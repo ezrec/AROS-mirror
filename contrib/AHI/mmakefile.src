@@ -10,5 +10,47 @@ include $(TOP)/config/make.cfg
 
 EXEDIR := $(CONTRIBDIR)/AHI
 
+INCS := clib-ahi_protos.h clib-ahi_sub_protos.h         \
+	inline-ahi.h inline-ahi_sub.h			\
+	proto-ahi.h proto-ahi_sub.h
+
+#MM
+includes-copy : $(INCS)
+	mkdir -p $(GENINCDIR)/inline
+	$(CP) Include/C/devices/ahi.h $(AROS_INCLUDES)/devices/
+	$(CP) Include/C/libraries/ahi_sub.h $(AROS_INCLUDES)/libraries/
+	$(CP) clib-ahi_protos.h $(AROS_INCLUDES)/clib/ahi_protos.h
+	$(CP) clib-ahi_sub_protos.h $(AROS_INCLUDES)/clib/ahi_sub_protos.h
+	$(CP) inline-ahi.h $(AROS_INCLUDES)/inline/ahi.h
+	$(CP) inline-ahi_sub.h $(AROS_INCLUDES)/inline/ahi_sub.h
+	$(CP) proto-ahi.h $(AROS_INCLUDES)/proto/ahi.h
+	$(CP) proto-ahi_sub.h $(AROS_INCLUDES)/proto/ahi_sub.h
+	$(CP) Include/C/devices/ahi.h $(GENINCDIR)/devices/
+	$(CP) Include/C/libraries/ahi_sub.h $(GENINCDIR)/libraries/
+	$(CP) clib-ahi_protos.h $(GENINCDIR)/clib/ahi_protos.h
+	$(CP) clib-ahi_sub_protos.h $(GENINCDIR)/clib/ahi_sub_protos.h
+	$(CP) inline-ahi.h $(GENINCDIR)/inline/ahi.h
+	$(CP) inline-ahi_sub.h $(GENINCDIR)/inline/ahi_sub.h
+	$(CP) proto-ahi.h $(GENINCDIR)/proto/ahi.h
+	$(CP) proto-ahi_sub.h $(GENINCDIR)/proto/ahi_sub.h
+
+clib-ahi_protos.h:	Include/SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=clib
+
+clib-ahi_sub_protos.h:	Include/SFD/ahi_sub_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=clib
+
+inline-ahi.h:	Include/SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=macros
+
+inline-ahi_sub.h:	Include/SFD/ahi_sub_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=macros
+
+proto-ahi.h:	Include/SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=proto
+
+proto-ahi_sub.h:	Include/SFD/ahi_sub_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=proto
+
 %build_with_configure mmake=contrib-AHI prefix=$(EXEDIR) \
     includedir=$(AROS_INCLUDES) extraoptions="--with-os-includedir=$(AROS_INCLUDES)"
