@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:28:20  stegerg
+ * REG() macro replacementes
+ *
  * Revision 42.0  2000/05/09 22:23:17  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -46,35 +49,73 @@
  * Compiler specific stuff.
  */
 #ifdef _DCC
-#ifndef SAVEDS
-#define SAVEDS    __geta4
-#endif
-#ifndef ASM
-#define ASM
-#endif
-#ifndef REG
-#define REG(x)    __ ## x
-#endif
+  #ifndef SAVEDS
+    #define SAVEDS    __geta4
+  #endif
+  #ifndef ASM
+    #define ASM
+  #endif
+  #ifndef REG
+    #define REG(x)    __ ## x
+  #endif
 #elif __STORM__
-#ifndef SAVEDS
-#define SAVEDS    __saveds
-#endif
-#ifndef ASM
-#define ASM
-#endif
-#ifndef REG
-#define REG(x)    register __ ## x
-#endif
+  #ifndef SAVEDS
+    #define SAVEDS    __saveds
+  #endif
+  #ifndef ASM
+    #define ASM
+  #endif
+  #ifndef REG
+    #define REG(x)    register __ ## x
+  #endif
 #else
-#ifndef SAVEDS
-#define SAVEDS    __saveds
+  #ifndef SAVEDS
+    #define SAVEDS    __saveds
+  #endif
+  #ifndef ASM
+    #define ASM       __asm
+  #endif
+  #ifndef REG
+    #define REG(x)    register __ ## x
+  #endif
 #endif
-#ifndef ASM
-#define ASM       __asm
-#endif
-#ifndef REG
-#define REG(x)    register __ ## x
-#endif
+
+#ifdef _AROS
+
+  #ifndef AROS_ASMCALL_H
+  #include <aros/asmcall.h>
+  #endif
+  
+  #undef ASM
+  #define ASM
+  #undef SAVEDS
+  #define SAVEDS
+
+  #define REGPARAM(reg,type,name) AROS_UFHA(type, name, reg)
+  
+  #define REGFUNC1(r,n,a1) AROS_UFH1(r,n,a1)
+  #define REGFUNC2(r,n,a1,a2) AROS_UFH2(r,n,a1,a2)
+  #define REGFUNC3(r,n,a1,a2,a3) AROS_UFH3(r,n,a1,a2,a3)
+  #define REGFUNC4(r,n,a1,a2,a3,a4) AROS_UFH4(r,n,a1,a2,a3,a4)
+  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) AROS_UFH5(r,n,a1,a2,a3,a4,a5)
+  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) AROS_UFH6(r,n,a1,a2,a3,a4,a5,a6)
+  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFH7(r,n,a1,a2,a3,a4,a5,a6,a7)
+  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,a1,a2,a3,a4,a5,a6,a7,a8)
+  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9)
+  
+#else
+  #define REGPARAM(reg,type,name) REG(reg) type name
+  
+  #define REGFUNC1(r,n,a1) r n(a1)
+  #define REGFUNC2(r,n,a1,a2) r n(a1,a2)
+  #define REGFUNC3(r,n,a1,a2,a3) r n(a1,a2,a3)
+  #define REGFUNC4(r,n,a1,a2,a3,a4) r n(a1,a2,a3,a4)
+  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) r n(a1,a2,a3,a4,a5)
+  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) r n(a1,a2,a3,a4,a5,a6)
+  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
+  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
+  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
+  
 #endif
 
 /*****************************************************************************

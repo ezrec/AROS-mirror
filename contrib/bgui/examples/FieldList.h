@@ -28,6 +28,9 @@
  *    be positioned by the user.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:28:19  stegerg
+ * REG() macro replacementes
+ *
  * Revision 42.0  2000/05/09 22:19:43  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -72,7 +75,10 @@ typedef struct {
 /*
  *	Set attributes.
  */
-STATIC ASM VOID SetFLAttr( REG(a0) FLD *fld, REG(a1) struct TagItem *attr )
+//STATIC ASM VOID SetFLAttr( REG(a0) FLD *fld, REG(a1) struct TagItem *attr )
+STATIC ASM REGFUNC2(VOID, SetFLAttr,
+	REGPARAM(A0, FLD *, fld),
+	REGPARAM(A1, struct TagItem *, attr))
 {
 	struct TagItem		*tag, *tstate = attr;
 
@@ -102,7 +108,11 @@ STATIC ULONG SAVEDS ASM
 #else
 STATIC SAVEDS ASM ULONG
 #endif
-DispatchFL( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+//DispatchFL( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+REGFUNC3(,DispatchFL,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
 	FLD		       *fld;
 	APTR			entry;

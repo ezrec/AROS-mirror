@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:28:20  stegerg
+ * REG() macro replacementes
+ *
  * Revision 42.0  2000/05/09 22:23:32  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -279,7 +282,14 @@ typedef struct {
    LONG              bf_X, bf_Y;   /* Offsets for fancy backfills. */
 }  BFINFO;
 
-#define METHOD(f,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) m)
+#ifdef _AROS
+  #define METHOD(f,mtype,m) STATIC ASM AROS_UFH3(ULONG, f, \
+			  AROS_UFHA(Class *, cl, A0), \
+			  AROS_UFHA(Object *, obj, A2), \
+			  AROS_UFHA(mtype, m, A1))  
+#else
+  #define METHOD(f,mtype,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) mtype m) 
+#endif
 
 #define BGUI_PMB  0x000FF000
 #define BGUI_PB   0x800FF000

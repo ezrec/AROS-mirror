@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:28:20  stegerg
+ * REG() macro replacementes
+ *
  * Revision 42.0  2000/05/09 22:23:05  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -136,13 +139,62 @@ typedef struct {
 #endif
 #endif
 
+#ifdef _AROS
+
+  #ifndef AROS_ASMCALL_H
+  #include <aros/asmcall.h>
+  #endif
+  
+  #ifdef ASM
+  #undef ASM
+  #endif
+  #define ASM
+  
+  #ifdef SAVEDS
+  #undef SAVEDS
+  #endif
+  #define SAVEDS
+
+  #ifndef REGPARAM
+  #define REGPARAM(reg,type,name) AROS_UFHA(type, name, reg)
+  
+  #define REGFUNC1(r,n,a1) AROS_UFH1(r,n,a1)
+  #define REGFUNC2(r,n,a1,a2) AROS_UFH2(r,n,a1,a2)
+  #define REGFUNC3(r,n,a1,a2,a3) AROS_UFH3(r,n,a1,a2,a3)
+  #define REGFUNC4(r,n,a1,a2,a3,a4) AROS_UFH4(r,n,a1,a2,a3,a4)
+  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) AROS_UFH5(r,n,a1,a2,a3,a4,a5)
+  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) AROS_UFH6(r,n,a1,a2,a3,a4,a5,a6)
+  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFH7(r,n,a1,a2,a3,a4,a5,a6,a7)
+  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,a1,a2,a3,a4,a5,a6,a7,a8)
+  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9)
+  #endif
+  
+#else
+  #ifndef REGPARAM
+  #define REGPARAM(reg,type,name) REG(reg) type name
+  
+  #define REGFUNC1(r,n,a1) r n(a1)
+  #define REGFUNC2(r,n,a1,a2) r n(a1,a2)
+  #define REGFUNC3(r,n,a1,a2,a3) r n(a1,a2,a3)
+  #define REGFUNC4(r,n,a1,a2,a3,a4) r n(a1,a2,a3,a4)
+  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) r n(a1,a2,a3,a4,a5)
+  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) r n(a1,a2,a3,a4,a5,a6)
+  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
+  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
+  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
+  #endif
+  
+#endif
 /*
 **      An array of these structures must be passed at object-create time.
 **/
 typedef struct {
         UBYTE                   *rc_Name;         /* Command name. */
         UBYTE                   *rc_ArgTemplate;  /* DOS-style argument template. */
-        ASM VOID                (*rc_Func)( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
+//        ASM VOID                (*rc_Func)( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
+        ASM REGFUNC2(VOID, (*rc_Func),
+		REGPARAM(A0, REXXARGS *,),
+		REGPARAM(A1, struct RexxMsg *, ));
 }       REXXCOMMAND;
 
 /*
