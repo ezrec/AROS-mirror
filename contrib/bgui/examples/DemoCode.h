@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2000/08/10 17:53:19  stegerg
+ * removed a debug output.
+ *
  * Revision 42.6  2000/08/08 20:36:51  stegerg
  * UtilityBase on AROS is not of type struct Library *, but
  * struct UtilityBase *. BTW: Why????????? I think we should
@@ -134,8 +137,6 @@ int main( int argc, char **argv )
    struct Process       *this_task = ( struct Process * )FindTask( NULL );
    BOOL            is_wb = FALSE;
 
-   printf("cli = %x\n", Cli());
-   
    if (FALSE == openlibs())
    {
      closelibs();
