@@ -23,21 +23,19 @@ FILES := \
 	methodobject \
 	moduleobject \
 	object \
+	obmalloc \
 	rangeobject \
 	sliceobject \
 	stringobject \
 	tupleobject \
 	typeobject \
+	floatobject \
 	unicodectype \
 	unicodeobject 
 
-# Objects that need more work to compile.
-#	floatobject
-#	obmalloc
+USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR) -DAROS
 
-USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR)
-
-#MM linklibs-python-objects
+#MM linklibs-python-objects : includes
 
 %make_linklib_setup mmake=linklibs-python-objects
 %make_linklib 
