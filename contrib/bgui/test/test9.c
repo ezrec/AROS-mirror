@@ -20,6 +20,7 @@ struct Window *win;
 #define ID_HD_Exit      3
 
 struct Library *BGUIBase;
+struct IntuitionBase * IntuitionBase;
 
 void GimmeQuickDisplayWindow(void)
 {
@@ -75,6 +76,13 @@ int main(void)
     ULONG sigmask;
     BOOL quit = FALSE;
 
+    if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+    { 
+       printf("Could not open Intuition.library!\n");
+       return -1;  
+    }
+
+
     if(BGUIBase=OpenLibrary(BGUINAME,0L)) {
         GimmeQuickDisplayWindow();
         if(Win)
@@ -107,6 +115,8 @@ int main(void)
 
         CloseLibrary(BGUIBase);
     }
+
+    CloseLibrary((struct Library *)IntuitionBase);
 
     return 0;
 }

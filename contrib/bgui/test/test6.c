@@ -20,6 +20,7 @@
 #include <proto/exec.h>
 
 struct Library *BGUIBase=NULL;
+struct IntuitionBase * IntuitionBase;
 
 // In the E source, the font info objects had formatting.
 // This is the "GUI" page.
@@ -74,6 +75,12 @@ int main(argc,argv)
 {
 	Object *window;
 
+	if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+	{
+	  printf("Could not open Intuition.library!\n");
+	  return -1;
+	}
+
 	if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
 	{
 		if((window=InitTest_6())!=NULL
@@ -102,4 +109,6 @@ int main(argc,argv)
 		}
 		CloseLibrary(BGUIBase);
 	}
+	CloseLibrary((struct Library *)IntuitionBase);
+
 }

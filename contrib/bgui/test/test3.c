@@ -27,10 +27,12 @@ void *rda=NULL;
 struct Library *BGUIBase=NULL;
 Object *window=NULL;
 struct Window *wnd;
+struct IntuitionBase * IntuitionBase;
 
 void cleanexit(ULONG rc,STRPTR text) {
 	if (window) DisposeObject(window);
 	if (BGUIBase) CloseLibrary(BGUIBase);
+	if (IntuitionBase) CloseLibrary((struct Library *)IntuitionBase);
 	if (rda) FreeArgs(rda);
 	if (text) FPrintf(Output(),"Error: could not %s.\n",text);
 	exit((int) rc);
@@ -67,6 +69,13 @@ void open_all(void) {
 		"18\tis below the list.",
 		NULL};
 	LONG stupid_c_temp_cw[]={100,1000};
+
+	if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+	{
+	  printf("Could not open Intuition.library!\n");
+	  return -1;
+	}
+
 	BGUIBase=OpenLibrary("bgui.library",41);
 	if (!BGUIBase) cleanexit(20,"open BGUI V41+");
 	window=WindowObject,

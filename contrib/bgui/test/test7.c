@@ -14,6 +14,10 @@
 #include <libraries/bgui_macros.h>
 #endif
 
+#ifdef _AROS
+#include <proto/bgui.h>
+#include <proto/intuition.h>
+#else
 #ifndef PRAGMAS_BGUI_PRAGMAS_H
 #include <pragmas/bgui_pragmas.h>
 #endif
@@ -21,10 +25,12 @@
 #ifndef CLIB_INTUITION_PROTOS_H
 #include <clib/intuition_protos.h>
 #endif
+#endif
 
 #ifndef LIBRARIES_GADTOOLS_H
 #include <libraries/gadtools.h>
 #endif
+
 
 #include <proto/exec.h>
 #include <proto/bgui.h>
@@ -46,6 +52,7 @@ Local ULONG Cyc2Page[] = { MX_Active, PAGE_Active, TAG_END };
 Local UBYTE *Prefspages[] = { "S_ystem","_GUI", "M_isc", NULL };
 
 struct Library *BGUIBase = NULL;
+struct IntuitionBase * IntuitionBase;
 
 #define GetStr(x) "Jotain"
 
@@ -113,6 +120,12 @@ int main(void)
     BOOL quit = FALSE;
     struct Window *win;
 
+    if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+    {
+      printf("Could not open Intuition.library!\n");
+      return -1;
+    }
+
     if(BGUIBase=OpenLibrary(BGUINAME,0L)) {
         Win = GimmePrefsWindow();
         win = WindowOpen(Win);
@@ -139,6 +152,8 @@ int main(void)
 
         CloseLibrary(BGUIBase);
     }
+
+    CloseLibrary((struct Library *)IntuitionBase);
 
     return 0;
 }

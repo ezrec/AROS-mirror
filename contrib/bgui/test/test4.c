@@ -18,9 +18,14 @@
 
 #include <proto/intuition.h>
 #include <proto/exec.h>
+#ifdef _AROS
+#warning No Gradientslider
+#else
 #include <gadgets/gradientslider.h>
+#endif
 
 struct Library *BGUIBase=NULL;
+struct IntuitionBase * IntuitionBase;
 
 enum
 {
@@ -49,6 +54,9 @@ Object *InitTest_4( void )
 		WINDOW_MasterGroup, ar[WIN4_MASTER] = VGroupObject,
 			FRM_Type,FRTYPE_NEXT,
 			FRM_Title,NULL,
+#ifdef _AROS
+#warning No Gradientslider
+#else
       StartMember, ar[WIN4_GRSLIDER1]= ExternalObject,
         EXT_MinWidth,           10,
         EXT_MinHeight,          10,
@@ -59,6 +67,7 @@ Object *InitTest_4( void )
         GA_ID,                  WIN4_GRSLIDER1,
         EndObject,
       EndMember,
+#endif
 		EndObject,
 	EndObject;
 
@@ -69,6 +78,12 @@ int main(argc,argv)
 {
 	Object *window;
 	struct Library *GradientSliderBase;
+
+	if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+	{
+	  printf("Could not open Intuition.library!\n");
+	  return -1;
+	}
 
 	if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
 	{
@@ -102,4 +117,7 @@ int main(argc,argv)
 		}
 		CloseLibrary(BGUIBase);
 	}
+
+	CloseLibrary((struct Library *)IntuitionBase);
+
 }

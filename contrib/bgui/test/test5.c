@@ -20,6 +20,7 @@
 #include <proto/exec.h>
 
 struct Library *BGUIBase=NULL;
+struct IntuitionBase * IntuitionBase;
 
 #define ID_W0 500
 
@@ -56,6 +57,12 @@ int main(argc,argv)
 {
 	Object *window;
 
+	if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+	{
+	  printf("Could not open Intuition.library!\n");
+	  return -1;
+	}
+
 	if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
 	{
 		if((window=InitTest_5())!=NULL
@@ -91,4 +98,7 @@ int main(argc,argv)
 		}
 		CloseLibrary(BGUIBase);
 	}
+
+	CloseLibrary((struct Library *)IntuitionBase);
+
 }

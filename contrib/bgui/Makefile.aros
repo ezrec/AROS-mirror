@@ -114,9 +114,7 @@ bin/test13: test/test13.c
 
 
 test = \
-bin/test1
-
-test_later = \
+bin/test1 \
 bin/test2 \
 bin/test3 \
 bin/test4 \
@@ -125,8 +123,6 @@ bin/test6 \
 bin/test7 \
 bin/test8 \
 bin/test9 \
-bin/test10 \
-bin/test11 \
 bin/test13
 
 test: $(INCLUDE_FILES) $(test)

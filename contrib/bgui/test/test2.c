@@ -20,6 +20,8 @@
 #include <proto/exec.h>
 
 struct Library *BGUIBase=NULL;
+struct IntuitionBase * IntuitionBase;
+
 
 UBYTE *NotifLabels[] = { "Enabled-->", "Disabled-->", "Still Disabled-->", NULL };
 
@@ -35,10 +37,7 @@ Object *InitTest_2( void )
 				StartMember, IndicatorFormat( 0, 100, 0, IDJ_CENTER, "%ld%%" ), FixMinHeight, EndMember,
 				StartMember, VertProgress( NULL, 0, 100, 0 ), EndMember,
 			EndObject,
-/**
 			VGroupObject, NormalOffset, NormalSpacing,
-**/
-/*
 				StartMember, TitleSeperator( "Conditional" ), EndMember,
 				StartMember,
 					HGroupObject, NormalSpacing,
@@ -47,12 +46,8 @@ Object *InitTest_2( void )
 					EndObject, FixMinHeight,
 				EndMember,
 				StartMember, TitleSeperator( "Map-List" ), EndMember,
-*/
-/**
 				StartMember,
 					HGroupObject, NormalSpacing,
-**/
-/*
 						StartMember,
 							VGroupObject, NormalSpacing,
 								StartMember, IndicatorFormat( 0, 100, 0, IDJ_CENTER, "%ld%%" ), FixMinHeight, EndMember,
@@ -62,22 +57,15 @@ Object *InitTest_2( void )
 						StartMember, VertSlider( NULL, 0, 100, 0, 0 ), FixWidth( 16 ), EndMember,
 						StartMember, VertScroller( NULL, 0, 101, 1, 0 ), FixWidth( 16 ), EndMember,
 						StartMember, VertSlider( NULL, 0, 100, 0, 0 ), FixWidth( 16 ), EndMember,
-*/
-/**
 						StartMember,
 							VGroupObject, NormalSpacing,
 								StartMember, IndicatorFormat( 0, 100, 0, IDJ_CENTER, "%ld%%" ), FixMinHeight, EndMember,
 								StartMember, VertProgress( NULL, 0, 100, 0 ), EndMember,
 							EndObject,
-**/
-/*
-*/
-/**
 						EndMember,
 					EndObject,
 				EndMember,
 			EndObject,
-**/
 		EndObject;
 
 	return( win );
@@ -86,6 +74,12 @@ Object *InitTest_2( void )
 int main(argc,argv)
 {
 	Object *window;
+
+	if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+	{
+	  printf("Could not open Intuition.library!\n");
+	  return -1;
+	}
 
 	if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
 	{
@@ -115,4 +109,7 @@ int main(argc,argv)
 		}
 		CloseLibrary(BGUIBase);
 	}
+
+	CloseLibrary((struct Library *)IntuitionBase);
+
 }

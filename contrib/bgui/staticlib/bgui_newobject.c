@@ -13,7 +13,6 @@
 /*****************************************************************************
 
     NAME */
-//#include <intuition/classusr.h>
 #define NO_INLINE_STDARG /* turn off inline def */
 #include <proto/bgui.h>
 extern struct Library * BGUIBase;
