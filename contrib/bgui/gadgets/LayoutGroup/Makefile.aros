@@ -29,7 +29,7 @@ $(BGUIGADGETSDIR)/$(GADGET) : $(GADGET)
 	@$(CP) $< $@
 
 $(GADGET) : $(LIBTARGETS) Makefile.aros
-	$(AROS_LD) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) \
+	$(AROS_CC) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) \
 		$(COMMONDIR)/bguiclass_libtag.o \
 		$(COMMONDIR)/bguiclass_lib.o \
 		$(LIBTARGETS) \
@@ -42,7 +42,7 @@ $(BGUIEXAMPLESDIR)/$(DEMO) : $(DEMO)
 	@$(CP) $< $@
 
 $(DEMO) : $(DEMO).o Makefile.aros
-	@$(AROS_LD) $(LDFLAGS) $< -o $@ $(EXELIBS)
+	@$(AROS_CC) $(LDFLAGS) $< -o $@ $(EXELIBS)
 
 %.o : %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
