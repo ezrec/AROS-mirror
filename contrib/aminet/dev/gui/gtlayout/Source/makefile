@@ -1,11 +1,16 @@
 TOP = ../../../../../..
-
+HOST_CPU    ?= i386
+HOST_ARCH   ?= linux
+TARGET_CPU  ?= i386
+TARGET_ARCH ?= linux
 include $(TOP)/config/make.cfg
 
 LOCALINCLUDES = -I. -I../Include
 
-DEFINES = -D_AROS
-OPTIMIZE = -O2
+CC := $(TOOLDIR)/$(TARGET_CPU)-$(TARGET_ARCH)-aros-gcc
+
+DEFINES =
+OPTIMIZE = -O2 -g3
 
 aros/%_aros.c : %.c
 	$(ARCHTOOL) -R aros/gtlayout_pragmas_aros.h  $^ $@ aros/gtlayout_defines_aros.h
@@ -131,13 +136,10 @@ TESTOBJS = test/gui.o test/Tools.o
 all: gtlayout.library test_aros
 
 gtlayout.library : $(INTERMEDIATES) $(OBJS) gtlayout_lib.o gtlayout_data.o
-	$(CC) -nostartfiles -nostdlib -Wl,-i \
-		gtlayout_lib.o gtlayout_data.o $(OBJS) \
-		-static -i -L$(LIBDIR) -lamiga -larosc -o $@
+	$(CC) gtlayout_lib.o gtlayout_data.o $(OBJS) -static -lamiga -o $@ -nostartfiles
 
 test_aros: $(TESTOBJS)
-	$(CC) -nostartfiles -nostdlib -Wl,-r\
-		-static $(TESTOBJS) -L$(LIBDIR) -lamiga -larosc -o $@
+	$(CC) $(TESTOBJS) -L$(LIBDIR) -lamiga -o $@
  
 clean:
 	$(RM) $(INTERMEDIATES) $(OBJS) gtlayout.library aros/gtlayout_defines_aros.h
