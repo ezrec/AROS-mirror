@@ -40,7 +40,7 @@ static char rcsid =
 #include <graphics/scale.h>
 #include <graphics/gfx.h>
 #include <intuition/intuition.h>
-#if defined(__SASC) || defined(STORMC4_WOS) || defined(AROS)
+#if defined(__SASC) || defined(WARPOS) || defined(AROS)
 #include <proto/exec.h>
 #include <proto/cybergraphics.h>
 #include <proto/graphics.h>

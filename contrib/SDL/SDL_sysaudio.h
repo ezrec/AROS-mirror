@@ -33,7 +33,7 @@ static char rcsid =
 
 #include <exec/exec.h>
 #include <dos/dos.h>
-#if defined(__SASC) || defined(STORMC4_WOS)
+#if defined(__SASC) || defined(WARPOS)
 #include <proto/exec.h>
 #else
 #include <inline/exec.h>
@@ -142,7 +142,7 @@ extern AudioBootStrap AHI_bootstrap;
 /* This is the current audio device */
 extern SDL_AudioDevice *current_audio;
 
-#ifndef __SASC
+#if !defined(__SASC) && !defined(WARPOS)
 extern struct ExecBase *SysBase;
 #endif
 

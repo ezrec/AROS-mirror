@@ -35,17 +35,23 @@ static char rcsid =
 #include <kstat.h>
 #endif
 
+// this is an undocumented feature of CGX, and recently of AROS
+// and P96, if it's not defined let define it ourselves.
+
+#ifndef RECTFMT_RAW
+    #define RECTFMT_RAW	(5UL)
+#endif
 
 #if 1
 
 #ifdef USE_CGX_WRITELUTPIXEL
-#if defined(MORPHOS) || defined(__SASC) || defined(AROS)
+#if defined(MORPHOS) || defined(__SASC) || defined(AROS) || defined(WARPOS)
 	#define WLUT WriteLUTPixelArray
-#elif 0
+#elif STORMC4_M68K
 
 void WLUT(APTR a,UWORD b,UWORD c,UWORD d,struct RastPort *e,APTR f,UWORD g,UWORD h,UWORD i,UWORD l,UBYTE m)
-{	
-	WriteLUTPixelArray(a,b,c,d,e,f,g,h,i,l,m); 
+{
+	WriteLUTPixelArray(a,b,c,d,e,f,g,h,i,l,m);
 }
 #else
 
@@ -77,7 +83,7 @@ static void CGX_FakeUpdate(_THIS, int numrects, SDL_Rect *rects);
 BOOL SafeDisp=TRUE,SafeChange=TRUE;
 struct MsgPort *safeport=NULL,*dispport=NULL;
 ULONG safe_sigbit,disp_sigbit;
-int use_picasso96=1;
+int use_picasso96 = 0;
 
 int CGX_SetupImage(_THIS, SDL_Surface *screen)
 {
@@ -285,7 +291,7 @@ int CGX_FlipHWSurface(_THIS, SDL_Surface *surface)
 		{
 			Wait(disp_sigbit);
 // Non faccio nulla, vuoto solo la porta
-			while(GetMsg(dispport)!=NULL) 
+			while(GetMsg(dispport)!=NULL)
 				;
 			SafeChange=TRUE;
 		}
@@ -301,7 +307,7 @@ int CGX_FlipHWSurface(_THIS, SDL_Surface *surface)
 		if(!SafeDisp)
 		{
 			Wait(safe_sigbit);
-			while(GetMsg(safeport)!=NULL) 
+			while(GetMsg(safeport)!=NULL)
 				;
 			SafeDisp=TRUE;
 		}
@@ -449,14 +455,14 @@ static void CGX_NormalUpdate(_THIS, int numrects, SDL_Rect *rects)
 
 				customroutine=2;
 #endif
-				
+
 //				format=RECTFMT_LUT8;   Vecchia funzione x usare la WritePixelArray.
 			}
 			else
 				customroutine=1;
 			break;
 		default:
-			D(bug("Unable to blit this surface!\n"));	
+			D(bug("Unable to blit this surface!\n"));
 			return;
 	}
 
@@ -481,7 +487,7 @@ static void CGX_NormalUpdate(_THIS, int numrects, SDL_Rect *rects)
 		for ( i=0; i<numrects; ++i ) {
 			if ( ! rects[i].w ) { /* Clipped? */
 				continue;
-			}	
+			}
 //			WLPA(this->screen,&rects[i],SDL_RastPort,SDL_XPixels,SDL_Window);
 
 			WLUT(this->screen->pixels,rects[i].x, rects[i].y,this->screen->pitch,
@@ -509,7 +515,7 @@ static void CGX_NormalUpdate(_THIS, int numrects, SDL_Rect *rects)
 			else
 				destbase=bm_address+(SDL_Window->TopEdge+SDL_Window->BorderTop)*destpitch+(SDL_Window->BorderLeft+SDL_Window->LeftEdge)*this->hidden->BytesPerPixel;
 
-			for ( i=0; i<numrects; ++i ) 
+			for ( i=0; i<numrects; ++i )
 			{
 				srcwidth=rects[i].w;
 
@@ -521,7 +527,7 @@ static void CGX_NormalUpdate(_THIS, int numrects, SDL_Rect *rects)
 				dest+=(rects[i].y*destpitch);
 				src=((char *)(this->screen->pixels))+rects[i].x;
 				src+=(rects[i].y*this->screen->pitch);
-				
+
 				for(j=rects[i].h;j;--j)
 				{
 					dst=dest;

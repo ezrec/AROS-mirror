@@ -28,7 +28,7 @@ static char rcsid =
 #include <exec/exec.h>
 #include <dos/dos.h>
 #include <dos/dostags.h>
-#if defined (__SASC) || defined(STORMC4_WOS) || defined(AROS)
+#if defined (__SASC) || defined(WARPOS) || defined(AROS)
 #include <proto/dos.h>
 #include <proto/exec.h>
 #else
@@ -46,7 +46,7 @@ static char rcsid =
 extern struct ExecBase *SysBase;
 extern struct DosLibrary *DOSBase;
 
-#ifdef STORMC4_WOS
+#ifdef WARPOS
 #include <proto/powerpc.h>
 
 /* use powerpc.library functions instead og exec */
@@ -66,5 +66,5 @@ extern struct DosLibrary *DOSBase;
 #else
 
 #define SYS_ThreadHandle struct Task *
-#endif /*STORMC4_WOS*/
+#endif /* WARPOS */
 

@@ -150,7 +150,7 @@ Uint32 SDL_SemValue(SDL_sem *sem)
 
 	value = 0;
 	if ( sem ) {
-		#ifdef STORMC4_WOS
+		#ifdef WARPOS 
 		value = sem->Sem.ssppc_SS.ss_NestCount;
 		#else
 		value = sem->Sem.ss_NestCount;

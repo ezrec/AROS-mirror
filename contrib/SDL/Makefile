@@ -30,42 +30,26 @@ OBJS = SDL_error.o SDL_fatal.o SDL_RLEaccel.o SDL_blit.o SDL_blit_0.o  \
 
 all: libSDL.a 
 
-EXAMPLES = testsprite testwin testbitmap testver testhread testsem
+EXAMPLES = testsprite testwin testbitmap testver testhread testsem \
+           testtypes testpalette testwm
 
-examples: $(EXAMPLES)
+examples:
 	list='$(EXAMPLES)'; for example in $$list; do \
 		echo "Making $$example"; \
-	    $(CC) -o $$example $(STARTUP) $$example.c $(LFLAGS) ; \
+		$(CC) -o tests/$$example $(STARTUP) -I.. -I. -L.. tests/$$example.c $(LFLAGS) ; \
 	done;
     
 install: examples
 	list='$(EXAMPLES)'; for subdir in $$list; do \
 		echo "Installing $$subdir"; \
-        mv $$subdir $(BASEDIR)/AROS/test/ ; \
+		cp tests/$$subdir $(BASEDIR)/AROS/test/ ; \
 	done;
- 
+	cp tests/*.bmp $(BASEDIR)/AROS/test/
+
 libSDL.a: $(OBJS)
 	-rm -f libSDL.a
 	ar cru libSDL.a $(OBJS)
 	ranlib libSDL.a
-
-testsprite: testsprite.c libSDL.a
-	$(CC) -o $@ $(STARTUP) testsprite.c $(LFLAGS) 
-    
-testwin: testwin.c libSDL.a
-	$(CC) -o $@ $(STARTUP) testwin.c $(LFLAGS) 
-
-testbitmap: testbitmap.c libSDL.a
-	$(CC) -o $@ $(STARTUP) testbitmap.c $(LFLAGS) 
-
-testhread: testhread.c libSDL.a
-	$(CC) -o $@ $(STARTUP) testhread.c $(LFLAGS) 
-
-testsem: testsem.c libSDL.a
-	$(CC) -o $@ $(STARTUP) testsem.c $(LFLAGS) 
-
-testver: testver.c libSDL.a
-	$(CC) -o $@ $(STARTUP) testver.c $(LFLAGS) 
 
 clean:
 	rm -f *.o

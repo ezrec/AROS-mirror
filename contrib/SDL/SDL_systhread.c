@@ -50,7 +50,7 @@ typedef struct {
 
 #ifndef MORPHOS
 
-#if defined(__SASC) && !defined(__PPC__) 
+#if defined(__SASC) && !defined(__PPC__)
 __saveds __asm Uint32 RunThread(register __a0 char *args )
 #elif defined(__PPC__) || defined(AROS)
 Uint32 RunThread(char *args)
@@ -63,7 +63,7 @@ Uint32 RunThread(char *args __asm("a0") )
 	struct Task *Father;
 
 #ifndef SHARED_LIB
-#ifdef STORMC4_WOS
+#ifdef WARPOS
 	thread_args *data=(thread_args *)args;
 #else
 	thread_args *data=(thread_args *)atol(args);
@@ -77,7 +77,7 @@ Uint32 RunThread(char *args __asm("a0") )
 
 		while(*args >= '0' && *args <= '9')
 			temp = (temp * 10) + (*args++ - '0');
-	
+
 		data=(thread_args *)temp;
 	}
 
@@ -130,6 +130,11 @@ int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 {
 	/* Create the thread and go! */
 	char buffer[20];
+
+#ifdef WARPOS
+	struct TagItem tags[6];
+#endif
+
 #ifdef SHARED_LIB
 	extern void *myLibPtr;
 
@@ -142,14 +147,16 @@ int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
     sprintf(buffer,"%ld",args);
 
 
-	#ifdef STORMC4_WOS
-	thread->handle=CreateTaskPPCTags(TASKATTR_CODE,	RunThread,
-					TASKATTR_NAME,	"SDL subtask",
-					TASKATTR_STACKSIZE, 100000,
-					(args ? TASKATTR_R3 : TAG_IGNORE), args,
-					TASKATTR_INHERITR2, TRUE,
-					TAG_DONE);
-	#else
+#ifdef WARPOS
+	 tags[0].ti_Tag = TASKATTR_CODE;                        tags[0].ti_Data = (ULONG)RunThread;
+    tags[1].ti_Tag = TASKATTR_NAME;                        tags[1].ti_Data = (ULONG)"SDL subtask";
+    tags[2].ti_Tag = TASKATTR_STACKSIZE;                   tags[2].ti_Data = 100000;
+    tags[3].ti_Tag = (args ? TASKATTR_R3 : TAG_IGNORE);    tags[3].ti_Data = (ULONG)args;
+    tags[4].ti_Tag = TASKATTR_INHERITR2;                   tags[4].ti_Data = TRUE;
+    tags[5].ti_Tag = TAG_DONE;                             tags[5].ti_Data = 0;
+
+    thread->handle=CreateTaskPPC(tags);
+#else
 	thread->handle=(struct Task *)CreateNewProcTags(
                     NP_Output, Output(),
                     NP_Input, Input(), 
@@ -160,7 +167,7 @@ int SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 					NP_Entry, (ULONG)RunThread,
 					NP_Arguments, (ULONG)buffer,
 					TAG_DONE);
-	#endif
+#endif
 
 	if(!thread->handle)
 	{

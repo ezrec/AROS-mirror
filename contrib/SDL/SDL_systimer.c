@@ -38,7 +38,7 @@ static char rcsid =
 #include <pragmas/graphics.h>
 #include <clib/exec_protos.h>
 #include <pragmas/exec.h>
-#elif defined(STORMC4_WOS) || defined(AROS)
+#elif defined(WARPOS) || defined(AROS)
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/graphics.h>
@@ -63,29 +63,106 @@ static struct GfxBase *GfxBase;
 
 /* The first ticks value of the application */
 
-#if !defined(__PPC__) || defined(STORMC4_WOS) || defined(MORPHOS)
+#if !defined(__PPC__) || defined(MORPHOS)
 static clock_t start;
+
+// #define USE_SYSTIME
+
+#ifdef USE_SYSTIME
+#include <devices/timer.h>
+#include <proto/timer.h>
+
+static struct timerequest *TimerIO = NULL;
+static struct Device *TimerBase = NULL;
+static struct timeval basetime;
+static struct MsgPort     *TimerMP = NULL;
+
+static int fallback = 0;
+
+static void close_timer(void)
+{
+    D(bug("freeing timer resources..."));
+    if(TimerIO) {
+        CloseDevice((struct IORequest *)TimerIO);
+        DeleteIORequest((struct IORequest *)TimerIO);
+        TimerIO = NULL;
+    }
+    if(TimerMP) {
+        DeleteMsgPort(TimerMP);
+        TimerMP = NULL;
+    }
+    D(bug("OK\n"));
+}
+#endif
 
 void SDL_StartTicks(void)
 {
+#ifndef USE_SYSTIME
 	/* Set first ticks value */
 	start=clock();
+#else
+  struct MsgPort     *TimerMP;
+
+  if (TimerBase || fallback) return;
+  
+  if (!(TimerMP = CreateMsgPort())) {
+ 	 start=clock();
+     fallback = 1;
+     return;
+  }
+  if (!(TimerIO = (struct timerequest *)
+              CreateIORequest(TimerMP, sizeof(struct timerequest)))) {
+     DeleteMsgPort(TimerMP);
+	 start=clock();
+     fallback = 1;
+     return;
+  }
+  if (OpenDevice("timer.device", UNIT_VBLANK, &TimerIO->tr_node, 0)) {
+      DeleteMsgPort(TimerMP);
+      DeleteIORequest((struct IORequest *)TimerIO);
+ 	  start=clock();
+      fallback = 1;
+      return;
+  }
+  TimerBase = TimerIO->tr_node.io_Device;
+  D(bug("Timer resource allocated.\n"));
+
+  GetSysTime(&basetime);
+#ifndef SHARED_LIB
+  atexit(close_timer);
+#endif
+  
+#endif
 }
 
 Uint32 SDL_GetTicks (void)
 {
-	clock_t ticks;
+#ifdef USE_SYSTIME
+    if (fallback) {
+#endif
+        clock_t ticks;
+        
+        ticks=clock()-start;
 
-	ticks=clock()-start;
-
-#ifdef __SASC
-// CLOCKS_PER_SEC == 1000 !
-
-	return(ticks);
+#if CLOCKS_PER_SEC == 1000
+        return(ticks);
 #else
-// CLOCKS_PER_SEC != 1000 !
+        return ticks*(1000/CLOCKS_PER_SEC);
+#endif  
 
-	return ticks*(1000/CLOCKS_PER_SEC);
+#ifdef USE_SYSTIME
+    }
+    else {
+        struct timeval tv;
+        Uint32 tics;
+        
+        GetSysTime(&tv);
+
+        tics = (tv.tv_secs - basetime.tv_secs) * 1000 + 
+            (tv.tv_micro - basetime.tv_micro)/1000;
+
+        return tics;
+    }
 #endif
 }
 
@@ -93,7 +170,7 @@ void SDL_Delay (Uint32 ms)
 {
 // Do a busy wait if time is less than 50ms
 
-	if(ms<20)
+	if(ms<50)
 	{
 		clock_t to_wait=clock();
 
@@ -109,6 +186,55 @@ void SDL_Delay (Uint32 ms)
 		Delay(ms/20);
 	}
 }
+
+#elif defined(WARPOS)
+/* Use the powerpc.library function GetSysTimePPC to get the time */
+static ULONG start;
+
+void SDL_StartTicks(void)
+{
+    /* Set first ticks value */
+    struct timeval tval;
+    GetSysTimePPC(&tval);
+    start = (tval.tv_secs*1000 + tval.tv_micro/1000);
+}
+
+Uint32 SDL_GetTicks (void)
+{
+    ULONG ticks;
+    struct timeval tval;
+    GetSysTimePPC(&tval);
+
+    ticks = (tval.tv_secs*1000 + tval.tv_micro/1000);
+
+    return (ticks-start); /* return time in ms */
+}
+
+void SDL_Delay (Uint32 ms)
+{
+// Do a busy wait if time is less than 50ms
+
+    if(ms<50)
+    {
+        ULONG to_wait;
+        ULONG t;
+        struct timeval tval;
+        GetSysTimePPC(&tval);
+        t = (tval.tv_secs*1000000 + tval.tv_micro);
+        to_wait = t + (ms*1000);
+
+        do {
+            GetSysTimePPC(&tval);
+            t = (tval.tv_secs*1000000 + tval.tv_micro);
+        }
+        while(t < to_wait);
+    }
+    else
+    {
+        Delay(ms/20);
+    }
+}
+
 
 #else
 

@@ -377,7 +377,7 @@ Uint32 MakeBitMask(_THIS,int type,int format,int *bpp)
 		case PIXFMT_BGRA32:
 			switch(type)
 			{
-#ifdef AROS
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN
                 case 0:
 					D(bug("BGRA32\n"));
 					return 0xff;
@@ -460,7 +460,8 @@ use_truecolor:
 static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 {
 	int i;
-	struct Library *RTGBase;
+    char *test;
+    struct Library *RTGBase;
 
 	D(bug("VideoInit... Opening libraries\n"));
 
@@ -485,13 +486,20 @@ static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 		}
 	}
 
-	if(RTGBase=OpenLibrary("libs:picasso96/rtg.library",0L)) {
-		extern int use_picasso96;
+// check if P96 is present and if we don't need the fix
+#ifndef AROS
+    test = getenv("USE_P96_FIX");
+       
+    if(test && *test != '0') {
+        if(RTGBase=OpenLibrary("libs:picasso96/rtg.library",0L)) {
+            extern int use_picasso96;
 
-		CloseLibrary(RTGBase);
-		use_picasso96=1;
-	}
-
+            CloseLibrary(RTGBase);
+            use_picasso96=1;
+        }
+    }
+#endif
+    
 	D(bug("Library intialized, locking screen...\n"));
 
 	SDL_Display = LockPubScreen(NULL);
@@ -544,11 +552,11 @@ static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 	swap_pixels = 0;
 
 // Non e' detto che sia cosi' pero', alcune schede potrebbero gestire i modi in modo differente
-
+#if 0
 	if ( SDL_BYTEORDER == SDL_LIL_ENDIAN ) {
 		swap_pixels = 1;
 	}
-
+#endif
 	D(bug("Before GetVideoModes....\n"));
 
 	/* Get the available video modes */

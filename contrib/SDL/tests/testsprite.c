@@ -271,6 +271,7 @@ int main(int argc, char *argv[])
 	/* Loop, blitting sprites and waiting for a keystroke */
 	frames = 0;
 	then = SDL_GetTicks();
+
 	done = 0;
 	sprites_visible = 0;
 	while ( !done ) {
@@ -294,7 +295,8 @@ int main(int argc, char *argv[])
 
 	/* Print out some timing information */
 	now = SDL_GetTicks();
-	if ( now > then ) {
+
+    if ( now > then ) {
 		printf("%2.2f frames per second\n",
 					((double)frames*1000)/(now-then));
 	}
