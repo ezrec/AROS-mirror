@@ -6,8 +6,13 @@
 
 #include <exec/types.h>
 #include <libraries/locale.h>
+
+#ifndef __AROS__
 #include <clib/locale_protos.h>
 #include <pragmas/locale_pragmas.h>
+#else
+#include <proto/locale.h>
+#endif
 
 #define CATCOMP_ARRAY
 

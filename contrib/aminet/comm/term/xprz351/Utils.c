@@ -34,11 +34,11 @@
   * Version 3.52  June 1995 , fix incorrect values for certain setup options
   **********************************************************************/
 
-#include "xprzmodem_all.h"
 
 #define CATCOMP_NUMBERS
 #include "xprzmodem_catalog.h"
 
+#include "xprzmodem_all.h"
 
 /*
  * Transfer options to use if XProtocolSetup not called
@@ -640,7 +640,7 @@ XProtocolHostMon (
       ++sv->matchptr;        /* string, increment match position */
       if (!*sv->matchptr)
       {                        /* if at end of match string, it all matched */
-        sv->buflen = actual - (sv->bufpos - serbuff);
+        sv->buflen = actual - ((long)sv->bufpos - (long)serbuff);
         XProtocolReceive (xio);
         sv->matchptr = startrcv;
         actual = 0;

@@ -5,6 +5,8 @@
  *   by Robert Williamson 
  *
  **/
+struct XPR_UPDATE;
+struct xpr_option;
 /*
    *   The structure
  */
