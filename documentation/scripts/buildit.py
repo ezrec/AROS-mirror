@@ -310,8 +310,7 @@ def copyImages():
             os.path.join( srcpath, 'trustec.png' ),
             os.path.join( srcpath, 'sourceforge.png' ),
             os.path.join( srcpath, 'phoenix.jpeg' ),
-            os.path.join( srcpath, 'bttr.jpeg' ),
-            os.path.join( srcpath, 'amigados-online-reference-manual.png' )
+            os.path.join( srcpath, 'bttr.jpeg' )
         ],
         dstpath
     )
