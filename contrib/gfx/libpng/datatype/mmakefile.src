@@ -1,30 +1,18 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-USER_INCLUDES := -I.
-USER_CFLAGS   := -DMYDEBUG
-
-MODNAME := png
-MODTYPE := datatype
+#MM- workbench-datatypes-complete: workbench-datatypes-png
+#MM workbench-datatypes-png : setup includes linklibs linklibs-png
 
 FILES := pngclass libfunc
 FUNCS := obtainengine
 
-USE_AMIGALIB := yes
-USE_CLIB_STATIC := yes
-# USE_ALIB := yes
-USE_MLIB := yes
-USE_ZLIB := yes
+USER_CFLAGS   := -DMYDEBUG
 
-#MM- workbench-datatypes-complete: workbench-datatypes-png
-#MM workbench-datatypes-png : setup includes linklibs linklibs-png
-workbench-datatypes-png : workbench-datatypes-png-module
-
-%make_module_setup mmake=workbench-datatypes-png
-
-LIBS := -lpng  $(LIBS)
-
-%make_module mmake=workbench-datatypes-png
+%build_module_macro mmake=workbench-datatypes-png \
+  modname=png modtype=datatype \
+  funcs=$(FUNCS) files=$(FILES) \
+  conffile=lib.conf \
+  uselibs="png amiga z arosc m"
 
 %common
-%include_deps

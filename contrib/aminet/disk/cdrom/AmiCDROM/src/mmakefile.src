@@ -1,10 +1,9 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-MODNAME := cdrom
-MODTYPE := handler
+#MM- aminet-disk-cdrom-amicdrom: setup includes linklibs aminet-disk-cdrom-amicdrom-module
+#MM- aminet-disk-cdrom-amicdrom-quick: aminet-disk-cdrom-amicdrom-module
 
-INIT_FILE := arosdevice
 FILES := \
 	arosmain \
 	cdrom \
@@ -19,20 +18,10 @@ FILES := \
 	rock \
 	volumes
 
-FUNCS := 
-
-NO_AUTOINIT := yes
-
-USE_LIBDEFS := no
-USE_CLIB_STATIC := yes
-USE_MLIB := yes
-USE_AROSLIB := yes
-
-#MM- aminet-disk-cdrom-amicdrom: setup includes linklibs aminet-disk-cdrom-amicdrom-module
-#MM- aminet-disk-cdrom-amicdrom-quick: aminet-disk-cdrom-amicdrom-module
-%make_module_setup mmake=aminet-disk-cdrom-amicdrom
-%make_module mmake=aminet-disk-cdrom-amicdrom
+%build_module_macro mmake=aminet-disk-cdrom-amicdrom \
+  modname=cdrom modtype=handler \
+  initfile=arosdevice files=$(FILES) \
+  uselibs="arossupport arosc m"
 
 %common
-%include_deps
 

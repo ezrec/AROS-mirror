@@ -1,12 +1,8 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-USER_INCLUDES := -I../commonaros
+#MM contrib-zune-classes-nlist : setup includes linklibs
 
-MODNAME 	:= NList
-MODTYPE		:= mcc
-
-INIT_FILE := library
 FILES := NList_mcc  	\
          NList_mcc0 	\
          NList_mcc1 	\
@@ -25,25 +21,18 @@ FILES := NList_mcc  	\
 	 NList_img  	\
 	 NList_img2 	
 	 
-FUNCS := 
+USER_INCLUDES := -I../commonaros
 
-INCLUDE_FILES := $(TOP)/$(CURDIR)/NList_mcc.h
+%build_module_macro mmake=contrib-zune-classes-nlist \
+  modname=NList modtype=mcc \
+  initfile=library files=$(FILES) \
+  uselibs="amiga mui rom m"
 
-USE_ROMLIB  	:= yes
-USE_MLIB    	:= yes
-USE_AMIGALIB 	:= yes
-USE_MUILIB  	:= yes
-
-USE_LIBDEFS := no
-
-#MM contrib-zune-classes-nlist : setup includes linklibs \
-#MM	contrib-zune-classes-nlist-module
-%make_module_setup mmake=contrib-zune-classes-nlist
-%make_module_cpak
-%make_module mmake=contrib-zune-classes-nlist
 
 #MM includes-copy
+
+INCLUDE_FILES := $(TOP)/$(CURDIR)/NList_mcc.h
 %copy_includes path=MUI dir=$(TOP)/$(CURDIR)
 
 %common
-%include_deps
+
