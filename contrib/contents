@@ -1,0 +1,4 @@
+compiler/ - The C compiler for AROS. It contains include files,
+	the source for amiga.lib and c.lib and the source for the
+	compiler and all compiler specific utilities.
+
