@@ -9,7 +9,7 @@
 #MM- development : development-gcc
 #MM development-gcc-build-quick : development-gcc-fetch
 
-ORIGINS := http://ftp.gnu.org/pub/gnu/gcc/gcc-3.3.1
+ORIGINS := /work/src/gcc/ http://ftp.gnu.org/pub/gnu/gcc/gcc-3.3.1
 
 #MM
 development-gcc-fetch :
@@ -25,5 +25,6 @@ development-gcc-fetch :
 
 #MM
 development-gcc-delete-specs :
-	$(RM) $(AROS_DEVELOPMENT)/lib/gcc-lib/3.3.1/specs
+	$(RM) $(AROS_DEVELOPMENT)/lib/gcc-lib/$(AROS_TARGET_CPU)-aros/3.3.1/specs
+
 
