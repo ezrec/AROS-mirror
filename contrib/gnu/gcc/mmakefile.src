@@ -1,0 +1,23 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+##MM- contrib-gnu : contrib-gnu-gcc
+##MM- contrib-gnu-gcc : development-gcc
+
+#MM development : development-gcc
+#MM development-gcc-quick : development-gcc-fetch
+
+ORIGINS := http://ftp.gnu.org/pub/gnu/gcc/gcc-3.3.1
+
+#MM
+development-gcc-fetch :
+	%fetch archive=gcc-core-3.3.1.tar.bz2 destination=$(PORTDIR)/gcc archive_origins=$(ORIGINS) \
+	patches_specs=gcc-core-3.3.1-aros.diff:gcc-3.3.1:-p1
+
+%build_with_configure mmake=development-gcc configure=$(PORTDIR)/gcc/gcc-3.3.1/configure nix=yes \
+    prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development extraoptions="--target=$(AROS_TARGET_CPU)-aros \
+    --build=local --enable-longlong --disable-nls --enable-sjlj-exceptions"
+
+
