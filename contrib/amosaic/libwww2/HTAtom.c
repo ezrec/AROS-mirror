@@ -17,7 +17,7 @@
 
 #include <stdio.h>				/* joe@athena, TBL 921019 */
 #include "HTUtils.h"
-#ifdef _AMIGA
+/* Where does this one end??? #ifdef _AMIGA
    #include <string.h>                           /* MJW 931003 */
 #include "tcp.h"
 

@@ -1147,8 +1147,8 @@ forget_multi:
 		    if(strcmp(dataptr,".") == 0) continue;
 
 /* If its .. *and* the current directory is / dont show anything, otherwise
-/* print out a nice Parent Directory entry.
-/* */
+ * print out a nice Parent Directory entry.
+ */
 
 		    if(strcmp(dataptr,"..") == 0)
 			{

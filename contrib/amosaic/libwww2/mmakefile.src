@@ -1,0 +1,54 @@
+# $Id$
+#
+include $(TOP)/config/make.cfg
+
+LIB :=	www2
+
+FILES := \
+	HTAABrow HTAssoc HTFormat HTInit HTMLDTD HTPlain HTTP
+# The below are all files, but for AMosaic it seems that only
+# the above are needed
+#	HTAABrow \
+	HTAAUtil \
+	HTAccess \
+	HTAlert \
+	HTAnchor \
+	HTAssoc \
+	HTAtom \
+	HTChunk \
+	HTCompressed \
+	HTFTP \
+	HTFWriter \
+	HTFile \
+	HTFormat \
+	HTGopher \
+	HTIcon \
+	HTInit \
+	HTList \
+	HTMIME \
+	HTML \
+	HTMLDTD \
+	HTMLGen \
+	HTMail \
+	HTMosaicHTML \
+	HTNews \
+	HTParse \
+	HTPlain \
+	HTSort \
+	HTString \
+	HTTCP \
+	HTTP \
+	HTTelnet \
+	HTUU \
+	HTWAIS \
+	HTWSRC \
+	HTWriter \
+	SGML
+
+#MM linklibs : linklib-www2
+
+%make_linklib_setup mmake=linklibs-www2
+%make_linklib
+
+%common
+%include_deps

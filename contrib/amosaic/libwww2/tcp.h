@@ -279,7 +279,7 @@ Regular BSD unix versions
   #define IoctlSocket	s_ioctl
   #define _STRICT_ANSI 1
   #include <exec/types.h>
-  #include <sys/ioctl.h>
+//  #include <sys/ioctl.h>
   #include <sys/time.h>
   #include <proto/socket.h>
   #include <netdb.h>
@@ -311,7 +311,7 @@ Defaults
 
  */
 #ifndef TCP_INCLUDES_DONE
-#include <sys/ioctl.h> /* EJB */
+//#include <sys/ioctl.h> /* EJB */
 #include <sys/socket.h>
 #include <netinet/in.h>
 #ifndef __hpux /* this may or may not be good -marc */
