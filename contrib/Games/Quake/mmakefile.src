@@ -52,7 +52,7 @@ RELEASE_CFLAGS=$(BASE_CFLAGS) -O3 -ffast-math -funroll-loops \
 DEBUG_CFLAGS=$(BASE_CFLAGS) -g
 
 AROSCFLAGS=-DAROS $(RELEASE_CFLAGS)
-AROSLDFLAGS=-L$(LIBDIR) -larosc_shared -larosm $(LIBDIR)/startup.o -lamiga -lautoinit
+AROSLDFLAGS=-L$(LIBDIR) -larosc_shared -larosm -lamiga -lautoinit
 
 DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
 DO_DEBUG_CC=$(CC) $(DEBUG_CFLAGS) -o $@ -c $<
@@ -187,7 +187,7 @@ AROS_OBJS = \
 #	$(CC) $(CFLAGS) -o $@ $(AROS_OBJS) $(AROSLDFLAGS) $(LDFLAGS)
 
 $(EXE) : $(AROS_OBJS) $(DEPLIBS)
-	%link_q from="$(AROS_OBJS)"
+	%link_q opt="$(TARGET_LDFLAGS) $(AROSLDFLAGS)" from="$(AROS_OBJS)"
 
 ####
 
