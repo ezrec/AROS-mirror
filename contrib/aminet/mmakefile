@@ -1,4 +1,3 @@
 # $Id$
 
-#MM- contrib-aminet : aminet-gadgedtest aminet-lazymines aminet-newmastermind \
-#MM	aminet-yahzee aminet-comm
+#MM- contrib-aminet : aminet-comm aminet-games 

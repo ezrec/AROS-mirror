@@ -18,12 +18,12 @@ EXE := $(DESTDIR)/yahzee
 
 .PHONY : all clean
 
-#MM aminet-yahzee : setup-aminet-yahzee setup-aminet-yahzee-catalogs
-aminet-yahzee 	: $(OBJS) $(EXE)
+#MM aminet-games-think-yahzee : setup-aminet-games-think-yahzee setup-aminet-games-think-yahzee-catalogs
+aminet-games-think-yahzee 	: $(OBJS) $(EXE)
 	@$(NOP)
 
 #MM
-setup-aminet-yahzee :
+setup-aminet-games-think-yahzee :
 	%mkdirs_q $(DESTDIR) $(OBJDIR)
 
 $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)

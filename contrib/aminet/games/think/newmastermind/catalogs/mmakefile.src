@@ -16,7 +16,7 @@ CATDIRS := $(foreach f, $(CATALOGS), $(DESTDIR)/$(f))
 .PHONY : all clean
 
 #MM
-setup-aminet-newmastermind-catalogs : create_dirs create_catalogs create_include
+setup-aminet-games-think-newmastermind-catalogs : create_dirs create_catalogs create_include
 
 create_catalogs:
 	@$(FOR) dir in $(CATALOGS) ; do \

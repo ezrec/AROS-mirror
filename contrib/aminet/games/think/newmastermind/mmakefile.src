@@ -18,12 +18,12 @@ EXE := $(DESTDIR)/newmastermind
 
 .PHONY : all clean
 
-#MM aminet-newmastermind : setup-aminet-newmastermind setup-aminet-newmastermind-catalogs
-aminet-newmastermind 	: $(OBJS) $(EXE)
+#MM aminet-games-think-newmastermind : setup-aminet-games-think-newmastermind setup-aminet-games-think-newmastermind-catalogs
+aminet-games-think-newmastermind 	: $(OBJS) $(EXE)
 	@$(NOP)
 
 #MM
-setup-aminet-newmastermind :
+setup-aminet-games-think-newmastermind :
 	%mkdirs_q $(DESTDIR) $(OBJDIR)
 
 $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)

@@ -18,12 +18,12 @@ EXE := $(DESTDIR)/lazymines
 
 .PHONY : all clean
 
-#MM aminet-lazymines : aminet-chunkyiclass setup-aminet-lazymines setup-aminet-lazymines-catalogs
-aminet-lazymines 	: $(OBJS) $(EXE)
+#MM aminet-games-think-lazymines : aminet-dev-src-chunkyiclass setup-aminet-games-think-lazymines setup-aminet-lazymines-catalogs
+aminet-games-think-lazymines 	: $(OBJS) $(EXE)
 	@$(NOP)
 
 #MM
-setup-aminet-lazymines :
+setup-aminet-games-think-lazymines :
 	%mkdirs_q $(DESTDIR) $(OBJDIR)
 
 $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)

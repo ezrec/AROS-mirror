@@ -15,12 +15,12 @@ FILES		:= chunkyiclass
 OBJS := $(foreach f,$(FILES) $(ADDITIONAL_OBJS),$(OBJDIR)/$(f).o)
 DEPS := $(foreach f,$(FILES) $(ADDITIONAL_OBJS),$(OBJDIR)/$(f).d)
 
-#MM aminet-chunkyiclass : setup-aminet-chunkyiclass
-aminet-chunkyiclass : $(LIB)
+#MM aminet-dev-src-chunkyiclass : setup-aminet-dev-src-chunkyiclass
+aminet-dev-src-chunkyiclass : $(LIB)
 	@$(NOP)
 
 #MM
-setup-aminet-chunkyiclass :
+setup-aminet-dev-src-chunkyiclass :
 	%mkdirs_q $(OBJDIR) $(LIBDIR)
 
 #MM
