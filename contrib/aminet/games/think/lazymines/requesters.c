@@ -21,6 +21,7 @@
 #include <intuition/intuition.h>
 #include <intuition/intuitionbase.h>
 #include <proto/intuition.h>
+#include <proto/alib.h>
 
 #include "display_globals.h"
 #include "localize.h"

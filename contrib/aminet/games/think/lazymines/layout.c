@@ -11,6 +11,7 @@
 #include <proto/graphics.h>
 #include <libraries/gadtools.h>
 #include <intuition/screens.h>
+#include <proto/alib.h>
 
 #include "game.h"
 #include "display_globals.h"

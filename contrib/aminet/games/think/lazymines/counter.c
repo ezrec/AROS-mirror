@@ -17,6 +17,7 @@
 #include <intuition/intuition.h>
 #include <intuition/screens.h>
 #include <proto/intuition.h>
+#include <proto/alib.h>
 
 #include "display_globals.h"
 #include "images.h"

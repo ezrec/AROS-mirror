@@ -17,6 +17,7 @@
 #include <graphics/gfxmacros.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
+#include <proto/alib.h>
 
 #include "display_globals.h"
 #include "requesters.h"

@@ -10,6 +10,7 @@
 #include <graphics/gfxbase.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
+#include <proto/alib.h>
 
 #include "chunkyiclass.h"
 
