@@ -15,6 +15,7 @@
 #include "HTUtils.h"
 #include "HTChunk.h"
 
+#include <string.h>
 #define INVALID (-1)
 
 /*	The State (context) of the parser
