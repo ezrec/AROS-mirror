@@ -1,4 +1,4 @@
-Stefan Berger fixed the handling of Esc in string gadgets and added a call to
+Georg Steger fixed the handling of Esc in string gadgets and added a call to
 StackSwap() in the long/string/ezrequest Requesters as the original
 reqtools.library does.
 
