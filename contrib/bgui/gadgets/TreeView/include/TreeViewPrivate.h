@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/08/08 20:23:21  stegerg
+ * added "#define LOCAL static"
+ *
  * Revision 42.4  2000/08/08 14:02:08  chodorowski
  * Removed all REGFUNC, REGPARAM and REG macros. Now includes
  * contrib/bgui/compilerspecific.h where they are defined.
@@ -68,6 +71,8 @@
 
 #include "TreeViewClass.h"
 
+#define LOCAL static
+
 /************************************************************************
 *************************  GLOBAL REFERENCES  ***************************
 ************************************************************************/
@@ -98,7 +103,7 @@ extern void __stdargs KPrintF(char *fmt,...);
 *************************  GLOBAL DEFINITIONS  **************************
 ************************************************************************/
 
- * Members of the treeview are held in this derivation of an Exec
+/* Members of the treeview are held in this derivation of an Exec
  * node. The node's ln_Type is used as a flags field, the flag bits
  * are defined below. The ln_Pri is unused.
  */
