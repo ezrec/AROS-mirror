@@ -52,12 +52,15 @@ struct Library *DiskfontBase = NULL;
 struct Device *ConsoleDevice = NULL;
 struct IOStdReq ioreq;
 
+#ifdef _AROS
+int errno;
+#endif
 
 BOOL PreClassInitFunc( void )
 {
-	if ( LayersBase = OpenLibrary( "layers.library", 37L ) )
+	if ( ( LayersBase = OpenLibrary( "layers.library", 37L ) ) )
 	{
-		if ( DiskfontBase = OpenLibrary( "diskfont.library", 37L ) )
+		if ( ( DiskfontBase = OpenLibrary( "diskfont.library", 37L ) ) )
 		{
 			if ( !OpenDevice( "console.device", -1L, (struct IORequest *)&ioreq, 0L ) )
 			{
