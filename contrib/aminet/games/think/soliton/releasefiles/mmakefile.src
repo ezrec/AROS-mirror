@@ -5,15 +5,13 @@ SOLITONDIR := $(CONTRIBDIR)/aminet/Soliton
 CARDS 		:= Cards_Standard_Medium
 CARDDIR 	:= $(SOLITONDIR)/Graphics
 CARDFILES 	:= $(foreach f, $(CARDS), $(CARDDIR)/$(f).iff)
-PPMCARDFILES 	:= $(foreach f, $(CARDS), $(CARDDIR)/$(f).ppm)
 
 PATTERNS 	:= Pattern_Standard
 PATTERNDIR	:= $(SOLITONDIR)/Graphics
 PATTERNFILES 	:= $(foreach f, $(PATTERNS), $(PATTERNDIR)/$(f).iff)
-PPMPATTERNFILES := $(foreach f, $(PATTERNS), $(PATTERNDIR)/$(f).ppm)
 
 #MM
-aminet-games-think-soliton-releasefiles : setup $(CARDFILES) $(PPMCARDFILES) $(PATTERNFILES) $(PPMPATTERNFILES)
+aminet-games-think-soliton-releasefiles : setup $(CARDFILES) $(PATTERNFILES)
 
 setup :
 	%mkdirs_q $(CARDDIR) $(PATTERNDIR)
@@ -22,14 +20,6 @@ $(CARDDIR)/%.iff : Graphics/%.iff
 	@$(CP) $< $@
 
 
-$(CARDDIR)/%.ppm : Graphics/%.iff
-	@$(IF) $(TEST) -x /usr/bin/ilbmtoppm ; then ilbmtoppm $< >$@ ; fi
-
-   
 $(PATTERNDIR)/%.iff : Graphics/%.iff
 	@$(CP) $< $@
-
-
-$(PATTERNDIR)/%.ppm : Graphics/%.iff
-	@$(IF) $(TEST) -x /usr/bin/ilbmtoppm ; then ilbmtoppm $< >$@ ; fi
 
