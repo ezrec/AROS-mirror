@@ -1,1 +1,2 @@
-make -f Makefile.aros
+make -f Makefile.aros all
+make -f Makefile.aros standard_build

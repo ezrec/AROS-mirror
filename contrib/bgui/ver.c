@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/30 03:24:35  bergers
+ * Changes for build process.
+ *
  * Revision 42.0  2000/05/09 22:10:37  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -35,7 +38,12 @@
  *
  */
 
+#ifdef _AROS
+#include "bgui.library_rev.h"
+#else
 #include "o/bgui.library_rev.h"
+#endif
+
 /*
  * Library ID and name strings.
  */

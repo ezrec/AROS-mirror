@@ -10,6 +10,8 @@ LD = ld
 CP = cp
 RM = rm
 DEFINES = -D_AROS
+MAKE = make
+ECHO = echo
 
 BINDIR = $(TOP)/bin/linux-i386/gen
 LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
@@ -44,27 +46,10 @@ INCLUDE_FILES = \
 	$(INCLUDES_DIR)/clib/bgui_protos.h \
 	$(INCLUDES_DIR)/defines/bgui.h
 
-main_o=o/lib$(o) o/libfunc$(o) o/task$(o) o/request$(o) \
-	o/misc$(o) o/bgui_locale$(o) 
-#o/miscc$(o)
 
-boopsi_o=o/classes$(o) o/dgm$(o) o/rootclass$(o)
-
-#o/arexxclass$(o)
-
-gfx_o=o/gfx$(o) o/blitter$(o) o/textclass$(o) o/strformat$(o)
-
-group_o=o/windowclass$(o) o/groupclass$(o) o/spacingclass$(o) o/pageclass$(o) \
-   o/viewclass$(o) o/externalclass$(o)
-
-image_o=o/frameclass$(o) o/labelclass$(o) o/separatorclass$(o) o/vectorclass$(o) o/systemiclass$(o)
-
-gadget_o=o/baseclass$(o) o/areaclass$(o) o/buttonclass$(o) \
-   o/checkboxclass$(o) o/commodityclass$(o) o/cycleclass$(o) o/indicatorclass$(o) \
-   o/infoclass$(o) o/listclass$(o) o/mxclass$(o) o/progressclass$(o) o/propclass$(o) \
-   o/sliderclass$(o) o/stringclass$(o) o/radiobuttonclass$(o)
-
-asl_o=o/aslreqclass$(o) o/filereqclass$(o) o/fontreqclass$(o) o/screenreqclass$(o)
+standard_build :
+	@$(ECHO) "Making BGUI standard version..."
+	@$(MAKE) -f Makefile.aros build BUILD_TYPE=S
 
 OBJECTS =  \
 	o/plmain$(o) \
@@ -81,6 +66,8 @@ all: makedirs \
 	$(INCLUDE_FILES) \
 	$(OBJECTS)
 
+build: bin/bgui.library.$(BUILD_TYPE)
+#test examples tools
 
 clean:
 	$(RM) $(INCLUDE_FILES) o/*.o
@@ -144,6 +131,49 @@ $(INCLUDES_DIR)/defines/bgui.h : include/aros/bgui_defines.h
 	$(CP) include/aros/bgui_defines.h $@
 
 
+bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
+		o/plmain$(o) \
+		o/plgfx$(o) \
+		o/plboopsi$(o) \
+		o/plimageclasses$(o) \
+		o/plgadgetclasses$(o) \
+		o/plgroupclasses$(o) \
+		o/plaslclasses$(o)
+#	if $(BUILD_TYPE) eq D
+	@$(CC) $(DEFINES) -c ver.c -o o/ver.o
+#	endif
+#	if $(BUILD_TYPE) eq S
+#	@$(CC) $(DEFINES) -c ver.c -o o/ver.o
+#	endif
+#	if $(BUILD_TYPE) eq E
+#	@$(CC) $(DEFINES) -c ver.c -o o/ver.o
+#	endif
+	@$(ECHO) Linking $@...
+	@$(LD) o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
+	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
+	      o/plgroupclasses$(o) -L$(LIBDIR) -laros -o $@
+
+main_o=o/lib$(o) o/libfunc$(o) o/task$(o) o/request$(o) \
+	o/misc$(o) o/bgui_locale$(o) 
+#o/miscc$(o) o/stkext$(o)
+
+boopsi_o=o/classes$(o) o/dgm$(o) o/rootclass$(o)
+#o/arexxclass$(o)
+
+gfx_o=o/gfx$(o) o/blitter$(o) o/textclass$(o) o/strformat$(o)
+
+group_o=o/windowclass$(o) o/groupclass$(o) o/spacingclass$(o) o/pageclass$(o) \
+   o/viewclass$(o) o/externalclass$(o)
+
+image_o=o/frameclass$(o) o/labelclass$(o) o/separatorclass$(o) o/vectorclass$(o) o/systemiclass$(o)
+
+gadget_o=o/baseclass$(o) o/areaclass$(o) o/buttonclass$(o) \
+   o/checkboxclass$(o) o/commodityclass$(o) o/cycleclass$(o) o/indicatorclass$(o) \
+   o/infoclass$(o) o/listclass$(o) o/mxclass$(o) o/progressclass$(o) o/propclass$(o) \
+   o/sliderclass$(o) o/stringclass$(o) o/radiobuttonclass$(o)
+
+asl_o=o/aslreqclass$(o) o/filereqclass$(o) o/fontreqclass$(o) o/screenreqclass$(o)
+
 o/plmain$(o): $(main_o)
 	@echo "Linking $@..."
 	@$(RM) -f $@
@@ -179,6 +209,9 @@ o/plaslclasses$(o) : $(asl_o)
 	@$(RM) -f $@
 	@$(LD) -r $(asl_o) -o $@
 
+o/libtag.o: libtag.c
+	$(CC) $(INCLUDES) -c $^ -o $@
+
 
 o/lib$(o): lib.c
 	$(CC) $(CFLAGS) $(DEFINES) -c lib.c -o $@ 2>&1|tee $@.err
@@ -201,6 +234,8 @@ o/bgui_locale$(o): bgui_locale.c
 o/miscc$(o): miscc.c
 	$(CC) $(CFLAGS) $(DEFINES) -c miscc.c -o $@ 2>&1|tee $@.err
 
+o/stkext$(o): stkext.c
+	$(CC) $(CFLAGS) $(DEFINES) -c miscc.c -o $@ 2>&1|tee $@.err
 
 
 o/classes$(o): classes.c
