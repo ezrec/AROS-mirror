@@ -9,3 +9,5 @@ AROS port by Jack Patton <jpatton@aros.org>
 
 See README.Amiga for notes on functionality.
 
+Note: the configure script is currently broken and disabled. Use the 
+Makefile or Makefile.aros to compile
