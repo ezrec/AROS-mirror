@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: mem.c,v 1.1 2002/05/27 01:20:03 henrik Exp $
+ * $Id: mem.c,v 1.4 2002/02/08 13:30:00 adam Exp $
  */
 
 /*-----------------------------------------------------------------------------------*/
@@ -197,7 +197,9 @@ mem_malloc(mem_size_t size)
     size += MEM_ALIGNMENT - ((size + SIZEOF_STRUCT_MEM) % MEM_ALIGNMENT);
   }
   
-  ASSERT("mem_malloc: size < MEM_SIZE", size < MEM_SIZE);
+  if(size > MEM_SIZE) {
+    return NULL;
+  }
   
   sys_sem_wait(mem_sem);
 

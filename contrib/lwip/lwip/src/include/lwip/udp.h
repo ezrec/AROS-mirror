@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: udp.h,v 1.1.1.1 2002/05/27 00:41:16 henrik Exp $
+ * $Id: udp.h,v 1.4 2002/03/04 10:47:56 adam Exp $
  */
 #ifndef __LWIP_UDP_H__
 #define __LWIP_UDP_H__
@@ -46,9 +46,11 @@
 #define UDP_HLEN 8
 
 struct udp_hdr {
-  u16_t src, dest;  /* src/dest UDP ports */
-  u16_t len, chksum;
-};
+  PACK_STRUCT_FIELD(u16_t src);
+  PACK_STRUCT_FIELD(u16_t dest);  /* src/dest UDP ports */
+  PACK_STRUCT_FIELD(u16_t len);
+  PACK_STRUCT_FIELD(u16_t chksum);
+} PACK_STRUCT_STRUCT;
 
 #define UDP_FLAGS_NOCHKSUM 0x01
 #define UDP_FLAGS_UDPLITE  0x02
@@ -56,8 +58,8 @@ struct udp_hdr {
 struct udp_pcb {
   struct udp_pcb *next;
 
-  struct ip_addr local_ip, dest_ip;
-  u16_t local_port, dest_port;
+  struct ip_addr local_ip, remote_ip;
+  u16_t local_port, remote_port;
   
   u8_t flags;
   u16_t chksum_len;

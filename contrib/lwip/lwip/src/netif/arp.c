@@ -10,11 +10,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright 
  *    notice, this list of conditions and the following disclaimer in the 
  *    documentation and/or other materials provided with the distribution. 
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *      This product includes software developed by the Swedish Institute
- *      of Computer Science and its contributors.
- * 4. Neither the name of the Institute nor the names of its contributors 
+ * 3. Neither the name of the Institute nor the names of its contributors 
  *    may be used to endorse or promote products derived from this software 
  *    without specific prior written permission. 
  *
@@ -34,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: arp.c,v 1.1.1.1 2002/05/27 00:41:13 henrik Exp $
+ * $Id: arp.c,v 1.10 2002/03/18 13:08:47 adam Exp $
  *
  */
 
@@ -43,20 +39,20 @@
 #include "netif/arp.h"
 #include "lwip/ip.h"
 
-#define ARPTABLE_SIZE 10
+#if LWIP_DHCP
+#  include "lwip/dhcp.h"
+#endif
+
+
+#define ARP_MAXAGE 2  /* 120 * 10 seconds = 20 minutes. */
 
 #define HWTYPE_ETHERNET 1
 
 #define ARP_REQUEST 1
 #define ARP_REPLY 2
 
-#ifdef __DJGPP__
-#define PACK_STRUCT_FIELD(x) x __attribute__((packed))
-#else
-#define PACK_STRUCT_FIELD(x) x
-#endif
-
 /* MUST be compiled with "pack structs" or equivalent! */
+PACK_STRUCT_BEGIN
 struct arp_hdr {
   PACK_STRUCT_FIELD(struct eth_hdr ethhdr);
   PACK_STRUCT_FIELD(u16_t hwtype);
@@ -66,28 +62,32 @@ struct arp_hdr {
   PACK_STRUCT_FIELD(struct eth_addr shwaddr);
   PACK_STRUCT_FIELD(struct ip_addr sipaddr);
   PACK_STRUCT_FIELD(struct eth_addr dhwaddr);
-  PACK_STRUCT_FIELD(struct ip_addr dipaddr); 
-};
+  PACK_STRUCT_FIELD(struct ip_addr dipaddr);
+} PACK_STRUCT_STRUCT;
+PACK_STRUCT_END
 
 #define ARPH_HWLEN(hdr) (NTOHS((hdr)->_hwlen_protolen) >> 8)
 #define ARPH_PROTOLEN(hdr) (NTOHS((hdr)->_hwlen_protolen) & 0xff)
 
 
 #define ARPH_HWLEN_SET(hdr, len) (hdr)->_hwlen_protolen = HTONS(ARPH_PROTOLEN(hdr) | ((len) << 8))
-#define ARPH_PROTOLEN_SET(hdr, len) (hdr)->_hwlen_protolen = HTONS((len) | (ARPH_PROTOLEN(hdr) << 8))
+#define ARPH_PROTOLEN_SET(hdr, len) (hdr)->_hwlen_protolen = HTONS((len) | (ARPH_HWLEN(hdr) << 8))
 
+PACK_STRUCT_BEGIN
 struct ethip_hdr {
   PACK_STRUCT_FIELD(struct eth_hdr eth);
   PACK_STRUCT_FIELD(struct ip_hdr ip);
 };
+PACK_STRUCT_END
 
 struct arp_entry {
   struct ip_addr ipaddr;
   struct eth_addr ethaddr;
-  u8_t age;
+  u8_t ctime;
 };
 
-static struct arp_entry arp_table[ARPTABLE_SIZE];
+static struct arp_entry arp_table[ARP_TABLE_SIZE];
+static u8_t ctime;
 
 /*-----------------------------------------------------------------------------------*/
 void
@@ -95,22 +95,38 @@ arp_init(void)
 {
   u8_t i;
   
-  for(i = 0; i < ARPTABLE_SIZE; ++i) {
+  for(i = 0; i < ARP_TABLE_SIZE; ++i) {
     ip_addr_set(&(arp_table[i].ipaddr),
 		IP_ADDR_ANY);
   }
+}
+/*-----------------------------------------------------------------------------------*/
+void
+arp_tmr(void)
+{
+  u8_t i;
+  
+  ++ctime;
+  for(i = 0; i < ARP_TABLE_SIZE; ++i) {
+    if(!ip_addr_isany(&arp_table[i].ipaddr) &&       
+       ctime - arp_table[i].ctime >= ARP_MAXAGE) {
+      DEBUGF(ARP_DEBUG, ("arp_timer: expired entry %d.\n", i));
+      ip_addr_set(&(arp_table[i].ipaddr),
+		  IP_ADDR_ANY);
+    }
+  }  
 }
 /*-----------------------------------------------------------------------------------*/
 static void
 add_arp_entry(struct ip_addr *ipaddr, struct eth_addr *ethaddr)
 {
   u8_t i, j, k;
-  u8_t maxage;
+  u8_t maxtime;
   
   /* Walk through the ARP mapping table and try to find an entry to
      update. If none is found, the IP -> MAC address mapping is
      inserted in the ARP table. */
-  for(i = 0; i < ARPTABLE_SIZE; ++i) {
+  for(i = 0; i < ARP_TABLE_SIZE; ++i) {
     
     /* Only check those entries that are actually in use. */
     if(!ip_addr_isany(&arp_table[i].ipaddr)) {
@@ -121,7 +137,7 @@ add_arp_entry(struct ip_addr *ipaddr, struct eth_addr *ethaddr)
 	for(k = 0; k < 6; ++k) {
 	  arp_table[i].ethaddr.addr[k] = ethaddr->addr[k];
 	}
-	arp_table[i].age = 0;
+	arp_table[i].ctime = ctime;
 	return;
       }
     }
@@ -131,7 +147,7 @@ add_arp_entry(struct ip_addr *ipaddr, struct eth_addr *ethaddr)
      create one. */
 
   /* First, we try to find an unused entry in the ARP table. */
-  for(i = 0; i < ARPTABLE_SIZE; ++i) {
+  for(i = 0; i < ARP_TABLE_SIZE; ++i) {
     if(ip_addr_isany(&arp_table[i].ipaddr)) {
       break;
     }
@@ -139,12 +155,12 @@ add_arp_entry(struct ip_addr *ipaddr, struct eth_addr *ethaddr)
 
   /* If no unused entry is found, we try to find the oldest entry and
      throw it away. */
-  if(i == ARPTABLE_SIZE) {
-    maxage = 0;
+  if(i == ARP_TABLE_SIZE) {
+    maxtime = 0;
     j = 0;
-    for(i = 0; i < ARPTABLE_SIZE; ++i) {
-      if(arp_table[i].age > maxage) {
-	maxage = arp_table[i].age;
+    for(i = 0; i < ARP_TABLE_SIZE; ++i) {
+      if(ctime - arp_table[i].ctime > maxtime) {
+	maxtime = ctime - arp_table[i].ctime;
 	j = i;
       }
     }
@@ -157,7 +173,7 @@ add_arp_entry(struct ip_addr *ipaddr, struct eth_addr *ethaddr)
   for(k = 0; k < 6; ++k) {
     arp_table[i].ethaddr.addr[k] = ethaddr->addr[k];
   }
-  arp_table[i].age = 0;
+  arp_table[i].ctime = ctime;
   return;
 
 }
@@ -210,6 +226,12 @@ arp_arp_input(struct netif *netif, struct eth_addr *ethaddr, struct pbuf *p)
 	hdr->ethhdr.src.addr[i] = ethaddr->addr[i];
       }
 
+      hdr->hwtype = htons(HWTYPE_ETHERNET);
+      ARPH_HWLEN_SET(hdr, 6);
+      
+      hdr->proto = htons(ETHTYPE_IP);
+      ARPH_PROTOLEN_SET(hdr, sizeof(struct ip_addr));      
+      
       hdr->ethhdr.type = htons(ETHTYPE_ARP);      
       return p;
     }
@@ -219,6 +241,9 @@ arp_arp_input(struct netif *netif, struct eth_addr *ethaddr, struct pbuf *p)
     DEBUGF(ARP_DEBUG, ("arp_arp_input: ARP reply\n"));
     if(ip_addr_cmp(&(hdr->dipaddr), &(netif->ip_addr))) {
       add_arp_entry(&(hdr->sipaddr), &(hdr->shwaddr));
+#if (LWIP_DHCP && DHCP_DOES_ARP_CHECK)
+      dhcp_arp_reply(&hdr->sipaddr);
+#endif      
     }
     break;
   default:
@@ -235,7 +260,7 @@ arp_lookup(struct ip_addr *ipaddr)
 {
   u8_t i;
   
-  for(i = 0; i < ARPTABLE_SIZE; ++i) {
+  for(i = 0; i < ARP_TABLE_SIZE; ++i) {
     if(ip_addr_cmp(ipaddr, &arp_table[i].ipaddr)) {
       return &arp_table[i].ethaddr;
     }
@@ -246,7 +271,6 @@ arp_lookup(struct ip_addr *ipaddr)
 struct pbuf *
 arp_query(struct netif *netif, struct eth_addr *ethaddr, struct ip_addr *ipaddr)
 {
-  /* Not implemented yet. */
   struct arp_hdr *hdr;
   struct pbuf *p;
   u8_t i;
@@ -261,7 +285,7 @@ arp_query(struct netif *netif, struct eth_addr *ethaddr, struct ip_addr *ipaddr)
   hdr->opcode = htons(ARP_REQUEST);
 
   for(i = 0; i < 6; ++i) {
-    hdr->dhwaddr.addr[i] = 0xff;
+    hdr->dhwaddr.addr[i] = 0x00;
     hdr->shwaddr.addr[i] = ethaddr->addr[i];
   }
   

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: netif.c,v 1.1 2002/05/27 01:20:03 henrik Exp $
+ * $Id: netif.c,v 1.2 2002/02/08 13:30:00 adam Exp $
  */
 
 #include "lwip/debug.h"
@@ -135,5 +135,11 @@ netif_set_default(struct netif *netif)
   netif_default = netif;
   DEBUGF(NETIF_DEBUG, ("netif: setting default interface %c%c\n",
 		       netif->name[0], netif->name[1]));
+}
+/*-----------------------------------------------------------------------------------*/
+void
+netif_init(void)
+{
+  netif_list = netif_default = NULL;
 }
 /*-----------------------------------------------------------------------------------*/

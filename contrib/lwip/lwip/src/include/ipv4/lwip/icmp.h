@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: icmp.h,v 1.1.1.1 2002/05/27 00:41:16 henrik Exp $
+ * $Id: icmp.h,v 1.2 2002/03/04 10:47:56 adam Exp $
  */
 #ifndef __LWIP_ICMP_H__
 #define __LWIP_ICMP_H__
@@ -74,25 +74,25 @@ void icmp_dest_unreach(struct pbuf *p, enum icmp_dur_type t);
 void icmp_time_exceeded(struct pbuf *p, enum icmp_te_type t);
 
 struct icmp_echo_hdr {
-  u16_t _type_code;
-  u16_t chksum;
-  u16_t id;
-  u16_t seqno;
-};
+  PACK_STRUCT_FIELD(u16_t _type_code);
+  PACK_STRUCT_FIELD(u16_t chksum);
+  PACK_STRUCT_FIELD(u16_t id);
+  PACK_STRUCT_FIELD(u16_t seqno);
+} PACK_STRUCT_STRUCT;
 
 
 
 struct icmp_dur_hdr {
-  u16_t _type_code;
-  u16_t chksum;
-  u32_t unused;
-};
+  PACK_STRUCT_FIELD(u16_t _type_code);
+  PACK_STRUCT_FIELD(u16_t chksum);
+  PACK_STRUCT_FIELD(u32_t unused);
+} PACK_STRUCT_STRUCT;
 
 struct icmp_te_hdr {
-  u16_t _type_code;
-  u16_t chksum;
-  u32_t unused;
-};
+  PACK_STRUCT_FIELD(u16_t _type_code);
+  PACK_STRUCT_FIELD(u16_t chksum);
+  PACK_STRUCT_FIELD(u32_t unused);
+} PACK_STRUCT_STRUCT;
 
 #define ICMPH_TYPE(hdr) (NTOHS((hdr)->_type_code) >> 8)
 #define ICMPH_CODE(hdr) (NTOHS((hdr)->_type_code) & 0xff)

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: pbuf.c,v 1.1 2002/05/27 01:20:03 henrik Exp $
+ * $Id: pbuf.c,v 1.6 2002/03/04 10:47:56 adam Exp $
  */
 
 /*-----------------------------------------------------------------------------------*/
@@ -521,6 +521,26 @@ pbuf_free(struct pbuf *p)
   return count;
 }
 /*-----------------------------------------------------------------------------------*/
+/* pbuf_clen():
+ *
+ * Returns the length of the pbuf chain.
+ */
+/*-----------------------------------------------------------------------------------*/
+u8_t
+pbuf_clen(struct pbuf *p)
+{
+  u8_t len;
+
+  if(p == NULL) {
+    return 0;
+  }
+  
+  for(len = 0; p != NULL; p = p->next) {
+    ++len;
+  }
+  return len;
+}
+/*-----------------------------------------------------------------------------------*/
 /* pbuf_ref():
  *
  * Increments the reference count of the pbuf.
@@ -563,6 +583,9 @@ pbuf_dechain(struct pbuf *p)
   struct pbuf *q;
   
   q = p->next;
+  if (q != NULL) {
+    q->tot_len = p->tot_len - p->len;
+  }
   p->tot_len = p->len;
   p->next = NULL;
   return q;

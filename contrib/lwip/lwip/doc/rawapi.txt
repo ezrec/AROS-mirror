@@ -2,7 +2,7 @@ Raw TCP/IP interface for lwIP 0.5
 
 Author: Adam Dunkels
 
-$Id: rawapi.txt,v 1.1.1.1 2002/05/27 00:41:17 henrik Exp $
+$Id: rawapi.txt,v 1.1 2001/12/12 10:00:52 adam Exp $
 
 lwIP provides two Application Program's Interfaces (APIs) for programs
 to use for communication with the TCP/IP code: the sequential API

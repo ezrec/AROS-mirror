@@ -1,3 +1,87 @@
+(0.5.3) Changes since version 0.5.2
+
+  ++ Bugfixes:
+
+  * memp_malloc(MEMP_API_MSG) could fail with multiple application
+    threads because it wasn't protected by semaphores.
+
+  ++ Other changes:
+
+  * struct ip_addr now packed.
+
+  * The name of the time variable in arp.c has been changed to ctime
+    to avoid conflicts with the time() function.
+
+(0.5.2) Changes since version 0.5.1
+
+  ++ New features:
+
+  * A new TCP function, tcp_tmr(), now handles both TCP timers.
+
+  ++ Bugfixes:
+
+  * A bug in tcp_parseopt() could cause the stack to hang because of a
+    malformed TCP option.
+
+  * The address of new connections in the accept() function in the BSD
+    socket library was not handled correctly.
+
+  * pbuf_dechain() did not update the ->tot_len field of the tail.
+
+  * Aborted TCP connections were not handled correctly in all
+    situations. 
+
+  ++ Other changes:
+
+  * All protocol header structs are now packed.
+
+  * The ->len field in the tcp_seg structure now counts the actual
+    amount of data, and does not add one for SYN and FIN segments.
+    
+(0.5.1) Changes since version 0.5.0
+
+  ++ New features:
+
+  * Possible to run as a user process under Linux.
+
+  * Preliminary support for cross platform packed structs.
+
+  * ARP timer now implemented.
+  
+  ++ Bugfixes:
+
+  * TCP output queue length was badly initialized when opening
+    connections.
+
+  * TCP delayed ACKs were not sent correctly.
+  
+  * Explicit initialization of BSS segment variables.
+  
+  * read() in BSD socket library could drop data.
+
+  * Problems with memory alignment.
+
+  * Situations when all TCP buffers were used could lead to
+    starvation.
+
+  * TCP MSS option wasn't parsed correctly.
+
+  * Problems with UDP checksum calculation.
+
+  * IP multicast address tests had endianess problems.
+
+  * ARP requests had wrong destination hardware address. 
+
+  ++ Other changes:
+
+  * struct eth_addr changed from u16_t[3] array to u8_t[6].
+
+  * A ->linkoutput() member was added to struct netif.
+
+  * TCP and UDP ->dest_* struct members where changed to ->remote_*.
+
+  * ntoh* macros are now null definitions for big endian CPUs. 
+  
 (0.5.0) Changes since version 0.4.2
 
   ++ New features:

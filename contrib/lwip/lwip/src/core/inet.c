@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: inet.c,v 1.2 2002/06/10 11:11:47 chodorowski Exp $
+ * $Id: inet.c,v 1.4 2002/02/15 23:00:52 adam Exp $
  */
 
 /*-----------------------------------------------------------------------------------*/
@@ -49,6 +49,7 @@
 #include "lwip/def.h"
 #include "lwip/inet.h"
 
+
 /*-----------------------------------------------------------------------------------*/
 /* chksum:
  *
@@ -65,7 +66,7 @@ chksum(void *dataptr, int len)
   u32_t acc;
     
   for(acc = 0; len > 1; len -= 2) {
-  	u16_t *dat = (u16_t *)dataptr;
+    u16_t *dat = (u16_t *)dataptr;
     acc += *dat++;
   }
 

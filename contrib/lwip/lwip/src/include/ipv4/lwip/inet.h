@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: inet.h,v 1.1.1.1 2002/05/27 00:41:17 henrik Exp $
+ * $Id: inet.h,v 1.4 2002/01/23 10:53:48 adam Exp $
  */
 #ifndef __LWIP_INET_H__
 #define __LWIP_INET_H__
@@ -41,7 +41,7 @@
 #include "lwip/pbuf.h"
 #include "lwip/ip_addr.h"
 
-u16_t inet_chksum(void *data, u16_t len);
+u16_t inet_chksum(void *dataptr, u16_t len);
 u16_t inet_chksum_pbuf(struct pbuf *p);
 u16_t inet_chksum_pseudo(struct pbuf *p,
 			 struct ip_addr *src, struct ip_addr *dest,
@@ -69,10 +69,17 @@ u16_t inet_chksum_pseudo(struct pbuf *p,
 #   endif /* BYTE_ORDER == BIG_ENDIAN */
 #endif /* HTONS */
 
-
-#ifndef NTOHS
-#   define NTOHS HTONS
+#ifdef NTOHS
+#undef NTOHS
 #endif /* NTOHS */
+
+#ifdef ntohs
+#undef ntohs
+#endif /* ntohs */
+
+#define NTOHS HTONS
+#define ntohs htons
+
 
 #ifndef HTONL
 #   if BYTE_ORDER == BIG_ENDIAN
@@ -86,11 +93,16 @@ u16_t inet_chksum_pseudo(struct pbuf *p,
 #   endif /* BYTE_ORDER == BIG_ENDIAN */
 #endif /* HTONL */
 
-#ifndef NTOHL
-#   define NTOHL HTONL
+#ifdef ntohl
+#undef ntohl
+#endif /* ntohl */
+
+#ifdef NTOHL
+#undef NTOHL
 #endif /* NTOHL */
 
-
+#define NTOHL HTONL
+#define ntohl htonl
 
 #ifndef _MACHINE_ENDIAN_H_
 #ifndef _NETINET_IN_H
@@ -98,9 +110,8 @@ u16_t inet_chksum_pseudo(struct pbuf *p,
 
 #if BYTE_ORDER == LITTLE_ENDIAN
 u16_t htons(u16_t n);
-u16_t ntohs(u16_t n);
 u32_t htonl(u32_t n);
-u32_t ntohl(u32_t n);
+#else
 #endif /* BYTE_ORDER == LITTLE_ENDIAN */
 
 #endif /* _LINUX_BYTEORDER_GENERIC_H */

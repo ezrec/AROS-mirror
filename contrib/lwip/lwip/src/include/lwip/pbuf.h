@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: pbuf.h,v 1.1.1.1 2002/05/27 00:41:14 henrik Exp $
+ * $Id: pbuf.h,v 1.2 2002/01/23 10:54:00 adam Exp $
  */
 /*-----------------------------------------------------------------------------------*/
 #ifndef __LWIP_PBUF_H__
@@ -131,6 +131,10 @@ void pbuf_ref(struct pbuf *p);
    chain are deallocated.  */
 u8_t pbuf_free(struct pbuf *p);
 
+/* pbuf_clen():
+
+   Returns the length of the pbuf chain. */
+u8_t pbuf_clen(struct pbuf *p);  
 
 /* pbuf_chain():
 

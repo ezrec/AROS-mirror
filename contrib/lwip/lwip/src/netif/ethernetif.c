@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: ethernetif.c,v 1.1.1.1 2002/05/27 00:41:13 henrik Exp $
+ * $Id: ethernetif.c,v 1.5 2002/02/08 13:30:01 adam Exp $
  */
 
 /*
@@ -309,6 +309,13 @@ ethernetif_input(struct netif *netif)
   }
 }
 /*-----------------------------------------------------------------------------------*/
+static void
+arp_timer(void *arg)
+{
+  arp_tmr();
+  sys_timeout(ARP_TMR_INTERVAL, (sys_timeout_handler)arp_timer, NULL);
+}
+/*-----------------------------------------------------------------------------------*/
 /*
  * ethernetif_init():
  *
@@ -328,10 +335,13 @@ ethernetif_init(struct netif *netif)
   netif->name[0] = IFNAME0;
   netif->name[1] = IFNAME1;
   netif->output = ethernetif_output;
+  netif->linkoutput = low_level_output;
   
   ethernetif->ethaddr = (struct eth_addr *)&(netif->hwaddr[0]);
   
   low_level_init(netif);
-  arp_init();  
+  arp_init();
+
+  sys_timeout(ARP_TMR_INTERVAL, (sys_timeout_handler)arp_timer, NULL);
 }
 /*-----------------------------------------------------------------------------------*/

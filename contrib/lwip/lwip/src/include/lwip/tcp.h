@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: tcp.h,v 1.1.1.1 2002/05/27 00:41:16 henrik Exp $
+ * $Id: tcp.h,v 1.6 2002/03/04 10:47:56 adam Exp $
  */
 #ifndef __LWIP_TCP_H__
 #define __LWIP_TCP_H__
@@ -54,11 +54,9 @@ struct tcp_pcb;
 /* Lower layer interface to TCP: */
 void             tcp_init    (void);  /* Must be called first to
 					 initialize TCP. */
-void             tcp_slowtmr (void);  /* Must be called every
-					 TCP_SLOW_INTERVAL ms. */
-void             tcp_fasttmr (void);  /* Must be called every
-					 TCP_FAST_INTERVAL ms. */
-
+void             tcp_tmr     (void);  /* Must be called every
+					 TCP_TMR_INTERVAL
+					 ms. (Typically 100 ms). */
 /* Application program's interface: */
 struct tcp_pcb * tcp_new     (void);
 
@@ -93,6 +91,12 @@ err_t            tcp_close   (struct tcp_pcb *pcb);
 err_t            tcp_write   (struct tcp_pcb *pcb, const void *dataptr, u16_t len,
 			      u8_t copy);
 
+/* It is also possible to call these two functions at the right
+   intervals (instead of calling tcp_tmr()). */
+void             tcp_slowtmr (void);
+void             tcp_fasttmr (void);
+
+
 /* Only used by IP to pass a TCP segment to TCP: */
 void             tcp_input   (struct pbuf *p, struct netif *inp);
 /* Used within the TCP code only: */
@@ -116,6 +120,9 @@ err_t            tcp_output  (struct tcp_pcb *pcb);
 /* Length of the TCP header, excluding options. */
 #define TCP_HLEN 20
 
+#define TCP_TMR_INTERVAL       100  /* The TCP timer interval in
+				       milliseconds. */
+
 #define TCP_FAST_INTERVAL      200  /* the fine grained timeout in
 				       milliseconds */
 #define TCP_SLOW_INTERVAL      500  /* the coarse grained timeout in
@@ -127,32 +134,25 @@ err_t            tcp_output  (struct tcp_pcb *pcb);
 
 #define TCP_MSL 60000  /* The maximum segment lifetime in microseconds */
 
-#if 0
 struct tcp_hdr {
-  u16_t src, dest;
-  u32_t seqno, ackno;
-  u8_t offset;
-  u8_t flags;
-  u16_t wnd;
-  u16_t chksum;
-  u16_t urgp;
-};
-#endif /* 0 */
-
-struct tcp_hdr {
-  u16_t src, dest;
-  u32_t seqno, ackno;
-  u16_t _offset_flags;
-  u16_t wnd;
-  u16_t chksum;
-  u16_t urgp;
-};
+  PACK_STRUCT_FIELD(u16_t src);
+  PACK_STRUCT_FIELD(u16_t dest);
+  PACK_STRUCT_FIELD(u32_t seqno);
+  PACK_STRUCT_FIELD(u32_t ackno);
+  PACK_STRUCT_FIELD(u16_t _offset_flags);
+  PACK_STRUCT_FIELD(u16_t wnd);
+  PACK_STRUCT_FIELD(u16_t chksum);
+  PACK_STRUCT_FIELD(u16_t urgp);
+} PACK_STRUCT_STRUCT;
 
 #define TCPH_OFFSET(hdr) (NTOHS((hdr)->_offset_flags) >> 8)
 #define TCPH_FLAGS(hdr) (NTOHS((hdr)->_offset_flags) & 0xff)
 
 #define TCPH_OFFSET_SET(hdr, offset) (hdr)->_offset_flags = HTONS(((offset) << 8) | TCPH_FLAGS(hdr))
 #define TCPH_FLAGS_SET(hdr, flags) (hdr)->_offset_flags = HTONS((TCPH_OFFSET(hdr) << 8) | (flags))
+
+#define TCP_TCPLEN(seg) ((seg)->len + ((TCPH_FLAGS((seg)->tcphdr) & TCP_FIN || \
+					TCPH_FLAGS((seg)->tcphdr) & TCP_SYN)? 1: 0))
 
 enum tcp_state {
   CLOSED      = 0,
@@ -183,8 +183,8 @@ struct tcp_pcb {
   struct ip_addr local_ip;
   u16_t local_port;
   
-  struct ip_addr dest_ip;
-  u16_t dest_port;
+  struct ip_addr remote_ip;
+  u16_t remote_port;
   
   /* receiver varables */
   u32_t rcv_nxt;   /* next seqno expected */
@@ -199,11 +199,12 @@ struct tcp_pcb {
   u16_t mss;   /* maximum segment size */
 
   u8_t flags;
-#define TF_ACK_NEXT 0x01   /* Delayed ACK. */
-#define TF_INFR     0x02   /* In fast recovery. */
-#define TF_RESET    0x04   /* Connection was reset. */
-#define TF_CLOSED   0x08   /* Connection was sucessfully closed. */
-#define TF_GOT_FIN  0x10   /* Connection was closed by the remote end. */
+#define TF_ACK_DELAY 0x01   /* Delayed ACK. */
+#define TF_ACK_NOW   0x02   /* Immediate ACK. */
+#define TF_INFR      0x04   /* In fast recovery. */
+#define TF_RESET     0x08   /* Connection was reset. */
+#define TF_CLOSED    0x10   /* Connection was sucessfully closed. */
+#define TF_GOT_FIN   0x20   /* Connection was closed by the remote end. */
   
   /* RTT estimation variables. */
   u16_t rttest; /* RTT estimate in 500ms ticks */
@@ -291,17 +292,14 @@ u8_t tcp_segs_free(struct tcp_seg *seg);
 u8_t tcp_seg_free(struct tcp_seg *seg);
 struct tcp_seg *tcp_seg_copy(struct tcp_seg *seg);
 
-#define tcp_ack(pcb)     if((pcb)->flags & TF_ACK_NEXT) { \
-                            tcp_send_ctrl((pcb), TCP_ACK); \
-                            (pcb)->flags &= ~TF_ACK_NEXT; \
+#define tcp_ack(pcb)     if((pcb)->flags & TF_ACK_DELAY) { \
+                            (pcb)->flags |= TF_ACK_NOW; \
+                            tcp_output(pcb); \
                          } else { \
-                            (pcb)->flags |= TF_ACK_NEXT; \
+                            (pcb)->flags |= TF_ACK_DELAY; \
                          }
 
-#define tcp_ack_now(pcb) tcp_send_ctrl((pcb), TCP_ACK); \
-                         if((pcb)->flags & TF_ACK_NEXT) { \
-                            (pcb)->flags &= ~TF_ACK_NEXT; \
-                         } \
+#define tcp_ack_now(pcb) (pcb)->flags |= TF_ACK_NOW; \
                          tcp_output(pcb)
 
 err_t tcp_send_ctrl(struct tcp_pcb *pcb, u8_t flags);
@@ -312,14 +310,14 @@ err_t tcp_enqueue(struct tcp_pcb *pcb, void *dataptr, u16_t len,
 void tcp_rexmit_seg(struct tcp_pcb *pcb, struct tcp_seg *seg);
 
 void tcp_rst(u32_t seqno, u32_t ackno,
-	     struct ip_addr *local_ip, struct ip_addr *dest_ip,
-	     u16_t local_port, u16_t dest_port);
+	     struct ip_addr *local_ip, struct ip_addr *remote_ip,
+	     u16_t local_port, u16_t remote_port);
 
 u32_t tcp_next_iss(void);
 
 extern u32_t tcp_ticks;
 
-#if TCP_DEBUG
+#if TCP_DEBUG || TCP_INPUT_DEBUG || TCP_OUTPUT_DEBUG
 void tcp_debug_print(struct tcp_hdr *tcphdr);
 void tcp_debug_print_flags(u8_t flags);
 void tcp_debug_print_state(enum tcp_state s);

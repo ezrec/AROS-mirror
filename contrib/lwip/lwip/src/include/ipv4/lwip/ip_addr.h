@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: ip_addr.h,v 1.1.1.1 2002/05/27 00:41:17 henrik Exp $
+ * $Id: ip_addr.h,v 1.4 2002/03/18 13:08:47 adam Exp $
  */
 #ifndef __LWIP_IP_ADDR_H__
 #define __LWIP_IP_ADDR_H__
@@ -41,9 +41,11 @@
 
 #define IP_ADDR_BROADCAST (&ip_addr_broadcast)
 
+PACK_STRUCT_BEGIN
 struct ip_addr {
-  u32_t addr;
-};
+  PACK_STRUCT_FIELD(u32_t addr);
+} PACK_STRUCT_STRUCT;
+PACK_STRUCT_END
 
 extern struct ip_addr ip_addr_broadcast;
 
@@ -67,7 +69,7 @@ extern struct ip_addr ip_addr_broadcast;
                                          ((addr1)->addr == 0x00000000))
 
 
-#define ip_addr_ismulticast(addr1) (((addr1)->addr & 0xf0000000) == 0xe0000000)
+#define ip_addr_ismulticast(addr1) (((addr1)->addr & ntohl(0xf0000000)) == ntohl(0xe0000000))
 				   
 
 #define ip_addr_debug_print(ipaddr) DEBUGF(LWIP_DEBUG, ("%d.%d.%d.%d", \

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: tcp.c,v 1.1 2002/05/27 01:20:03 henrik Exp $
+ * $Id: tcp.c,v 1.14 2002/03/04 10:47:56 adam Exp $
  */
 
 /*-----------------------------------------------------------------------------------*/
@@ -54,7 +54,7 @@
 /* Incremented every coarse grained timer shot
    (typically every 500 ms, determined by TCP_COARSE_TIMEOUT). */
 u32_t tcp_ticks;
-u8_t tcp_backoff[13] =
+const u8_t tcp_backoff[13] =
     { 1, 2, 4, 8, 16, 32, 64, 64, 64, 64, 64, 64, 64 };
 
 /* The TCP PCB lists. */
@@ -68,6 +68,74 @@ struct tcp_pcb *tcp_tmp_pcb;
 
 #define MIN(x,y) (x) < (y)? (x): (y)
 
+#if MEMP_RECLAIM
+static u8_t tcp_memp_reclaim(void *arg, memp_t type);
+#endif
+#if MEM_RECLAIM
+static mem_size_t tcp_mem_reclaim(void *arg, mem_size_t size);
+#endif
+
+static u8_t tcp_timer;
+
+/*-----------------------------------------------------------------------------------*/
+/*
+ * tcp_init():
+ *
+ * Initializes the TCP layer.
+ */
+/*-----------------------------------------------------------------------------------*/
+void
+tcp_init(void)
+{
+  /* Clear globals. */
+  tcp_listen_pcbs = NULL;
+  tcp_active_pcbs = NULL;
+  tcp_tw_pcbs = NULL;
+  tcp_tmp_pcb = NULL;
+  
+  /* Register memory reclaim function */
+#if MEM_RECLAIM
+  mem_register_reclaim((mem_reclaim_func)tcp_mem_reclaim, NULL);
+#endif /* MEM_RECLAIM */
+
+#if MEMP_RECLAIM
+  memp_register_reclaim(MEMP_PBUF, (memp_reclaim_func)tcp_memp_reclaim, NULL);
+  memp_register_reclaim(MEMP_TCP_SEG, (memp_reclaim_func)tcp_memp_reclaim, NULL);
+  memp_register_reclaim(MEMP_TCP_PCB, (memp_reclaim_func)tcp_memp_reclaim, NULL);
+#endif /* MEMP_RECLAIM */
+
+  /* initialize timer */
+  tcp_ticks = 0;
+  tcp_timer = 0;
+  
+}
+/*-----------------------------------------------------------------------------------*/
+/*
+ * tcp_tmr():
+ *
+ * Called periodically to dispatch TCP timers.
+ *
+ */
+/*-----------------------------------------------------------------------------------*/
+void
+tcp_tmr()
+{
+  ++tcp_timer;
+  if(tcp_timer == 10) {
+    tcp_timer = 0;
+  }
+  
+  if(tcp_timer & 1) {
+    /* Call tcp_fasttmr() every 200 ms, i.e., every other timer
+       tcp_tmr() is called. */
+    tcp_fasttmr();
+  }
+  if(tcp_timer == 0 || tcp_timer == 5) {
+    /* Call tcp_slowtmr() every 500 ms, i.e., every fifth timer
+       tcp_tmr() is called. */
+    tcp_slowtmr();
+  }
+}
 /*-----------------------------------------------------------------------------------*/
 /*
  * tcp_close():
@@ -143,8 +211,8 @@ void
 tcp_abort(struct tcp_pcb *pcb)
 {
   u32_t seqno, ackno;
-  u16_t dest_port, local_port;
-  struct ip_addr dest_ip, local_ip;
+  u16_t remote_port, local_port;
+  struct ip_addr remote_ip, local_ip;
   void (* errf)(void *arg, err_t err);
   void *errf_arg;
 
@@ -162,9 +230,9 @@ tcp_abort(struct tcp_pcb *pcb)
     seqno = pcb->snd_nxt;
     ackno = pcb->rcv_nxt;
     ip_addr_set(&local_ip, &(pcb->local_ip));
-    ip_addr_set(&dest_ip, &(pcb->dest_ip));
+    ip_addr_set(&remote_ip, &(pcb->remote_ip));
     local_port = pcb->local_port;
-    dest_port = pcb->dest_port;
+    remote_port = pcb->remote_port;
     errf = pcb->errf;
     errf_arg = pcb->callback_arg;
     tcp_pcb_remove(&tcp_active_pcbs, pcb);
@@ -173,7 +241,7 @@ tcp_abort(struct tcp_pcb *pcb)
       errf(errf_arg, ERR_ABRT);
     }
     DEBUGF(TCP_RST_DEBUG, ("tcp_abort: sending RST\n"));
-    tcp_rst(seqno, ackno, &local_ip, &dest_ip, local_port, dest_port);
+    tcp_rst(seqno, ackno, &local_ip, &remote_ip, local_port, remote_port);
   }
 }
 /*-----------------------------------------------------------------------------------*/
@@ -258,7 +326,10 @@ tcp_recved(struct tcp_pcb *pcb, u16_t len)
   if(pcb->rcv_wnd > TCP_WND) {
     pcb->rcv_wnd = TCP_WND;
   }
-  tcp_ack(pcb);
+  if(!(pcb->flags & TF_ACK_DELAY) ||
+     !(pcb->flags & TF_ACK_NOW)) {
+    tcp_ack(pcb);
+  }
   DEBUGF(TCP_DEBUG, ("tcp_recved: recveived %d bytes, wnd %u (%u).\n",
 		     len, pcb->rcv_wnd, TCP_WND - pcb->rcv_wnd));
 }
@@ -270,7 +341,7 @@ tcp_recved(struct tcp_pcb *pcb, u16_t len)
  * new TCP local port.
  */
 /*-----------------------------------------------------------------------------------*/
-static unsigned short 
+static u16_t
 tcp_new_port(void)
 {
   struct tcp_pcb *pcb;
@@ -317,12 +388,14 @@ tcp_connect(struct tcp_pcb *pcb, struct ip_addr *ipaddr, u16_t port,
 
   DEBUGF(TCP_DEBUG, ("tcp_connect to port %d\n", port));
   if(ipaddr != NULL) {
-    pcb->dest_ip = *ipaddr;
+    pcb->remote_ip = *ipaddr;
   } else {
     return ERR_VAL;
   }
-  pcb->dest_port = port;
-  pcb->local_port = tcp_new_port();
+  pcb->remote_port = port;
+  if(pcb->local_port == 0) {
+    pcb->local_port = tcp_new_port();
+  }
   iss = tcp_next_iss();
   pcb->rcv_nxt = 0;
   pcb->snd_nxt = iss;
@@ -338,9 +411,9 @@ tcp_connect(struct tcp_pcb *pcb, struct ip_addr *ipaddr, u16_t port,
   TCP_REG(&tcp_active_pcbs, pcb);
   
   /* Build an MSS option */
-  optdata = HTONL((2 << 24) | 
-		  (4 << 16) | 
-		  ((pcb->mss / 256) << 8) |
+  optdata = HTONL(((u32_t)2 << 24) | 
+		  ((u32_t)4 << 16) | 
+		  (((u32_t)pcb->mss / 256) << 8) |
 		  (pcb->mss & 255));
 
   ret = tcp_enqueue(pcb, NULL, 0, TCP_SYN, 0, (u8_t *)&optdata, 4);
@@ -351,7 +424,7 @@ tcp_connect(struct tcp_pcb *pcb, struct ip_addr *ipaddr, u16_t port,
 } 
 /*-----------------------------------------------------------------------------------*/
 /*
- * tcp_timer_coarse():
+ * tcp_slowtmr():
  *
  * Called every 500 ms and implements the retransmission timer and the timer that
  * removes PCBs that have been in TIME-WAIT for enough time. It also increments
@@ -405,6 +478,8 @@ tcp_slowtmr(void)
           seg->next = NULL;
           pcb->snd_nxt = ntohl(pcb->unsent->tcphdr->seqno);
         }
+
+	/* Do the actual retransmission. */
         tcp_rexmit_seg(pcb, seg);
 
         /* Reduce congestion window and ssthresh. */
@@ -523,7 +598,7 @@ tcp_slowtmr(void)
 }
 /*-----------------------------------------------------------------------------------*/
 /*
- * tcp_timer_fine():
+ * tcp_fasttmr():
  *
  * Is called every TCP_FINE_TIMEOUT (100 ms) and sends delayed ACKs.
  */
@@ -535,11 +610,10 @@ tcp_fasttmr(void)
 
   /* send delayed ACKs */  
   for(pcb = tcp_active_pcbs; pcb != NULL; pcb = pcb->next) {
-    if(pcb->flags & TF_ACK_NEXT) {
-      pcb->flags &= ~TF_ACK_NEXT;
-      tcp_send_ctrl(pcb, TCP_ACK);
-      tcp_output(pcb);
+    if(pcb->flags & TF_ACK_DELAY) {
       DEBUGF(TCP_DEBUG, ("tcp_timer_fine: delayed ACK\n"));
+      tcp_ack_now(pcb);
+      pcb->flags &= ~(TF_ACK_DELAY | TF_ACK_NOW);
     }
   }
 }
@@ -762,31 +836,6 @@ tcp_memp_reclaim(void *arg, memp_t type)
 #endif /* MEM_RECLAIM */
 /*-----------------------------------------------------------------------------------*/
 /*
- * tcp_init():
- *
- * Initializes the TCP layer.
- */
-/*-----------------------------------------------------------------------------------*/
-void
-tcp_init(void)
-{
-  /* Register memory reclaim function */
-#if MEM_RECLAIM
-  mem_register_reclaim((mem_reclaim_func)tcp_mem_reclaim, NULL);
-#endif /* MEM_RECLAIM */
-
-#if MEMP_RECLAIM
-  memp_register_reclaim(MEMP_PBUF, (memp_reclaim_func)tcp_memp_reclaim, NULL);
-  memp_register_reclaim(MEMP_TCP_SEG, (memp_reclaim_func)tcp_memp_reclaim, NULL);
-  memp_register_reclaim(MEMP_TCP_PCB, (memp_reclaim_func)tcp_memp_reclaim, NULL);
-#endif /* MEMP_RECLAIM */
-
-  /* initialize timer */
-  tcp_ticks = 0;
-
-}
-/*-----------------------------------------------------------------------------------*/
-/*
  * tcp_arg():
  *
  * Used to specify the argument that should be passed callback
@@ -927,16 +976,16 @@ tcp_pcb_remove(struct tcp_pcb **pcblist, struct tcp_pcb *pcb)
 {
   TCP_RMV(pcblist, pcb);
 
+  tcp_pcb_purge(pcb);
+  
   /* if there is an outstanding delayed ACKs, send it */
   if(pcb->state != TIME_WAIT &&
      pcb->state != LISTEN &&
-     pcb->flags & TF_ACK_NEXT) {
-    tcp_send_ctrl(pcb, TCP_ACK);
-  }
-  
-  tcp_pcb_purge(pcb);
+     pcb->flags & TF_ACK_DELAY) {
+    pcb->flags |= TF_ACK_NOW;
+    tcp_output(pcb);
+  }  
   pcb->state = CLOSED;
-  /*  memp_free(MEMP_TCP_PCB, pcb);*/
 
   ASSERT("tcp_pcb_remove: tcp_pcbs_sane()", tcp_pcbs_sane());
 }
@@ -957,7 +1006,7 @@ tcp_next_iss(void)
   return iss;
 }
 /*-----------------------------------------------------------------------------------*/
-#if TCP_DEBUG
+#if TCP_DEBUG || TCP_INPUT_DEBUG || TCP_OUTPUT_DEBUG
 void
 tcp_debug_print(struct tcp_hdr *tcphdr)
 {
@@ -1059,21 +1108,21 @@ tcp_debug_print_pcbs(void)
   DEBUGF(TCP_DEBUG, ("Active PCB states:\n"));
   for(pcb = tcp_active_pcbs; pcb != NULL; pcb = pcb->next) {
     DEBUGF(TCP_DEBUG, ("Local port %d, foreign port %d snd_nxt %lu rcv_nxt %lu ",
-                       pcb->local_port, pcb->dest_port,
+                       pcb->local_port, pcb->remote_port,
                        pcb->snd_nxt, pcb->rcv_nxt));
     tcp_debug_print_state(pcb->state);
   }    
   DEBUGF(TCP_DEBUG, ("Listen PCB states:\n"));
   for(pcb = (struct tcp_pcb *)tcp_listen_pcbs; pcb != NULL; pcb = pcb->next) {
     DEBUGF(TCP_DEBUG, ("Local port %d, foreign port %d snd_nxt %lu rcv_nxt %lu ",
-                       pcb->local_port, pcb->dest_port,
+                       pcb->local_port, pcb->remote_port,
                        pcb->snd_nxt, pcb->rcv_nxt));
     tcp_debug_print_state(pcb->state);
   }    
   DEBUGF(TCP_DEBUG, ("TIME-WAIT PCB states:\n"));
   for(pcb = tcp_tw_pcbs; pcb != NULL; pcb = pcb->next) {
     DEBUGF(TCP_DEBUG, ("Local port %d, foreign port %d snd_nxt %lu rcv_nxt %lu ",
-                       pcb->local_port, pcb->dest_port,
+                       pcb->local_port, pcb->remote_port,
                        pcb->snd_nxt, pcb->rcv_nxt));
     tcp_debug_print_state(pcb->state);
   }    

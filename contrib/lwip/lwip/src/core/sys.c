@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: sys.c,v 1.1 2002/05/27 01:20:03 henrik Exp $
+ * $Id: sys.c,v 1.1 2001/12/12 10:00:58 adam Exp $
  */
 
 #include "lwip/debug.h"

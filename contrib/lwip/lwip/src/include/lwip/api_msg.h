@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: api_msg.h,v 1.1.1.1 2002/05/27 00:41:13 henrik Exp $
+ * $Id: api_msg.h,v 1.1 2001/12/12 10:01:00 adam Exp $
  */
 #ifndef __LWIP_API_MSG_H__
 #define __LWIP_API_MSG_H__

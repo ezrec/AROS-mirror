@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: ip.h,v 1.1.1.1 2002/05/27 00:41:17 henrik Exp $
+ * $Id: ip.h,v 1.3 2002/03/04 10:47:56 adam Exp $
  */
 #ifndef __LWIP_IP_H__
 #define __LWIP_IP_H__
@@ -70,18 +70,26 @@ err_t ip_output_if(struct pbuf *p, struct ip_addr *src, struct ip_addr *dest,
 #define IP_HDRINCL  NULL
 
 struct ip_hdr {
-  u16_t _v_hl_tos;          /* version / header length / type of service */
-  u16_t _len;               /* total length */
-  u16_t _id;                /* identification */
-  u16_t _offset;            /* fragment offset field */
+  /* version / header length / type of service */
+  PACK_STRUCT_FIELD(u16_t _v_hl_tos);
+  /* total length */
+  PACK_STRUCT_FIELD(u16_t _len);
+  /* identification */
+  PACK_STRUCT_FIELD(u16_t _id);
+  /* fragment offset field */
+  PACK_STRUCT_FIELD(u16_t _offset);
 #define IP_RF 0x8000        /* reserved fragment flag */
 #define IP_DF 0x4000        /* dont fragment flag */
 #define IP_MF 0x2000        /* more fragments flag */
 #define IP_OFFMASK 0x1fff   /* mask for fragmenting bits */
-  u16_t _ttl_proto;         /* time to live / protocol*/
-  u16_t _chksum;            /* checksum */
-  struct ip_addr src, dest; /* source and destination IP addresses */
-};
+  /* time to live / protocol*/
+  PACK_STRUCT_FIELD(u16_t _ttl_proto);
+  /* checksum */
+  PACK_STRUCT_FIELD(u16_t _chksum);
+  /* source and destination IP addresses */
+  PACK_STRUCT_FIELD(struct ip_addr src);
+  PACK_STRUCT_FIELD(struct ip_addr dest); 
+} PACK_STRUCT_STRUCT;
 
 #define IPH_V(hdr)  (NTOHS((hdr)->_v_hl_tos) >> 12)
 #define IPH_HL(hdr) ((NTOHS((hdr)->_v_hl_tos) >> 8) & 0x0f)

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: icmp.c,v 1.1 2002/05/27 01:20:03 henrik Exp $
+ * $Id: icmp.c,v 1.2 2001/12/14 20:13:47 adam Exp $
  */
 
 /* Some ICMP messages should be passed to the transport protocols. This

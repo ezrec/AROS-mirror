@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: arch.h,v 1.1.1.1 2002/05/27 00:41:13 henrik Exp $
+ * $Id: arch.h,v 1.2 2002/01/08 07:13:42 adam Exp $
  */
 #ifndef __LWIP_ARCH_H__
 #define __LWIP_ARCH_H__
@@ -45,5 +45,17 @@
 
 #include "arch/cpu.h"
 #include "arch/cc.h"
+
+#ifndef PACK_STRUCT_BEGIN
+#define PACK_STRUCT_BEGIN
+#endif /* PACK_STRUCT_BEGIN */
+
+#ifndef PACK_STRUCT_END
+#define PACK_STRUCT_END
+#endif /* PACK_STRUCT_END */
+
+#ifndef PACK_STRUCT_FIELD
+#define PACK_STRUCT_FIELD(x) x
+#endif /* PACK_STRUCT_FIELD */
 
 #endif /* __LWIP_ARCH_H__ */

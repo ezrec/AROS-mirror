@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: netif.h,v 1.1.1.1 2002/05/27 00:41:14 henrik Exp $
+ * $Id: netif.h,v 1.2 2002/02/08 13:30:01 adam Exp $
  */
 #ifndef __LWIP_NETIF_H__
 #define __LWIP_NETIF_H__
@@ -65,6 +65,7 @@ struct netif {
      to send a packet on the interface. */
   err_t (* output)(struct netif *netif, struct pbuf *p,
 		   struct ip_addr *ipaddr);
+  err_t (* linkoutput)(struct netif *netif, struct pbuf *p);
 
   /* This field can be set bu the device driver and could point
      to state information for the device. */
@@ -74,6 +75,10 @@ struct netif {
 /* The list of network interfaces. */
 extern struct netif *netif_list;
 extern struct netif *netif_default;
+
+
+/* netif_init() must be called first. */
+void netif_init();
 
 struct netif *netif_add(struct ip_addr *ipaddr, struct ip_addr *netmask,
 			struct ip_addr *gw,

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: sockets.c,v 1.1.1.1 2002/05/27 00:41:12 henrik Exp $
+ * $Id: sockets.c,v 1.4 2002/02/18 13:11:34 adam Exp $
  */
 
 #include "lwip/debug.h"
@@ -40,74 +40,98 @@
 
 #define NUM_SOCKETS 10
 
-static struct netconn *sockets[NUM_SOCKETS];
+struct lwip_socket {
+  struct netconn *conn;
+  struct netbuf *lastdata;
+  u16_t lastoffset;
+};
 
+static struct lwip_socket sockets[NUM_SOCKETS];
+
+/*-----------------------------------------------------------------------------------*/
+static struct lwip_socket *
+get_socket(int s)
+{
+  struct lwip_socket *sock;
+  
+  if(s > NUM_SOCKETS) {
+    /* errno = EBADF; */
+    return NULL;
+  }
+  
+  sock = &sockets[s];
+
+  if(sock->conn == NULL) {
+    /* errno = EBADF; */
+    return NULL;
+  }
+  return sock;
+}
+/*-----------------------------------------------------------------------------------*/
+static int
+alloc_socket(struct netconn *newconn)
+{
+  int i;
+  
+  /* allocate a new socket identifier */
+  for(i = 0; i < NUM_SOCKETS; ++i) {
+    if(sockets[i].conn == NULL) {
+      sockets[i].conn = newconn;
+      sockets[i].lastdata = NULL;
+      sockets[i].lastoffset = 0;
+      return i;
+    }
+  }
+  return -1;
+}
 /*-----------------------------------------------------------------------------------*/
 int
 lwip_accept(int s, struct sockaddr *addr, int *addrlen)
 {
-  struct netconn *conn, *newconn;
+  struct lwip_socket *sock;
+  struct netconn *newconn;
   struct ip_addr *naddr;
   u16_t port;
-  u16_t i;
+  int newsock;
 
-  if(s > NUM_SOCKETS) {
-    /* errno = EBADF; */
+  sock = get_socket(s);
+  if(sock == NULL) {
     return -1;
   }
   
-  conn = sockets[s];
-
-  if(conn == NULL) {
-    /* errno = EBADF; */
-    return -1;
-  }
-  
-  newconn = netconn_accept(conn);
+  newconn = netconn_accept(sock->conn);
     
   /* get the IP address and port of the remote host */
-  netconn_peer(conn, &naddr, &port);
+  netconn_peer(newconn, &naddr, &port);
   
   ((struct sockaddr_in *)addr)->sin_addr.s_addr = naddr->addr;
   ((struct sockaddr_in *)addr)->sin_port = port;
 
-  /* allocate a new socket identifier */
-  for(i = 0; i < NUM_SOCKETS; ++i) {
-    if(sockets[i] == NULL) {
-      sockets[i] = newconn;
-      return i;
-    }
+  newsock = alloc_socket(newconn);
+  if(newsock == -1) {  
+    netconn_delete(newconn);
+    /* errno = ENOBUFS; */
   }
-  netconn_delete(newconn);
-  /* errno = ENOBUFS; */
-  return -1;
+  return newsock;
 }
 /*-----------------------------------------------------------------------------------*/
 int
 lwip_bind(int s, struct sockaddr *name, int namelen)
 {
-  struct netconn *conn;
+  struct lwip_socket *sock;
   struct ip_addr remote_addr;
   u16_t remote_port;
   err_t err;
   
-  if(s > NUM_SOCKETS) {
-    /* errno = EBADF; */
+  sock = get_socket(s);
+  if(sock == NULL) {
     return -1;
   }
   
-  conn = sockets[s];
-
-  if(conn == NULL) {
-    /* errno = EBADF; */
-    return -1;
-  }
-  
-
   remote_addr.addr = ((struct sockaddr_in *)name)->sin_addr.s_addr;
   remote_port = ((struct sockaddr_in *)name)->sin_port;
   
-  err = netconn_bind(conn, &remote_addr, ntohs(remote_port));
+  err = netconn_bind(sock->conn, &remote_addr, ntohs(remote_port));
 
   if(err != ERR_OK) {
     /* errno = ... */
@@ -120,50 +144,42 @@ lwip_bind(int s, struct sockaddr *name, int namelen)
 int
 lwip_close(int s)
 {
-  struct netconn *conn;
-
+  struct lwip_socket *sock;
+  
   DEBUGF(SOCKETS_DEBUG, ("close: socket %d\n", s));
-  
-  if(s > NUM_SOCKETS) {
-    /* errno = EBADF; */
+  sock = get_socket(s);
+  if(sock == NULL) {
     return -1;
   }
   
-  conn = sockets[s];
-
-  if(conn == NULL) {
-    /* errno = EBADF; */
-    return -1;
+  
+  netconn_delete(sock->conn);
+  if(sock->lastdata != NULL) {
+    netbuf_delete(sock->lastdata);
   }
-  sockets[s] = NULL;
-  netconn_delete(conn);
+  sock->lastdata = NULL;
+  sock->lastoffset = 0;
+  sock->conn = NULL;
   return 0;
 }
 /*-----------------------------------------------------------------------------------*/
 int
 lwip_connect(int s, struct sockaddr *name, int namelen)
 {
-  struct netconn *conn;
+  struct lwip_socket *sock;
   struct ip_addr remote_addr;
   u16_t remote_port;
   err_t err;
-  
-  if(s > NUM_SOCKETS) {
-    /* errno = EBADF; */
-    return -1;
-  }
-  
-  conn = sockets[s];
 
-  if(conn == NULL) {
-    /* errno = EBADF; */
+  sock = get_socket(s);
+  if(sock == NULL) {
     return -1;
   }
   
   remote_addr.addr = ((struct sockaddr_in *)name)->sin_addr.s_addr;
   remote_port = ((struct sockaddr_in *)name)->sin_port;
   
-  err = netconn_connect(conn, &remote_addr, ntohs(remote_port));
+  err = netconn_connect(sock->conn, &remote_addr, ntohs(remote_port));
 
   if(err != ERR_OK) {
     /* errno = ... */
@@ -176,22 +192,15 @@ lwip_connect(int s, struct sockaddr *name, int namelen)
 int
 lwip_listen(int s, int backlog)
 {
-  struct netconn *conn;
+  struct lwip_socket *sock;    
   err_t err;
   
-  if(s > NUM_SOCKETS) {
-    /* errno = EBADF; */
-    return -1;
-  }
-  
-  conn = sockets[s];
-
-  if(conn == NULL) {
-    /* errno = EBADF; */
+  sock = get_socket(s);
+  if(sock == NULL) {
     return -1;
   }
  
-  err = netconn_listen(conn);
+  err = netconn_listen(sock->conn);
 
   if(err != ERR_OK) {
     /* errno = ... */
@@ -202,51 +211,77 @@ lwip_listen(int s, int backlog)
 }
 /*-----------------------------------------------------------------------------------*/
 int
-lwip_recv(int s, void *mem, int len, unsigned int flags)
+lwip_recvfrom(int s, void *mem, int len, unsigned int flags,
+	      struct sockaddr *from, int *fromlen)
 {
-  struct netconn *conn;
+  struct lwip_socket *sock;
   struct netbuf *buf;
   u16_t buflen, copylen;
+  struct ip_addr *addr;
+  u16_t port;
+
   
-  
-  if(s > NUM_SOCKETS) {
-    /* errno = EBADF; */
+  sock = get_socket(s);
+  if(sock == NULL) {
     return -1;
   }
-  
-  conn = sockets[s];
 
-  if(conn == NULL) {
-    /* errno = EBADF; */
-    return -1;
-  }
-  
-  buf = netconn_recv(conn);
-
-  if(buf == NULL) {
-    return 0;
+  /* Check if there is data left from the last recv operation. */
+  if(sock->lastdata != NULL) {    
+    buf = sock->lastdata;
+  } else {
+    /* No data was left from the previous operation, so we try to get
+       some from the network. */
+    buf = netconn_recv(sock->conn);
+    
+    if(buf == NULL) {
+      /* We should really do some error checking here. */
+      return 0;
+    }
   }
   
   buflen = netbuf_len(buf);
 
+  buflen -= sock->lastoffset;
+  
   if(len > buflen) {
     copylen = buflen;
   } else {
     copylen = len;
   }
-    
   
   /* copy the contents of the received buffer into
      the supplied memory pointer mem */
-  netbuf_copy(buf, mem, copylen);
-  netbuf_delete(buf);
+  netbuf_copy_partial(buf, mem, copylen, sock->lastoffset);
 
+  /* If this is a TCP socket, check if there is data left in the
+     buffer. If so, it should be saved in the sock structure for next
+     time around. */
+  if(netconn_type(sock->conn) == NETCONN_TCP && buflen - copylen > 0) {
+    sock->lastdata = buf;
+    sock->lastoffset = buflen - copylen;
+  } else {
+    sock->lastdata = NULL;
+    sock->lastoffset = 0;
+    netbuf_delete(buf);
+  }
+
+  /* Check to see from where the data was. */
+  if(from != NULL && fromlen != NULL) {
+    addr = netbuf_fromaddr(buf);
+    port = htons(netbuf_fromport(buf));  
+    ((struct sockaddr_in *)from)->sin_addr.s_addr = addr->addr;
+    ((struct sockaddr_in *)from)->sin_port = port;
+    *fromlen = sizeof(struct sockaddr_in);
+  }
+
+  
   /* if the length of the received data is larger than
      len, this data is discarded and we return len.
      otherwise we return the actual length of the received
      data */
-  if(len > buflen) {
-    return buflen;
+  if(len > copylen) {
+    return copylen;
   } else {
     return len;
   }
@@ -259,79 +294,26 @@ lwip_read(int s, void *mem, int len)
 }
 /*-----------------------------------------------------------------------------------*/
 int
-lwip_recvfrom(int s, void *mem, int len, unsigned int flags,
-	 struct sockaddr *from, int *fromlen)
+lwip_recv(int s, void *mem, int len, unsigned int flags)
 {
-  struct netconn *conn;
-  struct netbuf *buf;
-  struct ip_addr *addr;
-  u16_t port;
-  u16_t buflen;
-  
-  if(s > NUM_SOCKETS) {
-    /* errno = EBADF; */
-    return -1;
-  }
-  
-  conn = sockets[s];
-
-  if(conn == NULL) {
-    /* errno = EBADF; */
-    return -1;
-  }
-  
-  buf = netconn_recv(conn);
-  
-  if(buf == NULL) {
-    return 0;
-  }
-  
-  buflen = netbuf_len(buf);
-    
-  /* copy the contents of the received buffer into
-     the supplied memory pointer */
-  netbuf_copy(buf, mem, len);
-
-  addr = netbuf_fromaddr(buf);
-  port = htons(netbuf_fromport(buf));
-  ((struct sockaddr_in *)from)->sin_addr.s_addr = addr->addr;
-  ((struct sockaddr_in *)from)->sin_port = port;
-  *fromlen = sizeof(struct sockaddr_in);
-  netbuf_delete(buf);
-
-  /* if the length of the received data is larger than
-     len, this data is discarded and we return len.
-     otherwise we return the actual length of the received
-     data */
-  if(len > buflen) {
-    return buflen;
-  } else {
-    return len;
-  }
+  return lwip_recvfrom(s, mem, len, flags, NULL, NULL);
 }
 /*-----------------------------------------------------------------------------------*/
 int
 lwip_send(int s, void *data, int size, unsigned int flags)
 {
-  struct netconn *conn;
+  struct lwip_socket *sock;
   struct netbuf *buf;
   err_t err;
 
   DEBUGF(SOCKETS_DEBUG, ("send: socket %d, size %d\n", s, size));
-    
-  if(s > NUM_SOCKETS) {
-    /* errno = EBADF; */
-    return -1;
-  }
-  
-  conn = sockets[s];
 
-  if(conn == NULL) {
-    /* errno = EBADF; */
+  sock = get_socket(s);
+  if(sock == NULL) {
     return -1;
-  }
+  }  
   
-  switch(netconn_type(conn)) {
+  switch(netconn_type(sock->conn)) {
   case NETCONN_UDP:
     /* create a buffer */
     buf = netbuf_new();
@@ -346,13 +328,13 @@ lwip_send(int s, void *data, int size, unsigned int flags)
     netbuf_ref(buf, data, size);
 
     /* send the data */
-    err = netconn_send(conn, buf);
+    err = netconn_send(sock->conn, buf);
 
     /* deallocated the buffer */
     netbuf_delete(buf);
     break;
   case NETCONN_TCP:
-    err = netconn_write(conn, data, size, NETCONN_COPY);
+    err = netconn_write(sock->conn, data, size, NETCONN_COPY);
     break;
   default:
     err = ERR_ARG;
@@ -370,35 +352,28 @@ int
 lwip_sendto(int s, void *data, int size, unsigned int flags,
        struct sockaddr *to, int tolen)
 {
-  struct netconn *conn;
+  struct lwip_socket *sock;
   struct ip_addr remote_addr, *addr;
   u16_t remote_port, port;
   int ret;
 
-  if(s > NUM_SOCKETS) {
-    /* errno = EBADF; */
+  sock = get_socket(s);
+  if(sock == NULL) {
     return -1;
   }
   
-  conn = sockets[s];
-
-  if(conn == NULL) {
-    /* errno = EBADF; */
-    return -1;
-  }
-
   /* get the peer if currently connected */
-  netconn_peer(conn, &addr, &port);
+  netconn_peer(sock->conn, &addr, &port);
   
   remote_addr.addr = ((struct sockaddr_in *)to)->sin_addr.s_addr;
   remote_port = ((struct sockaddr_in *)to)->sin_port;
-  netconn_connect(conn, &remote_addr, remote_port);
+  netconn_connect(sock->conn, &remote_addr, remote_port);
   
   ret = lwip_send(s, data, size, flags);
 
   /* reset the remote address and port number
      of the connection */
-  netconn_connect(conn, addr, port);
+  netconn_connect(sock->conn, addr, port);
   return ret;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -426,46 +401,35 @@ lwip_socket(int domain, int type, int protocol)
     /* errno = ENOBUFS; */
     return -1;
   }
-  
-  /* find an empty place in the sockets[] list */
-  for(i = 0; i < NUM_SOCKETS; ++i) {
-    if(sockets[i] == NULL) {
-      sockets[i] = conn;
-      DEBUGF(SOCKETS_DEBUG, ("socket: allocated numner %d\n", i));
-      return i;
-    }
+
+  i = alloc_socket(conn);
+
+  if(i == -1) {
+    /* errno = ENOBUFS; */
+    netconn_delete(conn);
   }
-  netconn_delete(conn);
-  /* errno = ENOBUFS; */
-  return -1;
+  return i;
 }
 /*-----------------------------------------------------------------------------------*/
 int
 lwip_write(int s, void *data, int size)
 {
-  struct netconn *conn;
+  struct lwip_socket *sock;
   err_t err;
 
   DEBUGF(SOCKETS_DEBUG, ("write: socket %d, size %d\n", s, size));
-  
-  if(s > NUM_SOCKETS) {
-    /* errno = EBADF; */
-    return -1;
-  }
-  
-  conn = sockets[s];
 
-  if(conn == NULL) {
-    /* errno = EBADF; */
+  sock = get_socket(s);
+  if(sock == NULL) {
     return -1;
   }
-  
-  switch(netconn_type(conn)) {
+    
+  switch(netconn_type(sock->conn)) {
   case NETCONN_UDP:
     return lwip_send(s, data, size, 0);
 
   case NETCONN_TCP:
-    err = netconn_write(conn, data, size, NETCONN_COPY);
+    err = netconn_write(sock->conn, data, size, NETCONN_COPY);
     break;
   default:
     err = ERR_ARG;

@@ -34,7 +34,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: arp.h,v 1.1.1.1 2002/05/27 00:41:13 henrik Exp $
+ * $Id: arp.h,v 1.4 2002/03/04 10:47:56 adam Exp $
  *
  */
 
@@ -46,20 +46,27 @@
 #include "lwip/netif.h"
 
 struct eth_addr {
-  u8_t addr[6];
-};
+  PACK_STRUCT_FIELD(u8_t addr[6]);
+} PACK_STRUCT_STRUCT;
   
 struct eth_hdr {
-  struct eth_addr dest;
-  struct eth_addr src;
-  u16_t type;
-};
+  PACK_STRUCT_FIELD(struct eth_addr dest);
+  PACK_STRUCT_FIELD(struct eth_addr src);
+  PACK_STRUCT_FIELD(u16_t type);
+} PACK_STRUCT_STRUCT;
+
+#define ARP_TMR_INTERVAL 10000
 
 #define ETHTYPE_ARP 0x0806
 #define ETHTYPE_IP  0x0800
 
 /* Initializes ARP. */
 void arp_init(void);
+
+/* The arp_tmr() function should be called every ARP_TMR_INTERVAL
+   microseconds (10 seconds). This function is responsible for
+   expiring old entries in the ARP table. */
+void arp_tmr(void);
 
 /* Should be called for all incoming packets of IP kind. The function
    does not alter the packet in any way, it just updates the ARP

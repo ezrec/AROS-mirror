@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: opt.h,v 1.1.1.1 2002/05/27 00:41:14 henrik Exp $
+ * $Id: opt.h,v 1.2 2002/01/09 21:29:28 adam Exp $
  */
 #ifndef __LWIP_OPT_H__
 #define __LWIP_OPT_H__
@@ -72,7 +72,7 @@
 #endif
 
 #ifndef PBUF_POOL_SIZE
-#define PBUF_POOL_SIZE          128
+#define PBUF_POOL_SIZE          16
 #endif
 
 #ifndef PBUF_POOL_BUFSIZE

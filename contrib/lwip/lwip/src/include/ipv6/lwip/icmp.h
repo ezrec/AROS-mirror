@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: icmp.h,v 1.1.1.1 2002/05/27 00:41:16 henrik Exp $
+ * $Id: icmp.h,v 1.1 2001/12/12 10:00:59 adam Exp $
  */
 #ifndef __LWIP_ICMP_H__
 #define __LWIP_ICMP_H__

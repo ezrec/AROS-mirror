@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: tcpip.c,v 1.1.1.1 2002/05/27 00:41:12 henrik Exp $
+ * $Id: tcpip.c,v 1.3 2002/03/04 10:47:56 adam Exp $
  */
 
 #include "lwip/debug.h"
@@ -54,17 +54,10 @@ static sys_mbox_t mbox;
 
 /*-----------------------------------------------------------------------------------*/
 static void
-slow_tcp_timer(void *arg)
+tcpip_tcp_timer(void *arg)
 {
-  tcp_slowtmr();
-  sys_timeout(TCP_SLOW_INTERVAL, (sys_timeout_handler)slow_tcp_timer, NULL);  
-}
-/*-----------------------------------------------------------------------------------*/
-static void
-fast_tcp_timer(void *arg)
-{
-  tcp_fasttmr();
-  sys_timeout(TCP_FAST_INTERVAL, (sys_timeout_handler)fast_tcp_timer, NULL);
+  tcp_tmr();
+  sys_timeout(TCP_TMR_INTERVAL, (sys_timeout_handler)tcpip_tcp_timer, NULL);
 }
 /*-----------------------------------------------------------------------------------*/
 
@@ -77,9 +70,8 @@ tcpip_thread(void *arg)
   udp_init();
   tcp_init();
 
-  sys_timeout(TCP_FAST_INTERVAL, (sys_timeout_handler)fast_tcp_timer, NULL);
-  sys_timeout(TCP_SLOW_INTERVAL, (sys_timeout_handler)slow_tcp_timer, NULL);
-
+  sys_timeout(TCP_TMR_INTERVAL, (sys_timeout_handler)tcpip_tcp_timer, NULL);
+  
   if(tcpip_init_done != NULL) {
     tcpip_init_done(tcpip_init_done_arg);
   }

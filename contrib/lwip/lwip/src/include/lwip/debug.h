@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: debug.h,v 1.1.1.1 2002/05/27 00:41:14 henrik Exp $
+ * $Id: debug.h,v 1.12 2002/03/04 10:47:56 adam Exp $
  */
 #ifndef __LWIP_DEBUG_H__
 #define __LWIP_DEBUG_H__
@@ -43,7 +43,7 @@
 /* These defines control the amount of debugging output: */
 #define MEM_TRACKING
 
-#define DEMO_DEBUG       0
+#define DEMO_DEBUG       1
 
 #define ARP_DEBUG        0
 
@@ -61,6 +61,7 @@
 #define ICMP_DEBUG       0
 #define INET_DEBUG       0
 #define IP_DEBUG         0
+#define IP_REASS_DEBUG   1
 #define MEM_DEBUG        0
 #define MEMP_DEBUG       0
 #define SYS_DEBUG        0
@@ -73,9 +74,11 @@
 #define TCP_WND_DEBUG    0
 #define TCP_OUTPUT_DEBUG 0
 #define TCP_RST_DEBUG    0
+#define TCP_QLEN_DEBUG   0
 #define UDP_DEBUG        0
 #define TCPIP_DEBUG      0
 #define TCPDUMP_DEBUG    0
+#define DHCP_DEBUG       1
 
 #include <stdio.h>
 #define DEBUGF(debug, x) do { if(debug){ printf x; } } while(0)
@@ -105,6 +108,7 @@
 #define ICMP_DEBUG       0
 #define INET_DEBUG       0
 #define IP_DEBUG         0
+#define IP_REASS_DEBUG   0
 #define MEM_DEBUG        0
 #define MEMP_DEBUG       0
 #define SYS_DEBUG        0
@@ -117,9 +121,11 @@
 #define TCP_WND_DEBUG    0
 #define TCP_OUTPUT_DEBUG 0
 #define TCP_RST_DEBUG    0
+#define TCP_QLEN_DEBUG   0
 #define UDP_DEBUG        0
 #define TCPIP_DEBUG      0
 #define TCPDUMP_DEBUG    0
+#define DHCP_DEBUG       0
 
 #endif /* LWIP_DEBUG */
 

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: api_lib.c,v 1.1.1.1 2002/05/27 00:41:11 henrik Exp $
+ * $Id: api_lib.c,v 1.8 2002/03/18 13:08:47 adam Exp $
  */
 
 /* This is the part of the API that is linked with
@@ -152,7 +152,7 @@ netbuf_first(struct netbuf *buf)
 }
 /*-----------------------------------------------------------------------------------*/
 void
-netbuf_copy(struct netbuf *buf, void *dataptr, u16_t len)
+netbuf_copy_partial(struct netbuf *buf, void *dataptr, u16_t len, u16_t offset)
 {
   struct pbuf *p;
   u16_t i, left;
@@ -166,14 +166,23 @@ netbuf_copy(struct netbuf *buf, void *dataptr, u16_t len)
   /* This implementation is bad. It should use bcopy
      instead. */
   for(p = buf->p; left < len && p != NULL; p = p->next) {
-    for(i = 0; i < p->len; ++i) {
-      ((char *)dataptr)[left] = ((char *)p->payload)[i];
-      if(++left >= len) {
-	return;
+    if(offset != 0 && offset >= p->len) {
+      offset -= p->len;
+    } else {    
+      for(i = offset; i < p->len; ++i) {
+	((char *)dataptr)[left] = ((char *)p->payload)[i];
+	if(++left >= len) {
+	  return;
+	}
       }
     }
   }
-  return;
+}
+/*-----------------------------------------------------------------------------------*/
+void
+netbuf_copy(struct netbuf *buf, void *dataptr, u16_t len)
+{
+  netbuf_copy_partial(buf, dataptr, len, 0);
 }
 /*-----------------------------------------------------------------------------------*/
 struct ip_addr *
@@ -205,6 +214,7 @@ netconn *netconn_new(enum netconn_type t)
     return NULL;
   }
   conn->recvmbox = SYS_MBOX_NULL;
+  conn->acceptmbox = SYS_MBOX_NULL;
   conn->sem = SYS_SEM_NULL;
   conn->state = NETCONN_NONE;
   return conn;
@@ -220,7 +230,7 @@ netconn_delete(struct netconn *conn)
     return ERR_OK;
   }
   
-  if((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
+  if((msg = memp_mallocp(MEMP_API_MSG)) == NULL) {
     return ERR_MEM;
   }
   
@@ -228,7 +238,7 @@ netconn_delete(struct netconn *conn)
   msg->msg.conn = conn;
   api_msg_post(msg);  
   sys_mbox_fetch(conn->mbox, NULL);
-  memp_free(MEMP_API_MSG, msg);
+  memp_freep(MEMP_API_MSG, msg);
 
   /* Drain the recvmbox. */
   if(conn->recvmbox != SYS_MBOX_NULL) {
@@ -278,12 +288,12 @@ netconn_peer(struct netconn *conn, struct ip_addr **addr,
   case NETCONN_UDPLITE:
   case NETCONN_UDPNOCHKSUM:
   case NETCONN_UDP:
-    *addr = &(conn->pcb.udp->dest_ip);
-    *port = conn->pcb.udp->dest_port;
+    *addr = &(conn->pcb.udp->remote_ip);
+    *port = conn->pcb.udp->remote_port;
     break;
   case NETCONN_TCP:
-    *addr = &(conn->pcb.tcp->dest_ip);
-    *port = conn->pcb.tcp->dest_port;
+    *addr = &(conn->pcb.tcp->remote_ip);
+    *port = conn->pcb.tcp->remote_port;
     break;
   }
   return (conn->err = ERR_OK);
@@ -325,7 +335,7 @@ netconn_bind(struct netconn *conn, struct ip_addr *addr,
     }
   }
   
-  if((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
+  if((msg = memp_mallocp(MEMP_API_MSG)) == NULL) {
     return (conn->err = ERR_MEM);
   }
   msg->type = API_MSG_BIND;
@@ -334,7 +344,7 @@ netconn_bind(struct netconn *conn, struct ip_addr *addr,
   msg->msg.msg.bc.port = port;
   api_msg_post(msg);
   sys_mbox_fetch(conn->mbox, NULL);
-  memp_free(MEMP_API_MSG, msg);
+  memp_freep(MEMP_API_MSG, msg);
   return conn->err;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -355,7 +365,7 @@ netconn_connect(struct netconn *conn, struct ip_addr *addr,
     }
   }
   
-  if((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
+  if((msg = memp_mallocp(MEMP_API_MSG)) == NULL) {
     return ERR_MEM;
   }
   msg->type = API_MSG_CONNECT;
@@ -364,7 +374,7 @@ netconn_connect(struct netconn *conn, struct ip_addr *addr,
   msg->msg.msg.bc.port = port;
   api_msg_post(msg);
   sys_mbox_fetch(conn->mbox, NULL);
-  memp_free(MEMP_API_MSG, msg);
+  memp_freep(MEMP_API_MSG, msg);
   return conn->err;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -384,14 +394,14 @@ netconn_listen(struct netconn *conn)
     }
   }
   
-  if((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
+  if((msg = memp_mallocp(MEMP_API_MSG)) == NULL) {
     return (conn->err = ERR_MEM);
   }
   msg->type = API_MSG_LISTEN;
   msg->msg.conn = conn;
   api_msg_post(msg);
   sys_mbox_fetch(conn->mbox, NULL);
-  memp_free(MEMP_API_MSG, msg);
+  memp_freep(MEMP_API_MSG, msg);
   return conn->err;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -460,7 +470,7 @@ netconn_recv(struct netconn *conn)
     buf->fromaddr = NULL;
 
     /* Let the stack know that we have taken the data. */
-    if((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
+    if((msg = memp_mallocp(MEMP_API_MSG)) == NULL) {
       conn->err = ERR_MEM;
       return buf;
     }
@@ -474,7 +484,7 @@ netconn_recv(struct netconn *conn)
     api_msg_post(msg);
 
     sys_mbox_fetch(conn->mbox, NULL);
-    memp_free(MEMP_API_MSG, msg);
+    memp_freep(MEMP_API_MSG, msg);
   } else {
     sys_mbox_fetch(conn->recvmbox, (void **)&buf);
   }
@@ -501,7 +511,7 @@ netconn_send(struct netconn *conn, struct netbuf *buf)
     return conn->err;
   }
 
-  if((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
+  if((msg = memp_mallocp(MEMP_API_MSG)) == NULL) {
     return (conn->err = ERR_MEM);
   }
 
@@ -512,7 +522,7 @@ netconn_send(struct netconn *conn, struct netbuf *buf)
   api_msg_post(msg);
 
   sys_mbox_fetch(conn->mbox, NULL);
-  memp_free(MEMP_API_MSG, msg);
+  memp_freep(MEMP_API_MSG, msg);
   return conn->err;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -537,7 +547,7 @@ netconn_write(struct netconn *conn, void *dataptr, u16_t size, u8_t copy)
     }
   }
 
-  if((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
+  if((msg = memp_mallocp(MEMP_API_MSG)) == NULL) {
     return (conn->err = ERR_MEM);
   }
   msg->type = API_MSG_WRITE;
@@ -582,7 +592,7 @@ netconn_write(struct netconn *conn, void *dataptr, u16_t size, u8_t copy)
     }
   }
  ret:
-  memp_free(MEMP_API_MSG, msg);
+  memp_freep(MEMP_API_MSG, msg);
   conn->state = NETCONN_NONE;
   if(conn->sem != SYS_SEM_NULL) {
     sys_sem_free(conn->sem);
@@ -599,7 +609,7 @@ netconn_close(struct netconn *conn)
   if(conn == NULL) {
     return ERR_VAL;
   }
-  if((msg = memp_malloc(MEMP_API_MSG)) == NULL) {
+  if((msg = memp_mallocp(MEMP_API_MSG)) == NULL) {
     return (conn->err = ERR_MEM);
   }
 
@@ -615,7 +625,7 @@ netconn_close(struct netconn *conn)
     goto again;
   }
   conn->state = NETCONN_NONE;
-  memp_free(MEMP_API_MSG, msg);
+  memp_freep(MEMP_API_MSG, msg);
   return conn->err;
 }
 /*-----------------------------------------------------------------------------------*/

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: api_msg.c,v 1.1.1.1 2002/05/27 00:41:12 henrik Exp $
+ * $Id: api_msg.c,v 1.3 2002/01/23 11:08:23 adam Exp $
  */
 
 #include "lwip/debug.h"
@@ -232,7 +232,9 @@ do_delconn(struct api_msg_msg *msg)
     break;
     }
   }
-  sys_mbox_post(msg->conn->mbox, NULL);
+  if(msg->conn->mbox != SYS_MBOX_NULL) {
+    sys_mbox_post(msg->conn->mbox, NULL);
+  }
 }
 /*-----------------------------------------------------------------------------------*/
 static void
