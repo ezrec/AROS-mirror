@@ -27,7 +27,7 @@ CFLAGS = $(INCLUDES) $(DEFINES)
 
 COMMONDIR = ../common
 
-LIBS = -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -lbgui
+LIBS = -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -lbgui -lautoinit
 
 FLAGS = -nostartfiles -nostdlib -Wl,-i
 

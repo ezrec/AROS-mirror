@@ -8,6 +8,11 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2002/02/19 22:08:06  stegerg
+ * The demo programs for the external bgui gadget classes did not work,
+ * because they were not linked against autoinit lib. And in TreeViewClass.c
+ * there was a printf -> crash.
+ *
  * Revision 42.3  2000/08/09 11:48:33  chodorowski
  * Fixed missing prototypes.
  *
@@ -258,7 +263,6 @@ SAVEDS ASM Class *BGUI_ClassInit(void)
 			    CLASS_ObjectSize,     sizeof(TVData),
 			    CLASS_DFTable,        ClassFunc,
 			    TAG_DONE);
-printf("Class init!\n");
    return ClassBase;
 }
 
