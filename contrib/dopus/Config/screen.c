@@ -564,6 +564,8 @@ int doscreenconfig()
 
 							GetWBScreen(&scrbuf);
 							wbdepth=1<<scrbuf.RastPort.BitMap->Depth;
+							if (wbdepth > 256) wbdepth = 256; /* AROS FIX */
+							
 							size=(wbdepth*3)*sizeof(ULONG);
 							if ((palbuf=AllocMem(size,MEMF_CLEAR))) {
 								ULONG palette[48];
@@ -625,7 +627,11 @@ int mode;
 			if (version2>=OSVER_39) {
 #warning Need unimplemented missing funcs
 kprintf("CANNOT GET DISPLAY INFO BECAUSE OF UNIMPLEMENTED FUNCS\n");
-#if 0			
+#if 1
+	(void)handle;
+	(void)dispinfo;
+	(void)modeid;
+#else			
 				modeid=GetVPModeID(vp);
 				if ((handle=FindDisplayInfo(config->screenmode)) ||
 					(handle=FindDisplayInfo(modeid))) {
