@@ -179,6 +179,10 @@ LONG handlemessage(ULONG);
 asm(".text; jmp pc@(_handler-.+2)");
 #endif */
 
+#ifdef __MORPHOS__
+ULONG __abox__ = 1;
+#endif
+
 #if defined(LATTICE)
 int __saveds handler (void)
 #elif defined(__AROS__)
