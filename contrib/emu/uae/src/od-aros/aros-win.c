@@ -15,6 +15,7 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/intuition.h>
+#include <aros/autoinit.h>
 #include <exec/types.h>
 #include <dos/dos.h>
 
@@ -145,9 +146,10 @@ int graphics_init(void)
         )
     )
     {
+        __showerror("Failed to SetAttrs() on uaedisplay(%lp - %lp)", uaedisplay, &uaedisplay);
         return 0;
     }
-
+    
     gfxvidinfo.emergmem = 0;
     gfxvidinfo.linemem = 0;
 
@@ -335,13 +337,10 @@ void LED(int on)
 
 /***************************************************************************/
 
-/* sam: need to put all this in a separate module */
-
 #ifdef PICASSO96
 
 void DX_Invalidate (int first, int last)
 {
-//    D(bug("DX_Invalidate(%d, %d)\n", first, last));
     if (first < picasso_invalid_start)
         picasso_invalid_start = first;
 
@@ -363,6 +362,7 @@ void DX_SetPalette(int start, int count)
     if (!screen_is_picasso || picasso_vidinfo.pixbytes != 1)
 	return;
 
+    printf("DX_SetPalette(): aborting()\n");
     abort();
 }
 
@@ -450,6 +450,7 @@ static void set_screen_for_picasso(void)
         )
     )
     {
+        bug ("SetAttrs - 1 - aborting()\n");
 	abort();
     };
 
@@ -499,6 +500,7 @@ void gfx_set_picasso_state (int on)
             )
 	)
 	{
+            bug ("SetAttrs - 2 - aborting()\n");
 	    abort();
 	};
 

@@ -1,0 +1,26 @@
+# Copyright © 2003, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+SRCDIR := $(TOP)/$(CURDIR)
+EXEDIR := $(GENDIR)/$(CURDIR)/..
+FILES  := \
+    aros-gui aros-win uae-gui
+
+#MM uae-od-aros : uae-gui
+#MM- uae-od-aros-quick : uae-gui-quick
+
+USER_CFLAGS := -O2  -Wall -Wno-unused\
+               -Wno-format -W -Wmissing-prototypes\
+               -Wstrict-prototypes   -DGCCCONSTFUNC='__attribute__((const))'\
+               -D_REENTRANT \
+               -fno-exceptions -DUNALIGNED_PROFITABLE\
+               -fno-strength-reduce -DREGPARAM='__attribute__((regparm(3)))'\
+               -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
+               -I$(SRCDIR)/.. -I$(SRCDIR)/../include
+
+%build_prog mmake=uae-od-aros \
+    progname=od-aros.o targetdir=$(EXEDIR) \
+    files=$(FILES) ldflags="-Wl,-r" uselibs=""
+
+%common

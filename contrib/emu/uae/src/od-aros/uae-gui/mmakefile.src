@@ -1,0 +1,17 @@
+# Copyright © 2003, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(GENDIR)/$(CURDIR)/..
+FILES  := \
+    asl support locale emulator emulatorwindow configurationeditor \
+    devicecontrol toolbar drive drivelist drivelisteditor driveeditor uaedisplay
+
+#MM uae-gui : includes linklibs uae-gui-catalogs
+
+%build_prog mmake=uae-gui \
+    progname=uae-gui.o targetdir=$(EXEDIR) \
+    files=$(FILES) ldflags="-Wl,-r" uselibs=""
+
+%common

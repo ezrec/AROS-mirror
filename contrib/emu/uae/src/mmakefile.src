@@ -8,8 +8,6 @@ include $(TOP)/config/make.cfg
 SRCDIR := $(TOP)/$(CURDIR)
 
 FILES := \
-    aros-gui \
-    aros-win \
     audio \
     autoconf \
     blitfunc \
@@ -46,6 +44,7 @@ FILES := \
     native2amiga \
     newcpu \
     od-joy \
+    od-aros \
     picasso96 \
     readcpu \
     savestate \
@@ -62,14 +61,15 @@ EXEDIR := $(CONTRIBDIR)/Emu/UAE
 USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
                -Wno-format -W -Wmissing-prototypes\
                -Wstrict-prototypes   -DGCCCONSTFUNC='__attribute__((const))'\
-               -D_REENTRANT -mpreferred-stack-boundary=2\
+               -D_REENTRANT \
 	       -fno-exceptions -DUNALIGNED_PROFITABLE\
 	       -fno-strength-reduce -DREGPARAM='__attribute__((regparm(3)))'\
 	       -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
 	       -I$(SRCDIR) -I$(SRCDIR)/include
 
 #MM- contrib-complete: uae
-#MM uae : uae-setup
+#MM uae : setup includes uae-setup uae-od-aros
+#MM- uae-quick : uae-setup uae-od-aros-quick
 
 #MM
 uae-setup ::  $(OBJDIR)/.build_setup_check

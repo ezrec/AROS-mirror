@@ -4,26 +4,16 @@
 #include <proto/cybergraphics.h>
 #include <proto/intuition.h>
 #include <proto/utility.h>
-
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <dos/dos.h>
 #include <cybergraphx/cybergraphics.h>
 #include <utility/tagitem.h>
 
+#define DEBUG 0
 #include <zune/customclasses.h>
-
-//#include </work/AROS/workbench/libs/muimaster/customclasses.h>
-
-#include "aros-gui.h"
-
-#include "sysconfig.h"
-#include "sysdeps.h"
-
-#include "config.h"
-#include "options.h"
-#include "uae.h"
-#include "gui.h"
+#include <aros/autoinit.h>
+#include "uaedisplay.h"
 
 #define _between(a,x,b)  ((x)>=(a) && (x)<=(b))
 #define _isinobject(x,y) (_between(_mleft(self),(x),_mright (self)) \
@@ -197,9 +187,12 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	    case MUIA_UAEDisplay_EventHandler:
 	        *(message->opg_Storage) = (IPTR)data->eventhandler;
 		break;
+
+            default:
+                return DoSuperMethodA(CLASS, self, (Msg)message);
 	}
 
-        return DoSuperMethodA(CLASS, self, (Msg)message);
+        return TRUE;
     }),
 
     MUIM_Setup, struct MUIP_Setup *,
@@ -209,7 +202,7 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
 	 if (!GetCyberMapAttr(_screen(self)->RastPort.BitMap, CYBRMATTR_ISCYBERGFX))
 	 {
-	     fprintf(stderr, "**error**: CyberGfx is required\n");
+	     __showerror("UAEDisplay: CyberGfx is required");
 	     return FALSE;
 	 }
 
@@ -224,7 +217,7 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
          if(data->bitdepth <= 8)
          {
-             fprintf(stderr, "**error**: Unsupported bith depth %ld\n", data->bitdepth);
+             __showerror("UAEDisplay: Unsupported bith depth %ld", data->bitdepth);
 	     goto error;
          }
 
@@ -277,12 +270,10 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
          if (data->nomenu)
 	 {
+	     bug("Setting NoMenus to FALSE\n");
 	     set(_win(self), MUIA_Window_NoMenus,  FALSE);
 	     data->nomenu = FALSE;
 	 }
-
-
-//	 printf("Received an event NOT for me: %d\n", message->muikey);
 
 	 return 0;
     }),
@@ -361,127 +352,3 @@ ZUNE_CUSTOMCLASS_INLINE_10
         return TRUE;
     })
 );
-
-
-static void sigchldhandler(int foo)
-{
-}
-
-Object *uaedisplay;
-static Object *application;
-static ULONG uaedisplay_signals;
-
-int gui_init (void)
-{
-    Object *window;
-
-    application = ApplicationObject,
-        SubWindow, (IPTR)window = WindowObject,
-            MUIA_Window_Title,    (IPTR)"UAE for AROS",
-            MUIA_Window_Activate, TRUE,
-
-            WindowContents, (IPTR)VGroup,
-                Child, (IPTR)uaedisplay = UAEDisplayObject,
-		    MUIA_UAEDisplay_Width,  1,
-                End,
-	    End,
-  	    MUIA_Window_DefaultObject, (IPTR)uaedisplay,
-        End,
-    End;
-    if (!application)
-        return -2;
-
-    /* Just in case abort() is invoked, in which case we have to make
-       sure that the application is disposed.  */
-    atexit(gui_exit);
-
-    set(window, MUIA_Window_Open, TRUE);
-    DoMethod
-    (
-        window,
-        MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
-        (IPTR)application, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit
-    );
-
-    if
-    (
-        DoMethod(application, MUIM_Application_NewInput, (IPTR) &uaedisplay_signals) ==
-	(IPTR)MUIV_Application_ReturnID_Quit
-    )
-    {
-        uae_quit();
-    }
-
-    SetTaskPri(FindTask(NULL), -5);
-    return 0;
-}
-
-int gui_update (void)
-{
-    return 0;
-}
-
-void gui_exit (void)
-{
-    if (application)
-    {
-        MUI_DisposeObject(application);
-	application = NULL;
-    }
-}
-
-void gui_fps (int x)
-{
-}
-
-void gui_led (int led, int on)
-{
-}
-
-void gui_filename (int num, const char *name)
-{
-}
-
-static void getline (char *p)
-{
-}
-
-
-void gui_handle_events (void)
-{
-    if (uaedisplay_signals)
-    {
-	ULONG signals_got = SetSignal(0,0);
-
-	uaedisplay_signals = signals_got & (uaedisplay_signals | SIGBREAKF_CTRL_C);
-
-	if
-	(
-	    uaedisplay_signals
-	  &&(
-	        (uaedisplay_signals & SIGBREAKF_CTRL_C)
-              ||(DoMethod(application, MUIM_Application_NewInput, (IPTR) &uaedisplay_signals) ==
-                 (IPTR)MUIV_Application_ReturnID_Quit)
-	    )
-	)
-	{
-            uae_quit();
-	}
-    }
-}
-
-void gui_changesettings (void)
-{
-}
-
-void gui_update_gfx (void)
-{
-}
-
-void gui_lock (void)
-{
-}
-
-void gui_unlock (void)
-{
-}
