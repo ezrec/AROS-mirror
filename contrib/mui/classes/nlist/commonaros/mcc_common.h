@@ -3,3 +3,4 @@
 */
 
 #define STDARGS
+#define __stdargs
