@@ -155,7 +155,7 @@ extern ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,
 extern ULONG MyCallHookPktA(Object *obj,struct Hook *hook,APTR message,...);
 extern LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,UBYTE *buf,LONG bufsize,struct KeyMap *kmap);
 extern char *ltoa(ULONG val, char *buffer, int len);
-#ifndef __SASC
+#if !defined(__SASC) && !defined(_AROS)
 extern char *stpcpy(char *to,char *from);
 #endif
 //$$$Sensei: new memory handling functions.
