@@ -731,15 +731,212 @@ High level mmakefile.src macro's
 
 FIXME: Other high level macro's ?
 
+.. Note:: In the definition of the genmf rules sometimes mmake variables are
+   	  used as default variables for an argument (e.g. ``dflags=%(cflags)``).
+	  This is not really possible in the definition file but is done by
+	  using text that has the same effect.
+
 Building programs
 """""""""""""""""
 
-FIXME
+There are two macro's for building programs. One macro ``%build_progs``
+that will compile every input file to a separate executable and one macro
+``%build_prog`` that will compile and link all the input files into one
+executable.
+
+%build_progs
+^^^^^^^^^^^^
+
+This macro will compile and link every input file to a separate executable
+and has the following definition::
+
+    %define build_progs mmake=/A files=/A \
+        objdir=$(GENDIR)/$(CURDIR) targetdir=$(AROSDIR)/$(CURDIR) \
+    	cflags=$(CFLAGS) dflags=$(BD_CFLAGS$(BDID)) ldflags=$(LDFLAGS) \
+    	uselibs= usehostlibs= usestartup=yes detach=no
+
+With the following arguments:
+
+    ``mmake=/A``
+        This is the name of the metatarget that will build the programs.
+    
+    ``files=/A``
+        The basenames of the C source files that will be compiled and linked
+	to executables. For every name present in this list an executable
+	with the same name will be generated.
+    
+    ``objdir=$(GENDIR)/$(CURDIR)``
+        The directory where the compiled object files will be put.
+    
+    ``targetdir=$(AROSDIR)/$(CURDIR)``
+        The directory where the executables will be placed.
+    
+    ``cflags=$(CFLAGS)``
+        The flags to add when compiling the .c files. By default the standard
+        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also 
+        means that some flags can be added by assigning these to the 
+        USER_CFLAGS and USER_INCLUDES make variables before using this macro.
+    
+    ``dflags=%(cflags)``
+        The flags to add when doing the dependency check. Default is the same 
+        as the ``cflags``.
+    
+    ``ldflags=$(LDFLAGS)``
+        The flags to use when linking the executables. By default the
+	standard AROS link flags will be used.
+    
+    ``uselibs=``
+        A list of static libraries to add when linking the executables. This is the
+        name of the library without the lib prefix or the .a suffix and
+	without the -l prefix for the use in the flags for the C compiler.
+        
+        By default no libraries are used when linking the executables.
+
+    ``usehostlibs=``
+        A list of static libraries of the host to add when linking the
+	executables. This is the name of the library without the lib prefix or the
+	.a suffix and without the -l prefix for the use in the flags for the C
+	compiler.
+        
+        By default no libraries are used when linking the executables.
+
+    ``usestartup=yes``
+        Use the standard startup code for the executables. By default this
+	is yes and this is also what one wants most of the time. Only disable
+	this if you know what you are doing.
+	
+    ``detach=no``
+        Wether the executables will run detached. Defaults to no.
+
+%build_prog
+^^^^^^^^^^^
+
+This macro will compile and link the input files to an executable
+and has the following definition::
+
+    %define build_prog mmake=/A progname=/A files=%(progname) asmfiles= \
+        objdir=$(GENDIR)/$(CURDIR) targetdir=$(AROSDIR)/$(CURDIR) \
+        cflags=$(CFLAGS) dflags=$(BD_CFLAGS$(BDID)) ldflags=$(LDFLAGS) \
+        aflags=$(AFLAFS) uselibs= usehostlibs= usestartup=yes detach=no
+
+With the following arguments:
+
+    ``mmake=/A``
+        This is the name of the metatarget that will build the program.
+    
+    ``progname=/A``
+        The name of the executable.
+    
+    ``files=``
+        The basenames of the C source files that will be compiled and linked
+	into the executable. By default just the name of the executable is taken.
+    
+    ``asmfiles=``
+        The assembler files to assemble and include in the executable. By
+	default no asm files are included in the executable.
+    
+    ``objdir=$(GENDIR)/$(CURDIR)``
+        The directory where the compiled object files will be put.
+    
+    ``targetdir=$(AROSDIR)/$(CURDIR)``
+        The directory where the executables will be placed.
+    
+    ``cflags=$(CFLAGS)``
+        The flags to add when compiling the .c files. By default the standard
+        AROS cflags (the ``$(CFLAGS)`` make variable) are taken. This also 
+        means that some flags can be added by assigning these to the 
+        USER_CFLAGS and USER_INCLUDES make variables before using this macro.
+    
+    ``dflags=%(cflags)``
+        The flags to add when doing the dependency check. Default is the same 
+        as the ``cflags``.
+    
+    ``aflags=$(AFLAGS)``
+        The flags to add when compiling the asm files. By default the standard
+        AROS aflags (e.g. ``$(AFLAGS)``) are taken. This also 
+        means that some flags can be added by assigning these to the 
+        SPECIAL_AFLAGS make variable before using this macro.
+    
+    ``ldflags=$(LDFLAGS)``
+        The flags to use when linking the executable. By default the
+	standard AROS link flags will be used.
+    
+    ``uselibs=``
+        A list of static libraries to add when linking the executable. This is the
+        name of the library without the lib prefix or the .a suffix and
+	without the -l prefix for the use in the flags for the C compiler.
+        
+        By default no libraries are used when linking the executable.
+
+    ``usehostlibs=``
+        A list of static libraries of the host to add when linking the
+	executable. This is the name of the library without the lib prefix or the
+	.a suffix and without the -l prefix for the use in the flags for the C compiler.
+        
+        By default no libraries are used when linking the executable.
+
+    ``usestartup=yes``
+        Use the standard startup code for the executables. By default this
+	is yes and this is also what one wants most of the time. Only disable
+	this if you know what you are doing.
+	
+    ``detach=no``
+        Wether the executable will run detached. Defaults to no.
 
 Building static linklibraries
 """""""""""""""""""""""""""""
 
-FIXME
+Building link libraries is straight forward. A list of files will be
+compiled or assembled and collected in a link library into a specified 
+target directory.
+
+The definition of the macro is as follows::
+
+    %define build_linklib mmake=/A libname=/A files="$(basename $(wildcard *.c)) \
+      asmfiles= cflags=$(CFLAGS) dflags=%(cflags) aflags=$(AFLAGS) \
+      objdir=$(OBJDIR) libdir=$(LIBDIR)
+
+With the meaning of the arguments as follows:
+
+    ``mmake=/A``
+        This is the name of the metatarget that will build the linklib.
+    
+    ``libname=/A``
+        The base name of the library to generate. The file that will be
+	generated will be called lib%(libname).a
+    
+    ``files=$(basename $(wildcard *.c))``
+    	The C files to compile and include in the library. By default all
+	the files ending in .c in the source directory will be used.
+    
+    ``asmfiles=``
+        The assembler files to assemble and include in the library. By
+	default no asm files are included in the library.
+    
+    ``cflags=$(CFLAGS)``
+        The flags to use when compiling the .c files. By default the standard
+        AROS cflags (e.g. ``$(CFLAGS)``) are taken. This also 
+        means that some flags can be added by assigning these to the 
+        USER_CFLAGS and USER_INCLUDES make variables before using this macro.
+    
+    ``dflags=%(cflags)``
+        The flags to add when doing the dependency check. Default is the same 
+        as the ``cflags``.
+
+    ``aflags=$(AFLAGS)``
+        The flags to add when compiling the asm files. By default the standard
+        AROS aflags (e.g. ``$(AFLAGS)``) are taken. This also 
+        means that some flags can be added by assigning these to the 
+        SPECIAL_AFLAGS make variable before using this macro.
+    
+    ``objdir=$(OBJDIR)``
+        The directory where to generate all the intermediate files. The 
+        default value is ``$(OBJDIR)`` which in itself is by default equal to
+        ``$(GENDIR)/$(CURDIR)``.
+    
+    ``libdir=$(LIBDIR)``
+        The directory to put the library in. By default the standard lib
+	directory ``$(LIBDIR)`` will be used.
 
 Building modules
 """"""""""""""""
@@ -753,43 +950,36 @@ The mmakefile.src macro
 
 This is the definition header of the build_module macro::
 
-    %define build_module mmake=\A modname=\A modtype=\A            \
+    %define build_module mmake=/A modname=/A modtype=/A            \
       conffile=%(modname).conf files="$(basename $(wildcard *.c))" \
       cflags=$(CFLAGS) dflags=%(cflags) objdir=$(OBJDIR)           \
       linklibname=%(modname) uselibs=
 
-(In the definition presented here genmf argument like %(modname) are used
-but in genmf doesn't allow it. In the macro though make statements are that
-have the same effect as giving the genmf arguments as default)
-
 Here is a list of the arguments for this macro:
 
-    ``mmake=\A``
-        This is the name of the metatarget that will build the module. It will
-        define that metatarget but won't include any metaprerequisites. If you
-        need these you can add by yourself with an extra 
-        ``#MM metatargets : ...`` line. Also a ``%(mmake)-quick`` and 
-        ``%(mmake)-clean`` metatarget will be defined.
+    ``mmake=/A``
+        This is the name of the metatarget that will build the module. Also a
+	``%(mmake)-quick`` and ``%(mmake)-clean`` metatarget will be defined.
         
-    ``modname=\A``
+    ``modname=/A``
         This is the name of the module without the suffix.
         
-    ``modtype=\A``
-        This is the type of the module and corresponds with the suffix a the
-        module. At the moment only library is supported but support for 
-        device, gadget, hidd and class is planned.
+    ``modtype=/A``
+        This is the type of the module and corresponds with the suffix of the
+        module. At the moment only library, mcc, mui and mcp are supported.
+	Support for other modules is planned in the future.
         
     ``conffile=%(modname).conf``
         The name of the configuration file. Default is modname.conf.
     
     ``files="$(basename $(wildcard *.c))"``
-        A list of all the source files with the .c suffix that contain the 
+        A list of all the C source files without the .c suffix that contain the 
         code for this module. By default all the .c files in the current 
         directory will be taken.
         
     ``cflags=$(CFLAGS)``
-        The flags to add when compiling the .c files. By default the standard
-        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also 
+        The flags to use when compiling the .c files. By default the standard
+        AROS cflags (e.g. ``$(CFLAGS)``) are taken. This also 
         means that some flags can be added by assigning these to the 
         USER_CFLAGS and USER_INCLUDES make variables before using this macro.
     
@@ -807,7 +997,7 @@ Here is a list of the arguments for this macro:
         library autoinit code and the stubs converting C stack calling
         convention to a call off the function from the library functable with
         the appropriate calling mechanism. These stubs are normally not needed
-        when the AROS defines for module function are not disabled.
+        when the AROS defines for module functions are not disabled.
         
         There will always be a file generated with the name
         ``$(LIBDIR)/lib%(linklibname).a`` and by default linklibname will be 
@@ -815,8 +1005,8 @@ Here is a list of the arguments for this macro:
         
     ``uselibs=``
         A list of static libraries to add when linking the module. This is the
-        name of the library without the lib prefix or the .a suffix not the -l
-        prefix for the use in the flags for the C compiler.
+        name of the library without the lib prefix or the .a suffix and
+	without the -l prefix for the use in the flags for the C compiler.
         
         By default no libraries are used when linking the module.
 
@@ -928,17 +1118,17 @@ This is the definition header of the build_module_macro macro::
 
 Here is a list of the arguments for this macro:
 
-    ``mmake=\A``
+    ``mmake=/A``
         This is the name of the metatarget that will build the module. It will
         define that metatarget but won't include any metaprerequisites. If you
         need these you can add by yourself with an extra 
         ``#MM metatargets : ...`` line. Also a ``%(mmake)-quick`` and 
         ``%(mmake)-clean`` metatarget will be defined.
         
-    ``modname=\A``
+    ``modname=/A``
         This is the name of the module without the suffix.
         
-    ``modtype=\A``
+    ``modtype=/A``
         This is the type of the module and corresponds with the suffix of the
         module. It can be one of the following : library gadget datatype
 	handler device resource mui mcc hidd.
@@ -987,15 +1177,15 @@ Here is a list of the arguments for this macro:
         
     ``uselibs=``
         A list of static libraries to add when linking the module. This is the
-        name of the library without the lib prefix or the .a suffix not the -l
-        prefix for the use in the flags for the C compiler.
+        name of the library without the lib prefix or the .a suffix and
+	without the -l prefix for the use in the flags for the C compiler.
         
         By default no libraries are used when linking the module.
 
     ``usehostlibs=``
-        A list of static libraries of the host to add when linking the module. This is the
-        name of the library without the lib prefix or the .a suffix not the -l
-        prefix for the use in the flags for the C compiler.
+        A list of static libraries of the host to add when linking the module. This
+	is the name of the library without the lib prefix or the .a suffix
+	and without the -l  prefix for the use in the flags for the C compiler.
         
         By default no libraries are used when linking the module.
 
@@ -1141,16 +1331,16 @@ has the following header::
 
 And the explanation of the argument to this macro:
 
-    ``mainmmake=\A``
+    ``mainmmake=/A``
         The mmake of the module from which one wants to replace files or to
 	wich to add additional files.
 	
-    ``maindir=\A``
+    ``maindir=/A``
         The directory where the object files of the main module are stored.
 	The is only the path relative to $(GENDIR). Most of the time this is the
 	directory where the source files of the module are stored.
         
-    ``arch=\A``
+    ``arch=/A``
         The architecture for which these files needs to be build. It can
 	have three different forms ARCH-CPU, ARCH or CPU. For example when
 	linux-i386 is specified these files will only be build for the linux
@@ -1194,18 +1384,18 @@ API that is shared between several architecture but not all of them.
 
 The macro has the following header::
 
-    %define rule_archalias mainmmake=\A arch=\A alias=\A
+    %define rule_archalias mainmmake=/A arch=/A alias=/A
 
 With the following arguments
 
-    ``mainmmake=\A``
+    ``mainmmake=/A``
         The mmake of the module from which one wants to replace files or to
 	wich to add additional files.
 
-    ``arch=\A``
+    ``arch=/A``
         The arch one wants to make alias from.
 	
-    ``alias=\A``
+    ``alias=/A``
         The arch one wants to alias to.
 	
 Examples
@@ -1669,7 +1859,7 @@ There are some special tags that all functions understand
 `TAG_IGNORE` 
     means that the contents
     of `ti_Data` is to be ignored. This tag is
-  especially useful for conditional inclusion of tags.
+    especially useful for conditional inclusion of tags.
   
 `TAG_MORE`
     By using this tag, you
