@@ -1,7 +1,7 @@
 
 import glob, os
 from util import TR, TD, Page, TableLite, Paragraph, Name, MyRawText, Href, \
-	newsColor
+	newsColor, Center, Text, Image
 
 def prepareNewsItem (filename):
     '''Convert a single news item into HTML.'''
@@ -34,6 +34,18 @@ def genPage (items, filename, linkBoxItem):
     The filenames must be dates in the form YYYYMMDD.'''
 
     page = Page (linkBoxItem=linkBoxItem)
+
+    if filename == 'index.html':
+	page.meat = page.meat + [
+	    Center (
+		Text ('You are visitor no. '),
+		Image ('/cgi-bin/wwwcount.cgi?df=aros.dat&dd=B&comma=T',
+		    alt='[picture of a counter]',
+		),
+		Text (' since 12. October 1999.')
+	    )
+	]
+	
     table = TableLite ()
     page.meat = page.meat + [table,]
 
