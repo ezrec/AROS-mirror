@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 EXEDIR := $(CONTRIBDIR)/freetype1
 
 #MM- contrib-freetype1-test : \
-#MM      contrib-freetype1-test-ftdump \
+##MM      contrib-freetype1-test-ftdump \
 #MM      contrib-freetype1-test-fterror \
 #MM      contrib-freetype1-test-ftlint \
 #MM      contrib-freetype1-test-ftmetric \
