@@ -36,7 +36,7 @@
  * CPU byte order. if not LITTLEINDIAN, big-endian is assumed
  */
 
-/* #define LITTLEINDIAN */
+#define LITTLEINDIAN
 
 /* 
  * Does your machine support 16-bit aligned 32-bit variables ?
