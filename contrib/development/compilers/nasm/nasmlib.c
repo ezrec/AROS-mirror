@@ -14,6 +14,7 @@
 #include "nasm.h"
 #include "nasmlib.h"
 
+
 static efunc nasm_malloc_error;
 
 #ifdef LOGALLOC
@@ -364,18 +365,16 @@ long raa_read (struct RAA *r, long posn)
 {
     if (posn > r->stepsize * LAYERSIZ(r))
 	return 0L;
+
     while (r->layers > 0) {
-	/* DGS:
         ldiv_t l;
 	l = ldiv (posn, r->stepsize);
 	r = r->u.b.data[l.quot];
 	posn = l.rem;
-        */
-	r = r->u.b.data[posn / r->stepsize];
 	if (!r)                     /* better check this */
 	    return 0L;
     }
-    return r->u.l.data[posn % r->stepsize];
+    return r->u.l.data[posn];
 }
 
 struct RAA *raa_write (struct RAA *r, long posn, long value) 
@@ -403,7 +402,6 @@ struct RAA *raa_write (struct RAA *r, long posn, long value)
 
     while (r->layers > 0) {
 	struct RAA **s;
-	/* DGS:
         ldiv_t l;
 	l = ldiv (posn, r->stepsize);
 	s = &r->u.b.data[l.quot];
@@ -411,12 +409,6 @@ struct RAA *raa_write (struct RAA *r, long posn, long value)
 	    *s = real_raa_init (r->layers - 1);
 	r = *s;
 	posn = l.rem;
-        */
-	s = &r->u.b.data[posn / r->stepsize];
-	if (!*s)
-	    *s = real_raa_init (r->layers - 1);
-	r = *s;
-	posn = posn % r->stepsize;
     }
 
     r->u.l.data[posn] = value;
