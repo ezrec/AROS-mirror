@@ -1735,6 +1735,7 @@ ReleaseWindows()
 
 	if(BlockNestCount)
 		BlockNestCount--;
+
 }
 
 	/* LineRead(BPTR File,STRPTR Buffer,LONG MaxChars):
@@ -3876,6 +3877,9 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 		/* Round the stack size to a multiple of four. */
 
 	StackSize = (StackSize + 3) & ~3;
+#ifdef __AROS__
+    	if (StackSize < AROS_STACKSIZE) StackSize = AROS_STACKSIZE;
+#endif
 
 		/* Reset the contents of the local memory allocation request. */
 
