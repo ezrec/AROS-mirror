@@ -1,0 +1,22 @@
+#   $Id$
+#
+
+include $(TOP)/config/make.cfg
+
+FILES := abc2ps abcparse buffer deco draw format music parse subs syms
+
+EXEDIR := $(CONTRIBDIR)/music
+EXE := $(EXEDIR)/abcm2ps
+
+USE_CLIB_SHARED := yes
+
+#MM contrib-music-notation-abcm2ps : includes linklibs
+
+%make_prog_setup mmake=contrib-music-notation-abcm2ps
+
+contrib-music-notation-abcm2ps : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps

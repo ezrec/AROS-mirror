@@ -11,7 +11,7 @@
 #define HAVE_MALLOC_H 1
 
 /* Define to handle the european A4 format.  */
-/* #undef A4_FORMAT */
+#define A4_FORMAT 1
 
 /* Define to let the B note have always its stem down.  */
 /* #undef BSTEM_DOWN */
