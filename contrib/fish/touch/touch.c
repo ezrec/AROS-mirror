@@ -56,6 +56,7 @@ main(void)
    int c;
 
    /*Get the list of filenames/patterns*/
+   args[0]=NULL;
    ReadArgs("FILE/A/M",args,&ra);
    filenames=(char **)args[0];
 
