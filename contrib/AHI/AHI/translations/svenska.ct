@@ -110,8 +110,8 @@ Musikenhet
 ; *** Properties box ***
 ;
 msgProperties
-Ljudläge\nInspelning\nUpphovsman\nCopyright\nDrivrutin\nVersion
-; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+Ljudläge\nInspelning\nUpphovsman\nCopyright\nDrivrutin\nVersion\nKommentar
+; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull
 Full duplex

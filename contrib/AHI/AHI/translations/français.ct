@@ -111,7 +111,7 @@ Unité musicale
 ;
 msgProperties
 Mode ID\nEnregistrement\nAuteur\nCopyright\nControleur\nVersion
-; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull
 Full duplex

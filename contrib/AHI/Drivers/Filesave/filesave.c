@@ -25,9 +25,11 @@
 
 #define dd ((struct FilesaveData*) AudioCtrl->ahiac_DriverData)
 
-extern void SlaveEntry(void);
-extern void RecSlaveEntry(void);
+void PlaySlaveEntry(void);
+void RecSlaveEntry(void);
 
+PROCGW( static, void,  playslaveentry, PlaySlaveEntry );
+PROCGW( static, void,  recslaveentry,  RecSlaveEntry );
 
 static const LONG frequency[] =
 {
@@ -289,11 +291,11 @@ ULONG _AHIsub_Start(
     {
       struct TagItem proctags[] =
       {
-	{ NP_Entry,     (ULONG) SlaveEntry },
-	{ NP_Name,      (ULONG) LibName    },
-	{ NP_Priority,  -1                 }, // It's a number cruncher...
-	{ NP_StackSize, 10000,             },
-	{ TAG_DONE,     0                  }
+	{ NP_Entry,     (ULONG) &playslaveentry },
+	{ NP_Name,      (ULONG) LibName         },
+	{ NP_Priority,  -1                      }, // It's a number cruncher...
+	{ NP_StackSize, 10000,                  },
+	{ TAG_DONE,     0                       }
       };
 
       Forbid();
@@ -344,10 +346,10 @@ ULONG _AHIsub_Start(
     {
       struct TagItem proctags[] =
       {
-	{ NP_Entry,     (ULONG) RecSlaveEntry },
-	{ NP_Name,      (ULONG) LibName       },
-	{ NP_Priority,  1                     },  // Make it steady...
-	{ TAG_DONE,     0                     }
+	{ NP_Entry,     (ULONG) &recslaveentry },
+	{ NP_Name,      (ULONG) LibName        },
+	{ NP_Priority,  1                      },  // Make it steady...
+	{ TAG_DONE,     0                      }
       };
 
       Delay(TICKS_PER_SECOND);         // Wait for window to close etc...

@@ -26,12 +26,12 @@
 #include "ahi_def.h"
 
 void
-DevBeginIO( struct AHIRequest* ioreq,
-            struct AHIBase*    AHIBase );
+_DevBeginIO( struct AHIRequest* ioreq,
+	     struct AHIBase*    AHIBase );
 
 ULONG
-DevAbortIO( struct AHIRequest* ioreq,
-            struct AHIBase*    AHIBase );
+_DevAbortIO( struct AHIRequest* ioreq,
+	     struct AHIBase*    AHIBase );
 
 void
 PerformIO ( struct AHIRequest *ioreq,

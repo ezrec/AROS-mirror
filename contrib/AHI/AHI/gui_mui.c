@@ -18,7 +18,6 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <exec/memory.h>
 #include <libraries/asl.h>
@@ -287,24 +286,27 @@ static void GUINewMode(void)
   char* arg3 = getCopyright();
   char* arg4 = getDriver();
   char* arg5 = getVersion();
+  char* arg6 = getAnnotation();
 
   buffer = AllocVec( strlen( arg1 ) +
                      strlen( arg2 ) +
                      strlen( arg3 ) +
                      strlen( arg4 ) +
                      strlen( arg5 ) +
+                     strlen( arg6 ) +
                      128,
                      MEMF_ANY);
 
   if( buffer != NULL )
   {
-    sprintf( buffer,"0x%08lx\n%s\n%s\n%s\nDevs:AHI/%s.audio\n%s",
+    sprintf( buffer,"0x%08lx\n%s\n%s\n%s\nDevs:AHI/%s.audio\n%s\n%s",
       getAudioMode(),
       arg1,
       arg2,
       arg3,
       arg4,
-      arg5 );
+      arg5,
+      arg6 );
 
     set(MUIInfos, MUIA_Text_Contents, (ULONG) buffer);
 
@@ -544,7 +546,7 @@ BOOL BuildGUI(char *screenname)
           MUIA_Text_SetMax, TRUE,
         End,
         Child, MUIInfos = TextObject,
-          MUIA_Text_Contents, "\n\n\n\n\n",
+          MUIA_Text_Contents, "\n\n\n\n\n\n",
           MUIA_Text_SetMin, FALSE,
         End,
       End,

@@ -90,8 +90,7 @@ struct Extras
 {
         UWORD   Channel;
         UWORD   Sound;
-        LONG    BuffSamples;
-        LONG    Count;
+        LONG    VolumeDiv;
 };
 
 /* Voice->Flags definitions */
@@ -182,14 +181,14 @@ struct AHIDevUnit
 };
 
 ULONG
-DevOpen ( ULONG              unit,
-          ULONG              flags,
-          struct AHIRequest* ioreq,
-          struct AHIBase*    AHIBase );
+_DevOpen ( struct AHIRequest* ioreq,
+	   ULONG              unit,
+	   ULONG              flags,
+	   struct AHIBase*    AHIBase );
 
 BPTR
-DevClose ( struct AHIRequest* ioreq,
-           struct AHIBase*    AHIBase );
+_DevClose ( struct AHIRequest* ioreq,
+	    struct AHIBase*    AHIBase );
 
 BOOL
 ReadConfig ( struct AHIDevUnit *iounit,

@@ -2,7 +2,7 @@
 LIBRARIES_AHISUB_I	SET	1
 
 **
-**	$VER: ahi_sub.i 5.2 (4.3.01)
+**	$VER: ahi_sub.i 5.3 (29.4.03)
 **	:ts=8 (TAB SIZE: 8)
 **
 **	ahi/[driver].audio definitions
@@ -60,7 +60,9 @@ LIBRARIES_AHISUB_I	SET	1
 	ULONG	ahiac_BuffType			; Buffer format (V2)
 	FPTR	ahiac_PreTimer			; Call before mixing (V4)
 	FPTR	ahiac_PostTimer			; Call after mixing (V4)
-	ULONG	ahiac_AntiClickSamples		; AntiClick samples (V5)
+	ULONG	ahiac_AntiClickSamples		; AntiClick samples (V6)
+	APTR	ahiac_PreTimerFunc		; A Hook wrapper for ahiac_PreTimer (V6)
+	APTR	ahiac_PostTimerFunc		; A Hook wrapper for ahiac_PostTimer (V6)
 
 ; The rest is PRIVATE! Hands off! They may change any time.
 ;	[lots of private stuff]

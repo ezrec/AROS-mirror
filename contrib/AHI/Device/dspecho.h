@@ -24,7 +24,6 @@
 #define ahi_dspecho_h
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include "ahi_def.h"
 #include "dsp.h"

@@ -21,7 +21,6 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include "ahi_def.h"
 

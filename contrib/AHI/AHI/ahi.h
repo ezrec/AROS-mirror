@@ -113,6 +113,7 @@ char *getAuthor(void);
 char *getCopyright(void);
 char *getDriver(void);
 char *getVersion(void);
+char *getAnnotation(void);
 
 #endif /* _AHI_H_ */
 

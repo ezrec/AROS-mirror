@@ -21,7 +21,6 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 // Fix broken includes
 struct VSPrite;
@@ -1115,8 +1114,8 @@ static void CloseInfoWindow( struct AHIAudioModeRequesterExt *req )
 */
 
 struct AHIAudioModeRequester*
-AllocAudioRequestA( struct TagItem* tags,
-                    struct AHIBase* AHIBase )
+_AHI_AllocAudioRequestA( struct TagItem* tags,
+			 struct AHIBase* AHIBase )
 {
   struct AHIAudioModeRequesterExt *req;
 
@@ -1337,9 +1336,9 @@ AllocAudioRequestA( struct TagItem* tags,
 */
 
 ULONG
-AudioRequestA( struct AHIAudioModeRequester* req_in,
-               struct TagItem*               tags,
-               struct AHIBase*               AHIBase )
+_AHI_AudioRequestA( struct AHIAudioModeRequester* req_in,
+		    struct TagItem*               tags,
+		    struct AHIBase*               AHIBase )
 {
   struct AHIAudioModeRequesterExt *req=(struct AHIAudioModeRequesterExt *)req_in;
   struct MinList list;
@@ -1722,8 +1721,8 @@ AudioRequestA( struct AHIAudioModeRequester* req_in,
 */
 
 void
-FreeAudioRequest( struct AHIAudioModeRequester* req,
-                  struct AHIBase*               AHIBase )
+_AHI_FreeAudioRequest( struct AHIAudioModeRequester* req,
+		       struct AHIBase*               AHIBase )
 {
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)

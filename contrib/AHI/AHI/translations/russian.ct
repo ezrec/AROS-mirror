@@ -111,7 +111,7 @@ msgUnitMusic
 ;
 msgProperties
 Режим ID\nЗапись\nАвтор\nАвторство\nДрайвер\nВерсия
-; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull
 Полный дуплекс

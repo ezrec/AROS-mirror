@@ -27,9 +27,6 @@
 
 /*** AHI include files ***/
 
-#include <config.h>
-#include <CompilerSpecific.h>
-
 #include <exec/semaphores.h>
 #include <exec/devices.h>
 #include <devices/ahi.h>

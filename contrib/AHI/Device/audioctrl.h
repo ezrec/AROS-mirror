@@ -26,20 +26,20 @@
 #include "ahi_def.h"
 
 struct AHIAudioCtrl*
-AllocAudioA( struct TagItem* tags,
-             struct AHIBase* AHIBase );
+_AHI_AllocAudioA( struct TagItem* tags,
+		  struct AHIBase* AHIBase );
 
 ULONG
-FreeAudio( struct AHIPrivAudioCtrl* audioctrl,
-           struct AHIBase*          AHIBase );
+_AHI_FreeAudio( struct AHIPrivAudioCtrl* audioctrl,
+		struct AHIBase*          AHIBase );
 
 ULONG
-KillAudio( struct AHIBase* AHIBase );
+_AHI_KillAudio( struct AHIBase* AHIBase );
 
 ULONG
-ControlAudioA( struct AHIPrivAudioCtrl* audioctrl,
-               struct TagItem*          tags,
-               struct AHIBase*          AHIBase );
+_AHI_ControlAudioA( struct AHIPrivAudioCtrl* audioctrl,
+		    struct TagItem*          tags,
+		    struct AHIBase*          AHIBase );
 
 struct AHIPrivAudioCtrl*
 CreateAudioCtrl( struct TagItem *tags );

@@ -18,7 +18,6 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <devices/ahi.h>
 #include <exec/memory.h>
@@ -791,17 +790,17 @@ BOOL PlaySound( struct AHIUnitPrefs* prefs )
   
   actrl = AHI_AllocAudio( AHIA_AudioID,  prefs->ahiup_AudioMode,
                           AHIA_MixFreq,  prefs->ahiup_Frequency,
-                          AHIA_Channels, max( prefs->ahiup_Channels, 1 ),
+                          AHIA_Channels, 1,
                           AHIA_Sounds,   1,
                           TAG_DONE );
 
   if( actrl != NULL )
   {
-    BYTE*                sample;
+    WORD*                sample;
     int                  length = 48000/440;
     struct AHISampleInfo sound;
       
-    sample = AllocVec( length, MEMF_PUBLIC );
+    sample = AllocVec( length * sizeof( *sample ), MEMF_PUBLIC );
       
     if( sample != NULL )
     {
@@ -809,16 +808,16 @@ BOOL PlaySound( struct AHIUnitPrefs* prefs )
         
       for( i = 0; i < length; ++i )
       {
-        sample[ i ] = 127 * sin( i * 2 * M_PI / length );
+        sample[ i ] = 0x7fff * sin( i * 2 * M_PI / length );
       }
         
-      sound.ahisi_Type    = AHIST_M8S;
+      sound.ahisi_Type    = AHIST_M16S;
       sound.ahisi_Address = sample;
       sound.ahisi_Length  = length;
         
       if( AHI_LoadSound( 0, AHIST_SAMPLE, &sound, actrl ) == AHIE_OK )
       {
-        if( AHI_ControlAudio( actrl, AHIC_Play,          TRUE,
+        if( AHI_ControlAudio( actrl, AHIC_Play,          FALSE,
                                      AHIC_MonitorVolume, prefs->ahiup_MonitorVolume,
                                      AHIC_InputGain,     prefs->ahiup_InputGain,
                                      AHIC_OutputVolume,  prefs->ahiup_OutputVolume,
@@ -834,18 +833,21 @@ BOOL PlaySound( struct AHIUnitPrefs* prefs )
                            AHIP_EndChannel,   0,
                            TAG_DONE );
 
-          Delay( 50 );
+	  if( AHI_ControlAudio( actrl, AHIC_Play, TRUE, TAG_DONE ) == AHIE_OK )
+	  {
+	    Delay( 50 );
           
-          AHI_Play( actrl, AHIP_BeginChannel, 0,
-                           AHIP_Sound,        AHI_NOSOUND,
-                           AHIP_EndChannel,   0,
-                           TAG_DONE );
+	    AHI_Play( actrl, AHIP_BeginChannel, 0,
+                             AHIP_Sound,        AHI_NOSOUND,
+                             AHIP_EndChannel,   0,
+                             TAG_DONE );
 
-          // Give the anti-click code a break ...
-          Delay( 1 );
+	    // Give the anti-click code a chance to do it's work ...
+	    Delay( 1 );
 
-          AHI_ControlAudio( actrl, AHIC_Play, FALSE,
-                                   TAG_DONE );
+	    AHI_ControlAudio( actrl, AHIC_Play, FALSE,
+                                     TAG_DONE );
+	  }
         }
 
         AHI_UnloadSound( 0, actrl );

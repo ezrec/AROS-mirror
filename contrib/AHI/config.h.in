@@ -18,5 +18,14 @@
 /* This one modifies the gcc include files */
 #undef USE_INLINE_STDARG
 
+/* This one modifies the gcc include files */
+#undef __USE_INLINE__
+
+/* Define if you have the oss.library headers.  */
+#undef HAVE_PROTO_OSS_H
+
+/* Define if you have the openpci headers.  */
+#undef HAVE_LIBRARIES_OPENPCI_H
+
 /* Set to one if we're on a big endian CPU/compiler */
 #undef WORDS_BIGENDIAN

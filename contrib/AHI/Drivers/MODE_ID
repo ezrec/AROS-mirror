@@ -32,5 +32,7 @@ ID	Driver		Author			E-Mail
 1E	EMU10kx		Martin Blom		<martin@blom.org>
 1F      (Experimental)	You			Tell me when you want a real ID.
 20-2f	(Amithlon)	Thorsten Hansen		<hansen_t@informatik.fh-hamburg.de>
-30	FM801		Benjamin Vernoux	<bvernoux@wanadoo.fr>
+30	FM 801		Benjamin Vernoux	<bvernoux@wanadoo.fr>
 31	???/Mediator	Pawel Stypula		<pawelS@elbox.com>
+32	FM 801/AOS4	Davy Wentzler		<info@audio-evolution.com>
+33	AROS/hosted	Martin Blom		<martin@blom.org>

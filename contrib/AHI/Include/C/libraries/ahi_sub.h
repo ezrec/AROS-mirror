@@ -2,7 +2,7 @@
 #define LIBRARIES_AHISUB_H
 
 /*
-**	$VER: ahi_sub.h 5.2 (4.3.01)
+**	$VER: ahi_sub.h 5.3 (29.4.03)
 **	:ts=8 (TAB SIZE: 8)
 **
 **	ahi/[driver].audio definitions
@@ -61,7 +61,9 @@ struct AHIAudioCtrlDrv
 	ULONG	     ahiac_BuffType;		/* Buffer format (V2)		*/
 	BOOL	   (*ahiac_PreTimer)(void);	/* Call before mixing (V4)	*/
 	void	   (*ahiac_PostTimer)(void);	/* Call after mixing (V4)	*/
-	ULONG	     ahiac_AntiClickSamples;	/* AntiClick samples (V5)	*/
+	ULONG	     ahiac_AntiClickSamples;	/* AntiClick samples (V6)	*/
+	struct Hook *ahiac_PreTimerFunc;        /* A Hook wrapper for ahiac_PreTimer (V6) */
+	struct Hook *ahiac_PostTimerFunc;       /* A Hook wrapper for ahiac_PostTimer (V6) */
 
 /* The rest is PRIVATE! Hands off! They may change any time.
 	[lots of private stuff] */

@@ -111,7 +111,7 @@ Unidade de Música
 ;
 msgProperties
 ID do Modo\nGravação\nAutor\n"Copyright"\n"Driver"\nVersão
-; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull
 'Full duplex'

@@ -21,7 +21,6 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <string.h>
 #include <stddef.h>
@@ -787,9 +786,45 @@ Mix( struct Hook*             unused_Hook,
           {
             /* Linear interpol. stuff */
 
-            cd->cd_StartPointL = cd->cd_TempStartPointL;
-            cd->cd_StartPointR = cd->cd_TempStartPointR;
+	    ULONG lo = (ULONG) (cd->cd_LastOffset >> 32);
 
+	    switch( cd->cd_Type ) {
+
+	      case AHIST_M8S:
+		cd->cd_StartPointL = ((BYTE*) cd->cd_DataStart)[ lo ] << 8;
+		break;
+
+	      case AHIST_S8S:
+		cd->cd_StartPointL = ((BYTE*) cd->cd_DataStart)[ lo*2+0 ] << 8;
+		cd->cd_StartPointR = ((BYTE*) cd->cd_DataStart)[ lo*2+1 ] << 8;
+		break;
+
+	      case AHIST_M16S:
+		cd->cd_StartPointL = ((WORD*) cd->cd_DataStart)[ lo ];
+		break;
+
+	      case AHIST_S16S:
+		cd->cd_StartPointL = ((WORD*) cd->cd_DataStart)[ lo*2+0 ];
+		cd->cd_StartPointR = ((WORD*) cd->cd_DataStart)[ lo*2+1 ];
+		break;
+
+	      case AHIST_M32S:
+		cd->cd_StartPointL = ((LONG*) cd->cd_DataStart)[ lo ] >> 16;
+		break;
+
+	      case AHIST_S32S:
+		cd->cd_StartPointL = ((LONG*) cd->cd_DataStart)[ lo*2+0 ] >> 16;
+		cd->cd_StartPointR = ((LONG*) cd->cd_DataStart)[ lo*2+1 ] >> 16;
+		break;
+	    }
+
+//	    This old code is totally fucked up ... Why didn't anybody
+//	    complain?!
+//            cd->cd_StartPointL = cd->cd_TempStartPointL;
+//            cd->cd_StartPointR = cd->cd_TempStartPointR;
+
+/* 	    KPrintF( "cd->cd_StartPointL=%08lx, cd->cd_StartPointR=%08lx\n", */
+/* 		     cd->cd_StartPointL, cd->cd_StartPointR ); */
             /*
             ** Offset always points OUTSIDE the sample after this
             ** call.  Ie, if we read a sample at offset (Offset.I)
@@ -797,11 +832,26 @@ Mix( struct Hook*             unused_Hook,
             ** This is true for both backward and forward mixing.
             */
 
-
+/* 	    KPrintF( "cd->cd_Add=0x%08lx:%08lx\n", */
+/* 		     (ULONG) (cd->cd_Add >> 32), (ULONG) cd->cd_Add ); */
+/* 	    KPrintF( "cd->cd_Offset=0x%08lx:%08lx, " */
+/* 		     "cd->cd_LastOffset=0x%08lx:%08lx," */
+/* 		     "cd->cd_FirstOffset=%08lx\n", */
+/* 		     (ULONG) (cd->cd_Offset >> 32), (ULONG) cd->cd_Offset, */
+/* 		     (ULONG) (cd->cd_LastOffset >> 32), (ULONG) cd->cd_LastOffset, */
+/* 		     cd->cd_FirstOffsetI ); */
+		     
             /* What we do now is to calculate how much futher we have
                advanced. */
 
               cd->cd_Offset -= cd->cd_LastOffset + 1;
+
+/* 	    KPrintF( "cd->cd_Offset=0x%08lx:%08lx, " */
+/* 		     "cd->cd_LastOffset=0x%08lx:%08lx," */
+/* 		     "cd->cd_FirstOffset=%08lx\n", */
+/* 		     (ULONG) (cd->cd_Offset >> 32), (ULONG) cd->cd_Offset, */
+/* 		     (ULONG) (cd->cd_LastOffset >> 32), (ULONG) cd->cd_LastOffset, */
+/* 		     cd->cd_FirstOffsetI ); */
 
             /*
             ** Offset should now be added to the NEXT Offset. Offset
@@ -819,8 +869,15 @@ Mix( struct Hook*             unused_Hook,
 
             cd->cd_Offset += cd->cd_NextOffset;
 
-            cd->cd_FirstOffsetI = cd->cd_Offset >> 32;
+//            cd->cd_FirstOffsetI = cd->cd_Offset >> 32;
+            cd->cd_FirstOffsetI = cd->cd_NextOffset >> 32;
 
+/* 	    KPrintF( "cd->cd_Offset=0x%08lx:%08lx, " */
+/* 		     "cd->cd_LastOffset=0x%08lx:%08lx," */
+/* 		     "cd->cd_FirstOffset=%08lx\n", */
+/* 		     (ULONG) (cd->cd_Offset >> 32), (ULONG) cd->cd_Offset, */
+/* 		     (ULONG) (cd->cd_LastOffset >> 32), (ULONG) cd->cd_LastOffset, */
+/* 		     cd->cd_FirstOffsetI ); */
             /*
             ** But what if the next sample is so short that we just
             ** passed it!?  Here is the nice part.  CalcSamples
@@ -926,8 +983,7 @@ Mix( struct Hook*             unused_Hook,
         */
 
         dst = (char *) dst + audioctrl->ac.ahiac_BuffSamples * 
-                             SampleFrameSize( audioctrl->ac.ahiac_BuffType,
-                                              AHIBase );
+	  _AHI_SampleFrameSize( audioctrl->ac.ahiac_BuffType, AHIBase );
       }
 
       continue; /* while(TRUE) */

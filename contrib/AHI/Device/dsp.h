@@ -26,6 +26,8 @@
 #include <exec/types.h>
 #include "ahi_def.h"
 
+struct Echo;
+
 typedef void (*ECHOFUNC)( struct Echo *,
                           void *,
                           struct AHIPrivAudioCtrl * );

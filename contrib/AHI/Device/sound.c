@@ -21,7 +21,6 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <exec/memory.h>
 #include <utility/tagitem.h>
@@ -112,12 +111,12 @@
 */
 
 ULONG
-SetVol ( UWORD                    channel,
-         Fixed                    volume,
-         sposition                pan,
-         struct AHIPrivAudioCtrl* audioctrl,
-         ULONG                    flags,
-         struct AHIBase*          AHIBase )
+_AHI_SetVol ( UWORD                    channel,
+	      Fixed                    volume,
+	      sposition                pan,
+	      struct AHIPrivAudioCtrl* audioctrl,
+	      ULONG                    flags,
+	      struct AHIBase*          AHIBase )
 {
   struct AHIChannelData *cd;
   struct Library        *AHIsubBase;
@@ -252,11 +251,11 @@ SetVol ( UWORD                    channel,
 */
 
 ULONG
-SetFreq ( UWORD                    channel,
-          ULONG                    freq,
-          struct AHIPrivAudioCtrl* audioctrl,
-          ULONG                    flags,
-          struct AHIBase*          AHIBase )
+_AHI_SetFreq ( UWORD                    channel,
+	       ULONG                    freq,
+	       struct AHIPrivAudioCtrl* audioctrl,
+	       ULONG                    flags,
+	       struct AHIBase*          AHIBase )
 {
   struct AHIChannelData *cd;
   struct Library        *AHIsubBase;
@@ -417,13 +416,13 @@ SetFreq ( UWORD                    channel,
 */
 
 ULONG
-SetSound ( UWORD                    channel,
-           UWORD                    sound,
-           ULONG                    offset,
-           LONG                     length,
-           struct AHIPrivAudioCtrl* audioctrl,
-           ULONG                    flags,
-           struct AHIBase*          AHIBase )
+_AHI_SetSound ( UWORD                    channel,
+		UWORD                    sound,
+		ULONG                    offset,
+		LONG                     length,
+		struct AHIPrivAudioCtrl* audioctrl,
+		ULONG                    flags,
+		struct AHIBase*          AHIBase )
 {
   struct AHIChannelData *cd;
   struct AHISoundData   *sd;
@@ -706,9 +705,9 @@ SetSound ( UWORD                    channel,
 
 
 ULONG
-SetEffect( ULONG*                   effect,
-           struct AHIPrivAudioCtrl* audioctrl,
-           struct AHIBase*          AHIBase )
+_AHI_SetEffect( ULONG*                   effect,
+		struct AHIPrivAudioCtrl* audioctrl,
+		struct AHIBase*          AHIBase )
 {
   struct Library        *AHIsubBase;
   ULONG                  rc;
@@ -901,11 +900,11 @@ SetEffect( ULONG*                   effect,
 */
 
 ULONG
-LoadSound( UWORD                    sound,
-           ULONG                    type,
-           APTR                     info,
-           struct AHIPrivAudioCtrl* audioctrl,
-           struct AHIBase*          AHIBase )
+_AHI_LoadSound( UWORD                    sound,
+		ULONG                    type,
+		APTR                     info,
+		struct AHIPrivAudioCtrl* audioctrl,
+		struct AHIBase*          AHIBase )
 {
 
   struct Library *AHIsubBase;
@@ -1010,9 +1009,9 @@ LoadSound( UWORD                    sound,
 */
 
 ULONG
-UnloadSound( UWORD                    sound,
-             struct AHIPrivAudioCtrl* audioctrl,
-             struct AHIBase*          AHIBase )
+_AHI_UnloadSound( UWORD                    sound,
+		  struct AHIPrivAudioCtrl* audioctrl,
+		  struct AHIBase*          AHIBase )
 {
   struct Library *AHIsubBase;
   ULONG rc;
@@ -1127,9 +1126,9 @@ UnloadSound( UWORD                    sound,
 */
 
 ULONG
-PlayA( struct AHIPrivAudioCtrl* audioctrl,
-       struct TagItem*          tags,
-       struct AHIBase*          AHIBase )
+_AHI_PlayA( struct AHIPrivAudioCtrl* audioctrl,
+	    struct TagItem*          tags,
+	    struct AHIBase*          AHIBase )
 {
   struct TagItem *tag,*tstate=tags;
   struct Library *AHIsubBase;
@@ -1286,8 +1285,8 @@ static const UBYTE type2bytes[]=
 };
 
 ULONG
-SampleFrameSize( ULONG           sampletype,
-                 struct AHIBase* AHIBase )
+_AHI_SampleFrameSize( ULONG           sampletype,
+		      struct AHIBase* AHIBase )
 {
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {

@@ -4,7 +4,6 @@
  */
 
 #include <config.h>
-//#include <CompilerSpecific.h>
 
 #include <exec/alerts.h>
 #include <exec/libraries.h>
@@ -16,11 +15,9 @@
 #include <proto/exec.h>
 #include <proto/utility.h>
 
-#include "gatestubs1.h"
-#include "gatestubs2.h"
+#include "gatestubs.h"
 #include "library.h"
 
-#include "DriverBase.h"
 #include "DriverData.h"
 #include "version.h"
 
@@ -28,10 +25,10 @@
 #define INTUITIONNAME "intuition.library"
 #endif
 
-#if !defined( __AROS__ )
+#if !defined( __AROS__ ) && !defined( __amithlon__ )
 extern void _etext;
 #else
-# define _etext RomTag // Fake it
+# define _etext RomTag+1 // Fake it
 #endif
 
 /******************************************************************************
@@ -71,8 +68,6 @@ _start( void )
 ** Globals ********************************************************************
 ******************************************************************************/
 
-struct ExecBase* SysBase = NULL;
-
 const char  LibName[]     = DRIVER;
 const char  LibIDString[] = DRIVER " " VERS "\r\n";
 const UWORD LibVersion    = VERSION;
@@ -89,7 +84,7 @@ ULONG   __abox__=1;
 
 static const APTR FuncTable[] =
 {
-#if defined( __morphos__ ) || defined( __MORPHOS__ ) || defined( __amithlon__ )
+#if defined( __MORPHOS__ ) || defined( __amithlon__ )
   (APTR) FUNCARRAY_32BIT_NATIVE,
 #endif
 
@@ -122,7 +117,12 @@ static const APTR InitTable[4] =
   (APTR) DRIVERBASE_SIZEOF,
   (APTR) &FuncTable,
   NULL,
+#if defined( __MORPHOS__ ) || defined( __amithlon__ )
+  (APTR) _LibInit
+#else
   (APTR) gwLibInit
+#endif
+
 };
 
 
@@ -134,13 +134,22 @@ static const struct Resident RomTag =
   RTC_MATCHWORD,
   (struct Resident *) &RomTag,
   (struct Resident *) &_etext,
+#if defined( __MORPHOS__ ) 
+  RTF_EXTENDED | RTF_PPC | RTF_AUTOINIT,
+#elif defined( __amithlon__ )
+  RTF_PPC | RTF_AUTOINIT,
+#else
   RTF_AUTOINIT,
+#endif
   VERSION,
   NT_LIBRARY,
   0,                      /* priority */
   (BYTE *) LibName,
   (BYTE *) LibIDString,
   (APTR) &InitTable
+#if defined( __MORPHOS__ )
+  , REVISION, NULL
+#endif
 };
 
 
@@ -164,6 +173,71 @@ ReqA( const char*        text,
 
   EasyRequestArgs( NULL, &es, NULL, args );
 }
+
+/******************************************************************************
+** Serial port debugging ******************************************************
+******************************************************************************/
+
+#if defined( __AROS__ ) && !defined( __mc68000__ )
+
+#include <aros/asmcall.h>
+
+AROS_UFH2( void,
+	   rawputchar_m68k,
+	   AROS_UFHA( UBYTE,            c,       D0 ),
+	   AROS_UFHA( struct ExecBase*, sysbase, A3 ) )
+{
+  AROS_USERFUNC_INIT
+  __RawPutChar_WB( sysbase, c );
+  AROS_USERFUNC_EXIT  
+}
+
+#else
+
+static UWORD rawputchar_m68k[] = 
+{
+  0x2C4B,             // MOVEA.L A3,A6
+  0x4EAE, 0xFDFC,     // JSR     -$0204(A6)
+  0x4E75              // RTS
+};
+
+#endif
+
+void
+MyKPrintFArgs( UBYTE*           fmt, 
+	       ULONG*           args,
+	       struct DriverBase* AHIsubBase )
+{
+  RawDoFmt( fmt, args, (void(*)(void)) rawputchar_m68k, SysBase );
+}
+
+
+/******************************************************************************
+** HookEntry ******************************************************************
+******************************************************************************/
+
+#if defined( __MORPHOS__ )
+
+/* Should be in libamiga, but isn't? */
+
+static ULONG
+gw_HookEntry( void )
+{
+  struct Hook* h   = (struct Hook*) REG_A0;
+  void*        o   = (void*)        REG_A2; 
+  void*        msg = (void*)        REG_A1;
+
+  return ( ( (ULONG(*)(struct Hook*, void*, void*)) *h->h_SubEntry)( h, o, msg ) );
+}
+
+struct EmulLibEntry _HookEntry =
+{
+  TRAP_LIB, 0, (void (*)(void)) &gw_HookEntry
+};
+
+__asm( ".globl HookEntry;HookEntry=_HookEntry" );
+
+#endif
 
 /******************************************************************************
 ** Library init ***************************************************************
@@ -192,7 +266,7 @@ _LibInit( struct DriverBase* AHIsubBase,
     Alert( AN_Unknown|AG_OpenLib|AO_Intuition );
     goto error;
   }
-  
+
   if( UtilityBase == NULL )
   {
     Req( "Unable to open 'utility.library' version 37.\n" );
@@ -203,7 +277,6 @@ _LibInit( struct DriverBase* AHIsubBase,
   {
     goto error;
   }
-
 
   return AHIsubBase;
 

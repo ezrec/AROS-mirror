@@ -18,10 +18,10 @@ endif
 
 top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
+PREFIX		= @prefix@
 DISTDIR		= @DISTDIR@
 PREFSDIR	= ${DISTDIR}/User/Prefs
 CATDIR		= ${DISTDIR}/User/Catalogs
-PREFIX          = @prefix@
 
 build_os	= @build_os@
 
@@ -49,15 +49,14 @@ OBJECTS_BGUI	= gui_bgui.o
 OBJECTS_CA	= gui_ca.o
 OBJECTS_MUI	= gui_mui.o
 
-EXECUTABLES	= AHI_MUI
-# AHI_BGUI AHI_CA
+EXECUTABLES	= AHI_MUI # AHI_BGUI AHI_CA
 
 LANGUAGES	= $(notdir $(basename $(wildcard ${srcdir}/translations/*.ct)))
 CATALOGS	= $(addsuffix .catalog, $(LANGUAGES))
 
 
 #
-# EXECUTABLES
+# Targets
 ########################################
 
 .PHONY:		all clean distclean maintainer-clean bindist revup
@@ -65,7 +64,7 @@ CATALOGS	= $(addsuffix .catalog, $(LANGUAGES))
 all:		$(EXECUTABLES) ahiprefs.ct $(CATALOGS)
 
 clean:
-	$(RM) $(EXECUTABLES) $(LANGEXECUTABLES) version.h \
+	$(RM) $(EXECUTABLES) $(LANGTARGETS) version.h \
 	      *.catalog *.o *.bak *~ \#*\# core Makefile.dep
 
 distclean:	clean

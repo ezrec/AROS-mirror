@@ -91,12 +91,12 @@ bindist:
 	-$(RM) $(USRARCHIVE) $(DEVARCHIVE)
 
 	pwd=`pwd` bn=`basename $(DISTDIR)` && \
-	  ( cd $(DISTDIR)/.. && $(LHA) -ao6 $${pwd}/$(DEVARCHIVE) \
+	  ( cd $(DISTDIR)/.. && $(LHA) $${pwd}/$(DEVARCHIVE) \
 	  $${bn}/ahidev* $${bn}/ChangeLog $${bn}/COPYING* $${bn}/Developer )
 	cp $(DISTDIR)/ahidev.readme $(DEVREADME)
 
 	pwd=`pwd` bn=`basename $(DISTDIR)` && \
-	  ( cd $(DISTDIR)/.. && $(LHA) -ao6 $${pwd}/$(USRARCHIVE) \
+	  ( cd $(DISTDIR)/.. && $(LHA) $${pwd}/$(USRARCHIVE) \
 	  $${bn}/ahiusr* $${bn}/ChangeLog $${bn}/COPYING* $${bn}/User )
 	cp $(DISTDIR)/ahiusr.readme $(USRREADME)
 

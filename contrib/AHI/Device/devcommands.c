@@ -21,7 +21,6 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <dos/dos.h>
 #include <exec/errors.h>
@@ -76,8 +75,8 @@ static void UpdateMasterVolume( struct AHIDevUnit *, struct AHIBase * );
 // is called.
 
 void
-DevBeginIO( struct AHIRequest* ioreq,
-            struct AHIBase*    AHIBase )
+_DevBeginIO( struct AHIRequest* ioreq,
+	     struct AHIBase*    AHIBase )
 {
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {
@@ -122,8 +121,8 @@ DevBeginIO( struct AHIRequest* ioreq,
 // is called.
 
 ULONG
-DevAbortIO( struct AHIRequest* ioreq,
-            struct AHIBase*    AHIBase )
+_DevAbortIO( struct AHIRequest* ioreq,
+	     struct AHIBase*    AHIBase )
 {
   ULONG rc = 0;
   struct AHIDevUnit *iounit;
@@ -245,6 +244,15 @@ TermIO ( struct AHIRequest *ioreq,
     KPrintF("Terminating IO Request 0x%08lx", (ULONG) ioreq);
   }
 
+  if( ioreq->ahir_Std.io_Command == CMD_WRITE )
+  {
+    // Update master volume if we're terminating a write request
+    UpdateMasterVolume( iounit, AHIBase );
+
+    // Convert io_Actual to bytes
+    ioreq->ahir_Std.io_Actual *= AHI_SampleFrameSize(ioreq->ahir_Type);
+  }
+  
   if(ioreq->ahir_Extras != 0)
   {
     int  sound  = GetExtras(ioreq)->Sound;
@@ -260,15 +268,6 @@ TermIO ( struct AHIRequest *ioreq,
     FreeVec( extras );
   }
 
-  if( ioreq->ahir_Std.io_Command == CMD_WRITE )
-  {
-    // Update master volume if we're terminating a write request
-    UpdateMasterVolume( iounit, AHIBase );
-
-    // Convert io_Actual to bytes
-    ioreq->ahir_Std.io_Actual *= AHI_SampleFrameSize(ioreq->ahir_Type);
-  }
-  
   if( ! (ioreq->ahir_Std.io_Flags & IOF_QUICK))
   {
       ReplyMsg(&ioreq->ahir_Std.io_Message);
@@ -562,22 +561,22 @@ FlushCmd ( struct AHIRequest *ioreq,
   // Abort all current IO-requests
   while((ior = (struct AHIRequest *) iounit->ReadList.mlh_Head))
   {
-    DevAbortIO(ior, AHIBase);
+    _DevAbortIO(ior, AHIBase);
     ioreq->ahir_Std.io_Actual++;
   }
   while((ior = (struct AHIRequest *) iounit->PlayingList.mlh_Head))
   {
-    DevAbortIO(ior, AHIBase);
+    _DevAbortIO(ior, AHIBase);
     ioreq->ahir_Std.io_Actual++;
   }
   while((ior = (struct AHIRequest *) iounit->SilentList.mlh_Head))
   {
-    DevAbortIO(ior, AHIBase);
+    _DevAbortIO(ior, AHIBase);
     ioreq->ahir_Std.io_Actual++;
   }
   while((ior = (struct AHIRequest *) iounit->WaitingList.mlh_Head))
   {
-    DevAbortIO(ior, AHIBase);
+    _DevAbortIO(ior, AHIBase);
     ioreq->ahir_Std.io_Actual++;
   }
   TermIO(ioreq,AHIBase);
@@ -872,9 +871,9 @@ WriteCmd ( struct AHIRequest *ioreq,
   else
   {
     // Initialize the structure
-    GetExtras(ioreq)->Channel = NOCHANNEL;
-    GetExtras(ioreq)->Sound   = AHI_NOSOUND;
-    GetExtras(ioreq)->Count   = 2;
+    GetExtras(ioreq)->Channel   = NOCHANNEL;
+    GetExtras(ioreq)->Sound     = AHI_NOSOUND;
+    GetExtras(ioreq)->VolumeDiv = 1;
   }
 
   if(iounit->IsPlaying && !error)
@@ -1252,7 +1251,8 @@ NewWriter ( struct AHIRequest *ioreq,
               AHI_Play(iounit->AudioCtrl,
                   AHIP_BeginChannel,  channel,
                   AHIP_LoopFreq,      ioreq->ahir_Frequency,
-                  AHIP_LoopVol,       ioreq->ahir_Volume,
+                  AHIP_LoopVol,       ( ioreq->ahir_Volume /
+					GetExtras(ioreq)->VolumeDiv ),
                   AHIP_LoopPan,       ioreq->ahir_Position,
                   AHIP_LoopSound,     GetExtras(ioreq)->Sound,
                   AHIP_LoopOffset,    ioreq->ahir_Std.io_Actual,
@@ -1429,7 +1429,7 @@ PlayRequest ( int channel,
   AHI_Play(iounit->AudioCtrl,
       AHIP_BeginChannel,  channel,
       AHIP_Freq,          ioreq->ahir_Frequency,
-      AHIP_Vol,           ioreq->ahir_Volume,
+      AHIP_Vol,           ioreq->ahir_Volume / GetExtras(ioreq)->VolumeDiv,
       AHIP_Pan,           ioreq->ahir_Position,
       AHIP_Sound,         GetExtras(ioreq)->Sound,
       AHIP_Offset,        ioreq->ahir_Std.io_Actual,
@@ -1591,43 +1591,106 @@ UpdateSilentPlayers ( struct AHIDevUnit *iounit,
 static void UpdateMasterVolume( struct AHIDevUnit *iounit,
 				struct AHIBase    *AHIBase )
 {
-  struct AHIRequest *ioreq;
-  UWORD              c;
-  
+  struct AHIRequest* ioreq1;
+  struct AHIRequest* ioreq2;
+  struct Library*    AHIsubBase;
+
+  AHIsubBase = ((struct AHIPrivAudioCtrl *) iounit->AudioCtrl)->ahiac_SubLib;
+
   AHIObtainSemaphore(&iounit->Lock);
 
-  c = 0;
-  
-  for(ioreq = (struct AHIRequest *)iounit->PlayingList.mlh_Head;
-      ioreq->ahir_Std.io_Message.mn_Node.ln_Succ;
-      ioreq = (struct AHIRequest *)ioreq->ahir_Std.io_Message.mn_Node.ln_Succ)
+  for(ioreq1 = (struct AHIRequest*) iounit->PlayingList.mlh_Head;
+      ioreq1->ahir_Std.io_Message.mn_Node.ln_Succ;
+      ioreq1 = (struct AHIRequest*) ioreq1->ahir_Std.io_Message.mn_Node.ln_Succ)
   {
-    ++c;
+    ULONG id     = ioreq1->ahir_Private[1];
+    int   c      = 0;
+    LONG  maxdiv = 1;
+
+/*     KPrintF( "Checking id %08lx on request %08lx... ", id, ioreq1 ); */
+    
+    for(ioreq2 = (struct AHIRequest*) iounit->PlayingList.mlh_Head;
+	ioreq2->ahir_Std.io_Message.mn_Node.ln_Succ;
+	ioreq2 = (struct AHIRequest*) ioreq2->ahir_Std.io_Message.mn_Node.ln_Succ)
+    {
+      if( ioreq2->ahir_Private[1] == id )
+      {
+	++c;
+
+	if( GetExtras(ioreq2) && GetExtras(ioreq2)->VolumeDiv > maxdiv )
+	{
+	  maxdiv = GetExtras(ioreq2)->VolumeDiv;
+	}
+      }
+    }
+
+    if( maxdiv < c )
+    {
+      maxdiv = c;
+    }
+
+    if( GetExtras(ioreq1)->VolumeDiv < maxdiv )
+    {
+      GetExtras(ioreq1)->VolumeDiv = maxdiv;
+    }
+
+/*     KPrintF( "%ld requests, maxdiv = %ld -> Vol %05lx => %05lx\n", */
+/* 	     c, maxdiv, ioreq1->ahir_Volume, */
+/* 	     ioreq1->ahir_Volume / GetExtras(ioreq1)->VolumeDiv ); */
   }
 
-  if( c != iounit->ChannelsInUse )
-  {
-    struct AHIEffMasterVolume vol;
-    
-    iounit->ChannelsInUse = c;
+  // Now update the volume as quickly as possible ...
 
-    if( c == 0 )
+  AHIsub_Disable((struct AHIAudioCtrlDrv *) iounit->AudioCtrl);
+  
+  for(ioreq1 = (struct AHIRequest*) iounit->PlayingList.mlh_Head;
+      ioreq1->ahir_Std.io_Message.mn_Node.ln_Succ;
+      ioreq1 = (struct AHIRequest*) ioreq1->ahir_Std.io_Message.mn_Node.ln_Succ)
+  {
+    if( GetExtras(ioreq1)->Channel != NOCHANNEL )
     {
-      vol.ahie_Effect   = AHIET_MASTERVOLUME | AHIET_CANCEL;
-      vol.ahiemv_Volume = 0x10000;
+      AHI_SetVol( GetExtras(ioreq1)->Channel,
+		  ioreq1->ahir_Volume / GetExtras(ioreq1)->VolumeDiv,
+		  ioreq1->ahir_Position,
+		  iounit->AudioCtrl,
+		  AHISF_IMM );
+    }
+  } 
+
+  AHIsub_Enable((struct AHIAudioCtrlDrv *) iounit->AudioCtrl);
+
+  // And now the real master volume ...
+  
+  // Always "reserve" one channel for each opener (yes, even if
+  // they're not actually writing anything)
+
+  if( iounit->Unit.unit_OpenCnt != iounit->ChannelsInUse )
+  {
+    iounit->ChannelsInUse = iounit->Unit.unit_OpenCnt;
+    
+    if( iounit->Unit.unit_OpenCnt == 0 )
+    {
+      struct AHIEffMasterVolume vol = {
+	AHIET_MASTERVOLUME | AHIET_CANCEL,
+	0x10000
+      };
+
+      AHI_SetEffect( &vol, iounit->AudioCtrl );
     }
     else
     {
-      vol.ahie_Effect   = AHIET_MASTERVOLUME;
-      vol.ahiemv_Volume = iounit->Channels * 0x10000 / c;
+      struct AHIEffMasterVolume vol = {
+	AHIET_MASTERVOLUME,
+	iounit->Channels * 0x10000 / iounit->Unit.unit_OpenCnt
+      };
 
       if( iounit->PseudoStereo )
       {
 	vol.ahiemv_Volume = vol.ahiemv_Volume / 2;
       }
-    }
 
-    AHI_SetEffect( &vol, iounit->AudioCtrl );
+      AHI_SetEffect( &vol, iounit->AudioCtrl );
+    }
   }
   
   AHIReleaseSemaphore(&iounit->Lock);

@@ -26,17 +26,17 @@
 #include "ahi_def.h"
 
 struct AHIAudioModeRequester*
-AllocAudioRequestA( struct TagItem* tags,
-                    struct AHIBase* AHIBase );
+_AHI_AllocAudioRequestA( struct TagItem* tags,
+			 struct AHIBase* AHIBase );
 
 ULONG
-AudioRequestA( struct AHIAudioModeRequester* req_in,
-               struct TagItem*               tags,
-               struct AHIBase*               AHIBase );
+_AHI_AudioRequestA( struct AHIAudioModeRequester* req_in,
+		    struct TagItem*               tags,
+		    struct AHIBase*               AHIBase );
 
 void
-FreeAudioRequest( struct AHIAudioModeRequester* req,
-                  struct AHIBase*               AHIBase);
+_AHI_FreeAudioRequest( struct AHIAudioModeRequester* req,
+		       struct AHIBase*               AHIBase);
 
 struct Gadget;
 

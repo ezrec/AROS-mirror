@@ -21,7 +21,35 @@
 ** The record slave process ***************************************************
 ******************************************************************************/
 
+#undef SysBase
+
+static void RecSlave( struct ExecBase* SysBase );
+
+#if defined( __AROS__ )
+
+#include <aros/asmcall.h>
+
+AROS_UFH3(LONG, RecSlaveEntry,
+	  AROS_UFHA(STRPTR, argPtr, A0),
+	  AROS_UFHA(ULONG, argSize, D0),
+	  AROS_UFHA(struct ExecBase *, SysBase, A6))
+{
+   AROS_USERFUNC_INIT
+   RecSlave( SysBase );
+   AROS_USERFUNC_EXIT
+}
+
+#else
+
 void RecSlaveEntry(void)
+{
+  struct ExecBase* SysBase = *((struct ExecBase**) 4);
+
+  RecSlave( SysBase );
+}
+#endif
+
+static void RecSlave( struct ExecBase* SysBase )
 {
   struct AHIAudioCtrlDrv* AudioCtrl;
   struct DriverBase*      AHIsubBase;

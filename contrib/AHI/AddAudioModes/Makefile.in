@@ -12,9 +12,9 @@
 
 top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
+PREFIX		= @prefix@
 DISTDIR		= @DISTDIR@
 CDIR		= ${DISTDIR}/User/C
-PREFIX          = @prefix@
 
 build_os	= @build_os@
 
@@ -37,11 +37,11 @@ VPATH		= @srcdir@
 ########################################
 
 OBJECTS		= AddAudioModes.o
-EXECUTABLE      = AddAudioModes
+EXECUTABLE	= AddAudioModes
 
 
 #
-# EXECUTABLEs
+# Targets
 ########################################
 
 .PHONY:		all clean distclean maintainer-clean install revup bindist

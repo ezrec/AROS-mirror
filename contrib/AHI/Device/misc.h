@@ -24,7 +24,6 @@
 #define ahi_misc_h
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <exec/lists.h>
 #include <exec/nodes.h>
@@ -92,6 +91,16 @@ void EndianSwap( size_t size, void* data );
 #else
 # define EndianSwap(s, x)
 #endif
+
+BOOL
+PreTimerFunc( struct Hook*             hook,
+	      struct AHIPrivAudioCtrl* audioctrl,
+	      void*                    null );
+
+void
+PostTimerFunc( struct Hook*             hook,
+	       struct AHIPrivAudioCtrl* audioctrl,
+	       void*                    null );
 
 BOOL
 PreTimer( struct AHIPrivAudioCtrl* audioctrl );

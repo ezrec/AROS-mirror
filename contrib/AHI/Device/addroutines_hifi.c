@@ -21,7 +21,7 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
+
 #include "addroutines.h"
 
 /******************************************************************************

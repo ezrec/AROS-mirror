@@ -111,7 +111,7 @@ Zene egység
 ;
 msgProperties
 Mód ID\nFelvétel\nSzerzõ\nCopyright\nMeghajtóprogram\nVerzió
-; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull
 Duplex

@@ -88,7 +88,7 @@ Music unit
 ; *** Properties box ***
 ;
 msgProperties (//)
-Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull (//)
 Full duplex

@@ -43,20 +43,20 @@ struct AHI_AudioDatabase
 
 
 ULONG
-NextAudioID( ULONG           id,
-             struct AHIBase* AHIBase );
+_AHI_NextAudioID( ULONG           id,
+		  struct AHIBase* AHIBase );
 
 ULONG
-AddAudioMode( struct TagItem* DBtags,
-              struct AHIBase* AHIBase );
+_AHI_AddAudioMode( struct TagItem* DBtags,
+		   struct AHIBase* AHIBase );
 
 ULONG
-RemoveAudioMode( ULONG           id,
-                 struct AHIBase* AHIBase );
+_AHI_RemoveAudioMode( ULONG           id,
+		      struct AHIBase* AHIBase );
 
 ULONG
-LoadModeFile( UBYTE*          name,
-              struct AHIBase* AHIBase );
+_AHI_LoadModeFile( UBYTE*          name,
+		   struct AHIBase* AHIBase );
 
 struct AHI_AudioDatabase*
 LockDatabase( void );

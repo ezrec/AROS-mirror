@@ -9,6 +9,8 @@
 
 @SET_MAKE@
 
+VPATH		= @srcdir@
+
 top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
 DISTDIR		= @DISTDIR@
@@ -23,46 +25,38 @@ host_cpu	= @host_cpu@
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
 
-FD2INLINE	= @FD2INLINE@
-FD2PRAGMA	= @FD2PRAGMA@
-FD2PP		= @FD2PRAGMA_PRE@
-
-VPATH		= @srcdir@
-
-FD2INLINE_TARGET= --target=${host}
+SFDC		= @SFDC@
+SFDC_TARGET	= --target=${host}
 
 
 #
 # Files
 ########################################
 
+CTARGETS	= C-clib-ahi_protos.h C-clib-ahi_sub_protos.h \
+		  C-proto-ahi.h C-proto-ahi_sub.h
+
 ASMTARGETS	= Asm-lvo-ahi_lib.i Asm-lvo-ahi_sub_lib.i
 
-STORMTARGETS	= Storm-pragma-ahi_lib.h Storm-pragma-ahi_sub_lib.h \
-		  Storm-proto-ahi.h Storm-proto-ahi_sub.h
+FDTARGETS	= FD-ahi_lib.fd FD-ahi_sub_lib.fd
 
-SASTARGETS	= SAS-pragmas-ahi_pragmas.h SAS-pragmas-ahi_sub_pragmas.h \
-		  SAS-proto-ahi.h SAS-proto-ahi_sub.h
+GCCTARGETS	= C-inline-ahi.h C-inline-ahi_sub.h
 
-GCCTARGETS	= gcc-inline-ahi.h gcc-inline-ahi_sub.h \
-		  gcc-proto-ahi.h gcc-proto-ahi_sub.h
-
+PRAGMATARGETS	= C-pragmas-ahi_pragmas.h C-pragmas-ahi_sub_pragmas.h
 
 
 ASMFILES	= Asm/devices/ahi.i Asm/libraries/ahi_sub.i
 
-CFILES		= C/clib/ahi_protos.h C/clib/ahi_sub_protos.h \
-		  C/libraries/ahi_sub.h C/devices/ahi.h
+CFILES		= C/libraries/ahi_sub.h C/devices/ahi.h
 
-FDFILES		= FD/ahi_lib.fd  FD/ahi_sub_lib.fd
-
+SFDFILES	= SFD/ahi_lib.sfd  SFD/ahi_sub_lib.sfd
 
 
-TARGETS		= $(GCCTARGETS)
-FILES		= $(CFILES) $(FDFILES)
+TARGETS		= $(CTARGETS) $(FDTARGETS) $(GCCTARGETS)
+FILES		= $(CFILES) $(SFDFILES)
 
 ifeq ($(host_cpu),m68k)
-TARGETS		+= $(ASMTARGETS) $(STORMTARGETS) $(SASTARGETS)
+TARGETS		+= $(ASMTARGETS) $(PRAGMATARGETS)
 FILES		+= $(ASMFILES)
 endif
 
@@ -75,7 +69,7 @@ endif
 all:		$(TARGETS)
 
 clean:
-	$(RM) -r $(TARGETS) *.bak *~ \#*\# core gcc
+	$(RM) -r $(TARGETS) gcc-include.stamp *.bak *~ \#*\# core gcc
 
 distclean:	clean
 	$(RM) Makefile
@@ -98,8 +92,10 @@ bindist:	$(TARGETS)
 	 $(INSTALL_DATA) $(srcdir)/$$file $(DEVINCDIR)/$$file; \
 	done
 
-gcc-include: FD/ahi_lib.fd FD/ahi_sub_lib.fd \
-	     C/clib/ahi_protos.h C/clib/ahi_sub_protos.h
+gcc-include: gcc-include.stamp
+
+gcc-include.stamp:	SFD/ahi_lib.sfd SFD/ahi_sub_lib.sfd \
+			$(CTARGETS) $(GCCTARGETS)
 	 $(INSTALL) --directory gcc/clib gcc/devices gcc/libraries \
 	                        gcc/inline gcc/proto
 
@@ -107,19 +103,14 @@ gcc-include: FD/ahi_lib.fd FD/ahi_sub_lib.fd \
 	 $(INSTALL_DATA) $(srcdir)/C/$$file gcc/$$file; \
 	done
 
-	$(FD2INLINE) --new $(FD2INLINE_TARGET) \
-	             $(srcdir)/FD/ahi_lib.fd gcc/clib/ahi_protos.h \
-		     -o gcc/inline/ahi.h
+	$(INSTALL_DATA) C-clib-ahi_protos.h	gcc/clib/ahi_protos.h
+	$(INSTALL_DATA) C-clib-ahi_sub_protos.h	gcc/clib/ahi_sub_protos.h
+	$(INSTALL_DATA) C-inline-ahi.h		gcc/inline/ahi.h
+	$(INSTALL_DATA) C-inline-ahi_sub.h	gcc/inline/ahi_sub.h
+	$(INSTALL_DATA) C-proto-ahi.h		gcc/proto/ahi.h
+	$(INSTALL_DATA) C-proto-ahi_sub.h	gcc/proto/ahi_sub.h
+	touch $@
 
-	$(FD2INLINE) --new $(FD2INLINE_TARGET) \
-	             $(srcdir)/FD/ahi_sub_lib.fd gcc/clib/ahi_sub_protos.h \
-	             -o gcc/inline/ahi_sub.h
-
-	$(FD2INLINE) --proto $(FD2INLINE_TARGET) \
-	             $(srcdir)/FD/ahi_lib.fd -o gcc/proto/ahi.h
-
-	$(FD2INLINE) --proto $(FD2INLINE_TARGET) \
-	             $(srcdir)/FD/ahi_sub_lib.fd -o gcc/proto/ahi_sub.h
 
 #
 # Auto-remake autoconf stuff
@@ -133,60 +124,38 @@ Makefile: Makefile.in ../config.status
 # Rules
 ########################################
 
-Asm-lvo-ahi_lib.i:	FD/ahi_lib.fd
-	$(FD2PRAGMA) $(FD2PP)infile $< $(FD2PP)special 23
-	mv ahi_lib.i $@
+Asm-lvo-ahi_lib.i:	SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=lvo
 
-Asm-lvo-ahi_sub_lib.i:	FD/ahi_sub_lib.fd
-	$(FD2PRAGMA) $(FD2PP)infile $< $(FD2PP)special 23
-	mv ahi_sub_lib.i $@
+Asm-lvo-ahi_sub_lib.i:	SFD/ahi_sub_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=lvo
 
-Storm-pragma-ahi_lib.h:	FD/ahi_lib.fd
-	$(FD2PRAGMA) $(FD2PP)infile $< $(FD2PP)special 5
-	mv ahi_lib.h $@
+C-clib-ahi_protos.h:	SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=clib
 
-Storm-pragma-ahi_sub_lib.h:	FD/ahi_sub_lib.fd
-	$(FD2PRAGMA) $(FD2PP)infile $< $(FD2PP)special 5
-	mv ahi_sub_lib.h $@
+C-clib-ahi_sub_protos.h:	SFD/ahi_sub_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=clib
 
-Storm-proto-ahi.h:	FD/ahi_lib.fd
-	$(FD2PRAGMA) $(FD2PP)infile $< $(FD2PP)special 30
-	mv ahi.h $@
+C-inline-ahi.h:		SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=macros
 
-Storm-proto-ahi_sub.h:	FD/ahi_sub_lib.fd
-	$(FD2PRAGMA) $(FD2PP)infile $< $(FD2PP)special 30
-	mv ahi_sub.h $@
+C-inline-ahi_sub.h:	SFD/ahi_sub_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=macros
 
-SAS-pragmas-ahi_pragmas.h:	FD/ahi_lib.fd
-	$(FD2PRAGMA) $(FD2PP)infile $< $(FD2PP)special 3
-	mv ahi_pragmas.h $@
+C-pragmas-ahi_pragmas.h:	SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=pragmas
 
-SAS-pragmas-ahi_sub_pragmas.h:	FD/ahi_sub_lib.fd
-	$(FD2PRAGMA) $(FD2PP)infile $< $(FD2PP)special 3
-	mv ahi_sub_pragmas.h $@
+C-pragmas-ahi_sub_pragmas.h:	SFD/ahi_sub_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=pragmas
 
-SAS-proto-ahi.h:	FD/ahi_lib.fd
-	$(FD2PRAGMA) $(FD2PP)infile $< $(FD2PP)special 33
-	mv ahi.h $@
+C-proto-ahi.h:		SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=proto
 
-SAS-proto-ahi_sub.h:	FD/ahi_sub_lib.fd
-	$(FD2PRAGMA) $(FD2PP)infile $< $(FD2PP)special 33
-	mv ahi_sub.h $@
+C-proto-ahi_sub.h:	SFD/ahi_sub_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=proto
 
-gcc-inline-ahi.h:	FD/ahi_lib.fd C/clib/ahi_protos.h
-	$(FD2INLINE) --new $(FD2INLINE_TARGET) $< $(srcdir)/C/clib/ahi_protos.h -o $@
+FD-ahi_lib.fd:	SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=fd
 
-gcc-inline-ahi_sub.h:	FD/ahi_sub_lib.fd C/clib/ahi_sub_protos.h
-	$(FD2INLINE) --new $(FD2INLINE_TARGET) $< $(srcdir)/C/clib/ahi_sub_protos.h -o $@
-
-#gcc-ppcinline-ahi.h:	FD/ahi_lib.fd C/clib/ahi_protos.h
-#	$(FD2INLINE) --new --powerup $< $(srcdir)/C/clib/ahi_protos.h -o $@
-
-#gcc-ppcinline-ahi_sub.h:	FD/ahi_sub_lib.fd C/clib/ahi_sub_protos.h
-#	$(FD2INLINE) --new --powerup $< $(srcdir)/C/clib/ahi_sub_protos.h -o $@
-
-gcc-proto-ahi.h:		FD/ahi_lib.fd
-	$(FD2INLINE) --proto $(FD2INLINE_TARGET) $< -o $@
-
-gcc-proto-ahi_sub.h:	FD/ahi_sub_lib.fd
-	$(FD2INLINE) --proto $(FD2INLINE_TARGET) $< -o $@
+FD-ahi_sub_lib.fd:	SFD/ahi_sub_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=fd

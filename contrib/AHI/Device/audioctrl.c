@@ -21,7 +21,6 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <exec/memory.h>
 #include <exec/alerts.h>
@@ -464,8 +463,8 @@ SamplerFunc( struct Hook*             hook,
 */
 
 struct AHIAudioCtrl*
-AllocAudioA( struct TagItem* tags,
-             struct AHIBase* AHIBase )
+_AHI_AllocAudioA( struct TagItem* tags,
+		  struct AHIBase* AHIBase )
 {
   struct AHIPrivAudioCtrl* audioctrl;
   struct Library *AHIsubBase;
@@ -606,6 +605,20 @@ AllocAudioA( struct TagItem* tags,
     audioctrl->ac.ahiac_PreTimer  = (BOOL (*)(void)) PreTimerPreserveAllRegs;
     audioctrl->ac.ahiac_PostTimer = (void (*)(void)) PostTimerPreserveAllRegs;
 
+    audioctrl->ac.ahiac_PreTimerFunc=AllocVec(sizeof(struct Hook),MEMF_PUBLIC|MEMF_CLEAR);
+    if(!audioctrl->ac.ahiac_PreTimerFunc)
+      goto error;
+
+    audioctrl->ac.ahiac_PostTimerFunc=AllocVec(sizeof(struct Hook),MEMF_PUBLIC|MEMF_CLEAR);
+    if(!audioctrl->ac.ahiac_PostTimerFunc)
+      goto error;
+
+    audioctrl->ac.ahiac_PreTimerFunc->h_Entry    = (HOOKFUNC) HookEntry;
+    audioctrl->ac.ahiac_PreTimerFunc->h_SubEntry = (HOOKFUNC) PreTimerFunc;
+    
+    audioctrl->ac.ahiac_PostTimerFunc->h_Entry    = (HOOKFUNC) HookEntry;
+    audioctrl->ac.ahiac_PostTimerFunc->h_SubEntry = (HOOKFUNC) PostTimerFunc;
+    
     if( !InitMixroutine( audioctrl ) ) goto error;
   }
 
@@ -683,8 +696,8 @@ error:
 */
 
 ULONG
-FreeAudio( struct AHIPrivAudioCtrl* audioctrl,
-           struct AHIBase*          AHIBase )
+_AHI_FreeAudio( struct AHIPrivAudioCtrl* audioctrl,
+		struct AHIBase*          AHIBase )
 {
   struct Library *AHIsubBase;
   int i;
@@ -721,6 +734,8 @@ FreeAudio( struct AHIPrivAudioCtrl* audioctrl,
 
     FreeVec( audioctrl->ac.ahiac_SamplerFunc );
     FreeVec( audioctrl->ac.ahiac_MixerFunc );
+    FreeVec( audioctrl->ac.ahiac_PreTimerFunc );
+    FreeVec( audioctrl->ac.ahiac_PostTimerFunc );
 
     AHIFreeVec( audioctrl );
   }
@@ -769,7 +784,7 @@ FreeAudio( struct AHIPrivAudioCtrl* audioctrl,
 */
 
 ULONG
-KillAudio( struct AHIBase* AHIBase )
+_AHI_KillAudio( struct AHIBase* AHIBase )
 {
   UWORD i;
 
@@ -893,9 +908,9 @@ KillAudio( struct AHIBase* AHIBase )
 */
 
 ULONG
-ControlAudioA( struct AHIPrivAudioCtrl* audioctrl,
-               struct TagItem*          tags,
-               struct AHIBase*          AHIBase )
+_AHI_ControlAudioA( struct AHIPrivAudioCtrl* audioctrl,
+		    struct TagItem*          tags,
+		    struct AHIBase*          AHIBase )
 {
   ULONG *ptr, playflags=0, stopflags=0, rc=AHIE_OK;
   UBYTE update=FALSE;

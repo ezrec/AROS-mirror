@@ -1,6 +1,6 @@
 /****************************************************************
    This file was created automatically by `FlexCat 2.4'
-   from "../../ahisrc/AHI/ahiprefs.cd".
+   from "/usr/local/aros/AROS/contrib/AHI/AHI/ahiprefs.cd".
 
    Do NOT edit by hand!
 ****************************************************************/

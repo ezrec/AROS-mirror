@@ -10,6 +10,6 @@ srcdir		= @srcdir@
 DRIVER		= void.audio
 MODEFILE	= VOID
 
-OBJECTS		= void-init.o void-main.o void-accel.o
+OBJECTS		= void-init.o void-main.o void-playslave.o void-accel.o
 
 include ../Common/Makefile.common

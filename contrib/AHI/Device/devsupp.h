@@ -24,7 +24,6 @@
 #define ahi_devsupp_h
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <devices/ahi.h>
 

@@ -24,51 +24,6 @@
 #define ahi_gateway_h
 
 #include <config.h>
-#include <CompilerSpecific.h>
-
-/* Library entry points (native) */
-
-#ifdef __AROS__
-#include <aros/libcall.h>
-#include <aros/asmcall.h>
-#endif
-
-#if !defined( AROS_SLIB_ENTRY )
-#define AROS_SLIB_ENTRY( f, l ) f
-#endif
-
-#if !defined( AROS_ASMSYMNAME )
-#define AROS_ASMSYMNAME(f) f
-#endif
-
-void AROS_ASMSYMNAME(gw_initRoutine)( void );
-void AROS_SLIB_ENTRY( gw_DevExpunge, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_DevOpen, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_DevClose, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_Null, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_DevBeginIO, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_DevAbortIO, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_AllocAudioA, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_FreeAudio, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_KillAudio, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_ControlAudioA, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_SetVol, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_SetFreq, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_SetSound, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_SetEffect, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_LoadSound, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_UnloadSound, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_PlayA, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_SampleFrameSize, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_GetAudioAttrsA, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_BestAudioIDA, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_AllocAudioRequestA, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_AudioRequestA, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_FreeAudioRequest, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_NextAudioID, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_AddAudioMode, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_RemoveAudioMode, Ahi )( void );
-void AROS_SLIB_ENTRY( gw_LoadModeFile, Ahi )( void );
 
 void m68k_IndexToFrequency( void );
 void m68k_DevProc( void );

@@ -25,6 +25,8 @@
 void
 SlaveEntry( void );
 
+PROCGW( static, void,  slaveentry, SlaveEntry );
+
 
 /*  There is probably no reason to support all these frequencies. If,
  *  for example, your hardware is locked at 48 kHz, it's ok to only
@@ -174,10 +176,10 @@ _AHIsub_Start( ULONG                   flags,
   {
     struct TagItem proctags[] =
     {
-      { NP_Entry,     (ULONG) SlaveEntry },
-      { NP_Name,      (ULONG) LibName    },
-      { NP_Priority,  -1                 },
-      { TAG_DONE,     0                  }
+      { NP_Entry,     (ULONG) &slaveentry },
+      { NP_Name,      (ULONG) LibName     },
+      { NP_Priority,  -1                  },
+      { TAG_DONE,     0                   }
     };
     
     dd->mixbuffer = AllocVec( AudioCtrl->ahiac_BuffSize,
@@ -365,68 +367,4 @@ _AHIsub_HardwareControl( ULONG                   attribute,
   struct VoidBase* VoidBase = (struct VoidBase*) AHIsubBase;
 
   return 0;
-}
-
-
-/******************************************************************************
-** The slave process **********************************************************
-******************************************************************************/
-
-void
-SlaveEntry( void )
-{
-  struct AHIAudioCtrlDrv* AudioCtrl;
-  struct DriverBase*      AHIsubBase;
-  struct VoidBase*        VoidBase;
-  BOOL                    running;
-  ULONG                   signals;
-
-  AudioCtrl  = (struct AHIAudioCtrlDrv*) FindTask( NULL )->tc_UserData;
-  AHIsubBase = (struct DriverBase*) dd->ahisubbase;
-  VoidBase   = (struct VoidBase*) AHIsubBase;
-
-  dd->slavesignal = AllocSignal( -1 );
-
-  if( dd->slavesignal != -1 )
-  {
-    // Everything set up. Tell Master we're alive and healthy.
-
-    Signal( (struct Task*) dd->mastertask,
-            1L << dd->mastersignal );
-
-    running = TRUE;
-
-    while( running )
-    {
-      signals = SetSignal(0L,0L);
-
-      if( signals & ( SIGBREAKF_CTRL_C | (1L << dd->slavesignal) ) )
-      {
-        running = FALSE;
-      }
-      else
-      {
-        CallHookPkt( AudioCtrl->ahiac_PlayerFunc, AudioCtrl, NULL );
-        CallHookPkt( AudioCtrl->ahiac_MixerFunc, AudioCtrl, dd->mixbuffer );
-        
-        // The mixing buffer is now filled with AudioCtrl->ahiac_BuffSamples
-        // of sample frames (type AudioCtrl->ahiac_BuffType). Send them
-        // to the sound card here.
-      }
-    }
-  }
-
-  FreeSignal( dd->slavesignal );
-  dd->slavesignal = -1;
-
-  Forbid();
-
-  // Tell the Master we're dying
-
-  Signal( (struct Task*) dd->mastertask,
-          1L << dd->mastersignal );
-
-  dd->slavetask = NULL;
-
-  // Multitaking will resume when we are dead.
 }

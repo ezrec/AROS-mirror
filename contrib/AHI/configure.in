@@ -15,7 +15,7 @@ AC_PROG_MAKE_SET
 AC_CONFIG_HEADER( config.h )
 
 AC_MSG_CHECKING(CPU to build for)
-AC_ARG_WITH(CPU,
+AC_ARG_WITH(cpu,
 [  --with-cpu              The CPU to optimize for],
 CPU=${withval}, unset CPU)
 AC_MSG_RESULT(${CPU})
@@ -40,16 +40,26 @@ case $host in
   : ${CPU="i686"}
   linkerflags="-noixemul -r"
   optflags="-mcpu=${CPU} -O2"
-  asflags="--defsym CPU=${CPU}"
+  asflags="--defsym CPU=${CPU} --defsym LITTLE_ENDIAN=1"
   resident=""   dnl *** Not supported (yet?)
   stripflag=""
  ;;
  m68k-unknown-amigaos)
-  : ${CPU="68020"}
+  : ${CPU="68020-60"}
   linkerflags="-noixemul"
   optflags="-m${CPU} -O2 -fomit-frame-pointer -ffast-math"
-  asflags="-m${CPU} --register-prefix-optional --bitwise-or --defsym CPU=${CPU}"
+  asCPU=`echo ${CPU} | sed 's/-.*//'`
+  asflags="-m${asCPU} --register-prefix-optional --bitwise-or --defsym CPU=${asCPU}"
   resident="-resident"
+  stripflag=""
+ ;;
+ powerpc-unknown-amigaos)
+  : ${CPU="603"}
+  AC_DEFINE(__USE_INLINE__)
+  linkerflags="-noixemul"
+  optflags="-mcpu=${CPU} -O2"
+  asflags="-m${CPU} -mregnames --defsym CPU=${CPU}"
+  resident="-mresident32"
   stripflag=""
  ;;
  powerpc-unknown-morphos)
@@ -111,24 +121,21 @@ AC_PROG_RANLIB
 AC_CHECK_PROG( RM, rm, rm )
 AC_CHECK_PROGS( ROBODOC, RoboDoc robodoc )
 AC_CHECK_PROGS( FLEXCAT, FlexCat flexcat )
-AC_CHECK_PROGS( FD2INLINE, FD2Inline fd2inline )
-AC_CHECK_PROGS( FD2PRAGMA, FD2Pragma fd2pragma )
+AC_CHECK_PROGS( SFDC, SFDC sfdc )
 AC_CHECK_PROGS( LHA, lha )
 
-if test -z "$FD2INLINE"; then
- AC_MSG_ERROR( fd2inline missing. )
-fi
-
-if test -z "$FD2PRAGMA"; then
- AC_MSG_WARN( fd2pragma missing. )
-else
- if test -n "`$FD2PRAGMA --help | grep -- --mode`"; then
-  AC_SUBST( FD2PRAGMA_PRE, -- )
- fi
+if test -z "$SFDC"; then
+ AC_MSG_ERROR( sfdc missing. )
 fi
 
 if test -z "$LHA"; then
  AC_MSG_WARN( lha missing. )
+else
+ if test -n "`$LHA 2>&1 | grep 'o.*compression method'`"; then
+  LHA="$LHA -ao5"
+ else
+  LHA="$LHA -a -r"
+ fi
 fi
 
 if test -z "$ROBODOC"; then
@@ -137,15 +144,24 @@ fi
 
 dnl Checks for libraries.
 
-AC_CHECK_LIB( amiga, NewList,,      AC_MSG_ERROR( "libamiga is missing." ) )
+AC_SEARCH_LIBS( NewList, amiga,,    AC_MSG_WARN( "libamiga is missing." ) )
 AC_CHECK_LIB( mui,   MUI_NewObject,,AC_MSG_WARN(  "Who cares?" ) )
 AC_SEARCH_LIBS( floor, m,,	    AC_MSG_ERROR( "libm is missing." ) )
 
+case $host in
+ i?86be-pc-amithlon)
+  : ${CPU="i686"}
+  LIBS="-lm $LIBS" dnl *** AC_CHECK_LIBS doesn't work with -r ...?
+ ;;
+esac
 
 dnl Checks for header files.
 
-AC_CHECK_HEADER( CompilerSpecific.h, , AC_MSG_ERROR( "CompilerSpecific.h is missing." )) 
+AC_CHECK_HEADERS( proto/oss.h, HAVE_OSS=1, AC_MSG_WARN( "proto/oss.h is missing." ))
+AC_CHECK_HEADERS( libraries/openpci.h, HAVE_OPENPCI=1, AC_MSG_WARN( "libraries/openpci.h is missing." ))
 
+AC_SUBST(HAVE_OSS)
+AC_SUBST(HAVE_OPENPCI)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 
@@ -163,6 +179,7 @@ AC_OUTPUT(Makefile
           Device/Makefile
           Docs/Makefile
           Drivers/Makefile
+          Drivers/AROS/Makefile
           Drivers/Common/Makefile.common
           Drivers/EMU10kx/Makefile
           Drivers/Filesave/Makefile

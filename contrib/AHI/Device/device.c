@@ -21,7 +21,6 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <exec/alerts.h>
 #include <exec/errors.h>
@@ -230,10 +229,10 @@ ChannelInfoFunc( struct Hook*              hook,
 // exec.library/OpenDevice().
 
 ULONG
-DevOpen ( ULONG              unit,
-          ULONG              flags,
-          struct AHIRequest* ioreq,
-          struct AHIBase*    AHIBase )
+_DevOpen ( struct AHIRequest* ioreq,
+	   ULONG              unit,
+	   ULONG              flags,
+	   struct AHIBase*    AHIBase )
 {
   ULONG rc = 0;
   BOOL  error = FALSE;
@@ -308,6 +307,8 @@ DevOpen ( ULONG              unit,
 
   if(!error)
   {
+/*     KPrintF( "Tagging %08lx on task %08lx\n", ioreq, FindTask(0)); */
+    ioreq->ahir_Private[1] = (ULONG) ioreq;
     ioreq->ahir_Std.io_Unit=(struct Unit *) iounit;
     if(iounit)    // Is NULL for AHI_NO_UNIT
       iounit->Unit.unit_OpenCnt++;
@@ -380,8 +381,8 @@ DevOpen ( ULONG              unit,
 // exec.library/CloseDevice().
 
 BPTR
-DevClose ( struct AHIRequest* ioreq,
-           struct AHIBase*    AHIBase )
+_DevClose ( struct AHIRequest* ioreq,
+	    struct AHIBase*    AHIBase )
 {
   struct AHIDevUnit *iounit;
   BPTR  seglist=0;
@@ -389,6 +390,12 @@ DevClose ( struct AHIRequest* ioreq,
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {
     KPrintF("CloseDevice(0x%08lx)\n", (ULONG) ioreq);
+
+    if( ioreq->ahir_Private[1] != (ULONG) ioreq )
+    {
+      KPrintF( "Warning: Expected I/O request 0x%08lx.\n",
+	       ioreq->ahir_Private[1] );
+    }
   }
 
   ObtainSemaphore(&AHIBase->ahib_Lock);
@@ -411,7 +418,7 @@ DevClose ( struct AHIRequest* ioreq,
   if(!AHIBase->ahib_Library.lib_OpenCnt)
   {
     if(AHIBase->ahib_Library.lib_Flags & LIBF_DELEXP)
-      seglist=DevExpunge(AHIBase);
+      seglist=_DevExpunge(AHIBase);
   }
   return seglist;
 }

@@ -111,7 +111,7 @@ Glazbena jedinica
 ;
 msgProperties
 ID naèina\nSnimanje\nAutor\nAutorko pravo\nDriver\nVerzija
-; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull
 Full Duplex

@@ -12,10 +12,10 @@
 
 top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
+PREFIX		= @prefix@
 DISTDIR		= @DISTDIR@
 DOSDRVDIR	= ${DISTDIR}/User/Devs/DOSDrivers
 LDIR		= ${DISTDIR}/User/L
-PREFIX          = @prefix@
 
 build_os	= @build_os@
 
@@ -43,7 +43,7 @@ EXECUTABLE	= AHI-Handler
 
 
 #
-# EXECUTABLEs
+# Targets
 ########################################
 
 .PHONY:		all clean distclean maintainer-clean install revup bindist

@@ -27,14 +27,14 @@
 #include <utility/tagitem.h>
 
 ULONG
-GetAudioAttrsA( ULONG                    id,
-                struct AHIPrivAudioCtrl* actrl,
-                struct TagItem*          tags,
-                struct AHIBase*          AHIBase );
+_AHI_GetAudioAttrsA( ULONG                    id,
+		     struct AHIPrivAudioCtrl* actrl,
+		     struct TagItem*          tags,
+		     struct AHIBase*          AHIBase );
 
 ULONG
-BestAudioIDA( struct TagItem* tags,
-              struct AHIBase* AHIBase );
+_AHI_BestAudioIDA( struct TagItem* tags,
+		   struct AHIBase* AHIBase );
 
 BOOL
 TestAudioID( ULONG id,

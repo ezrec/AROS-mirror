@@ -21,7 +21,7 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
+
 #include "addroutines.h"
 
 typedef long long LONGLONG;
@@ -79,7 +79,7 @@ AddLongMono( ADDARGS )
   for( i = 0; i < Samples; i++)
   {
     if( offseti == FirstOffsetI ) {
-      startpoint = *StartPointLeft;
+      startpoint = *StartPointLeft << 16;
     }
     else
     {
@@ -104,7 +104,7 @@ AddLongMono( ADDARGS )
     offset += Add;
   }
 
-  *StartPointLeft = endpoint;
+  *StartPointLeft = endpoint >> 16;
 
   *Dst    = dst;
   *Offset = offset;
@@ -128,7 +128,7 @@ AddLongStereo( ADDARGS )
   for( i = 0; i < Samples; i++)
   {
     if( offseti == FirstOffsetI ) {
-      startpoint = *StartPointLeft;
+      startpoint = *StartPointLeft << 16;
     }
     else
     {
@@ -154,7 +154,7 @@ AddLongStereo( ADDARGS )
     offset += Add;
   }
 
-  *StartPointLeft = endpoint;
+  *StartPointLeft = endpoint >> 16;
 
   *Dst    = dst;
   *Offset = offset;
@@ -177,8 +177,8 @@ AddLongsMono( ADDARGS )
   for( i = 0; i < Samples; i++)
   {
     if( offseti == FirstOffsetI ) {
-      startpointL = *StartPointLeft;
-      startpointR = *StartPointRight;
+      startpointL = *StartPointLeft << 16;
+      startpointR = *StartPointRight << 16;
     }
     else
     {
@@ -210,8 +210,8 @@ AddLongsMono( ADDARGS )
     offset += Add;
   }
 
-  *StartPointLeft = endpointL;
-  *StartPointRight = endpointR;
+  *StartPointLeft = endpointL >> 16;
+  *StartPointRight = endpointR >> 16;
 
   *Dst    = dst;
   *Offset = offset;
@@ -235,8 +235,8 @@ AddLongsStereo( ADDARGS )
   for( i = 0; i < Samples; i++)
   {
     if( offseti == FirstOffsetI ) {
-      startpointL = *StartPointLeft;
-      startpointR = *StartPointRight;
+      startpointL = *StartPointLeft << 16;
+      startpointR = *StartPointRight << 16;
     }
     else
     {
@@ -268,8 +268,8 @@ AddLongsStereo( ADDARGS )
     offset += Add;
   }
 
-  *StartPointLeft = endpointL;
-  *StartPointRight = endpointR;
+  *StartPointLeft = endpointL >> 16;
+  *StartPointRight = endpointR >> 16;
 
   *Dst    = dst;
   *Offset = offset;
@@ -458,7 +458,7 @@ AddLongMonoB( ADDARGS )
   for( i = 0; i < Samples; i++)
   {
     if( offseti == FirstOffsetI ) {
-      startpoint = *StartPointLeft;
+      startpoint = *StartPointLeft << 16;
     }
     else
     {
@@ -483,7 +483,7 @@ AddLongMonoB( ADDARGS )
     offset -= Add;
   }
 
-  *StartPointLeft = endpoint;
+  *StartPointLeft = endpoint >> 16;
 
   *Dst    = dst;
   *Offset = offset;
@@ -507,7 +507,7 @@ AddLongStereoB( ADDARGS )
   for( i = 0; i < Samples; i++)
   {
     if( offseti == FirstOffsetI ) {
-      startpoint = *StartPointLeft;
+      startpoint = *StartPointLeft << 16;
     }
     else
     {
@@ -533,7 +533,7 @@ AddLongStereoB( ADDARGS )
     offset -= Add;
   }
 
-  *StartPointLeft = endpoint;
+  *StartPointLeft = endpoint >> 16;
 
   *Dst    = dst;
   *Offset = offset;
@@ -557,8 +557,8 @@ AddLongsMonoB( ADDARGS )
   for( i = 0; i < Samples; i++)
   {
     if( offseti == FirstOffsetI ) {
-      startpointL = *StartPointLeft;
-      startpointR = *StartPointRight;
+      startpointL = *StartPointLeft << 16;
+      startpointR = *StartPointRight << 16;
     }
     else
     {
@@ -590,8 +590,8 @@ AddLongsMonoB( ADDARGS )
     offset -= Add;
   }
 
-  *StartPointLeft = endpointL;
-  *StartPointRight = endpointR;
+  *StartPointLeft = endpointL >> 16;
+  *StartPointRight = endpointR >> 16;
 
   *Dst    = dst;
   *Offset = offset;
@@ -615,8 +615,8 @@ AddLongsStereoB( ADDARGS )
   for( i = 0; i < Samples; i++)
   {
     if( offseti == FirstOffsetI ) {
-      startpointL = *StartPointLeft;
-      startpointR = *StartPointRight;
+      startpointL = *StartPointLeft << 16;
+      startpointR = *StartPointRight << 16;
     }
     else
     {
@@ -648,8 +648,8 @@ AddLongsStereoB( ADDARGS )
     offset -= Add;
   }
 
-  *StartPointLeft = endpointL;
-  *StartPointRight = endpointR;
+  *StartPointLeft = endpointL >> 16;
+  *StartPointRight = endpointR >> 16;
 
   *Dst    = dst;
   *Offset = offset;

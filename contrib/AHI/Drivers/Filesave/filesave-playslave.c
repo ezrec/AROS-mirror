@@ -82,7 +82,51 @@ htobe_long( unsigned long x )
 ** The slave process **********************************************************
 ******************************************************************************/
 
-void SlaveEntry(void)
+
+#if defined( __MORPHOS__ )
+
+/* For f*cks sake!!! Don't use SysBase in memcpy()! */
+
+void *
+memcpy(void *dst, const void *src, size_t len)
+{
+  bcopy(src, dst, len);
+  return dst;
+}
+
+#endif
+
+
+#undef SysBase
+
+static void PlaySlave( struct ExecBase* SysBase );
+
+#if defined( __AROS__ )
+
+#include <aros/asmcall.h>
+
+AROS_UFH3(LONG, PlaySlaveEntry,
+	  AROS_UFHA(STRPTR, argPtr, A0),
+	  AROS_UFHA(ULONG, argSize, D0),
+	  AROS_UFHA(struct ExecBase *, SysBase, A6))
+{
+   AROS_USERFUNC_INIT
+   PlaySlave( SysBase );
+   AROS_USERFUNC_EXIT
+}
+
+#else
+
+void PlaySlaveEntry(void)
+{
+  struct ExecBase* SysBase = *((struct ExecBase**) 4);
+
+  PlaySlave( SysBase );
+}
+
+#endif
+
+static void PlaySlave( struct ExecBase* SysBase )
 {
   struct AHIAudioCtrlDrv* AudioCtrl;
   struct DriverBase*      AHIsubBase;

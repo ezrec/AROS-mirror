@@ -18,7 +18,6 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <devices/ahi.h>
 #include <workbench/startup.h>
@@ -65,10 +64,11 @@ static char outvolBuffer[16];
 static char monvolBuffer[16];
 static char gainBuffer[16];
 
-static char authorBuffer[64];
-static char copyrightBuffer[64];
-static char driverBuffer[64];
-static char versionBuffer[64];
+static char authorBuffer[128];
+static char copyrightBuffer[128];
+static char driverBuffer[128];
+static char versionBuffer[128];
+static char annotationBuffer[128];
 
 
 /******************************************************************************
@@ -296,11 +296,12 @@ void NewMode(int selectedmode) {
 		      AHIDB_MinInputGain,     (ULONG) &MinGain,
 		      AHIDB_MaxInputGain,     (ULONG) &MaxGain,
 
-		      AHIDB_BufferLen,        64,
+		      AHIDB_BufferLen,        128,
 		      AHIDB_Author,           (ULONG) authorBuffer,
 		      AHIDB_Copyright,        (ULONG) copyrightBuffer,
 		      AHIDB_Driver,           (ULONG) driverBuffer,
 		      AHIDB_Version,          (ULONG) versionBuffer,
+		      AHIDB_Annotation,       (ULONG) annotationBuffer,
 		      TAG_DONE);
   }
 
@@ -634,4 +635,8 @@ char *getDriver(void) {
 
 char *getVersion(void) {
   return versionBuffer;
+}
+
+char *getAnnotation(void) {
+  return annotationBuffer;
 }

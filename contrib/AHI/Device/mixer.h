@@ -24,7 +24,6 @@
 #define ahi_mixer_h
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include "ahi_def.h"
 #include "addroutines.h"

@@ -1,3 +1,292 @@
+2003-12-22  Martin Blom  <martin@blom.org>
+
+	* Released aros.audio 5.0.
+
+	* Added an AROS driver based on oss.library.
+
+2003-11-28  Martin Blom  <martin@blom.org>
+
+	* Released emu10kx.audio 5.15.
+
+	* Clear DMA buffers when they are allocated, in case they
+	are accidentally played before filled (GREX problem??)
+
+	* emu10kx.audio: Detect GREX at loading time, not on every
+	interrupt.
+
+2003-11-24  Martin Blom  <martin@blom.org>
+
+	* Released emu10kx.audio 5.14.
+
+	* emu10kx.audio: Added GREX support (apparently, it has no bus
+	snooping)
+
+2003-11-23  Martin Blom  <martin@blom.org>
+
+	* Released emu10kx.audio 5.11, 5.12 and 5.13.
+
+	* emu10kx.audio: Resynced with the latest Linux drivers in order
+	to make it work on Audigy cards.
+
+2003-10-31  Martin Blom  <martin@blom.org>
+
+ 	* Released emu10kx.audio 5.10.
+
+	* emu10kx.audio: Don't show a requester if no sound card can be
+	found. [Nicolas Sallin]
+	
+2003-10-16  Martin Blom  <martin@blom.org>
+
+	* Released paula.audio 4.31.
+
+	* paula.audio: In MorphOS, audio.device is no longer used as a
+	lock for the audio hardware.  Instead, an internal flag is used
+
+2003-09-30  Martin Blom  <martin@blom.org>
+
+	* Released ahi.device 5.46.
+
+	* Obviously, I left a KPrintF in the code ...
+
+	* Released ahi.device 5.45.
+
+	* ahi.device: Test: Don't increase volume of playing requests
+	untill all outstanding requests are finished. Should fix that
+	annoying volume fluctuations?
+
+2003-09-29  Martin Blom  <martin@blom.org>
+
+	* Released ahi.device 5.44.
+
+	* ahi.device: Fixed a memory trashing bug introduced with the
+	dynamic volume update (ahi.device tried to play a sound on channel
+	65535.) [Kev Harrison and Michael Malyshev]
+
+	* Released void.audio 5.7.
+
+	* Released filesave.audio 5.4.
+
+	* Released emu10kx.audio 5.9.
+
+	* The introduction of --addvectors made a bug in the driver's init
+	code visible. Fixed. [Marcin Kurek]
+
+	* The MorphOS versions of the different modules now use
+	RTF_EXTENDED and rt_Revision.
+
+2003-09-28  Martin Blom  <martin@blom.org>
+
+	* Released emu10kx.audio 5.8.
+
+	* emu10kx.audio: Added a public semaphore with hooks to control
+	the AC97 mixer.
+
+2003-09-22  Martin Blom  <martin@blom.org>
+
+	* Applied initial AmigaOS4 patches from Davy Wentzler.
+
+	* Does not use CompilerSpecific.h anymore.
+
+	* Now uses the sfdc switch --addvectors instead of ugly
+	internal .sfd files.
+
+2003-07-30  Martin Blom  <martin@blom.org>
+
+	* Bumped revision of emu10kx.audio to 5.7.
+
+	* Bumped revision of filesave.audio to 5.3.
+
+	* Bumped revision of void.audio to 5.6
+
+	* Bumped revision of AHI-Handler to 5.3.
+
+	* Bumped revision of AddAudioModes to 5.5.
+
+	* Released AHI preferences 5.11.
+
+2003-07-28  Martin Blom  <martin@blom.org>
+
+	* Released ahi.device 5.42.
+
+	* ahi.device: Re-disabled the powerpc assembler optimized mixing
+	routines, since they're totally fubar. I'll look into it until
+	next release, I promise ...
+
+	* Rebuilt everything with an updated GG-cross build enviroment and
+	using the new SDK for the MorphOS version.
+
+2003-07-24  Martin Blom  <martin@blom.org>
+
+	* Bugfixed the ix86be-amithlon version and removed that beta
+	requester at startup.
+
+	* Removed void.audio from default build, since it's just an
+	example driver.
+
+	* Changed TARGET in Makefiles to EXECUTABLE, since TARGET
+	interferes with the AROS build environment. [Adam Chodorowski]
+
+	* ahi.device: Most of the library function gates are now
+	auto-generated.
+
+	* Nuked files that are now auto-generated (FD and clib includes).
+
+	* No separate SAS/C and Storm C files anymore. The proto and
+	pragma files work for all compilers now.
+
+	* The build process no longer uses fd2inline and fd2pragma. I
+	switched to SFD files and sfdc instead.
+
+	* emu10kx.audio: Don't build unless OpenPCI is found.
+
+	* ahi.device: More embarrassing bugs fixed: Due to a type in the
+	Makefile, the powerpc assembler optimized mixing routines were
+	never included!!
+
+2003-07-23  Martin Blom  <martin@blom.org>
+
+	* ahi.device: The linear interpolation code was like totally
+	fucked up when sounds were looping or joined. The test sine in the
+	preferences program finally sounds ok at other frequencies than 48
+	kHz.
+
+	* AHI: "Play a test sound" now plays a 16 bit sample instead of 8
+	bit, and it's always played at full volume.
+
+2003-07-14  Martin Blom  <martin@blom.org>
+
+	* Minor updates to the SFD files.
+
+2003-07-13  Martin Blom  <martin@blom.org>
+
+	* Added SFD files contributed by Steffen Haeuser to the developer
+	archives.
+
+	* Include/C/clib/ahi_(|sub_)protos.h: Added extern "C" if C++
+	detected. [Steffen Haeuser]
+
+2003-07-07  Martin Blom  <martin@blom.org>
+
+	* Released emu10kx.audio 5.6.
+
+	* The EMU10kx CAMD driver is now part of the m68k build.
+
+2003-07-06  Martin Blom  <martin@blom.org>
+
+	* Released ahi.device 5.41.
+
+	* ahi.device: Reworked the dynamic volume so that the master
+	volume is scaled based on the number of device openers. Then, for
+	each opener, each request is individually scaled based on the
+	number of active requests. This way, different programs will not
+	affect each other.
+	
+2003-07-05  Martin Blom  <martin@blom.org>
+
+	* emu10kx.audio: The newly added CAMD init code would crash the
+	driver would not load.
+	
+	* Released ahi.device 5.40.
+
+	* ahi.device: Made a subtile change to the linear interpolation
+	behaviour when a looped sound is played. Let's hope I made it
+	better and not worse ...
+
+	* Released AHI preferences 5.10.
+
+	* AHI preferences: Added annotation to the properties box.
+
+	* Released emu10kx.audio 5.5.
+	
+	* Released void.audio 5.5.
+	
+	* Released filesave.audio 5.2.
+
+	* Drivers/Common/library.c: Fixed init code for MorphOS and
+	Amithlon.
+
+	* Drivers/Common/library.h: Added PROCGW macro to handle
+	CreateNewProc() entry for all targets.
+
+2003-07-04  Martin Blom  <martin@blom.org>
+
+	* emu10kx.audio: Added CAMD support.
+
+	* emu10kx: A CAMD driver that works with both V37.14 and V40.4 of
+	camd.library.
+
+2003-06-30  Martin Blom  <martin@blom.org>
+
+	* Released ahi.device 5.39.
+
+	* Resurrected the old m68k assembler version of the echo routines.
+
+2003-06-23  Martin Blom  <martin@blom.org>
+
+	* emu10kx.audio: Added protection against multiple calls to
+	AHIsub_AllocAudio().
+
+2003-06-22  Martin Blom  <martin@blom.org>
+
+	* Released emu10kx.audio 5.3.
+
+	* emu10kx.audio: Ported to openpci.library.
+
+2003-06-20  Martin Blom  <martin@blom.org>
+
+	* Released emu10kx.audio 5.2.
+
+	* emu10kx.audio: Ported to use the common driver architecture
+	shared with void, filesave and now emu10kx.
+
+2003-05-03  Martin Blom  <martin@blom.org>
+
+	* Minor Makefile fixes for building in the the source tree.
+
+2003-05-01  Martin Blom  <martin@blom.org>
+
+	* Released ahi.device 5.38.
+
+	* ahi.device: Fixed an interpolation bug in the mixing routines
+	for 32 bit samples that appeared when 32 bit samples were used
+	with other sample types.
+
+	* The PlaySineEverywhere example now plays the sine using all
+	available sample types (mono/stereo, 8/16/32 bits). It also slides
+	the pan from the extreme left to the extreme right.
+
+2003-04-30  Martin Blom  <martin@blom.org>
+
+	* Added catalonian translations by Josep Subirats i Ferré. Thanks!
+
+2003-04-29  Martin Blom  <martin@blom.org>
+
+	* Released ahi.device 5.37.
+
+	* The non-hifi audio modes are now assembler optimized in the m68k
+	version.
+
+	* Updated autodocs to say that V6 drivers do not need to preserve
+	all registers in AHIsub_Disable()/AHIsub_Enable().
+
+	* Added ahiac_PreTimerFunc and ahiac_PostTimerFunc to
+	AHIAudioCtrlDrv structure (available to V6 drivers only, of
+	course).
+
+	* When building the developer's archives, only relevant header
+	files are included now. For example, only the m68k archive
+	contains header files for SAS/C, Storm and assemblers.
+
+2003-04-25  Martin Blom  <martin@blom.org>
+
+	* Released ahi.device 5.36.
+
+	* ahi.device: The dynamic volume code now assumes that each
+	application will play at least one sound. (It's just a test.)
+
+	* The m68k version is now compiled for 060 per default, but will
+	still run on 020+ of course.
+
 2003-04-24  Martin Blom  <martin@blom.org>
 
 	* Released filesave.audio version 5.1.

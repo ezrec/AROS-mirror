@@ -103,11 +103,14 @@ extern ADDFUNC*                 AddLofiLongsMonoBPtr;
 extern ADDFUNC*                 AddLofiLongsStereoBPtr;
 
 struct AHIBase*
-initRoutine( struct AHIBase*  device,
-             APTR             seglist,
-             struct ExecBase* sysbase );
+_DevInit( struct AHIBase*  device,
+	  APTR             seglist,
+	  struct ExecBase* sysbase );
 
 BPTR
-DevExpunge( struct AHIBase* device );
+_DevExpunge( struct AHIBase* device );
+
+ULONG
+_DevNULL( void );
 
 #endif /* ahi_header_h */

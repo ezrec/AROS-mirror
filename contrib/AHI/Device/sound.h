@@ -26,60 +26,60 @@
 #include "ahi_def.h"
 
 ULONG
-SetVol ( UWORD                    channel,
-         Fixed                    volume,
-         sposition                pan,
-         struct AHIPrivAudioCtrl* audioctrl,
-         ULONG                    flags,
-         struct AHIBase*          AHIBase );
+_AHI_SetVol ( UWORD                    channel,
+	      Fixed                    volume,
+	      sposition                pan,
+	      struct AHIPrivAudioCtrl* audioctrl,
+	      ULONG                    flags,
+	      struct AHIBase*          AHIBase );
 
 
 ULONG
-SetFreq ( UWORD                    channel,
-          ULONG                    freq,
-          struct AHIPrivAudioCtrl* audioctrl,
-          ULONG                    flags,
-          struct AHIBase*          AHIBase );
+_AHI_SetFreq ( UWORD                    channel,
+	       ULONG                    freq,
+	       struct AHIPrivAudioCtrl* audioctrl,
+	       ULONG                    flags,
+	       struct AHIBase*          AHIBase );
 
 
 ULONG
-SetSound ( UWORD                    channel,
-           UWORD                    sound,
-           ULONG                    offset,
-           LONG                     length,
-           struct AHIPrivAudioCtrl* audioctrl,
-           ULONG                    flags,
-           struct AHIBase*          AHIBase );
+_AHI_SetSound ( UWORD                    channel,
+		UWORD                    sound,
+		ULONG                    offset,
+		LONG                     length,
+		struct AHIPrivAudioCtrl* audioctrl,
+		ULONG                    flags,
+		struct AHIBase*          AHIBase );
 
 
 ULONG
-SetEffect( ULONG*                   effect,
-           struct AHIPrivAudioCtrl* audioctrl,
-           struct AHIBase*          AHIBase );
+_AHI_SetEffect( ULONG*                   effect,
+		struct AHIPrivAudioCtrl* audioctrl,
+		struct AHIBase*          AHIBase );
 
 
 ULONG
-LoadSound( UWORD                    sound,
-           ULONG                    type,
-           APTR                     info,
-           struct AHIPrivAudioCtrl* audioctrl,
-           struct AHIBase*          AHIBase );
+_AHI_LoadSound( UWORD                    sound,
+		ULONG                    type,
+		APTR                     info,
+		struct AHIPrivAudioCtrl* audioctrl,
+		struct AHIBase*          AHIBase );
 
 
 ULONG
-UnloadSound( UWORD                    sound,
-             struct AHIPrivAudioCtrl* audioctrl,
-             struct AHIBase*          AHIBase );
+_AHI_UnloadSound( UWORD                    sound,
+		  struct AHIPrivAudioCtrl* audioctrl,
+		  struct AHIBase*          AHIBase );
 
 
 ULONG
-PlayA( struct AHIPrivAudioCtrl* audioctrl,
-       struct TagItem*          tags,
-       struct AHIBase*          AHIBase );
+_AHI_PlayA( struct AHIPrivAudioCtrl* audioctrl,
+	    struct TagItem*          tags,
+	    struct AHIBase*          AHIBase );
 
 
 ULONG
-SampleFrameSize( ULONG           sampletype,
-                 struct AHIBase* AHIBase );
+_AHI_SampleFrameSize( ULONG           sampletype,
+		      struct AHIBase* AHIBase );
 
 #endif /* ahi_sound_h */

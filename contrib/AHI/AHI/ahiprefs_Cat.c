@@ -1,6 +1,6 @@
 /****************************************************************
    This file was created automatically by `FlexCat 2.4'
-   from "../../ahisrc/AHI/ahiprefs.cd".
+   from "/usr/local/aros/AROS/contrib/AHI/AHI/ahiprefs.cd".
 
    Do NOT edit by hand!
 ****************************************************************/
@@ -49,7 +49,7 @@ struct FC_String ahiprefs_Strings[64] = {
     { (STRPTR) "Advanced settings", 16 },
     { (STRPTR) "Unit %ld", 17 },
     { (STRPTR) "Music unit", 18 },
-    { (STRPTR) "Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion", 19 },
+    { (STRPTR) "Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation", 19 },
     { (STRPTR) "Full duplex", 20 },
     { (STRPTR) "Half duplex", 21 },
     { (STRPTR) "Nope", 22 },

@@ -1,7 +1,7 @@
 /* $Id$
 * $Log$
-* Revision 1.3  2003/04/29 18:17:58  chodorowski
-* Updated to 5.8.
+* Revision 1.4  2003/12/30 20:25:35  stegerg
+* Updated to latest AHI sources.
 *
 * Revision 5.3  2003/04/22 18:19:05  martin
 * Now creates localize.[ch] in srcdir.

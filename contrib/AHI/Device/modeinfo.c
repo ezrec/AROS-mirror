@@ -21,7 +21,6 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <exec/memory.h>
 #include <exec/alerts.h>
@@ -407,10 +406,10 @@ BOOL TestAudioID(ULONG id, struct TagItem *tags )
 */
 
 ULONG
-GetAudioAttrsA( ULONG                    id,
-                struct AHIPrivAudioCtrl* actrl,
-                struct TagItem*          tags,
-                struct AHIBase*          AHIBase )
+_AHI_GetAudioAttrsA( ULONG                    id,
+		     struct AHIPrivAudioCtrl* actrl,
+		     struct TagItem*          tags,
+		     struct AHIBase*          AHIBase )
 {
   struct AHI_AudioDatabase *audiodb;
   struct TagItem *dbtags,*tag1,*tag2,*tstate=tags;
@@ -669,8 +668,8 @@ GetAudioAttrsA( ULONG                    id,
 */
 
 ULONG
-BestAudioIDA( struct TagItem* tags,
-              struct AHIBase* AHIBase )
+_AHI_BestAudioIDA( struct TagItem* tags,
+		   struct AHIBase* AHIBase )
 {
   ULONG id = AHI_INVALID_ID, bestid = 0;
   Fixed score, bestscore = 0;

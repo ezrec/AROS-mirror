@@ -14,13 +14,13 @@ VPATH		= @srcdir@
 
 top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
-prefix		= @prefix@
+PREFIX		= @prefix@
 DISTDIR		= @DISTDIR@
 DEVSDIR		= ${DISTDIR}/User/Devs
 CATDIR		= ${DISTDIR}/User/Catalogs
-PREFIX          = @prefix@
 
 build_os	= @build_os@
+host		= @host@
 host_cpu	= @host_cpu@
 
 CC		= @CC@
@@ -43,6 +43,9 @@ INSTALL		= @INSTALL@
 INSTALL_PROGRAM	= @INSTALL_PROGRAM@
 INSTALL_DATA	= @INSTALL_DATA@
 
+SFDC		= @SFDC@
+SFDC_TARGET	= --target=${host}
+
 FLEXCAT		= @FLEXCAT@
 
 ifeq ($(strip $(FLEXCAT)),)
@@ -58,9 +61,10 @@ ENABLE_WARPUP	= @ENABLE_WARPUP@
 LANGUAGES	= $(notdir $(basename $(wildcard $(srcdir)/translations/*.ct)))
 CATALOGS	= $(addsuffix .catalog, $(LANGUAGES))
 
-OBJECTS		= header.o gateway.o device.o devcommands.o devsupp.o \
+OBJECTS		= header.o gateway.o gatestubs.o \
+		  device.o devcommands.o devsupp.o \
 		  localize.o modeinfo.o requester.o database.o debug.o\
-		  audioctrl.o effectinit.o sound.o misc.o\
+		  audioctrl.o effectinit.o sound.o misc.o dspecho.o \
 		  mixer.o 
 
 ifeq ($(ENABLE_WARPUP),yes)
@@ -68,13 +72,15 @@ OBJECTS		+= elfloader.o warpup.o
 endif
 
 ifeq ($(host_cpu),m68k)
-OBJECTS		+= addroutines_68k.o
+OBJECTS		+= addroutines_68k.o dspechofuncs_68k.o
 endif
 
-ifeq ($(host_cpu),ppc)
-OBJECTS		+= addroutines_ppc.o
-endif
+#ifeq ($(host_cpu),powerpc)
+#OBJECTS		+= addroutines_ppc.o
+#endif
 
+GENERATED	= version.h \
+		  gatestubs.c gatestubs.h
 
 #
 # Targets
@@ -90,7 +96,7 @@ mostlyclean:
 	$(RM) $(EXECUTABLE) *.o *.a *.bak *~ \#*\# core Makefile.dep
 
 clean:		mostlyclean
-	$(RM) $(CATALOGS) version.h
+	$(RM) $(CATALOGS) $(GENERATED)
 
 distclean:	clean
 	$(RM) Makefile
@@ -146,7 +152,7 @@ $(EXECUTABLE):		$(OBJECTS) libaddroutines.a
 	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
 
 libaddroutines.a:	addroutines_hifi.o addroutines_lofi.o \
-			addroutines_32bit.o dspecho.o
+			addroutines_32bit.o dspechofuncs.o
 	$(AR) $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 
@@ -158,6 +164,14 @@ version.h:	version.rev version.date
 	 echo "#define VERSION $$ver" > $@ && \
 	 echo "#define REVISION $$rev" >> $@ && \
 	 echo "#define VERS \"$$ver.$$rev ($$date)\"" >> $@
+
+gatestubs.c:	$(top_srcdir)/Include/SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) --mode=gatestubs $^ --output $@ \
+	        --gateprefix=gw --libprefix=_ --libarg=last --addvectors=device
+
+gatestubs.h:	$(top_srcdir)/Include/SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) --mode=gateproto $^ --output $@ \
+	        --gateprefix=gw --libprefix=_ --libarg=last --addvectors=device
 
 $(srcdir)/localize.c:	ahi.cd C_c_AHI.sd
 	$(FLEXCAT) $(srcdir)/ahi.cd $(srcdir)/localize.c=$(srcdir)/C_c_AHI.sd 
@@ -192,7 +206,7 @@ depend:
 	$(RM) Makefile.dep
 	$(MAKE) Makefile.dep
 
-Makefile.dep:	$(DEPENDENCIES) version.h
+Makefile.dep:	$(DEPENDENCIES) $(GENERATED)
 	@echo Making $@
 	-@$(CC) $(CPPFLAGS) $(CFLAGS) -MM $(SOURCES) > $@
 
@@ -200,5 +214,6 @@ include Makefile.dep
 
 addroutines_ppc.o:	addroutines_ppc.s
 addroutines_68k.o:	addroutines_68k.s
+dspechofuncs_68k.o:	dspechofuncs_68k.s
 
 $(wildcard $(srcdir)/translations/*.ct) $(srcdir)/ahi.ct:	ahi.cd

@@ -12,6 +12,7 @@
 
 top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
+PREFIX		= @prefix@
 DISTDIR		= @DISTDIR@
 CDIR		= ${DISTDIR}/User/C
 
@@ -34,7 +35,7 @@ VPATH		= @srcdir@
 ########################################
 
 OBJECTS		= CloneAudioModes.o
-TARGET		= CloneAudioModes
+EXECUTABLE	= CloneAudioModes
 
 
 #
@@ -43,10 +44,10 @@ TARGET		= CloneAudioModes
 
 .PHONY:		all clean distclean maintainer-clean install revup bindist
 
-all:		$(TARGET)
+all:		$(EXECUTABLE)
 
 clean:
-	$(RM) $(TARGET) version.h *.o *.bak *~ \#*\# core Makefile.dep
+	$(RM) $(EXECUTABLE) version.h *.o *.bak *~ \#*\# core Makefile.dep
 
 distclean:	clean
 	$(RM) Makefile
@@ -54,7 +55,7 @@ distclean:	clean
 maintainer-clean: distclean
 
 install:	all
-	$(INSTALL_PROGRAM) $(TARGET) $(PREFIX)/C/$(TARGET)
+	$(INSTALL_PROGRAM) $(EXECUTABLE) $(PREFIX)/C/$(EXECUTABLE)
 
 revup:
 	@rev=`cat $(srcdir)/version.rev` && echo `expr $$rev + 1` > $(srcdir)/version.rev
@@ -64,8 +65,8 @@ revup:
 
 bindist:	all
 	$(INSTALL) --directory $(CDIR)
-	$(INSTALL_PROGRAM) $(TARGET) $(CDIR)/$(TARGET)
-	$(STRIP) $(CDIR)/$(TARGET)
+	$(INSTALL_PROGRAM) $(EXECUTABLE) $(CDIR)/$(EXECUTABLE)
+	$(STRIP) $(CDIR)/$(EXECUTABLE)
 
 
 
@@ -83,7 +84,7 @@ Makefile: Makefile.in ../../../config.status
 # Rules
 ########################################
 
-$(TARGET):	$(OBJECTS)
+$(EXECUTABLE):	$(OBJECTS)
 	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
 
 

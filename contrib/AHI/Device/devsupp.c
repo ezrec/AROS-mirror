@@ -24,7 +24,6 @@
 // loads of byte writes, no interpolation etc), but who cares? 
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include "ahi_def.h"
 #include "devsupp.h"

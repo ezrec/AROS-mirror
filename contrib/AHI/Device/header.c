@@ -21,19 +21,23 @@
 */
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <exec/memory.h>
 #include <exec/resident.h>
 #include <exec/alerts.h>
 #include <exec/execbase.h>
-#include <proto/exec.h>
 #include <proto/dos.h>
+#include <proto/exec.h>
+#include <proto/gadtools.h>
+#include <proto/graphics.h>
+#include <proto/iffparse.h>
+
 
 #include "ahi_def.h"
 
 #include "header.h"
 #include "gateway.h"
+#include "gatestubs.h"
 #include "localize.h"
 #include "misc.h"
 #include "version.h"
@@ -51,11 +55,10 @@ CloseLibs ( void );
 ******************************************************************************/
 
 #if defined( __amithlon__ )
-#error blah
-__asm(
-"         .text;\n"
-"         .byte 0x4e, 0xfa, 0x00, 0x03\n"
-"         jmp _start" );
+__asm( "\
+         .text;\
+         .byte 0x4e, 0xfa, 0x00, 0x03\
+         jmp _start" );
 #endif
 
 int
@@ -64,9 +67,9 @@ _start( void )
   return -1;
 }
 
-#if defined( __morphos__ ) || defined( __MORPHOS__ )
+#if defined( __MORPHOS__ )
 ULONG   __abox__=1;
-ULONG   __amigappc__=1;  // deprecated
+ULONG   __amigappc__=1;  // deprecated, used in MOS 0.4
 #endif
 
 /******************************************************************************
@@ -77,6 +80,10 @@ extern const char DevName[];
 extern const char IDString[];
 static const APTR InitTable[4];
 
+#if defined( __amigaos4__  )
+static struct TagItem libCreateTags[];
+#endif
+
 // This structure must reside in the text segment or the read-only data segment!
 // "const" makes it happen.
 static const struct Resident RomTag =
@@ -84,8 +91,12 @@ static const struct Resident RomTag =
   RTC_MATCHWORD,
   (struct Resident *) &RomTag,
   (struct Resident *) &RomTag + 1,
-#if defined( __morphos__ ) || defined( __MORPHOS__ ) || defined( __amithlon__ )
+#if defined( __MORPHOS__ ) 
+  RTF_EXTENDED | RTF_PPC | RTF_AUTOINIT,
+#elif defined( __amithlon__ )
   RTF_PPC | RTF_AUTOINIT,
+#elif defined( __amigaos4__ )
+  RTF_NATIVE | RTF_AUTOINIT,
 #else
   RTF_AUTOINIT,
 #endif
@@ -94,7 +105,14 @@ static const struct Resident RomTag =
   0,                      /* priority */
   (BYTE *) DevName,
   (BYTE *) IDString,
+#if defined( __amigaos4__ )
+  libCreateTags
+#else
   (APTR) &InitTable
+# if defined( __MORPHOS__ )
+  , REVISION, NULL
+# endif
+#endif
 };
 
 
@@ -112,7 +130,22 @@ struct IntuitionBase      *IntuitionBase  = NULL;
 struct LocaleBase         *LocaleBase     = NULL;
 struct Device             *TimerBase      = NULL;
 struct UtilityBase        *UtilityBase    = NULL;
+
+#if defined( __amigaos4__ )
+struct ExecIFace          *IExec          = NULL;
+struct AHIIFace           *IAHI           = NULL;
+struct DOSIFace           *IDOS           = NULL;
+struct GadToolsIFace      *IGadTools      = NULL;
+struct GraphicsIFace      *IGraphics      = NULL;
+struct IFFParseIFace      *IIFFParse      = NULL;
+struct IntuitionIFace     *IIntuition     = NULL;
+struct LocaleIFace        *ILocale        = NULL;
+struct TimerIFace         *ITimer         = NULL;
+struct UtilityIFace       *IUtility       = NULL;
+#endif
+
 struct Resident           *MorphOSRes     = NULL;
+static struct timerequest *TimerIO        = NULL;
 
 #if defined( ENABLE_WARPUP )
 struct Library            *PowerPCBase    = NULL;
@@ -196,19 +229,24 @@ ALIAS( __UtilityBase, UtilityBase );
 ******************************************************************************/
 
 struct AHIBase*
-initRoutine( struct AHIBase*  device,
-             APTR             seglist,
-             struct ExecBase* sysbase )
+_DevInit( struct AHIBase*  device,
+	  APTR             seglist,
+	  struct ExecBase* sysbase )
 {
   SysBase = sysbase;
   AHIBase = device;
 
+#if defined( __amigaos4__ )
+  IExec = SysBase->MainInterface;
+#else
   AHIBase->ahib_Library.lib_Node.ln_Type = NT_DEVICE;
   AHIBase->ahib_Library.lib_Node.ln_Name = (STRPTR) DevName;
   AHIBase->ahib_Library.lib_Flags        = LIBF_SUMUSED | LIBF_CHANGED;
   AHIBase->ahib_Library.lib_Version      = VERSION;
-  AHIBase->ahib_Library.lib_Revision     = REVISION;
   AHIBase->ahib_Library.lib_IdString     = (STRPTR) IDString;
+#endif
+  AHIBase->ahib_Library.lib_Revision     = REVISION;
+  
   AHIBase->ahib_SysLib  = sysbase;
   AHIBase->ahib_SegList = (BPTR) seglist;
 
@@ -240,7 +278,7 @@ initRoutine( struct AHIBase*  device,
 
 
 BPTR
-DevExpunge( struct AHIBase* device )
+_DevExpunge( struct AHIBase* device )
 {
   BPTR seglist = 0;
 
@@ -263,42 +301,47 @@ DevExpunge( struct AHIBase* device )
   return seglist;
 }
 
+ULONG
+_DevNull( void ) {
+  return 0;
+}
+
 static const APTR funcTable[] =
 {
 
-#if defined( __morphos__ ) || defined( __MORPHOS__ ) || defined( __amithlon__ )
+#if defined( __MORPHOS__ ) || defined( __amithlon__ )
   (APTR) FUNCARRAY_32BIT_NATIVE,
 #endif
 
-  &AROS_SLIB_ENTRY( gw_DevOpen, Ahi ),
-  &AROS_SLIB_ENTRY( gw_DevClose, Ahi ),
-  &AROS_SLIB_ENTRY( gw_DevExpunge, Ahi ),
-  &AROS_SLIB_ENTRY( gw_Null, Ahi ),
+  gwDevOpen,
+  gwDevClose,
+  gwDevExpunge,
+  gwDevNull,
 
-  &AROS_SLIB_ENTRY( gw_DevBeginIO, Ahi ),
-  &AROS_SLIB_ENTRY( gw_DevAbortIO, Ahi ),
+  gwDevBeginIO,
+  gwDevAbortIO,
 
-  &AROS_SLIB_ENTRY( gw_AllocAudioA, Ahi ),
-  &AROS_SLIB_ENTRY( gw_FreeAudio, Ahi ),
-  &AROS_SLIB_ENTRY( gw_KillAudio, Ahi ),
-  &AROS_SLIB_ENTRY( gw_ControlAudioA, Ahi ),
-  &AROS_SLIB_ENTRY( gw_SetVol, Ahi ),
-  &AROS_SLIB_ENTRY( gw_SetFreq, Ahi ),
-  &AROS_SLIB_ENTRY( gw_SetSound, Ahi ),
-  &AROS_SLIB_ENTRY( gw_SetEffect, Ahi ),
-  &AROS_SLIB_ENTRY( gw_LoadSound, Ahi ),
-  &AROS_SLIB_ENTRY( gw_UnloadSound, Ahi ),
-  &AROS_SLIB_ENTRY( gw_NextAudioID, Ahi ),
-  &AROS_SLIB_ENTRY( gw_GetAudioAttrsA, Ahi ),
-  &AROS_SLIB_ENTRY( gw_BestAudioIDA, Ahi ),
-  &AROS_SLIB_ENTRY( gw_AllocAudioRequestA, Ahi ),
-  &AROS_SLIB_ENTRY( gw_AudioRequestA, Ahi ),
-  &AROS_SLIB_ENTRY( gw_FreeAudioRequest, Ahi ),
-  &AROS_SLIB_ENTRY( gw_PlayA, Ahi ),
-  &AROS_SLIB_ENTRY( gw_SampleFrameSize, Ahi ),
-  &AROS_SLIB_ENTRY( gw_AddAudioMode, Ahi ),
-  &AROS_SLIB_ENTRY( gw_RemoveAudioMode, Ahi ),
-  &AROS_SLIB_ENTRY( gw_LoadModeFile, Ahi ),
+  gwAHI_AllocAudioA,
+  gwAHI_FreeAudio,
+  gwAHI_KillAudio,
+  gwAHI_ControlAudioA,
+  gwAHI_SetVol,
+  gwAHI_SetFreq,
+  gwAHI_SetSound,
+  gwAHI_SetEffect,
+  gwAHI_LoadSound,
+  gwAHI_UnloadSound,
+  gwAHI_NextAudioID,
+  gwAHI_GetAudioAttrsA,
+  gwAHI_BestAudioIDA,
+  gwAHI_AllocAudioRequestA,
+  gwAHI_AudioRequestA,
+  gwAHI_FreeAudioRequest,
+  gwAHI_PlayA,
+  gwAHI_SampleFrameSize,
+  gwAHI_AddAudioMode,
+  gwAHI_RemoveAudioMode,
+  gwAHI_LoadModeFile,
   (APTR) -1
 };
 
@@ -308,11 +351,114 @@ static const APTR InitTable[4] =
   (APTR) sizeof( struct AHIBase ),
   (APTR) &funcTable,
   0,
-  (APTR) AROS_ASMSYMNAME( gw_initRoutine)
+#if defined( __MORPHOS__ ) || defined( __amithlon__ )
+  (APTR) _DevInit
+#else
+  (APTR) gwDevInit
+#endif
 };
 
 
-static struct timerequest *TimerIO        = NULL;
+#if defined( __amigaos4__ )
+static ULONG generic_Obtain (struct Interface *Self)
+{
+  return Self->Data.RefCount++;
+}
+
+
+static ULONG generic_Release (struct Interface *Self)
+{
+  return Self->Data.RefCount--;
+}
+
+
+static APTR dev_manager_vectors[] =
+{
+  generic_Obtain,
+  generic_Release,
+  NULL,
+  NULL,
+  gwDevOpen,
+  gwDevClose,
+  gwDevExpunge,
+  NULL,
+  gwDevBeginIO,
+  gwDevAbortIO,
+  (APTR) -1
+};
+
+
+static struct TagItem devmanagerTags[] =
+{
+  {MIT_Name,             (ULONG)"_ device"},
+  {MIT_VectorTable,      (ULONG)dev_manager_vectors},
+  {MIT_Version,          1},
+  {TAG_DONE,             0}
+};
+
+
+static APTR main_vectors[] = {
+  generic_Obtain,
+  generic_Release,
+  NULL,
+  NULL,
+  gwAHI_AllocAudioA,
+  gwAHI_FreeAudio,
+  gwAHI_KillAudio,
+  gwAHI_ControlAudioA,
+  gwAHI_SetVol,
+  gwAHI_SetFreq,
+  gwAHI_SetSound,
+  gwAHI_SetEffect,
+  gwAHI_LoadSound,
+  gwAHI_UnloadSound,
+  gwAHI_NextAudioID,
+  gwAHI_GetAudioAttrsA,
+  gwAHI_BestAudioIDA,
+  gwAHI_AllocAudioRequestA,
+  gwAHI_AudioRequestA,
+  gwAHI_FreeAudioRequest,
+  gwAHI_PlayA,
+  gwAHI_SampleFrameSize,
+  gwAHI_AddAudioMode,
+  gwAHI_RemoveAudioMode,
+  gwAHI_LoadModeFile,
+  (APTR) -1
+};
+
+
+static struct TagItem mainTags[] =
+{
+  {MIT_Name,              (ULONG)"main"},
+  {MIT_VectorTable,       (ULONG)main_vectors},
+  {MIT_Version,           1},
+  {TAG_DONE,              0}
+};
+
+
+/* MLT_INTERFACES array */
+
+static ULONG devInterfaces[] =
+{
+  (ULONG)devmanagerTags,
+  (ULONG)mainTags,
+  0
+};
+
+extern ULONG VecTable68K;
+// tbd extern
+
+
+/* CreateLibrary tag list */
+static struct TagItem libCreateTags[] =
+{
+  {CLT_DataSize,         (ULONG)sizeof(struct AHIBase)},
+  {CLT_Interfaces,       (ULONG)devInterfaces},
+  {CLT_Vector68K,        (ULONG)&VecTable68K},
+  {CLT_InitFunc,         (ULONG)dev_init},
+  {TAG_DONE,             0}
+};
+#endif
 
 /******************************************************************************
 ** OpenLibs *******************************************************************
@@ -382,13 +528,14 @@ OpenLibs ( void )
 
   TimerIO = (struct timerequest *) AllocVec( sizeof(struct timerequest),
                                              MEMF_PUBLIC | MEMF_CLEAR );
-  TimerIO->tr_node.io_Message.mn_Length = sizeof(struct timerequest);
-  
+
   if( TimerIO == NULL)
   {
     Req( "Out of memory." );
     return FALSE;
   }
+
+  TimerIO->tr_node.io_Message.mn_Length = sizeof(struct timerequest);
 
   if( OpenDevice( "timer.device",
                   UNIT_VBLANK,
@@ -397,7 +544,7 @@ OpenLibs ( void )
                   0) != 0 )
   {
     Req( "Unable to open 'timer.device'." );
-    return FALSE; 
+//    return FALSE; 
   }
   else
   {
@@ -414,6 +561,56 @@ OpenLibs ( void )
     return FALSE;
   }
 
+#if defined( __amigaos4__ )
+  if ((IIntuition = (struct IntuitionIFace *) GetInterface((struct Library *) IntuitionBase, "main", 1, NULL)) == NULL)
+  {
+       Req("Couldn't open IIntuition interface!\n");
+       return FALSE;
+  }
+
+  if ((IDOS = (struct DOSIFace *) GetInterface((struct Library *) DOSBase, "main", 1, NULL)) == NULL)
+  {
+       Req("Couldn't open IDOS interface!\n");
+       return FALSE;
+  }
+  
+  if ((IGraphics = (struct GraphicsIFace *) GetInterface((struct Library *) GfxBase, "main", 1, NULL)) == NULL)
+  {
+       Req("Couldn't open Graphics interface!\n");
+       return FALSE;
+  }
+
+  if ((IGadTools = (struct GadToolsIFace *) GetInterface((struct Library *) GadToolsBase, "main", 1, NULL)) == NULL)
+  {
+       Req("Couldn't open IGadTools interface!\n");
+       return FALSE;
+  }
+
+  if ((IIFFParse = (struct IFFParseIFace *) GetInterface((struct Library *) IFFParseBase, "main", 1, NULL)) == NULL)
+  {
+       Req("Couldn't open IFFParse interface!\n");
+       return FALSE;
+  }
+
+  if ((ILocale = (struct LocaleIFace *) GetInterface((struct Library *) LocaleBase, "main", 1, NULL)) == NULL)
+  {
+       Req("Couldn't open ILocale interface!\n");
+       return FALSE;
+  }
+
+  if ((ITimer = (struct TimerIFace *) GetInterface((struct Library *) TimerBase, "main", 1, NULL)) == NULL)
+  {
+       Req("Couldn't open Timer interface!\n");
+       return FALSE;
+  }
+
+  if ((IUtility = (struct UtilityIFace *) GetInterface((struct Library *) UtilityBase, "main", 1, NULL)) == NULL)
+  {
+       Req("Couldn't open Utility interface!\n");
+       return FALSE;
+  }
+#endif
+  
   // Fill in some defaults...
 
   AddByteMonoPtr         = AddByteMono;
@@ -647,13 +844,13 @@ OpenLibs ( void )
 
   OpenahiCatalog(NULL, NULL);
 
-#if defined( __amithlon__ )
-  Req( "This is a *beta* release of AHI/x86,\n"
-       "using the generic 'C' mixing routines.\n"
-       "\n"
-       "Detailed bug reports and patches are welcome.\n"
-	 "/Martin Blom <martin@blom.org>\n" );
-#endif
+/* #if defined( __amithlon__ ) */
+/*   Req( "This is a *beta* release of AHI/x86,\n" */
+/*        "using the generic 'C' mixing routines.\n" */
+/*        "\n" */
+/*        "Detailed bug reports and patches are welcome.\n" */
+/* 	 "/Martin Blom <martin@blom.org>\n" ); */
+/* #endif */
 
   return TRUE;
 }

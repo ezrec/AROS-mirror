@@ -1,6 +1,6 @@
 #  $Id$
 #
-#  Makefile.in for the user and developer documentation
+#  Makefile.in for the drivers
 #
 
 #
@@ -23,13 +23,8 @@ INSTALL_DATA	= @INSTALL_DATA@
 
 VPATH		= @srcdir@
 
-
-#
-# Files
-########################################
-
-TARGETS		= 
-
+HAVE_OPENPCI	= @HAVE_OPENPCI@
+HAVE_OSS	= @HAVE_OSS@
 
 #
 # Targets
@@ -37,9 +32,17 @@ TARGETS		=
 
 .PHONY:		all clean distclean maintainer-clean bindist
 
-SUBDIRS		= Filesave Void
+SUBDIRS		= Filesave #Void
 
-all:		$(TARGETS)
+ifneq ($(strip $(HAVE_OSS)),)
+SUBDIRS		+= AROS
+endif
+
+ifneq ($(strip $(HAVE_OPENPCI)),)
+SUBDIRS		+= EMU10kx
+endif
+
+all:
 	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@) || exit; done
 
 install:
@@ -47,7 +50,7 @@ install:
 
 clean:
 	-@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
-	$(RM) $(TARGETS) *.bak *~ \#*\# core
+	$(RM) *.bak *~ \#*\# core
 
 distclean:	clean
 	-@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
@@ -56,7 +59,7 @@ distclean:	clean
 maintainer-clean: distclean
 	-@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
 
-bindist:	$(TARGETS)
+bindist:
 	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@) || exit; done
 	$(INSTALL) --directory $(DRIVERDIR) 
 	for d in $(SUBDIRS) Paula Toccata Wavetools; do \

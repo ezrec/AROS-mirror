@@ -12,10 +12,10 @@
 
 top_srcdir	= @top_srcdir@
 common_srcdir	= ${top_srcdir}/Drivers/Common
+PREFIX		= @prefix@
 DISTDIR		= @DISTDIR@
 DRIVERDIR	= ${DISTDIR}/User/Devs/AHI
 MODEFILEDIR	= ${DISTDIR}/User/Devs/AudioModes
-PREFIX          = @prefix@
 
 VPATH		+= ${common_srcdir}
 
@@ -35,8 +35,7 @@ ASFLAGS		= @ASFLAGS@
 LDFLAGS		= @LDFLAGS@ -nostartfiles
 ARFLAGS         = @ARFLAGS@
 
-FD2INLINE	= @FD2INLINE@
-FD2INLINE_TARGET= --target=${host}
+SFDC		= @SFDC@
 
 LIBS		= @LIBS@
 
@@ -48,7 +47,7 @@ INSTALL_DATA	= @INSTALL_DATA@
 # Files
 ########################################
 
-OBJECTS		+= library.o gatestubs1.o gatestubs2.o
+OBJECTS		+= library.o gatestubs.o
 
 
 #
@@ -65,7 +64,7 @@ mostlyclean:
 	$(RM) $(DRIVER) $(MODEFILE) *.o *.a *.bak *~ \#*\# core Makefile.dep
 
 clean:		mostlyclean
-	$(RM) version.h gatestubs1.c gatestubs1.h gatestubs2.c gatestubs2.h
+	$(RM) version.h gatestubs.c gatestubs.h
 
 distclean:	clean
 	$(RM) Makefile
@@ -115,30 +114,27 @@ $(MODEFILE):	$(MODEFILE).o
 $(MODEFILE).o:	MODEFILE.s $(MODEFILE).s
 	gasp  $^ | $(AS) $(ASFLAGS) -o $@
 
-gatestubs1.c:	$(top_srcdir)/Include/FD/ahi_sub_lib.fd \
-		$(top_srcdir)/Include/C/clib/ahi_sub_protos.h
-	$(FD2INLINE) --mode=gatestubs --gateprefix=gw --libprefix=_ \
-	             $(FD2INLINE_TARGET) \
-	             $^ -o $@
+gatestubs.c:	$(top_srcdir)/Include/SFD/ahi_sub_lib.sfd
+	$(SFDC) --mode=gatestubs --gateprefix=gw --libprefix=_ --libarg=last \
+	        --addvectors=library --target=$(host) $^ -o $@
 
-gatestubs1.h:	$(top_srcdir)/Include/FD/ahi_sub_lib.fd \
-		$(top_srcdir)/Include/C/clib/ahi_sub_protos.h
-	$(FD2INLINE) --mode=gateproto --gateprefix=gw --libprefix=_ \
-	             $(FD2INLINE_TARGET) \
-	             $^ -o $@
+gatestubs.h:	$(top_srcdir)/Include/SFD/ahi_sub_lib.sfd
+	$(SFDC) --mode=gateproto --gateprefix=gw --libprefix=_ --libarg=last \
+	        --addvectors=library --target=$(host) $^ -o $@
 
-gatestubs1.o:	gatestubs1.c
+gatestubs.o:	gatestubs.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -D__CLIB_TYPES__ -c $^ $(OUTPUT_OPTION)
 
-gatestubs2.c:	lib.fd lib_protos.h
-	$(FD2INLINE) --mode=gatestubs --gateprefix=gw --libprefix=_ \
-	             $(FD2INLINE_TARGET) \
-	             $^ -o $@
+camdstubs.c:	camd_drv.sfd
+	$(SFDC) --mode=gatestubs --gateprefix=gw --libprefix=_ --libarg=last \
+	        --target=$(host) $^ -o $@
 
-gatestubs2.h:	lib.fd lib_protos.h
-	$(FD2INLINE) --mode=gateproto --gateprefix=gw --libprefix=_ \
-	             $(FD2INLINE_TARGET) \
-	             $^ -o $@
+camdstubs.h:	camd_drv.sfd
+	$(SFDC) --mode=gateproto --gateprefix=gw --libprefix=_ --libarg=last \
+	        --target=$(host) $^ -o $@
+
+camdstubs.o:	camdstubs.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -D__CLIB_TYPES__ -c $^ $(OUTPUT_OPTION)
 
 version.h:	version.rev version.date
 	@echo Creating $@
@@ -166,7 +162,7 @@ depend:
 	$(MAKE) Makefile.dep
 
 Makefile.dep:	$(DEPENDENCIES) version.h \
-		gatestubs1.c gatestubs2.c gatestubs1.h gatestubs2.h
+		gatestubs.c gatestubs.h
 	@echo Making $@
 	-@$(CC) $(CPPFLAGS) $(CFLAGS) -MM $(SOURCES) > $@
 

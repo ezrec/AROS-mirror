@@ -19,8 +19,11 @@
 
 /* $Id$
  * $Log$
- * Revision 1.3  2003/04/29 18:17:58  chodorowski
- * Updated to 5.8.
+ * Revision 1.4  2003/12/30 20:25:34  stegerg
+ * Updated to latest AHI sources.
+ *
+ * Revision 5.2  2003/09/22 20:06:17  martin
+ * Nuked CompilerSpecific.h
  *
  * Revision 5.1  2003/01/19 12:22:29  martin
  * Another year, another copyright update.
@@ -50,7 +53,6 @@
 #define NO_INLINE_STDARG
 
 #include <config.h>
-#include <CompilerSpecific.h>
 
 #include <intuition/icclass.h>
 #include <libraries/asl.h>
