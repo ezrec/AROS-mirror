@@ -30,6 +30,9 @@
 # Complete contrib
 contrib contrib
 
+# Stuff necessary to compile AROS
+necessary -a grub bgui
+
 # Amiga C Manual
 ACM -d contrib/ACM contrib/ACM
 
@@ -41,6 +44,9 @@ aminet -d contrib/aminet contrib/aminet
 
 # BGUI
 bgui -d contrib/bgui contrib/bgui
+
+# GRUB 
+grub -d contrib/grub contrib/grub
 
 # Self-contained version of crypt(3)
 crypt -d contrib/tools/crypt contrib/tools/crypt
