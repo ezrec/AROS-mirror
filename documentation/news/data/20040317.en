@@ -1,0 +1,10 @@
+==============
+NVIDIA Driver!
+==============
+
+:Authors:  David Le Corfec
+:Date:     2004-03-17
+
+Great news for NVIDIA graphics cards owners! Michal Schulz just finished
+and committed the first version of a 2D accelerated driver, with the help
+of Georg Steger to hunt down bugs. Congratulation to both of them!
