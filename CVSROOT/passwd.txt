@@ -1,25 +1,25 @@
-digulla:db1zGovyufSmw:aros:Aaron Digulla:digulla@wi-pc44.fh-konstanz.de:Coordinator
-matthias:bbxf6C1JfqE7U:aros:Matthias Fleischer:fleischr@IZFM.Uni-Stuttgart.DE:Exec, DOS, drivers
-pgpeter:ggX6o8c4l:aros:Peter Boeckmann:pgpeter@informatik.uni-siegen.de:Sparc, Alpha
-iaint:adwVPoZf6iJ6U:aros:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:FreeBSD, utility
-zino:bdYh/q95S4cmU:aros:Peter Bortas:zino@lysator.liu.se:WWW site
-mreckt:cbWLerEivCr6I:aros:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, misc.
-ldp:6u5hVWs926luc:aros:Lennard voor den Dag:ldp@worldonline.nl:Amiga port
-quango:cbSYvfdxV/owQ:aros:Chris Lawrence:quango@socomm.net:Linux/m68k
-geert:cbGlFwvZi5iZY:aros:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
-turrican:bcRFEzJmi8r7Y:aros:Kars de Jong:jongk@prac.cs.utwente.nl:misc
-nlorentz:aaoEn/1St7MB7JtA8mAs:aros:Nils Henrik Lorentzen:nlorentz@sn.no:diskfont,icons
-ruppert:bbtwjwdJnQGas:aros:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
+digulla:db1zGovyufSmw:Aaron Digulla:digulla@wi-pc44.fh-konstanz.de:Coordinator
+matthias:bbxf6C1JfqE7U:Matthias Fleischer:fleischr@IZFM.Uni-Stuttgart.DE:Exec, DOS, drivers
+pgpeter:ggX6o8c4l:Peter Boeckmann:pgpeter@informatik.uni-siegen.de:Sparc, Alpha
+iaint:adwVPoZf6iJ6U:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:FreeBSD, utility
+zino:bdYh/q95S4cmU:Peter Bortas:zino@lysator.liu.se:WWW site
+mreckt:cbWLerEivCr6I:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, misc.
+ldp:6u5hVWs926luc:Lennard voor den Dag:ldp@worldonline.nl:Amiga port
+quango:cbSYvfdxV/owQ:Chris Lawrence:quango@socomm.net:Linux/m68k
+geert:cbGlFwvZi5iZY:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
+turrican:bcRFEzJmi8r7Y:Kars de Jong:jongk@prac.cs.utwente.nl:misc
+nlorentz:aaoEn/1St7MB7JtA8mAs:Nils Henrik Lorentzen:nlorentz@sn.no:diskfont,icons
+ruppert:bbtwjwdJnQGas:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 
-stepan:dcIM.xvdbd/R.:aros:Stefan Reinauer:stepan@home.culture.mipt.ru:
-juddc:KIHh6YtTnh0KY:aros:Christopher D. Judd:juddc@rpi.edu:
-frv95tjn:caYBHmdz7UdCU:aros:Tommy Johansson:frv95tjn@mds.mdh.se:
-pcosta:bbFkszi19YU6M:aros:Paolo Costabel:pcosta@mbox.vol.it:
-#winter:dbg5HYnm/h.ZQ:aros:Bill Boatman:winter@freebsd1.foo.bar:
-daniel:b9bwcTjXjo3Gc:aros:Daniel Verite:daniel@brainstorm.eu.org:
-mroth:da/M1jS3sNsHg:aros:Michael Roth:mroth@inlet.lake.de:
-nico:bbHYNBwvWxgYE:aros:Nico Heinz:nico@fh-konstanz.de:
-ykoehler:pomie:aros:Yannick Koehler:yannickk@eicon.com:
-fasten:ccY.p7jBmFL4g:aros:Bernhard Fastenrath:fasten@informatik.uni-bonn.de:
-srittau:aaRBXVNGOCKiY:aros:Sebastian Rittau:jroger@sky.in-berlin.de:
+stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
+juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
+frv95tjn:caYBHmdz7UdCU:Tommy Johansson:frv95tjn@mds.mdh.se:
+pcosta:bbFkszi19YU6M:Paolo Costabel:pcosta@mbox.vol.it:
+#winter:dbg5HYnm/h.ZQ:Bill Boatman:winter@freebsd1.foo.bar:
+daniel:b9bwcTjXjo3Gc:Daniel Verite:daniel@brainstorm.eu.org:
+mroth:da/M1jS3sNsHg:Michael Roth:mroth@inlet.lake.de:
+nico:bbHYNBwvWxgYE:Nico Heinz:nico@fh-konstanz.de:
+ykoehler:pomie:Yannick Koehler:yannickk@eicon.com:
+fasten:ccY.p7jBmFL4g:Bernhard Fastenrath:fasten@informatik.uni-bonn.de:
+srittau:aaRBXVNGOCKiY:Sebastian Rittau:jroger@sky.in-berlin.de:
 jaxom:dcZ/NTob1tC2I:Thomas Schwarz:Thomas.Schwarz@munich.netsurf.de:
