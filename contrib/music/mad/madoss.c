@@ -18,10 +18,10 @@
  *
  * $Id$
  *
- * This is an example of a command line MPEG audio player, based on minimad.c
- * and libmad. It uses oss.library for audio output.
- * See http://www.underbit.com/products/mad/ for original MAD sources.
- * Have a look at doc/PATENTS.
+ * This is based on:
+ * minimad.c (Simple MAD decoder) v1.13   (C) 2000-2001 Robert Leslie
+ * madlld.c (MAD low-level demonstration/decoder) v1.0p1   (C) 2001, 2002 Bertrand Petit
+ *
  */
 
 #include <stdio.h>
@@ -35,7 +35,7 @@
 #include <proto/dos.h>
 
 #define DSP_DRIVER_NAME "/dev/dsp"
-#define SRCBUFSIZE 456780
+#define SRCBUFSIZE 60000
 #define DESTBUFSIZE 8900
 
 #include "mad.h"
@@ -47,6 +47,7 @@ struct buffer {
     BPTR infh;
     void *srcbuffer;
     short *destbuffer;
+    int framecount;
 };
 
 static void cleanup(struct buffer *buffer);
@@ -54,18 +55,20 @@ static enum mad_flow input(void *data, struct mad_stream *stream);
 static inline signed int scale(mad_fixed_t sample);
 static enum mad_flow output(void *data, struct mad_header const *header, struct mad_pcm *pcm);
 static enum mad_flow error(void *data, struct mad_stream *stream, struct mad_frame *frame);
+static const char *MadErrorString(const struct mad_stream *Stream);
+static void PrintFrameInfo(struct mad_header *Header);
 
 int main (int argc, char *argv[])
 {
     struct buffer buffer;
     struct mad_decoder decoder;
-    int ok, channels, rate;
+    int ok;
 
     OSSBase = NULL;
+    buffer.infh = NULL;
     buffer.srcbuffer = NULL;
     buffer.destbuffer = NULL;
-    channels = 2;
-    rate = 44100;
+    buffer.framecount = 0;
     if (argc != 2)
     {
 	printf ("Usage: madoss <filename>\n");
@@ -120,22 +123,6 @@ int main (int argc, char *argv[])
 	return -1;
     }
 
-    ok = OSS_SetNumChannels(channels);
-    if( !ok )
-    {
-	printf("error setting channels\n");
-	cleanup(&buffer);
-	return -1;
-    }
-
-    ok = OSS_SetWriteRate(rate, &rate);
-    if( !ok )
-    {
-	printf("error setting write rate\n");
-	cleanup(&buffer);
-	return -1;
-    }
-
     /* configure input, output, and error functions */
     mad_decoder_init(&decoder, &buffer,
 		     input, 0 /* header */, 0 /* filter */, output,
@@ -145,6 +132,7 @@ int main (int argc, char *argv[])
 
     mad_decoder_finish(&decoder);
 
+    printf("%d frames decoded.\n", buffer.framecount);
     cleanup(&buffer);
     return 0;
 }
@@ -165,19 +153,29 @@ static void cleanup(struct buffer *buffer)
 static enum mad_flow input(void *data, struct mad_stream *stream)
 {
     struct buffer *buffer = data;
-    int readlength;
+    int readlength, remainingbytes;
+    void * srcstart;
 
-    printf("buffer %x bufend %x this %x next %x skiplen %x\n", stream->buffer, stream->bufend, stream->this_frame, stream->next_frame, stream->skiplen);
-    readlength = Read(buffer->infh, buffer->srcbuffer, SRCBUFSIZE);
-    printf("read %d\n", readlength);
-    if ( readlength<0 )
+    //printf("1 buffer %x bufend %x thispos %d next %x buflen %d\n", stream->buffer, stream->bufend, stream->this_frame - stream->buffer, stream->next_frame, stream->bufend - stream->buffer);
+    if( stream->next_frame != NULL )
+    {
+	remainingbytes = stream->bufend - stream->next_frame;
+	memcpy( (void*)stream->buffer, stream->this_frame, remainingbytes );
+    }
+    else remainingbytes = 0;
+
+    srcstart = buffer->srcbuffer + remainingbytes;
+    readlength = Read(buffer->infh, srcstart, SRCBUFSIZE - remainingbytes);
+    printf("read %d remainingbytes %d srcstart %x\n", readlength, remainingbytes, (int)srcstart);
+    if( readlength<0 )
     {
 	printf("error reading file\n");
 	return MAD_FLOW_STOP;
     }
-    if ( readlength==0 )
+    if( readlength==0 )
 	return MAD_FLOW_STOP;
-    mad_stream_buffer(stream, buffer->srcbuffer, readlength);
+    mad_stream_buffer(stream, buffer->srcbuffer, readlength + remainingbytes);
+    //printf("2 buffer %x bufend %x thispos %d next %x buflen %d\n", stream->buffer, stream->bufend, stream->this_frame - stream->buffer, stream->next_frame, stream->bufend - stream->buffer);
 
     return MAD_FLOW_CONTINUE;
 }
@@ -206,18 +204,36 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
     mad_fixed_t const *left_ch, *right_ch;
     signed short *ptr;
     signed int sample;
-    int written, length;
+    int written, length, ok, rate;
     
     /* pcm->samplerate contains the sampling frequency */
-    
     nchannels = pcm->channels;
     nsamples  = pcm->length;
     left_ch   = pcm->samples[0];
     right_ch  = pcm->samples[1];
     //printf ("nchannels %d nsamples %d left_ch %x right_ch %x\n",nchannels,nsamples,left_ch,right_ch);
-    
+
+    if(buffer->framecount==0)
+    {
+	PrintFrameInfo((struct mad_header *)header);
+	ok = OSS_SetNumChannels(nchannels);
+	if( !ok )
+	{
+	    printf("error setting channels\n");
+	    return MAD_FLOW_STOP;
+	}
+	rate = pcm->samplerate;
+	ok = OSS_SetWriteRate(rate, &rate);
+	if( !ok )
+	{
+	    printf("error setting write rate\n");
+	    return MAD_FLOW_STOP;
+	}
+    }
+    buffer->framecount++;
+
     length = nsamples*2;
-    if (nchannels == 2)
+    if( nchannels == 2 )
 	length *= 2;
     if( length > DESTBUFSIZE )
     {
@@ -259,13 +275,146 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
 /* error function: called to handle a decoding error */
 static enum mad_flow error(void *data, struct mad_stream *stream, struct mad_frame *frame)
 {
-    struct buffer *buffer = data;
+    //struct buffer *buffer = data;
 
-    printf("decoding error 0x%04x at byte 0x%08x\n",
-	   stream->error, /*mad_stream_errorstr(stream),*/ stream->this_frame - stream->buffer);
+    printf("%srecoverable decoding error 0x%04x at byte 0x%08x (%s)\n", MAD_RECOVERABLE(stream->error) ? "" : "un",
+	   stream->error, stream->this_frame - stream->buffer, MadErrorString(stream));
 
     if( MAD_RECOVERABLE(stream->error) )
 	return MAD_FLOW_CONTINUE;
     else
 	return MAD_FLOW_STOP;
+}
+
+#if (MAD_VERSION_MAJOR>=1) || \
+    ((MAD_VERSION_MAJOR==0) && \
+     (((MAD_VERSION_MINOR==14) && \
+       (MAD_VERSION_PATCH>=2)) || \
+      (MAD_VERSION_MINOR>14)))
+#define MadErrorString(x) mad_stream_errorstr(x)
+#else
+static const char *MadErrorString(const struct mad_stream *Stream)
+{
+	switch(Stream->error)
+	{
+		/* Generic unrecoverable errors. */
+		case MAD_ERROR_BUFLEN:
+			return("input buffer too small (or EOF)");
+		case MAD_ERROR_BUFPTR:
+			return("invalid (null) buffer pointer");
+		case MAD_ERROR_NOMEM:
+			return("not enough memory");
+
+		/* Frame header related unrecoverable errors. */
+		case MAD_ERROR_LOSTSYNC:
+			return("lost synchronization");
+		case MAD_ERROR_BADLAYER:
+			return("reserved header layer value");
+		case MAD_ERROR_BADBITRATE:
+			return("forbidden bitrate value");
+		case MAD_ERROR_BADSAMPLERATE:
+			return("reserved sample frequency value");
+		case MAD_ERROR_BADEMPHASIS:
+			return("reserved emphasis value");
+
+		/* Recoverable errors */
+		case MAD_ERROR_BADCRC:
+			return("CRC check failed");
+		case MAD_ERROR_BADBITALLOC:
+			return("forbidden bit allocation value");
+		case MAD_ERROR_BADSCALEFACTOR:
+			return("bad scalefactor index");
+		case MAD_ERROR_BADFRAMELEN:
+			return("bad frame length");
+		case MAD_ERROR_BADBIGVALUES:
+			return("bad big_values count");
+		case MAD_ERROR_BADBLOCKTYPE:
+			return("reserved block_type");
+		case MAD_ERROR_BADSCFSI:
+			return("bad scalefactor selection info");
+		case MAD_ERROR_BADDATAPTR:
+			return("bad main_data_begin pointer");
+		case MAD_ERROR_BADPART3LEN:
+			return("bad audio data length");
+		case MAD_ERROR_BADHUFFTABLE:
+			return("bad Huffman table select");
+		case MAD_ERROR_BADHUFFDATA:
+			return("Huffman data overrun");
+		case MAD_ERROR_BADSTEREO:
+			return("incompatible block_type for JS");
+
+		/* Unknown error. This swich may be out of sync with libmad's
+		 * defined error codes.
+		 */
+		default:
+			return("Unknown error code");
+	}
+}
+#endif
+
+static void PrintFrameInfo(struct mad_header *Header)
+{
+	const char	*Layer,
+				*Mode,
+				*Emphasis;
+
+	/* Convert the layer number to it's printed representation. */
+	switch(Header->layer)
+	{
+		case MAD_LAYER_I:
+			Layer="I";
+			break;
+		case MAD_LAYER_II:
+			Layer="II";
+			break;
+		case MAD_LAYER_III:
+			Layer="III";
+			break;
+		default:
+			Layer="(unexpected layer value)";
+			break;
+	}
+
+	/* Convert the audio mode to it's printed representation. */
+	switch(Header->mode)
+	{
+		case MAD_MODE_SINGLE_CHANNEL:
+			Mode="single channel";
+			break;
+		case MAD_MODE_DUAL_CHANNEL:
+			Mode="dual channel";
+			break;
+		case MAD_MODE_JOINT_STEREO:
+			Mode="joint (MS/intensity) stereo";
+			break;
+		case MAD_MODE_STEREO:
+			Mode="normal LR stereo";
+			break;
+		default:
+			Mode="(unexpected mode value)";
+			break;
+	}
+
+	/* Convert the emphasis to it's printed representation. */
+	switch(Header->emphasis)
+	{
+		case MAD_EMPHASIS_NONE:
+			Emphasis="no";
+			break;
+		case MAD_EMPHASIS_50_15_US:
+			Emphasis="50/15 us";
+			break;
+		case MAD_EMPHASIS_CCITT_J_17:
+			Emphasis="CCITT J.17";
+			break;
+		default:
+			Emphasis="(unexpected emphasis value)";
+			break;
+	}
+
+	printf("%lu kb/s audio mpeg layer %s stream %s crc, "
+			"%s with %s emphasis at %d Hz sample rate\n",
+			Header->bitrate,Layer,
+			Header->flags&MAD_FLAG_PROTECTION?"with":"without",
+			Mode,Emphasis,Header->samplerate);
 }
