@@ -56,6 +56,9 @@ printf("%s: Trying to create Window Object\n",__FILE__);
 		WINDOW_MasterGroup, ar[WIN1_MASTER] = VGroupObject,
 			FRM_Type,FRTYPE_NEXT,
 			FRM_Title,NULL,
+#ifdef _AROS
+#warning Commented PropObject - cannot be created so far
+#else
 			StartMember, ar[WIN1_PROP1] = PropObject,
 				LAB_Label, "Prop",
 				LAB_Underscore, '_',
@@ -68,6 +71,7 @@ printf("%s: Trying to create Window Object\n",__FILE__);
 				PGA_Freedom, FREEHORIZ,
 				GA_ID, WIN1_PROP1,
 			EndObject,  EndMember,
+#endif
 			StartMember, ar[WIN1_CYCLE1] = CycleObject,
 				LAB_Label, "Cycle",
 				GA_ID, WIN1_CYCLE1,
