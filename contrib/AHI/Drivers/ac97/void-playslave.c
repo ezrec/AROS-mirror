@@ -82,7 +82,7 @@ D(bug("SR=%04x CR=%04x CIV=%02x LVI=%02x\n", inw(ac97Base->dmabase + PO_SR),
 
     running = TRUE;
     
-    SetTaskPri(FindTask(NULL), 30);
+    SetTaskPri(FindTask(NULL), 127);
 
     int tail = (inb(ac97Base->dmabase + PO_CIV) + 1) & 0x1f;
 
