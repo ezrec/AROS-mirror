@@ -90,6 +90,7 @@
 #include <proto/utility.h>
 
 #include <aros/debug.h>
+#include <aros/asmcall.h>
 #include <dos/dosasl.h>
 #include <dos/dosextens.h>
 #include <dos/filesystem.h>
@@ -166,12 +167,13 @@ void *const acdrfunctable[]=
 
 const UBYTE acdrdatatable = 0;
 
-AROS_LH2(struct ACDRBase *, init,
- AROS_LHA(struct ACDRBase *, acdrbase, D0),
- AROS_LHA(BPTR,              segList,  A0),
-      struct ExecBase *, SysBase, 0,   acdrdev)
+AROS_UFH3(struct ACDRBase *, AROS_SLIB_ENTRY(init,acdrdev),
+ AROS_UFHA(struct ACDRBase *, acdrbase, D0),
+ AROS_UFHA(BPTR,              segList,  A0),
+ AROS_UFHA(struct ExecBase *, SysBase,  A6)
+)
 {
-	AROS_LIBFUNC_INIT
+	AROS_USERFUNC_INIT
 
 	struct Task *task;
 	APTR stack;
@@ -224,7 +226,7 @@ AROS_LH2(struct ACDRBase *, init,
 		CloseLibrary((struct Library *)acdrbase->DOSBase);
 	}
 	return NULL;
-	AROS_LIBFUNC_EXIT
+	AROS_USERFUNC_EXIT
 }
 
 #include "baseredef.h"
