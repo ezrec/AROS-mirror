@@ -28,7 +28,7 @@ def prepareNewsItem (filename):
     
     return row
 	    
-def genPage (items, filename, linkBoxItem):
+def genPage (items, filename, linkBoxItem, mtime=0):
     '''Convert a list of news items into an HTML page and save
     it in filename. items must be a list of files with newsitems.
     The filenames must be dates in the form YYYYMMDD.'''
@@ -49,7 +49,6 @@ def genPage (items, filename, linkBoxItem):
 	
     table = TableLite ()
     page.meat = page.meat + [table,]
-    mtime = 0
 
     for file in items:
 	item = prepareNewsItem (file)
@@ -63,8 +62,10 @@ def genPage (items, filename, linkBoxItem):
 	p.append (Href ('oldnews.html', 'Older News'))
 	page.meat = page.meat + [p]
 
-    page.mtime = fmtime
+    page.mtime = mtime
     page.write (filename)
+
+    return mtime
 
 def gen (datadir):
     '''Create the news page (index.html, oldnews.html).'''
@@ -77,6 +78,6 @@ def gen (datadir):
     
     # Create a main page with the Top 5 news items and another page
     # with the rest.
-    genPage (list[:5], 'index.html', 'NEWS')
-    genPage (list[5:], 'oldnews.html', 'Old News')
+    mtime = genPage (list[:5], 'index.html', 'NEWS')
+    genPage (list[5:], 'oldnews.html', 'Old News', mtime)
 
