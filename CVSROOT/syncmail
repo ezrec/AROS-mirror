@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/python
 #  -*- Python -*-
 #
 
@@ -69,7 +69,7 @@ import time
 import getopt
 
 # Notification command
-MAILCMD = '/bin/mail -s "CVS: %(SUBJECT)s" %(PEOPLE)s 2>&1 > /dev/null'
+MAILCMD = '/usr/bin/mail -s "CVS: %(SUBJECT)s" %(PEOPLE)s 2>&1 > /dev/null'
 
 # Diff trimming stuff
 DIFF_HEAD_LINES = 20
