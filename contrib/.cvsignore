@@ -1,1 +1,8 @@
 makefile
+XDME
+ix
+*.lha
+*.info
+*.gz
+xpk*
+Moria3D.org

@@ -1,0 +1,3 @@
+makefile
+*.[ch]
+*.info
