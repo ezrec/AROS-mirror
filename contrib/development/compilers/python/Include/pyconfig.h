@@ -16,6 +16,15 @@
 /* Define to `int' if <sys/types.h> doesn't define.  */
 /* #undef gid_t */
 
+/* Define if your struct stat has st_blksize.  */
+#define HAVE_ST_BLKSIZE
+
+/* Define if your struct stat has st_blocks.  */
+#define HAVE_ST_BLOCKS
+
+/* Define if your struct stat has st_rdev.  */
+#define HAVE_ST_RDEV
+
 /* Define if your struct tm has tm_zone.  */
 /* #undef HAVE_TM_ZONE */
 
@@ -93,6 +102,9 @@
 /* Defined on Solaris to see additional function prototypes. */
 /* #undef __EXTENSIONS__ */
 
+/* This must be set to 64 on some systems to enable large file support */
+/* #undef _FILE_OFFSET_BITS */
+
 /* Define if getpgrp() must be called as getpgrp(0). */
 /* #undef GETPGRP_HAVE_ARG */
 
@@ -102,6 +114,18 @@
 
 /* Define this if your time.h defines altzone */
 /* #undef HAVE_ALTZONE */
+
+/* Define if --enable-ipv6 is specified */
+/* #undef ENABLE_IPV6 */
+
+/* Define if sockaddr has sa_len member */
+/* #undef HAVE_SOCKADDR_SA_LEN */
+
+/* struct addrinfo (netdb.h) */
+/* #undef HAVE_ADDRINFO */
+
+/* struct sockaddr_storage (sys/socket.h) */
+/* #undef HAVE_SOCKADDR_STORAGE */
 
 /* Defined when any dynamic module loading is enabled */
 /* FIXME: Dunno... */
@@ -138,6 +162,9 @@
 /* Define if your compiler supports function prototypes */
 #define HAVE_PROTOTYPES 1
 
+/* Define if you have readline 4.0 */
+/* #undef HAVE_RL_PRE_INPUT_HOOK */
+
 /* Define if you have GNU PTH threads */
 /* #undef HAVE_PTH */
 
@@ -159,6 +186,20 @@
 
 /* Define if the compiler provides a wchar.h header file. */
 /* #undef HAVE_WCHAR_H */
+
+/* This must be defined on some systems to enable large file support */
+/* #undef _LARGEFILE_SOURCE */
+
+/* Define if you want to have a Unicode type. */
+#define Py_USING_UNICODE 1
+
+/* Define as the integral type used for Unicode representation. */
+/* FIXME: Should be decided dynamically... */
+#define PY_UNICODE_TYPE unsigned short
+
+/* Define as the size of the unicode type. */
+/* FIXME: Should be decided dynamically... */
+#define Py_UNICODE_SIZE 2
 
 /* Define if nice() returns success/failure instead of the new priority. */
 /* FIXME: Don't have nice at all... */
@@ -200,6 +241,9 @@
 /* The number of bytes in a pthread_t. */
 /* FIXME: Don't have pthreads... */
 /* #undef SIZEOF_PTHREAD_T */
+
+/* Defined if PTHREAD_SCOPE_SYSTEM supported. */
+/* #undef PTHREAD_SYSTEM_SCHED_SUPPORTED */
 
 /* Define to `int' if <sys/types.h> doesn't define.  */
 /* #undef socklen_t */
@@ -248,6 +292,9 @@
    (shared library plus accessory files). */
 /* #undef WITH_NEXT_FRAMEWORK */
 
+/* Define if you want to use MacPython modules on MacOSX in unix-Python */
+/* #undef USE_TOOLBOX_OBJECT_GLUE */
+
 /* Define if you want to use SGI (IRIX 4) dynamic linking.
    This requires the "dl" library by Jack Jansen,
    ftp://ftp.cwi.nl/pub/dynload/dl-1.6.tar.Z.
@@ -257,6 +304,12 @@
 
 /* Define if you want to compile in rudimentary thread support */
 /* #define WITH_THREAD 1 */
+
+/* Define if mvwdelch in curses.h is an expression. */
+/* #undef MVWDELCH_IS_EXPRESSION */
+
+/* Define if WINDOW in curses.h offers a field _flags. */
+/* #undef WINDOW_HAS_FLAGS */
 
 /* ##################################################### */
 /* ################# BEGIN KLUDGE ###################### */
@@ -294,6 +347,9 @@
 /* The number of bytes in a void *.  */
 #define SIZEOF_VOID_P 4
 
+/* The number of bytes in a wchar_t.  */
+/* #undef SIZEOF_WCHAR_T */
+
 /* #################### END KLUDGE ##################### */
 /* ##################################################### */
 
@@ -305,6 +361,9 @@
 
 /* Define if you have the chown function.  */
 /* #undef HAVE_CHOWN */
+
+/* Define if you have the chroot function.  */
+/* #undef HAVE_CHROOT */
 
 /* Define if you have the clock function.  */
 #define HAVE_CLOCK 1
@@ -366,6 +425,12 @@
 /* Define if you have the ftruncate function.  */
 #define HAVE_FTRUNCATE 1
 
+/* Define if you have the gai_strerror function.  */
+/* #undef HAVE_GAI_STRERROR */
+
+/* Define if you have the getaddrinfo function.  */
+/* #undef HAVE_GETADDRINFO */
+
 /* Define if you have the getcwd function.  */
 #define HAVE_GETCWD 1
 
@@ -377,6 +442,9 @@
 
 /* Define if you have the getlogin function.  */
 /* #undef HAVE_GETLOGIN */
+
+/* Define if you have the getnameinfo function.  */
+/* #undef HAVE_GETNAMEINFO */
 
 /* Define if you have the getpeername function.  */
 /* #undef HAVE_GETPEERNAME */
@@ -399,8 +467,14 @@
 /* Define if you have the getwd function.  */
 /* #undef HAVE_GETWD */
 
+/* Define if you have the hstrerror function.  */
+/* #undef HAVE_HSTRERROR */
+
 /* Define if you have the hypot function.  */
 /* #undef HAVE_HYPOT */
+
+/* Define if you have the inet_pton function.  */
+/* #undef HAVE_INET_PTON */
 
 /* Define if you have the kill function.  */
 /* #undef HAVE_KILL */
@@ -444,6 +518,9 @@
 /* Define if you have the pthread_init function.  */
 /* #undef HAVE_PTHREAD_INIT */
 
+/* Define if you have the pthread_sigmask function.  */
+/* #undef HAVE_PTHREAD_SIGMASK */
+
 /* Define if you have the putenv function.  */
 #define HAVE_PUTENV 1
 
@@ -461,6 +538,9 @@
 
 /* Define if you have the setgid function.  */
 /* #undef HAVE_SETGID */
+
+/* Define if you have the setgroups function.  */
+/* #undef HAVE_SETGROUPS */
 
 /* Define if you have the setlocale function.  */
 /* #undef HAVE_SETLOCALE */
@@ -494,6 +574,9 @@
 
 /* Define if you have the sigrelse function.  */
 /* #undef HAVE_SIGRELSE */
+
+/* Define if you have the snprintf function.  */
+/* #undef HAVE_SNPRINTF */
 
 /* Define if you have the statvfs function.  */
 /* #undef HAVE_STATVFS */
@@ -546,6 +629,9 @@
 /* Define if you have the uname function.  */
 /* #undef HAVE_UNAME */
 
+/* Define if you have the unsetenv function.  */
+#define HAVE_UNSETENV
+
 /* Define if you have the waitpid function.  */
 /* #undef HAVE_WAITPID */
 
@@ -570,6 +656,12 @@
 /* Define if you have the <gdbm/ndbm.h> header file.  */
 /* #undef HAVE_GDBM_NDBM_H */
 
+/* Define if you have the <grp.h> header file.  */
+/* #undef HAVE_GRP_H */
+
+/* Define if you have the <langinfo.h> header file.  */
+/* #undef HAVE_LANGINFO_H */
+
 /* Define if you have the <libutil.h> header file.  */
 /* #undef HAVE_LIBUTIL_H */
 
@@ -587,6 +679,9 @@
 
 /* Define if you have the <ndir.h> header file.  */
 /* #undef HAVE_NDIR_H */
+
+/* Define if you have the <netpacket/packet.h> header file.  */
+/* #undef HAVE_NETPACKET_PACKET_H */
 
 /* Define if you have the <poll.h> header file.  */
 /* #undef HAVE_POLL_H */
@@ -657,6 +752,9 @@
 /* Define if you have the <sys/wait.h> header file.  */
 /* #undef HAVE_SYS_WAIT_H */
 
+/* Define if you have the <term.h> header file.  */
+/* #undef HAVE_TERM_H */
+
 /* Define if you have the <termios.h> header file.  */
 /* #undef HAVE_TERMIOS_H */
 
@@ -689,4 +787,9 @@
 #define DL_IMPORT(RTYPE) __declspec(dllexport) RTYPE
 #define DL_EXPORT(RTYPE) __declspec(dllexport) RTYPE
 #endif
+#endif
+
+/* Define the macros needed if on a UnixWare 7.x system. */
+#if defined(__USLC__) && defined(__SCO_VERSION__)
+#define STRICT_SYSV_CURSES /* Don't use ncurses extensions */
 #endif
