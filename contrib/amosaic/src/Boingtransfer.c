@@ -200,7 +200,15 @@ BOOL InitBitMaps(Object *obj,struct BoingTransferClData *data)
 void __inline __regargs GetXYPos(double Offset,long x,long y,double Radius,long *ResX,long *ResY)
 {
   double rx,ry;
-  double XAbstand=XSinTab[x]*Radius*YCosTab[y],YAbstand=YSinTab[y]*(double)Radius;
+  double XAbstand, YAbstand;
+  
+#ifdef _AROS
+#warning otherwise crash because of -1 coords passed to Area functions
+  Radius -= 1.0;
+#endif
+
+  XAbstand=XSinTab[x]*Radius*YCosTab[y];
+  YAbstand=YSinTab[y]*(double)Radius;
 
 //  double XAbstand=sin(x*PI/16+PID2)*Radius*YCosTab[y],YAbstand=YSinTab[y]*(double)Radius;
 
