@@ -136,13 +136,6 @@ void main(int argc,char **argv)
   sscanf(argv[4],"%lf",&xystep);
   sscanf(argv[5],"%ld",&itera);
 
-  printf("Read arguments:\n");
-  printf("%f from string %s\n",a,argv[1]);
-  printf("%f from string %s\n",xymin,argv[2]);
-  printf("%f from string %s\n",xymax,argv[3]);
-  printf("%f from string %s\n",xystep,argv[4]);
-  printf("%d from string %s\n",itera,argv[5]);
-
   /****** PREPARE EVERYTHING ******/
 
   IntuitionBase=(struct IntuitionBase *) OpenLibrary("intuition.library",37);
