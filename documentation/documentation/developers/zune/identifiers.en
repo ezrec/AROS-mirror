@@ -361,6 +361,7 @@ Identifier                       Name                                           
 (MUIB_Application | 0x00000000)  MUIM_Application_SetConfigdata
 (MUIB_Application | 0x00000001)  MUIM_Application_OpenWindows
 (MUIB_Application | 0x00000002)  MUIM_Application_Iconify
+(MUIB_Application | 0x00000003)  MUIM_Application_Execute
 ===============================  ==================================================  =
 
 ===============================  ===============================  =  =  =  =  ====================
