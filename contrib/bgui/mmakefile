@@ -10,10 +10,10 @@ LD = ld
 #DEFINES should really not define ENHANCED but for AROS it's fine.
 DEFINES := -DENHANCED
 
-OS_INCLUDES_DIR := $(AROSDIR)/Include
-INCLUDES_DIR    := $(AROSDIR)/Include
+OS_INCLUDES_DIR := $(AROS_INCLUDES)
+INCLUDES_DIR    := $(AROS_INCLUDES)
 
-OS_INCLUDES     := -I$(AROSDIR)/Include
+OS_INCLUDES     := -I$(AROS_INCLUDES)
 
 USER_INCLUDES   := -I. -I$(INCLUDES_DIR)
 

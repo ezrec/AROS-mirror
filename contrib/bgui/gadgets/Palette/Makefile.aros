@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 include ../../make.cfg
 
 BINDIR = $(AROSDIR)
-LIBDIR = $(AROSDIR)/lib
+LIBDIR = $(AROS_LIB)
 
 OS_INCLUDES_DIR = $(BINDIR)/Include
 
