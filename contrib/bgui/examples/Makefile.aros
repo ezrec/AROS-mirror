@@ -8,7 +8,7 @@ ECHO = echo
 DEFINES = -D_AROS
 RM = rm
 
-FLAGS = -nostartfiles -nostdlib -Wl,-i
+FLAGS = $(TARGET_LDFLAGS)
 
 BINDIR = $(GENDIR)
 LIBDIR = $(AROSDIR)/lib
