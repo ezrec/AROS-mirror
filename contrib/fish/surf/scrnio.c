@@ -24,7 +24,7 @@ long SignalMask = 0;
 struct RastPort *rp;
 struct ViewPort *vp;
 
-struct Library *GfxBase = 0;
+struct GfxBase *GfxBase = 0;
 struct IntuitionBase *IntuitionBase = 0;
 
 void OutErr(char *);
@@ -107,7 +107,7 @@ void OpenSurf() {
 
 void InitWindow()
 {
-    GfxBase = OpenLibrary("graphics.library",0);
+    GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0);
     if( GfxBase == 0 ) {
         OutErr("graphics library won't open");
         exit(10);
@@ -171,7 +171,7 @@ void CloseDisplay()
         CloseLibrary((struct Library *)IntuitionBase);
 
     if ( GfxBase )
-        CloseLibrary(GfxBase);
+        CloseLibrary((struct Library *)GfxBase);
 }
 
 

@@ -88,7 +88,7 @@ USHORT colortable[] = { 0x000, 0xf00, 0x0f0, 0x00f };
 UBYTE *displaymem;
 UBYTE *colorpalette;
 
-struct LayersBase *LayersBase;
+struct Library *LayersBase;
 struct Layer_Info *li;
 struct Layer *layer[3];
  

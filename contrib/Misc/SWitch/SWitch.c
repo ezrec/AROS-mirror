@@ -147,7 +147,7 @@ struct Gadget *CreateAllGadgets( struct Gadget **, void *, WORD, WORD, WORD, WOR
  */
 struct Library       *CxBase        = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
-struct IconBase      *IconBase      = NULL;
+struct Library       *IconBase      = NULL;
 struct DosBase       *DosBase       = NULL;
 struct GfxBase       *GfxBase       = NULL;
 struct Library       *GadToolsBase  = NULL;
