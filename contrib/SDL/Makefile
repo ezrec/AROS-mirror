@@ -17,7 +17,7 @@ GCCDEFINES = -DENABLE_CYBERGRAPHICS -DNO_SIGNAL_H -DAROS
 # -DHAVE_OPENGL -DMORPHOS -DENABLE_AHI 
 
 LFLAGS =  -nostdlib -nostartfiles -L. -lSDL -lamiga -larosc -larosm -lautoinit -larossupport -larosc
-STARTUP = $(BASEDIR)/AROS/Development/Lib/startup.o
+STARTUP = $(AROS_LIB)/startup.o
 
 OBJS = SDL_error.o SDL_fatal.o SDL_RLEaccel.o SDL_blit.o SDL_blit_0.o  \
    SDL_blit_1.o SDL_blit_A.o SDL_blit_N.o \
@@ -52,14 +52,14 @@ install: libSDL.a examples
 		cp tests/$$subdir $(BASEDIR)/AROS/Tests/ ; \
 	done;
 	cp tests/*.bmp $(BASEDIR)/AROS/Tests/
-	mkdir -p $(BASEDIR)/AROS/Development/Include/SDL
-	cp $(PUBLIC_HEADERS) $(BASEDIR)/AROS/Development/Include/SDL
+	mkdir -p $(AROS_INCLUDES)/SDL
+	cp $(PUBLIC_HEADERS) $(AROS_INCLUDES)/SDL
 	
 libSDL.a: $(OBJS)
 	-rm -f libSDL.a
 	ar cru libSDL.a $(OBJS)
 	ranlib libSDL.a
-	cp libSDL.a $(BASEDIR)/AROS/Development/Lib/
+	cp libSDL.a $(AROS_LIB)
 
 clean:
 	rm -f *.o
