@@ -104,7 +104,7 @@ AROS_LH3(APTR, AddPictureA,
 
 AROS_LH3(APTR, AddPaletteA,
     AROS_LHA(APTR, psm, A0),
-    AROS_LHA(PALETTE, palette, A1),
+    AROS_LHA(APTR, palette, A1),
     AROS_LHA(struct TagItem *, tags, A2),
     struct Library *, GuiGFXBase, 12, GuiGFX)
 {
