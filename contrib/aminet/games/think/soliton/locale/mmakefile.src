@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 DESTDIR := $(BINDIR)/Locale/Catalogs
 
-CATALOGS 	:= català dansk deutsch hrvatski maygar polski
+CATALOGS 	:= català dansk deutsch hrvatski maygar polski norsk
 CATDESC 	:= Soliton
 CATSUBDIR	:= 
 CATNAME 	:= Soliton
