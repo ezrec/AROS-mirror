@@ -7,6 +7,7 @@ def makeThumbnailPath( originalPath ):
 
 def makeThumbnail( src, dst, size ):
     image = Image.open( src )
+    image = image.convert( 'RGB' )
     image.thumbnail( size, Image.ANTIALIAS )
     image.save( dst )
 

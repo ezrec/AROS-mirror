@@ -13,6 +13,7 @@ from build.utility import *
 from build.thumbnail import *
 
 from template.www import makeTemplates
+from template.www.gallery import *
 
 # Setup
 
@@ -62,7 +63,6 @@ def recurse( function, path='.', depth=0 ):
             else:
                 function( name, depth )
 
-
 def processPicture( src, depth ):
     FORMATS = [ 'jpeg', 'png' ]
     
@@ -99,9 +99,47 @@ def makePictures():
         'pictures/screenshots' 
     ]
     
-    for path in DIRECTORIES:
-        recurse( processPicture, path ) 
-    
+    # First, copy the pictures and generate thumbnails
+    for root in DIRECTORIES:
+        recurse( processPicture, root )
+
+    # Second, create the galleries
+    for root in DIRECTORIES:
+        output = convertWWW( os.path.join( root, 'index.en' ), 'en' )
+        
+        names = os.listdir( root )
+        names.sort()
+        if root == 'pictures/screenshots':
+            names.reverse() 
+        
+        for name in names:
+            path = os.path.join( root, name )
+            if name == 'CVS' or not os.path.isdir( path ): continue 
+
+            output += convertWWW( os.path.join( path, 'overview.en' ), 'en' )
+
+            for pictureName in os.listdir( path ):
+                picturePath = os.path.join( path, pictureName )
+                pictureFormat = os.path.splitext( pictureName )[1][1:]
+                if pictureName == 'CVS' or os.path.isdir( picturePath ): continue 
+                if pictureFormat not in [ 'png', 'jpeg' ]: continue
+                
+                output += makePicture \
+                ( 
+                    picturePath, 
+                    convertWWW( os.path.splitext( picturePath )[0] + '.en', 'en' )
+                )
+        
+        strings = {
+            'ROOT'    : '../../',
+            'CONTENT' : output
+        }
+        
+        file \
+        ( 
+            os.path.join( DSTROOT, root, 'index.html.en' ), 'w'
+        ).write( TEMPLATE_DATA % strings )
+
 
 def makeStatus():
     dstdir = os.path.join( DSTROOT, 'introduction/status' )
@@ -166,6 +204,22 @@ def makeNews():
                 output.write( '\n\n' )
             output.close()
 
+def convertWWW( src, language ):
+    arguments = [
+        '--no-generator',   '--language=' + language,
+        '--no-source-link', '--no-datestamp', 
+        '--output-encoding=iso-8859-1',
+        src, '' ]
+    publisher = Publisher( destination_class = NullOutput )
+    publisher.set_reader( 'standalone', None, 'restructuredtext' )
+    publisher.set_writer( 'html' )
+    publisher.publish( argv = arguments )
+
+    return ''.join \
+    ( 
+        publisher.writer.body_pre_docinfo + 
+        publisher.writer.body 
+    ).encode( 'iso-8859-1' )
 
 def processWWW( src, depth ):
     src     = os.path.normpath( src )
@@ -187,23 +241,9 @@ def processWWW( src, depth ):
     
     if newer( [ TEMPLATE, src_abs ], dst_abs ):
         reportBuilding( src )
-        arguments = [
-            '--no-generator',   '--language=' + suffix,
-            '--no-source-link', '--no-datestamp', 
-            '--output-encoding=iso-8859-1',
-            src_abs, dst_abs ]
-        publisher = Publisher( destination_class = NullOutput )
-        publisher.set_reader( 'standalone', None, 'restructuredtext' )
-        publisher.set_writer( 'html' )
-        publisher.publish( argv = arguments )
-        
         strings = {
             'ROOT'    : '../' * depth,
-            'CONTENT' : ''.join \
-            ( 
-                publisher.writer.body_pre_docinfo + 
-                publisher.writer.body 
-            ).encode( 'iso-8859-1' )
+            'CONTENT' : convertWWW( src_abs, suffix )
         }
         
         file( dst_abs, 'w').write( TEMPLATE_DATA % strings )
@@ -251,12 +291,13 @@ def buildClean():
 def buildWWW():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'www' )
 
-    makePictures()
     makeNews()
     makeTemplates()
     
     global TEMPLATE_DATA
     TEMPLATE_DATA = file( TEMPLATE, 'r' ).read()
+
+    makePictures()
 
     #makeStatus()
 
