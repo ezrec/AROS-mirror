@@ -1,4 +1,4 @@
-#'$Id$'
+#'$Id$'
 
 # COPYRIGHT (C) 1996-9  ROBIN FRIEDRICH  email:Robin.Friedrich@pdq.net
 # Permission to use, copy, modify, and distribute this software and
