@@ -1,5 +1,8 @@
+#define timeval timeval_aros
 #include <dos/dos.h>
 #include <proto/dos.h>
+#undef timeval
+
 #include <string.h>
 
 #include <config.h>
