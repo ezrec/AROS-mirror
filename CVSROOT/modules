@@ -35,10 +35,10 @@ necessary -a grub Format64 AmiCDROM aminet_util_arc
 
 zune -a zune-libs-muimaster zune-prefs  zune-tests zune-demos
 
-zune-libs-muimaster -d Zune/libs/muimaster workbench/libs/muimaster
-zune-prefs          -d Zune/prefs workbench/prefs/Zune
-zune-tests          -d Zune/tests test/Zune
-zune-demos          -d Zune/demos workbench/demos/Zune
+zune-libs-muimaster -d Zune/libs/muimaster AROS/workbench/libs/muimaster
+zune-prefs          -d Zune/prefs AROS/workbench/prefs/Zune
+zune-tests          -d Zune/tests AROS/test/Zune
+zune-demos          -d Zune/demos AROS/workbench/demos/Zune
 
 ## This doesn't work :-/ How can I make sure when contrib/ is checked out,
 ## that the README gets created ?
