@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_releasesocket.c,v 1.1 2002/07/24 10:53:01 sebauer Exp $
+    $Id$
 */
 
 #include <exec/types.h>
@@ -17,16 +17,15 @@
 
     NAME */
 #ifndef __AROS
-__asm int LIB_ReleaseSocket(register __d0 long s, register __d1 long id)
+__asm int LIB_Inet_NtoA(register __d0 unsigned long ip)
 #else
-	AROS_LH4(APTR, LIB_ReleaseSocket,
+	AROS_LH1(int, LIB_Inet_NtoA,
 
 /*  SYNOPSIS */
-	AROS_LHA(long, s, D0),
-	AROS_LHA(long, id, D1),
+  AROS_LHA(unsigned long, ip, D0),
 
 /*  LOCATION */
-	struct Library *, SocketBase, 150, Socket)
+	struct Library *, SocketBase, 174, Socket)
 #endif
 
 /*  FUNCTION
@@ -53,9 +52,9 @@ __asm int LIB_ReleaseSocket(register __d0 long s, register __d1 long id)
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
-    D(bug("ReleaseSocket()\n"));
+    D(bug("Inet_NtoA()\n"));
 
-    return -1;
+    return 0;
 
     AROS_LIBFUNC_EXIT
 

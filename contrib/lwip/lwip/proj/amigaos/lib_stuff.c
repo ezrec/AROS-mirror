@@ -144,6 +144,15 @@ extern void LIB_SetSocketSignals(void);
 extern void LIB_getdtablesize(void);
 extern void LIB_ObtainSocket(void);
 extern void LIB_ReleaseSocket(void);
+extern void LIB_ReleaseCopyOfSocket(void);
+extern void LIB_Errno(void);
+extern void LIB_SetErrnoPtr(void);
+extern void LIB_Inet_NtoA(void);
+extern void LIB_inet_addr(void);
+extern void LIB_Inet_LnaOf(void);
+extern void LIB_Inet_NetOf(void);
+extern void LIB_Inet_MakeAddr(void);
+extern void LIB_inet_network(void);
 extern void LIB_SocketBaseTagList(void); /* -294 */
 
 static void *function_array[] =
@@ -172,7 +181,16 @@ static void *function_array[] =
   LIB_SetSocketSignals,    /* -132 */
   LIB_getdtablesize,       /* -138 */
   LIB_ObtainSocket,        /* -144 */
-  LIB_ReleaseSocket,       /* -152 */
+  LIB_ReleaseSocket,       /* -150 */
+  LIB_ReleaseCopyOfSocket, /* -156 */
+  LIB_Errno,               /* -162 */
+  LIB_SetErrnoPtr,         /* -168 */
+  LIB_Inet_NtoA,           /* -174 */
+  LIB_inet_addr,           /* -180 */
+  LIB_Inet_LnaOf,          /* -186 */
+  LIB_Inet_NetOf,          /* -192 */
+  LIB_Inet_MakeAddr,       /* -198 */
+  LIB_inet_network,        /* -204 */
   (void*)~0,
 };
 
