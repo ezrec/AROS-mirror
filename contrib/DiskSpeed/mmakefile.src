@@ -1,0 +1,39 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR	:= $(CONTRIBDIR)/DiskSpeed
+
+USER_CFLAGS := -I./ -I./diskspeed -I./scsispeed
+
+DISKSHARED := locale diskspeed/DiskSpeedCPU
+
+#MM contrib-diskspeed-comp : contrib-diskspeed-icons contrib-diskspeed-docs contrib-diskspeed-catalogs
+#MM contrib-scsispeed-comp : contrib-scsispeed-icons contrib-diskspeed-docs contrib-diskspeed-catalogs
+
+%build_prog mmake=contrib-diskspeed-comp \
+    progname=DiskSpeed targetdir=$(DESTDIR) \
+    files="$(DISKSHARED) diskspeed/DiskSpeed" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=contrib-scsispeed-comp \
+    progname=ScsiSpeed targetdir=$(DESTDIR) \
+    files="$(DISKSHARED) scsispeed/ScsiSpeed" uselibs="mui arossupport amiga arosc m"
+
+ICONS := DiskSpeed ScsiSpeed DiskSpeed.doc
+
+ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
+
+#MM contrib-diskspeed-icons : contrib-diskspeed-setup
+contrib-diskspeed-icons : $(ICONFILES)
+
+#MM contrib-scsispeed-icons : contrib-scsispeed-setup
+contrib-scsispeed-icons : $(ICONFILES)
+
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+	%makeicon2
+
+DOCFILES  := DiskSpeed.doc
+
+#MM contrib-diskspeed-docs : contrib-diskspeed-setup
+contrib-diskspeed-docs : $(DOCFILES)
+
+$(DESTDIR)/% : %
+	@$(CP) $< $@
