@@ -1,0 +1,38 @@
+#   $Id$
+#
+#   Makefile for the C: Programs
+
+include $(TOP)/config/make.cfg
+
+FILES = test1 \
+	test2 \
+	test3 \
+	test4 \
+	test5 \
+	test6 \
+	test7 \
+	test8 \
+	test9 \
+	test13
+
+BGUIPROGDIR := $(AROSDIR)/bgui
+
+# I'd like to move this into a rule, but it would be far too hard.
+EXES := $(foreach f,$(FILES), $(BGUIPROGDIR)/$(f))
+
+USE_BGUILIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_AROSLIB := yes
+
+#MM bgui-test : includes linklibs
+
+%make_prog_setup mmake=workbench-c
+
+bgui-test : setup $(EXES)
+
+%make_prog_single dir=$(BGUIPROGDIR)
+
+%common
+%include_deps
