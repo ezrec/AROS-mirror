@@ -9,7 +9,8 @@ EXEDIR := $(CONTRIBDIR)/MCC_Toolbar/Demos
 USER_CFLAGS := -DNO_INLINE_STDARG
 
 #MM contrib-zune-classes-toolbar-demo : includes linklibs \
-#MM 	    	    	    	      contrib-zune-classes-toolbar
+#MM 	    	    	    	      contrib-zune-classes-toolbar \
+#MM 	    	    	    	      contrib-zune-classes-nfloattext
 
 %build_prog mmake=contrib-zune-classes-toolbar-demo \
     progname=Toolbar-Demo targetdir=$(EXEDIR) \
