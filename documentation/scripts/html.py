@@ -49,9 +49,9 @@ class Standard( Container ):
         self.name       = name
         self.attributes = attributes
 
-        if self.attributes.has_key( 'hclass' ):
-            self.attributes['class'] = self.attributes['hclass']
-            del self.attributes['hclass']
+        if self.attributes.has_key( 'CLASS' ):
+            self.attributes['class'] = self.attributes['CLASS']
+            del self.attributes['CLASS']
             
         if defaults:
             for key in defaults.keys():
@@ -75,9 +75,9 @@ class StandardEmpty( Node ):
         self.name       = name
         self.attributes = attributes
 
-        if self.attributes.has_key( 'hclass' ):
-            self.attributes['class'] = self.attributes['hclass']
-            del self.attributes['hclass']
+        if self.attributes.has_key( 'CLASS' ):
+            self.attributes['class'] = self.attributes['CLASS']
+            del self.attributes['CLASS']
         
         if defaults:
             for key in defaults.keys():
@@ -148,22 +148,23 @@ class Font( Standard ):
 
 class Table( Standard ):
     def __init__( self, contents=None, **attributes ):
-        Standard.__init__ \
-        ( 
+        Standard.__init__( 
             self, 'table', attributes, contents,
-            { 'border' : 0 }
+            { 'border' : 0, 'class' : 'layout' }
         )
 
 class TR( Standard ):
     def __init__( self, contents=None, **attributes ):
-        Standard.__init__( self, 'tr', attributes, contents )
+        Standard.__init__( 
+            self, 'tr', attributes, contents,
+            { 'class' : 'layout' }
+        )
 
 class TD( Standard ):
     def __init__( self, contents=None, **attributes ):
-        Standard.__init__ \
-        (
+        Standard.__init__(
             self, 'td', attributes, contents,
-            { 'valign': 'top' }
+            { 'valign': 'top', 'class' : 'layout' }
         )
 
 
