@@ -45,8 +45,11 @@ struct chunkyidata {
 
 
 /* macros to extract components of IA_Data and CHUNKYIA_SelectedData */
-#define IMAGE_WIDTH(i)    (((UWORD *)(i))[0])
-#define IMAGE_HEIGHT(i)   (((UWORD *)(i))[1])
+//#define IMAGE_WIDTH(i)    (((UWORD *)(i))[0])
+//#define IMAGE_HEIGHT(i)   (((UWORD *)(i))[1])
+
+#define IMAGE_WIDTH(i)	(i[0] << 8 | i[1])
+#define IMAGE_HEIGHT(i)	(i[2] << 8 | i[3])
 #define IMAGE_DATA(i)     (&(i)[4])
 
 
