@@ -42,3 +42,6 @@ Moria3D -d contrib/Games/Moria3D contrib/Games/Moria3D
 
 # Misc
 Misc -d contrib/Misc contrib/Misc
+
+# (Large) binaries
+screenshots binaries/screenshots
