@@ -32,6 +32,8 @@ the native port.
 Printing debug statements
 -------------------------
 
+::
+
     #define DEBUG 1
     #include <aros/debug.h>
     ...
@@ -55,7 +57,7 @@ first (``./configure --enable-debug``).
 Live debugging
 ==============
 
-Start GDB like below:
+Start GDB like below::
 
     > cd /AROS/bin/linux-i386/AROS/
     > gdb aros
@@ -68,7 +70,7 @@ Start GDB like below:
     This GDB was configured as "i386-linux"...
     (gdb) 
 
-Then you run AROS with:
+Then you run AROS with::
 
     (gdb) r
     Starting program: /AROS/bin/linux-i386/AROS/aros 
@@ -82,14 +84,14 @@ Post-mortem debugging
 =====================
 
 First, you have to enable core dump generation, using eg. ulimit for the Bash shell.
-Then run AROS and generate a core dump.
+Then run AROS and generate a core dump::
 
     > cd /AROS/bin/linux-i386/AROS/
     > ulimit -c unlimited # see your shell manual to enable core dumps
     > ./aros
     Quit (core dumped)
 
-Now you can start GDB, by specifying the aros executable name and the core file:
+Now you can start GDB, by specifying the aros executable name and the core file::
 
     > gdb aros core
     GNU gdb 6.0-debian
@@ -118,7 +120,7 @@ Now you can start GDB, by specifying the aros executable name and the core file:
 Using GDB (basic commands)
 ==========================
 
-The command ``help`` gives help on all GDB commands.
+The command ``help`` gives help on all GDB commands::
 
     (gdb) help
     List of classes of commands:
@@ -144,7 +146,7 @@ The command ``help`` gives help on all GDB commands.
 
 The command ``bt`` (backtrace) prints a backtrace of all stack frames.
 Here is a backtrace after interrupting AROS with Ctrl-C in the GDB
-console:
+console::
 
     Program received signal SIGINT, Interrupt.
     0x40125607 in sigsuspend () from /lib/libc.so.6
@@ -159,24 +161,24 @@ console:
 Innermost frame is #0.
 
 To print the value of an expression accessible from the current frame,
-use ``p`` (print):
+use ``p`` (print)::
 
     (gdb) p SysBase
     $1 = (struct ExecBase *) 0x40231290
 
 GDB's print command understands the C syntax, so you can print any valid
-expression:
+expression::
 
     (gdb) p SysBase->IntVects[2]
     $2 = {iv_Data = 0x0, iv_Code = 0x8052f30 <SoftIntDispatch>, iv_Node = 0x4023c528}
 
-To move amongst frames, use the command ``f`` (frame) command:
+To move amongst frames, use the command ``f`` (frame) command::
 
     (gdb) f 1
     #1  0x080531d5 in idleTask (sysBase=0x40231290) at idletask.c:23
     23              sigsuspend(&sigs);
 
-Use ``q`` to quit.
+Use ``q`` to quit::
 
     (gdb) q
     The program is running.  Exit anyway? (y or n) y
@@ -188,7 +190,7 @@ Using GDB (AROS-specific)
 
 AROS specific GDB commands are supplied in ``/AROS/_gdbinit``, which gets
 installed to ``/AROS/bin/linux-i386/AROS/.gdbinit``.
-This file is read by GDB on startup, and contains the following commands:
+This file is read by GDB on startup, and contains the following commands::
 
     findaddr - Shows the module that contains the given address
     thistask - Print out information about the currently running task.
@@ -208,17 +210,17 @@ Using findaddr
 --------------
 
 Most often you will want to debug librairies or applications, but a
-backtrace gives you one or more unresolved adresses:
+backtrace gives you one or more unresolved adresses::
 
     0x4058d45b in ?? ()
 
-Use ``findaddr`` on any address you want to resolve (probably the innermost):
+Use ``findaddr`` on any address you want to resolve (probably the innermost)::
 
     (gdb) findaddr 0x4058d45b
     Searching in the loaded modules...
     Address found in Workbench:contrib/Zune/Libs/muimaster.library, which is loaded at 0x405379a4
 
-Next you'll use the ``add-symbol-file`` command to load the given file:
+Next you'll use the ``add-symbol-file`` command to load the given file::
 
     (gdb) add-symbol-file contrib/Zune/Libs/muimaster.library 0x405379a4
     add symbol table from file "contrib/Zune/Libs/muimaster.library" at
@@ -226,7 +228,7 @@ Next you'll use the ``add-symbol-file`` command to load the given file:
     (y or n) y
     Reading symbols from contrib/Zune/Libs/muimaster.library...done.
 
-Hopefully it has resolved the addresses:
+Hopefully it has resolved the addresses::
 
     (gdb) bt
     #0  0x4058d45b in strlen (ptr=0x80 <Address 0x80 out of bounds>) at strlen.c:45
@@ -238,7 +240,7 @@ Using thistask
 --------------
 
 It displays several information from the currently running task. No surprise,
-it is data you can find in ``SysBase->ThisTask``.
+it is data you can find in ``SysBase->ThisTask``::
 
     (gdb) thistask 
     Task     SigWait  SigRecvd StkSize   StkUsed Pri Type Name
