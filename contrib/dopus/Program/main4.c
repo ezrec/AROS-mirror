@@ -325,9 +325,9 @@ int *size;
 #warning We have no powerpacker library
 		if ((in= /* AROS: Remove this for now
 		    ppLoadData(name,DECR_POINTER,MEMF_CLEAR,buf,size,NULL)
-		    */ -1 )) {
-			if (in==-1 || in==-2) return(-1);
-			if (in==-3) return(-2);
+		    */ (BPTR)-1 )) {
+			if (in==(BPTR)-1 || in==(BPTR)-2) return(-1);
+			if (in==(BPTR)-3) return(-2);
 		}
 		else loadpp=1;
 	}
