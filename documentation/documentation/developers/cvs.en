@@ -75,7 +75,7 @@ with the "login" command. Login to the AROS CVS server with::
     > cvs -d :pserver:<user>@cvs.aros.org:/home/cvs/aros login
 
 Replace "<user>" with your username. You should be asked for your password, and 
-after typing it it you now connected (providing there was no error ofcourse). 
+after typing it it you now connected (providing there was no error of course). 
 You only need to login once, as CVS will remember your password and use it when 
 you access the same repository next time.
 
@@ -170,7 +170,7 @@ Updating the sources
 ====================
 
 After having checked out the sources, you might want to periodically update 
-them to get the latest changes the other developers have commited. For this
+them to get the latest changes the other developers have committed. For this
 you use the "update" command::
 
     > cd AROS
@@ -178,7 +178,7 @@ you use the "update" command::
     
 This will merge any changes that other developers have made into your sources 
 and also check out new directories and files that have been added. If someone
-commited changes to a file that you also have changed locally, CVS will try 
+committed changes to a file that you also have changed locally, CVS will try 
 to merge the changes automatically. If both of you changed the same lines CVS
 might fail in merging the sources. When this happens, CVS will complain and put
 **both** versions in the file separated by ``>>>>``. You need to edit the file
@@ -212,11 +212,11 @@ developers quickly can see what you have done and perhaps why. The log messages
 are collected and then sent in a daily mail to the development mailing list so
 everyone can keep up with developments to the code base.
 
-Before commiting your changes in a directory, you should first do an update
+Before committing your changes in a directory, you should first do an update
 there to see if anyone else has changed the files in the meantime you've been
 working on them. In case that happens, you need to resolve any problems before
-commiting. Also please make sure you have tested your changes before commiting
-them; atleast so that they do not break the build.
+committing. Also please make sure you have tested your changes before committing
+them; at least so that they do not break the build.
 
 
 Adding new files and directories
@@ -292,7 +292,7 @@ diff output format when running "cvs diff".
 Further reading
 ===============
 
-More detailed information about CVS can ofcourse be found in the manual pages
+More detailed information about CVS can of course be found in the manual pages
 and info files distributed with CVS itself, and there are also numerous sites
 containing useful tutorials and guides which might be more easy to read.
 The following pages are highly recommended:
