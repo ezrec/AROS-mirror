@@ -450,6 +450,7 @@ int main(int argc,char *argv[])
 int compilebook=0;
 time_t now;
 Object *snd;
+ULONG signals = 0;
 
 atexit(Ende);
 #ifdef __GNUC__
@@ -516,16 +517,19 @@ if (snd_playing) Wait(snd_sigmask);
 
 DisposeDTObject(snd);
 for(;;)
-	{
-	ULONG signals;
+{
 	if(DoMethod(mui_app,MUIM_Application_NewInput,&signals)==MUIV_Application_ReturnID_Quit)
 	{
-	    printf("received MUIV_Application_ReturnID_Quit\n");
 	    break;
 	}
-	if(flags&AUTOPLAY) DoMethod(mui_app,MUIM_Chess_SwapSides);
-	else if(signals) signals=Wait(signals);
+
+	if(flags&AUTOPLAY)
+	{
+	    DoMethod(mui_app,MUIM_Chess_SwapSides);
+	    signals = 0;
 	}
+	else if(signals) signals=Wait(signals);
+}
 return 0;
 }
 
