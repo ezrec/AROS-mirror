@@ -53,7 +53,7 @@ DEFAULT_KEYS_ARRAY
   { \
     if (!test) \
     { \
-      LONG ptrd; \
+      LONG ptrd = defaultval; \
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
         obtain_pen(data->mri, &var_dest, (struct MUI_PenSpec *) ptrd); \
       else \
@@ -67,7 +67,7 @@ DEFAULT_KEYS_ARRAY
   { \
     if (!test) \
     { \
-      LONG ptrd; \
+      LONG ptrd = defaultval; \
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
         var_dest = ptrd; \
       else \
@@ -1169,81 +1169,84 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   if (data->NList_MinLineHeight <= 0)
     data->addvinc = -data->NList_MinLineHeight;
   else
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VertInc, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VertInc, &ptrd) && ptrd)
       data->addvinc = *ptrd;
     else
       data->addvinc = DEFAULT_VERT_INC;
   }
 
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_StackCheck, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_StackCheck, &ptrd) && ptrd)
       data->NList_StackCheck = *ptrd + 1;
     else
       data->NList_StackCheck = 2;
     Calc_Stack(obj,data);
   }
 
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_ColWidthDrag, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_ColWidthDrag, &ptrd) && ptrd)
       data->NList_ColWidthDrag = *ptrd;
     else
       data->NList_ColWidthDrag = DEFAULT_CWD;
   }
 
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialCol, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialCol, &ptrd) && ptrd)
       data->NList_PartialCol = *ptrd;
     else
       data->NList_PartialCol = TRUE;
   }
 
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialChar, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialChar, &ptrd) && ptrd)
       data->NList_PartialChar = *ptrd;
     else
       data->NList_PartialChar = 0;
   }
 
-  { LONG *ptrd;
+  { LONG *ptrd = 0;
     data->NList_List_Select = MUIV_NList_Select_List;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_List_Select, &ptrd))
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_List_Select, &ptrd) && ptrd)
     { if (!*ptrd)
         data->NList_List_Select = MUIV_NList_Select_None;
     }
   }
 
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_SerMouseFix, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_SerMouseFix, &ptrd) && ptrd)
       data->NList_SerMouseFix = *ptrd;
     else
       data->NList_SerMouseFix = 0;
   }
 
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragLines, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragLines, &ptrd) && ptrd)
       data->NList_DragLines = *ptrd + 1;
     else
       data->NList_DragLines = DEFAULT_DRAGLINES;
   }
 
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelStep, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelStep, &ptrd) && ptrd)
+    {
+      kprintf("ptrd = %x\n", ptrd);
       data->NList_WheelStep = *ptrd;
+    }
     else
       data->NList_WheelStep = 1;
   }
 
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelFast, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelFast, &ptrd) && ptrd)
       data->NList_WheelFast = *ptrd;
     else
       data->NList_WheelFast = 5;
   }
 
-  { LONG *ptrd;
+  { LONG *ptrd = 0;
     data->NList_WheelMMB = FALSE;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelMMB, &ptrd))
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelMMB, &ptrd) && ptrd)
     { if (*ptrd)
         data->NList_WheelMMB = TRUE;
     }
@@ -1293,8 +1296,8 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   }
 
   if (data->NList_DragType == MUIV_NList_DragType_Default)
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragType, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragType, &ptrd) && ptrd)
       data->drag_type = *ptrd;
     else
       data->drag_type = MUIV_NList_DragType_Immediate;
@@ -1303,8 +1306,8 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     data->drag_type = data->NList_DragType;
 
   if ((data->NList_DragSortable) && (data->drag_type == MUIV_NList_DragType_None))
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragType, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragType, &ptrd) && ptrd)
       data->drag_type = *ptrd;
     else
       data->drag_type = MUIV_NList_DragType_Immediate;
@@ -1319,8 +1322,8 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   }
 */
 
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Smooth, &ptrd))
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Smooth, &ptrd) && ptrd)
       data->NList_Smooth = *ptrd;
     else
       data->NList_Smooth = 0;
@@ -1332,12 +1335,12 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     }
   }
 
-  { LONG *ptrd;
+  { LONG *ptrd = 0;
     if (data->NList_Keys && (data->NList_Keys != default_keys))
     { NL_Free(data,data->NList_Keys,"NList_Keys");
       data->NList_Keys = default_keys;
     }
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Keys, &ptrd))
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Keys, &ptrd) && ptrd)
     { struct KeyBinding *keys = (struct KeyBinding *) ptrd;
       LONG nk = 0, sk;
       while (keys[nk].kb_KeyTag)
@@ -1367,14 +1370,14 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   LOAD_BG(data->BG_Cursor_init,  data->NList_CursorBackground,  MUICFG_NList_BG_Cursor,  DEFAULT_BG_CURSOR);
   LOAD_BG(data->BG_UnselCur_init,data->NList_UnselCurBackground,MUICFG_NList_BG_UnselCur,DEFAULT_BG_UNSELCUR);
 
-  { LONG *ptrd;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PointerColor, &ptrd) && *ptrd)
+  { LONG *ptrd = 0;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PointerColor, &ptrd) && ptrd && *ptrd)
       NL_SpecPointerColors(*ptrd);
   }
 
   if (data->NList_ForcePen == MUIV_NList_ForcePen_Default)
-  { LONG *ptrd, fpen = MUIV_NList_ForcePen_Off;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_ForcePen, &ptrd))
+  { LONG *ptrd = 0, fpen = MUIV_NList_ForcePen_Off;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_ForcePen, &ptrd) && ptrd)
       fpen = *ptrd;
     data->ForcePen = (LONG) fpen;
   }
@@ -1390,9 +1393,9 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   data->multiselect = data->NList_MultiSelect;
   data->multisel_qualifier = 0;
-  { LONG *multisel;
+  { LONG *multisel = 0;
     LONG mult = MUIV_NList_MultiSelect_Shifted;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_MultiSelect, (LONG) (&multisel)))
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_MultiSelect, (LONG) (&multisel)) && multisel)
       mult = *multisel;
     if (data->NList_MultiSelect == MUIV_NList_MultiSelect_Default)
       data->multiselect = mult & 0x0007;
@@ -1401,9 +1404,9 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   }
 
   if (data->NList_ContextMenu == MUIV_NList_ContextMenu_Default)
-  { LONG *ptrd;
+  { LONG *ptrd = 0;
     data->ContextMenu = MUIV_NList_ContextMenu_Always;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Menu, &ptrd))
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Menu, &ptrd) && ptrd)
     { switch (*ptrd)
       { case MUIV_NList_ContextMenu_TopOnly :
         case MUIV_NList_ContextMenu_Always :
