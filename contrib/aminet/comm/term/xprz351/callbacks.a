@@ -1,0 +1,201 @@
+; callbacks.a
+; Glue to call XPR callback functions in comm program from inside XPR library.
+; This protects our registers from potential bugs in the comm program
+; which might change them in unexpected ways.  The prototypes in xprzmodem.h
+; put all arguments into the registers required by the XPR spec, so we don't
+; have to move anything around here.
+
+	INCLUDE	"exec/types.i"
+
+	; Entry points
+	XDEF	_xpr_fopen
+	XDEF	_xpr_fclose
+	XDEF	_xpr_fread
+	XDEF	_xpr_fwrite
+	XDEF	_xpr_sread
+	XDEF	_xpr_swrite
+	XDEF	_xpr_sflush
+	XDEF	_xpr_update
+	XDEF	_xpr_chkabort
+	XDEF	_xpr_chkmisc
+	XDEF	_xpr_gets
+	XDEF	_xpr_setserial
+	XDEF	_xpr_ffirst
+	XDEF	_xpr_fnext
+	XDEF	_xpr_finfo
+	XDEF	_xpr_fseek
+	XDEF	_xpr_options
+	XDEF	_xpr_unlink
+	XDEF	_xpr_squery
+	XDEF	_xpr_getptr
+
+	; XPR interface structure
+	STRUCTURE XPR_IO,0
+	APTR	XPR_FILENAME
+	APTR	XPR_FOPEN
+	APTR	XPR_FCLOSE
+	APTR	XPR_FREAD
+	APTR	XPR_FWRITE
+	APTR	XPR_SREAD
+	APTR	XPR_SWRITE
+	APTR	XPR_SFLUSH
+	APTR	XPR_UPDATE
+	APTR	XPR_CHKABORT
+	APTR	XPR_CHKMISC
+	APTR	XPR_GETS
+	APTR	XPR_SETSERIAL
+	APTR	XPR_FFIRST
+	APTR	XPR_FNEXT
+	APTR	XPR_FINFO
+	APTR	XPR_FSEEK
+	LONG	XPR_EXTENSION
+	APTR	XPR_DATA
+	APTR	XPR_OPTIONS
+	APTR	XPR_UNLINK
+	APTR	XPR_SQUERY
+	APTR	XPR_GETPTR
+	LABEL	XPR_IO_SIZEOF
+
+	SECTION	text,code
+
+_xpr_fopen:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_FOPEN(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_fclose:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_FCLOSE(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_fread:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_FREAD(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_fwrite:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_FWRITE(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_sread:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_SREAD(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_swrite:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_SWRITE(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_sflush:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_SFLUSH(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_update:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_UPDATE(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_chkabort:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_CHKABORT(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_chkmisc:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_CHKMISC(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_gets:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_GETS(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_setserial:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_SETSERIAL(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_ffirst:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_FFIRST(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_fnext:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_FNEXT(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_finfo:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_FINFO(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_fseek:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_FSEEK(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_options:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_OPTIONS(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_unlink:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_UNLINK(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_squery:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_SQUERY(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+_xpr_getptr:
+	movem.l	d2-d7/a2-a6,-(sp)
+	movea.l	XPR_GETPTR(a3),a6
+	jsr	(a6)
+	movem.l	(sp)+,d2-d7/a2-a6
+	rts
+
+	END

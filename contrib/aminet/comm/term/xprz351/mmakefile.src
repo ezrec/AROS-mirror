@@ -1,0 +1,55 @@
+include $(TOP)/config/make.cfg
+
+MODULE     := xprzmodem.library
+
+LOCALINCLUDES = -I. -I../Include
+
+LIBS := -L$(LIBDIR) -lamiga
+
+
+$(INCDIR)/defines/xpr.h : aros/xpr_defines.h
+	@$(ECHO) Copying $^ ...
+	@$(CP) $^ $@
+
+$(INCDIR)/proto/xpr.h : aros/xpr_proto.h
+	@$(ECHO) Copying $^ ...
+	@$(CP) $^ $@
+
+
+$(OBJDIR)/aros_src/%_aros.c : %.c
+	@$(ECHO) Generating $@...
+	@$(ARCHTOOL) -R Xpr_Lib.h  $^ $@ aros/xpr_defines_aros.h >/dev/null
+
+$(OBJDIR)/%.o : $(OBJDIR)/aros_src/%_aros.c
+	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES) $(DEFINES) -include aros/arosspecific.h"
+
+
+$(OBJDIR)/%.ol : $(OBJDIR)/aros_src/%_aros.c
+	%compile_q opt="$(CFLAGS) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h"
+
+$(OBJDIR)/test/%.o : test/%.c
+	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES)"
+
+FILES = Send Receive Utils
+
+INTERMEDIATES := $(foreach f,$(FILES),$(OBJDIR)/aros_src/$(f)_aros.c)
+DEPS := $(foreach f,$(FILES),$(OBJDIR)/$(f).d)
+
+#MM- aminet-comm-term-xprz : linklibs-aminet-comm-term-xprz
+#MM linklibs-aminet-comm-term-xprz : linklibs setup-xprz
+
+#First all intermediate files MUST be created so there is a 'defines' file!
+linklibs-aminet-comm-term-xprz: $(INTERMEDIATES) includes-copy
+
+includes-copy: $(INCDIR)/proto/xpr.h $(INCDIR)/defines/xpr.h
+
+#MM
+setup-xprz :
+	%mkdirs_q $(AROS_INCLUDES) $(OBJDIR) $(OBJDIR)/aros_src
+	%mkdirs_q $(AROS_LIB) $(AROS_LIBS)
+
+clean ::
+	-$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) $(AROS_LIBS)/gtlayout.library aros/gtlayout_defines_aros.h $(OBJDIR)/gtlayout_data.o $(OBJDIR)/gtlayout_data.ol $(STATIC_LIB)
+
+%common
+%include_deps

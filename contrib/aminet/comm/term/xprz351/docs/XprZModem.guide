@@ -1,0 +1,1024 @@
+@database "XPRZModem.guide"
+@node Main "XPRZModem.guide"
+
+                    XPRZModem.library & XPRzedzap.library
+                                Version 3.51
+                     Documentation for XPRZModem.library
+                               by Rick Huebner
+                    with additions for XPRzedzap.library
+                            by Robert Williamson
+                                 July 1,1995
+
+                                  Contents
+
+                         @{"Introduction         " link Introduction}
+                         @{"Installation         " link Installation}
+                         @{"Interface            " link Interface}
+                         @{"Options              " link Options}
+                         @{"Serial Port Settings " link Settings}
+                         @{"Receiving Files      " link Receiving}
+                         @{"Sending Files        " link Sending}
+                         @{"Status Display       " link status}
+                         @{"Technical Information" link Technical}
+                         @{"Zmodem derivatives   " link ZedZap}
+                         @{"XPRzmodem Defaults   " link ZMD}
+                         @{"XPRzedzap Defaults   " link ZZD}
+                         @{"Mailers and XPRs     " link MAILERS}
+                         @{"WPL Concerns         " link wpl}
+                         @{"Future               " link Future}
+                         @{"Revision History     " link History}
+                         @{"To do                " link ToDo}
+                         @{"Credits              " link Credits}
+@endnode
+
+@node Introduction
+                                 Introduction
+
+     XPRzModem.library and XPRzedzap.library are Amiga shared libraries (with
+full  source  code)  which  provide  ZModem file transfer capabilities to any
+XPR-compatible  communications program.  The XPR (eXternal PRotocol) standard
+describes an interface method which allows various file transfer protocols to
+be  implemented  as Amiga shared libraries.  These libraries may then be used
+interchangeably in any compatible communications program.  This takes a heavy
+load  off  of the comm program author, who no longer has to support dozens of
+different file transfer protocols in their program in order to make it widely
+useful and popular.  The comm program is also smaller and more efficient as a
+result,  since  all  those  obscure protocols (you know, the ones *you* don't
+need) are no longer taking up space.
+
+     The  XPR standard also helps users, who can mix and match their favorite
+file  transfer  protocols  with  their  favorite comm programs.  And when new
+protocols  are  invented, the user simply plugs in a new library, and voila!,
+it's  ready  to  use.  Hopefully, making protocols easy to support will allow
+more  and  better  comm programs to be written, as authors can concentrate on
+their programs instead of constantly re-inventing the wheel.
+
+     Of  course, for all of this wonderful stuff to happen, there needs to be
+a  good  selection  of these XPR libraries available to the public.  It's the
+classic  chicken-and-egg  problem; comm program authors won't be motivated to
+support  the  XPR  standard  unless  there  are a sizable number of protocols
+available  for  it.   And  other  programmers won't be motivated to write XPR
+libraries  until  there  are  a sizable number of comm programs which can use
+them.   In  an effort to do my bit [ B^) ] for the Amiga community, which has
+given me so many neat toys to play with over the past few years, I decided to
+try and help get the ball rolling.
+
+     Hopefully,  the  early  availability  of  a  ZModem  library  will  help
+stimulate  interest  in the XPR standard, resulting in better Amiga telecomms
+for  all  of  us.   And  by  making  my source code PD, I hope to help others
+interested in writing XPR libraries by giving them some serious example code.
+Also,  having ZModem library code readily available to John Q.  Hacker should
+help  ensure  a steady stream of enhanced ZModem libraries (with enzymes) for
+all of us to use in the future.
+
+     Of  course,  no discussion of the XPR standard would be complete without
+giving  proper  credit  to the author, 
+                    @{"Willy Langeveld" link Willy}
+of  the Stanford Linear Accelerator Center.  Many thanks are due him for this
+effort.   If  you  have any further questions about the XPR standard, be sure
+and  download  the  spec;  it  should be available on BIX (since he's a sysop
+there), or on most other major systems.
+
+     All  files in this archive which are not copyrighted are hereby released
+to  the  public  domain  (which  they  were  anyway,  by  way  of  not  being
+copyrighted,  but I want to make sure YOU realize that).  Do as you like with
+them.  Please make lots of copies and distribute them all over the place, and
+make  lots  of derivative works, and everything!  Heck, you can even publicly
+perform and/or display this code if you can figure out how... 
+@endnode
+
+@node Installation
+     Just  copy  the  xprzmodem.library file into your LIBS:  directory.  All
+XPR-compatible comm programs should provide a way for you to select which XPR
+protocol  you  wish  to  use,  either  by giving you a file requester showing
+LIBS:xpr*.library,  or  by automatically detecting these libraries and adding
+them into their menus.
+
+   If  your  intended  use is with a Mailer, use xprzedzap.library, selecting
+appropriate  CPU version for your system.  You may also use xprzedzap.library
+in the place of xprzmodem.library in both BBS's and terminal programs.
+
+680x0:      For Kickstart 2.1 or higher, all Processors.
+68020:      For Kickstart 2.1 or higher, optimized code for
+            CPU-Type 68020.
+68030:      For Kickstart 2.1 or higher, optimized code for
+            CPU-Type 68030.
+68040:      For Kickstart 2.1 or higher, optimized code for
+            CPU-Type 68040.
+@endnode
+
+@node Interface
+     The  XPR standard lays out two ways for the comm program user to specify
+options  for  the  XPR.  The more primitive option is for the comm program to
+provide  a  method  of  passing  an  option  string to the XPR library before
+transferring  files.   The  precise format and usage of this option string is
+left  up  to  the XPR author; the comm program just sends it verbatim.  If an
+environment  variable is found with the same name as the XPR (i.e.  there's a
+file in the ENV:  directory called "xprzmodem"), the comm program is supposed
+to  use  this  string  (contents of file) to initialize the protocol options.
+Also, a menu option or some such should normally be provided which will allow
+the user to be prompted for the option string interactively.
+
+     Version  2.0  of  the XPR standard created a new, more sophisticated way
+for  the  comm  program  user  to  specify  XPR options.  If the comm program
+supports  it,  the  XPR  library  can  give the comm program a list of option
+prompts,  and  the  comm  program can then let the user interactively set the
+various options individually, possibly even using nice gadgets and stuff.
+@endnode
+
+     If  setting  the options via the option string method (either ENV:  file
+or  primitive  comm  program),  note  that  the  setting for each option must
+immediately follow the option character with no intervening characters ("TY",
+not  "T  Y"  or  "T=Y").  When setting multiple options at once, separate the
+options  from  each other with commas and/or spaces; for example, "TN,OR,F0".
+You  don't  have  to  specify all options every time; the options you specify
+will  be merged into the current option settings, replacing their old values.
+Upper/lower  case  is  not  significant. 
+
+     If the comm program supports the xpr_options() call added in version 2.0
+of  the  XPR  spec, you should be prompted for each option with a nice prompt
+message  such as "Text mode (Y,N,?,C):" and possibly be able to use Intuition
+string  and/or  button  gadgets  instead of being stuck with the semi-cryptic
+option string format described above. 
+@endnode
+
+@node Options
+
+  T  @{"Text Translation Mode" link T} - Controls whether or not CR/LF pairs are translated.
+
+  O  @{"Overwrite Mode       " link O} - Controls what happens when a duplicate filename is
+                             found.
+
+  B  @{"Buffer Size          " link B} - Controls the size of the file I/O buffer.
+
+  F  @{"Frame Size           " link F} - Sends an ACK after X-many bytes.
+
+  E  @{"Error Count          " link E} - Determines the number of sequential errors before
+                             ZModem will abort the transfer.
+
+  M  @{"Block Size           " link M} - Determines the maximum block size.
+
+  A  @{"Auto-Activate        " link A} - Controls whether or not ZModem will automatically
+                             activate a receive.
+
+  D  @{"Delete After Sending " link D} - Controls whether or not the file is deleted after
+                             it has been sent.
+
+  K  @{"Keep Partial Files   " link K} - Controls whether or not partially received files
+                             are kept.
+
+  R  @{"Receive Full Dir Path" link R} - Controls whether or not ZModem will use the full
+                             directory path sent.
+
+  S  @{"Send Full Dir Path   " link S} - Controls whether or not ZModem will send the full
+                             directory path.
+
+  P  @{"Default Receive Path " link P} - Gives the default path for downloads to be.
+
+  N  @{"No Files Mode " link N} - Allows session without sending files.
+
+  Q  @{"DirectZap " link Q} - DirectZap protocol escapes fewer characters.
+
+  Z  @{"FTN mode " link Z} - Enables special features for Mailer operation.
+
+  Y  @{"XPR2001 mode " link Y} - Enables XPR 2.001 extensions
+
+
+    @{"XPRzedzap Defaults  " link ZZD}   - Defaults for xprzedzap.library.
+
+    @{"XPRzmodem Defaults " link ZMD}   - Defaults for xprzmodem.library.
+
+@endnode
+
+@node T "Text Translation Mode"
+                             Text Translation Mode
+
+Text Yes (TY)  - If receiving, translate CR/LF pairs or solo CR chars to
+                 normal Amiga LF chars.  Ignore data past ^Z.  If sending,
+                 suggests to receiver that they should receive this file in
+                 text mode.
+
+Text No (TN)   - Receive file verbatim, without changes.  If sending, suggest
+                 to receiver that they receive this file verbatim, without
+                 translations.
+
+Text     (T?)  - If receiving, use sender's suggestion as to whether to do
+Status           EOL translations or not.  If sending, tell receiver to use
+Unknown          default mode, because we don't know either.
+
+Text Comm (TC) - The library asks the comm program whether or not to use
+                 Text mode for each file.  If the comm program doesn't
+                 support the necessary @{"xpr_finfo()" link xpr_info} call,
+                 or if the call fails, this option acts like T?.  From the
+                 user's point of view, what this option normally does is set
+                 the Text mode to match the comm program's built-in
+                 text/binary/end-of-line/translation mode, if any.
+
+NOTE: The T option serves only as a suggestion to the receiving system when
+sending files; the receiver makes the final decision as to whether to take your
+advice or to force the files to be received in text or binary mode.
+
+@endnode
+
+@node O "Overwrite Mode"
+                                Overwrite Mode
+
+Overwrite Yes (OY)  - If about to receive file with same name as one which
+                      already exists, delete the old file and receive the
+                      new file in its place.
+
+Overwrite No (ON)   - If about to receive file with same name as one which
+                      already exists, append ".dup" onto the name of the new
+                      file to keep them separate.
+
+Overwrite (OR)      - If about to receive file with same name as one which
+Resume                already exists, resume receiving file data from the
+                      current end of the existing file.
+
+Overwrite Skip (OS) - If about to receive file with same name as one which
+                      already exists, tell sender never mind, skip this
+                      file, we don't want it.  Batch transfers will move
+                      on to the next file in the set, if any.
+@endnode
+
+@node B "Buffer Size"
+                            Buffer Size
+
+Buffer Size (Bnnn) - XPRZModem.library adds a layer of file I/O buffering in
+                     addition to whatever the comm program may or may not
+                     provide.  This option sets the size of XPRZModem's file
+                     I/O buffer in kilobytes.  The minimum value is 1 KB, for
+                     those using RAM drives or fast hard drives, or those whose
+                     comm programs already provide sufficient buffering.  The
+                     maximum value is as much contiguous RAM as you have
+                     available in your Amiga.
+
+                     Must be at least twice the size of M option.
+
+                     If you specify more than is actually available, XPRZModem
+                     will keep decrementing the buffer size requested by 1 KB
+                     until the memory allocation works.  That way, if your RAM
+                     is too fragmented to use the amount you request, XPRZModem
+                     simply uses the largest block available.  Buffering is
+                     especially helpful for floppy drive users; it keeps your
+                     drive from continuously gronking and slowing things down
+                     all through the transfer. If you are a floppy drive user,
+                     you might need to set the @{"Frame Size" link F}.
+
+NOTE: Versions of VLT prior to 5.034 couldn't handle buffer sizes >= 32 KB.
+      If you wanted to use larger buffers before and couldn't, try again now.
+@endnode
+
+@node F "Frame Size"
+                                Frame Size
+
+Frame Size (Fnnn) - Although normally avoided, ZModem has the ability to
+                    require an ACK to be sent from the receiver to the sender
+                    every X-many data bytes. Normally you don't want to use
+                    this feature, because not waiting for ACKs is part of how
+                    ZModem works so fast.  However, this feature can be very
+                    useful in conjunction with file I/O buffering on slow
+                    devices namely those floppy drives).  If you set up a
+                    large I/O buffer to avoid gronking your floppy so often,
+                    you'll find that when the buffer finally *does* get around
+                    to being flushed that it can take a very long time; so long,
+                    in fact, that the delay can cause timeouts and errors.  But
+                    if you set your ZModem to require the sender to wait for an
+                    ACK every buffer's-worth of data, the sender will politely
+                    wait for you to flush your buffer to the slow floppy and
+                    send it an ACK saying it's OK to continue now.  This value
+                    should be set to 0 to disable ACKs (normal mode), or set it
+                    to the actual number of data bytes allowed between ACKs.
+                    For example, if you set B64 because of your floppy, you
+                    should also set F65536.
+@endnode
+
+@node E "Error Count"
+                                Error Count
+
+Error Count (Ennn) - This allows you to set the number of sequential errors
+                     which will be required to convince ZModem to abort the
+                     transfer.  The normal value is 10, meaning that 10 errors
+                     must happen in a row with no valid data being transferred
+                     in order to cause an abort. This setting is provided for
+                     those using XPRZModem with a BBS, who may wish to use a
+                     relaxed setting, or those with really lousy phone lines
+                     who are desparate and patient enough to want the transfer
+                     to continue in spite of horrible performance.
+
+@endnode
+
+@node M "Block Size"
+                            Block Size
+
+Block Size (Mnnn) - Size of Block to transfer. Default of ZModem is 1024,
+                    minimum is 64 Bytes and the Maximum is 8192 Bytes (8K).
+                    Be careful with this option! If the uploaders blocks are
+                    bigger than the receiver because there is a older zmodem
+                    you will get errors and your cps-rate will slow down.
+                    Large blocks are useful if you have a good phoneline and
+                    a fast modem eg. 9600/14400 and higher.  If you use larger
+                    blocks you will save a little bit transfer overhead and
+                    the cps-rate will get a little better. Remember, the
+                    bps-rate controls the Blocksize, this option only sets
+                    the maximum.
+
+@endnode
+
+@node A "Auto Activate"
+                            Auto Activate
+
+Auto-Activate Yes (AY) - If the comm program supports the ability, the library
+                         will automatically go into receive mode when the start
+                         of a ZModem download is detected.
+
+Auto-Activate No (AN)  - Don't try to automatically start downloading, make the
+                         user activate it.
+
+@endnode
+
+@node D "Delete After Sending"
+                            Delete After Sending
+
+Delete After Sending Yes (DY) - Delete each file after it has been sucessfully
+                                sent.
+
+Delete After Sending No (DN)  - Don't delete files after sending them.
+
+@endnode
+
+@node K "Keep Partial Files"
+                            Keep Partial Files
+
+Keep Partial Files Yes (KY) - Keep the fragment of a file received so far if
+                              file reception is aborted.  This allows you to
+                              use the @{"Overwrite Resume" link O} option above to pick up
+                              where you left off on your next attempt.
+
+Keep Partial Files No (KN)  - Delete any partially-received file after an
+                              aborted transfer.
+@endnode
+
+@node S "Send Full Directory Path"
+                            Send Full Directory Path
+
+Send Full Directory Path Yes (SY) - Send full filenames including directory
+                                    path to receiver.
+
+Send Full Directory Path No (SN)  - Send only simple filenames, not including
+                                    directory path.
+@endnode
+
+@node R "Receive Full Directory Path"
+                            Receive Full Directory Path
+
+Receive Full Directory Path Yes (RY) - Use full filename exactly as received,
+                                       instead of using the P option directory
+                                       path.
+
+Receive Full Directory Path No (RN)  - Ignore received directory path (if any),
+                                       use @{"P" link P} option directory path instead.
+@endnode
+
+
+@node P "Default Path"
+                                 Default Path
+
+Default Path for (Pxxx) - Store all received files in directory "xxx" if option
+Received Files            @{"RN" link R} set.  Ignored if option @{"RY" link R} set.  "xxx" can be any
+                          valid existing directory, with or without trailing
+                          "/" (e.g. "Pdf0:", "PComm:hold", etc.).
+@endnode
+
+@node M "Maximun Block size for file transfer"
+                    Maximun Block size for file transfer
+
+             M{size}  Maximun Block size for file transfer:
+                Mx = Size of Block to transfer. Default of ZModem is 1024,
+                     Minimum is 64 Bytes, Maximum is 8192 Bytes (8K).
+                     Be carefull with this option. If the uploaders blocks are
+                     bigger than the receiver you will get errors and very
+                     poor cps rates.
+                     This option is normally used only in FTN mode, but may
+                     be used in terminal abd BBS modem to replace the 
+                     XPRSZmodem.library.
+                     The block size will vary when sending and will be static
+                     when receiving.
+                     When sending the maximum packet size will be baud rate
+                     dependant, and the size is calculated with the formula 
+                       MAX_PACKET = (BPS_RATE * 8192 / 9600).
+                     You can specify a limit for the maximum packet size with
+                     the M option, but it only influences the packet size if
+                     it is smaller than 8192 or if one is receiving a file 
+             (NOTE:  It should always be set to 8192 if one is receiving a file.
+             But the option in there to limit it to less).
+             The IO Buffer for reading/writing to/from the disk must be equal
+             to twice the maximum packet size or the maximum packet size will
+             be automatically decreased.
+@endnode
+
+@node C "Set Link rate"
+                                Set Link rate
+
+             C{link bps}  Set bps rate of link
+               C0 Buffer allocations and calculations of CPS will be based
+                  upon locked rate passed by the comm program.
+               Cx Buffer allocations and calculations of CPS will be based
+                  upon link rate.
+@endnode
+
+@node N "No files mode"
+                                No files mode
+
+             N{Y|N}  Start transfer even if no files to send:
+                NY  send no files mode (DirectZap, ZedZip and ZedZap protocols)
+                    It is permitted to have a session without sending or
+                    receiving files.  This is required with some protocols in
+                    FTN mode so as not to generate a spurious failure after a
+                    mailer session.  This also changes EOF actions from sending
+                    CAN's to just sending ZFIN.
+               NN   transfer will not take place if not files to send.   
+
+@endnode
+
+@node Q "DirectZap mode"
+                                DirectZap mode
+
+             Q{Y|N}  DirectZap protocol mode:
+               QY   Only ZDLE and ZDLEE are escaped.
+               QN   Normal escapeing is done.        
+@endnode    
+
+@node Z "FTN mode"
+                                FTN Mode
+
+             Z{Y|N}  FTN mode
+               ZY
+                - RxTimeOut is restored to 600ms
+                - transfers start with blocksize specified in M option.
+                - serialbuffer is cleared before sending/recving.  In FTN
+                  mode the turnaround from sending to receiving (and vis-versa)
+                  is quite fast, clearing the buffer avoids reading echos of our
+                  own characters or leftovers from the previous transfer.
+                - affects selection of protocol name
+               ZN none of the above take place
+@endnode
+
+@node Y "XPR2001 Mode"
+                            XPR 2.001 Mode
+
+             Y{Y|N}  XPR2001 mode
+               Y - When enabled, calls to XprSetup() will return a mask with
+                  the  additional  bits defined in the XPR 2.001 spec related
+                  to  double-buffering,  etc.   xpr_update()  calls  will  be
+                  masked  with  a  bit  indicating  directionof  transfer  to
+                  support   host   program   rthat  use  dual-staus  windows.
+
+               N - XPR2001 support diabled, required for Ncomm, Excelsior
+                   BBS and other hosts which do not properly handle xpr
+                   function and callbacks return codes.
+
+@endnode
+
+@node ZZD "XPRzedzap Defaults"
+
+                 Default Setup Options for xprzedzap.library
+
+        TN       No Text translation
+        OR       Overwrite Resume
+        B16      Buffer size 16KB
+        F0       Frame size = filelength
+        E30      Error count 30
+        SN       Do not send full directory path
+        RN       Do not use received full directory path
+        AN       Disable Auto-activate mode
+        DN       Do not Delete after sending
+        KY       Keep partial files
+        P""      Comm progrmas provides Path to use for received files
+        M8192    Maximum packet size 8K
+        C0       Set Link BPS Rate
+        NY       Alow Send if there are no files
+        QN       Disable DirectZap escape only CAN
+        ZY       Enable FTN mode
+        YY       Enable XPR2001 extensions
+
+@endnode
+
+@node ZMD "XPRzmodem Defaults"
+
+                 Default Setup options for xprzmodem.library
+
+        TC       Comm Program Sets Text translation mode
+        ON       Overwrite No
+        B16      Buffer size 16 KB
+        F0       Frame size = filesize
+        E10      Error count 10
+        SN       Do not Send full directory path
+        RN       Do not use Received full directory path
+        AY       Enable Auto-activate mode
+        DN       Do not Delete after sending
+        KY       Keep partial files
+        P""      Comm program sets Path to use for received files
+        M1024    Set maximum packet size 1K
+        C0       Set Link BPS Rate
+        NN       Do not Send if there are no files
+        QN       Disble DirectZap escape only CAN
+        ZN       Disable FTN mode
+        YY       Disable XPR2001 extensions
+
+@endnode
+
+@node Settings "Serial Port Settings"
+
+     This implementation of ZModem requires that your serial port be set to 8
+data  bits,  no  parity,  1  stop bit.  This allows ZModem to send full 8-bit
+binary  data  bytes  without having them munged on the way through the modem.
+If  your  comm  program supports the xpr_setserial() function, XPRZModem will
+use  it  to set your serial port to 8N1 before doing a transfer, and will set
+your  port  back  the way it was again after it's done.  If your comm program
+doesn't  support  xpr_setserial(),  you'll need to make sure it's in 8N1 mode
+yourself.
+
+     ZModem  works well in all serial port handshaking modes; none, XON/XOFF,
+or  7-wire/RTS/CTS.   Since  any  or  all  of  those handshaking modes may be
+appropriate  at  different  times,  with  different modems or remote systems,
+XPRZModem lets you set the handshaking mode and doesn't mess with it.
+
+    XON/XFF MUST be disabled when using DirectZap (option QY)
+
+@endnode
+
+@node Receiving "Receiving Files"
+
+     Once you get the @{"ZModem options" link Options} and your @{"serial port configuration" link Settings} set
+up  properly,  you're  ready  to  actually use this thing (gasp!).  Receiving
+files  via ZModem is quite simple.  First, get the file sender going by using
+whatever command it wants.  ZModem is a batch file transfer protocol, meaning
+that  it's capable of transferring several files in a single exchange, so the
+remote  system  may  allow you to specify multiple files to be sent to you at
+one  time.   It  may  also  allow  you  to  use  wildcard  characters  in the
+filename(s); this is all system dependant.
+
+     This may be all you have to do.  If you specified option {"AY" link A}
+("auto-activate"  on),  and  your  comm program supports it, XPRZModem should
+automatically  activate at this point and start receiving your files.  If you
+specified   @{"AN"   link   A},   or   your   comm  program  doesn't  support
+auto-activation,  you  should  now  use  whatever  option  your  comm program
+provides  to  activate file reception.  This will usually be a menu option or
+button  gadget.  Either way, once XPRZModem starts receiving files, it should
+automatically  receive  all  of  the  files  you  specified  into  the proper
+directory as indicated by the @{"R" link R} and @{"P" link P} options.
+
+     Make sure that you have set the ZModem options properly before
+starting the transfer; especially, make sure you only use @{"TY" link T} if you know
+that all of the files being transferred in this batch are printable ASCII
+text files.  If you use @{"TY" link T} on normal binary files like .ARCs or .ZOOs,
+they'll be mangled beyond use.
+@endnode
+
+@node Sending
+     Sending  files  using ZModem is fairly straightforward.  First, activate
+the  file receiver with whatever command the remote system requires.  You may
+or may not need to specify a filename or directory to the remote system; this
+depends  on  their implementation of ZModem.  Once the remote system is ready
+to  receive  files,  activate your comm program's ZModem send function.  Your
+comm program will prompt you for which file(s) to send.  Although ZModem is a
+batch  protocol,  your  comm  program  may  or  may  not allow you to specify
+multiple  file names to be sent; also, wildcards may or may not be supported.
+These  decisions  are  up  to  the  comm  program  author; ZModem will handle
+multiple  files  and  wildcards if the comm program allows them.  Once you've
+specified the file name(s), the file(s) will be sent to the remote system.
+
+     If  errors  occur  while  sending  the file(s), you'll probably notice a
+small  enhancement  I  made  to  the normal ZModem error recovery procedures.
+Normally,  file  transfer protocols have to compromise between efficient data
+transmission  on  good,  clean  phone  lines and quick error recovery on bad,
+noisy  phone lines.  If you pick a large packet size, you get high throughput
+on  clean  lines due to low packet overhead, but you have slow recovery times
+and  large  amounts  of  retransmitted  data  on noisy lines.  If you've used
+YModem  on  noisy  lines  you've  seen  this  problem.  But, if you use small
+packets  to reduce retransmitted data on noisy lines, you increase the amount
+of  time  the  protocol  spends  sending packet overhead, and your throughput
+suffers.  The solution is to vary the block size according to the experienced
+error  rate  during  the  transfer.   That  way you aren't stuck with a rigid
+packet  length which will sometimes be the wrong size no matter what.  I came
+up  with  this  idea  back  when  I first wrote the ZModem code for Opus, and
+cleared  it  for future compatibility with ZModem's designer, Chuck Forsberg,
+back  then.   Since then the basic concept has been extensively tested in the
+Opus   BBS  system,  and  has  proven  quite  effective;  it  has  also  been
+incorporated into various other ZModem implementations over time.  The actual
+algorithm for deciding what size packets to use when is pretty much up to the
+protocol  author.   XPRZModem  uses  a modified version of the Opus algorithm
+which prevents locking the packet size at a small value when a large one-time
+burst of errors occurs.
+@endnode
+
+@node Technical
+Here  are  some  notes  for  the  "other" XPR standard users, namely the comm
+program authors:
+
+     Certain XPR callback functions *must* be implemented by the comm program
+author  in order for XPRZModem to be used.  If any of these functions are not
+supported  by  your comm program, XPRZModem will display an error message and
+abort when invoked.  These required functions are:
+
+          xpr_fopen(), xpr_fclose(), xpr_fread(), xpr_fwrite(),
+          xpr_fseek(), xpr_sread(), xpr_swrite(), and xpr_update()
+
+     In  addition, for FTN operation , the XPR v3 xpr_updstatus() function is
+required.  The library will NOT abort if your program does not have it.  This
+function  provides transfer status to the host program for EACH file sent and
+received.
+
+     The  xpr_update()  function  provides  many  data  fields  for your comm
+program  to potentially display to the user.  These are the XPR_UPDATE struct
+elements which XPRZModem will keep updated during transfers:
+
+          xpru_protocol, xpru_filename, xpru_filesize, xpru_msg,
+          xpru_errormsg, xpru_blocks, xpru_blocksize, xpru_bytes,
+          xpru_errors, xpru_timeouts, xpru_blockcheck, xpru_expecttime,
+          xpru_elapsedtime, and xpru_datarate
+
+     As  you  can  see,  XPRZModem  tries to provide as many status fields as
+possible.  Although all of them are useful, the ones which are most important
+to  ZModem  users  are  filename,  filesize,  msg and/or errormsg, and bytes.
+Please  try  to provide at least these fields in your status display, plus as
+many of the rest as you can manage.
+
+     All  callbacks  are  protected  so that we are able to call XPR callback
+functions in the comm program from inside the XPR library.  This protects our
+registers  from potential bugs in the comm program which might change them in
+unexpected  ways.   The  prototypes in xprzmodem.h put all arguments into the
+registers required by the XPR spec.
+
+     Although  only  the  XPR callback functions listed above are crucial for
+XPRZModem,  almost  all  of  them  are  used  if they are provided.  Although
+XPRZModem will function without any of the other routines, its performance or
+capabilities  may  be degraded somewhat.  Specifically, this is what you give
+up if you choose not to supply any of these other XPR callback functions:
+
+          xpr_sflush(): Used when performing error recovery and resync
+               when sending files.  If not provided, extra timeout errors
+               and delayed error recovery will be likely.  The files will
+               still be transferred properly, but errors will degrade
+               overall throughput more than usual.
+
+          xpr_chkabort(): Called between sending or receiving packets.
+               If not provided, there's no way for your comm program user
+               to abort a transfer in progress except by trying to somehow
+               force it to decide to give up and abort on its own, such as
+               by turning off the modem and hoping the protocol will abort
+               after enough timeouts (it will, eventually...).
+
+           xpr_gets(): Called to prompt the user interactively for @{"options" link Options}
+               when your comm program invokes XProtocolSetup() with a null
+               xpr_filename field (if xpr_options() isn't available
+               instead).  If not provided, you'll have to prompt
+               the user for the options string yourself, and pass this
+               string in xpr_filename when invoking XProtocolSetup().
+
+           xpr_setserial(): Called to obtain the current serial port
+               settings, and to change the @{"serial port" link Settings} to 8N1 if it's not
+               already set that way.  If not provided, XPRZModem will
+               assume all transfers are being done at 2400 bps, which
+               won't hurt anything, and your users will have to make sure
+               that the serial port is set to 8N1 themselves.
+
+           xpr_ffirst() and xpr_fnext(): If either of these routines are
+               missing, XPRZModem will lose the ability to send multiple
+               files in a batch.  The xpr_filename pointer passed to
+               XProtocolSend() will be assumed to point to the actual full
+               filename of the single file to be sent in this batch.  If
+               both of these routines are provided, XPRZModem will rely
+               upon them completely to obtain the names of the files to
+               send, and the xpr_filename pointer will not be used for any
+               purpose by XPRZModem except to be passed to ffirst/fnext.
+               This gives your comm program a way to send not just a single
+               filename template's worth of files in a batch, but a list of
+               different filenames.  If, for example, you set xpr_filename
+               to point to the first node of a linked list of filenames
+               and/or templates to be sent, rather than just having it
+               point to a string, you can have your ffirst and fnext
+               routines traverse this linked list in order to determine the
+               next file to be sent.  Or you could have xpr_filename point
+               to a buffer containing a list of filenames separated by
+               commas, and your ffirst/fnext routines could return each
+               filename in this list in turn.  The key here is that if you
+               provide these two routines, you're in complete control over
+               the series of names fed to XProtocolSend.  If you omit these
+               routines, XPRZModem is stuck with single-file mode.  Once
+               again, if these two routines are provided, XPRZModem will
+               *always* call them; it makes no attempt to use the
+               xpr_filename pointer for anything itself.  This is not
+               explicitly spelled out in the XPR standard, but it seems the
+               only reasonable way to handle batch protocols to me.
+               Hopefully other XPR library authors will follow this
+               precedent as well, so that comm program authors will be able
+               to count on multiple-filename batch sessions being handled
+               properly.
+
+           xpr_finfo(): Used to determine the filesize of files being sent,
+               in order to tell the receiving system how big they are.
+               Also used to determine the size of a file which already
+               exists when in @{"Overwrite Resume" link O} mode; XPRZModem must be able
+               to get the size of the current portion of the file in order
+               to be able to tell the sender where to resume sending from.
+               If this routine isn't provided, @{"Overwrite Resume" link O} mode is
+               not allowed.  This routine is also used to check if @{"Text mode" link T}
+               should be set to Y or N for each file when option @{"TC" link T} is set.
+
+           xpr_options(): If you don't supply this, users will be stuck
+               with setting the library @{"options" link Options} via the semi-cryptic text
+               string method (ENV: and/or xpr_gets()).  This routine and
+               xpr_update() have a lot to do with the look and feel of your
+               program when using XPR libraries; any skimping on these two
+               routines will be painfully obvious to the user.  Conversely,
+               doing a nice job on these two routines will really make your
+               program shine.
+
+           xpr_unlink(): Required by the @{"DY" link D} and @{"KN" link K} options, so if you don't
+               supply it, those options are not allowed.
+
+@endnode
+
+
+@node ZedZap "XRPzedzap and other ZModem derived protocols"
+
+        doc by Robert Williamson
+
+   XPRzedzap.library  is  an enhanced version of xprzmodem.library for use in
+FTN  (Fidonet  Technology  Network) sessions.  The xprzedzap.library uses the
+3.1 version of the xprzmodem.library as its base and uses the 0.85 version of
+xprzedzap.library  by  Yves  Konigshofer  for  FTN-related  extensions.  This
+version  was audited by Yves and released with his approval of myself as KOTS
+(Keeeper of the Sources) for zedzap.
+
+      Since  the  version  0.55  sources  were  written  for lattice C, I had
+decided  to forget about them AND the .85 and .90 sources and build a new one
+from  xprzmodem  v3.1  source.  This source is compilable with SASc v6.51 and
+uses  the  libent  and libinit modules instead of the old latticelib assembly
+stubs.
+
+  The  new  version  has  virtually all the useful xprzedzap v1.0 options and
+features  DirectZap  as  well  and  ZedZap,  ZedZip, SZmodem and Zmodem.  The
+protocol currently active is displayed in the xpr status window.
+
+    -Robert Williamson
+@endnode
+
+@node MAILERS "Mailers and XPR Protocols"
+
+    Many  Mailers  make  use  of  XPR  protocols  to  provide  file  transfer
+capabilities and to gain the advantage of easy addition of new protocols when
+they become available.  Those known to use XPR protocols include:
+
+    POP, JAZ, RAP, ROCK, UMBRELLA, GAZEBO, PORTICUS, ROOF, NORM and JAMMAIL.
+
+   Since   Mailers  perform  a  fast  turaround  from  send  to  receive  and
+vise-versa,  the  XPR  design must insure that both echoed characters and any
+left  unread  from  the  previous  transfer do not cause detrimental effects.
+While  the  changes to avoid these problems will not affect term programs and
+BBS's using xprzedzap.library, the lack of these 'fixes' in xprzmodem.library
+make it near useless in mailers.
+
+     Mailers  require  that  a  session can be accomplished without reporting
+a  failure  if there were no files sent and/or received.  The enhancements in
+XPRzedzap.library address this problem.
+
+    Mailers  also require notification of the status of each file transfer in
+a batch.  This is provided by the XPR 3 function upd_status().
+
+    Calculation  of  CPS  and expected transfer times are based upon the baud
+rate.   If  the mailer does not set this to the linked rate, the calculations
+will  be based either upon the Locked rate or the prefs setting.  The C<baud>
+option  allows passing the LINK rate for more accurate and realistic results.
+This is especailly true for the per-block cps.
+
+    The  maximum  packet size can be set with a maximum/default at 8192 and a
+mimimum  of  64.   This  will  vary  when  sending  and  will  be static when
+receiving.  When receiving, it should be 8192 but the maximum packet size can
+be set to less than if the local system has a slow HD.
+  When  sending  the maximum packet size will be baud rate dependant, and the
+size is calculated with the formula:
+                MAX_PACKET = (BPS_RATE * 8192 / 9600).
+If C(baud) is passed, the link rate will be used for these allocations.
+
+    The IO Buffer for reading/writing to/from the disk must be equal to twice
+the  maximum  packet  size  (or the maximum packet size will automatically be
+decreased).
+
+    If  your  mailer  does  not  support  inbound  RESUME,  you must add 'ON'
+(OverWrite  Never)  to the setup string in order to override the default 'OR'
+(OverWrite  Resume)  and 'KN' (Keep Never) to override the default 'KP' (Keep
+Partial).
+
+    -Robert Williamson
+@endnode
+
+@node status "Status Display"
+
+         With  this version the Protocol name sent to the Status Display will
+be one of:
+            Zmodem      1K blocks standard, non-ftn mode
+            SZmodem     8K Blocks based upon bps rate,non- ftn mode
+            ZedZap      up to 8K Blocks based upon bps rate, ftn mode
+            ZedZip      1k blocks , ftn mode
+            DirectZap   up to 8k blocks, minimum escaping, ftn mode
+
+        Also  note  that During batch transfers, the Last Error message field
+is  set  to  "None"  when  starting to send or receive next file.  This is to
+avoid the confusion caused by an error message from a previous file not being
+cleared.
+
+    When resuming a transfer, the message 'Resuming' will appear.
+
+    XPR  2.001  support  for  dual-status windows was added.  This was tested
+with  private  versions  of  wpl.library and should also work with DreamTerm.
+Please note that there is no publically available version of wpl.library that
+supports the dual status window.
+    -Robert Williamson
+
+@endnode
+
+@node wpl "wpl concerns"
+    XprSetup  does  not  read  any wpl variables, so you must set option C to
+$(baud)  so that all calculations are based upon the actual link rate and not
+the locked rate.
+
+   XprSetup  makes  an XPR library ready for a transfer.  The first parameter
+given is the xpr library name, and the second parameter is a string passed to
+the  xpr  library  with XProtocolSetup().  The variable $(XprSetup) is set to
+the  numeric  return  of XProtocolSetup().  A value of 0 indicates a failure,
+otherwise the setup was successful.
+
+   Return Values in $(Setup) are or'ed from the following:
+
+        XPRS_FAILURE    0x00000000L
+        XPRS_SUCCESS    0x00000001L
+        XPRS_NORECREQ   0x00000002L
+        XPRS_NOSNDREQ   0x00000004L
+        XPRS_HOSTMON    0x00000008L
+        XPRS_USERMON    0x00000010L
+        XPRS_HOSTNOWAIT 0x00000020L
+        XPRS_NOUPDATE   0x00008000L
+        XPRS_XPR2001    0x00010000L *
+        XPRS_DOUBLE     0x00020000L *
+
+    *   Note:
+        some  private  jammail versions of wpl.library required both returned
+        to  enable  dual-status  display.   This is WRONG.  Only XPRS_XPR2001
+        should trigger use of dual-status display.
+
+        Normally returns:
+    XPRS_SUCCESS | XPRS_NORECREQ | XPRS_HOSTMON
+        | XPRS_DOUBLE | XPRS_XPR2001
+    or
+    XPRS_SUCCESS | XPRS_NORECREQ | XPRS_DOUBLE | XPRS_XPR2001
+
+
+   Return values in $(RC) are as follows:
+      0 - All OK.
+      1 - XProtocolSetup returned FALSE.
+      2 - Library not able to be opened
+      3 - Out of memory.
+      4 - Wasn't given required modem.
+
+    -Robert Williamson
+@endnode
+
+@node Future
+     I  don't  want  or expect this to be the last or only XPR ZModem library
+available.   There are a lot of less-commonly-used ZModem features which have
+popped  up over the past few years, and many people might like to see some of
+them  made  available.  Although DirectZap style escaping is enabled with the
+QY  option  (everything except ZDLE and ZDLEE), 8th bit escaping to allow use
+of  7-bit  serial channels is not on the todo list as yet..  I didn't want to
+add a bunch of rarely-used bells and whistles to this version of the library,
+because I want it to be able to serve as comprehensible example code.  I just
+want  to  provide  a good solid ZModem which reliably handles the majority of
+people's  needs.   Hopefully,  this  will  serve  as  a foundation for future
+enhanced versions, while providing a safe fallback for people to come back to
+if  that  fancy new enhanced version (with neo-maxi zoomed weebies) turns out
+to need some more debugging.
+    -Rick Huebner
+@endnode
+
+@node History
+
+    See HISTORY text file.
+
+@endnode
+
+@node Todo
+
+    Here are some features that would be nice for XPRZModem to have sometime
+in the future.  If there are any capable hackers out there that would like
+to improve upon what has already been written, feel free to do so.
+
+   o Preserve date of file being transferred.
+
+   o Investigate possibility of saving file protection bits.
+
+   o Work out ways to increase the transfer speed.
+
+   o Additional changes as time and others may suggest.
+
+   o Add TrapZap (TZA) support
+
+   o Work out ways to respond to receiver's interrupts faster.
+ 
+@endnode
+
+@node Credits
+
+   Special thanks (in alphabetical order) go to:
+
+   @{"Olaf 'Olsen' Barthel  " link Barthel}
+   @{"Jim Cooper            " link Cooper}
+   @{"Geoffrey Faivre-Malloy" link Geoffrey}
+   @{"Rainer Hess           " link Hess}
+   @{"Rick A. Huebner       " link Huebner}
+   @{"Yves Konigshofer      " link Yves}
+   @{"Willy Langeveld       " link Willy}
+   @{"Russell McOrmond      " link Russ}
+   @{"Marco Papa            " link Papa}
+   @{"William M. Perkins    " link Perkins}
+   @{"John Tillema          " link Tillema}
+   @{"Robert Williamson     " link Robert}
+  
+@endnode
+
+@node Barthel "Olaf 'Olsen' Barthel"
+Who knows what he changed! (no idea who wrote that comment)
+@endnode
+
+@node Cooper "Jim Cooper"
+Supplied the mysprintf code.
+@endnode
+
+@node Geoffrey "Geoffrey Faivre-Malloy"
+Converted XPRZModem documentation to amigaguide format.
+@endnode
+
+@node Hess "Rainer Hess"
+Responsible for version 2.61 to 3.1.
+Added locale support
+Many other features he claimed he added first appeared in Yves's xprzedzap
+sources.
+EMail:  rhess@a3tnt.adsp.sub.org @endnode
+
+@node Huebner "Rick A. Huebner"
+Wrote XPRZModem.library!  Without him we wouldn't have this wonderful source
+code to base this on :) Rick also developed zmodem for Opus BBS on the IBM.
+He was also the original author of the Proteus BBS Arexx Engine for the Amiga.
+@endnode
+
+@node Yves "Yves Konigshofer"
+The  author  of xprzedzap.library (released versions:  0.55, 0.85, 1.00, 1.5)
+It  seems  that  Yves  Koingshofer  was not given credit for such features as
+dos.library usage, variable block-size, 8K blocks etc.  Perhaps these changes
+were  done  independantly  to  Yves's xprzedzap.library derviative or perhaps
+credit  for  his  work  was  inadvertandly left out.  Since xprzedzap.library
+received wide release via AmiNet, and has been in use with numerous BBS's and
+Term  programs  as  well as with mailers such as JAZ, POP, RAP, ROCK, GAZEBO,
+PORTICUS,  UMBRELLA  and JAMMAIL for a number of years, I found it strange no
+credit was given to Yves who put so much effort into this work.  Yves is also
+the author of Contact!  BBS.
+@endnode
+
+@node Willy "Willy Langeveld"
+Invented the XPR version 1.0 and had help from @{"Marco Papa" link Papa} updating it to
+version 2.0.  Willy is the author of the popular telecomm program VLT.
+@endnode
+
+
+@node Russ "Russell McOrmond"
+One  of  the  prime  movers  on  the  XPR  3 mailing list, developed callback
+protection,   format.a   from   which   xprsprintf.a   was  copied,  and  the
+xpr_updstatus  function.  He is the author of the mailer development language
+WPL and of xprclock.library and xprfts.library.
+@endnode
+
+@node Papa "Marco Papa"
+Collaborated with @{"Willy Langeveld" link Willy} in updating the XPR specs from 1.0 to 2.0.
+@endnode
+
+@node Perkins "William M. Perkins"
+Spent many selfless hours of his life updating XPRZModem (2.50 & 2.52)
+@endnode
+
+@node Tillema "John Tillema"
+John fixed a bug in 2.51 of the library.
+@endnode
+
+@node Robert "Robert Williamson"
+Developer of ver 3.2 of both xprzmodem.library and xprzedzap.library.
+Keeper/Author  of  xprfts.library  v1.1,  xprslk.library  v0.40.   Author  of
+numerous  FreeWare  utilities  for  FTN  operations,  including XTick, XRaid,
+FQuery,  RED,  the  Xpack utilities and the Shelter Mailers:  Roof, Porticus,
+Gazebo  and  Umbrella  and  two  of  the  Melody point mailers:  Jaz and Rap.
+Currently   Keeper   of  the  sources  of  ConfMail  and  xferq.library  v1.9
+     This is a blatant freeware plug :)
+email:robert_williamsonp0.f104.n167.z1.fidonet.org
+netmail:FIDONET#1:167/104.0 AMIGANET#40:600/104.0
+@endnode

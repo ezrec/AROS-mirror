@@ -1,0 +1,88 @@
+Short: xprzmodem and xprzedzap, locale aware, WB2.1+
+Type: comm/term
+Uploader: robert_williamson@p0.f104.n167.z1.fidonet.org (Robert Williamson)
+Author: robert_williamson@p0.f104.n167.z1.fidonet.org (Robert Williamson)
+
+    xprzmodem.library v3.51 for term programs and bbs's
+  & xprzedzap.library v3.51 for mailers
+
+    xprz351.lha    contains    AmigaGuide    documentation   as   well   as
+68000/10/20/30/40 versions of both xprzmodem.library and xprzedzap.library.
+These libraries all require WB2.1 or better and support language catalogues
+via  locale.library.   A  French  catalogue  is available separately.  This
+release merges the source levels of the two libraries so that both can take
+advantage of all fixes and enhancements.
+
+   XPRzedzap.library is an enhanced version of xprzmodem.library for use in
+Mailers as well as BBSs and Terminal programs supporting XPR protocols.  It
+provides multiple zmodem-derived protocols, including:
+    Zmodem, ZedZip, ZedZap and DirectZap.  
+  It  is  a complete replacement for xprzmodem.library, xprszmodem.library,
+xprdzap.library and all previous versions of xprzedzap.library.
+
+    XPRzmodem.library  is  also  enhanced  to provide the same protocols as
+xprzedzap.library,  as well as support for SZmodem.  It is about 1K smaller
+since  it  does  not  include  some of the special features required in FTN
+operations.   This  version  should  be  used on systems that do not have a
+mailer or where the mailer does not support XPR protocols.
+
+
+  Installation problems:
+
+  locale.library MUST be installed, as well as the directories that library
+expects.
+
+  It  has  been  noted  that  some Term programs and BBS's have a hardcoded
+setup  for  xprzmodem.library.   In some cases the space reserved for setup
+strings  is too small for the additional options in these libraries and the
+host  may  crash.  If these programs have an external xpr setup option, use
+that  instead.   This  method has been reported as solving the problem with
+Ncomm.
+
+  Some  term  programs and BBS's are not coded to the spec, but rather take
+short-cuts  which  may  cause  that  program  to  hang when used with these
+libraries. This problem has been reported with Excelsior BBS. 
+  In particular:
+  Setting  YY causes XPR2.001 return codes to be set.  These codes make use
+of  all  32  bits  in  the  bitmap;  if  the host program only looks at the
+low-order  16  bits  or  expects hardcoded values, it will fail.  Never use
+this  option in a host that does not support it.  The only known hosts that
+do support this option are DreamTerm and wpl.library.
+
+    Fixes and Enhancements:
+
+    o  REQUIRES wb2.1+
+    o  Locale support.
+    o  Defaults optimized for each library to permit MUCH shorter setup
+       strings.
+    o  XPR 2.001 support for dual-status windows.  
+       Protocol now informs host that it supports XPR 2.001 extensions
+       and double-buffering. Setup toggles this support and is by default
+       disabled for xprzmodem.library and enabled for xprzedzap.library.
+    o  XPR 3 callbacks register protection is installed
+    o  XPR 3 xpr_updstatus function is enabled, permitting notification
+       of transfer status for EACH file sent or received.
+    o  Protocol name displayed will be one of: 
+        Zmodem, 1K blocks standard
+        SZmodem, up to 8K blocks
+        ZedZap, up to 8K Blocks size based upon bps rate, ftn mode
+        ZedZip, 1k blocks, ftn mode
+        DirectZap, up to 8k blocks, minimum escaping, ftn mode
+    o  Added status messages for resume
+    o  A number of strings were not localized, corrected.  Also added
+       localization for new options.  These are NOT translated for
+       german catalog, so that catalog has been removed from distribution.
+       Catalogues and documentation for other languages should be
+       distributed separately. A French catalog is available.
+   o  During batch transfers, Error message field is set to "None" when
+      starting to send or receive next file.
+   o  Improper variable names were used for some of the new options, causing
+      unexpected results when used with Term.
+   o  catalogue source is now also included in user distribution as well
+      as source distribution.
+
+    MAGIC NAME: XPRZ3
+    Robert Williamson
+        FidoNet#1:167/104.0
+        AmigaNet#40:600/104.0
+

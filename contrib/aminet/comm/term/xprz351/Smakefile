@@ -1,0 +1,160 @@
+#
+# smakefile for xprzmodem.library and xprzedzap.library
+# Usage:
+#   Smake <lib><cpu>
+# where lib is either of zmodem or zedzap
+# and cpu is one of 00,10,20,30,40
+# default is zedzap30
+#
+ZOPT           = zedzap 
+MAKEFILE       = smakefile
+ZMODEM_LIBRARY = xpr$(ZOPT).library
+CPU            = 68030
+ZMODEM_PATH    = $(ZOPT)/$(CPU)/
+VER            = 3
+REV            = 51
+CDATE          = (03.01.95)
+NAME_AND_DATE  = "$(ZOPT) $(VER).$(REV) BETA CPU-$(CPU) $(CDATE)"
+AVERS          = "$$VERS: $(ZMODEM_LIBRARY) $(VER).$(REV) $(CDATE)" 
+ASMOPT         = -m3
+#DBUGLIBS       = LIB:amiga.lib LIB:debug.lib
+
+CFLAGS = NMINC STRMERGE OPTIMIZE OPTTIME PARMS=REG NOSTKCHK LIBCODE CPU=$(CPU) DEFINE=$(ZOPT) 
+# DEFINE=$(ZMODEM_LIBRARY) DEFINE=$(VER) DEFINE=$(REV) DEFINE=$(CDATE)
+
+# DEFINE=KDEBUG
+# DEFINE=DEBUGLOG 
+# DEFINE=DEBUGLEVEL2
+
+CSRC    = xprzmodem_locale.c Send.c Receive.c Utils.c Zm.c xprgetsystime.a xprtimeout.c
+ASRC    = verstring.a callbacks.a xprsprintf.a
+OBJS    = callbacks.o xprzmodem_locale.o \
+          Send.o Receive.o Utils.o Zm.o \
+          xprgetsystime.o xprtimeout.o xprsprintf.o
+#verstring.o
+CHECK   = xprzmodem_catalog.h xprzmodem_catalog.cd Xproto.h Zmodem.h XprZmodem.h $(MAKEFILE)
+
+NOCOMPACT=IDIR=CH:  # <= Path to uncompacted Header-Files
+
+
+$(ZMODEM_LIBRARY): xprzmodem.GST $(OBJS)
+                   @SLINK FROM LIB:libent.o LIB:libinit.o $(OBJS) to $@ LIBPREFIX _ LIBFD Xpr_Lib.FD VERBOSE \
+                   LIBID $(NAME_AND_DATE) LIB LIB:sc.Lib $(DBUGLIBS) SC SD ND NOICONS \
+                   LIBVERSION $(VER) LIBREVISION $(REV) MAP $(ZMODEM_PATH)$@.Map FHL with LIB:utillib.with
+      copy $(ZMODEM_LIBRARY) $(ZMODEM_PATH)
+
+#verstring.o: verstring.a
+#            ASM $(ASMOPT) verstring.a
+
+xprsprintf.o: xprsprintf.a
+              ASM $(ASMOPT) -oxprsprintf.o xprsprintf.a 
+
+callbacks.o: callbacks.a
+              ASM $(ASMOPT) -ocallbacks.o callbacks.a
+
+Send.o:     Send.c $(CHECK)
+            SC $(CFLAGS) GST=xprzmodem.GST Send.c
+
+Receive.o:  Receive.c $(CHECK)
+            SC $(CFLAGS) GST=xprzmodem.GST Receive.c
+
+Utils.o:    Utils.c $(CHECK)
+            SC $(CFLAGS) GST=xprzmodem.GST Utils.c
+
+Zm.o:       Zm.c Zcrc.h $(CHECK)
+            SC $(CFLAGS) GST=xprzmodem.GST Zm.c
+
+xprtimeout.o: xprtimeout.c
+              SC $(CFLAGS) GST=xprzmodem.GST xprtimeout.c
+
+xprgetsystime.o: xprgetsystime.c
+              SC $(CFLAGS) GST=xprzmodem.GST xprgetsystime.c
+
+xprzmodem_locale.o: xprzmodem_locale.c xprzmodem_catalog.h
+              SC $(CFLAGS) xprzmodem_locale.c
+
+xprzmodem_catalog.h: xprzmodem_catalog.cd
+              CatComp xprzmodem_catalog.cd CFILE xprzmodem_catalog.h
+
+# Make xprzmodem_catalog?.ct Catalog with
+# "CatComp xprzmodem_catalog.cd CTFILE xprzmodem_catalog?.ct"
+
+# 1. CatComp xprzmodem_catalog.cd CTFILE xprzmodem_catalog?.ct
+# 2. Edit xprzmodem_catalog?.ct
+# 3. Make a Catalog:
+#    "CatComp xprzmodem_catalog.cd xprzmodem_catalog?.ct CATALOG catalogs/language/xprzmodem.catalog"
+
+
+#
+# GST-File
+#
+
+xprzmodem.GST: xprzmodem_all.h $(CHECK)
+               SC $(CFLAGS) $(NOCOMACT) NOOBJNAME \
+               MAKEGST=xprzmodem.GST xprzmodem_all.h
+
+#
+# output options
+#
+zedzap40:
+CPU=68040
+ZMODEM_PATH = $(ZOPT)/$(CPU)/
+    -@makedir $(ZOPT)
+    -@makedir $(ZMODEM_PATH)
+    Smake -a ZOPT=zedzap CPU=68040 ASMOPT=-m4 CDATE=$(CDATE)
+
+zmodem40:
+CPU=68040
+ZMODEM_PATH    = $(ZOPT)/$(CPU)/
+    -@makedir $(ZOPT)
+    -@makedir $(ZMODEM_PATH)
+     Smake -a ZOPT=zmodem CPU=68040 ASMOPT=-m4 CDATE=$(CDATE)
+
+zedzap30:
+CPU=68030
+ZMODEM_PATH    = $(ZOPT)/$(CPU)/
+    -@makedir $(ZOPT)
+    -@makedir $(ZMODEM_PATH)
+     Smake -a ZOPT=zedzap CPU=68030 ASMOPT=-m3 CDATE=$(CDATE)
+
+zmodem30:
+CPU=68030
+ZMODEM_PATH    = $(ZOPT)/$(CPU)/
+    -@makedir $(ZOPT)
+    -@makedir $(ZMODEM_PATH)
+    Smake -a ZOPT=zmodem CPU=68030 ASMOPT=-m3 CDATE=$(CDATE)
+
+zedzap20:
+CPU=68020
+ZMODEM_PATH    = $(ZOPT)/$(CPU)/
+    -@makedir $(ZOPT)
+    -@makedir $(ZMODEM_PATH)
+    Smake -a ZOPT=zedzap CPU=68020 ASMOPT=-m2 CDATE=$(CDATE)
+
+zmodem20:
+CPU=68020
+ZMODEM_PATH    = $(ZOPT)/$(CPU)/
+    -@makedir $(ZOPT)
+    -@makedir $(ZMODEM_PATH)
+    Smake -a ZOPT=zmodem CPU=68020 ASMOPT=-m2 CDATE=$(CDATE)
+
+zedzap00:
+CPU=any
+ZMODEM_PATH    = $(ZOPT)/$(CPU)/
+    -@makedir $(ZOPT)
+    -@makedir $(ZMODEM_PATH)
+    Smake -a ZOPT=zedzap CPU=any ASMOPT=-m0 CDATE=$(CDATE)
+
+zmodem00:
+CPU=any
+ZMODEM_PATH    = $(ZOPT)/$(CPU)/
+    -@makedir $(ZOPT)
+    -@makedir $(ZMODEM_PATH)
+    Smake -a ZOPT=zmodem CPU=any ASMOPT=-m0 CDATE=$(CDATE)
+
+bump:
+    setenv AMIGADATE `AMIGADATE`
+    smake -ak new CDATE=$${AMIGADATE}
+ 
+new:
+   rx bump $(AVERS)

@@ -1,0 +1,58 @@
+Echo "*ec*n"
+cd sc:source/xpr/zedzap3
+
+Echo "*e[32mMake 680x0 xprzedzap.library*e[31m"
+setenv AMIGADATE `AMIGADATE`
+smake zedzap00 CDATE=${AMIGADATE}
+copy xprzedzap.library ROOF:xprs/68000/xprzedzap.library
+Echo "*e[32mMake 680x0 xprzedzap.library completed*e[31m"
+
+Echo "*e[32mMake 68010 xprzedzap.library*e[31m"
+setenv AMIGADATE `AMIGADATE`
+smake zedzap10 CDATE=${AMIGADATE}
+copy xprzedzap.library ROOF:xprs/68010/xprzedzap.library
+Echo "*e[32mMake 68010 xprzedzap.library completed*e[31m"
+
+Echo "*e[32mMake 68020 xprzedzap.library*e[31m"
+setenv AMIGADATE `AMIGADATE`
+smake zedzap20 CDATE=${AMIGADATE}
+copy xprzedzap.library ROOF:xprs/68020/xprzedzap.library
+Echo "*e[32mMake 68020 xprzedzap.library completed*e[31m"
+
+Echo "*e[32mMake 68040 xprzedzap.library*e[31m"
+setenv AMIGADATE `AMIGADATE`
+smake zedzap40 CDATE=${AMIGADATE}
+copy xprzedzap.library ROOF:xprs/68040/xprzedzap.library
+Echo "*e[32mMake 68040 xprzedzap.library completed*e[31m"
+
+Echo "*e[32mMake 68030 xprzedzap.library*e[31m"
+setenv AMIGADATE `AMIGADATE`
+smake zedzap30 CDATE=${AMIGADATE}
+copy xprzedzap.library ROOF:xprs/68030/xprzedzap.library
+Echo "*e[32mMake 68030 xprzedzap.library completed*e[31m"
+
+Echo "*e[32mMake 680x0 xprzmodem.library*e[31m"
+setenv AMIGADATE `AMIGADATE`
+smake zmodem00 CDATE=${AMIGADATE}
+Echo "*e[32mMake 680x0 xprzmodem.library completed*e[31m"
+
+Echo "*e[32mMake 68010 xprzmodem.library*e[31m"
+setenv AMIGADATE `AMIGADATE`
+smake zmodem10 CDATE=${AMIGADATE}
+Echo "*e[32mMake 68010 xprzmodem.library completed*e[31m"
+
+Echo "*e[32mMake 68020 xprzmodem.library*e[31m"
+setenv AMIGADATE `AMIGADATE`
+smake zmodem20 CDATE=${AMIGADATE}
+Echo "*e[32mMake 68020 xprzmodem.library completed*e[31m"
+
+Echo "*e[32mMake 68040 xprzmodem.library*e[31m"
+setenv AMIGADATE `AMIGADATE`
+smake zmodem40 CDATE=${AMIGADATE}
+Echo "*e[32mMake 68040 xprzmodem.library completed*e[31m"
+
+Echo "*e[32mMake 68030 xprzmodem.library*e[31m"
+setenv AMIGADATE `AMIGADATE`
+smake zmodem30 CDATE=${AMIGADATE}
+Echo "*e[32mMake 68030 xprzmodem.library completed*e[31m"
+

@@ -1,0 +1,337 @@
+
+1.0, 29 Jul 89 - Original release.
+
+1.1,  03 Aug 89 - Fixed zsdata() to send file data packet in one swrite()
+                  call instead of calling zsendline for every byte, to prevent
+                  hammering the serial.device with single-byte write requests
+                  during uploads, and to speed up effective data transmission
+                  rates.
+
+2.0,  28 Oct 89 - Converted from Manx to Lattice C 5.04.  Created prototypes and
+                  made other tweaks as required.  Designed new library skeleton
+                  for Lattice code, replacing the old Manx library skeleton.
+                  Added new options TC, A, D, K, S, R, and P.  Added support for
+                  xpr_options() callback routine, and generally brought things
+                  up to par with XPR Spec 2.0.
+
+2.10, 12 Feb 91 - Fixed the following generally minor problems:
+
+  o  No longer munges A6 register (this was potentially serious), and added
+     callback glue to ensure comm program can't munge OUR registers either.
+     Decided that the protective glue was much safer than the more elegant
+     direct invocation used in version 2.0.
+
+  o  Slightly less transmission overhead (concatenates all output into single
+     swrites, builds output packets a bit faster).
+
+  o  Considerably less receive overhead; does a lot more waiting and a lot
+     fewer sreads, especially at high speed.  WARNING: this change doesn't
+     work with VLT version 4.846 or earlier (yes, Willy; it really was
+     broken B-)).  This change may or may not actually do you any good,
+     depending upon how your comm program implements the xpr_sread() function.
+
+  o  Fixed problems getting synchronized with some systems on uploads.
+
+  o  No longer closes files twice.
+
+  o  Now uses fully-reentrant sprintf() from amiga.lib; no more nasty BSS.
+
+  o  A couple of obscure error messages were > 50 bytes long, causing problems
+     with some comm program's transfer status windows, e.g. the infamouse VLT
+     "Incredible Shrinking Status Window."
+
+  o  Stabilized spastic data rate by computing elapsed time more accurately.
+
+  o  Fixed sprintf() error which caused invalid filelength to be sent on
+     uploads.
+
+  o  Aligned all data for optimal performance on 68030++ CPUs (now that I have
+     my A3000... B-)).  Doesn't really make any noticeable difference, but it
+     makes us 68030 owners feel better anyway.  I'm also including a version of
+     the library compiled for the 68020+ CPU, on the same principle.
+
+  o  Now uses .DUP2 instead of .DUP.DUP, etc.
+
+  o  Added config option E for number of errors which cause an abort.
+
+  o  Fixed bogus IO_Torture false alarm concerning timer.device.
+
+  o  Tried to fix an elusive Enforcer hit on reading location 0, but I'm not
+     sure I really got it, since I had trouble reproducing the problem.
+
+2.50, 15 Nov 91 - Fixed bugs and added the following features:
+
+  o  Added code to support 32 bit CRC (Circular Redundancy Check).
+     CRC-32 adds a little more protection to the data being sent
+     and received than does CRC-16.  Source for the CRC-32 additions
+     came from the Unix version of RZ/SZ by Chuck Forsberg.
+
+  o  Added code to update_rate() function in utils.c to avoid the
+     Guru # 80000005 if you decide to adjust the system clock during an
+     upload or download from Daylight Saving Time to Standard Time.  :-)
+
+  o  Proto additions using libinit.o and libent.o, and eliminating all
+     of the assembler code was supplied by Jim Cooper of SAS.  Jim
+     also supplied the mysprintf() code to replace sprintf().  This
+     version of XprZmodem can be compiled with the SAS version 5.10 C Compiler.
+     I do not know how well it might compile with the Aztec compiler.
+
+
+   2.50     update_rate()  fixed fatal error in current-duration
+                           calculation.  Caused 80000005 Guru.
+
+            sprintf()      replaced with Mysprintf() routine.
+                           Thanks to Jim Cooper of the SAS institude
+                           for  the libinit and linent objects.
+
+            Cyclic Redunduncy Check now uses a 32-bit hard-coded CRC table.
+            CRC-32 release by Bill Perkins.
+
+--------------------------------------------------------------------------
+
+This is basically version 2.50.  I just changed rx_timout from 600 to
+30 in send.c to fix uploads so they truly work.
+
+NOTE:  I compiled the 020 version using lattice 5.10b (as well as the
+       none '020 version), but since I only have a 68000, I don't know how
+       well or if it works.
+
+
+John Tillema
+jtillema@hacks.arizona.edu
+
+------
+
+Recompiled the 2.51 020 version as 2.52 after fixing the LmkFile.020 file.
+Internal name of the library was being compiled as XprZmodem.Library.020
+rather than as XprZmodem.Library.
+
+     Bill Perkins
+
+BIX: Wmperkins
+
+--------------------------------------------------------------------------
+
+2.51, 29 Jan 92 - Rxtimeout changed from 600 to 300 for upload timeout
+                  problem by John Tillema.
+
+2.52, 06 Mar 92 - Recompile code for 68020 library code.  Non-68020 code worked
+                  fine but John Tillema was not able to test the 2.51 68020
+                  version.
+
+---------------------------------------------------------------------------
+
+   2.53 - Special Version by Olaf 'Olsen' Barthel Author from "Term"
+          (Don't know what he change)
+
+---------------------------------------------------------------------------
+
+  2.60  - Don't know who made this version
+  2.60a - Don't know who made this version
+
+---------------------------------------------------------------------------
+
+INFO: All Libs up to 2.61 are based on the Source of V2.52!!!
+=============================================================
+	changes:
+
+ 2.61 - mysprintf() in Utils.c - returned int changed to unsigned int
+	SAS/C get a Warning of this.
+
+	- NOT RELEASED! ONLY FOR BETATESTER.
+
+	In function XProtocolHostMon() (module Utils.c) declared
+	static UBYTE startrcv[] = { ZPAD, ZDLE, ZHEX, "00" };
+	SAS/C 6.x get a error of this.
+	Declared to:
+	static UBYTE *startrcv[] = { ZPAD, ZDLE, ZHEX, '0', '0' };
+
+ 2.62 - Now Blocksize avaiable
+
+	- NOT RELEASED!
+
+	Changes by Rainer Hess
+
+ 2.63 - Now support locale.library to use different languages with
+	Workbench 2.1, 3.x. On this time will be only the default
+	englisch-language and a german catalog-file. Please send me
+	the filled up xprzmodem_catalog.ct for your language.
+
+	- NOT RELEASED! ONLY FOR BETATESTER.
+
+	Changes by Rainer Hess
+
+ 2.64 - Aug  3 1993 - Blocksize was global declared, it's now in
+	struct Vars.
+
+	- NOT RELEASED!
+
+	Aug  4 1993 - Bug-Fix in function update_rate(), maschine
+	crashes on little files e.g. 2 Bytes - old problem from
+	2.52 and before!
+
+	Changes by Rainer Hess
+
+ 3.0  - It's time to make a full release...
+
+	Compile Date 13.August.93
+
+	Rainer Hess - EMail: rhess@a3tnt.adsp.sub.org
+
+ 3.1  - Documentation update by Geoffrey Faivre-Malloy
+	Conversion of documentation to Amigaguide format.
+
+	Code-Changes by Rainer Hess:
+	ZModem runs always with the sender blocksize or uses standart-mode
+	(M1024) if there is on one system a older zmodem.
+
+	Compile Date 03.October.93
+
+ 3.2 - Added support for FTN operations and FTN Zmodem-derivative protocols
+
+    It  seems  that Yves Koingshofer was not given credit for such features
+    as  dos.library  usage,  variable  block-size, 8 K blocks etc.  Perhaps
+    these  changes  were  done  independantly  to  Yves's xprzedzap.library
+    derviative  or  perhaps credit for his work was inadvertandly left out.
+    Since  xprzedzap.library received wide release via AmiNet, and has been
+    in  use  with  numerous BBS's and Term programs as well as with mailers
+    such  as  JAZ,  POP,  RAP, GAZEBO, PORTICUS, UMBRELLA and JAMMAIL for a
+    number of years, I found it strange no credit was given to Yves who
+    put  so  much  effort  into  this  work. 
+    Credit  was  also  not  given  to Russell McOrmond, one of the founding
+    members of the XPR list whose format.a was renamed to xprsprintf.a with
+    only slight modifications. 
+
+    These oversights are rectified here. 
+
+    Those few changes of Yves's that did not cross over from xprzedzap.library
+    versions  .55,  .85, 1.00 and 1.5 (all based upon xprzmodem 2.52 source)
+    or were used without providing a setup option for modification have been
+    added here, with some changes of my own to simplify operations when the
+    protocol is used in mailers.
+
+    Code-Changes by Robert Williamson, in consultation with Yves
+    Konigshofer.  Although Yves no longer has an Amiga, he was kind enough
+    to  spend many, many hours with me on the phone, discussing the various
+    problems  and  solutions  involved  in  producing  these libaraies.  My
+    thanks to him are heartfelt.
+
+    General:
+
+    A number of strings were not localized, corrected.
+
+    Only wb2.1+ versions supported
+    Removed  all  extra  makefiles  and  replaced  with  a general one using
+    macros.
+
+    Added  callbacks.a  -  Protection  of ALL registers used for callback
+    functions is restored.
+    
+    XPR 3 xpr_updstatus function is enabled, permitting notification
+    of transfer status for EACH file sent or received.
+
+    Changed most references to KSIZE as a defined constant to use local
+    variable v-Ksize instead.
+
+    Compiler DEFINE ZEDZAP causes certain code sections to be replaced with
+    xpr-friendly  versions  from  xprzedzap  source  or  new code inserted.
+    These  changes  should  be compatible with usage of the library in pure
+    Zmodem mode.
+
+    Note that set up Defaults are different with xprzedzap.library.
+
+    TN       No Text translation
+    OR       Overwrite Resume
+    B16      Buffer size 16KB 
+    F0       Frame size = filelength 
+    E30      Error count 30 
+    SN       Do not send full directory path  
+    RN       Do not use received full directory path  
+    AN       Disable Auto-activate mode  
+    DN       Do not Delete after sending  
+    KY       Keep partial files  
+    P""      Comm progrmas provides Path to use for received files  
+    M8192    Maximum packet size 8K 
+    C0       Set Link BPS Rate  
+    NY       Alow Send if there are no files  
+    QN       Disable DirectZap escape only CAN  
+    ZY       Enable FTN mode  
+
+    xprzmodem.library
+
+    TC       Comm Program Sets Text translation mode
+    ON       Overwrite No
+    B16      Buffer size 16 KB
+    F0       Frame size = filesize
+    E10      Error count 10
+    SN       Do not Send full directory path
+    RN       Do not use Received full directory path
+    AY       Enable Auto-activate mode
+    DN       Do not Delete after sending
+    KY       Keep partial files  
+    P""      Comm program sets Path to use for received files  
+    M1024    Set maximum packet size 1K
+    C0       Set Link BPS Rate  
+    NN       Do not Send if there are no files  
+    QN       Disble DirectZap escape only CAN  
+    FN       Disable FTN mode  
+
+    New Setup options: 
+
+    Z   - FTN mode
+    The Z option enables FTN operation, when Y, the following is in effect:
+        - RxTimeOut is restored to 600ms
+        - transfers start with blocksize specified in M option.
+        - serialbuffer is cleared before sending/recving.  In FTN
+          mode the turnaround from sending to receiveng (and vis-versa)
+          is quite fast, clearing the buffer avoids reading echos of our
+          own characters or leftovers from the previous transfer.
+
+    C<link bps>
+    Buffer  size,  and  cps  calculations  will  be based upon link rate if
+    passed  with  C<baud> option, otherwise they will be based upon LOCKED
+    bps.
+
+    N   - send no files mode (DirectZap,  ZedZip  and  ZedZap protocols)
+    It is permitted to have a session without sending or receiving files if
+    N  option is Y.  This is required with some protocols in FTN mode so as
+    not  to  generate a spurious failure after a mailer session.  This also
+    chnages EOF mode from sending CAN's to just sending ZFIN.
+        
+    Q   - DirectZap mode
+    Only ZDLE adn ZDLEE will be escaped is Q option is Y (DirectZap protocol)
+
+    Changes in status display:
+
+    XPR 2.001 support for dual-status windows added.
+
+    Protocol name displayed will be one of: 
+        Zmodem, 1K blocks standard, up to 8K, non-ftn mode
+        ZedZap, up to 8K Blocks based upon bps rate, ftn mode
+        ZedZip, 1k blocks , ftn mode
+        DirectZap, up to 8k blocks, minimum escaping, ftn mode
+
+    Added  localization  for  new  options.   These  are NOT translated for
+    german catalog, so that catalog has been removed from distribution.
+
+    During  batch  transfers,  Error  message  field is set to "None" when
+    starting to send or receive next file.
+
+ 3.2a (no change in Version number)
+    Corrected  DirectZap xfer failure problem
+    "Resuming" message was ALWAYS was being printed at start of xfer
+    if  (OR)  resume was enabled.  Now only printed if Starting position is
+    not 0.
+ 3.3
+    Finished dual-display support, tested with JamMail
+ 3.4
+    Protocol names were not being displayed correctly on receive.
+ 3.5 
+    Added setup option switch to enable/disable XPR2.001 extensions.
+    Default is NO for xprzmodem.library and Y for xprzedzap.library.
+3.51
+    Fixed  improper variable names in setup which caused unexpected results
+    with TERM.
+    History removed from Guide file
+    Merged xprzedzap.doc into Guide file
+    Catalog source now included in BOTH source and user archives

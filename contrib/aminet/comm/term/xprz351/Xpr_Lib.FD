@@ -1,0 +1,10 @@
+##base _XProtocolBase
+##bias 30
+##public
+XProtocolCleanup(io)(A0)
+XProtocolSetup(io)(A0)
+XProtocolSend(io)(A0)
+XProtocolReceive(io)(A0)
+XProtocolHostMon(io,serbuff,actual,maxsize)(A0,A1,D0,D1)
+XProtocolUserMon(io,serbuff,actual,maxsize)(A0,A1,D0,D1)
+##end

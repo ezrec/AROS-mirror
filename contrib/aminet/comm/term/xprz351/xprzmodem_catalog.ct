@@ -1,0 +1,249 @@
+## version $VER: xprzmodem.catalog 1.1 (XX.XX.XX)
+## codeset 0
+## language X
+;
+MSG_ZMODEM_OPTIONS
+
+; ZModem options:;
+MSG_TEXT_MODE
+
+; Text mode (Y,N,?,C):;
+MSG_OVERWRITE_MODE
+
+; Overwrite mode (Y,N,R,S):;
+MSG_IO_BUFFER_SIZE
+
+; I/O buffer size (KB):;
+MSG_FRAME_SIZE
+
+; Frame size (bytes):;
+MSG_ERROR_LIMIT
+
+; Error limit:;
+MSG_AUTO_ACTIVATE_RECEIVER
+
+; Auto-activate receiver:;
+MSG_DELETE_AFTER_SENDING
+
+; Delete after sending:;
+MSG_KEEP_PARTIAL_FILES
+
+; Keep partial files:;
+MSG_SEND_FULL_PATH
+
+; Send full path:;
+MSG_USE_RECEIVED_PATH
+
+; Use received path:;
+MSG_DEFAULT_RECEIVE_PATH
+
+; Default receive path:;
+MSG_MAXIMUM_BLOCK_SIZE
+
+; Maximum Block Size:;
+MSG_NO_XPR_FINFO
+
+;Can't Resume; xpr_finfo() not supported;
+MSG_SEND_NO_FILES
+
+;Send if No Files:;
+MSG_LINK_RATE
+
+;Link Rate:;
+MSG_ESCAPE_ONLY_ZCAN
+
+;Escape ZCAN only:;
+MSG_FTN_ZMODEM
+
+;FTN ZModem:;
+MSGS_XPR_EXT
+
+;Enable XPR 2.001 Extensions:;
+MSG_STARTUP_TIMEOUT
+
+;Set Startup Timeout (seconds):;
+MSG_INVALID_T_FLAG
+
+; Invalid T flag ignored; should be Y, N, ?, or C;
+MSG_INVALID_O_FLAG
+
+; Invalid O flag ignored; should be Y, N, R, or S;
+MSG_INVALID_A_FLAG
+
+; Invalid A flag ignored; should be Y or N;
+MSG_NO_DY_XPR_UNLINK
+
+; Can't use DY; xpr_unlink() not supported;
+MSG_INVALID_D_FLAG
+
+; Invalid D flag ignored; should be Y or N;
+MSG_NO_KN_XPR_UNLINK
+
+; Can't use KN; xpr_unlink() not supported;
+MSG_INVALID_K_FLAG
+
+; Invalid K flag ignored; should be Y or N;
+MSG_INVALID_S_FLAG
+
+; Invalid S flag ignored; should be Y or N;
+MSG_INVALID_R_FLAG
+
+; Invalid R flag ignored; should be Y or N;
+MSG_INVALID_N_FLAG
+
+;Invalid N Flag Ignored; Should Be Y Or N;
+
+MSG_INVALID_Q_FLAG
+
+;Invalid Q Flag Ignored; Should Be Y Or N;
+
+MSG_INVALID_Z_FLAG
+
+;Invalid Z Flag Ignored; Should Be Y Or N;
+MSG_INVALID_Y_FLAG
+
+;Invalid Y Flag Ignored; Should Be Y Or N;
+MSG_COMM_PROG_MISSING
+
+; Comm prog missing required function(s); see docs;
+MSG_NOT_ENOUGH_MEMORY
+
+; Not enough memory;
+MSG_UPLOAD_USER_ERROR
+
+; Upload cancelled or timed out;
+MSG_SKIPPED_DUE_TO_ERRORS
+
+; One or more files skipped due to errors;
+MSG_NO_FILES_MATCH_TEMPLATE
+
+; No files match template;
+MSG_NO_FILES_SPECIFIED
+
+;No files specified;
+MSG_NO_FILES_REQUIRED
+
+;No files required;
+MSG_CANT_OPEN_FILE
+
+; Can't open file; skipping;
+MSG_DELETING_FILE_AFTER_SEND
+
+; Deleting file after send;
+MSG_SENDING_TEXT_FILE
+
+; Sending text file...;
+MSG_SENDING_BINARY_FILE
+
+; Sending binary file...;
+MSG_SENDING_FILE
+
+; Sending file...;
+MSG_SKIP_COMMAND_RECEIVED
+
+; SKIP command received;
+MSG_TRANSFER_CANCELLED
+
+; Transfer cancelled;
+MSG_DONE
+
+; Done.;
+MSG_SEND_DONE
+
+;Finished Sending;
+MSG_RECV_DONE
+
+;Finished Receiving;
+MSG_RESUMING_SEND
+
+;Resuming send;
+MSG_RESUMING_RECV
+
+;Resuming receive;
+MSG_SENDING_EOF
+
+; Sending EOF;
+MSG_EOF_ACKNOWLEDGED
+
+; EOF acknowledged;
+MSG_RESENDING_FROM
+
+; Resending from;
+MSG_DOWNLOAD_USER_ERROR
+
+; Download cancelled or timed out;
+MSG_IGNORING_COMMAND
+
+; Ignoring command;
+MSG_DELETING_RECEIVED_FILE
+
+; Deleting partially received file;
+MSG_KEEPING_RECEIVED_FILE
+
+; Keeping partially received file;
+MSG_RETRIES_LEFT
+
+; retries left;
+MSG_BAD_EOF
+
+; Bad EOF; here=%ld, there=%ld;
+MSG_EOF_RECEIVED
+
+; EOF received; checking for next file;
+MSG_DATA_AT_BAD_POSITION
+
+; Data at bad position; here=%ld, there=%ld;
+MSG_INSUFFICIENT_DISK_SPACE
+
+; Insufficient disk space; need %ld bytes, have %ld;
+MSG_FILE_EXISTS
+
+; File already exists; skipping;
+MSG_RECEIVE_BINARY
+
+; Receiving binary file...;
+MSG_RECEIVE_TEXT
+
+; Receiving text file...;
+MSG_ERROR_WRITING_FILE
+
+; Error writing file; disk full?;
+MSG_BAD_DATA_PACKET_CRC_16
+
+; Bad data packet CRC-16\x20;
+MSG_SENDER_CANCELED
+
+; Sender canceled\x20;
+MSG_DATA_PACKET_TIMEOUT
+
+; Data packet timeout\x20;
+MSG_UNRECOG_DATA_PACKET
+
+; Unrecognizable data packet\x20;
+MSG_DATA_PACKET_TOO_LONG
+
+; Data packet too long\x20;
+MSG_BAD_DATA_PACKET_CRC_32
+
+; Bad data packet CRC-32\x20;
+MSG_HEADER_SEARCH_GARBAGE
+
+; Header search garbage count exceeded\x20;
+MSG_HEADER
+
+; header;
+MSG_ERROR
+
+; error;
+MSG_BAD_HEADER_CRC_16
+
+; Bad Header CRC-16\x20;
+MSG_BAD_HEADER_CRC_32
+
+; Bad Header CRC-32\x20;
+MSG_BAD_HEADER_CRC
+
+; Bad Header CRC\x20;
+MSG_BAD_ZMODEM_ESC_SEQ
+
+; Bad ZMODEM escape sequence\x20;
