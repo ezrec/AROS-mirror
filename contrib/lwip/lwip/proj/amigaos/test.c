@@ -1,4 +1,8 @@
 #include <stdio.h>
+#include <string.h>
+
+#define MYDEBUG
+#include "debug.h"
 
 #include "lwip/debug.h"
 
@@ -129,99 +133,16 @@ static void tcpip_init_done(void *arg)
 
 void start(void)
 {
-  struct MsgPort *port = CreateMsgPort();
-  if (port)
+  LIB_add();
+
+  while (1)
   {
-    port->mp_Node.ln_Name = "AROS TCP/IP Stack";
-    AddPort(port);
+    LONG sigs = Wait(4096);
 
-    LIB_add();
-
-    while (1)
-    {
-    	LONG sigs = Wait((1UL<<port->mp_SigBit)|4096);
-
-      /* This stuff is not really needed anymore */
-
-			if (sigs & (1UL<<port->mp_SigBit))
-			{
-				struct LibMsg *msg;
-				while ((msg = (struct LibMsg*)GetMsg(port)))
-				{
-					switch (msg->type)
-					{
-            case LIBMSG_ACCEPT:
-                 msg->retval = lwip_accept((long)msg->args[0], (struct sockaddr *)msg->args[1], (int *)msg->args[2]);
-								 break;
-
-            case LIBMSG_BIND:
-                 msg->retval = lwip_bind((long)msg->args[0], (struct sockaddr*)msg->args[1],(long)msg->args[2]);
-                 Printf("bind(%ld,0x%lx,%ld)=%ld\n",msg->args[0],msg->args[1],msg->args[2],msg->retval);
-								 break;
-
-            case LIBMSG_CLOSESOCKET:
-                 msg->retval = lwip_close((long)msg->args[0]);
-                 Printf("CloseSocket(%ld)=%ld\n",msg->args[0],msg->retval);
-								 break;
-
-            case LIBMSG_CONNECT:
-                 msg->retval = lwip_connect((long)msg->args[0], (struct sockaddr*)msg->args[1],(long)msg->args[2]);
-								 break;
-
-            case LIBMSG_GETPEERNAME:
-								 break;
-
-            case LIBMSG_GETSOCKNAME:
-								 break;
-
-            case LIBMSG_GETSOCKOPT:
-								 break;
-
-            case LIBMSG_IOCTLSOCKET:
-								 break;
-
-            case LIBMSG_LISTEN:
-                 msg->retval = lwip_listen((long)msg->args[0],(long)msg->args[1]);
-                 Printf("listen(%ld,%ld)=%ld\n",msg->args[0],msg->args[1],msg->retval);
-								 break;
-
-            case LIBMSG_RECV:
-                 msg->retval = lwip_recv((long)msg->args[0],(unsigned char*)msg->args[1],(long)msg->args[2],(long)msg->args[3]);
-								 break;
-
-            case LIBMSG_RECVFROM :
-                 msg->retval = lwip_recvfrom((long)msg->args[0], (unsigned char *)msg->args[1], (long)msg->args[2], (long)msg->args[3], (struct sockaddr *)msg->args[4], (int *)msg->args[5]);
-								 break;
-
-            case LIBMSG_SEND:
-                 msg->retval = lwip_send((long)msg->args[0],(unsigned char*)msg->args[1],(long)msg->args[2],(long)msg->args[3]);
-								 break;
-
-            case LIBMSG_SENDTO:
-                 msg->retval = lwip_sendto((long)msg->args[0],(unsigned char *)msg->args[1], (long)msg->args[2], (long)msg->args[3], (struct sockaddr *)msg->args[4], (long)msg->args[5]); 
-								 break;
-
-            case LIBMSG_SETSOCKOPT:
-								 break;
-
-            case LIBMSG_SHUTDOWN:
-								 break;
-
-            case LIBMSG_SOCKET:
-                 msg->retval = lwip_socket((long)msg->args[0],(long)msg->args[1],(long)msg->args[2]);
-                 Printf("socket(%ld,%ld,%ld)=%ld\n",msg->args[0],msg->args[1],msg->args[2],msg->retval);
-								 break;
-
-					}
-					ReplyMsg((struct Message*)msg);
-				}
-			}
-			if (sigs & 4096) break;
-    }
-
-    RemPort(port);
-    DeleteMsgPort(port);
+		if (sigs & 4096) break;
   }
+
+  LIB_remove();
 }
 
 void raw_recv_func(void *arg, struct raw_pcb *upcb, struct pbuf *p, struct ip_addr *addr)

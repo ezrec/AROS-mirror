@@ -153,6 +153,7 @@ extern void LIB_Inet_LnaOf(void);
 extern void LIB_Inet_NetOf(void);
 extern void LIB_Inet_MakeAddr(void);
 extern void LIB_inet_network(void);
+extern void LIB_gethostbyname(void);
 extern void LIB_SocketBaseTagList(void); /* -294 */
 
 static void *function_array[] =
@@ -191,6 +192,7 @@ static void *function_array[] =
   LIB_Inet_NetOf,          /* -192 */
   LIB_Inet_MakeAddr,       /* -198 */
   LIB_inet_network,        /* -204 */
+  LIB_gethostbyname,       /* -210 */
   (void*)~0,
 };
 
