@@ -16,9 +16,6 @@ from HTMLgen import Href
 # page (second parameter to Href()) to Page() in the parameter
 # linkBoxItem. This will then "open" this item (ie. the subitems
 # will be shown).
-# FIXME Most pages are much bigger then the link box, therefore, we
-# could always open all items. That would allow the user to navigate
-# much more quickly.
 mainLinks = (
     ( Href ('index.html', 'NEWS'),
 	Href ('status.html', 'Status'),
