@@ -88,12 +88,15 @@ $(OBJDIR)/.build_setup_check:
 	echo '#include "md-i386-gcc/support.c"' >md-support.c
 	touch $(OBJDIR)/.build_setup_check
 
-clean::
-	rm -f cpudefs.* cpustbl.* cputbl.h blitfunc.* blittable.* blit.h \
+#MM uae-clean : uae-od-aros-clean
+uae-clean :
+	$(RM) cpudefs.* cpustbl.* cputbl.h blitfunc.* blittable.* blit.h \
 	      cpufast.s cpuemu.c cpuopti genblitter build68k gencpu\
               sd-sound.c sd-sound.h od-joy.c target.h md-fpp.h md-support.c\
-	      machdep osdep threaddep sounddep
+	      machdep osdep threaddep sounddep $(OBJDIR)
 
+
+clean:: uae-clean
 
 $(OBJDIR)/%.o: %.s
 	%assemble_q
