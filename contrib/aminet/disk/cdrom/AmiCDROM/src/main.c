@@ -26,12 +26,18 @@
 
 #include <clib/alib_protos.h>
 #include <clib/dos_protos.h>
-#include <clib/exec_protos.h>
+
+#include <proto/exec.h>
+
+#ifdef __MORPHOS__
+#include <emul/emulregs.h>
+#endif
 
 #include "cdrom.h"
 #include "iso9660.h"
 #include "rock.h"
 #include "hfs.h"
+#include "globals.h"
 
 #ifdef LATTICE
 #include <pragmas/dos_pragmas.h>
@@ -48,18 +54,15 @@ void dbprintf (char *p_dummy, ...)
 }
 #endif
 
-CDROM *cd = NULL;
-char g_the_device[80];
-int g_the_unit;
-int g_trackdisk = 0;
-t_ulong g_memory_type = MEMF_CHIP;
+struct Globals glob;
+struct Globals *global = &glob;
 
 struct UtilityBase *UtilityBase;
 
 void Cleanup (void)
 {
-  if (cd)
-    Cleanup_CDROM (cd);
+  if (global->g_cd)
+    Cleanup_CDROM (global->g_cd);
 
   if (UtilityBase)
     CloseLibrary ((struct Library*) UtilityBase);
@@ -352,7 +355,7 @@ void Check_Protocol (CDROM *p_cd)
     printf ("High Sierra protocol\n");
     break;
   default:
-    printf ("Unknown protocol, iso_errno = %d\n", iso_errno);
+    printf ("Unknown protocol, iso_errno = %d\n", global->iso_errno);
     break;
   }
 }
@@ -367,7 +370,7 @@ void Try_To_Open (CDROM *p_cd, char *p_directory, char *p_name)
   char pathname[256];
 
   if (!(vol = Open_Volume (p_cd, 1))) {
-    fprintf (stderr, "cannot open volume; iso_errno = %d\n", iso_errno);
+    fprintf (stderr, "cannot open volume; iso_errno = %d\n", global->iso_errno);
     exit (1);
   }
 
@@ -387,7 +390,7 @@ void Try_To_Open (CDROM *p_cd, char *p_directory, char *p_name)
   } else {
     if (!(home = Open_Top_Level_Directory (vol))) {
       fprintf (stderr, "cannot open home directory;"
-                       " iso_errno = %d\n", iso_errno);
+                       " iso_errno = %d\n", global->iso_errno);
       Close_Volume (vol);
       exit (1);
     }
@@ -424,14 +427,14 @@ void Try_To_Open (CDROM *p_cd, char *p_directory, char *p_name)
 	        Location (parent));
         Close_Object (parent);
       } else
-        printf ("parent not found, iso_errno = %d\n", iso_errno);
+        printf ("parent not found, iso_errno = %d\n", global->iso_errno);
     }
     Close_Object (obj);
   } else {
-    if (iso_errno == ISOERR_NOT_FOUND)
+    if (global->iso_errno == ISOERR_NOT_FOUND)
       printf ("Object '%s' not found\n", p_name);
     else
-      printf ("Object '%s': iso_errno = %d\n", p_name, iso_errno);
+      printf ("Object '%s': iso_errno = %d\n", p_name, global->iso_errno);
   }
 
   if (top)
@@ -450,13 +453,13 @@ void Show_File_Contents (CDROM *p_cd, char *p_name)
   int cnt;
 
   if (!(vol = Open_Volume (p_cd, 1))) {
-    fprintf (stderr, "cannot open volume; iso_errno = %d\n", iso_errno);
+    fprintf (stderr, "cannot open volume; iso_errno = %d\n", global->iso_errno);
     exit (1);
   }
 
   if (!(home = Open_Top_Level_Directory (vol))) {
     fprintf (stderr, "cannot open top level directory;"
-                     " iso_errno = %d\n", iso_errno);
+                     " iso_errno = %d\n", global->iso_errno);
     Close_Volume (vol);
     exit (1);
   }
@@ -475,7 +478,7 @@ void Show_File_Contents (CDROM *p_cd, char *p_name)
 
     Close_Object (obj);
   } else {
-    fprintf (stderr, "Object '%s': iso_errno = %d\n", p_name, iso_errno);
+    fprintf (stderr, "Object '%s': iso_errno = %d\n", p_name, global->iso_errno);
   }
 
   Close_Object (home);
@@ -596,7 +599,7 @@ void Show_Subdirectory (CDROM_OBJ *p_home, char *p_name, int p_long_info,
 
     Close_Object (obj);
   } else {
-    fprintf (stderr, "Object '%s': iso_errno = %d\n", p_name, iso_errno);
+    fprintf (stderr, "Object '%s': iso_errno = %d\n", p_name, global->iso_errno);
     return;
   }
 
@@ -626,7 +629,7 @@ void Show_Subdirectory (CDROM_OBJ *p_home, char *p_name, int p_long_info,
       }
       Close_Object (obj);
     } else {
-      fprintf (stderr, "Object '%s': iso_errno = %d\n", p_name, iso_errno);
+      fprintf (stderr, "Object '%s': iso_errno = %d\n", p_name, global->iso_errno);
     }
   }
 
@@ -642,13 +645,13 @@ void Show_Dir_Contents (CDROM *p_cd, char *p_name, int p_rock_ridge,
   t_bool recursive = (strchr (p_options, 'r') != NULL);
 
   if (!(vol = Open_Volume (p_cd, p_rock_ridge))) {
-    fprintf (stderr, "cannot open volume; iso_errno = %d\n", iso_errno);
+    fprintf (stderr, "cannot open volume; iso_errno = %d\n", global->iso_errno);
     exit (1);
   }
 
   if (!(home = Open_Top_Level_Directory (vol))) {
     fprintf (stderr, "cannot open top level directory;"
-                     " iso_errno = %d\n", iso_errno);
+                     " iso_errno = %d\n", global->iso_errno);
     Close_Volume (vol);
     exit (1);
   }
@@ -700,15 +703,15 @@ int Get_Device_And_Unit (void)
   int len;
   char buf[10];
   
-  len = GetVar ((UBYTE *) "CDROM_DEVICE", (UBYTE *) g_the_device,
-  		sizeof (g_the_device), 0);
+  len = GetVar ((UBYTE *) "CDROM_DEVICE", (UBYTE *) global->g_device,
+  		sizeof (global->g_device), 0);
   if (len < 0)
     return 0;
-  if (len >= sizeof (g_the_device)) {
+  if (len >= sizeof (global->g_device)) {
     fprintf (stderr, "CDROM_DEVICE too long\n");
     exit (1);
   }
-  g_the_device[len] = 0;
+  global->g_device[len] = 0;
   
   len = GetVar ((UBYTE *) "CDROM_UNIT", (UBYTE *) buf,
   		sizeof (buf), 0);
@@ -719,18 +722,18 @@ int Get_Device_And_Unit (void)
     exit (1);
   }
   buf[len] = 0;
-  g_the_unit = atoi (buf);
+  global->g_unit = atoi (buf);
   
   if (GetVar ((UBYTE *) "CDROM_TRACKDISK", (UBYTE *) buf,
       sizeof (buf), 0) > 0) {
     fprintf (stderr, "using trackdisk\n");
-    g_trackdisk = 1;
+    global->g_trackdisk = 1;
   }
 
   if (GetVar ((UBYTE *) "CDROM_FASTMEM", (UBYTE *) buf,
       sizeof (buf), 0) > 0) {
     fprintf (stderr, "using fastmem\n");
-    g_memory_type = MEMF_FAST;
+    global->g_memory_type = MEMF_FAST;
   }
 
   return 1;
@@ -954,6 +957,11 @@ void Test_Trackdisk_Device (CDROM *p_cd)
 
 void main (int argc, char *argv[])
 {
+  global->g_cd = NULL;
+  global->g_trackdisk = 0;
+  global->g_memory_type = MEMF_CHIP;
+  global->SysBase = SysBase;
+
   atexit (Cleanup);
 
   if (argc < 2)
@@ -991,58 +999,58 @@ void main (int argc, char *argv[])
   case 'j':
   case 'x':
   case 'z':
-    g_ignore_blocklength = TRUE;
+    global->g_ignore_blocklength = TRUE;
   }
 
-  cd = Open_CDROM (g_the_device, g_the_unit, g_trackdisk, g_memory_type,
+  global->g_cd = Open_CDROM (global->g_device, global->g_unit, global->g_trackdisk, global->g_memory_type,
   		   STD_BUFFERS, FILE_BUFFERS);
-  if (!cd) {
-    fprintf (stderr, "cannot open CDROM, error code = %d\n", g_cdrom_errno);
+  if (!global->g_cd) {
+    fprintf (stderr, "cannot open CDROM, error code = %d\n", global->g_cdrom_errno);
     exit (1);
   }
 
   if (argv[1][0] == 'a' && argc == 2)
-    Show_Drive_Information (cd);
+    Show_Drive_Information (global->g_cd);
   else if (argv[1][0] == 'b' && argc == 2)
-    Show_Table_Of_Contents (cd);
+    Show_Table_Of_Contents (global->g_cd);
   else if (argv[1][0] == 'c' && argc == 3)
-    Show_File_Contents (cd, argv[2]);
+    Show_File_Contents (global->g_cd, argv[2]);
   else if (argv[1][0] == 'd' && argc == 3)
-    Show_Dir_Contents (cd, argv[2], 0, argv[1]+1);
+    Show_Dir_Contents (global->g_cd, argv[2], 0, argv[1]+1);
   else if (argv[1][0] == 'e' && argc == 3)
-    Show_Dir_Contents (cd, argv[2], 1, argv[1]+1);
+    Show_Dir_Contents (global->g_cd, argv[2], 1, argv[1]+1);
   else if (argv[1][0] == 'f' && argc == 4)
-    Try_To_Open (cd, argv[2], argv[3]);
+    Try_To_Open (global->g_cd, argv[2], argv[3]);
   else if (argv[1][0] == 'i')
-    Check_Protocol (cd);
+    Check_Protocol (global->g_cd);
   else if (argv[1][0] == 'j' && argc == 3)
-    Play_Audio (cd, atoi (argv[2]));
+    Play_Audio (global->g_cd, atoi (argv[2]));
   else if (argv[1][0] == 'l' && argc == 2)
-    Find_Offset_Of_Last_Session (cd);
+    Find_Offset_Of_Last_Session (global->g_cd);
   else if (argv[1][0] == 'm' && argc == 3)
-    Show_Catalog_Node (cd, atoi (argv[2]));
+    Show_Catalog_Node (global->g_cd, atoi (argv[2]));
   else if (argv[1][0] == 'o' && argc == 3)
-    Try_To_Open (cd, NULL, argv[2]);
+    Try_To_Open (global->g_cd, NULL, argv[2]);
   else if (argv[1][0] == 'r')
-    Show_Root_Directory (cd);
+    Show_Root_Directory (global->g_cd);
   else if (argv[1][0] == 's' && argc == 3)
-    Show_Sectors (cd, atoi (argv[2]), 1);
+    Show_Sectors (global->g_cd, atoi (argv[2]), 1);
   else if (argv[1][0] == 's' && argc == 4)
-    Show_Sectors (cd, atoi (argv[2]), atoi (argv[3]));
+    Show_Sectors (global->g_cd, atoi (argv[2]), atoi (argv[3]));
   else if (argv[1][0] == 't' && argc == 3)
-    Try_To_Open (cd, (char *) -1, argv[2]);
+    Try_To_Open (global->g_cd, (char *) -1, argv[2]);
   else if (argv[1][0] == 'v')
-    Show_Primary_Volume_Descriptor (cd);
+    Show_Primary_Volume_Descriptor (global->g_cd);
   else if (argv[1][0] == 'x' && argc == 3)
-    Select_Mode (cd, atoi (argv[2]), 2048);
+    Select_Mode (global->g_cd, atoi (argv[2]), 2048);
   else if (argv[1][0] == 'x' && argc == 4)
-    Select_Mode (cd, atoi (argv[2]), atoi (argv[3]));
+    Select_Mode (global->g_cd, atoi (argv[2]), atoi (argv[3]));
   else if (argv[1][0] == 'y' && argc == 3)
-    Find_Block_Starting_With (cd, atoi (argv[2]));
+    Find_Block_Starting_With (global->g_cd, atoi (argv[2]));
   else if (argv[1][0] == 'z')
-    Send_Test_Unit_Ready (cd);
+    Send_Test_Unit_Ready (global->g_cd);
   else if (argv[1][0] == 'T')
-    Test_Trackdisk_Device (cd);
+    Test_Trackdisk_Device (global->g_cd);
   else
     Usage ();
 

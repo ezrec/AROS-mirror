@@ -18,7 +18,9 @@
  */
 
 #include <proto/exec.h>
+#ifdef __AROS__
 #include <aros/debug.h>
+#endif
 #include <exec/memory.h>
 #include <stdlib.h>
 #include <string.h>

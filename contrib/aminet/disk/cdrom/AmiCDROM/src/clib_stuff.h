@@ -1,7 +1,9 @@
 #ifndef CLIB_STUFF_H
 #define CLIB_STUFF_H
 
+#ifdef __AROS__
 #include "dos/bptr.h"
+#endif
 
 #if 0
 char *StrCpy(char *, char *);

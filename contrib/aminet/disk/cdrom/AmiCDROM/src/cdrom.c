@@ -43,7 +43,9 @@
 
 #include <proto/alib.h>
 #include <proto/exec.h>
+#ifdef __AROS__
 #include <aros/debug.h>
+#endif
 #include <devices/trackdisk.h>
 #include <limits.h>
 #include <string.h>
@@ -102,10 +104,11 @@ CDROM *Open_CDROM
 CDROM *cd;
 int i;
 int bufs = p_std_buffers + p_file_buffers + 1;
-  
+
 	global->g_cdrom_errno = CDROMERR_NO_MEMORY;
 
 	cd = AllocMem (sizeof (CDROM), MEMF_PUBLIC | MEMF_CLEAR | p_memory_type);
+
 	if (!cd)
 		return NULL;
 
@@ -113,7 +116,7 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 	cd->file_buffers = p_file_buffers;
 
 	cd->buffer_data = AllocMem (SCSI_BUFSIZE * bufs + 15, MEMF_PUBLIC | p_memory_type);
-	if (!cd->buffer_data)
+        if (!cd->buffer_data)
 	{
 		Cleanup_CDROM(cd);
 		return NULL;
@@ -125,7 +128,7 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 		Cleanup_CDROM(cd);
 		return NULL;
 	}
-  
+
 	cd->current_sectors = AllocMem (sizeof (long) * bufs, MEMF_PUBLIC);
 	if (!cd->current_sectors)
 	{
@@ -139,7 +142,7 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 		Cleanup_CDROM(cd);
 		return NULL;
 	}
-  
+
 	/*
 		make the buffer quad-word aligned. This greatly helps 
 		performance on '040-powered systems with DMA SCSI

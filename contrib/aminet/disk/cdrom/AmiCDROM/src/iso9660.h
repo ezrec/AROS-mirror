@@ -4,7 +4,9 @@
 #define _ISO9660_H_
 
 #include "generic.h"
+#ifdef __AROS__
 #include <aros/macros.h>
+#endif
 
 typedef struct directory_record {
   unsigned char         length;

@@ -24,7 +24,9 @@
 
 #include <proto/exec.h>
 #include <proto/utility.h>
+#ifdef __AROS__
 #include <aros/debug.h>
+#endif
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <stdlib.h>

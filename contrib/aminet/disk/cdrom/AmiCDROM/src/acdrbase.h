@@ -1,7 +1,9 @@
 #ifndef ACDRBASE_H
 #define ACDRBASE_H
 
+#ifdef __AROS__
 #include <dos/bptr.h>
+#endif
 #include <exec/execbase.h>
 #include <exec/devices.h>
 #include <intuition/intuitionbase.h>
