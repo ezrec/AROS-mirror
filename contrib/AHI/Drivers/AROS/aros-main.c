@@ -80,9 +80,17 @@ _AHIsub_AllocAudio( struct TagItem*         taglist,
     return AHISF_ERROR;
   }
 
+  // 32 fragments times 256 bytes each
+    
+  if( ! OSS_SetFragmentSize( 32, 8 ) )
+  {
+    Req( "OSS device does not support a fragment size of 1024." );
+    return AHIE_UNKNOWN;
+  }
+  
   if( ! OSS_FormatSupported_S16LE() || ! OSS_SetFormat_S16LE() )
   {
-    Req( "OSS device does not support 16 little endian samples!" );
+    Req( "OSS device does not support 16 bit little endian samples!" );
     return AHISF_ERROR;
   }
 
@@ -169,13 +177,16 @@ _AHIsub_Start( ULONG                   flags,
 
   if(flags & AHISF_PLAY)
   {
+    int freq = AudioCtrl->ahiac_MixFreq;
+
     struct TagItem proctags[] =
       {
 	{ NP_Entry,     (ULONG) &slaveentry },
 	{ NP_Name,      (ULONG) LibName     },
-	{ NP_Priority,  -1                  },
+	{ NP_Priority,  127                 },
 	{ TAG_DONE,     0                   }
       };
+
     
     dd->mixbuffer = AllocVec( AudioCtrl->ahiac_BuffSize,
 			      MEMF_ANY | MEMF_PUBLIC );
@@ -207,11 +218,29 @@ _AHIsub_Start( ULONG                   flags,
       return AHIE_NOMEM;                 // Well, out of memory or whatever...
     }
 
+    // Since OSS kind of sucks, we have to close and reopen it here ...
+    
+    OSS_Close();
+
+    if( ! OSS_Open( "/dev/dsp", FALSE, TRUE, FALSE ) )
+    {
+      Req( "OSS device would not reopen." );
+      return AHIE_UNKNOWN;
+    }
+
+    // 32 fragments times 256 bytes each
+    
+    if( ! OSS_SetFragmentSize( 32, 8 ) )
+    {
+      Req( "OSS device does not support a fragment size of 1024." );
+      return AHIE_UNKNOWN;
+    }
+
     switch( AudioCtrl->ahiac_BuffType )
     {
       case AHIST_M16S:
       case AHIST_M32S:
-	if( ! OSS_SetNumChannels( 1 ) )
+	if( ! OSS_SetMono() )
 	{
 	  Req( "OSS device does not support mono samples." );
 	  return AHIE_UNKNOWN;
@@ -220,7 +249,7 @@ _AHIsub_Start( ULONG                   flags,
 
       case AHIST_S16S:
       case AHIST_S32S:
-	if( ! OSS_SetNumChannels( 2 ) )
+	if( ! OSS_SetStereo() )
 	{
 	  Req( "OSS device does not support stereo samples." );
 	  return AHIE_UNKNOWN;
@@ -231,6 +260,18 @@ _AHIsub_Start( ULONG                   flags,
 	Req( "Unknown sample format requested: %08lx",
 	     AudioCtrl->ahiac_BuffType );
 	return AHIE_UNKNOWN;
+    }
+  
+    if( ! OSS_SetFormat_S16LE() )
+    {
+      Req( "OSS device does not support 16 bit little endian samples!" );
+      return AHIE_UNKNOWN;
+    }
+
+    if( ! OSS_SetWriteRate( freq, &freq ) )
+    {
+      Req( "OSS device does not support the requested frequency." );
+      return AHIE_UNKNOWN;
     }
   }
 
