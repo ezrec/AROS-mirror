@@ -1,3 +1,5 @@
+#include <proto/gtlayout.h>
+
 BOOL OpenLibs(void);
 void CloseLibs(void);
 void NewMessageDialog(void);
