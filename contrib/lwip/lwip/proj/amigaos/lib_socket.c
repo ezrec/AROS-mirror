@@ -2,20 +2,21 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id$
+    $Id: lib_socket.c,v 1.1 2002/07/11 17:59:24 sebauer Exp $
 */
 
 #include <exec/types.h>
 
 #include "socket_intern.h"
+#include "calling.h"
 
 /*****************************************************************************
 
     NAME */
 #ifndef __AROS
-__asm APTR LIB_socket(register __d0 long domain, register __d1 long type, register __d2 long protocol)
+__asm int LIB_socket(register __d0 long domain, register __d1 long type, register __d2 long protocol)
 #else
-	AROS_LH3(APTR, LIB_socket,
+	AROS_LH3(int, LIB_socket,
 
 /*  SYNOPSIS */
 	AROS_LHA(LONG, domain, D0),
@@ -50,7 +51,7 @@ __asm APTR LIB_socket(register __d0 long domain, register __d1 long type, regist
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
-    return -1;
+    return CallStackFunction(SOCKB(SocketBase), LIBMSG_SOCKET, 3, domain, type, protocol);
 
     AROS_LIBFUNC_EXIT
 

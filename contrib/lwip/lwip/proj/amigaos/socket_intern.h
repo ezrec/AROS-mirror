@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id$
+    $Id: socket_intern.h,v 1.1 2002/07/11 17:59:24 sebauer Exp $
 */
 
 #ifndef MUIMASTER_INTERN_H
@@ -37,8 +37,10 @@
 
 #else
 
+#include <dos.h>
+
 #define AROS_LIBFUNC_INIT
-#define AROS_LIBBASE_EXT_DECL(a,b) extern a b;
+#define AROS_LIBBASE_EXT_DECL(a,b) a b = (struct Library*)getreg(REG_A6);
 #define AROS_LIBFUNC_EXIT
 
 #endif
@@ -72,14 +74,13 @@ struct SocketBase_intern
     struct ExecBase		*sysbase;
     BPTR			seglist;
 
-    struct Process *process;
-    struct MsgPort *port;
+    struct MsgPort *stack_port;
 };
 
 /****************************************************************************************/
 
 #undef SOCKB
-#define SOCKMB(b)	((struct ScoketBase_intern *)b)
+#define SOCKB(b)	((struct SocketBase_intern *)b)
 
 #ifdef _AROS
 

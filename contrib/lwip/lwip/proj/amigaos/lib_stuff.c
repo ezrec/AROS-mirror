@@ -2,6 +2,9 @@
 
 #include "socket_intern.h"
 
+#define MYDEBUG
+#include "debug.h"
+
 __asm struct SocketBase_intern *LIB_init(register __d0 struct SocketBase_intern *SocketBase, register __a0 ULONG seglist, register __a6 struct ExecBase *sysbase)
 {
   SocketBase->sysbase = sysbase;
@@ -11,6 +14,12 @@ __asm struct SocketBase_intern *LIB_init(register __d0 struct SocketBase_intern 
   SocketBase->library.lib_Version = 1;
   SocketBase->library.lib_Revision = 0;
   SocketBase->library.lib_IdString = "bsdsocket.library";
+  if (!(SocketBase->stack_port = FindPort("AROS TCP/IP Stack")))
+  {
+  	/* TODO: Free the lib base */
+  	return NULL;
+  }
+  D(bug("bsdsocket.library: Init succesfull\n"));
   return SocketBase;
 }
 

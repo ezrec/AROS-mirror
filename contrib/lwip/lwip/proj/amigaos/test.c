@@ -23,6 +23,7 @@
 /* ----------------------------------------------- */
 
 #include "lib_stuff.h"
+#include "calling.h"
 
 /* ----------------------------------------------- */
 
@@ -107,8 +108,87 @@ static void tcpip_init_done(void *arg)
   sys_sem_signal(*sem);
 }
 
-void test(void)
+void start(void)
 {
+  struct MsgPort *port = CreateMsgPort();
+  if (port)
+  {
+    port->mp_Node.ln_Name = "AROS TCP/IP Stack";
+    AddPort(port);
+
+    LIB_add();
+
+    while (1)
+    {
+    	LONG sigs = Wait((1UL<<port->mp_SigBit)|4096);
+
+			if (sigs & (1UL<<port->mp_SigBit))
+			{
+				struct LibMsg *msg;
+				while ((msg = (struct LibMsg*)GetMsg(port)))
+				{
+					switch (msg->type)
+					{
+            case LIBMSG_ACCEPT:
+								 break;
+
+            case LIBMSG_BIND:
+								 break;
+
+            case LIBMSG_CLOSESOCKET:
+                 msg->retval = lwip_close((long)msg->args[0]);
+								 break;
+
+            case LIBMSG_CONNECT:
+								 break;
+
+            case LIBMSG_GETPEERNAME:
+								 break;
+
+            case LIBMSG_GETSOCKNAME:
+								 break;
+
+            case LIBMSG_GETSOCKOPT:
+								 break;
+
+            case LIBMSG_IOCTLSOCKET:
+								 break;
+
+            case LIBMSG_LISTEN:
+								 break;
+
+            case LIBMSG_RECV :
+								 break;
+
+            case LIBMSG_RECVFROM :
+								 break;
+
+            case LIBMSG_SEND :
+								 break;
+
+            case LIBMSG_SENDIO :
+								 break;
+
+            case LIBMSG_SETSOCKOPT :
+								 break;
+
+            case LIBMSG_SHUTDOWN :
+								 break;
+
+            case LIBMSG_SOCKET:
+                 msg->retval = lwip_socket((long)msg->args[0],(long)msg->args[1],(long)msg->args[2]);
+								 break;
+
+					}
+					ReplyMsg((struct Message*)msg);
+				}
+			}
+			if (sigs & 4096) break;
+    }
+
+    RemPort(port);
+    DeleteMsgPort(port);
+  }
 }
 
 void main(void)
@@ -149,10 +229,8 @@ void main(void)
     netif_add(&ipaddr, &netmask, &gw, loopif_init, tcpip_input);
   } 
 
-  LIB_add();
-  
-  test();
+  start();
 
-//  server_init();
-  Wait(4096);
+  /* TODO: If the program would be finished it would crash */
+  Wait(4069);
 }
