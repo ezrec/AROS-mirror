@@ -43,7 +43,9 @@ extern struct FMConfig *fmconfig;
 extern struct TextFont *txtshowfont;
 extern struct FMMain fmmain;
 
-#ifndef AROS
+#ifdef AROS
+WORD hexconvert(UBYTE*,UBYTE*,WORD,WORD);
+#else
 WORD __asm hexconvert(register __a0 UBYTE*,register __a1 UBYTE*,register __d0 WORD,register __d1 WORD);
 #endif
 

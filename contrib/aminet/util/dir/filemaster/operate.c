@@ -54,7 +54,11 @@ extern UBYTE hsparwed[];
 WORD format(struct FMList*,struct FMNode*,UBYTE*,struct CMenuConfig *cmc);
 WORD openicon(struct FMList*);
 WORD diskio(struct FMList*,struct IOStdReq*);
-//void __asm bootsum(register __a0 UBYTE *);
+#ifdef _AROS
+void bootsum(UBYTE *);
+#else
+void __asm bootsum(register __a0 UBYTE *);
+#endif
 void drives(struct FMList*);
 
 static ULONG bootblock[]=

@@ -143,7 +143,9 @@ void checkblocks(struct Edit*,WORD);
 void freeedit(struct Edit*);
 void limitblocks(struct Edit*,WORD,WORD);
 
-#ifndef AROS
+#ifdef AROS
+WORD hexconvert(UBYTE*,UBYTE*,WORD,WORD);
+#else
 WORD __asm hexconvert(register __a0 UBYTE*,register __a1 UBYTE*,register __d0 WORD,register __d1 WORD);
 #endif
 
@@ -155,7 +157,9 @@ WORD diskio(struct FMList*,struct IOStdReq*);
 WORD finddevice(BPTR,struct DosList**,struct DosList**);
 void doborder(WORD*,struct Border*,struct Border*,WORD*,struct Border*,struct Border*,WORD,WORD);
 
-#ifndef AROS
+#ifdef AROS
+ULONG checksum(UBYTE *,LONG);
+#else
 ULONG __asm checksum(register __a0 UBYTE *,register __d0 LONG);
 #endif
 
@@ -1043,7 +1047,6 @@ fmmessage(edit->list);
 return(1);
 break;
 case 1:
-#ifndef AROS
 if(checksum(edit->buffer,edit->blocklen)) {
         if(requestmsg(edit->list->workname,MSG_YES,MSG_NO,MSG_FDEDIT_CALCCHECKSUM)) {
                 *((ULONG*)&edit->buffer[4*5])=0;
@@ -1051,15 +1054,6 @@ if(checksum(edit->buffer,edit->blocklen)) {
                 editoutput(edit);
         }
 }
-#else
-if(CalcChecksum(edit->buffer,edit->blocklen)) {
-	if(requestmsg(edit->list->workname,MSG_YES,MSG_NO,MSG_FDEDIT_CALCCHECKSUM)) {
-		*((ULONG*)&edit->buffer[4*5])=0;
-		*((ULONG*)&edit->buffer[4*5])=-CalcChecksum(edit->buffer,edit->blocklen);
-		editoutput(edit);
-	}
-}
-#endif
 edit->ioreq->io_Command=CMD_WRITE;
 edit->ioreq->io_Data=edit->buffer;
 edit->ioreq->io_Length=edit->blocklen;
@@ -1153,13 +1147,8 @@ cnt[0]=0;
 
 if(edit->mode>=0) sformat(cnt,"%03.3d %s",edit->cursoroffset+edit->screenoffset,aschex);
 
-#ifndef AROS
 sformatmsg(vara,MSG_FDEDIT_DISKINFO1,checksum(edit->buffer,edit->blocklen)?'-':'+',getstring(dtype),edit->screenoffset,cnt);
 fittext(fmmain.rp,vara,-1,edit->xoffsetasc-1,edit->infoliney+1,edit->ascwidth,0);
-#else
-sformatmsg(vara,MSG_FDEDIT_DISKINFO1,CalcChecksum(edit->buffer,edit->blocklen)?'-':'+',getstring(dtype),edit->screenoffset,cnt);
-fittext(fmmain.rp,vara,-1,edit->xoffsetasc-1,edit->infoliney+1,edit->ascwidth,0);
-#endif
 
 if(edit->changed) fmmessage(list);
 edit->changed=0;

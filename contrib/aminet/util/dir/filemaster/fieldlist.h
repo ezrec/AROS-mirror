@@ -96,7 +96,7 @@ STATIC void __saveds __asm SetFLAttr(register __a0 FLD *fld, register __a1 struc
 	/*
 	 *	Scan attribute list.
 	 */
-	while ( tag = NextTagItem( &tstate )) {
+	while ( (tag = NextTagItem( (const struct TagItem **)&tstate ))) {
 		switch ( tag->ti_Tag ) {
 
 			case	FL_AcceptDrop0:
@@ -276,14 +276,14 @@ WORD cnt1;
 				 *	not sortable. We add them sorted when we are
 				 *	sortable.
 				 */
-				if ( fld->fld_SortDrops == FALSE ) DoMethod( obj, LVM_INSERTSINGLE, NULL, spot, entry, LVASF_SELECT );
-				else				   DoMethod( obj, LVM_ADDSINGLE, NULL, entry, LVAP_SORTED, LVASF_SELECT );
+				if ( fld->fld_SortDrops == FALSE ) DoMethod( obj, LVM_INSERTSINGLE, NULL, spot, (IPTR)entry, LVASF_SELECT );
+				else				   DoMethod( obj, LVM_ADDSINGLE, NULL, (IPTR)entry, LVAP_SORTED, LVASF_SELECT );
 
 				/*
 				 *	Remove it from the dropped object.
 				 */
 				fld2=(FLD*)INST_DATA(cl,DROP(msg)->bmd_Source);
-				if(fld2->fld_RemoveOld) DoMethod( DROP( msg )->bmd_Source, LVM_REMENTRY, NULL, entry );
+				if(fld2->fld_RemoveOld) DoMethod( DROP( msg )->bmd_Source, LVM_REMENTRY, NULL, (IPTR)entry );
 			}
 
 			/*
