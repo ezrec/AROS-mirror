@@ -5,6 +5,15 @@ LIB := freetype1
 
 FILESDIR := \
       arch/amigaos/freetype \
+      arch/amigaos/ttfglyphengine \
+      arch/amigaos/glyph \
+      arch/amigaos/kerning \
+      arch/amigaos/face \
+      arch/amigaos/openengine \
+      arch/amigaos/closeengine \
+      arch/amigaos/obtaininfoa \
+      arch/amigaos/setinfoa \
+      arch/amigaos/releaseinfoa \
       extend/ftxcmap \
       extend/ftxerr18 \
       extend/ftxgasp \
@@ -30,7 +39,9 @@ USER_INCLUDES := -I. -Iarch/amigaos -I$(AROS_INCLUDES)/freetype1
 %make_linklib_setup mmake=contrib-freetype1-linklib
 %make_linklib mmake=contrib-freetype1-linklib
 
-%build_module mmake=contrib-freetype1-module modname=freetype1 modtype=library files="$(FILES) freetype1_init" linklibname=freetype1_shared uselibs=arosc_shared
+%build_module mmake=contrib-freetype1-module modname=freetype1 modtype=library \
+    files="$(FILES) freetype1_init" linklibname=freetype1_shared \
+    uselibs="arosc_shared amiga"
 
 INCLUDE_FILES = freetype.h fterrid.h ftnameid.h
 
