@@ -1,12 +1,13 @@
-Common subdirectories: which-2.16/tilde and which-2.16-aros/tilde
-diff -u which-2.16/which.c which-2.16-aros/which.c
---- which-2.16/which.c  Thu Sep 11 20:58:49 2003
-+++ which-2.16-aros/which.c     Sat Apr 24 02:46:02 2004
-@@ -673,3 +673,7 @@
-   return ptr;
- }
- #endif /* NEED_XMALLOC */
-+int isspace(char sp) {
-+return(0);
-+}
-+
+diff -r -u which-2.16/which.c which-2.16-aros/which.c
+--- which-2.16/which.c	Thu Sep 11 20:58:49 2003
++++ which-2.16-aros/which.c	Sun Apr 25 13:53:39 2004
+@@ -22,6 +22,9 @@
+ #include "getopt.h"
+ #include "tilde/tilde.h"
+ #include "bash.h"
++#ifdef AROS
++#include <ctype.h>
++#endif
+ 
+ static const char *progname;
+ 
