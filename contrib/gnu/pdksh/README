@@ -1,0 +1,9 @@
+06/26/2004
+Diffs for GNU pdksh. I think the fork() workaround needs some work. 
+Also, this is set up to use an actual cross compiler, so an 
+mmakefile.src is useless at this point. Pretty much follow the 
+instructions in contrib/gnu/textutils/README to compile this.
+If you need to create the cross-compiler, see contrib/gnu/gcc/README.
+
+Jack Patton
+jpatton@aros.org
