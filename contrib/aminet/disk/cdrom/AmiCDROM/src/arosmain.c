@@ -207,7 +207,7 @@ void ACDR_work(struct ACDRBase *acdrbase)
     {
         while ((iofs=(struct IOFileSys *)GetMsg(&acdrbase->port)))
         {
-            D(bug("acdr.handler: got command %ld\n",iofs->IOFS.io_Command));
+            D(bug("[acdr] got command %ld\n",iofs->IOFS.io_Command));
             error=0;
             acdrhandle = (struct ACDRHandle *)iofs->IOFS.io_Unit;
             if (acdrhandle)
@@ -217,7 +217,7 @@ void ACDR_work(struct ACDRBase *acdrbase)
             else
             {
                     if (iofs->IOFS.io_Command != (UWORD)-1)
-                        bug("cdrom.handler: no acdrhandle!!!\n");
+                        bug("[acdr] no acdrhandle!!!\n");
             }
 #endif
 #endif
@@ -242,7 +242,7 @@ void ACDR_work(struct ACDRBase *acdrbase)
             case FSA_OPEN:
                 {
                 struct ACDRHandle *new;
-D(bug("****************acdr-open: %s\n", iofs->io_Union.io_OPEN_FILE.io_Filename));
+D(bug("[acdr] open: %s\n", iofs->io_Union.io_OPEN_FILE.io_Filename));
 
                     new = AllocMem(sizeof(struct ACDRHandle), MEMF_PUBLIC | MEMF_CLEAR);
                     if (new)
@@ -277,7 +277,7 @@ D(bug("****************acdr-open: %s\n", iofs->io_Union.io_OPEN_FILE.io_Filename
                             new->handle = (void *)packet.dp_Res1;
                             new->flags |= AHF_IS_LOCK;
                             new->device = acdrhandle->device;
-D(bug("****************acdr-open: lock = %lx\n", new->handle));
+D(bug("[acdr] open: lock = %p\n", new->handle));
                         }
                         else
                         {
@@ -295,7 +295,7 @@ D(bug("****************acdr-open: lock = %lx\n", new->handle));
                 {
                 struct ACDRHandle *new;
                 ULONG mode=iofs->io_Union.io_OPEN_FILE.io_FileMode;
-D(bug("****************acdr openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FILE.io_Filename, mode, iofs->io_Union.io_OPEN_FILE.io_Protection));
+D(bug("[acdr] openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FILE.io_Filename, mode, iofs->io_Union.io_OPEN_FILE.io_Protection));
                     if (
                             (mode == FMF_MODE_OLDFILE) ||
                             (mode == FMF_READ)
@@ -338,7 +338,7 @@ D(bug("****************acdr openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FI
                             new->handle = (void *)fh.fh_Arg1;
                             new->flags |= AHF_IS_FH;
                             new->device = acdrhandle->device;
-D(bug("****************acdr-openfile: handle = %lx\n", new->handle));
+D(bug("[acdr] openfile: handle = %lp\n", new->handle));
                             error = 0;
                         }
                         else
@@ -359,13 +359,13 @@ D(bug("****************acdr-openfile: handle = %lx\n", new->handle));
                 {
                     packet.dp_Type = ACTION_FREE_LOCK;
                     packet.dp_Arg1 = (IPTR)acdrhandle->handle;
-D(bug("****************acdr close: lock = %lx\n", acdrhandle->handle));
+D(bug("[acdr] close: lock=%p\n", acdrhandle->handle));
                 }
                 else
                 {
                     packet.dp_Type = ACTION_END;
                     packet.dp_Arg1 = (IPTR)acdrhandle->handle;
-D(bug("****************acdr close: handle = %lx\n", acdrhandle->handle));
+D(bug("[acdr] close: handle=%p\n", acdrhandle->handle));
                 }
                 sendPacket(acdrbase, &packet, acdrhandle->device->taskmp);
                 error = packet.dp_Res2;
@@ -450,10 +450,10 @@ D(bug("****************acdr close: handle = %lx\n", acdrhandle->handle));
 #ifdef DEBUG
 #if DEBUG!=0
 if ((acdrhandle->flags & AHF_IS_LOCK)==0)
-bug("acdrhandle: examine called on a lock!!!\n");
+bug("[acdr] examine called on a lock!!!\n");
 #endif
 #endif
-D(bug("****************acdr examine: lock = %lx\n", acdrhandle->handle));
+D(bug("[acdr] examine: lock=%p\n", acdrhandle->handle));
                     packet.dp_Arg1 = (IPTR)acdrhandle->handle;
                     packet.dp_Arg2 = (IPTR)MKBADDR(&fib);
                     sendPacket(acdrbase, &packet, acdrhandle->device->taskmp);
@@ -461,9 +461,9 @@ D(bug("****************acdr examine: lock = %lx\n", acdrhandle->handle));
 		    
                     if (packet.dp_Res1)
                     {
-                	struct ExAllData    *ead = iofs->io_Union.io_EXAMINE_ALL.io_ead;
-                	ULONG 	    	     size = iofs->io_Union.io_EXAMINE_ALL.io_Size;
-                	ULONG 	    	     mode = iofs->io_Union.io_EXAMINE_ALL.io_Mode;
+                	struct ExAllData    *ead = iofs->io_Union.io_EXAMINE.io_ead;
+                	ULONG 	    	     size = iofs->io_Union.io_EXAMINE.io_Size;
+                	ULONG 	    	     mode = iofs->io_Union.io_EXAMINE.io_Mode;
                 	ULONG 	    	     len;
                 	STRPTR      	     next,end;
 
@@ -514,7 +514,7 @@ D(bug("****************acdr examine: lock = %lx\n", acdrhandle->handle));
                                 ead->ed_Name = next;
                                 CopyMem(AROS_BSTR_ADDR(fib.fib_FileName), ead->ed_Name, len);
                                 next += len;
-D(bug("****************acdr examine: name = %s ([0]=%x)\n", ead->ed_Name, ead->ed_Name[0]));
+D(bug("[acdr] examine: name=%s ([0]=%x)\n", ead->ed_Name, ead->ed_Name[0]));
 
                             case 0:
                                 ead->ed_Next = 0;
@@ -775,7 +775,7 @@ D(bug("****************acdr examine: name = %s ([0]=%x)\n", ead->ed_Name, ead->e
 #endif
 
             default:
-                D(bug("acdr.handler: unkown fsa %d\n", iofs->IOFS.io_Command));
+                D(bug("[acdr] unkown fsa %d\n", iofs->IOFS.io_Command));
                 retval = DOSFALSE;
                 error = ERROR_ACTION_NOT_KNOWN;
 		break;
