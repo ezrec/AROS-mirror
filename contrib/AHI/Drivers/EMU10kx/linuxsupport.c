@@ -18,13 +18,7 @@
 */
 
 #include <exec/memory.h>
-
-#ifdef __AMIGAOS4__
-#include <proto/expansion.h>
-#else
-#include <libraries/openpci.h>
-#include <proto/openpci.h>
-#endif
+#include <utility/hooks.h>
 
 #include <proto/exec.h>
 
@@ -32,14 +26,14 @@
 #include <string.h>
 
 #include "emu10kx-misc.h"
-
+#include "pci_wrapper.h"
 
 static void*
 AllocPages( size_t size, ULONG req )
 {
   void* address;
 
-#ifdef __AMIGAOS4__
+#if defined(__AMIGAOS4__) || defined(__AROS__)
   unsigned long a;
   // FIXME: This should be non-cachable, DMA-able memory
   address = AllocVec( size + PAGE_SIZE, MEMF_PUBLIC );
@@ -83,7 +77,7 @@ void
 free_page( unsigned long addr )
 {
 //  printf( "Freeing page at %08x\n", addr );
-#ifndef __AMIGAOS4__
+#if !defined(__AMIGAOS4__) && !defined(__AROS__)
   FreeMem( (void*) addr, PAGE_SIZE );
 #endif
 }
@@ -96,11 +90,7 @@ pci_alloc_consistent( void* pci_dev, size_t size, dma_addr_t* dma_handle )
 //  res = pci_alloc_dmamem( pci_dev, size );
   res = (void*) AllocPages( size, MEMF_PUBLIC | MEMF_CLEAR );
 
-#ifdef __AMIGAOS4__
-  *dma_handle = (dma_addr_t) res;
-#else
-  *dma_handle = (dma_addr_t) pci_logic_to_physic_addr( res, pci_dev );
-#endif
+  *dma_handle = (dma_addr_t) ahi_pci_logic_to_physic_addr( res, pci_dev );
   
   return res;
 }
@@ -110,7 +100,7 @@ pci_free_consistent( void* pci_dev, size_t size, void* addr, dma_addr_t dma_hand
 {
 //  printf( "Freeing pages (%d bytes) at %08x\n", size, addr );
 
-#ifdef __AMIGAOS4__
+#if defined(__AMIGAOS4__) || defined(__AROS__)
   void *pageaddr = addr - 8;
   
   //DebugPrintF("FreeAbs %lx size = %ld\n", pageaddr, size);

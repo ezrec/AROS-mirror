@@ -14,7 +14,7 @@ OBJECTS		= emu10kx-init.o emu10kx-main.o emu10kx-accel.o \
 		  emu10kx-misc.o emu10kx-interrupt.o emu10kx-camd.o \
 		  emu10kx-ac97.o \
 		  main.o hwaccess.o emuadxmg.o efxmgr.o voicemgr.o \
-		  linuxsupport.o 
+		  linuxsupport.o pci_wrapper.o
 
 include ../Common/Makefile.common
 CPPFLAGS	+= -DAHI

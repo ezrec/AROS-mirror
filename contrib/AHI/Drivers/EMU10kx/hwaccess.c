@@ -33,16 +33,9 @@
 
 #ifdef AHI
 
-#ifdef __AMIGAOS4__
-#include <proto/expansion.h>
-
-#else
-#include <libraries/openpci.h>
-#include <proto/openpci.h>
-#endif
-
 #include <proto/exec.h>
 #include <proto/ahi_sub.h>
+#include <utility/hooks.h>
 
 #include <stdarg.h>
 
@@ -51,6 +44,7 @@
 #include "linuxsupport.h"
 #include "hwaccess.h"
 #include "8010.h"
+#include "pci_wrapper.h"
 
 /* uncomment next line to use midi port on Audigy drive */
 //#define USE_AUDIGY_DRIVE_MIDI
@@ -75,62 +69,60 @@
 
 
 
-#ifndef __AMIGAOS4__
-inline unsigned short my_inb(unsigned long port)
+inline unsigned short my_inb(unsigned long port, APTR dev)
 {
-  unsigned char res = pci_inb( port );
+  unsigned char res = ahi_pci_inb( port, dev );
 
   //  KPrintF( "my_inb(%08lx) ->%02lx\n", port, res );
 
   return res;
 }
 
-inline unsigned short my_inw(unsigned long port)
+inline unsigned short my_inw(unsigned long port, APTR dev)
 {
-  unsigned short res = SWAPWORD( pci_inw( port ) );
+  unsigned short res = SWAPWORD( ahi_pci_inw( port, dev ) );
 
   //  KPrintF( "my_inw(%08lx) ->%04lx\n", port, res );
 
   return res;
 }
 
-inline unsigned int my_inl(unsigned long port)
+inline unsigned int my_inl(unsigned long port, APTR dev)
 {
-  unsigned int res = SWAPLONG( pci_inl( port ) );
+  unsigned int res = SWAPLONG( ahi_pci_inl( port, dev ) );
 
   //  KPrintF( "my_inl(%08lx) ->%08lx\n", port, res );
 
   return res;
 }
 
-inline void my_outb(unsigned char value, unsigned long port)
+inline void my_outb(unsigned char value, unsigned long port, APTR dev)
 {
   //  KPrintF( "my_outb(%08lx,%02lx)\n", port, value );
 
-  pci_outb( value, port );
+  ahi_pci_outb( value, port, dev );
 }
 
-inline void my_outw(unsigned short value, unsigned long port)
+inline void my_outw(unsigned short value, unsigned long port, APTR dev)
 {
   //  KPrintF( "my_outw(%08lx,%04lx)\n", port, value );
 
-  pci_outw( SWAPWORD( value ), port );
+  ahi_pci_outw( SWAPWORD( value ), port, dev );
 }
 
-inline void my_outl(unsigned int value, unsigned long port)
+inline void my_outl(unsigned int value, unsigned long port, APTR dev)
 {
   //  KPrintF( "my_outl(%08lx,%08lx)\n", port, value );
 
-  pci_outl( SWAPLONG( value ), port );
+  ahi_pci_outl( SWAPLONG( value ), port, dev );
 }
 
-#define inb  my_inb
-#define inw  my_inw
-#define inl  my_inl
-#define outb my_outb
-#define outw my_outw
-#define outl my_outl
-#endif
+#define inb(port)        my_inb(port, card->pci_dev)
+#define inw(port)        my_inw(port, card->pci_dev)
+#define inl(port)        my_inl(port, card->pci_dev)
+#define outb(value,port) my_outb(value, port, card->pci_dev)
+#define outw(value,port) my_outw(value, port, card->pci_dev)
+#define outl(value,port) my_outl(value, port, card->pci_dev)
 
 #else // AHI
 
@@ -256,12 +248,12 @@ void emu10k1_writefn0(struct emu10k1_card *card, u32 reg, u32 data)
 
 		spin_lock_irqsave(&card->lock, flags);
 #ifdef __AMIGAOS4__
-		data |= SWAPLONG(((struct PCIDevice *) card->pci_dev)->InLong(card->iobase + reg)) & ~mask;
+		data |= SWAPLONG((inl(card->iobase + reg)) & ~mask;
 #else
 		data |= inl(card->iobase + reg) & ~mask;
 #endif
 #ifdef __AMIGAOS4__
-		((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + reg, SWAPLONG(data));
+		outl(SWAPLONG(data), card->iobase + reg);
 #else
 		outl(data, card->iobase + reg);
 #endif
@@ -269,7 +261,7 @@ void emu10k1_writefn0(struct emu10k1_card *card, u32 reg, u32 data)
 	} else {
 		spin_lock_irqsave(&card->lock, flags);
 #ifdef __AMIGAOS4__
-		((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + reg, SWAPLONG(data));
+		outl(SWAPLONG(data), card->iobase + reg);
 #else
 		outl(data, card->iobase + reg);
 #endif
@@ -315,7 +307,7 @@ u32 emu10k1_readfn0(struct emu10k1_card * card, u32 reg)
 
 		spin_lock_irqsave(&card->lock, flags);
 #ifdef __AMIGAOS4__
-		val = SWAPLONG(((struct PCIDevice *) card->pci_dev)->InLong(card->iobase + reg));
+		val = SWAPLONG(inl(card->iobase + reg));
 #else
 		val = inl(card->iobase + reg);
 #endif
@@ -325,7 +317,7 @@ u32 emu10k1_readfn0(struct emu10k1_card * card, u32 reg)
         } else {
 		spin_lock_irqsave(&card->lock, flags);
 #ifdef __AMIGAOS4__
-		val = SWAPLONG(((struct PCIDevice *) card->pci_dev)->InLong(card->iobase + reg));
+		val = SWAPLONG(inl(card->iobase + reg));
 #else
 		val = inl(card->iobase + reg);
 #endif
@@ -340,7 +332,7 @@ void emu10k1_timer_set(struct emu10k1_card * card, u16 data)
 
 	spin_lock_irqsave(&card->lock, flags);
 #ifdef __AMIGAOS4__
-	((struct PCIDevice *) card->pci_dev)->OutWord(card->iobase + TIMER, SWAPWORD(data & TIMER_RATE_MASK));
+	outw(SWAPWORD(data & TIMER_RATE_MASK), card->iobase + TIMER);
 #else
 	outw(data & TIMER_RATE_MASK, card->iobase + TIMER);
 #endif
@@ -371,9 +363,9 @@ void sblive_writeptr(struct emu10k1_card *card, u32 reg, u32 channel, u32 data)
 
 		spin_lock_irqsave(&card->lock, flags);
 #ifdef __AMIGAOS4__
-		((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + PTR, SWAPLONG(regptr));
-		data |= SWAPLONG(((struct PCIDevice *) card->pci_dev)->InLong(card->iobase + DATA)) & ~mask;
-		((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + DATA, SWAPLONG(data));
+		outl(SWAPLONG(regptr), card->iobase + PTR);
+		data |= SWAPLONG(inl(card->iobase + DATA)) & ~mask;
+		outl(SWAPLONG(data), card->iobase + DATA);
 #else
 		outl(regptr, card->iobase + PTR);
 		data |= inl(card->iobase + DATA) & ~mask;
@@ -383,8 +375,8 @@ void sblive_writeptr(struct emu10k1_card *card, u32 reg, u32 channel, u32 data)
 	} else {
 		spin_lock_irqsave(&card->lock, flags);
 #ifdef __AMIGAOS4__
-		((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + PTR, SWAPLONG(regptr));
-		((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + DATA, SWAPLONG(data));
+		outl(SWAPLONG(regptr), card->iobase + PTR);
+		outl(SWAPLONG(data), card->iobase + DATA);
 #else
 		outl(regptr, card->iobase + PTR);
 		outl(data, card->iobase + DATA);
@@ -409,7 +401,7 @@ void sblive_writeptr_tag(struct emu10k1_card *card, u32 channel, ...)
 		u32 regptr = (((reg << 16) & A_PTR_ADDRESS_MASK)
 			      | (channel & PTR_CHANNELNUM_MASK));
 #ifdef __AMIGAOS4__
-		((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + PTR, SWAPLONG(regptr));
+		outl(SWAPLONG(regptr), card->iobase + PTR);
 #else
 		outl(regptr, card->iobase + PTR);
 #endif
@@ -420,13 +412,13 @@ void sblive_writeptr_tag(struct emu10k1_card *card, u32 channel, ...)
 			data = (data << offset) & mask;
 
 #ifdef __AMIGAOS4__
-			data |= SWAPLONG(((struct PCIDevice *) card->pci_dev)->InLong(card->iobase + DATA)) & ~mask;
+			data |= SWAPLONG(inl(card->iobase + DATA)) & ~mask;
 #else
 			data |= inl(card->iobase + DATA) & ~mask;
 #endif
 		}
 #ifdef __AMIGAOS4__
-		((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + DATA, SWAPLONG(data));
+		outl(SWAPLONG(data), card->iobase + DATA);
 #else
 		outl(data, card->iobase + DATA);
 #endif
@@ -455,8 +447,8 @@ u32 sblive_readptr(struct emu10k1_card * card, u32 reg, u32 channel)
 
 		spin_lock_irqsave(&card->lock, flags);
 #ifdef __AMIGAOS4__
-		((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + PTR, SWAPLONG(regptr));
-		val = SWAPLONG(((struct PCIDevice *) card->pci_dev)->InLong(card->iobase + DATA));
+		outl(SWAPLONG(regptr), card->iobase + PTR);
+		val = SWAPLONG(inl(card->iobase + DATA));
 #else
 		outl(regptr, card->iobase + PTR);
 		val = inl(card->iobase + DATA);
@@ -467,8 +459,8 @@ u32 sblive_readptr(struct emu10k1_card * card, u32 reg, u32 channel)
 	} else {
 		spin_lock_irqsave(&card->lock, flags);
 #ifdef __AMIGAOS4__
-		((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + PTR, SWAPLONG(regptr));
-		val = SWAPLONG(((struct PCIDevice *) card->pci_dev)->InLong(card->iobase + DATA));
+		outl(SWAPLONG(regptr), card->iobase + PTR);
+		val = SWAPLONG(inl(card->iobase + DATA));
 #else
 		outl(regptr, card->iobase + PTR);
 		val = inl(card->iobase + DATA);
@@ -488,8 +480,8 @@ void emu10k1_irq_enable(struct emu10k1_card *card, u32 irq_mask)
 
 	spin_lock_irqsave(&card->lock, flags);
 #ifdef __AMIGAOS4__
-	val = SWAPLONG(((struct PCIDevice *) card->pci_dev)->InLong(card->iobase + INTE)) | irq_mask;
-	((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + INTE, SWAPLONG(val));
+        val = SWAPLONG(inl(card->iobase + INTE)) | irq_mask;
+        outl(SWAPLONG(val), card->iobase + INTE);
 #else
         val = inl(card->iobase + INTE) | irq_mask;
         outl(val, card->iobase + INTE);
@@ -507,8 +499,8 @@ void emu10k1_irq_disable(struct emu10k1_card *card, u32 irq_mask)
 
         spin_lock_irqsave(&card->lock, flags);
 #ifdef __AMIGAOS4__
-        val = SWAPLONG(((struct PCIDevice *) card->pci_dev)->InLong(card->iobase + INTE)) & ~irq_mask;
-        ((struct PCIDevice *) card->pci_dev)->OutLong(card->iobase + INTE, SWAPLONG(val));
+        val = SWAPLONG(inl(card->iobase + INTE)) & ~irq_mask;
+        outl(SWAPLONG(val), card->iobase + INTE);
 #else
         val = inl(card->iobase + INTE) & ~irq_mask;
         outl(val, card->iobase + INTE);
@@ -569,11 +561,10 @@ u16 emu10k1_ac97_read(struct ac97_codec *codec, u8 reg)
 
 	spin_lock_irqsave(&card->lock, flags);
 
-#ifdef __AMIGAOS4__
-	((struct PCIDevice *) card->pci_dev)->OutByte(card->iobase + AC97ADDRESS, reg);
-	data = SWAPWORD(((struct PCIDevice *) card->pci_dev)->InWord(card->iobase + AC97DATA));
-#else
 	outb(reg, card->iobase + AC97ADDRESS);
+#ifdef __AMIGAOS4__
+	data = SWAPWORD(inw(card->iobase + AC97DATA));
+#else
 	data = inw(card->iobase + AC97DATA);
 #endif
 
@@ -590,15 +581,13 @@ void emu10k1_ac97_write(struct ac97_codec *codec, u8 reg, u16 value)
 
 	spin_lock_irqsave(&card->lock, flags);
 
-#ifdef __AMIGAOS4__
-	((struct PCIDevice *) card->pci_dev)->OutByte(card->iobase + AC97ADDRESS, reg);
-	((struct PCIDevice *) card->pci_dev)->OutWord(card->iobase + AC97DATA, SWAPWORD(value));
-	((struct PCIDevice *) card->pci_dev)->OutByte(card->iobase + AC97ADDRESS, AC97_EXTENDED_ID);
-#else
 	outb(reg, card->iobase + AC97ADDRESS);
+#ifdef __AMIGAOS4__
+	outw(SWAPWORD(value), card->iobase + AC97DATA);
+#else
 	outw(value, card->iobase + AC97DATA);
-	outb( AC97_EXTENDED_ID, card->iobase + AC97ADDRESS); 
 #endif
+	outb( AC97_EXTENDED_ID, card->iobase + AC97ADDRESS); 
 
 	spin_unlock_irqrestore(&card->lock, flags);
 	printk( "emu10k1_ac97_write %02x, %08x\n", reg, value );
@@ -613,11 +602,10 @@ u16 emu10k1_readac97(struct emu10k1_card *card, u8 reg)
 
 	spin_lock_irqsave(&card->lock, flags);
 
-#ifdef __AMIGAOS4__
-	((struct PCIDevice *) card->pci_dev)->OutByte(card->iobase + AC97ADDRESS, reg);
-	data = SWAPWORD(((struct PCIDevice *) card->pci_dev)->InWord(card->iobase + AC97DATA));
-#else
 	outb(reg, card->iobase + AC97ADDRESS);
+#ifdef __AMIGAOS4__
+	data = SWAPWORD(inw(card->iobase + AC97DATA));
+#else
 	data = inw(card->iobase + AC97DATA);
 #endif
 
@@ -632,11 +620,10 @@ void emu10k1_writeac97(struct emu10k1_card *card, u8 reg, u16 value)
 
 	spin_lock_irqsave(&card->lock, flags);
 
-#ifdef __AMIGAOS4__
-	((struct PCIDevice *) card->pci_dev)->OutByte(card->iobase + AC97ADDRESS, reg);
-	((struct PCIDevice *) card->pci_dev)->OutWord(card->iobase + AC97DATA, SWAPWORD(value));
-#else
 	outb(reg, card->iobase + AC97ADDRESS);
+#ifdef __AMIGAOS4__
+	outw(SWAPWORD(value), card->iobase + AC97DATA);
+#else
 	outw(value, card->iobase + AC97DATA);
 #endif
 
@@ -664,13 +651,8 @@ int emu10k1_mpu_write_data(struct emu10k1_card *card, u8 data)
 	} else {
 		spin_lock_irqsave(&card->lock, flags);
 
-#ifdef __AMIGAOS4__
-		if ( ((((struct PCIDevice *) card->pci_dev)->InByte(card->iobase + MUSTAT)) & MUSTAT_ORDYN) == 0) {
-			((struct PCIDevice *) card->pci_dev)->OutByte(card->iobase + MUDATA, data);
-#else
 		if ((inb(card->iobase + MUSTAT) & MUSTAT_ORDYN) == 0) {
 			outb(data, card->iobase + MUDATA);
-#endif
 			ret = 0;
 		} else
 			ret = -1;
@@ -695,13 +677,8 @@ int emu10k1_mpu_read_data(struct emu10k1_card *card, u8 * data)
 	} else {
 		spin_lock_irqsave(&card->lock, flags);
 
-#ifdef __AMIGAOS4__
-		if ( ((((struct PCIDevice *) card->pci_dev)->InByte(card->iobase + MUSTAT)) & MUSTAT_IRDYN) == 0) {
-			*data = ((struct PCIDevice *) card->pci_dev)->InByte(card->iobase + MUDATA);
-#else
 		if ((inb(card->iobase + MUSTAT) & MUSTAT_IRDYN) == 0) {
 			*data = inb(card->iobase + MUDATA);
-#endif
 			ret = 0;
 		} else
 			ret = -1;
@@ -744,43 +721,32 @@ int emu10k1_mpu_reset(struct emu10k1_card *card)
 #endif
 			spin_lock_irqsave(&card->lock, flags);
 
-#ifdef __AMIGAOS4__
-			((struct PCIDevice *) card->pci_dev)->OutByte(card->iobase + MUCMD, MUCMD_RESET);
-#else        
 			outb(MUCMD_RESET, card->iobase + MUCMD);
-#endif
+
 			spin_unlock_irqrestore(&card->lock, flags);
 
 			sblive_wcwait(card, 8);
 
 			spin_lock_irqsave(&card->lock, flags);
 
-#ifdef __AMIGAOS4__
-			((struct PCIDevice *) card->pci_dev)->OutByte(card->iobase + MUCMD, MUCMD_RESET);
-#else        
 			outb(MUCMD_RESET, card->iobase + MUCMD);
-#endif
+
 			spin_unlock_irqrestore(&card->lock, flags);
 
 			sblive_wcwait(card, 8);
 
 			spin_lock_irqsave(&card->lock, flags);
 
-#ifdef __AMIGAOS4__
-			((struct PCIDevice *) card->pci_dev)->OutByte(card->iobase + MUCMD, MUCMD_ENTERUARTMODE);
-#else        
 			outb(MUCMD_ENTERUARTMODE, card->iobase + MUCMD);
-#endif
+
 			spin_unlock_irqrestore(&card->lock, flags);
 
 			sblive_wcwait(card, 8);
 
 			spin_lock_irqsave(&card->lock, flags);
-#ifdef __AMIGAOS4__
-			status = ((struct PCIDevice *) card->pci_dev)->InByte(card->iobase + MUDATA);
-#else        
+
 			status = inb(card->iobase + MUDATA);
-#endif
+
 			spin_unlock_irqrestore(&card->lock, flags);
 
 			if (status == 0xfe)

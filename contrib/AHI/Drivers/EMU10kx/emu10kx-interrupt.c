@@ -19,20 +19,14 @@
 
 #include <config.h>
 
-#ifdef __AMIGAOS4__
-#include <proto/expansion.h>
-#else
-#include <libraries/openpci.h>
-#include <proto/openpci.h>
-#include <clib/alib_protos.h>
-#endif
-
 #include <libraries/ahi_sub.h>
 #include <exec/execbase.h>
+#include <clib/alib_protos.h>
 #include <proto/exec.h>
 
 #include "library.h"
 #include "8010.h"
+#include "pci_wrapper.h"
 
 #define min(a,b) ((a)<(b)?(a):(b))
 
@@ -67,11 +61,7 @@ EMU10kxInterrupt( struct EMU10kxData* dd )
   ULONG intreq;
   BOOL  handled = FALSE;
   
-  #ifdef __AMIGAOS4__
-  while ( ( intreq = SWAPLONG( ((struct PCIDevice * ) dd->card.pci_dev)->InLong(dd->card.iobase + IPR ) ) ) != 0 )
-  #else
-   while( ( intreq = SWAPLONG( pci_inl( dd->card.iobase + IPR ) ) ) != 0 )
-  #endif
+  while( ( intreq = SWAPLONG( ahi_pci_inl( dd->card.iobase + IPR, dd->card.pci_dev ) ) ) != 0 )
   {
 //    KPrintF("IRQ: %08lx\n", intreq );
     if( intreq & IPR_INTERVALTIMER &&
@@ -174,11 +164,7 @@ EMU10kxInterrupt( struct EMU10kxData* dd )
     }
 
     /* Clear interrupt pending bit(s) */
-    #ifdef __AMIGAOS4__
-    ((struct PCIDevice * ) dd->card.pci_dev)->OutLong( dd->card.iobase + IPR, SWAPLONG( intreq ) );
-    #else
-    pci_outl( SWAPLONG( intreq ), dd->card.iobase + IPR );
-    #endif
+    ahi_pci_outl( SWAPLONG( intreq ), dd->card.iobase + IPR, dd->card.pci_dev );
 
     handled = TRUE;
   }

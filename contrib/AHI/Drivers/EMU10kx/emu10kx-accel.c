@@ -21,6 +21,7 @@
 
 #include <devices/ahi.h>
 #include <libraries/ahi_sub.h>
+#include <utility/hooks.h>
 
 #include "library.h"
 

@@ -31,14 +31,6 @@ driver! Anything that is based on this driver has to be GPL:ed.
 
 #include <config.h>
 
-#ifdef __AMIGAOS4__
-#include <proto/expansion.h>
-#else
-#include <libraries/openpci.h>
-#include <proto/openpci.h>
-#include <clib/alib_protos.h>
-#endif
-
 #include <devices/ahi.h>
 #include <exec/memory.h>
 #include <libraries/ahi_sub.h>
@@ -52,7 +44,7 @@ driver! Anything that is based on this driver has to be GPL:ed.
 #include "library.h"
 #include "8010.h"
 #include "emu10kx-misc.h"
-
+#include "pci_wrapper.h"
 
 /******************************************************************************
 ** Globals ********************************************************************
