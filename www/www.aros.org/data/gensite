@@ -10,9 +10,20 @@ htmldir = '../www'
 
 mainLinks = (
     ( Href ('/index.html', 'NEWS'),
-	Href ('/oldnews.html', 'Old news'),
+	Href ('/oldnews.html', 'Old News'),
+    ),
+    ( Href ('/documentation.html', 'Documentation'),
+	Href ('/autodocs/index.html', 'AutoDocs'),
+    ),
+    ( Href ('/screenshots.html', 'Screenshots'),
+    ),
+    ( Href ('/download.html', 'Download'),
     ),
     ( Href ('/links.html', 'Links'),
+	Href ('/links.html#More Related', 'More Related'),
+	Href ('/links.html#Articles', 'Articles'),
+	Href ('/links.html#Homepages', 'Homepages'),
+	Href ('/links.html#Less Related', 'Less Related'),
     ),
 )
 
@@ -67,7 +78,10 @@ class Page (SeriesDocument):
 		    self.linkbox = self.linkbox + [
 			RawText ('&nbsp;&nbsp;&nbsp;'),
 			link, BR ()]
-    
+
+    def write (self, filename):
+	SeriesDocument.write (self, os.path.join (htmldir, filename))
+
 def genNews ():
     list = glob.glob ('news/*')
     list.remove ('news/CVS')
@@ -114,9 +128,79 @@ def genNews ():
 	else:
 	    page.gotop = '/'
 
-	page.write (os.path.join (htmldir, filename))
+	page.write (filename)
 
     genPage (list[:5], 'index.html')
     genPage (list[5:], 'oldnews.html')
 
+def genDocumentation ():
+    page = Page (linkBoxItem='Documentation')
+    page.write ('documentation.html')
+
+def genScreenshots ():
+    page = Page (linkBoxItem='Screenshots')
+    page.write ('screenshots.html')
+
+def genDownload ():
+    page = Page (linkBoxItem='Download')
+    page.write ('download.html')
+
+def processLinks (links):
+    list = List ()
+
+    for link in links:
+	if type (link) == type (()):
+	    link, children = link[0], link[1:]
+	else:
+	    children = None
+
+	text = Text (link.href)
+	if link.text:
+	    if type (link.text) == type (()):
+		t = Text ()
+		for item in link.text:
+		    t.append (item)
+	    else:
+		t = Text (link.text)
+	    text.append (t)
+	if link.logo:
+	    text.append (Image ((link.logo, 0,0)))
+
+	list.append (text)
+	
+	if children:
+	    sublist = processLinks (children)
+	    list.append (sublist)
+    
+    return list
+
+def genLinks ():
+    def processSection (links, title):
+	body = []
+
+	#print title, list
+
+	body.append (Name (title))
+	body.append (Heading (2, title))
+	list = processLinks (links)
+	body.append (list)
+
+	return body
+
+    page = Page (linkBoxItem='Links')
+
+    from links import moreRelated, articles, homepages, lessRelated
+
+    page.meat = page.meat \
+	+ processSection (moreRelated, 'More Related') \
+	+ processSection (articles, 'Articles') \
+	+ processSection (homepages, 'Homepages') \
+	+ processSection (lessRelated, 'Less Related')
+
+    page.write ('links.html')
+
 genNews ()
+genDocumentation ()
+genScreenshots ()
+genDownload ()
+genLinks ()
