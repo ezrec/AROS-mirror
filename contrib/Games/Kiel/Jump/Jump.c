@@ -3,8 +3,9 @@
     $Id$
 
     Desc: Jump Game
-    Lang: german
+    Lang: english
 */
+#define ENABLE_RT 1
 
 /*****************************************************************************
 
@@ -29,13 +30,15 @@
     HISTORY
 
         24-Aug-1997     hkiel     Initial inclusion into the AROS tree
+        16-Sep-1997     hkiel     Fixed all casts
 
 ******************************************************************************/
 
-static const char version[] = "$VER: Jump 0.1 (29.08.1997)\n";
+static const char version[] = "$VER: Jump 0.2 (16.09.1997)\n";
 
 #include "../prec.c"
 #include "Jump.h"
+#include <aros/rt.h>
 
 #define FIRST 1
 #define SECOND 2
@@ -51,7 +54,9 @@ struct IntuiMessage *msg;
 ULONG class,iflags;
 USHORT code;
 
-int Feld[33];
+int field[33];
+/* This array contains the middle position(to be removed) for given
+   first(row) and second(column) stone, returns 0 for impossible move */
 USHORT check[33][33]=
 {
  {0,0,2,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -92,19 +97,19 @@ USHORT check[33][33]=
  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30,0,0,0,0,0,32,0,0}
 };
 
-#define DA  1
-#define WEG 2
-int ist;
+#define THERE	1
+#define AWAY	0
+int marked;
 
 int history[32][3],movecount;
 
-void oeffnelib()
+void open_lib()
 {
   IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library",0L);
   GfxBase = (struct GfxBase *) OpenLibrary("graphics.library",0L);
 }
 
-void oeffnewindow()
+void open_window()
 {
   if((Window=(struct Window *)OpenWindow(NEWWINDOW))==NULL)
     exit(FALSE);
@@ -112,143 +117,143 @@ void oeffnewindow()
   iflags=Window->IDCMPFlags;
 }
 
-void LoescheWin()
-{
-  SetAPen(rp,0);
-  RectFill(rp,0,0,400,170);
-}
+#define StopMsg() ModifyIDCMP(Window,(ULONG)NULL)
+#define ContMsg() ModifyIDCMP(Window,iflags)
 
-void StopMsg()
-{
-  ModifyIDCMP(Window,(ULONG)NULL);
-}
-
-void ContMsg()
-{
-  ModifyIDCMP(Window,iflags);
-}
-
-void schliessewindow()
+void close_window()
 {
   CloseWindow(Window);
 }
 
-void schliesselib()
+void close_lib()
 {
   CloseLibrary((struct Library *)IntuitionBase);
   CloseLibrary((struct Library *)GfxBase);
 }
 
-#include "JumpDatei.h"
+#include "JumpFile.h"
 
 int main()
 {
-BOOL ende=FALSE;
-int erster=0,nr,mitte;
+BOOL end_game=FALSE;
+int first=0,number,middle;
 
-oeffnelib();
-oeffnewindow();
-oeffnedatei();
+/* As usual some initting, including loading defaults-file or setting
+   playfield to default if no defaults-file found */
+  RT_Init ();
+  open_lib();
+  open_window();
+  open_file();
 
-while(ende!=TRUE)
-{
- Wait(1L<<Window->UserPort->mp_SigBit);
- msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
- class=msg->Class;
- code=msg->Code;
- switch(class)
- {
-   case IDCMP_CLOSEWINDOW:
-         ende=TRUE;
-         break;
-   case IDCMP_RAWKEY:
-         switch(code)
-         {
-           case  22:
-                 if(movecount>0)
-                 {
-                   movecount--;
-                   Feld[history[movecount][0]-1]=DA;
-                   Feld[history[movecount][1]-1]=WEG;
-                   Feld[history[movecount][2]-1]=DA;
-                   status=FIRST;
-                   setzen();
-                 }
-                 break;
-           case   9:
-                 ende=TRUE;
-                 break;
-           case  57:
-                 status=FIRST;
-                 oeffnedatei();
-                 break;
-           default:
-                 break;
-         }
-         break; 
-   case IDCMP_GADGETUP:
-         switch(nr=((struct Gadget *)(msg->IAddress))->GadgetID)
-         {
-           case  0:
-                 status=FIRST;
-                 oeffnedatei();
-                 break;
-           case 34:
-                 if(movecount>0)
-                 {
-                   movecount--;
-                   Feld[history[movecount][0]-1]=DA;
-                   Feld[history[movecount][1]-1]=WEG;
-                   Feld[history[movecount][2]-1]=DA;
-                   status=FIRST;
-                   setzen();
-                 }
-                 break;
-           default:
-                 switch(status)
-                 {
-                   case FIRST:
-                         if(Feld[nr-1]==DA)
-                         {
-                           Feld[nr-1]=WEG;
-                           ist=nr;
-                           status=SECOND;
-                           erster=nr;
-                           setzen();
-                         }
-                         break;
-                   case SECOND:
-                         if(Feld[nr-1]==WEG)
-                           if(erster==nr)
-                           {
-                             Feld[nr-1]=DA;
-                             status=FIRST;
-                             setzen();
-                           }
-                           else
-                             if((mitte=check[erster-1][nr-1])!=0&&Feld[mitte-1]==DA)
-                             {
-                               Feld[nr-1]=DA;
-                               Feld[mitte-1]=WEG;
-                               history[movecount][0]=erster;
-                               history[movecount][1]=nr;
-                               history[movecount][2]=mitte;
-                               erster=0;
-                               status=FIRST;
-                               setzen();
-                               movecount++;
-                             }
-                         break;
-                 }
-         }
-	 RefreshGadgets(&g[0],Window,NULL);
-         break;
-   default:
-         break;
- }
- ReplyMsg((struct Message *)msg);
-}
-schliessewindow();
-schliesselib();
-return(0);
+/* The main loop of the game */
+  while(end_game!=TRUE)
+  {
+    Wait(1L<<Window->UserPort->mp_SigBit);
+    msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    class=msg->Class;
+    code=msg->Code;
+    switch(class)
+    {
+      case IDCMP_CLOSEWINDOW:
+            end_game=TRUE;
+            break;
+      case IDCMP_RAWKEY:
+            switch(code)
+            {
+/* Undo last move */
+              case  22: /* Backspace */
+                    if(movecount>0)
+                    {
+                      movecount--;
+                      field[history[movecount][0]-1]=THERE;
+                      field[history[movecount][1]-1]=AWAY;
+                      field[history[movecount][2]-1]=THERE;
+                      status=FIRST;
+                    }
+                    break;
+/* Quit game */
+              case   9: /* ESC */
+                    end_game=TRUE;
+                    break;
+/* New game */
+              case  57: /* n */
+                    status=FIRST;
+                    open_file();
+                    break;
+              default:
+                    break;
+            }
+            break; 
+      case IDCMP_GADGETUP:
+            switch(number=((struct Gadget *)(msg->IAddress))->GadgetID)
+            {
+/* New game */
+              case  0:
+                    status=FIRST;
+                    open_file();
+                    break;
+/* Undo last move */
+              case 34:
+                    if(movecount>0)
+                    {
+                      movecount--;
+                      field[history[movecount][0]-1]=THERE;
+                      field[history[movecount][1]-1]=AWAY;
+                      field[history[movecount][2]-1]=THERE;
+                      status=FIRST;
+                    }
+                    break;
+              default:
+/* Handle clicks on stones */
+                    switch(status)
+                    {
+/* selected first stone, so mark it */
+                      case FIRST:
+                            if(field[number-1]==THERE)
+                            {
+                              field[number-1]=AWAY;
+                              marked=number;
+                              status=SECOND;
+                              first=number;
+                            }
+                            break;
+/* selected second stone */
+                      case SECOND:
+/* clicked on first stone again, so unmark it */
+                            if(field[number-1]==AWAY)
+                              if(first==number)
+                              {
+                                field[number-1]=THERE;
+                                status=FIRST;
+                              }
+/* clicked on different stone than first, so check if move is OK
+   and remove stones or do nothing */
+                              else
+                                if((middle=check[first-1][number-1])!=0&&field[middle-1]==THERE)
+                                {
+                                  field[number-1]=THERE;
+                                  field[middle-1]=AWAY;
+                                  history[movecount][0]=first;
+                                  history[movecount][1]=number;
+                                  history[movecount][2]=middle;
+                                  first=0;
+                                  status=FIRST;
+                                  movecount++;
+                                }
+                            break;
+                    }
+            }
+            break;
+      default:
+            break;
+    }
+/* Update playfield */
+    set_buttons();
+    ReplyMsg((struct Message *)msg);
+  }
+/* Terminated game, clean up */
+  close_window();
+  close_lib();
+  RT_Exit ();
+  return(0);
 }

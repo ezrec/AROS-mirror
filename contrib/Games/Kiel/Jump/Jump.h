@@ -263,7 +263,7 @@ struct Gadget g[] = {
   NULL,0L,NULL,33,NULL}};
 
 struct IntuiText Start_text = {
-  1,0,JAM1,25,12,NULL,(UBYTE *)"Neu",NULL };
+  1,0,JAM1,25,12,NULL,(UBYTE *)"New",NULL };
 
 #define Start_ID    0
 

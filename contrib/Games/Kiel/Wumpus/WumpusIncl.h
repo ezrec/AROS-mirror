@@ -30,7 +30,7 @@ struct NewWindow NeuesFenster;
   SetBPen(rp,0);
 }
 
-void schreibe(x, y, wort, farbe)
+void write_text(x, y, wort, farbe)
 int x, y, farbe;
 char *wort;
 {
@@ -52,7 +52,7 @@ SHORT x1,y1,x2,y2;
   Draw(rp,x1,y2);
 }
 
-void LoescheWin()
+void clear_win()
 {
   SetAPen(rp,0);
   RectFill(rp,0,0,Window->Width-5,Window->Height-11);

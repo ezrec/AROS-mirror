@@ -298,5 +298,4 @@ struct NewWindow new_window = {
 
 
 #define NEWWINDOW   &new_window
-#define WDBACKFILL  0
 #define FIRSTGADGET &Start

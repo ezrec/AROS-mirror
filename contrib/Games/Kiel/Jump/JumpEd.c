@@ -3,8 +3,9 @@
     $Id$
 
     Desc: JumpEd Game
-    Lang: german
+    Lang: english
 */
+#define ENABLE_RT 1
 
 /*****************************************************************************
 
@@ -29,13 +30,15 @@
     HISTORY
 
         24-Aug-1997     hkiel     Initial inclusion into the AROS tree
+	16-Sep-1997     hkiel     Fixed all casts
 
 ******************************************************************************/
 
-static const char version[] = "$VER: JumpEd 0.1 (29.08.1997)\n";
+static const char version[] = "$VER: JumpEd 0.2 (16.09.1997)\n";
 
 #include "../prec.c"
 #include "JumpEd.h"
+#include <aros/rt.h>
 
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
@@ -48,10 +51,10 @@ USHORT code;
 
 int field[33];
 
-#define DA  1
-#define WEG 0
+#define THERE	1
+#define AWAY	0
 
-#include "JumpEdDatei.h"
+#include "JumpEdFile.h"
 
 void open_lib()
 {
@@ -83,69 +86,79 @@ void close_lib()
 
 int main()
 {
-int nr,i;
-BOOL ende=FALSE;
+int number,i;
+BOOL end_editor=FALSE;
 
-open_lib();
-open_window();
-open_datei();
+/* Do some initting, including loading of existing defaults-file */
+  RT_Init() ;
+  open_lib();
+  open_window();
+  open_file();
 
-while(ende!=TRUE)
-{
- Wait(1L<<Window->UserPort->mp_SigBit);
- msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
- class=msg->Class;
- code=msg->Code;
- switch(class)
- {
-   case IDCMP_CLOSEWINDOW:
-         ende=TRUE;
-         break;
-   case IDCMP_RAWKEY:
-         switch(code)
-         {
-           case   9:
-                 ende=TRUE;
-                 break;
-           case  46:
-                 open_datei();
-                 break;
-           case  39:
-                 schreibedatei();
-                 break;
-           default:
-                 break;
-         }
-         break; 
-   case IDCMP_GADGETUP:
-         switch(nr=((struct Gadget *)(msg->IAddress))->GadgetID)
-         {
-           case  0:
-                 open_datei();
-                 break;
-           case 34:
-                 schreibedatei();
-                 break;
-           case 35:
-                 for(i=0;i<33;i++)
-                   field[i]=DA;
-                 field[16]=WEG;
-                 break;
-           default:
-                 if(field[nr-1]==DA)
-                   field[nr-1]=WEG;
-                 else
-                   field[nr-1]=DA;
-                 break;
-         }
-         break;
-   default:
-         break;
- }
- set_buttons();
- ReplyMsg((struct Message *)msg);
-}
-close_window();
-close_lib();
-return(0);
+/* The main loop of the editor */
+  while(end_editor!=TRUE)
+  {
+    Wait(1L<<Window->UserPort->mp_SigBit);
+    msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    class=msg->Class;
+    code=msg->Code;
+    switch(class)
+    {
+      case IDCMP_CLOSEWINDOW:
+            end_editor=TRUE;
+            break;
+      case IDCMP_RAWKEY:
+            switch(code)
+            {
+              case   9: /* ESC */
+                    end_editor=TRUE;
+                    break;
+              case  46: /* o */
+                    open_file();
+                    break;
+              case  39: /* s */
+                    write_file();
+                    break;
+              case  40: /* d */
+                    for(i=0;i<33;i++)
+                      field[i]=THERE;
+                    field[16]=AWAY;
+                    break;
+              default:
+                    break;
+            }
+            break; 
+      case IDCMP_GADGETUP:
+            switch(number=((struct Gadget *)(msg->IAddress))->GadgetID)
+            {
+              case  0:
+                    open_file();
+                    break;
+              case 34:
+                    write_file();
+                    break;
+              case 35:
+                    for(i=0;i<33;i++)
+                      field[i]=THERE;
+                    field[16]=AWAY;
+                    break;
+              default:
+                    if(field[number-1]==THERE)
+                      field[number-1]=AWAY;
+                    else
+                      field[number-1]=THERE;
+                    break;
+            }
+            break;
+      default:
+            break;
+    }
+    set_buttons();
+    ReplyMsg((struct Message *)msg);
+  }
+/* Quit editor, do some clean up */
+  close_window();
+  close_lib();
+  RT_Exit ();
+  return(0);
 }

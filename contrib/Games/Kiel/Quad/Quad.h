@@ -225,5 +225,4 @@ struct Gadget Start = {
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
   &Start_text,0L,NULL,Start_ID,NULL };
 
-#define WDBACKFILL  0
 #define FIRSTGADGET &Start

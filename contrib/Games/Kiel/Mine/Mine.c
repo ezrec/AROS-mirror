@@ -30,10 +30,11 @@
     HISTORY
 
 	24-Aug-1997	hkiel	  Initial inclusion into the AROS tree
+	16-Sep-1997	hkiel	  Fixed all casts
 
 ******************************************************************************/
 
-static const char version[] = "$VER: Mine 0.1 (29.08.1997)\n";
+static const char version[] = "$VER: Mine 0.2 (16.09.1997)\n";
 
 #include "Mineincl.h"
 #include <aros/rt.h>

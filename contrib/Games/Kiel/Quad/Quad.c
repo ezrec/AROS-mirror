@@ -5,6 +5,7 @@
     Desc: Quad Game
     Lang: english
 */
+#define ENABLE_RT 1
 
 /*****************************************************************************
 
@@ -29,14 +30,16 @@
     HISTORY
 
         24-Aug-1997     hkiel     Initial inclusion into the AROS tree
+        16-Sep-1997     hkiel     Fixed all casts
 
 ******************************************************************************/
 
-static const char version[] = "$VER: Quad 0.1 (29.08.1997)\n";
+static const char version[] = "$VER: Quad 0.2 (16.09.1997)\n";
 
 #include "../prec.c"
 #include "Quad.h"
 #include "QuadIncl.h"
+#include <aros/rt.h>
 
 int quit_game=0,go_on,field[2][9];
 int nummer;
@@ -103,6 +106,7 @@ void updatebuttons()
 int main()
 {
 int i;
+  RT_Init() ;
   open_lib();
   open_window();
 /* initialize the playfield */
@@ -250,5 +254,6 @@ int i;
 /* game terminated - clean up */
   close_window();
   close_lib();
+  RT_Exit() ;
   return(0);
 }

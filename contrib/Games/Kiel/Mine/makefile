@@ -4,7 +4,7 @@ TOP=../../..
 include $(TOP)/config/make.cfg
 
 STARTUP = $(LIBDIR)/startup.o
-LIBS = -L$(LIBDIR) -larosc -lamiga -larossupport -lamiga
+LIBS = -L$(LIBDIR) -larossupport -lamiga -larosc
 DEPLIBS = $(STARTUP) $(LIBDIR)/libarosc.a \
 	$(LIBDIR)/libamiga.a $(LIBDIR)/libaros.a
 CFLAGS = $(USER_DEFINES) -O2 -Wunused -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
@@ -18,11 +18,10 @@ setup:
 	@$(MKDIR) $(BINDIR)/Games
 
 Mine:	Mine.o $(DEPLIBS)
-	@$(ECHO) "Linking Mine..."
-	@$(CC) $(ILDFLAGS) -o $(BINDIR)/Games/$@ $(STARTUP) Mine.o $(LIBS)
-	@$(ECHO) "Checking Mine..."
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) -o $(BINDIR)/Games/$@ $(STARTUP) $@.o $(LIBS)
+	@$(ECHO) "Checking $@..."
 	@$(CHECKUDS) $(BINDIR)/Games/$@
-
 
 clean:
 	@$(ECHO) "Cleaning Source..."
