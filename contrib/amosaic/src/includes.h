@@ -39,6 +39,7 @@
 #include <intuition/imageclass.h>
 #include <intuition/cghooks.h>
 #include <intuition/icclass.h>
+#include <libraries/asl.h>
 #include <libraries/gadtools.h>
 #include <datatypes/datatypes.h>
 #include <datatypes/datatypesclass.h>
