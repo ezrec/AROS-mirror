@@ -766,7 +766,7 @@ def open(fp, mode = "r"):
 	except SyntaxError:
 	    pass
 
-    raise IOError, "cannot identify image file"
+    raise IOError, "cannot identify image file %s" % filename
 
 #
 # Image processing.
