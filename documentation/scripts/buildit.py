@@ -50,11 +50,11 @@ def recurse( function, path='.', depth=0 ):
                 function( name, depth )
 
 def processPicture( src, depth ):
-    FORMATS = [ 'jpeg', 'png' ]
-    
+    FORMATS = [ 'jpg', 'jpeg', 'png' ]
+
     extension  = os.path.splitext( src )[1][1:]
     if extension not in FORMATS: return
-    
+
     src     = os.path.normpath( src )
     dst_abs = os.path.normpath( os.path.join( DSTROOT, src ) )
     src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
@@ -70,7 +70,7 @@ def processPicture( src, depth ):
 
     # Copy the original image over.
     copy( src_abs, dst_abs )
-    
+
     # Create the thumbnail.
     if newer( [ src_abs ], tn_dst_abs ):
         print '» Thumbnailing', src
@@ -103,19 +103,22 @@ def makePictures():
             path = os.path.join( root, name )
             if name == 'CVS' or not os.path.isdir( path ): continue 
 
+	    output += '<a name=%s>\n' % name
             output += convertWWW( os.path.join( path, 'overview.en' ), 'en', options )
 
             for pictureName in os.listdir( path ):
                 picturePath = os.path.join( path, pictureName )
                 pictureFormat = os.path.splitext( pictureName )[1][1:]
                 if pictureName == 'CVS' or os.path.isdir( picturePath ): continue 
-                if pictureFormat not in [ 'png', 'jpeg' ]: continue
+                if pictureFormat not in [ 'jpg', 'jpeg', 'png' ]: continue
                 
                 output += makePicture( 
                     picturePath, 
                     convertWWW( os.path.splitext( picturePath )[0] + '.en', 'en', options )
                 )
-        
+
+	    output += '</a>'
+
         strings = {
             'ROOT'    : '../../',
             'BASE'    : '../../',
@@ -280,7 +283,7 @@ def copyImages():
         ],
         dstpath
     )
-    
+
     imagepath = 'images'
     dstpath   = os.path.join( DSTROOT, imagepath )
     srcpath   = imagepath
