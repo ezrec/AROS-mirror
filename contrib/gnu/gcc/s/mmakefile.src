@@ -1,0 +1,11 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup Package-Shutdown
+
+#MM development-gcc-startup :
+
+#MM- development-gcc : development-gcc-startup
+
+%copy_files_q dst=$(AROSDIR)/Development/S maketarget=development-gcc-startup-startup
+
