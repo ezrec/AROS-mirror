@@ -94,7 +94,7 @@
 */
 
 struct Menu * LIBENT
-LT_NewMenuTemplate(REG(a0) struct Screen *Screen,REG(a1) struct TextAttr *TextAttr,REG(a2) struct Image *AmigaGlyph,REG(a3) struct Image *CheckGlyph,REG(d0) LONG *ErrorPtr,REG(d1) struct NewMenu *MenuTemplate)
+LT_NewMenuTemplate(REG(a0) struct Screen *screen,REG(a1) struct TextAttr *textAttr,REG(a2) struct Image *AmigaGlyph,REG(a3) struct Image *CheckGlyph,REG(d0) LONG *ErrorPtr,REG(d1) struct NewMenu *MenuTemplate)
 {
 	LONG Error;
 
@@ -105,7 +105,7 @@ LT_NewMenuTemplate(REG(a0) struct Screen *Screen,REG(a1) struct TextAttr *TextAt
 	{
 		RootMenu *Root;
 
-		if(Root = LTP_NewMenu(Screen,TextAttr,AmigaGlyph,CheckGlyph,&Error))
+		if(Root = LTP_NewMenu(screen,textAttr,AmigaGlyph,CheckGlyph,&Error))
 		{
 				// Create the menu
 
