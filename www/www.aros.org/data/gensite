@@ -188,15 +188,20 @@ def genSnapshots ():
     today         = time.localtime(time.time())[0:3]
     yesterday     = today[0], today[1], today[2] - 1
 
-    all_packages =  ('source',    'Core sources')                                    \
-                   ,('contrib',   'Contributed programs sources')                    \
-                   ,('ibmpc-bin', 'Floppy disk image of the standalone x86 version') \
-                   ,('lx86-bin',  'Binaries to be run under x86 linux')
+    all_packages =  ('source',    'Core sources',                                    0) \
+                   ,('contrib',   'Contributed programs sources',                    0) \
+                   ,('ibmpc-bin', 'Floppy disk image of the standalone x86 version', 1) \
+                   ,('lx86-bin',  'Binaries to be run under x86 linux',              1)
 
     def snapLink(date, package, ext):
         file     = 'AROS-' + package + '-' + '%d%d%d' % date + '.' + ext
         location = 'http://aros.sourceforge.net/snapshots/' + file
 	return Href(location, file)
+
+    def snapLinkNA(date, package, ext):
+        return Center(Bold('n/a'))
+
+    log_func = [snapLinkNA, snapLink]
 
     table = TableLite(cellpadding=5, border=0)
 
@@ -214,12 +219,12 @@ def genSnapshots ():
             TR(
                 TD('%d.%d.%d' % yesterday),
                 TD(snapLink(yesterday, package[0], 'tgz')),
-                TD(snapLink(yesterday, package[0], 'log'))
+	        TD(log_func[package[2]](yesterday, package[0], 'log'))
             ),
             TR(
                 TD('%d.%d.%d' % today),
                 TD(snapLink(today, package[0], 'tgz')),
-                TD(snapLink(today, package[0], 'log'))
+                TD(log_func[package[2]](today, package[0], 'log'))
             )
         )
 
