@@ -1,2 +1,4 @@
 *.pyc
 .stamp
+apache.conf
+site.conf
