@@ -73,7 +73,7 @@ Extracting
 """"""""""
 
 Since AROS/i386-linux and AROS/i386-freebsd are hosted flavours of AROS,
-installation is simply. Simply get the apropriate archives for your platform
+installation is simple. Simply get the apropriate archives for your platform
 from the `download page`_ and extract them where you want them::
 
     > tar -vxzf AROS-<version>-i386-<platform>-system.tar.gz
