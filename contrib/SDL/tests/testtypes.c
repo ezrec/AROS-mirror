@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <string.h>
 #include "SDL_main.h"
 #include "SDL_types.h"
 
