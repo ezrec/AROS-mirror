@@ -21,10 +21,14 @@ extern struct ExecBase * SysBase;
 extern int  __UserLibInit (LC_LIBHEADERTYPEPTR *);
 extern void __UserLibCleanup (LC_LIBHEADERTYPEPTR *);
 
-
 ULONG SAVEDS L_InitLib (LC_LIBHEADERTYPEPTR lh)
 {
-	return __UserLibInit(lh);
+	SysBase = lh->lh_SysBase;
+	if (RETURN_OK == __UserLibInit(lh)) {
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
 
 void SAVEDS L_ExpungeLib (LC_LIBHEADERTYPEPTR lh)
