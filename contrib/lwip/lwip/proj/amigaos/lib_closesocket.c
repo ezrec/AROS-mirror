@@ -2,13 +2,19 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_closesocket.c,v 1.1 2002/07/11 17:59:24 sebauer Exp $
+    $Id: lib_closesocket.c,v 1.2 2002/07/11 22:52:13 sebauer Exp $
 */
 
 #include <exec/types.h>
+#include <proto/exec.h>
 
 #include "socket_intern.h"
-#include "calling.h"
+
+#include "lwip/sys.h"
+#include "lwip/sockets.h"
+
+/* #define MYDEBUG */
+#include "debug.h"
 
 /*****************************************************************************
 
@@ -46,10 +52,24 @@ __asm int LIB_CloseSocket(register __d0 LONG s)
 
 *****************************************************************************/
 {
+	  int rc;
+	  void *ud;
+	  struct Task *t;
+
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
-    return CallStackFunction(SOCKB(SocketBase), LIBMSG_CLOSESOCKET, 1, s);
+    t = FindTask(NULL);
+    ud = t->tc_UserData;
+    /* set user data (used by sys_arch functions) */
+    t->tc_UserData = SOCKB(SocketBase)->data;
+
+    rc = lwip_close(s);
+
+    D(bug("closesocket(%ld)=%ld\n",s,rc));
+    /* restore old user data */
+    t->tc_UserData = ud;
+    return rc;
 
     AROS_LIBFUNC_EXIT
 

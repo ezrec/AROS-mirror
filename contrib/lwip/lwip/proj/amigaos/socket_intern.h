@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: socket_intern.h,v 1.1 2002/07/11 17:59:24 sebauer Exp $
+    $Id: socket_intern.h,v 1.2 2002/07/11 22:52:13 sebauer Exp $
 */
 
 #ifndef MUIMASTER_INTERN_H
@@ -72,9 +72,9 @@ struct SocketBase_intern
 {
     struct Library		library;
     struct ExecBase		*sysbase;
-    BPTR			seglist;
 
-    struct MsgPort *stack_port;
+    struct SocketBase_intern *orgbase;
+    struct ThreadData *data;
 };
 
 /****************************************************************************************/

@@ -47,4 +47,4 @@ dirs:
 <
 
 clean:
-  -delete $(SRCDIR)/core/\#?.o $(SRCDIR)/core/ipv4/\#?.o $(SRCDIR)/netif/\#?.o $(SRCDIR)/arch/amigaos/\#?.o $(SRCDIR)/api/\#?.o
+  -delete $(SRCDIR)/core/\#?.o $(SRCDIR)/core/ipv4/\#?.o $(SRCDIR)/netif/\#?.o $(SRCDIR)/arch/amigaos/\#?.o $(SRCDIR)/api/\#?.o \#?.o

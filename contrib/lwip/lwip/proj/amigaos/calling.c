@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id$
+    $Id: calling.c,v 1.1 2002/07/11 22:52:13 sebauer Exp $
 */
 
 #include <stdarg.h>
@@ -15,8 +15,9 @@
 
 int CallStackFunction(struct SocketBase_intern *SocketBase, int type, int argc, ...)
 {
-  struct MsgPort *msgport = CreateMsgPort();
   int rc = -1;
+#if 0
+  struct MsgPort *msgport = CreateMsgPort();
 
   if (msgport)
   {
@@ -50,6 +51,7 @@ int CallStackFunction(struct SocketBase_intern *SocketBase, int type, int argc, 
   	}
   	DeleteMsgPort(msgport);
   }
+#endif
   return rc;
 }
 

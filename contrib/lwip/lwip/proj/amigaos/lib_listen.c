@@ -2,13 +2,19 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_listen.c,v 1.2 2002/07/12 08:38:07 sebauer Exp $
+    $Id: lib_listen.c,v 1.3 2002/07/12 13:11:20 sebauer Exp $
 */
 
 #include <exec/types.h>
+#include <proto/exec.h>
 
 #include "socket_intern.h"
-#include "calling.h"
+
+#include "lwip/sys.h"
+#include "lwip/sockets.h"
+
+/* #define MYDEBUG */
+#include "debug.h"
 
 /*****************************************************************************
 
@@ -47,10 +53,24 @@ __asm int LIB_listen(register __d0 long s, register __d1 long backlog)
 
 *****************************************************************************/
 {
+	  int rc;
+	  void *ud;
+	  struct Task *t;
+
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
-    return CallStackFunction(SOCKB(SocketBase), LIBMSG_LISTEN, 2, s, backlog);
+    t = FindTask(NULL);
+    ud = t->tc_UserData;
+    /* set user data (used by sys_arch functions) */
+    t->tc_UserData = SOCKB(SocketBase)->data;
+
+    rc = lwip_listen(s,backlog);
+
+    D(bug("listen()=%ld\n",rc));
+    /* restore old user data */
+    t->tc_UserData = ud;
+    return rc;
 
     AROS_LIBFUNC_EXIT
 

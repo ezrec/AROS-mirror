@@ -25,9 +25,14 @@ void main(void)
 
 	    if (connect(sock, (struct sockaddr *) &src, sizeof(src)) != -1)
 	    {
-		Printf("Client: Connected to socket\n");
+		Printf("Client: Connected to socket\nClient: Now sending a string\n");
 		send(sock,"test string",12,0);
+		Printf("Client: Sent a string\n");
+	    } else
+	    {
+	    	Printf("Client: Connecting failed\n");
 	    }
+	    Printf("Client: Close socket\n");
 
 	    CloseSocket(sock);
 	}

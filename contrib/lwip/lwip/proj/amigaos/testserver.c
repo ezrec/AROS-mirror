@@ -17,6 +17,8 @@ void main(void)
 	{
 	   struct sockaddr_in src;
 
+	   Printf("Server: Server socket at 0x%ld\n",sock);
+
 	   src.sin_family = AF_INET;
 	   src.sin_addr.s_addr = htonl(INADDR_ANY);
 	   src.sin_port = htons(6000);

@@ -1,9 +1,16 @@
+#include <string.h>
+
 #include <proto/exec.h>
 
 #include "socket_intern.h"
 
 #define MYDEBUG
 #include "debug.h"
+
+/* from sys_arch.c */
+struct ThreadData *Thread_Alloc(void);
+void Thread_Free(struct ThreadData *data);
+
 
 __asm struct SocketBase_intern *LIB_init(register __d0 struct SocketBase_intern *SocketBase, register __a0 ULONG seglist, register __a6 struct ExecBase *sysbase)
 {
@@ -14,29 +21,50 @@ __asm struct SocketBase_intern *LIB_init(register __d0 struct SocketBase_intern 
   SocketBase->library.lib_Version = 1;
   SocketBase->library.lib_Revision = 0;
   SocketBase->library.lib_IdString = "bsdsocket.library";
-  if (!(SocketBase->stack_port = FindPort("AROS TCP/IP Stack")))
-  {
-  	/* TODO: Free the lib base */
-  	return NULL;
-  }
+
+  SocketBase->orgbase = SocketBase;
+  SocketBase->data = NULL;
+
   D(bug("bsdsocket.library: Init succesfull\n"));
   return SocketBase;
 }
 
-__asm struct SocketBase_intern *LIB_open(register __a6 struct SocketBase_intern *base)
+__asm struct SocketBase_intern *LIB_open(register __a6 struct SocketBase_intern *SocketBase)
 {
+	void *newlib;
+  struct SocketBase_intern *orgbase = SocketBase->orgbase;
+
   /* Increase the library's open counter */
-  base->library.lib_OpenCnt++;
+  orgbase->library.lib_OpenCnt++;
 
   /* Clear delayed expunges (standard procedure) */
-  base->library.lib_Flags &= ~LIBF_DELEXP;
+  orgbase->library.lib_Flags &= ~LIBF_DELEXP;
 
-  return base; /* return library base */
+  newlib = AllocVec(orgbase->library.lib_NegSize + orgbase->library.lib_PosSize, MEMF_PUBLIC|MEMF_CLEAR);
+  if (!newlib)
+  {
+    orgbase->library.lib_OpenCnt--;
+    return NULL;
+  }
+
+  /* Copy over data */
+  memcpy(newlib, (char*)orgbase - orgbase->library.lib_NegSize, orgbase->library.lib_NegSize + orgbase->library.lib_PosSize);
+
+  D(bug("bsdsocket.library: openlib() allocated a new library base at 0x%lx (taskname=%s)\n",newlib,FindTask(NULL)->tc_Node.ln_Name));
+  SocketBase = (void*)(((char*)newlib) + orgbase->library.lib_NegSize);
+
+  if (!(SocketBase->data = Thread_Alloc()))
+  {
+  	FreeVec(newlib);
+    orgbase->library.lib_OpenCnt--;
+    return NULL;
+  }
+
+  return SocketBase; /* return library base */
 }
 
 __asm ULONG LIB_expunge(register __a6 struct SocketBase_intern *SocketBase)
 {
-  ULONG ret = NULL;
   long size;
 
   if (SocketBase->library.lib_OpenCnt == 0)
@@ -59,20 +87,27 @@ __asm ULONG LIB_expunge(register __a6 struct SocketBase_intern *SocketBase)
 }
 
 
-__asm ULONG LIB_close(register __a6 struct SocketBase_intern *base)
+__asm ULONG LIB_close(register __a6 struct SocketBase_intern *SocketBase)
 {
   ULONG ret = NULL;
 
-  /* Decrease the library's open counter */
-  base->library.lib_OpenCnt--;
+  if (SocketBase != SocketBase->orgbase)
+  {
+    struct SocketBase_intern *orgbase = SocketBase->orgbase;
+    FreeVec((char *)SocketBase - SocketBase->library.lib_NegSize);
+    SocketBase = orgbase;
+  }
 
-  if (!base->library.lib_OpenCnt)
+  /* Decrease the library's open counter */
+  SocketBase->library.lib_OpenCnt--;
+
+  if (!SocketBase->library.lib_OpenCnt)
   {
     /* not opened any more */
-    if (base->library.lib_Flags & LIBF_DELEXP)
+    if (SocketBase->library.lib_Flags & LIBF_DELEXP)
     {
       /* There is a delayed expunge waiting */
-      ret = LIB_expunge(base);
+      ret = LIB_expunge(SocketBase);
     }
   }
   return ret;
