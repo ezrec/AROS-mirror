@@ -11,6 +11,15 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/08/08 14:11:55  chodorowski
+ * Fixes to make BGUI compile on Amiga. Most notably this file defined
+ * it's own sprintf() which clashed quite severely with the one in clib.
+ * Does anyone know why this was done this way? The one in clib uses
+ * (I think) it's own routines, while the one in this file uses SprintfA()
+ * which in it's turn uses RawDoFmt() from exec.library. Are there any
+ * big differences how they handle formatting of strings?
+ * Anyway, it's disabled now, and everything seems to work...
+ *
  * Revision 42.3  2000/07/03 21:21:00  bergers
  * Replaced stch_l & stcu_d and had to make a few changes in other places because of that.
  *
@@ -59,8 +68,8 @@ extern struct Library *LocaleBase;
 
 //makeproto ASM ULONG CompStrlenF(REG(a0) UBYTE *fstring, REG(a1) ULONG *args)
 makeproto ASM REGFUNC2(ULONG, CompStrlenF,
-	REGPARAM(A0, UBYTE *, fstring),
-	REGPARAM(A1, ULONG *, args))
+        REGPARAM(A0, UBYTE *, fstring),
+        REGPARAM(A1, ULONG *, args))
 {
    struct Hook    hook = { NULL, NULL, (HOOKFUNC)LHook_Count, NULL, (APTR)0 };
    struct Locale *loc;
@@ -87,9 +96,9 @@ makeproto ASM REGFUNC2(ULONG, CompStrlenF,
 
 //makeproto ASM VOID DoSPrintF(REG(a0) UBYTE *buffer, REG(a1) UBYTE *fstring, REG(a2) ULONG *args)
 makeproto ASM REGFUNC3(VOID, DoSPrintF,
-	REGPARAM(A0, UBYTE *, buffer),
-	REGPARAM(A1, UBYTE *, fstring),
-	REGPARAM(A2, ULONG *, args))
+        REGPARAM(A0, UBYTE *, buffer),
+        REGPARAM(A1, UBYTE *, fstring),
+        REGPARAM(A2, ULONG *, args))
 {
    struct Hook    hook = { NULL, NULL, (HOOKFUNC)LHook_Format, NULL, NULL };
    struct Locale *loc;
@@ -120,10 +129,10 @@ makeproto ASM REGFUNC3(VOID, DoSPrintF,
 
 #ifdef _AROS
 #else
-makeproto void sprintf(char *buffer, char *format, ...)
-{
-   SPrintfA(buffer, format, (ULONG *)&format + 1);
-}
+//makeproto void sprintf(char *buffer, const char *format, ...)
+//{
+//   SPrintfA(buffer, format, (ULONG *)&format + 1);
+//}
 #endif
 
 extern __stdargs VOID KPutFmt( STRPTR format,  ULONG *values);
