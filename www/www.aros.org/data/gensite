@@ -374,21 +374,5 @@ genDownload ()
 genSnapshots ()
 genLinks ()
 
-def genTest():
-    page = PageMeat ('Test', 'test.shtml')
-    page.append (
-	Heading (2, "Test"),
-    )
-
-    # small test to see whethe the server supports SSI
-    page.append(
-        BR(),
-        '<!--#echo var="DATE_LOCAL" -->'
-    )
-
-    page.write()
-
-genTest()
-
 processPartialPages ()
 
