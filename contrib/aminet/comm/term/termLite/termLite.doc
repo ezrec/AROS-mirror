@@ -1,0 +1,11 @@
+`termLite'  is the little brother of `term'.  It is a very, very basic
+telecommunications   program   which   solely  relies  on  the  serial
+parameter  settings  configured  using  the  Prefs/Serial  tool.  As a
+terminal  program `termLite' is merely in an embryonal state, its main
+purpose  being  a  simple interface to the serial/parallel hardware (I
+used  it  to  control  RomWack from a remote machine).  The program is
+pure and can be made resident.  On startup you may pass it the name of
+the  device  to  use  and  the  device's unit number.  Cut & paste are
+supported through the console.  Source code and executable program are
+placed in the public domain, enjoy.
+                                    -olsen
