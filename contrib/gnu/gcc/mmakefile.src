@@ -6,22 +6,8 @@
 ##MM- contrib-gnu : contrib-gnu-gcc
 ##MM- contrib-gnu-gcc : development-gcc
 
-#MM- development : development-gcc
-#MM development-gcc-build-quick : development-gcc-fetch
-
-ORIGINS := /work/src/gcc/ http://ftp.gnu.org/pub/gnu/gcc/gcc-3.3.1
-
-#MM
-development-gcc-fetch :
-	%fetch archive=gcc-core-3.3.1.tar.bz2 destination=$(PORTSDIR)/gcc archive_origins=$(ORIGINS) \
-	patches_specs=gcc-core-3.3.1-aros.diff:gcc-3.3.1:-p1
-
-%build_with_configure mmake=development-gcc-build srcdir=$(PORTSDIR)/gcc/gcc-3.3.1 nix=yes \
-    prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development extraoptions="--target=$(AROS_TARGET_CPU)-aros \
-    --build=local --enable-longlong --disable-nls --enable-sjlj-exceptions"
-
-#MM- development-gcc : development-gcc-build development-gcc-delete-specs
-#MM- development-gcc-quick : development-gcc-build-quick development-gcc-delete-specs
+%fetch_and_build_gnu_development package=gcc subpackage=core version=3.3.1 patch=yes \
+    extraoptions="--enable-longlong --enable-sjlj-exceptions" postinstall=development-gcc-delete-specs
 
 #MM
 development-gcc-delete-specs :
