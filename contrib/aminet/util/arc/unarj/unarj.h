@@ -116,6 +116,11 @@ typedef unsigned long  ulong;   /* 32 bits or more */
 /* Environment definitions (implementation dependent)        */
 /* ********************************************************* */
 
+#ifdef __AROS__
+#include <sys/stat.h> 
+#define MKDIR(path, mode)   mkdir(path, mode)
+#endif
+
 #ifdef _QC
 #define __MSDOS__
 #endif
