@@ -13,6 +13,8 @@ aros/%_aros.c : %.c
 %.o : aros/%_aros.c
 	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(LOCALINCLUDES) -c $^ -o $@ -include aros/arosspecific.h
 
+test/%.o : test/%.c
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(STARTUP) $(LOCALINCLUDES) -c $^ -o $@
 
 API_SOURCE = \
 	LT_Activate \
@@ -119,16 +121,23 @@ FILES = \
 	LTP_TabClass \
 	LT_InitExit
 
+TESTFILES = test/gui test/Tools
+
 OBJS = $(foreach f,$(API_SOURCE) $(UFC_SOURCE) $(FILES),$(f).o)
+TESTOBJS = test/gui.o test/Tools.o
 
 #First all intermediate files MUST be created so there is a 'defines' file!
-all: gtlayout.library
+all: gtlayout.library test_aros
 
 gtlayout.library : $(INTERMEDIATES) $(OBJS) gtlayout_lib.o gtlayout_data.o
 	$(CC) -nostartfiles -nostdlib -Wl,-i \
 		gtlayout_lib.o gtlayout_data.o $(OBJS) \
 		-static -i -L$(LIBDIR) -lamiga -larosc -o $@
 
+test_aros: $(TESTOBJS)
+	$(CC) -nostartfiles -nostdlib -Wl,-r\
+		-static $(TESTOBJS) -L$(LIBDIR) -lamiga -larosc -o $@
+ 
 clean:
 	$(RM) $(INTERMEDIATES) $(OBJS) gtlayout.library aros/gtlayout_defines_aros.h
 
