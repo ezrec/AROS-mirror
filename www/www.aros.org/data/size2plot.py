@@ -18,7 +18,7 @@ def generateGP (outputfile, sizefile, title, xaxis = None):
 	dict['xaxis'] = '''set xtics nomirror %d\n''' % (3600*24*180)
     
     fh = open (gpFile, 'w')
-    print dict
+    #print dict
     fh.write ('''# This is a gnuplot file
 # It creates a picture of the current size of the CVS repository in
 set xlabel "Date"
@@ -41,8 +41,11 @@ plot '%(sizefile)s' using 1:($2/1024) title "" with lines
 def convert (outputfile, sizefile, title, xaxis = None):
     generateGP (outputfile, sizefile, title, xaxis)
 
-    status, output = commands.getstatusoutput ('%s %s' % (config.GNUPLOT, gpFile))
+    cmd = '%s %s' % (config.GNUPLOT, gpFile)
+    status, output = commands.getstatusoutput (cmd)
     if status:
+	sys.stderr.write ("'" cmd + "' failed: ")
+	sys.stderr.write (output)
 	sys.exit (os.WEXITSTATUS (status))
 
     os.remove (gpFile)
