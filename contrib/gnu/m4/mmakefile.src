@@ -1,0 +1,39 @@
+# Copyright © 2003, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(CONTRIBDIR)/gnu/m4
+
+#MM- contrib-gnu : contrib-gnu-m4
+
+#MM contrib-gnu-m4 : setup linklibs
+contrib-gnu-m4 : contrib-gnu-m4-build
+
+#MM contrib-gnu-m4-quick
+contrib-gnu-m4-quick : contrib-gnu-m4-build
+
+
+contrib-gnu-m4-build: .files-touched $(GENDIR)/$(CURDIR)/.configured
+	@$(MAKE) -C $(GENDIR)/$(CURDIR)
+	@$(MAKE) -C $(GENDIR)/$(CURDIR) install
+
+.files-touched:
+	@find . | xargs $(TOUCH) -r configure 
+	@$(ECHO) YES > $@
+
+$(GENDIR)/$(CURDIR)/.configured : mmakefile
+	%mkdirs_q $(GENDIR)/$(CURDIR)
+	@cd $(GENDIR)/$(CURDIR);                                          \
+	    $(RM) config.cache;                                           \
+	    CC=$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros-gcc \
+	    $(TOP)/$(CURDIR)/configure --prefix=$(EXEDIR)                 \
+	    --host=$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros
+	@$(ECHO) YES > $@
+
+#MM contrib-gnu-m4-clean :
+contrib-gnu-m4-clean :
+	@if [ -e $(GENDIR)/$(CURDIR)/Makefile ]; then \
+	    $(MAKE) -C $(GENDIR)/$(CURDIR) uninstall; \
+        fi
+	@$(RM) $(GENDIR)/$(CURDIR)
