@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+/* Avoid conflicts */
+#define BitMapHeader MyBitMapHeader
+#define ColorRegister MyColorRegister
 #include "myiff.h"
 #include <ctype.h>
 
