@@ -1,0 +1,89 @@
+## version $VER: newmastermind.catalog 1.0 (27.01.2005)
+## codeset 0
+## language deutsch
+;
+MSG_GAME_MENU
+ \0Spiel
+;  \0Game
+;
+MSG_GAME_NEW
+N\0Neu
+; N\0New
+;
+MSG_GAME_ABOUT
+?\0Über...
+; ?\0About...
+;
+MSG_GAME_QUIT
+Q\0NewMasterMind beenden
+; Q\0Quit NewMasterMind
+;
+MSG_SETTINGS_MENU
+ \0Einstellungen
+;  \0Settings
+;
+MSG_SETTINGS_OPPONENT
+ \0Gegner
+;  \0Opponent
+;
+MSG_SETTINGS_HUMAN
+ \0Mensch
+;  \0Human
+;
+MSG_SETTINGS_COMPUTER
+ \0Amiga
+;  \0Computer
+;
+MSG_SETTINGS_CORRECTION
+ \0Korrekturmethode
+;  \0Correction Method
+;
+MSG_SETTINGS_CHILDREN
+ \0für Kinder
+;  \0for Children
+;
+MSG_SETTINGS_ADULTS
+ \0für Erwachsene
+;  \0for Adults
+;
+MSG_SETTINGS_NUMCOLORS
+ \0Anzahl der Farben
+;  \0Number of Colors
+;
+MSG_SETTINGS_NUMCOLORS_4
+ \0004 Farben
+;  \0004 Colors
+;
+MSG_SETTINGS_NUMCOLORS_6
+ \0006 Farben
+;  \0006 Colors
+;
+MSG_SETTINGS_NUMCOLORS_8
+ \0008 Farben
+;  \0008 Colors
+;
+MSG_SETTINGS_COLORDISPLAY
+ \0Keine Farben
+;  \0No Colors
+;
+MSG_SETTINGS_SAVE
+ \0Einstellungen Speichern
+;  \0Save Settings
+;
+MSG_ABOUT_REQTITLE
+Über %s
+; About %s
+;
+MSG_ABOUT_REQMSG
+%s v%s\nVon %s %s\nCopyright © %s %s
+; %s v%s\nBy %s %s\nCopyright © %s %s
+;
+MSG_CONTINUE_GAD
+Fortsetzen
+; Continue
+;
+MSG_OK_GAD
+Ok
+; OK
+;
+
