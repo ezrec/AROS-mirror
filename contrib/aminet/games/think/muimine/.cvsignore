@@ -1,0 +1,7 @@
+SCOPTIONS
+*.o
+*.info
+*.bak
+*.lnk
+MUIMine
+MUIMineLevelData
