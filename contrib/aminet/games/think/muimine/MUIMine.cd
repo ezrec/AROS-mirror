@@ -1,0 +1,621 @@
+#header __MUIMINELOCALE
+;-----------------------------------------------------------------------------
+;
+;   menu strings -  these are the menu title and item strings for the game
+;   ------------    each string has two parts, first is a single character
+;                   NULL terminated string to be used as the command key
+;                   for the menu item ( this character should be a space
+;                   for titles and items that do not have a command key ),
+;                   the second part of the string is the string that is
+;                   shown for the title or item
+;
+MSG_MENUTITLE_GAME              (100//)
+ \000Game
+;
+MSG_MENUITEM_GAMESTART          (101//)
+S\000Start New Game
+;
+MSG_MENUITEM_GAMEBESTTIMES      (102//)
+B\000Show BestTimes...
+;
+MSG_MENUITEM_GAMELEVELSETUP     (103//)
+L\000Setup Levels...
+;
+MSG_MENUITEM_GAMEIMAGESETUP     (104//)
+G\000Setup Imagery...
+;
+MSG_MENUITEM_GAMESAFESTART      (106//)
+T\000Safe Start
+;
+MSG_MENUITEM_GAMEINFO           (110//)
+I\000Program Info...
+;
+MSG_MENUITEM_GAMEQUIT           (199//)
+Q\000Quit
+;
+MSG_MENUTITLE_LEVEL             (200//)
+ \000Level
+;
+MSG_MENUTITLE_MUI               (300//)
+ \000MUI
+;
+MSG_MENUITEM_MUIABOUT           (301//)
+ \000About MUI...
+;
+MSG_MENUITEM_MUISETTINGS        (302//)
+ \000MUI Settings...
+;
+;-----------------------------------------------------------------------------
+;
+;   common strings -  these are the labels and control characters for commonly
+;   --------------    used button gadgets in requesters. There are two types -
+;                     1. MUI buttons which, like menu items, have two parts, a
+;                     single character null terminated string which is the
+;                     control character for the button followd by the button's
+;                     label.
+;                     2. System gadget description strings MSG_xxx_GADGET(S)
+;                     in which gadget entries are seperated by a '|' character
+;                     the control character for the gadget is indicated in the
+;                     entry by preceding the character in the string with a
+;                     '_' character and the default gadget is indicated by a
+;                     '*' character at the beginning of its entry
+;
+;   Buttons
+;
+MSG_OKBUTT_TEXT                 (1000//)
+Ok
+;
+MSG_OKBUTT_CTRL                 (1001//)
+o
+;
+MSG_CANCELBUTT_TEXT             (1002//)
+Cancel
+;
+MSG_CANCELBUTT_CTRL             (1003//)
+c
+;
+MSG_CLOSEBUTT_TEXT              (1004//)
+Close
+;
+MSG_CLOSEBUTT_CTRL              (1005//)
+c
+;
+MSG_OKBUTT_LABEL                (1010//)
+o\000Ok
+;
+MSG_CANCELBUTT_LABEL            (1011//)
+c\000Cancel
+;
+MSG_CLOSEBUTT_LABEL             (1012//)
+c\000Close
+;
+;   Gadgets
+;
+MSG_YESNO_GADGETS               (1020//)
+_Yes|*_No
+;
+MSG_CONTINUE_GADGET             (1021//)
+*Continue
+;
+MSG_EXIT_GADGET                 (1022//)
+*Exit
+;
+;-----------------------------------------------------------------------------
+;
+;   strings for MUIMine.c
+;
+;   game description string
+;
+MSG_GAME_DESCRIPTION            (1050//)
+Find all the mines in the mine field game.
+;
+;-----------------------------------------------------------------------------
+;
+;   strings for MFWindow.c
+;   ----------------------
+;
+;   mine field window's default title
+;
+MSG_MFWINDOW_TITLE              (1100//)
+MUI Mine
+;
+;   mine field window's title format when a named difficulty level
+;   is selected, the '%s' argument is the difficulty level's name
+;
+MSG_MFWINDOW_TITLE_FMT          (1101//)
+MUI Mine - %s
+;
+;
+;   bubble help for the mines left display
+;
+MSG_MINESLEFT_HELP              (1110//)
+Number of mines remaining.
+;
+;   bubble help for the start button
+;
+MSG_STARTBUTT_HELP              (1111//)
+Start a new game.
+;
+;   bubble help for the time taken display
+;
+MSG_TIMETAKEN_HELP              (1112//)
+Time taken so far.
+;
+;
+;   error message when an attempt to open the mine field window fails
+;
+MSG_MFWINDOW_OPEN_ERR           (1120//)
+\033cError: Could not open Mine Field Window\n\n\
+This could be due to a Mine Field that is too\n\
+large for the screen, if this is so then either\n\
+delete the level, use a higher resolution screen\n\
+or lower resolution graphics files. This could\n\
+also be due to invalid graphics files in which\n\
+case you should correct or replace the files.\n\
+
+;
+;
+;   title for the get best time name window
+;
+MSG_BESTTIME_NAME_TITLE         (1130//)
+A New Best Time
+;
+;   format for the message contents of the get best time name window
+;   the first '%s' parameter is the string describing the ranking of
+;   the new best time as given by the MSG_BESTTIME_RANK_x strings,
+;   the second '%s' parameter is the name of the difficulty level.
+;
+MSG_BESTTIME_FMT                (1131//)
+\033cCongratulations!\n\n\
+You have achieved the%s best time\n\
+for the %s difficulty level.\n\n\
+Please enter your name ...
+;
+MSG_BESTTIME_RANK_1             (1132//)
+
+;
+MSG_BESTTIME_RANK_2             (1133//)
+ second
+;
+MSG_BESTTIME_RANK_3             (1134//)
+ third
+;
+;
+;   title of the program info window
+;
+MSG_PROGINFO_TITLE              (1140//)
+MUI Mine Program Info
+;
+;   extra credits string, shown in program info window
+;
+MSG_PROGINFO_CREDITS            (1141//)
+
+;
+;   translator's credit string, shown in program info window a
+;   catalog translator should give themselves credit in this
+;   string with something like "Boskonian translation by Helmuth"
+;
+MSG_PROGINFO_TRANSLATOR         (1142//)
+
+;
+;-----------------------------------------------------------------------------
+;
+;   strings for BTWindow.c
+;   ----------------------
+;
+;   title of the best times window
+;
+MSG_BTWINDOW_TITLE              (1200//)
+MUI Mine Best Times
+;
+;   bubble help for the level selection cycle gadget
+;
+MSG_BTLEVELCYCLE_HELP           (1205//)
+Selects the level to show best times for.
+;
+;   bubble help for the close button
+;
+MSG_BTCLOSEBUTT_HELP            (1206//)
+Close the window.
+;
+;   label of the 'reset this level' button
+;
+MSG_RESETLEVELBUTT_TEXT         (1210//)
+Reset Level
+;
+;   bubble help for the 'reset this level' button
+;
+MSG_RESETLEVELBUTT_HELP         (1211//)
+Clears the best times for this level.
+;
+;   label of the 'reset all levels' button
+;
+MSG_RESETALLBUTT_TEXT           (1212//)
+Reset All
+;
+;   bubble help for the 'reset all levels' button
+;
+MSG_RESETALLBUTT_HELP           (1213//)
+Clears the best times for all levels.
+;
+;   bubble help for the best times list
+;
+MSG_BTLIST_HELP                 (1220//)
+The three best times and names for this level.
+;
+;   heading of the time column of the best times list, note that
+;   this string is right justified ends with a space for better
+;   list layout
+;
+MSG_TIMECOL_HEADING             (1221//)
+\033r\033b Time\040
+;
+;   heading of the name column of the best times list, note that
+;   this string is left justified for better list layout
+;
+MSG_NAMECOL_HEADING             (1222//)
+\033l\033bName
+;
+;   query to confirm that the program user really wants to reset
+;   the best times for the currently selected level
+;
+MSG_QUERY_RESETLEVEL            (1230//)
+Do you really want to reset the\nbest time data for this level ?
+;
+;   query to confirm that the program user really wants to reset
+;   the best times for all the levels
+;
+MSG_QUERY_RESETALL              (1231//)
+Do you really want to reset the\nbest time data for all levels ?
+;
+;-----------------------------------------------------------------------------
+;
+;   strings for LEWindow.c
+;   ----------------------
+;
+;   title of the difficulty level editor window
+;
+MSG_LEWINDOW_TITLE              (1300//)
+MUI Mine Level Editor
+;
+;
+;   bubble help for the 'Ok' button
+;
+MSG_LE_OKBUTT_HELP              (1305//)
+Commit changes and close window.
+;
+;   bubble help for the 'Cancel' button
+;
+MSG_LE_CANCELBUTT_HELP          (1306//)
+Forget changes and close window.
+;
+;
+;   label of the add new level button (V1.0 only)
+;
+MSG_ADDBUTT_TEXT                (1310//)
+Add
+;
+;   control character for the add new level button (V1.0 only)
+;
+MSG_ADDBUTT_CTRL                (1311//)
+a
+;
+;   bubble help for the add new level button
+;
+MSG_ADDBUTT_HELP                (1312//)
+Add a new level at the end of the list.
+;
+;   control character and label of the add new level button (V1.1 and later)
+;
+MSG_ADDBUTT_LABEL               (1313//)
+a\000Add
+;
+;   label of the delete current level button (V1.0 only)
+;
+MSG_DELETEBUTT_TEXT             (1314//)
+Delete
+;
+;   control character for the delete current level button (V1.0 only)
+;
+MSG_DELETEBUTT_CTRL             (1315//)
+d
+;
+;   bubble help for the delete current level button
+;
+MSG_DELETEBUTT_HELP             (1316//)
+Delete the currently selected level.
+;
+;   control character and label of the delete current level button (V1.1 and later)
+;
+MSG_DELETEBUTT_LABEL            (1317//)
+d\000Delete
+;
+;   label of the undo changes to this level button (V1.0 only)
+;
+MSG_UNDOTHISBUTT_TEXT           (1318//)
+Undo This
+;
+;   control character for the undo changes to this level button (V1.0 only)
+;
+MSG_UNDOTHISBUTT_CTRL           (1319//)
+t
+;
+;   bubble help for the undo changes to this level button
+;
+MSG_UNDOTHISBUTT_HELP           (1320//)
+\033cRestore the currently selected level\n\
+to the state it was in when it\nwas last selected in the list.
+;
+;   control character and label of the undo changes to this level button (V1.1 and later)
+;
+MSG_UNDOTHISBUTT_LABEL          (1321//)
+t\000Undo This
+;
+;   lable of the undo all changes button (V1.0 only)
+;
+MSG_UNDOALLBUTT_TEXT            (1322//)
+Undo All
+;
+;   control character for the undo all changes button (V1.0 only)
+;
+MSG_UNDOALLBUTT_CTRL            (1323//)
+u
+;
+;   bubble help for the undo all changes button
+;
+MSG_UNDOALLBUTT_HELP            (1324//)
+\033cRestore all levels to the original\n\
+levels given when the Level Editor\n\
+window was opened.
+;
+;   control character and lable of the undo all changes button (V1.1 and later)
+;
+MSG_UNDOALLBUTT_LABEL           (1325//)
+u\000Undo All
+;
+;
+;   bubble help for the level list
+;
+MSG_LEVELLIST_HELP              (1330//)
+\033cSelect a level to edit from this list.\n\
+Use Drag and Drop to sort the list.
+;
+;   heading of the name column of the level list
+;
+MSG_LEVELNAMECOL_HEADING        (1331//)
+\033bName
+;
+;   heading of the width column of the level list
+;
+MSG_WIDTHCOL_HEADING            (1332//)
+\033bWidth
+;
+;   heading of the height column of the level list
+;
+MSG_HEIGHTCOL_HEADING           (1333//)
+\033bHeight
+;
+;   heading of the number of mines column of the level list
+;
+MSG_MINESCOL_HEADING            (1334//)
+\033bMines
+;
+;
+;   label for the edit level name string gadget, note that this
+;   string is right justified for better layout  (V1.0 only)
+;
+MSG_NAMEEDIT_TITLE              (1340//)
+\033rName
+;
+;   control character for the edit level name string gadget (V1.0 only)
+;
+MSG_NAMEEDIT_CTRL               (1341//)
+n
+;
+;   bubble help for the edit level name string gadget
+;
+MSG_NAMEEDIT_HELP               (1342//)
+\033cChange the name of the currently\n\
+selected level here. The name\n\
+must be unique for each level.
+;
+;   control character and label for the edit level name string gadget,
+;   note that this string is right justified for better layout (V1.1 and later)
+;
+MSG_NAMEEDIT_LABEL              (1343//)
+n\000\033rName
+;
+;   label for the edit width of minefield string gadget (V1.0 only)
+;
+MSG_WIDTHEDIT_TITLE             (1344//)
+\033rWidth
+;
+;   control character for the edit width of minefield string gadget (V1.0 only)
+;
+MSG_WIDTHEDIT_CTRL              (1345//)
+w
+;
+;   bubble help for the edit width of minefield srting gadget
+;
+MSG_WIDTHEDIT_HELP              (1346//)
+\033cChange the width of the mine field\n\
+of the currently selected level here.\n\
+This value must be greater than zero.
+;
+;   control character and label for the edit width of minefield string gadget (V1.1 and later)
+;
+MSG_WIDTHEDIT_LABEL             (1347//)
+w\000\033rWidth
+;
+;   label for the edit height of minefield string gadget (V1.0 only)
+;
+MSG_HEIGHTEDIT_TITLE            (1348//)
+\033rHeight
+;
+;   control character for the edit height of minefield string gadget (V1.0 only)
+;
+MSG_HEIGHTEDIT_CTRL             (1349//)
+h
+;
+;   bubble help for the edit height of minefield string gadget
+;
+MSG_HEIGHTEDIT_HELP             (1350//)
+\033cChange the height of the mine field\n\
+of the currently selected level here.\n\
+This value must be greater than zero.
+;
+;   control character and label for the edit height of minefield string gadget (V1.1 and later)
+;
+MSG_HEIGHTEDIT_LABEL            (1351//)
+h\000\033rHeight
+;
+;   label of the edit number of mines string gadget (V1.0 only)
+;
+MSG_MINESEDIT_TITLE             (1352//)
+\033rMines
+;
+;   control character for the edit number of mines string gadget (V1.0 only)
+;
+MSG_MINESEDIT_CTRL              (1353//)
+m
+;
+;   bubble help for the edit number of mines string dadget
+;
+MSG_MINESEDIT_HELP              (1354//)
+\033cChange the number of mines in the mine\n\
+field of the currently selected level here.\n\
+This value must be greater than zero and\n\
+less than the Width times the Height.
+;
+;   control character and label of the edit number of mines string gadget (V1.1 and later)
+;
+MSG_MINESEDIT_LABEL             (1355//)
+m\000\033rMines
+;
+;
+;   error message for level with no name specified
+;
+MSG_NOLEVELNAME_ERR             (1360//)
+\033cYou must give this level a name!
+;
+;   error message for level with width, height or number of mines
+;   not specified
+;
+MSG_UNSETLEVELDATA_ERR          (1361//)
+\033cYou must set values for Width, Height and Number of Mines!
+;
+;   error message for level with too many mines for the minefield
+;
+MSG_TOOMANYMINES_ERR            (1365//)
+\033cMust have Mines less than Width times Height.\n\
+Reduce the number of Mines.
+;
+;
+;   format for error message for a levelthat has the same values
+;   for width, height and number of mines as another level, the
+;   '%s' parameter is the name of the other level
+;
+MSG_DUPLEVEL_ERR_FMT            (1370//)
+\033cThis level is the same as level '%s'.\n\
+You must change this level's Width, Height or Mines.
+;
+;   format for error message for a level that has the same name as
+;   another level, the '%s' parameter is the name of other level
+;
+MSG_DUPNAME_ERR_FMT             (1371//)
+\033cThis level has the same name as level '%s'.\n\
+You must give this level a different name.
+;
+;   error message for an unknown error error with the level data, this
+;   message should never be displayed unless there is a program bug
+;
+MSG_UNKNOWNLEVELDATA_ERR        (1372//)
+\033cThere is some unknown problem with\n\
+your level data. Please determine the\n\
+cause and correct the situation!
+;
+;
+;   format for query to confirm that the program user really wants to
+;   delete a level, the '%s' parameter is the name of the level
+;
+MSG_QUERY_DELETELEVEL_FMT       (1380//)
+\033cDo you really want to delete the level\n'%s' ?
+;
+;   query to confirm that the program user really wants to delete a
+;   level that has not yet been given a name
+;
+MSG_QUERY_DELETEUNNAMED         (1381//)
+\033cDo you really want to delete\nthis unnamed level ?
+;
+;-----------------------------------------------------------------------------
+;
+;   strings for LevelData.c
+;   -----------------------
+;
+;   these are the names of the default levels
+;
+MSG_LEVEL_BEGINNER              (1400//)
+Beginner
+;
+MSG_LEVEL_INTERMEDIATE          (1401//)
+Intermediate
+;
+MSG_LEVEL_EXPERT                (1402//)
+Expert
+;
+;-----------------------------------------------------------------------------
+;
+;   strings for ISWindow.c
+;   ----------------------
+;
+MSG_ISWINDOW_TITLE              (1450//)
+MUIMine Image Select
+;
+MSG_ISWINDOW_MFLABEL            (1451//)
+m\000Mine Field
+;
+MSG_ISWINDOW_SBLABEL            (1452//)
+s\000Start Button
+;
+MSG_ISWINDOW_MDLABEL            (1453//)
+l\000Mines Left
+;
+MSG_ISWINDOW_TDLABEL            (1454//)
+t\000Time Taken
+;
+MSG_ISWINDOW_MFTITLE            (1461//)
+Select Image File for the Mine Field
+;
+MSG_ISWINDOW_SBTITLE            (1462//)
+Select Image File for the Start Button
+;
+MSG_ISWINDOW_MDTITLE            (1463//)
+Select Image File for the Mines Left Digits
+;
+MSG_ISWINDOW_TDTITLE            (1464//)
+Select Image File for the Time Taken Digits
+;
+MSG_ISWINDOW_MFHELP             (1471//)
+This is the image file used to render the Mine Field.
+;
+MSG_ISWINDOW_SBHELP             (1472//)
+This is the image file used to render the Start Button.
+;
+MSG_ISWINDOW_MDHELP             (1473//)
+This is the image file used to render the Mines Left Digits.
+;
+MSG_ISWINDOW_TDHELP             (1474//)
+This is the image file used to render the Time Taken Digits.
+;
+MSG_ISWINDOW_OKHELP             (1481//)
+Accept any changes and close the window.
+;
+MSG_ISWINDOW_CANCELHELP         (1482//)
+Forget any changes and close the window.
+;
+;   tell the user to close all asl file requesters before
+;   exiting the image select window
+;
+MSG_CLOSE_IMAGE_ASL             (1485//)
+\033cYou must close all the file requesters\nbefore exiting the Image Select Window.
+;
