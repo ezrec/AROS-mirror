@@ -1,0 +1,11 @@
+This  drawer  contains  the  source  codes  to  the entire `term'
+project.  In  order to compile it the v3.1 includes and libraries
+and the SAS/C 6.51 compiler is required.
+
+term-Source.lha
+
+   The main program source code
+
+gtlayout-Source.lha
+
+   The user interface source code

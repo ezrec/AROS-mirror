@@ -1,0 +1,39 @@
+This  drawer  contains  additional  support  material.  It is not
+required  to  run `term' but it makes good sense to install it as
+well.
+
+030
+
+   Special versions of the `term' main program and the
+   user interface support library compiled for use with
+   Amigas equipped with MC68020/030/040/060 CPUs.
+
+HydraCom
+
+   Amiga port of the HydraCom bidirectional file transfer
+   program, enhanced for use with `term'
+
+Locale
+
+   German user interface text and a blank catalog translation
+   file to fill in
+
+Rexx
+
+   Sample ARexx scripts for use with `term'
+
+Sound
+
+   Sound files for use with `term'
+
+Source
+
+   The complete `term' source code
+
+Tools
+
+   Additional utilities to with `term'
+
+Translation
+
+   7-bit character translation table files

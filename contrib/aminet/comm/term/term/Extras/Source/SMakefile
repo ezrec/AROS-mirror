@@ -1,0 +1,124 @@
+###############################################################################
+#
+#	SMakefile
+#
+#	Makefile for the `SMake' utility required to build `term'
+#
+#	Copyright © 1990-1996 by Olaf `Olsen' Barthel
+#		All Rights Reserved
+#
+###############################################################################
+
+.c.o:
+	sc $(CFLAGS) $<
+
+.a.o:
+	asm $(AFLAGS) $<
+
+###############################################################################
+# Type of CPU to build for; note that this is *case-sensitive*!
+#CPU =		ANY
+CPU =		68030
+
+###############################################################################
+# This turns on the optimization options
+#OPTIMIZE =	optimize opttime optinlocal optdepth=3 optrdepth=3
+
+###############################################################################
+# These two can cut compilation times by pulling in all header files into
+# the global symbol table. This will make changes to header files pretty
+# difficult, but if you need the time...
+#INCLUDEFLAGS =	define=INCLUDEALL
+#INCLUDEFILES =	Global.h Protos.h Data.h Errors.h
+
+###############################################################################
+# The compiler can make use of the utility.library arithmetic routines. You
+# can enable both or just the L_UTILITY line. Note that uncommenting the
+# C_UTILITY line only makes sense with CPU=ANY as the '020 inline math is
+# both shorter and a little faster.
+#C_UTILITY =	utillib
+L_UTILITY =	define __CXM33=__UCXM33 define __CXD33=__UCXD33 \
+		define __CXM22=__UCXM22 define __CXD22=__UCXD22
+
+###############################################################################
+# The name of the global symbol table file to use.
+GSTFILE =	term.gst
+
+###############################################################################
+# Compiler, assembler and linker options; you wouldn't want to change these.
+CFLAGS =	mccons streq strmerge nostkchk idlen=65 nover \
+		params=r error=7+100+154+161 \
+		cpu=$(CPU) define=CPU_$(CPU) gst=$(GSTFILE) \
+		$(C_UTILITY) $(DEBUG) $(OPTIMIZE) \
+		$(INCLUDEFLAGS)
+AFLAGS =	-d -u -dCPU_$(CPU) -dCPU='$(CPU)'
+LFLAGS =	smallcode smalldata nodebug noicons \
+		maxhunk 100000 $(L_UTILITY)
+
+###############################################################################
+# Libraries to link with; you wouldn't want to change these.
+LIBS =		lib:sc.lib lib:amiga.lib
+
+###############################################################################
+# The files that make up the program; you wouldn't want to change these.
+STARTUP =	VersionTag.o
+A_OBJS =	StackCall.o
+C_OBJS =	About.o Accountant.o AmigaGuide.o ARexx.o \
+		ARexxAttributes.o ARexxCommands.o ASCIIPanel.o ASCIITransfer.o \
+		Beep.o Boxes.o Buffer.o Call.o \
+		Capture.o CapturePanel.o CaptureParser.o Chat.o \
+		Choose.o Clip.o ClipPanel.o Colour.o \
+		CommandPanel.o Config.o Console.o ControlSequences.o \
+		CopyPanel.o Crypt.o CursorPanel.o CustomRequest.o \
+		Data.o DatePanel.o DayPanel.o Dial.o \
+		DialList.o EditRoutine.o Emulation.o EmulationPanel.o \
+		EmulationProcess.o EmulationSpecial.o EndOfLineTranslate.o FastMacroPanel.o \
+		FastMacros.o FastMacroWindow.o FileBuffer.o FixPath.o \
+		Flow.o HotkeyPanel.o Hotkeys.o Identify.o \
+		ImportPanel.o InfoWindow.o Init.o Job.o \
+		KeyConvert.o Launch.o LibPanel.o LibPanelPlus.o \
+		Lists.o Locale.o MacroPanel.o Main.o \
+		Matrix.o Memory.o Menus.o MiscPanel.o \
+		ModemPanel.o MsgQueue.o NewMarker.o OldConfig.o OwnDevUnit.o \
+		Packet.o PathPanel.o PatternPanel.o Phone.o \
+		PhoneGroup.o PhoneList.o PhoneLogGenerator.o PhonePanel.o \
+		PhonePanelPlus.o PhonePanelUI.o PickDisplayMode.o PickFile.o \
+		PickScreen.o Print.o PrintPanel.o Raster.o \
+		RatePanel.o Remember.o Rendezvous.o SaveWindow.o \
+		Scale.o ScreenPanel.o Scroll.o SendText.o \
+		Serial.o SerialIO.o SerialPanel.o SortCompare.o \
+		Sound.o SoundPanel.o Speech.o SpeechPanel.o \
+		Start.o StatusDisplay.o Strings.o TerminalPanel.o \
+		TerminalTest.o TextBufferWindow.o TimeDate.o TimePanel.o Tools.o \
+		Transfer.o TransferPanel.o Translate.o TranslationPanel.o \
+		TrapPanel.o Traps.o UploadPanel.o UploadQueue.o \
+		Verify.o VSPrintf.o WindowMarker.o XEM.o XPR.o zmodem.o
+
+OBJS =		$(STARTUP) $(A_OBJS) $(C_OBJS)
+
+###############################################################################
+# This builds the global symbol table file and the main program
+all:		$(GSTFILE) term
+
+term:		$(OBJS)
+		slink with <<
+			from $(OBJS) to $@ lib $(LIBS) $(LFLAGS)
+		<
+
+$(GSTFILE):	Headers.c Headers.h Strings.h OwnDevUnit.h xproto.h xem.h \
+		Rendezvous.h gtlayout.h Compiler.h $(INCLUDEFILES)
+		gst unload $@
+		sc $(CFLAGS) noobjname nogst makegst=$@ Headers.c
+
+###############################################################################
+# Special cases that require special options to compile.
+Strings.o:	Strings.c Strings.h
+		sc $(CFLAGS) nogst Strings.c
+
+Start.o:	Start.c
+		sc $(CFLAGS) cpu=any Start.c
+
+###############################################################################
+# Remove all working files and the main program.
+clean:
+	@-delete quiet "\#?.o" term term.gst

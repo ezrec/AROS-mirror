@@ -1,0 +1,166 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(CONTRIBDIR)/aminet
+
+%make_common_setup
+
+FILES := \
+	ARexx \
+	ARexxCommands \
+	ASCIIPanel \
+	ASCIITransfer \
+	About \
+	Accountant \
+	AmigaGuide \
+	Beep \
+	Boxes \
+	Buffer \
+	Call \
+	Capture \
+	CapturePanel \
+	CaptureParser \
+	Chat \
+	Choose \
+	Clip \
+	ClipPanel \
+	Colour \
+	CommandPanel \
+	Console \
+	ControlSequences \
+	CopyPanel \
+	Crypt \
+	CursorPanel \
+	CustomRequest \
+	DatePanel \
+	DayPanel \
+	Dial \
+	DialList \
+	EditRoutine \
+	EmulationPanel \
+	EmulationProcess \
+	EndOfLineTranslate \
+	FastMacroPanel \
+	FastMacroWindow \
+	FastMacros \
+	FixPath \
+	Flow \
+	Headers \
+	HotkeyPanel \
+	Hotkeys \
+	ImportPanel \
+	InfoWindow \
+	Init \
+	Job \
+	JobHandler \
+	KeyConvert \
+	LibPanel \
+	LibPanelPlus \
+	Lists \
+	Locale \
+	MacroPanel \
+	Memory \
+	Menus \
+	MiscPanel \
+	ModemPanel \
+	MsgQueue \
+	NewMarker \
+	OldConfig \
+	OwnDevUnit \
+	Packet \
+	PathPanel \
+	PatternPanel \
+	Phone \
+	PhoneGroup \
+	PhoneList \
+	PhoneLogGenerator \
+	PhonePanel \
+	PhonePanelPlus \
+	PhonePanelUI \
+	PickDisplayMode \
+	PickFile \
+	PickScreen \
+	Print \
+	PrintPanel \
+	Raster \
+	RatePanel \
+	Remember \
+	Rendezvous \
+	SaveWindow \
+	Scale \
+	ScreenPanel \
+	Scroll \
+	SendText \
+	SerialPanel \
+	SortCompare \
+	Sound \
+	SoundPanel \
+	StatusDisplay \
+	Strings \
+	TerminalPanel \
+	TerminalTest \
+	TextBufferWindow \
+	TimeDate \
+	TimePanel \
+	Transfer \
+	TransferPanel \
+	Translate \
+	TranslationPanel \
+	TrapPanel \
+	Traps \
+	UploadPanel \
+	UploadQueue \
+	VSPrintf \
+	Verify \
+	WindowMarker \
+	zmodem \
+	Data \
+	Emulation \
+	EmulationSpecial \
+	Identify \
+	Marker \
+	Start \
+	Main \
+	Serial \
+	SerialIO \
+	XEM \
+	XPR \
+	ARexxAttributes \
+	Config \
+	FileBuffer \
+	Launch \
+	Matrix \
+	Speech \
+	SpeechPanel \
+	Tools
+
+
+SRCS := $(foreach f, $(FILES), $(f).c )
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+LIBS := -L$(LIBDIR) -larosc_shared -lamiga -larossupport -larosm -lautoinit
+
+EXE := $(DESTDIR)/Term
+
+.PHONY : all clean
+
+#MM aminet-comm-term-term : setup-aminet-comm-term-term
+aminet-comm-term-term 	: $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-aminet-comm-term-term :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	%link_q from=$(OBJS)
+
+#MM
+clean-aminet :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c 
+	%compile_q

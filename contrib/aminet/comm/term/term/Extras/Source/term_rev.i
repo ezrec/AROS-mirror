@@ -1,0 +1,14 @@
+VERSION		EQU	4
+REVISION	EQU	7
+DATE	MACRO
+		dc.b	'20.10.96'
+	ENDM
+VERS	MACRO
+		dc.b	'term 4.7'
+	ENDM
+VSTRING	MACRO
+		dc.b	'term 4.7 (20.10.96)',13,10,0
+	ENDM
+VERSTAG	MACRO
+		dc.b	0,'$VER: term 4.7 (20.10.96)',0
+	ENDM

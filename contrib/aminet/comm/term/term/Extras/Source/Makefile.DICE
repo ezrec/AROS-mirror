@@ -1,0 +1,76 @@
+###############################################################################
+#
+#	Makefile
+#
+#	Makefile for the `SMake' utility required to build `term'
+#
+#	Copyright © 1990-1996 by Olaf `Olsen' Barthel
+#		All Rights Reserved
+#
+###############################################################################
+
+.c.o:
+	dcc -c $(CFLAGS) $(GST) $<
+
+.asm.o:
+	a68k -q -dCPU_030 -dCPU='030' -iasm: $<
+
+.a.o:
+	a68k -q -dCPU_030 -dCPU='030' -iasm: $*.asm
+
+###############################################################################
+
+VERSION =	4
+
+GST =		-HT:Headers.m=Headers.h
+CFLAGS =	-030 -proto -s1 -mC -mD -DINCLUDEALL -DCPU_68030
+
+OBJS =		VersionTag.o \
+		About.o Accountant.o AmigaGuide.o ARexx.o \
+		ARexxAttributes.o ARexxCommands.o ASCIIPanel.o ASCIITransfer.o \
+		Beep.o Boxes.o Buffer.o Call.o \
+		Capture.o CapturePanel.o CaptureParser.o Chat.o \
+		Choose.o Clip.o ClipPanel.o Colour.o \
+		CommandPanel.o Config.o Console.o ControlSequences.o \
+		CopyPanel.o Crypt.o CursorPanel.o CustomRequest.o \
+		Data.o DatePanel.o DayPanel.o Dial.o \
+		DialList.o EditRoutine.o Emulation.o EmulationPanel.o \
+		EmulationProcess.o EmulationSpecial.o EndOfLineTranslate.o FastMacroPanel.o \
+		FastMacros.o FastMacroWindow.o FileBuffer.o FixPath.o \
+		Flow.o HotkeyPanel.o Hotkeys.o Identify.o \
+		ImportPanel.o InfoWindow.o Init.o Job.o \
+		KeyConvert.o Launch.o LibPanel.o LibPanelPlus.o \
+		Lists.o Locale.o MacroPanel.o Main.o \
+		Matrix.o Menus.o Memory.o MiscPanel.o \
+		ModemPanel.o MsgQueue.o NewMarker.o OldConfig.o OwnDevUnit.o \
+		Packet.o PathPanel.o PatternPanel.o Phone.o \
+		PhoneGroup.o PhoneList.o PhoneLogGenerator.o PhonePanel.o \
+		PhonePanelPlus.o PhonePanelUI.o PickDisplayMode.o PickFile.o \
+		PickScreen.o Print.o PrintPanel.o Raster.o \
+		RatePanel.o Remember.o Rendezvous.o SaveWindow.o \
+		Scale.o ScreenPanel.o Scroll.o SendText.o \
+		Serial.o SerialIO.o SerialPanel.o SortCompare.o \
+		Sound.o SoundPanel.o Speech.o SpeechPanel.o \
+		Start.o StatusDisplay.o Strings.o TerminalPanel.o \
+		TerminalTest.o TextBufferWindow.o TimeDate.o TimePanel.o Tools.o \
+		Transfer.o TransferPanel.o Translate.o TranslationPanel.o \
+		TrapPanel.o Traps.o UploadPanel.o UploadQueue.o \
+		Verify.o VSPrintf.o WindowMarker.o XEM.o XPR.o ZModem.o
+
+###############################################################################
+
+all:		term
+
+term:		$(OBJS)
+		dlink -s -o $@ $(OBJS) glue/glue.lib dlib:cl.lib dlib:amiga30l.lib
+
+Strings.o:	Strings.c Strings.h
+		dcc -c $(CFLAGS) Strings.c
+
+Start.o:	Start.c
+		dcc -c $(CFLAGS) Start.c
+
+###############################################################################
+
+clean:
+		-delete #?.o

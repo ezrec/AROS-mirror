@@ -1,0 +1,98 @@
+###############################################################################
+#
+#	GNUmakefile
+#
+#	Makefile for the GNU make utility required to build `term'
+#
+#	Copyright © 1990-1996 by Olaf `Olsen' Barthel
+#		All Rights Reserved
+#
+###############################################################################
+
+.SUFFIXES: .c .o .asm .a
+
+###############################################################################
+#
+#	Converts the AmigaDOS hunk format object for GCC compatibility.
+#
+###############################################################################
+
+define hunk2gcc
+hunk2gcc >nil: $*.o; \
+delete >nil: $*.o; \
+join >nil: obj.#? as $*.o; \
+delete >nil: obj.#?;
+endef
+
+###############################################################################
+
+.c.o:
+	gcc -c $(CFLAGS) $<
+
+.asm.o:
+	a68k $(AFLAGS) $*.asm
+	@$(hunk2gcc)
+
+###############################################################################
+
+AFLAGS :=	-q -dCPU_030 -dCPU='030' -iinclude:
+CFLAGS :=	-DINCLUDEALL -DCPU_68030 -m68030 -noixemul -nostdlib -nostartfiles
+
+STARTUP :=	VersionTag.o
+C_OBJS :=	About.o Accountant.o AmigaGuide.o ARexx.o \
+		ARexxAttributes.o ARexxCommands.o ASCIIPanel.o ASCIITransfer.o \
+		Beep.o Boxes.o Buffer.o Call.o \
+		Capture.o CapturePanel.o CaptureParser.o Chat.o \
+		Choose.o Clip.o ClipPanel.o Colour.o \
+		CommandPanel.o Config.o Console.o ControlSequences.o \
+		CopyPanel.o Crypt.o CursorPanel.o CustomRequest.o \
+		Data.o DatePanel.o DayPanel.o Dial.o \
+		DialList.o EditRoutine.o Emulation.o EmulationPanel.o \
+		EmulationProcess.o EmulationSpecial.o EndOfLineTranslate.o FastMacroPanel.o \
+		FastMacros.o FastMacroWindow.o FileBuffer.o FixPath.o \
+		Flow.o HotkeyPanel.o Hotkeys.o Identify.o \
+		ImportPanel.o InfoWindow.o Init.o Job.o \
+		KeyConvert.o Launch.o LibPanel.o LibPanelPlus.o \
+		Lists.o Locale.o MacroPanel.o Main.o \
+		Matrix.o Memory.o Menus.o MiscPanel.o \
+		ModemPanel.o MsgQueue.o NewMarker.o OldConfig.o OwnDevUnit.o \
+		Packet.o PathPanel.o PatternPanel.o Phone.o \
+		PhoneGroup.o PhoneList.o PhoneLogGenerator.o PhonePanel.o \
+		PhonePanelPlus.o PhonePanelUI.o PickDisplayMode.o PickFile.o \
+		PickScreen.o Print.o PrintPanel.o Raster.o \
+		RatePanel.o Remember.o Rendezvous.o SaveWindow.o \
+		Scale.o ScreenPanel.o Scroll.o SendText.o \
+		Serial.o SerialIO.o SerialPanel.o SortCompare.o \
+		Sound.o SoundPanel.o Speech.o SpeechPanel.o \
+		Start.o StatusDisplay.o Strings.o TerminalPanel.o \
+		TerminalTest.o TextBufferWindow.o TimeDate.o TimePanel.o Tools.o \
+		Transfer.o TransferPanel.o Translate.o TranslationPanel.o \
+		TrapPanel.o Traps.o UploadPanel.o UploadQueue.o \
+		Verify.o VSPrintf.o WindowMarker.o XEM.o XPR.o ZModem.o
+
+OBJS :=		$(STARTUP) $(C_OBJS)
+
+LIBS :=		-L. -lnix -lgcc -lamiga -lglue
+
+###############################################################################
+
+all:		libglue.a term
+
+term:		$(OBJS)
+		gcc $(CFLAGS) -o $@ $(OBJS) $(LIBS)
+
+###############################################################################
+
+glue/glue.lib:	glue
+		cd glue; $(MAKE)
+
+libglue.a:	glue/glue.lib
+		hunk2gcc glue/glue.lib
+		ar qc $@ obj.#?
+		ranlib $@
+		@-delete >nil: obj.#?
+
+###############################################################################
+
+clean:
+		delete quiet $(OBJS) libglue.a term

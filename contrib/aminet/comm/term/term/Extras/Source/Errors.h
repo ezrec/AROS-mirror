@@ -1,0 +1,20 @@
+/*
+**	Errors.h
+**
+**	Error number definitions
+**
+**	Copyright © 1990-1996 by Olaf `Olsen' Barthel
+**		All Rights Reserved
+*/
+
+#ifndef _ERRORS_H
+#define _ERRORS_H 1
+
+enum	{	ERR_SAVE_ERROR=42000,ERR_LOAD_ERROR,ERR_OUTDATED,
+		ERR_NO_PRINTER,ERR_NO_GFX_OUTPUT,ERR_BAD_DIMENSION,
+		ERR_EXECUTE_ERROR,ERR_ABORTED,
+		ERR_NOT_A_FILE,ERR_NOT_A_DRAWER,ERR_FILE_NOT_FOUND,
+		ERR_DRAWER_NOT_FOUND,ERR_PROGRAM_NOT_FOUND
+	};
+
+#endif	/* _ERRORS_H */

@@ -1,0 +1,95 @@
+**
+**	VersionTag.a
+**
+**	Version tag identification
+**
+**	Copyright © 1990-1996 by Olaf `Olsen' Barthel
+**		All Rights Reserved
+**
+
+	include	"term_rev.i"
+
+*--------------------------------------------------------------------------
+
+	section	text,code
+
+*--------------------------------------------------------------------------
+
+	xref	Start
+
+	bra	Start
+
+*--------------------------------------------------------------------------
+
+	cnop	0,4
+
+	xdef	VersTag
+
+VersTag:
+
+	dc.b	0,'$VER: '
+	VERS
+	dc.b	' ('
+	DATE
+	dc.b	')'
+
+	IFD	CPU_ANY
+	dc.b	' Generic 68k version'
+	ELSE
+	dc.b	' 68020/030/040/060 version'
+	ENDC
+
+	dc.b	13,10,0
+
+*--------------------------------------------------------------------------
+*
+*	These lines are actually to make SLINK believe that some kind
+*	of startup code will clear the Data/BSS segment before running the
+*	main program. Since this is no longer necessary with Kickstart 2.x
+*	these two lines will save quite some disk space.
+*
+*--------------------------------------------------------------------------
+
+	cnop	0,4
+
+	xref	_BSSBAS
+	xref	_BSSLEN
+
+	dc.l	_BSSBAS
+	dc.l	_BSSLEN
+
+*--------------------------------------------------------------------------
+
+	section	__MERGED,data
+
+*--------------------------------------------------------------------------
+
+	xdef	TermVersion
+
+TermVersion:
+
+	dc.l	VERSION
+
+	xdef	TermRevision
+
+TermRevision:
+
+	dc.l	REVISION
+
+	xdef	TermName
+
+TermName:
+
+	VERS
+	dc.b	0
+
+	cnop	0,4
+
+	xdef	TermDate
+
+TermDate:
+
+	DATE
+	dc.b	0
+
+	end
