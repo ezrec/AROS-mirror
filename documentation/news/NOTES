@@ -30,6 +30,13 @@ brackets ("[]").
 200304??:
  <next day here>
 
+20030409:
+ * Nice striped patterns [dlc]
+ * Bitmap preview in Zune imageadjust [dlc]
+ * Work progressing on moving several modules to the main tree from contrib
+   (libjpeg, jpeg.datatype, janoeditor, grub) [chodorowski]
+ * Another contrib program ported: MUImine [bergers]
+
 20030408:
  * Heated discussion on the ML about which UI style to adopt, regarding prefs
    buttons: Test/Revert/Save/Use/Cancel ?
