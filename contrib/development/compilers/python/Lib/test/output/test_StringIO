@@ -1,0 +1,21 @@
+test_StringIO
+abcdefghij
+klmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+2
+'abcuvwxyz!'
+'abc'
+'abcdefghij'
+'abcde'
+Caught expected ValueError writing to closed StringIO:
+I/O operation on closed file
+abcdefghij
+klmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+2
+'abcuvwxyz!'
+'abc'
+'abcdefghij'
+'abcde'
+Caught expected ValueError writing to closed StringIO:
+I/O operation on closed file
