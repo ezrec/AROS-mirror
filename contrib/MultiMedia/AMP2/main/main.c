@@ -282,7 +282,7 @@ void handle_arguments(int argc, char *argv[])
     printf("TRUECOLOR/S   : 24/32bit CGFX (used for BestMode).\n");
     printf("LORES/S       : decode at 1/4 of original resolution (def: off).\n\n");
 
-    printf("WINDOW/S      : use a window on Workbench for playback (def: off).\n");
+    printf("WINDOW/S      : use a window on Workbench for playback (def: on).\n");
     printf("DEBUG/S       : use this if you have problems and send me the output (def: off).\n");
     printf("VERBOSE/S     : gives additional information while/after playing (def: off).\n");
     printf("OVERLAY/S     : enable CGFX overlay support (def: off).\n");
@@ -291,10 +291,10 @@ void handle_arguments(int argc, char *argv[])
     printf("NOVIDEO/S     : no video playback, only audio.\n");
     printf("NOAUDIO/S     : no audio playback, only video.\n\n");
 
-    printf("DEVICE/K      : device of the CD/DVD for VCD/CD-i/DVD playback (def: atapi.device).\n");
+    printf("DEVICE/K      : device of the CD/DVD for VCD/CD-i/DVD playback (def: ata.device).\n");
     printf("UNIT/N        : unit of the CD/DVD for VCD/CD-i/DVD playback (def: 2).\n\n");
 
-    printf("AHI/S         : use AHI instead of audio.device (def: off).\n");
+    printf("AHI/S         : use AHI instead of audio.device (def: on).\n");
     printf("14BIT/S       : 14bit audio.device playback (def: 8bit).\n");
     printf("CALIBRATION/K : 14bit calibration file (def: no calibration).\n");
     printf("56KHZ/S       : allow up to 56khz audio.device playback (def: off).\n");

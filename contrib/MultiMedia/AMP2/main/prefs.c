@@ -24,11 +24,11 @@ void set_prefs()
   prefs.half           = PREFS_OFF;          /* Off */
   prefs.gray_depth     = 8;                  /* 8 */
   prefs.cgfx_depth     = PREFS_HIGHCOLOR;    /* 15/16 */
-  prefs.window         = PREFS_OFF;          /* Off */
+  prefs.window         = PREFS_ON;          /* Off */
   prefs.debug          = PREFS_OFF;          /* Off */
   prefs.verbose        = PREFS_OFF;          /* Off */
   prefs.overlay        = PREFS_OFF;          /* Off */
-  prefs.stereo         = PREFS_OFF;          /* Off */
+  prefs.stereo         = PREFS_ON;          /* Off */
   prefs.no_video       = PREFS_OFF;          /* Off */
   prefs.no_audio       = PREFS_OFF;          /* Off */
   strcpy(prefs.device, "ata.device");      /* atapi.device */
