@@ -17,25 +17,15 @@ compilation of miscellanous ideas that have been talked about in the past.
 Mailing list threads
 ====================
 
-+ `Getting more help`__
-+ `GUI`__
-+ `M68k emulator`__
-+ `Preferences`__
-+ `TCP/IP`__
-+ `Miscellaneous`__
-
-__ getting-more-help  
-__ gui  
-__ m68k-emulator  
-__ preferences  
-__ tcpip
-__ misc  
++ `Getting more help <getting-more-help>`__
++ `GUI <gui>`__
++ `M68k emulator <m68k-emulator>`__
++ `Preferences <preferences>`__
++ `TCP/IP <tcpip>`__
++ `Miscellaneous <misc>`__
 
 
 Other 
 =====
 
-+ `Ideas for the future`__
-
-__ ideas
-
++ `Ideas for the future <ideas>`__

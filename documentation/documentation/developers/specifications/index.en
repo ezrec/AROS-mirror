@@ -24,18 +24,10 @@ likely change before they are accepted as a official specifications. They
 might also be deprecated if a better aproach has been found and might not 
 correspond precisely with the current implementations available.
 
-+ `The AROS filesystem interface`__
-+ `Home directories`__
-+ `Standard key bindings`__
-+ `The Exec Microkernel`__
-+ `Hardware Independant Device Drivers`__
-+ `MIDI Driver Interface`__
-+ `MMU HIDD`__
-
-__ drafts/filesystem-interface
-__ drafts/home-directories
-__ drafts/standard-key-bindings
-__ drafts/exec
-__ drafts/hidd
-__ drafts/midi
-__ drafts/mmuhidd
++ `The AROS filesystem interface <drafts/filesystem-interface>`__
++ `Home directories <drafts/home-directories>`__
++ `Standard key bindings <drafts/standard-key-bindings>`__
++ `The Exec Microkernel <drafts/exec>`__
++ `Hardware Independant Device Drivers <drafts/hidd>`__
++ `MIDI Driver Interface <drafts/midi>`__
++ `MMU HIDD <drafts/mmuhidd>`__
