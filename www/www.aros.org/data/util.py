@@ -750,7 +750,13 @@ def processPartialPages ():
 
     #print changedPages
     for pp in changedPages:
-	page = HtmlPage (linkBoxItem=pp.key)
+        if pp.url == 'index.html':
+  	    index_meta = \
+                meta=Meta(equiv = 'refresh', content = '3; http://aros.sourceforge.net/')
+            print index_meta
+	    page = HtmlPage (linkBoxItem=pp.key, meta=index_meta)
+	else:
+            page = HtmlPage (linkBoxItem=pp.key)
 
 	text, input = '', pp.getText ()
 	#print `input`
