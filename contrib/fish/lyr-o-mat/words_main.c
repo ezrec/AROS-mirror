@@ -10,7 +10,7 @@ struct Library * AslBase;
 struct GfxBase * GfxBase;
 struct Library * IconBase;
 struct IntuitionBase * IntuitionBase;
-struct Library * UtilityBase;
+struct UtilityBase * UtilityBase;
 struct Library * GadToolsBase;
 
 BOOL openlibs(void)

@@ -124,7 +124,7 @@ extern UWORD                 OffX, OffY;
 extern struct GfxBase       *GfxBase;
 extern struct IntuitionBase *IntuitionBase;
 extern struct Library       *GadToolsBase;
-extern struct Library       *UtilityBase;
+extern struct UtilityBase   *UtilityBase;
 extern struct Library       *AslBase;
 extern struct Library       *IconBase;
 extern struct NewMenu        Project0NewMenu[];
