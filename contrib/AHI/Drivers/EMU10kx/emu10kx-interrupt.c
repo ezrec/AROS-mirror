@@ -36,7 +36,7 @@
 
 #if !AROS_BIG_ENDIAN
 #undef BIG_ENDIAN_MACHINE
-#define BIT_ENDIAN_MACHINE 0
+#define BIG_ENDIAN_MACHINE 0
 #endif
 
 #endif
@@ -242,18 +242,29 @@ PlaybackInterrupt( struct EMU10kxData* dd )
 	break;
 	
       case AHIST_M32S:
+      #if BIG_ENDIAN_MACHINE
 	dd->current_buffers[0] = copy_mono( src, dd->current_buffers[0],
 					    s, 2, EMU10kxBase->flush_caches );
+      #else
+	dd->current_buffers[0] = copy_mono( src + 1, dd->current_buffers[0],
+					    s, 2, EMU10kxBase->flush_caches );
+      #endif
 	src += s * 2;
 	break;
 	
       case AHIST_S32S:
+      #if BIG_ENDIAN_MACHINE
 	dd->current_buffers[0] = copy_stereo( src, src + 2, dd->current_buffers[0],
 					      s, 4, EMU10kxBase->flush_caches );
+      #else
+	dd->current_buffers[0] = copy_stereo( src + 1, src + 3, dd->current_buffers[0],
+					      s, 4, EMU10kxBase->flush_caches );
+      #endif
 	src += s * 4;
 	break;
 	
       case AHIST_L7_1:
+      #if BIG_ENDIAN_MACHINE
 	dd->current_buffers[0] = copy_stereo( src, src + 2, dd->current_buffers[0],
 					      s, 16, EMU10kxBase->flush_caches );
 	dd->current_buffers[1] = copy_stereo( src + 4, src + 6, dd->current_buffers[1],
@@ -262,6 +273,16 @@ PlaybackInterrupt( struct EMU10kxData* dd )
 					      s, 16, EMU10kxBase->flush_caches );
 	dd->current_buffers[3] = copy_stereo( src + 12, src + 14, dd->current_buffers[3],
 					      s, 16, EMU10kxBase->flush_caches );
+      #else
+	dd->current_buffers[0] = copy_stereo( src + 1, src + 3, dd->current_buffers[0],
+					      s, 16, EMU10kxBase->flush_caches );
+	dd->current_buffers[1] = copy_stereo( src + 5, src + 7, dd->current_buffers[1],
+					      s, 16, EMU10kxBase->flush_caches );
+	dd->current_buffers[2] = copy_stereo( src + 9, src + 11, dd->current_buffers[2],
+					      s, 16, EMU10kxBase->flush_caches );
+	dd->current_buffers[3] = copy_stereo( src + 13, src + 15, dd->current_buffers[3],
+					      s, 16, EMU10kxBase->flush_caches );
+      #endif
 	src += s * 16;
 	break;
     }
@@ -416,8 +437,9 @@ RecordInterrupt( struct EMU10kxData* dd )
 
   while( i < RECORD_BUFFER_SAMPLES / 2 * 2 )
   {
+  #if BIG_ENDIAN_MACHINE
     *ptr = ( ( *ptr & 0xff ) << 8 ) | ( ( *ptr & 0xff00 ) >> 8 );
-
+  #endif
     ++i;
     ++ptr;
   }
