@@ -59,7 +59,11 @@ static void userinit (void) {
 
 
 static handler lreset (void) {
+#ifndef AROS
   return signal(SIGINT, laction);
+#else
+  return SIG_IGN;
+#endif
 }
 
 
@@ -73,8 +77,10 @@ static void lstop (void) {
 
 static void laction (int i) {
   (void)i;  /* to avoid warnings */
+#ifndef AROS
   signal(SIGINT, SIG_DFL); /* if another SIGINT happens before lstop,
                               terminate process (default action) */
+#endif  
   old_linehook = lua_setlinehook(L, (lua_Hook)lstop);
   old_callhook = lua_setcallhook(L, (lua_Hook)lstop);
 }
@@ -86,7 +92,9 @@ static int ldo (int (*f)(lua_State *l, const char *), const char *name) {
   int top = lua_gettop(L);
   res = f(L, name);  /* dostring | dofile */
   lua_settop(L, top);  /* remove eventual results */
+#ifndef AROS
   signal(SIGINT, h);  /* restore old action */
+#endif
   /* Lua gives no message in such cases, so lua.c provides one */
   if (res == LUA_ERRMEM) {
     fprintf(stderr, "lua: memory allocation error\n");

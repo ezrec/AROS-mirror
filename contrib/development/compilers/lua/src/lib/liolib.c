@@ -36,7 +36,9 @@
 #define errno		(-1)
 #endif
 
-
+#ifdef AROS
+#define setlocale(a,b)	((void)a, strcmp((b),"C")==0?"C":NULL)
+#endif
 
 #ifdef POPEN
 /* FILE *popen();
