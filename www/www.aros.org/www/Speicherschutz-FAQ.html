@@ -1,0 +1,701 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Draft//EN">
+<HTML>
+<HEAD>
+<TITLE>Speicherschutz-FAQ 0.2 (24.09.1997)</TITLE>
+<LINK REV=made HREF="mailto:indy@welcome.north.de">
+</HEAD>
+
+<BODY>
+<PRE>
+Speicherschutz-FAQ
+
+$VER: Speicherschutz-FAQ 0.2 (24.09.1997)
+
+!Legende
+
+F: Was ist das Thema dieser FAQ?
+F: In welchen Sprachen liegt diese FAQ vor?
+!F: Wo kann man die neueste Version dieser FAQ finden?
+F: Wohin kann man Kritik, Berichtigungen von Fehler, Ergänzungen zur FAQ
+   schicken?
+F: Was gibt es an Literatur zum Thema Speicherschutz?
+
+
+Glossar
+
+F: Was ist ein stabiles, was ist ein robuste Betriebssystem?
+
+
+Speicherschutz allgemein
+
+F: Was ist Speicherschutz?
+F: Wie funktioniert Speicherschutz?
+F: Wie können Programme trotz Speicherschutz miteinander kommunizieren?
+F: Welche Nachteile hat Speicherschutz????
+F: Macht Speicherschutz ein OS langsamer?
+F: Auf welche Weise bremst Speicherschutz das OS aus?
+F: Kann Speicherschutz die Fragmentierung des Speichers verhindern?
+F: Benötigt man für Speicherschutz eine MMU?
+
+
+Schutz vor Fehlern in Programmen
+
+F: Gibt es fehlerfreie Programme?
+F: Schützt Speicherschutz vor fehlerhafter Software?
+F: Kann man mit Speicherschutz ein fehlerhaftes Programm lokalisieren?
+F: Erhöht Speicherschutz die Anzahl der Programmabbrüche?
+F: Erhöht sich durch Speicherschutz die Anzahl von Fehlern in Programmen?
+F: Was passiert wenn ein Treiber fehlerhaft ist, abstürtzt?
+F: Können die Speicherschutz-Funktionen eines OS in der Praxis fehlerfrei
+   sein?
+
+
+Für wen ist Speicherschutz wichtig?
+
+F: Ist Speicherschutz für einzelne UserInnen wichtig?
+F: Ist Speicherschutz für EntwicklerInnen wichtig?
+F: Benötigt ein Multiuser-OS Speicherschutz?
+F: Ist ein Multiuser-OS für Firmen wichtig?
+F: Ist eine Multiuser-OS für den Heimbereich wichtig?
+F: Benötigt der Amiga Speicherschutz, um Erfolg im Massenmarkt zu haben?
+
+
+Speicherschutz im Amiga
+
+F: Welche Eigenschaften könnte eine Speicherschutz Erweiterung fürs
+   Amiga-OS enthalten?
+F: Wo liegen die Probleme bei der Ergänzung des Amiga-OS um Speicherschutz?
+F: Was ist Shared-Memory?
+
+
+Speicherschutz in anderen Betriebssystemen
+
+F: Besitzt pOS Speicherschutz?
+F: Wird das OS der A\Box Speicherschutz besitzen?
+F: In welchen Betriebsystemen ist Speicherschutz gut implementiert?
+F: Laufen 32-Bit Windows 95 Programmen robuster als 16-Bit?
+
+
+Stabile Betriebssysteme
+
+F: OS xyz hat Speicherschutz und läuft trotzdem nicht stabil?
+F: Ist es möglich ein stabiles OS ohne Speicherschutz zu implementieren?
+F: Ist das derzeitge Amiga OS 3.1 stabil?
+
+
+Virtual Memory
+
+!F: Was ist virtual Memory?
+
+
+MMU
+
+F: Was ist eine MMU?
+F: Welche 680x0 Prozessoren haben eine MMU?
+
+Dank an
+History
+-------------------------------------------------
+
+!Legende
+
+!      !: Seit der letzten öffentlichen Version neue oder
+!         geänderte Zeile
+!      <: Hier wurden Zeilen gelöscht
+!   TODO: Kennzeichnet zu ergänzenden Bereich
+
+
+F: Was ist das Thema dieser FAQ?
+A: Thema dieser FAQ ist Speicherschutz(memory protection) bezogen
+   auf die Hardware und Software(OS) des Amigas. Dabei versucht diese FAQ
+   neutral möglichs alle Aspekte, Vor- und Nachteile, Meinungen sowie die
+!  Probleme, die es bei der Erweiterung des Amiga-OS um Speicherschutz
+   Funktionen gibt aufzuführen ohne jedoch einen Anspruch auf
+   Vollständigkeit und Korrektheit der enthaltenen Informationen zu
+   erheben.
+
+F: In welchen Sprachen liegt diese FAQ vor?
+A: Bisher nur in deutsch. Schön wären Übersetzungen der FAQ in andere
+   Sprachen, wobei es sich anbietet dann zunächst die englische Version zu
+   erweitern und diese dann in die anderen Sprache zu übertragen. Wer
+   Lust hat diese FAQ zu übersetzen und die Übersetzung nach Möglichkeit
+   zumindest für eine Weile zu pflegen kann sich an Sven Drieling
+   wenden(Adresse in Wohin kann man Kritik, Berichtigungen[...]  schicken?).
+
+!F: Wo kann man die neueste Version dieser FAQ finden?
+!
+!  WWW
+!    http://olis.north.de/Speicherschutz-FAQ.html
+!
+!
+!  Fido
+!    Filename: "Speicherschutz-FAQ.lha" (ca. 11KB) - ASCII Latin-1
+!    OL-MEDIC BBS (2:2426/2270.0)
+!    +49 (4 41) 9 35 07 31  (analog 28.800)
+!
+!
+!  Mailbox
+!    Filename: "Speicherschutz-FAQ.lha" (ca. 11KB) - ASCII Latin-1
+!    BLACK-ZONE BBS:
+!      +49 (61 42)  4 62 78 (19.2)    +49 (61 42) 92 40 80 (64.0)
+!      +49 (61 42)  4 39 30 (33.6)    +49 (61 42) 92 40 81 (64.0)
+!      +49 (61 42) 92 60 75 (33.6)
+!
+!
+!  E-Mail
+!    Sven Drieling, indy@welcome.north.de
+
+
+F: Wohin kann man Kritik, Berichtigungen von Fehler und Ergänzungen zur FAQ
+   schicken?
+A: Sven Drieling    E-Mail: indy@welcome.north.de
+   Am Breithof 5    Fido  : 2:2426/2270.13
+   27804 Berne      Tel.  : (0 44 06) 53 12
+
+F: Was gibt es an Literatur zum Thema Speicherschutz?
+A: Memory Protection for AmigaOS
+   http://www.informatik.tu-muenchen.de/~stieber/AmigaOS-Speicherschutz
+   Vorschlag für eine Erweiterung des Amiga-OS um Speicherschutz, die
+   auf shared-memory mit Zugriffsprotokollen basiert.
+
+
+Glossar
+
+F: Was ist ein stabiles, was ist ein robuste Betriebssystem?
+
+A: Ein stabiles Betriebssystem ist ein Betriebssytem, das selbst
+   keine Fehler enthält und somit absturzfrei und korrekt läuft. Allerdings
+   können fehlerhafte Programme das Betriebsystem oder parallel laufende
+   Programme zum Absturz bringen oder andere Fehler erzeugen, es sei denn
+   das Betriebssystem ist robust.
+
+   Ein robustes Betriebssystem ist ein Betriebssystem, das nicht durch
+   fehlerhafte Programme zum Absturz oder fehlerhaften Verhalten
+   gebracht werden kann und auch parallel laufende Programme entsprechend
+   voreinander schützt.
+
+
+Speicherschutz allgemein
+
+F: Was ist Speicherschutz?
+A: Speicherschutz schützt Speicherbereiche vordem (un)gewollten Überschreiben
+   und vor dem (un)gewollten auslesen durch ein Programm. Da ein Fehler
+   eines Programms damit verbunden sein kann, Speicherbereiche anderer
+   Programme zu schädigen und dies dann zu Fehlern und zum Abstürzen dieser
+   Programme führen kann, obwohl die Programme eigentlich fehlerfrei sind,
+   schützt Speicherschutz so andere Programme vor fehlerhaften Programmen
+   und erhöht damit die Stabilität eines Systems.
+
+F: Wie funktioniert Speicherschutz?
+A: Speicherschutz weist jedem Programm einen eigenen geschützten
+   Adreßraum ("Speicherbereich") zu und verhindert, daß fremde Programme auf
+!  diesen Speicherbereich lesend oder schreibend zugreifen können. Dies
+!  gilt nicht nur für von Anwender gestartete Programme, sondern auch das
+!  OS erhält, bei konsequenter Anwendung des Speicherschutzes, einen eigenen
+!  Adressraum und ist so vor den Anwenderprogrammen geschützt und getrennt.
+
+   Problem ist dabei u.a., daß nun Mechanismen für eine möglichs schnelle
+   Kommunikation zwischen im Multitasking laufenden Programmen geschaffen
+   werden müssen. Dies kann durch z.B. kopieren von Nachrichten(relativ
+   langsam), gemeinsam genutzten Speicherbereichen(wieder die Gefahr eines
+!  gegenseitigen störens von Programmen) oder den nur lesenden Zugriff für
+   ein Programm auf den Speicherbereich eines anderen Programm geschehen.
+
+F: Wie können Programme trotz Speicherschutz miteinander kommunizieren?
+A: - Shared memory
+   - TCP/IP
+   - Messagequeues
+   - Semaphoren
+   - Signale
+
+F: Welche Nachteile hat Speicherschutz????
+A: - Aufwendigere Kommunikation zwischen gleichzeitig laufenden Pogrammen.
+   - Aufwendigeres durchreichen von Informationen zwischen der Hardwarebene,
+     den verschiedenen Ebenen eines OS und den laufenden Anwenderprogrammen.
+   - Eingeschränkte DMA
+   - spezieller SuperVisor-Modus für alle OS-Aufrufe
+     (da diese den Speicherschutz wieder durchbrechen können
+      müssen, z.B. Linux-Systemcalls und Interrupt-Calls)
+      (TODO: [Sven] Hatte ich AFAIK aus einem Posting von Andreas Kleinert
+       gezogen, die letzten beiden Punkte sollten noch besser erklärt werden)
+
+F: Macht Speicherschutz ein OS langsamer?
+A: Zumindest wird ein OS mit Speicherschutz nicht schneller als ein OS ohne
+   Speicherschutz sein.
+
+   Für Speicherschutz sind sowohl vom Prozessor aus als auch vom OS
+   zusätzliche Verwaltungsaufgaben zu erledigen - die Zeit kosten, wodurch
+   in der Regel ein OS mit Speicherschutz gegenüber demselben OS ohne
+   aktiven Speicherschutz langsamer sein wird, d.h. aber nicht, daß
+   alle Betriebssystemen mit Speicherschutz allen anderen ohne
+   Speicherschutz von der Geschwindigkeit her unterlegen sein müssen.
+
+   Wieviel Zeit für die zusätzlichen Verwaltungsaufgaben nötig ist,
+   ist abhängig vom Prozessor, dem Speichersystem und dem jeweiligen OS.
+   Bei den heutigen CPUs dürfte sich der zeitliche Aufwand dazu im Grenzen
+   halten und gegenüber der Zeit, die z.B. nach einer Zerstörung des
+!  Dateisystems für ein aufspielen des BackUp benötigt wird, ist
+!  dieser Rechenzeitverlust gering. Spürbar bemerkbar könnte er sich
+!  jedoch z.B. bei Berechnungen von langen 3D-Animationen machen, sofern
+   diese absturzfrei ablaufen.
+
+F: Auf welche Weise bremst Speicherschutz das OS aus?
+A: - Abfrage ob Speicherzugriff gültig, ungültig.
+   - Verwaltung zusätzlicher Informationen bei der Reservierung von Speicher.
+   - Rettung zusätzlicher Informationen beim Taskswitching.
+
+F: Kann Speicherschutz die Fragmentierung des Speichers verhindern?
+A: Nein, dies ist aber mit einer entsprechenden Virtual Memory
+   Implementation möglich.
+
+F: Benötigt man für Speicherschutz eine MMU?
+A: Ja, ohne MMU ist Speicherschutz zwar theoretisch auch denkbar
+   (Trace-Modus, Virtuelle Maschine) aber ohne MMU ist keine akzeptale
+   Geschwindigkeit erzielbar.
+
+
+Schutz vor Fehlern in Programmen
+
+F: Gibt es fehlerfreie Programme?
+A: Ja, in der Regel aber nur in der Theorie. In der Praxis besitzen
+   fast alle Programme, die ein wenig komplexer sind, Fehler. Die
+   Wahrscheinlichkeit, daß ein OS, eine Textverarbeitung oder ein anderes
+   Programm fehlerfrei ist, ist verschwindend gering und ein solches
+   Programm fehlerfrei zu machen dürfte die Kosten für ein solches Programm
+   vervielfachen.
+
+   Wenn man ein Programm aber lange benutzt weiß man, daß die von einen
+   benutzen Funktionen stabil sind bzw. kennt die Funktionen, die nicht
+   fehlerfrei arbeiten und vermeidet deren Gebrauch. In diesen Fall kann
+   man davon ausgehen, daß ein Programm relativ stabil läuft und man daher
+   auch keinen Speicherschutz braucht. Sobald man aber eine neue Version
+   dieses Programm benutzt oder ganz neue Software einsetzt hat man dieses
+   Wissen nicht mehr und muß es sich erst mit der Zeit wieder aneignen.
+
+!  Wenn es um Fehlern in Programmen geht, darf man auch nicht vergessen, daß
+   Compiler selbst komplexe Programme sind, die einen eigentlich
+!  fehlerfreien Quellcode in einen fehlerhaften Programmcode übersetzen
+   könnten und letzendlich ist auch die Hardware eine Quelle für Fehler.
+
+F: Schützt Speicherschutz vor fehlerhafter Software?
+A: Nein, es schützt nur davor, daß ein Fehler in einen Programm nicht
+   dazu führt, daß Daten oder Programmcode eines anderen Programms
+   zerstört werden. Ein einzelnes Programm kann weiterhin seine eigenen
+!  Daten zerstören und andere Fehler aufweisen, die dann aber theoretisch
+   nur dieses Programm betreffen.
+
+F: Kann man mit Speicherschutz ein fehlerhaftes Programm lokalisieren?
+A: Jein, abhängig von der Implementation ist es möglich, daß das OS
+   das Programm anzeigt, daß den Fehler ausgelöst hat allerdings muß
+   dies nicht das fehlerhafte Programm sein. Beispiel:
+   - Programm X fordert Speicherblock vom OS an
+   - OS gibt falschen Zeiger zurück
+   - Programm X schreibt mittels dieses falschen Zeigers Nullen in den
+     Speicher
+   - Speicherschutz zeigt nicht erlaubten Schreibzugriff an
+
+   In diesen Fall liegt der Fehler im OS allerdings können die
+   Sicherheitsroutinen nur anzeigen, daß der Fehler von Programm X ausgelöst
+   wird, die eigentlich Ursache, den Fehler in der Speicherreservierungs
+   Funktion des OS, läßt sich nur durch Analyse des Programms finden, so
+   daß das Programm schnell zu Unrecht eines Fehlers bezichtigt werden kann.
+
+F: Erhöht Speicherschutz die Anzahl der Programmabbrüche?
+A: Ja, durch Speicherschutz werden alle unerlaubten Zugriffe auf
+   Speicherbereiche erkannt. Ohne Speicherschutz müssen diese nicht
+   zwangsläufig zu Abstürzen oder Fehlern führen, da sie in nicht
+   genutzte Speicherbereiche geschehen oder sie Daten betreffen, die
+   nicht benötigt werden, während bei Speicherschutz jeder Verstoß erkannt
+   wird und damit zu einem Programmabbruch führt. Es ist allerdings
+   möglich diese Zahl herabzusetzen, indem nur Zugriffe auf
+   rerservierte Speicherblöcke zu Programmabbrüchen führen und
+   andere optional nur als Fehler gemeldet werden aber das Programm nicht
+   abbrechen.
+
+!  Es besteht allerdings auch die Möglichkeit fehlerhafte Programme weiterhin
+!  recht sinnvoll benutzen zu können, da nur das jeweils fehlerhafte Programm
+!  und nicht der gesamte Rechner abstürtzt.
+
+F: Erhöht sich durch Speicherschutz die Anzahl von Fehlern in Programmen?
+A: Das hängt von den ProgrammiererInnen, UserInnen und der Implementation
+   des Speicherschutzes ab. Da mit Speicherschutz ein fehlerhaftes Programm
+   nicht unbedingt Schaden im System anrichten muß, muß der Fehler
+   auch nicht unbedingt beseitigt werden. Wenn die Implementation den
+   UserInnen jedoch deutlich jeden nicht erlaubten Zugriff anzeigt und die
+   UserInnen darauf bestehen, daß Programme diese Fehler nicht aufweisen
+   dürfen, dann dürfte mit Speicherschutz die Anzahl von Fehlern in
+   Programmen nicht unbedingt steigen auch wenn Speicherschutz
+   ProgrammiererInnen dazu ermuntern könnte diese Fehler nicht zu beheben,
+   da sie ja keinen Schaden anrichten.
+   (TODO: Könnte man mit der vorigen Frage noch besser abgleichen)
+
+F: Was passiert wenn ein Treiber fehlerhaft ist, abstürtzt?
+A: Dann arbeiten alle Programmen, die diesen Treiber benötigen, auch
+   nicht mehr fehlerfrei, bleiben stehen, stürzen ab bzw. lassen sich
+   im Idealfall kontrolliert ("Sichern von Daten") beenden.
+
+F: Können die Speicherschutz-Funktionen eines OS in der Praxis fehlerfrei
+   sein?
+A: Speicherschutz ist auch Software(und Hardware) und unterliegt
+   damit den allgemeinen Gesetzen der Fehlerfreiheit. Allerdings
+   muß Speicherschutz - abhängig vom OS - nicht unbedingt übermäßig
+   komplex zu implementieren sein, so daß eine relativ hohe Chance bestehen
+   kann, daß die entsprechenden Funktionen möglichs fehlerfrei sind.
+   Zudem ist es im Fall von Speicherschutzfunktionieren recht lohnungswert,
+   diese intensiv auszutesten und erkannte Fehler zu beseitigen. Eine
+   100% Sicherheit gibt es für eine fehlerfreie Speicherschutzimplementation
+   aber nicht.
+
+
+Für wen ist Speicherschutz wichtig?
+
+F: Ist Speicherschutz für einzelne UserInnen wichtig?
+A: Speicherschutz ist für einzelne UserInnen praktisch, weil es die
+   Laufzeiten des Gesamtsystems erhöht es ist aber nicht unbedingt ein
+   muß und abhängig von der jeweiligen Person wird sie Speicherschutz
+   unbedingt haben wollen, nichts dagegen haben, wenn Speicherschutz
+   vorhanden ist oder Speicherschutz nicht brauchen und dagegen sein,
+   weil es z.B. die Performance des Systems verringert.
+
+F: Ist Speicherschutz für EntwicklerInnen wichtig?
+A: Ja, bei der Entwicklung eines Programms kommt es zwangsläufig häufig
+   zu Fehlern. Ein entsprechend implementierter Speicherschutz kann einmal
+   helfen diese Fehler schneller zu lokalisieren und verhindert, daß der
+   Rechner nach jeden Absturz neu gebootet und die Programmierumgebung neu
+   gestartet werden muß. So wird Zeit eingespart, die sich schnell bezahlt
+   machen kann.
+
+   Alternativen dazu wären, das zu testende Prgramm in einer
+   virtuellen Maschine laufen zu lassen. Dadurch wird es zwar langsamer
+   aber es läßt sich auch besser nachvollziehen was das Programm
+   gerade macht(Debugger: Einzelschrittmodus), so daß Fehler leichter zu
+   finden sind. Man kann das zu testende Programm auch auf einen zweiten
+   Rechner laufen lassen, so würde der Testrechner zwar abstürzen aber
+   der Entwicklungsrechner unberührt bleiben und während des Neubootens
+   des Testrechners könnte auf dem Entwicklungsrechner schon weiter
+   gearbeitet werden. Gegenüber Speicherschutz ist die letzte Lösung
+   allerdings in der Anschaffung relativ teuer.
+
+F: Benötigt ein Multiuser-OS Speicherschutz?
+A: Ja, ohne Speicherschutz gäbe es quasi keinen Schutz. Alle gerade
+   aktiven UserInnen im System könnte problemlos andere aktive UserInnen
+   stören oder deren Daten ausspähen. Ein sinnvolles Arbeiten wäre in einen
+   Multiuser-OS ohne Speicherschutz in der Praxis nicht möglich.
+
+F: Ist ein Multiuser-OS für Firmen wichtig?
+A: Ja.
+
+F: Ist eine Multiuser-OS für den Heimbereich wichtig?
+A: Im Moment nicht, falls aber in Zukunft eine Vernetzung in Haushalten
+   etwas ganz normales sein sollte, dann könnte statt ein Rechner pro
+   BewohnerIn eventuell ein größerer, schnellerer Rechner für alle
+   die bessere Wahl sein und dann würde ein Multiuser-OS auch
+   für den Heimbereich wichtig werden.
+
+F: Benötigt der Amiga Speicherschutz, um Erfolg im Massenmarkt zu haben?
+A: Recht wahrscheinlich. Speicherschutz gehört neben 32-Bit OS, preemptiven
+   Multitasking, Virtual Memory, 64-Bit Dateisystem, Multiuser Fähigkeit,
+   Internet Unterstützung und zumindest als Kür symmetrisches
+   Multiprocessing zu den Grundeigenschaften die ein heutiges OS haben muß,
+   um überhaupt erst einmal auf eine Auswahlliste aufgenommen zu werden.
+   Trotzdem könnte das Amiga-OS auch ohne Speicherschutz Erfolg haben
+   eventuell sogar wegen des fehlenden Speicherschutzes und der dadurch
+   höheren Effizients. Beispiele dafür wären z.B. Set-Top-Boxen, Point of
+   Sale/Information Systeme, Spielkonsolen, Steuerungsrechner etc., die
+   auch alle einen großen Markt bedienen.
+
+
+Speicherschutz im Amiga
+
+F: Welche Eigenschaften könnte eine Speicherschutz Erweiterung fürs
+   Amiga-OS enthalten?
+A: - Das OS läuft auch auf Rechner ohne MMU, dann natürlich auch ohne
+     aktiven Speicherschutz -> Speicherschutz optional abschaltbar
+   - Alte Programme sind weiterhin lauffähig
+
+F: Wo liegen die Probleme bei der Ergänzung des Amiga-OS um Speicherschutz?
+A: Unabhängig vom Amiga-OS ist es so, daß Speicherschutz eine fundamentale
+   Eigenschaft eines OS ist. Wenn diese Eigenschaft nicht von Beginn an
+   eingeplant ist, dann ist die Wahrscheinlichkeit hoch, daß sich das
+   vorhandene Konzept nur schwer und umständlich, um diese neue
+   Eigenschaft ergänzen läßt.
+
+   Im Amiga-OS speziell ist es so, daß das OS eigentlich gerade im Grunde
+   dafür ausgelegt ist, daß es keinen Speicherschutz hat. So werden beim
+   Verschicken von Nachrichten zwischen verschiedenen Programmen deren
+   Inhalte nicht vom Speicherbereich eines Programms in den Speicherbereich
+   eines anderen kopiert, sondern es wird nur ein Zeiger auf die Nachricht
+   weitergegeben. Vorraussetzung dafür ist, daß zumindest die an den
+   Nachrichtenaustausch beteiligten Programme lesenden und auch
+   schreibenden(MENUCANCEL) Zugriff auf den Speicherbereich dieser Nachricht
+   haben. Da in diesen Fall nur Zeiger ausgetauscht werden, ist das
+   verschicken von Nachrichten im Amiga-OS sehr schnell nur verträgt es
+   sich schwer mit der Idee des Speicherschutz und von diesen Fällen gibt
+   es eine Reihe im Amiga-OS.
+
+   Verschicken von Nachrichten
+     Das Verschicken von Nachrichten erfolgt im Amiga-OS derzeit(bis
+     3.1) nicht über das Kopieren der Nachricht, sondern nur über die
+     Weitergabe eines Zeigers auf einen gemeinsam zugänglichen
+     Speicherbereich(lesend, schreibend) mit dieser Nachricht. Diesen
+     Austausch von Nachrichten findet man an vielen Stellen des
+     Amiga-OS(Intuition(IDCMP), DOS-Library(Packets), Devices(DoIO)).
+
+
+!  Verschicken von übermäßig vielen Nachrichten
+!    Da sich Nachrichten im derzeitigen Amiga-OS sehr schnell verschicken
+!    lassen, werden teilweise viele Nachrichten erzeugt(MouseMove,
+!    IntuiTicks etc.), wobei schon derzeit darauf hingewiesen wird
+!    diese Nachrichten möglichs schnell abzuarbeiten. Wenn durch
+!    Speicherschutz sich das verschicken von Nachrichten verlangsamen
+!    sollte, könnte dies aufgrund der vielen Nachrichten zu einen
+!    spürbaren Performanceverlust führen.
+!
+!    Dies gilt z.B. auch für aktive BOOPSI Gadgets, denen ungefiltert
+!    alle Ereignisse zugeschickt werden, die das input.device im Augenblick
+!    zu bieten hat. Bei einen Multiuser fähigen Amiga-OS käme hinzu, daß
+!    es mehr als ein aktives BOOPSI-Gadget geben kann.
+
+
+   Shared Libraries
+     Shared Libraries bilden das Grundkonzept des Amiga-OS - es besteht aus
+     einzelnen Libraries(Exec, Intuition, Graphics etc.), die sich leicht
+     durch neuere Versionen austauschen lassen und die Funktionalität des
+     Amiga-OS läßt sich auch leicht durch zusätzliche Shared Libraries
+     erweitern.
+
+     Diese Shared Libraries sind für alle Tasks("Programme") zugänglich und
+     wenn ein Task eine Funktion einer Library aufruft, dann wird der
+     Code der Library Teil des Codes des Tasks. Dies bedeutet, daß dieser
+     Code der Library auf den Speicherbereich des aufrufenden Tasks
+     zugreifen kann, weil er während der Laufzeit Teil dieses Tasks ist.
+     Zudem besitzt eine Library selbst Daten auf den die Funktionen
+     der Library jederzeit zugreifen können müssen.
+
+     Realisiert sind die Libraries über Funktionstabellen in denen
+     direkt mit JSR  der Befehl zum Ausführen des Codes
+     steht. Die Einträge dieser Tabellen lassen sich mit Exec.SetFunction()
+     verändern, wovon viele Programme zur Eingliederung von Patches
+     gebraucht machen. Zumindest für bestehende Programme, muß dieses
+     Patchen auch in Zukunft erlaubt sein auch wenn es absolut gegen die
+     Idee des Speicherschutzes spricht, da jedes Programm sich direkt
+     ins OS einklinken kann, obwohl eigentlich OS und Anwenderprogrammen
+     durch Speicherschutz voneinander getrennt sein sollten.
+
+
+   Exec-Devices
+     Exec-Devices stellen Funktionen in Form von Servern zur Verfügung.
+     Tasks schicken an diese Server Aufträge im Form von Nachrichten
+     ab(DoIO) und erhalten die Ergebnisse in Form von Nachrichten oder
+     durchs direkte Schreiben der Server der Ergebnisse im vom Task
+     gewünschte Speicherbereiche zurück.
+
+
+   DOS-Handler("Filesysteme")
+     Hierfür gilt dasgleiche wie für Devices über Nachrichten(Packets) -
+     auch wenn Funktionen der Dos-Library wie Read, Write, Seek etc.
+     benutzt werden - werden Aufträge an einen Handler abgeschickt, der
+     die Ergebnisse in Form von Nachrichten und durch das direkte
+     Schreiben in angegebene Speicherbereiche zurückgibt.
+
+
+   DMA(Direct Memory Access)
+     DMA ermöglicht eine Hardware direkt ohne den Umweg über einen
+     Prozessor schreibend und lesend auf einen Speicherbereich
+     zuzugreifen. Hiervon macht nicht nur Amiga-Hardware sehr intensiven
+     gebrauch, weil es die Geschwindigkeit eines Systems um mehrere
+     Faktoren erhöht nur wird damit in der Regel auch die MMU einer
+     CPU umgangen.
+
+
+!  Taskswitching
+!    Bei einen Amiga-OS mit Speicherschutz wird wahrscheinlich das
+!    Umschalten zwischen "gleichzeitig" laufenden Tasks länger dauern
+!    als jetzt. Problem ist dabei, daß dies nicht beim Amiga-OS
+!    berücksichtigt worden ist, sondern das Amiga-OS sich am derzeitigen
+!    schnellen Taskwechsel orientiert. So wird der input.device-Task
+!    z.B. 60 mal in der Sekunde aufgerufen, was sich schon spürbar
+!    bemerkbar machen könnte. Dieses häufige Aufrufen gerantiert
+!    andererseits aber auch wieder die schnelle Reaktion der GUI auf
+!    Aktionen der UserInnen.
+
+F: Was ist Shared-Memory?
+A: a) Ein Speicherbereich, der verschiedenen Tasks zur Verfügung steht.
+   b) Ein Speicherbereich eines Tasks, den dieser Task über ein Protokoll
+      für einen oder mehrern anderen Tasks zum direkten Zugriff freigegeben
+      hat.
+
+
+Speicherschutz in anderen Betriebssystemen
+
+F: Besitzt pOS Speicherschutz?
+A: Bisher(07-Aug-1997) meines[Sven] Wissens nicht, ob Speicherschutz für
+   zukünftige Versionen geplant ist, weiß ich nicht.
+
+F: Wird das OS der A\Box Speicherschutz besitzen?
+A: Zur Zeit ist geplant, daß das OS der A\Box auf einen Unix-Kernel
+   basiert. Da Unix über Speicherschutz verfügt, wird somit auch das
+   OS der A\Box Speicherschutz besitzen. Inwieweit es Einzug in dem
+   auf diesen Unix-Kernel aufsetzen Amiga-OS einzug halten wird ist
+   mir[Sven] nicht bekannt.
+   (TODO: URL A\Box OS auf www.phase5.de)
+
+F: In welchen Betriebsystemen ist Speicherschutz gut implementiert?
+A: TODO: Tja, schreibt mal.
+
+F: Laufen 32-Bit Windows 95 Programmen robuster als 16-Bit?
+A: Ja, weil sich alle 16-Bit Programmen eine Speicherbereich teilen
+   ohne gegenseitig durch Speicherschutz voreinander geschützt zu sein,
+   während 32-Bit Programme jeweils einen eigenen geschützten Speicherbereich
+   für sich haben.
+
+
+Stabile Betriebssysteme
+
+F: OS xyz hat Speicherschutz und läuft trotzdem nicht stabil?
+A: Nur das angegebene Feature "Speicherschutz" selbst garantiert noch kein
+   stabiles System. Speicherschutz selbst muß vollständig, gut und
+   fehlerlos im OS implementiert sein.
+
+F: Ist es möglich ein stabiles OS ohne Speicherschutz zu implementieren?
+A: Ja, stabil und robust sind zwei verschiedene Dinge. Stabil ist ein OS,
+   wenn es selbst in allen Situationen fehlerfrei läuft. Robust ist ein OS,
+   wenn es durch fehlerhafte Programme nicht zum Absturz gebracht werden
+   kann.
+
+F: Ist das derzeitge Amiga OS 3.1 stabil?
+A: Ja, das Amiga OS 3.1 ist recht stabil. Die Ursache von Abstürzen dürfte
+   in der Regel eher an einen Programm als am Amiga-OS liegen.
+
+
+
+Virtual Memory
+
+!F: Was ist Virtual Memory?
+!A: Ohne Virtual Memory gibt es nur einen Adressraum und alle Programme
+!  müssen sich diese einmal real vorhandenen 8MB, 16MB, 32MB etc.
+!  an Speicher teilen. Bei Virtual Memory bekommt jedes Programm seinen
+!  eigenen Adressraum - in der Regel in der Größe des Adressraums den
+!  die CPU maximal verteilen kann. Bei einer CPU mit 32-Adressleitungen
+!  wären dies 4GB. Diese sind natürlich nicht real als RAM vorhanden,
+!  sondern werden mittels einer MMU auf real vorhandenen Speicher abgebildet,
+!  für Programm 1 würde die virtuelle Adresse 1024 z.B. im real vorhandenen
+!  Speicher bei 3000 liegen und für Programm 2 1024 bei 75 000. Für
+!  die Software ist das egal, da die MMU automatisch diese Abbildung
+!  übernimmt. Dank dieser virtuellen Adressen lassen sich Speicherbereiche
+!  auch auf Festplatte auslagern, dadurch wird der Speicherbereich im
+!  real vorhandenen RAM frei und kann anders genutzt werden bis der
+!  ausgelagerte Speicherblock wieder gebraucht wird. Dafür wird dann ein
+!  anderer gerade nicht benötigte Speicherblock auf die Festplatte
+!  geschrieben wird und der vorher gerettete wieder ins RAM geladen. Dies
+!  ist natürlich langsamer als wenn genügend RAM für alle Programme da wär
+!  aber so lassen sich oft Programme, die große Datenmengen verarbeiten,
+!  besser bzw. überhaupt erst nutzen als wenn diese Möglichkeit nicht
+!  vorhanden wär.
+!
+!  TODO: Liste VM Implementationen für Amiga-OS
+
+MMU
+
+F: Was ist eine MMU?
+A: Eine MMU(Memory Management Unit) teilt den real vorhandenen Adreßraum
+   in Seiten ein. Auf diese physikalisch vorhandenen Adressen kann eine MMU
+   logische Adressen abbilden(Virtual Memory) und den lesenden und
+   schreibenden Zugriff auf die einzelnen Seiten überwachen(Speicherschutz).
+
+F: Welche 680x0 Prozessoren haben eine MMU?
+A: Prozessor  MMU     Typenbezeichnung
+   ----------------------------------------------
+   68000      Ja      extern, TODO: Bezeichnung?
+   68010      Ja      extern, TODO: Bezeichnung?
+   68020      Ja      extern, PMMU 68851
+   68EC020    Nein    TODO: [Sven] soviel ich weiß
+   68030      Ja      intern
+   68EC030    Nein[1]
+   68040      Ja      intern
+   68LC040    Ja[2]   intern
+   68EC040    Nein
+   68060      Ja      intern
+
+
+   Kompabilität:
+     Die PMMU 68851 und die interne MMU des 68030 sind identisch. Die MMU
+     des 68040 und des 68060 haben gegenüber ihren jeweiligen Vorgängern
+     an Funktionalität verloren und sind nicht 100% kompatibel, so daß
+     Programme, die eine MMU nutzen und z.B. speziell für den 68030
+     geschrieben worden sind, mit den 68040/68060 nicht laufen oder
+     Probleme bereiten.
+
+   [1] Eine Reihe von 68EC030(die u.a. in Amigas verbaut worden sind)
+       besitzen eine scheinbar funktionierende MMU(Enforcer, VM-Programme
+       laufen). Allerdings ist bei diesen 68EC030'ern die MMU nicht
+       getestet worden, so gibt es keine Garantie dafür, daß die MMU
+       ordnungsgemäßt funktioniert - dies gilt insbesonders für den
+       Dauerbetrieb. Für kritische Aufgaben wie Speicherschutz und Virtual
+       Memory sind diese CPUs daher nicht geeignet.
+
+   [2] Ja, der 68LC040 hat eine MMU ihm fehlt gegenüber dem 68040 nur
+       die FPU - auch wenns oft anders angegeben wird.
+
+
+Dank an
+  - Allen SchreiberInnen der aktuellen(Juli/August 1997) Speicherschutz
+    Threads in z-netz/rechner/amiga/allgemein, comp.sys.amiga.misc,
+    de.comp.sys.amiga.misc.
+
+  - Christian Stieber für seinen "Memory Protection for AmigaOS" Text von
+    dem u.a. der "F: Wo liegen die Probleme bei der Ergänzung des Amiga-OS
+    um Speicherschutz?" Teil zugute gekommen ist.
+
+! - Der Taskswitching Abschnitt basiert auf einen Posting von Timmo
+!   Stange in z.r.a.a. Timmo, keine Ahnung ob meine Mail angekommen ist,
+!   mir waren ein paar verloren gegangen.
+
+
+Todo
+<
+  - FTP als Quelle
+
+  - Mehr Literatur zum Thema Speicherschutz
+
+  - F: Welche Nachteile hat Speicherschutz???? - zusätzliche Erläuterungen
+
+  - F: Erhöht sich durch Speicherschutz die Anzahl von Fehlern in Programmen?
+    (TODO: Könnte man mit der vorigen Frage noch besser abgleichen)
+
+  - F: Wird das OS der A\Box Speicherschutz besitzen?
+    (TODO: URL A\Box OS auf www.phase5.de)
+
+  - F: In welchen Betriebsystemen ist Speicherschutz gut implementiert?
+    TODO: Tja, schreibt mal.
+
+! - F: Was ist Virtual Memory?
+!   TODO: Liste VM Implementationen für Amiga-OS
+
+! - Enforcer, Mungwall
+
+
+Brainstorm
+  F: Schutz vor Schreiben in nicht vorhandene Speicherbereiche.
+
+  F: Bricht/muß brechen Multithreading MP?
+
+  - Zwei virtuelle Adressen auf eine physikalische Adresse einmal zum
+    Lesen einmal zum Schreiben
+
+  - Erst dann Kopie von Speicherbereich anlegen, wenn anderer schreibend
+    darauf zugreift(Mach Kernel).
+
+
+History
+  V0.2 24.09.1997 sven add: Legende
+                       add: F: Wo kann man die neueste Version dieser FAQ
+                               finden?
+                       add: Verschicken von übermäßig vielen Nachrichten
+                       add: Taskswitching
+                       add: Virtual Memory
+  V0.1 03.08.1997 sven first public release
+
+</PRE>
+</BODY)
+</HTML>
