@@ -1,0 +1,29 @@
+/* main program */
+
+#include <exec/types.h>
+#include <intuition/intuition.h>
+#include <graphics/gfxmacros.h>
+
+
+extern struct Screen *SurfScrn;
+extern struct Window *SurfWin;
+extern struct Window *CntrlWin;
+extern struct Window *GadWin;
+extern long BackColor;
+/*
+ * bit masks for waiting for signals
+ */
+extern short CntrlSigBit, SurfSigBit, GadSigBit;
+extern long SignalMask;
+
+extern struct RastPort *rp;
+extern struct ViewPort *vp;
+
+
+
+extern int WinFgCol;
+extern int ColorMax;
+extern int NumColors;
+
+#define DefBkPlane 0
+
