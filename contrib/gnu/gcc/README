@@ -2,9 +2,10 @@ INDEX
 =====
 
 1. What is this?
-2. What is and how to build a cross compiler for AROS?
-3. What is and how to build a native compiler for AROS?
-4. Contact
+2. Required knowledges
+3. What is and how to build a cross compiler for AROS?
+4. What is and how to build a native compiler for AROS?
+5. Contact
 
 ------------------------------------------------------------------------
 
@@ -14,7 +15,31 @@ INDEX
   follow the same naming convention as the gcc releases, plus a trailing
   "-aros.diff" (without quotes).
 
-2. What is and how to build a cross compiler for AROS?
+2. Required knowledges
+
+  This README is not for everyone. You need to know a few things before 
+  you attempt to build a native or crosscompiler, and this documentation
+  does not attempt to explain to you those things.
+  
+  You need to know the following things:
+  
+    1) What is a "patch" and how to "apply" it. Refer to the "patch" 
+       and "diff" commands man pages to know more about it.
+     
+    2) What is gcc and, more importantly, how to build it from sources.
+       You can find documentation about these issues both on gcc's web 
+       pages and in every gcc archive. The web page can be found at
+       http://gcc.gnu.org/, and the documentation for how to build and
+       install it is at http://gcc.gnu.org/install/.
+
+    3) If you want to build a native compiler, you also need to know
+       how to use a compiler and, more specifically, a crosscompiler 
+       for AROS.
+       
+  Failure to meed any of the above requirements will most likely result 
+  in anger and frustration, you've been warned! :-) 
+  
+3. What is and how to build a cross compiler for AROS?
 
   A cross compiler is a compiler able to produce binaries usable by a
   "target" system, which however runs on a different system than the
@@ -60,7 +85,7 @@ INDEX
               collect-aros is in the PATH, so that the compiler can
               access it.
 
-3. What is and how to build a native compiler for AROS?
+4. What is and how to build a native compiler for AROS?
 
   As opposed to a crosscompiler, a native compiler runs on the same
   system the compiler is targetted for, that is "host" and "target"
@@ -157,7 +182,7 @@ INDEX
               backend, and the "spawn" version of docommand, and then
 	      link with libiberty.a and libbfd.a.
 
-4. Contact
+5. Contact
 
 If you need to blame someone for how crappy this gcc port is, then by
 any means blame Fabio Alemagna <falemagn@studenti.unina.it>. Feel free
