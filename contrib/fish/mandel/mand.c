@@ -72,6 +72,8 @@ Enjoy!
 struct MathBase* MathBase;
 struct MathTransBase* MathTransBase;
 
+struct DosLibrary* DOSBase;
+
 /*----------------------*/
 /* Graphics definitions */
 
@@ -181,6 +183,11 @@ main()
    if (IntuitionBase == NULL)
       loc_abort("Can't open intuition.library");
    cur_resource |= F_INTUITION;
+
+   DOSBase = (struct DosLibrary *)OpenLibrary("dos.library", 0);
+   if (DOSBase == NULL)
+      loc_abort("Can't open dos.library");
+   cur_resource |= F_DOS;
 
    console = fopen("con:0/0/640/200/Mandelbrot Commands","w+");
    if (console == NULL)
@@ -640,6 +647,8 @@ char *s;
       fclose(v_fp);
    if (redir_fp)
       fclose(redir_fp);
+   if (cur_resource & F_DOS)
+      CloseLibrary((struct Library*)DOSBase);
    if (cur_resource & F_GRAPHICS)
       CloseLibrary((struct Library*)GfxBase);
    if (cur_resource & F_INTUITION)

@@ -24,6 +24,8 @@ notice is retained.
 extern struct MathBase* MathBase;
 extern struct MathTransBase* MathTransBase;
 
+extern struct DosLibrary* DOSBase;
+
 extern struct Menu MainMenu[MENU_COUNT];
 
 

@@ -91,7 +91,7 @@ notice is retained.
 #define F_CONSOLE   0x000010
 #define F_COLORTAB  0x000020
 #define F_SETSTORE  0x000040
-
+#define F_DOS       0x000080
 
 #define EVER ;;
 #define MAXX 640
