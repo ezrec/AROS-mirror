@@ -1,0 +1,47 @@
+# $Id$
+#
+
+include $(TOP)/config/make.cfg
+
+LIB := renderstubs
+
+FILES := remaparray 	    	\
+    	 creatermhandler    	\
+	 createhistogram    	\
+	 addrgbimage 	    	\
+	 addchunkyimage     	\
+	 extractpalette     	\
+	 render     	    	\
+	 planar2chunky      	\
+	 chunky2rgb 	    	\
+	 chunky2bitmap      	\
+	 createscaleengine  	\
+	 scale      	    	\
+	 convertchunky      	\
+	 createpentable     	\
+	 createpalette      	\
+	 importpalette      	\
+	 exportpalette      	\
+	 sortpalette 	    	\
+	 addhistogram 	    	\
+	 createmapengine    	\
+	 maprgbarray 	    	\
+	 mapchunkyarray     	\
+	 rgbarraydiversity  	\
+	 chunkyarraydiversity 	\
+	 insertalphachannel 	\
+	 extractalphachannel 	\
+	 applyalphachannel  	\
+	 mixrgbarray 	    	\
+	 createalphaarray   	\
+	 mixalphachannel    	\
+	 tintrgbarray
+
+#MM- linklibs: linklibs-renderstubs
+#MM linklibs-renderstubs : includes
+
+%make_linklib_setup mmake=linklibs-renderstubs
+%make_linklib
+	
+%common
+%include_deps
