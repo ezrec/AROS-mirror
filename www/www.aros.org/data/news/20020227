@@ -1,0 +1,3 @@
+Georg Steger fixed a possible deadlock in intuition.  He also added
+Mouse Wheel support to AROS which can be seen in More and ASL
+requesters for example.
