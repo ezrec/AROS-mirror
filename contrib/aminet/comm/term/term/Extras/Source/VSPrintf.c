@@ -82,10 +82,31 @@ LimitedSPrintf(LONG Size,STRPTR Buffer,STRPTR FormatString,...)
 	 *	Just like vsprintf(), but using the ROM routines.
 	 */
 
+
+#ifdef __AROS__
+AROS_UFH2S(void, cpy_func,
+    AROS_UFHA(UBYTE, chr, D0),
+    AROS_UFHA(STRPTR *, strPtrPtr, A3))
+{
+    AROS_USERFUNC_INIT
+    
+    *(*strPtrPtr)++ = chr;
+    
+    AROS_USERFUNC_EXIT
+}
+#endif
+
 VOID
 VSPrintf(STRPTR Buffer,STRPTR FormatString,va_list VarArgs)
 {
+#ifdef __AROS__
+	STRPTR Buffer_Ptr = Buffer;
+#endif
+#ifdef __AROS__
+	RawDoFmt(FormatString,(APTR)VarArgs,cpy_func,&Buffer_Ptr);
+#else
 	RawDoFmt(FormatString,(APTR)VarArgs,(PUTCHAR)"\x16\xC0\x4E\x75",(APTR)Buffer);
+#endif
 }
 
 	/* SPrintf(STRPTR Buffer,STRPTR FormatString,...):
