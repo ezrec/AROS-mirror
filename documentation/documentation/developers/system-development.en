@@ -68,12 +68,12 @@ main AROS tree the following requirements must be satisfied:
 
 2. The license does not conflict with the APL:
    
-   a. If it is a standalone program, almost any license that complies with (2)
+   a. If it is a stand-alone program, almost any license that complies with (2)
       is allowed.
 
    b. If it is a library, the license must allow linking with programs and
       libraries that use a different license without any problems. This means
-      that libraries that are under GPL (as opposed to LGPL) are dissallowed.
+      that libraries that are under GPL (as opposed to LGPL) are disallowed.
 
 3. The license must be explicitly stated in a file named LEGAL located in the
    root directory of the sources it applies to.
@@ -101,7 +101,7 @@ Comments
 ========
 
 AROS uses some of the comments in the source to generate the documentation.
-Therefore it's neccessary to keep a certain format so the tools can find
+Therefore it's necessary to keep a certain format so the tools can find
 their information. Other comments are ignored but they should explain what
 you thought when you wrote the code. If you really can't think of an
 explanation, then don't write the code a second time like this::
@@ -178,7 +178,7 @@ As you can see, comments are used to merge the function prototype and the
 header into one.
 
 NAME 
-    This field contains all neccessary prototypes to use the function
+    This field contains all necessary prototypes to use the function
     from the user point of view and the name of the function in a `AROS_LH#?()`
     macro (Library Header). These macros are used to make the same code work on
     different kind of hardwares. The name of the macro depends on the amount of
@@ -190,7 +190,7 @@ NAME
     passed in certain registers (eg. callback hooks), you must use
     `AROS_UFH#?()` macros (User Function Header) instead of `AROS_LH#?()`. Append
     the number of arguments to this macro. Since it has never a base, the field
-    LOCATION must be omitted and it's not neccessary to append the "I" to the
+    LOCATION must be omitted and it's not necessary to append the "I" to the
     macros name. An example for a callback hook `foo()` would be::
 
         AROS_UFH3(ULONG, foo,
@@ -225,21 +225,21 @@ SYNOPSIS
     This field contains all arguments of the function one by
     one in `AROS_LHA()` macros (Library Header Argument). This macro makes sure
     the respective argument is put in the right CPU register when the function
-    is called (if possible and neccessary). The first argument for the macro is
+    is called (if possible and necessary). The first argument for the macro is
     the type of the parameter followed by the name of the parameter and the
     register the parameter is expected in. Valid names for registers are D0,
-    D1, D2 upto D7 and A0 upto A6.
+    D1, D2 up to D7 and A0 up to A6.
 
     If the function is not part of a library but the arguments must be passed
     to it in registers, then use `AROS_UFHA()` macros (User Function Header
     Argument) which take the same parameters as the `AROS_LHA()` macros. Don't
-    forget the closing parenthese for the `AROS_UFC`.
+    forget the closing parenthesis for the `AROS_UFC`.
 
     If the function is not part of a library and the arguments need not be
-    passed in registers, no macros are neccessary.
+    passed in registers, no macros are necessary.
 
 LOCATION
-    This field is neccessary for shared libraries only. It
+    This field is necessary for shared libraries only. It
     contains the last four parameters for the `AROS_LH#?()` macro which are the
     type of the library, the name of the variable, in which the function
     expects the library base, the offset of the function in the jumptable (the
@@ -358,9 +358,9 @@ Looks ugly, eh ? :-) Ok, here are the rules:
 
 + Put spaces between operands and operators
 
-+ Put braces ``{}``, brackets ``[]`` and parenthese
++ Put braces ``{}``, brackets ``[]`` and parentheses
   ``()`` below each other (d) if there is much code between. Brackets and 
-  parenthese may be in one line if the code between is small (c)
+  parentheses may be in one line if the code between is small (c)
 
 + Indent by 4 Spaces. Two indent levels may be abbreviated by one tab.
 
@@ -376,11 +376,11 @@ Looks ugly, eh ? :-) Ok, here are the rules:
      exactly this. If your editor doesn't, write a bug report.
 
 + If you have a function with many arguments (d, e) you should put the
-  parenthese in lines of their own and each argument in one line (d) or put
-  the first argument behind the opening parenthese (e) and each following
+  parentheses in lines of their own and each argument in one line (d) or put
+  the first argument behind the opening parenthesis (e) and each following
   argument in a line of its own with the comma in front. The closing
-  parenthese is in a line of its own and aligned with the beginning of the
-  expression (ie. the a and not the opening parenthese or the
+  parenthesis is in a line of its own and aligned with the beginning of the
+  expression (ie. the a and not the opening parenthesis or the
   `printf()`).
 
 + Use a single blank line to separate logical blocks. Large comments
@@ -409,14 +409,14 @@ that may be made resident, shared or linked to other modules.
 
 + The above applies to library bases as well. If you are writing
   a library, put the bases of other libraries into your own library
-  base structure. Boopsi classes can store library bases in their
+  base structure. BOOPSI classes can store library bases in their
   class private data.
 
 + Try to set the `static` and `const` attributes to all
   your global data. You can also use the `CONST_STRPTR` and
   `CONST_APTR` types defined in <exec/types.h>. Using `static const`
   allows the compiler to move data into the ".text" (AKA code)
-  segment.  If you need to pass these globals to another function, try to chenge
+  segment.  If you need to pass these globals to another function, try to change
   its prototype to use `const` too. Note that, as of OS 3.5, Olaf
   Barthel has finally switched to using `const` in
   <clib/#?_protos.h> headers.
@@ -445,7 +445,7 @@ This file describes how to port AROS to a new kind of hardware.
 1. Select an identifying name for your CPU (eg. i386, m68k, hppa, sparc)
    and add "-emul" (eg. i386-emul) if your port is to be running as
    a "sub-OS" or "-native" (eg. m68k-native) if the port will be a
-   standalone OS.
+   stand-alone OS.
 
 2. Select an identifying name for your system (eg. sgi, linux, amiga, etc).
 
@@ -488,7 +488,7 @@ This file describes how to port AROS to a new kind of hardware.
 6. Populate $(KERNEL)/. It is recommended that you make a copy of i386-emul,
    because that is the most uptodate version of the kernel.
 
-7. Type "make machine". It will compile a programm and run it. The output
+7. Type "make machine". It will compile a program and run it. The output
    can be used to modify $(KERNEL)/machine.h.
 
 8. Run "make machine.i" in $(KERNEL). It will generate a file "machine.i"
