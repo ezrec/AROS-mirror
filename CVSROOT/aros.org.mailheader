@@ -8,12 +8,13 @@ aros-dev-owner:          aros-dev-admin
 
 ## aros-user mailing list
 ## created: 03-Sep-1999 digulla
-aros-user:               "|cat > /dev/null"
-aros-user2:               "|/var/lib/mailman/mail/wrapper post aros-user"
-aros-user-admin:         "|/var/lib/mailman/mail/wrapper mailowner aros-user"
-aros-user-request:       "|/var/lib/mailman/mail/wrapper mailcmd aros-user"
-owner-aros-user:         aros-user-admin
-aros-user-owner:         aros-user-admin
+# Deleted because of Spam end of 2004
+#aros-user:               "|cat > /dev/null"
+#aros-user2:               "|/var/lib/mailman/mail/wrapper post aros-user"
+#aros-user-admin:         "|/var/lib/mailman/mail/wrapper mailowner aros-user"
+#aros-user-request:       "|/var/lib/mailman/mail/wrapper mailcmd aros-user"
+#owner-aros-user:         aros-user-admin
+#aros-user-owner:         aros-user-admin
 
 ## aros-announce mailing list
 ## created: 06-Mar-2000 root
