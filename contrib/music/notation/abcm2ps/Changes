@@ -1,3 +1,38 @@
+---- Version 3.3.1 - 03/01/26 ----
+
+Have bigger stems when notes outside the staff.
+No implicit slur in grace notes when explicit ones.
+Accept end of slur after grace note sequence.
+Do %%multicol work before 1st tune.
+
+---- Version 3.3.0 - 03/01/19 ----
+
+Bad vertical offset when Q: and P:.
+Fix some problems when 3 voices per staff.
+May have '%%postscript' in tune lines.
+'%%EPS' added.
+Note overlap when multi-voices and chords.
+Better vertical offset of some rests when multi-voices.
+Erroneous empty page on %%newpage.
+Change the note spacing.
+Don't read 'fonts.fmt' at starting time.
+Remove 'style.h'.
+Remove the '-p' / '-P' command line options.
+
+---- Version 3.2.1 - 03/01/12 ----
+
+'%%autoclef' added.
+May have '%%postscript' in tunes.
+Customization of '8' above or below the clefs.
+Accept 'octave=xxx' in K:.
+
+---- Version 3.2.0 - 03/01/07 ----
+
+Header and footer format.
+Bad slurs when grace notes since 3.1.14.
+Better vertical offset of small rests when multi-voices.
+System bracket change (from G. Gonzatto).
+
 ---- Version 3.1.17 - 02/12/08 ----
 
 Have decorations on spaces ('y').

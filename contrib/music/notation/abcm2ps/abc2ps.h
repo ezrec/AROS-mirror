@@ -60,6 +60,18 @@
 #define GCHPRE		0.4	/* portion of guitar chord before note */
 #define LYDIG_SH	3.	/* shift for lyrics starting with a digit */
 
+/* -- Parameters for note spacing -- */
+/* -- bnn determines how strongly the first note enters into the spacing.
+      For bnn=1, the spacing is calculated using the first note.
+      For bnn=0, the spacing is the average for the two notes.
+   -- fnn multiplies the spacing under a beam, to compress the notes a bit
+   -- gnn multiplies the spacing a second time within an n-tuplet
+ */
+
+#define bnnp 0.9
+#define fnnp 0.9
+#define gnnp 0.8
+
 /* -- macros for program internals -- */
 
 #define CM		28.35	/* factor to transform cm to pt */
@@ -166,7 +178,7 @@ struct SYMBOL { 		/* struct for a drawable symbol */
 #define S_NPLET_END	0x0040	/* end or in a n-plet sequence */
 	unsigned char nhd;	/* number of notes in chord - 1 */
 	signed char stem;	/* 1 / -1 for stem up / down */
-	char	nflags;		/* number of note flags */
+	signed char nflags;	/* number of note flags when > 0 */
 	char	dots;		/* number of dots */
 	char	head;		/* head type */
 #define H_FULL		0
@@ -179,11 +191,9 @@ struct SYMBOL { 		/* struct for a drawable symbol */
 				 *	- old key signature when KEYSIG
 				 *	- reset bar number when BAR
 				 *	- subtype when FMTCHG (format change)
-				 *	  with value in xmx */
-#define LMARG 0				/* left margin */
-#define RMARG 1				/* right margin */
-#define STBRK 2				/* staff break */
-#define SCALE 3				/* new scale */
+				 *	  with value in xmx: */
+#define STBRK 0				/* staff break */
+#define PSSEQ 1				/* postscript sequence */
 	short	doty;		/* dot y pos when voices overlap */
 	float	x;		/* position */
 	short	y;
@@ -218,7 +228,7 @@ struct FORMAT { 		/* struct for page layout */
 	int	landscape, titleleft, continueall, writehistory;
 	int	stretchstaff, stretchlast, withxrefs, barsperstaff;
 	int	oneperpage, musiconly, titlecaps, graceslurs, straightflags;
-	int	encoding, partsbox, infoline, printtempo;
+	int	encoding, partsbox, infoline, printtempo, autoclef;
 	int	measurenb, measurefirst, measurebox, flatbeams, squarebreve;
 	int	exprabove, exprbelow, breathlow, vocalabove, freegchord;
 	char	*footer, *header;
@@ -228,8 +238,6 @@ struct FORMAT { 		/* struct for page layout */
 };
 
 extern struct FORMAT cfmt;	/* current format for output */
-
-extern char *style;
 
 extern char *mbf;		/* where to PUTx() */
 extern int nbuf;		/* number of bytes buffered */
@@ -361,13 +369,12 @@ void make_font_list(void);
 void print_format(void);
 int read_fmt_file(char *filename,
 		  char *dirname);
-void set_pretty_format(void);
-void set_pretty2_format(void);
-void set_standard_format(void);
+void set_format(void);
 /* music.c */
 void output_music(void);
 void reset_gen(void);
 /* parse.c */
+extern float multicol_start;
 struct SYMBOL *add_sym(struct VOICE_S *p_voice,
 		       int type);
 void voice_dup(void);

@@ -1,8 +1,24 @@
 /*
+ * Low-level utilities.
+ *
  * This file is part of abcm2ps.
- * Copyright (C) 1998-2002 Jean-François Moine
- * (adapted from abc2ps, Copyright (C) 1996,1997 Michael Methfessel)
- * See file abc2ps.c for details.
+ *
+ * Copyright (C) 1998-2003 Jean-François Moine
+ * Adapted from abc2ps, Copyright (C) 1996,1997 Michael Methfessel
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
 #include <stdio.h>
@@ -177,8 +193,6 @@ static struct text {
 	char text[2];
 } *text_tb[TEXT_MAX];
 
-/*  low-level utilities  */
-
 /* -- print message for internal error and maybe stop -- */
 void bug(char *msg,
 	 int fatal)
@@ -303,19 +317,18 @@ void tex_str(char *d,
 			}
 			/* treat escape with octal value */
 			if ((unsigned) (c1 - '0') <= 3
-			    && (unsigned) (c2 - '0') <= 7) {
-				if ((unsigned) (s[2] - '0') <= 7) {
-					if ((maxlen -= 4) <= 0)
-						break;
-					*d++ = '\\';
-					*d++ = c1;
-					*d++ = c2;
-					*d++ = s[2];
-					c1 = ((c1 - '0') << 6) + ((c2 - '0') << 3) + s[2] - '0';
-					w += cwid(c1);
-					s += 2;
+			    && (unsigned) (c2 - '0') <= 7
+			    && (unsigned) (s[2] - '0') <= 7) {
+				if ((maxlen -= 4) <= 0)
 					break;
-				}
+				*d++ = '\\';
+				*d++ = c1;
+				*d++ = c2;
+				*d++ = s[2];
+				c1 = ((c1 - '0') << 6) + ((c2 - '0') << 3) + s[2] - '0';
+				w += cwid(c1);
+				s += 2;
+				break;
 			}
 			/* convert to rfc1345 */
 			switch (c1) {
@@ -387,11 +400,11 @@ static void put_str3(char *head,
 	PUT0(tail);
 }
 
-/* -- set_font_str -- */
-static void set_font_str(char *str,
-			 struct FONTSPEC *font)
+/* -- set font and memorize in case of page break -- */
+static void set_font_init(struct FONTSPEC *font)
 {
-	sprintf(str, "%.1f F%d ", font->size, font->fnum);
+	set_font(font);
+	sprintf(page_init, "%.1f F%d ", font->size, font->fnum);
 }
 
 /* -- add_to_text_block -- */
@@ -404,10 +417,8 @@ void add_to_text_block(char *s,
 	tex_str(buf, s, sizeof buf, &lw);
 
 	/* if first line, set the fonts */
-	if (twidth == 0) {
-		set_font(&cfmt.textfont);
-		set_font_str(page_init, &cfmt.textfont);
-	}
+	if (twidth == 0)
+		set_font_init(&cfmt.textfont);
 
 	/* follow lines */
 	if (job == OBEYLINES || job == OBEYCENTER) {
@@ -442,7 +453,7 @@ void add_to_text_block(char *s,
 }
 
 /* -- write_text_block -- */
-void write_text_block(int  job,
+void write_text_block(int job,
 		      int abc_state)
 {
 	if (twidth == 0)
@@ -478,7 +489,7 @@ void write_text_block(int  job,
 	buffer_eob();
 
 	/* next line to allow pagebreak after each paragraph */
-	if (!epsf && abc_state != ABC_S_TUNE)
+	if (!epsf && abc_state != ABC_S_TUNE && multicol_start > 0)
 		write_buffer();
 	page_init[0] = '\0';
 
@@ -528,8 +539,7 @@ void put_words(void)
 	if ((u = text_tb[TEXT_W]) == 0)
 		return;
 
-	set_font(&cfmt.wordsfont);
-	set_font_str(page_init, &cfmt.wordsfont);
+	set_font_init(&cfmt.wordsfont);
 
 	/* see if we may have 2 columns */
 	middle = 0.5 * ((cfmt.landscape ? cfmt.pageheight : cfmt.pagewidth)
@@ -682,8 +692,7 @@ void put_history(void)
 	struct text *t;
 	float baseskip,parskip;
 
-	set_font(&cfmt.textfont);
-	set_font_str(page_init, &cfmt.textfont);
+	set_font_init(&cfmt.textfont);
 	baseskip = cfmt.textfont.size * cfmt.lineskipfac;
 	parskip = cfmt.textfont.size * cfmt.parskipfac;
 
@@ -853,8 +862,7 @@ void write_user_ps(void)
 {
 	struct text *t;
 
-	if ((t = text_tb[TEXT_PS]) == 0)
-		return;
+	t = text_tb[TEXT_PS];
 	while (t != 0) {
 		fprintf(fout, "%s\n", t->text);
 		t = t->next;

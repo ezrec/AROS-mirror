@@ -104,7 +104,8 @@ List of the options
 		3  at top left on even pages, top right on odd pages
 		4  at top right on even pages, top left on odd pages
 	For compatibility with previous versions, '+N' is the same as
-	'-N0', and '+N' is the same as '-N2'.
+	'-N0', and '-N' is the same as '-N2'.
+	If a header is defined ('%%header'), this option is ignored.
 
   -n, +n
 	See: format - writehistory <bool>
@@ -117,14 +118,6 @@ List of the options
 	With this option, it will be <name>.ps or <name>nnn.eps.
 	If <name> is '=', the output file as the name of the ABC
 	source file with the extension '.ps' (or '.eps').
-
-  -P
-	Select the secundary pretty output option. See '-p'.
-
-  -p, +p
-	Generate pretty output, with more whitespace between tunes,
-	larger fonts for titles, and larger music symbols. By default,
-	the layout squeezes the tunes to reduce the number of pages.
 
   -s<float>
 	See: format - scale <float>

@@ -1,8 +1,24 @@
 /*
+ * Postscript definitions.
+ *
  * This file is part of abcm2ps.
- * Copyright (C) 1998-2002 Jean-François Moine
+ *
+ * Copyright (C) 1998-2003 Jean-François Moine
  * Adapted from abc2ps, Copyright (C) 1996,1997 Michael Methfessel
- * See file abc2ps.c for details.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
 #include <stdio.h>
@@ -14,7 +30,11 @@
 /*  subroutines to define postscript macros which draw symbols	*/
 
 static char ps_head[] =
-	"\n/cshow { % usage: str cshow  - center at current pt\n"
+	"\n/xymove {\n"
+	"	2 copy /y exch def /x exch def M\n"
+	"} bdef\n"
+
+	"\n/cshow {	% usage: str cshow - center at current pt\n"
 	"	dup stringwidth pop 2 div neg 0 rmoveto show\n"
 	"} bdef\n"
 
@@ -55,7 +75,7 @@ static char ps_head[] =
 
 	"/whf {3 add 3 3 1 roll wln} bdef\n"
 
-	"\n/tclef {  % usage:  x y tclef  - treble clef\n"
+	"\n/tclef {	% usage: x y tclef - treble clef\n"
 	"	M\n"
 	"	-1.9 3.7 rmoveto\n"
 	"	-3.3 1.9 -3.1 6.8 2.4 8.6 rcurveto\n"
@@ -83,7 +103,14 @@ static char ps_head[] =
 	"	exch 0.85 div exch 0.85 div gsave 0.85 dup scale tclef grestore\n"
 	"} bdef\n"
 
-	"\n/bclef {  % usage:  x y bclef  - bass clef\n"
+	"\n/octu {	% usage: x y octu - upper '8'\n"
+	"	/Times-Roman 12 selectfont M -1.5 34 rmoveto (8) show\n"
+	"} bdef\n"
+	"\n/octl {	% usage: x y octl - lower '8'\n"
+	"	/Times-Roman 12 selectfont M -3.5 -19 rmoveto (8) show\n"
+	"} bdef\n"
+
+	"\n/bclef {	% usage: x y bclef - bass clef\n"
 	"	M\n"
 	"	-8.8 3.5 rmoveto\n"
 	"	6.3 1.9 10.2 5.6 10.5 10.8 rcurveto\n"
@@ -118,7 +145,7 @@ static char ps_head[] =
 	"	fill\n"
 	"} bdef\n"
 
-	"\n/cclef { % usage: x y cclef\n"
+	"\n/cclef {	% usage: x y cclef\n"
 	"	gsave T\n"
 	"	cchalf 0 24 T 1 -1 scale cchalf\n"
 	"	-5.0 0 M 0 24 rlineto 3 0 rlineto 0 -24 rlineto fill\n"
@@ -129,46 +156,46 @@ static char ps_head[] =
 	"	exch 0.85 div exch 0.85 div gsave 0.85 dup scale 0 2 T cclef grestore"
 	"} bdef\n"
 
-	"\n/pclef { % usage: x y pclef\n"
-	"	M 1.4 setlinewidth  -2.7 2 rmoveto\n"
-	"	0 20 rlineto 5.4 0 rlineto 0 -20 rlineto -5.4 0  rlineto stroke\n"
+	"\n/pclef {	% usage: x y pclef\n"
+	"	M 1.4 setlinewidth -2.7 2 rmoveto\n"
+	"	0 20 rlineto 5.4 0 rlineto 0 -20 rlineto -5.4 0 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/bm {  % usage: t dx dy x y bm  - beam, depth t\n"
+	"\n/bm {	% usage: t dx dy x y bm - beam, depth t\n"
 	"	M 3 copy rlineto neg 0 exch rlineto\n"
 	"	neg exch neg exch rlineto 0 exch rlineto fill\n"
 	"} bdef\n"
 
-	"\n/bnum {  % usage: str x y bnum - number on beam\n"
+	"\n/bnum {	% usage: str x y bnum - number on beam\n"
 	"	M /Times-Italic 12 selectfont cshow\n"
 	"} bdef\n"
-  
-	"\n/hbr {  % usage: x1 y1 x2 y2 hbr - half bracket\n"
+
+	"\n/hbr {	% usage: x1 y1 x2 y2 hbr - half bracket\n"
 	"	M dlw lineto 0 -3 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/r00 {  %% usage: x y r00 - longa rest\n"
-	"	6 add 2 copy /y exch def /x exch def M\n"
-	"	-1 0 rmoveto 0 -12 rlineto 3 0 rlineto 0 12 rlineto fill\n"
+	"\n/r00 {	% usage: x y r00 - longa rest\n"
+	"	xymove\n"
+	"	-1 6 rmoveto 0 -12 rlineto 3 0 rlineto 0 12 rlineto fill\n"
 	"} bdef\n"
 
-	"\n/r0 {  %% usage: x y r0 - breve rest\n"
-	"	6 add 2 copy /y exch def /x exch def M\n"
-	"	-1 0 rmoveto 0 -6 rlineto 3 0 rlineto 0 6 rlineto fill\n"
+	"\n/r0 {	% usage: x y r0 - breve rest\n"
+	"	xymove\n"
+	"	-1 6 rmoveto 0 -6 rlineto 3 0 rlineto 0 6 rlineto fill\n"
 	"} bdef\n"
 
-	"\n/r1 {  %% usage: x y r1 - rest\n"
-	"	6 add 2 copy /y exch def /x exch def M\n"
-	"	-3 0 rmoveto 0 -3 rlineto 6 0 rlineto 0 3 rlineto fill\n"
+	"\n/r1 {	% usage: x y r1 - rest\n"
+	"	xymove\n"
+	"	-3 6 rmoveto 0 -3 rlineto 6 0 rlineto 0 3 rlineto fill\n"
 	"} bdef\n"
 
-	"\n/r2 {  %% usage: x y r2 - half rest\n"
-	"	2 copy /y exch def /x exch def M\n"
+	"\n/r2 {	% usage: x y r2 - half rest\n"
+	"	xymove\n"
 	"	-3 0 rmoveto 0 3 rlineto 6 0 rlineto 0 -3 rlineto fill\n"
 	"} bdef\n"
 
-	 "\n/r4 { %% usage: x y r4 - quarter rest\n"
-	"	2 copy /y exch def /x exch def M\n"
+	 "\n/r4 {	% usage: x y r4 - quarter rest\n"
+	"	xymove\n"
 	"	-0.5 8.9 rmoveto\n"
 	"	1.3 -3.4 rlineto\n"
 	"	-2.0 -4.5 rlineto\n"
@@ -178,31 +205,33 @@ static char ps_head[] =
 	"	-2.2 4.2 rlineto\n"
 	"	0.0 0.0 2.0 4.7 2.1 4.7 rcurveto\n"
 	"	-3.3 5.0 rlineto\n"
-	"	fill\n} bdef\n"
+	"	fill\n"
+	"} bdef\n"
 
-	"\n/r8e { %% 1/8 .. 1/64 rest element\n"
+	"\n/r8e {	% 1/8 .. 1/64 rest element\n"
 	"	-1.5 -1.5 -2.4 -2.0 -3.6 -2.0 rcurveto\n"
 	"	2.4 2.8 -2.8 4.0 -2.8 1.2 rcurveto\n"
 	"	0.0 -2.7 4.3 -2.4 5.9 -0.6 rcurveto\n"
-	"	fill\n} bdef\n"
+	"	fill\n"
+	"} bdef\n"
 
-	"\n/r8 { %% usage: x y r8 - eighth rest\n"
-	"	2 copy /y exch def /x exch def M\n"
+	"\n/r8 {	% usage: x y r8 - eighth rest\n"
+	"	xymove\n"
 	"	0.5 setlinewidth 3.3 4.0 rmoveto\n"
 	"	-3.4 -9.6 rlineto stroke\n"
 	"	x y M 3.4 4.0 rmoveto r8e\n"
 	"} bdef\n"
 
-	"\n/r16 { %% usage: x y r16 - 16th rest\n"
-	"	2 copy /y exch def /x exch def M\n"
+	"\n/r16 {	% usage: x y r16 - 16th rest\n"
+	"	xymove\n"
 	"	0.5 setlinewidth 3.3 4.0 rmoveto\n"
 	"	-4.0 -15.6 rlineto stroke\n"
 	"	x y M 3.4 4.0 rmoveto r8e\n"
 	"	x y M 1.9 -2.0 rmoveto r8e\n"
 	"} bdef\n"
 
-	"\n/r32 { %% usage: x y r32 - 32th rest\n"
-	"	2 copy /y exch def /x exch def M\n"
+	"\n/r32 {	% usage: x y r32 - 32th rest\n"
+	"	xymove\n"
 	"	0.5 setlinewidth 4.8 10.0 rmoveto\n"
 	"	-5.5 -21.6 rlineto stroke\n"
 	"	x y M 4.9 10.0 rmoveto r8e\n"
@@ -210,8 +239,8 @@ static char ps_head[] =
 	"	x y M 1.9 -2.0 rmoveto r8e\n"
 	"} bdef\n"
 
-	"\n/r64 { %% usage: x y r64 - 64th rest\n"
-	"	2 copy /y exch def /x exch def M\n"
+	"\n/r64 {	% usage: x y r64 - 64th rest\n"
+	"	xymove\n"
 	"	0.5 setlinewidth 4.8 10.0 rmoveto\n"
 	"	-7.0 -27.6 rlineto stroke\n"
 	"	x y M 4.9 10.0 rmoveto r8e\n"
@@ -220,19 +249,20 @@ static char ps_head[] =
 	"	x y M 0.3 -8.0 rmoveto r8e\n"
 	"} bdef\n"
 
-	"\n/dt {  % usage: dx dy dt - dot shifted by dx,dy\n"
+	"\n/dt {	% usage: dx dy dt - dot shifted by dx,dy\n"
 	"	y add exch x add exch M currentpoint 1.2 0 360 arc fill\n"
 	"} bdef\n"
 
-	"\n/hld {  %% usage: x y hld  - fermata\n"
+	"\n/hld {	% usage: x y hld - fermata\n"
 	"	1.5 add 2 copy 1.5 add M currentpoint 1.3 0 360 arc\n"
 	"	M -7.5 0 rmoveto\n"
 	"	0 11.5 15 11.5 15 0 rcurveto\n"
 	"	-0.25 0 rlineto\n"
 	"	-1.25 9 -13.25 9 -14.50 0 rcurveto\n"
-	"	fill\n} bdef\n"
+	"	fill\n"
+	"} bdef\n"
 
-	"\n/dnb {  %% usage: x y dnb - down bow\n"
+	"\n/dnb {	% usage: x y dnb - down bow\n"
 	"	dlw M\n"
 	"	-3.2 2.0 rmoveto\n"
 	"	0.0 7.2 rlineto\n"
@@ -243,47 +273,49 @@ static char ps_head[] =
 	"	0.0 2.4 rlineto\n"
 	"	6.4 0.0 rlineto\n"
 	"	0.0 -2.4 rlineto\n"
-	"	fill\n} bdef\n"
+	"	fill\n"
+	"} bdef\n"
 
-	"\n/upb {  %% usage: x y upb - up bow\n"
+	"\n/upb {	% usage: x y upb - up bow\n"
 	"	dlw M -2.6 9.4 rmoveto\n"
 	"	2.6 -8.8 rlineto\n"
 	"	2.6 8.8 rlineto\n"
-	"	stroke\n} bdef\n"
+	"	stroke\n"
+	"} bdef\n"
 
-	"\n/grm {  % usage: x y grm - gracing mark\n"
+	"\n/grm {	% usage: x y grm - gracing mark\n"
 	"	M -5 2.5 rmoveto\n"
 	"	5.0 8.5 5.5 -4.5 10.0 2.0 rcurveto\n"
 	"	-5.0 -8.5 -5.5 4.5 -10.0 -2.0 rcurveto fill\n"
 	"} bdef\n"
 
-	"\n/stc {  % usage:  x y stc  - staccato mark\n"
+	"\n/stc {	% usage: x y stc - staccato mark\n"
 	"	M currentpoint 1.2 0 360 arc fill\n"
 	"} bdef\n"
 
-	"\n/emb {  % usage: x y emb - emphasis bar\n"
+	"\n/emb {	% usage: x y emb - emphasis bar\n"
 	"	1.2 setlinewidth 1 setlinecap M\n"
 	"	-2.5 0 rmoveto 5 0 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/cpu {  % usage: x y cpu - roll sign above head\n"
+	"\n/cpu {	% usage: x y cpu - roll sign above head\n"
 	"	M -6 0 rmoveto\n"
 	"	0.4 7.3 11.3 7.3 11.7 0 rcurveto\n"
 	"	-1.3 6 -10.4 6 -11.7 0 rcurveto fill\n"
 	"} bdef\n"
 
-	"\n/sld {  % usage: x y sld  - slide\n"
+	"\n/sld {	% usage: x y sld - slide\n"
 	"	M -7.2 -4.8 rmoveto\n"
 	"	1.8 -0.7 4.5 0.2 7.2 4.8 rcurveto\n"
 	"	-2.1 -5.0 -5.4 -6.8 -7.6 -6.0 rcurveto fill\n"
 	"} bdef\n"
-  
-	"\n/trl {  % usage: x y trl - trill sign\n"
+
+	"\n/trl {	% usage: x y trl - trill sign\n"
 	"	/Times-BoldItalic 16 selectfont\n"
 	"	M -4 2 rmoveto (tr) show\n"
 	"} bdef\n"
 
-	"\n/umrd {  % usage: x y umrd - upper mordent\n"
+	"\n/umrd {	% usage: x y umrd - upper mordent\n"
 	"	4 add M\n"
 	"	2.2 2.2 rlineto 2.1 -2.9 rlineto 0.7 0.7 rlineto\n"
 	"	-2.2 -2.2 rlineto -2.1 2.9 rlineto -0.7 -0.7 rlineto\n"
@@ -291,45 +323,45 @@ static char ps_head[] =
 	"	2.2 2.2 rlineto 2.1 -2.9 rlineto 0.7 0.7 rlineto fill\n"
 	"} bdef\n"
 
-	"\n/lmrd {  % usage: x y lmrd - lower mordent\n"
+	"\n/lmrd {	% usage: x y lmrd - lower mordent\n"
 	"	2 copy umrd 8 add M\n"
 	"	0.6 setlinewidth 0 -8 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/fng {  % usage:  str x y fng - finger (0-5)\n"
+	"\n/fng {	% usage: str x y fng - finger (0-5)\n"
 	"	/Bookman-Demi 8 selectfont\n"
 	"	M -3 1 rmoveto show\n"
 	"} bdef\n"
 
-	"\n/dacs {  % usage:  str x y dacs - D.C. / D.S.\n"
+	"\n/dacs {	% usage: str x y dacs - D.C. / D.S.\n"
 	"	/Times-Roman 16 selectfont\n"
 	"	3 add M cshow\n"
 	"} bdef\n"
 
-	"\n/brth {  % usage: x y brth - breath\n"
+	"\n/brth {	% usage: x y brth - breath\n"
 	"	/Times-BoldItalic 30 selectfont\n"
 	"	6 add M (,) show\n"
 	"} bdef\n"
 		
-	"\n/pf {  % usage: str x y pf - p, f, pp, ..\n"
+	"\n/pf {	% usage: str x y pf - p, f, pp, ..\n"
 	"	/Times-BoldItalic 16 selectfont\n"
 	"	5 add M cshow\n"
 	"} bdef\n"
 
-	"\n/sfz {  % usage: str x y sfz\n"
+	"\n/sfz {	% usage: str x y sfz\n"
 	"	exch 4 sub exch 5 add M pop\n"
 	"	/Times-Italic 14 selectfont (s) show\n"
 	"	/Times-BoldItalic 16 selectfont (f) show\n"
 	"	/Times-Italic 14 selectfont (z) show\n"
 	"} bdef\n"
 
-	"\n/coda {  % usage: x y coda - coda\n"
+	"\n/coda {	% usage: x y coda - coda\n"
 	"	1 setlinewidth 2 add 2 copy M 0 20 rlineto\n"
 	"	2 copy 10 add exch -10 add exch M 20 0 rlineto stroke\n"
 	"	10 add 6 0 360 arc 1.7 setlinewidth stroke\n"
 	"} bdef\n"
 
-	"\n/sgno {  % usage: x y sgno - segno\n"
+	"\n/sgno {	% usage: x y sgno - segno\n"
 	"	M 0 3 rmoveto currentpoint currentpoint currentpoint\n"
 	"	1.5 -1.7 6.4 0.3 3.0 3.7 rcurveto\n"
 	"	-10.4 7.8 -8.0 10.6 -6.5 11.9 rcurveto\n"
@@ -345,22 +377,22 @@ static char ps_head[] =
 	"	8 add exch 6 add exch 1.2 0 360 arc fill\n"
 	"} bdef\n"
 
-	"\n/cresc {  % usage: w x y cresc - (de)crescendo\n"
+	"\n/cresc {	% usage: w x y cresc - (de)crescendo\n"
 	"	1.2 setlinewidth 6 add M\n"
 	"	dup 4 rlineto neg 4 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/dplus {  % usage: x y dplus - + decoration\n"
+	"\n/dplus {	% usage: x y dplus - + decoration\n"
 	"	1.2 setlinewidth M 0 0.5 rmoveto 0 6 rlineto\n"
 	"	-3 -3 rmoveto 6 0 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/accent {  % usage: x y accent - accent\n"
+	"\n/accent {	% usage: x y accent - accent\n"
 	"	1.2 setlinewidth M -4 2 rmoveto\n"
 	"	8 2 rlineto -8 2 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/turn {  % usage: x y turn - turn\n"
+	"\n/turn {	% usage: x y turn - turn\n"
 	"	M 5.2 8 rmoveto\n"
 	"	1.4 -0.5 0.9 -4.8 -2.2 -2.8 rcurveto\n"
 	"	-4.8 3.5 rlineto\n"
@@ -375,22 +407,22 @@ static char ps_head[] =
 	"	fill\n"
 	"} bdef\n"
 
-	"\n/turnx {  % usage: x y trnx - turn with line through it\n"
+	"\n/turnx {	% usage: x y trnx - turn with line through it\n"
 	"	2 copy turn M\n"
 	"	0.6 setlinewidth 0 1.5 rmoveto 0 9 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/lphr {  % usage: x y lphr - longphrase\n"
+	"\n/lphr {	% usage: x y lphr - longphrase\n"
 	"	1.2 setlinewidth M\n"
 	"	0 -18 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/mphr {  % usage: x y mphr - mediumphrase\n"
+	"\n/mphr {	% usage: x y mphr - mediumphrase\n"
 	"	1.2 setlinewidth M\n"
 	"	0 -12 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/sphr {  % usage: x y sphr - shortphrase\n"
+	"\n/sphr {	% usage: x y sphr - shortphrase\n"
 	"	1.2 setlinewidth M\n"
 	"	0 -6 rlineto stroke\n"
 	"} bdef\n"
@@ -420,36 +452,36 @@ static char ps_head[] =
 	"	1 add M -1.5 5 rlineto 3 0 rlineto -1.5 -5 rlineto fill\n"
 	"} bdef\n"
 
-	"/opend {  % usage: x y opend - 'open' sign\n"
+	"/opend {	% usage: x y opend - 'open' sign\n"
 	"	dlw M currentpoint 3 add 2.5 -90 270 arc stroke\n"
 	"} bdef\n"
 
-	"/snap {  % usage: x y snap - 'snap' sign\n"
+	"/snap {	% usage: x y snap - 'snap' sign\n"
 	"	dlw M currentpoint -3 6 rmoveto\n"
 	"	0 5 6 5 6 0 rcurveto\n"
 	"	0 -5 -6 -5 -6 0 rcurveto\n"
 	"	5 add M 0 -6 rlineto stroke\n"
 	"} bdef\n"
 
-	"/thumb {  % usage: x y thumb - 'thumb' sign\n"
+	"/thumb {	% usage: x y thumb - 'thumb' sign\n"
 	"	dlw M currentpoint -2.5 7 rmoveto\n"
 	"	0 6 5 6 5 0 rcurveto\n"
 	"	0 -6 -5 -6 -5 0 rcurveto\n"
 	"	2 add M 0 -4 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/hl {  % usage: y hl  - helper line at height y\n"
+	"\n/hl {	% usage: y hl - helper line at height y\n"
 	"	0.8 setlinewidth x -6.5 add exch M\n"
 	"	13 0 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/hl1 {  % usage: y hl1  - longer helper line\n"
+	"\n/hl1 {	% usage: y hl1 - longer helper line\n"
 	"	0.8 setlinewidth x -8 add exch M\n"
 	"	16 0 rlineto stroke\n"
 	"} bdef\n"
 
 	"\n% accidentals\n"
-	"/sh0 {  % usage:  x y sh0  - sharp sign\n"
+	"/sh0 {		% usage: x y sh0 - sharp sign\n"
 	"	gsave T 0.9 setlinewidth\n"
 	"	-1.2 -8.4 M 0 15.4 rlineto\n"
 	"	1.4 -7.2 M 0 15.4 rlineto stroke\n"
@@ -457,10 +489,10 @@ static char ps_head[] =
 	"	-2.6 3.4 M 5.4 1.6 rlineto 0 -2.2 rlineto -5.4 -1.6 rlineto 0 2.2 rlineto fill\n"
 	"	grestore\n"
 	"} bdef\n"
-	"/sh { % usage: dx sh  - sharp relative to head\n"
+	"/sh {		% usage: dx sh - sharp relative to head\n"
 	"	x add y sh0 } bdef\n"
 	"\n"
-	"/ft0 { % usage:  x y ft0  - flat sign\n"
+	"/ft0 {		% usage: x y ft0 - flat sign\n"
 	"	gsave T 0.8 setlinewidth\n"
 	"	-1.8 2.5 M\n"
 	"	6.4 3.3 6.5 -3.6 0 -6.6 rcurveto\n"
@@ -469,10 +501,10 @@ static char ps_head[] =
 	"	0 7.1 rmoveto 0 -12.6 rlineto stroke\n"
 	"	grestore\n"
 	"} bdef\n"
-	"/ft { % usage: dx ft  - flat relative to head\n"
+	"/ft {		% usage: dx ft - flat relative to head\n"
 	"	x add y ft0 } bdef\n"
 	"\n"
-	"/nt0 { % usage:  x y nt0  - natural sign\n"
+	"/nt0 {		% usage: x y nt0 - natural sign\n"
 	"	gsave T 0.5 setlinewidth\n"
 	"	-2 -4.3 M 0 12.2 rlineto\n"
 	"	1.3 -7.8 M 0 12.2 rlineto stroke\n"
@@ -481,10 +513,10 @@ static char ps_head[] =
 	"	-2 2.4 M 3.3 0.6 rlineto stroke\n"
 	"	grestore\n"
 	"} bdef\n"
-	"/nt { % usage: dx nt  - natural relative to head\n"
+	"/nt {		% usage: dx nt - natural relative to head\n"
 	"	x add y nt0 } bdef\n"
 
-	"\n/ftx { % usage: x y ftx - narrow flat sign\n"
+	"\n/ftx {	% usage: x y ftx - narrow flat sign\n"
 	"	M -1.4 2.7 rmoveto\n"
 	"	5.7 3.1 5.7 -3.6 0.0 -6.7 rcurveto\n"
 	"	3.9 4.0 4.0 7.6 0.0 5.8 rcurveto\n"
@@ -509,7 +541,7 @@ static char ps_head[] =
 	"	M -1.3 -1.3 rmoveto\n"
 	"	-2 -0.2 rlineto -0.2 -2 rlineto 2 0.2 rlineto 0.2 2 rlineto fill\n"
 	" } bdef\n"
-	"/dsh { % usage: dx dsh  - double sharp relative to head\n"
+	"/dsh {		% usage: dx dsh - double sharp relative to head\n"
 	" x add y dsh0 } bdef\n"
 
 	"\n% accidentals in guitar chord\n"
@@ -546,33 +578,33 @@ static char ps_head[] =
 	"	forall\n"
 	"} bdef\n"
 
-	"\n/bar {  % usage: h x y bar - single bar\n"
+	"\n/bar {	% usage: h x y bar - single bar\n"
 	"	M dlw 0 exch rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/dbar {  % usage: h x y dbar - thin double bar\n"
+	"\n/dbar {	% usage: h x y dbar - thin double bar\n"
 	"	M dlw dup 0 exch rlineto -3 0 rmoveto\n"
 	"	0 exch neg rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/fbar1 {  % usage: h x y fbar1 - fat double bar at start\n"
+	"\n/fbar1 {	% usage: h x y fbar1 - fat double bar at start\n"
 	"	M dlw dup 0 exch rlineto 3 0 rlineto dup 0 exch neg rlineto\n"
 	"	currentpoint fill M\n"
 	"	3 0 rmoveto 0 exch rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/fbar2 {  % usage: h x y fbar2 - fat double bar at end\n"
+	"\n/fbar2 {	% usage: h x y fbar2 - fat double bar at end\n"
 	"	M dlw dup 0 exch rlineto -3 0 rlineto dup 0 exch neg rlineto\n"
 	"	currentpoint fill M\n"
 	"	-3 0 rmoveto 0 exch rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/rdots {  % usage: x y rdots - repeat dots\n"
+	"\n/rdots {	% usage: x y rdots - repeat dots\n"
 	"	9 add M currentpoint 2 copy 1.2 0 360 arc\n"
 	"	6 add M currentpoint 1.2 0 360 arc fill\n"
 	"} bdef\n"
 
-	"\n/csig {  % usage:  x y csig - C timesig\n"
+	"\n/csig {	% usage: x y csig - C timesig\n"
 	"	M\n"
 	"	1.0 17.3 rmoveto\n"
 	"	0.9 -0.0 2.3 -0.7 2.4 -2.2 rcurveto\n"
@@ -585,7 +617,7 @@ static char ps_head[] =
 	"	fill\n"
 	" } bdef\n"
 
-	"\n/ctsig {  % usage:  x y ctsig - C| timesig\n"
+	"\n/ctsig {	% usage: x y ctsig - C| timesig\n"
 	"	dlw 2 copy csig 4 add M 0 16 rlineto stroke\n"
 	"} bdef\n"
 
@@ -595,12 +627,12 @@ static char ps_head[] =
 	"	M 0 12 rmoveto cshow grestore\n"
 	"} bdef\n"
 
-	"\n/stsig { % usage: (meter) x y stsig - single time signature\n"
+	"\n/stsig {	% usage: (meter) x y stsig - single time signature\n"
 	"	M gsave /Times-Bold 18 selectfont 1.2 1 scale\n"
 	"	0 6 rmoveto cshow grestore\n"
 	"} bdef\n"
 
-	"\n/staff { % usage: l staff  - draw staff\n"
+	"\n/staff {	% usage: l staff - draw staff\n"
 	"	dlw dup 0 rlineto dup neg 6 rmoveto\n"
 	"	dup 0 rlineto dup neg 6 rmoveto\n"
 	"	dup 0 rlineto dup neg 6 rmoveto\n"
@@ -608,7 +640,7 @@ static char ps_head[] =
 	"	0 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/sep0 { % usage: x1 x2 sep0  - hline separator\n"
+	"\n/sep0 {	% usage: x1 x2 sep0 - hline separator\n"
 	"	dlw 0 M 0 lineto stroke\n"
 	"} bdef\n"
 
@@ -625,15 +657,15 @@ static char ps_head[] =
 	"	0 -100 M 1 -1 scale hbrce grestore\n"
 	"} bdef\n"
 
-	"\n/bracket {	% usage: h x y braket\n"
-	"	M dlw -5 0 rmoveto currentpoint\n"
-	"	-1.7 2 rmoveto 6.5 1.5 8 7 8 6 rcurveto\n"
-	"	0 -1.5 -1.5 -6 -5.5 -7 rcurveto fill\n"
+	"\n/bracket {	% usage: h x y bracket\n"
+	"	M dlw -5 2 rmoveto currentpoint\n"
+	"	-1.7 2 rmoveto 10.5 -1 12 4.5 12 3.5 rcurveto\n"
+	"	0 -1 -3.5 -5.5 -8.5 -5.5 rcurveto fill\n"
 	"	3 setlinewidth M 0 2 rmoveto\n"
-	"	0 exch neg -4 add rlineto currentpoint stroke\n"
+	"	0 exch neg -8 add rlineto currentpoint stroke\n"
 	"	dlw M -1.7 0 rmoveto\n"
-	"	6.5 -1.5 8 -7 8 -6 rcurveto\n"
-	"	0 1.5 -1.5 6 -5.5 7 rcurveto fill\n"
+	"	10.5 1 12 -4.5 12 -3.5 rcurveto\n"
+	"	0 1 -3.5 5.5 -8.5 5.5 rcurveto fill\n"
 	"} bdef\n"
 
 	"\n/mrest {	% usage: nb_measures x y mrest\n"
@@ -658,21 +690,21 @@ static char ps_head[] =
 	"	-7 4 rmoveto 14 10 rlineto -14 -4 rmoveto 14 10 rlineto stroke\n"
 	"} bdef\n"
 
-	"\n/end1 {  % usage: str dx x y end1  - mark first ending\n"
+	"\n/end1 {	% usage: str dx x y end1 - mark first ending\n"
 	"	gsave dlw T 0 -20 M\n"
 	"	0 20 rlineto 0 rlineto 0 -20 rlineto stroke\n"
 	"	4 -13 M /Times-Roman 13 selectfont 1.2 0.95 scale\n"
 	"	show grestore\n"
 	"} bdef\n"
 
-	"\n/end2 {  % usage: str dx x y end2  - mark second ending\n"
+	"\n/end2 {	% usage: str dx x y end2 - mark second ending\n"
 	"	gsave dlw T 0 -20 M\n"
 	"	0 20 rlineto 0 rlineto stroke\n"
 	"	4 -13 M /Times-Roman 13 selectfont 1.2 0.95 scale\n"
 	"	show grestore\n"
 	"} bdef\n"
 
-	"\n/SL {  % usage: pp2x pp1x p1 pp1 pp2 p2 p1 SL\n"
+	"\n/SL {	% usage: pp2x pp1x p1 pp1 pp2 p2 p1 SL\n"
 	"	M curveto rlineto curveto fill\n"
 	"} bdef\n"
 
@@ -704,15 +736,15 @@ static char ps_head[] =
 	"	} repeat gsave txt show grestore LF () TXT pop\n"
 	"} def\n"
 
-	"\n/hd {	% usage: x y hd  - full head\n"
-	"	2 copy /y exch def /x exch def M\n"
+	"\n/hd {	% usage: x y hd - full head\n"
+	"	xymove\n"
 	"	3.5 2.0 rmoveto\n"
 	"	-2.0 3.5 -9.0 -0.5 -7.0 -4.0 rcurveto\n"
 	"	2.0 -3.5 9.0 0.5 7.0 4.0 rcurveto fill\n"
 	"} bdef\n"
 
-	"\n/Hd {	% usage: x y Hd  - open head for half\n"
-	"	2 copy /y exch def /x exch def M\n"
+	"\n/Hd {	% usage: x y Hd - open head for half\n"
+	"	xymove\n"
 	"	3.0 1.6 rmoveto\n"
 	"	-1.0 1.8 -7.0 -1.4 -6.0 -3.2 rcurveto\n"
 	"	1.0 -1.8 7.0 1.4 6.0 3.2 rcurveto\n"
@@ -721,8 +753,8 @@ static char ps_head[] =
 	"	-2.0 3.8 5.0 7.6 7.0 3.8 rcurveto\n"
 	"	fill\n} bdef\n"
 
-	"\n/HD {	% usage: x y HD  - open head for whole\n"
-	"	2 copy /y exch def /x exch def M\n"
+	"\n/HD {	% usage: x y HD - open head for whole\n"
+	"	xymove\n"
 	"	-1.6 2.4 rmoveto\n"
 	"	2.8 1.6 6.0 -3.2 3.2 -4.8 rcurveto\n"
 	"	-2.8 -1.6 -6.0 3.2 -3.2 4.8 rcurveto\n"
@@ -740,17 +772,17 @@ static char ps_head[] =
 	"} bdef\n"
 
 	"\n/breve {	% usage: x y breve - square breve\n"
-	"	2 copy /y exch def /x exch def M\n"
-	"	3 setlinewidth -6 -2.5 rmoveto 12 0 rlineto\n"
-	"	0 5 rmoveto -12 0 rlineto stroke\n"
+	"	xymove\n"
+	"	2.5 setlinewidth -6 -2.7 rmoveto 12 0 rlineto\n"
+	"	0 5.4 rmoveto -12 0 rlineto stroke\n"
 	"	dlw x y M -6 -5 rmoveto 0 10 rlineto\n"
 	"	x y M 6 -5 rmoveto 0 10 rlineto stroke\n"
 	"} bdef\n"
 
 	"\n/longa {	% usage: x y longa\n"
-	"	2 copy /y exch def /x exch def M\n"
-	"	3 setlinewidth -6 -2.5 rmoveto 12 0 rlineto\n"
-	"	0 5 rmoveto -12 0 rlineto stroke\n"
+	"	xymove\n"
+	"	2.5 setlinewidth -6 -2.7 rmoveto 12 0 rlineto\n"
+	"	0 5.4 rmoveto -12 0 rlineto stroke\n"
 	"	dlw x y M -6 -5 rmoveto 0 10 rlineto\n"
 	"	x y M 6 -10 rmoveto 0 15 rlineto stroke\n"
 	"} bdef\n";
@@ -919,12 +951,12 @@ void define_font(char name[],
 /* -- def_stems -- */
 static void def_stems(FILE *fp)
 {
-	fprintf(fp, "\n/su {  %% usage: len su	- up stem\n"
+	fprintf(fp, "\n/su {	%% usage: len su - up stem\n"
 		"	dlw x y M %.1f %.1f rmoveto %.1f sub 0 exch rlineto stroke\n"
 		"} bdef\n",
 		STEM_XOFF, STEM_YOFF, STEM_YOFF);
 
-	fprintf(fp, "\n/sd {  %% usage: len sd  - down stem\n"
+	fprintf(fp, "\n/sd {	%% usage: len sd - down stem\n"
 		"	dlw x y M %.1f %.1f rmoveto neg %.1f add 0 exch rlineto stroke\n"
 		"} bdef\n",
 		-STEM_XOFF, -STEM_YOFF, STEM_YOFF);
@@ -1003,7 +1035,7 @@ static void def_flags(FILE *fp)
 static void def_gnote(FILE *fp)
 {
 	fprintf(fp, "\n/ghd {	%% usage: x y ghd - grace note head\n"
-		"	2 copy /y exch def /x exch def M\n"
+		"	xymove\n"
 		"	-1.3 1.5 rmoveto\n"
 		"	2.4 2 5 -1 2.6 -3 rcurveto\n"
 		"	-2.4 -2 -5 1 -2.6 3 rcurveto fill\n"
@@ -1049,34 +1081,34 @@ static void def_gnote(FILE *fp)
 		GSTEM_XOFF);
 
 	fprintf(fp,
-		"\n/ga {  %% usage: ga - acciaccatura\n"
+		"\n/ga {	%% usage: ga - acciaccatura\n"
 		"	x y M -1 4 rmoveto 9 5 rlineto stroke\n"
 		"} bdef\n"
 
-		"\n/ghl {  %% usage: x y ghl  - grace note helper line\n"
+		"\n/ghl {	%% usage: x y ghl - grace note helper line\n"
 		"	0.6 setlinewidth x -3 add exch M\n"
 		"	6 0 rlineto stroke\n"
 		"} bdef\n"
 
-		"\n/gsl {  %% usage: x1 y2 x2 y2 x3 y3 x0 y0 gsl\n"
+		"\n/gsl {	%% usage: x1 y2 x2 y2 x3 y3 x0 y0 gsl\n"
 		"	dlw M curveto stroke\n"
 		"} bdef\n"
 
 		"\n%% grace note accidentals\n"
 		"/gsc { gsave x add y T 0.7 dup scale 0 0 } bdef\n"
-		"/gsh {  %% usage: x y gsh\n"
+		"/gsh {		%% usage: x y gsh\n"
 		"	gsc sh0 grestore\n"
 		"} bdef\n"
-		"/gnt {  %% usage: x y gnt\n"
+		"/gnt {		%% usage: x y gnt\n"
 		"	gsc nt0 grestore\n"
 		"} bdef\n"
-		"/gft {  %% usage: x y gft\n"
+		"/gft {		%% usage: x y gft\n"
 		"	gsc ft0 grestore\n"
 		"} bdef\n"
-		"/gdsh {  %% usage: x y gdsh\n"
+		"/gdsh {	%% usage: x y gdsh\n"
 		"	gsc dsh0 grestore\n"
 		"} bdef\n"
-		"/gdft {  %% usage: x y gdft\n"
+		"/gdft {	%% usage: x y gdft\n"
 		"	gsc dft0 grestore\n"
 		"} bdef\n");
 }

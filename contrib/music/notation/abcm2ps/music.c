@@ -2,7 +2,8 @@
  * Music generator.
  *
  * This file is part of abcm2ps.
- * Copyright (C) 1998-2002 Jean-François Moine
+ *
+ * Copyright (C) 1998-2003 Jean-François Moine
  * Adapted from abc2ps, Copyright (C) 1996,1997 Michael Methfessel
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,23 +37,29 @@ static float alfa_last, beta_last;	/* for last short short line.. */
 static struct SYMBOL *tssym;	/* time sorted list of symbols */
 static struct SYMBOL *tsnext;	/* next line when cut */
 
-#include "style.h"		/* globals to define layout style */
-char *style = STYLE;
-
 #define AT_LEAST(a,b)  do { float tmp = b; if(a<tmp) a=tmp; } while (0)
 
-/*  subroutines connected with output of music	*/
+/* width of notes indexed by log2(note_length) */
+static float w_tb[9] = {
+	10, 14.15, 20, 28.3,
+	40,				/* crotchet */
+	56.6, 80, 113, 150
+};
 
-/* -- Sets the prefered width for a note depending on the duration -- */
-/* Return the horizontal space of a note/rest */
-static float nwidth(int len)
-{
-#if 1
-	return 24. * (float) len / (float) (BASE_LEN / 4) + 16.;
-#else
-	return 24. * (float) len / (float) (BASE_LEN / 4) + 12.;
-#endif
-}
+/* upper and lower space needed by rests */
+static struct {
+	char u, l;
+} rest_sp[9] = {
+	{16, 25},
+	{16, 19},
+	{10, 19},
+	{10, 13},
+	{10, 13},			/* crotchet */
+	{7, 7},
+	{10, 4},
+	{10, 7},
+	{10, 13}
+};
 
 /* -- decide whether to shift heads to other side of stem on chords -- */
 /* also position accidentals to avoid too much overlap */
@@ -618,7 +625,7 @@ static void set_pitch(void)
 				g->ymn = g->y = 3 * (g->pits[0] - 18);
 				g->ymx = 3 * (g->pits[g->nhd] - 18);
 				g->ys = g->ymx + GSTEM;
-				if (g->nflags != 0)
+				if (g->nflags > 0)
 					g->ys += 1.2 * (g->nflags - 1);
 				if (g->ymn < pmn)
 					pmn = g->ymn;
@@ -639,6 +646,13 @@ static void set_pitch(void)
 			s->y = 12;
 			s->dc_top = 12. + 2.;
 			s->dc_bot = 12. - 2.;
+#if 0
+/* (not useful */
+			if (s->nflags > 0) {
+				s->dc_top += (s->nflags + 1) / 2 * 6;
+				s->dc_bot -= (s->nflags + 2) / 2 * 6;
+			}
+#endif
 			continue;
 		case NOTE:
 			break;
@@ -667,7 +681,7 @@ static void set_pitch(void)
 static void set_multi(void)
 {
 	struct SYMBOL *s;
-	int i, staff;
+	int i, staff, us, ls;
 	struct {
 		short nvoice;
 		short last;
@@ -738,15 +752,17 @@ static void set_multi(void)
 				stb[staff].last = i;
 			if (t->type != NOTE)
 				continue;
-			if (t->ymx > stb[staff].st[i].ymx)
-				stb[staff].st[i].ymx = t->ymx;
-			if (t->ymn < stb[staff].st[i].ymn)
-				stb[staff].st[i].ymn = t->ymn;
+			if (t->dc_top > stb[staff].st[i].ymx)
+				stb[staff].st[i].ymx = t->dc_top;
+			if (t->dc_bot < stb[staff].st[i].ymn)
+				stb[staff].st[i].ymn = t->dc_bot;
 		}
 
 		for ( ;
 		     s != 0 && s->type != BAR;
 		     s = s->ts_next) {
+			int j;
+
 			if (s->len == 0		/* not a note nor a rest */
 			    || s->as.u.note.invis)
 				continue;
@@ -774,9 +790,9 @@ static void set_multi(void)
 				/* if 3 voices, and vertical space enough,
 				 * have stems down on the 2nd voice */
 				if (i != 0
-				    && i == stb[staff].last - 1
+				    && i + 1 == stb[staff].last
 				    && stb[staff].st[i].ymn - STEM
-					> stb[staff].st[i + 1].ymx)
+						> stb[staff].st[i + 1].ymx)
 					s->multi = -1;
 			}
 			if (s->type != REST)
@@ -785,28 +801,38 @@ static void set_multi(void)
 			/* set the rest vertical offset */
 			/* (if visible and invisible rests on the same staff,
 			 *  set as if 1 rest only) */
+			us = rest_sp[4 - s->nflags].u;
+			ls = rest_sp[4 - s->nflags].l;
 			if (s->multi > 0) {
 				if (s->ts_next == 0
 				    || s->ts_next->type != REST
 				    || !s->ts_next->as.u.note.invis) {
-					s->y = stb[staff].st[i + 1].ymx
-						/ 6 * 6 + 12;
+					j = i + 1;
+					if (stb[staff].st[j].nn == 0)
+						j++;
+					s->y = (stb[staff].st[j].ymx + ls)
+						/ 6 * 6;
 					if (s->y < 12)
 						s->y = 12;
-					if (s->y + 6 > s->dc_top)
-						s->dc_top = s->y + 6;
 				}
 			} else {
 				if (s->ts_prev->type != REST
 				    || !s->ts_prev->as.u.note.invis) {
-					s->y = (stb[staff].st[i - 1].ymn + 20)
-						/ 6 * 6 - 12 - 20;
+					j = i - 1;
+					if (stb[staff].st[j].nn == 0)
+						j--;
+					s->y = (stb[staff].st[j].ymn - us + 48)
+						/ 6 * 6 - 48;
 					if (s->y > 12)
 						s->y = 12;
-					if (s->y - 6 < s->dc_bot)
-						s->dc_bot = s->y - 6;
 				}
 			}
+			s->dc_top = s->y + us;
+			if (s->dc_top > stb[staff].st[i].ymx)
+				stb[staff].st[i].ymx = s->dc_top;
+			s->dc_bot = s->y - ls;
+			if (s->dc_bot < stb[staff].st[i].ymn)
+				stb[staff].st[i].ymn = s->dc_bot;
 		}
 
 		while (s != 0 && s->type == BAR)
@@ -1002,7 +1028,7 @@ static void set_global(void)
 					break;
 				}
 
-				if (s->nflags == 0) {
+				if (s->nflags <= 0) {
 					if (lastnote != 0) {
 						lastnote->as.u.note.word_end = 1;
 						lastnote = 0;
@@ -1062,9 +1088,11 @@ static void set_global(void)
 	set_float();
 
 	/* set the clefs */
-	for (staff = 0; staff <= nstaff; staff++) {
-		if (!staff_tb[staff].forced_clef)
-			set_clef(staff);
+	if (cfmt.autoclef) {
+		for (staff = 0; staff <= nstaff; staff++) {
+			if (!staff_tb[staff].forced_clef)
+				set_clef(staff);
+		}
 	}
 
 	/* set the starting clefs and adjust the note pitches */
@@ -1083,7 +1111,7 @@ static float set_indent(int first_line)
 	float more_shift;
 	struct VOICE_S *p_voice;
 
-	/*fixme: split big lines*/
+/*fixme: split big lines*/
 	w = 0;
 	if (first_line) {
 
@@ -1419,7 +1447,7 @@ static float set_graceoffs(struct SYMBOL *s)
 		}
 		g->x = xx;
 
-		if (g->nflags == 0) {
+		if (g->nflags <= 0) {
 			g->sflags |= S_WORD_ST;
 			g->as.u.note.word_end = 1;
 		}
@@ -1428,13 +1456,13 @@ static float set_graceoffs(struct SYMBOL *s)
 			g->as.u.note.word_end = 1;
 			break;
 		}
-		if (next->nflags == 0)
+		if (next->nflags <= 0)
 			g->as.u.note.word_end = 1;
 		if (g->as.u.note.word_end) {
 			next->sflags |= S_WORD_ST;
 			xx += GSPACE / 4;
 		}
-		if (g->nflags == 0)
+		if (g->nflags <= 0)
 			xx += GSPACE / 4;
 		if (g->y > next->y + 8)
 			xx -= 1.6;
@@ -1463,7 +1491,7 @@ static void set_overlap(void)
 	for (s = tssym; s != 0; s = s->ts_next) {
 		struct SYMBOL *s2;
 		int d, m, nhd2;
-		float d1, d2, x2, dy1, dy2;
+		float d1, d2, x1, x2, dy1, dy2;
 		float noteshift;
 
 		if (s->type != NOTE)
@@ -1490,7 +1518,7 @@ static void set_overlap(void)
 					s->shac[m] += 3.;
 		}
 
-		d1 = d2 = x2 = dy1 = 0;
+		d1 = d2 = x1 = x2 = dy1 = 0;
 		d = s->pits[0] - s2->pits[nhd2];
 		s1 = s;
 
@@ -1512,23 +1540,27 @@ static void set_overlap(void)
 
 		/* if voices with a same stem direction, force a shift */
 		if (s1->stem == s2->stem) {
+			if (s1->stem > 0) {
+				if (s2->ys < s1->y
+				    || s2->y > s1->ys)
+					continue;
+			} else {
+				if (s2->y < s1->ys
+				    || s2->ys > s1->y)
+					continue;
+			}
 			if (d > 0) {
 				s1 = s2;
 				s2 = s;
 				d = -d;
 			}
+#if 0
 			if ((d < -1
 			     && s1->head == H_OVAL)
 			    || (d < -3
 				&& s1->head == H_SQUARE))
 				continue;
-			if (s1->stem > 0) {
-				if (s2->y < s1->ys)
-					continue;
-			} else {
-				if (s2->ys > s1->y)
-					continue;
-			}
+#endif
 		}
 		switch (d) {
 		case 0: {
@@ -1589,13 +1621,17 @@ static void set_overlap(void)
 			 || s2->len >= SEMIBREVE)
 			noteshift = 10;
 		else	noteshift = 7.8;
-/* fixme: treat the accidentals */
+/*fixme: treat the accidentals*/
+/*fixme: treat the chord shifts*/
+/*fixme: treat the previous shifts (3 voices or more)*/
 		/* the dot of the 2nd voice should be lower */
 		dy2 = -3;
 
-		/* if the 1st voice is below the 2nd one, shift the 1st voice (lowest) */
+		/* if the 1st voice is below the 2nd one,
+		 * shift the 1st voice (lowest) */
 		if (d < 0) {
-			if (d == -1)
+/*fixme: check if overlap in chord*/
+			if (d == -1 || nhd2 != 0 || s->nhd != 0)
 				d1 = noteshift;
 			else	d1 = noteshift * 0.5;
 
@@ -1613,8 +1649,11 @@ static void set_overlap(void)
 			if (s2->dots == 0)
 				d1 = noteshift;
 
-			/* both notes are dotted, have a bigger shift on the 2nd voice */
-			else	d2 = 12. + 3.5 * s2->dots;
+			/* both notes are dotted, shift the 2nd voice */
+			else	{
+				d2 = noteshift;
+				x1 = d2;
+			}
 
 		/* if the upper note is MINIM or higher, shift the 1st voice */
 		} else if (s1->head != H_FULL
@@ -1624,9 +1663,10 @@ static void set_overlap(void)
 		/* else shift the 2nd voice */
 		else	d2 = noteshift;
 
-		/* do the shift, and have a minimal space */
+		/* do the shift, and update the width */
 	do_shift:
 		if (d1 > 0) {
+			d1 += s2->shhd[0];
 			for (m = s1->nhd; m >= 0; m--) {
 				s1->shhd[m] += d1;
 				s1->shac[m] += d1;
@@ -1640,6 +1680,7 @@ static void set_overlap(void)
 				s2->shhd[m] += d2;
 				s2->shac[m] += d2;
 			}
+			s1->xmx += x1;
 			s2->xmx += d2;
 			s1->wr += d2 + 2;
 			s2->wr += d2 + 2;
@@ -1687,7 +1728,7 @@ static void set_stems(void)
 			if (s->nflags == 2)
 				slen -= 1;
 			if (s->pits[s->nhd] > 26
-			    && (s->nflags == 0
+			    && (s->nflags <= 0
 				|| !((s->sflags & S_WORD_ST)
 				     && s->as.u.note.word_end))) {
 				slen -= 2;
@@ -1696,6 +1737,8 @@ static void set_stems(void)
 			}
 			s->y = s->ymn;
 			s->ys = s->ymx + slen;
+			if (s->ys < 12)
+				s->ys = 12;
 			ymin = (float) (s->ymn - 4);
 			ymax = s->ys + 2;
 			if (s->as.u.note.ti1[0] != 0
@@ -1703,7 +1746,7 @@ static void set_stems(void)
 				ymin -= 3;
 		} else {
 			if (s->pits[0] < 18
-			    && (s->nflags == 0
+			    && (s->nflags <= 0
 				|| !((s->sflags & S_WORD_ST)
 				     && s->as.u.note.word_end))) {
 				slen -= 2;
@@ -1711,6 +1754,8 @@ static void set_stems(void)
 					slen -= 2;
 			}
 			s->ys = s->ymn - slen;
+			if (s->ys > 12)
+				s->ys = 12;
 			s->y = s->ymx;
 			ymin = s->ys - 2.;
 			ymax = (float) (s->y + 4);
@@ -1780,7 +1825,7 @@ static void set_width(struct SYMBOL *s)
 			}
 
 			/* special case: standalone with up-stem and flags */
-			if (s->nflags && s->stem > 0
+			if (s->nflags > 0 && s->stem > 0
 			    && (s->sflags & S_WORD_ST)
 			    && s->as.u.note.word_end
 			    && !(s->y % 6))
@@ -1849,7 +1894,7 @@ static void set_width(struct SYMBOL *s)
 
 		/* leave room for vocals under note */
 		/* related to draw_vocals() */
-		/*fixme: pb when lyrics of 2 voices in the same staff */
+/*fixme: pb when lyrics of 2 voices in the same staff */
 		if (s->ly) {
 			struct lyrics *ly = s->ly;
 			float swfac;
@@ -1883,7 +1928,9 @@ static void set_width(struct SYMBOL *s)
 		}
 
 		if (s->len != 0) {
-			xx = nwidth(s->len);
+			xx = w_tb[4 - s->nflags];
+			if (s->dots)
+				xx *= 1.2;
 			s->pr = bnnp * xx;
 			s->pl = (1. - bnnp) * xx;
 		} else	s->pl = s->pr = 10;		/* space ('y') */
@@ -2227,19 +2274,6 @@ static void set_sym_glue(float width)
 		/* get the notes at this time, set spacing
 		 * and get the min shrinking */
 		seq = s->seq;
-		if (s->type == FMTCHG
-		    && (s->u == LMARG
-			|| s->u == RMARG
-			|| s->u == SCALE)) {
-			if (s->u == LMARG)
-				cfmt.leftmargin = s->xmx;
-			else if (s->u == RMARG)
-				cfmt.rightmargin = s->xmx;
-			else	cfmt.scale = s->xmx;
-			if ((s = s->ts_next) == 0)
-				break;
-			continue;
-		}
 		len = s->time - time;
 		time = s->time;
 		max_shrink = max_space = 0;
@@ -2357,7 +2391,7 @@ static void set_sym_glue(float width)
 				continue;
 
 		/* may have a key sig change at end of line */
-		/*fixme: may also have a meter change*/
+/*fixme: may also have a meter change*/
 		if (s->type == KEYSIG)
 			continue;
 		s = s4->ts_prev;
@@ -2560,14 +2594,6 @@ static int any_symbol(void)
 		case BAR:
 		case MREP:
 			return 1;
-		case FMTCHG:
-			if (s->u == LMARG)
-				cfmt.leftmargin = s->xmx;
-			else if (s->u == RMARG)
-				cfmt.rightmargin = s->xmx;
-			else if (s->u == SCALE)
-				cfmt.scale = s->xmx;
-			break;
 		}
 	}
 	return 0;
@@ -2789,7 +2815,8 @@ static void buffer_adjust(void)
 void output_music(void)
 {
 	struct VOICE_S *p_voice;
-	int	voice, first_line;
+	int voice, first_line;
+	float lwidth;
 
 	for (p_voice = first_voice; p_voice; p_voice = p_voice->next)
 		if (p_voice->sym != 0)
@@ -2807,7 +2834,7 @@ void output_music(void)
 
 	first_line = 1;
 	alfa_last = 0.1;
-	beta_last = 0.0;
+	beta_last = 0;
 
 	/* dump buffer if not enough space for a staff line */
 	check_buffer();
@@ -2824,15 +2851,15 @@ void output_music(void)
 	/* set all symbols (per music line) */
 	clrarena(3);
 	lvlarena(3);
+	lwidth = ((cfmt.landscape ? cfmt.pageheight : cfmt.pagewidth)
+		- cfmt.leftmargin - cfmt.rightmargin)
+			/ cfmt.scale;
 	for (;;) {		/* loop over pieces of line for output */
 		find_piece();
 
 		if (any_symbol()) {
-			float indent, line_height, lwidth;
+			float indent, line_height;
 
-			lwidth = ((cfmt.landscape ? cfmt.pageheight : cfmt.pagewidth)
-				- cfmt.leftmargin - cfmt.rightmargin)
-					/ cfmt.scale;
 			indent = set_indent(first_line);
 			set_sym_glue(lwidth - indent);
 

@@ -1,7 +1,7 @@
 /*
  * abcm2ps: a program to typeset tunes written in abc format using PostScript
  *
- * Copyright (C) 1998-2002 Jean-François Moine
+ * Copyright (C) 1998-2003 Jean-François Moine
  *
  * Adapted from abc2ps-1.2.5:
  *  Copyright (C) 1996,1997  Michael Methfessel
@@ -54,7 +54,6 @@ struct SYMBOL *sym;		/* (points to the symbols of the current voice) */
 
 char page_init[201];		/* initialization string after page break */
 int tunenum;			/* number of current tune */
-int nsym;			/* number of symbols in line */
 int pagenum = 1;		/* current page in output file */
 
 int in_page;
@@ -85,7 +84,6 @@ static float indent = -1.0;	/* 1st line indentation */
 static int music_only = -1;	/* no vocals if 1 */
 static int flatbeams = -1;	/* flat beams when bagpipe */
 static int graceslurs = -1;	/* slurs in grace notes */
-static int pretty;		/* for pretty but sprawling layout */
 static float scalefac = -1.0;	/* scale factor for symbol size */
 static float staffsep = -1.0;	/* staff separation */
 static char *styf;		/* layout style file name */
@@ -133,7 +131,7 @@ int main(int argc,
 	int j;
 	char *p;
 	char c, *aaa;
-	int help_me;		/* need help ? */
+	int help_me;		/* need help? */
 
 	/* -- set default options and parse arguments -- */
 	printf("abcm2ps-" VERSION " (" VDATE ")\n");
@@ -151,7 +149,7 @@ int main(int argc,
 		 0,				/* free */
 		(void (*)(int level)) lvlarena, /* new level */
 		 sizeof(struct SYMBOL) - sizeof(struct abcsym),
-		 0);	/* don't keep comments */
+		 0);			/* don't keep comments */
 
 	/* parse the arguments - as soon as a file ends, it is treated */
 	help_me = 0;
@@ -176,7 +174,6 @@ int main(int argc,
 					choose_outname = 0;
 					strcpy(outf, OUTPUTFILE);
 					break;
-				case 'p': pretty = 0; break;
 				case 'Q': printtempo = 0; break;
 				case 'x': include_xrefs = 0; break;
 				case '1': one_per_page = 0; break;
@@ -213,6 +210,8 @@ int main(int argc,
 /*				case 'b': */
 				case 'C':
 				case 'g':
+				case 'P':
+				case 'p':
 				case 'R':
 				case 'S':
 				case 'T':
@@ -221,8 +220,6 @@ int main(int argc,
 					printf("'-%c' is obsolete - option ignored\n",
 					       c);
 					break;
-				case 'P': pretty = 2; break;
-				case 'p': pretty = 1; break;
 				case 'Q': printtempo = 1; break;
 				case 'u': deco_old = 1; break;
 				case 'V':
@@ -351,7 +348,7 @@ int main(int argc,
 					case 'N':
 						sscanf(aaa, "%d", &pagenumbers);
 						if (pagenumbers < 0 || pagenumbers > 4) {
-							printf("++++ Bad pagenumbers value %s - changed to 2\n",
+							printf("++++ '-N' value %s - changed to 2\n",
 								aaa);
 							pagenumbers = 2;
 						}
@@ -661,15 +658,10 @@ static char *read_file(void)
 /* -- set_page_format --- */
 static void set_page_format(void)
 {
-	set_standard_format();
-	switch (pretty) {
-	case 1:  set_pretty_format(); break;
-	case 2:  set_pretty2_format(); break;
-	}
+	set_format();
 
-	read_fmt_file("fonts.fmt", styd);
 	if (styf != 0) {
-		char tmp[201];
+		char tmp[256];
 
 		strcpy(tmp, styf);
 		strext(tmp, "fmt");
@@ -712,9 +704,7 @@ static void usage(void)
 	       "     -O fff  set outfile name to fff\n"
 	       "     -O =    make outfile name from infile/title\n"
 	       "  .output formatting:\n"
-	       "     -p      pretty output (looks better, needs more space)\n"
-	       "     -P      select second predefined pretty output style\n"
-	       "     -s xx   set scale factor for symbol size to xx\n"
+	       "     -s xx   set scale factor to xx\n"
 	       "     -w xx   set staff width (cm/in/pt)\n"
 	       "     -m xx   set left margin (cm/in/pt)\n"
 	       "     -d xx   set staff separation (cm/in/pt)\n"
@@ -738,7 +728,7 @@ static void usage(void)
 	       "     -f      have flat beams when bagpipe tunes\n"
 	       "  .line breaks:\n"
 	       "     -c      auto line break\n"
-	       "     -B bb   break every bb bars\n"
+	       "     -B n    break every n bars\n"
 	       "  .input file selection/options:\n"
 	       "     -e pattern\n"
 	       "             xref list of tunes to select\n"
@@ -755,9 +745,7 @@ static void usage(void)
 static void write_version(void)
 {
 	printf("Compiled: " __DATE__ "\n"
-	       "Style: %s\n"
-	       "Options:",
-	       style);
+	       "Options:");
 #ifdef BSTEM_DOWN
 	printf(" BSTEM_DOWN");
 #endif
@@ -777,7 +765,7 @@ static void write_version(void)
 #endif
 
 	if (strlen(DEFAULT_FDIR) > 0)
-		printf("Default format directory %s\n", DEFAULT_FDIR);
+		printf("Default format directory: %s\n", DEFAULT_FDIR);
 }
 
 /* -- arena routines -- */

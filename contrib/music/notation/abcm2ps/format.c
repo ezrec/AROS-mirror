@@ -1,6 +1,24 @@
-/*  
- *  This file is part of abc2ps, Copyright (C) 1996,1997 Michael Methfessel
- *  Modified for abcm2ps, Copyright (C) 1998-2001 Jean-François Moine
+/*
+ * Formatting functions.
+ *
+ * This file is part of abcm2ps.
+ *
+ * Copyright (C) 1998-2003 Jean-François Moine
+ * Adapted from abc2ps, Copyright (C) 1996,1997 Michael Methfessel
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
 #include <stdio.h>
@@ -30,6 +48,7 @@ static struct format {
 	short subtype;		/* special cases - see code */
 	void *v;
 } format_tb[] = {
+	{"autoclef", FORMAT_B, 0, &cfmt.autoclef},
 	{"barsperstaff", FORMAT_I, 0, &cfmt.barsperstaff},
 	{"botmargin", FORMAT_U, 0, &cfmt.botmargin},
 	{"composerfont", FORMAT_F, 0, &cfmt.composerfont},
@@ -171,8 +190,8 @@ void make_font_list(void)
 	used_font[f->headerfont.fnum] = 1;
 }
 
-/* -- set the default standard format -- */
-void set_standard_format(void)
+/* -- set the default format -- */
+void set_format(void)
 {
 	struct FORMAT *f;
 
@@ -205,6 +224,7 @@ void set_standard_format(void)
 	f->measurenb = -1;
 	f->measurefirst = 1;
 	f->printtempo = 1;
+	f->autoclef = 1;
 	fontspec(&f->titlefont,	"Times-Roman", 20.0);
 	fontspec(&f->subtitlefont, "Times-Roman", 16.0);
 	fontspec(&f->composerfont, "Times-Italic", 14.0);
@@ -218,59 +238,6 @@ void set_standard_format(void)
 	fontspec(&f->footerfont, "Times-Roman", 12.0);	/* not scaled */
 	fontspec(&f->headerfont, "Times-Roman", 12.0);	/* not scaled */
 }
-
-/* -- set_pretty_format -- */
-void set_pretty_format(void)
-{
-	struct FORMAT *f;
-
-	f = &cfmt;
-	f->name = "pretty";
-	f->titlespace 	= 0.4 * CM;
-	f->composerspace = 0.25 * CM;
-	f->musicspace	= 0.25 * CM;
-	f->staffsep	= 50.0 * PT;
-	f->sysstaffsep	= 38.0 * PT;
-	f->scale	= 0.8;
-	f->maxshrink	= 0.55;
-	f->parskipfac	= 0.1;
-	f->wordsspace	= 0.5 * CM;
-	fontspec(&f->titlefont,	"Times-Roman", 24.0);
-	fontspec(&f->subtitlefont,  "Times-Roman", 20.0);
-	fontspec(&f->composerfont,  "Times-Italic", 16.0);
-	fontspec(&f->partsfont,	"Times-Roman", 15.0);
-	fontspec(&f->vocalfont,	"Times-Bold", 14.0);
-	fontspec(&f->textfont,	"Times-Roman", 13.0);
-	fontspec(&f->wordsfont,	"Times-Roman", 13.0);
-	fontspec(&f->infofont, "Times-Italic", 16.0);
-}
-
-/* -- set_pretty2_format -- */
-void set_pretty2_format(void)
-{
-	struct FORMAT *f;
-
-	f = &cfmt;
-	f->name = "pretty2";
-	f->titlespace	= 0.4 * CM;
-	f->composerspace = 0.3 * CM;
-	f->musicspace	= 0.25 * CM;
-	f->partsspace	= 0.2 * CM;
-	f->staffsep	= 55.0 * PT;
-	f->sysstaffsep	= 43.0 * PT;
-	f->textspace	= 0.2 * CM;
-	f->maxshrink	= 0.55;
-	f->titleleft	= 1;
-	f->parskipfac	= 0.1;
-	fontspec(&f->titlefont,	"Helvetica-Bold", 21.0);
-	fontspec(&f->subtitlefont, "Helvetica-Bold", 17.0);
-	fontspec(&f->composerfont, "Helvetica",	13.0);
-	fontspec(&f->partsfont,	"Times-Roman", 17.0);
-	fontspec(&f->textfont,	"Times-Roman", 13.0);
-	fontspec(&f->wordsfont,	"Times-Roman", 13.0);
-	fontspec(&f->infofont, "Helvetica", 13.0);
-}
-
 /* -- print the current format -- */
 void print_format(void)
 {
@@ -397,7 +364,6 @@ int interpret_format_line(char *p)
 	if (strcmp(w, "postscript") == 0) {
 		if (!file_initialized)
 			add_text(p, TEXT_PS);
-		else	ERROR(("Cannot have a postscript definition when the output file is opened"));
 		return 2;
 	}
 
@@ -444,10 +410,16 @@ int interpret_format_line(char *p)
 		case FORMAT_B:
 			*((int *) fd->v) = g_logv(p);
 			break;
-		case FORMAT_S:
-			*((char **) fd->v) = getarena(strlen(p) + 1);
-			strcpy(*((char **) fd->v), p);
+		case FORMAT_S: {
+			int l;
+
+			l = strlen(p) + 1;
+			*((char **) fd->v) = getarena(l);
+			if (*p == '"')
+				get_str(*((char **) fd->v), p, l);
+			else	strcpy(*((char **) fd->v), p);
 			break;
+		    }
 		}
 		return 0;
 	}
@@ -468,7 +440,7 @@ int read_fmt_file(char *filename,
 		  char *dirname)
 {
 	FILE *fp;
-	char fname[201];
+	char fname[256];
 
 	strcpy(fname, filename);
 	if ((fp = fopen(fname, "r")) == 0) {
@@ -483,7 +455,7 @@ int read_fmt_file(char *filename,
 	for (;;) {
 		char line[BSIZE];
 
-		if (!fgets(line, BSIZE, fp))
+		if (!fgets(line, sizeof line, fp))
 			break;
 		line[strlen(line) - 1] = '\0';	/* remove '\n' */
 		if (interpret_format_line(line) == 1)
@@ -503,6 +475,6 @@ void set_font(struct FONTSPEC *font)
 		ERROR(("Font \"%s\" not predefined; using first in list",
 			fontnames[fnum]));
 		fnum = 0;
-	};
+	}
 	PUT2("%.1f F%d ", font->size, fnum);
 }

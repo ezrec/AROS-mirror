@@ -1,12 +1,9 @@
-/*++
+/*
  * Decoration handling.
  *
  * This file is part of abcm2ps.
  *
- * Copyright (C) 2000-2002, Jean-François Moine.
- *
- * Contact: mailto:moinejf@free.fr
- * Original site: http://moinejf.free.fr/
+ * Copyright (C) 2000-2003, Jean-François Moine.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- *
- *--*/
+ */
 
 #include <stdio.h>
 #include <string.h>
@@ -1042,7 +1038,7 @@ void draw_deco_staff(void)
 			x = x2 = s->x;			/* (compiler warning) */
 			n = 2;
 
-			/* if 1st repeat, search the 2nd */
+			/* if 1st repeat, search the 2nd one */
 			if (s1->as.text[0] == '1') {
 				nmes = -1;
 				for (s = s->next; s != 0; s = s->next) {
@@ -1177,7 +1173,7 @@ void draw_deco_staff(void)
 				     nbar, showm);
 			} else if (nbar % cfmt.measurenb == 0) {
 				for (s = first_voice->sym;
-				     s != 0;
+				     s->next != 0;	/* ?? */
 				     s = s->next) {
 					if (s->type != CLEF
 					    && s->type != KEYSIG
@@ -1194,7 +1190,7 @@ void draw_deco_staff(void)
 			}
 		}
 
-/*fixme: OK when no bar at the end of the previous line */
+/*fixme: KO when no bar at the end of the previous line */
 		wmeasure = first_voice->meter.wmeasure;
 		bar_time = first_voice->sym->time
 			+ wmeasure;
@@ -1462,7 +1458,7 @@ float draw_partempo(float top,
 			}
 			/* (16 is the stem height) */
 			if (s->as.u.tempo.length < SEMIBREVE) {
-				if (flags == 0)
+				if (flags <= 0)
 					PUT1(" %d su", STEM);
 				else {
 					PUT2(" %d %d sfu", flags, STEM);
@@ -1497,8 +1493,8 @@ float draw_partempo(float top,
 			if (ymin < y)
 				ymin = y;
 		}
-		if (top < ymin + h)
-			dy += ymin + h - top;
+		if (top < ymin + h + ht)
+			dy = ymin + h + ht - top;
 	}
 
 	set_font(&cfmt.partsfont);

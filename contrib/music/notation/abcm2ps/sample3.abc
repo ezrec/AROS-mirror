@@ -1,4 +1,6 @@
 %%deco alcoda 3 dacs 20 0 0 Al Coda
+%%header "	$T	Page $P"
+%%footer "	$F"
 
 X:1
 T:abcm2ps version 3 features
@@ -36,7 +38,10 @@ CD EF|
 %%leftmargin 11cm
 %%rightmargin 4cm
 CD EF|
-%%scale 0.75 % set the scale back to default
+%%leftmargin 5cm
+%%scale 1
+%%EPS sample3.eps
+%%scale 0.75		% set the scale back to default
 % restore the left and right margins
 %%leftmargin 1.78cm
 %%rightmargin 1.78cm

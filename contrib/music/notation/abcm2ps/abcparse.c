@@ -1,7 +1,7 @@
 /*++
- * This module parses the ABC syntax.
+ * Generic ABC parser.
  *
- * Copyright (C) 1998-2002 Jean-François Moine
+ * Copyright (C) 1998-2003 Jean-François Moine
  * Adapted from abc2ps, Copyright (C) 1996, 1997  Michael Methfessel
  *
  * Contact: mailto:moinejf@free.fr
@@ -617,6 +617,9 @@ static void parse_key(unsigned char *p,
 			curvoice->add_pitch += 7;
 		else if (!strcmp(w, "-8"))
 			curvoice->add_pitch -= 7;
+		/* check for "octave=...", no spaces allowed */
+		else if (strncmp(w, "octave", 6) == 0)
+			;
 		else	syntax("Unknown token in key specifier",
 			       p - strlen(w));
 
@@ -1772,7 +1775,9 @@ again:					/* for history */
 				char_tb['{'] = CHAR_BAD;
 				char_tb['}'] = CHAR_GRACE;
 				carryover_sav = curvoice->carryover;
+				curvoice->carryover = 0;
 			} else {
+				p = parse_extra(p, &t->last_sym->u.note);
 				char_tb['{'] = CHAR_GRACE;
 				char_tb['}'] = CHAR_BAD;
 				curvoice->carryover = carryover_sav;

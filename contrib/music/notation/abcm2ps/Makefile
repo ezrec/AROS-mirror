@@ -1,7 +1,7 @@
 # Generated automatically from Makefile.in by configure.
 # Makefile source for abcm2ps
 
-VERSION = 3.1.17
+VERSION = 3.3.1
 
 CC = gcc
 INSTALL = /usr/bin/install -c
@@ -25,7 +25,6 @@ OBJECTS=abc2ps.o \
 abcm2ps: $(OBJECTS)
 	$(CC) $(CFLAGS) -o abcm2ps $(OBJECTS)
 $(OBJECTS): abcparse.h abc2ps.h config.h
-music.o: style.h
 
 # win32 with a cross-compiler
 #CC32=i586-mingw32-gcc
@@ -94,8 +93,7 @@ dist:
 		abcm2ps-$(VERSION)/sample.abc \
 		abcm2ps-$(VERSION)/sample2.abc \
 		abcm2ps-$(VERSION)/sample3.abc \
-		abcm2ps-$(VERSION)/style.h \
-		abcm2ps-$(VERSION)/style.pure \
+		abcm2ps-$(VERSION)/sample3.eps \
 		abcm2ps-$(VERSION)/subs.c \
 		abcm2ps-$(VERSION)/syms.c \
 		abcm2ps-$(VERSION)/tight.fmt \

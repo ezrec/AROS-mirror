@@ -3,7 +3,7 @@
  *
  * This file is part of abcm2ps.
  *
- * Copyright (C) 1998-2002 Jean-François Moine
+ * Copyright (C) 1998-2003 Jean-François Moine
  * Adapted from abc2ps, Copyright (C) 1996,1997 Michael Methfessel
  *
  * This program is free software; you can redistribute it and/or modify
@@ -853,25 +853,30 @@ static void draw_bar(float x,
 	PUT0("\n");
 }
 
-/* -- draw_rest -- */
+/* -- draw a rest -- */
 /* (the staves are defined) */
 static void draw_rest(struct SYMBOL *s)
 {
-	int i;
-	float x, y, dotx, doty, staffb;
-	char *p;
+	int i, y;
+	float x, dotx, staffb;
+
+static char *rest_tb[9] = {
+	"r64", "r32", "r16", "r8",
+	"r4",
+	"r2", "r1", "r0", "r00"
+};
 
 	if (s->as.u.note.invis)
 		return;
 
 	x = s->x;
 	y = s->y;
+	i = 4 - s->nflags;		/* rest_tb index */
 
 	/* if rest alone in the measure, do it semibreve and center */
 	if (s->as.u.note.len == voice_tb[s->voice].meter.wmeasure) {
-		s->head = H_OVAL;
-		if (s->len > SEMIBREVE)
-			s->len = BREVE;
+/*fixme: vertical spacing pb may occur when multi-voice*/
+		i = 6;			/* r1 */
 		s->dots = 0;
 		if (s->next != 0)
 			x = s->next->x;
@@ -884,52 +889,38 @@ static void draw_rest(struct SYMBOL *s)
 	}
 
 	staffb = staff_tb[s->staff].y;	/* bottom of staff */
-	PUT2("%.1f %.0f ", x, y + staffb);
 
-	switch (s->head) {
-	case H_SQUARE:
-	case H_OVAL:
-		if (s->len < BREVE)
-			p = "r1";
-		else if (s->len < BREVE * 2)
-			p = "r0";
-		else	p = "r00";
-		PUT0(p);
-		if (y < -6		/* add one helper line */
-		    /*fixme:add upper helper line when breve*/
-		    || y >= 24) {
-			PUT1(" %.1f hl", y + 6. + staffb);
+	PUT3("%.1f %.1f %s", x, y + staffb, rest_tb[i]);
+
+	/* add helper line(s) */
+	switch (i) {
+	case 8:			/* breve / longa */
+	case 7:
+		if (y >= 24)
+			PUT1(" %.1f hl", y + 6 + staffb);
+		if (i == 7) {
+			if (y <= -6)
+				PUT1(" %.1f hl", y + staffb);
+		} else {
+			if (y <= 0)
+				PUT1(" %.1f hl", y - 6 + staffb);
 		}
-		dotx = 8;
-		doty = -3;
 		break;
-	case H_EMPTY:
-		PUT0("r2");
-		if (y <= -6		/* add one helper line */
-		    || y >= 30) {
+	case 6:			/* semibreve */
+		if (y < -6
+		    || y >= 24)
+			PUT1(" %.1f hl", y + 6 + staffb);
+		break;
+	case 5:			/* minim */
+		if (y <= -6
+		    || y >= 30)
 			PUT1(" %.1f hl", y + staffb);
-		}
-		dotx = 8;
-		doty = 3;
-		break;
-	default:
-		switch (s->nflags) {
-		case 0: p = "r4"; break;
-		case 1: p = "r8"; break;
-		case 2: p = "r16"; break;
-		case 3: p = "r32"; break;
-		default: p = "r64"; break;
-		}
-		PUT0(p);
-		dotx = 6.5;
-		if ((int) y % 6)
-			doty = 0;		/* dots */
-		else	doty = 3;
 		break;
 	}
 
+	dotx = 8.0;
 	for (i = 0; i < s->dots; i++) {
-		PUT2(" %.1f %.1f dt", dotx, doty);
+		PUT1(" %.1f 3 dt", dotx);
 		dotx += 3.5;
 	}
 	PUT0("\n");
@@ -978,6 +969,7 @@ static void draw_gracenotes(float x,
 	/* slur */
 	if (voice_tb[s->voice].bagpipe	/* no slur when bagpipe */
 	    || !cfmt.graceslurs
+	    || s->as.u.note.slur_st	/* explicit slur */
 	    || s->next == 0
 	    || s->next->type != NOTE)
 		return;
@@ -1128,7 +1120,7 @@ static char *acc_tb[] = { "", "sh", "nt", "ft", "dsh", "dft" };
 			if ((doty = s->doty) == 0)	/* defined when voices overlap */
 				doty = 3;
 		}
-		if (s->nflags && s->stem > 0
+		if (s->nflags > 0 && s->stem > 0
 		    && (s->sflags & S_WORD_ST)
 		    && s->as.u.note.word_end
 		    && s->nhd == 0)
@@ -1183,7 +1175,7 @@ static void draw_note(float x,
 
 		c = s->stem > 0 ? 'u' : 'd';
 		slen = s->stem * (s->ys - s->y);
-		if (!fl || s->nflags == 0) {		/* stem only */
+		if (!fl || s->nflags <= 0) {		/* stem only */
 			c2 = s->as.u.note.grace ? 'g' : 's';
 			PUT3(" %.1f %c%c", slen, c2, c);
 		} else {				/* stem and flags */
@@ -2267,6 +2259,7 @@ static void draw_all_slurs(struct SYMBOL *sym)
 					if (gr2 != 0) {
 						s1 = gr2->next;
 						gr2 = 0;
+						continue;
 					}
 					if (gr1 == 0 || gr1_out)
 						break;
@@ -2303,10 +2296,12 @@ static void draw_all_slurs(struct SYMBOL *sym)
 					;
 				s1->next = gr1->next;
 				gr1->next->prev = s1;
+				gr1->as.u.note.slur_st = 1;
 			}
 			if (gr2 != 0) {
 				gr2->prev->next = gr2->grace;
 				gr2->grace->prev = gr2->prev;
+				gr2->as.u.note.slur_st = 1;
 			}
 
 			cut = next_scut(s);
@@ -2609,15 +2604,8 @@ void draw_symbols(struct VOICE_S *p_voice)
 			if (s->as.u.clef.octave == 0)
 				break;
 /*fixme: works for treble clef only*/
-			if (s->as.u.clef.octave > 0) {
-				y += 36.;
-				x -= 1.5;
-			} else {
-				y -= 18.;
-				x -= 3.5;
-			}
-			PUT2("/Times-Roman 10 selectfont %.1f %.1f M (8) show\n",
-			     x, y);
+			PUT3("%.1f %.1f oct%c\n", x, y,
+			     s->as.u.clef.octave > 0 ? 'u' : 'l');
 			break;
 		}
 		case TIMESIG:
@@ -2683,6 +2671,10 @@ void draw_symbols(struct VOICE_S *p_voice)
 				     dx, dy, x, y);
 				if (nstaff != 0 && s->xmx > 0.5 * CM)
 					draw_lstaff(x);
+				break;
+			}
+			if (s->u == PSSEQ) {
+				PUT1("%s\n", &s->as.text[13]);
 				break;
 			}
 #if 1

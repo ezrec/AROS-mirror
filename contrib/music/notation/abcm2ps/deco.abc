@@ -4,7 +4,6 @@
 % == postscript definitions - must be before any tune ==
 %
 % -- cresc / decresc / dimin
-%
 %%postscript /crdc {  % usage: str x y crdc - cresc, decresc, ..
 %%postscript	/Times-Italic 14 selectfont
 %%postscript	M -6 4 rmoveto show
@@ -33,10 +32,18 @@
 %%postscript	[6] 0 setdash 30 add 0 rlineto currentpoint stroke M
 %%postscript	[] 0 setdash 0 -6 rlineto stroke
 %%postscript } bdef
+%%postscript /octavab {	% usage: len x y octavab
+%%postscript	exch -10 add exch 2 copy 
+%%postscript	M 0 -10 rmoveto /Times-Roman 16 selectfont (8) show
+%%postscript	/Times-Roman 12 selectfont (va basso) show
+%%postscript	10 add M 0 -6 rlineto currentpoint stroke M
+%%postscript	[6] 0 setdash 30 add 0 rlineto stroke
+%%postscript	[] 0 setdash
+%%postscript } bdef
 %
 % -- repeat sign in a stem
 %%postscript /repst {	% usage: x y repst
-%%postscript	M -3 -14 rmoveto 9 3 rlineto 0 -3 rlineto -9 -3 rlineto fill
+%%postscript	M -3 -13 rmoveto 9 3 rlineto 0 -3 rlineto -9 -3 rlineto fill
 %%postscript } bdef
 %
 % -- write big letters (position marks) above the staff
@@ -177,14 +184,14 @@
 %	- ta or tb: turn from above or from below
 %	- b, ub or db: middle, upper or lower bar
 %%postscript /tr3 {		% usage: x y tr3 - mordent with 3 peeks
-%%postscript	M 2.2 2.2 rlineto 2.18 -3.0 rlineto 0.62 0.8 rlineto
-%%postscript	2.2 2.2 rlineto 2.18 -3.0 rlineto 0.62 0.8 rlineto
-%%postscript	2.2 2.2 rlineto 2.18 -3.0 rlineto 0.62 0.8 rlineto
-%%postscript	-2.2 -2.2 rlineto -2.18 3.0 rlineto -0.62 -0.8 rlineto
-%%postscript	-2.2 -2.2 rlineto -2.18 3.0 rlineto -0.62 -0.8 rlineto
-%%postscript	-2.2 -2.2 rlineto -2.18 3.0 rlineto -0.62 -0.8 rlineto fill
+%%postscript	M 2.2 2.2 rlineto 2.1 -2.9 rlineto 0.7 0.7 rlineto
+%%postscript	2.2 2.2 rlineto 2.1 -2.9 rlineto 0.7 0.7 rlineto
+%%postscript	2.2 2.2 rlineto 2.1 -2.9 rlineto 0.7 0.7 rlineto
+%%postscript	-2.2 -2.2 rlineto -2.1 2.9 rlineto -0.7 -0.7 rlineto
+%%postscript	-2.2 -2.2 rlineto -2.1 2.9 rlineto -0.7 -0.7 rlineto
+%%postscript	-2.2 -2.2 rlineto -2.1 2.9 rlineto -0.7 -0.7 rlineto fill
 %%postscript } bdef
-%%postscript /t2ub {	% usage: x y t2ub - mordent ending with a upper bar
+%%postscript /t2ub {	% usage: x y t2ub - mordent ending with an upper bar
 %%postscript	2 copy umrd 0.6 setlinewidth
 %%postscript	M 5 4 rmoveto 0 6 rlineto stroke
 %%postscript } bdef
@@ -196,21 +203,21 @@
 %%postscript /ubt3ta {	% usage: x y ubt3ta - up bar + mordent + upper turn
 %%postscript	4 add 2 copy 0.6 setlinewidth
 %%postscript	M -7.5 0 rmoveto 0 6 rlineto stroke
-%%postscript	2 copy exch 7.5 sub exch tr3 exch 7.5 add exch
-%%postscript	M 2 6 14 6 16 0 rcurveto stroke
+%%postscript	2 copy exch 7.5 sub exch tr3
+%%postscript	M 7.5 0 rmoveto 2 6 14 6 16 0 rcurveto stroke
 %%postscript } bdef
 %%postscript /tbt3 {	% usage: x y tbt3 - low turn + long mordent
 %%postscript	exch 10 sub exch 6 add 2 copy 0.6 setlinewidth
-%%postscript	exch 8 sub exch M 2 -6 14 -6 16 0 rcurveto stroke
+%%postscript	M -8 0 rmoveto 2 -6 14 -6 16 0 rcurveto stroke
 %%postscript	exch 8 add exch tr3
 %%postscript } bdef
 %%postscript /t2ta {	% usage: x y t2ta - mordent + upper turn
 %%postscript	2 copy umrd
 %%postscript	M 5 4 rmoveto 1 5 9 5 10 0 rcurveto stroke
 %%postscript } bdef
-%%postscript /t2t2b {	% usage: x y t2t2b - upper + lower mordent
-%%postscript	2 copy exch 5 sub exch umrd
-%%postscript	exch 5 add exch lmrd
+%%postscript /t3b {	% usage: x y t3b - upper + lower mordent
+%%postscript	2 copy exch -7.5 add exch 4 add tr3 0.6 setlinewidth
+%%postscript	M 2.5 0 rmoveto 0 8 rlineto stroke
 %%postscript } bdef
 %%postscript /sharp {	% usage: x y sharp - sharp above note
 %%postscript	4 add gsave T 0.6 dup scale 0 0 sh0 grestore
@@ -220,6 +227,11 @@
 %%postscript } bdef
 %%postscript /natural {	% usage: x y natural - natural sign above note
 %%postscript	4 add gsave T 0.6 dup scale 0 0 nt0 grestore
+%%postscript } bdef
+%
+% -- 'treble-8' customization
+%%postscript /octl {
+%%postscript	/Times-Italic-Bold 16 selectfont M 5.5 -14 rmoveto (8vb) show
 %%postscript } bdef
 %
 % == decoration definitions ==
@@ -245,8 +257,6 @@
 %%deco alcoda 3 dacs 20 0 0 al Coda
 %
 % -- who asked for a Pedal indication ?
-% %deco ped 6 pf 20 0 0 Ped
-% %deco ped-end 6 pf 20 0 0 *
 %%deco ped 6 ped 20 0 0
 %%deco ped-end 6 pedoff 20 0 0
 %
@@ -256,6 +266,8 @@
 % -- start / stop of octava indication
 %%deco 8( 5 - 24 0 0
 %%deco 8) 5 octava 24 0 0
+%%deco 8b( 7 - 24 0 0
+%%deco 8b) 7 octavab 24 0 0
 %
 % -- repeat stem
 %%deco / 1 repst 0 0 0
@@ -276,7 +288,7 @@
 %%deco ubt3ta 3 ubt3ta 12 8 24
 %%deco tbt3 3 tbt3 14 14 18
 %%deco t2ta 3 t2ta 12 5 15
-%%deco t2t2b 3 t2t2b 12 5 15
+%%deco t3b 3 t3b 12 5 15
 %%deco # 3 sharp 8 0 0
 %%deco b 3 flat 8 0 0
 %%deco = 3 natural 8 0 0
@@ -284,8 +296,9 @@
 X:1
 T:Customized decorations
 M:C
-K:C
+K:C treble-8
 !biga!y!fp!C!t2ub!C !cresc!D!t3tab!D !decresc!E!ubt3ta!E !dimin!F!tbt3!F|\
-!mp!G!t2ta!G !(p)!A!t2t2b!c !b!T!(pp)!A2 !#!P!(f)!B2|!=!M!(ff)!c8|
-!8(!!riten!EF !-!G2 !ped!GA!ped-end!B!8)!c|!bigb!CDE!()!F GAB!alcoda!c|\
+!mp!G!t2ta!G !(p)!A!t3b!c !b!T!(pp)!A2 !#!P!(f)!B2|!=!M!(ff)!c8|
+K: clef=treble
+!8(!!riten!EF !-!G2 !ped!GA!ped-end!B!8)!c|!8b(!!bigb!CDE!()!F GAB!8b)!!alcoda!c|\
 CD!-(!E2!-)!!/!c4|

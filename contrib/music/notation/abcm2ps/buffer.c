@@ -3,7 +3,7 @@
  *
  * This file is part of abcm2ps.
  *
- * Copyright (C) 1998-2002 Jean-François Moine
+ * Copyright (C) 1998-2003 Jean-François Moine
  * Adapted from abc2ps, Copyright (C) 1996,1997 Michael Methfessel
  *
  * This program is free software; you can redistribute it and/or modify
@@ -94,8 +94,8 @@ static void init_ps(char *str,
 		"/dlw {0.7 setlinewidth} bdef\n");
 #if PS_LEVEL==1
 	fprintf(fout,
-		"/selectfont { exch findfont exch dup   %% emulate level 2 op\n"
-		"\ttype /arraytype eq {makefont}{scalefont} ifelse setfont\n"
+		"/selectfont { exch findfont exch dup	%% emulate level 2 op\n"
+		"	type /arraytype eq {makefont}{scalefont} ifelse setfont\n"
 		"} bdef\n");
 #endif
 	define_encoding(cfmt.encoding);
@@ -148,10 +148,113 @@ void close_output_file(void)
 	nbpages = tunenum = 0;
 }
 
+/* -- output a header/footer element -- */
+static void format_hf(char *p)
+{
+	char *q;
+	char s[256];
+
+	for (;;) {
+		if (*p == '\0')
+			break;
+		if ((q = strchr(p, '$')) != 0)
+			*q = '\0';
+		fprintf(fout, "%s", p);
+		if (q == 0)
+			break;
+		p = q + 1;
+		switch (*p) {
+		case 'F':		/* ABC file name */
+			fprintf(fout, "%s", in_fname);
+			break;
+		case 'P':		/* page number */
+			if (p[1] == '0') {
+				p++;
+				if (pagenum & 1)
+					break;
+			} else if (p[1] == '1') {
+				p++;
+				if ((pagenum & 1) == 0)
+					break;
+			}
+			fprintf(fout, "%d", pagenum);
+			break;
+		case 'T':		/* tune title */
+			tex_str(s, info.title[0], sizeof s, 0);
+			fprintf(fout, "%s", s);
+			break;
+		default:
+			continue;
+		}
+		p++;
+	}
+}
+
+/* -- output the header or footer -- */
+static float headfooter(int header,
+			float pwidth,
+			float pheight)
+{
+	char str[256];
+	char *p, *q;
+	float size, y;
+	int fnum;
+
+	if (header) {
+		p = cfmt.header;
+		size = cfmt.headerfont.size;
+		fnum = cfmt.headerfont.fnum;
+		y = cfmt.topmargin - 32.0;
+	} else {
+		p = cfmt.footer;
+		size = cfmt.footerfont.size;
+		fnum = cfmt.footerfont.fnum;
+		y = - (pheight - cfmt.topmargin - cfmt.botmargin)
+			+ size + 3.;
+	}
+
+	fprintf(fout, "%.1f F%d ", size, fnum);
+
+	tex_str(str, p, sizeof str, 0);
+
+	/* left side */
+	p = str;
+	if ((q = strchr(p, '\t')) != 0) {
+		if (q != p) {
+			*q = '\0';
+			fprintf(fout, "%.1f %.1f M (",
+				cfmt.leftmargin, y);
+			format_hf(p);
+			fprintf(fout, ") show\n");
+		}
+		p = q + 1;
+	}
+	if ((q = strchr(p, '\t')) != 0)
+		*q = '\0';
+	if (q != p) {
+		fprintf(fout, "%.1f %.1f M (",
+			pwidth * 0.5, y);
+		format_hf(p);
+		fprintf(fout, ") cshow\n");
+	}
+	if (q != 0) {
+		p = q + 1;
+		if (*p != '\0') {
+			fprintf(fout, "%.1f %.1f M (",
+				pwidth - cfmt.rightmargin, y);
+			format_hf(p);
+			fprintf(fout, ") lshow\n");
+		}
+	}
+
+	return size + 6.;
+}
+
 /* -- initialize postscript page -- */
 static void init_page(void)
 {
 	float pheight, pwidth;
+
 	if (in_page)
 		return;
 
@@ -180,36 +283,19 @@ static void init_page(void)
 	posy = pheight - cfmt.topmargin;
 	botpage = cfmt.botmargin;
 
-/*fixme: as no scale for page & footer -> have specific fonts*/
-	/* write the page number on the right (not at right:)) side */
-	if (pagenumbers) {
-		float top;
-
-		top = cfmt.topmargin - 32.0;
-		fprintf(fout, "%.1f F%d ",
-			cfmt.footerfont.size, cfmt.footerfont.fnum);
-		if (((pagenumbers - 1) & 1) ^ (pagenum & ((pagenumbers - 1) >> 1)))
-			fprintf(fout, "%.1f %.1f M (%d) lshow\n",
-				pwidth - cfmt.rightmargin, top, pagenum);
-		else	fprintf(fout, "%.1f %.1f M (%d) show\n",
- 				cfmt.leftmargin, top, pagenum);
+	/* output the header and footer */
+	if (cfmt.header == 0 && pagenumbers != 0) {
+		switch (pagenumbers) {
+		case 1: cfmt.header = "$P\t"; break;
+		case 2: cfmt.header = "\t\t$P"; break;
+		case 3: cfmt.header = "$P0\t\t$P1"; break;
+		case 4: cfmt.header = "$P1\t\t$P0"; break;
+		}
 	}
-
-	/* ouput the footer */
-	if (cfmt.footer != 0) {
-		char str[128];
-
-		tex_str(str, cfmt.footer, sizeof str, 0);
-
-		fprintf(fout, "%.1f F%d"
-			" %.1f %.1f M (%s) cshow\n",
-			cfmt.footerfont.size, cfmt.footerfont.fnum,
-			pwidth * 0.5,
-			- (pheight - cfmt.topmargin - cfmt.botmargin)
-				+ cfmt.footerfont.size + 5.,
-			str);
-		botpage += cfmt.footerfont.size + 10.;
-	}
+	if (cfmt.header != 0)
+		headfooter(1, pwidth, pheight);
+	if (cfmt.footer != 0)
+		botpage += headfooter(0, pwidth, pheight);
 	pagenum++;
 }
 
@@ -293,7 +379,6 @@ void a2b(void)
 		init_page();
 
 	l = strlen(mbf);
-	/*  printf ("Append %d <%s>\n", l, t); */
 
 	nbuf += l;
 	if (nbuf >= BUFFSZ - 500) {	/* must have place for 1 more line */

@@ -3,7 +3,7 @@
  *
  * This file is part of abcm2ps.
  *
- * Copyright (C) 1998-2002 Jean-François Moine
+ * Copyright (C) 1998-2003 Jean-François Moine
  * Adapted from abc2ps, Copyright (C) 1996,1997 Michael Methfessel
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,7 +53,8 @@ static int lastvoice;			/* last voice for overlay allocation */
 
 static int bar_number;			/* (for %%setbarnb) */
 
-static float multicol_start, multicol_max;	/* (for multicol) */
+float multicol_start = 1;		/* (for multicol) */
+static float multicol_max;
 static float lmarg, rmarg;
 
 #define SQ_ANY 0x00
@@ -77,8 +78,6 @@ static void get_note(struct SYMBOL *s);
 static struct abcsym *process_pscomment(struct abcsym *as);
 static void set_nplet(struct SYMBOL *s);
 static void sym_link(struct SYMBOL *s);
-
-/*  subroutines connected with parsing the input file  */
 
 /* -- add a new symbol at end of list -- */
 struct SYMBOL *add_sym(struct VOICE_S *p_voice,
@@ -159,7 +158,7 @@ static void gchord_adjust(struct SYMBOL *s)
 	p = s->as.text;
 	if (strchr("^_<>@", *p) != 0)
 		freegchord = 1;
-/*fixme: treat 'dim' as 'o', 'halfdim' as '/o', and maj as a triangle*/
+/*fixme: treat 'dim' as 'o', 'halfdim' as '/o', and 'maj' as a triangle*/
 	while (*p != '\0') {
 		switch (*p) {
 		case '#':
@@ -895,15 +894,19 @@ void identify_note(struct SYMBOL *s,
 	switch (base) {
 	case BREVE * 2:
 		head = H_SQUARE;
+		flags = -4;
 		break;
 	case BREVE:
 		head = cfmt.squarebreve ? H_SQUARE : H_OVAL;
+		flags = -3;
 		break;
 	case SEMIBREVE:
 		head = H_OVAL;
+		flags = -2;
 		break;
 	case MINIM:
 		head = H_EMPTY;
+		flags = -1;
 		break;
 	case CROTCHET:
 		break;
@@ -1519,6 +1522,47 @@ static struct abcsym *process_pscomment(struct abcsym *as)
 			/* not reached */
 		}
 		break;
+	case 'E':
+		if (strcmp(w, "EPS") == 0) {
+			float x1, y1, x2, y2;
+			FILE *epsf;
+			char line[BSIZE];
+
+			output_music();
+			if ((epsf = fopen(p, "r")) == 0) {
+				ERROR(("line %d: No such file: %s",
+				       as->linenum, p));
+				return as;
+			}
+
+			/* get the bounding box */
+			while (fgets(line, sizeof line, epsf)) {
+				if (strncmp(line, "%%BoundingBox:", 14) == 0) {
+					if (sscanf(&line[14], "%f %f %f %f",
+						   &x1, &y1, &x2, &y2) == 4)
+						break;
+				}
+			}
+			if (strncmp(line, "%%BoundingBox:", 14) != 0) {
+				ERROR(("line %d: No bounding box in '%s'",
+				       as->linenum, p));
+				return as;
+			}
+			abskip((y2 - y1) * cfmt.scale);
+			PUT1("%%start EPS file '%s'\ngsave\n", p);
+			PUT2("%.2f %.2f T\n", -x1, -y1);
+			rewind(epsf);
+			while (fgets(line, sizeof line, epsf)) { /* copy the file */
+				if ((p = strstr(line, "showpage")) != 0)
+					memcpy(p, "        ", 8);
+				PUT1("%s", line);
+			}
+			fclose(epsf);
+			PUT0("grestore\n%%end EPS\n");
+			buffer_eob();
+			return as;
+		}
+		break;
 	case 'm':
 		if (strcmp(w, "multicol") == 0) {
 			float bposy;
@@ -1530,22 +1574,47 @@ static struct abcsym *process_pscomment(struct abcsym *as)
 				lmarg = cfmt.leftmargin;
 				rmarg = cfmt.rightmargin;
 			} else if (strncmp(p, "new", 3) == 0) {
-				bposy = get_bposy();
-				abskip(bposy - multicol_start);
-				if (bposy < multicol_max)
-					multicol_max = bposy;
-				cfmt.leftmargin = lmarg;
-				cfmt.rightmargin = rmarg;
+				if (multicol_start > 0)
+					ERROR(("line %d: %%%%multicol new without start",
+						as->linenum));
+				else {
+					bposy = get_bposy();
+					if (bposy < multicol_start)
+						abskip(bposy - multicol_start);
+					if (bposy < multicol_max)
+						multicol_max = bposy;
+					cfmt.leftmargin = lmarg;
+					cfmt.rightmargin = rmarg;
+				}
 			} else if (strncmp(p, "end", 3) == 0) {
-				bposy = get_bposy();
-				if (bposy > multicol_max)
-					abskip(bposy - multicol_max);
-				cfmt.leftmargin = lmarg;
-				cfmt.rightmargin = rmarg;
+				if (multicol_start > 0)
+					ERROR(("line %d: %%%%multicol end without start",
+						as->linenum));
+				else {
+					bposy = get_bposy();
+					if (bposy > multicol_max)
+						abskip(bposy - multicol_max);
+					cfmt.leftmargin = lmarg;
+					cfmt.rightmargin = rmarg;
+					multicol_start = 1;
+				}
 			} else {
 				ERROR(("line %d: Unknown keyword '%s' in %%%%multicol",
 					as->linenum, p));
 			}
+			return as;
+		}
+		break;
+	case 'n':
+		if (strcmp(w, "newpage") == 0) {
+			if (epsf)
+				return as;
+			output_music();
+			write_buffer();
+			use_buffer = 0;
+			if (isdigit(*p))
+				pagenum = atoi(p);
+			write_pagebreak();
 			return as;
 		}
 		break;
@@ -1639,47 +1708,24 @@ static struct abcsym *process_pscomment(struct abcsym *as)
 			return as;
 		}
 		break;
-	case 'n':
-		if (strcmp(w, "newpage") == 0) {
-			if (epsf)
-				return as;
-			output_music();
-			write_buffer();
-/*fixme?		use_buffer = 0; */
-			if (isdigit(*p))
-				pagenum = atoi(p);
-			write_pagebreak();
-			return as;
-		}
-		break;
 	}
-	if (interpret_format_line(q) == 0) {
-		ops_into_fmt();
+	if (as->state == ABC_S_TUNE
+	    || as->state == ABC_S_EMBED) {
 		if (strcmp(w, "leftmargin") == 0
 		    || strcmp(w, "rightmargin") == 0
 		    || strcmp(w, "scale") == 0) {
-			if (as->state == ABC_S_TUNE
-			    || as->state == ABC_S_EMBED) {
-				struct VOICE_S *old_voice;
-
-				old_voice = curvoice;
-				curvoice = first_voice;
-				sym_link(s);
-				curvoice = old_voice;
-				s->type = FMTCHG;
-				if (w[0] == 'l') {
-					s->u = LMARG;
-					s->xmx = cfmt.leftmargin;
-				} else if (w[0] == 'r') {
-					s->u = RMARG;
-					s->xmx = cfmt.rightmargin;
-				} else {
-					s->u = SCALE;
-					s->xmx = cfmt.scale;
-				}
-			}
+			output_music();
+			buffer_eob();
+		}
+		else if (strcmp(w, "postscript") == 0) {
+			sym_link(s);
+			s->type = FMTCHG;
+			s->u = PSSEQ;
+			return as;
 		}
 	}
+	if (interpret_format_line(q) == 0)
+		ops_into_fmt();
 	return as;
 }
 
