@@ -38,11 +38,6 @@ extern int numChannels;
 #define SFX_VOICES 32
 #define MUS_VOICES 32
 
-#define NUM_SAMPLES 1260       // 1260 = 35Hz, 630 = 70Hz, 315 = 140Hz
-#define BUFFER_SIZE (NUM_SAMPLES * 2 * 2)    // stereo 16-bit samples
-
-#define BEATS_PER_PASS 4       // 4 = 35Hz, 2 = 70Hz, 1 = 140Hz
-
 struct Channel {
   float pitch;
   float pan;
@@ -89,6 +84,10 @@ static struct AHIRequest *audio_io2 = NULL;
 
 static WORD *buffer1 = NULL;
 static WORD *buffer2 = NULL;
+
+static ULONG NUM_SAMPLES = 1260;       // 1260 = 35Hz, 630 = 70Hz, 315 = 140Hz
+static ULONG BUFFER_SIZE = (1260 * 2 * 2);        // stereo 16-bit samples
+static ULONG BEATS_PER_PASS = 4;       // 4 = 35Hz, 2 = 70Hz, 1 = 140Hz
 
 static int sound_status = 0;
 
@@ -238,18 +237,34 @@ void I_InitSound (void)
   if (M_CheckParm("-nosfx"))
     return;
 
+  if (M_CheckParm("-music")) {
+    if (M_CheckParm("-70Hz")) {
+      NUM_SAMPLES = 630;
+      BUFFER_SIZE = NUM_SAMPLES * 2 * 2;
+      BEATS_PER_PASS = 2;
+      fprintf (stderr, "I_InitSound: Playing music at 70Hz.\n");
+      fflush( stderr );
+    } else if (M_CheckParm("-140Hz")) {
+      NUM_SAMPLES = 315;
+      BUFFER_SIZE = NUM_SAMPLES * 2 * 2;
+      BEATS_PER_PASS = 1;
+      fprintf (stderr, "I_InitSound: Playing music at 140Hz.\n");
+      fflush( stderr );
+    }
+  }
+
   sound_status = 0;
 
   // create sound handling task
   sound_task = (struct Task *)CreateNewProcTags( NP_Output, Output(),
-                                                 NP_Input, Input(), 
-					         NP_Name, (IPTR)"doom_sound_daemon",
-					         NP_CloseOutput, FALSE,
+                                                 NP_Input, Input(),
+					                             NP_Name, (IPTR)"doom_sound_daemon",
+					                             NP_CloseOutput, FALSE,
                                                  NP_CloseInput, FALSE,
-					         NP_StackSize, 20000,
-					         NP_Entry, (IPTR)sound_handler,
+					                             NP_StackSize, 20000,
+					                             NP_Entry, (IPTR)sound_handler,
                                                  NP_Priority, 40,
-					         TAG_DONE);
+					                             TAG_DONE);
   if (!sound_task) {
     fprintf (stderr, "I_InitSound: Cannot create sound daemon, no sfx or music.\n");
     fflush( stderr );
@@ -473,6 +488,17 @@ void I_InitMusic(void)
   if (M_CheckParm("-music") && (music_okay == 1)) {
     fprintf (stderr, " Music okay.\n");
     fflush( stderr );
+
+    if (M_CheckParm("-70Hz")) {
+      NUM_SAMPLES = 630;
+      BUFFER_SIZE = NUM_SAMPLES * 2 * 2;
+      BEATS_PER_PASS = 2;
+    } else if (M_CheckParm("-140Hz")) {
+      NUM_SAMPLES = 315;
+      BUFFER_SIZE = NUM_SAMPLES * 2 * 2;
+      BEATS_PER_PASS = 1;
+    }
+
     return;
   }
 
@@ -742,13 +768,14 @@ void fill_buffer(WORD *buffer)
         // start music from beginning
         score_ptr = (UBYTE *)((ULONG)score_data + (ULONG)score_start);
       }
-      mus_delay -= BEATS_PER_PASS;     // 1=140Hz, 2=70Hz
-      if (mus_delay < 0) {
+      mus_delay -= BEATS_PER_PASS;     // 1=140Hz, 2=70Hz, 4=35Hz
+      if (mus_delay <= 0) {
         UBYTE event;
         UBYTE note;
         UBYTE time;
         UBYTE ctrl;
         UBYTE value;
+        int next_time;
         int channel;
         int voice;
         int inst;
@@ -867,18 +894,18 @@ nextEvent:        // next event
           }
         } while (!(event & 0x80));     // not last event
 
-        // now get the time until the next event
-        mus_delay = 0;
+        // now get the time until the next event(s)
+        next_time = 0;
         time = *score_ptr++;
         while (time & 0x80) {
           // while msb set, accumulate 7 bits
-          mus_delay |= (ULONG)(time & 0x7f);
-          mus_delay <<= 7;
+          next_time |= (ULONG)(time & 0x7f);
+          next_time <<= 7;
           time = *score_ptr++;
         }
-        mus_delay |= (ULONG)time;
-        mus_delay--;
-        if (mus_delay < 0)
+        next_time |= (ULONG)time;
+        mus_delay += next_time;
+        if (mus_delay <= 0)
           goto nextEvent;
       }
     }

@@ -15,6 +15,9 @@
 // for more details.
 //
 // $Log$
+// Revision 1.2  2004/09/25 16:54:23  stegerg
+// More fixes/enhancements by Joseph Fenton.
+//
 // Revision 1.1  2000/02/29 18:21:03  stegerg
 // Doom port based on ADoomPPC. Read README.AROS!
 //
@@ -74,6 +77,8 @@ int main (int argc, char* argv[])
     "-mouse",
     "-joypad",
     "-music",
+    "-70Hz",
+    "-140Hz",
     "-nosfx",
     "-mmu",
     "-fps",
@@ -107,7 +112,6 @@ int main (int argc, char* argv[])
     "-cdrom",
     "-playdemo",
     "-avg",
-    
     "-scr"
   };
   /* these command line arguments each take a value */
