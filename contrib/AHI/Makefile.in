@@ -1,0 +1,92 @@
+#  $Id$
+#
+#  Makefile.in for the AHI sound system
+#
+
+#
+# Autoconfig stuff
+########################################
+
+@SET_MAKE@
+
+top_srcdir	= @top_srcdir@
+srcdir		= @srcdir@
+DISTDIR		= @DISTDIR@
+CATDIR		= ${DISTDIR}/User/Catalogs
+
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+
+CPPFLAGS	= @CPPFLAGS@
+CFLAGS		= @CFLAGS@
+LDFLAGS		= @LDFLAGS@
+
+
+VPATH		= @srcdir@
+
+
+#
+# Targets
+########################################
+
+.PHONY:		all clean distclean maintainer-clean bindist revup
+
+SUBDIRS		= AHI AddAudioModes Device Docs Include
+
+
+all:
+	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
+
+clean:
+	-@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
+
+distclean:
+	-@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
+	$(RM) config.log config.cache config.status config.h\
+	      stamp-h stamp-h.in Makefile
+
+maintainer-clean:
+	-@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
+	$(RM) config.log config.cache config.status config.h\
+	      stamp-h stamp-h.in Makefile configure config.h.in
+
+bindist:
+	$(INSTALL) --directory $(DISTDIR)
+	rm -rf $(DISTDIR)/*
+	$(INSTALL_DATA) ${srcdir}/COPYING $(DISTDIR)
+	$(INSTALL_DATA) ${srcdir}/COPYING.LIB $(DISTDIR)
+
+	$(INSTALL) --directory $(CATDIR)
+	$(INSTALL_DATA) ${srcdir}/README.ATO $(CATDIR)
+	$(INSTALL_DATA) ${srcdir}/README.TRANSLATIONS $(CATDIR)
+
+	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
+
+revup:
+	@rev=`cat $(srcdir)/version.rev` && echo `expr $$rev + 1` > $(srcdir)/version.rev
+	@date +%y.%m.%d > $(srcdir)/version.date
+	@echo -n "New revision: "
+	@cat $(srcdir)/version.rev
+
+#
+# Auto-remake autoconf stuff
+########################################
+
+${srcdir}/configure: configure.in
+	cd ${srcdir} && autoconf
+
+# autoheader might not change config.h.in, so touch a stamp file.
+${srcdir}/config.h.in: stamp-h.in
+${srcdir}/stamp-h.in: configure.in
+	cd ${srcdir} && autoheader
+	echo timestamp > ${srcdir}/stamp-h.in
+
+config.h: stamp-h
+stamp-h: config.h.in config.status
+	./config.status
+
+Makefile: Makefile.in config.status
+	./config.status
+
+config.status: configure
+	./config.status --recheck

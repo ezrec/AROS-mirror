@@ -1,0 +1,70 @@
+dnl $Id$
+
+
+dnl Process this file with autoconf to produce a configure script.
+
+AC_REVISION( $Revision$ )
+dnl
+AC_INIT( TODO )
+
+
+dnl General
+
+AC_CANONICAL_SYSTEM
+AC_PROG_MAKE_SET
+AC_CONFIG_HEADER( config.h )
+
+: ${CFLAGS='-g -I. -O2 -fomit-frame-pointer -ffast-math -W -Wall -Wstrict-prototypes -Wno-unused '}
+: ${CPPFLAGS='-I/gg/os-include -I/gg/include'}
+: ${LDFLAGS='-noixemul'}
+: ${ARFLAGS='-ru'}
+
+: ${DISTDIR='/tmp/ahi'}
+AC_PREFIX_DEFAULT( / )
+
+AC_SUBST(ASFLAGS)
+AC_SUBST(ARFLAGS)
+AC_SUBST(DISTDIR)
+
+dnl Checks for programs.
+
+AC_CHECK_TOOL( CC, gcc, :) 
+AC_CHECK_TOOL( AS, as, :) 
+
+AC_PROG_INSTALL
+AC_PROG_CC
+AC_PROG_RANLIB
+AC_CHECK_PROG( AR, ar, ar )
+AC_CHECK_PROG( RM, rm, rm )
+AC_CHECK_PROG( FLEXCAT, flexcat, flexcat )
+AC_CHECK_PROG( ASM, PhxAss, PhxAss )
+AC_CHECK_PROG( MAKEDEPEND, makedepend, makedepend )
+
+
+dnl Checks for libraries.
+
+AC_CHECK_LIB( amiga, NewList,  , AC_MSG_ERROR( "libamiga is missing." ) )
+AC_CHECK_LIB( m,     floor,    , AC_MSG_ERROR( "libm is missing." ) )
+
+
+dnl Checks for header files.
+
+AC_CHECK_HEADER( CompilerSpecific.h, , AC_MSG_ERROR( "CompilerSpecific.h is missing." )) 
+
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+
+AC_C_CONST
+AC_C_INLINE
+
+
+dnl Checks for library functions.
+
+
+AC_OUTPUT(Makefile
+          AHI/Makefile
+          AddAudioModes/Makefile
+          Device/Makefile
+          Docs/Makefile
+          Include/Makefile,
+          echo timestamp > stamp-h)

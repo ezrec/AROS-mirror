@@ -1,0 +1,154 @@
+
+The second beta release of AHI/PPC
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+...or what will eventually be known as AHI version 5 (not to be confused
+with that I hoped to be version 5 before -- that will be another release)
+is here.
+
+This version supports WarpUp!  But more work needs to be done, because this
+version is a full 35% slower when run under WarpUp than PowerUp.  Don't
+expect speed!  Just tell me that it works.  A bug in WarpUp was recently
+discovered (yesterday, actually), which prevents AHI from using proper
+cache handling.  A later beta of AHI will either add a work-around fix or
+require a later WarpUp version.
+
+I also fixed a couple of bugs in the ppc mixing routines.  Then I found
+some more, that I didn't fix.  Especially the anti-click code seem to have
+problems, so don't turn it on unless you have to!  And even if you have to,
+please, do listen carefully to the result before pressing your CDs!  If you
+find any predictable and repeatable problems, do let me know!
+
+The lock-up problem with AmigaAMP has not been found yet.  Unfortunately,
+it happened with WarpUp as well, which kind of blew my theory about it
+being a PowerUp bug.  It now looks like it's a problem with either my or
+Thomas code.  Probably mine.
+
+So, what else is new?  I played Quake Arena for the first time a couple of
+weeks ago.  It sucked.  Whatever happened to all great games that was fun
+to play, like Gianna Sisters, Rally Speedway and Commando?
+
+
+Things still to do before the full release
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+ · Write assembler echo and master volume (m68k and ppc).
+ · Add non-mixing modes for so-called "serious" music software and fast
+   streaming.
+ · Finish the packaging.  This includes installer script, updated
+   documentation, proper source archive that includes the drivers and a
+   prober developer archive with header files et cetera.
+ · I need to update the BGUI and ClassAct preferences programs to support
+   the global anti-click settings.  Or even better, ditch them all for a OS
+   3.5 version.  We'll see.
+ · Fix all the bugs you find.
+
+Take your pick!  Any help is wecome, and the more help I get, the sooner
+the full release will come.
+
+How to make your very own version of AHI
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+To configure on an Amiga:
+
+sh configure --host=m68k-unknown-amigaos
+
+
+To configure on a PC running Linux:
+
+./configure --host=m68k-amigaos --build=i686-pc-linux-gnu
+
+
+You can build in separate directories, which is very useful when
+working on the PPC version:
+
+mkdir build060
+cd build060
+sh ../ahisrc/configure --host=m68k-unknown-amigaos
+
+
+The following targets are available:
+
+all:
+	Makes all binaries, but only one version of the device.
+
+clean:
+	Removes all binaries and temporary files.
+
+distclean:
+	Like clean, but also removes files created by 'configure'.
+
+maintainer-clean:
+	Removes all machine-generated files, including the autoconf files.
+
+bindist:
+	Builds the binary distribution.  You can change the directory in
+	which the binary distribution will be created, by setting the
+	variable DISTDIR. The default is '/tmp/ahi'. This will build all
+	possible versions of the device, including the PowerPC version.
+
+revup:
+	Increases the revision of the distribution.
+
+
+When you add code, please remember a few things:
+
+  · Avoid TAB characters, if possible.
+  · The TAB size is 8.
+  · The indent level is 2.
+  · Compiler warnings are NOT acceptable.
+
+
+Required programs/packages
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+Here is a short list of required tools that I'm aware of:
+
+From GeekGadgets:
+
+autoconf                 autoconf-2.13-bin.tgz
+gcc/egcs                 gcc-2.95.1-bin020.tgz
+make                     make-3.77-bin.tgz
+ppctools                 ppctools-bin.tgz
+unixtex                  unixtex-6.1b-bin?.tgz
+texinfo                  texinfo-3.12-bin.tgz
+
+Other tools:
+
+FD2Pragma
+FlexCat
+Makedepend
+PhxAss
+RoboDoc
+UnixDirs3 (when using separate build directories)
+
+
+Building a libgcc.a for ppctools-bin
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+In order to build an ahi.so that works with WarpUp, you'll need to build
+libgcc.a.  Here is how I did that on a Linux box.  I suppose it works under
+AmigaOS as well.
+
+1) Get binutils-2.7.tar.gz and gcc-2.7.2.1.tar.gz from your local GNU
+   mirror.
+
+2) mkdir source; mkdir build; mkdir build/ppc-gcc; mkdir build/ppc-binutils
+
+3) Unpack the sources into the "source" directory.
+
+4) Go to build/ppc-binutils and write (change prefix and host to fit your
+   system):
+
+   $ ../../source/binutils-2.7/configure --target=ppc-unknown-elf \
+   > --host=i386-unknown-linux --prefix=/home/lcs/gg
+   $ make
+   $ make install
+
+   If you get errors from bad prototypes, just uncomment them and retry
+   (I had problems with strdup and a few more).
+
+5) Go to build/ppc-gcc and write (change prefix and host to fit your
+   system):
+
+   $ ../../source/gcc-2.7.2.1/configure --target=ppc-unknown-elf \
+   > --host=i386-unknown-linux --prefix=/home/lcs/gg
+   $ make LIBGCC2_INCLUDES=-Dinhibit_libc libgcc.a
+
+6) Copy the file libgcc.a to ade:ppc-amigaos/lib/libgcc.a or
+   gg:ppc-amigaos/lib/libgcc.a
