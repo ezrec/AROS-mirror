@@ -91,9 +91,9 @@ LT_AddL(LayoutHandle *handle,LONG type,ULONG labelID,LONG id,...)	/* link librar
 		struct TagItem *tagList;
 		va_list varArgs;
 
-		va_start(varArg,id);
+		va_start(varArgs,id);
 
-		tagList = (struct TagItem *)varArg;
+		tagList = (struct TagItem *)varArgs;
 
 		if(handle->LocaleHook)
 		{
