@@ -74,6 +74,7 @@ Base                      Name                       Class
 (MUIB_AROS | 0x00000100)  MUIB_Calendar              Calendar.mcc
 (MUIB_AROS | 0x00000200)  MUIB_PreferencesWindow     PreferencesWindow.mcc
 (MUIB_AROS | 0x00000300)  MUIB_IconImage             IconImage.mcc
+(MUIB_AROS | 0x00000400)  MUIB_AboutWindow           AboutWindow.mcc
 ========================  =========================  ========================
 
 
@@ -148,6 +149,26 @@ Identifier                     Name                             I  S  G  P  Type
 (MUIB_IconImage | 0x00000000)  MUIA_IconImage_DiskObject        X           struct DiskObject *
 (MUIB_IconImage | 0x00000001)  MUIA_IconImage_File              X           CONST_STRPTR
 =============================  ===============================  =  =  =  =  ====================
+
+
+Class: AboutWindow.mcc
+----------------------
+
+===============================  ===============================  =  =  =  =  ====================
+Attributes
+--------------------------------------------------------------------------------------------------
+Identifier                       Name                             I  S  G  P  Type                
+===============================  ===============================  =  =  =  =  ====================
+(MUIB_AboutWindow | 0x00000000)  MUIA_AboutWindow_Image           X           Object *
+(MUIB_AboutWindow | 0x00000001)  MUIA_AboutWindow_Title           X           CONST_STRPTR
+(MUIB_AboutWindow | 0x00000002)  MUIA_AboutWindow_Version_Number  X           CONST_STRPTR
+(MUIB_AboutWindow | 0x00000003)  MUIA_AboutWindow_Version_Date    X           CONST_STRPTR
+(MUIB_AboutWindow | 0x00000004)  MUIA_AboutWindow_Version_Extra   X           CONST_STRPTR
+(MUIB_AboutWindow | 0x00000005)  MUIA_AboutWindow_Copyright       X           CONST_STRPTR
+(MUIB_AboutWindow | 0x00000006)  MUIA_AboutWindow_Description     X           CONST_STRPTR
+(MUIB_AboutWindow | 0x00000007)  MUIA_AboutWindow_Authors         X           struct TagItem *
+(MUIB_AboutWindow | 0x00000008   MUIA_AboutWindow_Sponsors        X           struct TagItem *
+===============================  ===============================  =  =  =  =  ====================
 
 
 Zune core classes
