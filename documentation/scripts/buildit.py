@@ -283,6 +283,19 @@ def copyImages():
         ],
         dstpath
     )
+    
+    imagepath = 'documentation/developers/zune/images'
+    dstpath   = os.path.join( DSTROOT, imagepath )
+    srcpath   = imagepath
+    
+    makedir( dstpath )
+    
+    copy(
+        [
+            os.path.join( srcpath, 'hello.png' )
+        ],
+        dstpath
+    )
 
     imagepath = 'images'
     dstpath   = os.path.join( DSTROOT, imagepath )
