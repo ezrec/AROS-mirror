@@ -13,7 +13,7 @@ ruppert:bbtwjwdJnQGas:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatype
 vmc:abVary.zhDODw:Harald Frank:support@isdntown.east.de:Amiga port
 helios:acwZVMiQtI78o:Martin Steigerwald:steigerw@stud.uni-frankfurt.de:Beta tester
 srittau:aaRBXVNGOCKiY:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Misc
-laguest:baLtYMMsFjGms:Oldin McGroin:L.A.Guest@comp.brad.ac.uk:CLI tools
+laguest:baLtYMMsFjGms:L. A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
 
 stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
