@@ -15,7 +15,13 @@ STARTUP = $(BASEDIR)/AROS/lib/startup.o
 
 GCCLIB = `$(CC) --print-libgcc-file`
 
-all: $(PROJECTNAME) 
+all: libavcodec/libavcodec.a libavformat/libavformat.a $(PROJECTNAME)   
+
+libavformat/libavformat.a:
+	cd libavformat && make && cd ..
+
+libavcodec/libavcodec.a:
+	cd libavcodec && make && cd ..
 
 $(OBJ)%.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<

@@ -166,10 +166,7 @@ int play_decode_stream(AVFormatContext *is)
         os_delay(2000);
 
     sample_frame = get_elapsed_samples();
-   
-    printf("\nStart sample_frame: %ld, use audio: %d, samples_per_frame %lu\n\n", 
-            sample_frame, use_audio, samples_per_frame);
-    
+       
     for(;;) {
         AVPacket pkt;
         uint8_t *ptr;
@@ -225,10 +222,6 @@ redo:
 
                 if(get_elapsed_samples() > samples_per_frame && 
                         sample_frame < (get_elapsed_samples() - samples_per_frame)) {
-#if 0
-                    printf("Frameskip: sampleframe %ld elapsed: %ld\n", 
-                            sample_frame, get_elapsed_samples());
-#endif
                     skips++;
                     do_frame_skip();
                 } else {
@@ -242,7 +235,7 @@ redo:
 
                 frames++;
 
-                fprintf(stderr, "%lu %lu - ", sample_frame, get_elapsed_samples());
+//                fprintf(stderr, "%lu %lu - ", sample_frame, get_elapsed_samples());
                 
                 if((frames % 25) == 1)
                     fprintf(stderr, "FRM:%d VBUF:%d ABUF:%d PLD:%lu Wait:%d Skip:%d FPS:%f\r",
