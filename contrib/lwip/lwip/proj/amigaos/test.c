@@ -135,10 +135,12 @@ void start(void)
 
             case LIBMSG_BIND:
                  msg->retval = lwip_bind((long)msg->args[0], (struct sockaddr*)msg->args[1],(long)msg->args[2]);
+                 Printf("bind(%ld,0x%lx,%ld)=%ld\n",msg->args[0],msg->args[1],msg->args[2],msg->retval);
 								 break;
 
             case LIBMSG_CLOSESOCKET:
                  msg->retval = lwip_close((long)msg->args[0]);
+                 Printf("CloseSocket(%ld)=%ld\n",msg->args[0],msg->retval);
 								 break;
 
             case LIBMSG_CONNECT:
@@ -159,6 +161,7 @@ void start(void)
 
             case LIBMSG_LISTEN:
                  msg->retval = lwip_listen((long)msg->args[0],(long)msg->args[1]);
+                 Printf("listen(%ld,%ld)=%ld\n",msg->args[0],msg->args[1],msg->retval);
 								 break;
 
             case LIBMSG_RECV:
@@ -185,6 +188,7 @@ void start(void)
 
             case LIBMSG_SOCKET:
                  msg->retval = lwip_socket((long)msg->args[0],(long)msg->args[1],(long)msg->args[2]);
+                 Printf("socket(%ld,%ld,%ld)=%ld\n",msg->args[0],msg->args[1],msg->args[2],msg->retval);
 								 break;
 
 					}

@@ -16,13 +16,18 @@ NETIFOBJS=$(SRCDIR)/netif/loopif.o $(SRCDIR)/netif/tcpdump.o $(SRCDIR)/netif/arp
 APIOBJS=$(SRCDIR)/api/api_lib.o $(SRCDIR)/api/api_msg.o $(SRCDIR)/api/err.o $(SRCDIR)/api/sockets.o $(SRCDIR)/api/tcpip.o
 LIBOBJS=calling.o lib_accept.o lib_bind.o lib_connect.o lib_getpeername.o lib_getsockname.o lib_getsockopt.o lib_ioctlsocket.o lib_listen.o lib_recv.o lib_recvfrom.o lib_send.o lib_sendto.o lib_setsockopt.o lib_shutdown.o lib_closesocket.o lib_socket.o lib_stuff.o
 
-all: test
+all: test testserver testclient
 
 test: $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) $(LIBOBJS) test.o
   sc NOVERS TO test link with <<
 $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) $(LIBOBJS) test.o lib:debug.lib
 <
 
+testserver: testserver.o
+  sc TO testserver link testserver.o
+
+testclient: testclient.o
+  sc TO testclient link testclient.o
 
 .c.o:
 		$(CC) $(DEF)IPv4 $(CFLAGS) $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o

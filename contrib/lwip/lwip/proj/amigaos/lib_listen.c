@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_listen.c,v 1.1 2002/07/11 17:59:24 sebauer Exp $
+    $Id: lib_listen.c,v 1.2 2002/07/12 08:38:07 sebauer Exp $
 */
 
 #include <exec/types.h>
@@ -50,7 +50,7 @@ __asm int LIB_listen(register __d0 long s, register __d1 long backlog)
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
-    return CallStackFunction(SOCKB(SocketBase), LIBMSG_SOCKET, 2, s, backlog);
+    return CallStackFunction(SOCKB(SocketBase), LIBMSG_LISTEN, 2, s, backlog);
 
     AROS_LIBFUNC_EXIT
 
