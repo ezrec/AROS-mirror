@@ -21,8 +21,8 @@
 
 /*
 $Log$
-Revision 1.3  2005/01/12 13:09:01  NicJA
-tidied remaining debug output
+Revision 1.4  2005/01/13 08:59:01  NicJA
+fixed a couple more rendering issues, and corrected mouse coordinate passing from tk
 
 Revision 1.2  2005/01/12 11:11:40  NicJA
 removed extremely broken "FAST" double bufering routines for the time being - will be placed into seperate files later..
@@ -175,8 +175,6 @@ IDEAS:
 #include "macros.h"
 #include "vb.h"
 
-/* #define DEBUGPRINT */
-
 #define DEBUG 1
 #include <aros/debug.h>
 
@@ -237,12 +235,12 @@ AROSMesaCreateVisual(register struct TagItem *tagList)
           GL_FALSE,                             /* stereo */
           16,                                   /* depth_size */
           8,                                    /* stencil_size */
-          16,                                   /* accum_size */
+          8,                                   /* accum_size */
           index_bits,
           redbits, greenbits,
-          bluebits, alphabits
-          );
+          bluebits, alphabits );
 
+    if (!(v->gl_visual)) return NULL;
     return v;
 }
 
@@ -258,9 +256,13 @@ struct arosmesa_buffer *AROSMesaCreateBuffer( struct arosmesa_visual *visual,int
     
     if (!(b = (struct arosmesa_buffer *) AllocVec(sizeof(struct arosmesa_buffer),MEMF_PUBLIC|MEMF_CLEAR))) return NULL;
     
-    b->gl_buffer = gl_create_framebuffer( visual->gl_visual);
-    
     /* other stuff */
+
+    if (!(b->gl_buffer = gl_create_framebuffer( visual->gl_visual)))
+    {
+        FreeVec(b);
+        return NULL;
+    }
     
     return b;
 }
@@ -298,34 +300,32 @@ AROSMesaCreateContext(register struct TagItem *tagList)
     if (!(c = (struct arosmesa_context *) AllocVec(sizeof(struct arosmesa_context),MEMF_PUBLIC|MEMF_CLEAR)))
     {
             LastError=AMESA_OUT_OF_MEM;
-            return(NULL);
+            return NULL;
     }
 
     if(!(c->visual = (struct arosmesa_visual *)GetTagData(AMA_Visual,NULL,tagList)))
     {
         if (!(c->visual = AROSMesaCreateVisual(tagList)))
         {
+            FreeVec( c );
             LastError=AMESA_OUT_OF_MEM;
             return NULL;
         }
         c->flags=c->flags||0x1;
     }
 
-    if(!(c->buffer = (struct arosmesa_buffer *)GetTagData(AMA_Buffer,NULL,tagList)))
-    {
-        if(!(c->buffer = AROSMesaCreateBuffer( c->visual,GetTagData(AMA_WindowID,1,tagList))))
-        {
-            LastError=AMESA_OUT_OF_MEM;
-            return NULL;
-        }
-        c->flags=c->flags||0x2;
-    }
-
     c->share=(struct arosmesa_context *)GetTagData(AMA_ShareGLContext,NULL,tagList);
     struct arosmesa_context *sharetmp = c->share;
+
     c->gl_ctx = gl_create_context(  c->visual->gl_visual,
           sharetmp ? sharetmp->gl_ctx : NULL,
           (void *) c, GL_TRUE);
+
+    if (!(c->gl_ctx))
+    {
+        FreeVec( c );
+        return NULL;
+    }
 
 /*  drawMode=GetTagData(AMA_DrawMode,AMESA_AGA,tagList);  */
 /* Disabled for now .. (nicja)
@@ -339,9 +339,7 @@ D(bug("[AMESA] : AROSMesaCreateContext -> doublebuffered\n"));
         {
             if (!(arosTC_Standard_init_db(c,tagList)))
             {
-                gl_destroy_context( c->gl_ctx );
-                FreeVec( c );
-                return NULL;
+                goto amccontextclean;
             }
         }
         else
@@ -349,9 +347,7 @@ D(bug("[AMESA] : AROSMesaCreateContext -> doublebuffered\n"));
 //          if (aros8bit_Standard_init_db(c,tagList))   Not realy finished/working
             if (!(aros8bit_Standard_init(c,tagList)))
             {
-                gl_destroy_context( c->gl_ctx );
-                FreeVec( c );
-                return NULL;
+                goto amccontextclean;
             }
         }
     }
@@ -365,24 +361,35 @@ D(bug("[AMESA] : AROSMesaCreateContext -> unbuffered\n"));
         {
             if (!(arosTC_Standard_init(c,tagList)))
             {
-                gl_destroy_context( c->gl_ctx );
-                FreeVec( c );
-                return NULL;
+                goto amccontextclean;
             }
         }
         else
         {
             if (!(aros8bit_Standard_init(c,tagList)))
             {
-                gl_destroy_context( c->gl_ctx );
-                FreeVec( c );
-                return NULL;
+                goto amccontextclean;
             }
         }
     }
+  
+    if(!(c->buffer = (struct arosmesa_buffer *)GetTagData(AMA_Buffer,NULL,tagList)))
+    {
+        if(!(c->buffer = AROSMesaCreateBuffer( c->visual,GetTagData(AMA_WindowID,1,tagList))))
+        {
+            LastError=AMESA_OUT_OF_MEM;
+            goto amccontextclean;
+        }
+        c->flags=c->flags||0x2;
+    }
+ 
     if (c->gl_ctx) c->gl_ctx->Driver.UpdateState = c->InitDD;
     return c;
-  
+    
+amccontextclean:
+    gl_destroy_context( c->gl_ctx );
+    FreeVec( c );
+    return NULL;
 }
 
 void AROSMesaDestroyContext(register struct arosmesa_context *c )
@@ -410,7 +417,7 @@ void AROSMesaMakeCurrent(register struct arosmesa_context *amesa,register struct
 
         if (amesa->gl_ctx->Viewport.Width==0) {
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaMakeCurrent: call glViewport(0,0,%d,%d)", amesa->width, amesa->height));
+D(bug("[AMESA] : AROSMesaMakeCurrent: call glViewport(0,0,%d,%d)\n", amesa->width, amesa->height));
 #endif
             glViewport( 0, 0, amesa->width, amesa->height );
         }

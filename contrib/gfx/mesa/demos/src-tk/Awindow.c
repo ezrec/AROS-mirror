@@ -29,13 +29,16 @@
 /* Mesa tkAROS by Stefan Z (d94sz@efd.lth.se)*/
 
 /*$Log$
- *Revision 1.1  2005/01/11 14:58:28  NicJA
- *AROSMesa 3.0
+ *Revision 1.2  2005/01/13 08:59:00  NicJA
+ *fixed a couple more rendering issues, and corrected mouse coordinate passing from tk
  *
- *- Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- *- GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- *- Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
+/*Revision 1.1  2005/01/11 14:58:28  NicJA
+/*AROSMesa 3.0
+/*
+/*- Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
+/*- GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
+/*- Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
+/*
 /*Revision 1.3  2005/01/08 02:59:10  NicJA
 /*Fixed problems causing mesa2 to not compile/the demos to have unresolved symbols.  seperated mmafile.src into seperate files for each component.  can someone please check the mmakefile.src'c in demo and samples since they dont copy the data files as expected ..
 /*
@@ -450,7 +453,7 @@ void tkExec(void)
 						if (MouseMoveFunc) {
 							int x = msg->MouseX,y = msg->MouseY;
 							ReplyMsg((struct Message *)msg);
-							Redraw = (*MouseMoveFunc)(x,y,press);
+							Redraw = (*MouseMoveFunc)(x,(y-tkhwnd->BorderBottom),press);
 						} else
 							ReplyMsg((struct Message *)msg);
 						break;                  
@@ -475,7 +478,7 @@ void tkExec(void)
 							press=mask;
 							if (MouseDownFunc) {
 								ReplyMsg((struct Message *)msg);
-								Redraw = (*MouseDownFunc)(x,y,mask);
+								Redraw = (*MouseDownFunc)(x,(y-tkhwnd->BorderBottom),mask);
 							} else
 								ReplyMsg((struct Message *)msg);
 							}
@@ -484,7 +487,7 @@ void tkExec(void)
 							if (MouseUpFunc)
 								{
 								ReplyMsg((struct Message *)msg);
-								Redraw = (*MouseUpFunc)(x,y,mask);
+								Redraw = (*MouseUpFunc)(x,(y-tkhwnd->BorderBottom),mask);
 								} else
 								ReplyMsg((struct Message *)msg);
 							press=0;
@@ -651,14 +654,17 @@ GLenum tkInitWindow(char *title)
 						}
 
 					win.context=AROSMesaCreateContextTags(
-							AMA_DrawMode,                       AMESA_AGA,
+							AMA_DrawMode,                   AMESA_AGA,
 							AMA_Window,(unsigned long)      tkhwnd,
 							AMA_RastPort,(unsigned long)    tkhwnd->RPort,
 							AMA_Screen,(unsigned long)      tkhwnd->WScreen,
-							AMA_DoubleBuf,                      DB_Flag,
-							AMA_RGBMode,                        RGB_Flag,
-							AMA_Left,                           tkhwnd->BorderLeft,
-							AMA_Bottom,                         tkhwnd->BorderBottom+1,
+							AMA_DoubleBuf,                  DB_Flag,
+							AMA_RGBMode,                    RGB_Flag,
+
+							AMA_Left,                       tkhwnd->BorderLeft,
+							AMA_Right,                      tkhwnd->BorderRight+1,
+							AMA_Top,                        tkhwnd->BorderTop,
+							AMA_Bottom,                     tkhwnd->BorderBottom+1,
 							TAG_DONE,0);
 
 					AROSMesaMakeCurrent(win.context,win.context->buffer);
@@ -738,7 +744,7 @@ GLint tkGetColorMapSize(void)
 void tkGetMouseLoc(int *x, int *y)
 {
 	*x = tkhwnd->MouseX;
-	*y = tkhwnd->MouseY;
+	*y = (tkhwnd->MouseY - tkhwnd->BorderBottom);
 }
 
 

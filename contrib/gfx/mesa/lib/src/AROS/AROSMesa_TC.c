@@ -21,6 +21,9 @@
 
 /*
 $Log$
+Revision 1.4  2005/01/13 08:59:01  NicJA
+fixed a couple more rendering issues, and corrected mouse coordinate passing from tk
+
 Revision 1.3  2005/01/12 13:09:01  NicJA
 tidied remaining debug output
 
@@ -122,8 +125,9 @@ extern struct Library*  CyberGfxBase;
 
 #define MAX_POLYGON 300
 
-#define TC_RGBA(r,g,b,a) ((((((a<<8)|r)<<8)|g)<<8)|b)
-
+#define         TC_RGBA(r,g,b,a)                ((((((a<<8)|r)<<8)|g)<<8)|b)
+#define         PACK_8B8G8R( R, G, B )          ( ((B) << 16) | ((G) << 8) | (R) )
+//#define       PACK_8A8B8G8R( R, G, B, A ) 
 #define DEBUG 1
 #include <aros/debug.h>
 
@@ -190,7 +194,7 @@ static void arosTC_clear_color( GLcontext *ctx,
 {
 #warning TODO: Free pen color if not used
     AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    amesa->clearpixel=TC_RGBA(r,g,b,a);
+    amesa->clearpixel = TC_RGBA(r,g,b,a);
 #ifdef DEBUGPRINT
 D(bug("[AMESA:TC] : arosTC_clear_color(c=%x,r=%d,g=%d,b=%d,a=%d) = %x\n",ctx, r, g, b, a, amesa->clearpixel));
 #endif
@@ -291,7 +295,6 @@ D(bug("[AMESA:TC] : arosTC_fast_points_function(f:%d, l:%d)\n", first, last));
         /* draw all points using the current color (set_color) */
 /*      D(bug("[AMESA:TC] : VB->MonoColor\n"));*/
         for (i=first;i<=last;i++) {
-
            if (VB->ClipMask[i]==0) {
                 /* compute window coordinate */
                 int x, y;
@@ -401,21 +404,30 @@ D(bug("[AMESA:TC] : arosTC_write_ci32_span(n:%d,x:%d,y:%d)\n",n,x,y));
                 *dp = penconv[index[i]];dp++;
             } else {
                 if(ant)
-D(bug("[AMESA:TC] : arosTC_write_index_span: WritePixelArray()\n"));
+                {
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : arosTC_write_ci32_span: WritePixelArray()\n"));
+#endif
                     WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
-                dp=(ULONG*)amesa->imageline;
-                ant=0;
-                x++;
+                    dp=(ULONG*)amesa->imageline;
+                    x=x+ant;
+                    ant=0;
+                }
+                else x++;
             }
         }
         if(ant)
-D(bug("[AMESA:TC] : arosTC_write_index_span: WritePixelArray()\n"));
+        {
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : arosTC_write_ci32_span: WritePixelArray()\n"));
+#endif
             WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
+        }
 
     } else {            /* Slower */
-            for (i=0;i<n;i++,x++) {
-                if (mask[i]) {
-                 /* draw pixel (x[i],y[i]) using index[i] */
+        for (i=0;i<n;i++,x++) {
+            if (mask[i]) {
+                /* draw pixel (x[i],y[i]) using index[i] */
                 WriteRGBPixel(rp,x,y,penconv[index[i]]);
             }
         }
@@ -452,21 +464,30 @@ D(bug("[AMESA:TC] : arosTC_write_ci8_span(n:%d,x:%d,y:%d)\n",n,x,y));
                 *dp = penconv[index[i]];dp++;
             } else {
                 if(ant)
-D(bug("[AMESA:TC] : arosTC_write_index_span: WritePixelArray()\n"));
+                {
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : arosTC_write_ci8_span: WritePixelArray()\n"));
+#endif
                     WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
-                dp=(ULONG*)amesa->imageline;
-                ant=0;
-                x++;
+                    dp=(ULONG*)amesa->imageline;
+                    x=x+ant;
+                    ant=0;
+                }
+                else x++;
             }
         }
         if(ant)
-D(bug("[AMESA:TC] : arosTC_write_index_span: WritePixelArray()\n"));
+        {
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : arosTC_write_ci8_span: WritePixelArray()\n"));
+#endif
             WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
+        }
 
     } else {            /* Slower */
-            for (i=0;i<n;i++,x++) {
-                if (mask[i]) {
-                 /* draw pixel (x[i],y[i]) using index[i] */
+        for (i=0;i<n;i++,x++) {
+            if (mask[i]) {
+                /* draw pixel (x[i],y[i]) using index[i] */
                 WriteRGBPixel(rp,x,y,penconv[index[i]]);
             }
         }
@@ -486,7 +507,7 @@ static void arosTC_write_rgba_span( const GLcontext *ctx, GLuint n, GLint x, GLi
     x=FIXx(x);
 
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_write_color_span(ant=%d,x=%d,y=%d)",n,x,y));
+D(bug("[AMESA:TC] : arosTC_write_rgba_span(ant=%d,x=%d,y=%d)",n,x,y));
 #endif
 
     if((dp = (ULONG*)amesa->imageline))
@@ -512,19 +533,19 @@ D(bug("mask\n"));
                     if(ant)
                     {
                         WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
-/*D(bug("[AMESA:TC] : WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
+/*D(bug("[AMESA:TC] : arosTC_write_rgba_span: WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
                         dp=(ULONG*)amesa->imageline;
-                        ant=0;
                         x=x+ant;
+                        ant=0;
                     }
-                    x++;
+                    else x++;
                 }
             }
 
             if(ant)
             {
                 WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
-/*D(bug("[AMESA:TC] : WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
+/*D(bug("[AMESA:TC] : arosTC_write_rgba_span: WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
             }
         }
         else
@@ -616,10 +637,10 @@ D(bug("mask\n"));
                         WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
 /*D(bug("[AMESA:TC] : WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
                         dp=(ULONG*)amesa->imageline;
-                        ant=0;
                         x=x+ant;
+                        ant=0;
                     }
-                    x++;
+                    else x++;
                 }
             }
 
@@ -773,14 +794,12 @@ D(bug("[AMESA:TC] : arosTC_read_ci32_span>>\n"));
     y=FIXy(y);
     x=FIXx(x);
 
-    /* Currently this is wrong ARGB-values are NO indexes !!!*/
+    /* Currently this is wrong ARGB-values are NOT indexes !!!*/
     if(amesa->imageline) {
         ReadPixelArray(amesa->imageline,0,0,4*n,amesa->rp,x,y,n,1,RECTFMT_ARGB);
-        for(i=0; i<n; i++)
-            index[i]=((ULONG*)amesa->imageline)[i];
+        for(i=0; i<n; i++) index[i]=((ULONG*)amesa->imageline)[i];
     } else {
-        for (i=0; i<n; i++,x++)
-            index[i] = ReadRGBPixel(amesa->rp,x,y);
+        for (i=0; i<n; i++,x++) index[i] = ReadRGBPixel(amesa->rp,x,y);
     }
 }
 
@@ -812,7 +831,7 @@ D(bug("[AMESA:TC] : arosTC_read_color_span>>\n"));
             rgba[i][RCOMP] = (col & 0xff0000)>>16;
             rgba[i][GCOMP] = (col & 0xff00)>>8;
             rgba[i][BCOMP] = col & 0xff;
-            rgba[i][ACOMP] = (col & 0xff000000)>>24;
+            rgba[i][ACOMP] = 255;
         }
     } else
         for (i=0; i<n; i++, x++) {
@@ -820,8 +839,8 @@ D(bug("[AMESA:TC] : arosTC_read_color_span>>\n"));
             rgba[i][RCOMP] = (col & 0xff0000)>>16;
             rgba[i][GCOMP] = (col & 0xff00)>>8;
             rgba[i][BCOMP] = col & 0xff;
-            rgba[i][ACOMP] = (col & 0xff000000)>>24;
-            }
+            rgba[i][ACOMP] = 255;
+        }
 }
 
 /**********************************************************************/
@@ -965,7 +984,7 @@ D(bug("[AMESA:TC] : arosTC_read_rgba_pixels-\n"));
             rgba[i][RCOMP] = (col&0xff0000)>>16;
             rgba[i][GCOMP] = (col&0xff00)>>8;
             rgba[i][BCOMP] = col&0xff;
-            rgba[i][ACOMP] = (col&0xff000000)>>24;
+            rgba[i][ACOMP] = 255;
         }
     }
 }
@@ -1098,16 +1117,16 @@ arosTC_Standard_resize( GLcontext *ctx,GLuint *width, GLuint *height)
     *width=amesa->width;
     *height=amesa->height;
 
-    if(!((  amesa->width  == (amesa->front_rp->Layer->bounds.MaxX-amesa->front_rp->Layer->bounds.MinX-amesa->left) )
-    &&  ( amesa->height == (amesa->front_rp->Layer->bounds.MaxY-amesa->front_rp->Layer->bounds.MinY-amesa->bottom)  )))
+    if(!((  amesa->width  == (amesa->front_rp->Layer->bounds.MaxX-amesa->front_rp->Layer->bounds.MinX-amesa->left-amesa->right) )
+    &&  ( amesa->height == (amesa->front_rp->Layer->bounds.MaxY-amesa->front_rp->Layer->bounds.MinY-amesa->bottom-amesa->top)  )))
     {
         FreeOneLine(amesa);
 
         amesa->FixedWidth =amesa->RealWidth =amesa->front_rp->Layer->bounds.MaxX-amesa->front_rp->Layer->bounds.MinX;
         amesa->FixedHeight=amesa->RealHeight=amesa->front_rp->Layer->bounds.MaxY-amesa->front_rp->Layer->bounds.MinY;
 
-        *width=amesa->width = amesa->RealWidth-amesa->left;
-        *height=amesa->height = amesa->RealHeight-amesa->bottom;
+        *width=amesa->width = amesa->RealWidth-amesa->left-amesa->right;
+        *height=amesa->height = amesa->RealHeight-amesa->bottom-amesa->top;
         amesa->depth = GetCyberMapAttr(amesa->front_rp->BitMap,CYBRMATTR_DEPTH);
 
         if (amesa->visual->db_flag)
@@ -1116,9 +1135,8 @@ arosTC_Standard_resize( GLcontext *ctx,GLuint *width, GLuint *height)
             if((amesa->back_rp = make_rastport(amesa->RealWidth,amesa->RealHeight,amesa->depth,amesa->rp->BitMap))==NULL) {
                 amesa->rp = amesa->front_rp;
                 printf("AROSMesa Error : To little mem free. Couldn't allocate Dubblebuffer in this size.\n");
-            } else {
-                amesa->rp=amesa->back_rp;
             }
+            else amesa->rp=amesa->back_rp;
         }
 
         AllocOneLine(amesa);
@@ -1174,14 +1192,16 @@ D(bug("[AMESA:TC] : arosTC_Standard_init(amctx=%x,taglist=%x)\n",c,tagList));
     c->FixedHeight=c->RealHeight=c->rp->Layer->bounds.MaxY-c->rp->Layer->bounds.MinY;
 
     c->left = GetTagData(AMA_Left,0,tagList);
-    c->bottom= GetTagData(AMA_Bottom,0,tagList);
+    c->right = GetTagData(AMA_Right,0,tagList);
+    c->top = GetTagData(AMA_Top,0,tagList);
+    c->bottom = GetTagData(AMA_Bottom,0,tagList);
 
     c->front_rp =c->rp;
     c->back_rp=NULL;
 /*  c->rp = c->front_rp;*/
 
-    c->width = GetTagData(AMA_Width,c->RealWidth-c->left,tagList);
-    c->height= GetTagData(AMA_Height,c->RealHeight-c->bottom,tagList);
+    c->width = GetTagData(AMA_Width,c->RealWidth - c->left - c->right,tagList);
+    c->height= GetTagData(AMA_Height,c->RealHeight - c->top - c->bottom,tagList);
 
     if (CyberGfxBase!=NULL && IsCyberModeID(GetVPModeID(&c->Screen->ViewPort)))
     {
@@ -1205,7 +1225,7 @@ D(bug("[AMESA:TC] : arosTC_Standard_init(amctx=%x,taglist=%x)\n",c,tagList));
     if (c->visual->db_flag==GL_TRUE)
     {
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : Doublebuff inside arosTC_Standard_init"));
+D(bug("[AMESA:TC] : Doublebuff inside arosTC_Standard_init\n"));
 #endif
         if((c->back_rp = make_rastport(c->RealWidth,c->RealHeight,c->depth, c->rp->BitMap))!=NULL)
         {
@@ -1243,8 +1263,10 @@ D(bug("[AMESA:TC] : Doublebuff inside arosTC_Standard_init"));
     printf("c->RealHeight=%d\n",c->RealHeight);
     printf("c->width =%d\n",c->width);
     printf("c->height=%d\n",c->height);
-    printf("c->left  =%d\n",c->left);
-    printf("c->bottom=%d\n",c->bottom);
+    printf("c->left:%d, ",c->left);
+    printf("c->right:%d, ",c->right);
+    printf("c->top:%d, ",c->top);
+    printf("c->bottom:%d\n",c->bottom);
     printf("c->depth =%d\n",c->depth);
 #endif
 

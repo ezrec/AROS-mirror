@@ -1201,7 +1201,7 @@ struct RastPort *make_rastport( int width, int height, int depth, struct BitMap 
     
     if ((bm=AllocBitMap(width,height,depth,BMF_CLEAR|BMF_INTERLEAVED,friendbm)))
     {
-        if ((rp = (struct RastPort *) malloc( sizeof(struct RastPort))))
+        if ((rp = (struct RastPort *) AllocVec( sizeof(struct RastPort),MEMF_CLEAR|MEMF_PUBLIC)))
         {
             InitRastPort( rp );
             rp->BitMap = bm;
@@ -1224,7 +1224,7 @@ void destroy_rastport( struct RastPort *rp )
 {
     WaitBlit();
     FreeBitMap( rp->BitMap );
-    free( rp );
+    FreeVec( rp );
 }
 
 /* 
@@ -1378,16 +1378,16 @@ aros8bit_Standard_resize( GLcontext *ctx,GLuint *width, GLuint *height)
     *width=amesa->width;
     *height=amesa->height;
 
-    if(!((  amesa->width  == (amesa->front_rp->Layer->bounds.MaxX-amesa->front_rp->Layer->bounds.MinX-amesa->left) ) 
-    &&  ( amesa->height == (amesa->front_rp->Layer->bounds.MaxY-amesa->front_rp->Layer->bounds.MinY-amesa->bottom)  )))
+    if(!((  amesa->width  == (amesa->front_rp->Layer->bounds.MaxX-amesa->front_rp->Layer->bounds.MinX-amesa->left-amesa->right) ) 
+    &&  ( amesa->height == (amesa->front_rp->Layer->bounds.MaxY-amesa->front_rp->Layer->bounds.MinY-amesa->bottom-amesa->top)  )))
     {
         FreeOneLine(amesa);
     
         amesa->FixedWidth =amesa->RealWidth =amesa->front_rp->Layer->bounds.MaxX-amesa->front_rp->Layer->bounds.MinX;
         amesa->FixedHeight=amesa->RealHeight=amesa->front_rp->Layer->bounds.MaxY-amesa->front_rp->Layer->bounds.MinY;
     
-        *width=amesa->width = amesa->RealWidth-amesa->left;
-        *height=amesa->height = amesa->RealHeight-amesa->bottom;
+        *width=amesa->width = amesa->RealWidth-amesa->left-amesa->right;
+        *height=amesa->height = amesa->RealHeight-amesa->bottom-amesa->top;
         amesa->depth = GetBitMapAttr(amesa->front_rp->BitMap,BMA_DEPTH);
     
         destroy_temp_raster( amesa->rp); /* deallocate temp raster */
@@ -1396,15 +1396,12 @@ aros8bit_Standard_resize( GLcontext *ctx,GLuint *width, GLuint *height)
         free_temp_rastport(amesa);
     
         if (amesa->visual->db_flag) {
-            if (amesa->back_rp) {   /* Free double buffer */
-                destroy_rastport(amesa->back_rp);
-            }
+            if (amesa->back_rp) destroy_rastport(amesa->back_rp);/* Free double buffer */
             if((amesa->back_rp = make_rastport(amesa->RealWidth,amesa->RealHeight,amesa->depth,amesa->rp->BitMap))==NULL) {
                 amesa->rp = amesa->front_rp;
                 printf("To little mem free. Couldn't allocate Dubblebuffer in this size.\n");
-            } else {
-                amesa->rp=amesa->back_rp;
             }
+            else amesa->rp=amesa->back_rp;
         }
     
         if(!make_temp_raster( amesa->rp )) printf("Error allocating TmpRasterPort\n");
@@ -1511,20 +1508,22 @@ D(bug("[AMESA:8bit] : aros8bit_Standard_init\n"));
     c->FixedWidth =c->RealWidth =c->rp->Layer->bounds.MaxX-c->rp->Layer->bounds.MinX;
     c->FixedHeight=c->RealHeight=c->rp->Layer->bounds.MaxY-c->rp->Layer->bounds.MinY;
 
-    c->left	= GetTagData(AMA_Left,0,tagList);
-    c->bottom= GetTagData(AMA_Bottom,0,tagList);
+    c->left = GetTagData(AMA_Left,0,tagList);
+    c->right = GetTagData(AMA_Right,0,tagList);
+    c->top = GetTagData(AMA_Top,0,tagList);
+    c->bottom = GetTagData(AMA_Bottom,0,tagList);
 
     c->front_rp =c->rp;
     c->back_rp=NULL;
-/*	c->rp = c->front_rp; */
+/*  c->rp = c->front_rp; */
 
-    c->width = GetTagData(AMA_Width,c->RealWidth-c->left,tagList);
-    c->height= GetTagData(AMA_Height,c->RealHeight-c->bottom,tagList);
+    c->width = GetTagData(AMA_Width,c->RealWidth - c->left - c->right,tagList);
+    c->height= GetTagData(AMA_Height,c->RealHeight - c->top - c->bottom,tagList);
 
     c->depth = GetBitMapAttr(c->rp->BitMap,BMA_DEPTH);
 
-/*	c->gl_ctx->BufferWidth = c->width; */
-/*	c->gl_ctx->BufferHeight = c->height; */
+/*  c->gl_ctx->BufferWidth = c->width; */
+/*  c->gl_ctx->BufferHeight = c->height; */
 
     c->pixel = 0;	/* current drawing pen */
 
