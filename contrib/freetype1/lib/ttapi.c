@@ -221,7 +221,7 @@
 
   EXPORT_FUNC
   TT_Error  TT_Set_Raster_Gray_Palette( TT_Engine  engine,
-                                        Byte*      palette )
+                                        TT_Byte*      palette )
   {
     int  i;
 
