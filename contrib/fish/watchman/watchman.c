@@ -18,12 +18,19 @@
 /* Figure out the #includes for yourself - or use the trick... */
 
 #include <aros/oldprograms.h>
+#include <aros/machine.h>
 #include <exec/memory.h>
 
 #define Lx 29		/* The eyes offset from upper left corner */
 #define Ly 49
 #define Rx 49
 #define Ry 46
+
+#if (AROS_BIG_ENDIAN == 0)
+#   define CONV_WORD(x) (((x) >> 8) | ((x) << 8))
+#else
+#   define CONV_WORD(x) x
+#endif
 
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
@@ -272,7 +279,8 @@ void OpenStuff () {
         if ((Eyemap_chip = AllocMem((LONG)sizeof(Eyemap),MEMF_CHIP))== 0) 
         	CloseStuff (1);   /* allocate chip memory for images */
         for (i=0 ; i < 4 ;i++) {
-                Eyemap_chip[i] = Eyemap[i];
+		/* Do endian conversion */
+                Eyemap_chip[i] = CONV_WORD(Eyemap[i]);
         }
         if ((Manmap_chip[0] = AllocMem((LONG)sizeof(Manmap[0]),MEMF_CHIP)) == NULL)
              CloseStuff (1);
@@ -280,12 +288,15 @@ void OpenStuff () {
              CloseStuff (1);
 
         for (i=0 ; i < 528 ;i++) {
-                Manmap_chip[0][i] = Manmap[0][i];
-                Manmap_chip[1][i] = Manmap[1][i];
+		
+		/* Do endian conversion */
+                Manmap_chip[0][i] = CONV_WORD(Manmap[0][i]);
+                Manmap_chip[1][i] = CONV_WORD(Manmap[1][i]);
         }
         SetAPen(win->RPort, 1L);
         SetDrMd(win->RPort, JAM1);
         BltTemplate(Manmap_chip[0], 0L, 12L, win->RPort, 0L, 0L, 88L, 88L);
+
         SetAPen(win->RPort, 2L);
 	SetWriteMask(win->RPort, 2L);       /* Braindead COMPLEMENT */
         BltTemplate(Manmap_chip[1], 0L, 12L, win->RPort, 0L, 0L, 88L, 88L);
@@ -389,6 +400,7 @@ main ()
                 }
             }
         }
+	
         GetRelMp(&Mx, &My);                      /* Action ! */
         if (LastL != (NewL = index(Mx - Lx, My - Ly))) {
             DrawEye(LastL, Lx, Ly, 0);
