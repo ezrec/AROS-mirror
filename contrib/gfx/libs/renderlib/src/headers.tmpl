@@ -45,3 +45,9 @@ void	MixAlphaChannel(ULONG *, ULONG *, UWORD, UWORD, ULONG *, Tag, ... );
 void	TintRGBArray(ULONG *, UWORD, UWORD, ULONG, UWORD, ULONG *, Tag, ... );
 
 ##end clib
+
+##begin proto
+#ifndef RenderBase
+  extern struct Library *RenderBase;
+#endif
+##end proto
