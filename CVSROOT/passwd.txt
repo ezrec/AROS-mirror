@@ -113,5 +113,6 @@ ron72:5sy9OE/Bv.VQQ:Ronny Loken:ronny@loken.as:
 johnboy:ca3a6vTDYIMrk:Joerg Dietrich:Dietrich_Joerg@t-online.de:
 catull:lbmA8NEO1TBIU:Carlo Dapor:carlo@vis.ethz.ch:
 alholzhey:ccy6Goxoq1BHc:Alexandre L. Holzhey:alhbr@terra.com.br:
+ksvalast:adMlRxsmsLZJ6:Kjetil Svalastog Matheussen:ksvalast@student.matnat.uio.no:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
