@@ -141,6 +141,7 @@ struct DiskSpeedConfig_Intern diskspeedmui_config;
 #include <string.h>
 #include <stdio.h>
 
+#undef DEBUG
 #define DEBUG 1
 #   include <aros/debug.h>
 
