@@ -1,6 +1,6 @@
 #   $Id$
 #
-#   Makefile to make FileMaster.
+#   Makefile to make BwBASIC.
 
 include $(TOP)/config/make.cfg
 
