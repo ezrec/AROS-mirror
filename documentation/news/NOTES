@@ -31,6 +31,14 @@ brackets ("[]").
 200304??:
  <next day here>
 
+20030419:
+
++ Reworked diskfont.library with several fixes [verhaegs]
++ Fixed bug in Locale Prefs which caused random crashes in i386-pc [stegerg]
++ Repository cleanups. GRUB, libjpeg, jpeg.datatype, libbz2 and JanoEditor 
+  moved from contrib to main tree while liblcc moved from main tree to contrib 
+  [digulla,chodorowski]
+
 20030414:
 
 + AHI ported partly [Martin Blom]
