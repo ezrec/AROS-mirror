@@ -115,12 +115,11 @@ __ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
 IRC channels
 ============
 
-There is also an official IRC channel for AROS, which is situated on EFnet_ and
-is called #aros. It's administered by Ola "4pLaY" Jensen. There is also
-a developer-only channel, but you need to contact some other developer or 4pLaY
-to get access to it. Just send him a private message when you're online (his
-exact nick is "``_4pLaY_``" or sometimes "``|4|AWAY``" when he's not really in
-front of the computer).
+There is also an official IRC channel for AROS, which is situated on FreeNode_
+and is called #aros. It's administered by Ola "4pLaY" Jensen. There is also
+a developer-only channel, but you need to contact some other developer or 
+4pLaY to get access to it. Just send him a private message when you're online
+(his exact nick is "``_4pLaY_``" or sometimes "``|4|AWAY``" when he's not 
+really in front of the computer).
 
-.. _EFnet: http://www.efnet.org/
-
+.. _FreeNode: http://www.freenode.net/
