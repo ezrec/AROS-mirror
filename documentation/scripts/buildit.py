@@ -91,7 +91,7 @@ def processPicture( src, depth ):
     # Create the thumbnail.
     if newer( [ src_abs ], tn_dst_abs ):
         print '» Thumbnailing', src
-        makeThumbnail( src_abs, tn_dst_abs, (320, 256) )
+        makeThumbnail( src_abs, tn_dst_abs, (200, 200) )
 
 
 def makePictures():
@@ -317,6 +317,7 @@ def buildWWW():
 
     copy \
     ( [
+        'images/aros-banner.gif',
         'images/trustec.png',
         'images/sourceforge.png',
         'images/amigados-online-reference-manual.png',
