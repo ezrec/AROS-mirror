@@ -6,6 +6,8 @@ LIB :=	www2
 USER_CFLAGS := $(USER_CFLAGS) -DUSE_DIRENT
 
 FILES := \
+	aros_tcphack \
+	HTAABrow \
 	HTAAUtil \
 	HTAccess \
 	HTAlert \
@@ -15,7 +17,6 @@ FILES := \
 	HTChunk \
 	HTCompressed \
 	HTFile \
-	HTFTP \
 	HTFWriter \
 	HTFormat \
 	HTGopher \
@@ -33,6 +34,7 @@ FILES := \
 	HTPlain \
 	HTSort \
 	HTString \
+	HTTCP \
 	HTTP \
 	HTTelnet \
 	HTUU \
@@ -42,8 +44,8 @@ FILES := \
 	SGML
 
 # These files don't compile yet:
-#	HTTCP
-#	HTFile
+# Don't use these:
+#	HTFTP \
 
 #MM- linklibs : linklib-www2
 

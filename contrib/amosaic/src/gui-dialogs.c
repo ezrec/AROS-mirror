@@ -214,7 +214,7 @@ mo_status mo_post_save_window (mo_window *win)
 #ifdef HAVE_GETCD
 		else getcd(0, default_save_dir);
 #else
-#warning This is definately buggy!
+#warning This is definitely buggy!
 		else getcwd(default_save_dir,1024);
 #endif
 	}
@@ -245,7 +245,7 @@ mo_status mo_post_savebinary_window (mo_window *win)
 #ifdef HAVE_GETCD
 		else getcd(0, default_save_dir);
 #else
-#warning This is definately buggy!
+#warning This is definitely buggy!
 		else getcwd(default_save_dir,1024);
 #endif
 	}

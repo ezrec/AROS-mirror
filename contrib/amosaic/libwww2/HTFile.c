@@ -969,8 +969,10 @@ forget_multi:
 
 	    while (dirbuf = readdir(dp)) {
 			/* while there are directory entries to be read */
+#ifndef __AROS__
 		if (dirbuf->d_ino == 0) continue;
 				/* if the entry is not being used, skip it */
+#endif
 
 		if (!strncmp(dirbuf->d_name, base, baselen)) {
 		    HTFormat rep = HTFileFormat(dirbuf->d_name, &encoding,
@@ -1287,7 +1289,11 @@ open_file:
 /*	Now, as transparently mounted access has failed, we try FTP.
 */
   suicide:
+#ifndef __AROS__
     return HTFTPLoad(addr, anchor, format_out, sink);
+#else
+    return 0;
+#endif
 }
 
 /*		Protocol descriptors

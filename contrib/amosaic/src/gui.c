@@ -1728,6 +1728,7 @@ void amiga_load_prefs(void)
 
   Rdata.use_global_history = TRUE;
   Rdata.track_visited_anchors = TRUE;
+#ifndef __AROS__
   Rdata.font = "times/13";
   Rdata.boldfont = "times/13/bold";
   Rdata.italicfont = "times/13/italic";
@@ -1741,6 +1742,21 @@ void amiga_load_prefs(void)
   Rdata.addressfont = "times/13/italic";
   Rdata.listingfont = "courier/11";
   Rdata.plainfont = "courier/11";
+#else
+  Rdata.font = "arial/13";
+  Rdata.boldfont = "arial/13/bold";
+  Rdata.italicfont = "arial/13/italic";
+  Rdata.h1font = "arial/24";
+  Rdata.h2font = "arial/18";
+  Rdata.h3font = "arial/15";
+  Rdata.h4font = "arial/13";
+  Rdata.h5font = "arial/11";
+  Rdata.h6font = "arial/11";
+  Rdata.fixedfont = "courier/13";
+  Rdata.addressfont = "arial/13/italic";
+  Rdata.listingfont = "courier/11";
+  Rdata.plainfont = "courier/11";
+#endif
   Rdata.home_document = "http://www.omnipresence.com/amosaic/2.0/";
   Rdata.use_global_history = True;
   Rdata.display_urls_not_titles = False;

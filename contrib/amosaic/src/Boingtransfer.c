@@ -255,10 +255,14 @@ void __regargs CalculateBoingBall(struct BoingTransferClData *data,Object *obj)
     AreaEnd(&data->MaskRP);
 
     for(i=0;i<FRAMES;i++)
+    {
       DrawBoingBall(&data->RP[i],data->Radius,data,obj,i,data->RedPen,data->WhitePen);
+    }
   }
   else
+  {
     FreeBitMaps(data);
+  }
 }
 ///
 ///BoingTransferAskMinMax

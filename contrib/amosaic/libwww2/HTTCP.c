@@ -328,6 +328,7 @@ struct in_addr SOCKS_ftpsrv;
 
 PUBLIC int HTDoConnect (char *url, char *protocol, int default_port, int *s)
 {
+#ifndef __AROS__
 #ifndef _DNET
   struct sockaddr_in soc_address;
   struct sockaddr_in *sin = &soc_address;
@@ -604,9 +605,10 @@ PUBLIC int HTDoConnect (char *url, char *protocol, int default_port, int *s)
   }
   return 0;
 #endif
+#endif
 }
 
-#if !defined(_AMIGA) && !defined(_AROS)
+#if !defined(_AMIGA)
 /* This is so interruptible reads can be implemented cleanly. */
 int HTDoRead (int fildes, void *buf, unsigned nbyte)
 {
