@@ -1,0 +1,11 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup Package-Shutdown
+
+#MM contrib-zune-classes-toolbar-startup :
+
+#MM- contrib-zune-classes-toolbar      : contrib-zune-classes-toolbar-startup
+
+%copy_files_q dst=$(CONTRIBDIR)/MCC_Toolbar/S maketarget=contrib-zune-classes-toolbar-startup
+
