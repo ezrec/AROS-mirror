@@ -8,6 +8,10 @@ struct IntuiMessage *msg;
 
 ULONG iflags;
 
+#define StopMsg() ModifyIDCMP(Window,0L)
+#define ContMsg() ModifyIDCMP(Window,iflags)
+#define LoescheWin() EraseRect(rp,0,0,Window->Width-5,Window->Height-11)
+
 void open_lib()
 {
   IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library",0L);
@@ -19,6 +23,7 @@ struct NewWindow NeuesFenster;
 {
   Window = (struct Window *) OpenWindow(&NeuesFenster);
   rp=Window->RPort;
+  iflags=Window->IDCMPFlags;
   ActivateWindow(Window);
 }
 
@@ -44,12 +49,6 @@ SetAPen(rp,1);
   Draw(rp,x1,y2);
 }
 
-void LoescheWin()
-{
-SetAPen(rp,0);
-  RectFill(rp,0,0,Window->Width-5,Window->Height-11);
-}
-
 /* AROS unimplemented
 void copypic(x1,y1,dx,dy,x2,y2)
 {
@@ -66,17 +65,6 @@ SHORT altx,alty;
   Win->LeftEdge=10;
   Win->TopEdge=10;
   SizeWindow(Win,x-altx,y-alty);
-}
-
-void StopMsg()
-{
-  iflags=Window->IDCMPFlags;
-  ModifyIDCMP(Window,(ULONG)NULL);
-}
-
-void ContMsg()
-{
-  ModifyIDCMP(Window,iflags);
 }
 
 void schliessewindow()

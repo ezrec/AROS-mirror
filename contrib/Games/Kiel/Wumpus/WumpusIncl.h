@@ -13,6 +13,7 @@ USHORT code;
 #define random(max) ((rand()%max)+1)
 #define StopMsg() ModifyIDCMP(Window,0L)
 #define ContMsg() ModifyIDCMP(Window,iflags)
+#define clear_win() EraseRect(rp,0,0,Window->Width-5,Window->Height-11)
 
 void open_lib()
 {
@@ -50,12 +51,6 @@ SHORT x1,y1,x2,y2;
   Move(rp,x2,y1);
   Draw(rp,x2,y2);
   Draw(rp,x1,y2);
-}
-
-void clear_win()
-{
-  SetAPen(rp,0);
-  RectFill(rp,0,0,Window->Width-5,Window->Height-11);
 }
 
 void close_window()

@@ -117,7 +117,7 @@ void open_window()
   iflags=Window->IDCMPFlags;
 }
 
-#define StopMsg() ModifyIDCMP(Window,(ULONG)NULL)
+#define StopMsg() ModifyIDCMP(Window,0L)
 #define ContMsg() ModifyIDCMP(Window,iflags)
 
 void close_window()
