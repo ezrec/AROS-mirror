@@ -10,7 +10,7 @@ Tobias Seiler made PC keyboards working no matter if is connected
 to the aux (PS/2) port or not and no matter if there is mouse connected
 or not.
 
-Stefan Berger fixed a bug in DiskObjIO() and CloseWindowSafely() in
+Georg Steger fixed a bug in DiskObjIO() and CloseWindowSafely() in
 reqtools and asl.
 
 Sebastian Heutling improved the HDToolBox tool and fixed a couple of bugs
