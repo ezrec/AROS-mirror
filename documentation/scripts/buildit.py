@@ -92,7 +92,12 @@ def processPicture( src, depth ):
 
 
 def makePictures():
-    DIRECTORIES = [ 'pictures/developers', 'pictures/screenshots' ]
+    DIRECTORIES = \
+    [ 
+        'pictures/developers', 
+        'pictures/developers-together', 
+        'pictures/screenshots' 
+    ]
     
     for path in DIRECTORIES:
         recurse( processPicture, path ) 
@@ -273,8 +278,8 @@ def buildWWW():
     imagepath = os.path.join( DSTROOT, 'images' ) 
     makedir( imagepath )
 
-    copy
-    ( [ \
+    copy \
+    ( [
         'images/trustec.png',
         'images/sourceforge.png',
         'images/amigados-online-reference-manual.png',
@@ -290,8 +295,8 @@ def buildWWW():
     toolpath = os.path.join( DSTROOT, 'tools' )
     makedir( toolpath )
 
-    copy 
-    ( [ \
+    copy \
+    ( [ 
         'targets/www/tools/password.html',
         'targets/www/tools/password.php', 
         'targets/www/tools/redirect.php' 
