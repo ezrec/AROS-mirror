@@ -803,6 +803,7 @@
    streng *arexx_compress( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_trim( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_upper( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 );
 
 /*
  ******************************************************************************

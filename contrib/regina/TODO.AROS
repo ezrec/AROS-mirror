@@ -15,7 +15,7 @@
   - GETSPACE
   - IMPORT
   - PRAGMA
-  - RANDU
+  - RANDU: Settings for number accuracy not handled yet.
   - REMLIB
   - SETCLIP
   - SHOW

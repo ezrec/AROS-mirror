@@ -96,6 +96,7 @@
 #define arexx_eof                    __regina_arexx_eof
 #define arexx_hash                   __regina_arexx_hash
 #define arexx_open                   __regina_arexx_open
+#define arexx_randu                  __regina_arexx_randu
 #define arexx_readch                 __regina_arexx_readch
 #define arexx_readln                 __regina_arexx_readln
 #define arexx_seek                   __regina_arexx_seek

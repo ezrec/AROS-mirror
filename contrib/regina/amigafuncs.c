@@ -26,6 +26,28 @@ typedef struct _amiga_tsd_t {
   proclevel amilevel;
 } amiga_tsd_t;
 
+
+/* Init amiga specific thread data, this function is called during initialisation
+ * of the thread specific data
+ */
+int init_amigaf ( tsd_t *TSD )
+{
+  amiga_tsd_t *atsd = MallocTSD( sizeof(amiga_tsd_t) );
+  
+  if (atsd==NULL) return 0;
+
+  /* Allocate later because systeminfo is not initialized at the moment */
+  atsd->amilevel = NULL;
+  TSD->ami_tsd = (void *)atsd;
+
+  return 1;
+}
+
+
+/*
+ * Support functions for the ARexx IO functions
+ */
+/* setamilevel will change the environment to the variables used for open files */
 static proclevel setamilevel( tsd_t *TSD )
 {
   amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
@@ -41,6 +63,8 @@ static proclevel setamilevel( tsd_t *TSD )
   return oldlevel;
 }
 
+
+/* getfile will return the FILE pointer of given name */
 static FILE *getfile( tsd_t *TSD, const streng *name )
 {
   proclevel oldlevel = setamilevel( TSD );
@@ -61,6 +85,8 @@ static FILE *getfile( tsd_t *TSD, const streng *name )
   return file;
 }
 
+
+/* addfile: store the FILE pointer in a given name */
 static void addfile( tsd_t *TSD, const streng *name, FILE *file )
 {
   proclevel oldlevel = setamilevel( TSD );
@@ -74,6 +100,8 @@ static void addfile( tsd_t *TSD, const streng *name, FILE *file )
   TSD->currlevel = oldlevel;
 }
 
+
+/* rmfile: remove a given of open files list */
 static void rmfile( tsd_t *TSD, const streng *name )
 {
   amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
@@ -86,21 +114,12 @@ static void rmfile( tsd_t *TSD, const streng *name )
   TSD->currlevel = oldlevel;
 }
 
-/* Init amiga specific thread data */
-int init_amigaf ( tsd_t *TSD )
-{
-  amiga_tsd_t *atsd = MallocTSD( sizeof(amiga_tsd_t) );
-  
-  if (atsd==NULL) return 0;
 
-  /* Allocate later because systeminfo is not initialized at the moment */
-  atsd->amilevel = NULL;
-  TSD->ami_tsd = (void *)atsd;
-
-  return 1;
-}
-
-/* Open a file */
+/*
+ * Implementation of the ARexx IO functions
+ * See general documentation for more information
+ * Functions implemented: OPEN, CLOSE, READCH, READLN, WRITECH, WRITELN, EOF, SEEK
+ */
 streng *arexx_open( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2, parm3;
@@ -127,15 +146,26 @@ streng *arexx_open( tsd_t *TSD, cparamboxptr parm1 )
   
   if ( parm3==NULL
        || parm3->value==NULL
-       || parm3->value->len==0
-       || toupper(parm3->value->value[0])=='W' )
+       || parm3->value->len==0 )
     mode=0;
-  else if ( toupper(parm3->value->value[0])=='R' )
-    mode=1;
-  else if ( toupper(parm3->value->value[0])=='A' )
-    mode=2;
-  else
-    exiterror( ERR_INCORRECT_CALL, 0 );
+  else switch( getoptionchar( TSD, parm3->value, "OPEN", 3, "WRA" ) )
+  {
+    case 'W':
+      mode=0;
+      break;
+    
+    case 'R':
+      mode=1;
+      break;
+      
+    case 'A':
+      mode=2;
+      break;
+      
+    default:
+      assert(0);
+      break;
+  }
 
   file = fopen( filename, modestrings[mode] );
   FreeTSD( filename );
@@ -148,6 +178,7 @@ streng *arexx_open( tsd_t *TSD, cparamboxptr parm1 )
   addfile( TSD, parm1->value, file );
   return int_to_streng( TSD, 1);
 }
+
 
 streng *arexx_close( tsd_t *TSD, cparamboxptr parm1 )
 {
@@ -164,6 +195,7 @@ streng *arexx_close( tsd_t *TSD, cparamboxptr parm1 )
   
   return int_to_streng( TSD, 1 );
 }
+
 
 streng *arexx_writech( tsd_t *TSD, cparamboxptr parm1 )
 {
@@ -186,6 +218,7 @@ streng *arexx_writech( tsd_t *TSD, cparamboxptr parm1 )
   return int_to_streng( TSD, count );
 }
 
+
 streng *arexx_writeln( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2;
@@ -207,6 +240,7 @@ streng *arexx_writeln( tsd_t *TSD, cparamboxptr parm1 )
   return int_to_streng( TSD, count );
 }
 
+
 streng *arexx_seek( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2, parm3;
@@ -226,20 +260,33 @@ streng *arexx_seek( tsd_t *TSD, cparamboxptr parm1 )
   if (error)
     exiterror( ERR_INCORRECT_CALL, 0 );
   
-  if ( parm3==NULL || parm3->value==NULL ||
-       parm3->value->len == 0 ||
-       toupper(parm3->value->value[0])=='C' )
+  if ( parm3==NULL
+       || parm3->value==NULL
+       || parm3->value->len == 0 )
     wench = SEEK_CUR;
-  else if ( toupper( parm3->value->value[0] )=='B' )
-    wench = SEEK_SET;
-  else if ( toupper( parm3->value->value[0] )=='E' )
-    wench = SEEK_END;
-  else
-    exiterror( ERR_INCORRECT_CALL, 0 );
+  else switch( getoptionchar( TSD, parm3->value, "SEEK", 3, "CBE" ) )
+  {
+    case 'C':
+      wench = SEEK_CUR;
+      break;
+      
+    case 'B':
+      wench = SEEK_SET;
+      break;
+      
+    case 'E':
+      wench = SEEK_END;
+      break;
+      
+    default:
+      assert(0);
+      break;
+  }
   
   pos = fseek( file, offset, wench );
   return int_to_streng( TSD, pos );
 }
+
 
 streng *arexx_readch( tsd_t *TSD, cparamboxptr parm1 )
 {
@@ -283,6 +330,7 @@ streng *arexx_readch( tsd_t *TSD, cparamboxptr parm1 )
   }
 }
 
+
 streng *arexx_readln( tsd_t *TSD, cparamboxptr parm )
 {
   FILE *file;
@@ -301,6 +349,7 @@ streng *arexx_readln( tsd_t *TSD, cparamboxptr parm )
   return Str_cre_TSD( TSD, buffer );
 }
 
+
 streng *arexx_eof( tsd_t *TSD, cparamboxptr parm )
 {
   FILE *file;
@@ -315,6 +364,10 @@ streng *arexx_eof( tsd_t *TSD, cparamboxptr parm )
 }
 
 
+/* 
+ * Implementation of the additional conversion functions from ARexx
+ * Functions: B2C, C2B
+ */
 streng *arexx_b2c( tsd_t *TSD, cparamboxptr parm )
 {
   parambox parm2;
@@ -330,6 +383,7 @@ streng *arexx_b2c( tsd_t *TSD, cparamboxptr parm )
   
   return ret;
 }
+
 
 streng *arexx_c2b( tsd_t *TSD, cparamboxptr parm )
 {
@@ -348,6 +402,10 @@ streng *arexx_c2b( tsd_t *TSD, cparamboxptr parm )
 }
 
 
+/*
+ * Implementation of the bitwise function from ARexx
+ * Functions: BITCHG, BITCLR, BITSET, BITTST
+ */
 streng *arexx_bitchg( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2;
@@ -372,6 +430,7 @@ streng *arexx_bitchg( tsd_t *TSD, cparamboxptr parm1 )
   ret->value[byte]^=(char)(1<<dt.rem);
   return ret;
 }
+
 
 streng *arexx_bitclr( tsd_t *TSD, cparamboxptr parm1 )
 {
@@ -398,6 +457,7 @@ streng *arexx_bitclr( tsd_t *TSD, cparamboxptr parm1 )
   return ret;
 }
 
+
 streng *arexx_bitset( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2;
@@ -423,6 +483,7 @@ streng *arexx_bitset( tsd_t *TSD, cparamboxptr parm1 )
   return ret;
 }
 
+
 streng *arexx_bittst( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2;
@@ -447,6 +508,11 @@ streng *arexx_bittst( tsd_t *TSD, cparamboxptr parm1 )
   return ret;
 }
 
+
+/*
+ * Some more misc. ARexx functions
+ * Functions: COMPRESS, HASH, RANDU, TRIM, UPPER
+ */
 streng *arexx_hash( tsd_t *TSD, cparamboxptr parm1 )
 {
   unsigned char *uc;
@@ -462,6 +528,7 @@ streng *arexx_hash( tsd_t *TSD, cparamboxptr parm1 )
   
   return int_to_streng( TSD, sum );
 }
+
 
 streng *arexx_compress( tsd_t *TSD, cparamboxptr parm1 )
 {
@@ -491,6 +558,7 @@ streng *arexx_compress( tsd_t *TSD, cparamboxptr parm1 )
   return ret;
 }
 
+
 static const streng T_str = { 1, 1, "T" };
 static const parambox T_parm = { NULL, 0, &T_str };
 
@@ -503,7 +571,8 @@ streng *arexx_trim( tsd_t *TSD, cparamboxptr parm1 )
   return std_strip( TSD, parm1 );
 }
 
-streng *arexx_upper( tsd_t *TSD, cparamboxptr parm1)
+
+streng *arexx_upper( tsd_t *TSD, cparamboxptr parm1 )
 {
   int i;
   streng *ret;
@@ -515,4 +584,25 @@ streng *arexx_upper( tsd_t *TSD, cparamboxptr parm1)
     ret->value[i] = toupper( ret->value[i] );
   
   return ret;
+}
+
+
+streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 )
+{
+  int error, seed;
+  char text[30];
+  
+  checkparam( parm1, 0, 1, "RANDU" );
+  
+  if ( parm1!=NULL && parm1->value!=NULL )
+  {
+    seed = streng_to_int( TSD, parm1->value, &error );
+    if (error)
+      exiterror( ERR_INVALID_INTEGER, 0 );
+    
+    srand48( (long int)seed );
+  }
+  
+  sprintf( text, "%f", drand48() );
+  return Str_cre_TSD( TSD, text );
 }

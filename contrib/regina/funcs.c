@@ -184,6 +184,7 @@ static const struct function_type functions[] = {
   { 0,              std_qualify, "QUALIFY" },
   { 0,              std_queued, "QUEUED" },
   { 0,              std_random, "RANDOM" },
+  { 0,              arexx_randu, "RANDU" },
 #ifdef AREXXIO
   { 0,              arexx_readch, "READCH" },
   { 0,              arexx_readln, "READLN" },
