@@ -120,7 +120,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                     (
                         Img \
                         (
-                            src = 'http://sourceforge.net/sflogo.php?group_id=43586&type=1', 
+                            src = 'http://sflogo.sourceforge.net/sflogo.php?group_id=43586&type=1', 
                             width = 88, height = 31, border = 0, alt = 'SourceForge Logo'
                         ),
                         href = 'http://sourceforge.net/'
