@@ -46,8 +46,6 @@
 #endif
 
 
-#pragma options align=mac68k
-
 
 //
 // NOTES: mobj_t
@@ -295,6 +293,9 @@ typedef struct mobj_s
 //-----------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.2  2000/07/10 12:51:59  bernie
+// removed one more non-GCC #pragma
+//
 // Revision 1.1  2000/02/29 18:21:06  stegerg
 // Doom port based on ADoomPPC. Read README.AROS!
 //
