@@ -49,9 +49,13 @@ def genPage (items, filename, linkBoxItem):
 	
     table = TableLite ()
     page.meat = page.meat + [table,]
+    mtime = 0
 
     for file in items:
 	item = prepareNewsItem (file)
+	fmtime = os.path.getmtime (file)
+	if mtime < fmtime
+	    mtime = fmtime
 	table.append (item)
 
     if filename == 'index.html':
@@ -59,6 +63,7 @@ def genPage (items, filename, linkBoxItem):
 	p.append (Href ('oldnews.html', 'Older News'))
 	page.meat = page.meat + [p]
 
+    page.mtime = fmtime
     page.write (filename)
 
 def gen (datadir):
