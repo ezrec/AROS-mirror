@@ -219,7 +219,7 @@ void initclock()
 {
 	if (!clock_task) {
 		clockmsg_port=NULL;
-		clock_task=(struct Task *) CreateTask("dopus_clock",config->priority+1,clocktask,4000);
+		clock_task=(struct Task *) CreateTask("dopus_clock",config->priority+1,clocktask,AROS_STACKSIZE);
 	}
 }
 
