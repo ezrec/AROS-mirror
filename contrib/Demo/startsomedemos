@@ -1,0 +1,32 @@
+cd BlackHole
+run blackhole x 0 y 20
+
+cd /DawaFire
+run dawafire x 500 y 20
+
+cd /FTunnel
+run ftunnel x 270 y 20
+
+
+cd /Firework
+run firework x 0 y 200
+
+cd /Flamme
+run flamme x 500 y 200
+
+cd /Galaxy
+run galaxy x 270 y 200
+
+cd /InfPlane
+run infplane x 0 y 500
+
+cd /Parallax
+run parallax x 500 y 500
+
+cd /NewVox
+run newvox x 270 y 500 s 25000
+
+
+
+cd /
+

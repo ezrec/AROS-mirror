@@ -1,4 +1,7 @@
+include $(TOP)/config/make.cfg
+
 #MM- contrib-demos : \
+#MM		demo-startscripts \
 #MM		demo-voxel \
 #MM		demo-newvox \
 #MM		demo-galaxy  \
@@ -12,3 +15,16 @@
 #MM		demo-firework \
 #MM		demo-metaballs \
 #MM		demo-blackhole
+
+SCRIPTFILES := startsomedemos
+DESTSCRIPTFILES := $(foreach f, $(SCRIPTFILES), $(CONTRIBDIR)/Demos/$(f))
+
+#MM demo-startscripts :
+demo-startscripts : setup-demo-startscripts $(DESTSCRIPTFILES)
+	@$(NOP)
+
+setup-demo-startscripts : 
+	@$(MKDIR) $(CONTRIBDIR)/Demos
+
+$(CONTRIBDIR)/Demos/% : %
+	@$(CP) $< $@
