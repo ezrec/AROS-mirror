@@ -1,14 +1,16 @@
-==========
-Contribute
-==========
+=========
+Mitwirken
+=========
 
-:Authors:   Adam Chodorowski, Henning Kiel (translation) 
-:Copyright: Copyright © 1995-2002, The AROS Development Team
-:Version:   $Revision$
-:Date:      $Date$
-:Status:    Done. 
+:Autor:      Adam Chodorowski
+:Übersetzer: Henning Kiel
+:Copyright:  Copyright © 1995-2002, The AROS Development Team
+:Version:    $Revision$
+:Original:   contribute.en 1.3
+:Datum:      $Date$
+:Status:     Fertig
 
-.. Contents::
+.. Inhalt::
 
 .. START ABSTRACT
 
@@ -48,7 +50,7 @@ Programmierung
 
 + Implementierung von fehlenden Libraries, Resources, Devices oder
   Teilen von diesen. 
-  Siehe detailierten Status Report für mehr Information über welche
+  Siehe detaillierten Status Report für mehr Information über welche
   Teile immer noch fehlen.
 
 + Implementierung oder Verbesserung von Hardware Treibern:

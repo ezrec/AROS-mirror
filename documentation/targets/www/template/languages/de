@@ -1,0 +1,51 @@
+[titles]
+
+mirrors:          Spiegel
+contents:         Inhalt
+search:           Suche
+visitors:         Besucher
+sponsors:         Sponsoren
+
+[navigation]
+
+news:             Neues
+archive:          Archiv
+introduction:     Einleitung
+status:           Status
+screenshots:      Screenshots
+ports:            Portierungen
+download:         Download
+documentation:    Dokumentation
+users:            Benutzer
+installation:     Installation
+using:            Benutzung
+faq:              FAQ
+developers:       Entwickler
+contribute:       Mitwirken
+working-with-cvs: Arbeiten mit CVS
+compiling:        Übersetzen
+application-development-manual: Anwendungs-Entwicklungs Handbuch
+system-development-manual:      System-Entwicklungs Handbuch
+reference:        Referenz
+specifications:   Spezifikationen
+ui-style-guide:   Benutzeroberflächen Richtlinien
+documenting:      Dokumentierung
+translating:      Übersetzung
+summaries:        Zusammenfassungen
+ideas:            Sonstige Ideen
+links:            Links
+contact:          Kontakt
+mailing-lists:    Mailinglisten
+forums:           Foren
+irc-channels:     IRC Channels
+credits:          Danksagung
+sponsors:         Sponsoren
+
+
+[misc]
+
+go:               Gehe zu
+search:           Suche
+copyright:        Copyright © 1995-2002, The AROS Development Team. All rights reserved.
+trademarks:       Amiga®, AmigaOS®, Workbench und Intuition sind eingetragene Warenzeichen von Amiga Inc. Alle anderen Warenzeichen gehören dem jeweiligen Besitzer.
+read-more:        Mehr dazu...
