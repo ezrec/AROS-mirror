@@ -8,7 +8,7 @@
 
 #And these ones are for normal operation
 DEBUGLIBS  =
-DEBUGFLAGS = -DNDEBUG -DDEBUG=0
+DEBUGFLAGS = -DNDEBUG
 
 # some shortcuts
 
@@ -30,8 +30,10 @@ LDFLAGS2	= -noixemul
 OS=$(shell uname)
 ifeq "$(OS)" "MorphOS"
 LDLIBS1 =
+KILLDEV = KillDevice
 else
 LDLIBS1 = -lamiga
+KILLDEV =
 endif
 
 LDLIBS2		=
@@ -49,7 +51,7 @@ OBJS4		= checkcd.o cdrom.o iso9660.o rock.o hfs.o generic.o path.o
 
 # general targets
 
-all:		cdrom-handler cdrom cdcontrol checkcd
+all:		cdrom-handler cdrom cdcontrol checkcd $(KILLDEV)
 
 cdrom-handler:	$(OBJS1)
 		$(CC) $(LDFLAGS1) -o $@ $(OBJS1) $(LDLIBS1) $(DEBUGLIBS)
@@ -63,6 +65,9 @@ cdcontrol:	$(OBJS3)
 
 checkcd:	$(OBJS4)
 		$(CC) $(LDFLAGS2) -o $@ $(OBJS4) $(LDLIBS2)
+
+KillDevice:	KillDevice.c
+		$(CC) $(CFLAGS) $(LDFLAGS1) -o $@ KillDevice.c
 
 # dependencies
 
@@ -89,4 +94,4 @@ dist:
 # delete all nifty stuff
 
 clean:
-		-$(RM) *.o cdrom cdrom-handler cdcontrol checkcd
+		-$(RM) *.o cdrom cdrom-handler cdcontrol checkcd KillDevice

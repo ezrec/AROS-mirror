@@ -8,6 +8,9 @@ AmiCDROM - a CDROM filesystem for the Commodore Amiga
 Version 1.15   03-Nov-94   (C) 1993,1994 by Frank Munkert
                            (ln_fmu@pki-nbg.philips.de)
 
+MorphOS port   17-Dec-04   Pavel Fedin
+                           (sonic_amiga@rambler.ru)
+
 * IMPORTANT NOTICE FOR USERS OF VERSIONS 1.0, 1.1 and 1.2:
 *
 * The format of the Mountlist 'Startup' field has been changed.
@@ -30,6 +33,7 @@ Table of Contents:
 	@{"CDCONTROL" link "CDCONTROL"}	  -  The 'CDCONTROL' Program
 	@{"CDROM" link "CDROM"}		  -  The 'CDROM' Program
 	@{"CHECKCD" link "CHECKCD"}		  -  The 'CHECKCD' Program
+        @{"KILLDEVICE" link "KILLDEVICE"}	  -  The 'KILLDEVICE' Program (MorphOS only)
 	@{"TROUBLESHOOTING" link "TROUBLESHOOTING"}	  -  Troubleshooting
 	@{"UTILITIES" link "UTILITIES"}	  -  Other utilities of interest
 	@{"THANKS" link "THANKS"}		  -  Thanks must go to..
@@ -91,7 +95,7 @@ Table of Contents:
   1. Copy the 'cdrom-handler' file to L:cdrom-handler.
 
   2. @{"If you use Workbench 2.0" link "2.0"}
-     @{"If you use Workbench 2.1 or higher" link "2.1"}
+     @{"If you use Workbench 2.1 or higher or MorphOS" link "2.1"}
 
 
      @{"Startup" link "startup"} - The 'Startup' field
@@ -121,7 +125,7 @@ Table of Contents:
 
 @endnode
 
-@node 2.1 "Installation on 2.1 and higher systems"
+@node 2.1 "Installation on 2.1 and higher systems and MorphOS"
 
      Edit the file CD0. It contains a Mountlist as described in step 2a
      (with the exception that "CD0:" and "#" are missing).
@@ -146,6 +150,21 @@ Table of Contents:
      If you have put CD0 into DEVS:DosDrivers and the handler does not
      auto-mount, then you probably have a wrong filename in the 'Handler'
      or 'Startup' field.
+
+  IMPORTANT FOR MORPHOS:
+     If you wish to completely replace MorphOS internal CD-ROM handler
+     with AmiCDROM you need to place included "KillDevice" utility into
+     your MOSSYS:S/Startup-Sequence file before the line:
+
+	Mount >NIL: MOSSYS:Devs/DOSDrivers/~(#?.info) DEVS:DOSDrivers/~(#?.info)
+
+     So that this would look like:
+
+	KillDevice CD0:
+	Mount >NIL: MOSSYS:Devs/DOSDrivers/~(#?.info) DEVS:DOSDrivers/~(#?.info)
+
+     Otherwise you'll need to use another name for AmiCDROM device, for example
+     ACD0:
 
 @endnode
 
@@ -568,6 +587,26 @@ Table of Contents:
 
 @endnode
 
+@node KILLDEVICE "The 'KILLDEVICE' Program"
+
+  Unfortunately MorphOS operating system has a problem - it can't dismount
+  handlers correctly. KillDevice is a hack which allows you to remove
+  existing CD-ROM handler in order to replace it with AmiCDROM.
+
+  Note that it is REALLY A HACK! It actually rips off the device from
+  the system, and not shuts it down in somehow friendly manner. I hope
+  some day this problem will be fixed and this tool will not be needed any
+  more.
+
+  The only argument for KillDevice is physical device name:
+
+     killdevice cd0:
+
+  This program exists only in MorphOS version of the package. It is simply
+  not useful on other systems due to its weird nature.
+
+@endnode
+
 @node TROUBLESHOOTING "Troubleshooting"
 
   Q: My Amiga crashes if I mount the CD0 device.
@@ -608,17 +647,21 @@ Table of Contents:
   locations. Useful if you don't like the icon locations and images on
   your CDROM.
 
-  "cdromemu.device" (included in this distribution):
+  "cdromemu.device" (can be found in original m68k archive):
   Emulates a trackdisk device which reads a CDROM image from an AmigaDOS
   file. Can be used by CDROM manufacturers to verify the output of
-  their pre-mastering program. See the file cdromemu/cdromemu.doc.
+  their pre-mastering program. It is removed from MorphOS distribution
+  because it comes without source code and can't be recompiled.
 
 @endnode
 
 @node THANKS "Thanks must go to.."
 
-  I would like to send many thanks for their help, encouragement and
-  beta testing to:
+  My promary thanks go to original author, Frank Munkert, for releasing
+  source code of AmiCDROM version 1.15.
+
+  Also the following people were involved into development and beta testing
+  of previous versions of AmiCDROM:
  
     Thomas Baetzler
     Olaf Barthel
@@ -679,13 +722,13 @@ Table of Contents:
 @node BUGS "Bugs and not supported features"
 
   Bugs: If you find any bugs, please send an e-mail message to:
-	   ln_fmu@pki-nbg.philips.de
+	   sonic_amiga@rambler.ru
 
     If you want to report an error, please describe your system
-    configuration (Amiga model, SCSI device name, CDROM drive model)
-    and include your MountList entry for the "CD0:" device.
-    Include in your bug report the output of the commands "cdrom a"
-    and "cdrom v".
+    configuration (computer model, operating system name and version,
+    SCSI device name, CDROM drive model) and include your MountList
+    entry for the "CD0:" device. Include in your bug report the output
+    of the commands "cdrom a" and "cdrom v".
 
   Not supported features:
   
@@ -697,8 +740,35 @@ Table of Contents:
 
 @node TODO "TO DO"
 
-Things still to do:
--------------------
+Things to do:
+-------------
+
+  Since AmiCDFS version 2.40 exists as an official continuation of AmiCDROM
+  i will now create a forked project named CDVDFS (CD- and DVD-ROM filesystem).
+  My current plans for this project are:
+
+- Implement national chanacter set conversion.
+- Implement Joliet extension support.
+- Implement UDF filesystem support.
+- Create MUI-based preferences editor instead of old "cdcontrol" program.
+- Implement reading CDDA tracks as files (like in AsimCDFS).
+
+  The project can be supported for all existing branches of Amiga operating
+  systems. Current source code supports three flavours:
+
+- AmigaOS/m68k (until v3.9)
+- MorphOS
+- AROS
+
+  However currently i own only MorphOS so only this branch will be actively
+  maintained by me. Maintainers for other branches are wanted. Since source
+  code will be subjected to major changes (in this port i minimized the
+  intervention) i can't guarantee support for unmaintained architectures.
+
+  If you wish to become a maintainer please mail me at sonic_amiga@rambler.ru.
+
+Original to-do from Frank Murket:
+---------------------------------
 
 - Support trackdisk disk change interrupt:
   Neither trackdisk interrupts nor trackdisk changenums are supported
@@ -708,6 +778,10 @@ Things still to do:
 @endnode
 
 @node HISTORY "History of AmiCDROM"
+
+Changes for MorphOS port:
+
+* Rewritten CDDA play routine, now it should work with all IDE drives.
 
 Changes in V1.15:
 

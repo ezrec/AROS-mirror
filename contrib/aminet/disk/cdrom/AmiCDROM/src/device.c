@@ -111,7 +111,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define DEBUG 1
 #ifdef __AROS__
 #include <aros/debug.h>
 #endif
@@ -452,16 +451,14 @@ UBYTE   notdone = 1;
 		packet->dp_Res1 = DOSTRUE;
 		packet->dp_Res2 = 0;
 		error = 0;	
-#ifndef NDEBUG
-		dbprintf(
+		BUG(dbprintf(
 			"Packet: %3ld %08lx %08lx %08lx %10s ",
 			packet->dp_Type,
 			packet->dp_Arg1,
 			packet->dp_Arg2,
 			packet->dp_Arg3,
 			typetostr(packet->dp_Type)
-		);
-#endif
+		);)
 		if (!global->g_cd)
 		{
 			switch (packet->dp_Type)

@@ -1,7 +1,7 @@
-Short: CDROM disk filesystem (ISO-9660+RR+HFS)
+Short: CDROM disk filesystem, MorphOS version (ISO-9660+RR+HFS)
 Type: disk/cdrom
-Uploader: ln_fmu@pki-nbg.philips.de
-Author: ln_fmu@pki-nbg.philips.de
+Uploader: sonic_amiga@rambler.ru
+Author: sonic_amiga@rambler.ru
 
 * IMPORTANT NOTICE FOR USERS OF VERSIONS 1.0, 1.1 and 1.2:
 *
@@ -23,6 +23,13 @@ e.g. "type cd0:foo/readme.txt".
 The file 'AmiCDROM.guide' contains information about installing and
 using the CDROM handler.
 
+This particular archive contains MorphOS port. Included source code
+can also be compiled on AmigaOS and AROS
+
+Original author is Frank Munkert <ln_fmu@pki-nbg.philips.de> but he
+stopped his work long ago. Now AROS team picked up the code. Thanks
+to Frank for making it available.
+
 Please send suggestions and bug reports to:
 
-    ln_fmu@pki-nbg.philips.de
+    sonic_amiga@rambler.ru

@@ -186,6 +186,24 @@ void Close_Intui() {
 #endif
 #define WorkbenchBase global->WorkbenchBase
 
+#ifdef __MORPHOS__
+void Display_Error_Tags (char *p_message, APTR arg) {
+static struct EasyStruct req =
+{
+	sizeof (struct EasyStruct),
+	0,
+	(UBYTE *) "CDROM Handler Error",
+	NULL,
+	(UBYTE *) "Abort"
+};
+        if (IntuitionBase)
+        {
+                req.es_TextFormat = (UBYTE *) p_message;
+        	EasyRequestArgs (NULL, &req, NULL, arg);
+        }
+        return;
+}
+#else
 void Display_Error (char *p_message, ...) {
 va_list arg;
 static struct EasyStruct req =
@@ -218,6 +236,7 @@ static struct EasyStruct req =
 	va_end (p_message);
 #endif
 }
+#endif
 
 void Show_CDDA_Icon (void) {
 
