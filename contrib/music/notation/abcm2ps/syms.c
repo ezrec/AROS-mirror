@@ -195,7 +195,7 @@ static char ps_head[] =
 
 	"\n/dacs {  % usage:  str x y dacs - D.C. / D.S.\n"
 	"	/Times-Roman 16 selectfont\n"
-	"	1 add M cshow\n"
+	"	3 add M cshow\n"
 	"} bdef\n"
 
 	"\n/brth {  % usage: x y brth - breath\n"
@@ -254,11 +254,18 @@ static char ps_head[] =
 	"} bdef\n"
 
 	"\n/turn {  % usage: x y turn - turn\n"
-	"	M -3.5 5 rmoveto\n"
-	"	-4.2 -5.5 -5.2 8.6 4.1 1.3 rcurveto\n"
-	"	6.0 -4.5 6.0 2.1 2.4 0.7 rcurveto\n"
-	"	4.2 5.5 5.4 -8.6 -4.1 -1.3 rcurveto\n"
-	"	-6.0 4.5 -6.0 -2.1 -2.4 -0.7 rcurveto fill\n"
+	"	M 6 8 rmoveto\n"
+	"	-1.24 -0.64 -2.1 -0.26 -1.96 0.62 rcurveto\n"
+	"	0.12 0.88 1.16 1.2 2.16 0.08 rcurveto\n"
+	"	2.24 -2.62 -0.64 -6.52 -3.6 -4.44 rcurveto\n"
+	"	-1.96 1.5 -3.34 2.6 -4.84 3.6 rcurveto\n"
+	"	-3.12 2.0 -3.62 -2.36 -2.24 -2.86 rcurveto\n"
+	"	1.24 0.64 2.1 0.26 1.96 -0.62 rcurveto\n"
+	"	-0.12 -0.88 -1.16 -1.2 -2.16 -0.08 rcurveto\n"
+	"	-2.24 2.62 0.64 6.52 3.6 4.44 rcurveto\n"
+	"	1.96 -1.5 3.34 -2.6 4.84 -3.6 rcurveto\n"
+	"	3.12 -2.0 3.62 2.36 2.24 2.86 rcurveto\n"
+	"	fill\n"
 	"} bdef\n"
 
 	"\n/turnx {  % usage: x y trnx - turn with line through it\n"

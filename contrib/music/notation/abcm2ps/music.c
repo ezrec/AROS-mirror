@@ -374,7 +374,6 @@ static void def_tssym(void)
 	for (p_voice = first_voice; p_voice; p_voice = p_voice->next) {
 		p_voice->s_anc = 0;
 		p_voice->selected = 0;
-		p_voice->staff_chg = 0;
 	}
 
 	/* sort the symbol by time */
@@ -466,65 +465,6 @@ static void def_tssym(void)
 			}
 		}
 
-		/* set the staff of the floating voices */
-		for (p_voice = first_voice; p_voice; p_voice = p_voice->next) {
-			struct SYMBOL *u;
-			int xp;
-			int d1, d2;
-
-			if (!p_voice->floating
-			    || !p_voice->selected)
-				continue;
-			s = p_voice->s_anc;
-			t = p_voice->next->s_anc;	/* (next is always != 0) */
-			u = p_voice->prev->s_anc;	/* (prev is always != 0) */
-			if (t == 0
-			    || u == 0
-#if 1 /*fixme:test*/
-			    || s->type != NOTE) {
-#else
-			    || s->len == 0) {	/* not a note nor a rest */
-#endif
-				if (p_voice->staff_chg)
-					s->staff++;
-				p_voice->last_symbol = s;
-				continue;
-			}
-
-			xp = s->nhd;
-			d1 = u->pits[0] - s->pits[0];
-			d2 = s->pits[0] - t->pits[0];
-			if (d2 < 0
-			    || (d2 < 7
-				&& s->pits[xp] <= 13)	/* G, */
-			    || d1 > 7) {
-				if (!p_voice->staff_chg) {
-					p_voice->staff_chg = 1;
-					u = p_voice->last_symbol->next;
-					while (u != s) {
-						u->staff++;
-						u = u->next;
-					}
-				}
-				p_voice->last_symbol = s;
-			} else if (d1 < 0
-				   || (d1 < 7
-				       && s->pits[0] >= 19)	/* F */
-				   || d2 > 7) {
-				if (p_voice->staff_chg) {
-					p_voice->staff_chg = 0;
-					u = p_voice->last_symbol->next;
-					while (u != s) {
-						u->staff--;
-						u = u->next;
-					}
-				}
-				p_voice->last_symbol = s;
-			}
-			if (p_voice->staff_chg)
-				s->staff++;
-		}
-
 		/* set the time linkage */
 		for (p_voice = first_voice; p_voice; p_voice = p_voice->next) {
 			if (!p_voice->selected)
@@ -534,6 +474,91 @@ static void def_tssym(void)
 			prev_sym->ts_next = s;
 			prev_sym = s;
 			p_voice->s_anc = s->next;
+		}
+	}
+}
+
+/* -- set the staff of the floating voices -- */
+/* this function is called only once per tune */
+static void set_float(void)
+{
+	struct VOICE_S *p_voice;
+	int staff, staff_chg;
+	struct SYMBOL *s, *s1;
+
+	for (p_voice = first_voice; p_voice; p_voice = p_voice->next) {
+		if (!p_voice->floating)
+			continue;
+		staff_chg = 0;
+		staff = p_voice->staff;
+		for (s = p_voice->sym; s != 0; s = s->next) {
+			int up, down;
+
+			if (s->type != NOTE) {
+				if (staff_chg)
+					s->staff++;
+				continue;
+			}
+			if (s->pits[0] >= 19) {		/* F */
+				staff_chg = 0;
+				continue;
+			}
+			if (s->pits[s->nhd] <= 13) {	/* G, */
+				staff_chg = 1;
+				s->staff++;
+				continue;
+			}
+			up = 127;
+			for (s1 = s->ts_prev; s1 != 0; s1 = s1->ts_prev) {
+				if (s1->staff != staff
+				    || s1->voice == s->voice)
+					break;
+				if (s1->type == NOTE
+				    && s1->pits[0] < up)
+					up = s1->pits[0];
+			}
+			if (up == 127) {
+				if (staff_chg)
+					s->staff++;
+				continue;
+			}
+			if (s->pits[s->nhd] > up - 3) {
+				staff_chg = 0;
+				continue;
+			}
+			down = -127;
+			for (s1 = s->ts_next; s1 != 0; s1 = s1->ts_next) {
+				if (s1->staff != staff + 1
+				    || s1->voice == s->voice)
+					break;
+				if (s1->type == NOTE
+				    && s1->pits[s1->nhd] > down)
+					down = s1->pits[s1->nhd];
+			}
+			if (down == -127) {
+				if (staff_chg)
+					s->staff++;
+				continue;
+			}
+			if (s->pits[0] < down + 3) {
+				staff_chg = 1;
+				s->staff++;
+				continue;
+			}
+			up -= s->pits[s->nhd];
+			down = s->pits[0] - down;
+			if (!staff_chg) {
+				if (up < down + 3)
+					continue;
+				staff_chg = 1;
+			} else {
+				if (up < down - 3) {
+					staff_chg = 0;
+					continue;
+				}
+			}
+			if (staff_chg)
+				s->staff++;
 		}
 	}
 }
@@ -624,7 +649,8 @@ static void set_multi(void)
 	struct SYMBOL *s;
 	int i, staff;
 	struct {
-		int nvoice;
+		short nvoice;
+		short last;
 		struct {
 			short voice;
 			short nn;
@@ -647,16 +673,24 @@ static void set_multi(void)
 				break;
 			}
 		}
-		if (p_voice->floating)
-			stb[staff + 1].st[0].voice = p_voice - voice_tb;
+		if (p_voice->floating) {
+			staff++;
+			for (i = 0; i < 4; i++) {
+				if (stb[staff].st[i].voice < 0) {
+					stb[staff].st[i].voice = p_voice - voice_tb;
+					break;
+				}
+			}
+		}
 	}
 	s = tssym;
 	while (s != 0) {
 		struct SYMBOL *t;
 
 		for (staff = MAXSTAFF; --staff >= 0; ) {
+			stb[staff].nvoice = 0;
+			stb[staff].last = 0;
 			for (i = 4; --i >= 0; ) {
-				stb[staff].nvoice = 0;
 				stb[staff].st[i].nn = 0;
 				stb[staff].st[i].ymx = 0;
 				stb[staff].st[i].ymn = 24;
@@ -664,7 +698,6 @@ static void set_multi(void)
 		}
 
 		/* go to the next bar and get the max/min offsets */
-/*fixme: should also stop on %%staves*/
 		for (t = s;
 		     t != 0 && t->type != BAR;
 		     t = t->ts_next) {
@@ -678,8 +711,11 @@ static void set_multi(void)
 			}
 			if (i == 4)
 				bug("Voice with no staff", 1);
+			
 			if (++stb[staff].st[i].nn == 1)
 				stb[staff].nvoice++;
+			if (i > stb[staff].last)
+				stb[staff].last = i;
 			if (t->type != NOTE)
 				continue;
 			if (t->ymx > stb[staff].st[i].ymx)
@@ -695,16 +731,34 @@ static void set_multi(void)
 			    || s->as.u.note.invis)
 				continue;
 			staff = s->staff;
-			if (stb[staff].nvoice <= 1)
-				continue;	/* only 1 voice in the staff */
+			if (stb[staff].nvoice <= 1) {
+
+				/* only 1 voice in the staff */
+				p_voice = &voice_tb[s->voice];
+				if (p_voice->floating) {
+					if (s->staff == p_voice->staff)
+						s->multi = -1;
+					else	s->multi = 1;
+				}
+				continue;
+			}
 			for (i = 0; i < 4; i++) {
 				if (stb[staff].st[i].voice == s->voice)
 					break;
 			}
-			if (i == 3
-			    || stb[staff].st[i + 1].nn == 0)
+			if (i == stb[staff].last)
 				s->multi = -1;	/* last voice */
-			else	s->multi = 1;	/* first voice(s) */
+			else {
+				s->multi = 1;	/* first voice(s) */
+
+				/* if 3 voices, and vertical space enough,
+				 * have stems down on the 2nd voice */
+				if (i != 0
+				    && i == stb[staff].last - 1
+				    && stb[staff].st[i].ymn - STEM
+					> stb[staff].st[i + 1].ymx)
+					s->multi = -1;
+			}
 			if (s->type != REST)
 				continue;
 
@@ -974,6 +1028,9 @@ static void set_global(void)
 	/* sort the symbols by time */
 	def_tssym();
 
+	/* set the staff of the floating voices */
+	set_float();
+
 	/* set the clefs */
 	for (staff = 0; staff <= nstaff; staff++) {
 		if (!staff_tb[staff].forced_clef)
@@ -1242,9 +1299,8 @@ static void set_beams(struct SYMBOL *sym)
 			/* notes in a beam have the same stem direction */
 			if ((s->sflags & S_WORD_ST)
 			    && !s->as.u.note.word_end) {	/* start of beam */
-				int avg;
+				int avg, n;
 				struct SYMBOL *t;
-				int n;
 
 				avg = s->yav;
 				n = 1;
@@ -1400,9 +1456,9 @@ static void set_overlap(void)
 			}
 		}
 
-		if (s1->multi == s2->multi) {
-
-			/* voices with a same stem direction - force a shift */
+		/* if voices with a same stem direction, force a shift */
+//fixme		if (s1->multi == s2->multi) {
+		if (s1->stem == s2->stem) {
 			if (d > 0) {
 				s1 = s2;
 				s2 = s;
@@ -1413,6 +1469,13 @@ static void set_overlap(void)
 			    || (d < -3
 				&& s1->head == H_SQUARE))
 				continue;
+			if (s1->stem > 0) {
+				if (s2->y < s1->ys)
+					continue;
+			} else {
+				if (s2->ys > s1->y)
+					continue;
+			}
 		}
 		switch (d) {
 		case 0: {
@@ -1540,8 +1603,7 @@ static void set_stems(void)
 	struct SYMBOL *s;
 
 	for (s = tssym; s != 0; s = s->ts_next) {
-		float slen;
-		float ymin, ymax;
+		float slen, ymin, ymax;
 
 		if (s->type != NOTE)
 			continue;
@@ -1551,16 +1613,6 @@ static void set_stems(void)
 
 		/* set height of stem end, without considering beaming for now */
 		slen = STEM;
-#if 0
-		if (s->nhd > 0) {
-			int delta;
-
-			delta = s->pits[s->nhd] - s->pits[0];
-			slen -= 1;
-			if (delta > 2)
-				slen -= 2;
-		}
-#endif
 		if (s->nflags >= 2) {
 			slen += 2;
 			if (s->nflags == 3)
@@ -1576,8 +1628,8 @@ static void set_stems(void)
 				s->ys = s->ymn;
 				s->y = s->ymx;
 			}
-			ymin = s->ymn - 4;
-			ymax = s->ymx + 4;
+			ymin = (float) (s->ymn - 4);
+			ymax = (float) (s->ymx + 4);
 		} else if (s->stem >= 0) {
 			if (s->nflags > 2)
 				slen -= 1;
@@ -1591,7 +1643,7 @@ static void set_stems(void)
 			}
 			s->y = s->ymn;
 			s->ys = s->ymx + slen;
-			ymin = s->y - 4;
+			ymin = (float) (s->ymn - 4);
 			ymax = s->ys + 2;
 			if (s->as.u.note.ti1[0] != 0
 			    || s->as.u.note.ti2[0] != 0)
@@ -1921,12 +1973,12 @@ static void set_width(struct SYMBOL *s)
 		s->pr = s->wr + 16;
 		break;
 	case MREP:
-		if (s->as.u.bar.len == 1) {
-			s->wr = s->wl = 16 / 2 + 8;
+		s->wr = s->wl = 16 / 2 + 8;
+		if (s->as.u.bar.len == 1)
 			s->pr = s->pl = s->wr + 8;
-		} else {
-			s->wr = s->wl = 16 / 2 + 16;
-			s->pr = s->pl = s->wr + 16;
+		else	{
+			s->pl = 0;
+			s->pr = nwidth(s->len);
 		}
 		break;
 	case GRACE:
@@ -2345,7 +2397,7 @@ static void set_sym_glue(float width)
 	}
 
 	/* add small random shifts to positions (if only one voice) */
-	if (nvoice == 0) {
+	if (first_voice->next == 0) {
 		for (s = voice_tb[0].sym; s->next != 0; s = s->next) {
 			if (s->len > 0) {	/* if note or rest */
 				float w1, w2;
@@ -2694,7 +2746,7 @@ void output_music(void)
 	check_buffer();
 
 	set_global();		/* set global characteristics */
-	if (nvoice > 0)		/* when multi-voices */
+	if (first_voice->next != 0)	/* when multi-voices */
 		set_multi();	/* set the stems direction in 'multi' */
 	for (p_voice = first_voice; p_voice; p_voice = p_voice->next)
 		set_beams(p_voice->sym);	/* decide on beams */

@@ -24,7 +24,7 @@
 /* -- macros controlling music typesetting -- */
 
 #define STEM_YOFF	1.0	/* offset stem from note center */
-#define STEM_XOFF	3.6
+#define STEM_XOFF	3.5
 #define STEM		20	/* standard stem length */
 #define STEM_MIN	16	/* min stem length under beams */
 #define STEM_MIN2	12	/* ... for notes with two beams */
@@ -287,7 +287,6 @@ struct VOICE_S {
 	unsigned floating:1;	/* floating voice in a brace */
 	unsigned bagpipe:1;	/* switch for HP mode */
 	unsigned selected:1;	/* selected while sorting by time (music.c) */
-	unsigned staff_chg:1;	/* change staff of floating voice (music.c) */
 	unsigned bar_repeat:1;	/* bar at start of staff is a repeat bar */
 	signed char bar_start;	/* bar type at start of staff / -1 */
 	unsigned char r_plet;	/* number of n-plet notes while parsing */

@@ -1520,11 +1520,9 @@ static char *parse_extra(char *p,
 				note->ti1[i] = 1;
 			break;
 		case ')':
+			if (char_tb[')'] == CHAR_CPAR)
+				return p - 1;	/* ')' after '(&' */
 			note->slur_end++;
-#if 0
-			/*fixme: count the nb of '(' and ')'*/
-			syntax("Unexpected symbol", p - 1);
-#endif
 			break;
 		case '>':
 			i = 1;
@@ -1992,7 +1990,7 @@ static unsigned char *parse_note(struct abctune *t,
 	case 'y':			/* space (BarFly) */
 		s->type = ABC_T_REST;
 		s->u.note.invis = 1;
-		return p + 1;
+		return parse_extra(p + 1, &s->u.note);
 	case 'x':			/* invisible rest */
 		s->u.note.invis = 1;
 		/* fall thru */

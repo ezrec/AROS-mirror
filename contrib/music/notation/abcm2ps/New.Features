@@ -1,10 +1,35 @@
-Features in abcm2ps 3.1.1 (J.F. Moine, July 2002)
-==================================================
+Features in abcm2ps 3.1.2 (J.F. Moine, August 2002)
+===================================================
+
+----- voice overlap -----
+
+Sometimes, some extra notes need to appear at the same time on a staff.
+The Taral's proposal is to use the character '&' (ampersand) for that
+purpose. Here is the original mail:
+
+	& and && operators:
+	    The & operator will be used for splits into 2 voices in a single
+	    measure, thus:
+		|F2A2Bc&F2c2bc|
+	    The && operator will support direct overlay of two lines of music,
+	    similar to the & operator, but without forcing stem direction.
+
+	(&...&...) and (&&...&&...) operators:
+	    These are similar to the & and && operators, but operate on multiple
+	    measures of music, thus:
+		|!f!(&GG<G|GG F=E| E2  E(_D/E)|_D D  C      D |C4- |C
+		     &DC<C|CC_D C|=B,2_B,B,   |_A,A,(G,/A,/)B,|F,4-|F,)zzD=E|
+	    (For &&, this can be extended to N lines, e.g.
+	    (&&...&&...&&...&&...))
+
+Note 1: As the last syntax raises a problem with slurs, abcm2ps does not
+	handle slurs inside a '(&...&...)' construct.
+Note 2: The difference between '&' and '&&' does not work yet.
 
 ----- staff break -----
 
 For purpose of original clef indication (on the left side), or for
-a coda, a staff break may be inserted as the pseudo comment
+a coda, a staff break may be inserted as the pseudo comment:
 	%%staffbreak <unit>
 The <unit> gives the width of the break (in points, inches or cm).
 As a side effect, when the width is bigger than 0.5 cm, the

@@ -31,6 +31,9 @@ static struct SYMBOL *lyric_start;	/* 1st note of the line for w: */
 static struct SYMBOL *lyric_cont;	/* current symbol when w: continuation */
 
 static struct SYMBOL *grace_head, *grace_tail;
+static struct SYMBOL *voice_over;	/* voice overlay */
+static int over_bar;			/* voice overlay in a measure */
+static int lastvoice;			/* last voice for overlay allocation */
 
 static int bar_number;			/* (for %%setbarnb) */
 
@@ -61,7 +64,7 @@ static void sym_link(struct SYMBOL *s);
 
 /*  subroutines connected with parsing the input file  */
 
-/* -- returns a new symbol at end of list -- */
+/* -- add a new symbol at end of list -- */
 struct SYMBOL *add_sym(struct VOICE_S *p_voice,
 		       int type)
 {
@@ -134,21 +137,25 @@ void voice_dup(void)
 static void gchord_adjust(struct SYMBOL *s)
 {
 	char *p;
-	int l;
+	int freegchord, l;
 
+	freegchord = cfmt.freegchord;
 	p = s->as.text;
+	if (strchr("^_<>@", *p) != 0)
+		freegchord = 1;
+/*fixme: treat 'dim' as 'o', 'halfdim' as '/o', and maj as a triangle*/
 	while (*p != '\0') {
 		switch (*p) {
 		case '#':
-			if (!cfmt.freegchord)
+			if (!freegchord)
 				*p = '\201';
 			break;
 		case 'b':
-			if (!cfmt.freegchord)
+			if (!freegchord)
 				*p = '\202';
 			break;
 		case '=':
-			if (!cfmt.freegchord)
+			if (!freegchord)
 				*p = '\203';
 			break;
 		case ';':
@@ -326,6 +333,128 @@ static char *get_lyric(unsigned char *p)
 	return 0;
 }
 
+/* -- get a voice overlay -- */
+static void get_over(struct SYMBOL *s)
+{
+	struct VOICE_S *p_voice, *p_voice2;
+	struct SYMBOL *s1, *s2;
+	int ctime, otype;
+
+	/* treat the end of overlay */
+	p_voice = curvoice;
+	if (over_bar) {
+		struct SYMBOL *s2;
+
+		s2 = add_sym(curvoice, BAR);
+		s2->as.type = ABC_T_BAR;
+		s2->time = curvoice->time;
+	}
+	if (s == 0
+	    || s->as.u.v_over.type == V_OVER_E)  {
+		over_bar = 0;
+		if (voice_over == 0) {
+			ERROR(("Erroneous end of voice overlap"));
+			return;
+		}
+		voice_over = 0;
+		for (p_voice = p_voice->prev; ; p_voice = p_voice->prev)
+			if (p_voice->name[0] != '&')
+				break;
+		curvoice = p_voice;
+		return;
+	}
+
+	/* treat the overlay start */
+	otype = s->as.u.v_over.type;
+	p_voice2 = p_voice->next;
+	if (otype == V_OVER_SS
+	    || otype == V_OVER_SD) {
+		voice_over = s;
+		if (otype == V_OVER_SS)
+			p_voice2->stem = 1;	/*fixme: may be down*/
+		return;
+	}
+
+	/* create the extra voice if not done yet */
+	if (p_voice2 == 0
+	    || p_voice2->name[0] != '&') {
+		if (--lastvoice <= nvoice) {
+			ERROR(("line %d: Too many voices",
+				s->as.linenum));
+			return;
+		}
+		p_voice2 = &voice_tb[lastvoice];
+		p_voice2->name = getarena(2);
+		p_voice2->name[0] = '&';
+		p_voice2->name[1] = '\0';
+		p_voice->second = 1;
+		if ((p_voice2->next = p_voice->next) != 0)
+			p_voice2->next->prev = p_voice2;
+		p_voice->next = p_voice2;
+		p_voice2->prev = p_voice;
+		if (otype == V_OVER_S)
+			p_voice2->stem = 1;	/*fixme: may be down*/
+	}
+
+	/* search the start of sequence */
+	if (voice_over == 0) {
+		voice_over = s;
+		over_bar = 1;
+		for (s = p_voice->last_symbol; s != 0; s = s->prev)
+			if (s->type == BAR)
+				break;
+	} else {
+		struct SYMBOL *tmp;
+
+		tmp = s;
+		s = (struct SYMBOL *) voice_over->as.next;
+/*fixme: what if this symbol is not in the voice?*/
+		if (s->voice != curvoice - voice_tb) {
+			ERROR(("line %d: Voice overlay not closed",
+				s->as.linenum));
+			voice_over = 0;
+			return;
+		}
+		voice_over = tmp;
+	}
+
+	/* search the last common sequence */
+	ctime = p_voice2->time;
+	for (s1 = s; s1 != 0; s1 = s1->prev)
+		if (s1->time <= ctime)
+			break;
+
+	/* fill the secundary voice with invisible silences */
+	if (s1 == 0)
+		s1 = p_voice->sym;
+	while (s1 != s) {
+		int len;
+
+		len = s1->len;
+		s1 = s1->next;
+		while (s1 != s) {
+			if (s1->type == BAR)
+				break;
+			len += s1->len;
+			s1 = s1->next;
+		}
+		s2 = add_sym(p_voice2, REST);
+		s2->as.type = ABC_T_REST;
+		s2->as.u.note.invis = 1;
+		s2->len = len;
+		s2->time = ctime;
+		ctime += len;
+		if (s1 != s
+		    || (s1 != 0 && s1->type == BAR)) {
+			s2 = add_sym(p_voice2, BAR);
+			s2->as.u.bar.type = B_SINGLE;
+			s2->time = ctime;
+		}
+	}
+	p_voice2->time = ctime;
+	curvoice = p_voice2;
+}
+
 /* -- get staves definition (%%staves) -- */
 static void get_staves(struct SYMBOL *s)
 {
@@ -378,6 +507,7 @@ static void get_staves(struct SYMBOL *s)
 		else	p_voice2->next = p_voice;
 		p_voice2 = p_voice;
 	}
+	lastvoice = dup_voice;
 
 	/* define the staves */
 	memset(staff_tb, 0, sizeof staff_tb);
@@ -475,7 +605,7 @@ static void get_staves(struct SYMBOL *s)
 				if (p_voice->second) {
 					p_voice->second = 0;
 					do {
-						p_voice--;
+						p_voice = p_voice->prev;
 					} while (p_voice->second);
 					p_voice->second = 1;
 				}
@@ -722,13 +852,17 @@ void identify_note(struct SYMBOL *s,
 		  int *p_dots,
 		  int *p_flags)
 {
-	int len, head, dots, flags;
-	int base;
+	int len, head, dots, flags, base, i;
 
 	switch (s->type) {
 	case NOTE:
 	case REST:
+
+		/* use the shortest note length when in chord */
 		len = s->as.u.note.lens[0];
+		for (i = 1; i <= s->nhd; i++)
+			if (s->as.u.note.lens[i] < len)
+				len = s->as.u.note.lens[i];
 		break;
 	case TEMPO:
 		len = s->as.u.tempo.length;
@@ -857,11 +991,15 @@ void do_tune(struct abctune *at,
 	     int header_only)
 {
 	struct abcsym *as;
-	int voice;
 
 	/* initialize */
 	memset(voice_tb, 0, sizeof voice_tb);
 	voice_init();		/* initialize all the voices */
+	voice_tb[0].name = getarena(2);
+	voice_tb[0].name[0] = '1';	/* implicit voice */
+	voice_tb[0].name[1] = '\0';
+	voice_over = 0;
+	lastvoice = MAXVOICE;
 	if (!in_page)
 		init_pdims();
 	check_margin();
@@ -889,7 +1027,6 @@ void do_tune(struct abctune *at,
 	use_buffer = 1;
 
 	/* scan the tune */
-	voice = 0;
 	grace_head = 0;
 	for (as = at->first_sym; as != 0; as = as->next) {
 		struct SYMBOL *s = (struct SYMBOL *) as;
@@ -916,18 +1053,18 @@ void do_tune(struct abctune *at,
 				as = as->next;
 				p = &as->text[0];
 			}
-			voice = curvoice - voice_tb;
 			break;
 		}
 		case ABC_T_PSCOM:
 			as = process_pscomment(as);
-			voice = curvoice - voice_tb;
 			break;
 		case ABC_T_NOTE:
 		case ABC_T_REST:
 			get_note(s);
 			break;
 		case ABC_T_BAR:
+			if (over_bar)
+				get_over(0);
 			get_bar(s);
 			break;
 		case ABC_T_CLEF:
@@ -939,16 +1076,38 @@ void do_tune(struct abctune *at,
 				curvoice->last_symbol->sflags |= S_EOLN;
 			continue;
 		case ABC_T_MREST:
-		case ABC_T_MREP:
-			sym_link(s);
-			s->type = as->type == ABC_T_MREST ? MREST : MREP;
-			s->len = voice_tb[s->voice].meter.wmeasure
+		case ABC_T_MREP: {
+			int len;
+
+			len = curvoice->meter.wmeasure
 				* s->as.u.bar.len;
-			if (s->len > MAX_TIME) {
+			if (len > MAX_TIME) {
 				ERROR(("line %d: Measure duration exceeds MAX_TIME",
 				      s->as.linenum));
-				s->len = MAX_TIME - 1;
+				len = MAX_TIME - 1;
 			}
+			if (as->type == ABC_T_MREP
+			    && s->as.u.bar.len > 1) {
+				struct SYMBOL *s2;
+
+			/* repeat measure more than 1 time */
+			/* 2 times -> (bar - invisible rest - bar - mrep - bar) */
+/*fixme: 3 or more times not treated*/
+				s2 = add_sym(curvoice, REST);
+				s2->as.type = ABC_T_REST;
+				s2->as.u.note.invis = 1;
+				len /= s->as.u.bar.len;
+				s2->len = len;
+				s2->time = curvoice->time;
+				curvoice->time += len;
+				s2 = add_sym(curvoice, BAR);
+				s2->as.u.bar.type = B_SINGLE;
+				s2->time = curvoice->time;
+			}
+			sym_link(s);
+			s->type = as->type == ABC_T_MREST ? MREST : MREP;
+			s->len = len;
+		    }
 			break;
 		case ABC_T_GRACE_START:
 			sym_link(s);
@@ -958,6 +1117,9 @@ void do_tune(struct abctune *at,
 			break;
 		case ABC_T_GRACE_END:
 			grace_head = 0;
+			continue;
+		case ABC_T_V_OVER:
+			get_over(s);
 			continue;
 		default:
 			continue;

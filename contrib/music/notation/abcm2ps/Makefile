@@ -1,7 +1,7 @@
 # Generated automatically from Makefile.in by configure.
 # Makefile source for abcm2ps
 
-VERSION = 3.1.1
+VERSION = 3.1.4
 
 CC = gcc
 INSTALL = /usr/bin/install -c
@@ -28,16 +28,16 @@ $(OBJECTS): abcparse.h abc2ps.h config.h
 music.o: style.h
 
 # win32 with a cross-compiler
-CC32=i586-mingw32-gcc
-C32FLAGS=-O2 -pipe -Wall -DVERSION='"$(VERSION)"' -DUS_LETTER
-OBJ32=abc2ps.obj \
-	abcparse.obj buffer.obj deco.obj draw.obj format.obj music.obj parse.obj \
-		subs.obj syms.obj
-%.obj : %.c
-	$(CC32) -c $(C32FLAGS) $(CPPFLAGS) $< -o $@
-$(OBJ32): abcparse.h abc2ps.h config.h
-abcm2ps.exe: $(OBJ32)
-	$(CC32) $(C32FLAGS) -o abcm2ps.exe $(OBJ32)
+#CC32=i586-mingw32-gcc
+#C32FLAGS=-O2 -pipe -Wall -DVERSION='"$(VERSION)"'
+#OBJ32=abc2ps.obj \
+#	abcparse.obj buffer.obj deco.obj draw.obj format.obj music.obj parse.obj \
+#		subs.obj syms.obj
+#%.obj : %.c
+#	$(CC32) -c $(C32FLAGS) $(CPPFLAGS) $< -o $@
+#$(OBJ32): abcparse.h abc2ps.h config.h
+#abcm2ps.exe: $(OBJ32)
+#	$(CC32) $(C32FLAGS) -o abcm2ps.exe $(OBJ32)
 
 install: abcm2ps
 	mkdir -p $(bindir); \
@@ -101,7 +101,7 @@ dist:
 		abcm2ps-$(VERSION)/tight.fmt \
 		abcm2ps-$(VERSION)/voices.abc; \
 	rm abcm2ps-$(VERSION)
-zip: abcm2ps.exe
-	zip abcm2ps-$(VERSION).zip abcm2ps.exe License
+#zip: abcm2ps.exe
+#	zip abcm2ps-$(VERSION).zip abcm2ps.exe License
 clean:
-	rm -f *.o *.obj
+	rm -f *.o # *.obj

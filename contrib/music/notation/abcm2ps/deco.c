@@ -99,10 +99,10 @@ static struct deco_def_s {
 	{"5", 3, 11, 8, 0, 0, 255},
 	{"+", 3, 20, 7},
 	{"accent", 3, 21, 8},
-	{"D.C.", 3, 12, 12, 0, 0, 255},
-	{"D.S.", 3, 12, 12, 0, 0, 255},
+	{"D.C.", 3, 12, 16, 0, 0, 255},
+	{"D.S.", 3, 12, 16, 0, 0, 255},
 	{"emphasis", 3, 21, 8},
-	{"fine", 3, 12, 12, 0, 0, 1},
+	{"fine", 3, 12, 16, 0, 0, 1},
 	{"f", 6, 13, 20, 2, 2},
 	{"ff", 6, 13, 20, 2, 5},
 	{"fff", 6, 13, 20, 2, 8},
@@ -1238,36 +1238,70 @@ void draw_deco_staff(void)
 static void draw_gchord(struct SYMBOL *s,
 			float gchy)
 {
-	float w, spc, yspc;
+	float x, w, spc, yspc, gchx;
 	char *p, *q, *r;
 	char t[81];
+	int n, pos;
 
-	yspc = cfmt.gchordfont.size;
+	yspc = cfmt.gchordfont.size * cfmt.gchordfont.swfac;
 	p = t;
 	tex_str(p, s->as.text, sizeof t, 0);
 
-	/* ignore the guitar chord position (ABC draft) */
+	/* treat the guitar chord position (ABC draft) */
+	pos = 0;		/* above */
 	switch (*p) {
 	case '^':
+		p++;		/* default = above */
+		break;
 	case '_':
+		p++;
+		pos = 1;	/* below */
+		break;
 	case '<':
+		p++;
+		pos = 2;	/* left */
+		break;
 	case '>':
+ 		p++;
+		pos = 3;	/* right */
+		break;
 	case '@':
 		p++;
+		if (sscanf(p, "%f,%f%n", &gchx, &gchy, &n) != 2)
+			ERROR (("Error in guitar chord \"@\" format"));
+		else {
+			p += n;
+			pos = 4;	/* absolute */
+		}
 		break;
 	}
 
-	/* get where to print the first line */
-	if (gchy < 34.)
-		gchy = 34.;
-
-	/* find the top line */
+	/* count the number of lines */
+	n = 1;
 	q = p;
 	while ((q = strchr(q, '\n')) != 0) {
-		gchy += yspc;
-		q += 2;		/* skip "\n" */
+		n++;
+		q++;		/* skip '\n' */
 	}
-	s->dc_top = gchy + yspc;
+
+	/* set where to print the first line */
+	switch (pos) {
+	case 0:			/* above */
+		if (gchy < 34.)
+			gchy = 34.;
+		gchy += yspc * (n - 1);
+		s->dc_top = gchy + yspc;
+		break;
+	case 1:			/* below */
+		gchy = -20;
+		if (s->dc_bot > gchy + yspc * n)
+			s->dc_bot = gchy + yspc * n;
+		break;
+	case 2:			/* left */
+	case 3:			/* right */
+		gchy = s->y - yspc * 0.25 + yspc * 0.5 * (n - 1);
+		break;
+	}
 
 	/* loop on each line */
 	for (;;) {
@@ -1276,13 +1310,28 @@ static void draw_gchord(struct SYMBOL *s,
 		w = 0;
 		for (r = p; *r != '\0'; r++)
 			w += cwid(*r);
-		spc = w * yspc * GCHPRE;
-		if (spc > 8.0)
-			spc = 8.0;
-		PUT3("%.1f \x01%c%5.2f M ", s->x - spc,
-		     '0' + s->staff, gchy);
-
-		PUT1("(%s) gcshow ", p);
+		x = s->x;
+		spc = w * yspc;
+		switch (pos) {
+		case 0:
+		case 1:
+			spc *= GCHPRE;
+			if (spc > 8)
+				spc = 8;
+			x -= spc;
+			break;
+		case 2:
+			x -= spc + 10;
+			break;
+		case 3:
+			x += 10;
+			break;
+		default:
+			x += gchx;
+			break;
+		}
+		PUT4("%.1f \x01%c%5.2f M (%s) gcshow ",
+		     x, '0' + s->staff, gchy, p);
 		if (q == 0)
 			break;
 		p = q + 1;	/* skip '\n' */

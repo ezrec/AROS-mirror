@@ -240,14 +240,21 @@ static int calculate_beam(struct BEAM *bm,
 				- staff_tb[s->staff].y;
 			if (s1->stem > 0) {
 				if (s->stem > 0) {
+/*fixme: KO when the voice numbers are inverted */
 					if (s->voice < voice)
+						continue;
+					if (s->y > ys)
 						continue;
 					stem_err = s->ys + 8. - ys;
 				} else	stem_err = s->y + 8. - ys;
 			} else {
 				if (s->stem > 0)
 					stem_err = ys - s->y + 8.;
-				else	stem_err = ys - s->ys + 8.;
+				else {
+					stem_err = ys - s->ys + 8.;
+					if (s->y < ys)
+						continue;
+				}
 			}
 		}
 		if (stem_err > max_stem_err)
@@ -814,21 +821,19 @@ static void draw_rest(struct SYMBOL *s)
 	y = s->y;
 
 	/* if rest alone in the measure, do it semibreve and center */
-	if (s->as.u.note.lens[0] == voice_tb[s->voice].meter.wmeasure
-	    && s->head != H_SQUARE) {
-		struct SYMBOL *s2;
+	if (s->as.u.note.lens[0] == voice_tb[s->voice].meter.wmeasure) {
+		s->head = H_OVAL;
+		if (s->len > SEMIBREVE)
+			s->len = BREVE;
+		s->dots = 0;
+		if (s->next != 0)
+			x = s->next->x;
+		else	x = realwidth;
+		x = (x + s->prev->x) * 0.5;
 
-		if ((s2 = s->next) != 0) {
-			s->head = H_OVAL;
-			if (s->len > SEMIBREVE)
-				s->len = BREVE;
-			s->dots = 0;
-			x = (s2->x + x) * 0.5 - 10.;
-
-			/* center the associated decorations */
-			if (s->as.u.note.dc.n > 0)
-				deco_update(s, x - s->x);
-		}
+		/* center the associated decorations */
+		if (s->as.u.note.dc.n > 0)
+			deco_update(s, x - s->x);
 	}
 
 	staffb = staff_tb[s->staff].y;	/* bottom of staff */
@@ -1750,7 +1755,8 @@ if (two_staves) printf("*** multi-staves slurs not treated\n");
 	else	x2 = realwidth;		/* (the slur starts on last note of the line) */
 	y1 = k1->y;
 	y2 = k2->y;
-	if (k1->type == NOTE) {		/* here if k1 points to note */
+
+/*	if (k1->type == NOTE) {		1st symbol is always a note */
 		if (k1->stem * s > 0) {
 			x1 += s * 4;
 			y1 = k1->ys + s * 2;
@@ -1763,9 +1769,9 @@ if (two_staves) printf("*** multi-staves slurs not treated\n");
 			if (y1 > k1->dc_bot - 2.5)
 				y1 = k1->dc_bot - 2.5;
 		}
-	}
+/*	}	*/
 
-	if (k2->type == NOTE) {		/* here if k2 points to note */
+	if (k2->type == NOTE) {
 		if (k2->stem * s > 0) {
 			x2 += s * 3;
 			y2 = k2->ys + s * 2;
@@ -1795,9 +1801,20 @@ if (two_staves) printf("*** multi-staves slurs not treated\n");
 		}
 	}
 
+#if 0	/* 1st symbol is always a note */
 	if (k1->type != NOTE) {
-		x1 += k1->wr;
 		y1 = y2 + 1.2 * s;
+#if 1
+		for (k = k1->next; k != 0; k = k->next) {
+			if (k->type == NOTE) {
+				y1 = k->y + s * 6;
+				break;
+			}
+			if (k == k2)
+				break;
+		}
+#else
+		x1 += k1->wr;
 		if (nn > 1) {
 			if (s > 0) {
 				if (y1 < 24 + 4)
@@ -1807,10 +1824,22 @@ if (two_staves) printf("*** multi-staves slurs not treated\n");
 					y1 = -4;
 			}
 		}
+#endif
 	}
+#endif
 
 	if (k2->type != NOTE) {
 		y2 = y1 + 1.2 * s;
+#if 1
+		for (k = k2->prev; k != 0; k = k->prev) {
+			if (k->type == NOTE) {
+				y2 = k->y + s * 6;
+				break;
+			}
+			if (k == k1)
+				break;
+		}
+#else
 		if (nn > 1) {
 			if (s > 0) {
 				if (y2 < 24 + 4)
@@ -1820,6 +1849,7 @@ if (two_staves) printf("*** multi-staves slurs not treated\n");
 					y2 = -4;
 			}
 		}
+#endif
 	}
 
 	/* shift endpoints */
@@ -2577,14 +2607,13 @@ void draw_symbols(struct VOICE_S *p_voice)
 			if (p_voice->second)
 				break;
 			if (s->as.u.bar.len == 1) {
+				x = (s->prev->x + s->next->x) * 0.5;
 				PUT2("%.1f %.1f mrep\n",
 				     x, staff_tb[s->staff].y);
 				break;
 			}
-			if (p_voice == first_voice)
-				draw_bar(x, s);
 			PUT2("%.1f %.1f mrep2\n",
-			     x, staff_tb[s->staff].y);
+			     s->prev->x, staff_tb[s->staff].y);
 			break;
 		case GRACE:
 			draw_gracenotes(x,

@@ -68,3 +68,18 @@ V:1
 V:2
 %%staffbreak 2cm
 [K:G clef=bass]A,2D,,2||
+
+X:4
+T:Voice overlay
+M:C
+L:1/4
+K:C
+GABc|cdef&ABcd|GABc|defg&&Bcde|
+GABc|efga&&FGAB&&CDEF|GA(&&Bc|de&&FG|AB)cd|
+
+X:5
+T:Annotations
+M:C
+L:1/8
+K:C
+"^normal"CD"_below"EF "<left"cd">right"ec|"@20,-30anywhere"gfed (c4y)||

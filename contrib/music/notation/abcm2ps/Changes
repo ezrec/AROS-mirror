@@ -1,5 +1,21 @@
+---- Version 3.1.4 - 02/08/18 ----
+
+May have slurs on spaces ('y').
+Handle the position chars in guitar chords (adapted from Guido Gonzato).
+
+---- Version 3.1.3 - 02/08/14 ----
+
+Use the shortest length rule in chord.
+Change the floating voice algorithm.
+Problem when many %%staves in a tune.
+
+---- Version 3.1.2 - 02/08/04 ----
+
+Treat '&' (voice overlap - Taral's proposal).
+
 ---- Version 3.1.1 - 02/07/28 ----
 
+Have 2 measures repeat work with multi-voices.
 Accept guitar chords on 2 lines.
 Accept ';' as a new guitar chord line.
 Crash when a line ends with a note and a starting slur.
