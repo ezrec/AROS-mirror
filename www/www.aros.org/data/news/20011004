@@ -1,0 +1,10 @@
+AROS web site too slow ? Now you can mirror us with
+
+<shell>    rsync -avz --delete rsync://www.aros.org/aroswww www</shell>
+
+Don't forget to tell us the link of your mirror so we can mention
+you in the links section :-)
+
+And 4play has created an IRC channel for us on
+<a href="http://www.efnet.org/index.php">EFNet</a>.
+<shell>/join #aros</shell>, the official AROS IRC channel.
