@@ -40,7 +40,7 @@ extern struct Library *MUIMasterBase;
 #endif
 
 //extern struct TagItem *FindTagItem(Tag,struct TagItem *);
-//#include "private.h"
+#include "private.h"
 
 #include "rev.h"
 
@@ -49,13 +49,18 @@ extern struct Library *MUIMasterBase;
 #ifdef __GNUC__
 #include "../NListviews_mcp/NListviews_mcp.h"
 #include "../NList_mcc/NList_mcc.h"
+#ifndef _AROS
 #include "../common/mcc_common.h"
+#else
+#include "../commonaros/mcc_common.h"
+#endif
 #else
 #include "/NListviews_mcp/NListviews_mcp.h"
 #include "/NList_mcc/NList_mcc.h"
 #include "/common/mcc_common.h"
 #endif
 
+#if 0
 struct NLVData
 {
   Object *LI_NList;
@@ -71,7 +76,7 @@ struct NLVData
   BOOL   sem;
   BOOL   SETUP;
 };
-
+#endif
 
 /****************************************************************************************/
 /****************************************************************************************/
@@ -324,31 +329,31 @@ static ULONG mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
   LONG Dropable = FALSE;
   LONG DragType = MUIV_NList_DragType_None;
 
-  if (tag = FindTagItem(MUIA_Draggable, msg->ops_AttrList))
+  if ((tag = FindTagItem(MUIA_Draggable, msg->ops_AttrList)))
     tag->ti_Tag = TAG_IGNORE;
-  if (tag = FindTagItem(MUIA_Dropable, msg->ops_AttrList))
+  if ((tag = FindTagItem(MUIA_Dropable, msg->ops_AttrList)))
   { Dropable = tag->ti_Data;
     tag->ti_Tag = TAG_IGNORE;
   }
 
-  if (tag = FindTagItem(MUIA_CycleChain, msg->ops_AttrList))
+  if ((tag = FindTagItem(MUIA_CycleChain, msg->ops_AttrList)))
   { tag->ti_Tag = TAG_IGNORE;
     cyclechain = tag->ti_Data;
   }
 
-  if ((tag = FindTagItem(MUIA_NListview_NList, msg->ops_AttrList)) ||
-       (tag = FindTagItem(MUIA_Listview_List, msg->ops_AttrList)))
+  if (((tag = FindTagItem(MUIA_NListview_NList, msg->ops_AttrList))) ||
+       ((tag = FindTagItem(MUIA_Listview_List, msg->ops_AttrList))))
   { nlist = (Object *) tag->ti_Data;
     if (nlist)
     { if (Dropable)
       { nnset(nlist,MUIA_Dropable,Dropable);
       }
-      if ((tag = FindTagItem(MUIA_NList_DragType, msg->ops_AttrList)) ||
-          (tag = FindTagItem(MUIA_Listview_DragType, msg->ops_AttrList)))
+      if (((tag = FindTagItem(MUIA_NList_DragType, msg->ops_AttrList))) ||
+          ((tag = FindTagItem(MUIA_Listview_DragType, msg->ops_AttrList))))
       { nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
-      if ((tag = FindTagItem(MUIA_Listview_Input, msg->ops_AttrList)) ||
-          (tag = FindTagItem(MUIA_NList_Input, msg->ops_AttrList)))
+      if (((tag = FindTagItem(MUIA_Listview_Input, msg->ops_AttrList))) ||
+          ((tag = FindTagItem(MUIA_NList_Input, msg->ops_AttrList))))
       { nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
       if ((tag = FindTagItem(MUIA_Listview_MultiSelect, msg->ops_AttrList)) ||
@@ -397,7 +402,7 @@ static ULONG mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
     data->Horiz_Attached = FALSE;
     data->Vert_ScrollBar = MUIV_NListview_VSB_Default;
     data->Horiz_ScrollBar = MUIV_NListview_HSB_Default;
-    if (tag = FindTagItem(MUIA_Listview_ScrollerPos, msg->ops_AttrList))
+    if ((tag = FindTagItem(MUIA_Listview_ScrollerPos, msg->ops_AttrList)))
     { if (tag->ti_Data == MUIV_Listview_ScrollerPos_None)
       { data->Vert_ScrollBar = MUIV_NListview_VSB_None;
         data->Horiz_ScrollBar = MUIV_NListview_HSB_None;
@@ -407,9 +412,9 @@ static ULONG mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
       else if (tag->ti_Data == MUIV_Listview_ScrollerPos_Right)
         data->Vert_ScrollBar = MUIV_NListview_VSB_Always;
     }
-    if (tag = FindTagItem(MUIA_NListview_Vert_ScrollBar, msg->ops_AttrList))
+    if ((tag = FindTagItem(MUIA_NListview_Vert_ScrollBar, msg->ops_AttrList)))
       data->Vert_ScrollBar = tag->ti_Data;
-    if (tag = FindTagItem(MUIA_NListview_Horiz_ScrollBar, msg->ops_AttrList))
+    if ((tag = FindTagItem(MUIA_NListview_Horiz_ScrollBar, msg->ops_AttrList)))
       data->Horiz_ScrollBar = tag->ti_Data;
     data->VertSB = data->Vert_ScrollBar;
     data->HorizSB = data->Horiz_ScrollBar;
@@ -600,9 +605,19 @@ ULONG _Dispatcher_gate(void)
   struct IClass *cl = REG_A0;
   Msg msg = REG_A1;
   Object *obj = REG_A2;
+#elif defined(_AROS)
+AROS_UFH3(IPTR, _Dispatcher,
+    AROS_UFHA(struct IClass *, cl, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(Msg, msg, A1))
+{
 #else
 ULONG ASM SAVEDS NListview_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) Msg msg GNUCREG(a1) )
 {
+#endif
+
+#ifdef _AROS
+  AROS_USERFUNC_INIT
 #endif
 
   switch (msg->MethodID)
@@ -672,6 +687,10 @@ ULONG ASM SAVEDS NListview_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), RE
       }
   }
   return(DoSuperMethodA(cl,obj,msg));
+
+#ifdef _AROS
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 #ifdef USE_ZUNE
