@@ -381,7 +381,8 @@ OpenLibs ( void )
 
   TimerIO = (struct timerequest *) AllocVec( sizeof(struct timerequest),
                                              MEMF_PUBLIC | MEMF_CLEAR );
-
+  TimerIO->tr_node.io_Message.mn_Length = sizeof(struct timerequest);
+  
   if( TimerIO == NULL)
   {
     Req( "Out of memory." );
@@ -395,7 +396,7 @@ OpenLibs ( void )
                   0) != 0 )
   {
     Req( "Unable to open 'timer.device'." );
-//    return FALSE; 
+    return FALSE; 
   }
   else
   {
