@@ -372,8 +372,9 @@ Looks ugly, eh ? :-) Ok, here are the rules:
   2. Most code in AROS was written this way and your code should look like the
      rest. 
   3. You can print this code on any printer without special
-     tools to "fix" the tabs. 4. Most editors have smart tabs which do
-     exactly this. If your editor doesn't, write a bug report.
+     tools to "fix" the tabs.
+  4. Most editors have smart tabs which do exactly this. If your editor
+     doesn't, write a bug report.
 
 + If you have a function with many arguments (d, e) you should put the
   parentheses in lines of their own and each argument in one line (d) or put
