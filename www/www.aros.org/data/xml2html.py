@@ -1,10 +1,10 @@
 '''Routines to convert XML to HTML.'''
 
-import xmlsupport, code2html, cStringIO, string
+import xmlsupport, code2html, cStringIO, string, time
 
 from util import TableLite, TR, TD, Heading, RawText, Page, arosRC, \
 	Developers, cvsrootdir, exampleBorderColor, exampleBGColor, \
-	DefinitionList
+	DefinitionList, Href, Name, HR, BR, Para
 
 def writeVerbatim (p, xmlfile, item):
     if isinstance (item, xmlsupport.Tag):
@@ -20,16 +20,46 @@ def writeVerbatim (p, xmlfile, item):
     else:
 	p.fh.write (item.text)
 
+def addToc (p, level, item):
+    '''level = 1 (chapter), 2 (section), 3 (subsection), etc.'''
+
+    p.toccount[level-1] = p.toccount[level-1] + 1
+    p.toccount = p.toccount[:level] + [0,0,0,0,0]
+    label = ''
+    for cnt in p.toccount[:level]:
+	label = label + `cnt` + '.'
+    
+    # Strip last dot if not a chapter
+    if level != 1:
+	label = label[:-1]
+    
+    title = label + ' ' + item.attr['title']
+    print title
+    
+    p.fh.write (str (Name (label)) + '\n')
+    p.fh.write (str (Heading (level, RawText (title)))+'\n')
+    mtime = item.attr.get ('mtime', '')
+    new = item.attr.get ('new', '')
+    if mtime:
+	new = time.strftime ('%d.%m.%Y', time.localtime (time.time ()))
+    if new:
+	p.fh.write ('<font size="-1">Last Update: %s</font><br>\n\n' % new)
+
+	new = ' (%s)' % new
+
+    p.toc.append (Href ('#%s' % label, RawText (title + new)))
+    p.toc.append (BR ())
+
 def chapterToHtml (p, xmlfile, item):
-    p.fh.write (str (Heading (1, RawText (item.attr['title']))))
+    addToc (p, 1, item)
     xmlfile.processRecursive (p, item.content)
 
 def sectionToHtml (p, xmlfile, item):
-    p.fh.write (str (Heading (2, RawText (item.attr['title']))))
+    addToc (p, 2, item)
     xmlfile.processRecursive (p, item.content)
 
 def subsectionToHtml (p, xmlfile, item):
-    p.fh.write (str (Heading (3, RawText (item.attr['title']))))
+    addToc (p, 3, item)
     xmlfile.processRecursive (p, item.content)
 
 def emailToHtml (p, xmlfile, item):
@@ -112,7 +142,7 @@ def classToHtml (p, xmlfile, item):
     p.fh.write ('</tt></strong>')
 
 def ideaToHtml (p, xmlfile, item):
-    p.fh.write (str (Heading (2, item.attr['title'])))
+    addToc (p, 2, item)
     p.fh.write ('\n<p><strong>By %s</strong></p>\n\n' % item.attr['by'])
     xmlfile.processRecursive (p, item.content)
 
@@ -350,31 +380,33 @@ class XmlPage (Page):
     def __init__ (self, xmlfilename, rcFile=arosRC, linkBoxItem='', **kw):
 	apply (Page.__init__, (self, rcFile, linkBoxItem,), kw)
 
-	xmlfile = xmlsupport.XmlFile ()
-	xmlfile.addEntity ('AROS', 'AROS')
-	xmlfile.addEntity ('AMIGA', 'Amiga®')
-	xmlfile.addEntity ('AMIGAOS', 'AmigaOS')
+	xmlfile = xmlsupport.AROSXmlFile ()
 
 	XML2HTML = Xml2HtmlProcessor ()
+	XML2HTML.toccount = [0, 0, 0, 0, 0]
+	XML2HTML.toc = []
 
 	xmlfile.parse (xmlfilename)
 	xmlfile.process (XML2HTML)
+	if XML2HTML.toc:
+	    self.meat = self.meat + XML2HTML.toc + [BR(), HR (), BR()]
 	self.meat = self.meat + [RawText (XML2HTML.fh.getvalue ())]
 	XML2HTML.fh.close ()
 
 def elementToHtml (element, page):
-    xmlfile = xmlsupport.XmlFile ()
-
-    xmlfile.addEntity ('AROS', 'AROS')
-    xmlfile.addEntity ('AMIGA', 'Amiga®')
-    xmlfile.addEntity ('AMIGAOS', 'AmigaOS')
+    xmlfile = xmlsupport.AROSXmlFile ()
 
     XML2HTML = Xml2HtmlProcessor ()
+    XML2HTML.toccount = [0, 0, 0, 0, 0]
+    XML2HTML.toc = []
 
     if type (element) != type ([]) and type (element) != type (()):
 	element = [element]
     xmlfile.tree = element
     xmlfile.process (XML2HTML)
+    if XML2HTML.toc:
+	page.meat = page.meat + XML2HTML.toc + [BR(), HR (), BR()]
+	
     page.meat = page.meat + [RawText (XML2HTML.fh.getvalue ())]
     XML2HTML.fh.close ()
 
