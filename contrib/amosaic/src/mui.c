@@ -877,8 +877,18 @@ AROS_UFH3(LONG, HotlistGroupCompareFunc,
 struct Hook HotlistGroupCompareHook = {{NULL,NULL},(void *)HotlistGroupCompareFunc,NULL,NULL};
  
  
+#ifndef __AROS__
 SAVEDS ASM APTR HotlistGroupConstructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistGroupEntry *hge)
 {
+#else
+AROS_UFH3(APTR, HotlistGroupConstructFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(APTR, pool, A2),
+    AROS_UFHA(struct HotlistGroupEntry *, hge, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
   struct HotlistGroupEntry *new;
   if((new=AllocPooled(pool,sizeof(struct HotlistGroupEntry))))
   {
@@ -897,19 +907,49 @@ SAVEDS ASM APTR HotlistGroupConstructFunc(REG(a0) struct Hook *hook,REG(a2) APTR
     FreePooled(pool,hge,sizeof(struct HotlistGroupEntry));
   }
   return(NULL);
+
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 struct Hook HotlistGroupConstructHook = {{NULL,NULL},(void *)HotlistGroupConstructFunc,NULL,NULL};
 
+
+#ifndef __AROS__
 SAVEDS ASM LONG HotlistGroupDisplayFunc(REG(a0) struct Hook *hook,REG(a2) char **array,REG(a1) struct HotlistGroupEntry *hge)
 {
+#else
+AROS_UFH3(LONG, HotlistGroupDisplayFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(char **, array, A2),
+    AROS_UFHA(struct HotlistGroupEntry *, hge, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
   *array  = hge->Title;
   return(0);
+
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }
 struct Hook HotlistGroupDisplayHook = {{NULL,NULL},(void *)HotlistGroupDisplayFunc,NULL,NULL};
  
+ 
+#ifndef __AROS__
 SAVEDS ASM void HotlistGroupButtonsFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
+#else
+AROS_UFH3(void, HotlistGroupButtonsFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, List, A2),
+    AROS_UFHA(APTR *, arg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
   long Count,Selected;
   get(List,MUIA_List_Active,&Selected);
   if(Selected==-1)
@@ -927,12 +967,27 @@ SAVEDS ASM void HotlistGroupButtonsFunc(REG(a2) Object *List,REG(a1) APTR *arg)
     set(BT_HotlistGroupUp,MUIA_Disabled,Selected<1?TRUE:FALSE);
     set(BT_HotlistGroupDown,MUIA_Disabled,Selected==Count-1?TRUE:FALSE);   
   }
+  
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 struct Hook HotlistGroupButtonsHook={{NULL,NULL},(VOID *)HotlistGroupButtonsFunc,NULL,NULL};
 
+
+#ifndef __AROS__
 SAVEDS ASM void HotlistGroupSelectFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
+#else
+AROS_UFH3(void, HotlistGroupSelectFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, List, A2),
+    AROS_UFHA(APTR *, arg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
   long Selected;
   get(List,MUIA_List_Active,&Selected);
   if(Selected!=-1)
@@ -941,14 +996,33 @@ SAVEDS ASM void HotlistGroupSelectFunc(REG(a2) Object *List,REG(a1) APTR *arg)
     DoMethod(CurrentShownURLGroup->ChildList,MUIM_List_GetEntry,Selected,&hge);
     ShowHotlist(hge);
   }
+
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 struct Hook HotlistGroupSelectHook={{NULL,NULL},(VOID *)HotlistGroupSelectFunc,NULL,NULL};
  
+ 
+#ifndef __AROS__
 SAVEDS ASM void HotlistGroupParentFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
+#else
+AROS_UFH3(void, HotlistGroupParentFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, List, A2),
+    AROS_UFHA(APTR *, arg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
   if(CurrentShownURLGroup->Parent)
     ShowHotlist(CurrentShownURLGroup->Parent);
+
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 struct Hook HotlistGroupParentHook={{NULL,NULL},(VOID *)HotlistGroupParentFunc,NULL,NULL};
@@ -1021,8 +1095,18 @@ BOOL EditHotlistGroupEntry(struct HotlistGroupEntry *Entry)
   return(ret);
 }
 
+#ifndef __AROS__
 SAVEDS ASM void HotlistGroupNewFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
+#else
+AROS_UFH3(void, HotlistGroupNewFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, List, A2),
+    AROS_UFHA(APTR *, arg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
   struct HotlistGroupEntry Entry;
   strcpy(Entry.Title,GetamosaicString(MSG_HOTLIST_GROUP_DEFAULTNAME));
   Entry.Parent=CurrentShownURLGroup;
@@ -1034,21 +1118,51 @@ SAVEDS ASM void HotlistGroupNewFunc(REG(a2) Object *List,REG(a1) APTR *arg)
     DoMethod(CurrentShownURLGroup->ChildList,MUIM_List_InsertSingle,&Entry,MUIV_List_Insert_Bottom);
     SaveHotlist();
   }
+
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }
 struct Hook HotlistGroupNewHook={{NULL,NULL},(VOID *)HotlistGroupNewFunc,NULL,NULL};
 
+
+#ifndef __AROS__
 SAVEDS ASM void HotlistGroupDeleteFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
+#else
+AROS_UFH3(void, HotlistGroupDeleteFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, List, A2),
+    AROS_UFHA(APTR *, arg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
   long Active;
   get(List,MUIA_List_Active,&Active);
   DoMethod(List,MUIM_List_Remove,Active);
   DoMethod(CurrentShownURLGroup->ChildList,MUIM_List_Remove,Active);
   SaveHotlist();
+
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }     
 struct Hook HotlistGroupDeleteHook={{NULL,NULL},(VOID *)HotlistGroupDeleteFunc,NULL,NULL};
 
+
+#ifndef __AROS__
 SAVEDS ASM void HotlistGroupEditFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
+#else
+AROS_UFH3(void, HotlistGroupEditFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, List, A2),
+    AROS_UFHA(APTR *, arg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
   long Active;
   struct HotlistGroupEntry *Entry;
   get(List,MUIA_List_Active,&Active);
@@ -1060,15 +1174,34 @@ SAVEDS ASM void HotlistGroupEditFunc(REG(a2) Object *List,REG(a1) APTR *arg)
     DoMethod(CurrentShownURLGroup->ChildList,MUIM_List_InsertSingle,Entry,Active);
     SaveHotlist();
   }
+
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }     
 struct Hook HotlistGroupEditHook={{NULL,NULL},(VOID *)HotlistGroupEditFunc,NULL,NULL};
 
+
+#ifndef __AROS__
 SAVEDS ASM void HotlistGroupSortFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
+#else
+AROS_UFH3(void, HotlistGroupSortFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, List, A2),
+    AROS_UFHA(APTR *, arg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
   DoMethod(List,MUIM_List_Sort);
   DoMethod(CurrentShownURLGroup->ChildList,MUIM_List_Sort);
   set(List,MUIA_List_Active,MUIV_List_Active_Off);
   SaveHotlist();
+
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }     
 struct Hook HotlistGroupSortHook={{NULL,NULL},(VOID *)HotlistGroupSortFunc,NULL,NULL};
 
@@ -1093,8 +1226,18 @@ void CopyHotlistGroup(struct HotlistGroupEntry *source,struct HotlistGroupEntry 
   }
 }
 
+#ifndef __AROS__
 SAVEDS ASM void HotlistGroupUpFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
+#else
+AROS_UFH3(void, HotlistGroupUpFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, List, A2),
+    AROS_UFHA(APTR *, arg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
   long Count,Selected;
   get(List,MUIA_List_Entries,&Count);
   get(List,MUIA_List_Active,&Selected);
@@ -1105,11 +1248,26 @@ SAVEDS ASM void HotlistGroupUpFunc(REG(a2) Object *List,REG(a1) APTR *arg)
     set(List,MUIA_List_Active,Selected-1);
     SaveHotlist();
   }
+
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }     
 struct Hook HotlistGroupUpHook={{NULL,NULL},(VOID *)HotlistGroupUpFunc,NULL,NULL};
 
+
+#ifndef __AROS__
 SAVEDS ASM void HotlistGroupDownFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
+#else
+AROS_UFH3(void, HotlistGroupDownFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, List, A2),
+    AROS_UFHA(APTR *, arg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
   long Count,Selected;
   get(List,MUIA_List_Entries,&Count);
   get(List,MUIA_List_Active,&Selected);
@@ -1120,6 +1278,10 @@ SAVEDS ASM void HotlistGroupDownFunc(REG(a2) Object *List,REG(a1) APTR *arg)
     set(List,MUIA_List_Active,Selected+1);
     SaveHotlist();
   }  
+  
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }     
 struct Hook HotlistGroupDownHook={{NULL,NULL},(VOID *)HotlistGroupDownFunc,NULL,NULL};
  
@@ -1832,12 +1994,10 @@ void mui_init(void)
 	set(HTML_Gad,HTMLA_SB_Vert,SB_Vert);
 	set(HTML_Gad,HTMLA_SB_Horiz,SB_Horiz);
 
-#if 0
 	DoMethod(SB_Vert, MUIM_Notify, MUIA_Prop_First, MUIV_EveryTime,
 		HTML_Gad, 3, MUIM_Set, HTMLA_scroll_y, MUIV_TriggerValue);
 	DoMethod(SB_Horiz, MUIM_Notify, MUIA_Prop_First, MUIV_EveryTime,
 		HTML_Gad, 3, MUIM_Set, HTMLA_scroll_x, MUIV_TriggerValue);
-#endif
 
 	DoMethod(TX_URL,MUIM_Notify,MUIA_String_Acknowledge,MUIV_EveryTime,
 		App,2,MUIM_Application_ReturnID,ID_STRINGURL);
