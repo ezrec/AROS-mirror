@@ -8,10 +8,10 @@
  *
  * HISTORY
  * $Log$
+ * Revision 1.2  2001/12/26 19:30:19  henrik
+ * Aros version
+ *
  * Revision 1.1  2001/12/25 22:21:39  henrik
- * lots of assembler in api/amiga_api.h that needs to be fixed
- * better not do it since my knowledge of assembler i almost zero
- * think one need to change adresses to something like eax,ebx or something?
  *
  * Revision 1.4  1994/02/16  06:31:55  jraja
  * Eliminated unnecessary checks :-) (see api/allocdatabuffer.h).

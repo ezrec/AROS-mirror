@@ -8,10 +8,10 @@
  * 
  * HISTORY 
  * $Log$
+ * Revision 1.2  2001/12/26 19:30:19  henrik
+ * Aros version
+ *
  * Revision 1.1  2001/12/25 22:21:39  henrik
- * lots of assembler in api/amiga_api.h that needs to be fixed
- * better not do it since my knowledge of assembler i almost zero
- * think one need to change adresses to something like eax,ebx or something?
  *
  * Revision 3.3  1994/01/11  19:36:40  too
  * Replaced SetDtableSize with getdtablesize.

@@ -9,10 +9,10 @@
  * Last modified: Wed Jan  5 19:27:36 1994 too
  * 
  * $Log$
+ * Revision 1.2  2001/12/26 19:30:19  henrik
+ * Aros version
+ *
  * Revision 1.1  2001/12/25 22:21:39  henrik
- * lots of assembler in api/amiga_api.h that needs to be fixed
- * better not do it since my knowledge of assembler i almost zero
- * think one need to change adresses to something like eax,ebx or something?
  *
  * Revision 3.1  1994/01/06  13:39:42  too
  * extern prototype for sockArgs() which resides in amiga_syscalls.c
