@@ -36,7 +36,7 @@ extern void idct_add_altivec(uint8_t *dest, int line_size, int16_t *block);
 
 void MPV_common_init_ppc(MpegEncContext *s)
 {
-#if HAVE_ALTIVEC
+#ifdef HAVE_ALTIVEC
     if (has_altivec())
     {
         if ((s->avctx->idct_algo == FF_IDCT_AUTO) ||
@@ -55,14 +55,14 @@ void MPV_common_init_ppc(MpegEncContext *s)
         if ((((long)(s->q_intra_matrix) & 0x0f) != 0) ||
                 (((long)(s->q_inter_matrix) & 0x0f) != 0))
         {
-            fprintf(stderr, "Internal Error: q-matrix blocks must be 16-byte aligned "
+            av_log(s->avctx, AV_LOG_INFO, "Internal Error: q-matrix blocks must be 16-byte aligned "
                     "to use Altivec DCT. Reverting to non-altivec version.\n");
             return;
         }
 
         if (((long)(s->intra_scantable.inverse) & 0x0f) != 0)
         {
-            fprintf(stderr, "Internal Error: scan table blocks must be 16-byte aligned "
+            av_log(s->avctx, AV_LOG_INFO, "Internal Error: scan table blocks must be 16-byte aligned "
                     "to use Altivec DCT. Reverting to non-altivec version.\n");
             return;
         }
@@ -71,8 +71,11 @@ void MPV_common_init_ppc(MpegEncContext *s)
         if ((s->avctx->dct_algo == FF_DCT_AUTO) ||
                 (s->avctx->dct_algo == FF_DCT_ALTIVEC))
         {
+#if 0 /* seems to cause trouble under some circumstances */
             s->dct_quantize = dct_quantize_altivec;
-            s->dct_unquantize_h263 = dct_unquantize_h263_altivec;
+#endif
+            s->dct_unquantize_h263_intra = dct_unquantize_h263_altivec;
+            s->dct_unquantize_h263_inter = dct_unquantize_h263_altivec;
         }
     } else
 #endif

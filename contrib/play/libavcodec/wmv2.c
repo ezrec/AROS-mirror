@@ -59,12 +59,14 @@ static void wmv2_common_init(Wmv2Context * w){
     ff_init_scantable(s->dsp.idct_permutation, &w->abt_scantable[1], wmv2_scantableB);
 }
 
+#ifdef CONFIG_ENCODERS
+
 static int encode_ext_header(Wmv2Context *w){
     MpegEncContext * const s= &w->s;
     PutBitContext pb;
     int code;
         
-    init_put_bits(&pb, s->avctx->extradata, s->avctx->extradata_size, NULL, NULL);
+    init_put_bits(&pb, s->avctx->extradata, s->avctx->extradata_size);
 
     put_bits(&pb, 5, s->avctx->frame_rate / s->avctx->frame_rate_base); //yes 29.97 -> 29
     put_bits(&pb, 11, FFMIN(s->bit_rate/1024, 2047));
@@ -84,7 +86,6 @@ static int encode_ext_header(Wmv2Context *w){
     return 0;
 }
 
-#ifdef CONFIG_ENCODERS
 static int wmv2_encode_init(AVCodecContext *avctx){
     Wmv2Context * const w= avctx->priv_data;
     
@@ -101,7 +102,6 @@ static int wmv2_encode_init(AVCodecContext *avctx){
 }
 
 static int wmv2_encode_end(AVCodecContext *avctx){
-    Wmv2Context * const w= avctx->priv_data;
     
     if(MPV_encode_end(avctx) < 0)
         return -1;
@@ -182,7 +182,7 @@ int ff_wmv2_encode_picture_header(MpegEncContext * s, int picture_number)
         put_bits(&s->pb, 1, s->dc_table_index);
         put_bits(&s->pb, 1, s->mv_table_index);
     
-        s->inter_intra_pred= (s->width*s->height < 320*240 && s->bit_rate<=II_BITRATE);
+        s->inter_intra_pred= 0;//(s->width*s->height < 320*240 && s->bit_rate<=II_BITRATE);
     }
     s->esc3_level_length= 0;
     s->esc3_run_length= 0;
@@ -217,7 +217,7 @@ void ff_wmv2_encode_mb(MpegEncContext * s,
                  wmv2_inter_table[w->cbp_table_index][cbp + 64][0]);
 
         /* motion vector */
-        h263_pred_motion(s, 0, &pred_x, &pred_y);
+        h263_pred_motion(s, 0, 0, &pred_x, &pred_y);
         msmpeg4_encode_motion(s, motion_x - pred_x, 
                               motion_y - pred_y);
     } else {
@@ -339,7 +339,7 @@ static int decode_ext_header(Wmv2Context *w){
     s->slice_height = s->mb_height / code;
 
     if(s->avctx->debug&FF_DEBUG_PICT_INFO){
-        printf("fps:%d, br:%d, qpbit:%d, abt_flag:%d, j_type_bit:%d, tl_mv_flag:%d, mbrl_bit:%d, code:%d, flag3:%d, slices:%d\n", 
+        av_log(s->avctx, AV_LOG_DEBUG, "fps:%d, br:%d, qpbit:%d, abt_flag:%d, j_type_bit:%d, tl_mv_flag:%d, mbrl_bit:%d, code:%d, flag3:%d, slices:%d\n", 
         fps, s->bit_rate, w->mspel_bit, w->abt_flag, w->j_type_bit, w->top_left_mv_flag, w->per_mb_rl_bit, code, w->flag3, 
         code);
     }
@@ -367,9 +367,9 @@ return -1;
     s->pict_type = get_bits(&s->gb, 1) + 1;
     if(s->pict_type == I_TYPE){
         code = get_bits(&s->gb, 7);
-        printf("I7:%X/\n", code);
+        av_log(s->avctx, AV_LOG_ERROR, "I7:%X/\n", code);
     }
-    s->qscale = get_bits(&s->gb, 5);
+    s->chroma_qscale= s->qscale = get_bits(&s->gb, 5);
     if(s->qscale < 0)
        return -1;
        
@@ -398,7 +398,7 @@ int ff_wmv2_decode_secondary_picture_header(MpegEncContext * s)
         s->inter_intra_pred= 0;
         s->no_rounding = 1;
         if(s->avctx->debug&FF_DEBUG_PICT_INFO){
-	    printf("qscale:%d rlc:%d rl:%d dc:%d mbrl:%d j_type:%d \n", 
+	    av_log(s->avctx, AV_LOG_DEBUG, "qscale:%d rlc:%d rl:%d dc:%d mbrl:%d j_type:%d \n", 
 		s->qscale,
 		s->rl_chroma_table_index,
 		s->rl_table_index, 
@@ -444,11 +444,11 @@ int ff_wmv2_decode_secondary_picture_header(MpegEncContext * s)
         s->dc_table_index = get_bits1(&s->gb);
         s->mv_table_index = get_bits1(&s->gb);
     
-        s->inter_intra_pred= (s->width*s->height < 320*240 && s->bit_rate<=II_BITRATE);
+        s->inter_intra_pred= 0;//(s->width*s->height < 320*240 && s->bit_rate<=II_BITRATE);
         s->no_rounding ^= 1;
         
         if(s->avctx->debug&FF_DEBUG_PICT_INFO){
-            printf("rl:%d rlc:%d dc:%d mv:%d mbrl:%d qp:%d mspel:%d per_mb_abt:%d abt_type:%d cbp:%d ii:%d\n", 
+            av_log(s->avctx, AV_LOG_DEBUG, "rl:%d rlc:%d dc:%d mv:%d mbrl:%d qp:%d mspel:%d per_mb_abt:%d abt_type:%d cbp:%d ii:%d\n", 
 		s->rl_table_index, 
 		s->rl_chroma_table_index, 
 		s->dc_table_index,
@@ -472,14 +472,11 @@ s->picture_number++; //FIXME ?
 //        return wmv2_decode_j_picture(w); //FIXME
 
     if(w->j_type){
-        printf("J-type picture isnt supported\n");
+        av_log(s->avctx, AV_LOG_ERROR, "J-type picture isnt supported\n");
         return -1;
     }
 
     return 0;
-}
-
-static void ff_wmv2_decode_init(MpegEncContext *s){
 }
 
 static inline int wmv2_decode_motion(Wmv2Context *w, int *mx_ptr, int *my_ptr){
@@ -505,14 +502,14 @@ static int16_t *wmv2_pred_motion(Wmv2Context *w, int *px, int *py){
     int xy, wrap, diff, type;
     int16_t *A, *B, *C, *mot_val;
 
-    wrap = s->block_wrap[0];
+    wrap = s->b8_stride;
     xy = s->block_index[0];
 
-    mot_val = s->motion_val[xy];
+    mot_val = s->current_picture.motion_val[0][xy];
 
-    A = s->motion_val[xy - 1];
-    B = s->motion_val[xy - wrap];
-    C = s->motion_val[xy + 2 - wrap];
+    A = s->current_picture.motion_val[0][xy - 1];
+    B = s->current_picture.motion_val[0][xy - wrap];
+    C = s->current_picture.motion_val[0][xy + 2 - wrap];
     
     diff= FFMAX(ABS(A[0] - B[0]), ABS(A[1] - B[1]));
     
@@ -587,7 +584,6 @@ static inline int wmv2_decode_inter_block(Wmv2Context *w, DCTELEM *block, int n,
 
 static void wmv2_add_block(Wmv2Context *w, DCTELEM *block1, uint8_t *dst, int stride, int n){
     MpegEncContext * const s= &w->s;
-    uint8_t temp[2][64];
 
     switch(w->abt_type_table[n]){
     case 0:
@@ -606,7 +602,7 @@ static void wmv2_add_block(Wmv2Context *w, DCTELEM *block1, uint8_t *dst, int st
         memset(w->abt_block2[n], 0, 64*sizeof(DCTELEM));
         break;
     default:
-        fprintf(stderr, "internal error in WMV2 abt\n");
+        av_log(s->avctx, AV_LOG_ERROR, "internal error in WMV2 abt\n");
     }
 }
 
@@ -650,7 +646,7 @@ void ff_mspel_motion(MpegEncContext *s,
     if(s->flags&CODEC_FLAG_EMU_EDGE){
         if(src_x<1 || src_y<1 || src_x + 17  >= s->h_edge_pos
                               || src_y + h+1 >= v_edge_pos){
-            ff_emulated_edge_mc(s, ptr - 1 - s->linesize, s->linesize, 19, 19, 
+            ff_emulated_edge_mc(s->edge_emu_buffer, ptr - 1 - s->linesize, s->linesize, 19, 19, 
                              src_x-1, src_y-1, s->h_edge_pos, s->v_edge_pos);
             ptr= s->edge_emu_buffer + 1 + s->linesize;
             emu=1;
@@ -691,7 +687,7 @@ void ff_mspel_motion(MpegEncContext *s,
     offset = (src_y * uvlinesize) + src_x;
     ptr = ref_picture[1] + offset;
     if(emu){
-        ff_emulated_edge_mc(s, ptr, s->uvlinesize, 9, 9, 
+        ff_emulated_edge_mc(s->edge_emu_buffer, ptr, s->uvlinesize, 9, 9, 
                          src_x, src_y, s->h_edge_pos>>1, s->v_edge_pos>>1);
         ptr= s->edge_emu_buffer;
     }
@@ -699,7 +695,7 @@ void ff_mspel_motion(MpegEncContext *s,
 
     ptr = ref_picture[2] + offset;
     if(emu){
-        ff_emulated_edge_mc(s, ptr, s->uvlinesize, 9, 9, 
+        ff_emulated_edge_mc(s->edge_emu_buffer, ptr, s->uvlinesize, 9, 9, 
                          src_x, src_y, s->h_edge_pos>>1, s->v_edge_pos>>1);
         ptr= s->edge_emu_buffer;
     }
@@ -740,7 +736,7 @@ static int wmv2_decode_mb(MpegEncContext *s, DCTELEM block[6][64])
         s->mb_intra = 1;
         code = get_vlc2(&s->gb, mb_intra_vlc.table, MB_INTRA_VLC_BITS, 2);
         if (code < 0){
-            fprintf(stderr, "II-cbp illegal at %d %d\n", s->mb_x, s->mb_y);
+            av_log(s->avctx, AV_LOG_ERROR, "II-cbp illegal at %d %d\n", s->mb_x, s->mb_y);
             return -1;
         }
         /* predict coded block pattern */
@@ -786,7 +782,7 @@ static int wmv2_decode_mb(MpegEncContext *s, DCTELEM block[6][64])
         for (i = 0; i < 6; i++) {
             if (wmv2_decode_inter_block(w, block[i], i, (cbp >> (5 - i)) & 1) < 0)
 	    {
-	        fprintf(stderr,"\nerror while decoding inter block: %d x %d (%d)\n", s->mb_x, s->mb_y, i);
+	        av_log(s->avctx, AV_LOG_ERROR, "\nerror while decoding inter block: %d x %d (%d)\n", s->mb_x, s->mb_y, i);
 	        return -1;
 	    }
         }    
@@ -807,7 +803,7 @@ static int wmv2_decode_mb(MpegEncContext *s, DCTELEM block[6][64])
         for (i = 0; i < 6; i++) {
             if (msmpeg4_decode_block(s, block[i], i, (cbp >> (5 - i)) & 1, NULL) < 0)
 	    {
-	        fprintf(stderr,"\nerror while decoding intra block: %d x %d (%d)\n", s->mb_x, s->mb_y, i);
+	        av_log(s->avctx, AV_LOG_ERROR, "\nerror while decoding intra block: %d x %d (%d)\n", s->mb_x, s->mb_y, i);
 	        return -1;
 	    }
         }    

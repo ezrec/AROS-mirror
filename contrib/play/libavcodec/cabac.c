@@ -26,6 +26,7 @@
 #include <string.h>
 
 #include "common.h"
+#include "bitstream.h"
 #include "cabac.h"
 
 const uint8_t ff_h264_lps_range[64][4]= {
@@ -69,12 +70,31 @@ const uint8_t ff_h264_lps_state[64]= {
  36,36,37,37,37,38,38,63,
 };
 
+const uint8_t ff_h264_norm_shift[256]= {
+ 8,7,6,6,5,5,5,5,4,4,4,4,4,4,4,4,
+ 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+ 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+};
+
 /**
  *
  * @param buf_size size of buf in bits
  */
 void ff_init_cabac_encoder(CABACContext *c, uint8_t *buf, int buf_size){
-    init_put_bits(&c->pb, buf, buf_size, NULL, NULL);
+    init_put_bits(&c->pb, buf, buf_size);
 
     c->low= 0;
     c->range= 0x1FE;
@@ -90,14 +110,19 @@ void ff_init_cabac_encoder(CABACContext *c, uint8_t *buf, int buf_size){
  *
  * @param buf_size size of buf in bits
  */
-void ff_init_cabac_decoder(CABACContext *c, uint8_t *buf, int buf_size){
+void ff_init_cabac_decoder(CABACContext *c, const uint8_t *buf, int buf_size){
     c->bytestream_start= 
     c->bytestream= buf;
+    c->bytestream_end= buf + buf_size;
 
-    c->low= *c->bytestream++;
-    c->low= (c->low<<9) + ((*c->bytestream++)<<1);
-    c->range= 0x1FE00;
-    c->bits_left= 7;
+#if CABAC_BITS == 16
+    c->low =  (*c->bytestream++)<<18;
+    c->low+=  (*c->bytestream++)<<10;
+#else
+    c->low =  (*c->bytestream++)<<10;
+#endif
+    c->low+= ((*c->bytestream++)<<2) + 2;
+    c->range= 0x1FE<<(CABAC_BITS + 1);
 }
 
 void ff_init_cabac_states(CABACContext *c, uint8_t const (*lps_range)[4], 
@@ -106,14 +131,14 @@ void ff_init_cabac_states(CABACContext *c, uint8_t const (*lps_range)[4],
     
     for(i=0; i<state_count; i++){
         for(j=0; j<4; j++){ //FIXME check if this is worth the 1 shift we save
-            c->lps_range[2*i+0][j]=
-            c->lps_range[2*i+1][j]= lps_range[i][j];
+            c->lps_range[2*i+0][j+4]=
+            c->lps_range[2*i+1][j+4]= lps_range[i][j];
         }
 
         c->mps_state[2*i+0]= 2*mps_state[i];
         c->mps_state[2*i+1]= 2*mps_state[i]+1;
 
-        if(lps_state[i]){
+        if( i ){
             c->lps_state[2*i+0]= 2*lps_state[i];
             c->lps_state[2*i+1]= 2*lps_state[i]+1;
         }else{
@@ -125,6 +150,9 @@ void ff_init_cabac_states(CABACContext *c, uint8_t const (*lps_range)[4],
 
 #if 0 //selftest
 #define SIZE 10240
+
+#include "avcodec.h"
+
 int main(){
     CABACContext c;
     uint8_t b[9*SIZE];
@@ -172,33 +200,33 @@ STOP_TIMER("put_cabac_ueg")
     for(i=0; i<SIZE; i++){
 START_TIMER
         if( (r[i]&1) != get_cabac_bypass(&c) )
-            printf("CABAC bypass failure at %d\n", i);
+            av_log(NULL, AV_LOG_ERROR, "CABAC bypass failure at %d\n", i);
 STOP_TIMER("get_cabac_bypass")
     }
     
     for(i=0; i<SIZE; i++){
 START_TIMER
         if( (r[i]&1) != get_cabac(&c, state) )
-            printf("CABAC failure at %d\n", i);
+            av_log(NULL, AV_LOG_ERROR, "CABAC failure at %d\n", i);
 STOP_TIMER("get_cabac")
     }
-
+#if 0
     for(i=0; i<SIZE; i++){
 START_TIMER
         if( r[i] != get_cabac_u(&c, state, (i&1) ? 6 : 7, 3, i&1) )
-            printf("CABAC unary (truncated) binarization failure at %d\n", i);
+            av_log(NULL, AV_LOG_ERROR, "CABAC unary (truncated) binarization failure at %d\n", i);
 STOP_TIMER("get_cabac_u")
     }
 
     for(i=0; i<SIZE; i++){
 START_TIMER
         if( r[i] != get_cabac_ueg(&c, state, 3, 0, 1, 2))
-            printf("CABAC unary (truncated) binarization failure at %d\n", i);
+            av_log(NULL, AV_LOG_ERROR, "CABAC unary (truncated) binarization failure at %d\n", i);
 STOP_TIMER("get_cabac_ueg")
     }
-
+#endif
     if(!get_cabac_terminate(&c))
-        printf("where's the Terminator?\n");
+        av_log(NULL, AV_LOG_ERROR, "where's the Terminator?\n");
     
     return 0;
 }

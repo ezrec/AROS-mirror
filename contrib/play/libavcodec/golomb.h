@@ -1,6 +1,7 @@
 /*
  * exp golomb vlc stuff
  * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
+ * Copyright (c) 2004 Alex Beregszaszi
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +23,7 @@
  * @file golomb.h
  * @brief 
  *     exp golomb vlc stuff
- * @author Michael Niedermayer <michaelni@gmx.at>
+ * @author Michael Niedermayer <michaelni@gmx.at> and Alex Beregszaszi
  */
 
 #define INVALID_VLC           0x80000000
@@ -80,7 +81,10 @@ static inline int svq3_get_ue_golomb(GetBitContext *gb){
         
         return ff_interleaved_ue_golomb_vlc_code[buf];
     }else{
-        buf|=1;
+        LAST_SKIP_BITS(re, gb, 8);
+        UPDATE_CACHE(re, gb);
+        buf |= 1 | (GET_CACHE(re, gb) >> 8);
+
         if((buf & 0xAAAAAAAA) == 0)
             return INVALID_VLC;
 
@@ -88,7 +92,7 @@ static inline int svq3_get_ue_golomb(GetBitContext *gb){
             buf = (buf << 2) - ((buf << log) >> (log - 1)) + (buf >> 30);
         }
 
-        LAST_SKIP_BITS(re, gb, 63 - 2*log);
+        LAST_SKIP_BITS(re, gb, 63 - 2*log - 8);
         CLOSE_READER(re, gb);
 
         return ((buf << log) >> log) - 1;
@@ -178,6 +182,105 @@ static inline int svq3_get_se_golomb(GetBitContext *gb){
     }
 }
 
+/**
+ * read unsigned golomb rice code (ffv1).
+ */
+static inline int get_ur_golomb(GetBitContext *gb, int k, int limit, int esc_len){
+    unsigned int buf;
+    int log;
+    
+    OPEN_READER(re, gb);
+    UPDATE_CACHE(re, gb);
+    buf=GET_CACHE(re, gb);
+
+    log= av_log2(buf);
+
+    if(log > 31-limit){
+        buf >>= log - k;
+        buf += (30-log)<<k;
+        LAST_SKIP_BITS(re, gb, 32 + k - log);
+        CLOSE_READER(re, gb);
+    
+        return buf;
+    }else{
+        buf >>= 32 - limit - esc_len;
+        LAST_SKIP_BITS(re, gb, esc_len + limit);
+        CLOSE_READER(re, gb);
+    
+        return buf + limit - 1;
+    }
+}
+
+/**
+ * read unsigned golomb rice code (jpegls).
+ */
+static inline int get_ur_golomb_jpegls(GetBitContext *gb, int k, int limit, int esc_len){
+    unsigned int buf;
+    int log;
+    
+    OPEN_READER(re, gb);
+    UPDATE_CACHE(re, gb);
+    buf=GET_CACHE(re, gb);
+
+    log= av_log2(buf);
+    
+    if(log > 31-11){
+        buf >>= log - k;
+        buf += (30-log)<<k;
+        LAST_SKIP_BITS(re, gb, 32 + k - log);
+        CLOSE_READER(re, gb);
+    
+        return buf;
+    }else{
+        int i;
+        for(i=0; SHOW_UBITS(re, gb, 1) == 0; i++){
+            LAST_SKIP_BITS(re, gb, 1);
+            UPDATE_CACHE(re, gb);
+        }
+        SKIP_BITS(re, gb, 1);
+
+        if(i < limit - 1){
+            if(k){
+                buf = SHOW_UBITS(re, gb, k);
+                LAST_SKIP_BITS(re, gb, k);
+            }else{
+                buf=0;
+            }
+
+            CLOSE_READER(re, gb);
+            return buf + (i<<k);
+        }else if(i == limit - 1){
+            buf = SHOW_UBITS(re, gb, esc_len);
+            LAST_SKIP_BITS(re, gb, esc_len);
+            CLOSE_READER(re, gb);
+    
+            return buf + 1;
+        }else
+            return -1;
+    }
+}
+
+/**
+ * read signed golomb rice code (ffv1).
+ */
+static inline int get_sr_golomb(GetBitContext *gb, int k, int limit, int esc_len){
+    int v= get_ur_golomb(gb, k, limit, esc_len);
+    
+    v++;
+    if (v&1) return v>>1;
+    else return -(v>>1);
+    
+//    return (v>>1) ^ -(v&1);
+}
+
+/**
+ * read signed golomb rice code (flac).
+ */
+static inline int get_sr_golomb_flac(GetBitContext *gb, int k, int limit, int esc_len){
+    int v= get_ur_golomb_jpegls(gb, k, limit, esc_len);
+    return (v>>1) ^ -(v&1);
+}
+
 #ifdef TRACE
 
 static inline int get_ue(GetBitContext *s, char *file, char *func, int line){
@@ -189,7 +292,7 @@ static inline int get_ue(GetBitContext *s, char *file, char *func, int line){
     
     print_bin(bits, len);
     
-    printf("%5d %2d %3d ue  @%5d in %s %s:%d\n", bits, len, i, pos, file, func, line);
+    av_log(NULL, AV_LOG_DEBUG, "%5d %2d %3d ue  @%5d in %s %s:%d\n", bits, len, i, pos, file, func, line);
     
     return i;
 }
@@ -203,7 +306,7 @@ static inline int get_se(GetBitContext *s, char *file, char *func, int line){
     
     print_bin(bits, len);
     
-    printf("%5d %2d %3d se  @%5d in %s %s:%d\n", bits, len, i, pos, file, func, line);
+    av_log(NULL, AV_LOG_DEBUG, "%5d %2d %3d se  @%5d in %s %s:%d\n", bits, len, i, pos, file, func, line);
     
     return i;
 }
@@ -217,7 +320,7 @@ static inline int get_te(GetBitContext *s, int r, char *file, char *func, int li
     
     print_bin(bits, len);
     
-    printf("%5d %2d %3d te  @%5d in %s %s:%d\n", bits, len, i, pos, file, func, line);
+    av_log(NULL, AV_LOG_DEBUG, "%5d %2d %3d te  @%5d in %s %s:%d\n", bits, len, i, pos, file, func, line);
     
     return i;
 }
@@ -278,4 +381,63 @@ static inline void set_se_golomb(PutBitContext *pb, int i){
     i^= (i>>31);
 #endif
     set_ue_golomb(pb, i);
+}
+
+/**
+ * write unsigned golomb rice code (ffv1).
+ */
+static inline void set_ur_golomb(PutBitContext *pb, int i, int k, int limit, int esc_len){
+    int e;
+    
+    assert(i>=0);
+    
+    e= i>>k;
+    if(e<limit){
+        put_bits(pb, e + k + 1, (1<<k) + (i&((1<<k)-1)));
+    }else{
+        put_bits(pb, limit + esc_len, i - limit + 1);
+    }
+}
+
+/**
+ * write unsigned golomb rice code (jpegls).
+ */
+static inline void set_ur_golomb_jpegls(PutBitContext *pb, int i, int k, int limit, int esc_len){
+    int e;
+    
+    assert(i>=0);
+    
+    e= (i>>k) + 1;
+    if(e<limit){
+        put_bits(pb, e, 1);
+        if(k)
+            put_bits(pb, k, i&((1<<k)-1));
+    }else{
+        put_bits(pb, limit  , 1);
+        put_bits(pb, esc_len, i - 1);
+    }
+}
+
+/**
+ * write signed golomb rice code (ffv1).
+ */
+static inline void set_sr_golomb(PutBitContext *pb, int i, int k, int limit, int esc_len){
+    int v;
+
+    v = -2*i-1;
+    v ^= (v>>31);
+
+    set_ur_golomb(pb, v, k, limit, esc_len);
+}
+
+/**
+ * write signed golomb rice code (flac).
+ */
+static inline void set_sr_golomb_flac(PutBitContext *pb, int i, int k, int limit, int esc_len){
+    int v;
+
+    v = -2*i-1;
+    v ^= (v>>31);
+
+    set_ur_golomb_jpegls(pb, v, k, limit, esc_len);
 }

@@ -45,19 +45,11 @@ static int alaw2linear(unsigned char	a_val)
 
 	a_val ^= 0x55;
 
-	t = (a_val & QUANT_MASK) << 4;
+	t = a_val & QUANT_MASK;
 	seg = ((unsigned)a_val & SEG_MASK) >> SEG_SHIFT;
-	switch (seg) {
-	case 0:
-		t += 8;
-		break;
-	case 1:
-		t += 0x108;
-		break;
-	default:
-		t += 0x108;
-		t <<= seg - 1;
-	}
+	if(seg) t= (t + t + 1 + 32) << (seg + 2);
+	else    t= (t + t + 1     ) << 3;
+
 	return ((a_val & SIGN_BIT) ? t : -t);
 }
 
@@ -135,6 +127,23 @@ static int pcm_encode_init(AVCodecContext *avctx)
         break;
     }
     
+    switch(avctx->codec->id) {
+    case CODEC_ID_PCM_S16LE:
+    case CODEC_ID_PCM_S16BE:
+    case CODEC_ID_PCM_U16LE:
+    case CODEC_ID_PCM_U16BE:
+        avctx->block_align = 2 * avctx->channels;
+        break;
+    case CODEC_ID_PCM_S8:
+    case CODEC_ID_PCM_U8:
+    case CODEC_ID_PCM_MULAW:
+    case CODEC_ID_PCM_ALAW:
+        avctx->block_align = avctx->channels;
+        break;
+    default:
+        break;
+    }
+
     avctx->coded_frame= avcodec_alloc_frame();
     avctx->coded_frame->key_frame= 1;
     
@@ -342,7 +351,6 @@ static int pcm_decode_frame(AVCodecContext *avctx,
         }
         break;
     default:
-        *data_size = 0;
         return -1;
     }
     *data_size = (uint8_t *)samples - (uint8_t *)data;

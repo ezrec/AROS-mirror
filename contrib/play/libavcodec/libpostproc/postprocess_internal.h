@@ -37,9 +37,11 @@
 
 // Experimental vertical filters
 #define V_X1_FILTER	0x0200			// 512
+#define V_A_DEBLOCK	0x0400
 
 // Experimental horizontal filters
 #define H_X1_FILTER	0x2000			// 8192
+#define H_A_DEBLOCK	0x4000
 
 /// select between full y range (255-0) or standart one (234-16)
 #define FULL_Y_RANGE	0x8000			// 32768
@@ -134,8 +136,8 @@ typedef struct PPContext{
 	uint64_t __attribute__((aligned(8))) pQPb;
 	uint64_t __attribute__((aligned(8))) pQPb2;
 
-	uint64_t __attribute__((aligned(8))) mmxDcOffset[32];
-	uint64_t __attribute__((aligned(8))) mmxDcThreshold[32];
+	uint64_t __attribute__((aligned(8))) mmxDcOffset[64];
+	uint64_t __attribute__((aligned(8))) mmxDcThreshold[64];
 
 	QP_STORE_T *stdQPTable;       ///< used to fix MPEG2 style qscale
 	QP_STORE_T *nonBQPTable;

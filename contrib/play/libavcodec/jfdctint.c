@@ -148,16 +148,10 @@
 #endif
 
 
-/*
- * Perform the forward DCT on one block of samples.
- */
-
-GLOBAL(void)
-ff_jpeg_fdct_islow (DCTELEM * data)
-{
-  int32_t tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
-  int32_t tmp10, tmp11, tmp12, tmp13;
-  int32_t z1, z2, z3, z4, z5;
+static always_inline void row_fdct(DCTELEM * data){
+  int_fast32_t tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  int_fast32_t tmp10, tmp11, tmp12, tmp13;
+  int_fast32_t z1, z2, z3, z4, z5;
   DCTELEM *dataptr;
   int ctr;
   SHIFT_TEMPS
@@ -225,6 +219,23 @@ ff_jpeg_fdct_islow (DCTELEM * data)
     
     dataptr += DCTSIZE;		/* advance pointer to next row */
   }
+}
+
+/*
+ * Perform the forward DCT on one block of samples.
+ */
+
+GLOBAL(void)
+ff_jpeg_fdct_islow (DCTELEM * data)
+{
+  int_fast32_t tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  int_fast32_t tmp10, tmp11, tmp12, tmp13;
+  int_fast32_t z1, z2, z3, z4, z5;
+  DCTELEM *dataptr;
+  int ctr;
+  SHIFT_TEMPS
+
+  row_fdct(data);
 
   /* Pass 2: process columns.
    * We remove the PASS1_BITS scaling, but leave the results scaled up
@@ -293,5 +304,70 @@ ff_jpeg_fdct_islow (DCTELEM * data)
 					   CONST_BITS+PASS1_BITS);
     
     dataptr++;			/* advance pointer to next column */
+  }
+}
+
+/*
+ * The secret of DCT2-4-8 is really simple -- you do the usual 1-DCT
+ * on the rows and then, instead of doing even and odd, part on the colums
+ * you do even part two times.
+ */
+GLOBAL(void)
+ff_fdct248_islow (DCTELEM * data)
+{
+  int_fast32_t tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+  int_fast32_t tmp10, tmp11, tmp12, tmp13;
+  int_fast32_t z1;
+  DCTELEM *dataptr;
+  int ctr;
+  SHIFT_TEMPS
+
+  row_fdct(data);
+
+  /* Pass 2: process columns.
+   * We remove the PASS1_BITS scaling, but leave the results scaled up
+   * by an overall factor of 8.
+   */
+
+  dataptr = data;
+  for (ctr = DCTSIZE-1; ctr >= 0; ctr--) {
+     tmp0 = dataptr[DCTSIZE*0] + dataptr[DCTSIZE*1];
+     tmp1 = dataptr[DCTSIZE*2] + dataptr[DCTSIZE*3];
+     tmp2 = dataptr[DCTSIZE*4] + dataptr[DCTSIZE*5];
+     tmp3 = dataptr[DCTSIZE*6] + dataptr[DCTSIZE*7];
+     tmp4 = dataptr[DCTSIZE*0] - dataptr[DCTSIZE*1];
+     tmp5 = dataptr[DCTSIZE*2] - dataptr[DCTSIZE*3];
+     tmp6 = dataptr[DCTSIZE*4] - dataptr[DCTSIZE*5];
+     tmp7 = dataptr[DCTSIZE*6] - dataptr[DCTSIZE*7];
+      
+     tmp10 = tmp0 + tmp3;
+     tmp11 = tmp1 + tmp2;
+     tmp12 = tmp1 - tmp2;
+     tmp13 = tmp0 - tmp3;
+     
+     dataptr[DCTSIZE*0] = (DCTELEM) DESCALE(tmp10 + tmp11, PASS1_BITS);
+     dataptr[DCTSIZE*4] = (DCTELEM) DESCALE(tmp10 - tmp11, PASS1_BITS);
+     
+     z1 = MULTIPLY(tmp12 + tmp13, FIX_0_541196100);
+     dataptr[DCTSIZE*2] = (DCTELEM) DESCALE(z1 + MULTIPLY(tmp13, FIX_0_765366865),
+				            CONST_BITS+PASS1_BITS);
+     dataptr[DCTSIZE*6] = (DCTELEM) DESCALE(z1 + MULTIPLY(tmp12, - FIX_1_847759065),
+				            CONST_BITS+PASS1_BITS);
+
+     tmp10 = tmp4 + tmp7;
+     tmp11 = tmp5 + tmp6;
+     tmp12 = tmp5 - tmp6;
+     tmp13 = tmp4 - tmp7;
+
+     dataptr[DCTSIZE*1] = (DCTELEM) DESCALE(tmp10 + tmp11, PASS1_BITS);
+     dataptr[DCTSIZE*5] = (DCTELEM) DESCALE(tmp10 - tmp11, PASS1_BITS);
+     
+     z1 = MULTIPLY(tmp12 + tmp13, FIX_0_541196100);
+     dataptr[DCTSIZE*3] = (DCTELEM) DESCALE(z1 + MULTIPLY(tmp13, FIX_0_765366865),
+				            CONST_BITS+PASS1_BITS);
+     dataptr[DCTSIZE*7] = (DCTELEM) DESCALE(z1 + MULTIPLY(tmp12, - FIX_1_847759065),
+				            CONST_BITS+PASS1_BITS);
+    
+     dataptr++;			/* advance pointer to next column */
   }
 }

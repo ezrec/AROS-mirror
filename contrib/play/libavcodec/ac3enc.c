@@ -24,7 +24,7 @@
 //#define DEBUG
 //#define DEBUG_BITALLOC
 #include "avcodec.h"
-
+#include "bitstream.h"
 #include "ac3.h"
 
 typedef struct AC3EncodeContext {
@@ -464,7 +464,7 @@ static void compute_exp_strategy(uint8_t exp_strategy[NB_BLOCKS][AC3_MAX_CHANNEL
     for(i=1;i<NB_BLOCKS;i++) {
         exp_diff = calc_exp_diff(exp[i][ch], exp[i-1][ch], N/2);
 #ifdef DEBUG            
-        printf("exp_diff=%d\n", exp_diff);
+        av_log(NULL, AV_LOG_DEBUG, "exp_diff=%d\n", exp_diff);
 #endif
         if (exp_diff > EXP_DIFF_THRESHOLD)
             exp_strategy[i][ch] = EXP_NEW;
@@ -515,7 +515,7 @@ static int encode_exp(uint8_t encoded_exp[N/2],
                       int nb_exps,
                       int exp_strategy)
 {
-    int group_size, nb_groups, i, j, k, recurse, exp_min, delta;
+    int group_size, nb_groups, i, j, k, exp_min;
     uint8_t exp1[N/2];
 
     switch(exp_strategy) {
@@ -550,25 +550,13 @@ static int encode_exp(uint8_t encoded_exp[N/2],
     if (exp1[0] > 15)
         exp1[0] = 15;
 
-    /* Iterate until the delta constraints between each groups are
-       satisfyed. I'm sure it is possible to find a better algorithm,
-       but I am lazy */
-    do {
-        recurse = 0;
-        for(i=1;i<=nb_groups;i++) {
-            delta = exp1[i] - exp1[i-1];
-            if (delta > 2) {
-                /* if delta too big, we encode a smaller exponent */
-                exp1[i] = exp1[i-1] + 2;
-            } else if (delta < -2) {
-                /* if delta is too small, we must decrease the previous
-               exponent, which means we must recurse */
-                recurse = 1;
-                exp1[i-1] = exp1[i] + 2;
-            }
-        }
-    } while (recurse);
-    
+    /* Decrease the delta between each groups to within 2
+     * so that they can be differentially encoded */
+    for (i=1;i<=nb_groups;i++)
+	exp1[i] = FFMIN(exp1[i], exp1[i-1] + 2);
+    for (i=nb_groups-1;i>=0;i--)
+	exp1[i] = FFMIN(exp1[i], exp1[i+1] + 2);
+
     /* now we have the exponent values the decoder will see */
     encoded_exp[0] = exp1[0];
     k = 1;
@@ -580,11 +568,11 @@ static int encode_exp(uint8_t encoded_exp[N/2],
     }
     
 #if defined(DEBUG)
-    printf("exponents: strategy=%d\n", exp_strategy);
+    av_log(NULL, AV_LOG_DEBUG, "exponents: strategy=%d\n", exp_strategy);
     for(i=0;i<=nb_groups * group_size;i++) {
-        printf("%d ", encoded_exp[i]);
+        av_log(NULL, AV_LOG_DEBUG, "%d ", encoded_exp[i]);
     }
-    printf("\n");
+    av_log(NULL, AV_LOG_DEBUG, "\n");
 #endif
 
     return 4 + (nb_groups / 3) * 7;
@@ -735,6 +723,9 @@ static int compute_bit_allocation(AC3EncodeContext *s,
     /* (fsnoffset[4] + fgaincod[4]) * c */
     frame_bits += 2*4 + 3 + 6 + s->nb_all_channels * (4 + 3);
 
+    /* auxdatae, crcrsv */
+    frame_bits += 2;
+
     /* CRC */
     frame_bits += 16;
 
@@ -746,7 +737,7 @@ static int compute_bit_allocation(AC3EncodeContext *s,
 	   bit_alloc(s, bap, encoded_exp, exp_strategy, frame_bits, csnroffst, 0) < 0)
 	csnroffst -= SNR_INC1;
     if (csnroffst < 0) {
-	fprintf(stderr, "Yack, Error !!!\n");
+	av_log(NULL, AV_LOG_ERROR, "Yack, Error !!!\n");
 	return -1;
     }
     while ((csnroffst + SNR_INC1) <= 63 && 
@@ -904,7 +895,7 @@ static int AC3_encode_init(AVCodecContext *avctx)
 /* output the AC3 frame header */
 static void output_frame_header(AC3EncodeContext *s, unsigned char *frame)
 {
-    init_put_bits(&s->pb, frame, AC3_MAX_CODED_FRAME_SIZE, NULL, NULL);
+    init_put_bits(&s->pb, frame, AC3_MAX_CODED_FRAME_SIZE);
 
     put_bits(&s->pb, 16, 0x0b77); /* frame header */
     put_bits(&s->pb, 16, 0); /* crc1: will be filled later */
@@ -978,7 +969,7 @@ static void output_audio_block(AC3EncodeContext *s,
                                int8_t global_exp[AC3_MAX_CHANNELS],
                                int block_num)
 {
-    int ch, nb_groups, group_size, i, baie;
+    int ch, nb_groups, group_size, i, baie, rbnd;
     uint8_t *p;
     uint16_t qmant[AC3_MAX_CHANNELS][N/2];
     int exp0, exp1;
@@ -1000,14 +991,28 @@ static void output_audio_block(AC3EncodeContext *s,
         put_bits(&s->pb, 1, 0); /* no new coupling strategy */
     }
 
-    if (s->acmod == 2) {
-        put_bits(&s->pb, 1, 0); /* no matrixing (but should be used in the future) */
-    }
+    if (s->acmod == 2)
+      {
+	if(block_num==0)
+	  {
+	    /* first block must define rematrixing (rematstr)  */
+	    put_bits(&s->pb, 1, 1); 
+	    
+	    /* dummy rematrixing rematflg(1:4)=0 */
+	    for (rbnd=0;rbnd<4;rbnd++)
+	      put_bits(&s->pb, 1, 0); 
+	  }
+	else 
+	  {
+	    /* no matrixing (but should be used in the future) */
+	    put_bits(&s->pb, 1, 0);
+	  } 
+      }
 
 #if defined(DEBUG) 
     {
-        static int count = 0;
-        printf("Block #%d (%d)\n", block_num, count++);
+      static int count = 0;
+      av_log(NULL, AV_LOG_DEBUG, "Block #%d (%d)\n", block_num, count++);
     }
 #endif
     /* exponent strategy */
@@ -1329,7 +1334,8 @@ static int output_frame_end(AC3EncodeContext *s)
     frame = s->pb.buf;
     n = 2 * s->frame_size - (pbBufPtr(&s->pb) - frame) - 2;
     assert(n >= 0);
-    memset(pbBufPtr(&s->pb), 0, n);
+    if(n>0)
+      memset(pbBufPtr(&s->pb), 0, n);
     
     /* Now we must compute both crcs : this is not so easy for crc1
        because it is at the beginning of the data... */
@@ -1353,7 +1359,7 @@ static int AC3_encode_frame(AVCodecContext *avctx,
                             unsigned char *frame, int buf_size, void *data)
 {
     AC3EncodeContext *s = avctx->priv_data;
-    short *samples = data;
+    int16_t *samples = data;
     int i, j, k, v, ch;
     int16_t input_samples[N];
     int32_t mdct_coef[NB_BLOCKS][AC3_MAX_CHANNELS][N/2];

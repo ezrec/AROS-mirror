@@ -101,10 +101,11 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s, unsigned char *cur,
 static void iv_alloc_frames(Indeo3DecodeContext *s) 
 {
   int luma_width, luma_height, luma_pixels, chroma_width, chroma_height,
-    chroma_pixels, bufsize, i;
+      chroma_pixels, i;
+  unsigned int bufsize;
 
-  luma_width = (s->width + 15) & -0x10;
-  luma_height = (s->height + 15) & -0x10;
+  luma_width   = (s->width  + 3) & (~3);
+  luma_height  = (s->height + 3) & (~3);
 
   s->iv_frame[0].y_w = s->iv_frame[0].y_h = 
     s->iv_frame[0].the_buf_size = 0;
@@ -112,8 +113,8 @@ static void iv_alloc_frames(Indeo3DecodeContext *s)
     s->iv_frame[1].the_buf_size = 0;
   s->iv_frame[1].the_buf = NULL;
 
-  chroma_width = luma_width >> 2;
-  chroma_height = luma_height >> 2;
+  chroma_width  = ((luma_width >> 2) + 3) & (~3);
+  chroma_height = ((luma_height>> 2) + 3) & (~3);
   luma_pixels = luma_width * luma_height;
   chroma_pixels = chroma_width * chroma_height;
 
@@ -223,6 +224,9 @@ static unsigned long iv_decode_frame(Indeo3DecodeContext *s,
     hdr_height, buf_pos + offs * 2, fflags2, hdr_pos, buf_pos, 
     min(hdr_width, 160));
 
+  if (!(s->avctx->flags & CODEC_FLAG_GRAY))
+  {
+
   buf_pos = buf + 16 + offs2;
   offs = le2me_32(*(uint32_t *)buf_pos);
   buf_pos += 4;
@@ -238,6 +242,8 @@ static unsigned long iv_decode_frame(Indeo3DecodeContext *s,
   iv_Decode_Chunk(s, s->cur_frame->Ubuf, s->ref_frame->Ubuf, chroma_width, 
     chroma_height, buf_pos + offs * 2, fflags2, hdr_pos, buf_pos, 
     min(chroma_width, 40));
+
+  }
 
   return 8;
 }
@@ -306,8 +312,8 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
   long *width_tbl, width_tbl_arr[10];
   char *ref_vectors;
   unsigned char *cur_frm_pos, *ref_frm_pos, *cp, *cp2;
-  unsigned long *cur_lp, *ref_lp, *correction_lp[2], *correctionloworder_lp[2],
-    *correctionhighorder_lp[2];
+  uint32_t *cur_lp, *ref_lp;
+  const uint32_t *correction_lp[2], *correctionloworder_lp[2], *correctionhighorder_lp[2];
   unsigned short *correction_type_sp[2];
   ustr_t strip_tbl[20], *strip;
   int i, j, k, lp1, lp2, flag1, cmd, blks_width, blks_height, region_160_width,
@@ -399,7 +405,7 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
       if(cmd == 0 || ref_vectors != NULL) {
         for(lp1 = 0; lp1 < blks_width; lp1++) {
           for(i = 0, j = 0; i < blks_height; i++, j += width_tbl[1])
-            ((unsigned long *)cur_frm_pos)[j] = ((unsigned long *)ref_frm_pos)[j];
+            ((uint32_t *)cur_frm_pos)[j] = ((uint32_t *)ref_frm_pos)[j];
           cur_frm_pos += 4;
           ref_frm_pos += 4;
         }
@@ -414,7 +420,10 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
       if((lv - 8) <= 7 && (k == 0 || k == 3 || k == 10)) {
         cp2 = s->ModPred + ((lv - 8) << 7);
         cp = ref_frm_pos;
-        for(i = 0; i < blks_width << 2; i++) { *(cp++) = cp2[*cp >> 1]; }
+        for(i = 0; i < blks_width << 2; i++) { 
+            int v = *cp >> 1;
+            *(cp++) = cp2[v]; 
+        }
       }
 
       if(k == 1 || k == 4) {
@@ -438,8 +447,8 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
             for(lp1 = 0; lp1 < blks_width; lp1++) {
               for(lp2 = 0; lp2 < 4; ) {
                 k = *buf1++;
-                cur_lp = ((unsigned long *)cur_frm_pos) + width_tbl[lp2];
-                ref_lp = ((unsigned long *)ref_frm_pos) + width_tbl[lp2];
+                cur_lp = ((uint32_t *)cur_frm_pos) + width_tbl[lp2];
+                ref_lp = ((uint32_t *)ref_frm_pos) + width_tbl[lp2];
 
                 switch(correction_type_sp[0][k]) {
                   case 0:
@@ -540,8 +549,8 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
               for(lp2 = 0; lp2 < 4; ) {
                 k = *buf1++;
 
-                cur_lp = ((unsigned long *)cur_frm_pos) + width_tbl[lp2 * 2];
-                ref_lp = ((unsigned long *)cur_frm_pos) + width_tbl[(lp2 * 2) - 1];
+                cur_lp = ((uint32_t *)cur_frm_pos) + width_tbl[lp2 * 2];
+                ref_lp = ((uint32_t *)cur_frm_pos) + width_tbl[(lp2 * 2) - 1];
 
                 switch(correction_type_sp[lp2 & 0x01][k]) {
                   case 0:
@@ -619,7 +628,7 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
                     break;
 
                   case 9:
-                    fprintf(stderr, "UNTESTED.\n");
+                    av_log(s->avctx, AV_LOG_ERROR, "UNTESTED.\n");
                     lv1 = *buf1++;
                     lv = (lv1 & 0x7F) << 1;
                     lv += (lv << 8);
@@ -652,8 +661,8 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
               for(lp1 = 0; lp1 < blks_width; lp1 += 2) {
                 for(lp2 = 0; lp2 < 4; ) {
                   k = *buf1++;
-                  cur_lp = ((unsigned long *)cur_frm_pos) + width_tbl[lp2 * 2];
-                  ref_lp = ((unsigned long *)cur_frm_pos) + width_tbl[(lp2 * 2) - 1];
+                  cur_lp = ((uint32_t *)cur_frm_pos) + width_tbl[lp2 * 2];
+                  ref_lp = ((uint32_t *)cur_frm_pos) + width_tbl[(lp2 * 2) - 1];
                   lv1 = ref_lp[0];
                   lv2 = ref_lp[1];
                   if(lp2 == 0 && flag1 != 0) {
@@ -788,7 +797,7 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
                       break;
 
                     case 9:
-                      fprintf(stderr, "UNTESTED.\n");
+                      av_log(s->avctx, AV_LOG_ERROR, "UNTESTED.\n");
                       lv1 = *buf1;
                       lv = (lv1 & 0x7F) << 1;
                       lv += (lv << 8);
@@ -814,8 +823,8 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
               for(lp1 = 0; lp1 < blks_width; lp1 += 2) {
                 for(lp2 = 0; lp2 < 4; ) {
                   k = *buf1++;
-                  cur_lp = ((unsigned long *)cur_frm_pos) + width_tbl[lp2 * 2];
-                  ref_lp = ((unsigned long *)ref_frm_pos) + width_tbl[lp2 * 2];
+                  cur_lp = ((uint32_t *)cur_frm_pos) + width_tbl[lp2 * 2];
+                  ref_lp = ((uint32_t *)ref_frm_pos) + width_tbl[lp2 * 2];
 
                   switch(correction_type_sp[lp2 & 0x01][k]) {
                     case 0:
@@ -862,8 +871,8 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
                       if(lp2 == 0) {
                         RLE_V3_CHECK(buf1,rle_v1,rle_v2,rle_v3)
                         for(i = 0, j = 0; i < 8; i++, j += width_tbl[1]) {
-                          ((unsigned long *)cur_frm_pos)[j] = ((unsigned long *)ref_frm_pos)[j];
-                          ((unsigned long *)cur_frm_pos)[j+1] = ((unsigned long *)ref_frm_pos)[j+1];
+                          ((uint32_t *)cur_frm_pos)[j] = ((uint32_t *)ref_frm_pos)[j];
+                          ((uint32_t *)cur_frm_pos)[j+1] = ((uint32_t *)ref_frm_pos)[j+1];
                         }
                         RLE_V2_CHECK(buf1,rle_v2, rle_v3,lp2)
                         break;
@@ -884,13 +893,13 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
                       break;
 
                     case 9:
-                      fprintf(stderr, "UNTESTED.\n");
+                      av_log(s->avctx, AV_LOG_ERROR, "UNTESTED.\n");
                       lv1 = *buf1;
                       lv = (lv1 & 0x7F) << 1;
                       lv += (lv << 8);
                       lv += (lv << 16);
                       for(i = 0, j = 0; i < 8; i++, j += width_tbl[1])
-                        ((unsigned long *)cur_frm_pos)[j] = ((unsigned long *)cur_frm_pos)[j+1] = lv;
+                        ((uint32_t *)cur_frm_pos)[j] = ((uint32_t *)cur_frm_pos)[j+1] = lv;
                       LV1_CHECK(buf1,rle_v3,lv1,lp2)
                       break;
 
@@ -917,8 +926,8 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
             for(lp1 = 0; lp1 < blks_width; lp1++) {
               for(lp2 = 0; lp2 < 4; ) {
                 k = *buf1++;
-                cur_lp = ((unsigned long *)cur_frm_pos) + width_tbl[lp2 * 2];
-                ref_lp = ((unsigned long *)ref_frm_pos) + width_tbl[lp2 * 2];
+                cur_lp = ((uint32_t *)cur_frm_pos) + width_tbl[lp2 * 2];
+                ref_lp = ((uint32_t *)ref_frm_pos) + width_tbl[lp2 * 2];
 
                 switch(correction_type_sp[lp2 & 0x01][k]) {
                   case 0:
@@ -977,7 +986,7 @@ static void iv_Decode_Chunk(Indeo3DecodeContext *s,
                     break;
 
                 case 9:
-                  fprintf(stderr, "UNTESTED.\n");
+                  av_log(s->avctx, AV_LOG_ERROR, "UNTESTED.\n");
                   lv1 = *buf1++;
                   lv = (lv1 & 0x7F) << 1;
                   lv += (lv << 8);
@@ -1053,6 +1062,11 @@ static int indeo3_decode_frame(AVCodecContext *avctx,
     unsigned char *src, *dest;
     int y;
 
+    /* no supplementary picture */
+    if (buf_size == 0) {
+        return 0;
+    }
+
     iv_decode_frame(s, buf, buf_size);
 
     if(s->frame.data[0])
@@ -1060,7 +1074,7 @@ static int indeo3_decode_frame(AVCodecContext *avctx,
 
     s->frame.reference = 0;
     if(avctx->get_buffer(avctx, &s->frame) < 0) {
-        fprintf(stderr, "get_buffer() failed\n");
+        av_log(s->avctx, AV_LOG_ERROR, "get_buffer() failed\n");
         return -1;
     }
 
@@ -1072,6 +1086,8 @@ static int indeo3_decode_frame(AVCodecContext *avctx,
       dest += s->frame.linesize[0];
     }
 
+    if (!(s->avctx->flags & CODEC_FLAG_GRAY))
+    {
     src = s->cur_frame->Ubuf;
     dest = s->frame.data[1];
     for (y = 0; y < s->height / 4; y++) {
@@ -1086,6 +1102,7 @@ static int indeo3_decode_frame(AVCodecContext *avctx,
       memcpy(dest, src, s->cur_frame->uv_w);
       src += s->cur_frame->uv_w;
       dest += s->frame.linesize[2];
+    }
     }
 
     *data_size=sizeof(AVFrame);

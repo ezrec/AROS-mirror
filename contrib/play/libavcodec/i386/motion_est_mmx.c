@@ -1,6 +1,7 @@
 /*
  * MMX optimized motion estimation
  * Copyright (c) 2001 Fabrice Bellard.
+ * Copyright (c) 2002-2004 Michael Niedermayer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,30 +20,31 @@
  * mostly by Michael Niedermayer <michaelni@gmx.at>
  */
 #include "../dsputil.h"
+#include "mmx.h"
 
 static const __attribute__ ((aligned(8))) uint64_t round_tab[3]={
-0x0000000000000000,
-0x0001000100010001,
-0x0002000200020002,
+0x0000000000000000ULL,
+0x0001000100010001ULL,
+0x0002000200020002ULL,
 };
 
-static __attribute__ ((aligned(8))) uint64_t bone= 0x0101010101010101LL;
+static attribute_used __attribute__ ((aligned(8))) uint64_t bone= 0x0101010101010101LL;
 
-static inline void sad8_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
+static inline void sad8_1_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
-    int len= -(stride<<h);
+    long len= -(stride*h);
     asm volatile(
         ".balign 16			\n\t"
         "1:				\n\t"
-        "movq (%1, %%eax), %%mm0	\n\t"
-        "movq (%2, %%eax), %%mm2	\n\t"
-        "movq (%2, %%eax), %%mm4	\n\t"
-        "addl %3, %%eax			\n\t"
+        "movq (%1, %%"REG_a"), %%mm0	\n\t"
+        "movq (%2, %%"REG_a"), %%mm2	\n\t"
+        "movq (%2, %%"REG_a"), %%mm4	\n\t"
+        "add %3, %%"REG_a"		\n\t"
         "psubusb %%mm0, %%mm2		\n\t"
         "psubusb %%mm4, %%mm0		\n\t"
-        "movq (%1, %%eax), %%mm1	\n\t"
-        "movq (%2, %%eax), %%mm3	\n\t"
-        "movq (%2, %%eax), %%mm5	\n\t"
+        "movq (%1, %%"REG_a"), %%mm1	\n\t"
+        "movq (%2, %%"REG_a"), %%mm3	\n\t"
+        "movq (%2, %%"REG_a"), %%mm5	\n\t"
         "psubusb %%mm1, %%mm3		\n\t"
         "psubusb %%mm5, %%mm1		\n\t"
         "por %%mm2, %%mm0		\n\t"
@@ -57,116 +59,116 @@ static inline void sad8_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
         "paddw %%mm3, %%mm2		\n\t"
         "paddw %%mm2, %%mm0		\n\t"
         "paddw %%mm0, %%mm6		\n\t"
-        "addl %3, %%eax			\n\t"
+        "add %3, %%"REG_a"		\n\t"
         " js 1b				\n\t"
         : "+a" (len)
-        : "r" (blk1 - len), "r" (blk2 - len), "r" (stride)
+        : "r" (blk1 - len), "r" (blk2 - len), "r" ((long)stride)
     );
 }
 
-static inline void sad8_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
+static inline void sad8_1_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
-    int len= -(stride<<h);
+    long len= -(stride*h);
     asm volatile(
         ".balign 16			\n\t"
         "1:				\n\t"
-        "movq (%1, %%eax), %%mm0	\n\t"
-        "movq (%2, %%eax), %%mm2	\n\t"
+        "movq (%1, %%"REG_a"), %%mm0	\n\t"
+        "movq (%2, %%"REG_a"), %%mm2	\n\t"
         "psadbw %%mm2, %%mm0		\n\t"
-        "addl %3, %%eax			\n\t"
-        "movq (%1, %%eax), %%mm1	\n\t"
-        "movq (%2, %%eax), %%mm3	\n\t"
+        "add %3, %%"REG_a"		\n\t"
+        "movq (%1, %%"REG_a"), %%mm1	\n\t"
+        "movq (%2, %%"REG_a"), %%mm3	\n\t"
         "psadbw %%mm1, %%mm3		\n\t"
         "paddw %%mm3, %%mm0		\n\t"
         "paddw %%mm0, %%mm6		\n\t"
-        "addl %3, %%eax			\n\t"
+        "add %3, %%"REG_a"		\n\t"
         " js 1b				\n\t"
         : "+a" (len)
-        : "r" (blk1 - len), "r" (blk2 - len), "r" (stride)
+        : "r" (blk1 - len), "r" (blk2 - len), "r" ((long)stride)
     );
 }
 
 static inline void sad8_2_mmx2(uint8_t *blk1a, uint8_t *blk1b, uint8_t *blk2, int stride, int h)
 {
-    int len= -(stride<<h);
+    long len= -(stride*h);
     asm volatile(
         ".balign 16			\n\t"
         "1:				\n\t"
-        "movq (%1, %%eax), %%mm0	\n\t"
-        "movq (%2, %%eax), %%mm2	\n\t"
+        "movq (%1, %%"REG_a"), %%mm0	\n\t"
+        "movq (%2, %%"REG_a"), %%mm2	\n\t"
         "pavgb %%mm2, %%mm0		\n\t"
-        "movq (%3, %%eax), %%mm2	\n\t"
+        "movq (%3, %%"REG_a"), %%mm2	\n\t"
         "psadbw %%mm2, %%mm0		\n\t"
-        "addl %4, %%eax			\n\t"
-        "movq (%1, %%eax), %%mm1	\n\t"
-        "movq (%2, %%eax), %%mm3	\n\t"
+        "add %4, %%"REG_a"		\n\t"
+        "movq (%1, %%"REG_a"), %%mm1	\n\t"
+        "movq (%2, %%"REG_a"), %%mm3	\n\t"
         "pavgb %%mm1, %%mm3		\n\t"
-        "movq (%3, %%eax), %%mm1	\n\t"
+        "movq (%3, %%"REG_a"), %%mm1	\n\t"
         "psadbw %%mm1, %%mm3		\n\t"
         "paddw %%mm3, %%mm0		\n\t"
         "paddw %%mm0, %%mm6		\n\t"
-        "addl %4, %%eax			\n\t"
+        "add %4, %%"REG_a"		\n\t"
         " js 1b				\n\t"
         : "+a" (len)
-        : "r" (blk1a - len), "r" (blk1b -len), "r" (blk2 - len), "r" (stride)
+        : "r" (blk1a - len), "r" (blk1b -len), "r" (blk2 - len), "r" ((long)stride)
     );
 }
 
 static inline void sad8_4_mmx2(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 { //FIXME reuse src
-    int len= -(stride<<h);
+    long len= -(stride*h);
     asm volatile(
         ".balign 16			\n\t"
         "movq "MANGLE(bone)", %%mm5	\n\t"
         "1:				\n\t"
-        "movq (%1, %%eax), %%mm0	\n\t"
-        "movq (%2, %%eax), %%mm2	\n\t"
-        "movq 1(%1, %%eax), %%mm1	\n\t"
-        "movq 1(%2, %%eax), %%mm3	\n\t"
+        "movq (%1, %%"REG_a"), %%mm0	\n\t"
+        "movq (%2, %%"REG_a"), %%mm2	\n\t"
+        "movq 1(%1, %%"REG_a"), %%mm1	\n\t"
+        "movq 1(%2, %%"REG_a"), %%mm3	\n\t"
         "pavgb %%mm2, %%mm0		\n\t"
         "pavgb %%mm1, %%mm3		\n\t"
         "psubusb %%mm5, %%mm3		\n\t"
         "pavgb %%mm3, %%mm0		\n\t"
-        "movq (%3, %%eax), %%mm2	\n\t"
+        "movq (%3, %%"REG_a"), %%mm2	\n\t"
         "psadbw %%mm2, %%mm0		\n\t"
-        "addl %4, %%eax			\n\t"
-        "movq (%1, %%eax), %%mm1	\n\t"
-        "movq (%2, %%eax), %%mm3	\n\t"
-        "movq 1(%1, %%eax), %%mm2	\n\t"
-        "movq 1(%2, %%eax), %%mm4	\n\t"
+        "add %4, %%"REG_a"		\n\t"
+        "movq (%1, %%"REG_a"), %%mm1	\n\t"
+        "movq (%2, %%"REG_a"), %%mm3	\n\t"
+        "movq 1(%1, %%"REG_a"), %%mm2	\n\t"
+        "movq 1(%2, %%"REG_a"), %%mm4	\n\t"
         "pavgb %%mm3, %%mm1		\n\t"
         "pavgb %%mm4, %%mm2		\n\t"
         "psubusb %%mm5, %%mm2		\n\t"
         "pavgb %%mm1, %%mm2		\n\t"
-        "movq (%3, %%eax), %%mm1	\n\t"
+        "movq (%3, %%"REG_a"), %%mm1	\n\t"
         "psadbw %%mm1, %%mm2		\n\t"
         "paddw %%mm2, %%mm0		\n\t"
         "paddw %%mm0, %%mm6		\n\t"
-        "addl %4, %%eax			\n\t"
+        "add %4, %%"REG_a"		\n\t"
         " js 1b				\n\t"
         : "+a" (len)
-        : "r" (blk1 - len), "r" (blk1 - len + stride), "r" (blk2 - len), "r" (stride)
+        : "r" (blk1 - len), "r" (blk1 - len + stride), "r" (blk2 - len), "r" ((long)stride)
     );
 }
 
 static inline void sad8_2_mmx(uint8_t *blk1a, uint8_t *blk1b, uint8_t *blk2, int stride, int h)
 {
-    int len= -(stride<<h);
+    long len= -(stride*h);
     asm volatile(
         ".balign 16			\n\t"
         "1:				\n\t"
-        "movq (%1, %%eax), %%mm0	\n\t"
-        "movq (%2, %%eax), %%mm1	\n\t"
-        "movq (%1, %%eax), %%mm2	\n\t"
-        "movq (%2, %%eax), %%mm3	\n\t"
+        "movq (%1, %%"REG_a"), %%mm0	\n\t"
+        "movq (%2, %%"REG_a"), %%mm1	\n\t"
+        "movq (%1, %%"REG_a"), %%mm2	\n\t"
+        "movq (%2, %%"REG_a"), %%mm3	\n\t"
         "punpcklbw %%mm7, %%mm0		\n\t"
         "punpcklbw %%mm7, %%mm1		\n\t"
         "punpckhbw %%mm7, %%mm2		\n\t"
         "punpckhbw %%mm7, %%mm3		\n\t"
         "paddw %%mm0, %%mm1		\n\t"
         "paddw %%mm2, %%mm3		\n\t"
-        "movq (%3, %%eax), %%mm4	\n\t"
-        "movq (%3, %%eax), %%mm2	\n\t"
+        "movq (%3, %%"REG_a"), %%mm4	\n\t"
+        "movq (%3, %%"REG_a"), %%mm2	\n\t"
         "paddw %%mm5, %%mm1		\n\t"
         "paddw %%mm5, %%mm3		\n\t"
         "psrlw $1, %%mm1		\n\t"
@@ -180,21 +182,21 @@ static inline void sad8_2_mmx(uint8_t *blk1a, uint8_t *blk1b, uint8_t *blk2, int
         "punpckhbw %%mm7, %%mm1		\n\t"
         "paddw %%mm1, %%mm0		\n\t"
         "paddw %%mm0, %%mm6		\n\t"
-        "addl %4, %%eax			\n\t"
+        "add %4, %%"REG_a"		\n\t"
         " js 1b				\n\t"
         : "+a" (len)
-        : "r" (blk1a - len), "r" (blk1b -len), "r" (blk2 - len), "r" (stride)
+        : "r" (blk1a - len), "r" (blk1b -len), "r" (blk2 - len), "r" ((long)stride)
     );
 }
 
 static inline void sad8_4_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
 {
-    int len= -(stride<<h);
+    long len= -(stride*h);
     asm volatile(
         ".balign 16			\n\t"
         "1:				\n\t"
-        "movq (%1, %%eax), %%mm0	\n\t"
-        "movq (%2, %%eax), %%mm1	\n\t"
+        "movq (%1, %%"REG_a"), %%mm0	\n\t"
+        "movq (%2, %%"REG_a"), %%mm1	\n\t"
         "movq %%mm0, %%mm4		\n\t"
         "movq %%mm1, %%mm2		\n\t"
         "punpcklbw %%mm7, %%mm0		\n\t"
@@ -203,8 +205,8 @@ static inline void sad8_4_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
         "punpckhbw %%mm7, %%mm2		\n\t"
         "paddw %%mm1, %%mm0		\n\t"
         "paddw %%mm2, %%mm4		\n\t"
-        "movq 1(%1, %%eax), %%mm2	\n\t"
-        "movq 1(%2, %%eax), %%mm3	\n\t"
+        "movq 1(%1, %%"REG_a"), %%mm2	\n\t"
+        "movq 1(%2, %%"REG_a"), %%mm3	\n\t"
         "movq %%mm2, %%mm1		\n\t"
         "punpcklbw %%mm7, %%mm2		\n\t"
         "punpckhbw %%mm7, %%mm1		\n\t"
@@ -215,8 +217,8 @@ static inline void sad8_4_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
         "punpckhbw %%mm7, %%mm4		\n\t"
         "paddw %%mm3, %%mm2		\n\t"
         "paddw %%mm4, %%mm1		\n\t"
-        "movq (%3, %%eax), %%mm3	\n\t"
-        "movq (%3, %%eax), %%mm4	\n\t"
+        "movq (%3, %%"REG_a"), %%mm3	\n\t"
+        "movq (%3, %%"REG_a"), %%mm4	\n\t"
         "paddw %%mm5, %%mm2		\n\t"
         "paddw %%mm5, %%mm1		\n\t"
         "psrlw $2, %%mm2		\n\t"
@@ -230,10 +232,10 @@ static inline void sad8_4_mmx(uint8_t *blk1, uint8_t *blk2, int stride, int h)
         "punpckhbw %%mm7, %%mm2		\n\t"
         "paddw %%mm2, %%mm0		\n\t"
         "paddw %%mm0, %%mm6		\n\t"
-        "addl %4, %%eax			\n\t"
+        "add %4, %%"REG_a"		\n\t"
         " js 1b				\n\t"
         : "+a" (len)
-        : "r" (blk1 - len), "r" (blk1 -len + stride), "r" (blk2 - len), "r" (stride)
+        : "r" (blk1 - len), "r" (blk1 -len + stride), "r" (blk2 - len), "r" ((long)stride)
     );
 }
 
@@ -265,26 +267,69 @@ static inline int sum_mmx2(void)
 
 
 #define PIX_SAD(suf)\
-static int pix_abs8x8_ ## suf(uint8_t *blk2, uint8_t *blk1, int stride)\
+static int sad8_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
+{\
+    assert(h==8);\
+    asm volatile("pxor %%mm7, %%mm7		\n\t"\
+                 "pxor %%mm6, %%mm6		\n\t":);\
+\
+    sad8_1_ ## suf(blk1, blk2, stride, 8);\
+\
+    return sum_ ## suf();\
+}\
+static int sad8_x2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
+{\
+    assert(h==8);\
+    asm volatile("pxor %%mm7, %%mm7		\n\t"\
+                 "pxor %%mm6, %%mm6		\n\t"\
+                 "movq %0, %%mm5		\n\t"\
+                 :: "m"(round_tab[1]) \
+                 );\
+\
+    sad8_2_ ## suf(blk1, blk1+1, blk2, stride, 8);\
+\
+    return sum_ ## suf();\
+}\
+\
+static int sad8_y2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
+{\
+    assert(h==8);\
+    asm volatile("pxor %%mm7, %%mm7		\n\t"\
+                 "pxor %%mm6, %%mm6		\n\t"\
+                 "movq %0, %%mm5		\n\t"\
+                 :: "m"(round_tab[1]) \
+                 );\
+\
+    sad8_2_ ## suf(blk1, blk1+stride, blk2, stride, 8);\
+\
+    return sum_ ## suf();\
+}\
+\
+static int sad8_xy2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
+{\
+    assert(h==8);\
+    asm volatile("pxor %%mm7, %%mm7		\n\t"\
+                 "pxor %%mm6, %%mm6		\n\t"\
+                 "movq %0, %%mm5		\n\t"\
+                 :: "m"(round_tab[2]) \
+                 );\
+\
+    sad8_4_ ## suf(blk1, blk2, stride, 8);\
+\
+    return sum_ ## suf();\
+}\
+\
+static int sad16_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
     asm volatile("pxor %%mm7, %%mm7		\n\t"\
                  "pxor %%mm6, %%mm6		\n\t":);\
 \
-    sad8_ ## suf(blk1, blk2, stride, 3);\
+    sad8_1_ ## suf(blk1  , blk2  , stride, h);\
+    sad8_1_ ## suf(blk1+8, blk2+8, stride, h);\
 \
     return sum_ ## suf();\
 }\
-static int sad8x8_ ## suf(void *s, uint8_t *blk2, uint8_t *blk1, int stride)\
-{\
-    asm volatile("pxor %%mm7, %%mm7		\n\t"\
-                 "pxor %%mm6, %%mm6		\n\t":);\
-\
-    sad8_ ## suf(blk1, blk2, stride, 3);\
-\
-    return sum_ ## suf();\
-}\
-\
-static int pix_abs8x8_x2_ ## suf(uint8_t *blk2, uint8_t *blk1, int stride)\
+static int sad16_x2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
     asm volatile("pxor %%mm7, %%mm7		\n\t"\
                  "pxor %%mm6, %%mm6		\n\t"\
@@ -292,12 +337,12 @@ static int pix_abs8x8_x2_ ## suf(uint8_t *blk2, uint8_t *blk1, int stride)\
                  :: "m"(round_tab[1]) \
                  );\
 \
-    sad8_2_ ## suf(blk1, blk1+1, blk2, stride, 3);\
+    sad8_2_ ## suf(blk1  , blk1+1, blk2  , stride, h);\
+    sad8_2_ ## suf(blk1+8, blk1+9, blk2+8, stride, h);\
 \
     return sum_ ## suf();\
 }\
-\
-static int pix_abs8x8_y2_ ## suf(uint8_t *blk2, uint8_t *blk1, int stride)\
+static int sad16_y2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
     asm volatile("pxor %%mm7, %%mm7		\n\t"\
                  "pxor %%mm6, %%mm6		\n\t"\
@@ -305,12 +350,12 @@ static int pix_abs8x8_y2_ ## suf(uint8_t *blk2, uint8_t *blk1, int stride)\
                  :: "m"(round_tab[1]) \
                  );\
 \
-    sad8_2_ ## suf(blk1, blk1+stride, blk2, stride, 3);\
+    sad8_2_ ## suf(blk1  , blk1+stride,  blk2  , stride, h);\
+    sad8_2_ ## suf(blk1+8, blk1+stride+8,blk2+8, stride, h);\
 \
     return sum_ ## suf();\
 }\
-\
-static int pix_abs8x8_xy2_ ## suf(uint8_t *blk2, uint8_t *blk1, int stride)\
+static int sad16_xy2_ ## suf(void *v, uint8_t *blk2, uint8_t *blk1, int stride, int h)\
 {\
     asm volatile("pxor %%mm7, %%mm7		\n\t"\
                  "pxor %%mm6, %%mm6		\n\t"\
@@ -318,67 +363,8 @@ static int pix_abs8x8_xy2_ ## suf(uint8_t *blk2, uint8_t *blk1, int stride)\
                  :: "m"(round_tab[2]) \
                  );\
 \
-    sad8_4_ ## suf(blk1, blk2, stride, 3);\
-\
-    return sum_ ## suf();\
-}\
-\
-static int pix_abs16x16_ ## suf(uint8_t *blk2, uint8_t *blk1, int stride)\
-{\
-    asm volatile("pxor %%mm7, %%mm7		\n\t"\
-                 "pxor %%mm6, %%mm6		\n\t":);\
-\
-    sad8_ ## suf(blk1  , blk2  , stride, 4);\
-    sad8_ ## suf(blk1+8, blk2+8, stride, 4);\
-\
-    return sum_ ## suf();\
-}\
-static int sad16x16_ ## suf(void *s, uint8_t *blk2, uint8_t *blk1, int stride)\
-{\
-    asm volatile("pxor %%mm7, %%mm7		\n\t"\
-                 "pxor %%mm6, %%mm6		\n\t":);\
-\
-    sad8_ ## suf(blk1  , blk2  , stride, 4);\
-    sad8_ ## suf(blk1+8, blk2+8, stride, 4);\
-\
-    return sum_ ## suf();\
-}\
-static int pix_abs16x16_x2_ ## suf(uint8_t *blk2, uint8_t *blk1, int stride)\
-{\
-    asm volatile("pxor %%mm7, %%mm7		\n\t"\
-                 "pxor %%mm6, %%mm6		\n\t"\
-                 "movq %0, %%mm5		\n\t"\
-                 :: "m"(round_tab[1]) \
-                 );\
-\
-    sad8_2_ ## suf(blk1  , blk1+1, blk2  , stride, 4);\
-    sad8_2_ ## suf(blk1+8, blk1+9, blk2+8, stride, 4);\
-\
-    return sum_ ## suf();\
-}\
-static int pix_abs16x16_y2_ ## suf(uint8_t *blk2, uint8_t *blk1, int stride)\
-{\
-    asm volatile("pxor %%mm7, %%mm7		\n\t"\
-                 "pxor %%mm6, %%mm6		\n\t"\
-                 "movq %0, %%mm5		\n\t"\
-                 :: "m"(round_tab[1]) \
-                 );\
-\
-    sad8_2_ ## suf(blk1  , blk1+stride,  blk2  , stride, 4);\
-    sad8_2_ ## suf(blk1+8, blk1+stride+8,blk2+8, stride, 4);\
-\
-    return sum_ ## suf();\
-}\
-static int pix_abs16x16_xy2_ ## suf(uint8_t *blk2, uint8_t *blk1, int stride)\
-{\
-    asm volatile("pxor %%mm7, %%mm7		\n\t"\
-                 "pxor %%mm6, %%mm6		\n\t"\
-                 "movq %0, %%mm5		\n\t"\
-                 :: "m"(round_tab[2]) \
-                 );\
-\
-    sad8_4_ ## suf(blk1  , blk2  , stride, 4);\
-    sad8_4_ ## suf(blk1+8, blk2+8, stride, 4);\
+    sad8_4_ ## suf(blk1  , blk2  , stride, h);\
+    sad8_4_ ## suf(blk1+8, blk2+8, stride, h);\
 \
     return sum_ ## suf();\
 }\
@@ -389,32 +375,32 @@ PIX_SAD(mmx2)
 void dsputil_init_pix_mmx(DSPContext* c, AVCodecContext *avctx)
 {
     if (mm_flags & MM_MMX) {
-        c->pix_abs16x16     = pix_abs16x16_mmx;
-        c->pix_abs16x16_x2  = pix_abs16x16_x2_mmx;
-        c->pix_abs16x16_y2  = pix_abs16x16_y2_mmx;
-        c->pix_abs16x16_xy2 = pix_abs16x16_xy2_mmx;
-        c->pix_abs8x8     = pix_abs8x8_mmx;
-        c->pix_abs8x8_x2  = pix_abs8x8_x2_mmx;
-        c->pix_abs8x8_y2  = pix_abs8x8_y2_mmx;
-        c->pix_abs8x8_xy2 = pix_abs8x8_xy2_mmx;
+        c->pix_abs[0][0] = sad16_mmx;
+        c->pix_abs[0][1] = sad16_x2_mmx;
+        c->pix_abs[0][2] = sad16_y2_mmx;
+        c->pix_abs[0][3] = sad16_xy2_mmx;
+        c->pix_abs[1][0] = sad8_mmx;
+        c->pix_abs[1][1] = sad8_x2_mmx;
+        c->pix_abs[1][2] = sad8_y2_mmx;
+        c->pix_abs[1][3] = sad8_xy2_mmx;
 
-	c->sad[0]= sad16x16_mmx;
-        c->sad[1]= sad8x8_mmx;
+	c->sad[0]= sad16_mmx;
+        c->sad[1]= sad8_mmx;
     }
     if (mm_flags & MM_MMXEXT) {
-	c->pix_abs16x16     = pix_abs16x16_mmx2;
-	c->pix_abs8x8     = pix_abs8x8_mmx2;
+	c->pix_abs[0][0] = sad16_mmx2;
+	c->pix_abs[1][0] = sad8_mmx2;
 
-	c->sad[0]= sad16x16_mmx2;
-	c->sad[1]= sad8x8_mmx2;
+	c->sad[0]= sad16_mmx2;
+	c->sad[1]= sad8_mmx2;
         
         if(!(avctx->flags & CODEC_FLAG_BITEXACT)){
-            c->pix_abs16x16_x2  = pix_abs16x16_x2_mmx2;
-            c->pix_abs16x16_y2  = pix_abs16x16_y2_mmx2;
-            c->pix_abs16x16_xy2 = pix_abs16x16_xy2_mmx2;
-            c->pix_abs8x8_x2  = pix_abs8x8_x2_mmx2;
-            c->pix_abs8x8_y2  = pix_abs8x8_y2_mmx2;
-            c->pix_abs8x8_xy2 = pix_abs8x8_xy2_mmx2;
+            c->pix_abs[0][1] = sad16_x2_mmx2;
+            c->pix_abs[0][2] = sad16_y2_mmx2;
+            c->pix_abs[0][3] = sad16_xy2_mmx2;
+            c->pix_abs[1][1] = sad8_x2_mmx2;
+            c->pix_abs[1][2] = sad8_y2_mmx2;
+            c->pix_abs[1][3] = sad8_xy2_mmx2;
         }
     }
 }

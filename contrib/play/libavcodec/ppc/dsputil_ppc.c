@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2002 Brian Foley
  * Copyright (c) 2002 Dieter Shirley
+ * Copyright (c) 2003-2004 Romain Dolbeau <romain@dolbeau.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,6 +26,7 @@
 #include "dsputil_altivec.h"
 #endif
 
+extern void fdct_altivec(int16_t *block);
 extern void idct_put_altivec(uint8_t *dest, int line_size, int16_t *block);
 extern void idct_add_altivec(uint8_t *dest, int line_size, int16_t *block);
 
@@ -33,7 +35,7 @@ int mm_flags = 0;
 int mm_support(void)
 {
     int result = 0;
-#if HAVE_ALTIVEC
+#ifdef HAVE_ALTIVEC
     if (has_altivec()) {
         result |= MM_ALTIVEC;
     }
@@ -41,13 +43,14 @@ int mm_support(void)
     return result;
 }
 
-#ifdef POWERPC_TBL_PERFORMANCE_REPORT
-unsigned long long perfdata[powerpc_perf_total][powerpc_data_total];
+#ifdef POWERPC_PERFORMANCE_REPORT
+unsigned long long perfdata[POWERPC_NUM_PMC_ENABLED][powerpc_perf_total][powerpc_data_total];
 /* list below must match enum in dsputil_ppc.h */
 static unsigned char* perfname[] = {
-  "fft_calc_altivec",
+  "ff_fft_calc_altivec",
   "gmc1_altivec",
   "dct_unquantize_h263_altivec",
+  "fdct_altivec",
   "idct_add_altivec",
   "idct_put_altivec",
   "put_pixels16_altivec",
@@ -57,46 +60,47 @@ static unsigned char* perfname[] = {
   "put_no_rnd_pixels8_xy2_altivec",
   "put_pixels16_xy2_altivec",
   "put_no_rnd_pixels16_xy2_altivec",
-  "clear_blocks_dcbz32_ppc"
+  "hadamard8_diff8x8_altivec",
+  "hadamard8_diff16_altivec",
+  "avg_pixels8_xy2_altivec",
+  "clear_blocks_dcbz32_ppc",
+  "clear_blocks_dcbz128_ppc",
+  "put_h264_chroma_mc8_altivec",
+  "avg_h264_chroma_mc8_altivec",
+  "put_h264_qpel16_h_lowpass_altivec",
+  "avg_h264_qpel16_h_lowpass_altivec",
+  "put_h264_qpel16_v_lowpass_altivec",
+  "avg_h264_qpel16_v_lowpass_altivec",
+  "put_h264_qpel16_hv_lowpass_altivec",
+  "avg_h264_qpel16_hv_lowpass_altivec",
+  ""
 };
-#ifdef POWERPC_PERF_USE_PMC
-unsigned long long perfdata_miss[powerpc_perf_total][powerpc_data_total];
-#endif
 #include <stdio.h>
 #endif
 
-#ifdef POWERPC_TBL_PERFORMANCE_REPORT
+#ifdef POWERPC_PERFORMANCE_REPORT
 void powerpc_display_perf_report(void)
 {
-  int i;
-#ifndef POWERPC_PERF_USE_PMC
-  fprintf(stderr, "PowerPC performance report\n Values are from the Time Base register, and represent 4 bus cycles.\n");
-#else /* POWERPC_PERF_USE_PMC */
-  fprintf(stderr, "PowerPC performance report\n Values are from the PMC registers, and represent whatever the registers are set to record.\n");
-#endif /* POWERPC_PERF_USE_PMC */
+  int i, j;
+  av_log(NULL, AV_LOG_INFO, "PowerPC performance report\n Values are from the PMC registers, and represent whatever the registers are set to record.\n");
   for(i = 0 ; i < powerpc_perf_total ; i++)
   {
-    if (perfdata[i][powerpc_data_num] != (unsigned long long)0)
-      fprintf(stderr, " Function \"%s\" (pmc1):\n\tmin: %llu\n\tmax: %llu\n\tavg: %1.2lf (%llu)\n",
-              perfname[i],
-              perfdata[i][powerpc_data_min],
-              perfdata[i][powerpc_data_max],
-              (double)perfdata[i][powerpc_data_sum] /
-              (double)perfdata[i][powerpc_data_num],
-              perfdata[i][powerpc_data_num]);
-#ifdef POWERPC_PERF_USE_PMC
-    if (perfdata_miss[i][powerpc_data_num] != (unsigned long long)0)
-      fprintf(stderr, " Function \"%s\" (pmc2):\n\tmin: %llu\n\tmax: %llu\n\tavg: %1.2lf (%llu)\n",
-              perfname[i],
-              perfdata_miss[i][powerpc_data_min],
-              perfdata_miss[i][powerpc_data_max],
-              (double)perfdata_miss[i][powerpc_data_sum] /
-              (double)perfdata_miss[i][powerpc_data_num],
-              perfdata_miss[i][powerpc_data_num]);
-#endif
+    for (j = 0; j < POWERPC_NUM_PMC_ENABLED ; j++)
+      {
+	if (perfdata[j][i][powerpc_data_num] != (unsigned long long)0)
+	  av_log(NULL, AV_LOG_INFO,
+		  " Function \"%s\" (pmc%d):\n\tmin: %llu\n\tmax: %llu\n\tavg: %1.2lf (%llu)\n",
+		  perfname[i],
+		  j+1,
+		  perfdata[j][i][powerpc_data_min],
+		  perfdata[j][i][powerpc_data_max],
+		  (double)perfdata[j][i][powerpc_data_sum] /
+		  (double)perfdata[j][i][powerpc_data_num],
+		  perfdata[j][i][powerpc_data_num]);
+      }
   }
 }
-#endif /* POWERPC_TBL_PERFORMANCE_REPORT */
+#endif /* POWERPC_PERFORMANCE_REPORT */
 
 /* ***** WARNING ***** WARNING ***** WARNING ***** */
 /*
@@ -110,13 +114,25 @@ void powerpc_display_perf_report(void)
   It simply clear to zero a single cache line,
   so you need to know the cache line size to use it !
   It's absurd, but it's fast...
+
+  update 24/06/2003 : Apple released yesterday the G5,
+  with a PPC970. cache line size : 128 bytes. Oups.
+  The semantic of dcbz was changed, it always clear
+  32 bytes. so the function below will work, but will
+  be slow. So I fixed check_dcbz_effect to use dcbzl,
+  which is defined to clear a cache line (as dcbz before).
+  So we still can distinguish, and use dcbz (32 bytes)
+  or dcbzl (one cache line) as required.
+
+  see <http://developer.apple.com/technotes/tn/tn2087.html>
+  and <http://developer.apple.com/technotes/tn/tn2086.html>
 */
 void clear_blocks_dcbz32_ppc(DCTELEM *blocks)
 {
-POWERPC_TBL_DECLARE(powerpc_clear_blocks_dcbz32, 1);
+POWERPC_PERF_DECLARE(powerpc_clear_blocks_dcbz32, 1);
     register int misal = ((unsigned long)blocks & 0x00000010);
     register int i = 0;
-POWERPC_TBL_START_COUNT(powerpc_clear_blocks_dcbz32, 1);
+POWERPC_PERF_START_COUNT(powerpc_clear_blocks_dcbz32, 1);
 #if 1
     if (misal) {
       ((unsigned long*)blocks)[0] = 0L;
@@ -125,8 +141,12 @@ POWERPC_TBL_START_COUNT(powerpc_clear_blocks_dcbz32, 1);
       ((unsigned long*)blocks)[3] = 0L;
       i += 16;
     }
-    for ( ; i < sizeof(DCTELEM)*6*64 ; i += 32) {
-      asm volatile("dcbz %0,%1" : : "r" (blocks), "r" (i) : "memory");
+    for ( ; i < sizeof(DCTELEM)*6*64-31 ; i += 32) {
+#ifndef __MWERKS__
+      asm volatile("dcbz %0,%1" : : "b" (blocks), "r" (i) : "memory");
+#else
+      __dcbz( blocks, i );
+#endif
     }
     if (misal) {
       ((unsigned long*)blocks)[188] = 0L;
@@ -138,11 +158,48 @@ POWERPC_TBL_START_COUNT(powerpc_clear_blocks_dcbz32, 1);
 #else
     memset(blocks, 0, sizeof(DCTELEM)*6*64);
 #endif
-POWERPC_TBL_STOP_COUNT(powerpc_clear_blocks_dcbz32, 1);
+POWERPC_PERF_STOP_COUNT(powerpc_clear_blocks_dcbz32, 1);
 }
 
+/* same as above, when dcbzl clear a whole 128B cache line
+   i.e. the PPC970 aka G5 */
+#ifndef NO_DCBZL
+void clear_blocks_dcbz128_ppc(DCTELEM *blocks)
+{
+POWERPC_PERF_DECLARE(powerpc_clear_blocks_dcbz128, 1);
+    register int misal = ((unsigned long)blocks & 0x0000007f);
+    register int i = 0;
+POWERPC_PERF_START_COUNT(powerpc_clear_blocks_dcbz128, 1);
+#if 1
+ if (misal) {
+   // we could probably also optimize this case,
+   // but there's not much point as the machines
+   // aren't available yet (2003-06-26)
+      memset(blocks, 0, sizeof(DCTELEM)*6*64);
+    }
+    else
+      for ( ; i < sizeof(DCTELEM)*6*64 ; i += 128) {
+	asm volatile("dcbzl %0,%1" : : "b" (blocks), "r" (i) : "memory");
+      }
+#else
+    memset(blocks, 0, sizeof(DCTELEM)*6*64);
+#endif
+POWERPC_PERF_STOP_COUNT(powerpc_clear_blocks_dcbz128, 1);
+}
+#else
+void clear_blocks_dcbz128_ppc(DCTELEM *blocks)
+{
+  memset(blocks, 0, sizeof(DCTELEM)*6*64);
+}
+#endif
+
+#ifndef NO_DCBZL
 /* check dcbz report how many bytes are set to 0 by dcbz */
-long check_dcbz_effect(void)
+/* update 24/06/2003 : replace dcbz by dcbzl to get
+   the intended effect (Apple "fixed" dcbz)
+   unfortunately this cannot be used unless the assembler
+   knows about dcbzl ... */
+long check_dcbzl_effect(void)
 {
   register char *fakedata = (char*)av_malloc(1024);
   register char *fakedata_middle;
@@ -159,7 +216,9 @@ long check_dcbz_effect(void)
 
   memset(fakedata, 0xFF, 1024);
 
-  asm volatile("dcbz %0, %1" : : "r" (fakedata_middle), "r" (zero));
+  /* below the constraint "b" seems to mean "Address base register"
+     in gcc-3.3 / RS/6000 speaks. seems to avoid using r0, so.... */
+  asm volatile("dcbzl %0, %1" : : "b" (fakedata_middle), "r" (zero));
 
   for (i = 0; i < 1024 ; i ++)
   {
@@ -171,31 +230,45 @@ long check_dcbz_effect(void)
   
   return count;
 }
+#else
+long check_dcbzl_effect(void)
+{
+  return 0;
+}
+#endif
+
+
+void dsputil_h264_init_ppc(DSPContext* c, AVCodecContext *avctx);
 
 void dsputil_init_ppc(DSPContext* c, AVCodecContext *avctx)
 {
-    // Common optimisations whether Altivec or not
+    // Common optimizations whether Altivec is available or not
 
-  switch (check_dcbz_effect()) {
+  switch (check_dcbzl_effect()) {
   case 32:
     c->clear_blocks = clear_blocks_dcbz32_ppc;
+    break;
+  case 128:
+    c->clear_blocks = clear_blocks_dcbz128_ppc;
     break;
   default:
     break;
   }
+
+#ifdef HAVE_ALTIVEC
+  dsputil_h264_init_ppc(c, avctx);
   
-#if HAVE_ALTIVEC
     if (has_altivec()) {
         mm_flags |= MM_ALTIVEC;
         
         // Altivec specific optimisations
-        c->pix_abs16x16_x2 = pix_abs16x16_x2_altivec;
-        c->pix_abs16x16_y2 = pix_abs16x16_y2_altivec;
-        c->pix_abs16x16_xy2 = pix_abs16x16_xy2_altivec;
-        c->pix_abs16x16 = pix_abs16x16_altivec;
-        c->pix_abs8x8 = pix_abs8x8_altivec;
-        c->sad[0]= sad16x16_altivec;
-        c->sad[1]= sad8x8_altivec;
+        c->pix_abs[0][1] = sad16_x2_altivec;
+        c->pix_abs[0][2] = sad16_y2_altivec;
+        c->pix_abs[0][3] = sad16_xy2_altivec;
+        c->pix_abs[0][0] = sad16_altivec;
+        c->pix_abs[1][0] = sad8_altivec;
+        c->sad[0]= sad16_altivec;
+        c->sad[1]= sad8_altivec;
         c->pix_norm1 = pix_norm1_altivec;
         c->sse[1]= sse8_altivec;
         c->sse[0]= sse16_altivec;
@@ -207,17 +280,30 @@ void dsputil_init_ppc(DSPContext* c, AVCodecContext *avctx)
         c->add_bytes= add_bytes_altivec;
 #endif /* 0 */
         c->put_pixels_tab[0][0] = put_pixels16_altivec;
+        /* the two functions do the same thing, so use the same code */
+        c->put_no_rnd_pixels_tab[0][0] = put_pixels16_altivec;
         c->avg_pixels_tab[0][0] = avg_pixels16_altivec;
-// next one disabled as it's untested.
-#if 0
         c->avg_pixels_tab[1][0] = avg_pixels8_altivec;
-#endif /* 0 */
+	c->avg_pixels_tab[1][3] = avg_pixels8_xy2_altivec;
         c->put_pixels_tab[1][3] = put_pixels8_xy2_altivec;
         c->put_no_rnd_pixels_tab[1][3] = put_no_rnd_pixels8_xy2_altivec;
         c->put_pixels_tab[0][3] = put_pixels16_xy2_altivec;
         c->put_no_rnd_pixels_tab[0][3] = put_no_rnd_pixels16_xy2_altivec;
         
 	c->gmc1 = gmc1_altivec;
+
+#ifdef CONFIG_DARWIN // ATM gcc-3.3 and gcc-3.4 fail to compile these in linux...
+	c->hadamard8_diff[0] = hadamard8_diff16_altivec;
+	c->hadamard8_diff[1] = hadamard8_diff8x8_altivec;
+#endif
+
+#ifdef CONFIG_ENCODERS
+	if (avctx->dct_algo == FF_DCT_AUTO ||
+	    avctx->dct_algo == FF_DCT_ALTIVEC)
+	{
+	    c->fdct = fdct_altivec;
+	}
+#endif //CONFIG_ENCODERS
 
         if ((avctx->idct_algo == FF_IDCT_AUTO) ||
                 (avctx->idct_algo == FF_IDCT_ALTIVEC))
@@ -231,24 +317,21 @@ void dsputil_init_ppc(DSPContext* c, AVCodecContext *avctx)
 #endif /* ALTIVEC_USE_REFERENCE_C_CODE */
         }
         
-#ifdef POWERPC_TBL_PERFORMANCE_REPORT
+#ifdef POWERPC_PERFORMANCE_REPORT
         {
-          int i;
+          int i, j;
           for (i = 0 ; i < powerpc_perf_total ; i++)
           {
-            perfdata[i][powerpc_data_min] = 0xFFFFFFFFFFFFFFFF;
-            perfdata[i][powerpc_data_max] = 0x0000000000000000;
-            perfdata[i][powerpc_data_sum] = 0x0000000000000000;
-            perfdata[i][powerpc_data_num] = 0x0000000000000000;
-#ifdef POWERPC_PERF_USE_PMC
-            perfdata_miss[i][powerpc_data_min] = 0xFFFFFFFFFFFFFFFF;
-            perfdata_miss[i][powerpc_data_max] = 0x0000000000000000;
-            perfdata_miss[i][powerpc_data_sum] = 0x0000000000000000;
-            perfdata_miss[i][powerpc_data_num] = 0x0000000000000000;
-#endif /* POWERPC_PERF_USE_PMC */
-          }
+	    for (j = 0; j < POWERPC_NUM_PMC_ENABLED ; j++)
+	      {
+		perfdata[j][i][powerpc_data_min] = 0xFFFFFFFFFFFFFFFFULL;
+		perfdata[j][i][powerpc_data_max] = 0x0000000000000000ULL;
+		perfdata[j][i][powerpc_data_sum] = 0x0000000000000000ULL;
+		perfdata[j][i][powerpc_data_num] = 0x0000000000000000ULL;
+	      }
+	  }
         }
-#endif /* POWERPC_TBL_PERFORMANCE_REPORT */
+#endif /* POWERPC_PERFORMANCE_REPORT */
     } else
 #endif /* HAVE_ALTIVEC */
     {

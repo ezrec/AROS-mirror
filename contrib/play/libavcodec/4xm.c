@@ -220,17 +220,12 @@ static void idct(DCTELEM block[64]){
 }
 
 static void init_vlcs(FourXContext *f){
-    static int done = 0;
     int i;
 
-    if (!done) {
-        done = 1;
-
-        for(i=0; i<4; i++){
-            init_vlc(&block_type_vlc[i], BLOCK_TYPE_VLC_BITS, 7, 
-                     &block_type_tab[i][0][1], 2, 1,
-                     &block_type_tab[i][0][0], 2, 1);
-        }
+    for(i=0; i<4; i++){
+        init_vlc(&block_type_vlc[i], BLOCK_TYPE_VLC_BITS, 7, 
+                 &block_type_tab[i][0][1], 2, 1,
+                 &block_type_tab[i][0][0], 2, 1, 1);
     }
 }
 
@@ -333,7 +328,7 @@ static int decode_p_frame(FourXContext *f, uint8_t *buf, int length){
     const int wordstream_size= get32(buf+12);
     
     if(bitstream_size+ bytestream_size+ wordstream_size + 20 != length)
-        printf("lengths %d %d %d %d\n", bitstream_size, bytestream_size, wordstream_size, 
+        av_log(f->avctx, AV_LOG_ERROR, "lengths %d %d %d %d\n", bitstream_size, bytestream_size, wordstream_size, 
         bitstream_size+ bytestream_size+ wordstream_size - length);
     
     f->bitstream_buffer= av_fast_realloc(f->bitstream_buffer, &f->bitstream_buffer_size, bitstream_size + FF_INPUT_BUFFER_PADDING_SIZE);
@@ -354,7 +349,7 @@ static int decode_p_frame(FourXContext *f, uint8_t *buf, int length){
     }
     
     if(bitstream_size != (get_bits_count(&f->gb)+31)/32*4)
-        printf(" %d %d %d bytes left\n", 
+        av_log(f->avctx, AV_LOG_ERROR, " %d %d %d bytes left\n", 
             bitstream_size - (get_bits_count(&f->gb)+31)/32*4, 
             bytestream_size - (f->bytestream - (buf + 20 + bitstream_size + wordstream_size)),
             wordstream_size - (((uint8_t*)f->wordstream) - (buf + 20 + bitstream_size))
@@ -373,7 +368,7 @@ static int decode_i_block(FourXContext *f, DCTELEM *block){
     /* DC coef */
     val = get_vlc2(&f->pre_gb, f->pre_vlc.table, ACDC_VLC_BITS, 3);
     if (val>>4){
-        printf("error dc run != 0\n");
+        av_log(f->avctx, AV_LOG_ERROR, "error dc run != 0\n");
     }
 
     if(val)
@@ -396,7 +391,7 @@ static int decode_i_block(FourXContext *f, DCTELEM *block){
             level = get_xbits(&f->gb, code & 0xf);
             i += code >> 4;
             if (i >= 64) {
-                printf("run %d oveflow\n", i);
+                av_log(f->avctx, AV_LOG_ERROR, "run %d oveflow\n", i);
                 return 0;
             }
 
@@ -426,6 +421,11 @@ static inline void idct_put(FourXContext *f, int x, int y){
         for(i=4; i<6; i++) idct(block[i]);
     }
 
+/* Note transform is:
+y= ( 1b + 4g + 2r)/14
+cb=( 3b - 2g - 1r)/14
+cr=(-1b - 4g + 5r)/14
+*/ 
     for(y=0; y<8; y++){
         for(x=0; x<8; x++){
             DCTELEM *temp= block[(x>>2) + 2*(y>>2)] + 2*(x&3) + 2*8*(y&3); //FIXME optimize
@@ -530,7 +530,7 @@ static uint8_t *read_huffman_tables(FourXContext *f, uint8_t * const buf){
         for(node= j; up[node] != -1; node= up[node]){
             bits += flag[node]<<len;
             len++;
-            if(len > 31) printf("vlc length overflow\n"); //can this happen at all ?
+            if(len > 31) av_log(f->avctx, AV_LOG_ERROR, "vlc length overflow\n"); //can this happen at all ?
         }
         
         bits_tab[j]= bits;
@@ -539,7 +539,7 @@ static uint8_t *read_huffman_tables(FourXContext *f, uint8_t * const buf){
     
     init_vlc(&f->pre_vlc, ACDC_VLC_BITS, 257, 
              len_tab , 1, 1,
-             bits_tab, 4, 4);
+             bits_tab, 4, 4, 0);
              
     return ptr;
 }
@@ -551,12 +551,12 @@ static int decode_i_frame(FourXContext *f, uint8_t *buf, int length){
     uint16_t *dst= (uint16_t*)f->current_picture.data[0];
     const int stride= f->current_picture.linesize[0]>>1;
     const int bitstream_size= get32(buf);
-    const int token_count= get32(buf + bitstream_size + 8);
+    const int token_count __attribute__((unused)) = get32(buf + bitstream_size + 8);
     int prestream_size= 4*get32(buf + bitstream_size + 4);
     uint8_t *prestream= buf + bitstream_size + 12;
     
     if(prestream_size + bitstream_size + 12 != length)
-        fprintf(stderr, "size missmatch %d %d %d\n", prestream_size, bitstream_size, length);
+        av_log(f->avctx, AV_LOG_ERROR, "size missmatch %d %d %d\n", prestream_size, bitstream_size, length);
    
     prestream= read_huffman_tables(f, prestream);
 
@@ -581,7 +581,7 @@ static int decode_i_frame(FourXContext *f, uint8_t *buf, int length){
     }
 
     if(get_vlc2(&f->pre_gb, f->pre_vlc.table, ACDC_VLC_BITS, 3) != 256)
-        printf("end missmatch\n");
+        av_log(f->avctx, AV_LOG_ERROR, "end missmatch\n");
     
     return 0;
 }
@@ -595,8 +595,6 @@ static int decode_frame(AVCodecContext *avctx,
     AVFrame *p, temp;
     int i, frame_4cc, frame_size;
 
-    *data_size = 0;
-
     /* special case for last picture */
     if (buf_size == 0) {
         return 0;
@@ -604,7 +602,7 @@ static int decode_frame(AVCodecContext *avctx,
 
     frame_4cc= get32(buf);
     if(buf_size != get32(buf+4)+8){
-        fprintf(stderr, "size missmatch %d %d\n", buf_size, get32(buf+4));
+        av_log(f->avctx, AV_LOG_ERROR, "size missmatch %d %d\n", buf_size, get32(buf+4));
     }
 
     if(frame_4cc == ff_get_fourcc("cfrm")){
@@ -616,7 +614,7 @@ static int decode_frame(AVCodecContext *avctx,
 
         for(i=0; i<CFRAME_BUFFER_COUNT; i++){
             if(f->cfrm[i].id && f->cfrm[i].id < avctx->frame_number)
-                printf("lost c frame %d\n", f->cfrm[i].id);
+                av_log(f->avctx, AV_LOG_ERROR, "lost c frame %d\n", f->cfrm[i].id);
         }
         
         for(i=0; i<CFRAME_BUFFER_COUNT; i++){
@@ -640,7 +638,7 @@ static int decode_frame(AVCodecContext *avctx,
             frame_size= cfrm->size;
             
             if(id != avctx->frame_number){
-                printf("cframe id missmatch %d %d\n", id, avctx->frame_number);
+                av_log(f->avctx, AV_LOG_ERROR, "cframe id missmatch %d %d\n", id, avctx->frame_number);
             }
             
             cfrm->size= cfrm->id= 0;
@@ -666,7 +664,7 @@ static int decode_frame(AVCodecContext *avctx,
 
     p->reference= 1;
     if(avctx->get_buffer(avctx, p) < 0){
-        fprintf(stderr, "get_buffer() failed\n");
+        av_log(avctx, AV_LOG_ERROR, "get_buffer() failed\n");
         return -1;
     }
 
@@ -679,9 +677,9 @@ static int decode_frame(AVCodecContext *avctx,
         if(decode_p_frame(f, buf, frame_size) < 0)
             return -1;
     }else if(frame_4cc == ff_get_fourcc("snd_")){
-        printf("ignoring snd_ chunk length:%d\n", buf_size);
+        av_log(avctx, AV_LOG_ERROR, "ignoring snd_ chunk length:%d\n", buf_size);
     }else{
-        printf("ignoring unknown chunk length:%d\n", buf_size);
+        av_log(avctx, AV_LOG_ERROR, "ignoring unknown chunk length:%d\n", buf_size);
     }
 
 #if 0
@@ -733,8 +731,6 @@ static int decode_end(AVCodecContext *avctx){
     }
     free_vlc(&f->pre_vlc);
     
-    avcodec_default_free_buffers(avctx);
-
     return 0;
 }
 

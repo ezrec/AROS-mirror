@@ -1,6 +1,9 @@
 /*
  * Copyright (c) 2002 Dieter Shirley
  *
+ * dct_unquantize_h263_altivec:
+ * Copyright (c) 2003 Romain Dolbeau <romain@dolbeau.org>
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -107,7 +110,9 @@ int dct_quantize_altivec(MpegEncContext* s,
     int lastNonZero;
     vector float row0, row1, row2, row3, row4, row5, row6, row7;
     vector float alt0, alt1, alt2, alt3, alt4, alt5, alt6, alt7;
-    const vector float zero = (const vector float)FOUROF(0.);
+    const_vector float zero = (const_vector float)FOUROF(0.);
+    // used after quantise step
+    int oldBaseValue = 0;
 
     // Load the data into the row/alt vectors
     {
@@ -284,9 +289,6 @@ int dct_quantize_altivec(MpegEncContext* s,
         }
     }
 
-    // used after quantise step
-    int oldBaseValue = 0;
-
     // perform the quantise step, using the floating point data
     // still in the row/alt registers
     {
@@ -414,21 +416,23 @@ int dct_quantize_altivec(MpegEncContext* s,
             data7 = vec_max(vec_min(data7, max_q), min_q);
         }
 
+        {
         vector bool char zero_01, zero_23, zero_45, zero_67;
         vector signed char scanIndices_01, scanIndices_23, scanIndices_45, scanIndices_67;
         vector signed char negOne = vec_splat_s8(-1);
         vector signed char* scanPtr =
                 (vector signed char*)(s->intra_scantable.inverse);
+        signed char lastNonZeroChar;
 
         // Determine the largest non-zero index.
-        zero_01 = vec_pack(vec_cmpeq(data0, (vector short)zero),
-                vec_cmpeq(data1, (vector short)zero));
-        zero_23 = vec_pack(vec_cmpeq(data2, (vector short)zero),
-                vec_cmpeq(data3, (vector short)zero));
-        zero_45 = vec_pack(vec_cmpeq(data4, (vector short)zero),
-                vec_cmpeq(data5, (vector short)zero));
-        zero_67 = vec_pack(vec_cmpeq(data6, (vector short)zero),
-                vec_cmpeq(data7, (vector short)zero));
+        zero_01 = vec_pack(vec_cmpeq(data0, (vector signed short)zero),
+                vec_cmpeq(data1, (vector signed short)zero));
+        zero_23 = vec_pack(vec_cmpeq(data2, (vector signed short)zero),
+                vec_cmpeq(data3, (vector signed short)zero));
+        zero_45 = vec_pack(vec_cmpeq(data4, (vector signed short)zero),
+                vec_cmpeq(data5, (vector signed short)zero));
+        zero_67 = vec_pack(vec_cmpeq(data6, (vector signed short)zero),
+                vec_cmpeq(data7, (vector signed short)zero));
 
         // 64 biggest values
         scanIndices_01 = vec_sel(scanPtr[0], negOne, zero_01);
@@ -461,7 +465,6 @@ int dct_quantize_altivec(MpegEncContext* s,
 
         scanIndices_01 = vec_splat(scanIndices_01, 0);
 
-        signed char lastNonZeroChar;
 
         vec_ste(scanIndices_01, 0, &lastNonZeroChar);
 
@@ -484,6 +487,7 @@ int dct_quantize_altivec(MpegEncContext* s,
         vec_st(data5, 80, data);
         vec_st(data6, 96, data);
         vec_st(data7, 112, data);
+        }
     }
 
     // special handling of block[0]
@@ -522,13 +526,13 @@ int dct_quantize_altivec(MpegEncContext* s,
 void dct_unquantize_h263_altivec(MpegEncContext *s, 
                                  DCTELEM *block, int n, int qscale)
 {
-POWERPC_TBL_DECLARE(altivec_dct_unquantize_h263_num, 1);
+POWERPC_PERF_DECLARE(altivec_dct_unquantize_h263_num, 1);
     int i, level, qmul, qadd;
     int nCoeffs;
     
     assert(s->block_last_index[n]>=0);
 
-POWERPC_TBL_START_COUNT(altivec_dct_unquantize_h263_num, 1);
+POWERPC_PERF_START_COUNT(altivec_dct_unquantize_h263_num, 1);
     
     qadd = (qscale - 1) | 1;
     qmul = qscale << 1;
@@ -562,7 +566,7 @@ POWERPC_TBL_START_COUNT(altivec_dct_unquantize_h263_num, 1);
     }
 #else /* ALTIVEC_USE_REFERENCE_C_CODE */
     {
-      register const vector short vczero = (const vector short)vec_splat_s16(0);
+      register const_vector signed short vczero = (const_vector signed short)vec_splat_s16(0);
       short __attribute__ ((aligned(16))) qmul8[] =
           {
             qmul, qmul, qmul, qmul,
@@ -578,7 +582,7 @@ POWERPC_TBL_START_COUNT(altivec_dct_unquantize_h263_num, 1);
             -qadd, -qadd, -qadd, -qadd,
             -qadd, -qadd, -qadd, -qadd
           };
-      register vector short blockv, qmulv, qaddv, nqaddv, temp1;
+      register vector signed short blockv, qmulv, qaddv, nqaddv, temp1;
       register vector bool short blockv_null, blockv_neg;
       register short backup_0 = block[0];
       register int j = 0;
@@ -641,5 +645,5 @@ POWERPC_TBL_START_COUNT(altivec_dct_unquantize_h263_num, 1);
     }
 #endif /* ALTIVEC_USE_REFERENCE_C_CODE */
 
-POWERPC_TBL_STOP_COUNT(altivec_dct_unquantize_h263_num, nCoeffs == 63);
+POWERPC_PERF_STOP_COUNT(altivec_dct_unquantize_h263_num, nCoeffs == 63);
 }

@@ -23,6 +23,7 @@
  */
  
 #include "avcodec.h"
+#include "bitstream.h"
 #include "mpegaudio.h"
 
 /* currently, cannot change these constants (need to modify
@@ -87,8 +88,10 @@ static int MPA_encode_init(AVCodecContext *avctx)
             break;
         }
     }
-    if (i == 3)
+    if (i == 3){
+        av_log(avctx, AV_LOG_ERROR, "Sampling rate %d is not allowed in mp2\n", freq);
         return -1;
+    }
     s->freq_index = i;
 
     /* encoding bitrate & frequency */
@@ -96,8 +99,10 @@ static int MPA_encode_init(AVCodecContext *avctx)
         if (mpa_bitrate_tab[s->lsf][1][i] == bitrate) 
             break;
     }
-    if (i == 15)
+    if (i == 15){
+        av_log(avctx, AV_LOG_ERROR, "bitrate %d is not allowed in mp2\n", bitrate);
         return -1;
+    }
     s->bitrate_index = i;
 
     /* compute total header size & pad bit */
@@ -117,7 +122,7 @@ static int MPA_encode_init(AVCodecContext *avctx)
     s->alloc_table = alloc_tables[table];
 
 #ifdef DEBUG
-    printf("%d kb/s, %d Hz, frame_size=%d bits, table=%d, padincr=%x\n", 
+    av_log(avctx, AV_LOG_DEBUG, "%d kb/s, %d Hz, frame_size=%d bits, table=%d, padincr=%x\n", 
            bitrate, freq, s->frame_size, table, s->frame_frac_incr);
 #endif
 
@@ -462,7 +467,7 @@ static void compute_scale_factors(unsigned char scale_code[SBLIMIT],
             sf[1] = sf[2] = sf[0];
             break;
         default:
-            av_abort();
+            assert(0); //cant happen
         }
         
 #if 0
@@ -765,7 +770,7 @@ static int MPA_encode_frame(AVCodecContext *avctx,
     }
     compute_bit_allocation(s, smr, bit_alloc, &padding);
 
-    init_put_bits(&s->pb, frame, MPA_MAX_CODED_FRAME_SIZE, NULL, NULL);
+    init_put_bits(&s->pb, frame, MPA_MAX_CODED_FRAME_SIZE);
 
     encode_frame(s, bit_alloc, padding);
     

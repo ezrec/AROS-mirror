@@ -160,7 +160,6 @@ static int a52_decode_frame(AVCodecContext *avctx,
 	2, 1, 2, 3, 3, 4, 4, 5
     };
 
-    *data_size = 0;
     buf_ptr = buf;
     while (buf_size > 0) {
         len = s->inbuf_ptr - s->inbuf;
@@ -190,7 +189,7 @@ static int a52_decode_frame(AVCodecContext *avctx,
 			/* No specific number of channel requested */
 			avctx->channels = s->channels;
 		    else if (s->channels < avctx->channels) {
-			fprintf(stderr, "ac3dec: AC3 Source channels are less than specified: output to %d channels.. (frmsize: %d)\n", s->channels, len);
+			av_log(avctx, AV_LOG_ERROR, "ac3dec: AC3 Source channels are less than specified: output to %d channels.. (frmsize: %d)\n", s->channels, len);
 			avctx->channels = s->channels;
 		    }
 		    avctx->bit_rate = bit_rate;

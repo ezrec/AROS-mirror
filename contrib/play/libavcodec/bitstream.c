@@ -1,6 +1,7 @@
 /*
  * Common bit i/o utils
  * Copyright (c) 2000, 2001 Fabrice Bellard.
+ * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,63 +21,12 @@
  */
 
 /**
- * @file common.c
- * common internal api.
+ * @file bitstream.c
+ * bitstream api.
  */
-
+ 
 #include "avcodec.h"
-
-const uint8_t ff_sqrt_tab[128]={
-        0, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5,
-        5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
-        9, 9, 9, 9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11
-};
-
-const uint8_t ff_log2_tab[256]={
-        0,0,1,1,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
-        5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
-        6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
-        6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
-        7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
-        7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
-        7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
-        7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7
-};
-
-void init_put_bits(PutBitContext *s, 
-                   uint8_t *buffer, int buffer_size,
-                   void *opaque,
-                   void (*write_data)(void *, uint8_t *, int))
-{
-    s->buf = buffer;
-    s->buf_end = s->buf + buffer_size;
-    s->data_out_size = 0;
-    if(write_data!=NULL) 
-    {
-    	fprintf(stderr, "write Data callback is not supported\n");
-    }
-#ifdef ALT_BITSTREAM_WRITER
-    s->index=0;
-    ((uint32_t*)(s->buf))[0]=0;
-//    memset(buffer, 0, buffer_size);
-#else
-    s->buf_ptr = s->buf;
-    s->bit_left=32;
-    s->bit_buf=0;
-#endif
-}
-
-
-/* return the number of bits output */
-int64_t get_bit_count(PutBitContext *s)
-{
-#ifdef ALT_BITSTREAM_WRITER
-    return s->data_out_size * 8 + s->index;
-#else
-    return (s->buf_ptr - s->buf + s->data_out_size) * 8 + 32 - (int64_t)s->bit_left;
-#endif
-}
+#include "bitstream.h"
 
 void align_put_bits(PutBitContext *s)
 {
@@ -87,86 +37,17 @@ void align_put_bits(PutBitContext *s)
 #endif
 }
 
-
-/* pad the end of the output stream with zeros */
-void flush_put_bits(PutBitContext *s)
-{
-#ifdef ALT_BITSTREAM_WRITER
-    align_put_bits(s);
-#else
-    s->bit_buf<<= s->bit_left;
-    while (s->bit_left < 32) {
-        /* XXX: should test end of buffer */
-        *s->buf_ptr++=s->bit_buf >> 24;
-        s->bit_buf<<=8;
-        s->bit_left+=8;
-    }
-    s->bit_left=32;
-    s->bit_buf=0;
-#endif
-}
-
-#ifdef CONFIG_ENCODERS
-
-void put_string(PutBitContext * pbc, char *s)
+void put_string(PutBitContext * pbc, char *s, int put_zero)
 {
     while(*s){
         put_bits(pbc, 8, *s);
         s++;
     }
-    put_bits(pbc, 8, 0);
+    if(put_zero)
+        put_bits(pbc, 8, 0);
 }
 
 /* bit input functions */
-
-#endif //CONFIG_ENCODERS
-
-/**
- * init GetBitContext.
- * @param buffer bitstream buffer, must be FF_INPUT_BUFFER_PADDING_SIZE bytes larger then the actual read bits
- * because some optimized bitstream readers read 32 or 64 bit at once and could read over the end
- * @param bit_size the size of the buffer in bits
- */
-void init_get_bits(GetBitContext *s,
-                   const uint8_t *buffer, int bit_size)
-{
-    const int buffer_size= (bit_size+7)>>3;
-
-    s->buffer= buffer;
-    s->size_in_bits= bit_size;
-    s->buffer_end= buffer + buffer_size;
-#ifdef ALT_BITSTREAM_READER
-    s->index=0;
-#elif defined LIBMPEG2_BITSTREAM_READER
-#ifdef LIBMPEG2_BITSTREAM_READER_HACK
-  if ((int)buffer&1) {
-     /* word alignment */
-    s->cache = (*buffer++)<<24;
-    s->buffer_ptr = buffer;
-    s->bit_count = 16-8;
-  } else
-#endif
-  {
-    s->buffer_ptr = buffer;
-    s->bit_count = 16;
-    s->cache = 0;
-  }
-#elif defined A32_BITSTREAM_READER
-    s->buffer_ptr = (uint32_t*)buffer;
-    s->bit_count = 32;
-    s->cache0 = 0;
-    s->cache1 = 0;
-#endif
-    {
-        OPEN_READER(re, s)
-        UPDATE_CACHE(re, s)
-        UPDATE_CACHE(re, s)
-        CLOSE_READER(re, s)
-    }
-#ifdef A32_BITSTREAM_READER
-    s->cache1 = 0;
-#endif
-}
 
 /** 
  * reads 0-32 bits.
@@ -201,7 +82,8 @@ void align_get_bits(GetBitContext *s)
 int check_marker(GetBitContext *s, const char *msg)
 {
     int bit= get_bits1(s);
-    if(!bit) printf("Marker bit missing %s\n", msg);
+    if(!bit)
+	    av_log(NULL, AV_LOG_INFO, "Marker bit missing %s\n", msg);
 
     return bit;
 }
@@ -227,15 +109,19 @@ int check_marker(GetBitContext *s, const char *msg)
 }
 
 
-static int alloc_table(VLC *vlc, int size)
+static int alloc_table(VLC *vlc, int size, int use_static)
 {
     int index;
     index = vlc->table_size;
     vlc->table_size += size;
     if (vlc->table_size > vlc->table_allocated) {
         vlc->table_allocated += (1 << vlc->bits);
-        vlc->table = av_realloc(vlc->table,
-                                sizeof(VLC_TYPE) * 2 * vlc->table_allocated);
+        if(use_static)
+            vlc->table = av_realloc_static(vlc->table,
+                                           sizeof(VLC_TYPE) * 2 * vlc->table_allocated);
+        else
+            vlc->table = av_realloc(vlc->table,
+                                    sizeof(VLC_TYPE) * 2 * vlc->table_allocated);
         if (!vlc->table)
             return -1;
     }
@@ -246,14 +132,14 @@ static int build_table(VLC *vlc, int table_nb_bits,
                        int nb_codes,
                        const void *bits, int bits_wrap, int bits_size,
                        const void *codes, int codes_wrap, int codes_size,
-                       uint32_t code_prefix, int n_prefix)
+                       uint32_t code_prefix, int n_prefix, int use_static)
 {
     int i, j, k, n, table_size, table_index, nb, n1, index;
     uint32_t code;
     VLC_TYPE (*table)[2];
 
     table_size = 1 << table_nb_bits;
-    table_index = alloc_table(vlc, table_size);
+    table_index = alloc_table(vlc, table_size, use_static);
 #ifdef DEBUG_VLC
     printf("new table index=%d size=%d code_prefix=%x n=%d\n",
            table_index, table_size, code_prefix, n_prefix);
@@ -286,12 +172,12 @@ static int build_table(VLC *vlc, int table_nb_bits,
                 nb = 1 << (table_nb_bits - n);
                 for(k=0;k<nb;k++) {
 #ifdef DEBUG_VLC
-                    printf("%4x: code=%d n=%d\n",
+                    av_log(NULL, AV_LOG_DEBUG, "%4x: code=%d n=%d\n",
                            j, i, n);
 #endif
                     if (table[j][1] /*bits*/ != 0) {
-                        fprintf(stderr, "incorrect codes\n");
-                        exit(1);
+                        av_log(NULL, AV_LOG_ERROR, "incorrect codes\n");
+                        return -1;
                     }
                     table[j][1] = n; //bits
                     table[j][0] = i; //code
@@ -326,7 +212,7 @@ static int build_table(VLC *vlc, int table_nb_bits,
                                 bits, bits_wrap, bits_size,
                                 codes, codes_wrap, codes_size,
                                 (code_prefix << table_nb_bits) | i,
-                                n_prefix + table_nb_bits);
+                                n_prefix + table_nb_bits, use_static);
             if (index < 0)
                 return -1;
             /* note: realloc has been done, so reload tables */
@@ -358,15 +244,27 @@ static int build_table(VLC *vlc, int table_nb_bits,
 
    'wrap' and 'size' allows to use any memory configuration and types
    (byte/word/long) to store the 'bits' and 'codes' tables.  
+
+   'use_static' should be set to 1 for tables, which should be freed
+   with av_free_static(), 0 if free_vlc() will be used.
 */
 int init_vlc(VLC *vlc, int nb_bits, int nb_codes,
              const void *bits, int bits_wrap, int bits_size,
-             const void *codes, int codes_wrap, int codes_size)
+             const void *codes, int codes_wrap, int codes_size,
+             int use_static)
 {
     vlc->bits = nb_bits;
-    vlc->table = NULL;
-    vlc->table_allocated = 0;
-    vlc->table_size = 0;
+    if(!use_static) {
+        vlc->table = NULL;
+        vlc->table_allocated = 0;
+        vlc->table_size = 0;
+    } else {
+        /* Static tables are initially always NULL, return
+           if vlc->table != NULL to avoid double allocation */
+        if(vlc->table)
+            return 0;
+    }
+
 #ifdef DEBUG_VLC
     printf("build table nb_codes=%d\n", nb_codes);
 #endif
@@ -374,7 +272,7 @@ int init_vlc(VLC *vlc, int nb_bits, int nb_codes,
     if (build_table(vlc, nb_bits, nb_codes,
                     bits, bits_wrap, bits_size,
                     codes, codes_wrap, codes_size,
-                    0, 0) < 0) {
+                    0, 0, use_static) < 0) {
         av_free(vlc->table);
         return -1;
     }
@@ -387,33 +285,3 @@ void free_vlc(VLC *vlc)
     av_free(vlc->table);
 }
 
-int64_t ff_gcd(int64_t a, int64_t b){
-    if(b) return ff_gcd(b, a%b);
-    else  return a;
-}
-
-void ff_float2fraction(int *nom_arg, int *denom_arg, double f, int max){
-    double best_diff=1E10, diff;
-    int best_denom=1, best_nom=1;
-    int nom, denom, gcd;
-    
-    //brute force here, perhaps we should try continued fractions if we need large max ...
-    for(denom=1; denom<=max; denom++){
-        nom= (int)(f*denom + 0.5);
-        if(nom<=0 || nom>max) continue;
-        
-        diff= ABS( f - (double)nom / (double)denom );
-        if(diff < best_diff){
-            best_diff= diff;
-            best_nom= nom;
-            best_denom= denom;
-        }
-    }
-    
-    gcd= ff_gcd(best_nom, best_denom);
-    best_nom   /= gcd;
-    best_denom /= gcd;
-
-    *nom_arg= best_nom;
-    *denom_arg= best_denom;
-}
