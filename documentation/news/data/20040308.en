@@ -51,7 +51,7 @@ to our `intuition.library`.
 
 Georg Steger reworked the graphics driver subsystem to allow better
 optimization, most notably under X11. As a consequence, antialiased
-fonts render faster. and are actually quite usable now.
+fonts render faster and are actually quite usable now.
 
 He also added PNG support to the icon.library, which now can use plain 
 PNG images as icons. The format used is the same as MorphOS' or AmigaOS'
