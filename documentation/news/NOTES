@@ -35,9 +35,9 @@ brackets ("[]").
  * thinking about moving at least Regina, Freetype, jpeg.datatype
    and JanoEditor into the main tree [chodorowski]
 
-20030402: STATUS UPDATE [falemagn] ============================================
-
 20030402:
  * jpeg.datatype in contrib (but nobody noticed :) [gierich]
+
+20030402: STATUS UPDATE [falemagn] ============================================
 
 -- End of file ----------------------------------------------------------------
