@@ -52,7 +52,7 @@ void GetScreenAspect(struct Screen *screen, int *aspectx, int *aspecty)
 	{
 		DisplayInfoHandle dih;
 
-		if(dih = FindDisplayInfo(modeID))
+		if((dih = FindDisplayInfo(modeID)))
 		{
 			struct DisplayInfo di;	
 
@@ -128,7 +128,7 @@ void GetVisibleSize(struct mvscreen *scr, int *width, int *height)
 		*width = scr->screen->Width;
 		*height = scr->screen->Height;
 		
-		if(dih = FindDisplayInfo(scr->modeID))
+		if((dih = FindDisplayInfo(scr->modeID)))
 		{
 			if(GetDisplayInfoData(dih, (UBYTE*) &di, sizeof(di), DTAG_DIMS, scr->modeID))
 			{
@@ -154,7 +154,7 @@ struct mvscreen *CreateMVScreen(struct mainsettings *mvs)
 {
 	struct mvscreen *scr;
 
-	if (scr = Malloclear(sizeof(struct mvscreen)))
+	if ((scr = Malloclear(sizeof(struct mvscreen))))
 	{
 		BOOL success = FALSE;
 
@@ -174,7 +174,7 @@ struct mvscreen *CreateMVScreen(struct mainsettings *mvs)
 
 			if (mvs->modeID == INVALID_ID)
 			{
-				if (defscreen = LockPubScreen(NULL))
+				if ((defscreen = LockPubScreen(NULL)))
 				{
 					ULONG modeID;
 					vp = &defscreen->ViewPort;
@@ -186,7 +186,7 @@ struct mvscreen *CreateMVScreen(struct mainsettings *mvs)
 					{
 						DisplayInfoHandle dih;
 				
-						if(dih = FindDisplayInfo(modeID))
+						if((dih = FindDisplayInfo(modeID)))
 						{
 							struct DimensionInfo di;	
 				
@@ -209,7 +209,7 @@ struct mvscreen *CreateMVScreen(struct mainsettings *mvs)
 
 				id = mvs->modeID;
 				
-				if(dih = FindDisplayInfo(id))
+				if((dih = FindDisplayInfo(id)))
 				{
 					struct DimensionInfo di;	
 				
@@ -242,7 +242,7 @@ struct mvscreen *CreateMVScreen(struct mainsettings *mvs)
 				if (CyberGfxBase && !mvs->hamscreen)
 				{
 					struct TagItem *taglist;
-					if (taglist = AllocateTagItems(10))
+					if ((taglist = AllocateTagItems(10)))
 					{
 						struct TagItem *tp = taglist;
 			
@@ -264,7 +264,7 @@ struct mvscreen *CreateMVScreen(struct mainsettings *mvs)
 				if (id == INVALID_ID)
 				{
 					struct TagItem *taglist;
-					if (taglist = AllocateTagItems(10))
+					if ((taglist = AllocateTagItems(10)))
 					{
 						struct TagItem *tp = taglist;
 			
@@ -294,7 +294,7 @@ struct mvscreen *CreateMVScreen(struct mainsettings *mvs)
 			}
 
 
-			if (scr->screen = LockPubScreen(PROGNAME))
+			if ((scr->screen = LockPubScreen(PROGNAME)))
 			{
 				scr->screentype = PUBLICSCREEN;
 				success = TRUE;
@@ -306,21 +306,21 @@ struct mvscreen *CreateMVScreen(struct mainsettings *mvs)
 				{
 					UWORD empty = 0xffff;
 					
-					if (scr->screen = OpenScreenTags(NULL,
+					if ((scr->screen = OpenScreenTags(NULL,
 						SA_Width, width,
 						SA_Height, height,
 						SA_Depth, depth,
 						SA_DisplayID, id, 
 						SA_Type, PUBLICSCREEN,
 						SA_AutoScroll, TRUE,
-						SA_Title, PROGNAME,
-						SA_PubName, PROGNAME,
+						SA_Title, (IPTR)PROGNAME,
+						SA_PubName, (IPTR)PROGNAME,
 						SA_ShowTitle, FALSE,
 						SA_LikeWorkbench, TRUE,
 						SA_FullPalette, TRUE,
 						SA_SharePens, TRUE,
-						SA_Pens, &empty,
-						TAG_DONE))
+						SA_Pens, (IPTR)&empty,
+						TAG_DONE)))
 					{
 						PubScreenStatus(scr->screen, 0);
 						scr->screentype = CUSTOMSCREEN;
@@ -345,7 +345,7 @@ struct mvscreen *CreateMVScreen(struct mainsettings *mvs)
 			{
 				if (mvs->scropenmode == SCROPENMODE_PUBLIC)
 				{
-					if (scr->screen = LockPubScreen(mvs->pubscreen))
+					if ((scr->screen = LockPubScreen(mvs->pubscreen)))
 					{
 						ScreenToFront(scr->screen);
 						success = TRUE;
@@ -368,9 +368,9 @@ struct mvscreen *CreateMVScreen(struct mainsettings *mvs)
 		if (success)
 		{
 			success = FALSE;
-			if (scr->visualinfo = GetVisualInfo(scr->screen, TAG_DONE))
+			if ((scr->visualinfo = GetVisualInfo(scr->screen, TAG_DONE)))
 			{
-				if (scr->psm = CreatePenShareMap(GGFX_HSType, mvs->hstype, TAG_DONE))
+				if ((scr->psm = CreatePenShareMap(GGFX_HSType, mvs->hstype, TAG_DONE)))
 				{
 					if (mvs->screenaspectx > 0 && mvs->screenaspecty > 0)
 					{
@@ -400,7 +400,11 @@ struct mvscreen *CreateMVScreen(struct mainsettings *mvs)
 				int fontysize;
 				char fontstring[110];
 			
+			#ifdef __AROS__
+				switch (sscanf(mvs->fontspec, "%d,%100s", &fontysize, fontname))
+			#else
 				switch (sscanf(mvs->fontspec, "%lu,%100s", &fontysize, fontname))
+			#endif
 				{
 					case 2:
 						sprintf(fontstring, "%s.font", fontname);

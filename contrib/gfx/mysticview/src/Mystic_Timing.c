@@ -121,7 +121,7 @@ struct trigger *CreateTrigger(void)
 	struct trigger *trigger;
 	BOOL success = FALSE;
 
-	if (trigger = Malloc(sizeof(struct trigger)))
+	if ((trigger = Malloc(sizeof(struct trigger))))
 	{
 		memset(trigger, 0, sizeof(struct trigger));
 		trigger->tickcount = 0;
@@ -129,7 +129,7 @@ struct trigger *CreateTrigger(void)
 		InitSemaphore(&trigger->semaphore);
 		if ((trigger->triggersignal = AllocSignal(-1)) >= 0)
 		{
-			if (trigger->subtask = SubTask(triggerfunc, trigger, TRIGGERSTACK, MAXPRIORITY, "MysticView TriggerTask (%x)", NULL, FALSE))
+			if ((trigger->subtask = SubTask(triggerfunc, trigger, TRIGGERSTACK, MAXPRIORITY, "MysticView TriggerTask (%x)", NULL, FALSE)))
 			{
 				trigger->signalmask = 1 << SubTaskReadySignal(trigger->subtask);
 				success = TRUE;

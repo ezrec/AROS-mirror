@@ -41,7 +41,7 @@ void DeleteFakeGadgetList(struct FakeGadgetList *fgl)
 	{
 		struct FakeGadget *fg;
 
-		while (fg = (struct FakeGadget *) RemHead(&fgl->list))
+		while ((fg = (struct FakeGadget *) RemHead(&fgl->list)))
 		{
 			fg->inserted = FALSE;
 			DeleteFakeGadget(fg);
@@ -73,7 +73,7 @@ struct FakeGadgetList * STDARGS CreateFakeGadgetList(struct Window *win, ...)
 #endif
 */
 
-	if (fgl = Malloclear(sizeof(struct FakeGadgetList)))
+	if ((fgl = Malloclear(sizeof(struct FakeGadgetList))))
 	{
 		NewList(&fgl->list);
 		fgl->numgadgets = 0;
@@ -141,7 +141,7 @@ struct FakeGadget * STDARGS CreateFakeGadget(ULONG id, ULONG type, ...)
 	taglist = (struct TagItem *) va;
 #endif
 
-	if (fg = Malloclear(sizeof(struct FakeGadget)))
+	if ((fg = Malloclear(sizeof(struct FakeGadget))))
 	{
 		fg->type = type;
 		fg->id = id;
@@ -229,7 +229,7 @@ void GetLayoutData(struct FakeGadgetList *fgl, int orientation, int *minwidth, i
 
 	fgnode = (struct FakeGadget *) fgl->list.lh_Head;
 
-	while (fgnextnode = (struct FakeGadget *) fgnode->node.ln_Succ)
+	while ((fgnextnode = (struct FakeGadget *) fgnode->node.ln_Succ))
 	{
 		switch (orientation)
 		{
@@ -318,7 +318,7 @@ BOOL LayoutFakeGadgetList(struct FakeGadgetList *fgl, int orientation, int width
 
 			fgnode = (struct FakeGadget *) fgl->list.lh_Head;
 
-			while (fgnextnode = (struct FakeGadget *) fgnode->node.ln_Succ)
+			while ((fgnextnode = (struct FakeGadget *) fgnode->node.ln_Succ))
 			{
 				switch (orientation)
 				{
@@ -442,7 +442,7 @@ void DrawFakeGadgetList(struct FakeGadgetList *fgl, struct BitMap *bm)
 		struct FakeGadget *fgnode, *fgnextnode;
 		fgnode = (struct FakeGadget *) fgl->list.lh_Head;
 
-		while (fgnextnode = (struct FakeGadget *) fgnode->node.ln_Succ)
+		while ((fgnextnode = (struct FakeGadget *) fgnode->node.ln_Succ))
 		{
 			DrawFakeGadget(fgl->window, (struct FakeGadget *) fgnode, fgl->x, fgl->y, bm);
 			fgnode = fgnextnode;
@@ -469,7 +469,7 @@ struct FakeGadget *CheckFakeGadget(struct FakeGadgetList *fgl, struct IntuiMessa
 	mx = imsg->MouseX - fgl->x - fg->hborder;
 	my = imsg->MouseY - fgl->y - fg->vborder;
 
-	while (fgnextnode = (struct FakeGadget *) fg->node.ln_Succ)
+	while ((fgnextnode = (struct FakeGadget *) fg->node.ln_Succ))
 	{
 		if (fg->visible
 				&& mx >= fg->x

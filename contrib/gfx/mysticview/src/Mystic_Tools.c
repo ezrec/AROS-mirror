@@ -48,7 +48,7 @@ ULONG ASM SAVEDS FileReqFilterFunc(
 			if (fib->fib_DirEntryType < 0)
 			{
 				char *fullname;
-				if (fullname = FullName(fr->fr_Drawer, fib->fib_FileName))
+				if ((fullname = FullName(fr->fr_Drawer, fib->fib_FileName)))
 				{
 					include = IsPicture(fullname, TAG_DONE);
 					Free(fullname);
@@ -98,7 +98,7 @@ BOOL Exists(char *filename)
 	if (filename)
 	{
 		BPTR lock;
-		if (lock = Lock(filename, ACCESS_READ))
+		if ((lock = Lock(filename, ACCESS_READ)))
 		{
 			exists = TRUE;
 			UnLock(lock);
@@ -121,7 +121,7 @@ struct List *CreateList(void)
 {
 	struct List *list;
 
-	if (list = Malloc(sizeof(struct List)))
+	if ((list = Malloc(sizeof(struct List))))
 	{
 		NewList(list);
 	}
@@ -165,7 +165,7 @@ void DeleteList(struct List *list)
 		struct Node *node;
 		while (!IsListEmpty(list))
 		{
-			if (node = list->lh_Head)
+			if ((node = list->lh_Head))
 			{
 				Remove(node);
 				DeleteNode(node);
@@ -196,7 +196,7 @@ int CountListEntries(struct List *list)
 			struct Node *nextnode;
 
 			node = list->lh_Head;
-			while (nextnode = node->ln_Succ)
+			while ((nextnode = node->ln_Succ))
 			{
 				count++;
 				node = nextnode;
@@ -223,9 +223,9 @@ char **CreateArrayFromList(struct List *list)
 
 	int count;
 
-	if (count = CountListEntries(list))
+	if ((count = CountListEntries(list)))
 	{
-		if (array = Malloclear((count + 1) * sizeof(char *)))
+		if ((array = Malloclear((count + 1) * sizeof(char *))))
 		{
 			struct Node *node;
 			struct Node *nextnode;
@@ -268,11 +268,11 @@ struct List *CreateListFromArray(char **array)
 {
 	struct List *list;
 
-	if (list = CreateList())
+	if ((list = CreateList()))
 	{
 		char **t;
 
-		if (t = array)
+		if ((t = array))
 		{
 			BOOL error = FALSE;
 			struct Node *node;
@@ -280,9 +280,9 @@ struct List *CreateListFromArray(char **array)
 			while (*t && !error)
 			{
 				error = TRUE;
-				if (node = Malloclear(sizeof(struct Node)))
+				if ((node = Malloclear(sizeof(struct Node))))
 				{
-					if (node->ln_Name = _StrDup(*t))
+					if ((node->ln_Name = _StrDup(*t)))
 					{
 						AddTail(list, node);
 						error = FALSE;
@@ -323,7 +323,7 @@ char *DupPath(char *filename)
 	{
 		char c, *s;
 
-		if (s = PathPart(filename))
+		if ((s = PathPart(filename)))
 		{
 			c = *s;
 			*s = 0;
@@ -351,13 +351,13 @@ char *_StrDupTrim(char *string)
 
 	if (string)
 	{
-		if (len = strlen(string))
+		if ((len = strlen(string)))
 		{
 			char *a, *b;
 			char c;
 
 			a = string;
-			while (c = *a)
+			while ((c = *a))
 			{
 				if (c == 32 || c == 9 || c == 13 || c == 10)
 				{
@@ -375,7 +375,7 @@ char *_StrDupTrim(char *string)
 				if (len > 1)
 				{
 					b = a + len - 1;
-					while (c = *b)
+					while ((c = *b))
 					{
 						if (c == 32 || c == 9 || c == 13 || c == 10)
 						{
@@ -391,7 +391,7 @@ char *_StrDupTrim(char *string)
 
 				if (len)
 				{
-					if (trimmed = Malloc(len+1))
+					if ((trimmed = Malloc(len+1)))
 					{
 						strncpy(trimmed, a, len);
 						trimmed[len] = (char) 0;
@@ -458,7 +458,7 @@ char **DupStringList(char **list)
 
 	//	if (num > 0)
 	//	{
-			if (newlist = CreateStringList(num))
+			if ((newlist = CreateStringList(num)))
 			{
 				for (i = 0; i < num; ++i)
 				{
@@ -492,7 +492,7 @@ char **CreateFilePatternList(struct WBArg *wbargs, int numargs)
 
 	if (wbargs && numargs > 0)
 	{
-		if (wbargarray = CreateStringList(numargs))
+		if ((wbargarray = CreateStringList(numargs)))
 		{
 			char filenamebuffer[MAXFULLNAMELEN];
 			int i;
@@ -573,15 +573,15 @@ struct DateStamp *GetFileDate(char *filename)
 	struct DateStamp *d = NULL;
 	BPTR lock;
 
-	if (lock = Lock(filename, ACCESS_READ))
+	if ((lock = Lock(filename, ACCESS_READ)))
 	{
 		struct FileInfoBlock *fib;
 
-		if (fib = AllocDosObject(DOS_FIB, NULL))
+		if ((fib = AllocDosObject(DOS_FIB, NULL)))
 		{
 			if (Examine(lock, fib))
 			{
-				if (d = Malloc(sizeof(struct DateStamp)))
+				if ((d = Malloc(sizeof(struct DateStamp))))
 				{
 					memcpy(d, &fib->fib_Date, sizeof(struct DateStamp));
 				}
@@ -616,7 +616,7 @@ char *FullName(char *pathname, char *filename)
 		BOOL success = FALSE;
 		int fulllen = strlen(pathname) + strlen(filename) + 20;
 
-		if (fullname = Malloc(fulllen+1))
+		if ((fullname = Malloc(fulllen+1)))
 		{
 			strcpy(fullname, pathname);
 			if (AddPart(fullname, filename, fulllen))
@@ -659,17 +659,17 @@ char **LoadStringList(char *filename)
 	NewList(&list);
 
 
-	if (fp = fopen(filename, "r"))
+	if ((fp = fopen(filename, "r")))
 	{
-		if (linebuffer = Malloc(2048))
+		if ((linebuffer = Malloc(2048)))
 		{
 			error = FALSE;
 
 			while (fgets(linebuffer, 2048, fp) && !error)
 			{
-				if (line = _StrDupTrim(linebuffer))
+				if ((line = _StrDupTrim(linebuffer)))
 				{
-					if (node = Malloclear(sizeof(struct Node)))
+					if ((node = Malloclear(sizeof(struct Node))))
 					{
 						node->ln_Name = line;
 						AddTail(&list, node);
@@ -690,7 +690,7 @@ char **LoadStringList(char *filename)
 
 	if (!error && count)
 	{
-		if (picturelist = Malloc(sizeof(char *) * (count + 1)))
+		if ((picturelist = Malloc(sizeof(char *) * (count + 1))))
 		{
 			picturelist[count] = NULL;
 		}
@@ -702,7 +702,7 @@ char **LoadStringList(char *filename)
 
 		while (!IsListEmpty(&list))
 		{
-			if (node = list.lh_Head)
+			if ((node = list.lh_Head))
 			{
 				if (picturelist)
 				{
@@ -736,8 +736,8 @@ BOOL ModeRequest(struct ScreenModeRequester *sr, struct Window *win, struct main
 		//LOCK(settings);
 
 		if (AslRequestTags(sr,
-				ASLSM_TitleText, title,
-				ASLSM_Window, win,
+				ASLSM_TitleText, (IPTR)title,
+				ASLSM_Window, (IPTR)win,
 				ASLSM_SleepWindow, TRUE,
 
 				ASLSM_InitialDisplayID, settings->modeID,
@@ -781,17 +781,17 @@ BOOL PathRequest(struct FileRequester *fr, struct Window *win, STRPTR title,
 	BOOL result = FALSE;
 
 	if (AslRequestTags(fr,
-			ASLFR_TitleText, title,
+			ASLFR_TitleText, (IPTR)title,
 			ASLFR_RejectIcons, TRUE,
-			ASLFR_Window, win,
+			ASLFR_Window, (IPTR)win,
 			ASLFR_SleepWindow, TRUE,
-			ASLFR_InitialDrawer, pathname ? pathname : "",
+			ASLFR_InitialDrawer, pathname ? (IPTR)pathname : (IPTR)"",
 			ASLFR_DrawersOnly, TRUE,
 			TAG_DONE))
 	{
 		char *newp;
 
-		if (newp = _StrDup(fr->fr_Drawer))
+		if ((newp = _StrDup(fr->fr_Drawer)))
 		{
 			*newpathname = newp;
 			result = TRUE;
@@ -817,19 +817,19 @@ BOOL FileRequest(struct FileRequester *fr, struct Window *win, STRPTR title,
 	BOOL result = FALSE;
 
 	if (AslRequestTags(fr,
-			ASLFR_TitleText, title,
+			ASLFR_TitleText, (IPTR)title,
 			ASLFR_RejectIcons, TRUE,
-			ASLFR_Window, win,
+			ASLFR_Window, (IPTR)win,
 			ASLFR_SleepWindow, TRUE,
-			ASLFR_InitialFile, filename ? filename : "",
-			ASLFR_InitialDrawer, pathname ? pathname : "",
+			ASLFR_InitialFile, filename ? (IPTR)filename : (IPTR)"",
+			ASLFR_InitialDrawer, pathname ? (IPTR)pathname : (IPTR)"",
 			TAG_DONE))
 	{
 		char *newp, *newf;
 
-		if (newp = _StrDup(fr->fr_Drawer))
+		if ((newp = _StrDup(fr->fr_Drawer)))
 		{
-			if (newf = _StrDup(fr->fr_File))
+			if ((newf = _StrDup(fr->fr_File)))
 			{
 				*newpathname = newp;
 				*newfilename = newf;
@@ -860,20 +860,20 @@ BOOL SaveRequest(struct FileRequester *fr, struct Window *win, STRPTR title,
 	BOOL result = FALSE;
 
 	if (AslRequestTags(fr,
-			ASLFR_TitleText, title,
+			ASLFR_TitleText, (IPTR)title,
 			ASLFR_RejectIcons, TRUE,
-			ASLFR_Window, win,
+			ASLFR_Window, (IPTR)win,
 			ASLFR_SleepWindow, TRUE,
 			ASLFR_DoSaveMode, TRUE,
-			ASLFR_InitialFile, filename ? filename : "",
-			ASLFR_InitialDrawer, pathname ? pathname : "",
+			ASLFR_InitialFile, filename ? (IPTR)filename : (IPTR)"",
+			ASLFR_InitialDrawer, pathname ? (IPTR)pathname : (IPTR)"",
 			TAG_DONE))
 	{
 		char *newp, *newf;
 
-		if (newp = _StrDup(fr->fr_Drawer))
+		if ((newp = _StrDup(fr->fr_Drawer)))
 		{
-			if (newf = _StrDup(fr->fr_File))
+			if ((newf = _StrDup(fr->fr_File)))
 			{
 				*newpathname = newp;
 				*newfilename = newf;
@@ -915,7 +915,7 @@ char **MultiFileRequest(struct FileRequester *fr, struct Window *win,
 		if (l > 0)
 		{
 			l = l * 2 + 2;
-			if (rejpat = Malloc(l))
+			if ((rejpat = Malloc(l)))
 			{
 				if (ParsePatternNoCase(rejectpattern, rejpat, l) == -1)
 				{
@@ -935,26 +935,26 @@ char **MultiFileRequest(struct FileRequester *fr, struct Window *win,
 	filereqfilterhook.h_SubEntry = (HOOKFUNC) NULL;
 	filereqfilterhook.h_Data = NULL;
 
-	if(AslRequestTags(fr,ASLFR_TitleText,title,
-			ASLFR_FilterFunc, onlypictures ? &filereqfilterhook : NULL,
+	if(AslRequestTags(fr,ASLFR_TitleText,(IPTR)title,
+			ASLFR_FilterFunc, onlypictures ? (IPTR)&filereqfilterhook : NULL,
 			ASLFR_RejectIcons, TRUE,
-			ASLFR_RejectPattern, rejpat,
-			ASLFR_Window, win,
+			ASLFR_RejectPattern, (IPTR)rejpat,
+			ASLFR_Window, (IPTR)win,
 			ASLFR_SleepWindow, TRUE,
-			ASLFR_InitialFile, filename ? filename : nonemptystring,
-			ASLFR_InitialDrawer, pathname ? pathname : "",
+			ASLFR_InitialFile, filename ? (IPTR)filename : (IPTR)nonemptystring,
+			ASLFR_InitialDrawer, pathname ? (IPTR)pathname : (IPTR)"",
 			ASLFR_DoMultiSelect, TRUE,
 			ASLFR_DoPatterns, TRUE,
 			TAG_DONE))
 	{
 		char *newp, *newf;
 
-		if (newp = _StrDup(fr->fr_Drawer))
+		if ((newp = _StrDup(fr->fr_Drawer)))
 		{
 			*newpathname = newp;
 		}
 
-		if (newf = _StrDup(fr->fr_File))
+		if ((newf = _StrDup(fr->fr_File)))
 		{
 			*newfilename = newf;
 		}
@@ -996,7 +996,7 @@ void SetAlternateWindowPosition(struct mvscreen *scr, struct mvwindow *win)
 	{
 		DisplayInfoHandle dih;
 
-		if(dih = FindDisplayInfo(modeID))
+		if((dih = FindDisplayInfo(modeID)))
 		{
 			struct DimensionInfo di;
 
@@ -1033,11 +1033,11 @@ long FileSize(char *filename)
 	if (filename)
 	{
 		BPTR lock;
-		if (lock = Lock(filename, ACCESS_READ))
+		if ((lock = Lock(filename, ACCESS_READ)))
 		{
 			struct FileInfoBlock *fib;
 
-			if (fib = AllocDosObject(DOS_FIB, NULL))
+			if ((fib = AllocDosObject(DOS_FIB, NULL)))
 			{
 				if (Examine(lock, fib))
 				{
@@ -1078,7 +1078,7 @@ LONG SAVEDS callsubfunc(struct subtask *subtask, BYTE abortsignal)
 {
 	LONG result = 0;
 
-	if (data = ObtainData(subtask))
+	if ((data = ObtainData(subtask)))
 	{
 		result = data->function(data->userdata);
 		ReleaseData(subtask);

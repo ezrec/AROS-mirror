@@ -111,7 +111,7 @@ struct pichandler * STDARGS CreatePicHandler(char **filepatternlist,
 	tags = (struct TagItem *) va;
 #endif
 
-	if (wrappedpichandler = Malloc(sizeof(struct pichandler)))
+	if ((wrappedpichandler = Malloc(sizeof(struct pichandler))))
 	{
 		BOOL success = FALSE;
 
@@ -138,12 +138,12 @@ struct pichandler * STDARGS CreatePicHandler(char **filepatternlist,
 		autocrop = GetTagData(PICH_AutoCrop, FALSE, tags);
 		includedirs = GetTagData(PICH_IncludeDirs, FALSE, tags);
 		
-		if (wrappedpichandler->newPicHandler = 
+		if ((wrappedpichandler->newPicHandler = 
 				PicHandler_Create(NULL,
 					PICH_Recursive, recursive,
 					PICH_SortMode, sortmode,
 					PICH_SortReverse, reverse,
-					PICH_Reject, rejectpattern, 
+					PICH_Reject, (IPTR)rejectpattern, 
 					PICH_BufferPercent, bufferpercent,
 					PICH_SimpleScanning, simplescanning,
 					PICH_IncludeDirs, includedirs,
@@ -154,7 +154,7 @@ struct pichandler * STDARGS CreatePicHandler(char **filepatternlist,
 						PHNOTIFY_SCANNING +
 						PHNOTIFY_ID_ERROR_LOADING,
 					PICH_AutoCrop, autocrop,
-					TAG_DONE))
+					TAG_DONE)))
 		{
 			success = TRUE;
 			if (filepatternlist)
@@ -312,7 +312,7 @@ PICTURE *GetPic(struct pichandler *handler)
 
 	if (handler)
 	{
-		if (pic = handler->pic)
+		if ((pic = handler->pic))
 		{
 			assert(handler->picinfo);
 		}		
@@ -363,7 +363,7 @@ BOOL NextPic(struct pichandler *handler)
 			
 			if (requestID != PICID_UNDEFINED && requestID != currentID)
 			{
-				if (result = PicHandler_RequestPic(handler->newPicHandler, requestID))
+				if ((result = PicHandler_RequestPic(handler->newPicHandler, requestID)))
 				{
 					handler->requestedID = requestID;
 				}
@@ -413,7 +413,7 @@ BOOL CurrentPic(struct pichandler *handler)
 			
 			if (requestID != PICID_UNDEFINED)
 			{
-				if (result = PicHandler_RequestPic(handler->newPicHandler, requestID))
+				if ((result = PicHandler_RequestPic(handler->newPicHandler, requestID)))
 				{
 					handler->requestedID = requestID;
 				}
@@ -667,7 +667,7 @@ BOOL ReloadPic(struct pichandler *handler)
 		requestID = PicHandler_GetCurrentID(handler->newPicHandler);
 		if (requestID != PICID_UNDEFINED)
 		{
-			if (result = PicHandler_RequestPic(handler->newPicHandler, requestID))
+			if ((result = PicHandler_RequestPic(handler->newPicHandler, requestID)))
 			{
 				handler->requestedID = requestID;
 			}
@@ -707,7 +707,7 @@ BOOL NewPicAvailable(struct pichandler *ph, LONG *error)
 	{
 		struct PHMessage *msg;
 	
-		while (msg = PicHandler_GetNotification(ph->newPicHandler))
+		while ((msg = PicHandler_GetNotification(ph->newPicHandler)))
 		{
 			switch (msg->msgtype)
 			{
@@ -851,7 +851,11 @@ BOOL NewPicAvailable(struct pichandler *ph, LONG *error)
 						}
 						else
 						{
+						#ifdef __AROS__
+							printf("error locking picture from pichandler! newpic: %p, newpicinfo: %p\n", newpic, newpicinfo);
+						#else
 							printf("error locking picture from pichandler! newpic: %lx, newpicinfo: %lx\n", newpic, newpicinfo);
+						#endif
 						}
 
 						PicHandler_FreePicInfo(newpicinfo);

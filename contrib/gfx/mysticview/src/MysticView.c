@@ -1336,8 +1336,8 @@ void DeleteViewPic(struct viewdata *viewdata, PICTURE *defaultpic, struct mainse
 	if (viewdata)
 	{
 		MV_SetAttrs(viewdata->view,
-			MVIEW_Text, SetPicInfoText(viewdata, defaultpic, settings),
-			MVIEW_Picture, defaultpic, TAG_DONE);
+			MVIEW_Text, (IPTR)SetPicInfoText(viewdata, defaultpic, settings),
+			MVIEW_Picture, (IPTR)defaultpic, TAG_DONE);
 
 		viewdata->showpic = NULL;
 		ReleasePic(viewdata->pichandler);
@@ -1398,7 +1398,7 @@ ULONG NewPicHandler(struct viewdata *viewdata, char **filepatternlist, struct ma
 
 void SetViewText(struct viewdata *viewdata, char *text)
 {
-	MV_SetAttrs(viewdata->view, MVIEW_Text, text, TAG_DONE);
+	MV_SetAttrs(viewdata->view, MVIEW_Text, (IPTR)text, TAG_DONE);
 }
 
 
@@ -1443,7 +1443,7 @@ void DeleteNewMenuItems(struct NewMenu *newmenu)
 {
 	struct NewMenu *n;
 
-	if (n = newmenu)
+	if ((n = newmenu))
 	{
 		do
 		{
@@ -1467,7 +1467,7 @@ struct NewMenu *CreateNewMenuItems(int num, char **commkeys,
 	struct NewMenu *newitems, *nm;
 	BOOL error = TRUE;
 
-	if (newitems = Malloclear(sizeof(struct NewMenu) * (num + 2)))
+	if ((newitems = Malloclear(sizeof(struct NewMenu) * (num + 2))))
 	{
 		error = FALSE;
 		nm = newitems;
@@ -1554,8 +1554,8 @@ void FreePathMenus(struct mview *mv)
 	{
 		struct MenuItem *it;
 
-		if (it = FindMenuItem(mv->window->menu, MITEM_COPYTOPATH))	it->SubItem = NULL;
-		if (it = FindMenuItem(mv->window->menu, MITEM_MOVETOPATH))	it->SubItem = NULL;
+		if ((it = FindMenuItem(mv->window->menu, MITEM_COPYTOPATH)))	it->SubItem = NULL;
+		if ((it = FindMenuItem(mv->window->menu, MITEM_MOVETOPATH)))	it->SubItem = NULL;
 
 		if (mv->copypathmenuitems)
 			FreeMenus((struct Menu *) mv->copypathmenuitems);
@@ -1603,9 +1603,9 @@ void SetupPathMenus(struct mview *mv, struct pathsettings *settings)
 					ULONG ids[12] = {MITEM_COPYTO, MITEM_DUMMY, MITEM_COPY1, MITEM_COPY1 + 1, MITEM_COPY1 + 2, MITEM_COPY1 + 3, MITEM_COPY1 + 4,
 						MITEM_COPY1 + 5, MITEM_COPY1 + 6, MITEM_COPY1 + 7, MITEM_COPY1 + 8, MITEM_COPY1 + 9};
 					char *commkeys[12] = {"_C", "", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10"};
-					if (mv->copynewmenuarray = CreateNewMenuItems(12, commkeys, menuarray, "(...)", (APTR *) ids))
+					if ((mv->copynewmenuarray = CreateNewMenuItems(12, commkeys, menuarray, "(...)", (APTR *) ids)))
 					{
-						if (mv->copypathmenuitems = (struct MenuItem *) CreateMenus(mv->copynewmenuarray, NULL))
+						if ((mv->copypathmenuitems = (struct MenuItem *) CreateMenus(mv->copynewmenuarray, NULL)))
 						{
 							if (LayoutMenuItems(mv->copypathmenuitems, mv->screen->visualinfo,
 								GTMN_NewLookMenus, TRUE, TAG_DONE))
@@ -1622,9 +1622,9 @@ void SetupPathMenus(struct mview *mv, struct pathsettings *settings)
 						MITEM_MOVE1 + 5, MITEM_MOVE1 + 6, MITEM_MOVE1 + 7, MITEM_MOVE1 + 8, MITEM_MOVE1 + 9};
 					char *commkeys[12] = {"_M", "", "SHIFT F1", "SHIFT F2", "SHIFT F3", "SHIFT F4", "SHIFT F5", "SHIFT F6", "SHIFT F7", "SHIFT F8", "SHIFT F9", "SHIFT F10"};
 					success = FALSE;
-					if (mv->movenewmenuarray = CreateNewMenuItems(12, commkeys, menuarray, "(...)", (APTR *) ids))
+					if ((mv->movenewmenuarray = CreateNewMenuItems(12, commkeys, menuarray, "(...)", (APTR *) ids)))
 					{
-						if (mv->movepathmenuitems = (struct MenuItem *) CreateMenus(mv->movenewmenuarray, NULL))
+						if ((mv->movepathmenuitems = (struct MenuItem *) CreateMenus(mv->movenewmenuarray, NULL)))
 						{
 							if (LayoutMenuItems(mv->movepathmenuitems, mv->screen->visualinfo,
 								GTMN_NewLookMenus, TRUE, TAG_DONE))
@@ -1640,7 +1640,7 @@ void SetupPathMenus(struct mview *mv, struct pathsettings *settings)
 					struct MenuItem *it;
 					success = FALSE;
 
-					if (it = FindMenuItem(mv->window->menu, MITEM_COPYTOPATH))
+					if ((it = FindMenuItem(mv->window->menu, MITEM_COPYTOPATH)))
 					{
 						it->SubItem = mv->copypathmenuitems;
 						success = TRUE;
@@ -1649,7 +1649,7 @@ void SetupPathMenus(struct mview *mv, struct pathsettings *settings)
 					if (success)
 					{
 						success = FALSE;
-						if (it = FindMenuItem(mv->window->menu, MITEM_MOVETOPATH))
+						if ((it = FindMenuItem(mv->window->menu, MITEM_MOVETOPATH)))
 						{
 							it->SubItem = mv->movepathmenuitems;
 							success = TRUE;
@@ -1690,7 +1690,7 @@ void FreePresetMenu(struct mview *mv)
 	{
 		struct MenuItem *it;
 
-		if (it = FindMenuItem(mv->window->menu, MITEM_USEPRESET))
+		if ((it = FindMenuItem(mv->window->menu, MITEM_USEPRESET)))
 		{
 			it->SubItem = NULL;
 		}
@@ -1733,9 +1733,9 @@ void SetupPresetMenu(struct mview *mv, struct pathsettings *settings)
 
 				FreePresetMenu(mv);
 
-				if (mv->presetmenuarray = CreateNewMenuItems(10, commkeys, filenames, "(...)", (APTR *) ids))
+				if ((mv->presetmenuarray = CreateNewMenuItems(10, commkeys, filenames, "(...)", (APTR *) ids)))
 				{
-					if (mv->presetmenuitems = (struct MenuItem *) CreateMenus(mv->presetmenuarray, NULL))
+					if ((mv->presetmenuitems = (struct MenuItem *) CreateMenus(mv->presetmenuarray, NULL)))
 					{
 						if (LayoutMenuItems(mv->presetmenuitems, mv->screen->visualinfo,
 							GTMN_NewLookMenus, TRUE, TAG_DONE))
@@ -1755,7 +1755,7 @@ void SetupPresetMenu(struct mview *mv, struct pathsettings *settings)
 					struct MenuItem *it;
 					success = FALSE;
 
-					if (it = FindMenuItem(mv->window->menu, MITEM_USEPRESET))
+					if ((it = FindMenuItem(mv->window->menu, MITEM_USEPRESET)))
 					{
 						it->SubItem = mv->presetmenuitems;
 						success = TRUE;
@@ -1795,7 +1795,7 @@ void FreePubscreenMenu(struct mview *mv)
 	{
 		struct MenuItem *it;
 
-		if (it = FindMenuItem(mv->window->menu, MITEM_SELECTPUBSCREEN))
+		if ((it = FindMenuItem(mv->window->menu, MITEM_SELECTPUBSCREEN)))
 		{
 			it->SubItem = NULL;
 		}
@@ -1825,13 +1825,13 @@ void SetupPubscreenMenu(struct mview *mv, struct mainsettings *settings)
 				int numscreens = 0;
 				struct List *pubscreenlist;
 
-				if (pubscreenlist = LockPubScreenList())
+				if ((pubscreenlist = LockPubScreenList()))
 				{
 					struct Node *node;
 					struct Node *nextnode;
 
 					node = pubscreenlist->lh_Head;
-					while (nextnode = node->ln_Succ)
+					while ((nextnode = node->ln_Succ))
 					{
 						numscreens++;
 						node = nextnode;
@@ -1855,12 +1855,12 @@ void SetupPubscreenMenu(struct mview *mv, struct mainsettings *settings)
 							Free(mv->pubscreenlist);
 						}
 
-						if (mv->pubscreenlist = CreateStringList(numscreens + 3))
+						if ((mv->pubscreenlist = CreateStringList(numscreens + 3)))
 						{
 							char *name;
 
 						   node = pubscreenlist->lh_Head;
-						   while (nextnode = node->ln_Succ)
+						   while ((nextnode = node->ln_Succ))
 						   {
 								BOOL getit = TRUE;
 
@@ -1868,7 +1868,7 @@ void SetupPubscreenMenu(struct mview *mv, struct mainsettings *settings)
 
 								if (getit)
 								{
-									if (mv->pubscreenlist[count + 3] = _StrDup(name))
+									if ((mv->pubscreenlist[count + 3] = _StrDup(name)))
 									{
 										count++;
 									}
@@ -1885,7 +1885,7 @@ void SetupPubscreenMenu(struct mview *mv, struct mainsettings *settings)
 				{
 					ULONG *idlist;
 
-					if (idlist = Malloc(sizeof(APTR) * (numscreens + 3)))
+					if ((idlist = Malloc(sizeof(APTR) * (numscreens + 3))))
 					{
 						int i;
 
@@ -1905,9 +1905,9 @@ void SetupPubscreenMenu(struct mview *mv, struct mainsettings *settings)
 
 						FreePubscreenMenu(mv);
 
-						if (mv->pubscreenmenuarray = CreateNewMenuItems(numscreens + 3, NULL, mv->pubscreenlist, "", (APTR *) idlist))
+						if ((mv->pubscreenmenuarray = CreateNewMenuItems(numscreens + 3, NULL, mv->pubscreenlist, "", (APTR *) idlist)))
 						{
-							if (mv->pubscreenmenuitems = (struct MenuItem *) CreateMenus(mv->pubscreenmenuarray, NULL))
+							if ((mv->pubscreenmenuitems = (struct MenuItem *) CreateMenus(mv->pubscreenmenuarray, NULL)))
 							{
 								if (LayoutMenuItems(mv->pubscreenmenuitems, mv->screen->visualinfo,
 									GTMN_NewLookMenus, TRUE, TAG_DONE))
@@ -1922,7 +1922,7 @@ void SetupPubscreenMenu(struct mview *mv, struct mainsettings *settings)
 							struct MenuItem *it;
 							success = FALSE;
 
-							if (it = FindMenuItem(mv->window->menu, MITEM_SELECTPUBSCREEN))
+							if ((it = FindMenuItem(mv->window->menu, MITEM_SELECTPUBSCREEN)))
 							{
 								it->SubItem = mv->pubscreenmenuitems;
 								success = TRUE;
@@ -2485,12 +2485,12 @@ int HandleMView (struct mview *mv,
 		MVIEW_ScreenAspectX, settings->screenaspectx,
 		MVIEW_ScreenAspectY, settings->screenaspecty,
 		MVIEW_ShowCursor, settings->markcenter,
-		MVIEW_Text, SetPicInfoText(viewdata, viewdata->showpic, settings),
-		MVIEW_Picture, viewdata->showpic ? viewdata->showpic : mv->logopic,
+		MVIEW_Text, (IPTR)SetPicInfoText(viewdata, viewdata->showpic, settings),
+		MVIEW_Picture, viewdata->showpic ? (IPTR)viewdata->showpic : (IPTR)mv->logopic,
 		MVIEW_ReadySignal, viewdata->picturevisiblesignal,
 		MVIEW_DrawArrows, settings->showarrows,
 		MVIEW_ShowPip, settings->showpip,
-		MVIEW_RPSemaphore, &viewdata->rastlock,
+		MVIEW_RPSemaphore, (IPTR)&viewdata->rastlock,
 		TAG_DONE);
 
 	if (!viewdata->view)
@@ -2628,14 +2628,14 @@ int HandleMView (struct mview *mv,
 
 			if (signals & idcmpsignal)
 			{
-				static lastclick_seconds = 0, lastclick_micros = 0;
+				static LONG lastclick_seconds = 0, lastclick_micros = 0;
 				struct IntuiMessage myImsg;
 			//	BOOL setviewrelative = FALSE;
 				BOOL relayoutmenus = FALSE;
 				BOOL softrefresh = FALSE;
 				BOOL setmenusettings = FALSE;
 
-				while (imsg = GT_GetIMsg(win->UserPort))
+				while ((imsg = GT_GetIMsg(win->UserPort)))
 				{
 					memcpy(&myImsg, imsg, sizeof(struct IntuiMessage));
 
@@ -2671,7 +2671,7 @@ int HandleMView (struct mview *mv,
 									//	SetMenuSettings(mv, settings);
 										setmenusettings = TRUE;
 										SetButtonSettings(viewdata, mv->window, buttons, settings, FALSE);
-										MV_SetAttrs(viewdata->view, MVIEW_Text, SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
+										MV_SetAttrs(viewdata->view, MVIEW_Text, (IPTR)SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
 									}
 									break;
 
@@ -2692,12 +2692,12 @@ int HandleMView (struct mview *mv,
 									//	SetMenuSettings(mv, settings);
 										setmenusettings = TRUE;
 										SetButtonSettings(viewdata, mv->window, buttons, settings, FALSE);
-										MV_SetAttrs(viewdata->view, MVIEW_Text, SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
+										MV_SetAttrs(viewdata->view, MVIEW_Text, (IPTR)SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
 									}
 									break;
 
 								case GAD_SLIDE:
-									if (settings->slideshow = buttons->gadgets[GAD_SLIDE]->togglestatus)
+									if ((settings->slideshow = buttons->gadgets[GAD_SLIDE]->togglestatus))
 									{
 										SetTrigger(viewdata->trigger, settings->slidedelay ? settings->slidedelay * 5 : MINDELAY);
 									}
@@ -2707,11 +2707,11 @@ int HandleMView (struct mview *mv,
 									}
 								//	SetMenuSettings(mv, settings);
 									setmenusettings = TRUE;
-									MV_SetAttrs(viewdata->view, MVIEW_Text, SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
+									MV_SetAttrs(viewdata->view, MVIEW_Text, (IPTR)SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
 									break;
 
 								case GAD_LOOP:
-									if (settings->loop = buttons->gadgets[GAD_LOOP]->togglestatus)
+									if ((settings->loop = buttons->gadgets[GAD_LOOP]->togglestatus))
 									{
 										settings->autoquit = FALSE;
 										settings->autohide = FALSE;
@@ -2779,8 +2779,8 @@ int HandleMView (struct mview *mv,
 							int x, y, w, h;
 
 							MV_GetAttrs(viewdata->view,
-								MVIEW_PictureX, &x, MVIEW_PictureY, &y,
-								MVIEW_PictureWidth, &w, MVIEW_PictureHeight, &h, TAG_DONE);
+								MVIEW_PictureX, (IPTR)&x, MVIEW_PictureY, (IPTR)&y,
+								MVIEW_PictureWidth, (IPTR)&w, MVIEW_PictureHeight, (IPTR)&h, TAG_DONE);
 
 							switch (myImsg.Code)
 							{
@@ -3082,7 +3082,7 @@ int HandleMView (struct mview *mv,
 									//	SetMenuSettings(mv, settings);
 										setmenusettings = TRUE;
 										SetButtonSettings(viewdata, mv->window, buttons, settings, FALSE);
-										MV_SetAttrs(viewdata->view, MVIEW_Text, SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
+										MV_SetAttrs(viewdata->view, MVIEW_Text, (IPTR)SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
 									}
 
 								case '1':
@@ -3279,7 +3279,7 @@ int HandleMView (struct mview *mv,
 									//	SetMenuSettings(mv, settings);
 										setmenusettings = TRUE;
 										SetButtonSettings(viewdata, mv->window, buttons, settings, FALSE);
-										MV_SetAttrs(viewdata->view, MVIEW_Text, SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
+										MV_SetAttrs(viewdata->view, MVIEW_Text, (IPTR)SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
 									}
 									break;
 								case 9:
@@ -3301,7 +3301,7 @@ int HandleMView (struct mview *mv,
 									break;
 
 								case 's':	case 'S':	case '9':
-									if (settings->slideshow = !settings->slideshow)
+									if ((settings->slideshow = !settings->slideshow))
 									{
 										SetTrigger(viewdata->trigger, settings->slidedelay ? settings->slidedelay * 5 : MINDELAY);
 									}
@@ -3312,7 +3312,7 @@ int HandleMView (struct mview *mv,
 								//	SetMenuSettings(mv, settings);
 									setmenusettings = TRUE;
 									SetButtonSettings(viewdata, mv->window, buttons, settings, FALSE);
-									MV_SetAttrs(viewdata->view, MVIEW_Text, SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
+									MV_SetAttrs(viewdata->view, MVIEW_Text, (IPTR)SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
 									break;
 
 								default:
@@ -3348,7 +3348,7 @@ int HandleMView (struct mview *mv,
 										break;
 
 									case MITEM_AUTODISPLAYMODE:
-										if (settings->autodisplaymode = GetItemFlag(item, TRUE, FALSE))
+										if ((settings->autodisplaymode = GetItemFlag(item, TRUE, FALSE)))
 										{
 											if (!NeuralBase)
 											{
@@ -3408,7 +3408,7 @@ int HandleMView (struct mview *mv,
 										//	SetMenuSettings(mv, settings);
 											setmenusettings = TRUE;
 											SetButtonSettings(viewdata, mv->window, buttons, settings, FALSE);
-											MV_SetAttrs(viewdata->view, MVIEW_Text, SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
+											MV_SetAttrs(viewdata->view, MVIEW_Text, (IPTR)SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
 										}
 										break;
 
@@ -3468,7 +3468,7 @@ int HandleMView (struct mview *mv,
 											if ((fullname = FullName(pathname, filename)))
 											{
 												char **piclist;
-												if (piclist = LoadStringList(fullname))
+												if ((piclist = LoadStringList(fullname)))
 												{
 													newpicsignal = NewPicHandler(viewdata, piclist, settings, mv->logopic);
 													DeleteFilePatternList(piclist);
@@ -3492,10 +3492,10 @@ int HandleMView (struct mview *mv,
 												pathsettings->listpath = _StrDup(pathname);
 											}
 
-											if (fullname = FullName(pathname, filename))
+											if ((fullname = FullName(pathname, filename)))
 											{
 												char **piclist;
-												if (piclist = LoadStringList(fullname))
+												if ((piclist = LoadStringList(fullname)))
 												{
 													AppendPicHandler(viewdata->pichandler, piclist);
 													DeleteFilePatternList(piclist);
@@ -3565,7 +3565,7 @@ int HandleMView (struct mview *mv,
 										//	SetMenuSettings(mv, settings);
 											setmenusettings = TRUE;
 											SetButtonSettings(viewdata, mv->window, buttons, settings, FALSE);
-											MV_SetAttrs(viewdata->view, MVIEW_Text, SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
+											MV_SetAttrs(viewdata->view, MVIEW_Text, (IPTR)SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
 										}
 										break;
 
@@ -3574,7 +3574,7 @@ int HandleMView (struct mview *mv,
 										break;
 
 									case MITEM_SLIDE:
-										if (settings->slideshow = GetItemFlag(item, TRUE, FALSE))
+										if ((settings->slideshow = GetItemFlag(item, TRUE, FALSE)))
 										{
 											SetTrigger(viewdata->trigger, settings->slidedelay ? settings->slidedelay * 5 : MINDELAY);
 										}
@@ -3582,7 +3582,7 @@ int HandleMView (struct mview *mv,
 										{
 											SetTrigger(viewdata->trigger, 0);
 										}
-										MV_SetAttrs(viewdata->view, MVIEW_Text, SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
+										MV_SetAttrs(viewdata->view, MVIEW_Text, (IPTR)SetPicInfoText(viewdata, viewdata->showpic, settings), TAG_DONE);
 										SetButtonSettings(viewdata, mv->window, buttons, settings, FALSE);
 										break;
 
@@ -3635,7 +3635,7 @@ int HandleMView (struct mview *mv,
 										break;
 
 									case MITEM_AUTOQUIT:
-										if (settings->autoquit = GetItemFlag(item, TRUE, FALSE))
+										if ((settings->autoquit = GetItemFlag(item, TRUE, FALSE)))
 										{
 											settings->autohide = FALSE;
 											settings->loop = FALSE;
@@ -3645,7 +3645,7 @@ int HandleMView (struct mview *mv,
 										break;
 
 									case MITEM_AUTOHIDE:
-										if (settings->autohide = GetItemFlag(item, TRUE, FALSE))
+										if ((settings->autohide = GetItemFlag(item, TRUE, FALSE)))
 										{
 											settings->autoquit = FALSE;
 											settings->loop = FALSE;
@@ -3663,7 +3663,7 @@ int HandleMView (struct mview *mv,
 										break;
 
 									case MITEM_LOOP:
-										if (settings->loop = GetItemFlag(item, TRUE, FALSE))
+										if ((settings->loop = GetItemFlag(item, TRUE, FALSE)))
 										{
 											settings->autoquit = FALSE;
 											settings->autohide = FALSE;
@@ -3829,7 +3829,7 @@ int HandleMView (struct mview *mv,
 									case MITEM_RESETSETTINGS:
 									{
 										struct mainsettings *new;
-										if (new = CreateMainSettings(NULL, NULL, NULL))
+										if ((new = CreateMainSettings(NULL, NULL, NULL)))
 										{
 											DeleteMainSettings(settings);
 											settings = new;
@@ -3841,7 +3841,7 @@ int HandleMView (struct mview *mv,
 									case MITEM_RESTORESETTINGS:
 									{
 										struct mainsettings *new;
-										if (new = CreateMainSettings(NULL, oldsettings, NULL))
+										if ((new = CreateMainSettings(NULL, oldsettings, NULL)))
 										{
 											DeleteMainSettings(settings);
 											settings = new;
@@ -3854,7 +3854,7 @@ int HandleMView (struct mview *mv,
 									{
 										struct mainsettings *new;
 										WindowBusy(mv->window);
-										if (new = LoadDefaultSettings(mv->progfilename))
+										if ((new = LoadDefaultSettings(mv->progfilename)))
 										{
 											DeleteMainSettings(settings);
 											settings = new;
@@ -3967,7 +3967,7 @@ int HandleMView (struct mview *mv,
 									{
 										char *fullsourcename;
 
-										if (fullsourcename = GetPicFile(viewdata->pichandler))
+										if ((fullsourcename = GetPicFile(viewdata->pichandler)))
 										{
 											if (PerformFileAction(mv, fullsourcename, fullsourcename, FILEACTION_DELETE, settings->confirmlevel))
 											{
@@ -4070,7 +4070,7 @@ int HandleMView (struct mview *mv,
 												pathsettings->presetpath = _StrDup(pathname);
 											}
 
-											if (fullname = FullName(pathname, filename))
+											if ((fullname = FullName(pathname, filename)))
 											{
 												WindowBusy(mv->window);
 												SavePreset(mv, settings, fullname);
@@ -4094,11 +4094,11 @@ int HandleMView (struct mview *mv,
 												pathsettings->presetpath = _StrDup(pathname);
 											}
 
-											if (fullname = FullName(pathname, filename))
+											if ((fullname = FullName(pathname, filename)))
 											{
 												struct mainsettings *new;
 												WindowBusy(mv->window);
-												if (new = LoadPreset(fullname, settings))
+												if ((new = LoadPreset(fullname, settings)))
 												{
 													DeleteMainSettings(settings);
 													settings = new;
@@ -4175,9 +4175,9 @@ int HandleMView (struct mview *mv,
 	
 				if (setviewrelative)
 				{
-					ULONG newxpos, newypos;
+					IPTR newxpos, newypos;
 					MV_SetViewRelative(viewdata->view, myImsg.MouseX, myImsg.MouseY);
-					MV_GetAttrs(viewdata->view, MVIEW_XPos, &newxpos, MVIEW_YPos, &newypos, TAG_DONE);
+					MV_GetAttrs(viewdata->view, MVIEW_XPos, (IPTR)&newxpos, MVIEW_YPos, (IPTR)&newypos, TAG_DONE);
 					viewdata->xpos = viewdata->destxpos = (double) newxpos / 65536;
 					viewdata->ypos = viewdata->destypos = (double) newypos / 65536;
 				}
@@ -4208,9 +4208,9 @@ int HandleMView (struct mview *mv,
 				char **filepatternlist;
 				char *newpath, *newfile;
 
-				if (filepatternlist = MultiFileRequest(mv->freq, win,
+				if ((filepatternlist = MultiFileRequest(mv->freq, win,
 					requestfiles == REQUEST_OPENFILES ? MVTEXT_SELECTPICTURES : MVTEXT_ADDPICTURES,
-					viewdata->pathname, NULL /*viewdata->filename*/, &newpath, &newfile, settings->filterpictures, settings->rejectpattern))
+					viewdata->pathname, NULL /*viewdata->filename*/, &newpath, &newfile, settings->filterpictures, settings->rejectpattern)))
 				{
 					if (requestfiles == REQUEST_APPENDFILES && viewdata->pichandler)
 					{

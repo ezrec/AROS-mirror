@@ -70,7 +70,7 @@ BOOL Scan(struct FileList *filelist, struct ScanListNode *snode, ULONG abortsign
 
 	if (snode->rejectpattern)
 	{
-		if (rejectpattern = Malloc(strlen(snode->rejectpattern)*3+2))
+		if ((rejectpattern = Malloc(strlen(snode->rejectpattern)*3+2)))
 		{
 			ParsePatternNoCase(snode->rejectpattern, rejectpattern, strlen(snode->rejectpattern)*3+2);
 		}
@@ -91,7 +91,7 @@ BOOL Scan(struct FileList *filelist, struct ScanListNode *snode, ULONG abortsign
 	//	Scan
 	//
 
-	if (argument = snode->filepattern)
+	if ((argument = snode->filepattern))
 	{
 		BOOL iswild = FALSE;
 		char *tbuf;
@@ -100,7 +100,7 @@ BOOL Scan(struct FileList *filelist, struct ScanListNode *snode, ULONG abortsign
 		memset(&anchor, 0, sizeof(struct AnchorPath));
 		
 		l = strlen(argument) * 2 + 2;
-		if (tbuf = Malloc(l))
+		if ((tbuf = Malloc(l)))
 		{
 			iswild = ParsePatternNoCase(argument, tbuf, l);
 			Free(tbuf);
@@ -172,7 +172,7 @@ BOOL Scan(struct FileList *filelist, struct ScanListNode *snode, ULONG abortsign
 							}
 							if (include && !snode->simplescanning)
 							{
-								include = IsPicture(fullname, GGFX_FormatName, &formatname, TAG_DONE);
+								include = IsPicture(fullname, GGFX_FormatName, (IPTR)&formatname, TAG_DONE);
 							}
 						}
 						
@@ -183,7 +183,7 @@ BOOL Scan(struct FileList *filelist, struct ScanListNode *snode, ULONG abortsign
 							
 							filesize = anchor.ap_Info.fib_Size;
 							
-							if (fnode = CreateFileListNode(fullname, formatname ? formatname : "unknown", filesize, *scanindex, &anchor.ap_Info.fib_Date, isdir))
+							if ((fnode = CreateFileListNode(fullname, formatname ? formatname : "unknown", filesize, *scanindex, &anchor.ap_Info.fib_Date, isdir)))
 							{
 								ObtainSemaphore(&filelist->locksemaphore);
 								InsertFileNode(filelist, fnode);

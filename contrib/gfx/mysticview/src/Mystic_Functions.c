@@ -50,7 +50,7 @@ BOOL MVFunction_CreateThumbnail(struct mvwindow *win, struct mainsettings *setti
 			if (NewIconBase)
 			{
 				char *fullname;
-				if (fullname = FullName(viewdata->pathname, viewdata->filename))
+				if ((fullname = FullName(viewdata->pathname, viewdata->filename)))
 				{
 					struct NewDiskObject *dob = NULL;
 
@@ -106,9 +106,9 @@ LONG SAVEDS aboutfunc(struct subtask *subtask, BYTE abortsignal)
 		win = mv->window->window;
 	}
 
-	if (name = GetKeyLicensee())
+	if ((name = GetKeyLicensee()))
 	{
-		EasyRequest(win, &aboutregisteredreq, NULL, name);
+		EasyRequest(win, &aboutregisteredreq, NULL, (IPTR)name);
 		Free(name);
 	}
 	else
@@ -204,7 +204,7 @@ BOOL MVFunction_UsePreset(struct mview *mv, struct mainsettings **mainsettings,
 		if (fullname)
 		{
 			struct mainsettings *new;
-			if (new = LoadPreset(fullname, *mainsettings))
+			if ((new = LoadPreset(fullname, *mainsettings)))
 			{
 				DeleteMainSettings(*mainsettings);
 				*mainsettings = new;
@@ -234,7 +234,7 @@ void MVFunction_CopyMoveToPath(struct mview *mv, struct mainsettings *settings,
 	{
 		if (viewdata->showpic)
 		{
-			if (fullsourcename = FullName(viewdata->pathname, viewdata->filename))
+			if ((fullsourcename = FullName(viewdata->pathname, viewdata->filename)))
 			{
 				if (immediately)
 				{
@@ -313,7 +313,7 @@ void MVFunction_CopyMoveTo(struct mview *mv, struct mainsettings *settings,
 	{
 		if (viewdata->showpic)
 		{
-			if (fullsourcename = FullName(viewdata->pathname, viewdata->filename))
+			if ((fullsourcename = FullName(viewdata->pathname, viewdata->filename)))
 			{
 				if (immediately)
 				{
@@ -442,21 +442,25 @@ BOOL MVFunction_CreateAutoThumbnail(struct mvwindow *window, struct mainsettings
 				{
 					char *fullname;
 
-					if (fullname = FullName(viewdata->pathname, viewdata->filename))
+					if ((fullname = FullName(viewdata->pathname, viewdata->filename)))
 					{
 						char checkstring[200];
 						char **tt;
 						BOOL createthumbnail = TRUE;
-
+						
+					#ifdef __AROS__
+						sprintf(checkstring, "%d,%d", settings->thumbsize, settings->thumbnumcolors);
+					#else
 						sprintf(checkstring, "%ld,%ld", settings->thumbsize, settings->thumbnumcolors);
+					#endif
 
-						if (tt = GetToolTypes(fullname))
+						if ((tt = GetToolTypes(fullname)))
 						{
 							//	icon found
 
 							char *s;
 
-							if (s = ArgString((UBYTE **)tt, "MYSTICVIEW_THUMBNAIL", NULL))
+							if ((s = ArgString((UBYTE **)tt, "MYSTICVIEW_THUMBNAIL", NULL)))
 							{
 								// mysticview thumbnail recognized
 
@@ -472,7 +476,7 @@ BOOL MVFunction_CreateAutoThumbnail(struct mvwindow *window, struct mainsettings
 									}
 									else
 									{
-										if (s = ArgString((UBYTE **)tt, "MYSTICVIEW_THUMBDATE", NULL))
+										if ((s = ArgString((UBYTE **)tt, "MYSTICVIEW_THUMBDATE", NULL)))
 										{
 											char strDate[30], strTime[30];
 
@@ -480,7 +484,7 @@ BOOL MVFunction_CreateAutoThumbnail(struct mvwindow *window, struct mainsettings
 											{
 												struct DateStamp *filedate;
 
-												if (filedate = GetFileDate(fullname))
+												if ((filedate = GetFileDate(fullname)))
 												{
 													struct DateTime thumbdate;
 													thumbdate.dat_Format = FORMAT_CDN;
@@ -518,11 +522,11 @@ BOOL MVFunction_CreateAutoThumbnail(struct mvwindow *window, struct mainsettings
 
 							if (MVFunction_CreateThumbnail(window, settings, viewdata))
 							{
-								if (tt = GetToolTypes(fullname))
+								if ((tt = GetToolTypes(fullname)))
 								{
 									struct List *tlist;
 
-									if (tlist = CreateListFromArray(tt))
+									if ((tlist = CreateListFromArray(tt)))
 									{
 										char **newtt;
 										char strDate[30], strTime[30];
@@ -544,7 +548,7 @@ BOOL MVFunction_CreateAutoThumbnail(struct mvwindow *window, struct mainsettings
 
 										SetPrefsNode(tlist, "MYSTICVIEW_THUMBNAIL", checkstring, TRUE);
 
-										if (newtt = CreateArrayFromList(tlist))
+										if ((newtt = CreateArrayFromList(tlist)))
 										{
 											PutToolTypes(fullname, newtt);
 											DeleteStringList(newtt);

@@ -181,7 +181,7 @@ APTR SubTask(LONG (* function)(struct subtask *, BYTE),
 	struct subtask *st;
 	BOOL success = FALSE;
 
-	if (st = malloc(sizeof(struct subtask)))
+	if ((st = malloc(sizeof(struct subtask))))
 	{
 		memset(st, 0, sizeof(struct subtask));
 
@@ -224,9 +224,9 @@ APTR SubTask(LONG (* function)(struct subtask *, BYTE),
 					NP_StackSize, stacksize > 32768 ? stacksize: 32768,
 					NP_Name, (ULONG) st->procname, TAG_DONE))
 #else
-				if (st->subproc = CreateNewProcTags(NP_Entry, (ULONG) SubTaskEntry,
+				if ((st->subproc = CreateNewProcTags(NP_Entry, (ULONG) SubTaskEntry,
 					NP_StackSize, stacksize > 4000 ? stacksize: 4000,
-					NP_Name, (ULONG) st->procname, TAG_DONE))
+					NP_Name, (ULONG) st->procname, TAG_DONE)))
 #endif
 				{
 					struct MsgPort *port = NULL;

@@ -117,7 +117,7 @@ void RemoveAppWindowSafely(struct AppWindow *appwin, struct MsgPort *appmsgport)
 	
 		Forbid();
 	
-		while (appmsg = (struct AppMessage *) GetMsg(appmsgport))
+		while ((appmsg = (struct AppMessage *) GetMsg(appmsgport)))
 		{
 			ReplyMsg((struct Message *) appmsg);
 		}
@@ -185,7 +185,7 @@ struct mvwindow *CreateMVWindow (struct mview *mv, struct mvscreen *scr, struct 
 
 	if (scr && mvs)
 	{	
-		if (win = Malloclear(sizeof(struct mvwindow)))
+		if ((win = Malloclear(sizeof(struct mvwindow))))
 		{
 			BOOL success = FALSE;
 			struct TagItem *taglist;
@@ -201,7 +201,7 @@ struct mvwindow *CreateMVWindow (struct mview *mv, struct mvscreen *scr, struct 
 			//	{
 			//		win->appSignal = 1L << mv->appmsgport->mp_SigBit;
 		
-					if (taglist = AllocateTagItems(20))
+					if ((taglist = AllocateTagItems(20)))
 					{
 						UWORD visibleWidth, visibleHeight, visibleMidX, visibleMidY;
 						UWORD visibleLeft, visibleTop;
@@ -224,7 +224,7 @@ struct mvwindow *CreateMVWindow (struct mview *mv, struct mvscreen *scr, struct 
 						{
 							DisplayInfoHandle dih;
 					
-							if(dih = FindDisplayInfo(modeID))
+							if((dih = FindDisplayInfo(modeID)))
 							{
 								struct DimensionInfo di;	
 					
@@ -355,17 +355,17 @@ struct mvwindow *CreateMVWindow (struct mview *mv, struct mvscreen *scr, struct 
 		
 						inserttag(tp, TAG_DONE, 0);
 				
-						if (win->menu = CreateMenus(mainmenu, NULL))
+						if ((win->menu = CreateMenus(mainmenu, NULL)))
 						{
 							if(LayoutMenus(win->menu, scr->visualinfo, GTMN_NewLookMenus, TRUE, TAG_DONE))
 							{
-								if(win->window = OpenWindowTagList(NULL, taglist))
+								if((win->window = OpenWindowTagList(NULL, taglist)))
 								{
-									if (win->backpen = ObtainBestPen(scr->screen->ViewPort.ColorMap,
+									if ((win->backpen = ObtainBestPen(scr->screen->ViewPort.ColorMap,
 										RED_RGB32(mvs->bgcolor),
 										GREEN_RGB32(mvs->bgcolor),
 										BLUE_RGB32(mvs->bgcolor),
-										OBP_Precision, PRECISION_ICON, TAG_DONE))
+										OBP_Precision, PRECISION_ICON, TAG_DONE)))
 									{
 									//	ULONG realrgb[3];
 									//	GetRGB32(scr->screen->ViewPort.ColorMap, win->backpen, 1, realrgb);

@@ -150,7 +150,7 @@ char * STDARGS GetKeyWord(int value, char *def, ...)
 	args = (ULONG *) va;
 #endif
 
-	while (string = *((char **) args))
+	while ((string = *((char **) args)))
 	{
 		args++;
 		keyvalue = *((int *) args);
@@ -189,9 +189,9 @@ struct Node *FindPrefsNode(struct List *list, char *name)
 			int searchlen = strlen(name);
 
 			currentnode = list->lh_Head;
-			while (nextnode = currentnode->ln_Succ)
+			while ((nextnode = currentnode->ln_Succ))
 			{
-				if (text = currentnode->ln_Name)
+				if ((text = currentnode->ln_Name))
 				{
 					if (!Strnicmp(name, text, searchlen))
 					{
@@ -231,7 +231,7 @@ BOOL SetPrefsNode(struct List *list, char *setting, char *value, BOOL enabled)
 
 	if (list && setting)
 	{
-		if (newnode = Malloclear(sizeof(struct Node)))
+		if ((newnode = Malloclear(sizeof(struct Node))))
 		{
 			char *text;
 			int len = 10;
@@ -239,7 +239,7 @@ BOOL SetPrefsNode(struct List *list, char *setting, char *value, BOOL enabled)
 			if (setting) len += strlen(setting);
 			if (value) len += strlen(value);
 
-			if (text = Malloc(len))
+			if ((text = Malloc(len)))
 			{
 				if (value && enabled)
 				{
@@ -317,7 +317,11 @@ BOOL SetPrefsNodeNum(struct List *list, char *setting, int num, BOOL enabled)
 	if (enabled)
 	{
 		char text[100];
+	#ifdef __AROS__
+		sprintf(text, "%d", num);
+	#else
 		sprintf(text, "%ld", num);
+	#endif
 		return SetPrefsNode(list, setting, text, TRUE);
 	}
 	else
@@ -382,7 +386,7 @@ char **CreateMainSettingsArray(struct mainsettings *settings, char **ttypes)
 	char **settingsarray = NULL;
 	struct List *toollist;
 
-	if (toollist = CreateListFromArray(ttypes))
+	if ((toollist = CreateListFromArray(ttypes)))
 	{
 		int error = 0;
 
@@ -615,7 +619,7 @@ struct pathsettings * STDARGS CreatePathSettings(char **ttypes, struct pathsetti
 #endif
 */
 
-	if (mvs = Malloclear(sizeof(struct pathsettings)))
+	if ((mvs = Malloclear(sizeof(struct pathsettings))))
 	{
 		char *s;
 		char temps[50];
@@ -665,31 +669,31 @@ struct pathsettings * STDARGS CreatePathSettings(char **ttypes, struct pathsetti
 
 		//	Tooltypes
 
-		if (s = ArgString((UBYTE **) ttypes, "STARTPATH", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "STARTPATH", NULL)))
 		{
 			Free(mvs->startpath);
 			mvs->startpath = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "LISTPATH", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "LISTPATH", NULL)))
 		{
 			Free(mvs->listpath);
 			mvs->listpath = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "SAVEPATH", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "SAVEPATH", NULL)))
 		{
 			Free(mvs->savepath);
 			mvs->savepath = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "PRESETPATH", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "PRESETPATH", NULL)))
 		{
 			Free(mvs->presetpath);
 			mvs->presetpath = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "COPYPATH", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "COPYPATH", NULL)))
 		{
 			Free(mvs->copypath);
 			mvs->copypath = _StrDup(s);
@@ -697,8 +701,12 @@ struct pathsettings * STDARGS CreatePathSettings(char **ttypes, struct pathsetti
 
 		for (i = 0; i < 10; ++i)
 		{
+		#ifdef __AROS__
+			sprintf(temps, "DESTPATH%d", i);
+		#else
 			sprintf(temps, "DESTPATH%ld", i);
-			if (s = ArgString((UBYTE **) ttypes, temps, NULL))
+		#endif
+			if ((s = ArgString((UBYTE **) ttypes, temps, NULL)))
 			{
 				Free(mvs->destpath[i]);
 				mvs->destpath[i] = _StrDup(s);
@@ -707,8 +715,12 @@ struct pathsettings * STDARGS CreatePathSettings(char **ttypes, struct pathsetti
 
 		for (i = 0; i < 10; ++i)
 		{
+		#ifdef __AROS__
+			sprintf(temps, "PRESET%d", i);
+		#else
 			sprintf(temps, "PRESET%ld", i);
-			if (s = ArgString((UBYTE **) ttypes, temps, NULL))
+		#endif
+			if ((s = ArgString((UBYTE **) ttypes, temps, NULL)))
 			{
 				Free(mvs->preset[i]);
 				mvs->preset[i] = _StrDup(s);
@@ -737,7 +749,7 @@ char **CreatePathSettingsArray(struct pathsettings *settings, char **ttypes)
 	char **settingsarray = NULL;
 	struct List *toollist;
 
-	if (toollist = CreateListFromArray(ttypes))
+	if ((toollist = CreateListFromArray(ttypes)))
 	{
 		int error = 0;
 		int i;
@@ -796,9 +808,9 @@ BOOL SaveDefaultSettings(struct mainsettings *settings, char *filename)
 	{
 		char **newttarray;
 
-		if (newttarray = CreateMainSettingsArray(settings, dob->do_ToolTypes))
+		if ((newttarray = CreateMainSettingsArray(settings, (char **)dob->do_ToolTypes)))
 		{
-			dob->do_ToolTypes = newttarray;
+			dob->do_ToolTypes = (STRPTR *)newttarray;
 			success = PutDiskObject(filename, dob);
 			DeleteStringList(newttarray);
 		}
@@ -824,9 +836,9 @@ struct mainsettings *LoadDefaultSettings(char *filename)
 	struct mainsettings *settings = NULL;
 	struct DiskObject *dob;
 
-	if (dob = GetDiskObject(filename))
+	if ((dob = GetDiskObject(filename)))
 	{
-		settings = CreateMainSettings(dob->do_ToolTypes, NULL, NULL);
+		settings = CreateMainSettings((char **)dob->do_ToolTypes, NULL, NULL);
 		FreeDiskObject(dob);
 	}
 
@@ -853,12 +865,12 @@ BOOL SavePreset(struct mview *mv, struct mainsettings *settings, char *filename)
 
 	if (filename)
 	{
-		if (settingsarray = CreateMainSettingsArray(settings, NULL))
+		if ((settingsarray = CreateMainSettingsArray(settings, NULL)))
 		{
 			FILE *fp;
 			char **t = settingsarray;
 
-			if (fp = fopen(filename, "wb"))
+			if ((fp = fopen(filename, "wb")))
 			{
 				success = TRUE;
 
@@ -883,7 +895,7 @@ BOOL SavePreset(struct mview *mv, struct mainsettings *settings, char *filename)
 					{
 						char **tt;
 
-						if (tt = CreateStringList(1))
+						if ((tt = CreateStringList(1)))
 						{
 							char *backdeftool;
 							char **backtt;
@@ -892,18 +904,18 @@ BOOL SavePreset(struct mview *mv, struct mainsettings *settings, char *filename)
 							tt[0] = _StrDup("MYSTICVIEW_PRESET=YES");
 
 							backdeftool = mv->diskobject->do_DefaultTool;
-							backtt = mv->diskobject->do_ToolTypes;
+							backtt = (char **)mv->diskobject->do_ToolTypes;
 							backtype = mv->diskobject->do_Type;
 
 							mv->diskobject->do_Type = WBPROJECT;
-							mv->diskobject->do_ToolTypes = tt;
+							mv->diskobject->do_ToolTypes = (STRPTR *)tt;
 						//	mv->diskobject->do_DefaultTool = "mysticview";
 							mv->diskobject->do_DefaultTool = settings->defaulttool;
 
 							PutDiskObject(filename, mv->diskobject);
 
 							mv->diskobject->do_Type = backtype;
-							mv->diskobject->do_ToolTypes = backtt;
+							mv->diskobject->do_ToolTypes = (STRPTR *)backtt;
 							mv->diskobject->do_DefaultTool = backdeftool;
 
 							DeleteStringList(tt);
@@ -932,7 +944,7 @@ struct mainsettings *LoadPreset(char *filename, struct mainsettings *oldsettings
 	struct mainsettings *settings = NULL;
 	char **settingsarray;
 
-	if (settingsarray = LoadStringList(filename))
+	if ((settingsarray = LoadStringList(filename)))
 	{
 		settings = CreateMainSettings(settingsarray, oldsettings, NULL);
 
@@ -959,7 +971,7 @@ BOOL GetBooleanSetting(char **ttypes, char *name, BOOL def)
 	char *s;
 	BOOL r = def;
 
-	if (s = ArgString((UBYTE **) ttypes, name, NULL))
+	if ((s = ArgString((UBYTE **) ttypes, name, NULL)))
 	{
 		if (!Stricmp(s, "YES"))
 		{
@@ -1061,7 +1073,7 @@ struct mainsettings * STDARGS CreateMainSettings(char **ttypes, struct mainsetti
 #endif
 */
 
-	if (mvs = Malloclear(sizeof(struct mainsettings)))
+	if ((mvs = Malloclear(sizeof(struct mainsettings))))
 	{
 		char *s;
 		LONG temp;
@@ -1166,55 +1178,55 @@ struct mainsettings * STDARGS CreateMainSettings(char **ttypes, struct mainsetti
 
 		//	Tooltypes
 
-		if (s = ArgString((UBYTE **) ttypes, "PUBSCREEN", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "PUBSCREEN", NULL)))
 		{
 			Free(mvs->pubscreen);
 			mvs->pubscreen = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "FONTSPEC", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "FONTSPEC", NULL)))
 		{
 			Free(mvs->fontspec);
 			mvs->fontspec = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "DEFAULTTOOL", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "DEFAULTTOOL", NULL)))
 		{
 			Free(mvs->defaulttool);
 			mvs->defaulttool = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "PICFORMAT", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "PICFORMAT", NULL)))
 		{
 			Free(mvs->picformat);
 			mvs->picformat = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "CX_POPKEY", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "CX_POPKEY", NULL)))
 		{
 			Free(mvs->hotkey);
 			mvs->hotkey = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "STARTPIC", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "STARTPIC", NULL)))
 		{
 			Free(mvs->startpic);
 			mvs->startpic = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "BUTTONPIC", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "BUTTONPIC", NULL)))
 		{
 			Free(mvs->buttonpic);
 			mvs->buttonpic = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "ANIMPIC", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "ANIMPIC", NULL)))
 		{
 			Free(mvs->animpic);
 			mvs->animpic = _StrDup(s);
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "REJECTPATTERN", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "REJECTPATTERN", NULL)))
 		{
 			Free(mvs->rejectpattern);
 			mvs->rejectpattern = _StrDup(s);
@@ -1289,7 +1301,7 @@ struct mainsettings * STDARGS CreateMainSettings(char **ttypes, struct mainsetti
 			mvs->winopenmode = Stricmp(s, "MOUSE") ? mvs->winopenmode : WOPENMODE_MOUSE;
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "WINSIZEMODE", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "WINSIZEMODE", NULL)))
 		{
 			mvs->winsizemode = Stricmp(s, "DEFAULT") ? mvs->winsizemode : WSIZEMODE_NONE;
 			mvs->winsizemode = Stricmp(s, "VISIBLE") ? mvs->winsizemode : WSIZEMODE_VISIBLE;
@@ -1299,13 +1311,13 @@ struct mainsettings * STDARGS CreateMainSettings(char **ttypes, struct mainsetti
 			mvs->winsizemode = Stricmp(s, "FULL") ? mvs->winsizemode : WSIZEMODE_FULL;
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "REFRESHMODE", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "REFRESHMODE", NULL)))
 		{
 			mvs->refreshmode = Stricmp(s, "SIMPLE") ? mvs->refreshmode : WFLG_SIMPLE_REFRESH;
 			mvs->refreshmode = Stricmp(s, "SMART") ? mvs->refreshmode : WFLG_SMART_REFRESH;
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "DISPLAYMODE", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "DISPLAYMODE", NULL)))
 		{
 			mvs->displaymode = Stricmp(s, "FIT") ? mvs->displaymode : MVDISPMODE_FIT;
 			mvs->displaymode = Stricmp(s, "ONEPIXEL") ? mvs->displaymode : MVDISPMODE_ONEPIXEL;
@@ -1314,20 +1326,20 @@ struct mainsettings * STDARGS CreateMainSettings(char **ttypes, struct mainsetti
 			mvs->displaymode = Stricmp(s, "IGNOREASPECT") ? mvs->displaymode : MVDISPMODE_IGNOREASPECT;
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "PRECISION", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "PRECISION", NULL)))
 		{
 			mvs->precision = Stricmp(s, "EXACT") ? mvs->precision : PRECISION_EXACT;
 			mvs->precision = Stricmp(s, "IMAGE") ? mvs->precision : PRECISION_IMAGE;
 			mvs->precision = Stricmp(s, "ICON") ? mvs->precision : PRECISION_ICON;
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "RENDERQUALITY", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "RENDERQUALITY", NULL)))
 		{
 			mvs->hstype = Stricmp(s, "HIGH") ? mvs->hstype : HSTYPE_15BIT_TURBO;
 			mvs->hstype = Stricmp(s, "LOW") ? mvs->hstype : HSTYPE_12BIT_TURBO;
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "SORTMODE", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "SORTMODE", NULL)))
 		{
 			mvs->sortmode = Stricmp(s, "NONE") ? mvs->sortmode : SORTMODE_NONE;
 			mvs->sortmode = Stricmp(s, "FILENAME") ? mvs->sortmode : SORTMODE_ALPHA_FILE;
@@ -1353,7 +1365,7 @@ struct mainsettings * STDARGS CreateMainSettings(char **ttypes, struct mainsetti
 			mvs->dither = Stricmp(s, "AUTO") ? mvs->dither : MVDITHERMODE_AUTO;
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "LMBACTION", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "LMBACTION", NULL)))
 		{
 			mvs->leftmouseaction = Stricmp(s, "DRAG") ? mvs->leftmouseaction : MOUSEACTION_DRAG;
 			mvs->leftmouseaction = Stricmp(s, "NEXT") ? mvs->leftmouseaction : MOUSEACTION_NEXT;
@@ -1395,7 +1407,7 @@ struct mainsettings * STDARGS CreateMainSettings(char **ttypes, struct mainsetti
 			}
 		}
 
-		if (s = ArgString((UBYTE **) ttypes, "ZOOMSTEP", NULL))
+		if ((s = ArgString((UBYTE **) ttypes, "ZOOMSTEP", NULL)))
 		{
 			mvs->zoomstep = strtod(s, NULL);
 			mvs->zoomstep = RNG(0.01, mvs->zoomstep, 2);
@@ -1456,9 +1468,9 @@ char **GetToolTypes(char *filename)
 	char **tt = NULL;
 	struct DiskObject *dob;
 
-	if (dob = GetDiskObject(filename))
+	if ((dob = GetDiskObject(filename)))
 	{
-		tt = DupStringList(dob->do_ToolTypes);
+		tt = DupStringList((char **)dob->do_ToolTypes);
 		FreeDiskObject(dob);
 	}
 
@@ -1477,17 +1489,17 @@ BOOL PutToolTypes(char *filename, char **tt)
 	struct DiskObject *dob;
 	BOOL success = FALSE;
 
-	if (dob = GetDiskObject(filename))
+	if ((dob = GetDiskObject(filename)))
 	{
 		char **backup;
 
-		backup = dob->do_ToolTypes;
+		backup = (char **)dob->do_ToolTypes;
 
-		dob->do_ToolTypes = tt;
+		dob->do_ToolTypes = (STRPTR *)tt;
 
 		success = PutDiskObject(filename, dob);
 
-		dob->do_ToolTypes = backup;
+		dob->do_ToolTypes = (STRPTR *)backup;
 
 		FreeDiskObject(dob);
 	}
@@ -1508,7 +1520,7 @@ char **SetToolType(char **ttypes, char *entry, char *value)
 	char **newttypes = NULL;
 	struct List *tlist;
 
-	if (tlist = CreateListFromArray(ttypes))
+	if ((tlist = CreateListFromArray(ttypes)))
 	{
 		if (SetPrefsNode(tlist, entry, value, TRUE))
 		{
@@ -1541,7 +1553,7 @@ BOOL SaveArray(char **array, char *pathname, char *filename)
 
 		success = TRUE;
 
-		if (fullname = FullName(pathname, filename))
+		if ((fullname = FullName(pathname, filename)))
 		{
 			if (!Exists(fullname))
 			{
@@ -1557,7 +1569,7 @@ BOOL SaveArray(char **array, char *pathname, char *filename)
 			{
 				success = FALSE;
 
-				if (fp = fopen(fullname, "wb"))
+				if ((fp = fopen(fullname, "wb")))
 				{
 					char **t = array;
 					success = TRUE;
@@ -1597,7 +1609,7 @@ BOOL SavePathSettings(struct pathsettings *pathsettings, char *pathname)
 	{
 		char **array;
 
-		if (array = CreatePathSettingsArray(pathsettings, NULL))
+		if ((array = CreatePathSettingsArray(pathsettings, NULL)))
 		{
 			success = SaveArray(array, pathname, "Paths");
 			DeleteStringList(array);
@@ -1619,7 +1631,7 @@ struct pathsettings *LoadPathSettings(char *pathname, struct pathsettings *oldse
 {
 	struct pathsettings *currentsettings;
 
-	if (currentsettings = CreatePathSettings(NULL, oldsettings, NULL))
+	if ((currentsettings = CreatePathSettings(NULL, oldsettings, NULL)))
 	{
 		struct pathsettings *tempsettings;
 
@@ -1628,11 +1640,11 @@ struct pathsettings *LoadPathSettings(char *pathname, struct pathsettings *oldse
 			char *fullname;
 			char **array;
 
-			if (fullname = FullName(pathname, "Paths"))
+			if ((fullname = FullName(pathname, "Paths")))
 			{
-				if (array = LoadStringList(fullname))
+				if ((array = LoadStringList(fullname)))
 				{
-					if (tempsettings = CreatePathSettings(array, currentsettings, NULL))
+					if ((tempsettings = CreatePathSettings(array, currentsettings, NULL)))
 					{
 						DeletePathSettings(currentsettings);
 						currentsettings = tempsettings;

@@ -130,7 +130,7 @@ char *_StrDupPublic(char *s)
 	if (s)
 	{
 		int l = strlen(s);
-		if (s2 = AllocVec(l + 1, MEMF_PUBLIC))
+		if ((s2 = AllocVec(l + 1, MEMF_PUBLIC)))
 		{
 			if (l)
 			{
@@ -329,7 +329,7 @@ static struct FileListNode *FindFileListNode(struct FileList *filelist, ULONG id
 {
 	struct Node *node = filelist->list->lh_Head, *nextnode, *foundnode = NULL;
 
-	while (nextnode = node->ln_Succ)
+	while ((nextnode = node->ln_Succ))
 	{
 		if (((struct FileListNode *) node)->picID == id)
 		{
@@ -357,7 +357,7 @@ static struct ToLoadNode *FindToLoadNode(struct ToLoadList *tlist, ULONG id)
 {
 	struct Node *node = tlist->list->lh_Head, *nextnode, *foundnode = NULL;
 
-	while (nextnode = node->ln_Succ)
+	while ((nextnode = node->ln_Succ))
 	{
 		if (((struct ToLoadNode *) node)->picID == id)
 		{
@@ -637,7 +637,7 @@ BOOL SortFileList(struct FileList *filelist, int sortmode, BOOL reverse)
 	{
 		struct FileList *tempfilelist;
 
-		if (tempfilelist = CreateFileList(sortmode, reverse))
+		if ((tempfilelist = CreateFileList(sortmode, reverse)))
 		{
 			struct FileListNode *fnode;
 
@@ -648,7 +648,7 @@ BOOL SortFileList(struct FileList *filelist, int sortmode, BOOL reverse)
 
 			DB(kprintf("*** resorting filelist...\n"));
 
-			while (fnode = (struct FileListNode *) RemHead(filelist->list))
+			while ((fnode = (struct FileListNode *) RemHead(filelist->list)))
 			{
 				InsertFileNode(tempfilelist, fnode);
 			}
@@ -713,9 +713,9 @@ struct ScanListNode *CreateScanListNode(char *filepattern, char *rejectpattern, 
 	struct ScanListNode *slnode;
 	BOOL success = FALSE;
 
-	if (slnode = MalloclearPublic(sizeof(struct ScanListNode)))
+	if ((slnode = MalloclearPublic(sizeof(struct ScanListNode))))
 	{
-		if (slnode->filepattern = _StrDupPublic(filepattern))
+		if ((slnode->filepattern = _StrDupPublic(filepattern)))
 		{
 			slnode->rejectpattern = _StrDupPublic(rejectpattern);
 
@@ -753,7 +753,7 @@ void ClearScanList(struct ScanList *scanlist)
 	{
 		struct ScanListNode *snode;
 
-		while (snode = (struct ScanListNode *) RemHead(scanlist->list))
+		while ((snode = (struct ScanListNode *) RemHead(scanlist->list)))
 		{
 			DeleteScanListNode(snode);
 		}
@@ -797,14 +797,14 @@ struct ScanList *CreateScanList(void)
 	struct ScanList *scanlist;
 	BOOL success = FALSE;
 
-	if (scanlist = Malloclear(sizeof(struct ScanList)))
+	if ((scanlist = Malloclear(sizeof(struct ScanList))))
 	{
 		scanlist->locksemaphore.ss_Link.ln_Pri = 0;
 		scanlist->locksemaphore.ss_Link.ln_Name = PICLIST_SEMAPHORE_NAME;
 
 		AddSemaphore(&scanlist->locksemaphore);
 
-		if (scanlist->list = CreateList())
+		if ((scanlist->list = CreateList()))
 		{
 			success = TRUE;
 		}
@@ -841,7 +841,7 @@ struct ScanListNode *ScanList_AddPattern(struct ScanList *scanlist,
 
 	if (scanlist)
 	{
-		if (slnode = CreateScanListNode(filepattern, rejectpattern, recursive, includedirs, simplescanning))
+		if ((slnode = CreateScanListNode(filepattern, rejectpattern, recursive, includedirs, simplescanning)))
 		{
 			assert(scanlist->list);
 
@@ -890,7 +890,7 @@ BOOL SAVEDS scaninitfunc(struct subtask *data)
 
 	assert(handler->scanlist == NULL);
 
-	if (handler->scanlist = CreateScanList())
+	if ((handler->scanlist = CreateScanList()))
 	{
 		return TRUE;
 	}
@@ -940,7 +940,7 @@ LONG SAVEDS scanfunc(struct subtask *subtask, BYTE abortsignal)
 
 			ObtainSemaphore(&scanlist->locksemaphore);
 
-			if (snode = (struct ScanListNode *) RemHead(scanlist->list))
+			if ((snode = (struct ScanListNode *) RemHead(scanlist->list)))
 			{
 				scanlist->numentries--;
 			}
@@ -1031,9 +1031,9 @@ struct FileListNode *CreateFileListNode(char *fullname, char *formatID, long fil
 	struct FileListNode *pnode;
 	BOOL success = FALSE;
 
-	if (pnode = Malloclear(sizeof(struct FileListNode)))
+	if ((pnode = Malloclear(sizeof(struct FileListNode))))
 	{
-		if (pnode->fullname = _StrDup(fullname))
+		if ((pnode->fullname = _StrDup(fullname)))
 		{
 			ULONG id;
 
@@ -1117,7 +1117,7 @@ void DeleteFileList(struct FileList *filelist)
 		{
 			struct FileListNode *fnode;
 
-			while (fnode = (struct FileListNode *) RemHead(filelist->list))
+			while ((fnode = (struct FileListNode *) RemHead(filelist->list)))
 			{
 				DeleteFileListNode(fnode);
 			}
@@ -1141,10 +1141,10 @@ struct FileList *CreateFileList(int sortmode, BOOL reverse)
 	struct FileList *filelist;
 	BOOL success = FALSE;
 
-	if (filelist = Malloclear(sizeof(struct FileList)))
+	if ((filelist = Malloclear(sizeof(struct FileList))))
 	{
 		InitSemaphore(&filelist->locksemaphore);
-		if (filelist->list = CreateList())
+		if ((filelist->list = CreateList()))
 		{
 			filelist->numentries = 0;
 			filelist->sortmode = sortmode;
@@ -1201,9 +1201,9 @@ struct ToLoadNode *CreateToLoadNode(ULONG picID, char *fullname, float pri, BOOL
 	struct ToLoadNode *tnode;
 	BOOL success = FALSE;
 
-	if (tnode = Malloclear(sizeof(struct ToLoadNode)))
+	if ((tnode = Malloclear(sizeof(struct ToLoadNode))))
 	{
-		if (tnode->fullname = _StrDup(fullname))
+		if ((tnode->fullname = _StrDup(fullname)))
 		{
 			tnode->picID = picID;
 			tnode->node.ln_Type = NT_USER;
@@ -1238,7 +1238,7 @@ void DeleteToLoadList(struct ToLoadList *tlist)
 		{
 			struct ToLoadNode *tnode;
 
-			while (tnode = (struct ToLoadNode *) RemHead(tlist->list))
+			while ((tnode = (struct ToLoadNode *) RemHead(tlist->list)))
 			{
 				DeleteToLoadNode(tnode);
 			}
@@ -1261,10 +1261,10 @@ struct ToLoadList *CreateToLoadList(void)
 	struct ToLoadList *tlist;
 	BOOL success = FALSE;
 
-	if (tlist = Malloclear(sizeof(struct ToLoadList)))
+	if ((tlist = Malloclear(sizeof(struct ToLoadList))))
 	{
 		InitSemaphore(&tlist->locksemaphore);
-		if (tlist->list = CreateList())
+		if ((tlist->list = CreateList()))
 		{
 			tlist->numentries = 0;
 			success = TRUE;
@@ -1298,9 +1298,9 @@ void LowerToLoadListPriority(struct ToLoadList *tlist)
 
 	ObtainSemaphore(&tlist->locksemaphore);
 
-	if (node = tlist->list->lh_Head)
+	if ((node = tlist->list->lh_Head))
 	{
-		while (nextnode = node->ln_Succ)
+		while ((nextnode = node->ln_Succ))
 		{
 			struct ToLoadNode *tlnode = (struct ToLoadNode *) node;
 
@@ -1345,9 +1345,9 @@ void EnqueueToLoadList(struct FileList *flist, struct ToLoadList *tlist, struct 
 
 	//	remove node with the new node's ID (if present)
 
-	if (node = tlist->list->lh_Head)
+	if ((node = tlist->list->lh_Head))
 	{
-		while (nextnode = node->ln_Succ)
+		while ((nextnode = node->ln_Succ))
 		{
 			if (((struct ToLoadNode *) node)->picID == newtnode->picID)
 			{
@@ -1426,8 +1426,8 @@ BOOL RequestIDToLoad(struct PicHandler *ph, ULONG id)
 					struct ToLoadNode *tnode;
 					success = FALSE;
 
-					if (tnode = CreateToLoadNode(tempfilenode->picID, tempfilenode->fullname,
-						priority, tempfilenode->isdirectory))
+					if ((tnode = CreateToLoadNode(tempfilenode->picID, tempfilenode->fullname,
+						priority, tempfilenode->isdirectory)))
 					{
 						tnode->primary = primary;
 						EnqueueToLoadList(flist, tlist, tnode);
@@ -1481,7 +1481,7 @@ struct PHMessage *CreatePHMessage(struct PicHandler *handler, ULONG msgtype, ULO
 	struct PHMessage *msg;
 	BOOL success = FALSE;
 
-	if (msg = Malloclear(sizeof(struct PHMessage)))
+	if ((msg = Malloclear(sizeof(struct PHMessage))))
 	{
 		assert(handler);
 		assert(handler->replyport);
@@ -1590,7 +1590,7 @@ BOOL STDARGS PostPHMessage(struct PicHandler *handler, ULONG msgtype, ...)
 
 			success = FALSE;
 
-			if (msg = CreatePHMessage(handler, msgtype, data))
+			if ((msg = CreatePHMessage(handler, msgtype, data)))
 			{
 				assert(handler->msgport);
 
@@ -1672,7 +1672,7 @@ void pichandleclosefunc(struct PicHandler *handler)
 	handler->filelist = NULL;
 
 
-	while (phmsg = (struct PHMessage *) GetMsg(handler->replyport))
+	while ((phmsg = (struct PHMessage *) GetMsg(handler->replyport)))
 	{
 		ObtainSemaphore(&handler->notifysemaphore);
 		Remove(&phmsg->notifylistnode);
@@ -1748,7 +1748,7 @@ LONG SAVEDS pichandlefunc(struct subtask *subtask, BYTE abortsignal)
 		{
 			struct PHMessage *phmsg;
 
-			while (phmsg = (struct PHMessage *) GetMsg(handler->replyport))
+			while ((phmsg = (struct PHMessage *) GetMsg(handler->replyport)))
 			{
 				ObtainSemaphore(&handler->notifysemaphore);
 
@@ -1794,7 +1794,7 @@ struct PicHandler * STDARGS PicHandler_Create(ULONG dummy, ...)
 	tags = (struct TagItem *) va;
 #endif
 
-	if (pichandler = Malloclear(sizeof(struct PicHandler)))
+	if ((pichandler = Malloclear(sizeof(struct PicHandler))))
 	{
 		NewList(&pichandler->notifylist);
 		InitSemaphore(&pichandler->notifysemaphore);
@@ -1809,11 +1809,11 @@ struct PicHandler * STDARGS PicHandler_Create(ULONG dummy, ...)
 		pichandler->bufferpercent = GetTagData(PICH_BufferPercent, 40, tags);
 		pichandler->autocrop = GetTagData(PICH_AutoCrop, FALSE, tags);
 
-		if (pichandler->msgport = CreateMsgPort())
+		if ((pichandler->msgport = CreateMsgPort()))
 		{
-			if (pichandler->toloadlist = CreateToLoadList())
+			if ((pichandler->toloadlist = CreateToLoadList()))
 			{
-				if (pichandler->pichandletask = SubTask(pichandlefunc, pichandler, PICHANDLESTACK, globalpriority, "MysticView PicHandler (%x)", pichandleinitfunc, FALSE))
+				if ((pichandler->pichandletask = SubTask(pichandlefunc, pichandler, PICHANDLESTACK, globalpriority, "MysticView PicHandler (%x)", pichandleinitfunc, FALSE)))
 				{
 					success = TRUE;
 				}
@@ -1850,7 +1850,7 @@ void PicHandler_Delete(struct PicHandler *pichandler)
 
 		PicHandler_SetAttributes(pichandler, PICH_Notify, PHNOTIFY_NOTHING, TAG_DONE);
 
-		while (phmsg = PicHandler_GetNotification(pichandler))
+		while ((phmsg = PicHandler_GetNotification(pichandler)))
 		{
 			PicHandler_Acknowledge(pichandler, phmsg);
 		}
@@ -1862,7 +1862,7 @@ void PicHandler_Delete(struct PicHandler *pichandler)
 		CloseSubTask(pichandler->pichandletask);
 
 
-		while (phmsg = PicHandler_GetNotification(pichandler))
+		while ((phmsg = PicHandler_GetNotification(pichandler)))
 		{
 			DeletePHMessage(pichandler, phmsg);
 		}
@@ -2029,7 +2029,7 @@ BOOL STDARGS PicHandler_SetAttributes(
 		rejectpattern = (char *) GetTagData(PICH_Reject, ~0, tags);
 		if ((ULONG) rejectpattern != ~0)
 		{
-			if (rejectpattern = _StrDup(rejectpattern))
+			if ((rejectpattern = _StrDup(rejectpattern)))
 			{
 				char *t;
 
@@ -2287,15 +2287,15 @@ PICTURE *PicHandler_ObtainPicture(struct PicHandler *pichandler, ULONG id)
 	{
 		struct LoadedList *llist;
 
-		if (llist = pichandler->loadedlist)
+		if ((llist = pichandler->loadedlist))
 		{
 			struct Node *node, *nextnode;
 
 			ObtainSemaphore(&llist->locksemaphore);
 
-			if (node = llist->list->lh_Head)
+			if ((node = llist->list->lh_Head))
 			{
-				while (nextnode = node->ln_Succ)
+				while ((nextnode = node->ln_Succ))
 				{
 					struct LoadedNode *lnode = (struct LoadedNode *) node;
 
@@ -2335,15 +2335,15 @@ void PicHandler_ReleasePicture(struct PicHandler *pichandler, ULONG id)
 	{
 		struct LoadedList *llist;
 
-		if (llist = pichandler->loadedlist)
+		if ((llist = pichandler->loadedlist))
 		{
 			struct Node *node, *nextnode;
 
 			ObtainSemaphore(&llist->locksemaphore);
 
-			if (node = llist->list->lh_Head)
+			if ((node = llist->list->lh_Head))
 			{
-				while (nextnode = node->ln_Succ)
+				while ((nextnode = node->ln_Succ))
 				{
 					struct LoadedNode *lnode = (struct LoadedNode *) node;
 
@@ -2393,7 +2393,11 @@ void DeleteLoadedNode(struct LoadedNode *lnode)
 
 		if (lnode->lockcount)
 		{
+		#ifdef __AROS__
+			printf("*** MysticView debugging message: DeleteLoadedNode() lnode->lockcount == %d\n", lnode->lockcount);
+		#else
 			printf("*** MysticView debugging message: DeleteLoadedNode() lnode->lockcount == %ld\n", lnode->lockcount);
+		#endif
 		}
 
 		DeletePicture(lnode->picture);
@@ -2413,15 +2417,15 @@ struct LoadedNode *CreateLoadedNode(ULONG picID, PICTURE *pic, char *fullname, f
 	struct LoadedNode *lnode;
 	BOOL success = FALSE;
 
-	if (lnode = Malloclear(sizeof(struct LoadedNode)))
+	if ((lnode = Malloclear(sizeof(struct LoadedNode))))
 	{
-		if (lnode->fullname = _StrDup(fullname))
+		if ((lnode->fullname = _StrDup(fullname)))
 		{
-			ULONG width, height, pixelformat;
+			IPTR width, height, pixelformat;
 
-			if (GetPictureAttrs(pic, PICATTR_Width, &width,
-				PICATTR_Height, &height,
-				PICATTR_PixelFormat, &pixelformat, TAG_DONE) == 3)
+			if (GetPictureAttrs(pic, PICATTR_Width, (IPTR)&width,
+				PICATTR_Height, (IPTR)&height,
+				PICATTR_PixelFormat, (IPTR)&pixelformat, TAG_DONE) == 3)
 			{
 				lnode->numbytes = width * height *
 					(pixelformat == PIXFMT_0RGB_32 ? 4 : 1);
@@ -2467,7 +2471,7 @@ void DeleteLoadedList(struct LoadedList *llist)
 		{
 			struct LoadedNode *lnode;
 
-			while (lnode = (struct LoadedNode *) RemHead(llist->list))
+			while ((lnode = (struct LoadedNode *) RemHead(llist->list)))
 			{
 				llist->numbytes -= lnode->numbytes;
 				llist->numentries -= 1;
@@ -2496,10 +2500,10 @@ struct LoadedList *CreateLoadedList(void)
 	struct LoadedList *llist;
 	BOOL success = FALSE;
 
-	if (llist = Malloclear(sizeof(struct LoadedList)))
+	if ((llist = Malloclear(sizeof(struct LoadedList))))
 	{
 		InitSemaphore(&llist->locksemaphore);
-		if (llist->list = CreateList())
+		if ((llist->list = CreateList()))
 		{
 			llist->numentries = 0;
 			success = TRUE;
@@ -2564,9 +2568,9 @@ BOOL FlushLoadedList(struct LoadedList *llist, int flushmode, int bufferpercent)
 		for(;;)
 		{
 			BOOL couldremove = FALSE;
-			if (node = llist->list->lh_TailPred)
+			if ((node = llist->list->lh_TailPred))
 			{
-				while (nextnode = node->ln_Pred)
+				while ((nextnode = node->ln_Pred))
 				{
 					struct LoadedNode *lnode = (struct LoadedNode *) node;
 
@@ -2604,9 +2608,9 @@ BOOL FlushLoadedList(struct LoadedList *llist, int flushmode, int bufferpercent)
 		{
 			BOOL couldremove = FALSE;
 
-			if (node = llist->list->lh_TailPred)
+			if ((node = llist->list->lh_TailPred))
 			{
-				while (nextnode = node->ln_Pred)
+				while ((nextnode = node->ln_Pred))
 				{
 					struct LoadedNode *lnode = (struct LoadedNode *) node;
 
@@ -2644,9 +2648,9 @@ BOOL FlushLoadedList(struct LoadedList *llist, int flushmode, int bufferpercent)
 		{
 			BOOL couldremove = FALSE;
 
-			if (node = llist->list->lh_TailPred)
+			if ((node = llist->list->lh_TailPred))
 			{
-				while (nextnode = node->ln_Pred)
+				while ((nextnode = node->ln_Pred))
 				{
 					struct LoadedNode *lnode = (struct LoadedNode *) node;
 
@@ -2721,9 +2725,9 @@ void LowerLoadedListPriority(struct LoadedList *llist)
 
 	ObtainSemaphore(&llist->locksemaphore);
 
-	if (node = llist->list->lh_TailPred)
+	if ((node = llist->list->lh_TailPred))
 	{
-		while (nextnode = node->ln_Pred)
+		while ((nextnode = node->ln_Pred))
 		{
 			struct LoadedNode *lnode = (struct LoadedNode *) node;
 
@@ -2752,7 +2756,7 @@ BOOL SAVEDS loadinitfunc(struct subtask *data)
 
 	assert(handler->loadedlist == NULL);
 
-	if (handler->loadedlist = CreateLoadedList())
+	if ((handler->loadedlist = CreateLoadedList()))
 	{
 		return TRUE;
 	}
@@ -2802,7 +2806,7 @@ LONG SAVEDS loadfunc(struct subtask *subtask, BYTE abortsignal)
 
 		if (!IsListEmpty(handler->toloadlist->list))
 		{
-			if (tlnode = (struct ToLoadNode *) RemHead(handler->toloadlist->list))
+			if ((tlnode = (struct ToLoadNode *) RemHead(handler->toloadlist->list)))
 			{
 				handler->toloadlist->numentries--;
 			}
@@ -2827,9 +2831,9 @@ LONG SAVEDS loadfunc(struct subtask *subtask, BYTE abortsignal)
 
 			ObtainSemaphore(&handler->loadedlist->locksemaphore);
 
-			if (node = handler->loadedlist->list->lh_Head)
+			if ((node = handler->loadedlist->list->lh_Head))
 			{
-				while (nextnode = node->ln_Succ)
+				while ((nextnode = node->ln_Succ))
 				{
 					struct LoadedNode *lnode = (struct LoadedNode *) node;
 					if (lnode->picID == tlnode->picID)
@@ -2938,7 +2942,7 @@ LONG SAVEDS loadfunc(struct subtask *subtask, BYTE abortsignal)
 						PostPHMessage(handler, PHNOTIFY_ID_LOADING, tlnode->picID, TRUE);
 
 						t1 = clock();
-						picture = LoadPicture(tlnode->fullname, GGFX_ErrorCode, &error, TAG_DONE);
+						picture = LoadPicture(tlnode->fullname, GGFX_ErrorCode, (IPTR)&error, TAG_DONE);
 						t2 = clock();
 						loadtime = (float) (t2 - t1) / (float) CLOCKS_PER_SEC;
 
@@ -2965,7 +2969,7 @@ LONG SAVEDS loadfunc(struct subtask *subtask, BYTE abortsignal)
 							DB(kprintf("retrying...\n"));
 
 									t1 = clock();
-									picture = LoadPicture(tlnode->fullname, GGFX_ErrorCode, &error, TAG_DONE);
+									picture = LoadPicture(tlnode->fullname, GGFX_ErrorCode, (IPTR)&error, TAG_DONE);
 									t2 = clock();
 									loadtime = (float) (t2 - t1) / (float) CLOCKS_PER_SEC;
 
@@ -3003,8 +3007,8 @@ LONG SAVEDS loadfunc(struct subtask *subtask, BYTE abortsignal)
 
 						DB(kprintf(">> creating loadednode for %lx: %s\n", tlnode->picID, tlnode->fullname));
 
-						if (loadednode = CreateLoadedNode(tlnode->picID, picture, tlnode->fullname,
-							tlnode->primary ? 1.0f : tlnode->pri, loadtime))
+						if ((loadednode = CreateLoadedNode(tlnode->picID, picture, tlnode->fullname,
+							tlnode->primary ? 1.0f : tlnode->pri, loadtime)))
 						{
 
 						}
@@ -3121,7 +3125,7 @@ PICINFO *PicHandler_GetPicInfo(struct PicHandler *pichandler, int id)
 
 			node = pichandler->filelist->list->lh_Head;
 
-			while (nextnode = node->ln_Succ)
+			while ((nextnode = node->ln_Succ))
 			{
 				fnode = (struct FileListNode *) node;
 				if (fnode->picID == id)
@@ -3135,7 +3139,7 @@ PICINFO *PicHandler_GetPicInfo(struct PicHandler *pichandler, int id)
 
 			if (found)
 			{
-				if (picinfo = Malloclear(sizeof(PICINFO)))
+				if ((picinfo = Malloclear(sizeof(PICINFO))))
 				{
 					picinfo->listindex = listindex;
 					picinfo->fullname = _StrDup(fnode->fullname);
@@ -3213,7 +3217,7 @@ LONG PicHandler_GetListIndex(struct PicHandler *pichandler, int id)
 
 			index = 0;
 
-			while (nextnode = node->ln_Succ)
+			while ((nextnode = node->ln_Succ))
 			{
 				if (((struct FileListNode *) node)->picID == id)
 				{
@@ -3471,7 +3475,7 @@ char **PicHandler_CreateFileList(struct PicHandler *ph)
 
 		if (n > 0)
 		{
-			if (list = CreateStringList(n))
+			if ((list = CreateStringList(n)))
 			{
 				struct Node *node = ph->filelist->list->lh_Head, *nextnode;
 				struct FileListNode *fnode;
@@ -3479,7 +3483,7 @@ char **PicHandler_CreateFileList(struct PicHandler *ph)
 
 				success = TRUE;
 
-				while (nextnode = node->ln_Succ)
+				while ((nextnode = node->ln_Succ))
 				{
 					fnode = (struct FileListNode *) node;
 

@@ -146,7 +146,7 @@ BOOL PicDelete(struct mview *mv, char *name, int confirmlevel)
 			{
 				int result = EasyRequest(mv->window->window, 
 					&confirmdeletereq, NULL, 
-					FilePart(name));
+					(IPTR)FilePart(name));
 				if (result == 1)
 				{
 					delete = TRUE;
@@ -167,7 +167,7 @@ BOOL PicDelete(struct mview *mv, char *name, int confirmlevel)
 				{
 					error = RETURN_FAIL;
 
-					if (command = Malloc(strlen(name) + 100))
+					if ((command = Malloc(strlen(name) + 100)))
 					{
 						sprintf(command, "delete >NIL: <NIL: %c%s%c QUIET\n", 34,name,34);
 						CallSubTask(subfunc, command, globalpriority, PICHANDLESTACK, &error);
@@ -177,7 +177,7 @@ BOOL PicDelete(struct mview *mv, char *name, int confirmlevel)
 			
 					if (error == RETURN_OK)
 					{
-						if (command = Malloc(strlen(name) + 100))
+						if ((command = Malloc(strlen(name) + 100)))
 						{
 							sprintf(command, "delete >NIL: <NIL: %c%s.info%c QUIET\n", 34,name,34);
 							CallSubTask(subfunc, command, globalpriority, PICHANDLESTACK, NULL);
@@ -188,7 +188,7 @@ BOOL PicDelete(struct mview *mv, char *name, int confirmlevel)
 					}
 					else
 					{
-						retry = (EasyRequest(mv->window->window, &errordeletereq, NULL, name) == 1);
+						retry = (EasyRequest(mv->window->window, &errordeletereq, NULL, (IPTR)name) == 1);
 					}
 			
 				} while (retry);
@@ -229,7 +229,7 @@ BOOL PicCopy(struct mview *mv, char *sname, char *dname, int confirmlevel)
 				{
 					int result = EasyRequest(mv->window->window, 
 						&confirmoverwritereq, NULL, 
-						FilePart(destname));
+						(IPTR)FilePart(destname));
 
 					if (result == 1)
 					{
@@ -250,7 +250,7 @@ BOOL PicCopy(struct mview *mv, char *sname, char *dname, int confirmlevel)
 			{
 				char *newname;
 				change = FALSE;
-				if (newname = FileReq(mv, destname, MVTEXT_SELECTDESTINATION))
+				if ((newname = FileReq(mv, destname, MVTEXT_SELECTDESTINATION)))
 				{
 					Free(destname);
 					destname = newname;
@@ -263,7 +263,7 @@ BOOL PicCopy(struct mview *mv, char *sname, char *dname, int confirmlevel)
 			}
 			
 		
-			if (command = Malloc(strlen(sname) + strlen(destname) + 100))
+			if ((command = Malloc(strlen(sname) + strlen(destname) + 100)))
 			{
 				sprintf(command, "copy <NIL: >NIL: from %c%s%c to %c%s%c QUIET CLONE\n", 34,sname,34, 34,destname,34);
 				CallSubTask(subfunc, command, globalpriority, PICHANDLESTACK, &error);
@@ -272,7 +272,7 @@ BOOL PicCopy(struct mview *mv, char *sname, char *dname, int confirmlevel)
 
 			if (error == RETURN_OK)
 			{
-				if (command = Malloc(strlen(sname) + strlen(destname) + 100))
+				if ((command = Malloc(strlen(sname) + strlen(destname) + 100)))
 				{
 					sprintf(command, "copy <NIL: >NIL: from %c%s.info%c to %c%s.info%c QUIET CLONE\n", 34,sname,34, 34,destname,34);
 					CallSubTask(subfunc, command, globalpriority, PICHANDLESTACK, NULL);
@@ -287,7 +287,7 @@ BOOL PicCopy(struct mview *mv, char *sname, char *dname, int confirmlevel)
 				int result;
 
 				result = EasyRequest(mv->window->window, &copyproblemreq, NULL, 
-					sname, destname);
+					(IPTR)sname, (IPTR)destname);
 				
 				if (result == 1)
 				{
@@ -341,7 +341,7 @@ BOOL PicMove(struct mview *mv, char *sname, char *dname, int confirmlevel)
 				{
 					int result = EasyRequest(mv->window->window, 
 						&confirmoverwritereq, NULL, 
-						FilePart(destname));
+						(IPTR)FilePart(destname));
 
 					if (result == 1)
 					{
@@ -362,7 +362,7 @@ BOOL PicMove(struct mview *mv, char *sname, char *dname, int confirmlevel)
 			{
 				char *newname;
 				change = FALSE;
-				if (newname = FileReq(mv, destname, MVTEXT_SELECTDESTINATION))
+				if ((newname = FileReq(mv, destname, MVTEXT_SELECTDESTINATION)))
 				{
 					Free(destname);
 					destname = newname;
@@ -375,7 +375,7 @@ BOOL PicMove(struct mview *mv, char *sname, char *dname, int confirmlevel)
 			}
 			
 		
-			if (command = Malloc(strlen(sname) + strlen(destname) + 100))
+			if ((command = Malloc(strlen(sname) + strlen(destname) + 100)))
 			{
 				sprintf(command, "copy <NIL: >NIL: from %c%s%c to %c%s%c QUIET CLONE\n", 34,sname,34, 34,destname,34);
 				CallSubTask(subfunc, command, globalpriority, PICHANDLESTACK, &error);
@@ -384,7 +384,7 @@ BOOL PicMove(struct mview *mv, char *sname, char *dname, int confirmlevel)
 
 			if (error == RETURN_OK)
 			{
-				if (command = Malloc(strlen(sname) + strlen(destname) + 100))
+				if ((command = Malloc(strlen(sname) + strlen(destname) + 100)))
 				{
 					sprintf(command, "copy <NIL: >NIL: from %c%s.info%c to %c%s.info%c QUIET CLONE\n", 34,sname,34, 34,destname,34);
 					CallSubTask(subfunc, command, globalpriority, PICHANDLESTACK, NULL);
@@ -401,7 +401,7 @@ BOOL PicMove(struct mview *mv, char *sname, char *dname, int confirmlevel)
 				int result;
 
 				result = EasyRequest(mv->window->window, &copyproblemreq, NULL, 
-					sname, destname);
+					(IPTR)sname, (IPTR)destname);
 				
 				if (result == 1)
 				{

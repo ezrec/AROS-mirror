@@ -29,7 +29,11 @@
 
 /*------------------------------------------------------------------*/
 
+#ifdef __AROS__
+	char versionstring[] = "$VER: " PROGNAME PROGVERSION "";
+#else
 	static char versionstring[] = "$VER: " PROGNAME PROGVERSION "";
+#endif
 
 /*------------------------------------------------------------------*/
 
@@ -382,7 +386,7 @@ void ToggleMenuFlags(struct Menu *menu, ULONG id, UWORD set, UWORD clear)
 						si->Flags &= ~clear;
 						si->Flags |= set;
 					}
-				} while (si = si->NextItem);
+				} while ((si = si->NextItem));
 			}
 
 			if (GTMENUITEM_USERDATA(mi) == (APTR)id)
@@ -391,9 +395,9 @@ void ToggleMenuFlags(struct Menu *menu, ULONG id, UWORD set, UWORD clear)
 				mi->Flags |= set;
 			}
 
-		} while (mi = mi->NextItem);
+		} while ((mi = mi->NextItem));
 
-	} while (menu = menu->NextMenu);
+	} while ((menu = menu->NextMenu));
 
 }
 
@@ -421,7 +425,7 @@ ULONG GetMenuFlag(struct Menu *menu, ULONG id, int true, int false)
 					{
 						return (ULONG)((si->Flags & CHECKED) ? true : false);
 					}
-				} while (si = si->NextItem);
+				} while ((si = si->NextItem));
 			}
 
 			if (GTMENUITEM_USERDATA(mi) == (APTR)id)
@@ -429,9 +433,9 @@ ULONG GetMenuFlag(struct Menu *menu, ULONG id, int true, int false)
 				return (ULONG)((mi->Flags & CHECKED) ? true : false);
 			}
 
-		} while (mi = mi->NextItem);
+		} while ((mi = mi->NextItem));
 
-	} while (menu = menu->NextMenu);
+	} while ((menu = menu->NextMenu));
 
 	return 0;
 }
@@ -459,7 +463,7 @@ struct MenuItem *FindMenuItem(struct Menu *menu, ULONG id)
 					{
 						return si;
 					}
-				} while (si = si->NextItem);
+				} while ((si = si->NextItem));
 			}
 
 			if (GTMENUITEM_USERDATA(mi) == (APTR)id)
@@ -467,9 +471,9 @@ struct MenuItem *FindMenuItem(struct Menu *menu, ULONG id)
 				return mi;
 			}
 
-		} while (mi = mi->NextItem);
+		} while ((mi = mi->NextItem));
 
-	} while (menu = menu->NextMenu);
+	} while ((menu = menu->NextMenu));
 
 	return NULL;
 }
@@ -506,7 +510,7 @@ void *Malloc(unsigned long size)
 		
 		ObtainSemaphore(&memsemaphore);
 
-		if (buf = AllocPooled(mainpool, size + sizeof(ULONG)))
+		if ((buf = AllocPooled(mainpool, size + sizeof(ULONG))))
 		{
 			*buf++ = size;
 
@@ -542,7 +546,7 @@ void *Malloclear(unsigned long size)
 
 		ObtainSemaphore(&memsemaphore);
 
-		if (buf = AllocPooled(mainpool, size + sizeof(ULONG)))
+		if ((buf = AllocPooled(mainpool, size + sizeof(ULONG))))
 		{
 			*buf++ = size;
 
@@ -610,7 +614,7 @@ char *_StrDup(char *s)
 	if (s)
 	{
 		int l = strlen(s);
-		if (s2 = Malloc(l + 1))
+		if ((s2 = Malloc(l + 1)))
 		{
 			if (l)
 			{
@@ -675,7 +679,11 @@ int getrandom(int min, int max)
 
 BOOL InitGlobal(void)
 {
+#ifdef __AROS__
+	sprintf(mypersonalID, "CBF%lx", GetUniqueID());
+#else
 	sprintf(mypersonalID, "CBF%x", GetUniqueID());
+#endif
 
 	MysticBase = OpenLibrary("mysticview.library", MYSTIC_VERSION);
 	if (!MysticBase)

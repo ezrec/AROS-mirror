@@ -159,12 +159,12 @@ struct mview *CreateMView(struct mainsettings *mvs, char *progfilename)
 	
 	struct mview *mv;
 
-	if (mv = Malloclear(sizeof(struct mview)))
+	if ((mv = Malloclear(sizeof(struct mview))))
 	{
 		InitSemaphore(&mv->semaphore);
 		mv->progfilename = progfilename;
 
-		if (mv->appmsgport = CreateMsgPort())
+		if ((mv->appmsgport = CreateMsgPort()))
 		{
 
 			mv->appSignal = 1L << mv->appmsgport->mp_SigBit;
@@ -232,7 +232,7 @@ struct mview *CreateMView(struct mainsettings *mvs, char *progfilename)
 						
 						mv->logopic = MakePicture(MysticLogo, LOGOWIDTH, LOGOHEIGHT,
 							GGFX_PixelFormat, PIXFMT_CHUNKY_CLUT, 
-							GGFX_Palette, MysticLogoPalette,
+							GGFX_Palette, (IPTR)MysticLogoPalette,
 							GGFX_PaletteFormat, PALFMT_RGB8,
 							GGFX_Independent, TRUE,
 							GGFX_NumColors, LOGONUMCOLORS, TAG_DONE);
@@ -248,7 +248,7 @@ struct mview *CreateMView(struct mainsettings *mvs, char *progfilename)
 				{
 					mv->buttonpic = MakePicture(MysticButtons, BUTTONSWIDTH, BUTTONSHEIGHT,
 						GGFX_PixelFormat, PIXFMT_CHUNKY_CLUT, 
-						GGFX_Palette, MysticButtonsPalette,
+						GGFX_Palette, (IPTR)MysticButtonsPalette,
 						GGFX_PaletteFormat, PALFMT_RGB8,
 						GGFX_Independent, TRUE,
 						GGFX_NumColors, BUTTONSNUMCOLORS, TAG_DONE);
@@ -264,7 +264,7 @@ struct mview *CreateMView(struct mainsettings *mvs, char *progfilename)
 				{
 					mv->animpic = MakePicture(MysticAnim, ANIMWIDTH, ANIMHEIGHT*ANIMFRAMES,
 						GGFX_PixelFormat, PIXFMT_CHUNKY_CLUT,
-						GGFX_Palette, MysticAnimPalette,
+						GGFX_Palette, (IPTR)MysticAnimPalette,
 						GGFX_PaletteFormat, PALFMT_RGB8,
 						GGFX_Independent, TRUE,
 						GGFX_NumColors, ANIMNUMCOLORS, TAG_DONE);
@@ -283,9 +283,9 @@ struct mview *CreateMView(struct mainsettings *mvs, char *progfilename)
 	{
 		success = FALSE;
 
-		if (mv->brokermsgport = CreateMsgPort())
+		if ((mv->brokermsgport = CreateMsgPort()))
 		{
-			if (mv->newbroker = Malloclear(sizeof(struct NewBroker)))
+			if ((mv->newbroker = Malloclear(sizeof(struct NewBroker))))
 			{
 				char tempname[100];
 				int count = 1;
@@ -303,19 +303,19 @@ struct mview *CreateMView(struct mainsettings *mvs, char *progfilename)
 				while (count < 64)		// better we limit the show to something reasonable...
 				{
 					Free(mv->newbroker->nb_Name);
-					if (mv->newbroker->nb_Name = _StrDup(tempname))
+					if ((mv->newbroker->nb_Name = _StrDup(tempname)))
 					{
-						if (mv->broker = CxBroker(mv->newbroker, NULL))
+						if ((mv->broker = CxBroker(mv->newbroker, NULL)))
 						{
 							CxObj *filter, *sender, *translate;
 						
-							if (filter = CxFilter(mvs->hotkey))
+							if ((filter = CxFilter(mvs->hotkey)))
 							{
 								AttachCxObj(mv->broker, filter);
-								if (sender = CxSender(mv->brokermsgport, EVT_HOTKEY))
+								if ((sender = CxSender(mv->brokermsgport, EVT_HOTKEY)))
 								{
 									AttachCxObj(filter, sender);
-									if (translate = (CxTranslate(NULL)))
+									if ((translate = (CxTranslate(NULL))))
 									{
 										AttachCxObj(filter, translate);
 										if (! CxObjError(filter))
