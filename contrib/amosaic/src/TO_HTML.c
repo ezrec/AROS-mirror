@@ -23,7 +23,7 @@
 #if FALSE
 HERE
 void
-TO_HTMLSetText(Object *w, char *text, char *header_text, char *footer_text, int element_id, char *target_anchor, WidgetInfo *ptr) /* last param was 
+TO_HTMLSetText(Object *w, char *text, char *header_text, char *footer_text, int element_id, char *target_anchor, WidgetInfo *ptr) /* last param was */ 
 {
   WidgetInfo *wptr = (WidgetInfo *)ptr;
   struct ele_rec *start;
