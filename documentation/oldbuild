@@ -1,9 +1,0 @@
-#!/bin/sh
-source scripts/config/defaults
-if [ -e scripts/config/user ]; then
-    source scripts/config/user
-fi
-
-export PYTHONPATH=$DOCUTILS:$PYTHONPATH
-
-$PYTHON scripts/oldbuildit.py $*
