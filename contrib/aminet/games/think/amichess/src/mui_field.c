@@ -8,6 +8,7 @@
 #include <proto/intuition.h>
 #include <proto/muimaster.h>
 #include <proto/utility.h>
+#include <hardware/blit.h>
 
 Object *DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...);
 
