@@ -127,7 +127,9 @@ struct TagItem LocalTags[3] =
 int __saveds __asm
 __UserLibInit (register __a6 struct MyLibrary *libbase)
 {
+#ifndef __AROS__
   SysBase = *(struct ExecBase **) 4L;
+#endif
   if (!(DOSBase = (struct DosLibrary *) OpenLibrary ("dos.library", LIBRARY_ANY)))
     return (RETURN_FAIL);
 

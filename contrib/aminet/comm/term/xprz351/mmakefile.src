@@ -30,7 +30,7 @@ $(OBJDIR)/%.ol : $(OBJDIR)/aros_src/%_aros.c
 $(OBJDIR)/test/%.o : test/%.c
 	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES)"
 
-FILES = Send Receive Utils xprgetsystime xprtimeout xprzmodem_locale Zm xprsprintf xprz_init
+FILES = Send Receive Utils xprgetsystime xprtimeout xprzmodem_locale Zm xprsprintf xprz_init functable endtag
 
 INTERMEDIATES := $(foreach f,$(FILES),$(OBJDIR)/aros_src/$(f)_aros.c)
 DEPS := $(foreach f,$(FILES),$(OBJDIR)/$(f).d)
@@ -39,8 +39,7 @@ DEPS := $(foreach f,$(FILES),$(OBJDIR)/$(f).d)
 #MM linklibs-aminet-comm-term-xprz : linklibs setup-xprz
 
 #First all intermediate files MUST be created so there is a 'defines' file!
-linklibs-aminet-comm-term-xprz: $(INTERMEDIATES) libdefs.h includes-copy 
-#$(AROS_LIBS)/$(MODULE)
+linklibs-aminet-comm-term-xprz: $(INTERMEDIATES) libdefs.h includes-copy  $(AROS_LIBS)/$(MODULE)
 
 includes-copy: $(INCDIR)/proto/xpr.h $(INCDIR)/defines/xpr.h
 
