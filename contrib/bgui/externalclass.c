@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:47  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:08:50  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -56,7 +67,12 @@ typedef struct {
 /*
  * Module prototypes.
  */
+#ifdef _AROS
+/* looks like proto isn't needed, because ExtClassDispatch is defined
+   before it is used (or better: accessed) the first time */
+#else
 SAVEDS ASM STATIC ULONG ExtClassDispatch( REG(a0) Class *, REG(a2) Object *, REG(a1) Msg );
+#endif
 
 ///
 
@@ -65,7 +81,10 @@ SAVEDS ASM STATIC ULONG ExtClassDispatch( REG(a0) Class *, REG(a2) Object *, REG
 /*
  * Build the create tags and tracked tags.
  */
-STATIC ASM BOOL SetupAttrList(REG(a0) ED *ed, REG(a1) struct TagItem *attr)
+//STATIC ASM BOOL SetupAttrList(REG(a0) ED *ed, REG(a1) struct TagItem *attr)
+STATIC ASM REGFUNC2(BOOL, SetupAttrList,
+	REGPARAM(A0, ED *, ed),
+	REGPARAM(A1, struct TagItem *, attr))
 {
    struct TagItem *tstate, *tag;
 
@@ -108,7 +127,9 @@ STATIC ASM BOOL SetupAttrList(REG(a0) ED *ed, REG(a1) struct TagItem *attr)
 /*
  * Set the track changes.
  */
-STATIC ASM VOID GetTrackChanges( REG(a0) ED *ed )
+//STATIC ASM VOID GetTrackChanges( REG(a0) ED *ed )
+STATIC ASM REGFUNC1(VOID, GetTrackChanges,
+	REGPARAM(A0, ED *, ed))
 {
    struct TagItem    *tstate = ed->ed_TrackList, *tag;
 
@@ -124,7 +145,10 @@ STATIC ASM VOID GetTrackChanges( REG(a0) ED *ed )
 /*
  * Setup object size.
  */
-STATIC ASM VOID SetupSize(REG(a0) Class *cl, REG(a1) Object *obj)
+//STATIC ASM VOID SetupSize(REG(a0) Class *cl, REG(a1) Object *obj)
+STATIC ASM REGFUNC2(VOID, SetupSize,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A1, Object *, obj))
 {
    ED                 *ed = INST_DATA(cl, obj);
    BC                 *bc = BASE_DATA(obj);
@@ -389,7 +413,11 @@ METHOD(ExtClassRender, struct bmRender *bmr)
 /*
  * Class dispatcher.
  */
-SAVEDS ASM STATIC ULONG ExtClassDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+//SAVEDS ASM STATIC ULONG ExtClassDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+SAVEDS ASM STATIC REGFUNC3(ULONG, ExtClassDispatch,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
    ED                *ed;
    ULONG              rc;

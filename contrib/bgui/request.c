@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:48  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:10:03  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -40,7 +51,11 @@ typedef struct {
 /*
  * Parse a button label.
  */
-STATIC ASM UBYTE *GetButtonName( REG(a0) UBYTE *source, REG(a1) UBYTE *uc, REG(d0) ULONG uchar )
+//STATIC ASM UBYTE *GetButtonName( REG(a0) UBYTE *source, REG(a1) UBYTE *uc, REG(d0) ULONG uchar )
+STATIC ASM REGFUNC3(UBYTE *, GetButtonName,
+	REGPARAM(A0, UBYTE *, source),
+	REGPARAM(A1, UBYTE *, uc),
+	REGPARAM(D0, ULONG, uchar))
 {
    uc[0] = uc[1] = 0;
 
@@ -200,7 +215,11 @@ STATIC Object *CreateButtonGroup( UBYTE *gstring, ULONG xen, UBYTE uchar, ULONG 
 /*
  * Requester IDCMP hook.
  */
-STATIC SAVEDS ASM VOID ReqHookFunc(REG(a0) struct Hook *hook, REG(a2) Object *window, REG(a1) struct IntuiMessage *msg)
+//STATIC SAVEDS ASM VOID ReqHookFunc(REG(a0) struct Hook *hook, REG(a2) Object *window, REG(a1) struct IntuiMessage *msg)
+STATIC SAVEDS ASM REGFUNC3(VOID, ReqHookFunc,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, Object *, window),
+	REGPARAM(A1, struct IntuiMessage *, msg))
 {
    IHD      *ihd = (IHD *)hook->h_Data;
    int       id = 0;
@@ -250,8 +269,21 @@ static struct Hook ReqHook = { NULL, NULL, (HOOKFUNC)ReqHookFunc, NULL, NULL };
 /*
  * Put up a BGUI requester.
  */
+#ifdef _AROS
+AROS_LH3(ULONG, BGUI_RequestA,
+    AROS_LHA(struct Window *, win, A0),
+    AROS_LHA(struct bguiRequest *, es, A1),
+    AROS_LHA(ULONG *, args, A2),
+    struct Library *, BGUIBase, 7, BGUI)
+#else
 makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) struct bguiRequest *es, REG(a2) ULONG *args)
+#endif
 {
+#ifdef _AROS
+   AROS_LIBFUNC_INIT
+   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+#endif
+
    Object         *window;
    struct Screen  *screen;
    IHD             ihd;
@@ -394,4 +426,8 @@ makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) str
       }
    }
    return rc;
+
+#ifdef _AROS
+   AROS_LIBFUNC_EXIT
+#endif
 }

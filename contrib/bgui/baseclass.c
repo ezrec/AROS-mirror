@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:46  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:08:19  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -160,8 +171,24 @@ makeproto ULONG CalcDimensions(Class *cl, Object *obj, struct bmDimensions *bmd,
 }
 ///
 
+#ifdef _AROS
+AROS_LH3(VOID, BGUI_PostRender,
+    AROS_LHA(Class *, cl, A0),
+    AROS_LHA(Object *, obj, A2),
+    AROS_LHA(struct gpRender *, gpr, A1),
+    struct Library *, BGUIBase, 23, BGUI)
+#else
 makeproto SAVEDS ASM VOID BGUI_PostRender(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpRender *gpr)
+#endif
 {
+#ifdef _AROS
+   AROS_LIBFUNC_INIT
+   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+#endif
+
+#ifdef _AROS
+   AROS_LIBFUNC_EXIT
+#endif
 }
 
 /// RM_REFRESH

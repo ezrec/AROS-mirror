@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:48  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:10:21  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -36,7 +47,10 @@
 
 extern struct Library *LocaleBase;
 
-makeproto ASM ULONG CompStrlenF(REG(a0) UBYTE *fstring, REG(a1) ULONG *args)
+//makeproto ASM ULONG CompStrlenF(REG(a0) UBYTE *fstring, REG(a1) ULONG *args)
+makeproto ASM REGFUNC2(ULONG, CompStrlenF,
+	REGPARAM(A0, UBYTE *, fstring),
+	REGPARAM(A1, ULONG *, args))
 {
    struct Hook    hook = { NULL, NULL, (HOOKFUNC)LHook_Count, NULL, (APTR)0 };
    struct Locale *loc;
@@ -61,7 +75,11 @@ makeproto ASM ULONG CompStrlenF(REG(a0) UBYTE *fstring, REG(a1) ULONG *args)
    return StrLenfA(fstring, args);
 }
 
-makeproto ASM VOID DoSPrintF(REG(a0) UBYTE *buffer, REG(a1) UBYTE *fstring, REG(a2) ULONG *args)
+//makeproto ASM VOID DoSPrintF(REG(a0) UBYTE *buffer, REG(a1) UBYTE *fstring, REG(a2) ULONG *args)
+makeproto ASM REGFUNC3(VOID, DoSPrintF,
+	REGPARAM(A0, UBYTE *, buffer),
+	REGPARAM(A1, UBYTE *, fstring),
+	REG(A2, ULONG *, args))
 {
    struct Hook    hook = { NULL, NULL, (HOOKFUNC)LHook_Format, NULL, NULL };
    struct Locale *loc;

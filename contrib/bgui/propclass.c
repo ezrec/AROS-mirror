@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:48  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:09:56  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -687,7 +698,12 @@ METHOD(PropClassHitTest, struct gpHitTest *gph)
 }
 ///
 
-STATIC ASM VOID NotifyChange(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi, REG(d0) ULONG flags)
+//STATIC ASM VOID NotifyChange(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi, REG(d0) ULONG flags)
+STATIC ASM REGFUNC4(VOID, NotifyChange,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *, gpi),
+	REGPARAM(D0, ULONG, flags))
 {
    PD          *pd = INST_DATA(cl, obj);
    ULONG        type;
@@ -727,7 +743,11 @@ STATIC ASM VOID NotifyChange(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) str
  * Adjust knob position in
  * whatever direction necessary.
  */
-STATIC ASM VOID AdjustKnob(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi)
+//STATIC ASM VOID AdjustKnob(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi)
+STATIC ASM REGFUNC3(VOID, AdjustKnob,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *, gpi))
 {
    PD        *pd = INST_DATA(cl, obj);
    LONG       top, total = max(pd->pd_Total - pd->pd_Visible, 0);

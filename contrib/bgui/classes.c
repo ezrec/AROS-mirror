@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:46  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:08:37  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -71,7 +82,14 @@
 #include "include/classdefs.h"
 #include <dos.h>
 
+#ifdef _AROS
+typedef ULONG (*ClassMethodDispatcher)(AROS_UFPA(Class *, cl, A0),
+				       AROS_UFPA(Object *, obj, A2),
+				       AROS_UFPA(Msg, msg, A1),
+				       AROS_UFPA(APTR, global_data, A4));
+#else
 typedef ASM ULONG (*ClassMethodDispatcher)(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg, REG(a4) APTR global_data);
+#endif
 
 typedef struct SortedMethod
 {
@@ -118,7 +136,12 @@ makeproto Class *BGUI_MakeClass(ULONG tag, ...)
    return BGUI_MakeClassA((struct TagItem *)&tag);
 }
 
-static ASM ULONG ClassCallDispatcher(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg, REG(a4) APTR global_data)
+//static ASM ULONG ClassCallDispatcher(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg, REG(a4) APTR global_data)
+static ASM REGFUNC4(ULONG, ClassCallDispatcher,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg),
+	REGPARAM(A4, APTR, global_data))
 {
    BGUIClassData *class_data;
    DPFUNC *class_methods;
@@ -149,7 +172,9 @@ struct CallData
    APTR global_data;
 };
 
-static ULONG ASM CallMethod(REG(a3) struct CallData *call_data)
+//static ULONG ASM CallMethod(REG(a3) struct CallData *call_data)
+static ASM REGFUNC1(ULONG, CallMethod,
+	REGPARAM(A3, struct CallData *, call_data))
 {
    register APTR stack;
    register ULONG result;
@@ -193,7 +218,11 @@ static SortedMethod *LookupMethod(BGUIClassData *class_data,ULONG method)
    return(NULL);
 }
 
-makeproto SAVEDS ASM ULONG __GCD( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg)
+//makeproto SAVEDS ASM ULONG __GCD( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg)
+makeproto SAVEDS ASM REGFUNC3(ULONG, __GCD,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
    struct CallData call_data;
    BGUIClassData *class_data;
@@ -237,8 +266,19 @@ makeproto SAVEDS ASM ULONG __GCD( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1
 /*
  * Setup a class.
  */
+#ifdef _AROS
+AROS_LH1(Class *, BGUI_MakeClassA,
+    AROS_LHA(struct TagItem *, tags, A0),
+    struct Library *, BGUIBase, 24, BGUI)
+#else
 makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
+#endif
 {
+#ifdef _AROS
+   AROS_LIBFUNC_INIT
+   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+#endif
+
    ULONG  old_a4 = (ULONG)getreg(REG_A4);
    ULONG  SuperClass, SuperClass_ID, Class_ID, Flags, ClassSize, ObjectSize;
    BGUIClassData *ClassData;
@@ -393,10 +433,25 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
    };
    putreg(REG_A4, (LONG)old_a4);
    return cl;
+
+#ifdef _AROS
+   AROS_LIBFUNC_EXIT
+#endif
 }
 
+#ifdef _AROS
+AROS_LH1(BOOL, BGUI_FreeClass,
+    AROS_LHA(Class *, cl, A0),
+    struct Library *, BGUIBase, 25, BGUI)
+#else
 makeproto SAVEDS ASM BOOL BGUI_FreeClass(REG(a0) Class *cl)
+#endif
 {
+#ifdef _AROS
+   AROS_LIBFUNC_INIT
+   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+#endif
+
    if (cl)
    {
       if(cl->cl_UserData)
@@ -427,9 +482,17 @@ makeproto SAVEDS ASM BOOL BGUI_FreeClass(REG(a0) Class *cl)
       }
    };
    return FALSE;
+
+#ifdef _AROS
+   AROS_LIBFUNC_EXIT
+#endif
 }
 
-makeproto ULONG ASM BGUI_GetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct rmAttr *ra)
+//makeproto ULONG ASM BGUI_GetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct rmAttr *ra)
+makeproto ASM REGFUNC3(ULONG, BGUI_GetAttrChart,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct rmAttr *, ra))
 {
    ULONG           flags = ra->ra_Flags;
    struct TagItem *attr  = ra->ra_Attr;
@@ -500,7 +563,11 @@ makeproto ULONG ASM BGUI_GetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, RE
    return rc;
 }
 
-makeproto ULONG ASM BGUI_SetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct rmAttr *ra)
+//makeproto ULONG ASM BGUI_SetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct rmAttr *ra)
+makeproto ASM REGFUNC3(ULONG, BGUI_SetAttrChart,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct rmAttr *, ra))
 {
    ULONG           flags = ra->ra_Flags;
    struct TagItem *attr  = ra->ra_Attr;
@@ -694,9 +761,21 @@ makeproto ULONG BGUI_UnpackStructureTag(UBYTE *dataspace, ULONG *pt, ULONG tag, 
    #endif
 }
 
-
+#ifdef _AROS
+AROS_LH3(ULONG, BGUI_PackStructureTags,
+    AROS_LHA(APTR, pack, A0),
+    AROS_LHA(ULONG *, packTable, A1),
+    AROS_LHA(struct TagItem *, tagList, A2),
+    struct Library *, BGUIBase, 26, BGUI)
+#else
 makeproto SAVEDS ULONG ASM BGUI_PackStructureTags(REG(a0) APTR pack, REG(a1) ULONG *packTable, REG(a2) struct TagItem *tagList)
+#endif
 {
+#ifdef _AROS
+   AROS_LIBFUNC_INIT
+   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+#endif
+
    #ifdef ENHANCED
 
    return PackStructureTags(pack, packTable, tagList);
@@ -713,10 +792,27 @@ makeproto SAVEDS ULONG ASM BGUI_PackStructureTags(REG(a0) APTR pack, REG(a1) ULO
    return rc;
 
    #endif
+   
+#ifdef _AROS
+   AROS_LIBFUNC_EXIT
+#endif
 }
 
+#ifdef _AROS
+AROS_LH3(ULONG, BGUI_UnpackStructureTags,
+    AROS_LHA(APTR, pack, A0),
+    AROS_LHA(ULONG *, packTable, A1),
+    AROS_LHA(struct TagItem *, tagList, A2),
+    struct Library *, BGUIBase, 27, BGUI)
+#else
 makeproto SAVEDS ULONG ASM BGUI_UnpackStructureTags(REG(a0) APTR pack, REG(a1) ULONG *packTable, REG(a2) struct TagItem *tagList)
+#endif
 {
+#ifdef _AROS
+   AROS_LIBFUNC_INIT
+   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+#endif
+
    #ifdef ENHANCED
 
    return UnpackStructureTags(pack, packTable, tagList);
@@ -733,16 +829,30 @@ makeproto SAVEDS ULONG ASM BGUI_UnpackStructureTags(REG(a0) APTR pack, REG(a1) U
    return rc;
 
    #endif
+
+#ifdef _AROS
+   AROS_LIBFUNC_EXIT
+#endif
 }
 
 /*
  * Quick GetAttr();
  */
-makeproto ASM ULONG Get_Attr(REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) void *storage)
+//makeproto ASM ULONG Get_Attr(REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) void *storage)
+makeproto ASM REGFUNC3(ULONG, Get_Attr,
+	REGPARAM(A0, Object *, obj),
+	REGPARAM(D0, ULONG, attr),
+	REGPARAM(A1, void *, storage))
 {
    return AsmDoMethod(obj, OM_GET, attr, storage);
 }
-makeproto ASM ULONG Get_SuperAttr(REG(a2) Class *cl, REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) void *storage)
+
+//makeproto ASM ULONG Get_SuperAttr(REG(a2) Class *cl, REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) void *storage)
+makeproto ASM REGFUNC4(ULONG, Get_SuperAttr,
+	REGPARAM(A2, Class *, cl),
+	REGPARAM(A0, Object *, obj),
+	REGPARAM(D0, ULONG, attr),
+	REGPARAM(A1, void *, storage))
 {
    return AsmDoSuperMethod(cl, obj, OM_GET, attr, storage);
 }
@@ -809,7 +919,12 @@ makeproto ULONG DoNotifyMethod(Object *obj, struct GadgetInfo *ginfo, ULONG flag
 /*
  * Call the GM_RENDER method.
  */
-makeproto ASM ULONG DoRenderMethod(REG(a0) Object *obj, REG(a1) struct GadgetInfo *ginfo, REG(d0) ULONG redraw)
+
+//makeproto ASM ULONG DoRenderMethod(REG(a0) Object *obj, REG(a1) struct GadgetInfo *ginfo, REG(d0) ULONG redraw)
+makeproto ASM REGFUNC3(ULONG, DoRenderMethod,
+	REGPARAM(A0, Object *, obj),
+	REGPARAM(A1, struct GadgetInfo *, ginfo),
+	REGPARAM(D0, ULONG, redraw))
 {
    struct RastPort   *rp;
    ULONG              rc = 0;
@@ -825,7 +940,11 @@ makeproto ASM ULONG DoRenderMethod(REG(a0) Object *obj, REG(a1) struct GadgetInf
 /*
  * Forward certain types of messages with modifications.
  */
-makeproto ASM ULONG ForwardMsg(REG(a0) Object *s, REG(a1) Object *d, REG(a2) Msg msg)
+//makeproto ASM ULONG ForwardMsg(REG(a0) Object *s, REG(a1) Object *d, REG(a2) Msg msg)
+makeproto ASM REGFUNC3(ULONG, ForwardMsg,
+	REGPARAM(A0, Object *, s),
+	REGPARAM(A1, Object *, d),
+	REGPARAM(A2, Msg, msg))
 {
    WORD          *mouse = NULL;
    ULONG          rc, storage;
@@ -891,12 +1010,17 @@ makeproto struct BaseInfo *AllocBaseInfo(ULONG tag1, ...)
 #endif
 
 #ifdef DEBUG_BGUI
-makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoDebugA(REG(a0) struct TagItem *tags,REG(a1) STRPTR file, REG(d0) ULONG line)
-{
+//makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoDebugA(REG(a0) struct TagItem *tags,REG(a1) STRPTR file, REG(d0) ULONG line)
+makeproto SAVEDS ASM REGFUNC3(struct BaseInfo *, BGUI_AllocBaseInfoDebugA,
+	REGPARAM(A0, struct TagItem *, tags),
+	REGPARAM(A1, STRPTR, file),
+	REGPARAM(D0, ULONG, line))
 #else
-makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoA(REG(a0) struct TagItem *tags)
-{
+//makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoA(REG(a0) struct TagItem *tags)
+makeproto SAVEDS ASM REGFUNC1(struct BaseInfo *, BGUI_AllocBaseInfoA,
+	REGPARAM(A0, struct TagItem *, tags))
 #endif
+{
    struct BaseInfo   *bi, *bi2;
    struct GadgetInfo *gi = NULL;
    ULONG             *flags;

@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:47  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:08:45  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -586,7 +597,10 @@ METHOD(CycleClassGoActive, struct gpInput *gpi)
 /*
  * Which entry is selected?
  */
-STATIC ASM UWORD Selected(REG(a0) CD *cd, REG(a1) struct RastPort *rp)
+//STATIC ASM UWORD Selected(REG(a0) CD *cd, REG(a1) struct RastPort *rp)
+STATIC ASM REGFUNC2(UWORD, Selected,
+	REGPARAM(A0, CD *, cd),
+	REGPARAM(A1, struct RastPort *, rp))
 {
    WORD        mx = cd->cd_PopWindow->MouseX, my = cd->cd_PopWindow->MouseY;
    LONG        item = ~0;

@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:46  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:08:32  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -364,7 +375,11 @@ METHOD(ButtonClassRender, struct bmRender *bmr)
 /*
  * We must go active.
  */
-STATIC ASM ULONG ButtonClassGoActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
+//STATIC ASM ULONG ButtonClassGoActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
+STATIC ASM REGFUNC3(ULONG, ButtonClassGoActive,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *, gpi))
 {
    BD                   *bd = INST_DATA(cl, obj);
    ULONG                 rc;
@@ -433,7 +448,11 @@ STATIC ASM ULONG ButtonClassGoActive( REG(a0) Class *cl, REG(a2) Object *obj, RE
 /*
  * Handle button gadget input.
  */
-STATIC ASM ULONG ButtonClassHandleInput( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
+//STATIC ASM ULONG ButtonClassHandleInput( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
+STATIC ASM REGFUNC3(ULONG, ButtonClassHandleInput,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *,gpi))
 {
    WORD                  sel = 0;
    struct gpHitTest      gph;

@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:48  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:10:23  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -70,7 +81,9 @@ typedef struct {
  * Obtain the LongVal and TextVal
  * values from the strgclass object.
  */
-STATIC ASM VOID GetValues(REG(a0) SD *sd)
+//STATIC ASM VOID GetValues(REG(a0) SD *sd)
+STATIC ASM REGFUNC1(VOID, GetValues,
+	REGPARAM(A0, SD *, sd))
 {
    Get_Attr(sd->sd_StrGad, STRINGA_TextVal, &sd->sd_TextContents);
    Get_Attr(sd->sd_StrGad, STRINGA_LongVal, &sd->sd_IntegerContents);
@@ -79,7 +92,11 @@ STATIC ASM VOID GetValues(REG(a0) SD *sd)
 /*
  * Object cleanup.
  */
-STATIC ASM ULONG StringClassDispose( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+//STATIC ASM ULONG StringClassDispose( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+STATIC ASM REGFUNC3(ULONG, StringClassDispose,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
    SD       *sd = INST_DATA(cl, obj);
 
@@ -104,7 +121,11 @@ STATIC ASM ULONG StringClassDispose( REG(a0) Class *cl, REG(a2) Object *obj, REG
 /*
  * Allocate buffers. (Only when maxchars > 128)
  */
-STATIC ASM BOOL StringClassBuffers( REG(a0) SD *sd, REG(a1) struct TagItem *tags, REG(d0) ULONG max )
+//STATIC ASM BOOL StringClassBuffers( REG(a0) SD *sd, REG(a1) struct TagItem *tags, REG(d0) ULONG max )
+STATIC ASM REGFUNC3(BOOL, StringClassBuffers,
+	REGPARAM(A0, SD *, sd),
+	REGPARAM(A1, struct TagItem *, tags),
+	REGPARAM(D0, ULONG, max))
 {
    /*
     * We only allocate buffer when:
@@ -132,7 +153,11 @@ STATIC ASM BOOL StringClassBuffers( REG(a0) SD *sd, REG(a1) struct TagItem *tags
 /*
  * Create a shiny new object.
  */
-STATIC ASM ULONG StringClassNew( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops )
+//STATIC ASM ULONG StringClassNew( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops )
+STATIC ASM REGFUNC3(ULONG, StringClassNew,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opSet *, ops))
 {
    SD             *sd;
    struct TagItem *tag, *tags;
@@ -242,7 +267,11 @@ STATIC ASM ULONG StringClassNew( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)
 /*
  * Change the object attributes.
  */
-STATIC ASM ULONG StringClassSetUpdate( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opUpdate *opu )
+//STATIC ASM ULONG StringClassSetUpdate( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opUpdate *opu )
+STATIC ASM REGFUNC3(ULONG, StringClassSetUpdate,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opUpdate *, opu))
 {
    SD                *sd = INST_DATA(cl, obj);
    struct TagItem    *clones, *tag;

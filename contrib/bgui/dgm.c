@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:47  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:08:48  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -146,8 +157,22 @@ makeproto ULONG myDoGadgetMethod(Object *obj, struct Window *win, struct Request
 /*
  * Emulate the intuition DoGadgetMethod() call.
  */
+#ifdef _AROS
+AROS_LHA4(ULONG, BGUI_DoGadgetMethodA,
+    AROS_LHA(Object *, obj, A0),
+    AROS_LHA(struct Window *, win, A1),
+    AROS_LHA(struct Requester *, req, A2),
+    AROS_LHA(Msg, msg, A3),
+    struct Library *, BGUIBase, 11, BGUI)
+#else
 makeproto SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *obj, REG(a1) struct Window *win, REG(a2) struct Requester *req, REG(a3) Msg msg )
+#endif
 {
+#ifdef _AROS
+   AROS_LIBFUNC_INIT
+   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+#endif
+
    Object      *dgm;
    ULONG        rc;
 
@@ -185,6 +210,10 @@ makeproto SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *obj, REG(a1) st
     * an important argument is missing.
     */
    return AsmDoMethodA(obj, msg);
+
+#ifdef _AROS
+   AROS_LIBFUNC_EXIT
+#endif
 }
 ///
 /// GM_GOACTIVE, GM_HANDLEINPUT

@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:48  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:09:50  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -85,7 +96,10 @@ typedef struct {
 /*
  * Get the member 'num'.
  */
-STATIC ASM PM *GetMember(REG(a0) PML *l, REG(d0) ULONG mnum)
+//STATIC ASM PM *GetMember(REG(a0) PML *l, REG(d0) ULONG mnum)
+STATIC ASM REGFUNC2(PM *, GetMember,
+	REGPARAM(A0, PML *, l),
+	REGPARAM(D0, ULONG, mnum))
 {
    PM          *pm;
    ULONG        num = 0;
@@ -101,7 +115,11 @@ STATIC ASM PM *GetMember(REG(a0) PML *l, REG(d0) ULONG mnum)
 /*
  * Add members.
  */
-STATIC ASM VOID AddMembers( REG(a0) Class *cl, REG(a1) Object *obj, REG(a2) struct TagItem *attr)
+//STATIC ASM VOID AddMembers( REG(a0) Class *cl, REG(a1) Object *obj, REG(a2) struct TagItem *attr)
+STATIC ASM REGFUNC3(VOID, AddMembers,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A1, Object *, obj),
+	REGPARAM(A2, struct TagItem *, attr))
 {
    PD                *pd = INST_DATA(cl, obj);
    PM                *pm;
@@ -151,7 +169,9 @@ STATIC ASM VOID AddMembers( REG(a0) Class *cl, REG(a1) Object *obj, REG(a2) stru
 /*
  * Set members active/deactive.
  */
-STATIC ASM VOID DoMembers(REG(a0) PD *pd)
+//STATIC ASM VOID DoMembers(REG(a0) PD *pd)
+STATIC ASM REGFUNC1(VOID, DoMembers,
+	REGPARAM(A0, PD *, pd))
 {
    PM       *pm, *active = pd->pd_Active;
    BOOL      inhibit = pd->pd_Flags & PDF_INHIBIT;

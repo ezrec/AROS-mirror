@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:48  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:10:31  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -336,10 +347,28 @@ makeproto Class *InitTextClass(void)
  * Figure out the total text width and height
  * of an text with info-style command sequences.
  */
+#ifdef _AROS
+AROS_LH4(VOID, BGUI_InfoTextSize,
+    AROS_LHA(struct RastPort *, rp, A0),
+    AROS_LHA(UBYTE *, text, A1),
+    AROS_LHA(UWORD *, wi, A2),
+    AROS_LHA(UWORD *, wh, A3),
+    struct Library *, BGUIBase, 18, BGUI)
+#else
 makeproto SAVEDS ASM VOID BGUI_InfoTextSize(REG(a0) struct RastPort *rp, REG(a1) UBYTE *text, REG(a2) UWORD *wi, REG(a3) UWORD *wh)
+#endif
 {
+#ifdef _AROS
+   AROS_LIBFUNC_INIT
+   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+#endif
+
    if (wi) *wi = TotalWidth( rp, text);
    if (wh) *wh = TotalHeight(rp, text);
+
+#ifdef _AROS
+   AROS_LIBFUNC_EXIT
+#endif
 }
 
 /*
@@ -347,9 +376,27 @@ makeproto SAVEDS ASM VOID BGUI_InfoTextSize(REG(a0) struct RastPort *rp, REG(a1)
  * inside the bounding box. Text is automatically
  * trucated when out of bounds.
  */
+#ifdef _AROS
+AROS_LH4(VOID, BGUI_InfoText,
+    AROS_LHA(struct RastPort *, rp, A0),
+    AROS_LHA(UBYTE *, text, A1),
+    AROS_LHA(struct IBox *, bounds, A2),
+    AROS_LHA(struct DrawInfo *, dri, A3),
+    struct Library *, BGUIBase, 19, BGUI)
+#else
 makeproto SAVEDS ASM VOID BGUI_InfoText( REG(a0) struct RastPort *rp, REG(a1) UBYTE *text, REG(a2) struct IBox *bounds, REG(a3) struct DrawInfo *dri )
+#endif
 {
+#ifdef _AROS
+   AROS_LIBFUNC_INIT
+   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+#endif
+
    RenderInfoText(rp, text, PENS(dri), bounds, (UWORD)~0);
+
+#ifdef _AROS
+   AROS_LIBFUNC_EXIT
+#endif
 }
 
 /*
@@ -606,7 +653,10 @@ STATIC WORD XPos(struct BaseInfo *bi, UBYTE *text, UWORD *old_style, struct IBox
 /*
  * Determine the total height of the text.
  */
-makeproto UWORD ASM TotalHeight( REG(a0) struct RastPort *rp, REG(a1) UBYTE *text )
+//makeproto UWORD ASM TotalHeight( REG(a0) struct RastPort *rp, REG(a1) UBYTE *text )
+makeproto ASM REGFUNC2(UWORD, TotalHeight,
+	REGPARAM(A0, struct RastPort *, rp),
+	REGPARAM(A1, UBYTE *, text))
 {
    UWORD    nl = 1;
    UBYTE    c;
@@ -631,7 +681,10 @@ makeproto UWORD ASM TotalHeight( REG(a0) struct RastPort *rp, REG(a1) UBYTE *tex
  * Determine the total width
  * of the information text.
  */
-makeproto UWORD ASM TotalWidth(REG(a0) struct RastPort *rp, REG(a1) UBYTE *text)
+//makeproto UWORD ASM TotalWidth(REG(a0) struct RastPort *rp, REG(a1) UBYTE *text)
+makeproto ASM REGFUNC2(UWORD, TotalWidth,
+	REGPARAM(A0, struct RastPort *, rp),
+	REGPARAM(A1, UBYTE *, text))
 {
    struct RastPort rport = *rp;
    ULONG           line_len = 0, len = 0;

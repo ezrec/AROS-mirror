@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:48  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:09:48  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -66,7 +77,10 @@ METHOD(MXClassSetUpdate,   struct opUpdate *);
 /*
  * Add MX objects.
  */
-STATIC ASM BOOL AddMXObjects(REG(a0) Object *target, REG(a1) MD *md)
+//STATIC ASM BOOL AddMXObjects(REG(a0) Object *target, REG(a1) MD *md)
+STATIC ASM REGFUNCS2(BOOL, AddMXObjects,
+	REGPARAM(A0, Object *, target),
+	REGPARAM(A1, MD *, md))
 {
    UBYTE       **labels = md->md_LabelStrings;
    UWORD         i = 0;

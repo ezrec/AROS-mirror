@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:46  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:08:29  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -39,7 +50,10 @@
 
 #include "include/classdefs.h"
 
-makeproto VOID ASM EraseBMO(REG(a0) BMO *bmo)
+/* AROSFIXME: EraseBMO proto!?!? */
+//makeproto VOID ASM EraseBMO(REG(a0) BMO *bmo)
+makeproto ASM REGFUNC1(VOID, EraseBMO,
+	REGPARAM(A0, BMO *, bmo))
 {
    struct Screen *s = bmo->bmo_Screen;
 
@@ -64,7 +78,11 @@ makeproto VOID ASM EraseBMO(REG(a0) BMO *bmo)
    ReleaseSemaphore(&bmo->bmo_Lock);
 }
 
-STATIC VOID ASM SAVEDS backfill_func(REG(a0) struct Hook *hook, REG(a2) struct RastPort *rp, REG(a1) BFINFO *bf)
+//STATIC VOID ASM SAVEDS backfill_func(REG(a0) struct Hook *hook, REG(a2) struct RastPort *rp, REG(a1) BFINFO *bf)
+STATIC SAVEDS ASM REGFUNC3(VOID, backfill_func,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, struct RastPort *, rp),
+	REGPARAM(A1, BFINFO *, bf))
 {
    BMO *bmo = (BMO *)hook->h_Data;
 
@@ -78,7 +96,9 @@ STATIC VOID ASM SAVEDS backfill_func(REG(a0) struct Hook *hook, REG(a2) struct R
 
 static struct Hook bf_hook = { NULL, NULL, (FUNCPTR)backfill_func, NULL, NULL };
 
-makeproto VOID ASM LayerBMO(REG(a0) BMO *bmo)
+//makeproto VOID ASM LayerBMO(REG(a0) BMO *bmo)
+makeproto ASM REGFUNC1(VOID, LayerBMO,
+	REGPARAM(A0, BMO *, bmo))
 {
    if (!bmo->bmo_BMWindow)
    {
@@ -92,7 +112,9 @@ makeproto VOID ASM LayerBMO(REG(a0) BMO *bmo)
    };
 }
 
-makeproto VOID ASM DrawBMO(REG(a0) BMO *bmo)
+//makeproto VOID ASM DrawBMO(REG(a0) BMO *bmo)
+makeproto ASM REGFUNC1(VOID, DrawBMO,
+	REGPARAM(A0, BMO *, bmo))
 {
    struct Screen     *s  = bmo->bmo_Screen;
    struct BitMap     *bm = bmo->bmo_ObjectBuffer;
@@ -328,7 +350,10 @@ __saveds void Mover(void)
  * Setup everything to move a chunk of the screen
  * around on the screen.
  */
-makeproto ASM BMO *CreateBMO(REG(a0) Object *obj, REG(a1) struct GadgetInfo *gi)
+
+makeproto ASM REGFUNC2(BMO *, CreateBMO,
+	REGPARAM(A0, Object *, obj),
+	REGPARAM(A1, struct GadgetInfo *, gi))
 {
    struct Screen     *scr = gi->gi_Screen;
    struct Window     *win = gi->gi_Window;
@@ -389,7 +414,9 @@ makeproto ASM BMO *CreateBMO(REG(a0) Object *obj, REG(a1) struct GadgetInfo *gi)
 /*
  * Cleanup the mess we made.
  */
-makeproto ASM VOID DeleteBMO(REG(a0) BMO *bmo)
+//makeproto ASM VOID DeleteBMO(REG(a0) BMO *bmo)
+makeproto ASM REGFUNC1(VOID, DeleteBMO,
+	REGPARAM(A0, BMO *, bmo))
 {
    /*
     * Signal termination.
@@ -400,7 +427,11 @@ makeproto ASM VOID DeleteBMO(REG(a0) BMO *bmo)
 /*
  * Move the chunk to a new location.
  */
-makeproto ASM VOID MoveBMO(REG(a0) BMO *bmo, REG(d0) WORD x, REG(d1) WORD y)
+
+makeproto ASM REGFUNC3(VOID, MoveBMO,
+	REGPARAM(A0, BMO *, bmo),
+	REGPARAM(D0, WORD, x),
+	REGPARAM(d1, WORD, y))
 {
    /*
     * Make sure we stay inside the

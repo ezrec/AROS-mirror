@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:47  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:09:01  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -130,7 +141,11 @@ static ULONG FramePackTable[] =
  * care of the backfilling rasters and the special
  * backfilling pens.
  */
-STATIC SAVEDS ASM BuiltInBack(REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct FrameDrawMsg *fdm)
+//STATIC SAVEDS ASM BuiltInBack(REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct FrameDrawMsg *fdm)
+STATIC SAVEDS ASM REGFUNC3(IPTR, BuiltInBack,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct FrameDrawMsg *, fdm))
 {
    FD                   *fd = INST_DATA(OCLASS(obj), obj);
    UWORD                *pens = PENS(fdm->fdm_DrawInfo), apen, bpen;
@@ -523,7 +538,10 @@ STATIC VOID RenderXenFrame(struct bmRender *bmr, WORD l, WORD t, WORD r, WORD b,
 /*
  * Pass on the frame thickness.
  */
-STATIC ASM VOID FrameThickness(REG(a0) Class *cl, REG(a2) Object *obj)
+//STATIC ASM VOID FrameThickness(REG(a0) Class *cl, REG(a2) Object *obj)
+STATIC ASM REGFUNC2(VOID, FrameThickness,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj))
 {
    FD                  *fd = INST_DATA(cl, obj);
    struct ThicknessMsg  tm;
@@ -598,7 +616,11 @@ STATIC ASM VOID FrameThickness(REG(a0) Class *cl, REG(a2) Object *obj)
 /*
  * Setup frame attributes.
  */
-STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct TagItem *attr)
+//STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct TagItem *attr)
+STATIC ASM REGFUNC3(VOID, SetFrameAttrs,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct TagItem *, attr))
 {
    FD                *fd = INST_DATA(cl, obj);
    struct TextFont   *tf;

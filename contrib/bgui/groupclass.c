@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:47  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:09:07  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -390,7 +401,11 @@ typedef struct {
 
 /// NextGroupNode
 
-static ASM MD *NextGroupNode(REG(a0) GD *gd, REG(a1) Object **node, REG(d0) ULONG flags)
+//static ASM MD *NextGroupNode(REG(a0) GD *gd, REG(a1) Object **node, REG(d0) ULONG flags)
+static ASM REGFUNC3(MD *, NextGroupNode,
+	REGPARAM(A0, GD *, gd),
+	REGPARAM(A1, Object **, node),
+	REGPARAM(D0, ULONG, flags))
 {
    Object    *next;
    MD        *md;
@@ -411,7 +426,11 @@ static ASM MD *NextGroupNode(REG(a0) GD *gd, REG(a1) Object **node, REG(d0) ULON
 ///
 /// GroupNode
 
-STATIC ASM Object *GroupNode(REG(a0) GD *gd, REG(d0) int i, REG(d1) int j)
+//STATIC ASM Object *GroupNode(REG(a0) GD *gd, REG(d0) int i, REG(d1) int j)
+STATIC ASM REGFUNC3(Object *, GroupNode,
+	REGPARAM(A0, GD *, gd),
+	REGPARAM(D0, int, i),
+	REGPARAM(D1, int, j))
 {
    switch (gd->gd_Style)
    {
@@ -461,7 +480,10 @@ static UWORD HSpace(UWORD space)
 ///
 /// FindObNode
 
-STATIC ASM Object *FindObNode(REG(a0) GD *gd, REG(a1) Object *find)
+//STATIC ASM Object *FindObNode(REG(a0) GD *gd, REG(a1) Object *find)
+STATIC ASM REGFUNC2(Object *, FindObNode,
+	REGPARAM(A0, GD *, gd),
+	REGPARAM(A1, Object *, find))
 {
    Object         *m = NULL;
    MD             *md;
@@ -524,7 +546,11 @@ STATIC Object *NewSpaceObject(Object *obj, ULONG weight)
 /*
  * Pass an attribute on to the members.
  */
-STATIC ASM void PassAttr(REG(a0) GD *gd, REG(a1) struct TagItem *tag, REG(a2) struct GadgetInfo *gi)
+//STATIC ASM void PassAttr(REG(a0) GD *gd, REG(a1) struct TagItem *tag, REG(a2) struct GadgetInfo *gi)
+STATIC ASM REGFUNC3(void, PassAttr,
+	REGPARAM(A0, GD *, gd),
+	REGPARAM(A1, struct TagItem *, tag),
+	REGPARAM(A2, struct GadgetInfo *, gi))
 {
    Object         *m;
    MD             *md;
@@ -1650,7 +1676,9 @@ METHOD(GroupClassReleaseMembers, struct gmReleaseMembers *gmrm)
 ///
 /// RelayoutGroup
 
-makeproto ASM ULONG RelayoutGroup(REG(a0) Object *obj)
+//makeproto ASM ULONG RelayoutGroup(REG(a0) Object *obj)
+makeproto ASM REGFUNC1(ULONG, RelayoutGroup,
+	REGPARAM(A0, Object *, obj))
 {
    BC                 *bc = BASE_DATA(obj);
    struct Window      *w = NULL;

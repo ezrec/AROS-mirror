@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:47  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:09:28  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -272,7 +283,13 @@ STATIC VOID RenderEntry(Object *obj, LD *ld, struct BaseInfo *bi, LVE *lve, ULON
 #define REL_ZERO (0x80000000)
 
 
-VOID ASM ColumnSeparators(REG(a0) LD *ld, REG(a1) struct BaseInfo *bi, REG(d0) ULONG x, REG(d1) ULONG y, REG(d2) ULONG h)
+//VOID ASM ColumnSeparators(REG(a0) LD *ld, REG(a1) struct BaseInfo *bi, REG(d0) ULONG x, REG(d1) ULONG y, REG(d2) ULONG h)
+ASM REGFUNC5(VOID, ColumnSeparators,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(A1, struct BaseInfo *, bi),
+	REGPARAM(D0, ULONG, x),
+	REGPARAM(D1, ULONG, y),
+	REGPARAM(D2, ULONG, h))
 {
    int col, pena, penb, x2, y2;
 
@@ -314,7 +331,10 @@ VOID ASM ColumnSeparators(REG(a0) LD *ld, REG(a1) struct BaseInfo *bi, REG(d0) U
 /*
  * Find a node by it's number (slow!).
  */
-STATIC ASM LVE *FindNode( REG(a0) LD *ld, REG(d0) ULONG num )
+//STATIC ASM LVE *FindNode( REG(a0) LD *ld, REG(d0) ULONG num )
+STATIC ASM REGFUNC2(LVE *, FindNode,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(D0, ULONG, num))
 {
    LVE         *lve;
    ULONG        lnum = 0L;
@@ -340,7 +360,10 @@ STATIC ASM LVE *FindNode( REG(a0) LD *ld, REG(d0) ULONG num )
 /*
  * Find a node by it's number (quickly).
  */
-STATIC ASM LVE *FindNodeQuick( REG(a0) LD *ld, REG(d0) ULONG num )
+//STATIC ASM LVE *FindNodeQuick( REG(a0) LD *ld, REG(d0) ULONG num )
+STATIC ASM REGFUNC2(LVE *, FindNodeQuick,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(D0, ULONG, num))
 {
    LVE         *lve = ld->ld_TopEntry;
    ULONG        top = ld->ld_Top;
@@ -374,7 +397,12 @@ STATIC ASM LVE *FindNodeQuick( REG(a0) LD *ld, REG(d0) ULONG num )
  * Add an entry in the list. Ugly code with
  * lotsa goto's :)
  */
-STATIC ASM VOID AddEntryInList( REG(a0) LD *ld, REG(a1) Object *obj, REG(a2) LVE *lve, REG(d0) ULONG how )
+//STATIC ASM VOID AddEntryInList( REG(a0) LD *ld, REG(a1) Object *obj, REG(a2) LVE *lve, REG(d0) ULONG how )
+STATIC ASM REGFUNC4(VOID, AddEntryInList,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(A1, Object *, obj),
+	REGPARAM(A2, LVE *, lve),
+	REGPARAM(D0, ULONG, how))
 {
    LVE                *tmp;
    struct lvCompare    lvc;
@@ -462,7 +490,13 @@ STATIC ASM VOID AddEntryInList( REG(a0) LD *ld, REG(a1) Object *obj, REG(a2) LVE
 /*
  * Add entries to the list.
  */
-STATIC ASM BOOL AddEntries(REG(a0) LD *ld, REG(a1) APTR *entries, REG(a2) Object *obj, REG(d0) ULONG how, REG(a3) LVE *pred)
+//STATIC ASM BOOL AddEntries(REG(a0) LD *ld, REG(a1) APTR *entries, REG(a2) Object *obj, REG(d0) ULONG how, REG(a3) LVE *pred)
+STATIC ASM REGFUNC5(BOOL, AddEntries,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(A1, APTR *, entries),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(D0, ULONG, how),
+	REGPARAM(A3, LVE *, pred))
 {
    LVE               *lve;
    struct lvResource  lvr;
@@ -542,7 +576,10 @@ STATIC ASM BOOL AddEntries(REG(a0) LD *ld, REG(a1) APTR *entries, REG(a2) Object
 /*
  * Make an entry visible.
  */
-STATIC ASM ULONG MakeVisible(REG(a0) LD *ld, REG(d0) ULONG entry)
+//STATIC ASM ULONG MakeVisible(REG(a0) LD *ld, REG(d0) ULONG entry)
+STATIC ASM REGFUNC2(ULONG, MakeVisible,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(D0, ULONG, entry))
 {
    ULONG       new_top;
 
@@ -567,7 +604,9 @@ STATIC ASM ULONG MakeVisible(REG(a0) LD *ld, REG(d0) ULONG entry)
 /*
  * De-select node list (slow!).
  */
-STATIC ASM VOID DeSelect(REG(a0) LD *ld)
+//STATIC ASM VOID DeSelect(REG(a0) LD *ld)
+STATIC ASM REGFUNC1(VOID, DeSelect,
+	REGPARAM(A0, LD *, ld))
 {
    LVE         *lve;
 
@@ -584,7 +623,9 @@ STATIC ASM VOID DeSelect(REG(a0) LD *ld)
 /*
  * Select node list (slow!).
  */
-STATIC ASM VOID Select(REG(a0) LD *ld)
+//STATIC ASM VOID Select(REG(a0) LD *ld)
+STATIC ASM REGFUNC1(VOID, Select,
+	REGPARAM(A0, LD *, ld))
 {
    LVE         *lve;
 
@@ -597,7 +638,12 @@ STATIC ASM VOID Select(REG(a0) LD *ld)
 /*
  * Setup a new top-value.
  */
-STATIC ASM VOID NewTop(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi, REG(a2) Object *obj, REG(d0) ULONG new_top)
+//STATIC ASM VOID NewTop(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi, REG(a2) Object *obj, REG(d0) ULONG new_top)
+STATIC ASM REGFUNC4(VOID, NewTop,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(A1, struct GadgetInfo *, gi),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(D0, ULONG, new_top))
 {
    struct BaseInfo   *bi;
    int                i;
@@ -819,7 +865,10 @@ STATIC BOOL GetColumnPositions(Object *obj, LD *ld)
 *
 *************************************************************************/
 
-STATIC ASM VOID DrawDragLine(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi)
+//STATIC ASM VOID DrawDragLine(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi)
+STATIC ASM REGFUNC2(VOID, DrawDragLine,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(A1, struct GadgetInfo *, gi))
 {
    WORD x1 = ld->ld_InnerBox.Left + ld->ld_DragXLine - 2;
    WORD x2 = x1 + 1;
@@ -1427,7 +1476,10 @@ METHOD(ListClassDispose, Msg msg)
 /*
  * Setup the list area bounds.
  */
-STATIC ASM VOID ListAreaBounds(REG(a0) Object *obj, REG(a1) LD *ld)
+//STATIC ASM VOID ListAreaBounds(REG(a0) Object *obj, REG(a1) LD *ld)
+STATIC ASM REGFUNC2(VOID, ListAreaBounds,
+	REGPARAM(A0, Object *, obj),
+	REGPARAM(A1, LD *, ld))
 {
    int          fh = ld->ld_EntryHeight;
    int          overhead;
@@ -1500,7 +1552,11 @@ STATIC ASM VOID ListAreaBounds(REG(a0) Object *obj, REG(a1) LD *ld)
 ///
 /// RenderColumn
 
-STATIC ASM SAVEDS VOID RenderColumn(REG(a0) char *text, REG(a2) Object *obj, REG(a1) struct lvRender *lvr)
+//STATIC ASM SAVEDS VOID RenderColumn(REG(a0) char *text, REG(a2) Object *obj, REG(a1) struct lvRender *lvr)
+STATIC ASM SAVEDS REGFUNC3(VOID, RenderColumn,
+	REGPARAM(A0, char *, text),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct lvRender *, lvr))
 {
    UWORD             *pens = lvr->lvr_DrawInfo->dri_Pens;
    struct RastPort   *rp   = lvr->lvr_RPort;
@@ -1925,7 +1981,10 @@ METHOD(ListClassRender, struct bmRender *bmr)
 /*
  * Find out over which entry the mouse is located.
  */
-STATIC ASM LONG MouseOverEntry(REG(a0) LD *ld, REG(d0) LONG t)
+//STATIC ASM LONG MouseOverEntry(REG(a0) LD *ld, REG(d0) LONG t)
+STATIC ASM REGFUNC2(LONG, MouseOverEntry,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(D0, LONG, t))
 {
    t -= ld->ld_ListArea.Top;
    if (t < 0) return -1;
@@ -1940,7 +1999,10 @@ STATIC ASM LONG MouseOverEntry(REG(a0) LD *ld, REG(d0) LONG t)
 /*
  * Perform multi-(de)selection.
  */
-STATIC ASM BOOL MultiSelect( REG(a0) LD *ld, REG(d0) ULONG active )
+//STATIC ASM BOOL MultiSelect( REG(a0) LD *ld, REG(d0) ULONG active )
+STATIC ASM REGFUNC2(BOOL, MultiSelect,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(D0, ULONG, active))
 {
    LVE         *node = FindNodeQuick( ld, ld->ld_MultiStart ), *anode = FindNodeQuick( ld, active );
    BOOL         rc = FALSE;
@@ -2748,7 +2810,11 @@ METHOD(ListClassDimensions, struct bmDimensions *bmd)
 /*
  * Key activation.
  */
-STATIC ASM ULONG ListClassKeyActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmKeyInput *wmki )
+//STATIC ASM ULONG ListClassKeyActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmKeyInput *wmki )
+STATIC ASM REGFUNC3(ULONG, ListClassKeyActive,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct wmKeyInput *, wmki))
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    UWORD        qual = wmki->wmki_IEvent->ie_Qualifier;
@@ -2828,7 +2894,12 @@ STATIC ASM ULONG ListClassKeyActive( REG(a0) Class *cl, REG(a2) Object *obj, REG
 /*
  * Get entry predecessor, position and add method.
  */
-STATIC ASM VOID EntryPosHow( REG(a0) LD *ld, REG(a1) LVE **lve, REG(d0) ULONG pos, REG(a2) ULONG *how )
+//STATIC ASM VOID EntryPosHow( REG(a0) LD *ld, REG(a1) LVE **lve, REG(d0) ULONG pos, REG(a2) ULONG *how )
+STATIC ASM REGFUNC4(VOID, EntryPosHow,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(A1, LVE **, lve),
+	REGPARAM(D0, ULONG, pos),
+	REGPARAM(A2, ULONG, *how))
 {
    if ( ! pos ) {
       /*
@@ -2857,7 +2928,13 @@ STATIC ASM VOID EntryPosHow( REG(a0) LD *ld, REG(a1) LVE **lve, REG(d0) ULONG po
 /*
  * (Multi)Select entry and/or make it visible.
  */
-SAVEDS ASM VOID DoEntry(REG(a0) struct GadgetInfo *gi, REG(a1) Object *obj, REG(a2) LD *ld, REG(d0) ULONG flags, REG(d1) ULONG number)
+//SAVEDS ASM VOID DoEntry(REG(a0) struct GadgetInfo *gi, REG(a1) Object *obj, REG(a2) LD *ld, REG(d0) ULONG flags, REG(d1) ULONG number)
+SAVEDS ASM REGFUNC5(VOID, DoEntry,
+	REGPARAM(A0, struct GadgetInfo *, gi),
+	REGPARAM(A1, Object *, obj),
+	REGPARAM(A2, LD *, ld),
+	REGPARAM(D0, ULONG, flags),
+	REGPARAM(D1, ULONG, number))
 {
    ULONG       tag;
 
@@ -3143,7 +3220,11 @@ METHOD(ListClassClear, struct lvmCommand *lvc)
 /*
  * Find a node by it's entry data (slow!).
  */
-STATIC ASM LVE *FindEntryData(REG(a0) LD *ld, REG(a1) APTR data, REG(a2) ULONG *number)
+//STATIC ASM LVE *FindEntryData(REG(a0) LD *ld, REG(a1) APTR data, REG(a2) ULONG *number)
+STATIC ASM REGFUNC3(LVE *, FindEntryData,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(A1, APTR, data),
+	REGPARAM(A2, ULONG *, number))
 {
    LVE         *lve;
    ULONG        num = 0;
@@ -3162,7 +3243,10 @@ STATIC ASM LVE *FindEntryData(REG(a0) LD *ld, REG(a1) APTR data, REG(a2) ULONG *
 /*
  * Find a node by it's entry data (can be fast!).
  */
-STATIC ASM LVE *FindEntryDataF(REG(a0) LD *ld, REG(a1) APTR data)
+//STATIC ASM LVE *FindEntryDataF(REG(a0) LD *ld, REG(a1) APTR data)
+STATIC ASM REGFUNC2(LVE *, FindEntryDataF,
+	REGPARAM(A0, LD *, ld),
+	REGPARAM(A1, APTR, data))
 {
    LVE         *lve;
 
@@ -3181,7 +3265,11 @@ STATIC ASM LVE *FindEntryDataF(REG(a0) LD *ld, REG(a1) APTR data)
 /*
  * Get an entry.
  */
-STATIC ASM ULONG ListClassGetEntry( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmGetEntry *lvg )
+//STATIC ASM ULONG ListClassGetEntry( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmGetEntry *lvg )
+STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct lvmGetEntry *, lvg))
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    LVE         *lve;
@@ -3369,7 +3457,11 @@ STATIC ASM ULONG ListClassGetEntry( REG(a0) Class *cl, REG(a2) Object *obj, REG(
 /*
  * Remove an entry from the list.
  */
-STATIC ASM ULONG ListClassRemEntry( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmRemEntry *lvmr )
+//STATIC ASM ULONG ListClassRemEntry( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmRemEntry *lvmr )
+STATIC ASM REGFUNC3(ULONG, ListClassRemEntry,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct lvmRemEntry *, lvmr))
 {
    LD          *ld = INST_DATA(cl, obj);
    LVE         *lve;
@@ -3595,7 +3687,11 @@ METHOD(ListClassRedrawSingle, struct lvmRedrawSingle *lvrs)
 /*
  * Sort the list.
  */
-STATIC ASM ULONG ListClassSort( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmCommand *lvmc )
+//STATIC ASM ULONG ListClassSort( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmCommand *lvmc )
+STATIC ASM REGFUNC3(ULONG, ListClassSort,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct lvmCommand *, lvmc))
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    LVE         *lve;
@@ -3645,7 +3741,11 @@ STATIC ASM ULONG ListClassSort( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) 
 /*
  * (Un)lock the list.
  */
-STATIC ASM ULONG ListClassLock( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmCommand *lvmc )
+//STATIC ASM ULONG ListClassLock( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmCommand *lvmc )
+STATIC ASM REGFUNC3(ULONG, ListClassLock,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct lvmCommand *, lvmc))
 {
    LD       *ld = INST_DATA(cl, obj);
 
@@ -3667,7 +3767,11 @@ STATIC ASM ULONG ListClassLock( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) 
 /*
  * Move an entry.
  */
-STATIC ASM ULONG ListClassMove( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmMove *lvm )
+//STATIC ASM ULONG ListClassMove( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmMove *lvm )
+STATIC ASM REGFUNC3(ULONG, ListClassMove,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct lvmMove *, lvm))
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    LVE         *lve, *tmp;
@@ -3883,7 +3987,11 @@ STATIC ASM ULONG ListClassMove( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) 
 /*
  * Replace an entry.
  */
-STATIC ASM ULONG ListClassReplace( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmReplace *lvmr )
+//STATIC ASM ULONG ListClassReplace( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct lvmReplace *lvmr )
+STATIC ASM REGFUNC3(ULONG, ListClassReplace,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct lvmReplace *, lvmr))
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    LVE         *lvo;
@@ -4049,7 +4157,11 @@ METHOD(ListClassDragActive, struct bmDragMsg *bmdm)
 /*
  * Deactivate.
  */
-STATIC ASM ULONG ListClassDragInactive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct bmDragMsg *bmdm )
+//STATIC ASM ULONG ListClassDragInactive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct bmDragMsg *bmdm )
+STATIC ASM REGFUNC3(ULONG, ListClassDragInactive,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct bmDragMsg *, bmdm))
 {
    LD                   *ld = INST_DATA(cl, obj);
 
@@ -4247,7 +4359,11 @@ METHOD(ListClassDragUpdate, struct bmDragPoint *bmdp)
 /*
  * We have been dropped upon.
  */
-STATIC ASM ULONG ListClassDropped( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct bmDropped *bmd )
+//STATIC ASM ULONG ListClassDropped( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct bmDropped *bmd )
+STATIC ASM REGFUNC3(ULONG, ListClassDropped,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct bmDropped *, bmd))
 {
    LD       *ld = ( LD * )INST_DATA( cl, obj );
    struct MinList     buffer;
@@ -4519,7 +4635,11 @@ METHOD(ListClassGetObject, struct bmGetDragObject *bmgo)
 /*
  * Free the dragged object.
  */
-STATIC ASM ULONG ListClassFreeObject( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct bmFreeDragObject *bmfo )
+//STATIC ASM ULONG ListClassFreeObject( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct bmFreeDragObject *bmfo )
+STATIC ASM REGFUNC3(ULONG, ListClassFreeObject,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct bmFreeDragObject *, bmfo))
 {
    LD       *ld = INST_DATA( cl, obj );
 

@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:47  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:08:41  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -70,6 +81,8 @@ STATIC struct TagItem BoolTags[] = {
 /*
  * Module prototypes.
  */
+
+/*
 STATIC ASM ULONG CommClassNew(       REG(a0) Class *, REG(a2) Object *, REG(a1) struct opSet *      );
 STATIC ASM ULONG CommClassDispose(   REG(a0) Class *, REG(a2) Object *, REG(a1) Msg                     );
 STATIC ASM ULONG CommClassGet(       REG(a0) Class *, REG(a2) Object *, REG(a1) struct opGet *      );
@@ -80,6 +93,18 @@ STATIC ASM ULONG CommClassEnableHotkey(  REG(a0) Class *, REG(a2) Object *, REG(
 STATIC ASM ULONG CommClassEnableBroker(  REG(a0) Class *, REG(a2) Object *, REG(a1) Msg                     );
 STATIC ASM ULONG CommClassDisableBroker( REG(a0) Class *, REG(a2) Object *, REG(a1) Msg                     );
 STATIC ASM ULONG CommClassMsgInfo(   REG(a0) Class *, REG(a2) Object *, REG(a1) struct cmMsgInfo *     );
+*/
+
+STATIC ASM REGFUNC3(ULONG, CommClassNew, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct opSet *, ops));
+STATIC ASM REGFUNC3(ULONG, CommClassDispose, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
+STATIC ASM REGFUNC3(ULONG, CommClassGet, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct opGet *, opg));
+STATIC ASM REGFUNC3(ULONG, CommClassAddHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmAddHotkey *, cah));
+STATIC ASM REGFUNC3(ULONG, CommClassRemHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
+STATIC ASM REGFUNC3(ULONG, CommClassDisableHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
+STATIC ASM REGFUNC3(ULONG, CommClassEnableHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
+STATIC ASM REGFUNC3(ULONG, CommClassEnableBroker, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
+STATIC ASM REGFUNC3(ULONG, CommClassDisableBroker, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
+STATIC ASM REGFUNC3(ULONG, CommClassMsgInfo, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmMsgInfo*, cmi));
 
 /*
  * Class function table.
@@ -249,7 +274,12 @@ METHOD(CommClassDispose, Msg msg)
 /*
  * They want something.
  */
-STATIC ASM ULONG CommClassGet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opGet *opg )
+
+//STATIC ASM ULONG CommClassGet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opGet *opg )
+STATIC ASM REGFUNC3(ULONG, CommClassGet,
+	REGPARAM(A0, Class *, cl),#
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opGet *, opg))
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    ULONG        rc = 1L, *store = opg->opg_Storage;
@@ -274,7 +304,10 @@ STATIC ASM ULONG CommClassGet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) s
 /*
  * Search for a key by it's ID.
  */
-STATIC ASM KEY *FindKey( REG(a0) KEYLIST *kl, REG(d0) ULONG keyID )
+//STATIC ASM KEY *FindKey( REG(a0) KEYLIST *kl, REG(d0) ULONG keyID )
+STATIC ASM REGFUNC2(KEY *, FindKey,
+	REGPARAM(A0, KEYLIST *, kl),
+	REGPARAM(D0, ULONG, keyID))
 {
    KEY         *key;
 
@@ -288,7 +321,12 @@ STATIC ASM KEY *FindKey( REG(a0) KEYLIST *kl, REG(d0) ULONG keyID )
 /*
  * Add a hotkey to the list.
  */
-STATIC ASM ULONG CommClassAddHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmAddHotkey *cah )
+ 
+//STATIC ASM ULONG CommClassAddHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmAddHotkey *cah )
+STATIC ASM REGFUNC3(ULONG, CommClassAddHotkey,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct cmAddHotkey *, cah))
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    KEY         *key;
@@ -378,7 +416,11 @@ STATIC ASM ULONG CommClassAddHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG
 /*
  * Remove a hotkey from the list.
  */
-STATIC ASM ULONG CommClassRemHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmDoKeyCommand *com )
+//STATIC ASM ULONG CommClassRemHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmDoKeyCommand *com )
+STATIC ASM REGFUNC3(ULONG, CommClassRemHotkey,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct cmDoKeyCommand *, com))
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    KEY         *key;
@@ -429,7 +471,11 @@ STATIC ASM ULONG CommClassRemHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG
 /*
  * Disable a hotkey.
  */
-STATIC ASM ULONG CommClassDisableHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmDoKeyCommand *com )
+//STATIC ASM ULONG CommClassDisableHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmDoKeyCommand *com )
+STATIC ASM REGFUNC3(ULONG, CommClassDisableHotkey,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct cmDoKeyCommand *, com))
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    KEY         *key;
@@ -474,7 +520,12 @@ STATIC ASM ULONG CommClassDisableHotkey( REG(a0) Class *cl, REG(a2) Object *obj,
 /*
  * Enable a hotkey.
  */
-STATIC ASM ULONG CommClassEnableHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmDoKeyCommand *com )
+
+//STATIC ASM ULONG CommClassEnableHotkey( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmDoKeyCommand *com )
+STATIC ASM REGFUNC3(ULONG, CommClassEnableHotkey,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct cmDoKeyCommand *, com))
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    KEY         *key;
@@ -519,7 +570,11 @@ STATIC ASM ULONG CommClassEnableHotkey( REG(a0) Class *cl, REG(a2) Object *obj, 
 /*
  * Enable the broker.
  */
-STATIC ASM ULONG CommClassEnableBroker( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+//STATIC ASM ULONG CommClassEnableBroker( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+STATIC ASM REGFUNC3(ULONG, CommClassEnableBroker,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    ULONG        rc = 0L;
@@ -545,7 +600,11 @@ STATIC ASM ULONG CommClassEnableBroker( REG(a0) Class *cl, REG(a2) Object *obj, 
 /*
  * Disable the broker.
  */
-STATIC ASM ULONG CommClassDisableBroker( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+//STATIC ASM ULONG CommClassDisableBroker( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+STATIC ASM REGFUNC3(ULONG, CommClassDisableBroker,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
    CD       *cd = ( CD * )INST_DATA( cl, obj );
    ULONG        rc = 0L;
@@ -571,7 +630,11 @@ STATIC ASM ULONG CommClassDisableBroker( REG(a0) Class *cl, REG(a2) Object *obj,
 /*
  * Poll broker port.
  */
-STATIC ASM ULONG CommClassMsgInfo( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmMsgInfo *cmi )
+//STATIC ASM ULONG CommClassMsgInfo( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct cmMsgInfo *cmi )
+STATIC ASM REGFUNC3(ULONG, CommClassMsgInfo,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct cmMsgInfo*, cmi))
 {
    CD          *cd = ( CD * )INST_DATA( cl, obj );
    CxMsg          *msg;

@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:48  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:09:42  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -49,11 +60,28 @@ makeproto struct TextAttr Topaz80 =
    FPF_ROMFONT
 };
 
-makeproto ASM LONG max(REG(d0) LONG a, REG(d1) LONG b) { return (a > b) ? a : b; }
-makeproto ASM LONG min(REG(d0) LONG a, REG(d1) LONG b) { return (a < b) ? a : b; }
-makeproto ASM LONG abs(REG(d0) LONG a)                 { return (a > 0) ? a :-a; }
+//makeproto ASM LONG max(REG(d0) LONG a, REG(d1) LONG b)
+makeproto ASM REGFUNC2(LONG, max,
+	REGPARAM(D0, LONG, a),
+	REGPARAM(D1, LONG, b))
+{ return (a > b) ? a : b; }
 
-makeproto ASM LONG range(REG(d0) LONG c, REG(d1) LONG a, REG(d2) LONG b)
+//makeproto ASM LONG min(REG(d0) LONG a, REG(d1) LONG b)
+makeproto ASM REGFUNC2(LONG, min,
+	REGPARAM(D0, LONG, a),
+	REGPARAM(D1, LONG, b))
+{ return (a < b) ? a : b; }
+
+//makeproto ASM LONG abs(REG(d0) LONG a)
+makeproto ASM REGFUNC1(LONG, abs,
+	REGPARAM(D0, LONG, a))
+{ return (a > 0) ? a :-a; }
+
+//makeproto ASM LONG range(REG(d0) LONG c, REG(d1) LONG a, REG(d2) LONG b)
+makeproto ASM REGFUNC3(LONG, range,
+	REGPARAM(D0, LONG, c),
+	REGPARAM(D1, LONG, a),
+	REGPARAM(D2, LONG, b))
 {
    if (c < a) return a;
    if (c > b) return b;
@@ -63,7 +91,9 @@ makeproto ASM LONG range(REG(d0) LONG c, REG(d1) LONG a, REG(d2) LONG b)
 /*
  * Count the number of labels in an array.
  */
-makeproto ASM ULONG CountLabels(REG(a0) UBYTE **labels)
+//makeproto ASM ULONG CountLabels(REG(a0) UBYTE **labels)
+makeproto ASM REGFUNC1(ULONG, CountLabels,
+	REGPARAM(A0, UBYTE **, labels))
 {
    int n = 0;
 
@@ -75,7 +105,11 @@ makeproto ASM ULONG CountLabels(REG(a0) UBYTE **labels)
 /*
  * See if a point is in a box.
  */
-makeproto ASM BOOL PointInBox(REG(a0) struct IBox *box, REG(d0) WORD x, REG(d1) WORD y)
+//makeproto ASM BOOL PointInBox(REG(a0) struct IBox *box, REG(d0) WORD x, REG(d1) WORD y)
+makeproto ASM REGFUNC3(BOOL, PointInBox,
+	REGPARAM(A0, struct IBox *, box),
+	REGPARAM(D0, WORD, x),
+	REGPARAM(D1, WORD, y))
 {
    x -= box->Left;
    y -= box->Top;
@@ -152,7 +186,10 @@ makeproto WORD MapKey(UWORD code, UWORD qualifier, APTR *iaddress)
 /*
  * Show online-help requester.
  */
-makeproto ASM VOID ShowHelpReq( REG(a0) struct Window *win, REG(a1) UBYTE *text )
+//makeproto ASM VOID ShowHelpReq( REG(a0) struct Window *win, REG(a1) UBYTE *text )
+makeproto ASM REGFUNC2(VOID, ShowHelpReq,
+	REGPARAM(A0, struct Window *, win),
+	REGPARAM(A1, UBYTE *, text))
 {
    struct bguiRequest      req = { NULL };
 
@@ -170,7 +207,12 @@ makeproto ASM VOID ShowHelpReq( REG(a0) struct Window *win, REG(a1) UBYTE *text 
 /*
  * Re-allocate and format a buffer.
  */
-makeproto ASM UBYTE *DoBuffer(REG(a0) UBYTE *text, REG(a1) UBYTE **buf_ptr, REG(a2) ULONG *buf_len, REG(a3) ULONG *args)
+//makeproto ASM UBYTE *DoBuffer(REG(a0) UBYTE *text, REG(a1) UBYTE **buf_ptr, REG(a2) ULONG *buf_len, REG(a3) ULONG *args)
+makeproto ASM REGFUNC4(UBYTE *, DoBuffer,
+	REGPARAM(A0, UBYTE *, text),
+	REGPARAM(A1, UBYTE **, buf_ptr),
+	REGPARAM(A2, ULONG *, buf_len),
+	REGPARAM(A3, ULONG *, args))
 {
    ULONG       len;
 
@@ -230,7 +272,10 @@ makeproto VOID DoMultiSet(Tag tag, ULONG data, ULONG count, Object *obj1, ...)
 /*
  * Set a gadget's bounds.
  */
-makeproto ASM VOID SetGadgetBounds(REG(a0) Object *obj, REG(a1) struct IBox *bounds)
+//makeproto ASM VOID SetGadgetBounds(REG(a0) Object *obj, REG(a1) struct IBox *bounds)
+makeproto ASM REGFUNC2(VOID, SetGadgetBounds
+	REGPARAM(A0, Object *, obj),
+	REGPARAM(A1, struct IBox *, bounds))
 {
    DoSetMethodNG(obj, GA_Left,   bounds->Left,    GA_Top,    bounds->Top,
                       GA_Width,  bounds->Width,   GA_Height, bounds->Height, TAG_DONE);
@@ -239,7 +284,10 @@ makeproto ASM VOID SetGadgetBounds(REG(a0) Object *obj, REG(a1) struct IBox *bou
 /*
  * Set an image's bounds.
  */
-makeproto ASM VOID SetImageBounds(REG(a0) Object *obj, REG(a1) struct IBox *bounds)
+//makeproto ASM VOID SetImageBounds(REG(a0) Object *obj, REG(a1) struct IBox *bounds)
+makeproto ASM REGFUNC2(VOID, SetImageBounds,
+	REGPARAM(A0, Object *, obj),
+	REGPARAM(A1, struct IBox *, bounds))
 {
    DoSetMethodNG(obj, IA_Left,   bounds->Left,    IA_Top,    bounds->Top,
                       IA_Width,  bounds->Width,   IA_Height, bounds->Height, TAG_DONE);
@@ -249,7 +297,10 @@ makeproto ASM VOID SetImageBounds(REG(a0) Object *obj, REG(a1) struct IBox *boun
 /*
  * Un-map a mapped tag-list.
  */
-makeproto ASM VOID UnmapTags(REG(a0) struct TagItem *tags, REG(a1) struct TagItem *map)
+//makeproto ASM VOID UnmapTags(REG(a0) struct TagItem *tags, REG(a1) struct TagItem *map)
+makeproto ASM REGFUNC2(VOID, UnmapTags,
+	REGPARAM(A0, struct TagItem *, tags),
+	REGPARAM(A1, struct TagItem *, map))
 {
    struct TagItem *tag, *tag1, *at = map;
 
@@ -272,7 +323,9 @@ makeproto ASM VOID UnmapTags(REG(a0) struct TagItem *tags, REG(a1) struct TagIte
 /*
  * Create a vector image.
  */
-makeproto ASM Object *CreateVector(REG(a0) struct TagItem *attr)
+//makeproto ASM Object *CreateVector(REG(a0) struct TagItem *attr)
+makeproto ASM REGFUNC1(Object *, CreateVector
+	REGPARAM(A0, struct TagItem *, attr))
 {
    struct TagItem    *tag, *tstate = attr;
 
@@ -287,7 +340,9 @@ makeproto ASM Object *CreateVector(REG(a0) struct TagItem *attr)
 /*
  * Fix the tag pointer.
  */
-makeproto ASM struct TagItem *BGUI_NextTagItem(REG(a0) struct TagItem **t)
+//makeproto ASM struct TagItem *BGUI_NextTagItem(REG(a0) struct TagItem **t)
+makeproto ASM REGFUNC1(struct TagItem *, BGUI_NextTagItem,
+	REGPARAM(A0, struct TagItem **, t))
 {
    struct TagItem *rt, *tag, *tag2, *tstate;
 

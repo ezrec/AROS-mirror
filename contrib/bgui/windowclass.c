@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:48  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:10:42  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -354,7 +365,11 @@ STATIC ULONG GroupDimensions(Object *master, struct TextAttr *font, UWORD *minw,
  * because of a re-size and the right and bottom border of the window in it's
  * previous position if the size has grown.
  */
-STATIC SAVEDS ASM VOID BackFill_func(REG(a0) struct Hook *hook, REG(a2) struct RastPort *rp, REG(a1) BFINFO *info)
+//STATIC SAVEDS ASM VOID BackFill_func(REG(a0) struct Hook *hook, REG(a2) struct RastPort *rp, REG(a1) BFINFO *info)
+STATIC SAVEDS ASM REGFUNC3(VOID, BackFill_func,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, struct RastPort *, rp),
+	REGPARAM(A1, BFINFO *, info))
 {
    struct Layer    *save_layer;
    struct Window   *w = NULL;
@@ -879,7 +894,10 @@ METHOD(WindowClassDispose, Msg msg)
 /*
  * Setup the menu strip.
  */
-STATIC ASM BOOL DoMenuStrip( REG(a0) WD *wd, REG(a1) struct Screen *scr )
+//STATIC ASM BOOL DoMenuStrip( REG(a0) WD *wd, REG(a1) struct Screen *scr )
+STATIC ASM REGFUNC2(BOOL, DoMenuStrip,
+	REGPARAM(A0, WD *, wd),
+	REGPARAM(A1, struct Screen *, scr))
 {
    /*
     * Get the visual info. (We use
@@ -910,7 +928,9 @@ STATIC ASM BOOL DoMenuStrip( REG(a0) WD *wd, REG(a1) struct Screen *scr )
 /*
  * Kill the AppWindow stuff.
  */
-STATIC ASM VOID KillAppWindow(REG(a0) WD *wd)
+//STATIC ASM VOID KillAppWindow(REG(a0) WD *wd)
+STATIC ASM REGFUNC1(VOID, KillAppWindow,
+	REGPARAM(A0, WD *, wd))
 {
    struct Message       *msg;
 
@@ -942,7 +962,9 @@ STATIC ASM VOID KillAppWindow(REG(a0) WD *wd)
 /*
  * Make it an AppWindow.
  */
-STATIC ASM BOOL MakeAppWindow(REG(a0) WD *wd)
+//STATIC ASM BOOL MakeAppWindow(REG(a0) WD *wd)
+STATIC ASM REGFUNC1(BOOL, MakeAppWindow,
+	REGPARAM(A0, WD *, wd))
 {
    /*
     * Create a message port.
@@ -964,7 +986,9 @@ STATIC ASM BOOL MakeAppWindow(REG(a0) WD *wd)
  * Compute width and height of the
  * system gadgets.
  */
-STATIC ASM VOID SystemSize(REG(a1) WD *wd)
+//STATIC ASM VOID SystemSize(REG(a1) WD *wd)
+STATIC ASM REGFUNC1(VOID, SystemSize,
+	REGPARAM(A1, WD *,wd))
 {
    struct TagItem   tags[4];
    Object          *image;
@@ -1036,7 +1060,11 @@ STATIC ASM VOID SystemSize(REG(a1) WD *wd)
 /*
  * Query border sizes.
  */
-STATIC ASM void WBorderSize(REG(a0) WD *wd, REG(a1) struct Screen *scr, REG(a2) struct TextAttr *at)
+//STATIC ASM void WBorderSize(REG(a0) WD *wd, REG(a1) struct Screen *scr, REG(a2) struct TextAttr *at)
+STATIC ASM REGFUNC3(void, WBorderSize,
+	REGPARAM(A0, WD *, wd),
+	REGPARAM(A1, struct Screen *, scr),
+	REGPARAM(A2, struct TextAttr *, at))
 {
    UWORD    wl, wt, wr, wb;
 
@@ -1796,7 +1824,9 @@ METHOD(WindowClassOpen, Msg msg)
  * the port which belong to
  * the window.
  */
-STATIC ASM VOID ClearMsgPort( REG(a0) WD *wd )
+//STATIC ASM VOID ClearMsgPort( REG(a0) WD *wd )
+STATIC ASM REGFUNC1(VOID, ClearMsgPort,
+	REGPARAM(A0, WD *, wd))
 {
    struct IntuiMessage     *imsg;
    struct Node       *succ;
@@ -2000,7 +2030,11 @@ METHOD(WindowClassWakeUp, Msg msg)
 /*
  * Keep track of window bound changes.
  */
-STATIC ASM ULONG WindowClassChange( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+//STATIC ASM ULONG WindowClassChange( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+STATIC ASM REGFUNC3(ULONG, WindowClassChange,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
@@ -2022,7 +2056,11 @@ STATIC ASM ULONG WindowClassChange( REG(a0) Class *cl, REG(a2) Object *obj, REG(
 /*
  * Get an attribute.
  */
-STATIC ASM ULONG WindowClassGet(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opGet *opg)
+//STATIC ASM ULONG WindowClassGet(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opGet *opg)
+STATIC ASM REGFUNC3(ULONG, WindowClassGet,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPRAAM(A1, struct opGet *, opg))
 {
    WD       *wd = (WD *)INST_DATA(cl, obj);
    ULONG     rc = 1, *store = opg->opg_Storage;
@@ -2207,7 +2245,10 @@ METHOD(WindowClassHelp, Msg msg)
  * Fill up an InputEvent structure
  * with RAWKEY information.
  */
-STATIC ASM VOID FillIE(REG(a0) struct InputEvent *ie, REG(a1) struct IntuiMessage *imsg)
+//STATIC ASM VOID FillIE(REG(a0) struct InputEvent *ie, REG(a1) struct IntuiMessage *imsg)
+STATIC ASM REGFUNC2(VOID, FillIE,
+	REGPARAM(A0, struct InputEvent *, ie),
+	REGPARAM(A1, struct IntuiMessage *, imsg))
 {
    ie->ie_Class              = IECLASS_RAWKEY;
    ie->ie_Code               = imsg->Code;
@@ -2221,7 +2262,9 @@ STATIC ASM VOID FillIE(REG(a0) struct InputEvent *ie, REG(a1) struct IntuiMessag
  * Get the first message from the
  * window port which belongs to the window.
  */
-STATIC ASM struct IntuiMessage *GetIMsg( REG(a0) WD *wd )
+//STATIC ASM struct IntuiMessage *GetIMsg( REG(a0) WD *wd )
+STATIC ASM REGFUNC1(struct IntuiMessage *, GetIMsg,
+	REGPARAM(A0, WD *, wd))
 {
    struct IntuiMessage     *imsg;
    struct MsgPort       *mp = wd->wd_UserPort;
@@ -2453,7 +2496,10 @@ STATIC ULONG KeyGadget(Class *cl, Object *obj, struct IntuiMessage *imsg)
 /*
  * Find tab-cycle entry.
  */
-STATIC ASM TABCYCLE *GetCycleNode( REG(a0) WD *wd, REG(a1) Object *obj )
+//STATIC ASM TABCYCLE *GetCycleNode( REG(a0) WD *wd, REG(a1) Object *obj )
+STATIC ASM REGFUNC2(TABCYCLE *, GetCycleNode,
+	REGPARAM(A0, WD *, wd),
+	REGPARAM(A1, Object *, obj))
 {
    TABCYCLE    *tc;
 
@@ -2467,7 +2513,11 @@ STATIC ASM TABCYCLE *GetCycleNode( REG(a0) WD *wd, REG(a1) Object *obj )
 /*
  * Perform update notification.
  */
-STATIC ASM VOID UpdateNotification( REG(a0) WD *wd, REG(a1) struct TagItem *attr, REG(d0) ULONG id )
+//STATIC ASM VOID UpdateNotification( REG(a0) WD *wd, REG(a1) struct TagItem *attr, REG(d0) ULONG id )
+STATIC ASM REGFUNC3(VOID, UpdateNotification,
+	REGPARAM(A0, WD *, wd),
+	REGPARAM(A1, struct TagItem *, attr),
+	REGPARAM(D0, ULONG, id))
 {
    struct TagItem       *clones;
    UPN            *up;
@@ -2514,7 +2564,11 @@ STATIC ASM VOID UpdateNotification( REG(a0) WD *wd, REG(a1) struct TagItem *attr
 /*
  * Default tool tip hook.
  */
-STATIC ASM ULONG ToolTip_func(REG(a0) struct Hook *h, REG(a2) Object *obj, REG(a1) struct ttCommand *ttc)
+//STATIC ASM ULONG ToolTip_func(REG(a0) struct Hook *h, REG(a2) Object *obj, REG(a1) struct ttCommand *ttc)
+STATIC ASM REGFUNC3(ULONG, ToolTip_func,
+	REGPARAM(A0, struct Hook *, h),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct ttCommand *, ttc))
 {
    WD                *wd;
    struct Window     *tw = NULL;
@@ -3216,7 +3270,10 @@ METHOD(WindowClassGadgetKey, struct wmGadgetKey *wmg)
 /*
  * Find a menu by it's ID.
  */
-STATIC ASM struct Menu *FindMenu( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
+//STATIC ASM struct Menu *FindMenu( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
+STATIC ASM REGFUNC2(struct Menu *, FindMenu,
+	REGPARAM(A0, struct Menu *, ptr),
+	REGPARAM(D0, ULONG, id))
 {
    struct Menu    *tmp;
 
@@ -3233,7 +3290,10 @@ STATIC ASM struct Menu *FindMenu( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
 /*
  * Find a (sub)item by it's ID.
  */
-STATIC ASM struct MenuItem *FindItem( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
+//STATIC ASM struct MenuItem *FindItem( REG(a0) struct Menu *ptr, REG(d0) ULONG id )
+STATIC ASM REGFUNC2(struct MenuItem *, FindItem,
+	REGPARAM(A0, struct Menu *, ptr),
+	REGPARAM(D0, ULONG, id))
 {
    struct Menu    *tmp;
    struct MenuItem         *item, *sub;
@@ -3262,7 +3322,10 @@ STATIC ASM struct MenuItem *FindItem( REG(a0) struct Menu *ptr, REG(d0) ULONG id
 /*
  * Find a NewMenu by it's ID.
  */
-STATIC ASM struct NewMenu *FindNewMenu( REG(a0) struct NewMenu *nm, REG(d0) ULONG id )
+//STATIC ASM struct NewMenu *FindNewMenu( REG(a0) struct NewMenu *nm, REG(d0) ULONG id )
+STATIC ASM REGFUNC2(struct NewMenu *, FindNewMenu,
+	REGPARAM(A0, struct NewMenu *, nm),
+	REGPARAM(D0, ULONG, id))
 {
    while ( nm->nm_Type != NM_END ) {
       if ( id == ( ULONG )nm->nm_UserData ) return( nm );
@@ -3275,7 +3338,11 @@ STATIC ASM struct NewMenu *FindNewMenu( REG(a0) struct NewMenu *nm, REG(d0) ULON
 /*
  * Disable a menu.
  */
-STATIC ASM ULONG WindowClassDisableMenu( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuAction *wmma )
+//STATIC ASM ULONG WindowClassDisableMenu( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuAction *wmma )
+STATIC ASM REGFUNC3(ULONG, WindowClassDisableMenu,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct wmMenuAction *, wmma))
 {
    WD       *wd = ( WD * )INST_DATA( cl, obj );
    struct Menu    *menu;
@@ -3333,7 +3400,11 @@ STATIC ASM ULONG WindowClassDisableMenu( REG(a0) Class *cl, REG(a2) Object *obj,
 /*
  * (Un)check an item.
  */
-STATIC ASM ULONG WindowClassCheckItem( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuAction *wmma )
+//STATIC ASM ULONG WindowClassCheckItem( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuAction *wmma )
+STATIC ASM REGFUNC3(ULONG, WindowClassCheckItem,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct wmMenuAction *, wmma))
 {
    WD       *wd = ( WD * )INST_DATA( cl, obj );
    struct MenuItem         *item;
@@ -3379,7 +3450,11 @@ STATIC ASM ULONG WindowClassCheckItem( REG(a0) Class *cl, REG(a2) Object *obj, R
 /*
  * Ask for the disabled status of a menu or (sub)item.
  */
-STATIC ASM ULONG WindowClassMenuDisabled( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuQuery *wmmq )
+//STATIC ASM ULONG WindowClassMenuDisabled( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuQuery *wmmq )
+STATIC ASM REGFUNC3(ULONG, WindowClassMenuDisabled,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct wmMenuQuery *, wmmq))
 {
    struct NewMenu       *newmenu;
    WD          *wd = ( WD * )INST_DATA( cl, obj );
@@ -3399,7 +3474,11 @@ STATIC ASM ULONG WindowClassMenuDisabled( REG(a0) Class *cl, REG(a2) Object *obj
 /*
  * Ask for the CHECKED status of a (sub)item.
  */
-STATIC ASM ULONG WindowClassItemChecked( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuQuery *wmmq )
+//STATIC ASM ULONG WindowClassItemChecked( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct wmMenuQuery *wmmq )
+STATIC ASM REGFUNC3(ULONG, WindowClassItemChecked,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct wmMenuQuery *, wmmq))
 {
    struct NewMenu       *newmenu;
    WD          *wd = ( WD * )INST_DATA( cl, obj );

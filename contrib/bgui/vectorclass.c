@@ -11,6 +11,17 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/14 23:32:48  stegerg
+ * changed over 200 function headers which all use register
+ * parameters (oh boy ...), because the simple REG() macro
+ * doesn't work with AROS. And there are still hundreds
+ * of headers left to be fixed :(
+ *
+ * Many of these functions would also work with stack
+ * params, but since i have fixed every single one
+ * I encountered up to now, I guess will have to do
+ * the same for the rest.
+ *
  * Revision 42.0  2000/05/09 22:10:34  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -440,7 +451,10 @@ static struct VectorItem *BuiltIn[] =
 /*
  * Deallocate the AreaFill() stuff.
  */
-STATIC ASM VOID CleanUpArea( REG(a0) struct RastPort *rp, REG(a1) VD *vd )
+//STATIC ASM VOID CleanUpArea( REG(a0) struct RastPort *rp, REG(a1) VD *vd )
+STATIC ASM REGFUNC2(VOID, CleanUpArea,
+	REGPARAM(A0, struct RastPort *, rp),
+	REGPARAM(A1, VD *, vd))
 {
    if (vd->vd_Flags & VDATF_AREA)
    {
