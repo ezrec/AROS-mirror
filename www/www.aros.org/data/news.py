@@ -39,7 +39,7 @@ def genPage (key, filename, items):
 	page.append (
 	    Paragraph (
 		Text ('You are visitor no. '),
-		Image (('/cgi-bin/wwwcount.cgi?df=aros.dat&dd=B&comma=Y&pad=Y&md=7', 94, 30),
+		Image (('http://www.aros.org/cgi-bin/wwwcount.cgi?df=aros.dat&dd=B&comma=Y&pad=Y&md=7', 94, 30),
 		    alt='[picture of a counter]',
 		),
 		Text (' since 12. October 1999.'),
