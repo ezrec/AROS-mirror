@@ -764,7 +764,8 @@ int mode;
 					if ((ptr=strstri(avail[fnum].af_Attr.ta_Name,".font"))) *ptr=0;
 					avail[fnum].af_Attr.ta_Style=0;
 					for (a=0;a<num;a++) {
-						if (strcmp((char *)avail[a].af_Attr.ta_Name,(char *)avail[fnum].af_Attr.ta_Name))
+						/* AROS/AmigaOS bug fix: the "!" before strcmp was missing! */
+						if (!strcmp((char *)avail[a].af_Attr.ta_Name,(char *)avail[fnum].af_Attr.ta_Name))
 							++avail[fnum].af_Attr.ta_Style;
 					}
 				}
