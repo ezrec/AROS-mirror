@@ -11,11 +11,8 @@ MAKE = make
 ECHO = echo
 RM = rm
 
-#AROSDIR = $(ARCHDIR)/AROS
-#AROS_INCLUDES = $(AROSDIR)/Include
-#BINDIR = $(TOP)/bin/linux-i386/AROS
-#OS_INCLUDES_DIR = $(BINDIR)/Include
-OS_INCLUDES_DIR = $(AROS_INCLUDES)
+AROSDIR = $(ARCHDIR)/AROS
+AROS_INCLUDES = $(AROSDIR)/Include
 
 OS_INCLUDES = -I$(OS_INCLUDES_DIR) -I../..
 
@@ -23,9 +20,9 @@ INCLUDES = $(USER_INCLUDES) $(OS_INCLUDES) $(DEFINES)
 
 CFLAGS = $(INCLUDES)
 
-TARGET =  bguiclass_lib.o bguiclass_libtag.o bguiclass_libendtag.o
+TARGETS =  bguiclass_lib.o bguiclass_libtag.o bguiclass_libendtag.o
 
-all: $(TARGET)
+all: $(TARGETS)
 
 clean : 
 	@$(RM) -rf $(TARGET)

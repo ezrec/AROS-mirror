@@ -12,8 +12,9 @@ ECHO = echo
 RM = rm
 CP = cp
 
-BINDIR = $(TOP)/bin/linux-i386/AROS
-LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
+AROSDIR = $(ARCHDIR)/AROS
+BINDIR = $(AROSDIR)
+LIBDIR = $(AROSDIR)/lib
 
 OS_INCLUDES_DIR = $(BINDIR)/Include
 
