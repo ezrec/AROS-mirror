@@ -8885,7 +8885,7 @@ int tcc_set_output_type(TCCState *s, int output_type)
  	    tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/crti.o");
 #else
 	tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/detach.o");
-        //tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/libautoinit.a");
+        tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/libautoinit.a");
 #endif 
     }
     return 0;

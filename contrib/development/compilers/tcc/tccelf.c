@@ -199,8 +199,14 @@ static int add_elf_sym(Section *s, unsigned long value, unsigned long size,
                        sym_bind, sh_num, esym_bind, esym->st_shndx);
 #endif
                 /* NOTE: we accept that two DLL define the same symbol */
-                if (s != tcc_state->dynsymtab_section)
-                    error_noabort("'%s' defined twice", name);
+#ifndef _AROS
+		   if (s != tcc_state->dynsymtab_section)
+                   error_noabort("'%s' defined twice", name);
+#else
+		   if (s != tcc_state->dynsymtab_section)
+	  	   printf("'%s' defined twice\n", name);
+#endif
+
             }
         } else {
         do_patch:
@@ -782,7 +788,7 @@ static void tcc_add_runtime(TCCState *s1)
         tcc_add_file(s1, CONFIG_TCC_CRT_PREFIX "/crtn.o");
 #else
         tcc_add_library(s1, "arosc");
-        tcc_add_file(s1, CONFIG_TCC_CRT_PREFIX "/libautoinit.a");
+        tcc_add_file(s1, CONFIG_TCC_CRT_PREFIX "/startup.o");
 
 #endif
     }
