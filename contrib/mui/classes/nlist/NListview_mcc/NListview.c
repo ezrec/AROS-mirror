@@ -1,3 +1,29 @@
+/***************************************************************************
+
+ NListview.mcc - New Listview MUI Custom Class
+ Registered MUI class, Serial Number: 1d51 (0x9d510020 to 0x9d51002F)
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include <stdlib.h>
 #include <string.h>
@@ -9,11 +35,7 @@
 #include <exec/io.h>
 #include <libraries/dos.h>
 #include <libraries/dosextens.h>
-#ifndef USE_ZUNE
 #include <libraries/mui.h>
-#else
-#include <mui.h>
-#endif
 #include <devices/clipboard.h>
 #include <workbench/workbench.h>
 #include <intuition/intuition.h>
@@ -26,66 +48,35 @@
 #include <proto/layers.h>
 #include <proto/graphics.h>
 #include <proto/utility.h>
+#include <proto/keymap.h>
 #include <proto/intuition.h>
 #include <clib/alib_protos.h>
 
-#ifdef __AROS__
 #include <proto/muimaster.h>
-#endif
 
-#ifdef USE_ZUNE
-#include "muimaster_intern.h"
-#include "support.h"
-extern struct Library *MUIMasterBase;
-#endif
-
-//extern struct TagItem *FindTagItem(Tag,struct TagItem *);
 #include "private.h"
-
 #include "rev.h"
 
-#include "NListview_mcc.h"
-
 #ifdef __GNUC__
-#include "../NListviews_mcp/NListviews_mcp.h"
-#include "../NList_mcc/NList_mcc.h"
-#ifndef __AROS__
-#include "../common/mcc_common.h"
+  #if defined(__PPC__)
+    #pragma pack(2)
+    #include "../NListviews_mcp/NListviews_mcp.h"
+    #pragma pack()
+  #else
+    #include "../NListviews_mcp/NListviews_mcp.h"
+  #endif
 #else
-#include "../commonaros/mcc_common.h"
-#endif
-#else
-#include "/NListviews_mcp/NListviews_mcp.h"
-#include "/NList_mcc/NList_mcc.h"
-#include "/common/mcc_common.h"
+  #include "/NListviews_mcp/NListviews_mcp.h"
 #endif
 
-#if 0
-struct NLVData
-{
-  Object *LI_NList;
-  Object *PR_Vert;
-  Object *PR_Horiz;
-  Object *Group;
-  LONG   Vert_Attached;
-  LONG   Horiz_Attached;
-  LONG   VertSB;
-  LONG   HorizSB;
-  LONG   Vert_ScrollBar;
-  LONG   Horiz_ScrollBar;
-  BOOL   sem;
-  BOOL   SETUP;
-};
+#include "mcc_common.h"
+
+#ifndef MUI_EHF_GUIMODE
+#define MUI_EHF_GUIMODE     (1<<1)  /* set this if you dont want your handler to be called */
+                                    /* when your object is disabled or invisible */
 #endif
 
-/****************************************************************************************/
-/****************************************************************************************/
-/******************************                    **************************************/
-/******************************  NListView Class   **************************************/
-/******************************                    **************************************/
-/****************************************************************************************/
-/****************************************************************************************/
-
+#include <MUI/NList_mcc.h>
 
 #define imgbt(nr)\
   ImageObject,\
@@ -94,6 +85,48 @@ struct NLVData
     MUIA_InputMode , MUIV_InputMode_RelVerify,\
     MUIA_Image_Spec, (long) nr,\
   End
+
+static LONG IMsgToChar(struct IntuiMessage *imsg, ULONG dccode, ULONG dcquali)
+{
+	UBYTE buf[4];
+	struct InputEvent ie = { 0, IECLASS_RAWKEY, 0, 0, 0 };
+
+	if (imsg->Class == IDCMP_RAWKEY)
+	{
+		ie.ie_Code         = imsg->Code & ~dccode;
+		ie.ie_Qualifier    = imsg->Qualifier & ~dcquali;
+		ie.ie_EventAddress = (APTR *)*((ULONG *)imsg->IAddress);
+		ie.ie_TimeStamp    = *((struct timeval *)&imsg->Seconds);
+
+		if ((MapRawKey(&ie,buf,3,0)>0))
+			return((LONG)buf[0]);
+	}
+
+	return(-1);
+}
+
+static ULONG mNLV_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
+{
+  struct NLVData *data = INST_DATA(cl,obj);
+  struct IntuiMessage *imsg = msg->imsg;
+
+  if(imsg && data->LI_NList)
+  {
+    switch(imsg->Class)
+    {
+      case IDCMP_RAWKEY:
+      {
+        if (data->ControlChar && IMsgToChar(imsg, 0, (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT)) == data->ControlChar)
+				{
+          set(data->LI_NList, MUIA_NList_Active, imsg->Qualifier & (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT) ? MUIV_NList_Active_Up : MUIV_NList_Active_Down);
+        }
+      }
+      break;
+    }
+  }
+
+  return 0;
+}
 
 
 static ULONG mNLV_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
@@ -104,10 +137,11 @@ static ULONG mNLV_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleIn
   {
     if (data->LI_NList)
     {
-      DoMethod(data->LI_NList,MUIM_HandleInput,msg->imsg,msg->muikey);
+      DoMethod(data->LI_NList, MUIM_HandleInput, msg->imsg, msg->muikey);
       return (0);
     }
   }
+
   return (DoSuperMethodA(cl,obj,(Msg) msg));
 }
 
@@ -130,8 +164,10 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
   { data->Vert_ScrollBar = vert & 0x0F;
 
     if (data->Vert_ScrollBar == MUIV_NListview_VSB_Default)
-    { LONG *scrollbar = 0;
-      if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_VSB, (LONG) (&scrollbar)) && scrollbar)
+    {
+      LONG *scrollbar;
+
+      if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_VSB, (LONG) (&scrollbar)))
         data->VertSB = *scrollbar;
       else
         data->VertSB = MUIV_NListview_VSB_Always;
@@ -174,8 +210,8 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
   { data->Horiz_ScrollBar = horiz & 0x0F;
 
     if (data->Horiz_ScrollBar == MUIV_NListview_HSB_Default)
-    { LONG *scrollbar = 0;
-      if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_HSB, (LONG) (&scrollbar)) && scrollbar)
+    { LONG *scrollbar;
+      if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_HSB, (LONG) (&scrollbar)))
         data->HorizSB = *scrollbar;
       else
         data->HorizSB = DEFAULT_HSB;
@@ -282,40 +318,33 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
   }
 }
 
-#ifdef MORPHOS
-ULONG DoSuperNew(struct IClass *cl, Object *obj, ...)
+#ifdef __AROS__
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
-	ULONG mav[50];
-	ULONG ret;
-	va_list tags;
-	struct opSet myopSet;
-	int i=0;
+  AROS_SLOWSTACKMETHODS_PRE(tag1)
+  
+  retval = DoSuperNewTagList(cl, obj, NULL,  (struct TagItem *) AROS_SLOWSTACKMETHODS_ARG(tag1));
 
-	va_start(tags, obj);
-	while(i<50)
-	{
-		mav[i] = va_arg(tags, ULONG);
-		if(mav[i] == TAG_DONE) break;
-		mav[i+1] = va_arg(tags, ULONG);
-		if(mav[i] == TAG_MORE) break;
-		i += 2;
-	}
-	va_end(tags);
-
-	myopSet.MethodID = OM_NEW;
-	myopSet.ops_AttrList = (struct TagItem *) &mav;
-	myopSet.ops_GInfo = NULL;
-	ret = DoSuperMethodA(cl, obj, (APTR)&myopSet);
-
-	return ret;
+  AROS_SLOWSTACKMETHODS_POST
 }
-#else
-#ifndef USE_ZUNE
-ULONG STDARGS DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
+#elif !defined(__MORPHOS__)
+Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
-  return(DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL));
+  Object *rc;
+  va_list args;
+
+  #if defined(__amigaos4__)
+  va_startlinear(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, va_getlinearva(args, ULONG), NULL);
+  #else
+  va_start(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, args, NULL);
+  #endif
+
+  va_end(args);
+
+  return rc;
 }
-#endif
 #endif
 
 /* static ULONG mNLV_New(struct IClass *cl,Object *obj,Msg msg) */
@@ -327,55 +356,73 @@ static ULONG mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
   Object *nlist = NULL;
   Object *vgroup = NULL;
   LONG Dropable = FALSE;
-  LONG DragType = MUIV_NList_DragType_None;
 
-  if ((tag = FindTagItem(MUIA_Draggable, msg->ops_AttrList)))
+  if((tag = FindTagItem(MUIA_Draggable, msg->ops_AttrList)))
     tag->ti_Tag = TAG_IGNORE;
-  if ((tag = FindTagItem(MUIA_Dropable, msg->ops_AttrList)))
-  { Dropable = tag->ti_Data;
+
+  if((tag = FindTagItem(MUIA_Dropable, msg->ops_AttrList)))
+  {
+    Dropable = tag->ti_Data;
     tag->ti_Tag = TAG_IGNORE;
   }
 
-  if ((tag = FindTagItem(MUIA_CycleChain, msg->ops_AttrList)))
-  { tag->ti_Tag = TAG_IGNORE;
+  if((tag = FindTagItem(MUIA_CycleChain, msg->ops_AttrList)))
+  {
+    tag->ti_Tag = TAG_IGNORE;
     cyclechain = tag->ti_Data;
   }
 
-  if (((tag = FindTagItem(MUIA_NListview_NList, msg->ops_AttrList))) ||
-       ((tag = FindTagItem(MUIA_Listview_List, msg->ops_AttrList))))
-  { nlist = (Object *) tag->ti_Data;
-    if (nlist)
-    { if (Dropable)
-      { nnset(nlist,MUIA_Dropable,Dropable);
+  if((tag = FindTagItem(MUIA_NListview_NList, msg->ops_AttrList)) ||
+     (tag = FindTagItem(MUIA_Listview_List, msg->ops_AttrList)))
+  {
+    nlist = (Object *) tag->ti_Data;
+
+    if(nlist)
+    {
+      if(Dropable)
+      {
+        nnset(nlist,MUIA_Dropable,Dropable);
       }
-      if (((tag = FindTagItem(MUIA_NList_DragType, msg->ops_AttrList))) ||
-          ((tag = FindTagItem(MUIA_Listview_DragType, msg->ops_AttrList))))
-      { nnset(nlist,tag->ti_Tag,tag->ti_Data);
+
+      if((tag = FindTagItem(MUIA_NList_DragType, msg->ops_AttrList)) ||
+         (tag = FindTagItem(MUIA_Listview_DragType, msg->ops_AttrList)))
+      {
+        nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
-      if (((tag = FindTagItem(MUIA_Listview_Input, msg->ops_AttrList))) ||
-          ((tag = FindTagItem(MUIA_NList_Input, msg->ops_AttrList))))
-      { nnset(nlist,tag->ti_Tag,tag->ti_Data);
+
+      if((tag = FindTagItem(MUIA_Listview_Input, msg->ops_AttrList)) ||
+         (tag = FindTagItem(MUIA_NList_Input, msg->ops_AttrList)))
+      {
+        nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
-      if ((tag = FindTagItem(MUIA_Listview_MultiSelect, msg->ops_AttrList)) ||
-          (tag = FindTagItem(MUIA_NList_MultiSelect, msg->ops_AttrList)))
-      { nnset(nlist,tag->ti_Tag,tag->ti_Data);
+
+      if((tag = FindTagItem(MUIA_Listview_MultiSelect, msg->ops_AttrList)) ||
+         (tag = FindTagItem(MUIA_NList_MultiSelect, msg->ops_AttrList)))
+      {
+        nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
-      if ((tag = FindTagItem(MUIA_Listview_DoubleClick, msg->ops_AttrList)) ||
-          (tag = FindTagItem(MUIA_NList_DoubleClick, msg->ops_AttrList)))
-      { nnset(nlist,tag->ti_Tag,tag->ti_Data);
+
+      if((tag = FindTagItem(MUIA_Listview_DoubleClick, msg->ops_AttrList)) ||
+         (tag = FindTagItem(MUIA_NList_DoubleClick, msg->ops_AttrList)))
+      {
+        nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
-      if ((tag = FindTagItem(MUIA_Listview_DefClickColumn, msg->ops_AttrList)) ||
-          (tag = FindTagItem(MUIA_NList_DefClickColumn, msg->ops_AttrList)))
-      { nnset(nlist,tag->ti_Tag,tag->ti_Data);
+
+      if((tag = FindTagItem(MUIA_Listview_DefClickColumn, msg->ops_AttrList)) ||
+         (tag = FindTagItem(MUIA_NList_DefClickColumn, msg->ops_AttrList)))
+      {
+        nnset(nlist,tag->ti_Tag,tag->ti_Data);
       }
     }
     else
-    { obj = NULL;
+    {
+      obj = NULL;
       return((ULONG) obj);
     }
   }
   else
-  { nlist = MUI_NewObject(MUIC_NList, MUIA_Dropable, Dropable, TAG_MORE, msg->ops_AttrList);
+  {
+    nlist = MUI_NewObject(MUIC_NList, MUIA_Dropable, Dropable, TAG_MORE, msg->ops_AttrList);
   }
 
   obj = (Object *) DoSuperNew(cl,obj,
@@ -391,7 +438,8 @@ static ULONG mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
   );
 
   if (obj)
-  { data = INST_DATA(cl,obj);
+  {
+    data = INST_DATA(cl,obj);
     data->sem = FALSE;
     data->SETUP = FALSE;
     data->LI_NList = nlist;
@@ -402,29 +450,41 @@ static ULONG mNLV_New(struct IClass *cl,Object *obj,struct opSet *msg)
     data->Horiz_Attached = FALSE;
     data->Vert_ScrollBar = MUIV_NListview_VSB_Default;
     data->Horiz_ScrollBar = MUIV_NListview_HSB_Default;
-    if ((tag = FindTagItem(MUIA_Listview_ScrollerPos, msg->ops_AttrList)))
-    { if (tag->ti_Data == MUIV_Listview_ScrollerPos_None)
-      { data->Vert_ScrollBar = MUIV_NListview_VSB_None;
+    if((tag = FindTagItem(MUIA_Listview_ScrollerPos, msg->ops_AttrList)))
+    {
+      if (tag->ti_Data == MUIV_Listview_ScrollerPos_None)
+      {
+        data->Vert_ScrollBar = MUIV_NListview_VSB_None;
         data->Horiz_ScrollBar = MUIV_NListview_HSB_None;
       }
       else if (tag->ti_Data == MUIV_Listview_ScrollerPos_Left)
+      {
         data->Vert_ScrollBar = MUIV_NListview_VSB_Left;
+      }
       else if (tag->ti_Data == MUIV_Listview_ScrollerPos_Right)
+      {
         data->Vert_ScrollBar = MUIV_NListview_VSB_Always;
+      }
     }
-    if ((tag = FindTagItem(MUIA_NListview_Vert_ScrollBar, msg->ops_AttrList)))
+
+    if((tag = FindTagItem(MUIA_NListview_Vert_ScrollBar, msg->ops_AttrList)))
       data->Vert_ScrollBar = tag->ti_Data;
-    if ((tag = FindTagItem(MUIA_NListview_Horiz_ScrollBar, msg->ops_AttrList)))
+
+    if((tag = FindTagItem(MUIA_NListview_Horiz_ScrollBar, msg->ops_AttrList)))
       data->Horiz_ScrollBar = tag->ti_Data;
+
+    if((tag = FindTagItem(MUIA_ControlChar, msg->ops_AttrList)))
+      data->ControlChar = tag->ti_Data;
+
     data->VertSB = data->Vert_ScrollBar;
     data->HorizSB = data->Horiz_ScrollBar;
+
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NListview_Horiz_ScrollBar,MUIV_EveryTime,
       obj, 3, MUIM_Set,MUIA_NListview_Horiz_ScrollBar,MUIV_TriggerValue);
+
     set(data->LI_NList,MUIA_NList_KeepActive,(LONG) obj);
-/*kprintf("NListview obj=    0x%08lX \n",obj);*/
-/*kprintf("NListview vgroup= 0x%08lX \n",vgroup);*/
-/*kprintf("NListview nlist=  0x%08lX \n",nlist);*/
   }
+
   return((ULONG) obj);
 }
 
@@ -453,6 +513,14 @@ static ULONG mNLV_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     data->sem = FALSE;
   }
 
+  // Add the event handler for RAWKEY now
+	data->eh.ehn_Class  = cl;
+	data->eh.ehn_Object = obj;
+	data->eh.ehn_Events = IDCMP_RAWKEY;
+	data->eh.ehn_Flags  = MUI_EHF_GUIMODE;
+	data->eh.ehn_Priority = -1;
+	if (_win(obj)) DoMethod(_win(obj), MUIM_Window_AddEventHandler, (ULONG)&data->eh);
+
   if (!(DoSuperMethodA(cl,obj,(Msg) msg)))
     return(FALSE);
 
@@ -465,6 +533,9 @@ static ULONG mNLV_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg
 {
   register struct NLVData *data = INST_DATA(cl,obj);
   data->SETUP = FALSE;
+
+	if (_win(obj)) DoMethod(_win(obj), MUIM_Window_RemEventHandler, (ULONG)&data->eh);
+
   return (DoSuperMethodA(cl,obj,(Msg) msg));
 }
 
@@ -522,7 +593,7 @@ static ULONG mNLV_Set(struct IClass *cl,Object *obj,Msg msg)
   register struct NLVData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
 
-  for (tags=((struct opSet *)msg)->ops_AttrList;tag=(struct TagItem *) NextTagItem(&tags);)
+  for(tags=((struct opSet *)msg)->ops_AttrList;(tag=(struct TagItem *) NextTagItem(&tags));)
   {
     switch (tag->ti_Tag)
     {
@@ -598,28 +669,10 @@ static ULONG mNLV_Get(struct IClass *cl,Object *obj,Msg msg)
   return (DoSuperMethodA(cl,obj,msg));
 }
 
-
-#ifdef MORPHOS
-ULONG _Dispatcher_gate(void)
+DISPATCHERPROTO(_Dispatcher)
 {
-  struct IClass *cl = REG_A0;
-  Msg msg = REG_A1;
-  Object *obj = REG_A2;
-#elif defined(__AROS__)
-AROS_UFH3(IPTR, _Dispatcher,
-    AROS_UFHA(struct IClass *, cl, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(Msg, msg, A1))
-{
-#else
-ULONG ASM SAVEDS NListview_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) Msg msg GNUCREG(a1) )
-{
-#endif
-
-#ifdef __AROS__
-  AROS_USERFUNC_INIT
-#endif
-
+  DISPATCHER_INIT
+  
   switch (msg->MethodID)
   {
     case OM_NEW                  : return (                mNLV_New(cl,obj,(APTR)msg));
@@ -629,6 +682,7 @@ ULONG ASM SAVEDS NListview_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), RE
 /*    case 0x80424d50              : return (               mNLV_4d50(cl,obj,(APTR)msg));*/
 /*    case 0x8042845b              : return (               mNLV_845b(cl,obj,(APTR)msg));*/
     case MUIM_HandleInput        : return (        mNLV_HandleInput(cl,obj,(APTR)msg));
+    case MUIM_HandleEvent        : return (        mNLV_HandleEvent(cl,obj,(APTR)msg));
     case OM_SET                  : return (                mNLV_Set(cl,obj,(APTR)msg));
     case OM_GET                  : return (                mNLV_Get(cl,obj,(APTR)msg));
     case MUIM_KillNotify         :
@@ -687,19 +741,7 @@ ULONG ASM SAVEDS NListview_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), RE
       }
   }
   return(DoSuperMethodA(cl,obj,msg));
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
+  
+  DISPATCHER_EXIT
 }
 
-#ifdef USE_ZUNE
-
-const struct __MUIBuiltinClass _MUI_Listview_desc = { 
-    MUIC_Listview, 
-    MUIC_Group, 
-    sizeof(struct NLVData), 
-    (void*)NListview_Dispatcher 
-};
-
-#endif
