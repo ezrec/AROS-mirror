@@ -11,6 +11,6 @@ BEGIN { FS=":"; names[""] = 1; }
     }
     names[name] = 1;
 
-    print name":"$2":aros" > "passwd"
+    print name":"$2":cvs" > "passwd"
     print name":"$3":"$4":"$5 > "developers"
  }
