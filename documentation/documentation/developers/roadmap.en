@@ -10,9 +10,9 @@ AROS 1.0 roadmap
     This is a roadmap intended to outline the general direction of AROS 
     development up until the AROS 1.0 release, and list which requirements 
     must be fulfilled before we can release it. It is *not* meant to force 
-    developers to work on certain things (which is not enforcable in an open 
+    developers to work on certain things (which is not enforceable in an open 
     source project anyway) but should rather be seen as a recommendation and 
-    indiciation in which direction we are working. Hopefully, this will help 
+    indication in which direction we are working. Hopefully, this will help 
     organize the development effort and make us all work more in the same 
     direction.
 
@@ -29,7 +29,7 @@ Milestones
 ----------
 
 0.1
-    AmigaOS 3.1 API compatability, excluding parts which are deemed to be
+    AmigaOS 3.1 API compatibility, excluding parts which are deemed to be
     non-portable or obsolete and not worth the effort. Also, comprehensive
     developer documentation of this API must be available.
     
@@ -43,13 +43,13 @@ Milestones
 
 
 0.2
-    Partial AmigaOS 3.5 and 3.9 API compatability. We choose the parts that 
+    Partial AmigaOS 3.5 and 3.9 API compatibility. We choose the parts that 
     we feel are useful and worthwhile to have, and ditch the rest. Also, 
     comprehensive developer documentation of this API must be available.
     
-    For example, it seems *very* unlikely that we want ReAction compatability 
-    since we have already chosen to standarize on Zune for the GUI toolkit
-    (and implementing the ReAction API is not a trivial undertaking). Ofcourse, 
+    For example, it seems *very* unlikely that we want ReAction compatibility 
+    since we have already chosen to standardize on Zune for the GUI toolkit
+    (and implementing the ReAction API is not a trivial undertaking). Of course, 
     this will have to be discussed properly before a detailed list is agreed 
     upon.
     
@@ -59,7 +59,7 @@ Milestones
 0.3
     Finished Zune. This means:
     
-    + Complete MUI API compatability.
+    + Complete MUI API compatibility.
     + Finished preferences program.
     + Comprehensive developer documentation.
 
@@ -79,8 +79,8 @@ Milestones
 
     
 0.5.
-    Sound support, meaning API compatability and basic applications. There 
-    should be atleast one driver for each mandatory port. Also, comprehensive
+    Sound support, meaning API compatibility and basic applications. There 
+    should be at least one driver for each mandatory port. Also, comprehensive
     developer documentation of this API must be available.
     
     Details to follow...
@@ -89,11 +89,11 @@ Milestones
 0.6
     Networking support. This includes a TCP/IP-stack and some basic
     applications like email and SSH clients, and also a *simple* web browser.
-    There should be atlease one NIC driver for each mandatory port. Also, 
+    There should be at least one NIC driver for each mandatory port. Also, 
     comprehensive developer documentation of this API must be available.
     
     The requirements on the web browser should not be high, but it should be
-    possible to atleast browse the web in some way (even if it is only in text
+    possible to at least browse the web in some way (even if it is only in text
     mode).
     
     Details to follow...
