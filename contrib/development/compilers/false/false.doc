@@ -1,0 +1,672 @@
+
+                         The FALSE Programming Language
+
+                           by Wouter van Oortmerssen
+
+                                    Manual
+
+
+WHAT'S NEW in v1.3
+- lots of new and exciting example source code by lots of people!
+  (have a look in `contrib/' for some amazing code)
+- documentation in french too
+- minor fixes and enhancements to the portable interpreter
+  (read comments in the source)
+- new infos, ftp/www sites etc., read the last chapter
+
+WHAT'S NEW in v1.1
+- one bug fix in the 68k version
+- other example sources (mainly written by Eelko, in the "other" dir.)
+- Portable False Interpreter/Debugger!
+  (read comments in the source)
+
+
++-------------------------------+
+|	Introduction:		|
++-------------------------------+
+
+The language FALSE and it's compiler were designed for only two reasons:
+- building a working compiler in just 1k (!)
+- designing a language that looks cryptic and fuzzy (in the APL tradition)
+
+the result is a language that is quite powerfull (for it's size).
+It's a Forth type language with lambda abstraction and lots of other goodies.
+I named the language after my favourite truthvalue.
+
+NOTE: a) the compiler as well as the generated code need kickstart v37+
+      b) You're strongly advised to read this entire manual before
+         trying to operate the compiler.
+
++-------------------------------+
+|	The implementation:	|
++-------------------------------+
+
+To compile a FALSE program, type "false" followed by the source-code
+name, like:
+
+1> false helloworld.f
+
+the compiler produces an executable called "a.out" in the same dir:
+
+1> a.out
+Hello, World!
+1>
+
+To squeeze the real compilation functions for all language elements in
+1024 bytes, some things had to go: there are no error messages, and even
+worse: there are no syntax error checks. Luckily, the language is
+designed so that it's hard to make compile-time errors.
+
+the compiler only signals an error in the following events:
+- it could not allocate memory
+- it could not read the source file
+- it could not write the executable
+- it could not open dos.library (very unlikely)
+- it found a symbol in the source, which isn't part of the language.
+
+an error is signalled by returning value 10 instead of 0, it is
+therefore wise to have your cli-prompt display return values ("%R")
+
+note: the compiler will start acting weird as soon as you try
+to compile sources or produce executables >32k
+
+Working with FALSE
+------------------
+It is actually possible to write small utilities and stuff in FALSE,
+and quite powerfull too once you see how to use stacks and lambda
+functions etc. However, with a minimal compiler like this it's hard to
+find errors, and I suppose you really have to be a Forth hacker or a
+hardcore programmer to get the most of it.
+
+Helloworld in FALSE:
+--------------------
+
+"Hello, World!
+"
+
+(yes, that's all...).
+And this is the fac() function definition in FALSE:
+
+[$1=$[\%1\]?~[$1-f;!*]?]f:
+
+(fuzzy eh? we'll explain that later...)
+
+
++-------------------------------+
+|	FALSE: The Language.	|
++-------------------------------+
+
+Format of the language:
+-----------------------
+FALSE sources are totally free-format, i.e you may have any number
+of tabs/spaces/lf's between two symbols. comments start with "{",
+end with "}" and may not be nested.
+
+
+evaluation:
+-----------
+FALSE inherits its way of evaluating expressions from Forth, so it
+really helps if you know that language, but for those who don't:
+
+All elements in the language are defined by what they push on and/or
+pop from the stack. for example, a number like "1" or "100" simply
+pushes it's own value on the stack. An operator like "+" takes the
+two top elements of the stack, adds them, and pushes back the result:
+
+1 2 + 4 *	{ (1+2)*4 }
+
+the result of this expression is "12". We will use the notation
+(<pops>-<pushes>) to signify what a function does, so "1" does (-num)
+and "+" does (n1,n2-result)
+
+complex expressions will keep lots of intermediate results on the stack,
+so mostly there's no need for local variables. FALSE doesn't even
+have expressions or statements; more likely a program is one stream
+of symbols that  manipulate the stack. It's very helpfull when you
+can imagine what the stack looks like in a particular part of the program
+when programming.
+
+
+elementary functions:
+---------------------
+
+available are:
+
+"+"	"-"	"*"	"/"	"_"
+
+these function as usual. "_" is the unary minus.
+
+
+"="	">"
+
+these result in 0 (false) or -1 (true)
+
+unequal is "=~", and smaller than etc. can be made by swapping arguments
+and/or using "~"
+
+example:	a;1_=~		{ a<>-1 }
+
+
+"&"	"|"	"~"
+
+"and", "or" and "not", as usual.
+
+example:	a;0>a;99>~&	{ (a>0) and (a<100) }
+
+
+values:
+-------
+
+values are either integers like discussed before ("1", "100" etc.),
+or characters precede by a quote: 'A (equals 65) (do not mix up with
+backquote "`" !)
+note that the 1k parser only parses integers up to 320000, it uses
+full 32bit representation for them, however.
+
+
+global variables:
+-----------------
+variables to store values are less needed in FALSE than in other
+languages. in FALSE they are used mostly for functions, explained
+below.
+
+a variable is a character "a" to "z" (just these).
+":" is the assignment function, and ";" is contrary: it gets the
+variable's value:
+
+1a:	{ a:=1 }
+a;1+b:	{ b:=a+1 }
+
+i.e: "a;" is used where in other languages you would just write "a"
+
+all variables (and also stack-items) are 32bits.
+
+lambda functions:
+-----------------
+a FALSE lambda function is a piece of code between []. for example:
+
+[1+]
+
+is a function that adds 1 to it's argument. A function is really defined
+by what it takes from the stack (in this case the first arg to "+"), and
+what it puts back, just like builtin functions. Note that FALSE lambda
+functions are not restricted to just one return value.
+
+what a [] expression really does, is push the function. this means in
+practise that it can be given to yet another function as argument etc.,
+just like in functional languages. The symbol "!" is called "apply",
+and applies a function to it's arguments, for example:
+
+2[1+]!
+
+would result in "3"
+This wouldn't make much sense, since what you really want is define the
+function once, and then use it all-over. this is easy:
+
+[1+]i:
+
+this defines the function "i" (actually, it assigns the function to "i"),
+so that it can be used simply by applying "i" to it's arguments:
+
+2i;!
+
+WARNING: as with all other elements in FALSE, but even more important
+         with functions: the 1k compiler does not check if symbols like
+         "!" really get a function as argument (so "1!" means trouble),
+         the compiler may even crash if you don't balance your [ and ].
+
+
+stack functions:
+----------------
+
+"$"	(x-x,x)			dup:	duplicate topmost stackitem
+"%"	(x-)			drop:	delete topmost stack item
+"\"	(x1,x2-x2,x1)		swap:	swap to topmost stack-items.
+"@"	(x,x1,x2-x1,x2,x)	rot:	rotate 3rd stack item to top.
+"ø"	(n-x)			pick:	copy n-th item to top (0ø equals $)
+
+examples:
+
+1$		equals		1 1
+1 2%		equals		1
+1 2\		equals		2 1
+1 2 3@		equals		2 3 1
+7 8 9 2ø	equals		7 8 9 7
+
+
+control structure:
+------------------
+FALSE only has an IF and a WHILE.
+if is "?", and looks like this: (bool,fun-). example:
+
+a;1=["hello!"]?		{ if a=1 then print "hello!" }
+
+the first argument is a boolean value, the second the lambda function
+to be executed (see below for "")
+there's no "else", so you'll have to mimic this with a second "?".
+this can be easily done by copying the truthvalue:
+
+a;1=$["true"]?~["false"]?
+
+after the first "?" (wether it's executed or not), a copy of the truthvalue
+is still on the stack, and we negate it for the else part.
+Beware that if the first "if" needs arguments on the stack from before
+the boolean expression, it's top is still the truthvalue.
+
+While is a "#", and gets two lambda functions as args, one that results in
+a boolean, and the second as body:
+
+[a;1=][2f;!]#		{ while a=1 do f(2) }
+
+note that with while, if and lambda's, you can build virtually
+any other control structure.
+
+
+Input/Output:
+-------------
+  watch out: all these are BUFFERED.
+
+- strings printing: strings simply print themselves. Special: strings in FALSE
+  may contain <lf>'s, that explains why in the helloworld program, the second
+  " is on the next line:
+
+  "Hello, World!
+  "
+
+- integers: "." prints the topmost stack item as integer value:
+
+  123.		{ prints string "123" on console }
+
+- characters: ","
+
+  65,		{ prints "A" }
+
+- reading a character from stdin: "^"
+
+  ^		{ top stack is char read }
+
+- flush: "ß"
+  when stdin and stdout are different (i.e. you started your compiled
+  FALSE program with <infile >outfile you will hardly need to flush, however,
+  if you both use "^" and the output operations on the same console,
+  you may need to flush between input and output.
+  "ß" flushes both input and output.
+
+  ß[^$1_=~][,]#		{ while c:=getc()<>EOF do putc(c) }
+
+  for example, above program copies input to output until eof,
+  so no flushing is needed after every read when used with two
+  files, however:
+
+  "press return:"ß^%ß"continuing..."
+
+  it is, since we get input on the same console as the output.
+
+
++-------------------------------+
+|	Example programming	|
++-------------------------------+
+
+How the $#%! am I going to write a decent program with all this, you may ask.
+Well, the first barrier one has to take into account, is that FALSE doesn't
+support any amiga-specific programming, some io-functions is as far as
+it gets. However, with those, you can create some stunningly compact
+utilities, for example the FALSE version of the "copy" command we saw above,
+in just 13 bytes!
+
+ß[^$1_=~][,]#
+
+ok, what happens: first recognise the four main parts in this program,
+we have a flush, then two arguments and then a while. The first []
+function is supposed to deliver the boolean for the while: it reads
+a character, duplicates it, the compares it it with -1 (EOF). at the end
+of this function, we do not only have a boolean, but also an extra copy
+of the character we read. This immediately demonstrates a powerfull
+feature of FALSE: we can have any number of interim-results on the
+stack. the body of the while loop [,] just prints the character to
+stdout.
+Note that if the body is not executed, we leave with a non-empty stack.
+This is no problem at the end of a program, however, doing this within an
+iteration would be fatal.
+
+
+another example of FALSE programming: the fac() function.
+
+[$1=$[\%1\]?~[$1-f;!*]?]f:
+
+thus we call fac(6) (=720) like:
+
+6f;!
+
+no range checking is done by the "f" function, that is what
+is done by the fac.f example program.
+
+Well, how does it work? (does it?) First recognise the f;! within
+the function implementation: that's the recursion. Let us recall what
+fac() looks like in a hypotheticall procedural/functional programming
+language:
+
+fac(n) = if n=1 then 1 else n*fac(n-1)
+
+our FALSE code goes just along these lines, only we use two "if"'s (hence
+the two [] blocks) insteas of one if-then-else.
+we start with (n-) on the stack:
+
+$1=$
+
+duplicate the n, and compare it with 1, and leave a second truthvalue (t),
+thus: (n,t,t-)
+
+[\%1\]?
+
+first push the [], and after the "if" (=?) we have (n,t-). we won't
+be needing the lower n anymore, so we swap and drop. then we push the
+final result "1", and swap it below the truthvalue for the second "if".
+(1,t-)
+
+~[$1-f;!*]?
+
+we first have to negate the truthvalue, because this is the else part.
+in the "if"-body, we have just (n-), and we add a "n-1" to that as argument
+for the recusive call. after f;! we have (n,r-) (r is result of the call),
+and we simply multiply the two together as result of the whole.
+
+this may look all awfully complicated, but infact, it isn't. it's
+just a very different style of programming. once you fully understand
+it's power, you won't want to live without it :-)
+
+if by now you haven't understood zip of how FALSE works, this probably
+isn't the language for you. however, if you got the slightest feeling
+that some things are getting clear to you, try understanding the examples,
+and your on your way of becoming a real FALSE programmer ! :-). however,
+the examples are not heavily commented, as that is considered bad-taste
+in FALSE (see some section below).
+
+
++-------------------------------+
+|	FALSE wizards corner	|
++-------------------------------+
+
+"Inline assembly" in FALSE:
+---------------------------
+
+one topic has been kept undiscussed (on purpose), and it's the
+possibility to add assembly code to a FALSE program, to allow it to
+be extended with custom functions.
+
+syntax:		<integer>`
+
+any integer value 0..65535 folowed by a backquote. an expression like
+this causes the a 16bit value to be put directly into the code.
+A series of backquoted values may allow you a primitive form of
+inline assembly. for example:
+
+[8221`29184`9336`4`50510`20142`65338`50510`11008`]a:	{ allocmem (size-mem) }
+[8221`8797`9336`4`50510`20142`65326`50510`]f:		{ freemem (mem,size-) }
+
+are two assembly functions that allow you to allocate memory
+from within FALSE (see example alloc.f)
+
+register conventions:
+when writing assembly code for use with FALSE, use following registers:
+
+A6 = dosbase
+A5 = evaluation stack. use MOVE.L (A5)+,D0 to read a paramenter into D0,
+     and MOVE.L D0,-(A5) to write one.
+A4 = variables. 0(A4) = a, 4(A4) = b etc.
+D6 = stdout
+D5 = stdin
+
+example code for allocmem/freemem above:
+
+alloc:	move.l	(a5)+,d0
+	moveq	#0,d1
+	move.l	4.w,a2
+	exg	a2,a6		; we need to restore dosbase later.
+	jsr	-198(a6)
+	exg	a2,a6
+	move.l	d0,-(a5)	; no rts, that's done by []
+
+free:	move.l	(a5)+,d0	; second argument first!
+	move.l	(a5)+,a1
+	move.l	4.w,a2
+	exg	a2,a6
+	jsr	-210(a6)
+	exg	a2,a6
+
+
+peek/poke:
+----------
+
+":" and ";" are operators to read and write variables, but they can be
+(mis-)used to do arbitrary peek and poking, even array-indexing!
+(see vcheck.f for an example: we read execbase)
+
+array indexing and structure reading:
+if p is a pointer to an array/structure, then:
+
+p;<index>+;
+
+reads p[<index>].
+
+unfortunately, this way you can only read 32bit values.
+
+cli arguments:
+--------------
+
+reading files is mostly done with redirection on the commandline, however,
+for future extensability, a pointer to the command-line arguments is
+passed in var a. see also "command line tips" below.
+
+stack:
+------
+
+you can use the stack as a buffer, and reverse-indexing the values
+on it with ø. however, the FALSE stack is the lower-half of the normal
+amigados stack, and thus normally only 2k. You can write programs
+that need arbitrarily large stack-buffers by increasing the stack
+size before running.
+
+command line tips:
+------------------
+
+- make sure you write an input redirection when testing some
+  programs: if the program simply does "nothing", than the
+  computer is not hung, but it's simply waiting for input.
+- if you do not write a flush (ß) at the start of a program that
+  processes the input to the output, you will get a <lf> as
+  first input: this is actually the commandline. example:
+
+  a.out blabla <in >out
+
+  then a.out will first read "blabla" as a line, then the contents
+  of "in".
+
+
+good style:
+-----------
+
+programming in FALSE has a certain kind of taste: it's not easy, but
+when it works, it works good, and the resulting sources look great.
+Therefore, it may be tempting to "indent" while-loops in larger
+programs, but remember:
+- indentation, spacing and comments are for wimps :-)
+- real FALSE programmmers:
+  - write dense code
+  - write only very "global" comments.
+  - use the stack intensively, and thus dislike to use variables
+    for other purposes than function definitions.
+
+
+
++---------------------------------------+
+|	FALSE language overview.	|
++---------------------------------------+
+
+syntax:		pops:		pushes:		example:
+		-->top		-->top
+--------------- --------------- --------------- -------------------------------
+
+{comment}	-		-			{ this is a comment }
+[code]		-		function	[1+]	{ (lambda (x) (+ x 1)) }
+a .. z		-		varadr		a	{ use a: or a; }
+integer		-		value		1
+'char		-		value		'A	{ 65 }
+num`		-		-		0`	{ emitword(0) }
+
+:		n,varadr	-		1a:	{ a:=1 }
+;		varadr		varvalue	a;	{ a }
+!		function	-		f;!	{ f() }
+
++		n1,n1		n1+n2		1 2+	{ 1+2 }
+-		n1,n2		n1-n2		1 2-
+*		n1,n2		n1*n2		1 2*
+/		n1,n2		n1/n2		1 2/
+_		n		-n		1_	{ -1 }
+
+=		n1,n1		n1=n2		1 2=~	{ 1<>2 }
+>		n1,n2		n1>n2		1 2>
+
+&		n1,n2		n1 and n2	1 2&	{ 1 and 2 }
+|		n1,n2		n1 or n2	1 2|
+~		n		not n		0~	{ -1,TRUE }
+
+$		n		n,n		1$	{ dupl. top stack }
+%		n		-		1%	{ del. top stack }
+\		n1,n2		n2,n1		1 2\	{ swap }
+@		n,n1,n2		n1,n2,n		1 2 3@	{ rot }
+ø (alt-o)	n		v		1 2 1ø	{ pick }
+
+
+?		bool,fun	-		a;2=[1f;!]?
+						{ if a=2 then f(1) }
+#		boolf,fun	-		1[$100<][1+]#
+						{ while a<100 do a:=a+1 }
+
+.		n		-		1.	{ printnum(1) }
+"string"	-		-		"hi!"	{ printstr("hi!") }
+,		ch		-		10,	{ putc(10) }
+^		-		ch		^	{ getc() }
+ß (alt-s)	-		-		ß	{ flush() }
+
+
+
++-----------------------------------------------+
+|	additional infos & thank you's		|
++-----------------------------------------------+
+
+FALSE was created for fun, just to see how small a compiler I could
+write while still compiling a relatively powerfull language.
+The result is even better than I thought: it's great fun to
+program in FALSE, and it looks even better.
+
+about the compiler source: note that throughout the program ALL
+variables reside in registers without saving on the stack!
+please: don't come and tell me you found a way to reduce
+the size of the executable by 4 more bytes... I think it's small
+enough as it is now.
+
+False has inspired other people to implement similarly perverse
+languages. Some of them are:
+
+* "Brainfuck" by Urban Mueller. If you enjoy compilers just because
+  of their lenght, make sure you get a look at the this! (an
+  executable in less than 256 bytes!) [aminet:dev/lang/brainfuck2.lha]
+  This is helloworld:
+
+  >+++++++++[<++++++++>-]<.>+++++++[<++++>-]<+.+++++++..+++.[-]>++++++++[<++++>-]
+  <.#>+++++++++++[<+++++>-]<.>++++++++[<+++>-]<.+++.------.--------.[-]>++++++++[
+  <++++>-]<+.[-]++++++++++.
+
+* "Y" by Thomas Fischbacher. Very similar to False (syntax too), yet
+  with some more powerful constructs. Comes with (portable) interpreter
+  in C++ [aminet:dev/lang/Y.lha]
+
+* "Befunge" by Chris Pressey. Comes with interpreter and debugger in C.
+  Code is different from False, but looks equally beautiful. [bef.zip,
+  have a look at http://www.cats-eye.com/cet/soft/lang/befunge/].
+  factorial looks like this:
+
+                                      v
+  >v"Please enter a number (1-16) : "0<
+  ,:             >$*99g1-:99p#v_.25*,@
+  ^_&:1-99p>:1-:!|10          < 
+           ^     <
+              
+* "Bloop" by Ben Schaeffer <Yaxman@nesbbx.rain.com>. An as yet unreleased
+  language with features from False (and another pet language of mine,
+  "Yax"). Ben also made a true x86 version of False (by translating the
+  68k code), but I lost the code (silly me).
+
+
+Steinar Knutsen has been so friendly to set up an FTP site so
+all you people can put your False related products there!
+
+ftp://ftp.nvg.unit.no/pub/lang/false/ for the distribution.
+ftp://ftp.nvg.unit.no/pub/lang/false/src/ for sources not in the
+distribution.
+
+
+Chris Pressey has a False homepage at:
+
+http://www.cats-eye.com/cet/soft/lang/false/
+
+
+
+I want to thank the people who contributed sourcecode,
+among others:
+
+Ben Schaeffer, Ed Mackey, Eelko de Vos (and the rest of The TU-Delft
+False Fanclub, Maarten and Rene), Herb Wollman, Lionel Vintenat,
+Marcel van Kervinck, Peter Bengtsson, Steinar Knutsen, Thomas Fischbacher,
+and Tomas Partl
+
+and the many more people that have shown their interest
+in the language. one of them put it like this:
+
+  #define FLAME ON
+  Dear Mr. Wouter van Oortmerssen, Sir, Bwana!
+  
+  We (FORTH enthusiasts of Southern German Banana Republic
+  of Bavaria) are not amused by your FALSE language.
+  
+  No Sir, not at all.
+  
+  Some of us are still jumping up and down in the coconut tree
+  muttering obscenities like "DUP RECURSE that *@! Oortmerssen!".
+  (Some are say even things like "'Oortmerssen EXECUTE")
+  
+  You have had the intention of writing an absolutely cryptic
+  while extreme terse & powerful language. In that you've
+  succeeded marvelously.
+  Yet why, Great Moore! have you taken FORTH for the template?
+  Forth is quite cryptic already, yet you must you render it
+  completely unreadable. In Bavaria this is regarded as a
+  grave public offense, sentenceable to not below of 3 years
+  of pure K&R C programming. You could plead for clemency by
+  pointing out your having introduced the lambda computational
+  concept into FORTH, though.
+  I will grant you that much.
+
+Donations? who would want to give something for a program that
+has the size of a bootblock virus? anyway, the only thing I'd
+like to receive is large and complex FALSE sources (of working
+applications, of course). Please always put a comment at the
+top of your source, otherwise you'll give me a hard time guessing
+if it's FALSE or uuencoded. don't ask me to debug your code, as
+understanding other peoples FALSE programs is horrible.
+
+If you want to contact me:
+
+
+	Wouter van Oortmerssen
+	Levendaal 87
+	2311 JG  Leiden
+	HOLLAND
+
+or better if you have access to Email:
+
+	Wouter@mars.let.uva.nl
+	W.v.Oortmerssen@let.uva.nl
+	Oortmers@fwi.uva.nl
+

@@ -1,0 +1,47 @@
+/* psuedo.yax FALSE source code to psuedocode utility */
+
+(write 'Input file.f:''')
+(string s)
+(read s)
+(see s)/*(tell 'a.out.psuedo')*/
+(set c (get))
+(while (? c -1)
+	(select c
+		123(do (set c 0)(put 123)(while (? (put(get)) 125)))
+		39(set c (write' ascii '''))
+		58(set c (write' = '''))
+		59(set c (write' '''))
+		33(set c (write' apply '''))
+		95(set c (write' neg '''))
+		36(set c (write' dup '''))
+		37(set c (write' del '''))
+		92(set c (write' swap'''))
+		64(set c (write' rot '''))
+		248(set c (write' pick '''))
+		63(set c (write' if '''))
+		35(set c (write' while '''))
+		46(set c (write' numprint '''))
+		34(do (set c 0)(put 34) (while (? (put(get))34)))
+		44(set c (write' put '''))
+		94(set c (write' get '''))
+		223(set c (write' flush '))
+	)
+ 	(if c (put c))
+	(set c (get))
+)
+(seen)/*(told)*/
+/*
+{ copy.f: copy file.
+  usage: copy <infile >outfile  }
+
+[^$1_=~][,]#
+
+<changed to>
+
+{ copy.f: copy file.
+  usage: copy <infile >outfile  }
+
+ flush
+[ get  dup 1 neg =~][ put ] while
+
+*/

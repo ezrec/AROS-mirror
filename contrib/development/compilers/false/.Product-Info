@@ -1,0 +1,26 @@
+.BEGIN-FISH-DESCRIPTION
+.name
+False
+.type
+Compiler
+.short
+compiler for The FALSE Programming Language
+.description
+A forth-type programming language with fuzzy syntax, lambda abstraction
+and more. Comes with a compiler that is just 1 Kb in size, a portable
+interpreter, and lots of example source code.
+.requirements
+Needs OS v37+ for the amiga compiler version
+.version
+1.2
+.date
+1993 .. 1996
+.author
+Wouter van Oortmerssen
+.distribution
+Freeware
+.email
+Wouter@mars.let.uva.nl
+.source
+includes sources to both compiler (68k assembly) and interpreter (C)
+.END-FISH-DESCRIPTION

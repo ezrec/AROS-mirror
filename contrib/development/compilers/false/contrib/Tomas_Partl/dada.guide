@@ -1,0 +1,332 @@
+@database "dada"
+@master "Bag-o-Meat:zeal/source/dada/dada.guide"
+
+@Node Main "dada.guide"
+
+ @{"                             --- Manifesto ---                              "  Link "--- Manifesto ---"}
+
+
+
+
+   @{" Dada "  Link "Dada"}
+         @{" Circle "  Link "Circle"}
+                 @{" Spiral "  Link "Spiral"}
+                         @{" Xpand "  Link "Xpand"}
+                                 @{" Examples " Link "Examples"}
+                                           @{" Volunteers " Link "Volunteers"}
+                                                       @{" Author " Link "Author"}
+                                                               @{" Feeling lost? " Link "Feeling lost"}
+ @{b}Contents:@{ub} this is the list of all files included in dada.lha
+           dada.f          dada.guide
+           circle.f        spiral.f                            @{"!!! Important !!!" Link "Important"}
+           xpand.f         xpand.dada
+           example1.dada   example2.dada                           @{" Greetings " Link "Greetings"}
+
+                       @{i} Released on Feb 26, 1995@{ui}
+@EndNode
+
+@Node "--- Manifesto ---" "The Manifesto of False Dada"
+
+@{b}                       Forgotten Jewels@{ub}
+
+    Look  around  yourself.   Compilers  are  being written so that
+    companies   can   produce   desktop  publishing  software  that
+    facilitates  the  delivery  of  news  to  millions  every  day.
+    Tremendous  effort  goes  into  development of spreadsheets and
+    databases  that  aid  corporations striving for higher customer
+    satisfaction.   Programs  exist  that  navigate probes in their
+    search for a future home of the man kind.  Countless people use
+    a  miscellany of software every day.  We can't be blind to this
+    decadence any more.
+
+    Why  all  that  purpose?   Why do we have to keep building this
+    tower  of  Babel  atop the holy foundation of The Sources?  Man
+    has  devised the compiler to render fair things useful.  People
+    resent  that  from  which all has sprung to function.  Hosts of
+    hypocritical  gluttons feast on graphic interfaces without even
+    wondering  where  the  fruit  was  lovingly tended before their
+    decayed teeth stained it.
+
+    Alas,  the  abyss  is  already  too  deep to even see the light
+    above.   Yet,  we  may  still contrive to kindle a light of our
+    own.   Therefore,  we  say  NO  to  purpose.   We repudiate all
+    software  except  that  which  contributes to the beauty of The
+    Sources.
+
+    Though we brandish the standard of truth, there's little we can
+    rely on.  Betrayal lurks in every niche.  However, we do have a
+    weapon that shall never fail us:  @{b}Our hope is False@{ub}.
+
+@EndNode
+
+@Node "Circle" "dada/circle.f"
+
+        @{b}Circle@{ub}
+
+        usage:
+                circle n [flags] [>outfile]
+
+        description:
+
+                Draws a text circle of radius n.
+                The only flag currently defined is 'h'
+                which makes the circle half as high as wide.
+                With most fonts, flag h yields better results.
+
+        result:
+
+                outfile is a valid @{"ASCII image" Link "ASCII Image"}
+@EndNode
+
+@Node "Spiral" "dada/spiral.f"
+
+        @{b}Spiral@{ub}
+
+        usage:
+                spiral n [>outfile]
+
+        description:
+
+                Draws a text spiral of n coils.
+        result:
+
+                outfile is a valid @{"ASCII image" Link "ASCII Image"}
+@EndNode
+
+@Node "Xpand" "dada/xpand.dada"
+
+        @{b}Xpand@{ub}
+
+        usage:
+                xpand n <infile [>outfile]
+
+        description:
+
+                Assuming  that  infile  is an @{"ASCII image" Link "ASCII Image"}, this
+                function makes it n times wider.
+@EndNode
+
+@Node "Dada" "dada/dada.f"
+
+        @{b}Dada@{ub}
+
+        usage:
+                dada <infile [>outfile]
+
+        description:
+
+                Complex formatting is applied to infile.
+
+        input:
+                infile is an ASCII file of this format:
+
+                        @{i}(ASCII image)@{ui}
+                        @{i}X[T][F]@{ui}
+                        @{i}(text)@{ui}
+
+        (@{"ASCII image" Link "ASCII Image"}) - is an image composed of dots (.)
+                and hashes (#).  You can think of the 
+                dots as blanks and the hashes as solid 
+                squares.
+        X  -    X terminates the image part of infile.
+                It can't be omitted.
+        T  -    optional flag.  It commands Dada to talk.
+        F  -    optional flag.  If present, then the
+                (text) part of infile is assumed to
+                be a False source.  Dada will remove
+                all {comments} and take care that
+                "strings", character constants (e.g.'A)
+                and numeric expressions will remain
+                intact.
+        (text) - any ASCII text.  If you set the flag F
+                then the meaning of (text) as a False
+                source will no be changed.
+
+        note:
+                It's  okay to precede the (ASCII image) part of
+                infile  with  a  "{" and to append a "}" to the
+                end of the line containing the terminator X.
+@EndNode
+
+@Node "Examples" "dada/example?.dada"
+        @{b}Examples@{ub}
+
+        There  are  a  few  examples  in  this  archive
+        intended to demonstrate the effects of @{" dada " Link "Dada"}:
+
+   example1.dada
+   example2.dada
+
+        These two files are simple demonstrations of
+        plain text formatting.
+
+   xpand.dada
+
+        This  is the infile used to format the source
+        of  the @{" expander " Link "Xpand"} to  the  breathtaking form
+        captured in xpander.f.
+
+        Before you try these out, you'll have to compile @{" dada.f " Link "Dada"}
+        (also in this package).  After that, size your shell window
+        to maximum and type
+
+                @{i}a.out <example1.dada@{ui}
+
+        etc.
+
+@EndNode
+
+@Node "ASCII Image" "What is an ASCII image?"
+
+@{b}ASCII Images@{ub}
+
+        In  this  case, an ASCII image is a sequence of hashes
+        (#),  dots  (.) and end of line characters (<cr>).  It
+        may  include  other  characters, e.g.  spaces as well,
+        but  they  are  ignored.   Also,  note that under some
+        circumstances,  other characters than "#" "." and <cr>
+        might  have  special meanings.  The use of "X" to mark
+        the  end of image in the @{"dada" Link "Dada"} infile is an instance of
+        this.
+
+        @{i}This is an example ASCII image:@{ui}
+
+                .############
+                #............#
+                #..###..@{"###" Link "Ouch"}..#
+                #..###..@{"###" Link "Ouch"}..#
+                #............#
+                #..#.#.#.#.#.#
+                #.#.#.#.#.#..#
+                #............#
+                .############
+@EndNode
+
+@Node "Feeling lost" "background information"
+
+    @{b}The Dada Package@{ub}
+
+        This   is  a  collection  of  False  sources  designed
+        exclusively to make themselves beautiful.
+
+        False  is  a  powerful  disjunctive  set  of Oberon, a
+        programming language by Niclaus Wirth.  It was written
+        by  Wouter  van  Oortmerssen  and  it's  a programming
+        language as well.
+
+        This  release  targets  the  programming  and literary
+        communities.   However,  even  if  you don't belong to
+        either  of  these,  you may still send me an unlimited
+        amount  of  money as a registration fee.  (All of your
+        donations  will  be  used  to  demonstrate the authors
+        comtempt for money.)
+@EndNode
+
+@Node "Volunteers" "volunteer information"
+
+        If you're wondering how you could personally contribute
+        to the beautification of sources, you can consider some
+        of the following undertakings:
+
+        @{b}Projects@{ub}
+
+        - write more pattern creators.  So far, there are only
+        the spiral  and circle generators as  included in this
+        package, at least as far as I know.
+
+        - write a set of ASCII image utilities. (XOR, OR, AND
+        two images)
+
+        - Convince the @{"author" Link "Author"} to start putting energy into something
+        more reasonable.
+@EndNode
+
+@Node "Author" "about the author"
+
+        The  sources  as well as the documentation included in
+        this  archive  were  written by
+
+        @{b}Jesus Christ of Voodoo Software@{ub}
+
+        You can write me to this address
+
+                        Tomas Partl
+                        Sikma 17
+                 130 00 Praha 3
+                        The Czech Republic
+
+        or use e-mail:  partl@km1.fjfi.cvut.cz
+        FIDONET:        2:420/24.902
+@EndNode
+
+@Node "Greetings" "Greetings"
+
+        I just wanna say @{b}Hi!@{ub} to
+
+        Patrik Rak/RAXOFT
+        Fractalus/4TM
+        Dr. Avalange/4TM
+        von Draque
+        RokDaZone/Infect&AA @{" " Link "Henning"}
+        Frank Riffel & Peter Kunath/Delirium Softdesign @{" " Link "Delirium"}
+        The Electro Genetix
+
+        and everyone else too.
+
+        Thanks to Wouter van Oortmerssen for False.
+@EndNode
+
+@Node "Henning" "Hi, Henning!"
+
+                What't wrong with you?  
+                And what's wrong with 42?
+@EndNode
+
+@Node "Delirium" "Err..."
+
+I'm  really  sorry  I didn't send you a new version of
+VSSPlayer  yet.   My  old sources are so horrible that
+all  courage  leaves  me  the moment I looked at them.
+Besides,  I  want  to write a whole new system anyway.
+Okay,  as  soon  as  I'm done editing this guide, I'll
+delete  False  from  my  HDD and start doing something
+serious.   On  the  second thought, I'll leave it till
+the  morning.   It's  2am  and  I  don't want to erase
+anything important out of sleepiness.
+@EndNode
+
+@Node "Important" "important notes"
+
+@{b} Dada @{ub}
+
+        @{" Dada " Link "Dada"}  requires  the  stacksize  to be somewhat greater
+        than  four  times  the size of the image it processes.
+        This  is  because all False stack items are longwords.
+        E.g.,  if  you're  about to process a 5K file of which
+        about a half is the image, set you stack size to
+
+        5*1024
+        ------*4 + 1024 = 10240+1024 = 11264 bytes
+           2
+
+        The  extra  kilo is added to make sure that dada has a
+        sufficient  program stack (although I think a lot less
+        would do).
+
+@{b} Circle @{ub}
+
+        @{" Circle " Link "Circle"} can also have extra stack requirements.  These
+        will not exceed 128*radius.
+@EndNode
+
+@Node "Ouch" "Ouch!"
+
+
+
+
+
+
+
+           @{b}Congratulations.  You clicked the evil eye.@{ub}
+
+@EndNode

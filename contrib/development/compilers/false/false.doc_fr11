@@ -1,0 +1,613 @@
+
+                        Langage de programmation FALSE
+
+                          par Wouter van Oortmerssen
+
+                                    Manuel
+
+
+QUOI DE NEUF dans la v1.1 ?
+- une erreur corrigée ;
+- d'autres sources d'exemples (principalement ecrits par Eelko) ;
+- Interpréteur/Dévermineur portable.
+  (lisez les commentaires dans le source pour plus d'infos)
+
+
++-------------------------------+
+|       Introduction :          |
++-------------------------------+
+
+Le langage FALSE et son compilateur ont ete conçus pour seulement deux
+raisons :
+- faire un compilateur fonctionnel en seulement 1ko (!) ;
+- faire un langage semblant crypté et aberrant (dans la tradition APL).
+
+Il en a resulté un langage fort puissant (pour sa  taille).  C'est  un
+langage de type Forth avec lambda abstrations et plein d'autres bonnes
+choses. J'ai choisi le nom du langage  d'après  ma  valeur  de  vérité
+préférée.
+
+NOTE: a) le compilateur comme le code généré nécessitent le  kickstart
+         v37+
+      b) Vous êtes fortement encouragé à  lire  le  manuel  en  entier
+         avant d'essayer d'utiliser le compilateur.
+
+
++-------------------------------+
+|       L'implémentation :      |
++-------------------------------+
+
+Pour compiler un programme FALSE, tapez "false" suivi du nom  du  code
+source, comme suit :
+
+1> false helloworld.f
+
+le compilateur produit un exécutable appelé « a.out  »  dans  le  même
+répertoire :
+
+1> a.out
+Hello, World!
+1>
+
+Pour faire rentrer toutes les fontions de la compilation  réelle  pour
+tous  les  éléments  du  langage  dans  1024  octets, il a fallu faire
+quelques sacrifices : il n'y a pas de message d'erreur et encore  pire
+:  il  n'y a aucune verification des erreurs de syntaxe. Heureusement,
+le langage est concu de manière à ce qu'il soit difficile de provoquer
+des erreurs à la compilation
+
+Le compilateur ne signale des erreurs que dans les cas suivants :
+- il ne peut pas allouer de la mémoire ;
+- il ne peut pas lire le fichier source ;
+- il ne peut pas écrire l'exécutable ;
+- il ne peut pas ouvrir dos.library (vraiment dommage) ;
+- il trouve un symbole dans le source qui ne fait pas partie du langage.
+
+note : le compilateur commencera à débloquer dès que vous essaierez de
+compiler des sources ou de produire des exécutables de plus de 32 ko.
+
+Travailler avec FALSE
+---------------------
+
+Il est réellement possible d'écrire de petits utilitaires en FALSE, et
+puissants,  dès  que  vous  aurez  vu  comment utiliser les piles, les
+lambda fonctions, etc. Toutefois, avec un  compilateur  minimal  comme
+celui-ci,  il est difficile de trouver des erreurs et je suppose qu'il
+vous faudra être un as du Forth ou un programmeur "hardcore"  pour  en
+tirer la substantifique moëlle.
+
+Helloworld en FALSE:
+--------------------
+
+"Hello, World!
+"
+
+(oui, c'est tout...).
+
+Et voici le définition de la fonction fac() en FALSE :
+
+[$1=$[\%1\]?~[$1-f;!*]?]f:
+
+(Confus, hein ? Nous l'expliquerons plus tard...)
+
+
++-------------------------------+
+|       FALSE: Le Language.     |
++-------------------------------+
+
+Format du language :
+--------------------
+Les sources FALSE ont un format totalement  libre,  i.e.  vous  pouvez
+avoir  autant  de tabs/espaces/lf entre deux symboles que vous voulez,
+les commentaires commencent par "{", finissent par "}" et  ne  peuvent
+pas être imbriqués.
+
+Évaluation :
+------------
+FALSE hérite son mode d'évaluation des expressions de Forth, donc cela
+aide vraiment si vous connaissez ce langage, mais pour ceux  qui ne le
+connaissent pas :
+
+Tous les éléments dans le langage sont définis par ce qu'ils  empilent
+et/ou  dépilent.  Par  exemple,  un nombre comme "1" ou "100" empilera
+simplement sa propre valeur sur la pile. Un opérateur comme "+"  prend
+les  deux  éléments du haut de la pile, les additionne et ré-empile le
+résultat :
+
+1 2 + 4 *       { (1+2)*4 }
+
+Le résultat de cette expression est "12". Nous utiliserons la notation
+(<dépilages>-<empilages>)  pour  spécifier  ce  que fait une fonction,
+ainsi "1" fait (-nb) et "+" fait (n1,n2-result)
+
+Les   expressions   complexes   laisseront   beaucoup   de   résultats
+intermédiaires  sur  la pile, aussi n'y a-t-il généralement pas besoin
+de  variables  locales.  FALSE   n'a   même   pas   d'expressions   ou
+d'instructions  ;  un  programme est plus proche d'un flux de symboles
+manipulant la pile. Cela aide grandement quand vous pouvez imaginer la
+pile   comme  une  partie  particulière  du  programme,  lorsque  vous
+programmez.
+
+Fonctions élémentaires :
+------------------------
+
+Sont disponibles :
+
+"+"     "-"     "*"     "/"     "_"
+
+Ces fonctions sont celles habituelles. "_" est le moins unaire
+
+"="     ">"
+
+celles-ci rendent 0 (faux) ou -1 (vrai)
+
+non-égal est "=~", et les plus petit que, etc. peuvent être obtenus en
+échangeant les arguments et/ou en utilisant "~"
+
+exemple:        a;1_=~          { a<>-1 }
+
+
+"&"     "|"     "~"
+
+"and", "or" et "not", comme d'hab..
+
+exemple:        a;0>a;99>~&     { (a>0) and (a<100) }
+
+
+Valeurs :
+---------
+Les valeurs sont soit des entiers comme plus haut ("1", "100",  etc.),
+soit  des  caractères  précédés  par une apostrophe : 'A (egal 65) (ne
+confondez pas avec le backquote "`" !)
+
+Notez que le parseur 1k parse seulement  les  entiers  jusqu'a  320000
+mais il utilise tout de même leur représentation 32 bits.
+
+Variables globales :
+--------------------
+Des variables pour stocker des valeurs sont moins utiles en FALSE  que
+dans  les autres langages. En FALSE, elles sont surtout utilisées pour
+des fonctions, comme expliqué plus bas.
+
+Une variable est un caractère "a" à "z" (et aucun autre).
+":" est la fonction d'assignation, et ";" est le contraire : il  prend
+la valeur de la variable :
+
+1a:     { a:=1 }
+a;1+b:  { b:=a+1 }
+
+i.e: « a; » est utilisé là ou dans  d'autres  langages  vous  écririez
+juste « a »
+
+Toutes les variables (et les éléments de la pile) sont 32 bits.
+
+Lambda fonctions:
+-----------------
+Une lambda fonction FALSE est un morceau de code entre []. Par exemple :
+
+[1+]
+
+est une fonction qui  ajoute  1  à  son  argument.  Une  fonction  est
+reellement  definie  par ce qu'elle prend sur la pile (dans ce cas la,
+le premier argument de "+") et ce qu'elle y  remet,  exactement  comme
+les  fonctions  internes.  Notez  que les lambda fonctions ne sont pas
+astreintes à ne retourner qu'une valeur.
+
+Ce que fait vraiment une expression [] est d'empiler la  fonction.  Ce
+qui  signifie, en pratique, qu'elle peut être passée en argument à une
+autre fonction, etc., exactement comme dans des langages fonctionnels.
+Le symbole « ! » est appelé « application », et applique la fonction à
+ses arguments. Par exemple :
+
+2[1+]!
+
+retournerait « 3 ». Ca n'aurait pas beaucoup de sens, puisque  ce  que
+nous  voulons  est  de définir la fonction une seule fois pour pouvoir
+ensuite l'utiliser autant qu'on veut. C'est simple :
+
+[1+]i:
+
+Ceci definit la fonction « i » (en fait, cela assigne la fonction à  «
+i »)  de  telle  manière  qu'elle  puisse  être utilisée simplement en
+appliquant « i » à ses arguments :
+
+2i;!
+
+ATTENTION : comme avec  tous les  autres éléments de FALSE, mais c'est
+            encore plus important pour les fonctions : le  compilateur
+            1k ne vérifie pas si un symbole comme « ! » prend vraiment
+            une fonction en argument (donc « 1!  »  sera  génant).  Le
+            compilateur peut même planter si vous n'équilibrez pas vos
+            [ et ]
+
+Fonctions de gestion de pile :
+------------------------------
+
+« $ »   (x-x,x)                 dup:    duplique l'élément de haut de pile
+« % »   (x-)                    drop:   supprime l'élément de haut de pile
+« \ »   (x1,x2-x2,x1)           swap:   échange les deux éléments du haut
+« @ »   (x,x1,x2-x1,x2,x)       rot:    rotation du 3ieme élément sur le haut
+« ø »   (n-x)                   pick:   copie le n-ème élément en haut de pile
+(touche alt-o du clavier français)
+
+exemples:
+
+1$              égal            1 1
+1 2%            égal            1
+1 2\            égal            2 1
+1 2 3@          égal            2 3 1
+7 8 9 2ø        égal            7 8 9 7
+
+
+Structure de contrôle:
+----------------------
+FALSE a seulement un SI et un TANT QUE.
+
+si est « ? » et ressemble a ceci : (bool,fct-). Exemple :
+
+a;1=["Salut !"]?        { si a=1 alors afficher "Salut !" }
+
+Le premier argument est une valeur booléenne, le  second,  une  lambda
+fonction à exécuter (voir plus bas pour ""). Il n'y a pas de « sinon »
+et vous devrez donc le simuler avec un second « ? ». Ca peut être fait
+facilement en copiant la valeur de vérité :
+
+a;1=$["vrai"]?~["faux"]?
+
+Apres le premier « ? » (qu'il soit exécuté ou non), une  copie  de  la
+valeur  de  vérité est encore sur la pile, et on la nie pour la partie
+sinon. Faites attention au fait que si le premier « si » nécessite des
+arguments  sur  la pile avant l'expression booléenne, il y a encore la
+valeur de vérité en haut de la pile.
+
+Le tant que est un  «  #  »  et  prend  deux  lambda  fonctions  comme
+arguments ; une qui donne un booléen et la seconde comme corps :
+
+[a;1=][2f;!]#           { tant que a=1 faire f(2) }
+
+Notez qu'avec les tant que,  si  et  lambda,  vous  pouvez  construire
+virtuellement n'importe quelle autre structure.
+
+Entrée/Sortie :
+---------------
+  attention : elles sont toutes bufférisees [N.d.T. : tamponnées ? :-)]
+
+-  affichage  de  chaînes  :  les  chaînes  s'affichent   elles-mêmes,
+simplement.  Attention  :  les  chaînes  en FALSE peuvent contenir des
+<lf>s (sauts de ligne), ce qui explique pourquoi,  dans  le  programme
+helloworld, le second " est sur la ligne suivante :
+
+  "Hello, World!
+  "
+
+- entiers : « . » affiche l'élément en  haut  de  la  pile  comme  une
+  valeur entière :
+
+  123.          { imprime la chaine "123" sur la console }
+
+- caractères : « , »
+
+  65,           { imprime "A" }
+
+- lire un caractère depuis stdin: « ^ »
+
+  ^             { le sommet de pile est le char lu }
+
+- flush : « ß » (touche alt-s du clavier français)
+
+  quand stdin et stdout sont différents (i.e. vous avez demarré  votre
+  programme  FALSE compilé avec <infile >outfile) vous aurez besoin de
+  « flusher » (vider les  tampons)  allègrement.  Cependant,  si  vous
+  utilisez « ^ » et les opérations de sortie sur la même console, vous
+  risquez de devoir « flusher » entre les entrées et les sorties.  "ß"
+  « flushe » à la fois l'entrée et la sortie.
+
+  ß[^$1_=~][,]#         { tant que c:=getc()<>EOF faire putc(c) }
+
+  Par exemple, le programme ci-dessus copie  l'entrée  sur  la  sortie
+  jusqu'à  eof (fin de fichier). Ainsi, aucun « flushage » n'est utile
+  après la lecture quand il est utilisé avec deux fichiers. Cependant:
+
+  "tapez retour : "ß^%ß"continue..."
+
+  C'est ici  indispensable,  puisqu'on  prend  l'entrée  sur  la  même
+  console que la sortie.
+
++-------------------------------+
+|   Exemple de programmation    |
++-------------------------------+
+
+Comment $#%!  veut-il  que  j'écrive  un  programme  décent  avec  ca,
+pourriez-vous  dire. Bien, le premier obstacle à prendre en compte est
+que FALSE ne supporte aucune programmation spécifique Amiga. Au  mieux
+utilise-t-il  quelques  fonctions  d'entrees/sorties.  Toutefois, avec
+celles-ci,  vous  pouvez  créer  quelques  utilitaires  formidablement
+compacts,  comme  par  exemple  la version FALSE de la commande "copy"
+ci-dessous en juste 13 octets !
+
+ß[^$1_=~][,]#
+
+Ok, que  se  passe-t-il  :  d'abord,  identifiez  les  quatre  parties
+principales  dans  ce  programme.  Nous  avons un « flush », puis deux
+arguments et un tant que. La première fonction [] est supposée  rendre
+un booléen pour le tant que : elle lit un caractère, le duplique et le
+compare avec -1 (EOF). A la fin de cette fonction,  nous  n'avons  pas
+seulement un booléen, mais aussi une copie du caractère que nous avons
+lu. Ceci démontre tout de suite une caractéristique puissante de FALSE
+:  on  peut avoir un nombre quelconque de résultats intermédiaires sur
+la pile. Le corps de la boucle tant que [,] imprime juste le caractère
+sur stdout.
+Notez que si le corps n'est pas executé, on quitte avec une  pile  non
+vide.  Ce n'est pas un problème à la fin d'un programme, mais faire la
+meme chose à l'intérieur d'une itération pourrait être fatal.
+
+Autre exemple de programmation en FALSE : la fonction fac().
+
+[$1=$[\%1\]?~[$1-f;!*]?]f:
+
+Ainsi on appelle fac(6) (=720) par :
+
+6f;!
+
+Aucun contrôle d'intervalle n'est fait par la fonction "f".  C'est  ce
+qui est fait par le programme d'exemple fac.f.
+
+Bon, comment ca marche ? (et marché-ce ?) D'abord, identifiez le f;! à
+l'intérieur de l'implémentation de la fonction : c'est la récursivité.
+Laissez-nous rappeler à quoi  ressemble  la  fonction  fac()  dans  un
+langage procédural ou fonctionnel hypothétique :
+
+fac(n) = if n=1 then 1 else n*fac(n-1)
+
+Notre code FALSE suit exactement cet idée, sauf que l'on utilise  deux
+«  si  »  (d'où  les  deux  blocs  []) au lieu d'un si-alors-sinon. On
+commence avec (n-) sur la pile :
+
+$1=$
+
+On duplique le n, on le compare avec 1 et on laisse une seconde valeur
+de vérité (t), ainsi : (n,t,t-)
+
+[\%1\]?
+
+D'abord, on empile le [], puis après le « si » (=?), on a (n,t-). Nous
+n'aurons  plus  besoin  du n inférieur, donc on l'échange (swap) et le
+supprime (drop). Ensuite, on empile le résultat final "1" et l'échange
+avec la valeur de vérité pour le second "si". (1,t-)
+
+~[$1-f;!*]?
+
+Il nous faut d'abord nier la valeur de vérité, puisque c'est la partie
+else.  Dans le corps du « si », nous avons juste (n-), et on ajoute un
+« n-1 » à celui-ci comme argument pour l'appel récursif. Après f;!, on
+a  (n,r-)  (r  est le résultat de l'appel), et on multiplie simplement
+les deux ensembles pour donner le résultat du tout.
+
+Ca peut paraître inutilement compliqué, mais en fait, ça ne l'est pas.
+C'est  juste  une  différence  de style de programmation. Une fois que
+vous aurez pris conscience de sa puissance, vous ne pourrez plus vivre
+sans :-)
+
+Si jusqu'ici vous  n'avez  toujours  pas  compris  comment  fonctionne
+FALSE,  ce  n'est probablement pas un langage pour vous. Cependant, si
+vous avez  le  plus  léger  sentiment  que  certaines  choses  étaient
+claires, essayez de comprendre les exemples et vous serez sur la bonne
+voie pour devenir un vrai programmeur FALSE (« real FALSE programmer»)
+!  :-)  Toutefois,  les  exemples  ne  sont pas abondamment commentés,
+puisque c'est considéré  comme  une  faute  de  goût  en  FALSE  (voir
+quelques sections au-dessus).
+
++-------------------------------+
+|   Le coin des sorciers FALSE  |
++-------------------------------+
+
+« Assembleur en ligne » en FALSE :
+----------------------------------
+
+Il reste un sujet qui  n'a  pas  ete  abordé  (à  dessein).  C'est  la
+possibilité  d'ajouter  du  code assembleur à un programme FALSE, pour
+lui permettre d'être étendu avec des fonctions personnelles.
+
+syntaxe :       <integer>`
+
+N'importe quelle valeur entiere 0..65535 suivie par une  apostrophe  a
+l'envers  (backquote). Une expression de ce genre provoque l'insertion
+directement dans le code de la valeur 16 bits. Une série de valeurs  «
+backquotées  » peut vous permettre une forme primitive d'assembleur en
+ligne. Par exemple :
+
+[8221`29184`9336`4`50510`20142`65338`50510`11008`]a:    { allocmem (size-mem) }
+[8221`8797`9336`4`50510`20142`65326`50510`]f:           { freemem (mem,size-) }
+
+sont deux fonctions assembleur qui permettent d'allouer de la  mémoire
+partir de FALSE (voir l'exemple alloc.f).
+
+conventions de registre :
+Quand vous écrivez du code  assembleur  pour  l'utiliser  avec  FALSE,
+utilisez les registres suivants :
+
+A6 = dosbase
+
+A5 = pile  d'évaluation.  Utilisez  MOVE.L  (A5)+,D0   pour   lire  un
+     paramètre dans D0, et MOVE.L D0,-(A5) pour en ecrire un.
+A4 = variables. 0(A4) = a, 4(A4) = b etc.
+D6 = stdout
+D5 = stdin
+
+Exemple de code pour allocmem/freemem d'au-dessus :
+
+alloc:  move.l  (a5)+,d0
+        moveq   #0,d1
+        move.l  4.w,a2
+        exg     a2,a6           ; il faut restaurer dosbase plus tard.
+        jsr     -198(a6)
+        exg     a2,a6
+        move.l  d0,-(a5)        ; pas de rts, c'est fait par []
+
+free:   move.l  (a5)+,d0        ; deuxième argument d'abord !
+        move.l  (a5)+,a1
+        move.l  4.w,a2
+        exg     a2,a6
+        jsr     -210(a6)
+        exg     a2,a6
+
+
+peek/poke:
+----------
+":" et ";" sont les opérateurs pour lire et écrire des variables, mais
+ils  peuvent  être  (mal)  utilisés  pour  faire  des  peeks  et pokes
+arbitraires, ou même de l'indexation de tableau ! (voir vcheck.f  pour
+un exemple : on lit execbase)
+
+Indexation de tableau et lecture de structures :
+Si p est un pointeur sur un tableau/structure, alors :
+
+p;<index>+;
+
+lit p[<index>].
+
+Malheureusement, par ce moyen, vous ne pouvez  lire que des valeurs 32
+bits.
+
+Arguments cli :
+---------------
+Lire des fichiers est surtout fait par redirection  sur  la  ligne  de
+commandes.  Toutefois,  pour une future extension, un pointeur sur les
+arguments de la ligne de commande est  passé  en  var  a.  Voir  aussi
+« trucs de la ligne de commandes » plus bas.
+
+Pile :
+------
+Vous pouvez utiliser la pile comme un tampon, et  indexer  à  l'envers
+ses  valeurs  avec  ø. Cependant, la pile FALSE est moitié plus petite
+que la pile AmigaDos normale et ne fait donc  normalement  que  2  ko.
+Vous   pouvez   écrire  des  programmes  qui  ont  besoin  d'une  pile
+arbitrairement grande en augmentant la taille  de  la  pile  avant  le
+lancement.
+
+Trucs de la ligne de commandes :
+--------------------------------
+
+- assurez-vous que vous écrivez une redirection de l'entrée quand vous
+  testez certains programmes : si le programme ne fait « rien », alors
+  ce  n'est  pas  l'ordinateur  qui  est  planté,  mais  simplement le
+  programme qui attend une entrée.
+
+- si vous n'écrivez pas un « flush » (ß) au début d'un  programme  qui
+  gère l'entrée et la sortie, vous aurez un <lf> comme première entrée
+  : c'est celui de la ligne de commande. Exemple :
+
+  a.out blabla <in >out
+
+  alors a.out lira d'abord "blabla"  comme une ligne, puis le  contenu
+  de « in ».
+
+Bon style :
+-----------
+
+La programmation en FALSE est relativement savoureuse : ce  n'est  pas
+facile,  mais  quand ca marche, ca marche bien et le source obtenu est
+superbe. Par conséquent, il pourrait être tentant d'« indenter  »  des
+boucles  tant  que  dans de plus grands programmes. Mais rappelez-vous
+que :
+
+- indentations, espacements et commentaires sont pour les gosses :-) ;
+- un vrai programmeur FALSE :
+  - écrit du code dense ;
+  - n'écrit que des commentaires très « généraux » ;
+  - utilise  la pile intensivement, et évite  d'utiliser des variables
+    pour autre choses que les définitions de fonctions.
+
++---------------------------------------+
+|       Résume du langage FALSE.        |
++---------------------------------------+
+
+syntaxe :       pops :          pushes :        exemple :
+                -->top          -->top
+--------------- --------------- --------------- -------------------------------
+
+{comment}       -               -                       { un commentaire }
+[code]          -               fonction        [1+]    { (lambda (x) (+ x 1)) }
+a .. z          -               varadr          a       { utiliser a: or a; }
+integer         -               value           1
+'char           -               value           'A      { 65 }
+num`            -               -               0`      { émet le mot 0 }
+
+:               n,varadr        -               1a:     { a:=1 }
+;               varadr          varvalue        a;      { a }
+!               fonction        -               f;!     { f() }
+
++               n1,n1           n1+n2           1 2+    { 1+2 }
+-               n1,n2           n1-n2           1 2-
+*               n1,n2           n1*n2           1 2*
+/               n1,n2           n1/n2           1 2/
+_               n               -n              1_      { -1 }
+
+=               n1,n1           n1=n2           1 2=~   { 1<>2 }
+>               n1,n2           n1>n2           1 2>
+
+&               n1,n2           n1 and n2       1 2&    { 1 and 2 }
+|               n1,n2           n1 or n2        1 2|
+~               n               not n           0~      { -1,TRUE }
+
+$               n               n,n             1$      { dupl. haut de pile }
+%               n               -               1%      { eff. haut de pile }
+\               n1,n2           n2,n1           1 2\    { échange }
+@               n,n1,n2         n1,n2,n         1 2 3@  { rotation }
+ø (alt-o)       n               v               1 2 1ø  { pick }
+
+
+?               bool,fon        -               a;2=[1f;!]?
+                                                { if a=2 then f(1) }
+#               boolf,fon       -               1[$100<][1+]#
+                                                { while a<100 do a:=a+1 }
+
+.               n               -               1.      { printnum(1) }
+"string"        -               -               "hi!"   { printstr("hi!") }
+,               ch              -               10,     { putc(10) }
+^               -               ch              ^       { getc() }
+ß (alt-s)       -               -               ß       { flush() }
+
+
+
++-------------------------------+
+|     Infos supplémentaires     |
++-------------------------------+
+
+FALSE a été créer pour rire, juste pour voir jusqu'à quelle taille  je
+pouvais  réduire  un  compilateur  compilant  un  langage relativement
+puissant. Le résultat est même meilleur que je ne le pensais  :  c'est
+franchement  amusant  de  programmer en FALSE et ça semble même encore
+mieux que ça.
+
+A propos du source du compilateur : notez que d'un bout à  l'autre  du
+programme,   TOUTES   les  variables  sont  dans  les  registres  sans
+sauvegarde dans le pile ! S'il vous plait, ne venez pas  me  dire  que
+vous  avez  trouvé  une  façon  de  réduire  la taille de l'exécutable
+d'encore 4 octets... Je pense qu'il est assez petit comme ça. Si  vous
+aimez  les  compilateurs  juste à cause de leur taille, allez jeter un
+oeil sur le langage "brainfuck" de Urban Mueller qui fait moins de 256
+octets !
+
+Donations ? Qui voudrait me donner quelque chose pour un programme qui
+fait  la  taille  d'un virus de bootblock ? De toutes facons, la seule
+chose que j'aimerais recevoir, ce sont de longs et  complexes  sources
+en  FALSE  (d'applications  fonctionnelles,  bien  entendu). S'il vous
+plait, mettez toujours un commentaire en haut de votre  source,  sinon
+il  me  faudra du temps pour deviner s'il s'agit de FALSE ou d'un truc
+uuencodé. Ne me demandez pas de déverminer votre code, car  comprendre
+les programmes FALSE des autres est absolument atroce.
+
+Si vous voulez me contacter :
+
+        Wouter van Oortmerssen ($#%!)
+        Levendaal 87
+        2311 JG  Leiden
+        HOLLAND
+
+ou mieux, si vous avez accès au e-mail :
+
+        Wouter@alf.let.uva.nl           (E/FALSE, etc., support programmation)
+        Wouter@mars.let.uva.nl          (personnel)
+        Oortmers@gene.fwi.uva.nl        (autre)
+
