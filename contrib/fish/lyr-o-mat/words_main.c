@@ -118,22 +118,23 @@ void LoadApp(int argc,union wbstart argv)
      loadAll(MODE_LOADCONFIG,"Loading Application...");
     }
    }
+
+   if(dobj = GetDiskObject(argv.msg->sm_ArgList->wa_Name))
+   {
+    long left   = 0L;
+    long top    = 50L;
+    long width  = 320L;
+    long height = 150L;
+    if(tool = FindToolType(dobj->do_ToolTypes,"LEFTEDGE"))left   = atol(tool);
+    if(tool = FindToolType(dobj->do_ToolTypes,"TOPEDGE")) top    = atol(tool);
+    if(tool = FindToolType(dobj->do_ToolTypes,"WIDTH"))   width  = atol(tool);
+    if(tool = FindToolType(dobj->do_ToolTypes,"HEIGHT"))  height = atol(tool);
+    left   = (left < 0) ? 0 : (left > Scr->Width ) ? Scr->Width  : left; 
+    top    = (top  < 0) ? 0 : (top  > Scr->Height) ? Scr->Height : top;
+    width  = (width  > (Scr->Width  - left)) ? Scr->Width  - left : width;
+    height = (height > (Scr->Height - top))  ? Scr->Height - top  : height;
+    sprintf(winfo.outfilename,"con:%ld/%ld/%ld/%ld/" LYR_NAME "/INACTIVE",left,top,width,height);
+   }
   }
- }
- if(dobj = GetDiskObject(argv.msg->sm_ArgList->wa_Name))
- {
-  long left   = 0L;
-  long top    = 50L;
-  long width  = 320L;
-  long height = 150L;
-  if(tool = FindToolType(dobj->do_ToolTypes,"LEFTEDGE"))left   = atol(tool);
-  if(tool = FindToolType(dobj->do_ToolTypes,"TOPEDGE")) top    = atol(tool);
-  if(tool = FindToolType(dobj->do_ToolTypes,"WIDTH"))   width  = atol(tool);
-  if(tool = FindToolType(dobj->do_ToolTypes,"HEIGHT"))  height = atol(tool);
-  left   = (left < 0) ? 0 : (left > Scr->Width ) ? Scr->Width  : left; 
-  top    = (top  < 0) ? 0 : (top  > Scr->Height) ? Scr->Height : top;
-  width  = (width  > (Scr->Width  - left)) ? Scr->Width  - left : width;
-  height = (height > (Scr->Height - top))  ? Scr->Height - top  : height;
-  sprintf(winfo.outfilename,"con:%ld/%ld/%ld/%ld/" LYR_NAME "/INACTIVE",left,top,width,height);
  }
 }
