@@ -168,6 +168,6 @@ test_aros: $(TESTOBJS)
 	$(CC) $(TESTOBJS) -L$(LIBDIR) -lgtlayout -lamiga -L./ -o $@
  
 clean:
-	$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) gtlayout.library aros/gtlayout_defines_aros.h gtlayout_lib.o gtlayout_data.o libgtlayout.a
+	$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) gtlayout.library aros/gtlayout_defines_aros.h gtlayout_lib.o gtlayout_data.o gtlayout_data.ol libgtlayout.a
 
 
