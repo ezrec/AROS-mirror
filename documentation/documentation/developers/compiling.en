@@ -46,7 +46,7 @@ using CVS (which requires that you `apply for access`__ though). In the former
 case, getting the ``source`` package is enough (unless you also want to 
 compile the contrib programs). In the latter case, you need to checkout the 
 ``AROS`` module, and also the ``necessary`` module if you want to compile the
-i389-pc port.
+i386-pc port.
 
 __ ../../download
 __ ../../documentation/developers/contribute#the-cvs-repository
