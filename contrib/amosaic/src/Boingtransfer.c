@@ -6,6 +6,9 @@
 */
 #include "includes.h"
 #include "globals.h"
+
+void fail(APTR, char *);
+
 #define min(x,y) (x<y?x:y)
 
 #define WINKELFAKTOR (0.4)
