@@ -383,10 +383,12 @@ int stk_display_open( int flags, int width, int height, int depth )
     else { /* load window icon on first time setup */
 	SDL_Surface *icon;
 	icon = png_load(SRC_DIR "/gfx/win_icon.png");
-	SDL_SetColorKey(icon, SDL_SRCCOLORKEY, 0);
-	SDL_WM_SetIcon(icon, NULL);
+        if (icon != NULL) {
+	    SDL_SetColorKey(icon, SDL_SRCCOLORKEY, 0);
+	    SDL_WM_SetIcon(icon, NULL);
+        }
     }
-	    
+
     /* open new display */
     if ( ( depth = SDL_VideoModeOK( width, height, depth, flags ) ) == 0 ) {
         fprintf( stderr, "Requested mode %ix%i %s unavailable\n",
