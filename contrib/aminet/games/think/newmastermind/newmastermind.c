@@ -158,7 +158,7 @@ event_loop (void)
    while (!quit)
    {
       WaitPort (main_win->UserPort);
-      while (msg = GT_GetIMsg (main_win->UserPort))
+      while ((msg = GT_GetIMsg (main_win->UserPort)))
       {
          class = msg->Class;
          code = msg->Code;
@@ -270,11 +270,11 @@ process_menus (
 BOOL
 initialize (void)
 {
-   if (IntuitionBase = OpenLibrary ("intuition.library", 37L))
+   if ((IntuitionBase = (struct IntuitionBase *)OpenLibrary ("intuition.library", 37L)))
    {
-      if (GfxBase = (struct GfxBase *)OpenLibrary ("graphics.library", 37L))
+      if ((GfxBase = (struct GfxBase *)OpenLibrary ("graphics.library", 37L)))
       {
-         if (GadToolsBase = OpenLibrary ("gadtools.library", 37L))
+         if ((GadToolsBase = OpenLibrary ("gadtools.library", 37L)))
             return init_display ();
          else
          {
@@ -306,7 +306,7 @@ init_display (void)
         LockPubScreen ((pubscr_name[0] == '\0') ? NULL : pubscr_name)) ||
        (pub_screen = LockPubScreen (NULL)))
    {
-      if (draw_info = GetScreenDrawInfo (pub_screen))
+      if ((draw_info = GetScreenDrawInfo (pub_screen)))
       {
          gui_pens = draw_info->dri_Pens;
          init_pens (pub_screen);
@@ -328,7 +328,7 @@ init_display (void)
          }
          if (window_extent (pub_screen, 8, &win_w, &win_h))
          {
-            if (vis_info = GetVisualInfo (pub_screen, TAG_DONE))
+            if ((vis_info = GetVisualInfo (pub_screen, TAG_DONE)))
             {
                main_win = OpenWindowTags (NULL,
                            WA_Left, (pub_screen->Width - win_w) / 2,
@@ -340,9 +340,9 @@ init_display (void)
                            WA_CloseGadget, TRUE,
                            WA_DepthGadget, TRUE,
                            WA_DragBar, TRUE,
-                           WA_Title, PRG_NAME,
-                           WA_ScreenTitle, scr_title,
-                           WA_PubScreen, pub_screen,
+                           WA_Title, (IPTR)PRG_NAME,
+                           WA_ScreenTitle, (IPTR)scr_title,
+                           WA_PubScreen, (IPTR)pub_screen,
                            WA_NewLookMenus, TRUE,
                            WA_ReportMouse, TRUE,
                            WA_IDCMP, IDCMP_MOUSEBUTTONS | IDCMP_MENUPICK |
@@ -430,7 +430,7 @@ init_gadgets (void)
 BOOL
 init_menu (void)
 {
-   if (main_menu = CreateLocMenus (new_menu, vis_info, TAG_DONE))
+   if ((main_menu = CreateLocMenus (new_menu, vis_info, TAG_DONE)))
    {
       if (LayoutMenus (main_menu, vis_info,
                        GTMN_NewLookMenus, TRUE, TAG_DONE))
@@ -482,6 +482,6 @@ finalize (void)
       UnlockPubScreen (NULL, pub_screen);
    }
    CloseLibrary (GadToolsBase);
-   CloseLibrary ((struct Library  *)GfxBase);
-   CloseLibrary (IntuitionBase);
+   CloseLibrary ((struct Library *)GfxBase);
+   CloseLibrary ((struct Library *)IntuitionBase);
 }

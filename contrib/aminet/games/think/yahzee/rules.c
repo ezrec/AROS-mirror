@@ -269,7 +269,7 @@ calc_amer_maxi (
 {
    UBYTE   kind_count[6];
    register UBYTE   n, straight = 0;
-   register UBYTE   pair[3] = { 0, 0, 0 };
+   UBYTE   pair[3] = { 0, 0, 0 };
    register UBYTE   tripple1 = 0, tripple2 = 0, quad = 0;
    
    /* initialize kind_count and calculate chance */

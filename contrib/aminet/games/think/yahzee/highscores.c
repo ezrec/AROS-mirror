@@ -46,7 +46,7 @@ load_high_scores (
    char   num_str[4];
    UBYTE   status = 0;
    
-   if (score_file = fopen ("yahzee.hiscore", "r"))
+   if ((score_file = fopen ("yahzee.hiscore", "r")))
    {
       while ((ch = fgetc (score_file)) != EOF && k < NUM_SCORES)
       {
@@ -124,7 +124,7 @@ save_high_scores (void)
    
    if (need_save)
    {
-      if (score_file = fopen ("yahzee.hiscore", "w"))
+      if ((score_file = fopen ("yahzee.hiscore", "w")))
       {
          for (j = 0; j < NUM_SCORES; ++j)
          {
@@ -222,9 +222,9 @@ display_high_scores (
                          WA_Width, width,
                          WA_Height, height,
                          WA_AutoAdjust, FALSE,
-                         WA_Title, localized_string (MSG_HIGHSCORE_REQTITLE),
-                         WA_ScreenTitle, main_win->ScreenTitle,
-                         WA_PubScreen, main_win->WScreen,
+                         WA_Title, (IPTR)localized_string (MSG_HIGHSCORE_REQTITLE),
+                         WA_ScreenTitle, (IPTR)(main_win->ScreenTitle),
+                         WA_PubScreen, (IPTR)(main_win->WScreen),
                          WA_IDCMP, IDCMP_MOUSEBUTTONS,
                          WA_DragBar, TRUE,
                          WA_DepthGadget, TRUE,
@@ -251,7 +251,7 @@ display_high_scores (
       while (!done)
       {
          WaitPort (win->UserPort);
-         while (msg = (struct IntuiMessage *)GetMsg (win->UserPort))
+         while ((msg = (struct IntuiMessage *)GetMsg (win->UserPort)))
          {
             done = (msg->Class == IDCMP_MOUSEBUTTONS &&
                     msg->Code == SELECTDOWN);

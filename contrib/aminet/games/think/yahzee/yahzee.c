@@ -164,7 +164,7 @@ event_loop (void)
    while (!quit)
    {
       WaitPort (main_win->UserPort);
-      while (msg = GT_GetIMsg (main_win->UserPort))
+      while ((msg = GT_GetIMsg (main_win->UserPort)))
       {
          class = msg->Class;
          code = msg->Code;
@@ -277,11 +277,11 @@ process_menus (
 BOOL
 initialize (void)
 {
-   if (IntuitionBase = OpenLibrary ("intuition.library", 37L))
+   if ((IntuitionBase = (struct IntuitionBase *)OpenLibrary ("intuition.library", 37L)))
    {
-      if (GfxBase = (struct GfxBase *)OpenLibrary ("graphics.library", 37L))
+      if ((GfxBase = (struct GfxBase *)OpenLibrary ("graphics.library", 37L)))
       {
-         if (GadToolsBase = OpenLibrary ("gadtools.library", 37L))
+         if ((GadToolsBase = OpenLibrary ("gadtools.library", 37L)))
             return init_display ();
          else
          {
@@ -321,7 +321,7 @@ init_display (void)
       text_pen = (draw_info) ? draw_info->dri_Pens[TEXTPEN] : 1;
       FreeScreenDrawInfo (pub_screen, draw_info);
       
-      if (vis_info = GetVisualInfo (pub_screen, TAG_DONE))
+      if ((vis_info = GetVisualInfo (pub_screen, TAG_DONE)))
       {
          init_gadgets ();
          if (layout_display (pub_screen, &main_win, rules, num_players))
@@ -390,7 +390,7 @@ init_gadgets (void)
 BOOL
 init_menu (void)
 {
-   if (main_menu = CreateLocMenus (new_menu, vis_info, TAG_DONE))
+   if ((main_menu = CreateLocMenus (new_menu, vis_info, TAG_DONE)))
    {
       if (LayoutMenus (main_menu, vis_info,
                        GTMN_NewLookMenus, TRUE, TAG_DONE))
@@ -441,5 +441,5 @@ finalize (void)
    if (GfxBase)
       CloseLibrary ((struct Library *)GfxBase);
    if (IntuitionBase)
-      CloseLibrary (IntuitionBase);
+      CloseLibrary ((struct Library *)IntuitionBase);
 }

@@ -33,7 +33,7 @@ init_locale (
    char  *catalog)
 {
    li.li_LocaleBase = NULL;
-   if (LocaleBase = OpenLibrary ("locale.library", 38L))
+   if ((LocaleBase = (struct LocaleBase *)OpenLibrary ("locale.library", 38L)))
    {
       li.li_LocaleBase = LocaleBase;
       li.li_Catalog = OpenCatalogA (NULL, catalog, NULL);
@@ -46,7 +46,7 @@ finalize_locale (void)
    if (LocaleBase)
    {
       CloseCatalog (li.li_Catalog);
-      CloseLibrary (LocaleBase);
+      CloseLibrary ((struct Library *)LocaleBase);
    }
 }
 
@@ -91,7 +91,7 @@ CreateLocMenus (
       }
    }
    
-   if (menus = CreateMenusA (nm, (struct TagItem *)&tag))
+   if ((menus = CreateMenusA (nm, (struct TagItem *)&tag)))
    {
       if (!(LayoutMenus (menus, vis_info,
                          GTMN_NewLookMenus, TRUE,
