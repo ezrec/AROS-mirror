@@ -8,19 +8,23 @@
 #include <proto/rexxsyslib.h>
 
 #include <exec/ports.h>
+#include <exec/memory.h>
 #include <intuition/intuition.h>
 #include <dos/dosextens.h>
 #include <rexx/storage.h>
+#include <rexx/rxslib.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 struct Library *ReginaBase;
-struct Library *RexxSysBase;
+struct RxsLib *RexxSysBase;
 struct IntuitionBase *IntuitionBase;
 
 static void StartFile(struct RexxMsg *);
+static void AddLib(struct RexxMsg *);
+static void RemLib(struct RexxMsg *);
 
 int main(void)
 {
@@ -45,7 +49,7 @@ int main(void)
 	EasyRequest(NULL, &es, NULL);
 	return 20;
     }
-    RexxSysBase = OpenLibrary("rexxsyslib.library", 44);
+    RexxSysBase = (struct RxsLib *)OpenLibrary("rexxsyslib.library", 44);
     if (RexxSysBase == NULL)
     {
 	es.es_TextFormat = "Error opening rexxsyslib.library V44";
@@ -87,7 +91,16 @@ int main(void)
 		    case RXFUNC:
 			StartFile(msg);
 			break;
-			
+
+		    case RXADDFH:
+		    case RXADDLIB:
+		        AddLib(msg);
+		        break;
+
+		    case RXREMLIB:
+		        RemLib(msg);
+		        break;
+		      
 		    case RXCLOSE:
 			done = TRUE;
 		    default:
@@ -99,13 +112,13 @@ int main(void)
 			break;
 		    }
 		}
-		ReplyMsg(msg);
+		ReplyMsg((struct Message *)msg);
 	    }
 	}
     } while(!done);
 
     DeletePort(port);
-    CloseLibrary(RexxSysBase);
+    CloseLibrary((struct Library *)RexxSysBase);
     CloseLibrary(ReginaBase);
     CloseLibrary((struct Library *)IntuitionBase);
 
@@ -126,29 +139,29 @@ static void StartFile(struct RexxMsg *msg)
     if (iscommand)
     {
 	/* For a command the characters up to the first space is the filename */
-	s = msg->rm_Args[0];
+	s = (UBYTE *)msg->rm_Args[0];
 	while (*s != 0 && !isspace(*s)) s++;
-	len = s - msg->rm_Args[0];
+	len = s - (UBYTE *)msg->rm_Args[0];
     }
     else
     {
 	/* For a function whole ARG0 is the filename */
-	len = LengthArgstring(msg->rm_Args[0]);
+	len = LengthArgstring((UBYTE *)msg->rm_Args[0]);
     }
     extlen = msg->rm_FileExt==NULL ? 5 : strlen(msg->rm_FileExt);
 
     filename = malloc(len + 6 + extlen);
-    memcpy(filename, msg->rm_Args[0], len);
+    memcpy(filename, (char *)msg->rm_Args[0], len);
     filename[len] = 0;
     if (strchr(filename, ':') == NULL)
     {
 	strcpy(filename, "REXX:");
-	strncat(filename, msg->rm_Args[0], len);
+	strncat(filename, (char *)msg->rm_Args[0], len);
     }
     lock = Lock(filename, ACCESS_READ);
     if (lock == NULL)
     {
-	strcat(filename, msg->rm_FileExt==NULL ? ".rexx" : msg->rm_FileExt);
+	strcat(filename, msg->rm_FileExt==NULL ? ".rexx" : (const char *)msg->rm_FileExt);
 	lock = Lock(filename, ACCESS_READ);
     }
     if (lock == NULL)
@@ -173,7 +186,7 @@ static void StartFile(struct RexxMsg *msg)
 	    else
 	    {
 		argcount = 1;
-		len = LengthArgstring(msg->rm_Args[0]) - (s - msg->rm_Args[0]);
+		len = LengthArgstring((UBYTE *)msg->rm_Args[0]) - (s - (UBYTE *)msg->rm_Args[0]);
 		MAKERXSTRING(rxargs[0], s, len);
 	    }
 	}
@@ -196,7 +209,7 @@ static void StartFile(struct RexxMsg *msg)
     {
 	for (argcount = 0; msg->rm_Args[1+argcount] != NULL; argcount++)
 	{
-	    UBYTE *argstr = msg->rm_Args[1+argcount];
+	    UBYTE *argstr = (UBYTE *)msg->rm_Args[1+argcount];
 	    MAKERXSTRING(rxargs[argcount], argstr, LengthArgstring(argstr));
 	}
     }
@@ -234,10 +247,86 @@ static void StartFile(struct RexxMsg *msg)
     fflush(stdout);
     msg->rm_Result1 = rc;
     if (rc==0 && (msg->rm_Action & RXFF_RESULT) && RXVALIDSTRING(rxresult))
-	msg->rm_Result2 = CreateArgstring(RXSTRPTR(rxresult), RXSTRLEN(rxresult));
+	msg->rm_Result2 = (IPTR)CreateArgstring(RXSTRPTR(rxresult), RXSTRLEN(rxresult));
 
     if (RXSTRPTR(rxresult)!=NULL)
 	free(RXSTRPTR(rxresult));
     
     free(filename);
+}
+
+static void AddLib(struct RexxMsg *msg)
+{
+  struct RexxRsrc *rsrc;
+  
+  if (msg->rm_Args[0] == NULL || msg->rm_Args[1] == NULL)
+  {
+    msg->rm_Result1 = 20;
+    return;
+  }
+  
+  rsrc = (struct RexxRsrc *)AllocMem(sizeof(struct RexxRsrc), MEMF_ANY | MEMF_CLEAR);
+  rsrc->rr_Size = sizeof(struct RexxRsrc);
+  rsrc->rr_Node.ln_Pri = atoi((char *)msg->rm_Args[1]);
+  rsrc->rr_Node.ln_Name = strdup((char *)msg->rm_Args[0]);
+  
+  if ((msg->rm_Action & RXCODEMASK) == RXADDLIB)
+  {
+    rsrc->rr_Node.ln_Type = RRT_LIB;
+    if (msg->rm_Args[2] == NULL)
+    {
+      msg->rm_Result1 = 20;
+      FreeMem(rsrc, rsrc->rr_Size);
+      return;
+    }
+    rsrc->rr_Args1 = (LONG)atoi((char *)msg->rm_Args[2]);
+    rsrc->rr_Args2 = (msg->rm_Args[3] == NULL) ? (LONG)0 : (LONG)atoi((char *)msg->rm_Args[2]);
+  }
+  else
+    rsrc->rr_Node.ln_Type = RRT_HOST;
+
+  LockRexxBase(0);
+  if (FindName(&RexxSysBase->rl_LibList, rsrc->rr_Node.ln_Name))
+  {
+    FreeMem(rsrc, rsrc->rr_Size);
+    msg->rm_Result1 = 0;
+    if (msg->rm_Action & RXFF_RESULT)
+      msg->rm_Result2 = (IPTR)CreateArgstring("0", 1);
+  }
+  else
+  {
+    Enqueue(&RexxSysBase->rl_LibList, (struct Node *)rsrc);
+    if (msg->rm_Action & RXFF_RESULT)
+      msg->rm_Result2 = (IPTR)CreateArgstring("1", 1);
+  }
+  UnlockRexxBase(0);
+}
+
+static void RemLib(struct RexxMsg *msg)
+{
+  struct RexxRsrc *rsrc;
+  
+  if (msg->rm_Args[0] == NULL)
+  {
+    msg->rm_Result1 = 20;
+    return;
+  }
+  
+  LockRexxBase(0);
+  rsrc = (struct RexxRsrc *)FindName(&RexxSysBase->rl_LibList, (STRPTR)msg->rm_Args[0]);
+  if (rsrc == NULL)
+  {
+    msg->rm_Result1 = 0;
+    if (msg->rm_Action & RXFF_RESULT)
+      msg->rm_Result2 = (IPTR)CreateArgstring("0", 1);
+  }
+  else
+  {
+    Remove((struct Node *)rsrc);
+    FreeMem(rsrc, rsrc->rr_Size);
+    msg->rm_Result1 = 0;
+    if (msg->rm_Action & RXFF_RESULT)
+      msg->rm_Result2 = (IPTR)CreateArgstring("1", 1);
+  }
+  UnlockRexxBase(0);
 }
