@@ -41,6 +41,7 @@ Default values
    later on.  there are also a bunch of defaults at the end .
 
  */
+#include "HTTCP.h"
 /* Default values of those: */
 #define NETCLOSE close	    /* Routine to close a TCP-IP socket 	*/
 #define NETREAD  HTDoRead	/* Routine to read from a TCP-IP socket     */
