@@ -7,8 +7,8 @@ COMPILER_OPTS       = NOLINK MATH=68882 NOMODIFIED ERRORREXX STRUCTUREEQUIVALENC
 LINKER_OPTS_DEBUG   = SC SD ADDSYM
 LINKER_OPTS         = SC SD ND
 
-OBJECTS_DEBUG       = SubRoutines.oDEBUG ScreenClass.oDEBUG WindowClass.oDEBUG MainTask.oDEBUG RootClass.oDEBUG AreaClass.oDEBUG WindowTaskClass.oDEBUG RectFillClass.oDEBUG BitmapClass.oDEBUG PlanarTestClass.oDEBUG Chunky8TestClass.oDEBUG ThreadRootClass.oDEBUG MethodSenderClass.oDEBUG GroupClass.oDEBUG scalosmaster.library.oDEBUG PanelClass.oDEBUG IconPanelClass.oDEBUG PanelViewClass.oDEBUG
-OBJECTS             = SubRoutines.o      ScreenClass.o      WindowClass.o      MainTask.o      RootClass.o      AreaClass.o      WindowTaskClass.o      RectFillClass.o      BitmapClass.o      PlanarTestClass.o      Chunky8TestClass.o      ThreadRootClass.o      MethodSenderClass.o      GroupClass.o      scalosmaster.library.o      PanelClass.o      IconPanelClass.o      PanelViewClass.o
+OBJECTS_DEBUG       = SubRoutines.oDEBUG NodeListClass.oDEBUG DOSFileIconClass.oDEBUG TextClass.oDEBUG DOSIconClass.oDEBUG DOSListIconClass.oDEBUG TableClass.oDEBUG DOSDeviceIconClass.oDEBUG AmigaIconClass.oDEBUG DOSDirIconClass.oDEBUG GFXTestClass.oDEBUG IconClass.oDEBUG ScreenClass.oDEBUG WindowClass.oDEBUG MainTask.oDEBUG RootClass.oDEBUG AreaClass.oDEBUG WindowTaskClass.oDEBUG RectFillClass.oDEBUG BitmapClass.oDEBUG PlanarTestClass.oDEBUG Chunky8TestClass.oDEBUG ThreadRootClass.oDEBUG MethodSenderClass.oDEBUG GroupClass.oDEBUG scalosmaster.library.oDEBUG PanelClass.oDEBUG IconPanelClass.oDEBUG PanelViewClass.oDEBUG GraphicClass.oDEBUG
+OBJECTS             = SubRoutines.o      NodeListClass.o DOSFileIconClass.o TextClass.o DOSIconClass.o DOSListIconClass.o TableClass.o DOSDeviceIconClass.o AmigaIconClass.o DOSDirIconClass.o GFXTestClass.o IconClass.o ScreenClass.o      WindowClass.o      MainTask.o      RootClass.o      AreaClass.o      WindowTaskClass.o      RectFillClass.o      BitmapClass.o      PlanarTestClass.o      Chunky8TestClass.o      ThreadRootClass.o      MethodSenderClass.o      GroupClass.o      scalosmaster.library.o      PanelClass.o      IconPanelClass.o      PanelViewClass.o GraphicClass.o
 
 STARTUP             = LIB:c.o
 
@@ -60,6 +60,9 @@ RootClass.oDEBUG       : RootClass.c RootClass.h Scalos.h ScalosIntern.h smakefi
 WindowTaskClass.o      : WindowTaskClass.c WindowTaskClass.h Scalos.h ScalosIntern.h smakefile Debug.h
 WindowTaskClass.oDEBUG : WindowTaskClass.c WindowTaskClass.h Scalos.h ScalosIntern.h smakefile Debug.h
 
+GraphicClass.o      : GraphicClass.c GraphicClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+GraphicClass.oDEBUG : GraphicClass.c GraphicClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
 RectFillClass.o        : RectFillClass.c RectFillClass.h Scalos.h ScalosIntern.h smakefile Debug.h
 RectFillClass.oDEBUG   : RectFillClass.c RectFillClass.h Scalos.h ScalosIntern.h smakefile Debug.h
 
@@ -95,6 +98,43 @@ IconPanelClass.oDEBUG  : IconPanelClass.c IconPanelClass.h Scalos.h ScalosIntern
 
 PanelViewClass.o       : PanelViewClass.c PanelViewClass.h Scalos.h ScalosIntern.h smakefile Debug.h
 PanelViewClass.oDEBUG  : PanelViewClass.c PanelViewClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+IconClass.o       : IconClass.c IconClass.o.h Scalos.h ScalosIntern.h smakefile Debug.h
+DEBUG             : IconClass.c IconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+GFXTestClass.o       : GFXTestClass.c GFXTestClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+GFXTestClass.oDEBUG  : GFXTestClass.c GFXTestClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+DOSDirIconClass.o       : DOSDirIconClass.c DOSDirIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+DOSDirIconClass.oDEBUG  : DOSDirIconClass.c DOSDirIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+AmigaIconClass.o       : AmigaIconClass.c AmigaIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+AmigaIconClass.oDEBUG  : AmigaIconClass.c AmigaIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+DOSDeviceIconClass.o       : DOSDeviceIconClass.c DOSDeviceIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+DOSDeviceIconClass.oDEBUG  : DOSDeviceIconClass.c DOSDeviceIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+TableClass.o       : TableClass.c TableClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+TableClass.oDEBUG  : TableClass.c TableClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+DOSListIconClass.o       : DOSListIconClass.c DOSListIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+DOSListIconClass.oDEBUG  : DOSListIconClass.c DOSListIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+DOSIconClass.o       : DOSIconClass.c DOSIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+DOSIconClass.oDEBUG  : DOSIconClass.c DOSIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+TextClass.o       : TextClass.c TextClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+TextClass.oDEBUG  : TextClass.c TextClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+DOSFileIconClass.o       : DOSFileIconClass.c DOSFileIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+DOSFileIconClass.oDEBUG  : DOSFileIconClass.c DOSFileIconClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+NodeListClass.o       : NodeListClass.c NodeListClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+NodeListClass.oDEBUG  : NodeListClass.c NodeListClass.h Scalos.h ScalosIntern.h smakefile Debug.h
+
+
+#.o       : .c .h Scalos.h ScalosIntern.h smakefile Debug.h
+#.oDEBUG  : .c .h Scalos.h ScalosIntern.h smakefile Debug.h
 
 
 # Update revision
