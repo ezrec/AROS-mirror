@@ -1,6 +1,13 @@
-#   $Id$
-#
-#   Makefile to make DirOpus
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
 
-#MM- contrib-dopus : dopus-library DirOpus ConfigOpus
+include make.cfg
 
+SFILES := Package-Startup
+
+#MM contrib-dopus : dopus-library DirOpus ConfigOpus
+contrib-dopus : $(SFILES:%=$(DOPUSDIR)/S/%)
+
+$(DOPUSDIR)/S/% : S/%
+	@$(MKDIR) $(dir $@)
+	@$(CP) $< $@
