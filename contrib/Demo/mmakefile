@@ -14,7 +14,8 @@ include $(TOP)/config/make.cfg
 #MM		demo-parallax \
 #MM		demo-firework \
 #MM		demo-metaballs \
-#MM		demo-blackhole
+#MM		demo-blackhole \
+#MM		demo-rubberstrings
 
 SCRIPTFILES := startsomedemos
 DESTSCRIPTFILES := $(foreach f, $(SCRIPTFILES), $(CONTRIBDIR)/Demos/$(f))
