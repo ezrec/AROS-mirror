@@ -35,6 +35,13 @@ struct utsname
   char machine[_UTSNAME_LENGTH];
 };
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif
 int uname (struct utsname *name);
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* _UTSNAME_ALREADY_INCLUDED_ */

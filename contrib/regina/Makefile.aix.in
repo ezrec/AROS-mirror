@@ -12,11 +12,11 @@ THIS            = Makefile
 
 @SET_MAKE@
 
-ABI_MAJOR=2
-ABI_MINOR=2
-ABI=$(ABI_MAJOR).$(ABI_MINOR)
-VER=22
-VERDOT=2.2
+
+
+
+VER=@VERSION_NODOT@
+VERDOT=@VERSION@
 REG_DIR=Regina-$(VERDOT)
 
 srcdir  = @srcdir@
@@ -26,6 +26,8 @@ libdir  = @libdir@
 bindir  = @bindir@
 includedir  = @includedir@
 mandir  = @mandir@
+sharedir = $(prefix)/share/regina
+target = @target@
 
 INSTALL         = $(srcdir)/install-sh
 
@@ -33,7 +35,7 @@ CC              = @CC@
 LN_S            = @LN_S@
 CFLAGS          = @CFLAGS@
 
-CEXTRA =           @CEXTRA@ @DLFCNINCDIR@
+CEXTRA =           @CEXTRA@ @DLFCNINCDIR@ -DREGINA_SHARE_DIRECTORY=\"$(sharedir)\"
 DEBUG =            @DEBUG@
 TRACEMEM =         @TRACEMEM@
 FLISTS =           @FLISTS@
@@ -42,10 +44,10 @@ THREADING_LINK = @THREADING_LINK@
 SHL_SCRIPT = @SHL_SCRIPT@
 MT_FILE = @MT_FILE@
 EEXTRA =           @EEXTRA@
-EXECISER_DEP = @EXECISER_DEP@
+EXECISER_DEP =     @EXECISER_DEP@
 LIBPRE  =          @LIBPRE@
 LIBFILE  =         @LIBFILE@
-SHLFILE  =         @SHLFILE@
+SHLFILE =          @SHLFILE@
 ALLOCA =           @ALLOCA@
 ALLOCA_SHO =       @ALLOCA_SHO@
 STATICLIB =        @STATICLIB@
@@ -100,7 +102,7 @@ LIBDIR = $(TOPDIR)/lib
 MANEXT = l
 MANDIR = $(TOPDIR)/man/man$(MANEXT)
 
-MISCDEFS = -DFGC -DHAVE_CONFIG_H $(TRACEMEM) $(FLISTS) -I. -I$(srcdir) $(SYS_DEFS)
+MISCDEFS = -DHAVE_CONFIG_H $(TRACEMEM) $(FLISTS) -I. -I$(srcdir) $(SYS_DEFS)
 
 COPT = $(DEBUG) $(CFLAGS) $(CEXTRA) $(MISCDEFS) $(THREADING_COMPILE)
 LINKOPT = $(DEBUG) $(CFLAGS) $(EEXTRA) $(THREADING_LINK)
@@ -112,45 +114,41 @@ FILES = funcs builtin error variable interprt debug dbgfuncs \
         tracing interp cmath convert strings library strmath signals \
         macros envir extlib wrappers options doscmd #r2perl
 
-CSRCFILES = $(REG_DIR)/funcs.c $(REG_DIR)/builtin.c $(REG_DIR)/error.c $(REG_DIR)/variable.c \
-        $(REG_DIR)/interprt.c $(REG_DIR)/debug.c $(REG_DIR)/dbgfuncs.c $(REG_DIR)/memory.c $(REG_DIR)/parsing.c $(REG_DIR)/files.c \
-        $(REG_DIR)/misc.c $(REG_DIR)/unxfuncs.c $(REG_DIR)/cmsfuncs.c $(REG_DIR)/os2funcs.c $(REG_DIR)/shell.c $(REG_DIR)/rexxext.c $(REG_DIR)/stack.c \
-        $(REG_DIR)/tracing.c $(REG_DIR)/interp.c $(REG_DIR)/cmath.c $(REG_DIR)/convert.c $(REG_DIR)/strings.c $(REG_DIR)/library.c \
-        $(REG_DIR)/strmath.c $(REG_DIR)/signals.c $(REG_DIR)/macros.c $(REG_DIR)/envir.c $(REG_DIR)/expr.c \
-        $(REG_DIR)/extlib.c $(REG_DIR)/wrappers.c $(REG_DIR)/options.c $(REG_DIR)/doscmd.c \
-        $(REG_DIR)/alloca.c $(REG_DIR)/mt_notmt.c $(REG_DIR)/mt_win32.c $(REG_DIR)/mt_posix.c $(REG_DIR)/nosaa.c\
-        $(REG_DIR)/extstack.c
-
 OFILES = funcs.$(OBJ) builtin.$(OBJ) error.$(OBJ) variable.$(OBJ) \
-        interprt.$(OBJ) debug.$(OBJ) dbgfuncs.$(OBJ) memory.$(OBJ) parsing.$(OBJ) files.$(OBJ) \
-        misc.$(OBJ) unxfuncs.$(OBJ) cmsfuncs.$(OBJ) os2funcs.$(OBJ) shell.$(OBJ) rexxext.$(OBJ) stack.$(OBJ) \
-        tracing.$(OBJ) interp.$(OBJ) cmath.$(OBJ) convert.$(OBJ) strings.$(OBJ) library.$(OBJ) \
-        strmath.$(OBJ) signals.$(OBJ) macros.$(OBJ) envir.$(OBJ) expr.$(OBJ) \
-        extlib.$(OBJ) yaccsrc.$(OBJ) lexsrc.$(OBJ) options.$(OBJ) doscmd.$(OBJ) \
-        wrappers.$(OBJ) $(ALLOCA) $(MT_FILE).$(OBJ) instore.$(OBJ) rexxbif.$(OBJ) extstack.$(OBJ)
+	interprt.$(OBJ) debug.$(OBJ) dbgfuncs.$(OBJ) memory.$(OBJ) parsing.$(OBJ) files.$(OBJ) \
+	misc.$(OBJ) unxfuncs.$(OBJ) cmsfuncs.$(OBJ) os2funcs.$(OBJ) shell.$(OBJ) rexxext.$(OBJ) stack.$(OBJ) \
+	tracing.$(OBJ) interp.$(OBJ) cmath.$(OBJ) convert.$(OBJ) strings.$(OBJ) library.$(OBJ) \
+	strmath.$(OBJ) signals.$(OBJ) macros.$(OBJ) envir.$(OBJ) expr.$(OBJ) extstack.$(OBJ) \
+	extlib.$(OBJ) yaccsrc.$(OBJ) lexsrc.$(OBJ) options.$(OBJ) doscmd.$(OBJ) rexxbif.$(OBJ) \
+	wrappers.$(OBJ) $(ALLOCA) $(MT_FILE).$(OBJ) instore.$(OBJ) #r2perl.$(OBJ)
 
 SHOFILES = $(OFILES) \
-        drexx.$(OBJ) client.$(OBJ) rexxsaa.$(OBJ)
+	drexx.$(OBJ) client.$(OBJ) rexxsaa.$(OBJ)
 
 DEMODIR = $(REG_DIR)/demo
 DEMOFILES = $(DEMODIR)/*
 TRIPDIR = $(REG_DIR)/trip
 TRIPFILES = $(TRIPDIR)/*
 CONFFILES = $(REG_DIR)/configure.in $(REG_DIR)/config.h.in $(REG_DIR)/Makefile.in \
-        $(REG_DIR)/install-sh $(REG_DIR)/config.guess $(REG_DIR)/config.sub $(REG_DIR)/aclocal.m4 \
-        $(REG_DIR)/configure
+            $(REG_DIR)/install-sh $(REG_DIR)/config.guess $(REG_DIR)/config.sub $(REG_DIR)/aclocal.m4 \
+            $(REG_DIR)/configure
 YACCLEX_FILES = $(REG_DIR)/yaccsrc.y $(REG_DIR)/lexsrc.l
 
 ALLSRC = $(CFILES) $(HFILES)
 
-HFILES = $(REG_DIR)/rexx.h $(REG_DIR)/defs.h $(REG_DIR)/extern.h $(REG_DIR)/types.h \
-                $(REG_DIR)/strings.h $(REG_DIR)/configur.h $(REG_DIR)/yaccsrc.h \
-                $(REG_DIR)/rxiface.h $(REG_DIR)/rexxsaa.h $(REG_DIR)/utsname.h
-CFILES = $(CSRCFILES) $(REG_DIR)/yaccsrc.c $(REG_DIR)/lexsrc.c $(REG_DIR)/execiser.c \
-                $(REG_DIR)/rexxsaa.c $(REG_DIR)/rexx.c $(REG_DIR)/regina.c $(REG_DIR)/client.c \
-                $(REG_DIR)/r2perl.c $(REG_DIR)/test1.c $(REG_DIR)/test2.c
+MTSSRC = $(srcdir)/en.mts $(srcdir)/pt.mts $(srcdir)/no.mts \
+         $(srcdir)/de.mts $(srcdir)/es.mts
+MTBFILES = en.mtb pt.mtb no.mtb \
+           de.mtb es.mtb
 
-JUNK = *.o libregina* execiser rexx regina libtest*$(SHLPST) *.exp
+HFILES = $(REG_DIR)/rexx.h $(REG_DIR)/defs.h $(REG_DIR)/extern.h $(REG_DIR)/types.h \
+         $(REG_DIR)/strings.h $(REG_DIR)/configur.h $(REG_DIR)/yaccsrc.h \
+         $(REG_DIR)/rxiface.h $(REG_DIR)/rexxsaa.h $(REG_DIR)/utsname.h
+CFILES = $(CSRCFILES) $(REG_DIR)/yaccsrc.c $(REG_DIR)/lexsrc.c $(REG_DIR)/execiser.c \
+         $(REG_DIR)/rexxsaa.c $(REG_DIR)/rexx.c $(REG_DIR)/regina.c $(REG_DIR)/client.c \
+         $(REG_DIR)/r2perl.c $(REG_DIR)/test1.c $(REG_DIR)/test2.c
+
+JUNK = *.o $(STATICLIB) execiser$(EXE) threader$(EXE) rxqueue$(EXE) rxstack$(EXE) rexx$(EXE) trexx$(EXE) $(SHL_TARGETS) *.exp
 
 #.SUFFIXES: .sho $(SUFFIXES)
 #
@@ -158,7 +156,7 @@ JUNK = *.o libregina* execiser rexx regina libtest*$(SHLPST) *.exp
 #
 .SUFFIXES:
 
-all : rexx execiser$(EXE) $(SHL_TARGETS) rxstack rxqueue
+all : rexx$(EXE) execiser$(EXE) trexx$(EXE) $(SHL_TARGETS) rxstack$(EXE) rxqueue$(EXE) $(MTBFILES)
 
 $(srcdir)/rexx.h : $(srcdir)/extern.h $(srcdir)/strings.h $(srcdir)/defs.h $(srcdir)/types.h $(srcdir)/mt.h
 
@@ -170,6 +168,14 @@ rexx$(EXE) : $(OFILES) rexx.$(OBJ) nosaa.$(OBJ)
 
 regina$(EXE) : $(EXECISER_DEP) regina.$(OBJ)
 	$(PURIFY) $(CC) $(LINKOPT) $(DYNAMIC_LDFLAGS) -o regina$(EXE) regina.$(OBJ) $(LINKSHL) $(SHLIBS)
+	$(LDEXTRA)
+
+trexx$(EXE) : trexx.$(OBJ) $(OFILES) rexxsaa.$(OBJ) client.$(OBJ) drexx.$(OBJ)
+	$(PURIFY) $(CC) $(LINKOPT) $(STATIC_LDFLAGS) -o trexx$(EXE) trexx.$(OBJ) rexxsaa.$(OBJ) client.$(OBJ) drexx.$(OBJ) $(OFILES) $(BOTHLIBS)
+	$(LDEXTRA)
+
+tregina$(EXE) : $(EXECISER_DEP) tregina.$(OBJ)
+	$(PURIFY) $(CC) $(LINKOPT) $(DYNAMIC_LDFLAGS) -o tregina$(EXE) tregina.$(OBJ) $(LINKSHL) $(BOTHLIBS) $(SHLIBS)
 	$(LDEXTRA)
 
 execiser$(EXE) : execiser.$(OBJ) $(EXECISER_DEP)
@@ -195,10 +201,22 @@ $(SHLPRE)$(SHLFILE)$(SHLPST): $(SHOFILES) $(REGINAEXP)
 # Rules for lex and yacc source - not used at this stage
 #
 #$(srcdir)/yaccsrc.h $(srcdir)/yaccsrc.c: $(srcdir)/yaccsrc.y
-#        bison -o$(srcdir)/yaccsrc.c -d $(srcdir)/yaccsrc.y
+#	bison -o$(srcdir)/yaccsrc.c -d $(srcdir)/yaccsrc.y
 #
 #$(srcdir)/lexsrc.c: $(srcdir)/lexsrc.l
-#        flex -Scontrib/flex.skl -8 -o$(srcdir)/lexsrc.c $(srcdir)/lexsrc.l
+#	flex -Scontrib/flex.skl -8 -o$(srcdir)/lexsrc.c $(srcdir)/lexsrc.l
+
+#
+# Convert .mts to .mtb
+#
+$(MTBFILES): msgcmp$(EXE) $(MTSSRC)
+	./msgcmp $(MTSSRC)
+
+msgcmp$(EXE): msgcmp.$(OBJ)
+	$(PURIFY) $(CC) $(LINKOPT) -o msgcmp$(EXE) msgcmp.$(OBJ)
+
+msgcmp.$(OBJ): $(srcdir)/msgcmp.c
+	$(CC) $(COPT) $(CC2O) -c $(srcdir)/msgcmp.c
 
 #
 # Rules for static objects
@@ -251,7 +269,7 @@ shell.$(OBJ) :   $(srcdir)/shell.c
 rexxext.$(OBJ) : $(srcdir)/rexxext.c
 	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(srcdir)/rexxext.c
 
-stack.$(OBJ) :   $(srcdir)/stack.c
+stack.$(OBJ) :   $(srcdir)/stack.c $(srcdir)/extstack.h $(srcdir)/rexxbif.h
 	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(srcdir)/stack.c
 
 tracing.$(OBJ) : $(srcdir)/tracing.c
@@ -361,6 +379,18 @@ erexxbif.$(OBJ) : $(srcdir)/rexxbif.c $(srcdir)/rexxbif.h
 	$(CC) -DEXTERNAL_TO_REGINA $(COPT) $(CC2O) $(DYN_COMP) -c $(srcdir)/rexxbif.c
 
 #
+# Rules for Regina tokeniser targets
+#
+trexx.$(OBJ) : $(srcdir)/tregina.c
+	-mv tregina.$(OBJ) tregina$(OSAVE)
+	$(CC) $(COPT) $(DYN_COMP) -c $(srcdir)/tregina.c
+	-mv tregina.$(OBJ) trexx.$(OBJ)
+	-mv tregina$(OSAVE) tregina.$(OBJ)
+
+tregina.$(OBJ) : $(srcdir)/tregina.c
+	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(srcdir)/tregina.c
+
+#
 # Rules for sample programs
 #
 test1.$(OBJ): $(srcdir)/test1.c
@@ -402,7 +432,7 @@ zip:
 	(cd $(srcdir)/..; \
 	zip regna$(VER) $(ARCHIVE_FILES) )
 
-binary: ./rexx
+binary: all
 	-rm -fr ./tmpdir
 	-mkdir -p ./tmpdir/bin
 	-mkdir -p ./tmpdir/lib
@@ -421,26 +451,36 @@ install: all
 	$(INSTALL) -m 755 -d $(bindir)
 	$(INSTALL) -m 755 -d $(libdir)
 	$(INSTALL) -m 755 -d $(includedir)
-	$(INSTALL) -m 755 -d $(prefix)/rexx
+	$(INSTALL) -m 755 -d $(sharedir)
 	$(INSTALL) -m 755 -d $(mandir)/man1
 	$(INSTALL) -m 755 -c ./rexx $(bindir)/rexx
-	$(INSTALL) -m 755 -c ./$(LIBPRE)$(LIBFILE).a $(libdir)/$(LIBPRE)$(LIBFILE).a
+	$(INSTALL) -m 755 -c ./rxqueue $(bindir)/rxqueue
+	$(INSTALL) -m 755 -c ./rxstack $(bindir)/rxstack
+	$(INSTALL) -m 755 -c ./regina $(bindir)/regina
+	$(INSTALL) -m 755 -c ./trexx $(bindir)/trexx
+	$(INSTALL) -m 755 -c ./tregina $(bindir)/tregina
+	$(INSTALL) -m 755 -c ./regina-config $(bindir)/$(SHLFILE)-config
+	$(INSTALL) -m 755 -c ./$(SHLPRE)$(SHLFILE).a $(libdir)/$(SHLPRE)$(SHLFILE).a
 	$(INSTALL) -m 744 -c $(srcdir)/rexx.1 $(mandir)/man1/rexx.1
 	$(INSTALL) -m 744 -c $(srcdir)/rexxsaa.h $(includedir)/rexxsaa.h
-	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/rexxcps.rexx  $(prefix)/rexx/rexxcps.rexx
-	-chmod 755 $(prefix)/rexx/rexxcps.rexx
-	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/animal.rexx   $(prefix)/rexx/animal.rexx
-	-chmod 755 $(prefix)/rexx/animal.rexx
-	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/block.rexx    $(prefix)/rexx/block.rexx
-	-chmod 755 $(prefix)/rexx/block.rexx
-	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/dateconv.rexx $(prefix)/rexx/dateconv.rexx
-	-chmod 755 $(prefix)/rexx/dateconv.rexx
-	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/timeconv.rexx $(prefix)/rexx/timeconv.rexx
-	-chmod 755 $(prefix)/rexx/timeconv.rexx
-	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/dynfunc.rexx  $(prefix)/rexx/dynfunc.rexx
-	-chmod 755 $(prefix)/rexx/dynfunc.rexx
-	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/newstr.rexx   $(prefix)/rexx/newstr.rexx
-	-chmod 755 $(prefix)/rexx/newstr.rexx
+	$(INSTALL) -m 744 -c ./pt.mtb $(sharedir)/pt.mtb
+	$(INSTALL) -m 744 -c ./no.mtb $(sharedir)/no.mtb
+	$(INSTALL) -m 744 -c ./de.mtb $(sharedir)/de.mtb
+	$(INSTALL) -m 744 -c ./es.mtb $(sharedir)/es.mtb
+	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/rexxcps.rexx  $(sharedir)/rexxcps.rexx
+	-chmod 755 $(sharedir)/rexxcps.rexx
+	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/animal.rexx   $(sharedir)/animal.rexx
+	-chmod 755 $(sharedir)/animal.rexx
+	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/block.rexx    $(sharedir)/block.rexx
+	-chmod 755 $(sharedir)/block.rexx
+	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/dateconv.rexx $(sharedir)/dateconv.rexx
+	-chmod 755 $(sharedir)/dateconv.rexx
+	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/timeconv.rexx $(sharedir)/timeconv.rexx
+	-chmod 755 $(sharedir)/timeconv.rexx
+	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/dynfunc.rexx  $(sharedir)/dynfunc.rexx
+	-chmod 755 $(sharedir)/dynfunc.rexx
+	$(bindir)/rexx $(srcdir)/preinst.rexx $(bindir)/rexx $(srcdir)/demo/newstr.rexx   $(sharedir)/newstr.rexx
+	-chmod 755 $(sharedir)/newstr.rexx
 	$(INSTALL) -m 755 -c ./regina $(bindir)/regina
 	$(INSTALL) -m 755 -c ./$(SHLPRE)test1$(SHLPST) $(libdir)/$(SHLPRE)test1$(SHLPST)
 	$(INSTALL) -m 755 -c ./$(SHLPRE)test2$(SHLPST) $(libdir)/$(SHLPRE)test2$(SHLPST)

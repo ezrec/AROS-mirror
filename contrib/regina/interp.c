@@ -62,7 +62,7 @@ streng *dointerpret( tsd_t *TSD, streng *string )
    if (parsing.result != 0)
    {
       Free_stringTSD(string) ;
-      exiterror( ERR_YACC_SYNTAX, 0 ) ;
+      exiterror( ERR_YACC_SYNTAX, 1, parsing.tline ) ;
       return NULL ;
    }
 

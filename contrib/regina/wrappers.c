@@ -62,14 +62,14 @@
 
 /*
  * Most Unix systems have dlopen(), so set this as the default and
- * unset it for platforms that don't have it
+ * unset it for platforms that don't have it - except for HPUX
  */
-# if defined(HAVE_DLFCN_H)
-#  define DYNAMIC_DLOPEN
-# endif
-
 # if defined(__hpux)
 #  define DYNAMIC_HPSHLOAD
+# endif
+
+# if defined(HAVE_DLFCN_H) && !defined(DYNAMIC_HPSHLOAD)
+#  define DYNAMIC_DLOPEN
 # endif
 
 # if defined(DYNAMIC_DLOPEN)
@@ -161,24 +161,23 @@ void *wrapper_dummy_for_aix( void )
 #endif
 
 /* versions of strlwr & strupr to simulate case-insensitivity */
-static void rxstrlwr(unsigned char * s)
+static void rxstrlwr(unsigned char * s, unsigned char *e)
 {
-   while (*s) 
+   while (*s && s != e)
    {
-      *s = tolower(*s);
+      *s = (unsigned char) (tolower(*s));
       s++;
    }
 }
 
-static void rxstrupr(unsigned char * s)
+static void rxstrupr(unsigned char * s, unsigned char *e)
 {
-   while (*s) 
+   while (*s && s != e)
    {
-      *s = toupper(*s);
+      *s = (unsigned char) (toupper(*s));
       s++;
    }
 }
-
 
 
 void *wrapper_load( const tsd_t *TSD, const streng *module )
@@ -194,7 +193,7 @@ void *wrapper_load( const tsd_t *TSD, const streng *module )
 #if defined(DYNAMIC_HPSHLOAD)
    char buf[1024];
 #endif
-   char *file_name,*module_name, *udpart;
+   char *file_name, *module_name, *udpart, *postfix;
 
 #ifndef DYNLIBLEN
    file_name = module_name = str_ofTSD(module);
@@ -206,6 +205,7 @@ void *wrapper_load( const tsd_t *TSD, const streng *module )
    memcpy(udpart, module->value, Str_len(module) );
    strcpy(udpart + Str_len(module), DYNLIBPST );
    file_name = module_name;
+   postfix = udpart + Str_len(module);
 # if defined(DYNAMIC_HPSHLOAD)
    find_shared_library(TSD,module_name,"SHLIB_PATH",buf);
    file_name = buf;
@@ -218,13 +218,23 @@ void *wrapper_load( const tsd_t *TSD, const streng *module )
    /* deal with incorrect case in call */
    if (handle == NULL) 
    {
-      rxstrlwr(udpart);
+      rxstrlwr(udpart,postfix);
       handle = dlopen(module_name, RTLD_LAZY);
 
       if (handle == NULL) 
       {                  
-         rxstrupr(udpart);
+         rxstrupr(udpart,postfix);
          handle = dlopen(module_name, RTLD_LAZY);
+         /*
+          * Reset the original module portion of the filename to be
+          * searched again so that any error message returned uses the
+          * original module name
+          */
+         if ( handle == NULL )
+         {
+            memcpy(udpart, module->value, Str_len(module) );
+            handle = dlopen(module_name, RTLD_LAZY);
+         }
       }
    }
 
@@ -239,18 +249,18 @@ void *wrapper_load( const tsd_t *TSD, const streng *module )
          set_err_message(TSD, "", "");
    }
 #elif defined(DYNAMIC_HPSHLOAD)
-   handle = shl_load( file_name, BIND_IMMEDIATE | BIND_VERBOSE | DYNAMIC_PATH ,0L ) ;
+   handle = shl_load( file_name, BIND_IMMEDIATE | DYNAMIC_PATH, 0L ) ;
    if (handle == NULL) 
    {
-      rxstrlwr(udpart);
+      rxstrlwr(udpart,postfix);
       find_shared_library(TSD,module_name,"SHLIB_PATH",buf);
-      handle = shl_load( file_name, BIND_IMMEDIATE | BIND_VERBOSE | DYNAMIC_PATH ,0L ) ;
+      handle = shl_load( file_name, BIND_IMMEDIATE | DYNAMIC_PATH ,0L ) ;
 
       if (handle == NULL) 
       {
-         rxstrupr(udpart);
+         rxstrupr(udpart,postfix);
          find_shared_library(TSD,module_name,"SHLIB_PATH",buf);
-         handle = shl_load( file_name, BIND_IMMEDIATE | BIND_VERBOSE | DYNAMIC_PATH ,0L ) ;
+         handle = shl_load( file_name, BIND_IMMEDIATE | DYNAMIC_PATH ,0L ) ;
       }
    }
 
@@ -309,10 +319,25 @@ PFN wrapper_get_addr( const tsd_t *TSD, const struct library *lptr, const streng
 #if defined(DYNAMIC_BEOS)
    status_t rc=0;
 #endif
+#if defined(MODULES_NEED_USCORE)
+   streng *us_func;
+#endif
 
    funcname = str_of( TSD, name ) ;
 
 #if defined(DYNAMIC_DLOPEN)
+# if defined(MODULES_NEED_USCORE)
+   /*
+    * Some platforms need to have an underscore prepended to the function
+    * name to be found in a loadable module.
+    */
+   FreeTSD( funcname );
+   us_func = Str_makeTSD( Str_len( name ) + 1 );
+   memcpy( us_func->value, "_", 1 );
+   us_func->len = 1;
+   Str_catTSD( us_func, name );
+   funcname = str_of( TSD, us_func );
+# endif
    /*
     * Note, the following assignment is not allowed by ANSI, but SVR4.2
     * includes it as an example, so it is probably safe in this context
@@ -322,12 +347,12 @@ PFN wrapper_get_addr( const tsd_t *TSD, const struct library *lptr, const streng
    /* deal with, eg 'SysLoadFuncs' when the function is 'sysloadfuncs' or 'SYSLOADFUNCS' */
    if (addr == NULL) 
    {
-      rxstrupr(funcname);
+      rxstrupr(funcname,NULL);
       addr = (PFN)(dlsym( handle, funcname )) ;
 
       if (addr == NULL) 
       {
-         rxstrlwr(funcname);
+         rxstrlwr(funcname,NULL);
          addr = (PFN)(dlsym( handle, funcname )) ;
 
          if (addr==NULL)
@@ -342,10 +367,10 @@ PFN wrapper_get_addr( const tsd_t *TSD, const struct library *lptr, const streng
 
       if (rc = shl_findsym( &handle, funcname, TYPE_PROCEDURE, &eaddr ))
       {
-         rxstrupr(funcname);
+         rxstrupr(funcname,NULL);
          if (rc = shl_findsym( &handle, funcname, TYPE_PROCEDURE, &eaddr ))
          {
-            rxstrlwr(funcname);
+            rxstrlwr(funcname,NULL);
             if (rc = shl_findsym( &handle, funcname, TYPE_PROCEDURE, &eaddr ))
             {
                addr = NULL ;
@@ -364,7 +389,7 @@ PFN wrapper_get_addr( const tsd_t *TSD, const struct library *lptr, const streng
    if (rc)
    {
       char buf[150];
-      sprintf(buf,"DosQueryProcAddr() failed with %d looking for %s", rc, funcname );
+      sprintf(buf,"DosQueryProcAddr() failed with %ld looking for %s", (long) rc, funcname );
       set_err_message(TSD, buf, "" ) ;
    }
 #elif defined(DYNAMIC_WIN32)
@@ -384,9 +409,8 @@ PFN wrapper_get_addr( const tsd_t *TSD, const struct library *lptr, const streng
          addr = (PFN)GetProcAddress((HMODULE)handle, funcname);
          if (addr == NULL)
          {
-            char buf[256];
             FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT), LoadError, 256, NULL ) ;
-            set_err_message(TSD, "GetProcAddress() failed: ", buf ) ;
+            set_err_message(TSD, "GetProcAddress() failed: ", LoadError ) ;
          }
       }
    }

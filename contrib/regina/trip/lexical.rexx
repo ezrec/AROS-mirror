@@ -70,7 +70,7 @@ data.7.2 = ''
 data.8.caption = 'strings'
 data.8.1 = 6  "foo = 'bar"
 data.8.2 = 6  'foo = "bar'
-data.8.3 = 6  "foo = bar /* "
+data.8.3 = 6  "foo = bar /* " /**/
 data.8.4 = ''
 
 data.9.caption = 'when'
@@ -137,24 +137,24 @@ data.14.4 = 19 'call +34'
 data.14.5 = ''
 
 data.15.caption = 'symbols'
-data.15.1 = 20 'call on foobar'
-data.15.2 = 20 'call on "name"'
-data.15.3 = 20 'call on failure name "foobar"'
-data.15.4 = 20 'call on'
-data.15.5 = 20 'call on name foo'
-data.15.6 = 20 'call on failure name'
+data.15.1 = 25 'call on foobar'
+data.15.2 = 25 'call on "name"'
+data.15.3 = 19 'call on failure name "foobar"'
+data.15.4 = 25 'call on'
+data.15.5 = 25 'call on name foo'
+data.15.6 = 19 'call on failure name'
 data.15.7 = 20 'do i=3 to 5; nop; end "i"'
 data.15.8 = 20 'do i=3 to 5; nop; end +i'
 data.15.9 = 20 'do i=3 to 5; iterate "i"; end'
 data.15.10= 20 'do i=3 to 5; iterate +i; end'
 data.15.11= 20 'do i=3 to 5; leave "i"; end'
 data.15.12= 20 'do i=3 to 5; leave +i; end'
-data.15.13= 20 'signal on foobar'
-data.15.14= 20 'signal on "name"'
-data.15.15= 20 'signal on failure name "foobar"'
-data.15.16= 20 'signal on'
-data.15.17= 20 'signal on name foo'
-data.15.18= 20 'signal on failure name'
+data.15.13= 25 'signal on foobar'
+data.15.14= 25 'signal on "name"'
+data.15.15= 19 'signal on failure name "foobar"'
+data.15.16= 25 'signal on'
+data.15.17= 25 'signal on name foo'
+data.15.18= 19 'signal on failure name'
 data.15.19= 25 'numeric foobar'
 data.15.20= 25 'numeric form foobar'
 data.15.21= 25 'foobar='fff';numeric form (foobar)'
@@ -166,7 +166,7 @@ data.15.26= ''
 
 data.16.caption = 'trailers'
 data.16.1 = 25 'call on failure foo'
-data.16.2 = 21 'call on failure name testing foo'
+data.16.2 = 19 'call on failure name testing foo'
 data.16.3 = 21 'call off failure foo'
 data.16.4 = 21 'do forever foo; leave; end'
 data.16.5 = 10 'do 3; leave; end foo'
@@ -179,7 +179,7 @@ data.16.11= 21 'numeric form engineering foo'
 data.16.12= 21 'select foo; when 1 then nop; end'
 data.16.13= 10 'select; when 1 then nop; end foo'
 data.16.14= 21 'signal foo bar'
-data.16.15= 21 'signal on novalue name foo bar'
+data.16.15= 19 'signal on novalue name foo bar'
 data.16.16= 21 'signal off novalue name foo'
 data.16.17= 21 'signal off novalue foo'
 data.16.18= 21 'trace off forever'
@@ -292,6 +292,7 @@ j = 1
          if rc\=num then do
             say 
             say 'Reports "'string'" as syntax error' rc', not' num
+            say condition('e')
             end
 
    endofloop:

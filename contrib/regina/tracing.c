@@ -34,9 +34,11 @@ static char *RCSid = "$Id$";
 
 
 typedef struct { /* tra_tsd: static variables of this module (thread-safe) */
-   int  traceflag;
+   int  traceflag;   /* boolean: 1 indicates that trace output is NOT displayed */
    int  lasttracedline;
    int  ctrlcounter;
+   int  intercount;  /* number of times to execute trace without interaction */
+   int  quiet;       /* boolean: run quietly in interaction trace */
    int  notnow;
    char tracestr[LINELENGTH+1] ;
    char buf0[32] ;
@@ -164,7 +166,7 @@ void tracecompound( const tsd_t *TSD, const streng *stem, int length, const stre
    tra_tsd_t *tt;
 
    tt = TSD->tra_tsd;
-   if ((tt->traceflag)||(TSD->trace_stat!='I'))
+   if ( (tt->traceflag) || (TSD->trace_stat!='I') || tt->quiet )
       return ;
 
    message = Str_makeTSD( stem->len + index->len + 30 + tt->ctrlcounter ) ;
@@ -192,10 +194,12 @@ static void tracemsg( const tsd_t *TSD )
 {
    streng *message=NULL ;
    int rc=0 ;
-   char *msg= "       +++ Interactive trace. TRACE OFF to end debug, ENTER to continue. +++" ;
+   const char *msg;
 
    rc = HOOK_GO_ON ;
-   message = Str_creTSD( msg ) ;
+   msg = errortext( TSD, 0, 3, 0, 0 );
+   message = Str_makeTSD( 12 + strlen( msg ) );
+   message->len = sprintf( message->value, "       +++ %s", msg );
    printout( TSD, message ) ;
    Free_stringTSD( message ) ;
 }
@@ -207,7 +211,20 @@ int intertrace( tsd_t *TSD )
    tra_tsd_t *tt;
 
    tt = TSD->tra_tsd;
-   if (tt->traceflag)
+
+   if ( tt->intercount )
+   {
+      tt->intercount -= 1;
+      if ( tt->intercount == 0 )
+      {
+         tt->quiet = 0;
+         tt->traceflag = 0;
+      }
+      else
+         return 0;
+   }
+
+   if ( tt->traceflag )
       return 0 ;
 
    if (tt->notnow==1)
@@ -220,11 +237,11 @@ int intertrace( tsd_t *TSD )
       tt->notnow = 0 ;
       tracemsg(TSD) ;
    }
-
    tt->traceflag = 1 ;
    retvalue1 = (-1) ;
 
-   for (; retvalue1<0; ) {
+   for (; retvalue1<0; ) 
+   {
       rc = HOOK_GO_ON ;
       if (TSD->systeminfo->hooks & HOOK_MASK(HOOK_TRCIN))
          rc = hookup_input( TSD, HOOK_TRCIN, &str ) ;
@@ -247,7 +264,18 @@ int intertrace( tsd_t *TSD )
       {
          dointerpret( TSD, str ) ;
          if (!TSD->systeminfo->interactive)
+         {
+            tt->intercount = tt->quiet = 0;
             return 0 ;
+         }
+         if ( tt->intercount )
+         {
+            if ( tt->quiet )
+               tt->traceflag = 1 ;
+            else
+               tt->traceflag = 0 ;
+            return 0;
+         }
       }
    }
 
@@ -262,7 +290,7 @@ void tracenumber( const tsd_t *TSD, const num_descr *num, char type )
    num_descr nd;
 
    tt = TSD->tra_tsd;
-   if (tt->traceflag)
+   if ( tt->traceflag || tt->quiet )
       return ;
 
    tmpch = TSD->currlevel->tracestat ;
@@ -290,7 +318,7 @@ void tracebool( const tsd_t *TSD, int value, char type )
    tra_tsd_t *tt;
 
    tt = TSD->tra_tsd;
-   if (tt->traceflag)
+   if ( tt->traceflag || tt->quiet )
       return ;
 
    tmpch = TSD->currlevel->tracestat ;
@@ -312,7 +340,7 @@ void tracevalue( const tsd_t *TSD, const streng *str, char type )
    tra_tsd_t *tt;
 
    tt = TSD->tra_tsd;
-   if (tt->traceflag)
+   if ( tt->traceflag || tt->quiet )
       return ;
 
    tmpch = TSD->currlevel->tracestat ;
@@ -334,7 +362,7 @@ void traceline( const tsd_t *TSD, const treenode *this, char tch, int offset )
    tra_tsd_t *tt;
 
    tt = TSD->tra_tsd;
-   if ((tch=='O')||(tt->traceflag))
+   if ( (tch=='O') || (tt->traceflag) || tt->quiet )
       return ;
 
    if ((this->charnr<0)||(this->lineno<0))
@@ -409,12 +437,8 @@ void traceback( const tsd_t *TSD )
          ptr = ss->callstack[i] ;
          if (!ptr)
             continue ;
-#if OLD_OPTIONS
-         if (--j>12 && TSD->currlevel->u.options.prune_trace)
-#else
          if ( -- j > 12
          && get_options_flag( TSD->currlevel, EXT_PRUNE_TRACE ) )
-#endif
             sprintf(tt->tracefmt,"%%6d +++ [...] %%%ds%%s", 30 ) ;
          else
             sprintf(tt->tracefmt,"%%6d +++ %%%ds%%s", (j)*3 ) ;
@@ -443,7 +467,7 @@ void queue_trace_char( const tsd_t *TSD, char ch2 )
    if (tt->bufptr0<32)
       tt->buf0[tt->bufptr0++]=ch2 ;
    else
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 }
 
 void flush_trace_chars( tsd_t *TSD )
@@ -460,9 +484,11 @@ void flush_trace_chars( tsd_t *TSD )
 
 void set_trace_char( tsd_t *TSD, char ch2 )
 {
-   switch (ch2=(char)toupper(ch2)) {
+   switch (ch2=(char)toupper(ch2)) 
+   {
       case '?':
          ch2 = (char) (TSD->systeminfo->interactive = !TSD->systeminfo->interactive) ;
+         TSD->currlevel->traceint = (char) TSD->systeminfo->interactive ; /* MDW 30012002 */
          if (ch2)
             starttrace(TSD) ;
          break ;
@@ -478,27 +504,56 @@ void set_trace_char( tsd_t *TSD, char ch2 )
       case 'N':
       case 'O':
       case 'R':
-      case 'S':
          TSD->currlevel->tracestat=ch2 ;
          break ;
 
       default:
-          exiterror( ERR_INVALID_TRACE, 1, "?ACEFILNORS", ch2 )  ;
+         exiterror( ERR_INVALID_TRACE, 1, "ACEFILNOR", ch2 )  ;
    }
 
-   if (ch2=='O')
-      TSD->systeminfo->interactive = 0 ;
+   if ( ch2 == 'O' )
+      TSD->systeminfo->interactive = TSD->currlevel->traceint = 0 ; /* MDW 30012002 */
+      /* MDW 30012002 - above line replaces this one TSD->systeminfo->interactive = 0 ; */
    TSD->trace_stat = TSD->currlevel->tracestat ;
 }
 
 void set_trace( tsd_t *TSD, const streng *setting )
 {
    int cptr=0 ;
+   tra_tsd_t *tt;
 
    if (myisnumber(setting))
    {
-      if (myiswnumber(TSD, setting))
+      if ( myiswnumber(TSD, setting) )
+      {
+         cptr = myatol( TSD, setting );
+         /*
+          * If the number is positive, interactive tracing continues
+          * for the supplied number of clauses, but no pausing is done.
+          * If the number is negative, no trace output is inhibited
+          * (as is the pauses) for the supplied number of clauses.
+          * If the number is zero, this is the same as TRACE OFF
+          */
+         tt = TSD->tra_tsd;
+         if ( cptr == 0 )
+         {
+            TSD->systeminfo->interactive = TSD->currlevel->traceint = 0 ; /* MDW 30012002 */
+            /* MDW 30012002 - above line replaces this one TSD->currlevel->tracestat = 'O' ; */
+            TSD->systeminfo->interactive = 0 ;
+            TSD->trace_stat = TSD->currlevel->tracestat ;
+         }
+         else if ( cptr > 0 )
+         {
+            tt->quiet = 0;
+            tt->intercount = cptr+1;
+         }
+         else
+         {
+            tt->quiet = 1;
+            tt->intercount = (-cptr)+1;
+         }
          return ;  /* need to do something else ... */
+      }
       else
          exiterror( ERR_INVALID_INTEGER, 7, tmpstr_of( TSD, setting ) )  ;
    }

@@ -10,7 +10,7 @@
 
 #include "rexxsaa.h"
 
-#define STARTUPMSG "       +++ Interactive trace. TRACE OFF to end debug, ENTER to continue. +++"
+#define STARTUPMSG "       +++ Interactive trace.  \"Trace Off\" to end debug. ENTER to continue."
 
 #ifdef _MSC_VER
 /* This picky compiler claims about unused formal parameters.

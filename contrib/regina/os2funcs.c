@@ -29,6 +29,7 @@ static char *RCSid = "$Id$";
 # define DONT_TYPEDEF_PFN
 # include <io.h>
 # include <os2emx.h>
+# include <fcntl.h>
 #endif
 
 #include "rexx.h"
@@ -57,9 +58,9 @@ static char *RCSid = "$Id$";
 # ifdef HAVE_UNISTD_H
 #  include <unistd.h>
 # endif
-# ifdef _MSC_VER
-#  include <io.h>
+# if defined(_MSC_VER) && !defined(__WINS__)
 #  include <direct.h>
+#  include <io.h>
 # endif
 #elif defined(MAC)
 # include "mac.h"
@@ -75,10 +76,6 @@ static char *RCSid = "$Id$";
 # ifdef HAVE_UNISTD_H
 #  include <unistd.h>
 # endif
-#endif
-
-#ifdef HAVE_LINUX_STAT_H_NO
-# include <linux/stat.h>
 #endif
 
 #ifdef DJGPP
@@ -191,7 +188,21 @@ streng *os2_beep( tsd_t *TSD, cparamboxptr parms )
 
 #if defined(WIN32)
    Beep( (DWORD)freq, (DWORD)dur );
-#elif defined(DOS) && defined(__EMX__)
+#elif defined (__EMX__)
+   if (_osmode != DOS_MODE)
+      DosBeep( freq, dur );
+   else
+   {
+      int hdl;
+
+      /* stdout and/or stderr may be redirected */
+      if ((hdl = open("con", O_WRONLY)) != -1)
+      {
+         write(hdl, "\x07" /* ^G == bell */, 1);
+         close(hdl);
+      }
+   }
+#elif defined(DOS)
    putchar(7);
 #elif defined(OS2)
    DosBeep( freq, dur );
@@ -205,7 +216,8 @@ streng *os2_beep( tsd_t *TSD, cparamboxptr parms )
    sound( freq );
    delay( dur );
    nosound( );
-#else
+#elif defined(__WINS__) || defined(__EPOC32__)
+   beep( freq, dur );
 #endif
    return nullstringptr();
 }
@@ -228,7 +240,7 @@ streng *os2_filespec( tsd_t *TSD, cparamboxptr parms )
 #endif
 
    checkparam(  parms,  2,  2 , "FILESPEC" ) ;
-   format = getoptionchar( TSD, parms->value, "FILESPEC", 1, "DNP" ) ;
+   format = getoptionchar( TSD, parms->value, "FILESPEC", 1, "DNP", "?" ) ;
    inpath = Str_dupstrTSD( parms->next->value ) ;
 #if defined(DJGPP)
    fnsplit( inpath->value, fdrive, fdir, fname, fext );

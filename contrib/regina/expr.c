@@ -329,7 +329,7 @@ do_an_add:
          return numthr ;
 
       default:
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          return NULL ;
    }
 
@@ -441,6 +441,17 @@ cnsnt:   if (kill)
          paramboxptr args ;
          streng *ptr ;
 
+         /*
+          * Check if the internal function name ends with a '.'.
+          * This is an error in the ANSI standard, but it is possible
+          * that existing code allows this, so only generate an error
+          * if STRICT_ANSI OPTION is set.
+          */
+         if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+         {
+            if ( this->name->value[(this->name->len)-1] == '.' )
+               exiterror( ERR_UNQUOTED_FUNC_STOP, 1, tmpstr_of( TSD, this->name ) )  ;
+         }
          if ((entry=this->u.node)!=NULL)
          {
             nodeptr savecurrentnode;  /* pgb */
@@ -456,7 +467,7 @@ cnsnt:   if (kill)
             TSD->currentnode = savecurrentnode; /* pgb */
 
             if (ptr==NULL)
-                exiterror( ERR_NO_DATA_RETURNED, 0 )  ;
+               exiterror( ERR_NO_DATA_RETURNED, 1, tmpstr_of( TSD, this->name ) )  ;
 
             popcallstack(TSD,stackmark) ;
             removelevel( TSD, TSD->currlevel ) ;
@@ -471,7 +482,7 @@ cnsnt:   if (kill)
             return ptr ;
          }
       }
-
+      /* THIS IS MEANT TO FALL THROUGH! */
       case X_IS_BUILTIN:
       case X_EX_FUNC:
       {
@@ -485,7 +496,7 @@ cnsnt:   if (kill)
                *kill = ptr ;
 
             if (!ptr)
-                exiterror( ERR_NO_DATA_RETURNED, 0 )  ;
+                exiterror( ERR_NO_DATA_RETURNED, 1, tmpstr_of( TSD, this->name ) )  ;
 
             if (TSD->trace_stat=='I')
                tracevalue( TSD, ptr, 'F' ) ;
@@ -501,6 +512,9 @@ cnsnt:   if (kill)
          streng *ptr, *command ;
          int stackmark ;
          paramboxptr args, targs ;
+
+         if ( TSD->restricted )
+            exiterror( ERR_RESTRICTED, 5 )  ;
 
          update_envirs( TSD, TSD->currlevel ) ;
 
@@ -526,7 +540,7 @@ cnsnt:   if (kill)
 
          if (!ptr)
          {
-             exiterror( ERR_ROUTINE_NOT_FOUND, 0 )  ;
+            exiterror( ERR_ROUTINE_NOT_FOUND, 0 )  ;
             ptr = nullstringptr() ;
          }
          if (kill)
@@ -539,8 +553,11 @@ cnsnt:   if (kill)
 #else
 
          stackmark = pushcallstack( TSD, TSD->currentnode ) ;
-         ptr = execute_external(TSD,this->name,args,
-                                TSD->systeminfo->environment,NULL,0,
+         ptr = execute_external(TSD,this->name,
+                                args,
+                                TSD->systeminfo->environment,
+                                NULL,
+                                TSD->systeminfo->hooks,
                                 INVO_FUNCTION);
          popcallstack( TSD, stackmark ) ;
 
@@ -550,13 +567,10 @@ cnsnt:   if (kill)
              * "this->name" wasn't a Rexx program, so
              * see if it is an OS command.
              * Only do this if the OPTIONS EXT_COMMANDS_AS_FUNCS is
-             * set.
+             * set and STRICT_ANSI is NOT set.
              */
-#if OLD_OPTIONS
-            if ( TSD->currlevel->u.options.ext_commands_as_funcs )
-#else
-            if ( get_options_flag( TSD->currlevel, EXT_EXT_COMMANDS_AS_FUNCS ) )
-#endif
+            if ( get_options_flag( TSD->currlevel, EXT_EXT_COMMANDS_AS_FUNCS ) 
+            &&  !get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
             {
                command = Str_makeTSD( 1000 ) ;
                command = Str_catTSD(command,this->name ) ;
@@ -658,7 +672,7 @@ cnsnt:   if (kill)
          return sptr ;
 
       default:
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          return NULL ;
    }
 }
@@ -1104,7 +1118,7 @@ int isboolean( tsd_t *TSD, nodeptr this )
 
 
       default:
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          return 0 ;
    }
 }

@@ -202,26 +202,27 @@ static void DestroyNode(const tsd_t *TSD, nodeptr p)
 
    type = p->type ;
    if (type == X_CON_SYMBOL || type == X_STRING)
+   {
       if (p->u.number)
       {
          FreeTSD( p->u.number->num ) ;
          FreeTSD( p->u.number ) ;
       }
-
+   }
    if (type==X_SIM_SYMBOL || type==X_STEM_SYMBOL || type==X_HEAD_SYMBOL ||
        type==X_CTAIL_SYMBOL || type==X_VTAIL_SYMBOL )
+   {
       if (p->u.varbx)
       {
-#ifdef DEBUG
          detach( TSD, p->u.varbx ) ;
-#else
-         detach( p->u.varbx ) ;
-#endif
       }
+   }
 
    if (type == X_CEXPRLIST)
+   {
       if (p->u.strng)
          Free_stringTSD( p->u.strng ) ;
+   }
 }
 
 /* DestroyInternalParsingTree frees all allocated memory used by a parsing
@@ -243,7 +244,8 @@ void DestroyInternalParsingTree(const tsd_t *TSD, internal_parser_type *ipt)
    {
       tr = ipt->nodes;
 
-      while (tr) {
+      while (tr) 
+      {
          for (i = 0; i < tr->num; i++)
             DestroyNode(TSD, tr->elems + i);
          th = tr->next;
@@ -261,7 +263,8 @@ void DestroyInternalParsingTree(const tsd_t *TSD, internal_parser_type *ipt)
    {
       lr = ipt->first_source_line;
 
-      while (lr) {
+      while (lr) 
+      {
          lh = lr->next;
          Free_stringTSD(lr->line);
          FreeTSD(lr);
@@ -276,7 +279,8 @@ void DestroyInternalParsingTree(const tsd_t *TSD, internal_parser_type *ipt)
    {
       ar = ipt->first_label;
 
-      while (ar) {
+      while (ar) 
+      {
          ah = ar->next;
          FreeTSD(ar);
          ar = ah;
@@ -298,7 +302,8 @@ void DestroyInternalParsingTree(const tsd_t *TSD, internal_parser_type *ipt)
    {
       or = ipt->srclines;
 
-      while (or) {
+      while (or) 
+      {
          oh = or->next;
          FreeTSD(or->elems);
          FreeTSD(or);
@@ -419,10 +424,12 @@ internal_parser_type ExpandTinnedTree(const tsd_t *TSD,
       else
          this->next = ipt.nodes->elems + (unsigned long) this->next;
       for (j = 0;j < sizeof(this->p) / sizeof(this->p[0]);j++)
+      {
          if (this->p[j] == (nodeptr) (unsigned long) -1)
             this->p[j] = NULL;
          else
             this->p[j] = ipt.nodes->elems + (unsigned long) this->p[j];
+      }
    }
    size = size; /* keep compiler happy */
 
@@ -452,7 +459,8 @@ static unsigned long ComputeExternalSize(const internal_parser_type *ipt,
    /* sourceline table */
    elems = 0;
    otp = ipt->srclines;
-   while (otp != NULL) {
+   while (otp != NULL) 
+   {
       elems += otp->sum;
       otp = otp->next;
    }
@@ -490,7 +498,8 @@ static unsigned long ComputeExternalSize(const internal_parser_type *ipt,
  */
 static unsigned long FillStrings(char *base, unsigned long start, const otree *otp)
 {
-   while (otp != NULL) {
+   while (otp != NULL) 
+   {
       memcpy(base + start, otp->elems, otp->num * sizeof(offsrcline));
       start += otp->num * sizeof(offsrcline);
       otp = otp->next;
@@ -512,7 +521,8 @@ static unsigned long FillTree(treenode *table, char *base, unsigned long start,
    unsigned long i,j;
    extstring *e;
 
-   while (ttp) {
+   while (ttp) 
+   {
       for (i = 0;i < ttp->num;i++)
       {
          np = (cnodeptr) (ttp->elems + i);
@@ -543,11 +553,12 @@ static unsigned long FillTree(treenode *table, char *base, unsigned long start,
          else
             table->next = (nodeptr) np->next->nodeindex;
          for (j = 0;j < sizeof(np->p) / sizeof(np->p[0]);j++)
+         {
             if (table->p[j] == NULL)
                table->p[j] = (nodeptr) (unsigned long) -1;
             else
                table->p[j] = (nodeptr) np->p[j]->nodeindex;
-
+         }
          table++;
       }
       ttp = ttp->next;

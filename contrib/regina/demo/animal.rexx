@@ -1,5 +1,3 @@
-#! /local/bin/rexx
-
 /* Written by Stig Hemmer <stig@pvv.unit.no> */
 
 parse arg infile .

@@ -228,7 +228,7 @@ exit 0
 
 ch: procedure expose sigl 
    parse arg first, second
-   if first ^== second then do
+   if first \== second then do
       say
       say 'first  = /'first'/'
       say 'second = /'second'/'

@@ -61,6 +61,7 @@ PROTECTION_VAR(regina_parser)
 internal_parser_type parser_data = {NULL, };
 int retlength=0 ;
 char retvalue[BUFFERSIZE] ;
+unsigned SymbolDetect = 0;
 /* end of externals protected by regina_parser */
 
 /* locals, they are protected by regina_parser, too */
@@ -71,8 +72,16 @@ static int in_numform=0, next_numform=0 ;
 static int obs_with=0, in_do=0, in_then=0, dontlast=0 ;
 static int sum=0 ;
 static int code=0, nexta=0, in_parse=0, in_trace=0, itflag=0 ;
-static int in_signal=0, in_call=0, in_address=0 ;
-static int seek_with=0 ;
+static int in_signal=0, in_call=0 ;
+static enum { not_in_address = 0,
+              in_address_keyword, /* ADDRESS just seen */
+              in_address_main, /* after the first word */
+              in_address_value, /* like main but VALUE was seen */
+              in_address_with} in_address = not_in_address,
+                               last_in_address = not_in_address ;
+static enum {no_seek_with = 0,
+             seek_with_from_parse,
+             seek_with_from_address} seek_with = no_seek_with ;
 static int preva=0, lasta=0 ;
 static char ch, ech ;
 static int kill_this_space=0, kill_next_space=1 ;
@@ -175,8 +184,10 @@ bbl (\ |\t)+
      else
         in_numform = 0 ;
 
-     if (in_address)
-        in_address-- ;
+     last_in_address = in_address ; /* just for the "Environment" */
+    /* there can't be an intermediate SPACE between ADDRESS and the next word*/
+     if (in_address == in_address_keyword)
+        in_address = in_address_main ;
 
      kill_this_space = kill_next_space ;
      kill_next_space = 0 ;
@@ -207,7 +218,7 @@ bbl (\ |\t)+
    char *ptr;
    if ((ptr = strchr(yytext, '\n')) != NULL)
    {
-      nextstart = yyleng - (int) (ptr - yytext) ;
+      nextstart = yyleng - (int) (ptr - (char *) yytext) ;
       nextline++ ;
       if (extnextline != -1)
          extnextline++;
@@ -227,9 +238,11 @@ bbl (\ |\t)+
    obs_with = in_do = 0 ;
    in_signal = in_address = in_call = 0 ;
    in_parse = 0 ;
+   if (seek_with == seek_with_from_address)
+      seek_with = no_seek_with ;
    if ((ptr = strchr(yytext, '\n')) != NULL)
    {
-      nextstart = yyleng - (int) (ptr - yytext) ;
+      nextstart = yyleng - (int) (ptr - (char *) yytext) ;
       nextline++ ;
       if (extnextline != -1)
          extnextline++;
@@ -239,9 +252,10 @@ bbl (\ |\t)+
    return STATSEP ; }
 
 <comm>{a}{d}{d}{r}{e}{s}{s}{bl} {
-   BEGIN value1 ;
-   in_signal = 1 ;
-   in_address = 2 ;
+   BEGIN value1 ; /* Allow a following VALUE keyword */
+   seek_with = seek_with_from_address ;
+   in_address = in_address_keyword ;
+   in_call = 1 ; /* Allow the next words to be given as in CALL. */
    SET_NEXTSTART() ;
    return ADDRESS ; }
 
@@ -284,6 +298,7 @@ bbl (\ |\t)+
 <comm>{i}{f}{bl} {
    BEGIN ifcont ;
    in_then = 1 ;
+   parser_data.if_linenr = linenr - 1;
    SET_NEXTSTART() ;
    return IF ; }
 
@@ -373,9 +388,16 @@ bbl (\ |\t)+
    SET_NEXTSTART() ;
    return TRACE ; }
 
+<comm>{u}{p}{p}{e}{r}{bl} {
+   BEGIN other ;
+   in_parse = 1 ;
+   SET_NEXTSTART() ;
+   return UPPER ; }
+
 <comm>{w}{h}{e}{n}{bl} {
    BEGIN ifcont ;
    in_then = 1 ;
+   parser_data.when_linenr = linenr - 1;
    SET_NEXTSTART() ;
    return WHEN ; }
 
@@ -447,11 +469,25 @@ bbl (\ |\t)+
    return ASSIGNMENTVARIABLE ; }
 
 <nmform,signal,value1>{bl}{v}{a}{l}{u}{e}{bl} {
-   if (in_call) REJECT ;
+   if (in_call)
+   {
+      if ((last_in_address == in_address_keyword) &&
+          (in_address == in_address_main))
+      {
+         BEGIN other ; /* the next useful expression will set it to "other"
+                        * in either case. The BEGIN-states aren't very
+                        * handy in most cases; they are not flexible enough.
+                        */
+         in_address = in_address_value ;
+         SET_NEXTSTART() ;
+         return VALUE ;
+      }
+      REJECT ;
+   }
    BEGIN other ;
    if ((!in_trace)&&(!in_address)&&(!in_signal)&&(!in_call)&&(!in_numform))
       obs_with = 1 ;
-   in_trace = in_signal = in_call = in_address = 0 ;
+   in_trace = in_signal = in_call = 0 ;
    SET_NEXTSTART() ;
    return VALUE ; }
 
@@ -499,6 +535,11 @@ bbl (\ |\t)+
    BEGIN signame ;
    SET_NEXTSTART() ;
    return SYNTAX ; }
+
+<sgtype>{l}{o}{s}{t}{d}{i}{g}{i}{t}{s}{bl} {
+   BEGIN signame ;
+   SET_NEXTSTART() ;
+   return LOSTDIGITS ; }
 
 <value1>{bl}[a-zA-Z?]+{bl} {
    if (!in_trace) REJECT ;
@@ -557,10 +598,10 @@ bbl (\ |\t)+
    return VAR ; }
 
 <parse>{v}{a}{l}{u}{e}{bl} {
-   seek_with = 1 ;
+   seek_with = seek_with_from_parse ;
    in_trace = 0 ;
    in_parse = 0 ;
-   BEGIN with ;
+   BEGIN with ; /* in fact this works as a "not comm" */
    SET_NEXTSTART() ;
    return VALUE ; }
 
@@ -580,8 +621,11 @@ bbl (\ |\t)+
    BEGIN other ;
    if ((in_do)||(!seek_with))
       REJECT ;
+   if (seek_with == seek_with_from_parse)
+      in_parse = 1 ;
    seek_with = 0 ;
-   in_parse = 1 ;
+   if (in_address) /* any address state */
+      in_address = in_address_with ; /* WITH seen */
    SET_NEXTSTART() ;
    return WITH ; }
 
@@ -618,52 +662,60 @@ bbl (\ |\t)+
    return FOREVER ; }
 
 {bl}{t}{o}{bl} {
-   if (in_do==2) {
+   if (in_do==2) 
+   {
       BEGIN other ;
       SET_NEXTSTART() ;
-      return TO ; }
+      return TO ; 
+   }
    else if (in_do==1)
    {
       parser_data.tline = linenr - 1 ; /* set tline for exiterror */
-      exiterror( ERR_INVALID_DO_SYNTAX, 0 )  ;
+      exiterror( ERR_INVALID_DO_SYNTAX, 1, "TO" )  ;
    }
    REJECT ; }
 
 {bl}{b}{y}{bl} {
-   if (in_do==2) {
+   if (in_do==2) 
+   {
       BEGIN other ;
       SET_NEXTSTART() ;
-      return BY ; }
+      return BY ; 
+   }
    else if (in_do==1)
    {
       parser_data.tline = linenr - 1 ; /* set tline for exiterror */
-      exiterror( ERR_INVALID_DO_SYNTAX, 0 ) ;
+      exiterror( ERR_INVALID_DO_SYNTAX, 1, "BY" ) ;
    }
    REJECT ; }
 
 {bl}{f}{o}{r}{bl} {
-   if (in_do==2) {
+   if (in_do==2) 
+   {
       BEGIN other ;
       SET_NEXTSTART() ;
-      return FOR ; }
+      return FOR ; 
+   }
    else if (in_do==1)
    {
       parser_data.tline = linenr - 1 ; /* set tline for exiterror */
-      exiterror( ERR_INVALID_DO_SYNTAX, 0 ) ;
+      exiterror( ERR_INVALID_DO_SYNTAX, 1, "FOR" ) ;
    }
    REJECT ; }
 
 {bl}{w}{h}{i}{l}{e}{bl} {
-   if (in_do) {
+   if (in_do) 
+   {
       if (in_do==3)
       {
          parser_data.tline = linenr - 1 ; /* set tline for exiterror */
-         exiterror( ERR_INVALID_DO_SYNTAX, 0 )  ;
+         exiterror( ERR_INVALID_DO_SYNTAX, 1, "WHILE" )  ;
       }
       in_do=3 ;
       BEGIN other ;
       SET_NEXTSTART() ;
-      return WHILE ; }
+      return WHILE ; 
+   }
    REJECT ; }
 
 {bl}{u}{n}{t}{i}{l}{bl} {
@@ -671,7 +723,7 @@ bbl (\ |\t)+
       if (in_do==3)
       {
          parser_data.tline = linenr - 1 ; /* set tline for exiterror */
-         exiterror( ERR_INVALID_DO_SYNTAX, 0 )  ;
+         exiterror( ERR_INVALID_DO_SYNTAX, 1, "UNTIL" )  ;
       }
 
       in_do=3 ;
@@ -777,8 +829,8 @@ bbl (\ |\t)+
 
    if (in_call)
    {
-      in_call = 0 ; 
-      kill_next_space = 1 ; 
+      in_call = 0 ;
+      kill_next_space = 1 ;
    }
    else
       lasta = 1 ;
@@ -850,23 +902,32 @@ bbl (\ |\t)+
 
    if (in_call)
    {
-      in_call = 0 ; 
-      kill_next_space = 1 ; 
+      in_call = 0 ;
+      kill_next_space = 1 ;
    }
-   else 
+   else
       lasta = 1 ;
 
    SET_NEXTSTART() ;
    return BINSTRING ;
 }
 
-
 ('([^']|'')*'|\"([^"]|"")*\")[xXbB]/[^a-zA-Z0-9.@#$!?_(] {
+   unsigned int i;
+   char bad=' ';
+   BEGIN other ;
    parser_data.tline = linenr - 1 ; /* set tline for exiterror */
-   exiterror( ERR_INVALID_HEX_CONST, 3, yytext )  ;
+   for (i=0;yytext[i]; i++)
+   {
+      if ( !isxdigit(yytext[i]) && !(yytext[i] == '\"' && yytext[0] == '\"') && !(yytext[i] == '\'' && yytext[0] == '\'') && yytext[i] != ' ' )
+      {
+         bad = yytext[i];
+         break;
+      }
+   }
+   exiterror( ERR_INVALID_HEX_CONST, 3, bad )  ;
    SET_NEXTSTART() ;
    }
-
 
 ('([^']|'')*'|\"([^"]|\"\")*\") {
    unsigned i,j;
@@ -901,10 +962,10 @@ bbl (\ |\t)+
 
     if (in_call)
     {
-       in_call = 0 ; 
-       kill_next_space = 1 ; 
+       in_call = 0 ;
+       kill_next_space = 1 ;
     }
-    else 
+    else
        lasta = 1 ;
 
    SET_NEXTSTART() ;
@@ -994,16 +1055,17 @@ bbl (\ |\t)+
       exiterror( ERR_INV_SUBKEYWORD, 11, "ENGINEERING SCIENTIFIC", retvalue ) ;
    }
 
-   if (in_address)
+   if ((last_in_address == in_address_keyword) &&
+       (in_address == in_address_main))
    {
       kill_next_space = 1 ;
-      in_address=0 ;
+      in_call = 0 ;
       SET_NEXTSTART() ;
-      return ENVIRONMENT ;
+      return SIMSYMBOL ;
    }
 
    /* We must check if a '(' follows. Remember the number of eaten chars. */
-      j = 0;
+      j = 1;
    for (;(i=input())=='`';)
      j++ ;
    if (i != '(')
@@ -1011,6 +1073,8 @@ bbl (\ |\t)+
       j-- ;
       unput(i) ;
    }
+   /* input() has destroyed the yytext-terminator re-set it */
+   yytext[yyleng] = '\0';
    SET_NEXTSTART() ;
    nextstart += j ;
 
@@ -1044,6 +1108,41 @@ bbl (\ |\t)+
       return CONCATENATE ; }
 
    lasta = 1 ;
+
+   if (in_address == in_address_with)
+      kill_next_space = 1 ;
+   if (SymbolDetect) /* allow a fast breakout */
+   {
+      /* We define a tricky preprocessor directive. This will give us
+       * maximum performance without the loss of control or errors produced
+       * by typos.
+       */
+#define RET_IF(s)  if ((SymbolDetect & SD_##s) &&      \
+                       (yyleng == sizeof(#s) - 1) &&   \
+                       (strncmp(retvalue,              \
+                                #s,                    \
+                                sizeof(#s) - 1) == 0)) \
+                      return(s)
+      /* e.g. RET_IF(INPUT); is replaced by:
+       *  if ((SymbolDetect & SD_INPUT) &&
+       *      (yyleng == sizeof("INPUT") - 1) &&
+       *      (strncmp(retvalue,
+       *               "INPUT",
+       *               sizeof("INPUT") - 1) == 0))
+       *     return(s);
+       */
+      RET_IF(INPUT);
+      RET_IF(OUTPUT);
+      RET_IF(ERROR);
+      RET_IF(NORMAL);
+      RET_IF(APPEND);
+      RET_IF(REPLACE);
+      RET_IF(STREAM);
+      RET_IF(STEM);
+      RET_IF(LIFO);
+      RET_IF(FIFO);
+#undef RET_IF
+   }
    return SIMSYMBOL ; }
 
 {bl}\) {
@@ -1176,14 +1275,13 @@ bbl (\ |\t)+
    return EXP ; }
 
 {bl}[ \t]{bl} {
+   if (in_address == in_address_value) /* Always allow spaces in the VALUE */
+   {                                   /* part of the ADDRESS stmt.        */
+      SET_NEXTSTART() ;
+      return SPACE ;
+   }
    if (kill_this_space)
    {
-      SET_NEXTSTART() ;
-      return yylex() ;
-   }
-   if (in_address)
-   {
-      in_address = 0 ;
       SET_NEXTSTART() ;
       return yylex() ;
    }
@@ -1204,12 +1302,12 @@ bbl (\ |\t)+
 : {
    SET_NEXTSTART() ;
    parser_data.tline = linenr - 1 ; /* set tline for exiterror */
-   exiterror( ERR_SYMBOL_EXPECTED, 0 ) ;}
+   exiterror( ERR_SYMBOL_EXPECTED, 1, yytext ) ;}
 
 . {
    SET_NEXTSTART() ;
    parser_data.tline = linenr - 1 ; /* set tline for exiterror */
-   exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;}
+   exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;}
 
 
 %%
@@ -1399,9 +1497,9 @@ static int fill_buffer( char *buf, int max_size )
    static char line[BUFFERSIZE+2] ; /* special buffer to allow max_size */
    static int pos = 0, max = 0 ;    /* being smaller than BUFFERSIZE+1  */
    static int nesting = 0;          /* nesting level of comments        */
+   int nesting_start_line = 0;      /* start line of comment for errortext() */
    char *dest, c;
    int i, squote, dquote;
-
 
    if (firstln == 0)
    {
@@ -1459,89 +1557,101 @@ static int fill_buffer( char *buf, int max_size )
    /* A new line is available, check first for an ending comment */
    dest = line; /* we change comments in line */
    if (nesting) /* This may lead to more line reading */
-      {
-         extnextline = ++nextline ;
-         extnextstart = 1; /* See Reference (*) below */
+   {
+      /*
+       * The first time extnextline is non-zero, we have the comment
+       * starting sequence line. This is saved for use if no matching
+       * ending comment sequence is found, so that the error message
+       * reflects the start of the comment.
+       * Regina feature request: #508788
+       */
+      if ( extnextline < 0 )
+         nesting_start_line = nextline+1;
+      extnextline = ++nextline ;
+      extnextstart = 1; /* See Reference (*) below */
 repeated_nesting:
+      while (pos < max)
+      {
+         c = line[pos];
+         if (c == '*') /* start of comment end? */
+         {
+            if (line[pos+1] == '/')
+            {  /* pos+1 always exists, at least '\n' or '\0' */
+               if (--nesting == 0)
+               {
+                  pos += 2;
+                  *dest++ = '`';
+                  *dest++ = '`';
+                  break;
+               }
+               *dest++ = '`';
+               pos++;
+            }
+         }
+         else if (c == '/') /* start of new begin? */
+         {
+            if (line[pos+1] == '*')
+            {
+               nesting++;
+               *dest++ = '`';
+               pos++;
+            }
+         }
+         *dest++ = '`';
+         pos++;
+      }
+      if (pos >= max)
+      {
+         pos = 0;
+         max = get_next_line( line, sizeof(line), yyin ) ;
+         if (max < 0) /* empty input file */
+         {
+            if ( nesting_start_line )
+               parser_data.tline = nesting_start_line ; /* set tline for exiterror */
+            else
+               parser_data.tline = linenr - 1 ; /* set tline for exiterror */
+            exiterror( ERR_UNMATCHED_QUOTE, 1 ) ;
+            return 0 ;
+         }
+         /* This is a comment continuation. If the lexer will return
+          * something it already has a valid tline/tstart pair.
+          * The lexer will return the current token and on the NEXT
+          * call it expects a valid nextline/nextstart pair.
+          */
+         extnextline = ++nextline; extnextstart = 1;
+         dest = line; /* we change comments in line */
+         goto repeated_nesting;
+      }
+      extnextstart = pos + 1;
+      if (contline)
+      { /* Exception! Have a look at: "x='y',{*\n\n*}\n'z'". This should
+         * result in "x = 'y' 'z'".
+         * We must parse until EOL and check for whitespaces and comments...
+         */
          while (pos < max)
          {
             c = line[pos];
-            if (c == '*') /* start of comment end? */
+            if (!isspace(c))
             {
-               if (line[pos+1] == '/')
-               {  /* pos+1 always exists, at least '\n' or '\0' */
-                  if (--nesting == 0)
+               if (c == '/')
+               {
+                  if (line[pos+1] == '*')
                   {
                      pos += 2;
-                     *dest++ = '`';
-                     *dest++ = '`';
-                     break;
+                     nesting++;
+                     goto repeated_nesting;
                   }
-                  *dest++ = '`';
-                  pos++;
                }
+               parser_data.tline = linenr - 1 ; /* set tline for exiterror */
+               exiterror( ERR_YACC_SYNTAX, 1, parser_data.tline ) ; /* standard error */
             }
-            else if (c == '/') /* start of new begin? */
-            {
-               if (line[pos+1] == '*')
-               {
-                  nesting++;
-                  *dest++ = '`';
-                  pos++;
-               }
-            }
-            *dest++ = '`';
             pos++;
          }
-         if (pos >= max)
-         {
-            pos = 0;
-            max = get_next_line( line, sizeof(line), yyin ) ;
-            if (max < 0) /* empty input file */
-            {
-               parser_data.tline = linenr - 1 ; /* set tline for exiterror */
-               exiterror( ERR_UNMATCHED_QUOTE, 1 ) ;
-               return 0 ;
-            }
-            /* This is a comment continuation. If the lexer will return
-             * something it already has a valid tline/tstart pair.
-             * The lexer will return the current token and on the NEXT
-             * call it expects a valid nextline/nextstart pair.
-             */
-            extnextline = ++nextline; extnextstart = 1;
-            dest = line; /* we change comments in line */
-            goto repeated_nesting;
-         }
-         extnextstart = pos + 1;
-         if (contline)
-         { /* Exception! Have a look at: "x='y',{*\n\n*}\n'z'". This should
-            * result in "x = 'y' 'z'".
-            * We must parse until EOL and check for whitespaces and comments...
-            */
-            while (pos < max)
-            {
-               c = line[pos];
-               if (!isspace(c))
-               {
-                  if (c == '/')
-                  {
-                     if (line[pos+1] == '*')
-                     {
-                        pos += 2;
-                        nesting++;
-                        goto repeated_nesting;
-                     }
-                  }
-                  parser_data.tline = linenr - 1 ; /* set tline for exiterror */
-                  exiterror( ERR_YACC_SYNTAX, 1, parser_data.tline ) ; /* standard error */
-               }
-               pos++;
-            }
-            /* All done, it was a continuation line. */
-            /* contline will be resetted by: */
-            return fill_buffer( buf, max_size ) ;
-         }
+         /* All done, it was a continuation line. */
+         /* contline will be resetted by: */
+         return fill_buffer( buf, max_size ) ;
       }
+   }
    /* We have something to play with. Run through the input and check for
     * strings including comments.
     */
@@ -1732,6 +1842,12 @@ int yywrap( void )
 /* initalize all local and global values */
 static void init_it_all( tsd_t *TSD )
 {
+#if defined(FLEX_SCANNER) && defined(FLEX_DEBUG)
+   if (__reginadebug)
+      yy_flex_debug = 1;
+     else
+      yy_flex_debug = 0;
+#endif
    inEOF = 0 ;
    in_numform = 0 ;
    next_numform = 0 ;
@@ -1772,6 +1888,7 @@ static void init_it_all( tsd_t *TSD )
    nextstart = 1;
    kill_next_space = 1 ;
    extnextline = -1 ;
+   SymbolDetect = 0;
 
    memset(&parser_data, 0, sizeof(internal_parser_type));
    parser_data.TSD = TSD;

@@ -1,4 +1,4 @@
-                        Regina 2.2
+                        Regina 3.0
                        for OS/2 2.0+
 
 This file contains 32 bit executables of the Regina Rexx interpreter for
@@ -8,32 +8,37 @@ features of this interpreter.
 Regina is distributed under the GNU Library General Public Licence.
 See COPYING-LIB for details.
 
-This port of Regina is for use in OS/2.
+This port of Regina is for use in OS/2 2.0 and above.
 
 The files in this archive are:
 
 README       - this file
-README.08x   - readme files for 0.08 releases of Regina
-README.2x    - readme files for 2.x releases of Regina
+README.3x    - readme files for 3.x releases of Regina
 COPYING-LIB  - GNU Library General Public Licence
 file_id.diz  - Description file for BBS use
-rexx.exe     - 32bit Regina Rexx interpreter static executable
-regina.exe   - 32bit Regina Rexx interpreter executable (uses regina.dll)
-regina.lib   - Regina static library (for Watcom C++)
+rexx.exe     - Regina Rexx interpreter static executable
+regina.exe   - Regina Rexx interpreter executable (uses regina.dll)
+rxstack.exe  - Regina stack server executable
+rxqueue.exe  - Regina stack interface executable
 regina.dll   - Regina dynamic library
-regina_os2_dll.lib   - Regina import library for regina.dll
-regina_os2_dll.a     - Regina import library for regina.dll
+regina.lib   - Import library for Visual Age C++ compiler
+rexx.lib     - Regina static library for Visual Age C++ compiler
+regina.a     - Import library for EMX
+rexx.a       - Regina static library for EMX
 rexxsaa.h    - Header file for access to regina.lib
 test1.dll    - Sample external function packages; used by dynfunc.rexx
-test2.dll      demo Rexx program
+test2.dll
 demo\*.rexx  - Sample Rexx programs
+nls\*.mtb    - Native Language message files
 
-Installation is simply a matter of copying the rexx.exe
-files into a directory specified in your PATH environment variable.
+Copy the .EXE files into a directory in your PATH and copy the .DLL 
+files into a directory in your LIBPATH.
 
-Please report any bugs with this release of Regina to me, NOT to Anders.
-Most likely the bugs are of my origin, so I will attempt to fix them.
-As with previous bugs fixed by me, I will pass these fixes on to Anders.
+If you want to have Regina error messages displayed in you native
+language, set the environment variable; REGINA_LANG to the two-character
+language abbreviation (the first two chracters of a file in the NLS 
+directory), and set REGINA_LANG_DIR to the directory containing the
+*.mtb files.
 
 Cheers, Mark.
 ------------------------------------------------------------------------

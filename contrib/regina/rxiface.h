@@ -149,7 +149,7 @@ int IfcStartUp( tsd_t *TSD, char *name, int *Major, int *Minor ) ;
 int IfcExecScript( int NameLen, const char *Name,
                    int ArgCount, const int *ParLengths, const char **ParStrings,
                    int CallType, int ExitFlags, int EnvLen, const char *EnvName,
-                   int SourceCode,
+                   int SourceCode, int restricted,
                    const char *SourceString, unsigned long SourceStringLen,
                    const void *TinnedTree, unsigned long TinnedTreeLen,
                    int *RetLen, char **RetString, void **instore_buf,

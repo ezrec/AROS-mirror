@@ -532,7 +532,7 @@ static streng *format_result( tsd_t *TSD, int type, char *buffer, int length )
       }
 
       default:
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
    }
    return result ;
@@ -2248,7 +2248,7 @@ streng *vms_f_parse( tsd_t *TSD, cparamboxptr parms )
          cptr = nam.nam$l_ver ;  clen = nam.nam$b_ver ;  break ;
 
       default:
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
    }
 
    result = Str_makeTSD( clen ) ;
@@ -2528,7 +2528,7 @@ streng *vms_f_file_attributes( tsd_t *TSD, cparamboxptr parms )
             case FAB$C_IDX: res = Str_creTSD( "IDX" ) ; break ;
             case FAB$C_REL: res = Str_creTSD( "REL" ) ; break ;
             case FAB$C_SEQ: res = Str_creTSD( "SEQ" ) ; break ;
-            default: exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+            default: exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          }
          break ;
       case FIL_PRO:  res = get_prot( tmp=xabpro.xab$w_pro ); break ;
@@ -2558,14 +2558,14 @@ streng *vms_f_file_attributes( tsd_t *TSD, cparamboxptr parms )
             case FAB$C_STM: res = Str_creTSD( "STM" ) ; break ;
             case FAB$C_STMLF: res = Str_creTSD( "STMLF" ) ; break ;
             case FAB$C_STMCR: res = Str_creTSD( "STMCR" ) ; break ;
-            default: exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+            default: exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          }
          break ;
       case FIL_RVN:  res = int_to_streng( TSD, xabdat.xab$w_rvn ); break ;
       case FIL_UIC:  res = get_uic( TSD, ( union uicdef *)&(xabpro.xab$l_uic) ); break ;
       case FIL_WCK:  res = boolean( fab.fab$l_fop & FAB$M_WCK ); break ;
       default:
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
    }
 
    if (rc == RMS$_NORMAL)
@@ -3341,7 +3341,7 @@ streng *vms_f_cvtime( tsd_t *TSD, cparamboxptr parms )
          break ;
       }
 
-      default: exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      default: exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
    }
 
    return result ;

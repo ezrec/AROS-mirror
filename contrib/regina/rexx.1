@@ -18,14 +18,11 @@ rexx \- The Regina Rexx interpreter
 .I scriptparams
 ]]
 .SH Description
-Rexx will read the file named as
-.PN script
+Rexx will read the file named as script
 and will assume the contents of that file to be a Rexx script and
-interpret that script. Any parameters following
-.PN script
+interpret that script. Any parameters following script
 will be interpreted as the parameters to the Rexx script. If
-.PN script
-is not specified, the Rexx script to interpret will be read
+script is not specified, the Rexx script to interpret will be read
 from standard input, and interpretation will start when the whole
 script has been read.
 
@@ -62,6 +59,13 @@ Starts Regina in interactive mode. No script will be executed.
 .IP \-v
 Displays Regina version and exits.
 
+.IP \-a
+Changes the way that arguments passed on the command line are made
+available to the called Rexx program. With this switch each parameter on the
+command line is available as a seperate argument, rather then the normal
+behaviour of only making the combined command line arguments available as one
+internal argument.
+
 
 .SH Built-ins
 Below is a list of all the standard built-in functions in Rexx. For a
@@ -69,11 +73,17 @@ more complete description of each function, see the documentation
 accompanying Regina.
 
 .IP ABBREV(long,short[,length])
-Returns `1' or 0', depending on whether `short' is an abbrevation of
-`long', or at least `length' characters.
+Returns `1' or 0', depending on whether 
+.I short
+is an abbreviation of
+.I long
+, or at least 
+.I length
+characters.
 
 .IP ABS(number)
-Returns the absolute value of `number'.
+Returns the absolute value of 
+.I number.
 
 .IP ADDRESS()
 Returns the name of the current environment.
@@ -153,7 +163,7 @@ whether `string' is of the named type.
 
 .IP DATE([option-out,[date,[option-in]]])
 Returns the date, in various formats, which can be Base, Century,
-Days, European, Month, Normal, Ordered, Standard, USA, or Weekday.
+Days, European, Month, Normal, Ordered, Standard, USA, UnixTime, or Weekday.
 Can also be used to convert a date `date' from one format `option-in'
 to another; `option-out'.
 
@@ -178,6 +188,7 @@ Converts the decimal number `integer' to a hex-string of length
 
 .IP ERRORTEXT(errno)
 Returns the error text associated with error number `errno'.
+'errno' can specify a sub-error number in the format n.n. eg. 40.1
 
 .IP FORM()
 Returns the current setting of NUMERIC FORM.

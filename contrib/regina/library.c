@@ -198,6 +198,7 @@ static struct library_func *find_library_func( const tsd_t *TSD, const streng *n
 void set_err_message( const tsd_t *TSD, const char *message1, const char *message2 )
 {
    lib_tsd_t *lt;
+   int size;
 
    lt = TSD->lib_tsd;
    if (lt->err_message)
@@ -206,11 +207,13 @@ void set_err_message( const tsd_t *TSD, const char *message1, const char *messag
 #if 0
    lt->err_message = Str_creTSD( message ) ;
 #else
-   lt->err_message = MallocTSD(strlen(message1)+strlen(message2)+1);
+   size = strlen(message1)+strlen(message2);
+   lt->err_message = MallocTSD(size+1);
    if ( lt->err_message )
    {
       strcpy( lt->err_message->value, message1 );
       strcat( lt->err_message->value, message2 );
+      lt->err_message->len = size;
    }
 #endif
 }
@@ -345,6 +348,9 @@ streng *rex_rxfuncadd( tsd_t *TSD, cparamboxptr parms )
    streng *rxname=NULL ;
    streng *module=NULL, *objnam=NULL ;
    int rc;
+
+   if ( TSD->restricted )
+      exiterror( ERR_RESTRICTED, 1, "RXFUNCADD" )  ;
 
    checkparam(  parms,  3,  3 , "RXFUNCADD" ) ;
 

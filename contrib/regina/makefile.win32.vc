@@ -46,7 +46,7 @@ OPTIMIZE = -Ox -J #-O2gityb1 -J
 !endif
 
 !if "$(FLISTS)" == "N"
-NOFLISTS = /UFLISTS
+NOFLISTS = -DNOFLISTS
 !else
 NOFLISTS =
 !endif
@@ -68,7 +68,7 @@ REXXSOCKET="-DRXSOCKET=$(SOCKET)"
 LIBS = advapi32.lib user32.lib #libc.lib
 WINSOCK = wsock32.lib
 SERVICELIBS = libcmt.lib kernel32.lib advapi32.lib shell32.lib
-SHL_TARGETS= regina.exe test1.dll test2.dll
+SHL_TARGETS= regina.exe tregina.exe test1.dll test2.dll
 LD     = link
 LIBFLAGS = /OUT:rexx.lib
 LIBLINK = regina.lib
@@ -79,7 +79,7 @@ LD_RXLIB1= /DEF:$(SRCDIR)\test1_w32_dll.def
 LD_RXLIB2= /DEF:$(SRCDIR)\test2_w32_dll.def
 MV= -ren
 #
-CEXTRA = -DFGC -DWIN32 -nologo -W4 $(REXXSOCKET) # -Zp1
+CEXTRA = -DWIN32 -nologo -W4 $(REXXSOCKET) # -Zp1
 
 CC2O=-Fo$@
 #
@@ -99,12 +99,11 @@ CC2O=-Fo$@
 #
 BINDIR = $(TOPDIR)/bin
 LIBDIR = $(TOPDIR)/lib
-ABI=2.1
-VER=21
-VERDOT=2.1
+VER=30
+VERDOT=3.0
 
 COPT = $(OPTIMIZE) $(DEBUGFLAG) $(CEXTRA) -I$(SRCDIR) $(MEMTRACE) $(NOFLISTS) $(WINMULTI) $(THREADING)
-LINKOPT = $(EEXTRA)
+LINKOPT = $(EEXTRA) /NOLOGO /VERSION:$(VERDOT)
 OTHERCOPT = $(OPTIMIZE) $(DEBUGFLAG) $(CEXTRA) -I$(SRCDIR) $(MEMTRACE) $(NOFLISTS) $(WINMULTI) $(THREADING)
 
 README = $(SRCDIR)/README.??? $(SRCDIR)/COPYING-LIB $(SRCDIR)/BUGS $(SRCDIR)/yaccsrc.bound
@@ -152,13 +151,16 @@ CFILES = $(SRCDIR)/yaccsrc.c $(SRCDIR)/lexsrc.c $(CSRCFILES) $(SRCDIR)/execiser.
                 $(SRCDIR)/rexxsaa.c $(SRCDIR)/rexx.c $(SRCDIR)/regina.c $(SRCDIR)/client.c \
                 $(SRCDIR)/r2perl.c $(SRCDIR)/test1.c $(SRCDIR)/test2.c
 
+MTSSRC = $(SRCDIR)/en.mts $(SRCDIR)/pt.mts $(SRCDIR)/no.mts \
+	$(SRCDIR)/de.mts $(SRCDIR)/es.mts
+
 #.SUFFIXES: .sho $(SUFFIXES)
 #
 # Do not use default suffixes rule
 #
 .SUFFIXES:
 
-all : rexx.exe rexx.lib execiser.exe $(SHL_TARGETS) rxstack.exe rxqueue.exe
+all : rexx.exe rexx.lib trexx.exe execiser.exe $(SHL_TARGETS) rxstack.exe rxqueue.exe mtb_files
 
 $(CSRCFILES) : $(SRCDIR)/rexx.h
 
@@ -174,6 +176,12 @@ rexx.exe : $(OFILES) rexx.obj rexxw32exe.obj nosaa.obj
 
 regina.exe : regina.dll regina.obj reginaw32exe.obj
          $(LD) $(LINKOPT) $(DYNAMIC_LDFLAGS) /OUT:regina.exe regina.obj reginaw32exe.obj $(LINKSHL) $(LIBS) $(WINSOCK)
+
+trexx.exe : trexx.obj rexx.lib trexxw32exe.obj
+         $(LD) $(LINKOPT) $(STATIC_LDFLAGS) /OUT:trexx.exe trexx.obj trexxw32exe.obj rexx.lib $(LIBS) $(WINSOCK)
+
+tregina.exe : regina.dll tregina.obj treginaw32exe.obj
+         $(LD) $(LINKOPT) $(DYNAMIC_LDFLAGS) /OUT:tregina.exe tregina.obj treginaw32exe.obj $(LINKSHL) $(LIBS) $(WINSOCK)
 
 execiser.exe : execiser.obj regina.dll
          $(LD) $(LINKOPT) /OUT:execiser.exe execiser.obj $(LIBLINK)
@@ -191,7 +199,20 @@ rexx.lib: $(OFILES) client.obj drexx.obj rexxsaa.obj
         lib $(LIBFLAGS) $(OFILES) client.obj drexx.obj rexxsaa.obj
 
 regina.dll: $(SHOFILES) reginaw32dll.obj
-        link $(EEXTRA) /NOLOGO /DLL /OUT:regina.dll /MAP:regina_dd.map /IMPLIB:regina.lib /DEF:$(SRCDIR)\regina_w32_dll.def reginaw32dll.obj $(DLLDIR)\*.obj $(LIBS) $(WINSOCK)
+        link $(LINKOPT) /DLL /BASE:0x6B000000 /OUT:regina.dll /MAP:regina_dd.map /IMPLIB:regina.lib /DEF:$(SRCDIR)\regina_w32_dll.def reginaw32dll.obj $(DLLDIR)\*.obj $(LIBS) $(WINSOCK)
+
+
+#
+# Convert .mts to .mtb
+#
+mtb_files: msgcmp.exe $(MTSSRC)
+        msgcmp $(MTSSRC)
+
+msgcmp.exe: msgcmp.obj
+        link $(LINKOPT) /OUT:msgcmp.exe msgcmp.obj
+
+msgcmp.obj: $(SRCDIR)/msgcmp.c
+        $(CC) $(COPT) $(CC2O) -c $(SRCDIR)/msgcmp.c
 
 #
 # Rules for static objects
@@ -491,6 +512,15 @@ $(DLLDIR)\rexxbif.obj : $(SRCDIR)/rexxbif.c $(SRCDIR)/rexx.h
         $(CC) $(OTHERCOPT) $(CC2O) $(DYN_COMP) -c $(SRCDIR)/rexxbif.c
 
 #
+# Rules for tokeniser targets
+#
+trexx.obj : $(SRCDIR)/tregina.c
+        $(CC) $(COPT) $(CC2O) -c $(SRCDIR)/tregina.c
+
+tregina.obj : $(SRCDIR)/tregina.c
+        $(CC) $(COPT) $(CC2O) -c $(SRCDIR)/tregina.c
+
+#
 # Rules for sample programs
 #
 test1.obj: $(SRCDIR)/test1.c
@@ -520,8 +550,18 @@ reginaw32exe.obj reginaw32exe.res: $(SRCDIR)/reginaw32exe.rc
 #
 rexxw32exe.obj rexxw32exe.res: $(SRCDIR)/rexxw32exe.rc
         -copy $(SRCDIR)\reginaw32.ico .
-        rc /r /forexxw32exe.res /i$(SRCDIR)\ $(SRCDIR)\reginaw32exe.rc
+        rc /r /forexxw32exe.res /i$(SRCDIR)\ $(SRCDIR)\rexxw32exe.rc
         cvtres /MACHINE:IX86 /NOLOGO /OUT:rexxw32exe.obj rexxw32exe.res
+#
+treginaw32exe.obj treginaw32exe.res: $(SRCDIR)/treginaw32exe.rc
+        -copy $(SRCDIR)\reginaw32.ico .
+        rc /r /fotreginaw32exe.res /i$(SRCDIR)\ $(SRCDIR)\treginaw32exe.rc
+        cvtres /MACHINE:IX86 /NOLOGO /OUT:treginaw32exe.obj treginaw32exe.res
+#
+trexxw32exe.obj trexxw32exe.res: $(SRCDIR)/trexxw32exe.rc
+        -copy $(SRCDIR)\reginaw32.ico .
+        rc /r /fotrexxw32exe.res /i$(SRCDIR)\ $(SRCDIR)\trexxw32exe.rc
+        cvtres /MACHINE:IX86 /NOLOGO /OUT:trexxw32exe.obj trexxw32exe.res
 #
 rxstackw32exe.obj rxstackw32exe.res: $(SRCDIR)/rxstackw32exe.rc
         -copy $(SRCDIR)\reginaw32.ico .

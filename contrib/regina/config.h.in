@@ -48,6 +48,9 @@
 /* Define if you have the putenv function.  */
 #undef HAVE_PUTENV
 
+/* Define if you have the mkstemp function.  */
+#undef HAVE_MKSTEMP
+
 /* Define if you have the random function.  */
 #undef HAVE_RANDOM
 
@@ -59,6 +62,9 @@
 
 /* Define if you have the strerror_r function.  */
 #undef HAVE_STRERROR_R
+
+/* Define if you have the sysconf function.  */
+#undef HAVE_SYSCONF
 
 /* Define if you have the usleep function.  */
 #undef HAVE_USLEEP
@@ -99,14 +105,20 @@
 /* Define if you have the <limits.h> header file.  */
 #undef HAVE_LIMITS_H
 
-/* Define if you have the <linux/stat.h> header file.  */
-#undef HAVE_LINUX_STAT_H
+/* Define if you have the <sys/resource.h> header file.  */
+#undef HAVE_SYS_RESOURCE_H
+
+/* Define if you have the <sys/stat.h> header file.  */
+#undef HAVE_SYS_STAT_H
 
 /* Define if you have the <malloc.h> header file.  */
 #undef HAVE_MALLOC_H
 
 /* Define if you have the <math.h> header file.  */
 #undef HAVE_MATH_H
+
+/* Define if you have the <poll.h> header file.  */
+#undef HAVE_POLL_H
 
 /* Define if you have the <pwd.h> header file.  */
 #undef HAVE_PWD_H
@@ -141,6 +153,9 @@
 /* Define if you have the <unistd.h> header file.  */
 #undef HAVE_UNISTD_H
 
+/* Define if you have the <sys/wait.h> header file.  */
+#undef HAVE_SYS_WAIT_H
+
 /* Define if you have the <sys/socket.h> header file.  */
 #undef HAVE_SYS_SOCKET_H
 
@@ -170,3 +185,9 @@
 
 /* Define if getpwuid_r returns a struct passwd * */
 #undef HAVE_GETPWUID_R_RETURNS_STRUCT
+
+/* Define if select() is defined in <time.h> */
+#undef SELECT_IN_TIME_H
+
+/* Define if leading underscores are required for function names in loadable modules */
+#undef MODULES_NEED_USCORE

@@ -132,8 +132,10 @@ int descr_to_int( const num_descr *input )
    {
       i = MAX( 0, input->exp ) ;
       for (; i<input->size; i++)
+      {
          if (input->num[i]!='0')
-             exiterror( ERR_INVALID_INTEGER, 0 )  ;
+            exiterror( ERR_INVALID_INTEGER, 0 )  ;
+      }
    }
 
 
@@ -182,7 +184,7 @@ void str_strip( num_descr *num )
 }
 
 
-#ifdef FGC
+#if 1
 int getdescr( const tsd_t *TSD, const streng *num, num_descr *descr )
 /* converts num into a descr and returns 0 if successfully.
  * returns 1 in case of an error. descr contains nonsense in this case.
@@ -849,7 +851,7 @@ void string_add( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_d
    r->exp = msd + 1 ;
    r->size = r->exp - lsd ;
 
-#ifdef FGC
+#if 1
    memcpy( fnum, mt->add_out+1, r->size - ( (carry) ? 1 : 0 ) ) ;
 #else
    memcpy( fnum, mt->add_out+1, r->size ) ;
@@ -1092,7 +1094,10 @@ streng *str_format_orig( const tsd_t *TSD, const streng *input, int before, int 
           * it was previously unset.
           */
          if (expp==(-1))
-            for (k=exponent,expp=0; k; k/=10, expp++) ;
+         {
+            for (k=exponent,expp=0; k; k/=10, expp++)
+               ;
+         }
 
          /* We have to fill in numbers from the end of it, and pad with
           * zeros to the left. First find the end, and then loop backwards
@@ -1132,8 +1137,10 @@ streng *str_format_orig( const tsd_t *TSD, const streng *input, int before, int 
          out_ptr += expp ;
       }
       else if (expp!=(-1))
+      {
          for (j=(-2); j<expp; j++)
            *(out_ptr++) = ' ' ;
+      }
    }
    else
    {
@@ -1174,8 +1181,10 @@ streng *str_format_orig( const tsd_t *TSD, const streng *input, int before, int 
          if (size>before)
              exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
          else
+         {
             for (k=0; k<(before-size); k++)
                *(out_ptr++) = ' ' ;
+         }
       }
 
       /* Write out the sign if it is needed, and then loop trough the
@@ -1196,8 +1205,10 @@ streng *str_format_orig( const tsd_t *TSD, const streng *input, int before, int 
        * part, help it, and fill it with zeros.
        */
       if (exponent>0)
+      {
          for (; exponent; exponent--)
             *(out_ptr++) = '0' ;
+      }
 
       /* Now has the time come for the decimal points, which is only
        * to be written out if there actually are decimals, and if
@@ -1449,20 +1460,24 @@ streng *str_format(tsd_t *TSD, const streng *input, int Before,
             }
          }
          for (h = mt->fdescr.size - 1;h >= 0;h--)
+         {
             if (mt->fdescr.num[h] != '0')
                break;
             else if (h == 0) /* completely zero */
                Sign = 0;
+         }
          /* The value itself is correct now but check the format: */
       }
       else /* rounding by truncating */
       {
          mt->fdescr.size = h;
          for (--h;h >= 0;h--)
+         {
             if (mt->fdescr.num[h] != '0')
                break;
             else if (h == 0) /* completely zero */
                Sign = 0;
+         }
       }
    } /* Rounded */
    /* That's all for now with the right part */
@@ -1599,20 +1614,35 @@ streng *str_norm( const tsd_t *TSD, num_descr *in, streng *try )
 
    /* remove effect of leading zeros in the descriptor */
    for ( i=0; i<in->size ; i++)
+   {
       if ( in->num[i]!='0' )
          break ;
+   }
 
    exp = in->exp ;
-   if (i==in->size)
+   if (i==in->size) /* mantissa contains zeros only */
    {
       in->size = in->exp = 1 ;
       in->negative = 0 ;
       in->num[0] = '0' ;
       if (try)
       {
+         /*
+          * Replace assert() with real code - MDW 30012002
          assert( try->max > 0 ) ;
          try->value[0] = '0' ;
          try->len = 1 ;
+         */
+         if (try->max)
+         {
+            try->value[0] = '0' ;
+            try->len = 1 ;
+         }
+         else
+         {
+            Free_stringTSD( try ) ;
+            try = Str_creTSD( "0" ) ;
+         }
       }
       else
          try = Str_creTSD( "0" ) ;
@@ -1621,26 +1651,34 @@ streng *str_norm( const tsd_t *TSD, num_descr *in, streng *try )
    else
      size = in->size ;
 
-   if ((MAX_EXPONENT+1<exp) || ((-MAX_EXPONENT-1)>exp))
+   if ((MAX_EXPONENT+1<exp) || ((-MAX_EXPONENT-1)>exp)) /* too late here! FGC */
    {
-       exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
+      exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
       return NULL ;
    }
 
    exp -= top = i ;               /* adjust the exponent */
+
+   /* Again, it is too late for an adjustment to digits() here. The user may
+    * have changed digits() in between. The rounding should have taken place
+    * after the math operation (which happens) and that's all.
+    * Benefit: We don't have to round and therefore can't change the
+    * exponent by rounding. FGC
+    */
    sdigs = MIN( size-i, TSD->currlevel->currnumsize ) ;  /* significant digits in answer */
 
-   if (( sdigs - exp > 2*TSD->currlevel->currnumsize ) || ( sdigs < exp ))
+   if ((exp <= -6) || ( exp > TSD->currlevel->currnumsize )) /* ANSI */
    {
-
+      /* Too late for rounding, must be fixed! FGC */
       if ((size-i > TSD->currlevel->currnumsize) && (in->num[TSD->currlevel->currnumsize+i] > '4'))
       {
          for (j=TSD->currlevel->currnumsize+i-1; j>=i; j--)
+         {
             if (((in->num[j])++)=='9')
                in->num[j] = '0' ;
             else
                break ;
-
+         }
          if (j<i)
          {
             in->num[i] = '1' ;
@@ -1677,12 +1715,14 @@ streng *str_norm( const tsd_t *TSD, num_descr *in, streng *try )
    top = MIN( sdigs, TSD->currlevel->currnumsize ) + i ;
    if ((size-i > TSD->currlevel->currnumsize) && (in->num[TSD->currlevel->currnumsize+i] > '4'))
    {
+      /* Too late for rounding, must be fixed! FGC */
       for (j=TSD->currlevel->currnumsize+i-1; j>=i; j--)
+      {
          if (((in->num[j])++)=='9')
             in->num[j] = '0' ;
          else
             break ;
-
+      }
       if (j<i)
       {
          top-- ;
@@ -1698,6 +1738,9 @@ streng *str_norm( const tsd_t *TSD, num_descr *in, streng *try )
 
       p += (mt->norm_out[k++] = in->num[i]) - '0' ;
    }
+   while (j-- > 0)             /* Fill possibly lost zeros */
+      mt->norm_out[k++] = '0';
+
    if (p==0)
       mt->norm_out[(k=1)-1] = '0' ;
 
@@ -1742,9 +1785,10 @@ streng *str_norm( const tsd_t *TSD, num_descr *in, streng *try )
 
    /* remove effect of leading zeros in the descriptor */
    for ( i=0; i<in->size ; i++)
+   {
       if ( in->num[i]!='0' )
          break ;
-
+   }
    exp = in->exp ;
    size = in->size ;
    neg = in->negative ;
@@ -1763,11 +1807,12 @@ streng *str_norm( const tsd_t *TSD, num_descr *in, streng *try )
       if ((size-i > TSD->currlevel->currnumsize) && (in->num[TSD->currlevel->currnumsize+i] > '4'))
       {
          for (j=TSD->currlevel->currnumsize+i-1; j>=i; j--)
+         {
             if (((in->num[j])++)=='9')
                in->num[j] = '0' ;
             else
                break ;
-
+         }
          if (j<i)
          {
             in->num[i] = '1' ;
@@ -1806,11 +1851,12 @@ streng *str_norm( const tsd_t *TSD, num_descr *in, streng *try )
    if ((size-i > TSD->currlevel->currnumsize) && (in->num[TSD->currlevel->currnumsize+i] > '4'))
    {
       for (j=TSD->currlevel->currnumsize+i-1; j>=i; j--)
+      {
          if (((in->num[j])++)=='9')
             in->num[j] = '0' ;
          else
             break ;
-
+      }
       if (j<i)
       {
          top-- ;
@@ -2009,6 +2055,7 @@ void string_div( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_d
    /* than s->num, we must add an additional digit to f->num */
 
    for (i=0; i<ssize; i++)
+   {
       if ( mt->div_out[i] > s->num[i] )
          break ;
       else if ( mt->div_out[i] < s->num[i] )
@@ -2018,6 +2065,7 @@ void string_div( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_d
          r->exp-- ;
          break ;
       }
+   }
 
    /* situation: s->num[1..ssize] contains the devisor, and the array   */
    /* div_out[tstart==0..tcnt-1] hold the (first part of the) devidend. The */
@@ -2089,11 +2137,13 @@ void string_div( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_d
       {
          finished = 1 ;
          for (i=tstart; i<tcnt; i++)
+         {
             if (mt->div_out[i]!='0')
             {
                finished = 0 ;
                break ;
             }
+         }
       }
 
    } /* for each digit wanted in the result */
@@ -2111,8 +2161,10 @@ void string_div( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_d
       r2->exp = r->exp ;
 
       for (r2->size = outp; (r2->size > r2->exp) && (r2->size > 1); r2->size--)
+      {
          if (r2->num[r2->size-1]!='0')
-             break ;
+            break ;
+      }
    }
 
    if ((type == DIVTYPE_REMINDER) || (type == DIVTYPE_BOTH))
@@ -2129,8 +2181,10 @@ void string_div( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_d
    /* then, at the end, we have to strip of trailing zeros that come */
    /* after the decimal point, first do we have any decimals?        */
    for (r->size = outp; (r->size > r->exp) && (r->size > 1); r->size--)
+   {
       if (r->num[r->size-1]!='0')
-          break ;
+         break ;
+   }
 }
 
 
@@ -2198,7 +2252,7 @@ void string_mul( const tsd_t *TSD, const num_descr *f, const num_descr *s, num_d
       if (base-offset >= 0)
          mt->mul_out[base-offset++] = (char) (carry + '0') ;
       else
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
       base-- ;
    }
@@ -2236,7 +2290,7 @@ static void descr_strip( const tsd_t *TSD, const num_descr *from, num_descr *to 
       to->num[j] = from->num[i+j] ;
 
    if ((to->exp-1 > MAX_EXPONENT) || ( -MAX_EXPONENT > to->exp+1))
-       exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
+      exiterror( ERR_ARITH_OVERFLOW, 0 )  ;
 
    to->size = j ;
 }
@@ -2303,8 +2357,8 @@ streng *str_add( const tsd_t *TSD, const void *descr, const streng *second )
    mat_tsd_t *mt;
 
    mt = TSD->mat_tsd;
-    if (getdescr( TSD, second, &mt->sdescr ))
-       exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
+   if (getdescr( TSD, second, &mt->sdescr ))
+      exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
 
    string_add( TSD, descr, &mt->sdescr, &mt->rdescr ) ;
    return str_norm( TSD, &mt->rdescr, NULL ) ;
@@ -2312,7 +2366,7 @@ streng *str_add( const tsd_t *TSD, const void *descr, const streng *second )
 
 int descr_sign( const void *descr )
 {
-    return( ((num_descr*)descr)->negative ? -1 : 1 ) ;
+   return( ((num_descr*)descr)->negative ? -1 : 1 ) ;
 }
 
 
@@ -2623,7 +2677,7 @@ streng *str_binerize( const tsd_t *TSD, const streng *number, int length )
     * not possible, then we don't have a number, which is an error.
     */
    if (getdescr( TSD, number, &mt->edescr ))
-       exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
+      exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
 
    /*
     * If the number is negative, then we *must* know how long it is,
@@ -2631,7 +2685,7 @@ streng *str_binerize( const tsd_t *TSD, const streng *number, int length )
     * the wanted length. If we don't know the length, report an error.
     */
    if ((length==(-1)) && (mt->edescr.negative))
-       exiterror( ERR_INCORRECT_CALL, 0 )  ;
+      exiterror( ERR_INCORRECT_CALL, 0 )  ;
 
    /*
     * Then we have to determine if this actually is a whole number.
@@ -2641,7 +2695,7 @@ streng *str_binerize( const tsd_t *TSD, const streng *number, int length )
     */
    if (mt->edescr.size < mt->edescr.exp)
    {
-       exiterror( ERR_INVALID_INTEGER, 0 )  ;
+      exiterror( ERR_INVALID_INTEGER, 0 )  ;
    }
    else if (mt->edescr.size > mt->edescr.exp)
    {
@@ -2649,8 +2703,12 @@ streng *str_binerize( const tsd_t *TSD, const streng *number, int length )
        * Make sure that all digits in the fractional part is zero
        */
       for (i=MIN(mt->edescr.exp,0); i<mt->edescr.exp; i++)
+      {
          if (mt->edescr.num[i]!='0')
-             exiterror( ERR_INVALID_INTEGER, 0 )  ;
+         {
+            exiterror( ERR_INVALID_INTEGER, 0 )  ;
+         }
+      }
    }
 
    /*
@@ -2776,7 +2834,7 @@ streng *str_normalize( const tsd_t *TSD, const streng *number )
 
    mt = TSD->mat_tsd;
    if (getdescr( TSD, number, &mt->fdescr ))
-       exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
+      exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
 
    return str_norm( TSD, &mt->fdescr, NULL ) ;
 }
@@ -2821,8 +2879,10 @@ int myiswnumber( const tsd_t *TSD, const streng *number )
    if (i <= 0)     /* 0.?? */
       return 0;
    for (; i < mt->fdescr.size; i++)
+   {
       if (mt->fdescr.num[i] != '0')     /* decimal part not zero */
          return 0;
+   }
    return 1;
 }
 
@@ -2847,9 +2907,10 @@ int streng_to_int( const tsd_t *TSD, const streng *number, int *error )
    if (i<0)
       i = 0 ;
    for (; i<mt->fdescr.size; i++)
+   {
       if (mt->fdescr.num[i] != '0')  /* decimal part not zero */
          goto errorout ;
-
+   }
    if (mt->fdescr.exp>9)
       goto errorout ; /* thus, a 32 bit integer should be sufficient */
 

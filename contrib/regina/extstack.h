@@ -38,6 +38,7 @@ int set_queue_in_rxstack( const tsd_t *TSD, int sock, streng *queue_name, streng
 int get_number_in_queue_from_rxstack( const tsd_t *TSD, int sock );
 int get_queue_from_rxstack( const tsd_t *TSD, int sock, streng **result );
 int create_queue_on_rxstack( const tsd_t *TSD, int sock, streng *queue, streng **result );
+int timeout_queue_on_rxstack( const tsd_t *TSD, int sock, long timeout );
 int get_line_from_rxstack( const tsd_t *TSD, int sock, streng **result );
 int queue_line_lifo_to_rxstack( const tsd_t *TSD, int sock, streng *line );
 int queue_line_fifo_to_rxstack( const tsd_t *TSD, int sock, streng *line );
@@ -65,12 +66,39 @@ int get_length_from_header( const tsd_t *TSD, streng *header );
 #define RXSTACK_GET_QUEUE_STR       "G"
 #define RXSTACK_NUMBER_IN_QUEUE     'N'
 #define RXSTACK_NUMBER_IN_QUEUE_STR "N"
+#define RXSTACK_TIMEOUT_QUEUE       'T'
+#define RXSTACK_TIMEOUT_QUEUE_STR   "T"
 #define RXSTACK_WRITE_QUEUE         'W'
 #define RXSTACK_WRITE_QUEUE_STR     "W"
 #define RXSTACK_UNKNOWN             '?'
 #define RXSTACK_UNKNOWN_STR         "?"
 #define RXSTACK_HEADER_SIZE         7
+#define RXSTACK_TIMEOUT_SIZE        6
 
 #ifndef RXSOCKET
 # define RXSOCKET 5757
 #endif
+
+#define ERR_RXSTACK_CANT_CONNECT       101
+#define ERR_RXSTACK_CANT_CONNECT_TMPL    "Error connecting to %s on port %d: \"%s\""
+#define ERR_RXSTACK_NO_IP              102
+#define ERR_RXSTACK_NO_IP_TMPL           "Unable to obtain IP address for %s"
+#define ERR_RXSTACK_INVALID_SERVER     103
+#define ERR_RXSTACK_INVALID_SERVER_TMPL  "Invalid format for server in specified queue name: \"%s\""
+#define ERR_RXSTACK_INVALID_QUEUE      104
+#define ERR_RXSTACK_INVALID_QUEUE_TMPL   "Invalid format for queue name: \"%s\""
+#define ERR_RXSTACK_NO_WINSOCK         105
+#define ERR_RXSTACK_NO_WINSOCK_TMPL      "Unable to start Windows Socket interface: %s"
+#define ERR_RXSTACK_TOO_MANY_QUEUES    106
+#define ERR_RXSTACK_TOO_MANY_QUEUES_TMPL "Maximum number of external queues exceeded: %d"
+#define ERR_RXSTACK_READING_SOCKET     107
+#define ERR_RXSTACK_READING_SOCKET_TMPL  "Error occured reading socket: %s"
+#define ERR_RXSTACK_INVALID_SWITCH     108
+#define ERR_RXSTACK_INVALID_SWITCH_TMPL  "Invalid switch passed. Must be one of \"%s\""
+
+#define ERR_RXSTACK_INTERNAL            99
+#define ERR_RXSTACK_INTERNAL_TMPL        "Internal error with external queue interface: %d \"%s\""
+#define ERR_RXSTACK_GENERAL            100
+#define ERR_RXSTACK_GENERAL_TMPL         "General system error with external queue interface. %s. %s"
+
+#define ERR_STORAGE_EXHAUSTED_TMPL       "System resources exhausted"

@@ -36,7 +36,7 @@ volatile char *tmpstr_of( tsd_t *TSD, const streng *input )
 #endif
 
 
-#ifdef WIN32
+#if defined(WIN32)
 # if defined(_MSC_VER)
 #  if _MSC_VER >= 1100
 /* Stupid MSC can't compile own headers without warning at least in VC 5.0 */
@@ -49,6 +49,7 @@ volatile char *tmpstr_of( tsd_t *TSD, const streng *input )
 # else
 #  include <windows.h>
 # endif
+# include <io.h>
 #else
 # ifdef HAVE_SYS_SOCKET_H
 #  include <sys/socket.h>
@@ -173,7 +174,7 @@ int connect_to_rxstack( tsd_t *TSD, int portno, streng *server_name, int server_
    memset( &server, 0, sizeof(server) );
    server.sin_family = AF_INET;
    server.sin_addr.s_addr = server_address;
-   server.sin_port = htons(portno);
+   server.sin_port = htons((unsigned short) portno);
 
    sock = socket( AF_INET, SOCK_STREAM, 0 );
    if ( sock < 0 )
@@ -429,6 +430,35 @@ int delete_queue_from_rxstack( const tsd_t *TSD, int sock, streng *queue_name )
    return rc;
 }
 
+int timeout_queue_on_rxstack( const tsd_t *TSD, int sock, long timeout )
+{
+   int rc=0;
+   streng *result,*qtimeout, *hex_timeout;
+
+   qtimeout = REXX_D2X( timeout );
+   if ( qtimeout )
+   {
+      hex_timeout = REXX_RIGHT( qtimeout, RXSTACK_TIMEOUT_SIZE, '0');
+      DROPSTRENG( qtimeout );
+      if ( hex_timeout )
+      {
+         DEBUGDUMP(printf("Send timeout: %s(%d) rc %d\n", PSTRENGVAL(hex_timeout),PSTRENGLEN(hex_timeout),rc););
+         rc = send_command_to_rxstack( TSD, sock, RXSTACK_TIMEOUT_QUEUE_STR, PSTRENGVAL(hex_timeout), PSTRENGLEN(hex_timeout) );
+         DROPSTRENG( hex_timeout );
+         if ( rc != -1 )
+         {
+            result = read_result_from_rxstack( TSD, sock, RXSTACK_HEADER_SIZE );
+            if ( result )
+            {
+               rc = result->value[0]-'0';
+               DROPSTRENG( result );
+            }
+         }
+      }
+   }
+   return rc;
+}
+
 int get_number_in_queue_from_rxstack( const tsd_t *TSD, int sock )
 {
    int rc,length=0;
@@ -517,7 +547,7 @@ int get_line_from_rxstack( const tsd_t *TSD, int sock, streng **result )
             length = get_length_from_header( TSD, header );
             *result = read_result_from_rxstack( TSD, sock, length );
          }
-         else if ( rc == 1 )
+         else if ( rc == 1 || rc == 4 )
          {
             /*
              * queue is empty - return a NULL

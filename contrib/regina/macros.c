@@ -233,26 +233,51 @@ streng *execute_external( tsd_t *TSD, const streng *command, paramboxptr args,
             if (!fptr)
             {
                FreeTSD( jbuf ) ;
-               if (RetCode)
+               if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
                {
-                  *RetCode = -ERR_PROG_UNREADABLE;
-                  if ( get_options_flag( TSD->currlevel, EXT_STDOUT_FOR_STDERR ) )
+                  /*
+                   * If we can't find the external routine, we should exiterror()
+                   * with 43.1 - as per ANSI
+                   */
+                  exiterror( ERR_ROUTINE_NOT_FOUND, 1, path );
+               }
+               else
+               {
+                  /*
+                   * The only time this function is called with a non-NULL
+                   * RetCode is from client.c, when an external routine
+                   * is being executed via the SAA interface. In this case
+                   * the error returned is the only thing we should do;
+                   * we certainly should NOT be writing anything to stdout
+                   * or stderr!
+                   */
+                  if (RetCode)
                   {
-                     fprintf(stdout,"REXX: Error %d: %s: \"%s\"\n",
-                          ERR_ROUTINE_NOT_FOUND,
-                          errortext( ERR_ROUTINE_NOT_FOUND ), path );
+                     *RetCode = -ERR_PROG_UNREADABLE;
+                  }
+#if 0
+                  if (RetCode)
+                  {
+                     *RetCode = -ERR_PROG_UNREADABLE;
+                     if ( get_options_flag( TSD->currlevel, EXT_STDOUT_FOR_STDERR ) )
+                     {
+                        fprintf(stdout,"REXX: Error %d: %s: \"%s\"\n",
+                             ERR_ROUTINE_NOT_FOUND,
+                             errortext( TSD, ERR_ROUTINE_NOT_FOUND, 0, 0, &is_fmt ), path );
+                        /* JH 19991105 the variable name was not set by
+                           get_external_routine() when file is not found. */
+                        fflush( stdout );
+                     }
+                     else
+                        fprintf(stderr,"REXX: Error %d: %s: \"%s\"\n",
+                             ERR_ROUTINE_NOT_FOUND,
+                             errortext( TSD, ERR_ROUTINE_NOT_FOUND, 0, 0, &is_fmt ), path );
                      /* JH 19991105 the variable name was not set by
                         get_external_routine() when file is not found. */
-                     fflush( stdout );
                   }
-                  else
-                     fprintf(stderr,"REXX: Error %d: %s: \"%s\"\n",
-                          ERR_ROUTINE_NOT_FOUND,
-                          errortext( ERR_ROUTINE_NOT_FOUND ), path );
-                  /* JH 19991105 the variable name was not set by
-                     get_external_routine() when file is not found. */
+#endif
+                  return NULL ;
                }
-               return NULL ;
             }
          }
       }
@@ -302,7 +327,7 @@ streng *execute_external( tsd_t *TSD, const streng *command, paramboxptr args,
       {
          TSD->currentnode = savecurrentnode; /* pgb */
          ptr = NULL ;
-         exiterror( ERR_YACC_SYNTAX, 0 )  ;
+         exiterror( ERR_YACC_SYNTAX, 1, parsing.tline ) ;
       }
    }
    if (TSD->systeminfo->hooks & HOOK_MASK(HOOK_TERMIN))
@@ -335,7 +360,7 @@ internal_parser_type enter_macro( tsd_t *TSD, const streng *source,
    fetch_string( TSD, source, &parsing );
    if (parsing.result != 0)
    {
-      exiterror( ERR_YACC_SYNTAX, 0 ) ;
+      exiterror( ERR_YACC_SYNTAX, 1, parsing.tline ) ;
       return(parsing);
    }
    if (ept && extlength)

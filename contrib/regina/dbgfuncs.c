@@ -35,14 +35,14 @@ streng *dbg_freelists( tsd_t *TSD, cparamboxptr dummy )
 }
 #endif
 
-#ifndef NDEBUG
-
 streng *dbg_traceback( tsd_t *TSD, cparamboxptr dummy )
 {
    traceback(TSD) ;
    dummy = dummy; /* keep compiler happy */
    return nullstringptr() ;
 }
+
+#ifndef NDEBUG
 
 
 streng *dbg_dumpvars( tsd_t *TSD, cparamboxptr dummy )

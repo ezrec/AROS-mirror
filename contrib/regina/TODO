@@ -7,7 +7,6 @@ o A testing suite to check out if old or new errors persists or are solved.
   - perhaps modification of the existing trip test to be cross-platform
     and to work with other interpreters would be useful
 o Add execio process.
-o Add missing ANSI standard ADDRESS extensions
 o Cache the parse-tree for externally called Rexx programs so subsequent 
   calls can be satisfied from the cached parse-tree.
 

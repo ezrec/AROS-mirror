@@ -48,6 +48,7 @@ static char *RCSid = "$Id$";
 
 /* locals, they are protected by regina_parser (see lexsrc.l) */
 static int tmplno, tmpchr ;
+static nodeptr current, with = NULL ;
 #if 0 /* see below */
 static nodeptr *narray=NULL ;
 static int narptr=0, narmax=0 ;
@@ -72,8 +73,9 @@ void newlabel( const tsd_t *TSD, internal_parser_type *ipt, nodeptr this ) ;
 %token LT DIFFERENT EQUALEQUAL NOTEQUALEQUAL OFFSET SPACE EXP XOR
 %token PLACEHOLDER NOTREADY CONSYMBOL SIMSYMBOL EXFUNCNAME INFUNCNAME
 %token LABEL DOVARIABLE HEXSTRING STRING VERSION LINEIN WHATEVER NAME
-%token FAILURE BINSTRING ENVIRONMENT OPTIONS
+%token FAILURE BINSTRING OPTIONS ENVIRONMENT LOSTDIGITS
 %token GTGT LTLT NOTGTGT NOTLTLT GTGTE LTLTE
+%token INPUT OUTPUT ERROR NORMAL APPEND REPLACE STREAM STEM LIFO FIFO
 
 %start prog
 
@@ -173,6 +175,7 @@ mtstatement  : address_stat
              | select_stat
              | signal_stat
              | trace_stat
+             | upper_stat
              | assignment
              ;
 
@@ -254,18 +257,28 @@ otherwise    : OTHERWISE               { $$ = makenode(X_OTHERWISE,0) ;
 trace        : TRACE                   { $$ = makenode(X_TRACE,0) ;
                                          $$->lineno = parser_data.tline ;
                                          $$->charnr = parser_data.tstart ; } ;
-address_stat : address VALUE expr seps { $$ = $1 ;
-                                         $$->type = X_ADDR_V ;
-                                         $$->p[0] = $3 ; }
-             | address seps            { $$ = $1 ;
-                                         $$->type = X_ADDR_S ; }
-             | address nvir nexpr seps { $$ = $1 ;
-                                         $$->type = X_ADDR_N ;
-                                         $$->p[0] = $3 ;
-                                         $$->name = (streng *)$2 ; }
-             | address expr seps       { $$ = $1 ;
-                                         $$->type = X_ADDR_V ;
-                                         $$->p[0] = $2 ; }
+upper        : UPPER                   { $$ = makenode(X_UPPER_VAR,0) ;
+                                         $$->lineno = parser_data.tline ;
+                                         $$->charnr = parser_data.tstart ; } ;
+address_stat : address                 { $$ = current = $1 ; }
+               address_stat2
+             ;
+
+address_stat2: VALUE expr naddr_with   { current->type = X_ADDR_V ;
+                                         current->p[0] = $2 ;
+                                         current->p[1] = $3 ; }
+             | addr_with               { exiterror( ERR_STRING_EXPECTED, 1, __reginatext ) ;}
+             | seps                    { current->type = X_ADDR_S ; }
+             | error                   { exiterror( ERR_STRING_EXPECTED, 1, __reginatext ) ;}
+               naddr_with
+             | nvir nexpr naddr_with   { current->name = (streng *)$1 ;
+                                         current->type = X_ADDR_N ;
+                                         current->p[0] = $2 ;
+                                         current->p[1] = $3 ; }
+             | '(' expr ')' nspace naddr_with { current->type = X_ADDR_V ;
+                                         current->p[0] = $2 ;
+                                         current->p[1] = $5 ;
+                                         current->u.nonansi = 1 ; }
              ;
 
 arg_stat     : arg templs seps         { $$ = $1 ;
@@ -283,12 +296,14 @@ call_stat    : call asymbol exprs seps { $$ = $1 ;
                                          $$->name = $2->name ;
                                          $$->p[0] = $2->p[0] ;
                                          RejectNode( $2 ); }
-             | call on error seps      {  exiterror( ERR_SYMBOL_EXPECTED, 1, retvalue ) ;}
-             | call off error seps     {  exiterror( ERR_SYMBOL_EXPECTED, 1, retvalue ) ;}
-             | call on c_action error seps
-                                       {  exiterror( ERR_INV_SUBKEYWORD, 1, "ERROR HALT NOTREADY FAILURE", retvalue ) ;}
-             | call on c_action namespec error seps
-                                       {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+             | call on error { exiterror( ERR_INV_SUBKEYWORD, 1, "ERROR FAILURE HALT NOTREADY", __reginatext ) ;}
+                       seps
+             | call off error { exiterror( ERR_INV_SUBKEYWORD, 2, "ERROR FAILURE HALT NOTREADY", __reginatext ) ;}
+                        seps
+             | call on c_action error { exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
+                                seps
+             | call on c_action namespec error { exiterror( ERR_STRING_EXPECTED, 3, __reginatext ) ;}
+                                         seps
              | call on c_action namespec seps
                                        { $$ = $1 ;
                                          $$->type = X_CALL_SET ;
@@ -300,8 +315,8 @@ call_stat    : call asymbol exprs seps { $$ = $1 ;
                                          $$->p[0] = $2 ;
                                          $$->name = NULL ;
                                          $$->p[1] = $3 ; }
-             | call off c_action error seps
-                                       {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+             | call off c_action error { exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
+                                 seps
              | call off c_action seps  { $$ = $1 ;
                                          $$->type = X_CALL_SET ;
                                          $$->p[0] = $2 ;
@@ -323,7 +338,7 @@ end_stat     : END                     { $$ = makenode(X_END,0) ;
 end          : end_stat simsymb       { $$ = $1 ;
                                          $$->name = (streng*)($2) ; }
              | end_stat                { $$ = $1 ; }
-             | end_stat simsymb error {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+             | end_stat simsymb error {  exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
              ;
 
 do_stat      :  do repetitor conditional seps nxstats end seps
@@ -360,13 +375,151 @@ repetitor    : dovar '=' expr tobyfor tobyfor tobyfor
                                          $$->name = (streng *)$1 ;
                                          checkdosyntax($$) ; }
              | FOREVER                 { $$ = makenode(X_REP_FOREVER,0) ; }
-             | FOREVER error seps      {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
-             | expr                    { $1 = makenode(X_DO_FOR,1,$1) ;
+             | FOREVER error { exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
+                       seps
+             | expr                    { $1 = makenode(X_DO_EXPR,1,$1) ;
                                          $$ = makenode(X_REP,2,NULL,$1) ; }
              |                         { $$ = NULL ; }
              ;
 
-nvir         : ENVIRONMENT             { $$ = (nodeptr)Str_cre_TSD(parser_data.TSD,retvalue) ; }
+nvir         : CONSYMBOL               { $$ = (nodeptr)Str_cre_TSD(parser_data.TSD,retvalue) ; }
+             | SIMSYMBOL               { $$ = (nodeptr)Str_cre_TSD(parser_data.TSD,retvalue) ; }
+             | STRING                  { $$ = (nodeptr)Str_cre_TSD(parser_data.TSD,retvalue) ; }
+             ;
+
+naddr_with   :                         { SymbolDetect |= SD_ADDRWITH ;
+                                         $$ = with = makenode(X_ADDR_WITH,0) ;
+                                         $$->lineno = parser_data.tline ;
+                                         $$->charnr = parser_data.tstart ; }
+               addr_with               { with = NULL ;
+                                         SymbolDetect &= ~SD_ADDRWITH ; }
+             | seps                    { $$ = NULL ; }
+             ;
+
+addr_with    : WITH connection seps    { $$ = $2 ; /* pro forma */ }
+             | WITH connection error seps { exiterror( ERR_INV_SUBKEYWORD, 5, __reginatext ) ; }
+             | WITH nspace seps        { exiterror( ERR_INV_SUBKEYWORD, 5, __reginatext ) ; }
+             ;
+
+connection   : inputstmts
+             | outputstmts
+             | errorstmts
+             | error                   { exiterror( ERR_INV_SUBKEYWORD, 5, __reginatext ) ; }
+             ;
+
+inputstmts   : inputstmt
+               adeo
+             ;
+
+outputstmts  : outputstmt
+               adei
+             ;
+
+errorstmts   : errorstmt
+               adio
+             ;
+
+adeo         : outputstmt nspace
+             | outputstmt errorstmt nspace
+             | errorstmt nspace
+             | errorstmt outputstmt nspace
+             | nspace
+             ;
+
+adei         : inputstmt nspace
+             | inputstmt errorstmt nspace
+             | errorstmt nspace
+             | errorstmt inputstmt nspace
+             | nspace
+             ;
+
+adio         : inputstmt nspace
+             | inputstmt outputstmt nspace
+             | outputstmt nspace
+             | outputstmt inputstmt nspace
+             | nspace
+             ;
+
+inputstmt    : nspace INPUT nspace resourcei { with->p[0] = $4; }
+             | nspace INPUT error      { exiterror( ERR_INV_SUBKEYWORD, 6, __reginatext ) ; }
+             ;
+
+outputstmt   : nspace OUTPUT nspace resourceo { with->p[1] = $4; }
+             | nspace OUTPUT error     { exiterror( ERR_INV_SUBKEYWORD, 7, __reginatext ) ; }
+             ;
+
+errorstmt    : nspace ERROR nspace resourceo { with->p[2] = $4; }
+             | nspace ERROR error      { exiterror( ERR_INV_SUBKEYWORD, 14, __reginatext ) ; }
+             ;
+
+resourcei    : resources               { $$ = $1 ; }
+             | NORMAL                  { $$ = makenode(X_ADDR_WITH, 0) ;
+                                         $$->lineno = parser_data.tline ;
+                                         $$->charnr = parser_data.tstart ; }
+             ;
+
+resourceo    : resources               { $$ = $1 ; }
+             | APPEND resources        { $$ = $2 ;
+                                         $$->u.of.append = 1 ; }
+             | APPEND error            { exiterror( ERR_INV_SUBKEYWORD, 8, __reginatext ) ; }
+             | REPLACE resources       { $$ = $2 ; }
+             | REPLACE error           { exiterror( ERR_INV_SUBKEYWORD, 9, __reginatext ) ; }
+             | NORMAL                  { $$ = makenode(X_ADDR_WITH, 0) ;
+                                         $$->lineno = parser_data.tline ;
+                                         $$->charnr = parser_data.tstart ; }
+             ;
+
+resources    : STREAM nnvir            { /* ANSI extension: nsimsymb is
+                                          * used by the standard, but I think
+                                          * there are no reasons why using
+                                          * it here as a must. FGC
+                                          */
+                                         $$ = makenode(X_ADDR_WITH, 0) ;
+                                         $$->name = (streng *) $2 ;
+                                         $$->lineno = parser_data.tline ;
+                                         $$->charnr = parser_data.tstart ;
+                                         $$->u.of.awt = isSTREAM;
+                                         SymbolDetect |= SD_ADDRWITH ; }
+             | STREAM error            { exiterror( ERR_INVALID_OPTION, 1, __reginatext ) ; }
+             | STEM nsimsymb           {
+                                         streng *tmp=(streng *)$2;
+                                         if ( tmp->value[(tmp->len)-1] != '.' )
+                                            exiterror( ERR_INVALID_OPTION, 3, __reginatext );
+                                         $$ = makenode(X_ADDR_WITH, 0, 0) ;
+                                         $$->name = (streng *) $2 ;
+                                         $$->lineno = parser_data.tline ;
+                                         $$->charnr = parser_data.tstart ;
+                                         $$->u.of.awt = isSTEM;
+                                         SymbolDetect |= SD_ADDRWITH ; }
+             | STEM error              { exiterror( ERR_INVALID_OPTION, 2, __reginatext ) ; }
+             | LIFO nnvir              {
+                                         $$ = makenode(X_ADDR_WITH, 0) ;
+                                         $$->name = (streng *) $2 ;
+                                         $$->lineno = parser_data.tline ;
+                                         $$->charnr = parser_data.tstart ;
+                                         $$->u.of.awt = isLIFO;
+                                         SymbolDetect |= SD_ADDRWITH ; }
+             | LIFO error              { exiterror( ERR_INVALID_OPTION, 100, __reginatext ) ; }
+             | FIFO nnvir              {
+                                         $$ = makenode(X_ADDR_WITH, 0) ;
+                                         $$->name = (streng *) $2 ;
+                                         $$->lineno = parser_data.tline ;
+                                         $$->charnr = parser_data.tstart ;
+                                         $$->u.of.awt = isFIFO;
+                                         SymbolDetect |= SD_ADDRWITH ; }
+             | FIFO error              { exiterror( ERR_INVALID_OPTION, 101, __reginatext ) ; }
+             ;
+
+nsimsymb     :                         { SymbolDetect &= ~SD_ADDRWITH ; }
+               nspace xsimsymb         { $$ = $3 ; }
+             ;
+
+nnvir        :                         { SymbolDetect &= ~SD_ADDRWITH ; }
+               nspace nvir             { $$ = $3 ; }
+             ;
+
+nspace       : SPACE
+             |
              ;
 
 dovar        : DOVARIABLE              { $$ = (nodeptr)Str_cre_TSD(parser_data.TSD,retvalue) ; }
@@ -382,7 +535,13 @@ conditional  : WHILE expr              { $$ = makenode(X_WHILE,1,$2) ; }
              |                         { $$ = NULL ; }
              ;
 
-drop_stat    : drop anyvars seps       { $$ = $1 ;
+drop_stat    : drop anyvars error { exiterror( ERR_SYMBOL_EXPECTED, 1, __reginatext ) ;}
+             | drop anyvars seps       { $$ = $1 ;
+                                         $$->p[0] = $2 ; }
+             ;
+
+upper_stat   : upper anyvars error { exiterror( ERR_SYMBOL_EXPECTED, 1, __reginatext ) ;}
+             | upper anyvars seps       { $$ = $1 ;
                                          $$->p[0] = $2 ; }
              ;
 
@@ -404,7 +563,7 @@ if_stat      : if expr nseps THEN nseps ystatement
              | if expr nseps THEN nseps error
                                        {  exiterror( ERR_INCOMPLETE_STRUCT, 3 ) ;}
              | if seps                 {  exiterror( ERR_INCOMPLETE_STRUCT, 0 ) ;}
-             | if expr nseps error     {  exiterror( ERR_THEN_EXPECTED, 0 )  ; }
+             | if expr nseps error     {  exiterror( ERR_THEN_EXPECTED, 1, parser_data.if_linenr, __reginatext )  ; }
              ;
 
 unexp_then   : gruff THEN              {  exiterror( ERR_THEN_UNEXPECTED, 1 )  ; }
@@ -420,8 +579,8 @@ ipret_stat   : interpret expr seps     { $$ = $1 ;
 
 iterate_stat : iterate simsymb seps    { $$ = $1 ;
                                          $$->name = (streng *) $2 ; }
-             | iterate simsymb error seps
-                                       {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+             | iterate simsymb error { exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
+                               seps
              | iterate seps            { $$ = $1 ; }
              ;
 
@@ -437,21 +596,22 @@ labelname    : label                   { $$ = $1 ;
 
 leave_stat   : leave simsymb seps      { $$ = $1 ;
                                          $$->name = (streng *) $2 ; }
-             | leave simsymb error seps
-                                       {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+             | leave simsymb error { exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
+                             seps
              | leave seps              { $$ = $1 ; }
              ;
 
 nop_stat     : nop seps                { $$ = $1 ; }
-             | nop error seps          {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+             | nop error {  exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
+                   seps
              ;
 
 numeric_stat : numeric DIGITS expr seps { $$ = $1 ;
                                          $$->type = X_NUM_D ;
                                          $$->p[0] = $3 ; }
              | numeric DIGITS seps     { $$ = $1; $$->type = X_NUM_DDEF ; }
-             | numeric FORM form_expr error seps
-                                       {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+             | numeric FORM form_expr error { exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
+                                      seps
              | numeric FORM form_expr seps
                                        { $$ = $1 ;
                                          $$->type = X_NUM_F ;
@@ -460,12 +620,14 @@ numeric_stat : numeric DIGITS expr seps { $$ = $1 ;
                                          $$ = $1 ; $$->type=X_NUM_FRMDEF ;}
              | numeric FORM VALUE expr seps  { $$ = $1 ; $$->type=X_NUM_V ;
                                          $$->p[0] = $4 ; }
-             | numeric FORM error seps {  exiterror( ERR_INV_SUBKEYWORD, 11, "ENGINEERING SCIENTIFIC", retvalue ) ;}
+             | numeric FORM error { exiterror( ERR_INV_SUBKEYWORD, 11, "ENGINEERING SCIENTIFIC", __reginatext ) ;}
+                            seps
              | numeric FUZZ seps       { $$ = $1; $$->type = X_NUM_FDEF ;}
              | numeric FUZZ expr seps  { $$ = $1 ;
                                          $$->type = X_NUM_FUZZ ;
                                          $$->p[0] = $3 ; }
-             | numeric error seps      {  exiterror( ERR_INV_SUBKEYWORD, 15, "DIGITS FORM FUZZ", retvalue ) ;}
+             | numeric error { exiterror( ERR_INV_SUBKEYWORD, 15, "DIGITS FORM FUZZ", __reginatext ) ;}
+                       seps
              ;
 
 form_expr    : SCIENTIFIC              { $$ = makenode(X_NUM_SCI,0) ; }
@@ -492,7 +654,9 @@ parse_stat   : parse parse_param template seps
                                        { $$ = $1 ;
                                          $$->type = X_PARSE_ARG_U ;
                                          $$->p[0] = $4 ; }
-             | parse error seps        {  exiterror( ERR_INV_SUBKEYWORD, 12, "ARG EXTERNAL LINEIN PULL SOURCE UPPER VAR VALUE VERSION", retvalue ) ;}
+             | parse UPPER error { exiterror( ERR_INV_SUBKEYWORD, 13, "ARG EXTERNAL LINEIN PULL SOURCE UPPER VAR VALUE VERSION", __reginatext ) ;}
+             | parse error { exiterror( ERR_INV_SUBKEYWORD, 12, "ARG EXTERNAL LINEIN PULL SOURCE UPPER VAR VALUE VERSION", __reginatext ) ;}
+                     seps
              ;
 
 templs       : template ',' templs     { $$ = $1 ; $$->next = $3 ; }
@@ -511,10 +675,12 @@ parse_param  : LINEIN                  { $$ = makenode(X_PARSE_EXT,0) ; }
              ;
 
 proc_stat    : proc seps               { $$ = $1 ; }
-             | proc error seps          {  exiterror( ERR_INV_SUBKEYWORD, 17, "EXPOSE", retvalue ) ;}
-             | proc EXPOSE error seps   {  exiterror( ERR_SYMBOL_EXPECTED, 1, retvalue ) ;}
-             | proc EXPOSE anyvars error seps
-                                        {  exiterror( ERR_SYMBOL_EXPECTED, 1, retvalue ) ;}
+             | proc error { exiterror( ERR_INV_SUBKEYWORD, 17, __reginatext ) ;}
+                    seps
+             | proc EXPOSE error { exiterror( ERR_SYMBOL_EXPECTED, 1, __reginatext ) ;}
+                           seps
+             | proc EXPOSE anyvars error { exiterror( ERR_SYMBOL_EXPECTED, 1, __reginatext ) ;}
+                                   seps
              | proc EXPOSE anyvars seps { $$ = $1 ;
                                          $$->p[0] = $3 ; }
              ;
@@ -540,7 +706,7 @@ return_stat  : return nexpr seps       { $$ = $1 ;
              ;
 
 sel_end      : END simsymb             {  exiterror( ERR_UNMATCHED_END, 0 ) ;}
-             | END simsymb error       {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+             | END simsymb error       {  exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
              | END
              ;
 
@@ -551,7 +717,7 @@ select_stat  : select seps when_stats otherwise_stat sel_end seps
              | select seps END error   {  exiterror( ERR_WHEN_EXPECTED, 0 ) ;}
              | select seps otherwise error
                                        {  exiterror( ERR_WHEN_EXPECTED, 0 ) ;}
-             | select error            {  exiterror( ERR_EXTRA_DATA, 1, retvalue )  ; }
+             | select error            {  exiterror( ERR_EXTRA_DATA, 1, __reginatext )  ;}
              | select seps THEN        {  exiterror( ERR_THEN_UNEXPECTED, 0 ) ;}
              | select seps when_stats otherwise error
                                        {  exiterror( ERR_INCOMPLETE_STRUCT, 0 ) ;}
@@ -569,7 +735,7 @@ when_stat    : when expr nseps THEN nseps statement
              | when expr nseps THEN nseps statement THEN
                                        {  exiterror( ERR_THEN_UNEXPECTED, 0 ) ;}
              | when expr seps
-                                       {  exiterror( ERR_THEN_EXPECTED, 0 )  ; }
+                                       {  exiterror( ERR_THEN_EXPECTED, 2, parser_data.when_linenr, __reginatext )  ; }
              | when error              {  exiterror( ERR_INVALID_EXPRESSION, 0 ) ;}
              ;
 
@@ -592,15 +758,18 @@ otherwise_stat : otherwise nseps nxstats {
 signal_stat : signal VALUE expr seps   { $$ = $1 ;
                                          $$->type = X_SIG_VAL ;
                                          $$->p[0] = $3 ; }
-            | signal asymbol error seps {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+            | signal asymbol error { exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
+                             seps
             | signal asymbol seps      { $$ = $1 ;
                                          $$->name = (streng *)$2 ; }
-            | signal on error seps     {  exiterror( ERR_SYMBOL_EXPECTED, 1, retvalue ) ;}
-            | signal off error seps    {  exiterror( ERR_SYMBOL_EXPECTED, 1, retvalue ) ;}
-            | signal on s_action error seps
-                                       {  exiterror( ERR_INV_SUBKEYWORD, 3, "ERROR HALT NOTREADY FAILURE NOVALUE SYNTAX" , retvalue ) ;}
-            | signal on s_action namespec error seps
-                                       {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+            | signal on error { exiterror( ERR_INV_SUBKEYWORD, 3, "ERROR FAILURE HALT NOTREADY NOVALUE SYNTAX LOSTDIGITS", __reginatext ) ;}
+                        seps
+            | signal off error { exiterror( ERR_INV_SUBKEYWORD, 4, "ERROR FAILURE HALT NOTREADY NOVALUE SYNTAX LOSTDIGITS", __reginatext ) ;}
+                         seps
+            | signal on s_action error { exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
+                                 seps
+            | signal on s_action namespec error { exiterror( ERR_STRING_EXPECTED, 3, __reginatext ) ;}
+                                          seps
             | signal on s_action namespec seps
                                        { $$ = $1 ;
                                          $$->type = X_SIG_SET ;
@@ -613,8 +782,8 @@ signal_stat : signal VALUE expr seps   { $$ = $1 ;
                                          $$->p[0] = $2 ;
                                          $$->name = (streng *)$4 ;
                                          $$->p[1] = $3 ; }
-            | signal off s_action error seps
-                                       {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+            | signal off s_action error { exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
+                                  seps
             | signal off s_action seps { $$ = $1 ;
                                          $$->type = X_SIG_SET ;
                                          $$->p[0] = $2 ;
@@ -622,12 +791,12 @@ signal_stat : signal VALUE expr seps   { $$ = $1 ;
             ;
 
 namespec    : NAME SIMSYMBOL           { $$ = (nodeptr)Str_cre_TSD(parser_data.TSD,retvalue);}
-            | NAME error               {  exiterror( ERR_SYMBOL_EXPECTED, 1, retvalue )  ;}
+            | NAME error               { exiterror( ERR_STRING_EXPECTED, 3, __reginatext ) ;}
             ;
 
 asymbol     : CONSYMBOL                { $$ = (nodeptr)Str_cre_TSD(parser_data.TSD,retvalue) ; }
             | SIMSYMBOL                { $$ = (nodeptr)Str_cre_TSD(parser_data.TSD,retvalue) ; }
-            | error                    {  exiterror( ERR_STRING_EXPECTED, 0 )  ;}
+            | error                    { exiterror( ERR_STRING_EXPECTED, 0 ) ;}
             ;
 
 on          : ON                       { $$ = makenode(X_ON,0) ; }
@@ -645,13 +814,14 @@ c_action    : ERROR                    { $$ = makenode(X_S_ERROR,0) ; }
 s_action    : c_action                 { $$ = $1 ; }
             | NOVALUE                  { $$ = makenode(X_S_NOVALUE,0) ; }
             | SYNTAX                   { $$ = makenode(X_S_SYNTAX,0) ; }
+            | LOSTDIGITS               { $$ = makenode(X_S_LOSTDIGITS,0) ; }
 
 trace_stat  : trace VALUE expr seps    { $$ = $1 ;
                                          $$->p[0] = $3 ; }
             | trace expr seps          { $$ = $1 ;
                                          $$->p[0] = $2 ; }
-            | trace whatever error seps
-                                       {  exiterror( ERR_EXTRA_DATA, 1, retvalue ) ;}
+            | trace whatever error { exiterror( ERR_EXTRA_DATA, 1, __reginatext ) ;}
+                             seps
             | trace whatever seps      { $$ = $1 ;
                                          $$->name = (streng *) $2 ; }
             ;
@@ -771,7 +941,8 @@ extfunc     : EXFUNCNAME               { $$ = (nodeptr)Str_cre_TSD(parser_data.T
 
 template    : pv solid template        { $$ =makenode(X_TPL_SOLID,3,$1,$2,$3);}
             | pv                       { $$ =makenode(X_TPL_SOLID,1,$1) ; }
-            | error seps               {  exiterror( ERR_INVALID_TEMPLATE, 1, retvalue ) ;}
+            | error { exiterror( ERR_INVALID_TEMPLATE, 1, __reginatext ) ;}
+              seps
             ;
 
 solid       : '-' offset               { $$ = makenode(X_NEG_OFFS,0) ;
@@ -797,7 +968,9 @@ solid       : '-' offset               { $$ = makenode(X_NEG_OFFS,0) ;
 offset      : OFFSET                   { $$ = (nodeptr)Str_cre_TSD(parser_data.TSD,retvalue) ; }
             | CONSYMBOL                { streng *sptr = Str_cre_TSD(parser_data.TSD,retvalue) ;
                                           if (myisnumber(sptr))
-                                             exiterror( ERR_INVALID_INTEGER, 0 ) ;
+                                          {
+                                             exiterror( ERR_INVALID_INTEGER, 4, sptr->value ) ;
+                                          }
                                           else
                                              exiterror( ERR_INVALID_TEMPLATE, 0 ) ;}
             ;
@@ -844,7 +1017,7 @@ xsimsymb    : SIMSYMBOL                { $$ = (treenode *) Str_cre_TSD(parser_da
             ;
 
 simsymb     : SIMSYMBOL                { $$ = (treenode *) Str_cre_TSD(parser_data.TSD,retvalue);}
-            | error                    {  exiterror( ERR_SYMBOL_EXPECTED, 1, retvalue ) ;}
+            | error                    { exiterror( ERR_SYMBOL_EXPECTED, 1, __reginatext ) ;}
             ;
 
 %%
@@ -900,18 +1073,42 @@ static nodeptr makenode( int type, int numb, ... )
    return( thisleave ) ;
 }
 
+static char *getdokeyword( int type )
+{
+   char *ptr;
+   switch( type )
+   {
+      case X_DO_TO: ptr="TO";break;
+      case X_DO_BY: ptr="BY";break;
+      case X_DO_FOR: ptr="FOR";break;
+      default: ptr="";break;
+   }
+   return ptr;
+}
 
 static void checkdosyntax( cnodeptr this )
 {
    if ((this->p[1]!=NULL)&&(this->p[2]!=NULL))
+   {
       if ((this->p[1]->type)==(this->p[2]->type))
-          exiterror( ERR_INVALID_DO_SYNTAX, 0 )  ;
+      {
+         exiterror( ERR_INVALID_DO_SYNTAX, 1, getdokeyword(this->p[1]->type) )  ;
+      }
+   }
    if ((this->p[2]!=NULL)&&(this->p[3]!=NULL))
+   {
       if ((this->p[2]->type)==(this->p[3]->type))
-          exiterror( ERR_INVALID_DO_SYNTAX, 0 )  ;
+      {
+         exiterror( ERR_INVALID_DO_SYNTAX, 1, getdokeyword(this->p[2]->type) )  ;
+      }
+   }
    if ((this->p[1]!=NULL)&&(this->p[3]!=NULL))
+   {
       if ((this->p[1]->type)==(this->p[3]->type))
-          exiterror( ERR_INVALID_DO_SYNTAX, 0 )  ;
+      {
+         exiterror( ERR_INVALID_DO_SYNTAX, 1, getdokeyword(this->p[1]->type) )  ;
+      }
+   }
    return ;
 }
 
@@ -1205,4 +1402,3 @@ static void checkconst( nodeptr this )
       this->type = X_CEXPRLIST ;
    }
 }
-

@@ -3,10 +3,11 @@
 #
 # Using gcc/emx on OS/2 with GNU make
 #
-VER=22
-VERDOT=2.2
+VER=30
+VERDOT=3.0
 
 SRCDIR=$(REGINA_SRCDIR)
+SRCDIRN=$(REGINA_SRCDIRN)
 CC = gcc
 
 ifeq ($(DEBUG),Y)
@@ -75,12 +76,13 @@ LIBLINK = $(LIBFILE).$(LIBPST)
 OBJECTS = $(OFILES)
 OSAVE = .o.save
 CC2O=-o $@
+RC = rc $(SRCDIRN)\reginaos2.rc $@
 MV=-ren
 RM=-del
 
 RANLIB_LIB=#ranlib $(LIBFILE).a
 
-MISCDEFS = -DFGC -I$(SRCDIR) #-DR2PERL
+MISCDEFS = -I$(SRCDIR) #-DR2PERL
 #DEBUG    = #-g -DNDEBUG #-Dlint
 PROF     = #-p #g
 #OPTIMIZE = -O -DNDEBUG
@@ -145,13 +147,16 @@ CFILES = $(SRCDIR)/yaccsrc.c $(SRCDIR)/lexsrc.c $(CSRCFILES) $(SRCDIR)/execiser.
 	$(SRCDIR)/rexxsaa.c $(SRCDIR)/rexx.c $(SRCDIR)/regina.c $(SRCDIR)/client.c \
 	$(SRCDIR)/r2perl.c $(SRCDIR)/test1.c $(SRCDIR)/test2.c
 
+MTSSRC = $(SRCDIR)/en.mts $(SRCDIR)/pt.mts $(SRCDIR)/no.mts \
+	$(SRCDIR)/de.mts $(SRCDIR)/es.mts
+
 #.SUFFIXES: .sho $(SUFFIXES)
 #
 # Do not use default suffixes rule
 #
 .SUFFIXES:
 
-all : rexx$(EXE) $(LIBFILE).$(LIBPST) execiser$(EXE) rxstack$(EXE) rxqueue$(EXE) $(SHL_TARGETS)
+all : rexx$(EXE) $(LIBFILE).$(LIBPST) trexx$(EXE) tregina$(EXE) execiser$(EXE) rxstack$(EXE) rxqueue$(EXE) $(SHL_TARGETS) mtb_files
 
 $(CSRCFILES) : $(SRCDIR)/rexx.h
 
@@ -161,24 +166,45 @@ $(SRCDIR)/mt.h : $(SRCDIR)/$(MT_FILE).h
 
 rexx$(EXE) : $(OFILES) rexx.$(OBJ) nosaa.$(OBJ)
 	$(CC) $(LINKOPT) $(STATIC_LDFLAGS) -o rexx$(EXE) $(OBJECTS) rexx.$(OBJ) nosaa.$(OBJ) $(LIBS) $(SOCKET)
+	-copy $(SRCDIRN)\reginaos2.ico
+	$(RC)
+	-lxlite rexx$(EXE)
 
 regina : $(SHLFILE).$(SHL) regina.obj $(GETOPT)
 	$(CC) $(LINKOPT_DLL) -Zexe $(DYNAMIC_LDFLAGS) -o regina regina.obj $(LIBS) $(SHLIBS) $(SOCKET)
 
 regina$(EXE) : regina
+	-copy $(SRCDIRN)\reginaos2.ico
+	$(RC)
+	-lxlite regina$(EXE)
+
+trexx$(EXE) : trexx.$(OBJ) $(LIBFILE).$(LIBPST)
+	$(CC) $(LINKOPT) $(STATIC_LDFLAGS) -o trexx$(EXE) trexx.$(OBJ) $(LIBFILE).$(LIBPST) $(LIBS) $(SOCKET)
+	-copy $(SRCDIRN)\reginaos2.ico
+	$(RC)
+	-lxlite trexx$(EXE)
+
+tregina : tregina.obj $(SHLFILE).$(SHL)
+	$(CC) $(LINKOPT_DLL) -Zexe $(DYNAMIC_LDFLAGS) -o tregina tregina.obj $(LIBS) $(SHLIBS) $(SOCKET)
+
+tregina$(EXE) : tregina
+	-copy $(SRCDIRN)\reginaos2.ico
+	$(RC)
+	-lxlite tregina$(EXE)
 
 execiser : execiser.obj $(SHLFILE).$(SHL)
 	$(CC) $(LINKOPT_DLL) -Zexe $(DYNAMIC_LDFLAGS) -o execiser execiser.obj $(LIBS) $(SHLIBS) $(SOCKET)
 
 execiser$(EXE) : execiser
+	-lxlite execiser$(EXE)
 
 rxqueue$(EXE) : $(OFILES) rxqueue.$(OBJ) eextstack.$(OBJ) erexxbif.$(OBJ)
 	$(CC) $(LINKOPT) $(STATIC_LDFLAGS) -o rxqueue$(EXE) rxqueue.$(OBJ) eextstack.$(OBJ) erexxbif.$(OBJ) $(SOCKET)
-
+	-lxlite rxqueue$(EXE)
 
 rxstack$(EXE) : $(OFILES) rxstack.$(OBJ) eextstack.$(OBJ) erexxbif.$(OBJ)
 	$(CC) $(LINKOPT) $(STATIC_LDFLAGS) -o rxstack$(EXE) rxstack.$(OBJ) eextstack.$(OBJ) erexxbif.$(OBJ) $(SOCKET)
-
+	-lxlite rxstack$(EXE)
 
 $(LIBFILE).$(LIBPST): $(OFILES) client.$(OBJ) drexx.$(OBJ) rexxsaa.$(OBJ)
 	$(LIBEXE) $(LIBFLAGS) $(OBJECTS) client.$(OBJ) drexx.$(OBJ) rexxsaa.$(OBJ)
@@ -191,6 +217,21 @@ $(SHLFILE).$(SHL): $(SHOFILES) $(SHLDEF)
 	$(SHL2)
 	$(SHL3)
 	$(SHL4)
+	-copy $(SRCDIRN)\reginaos2.ico
+	$(RC)
+	-lxlite $(SHLFILE).$(SHL)
+
+#
+# Convert .mts to .mtb
+#
+mtb_files: msgcmp$(EXE) $(MTSSRC)
+	msgcmp $(MTSSRC)
+
+msgcmp$(EXE): msgcmp.$(OBJ)
+	$(CC) $(LINKOPT) $(STATIC_LDFLAGS) -o msgcmp$(EXE) msgcmp.$(OBJ)
+
+msgcmp.$(OBJ): $(SRCDIR)/msgcmp.c
+	$(CC) $(COPT) $(CC2O) -c $(SRCDIR)/msgcmp.c
 
 #
 # Rules for static objects
@@ -596,6 +637,15 @@ yaccsrc.obj : $(SRCDIR)/yaccsrc.c $(SRCDIR)/defs.h $(SRCDIR)/rexx.h
 	       $(CC) $(OTHERCOPT_DLL) $(CC2O) $(DYN_COMP) -c -DYYMAXDEPTH=10000 $(SRCDIR)/yaccsrc.c
 	       $(O2SHO)
 	       $(SAVE2O)
+
+#
+# Rules for Regina tokeniser targets
+#
+trexx.$(OBJ) : $(SRCDIR)/tregina.c
+	$(CC) $(COPT) -c -o trexx.$(OBJ) $(SRCDIR)/tregina.c
+
+tregina.obj : $(SRCDIR)/tregina.c
+	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(SRCDIR)/tregina.c
 
 #
 # Rules for sample programs

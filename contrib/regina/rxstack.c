@@ -83,6 +83,7 @@ static char *RCSid = "$Id$";
  *       out-> 0FFFFFFxxx--data--xxx (if queue name existed)
  *       out-> 1000000 (if queue empty)
  *       out-> 2xxxxxx (if queue name deleted - length ignored)
+ *       out-> 4xxxxxx (if timeout on queue exceeded - length ignored)
  *       regina PULL, rxqueue N/A
  *   S - set default queue name (allow false queues)
  *       in->  SFFFFFFxxx--queue name--xxx
@@ -98,6 +99,10 @@ static char *RCSid = "$Id$";
  *       out-> 0FFFFFF (if queue exists)
  *       out-> 2xxxxxx (if error or queue doesn't exist - length ignored)
  *       regina QUEUED(), rxqueue N/A
+ *   T - set timeout on queue pull
+ *       in->  DFFFFFFTTTTTT
+ *       out-> 0000000 (if queue timeout set)
+ *       regina RXQUEUE('T'), rxqueue N/A
  *   W - write client's temporary stack to "real" stack
  *       in->  W000000
  *       out-> 0FFFFFF (if queue exists)
@@ -130,6 +135,7 @@ static char *RCSid = "$Id$";
 # else
 #  include <windows.h>
 # endif
+# include <io.h>
 #else
 # ifdef HAVE_SYS_SOCKET_H
 #  include <sys/socket.h>
@@ -169,6 +175,25 @@ static char *RCSid = "$Id$";
 # include <process.h>
 #endif
 
+#if defined(TIME_WITH_SYS_TIME)
+# include <sys/time.h>
+# include <time.h>
+#else
+# if defined(HAVE_SYS_TIME_H)
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
+
+#define HAVE_FORK
+#if !defined(__WATCOMC__) && !defined(_MSC_VER)  && !(defined(__IBMC__) && defined(WIN32)) && !defined(__SASC) && !defined(__MINGW32__) && !defined(__BORLANDC__)
+# undef HAVE_FORK
+#endif
+#if defined(__WATCOMC__) && defined(__QNX__)
+# define HAVE_FORK
+#endif
+
 #include "extstack.h"
 
 #ifndef NDEBUG
@@ -179,9 +204,10 @@ static char *RCSid = "$Id$";
 
 #ifdef BUILD_NT_SERVICE
 # include "service.h"
-// this event is signalled when the
-// service should end
-//
+/*
+ * this event is signalled when the
+ * service should end
+ */
 HANDLE  hServerStopEvent = NULL;
 #endif
 
@@ -230,6 +256,7 @@ typedef struct
     */
    stacklineptr firstbox;
    stacklineptr lastbox;
+   long queue_timeout;
 } CLIENT;
 /*
  * Linked list would be better for client - TBD
@@ -238,6 +265,7 @@ CLIENT clients[MAX_CLIENTS];
 
 int running = 1;
 int allclean = 0;
+time_t base_secs; /* the time the process started */
 
 #if !defined(HAVE_STRERROR)
 /*
@@ -262,6 +290,37 @@ const char *get_sys_errlist( int num )
    return sys_errlist[num] ;
 }
 #endif
+
+time_t getmsecs( void )
+{
+   time_t secs,usecs;
+#if defined(HAVE_GETTIMEOFDAY)
+   struct timeval times ;
+
+   gettimeofday(&times, NULL) ;
+   secs = times.tv_sec - base_secs;
+   usecs = times.tv_usec ;
+
+   DEBUGDUMP(printf("getmsecs() secs: %ld usecs: %ld\n", secs, usecs););
+
+   if (times.tv_usec < 0)
+   {
+      usecs = (times.tv_usec + 1000000) ;
+      secs = times.tv_sec - 1 ;
+   }
+
+#elif defined(HAVE_FTIME)
+   struct timeb timebuffer;
+
+   ftime(&timebuffer);
+   secs = timebuffer.time - base_secs;
+   usecs = timebuffer.millitm * 1000;
+#else
+   secs = time(NULL) - base_secs;
+   usecs = 0 ;
+#endif
+   return ( (secs*1000000)+usecs) / 1000;
+}
 
 streng *Streng_upper( streng *str )
 {
@@ -394,47 +453,52 @@ int rxstack_cleanup( void )
 #ifdef BUILD_NT_SERVICE
 BOOL report_service_start( void )
 {
-   // report the status to the service control manager.
-   //
+   /* 
+    * report the status to the service control manager.
+    */
    return (ReportStatusToSCMgr(
-           SERVICE_RUNNING,       // service state
-           NO_ERROR,              // exit code
-           0));                   // wait hint
+           SERVICE_RUNNING,       /* service state */
+           NO_ERROR,              /* exit code */
+           0));                   /* wait hint */
 }
 
 BOOL report_service_pending_start( void )
 {
-   // report the status to the service control manager.
-   //
+   /* 
+    * report the status to the service control manager.
+    */
    return (ReportStatusToSCMgr(
-           SERVICE_START_PENDING, // service state
-           NO_ERROR,              // exit code
-           3000));                // wait hint
+           SERVICE_START_PENDING, /* service state */
+           NO_ERROR,              /* exit code */
+           3000));                /* wait hint */
 }
 
 int nt_service_start( void )
 {
-   // code copied from sample NT Service code. The goto's are
-   // not mine!!
-   // report the status to the service control manager.
-   //
+   /*
+    * code copied from sample NT Service code. The goto's are
+    * not mine!!
+    * report the status to the service control manager.
+    */
    if ( !report_service_pending_start() )
       goto cleanupper;
 
-   // create the event object. The control handler function signals
-   // this event when it receives the "stop" control code.
-   //
+   /*
+    * create the event object. The control handler function signals
+    * this event when it receives the "stop" control code.
+    */
    hServerStopEvent = CreateEvent(
-        NULL,    // no security attributes
-        TRUE,    // manual reset event
-        FALSE,   // not-signalled
-        NULL);   // no name
+        NULL,    /* no security attributes */
+        TRUE,    /* manual reset event */
+        FALSE,   /* not-signalled */
+        NULL);   /* no name */
 
    if ( hServerStopEvent == NULL)
       goto cleanupper;
 
-   // report the status to the service control manager.
-   //
+   /* 
+    * report the status to the service control manager.
+    */
    if ( !report_service_pending_start() )
       goto cleanupper;
 
@@ -545,6 +609,7 @@ int rxstack_create_client( int socket )
    {
       clients[i].default_queue = 0;
       clients[i].socket = socket;
+      clients[i].queue_timeout = 0;
    }
    return 0;
 }
@@ -630,6 +695,35 @@ int rxstack_set_default_queue( CLIENT *client, streng *data )
       DEBUGDUMP(printf("Setting default queue for client: <%s> Prev: %d <%s>\n", PSTRENGVAL(data), rc, PSTRENGVAL(queuename[rc]) ););
    }
    return rc;
+}
+
+int rxstack_timeout_queue( CLIENT *client, streng *data )
+{
+   streng *timeout;
+   /*
+    * Extract the timeout value from the incoming buffer
+    */
+   timeout = MakeStreng( PSTRENGLEN( data ) );
+   if ( timeout == NULL )
+   {
+      showerror( ERR_STORAGE_EXHAUSTED, 0, ERR_STORAGE_EXHAUSTED_TMPL );
+      exit( ERR_STORAGE_EXHAUSTED );
+   }
+   memcpy( PSTRENGVAL(timeout), PSTRENGVAL( data ), PSTRENGLEN( data ) );
+   /*
+    * Convert the timeout
+    * If the supplied timeout is 0 (infinite wait), set the client->queue_timeout
+    * to -1.
+    */
+   client->queue_timeout = REXX_X2D( timeout );
+   if ( client->queue_timeout == 0 )
+   {
+      client->queue_timeout = -1;
+   }
+   DEBUGDUMP(printf("Timeout on queue: %ld\n", client->queue_timeout ););
+   DROPSTRENG( timeout );
+
+   return 0;
 }
 
 int rxstack_create_queue( CLIENT *client, streng *data )
@@ -886,10 +980,13 @@ int rxstack_number_in_queue( CLIENT *client )
    return lines ;
 }
 
+/*
+ * Gets the line off the queue but doesn't delete it
+ */
 int rxstack_get_line_off_queue( CLIENT *client, streng **result )
 {
    /*
-    * Return 0 if line OK, 1 if queue empty, 2 if error
+    * Return 0 if line OK, 1 if queue empty, 2 if error, 3 if timeout, 4 if still waiting
     */
    int rc;
    stacklineptr line=NULL ;
@@ -909,8 +1006,13 @@ int rxstack_get_line_off_queue( CLIENT *client, streng **result )
          rc = 2;
    }
    else
-      rc = 1; /* queue empty */
-   DEBUGDUMP(printf("Pulling line off queue\n" ););
+   {
+      if ( client->queue_timeout )
+         rc = 3; /* waiting */
+      else
+         rc = 1; /* queue empty */
+   }
+   DEBUGDUMP(printf("Pulling line off queue; rc %d\n", rc ););
    return rc;
 }
 
@@ -990,7 +1092,7 @@ int rxstack_process_command( CLIENT *client )
        */
       length = REXX_X2D( header );
       DROPSTRENG( header );
-      DEBUGDUMP(printf("length: %d\n", length););
+      DEBUGDUMP(printf("Header: <%s> length: %d\n", header->value, length););
       if ( length )
       {
          /*
@@ -1071,15 +1173,22 @@ int rxstack_process_command( CLIENT *client )
          case RXSTACK_PULL:
             DEBUGDUMP(printf("--- Pull ---\n"););
             rc = rxstack_get_line_off_queue( client, &result );
-            if ( rc == 0 )
-               rxstack_send_return( client->socket, "0", PSTRENGVAL( result ), PSTRENGLEN( result ) );
-            else
+            switch( rc )
             {
-               rcode[0] = (char)rc+'0';
-               rxstack_send_return( client->socket, rcode, NULL, 0 );
+               case 0: /* all OK */
+                  rxstack_send_return( client->socket, "0", PSTRENGVAL( result ), PSTRENGLEN( result ) );
+                  DROPSTRENG( result );
+                  rc = rxstack_delete_line_off_queue( client );
+                  break;
+               case 1: /* empty */
+               case 2: /* error */
+                  rcode[0] = (char)(rc+'0');
+                  rxstack_send_return( client->socket, rcode, NULL, 0 );
+                  DROPSTRENG( result );
+                  break;
+               default: /* 3 - still waiting; don't return */
+                  break;
             }
-            DROPSTRENG( result );
-            rc = rxstack_delete_line_off_queue( client );
             break;
          case RXSTACK_GET_QUEUE:
             DEBUGDUMP(printf("--- Get Queue ---\n"););
@@ -1095,7 +1204,7 @@ int rxstack_process_command( CLIENT *client )
                rxstack_send_return( client->socket, "0", NULL, 0 );
             else if ( rc == 1 )
             {
-               rcode[0] = (char)rc+'0';
+               rcode[0] = (char)(rc+'0');
                rxstack_send_return( client->socket, rcode, (queuename[client->default_queue])->value, (queuename[client->default_queue])->len );
             }
             DROPSTRENG( buffer );
@@ -1106,7 +1215,17 @@ int rxstack_process_command( CLIENT *client )
              * Delete the queue
              */
             rc = rxstack_delete_queue( client, buffer );
-            rcode[0] = (char)rc+'0';
+            rcode[0] = (char)(rc+'0');
+            rxstack_send_return( client->socket, rcode, NULL, 0 );
+            DROPSTRENG( buffer );
+            break;
+         case RXSTACK_TIMEOUT_QUEUE:
+            DEBUGDUMP(printf("--- Timeout Queue ---\n"););
+            /*
+             * Set timeout for pull from queue
+             */
+            rc = rxstack_timeout_queue( client, buffer );
+            rcode[0] = (char)(rc+'0');
             rxstack_send_return( client->socket, rcode, NULL, 0 );
             DROPSTRENG( buffer );
             break;
@@ -1121,6 +1240,54 @@ int rxstack_process_command( CLIENT *client )
    return 0;
 }
 
+void check_for_waiting( CLIENT *client, time_t inc )
+{
+   streng *result=NULL;
+   int rc;
+   char rcode[2];
+
+   rcode[1] = '\0';
+   /*
+    * If the client is waiting infinitely (clinet->queue_timeout = -1, then
+    * simply ignore the decrement of the timeout counter
+    */
+   if ( client->queue_timeout != -1 )
+   {
+      if ( inc >= client->queue_timeout )
+         client->queue_timeout = 0;
+      else
+         client->queue_timeout -= inc;
+   }
+   DEBUGDUMP(printf("Checking for wait. Remaining time: %ld Value decremented: %ld\n", client->queue_timeout, inc ););
+   /*
+    * Check if there is anything in the queue...
+    */
+   rc = rxstack_get_line_off_queue( client, &result );
+   if ( rc == 1 /* empty */
+   &&   client->queue_timeout == 0 )
+   {
+      rc = 4;
+   }
+   switch( rc )
+   {
+      case 0: /* all OK */
+         rxstack_send_return( client->socket, "0", PSTRENGVAL( result ), PSTRENGLEN( result ) );
+         DROPSTRENG( result );
+         rc = rxstack_delete_line_off_queue( client );
+         break;
+      case 1: /* empty */
+      case 2: /* error */
+      case 4: /* timeout */
+         rcode[0] = (char)(rc+'0');
+         rxstack_send_return( client->socket, rcode, NULL, 0 );
+         DROPSTRENG( result );
+         client->queue_timeout = 0;
+         break;
+      default: /* 3 - still waiting; don't return */
+         break;
+   }
+}
+
 int rxstack_doit( )
 {
    int listen_sock,i,msgsock;
@@ -1128,11 +1295,16 @@ int rxstack_doit( )
    fd_set ready;
    int max_sock,client_size;
    int portno,rc;
-#ifdef BUILD_NT_SERVICE
    struct timeval to;
+   time_t now;
+#ifdef BUILD_NT_SERVICE
    char buf[30];
 #endif
+#if defined(SO_REUSEADDR) && defined(SOL_SOCKET)
+   int on = 1;
+#endif
 
+   base_secs = time(NULL);
    client_size = sizeof( struct sockaddr );
 #ifdef WIN32
    if ( init_external_queue( NULL ) )
@@ -1166,7 +1338,6 @@ int rxstack_doit( )
    memcpy( queuename[0]->value, "SESSION", 7 ) ;
    real_queue[0] = 1;
 
-
 #ifdef BUILD_NT_SERVICE
    if ( IsItNT()
    &&   !report_service_pending_start() )
@@ -1186,7 +1357,7 @@ int rxstack_doit( )
    server.sin_family = AF_INET;
    server.sin_addr.s_addr = htonl(INADDR_ANY);
    portno = get_default_port_number();
-   server.sin_port = htons(portno);
+   server.sin_port = htons((unsigned short) portno);
 
 #ifdef BUILD_NT_SERVICE
    if ( IsItNT()
@@ -1194,6 +1365,9 @@ int rxstack_doit( )
       goto notrunning;
 #endif
 
+#if defined(SO_REUSEADDR) && defined(SOL_SOCKET)
+   setsockopt( listen_sock, SOL_SOCKET, SO_REUSEADDR, (void *) &on, sizeof( on ) );
+#endif
    if ( bind(listen_sock, (struct sockaddr *)&server, sizeof(server)) < 0)
    {
       showerror( ERR_EXTERNAL_QUEUE, ERR_RXSTACK_GENERAL, ERR_RXSTACK_GENERAL_TMPL, "Error binding socket", strerror( errno ) );
@@ -1233,10 +1407,7 @@ int rxstack_doit( )
        */
       for ( i = 0; i < MAX_CLIENTS; i++ )
       {
-#ifdef BUILD_NT_SERVICE
-         to.tv_usec = 0;
-         to.tv_sec = 2;
-#endif
+
          if ( clients[i].socket )
          {
             DEBUGDUMP(printf("FD_SET for %d\n", clients[i].socket););
@@ -1245,17 +1416,17 @@ int rxstack_doit( )
                max_sock = clients[i].socket;
          }
       }
-      DEBUGDUMP(printf("*********** before select() max_sock %d\n", max_sock););
-#ifdef BUILD_NT_SERVICE1
+      to.tv_usec = 100000; /* 100000 is 100 milliseconds */
+      to.tv_sec = 0; 
+      now = getmsecs();
+      DEBUGDUMP(printf("*********** before select() max_sock %d time: %ld\n", max_sock, now););
       if ( ( rc = select(max_sock+1, &ready, (fd_set *)0, (fd_set *)0, &to) ) < 0)
-#else
-      if ( ( rc = select(max_sock+1, &ready, (fd_set *)0, (fd_set *)0, NULL) ) < 0)
-#endif
       {
          if ( errno != EINTR )
             showerror( ERR_EXTERNAL_QUEUE, ERR_RXSTACK_GENERAL, ERR_RXSTACK_GENERAL_TMPL, "Calling select", strerror( errno ) );
          break;
       }
+      DEBUGDUMP(printf("*********** after select() rc %d time: %ld\n", rc, getmsecs()););
       if ( rc )
       {
          if ( FD_ISSET(listen_sock, &ready ) )
@@ -1298,6 +1469,26 @@ int rxstack_doit( )
             }
          }
       }
+      /*
+       * If select() timed out or received input, check all connected clients who
+       * may be waiting for input on one of the queues.
+       */
+      if ( rc != -1 )
+      {
+         /*
+          * now contains the time between the start of select() call and now
+          * in milliseconds
+          */
+         now = getmsecs() - now;
+         for ( i = 0; i < MAX_CLIENTS; i++ )
+         {
+            if ( clients[i].socket
+            &&   clients[i].queue_timeout )
+            {
+               check_for_waiting( &clients[i], now );
+            }
+         }
+      }
    }
 #ifdef BUILD_NT_SERVICE
 notrunning:
@@ -1317,7 +1508,7 @@ int runNormal( int argc, char **argv )
       }
       else if ( strcmp(argv[1], "-d") == 0 )
       {
-#if !defined(__WATCOMC__) && !defined(_MSC_VER)  && !(defined(__IBMC__) && defined(WIN32)) && !defined(__SASC) && !defined(__MINGW32__) && !defined(__BORLANDC__)
+#if defined(HAVE_FORK)
          if ( ( rc = fork() ) != 0 )
             exit(rc < 0);
          rc = rxstack_doit();

@@ -32,8 +32,7 @@ static char *RCSid = "$Id$";
 #define METAOP(name,value) { #name, -1, value }
 
 
-static const struct option all_options[] = {  /* Must be alphabetically sorted! */
-   METAOP( ANSI, "FAST_LINES_BIF_DEFAULT" ),
+static const struct __regina_option all_options[] = {  /* Must be alphabetically sorted! */
    METAOP( BUFFERS, "BUFTYPE_BIF DESBUF_BIF DROPBUF_BIF MAKEBUF_BIF" ),
    OPTION( BUFTYPE_BIF ),
    OPTION( CACHEEXT ),
@@ -50,7 +49,9 @@ static const struct option all_options[] = {  /* Must be alphabetically sorted! 
    OPTION( MAKEBUF_BIF ),
    OPTION( OPEN_BIF ),
    OPTION( PRUNE_TRACE ),
+   OPTION( REGINA_BIFS ),
    OPTION( STDOUT_FOR_STDERR ),
+   OPTION( STRICT_ANSI ),
    OPTION( TRACE_HTML ),
    { NULL, 0 }
 } ;
@@ -60,7 +61,7 @@ void do_options( const tsd_t *TSD, streng *options, int toggle )
 {
    char *cptr=NULL, *eptr=NULL, *start=NULL ;
    int length=0, inverse=0, tmp=0 ;
-   const struct option *lower=NULL, *upper=NULL, *middle=NULL ;
+   const struct __regina_option *lower=NULL, *upper=NULL, *middle=NULL ;
 
    cptr = options->value ;
    eptr = cptr + options->len ;
@@ -77,7 +78,7 @@ void do_options( const tsd_t *TSD, streng *options, int toggle )
       length = cptr - start ;
 
       lower = all_options ;
-      upper = lower + (sizeof(all_options)/sizeof(struct option)) - 2 ;
+      upper = lower + (sizeof(all_options)/sizeof(struct __regina_option)) - 2 ;
 
       while( upper >= lower )
       {
@@ -102,42 +103,17 @@ void do_options( const tsd_t *TSD, streng *options, int toggle )
          }
          else
          {
-#ifdef OLD_OPTIONS
-            int obyte=0, obit=0;
-
-            obyte = middle->offset/(sizeof(unsigned char)*8) ;
-            obit = middle->offset - obyte*(sizeof(unsigned char)*8) ;
-fprintf(stderr,"Now %x First %x Next %x open_bif %x ext_comm %x\n",
-               TSD->currlevel->u.flags[obyte],(unsigned char)~(1<<(7-obit)),
-               (unsigned char)(1<<(7-obit)),
-               TSD->currlevel->u.options.open_bif,
-               TSD->currlevel->u.options.ext_commands_as_funcs
-               ) ;
-
-            if (inverse^toggle)
-               TSD->currlevel->u.flags[obyte] &= (unsigned char)(~(1<<(7-obit))) ;
-            else
-               TSD->currlevel->u.flags[obyte] |= (unsigned char)(1<<(7-obit)) ;
-fprintf(stderr,"Now %x First %x Next %x open_bif %x ext_comm %x\n",
-               TSD->currlevel->u.flags[obyte],(unsigned char)~(1<<(7-obit)),
-               (unsigned char)(1<<(7-obit)),
-               TSD->currlevel->u.options.open_bif,
-               TSD->currlevel->u.options.ext_commands_as_funcs
-               ) ;
-#else
 
             if (inverse^toggle)
                set_options_flag( TSD->currlevel, middle->offset, 0 ) ;
             else
                set_options_flag( TSD->currlevel, middle->offset, 1 ) ;
-#endif
          }
       }
    }
    Free_stringTSD( options ) ;
 }
 
-#ifndef OLD_OPTIONS
 int get_options_flag( cproclevel pl, int offset )
 {
    register int obyte = offset / ( sizeof( unsigned char ) * 8 ) ;
@@ -156,4 +132,3 @@ void set_options_flag( proclevel pl, int offset, int status )
    else
       pl->u.flags[obyte] &= (unsigned char)(~(1<<(7-obit))) ;
 }
-#endif

@@ -3,7 +3,7 @@
 #
 # Using Borland C++ 5.5 under Win32
 # Usage:
-#    make -f [DEBUG=Y [TRACEMEM=Y]] [FLISTS=N] [MULTI=Y]
+#    make -f [DEBUG=Y [TRACEMEM=Y]] [FLISTS=N] [MULTI=Y] [WDOSX=Y]
 #
 # generated files without giving a target on the command line:
 # rexx.exe    statically bounded REXX interpreter
@@ -24,7 +24,7 @@ BORLAND=C:\Borland\Bcc55
 #
 CC = bcc32
 LD = ilink32
-BASE_COPT = -q -DFGC=1 -DWIN32 -w-aus -w-par -K
+BASE_COPT = -q -DWIN32 -w-aus -w-par -K
 #
 !if "$(DEBUG)" == "Y"
 BASE_LINKOPT = -v
@@ -45,6 +45,12 @@ OPTIMIZE = -O2 -d
 NOFLISTS = -UFLISTS
 !else
 NOFLISTS =
+!endif
+#
+!if "$(WDOSX)" == "Y"
+FORWDOSX = -DWDOSX
+!else
+FORWDOSX =
 !endif
 #
 !if "$(MULTI)" == "Y"
@@ -95,7 +101,7 @@ ABI=2.0
 VER=20
 VERDOT=2.0
 
-COPT = $(OPTIMIZE) $(DEBUGFLAG) $(BASE_COPT) -I$(SRCDIR) $(MEMTRACE) $(NOFLISTS) $(WINMULTI) $(THREADING)
+COPT = $(OPTIMIZE) $(DEBUGFLAG) $(BASE_COPT) -I$(SRCDIR) $(FORWDOSX) $(MEMTRACE) $(NOFLISTS) $(WINMULTI) $(THREADING)
 LINKOPT = $(BASE_LINKOPT) -L$(BORLAND)\lib -ap -q
 
 README = $(SRCDIR)/README.??? $(SRCDIR)/COPYING-LIB $(SRCDIR)/BUGS $(SRCDIR)/yaccsrc.bound
@@ -110,12 +116,12 @@ CSRCFILES = $(SRCDIR)/funcs.c $(SRCDIR)/builtin.c $(SRCDIR)/error.c $(SRCDIR)/va
 
 OFILES = funcs.obj builtin.obj error.obj variable.obj \
 	interprt.obj debug.obj dbgfuncs.obj memory.obj parsing.obj files.obj \
-	misc.obj unxfuncs.obj cmsfuncs.obj os2funcs.obj shell.obj rexxext.obj stack.obj \
+	misc.obj unxfuncs.obj cmsfuncs.obj os2funcs.obj shell.obj rexxext.obj stack.obj extstack.obj \
 	tracing.obj interp.obj cmath.obj convert.obj strings.obj library.obj \
-	strmath.obj signals.obj macros.obj envir.obj expr.obj instore.obj \
+	strmath.obj signals.obj macros.obj envir.obj expr.obj instore.obj rexxbif.obj \
 	extlib.obj yaccsrc.obj lexsrc.obj options.obj doscmd.obj wrappers.obj $(MT_FILE).obj #r2perl.obj
 
-SHOFILES = $(DLLDIR)\funcs.obj $(DLLDIR)\builtin.obj $(DLLDIR)\error.obj $(DLLDIR)\variable.obj \
+SHOFILES = $(DLLDIR)\funcs.obj $(DLLDIR)\builtin.obj $(DLLDIR)\error.obj $(DLLDIR)\variable.obj $(DLLDIR)\extstack.obj $(DLLDIR)\rexxbif.obj \
 	$(DLLDIR)\interprt.obj $(DLLDIR)\debug.obj $(DLLDIR)\dbgfuncs.obj $(DLLDIR)\memory.obj $(DLLDIR)\parsing.obj $(DLLDIR)\files.obj \
 	$(DLLDIR)\misc.obj $(DLLDIR)\unxfuncs.obj $(DLLDIR)\cmsfuncs.obj $(DLLDIR)\os2funcs.obj $(DLLDIR)\shell.obj $(DLLDIR)\rexxext.obj $(DLLDIR)\stack.obj \
 	$(DLLDIR)\tracing.obj $(DLLDIR)\interp.obj $(DLLDIR)\cmath.obj $(DLLDIR)\convert.obj $(DLLDIR)\strings.obj $(DLLDIR)\library.obj \
@@ -138,13 +144,16 @@ HFILES = $(SRCDIR)/rexx.h $(SRCDIR)/defs.h $(SRCDIR)/extern.h $(SRCDIR)/types.h 
 	 $(SRCDIR)/rxiface.h $(SRCDIR)/rexxsaa.h $(SRCDIR)/utsname.h \
 	 $(SRCDIR)/mt.h $(SRCDIR)/mt_notmt.h $(SRCDIR)/mt_win32.h $(SRCDIR)/mt_posix.h
 
+MTSSRC = $(SRCDIR)/en.mts $(SRCDIR)/pt.mts $(SRCDIR)/no.mts \
+	$(SRCDIR)/de.mts $(SRCDIR)/es.mts
+
 #.SUFFIXES: .sho $(SUFFIXES)
 #
 # Do not use default suffixes rule
 #
 .SUFFIXES:
 
-all : rexx.exe rexx.lib execiser.exe $(SHL_TARGETS)
+all : rexx.exe rexx.lib execiser.exe $(SHL_TARGETS) rxstack.exe rxqueue.exe mtb_files
 
 $(CSRCFILES) : $(SRCDIR)/rexx.h
 
@@ -164,6 +173,12 @@ regina.exe : regina.dll regina.obj $(GETOPT) reginaw32exe.res
 execiser.exe : execiser.obj regina.dll
 	 $(LD) $(LINKOPT) /Tpe c0x32.obj execiser.obj, execiser.exe, , $(LINKSHL) $(LIBS), , 
 
+rxqueue.exe : rxqueue.obj erexxbif.obj eextstack.obj reginaw32exe.res
+	 $(LD) $(LINKOPT) /Tpe c0x32.obj rxqueue.obj+erexxbif.obj+eextstack.obj, rxqueue.exe, , $(LINKSHL) $(LIBS), , reginaw32exe.res
+
+rxstack.exe : rxstack.obj erexxbif.obj eextstack.obj reginaw32exe.res
+	 $(LD) $(LINKOPT) /Tpe c0x32.obj rxstack.obj+erexxbif.obj+eextstack.obj, rxstack.exe, , $(LINKSHL) $(LIBS), , reginaw32exe.res
+
 threader.exe : threader.obj regina.dll
 	 $(LD) $(LINKOPT) /Tpe c0x32.obj threader.obj, threader.exe, , $(LINKSHL) import32.lib cw32mt.lib, ,
 
@@ -172,6 +187,18 @@ rexx.lib: $(OFILES) client.obj drexx.obj rexxsaa.obj
 
 regina.dll: $(DLLDIR) $(SHOFILES) reginaw32dll.res
 	$(LD) $(LINKOPT) -Gi /Tpd c0d32.obj $(SHOFILES), regina.dll, regina_dd.map, $(LIBS), $(SRCDIR)\regina_w32_dll.def, reginaw32dll.res
+
+#
+# Convert .mts to .mtb
+#
+mtb_files: msgcmp.exe $(MTSSRC)
+	msgcmp $(MTSSRC)
+
+msgcmp.exe: msgcmp.obj
+	 $(LD) $(LINKOPT) /Tpe c0x32.obj msgcmp.obj, msgcmp, , $(LINKSHL) $(LIBS), , reginaw32exe.res
+
+msgcmp.obj: $(SRCDIR)/msgcmp.c
+	$(CC) $(COPT) $(CC2O) $(STAT_COMP) $(SRCDIR)/msgcmp.c
 
 #
 # Rules for static objects
@@ -226,6 +253,18 @@ rexxext.obj : $(SRCDIR)/rexxext.c
 
 stack.obj :   $(SRCDIR)/stack.c
 	$(CC) $(COPT) $(CC2O) $(STAT_COMP) $(SRCDIR)/stack.c
+
+extstack.obj :   $(SRCDIR)/extstack.c
+	$(CC) $(COPT) $(CC2O) $(STAT_COMP) $(SRCDIR)/extstack.c
+
+eextstack.obj : $(SRCDIR)/extstack.c $(SRCDIR)/rexx.h
+	$(CC) -DEXTERNAL_TO_REGINA $(COPT) $(CC2O) $(STAT_COMP) $(SRCDIR)/extstack.c
+
+rexxbif.obj :   $(SRCDIR)/rexxbif.c $(SRCDIR)/rexxbif.h
+	$(CC) $(COPT) $(CC2O) $(STAT_COMP) $(SRCDIR)/rexxbif.c
+
+erexxbif.obj :   $(SRCDIR)/rexxbif.c $(SRCDIR)/rexxbif.h
+	$(CC) $(COPT) -DEXTERNAL_TO_REGINA $(CC2O) $(STAT_COMP) $(SRCDIR)/rexxbif.c
 
 tracing.obj : $(SRCDIR)/tracing.c
 	$(CC) $(COPT) $(CC2O) $(STAT_COMP) $(SRCDIR)/tracing.c
@@ -314,6 +353,12 @@ threader.obj : $(SRCDIR)/threader.c $(SRCDIR)/rexxsaa.h
 getopt.obj : $(SRCDIR)/getopt.c
 	$(CC) $(COPT) $(CC2O) $(STAT_COMP) $(SRCDIR)/getopt.c
 
+rxqueue.obj : $(SRCDIR)/rxqueue.c $(SRCDIR)/rexx.h
+	$(CC) -DEXTERNAL_TO_REGINA $(COPT) $(CC2O) $(STAT_COMP) $(SRCDIR)/rxqueue.c
+
+rxstack.obj : $(SRCDIR)/rxstack.c $(SRCDIR)/rexx.h
+	$(CC) -DEXTERNAL_TO_REGINA $(COPT) $(CC2O) $(STAT_COMP) $(SRCDIR)/rxstack.c
+
 #
 # Rules for shared objects
 #
@@ -367,6 +412,12 @@ $(DLLDIR)\rexxext.obj : $(SRCDIR)/rexxext.c
 
 $(DLLDIR)\stack.obj :   $(SRCDIR)/stack.c
 	$(CC) $(COPT) $(CC2O) $(DYN_COMP) $(SRCDIR)/stack.c
+
+$(DLLDIR)\extstack.obj :   $(SRCDIR)/extstack.c
+	$(CC) $(COPT) $(CC2O) $(DYN_COMP) $(SRCDIR)/extstack.c
+
+$(DLLDIR)\rexxbif.obj :   $(SRCDIR)/rexxbif.c $(SRCDIR)/rexxbif.h
+	$(CC) $(COPT) $(CC2O) $(DYN_COMP) $(SRCDIR)/rexxbif.c
 
 $(DLLDIR)\tracing.obj : $(SRCDIR)/tracing.c
 	$(CC) $(COPT) $(CC2O) $(DYN_COMP) $(SRCDIR)/tracing.c

@@ -1,4 +1,3 @@
-#! /local/bin/rexx
 /*
  * Test program for Regina 08a
  *

@@ -294,7 +294,7 @@ BOOL ReportStatusToSCMgr(DWORD dwCurrentState,
 
         // Report the status of the service to the service control manager.
         //
-        if (!(fResult = SetServiceStatus( sshStatusHandle, &ssStatus))) {
+        if ((fResult = SetServiceStatus( sshStatusHandle, &ssStatus)) == FALSE) {
             AddToMessageLog(TEXT("SetServiceStatus"));
         }
     }

@@ -513,7 +513,9 @@ recurse:
              * Same applies if the position is absolute, just move it.
              */
             if ((end--)==0)
-                exiterror( ERR_INVALID_INTEGER, 0 )  ;
+            {
+               exiterror( ERR_INVALID_INTEGER, 0 )  ;
+            }
 
             if (end>length)
                end = length ;

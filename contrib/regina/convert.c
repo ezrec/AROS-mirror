@@ -200,6 +200,8 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
    const char *end_ptr=NULL ; /* ptr to end+1 in input hex string */
    char *res_ptr=NULL ;       /* ptr to current char in output string */
    int byte_boundary=0 ;      /* boolean, are we at at byte bounary? */
+   int count;                 /* used to count positions */
+   int last_blank=0;          /* used to report last byte errors */
 
    /*
     * Allow one extra char for padding, ignore that allocated string
@@ -220,7 +222,9 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
     * the hex string is checked for during the loop.
     */
    if ((ptr<end_ptr) && ((isspace(*ptr)) || (isspace(*(end_ptr-1)))))
-       exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+   {
+      exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+   }
 
    /*
     * Find the number of hex digits in the first group of hex digits.
@@ -245,7 +249,7 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
     * Stuff hex digits into the output string, and report error
     * for any other type of data.
     */
-   for (ptr=string->value; ptr<end_ptr; ptr++)
+   for (count=1,ptr=string->value; ptr<end_ptr; ptr++, count++)
    {
       if (isspace(*ptr))
       {
@@ -253,8 +257,11 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
           * Just make sure that this space occurs at a byte boundary,
           * except from that, ignore it.
           */
+         last_blank = count;
          if (!byte_boundary)
-             exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+         {
+            exiterror( ERR_INVALID_HEX_CONST, 1, count )  ;
+         }
       }
       else if (isxdigit(*ptr))
       {
@@ -275,7 +282,9 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
          byte_boundary = !byte_boundary ;
       }
       else
-          exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+      {
+         exiterror( ERR_INVALID_HEX_CONST, 3, (char)*ptr )  ;
+      }
    }
 
    /*
@@ -284,7 +293,9 @@ static streng *pack_hex( const tsd_t *TSD, const streng *string )
     * of hex digits ended at a byte boundary; report error if not.
     */
    if (!byte_boundary)
-       exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+   {
+      exiterror( ERR_INVALID_HEX_CONST, 1, last_blank )  ;
+   }
 
    result->len = res_ptr - result->value ;
    assert( result->len <= result->max ) ;
@@ -477,7 +488,9 @@ streng *std_b2x( tsd_t *TSD, cparamboxptr parms )
     * an error, so report it if that is the case.
     */
    if ((ptr>string->value) && ((first_group==0) || (isspace(*(endptr-1)))))
-       exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+   {
+      exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+   }
 
    /*
     * If the string is a proper bin string, we need one hex digit for
@@ -520,7 +533,9 @@ streng *std_b2x( tsd_t *TSD, cparamboxptr parms )
           * better be 0, or else there is space within a nibble.
           */
          if (cur_bit!=0)
-             exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+         {
+            exiterror( ERR_INVALID_HEX_CONST, 2, 1+(ptr-string->value) )  ;
+         }
       }
 
       else if (((*ptr)=='0')||((*ptr)=='1'))
@@ -540,7 +555,9 @@ streng *std_b2x( tsd_t *TSD, cparamboxptr parms )
          }
       }
       else
-          exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+      {
+         exiterror( ERR_INVALID_HEX_CONST, 4, *ptr )  ;
+      }
    }
 
    /*
@@ -574,6 +591,7 @@ streng *std_x2b( tsd_t *TSD, cparamboxptr parms )
    char *res_ptr=NULL ;    /* ptr to contents of 'result' */
    int nibble=0 ;          /* holds a nibble while extracting bin digits */
    int count=0 ;           /* loop control variable */
+   int pos=0 ;             /* position in string for error reporting */
 
    /*
     * Check that we got the parameters that we needed. Then initialize
@@ -597,8 +615,14 @@ streng *std_x2b( tsd_t *TSD, cparamboxptr parms )
     */
    if (end_ptr>ptr)
    {
-      if ((isspace(*ptr)) || (isspace(*(end_ptr-1))))
-          exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+      if ((isspace(*ptr)))
+      {
+         exiterror( ERR_INVALID_HEX_CONST, 1, 1 )  ;
+      }
+      if ((isspace(*(end_ptr-1))))
+      {
+         exiterror( ERR_INVALID_HEX_CONST, 1, (end_ptr-ptr) )  ;
+      }
    }
 
    /*
@@ -607,7 +631,7 @@ streng *std_x2b( tsd_t *TSD, cparamboxptr parms )
     * If anything other than spaces or hex digits are found, report
     * an error.
     */
-   for (; ptr<end_ptr; ptr++)
+   for (pos=1; ptr<end_ptr; ptr++,pos++)
    {
       if (isspace(*ptr))
       {
@@ -624,7 +648,7 @@ streng *std_x2b( tsd_t *TSD, cparamboxptr parms )
          }
          else if (space_stat==1)
          {
-             exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+            exiterror( ERR_INVALID_HEX_CONST, 1, pos )  ;
          }
       }
       else if (isxdigit(*ptr))
@@ -650,7 +674,9 @@ streng *std_x2b( tsd_t *TSD, cparamboxptr parms )
            space_stat = ((space_stat==1) ? 2 : 1) ;
       }
       else
-          exiterror( ERR_INVALID_HEX_CONST, 0 )  ;
+      {
+         exiterror( ERR_INVALID_HEX_CONST, 3, *ptr )  ;
+      }
    }
 
    /*

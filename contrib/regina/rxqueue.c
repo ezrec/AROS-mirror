@@ -42,6 +42,7 @@ static char *RCSid = "$Id$";
 # else
 #  include <windows.h>
 # endif
+# include <io.h>
 #else
 # ifdef HAVE_SYS_SOCKET_H
 #  include <sys/socket.h>
@@ -128,7 +129,7 @@ int send_all( int sock, char *action )
       while ( ( c = getchar() ) != EOF && c != '\n' )
       {
          if ( len >= bufflen
-         && !( buff = realloc( buff, bufflen <<= 1 ) ) )
+         && (( buff = realloc( buff, bufflen <<= 1 ) ) == NULL ) )
          {
            showerror( ERR_STORAGE_EXHAUSTED, 0, ERR_STORAGE_EXHAUSTED_TMPL );
            exit( ERR_STORAGE_EXHAUSTED );
@@ -328,7 +329,7 @@ int main( int argc, char *argv[])
                /*
                 * Allocate the initial buffer
                 */
-               if (!( buff = (char *)malloc( bufflen = 256 ) ) )
+               if (( buff = (char *)malloc( bufflen = 256 ) ) == NULL )
                {
                   showerror( ERR_STORAGE_EXHAUSTED, 0, ERR_STORAGE_EXHAUSTED_TMPL );
                   rc = ERR_STORAGE_EXHAUSTED;

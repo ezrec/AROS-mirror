@@ -54,18 +54,6 @@ Say numlines 'in file'
 /*--------------------------------------------------------------------
  * The Regina parser incorrectly parses the sample code below, and
  * returns the following error:
- * Error 15 running "/home/mark/Regina-0.08h/bug030.rex", line 1: Invalid hexadecimal or binary constant
- * Error 15.3: Only 0-9, a-f, A-F, and blank are valid in hexadecimal string; found "'<'x"
- * Reported By: Mark Hessling
- * Bug Number:  19991216-29512
- * Fixed By:
- * Fixed in:
- */
-Say '<'x'>'
-
-/*--------------------------------------------------------------------
- * The Regina parser incorrectly parses the sample code below, and
- * returns the following error:
  * Error 14 running "/home/mark/Regina-0.08h/bug29512.rex", line 2: Incomplete DO/IF/SELECT"
  * If the '?' is protected by parentheses, it works.
  * Reported By: Toby ?
@@ -130,6 +118,33 @@ Return /* should return a value!! */
 syntax:
 Say Condition( 'D' )
 Exit
+
+/*--------------------------------------------------------------------
+ * Regina does not trap conditions in externally called routines
+ * Reported by: Mark Hessling
+ * Bug Number:  
+ * Fixed by:
+ * Fixed in:
+ */
+/* a1.rex */
+signal on syntax
+call 'a2' 'an err'
+return 0
+
+syntax:
+say 'syntax at' sigl
+exit 1
+
+/* a2.rex - must be in REGINA_MACROS */
+parse arg aa
+say 'in a2' aa
+say date('x')
+return
+
+Should result in:
+----------------
+in a2 an err
+syntax at 3
 
 ======================================================================
 ============================= FIXED ==================================
@@ -765,4 +780,16 @@ Call Fred'1234'  /* syntax error */
  * Fixed By:    Mark Hessling
  * Fixed in:    2.0
  */
+
+/*--------------------------------------------------------------------
+ * The Regina parser incorrectly parses the sample code below, and
+ * returns the following error:
+ * Error 15 running "/home/mark/Regina-0.08h/bug030.rex", line 1: Invalid hexadecimal or binary constant
+ * Error 15.3: Only 0-9, a-f, A-F, and blank are valid in hexadecimal string; found "'<'x"
+ * Reported By: Mark Hessling
+ * Bug Number:  19991216-29512
+ * Fixed By: ??? pointed out that it is not a bug.
+ * Fixed in: 3.0.
+ */
+Say '<'x'>'
 

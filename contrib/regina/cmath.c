@@ -46,6 +46,7 @@ double myatof( const tsd_t *TSD, const streng *string )
    str = str_ofTSD(string) ;
    answer = strtod(str,&ptr) ;
 
+   /* remove leading spaces */
    for (;(*ptr)&&(isspace(*ptr));ptr++) ;
 #ifdef SUNOS_STRTOD_BUG
    for (;*ptr=='0';ptr++) ;

@@ -1,5 +1,3 @@
-#! /local/bin/rexx
-
                 /* This program is block structured ! */
         /* Author unknown - ported to REXX from ND Fortran by */
             /* Anders Christensen -- anders@solan.unit.no */

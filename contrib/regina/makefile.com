@@ -15,10 +15,10 @@ BINDIR = $(TOPDIR)/bin
 LIBDIR = $(TOPDIR)/lib
 MANEXT = l
 MANDIR = $(TOPDIR)/man/man$(MANEXT)
-VER=21
-VERDOT=2.1
+VER=30
+VERDOT=3.0
 
-MISCDEFS = -DFGC -I$(SRCDIR) #-DR2PERL
+MISCDEFS = -I$(SRCDIR) #-DR2PERL
 #DEBUG	  = #-g	-DNDEBUG #-Dlint
 PROF	 = #-p #g
 #OPTIMIZE = -O -DNDEBUG
@@ -80,13 +80,16 @@ CFILES = $(SRCDIR)/yaccsrc.c $(SRCDIR)/lexsrc.c	$(CSRCFILES) $(SRCDIR)/execiser.
 		$(SRCDIR)/rexxsaa.c $(SRCDIR)/rexx.c $(SRCDIR)/regina.c	$(SRCDIR)/client.c \
 		$(SRCDIR)/r2perl.c $(SRCDIR)/test1.c $(SRCDIR)/test2.c
 
+MTSSRC = $(SRCDIR)/en.mts $(SRCDIR)/pt.mts $(SRCDIR)/no.mts \
+	$(SRCDIR)/de.mts $(SRCDIR)/es.mts
+
 #.SUFFIXES: .sho $(SUFFIXES)
 #
 # Do not use default suffixes rule
 #
 .SUFFIXES:
 
-all : rexx$(EXE) execiser$(EXE)	$(SHL_TARGETS)
+all : rexx$(EXE) execiser$(EXE) trexx$(EXE) $(SHL_TARGETS) mtb_files
 
 $(CSRCFILES) : $(SRCDIR)/rexx.h
 
@@ -95,7 +98,7 @@ $(SRCDIR)/rexx.h : $(SRCDIR)/extern.h $(SRCDIR)/strings.h $(SRCDIR)/defs.h $(SRC
 $(SRCDIR)/mt.h : $(SRCDIR)/$(MT_FILE).h
 
 rexx$(EXE) : $(OFILES) rexx.$(OBJ) nosaa.$(OBJ)
-	$(PURIFY) $(CC) $(LINKOPT) $(STATIC_LDFLAGS) -o rexx $(OBJECTS) rexx.$(OBJ) nosaa.$(OBJ) $(OS2LIBA) $(LIBS) $(TCPLIBS)
+	$(PURIFY) $(CC) $(LINKOPT) $(STATIC_LDFLAGS) -o rexx$(EXE) $(OBJECTS) rexx.$(OBJ) nosaa.$(OBJ) $(OS2LIBA) $(LIBS) $(TCPLIBS)
 	$(LDEXTRA)
 	$(LDEXTRA1)
 
@@ -103,13 +106,18 @@ regina$(EXE) : $(LIBPRE)$(SHLFILE).$(SHL) regina.$(OBJ)	$(SHLIMPLIB) $(OS2LIBA)
 	$(PURIFY) $(CC)	$(LINKOPT) $(DYNAMIC_LDFLAGS) -o regina$(EXE) regina.$(OBJ) $(LINKSHL) $(LIBS) $(SHLIBS) $(OS2LIBA)
 	$(LDEXTRA)
 
+trexx$(EXE) : trexx.$(OBJ) $(LIBPRE)$(LIBFILE).$(LIBPST)
+	$(PURIFY) $(CC) $(LINKOPT) $(STATIC_LDFLAGS) -o trexx$(EXE) trexx.$(OBJ) $(LIBPRE)$(LIBFILE).$(LIBPST) $(LIBS) $(TCPLIBS)
+	$(LDEXTRA)
+	$(LDEXTRA1)
+
 execiser$(EXE) : execiser.$(OBJ) $(LIBPRE)$(LIBFILE).$(LIBPST) $(OS2LIBA)
-	$(PURIFY) $(CC)	$(LINKOPT) -o execiser execiser.$(OBJ) $(LIBLINK) $(OS2LIBA) $(TCPLIBS)
+	$(PURIFY) $(CC)	$(LINKOPT) -o execiser$(EXE) execiser.$(OBJ) $(LIBLINK) $(OS2LIBA) $(TCPLIBS)
 	$(LDEXTRA)
 	$(LDEXTRA1)
 
 threader$(EXE) : threader.$(OBJ) $(LIBPRE)$(LIBFILE).$(LIBPST) $(OS2LIBA)
-	$(PURIFY) $(CC)	$(LINKOPT) -o threader threader.$(OBJ) $(LIBLINK) $(OS2LIBA)
+	$(PURIFY) $(CC)	$(LINKOPT) -o threader$(EXE) threader.$(OBJ) $(LIBLINK) $(OS2LIBA)
 	$(LDEXTRA)
 	$(LDEXTRA1)
 
@@ -141,6 +149,20 @@ $(OS2LIB):
 $(OS2LIBA):
 	$(PURGEOS2LIB1)
 	$(PURGEOS2LIB2)
+
+#
+# Convert .mts to .mtb
+#
+mtb_files: msgcmp$(EXE) $(MTSSRC)
+	msgcmp $(MTSSRC)
+
+msgcmp$(EXE): msgcmp.$(OBJ)
+	$(PURIFY) $(CC) $(LINKOPT) $(STATIC_LDFLAGS) -o msgcmp msgcmp.$(OBJ) $(OS2LIBA) $(LIBS)
+	$(LDEXTRA)
+	$(LDEXTRA1)
+
+msgcmp.$(OBJ): $(SRCDIR)/msgcmp.c
+	$(CC) $(COPT) $(CC2O) -c $(SRCDIR)/msgcmp.c
 
 #
 # Rules	for static objects
@@ -566,7 +588,13 @@ yaccsrc.sho : $(SRCDIR)/yaccsrc.c $(SRCDIR)/defs.h $(SRCDIR)/rexx.h
 	$(SAVE2O)
 
 #
-# Rules	for sample programs
+# Rules for Regina tokeniser targets
+#
+trexx.$(OBJ) : $(SRCDIR)/tregina.c
+	$(CC) $(COPT) -c $(CC2O) $(SRCDIR)/tregina.c
+
+#
+# Rules for sample programs
 #
 test1.$(OBJ): $(SRCDIR)/test1.c
 	$(CC) -c $(COPT) $(CC2O) $(DYN_COMP) $(SRCDIR)/test1.c

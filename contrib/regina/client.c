@@ -39,7 +39,7 @@ static char *RCSid = "$Id$";
 #    define DONT_TYPEDEF_PFN
 #    include <os2.h>
 #   else
-#    if defined(_MSC_VER)
+#    if defined(_MSC_VER) && !defined(__WINS__)
 #     undef APIENTRY
 #     if _MSC_VER >= 1100
 /* Stupid MSC can't compile own headers without warning at least in VC 5.0 */
@@ -204,7 +204,7 @@ static paramboxptr parametrize( const tsd_t *TSD, int ArgCount, const int *ParLe
 int IfcExecScript( int NameLen, const char *Name,
                    int ArgCount, const int *ParLengths, const char **ParStrings,
                    int CallType, int ExitFlags, int EnvLen, const char *EnvName,
-                   int SourceCode,
+                   int SourceCode, int restricted,
                    const char *SourceString, unsigned long SourceStringLen,
                    const void *TinnedTree, unsigned long TinnedTreeLen,
                    int *RetLen, char **RetString, void **instore_buf,
@@ -239,9 +239,13 @@ int IfcExecScript( int NameLen, const char *Name,
 
    ctype = map_type(CallType) ;
 
+   TSD->restricted = restricted;
+
    for (hooks=num=0; num<30; num++)
+   {
       if ((ExitFlags>>num) & 0x01)
          hooks |= (1 << (ReMapHook(wTSD, num))) ;
+   }
 
    environment = wrapstring( wTSD, EnvName, EnvLen ) ;
    if (!environment)
@@ -321,7 +325,7 @@ int IfcExecScript( int NameLen, const char *Name,
       }
       else
       {
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          return 0 ;
       }
    }
@@ -578,7 +582,7 @@ int hookup( const tsd_t *TSD, int hook )
    else if (rcode==RX_HOOK_NOPE)
       rcode = HOOK_NOPE ;
    else
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
    return rcode ;
 }
 
@@ -611,7 +615,7 @@ int hookup_output( const tsd_t *TSD, int hook, const streng *outdata )
    else if (rcode==RX_HOOK_NOPE)
       rcode = HOOK_NOPE ;
    else
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
    return rcode ;
 }
@@ -657,7 +661,7 @@ int hookup_output2( const tsd_t *TSD, int hook, const streng *outdata1, const st
    else if (rcode==RX_HOOK_NOPE)
       rcode = HOOK_NOPE ;
    else
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
    return rcode ;
 }
@@ -688,7 +692,7 @@ int hookup_input( const tsd_t *TSD, int hook, streng **indata )
    else if (rcode==RX_HOOK_NOPE)
       rcode = HOOK_NOPE ;
    else
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
    *indata = wrapstring( TSD, retstr, retlen ) ;
    FreeTSD( retstr ) ; /* retstr was always newly allocated */
@@ -737,7 +741,7 @@ int hookup_input_output( const tsd_t *TSD, int hook, const streng *outdata, stre
    else if (rcode==RX_HOOK_NOPE)
       rcode = HOOK_NOPE ;
    else
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
    *indata = wrapstring( TSD, retstr, retlen ) ;
    FreeTSD( retstr ) ; /* retstr was always newly allocated */
@@ -874,10 +878,10 @@ static int SetVariable(const tsd_t *TSD, int Code, int *Lengths, char *Strings[]
    varbl = NULL; /* For debugging purpose only */
 
    if (!valid_var_symbol(varname))
-      {
-         Free_stringTSD( varname ) ;
-         return RX_CODE_INVNAME ;
-      }
+   {
+      Free_stringTSD( varname ) ;
+      return RX_CODE_INVNAME ;
+   }
 
    value = wrapstring( TSD, Strings[1], Lengths[1] ) ;
 
@@ -952,7 +956,7 @@ int IfcVarPool( tsd_t *TSD, int Code, int *Lengths, char *Strings[] )
    else if (Code==RX_CODE_PARAM)
       rc = handle_param( TSD, Lengths, Strings ) ;
    else
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
    return rc ;
 }
@@ -1008,6 +1012,19 @@ void *IfcAllocateMemory( unsigned long size )
    /* We now use the Virtual-functions instead of Global... */
    ret = VirtualAlloc( NULL, size, MEM_COMMIT, PAGE_READWRITE ) ;
    return ret;
+#elif defined( __EMX__ ) && !defined(DOS)
+   if (_osmode == OS2_MODE)
+   {
+      if ( ( BOOL )DosAllocMem( &ret, size, fPERM|PAG_COMMIT ) )
+         return NULL;
+      else
+         return ret;
+   }
+   else /* DOS or something else */
+   {
+      ret = (void *)malloc( size );
+      return ret;
+   }
 #elif defined( OS2 )
    if ( ( BOOL )DosAllocMem( &ret, size, fPERM|PAG_COMMIT ) )
       return NULL;
@@ -1028,6 +1045,11 @@ unsigned long IfcFreeMemory( void *ptr )
     * We can first decommit and then release or release at once. FGC.
     */
    VirtualFree( ptr, 0, MEM_RELEASE ) ;
+#elif defined( __EMX__ ) && !defined(DOS)
+   if (_osmode == OS2_MODE)
+      DosFreeMem( ptr );
+   else /* DOS or something else */
+      free( ptr );
 #elif defined( OS2 )
    DosFreeMem( ptr );
 #else
@@ -1048,9 +1070,11 @@ static void RemoveParams(const tsd_t *TSD)
    if ( ct->Strings && ct->Lengths )
    {
       for (i = 0;i < ct->StringsCount;i++) /* The last one is always NULL */
+      {
          if ((ct->Lengths[i] != RX_NO_STRING) &&
              (ct->Strings[i] != NULL))
             FreeTSD( ct->Strings[i] );
+      }
    }
 
    if ( ct->Lengths )
@@ -1083,14 +1107,17 @@ static void MakeParams(const tsd_t *TSD, cparamboxptr parms)
    ct->StringsCount = 0; /* This is the default in case of unused parameters */
    /* Detect the index of the last valid parameter */
    for (i=0,p=parms; p; p=p->next,i++)
+   {
       if (p->value)
          ct->StringsCount=i+1 ;
+   }
 
    /* add one NULL string at the end */
    ct->Lengths = MallocTSD( sizeof(int) * (ct->StringsCount+1) ) ;
    ct->Strings = MallocTSD( sizeof(char*) * (ct->StringsCount+1) ) ;
 
    for (i=0,p=parms; i < ct->StringsCount; p=p->next,i++)
+   {
       if (p->value)
       {
          ct->Lengths[i] = Str_len( p->value ) ;
@@ -1101,6 +1128,7 @@ static void MakeParams(const tsd_t *TSD, cparamboxptr parms)
          ct->Lengths[i] = RX_NO_STRING ;
          ct->Strings[i] = NULL ;
       }
+   }
 
    /* Provide a hidden NULL string at the end */
    ct->Lengths[ct->StringsCount] = RX_NO_STRING ;
@@ -1110,7 +1138,7 @@ static void MakeParams(const tsd_t *TSD, cparamboxptr parms)
 /* do_an_external calls IfcExecFunc with the appropriate parameters. Basically
  * it wraps the parameters. Either ExeName or box must be NULL.
  */
-static streng *do_an_external( const tsd_t *TSD,
+static streng *do_an_external( tsd_t *TSD,
                                const streng *ExeName,
                                const struct library_func *box,
                                cparamboxptr parms,
@@ -1124,6 +1152,8 @@ static streng *do_an_external( const tsd_t *TSD,
    int RC ;
    PFN Func;
    cli_tsd_t *ct;
+   volatile char *tmpExternalName; /* used to save ct->ExternalName */
+                                   /* when erroring                 */
 
    ct = TSD->cli_tsd;
 
@@ -1131,11 +1161,13 @@ static streng *do_an_external( const tsd_t *TSD,
    if (ExeName)
    {
       ct->ExternalName = str_of( TSD, ExeName );
+      tmpExternalName = tmpstr_of( TSD, ExeName );
       Func = NULL;
    }
    else
    {
       ct->ExternalName = str_of( TSD, box->name );
+      tmpExternalName = tmpstr_of( TSD, box->name );
       Func = box->addr;
    }
 
@@ -1147,7 +1179,15 @@ static streng *do_an_external( const tsd_t *TSD,
 
    if (RC)
    {
-      exiterror( RC, 0) ;
+      switch( RC )
+      {
+         case ERR_ROUTINE_NOT_FOUND:
+            exiterror( ERR_ROUTINE_NOT_FOUND, 1, tmpExternalName );
+            break;
+         default:
+            exiterror( RC, 0) ;
+            break;
+      }
       retval = NULL ;
    }
    else
@@ -1193,8 +1233,8 @@ int IfcCreateQueue( tsd_t *TSD, const char *qname, const int qlen, char *data, u
       /*
        * Return the new queue name
        */
-      memcpy( data, strdata->value, max( strdata->len, buflen) - 1 );
-      *(data+(max( strdata->len, buflen) - 1)) = '\0';
+      memcpy( data, strdata->value, max( strdata->len, (int) buflen) - 1 );
+      *(data+(max( strdata->len, (int) buflen) - 1)) = '\0';
       /*
        * If the returned queue name is different to
        * the one we requested, set the dupflag

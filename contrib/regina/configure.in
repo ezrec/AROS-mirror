@@ -2,6 +2,9 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT(rexxsaa.h)
 AC_PREFIX_DEFAULT(/usr)
 
+VERSION=3.0
+VERSION_NODOT=30
+
 dnl ---------------------- check for C compiler -----------------
 dnl Checks for one of the C compilers below - change if yours not there.
 CC_LIST="gcc cc c89 acc"
@@ -82,8 +85,11 @@ AC_CHECK_HEADERS( \
         pwd.h \
         grp.h \
         math.h \
+        poll.h \
         time.h \
         sys/time.h \
+        sys/wait.h \
+        sys/stat.h \
         assert.h \
         errno.h \
         stdarg.h \
@@ -93,16 +99,16 @@ AC_CHECK_HEADERS( \
         limits.h \
         fcntl.h \
         malloc.h \
-        dlfcn.h \
         dl.h \
         sys/select.h \
         arpa/inet.h  \
         sys/socket.h \
+        sys/resource.h \
         netinet/in.h \
         netdb.h
         )
 
-AC_CHECK_FUNCS(putenv usleep random ftruncate memcpy memmove strerror strerror_r gettimeofday ftime _fullpath vsprintf _splitpath2 _splitpath sigaction)
+AC_CHECK_FUNCS(sysconf putenv usleep random ftruncate memcpy memmove strerror strerror_r gettimeofday ftime _fullpath vsprintf _splitpath2 _splitpath sigaction mkstemp)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -171,7 +177,15 @@ if test "$on_beos" = yes; then
         else
                 CFLAGS="-O2 -Wall"
         fi
+        sharedir="/boot/home/config/add-ons/rexx"
+else
+        if test "x$prefix" != xNONE; then
+           sharedir="$prefix/share/regina"
+        else
+           sharedir="$ac_default_prefix/share/regina"
+        fi
 fi
+AC_SUBST(sharedir)
 
 dnl --------------- allow --enable-purify to enable linking with Purify
 AC_ARG_ENABLE(purify,
@@ -224,7 +238,11 @@ if test "$mh_has_pthreads" = yes; then
 		MH_GETPWUID_R_STRUCT_RETURN
 	fi
 	CFLAGS="$save_CFLAGS"
+	REGINAMULTITHREAD="yes"
+else
+	REGINAMULTITHREAD="no"
 fi
+AC_SUBST(REGINAMULTITHREAD)
 
 dnl --------------- allow --enable-tracemem to enable internal memory tracing
 AC_ARG_ENABLE(tracemem,
@@ -265,36 +283,51 @@ else
 fi
 AC_SUBST(REXXSOCKET)
 
-dnl --------------- allow --with-dlfcnincdir to enable compiling with dlfcn.h under AIX 3/4.1
+dnl --------------- allow --with-dlfcnincdir to enable compiling with dlfcn.h on platforms that don't provide dl*() functions natively
 AC_ARG_WITH(dlfcnincdir,
-        [  --with-dlfcnincdir      location of dlfcn.h (AIX only)],
+        [  --with-dlfcnincdir      location of dlfcn.h],
         [with_dlfcnincdir=$withval],
         [with_dlfcnincdir=no],
 )
 if test "$with_dlfcnincdir" = no; then
         DLFCNINCDIR=""
+        AC_CHECK_HEADERS( dlfcn.h )
 else
-        DLFCNINCDIR="-I$with_dlfcnincdir"
-        HAVE_DLFCN_H="1"
-        AC_DEFINE(HAVE_DLFCN_H)
+        if test -f "$with_dlfcnincdir/dlfcn.h"; then
+           DLFCNINCDIR="-I$with_dlfcnincdir"
+           HAVE_DLFCN_H="1"
+           AC_DEFINE(HAVE_DLFCN_H)
+        else
+           AC_MSG_ERROR(dlfcn.h not found in \"$with_dlfcnincdir\" as specified in --with-dlfcnincdir switch; cannot continue)
+        fi
 fi
 AC_SUBST(DLFCNINCDIR)
 
-dnl --------------- allow --with-dlfcnlibdir to enable compiling with dlfcn.h under AIX 3/4.1
+dnl --------------- allow --with-dlfcnlibdir to enable compiling with dlfcn.h on platforms that don't provide dl*() functions natively
+AC_REQUIRE([MH_SHLPST])
 AC_ARG_WITH(dlfcnlibdir,
-        [  --with-dlfcnlibdir      location of libdl.a (AIX only)],
+        [  --with-dlfcnlibdir      location of libdl.a(AIX) libdl.dylib(MacOSX)],
         [with_dlfcnlibdir=$withval],
         [with_dlfcnlibdir=no],
 )
 if test "$with_dlfcnlibdir" = no; then
         DLFCNLIBDIR=""
 else
-        DLFCNLIBDIR="-L$with_dlfcnlibdir -ldl"
+        if test -f "$with_dlfcnlibdir/libdl$SHLPST"; then
+           DLFCNLIBDIR="-L$with_dlfcnlibdir -ldl"
+        else
+           AC_MSG_ERROR(libdl$SHLPST not found in \"$with_dlfcnlibdir\" as specified in --with-dlfcnlibdir switch; cannot continue)
+        fi
 fi
 AC_SUBST(DLFCNLIBDIR)
 
 dnl --------------- Check how to make shared libraries -------------------
+dnl MH_SHARED_LIBRARY must be called after determining if POSIX threads is specified
 MH_SHARED_LIBRARY
+
+dnl --------------- Check if underscore is needed in loadable modules ----
+dnl MH_CHECK_LEADING_USCORE must be called after processing --with-dlfcn[inc,lib]dir switches
+MH_CHECK_LEADING_USCORE
 
 dnl --------------- Force definition of pre-compiler macro UNIX ----------
 AC_DEFINE(UNIX)
@@ -309,10 +342,13 @@ else
 	fi
 fi
 AC_SUBST(STARTUPDIR)
+AC_SUBST(VERSION)
+AC_SUBST(VERSION_NODOT)
 
 dnl AC_OUTPUT(Makefile)
 
-AC_OUTPUT($mymakefile)
+AC_OUTPUT($mymakefile regina-config rxstack.init.d)
+chmod 755 regina-config
 
 case "$target" in
         *ibm-aix*)

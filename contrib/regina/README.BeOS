@@ -1,9 +1,9 @@
-                              Regina 2.2 for BeOS
+                              Regina 3.0 for BeOS
 
-This archive contains binaries for the Regina Rexx Interpreter 2.2 for BeOS.
+This archive contains binaries for the Regina Rexx Interpreter 3.0 for BeOS.
 Regina is one of the fastest Rexx interpreters available, and the most
 portable. Regina is available on most Unix platforms, including Linux and
-FreeBSD, Windows 9x/NT/2k, OS/2, DOS, Amiga, OpenVMS, OpenEdition and Linux/390.
+FreeBSD, Windows 9x/NT/2k/XP, OS/2, DOS, Amiga, OpenVMS, OpenEdition and Linux/390.
 
 Regina is distributed under the GNU LIBRARY GENERAL PUBLIC LICENSE. See
 COPYING-LIB for details.
@@ -40,7 +40,7 @@ to
 /boot/home/config/boot/UserBootscript
 
 For more information on Regina, visit the Regina Home page at
-http://www.lightlink.com/hessling/regina/
+http://regina-rexx.sf.net
 
 Cheers, Mark.
 ------------------------------------------------------------------------

@@ -6,6 +6,9 @@ cd dist
 copy ..\%1\regina.exe
 copy ..\%1\regina.dll
 copy ..\%1\rexx.lib
+copy ..\%1\rexx.exe
+copy ..\%1\rxstack.exe
+copy ..\%1\rxqueue.exe
 copy ..\%1\regina.lib
 copy ..\%1\test1.dll
 copy ..\%1\test2.dll

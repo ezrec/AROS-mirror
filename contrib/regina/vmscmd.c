@@ -260,7 +260,7 @@ static void write_out_ast()
    return;
 }
 
-int vms_do_command( tsd_t *TSD, const streng *cmd, int in, int out, int fout, int envir )
+int vms_do_command( tsd_t *TSD, const streng *cmd, int in, int out, int fout, const environment *env )
 {
    struct dsc$descriptor_s name, input, output, prc_name ;
    int fdin[2], fdout[2], strval[2], strval2[2], lim=0, max=0 ;

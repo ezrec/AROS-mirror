@@ -1,4 +1,3 @@
-#! /local/bin/rexx
 /* ReXX */
   /* Take a measure of REXX clauses-per-second (CPS)                 */
   /* Mike Cowlishaw (mfc@ibm.com).  Multi-platform.                  */
