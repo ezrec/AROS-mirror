@@ -58,6 +58,7 @@
 #include <ctype.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
+#include <stdlib.h>
 
 
 #define YES			1
