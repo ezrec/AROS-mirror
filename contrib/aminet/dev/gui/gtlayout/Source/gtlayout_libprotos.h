@@ -43,10 +43,10 @@ ULONG LTP_Atol(STRPTR String);
 #ifndef __AROS__
 VOID SAVE_DS ASM LTP_BackfillRoutine(REG(a0) struct Hook *Hook, REG(a2) struct RastPort *RPort, REG(a1) struct LayerMsg *Bounds);
 #else
-AROS_UFH3(void, LTP_BackfillRoutine,
-	  AROS_UFHA(struct Hook *, hook, A0),
-	  AROS_UFHA(struct RastPort *, RPort, A2),
-	  AROS_UFHA(struct LayerMsg *, Bounds, A1)
+AROS_UFP3(void, LTP_BackfillRoutine,
+	  AROS_UFPA(struct Hook *, hook, A0),
+	  AROS_UFPA(struct RastPort *, RPort, A2),
+	  AROS_UFPA(struct LayerMsg *, Bounds, A1)
 );
 #endif
 
@@ -92,10 +92,10 @@ ObjectNode *LTP_CreateObjectNode(LayoutHandle *handle, LONG type, ULONG id, STRP
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_DefaultEditRoutine(REG(a0) struct Hook *Hook, REG(a2) struct SGWork *Work, REG(a1) Msg msg);
 #else
-AROS_UFH3(ULONG, LTP_DefaultEditRoutine,
-	  AROS_UFHA(struct Hook *, Hook, A0),
-	  AROS_UFHA(struct SGWork *, Work, A2),
-	  AROS_UFHA(Msg, msg, A1)
+AROS_UFP3(ULONG, LTP_DefaultEditRoutine,
+	  AROS_UFPA(struct Hook *, Hook, A0),
+	  AROS_UFPA(struct SGWork *, Work, A2),
+	  AROS_UFPA(Msg, msg, A1)
 );
 #endif
 
@@ -103,10 +103,10 @@ AROS_UFH3(ULONG, LTP_DefaultEditRoutine,
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_DefaultHistoryHook(REG(a0) struct Hook *Hook, REG(a2) struct Gadget *Gadget, REG(a1) STRPTR NewString);
 #else
-AROS_UFH3(ULONG, LTP_DefaultHistoryHook,
-	  AROS_UFHA(struct Hook *, hook, A0),
-	  AROS_UFHA(struct Gadget *, gadget, A2),
-	  AROS_UFHA(STRPTR, NewString, A1)
+AROS_UFP3(ULONG, LTP_DefaultHistoryHook,
+	  AROS_UFPA(struct Hook *, hook, A0),
+	  AROS_UFPA(struct Gadget *, gadget, A2),
+	  AROS_UFPA(STRPTR, NewString, A1)
 );
 #endif
 
@@ -201,10 +201,10 @@ VOID LTP_HandleHistory(struct SGWork *Work);
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_HexEditRoutine(REG(a0) struct Hook *hook, REG(a2) struct SGWork *sgw, REG(a1) Msg msg);
 #else
-AROS_UFH3(ULONG, LTP_HexEditRoutine,
-	  AROS_UFHA(struct Hook *, hook, A0),
-	  AROS_UFHA(struct SGWork *, sgw, A2),
-	  AROS_UFHA(Msg, msg, A1)
+AROS_UFP3(ULONG, LTP_HexEditRoutine,
+	  AROS_UFPA(struct Hook *, hook, A0),
+	  AROS_UFPA(struct SGWork *, sgw, A2),
+	  AROS_UFPA(Msg, msg, A1)
 );
 #endif
 
@@ -212,10 +212,10 @@ AROS_UFH3(ULONG, LTP_HexEditRoutine,
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_ImageDispatch(REG(a0) struct IClass *class, REG(a2) Object *object, REG(a1) Msg msg);
 #else
-AROS_UFH3(ULONG, LTP_ImageDispatch,
-	  AROS_UFHA(struct IClass *, class, A0),
-	  AROS_UFHA(Object *, object, A2),
-	  AROS_UFHA(Msg, msg, A1)
+AROS_UFP3(ULONG, LTP_ImageDispatch,
+	  AROS_UFPA(struct IClass *, class, A0),
+	  AROS_UFPA(Object *, object, A2),
+	  AROS_UFPA(Msg, msg, A1)
 );
 #endif
 
@@ -238,10 +238,10 @@ LONG LTP_GetCurrentLevel(ObjectNode *Node);
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_LevelClassDispatcher(REG(a0) Class *class, REG(a2) Object *object, REG(a1) Msg msg);
 #else
-AROS_UFH3(ULONG, LTP_LevelClassDispatcher,
-	  AROS_UFHA(Class *, class, A0),
-	  AROS_UFHA(Object *, object, A2),
-	  AROS_UFHA(Msg, msg, A1)
+AROS_UFP3(ULONG, LTP_LevelClassDispatcher,
+	  AROS_UFPA(Class *, class, A0),
+	  AROS_UFPA(Object *, object, A2),
+	  AROS_UFPA(Msg, msg, A1)
 );
 #endif
 
@@ -265,10 +265,10 @@ RootMenu *LTP_NewMenu(struct Screen *Screen, struct TextAttr *TextAttr, struct I
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_PasswordEditRoutine(REG(a0) struct Hook *Hook, REG(a2) struct SGWork *Work, REG(a1) Msg msg);
 #else
-AROS_UFH3(ULONG, LTP_PasswordEditRoutine,
-	  AROS_UFHA(struct Hook *, Hook, A0),
-	  AROS_UFHA(struct SGWork *, Work, A2),
-	  AROS_UFHA(Msg, msg, A1)
+AROS_UFP3(ULONG, LTP_PasswordEditRoutine,
+	  AROS_UFPA(struct Hook *, Hook, A0),
+	  AROS_UFPA(struct SGWork *, Work, A2),
+	  AROS_UFPA(Msg, msg, A1)
 );
 #endif
 
@@ -279,10 +279,10 @@ VOID LTP_PlaceGroups(LayoutHandle *handle, ObjectNode *group, LONG left, LONG to
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_PopupClassDispatcher(REG(a0) struct IClass *class, REG(a2) Object *object, REG(a1) Msg msg);
 #else
-AROS_UFH3(ULONG, LTP_PopupClassDispatcher,
-	  AROS_UFHA(struct IClass *, class, A0),
-	  AROS_UFHA(Object *, object, A2),
-	  AROS_UFHA(Msg, msg, A1)
+AROS_UFP3(ULONG, LTP_PopupClassDispatcher,
+	  AROS_UFPA(struct IClass *, class, A0),
+	  AROS_UFPA(Object *, object, A2),
+	  AROS_UFPA(Msg, msg, A1)
 );
 #endif
 
@@ -341,10 +341,10 @@ BOOL LTP_ObtainTabSize(struct IBox *Box, ...);
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_TabClassDispatcher(REG(a0) struct IClass *class, REG(a2) Object *object, REG(a1) Msg msg);
 #else
-AROS_UFH3(ULONG, LTP_TabClassDispatcher,
-	  AROS_UFHA(struct IClass *, class, A0),
-	  AROS_UFHA(Object *, object, A2),
-	  AROS_UFHA(Msg, msg, A1)
+AROS_UFP3(ULONG, LTP_TabClassDispatcher,
+	  AROS_UFPA(struct IClass *, class, A0),
+	  AROS_UFPA(Object *, object, A2),
+	  AROS_UFPA(Msg, msg, A1)
 );
 #endif
 

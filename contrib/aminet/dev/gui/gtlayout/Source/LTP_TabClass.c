@@ -736,6 +736,8 @@ AROS_UFH3(ULONG, LTP_TabClassDispatcher,
 )
 #endif
 {
+        AROS_USERFUNC_INIT
+	
 	switch(msg->MethodID)
 	{
 		case OM_NEW:
@@ -768,6 +770,8 @@ AROS_UFH3(ULONG, LTP_TabClassDispatcher,
 	}
 
 	return(DoSuperMethodA(class,object,msg));
+    
+        AROS_USERFUNC_EXIT
 }
 
 #endif	/* DO_TAB_KIND */

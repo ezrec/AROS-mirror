@@ -34,6 +34,8 @@ AROS_UFH3(ULONG, LTP_PasswordEditRoutine,
 )
 #endif
 {
+        AROS_USERFUNC_INIT
+	
 	LayoutHandle *Handle;
 	ObjectNode *Node;
 	STRPTR Buffer;
@@ -128,6 +130,8 @@ AROS_UFH3(ULONG, LTP_PasswordEditRoutine,
 	}
 
 	return(TRUE);
+    
+        AROS_USERFUNC_EXIT
 }
 
 #endif	/* DO_PASSWORD_KIND */

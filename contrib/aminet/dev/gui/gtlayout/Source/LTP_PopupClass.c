@@ -1255,6 +1255,8 @@ AROS_UFH3(ULONG, LTP_PopupClassDispatcher,
 )
 #endif
 {
+        AROS_USERFUNC_INIT
+	
 	switch(msg->MethodID)
 	{
 		case OM_NEW:
@@ -1287,6 +1289,8 @@ AROS_UFH3(ULONG, LTP_PopupClassDispatcher,
 	}
 
 	return(DoSuperMethodA(class,object,msg));
+    
+        AROS_USERFUNC_EXIT
 }
 
 #endif	/* DO_POPUP_KIND */

@@ -24,6 +24,8 @@ AROS_UFH3(ULONG, LTP_DefaultHistoryHook,
 )
 #endif
 {
+        AROS_USERFUNC_INIT
+	
 	ObjectNode			*Node	= (ObjectNode *)Gadget->UserData;
 	struct LayoutHandle	*Handle = Node->Special.String.LayoutHandle;
 	struct MinList		*List	= (struct MinList *)Hook->h_Data;
@@ -60,4 +62,6 @@ AROS_UFH3(ULONG, LTP_DefaultHistoryHook,
 	}
 
 	return(TRUE);
+    
+        AROS_USERFUNC_EXIT
 }

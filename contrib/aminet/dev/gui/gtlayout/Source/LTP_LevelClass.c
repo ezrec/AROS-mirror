@@ -1272,6 +1272,8 @@ AROS_UFH3(ULONG, LTP_LevelClassDispatcher,
 )
 #endif
 {
+        AROS_USERFUNC_INIT
+	
 	ULONG result;
 
 	switch(msg->MethodID)
@@ -1330,6 +1332,8 @@ AROS_UFH3(ULONG, LTP_LevelClassDispatcher,
 	}
 
 	return(result);
+    
+        AROS_USERFUNC_EXIT
 }
 
 #endif	/* DO_LEVEL_KIND */

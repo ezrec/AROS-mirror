@@ -169,6 +169,8 @@ AROS_UFH3(ULONG, LTP_ImageDispatch,
 )
 #endif
 {
+        AROS_USERFUNC_INIT
+	
 	switch(msg->MethodID)
 	{
 		case IM_ERASE:
@@ -187,4 +189,6 @@ AROS_UFH3(ULONG, LTP_ImageDispatch,
 	}
 
 	return(DoSuperMethodA(class,object,msg));
+    
+        AROS_USERFUNC_EXIT
 }

@@ -37,6 +37,8 @@ AROS_UFH3(void, LTP_BackfillRoutine,
 )
 #endif
 {
+        AROS_USERFUNC_INIT
+
 	LayoutHandle *Handle = (LayoutHandle *)Hook->h_Data;
 
 		// Make a copy of the rastport
@@ -56,6 +58,8 @@ AROS_UFH3(void, LTP_BackfillRoutine,
 	RectFill(&Handle->BackfillRastPort,
 		Bounds->Bounds.MinX,Bounds->Bounds.MinY,
 		Bounds->Bounds.MaxX,Bounds->Bounds.MaxY);
+    
+        AROS_USERFUNC_EXIT
 }
 
 /*

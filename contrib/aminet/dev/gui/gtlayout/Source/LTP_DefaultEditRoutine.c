@@ -32,6 +32,8 @@ AROS_UFH3(ULONG, LTP_DefaultEditRoutine,
 )
 #endif
 {
+        AROS_USERFUNC_INIT
+	
 	struct Hook *Validate;
 	LayoutHandle *Handle;
 	ObjectNode *Node;
@@ -168,4 +170,6 @@ AROS_UFH3(ULONG, LTP_DefaultEditRoutine,
 	}
 
 	return(TRUE);
+    
+        AROS_USERFUNC_EXIT
 }

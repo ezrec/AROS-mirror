@@ -34,6 +34,8 @@ AROS_UFH3(ULONG, LTP_HexEditRoutine,
 )
 #endif
 {
+        AROS_USERFUNC_INIT
+	
 	LayoutHandle *handle;
 	ObjectNode *node;
 	BOOL activate;
@@ -107,6 +109,8 @@ AROS_UFH3(ULONG, LTP_HexEditRoutine,
 	}
 
 	return(TRUE);
+    
+        AROS_USERFUNC_EXIT
 }
 
 #endif	/* DO_HEXHOOK */

@@ -15,6 +15,8 @@
 #define ASM	__asm
 #define REG(x)	register __ ## x
 #define LIBENT	SAVE_DS ASM
+#define AROS_USERFUNC_INIT
+#define AROS_USERFUNC_EXIT
 #else
 #define SAVE_DS
 #define ASM
