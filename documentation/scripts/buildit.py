@@ -88,7 +88,7 @@ def processPicture( src, depth ):
     # Create the thumbnail.
     if newer( [ src_abs ], tn_dst_abs ):
         print '» Thumbnailing', src
-        makeThumbnail( src_abs, tn_dst_abs, (200, 200) )
+        makeThumbnail( src_abs, tn_dst_abs, (320, 256) )
 
 
 def makePictures():

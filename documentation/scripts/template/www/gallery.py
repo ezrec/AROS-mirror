@@ -14,7 +14,7 @@ def makePicture( path, description ):
         cellpadding = 4, cellspacing = 0, border = 1, width = '100%%',
         contents = TR \
         ( [
-            TD( width = '208', contents = A( href = path, contents = Img( src = thumbnail ) ) ),
+            TD( width = '328', contents = A( href = path, contents = Img( src = thumbnail ) ) ),
             TD \
             ( 
                 width = '*', contents =
