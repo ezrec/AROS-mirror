@@ -23,14 +23,19 @@ USE_ZLIB     := yes
 
 %make_prog_setup mmake=contrib-development-nasm
 
-contrib-development-nasm : setup $(EXE)
+contrib-development-nasm : setup $(EXE) includes
 
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
 #MM
 setup ::
-	%mkdirs_q $(EXEDIR)
+	%mkdirs_q $(EXEDIR) $(EXEDIR)/include
 	cp test/arostest.s test/arostest.README $(EXEDIR)
+
+
+includes:
+	$(AWK) -f genasminc.awk $(INCDIR)/defines/*.h >$(EXEDIR)/include/libs.i
 
 %common
 %include_deps
+
