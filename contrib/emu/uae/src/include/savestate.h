@@ -83,6 +83,8 @@ extern uae_u8 *save_rom (int, int *);
 extern void save_state (char *filename, char *description);
 extern void restore_state (char *filename);
 
+extern void savestate_restore_finish (void);
+
 extern void custom_save_state (void);
 
 #define STATE_SAVE 1
