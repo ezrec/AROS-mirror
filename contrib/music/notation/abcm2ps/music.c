@@ -1704,7 +1704,7 @@ static void set_width(struct SYMBOL *s)
 			tex_str(t, s->as.text, sizeof t, &w);
 
 			/* may have many lines in guitar chord */
-			if (strstr(t, "\\n") != 0) {
+			if (strchr(t, '\n') != 0) {
 
 				/* stacked chord/figured bass */
 				float wlower;
@@ -1714,13 +1714,13 @@ static void set_width(struct SYMBOL *s)
 				p = t;
 				for (;;) {
 					if (*p == '\0'
-					    || (*p == '\\' && p[1] == 'n')) {
+					    || *p == '\n') {
 						if (wlower > w)
 							w = wlower;
 						if (*p == '\0')
 							break;
 						wlower = 0;
-						p += 2;		/* skip "\n" */
+						p++;
 						continue;
 					}
 					wlower += cwid(*p);

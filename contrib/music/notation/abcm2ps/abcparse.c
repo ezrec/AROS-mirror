@@ -1704,12 +1704,14 @@ again:					/* for history */
 		switch (char_tb[*p++]) {
 		case CHAR_GCHORD: {			/* " */
 			int l;
+			int more_gch;
 
+		gch_continue:
+			more_gch = 0;
 			q = p;
 			while (*p != '"') {
 				if (*p == '\0') {
-					syntax("EOL reached while parsing guitar chord",
-					       q);
+					more_gch = 1;
 					break;
 				}
 				p++;
@@ -1721,10 +1723,9 @@ again:					/* for history */
 
 				/* many guitar chord: concatenate with '\n' */
 				l2 = strlen(gchord);
-				gch = alloc_f(l2 + 2 + l + 1);
+				gch = alloc_f(l2 + 1 + l + 1);
 				strcpy(gch, gchord);
-				gch[l2++] = '\\';
-				gch[l2++] = 'n';
+				gch[l2++] = '\n';
 				strncpy(&gch[l2], q, l);
 				gch[l2 + l] = '\0';
 				if (free_f)
@@ -1737,6 +1738,14 @@ again:					/* for history */
 			}
 			if (*p != '\0')
 				p++;
+			else if (more_gch) {
+				if ((p = get_line()) == 0) {
+					syntax("EOF reached while parsing guitar chord",
+					       q);
+					break;
+				}
+				goto gch_continue;
+			}
 		}
 			break;
 		case CHAR_GRACE:		/* '{' or '}' */

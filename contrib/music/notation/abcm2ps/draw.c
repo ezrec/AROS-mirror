@@ -1728,7 +1728,7 @@ static void draw_slur(struct SYMBOL *k1,
 	nn = 1;
 	upstaff = k1->staff;
 	two_staves = 0;
-	for (k = k1->next; ; k = k->next) {
+	for (k = k1->next; k != 0; k = k->next) {
 		if (k->len > 0) {	/* note or rest */
 			nn++;
 			if (k->staff != upstaff) {
@@ -1745,7 +1745,9 @@ if (two_staves) printf("*** multi-staves slurs not treated\n");
 
 	/* fix endpoints */
 	x1 = k1->x + k1->xmx;		/* take the max right side */
-	x2 = k2->x;
+	if (k1 != k2)
+		x2 = k2->x;
+	else	x2 = realwidth;		/* (the slur starts on last note of the line) */
 	y1 = k1->y;
 	y2 = k2->y;
 	if (k1->type == NOTE) {		/* here if k1 points to note */
@@ -1869,7 +1871,7 @@ if (two_staves) printf("*** multi-staves slurs not treated\n");
 	h = 0;
 	a = (y2 - y1) / (x2 - x1);
 	addy = y1 - a * x1;
-	for (k = k1->next; k != k2 ; k = k->next) {
+	for (k = k1->next; k != 0 && k != k2 ; k = k->next) {
 		if (k->staff != upstaff)
 			continue;
 		switch (k->type) {

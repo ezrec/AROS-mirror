@@ -346,12 +346,6 @@ void tex_str(char *d,
 					break;
 				}
 			}
-			/* fixme: bad hack for multi-line guitar chord*/
-			if (c1 == 'n') {
-				if (--maxlen <= 0)
-					break;
-				*d++ = '\\';
-			}
 			goto addchar1;
 		case '{':
 		case '}':

@@ -39,7 +39,7 @@ List of the options
 	but they may be a way to generate graphical images. For
 	example, using GhostScript:
 		abcm2ps voices -E -e7
-		gs -sDEVICE=pngmono -r80 -g590x180 \
+		gs -sDEVICE=pngmono -r80 -g590x174 \
 			-dBATCH -dNOPAUSE \
 			-sOutputFile=quitolis.png Out001.eps
 	(the values for -g are the values of the bounding box in

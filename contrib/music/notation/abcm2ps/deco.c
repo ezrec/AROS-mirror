@@ -963,7 +963,7 @@ void draw_deco_staff(void)
 		}
 		some_gchord = 1;
 		w = cwid('a') * cfmt.gchordfont.size * 1.1;
-		if ((p = strstr(s->as.text, "\\n")) != 0)
+		if ((p = strchr(s->as.text, '\n')) != 0)
 			w *= p - s->as.text;
 		else	w *= strlen(s->as.text);
 		y = get_y(s, 1, s->x, w, 0);
@@ -1263,7 +1263,7 @@ static void draw_gchord(struct SYMBOL *s,
 
 	/* find the top line */
 	q = p;
-	while ((q = strstr(q, "\\n")) != 0) {
+	while ((q = strchr(q, '\n')) != 0) {
 		gchy += yspc;
 		q += 2;		/* skip "\n" */
 	}
@@ -1271,7 +1271,7 @@ static void draw_gchord(struct SYMBOL *s,
 
 	/* loop on each line */
 	for (;;) {
-		if ((q = strstr(p, "\\n")) != 0)
+		if ((q = strchr(p, '\n')) != 0)
 			*q = '\0';
 		w = 0;
 		for (r = p; *r != '\0'; r++)
@@ -1285,7 +1285,7 @@ static void draw_gchord(struct SYMBOL *s,
 		PUT1("(%s) gcshow ", p);
 		if (q == 0)
 			break;
-		p = q + 2;	/* skip "\n" */
+		p = q + 1;	/* skip '\n' */
 		gchy -= yspc;
 	}
 	PUT0("\n");

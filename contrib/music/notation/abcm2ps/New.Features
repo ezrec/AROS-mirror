@@ -1,4 +1,4 @@
-Features in abcm2ps 3.0.15 (J.F. Moine, June 2002)
+Features in abcm2ps 3.1.1 (J.F. Moine, July 2002)
 ==================================================
 
 ----- staff break -----
@@ -75,8 +75,9 @@ Multiple repeat indications (|:: .. ::|) are accepted but not displayed.
 Multimeasure rests are indicated by 'Z' followed by the number of
 measures.
 
-Sharps, flats and natural signs may be indicated in guitar chords
-using '\#', '\b' and '\='.
+In guitar chords, the characters '#', 'b' and '=' are displayed
+as sharps, flats and natural signs. Set the format parameter 'freegchord'
+to 1 to inhibit this feature.
 
 Invisible bars are indicated by '[]' or '[|]', and dashed bars by
 a single ':'.
@@ -96,13 +97,17 @@ The !slide! decoration is assigned to the letter 'J'.
 Acciaccatura (short appogiattura) are indicated by a '/' starting a grace
 note sequence (one note only - ex: {/B}c).
 
-Multiple guitar chord lines are indicated by separated quoted
-strings appearing before a same note (or rest or bar - ex: '"G3""4"G').
+Multiple lines of guitar chord are normally indicated by separate
+quoted strings appearing before a same note (or rest or bar). They may
+also be indicated by '\n', ';' or a new line inside the quoted string.
+Ex:
+	"G3""4"G "G3\n4"G "G3;4"G "G3
+	4"G
 
 A note length starting with '0' (zero) indicates a stemless black note
 (the note length must be a crotchet).
 
-'M:none' says there is no key signature.
+'M:none' indicates there is no key signature.
 
 The header field 'X:' may be ommited: a new tune may start directly on the
 first 'T:'.
@@ -215,12 +220,15 @@ given in cm, in or pt (see 'Output formatting' below).
 
 ----- Features removed from abc2ps-1.2.4 -----
 
+The scale is global (it was restricted to the music part in abc2ps
+- this is compatible with 'yaps', and surely other ABC packages).
+
 The characters '\\' don't do a line break anymore.
 
 In landscape format, the values of 'pagewidth' and 'pageheight' are
 internally exchanged, so there is no need to set them explicitely.
 
-The format 'staffwidth' is now obsolete. Better use 'pagewidth'.
+The format 'staffwidth' is obsolete. Better use 'pagewidth'.
 
 Clef indications (in K: or V:) do not change the note pitches.
 

@@ -87,7 +87,8 @@ List of the parameters
 			decoration.
 		<h>: decoration height.
 		<wl> and <wr>: left and right widths (not used actually).
-		<str>: text to display (for some postscript functions - see code).
+		<str>: text to display (for some postscript functions
+			- see code).
 
   encoding <int>
 	Default: 0 / 0 / 0
@@ -140,8 +141,10 @@ List of the parameters
 	Compilation: none
 	Command line: none
 	Description:
-		Prevent the characters '#' and 'b' to be converted to
-		sharp and flat in guitar chords.
+		Prevent the characters '#', 'b' and '=' to be displayed
+		as sharp, flat and natural sign in guitar chords.
+		When this flag is set, displaying accidental may be forced
+		escaping the characters ('\#', '\b' and '\=').
 
   gchordfont <font> <size>
 	Default: Helvetica 12 / Helvetica 12 / Helvetica 12

@@ -130,7 +130,7 @@ void voice_dup(void)
 	}
 }
 
-/* -- change the accidentals in the guitar chords -- */
+/* -- change the accidentals and "\\n" in the guitar chords -- */
 static void gchord_adjust(struct SYMBOL *s)
 {
 	char *p;
@@ -151,11 +151,17 @@ static void gchord_adjust(struct SYMBOL *s)
 			if (!cfmt.freegchord)
 				*p = '\203';
 			break;
+		case ';':
+			*p = '\n';	/* abcMIDI compatibility */
+			break;
 		case '\\':
 			p++;
 			switch (*p) {
 			case '\0':
 				return;
+			case 'n':
+				p[-1] = '\n';
+				goto move;
 			case '#':
 				p[-1] = '\201';
 				goto move;

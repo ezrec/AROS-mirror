@@ -1,3 +1,9 @@
+---- Version 3.1.1 - 02/07/28 ----
+
+Accept guitar chords on 2 lines.
+Accept ';' as a new guitar chord line.
+Crash when a line ends with a note and a starting slur.
+
 ---- Version 3.1.0 - 02/07/21 ----
 
 Problem when grace notes before a bar and multi-voices.
