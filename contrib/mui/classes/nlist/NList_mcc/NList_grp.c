@@ -1,6 +1,9 @@
 
 #include "private.h"
 
+#ifdef _AROS
+#include <proto/intuition.h>
+#endif
 
 #define MUIA_NList_Visible                  0x9d510063 /* GM  ..g  LONG              */
 
@@ -91,6 +94,13 @@ ULONG NGR_Dispatcher_gate(void)
   struct IClass *cl = REG_A0;
   Msg msg = REG_A1;
   Object *obj = REG_A2;
+#elif defined(_AROS)
+AROS_UFH3(ULONG, NGR_Dispatcher,
+    AROS_UFHA(struct IClass *, cl, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(Msg, msg, A1))
+{
+  AROS_USERFUNC_INIT
 #else
 ULONG ASM SAVEDS NGR_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) Msg msg GNUCREG(a1) )
 {
@@ -106,6 +116,9 @@ ULONG ASM SAVEDS NGR_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) 
     case MUIM_NoNotifySet : return (0);
   }
   return(DoSuperMethodA(cl,obj,msg));
+#ifdef _AROS
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 #ifdef MORPHOS
