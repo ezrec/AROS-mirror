@@ -125,7 +125,7 @@ void main(int argc, char **argv)
 	MUI_NewGroupClass=NewGroupClInit();
 	NewGroupClass=MUI_NewGroupClass->mcc_Class;
 	TextEditFieldClass=TextEditFieldClInit();
-	if(FileNotifyPort=CreatePort(NULL,0))
+	if((FileNotifyPort=CreatePort(NULL,0)))
 		FileNotifySigBit=1<<(FileNotifyPort->mp_SigBit);
 	else
 		printf("Couldn't create notify port\n");
@@ -551,7 +551,7 @@ void main(int argc, char **argv)
 #ifdef TRACE_INPUT
 			kprintf("Getting filenotify sig\n");
 #endif
-			while(msg=(struct NotifyMessage *)GetMsg(FileNotifyPort)){
+			while((msg=(struct NotifyMessage *)GetMsg(FileNotifyPort))){
 				Object *obj=(Object *)msg->nm_NReq->nr_UserData;
 #ifdef TRACE_INPUT
 				kprintf("Getting filenotify msg for object %08lx\n",obj);
@@ -782,8 +782,8 @@ void PasteStringClipBoard(char *string)
 	long unit=0,slen,length;
 	BOOL odd=FALSE;
 
-	if(ReplyPort=CreateMsgPort()){
-		if(ior=(struct IOStdReq *)CreateExtIO(ReplyPort,sizeof(struct IOClipReq))){
+	if((ReplyPort=CreateMsgPort())){
+		if((ior=(struct IOStdReq *)CreateExtIO(ReplyPort,sizeof(struct IOClipReq)))){
 			if(!OpenDevice("clipboard.device",unit,(struct IORequest *)ior,NULL)){
 
 				slen=strlen(string);
