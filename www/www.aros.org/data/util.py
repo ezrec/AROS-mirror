@@ -428,6 +428,10 @@ class MyStackedBarChart (barchart.StackedBarChart):
 	barchart.StackedBarChart.initialize (self)
 	self.colors = ('green', 'yellow', 'red')
 
+    def normalize (self):
+	self.zero = 0
+	self.scale = 100.0 / self.max_width
+
 class Dummy:
     def __init__ (self, list):
 	self.list = list
