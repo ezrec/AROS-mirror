@@ -248,7 +248,11 @@ avoid_trivial (
          r |= 4;
       if (r == 0)
       {
+#ifdef _AROS
+         if ((rand() & 1) == 0)
+#else
          if ((int)(2 * drand48 ()) == 0)
+#endif
             r |= 1;
          else
             r |= 2;
@@ -256,7 +260,11 @@ avoid_trivial (
       
       while (row0 == 0 && col0 == 0)
       {
+#ifdef _AROS
+	 rr = rand() % 3;
+#else
          rr = 3 * drand48 ();
+#endif
          if (r & (1 << rr))
          {
             row0 = (rr == 0) ? 0 : 1;
@@ -361,7 +369,11 @@ generate_path (
          
          if (count > 0)
          {
+#ifdef _AROS
+            next_pos = possible_pos[rand() % count];
+#else
             next_pos = possible_pos[(int)(count * drand48 ())];
+#endif
             row = POS2ROW (field, next_pos);
             col = POS2COL (field, next_pos);
             PATH_CELL (field, row, col);
@@ -694,22 +706,12 @@ field_reset (
    
    while (n > 0)
    {
-#if 0
+#ifdef _AROS
+      r = rand() % field->rows;
+      c = rand() % field->columns;
+#else
       r = drand48() * field->rows;
       c = drand48() * field->columns;
-#else
-// Added this to make it work.
-r = ((double)rand() * field->rows)/(RAND_MAX+1.0);
-c = ((double)rand() * field->columns)/(RAND_MAX+1.0);
-
-if (r >= field->rows || c >= field->columns)
-{
-  kprintf("Error!\n");
-  continue;
-}
-
-//kprintf("drand48(): %d\n",(int)(drand48() * 1000.0));
-//kprintf("n: %d;  IS_MINE(field,r(%d),c(%d)) : %d\n",n,r,c,IS_MINE(field,r,c));   
 #endif
 
 
