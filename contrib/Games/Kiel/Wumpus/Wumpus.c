@@ -41,7 +41,7 @@ static const char version[] = "$VER: Wumpus 0.2 (16.09.1997)\n";
 #define LITTLE 1
 #define MUCH 2
 
-#define MPAUSE 300000
+#define MPAUSE 30
 
 struct cavity
 {
@@ -89,7 +89,7 @@ struct Border SharedBorders[] = {
   {0,0,1,1,JAM1,5,&SharedBordersPairs0[0],NULL} };
 
 struct IntuiText cave20_text = {
-  1,0,JAM1,11,14,NULL,(UBYTE *)"20",NULL };
+  1,0,JAM1,11,4,NULL,(UBYTE *)"20",NULL };
 
 #define cave20_ID    19
 
@@ -102,7 +102,7 @@ struct Gadget cave20 = {
   &cave20_text,0L,NULL,cave20_ID,NULL };
 
 struct IntuiText cave19_text = {
-  1,0,JAM1,11,14,NULL,(UBYTE *)"19",NULL };
+  1,0,JAM1,11,4,NULL,(UBYTE *)"19",NULL };
 
 #define cave19_ID    18
 
@@ -115,7 +115,7 @@ struct Gadget cave19 = {
   &cave19_text,0L,NULL,cave19_ID,NULL };
 
 struct IntuiText cave18_text = {
-  1,0,JAM1,9,14,NULL,(UBYTE *)"18",NULL };
+  1,0,JAM1,9,4,NULL,(UBYTE *)"18",NULL };
 
 #define cave18_ID    17
 
@@ -128,7 +128,7 @@ struct Gadget cave18 = {
   &cave18_text,0L,NULL,cave18_ID,NULL };
 
 struct IntuiText cave17_text = {
-  1,0,JAM1,11,14,NULL,(UBYTE *)"17",NULL };
+  1,0,JAM1,11,4,NULL,(UBYTE *)"17",NULL };
 
 #define cave17_ID    16
 
@@ -141,7 +141,7 @@ struct Gadget cave17 = {
   &cave17_text,0L,NULL,cave17_ID,NULL };
 
 struct IntuiText cave16_text = {
-  1,0,JAM1,11,14,NULL,(UBYTE *)"16",NULL };
+  1,0,JAM1,11,4,NULL,(UBYTE *)"16",NULL };
 
 #define cave16_ID    15
 
@@ -154,7 +154,7 @@ struct Gadget cave16 = {
   &cave16_text,0L,NULL,cave16_ID,NULL };
 
 struct IntuiText cave15_text = {
-  1,0,JAM1,11,14,NULL,(UBYTE *)"15",NULL };
+  1,0,JAM1,11,4,NULL,(UBYTE *)"15",NULL };
 
 #define cave15_ID    14
 
@@ -167,7 +167,7 @@ struct Gadget cave15 = {
   &cave15_text,0L,NULL,cave15_ID,NULL };
 
 struct IntuiText cave14_text = {
-  1,0,JAM1,11,14,NULL,(UBYTE *)"14",NULL };
+  1,0,JAM1,11,4,NULL,(UBYTE *)"14",NULL };
 
 #define cave14_ID    13
 
@@ -180,7 +180,7 @@ struct Gadget cave14 = {
   &cave14_text,0L,NULL,cave14_ID,NULL };
 
 struct IntuiText cave13_text = {
-  1,0,JAM1,11,14,NULL,(UBYTE *)"13",NULL };
+  1,0,JAM1,11,4,NULL,(UBYTE *)"13",NULL };
 
 #define cave13_ID    12
 
@@ -193,7 +193,7 @@ struct Gadget cave13 = {
   &cave13_text,0L,NULL,cave13_ID,NULL };
 
 struct IntuiText cave12_text = {
-  1,0,JAM1,10,14,NULL,(UBYTE *)"12",NULL };
+  1,0,JAM1,10,4,NULL,(UBYTE *)"12",NULL };
 
 #define cave12_ID    11
 
@@ -206,7 +206,7 @@ struct Gadget cave12 = {
   &cave12_text,0L,NULL,cave12_ID,NULL };
 
 struct IntuiText cave11_text = {
-  1,0,JAM1,12,14,NULL,(UBYTE *)"11",NULL };
+  1,0,JAM1,12,4,NULL,(UBYTE *)"11",NULL };
 
 #define cave11_ID    10
 
@@ -219,7 +219,7 @@ struct Gadget cave11 = {
   &cave11_text,0L,NULL,cave11_ID,NULL };
 
 struct IntuiText cave10_text = {
-  1,0,JAM1,9,14,NULL,(UBYTE *)"10",NULL };
+  1,0,JAM1,9,4,NULL,(UBYTE *)"10",NULL };
 
 #define cave10_ID    9
 
@@ -232,7 +232,7 @@ struct Gadget cave10 = {
   &cave10_text,0L,NULL,cave10_ID,NULL };
 
 struct IntuiText cave9_text = {
-  1,0,JAM1,14,14,NULL,(UBYTE *)"9",NULL };
+  1,0,JAM1,14,4,NULL,(UBYTE *)"9",NULL };
 
 #define cave9_ID    8
 
@@ -245,7 +245,7 @@ struct Gadget cave9 = {
   &cave9_text,0L,NULL,cave9_ID,NULL };
 
 struct IntuiText cave8_text = {
-  1,0,JAM1,16,14,NULL,(UBYTE *)"8",NULL };
+  1,0,JAM1,16,4,NULL,(UBYTE *)"8",NULL };
 
 #define cave8_ID    7
 
@@ -258,7 +258,7 @@ struct Gadget cave8 = {
   &cave8_text,0L,NULL,cave8_ID,NULL };
 
 struct IntuiText cave7_text = {
-  1,0,JAM1,15,14,NULL,(UBYTE *)"7",NULL };
+  1,0,JAM1,15,4,NULL,(UBYTE *)"7",NULL };
 
 #define cave7_ID    6
 
@@ -271,7 +271,7 @@ struct Gadget cave7 = {
   &cave7_text,0L,NULL,cave7_ID,NULL };
 
 struct IntuiText cave6_text = {
-  1,0,JAM1,14,14,NULL,(UBYTE *)"6",NULL };
+  1,0,JAM1,14,4,NULL,(UBYTE *)"6",NULL };
 
 #define cave6_ID    5
 
@@ -284,7 +284,7 @@ struct Gadget cave6 = {
   &cave6_text,0L,NULL,cave6_ID,NULL };
 
 struct IntuiText cave5_text = {
-  1,0,JAM1,15,14,NULL,(UBYTE *)"5",NULL };
+  1,0,JAM1,15,4,NULL,(UBYTE *)"5",NULL };
 
 #define cave5_ID    4
 
@@ -297,7 +297,7 @@ struct Gadget cave5 = {
   &cave5_text,0L,NULL,cave5_ID,NULL };
 
 struct IntuiText cave4_text = {
-  1,0,JAM1,15,14,NULL,(UBYTE *)"4",NULL };
+  1,0,JAM1,15,4,NULL,(UBYTE *)"4",NULL };
 
 #define cave4_ID    3
 
@@ -310,7 +310,7 @@ struct Gadget cave4 = {
   &cave4_text,0L,NULL,cave4_ID,NULL };
 
 struct IntuiText cave3_text = {
-  1,0,JAM1,15,14,NULL,(UBYTE *)"3",NULL };
+  1,0,JAM1,15,4,NULL,(UBYTE *)"3",NULL };
 
 #define cave3_ID    2
 
@@ -323,7 +323,7 @@ struct Gadget cave3 = {
   &cave3_text,0L,NULL,cave3_ID,NULL };
 
 struct IntuiText cave2_text = {
-  1,0,JAM1,15,14,NULL,(UBYTE *)"2",NULL };
+  1,0,JAM1,15,4,NULL,(UBYTE *)"2",NULL };
 
 #define cave2_ID    1
 
@@ -336,7 +336,7 @@ struct Gadget cave2 = {
   &cave2_text,0L,NULL,cave2_ID,NULL };
 
 struct IntuiText cave1_text = {
-  1,1,JAM1,16,14,NULL,(UBYTE *)"1",NULL };
+  1,1,JAM1,16,4,NULL,(UBYTE *)"1",NULL };
 
 #define cave1_ID    0
 
@@ -381,7 +381,7 @@ struct Border SharedBorders1[] = {
   {0,0,1,0,JAM1,5,&SharedBordersPairs14[0],NULL} };
 
 struct IntuiText shout_text = {
-  1,0,JAM1,18,18,NULL,(UBYTE *)"Shout!",NULL };
+  1,0,JAM1,18,8,NULL,(UBYTE *)"Shout!",NULL };
 
 #define shout_ID    4
 
@@ -394,7 +394,7 @@ struct Gadget shout_gad = {
   &shout_text,0L,NULL,shout_ID,NULL };
 
 struct IntuiText spear_text = {
-  1,0,JAM1,27,18,NULL,(UBYTE *)"Throw spear",NULL };
+  1,0,JAM1,27,8,NULL,(UBYTE *)"Throw spear",NULL };
 
 #define spear_ID    3
 
@@ -447,8 +447,9 @@ struct Gadget tunnel1 = {
 
 struct NewWindow new_window = {
   0,0,640,400,0,1,
-  IDCMP_GADGETUP|IDCMP_CLOSEWINDOW|IDCMP_RAWKEY,
-  WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_ACTIVATE|WFLG_RMBTRAP|WFLG_SMART_REFRESH,
+  IDCMP_GADGETUP | IDCMP_CLOSEWINDOW,
+  WFLG_DRAGBAR | WFLG_DEPTHGADGET | WFLG_CLOSEGADGET | WFLG_ACTIVATE
+	| WFLG_RMBTRAP | WFLG_SMART_REFRESH | WFLG_GIMMEZEROZERO,
   NULL,NULL,
   (UBYTE *)"   »» Wumpus-Quest ««        by Henning Kiel",NULL,NULL,
   150,50,640,400,WBENCHSCREEN };
@@ -518,7 +519,6 @@ ContMsg();
 
     switch(class)
     {
-      case IDCMP_RAWKEY      :
       case IDCMP_CLOSEWINDOW : end_hunt=TRUE;
                          end_game=TRUE;
                          finish=TRUE;
@@ -564,11 +564,11 @@ StopMsg();
     }
     switch(stinks)
     {
-      case NONE   : write_text(245,253,"                         ",0);
+      case NONE   : write_text(245,250,"                         ",0);
                     break;
-      case LITTLE : write_text(245,253,"It's stinking...         ",3);
+      case LITTLE : write_text(245,250,"It's stinking...         ",3);
                     break;
-      case MUCH   : write_text(245,253,"It's stinking terribly!!!",2);
+      case MUCH   : write_text(245,250,"It's stinking terribly!!!",2);
                     break;
     }
   }
@@ -580,7 +580,7 @@ BYTE nr;
 {
 BOOL cancel=FALSE,ist=TRUE;
 
-  write_text(245,253,"Throw in which cave?     ",1);
+  write_text(245,250,"Throw in which cave?     ",1);
   while(!cancel)
   {
     WaitPort(Window->UserPort);
@@ -589,7 +589,6 @@ BOOL cancel=FALSE,ist=TRUE;
     ReplyMsg((struct Message *)msg);
     switch(class)
     {
-      case IDCMP_RAWKEY       :
       case IDCMP_CLOSEWINDOW  : end_hunt=TRUE;
                     		cancel=TRUE;
                     		return(FALSE);
@@ -612,14 +611,14 @@ BOOL cancel=FALSE,ist=TRUE;
   }
   if(!ist)
   {
-    write_text(245,253,"You missed Wumpus...     ",1);
+    write_text(245,250,"You missed Wumpus...     ",1);
     Delay(MPAUSE);
   }
   spears--;
   if(spears==0)
   {
 StopMsg();
-    write_text(245,253,"That was your last spear.",1);
+    write_text(245,250,"That was your last spear.",1);
     end_hunt=TRUE;
     Delay(MPAUSE);
 ContMsg();
@@ -638,9 +637,9 @@ BOOL is_abyss=FALSE;
       if(abyss[i]==cave[nr-1].tunnel[j])
         is_abyss=TRUE;
   if(is_abyss)
-    write_text(245,253,"Caution, Abyss !!!       ",2);
+    write_text(245,250,"Caution, Abyss !!!       ",2);
   else
-    write_text(245,253,"I don't hear anything.   ",2);
+    write_text(245,250,"I don't hear anything.   ",2);
 
 }
 
@@ -695,7 +694,7 @@ StopMsg();
             if(displace)
             {
               test=TRUE;
-              write_text(245,253,"You have been displaced !",2);
+              write_text(245,250,"You have been displaced !",2);
               Delay(MPAUSE);
               cave_number=random(20);
               draw_cave(cave_number);
@@ -712,7 +711,6 @@ ContMsg();
         ReplyMsg((struct Message *)msg);
         switch(class)
         {
-          case IDCMP_RAWKEY       :
           case IDCMP_CLOSEWINDOW  : end_hunt=TRUE;
                               cancel=TRUE;
                               break;
@@ -745,15 +743,15 @@ ContMsg();
 StopMsg();
     if(eaten_up)
     {
-      write_text(245,253,"You have been eaten up...",2);
+      write_text(245,250,"You have been eaten up...",2);
     }
     if(fallen)
     {
-      write_text(245,253,"You've fallen into Abyss!",2);
+      write_text(245,250,"You've fallen into Abyss!",2);
     }
     if(killed)
     {
-      write_text(245,253,"You've shot Wumpus!!!    ",1);
+      write_text(245,250,"You've shot Wumpus!!!    ",1);
     }
     Delay(MPAUSE);
     RemoveGList(Window,FIRSTGADGETH,5);

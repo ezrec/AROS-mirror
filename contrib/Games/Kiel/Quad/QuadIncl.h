@@ -20,18 +20,17 @@ void open_window()
 	, WA_Top,	    0
 	, WA_Width,	    536
 	, WA_Height,	    121
-	, WA_IDCMP,	    IDCMP_RAWKEY
-			    | IDCMP_REFRESHWINDOW
+	, WA_IDCMP,	    IDCMP_REFRESHWINDOW
 			    | IDCMP_MOUSEBUTTONS
 			    | IDCMP_GADGETUP
 			    | IDCMP_CLOSEWINDOW
 	, WA_Flags,	    WFLG_DRAGBAR
-			    |WFLG_DEPTHGADGET
-			    |WFLG_CLOSEGADGET
-			    |WFLG_NOCAREREFRESH
-			    |WFLG_SMART_REFRESH
-			    |WFLG_ACTIVATE
-			    |WFLG_RMBTRAP
+			    | WFLG_DEPTHGADGET
+			    | WFLG_CLOSEGADGET
+			    | WFLG_NOCAREREFRESH
+			    | WFLG_SMART_REFRESH
+			    | WFLG_ACTIVATE
+			    | WFLG_RMBTRAP
 	, WA_SimpleRefresh, TRUE
 	, WA_Gadgets,	    FIRSTGADGET
 	, TAG_END

@@ -20,7 +20,7 @@ struct Border SharedBorders[] = {
 #define target9_ID	19
 
 struct Gadget target9 = {
-  NULL,441,76,49,26,
+  NULL,441,86,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -30,7 +30,7 @@ struct Gadget target9 = {
 #define target8_ID	18
 
 struct Gadget target8 = {
-  &target9,389,76,49,26,
+  &target9,389,86,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -40,7 +40,7 @@ struct Gadget target8 = {
 #define target7_ID	17
 
 struct Gadget target7 = {
-  &target8,337,76,49,26,
+  &target8,337,86,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -50,7 +50,7 @@ struct Gadget target7 = {
 #define target6_ID	16
 
 struct Gadget target6 = {
-  &target7,441,46,49,26,
+  &target7,441,56,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -60,7 +60,7 @@ struct Gadget target6 = {
 #define target5_ID	15
 
 struct Gadget target5 = {
-  &target6,389,46,49,26,
+  &target6,389,56,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -70,7 +70,7 @@ struct Gadget target5 = {
 #define target4_ID	14
 
 struct Gadget target4 = {
-  &target5,337,46,49,26,
+  &target5,337,56,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -80,7 +80,7 @@ struct Gadget target4 = {
 #define target3_ID	13
 
 struct Gadget target3 = {
-  &target4,441,16,49,26,
+  &target4,441,26,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -90,7 +90,7 @@ struct Gadget target3 = {
 #define target2_ID	12
 
 struct Gadget target2 = {
-  &target3,389,16,49,26,
+  &target3,389,26,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -100,7 +100,7 @@ struct Gadget target2 = {
 #define target1_ID	11
 
 struct Gadget target1 = {
-  &target2,337,16,49,26,
+  &target2,337,26,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -109,12 +109,12 @@ struct Gadget target1 = {
 
 char stoptext[5]="Stop";
 struct IntuiText Stop_text = {
-  1,0,JAM1,27,13,NULL,(UBYTE *)stoptext,NULL };
+  1,0,JAM1,27,5,NULL,(UBYTE *)stoptext,NULL };
 
 #define Stop_ID		10
 
 struct Gadget Stop = {
-  &target1,226,57,92,18,
+  &target1,226,67,92,18,
   GFLG_GADGHIMAGE+GFLG_DISABLED,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -124,7 +124,7 @@ struct Gadget Stop = {
 #define initial9_ID	9
 
 struct Gadget initial9 = {
-  &Stop,151,76,49,26,
+  &Stop,151,86,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -134,7 +134,7 @@ struct Gadget initial9 = {
 #define initial8_ID	8
 
 struct Gadget initial8 = {
-  &initial9,99,76,49,26,
+  &initial9,99,86,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -144,7 +144,7 @@ struct Gadget initial8 = {
 #define initial7_ID	7
 
 struct Gadget initial7 = {
-  &initial8,47,76,49,26,
+  &initial8,47,86,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -154,7 +154,7 @@ struct Gadget initial7 = {
 #define initial6_ID	6
 
 struct Gadget initial6 = {
-  &initial7,151,46,49,26,
+  &initial7,151,56,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -164,7 +164,7 @@ struct Gadget initial6 = {
 #define initial5_ID	5
 
 struct Gadget initial5 = {
-  &initial6,99,46,49,26,
+  &initial6,99,56,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -174,7 +174,7 @@ struct Gadget initial5 = {
 #define initial4_ID	4
 
 struct Gadget initial4 = {
-  &initial5,47,46,49,26,
+  &initial5,47,56,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -184,7 +184,7 @@ struct Gadget initial4 = {
 #define initial3_ID	3
 
 struct Gadget initial3 = {
-  &initial4,151,16,49,26,
+  &initial4,151,26,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -194,7 +194,7 @@ struct Gadget initial3 = {
 #define initial2_ID	2
 
 struct Gadget initial2 = {
-  &initial3,99,16,49,26,
+  &initial3,99,26,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -204,7 +204,7 @@ struct Gadget initial2 = {
 #define initial1_ID	1
 
 struct Gadget initial1 = {
-  &initial2,47,16,49,26,
+  &initial2,47,26,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -213,12 +213,12 @@ struct Gadget initial1 = {
 
 char starttext[6]="Start";
 struct IntuiText Start_text = {
-  1,0,JAM1,24,13,NULL,(UBYTE *)starttext,NULL };
+  1,0,JAM1,24,5,NULL,(UBYTE *)starttext,NULL };
 
 #define Start_ID	0
 
 struct Gadget Start = {
-  &initial1,225,35,92,18,
+  &initial1,225,45,92,18,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,

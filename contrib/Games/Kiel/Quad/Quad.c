@@ -125,7 +125,6 @@ int i;
       switch(class)
       {
 /* message to quit game */
-        case IDCMP_RAWKEY      :
         case IDCMP_CLOSEWINDOW : quit_game=1;
                     		 break;
 /* handle gadgets */
@@ -156,7 +155,6 @@ int i;
       class=msg->Class;
       switch(class)
       {
-        case IDCMP_RAWKEY      :
         case IDCMP_CLOSEWINDOW : quit_game=1;
                                  break;
         case IDCMP_GADGETUP    : nummer=(((struct Gadget *)(msg->IAddress))->GadgetID);

@@ -18,7 +18,7 @@ struct Border SharedBorders[] = {
   {0,0,1,1,JAM1,6,&SharedBordersPairs0[0],NULL} };
 
 struct IntuiText Gadget35_text = {
-  1,0,JAM1,10,12,NULL,(UBYTE *)"Default",NULL };
+  1,0,JAM1,10,3,NULL,(UBYTE *)"Default",NULL };
 
 #define Gadget35_ID	35
 
@@ -31,7 +31,7 @@ struct Gadget Gadget35 = {
   &Gadget35_text,0L,NULL,Gadget35_ID,NULL };
 
 struct IntuiText Gadget34_text = {
-  1,0,JAM1,22,12,NULL,(UBYTE *)"Save",NULL };
+  1,0,JAM1,22,3,NULL,(UBYTE *)"Save",NULL };
 
 #define Gadget34_ID	34
 
@@ -276,7 +276,7 @@ struct Gadget g[] = {
   NULL,0L,NULL,33,NULL}};
 
 struct IntuiText load_text = {
-  1,0,JAM1,22,12,NULL,(UBYTE *)"Load",NULL };
+  1,0,JAM1,22,3,NULL,(UBYTE *)"Load",NULL };
 
 struct Gadget load = {
   &g[0],26,34,75,14,
