@@ -59,7 +59,7 @@ extern struct interfacing interface;
 #define rindex strrchr
 #endif
 
-#ifdef NOBSTRING
+#ifdef AROS
 #define bcmp(a,b,n) memcmp ((a),(b),(n))
 #define bzero(d,n) memset((d),0,(n))
 #define bcopy(s,d,n) memmove((d),(s),(n))

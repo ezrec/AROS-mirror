@@ -1,40 +1,29 @@
+#   $Id$
+#
+#   Makefile to make FileMaster.
+
 include $(TOP)/config/make.cfg
-
-%define_libs
-
-CFLAGS	:= $(USER_DEFINES) -O2 -Wall -DAROS -DDEBUG $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/aminet
-
-%make_common_setup
 
 FILES := append extract larc lhext maketree slide crcio header lhadd\
 lhlist patmatch stat dhuf huf lharc maketbl shuf util
 
+EXEDIR := $(CONTRIBDIR)/aminet
+EXE := $(EXEDIR)/filemaster
 
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
 
-LIBS := -L$(LIBDIR) -larosc_shared -lamiga -larossupport -larosm -lautoinit
+USER_CFLAGS := -DAROS
 
-EXE := $(DESTDIR)/lha
+#MM aminet-util-arc-lha : includes linklibs
 
-.PHONY : all clean
+%make_prog_setup mmake=aminet-util-arc-lha
 
-#MM aminet-util-arc-lha : setup-aminet-util-arc-lha
-aminet-util-arc-lha 	: $(OBJS) $(EXE)
-	@$(NOP)
+aminet-util-arc-lha : setup $(EXE)
 
-#MM
-setup-aminet-util-arc-lha :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	%link_q from=$(OBJS)
-
-#MM
-clean-aminet :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
+%common
+%include_deps
