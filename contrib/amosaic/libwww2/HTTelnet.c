@@ -39,7 +39,7 @@
 extern void application_user_feedback (char *);
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /*	make a string secure for passage to the
 **	system() command.  Make it contain only alphanumneric
 **	characters, or the characters '.', '-', '_', '+'.
