@@ -1,19 +1,18 @@
+#define AROS_ALMOST_COMPATIBLE
+
 #include "common.h"
 #include "strings.h"
-#include "pattern.h"
 #include "execute.h"
 #include "about.h"
 
 #define DEBUG 1
 #include <aros/debug.h>
 
-struct Library *BGUIBase;
-
-#ifdef _AROS
+struct Library       *BGUIBase;
 struct IntuitionBase *IntuitionBase;
-struct GfxBase *GfxBase;
-struct DosLibrary *DOSBase;
-#endif
+struct GfxBase       *GfxBase;
+struct DosLibrary    *DOSBase;
+struct Library       *WorkbenchBase;
 
 /*** Defines *****************************************************************/
 
@@ -51,16 +50,21 @@ APTR wlock;
 
 static char tempstring[256];
 
+struct List VolumeList;
+
 /*** Prototypes **************************************************************/
 
 static void Cleanup( char *msg );
 static void OpenLibs( void );
 static void CloseLibs( void );
+static void Initialize( void );
 
 static void MakeGUI( void );
 static void OpenGUI( void );
 
 static void HandleAll( void );
+
+static void ScanVolumes( void );
 
 /*** Functions ***************************************************************/
 
@@ -77,24 +81,43 @@ static void Cleanup( char *msg ) {
 
     if( WO_Window ) DisposeObject( WO_Window );
 
+    /* Free the memory used by the Volume List */
+    if( VolumeList.lh_Head != NULL ) {
+        struct Node *node;
+
+        ForeachNode( &VolumeList, node ) {
+            Remove( node );
+
+            if( node->ln_Name )
+                FreeVec( node->ln_Name );
+
+            FreeVec( node );
+        }
+    }
+
     CloseLibs();
 
     exit( rc );
 } /// Cleanup()
 /// static void OpenLibs( void )
 static void OpenLibs( void ) {
-    if( !(IntuitionBase = (struct IntuitionBase *) OpenLibrary( "intuition.library", 39L )) ) {
-        sprintf( tempstring, getString( ERR_OPENLIBRARY ), "intuition.library", 39 );
+    if( !(IntuitionBase = (struct IntuitionBase *) OpenLibrary( INTUITIONNAME, 39L )) ) {
+        sprintf( tempstring, getString( ERR_OPENLIBRARY ), INTUITIONNAME, 39 );
         Cleanup( tempstring );
     }
 
-    if( !(GfxBase = (struct GfxBase *) OpenLibrary( "graphics.library", 39L )) ) {
-        sprintf( tempstring, getString( ERR_OPENLIBRARY ), "graphics.library", 39 );
+    if( !(GfxBase = (struct GfxBase *) OpenLibrary( GRAPHICSNAME, 39L )) ) {
+        sprintf( tempstring, getString( ERR_OPENLIBRARY ), GRAPHICSNAME, 39 );
         Cleanup( tempstring );
     }
 
-    if( !(DOSBase = (struct DosLibrary *) OpenLibrary( "dos.library", 39L )) ) {
-        sprintf( tempstring, getString( ERR_OPENLIBRARY ), "dos.library", 39 );
+    if( !(DOSBase = (struct DosLibrary *) OpenLibrary( DOSNAME, 39L )) ) {
+        sprintf( tempstring, getString( ERR_OPENLIBRARY ), DOSNAME, 39 );
+        Cleanup( tempstring );
+    }
+
+    if( !(WorkbenchBase = OpenLibrary( WORKBENCHNAME, 39L )) ) {
+        sprintf( tempstring , getString( ERR_OPENLIBRARY ), WORKBENCHNAME, 39 );
         Cleanup( tempstring );
     }
 
@@ -109,39 +132,16 @@ static void CloseLibs( void ) {
     if( DOSBase ) CloseLibrary( (struct Library *) DOSBase );
     if( GfxBase ) CloseLibrary( (struct Library *) GfxBase );
     if( IntuitionBase ) CloseLibrary( (struct Library *) IntuitionBase );
+    if( WorkbenchBase ) CloseLibrary( WorkbenchBase );
 } /// CloseLibs()
 
+static void Initialize( void ) {
+    /* Initialize the volume list. */
+    NEWLIST( &VolumeList );
+}
+
 /// static void MakeGUI( void )
-static void MakeGUI( void )
-{
-    static struct bguiPattern pattern;
-    static struct BitMap      tempbm, *patternbm;
-    int i;
-
-    InitBitMap(&tempbm, PATTERN_DEPTH, PATTERN_WIDTH, PATTERN_HEIGHT);
-
-    /* This is a bit hackish. Should really remap the bitmap properly instead,
-       allocating pens and such. */
-
-    screen = LockPubScreen( NULL );
-    patternbm = AllocBitMap( PATTERN_WIDTH, PATTERN_HEIGHT, PATTERN_DEPTH, BMF_DISPLAYABLE, screen->RastPort.BitMap );
-    UnlockPubScreen( NULL, screen );
-
-    for(i = 0; i < PATTERN_DEPTH; i++){
-        tempbm.Planes[i] = (((UBYTE *)patterndata) + (i * PATTERN_PLANESIZE));
-    }
-
-
-    BltBitMap( &tempbm, 0, 0, patternbm, 0, 0, PATTERN_WIDTH, PATTERN_HEIGHT, 0xC0, 0xFF, NULL );
-
-    pattern.bp_Flags  = 0;
-    pattern.bp_Left   = 0;
-    pattern.bp_Top    = 0;
-    pattern.bp_Width  = PATTERN_WIDTH;
-    pattern.bp_Height = PATTERN_HEIGHT;
-    pattern.bp_BitMap = patternbm;
-    pattern.bp_Object = NULL;
-
+static void MakeGUI( void ) {
     WO_Window = WindowObject,
         WINDOW_SmartRefresh,  TRUE,
         WINDOW_AutoAspect,    TRUE,
@@ -152,7 +152,7 @@ static void MakeGUI( void )
         WINDOW_ScreenTitle,  "AROS Workbench",
 
         WINDOW_MasterGroup,
-            VGroupObject, NormalOffset, NormalSpacing, FRM_FillPattern, &pattern, FRM_Type, FRTYPE_NONE,
+            VGroupObject, NormalOffset, NormalSpacing, FRM_Type, FRTYPE_NONE,
                 /* Nothing here, yet. */
             EndMember,
         EndObject,
@@ -198,9 +198,41 @@ static void HandleAll( void ) {
     } while( running );
 } ///
 
+static void ScanVolumes( void ) {
+    struct Node    *node;
+    struct DosList *dl;
+
+    if( (dl = LockDosList( LDF_VOLUMES | LDF_READ )) ) {
+        while( (dl = NextDosEntry( dl, LDF_VOLUMES )) != NULL ) {
+            node = AllocVec( sizeof( struct Node ), MEMF_ANY | MEMF_CLEAR );
+
+            if( node ) {
+                node->ln_Name = AllocVec( strlen( dl->dol_DevName ) + 1, MEMF_ANY );
+
+                if( !node ) {
+                    FreeVec( node );
+                    Cleanup( "No memory.\n" );
+                }
+
+                strcpy( node->ln_Name, dl->dol_DevName );
+
+                AddTail( &VolumeList, node );
+            }
+        }
+
+        UnLockDosList( LDF_VOLUMES | LDF_READ );
+
+    } else {
+        Cleanup( "Could not lock the DosList.\n" );
+    }
+}
+
 /// int main( void )
 int main( void ) {
     OpenLibs();
+
+    Initialize();
+    ScanVolumes();
 
     MakeGUI();
     OpenGUI();

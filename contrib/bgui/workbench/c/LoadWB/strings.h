@@ -18,7 +18,7 @@
 
 /** Errormessages **/
 
-#define ERR_OPENLIBRARY     "Couldn't open %s verson %d or higher"
+#define ERR_OPENLIBRARY     "Couldn't open %s version %d or higher"
 #define ERR_MEMORY          "Not enough memory"
 
 /** Menu: Workbench **/
@@ -47,9 +47,9 @@
 #define ABT_WINDOWTITLE     "About AROS"
 
 #define ABT_TEXT            ISEQ_C "--=<( " ISEQ_B "AROS" ISEQ_N " )>=--\n\n" \
-			    ISEQ_C "the Amiga Research OS\n\n"   \
-			    ISEQ_C "Copyright © 1995-2000 the AROS Development Team.\n" \
-			    ISEQ_C "All Rights Reserved. Read the license for more information."
+                            ISEQ_C "the Amiga Research OS\n\n"   \
+                            ISEQ_C "Copyright © 1995-2000 the AROS Development Team.\n" \
+                            ISEQ_C "All Rights Reserved. Read the license for more information."
 
 #define ABT_DEV_LABEL       "The following people have contributed in the making of " ISEQ_B "AROS" ISEQ_N ":"
 
