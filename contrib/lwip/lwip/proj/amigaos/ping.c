@@ -11,7 +11,9 @@ static const char version[] = "$VER: "
 "Copyright © 1983 The Regents of the University of California.\n"
 "All rights reserved.\n";
 
+#ifndef _AROS
 typedef unsigned long IPTR;
+#endif
 
 /****** netutil.doc/ping ****************************************************
 
@@ -288,6 +290,13 @@ struct Library *SocketBase;
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
+
+
+char *inet_ntoa( struct in_addr ip )
+{
+  return Inet_NtoA(ip.s_addr);
+}
+
 
 #define DEFDATALEN  (64 - 8)         /* default data length */
 #define MAXIPLEN    60
