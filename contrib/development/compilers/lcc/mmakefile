@@ -1,0 +1,6 @@
+# $Id$
+
+#MM- aminet-development-compiler-lcc : aminet-development-compiler-lcc-cpp
+
+#dont work need fork and more
+##MM- aminet-development-compiler-lcc : aminet-development-compiler-lcc-etc
