@@ -7,6 +7,7 @@
 #include <proto/intuition.h>
 #endif
 
+#include <string.h>
 #include "filexstructs.h"
 #include "allprotos.h"
 #include "filexstrings.h"

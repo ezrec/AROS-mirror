@@ -15,6 +15,7 @@
 #include <clib/alib_protos.h>
 #endif
 
+#include <string.h>
 #include "filexstructs.h"
 #include "filexstrings.h"
 #include "allprotos.h"
