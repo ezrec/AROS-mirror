@@ -1,0 +1,2634 @@
+bsdsocket.library/Errno                                  bsdsocket.library/Errno
+
+   NAME
+         Errno - get error value after unsuccessful function call
+
+   SYNOPSIS
+         errno = Errno()
+         D0
+
+         LONG Errno(VOID);
+
+   FUNCTION
+         When  some  function  in  socket  library  return  an  error
+         condition value, they also set a specific error value.  This
+         error value can be extracted by this function.
+
+   RESULT
+         Error value  indicating  the error on  last failure  of some
+         socket function call.
+
+   NOTES
+         Return  value  of  Errno()  is not changed  after successful
+         function so so it cannot be used to determine success of any
+         function call  of this library.  Also, another function call
+         to this  library may change  the return value of  Errno() so
+         use it right after error occurred.
+
+   SEE ALSO
+         SetErrnoPtr()
+
+bsdsocket.library/ObtainSocket                    bsdsocket.library/ObtainSocket
+
+   NAME
+         ObtainSocket - get a socket from AmiTCP/IP socket list
+
+   SYNOPSIS
+         s = ObtainSocket(id, domain, type, protocol)
+         D0               D0  D1      D2    D3
+
+         LONG ObtainSocket(LONG, LONG, LONG, LONG);
+
+   FUNCTION
+         When one task wants to give  a socket to  an another one, it
+         releases it (with a key value) to a special socket list held
+         by  AmiTCP/IP.   This  function  requests  that  socket  and
+         receives it if id and other parameters match.
+
+   INPUTS
+         id       - a key value given by the socket donator.
+         domain   - see documentation of socket().
+         type     - see documentation of socket().
+         protocol - see documentation of socket().
+
+   RESULT
+         Non negative socket descriptor on success. On failure, -1 is
+         returned and the errno is set to indicate the error.
+
+   ERRORS
+         EMFILE          - The per-process descriptor table is
+                           full.
+
+         EPROTONOSUPPORT - The protocol type or the specified  pro-
+                           tocol is not supported within this
+                           domain.
+
+         EPROTOTYPE      - The protocol is the wrong type for the
+                           socket.
+
+         EWOULDBLOCK     - Matching socket is not found.
+
+   SEE ALSO
+         ReleaseCopyOfSocket(), ReleaseSocket(), socket()
+
+bsdsocket.library/ReleaseCopyOfSocket      bsdsocket.library/ReleaseCopyOfSocket
+
+   NAME
+         ReleaseCopyOfSocket - copy given socket to AmiTCP/IP socket list.
+
+   SYNOPSIS
+         id = ReleaseCopyOfSocket(fd, id)
+         D0                       D0  D1
+
+         LONG ReleaseCopyOfSocket(LONG, LONG);
+
+   FUNCTION
+         Make a new reference to a given socket (pointed by its descriptor)
+         and release it to the socket list held by AmiTCP/IP.
+
+   INPUTS
+         fd - descriptor of the socket to release.
+
+         id - the key value to identify use of this socket. It can be
+              unique or not, depending on its  value.  If id value is
+              between 0  and  65535,  inclusively,  it is  considered
+              nonunique  and it can  be  used as a port  number,  for
+              example.   If  id is greater  than  65535 and less than
+              2^31) it  must be unique in currently  held sockets  in
+              AmiTCP/IP socket  list,  Otherwise  an  error  will  be
+              returned  and  socket  is  not  released.    If  id  ==
+              UNIQUE_ID (defined in <sys/socket.h>) an unique id will
+              be generated.
+
+   RESULT
+         id - -1 in case of error and the key value of the socket put
+              in the list. Most useful when an unique id is generated
+              by this routine.
+
+   ERRORS
+         EINVAL - Requested unique id is already used.
+
+         ENOMEM - Needed memory couldn't be allocated.
+
+   NOTE
+         The socket descriptor is not deallocated.
+
+   SEE ALSO
+         ObtainSocket(), ReleaseSocket()
+
+
+bsdsocket.library/ReleaseSocket                  bsdsocket.library/ReleaseSocket
+
+   NAME
+         ReleaseSocket - release given socket to AmiTCP/IP socket list.
+
+   SYNOPSIS
+         id = ReleaseSocket(fd, id)
+         D0                 D0  D1
+
+         LONG ReleaseSocket(LONG, LONG);
+
+   FUNCTION
+         Release the reference of given socket (via  its  descriptor)
+         and move the socket to the  socket  list held by  AmiTCP/IP.
+         The socket descriptor is deallocated in this procedure.
+
+   INPUTS
+         fd - descriptor of the socket to release.
+
+         id - the key value to identify use of this socket. It can be
+              unique or not, depending on its  value.  If id value is
+              between 0  and  65535,  inclusively,  it is  considered
+              nonunique  and it can  be  used as a port  number,  for
+              example.   If  id is greater  than  65535 and less than
+              2^31) it  must be unique in currently  held sockets  in
+              AmiTCP/IP socket  list,  Otherwise  an  error  will  be
+              returned  and  socket  is  not  released.    If  id  ==
+              UNIQUE_ID (defined in <sys/socket.h>) an unique id will
+              be generated.
+
+   RESULT
+         id - -1 in case of error and the key value of the socket put
+              in the list. Most useful when an unique id is generated
+              by this routine.
+
+   ERRORS
+         EINVAL - Requested unique id is already used.
+
+         ENOMEM - Needed memory couldn't be allocated.
+
+   SEE ALSO
+         ObtainSocket(), ReleaseCopyOfSocket()
+
+bsdsocket.library/SetErrnoPtr                      bsdsocket.library/SetErrnoPtr
+
+   NAME
+         SetErrnoPtr - set new place where the error value will be written
+
+   SYNOPSIS
+         SetErrnoPtr(ptr, size)
+                     A0   D0
+
+         VOID SetErrnoPtr(VOID *, UBYTE);
+
+   FUNCTION
+         This functions allows caller to redirect error variable inside
+         scope of  caller task.   Usually this is  used to make  task's
+         global variable errno as error variable.
+
+   INPUTS
+         ptr     - pointer to error variable that is to be modified on
+                   every error condition on this library function.
+         size    - size of the error variable.
+
+   EXAMPLE
+         #include <errno.h>
+
+         struct Library;
+         struct Library * SocketBase = NULL;
+
+         int main(void)
+         {
+            ...
+           if ((SocketBase = OpenLibrary("bsdsocket.library", 2))
+               != NULL) {
+             SetErrnoPtr(&errno, sizeof(errno));
+            ...
+           }
+         }
+
+   NOTES
+         Be sure that this new error variable exists until library base
+         is finally closed or SetErrnoPtr() is called again for another
+         variable.
+
+   SEE ALSO
+         Errno()
+
+bsdsocket.library/SetSocketSignals            bsdsocket.library/SetSocketSignals
+
+   NAME
+         SetSocketSignals - inform AmiTCP/IP of INTR, IO and URG signals
+
+   SYNOPSIS
+         SetSocketSignals(sigintrmask, sigiomask, sigurgmask)
+                          D0           D1         D2
+
+         VOID SetSocketSignals(ULONG, ULONG, ULONG);
+
+   FUNCTION
+         SetSocketSignals() tells  the  AmiTCP/IP which signal  masks
+         corresponds UNIX SIGINT, SIGIO and SIGURG signals to be used
+         in   this implementation.  The  sigintrmask  mask is used to
+         determine which  Amiga  signals interrupt  blocking  library
+         calls.
+
+         The sigiomask  is sent  when  asynchronous  notification  of
+         socket   events   is  done,  the sigurgmask    is  sent when
+         out-of-band   data  arrives, respectively.   The signals are
+         sent only  to  the owning task  of   particular socket.  The
+         socket  has got no owner   by default; the  owner  is set by
+         FIOSETOWN (SIOCSPGRP) ioctl call.
+
+         Note that the supplied  values write over  old ones. If this
+         function is used and CTRL-C is still wanted to interrupt the
+         calls (the default behaviour),  the value BREAKF_CTRL_C must
+         be explicitly given.
+
+   NOTES
+         The function SetSocketSignals() is obsoleted by the function
+         SocketBaseTags().
+
+   SEE ALSO
+         IoctlSocket(), recv(), send(), select(), WaitSelect()
+
+bsdsocket.library/Inet_LnaOf                        bsdsocket.library/Inet_LnaOf
+
+   SEE ALSO
+        inet_addr()
+
+bsdsocket.library/Inet_NetOf                        bsdsocket.library/Inet_NetOf
+
+   SEE ALSO
+        inet_addr()
+
+bsdsocket.library/Inet_NtoA                          bsdsocket.library/Inet_NtoA
+
+   SEE ALSO
+        inet_addr()
+
+bsdsocket.library/inet_MakeAddr                  bsdsocket.library/inet_MakeAddr
+
+   SEE ALSO
+        inet_addr()
+
+bsdsocket.library/inet_addr                          bsdsocket.library/inet_addr
+
+   NAME
+         inet_addr,  inet_network,  Inet_MakeAddr,  Inet_LnaOf,
+         Inet_NetOf, Inet_NtoA - Internet address manipulation
+
+         inet_makeaddr, inet_lnaof, inet_netof,
+         inet_ntoa -- inline/stub functions to handle structure arguments
+
+   SYNOPSIS
+         #include <netinet/in.h>
+
+         addr = inet_addr(cp)
+         D0               A0
+
+         unsigned long inet_addr(char *);
+
+         net = inet_network(cp)
+         D0                 A0
+
+         unsigned long inet_network(char *);
+
+         in_addr = Inet_MakeAddr(net, lna)
+         D0                      D0   D1
+
+         unsigned long Inet_MakeAddr(long, long);
+
+         lna = Inet_LnaOf(in)
+         D0               D0
+
+         long Inet_LnaOf(unsigned long);
+
+         net = Inet_NetOf(in)
+         D0               D0
+
+         long Inet_NetOf(unsigned long);
+
+         addr = Inet_NtoA(in)
+         DO               D0
+
+         char * Inet_NtoA(unsigned long);
+
+
+         in_addr = inet_makeaddr(net, lna)
+
+         struct in_addr inet_makeaddr(long, long);
+
+         lna = inet_lnaof(in)
+
+         int inet_lnaof(struct in_addr);
+
+         net = inet_netof(in)
+
+         int inet_netof(struct in_addr);
+
+         addr = inet_ntoa(in)
+
+         char * inet_ntoa(struct in_addr);
+
+   IMPLEMENTATION NOTE
+         Return  value  of  Inet_MakeAddr()  and  argument  types  of
+         Inet_LnaOf(), Inet_NetOf() and Inet_NtoA() are longs instead
+         of  struct  in_addr.  The original behaviour  is achieved by
+         using  included  stub  functions (lower case function names)
+         which handle structure arguments.
+
+   DESCRIPTION
+         The routines inet_addr() and inet_network()  each  interpret
+         character  strings  representing  numbers  expressed  in the
+         Internet standard `.' notation, returning  numbers  suitable
+         for  use as Internet addresses and Internet network numbers,
+         respectively.  The routine inet_makeaddr() takes an Internet
+         network number and a local network address and constructs an
+         Internet address from it.   The  routines  inet_netof()  and
+         inet_lnaof()  break apart Internet host addresses, returning
+         the network number and local network address  part,  respec-
+         tively.
+
+         The routine inet_ntoa() returns a pointer to a string in the
+         base 256 notation ``d.d.d.d'' described below.
+
+         All Internet address are returned in  network  order  (bytes
+         ordered  from left to right).  All network numbers and local
+         address parts are returned as machine format integer values.
+
+   INTERNET ADDRESSES
+         Values specified using the `.'  notation  take  one  of  the
+
+         following forms:
+
+              a.b.c.d
+              a.b.c
+              a.b
+              a
+
+         When four parts are specified, each is interpreted as a byte
+         of data and assigned, from left to right, to  the four bytes
+         of  an Internet address.  Note: when  an Internet address is
+         viewed  as  a  32-bit  integer  quantity  on  little  endian
+         systems,  the  bytes referred to  above appear  as  d.c.b.a.
+         bytes are ordered from right to left.
+
+         When a three part address is specified,  the  last  part  is
+         interpreted  as  a  16-bit  quantity and placed in the right
+         most two bytes of the network address.  This makes the three
+         part  address  format convenient for specifying Class B net-
+         work addresses as "128.net.host".
+
+         When a two part address is supplied, the last part is inter-
+         preted  as  a  24-bit  quantity and placed in the right most
+         three bytes of the network address.  This makes the two part
+         address  format  convenient  for  specifying Class A network
+         addresses as "net.host".
+
+         When only one part is given, the value is stored directly in
+         the network address without any byte rearrangement.
+
+         All numbers supplied as ``parts'' in a `.' notation  may  be
+         decimal,  octal,  or  hexadecimal,  as  specified  in  the C
+         language (that is, a leading 0x or 0X  implies  hexadecimal;
+         otherwise,  a leading 0 implies octal; otherwise, the number
+         is interpreted as decimal).
+
+   RETURN VALUE
+         The value -1 is returned by inet_addr()  and  inet_network()
+         for malformed requests.
+
+   BUGS
+         The problem of host byte ordering versus network byte order-
+         ing  is  confusing.  A simple way to specify Class C network
+         addresses in a manner similar to that for Class B and  Class
+         A is needed.
+
+         The return value from inet_ntoa() points to static buffer
+         which  is  overwritten  in  each inet_ntoa() call.
+
+bsdsocket.library/inet_lnaof                        bsdsocket.library/inet_lnaof
+
+   SEE ALSO
+        inet_addr()
+
+bsdsocket.library/inet_makeaddr                  bsdsocket.library/inet_makeaddr
+
+   SEE ALSO
+        inet_addr()
+
+bsdsocket.library/inet_netof                        bsdsocket.library/inet_netof
+
+   SEE ALSO
+        inet_addr()
+
+bsdsocket.library/inet_network                    bsdsocket.library/inet_network
+
+   SEE ALSO
+        inet_addr()
+
+bsdsocket.library/inet_ntoa                          bsdsocket.library/inet_ntoa
+
+   SEE ALSO
+        inet_addr()
+
+bsdsocket.library/gethostbyaddr                  bsdsocket.library/gethostbyaddr
+
+   SEE ALSO
+         gethostbyname()
+
+bsdsocket.library/gethostbyname                  bsdsocket.library/gethostbyname
+
+   NAME
+         gethostbyname, gethostbyaddr  - get network host entry
+
+   SYNOPSIS
+         #include <sys/types.h>
+         #include <sys/socket.h>
+         #include <netdb.h>
+
+         hostent = gethostbyname(name)
+         D0                      A0
+
+         struct hostent *gethostbyname(char *);
+
+         hostent = gethostbyaddr(addr, len, type)
+         D0                      A0    D0   D1
+
+         struct hostent *gethostbyaddr(caddr_t, LONG, LONG);
+
+
+   DESCRIPTION
+         gethostbyname() and gethostbyaddr() both return a pointer
+         to an object with the following structure containing the
+         data received from a name server or the broken-out fields
+         of a line in netdb configuration file.  In the case of
+         gethostbyaddr(), addr is a pointer to the binary format
+         address of length len (not a character string) and type is
+         an address family as defined in <sys/socket.h>.
+
+           struct hostent {
+             char *h_name;       /* official name of host */
+             char **h_aliases;   /* alias list */
+             int  h_addrtype;    /* address type */
+             int  h_length;      /* length of address */
+             char **h_addr_list; /* list of addresses from name server */
+           };
+
+         The members of this structure are:
+
+         h_name              Official name of the host.
+
+         h_aliases           A zero  terminated  array  of  alternate
+                             names for the host.
+
+         h_addrtype          The  type  of  address  being  returned;
+                             currently always AF_INET.
+
+         h_length            The length, in bytes, of the address.
+
+         h_addr_list         A pointer to a list of network addresses
+                             for  the named host.  Host addresses are
+                             returned in network byte order.
+
+   DIAGNOSTICS
+         A NULL pointer is returned if no matching entry was found or
+         error occured.
+
+   BUGS
+         All information is contained in a static area so it must  be
+         copied if it is to be saved.  Only the Internet address for-
+         mat is currently understood.
+
+   SEE ALSO
+         AmiTCP/IP configuration
+
+bsdsocket.library/getnetbyaddr                    bsdsocket.library/getnetbyaddr
+
+   SEE ALSO
+         getnetbyname()
+
+bsdsocket.library/getnetbyname                    bsdsocket.library/getnetbyname
+
+   NAME
+         getnetbyname, getnetbyaddr - get network entry
+
+   SYNOPSIS
+         #include <netdb.h>
+
+         netent = getnetbyname(name)
+         D0                    A0
+
+         struct netent *getnetbyname(char *);
+
+         netent = getnetbyaddr(net, type)
+         D0                    D0   D1
+
+         struct netent *getnetbyaddr(long, long);
+
+   DESCRIPTION
+         getnetbyname(), and getnetbyaddr() both return  a  pointer to
+         an  object  with  the  following  structure  containing   the
+         broken-out fields of a line in netdb configuration file.
+
+           struct netent {
+             char *n_name;       /* official name of net */
+             char **n_aliases;   /* alias list */
+             int  n_addrtype;    /* net number type */
+             long n_net;         /* net number */
+           };
+
+         The members of this structure are:
+
+         n_name              The official name of the network.
+
+         n_aliases           A  zero  terminated  list  of  alternate
+                             names for the network.
+
+         n_addrtype          The type of the network number returned;
+                             currently only AF_INET.
+
+         n_net               The network number.  Network numbers are
+                             returned in machine byte order.
+
+         Network numbers are supplied in host order.
+
+         Type specifies the address type to use, currently only
+         AF_INET is supported.
+
+   DIAGNOSTICS
+         A NULL pointer is returned if no matching entry was found or
+         error occured.
+
+   BUGS
+         All information is contained in a static area so it must  be
+         copied if it is to be saved.
+
+         Only Internet network numbers are currently understood.
+
+   SEE ALSO
+         AmiTCP/IP configuration
+
+bsdsocket.library/getprotobyname                bsdsocket.library/getprotobyname
+
+   NAME
+         getprotobyname, getprotobynumber - get protocol entry
+
+   SYNOPSIS
+         #include <netdb.h>
+
+         protoent = getprotobyname(name)
+         D0                        A0
+
+         struct protoent *getprotobyname(char *);
+
+         protoent = getprotobynumber(proto)
+         D0                          D0
+
+         struct protoent *getprotobynumber(long);
+
+   DESCRIPTION
+         getprotobyname() and getprotobynumber() both return a pointer
+         to  an  object with the  following structure  containing  the
+         broken-out fields of a line in netdb configuration file
+
+           struct    protoent {
+             char *p_name;       /* official name of protocol */
+             char **p_aliases;   /* alias list */
+             int  p_proto;       /* protocol number */
+          };
+
+         The members of this structure are:
+
+         p_name              The official name of the protocol.
+         p_aliases           A  zero  terminated  list  of  alternate
+                             names for the protocol.
+         p_proto             The protocol number.
+
+
+   DIAGNOSTICS
+         A NULL pointer is returned if no matching entry was found or
+         error occured.
+
+   BUGS
+         All information is contained in a static area so it must  be
+         copied  if  it  is to be saved.  Only the Internet protocols
+         are currently understood.
+
+   SEE ALSO
+         AmiTCP/IP configuration
+
+bsdsocket.library/getprotobynumber            bsdsocket.library/getprotobynumber
+
+   SEE ALSO
+         getprotobyname()
+
+bsdsocket.library/getservbyname                  bsdsocket.library/getservbyname
+
+   NAME
+         getservbyname, getservbyport - get service entry
+
+   SYNOPSIS
+         #include <netdb.h>
+
+         servent = getservbyname(name, proto)
+         D0                      A0    A1
+
+         struct servent *getservbyname(char *, char *)
+
+         servent = getservbyport(port, proto)
+         D0                      D0    A0
+
+         struct servent *getservbyport(long, char *);
+
+   DESCRIPTION
+         getservbyname() and getservbyport() both return a pointer  to
+         an   object  with  the  following  structure  containing  the
+         broken-out fields of a line in netdb configuration file.
+
+           struct    servent {
+             char *s_name;       /* official name of service */
+             char **s_aliases;   /* alias list */
+             int  s_port;        /* port service resides at */
+             char *s_proto;      /* protocol to use */
+           };
+
+         The members of this structure are:
+              s_name              The official name of the service.
+              s_aliases           A zero terminated list of alternate
+                                  names for the service.
+              s_port              The port number at which  the  ser-
+                                  vice  resides.   Port  numbers  are
+                                  returned  in  network  short   byte
+                                  order.
+              s_proto             The name of  the  protocol  to  use
+                                  when contacting the service.
+
+         The proto argument specifies the protocol for which to the
+         sercive is to use. It is a normal C string, e.g. "tcp" or
+         "udp".
+
+   DIAGNOSTICS
+         A NULL pointer is returned if no matching entry was found or
+         error occured.
+
+   BUGS
+         All information is contained in a static area so it must  be
+         copied  if it is to be saved.  Expecting port numbers to fit
+         in a 32 bit quantity is probably naive.
+
+   SEE ALSO
+         AmiTCP/IP configuration
+
+bsdsocket.library/getservbyport                  bsdsocket.library/getservbyport
+
+   SEE ALSO
+         getservbyname()
+
+protocols/arp                                                      protocols/arp
+
+   NAME
+        arp - Address Resolution Protocol
+
+   CONFIG
+        Any SANA-II device driver using ARP
+
+   SYNOPSIS
+        #include <sys/socket.h>
+        #include <net/if_arp.h>
+        #include <netinet/in.h>
+
+        s = socket(AF_INET, SOCK_DGRAM, 0);
+
+   DESCRIPTION
+        ARP is a protocol used to dynamically map between Internet
+        Protocol (IP) and hardware addresses. It can be used by most
+        the SANA-II network interface drivers. The current
+        implementation supports only Internet Protocol (and is tested
+        only with Ethernet).  However, ARP is not limited to only that
+        combination.
+
+        ARP caches IP-to-hardware address mappings. When an interface
+        requests a mapping for an address not in the cache, ARP queues
+        the message which requires the mapping and broadcasts a
+        message on the associated network requesting the address
+        mapping. If a response is provided, the new mapping is cached
+        and any pending message is transmitted. ARP will queue at most
+        one packet while waiting for a mapping request to be responded
+        to; only the most recently transmitted packet is kept.
+
+        The address mapping caches are separate for each interface. The
+        amount of mappings in the cache may be specified with an
+        IoctlSocket() request.
+
+        To facilitate communications with systems which do not use ARP,
+        IoctlSocket() requests are provided to enter and delete entries
+        in the IP-to-Ethernet tables.
+
+   USAGE
+        #include <sys/ioctl.h>
+        #include <sys/socket.h>
+        #include <net/if.h>
+        #include <net/if_arp.h>
+
+        struct arpreq arpreq;
+
+        IoctlSocket(s, SIOCSARP, (caddr_t)&arpreq);
+        IoctlSocket(s, SIOCGARP, (caddr_t)&arpreq);
+        IoctlSocket(s, SIOCDARP, (caddr_t)&arpreq);
+
+        These three IoctlSocket()s take the same structure as an argument.
+        SIOCSARP sets an ARP entry, SIOCGARP gets an ARP entry, and SIOCDARP
+        deletes an ARP entry. These IoctlSocket() requests may be applied to
+        any socket descriptor (s). The arpreq structure contains:
+
+        /* Maximum number of octets in protocol/hw address */
+        #define MAXADDRARP  16
+
+        /*
+         * ARP ioctl request.
+         */
+        struct arpreq {
+                struct  sockaddr arp_pa;  /* protocol address */
+                struct  {                 /* hardware address */
+                  u_char sa_len;         /* actual length + 2 */
+                  u_char sa_family;
+                  char   sa_data[MAXADDRARP];
+                }  arp_ha;
+                int     arp_flags;                   /* flags */
+        };
+
+        /*  arp_flags and at_flags field values */
+        #define ATF_INUSE       0x01          /* entry in use */
+        #define ATF_COM         0x02       /* completed entry */
+        #define ATF_PERM        0x04       /* permanent entry */
+        #define ATF_PUBL        0x08         /* publish entry */
+
+
+        The interface whose ARP table is manipulated is specified by
+        arp_pa sockaddr. The address family for the arp_pa sockaddr
+        must be AF_INET; for the arp_ha sockaddr it must be AF_UNSPEC.
+        The length of arp_ha must match the length of used hardware
+        address. Maximum length for the hardware address is MAXADDRARP
+        bytes. The only flag bits which may be written are ATF_PERM
+        and ATF_PUBL. ATF_PERM makes the entry permanent if the
+        IoctlSocket() call succeeds. ATF_PUBL specifies that the ARP
+        code should respond to ARP requests for the indicated host
+        coming from other machines.  This allows a host to act as an
+        ARP server which may be useful in convincing an ARP-only
+        machine to talk to a non-ARP machine.
+
+    UNSUPPORTED IN AmiTCP/IP
+
+    AmiTCP/IP EXTENSIONS
+        There is an extension to the standard BSD4.4 ARP ioctl interface to
+        access the contents of the whole ARP mapping cache. (In the BSD4.4
+        the static ARP table is accessed via the /dev/kmem.) The SIOCGARPT
+        ioctl takes the following arptabreq structure as an argument:
+
+        /*
+         * An AmiTCP/IP specific ARP table ioctl request
+         */
+        struct arptabreq {
+                struct arpreq atr_arpreq;  /* To identify the interface */
+                long   atr_size;          /* # of elements in atr_table */
+                long   atr_inuse;               /* # of elements in use */
+                struct arpreq *atr_table;
+        };
+
+        The atr_arpreq specifies the used interface. The hardware address
+        for the interface is returned in the arp_ha field of atr_arpreq
+        structure.
+
+        The SIOCGARPT ioctl reads at most atr_size entries from the cache
+        into the user supplied buffer atr_table, if it is not NULL. Actual
+        amount of returned entries is returned in atr_size. The current
+        amount of cached mappings is returned in the atr_inuse.
+
+        The SIOCGARPT ioctl has following usage:
+
+        struct arpreq cache[N];
+        struct arptabreq arptab = { N, 0, cache };
+
+        IoctlSocket(s, SIOCGARPT, (caddr_t)&arptabreq);
+
+   DIAGNOSTICS
+        ARP watches passively for hosts impersonating the local host
+        (that  is,  a  host which responds to an ARP mapping request
+        for the local host's address).
+
+        "duplicate IP address a.b.c.d!!"
+        "sent from hardware address: %x:%x:...:%x:%x"
+
+        ARP  has  discovered  another host on the local network
+        which responds to mapping requests for its own Internet
+        address.
+
+   BUGS
+        The ARP is tested only with Ethernet. Other network hardware may
+        require special ifconfig configuration.
+
+   SEE ALSO
+        inet, netutil/arp, netutil/ifconfig, <net/if_arp.h>
+
+        Plummer, Dave, ``An  Ethernet  Address  Resolution  Protocol
+        -or-  Converting Network Protocol Addresses to 48.bit Ether-
+        net Addresses for Transmission on Ethernet  Hardware,''  RFC
+        826,  Network  Information  Center, SRI International, Menlo
+        Park, Calif., November 1982. (Sun 800-1059-10)
+
+protocols/icmp                                                    protocols/icmp
+
+   NAME
+        icmp - Internet Control Message Protocol
+
+   SYNOPSIS
+        #include <sys/socket.h>
+        #include <netinet/in.h>
+
+        int
+        socket(AF_INET, SOCK_RAW, proto)
+
+   DESCRIPTION
+        ICMP is the error and control message protocol used by IP and the
+        Internet protocol family.  It may be accessed through a ``raw
+        socket'' for network monitoring and diagnostic functions.  The proto
+        parameter to the socket call to create an ICMP socket is obtained
+        from getprotobyname().  ICMP sockets are connectionless, and are
+        normally used with the sendto() and recvfrom() calls, though the
+        connect() call may also be used to fix the destination for future
+        packets (in which case the recv() and send() socket library calls
+        may be used).
+
+        Outgoing packets automatically have an IP header prepended to them
+        (based on the destination address).  Incoming packets are received
+        with the IP header and options intact.
+
+   DIAGNOSTICS
+        A socket operation may fail with one of the following errors
+        returned:
+
+        [EISCONN]        when trying to establish a connection on a socket
+                         which already has one, or when trying to send a
+                         datagram with the destination address specified and
+                         the socket is already connected;
+
+        [ENOTCONN]       when trying to send a datagram, but no destination
+                         address is specified, and the socket hasn't been
+                         connected;
+
+        [ENOBUFS]        when the system runs out of memory for an internal
+                         data structure;
+
+        [EADDRNOTAVAIL]  when an attempt is made to create a socket with a
+                         network address for which no network interface
+                         exists.
+
+   SEE ALSO
+        bsdsocket.library/send(),  bsdsocket.library/recv(), inet,  ip
+
+   HISTORY
+        The icmp protocol is originally from 4.3BSD.
+
+protocols/if                                                        protocols/if
+
+   NAME
+        if - Network Interface to SANA-II devices
+
+   DESCRIPTION
+        Each network interface in the AmiTCP/IP corresponds to a path
+        through which messages may be sent and received.  A network
+        interface usually has a SANA-II device driver associated with it,
+        though the loopback interface, "lo", do not. The network interface
+        in the AmiTCP/IP (sana_softc) is superset of the BSD Unix network
+        interface.
+
+        When the network interface is first time referenced, AmiTCP/IP tries
+        to open the corresponding SANA-II device driver. If successful, a
+        software interface to the SANA-II device is created. The "network/"
+        prefix is added to the SANA-II device name, if needed. Once the
+        interface has acquired its address, it is expected to install a
+        routing table entry so that messages can be routed through it.
+
+        The SANA-II interfaces must be configured before they will allow
+        traffic to flow through them. It is done after the interface is
+        assigned a protocol address with a SIOCSIFADDR ioctl. Some
+        interfaces may use the protocol address or a part of it as their
+        hardware address. On interfaces where the network-link layer address
+        mapping is static, only the network number is taken from the ioctl;
+        the remainder is found in a hardware specific manner. On interfaces
+        which provide dynamic network-link layer address mapping facilities
+        (for example, Ethernets or Arcnets using ARP), the entire address
+        specified in the ioctl is used.
+
+        The following ioctl calls may be used to manipulate network
+        interfaces. Unless specified otherwise, the request takes an ifreq
+        structure as its parameter. This structure has the form
+
+        struct ifreq {
+          char ifr_name[IFNAMSIZ]; /* interface name (eg. "slip.device/0")*/
+          union {
+            struct sockaddr ifru_addr;
+            struct sockaddr ifru_dstaddr;
+            short           ifru_flags;
+          } ifr_ifru;
+        #define ifr_addr    ifr_ifru.ifru_addr                 /* address */
+        #define ifr_dstaddr ifr_ifru.ifru_dstaddr   /* end of p-to-p link */
+        #define ifr_flags   ifr_ifru.ifru_flags                  /* flags */
+        };
+
+        SIOCSIFADDR      Set interface address. Following the address
+                         assignment, the ``initialization'' routine for
+                         the interface is called.
+
+        SIOCGIFADDR      Get interface address.
+
+        SIOCSIFDSTADDR   Set point to point address for interface.
+
+        SIOCGIFDSTADDR   Get point to point address for interface.
+
+        SIOCSIFFLAGS     Set interface flags field. If the interface is
+                         marked down, any processes currently routing
+                         packets through the interface are notified.
+
+        SIOCGIFFLAGS     Get interface flags.
+
+        SIOCGIFCONF      Get interface configuration list. This request
+                         takes an ifconf structure (see below) as a
+                         value-result parameter. The ifc_len field should be
+                         initially set to the size of the buffer pointed to
+                         by ifc_buf. On return it will contain the length,
+                         in bytes, of the configuration list.
+
+        /*
+         * Structure used in SIOCGIFCONF request.
+         * Used to retrieve interface configuration
+         * for machine (useful for programs which
+         * must know all networks accessible).
+         */
+        struct ifconf {
+          int  ifc_len;                      /* size of associated buffer */
+          union {
+            caddr_t       ifcu_buf;
+            struct ifreq *ifcu_req;
+          } ifc_ifcu;
+        #define ifc_buf ifc_ifcu.ifcu_buf               /* buffer address */
+        #define ifc_req ifc_ifcu.ifcu_req /* array of structures returned */
+        };
+
+
+    UNSUPPORTED IN AmiTCP/IP
+        These standard BSD ioctl codes are not currently supported:
+
+        SIOCADDMULTI     Enable a multicast address for the interface.
+
+        SIOCDELMULTI     Disable a previously set multicast address.
+
+        SIOCSPROMISC     Toggle promiscuous mode.
+
+    AmiTCP/IP EXTENSIONS
+        The following ioctls are used to configure protocol and hardware
+        specific properties of a sana_softc interface. They are used in the
+        AmiTCP/IP only.
+
+        SIOCSSANATAGS    Set SANA-II specific properties with a tag list.
+
+        SIOCGSANATAGS    Get SANA-II specific properties into a
+                         wiretype_parameters structure and a user tag list.
+
+        struct wiretype_parameters
+        {
+          ULONG  wiretype;               /* the wiretype of the interface */
+          WORD   flags;                                      /* iff_flags */
+          struct TagItem *tags;                 /* tag list user provides */
+        };
+
+   SEE ALSO
+        arp, lo, netutil/arp, netutil/ifconfig, <sys/ioctl.h>, <net/if.h>,
+        <net/sana2tags.h>
+
+protocols/inet                                                    protocols/inet
+
+   NAME
+        inet - Internet protocol family
+
+   SYNOPSIS
+        #include <sys/types.h>
+        #include <netinet/in.h>
+
+   DESCRIPTION
+        The Internet protocol family implements a collection of protocols
+        which are centered around the Internet Protocol (IP) and which share
+        a common address format.  The Internet family provides protocol
+        support for the SOCK_STREAM, SOCK_DGRAM, and SOCK_RAW socket types.
+
+   PROTOCOLS
+        The Internet protocol family is comprised of the Internet Protocol
+        (IP), the Address Resolution Protocol (ARP), the Internet Control
+        Message Protocol (ICMP), the Transmission Control Protocol (TCP),
+        and the User Datagram Protocol (UDP).
+
+        TCP is used to support the SOCK_STREAM abstraction while UDP is used
+        to support the SOCK_DGRAM abstraction; (SEE ALSO tcp, SEE ALSO udp).
+        A raw interface to IP is available by creating an Internet socket of
+        type SOCK_RAW; (SEE ALSO ip).  ICMP is used by the kernel to handle
+        and report errors in protocol processing.  It is also accessible to
+        user programs; (SEE ALSO icmp).  ARP is used to translate 32-bit IP
+        addresses into varying length hardware addresses; (SEE ALSO arp).
+
+        The 32-bit IP address is divided into network number and host number
+        parts.  It is frequency-encoded; the most significant bit is zero in
+        Class A addresses, in which the high-order 8 bits are the network
+        number.  Class B addresses have their high order two bits set to 10
+        and use the highorder 16 bits as the network number field.  Class C
+        addresses have a 24-bit network number part of which the high order
+        three bits are 110.  Sites with a cluster of local networks may
+        chose to use a single network number for the cluster; this is done
+        by using subnet addressing.  The local (host) portion of the address
+        is further subdivided into subnet number and host number parts.
+        Within a subnet, each subnet appears to be an individual network;
+        externally, the entire cluster appears to be a single, uniform
+        network requiring only a single routing entry.  Subnet addressing is
+        enabled and examined by the following ioctl commands on a datagram
+        socket in the Internet domain; they have the same form as the
+        SIOCIFADDR (SEE ALSO if) command.
+
+        SIOCSIFNETMASK      Set interface network mask.  The network mask
+                            defines the network part of the address; if it
+                            contains more of the address than the address
+                            type would indicate, then subnets are in use.
+
+        SIOCGIFNETMASK      Get interface network mask.
+
+   ADDRESSING
+        IP addresses are four byte quantities, stored in network byte order
+        (the native Amiga byte order)
+
+        Sockets in the Internet protocol family  use  the  following
+        addressing structure:
+             struct sockaddr_in {
+                  short     sin_family;
+                  u_short   sin_port;
+                  struct    in_addr sin_addr;
+                  char sin_zero[8];
+             };
+
+        Functions in bsdsocket.library are provided to manipulate structures
+        of this form.
+
+        The sin_addr field of the sockaddr_in structure specifies a local or
+        remote IP address.  Each network interface has its own unique IP
+        address.  The special value INADDR_ANY may be used in this field to
+        effect "wildcard" matching.  Given in a bind() call, this value
+        leaves the local IP address of the socket unspecified, so that the
+        socket will receive connections or messages directed at any of the
+        valid IP addresses of the system.  This can prove useful when a
+        process neither knows nor cares what the local IP address is or when
+        a process wishes to receive requests using all of its network
+        interfaces.  The sockaddr_in structure given in the bind() call must
+        specify an in_addr value of either IPADDR_ANY or one of the system's
+        valid IP addresses.  Requests to bind any other address will elicit
+        the error EADDRNOTAVAIL. When a connect() call is made for a socket
+        that has a wildcard local address, the system sets the sin_addr
+        field of the socket to the IP address of the network interface that
+        the packets for that connection are routed via.
+
+        The sin_port field of the sockaddr_in structure specifies a port
+        number used by TCP or UDP. The local port address specified in a
+        bind() call is restricted to be greater than IPPORT_RESERVED
+        (defined in <netinet/in.h>) unless the creating process is running
+        as the super-user, providing a space of protected port numbers.  In
+        addition, the local port address must not be in use by any socket of
+        same address family and type.  Requests to bind sockets to port
+        numbers being used by other sockets return the error EADDRINUSE.  If
+        the local port address is specified as 0, then the system picks a
+        unique port address greater than IPPORT_RESERVED.  A unique local
+        port address is also picked when a socket which is not bound is used
+        in a connect() or send() call.  This allows programs which do not
+        care which local port number is used to set up TCP connections by
+        sim- ply calling socket() and then connect(), and to send UDP
+        datagrams with a socket() call followed by a send() call.
+
+        Although this implementation restricts sockets to unique local port
+        numbers, TCP allows multiple simultaneous connections involving the
+        same local port number so long as the remote IP addresses or port
+        numbers are different for each connection.  Programs may explicitly
+        override the socket restriction by setting the SO_REUSEADDR socket
+        option with setsockopt (see getsockopt()).
+
+   SEE ALSO
+        bsdsocket.library/bind(), bsdsocket.library/connect(),
+        bsdsocket.library/getsockopt(), bsdsocket.library/IoctlSocket(),
+        bsdsocket.library/send(), bsdsocket.library/socket(),
+        bsdsocket.library/gethostent(), bsdsocket.library/getnetent(),
+        bsdsocket.library/getprotoent(), bsdsocket.library/getservent(),
+        bsdsocket.library/inet_addr(), arp, icmp, ip, tcp, udp
+
+        Network Information Center, DDN Protocol Handbook (3 vols.),
+        Network  Information  Center, SRI International, Menlo Park,
+        Calif., 1985.
+        A AmiTCP/IP Interprocess Communication Primer
+
+   WARNING
+        The Internet protocol support is subject to change as the Internet
+        protocols develop.  Users should not depend on details of the
+        current implementation, but rather the services exported.
+
+protocols/ip                                                        protocols/ip
+
+   NAME
+        ip - Internet Protocol
+
+   SYNOPSIS
+        #include <sys/socket.h>
+        #include <netinet/in.h>
+
+        int
+        socket(AF_INET, SOCK_RAW, proto)
+
+   DESCRIPTION
+        IP is the transport layer protocol used by the Internet protocol
+        family.  Options may be set at the IP level when using higher-level
+        protocols that are based on IP (such as TCP and UDP). It may also be
+        accessed through a ``raw socket'' when developing new protocols, or
+        special purpose applica- tions.
+
+        A single generic option is supported at the IP level, IP_OPTIONS,
+        that may be used to provide IP options to be transmitted in the IP
+        header of each outgoing packet.  Options are set with setsockopt()
+        and examined with getsockopt().  The format of IP options to be sent
+        is that specified by the IP protocol specification, with one
+        exception: the list of addresses for Source Route options must
+        include the first-hop gateway at the beginning of the list of
+        gateways.  The first-hop gateway address will be extracted from the
+        option list and the size adjusted accordingly before use.  IP
+        options may be used with any socket type in the Internet family.
+
+        Raw IP sockets are connectionless, and are normally used with the
+        sendto and recvfrom calls, though the connect() call may also be
+        used to fix the destination for future packets (in which case the
+        recv() and send() system calls may be used).
+
+        If proto is 0, the default protocol IPPROTO_RAW is used for outgoing
+        packets, and only incoming packets destined for that protocol are
+        received.  If proto is non-zero, that protocol number will be used
+        on outgoing packets and to filter incoming packets.
+
+        Outgoing packets automatically have an IP header prepended to them
+        (based on the destination address and the protocol number the socket
+        is created with).  Incoming packets are received with IP header and
+        options intact.
+
+   DIAGNOSTICS
+        A socket operation may fail with one of the following errors
+        returned:
+
+        [EISCONN]        when trying to establish a connection on a socket
+                         which already has one, or when trying to send a
+                         datagram with the destination address specified and
+                         the socket is already connected;
+
+        [ENOTCONN]       when trying to send a datagram, but no destination
+                         address is specified, and the socket hasn't been
+                         connected;
+
+        [ENOBUFS]        when the system runs out of memory for an internal
+                         data structure;
+
+        [EADDRNOTAVAIL]  when an attempt is made to create a socket with a
+                         network address for which no network interface
+                         exists.
+
+        The following errors specific to IP may occur when setting or
+        getting IP options:
+
+        [EINVAL]         An unknown socket option name was given.
+
+        [EINVAL]         The IP option field was improperly formed; an
+                         option field was shorter than the minimum value or
+                         longer than the option buffer provided.
+
+   SEE ALSO
+        bsdsocket.library/getsockopt(), bsdsocket.library/send(),
+        bsdsocket.library/recv(), icmp, inet
+
+   HISTORY
+        The ip protocol appeared in 4.2BSD.
+
+protocols/lo                                                        protocols/lo
+
+   NAME
+        lo - Software Loopback Network Interface
+
+   SYNOPSIS
+        pseudo-device
+        loop
+
+   DESCRIPTION
+        The loop interface is a software loopback mechanism which may be
+        used for performance analysis, software testing, and/or local
+        communication.  There is no SANA-II interface associated with lo.
+        As with other network interfaces, the loopback interface must have
+        network addresses assigned for each address family with which it is
+        to be used.  These addresses may be set or changed with the
+        SIOCSIFADDR ioctl. The loopback interface should be the last
+        interface configured, as protocols may use the order of
+        configuration as an indication of priority.  The loopback should
+        never be configured first unless no hardware interfaces exist.
+
+   DIAGNOSTICS
+        "lo%d: can't handle af%d."
+        The interface was handed a message with ad- dresses formatted in an
+        unsuitable address family; the packet was dropped.
+
+   SEE ALSO
+        inet, if, netutil/ifconfig
+
+   BUGS
+        Older BSD Unix systems enabled the loopback interface
+        automatically, using a nonstandard Internet address (127.1).  Use
+        of that address is now discouraged; a reserved host address for the
+        local network should be used instead.
+
+protocols/routing                                              protocols/routing
+
+   NAME
+        routing - system supporting for local network packet routing
+
+   DESCRIPTION
+        The network facilities provided general packet routing,
+        leaving routing table maintenance to applications processes.
+
+        A simple set of data structures comprise a ``routing table''
+        used in selecting the appropriate network interface when
+        transmitting packets.  This table contains a single entry for
+        each route to a specific network or host.  A user process, the
+        routing daemon, maintains this data base with the aid of two
+        socket specific ioctl commands, SIOCADDRT and SIOCDELRT.
+        The commands allow the addition and deletion of a single
+        routing table entry, respectively.  Routing table
+        manipulations may only be carried out by super-user.
+
+        A routing table entry has the following form, as defined  in
+        <net/route.h>:
+             struct rtentry {
+                  u_long    rt_hash;
+                  struct    sockaddr rt_dst;
+                  struct    sockaddr rt_gateway;
+                  short     rt_flags;
+                  short     rt_refcnt;
+                  u_long    rt_use;
+                  struct    ifnet *rt_ifp;
+             };
+        with rt_flags defined from:
+          #define   RTF_UP         0x1              /* route usable */
+          #define   RTF_GATEWAY    0x2  /* destination is a gateway */
+          #define   RTF_HOST  0x4     /* host entry (net otherwise) */
+
+        Routing table entries come in three flavors: for a specific
+        host, for all hosts on a specific network, for any destination
+        not matched by entries of the first two types (a wildcard
+        route).  When the system is booted, each network interface
+        autoconfigured installs a routing table entry when it wishes
+        to have packets sent through it.  Normally the interface
+        specifies the route through it is a ``direct'' connection to
+        the destination host or network.  If the route is direct, the
+        transport layer of a protocol family usually requests the
+        packet be sent to the same host specified in the packet.
+        Otherwise, the interface may be requested to address the
+        packet to an entity different from the eventual recipient
+        (that is, the packet is forwarded).
+
+        Routing table entries installed by a user process may not
+        specify the hash, reference count, use, or interface fields;
+        these are filled in by the routing routines.  If a route is in
+        use when it is deleted (rt_refcnt is non-zero), the resources
+        associated with it will not be reclaimed until all references
+        to it are removed.
+
+        The routing code returns EEXIST if requested to duplicate an
+        existing entry, ESRCH if requested to delete a non-existent
+        entry, or ENOBUFS if insufficient resources were available to
+        install a new route.
+
+        The rt_use field contains the number of packets sent along the
+        route.  This value is used to select among multiple routes to
+        the same destination.  When multiple routes to the same
+        destination exist, the least used route is selected.
+
+        A wildcard routing entry is specified with a zero destination
+        address value.  Wildcard routes are used only when the system
+        fails to find a route to the destination host and network.
+        The combination of wildcard routes and routing redirects can
+        provide an economical mechanism for routing traffic.
+
+   SEE ALSO
+        bsdsocket.library/IoctlSocket(), netutil/route
+
+protocols/tcp                                                      protocols/tcp
+
+   NAME
+        tcp - Internet Transmission Control Protocol
+
+   SYNOPSIS
+        #include <sys/socket.h>
+        #include <netinet/in.h>
+
+        int
+        socket(AF_INET, SOCK_STREAM, 0)
+
+   DESCRIPTION
+        The TCP protocol provides reliable, flow-controlled, two-way
+        transmission of data.  It is a byte-stream protocol used to support
+        the SOCK_STREAM abstraction.  TCP uses the standard Internet address
+        format and, in addition, provides a per-host collection of ``port
+        addresses''. Thus, each address is composed of an Internet address
+        specifying the host and network, with a specific TCP port on the
+        host identifying the peer entity.
+
+        Sockets utilizing the tcp protocol are either ``active'' or
+        ``passive''.  Active sockets initiate connections to passive
+        sockets.  By default TCP sockets are created active; to create a
+        passive socket the listen() bsdsocket.library function call must be
+        used after binding the socket with the bind() bsdsocket.library
+        function call.  Only passive sockets may use the accept() call to
+        accept incoming connections.  Only active sockets may use the
+        connect() call to initiate connections.
+
+        Passive sockets may ``underspecify'' their location to match
+        incoming connection requests from multiple networks.  This
+        technique, termed ``wildcard addressing'', allows a single server to
+        provide service to clients on multiple networks.  To create a socket
+        which listens on all networks, the Internet address INADDR_ANY must
+        be bound.  The TCP port may still be specified at this time; if the
+        port is not specified the bsdsocket.library function will assign
+        one.  Once a connection has been established the socket's address is
+        fixed by the peer entity's location.  The address assigned the
+        socket is the address associated with the network interface through
+        which packets are being transmitted and received.  Normally this
+        address corresponds to the peer entity's network.
+
+        TCP supports one socket option which is set with setsockopt() and
+        tested with getsockopt().  Under most circumstances, TCP sends data
+        when it is presented; when outstanding data has not yet been
+        acknowledged, it gathers small amounts of output to be sent in a
+        single packet once an acknowledgement is received.  For a small
+        number of clients, such as X Window System functions that
+        send a stream of mouse events which receive no replies, this
+        packetization may cause significant delays.  Therefore, TCP provides
+        a boolean option, TCP_NODELAY (from <netinet/tcp.h>, to defeat this
+        algorithm.  The option level for the setsockopt call is the protocol
+        number for TCP, available from getprotobyname().
+
+        Options at the IP transport level may be used with TCP; SEE ALSO ip.
+        Incoming connection requests that are source-routed are noted, and
+        the reverse source route is used in responding.
+
+   DIAGNOSTICS
+        A socket operation may fail with one of the following errors
+        returned:
+
+        [EISCONN]        when trying to establish a connection on a socket
+                         which already has one;
+
+        [ENOBUFS]        when the AmiTCP/IP runs out of memory for an internal
+                         data structure;
+
+        [ETIMEDOUT]      when a connection was dropped due to excessive
+                         retransmissions;
+
+        [ECONNRESET]     when the remote peer forces the connection to be
+                         closed;
+
+        [ECONNREFUSED]   when the remote peer actively refuses connection
+                         establishment (usually because no process is
+                         listening to the port);
+
+        [EADDRINUSE]     when an attempt is made to create a socket with a
+                         port which has already been allocated;
+
+        [EADDRNOTAVAIL]  when an attempt is made to create a socket with a
+                         network address for which no network interface
+                         exists.
+
+   SEE ALSO
+        bsdsocket.library/getsockopt(), bsdsocket.library/socket(),
+        bsdsocket.library/bind(), bsdsocket.library/listen(),
+        bsdsocket.library/accept(), bsdsocket.library/connect(), inet,
+        ip, <sys/socket.h>, <netinet/tcp.h>, <netinet/in.h>
+
+   HISTORY
+        The tcp protocol stack appeared in 4.2BSD.
+
+protocols/udp                                                      protocols/udp
+
+   NAME
+        udp - Internet User Datagram Protocol
+
+   SYNOPSIS
+        #include <sys/socket.h>
+        #include <netinet/in.h>
+
+        int
+        socket(AF_INET, SOCK_DGRAM, 0)
+
+   DESCRIPTION
+        UDP is a simple, unreliable datagram protocol which is used to
+        support the SOCK_DGRAM abstraction for the Internet protocol family.
+        UDP sockets are connectionless, and are normally used with the
+        sendto() and recvfrom() calls, though the connect() call may also be
+        used to fix the destination for future packets (in which case the
+        recv() and send() function calls may be used).
+
+        UDP address formats are identical to those used by TCP. In
+        particular UDP provides a port identifier in addition to the normal
+        Internet address format.  Note that the UDP port space is separate
+        from the TCP port space (i.e. a UDP port may not be ``connected'' to
+        a TCP port). In addition broadcast packets may be sent (assuming the
+        underlying network supports this) by using a reserved ``broadcast
+        address''; this address is network interface dependent.
+
+        Options at the IP transport level may be used with UDP; SEE ALSO ip.
+
+   DIAGNOSTICS
+        A socket operation may fail with one of the following errors
+        returned:
+
+        [EISCONN]        when trying to establish a connection on a socket
+                         which already has one, or when trying to send a
+                         datagram with the destination address specified and
+                         the socket is already connected;
+
+        [ENOTCONN]       when trying to send a datagram, but no destination
+                         address is specified, and the socket hasn't been
+                         connected;
+
+        [ENOBUFS]        when the system runs out of memory for an
+                         internal data structure;
+
+        [EADDRINUSE]     when an attempt is made to create a socket with a
+                         port which has already been allocated;
+
+        [EADDRNOTAVAIL]  when an attempt is made to create a socket with a
+                         network address for which no network interface
+                         exists.
+
+   SEE ALSO
+        bsdsocket.library/getsockopt(), bsdsocket.library/recv(),
+        bsdsocket.library/send(), bsdsocket.library/socket(), inet, ip
+
+   HISTORY
+        The udp protocol appeared in 4.2BSD.
+
+bsdsocket.library/CloseSocket                      bsdsocket.library/CloseSocket
+
+   NAME
+         CloseSocket - delete a socket descriptor
+
+   SYNOPSIS
+         success = CloseSocket(s)
+         D0                    D0
+
+         long CloseSocket(long);
+
+   FUNCTION
+         CloseSocket() deletes  a  descriptor  from the  library base
+         socket reference table.   If s is the last reference  to the
+         underlying object, then the object  will  be deactivated and
+         socket  (see socket()),  associated naming  information  and
+         queued data are discarded.
+
+         All sockets are automatically closed when the socket library
+         is closed, but closing sockets as soon as possible is
+         recommended to save system resources.
+
+   RETURN VALUES
+          0   on success.
+
+         -1   on failure and sets errno to indicate the error.
+
+   ERRORS
+         EBADF             - s is not an active socket descriptor.
+
+         EINTR             - linger on close was interrupted.
+                             The socket is closed, however.
+
+   SEE ALSO
+         accept(), SocketBaseTagList(), shutdown(), socket(),
+         exec.library/CloseLibrary()
+bsdsocket.library/Dup2Socket                        bsdsocket.library/Dup2Socket
+
+   NAME
+        Dup2Socket - duplicate a socket descriptor
+
+   SYNOPSIS
+        newfd = Dup2Socket(fd1, fd2)
+        D0                 D0   D1
+
+        long Dup2Socket(long, long);
+
+   DESCRIPTION
+        Dup2Socket() duplicates an existing socket descriptor.
+        the argument fd1 is small non-negative value that indexes
+        the socket on SocketBase descriptor table. The value must
+        be less than the size of the table, which is returned by
+        getdtablesize(). fd2 specifies the desired value of the new
+        descriptor. If descriptor fd2 is already in use, it is
+        first deallocated as if it were closed by CloseSocket(). If
+        the value if fd2 is -1, the new descriptor used and returned
+        is the lowest numbered descriptor that is not currently in
+        use by the SocketBase.
+
+        Dup2Socket() has also an feature to mark a file descriptor as
+        being used. If fd1 is given as -1, fd2 is marked as being used
+        socket descriptor table and it won't be allocated for any
+        socket. This mark can be removed using CloseSocket() call.
+
+   RETURN VALUES
+        Dup2Socket() returns a new descriptor on  success. On failure
+        -1 is returned and errno is set to indicate the error.
+
+   ERRORS
+        EBADF          fd1 or fd2 is not a valid active descriptor.
+
+        EMFILE         Too many descriptors are active.
+
+   SEE ALSO
+        accept(), CloseSocket(), getdtablesize(), SocketBaseTagList(),
+        socket()
+
+bsdsocket.library/IoctlSocket                      bsdsocket.library/IoctlSocket
+
+   NAME
+         IoctlSocket - control sockets
+
+   SYNOPSIS
+         #include <sys/types.h>
+         #include <sys/ioctl.h>
+
+         value = IoctlSocket(fd, request, arg)
+         D0            D0  D1       A0
+
+         long IoctlSocket(long, long, caddr_t);
+
+   FUNCTION
+         IoctlSocket() performs a special function on the object referred
+         to by the open  socket descriptor fd. Note: the setsockopt()
+         call (see getsockopt()) is the primary  method for operating
+         on sockets  as such, rather than on the underlying  protocol
+         or network interface.
+
+         For most IoctlSocket() functions, arg is a pointer to data to
+         be used by the  function  or to be filled in by the function.
+         Other functions may ignore arg or may treat it directly as a
+         data item; they may, for example, be passed an int value.
+
+         The following requests are supported:
+
+
+         FIOASYNC            The argument is a  pointer  to  a  long.
+                             Set  or  clear asynchronous I/O.  If the
+                             value of that  long is  a  1  (one)  the
+                             descriptor  is set for asynchronous I/O.
+                             If the value of that long is a  0 (zero)
+                             the  descriptor is cleared for asynchro-
+                             nous I/O.
+
+   FIOCLEX
+         FIONCLEX            Ignored, no use for close-on-exec flag
+                             in Amiga.
+
+   FIOGETOWN
+         SIOCGPGRP           The argument is pointer to struct Task*.
+                             Set the value of that pointer to the
+                             Task that  is  receiving SIGIO or SIGURG
+                             signals for  the  socket  referred to by
+                             the descriptor passed to IoctlSocket().
+
+         FIONBIO             The argument is a  pointer  to  a  long.
+                             Set  or  clear non-blocking I/O.  If the
+                             value of that  long is  a  1  (one)  the
+                             descriptor  is set for non-blocking I/O.
+                             If the value of that long is a  0 (zero)
+                             the   descriptor  is  cleared  for  non-
+                             blocking I/O.
+
+         FIONREAD            The argument is a  pointer  to  a  long.
+                             Set the value of that long to the number
+                             of immediately readable characters  from
+                             the socket fd.
+
+   FIOSETOWN
+         SIOCSPGRP           The argument is pointer to struct Task*,
+                             pointer  to  the task  that will subseq-
+                             uently receive  SIGIO or  SIGURG signals
+                             for   the  socket  referred  to  by  the
+                             descriptor passed.
+
+         SIOCCATMARK         The argument is a pointer to a long.
+                             Set the value of that long to 1 if the
+                             read pointer for the socket referred to
+                             by the descriptor passed to
+                             IoctlSocket() points to a mark in the
+                             data stream for an out-of-band message,
+                             and to 0 if it does not point to a mark.
+
+
+   RETURN VALUES
+         IoctlSocket() returns 0 on success for most requests.   Some
+         specialized requests may return non-zero values on success; On
+         failure,  IoctlSocket() returns -1 and sets errno to indicate
+         the error.
+
+   ERRORS
+         EBADF          fd is not a valid descriptor.
+
+         EINVAL         request or arg is not valid.
+
+         IoctlSocket() will also fail if the object on which the function
+         is  being performed detects an error. In this case, an error
+         code specific  to  the  object  and  the  function  will  be
+         returned.
+
+   SEE ALSO
+         getsockopt(), SocketBaseTagList(), setsockopt()
+bsdsocket.library/accept                                bsdsocket.library/accept
+
+   NAME
+         accept - accept a connection on a socket
+
+   SYNOPSIS
+         #include <sys/types.h>
+         #include <sys/socket.h>
+
+         ns = accept(s, addr, addrlen)
+         D0          D0 A0    A1
+
+         long accept(long, struct sockaddr *, long *);
+
+   FUNCTION
+         The  argument  s  is a  socket  that  has  been created with
+         socket(), bound to an  address  with bind(), and  is listen-
+         ing for connections after a listen().  accept() extracts the
+         first  connection  on  the  queue  of  pending  connections,
+         creates a new socket with the same properties of s and allo-
+         cates a new socket descriptor for the socket.  If no pending
+         connections are present on the  queue, and the socket is not
+         marked  as non-blocking, accept() blocks the caller  until a
+         connection is present.  If the socket is marked non-blocking
+         and  no  pending  connections  are  present  on  the  queue,
+         accept() returns  an error as described below.  The accepted
+         socket is used to read and write data to and from the socket
+         which connected to  this one; it is not used to  accept more
+         connections.  The original socket s remains open for accept-
+         ing further connections.
+
+         The argument addr is a result parameter that  is  filled  in
+         with  the  address of the connecting entity, as known to the
+         communications layer.  The exact format of the addr  parame-
+         ter  is  determined by the domain in which the communication
+         is occurring.  The addrlen is a value-result  parameter;  it
+         should  initially  contain the amount of space pointed to by
+         addr; on return it will contain the actual length (in bytes)
+         of   the   address   returned.    This  call  is  used  with
+         connection-based socket types, currently with SOCK_STREAM.
+
+         It is possible to select() a socket  for  the  purposes  of
+         doing an accept() by selecting it for read.
+
+   RETURN VALUES
+         accept() returns a non-negative descriptor for the  accepted
+         socket on success.  On failure, it returns -1 and sets errno
+         to indicate the error.
+
+   ERRORS
+         EBADF        - The descriptor is invalid.
+
+         EINTR        - The operation was interrupted by a break
+                        signal.
+
+         EOPNOTSUPP   - The referenced socket is not of type
+                        SOCK_STREAM.
+
+         EWOULDBLOCK  - The socket is marked non-blocking and no con-
+                        nections are present to be accepted.
+
+   SEE ALSO
+         bind(), connect(), listen(), select(), SetSocketSignals(),
+         socket()
+bsdsocket.library/bind                                    bsdsocket.library/bind
+
+   NAME
+         bind - bind a name to a socket
+
+   SYNOPSIS
+         #include <sys/types.h>
+         #include <sys/socket.h>
+
+         success = bind(s, name, namelen)
+         D0             D0 A0    D1
+
+         long bind(long, struct sockaddr *, long);
+
+   FUNCTION
+         bind() assigns a name to an unnamed socket.  When  a  socket
+         is created with socket(2) it exists in a name space (address
+         family) but has no name assigned.  bind() requests that  the
+         name pointed to by name be assigned to the socket.
+
+   RETURN VALUES
+         0  - on success.
+
+         -1 - on failure and sets errno to indicate the error.
+
+   ERRORS
+         EACCES            - The requested address is protected,  and
+                             the  current user has inadequate permis-
+                             sion to access it.
+
+         EADDRINUSE        - The specified address is already in use.
+
+         EADDRNOTAVAIL     - The specified address is  not  available
+                             from the local machine.
+
+         EBADF             - s is not a valid descriptor.
+
+         EINVAL            - namelen is  not  the  size  of  a  valid
+                             address  for  the specified address fam-
+                             ily.
+
+                             The  socket  is  already  bound  to   an
+                             address.
+
+   SEE ALSO
+         connect(), getsockname(), listen(), socket()
+
+   NOTES
+         The rules used in name binding  vary  between  communication
+         domains.
+bsdsocket.library/connect                              bsdsocket.library/connect
+
+   NAME
+         connect - initiate a connection on a socket
+
+   SYNOPSIS
+         #include <sys/types.h>
+         #include <sys/socket.h>
+
+         success = connect(s, name, namelen)
+         D0                D0 A0    D1
+
+         long connect(long, struct sockaddr *, long);
+
+   FUNCTION
+         The parameter s is a socket.  If it  is of  type SOCK_DGRAM,
+         then  this call specifies the peer with which the  socket is
+         to be associated;  this address  is that  to which datagrams
+         are  to be sent, and  the only address from which  datagrams
+         are to be received.  If it is of type SOCK_STREAM, then this
+         call attempts  to make a connection  to another socket.  The
+         other socket is specified by name which is an address in the
+         communications space of  the  socket.   Each  communications
+         space interprets the  name parameter in  its  own way.  Gen-
+         erally, stream sockets may successfully connect() only once;
+         datagram sockets may use connect() multiple  times to change
+         their association.  Datagram sockets may dissolve the  asso-
+         ciation by connecting to  an invalid address, such as a null
+         address.
+
+   RETURN VALUES
+          0   on success.
+
+         -1   on failure and sets errno to indicate the error.
+
+   ERRORS
+         EADDRINUSE        - The address is already in use.
+
+         EADDRNOTAVAIL     - The specified address is  not  available
+                             on the remote machine.
+
+         EAFNOSUPPORT      - Addresses in the specified address  fam-
+                             ily cannot be used with this socket.
+
+         EALREADY          - The socket is non-blocking and a  previ-
+                             ous  connection attempt has not yet been
+                             completed.
+
+         EBADF             - s is not a valid descriptor.
+
+         ECONNREFUSED      - The attempt to  connect  was  forcefully
+                             rejected.   The  calling  program should
+                             CloseSocket() the socket descriptor, and
+                             issue another socket()  call to obtain a
+                             new descriptor before attempting another
+                             connect() call.
+
+         EINPROGRESS       - The socket is non-blocking and the  con-
+                             nection cannot be completed immediately.
+                             It is possible to select()  for  comple-
+                             tion  by  selecting the socket for writ-
+                             ing.
+
+         EINTR             - The operation was interrupted by a break
+                             signal.
+
+         EINVAL            - namelen is  not  the  size  of  a  valid
+                             address  for  the specified address fam-
+                             ily.
+
+         EISCONN             The socket is already connected.
+
+         ENETUNREACH       - The network is not reachable  from  this
+                             host.
+
+         ETIMEDOUT         - Connection   establishment   timed   out
+                             without establishing a connection.
+
+   SEE ALSO
+         accept(), CloseSocket(), connect(), getsockname(), select(),
+         socket()
+bsdsocket.library/getpeername                      bsdsocket.library/getpeername
+
+   NAME
+         getpeername - get name of connected peer
+
+   SYNOPSIS
+         success =  getpeername(s, name, namelen)
+         D0                     D0 A0    A1
+
+         long getpeername(long, struct sockaddr *, long *);
+
+   FUNCTION
+         getpeername() returns the name  of  the  peer  connected  to
+         socket  s.   The long  pointed  to  by the namelen parameter
+         should be  initialized  to  indicate  the  amount  of  space
+         pointed  to  by name.  On return it contains the actual size
+         of the name returned (in bytes).  The name is  truncated  if
+         the buffer provided is too small.
+
+   RETURN VALUE
+         A 0 is returned if the call succeeds, -1 if it fails.
+
+   ERRORS
+         EBADF        - The argument s is not a valid descriptor.
+
+         ENOBUFS      - Insufficient resources were available in  the
+                        system to perform the operation.
+
+         ENOTCONN     - The socket is not connected.
+
+   SEE ALSO
+         accept(), bind(), getsockname(), socket()
+bsdsocket.library/getsockname                      bsdsocket.library/getsockname
+
+   NAME
+         getsockname - get socket name
+
+   SYNOPSIS
+         success = getsockname(s, name, namelen)
+         D0                    D0 A0    A1
+
+         long getsockname(long, struct sockaddr *, long *);
+
+   FUNCTION
+         getsockname() returns the current  name  for  the  specified
+         socket.   The  namelen  parameter  should  be initialized to
+         indicate the amount of space pointed to by name.  On  return
+         it contains the actual size of the name returned (in bytes).
+
+   DIAGNOSTICS
+         A 0 is returned if the call succeeds, -1 if it fails.
+
+   ERRORS
+         The call succeeds unless:
+
+         EBADF          s is not a valid descriptor.
+
+         ENOBUFS        Insufficient resources were available in  the
+                        system to perform the operation.
+
+   SEE ALSO
+         bind(), getpeername(), socket()
+bsdsocket.library/getsockopt                        bsdsocket.library/getsockopt
+
+   NAME
+         getsockopt, setsockopt - get and set options on sockets
+
+   SYNOPSIS
+         #include <sys/types.h>
+         #include <sys/socket.h>
+
+         success =  getsockopt(s, level, optname, optval, optlen)
+         D0                    D0 D1     D2       A0      A1
+
+         long getsockopt(long, long, long, caddr_t, long *);
+
+         success =  setsockopt(s, level, optname, optval, optlen)
+         D0                    D0 D1     D2       A0      D3
+
+         long setsockopt(long, long, long, caddr_t, long);
+
+   FUNCTION
+         getsockopt() and setsockopt() manipulate options  associated
+         with  a socket.  Options may exist at multiple protocol lev-
+         els; they are always present  at  the  uppermost  ``socket''
+         level.
+
+         When manipulating socket options  the  level  at  which  the
+         option resides and the name of the option must be specified.
+         To manipulate options at  the  ``socket''  level,  level  is
+         specified as SOL_SOCKET.  To manipulate options at any other
+         level the protocol number of the appropriate  protocol  con-
+         trolling  the  option is supplied.  For example, to indicate
+         that an option is to be interpreted  by  the  TCP  protocol,
+         level  should  be  set  to  the  protocol number of TCP.
+
+         The parameters optval and optlen are used to  access  option
+         values  for  setsockopt().  For getsockopt() they identify a
+         buffer in which the value for the requested option(s) are to
+         be  returned.   For  getsockopt(),  optlen is a value-result
+         parameter, initially  containing  the  size  of  the  buffer
+         pointed to by optval, and modified on return to indicate the
+         actual size of the value returned.  If no option value is to
+         be supplied or returned, optval may be supplied as 0.
+
+         optname and any specified options are  passed  uninterpreted
+         to  the appropriate protocol module for interpretation.  The
+         include  file  <sys/socket.h>   contains   definitions   for
+         ``socket'' level options, described below.  Options at other
+         protocol  levels  vary  in  format  and  name.
+
+         Most socket-level options take an int parameter for  optval.
+         For setsockopt(), the parameter should be non-zero to enable
+         a boolean option, or zero if the option is to  be  disabled.
+
+         SO_LINGER   uses  a  struct  linger  parameter,  defined  in
+         <sys/socket.h>, which specifies the  desired  state  of  the
+         option and the linger interval (see below).
+
+         The following options are recognized at  the  socket  level.
+         Except  as noted, each may be examined with getsockopt() and
+         set with setsockopt().
+
+              SO_DEBUG          - toggle   recording   of   debugging
+                                  information
+              SO_REUSEADDR      - toggle local address reuse
+              SO_KEEPALIVE      - toggle keep connections alive
+              SO_DONTROUTE      - toggle routing bypass for  outgoing
+                                  messages
+              SO_LINGER         - linger on close if data present
+              SO_BROADCAST      - toggle   permission   to   transmit
+                                  broadcast messages
+              SO_OOBINLINE      - toggle  reception  of   out-of-band
+                                  data in band
+              SO_SNDBUF         - set buffer size for output
+              SO_RCVBUF         - set buffer size for input
+              SO_TYPE           - get the type  of  the  socket  (get
+                                  only)
+              SO_ERROR          - get and clear error on  the  socket
+                                  (get only)
+
+         SO_DEBUG  enables  debugging  in  the  underlying   protocol
+         modules.   SO_REUSEADDR  indicates  that  the  rules used in
+         validating addresses supplied in a bind() call should allow
+         reuse of local addresses.  SO_KEEPALIVE enables the periodic
+         transmission of messages on a connected socket.  Should  the
+         connected  party fail to respond to these messages, the con-
+         nection is considered broken. If  the  process  is
+         waiting in select() when the connection is broken, select()
+         returns true for any read or write events selected  for  the
+         socket.    SO_DONTROUTE  indicates  that  outgoing  messages
+         should bypass the  standard  routing  facilities.   Instead,
+         messages  are  directed to the appropriate network interface
+         according to the network portion of the destination address.
+
+         SO_LINGER controls the action taken when unsent messags  are
+         queued  on  socket and a CloseSocket() is performed.  If the
+         socket promises reliable delivery of data and  SO_LINGER  is
+         set,  the  system  will  block  the  process  on the close
+         attempt until it is able to transmit the data  or  until  it
+         decides  it  is unable to deliver the information (a timeout
+         period, in seconds, termed the linger interval, is specified
+         in the set- sockopt() call when SO_LINGER is requested).  If
+         SO_LINGER  is  disabled and a CloseSocket()  is  issued, the
+         system will process the  close  in  a manner that allows the
+         process to continue as quickly as possible.
+
+         The option SO_BROADCAST requests permission to  send  broad-
+         cast  datagrams  on  the socket.  Broadcast was a privileged
+         operation in earlier versions of the system.  With protocols
+         that  support  out-of-band  data,  the  SO_OOBINLINE  option
+         requests that out-of-band data be placed in the normal  data
+         input  queue  as  received;  it will then be accessible with
+         recv() or read() calls without the MSG_OOB flag.   SO_SNDBUF
+         and  SO_RCVBUF are options to adjust the normal buffer sizes
+         allocated for output and input buffers,  respectively.   The
+         buffer size may be increased for high-volume connections, or
+         may be decreased to limit the possible backlog  of  incoming
+         data.   The system places an absolute limit on these values.
+         Finally, SO_TYPE and SO_ERROR are  options  used  only  with
+         getsockopt().   SO_TYPE returns the type of the socket, such
+         as SOCK_STREAM; it is useful for servers that inherit  sock-
+         ets  on  startup.  SO_ERROR returns any pending error on the
+         socket and clears the error status.  It may be used to check
+         for asynchronous errors on connected datagram sockets or for
+         other asynchronous errors.
+
+   RETURN VALUES
+          0 - on success.
+
+         -1 - on failure and set errno to indicate the error.
+
+   ERRORS
+         EBADF             - s is not a valid descriptor.
+
+         ENOPROTOOPT       - The option is unknown at the level indi-
+                             cated.
+
+   SEE ALSO
+         IoctlSocket(), socket()
+
+   BUGS
+         Several of the socket options should  be  handled  at  lower
+         levels of the system.
+bsdsocket.library/listen                                bsdsocket.library/listen
+
+   NAME
+         listen - listen for connections on a socket
+
+   SYNOPSIS
+         success = listen(s, backlog)
+         D0               D0 D1
+
+         long listen(long, long);
+
+   FUNCTION
+         To accept  connections,  a  socket  is  first  created  with
+         socket(),  a  backlog for incoming connections is specified
+         with listen() and then the  connections  are  accepted  with
+         accept().   The  listen()  call  applies only to socket of
+         type SOCK_STREAM.
+
+         The backlog parameter defines the maximum length  the  queue
+         of pending connections may grow to.  If a connection request
+         arrives with the queue full the client will receive an error
+         with an indication of ECONNREFUSED.
+
+   RETURN VALUES
+          0    on success.
+
+         -1    on failure and sets errno to indicate the error.
+
+   ERRORS
+         EBADF             - s is not a valid descriptor.
+
+         EOPNOTSUPP        - The socket is not of a  type  that  sup-
+                             ports listen().
+
+   SEE ALSO
+         accept(), connect(), socket()
+
+   BUGS
+         The backlog is currently limited (silently) to 5.
+bsdsocket.library/recv                                    bsdsocket.library/recv
+
+   NAME
+         recv, recvfrom, - receive a message from a socket
+
+   SYNOPSIS
+         #include <sys/types.h>
+         #include <sys/socket.h>
+
+        nbytes = recv(s, buf, len, flags)
+        D0            D0 A0   D1   D2
+
+        long recv(long, char *, long, long);
+
+        nbytes = recvfrom(s, buf, len, flags, from, fromlen)
+        D0                D0 A0   D1   D2     A1    A2
+
+        long recvfrom(long, char *, long, long,
+                         struct sockaddr *, long *);
+
+   FUNCTION
+         s is a socket created with socket().  recv() and recvfrom(),
+         are used  to  receive messages from  another socket.  recv()
+         may  be  used  only on a connected socket  (see  connect()),
+         while  recvfrom() may be used  to receive data  on a  socket
+         whether it is in a connected state or not.
+
+         If from is not a NULL pointer, the  source  address  of  the
+         message  is filled in.  fromlen is a value-result parameter,
+         initialized to the size of the buffer associated with  from,
+         and  modified  on  return to indicate the actual size of the
+         address  stored  there.   The  length  of  the  message   is
+         returned.   If  a message is too long to fit in the supplied
+         buffer, excess bytes may be discarded depending on the  type
+         of socket the message is received from (see socket()).
+
+         If no messages are available at the socket, the receive call
+         waits  for  a  message  to arrive, unless the socket is non-
+         blocking (see IoctlSocket()) in which case -1  is  returned
+         with the external variable errno set to EWOULDBLOCK.
+
+         The select() call may be used to determine when  more  data
+         arrive.
+
+         The flags parameter is formed by ORing one or  more  of  the
+         following:
+
+         MSG_OOB      - Read any "out-of-band" data  present  on  the
+                        socket,  rather  than  the  regular "in-band"
+                        data.
+
+         MSG_PEEK     - "Peek" at the data present on the socket; the
+                        data  are returned, but not consumed, so that
+                        a subsequent receive operation will  see  the
+                        same data.
+
+   RETURN VALUES
+         These calls return the number of bytes received, or -1 if an
+         error occurred.
+
+   ERRORS
+         EBADF             - s is an invalid descriptor.
+
+         EINTR             - The operation was interrupted by a break
+                             signal.
+
+         EWOULDBLOCK       - The socket is  marked  non-blocking  and
+                             the requested operation would block.
+
+   SEE ALSO
+         connect(), getsockopt(), IoctlSocket(), select(), send(),
+         SocketBaseTagList(), socket()
+bsdsocket.library/recvfrom                            bsdsocket.library/recvfrom
+
+   SEE ALSO
+         recv()
+bsdsocket.library/select                                bsdsocket.library/select
+
+   NAME
+         select -- synchronous I/O multiplexing (stub/inline function)
+         WaitSelect -- select() with Amiga Wait() function.
+
+   SYNOPSIS
+         #include <sys/types.h>
+         #include <sys/time.h>
+
+         n = select (nfds, readfds, writefds, exceptfds, timeout)
+
+         long select(long, fd_set *, fd_set *, fd_set *,
+                     struct timeval *);
+
+         n = WaitSelect (nfds, readfds, writefds, exceptfds, timeout,
+         D0              D0    A0       A1        A2         A3
+                     sigmp)
+                     D1
+
+         long WaitSelect(long, fd_set *, fd_set *, fd_set *,
+                         struct timeval *, long *);
+
+         FD_SET (fd, &fdset)
+         FD_CLR (fd, &fdset)
+         FD_ISSET (fd, &fdset)
+         FD_ZERO (&fdset)
+         long fd;
+         fd_set fdset;
+
+   DESCRIPTION
+         select() examines the socket descriptor sets whose addresses
+         are passed in readfds,  writefds,  and exceptfds  to  see if
+         some of their descriptors are ready  for reading,  ready for
+         writing,  or have an exceptional condition pending.  nfds is
+         the  number  of bits to be checked in  each  bit  mask  that
+         represent a file descriptor; the descriptors from 0  through
+         (nfds - 1) in the descriptor sets  are examined.  On return,
+         select()  replaces  the  given descriptor sets  with subsets
+         consisting of  those descriptors  that  are  ready  for  the
+         requested operation.  The total number  of ready descriptors
+         in all the sets is returned.
+
+         WaitSelect() also takes a signal mask which is waited during
+         normal select() operation. If one of these singals is recei-
+         ved,  WaitSelect() returns  and has  re-set  the signal mask
+         to return those signals that  have arrived.  Normal select()
+         return values are returned.
+
+         The descriptor sets are stored as bit fields  in  arrays  of
+         integers.   The following macros are provided for manipulat-
+         ing such descriptor sets:  FD_ZERO  (&fdset)  initializes  a
+         descriptor  set  fdset to the null set.  FD_SET(fd, &fdset )
+         includes a particular descriptor fd  in  fdset.   FD_CLR(fd,
+         &fdset)  removes  fd  from  fdset.   FD_ISSET(fd, &fdset) is
+         nonzero if fd is a member of  fdset,  zero  otherwise.   The
+         behavior  of these macros is undefined if a descriptor value
+         is less than zero or greater than or  equal  to  FD_SETSIZE,
+         which  is  normally  at least equal to the maximum number of
+         descriptors supported by the system.
+
+         If timeout is not a NULL pointer,  it  specifies  a  maximum
+         interval  to wait for the selection to complete.  If timeout
+         is a NULL  pointer,  the  select  blocks  indefinitely.   To
+         effect  a  poll,  the  timeout argument should be a non-NULL
+         pointer, pointing to a zero-valued timeval structure.
+
+         Any of readfds, writefds, and exceptfds may be given as NULL
+         pointers if no descriptors are of interest.
+
+         Selecting true for reading on a socket descriptor upon which
+         a  listen() call has been performed indicates that a subse-
+         quent accept() call on that descriptor will not block.
+
+   RETURN VALUES
+         select() returns a non-negative value on success. A positive
+         value indicates the number of ready descriptors in the
+         descriptor sets. 0 indicates that the time limit referred to
+         by timeout expired or that the operation was interrupted
+         either by a break signal or by arrival of a signal specified
+         in *sigmp. On failure, select() returns -1, sets errno to
+         indicate the error, and the descriptor sets are not changed.
+
+   ERRORS
+         EBADF        - One  of  the  descriptor  sets  specified  an
+                        invalid descriptor.
+
+         EINTR        - one of the signals in SIGINTR  mask (see Set-
+                        SocketSignals())   is  set  and  it  was  not
+                        requested in WaitSelect() call.
+
+         EINVAL       - A component of the pointed-to time  limit  is
+                        outside  the  acceptable range: t_sec must be
+                        between 0 and 10^8, inclusive. t_usec must be
+                        greater  than  or  equal  to 0, and less than
+                        10^6.
+
+   SEE ALSO
+         accept(),  connect(), getdtablesize(), listen(), recv(),
+         send(), SetDTableSize(), SetSocketSignals()
+
+   NOTES
+         Under rare  circumstances,  select()  may  indicate  that  a
+         descriptor  is  ready for writing when in fact an attempt to
+         write would block.  This  can  happen  if  system  resources
+         necessary  for  a  write are exhausted or otherwise unavail-
+         able.  If an application deems it critical that writes to  a
+         file  descriptor not block, it should set the descriptor for
+         non-blocking I/O using the FIOASYNC request to IoctlSocket().
+
+         Default   system   limit  for  open  socket  descriptors  is
+         currently  64. However,  in  order  to accommodate  programs
+         which might  potentially  use  a larger number of open files
+         with select, it is possible  to  increase this size within a
+         program  by  providing  a  larger definition  of  FD_SETSIZE
+         before    the   inclusion    of   <sys/types.h>    and   use
+         SocketBaseTags(SBTM_SETVAL(SBTC_DTABLESIZE), FD_SETSIZE);
+         call directly after OpenLibrary().
+
+   BUGS
+         select() should probably return the time remaining from  the
+         original  timeout,  if  any,  by modifying the time value in
+         place.  This may be implemented in future  versions  of  the
+         system.   Thus,  it  is  unwise  to  assume that the timeout
+         pointer will be unmodified by the select() call.
+bsdsocket.library/send                                    bsdsocket.library/send
+
+   NAME
+         send, sendto - send a message from a socket
+
+   SYNOPSIS
+         #include <sys/types.h>
+         #include <sys/socket.h>
+
+         nbytes = send(s, msg, len, flags)
+         D0            D0 A0   D1   D2
+
+         int send(int, char *, int, int);
+
+         nbytes = sendto(s, msg, len, flags, to, tolen)
+         D0              D0 A0   D1   D2     A1  D3
+
+         int send(int, char *, int, int, struct sockaddr *, int);
+
+   FUNCTION
+         s is a socket created with socket().  send() and sendto() are
+         used  to transmit a message to  another socket. send() may be
+         used  only when the socket  is  in a connected  state,  while
+         sendto() may be used at any time.
+
+         The address of the target  is given by to with tolen specify-
+         ing its size.  The length of the message is given by len.  If
+         the  message is  too  long  to  pass  atomically  through the
+         underlying protocol, then the error EMSGSIZE is returned, and
+         the message is not transmitted.
+
+         No indication of failure to deliver is implicit  in a send().
+         Return values of -1 indicate some locally detected errors.
+
+         If no buffer space is  available at the socket  to  hold  the
+         message  to  be  transmitted,  then  send() normally  blocks,
+         unless the  socket  has been placed in non-blocking I/O mode.
+         The select() call may be used to determine when  it  is  pos-
+         sible to send more data.
+
+         The flags parameter is formed  by ORing  one  or  more of the
+         following:
+
+         MSG_OOB           - Send  ``out-of-band''  data  on  sockets
+                             that  support this notion.  The underly-
+                             ing protocol must  also  support  ``out-
+                             of-band''    data.     Currently,   only
+                             SOCK_STREAM  sockets  created   in   the
+                             AF_INET  address  family support out-of-
+                             band data.
+
+         MSG_DONTROUTE     - The SO_DONTROUTE option is turned on for
+                             the  duration of the operation.  This is
+                             usually used only by diagnostic or rout-
+                             ing programs.
+
+   RETURN VALUES
+         On success, these functions return the number of bytes sent.
+         On  failure,  they  return  -1 and set errno to indicate the
+         error.
+
+   ERRORS
+         EBADF             - s is an invalid descriptor.
+
+         EINTR             - The operation was interrupted by a break
+                              signal.
+
+         EINVAL            - len is not the size of a  valid  address
+                             for the specified address family.
+
+         EMSGSIZE          - The socket requires that message be sent
+                             atomically,  and the size of the message
+                             to be sent made this impossible.
+
+         ENOBUFS           - The system was  unable  to  allocate  an
+                             internal   buffer.   The  operation  may
+                             succeed when buffers become available.
+
+         ENOBUFS           - The output queue for a network interface
+                             was full.  This generally indicates that
+                             the interface has stopped  sending,  but
+                             may be caused by transient congestion.
+
+         EWOULDBLOCK       - The socket is  marked  non-blocking  and
+                             the requested operation would block.
+
+   SEE ALSO
+         connect(), getsockopt(), recv(), select(), socket()
+bsdsocket.library/sendto                                bsdsocket.library/sendto
+
+   SEE ALSO
+         send()
+bsdsocket.library/setsockopt                        bsdsocket.library/setsockopt
+
+   SEE ALSO
+         getsockopt()
+bsdsocket.library/shutdown                            bsdsocket.library/shutdown
+
+   NAME
+         shutdown - shut down part of a full-duplex connection
+
+   SYNOPSIS
+         success = shutdown(s, how)
+         D0                 D0 D1
+
+         long shutdown(long, long);
+
+   DESCRIPTION
+         The shutdown() call causes all or part of a full-duplex con-
+         nection on the socket associated with s to be shut down.  If
+         how is 0, then further receives will be disallowed.  If  how
+         is  1,  then further sends will be disallowed.  If how is 2,
+         then further sends and receives will be disallowed.
+
+   RETURN VALUES
+          0 - on success.
+
+         -1 - on failure and sets errno to indicate the error.
+
+   ERRORS
+         EBADF        - s is not a valid descriptor.
+
+         ENOTCONN     - The specified socket is not connected.
+
+   SEE ALSO
+         connect(), socket()
+
+   BUGS
+         The how values should be defined constants.
+bsdsocket.library/socket                                bsdsocket.library/socket
+
+   NAME
+         socket - create an endpoint for communication
+
+   SYNOPSIS
+         #include <sys/types.h>
+         #include <sys/socket.h>
+
+         s = socket(domain, type, protocol)
+         D0          D0     D1    D2
+
+         long socket(long, long, long);
+
+   FUNCTION
+         socket() creates an endpoint for communication and returns a
+         descriptor.
+
+         The  domain  parameter  specifies  a  communications  domain
+         within which communication will take place; this selects the
+         protocol  family  which should be used.  The protocol family
+         generally  is  the  same  as  the  address  family  for  the
+         addresses supplied in later operations on the socket.  These
+         families  are defined  in the  include file  <sys/socket.h>.
+         The currently understood formats are
+
+                 PF_INET - (ARPA Internet protocols)
+
+         The socket has the indicated type, which specifies the
+         semantics of communication.  Currently defined types are:
+
+                 SOCK_STREAM
+                 SOCK_DGRAM
+                 SOCK_RAW
+
+         A  SOCK_STREAM type  provides  sequenced,  reliable, two-way
+         connection  based   byte  streams.    An   out-of-band  data
+         transmission  mechanism  may  be  supported.   A  SOCK_DGRAM
+         socket supports datagrams  (connectionless, unreliable  mes-
+         sages  of  a  fixed   (typically   small)  maximum  length).
+         SOCK_RAW   sockets   provide  access  to   internal  network
+         interfaces.
+
+         The protocol specifies a particular protocol to be used with
+         the socket.  Normally  only a single protocol exists to sup-
+         port a particular socket type  within a given  protocol fam-
+         ily.  However, it is possible that many protocols may exist,
+         in which case a  particular protocol  must be  specified  in
+         this manner.  The  protocol number to use  is  particular to
+         the "communication domain" in which communication is to take
+         place.
+
+         Sockets of type SOCK_STREAM  are  full-duplex byte  streams,
+         similar to pipes.   A  stream socket must be in  a connected
+         state before any data may be sent or received on it.  A con-
+         nection  to another socket is created with a connect() call.
+         Once  connected, data  may be  transferred using send()  and
+         recv()  or their variant calls.   When  a  session  has been
+         completed a CloseSocket()  may  be  performed.   Out-of-band
+         data may also  be transmitted  as  described  in  send() and
+         received as described in recv().
+
+         The communications protocols used to implement a SOCK_STREAM
+         insure that data is  not lost or  duplicated.  If a piece of
+         data for  which the peer protocol has buffer space cannot be
+         successfully transmitted within a reasonable length of time,
+         then the  connection  is  considered broken  and  calls will
+         indicate an error with -1 returns and with ETIMEDOUT  as the
+         specific error code (see Errno()).  The protocols optionally
+         keep sockets "warm" by  forcing transmissions roughly  every
+         minute in the absence of other activity.
+
+         SOCK_DGRAM  and SOCK_RAW sockets allow sending of  datagrams
+         to  correspondents  named in send()  calls.   Datagrams  are
+         generally  received  with  recv(), which  returns  the  next
+         datagram with its return address.
+
+         The operation of  sockets  is  controlled  by  socket  level
+         options.   These  options  are defined in the file socket.h.
+         getsockopt() and  setsockopt()  are  used  to  get  and  set
+         options, respectively.
+
+   RETURN VALUES
+         socket() returns a non-negative descriptor on  success.   On
+         failure, it returns -1 and sets errno to indicate the error.
+
+   ERRORS
+         EACCES          - Permission to create  a  socket  of  the
+                           specified   type   and/or   protocol  is
+                           denied.
+
+         EMFILE          - The per-process descriptor table is
+                           full.
+
+         ENOBUFS         - Insufficient buffer space is available.
+                           The socket cannot be created until suf-
+                           ficient resources are freed.
+
+         EPROTONOSUPPORT - The protocol type or the specified  pro-
+                           tocol is not supported within this
+                           domain.
+
+         EPROTOTYPE      - The protocol is the wrong type for the
+                           socket.
+
+   SEE ALSO
+         accept(), bind(), CloseSocket(), connect(), getsockname(),
+         getsockopt(), IoctlSocket(), listen(), recv(), select(),
+         send(), shutdown(), WaitSelect()
+AmiTCP/sethostname                                            AmiTCP/sethostname
+
+   NAME
+        sethostname -- set the name of the host
+
+   SYNOPSIS
+        error = sethostname(name, namelen);
+
+        int sethostname(const char *, size_t);
+
+   FUNCTION
+        Set the name of the host to the given 'name' of length 'namelen'.
+
+   INPUTS
+        name    - Pointer to the name string.
+        namelen - Length of the name.
+
+   RESULT
+        error   - 0 on success.
+
+   EXAMPLE
+
+   NOTES
+        This function is not intended to be provided to the applications,
+        this is for AmiTCP internal use only (at least for now).
+
+   BUGS
+
+   SEE ALSO
+bsdsocket.library/gethostid                          bsdsocket.library/gethostid
+
+   NAME
+        gethostid -- get an unique 32-bit id to this host
+
+   SYNOPSIS
+        id = gethostid();
+
+        ULONG gethostid(void);
+
+   FUNCTION
+        Return the 32-bit unique id for this host. The Internet
+        address if the primary interface is used as the unique id.
+        This means that this function is also a supported way to get
+        the hosts IP address in AmiTCP/IP. If no interfaces are
+        configured, zero is returned. Any non-loobpack interface with
+        is preferred. Only if no other interfaces are present, is the
+        loopback address returned.
+
+   INPUTS
+
+   RESULT
+        id  - non-zero on success.
+
+   EXAMPLE
+        ULONG id;
+
+        id = gethostid();
+        if (id == 0)
+          exit(10);
+
+        printf("My primary IP address is: %s.\n", Inet_NtoA(id));
+
+   NOTES
+        Non-zero id is returned as soon as a interface is configured.
+        After that the id will not change, not even if the id is the
+        address of the loopback interface.
+
+   BUGS
+
+   SEE ALSO
+bsdsocket.library/gethostname                      bsdsocket.library/gethostname
+
+   NAME
+        gethostname -- get the name of the host
+
+   SYNOPSIS
+        error = gethostname(name, namelen);
+
+        long gethostname(char *, long);
+
+   FUNCTION
+        Get the name of the host to the buffer name of length namelen.
+        The name is queried from the netdb and/or the name server if
+        it is not explicitly configured (configuration variable
+        HOSTNAME).
+
+   INPUTS
+        name    - Pointer to the buffer where the name should be
+                  stored.
+        namelen - Length of the buffer name.
+
+   RESULT
+        error   - 0 on success.
+
+   EXAMPLE
+        char hostname[MAXHOSTNAMELEN];
+        long error;
+
+        error = gethostname(hostname, sizeof(hostname));
+        if (error < 0)
+          exit(10);
+
+        printf("My name is \"%s\".\n", hostname);
+
+   NOTES
+
+   BUGS
+        Unlike the Unix version, this version assures that the
+        resulting string is always NULL-terminated.
+
+   SEE ALSO
+        gethostid()

@@ -1,0 +1,14 @@
+amiga_syscalls.c: In function `_socket':
+amiga_syscalls.c:86: warning: suggest parentheses around assignment used as truth value
+amiga_syscalls.c: In function `_setsockopt':
+amiga_syscalls.c:333: warning: initialization discards `volatile' from pointer target type
+amiga_syscalls.c: In function `_getsockopt':
+amiga_syscalls.c:374: warning: initialization discards `volatile' from pointer target type
+amiga_generic.c:801: warning: `/*' within comment
+amiga_generic.c:276: warning: missing braces around initializer for `select_semaphore.ss_Link'
+gethostnamadr.c:355: warning: `/*' within comment
+res_send.c:67: warning: missing braces around initializer for `no_addr.sa_data'
+res_send.c: In function `res_send':
+res_send.c:300: warning: passing arg 3 of `send' discards `const' from pointer target type
+res_send.c:315: warning: passing arg 3 of `connect' discards `const' from pointer target type
+res_send.c:320: warning: passing arg 3 of `sendto' discards `const' from pointer target type
