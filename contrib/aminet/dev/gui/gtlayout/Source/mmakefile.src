@@ -154,6 +154,8 @@ FILES = \
 LINKLIB_FILES = \
 	varargfuncs
 
+DEPS := $(DEPS) $(foreach f,$(FILES) $(LINKLIB_FILES) $(OTHERS) $(UFC_SOURCE) $(API_SOURCE),$(OBJDIR)/$(f).d)
+
 #MM- aminet-dev-gui-gtlayout : linklibs-aminet-dev-gui-gtlayout
 #MM linklibs-aminet-dev-gui-gtlayout : linklibs setup-gtlayoutlib
 
