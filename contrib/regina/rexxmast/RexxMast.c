@@ -467,7 +467,7 @@ static void QueryFunclist(struct RexxMsg *msg)
         return;
     }
     msg->rm_Node.mn_ReplyPort = replyport;
-    msg->rm_Action &= !RXFF_FUNCLIST;
+    msg->rm_Action &= ~RXFF_FUNCLIST;
     LockRexxBase(0);
     ForeachNode(&RexxSysBase->rl_LibList, rsrc)
     {
