@@ -1,0 +1,50 @@
+
+#   $Id$
+#
+#   Generate liblibinit.a
+#
+include $(TOP)/config/make.cfg
+
+#MM contrib-mesa2-samples : contrib-mesa2-common setup-mesa2-samplesfiles
+
+MESASAMPFILES = 1.rgb 2.rgb 3.rgb 4.rgb
+
+MESASAMPLES :=  accum \
+            bitmap1 \
+            bitmap2 \
+            blendeq \
+            blendxor \
+            copy \
+            cursor \
+            depth \
+            eval \
+            fog \
+            font \
+            line \
+            logo \
+            nurb \
+            overlay \
+            point \
+            prim \
+            quad \
+            select \
+            shape \
+            sphere \
+            star \
+            stencil \
+            stretch \
+            texture \
+            tri \
+            wave
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
+    
+%build_progs mmake=contrib-mesa2-samples files=$(MESASAMPLES) \
+    targetdir=$(CONTRIBDIR)/Gfx/Mesa2/Samples \
+    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+
+#MM
+setup-mesa2-samplesfiles :
+	%copy_files_q files="$(MESASAMPFILES)" src=$(CURDIR) dst=$(CONTRIBDIR)/Gfx/Mesa2/Samples
+
+%common

@@ -29,11 +29,14 @@
 /* Mesa tkAmiga by Stefan Z (d94sz@efd.lth.se)*/
 
 /*$Log$
- *Revision 1.2  2004/06/29 00:32:39  NicJA
- *A few build related fixes (remove windows line endings in make scripts - python doesnt like them).
+ *Revision 1.3  2005/01/08 02:59:10  NicJA
+ *Fixed problems causing mesa2 to not compile/the demos to have unresolved symbols.  seperated mmafile.src into seperate files for each component.  can someone please check the mmakefile.src'c in demo and samples since they dont copy the data files as expected ..
  *
- *Still doesnt link to the examples correctly - allthought the linklibs seem to compile as expected??
- *
+/*Revision 1.2  2004/06/29 00:32:39  NicJA
+/*A few build related fixes (remove windows line endings in make scripts - python doesnt like them).
+/*
+/*Still doesnt link to the examples correctly - allthought the linklibs seem to compile as expected??
+/*
 /*Revision 1.1.1.1  2003/08/09 00:23:01  chodorowski
 /*Amiga Mesa 2.2 ported to AROS by Nic Andrews. Build with 'make aros'. Not built by default.
 /*
@@ -105,7 +108,7 @@ Exposefunc
 #endif
 
 #include "gltk.h"
-#include "GL/AmigaMesa.h"
+#include "../include/GL/AmigaMesa.h"
 
 
 

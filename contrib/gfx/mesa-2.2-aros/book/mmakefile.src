@@ -1,0 +1,87 @@
+
+#   $Id$
+#
+#   Generate liblibinit.a
+#
+include $(TOP)/config/make.cfg
+
+#MM contrib-mesa2-book : contrib-mesa2-common
+
+MESABOOKSRCDIR = book
+
+MESABOOK :=  robot \
+            accanti \
+            accnot \
+            accpersp \
+            accum \
+            aim \
+            alpha \
+            alpha3D \
+            anti \
+            antiindex \
+            antipindex \
+            antipoint \
+            antipoly \
+            bezcurve \
+            bezmesh \
+            bezsurf \
+            checker \
+            checker2 \
+            chess \
+            clip \
+            colormat \
+            cone \
+            cube \
+            curve \
+            depthcue \
+            disk \
+            dof \
+            dofnot \
+            double \
+            drawf \
+            feedback \
+            fog \
+            fogindex \
+            font \
+            light \
+            linelist \
+            lines \
+            list \
+            list2 \
+            maplight \
+            material \
+            mipmap \
+            model \
+            movelight \
+            nurbs \
+            pickdepth \
+            pickline \
+            picksquare \
+            plane \
+            planet \
+            planetup \
+            polys \
+            sccolorlight \
+            scene \
+            scenebamb \
+            sceneflat \
+            select \
+            simple \
+            smooth \
+            sphere \
+            stencil \
+            stroke \
+            surface \
+            tea \
+            teaambient \
+            teapots \
+            texgen \
+            texturesurf
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
+
+%build_progs mmake=contrib-mesa2-book files=$(MESABOOK) \
+    targetdir=$(CONTRIBDIR)/Gfx/Mesa2/Book \
+    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+
+%common

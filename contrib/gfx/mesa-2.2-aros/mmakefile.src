@@ -5,33 +5,15 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-mesa2 : includes
-#MM- contrib-mesa2-common : setup-contrib-mesa2-directories includes mesa-includes linklibs-mesagl linklibs-mesaglu linklibs-mesatk linklibs-mesaaux
-#MM linklibs-mesagl : includes
-#MM linklibs-mesaglu : includes
-#MM linklibs-mesatk : includes
-#MM linklibs-mesaaux : includes
-
-#MM- contrib-mesa2-demos : contrib-mesa2-common setup-mesa2-demosfiles
-#MM- contrib-mesa2-samples : contrib-mesa2-common setup-mesa2-samplesfiles
-#MM- contrib-mesa2-book : contrib-mesa2-common
+#MM- contrib-mesa2-common : setup-contrib-mesa2-directories includes mesa-includes linklibs-mesa2glmain linklibs-mesa2glu linklibs-mesa2tk linklibs-mesa2aux
 #MM- contrib-mesa2 : contrib-mesa2-common contrib-mesa2-demos contrib-mesa2-samples contrib-mesa2-book
+
+#MM linklibs-mesa2glmain : includes
 
 AMIGASRCDIR = amiga
 MESASRCDIR = src
-MESAGLUSRCDIR = src-glu
-MESATKSRCDIR = src-tk
-MESAAUXSRCDIR = src-aux
 
-MESADEMOSRCDIR = demos
-MESASAMPSRCDIR = samples
-MESABOOKSRCDIR = book
-
-MESADEMOSFILES := isosurf.dat
-
-MESASAMPFILES := 1.rgb 2.rgb 3.rgb 4.rgb
-
-LIBMESAGL :=  $(MESASRCDIR)/accum \
+LIBMESAGLM = $(MESASRCDIR)/accum \
             $(MESASRCDIR)/alpha \
             $(MESASRCDIR)/alphabuf \
             $(MESASRCDIR)/api \
@@ -83,179 +65,14 @@ LIBMESAGL :=  $(MESASRCDIR)/accum \
             $(MESASRCDIR)/ADisp_AGA \
             $(MESASRCDIR)/AmigaMesa
 
-LIBMESAGLU :=  $(MESAGLUSRCDIR)/glu \
-            $(MESAGLUSRCDIR)/mipmap \
-            $(MESAGLUSRCDIR)/nurbs \
-            $(MESAGLUSRCDIR)/nurbscrv \
-            $(MESAGLUSRCDIR)/nurbssrf \
-            $(MESAGLUSRCDIR)/nurbsutl \
-            $(MESAGLUSRCDIR)/project \
-            $(MESAGLUSRCDIR)/quadric \
-            $(MESAGLUSRCDIR)/tess \
-            $(MESAGLUSRCDIR)/tesselat \
-            $(MESAGLUSRCDIR)/polytest
-
-LIBMESATK :=  $(MESATKSRCDIR)/Awindow \
-            $(MESATKSRCDIR)/font \
-            $(MESATKSRCDIR)/shapes \
-            $(MESATKSRCDIR)/image
-
-LIBMESAAUX :=  $(MESAAUXSRCDIR)/glaux \
-            $(MESAAUXSRCDIR)/font \
-            $(MESAAUXSRCDIR)/image \
-            $(MESAAUXSRCDIR)/shapes \
-            $(MESAAUXSRCDIR)/teapot \
-            $(MESAAUXSRCDIR)/vect3d \
-            $(MESAAUXSRCDIR)/xxform
-
-MESADEMOS :=  $(MESADEMOSRCDIR)/bounce \
-            $(MESADEMOSRCDIR)/gamma \
-            $(MESADEMOSRCDIR)/gears \
-            $(MESADEMOSRCDIR)/isosurf \
-            $(MESADEMOSRCDIR)/osdemo \
-            $(MESADEMOSRCDIR)/spin \
-            $(MESADEMOSRCDIR)/test0 \
-            $(MESADEMOSRCDIR)/texobj \
-            $(MESADEMOSRCDIR)/reflect \
-            $(MESADEMOSRCDIR)/winpos
-
-MESASAMPLES :=  $(MESASAMPSRCDIR)/accum \
-            $(MESASAMPSRCDIR)/bitmap1 \
-            $(MESASAMPSRCDIR)/bitmap2 \
-            $(MESASAMPSRCDIR)/blendeq \
-            $(MESASAMPSRCDIR)/blendxor \
-            $(MESASAMPSRCDIR)/copy \
-            $(MESASAMPSRCDIR)/cursor \
-            $(MESASAMPSRCDIR)/depth \
-            $(MESASAMPSRCDIR)/eval \
-            $(MESASAMPSRCDIR)/fog \
-            $(MESASAMPSRCDIR)/font \
-            $(MESASAMPSRCDIR)/line \
-            $(MESASAMPSRCDIR)/logo \
-            $(MESASAMPSRCDIR)/nurb \
-            $(MESASAMPSRCDIR)/overlay \
-            $(MESASAMPSRCDIR)/point \
-            $(MESASAMPSRCDIR)/prim \
-            $(MESASAMPSRCDIR)/quad \
-            $(MESASAMPSRCDIR)/select \
-            $(MESASAMPSRCDIR)/shape \
-            $(MESASAMPSRCDIR)/sphere \
-            $(MESASAMPSRCDIR)/star \
-            $(MESASAMPSRCDIR)/stencil \
-            $(MESASAMPSRCDIR)/stretch \
-            $(MESASAMPSRCDIR)/texture \
-            $(MESASAMPSRCDIR)/tri \
-            $(MESASAMPSRCDIR)/wave
-
-MESABOOK :=  $(MESABOOKSRCDIR)/robot \
-            $(MESABOOKSRCDIR)/accanti \
-            $(MESABOOKSRCDIR)/accnot \
-            $(MESABOOKSRCDIR)/accpersp \
-            $(MESABOOKSRCDIR)/accum \
-            $(MESABOOKSRCDIR)/aim \
-            $(MESABOOKSRCDIR)/alpha \
-            $(MESABOOKSRCDIR)/alpha3D \
-            $(MESABOOKSRCDIR)/anti \
-            $(MESABOOKSRCDIR)/antiindex \
-            $(MESABOOKSRCDIR)/antipindex \
-            $(MESABOOKSRCDIR)/antipoint \
-            $(MESABOOKSRCDIR)/antipoly \
-            $(MESABOOKSRCDIR)/bezcurve \
-            $(MESABOOKSRCDIR)/bezmesh \
-            $(MESABOOKSRCDIR)/bezsurf \
-            $(MESABOOKSRCDIR)/checker \
-            $(MESABOOKSRCDIR)/checker2 \
-            $(MESABOOKSRCDIR)/chess \
-            $(MESABOOKSRCDIR)/clip \
-            $(MESABOOKSRCDIR)/colormat \
-            $(MESABOOKSRCDIR)/cone \
-            $(MESABOOKSRCDIR)/cube \
-            $(MESABOOKSRCDIR)/curve \
-            $(MESABOOKSRCDIR)/depthcue \
-            $(MESABOOKSRCDIR)/disk \
-            $(MESABOOKSRCDIR)/dof \
-            $(MESABOOKSRCDIR)/dofnot \
-            $(MESABOOKSRCDIR)/double \
-            $(MESABOOKSRCDIR)/drawf \
-            $(MESABOOKSRCDIR)/feedback \
-            $(MESABOOKSRCDIR)/fog \
-            $(MESABOOKSRCDIR)/fogindex \
-            $(MESABOOKSRCDIR)/font \
-            $(MESABOOKSRCDIR)/light \
-            $(MESABOOKSRCDIR)/linelist \
-            $(MESABOOKSRCDIR)/lines \
-            $(MESABOOKSRCDIR)/list \
-            $(MESABOOKSRCDIR)/list2 \
-            $(MESABOOKSRCDIR)/maplight \
-            $(MESABOOKSRCDIR)/material \
-            $(MESABOOKSRCDIR)/mipmap \
-            $(MESABOOKSRCDIR)/model \
-            $(MESABOOKSRCDIR)/movelight \
-            $(MESABOOKSRCDIR)/nurbs \
-            $(MESABOOKSRCDIR)/pickdepth \
-            $(MESABOOKSRCDIR)/pickline \
-            $(MESABOOKSRCDIR)/picksquare \
-            $(MESABOOKSRCDIR)/plane \
-            $(MESABOOKSRCDIR)/planet \
-            $(MESABOOKSRCDIR)/planetup \
-            $(MESABOOKSRCDIR)/polys \
-            $(MESABOOKSRCDIR)/sccolorlight \
-            $(MESABOOKSRCDIR)/scene \
-            $(MESABOOKSRCDIR)/scenebamb \
-            $(MESABOOKSRCDIR)/sceneflat \
-            $(MESABOOKSRCDIR)/select \
-            $(MESABOOKSRCDIR)/simple \
-            $(MESABOOKSRCDIR)/smooth \
-            $(MESABOOKSRCDIR)/sphere \
-            $(MESABOOKSRCDIR)/stencil \
-            $(MESABOOKSRCDIR)/stroke \
-            $(MESABOOKSRCDIR)/surface \
-            $(MESABOOKSRCDIR)/tea \
-            $(MESABOOKSRCDIR)/teaambient \
-            $(MESABOOKSRCDIR)/teapots \
-            $(MESABOOKSRCDIR)/texgen \
-            $(MESABOOKSRCDIR)/texturesurf
-
-USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -I$(MESAGLUSRCDIR) -I$(MESATKSRCDIR) -I$(MESAAUXSRCDIR) -Iamiga/misc
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
 USER_CFLAGS	:= -DNO_ERRNO_H
 
-%build_linklib mmake=linklibs-mesagl libname=MesaGL
-     files=$(LIBMESAGL) objdir=$(GENDIR)/$(CURDIR)/libMesaGL
-
-%build_linklib mmake=linklibs-mesaglu libname=MesaGLU \
-    files=$(LIBMESAGLU) objdir=$(GENDIR)/$(CURDIR)/libMesaGLU
-
-%build_linklib mmake=linklibs-mesatk libname=Mesatk \
-    files=$(LIBMESATK) objdir=$(GENDIR)/$(CURDIR)/libMesatk
-
-%build_linklib mmake=linklibs-mesaaux libname=Mesaaux \
-    files=$(LIBMESAAUX) objdir=$(GENDIR)/$(CURDIR)/libMesaaux
-
-USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
-
-
-%build_progs mmake=contrib-mesa2-demos files=$(MESADEMOS) \
-    targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
-    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
-    
-%build_progs mmake=contrib-mesa2-samples files=$(MESASAMPLES) \
-    targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
-    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
-
-%build_progs mmake=contrib-mesa2-book files=$(MESABOOK) \
-    targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
-    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+%build_linklib mmake=linklibs-mesa2glmain libname=MesaGL \
+    files=$(LIBMESAGLM) objdir=$(GENDIR)/$(CURDIR)
 
 #MM
 setup-contrib-mesa2-directories :
-	%mkdirs_q $(CONTRIBDIR)/Gfx $(CONTRIBDIR)/Gfx/Mesa2 $(CONTRIBDIR)/Gfx/Mesa2/demos $(CONTRIBDIR)/Gfx/Mesa2/samples $(CONTRIBDIR)/Gfx/Mesa2/book
-
-#MM
-setup-mesa2-demosfiles :
-	%copy_files_q files="$(MESADEMOSFILES)" src=$(MESADEMOSRCDIR) dst=$(CONTRIBDIR)/Gfx/Mesa2/$(MESADEMOSRCDIR)
-
-#MM
-setup-mesa2-samplesfiles :
-	%copy_files_q files="$(MESASAMPFILES)" src=$(MESASAMPSRCDIR)/ dst=$(CONTRIBDIR)/Gfx/Mesa2/$(MESASAMPSRCDIR)
+	%mkdirs_q $(CONTRIBDIR)/Gfx $(CONTRIBDIR)/Gfx/Mesa2 $(CONTRIBDIR)/Gfx/Mesa2/Demos $(CONTRIBDIR)/Gfx/Mesa2/Samples $(CONTRIBDIR)/Gfx/Mesa2/Book
 
 %common

@@ -1,0 +1,33 @@
+
+#   $Id$
+#
+#   Generate liblibinit.a
+#
+include $(TOP)/config/make.cfg
+
+#MM contrib-mesa2-demos : contrib-mesa2-common setup-mesa2-demosfiles
+
+MESADEMOSFILES := isosurf.dat 
+
+MESADEMOS :=  bounce \
+            gamma \
+            gears \
+            isosurf \
+            osdemo \
+            spin \
+            test0 \
+            texobj \
+            reflect \
+            winpos
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
+
+%build_progs mmake=contrib-mesa2-demos files=$(MESADEMOS) \
+    targetdir=$(CONTRIBDIR)/Gfx/Mesa2/Demos \
+    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+
+#MM
+setup-mesa2-demosfiles :
+	%copy_files_q files="$(MESADEMOSFILES)" src=$(CURDIR) dst=$(CONTRIBDIR)/Gfx/Mesa2/Demos
+
+%common
