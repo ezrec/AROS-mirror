@@ -87,60 +87,80 @@ int use_picasso96 = 0;
 
 int CGX_SetupImage(_THIS, SDL_Surface *screen)
 {
-	SDL_Ximage=NULL;
+	SDL_Ximage = NULL;
 
-	if(screen->flags&SDL_HWSURFACE) {
-		ULONG pitch;
+	if(screen->flags & SDL_HWSURFACE)
+	{
+	    ULONG pitch;
+	    APTR pixels;
+	    APTR lock;
+	    
+            lock = LockBitMapTags
+	    (
+	        SDL_RastPort->BitMap,
+		LBMI_BASEADDRESS, (IPTR)&pixels,
+		LBMI_BYTESPERROW, (IPTR)&pitch,
+		TAG_DONE
+	    );
 
-		if(!screen->hwdata) {
-			if(!(screen->hwdata=malloc(sizeof(struct private_hwdata))))
-				return -1;
+            if (lock)
+	    {
+	        UnLockBitMap(lock);		
+		
+	        if (!screen->hwdata)
+	            screen->hwdata = malloc(sizeof(struct private_hwdata));
+		    
+		if (screen->hwdata)
+		{
+	            screen->hwdata->lock      = NULL;
+	            screen->hwdata->allocated = 0;
+	            screen->hwdata->mask      = NULL;
+	            screen->hwdata->bmap      = SDL_RastPort->BitMap;
+	            screen->hwdata->videodata = this;
+		
+#warning FIXME: pixels is NOT guaranteed to stay the same across
+#warning FIXME: the various LockBitMap() calls. This oughta be fixed.	    
+	            screen->pixels = pixels;    
+		    screen->pitch  = pitch;
 
-			D(bug("Creating system accel struct\n"));
+		    this->UpdateRects = CGX_FakeUpdate;
+
+		    D(bug("Accel video image configured (%lx, pitch %ld).\n", screen->pixels, screen->pitch));
+		    
+		    return 0;
 		}
-		screen->hwdata->lock=NULL;
-		screen->hwdata->allocated=0;
-		screen->hwdata->mask=NULL;
-		screen->hwdata->bmap=SDL_RastPort->BitMap;
-		screen->hwdata->videodata=this;
-
-		if(!(screen->hwdata->lock=LockBitMapTags(screen->hwdata->bmap,
-				LBMI_BASEADDRESS,(ULONG)&screen->pixels,
-				LBMI_BYTESPERROW,(ULONG)&pitch,TAG_DONE))) {
-			free(screen->hwdata);
-			screen->hwdata=NULL;
-			return -1;
-		}
-		else {
-			UnLockBitMap(screen->hwdata->lock);
-			screen->hwdata->lock=NULL;
-		}
-
-		screen->pitch=pitch;
-
-		this->UpdateRects = CGX_FakeUpdate;
-
-		D(bug("Accel video image configured (%lx, pitch %ld).\n",screen->pixels,screen->pitch));
-		return 0;
+  	        
+		D(bug("Creating system accel struct FAILED.\n"));
+	    }
+	    
+	    D(bug("HW surface not available, falling back to SW surface.\n"));
+	    
+	    screen->flags &= ~SDL_HWSURFACE;
 	}
 
+	screen->hwdata=NULL;
+
+        D(bug("h = %d, pitch = %d\n", screen->h, screen->pitch));
+	
 	screen->pixels = malloc(screen->h*screen->pitch);
 
-	if ( screen->pixels == NULL ) {
+	if ( screen->pixels == NULL )
+	{
 		SDL_OutOfMemory();
-		return(-1);
+		return -1;
 	}
 
-	SDL_Ximage=screen->pixels;
+	SDL_Ximage = screen->pixels;
 
-	if ( SDL_Ximage == NULL ) {
+	if ( SDL_Ximage == NULL )
+	{
 		SDL_SetError("Couldn't create XImage");
-		return(-1);
+		return -1;
 	}
 
 	this->UpdateRects = CGX_NormalUpdate;
 
-	return(0);
+	return 0;
 }
 
 void CGX_DestroyImage(_THIS, SDL_Surface *screen)
