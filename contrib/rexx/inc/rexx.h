@@ -1,6 +1,9 @@
 /*
  * $Header$
  * $Log$
+ * Revision 1.2  2001/08/27 18:05:53  falemagn
+ * removed ## from the definition of VERSION because it's unneeded and would make gcc-3.0 fail the compilation
+ *
  * Revision 1.1  2001/04/04 05:43:37  wang
  * First commit: compiles on Linux, Amiga, Windows, Windows CE, generic gcc
  *
@@ -51,7 +54,7 @@
 #endif
 
 /* ------------ some defines ------------------ */
-#define	VERSION		"ARexx V0.5.0 " ## __DATE__
+#define	VERSION		"ARexx V0.5.0 " __DATE__
 #define	AUTHOR		"Mario Cassani, from BRexx 2.0.3 by Vassilis N. Vlachoudis"
 #define REGAPPKEY	TEXT("Software\\Marmita\\BRexx")
 #define	SCIENTIFIC	0
