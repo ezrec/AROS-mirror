@@ -1,0 +1,7 @@
+inifile.library (libini.so)
+
+This is an implementation of libini (ini file parsing) as an AROS shared library.
+
+It is designed to allow applications access (reading/creating/modifying) to microshaft style ini files.
+
+nicja

@@ -1,0 +1,57 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+INILBFILES := \
+    _iniDump \
+    _iniObjectRead \
+    _iniPropertyRead \
+    _iniScanUntilObject
+
+FUNCS := \
+    iniAllTrim \
+    iniAppend \
+    iniClose \
+    iniCommit \
+    iniCursor \
+    iniDelete \
+    iniElement \
+    iniElementCount \
+    iniGetBookmark \
+    iniGotoBookmark \
+    iniObject \
+    iniObjectDelete \
+    iniObjectEOL \
+    iniObjectFirst \
+    iniObjectInsert \
+    iniObjectLast \
+    iniObjectNext \
+    iniObjectSeek \
+    iniObjectSeekSure \
+    iniObjectUpdate \
+    iniOpen \
+    iniProperty \
+    iniPropertyDelete \
+    iniPropertyEOL \
+    iniPropertyFirst \
+    iniPropertyInsert \
+    iniPropertyLast \
+    iniPropertyNext \
+    iniPropertySeek \
+    iniPropertySeekSure \
+    iniPropertyUpdate \
+    iniPropertyValue \
+    iniToUpper \
+    iniValue
+
+#MM libs-libini-includes : \
+#MM     includes-copy
+#MM- libs-libini-module : linklibs
+
+USER_CFLAGS := -I./ -I./include
+
+%build_module mmake=libs-libini-module modname=inifile \
+    modtype=library files="inifile_init $(INILBFILES) $(FUNCS)" \
+    uselibs="amiga arosc rom m"
+ 
+%common
