@@ -48,8 +48,10 @@
 
 #define ABT_TEXT            ISEQ_C "--=<( " ISEQ_B "AROS" ISEQ_N " )>=--\n\n" \
                             ISEQ_C "the Amiga Research OS\n\n"   \
-                            ISEQ_C "Copyright © 1995-2000 the AROS Development Team.\n" \
-                            ISEQ_C "All Rights Reserved. Read the license for more information."
+                            ISEQ_C "Copyright © 1995-2000 the AROS Development Team.\n"
+#define ABT_TEXT2A          ISEQ_C "All Rights Reserved. Read the"
+#define ABT_TEXT2B          "license"
+#define ABT_TEXT2C          "for more information."
 
 #define ABT_DEV_LABEL       "The following people have contributed in the making of " ISEQ_B "AROS" ISEQ_N ":"
 

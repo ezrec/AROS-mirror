@@ -5,16 +5,20 @@
 /*** Prototypes *************************************************************/
 
 void AboutTask( void );
+void ReadCredits( void );
+STRPTR readFile( STRPTR filename, LONG *size );
 
 /*** Global variables *******************************************************/
 
+char *credits[];
+char *buffer;
 
 /*** Local variables ********************************************************/
 
-const enum
-{
+const enum {
     ID_OK,
-    ID_TABS
+    ID_TABS,
+    ID_LICENSE
 };
 
 /*** Public functions *******************************************************/
@@ -61,7 +65,30 @@ void AboutTask( void ) {
                                             INFO_FixTextWidth, TRUE,
                                             INFO_MinLines,        4,
                                             FRM_Type,             FRTYPE_NONE,
-                                        EndObject,
+                                        EndObject, FixMinHeight,
+                                    EndMember,
+                                    StartMember,
+                                        HGroupObject, Spacing( 0 ), VOffset( 0 ), HOffset( 0 ),
+                                            StartMember,
+                                                InfoObject,
+                                                    INFO_TextFormat,   getString( ABT_TEXT2A ),
+                                                    INFO_FixTextWidth, TRUE,
+                                                    INFO_MinLines,        1,
+                                                    FRM_Type,            FRTYPE_NONE,
+                                                EndObject,
+                                            EndMember,
+                                            StartMember,
+                                                PrefButton( getString( ABT_TEXT2B ), ID_LICENSE ), FixMinWidth,
+                                            EndMember,
+                                            StartMember,
+                                                InfoObject,
+                                                    INFO_TextFormat, getString( ABT_TEXT2C ),
+                                                    INFO_FixTextWidth, TRUE,
+                                                    INFO_MinLines, 1,
+                                                    FRM_Type, FRTYPE_NONE,
+                                                EndObject,
+                                            EndMember,
+                                        EndObject, FixMinHeight,
                                     EndMember,
                                 EndObject,
 
@@ -110,6 +137,11 @@ void AboutTask( void ) {
                         case ID_OK:
                             running = FALSE;
                             break;
+
+                        case ID_LICENSE:
+                            /* TODO: Use OpenWorkbenchObjectA() instead, when its fully implemented. */
+                            Execute( "Run >NIL: SYS:Utilities/More HELP:License", Input(), Output() );
+                            break;
                     }
                 }
             } while( running );
@@ -117,4 +149,41 @@ void AboutTask( void ) {
 
         DisposeObject( WO_About );
     }
+}
+
+void ReadCredits( void ) {
+    STRPTR buffer;
+    LONG   size;
+
+    if( (buffer = readFile( "HELP:Credits", &size )) ) {
+
+    }
+}
+
+
+STRPTR readFile( STRPTR filename, LONG *size ) {
+    struct FileInfoBlock fib;
+    BPTR                 file;
+    STRPTR               buffer;
+    LONG                 bytesRead;
+
+    if( !(file = Open( filename, MODE_OLDFILE )) ) return NULL;
+
+    if( ExamineFH( file, &fib ) ) {
+        *size = fib.fib_Size + 1;
+
+        if( (buffer = AllocVec( *size, MEMF_ANY )) ) {
+            bytesRead = Read( file, buffer, *size );
+
+            if( bytesRead != (*size - 1) ) {
+                FreeVec( buffer );
+                buffer = NULL;
+                *size  = 0;
+            }
+        }
+    }
+
+    Close( file );
+
+    return buffer;
 }
