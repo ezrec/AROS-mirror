@@ -13,9 +13,9 @@ $(SRCDIR)/core/ipv4/icmp $(SRCDIR)/core/ipv4/ip\
 $(SRCDIR)/core/ipv4/ip_addr $(SRCDIR)/core/ipv4/ip_frag
 
 
-ARCHOBJS = sys_arch lib_arch netif/sio netif/tcpdump
+ARCHOBJS = sys_arch lib_arch netif/sio netif/tcpdump netif/tapif
 
-NETIFOBJS = $(SRCDIR)/netif/loopif $(SRCDIR)/netif/slipif
+NETIFOBJS = $(SRCDIR)/netif/loopif $(SRCDIR)/netif/slipif $(SRCDIR)/netif/etharp
 
 APIOBJS = $(SRCDIR)/api/api_lib $(SRCDIR)/api/api_msg\
 $(SRCDIR)/api/err $(SRCDIR)/api/sockets $(SRCDIR)/api/tcpip\
