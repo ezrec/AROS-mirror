@@ -3,37 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/gnu/diffutils
-
 #MM- contrib-gnu : contrib-gnu-diffutils
 
-#MM contrib-gnu-diffutils : linklibs
-contrib-gnu-diffutils : contrib-gnu-diffutils-build
-
-#MM contrib-gnu-diffutils-quick
-contrib-gnu-diffutils-quick : contrib-gnu-diffutils-build
-
-
-contrib-gnu-diffutils-build: .files-touched $(GENDIR)/$(CURDIR)/.configured
-	@$(MAKE) -C $(GENDIR)/$(CURDIR)
-	@$(MAKE) -C $(GENDIR)/$(CURDIR) install
-
-.files-touched:
-	@find . | xargs $(TOUCH) -r configure 
-	@$(ECHO) YES > $@
-
-$(GENDIR)/$(CURDIR)/.configured : mmakefile
-	%mkdirs_q $(GENDIR)/$(CURDIR)
-	@cd $(GENDIR)/$(CURDIR);                                          \
-	    $(RM) config.cache;                                           \
-	    CC=$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros-gcc \
-	    $(TOP)/$(CURDIR)/configure --prefix=$(EXEDIR)                 \
-	    --host=$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros
-	@$(ECHO) YES > $@
-
-#MM contrib-gnu-diffutils-clean :
-contrib-gnu-diffutils-clean :
-	@if [ -e $(GENDIR)/$(CURDIR)/Makefile ]; then \
-	    $(MAKE) -C $(GENDIR)/$(CURDIR) uninstall; \
-        fi
-	@$(RM) $(GENDIR)/$(CURDIR)
+	
+%build_with_configure mmake=contrib-gnu-diffutils nix=yes prefix=$(CONTRIBDIR)/gnu
