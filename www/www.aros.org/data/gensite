@@ -245,7 +245,7 @@ def genLinks ():
 import xml2html
 
 def genXmlPage (filename, linkBoxItem):
-    xml2html.XmlPage (os.path.join (datadir, filename + '.xml'),
+    xml2html.XmlPage (os.path.join (arosdir, 'docs', 'src', filename + '.xml'),
 	linkBoxItem=linkBoxItem,
     ).write (filename + '.html')
 
@@ -254,11 +254,14 @@ genDocumentation ()
 
 genXmlPage ('background', 'Background')
 genXmlPage ('cvs', 'CVS')
+
+import faq2html
+faq2html.gen (arosRC, 'FAQ', os.path.join (arosdir, 'docs', 'faq')).write ('faq.html')
+
 genXmlPage ('mmake', 'MetaMake')
 genXmlPage ('hidd-intro', 'HIDD Intro')
 genXmlPage ('hidd-model', 'HIDD Model')
 genXmlPage ('ideas', 'Random Ideas')
-genXmlPage ('faq', 'FAQ')
 genXmlPage ('filesys', 'Filesystems')
 
 import contents2html
