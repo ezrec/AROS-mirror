@@ -1,0 +1,188 @@
+KEYBOARD INPUT MADE EASY
+© Copyright 1990 Timm Martin
+
+
+INTRODUCTION
+
+This archive contains a few functions which should make reading input from
+the keyboard a snap.  Included are 6 files:
+
+   README ...... what you are reading now
+   console.c ... functions to open and close the console device
+   input.c ..... a function to read keyboard input
+   input.h ..... header file for programs using these functions
+   test.c ...... test program showing you how to use these functions
+   test ........ executable form of the test program
+
+At the heart of this keyboard processor is an input function which "cooks"
+Intuition RAWKEY messages, returning a 16-bit number packed with all necessary
+key information.  This number contains not only the value of the key pressed,
+but also any qualifiers (such as the SHIFT key, ALT key, Amiga key, or CONTROL
+key).  The function will return all key presses including command keys
+(function keys, arrow keys, HELP, DELETE, BACKSPACE, RETURN, ESCAPE, and
+RETURN) and international dead keys (such as e-accent-grave received when you
+press ALT-g then e).
+
+
+LEGAL JUNK
+
+Some of the source is copyrighted, but all of it may be used freely as long
+as the copyright notice remains intact.  You may use any of this source
+inside executable programs without acknowledgement of or compensation to the
+author (me!).
+
+All of the source was written to conform to ANSI C standards and compiles
+cleanly using Manx C v5.0b (and compiler options -pas -wadpru).
+
+
+GETTING STARTED...QUICKLY!
+
+--  Place the input.h header file in the current directory and add the
+    following line to the beginning of your source file:
+
+        #include "input.h"
+
+--  In your program startup function, call the console_open() function,
+    checking its return value.  If FALSE, you should end the program.
+
+--  In your program cleanup function, call the console_close() function.
+
+--  Be sure to set the RAWKEY flag in the IDCMPFlags member of your NewWindow
+    structure.
+
+--  Inside your window input loop, check for a RAWKEY message class.  If
+    received, call the input_key() function, passing it a pointer to the
+    IntuiMessage.  If this function returns a non-zero value, then a key
+    has been pressed and you can process it.  For example:
+
+        struct Window *window;
+        struct IntuiMessage *imessage;
+        USHORT key;
+
+        while (imessage = (struct IntuiMessage *)GetMsg( window->UserPort ))
+        {
+          switch (imessage->Class == RAWKEY)
+          {
+            case RAWKEY:
+              if (key = input_key( imessage ))
+                /* key was pressed -- do something with it */
+            case CLOSEWINDOW:
+              etc...
+          }
+        }
+
+--  When processing a key, you first need find out whether the key was a
+    command key (such as F1, HELP, RETURN, UP-ARROW, etc.) or an ASCII
+    character (such as 'A', '3', 'k', etc.).  You can do this with the
+    KEY_COMMAND() macro (defined in input.h).  For example:
+
+        if (KEY_COMMAND( key ))
+          /* is a command key */
+        else
+          /* is an ASCII character */
+
+    Then you need to find out which key was pressed.  You can do this with
+    the KEY_VALUE() macro:
+
+        char c;
+        c = KEY_VALUE( key );
+
+    If this is a command key, then the key value will be a number between 1
+    and 20 as defined in input.h, such as COMMAND_F1, COMMAND_HELP,
+    COMMAND_UP_ARROW, etc.
+
+    If this is an ASCII character, however, then the key value will just be
+    the value of the character itself, such as decimal 65 if the 'A' key was
+    pressed.
+
+--  If you need to know if a qualifier was pressed with the key, you can use
+    the qualifier definitions in input.h.  For example:
+
+        if (key & QUAL_CONTROL)  /* was the control key pressed? */
+        if (key & QUAL_LSHIFT)   /* was the left shift key pressed? */
+        if (key & QUAL_SHIFT)    /* was either shift key pressed? */
+        etc...
+
+--  Compile the console.c and input.c source files.  Be sure to link these
+    files with your main program, for example (with the test.c program and
+    Manx C):
+
+        ln test console input -lc
+
+
+TECHNICAL DETAILS
+
+To convert Intuition RAWKEY messages into ASCII characters, the input_key()
+function uses the Amiga RawKeyConvert() function.  This function is not
+located in any ROM library, but rather, is a vector attached to the console
+device.  This means that you need to open console.device to use it.
+
+The source file console.c was provided for your convenience.  It includes the
+console_open() function (which opens the console device, returning TRUE or
+FALSE whether successful) and the console_close() function (which closes the
+console device).
+
+Each time you receive an Intuition RAWKEY message, you should call the
+input_key() function, sending it a pointer to the IntuiMessage.  Note that
+you may receive more than one RAWKEY message per key returned by input_key().
+Intuition sends a RAWKEY message each time a key is pressed OR released, and
+whenever a qualifier key is pressed or released.  The input_key() function
+filters out all extraneous messages and returns a non-zero value only when
+there's a key to be dealt with.
+
+The input_key() function returns a unsigned short (16-bit) integer.  The
+information is laid out as follows:
+
+    <-- MOST SIGNIFICANT BYTE --->  <-- LEAST SIGNIFICANT BYTE -->
+    15  14  13  12  11  10  09  08  07  06  05  04  03  02  01  00  <--BITS
+    RG  LG  RA  LA  CT  RS  LS  CO  <-------- key value --------->
+
+where if the bits are set (==1) indicate:
+
+    BIT  MEANING
+    ---  -----------------------------------
+    15   right AMIGA key was pressed
+    14   left AMIGA key was pressed
+    13   right ALT key was pressed
+    12   left ALT key was pressed
+    11   CONTROL key was pressed
+    10   right SHIFT key was pressed
+    09   left SHIFT key was pressed
+    08   one of the command keys was pressed
+
+The least significant byte (represented by bits 0 through 7) holds the value
+of the key pressed.  If a command key was pressed, bit 08 will be set and the
+key value in bits 0 through 7 will contain a number between 1 and 20 as
+defined in input.h:
+
+    VALUE  #define              CORRESPONDING COMMAND KEY
+    -----  -------------------  -------------------------
+     1     COMMAND_F1           F1 key
+     2     COMMAND_F2           F2 key
+     3     COMMAND_F3           F3 key
+     4     COMMAND_F4           F4 key
+     5     COMMAND_F5           F5 key
+     6     COMMAND_F6           F6 key
+     7     COMMAND_F7           F7 key
+     8     COMMAND_F8           F8 key
+     9     COMMAND_F9           F9 key
+    10     COMMAND_F10          F10 key
+    11     COMMAND_TAB          TAB key
+    12     COMMAND_DELETE       DELETE key
+    13     COMMAND_ESCAPE       ESCAPE key
+    14     COMMAND_BACKSPACE    BACKSPACE key
+    15     COMMAND_HELP         HELP key
+    16     COMMAND_RETURN       RETURN key
+    17     COMMAND_UP_ARROW     UP_ARROW key
+    18     COMMAND_DOWN_ARROW   DOWN_ARROW key
+    19     COMMAND_LEFT_ARROW   LEFT_ARROW key
+    20     COMMAND_RIGHT_ARROW  RIGHT_ARROW key
+
+If a character key was pressed, then bit 08 will be cleared and bits 0
+through 7 will represent the ASCII value of the character.
+
+For more information on how this 16-bit integer is created, see the input.c
+source file.
+
+
+/*--- END OF TEXT ---*/
