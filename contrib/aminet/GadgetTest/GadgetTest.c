@@ -42,7 +42,9 @@
 
 #include <aros/oldprograms.h>
 #include <proto/gadtools.h>
+#include <clib/alib_protos.h>
 #include <exec/memory.h>
+#include <stdio.h>
 #define Printf printf
 
 // DEFINITIONS
@@ -172,9 +174,9 @@
 
     struct NewMenu Test_NewMenu[] =
     {  // this is the menuitem
-        NM_TITLE, (STRPTR)"Project", NULL, 0, 0L, NULL,
-        NM_ITEM, (STRPTR)"Quit", (STRPTR)"Q", 0, 0L, NULL,
-        NM_END, NULL, NULL, 0, 0L, NULL
+        { NM_TITLE, (STRPTR)"Project", NULL, 0, 0L, NULL },
+        { NM_ITEM, (STRPTR)"Quit", (STRPTR)"Q", 0, 0L, NULL },
+        { NM_END, NULL, NULL, 0, 0L, NULL }
     };
 
     UWORD Test_GTypes[] =
@@ -194,17 +196,17 @@
 
     struct NewGadget Test_NGad[] =
     { // structures for allocating gadgets
-        91, 73, 202, 13, (UBYTE *)"BUTTON", NULL, GD_Button_Gadget, PLACETEXT_IN ,NULL, NULL,
-        91, 108, 26, 11, (UBYTE *)"CHECKBOX:", NULL, GD_CheckBox_Gadget, PLACETEXT_LEFT ,NULL, NULL,
-        379, 125, 177, 13, (UBYTE *)"INTEGER.:", NULL, GD_Integer_Gadget, PLACETEXT_LEFT ,NULL, NULL,
-        91, 4, 202, 72, (UBYTE *)"LISTVIEW:", NULL, GD_ListView_Gadget, PLACETEXT_LEFT ,NULL, NULL,
-        273, 111, 17, 9, NULL, NULL, GD_MX_Gadget, PLACETEXT_LEFT ,NULL, NULL,
-        91, 91, 202, 13, (UBYTE *)"CYCLE...:", NULL, GD_Cycle_Gadget, PLACETEXT_LEFT ,NULL, NULL,
-        379, 4, 180, 65, (UBYTE *)"PALETTE.:", NULL, GD_Palette_Gadget, PLACETEXT_LEFT ,NULL, NULL,
-        379, 73, 178, 13, (UBYTE *)"SCROLLER:", NULL, GD_Scroller_Gadget, PLACETEXT_LEFT ,NULL, NULL,
-        379, 91, 177, 13, (UBYTE *)"SLIDER..:", NULL, GD_Slider_Gadget, PLACETEXT_LEFT ,NULL, NULL,
-        379, 108, 177, 13, (UBYTE *)"STRING..:", NULL, GD_String_Gadget, PLACETEXT_LEFT ,NULL, NULL,
-        93, 141, 459, 13, (UBYTE *)"TEXT....:", NULL, GD_Text_Gadget, PLACETEXT_LEFT ,NULL, NULL
+        { 91, 73, 202, 13, (UBYTE *)"BUTTON", NULL, GD_Button_Gadget, PLACETEXT_IN ,NULL, NULL },
+        { 91, 108, 26, 11, (UBYTE *)"CHECKBOX:", NULL, GD_CheckBox_Gadget, PLACETEXT_LEFT ,NULL, NULL },
+        { 379, 125, 177, 13, (UBYTE *)"INTEGER.:", NULL, GD_Integer_Gadget, PLACETEXT_LEFT ,NULL, NULL },
+        { 91, 4, 202, 72, (UBYTE *)"LISTVIEW:", NULL, GD_ListView_Gadget, PLACETEXT_LEFT ,NULL, NULL },
+        { 273, 111, 17, 9, NULL, NULL, GD_MX_Gadget, PLACETEXT_LEFT ,NULL, NULL },
+        { 91, 91, 202, 13, (UBYTE *)"CYCLE...:", NULL, GD_Cycle_Gadget, PLACETEXT_LEFT ,NULL, NULL },
+        { 379, 4, 180, 65, (UBYTE *)"PALETTE.:", NULL, GD_Palette_Gadget, PLACETEXT_LEFT ,NULL, NULL },
+        { 379, 73, 178, 13, (UBYTE *)"SCROLLER:", NULL, GD_Scroller_Gadget, PLACETEXT_LEFT ,NULL, NULL },
+        { 379, 91, 177, 13, (UBYTE *)"SLIDER..:", NULL, GD_Slider_Gadget, PLACETEXT_LEFT ,NULL, NULL },
+        { 379, 108, 177, 13, (UBYTE *)"STRING..:", NULL, GD_String_Gadget, PLACETEXT_LEFT ,NULL, NULL },
+        { 93, 141, 459, 13, (UBYTE *)"TEXT....:", NULL, GD_Text_Gadget, PLACETEXT_LEFT ,NULL, NULL }
     };
 
     ULONG *Test_GTags[] =
@@ -478,7 +480,7 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
         }
 
         Forbid();
-        while (nd=RemHead(&LV_List));
+        while ((nd=RemHead(&LV_List)));
         Permit();
         FreeRemember(&RememberKey,TRUE);
     }
@@ -597,13 +599,14 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
         struct Gadget *SelGadget;     // the selected gadget
         BOOL ENDTEST=FALSE;           // end indicator
         BOOL CHECKGADGET=TRUE;        // whether the checkbox is checked or not
+        char *res=NULL;
 
         // main loop
 
         while (!(ENDTEST))
         {
             WaitPort(Test_Wnd->UserPort);
-            while (Msg=GT_GetIMsg(Test_Wnd->UserPort))
+            while ((Msg=GT_GetIMsg(Test_Wnd->UserPort)))
             { // as long as we got any message
               // copy all informations and then reply the message
 
@@ -612,7 +615,7 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
                 if ((Class == IDCMP_GADGETUP) || (Class == IDCMP_GADGETDOWN))
                 { // enforcer is watching you !
 
-                    if (SelGadget=(struct Gadget *)Msg->IAddress)
+                    if ((SelGadget=(struct Gadget *)Msg->IAddress))
                         SelGadgetID =   SelGadget->GadgetID;
                 }
                 GT_ReplyIMsg(Msg);
@@ -626,9 +629,9 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
                         break;
                     case IDCMP_GADGETUP:
                     case IDCMP_GADGETDOWN:
+                        res=NULL;
                         switch (SelGadgetID)
                         {
-                            char *res=NULL;
 
                             case GD_Button_Gadget  :
                                 PutStr("You clicked the button gadget\n");
@@ -637,20 +640,20 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
                                 if (CHECKGADGET) CHECKGADGET=FALSE;
                                 else CHECKGADGET=TRUE;
                                 Printf("You clicked the CheckBox gadget state: %s\n",
-                                CHECKGADGET ? (LONG)"Checked" : (LONG)"NOT CHECKED");
+                                CHECKGADGET ? "Checked" : "NOT CHECKED");
                                 break;
                             case GD_Integer_Gadget :
                                 res=((struct StringInfo *)SelGadget->SpecialInfo)->Buffer;
-                                if (res) Printf("You insert >%s< in the Integer gadget\n",(LONG)res);
+                                if (res) Printf("You insert >%s< in the Integer gadget\n",res);
                                 break;
                             case GD_ListView_Gadget:
-                                Printf("You clicked the ListView gadget entry: %s\n",(LONG)ListView_Gadget0Labels[Code]);
+                                Printf("You clicked the ListView gadget entry: %s\n",ListView_Gadget0Labels[Code]);
                                 break;
                             case GD_MX_Gadget      :
-                                Printf("You clicked the MX gadget active: %s\n",(LONG)MX_Gadget0Labels[Code]);
+                                Printf("You clicked the MX gadget active: %s\n",MX_Gadget0Labels[Code]);
                                 break;
                             case GD_Cycle_Gadget   :
-                                Printf("You clicked the Cycle gadget selected: %s\n",(LONG)Cycle_Gadget0Labels[Code]);
+                                Printf("You clicked the Cycle gadget selected: %s\n",Cycle_Gadget0Labels[Code]);
                                 break;
                             case GD_Palette_Gadget :
                                 Printf("You clicked the Palette gadget colour: %ld\n",Code);
@@ -663,7 +666,7 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
                                 break;
                             case GD_String_Gadget  :
                                 res=((struct StringInfo *)SelGadget->SpecialInfo)->Buffer;
-                                if (res) Printf("You insert >%s< in the String gadget\n",(LONG)res);
+                                if (res) Printf("You insert >%s< in the String gadget\n",res);
                                 break;
                             default:
                                 // never see this
@@ -689,7 +692,7 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
         Forbid();
 
         // first clear out all messages
-        while (Msg=GT_GetIMsg(Test_Wnd->UserPort)) GT_ReplyIMsg(Msg);
+        while ((Msg=GT_GetIMsg(Test_Wnd->UserPort))) GT_ReplyIMsg(Msg);
 
         // no more messages will be received
         ModifyIDCMP(Test_Wnd,0L);
