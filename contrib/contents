@@ -2,6 +2,8 @@ Games/ - A collection of games for AROS.
 
 Moria3D/ - A Virtual 3D Game with free 3D turning and moving.
 
-Installer/ - Implementation of Commodore's Installer
+Installer/ - Implementation of Commodore's Installer.
 
-fish/ A collection of sourcecodes from fish-disks.
+fish/ - A collection of sourcecodes from fish-disks.
+
+aminet/ - A collection of sourcecodes from AmiNet.
