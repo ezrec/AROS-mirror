@@ -107,18 +107,22 @@ AROS_LH2(struct ACDRBase *, init,
 			stack = AllocMem(AROS_STACKSIZE, MEMF_PUBLIC);
 			if (stack != NULL)
 			{
+			    	struct TagItem tags[] =
+				{
+				    {TASKTAG_ARG1, (IPTR)acdrbase},
+				    {TAG_DONE	    	    	 }
+				};
+				
 				task->tc_SPLower = stack;
 				task->tc_SPUpper = (BYTE *)stack+AROS_STACKSIZE;
-#if AROS_STACK_GROWS_DOWNWARDS
-				task->tc_SPReg = (BYTE *)task->tc_SPUpper-SP_OFFSET-sizeof(APTR);
-				((APTR *)task->tc_SPUpper)[-1] = acdrbase;
-#else
-				task->tc_SPReg = (BYTE *)task->tc_SPLower-SP_OFFSET+sizeof(APTR);
-				*(APTR *)task->tc_SPLower = acdrbase;
-#endif
+    	    	    	    #if AROS_STACK_GROWS_DOWNWARDS
+				task->tc_SPReg = (BYTE *)task->tc_SPUpper-SP_OFFSET;
+   	    	    	    #else
+				task->tc_SPReg = (BYTE *)task->tc_SPLower+SP_OFFSET;
+    	    	    	    #endif
 				NEWLIST(&acdrbase->process_list);
 				acdrbase->GetData=ACDR_GetData;
-				if (AddTask(task,ACDR_work,NULL) != NULL)
+				if (NewAddTask(task,ACDR_work,NULL,tags) != NULL)
 					return acdrbase;
 				FreeMem(stack, AROS_STACKSIZE);
 			}
