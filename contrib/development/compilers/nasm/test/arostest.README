@@ -1,0 +1,19 @@
+The simple test program 'arostest.s' may be assembled using the command line:
+  nasm -f elf arostest.s
+
+  this will produce an object file, arostest.o
+
+  This object file may be linked with the 'ld' linker using the following command line:
+  ld -r -o arostest arostest.o
+
+  and this will produce the file 'arostest' which is an executable file and may be run.
+
+  The operation of the test program is
+    create a console window from a description string,
+    output a text message,
+    input upto 80 characters of text,
+    and close when an enter is pressed.
+
+
+24/02/2002
+DGS
