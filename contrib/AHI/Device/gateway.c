@@ -260,7 +260,9 @@ m68k_IndexToFrequency( struct Gadget *gad, WORD level )
 AROS_UFH0( void,
 	   m68k_DevProc )
 {
+  AROS_USERFUNC_INIT
   DevProc();
+  AROS_USERFUNC_EXIT
 }
 
 
