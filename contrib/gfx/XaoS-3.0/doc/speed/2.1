@@ -1,0 +1,137 @@
+Statistic of 320x200 autopilot run
+
+Statistics: frames 9337
+mkrealloctable: added 22167, symetry 613
+calculate loop: tocalculate 5241302 avoided 3186884 mirrored 0
+calculate:calculated 2054418 inside 300456
+
+This means:
+Aprox number of calculated pixels for every frame:220 (0.34%)
+14% (1/6) of calculated pixels lies inside set
+Aprox number of new lines/columns for every frame:2.37
+Optimizations:
+Aproximation :  99.49% of calculations
+Symetry saved:  02.76% of remaining
+Solid guessing: 60.80% of remaining
+mirroring2:     0%     (no efective from mset. Slows down when active. Will be disabled)
+
+Statistic of 640x480 autopilot run
+
+Statistics: frames 2433
+mkrealloctable: added 47405, symetry 1173
+calculate loop: tocalculate 24968722 avoided 16780447 mirrored 0
+calculate:calculated 8188275 inside 1122047
+
+This means:
+Aprox number of calculated pixels for every frame:3364 (01.09%)
+13% (1/6) of calculated pixels lies inside set
+Aprox number of new lines/columns for every frame:19.48
+Optimizations:
+Aproximation :  98.46% of calculations  (framerate is lower, step bigger..
+                                         so this is normal)
+Symetry saved:  02.47% of remaining
+Solid guessing: 67.20% of remaining
+mirroring2:     0%     (no efective from mset)
+
+This shows that XaoS's optimization seems to perform well on most cases.
+Solid guessing also perform as well as normally boundary detection (during
+tests I did in xmand..)
+Number of calculated points inside set seems to be low(1/6)
+so I did following test:
+
+Number of calculations spent inside/outside:
+inside: 165858075
+outside:46113860
+3.5 times more inside than outside
+
+This shows that some detection of points inside set will be helpfull..
+It shoud slow down loop more than 2 times in case it will be sucessfull..
+
+
+320x200 autopilot run profiles:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 51.58    261.31   261.31  5084736     0.05     0.05  mand_calc	 
+            calculation loop still takes most of time
+ 39.96    463.79   202.48    45338     4.47     4.47  mkrealloc_table
+            This function is not big problem since it takes too
+	    much time just when called too often(framerate is high)
+  3.87    483.42    19.63    22669     0.87    12.40  calculatenew
+            Solid guesing if prety fast
+  1.15    489.24     5.82    22669     0.26     0.26  moveoldpoints
+            All this functions are not interesting for optimizing
+  1.14    495.01     5.77    22669     0.25    21.87  do_fractal
+  1.13    500.75     5.74    11018     0.52     0.52  do_autopilot
+  <SNIP>
+
+Tests how much spent by calling mand_calc function....
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  us/call  us/call  name    
+ 72.22      2.34     2.34                             mcount
+ 18.83      2.95     0.61        1 610000.00 900000.00  main
+  8.95      3.24     0.29  5000000     0.06     0.06  test
+
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 40.76      2.14     2.14                             mcount
+ 40.57      4.27     2.13  5000000     0.00     0.00  test
+ 18.67      5.25     0.98        1   980.00  3110.00  main
+
+not more than 5 second of 280 (01.78%) This shows that I don't have to
+optimize loop by integrating calculation loops..so I can keep clean
+functions for calculating..
+
+Calculating of new screen 320x200
+
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  us/call  us/call  name    
+ 60.87      0.14     0.14    20221     6.92     6.92  mand_calc
+ 34.78      0.22     0.08        1 80000.00 220000.00  calculatenew
+ 	Solid guessing is slow here, because of all optimizations
+	done for zooming. Thats why XaoS is not very effective for
+	calculating of new images. Maybe some special solid guessing
+	loop should be done.
+  4.35      0.23     0.01        2  5000.00  5000.00  mkrealloc_table
+  <SNIP>
+
+640x480 autopilot run
+
+
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 83.05    427.86   427.86  8480091     0.05     0.05  mand_calc
+ 	Framerate is lower, step is higher so calculation takes
+	more time..
+  8.72    472.78    44.92     4480    10.03    10.03  mkrealloc_table
+  	As I said..does not take significant amount of time..because framerate
+	is lower..
+  6.11    504.24    31.46     2240    14.04   205.11  calculatenew
+  	also this went up..
+  0.83    508.53     4.29                             mcount
+  0.58    511.51     2.98     5319     0.56     0.56  do_autopilot
+  0.40    513.58     2.07     2240     0.92     0.92  moveoldpoints
+  0.24    514.84     1.26     2240     0.56   226.67  do_fractal
+  0.02    514.93     0.09    62109     0.00     0.00  tl_process_group
+  <SNIP>
+
+640x480 start:
+
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 71.43      0.75     0.75    90444     0.01     0.01  mand_calc
+ 24.76      1.01     0.26        1   260.00  1010.00  calculatenew
+ 	very similiar to 320x200 sample
+  2.86      1.04     0.03                             mcount
+  0.95      1.05     0.01        2     5.00     5.00  mkrealloc_table
+  <SNIP>

@@ -1,0 +1,669 @@
+# Message catalog file required to replay XaoS tutorials in
+# czech language this is latin2 version in case I will once add
+# support for latin2 fonts
+#
+# Copyright (C) 1997 by Jan Hubicka
+#
+# See english.cat for more info
+
+#########################################################
+#For file anim.xaf
+anim "Ukladani a prehravani
+animaci"
+
+#########################################################
+#For file anim.xhf
+
+anim2 "Mozna jste si uz vsimli,
+ze XaoS umi prehravat animace."
+
+anim3 "Ty je mozne vytvaret primo
+v XaoSovi"
+
+languag1 "Protoze
+jsou ale animace a pozice ulozeny
+pomoci jednoducheho jazyka,"
+
+languag2 "(pozice jsou ve stenem
+formatu jako animace)"
+
+languag3 "je mozne potom animace
+rucne upravovat."
+
+
+languag4 "Vetsina animaci dodavanych
+s XaoSem je psana kompletne rucne
+pouze s pomoci ulozenych pozic"
+
+modif1 "Jenom jednoduchou upravou
+tohoto souboru"
+
+modif2 "Je mozne vygenerovat 
+jednoduchou \"zmensovaci\" animaci."
+modif3 "Pomoci teto zmeny \"zvetsovaci\" animaci."
+
+newanim "Take je mozne napsat uplne
+nove animace a efekty"
+
+examples "Inspiraci muzete hledat
+take v prikladech, ktere lze
+nahravat v nahodnem poradi ze
+save/load menu"
+
+examples2 "Pomoci ulozenych pozic
+je take mozne prevadet souradnice
+do jinych programu."
+
+examples3 "Fantazii se meze
+nekladou snad krome jazyka
+pouziteho v souborech popsaneho
+v xaos.info"
+
+#########################################################
+#For file barnsley.xaf
+
+intro4 "Uvod do fraktalu
+
+Cast ctvrta - Formulka pana Barnsleyho"
+
+barnsley1 "Jinou formulku si
+vymyslel pan Michael Barnsley"
+
+barnsley2 "Vysledkem je tento podivny fraktal"
+
+barnsley3 "Nepatri zrovna k nejzajimavejsim"
+
+barnsley4 "Ale jeho Juliovy mnoziny opravdu
+stoji za to."
+
+barnsley5 "Jejich struktura pripomina krystaly,"
+
+barnsley6 "narozdil od vetsiny ostatnich 
+fraktalu v XaoSovi, ktere 
+vypadaji spise organicky"
+#########################################################
+#For file filter.xaf
+
+filter "filtry"
+
+#########################################################
+#For file filter.xhf
+
+filter1 "Filtr je efekt aplikovany
+na data potom, co se fraktal vypocte"
+
+filter2 "XaoS ma nasledujici filtry"
+
+motblur "Motion blur"
+
+edge "Dva ruzne filtry 
+na detekci hran"
+
+edge2 "Prvni dela hrany tlustsi
+a proto je pekny hlavne ve vysokych
+rozlisenich"
+
+edge3 "Druhy dela hrany tenci"
+
+star "Starfield"
+
+interlace "Interlace filter 
+
+zrychluje vypocet a ve vyssim rozliseni
+dela podobny efekt jako Motion Blur"
+
+stereo "Stereogram filter"
+
+stereo2 "Pokud v nasleduji
+casti nic neuvidite, mozna
+to neni tim, ze neumite silhat,
+ale proto, ze XaoS predpoklada
+mensi monitor. To muzete zmenit
+parametry z prikazove radky.
+Prectete si xaos -help."
+
+emboss1 "Emboss filter"
+
+palettef1 "Palette emulator umoznuje
+rotaci palety i v true-coloru"
+truecolorf "Posledni filtr emuluje
+true-color."
+
+#########################################################
+#For file fractal.xaf
+
+end "Konec"
+
+fcopyright "Uvod do fraktalu
+vytvoril Jan Hubicka 
+v cervenci roku 1997"
+
+suggestions "
+Poslete mi vsechny 
+napady a komentare
+na moji adresu:
+
+hubicka@paru.cas.cz
+
+Dekuji"
+
+#########################################################
+#For file incolor.xaf
+
+incolor1 "Vetsinou se body
+uvnitr mnoziny kresli jednou
+barvou"
+
+incolor2 "To pekne zvyrazni hranice
+ale oblasti ivnitr vypadaji ponekud
+nudne."
+
+incolor3 "Pokud je chcete mit
+trochu zabavnejsi, muzete pouzit
+hodnotu posledniho orbitu
+k urceni barvy"
+
+incolor4 "XaoS ma deset ruznych
+takovych vypoctu, ktere nazyva
+\"incoloring modes\""
+
+zmag "zmag
+
+Barva se pocita podle
+vzdalenosti posledniho
+orbitu od pocatku"
+
+#########################################################
+#For file innew.xaf
+
+innew1 "Decomposition like
+
+Funguje stejne jako
+\"color decomposition\"
+v \"outcoloring modes\"
+tedy podle uhlu posledniho
+orbitu"
+
+innew2 "real/imag
+
+Jak nazev napovida, barva
+se vypocte podle realne casti
+posledniho orbitu vydelene imaginarni"
+
+innew3 "Nasledujicich 6 rezimu
+nema nejake hlubsi opodstatneni
+snad mimo toho, ze vypadaji zajimave.
+Cast je opsana z programu flarium."
+
+#########################################################
+#For file intro.xaf
+
+fractal "...Fraktaly..."
+fractal1 "Co to je?"
+
+fractal2 "Definice pana Mandelbrota:
+Fraktal je mnozina, pro kterou
+Hausdorff Besicovichova dimenze
+presahuje topologickou dimenzi."
+
+fractal3 "Neco snad neni jasne?"
+
+fractal4 "Nevadi.
+
+Vetsina matematiku stejne neni
+touto definici uspokojena"
+
+fractal5 "Jednoduse:"
+
+fractal6 "fraktal je slozeny z casti"
+
+fractal7 "kde kazda je priblizna
+zmensena kopie celku"
+
+fractal8 "Neustalym kopirovanim"
+
+fractal9 "vznikne cely fraktal."
+
+facts "Co je na fraktalech tak zajimaveho?"
+
+fact1 "Jsou nezavisle na meritku"
+fact2 "Jsou sobepodobne"
+fact3 "A casto se vyskytuji
+v prirode"
+fact4 "Napriklad mraky, hory
+nebo pobrezi."
+fact5 "Ale i hodne matematickych
+konstrukci jsou fraktaly"
+fact6 "Jednu prave sledujete na obrazovce"
+fact7 "Nejznamejsi je..."
+
+mset "Mandelbrotova mnozina"
+mset1 "Je generovana jednoduchym
+vyrazem"
+mset2 "Ale je to jeden
+z nejkrasnejsich fraktalu"
+mset3 "Protoze je fraktal"
+mset4 "hranice mnoziny obsahuji"
+mset5 "miniaturni kopie celku"
+mset6 "Toto je nejvetsi kopie.
+Pouze priblizne 50krat zmensena"
+mset7 "Mandelbrotova mnozina neni
+ciste sobepodobna"
+mset8 "Kazda miniaturni kopie
+se lisi"
+mset9 "Tato je 76000krat mensi"
+mset10 "Kopie z jinych casti
+jsou odlisnejsi."
+
+nat "Hranice mnoziny
+neobsahuji pouze miniaturni
+kopie celku"
+nat1 "Ale i nekonecne mnoho
+ruznych ornamentu"
+nat2 "Nektere jsou neuveritelne
+podobne tem z prirody"
+nat3 "Muzete tam najit stromy,"
+nat4 "reky a jezera,"
+nat5 "galaxie"
+nat6 "nebo vodopady"
+nat7 "Ale i naprosto nove tvary"
+
+julia "Mandelbrotova mnozina
+neni jedinym fraktalem generovanym
+vyrazem z=z^2+c,"
+julia1 "dalsim je"
+julia2 "Juliova mnozina"
+julia3 "Zajimave je, ze neni
+pouze jedina takova mnozina,"
+julia4 "ale je jich hned
+nekonecne mnoho"
+julia5 "Kazda se lisi pouze jednou hodnotou"
+julia6 "Bodem zvolenym v Mandelbrotove mnozine"
+julia7 "Mandelbrotova mnozina je
+vpodstate mapa Juliovych mnozin."
+julia8 "Body uvnitr mnoziny maji
+Juliovy mnoziny velke a spojite"
+julia9 "Body vne maji Juliovy 
+mnoziny nespojite"
+julia10 "Nejzajimavejsi jsou body
+na hranicich"
+
+theme "Tema juliovy mnoziny zalezi
+na bodu zvolem v Mandelbrotove mnozine"
+theme1 "Detaily kolem zvoleneho bodu"
+theme2 "jsou si velmi podobne."
+theme3 "Po zmenseni ale zjistite"
+theme4 "ze mnozina vypada uplne jinak"
+theme5 "Juliovy mnoziny na prvni pohled
+vypadaji nudne, protoze se tema nemeni"
+theme6 "Zustava to zvolene 
+v Mandelbrotove mnozine"
+theme7 "Peclivym vyberem bodu lze
+ale ziskat"
+theme8 "hezke obrazky"
+
+#########################################################
+#For file keys.xhf
+
+keys "Klavesy:
+
+q            - Konec prehravani       
+Space        - urychleni              
+               (muze chvili trvat)    
+vlevo/vpravo - zmena rychlosti titulku"
+
+#########################################################
+#For file magnet.xaf
+
+intro7 "Uvod do fraktalu
+
+Cast sedma - Magnet"
+
+magnet "Toto neni Mandelbrotova mnozina"
+magnet1 "Tento fraktal se nazyva magnet,
+protoze pochazi z teoreticke
+fyzyky"
+magnet2 "Vychazi ze studie
+magnetickych renormalizacnich
+transformaci"
+
+similiar "Podobnost s Mandelbrotovou
+mnozinou je zajimava, protoze to
+uz neni pouze matematicka hricka."
+
+magjulia "Ma neobvykle juliovy mnoziny"
+
+#########################################################
+#For file new.xaf
+
+new "Co je noveho ve verzi 3.0?"
+speed "1. Je rychlejsi1"
+speed1 "Hlavni vypocetni smycka
+nyni hleda periody a dela nekolik
+iteraci najednou"
+speed2 "Nove fraktaly se pocitaji
+pomoci metody \"boundary detection\""
+speed3 "Vypocet novych fraktalu je proto
+mnohem rychlejsi."
+speed4 "Napriklad Mandelbrotova
+mnozina pri 1 000 000 iteraci"
+speed5 "pocitam..."
+speed6 "Hotovo"
+speed7 "XaoS ma heruistiku
+a nehleda periody 
+tam, kde je neocekava.
+(zadne takove kolem nejsou)"
+speed8 "Take hlavni rutinky byly
+optimalizovany a jsou dvakrat
+rychlejsi"
+speed9 "Takze nyni dosahuje 130FPS
+na 130Mhz pentiu"
+
+new2 "2. filtry"
+new3 "3. devet outcoloring modu"
+new4 "4. nove incoloring mody"
+new5 "5. Truecolor coloring mody"
+new6 "6. Prehravani a ukladani animaci"
+newend "A dalsi zmeny jako rotace, lepsi
+nahodne palety apod. Kompletni seznam
+zmen je v souboru ChangeLog"
+
+#########################################################
+#For file newton.xaf
+
+intro3 "Uvod do fraktalu
+
+Cast treti-Newtonova metoda"
+newton "Tento fraktal je generovany
+uplne jinym vypoctem"
+newton1 "Newtonovou aproximacni metodou
+pro hledani korenu polynomu x^3=1"
+newton2 "Sleduje se pocet iteraci
+nutny k dosazeni priblizneho vysledku"
+newton3 "Tri koreny muzete videt jako
+modre kolecka"
+newton4 "Nejzajimavejsi jsou ale
+casti, kde si vypocet nebyl jisty,
+ke kteremu korenu se vyda"
+newton5 "Fraktal je velmi sobepodobny
+a tak tu uz nic moc noveho nenajdete"
+newton6 "Ale je mozne vygenerovat
+\"skoro-Juliovy\" mnoziny"
+newton7 "Kde se zvoleny bod
+pricte jako chyba pri aproximaci"
+newton8 "To vnese do vypoctu neporadek
+a ucini fraktal zajimavejsim"
+
+#########################################################
+#For file octo.xaf
+intro6 "Uvod do fraktalu
+
+Cast sesta-Octo"
+octo "Octo je jeden 
+z mene znamych fraktalu"
+octo1 "Vybrali jsme jej,
+protoze ma neobvykly tvar"
+octo2 "Podobne jako u Newtonova
+fraktalu XaoS umi generovat
+\"skoro-Juliovy\" mnoziny"
+
+#########################################################
+#For file outcolor.xaf
+
+outcolor "Out coloring modes"
+outcolor1 "Mandelbrotova mnozina
+je to osklive cerne uprostred
+obrazovky"
+outcolor2 "Barevna vec okolo jsou
+pouze hranice"
+outcolor3 "Normalne se barva urcuje
+podle poctu iteraci nutnych
+k dosazeni limitu"
+outcolor4 "Ale jsou i jine cesty"
+outcolor5 "XaoS je nazyva
+\"outcoloring modes\""
+
+iterreal "iter+real
+
+K obarveni pricte realnou cast
+posledniho orbitu k poctu iteraci"
+iterreal1 "Nektere nudnejsi obrazky
+tim lze vylepsit"
+
+iterimag "Dalsi coloring mode-iter+imag
+ma podobne vysledky"
+iterimag2 "Neni se cemu divit -
+jediny rozdil je, ze pricita
+imaginarni cast orbitu"
+
+iprdi "iter+real/imag
+
+Zde se pricte realna cast posledniho
+orbitu vydelena imaginarni k poctu
+iteraci"
+
+sum "iter+real+imag+real/imag
+
+A toto je soucet vsech predchozich"
+
+decomp "binarry decompossition
+
+Pokud je imaginarni cast
+mensi nez nula, odecte se
+pocet iteraci od maximalniho
+poctu iteraci, jinak se pouziva
+pocet iteraci"
+
+bio "Biomorphs
+
+Tento rezim se tak jmenuje proto,
+ze nektere fraktaly potom vypadaji
+jako jednobunecni zivocichove"
+
+#########################################################
+#For file outnew.xhf
+
+potential "Potential
+
+Tento rezim vypda nejlepe
+v true-color rezimu"
+
+cdecom "color decompossition"
+cdecom2 "Barva se vypocte
+podle uhlu posledniho orbitu"
+cdecom3 "Je podobna binarni
+dekompozici ale barva prechazi
+plynule"
+cdecom4 "V Newtonove fraktalu
+obarvuje bod podle korenu, ke
+kteremu se priblizuje a ne podle
+poctu iteraci"
+
+smooth "smooth
+
+Tento rezim se pokousi
+vytvorit plynule prechody
+a zarovnat skoky zpusobene
+zmenou poctu iteraci"
+smooth1 "Nefunguje na fraktalech
+Newton a Magnet"
+smooth2 "Funguje take
+pouze v true-coloru proto
+si zapnete truecolor filtr
+pokud jej nemate"
+
+#########################################################
+#For file outnew.xhf
+
+intro5 "Uvod do fraktalu
+
+Cast pata - Phoenix"
+
+phoenix "Toto je Mandelbrotova mnozina
+pro formuli znamou jako Phoenix"
+
+phoenix1 "Vypada trochu jinak nez
+ostatni fraktaly v XaoSovi ale je
+mozne najit jistou podobnost
+s Mandelbrotovou mnozinou"
+
+phoenix2 "Take obsahuje \"antenu\" ve predu"
+
+phoenix3 "Porad tema Jiliovy mnoziny
+odpovida tematu kolem zvoleneho bodu,"
+
+phoenix4 "ale Juliovy mnoziny vypadaji
+docela jinak"
+
+#########################################################
+#For file plane.xaf
+
+plane1 "Normalne realna souradnice
+bodu odpovida x-ove souradnici na
+obrazovce a imaginarni y-ove"
+
+plane2 "XaoS ma ale i 6 dalsich metod"
+plane3 "1/mu
+
+Kruhova inverse - casti z nekonecna
+jdou no nuly a nula do nekonecna"
+plane4 "Toto je normalni
+Mandelbrotova mnozina"
+plane5 "A toto po inversi"
+plane6 "Mnozina byla ve stredu,
+proto je nyni vsude kolem a
+nekonecna modra oblast kolem
+je ted male kolecko uprostred"
+plane7 "Dalsi obrazky budou
+pokazde ukazavny normalne
+a po inversi"
+
+plane8 "1/mu+0.25
+
+Zobrazeni je podobne inversi, 
+pouze stred je posunut"
+plane9 "Protoze stred je
+na hranici mnoziny, zobrazila
+se jako nekonecna parabola"
+plane10 "Zajimave skresluje i jine fraktaly,
+protoze robiji jejich symetrii"
+
+lambda "Zobrazeni lambda"
+
+ilambda "1/lambda
+
+Kombinace inverze a lambdy"
+
+imlambda "1/(lambda-1)
+
+Kombinace inverze,
+posunuti a lambdy"
+
+imlambda2 "Zpusobuje zajimavou
+deformaci Mandelbrotovy mnoziny"
+
+mick "1/(mu-1.40115)
+
+A opet inverze s posunitim,
+nyni posunuta do specialniho
+bodu Mandelbrotovy mnoziny.
+V okoli tohoto bodu je mnozina
+sobepodobna. Toto skresleni
+zvetsuje tuto cast"
+
+#########################################################
+#For file power.xaf
+
+intro2 "Uvod do fraktalu
+
+Cast druha-Mandekbrotovy mnoziny 
+s vyssi mocninou"
+
+power "z^2+c neni jediny vzorec
+generujici fraktal"
+power2 "Jenom trochu upraveny - x^3+c
+generuje fraktal take"
+power3 "Ten samozrejme take obsahuje
+kopie hlavni noziny"
+
+power4 "Dalsi takove fraktaly
+vzniknou poupravenymi vzorci"
+
+pjulia "A kazda takova mnozina 
+ma odpovidajici Juliovy mnoziny"
+
+#########################################################
+#For file truecolor.xaf
+
+truecolor "Truecolor coloring modes"
+truecolor1 "Normalne se fraktaly
+obarvuji pomoci palety. V truecoloru
+se paleta emuluje"
+truecolor2 "Jediny rozdil je,
+ze paleta je vetsi a barvy
+se plynule interpoluji"
+truecolor3 "Truecolor coloring mode
+ma uplne jiny pristup. Pouziva
+ruzne hodnoty z vypoctu,"
+truecolor4 "k vypoctu primo barvy,
+nejenom pozice v palete"
+truecolor5 "To umoznuje zobrazit
+az ctyri hodnoty v jednom bode"
+truecolor6 "Truecolor coloring
+mode vyzaduje truecolor. Pokud
+ho nemate, zapnete si laskave
+truecolor filtr"
+
+#########################################################
+#For file pert.xaf
+
+pert0 "Perturbation"
+pert1 "Podobne jako u Juliovy
+mnoziny muzete menit parametr
+pro generovani"
+pert2 "Je mozne v Mandelbrotove
+mnozine menit parametr jmenem
+\"perturbation\""
+pert3 "Ovlivni se tim startovni
+pozice orbitu, ktera je obvykle [0,0]"
+pert4 "Nedela tak zajimave zmeny
+jako parametr Juliovy Mnoziny,
+ale je tim mozne fraktal udelat
+nahodnejsi."
+
+#########################################################
+#For file palette.xaf
+
+pal "Nahodne palety"
+pal0 "XaoS nema zadne rucne
+definovane palety jako
+vetsina ostatnich programu
+generujici fraktaly,
+misto toho je generuje nahodne"
+pal1 "Jednoduse mackejte 'P'
+tak dlouho, dokud si nejakou
+z nabizenych palet nevyberete"
+pal2 "Jsou pouzity tri algoritmy"
+pal3 "Prvni dela prechody 
+z cerne do nahodne barvy"
+pal4 "Druhy prechod z cerne do barvy
+a potom do bile"
+pal5 "Treti je inspirovan
+kubistickymi obrazy"
+
+#########################################################
+#For file other.xaf
+
+auto1 "Autopilot"
+auto2 "Ti linejsi muzou jednoduse
+zapnout autopilota a nechat
+XaoS zkoumat fraktal automaticky"
+fastjulia1 "Rezim pro vyber Juliovy mnoziny"
+fastjulia2 "V tomto rezimu muzete menit
+parametr Juliovy mnoziny plynule"
+fastjulia3 "Diky podobnosti s okolim
+bodu v Mandelbrotove mnozine je take
+jej mozne pouzit jako preview bodu
+pred tim, nez tam zacnete zoomovat"
+rotation "Rotace obrazu"
+cycling "Rotace palety"

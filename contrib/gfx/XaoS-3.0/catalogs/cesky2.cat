@@ -1,0 +1,669 @@
+# Message catalog file required to replay XaoS tutorials in
+# czech language this is latin2 version in case I will once add
+# support for latin2 fonts
+#
+# Copyright (C) 1997 by Jan Hubicka
+#
+# See english.cat for more info
+
+#########################################################
+#For file anim.xaf
+anim "Ukládání a pøehrávání
+animací"
+
+#########################################################
+#For file anim.xhf
+
+anim2 "Mo¾ná jste si u¾ v¹imli,
+¾e XaoS umí pøehrávat animace."
+
+anim3 "Ty je mo¾né vytváøet pøímo
+v XaoSovi"
+
+languag1 "Proto¾e
+jsou ale animace a pozice ulo¾eny
+pomocí jednoduchého jazyka,"
+
+languag2 "(pozice jsou ve steném
+formátu jako animace)"
+
+languag3 "je mo¾né potom animace
+ruènì upravovat."
+
+
+languag4 "Vìt¹ina animací dodávaných
+s XaoSem je psaná kompletnì ruènì
+pouze s pomocí ulo¾ených pozic"
+
+modif1 "Jenom jednoduchou úpravou
+tohoto souboru"
+
+modif2 "Je mo¾né vygenerovat 
+jednoduchou \"zmen¹ovací\" animaci."
+modif3 "Pomocí této zmìny \"zvìt¹ovací\" animaci."
+
+newanim "Také je mo¾né napsat úplnì
+nové animace a efekty"
+
+examples "Inspiraci mù¾ete hledat
+také v pøíkladech, které lze
+nahrávat v náhodném poøadí ze
+save/load menu"
+
+examples2 "Pomocí ulo¾ených pozic
+je také mo¾né pøevádìt souøadnice
+do jiných programù."
+
+examples3 "Fantazii se meze
+nekladou snad kromì jazyka
+pou¾itého v souborech popsaného
+v xaos.info"
+
+#########################################################
+#For file barnsley.xaf
+
+intro4 "Úvod do fraktálù
+
+Èást ètvrtá - Formulka pana Barnsleyho"
+
+barnsley1 "Jinou formulku si
+vymyslel pan Michael Barnsley"
+
+barnsley2 "Výsledkem je tento podivný fraktál"
+
+barnsley3 "Nepatøí zrovna k nejzajímavìj¹ím"
+
+barnsley4 "Ale jeho Juliovy mno¾iny opravdu
+stoji za to."
+
+barnsley5 "Jejich struktura pøipomíná krystaly,"
+
+barnsley6 "narozdíl od vìt¹iny ostatních 
+fraktálù v XaoSovi, které 
+vypadají spí¹e organicky"
+#########################################################
+#For file filter.xaf
+
+filter "filtry"
+
+#########################################################
+#For file filter.xhf
+
+filter1 "Filtr je efekt aplikovaný
+na data potom, co se fraktál vypoète"
+
+filter2 "XaoS má následující filtry"
+
+motblur "Motion blur"
+
+edge "Dva rùzné filtry 
+na detekci hran"
+
+edge2 "První dìlá hrany tlust¹í
+a proto je pìkný hlavnì ve vysokých
+rozli¹eních"
+
+edge3 "Druhý dìlá hrany tenèí"
+
+star "Starfield"
+
+interlace "Interlace filter 
+
+zrychluje výpoèet a ve vý¹¹ím rozlí¹ení
+dìlá podobný efekt jako Motion Blur"
+
+stereo "Stereogram filter"
+
+stereo2 "Pokud v následují
+èásti nic neuvidíte, mo¾ná
+to není tím, ¾e neumíte ¹ilhat,
+ale proto, ¾e XaoS pøedpokládá
+men¹í monitor. To mù¾ete zmìnit
+parametry z pøíkazové øádky.
+Pøeètìte si xaos -help."
+
+emboss1 "Emboss filter"
+
+palettef1 "Palette emulator umo¾òuje
+rotaci palety i v true-coloru"
+truecolorf "Poslední filtr emuluje
+true-color."
+
+#########################################################
+#For file fractal.xaf
+
+end "Konec"
+
+fcopyright "Úvod do fraktálù
+vytvoøil Jan Hubicka 
+v èervenci roku 1997"
+
+suggestions "
+Po¹lete mi v¹echny 
+nápady a komentáøe
+na moji adresu:
+
+hubicka@paru.cas.cz
+
+Dìkuji"
+
+#########################################################
+#For file incolor.xaf
+
+incolor1 "Vìt¹inou se body
+uvnitø mno¾iny kreslí jednou
+barvou"
+
+incolor2 "To pìknì zvýrazní hranice
+ale oblasti ivnitø vypadají ponìkud
+nudnì."
+
+incolor3 "Pokud je chcete mít
+trochu zábavnìj¹í, mù¾ete pou¾it
+hodnotu posledního orbitu
+k urèení barvy"
+
+incolor4 "XaoS má deset rùzných
+takových výpoètù, které nazývá
+\"incoloring modes\""
+
+zmag "zmag
+
+Barva se poèítá podle
+vzdálenosti posledního
+orbitu od poèátku"
+
+#########################################################
+#For file innew.xaf
+
+innew1 "Decomposition like
+
+Funguje stejne jako
+\"color decomposition\"
+v \"outcoloring modes\"
+tedy podle úhlu posledního
+orbitu"
+
+innew2 "real/imag
+
+Jak název napovídá, barva
+se vypoète podle reálné èásti
+posledního orbitu vydìlené imaginární"
+
+innew3 "Následujících 6 re¾imù
+nemá nìjaké hlub¹í opodstatnìní
+snad mimo toho, ¾e vypadají zajímavì.
+Èást je opsána z programu flarium."
+
+#########################################################
+#For file intro.xaf
+
+fractal "...Fraktály..."
+fractal1 "Co to je?"
+
+fractal2 "Definice pana Mandelbrota:
+Fraktál je mno¾ina, pro kterou
+Hausdorff Besicovichova dimenze
+pøesahuje topologickou dimenzi."
+
+fractal3 "Nìco snad není jasné?"
+
+fractal4 "Nevadí.
+
+Vìt¹ina matematikù stejnì není
+touto definicí uspokojena"
+
+fractal5 "Jednodu¹e:"
+
+fractal6 "fraktál je slo¾ený z èástí"
+
+fractal7 "kde ka¾dá je pøibli¾ná
+zmen¹ená kopie celku"
+
+fractal8 "Neustálým kopírováním"
+
+fractal9 "vznikne celý fraktál."
+
+facts "Co je na fraktálech tak zajímavého?"
+
+fact1 "Jsou nezavislé na mìøítku"
+fact2 "Jsou sobìpodobné"
+fact3 "A èasto se vyskytují
+v pøirodì"
+fact4 "Napøíklad mraky, hory
+nebo pobøe¾í."
+fact5 "Ale i hodnì matematických
+konstrukcí jsou fraktály"
+fact6 "Jednu právì sledujete na obrazovce"
+fact7 "Nejznámìj¹í je..."
+
+mset "Mandelbrotova mno¾ina"
+mset1 "Je generována jednoduchým
+výrazem"
+mset2 "Ale je to jeden
+z nejkrásnìj¹ích fraktálù"
+mset3 "Proto¾e je fraktál"
+mset4 "hranice mno¾iny obsahují"
+mset5 "miniaturní kopie celku"
+mset6 "Toto je nejvìt¹í kopie.
+Pouze pøibli¾nì 50krát zmen¹ená"
+mset7 "Mandelbrotova mno¾ina není
+èistì sobìpodobná"
+mset8 "Ka¾dá miniaturní kopie
+se li¹í"
+mset9 "Tato je 76000krát men¹í"
+mset10 "Kopie z jiných èástí
+jsou odli¹nìj¹í."
+
+nat "Hranice mno¾iny
+neobsahují pouze miniaturní
+kopie celku"
+nat1 "Ale i nekoneènì mnoho
+rùzných ornamentù"
+nat2 "Nìkteré jsou neuvìøitelnì
+podobne tìm z pøírody"
+nat3 "Mù¾ete tam najít stromy,"
+nat4 "øeky a jezera,"
+nat5 "galaxie"
+nat6 "nebo vodopády"
+nat7 "Ale i naprosto nové tvary"
+
+julia "Mandelbrotova mno¾ina
+není jediným fraktálem generovaným
+výrazem z=z^2+c,"
+julia1 "dal¹ím je"
+julia2 "Juliova mno¾ina"
+julia3 "Zajímavé je, ¾e není
+pouze jediná taková mno¾ina,"
+julia4 "ale je jich hned
+nekoneènì mnoho"
+julia5 "Ka¾dá se li¹í pouze jednou hodnotou"
+julia6 "Bodem zvoleným v Mandelbrotovì mno¾ine"
+julia7 "Mandelbrotova mno¾ina je
+vpodstatì mapa Juliových mno¾in."
+julia8 "Body uvnitø mno¾iny mají
+Juliovy mno¾iny velké a spojité"
+julia9 "Body vnì mají Juliovy 
+mno¾iny nespojité"
+julia10 "Nejzajímavìj¹í jsou body
+na hranicích"
+
+theme "Téma juliovy mno¾iny zále¾í
+na bodu zvolém v Mandelbrotovì mno¾inì"
+theme1 "Detaily kolem zvoleného bodu"
+theme2 "jsou si velmi podobné."
+theme3 "Po zmen¹ení ale zjistíte"
+theme4 "¾e mno¾ina vypadá úplnì jinak"
+theme5 "Juliovy mno¾iny na první pohled
+vypadaji nudnì, proto¾e se téma nemìní"
+theme6 "Zùstává to zvolené 
+v Mandelbrotové mno¾inì"
+theme7 "Peèlivým výbìrem bodu lze
+ale ziskat"
+theme8 "hezké obrázky"
+
+#########################################################
+#For file keys.xhf
+
+keys "Klávesy:
+
+q            - Konec pøehrávání       
+Space        - urychlení              
+               (mù¾e chvíli trvat)    
+vlevo/vpravo - zmìna rychlosti titulkù"
+
+#########################################################
+#For file magnet.xaf
+
+intro7 "Úvod do fraktálù
+
+Èást sedmá - Magnet"
+
+magnet "Toto není Mandelbrotova mno¾ina"
+magnet1 "Tento fraktál se nazývá magnet,
+proto¾e pochází z teoretické
+fyzyky"
+magnet2 "Vychází ze studie
+magnetických renormalizaèních
+transformací"
+
+similiar "Podobnost s Mandelbrotovou
+mno¾inou je zajímavá, proto¾e to
+u¾ není pouze matematická høièka."
+
+magjulia "Má neobvyklé juliovy mno¾iny"
+
+#########################################################
+#For file new.xaf
+
+new "Co je nového ve verzi 3.0?"
+speed "1. Je rychlej¹í1"
+speed1 "Hlavní výpoèetní smyèka
+nyní hledá periody a dìlá nìkolik
+iterací najednou"
+speed2 "Nové fraktály se poèitají
+pomocí metody \"boundary detection\""
+speed3 "Výpoèet nových fraktálù je proto
+mnohem rychlej¹í."
+speed4 "Napøíklad Mandelbrotova
+mno¾ina pøi 1 000 000 iterací"
+speed5 "poèítám..."
+speed6 "Hotovo"
+speed7 "XaoS má heruistiku
+a nehledá periody 
+tam, kde je neoèekává.
+(¾ádné takové kolem nejsou)"
+speed8 "Take hlavní rutinky byly
+optimalizovány a jsou dvakrát
+rychlej¹í"
+speed9 "Tak¾e nyní dosahuje 130FPS
+na 130Mhz pentiu"
+
+new2 "2. filtry"
+new3 "3. devìt outcoloring modù"
+new4 "4. nové incoloring mody"
+new5 "5. Truecolor coloring mody"
+new6 "6. Pøehrávání a ukládání animací"
+newend "A dal¹í zmìny jako rotace, lep¹í
+nahodné palety apod. Kompletní seznam
+zmìn je v souboru ChangeLog"
+
+#########################################################
+#For file newton.xaf
+
+intro3 "Úvod do fraktálù
+
+Èást tøetí-Newtonova metoda"
+newton "Tento fraktál je generovaný
+uplnì jiným výpoètem"
+newton1 "Newtonovou aproximaèní metodou
+pro hledání koøenù polynomu x^3=1"
+newton2 "Sleduje se poèet iterací
+nutný k dosa¾ení pøibli¾ného výsledku"
+newton3 "Tøi koøeny mù¾ete vidìt jako
+modré koleèka"
+newton4 "Nejzajímavìj¹í jsou ale
+èásti, kde si výpoèet nebyl jistý,
+ke kterému koøenu se vydá"
+newton5 "Fraktál je velmi sobìpodobný
+a tak tu u¾ nic moc nového nenajdete"
+newton6 "Ale je mo¾né vygenerovat
+\"skoro-Juliovy\" mno¾iny"
+newton7 "Kde se zvolený bod
+pøiète jako chyba pøi aproximaci"
+newton8 "To vnese do výpoètu nepoøadek
+a uèiní fraktál zajímavìj¹ím"
+
+#########################################################
+#For file octo.xaf
+intro6 "Úvod do fraktálù
+
+Èást ¹está-Octo"
+octo "Octo je jeden 
+z ménì známych fraktálù"
+octo1 "Vybrali jsme jej,
+proto¾e má neobvyklý tvar"
+octo2 "Podobnì jako u Newtonova
+fraktálu XaoS umí generovat
+\"skoro-Juliovy\" mno¾iny"
+
+#########################################################
+#For file outcolor.xaf
+
+outcolor "Out coloring modes"
+outcolor1 "Mandelbrotova mno¾ina
+je to o¹klivé èerné uprostøed
+obrazovky"
+outcolor2 "Barevna vìc okolo jsou
+pouze hranice"
+outcolor3 "Normálnì se barva urèuje
+podle poètu iterací nutných
+k dosa¾ení limitu"
+outcolor4 "Ale jsou i jiné cesty"
+outcolor5 "XaoS je nazývá
+\"outcoloring modes\""
+
+iterreal "iter+real
+
+K obarvení pøiète reálnou èást
+posledního orbitu k poètu iterací"
+iterreal1 "Nìkteré nudnìj¹í obrázky
+tím lze vylep¹it"
+
+iterimag "Dal¹í coloring mode-iter+imag
+má podobné výsledky"
+iterimag2 "Není se èemu divit -
+jediný rozdíl je, ¾e pøièíta
+imaginární èást orbitu"
+
+iprdi "iter+real/imag
+
+Zde se pøiète realná èást posledního
+orbitu vydìlená imaginarní k poètu
+iterací"
+
+sum "iter+real+imag+real/imag
+
+A toto je souèet v¹ech pøedchozích"
+
+decomp "binarry decompossition
+
+Pokud je imaginární èást
+men¹í ne¾ nula, odeète se
+poèet iterací od maximálního
+poètu iterací, jinak se pou¾íva
+poèet iterací"
+
+bio "Biomorphs
+
+Tento re¾im se tak jmenuje proto,
+¾e nìkteré fraktály potom vypadají
+jako jednobunìèní ¾ivoèichové"
+
+#########################################################
+#For file outnew.xhf
+
+potential "Potential
+
+Tento re¾im vypdá nejlépe
+v true-color re¾imu"
+
+cdecom "color decompossition"
+cdecom2 "Barva se vypoète
+podle úhlu posledního orbitu"
+cdecom3 "Je podobná binární
+dekompozici ale barva pøechází
+plynule"
+cdecom4 "V Newtonovì fraktálu
+obarvuje bod podle koøenu, ke
+kterému se pøibli¾uje a ne podle
+poètu iterací"
+
+smooth "smooth
+
+Tento re¾im se pokou¹í
+vytvoøit plynulé pøechody
+a zarovnat skoky zpùsobené
+zmìnou poètu iterací"
+smooth1 "Nefunguje na fraktálech
+Newton a Magnet"
+smooth2 "Funguje také
+pouze v true-coloru proto
+si zapnìte truecolor filtr
+pokud jej nemáte"
+
+#########################################################
+#For file outnew.xhf
+
+intro5 "Úvod do fraktálù
+
+Èást pátá - Phoenix"
+
+phoenix "Toto je Mandelbrotova mno¾ina
+pro formuli známou jako Phoenix"
+
+phoenix1 "Vypadá trochu jinak ne¾
+ostatní fraktály v XaoSovi ale je
+mo¾ne najít jistou podobnost
+s Mandelbrotovou mno¾inou"
+
+phoenix2 "Také obsahuje \"anténu\" ve pøedu"
+
+phoenix3 "Poøád téma Jiliovy mno¾iny
+odpovídá tématu kolem zvoleného bodu,"
+
+phoenix4 "ale Juliovy mno¾iny vypadají
+docela jinak"
+
+#########################################################
+#For file plane.xaf
+
+plane1 "Normálnì realná souøadnice
+bodu odpovídá x-ové souradnici na
+obrazovce a imaginární y-ové"
+
+plane2 "XaoS má ale i 6 dal¹ích metod"
+plane3 "1/mu
+
+Kruhová inverse - èásti z nekoneèna
+jdou no nuly a nula do nekoneèna"
+plane4 "Toto je normální
+Mandelbrotova mno¾ina"
+plane5 "A toto po inversi"
+plane6 "Mno¾ina byla ve støedu,
+proto je nyní v¹ude kolem a
+nekoneèná modrá oblast kolem
+je teï malé koleèko uprostøed"
+plane7 "Dal¹í obrázky budou
+poka¾dé ukázávny normálnì
+a po inversi"
+
+plane8 "1/mu+0.25
+
+Zobrazení je podobné inversi, 
+pouze støed je posunut"
+plane9 "Proto¾e støed je
+na hranici mno¾iny, zobrazila
+se jako nekoneèná parabola"
+plane10 "Zajímavì skresluje i jiné fraktály,
+proto¾e robíjí jejich symetrii"
+
+lambda "Zobrazení lambda"
+
+ilambda "1/lambda
+
+Kombinace inverze a lambdy"
+
+imlambda "1/(lambda-1)
+
+Kombinace inverze,
+posunutí a lambdy"
+
+imlambda2 "Zpùsobuje zajímavou
+deformaci Mandelbrotovy mno¾iny"
+
+mick "1/(mu-1.40115)
+
+A opìt inverze s posunitím,
+nyní posunuta do speciálního
+bodu Mandelbrotovy mno¾iny.
+V okolí tohoto bodu je mno¾ina
+sobìpodobná. Toto skreslení
+zvìt¹uje tuto èást"
+
+#########################################################
+#For file power.xaf
+
+intro2 "Úvod do fraktálù
+
+Èást druhá-Mandekbrotovy mno¾iny 
+s vy¹¹í mocninou"
+
+power "z^2+c není jediný vzorec
+generující fraktál"
+power2 "Jenom trochu upravený - x^3+c
+generuje fraktál také"
+power3 "Ten samozøejmì také obsahuje
+kopie hlavni no¾iny"
+
+power4 "Dal¹í takové fraktály
+vzniknou poupravenými vzorci"
+
+pjulia "A ka¾dá taková mno¾ina 
+má odpovidající Juliovy mno¾iny"
+
+#########################################################
+#For file truecolor.xaf
+
+truecolor "Truecolor coloring modes"
+truecolor1 "Normálnì se fraktály
+obarvují pomocí palety. V truecoloru
+se paleta emuluje"
+truecolor2 "Jediný rozdíl je,
+¾e paleta je vìt¹í a barvy
+se plynule interpolují"
+truecolor3 "Truecolor coloring mode
+má úplnì jiný pøístup. Pou¾ívá
+rùzné hodnoty z vypoètu,"
+truecolor4 "k výpoètu pøímo barvy,
+nejenom pozice v paletì"
+truecolor5 "To umo¾òuje zobrazit
+a¾ ètyøi hodnoty v jednom bodì"
+truecolor6 "Truecolor coloring
+mode vy¾aduje truecolor. Pokud
+ho nemáte, zapnìte si laskavì
+truecolor filtr"
+
+#########################################################
+#For file pert.xaf
+
+pert0 "Perturbation"
+pert1 "Podobnì jako u Juliovy
+mno¾iny mù¾ete mìnit parametr
+pro generování"
+pert2 "Je mo¾né v Mandelbrotovì
+mno¾inì mìnit parametr jménem
+\"perturbation\""
+pert3 "Ovlivní se tím startovní
+pozice orbitu, která je obvykle [0,0]"
+pert4 "Nedìlá tak zajímavé zmìny
+jako parametr Juliovy Mno¾iny,
+ale je tím mo¾né fraktál udìlat
+náhodnìj¹í."
+
+#########################################################
+#For file palette.xaf
+
+pal "Náhodné palety"
+pal0 "XaoS nemá ¾ádné ruènì
+definované palety jako
+vìt¹ina ostatních programù
+generujicí fraktály,
+místo toho je generuje náhodnì"
+pal1 "Jednodu¹e maèkejte 'P'
+tak dlouho, dokud si nìjakou
+z nabízených palet nevyberete"
+pal2 "Jsou pou¾ity tøi algoritmy"
+pal3 "První dìlá pøechody 
+z èerné do náhodne barvy"
+pal4 "Druhý pøechod z èerné do barvy
+a potom do bílé"
+pal5 "Tøetí je inspirován
+kubistickými obrazy"
+
+#########################################################
+#For file other.xaf
+
+auto1 "Autopilot"
+auto2 "Ti línìj¹í mù¾ou jednodu¹e
+zapnout autopilota a nechat
+XaoS zkoumat fraktál automaticky"
+fastjulia1 "Re¾im pro výbìr Juliovy mno¾iny"
+fastjulia2 "V tomto re¾imu mù¾ete mìnit
+parametr Juliovy mno¾iny plynule"
+fastjulia3 "Díky podobnosti s okolím
+bodu v Mandelbrotovì mno¾inì je také
+jej mo¾né pou¾ít jako preview bodu
+pøed tím, ne¾ tam zaènete zoomovat"
+rotation "Rotace obrazu"
+cycling "Rotace palety"

@@ -1,0 +1,76 @@
+Statistic of 320x200 autopilot run
+
+Avoided caluclating of 507 points from 838 and mirrored 0 60.50% 0.52%
+Statistics: frames 27430
+mkrealloctable: added 63571, symetry 1479
+calculate loop: tocalculate 12980419 avoided 7387175 mirrored 0
+calculate:calculated 5593244 inside 896358
+iters inside:152380860 iters outside:477553612
+framerate:28.650832 34903
+Thank you for using XaoS
+
+This means:
+Aprox number of calculated pixels for every frame:203 (0.31%) was 220
+16% of calculated pixels lies inside set
+Aprox number of new lines/columns for every frame:2.31 (was 2.37)
+Optimizations:
+Aproximation :  99.54% of calculations (was 99.49%)
+Symetry saved:  02.32% of remaining    (was 02.76%)
+Solid guessing: 56.91% of remaining    (was 60.80%)
+mirroring2:     0%     (no efective from mset. Slows down when active. Will be disabled)
+
+result: Optimizations seems to work a bit better at all. (solid guessing came lower..
+but this result is bit random. Sometimes I have for example 80%) Aproximation works
+better.
+
+Profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 56.33    290.38   290.38  5593244     0.05     0.05  mand_calc    (same speed)
+ 32.38    457.31   166.93    54860     3.04     3.04  mkrealloc_table  (faster 28%)
+  4.95    482.81    25.50    27429     0.93    11.60  calculatenewinterruptible
+          bit slower..is more complex now..nothing significant
+  2.00    493.10    10.29    12551     0.82     0.82  do_autopilot
+  1.42    500.41     7.31    27430     0.27     0.27  moveoldpoints
+  0.97    505.43     5.02    27430     0.18    18.19  do_fractal
+  0.85    509.80     4.37                             mcount
+  0.44    512.05     2.25    27430     0.08     0.08  dosymetry
+  0.14    512.76     0.71     2289     0.31     0.31  fill
+  <SNIP>
+
+
+Avoided caluclating of 1072 points from 2598 and mirrored 0 41.26% 0.50%
+Statistics: frames 2144
+mkrealloctable: added 502196, symetry 2757
+calculate loop: tocalculate 9967110 avoided 6744612 mirrored 0
+calculate:calculated 3222498 inside 332272
+iters inside:56486240 iters outside:225727242
+framerate:5.271509 189699
+Thank you for using XaoS
+
+This means:
+Aprox number of calculated pixels for every frame:1503 was 3364
+10% of calculated pixels lies inside set
+Aprox number of new lines/columns for every frame:234 (caused by resolution lowering)
+Optimizations:
+Aproximation :  unknown-resolution lowering of  (was 99.49%)
+Symetry saved:  00.54% of remaining    (was 02.47%)
+Solid guessing: 32.33% of remaining    (was 60.80%)
+mirroring2:     0%     (no efective from mset. Slows down when active. Will be disabled)
+
+
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 53.77    130.56   130.56  3222498     0.04     0.04  mand_calc
+ 19.62    178.20    47.64     1438    33.13    33.13  fill
+ 11.41    205.90    27.70     4288     6.46     6.46  mkrealloc_table
+  7.80    224.83    18.93     2143     8.83    90.52  calculatenewinterruptible
+  3.33    232.92     8.09     2144     3.77     3.77  moveoldpoints
+  1.29    236.06     3.14     4736     0.66     0.66  do_autopilot
+  1.22    239.02     2.96                             mcount
+  <SNIP>
