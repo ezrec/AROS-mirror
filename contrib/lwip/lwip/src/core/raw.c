@@ -159,7 +159,7 @@ udp_bind(struct udp_pcb *pcb, struct ip_addr *ipaddr, u16_t port)
 #endif
 /*-----------------------------------------------------------------------------------*/
 err_t
-raw_connect(struct raw_pcb *pcb, struct ip_addr *ipaddr, u16_t port)
+raw_connect(struct raw_pcb *pcb, struct ip_addr *ipaddr)
 {
   struct raw_pcb *ipcb;
   ip_addr_set(&pcb->remote_ip, ipaddr);

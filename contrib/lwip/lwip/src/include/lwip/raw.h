@@ -60,8 +60,7 @@ struct raw_pcb {
    RAW code. */
 struct raw_pcb * raw_new        (int protcol);
 void             raw_remove     (struct raw_pcb *pcb);
-err_t            raw_connect    (struct raw_pcb *pcb, struct ip_addr *ipaddr,
-				 u16_t port);
+err_t            raw_connect    (struct raw_pcb *pcb, struct ip_addr *ipaddr);
 void             raw_recv       (struct raw_pcb *pcb,
 				 void (* recv)(void *arg, struct raw_pcb *upcb,
 					       struct pbuf *p,
