@@ -109,6 +109,8 @@ AROS_UFH3(LONG, LevelListDisplayFunc,
  AROS_UFHA(struct EditLevelData *, data  , A1))
 #endif
 {
+    AROS_USERFUNC_INIT
+
     if (data)
     {
         static char width[8], height[8], mines[8];
@@ -130,6 +132,8 @@ AROS_UFH3(LONG, LevelListDisplayFunc,
     }
 
     return 0;
+
+    AROS_USERFUNC_EXIT
 }
 
 static const struct Hook LevelListDisplayHook =
@@ -963,6 +967,8 @@ AROS_UFH3(ULONG, LEWindowDispatcher,
  AROS_UFHA(Msg            , msg, A1))
 #endif
 {
+    AROS_USERFUNC_INIT
+
     switch (msg->MethodID)
     {
         case OM_NEW:     return mNew    (cl, obj, (APTR)msg);
@@ -993,6 +999,8 @@ AROS_UFH3(ULONG, LEWindowDispatcher,
     }
 
     return DoSuperMethodA(cl, obj, msg);
+
+    AROS_USERFUNC_EXIT
 }
 
  

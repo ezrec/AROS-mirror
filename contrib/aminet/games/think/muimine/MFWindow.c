@@ -898,6 +898,8 @@ AROS_UFH3(ULONG, MFWindowDispatcher,
  AROS_UFHA(Msg            , msg, A1))
 #endif
 {
+    AROS_USERFUNC_INIT
+
     switch (msg->MethodID)
     {
         case OM_NEW:     return mNew    (cl, obj, (APTR)msg);
@@ -910,6 +912,8 @@ AROS_UFH3(ULONG, MFWindowDispatcher,
     }
 
     return DoSuperMethodA(cl, obj, msg);
+
+    AROS_USERFUNC_EXIT
 }
 
 
