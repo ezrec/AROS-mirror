@@ -467,5 +467,14 @@ Log Message:
 size of memory aros allocates (--memsize 64 gives you 64MB) and --mapsysbase
 allows native (emulated) applications to access address $4 to get the ExecBase.
 The latter is only needed if you run (or play with) the emulator, of course.
+Update of /home/cvs/aros/AROS/config/m68k-emul
+In directory sebigbos:/var/tmp/cvs-serv16071
 
-
+Removed Files:
+        .cvsignore cache.c disable.c dispatch.s enable.c exception.c 
+        forbid.c geninc.c getcc.s initcore.c machine.h makefile.src 
+        permit.c preparecontext.c runprocess.s setsr.c sigcore.h 
+        special.c stackswap.s superstate.c supervisor.s switch.s 
+        userstate.c 
+Log Message:
+These files were not used anywhere
