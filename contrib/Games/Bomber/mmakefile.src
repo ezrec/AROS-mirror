@@ -1,0 +1,33 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(CONTRIBDIR)/Games/Bomber
+EXE    := $(EXEDIR)/Bomber
+
+USE_CLIB_SHARED := yes
+USE_MLIB     := yes
+USE_AMIGALIB := yes
+
+DATAFILES := BombSnds.ssf Bomber.mid Bomber0.ssf Bomber1.ssf
+DESTDATAFILES  := $(foreach f, $(DATAFILES), $(EXEDIR)/$(f)) 
+
+#MM- contrib-games : Bomber
+#MM Bomber : setup 
+Bomber : setup $(EXE) $(DESTDATAFILES)
+
+#MM Bomber-quick :
+Bomber-quick : setup $(EXE) $(DESTDATAFILES)
+
+FILES := Main
+
+$(EXEDIR)/%.ssf : %.ssf
+	@$(CP) $< $@
+	
+$(EXEDIR)/%.mid : %.mid
+	@$(CP) $< $@
+
+%make_prog_setup mmake=Bomber
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
