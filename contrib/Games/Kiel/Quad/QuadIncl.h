@@ -4,7 +4,7 @@ struct Window *Window;
 struct IntuiMessage *msg;
 
 ULONG class;
-USHORT code;
+UWORD code;
 
 void open_lib()
 {
@@ -33,7 +33,7 @@ void open_window()
 			    |WFLG_ACTIVATE
 			    |WFLG_RMBTRAP
 	, WA_SimpleRefresh, TRUE
-	, WA_Gadgets,	    &Start
+	, WA_Gadgets,	    FIRSTGADGET
 	, TAG_END
     );
   ActivateWindow(Window);

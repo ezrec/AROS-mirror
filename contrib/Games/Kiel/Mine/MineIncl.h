@@ -10,7 +10,7 @@ ULONG iflags;
 
 #define StopMsg() ModifyIDCMP(Window,0L)
 #define ContMsg() ModifyIDCMP(Window,iflags)
-#define LoescheWin() EraseRect(rp,0,0,Window->Width-5,Window->Height-11)
+#define clearwin() EraseRect(rp,0,0,Window->Width-5,Window->Height-11)
 
 void open_lib()
 {
@@ -18,26 +18,22 @@ void open_lib()
   GfxBase = (struct GfxBase *) OpenLibrary("graphics.library",0L);
 }
 
-void open_window(NeuesFenster)
-struct NewWindow NeuesFenster;
+void open_window(struct NewWindow *newwindow)
 {
-  Window = (struct Window *) OpenWindow(&NeuesFenster);
+  Window = (struct Window *) OpenWindow(newwindow);
   rp=Window->RPort;
   iflags=Window->IDCMPFlags;
   ActivateWindow(Window);
 }
 
-void schreibe(x, y, wort, farbe)
-int x, y, farbe;
-char *wort;
+void write_text(LONG x, LONG y, char *text, ULONG color)
 {
-SetAPen(rp,farbe);
+SetAPen(rp,color);
   Move(rp, x, y);
-  Text(rp, wort, strlen( wort));
+  Text(rp, text, strlen(text));
 }
 
-void maleFeld(x1,y1,x2,y2)
-SHORT x1,y1,x2,y2;
+void drawfield(LONG x1, LONG y1, LONG x2, LONG y2)
 {
 SetAPen(rp,2);
   Move(rp,x1,y2);
@@ -55,11 +51,9 @@ void copypic(x1,y1,dx,dy,x2,y2)
 ClipBlit(rp,x1,y1,rp,x2,y2,dx,dy,192);
 } */
 
-void WinSize(Win,x,y)
-struct Window *Win;
-SHORT x,y;
+void WinSize(struct Window *Win, LONG x, LONG y)
 {
-SHORT altx,alty;
+LONG altx,alty;
   altx=Win->Width;
   alty=Win->Height;
   Win->LeftEdge=10;
@@ -67,12 +61,12 @@ SHORT altx,alty;
   SizeWindow(Win,x-altx,y-alty);
 }
 
-void schliessewindow()
+void close_window()
 {
   CloseWindow(Window);
 }
 
-void schliesselib()
+void close_lib()
 {
   CloseLibrary((struct Library *)IntuitionBase);
   CloseLibrary((struct Library *)GfxBase);

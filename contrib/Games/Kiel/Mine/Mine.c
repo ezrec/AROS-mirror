@@ -35,14 +35,14 @@
 
 static const char version[] = "$VER: Mine 0.2 (16.09.1997)\n";
 
-#include "Mineincl.h"
+#include "MineIncl.h"
 
-#define maxbreite 30
-#define maxhoehe 20
-#define feldbreite 18
-#define links 30
+#define maxwidth 30
+#define maxheight 20
+#define box_width 18
+#define left 30
 #define oben 50
-#define rechts 40
+#define right 40
 #define unten 40
 
 #define MARKE -2
@@ -58,16 +58,16 @@ static const char version[] = "$VER: Mine 0.2 (16.09.1997)\n";
 
 /* ---------------------------------- Gadgets ------------------------------- */
 
-SHORT SharedBordersPairs0[] = {
+WORD SharedBordersPairs0[] = {
   -2,-1,-2,17,-1,17,-1,-1,195,-1 };
-SHORT SharedBordersPairs1[] = {
+WORD SharedBordersPairs1[] = {
   -1,17,195,17,195,0,196,-1,196,17 };
 
 struct Border SharedBorders[] = {
-  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs0[0],&SharedBorders[1]},
-  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs1[0],NULL},
-  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs0[0],&SharedBorders[3]},
-  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs1[0],NULL} };
+  {0,0,2,0,JAM1,5,&SharedBordersPairs0[0],&SharedBorders[1]},
+  {0,0,1,0,JAM1,5,&SharedBordersPairs1[0],NULL},
+  {0,0,1,0,JAM1,5,&SharedBordersPairs0[0],&SharedBorders[3]},
+  {0,0,2,0,JAM1,5,&SharedBordersPairs1[0],NULL} };
 
 UBYTE Name_Gad_buf[21];
 
@@ -77,7 +77,7 @@ struct StringInfo Name_Gad_info = {
 struct IntuiText Name_Gad_text = {
   1,0,JAM1,80,-10,NULL,(UBYTE *)"Name:",NULL };
 
-#define Name_Gad_ID    0
+#define Name_Gad_ID	0
 
 struct Gadget Name_Gad = {
   NULL,5,30,195,17,
@@ -86,8 +86,6 @@ struct Gadget Name_Gad = {
   GTYP_STRGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
   &Name_Gad_text,0L,(APTR)&Name_Gad_info,Name_Gad_ID,NULL };
-
-
 
 struct NewWindow NeuesWindow =
 {
@@ -104,49 +102,49 @@ struct NewWindow NeuesWindow =
   WBENCHSCREEN
 };
 
-SHORT Spielfeld[maxbreite+1][maxhoehe+1],Feldx,Feldy,breite,hoehe,Spielart;
-BOOL Karte[maxbreite+2][maxhoehe+2],ende,Fehler,menuean,SpielAbbr,WEnde;
+BYTE Spielfeld[maxwidth+1][maxheight+1],Feldx,Feldy,width,height,Spielart;
+BOOL Karte[maxwidth+2][maxheight+2],ende,Fehler,menuean,SpielAbbr,WEnde;
 ULONG class;
-USHORT code;
+UWORD code;
 int Rest,Anzahl,AnzMarken,maxx,maxy,mausx,mausy,Zeiten[4];
-time_t tstart,tende;
-char Namen[4][21];
+time_t tstart,tend;
+char names[4][21];
 
-#include "MineDatei.h"
+#include "MineFile.h"
 
 void globalInit()
 {
-SHORT i;
+BYTE i;
   open_lib();
-  open_window(NeuesWindow);
+  open_window(&NeuesWindow);
   time( &tstart );
   srand(tstart);
-  breite=22;
-  hoehe=12;
+  width=22;
+  height=12;
   Anzahl=30;
   menuean=TRUE;
   Spielart=EIGENDEF;
   for(i=1;i<4;i++)
   {
     Zeiten[i]=999;
-    strcpy(Namen[i],"Keiner");
+    strcpy(names[i],"Keiner");
   }
-  open_datei();
+  open_hsfile();
 }
 
-#include "MineSpiel.h"
+#include "MineGame.h"
 
 BOOL Frage()
 {
 BOOL weiter=FALSE,ret=FALSE;
   MaleSpielfeld();
-  schreibe(links+feldbreite*breite/2-19,25,"Start",2);
+  write_text(left+box_width*width/2-19,25,"Start",2);
 
-  EraseRect(rp,links+feldbreite*breite/2-30,oben+feldbreite*hoehe/2-30,links+feldbreite*breite/2+30,oben+feldbreite*hoehe/2+30);
-  maleFeld(links+feldbreite*breite/2-30,oben+feldbreite*hoehe/2-30,links+feldbreite*breite/2+30,oben+feldbreite*hoehe/2+30);
-  maleFeld(links+feldbreite*breite/2-29,oben+feldbreite*hoehe/2-29,links+feldbreite*breite/2+29,oben+feldbreite*hoehe/2+29);
-  maleFeld(links+feldbreite*breite/2-28,oben+feldbreite*hoehe/2-28,links+feldbreite*breite/2+28,oben+feldbreite*hoehe/2+28);
-  schreibe(links+feldbreite*breite/2-20,oben+feldbreite*hoehe/2+5,"Menue",2);
+  EraseRect(rp,left+box_width*width/2-30,oben+box_width*height/2-30,left+box_width*width/2+30,oben+box_width*height/2+30);
+  drawfield(left+box_width*width/2-30,oben+box_width*height/2-30,left+box_width*width/2+30,oben+box_width*height/2+30);
+  drawfield(left+box_width*width/2-29,oben+box_width*height/2-29,left+box_width*width/2+29,oben+box_width*height/2+29);
+  drawfield(left+box_width*width/2-28,oben+box_width*height/2-28,left+box_width*width/2+28,oben+box_width*height/2+28);
+  write_text(left+box_width*width/2-20,oben+box_width*height/2+5,"Menue",2);
 
   while(!weiter)
   {
@@ -161,16 +159,16 @@ BOOL weiter=FALSE,ret=FALSE;
     {
       case IDCMP_RAWKEY :
       case IDCMP_CLOSEWINDOW  : ret=TRUE;
-                          weiter=TRUE;
-                          break;
+                    		weiter=TRUE;
+                    		break;
       case IDCMP_MOUSEBUTTONS : if(code==SELECTUP)
                           {
-                            if((mausx>links+feldbreite*breite/2-25)&&(mausy>5)&&(mausx<links+feldbreite*breite/2+25)&&(mausy<35))
+                            if((mausx>left+box_width*width/2-25)&&(mausy>5)&&(mausx<left+box_width*width/2+25)&&(mausy<35))
                             {
                               menuean=FALSE;
                               weiter=TRUE;
   			    }
-                            if((mausx>links+feldbreite*breite/2-30)&&(mausy>oben+feldbreite*hoehe/2-30)&&(mausx<links+feldbreite*breite/2+30)&&(mausy<oben+feldbreite*hoehe/2+30))
+                            if((mausx>left+box_width*width/2-30)&&(mausy>oben+box_width*height/2-30)&&(mausx<left+box_width*width/2+30)&&(mausy<oben+box_width*height/2+30))
                             {
                               menuean=TRUE;
                               weiter=TRUE;
@@ -187,13 +185,13 @@ BOOL endreq()
 {
 BOOL weiter=FALSE,ret=FALSE;
   WinSize(Window,200,100);
-  LoescheWin();
+  clearwin();
  Delay(5);
-  schreibe(20,13,"Wirklich beenden???",2);
-  maleFeld(50,25,100,75);
-  schreibe(60,55,"Ja.",1);
-  maleFeld(110,25,160,75);
-  schreibe(115,55,"Nein.",1);
+  write_text(20,13,"Wirklich beenden???",2);
+  drawfield(50,25,100,75);
+  write_text(60,55,"Ja.",1);
+  drawfield(110,25,160,75);
+  write_text(115,55,"Nein.",1);
   while(!weiter)
   {
     Wait(1L<<Window->UserPort->mp_SigBit);
@@ -225,12 +223,12 @@ BOOL weiter=FALSE,ret=FALSE;
 
 void CleanUp()
 {
-  schliessedatei();
-  schliessewindow();
-  schliesselib();
+  close_hsfile();
+  close_window();
+  close_lib();
 }
 
-/* ---------------------------	  HauptProgramm    -------------------------- */
+/* ---------------------------	  main programm    -------------------------- */
 
 int main()
 {

@@ -50,12 +50,12 @@ struct RastPort *rp;
 struct IntuiMessage *msg;
 
 ULONG class,iflags;
-USHORT code;
+UWORD code;
 
 int field[33];
 /* This array contains the middle position(to be removed) for given
    first(row) and second(column) stone, returns 0 for impossible move */
-USHORT check[33][33]=
+BYTE check[33][33]=
 {
  {0,0,2,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
  {0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},

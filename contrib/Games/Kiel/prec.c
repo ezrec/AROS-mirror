@@ -1,6 +1,3 @@
-#define SHORT short
-#define USHORT unsigned short
-
 #include <ctype.h>
 #include <time.h>
 #include <stdio.h>

@@ -47,15 +47,15 @@ char Puffer[2];
 void write_file()
 {
 int count,j;
-char Zahl[2];
+char number[2];
   if((filehandle=(struct FileHandle *)Open("S:Jump.dat",MODE_OLDFILE))==0)
   {
     filehandle=(struct FileHandle *)Open("S:Jump.dat",MODE_NEWFILE);
   }
   for(j=0;j<33;j++)
   {
-    sprintf(Zahl,"%1d",field[j]);
-    count=Write(filehandle,Zahl,1);
+    sprintf(number,"%1d",field[j]);
+    count=Write(filehandle,number,1);
   }
   Close(filehandle);
 }

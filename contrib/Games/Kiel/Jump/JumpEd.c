@@ -45,7 +45,7 @@ struct RastPort *rp;
 struct IntuiMessage *msg;
 
 ULONG class,iflags;
-USHORT code;
+UWORD code;
 
 int field[33];
 

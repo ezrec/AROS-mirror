@@ -3,7 +3,7 @@
     $Id$
 
     Desc: Wumpus Game
-    Lang: german
+    Lang: english
 */
 
 /*****************************************************************************
@@ -37,15 +37,15 @@ static const char version[] = "$VER: Wumpus 0.2 (16.09.1997)\n";
 
 #include "WumpusIncl.h"
 
-#define NICHT 0
-#define WENIG 1
-#define STARK 2
+#define NONE 0
+#define LITTLE 1
+#define MUCH 2
 
 #define MPAUSE 300000
 
 struct cavity
 {
-  SHORT tunnel[3];
+  BYTE tunnel[3];
 };
 
 struct cavity cave[20]=
@@ -71,22 +71,22 @@ struct cavity cave[20]=
   {{11,18,20}},
   {{13,16,19}}
 };
-SHORT wumpus,spears,batman[3],abyss[3];
+BYTE wumpus,spears,batman[3],abyss[3];
 BOOL end_hunt,end_game=FALSE;
 
 
 /* ---  gadget of map of cave-net  --- */
 
-SHORT SharedBordersPairs0[] = {
+WORD SharedBordersPairs0[] = {
   0,0,0,18,1,18,1,0,37,0 };
-SHORT SharedBordersPairs1[] = {
+WORD SharedBordersPairs1[] = {
   1,18,37,18,37,1,38,0,38,18 };
 
 struct Border SharedBorders[] = {
-  {0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[1]},
-  {0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs0[0],NULL},
-  {0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[3]},
-  {0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs0[0],NULL} };
+  {0,0,1,1,JAM1,5,&SharedBordersPairs1[0],&SharedBorders[1]},
+  {0,0,2,2,JAM1,5,&SharedBordersPairs0[0],NULL},
+  {0,0,2,2,JAM1,5,&SharedBordersPairs1[0],&SharedBorders[3]},
+  {0,0,1,1,JAM1,5,&SharedBordersPairs0[0],NULL} };
 
 struct IntuiText cave20_text = {
   1,0,JAM1,11,14,NULL,(UBYTE *)"20",NULL };
@@ -353,35 +353,35 @@ struct Gadget cave1 = {
 
 /* ---  gadgets of caves  --- */
 
-SHORT SharedBordersPairs10[] = {
+WORD SharedBordersPairs10[] = {
   0,0,0,98,1,98,1,0,147,0 };
-SHORT SharedBordersPairs11[] = {
+WORD SharedBordersPairs11[] = {
   1,98,147,98,147,1,148,0,148,98 };
-SHORT SharedBordersPairs12[] = {
+WORD SharedBordersPairs12[] = {
   0,0,0,28,1,28,1,0,147,0 };
-SHORT SharedBordersPairs13[] = {
+WORD SharedBordersPairs13[] = {
   1,28,147,28,147,1,148,0,148,28 };
-SHORT SharedBordersPairs14[] = {
+WORD SharedBordersPairs14[] = {
   0,0,0,28,1,28,1,0,77,0 };
-SHORT SharedBordersPairs15[] = {
+WORD SharedBordersPairs15[] = {
   1,28,77,28,77,1,78,0,78,28 };
 
 struct Border SharedBorders1[] = {
-  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs11[0],&SharedBorders1[1]},
-  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs10[0],NULL},
-  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs11[0],&SharedBorders1[3]},
-  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs10[0],NULL},
-  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs13[0],&SharedBorders1[5]},
-  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs12[0],NULL},
-  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs13[0],&SharedBorders1[7]},
-  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs12[0],NULL},
-  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs15[0],&SharedBorders1[9]},
-  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs14[0],NULL},
-  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs15[0],&SharedBorders1[11]},
-  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs14[0],NULL} };
+  {0,0,1,0,JAM1,5,&SharedBordersPairs11[0],&SharedBorders1[1]},
+  {0,0,2,0,JAM1,5,&SharedBordersPairs10[0],NULL},
+  {0,0,2,0,JAM1,5,&SharedBordersPairs11[0],&SharedBorders1[3]},
+  {0,0,1,0,JAM1,5,&SharedBordersPairs10[0],NULL},
+  {0,0,1,0,JAM1,5,&SharedBordersPairs13[0],&SharedBorders1[5]},
+  {0,0,2,0,JAM1,5,&SharedBordersPairs12[0],NULL},
+  {0,0,2,0,JAM1,5,&SharedBordersPairs13[0],&SharedBorders1[7]},
+  {0,0,1,0,JAM1,5,&SharedBordersPairs12[0],NULL},
+  {0,0,1,0,JAM1,5,&SharedBordersPairs15[0],&SharedBorders1[9]},
+  {0,0,2,0,JAM1,5,&SharedBordersPairs14[0],NULL},
+  {0,0,2,0,JAM1,5,&SharedBordersPairs15[0],&SharedBorders1[11]},
+  {0,0,1,0,JAM1,5,&SharedBordersPairs14[0],NULL} };
 
 struct IntuiText shout_text = {
-  1,0,JAM1,18,18,NULL,(UBYTE *)"Rufen!",NULL };
+  1,0,JAM1,18,18,NULL,(UBYTE *)"Shout!",NULL };
 
 #define shout_ID    4
 
@@ -394,7 +394,7 @@ struct Gadget shout_gad = {
   &shout_text,0L,NULL,shout_ID,NULL };
 
 struct IntuiText spear_text = {
-  1,0,JAM1,27,18,NULL,(UBYTE *)"Speer werfen",NULL };
+  1,0,JAM1,27,18,NULL,(UBYTE *)"Throw spear",NULL };
 
 #define spear_ID    3
 
@@ -457,7 +457,8 @@ struct NewWindow new_window = {
 
 void draw_tunnels()
 {
-int i,tunnels[30][4]={
+int i;
+LONG tunnels[30][4]={
   {313,130,352,162},
   {376,179,353,217},
   {313,217,254,217},
@@ -497,10 +498,10 @@ int i,tunnels[30][4]={
   }
 }
 
-SHORT map_of_caves()
+BYTE map_of_caves()
 {
-SHORT nummer=0;
-BOOL weiter=FALSE;
+BYTE number=0;
+BOOL finish=FALSE;
 
 StopMsg();
   AddGList(Window,FIRSTGADGETL,0,20,NULL);
@@ -508,7 +509,7 @@ StopMsg();
   RefreshGadgets(FIRSTGADGETL,Window,NULL);
   draw_tunnels();
 ContMsg();
-  while(!weiter)
+  while(!finish)
   {
     Wait(1L<<Window->UserPort->mp_SigBit);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
@@ -520,23 +521,23 @@ ContMsg();
       case IDCMP_RAWKEY      :
       case IDCMP_CLOSEWINDOW : end_hunt=TRUE;
                          end_game=TRUE;
-                         weiter=TRUE;
+                         finish=TRUE;
                          break;
-      case IDCMP_GADGETUP    : nummer=(((struct Gadget *)(msg->IAddress))->GadgetID)+1;
-                         weiter=TRUE;
+      case IDCMP_GADGETUP    : number=(((struct Gadget *)(msg->IAddress))->GadgetID)+1;
+                         finish=TRUE;
                          break;
       default          : break;
     }
   }
   RemoveGList(Window,FIRSTGADGETL,20);
-  return(nummer);
+  return(number);
 }
 
 void draw_cave(nr)
-SHORT nr;
+BYTE nr;
 {
 char outtext[9];
-SHORT a,b,stinken;
+BYTE a,b,stinks;
 
 StopMsg();
   clear_win();
@@ -544,11 +545,11 @@ StopMsg();
   for(a=0;a<3;a++)
     sprintf(tunnel_text[a].IText,"%2d",cave[nr-1].tunnel[a]);
   RefreshGadgets(FIRSTGADGETH,Window,NULL);
-  sprintf(outtext,"Höhle %2d",nr);
+  sprintf(outtext,"Cave %2d",nr);
   write_text(100,50,outtext,1);
   draw_rect(238,239,450,257);
   draw_rect(447,255,241,241);
-  stinken=NICHT;
+  stinks=NONE;
   if(wumpus!=nr-1)
   {
     for(a=0;a<3;a++)
@@ -556,31 +557,31 @@ StopMsg();
       for(b=0;b<3;b++)
       {
         if(wumpus==cave[(cave[nr-1].tunnel[a])-1].tunnel[b])
-          stinken=WENIG;
+          stinks=LITTLE;
       }
       if(wumpus==cave[nr-1].tunnel[a])
-        stinken=STARK;
+        stinks=MUCH;
     }
-    switch(stinken)
+    switch(stinks)
     {
-      case NICHT : write_text(245,253,"                         ",0);
-                   break;
-      case WENIG : write_text(245,253,"Es Stinkt...             ",3);
-                   break;
-      case STARK : write_text(245,253,"Es stinkt fürchterlich!!!",2);
-                   break;
+      case NONE   : write_text(245,253,"                         ",0);
+                    break;
+      case LITTLE : write_text(245,253,"It's stinking...         ",3);
+                    break;
+      case MUCH   : write_text(245,253,"It's stinking terribly!!!",2);
+                    break;
     }
   }
 ContMsg();
 }
 
-BOOL Speerwurf(nr)
-SHORT nr;
+BOOL throw(nr)
+BYTE nr;
 {
-BOOL abbruch=FALSE,ist=TRUE;
+BOOL cancel=FALSE,ist=TRUE;
 
-  write_text(245,253,"In welche Höhle werfen ? ",1);
-  while(!abbruch)
+  write_text(245,253,"Throw in which cave?     ",1);
+  while(!cancel)
   {
     Wait(1L<<Window->UserPort->mp_SigBit);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
@@ -590,35 +591,35 @@ BOOL abbruch=FALSE,ist=TRUE;
     {
       case IDCMP_RAWKEY       :
       case IDCMP_CLOSEWINDOW  : end_hunt=TRUE;
-                          abbruch=TRUE;
-                          return(FALSE);
-                          break;
+                    		cancel=TRUE;
+                    		return(FALSE);
+            			break;
       case IDCMP_GADGETUP     : switch(((struct Gadget *)(msg->IAddress))->GadgetID)
-                          {
-                            case 0  : abbruch=TRUE;
-                                      ist=(cave[nr-1].tunnel[0]==wumpus);
-                                      break;
-                            case 1  : abbruch=TRUE;
-                                      ist=(cave[nr-1].tunnel[1]==wumpus);
-                                      break;
-                            case 2  : abbruch=TRUE;
-                                      ist=(cave[nr-1].tunnel[2]==wumpus);
-                                      break;
-                            default : break;
-                          }
-                          break;
+        	                {
+                        	  case 0  : cancel=TRUE;
+                                	    ist=(cave[nr-1].tunnel[0]==wumpus);
+                                	    break;
+                        	  case 1  : cancel=TRUE;
+                                	    ist=(cave[nr-1].tunnel[1]==wumpus);
+                                	    break;
+                        	  case 2  : cancel=TRUE;
+                                	    ist=(cave[nr-1].tunnel[2]==wumpus);
+                                	    break;
+                        	  default : break;
+                    		}
+                    		break;
     }
   }
   if(!ist)
   {
-    write_text(245,253,"Leider daneben ...       ",1);
+    write_text(245,253,"You missed Wumpus...     ",1);
     Delay(MPAUSE);
   }
   spears--;
   if(spears==0)
   {
 StopMsg();
-    write_text(245,253,"Das war Ihr letzter Speer",1);
+    write_text(245,253,"That was your last spear.",1);
     end_hunt=TRUE;
     Delay(MPAUSE);
 ContMsg();
@@ -628,25 +629,25 @@ ContMsg();
 }
 
 void shout(nr)
-SHORT nr;
+BYTE nr;
 {
-SHORT i,j;
+BYTE i,j;
 BOOL is_abyss=FALSE;
   for(i=0;i<3;i++)
     for(j=0;j<3;j++)
       if(abyss[i]==cave[nr-1].tunnel[j])
         is_abyss=TRUE;
   if(is_abyss)
-    write_text(245,253,"Vorsicht Abgrund !!!     ",2);
+    write_text(245,253,"Caution, Abyss !!!       ",2);
   else
-    write_text(245,253,"Nichts zu hören !!!      ",2);
+    write_text(245,253,"I don't hear anything.   ",2);
 
 }
 
-void Spiel()
+void game()
 {
-SHORT cave_number,i,count=0;
-BOOL abbruch,erlegt=FALSE,eaten_up,verschleppen,fallen=FALSE,test=TRUE;
+BYTE cave_number,i,count=0;
+BOOL cancel,killed=FALSE,eaten_up,displace,fallen=FALSE,test=TRUE;
 
   end_hunt=FALSE;
   spears=3;
@@ -665,9 +666,9 @@ BOOL abbruch,erlegt=FALSE,eaten_up,verschleppen,fallen=FALSE,test=TRUE;
     draw_cave(cave_number);
     eaten_up=(cave_number==wumpus);
 
-    while(!end_hunt&&!eaten_up&&!erlegt&&!fallen)
+    while(!end_hunt&&!eaten_up&&!killed&&!fallen)
     {
-      abbruch=FALSE;
+      cancel=FALSE;
       if(test)
       {
 StopMsg();
@@ -682,19 +683,19 @@ StopMsg();
           test=FALSE;
           if(!(eaten_up=(cave_number==wumpus)))
           {
-            verschleppen=FALSE;
+            displace=FALSE;
             fallen=FALSE;
             for(i=0;i<3;i++)
             {
               if(cave_number==batman[i])
-                verschleppen=TRUE;
+                displace=TRUE;
               if(cave_number==abyss[i])
                 fallen=TRUE;
             }
-            if(verschleppen)
+            if(displace)
             {
               test=TRUE;
-              write_text(245,253,"Sie wurden verschleppt ! ",2);
+              write_text(245,253,"You have been displaced !",2);
               Delay(MPAUSE);
               cave_number=random(20);
               draw_cave(cave_number);
@@ -703,7 +704,7 @@ StopMsg();
         }
 ContMsg();
       }
-      while(!abbruch&&!eaten_up&&!fallen)
+      while(!cancel&&!eaten_up&&!fallen)
       {
         Wait(1L<<Window->UserPort->mp_SigBit);
         msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
@@ -713,7 +714,7 @@ ContMsg();
         {
           case IDCMP_RAWKEY       :
           case IDCMP_CLOSEWINDOW  : end_hunt=TRUE;
-                              abbruch=TRUE;
+                              cancel=TRUE;
                               break;
           case IDCMP_GADGETUP     : switch(((struct Gadget *)(msg->IAddress))->GadgetID)
                               {
@@ -729,14 +730,14 @@ ContMsg();
                                          draw_cave(cave_number);
                                          test=TRUE;
                                          break;
-                                case 3 : erlegt=Speerwurf(cave_number);
+                                case 3 : killed=throw(cave_number);
                                          test=FALSE;
                                          break;
                                 case 4 : shout(cave_number);
                                          test=FALSE;
                                          break;
                               }
-                              abbruch=TRUE;
+                              cancel=TRUE;
                               break;
         }
       }
@@ -744,15 +745,15 @@ ContMsg();
 StopMsg();
     if(eaten_up)
     {
-      write_text(245,253,"Sie sind gefressen worden",2);
+      write_text(245,253,"You have been eaten up...",2);
     }
     if(fallen)
     {
-      write_text(245,253,"Sie fallen in eine Grube!",2);
+      write_text(245,253,"You've fallen into Abyss!",2);
     }
-    if(erlegt)
+    if(killed)
     {
-      write_text(245,253,"Sie haben Wumpus erlegt !",1);
+      write_text(245,253,"You've shot Wumpus!!!    ",1);
     }
     Delay(MPAUSE);
     RemoveGList(Window,FIRSTGADGETH,5);
@@ -764,10 +765,10 @@ int main()
 {
   srand((unsigned)time(NULL));
   open_lib();
-  open_window(new_window);
+  open_window(&new_window);
 
   while(!end_game)
-    Spiel();
+    game();
 
   close_window();
   close_lib();

@@ -8,7 +8,6 @@ struct IntuiMessage *msg;
 
 ULONG iflags;
 ULONG class;
-USHORT code;
 
 #define random(max) ((rand()%max)+1)
 #define StopMsg() ModifyIDCMP(Window,0L)
@@ -21,27 +20,23 @@ void open_lib()
   GfxBase = (struct GfxBase *) OpenLibrary("graphics.library",0L);
 }
 
-void open_window(NeuesFenster)
-struct NewWindow NeuesFenster;
+void open_window(struct NewWindow *newwindow)
 {
-  Window = (struct Window *) OpenWindow(&NeuesFenster);
+  Window = (struct Window *) OpenWindow(newwindow);
   rp=Window->RPort;
   ActivateWindow(Window);
   iflags=Window->IDCMPFlags;
   SetBPen(rp,0);
 }
 
-void write_text(x, y, wort, farbe)
-int x, y, farbe;
-char *wort;
+void write_text(LONG x, LONG y, char *text, ULONG color)
 {
-  SetAPen(rp,farbe);
+  SetAPen(rp,color);
   Move(rp,x,y);
-  Text(rp,wort,strlen(wort));
+  Text(rp,text,strlen(text));
 }
 
-void draw_rect(x1,y1,x2,y2)
-SHORT x1,y1,x2,y2;
+void draw_rect(LONG x1, LONG y1, LONG x2, LONG y2)
 {
   SetAPen(rp,2);
   Move(rp,x1,y2);

@@ -1,26 +1,26 @@
-SHORT SharedBordersPairs0[] = {
+WORD SharedBordersPairs0[] = {
   0,0,0,13,1,13,1,0,73,0,0,0 };
-SHORT SharedBordersPairs1[] = {
+WORD SharedBordersPairs1[] = {
   1,13,73,13,73,1,74,0,74,13 };
-SHORT SharedBordersPairs2[] = {
+WORD SharedBordersPairs2[] = {
   0,0,0,14,1,14,1,0,27,0,0,0 };
-SHORT SharedBordersPairs3[] = {
+WORD SharedBordersPairs3[] = {
   1,14,27,14,27,1,28,0,28,14 };
 
 struct Border SharedBorders[] = {
-  {0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[1]},
-  {0,0,2,2,JAM1,6,(SHORT *)&SharedBordersPairs0[0],NULL},
-  {0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs3[0],&SharedBorders[3]},
-  {0,0,2,2,JAM1,6,(SHORT *)&SharedBordersPairs2[0],NULL},
-  {0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs3[0],&SharedBorders[5]},
-  {0,0,1,1,JAM1,6,(SHORT *)&SharedBordersPairs2[0],NULL},
-  {0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[7]},
-  {0,0,1,1,JAM1,6,(SHORT *)&SharedBordersPairs0[0],NULL} };
+  {0,0,1,1,JAM1,5,&SharedBordersPairs1[0],&SharedBorders[1]},
+  {0,0,2,2,JAM1,6,&SharedBordersPairs0[0],NULL},
+  {0,0,1,1,JAM1,5,&SharedBordersPairs3[0],&SharedBorders[3]},
+  {0,0,2,2,JAM1,6,&SharedBordersPairs2[0],NULL},
+  {0,0,2,2,JAM1,5,&SharedBordersPairs3[0],&SharedBorders[5]},
+  {0,0,1,1,JAM1,6,&SharedBordersPairs2[0],NULL},
+  {0,0,2,2,JAM1,5,&SharedBordersPairs1[0],&SharedBorders[7]},
+  {0,0,1,1,JAM1,6,&SharedBordersPairs0[0],NULL} };
 
 struct IntuiText Gadget35_text = {
   1,0,JAM1,10,12,NULL,(UBYTE *)"Default",NULL };
 
-#define Gadget35_ID    35
+#define Gadget35_ID	35
 
 struct Gadget Gadget35 = {
   NULL,26,75,75,14,
@@ -33,7 +33,7 @@ struct Gadget Gadget35 = {
 struct IntuiText Gadget34_text = {
   1,0,JAM1,22,12,NULL,(UBYTE *)"Save",NULL };
 
-#define Gadget34_ID    34
+#define Gadget34_ID	34
 
 struct Gadget Gadget34 = {
   &Gadget35,26,55,75,14,
@@ -275,27 +275,25 @@ struct Gadget g[] = {
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,33,NULL}};
 
-struct IntuiText Start_text = {
+struct IntuiText load_text = {
   1,0,JAM1,22,12,NULL,(UBYTE *)"Load",NULL };
 
-#define Start_ID    0
-
-struct Gadget Start = {
+struct Gadget load = {
   &g[0],26,34,75,14,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[6],
-  &Start_text,0L,NULL,Start_ID,NULL };
+  &load_text,0L,NULL,0,NULL };
+
+#define FIRSTGADGET	&load
 
 struct NewWindow new_window = {
   1,0,521,195,0,1,
   IDCMP_GADGETUP+IDCMP_MOUSEBUTTONS+IDCMP_CLOSEWINDOW+IDCMP_RAWKEY,
   WFLG_DRAGBAR+WFLG_DEPTHGADGET+WFLG_CLOSEGADGET+WFLG_NOCAREREFRESH+WFLG_SMART_REFRESH+WFLG_ACTIVATE+WFLG_RMBTRAP,
-  &Start,NULL,
+  FIRSTGADGET,NULL,
   (UBYTE *)"    Jump!    Default-Editor",NULL,NULL,
   150,50,640,282,WBENCHSCREEN };
 
-
-#define NEWWINDOW   &new_window
-#define FIRSTGADGET &Start
+#define NEWWINDOW	&new_window

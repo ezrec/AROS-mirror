@@ -32,6 +32,6 @@ $(DESTDIR)/% : $(OBJDIR)/%.o $(DEPLIBS)
 clean-games :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
-$(OBJDIR)/%.o : %.c ../prec.c %Datei.h %Spiel.h %incl.h
+$(OBJDIR)/%.o : %.c ../prec.c %File.h %Game.h %Incl.h
 	@$(ECHO) "Compiling $(@F)..."
 	@$(CC) $(CFLAGS) $(INCL) -c $< -o $@
