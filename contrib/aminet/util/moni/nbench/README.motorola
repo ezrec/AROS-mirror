@@ -1,0 +1,17 @@
+If you have a Motorola CPU or equivalent:
+
+When linked with the 'libmoto' (floating point library from Motorola)
+the results you obtain are much better. (FPU index of 0.896 versus
+1.910 in one example.)
+
+The Motorola math library is currently available at:
+http://www.mot.com/SPS/PowerPC/support/rsw_customer_support/mklinux/libmoto/libmoto_reg_mkdev.html
+
+If you have a Motorola CPU and you submit a result then please let me
+know whether you used libmoto or not. Please read the file README.submit.
+
+I do not have a Motorola CPU, and I can't help you with installing the
+library either.
+
+December 3, 1997
+Uwe F. Mayer
