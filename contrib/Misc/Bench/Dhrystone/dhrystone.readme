@@ -1,0 +1,39 @@
+Short: Dhrystone benchmark
+Author: Ronald Hof (knp@chello.nl)
+
+
+Here's a quick port of the dhrystone benchmark.
+
+To compile it, type: vpcc -o dhrystone dhry21a.c dhry21b.c timers.c
+
+
+
+My results:
+
+CPU: AMD K6-2 500MHz
+
+Speed results: 
+VP MIOPS  = 616.264199
+VP MLOPS  = 103.501253
+VP MFOPS  =  37.549733
+VP MDOPS  =  32.392249
+
+Linux: RedHat6.1     compiler: egcs-2.91.66    
+Amiga: AmigaSDK 1.01 compiler: vpcc
+
+
+Compiled without optimization 
+
+                                               Linux        Amiga
+ 
+Microseconds for one run through Dhrystone:     1.7         1.8
+Dhrystones per Second:                        591856.1    559367.2
+VAX MIPS rating =                             336.856      318.365
+
+
+Compiled with -O2
+
+Microseconds for one run through Dhrystone:     1.1         1.3
+Dhrystones per Second:                        880902.0    746880.6
+VAX MIPS rating =                             501.36      425.089
+
