@@ -21,6 +21,9 @@
 
 /*
 $Log$
+Revision 1.3  2005/01/12 13:09:01  NicJA
+tidied remaining debug output
+
 Revision 1.2  2005/01/12 11:11:40  NicJA
 removed extremely broken "FAST" double bufering routines for the time being - will be placed into seperate files later..
 
@@ -121,7 +124,6 @@ extern struct Library*  CyberGfxBase;
 
 #define TC_RGBA(r,g,b,a) ((((((a<<8)|r)<<8)|g)<<8)|b)
 
-//#define DEBUGPRINT
 #define DEBUG 1
 #include <aros/debug.h>
 

@@ -73,7 +73,6 @@
 /* TrueColor-RGBA */
 #define TC_RGBA(r,g,b,a) ((((((a<<8)|r)<<8)|g)<<8)|b)
 
-//#define DEBUGPRINT
 #define DEBUG 1
 #include <aros/debug.h>
 

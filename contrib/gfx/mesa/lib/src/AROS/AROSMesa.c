@@ -21,6 +21,9 @@
 
 /*
 $Log$
+Revision 1.3  2005/01/12 13:09:01  NicJA
+tidied remaining debug output
+
 Revision 1.2  2005/01/12 11:11:40  NicJA
 removed extremely broken "FAST" double bufering routines for the time being - will be placed into seperate files later..
 
@@ -41,7 +44,7 @@ Revision 1.16-a1.1  2003/08/09 00:23:14  chodorowski
 Amiga Mesa 2.2 ported to AROS by Nic Andrews. Build with 'make aros'. Not built by default.
 
  * Revision 1.16  1997/06/25  19:16:56  StefanZ
- * New drawing rutines:
+ * New drawing routines:
  * - Now in separate files
  * - cyberGfx added.
  *
@@ -57,7 +60,7 @@ Amiga Mesa 2.2 ported to AROS by Nic Andrews. Build with 'make aros'. Not built 
  * Revision 1.12  1996/08/14  22:17:32  StefanZ
  * New API to amigacalls (uses taglist)
  * Made it more flexible to add gfx-card support.
- * Fast doublebuff rutines
+ * Fast doublebuff routines
  * minor bugfixes
  *
  * Revision 1.10    1996/06/12  13:06:00  StefanZ
@@ -103,10 +106,10 @@ TODO:
 Dynamic allocate the vectorbuffer for polydrawing. (memory improvment)
 implement shared list.
 fix resizing bug.
-some native asm rutine
+some native asm routine
 fast asm line drawin in db mode
 fast asm clear       in db mode
-read buffer rutines  in db-mode
+read buffer routines  in db-mode
 
 IDEAS:
  Make the gl a sharedlibrary. (Have ben started look in /amiga)
@@ -174,11 +177,8 @@ IDEAS:
 
 /* #define DEBUGPRINT */
 
-#ifdef DEBUGPRINT
-#define DEBUGOUT(x) printf(x);
-#else
-#define DEBUGOUT(x) /*printf(x);*/
-#endif
+#define DEBUG 1
+#include <aros/debug.h>
 
 /**********************************************************************/
 /*****                Internal Data                                         *****/
@@ -332,7 +332,9 @@ AROSMesaCreateContext(register struct TagItem *tagList)
 #ifdef AMESA_DOUBLEBUFFFAST
     if(c->visual->db_flag==GL_TRUE)
     {
-DEBUGOUT("This is doublebuffered\n")
+#ifdef DEBUGPRINT
+D(bug("[AMESA] : AROSMesaCreateContext -> doublebuffered\n"));
+#endif
         if (CyberGfxBase)
         {
             if (!(arosTC_Standard_init_db(c,tagList)))
@@ -356,7 +358,9 @@ DEBUGOUT("This is doublebuffered\n")
     else  // allways fallback on AGA when unknown drawmode
 #endif*/
     {
-DEBUGOUT("This is NOT doublebuffered\n")
+#ifdef DEBUGPRINT
+D(bug("[AMESA] : AROSMesaCreateContext -> unbuffered\n"));
+#endif
         if (CyberGfxBase)
         {
             if (!(arosTC_Standard_init(c,tagList)))
@@ -368,7 +372,7 @@ DEBUGOUT("This is NOT doublebuffered\n")
         }
         else
         {
-            if (!(aros8bit_Standard_init(c,tagList)))   /* Add CyberGfx init here also (if ...)*/
+            if (!(aros8bit_Standard_init(c,tagList)))
             {
                 gl_destroy_context( c->gl_ctx );
                 FreeVec( c );
@@ -384,9 +388,7 @@ DEBUGOUT("This is NOT doublebuffered\n")
 void AROSMesaDestroyContext(register struct arosmesa_context *c )
 {
     /* destroy a AROS/Mesa context */
-/*
-    if (c==amesa) amesa=NULL;
-*/
+
     (*c->Dispose)( c );
 
     if(c->flags&&0x1) AROSMesaDestroyVisual(c->visual);
@@ -404,10 +406,12 @@ void AROSMesaMakeCurrent(register struct arosmesa_context *amesa,register struct
     if (amesa && b) {
         gl_make_current( amesa->gl_ctx,b->gl_buffer );
 
-        (*amesa->InitDD)(amesa->gl_ctx);                            /* Call Driver_init_rutine */
+        (*amesa->InitDD)(amesa->gl_ctx);                            /* Call Driver_init_routine */
 
         if (amesa->gl_ctx->Viewport.Width==0) {
-DEBUGOUT("glViewport");
+#ifdef DEBUGPRINT
+D(bug("[AMESA] : AROSMesaMakeCurrent: call glViewport(0,0,%d,%d)", amesa->width, amesa->height));
+#endif
             glViewport( 0, 0, amesa->width, amesa->height );
         }
 	else
@@ -432,10 +436,12 @@ BOOL AROSMesaSetDefs(register struct TagItem *tagList)
             
     tagValue=AMA_DrawMode;
     tag = FindTagItem(tagValue,tagList);
+#ifdef DEBUGPRINT
     if (tag)
-        printf("Tag=0x%x, is 0x%x/n",tagValue,tag->ti_Data);
+D(bug("[AMESA] : AROSMesaSetDefs: Tag=0x%x, is 0x%x/n",tagValue,tag->ti_Data));
     else
-        printf("Tag=0x%x is not specified/n",tagValue);
+D(bug("[AMESA] : AROSMesaSetDefs: Tag=0x%x is not specified/n",tagValue));
+#endif
 */
     return FALSE;
 }

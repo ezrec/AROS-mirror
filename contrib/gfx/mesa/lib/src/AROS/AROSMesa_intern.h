@@ -4,3 +4,5 @@
 /* Disabled for now .. (nicja)
 #define AMESA_DOUBLEBUFFFAST
 */
+
+//#define DEBUGPRINT
