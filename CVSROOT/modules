@@ -31,7 +31,7 @@
 contrib contrib
 
 # Stuff necessary to compile AROS
-necessary -a grub bgui Format64 AmiCDROM aminet_util_arc gzip
+necessary -a grub bgui Format64 AmiCDROM aminet_util_arc
 
 ## This doesn't work :-/ How can I make sure when contrib/ is checked out,
 ## that the README gets created ?
