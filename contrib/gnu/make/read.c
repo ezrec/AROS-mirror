@@ -34,15 +34,13 @@ Boston, MA 02111-1307, USA.  */
 #include "hash.h"
 
 
-#ifndef WINDOWS32
-#ifndef _AMIGA
+#if !defined WINDOWS32 && !defined __OPENAMIGA__
 #ifndef VMS
 #include <pwd.h>
 #else
 struct passwd *getpwnam PARAMS ((char *name));
 #endif
-#endif
-#endif /* !WINDOWS32 */
+#endif /* !WINDOWS32 && !__OPENAMIGA__ */
 
 /* A 'struct ebuffer' controls the origin of the makefile we are currently
    eval'ing.
@@ -98,11 +96,11 @@ static char *default_include_directories[] =
 #define INCLUDEDIR "."
 #endif
     INCLUDEDIR,
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
     "/usr/gnu/include",
     "/usr/local/include",
     "/usr/include",
-#endif
+#endif /* __OPENAMIGA__ */
     0
   };
 
@@ -225,11 +223,11 @@ read_all_makefiles (makefiles)
 	/* all lower case since readdir() (the vms version) 'lowercasifies' */
 	{ "makefile.vms", "gnumakefile.", "makefile.", 0 };
 #else
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
 	{ "GNUmakefile", "Makefile", "SMakefile", 0 };
-#else /* !Amiga && !VMS */
+#else /* !__OPENAMIGA__ && !VMS */
 	{ "GNUmakefile", "makefile", "Makefile", 0 };
-#endif /* AMIGA */
+#endif /* __OPENAMIGA__ */
 #endif /* VMS */
       register char **p = default_makefiles;
       while (*p != 0 && !file_exists_p (*p))
@@ -1100,7 +1098,7 @@ eval (ebuf, set_default)
             else
               break;
           }
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
         /* Here, the situation is quite complicated. Let's have a look
            at a couple of targets:
 
@@ -1116,7 +1114,7 @@ eval (ebuf, set_default)
         if (p && !(isspace ((unsigned char)p[1]) || !p[1]
                    || isspace ((unsigned char)p[-1])))
           p = 0;
-#endif
+#endif /* __OPENAMIGA__ */
 #ifdef HAVE_DOS_PATHS
         {
           int check_again;
@@ -2257,14 +2255,14 @@ parse_file_seq (stringp, stopchar, size, strip)
       if (p && *p == ',')
 	*p =' ';
 #endif
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
       if (stopchar == ':' && p && *p == ':'
           && !(isspace ((unsigned char)p[1]) || !p[1]
                || isspace ((unsigned char)p[-1])))
       {
 	p = find_char_unquote (p+1, stopchar, VMS_COMMA, 1);
       }
-#endif
+#endif /* __OPENAMIGA__ */
 #ifdef HAVE_DOS_PATHS
     /* For DOS paths, skip a "C:\..." or a "C:/..." until we find the
        first colon which isn't followed by a slash or a backslash.
@@ -2300,7 +2298,7 @@ parse_file_seq (stringp, stopchar, size, strip)
 #ifdef VMS
 	continue;
 #else
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
 	name = savestring ("", 0);
 #else
 	name = savestring ("./", 2);
@@ -2922,7 +2920,7 @@ tilde_expand (name)
 	  free (home_dir);
 	  home_dir = getenv ("HOME");
 	}
-#if !defined(_AMIGA) && !defined(WINDOWS32)
+#if !defined __OPENAMIGA__ && !defined WINDOWS32
       if (home_dir == 0 || home_dir[0] == '\0')
 	{
 	  extern char *getlogin ();
@@ -2935,7 +2933,7 @@ tilde_expand (name)
 		home_dir = p->pw_dir;
 	    }
 	}
-#endif /* !AMIGA && !WINDOWS32 */
+#endif /* !__OPENAMIGA__ && !WINDOWS32 */
       if (home_dir != 0)
 	{
 	  char *new = concat (home_dir, "", name + 1);
@@ -2944,7 +2942,7 @@ tilde_expand (name)
 	  return new;
 	}
     }
-#if !defined(_AMIGA) && !defined(WINDOWS32)
+#if !defined __OPENAMIGA__ && !defined WINDOWS32
   else
     {
       struct passwd *pwent;
@@ -2962,7 +2960,7 @@ tilde_expand (name)
       else if (userend != 0)
 	*userend = '/';
     }
-#endif /* !AMIGA && !WINDOWS32 */
+#endif /* !__OPENAMIGA__ && !WINDOWS32 */
 #endif /* !VMS */
   return 0;
 }

@@ -48,6 +48,10 @@
    */
 #undef HAVE_DCGETTEXT
 
+/* Define to 1 if you have the declaration of `sys_siglist', and to 0 if you
+   don't. */
+#undef HAVE_DECL_SYS_SIGLIST
+
 /* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
    */
 #undef HAVE_DIRENT_H
@@ -229,7 +233,7 @@
 /* Define to 1 if you have the <sys/wait.h> header file. */
 #undef HAVE_SYS_WAIT_H
 
-/* Define this if you have the `union wait' type in <sys/wait.h>. */
+/* Define this if you have the \`union wait' type in <sys/wait.h>. */
 #undef HAVE_UNION_WAIT
 
 /* Define to 1 if you have the <unistd.h> header file. */
@@ -326,9 +330,6 @@
 
 /* Define to 1 on System V Release 4. */
 #undef SVR4
-
-/* Define to 1 if `sys_siglist' is declared by <signal.h> or <unistd.h>. */
-#undef SYS_SIGLIST_DECLARED
 
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #undef TIME_WITH_SYS_TIME

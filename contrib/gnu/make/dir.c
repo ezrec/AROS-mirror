@@ -115,8 +115,8 @@ dosify (filename)
 #include "pathstuff.h"
 #endif
 
-#ifdef _AMIGA
-#include <ctype.h>
+#if defined __AMIGAOS__ && defined SASC
+#   include <ctype.h>
 #endif
 
 #ifdef HAVE_CASE_INSENSITIVE_FS
@@ -124,7 +124,7 @@ static char *
 downcase (filename)
      char *filename;
 {
-#ifdef _AMIGA
+#if defined __AMIGAOS__ && defined SASC
   static char new_filename[136];
 #else
   static char new_filename[PATH_MAX];
@@ -768,11 +768,11 @@ file_exists_p (name)
   }
 #endif /* HAVE_DOS_PATHS */
   if (dirend == 0)
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
     return dir_file_exists_p (".", name);
-#else /* !VMS && !AMIGA */
+#else /* !VMS && !__OPENAMIGA__ */
     return dir_file_exists_p ("", name);
-#endif /* AMIGA */
+#endif /* __OPENAMIGA__ */
 #endif /* VMS */
 
   slash = dirend;
@@ -827,11 +827,11 @@ file_impossible (filename)
   }
 # endif /* HAVE_DOS_PATHS */
   if (dirend == 0)
-# ifdef _AMIGA
+# ifdef __OPENAMIGA__
     dir = find_directory ("");
 # else /* !VMS && !AMIGA */
     dir = find_directory (".");
-# endif /* AMIGA */
+# endif /* __OPENAMIGA__ */
 #endif /* VMS */
   else
     {
@@ -909,11 +909,11 @@ file_impossible_p (filename)
   }
 #endif /* HAVE_DOS_PATHS */
   if (dirend == 0)
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
     dir = find_directory ("")->contents;
 #else /* !VMS && !AMIGA */
     dir = find_directory (".")->contents;
-#endif /* AMIGA */
+#endif /* __OPENAMIGA__ */
 #endif /* VMS */
   else
     {

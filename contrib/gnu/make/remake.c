@@ -1295,10 +1295,10 @@ library_search (lib, mtime_ptr)
 {
   static char *dirs[] =
     {
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
       "/lib",
       "/usr/lib",
-#endif
+#endif /* !__OPENAMIGA__ */
 #if defined(WINDOWS32) && !defined(LIBDIR)
 /*
  * This is completely up to the user at product install time. Just define

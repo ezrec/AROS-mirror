@@ -112,11 +112,11 @@ lookup_file (name)
 #ifdef VMS
     name = "[]";
 #else
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
     name = "";
 #else
     name = "./";
-#endif /* AMIGA */
+#endif /* __OPENAMIGA__ */
 #endif /* VMS */
 
   file_key.hname = name;

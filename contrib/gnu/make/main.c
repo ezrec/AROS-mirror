@@ -29,19 +29,23 @@ MA 02111-1307, USA.  */
 #include "getopt.h"
 
 #include <assert.h>
-#ifdef _AMIGA
+
+#ifdef __OPENAMIGA__
 # include <dos/dos.h>
 # include <proto/dos.h>
-#endif
+#endif /* __OPENAMIGA__ */
+
 #ifdef WINDOWS32
 #include <windows.h>
 #include "pathstuff.h"
 #endif
-#if defined(MAKE_JOBSERVER) && defined(HAVE_FCNTL_H)
+#if defined(HAVE_FCNTL_H)
 # include <fcntl.h>
+#else
+# error need fcntl.h
 #endif
 
-#ifdef _AMIGA
+#if defined __AMIGAOS__ && defined SASC
 int __stack = 20000; /* Make sure we have 20K of stack space */
 #endif
 
@@ -827,7 +831,7 @@ open_tmpfile(name, template)
 }
 
 
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
 int
 main (argc, argv, envp)
      int argc;
@@ -869,10 +873,12 @@ int main (int argc, char ** argv)
 
 #endif
 
+#ifdef HAVE_GETTEXT
   /* Set up gettext/internationalization support.  */
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+#endif
 
 #ifdef	POSIX
   sigemptyset (&fatal_signal_set);
@@ -1016,7 +1022,7 @@ int main (int argc, char ** argv)
      done before $(MAKE) is figured out so its definitions will not be
      from the environment.  */
 
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
   for (i = 0; envp[i] != 0; ++i)
     {
       int do_not_define;
@@ -1034,7 +1040,7 @@ int main (int argc, char ** argv)
         do_not_define = 1; /* it gets defined after loop exits */
         windows32_path = ep+1;
       }
-#endif
+#endif /* WINDOWS32 */
       /* The result of pointer arithmetic is cast to unsigned int for
 	 machines where ptrdiff_t is a different size that doesn't widen
 	 the same.  */
@@ -1064,37 +1070,45 @@ int main (int argc, char ** argv)
      */
     if (!unix_path && windows32_path)
       define_variable("PATH", 4, windows32_path, o_env, 1)->export = v_export;
-#endif
-#else /* For Amiga, read the ENV: device, ignoring all dirs */
+#endif /* WINDOWS32 */
+#else /* __OPENAMIGA__ */
     {
-	BPTR env, file, old;
-	char buffer[1024];
-	int len;
-	__aligned struct FileInfoBlock fib;
-
-	env = Lock ("ENV:", ACCESS_READ);
-	if (env)
-	{
-	    old = CurrentDir (DupLock(env));
-	    Examine (env, &fib);
-
-	    while (ExNext (env, &fib))
-	    {
-		if (fib.fib_DirEntryType < 0) /* File */
-		{
-		    /* Define an empty variable. It will be filled in
-			variable_lookup(). Makes startup quite a bit
-			faster. */
-			define_variable (fib.fib_FileName,
-			    strlen (fib.fib_FileName),
-			"", o_env, 1)->export = v_export;
-		}
-	    }
-	    UnLock (env);
-	    UnLock(CurrentDir(old));
-	}
+        /* Read the ENV: device, ignoring all dirs */
+        BPTR                  env, old;
+        char                  buffer[1024];
+        int                   len;
+        struct FileInfoBlock *fib;
+        
+        if ((fib = AllocDosObject(DOS_FIB, NULL)) != NULL)
+        {
+            if ((env = Lock("ENV:", ACCESS_READ)) != NULL)
+            {
+                old = CurrentDir(DupLock(env));
+                Examine(env, fib);
+                
+                while (ExNext(env, fib))
+                {
+                    if (fib->fib_DirEntryType < 0) /* File */
+                    {
+                        /*
+                            Define an empty variable. It will be filled in
+                            variable_lookup(). Makes startup quite a bit faster.
+                        */
+                        define_variable
+                        (
+                            fib->fib_FileName, strlen(fib->fib_FileName), 
+                            "", o_env, 1
+                        )->export = v_export;
+                    }
+                }
+                UnLock(env);
+                UnLock(CurrentDir(old));
+            }
+            
+            FreeDosObject(DOS_FIB, fib);
+        }
     }
-#endif
+#endif /* !__OPENAMIGA */
 
   /* Decode the switches.  */
 
@@ -1113,7 +1127,7 @@ int main (int argc, char ** argv)
         Sleep(30 * 1000);
         fprintf(stderr, _("done sleep(30). Continuing.\n"));
   }
-#endif
+#endif /* WINDOWS32 */
 
   decode_debug_flags ();
 
@@ -1843,7 +1857,7 @@ int main (int argc, char ** argv)
 		fatal (NILF, _("Couldn't change back to original directory."));
 	    }
 
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
 	  for (p = environ; *p != 0; ++p)
 	    if ((*p)[MAKELEVEL_LENGTH] == '='
 		&& strneq (*p, MAKELEVEL_NAME, MAKELEVEL_LENGTH))
@@ -1857,7 +1871,7 @@ int main (int argc, char ** argv)
 		sprintf (*p, "%s=%u", MAKELEVEL_NAME, makelevel);
 		break;
 	      }
-#else /* AMIGA */
+#else /* __OPENAMIGA__ */
 	  {
 	    char buffer[256];
 	    int len;
@@ -1870,7 +1884,7 @@ int main (int argc, char ** argv)
 	      SetVar (MAKELEVEL_NAME, buffer, -1, GVF_GLOBAL_ONLY);
 	    }
 	  }
-#endif
+#endif /* !__OPENAMIGA__ */
 
 	  if (ISDB (DB_BASIC))
 	    {
@@ -1888,7 +1902,7 @@ int main (int argc, char ** argv)
           if (job_rfd >= 0)
             close (job_rfd);
 
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
 	  exec_command (nargv, environ);
 #else
 	  exec_command (nargv);

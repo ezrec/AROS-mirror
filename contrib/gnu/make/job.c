@@ -36,10 +36,10 @@ char *default_shell = "sh.exe";
 int no_default_sh_exe = 1;
 int batch_mode_shell = 1;
 #else  /* WINDOWS32 */
-# ifdef _AMIGA
+# ifdef __OPENAMIGA__
 char default_shell[] = "";
 extern int MyExecute (char **);
-# else /* _AMIGA */
+# else /* !__OPENAMIGA__ */
 #  ifdef __MSDOS__
 /* The default shell is a pointer so we can change it if Makefile
    says so.  It is without an explicit path so we get a chance
@@ -55,7 +55,7 @@ char default_shell[] = "/bin/sh";
 #   endif /* VMS */
 #  endif /* __MSDOS__ */
 int batch_mode_shell = 0;
-# endif /* _AMIGA */
+# endif /* __OPENAMIGA__ */
 #endif /* WINDOWS32 */
 
 #ifdef __MSDOS__
@@ -66,13 +66,13 @@ int dos_status;
 int dos_command_running;
 #endif /* __MSDOS__ */
 
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
 # include <proto/dos.h>
-static int amiga_pid = 123;
-static int amiga_status;
+static int  amiga_pid = 123;
+static int  amiga_status;
 static char amiga_bname[32];
-static int amiga_batch_file;
-#endif /* Amiga.  */
+static int  amiga_batch_file;
+#endif /* __OPENAMIGA__ */
 
 #ifdef VMS
 # ifndef __GNUC__
@@ -505,7 +505,7 @@ reap_children (block, err)
       else
 	{
 	  /* No remote children.  Check for local children.  */
-#if !defined(__MSDOS__) && !defined(_AMIGA) && !defined(WINDOWS32)
+#if !defined __MSDOS__ && !defined __OPENAMIGA__ && !defined WINDOWS32
 	  if (any_local)
 	    {
 #ifdef VMS
@@ -554,7 +554,7 @@ reap_children (block, err)
               /* We got a remote child.  */
               remote = 1;
 	    }
-#endif /* !__MSDOS__, !Amiga, !WINDOWS32.  */
+#endif /* !__MSDOS__ && !__OPENAMIGA__ && !WINDOWS32  */
 
 #ifdef __MSDOS__
 	  /* Life is very different on MSDOS.  */
@@ -566,14 +566,13 @@ reap_children (block, err)
 	  exit_sig = WIFSIGNALED (status) ? WTERMSIG (status) : 0;
 	  coredump = 0;
 #endif /* __MSDOS__ */
-#ifdef _AMIGA
-	  /* Same on Amiga */
+#ifdef __OPENAMIGA__
 	  pid = amiga_pid - 1;
 	  status = amiga_status;
 	  exit_code = amiga_status;
 	  exit_sig = 0;
 	  coredump = 0;
-#endif /* _AMIGA */
+#endif /* __OPENAMIGA__*/
 #ifdef WINDOWS32
           {
             HANDLE hPID;
@@ -870,7 +869,7 @@ static void
 start_job_command (child)
      register struct child *child;
 {
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
   static int bad_stdin = -1;
 #endif
   register char *p;
@@ -1004,7 +1003,7 @@ start_job_command (child)
      performed some action (makes a difference as to what messages are
      printed, etc.  */
 
-#if !defined(VMS) && !defined(_AMIGA)
+#if !defined VMS && !defined __OPENAMIGA__
   if (
 #ifdef __MSDOS__
       unixy_shell	/* the test is complicated and we already did it */
@@ -1020,7 +1019,7 @@ start_job_command (child)
       free ((char *) argv);
       goto next_command;
     }
-#endif  /* !VMS && !_AMIGA */
+#endif  /* !VMS && !__OPENAMIGA__ */
 
   /* If -n was given, recurse to get the next line in the sequence.  */
 
@@ -1039,7 +1038,7 @@ start_job_command (child)
   fflush (stderr);
 
 #ifndef VMS
-#if !defined(WINDOWS32) && !defined(_AMIGA) && !defined(__MSDOS__)
+#if !defined WINDOWS32 && !defined __OPENAMIGA__ && !defined __MSDOS__
 
   /* Set up a bad standard input that reads from a broken pipe.  */
 
@@ -1062,7 +1061,7 @@ start_job_command (child)
 	}
     }
 
-#endif /* !WINDOWS32 && !_AMIGA && !__MSDOS__ */
+#endif /* !WINDOWS32 && !__OPENAMIGA__ && !__MSDOS__ */
 
   /* Decide whether to give this child the `good' standard input
      (one that points to the terminal or whatever), or the `bad' one
@@ -1076,13 +1075,13 @@ start_job_command (child)
 
   child->deleted = 0;
 
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
   /* Set up the environment for the child.  */
   if (child->environment == 0)
     child->environment = target_environment (child->file);
-#endif
+#endif /* !__OPENAMIGA__ */
 
-#if !defined(__MSDOS__) && !defined(_AMIGA) && !defined(WINDOWS32)
+#if !defined __MSDOS__ && !defined __OPENAMIGA__ && !defined WINDOWS32
 
 #ifndef VMS
   /* start_waiting_job has set CHILD->remote if we can start a remote job.  */
@@ -1216,7 +1215,7 @@ start_job_command (child)
     child->pid = dos_pid++;
   }
 #endif /* __MSDOS__ */
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
   amiga_status = MyExecute (argv);
 
   ++dead_children;
@@ -1226,7 +1225,7 @@ start_job_command (child)
      amiga_batch_file = 0;
      DeleteFile (amiga_bname);        /* Ignore errors.  */
   }
-#endif	/* Amiga */
+#endif /* __OPENAMIGA__ */
 #ifdef WINDOWS32
   {
       HANDLE hPID;
@@ -1609,7 +1608,7 @@ job_next_command (child)
 static int
 load_too_high ()
 {
-#if defined(__MSDOS__) || defined(VMS) || defined(_AMIGA)
+#if defined __MSDOS__ || defined VMS || defined __OPENAMIGA__
   return 1;
 #else
   double load;
@@ -2219,7 +2218,7 @@ child_execute_job (argv, child)
 
 #else /* !VMS */
 
-#if !defined (_AMIGA) && !defined (__MSDOS__)
+#if !defined __OPENAMIGA__ && !defined __MSDOS__
 /* UNIX:
    Replace the current process with one executing the command in ARGV.
    STDIN_FD and STDOUT_FD are used as the process's stdin and stdout; ENVP is
@@ -2242,11 +2241,11 @@ child_execute_job (stdin_fd, stdout_fd, argv, envp)
   /* Run the command.  */
   exec_command (argv, envp);
 }
-#endif /* !AMIGA && !__MSDOS__ */
+#endif /* !__OPENAMIGA__ && !__MSDOS__ */
 #endif /* !VMS */
 #endif /* !WINDOWS32 */
 
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
 /* Replace the current process with one running the command in ARGV,
    with environment ENVP.  This function does not return.  */
 
@@ -2373,7 +2372,7 @@ exec_command (argv, envp)
 #endif /* !WINDOWS32 */
 #endif /* !VMS */
 }
-#else /* On Amiga */
+#else /* __OPENAMIGA__ */
 void exec_command (argv)
      char **argv;
 {
@@ -2385,7 +2384,7 @@ void clean_tmp (void)
   DeleteFile (amiga_bname);
 }
 
-#endif /* On Amiga */
+#endif /* !__OPENAMIGA__ */
 
 #ifndef VMS
 /* Figure out the argument list necessary to run LINE as a command.  Try to
@@ -2450,14 +2449,14 @@ construct_command_argv_internal (line, restp, shell, ifs, batch_filename_ptr)
   char *sh_chars;
   char **sh_cmds;
 #else
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
   static char sh_chars[] = "#;\"|<>()?*$`";
   static char *sh_cmds[] = { "cd", "eval", "if", "delete", "echo", "copy",
 			     "rename", "set", "setenv", "date", "makedir",
 			     "skip", "else", "endif", "path", "prompt",
 			     "unset", "unsetenv", "version",
 			     0 };
-#else
+#else /* !__OPENAMIGA__ */
 #ifdef WINDOWS32
   static char sh_chars_dos[] = "\"|&<>";
   static char *sh_cmds_dos[] = { "break", "call", "cd", "chcp", "chdir", "cls",
@@ -2486,7 +2485,7 @@ construct_command_argv_internal (line, restp, shell, ifs, batch_filename_ptr)
 			     "export", "read", "readonly", "shift", "times",
 			     "trap", "switch", 0 };
 #endif /* WINDOWS32 */
-#endif /* Amiga */
+#endif /* __OPENAMIGA__ */
 #endif /* __MSDOS__ */
   register int i;
   register char *p;
@@ -2796,7 +2795,7 @@ construct_command_argv_internal (line, restp, shell, ifs, batch_filename_ptr)
   execute_by_shell = 1;	/* actually, call `system' if shell isn't unixy */
 #endif
 
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
   {
     char *ptr;
     char *buffer;
@@ -3089,7 +3088,7 @@ construct_command_argv (line, restp, file, batch_filename_ptr)
   return argv;
 }
 
-#if !defined(HAVE_DUP2) && !defined(_AMIGA)
+#if !defined HAVE_DUP2 && !defined __AMIGAOS__
 int
 dup2 (old, new)
      int old, new;
@@ -3107,4 +3106,4 @@ dup2 (old, new)
 
   return fd;
 }
-#endif /* !HAPE_DUP2 && !_AMIGA */
+#endif /* !HAPE_DUP2 && !__AMIGAOS__ */

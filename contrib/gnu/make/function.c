@@ -25,7 +25,7 @@ Boston, MA 02111-1307, USA.  */
 #include "commands.h"
 #include "debug.h"
 
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
 #include "amiga.h"
 #endif
 
@@ -612,11 +612,11 @@ func_basename_dir (o, argv, funcname)
 #ifdef VMS
 	    o = variable_buffer_output (o, "[]", 2);
 #else
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
 	    o = variable_buffer_output (o, "./", 2);
 #else
 	    ; /* Just a nop...  */
-#endif /* AMIGA */
+#endif /* !__OPENAMIGA__ */
 #endif /* !VMS */
 	  else
 	    /* The entire name is the basename.  */
@@ -1258,7 +1258,7 @@ func_wildcard (o, argv, funcname)
      const char *funcname;
 {
 
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
    o = wildcard_expansion (argv[0], o);
 #else
    char *p = string_glob (argv[0]);
@@ -1491,7 +1491,7 @@ msdos_openpipe (int* pipedes, int *pidp, char *text)
 #define func_shell 0
 
 #else
-#ifndef _AMIGA
+#ifndef __OPENAMIGA__
 static char *
 func_shell (o, argv, funcname)
      char *o;
@@ -1590,7 +1590,7 @@ func_shell (o, argv, funcname)
 
       /* Close the write side of the pipe.  */
       (void) close (pipedes[1]);
-#endif
+#endif /* !__MSDOS__ */
 
       /* Set up and read from the pipe.  */
 
@@ -1660,9 +1660,7 @@ func_shell (o, argv, funcname)
   return o;
 }
 
-#else	/* _AMIGA */
-
-/* Do the Amiga version of func_shell.  */
+#else /* __OPENAMIGA__ */
 
 static char *
 func_shell (char *o, char **argv, const char *funcname)
@@ -1686,6 +1684,7 @@ func_shell (char *o, char **argv, const char *funcname)
   char * buffer, * ptr;
   char ** aptr;
   int len = 0;
+  char **command_argv;
   char* batch_filename = NULL;
 
   /* Construct the argument list.  */
@@ -1747,7 +1746,7 @@ func_shell (char *o, char **argv, const char *funcname)
   free (buffer);
   return o;
 }
-#endif  /* _AMIGA */
+#endif  /* !__OPENAMIGA__ */
 #endif  /* !VMS */
 
 #ifdef EXPERIMENTAL

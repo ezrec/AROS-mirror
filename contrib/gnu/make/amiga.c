@@ -18,6 +18,7 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 MA 02111-1307, USA.  */
 
 #include "make.h"
+#include "filedef.h"
 #include "variable.h"
 #include "amiga.h"
 #include <assert.h>
@@ -26,8 +27,7 @@ MA 02111-1307, USA.  */
 #include <proto/exec.h>
 #include <proto/dos.h>
 
-static const char Amiga_version[] = "$VER: Make 3.74.3 (12.05.96) \n"
-		    "Amiga Port by A. Digulla (digulla@home.lake.de)";
+static const char Amiga_version[] = "$VER: GNU Make 3.80 (04.08.03)";
 
 int
 MyExecute (argv)

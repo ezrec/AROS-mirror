@@ -278,11 +278,13 @@ extern void bcopy PARAMS ((const char *b1, char *b2, int));
 #endif  /* ANSI_STRING.  */
 #undef  ANSI_STRING
 
+#ifdef M_XENIX
 /* SCO Xenix has a buggy macro definition in <string.h>.  */
 #undef  strerror
 
 #if !defined(ANSI_STRING) && !defined(__DECC)
 extern char *strerror PARAMS ((int errnum));
+#endif
 #endif
 
 #if HAVE_INTTYPES_H

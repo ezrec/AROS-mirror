@@ -404,13 +404,13 @@ fatal_error_signal (sig)
   remove_intermediates (1);
   exit (EXIT_FAILURE);
 #else /* not __MSDOS__ */
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
   remove_intermediates (1);
   if (sig == SIGINT)
      fputs (_("*** Break.\n"), stderr);
 
   exit (10);
-#else /* not Amiga */
+#else /* !__OPENAMIGA__ */
   handling_fatal_signal = 1;
 
   /* Set the handling for this signal to the default.
@@ -476,7 +476,7 @@ fatal_error_signal (sig)
      will be unblocked when we return and arrive then to kill us.  */
   if (kill (getpid (), sig) < 0)
     pfatal_with_name ("kill");
-#endif /* not Amiga */
+#endif /* __OPENAMIGA__ */
 #endif /* not __MSDOS__  */
 }
 

@@ -494,14 +494,14 @@ static char *default_variables[] =
     "SCCS_OUTPUT_OPTION", "-G$@",
 #endif
 
-#ifdef _AMIGA
-    ".LIBPATTERNS", "%.lib",
-#else
-#ifdef __MSDOS__
+#if defined __AMIGAOS__
+    ".LIBPATTERNS", "%.lib lib%.a",  /* depends on compiler */
+#elif defined __AROS__
+    ".LIBPATTERNS", "lib%.a",
+#elif defined __MSDOS__
     ".LIBPATTERNS", "lib%.a $(DJDIR)/lib/lib%.a",
 #else
     ".LIBPATTERNS", "lib%.so lib%.a",
-#endif
 #endif
 
 #endif /* !VMS */
