@@ -277,9 +277,10 @@ void Play(void)
  ULONG  class;
  USHORT code;
  WORD   mx,my;
- SetBPen(info.wd->RPort,1);
+
  if(MakeScWd())
  {
+  /* SetBPen(info.wd->RPort,1); */
   SetUpValues();
   sigs = (1L<<Project0Wnd->UserPort->mp_SigBit) | 
          (1L<<info.wd->UserPort->mp_SigBit);
