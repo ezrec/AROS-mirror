@@ -46,11 +46,16 @@ int main(void)
 	CloseLibrary(RexxSysBase);
 	return 20;
     }
-    msg->rm_Action = RXCOMM;
+    msg->rm_Action = RXCOMM | RXFF_RESULT;
     msg->rm_Args[0] = CreateArgstring(command, strlen(command));
     PutMsg(port, (struct Message *)msg);
     reply = (struct RexxMsg *)WaitPort(replyport);
-    printf("Result1: %d\nResult2: %d\n", reply->rm_Result1, reply->rm_Result2);
+    printf("Result1: %d\n", reply->rm_Result1);
+    if (reply->rm_Result1==0 && reply->rm_Result2!=NULL)
+    {
+	puts(reply->rm_Result2);
+	DeleteArgstring(reply->rm_Result2);
+    }
     DeleteArgstring(msg->rm_Args[0]);
     DeleteRexxMsg(msg);
     DeletePort(replyport);

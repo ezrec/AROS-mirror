@@ -145,6 +145,7 @@ void StartCommand(struct RexxMsg *msg)
     UnLock(lock);
     
     len = LengthArgstring(msg->rm_Args[0]) - (s - msg->rm_Args[0]);
+    MAKERXSTRING(rxresult, NULL, 0);
     if (len>0)
     {
 	MAKERXSTRING(rxarg, s, len);
@@ -156,6 +157,11 @@ void StartCommand(struct RexxMsg *msg)
     }
     fflush(stdout);
     msg->rm_Result1 = rc;
+    if (rc==0 && (msg->rm_Action & RXFF_RESULT) && RXVALIDSTRING(rxresult))
+	msg->rm_Result2 = CreateArgstring(RXSTRPTR(rxresult), RXSTRLEN(rxresult));
+
+    if (RXSTRPTR(rxresult)!=NULL)
+	free(RXSTRPTR(rxresult));
     
     free(filename);
 }
