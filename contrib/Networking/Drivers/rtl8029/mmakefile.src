@@ -1,7 +1,7 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM contrib-Networking-Drivers-rtl8029 : workbench-libs-prometheus
+#MM- contrib-Networking-Drivers-rtl8029 : workbench-libs-prometheus
 
 USER_CFLAGS := \
 	-Wno-uninitialized -Wno-parentheses \
