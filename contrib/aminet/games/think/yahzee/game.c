@@ -6,6 +6,8 @@
  * Copyright © 1994-1998 Håkan L. Younes (lorens@hem.passagen.se)
  */
 
+
+#include <stdlib.h>
 #include <math.h>
 #include <exec/types.h>
 #include <intuition/intuition.h>
