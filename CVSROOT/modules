@@ -36,6 +36,9 @@ AHI -d contrib/AHI contrib/AHI
 # Aminet
 aminet -d contrib/aminet contrib/aminet
 
+# DOpus
+dopus -d contrib/dopus contrib/dopus
+
 # Demo
 Demo -d contrib/Demo contrib/Demo
 Voxel -d contrib/Demo/Voxel contrib/Demo/Voxel
