@@ -1,5 +1,5 @@
-#ifndef COMPILERSPECIFIC_H
-#define COMPILERSPECIFIC_H
+#ifndef BGUI_COMPILERSPECIFIC_H
+#define BGUI_COMPILERSPECIFIC_H
 /*
 **      $Id$
 **
@@ -377,4 +377,4 @@
 
 #endif
 
-#endif /* !COMPILERSPECIFIC_H */
+#endif /* !BGUI_COMPILERSPECIFIC_H */
