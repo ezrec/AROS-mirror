@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.0  2000/05/09 22:09:56  mlemos
+ * Bumped to revision 42.0 before handing BGUI to AROS team
+ *
  * Revision 41.11  2000/05/09 19:54:55  mlemos
  * Merged with the branch Manuel_Lemos_fixes.
  *
