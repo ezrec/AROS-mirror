@@ -1,14 +1,14 @@
 TODO
 
-- Make the current item in the navbar stand out
+- Generate TOC for each page
 
 - Make a logo contest
-
-- Add Link to edenmarket (those guys host our server for free :-)
 
 - Split the code which generates the pages into separate scripts and
 use a "config database" (probably a python object which is accessed
 via cPickle) to create the inter-links.
+
+When this is done, create a list of "recently changed" pages.
 
 o Convert the C source files into hyperlinked HTML docs.
     - Generate lxr.conf from site.conf.
@@ -28,10 +28,10 @@ o Merge old docs
     - devinfo_inside.src
     - devinfo_outside.src
     - differences.src
-    - faq.src
+    * faq.src
     - filesys.src
-    - hidd-intro.src
-    - hidd-model.src
+    * hidd-intro.src
+    * hidd-model.src
     - hidd.src
     - ideas.src
     - included.src
@@ -41,6 +41,10 @@ o Merge old docs
 - Mirror Matts Diskimage
 
 DONE
+
+* Make the current item in the navbar stand out
+
+* Add Link to edenmarket (those guys host our server for free :-)
 
 * List of links:
     * Homepages
