@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2004/06/16 23:59:30  chodorowski
+ * Added missing AROS_USERFUNC_INIT/EXIT.
+ *
  * Revision 42.4  2003/01/18 19:10:09  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -735,6 +738,8 @@ AROS_UFH3(, BackFillHook,
 BackFillHook( REG(a0) struct Hook *hook, REG(a2) Object *imo, REG(a1) struct FrameDrawMsg *fdm )
 #endif
 {
+    AROS_USERFUNC_INIT
+
    UWORD pat[] =
    {
       0x0000, 0x0000, 0x0002, 0x0002, 0x000A, 0x000A, 0x002A, 0x002A,
@@ -751,6 +756,8 @@ BackFillHook( REG(a0) struct Hook *hook, REG(a2) Object *imo, REG(a1) struct Fra
    SetAfPt( fdm->fdm_RPort, NULL, 0 );
 
    return( FRC_OK );
+
+    AROS_USERFUNC_EXIT
 }
 
 /*
@@ -888,6 +895,8 @@ AROS_UFH3(,TabHookFunc,
 TabHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct IntuiMessage *msg )
 #endif
 {
+    AROS_USERFUNC_INIT
+
    struct Window        *window;
    Object            *mx_obj = ( Object * )hook->h_Data;
    ULONG           pos;
@@ -907,6 +916,8 @@ TabHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct Intu
       else                          pos++;
       SetGadgetAttrs(( struct Gadget * )mx_obj, window, NULL, MX_Active, pos, TAG_END );
    }
+
+    AROS_USERFUNC_EXIT
 }
 
 struct Hook TabHook = { NULL, NULL, ( HOOKFUNC )TabHookFunc, NULL, NULL };
