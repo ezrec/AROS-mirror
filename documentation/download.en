@@ -9,7 +9,7 @@ Snapshots
 =========
 
 Snapshots are published more often than full releases, but less often than
-nightly builds. They are, in contrast to nightly builds, tested atleast 
+nightly builds. They are, in contrast to nightly builds, tested at least 
 briefly on a couple of different machines, so the they should generally be
 more stable. On the other hand, they don't contain the latest code.
 

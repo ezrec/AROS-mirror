@@ -19,16 +19,16 @@ platforms. A "port" of AROS is exactly what the name implies, ie. a version of
 AROS ported to some specific platform. 
 
 
-Flavours
+Flavors
 --------
 
-Ports are divided up into two major groups, or "flavours" in AROS terminology,
+Ports are divided up into two major groups, or "flavors" in AROS terminology,
 namely "native" and "hosted". 
 
 Native ports run directly on the hardware and have total control over the
 computer. They will become the recommended way to run AROS in the future since
 it gives superior performance and efficiency, but they are currently to
-incomplete to be useful (atleast for development).
+incomplete to be useful (at least for development).
 
 Hosted ports run on top of another operating system and do not access the
 hardware directly, but use the facilities provided by the host OS. The
@@ -76,7 +76,7 @@ AROS/i386-pc
 
 AROS/i386-pc is the native port of AROS to the common IBM PC AT computers and
 compatibles using the x86 family of processors. The name is actually a bit
-misleading since AROS/i386-pc actually requires atleast a 486 class CPU due to
+misleading since AROS/i386-pc actually requires at least a 486 class CPU due to
 usage of some instructions not available on the 386.
 
 This port works quite well, but we only have the most basic driver support. 
@@ -96,7 +96,7 @@ AROS/m68k-pp
 AROS/m68k-pp is the native port of AROS to the Palm line of handheld computers
 and compatibles ("pp" stands for "palm pilot", which was the name of the first
 handhelds of this line). This means that you might be able to take AROS with you
-in your pocket when travelling in the future...
+in your pocket when traveling in the future...
 
 This port is currently very raw. It does mostly work (running in an emulator,
 since nobody wants to risk trashing their expensive hardware just yet) but there
@@ -142,6 +142,6 @@ Footnotes
 .. [#] Yes, we know that Linux is really just a kernel and not a whole OS, but
        it is much shorter to write that rather than "operating systems based on
        the Linux kernel, some of the common GNU tools and the X windowing
-       system". This size optimization is ofcourse negated by having to write
+       system". This size optimization is of course negated by having to write
        this explanation for the pedantic readers, but anyway...
 
