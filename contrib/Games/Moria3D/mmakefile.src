@@ -1,0 +1,24 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+FILES := $(wildcrad Levels/Level* Levels/Mission* Levels/Story*) \
+	 $(wildcard Textures/*.256) \
+	 Missions
+INSTDIR := $(BINDIR)/Moria3D
+
+DEST := $(foreach f,$(FILES),$(INSTDIR)/$(f))
+
+#MM
+Moria3D-setup : make-dirs copy-files
+
+make-dirs :
+	%mkdirs_q $(INSTDIR)/Levels $(INSTDIR)/Textures
+
+copy-files : $(DEST)
+
+$(INSTDIR)/% : %
+	$(CP) $< $@
+
+#MM
+clean :
+	$(RM) $(INSTDIR)
