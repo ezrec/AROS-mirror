@@ -226,9 +226,18 @@ void uaedisplay_eventhandler(struct IntuiMessage *imsg)
 	    break;
         }
 
+        case IDCMP_ACTIVEWINDOW:
+            newmousecounters = 1;
+	   /* fall trough */
+
         case IDCMP_MOUSEMOVE:
-            lastmx = imsg->MouseX;
+
+	    lastmx = imsg->MouseX;
             lastmy = imsg->MouseY;
+
+	    oldmx = imsg->MouseX;
+	    oldmy = imsg->MouseY;
+
 	    break;
 
        case IDCMP_MOUSEBUTTONS:
@@ -238,13 +247,6 @@ void uaedisplay_eventhandler(struct IntuiMessage *imsg)
             if (imsg->Code == MIDDLEUP)   buttonstate[2]=0;
             if (imsg->Code == MENUDOWN)   buttonstate[2]=1;
             if (imsg->Code == MENUUP)     buttonstate[2]=0;
-            break;
-
-       case IDCMP_ACTIVEWINDOW:
-           newmousecounters = 1;
-           break;
-
-       case IDCMP_INACTIVEWINDOW:
             break;
 
        default:
@@ -282,9 +284,6 @@ void uaedisplay_eventhandler(struct IntuiMessage *imsg)
 
 void handle_events(void)
 {
-    struct IntuiMessage *msg;
-    int dmx,dmy,class,code;
-
     newmousecounters = 0;
 
     gui_handle_events();
@@ -301,7 +300,7 @@ int debuggable(void)
 
 int needmousehack(void)
 {
-    return 0;
+    return 1;
 }
 
 /***************************************************************************/
