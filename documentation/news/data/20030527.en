@@ -19,8 +19,8 @@ GNU/Linux on it, and started working on the hosted AROS port. However he was
 no longer able to continue for personal reasons, so he sent the board to
 Michal Schulz, another talented hardware hacker.
 
-In the meantime, Michal, who already has a PPC PReP board, worked on the native
-PPC port, and merged his sources in the AROS CVS tree, creating the new
+In the meantime, Michal, who already had a PPC PReP board, worked on the native
+PPC port. He merged his sources in the AROS CVS tree, creating the new
 'arch/ppc' directory. To this day, he went as far as implementing task handling
 and scheduling. Congratulations Michal! Sources as well as a PReP boot image
 can be found at http://home.tu-clausthal.de/~misc/AROS.ppc.tar.bz2
@@ -92,7 +92,7 @@ Some miscellaneous things that have happened:
   so that signals occuring during a signal handler execution are not ignored.
   It should improve the stability of the serial device.
 + and of course, lots of fixes here and there by many developers : for a rough
-  idea, already more than 350 CVS commits this month (although we wont beat
+  idea, already more than 350 CVS commits this month (although we won't beat
   the record of 890 last month, according to the AROS-CVS mailing list
   archive).
 
@@ -106,5 +106,6 @@ Web
 ---
 
 Randy Vice set up an AROS support site, TeamAROS, at http://thenostromo.com/teamaros/
+
 Be sure to check their bounty program if you want to sponsor AROS development.
 
