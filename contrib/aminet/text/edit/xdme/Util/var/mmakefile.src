@@ -36,11 +36,12 @@ $(OBJDIR)/Yacc.tab.o : Yacc.tab.c
 Yacc.tab.c : Yacc.y
 	bison -d Yacc.y
 
-$(OBJDIR)/lex.yy.o : lex.yy.c Dyn.h Yacc.tab.c
+$(OBJDIR)/lex.yy.o : $(OBJDIR)/lex.yy.c Dyn.h Yacc.tab.c
 	$(HOST_CC) $(CFLAGS) -c -o $@ $<
 
-lex.yy.c : Lex.l
+$(OBJDIR)/lex.yy.c : Lex.l
 	lex -d Lex.l
+	@$(MV) lex.yy.c $@
 
 %common
 %include_deps
