@@ -58,5 +58,5 @@
 
 #endif
 
-#endif/ * COMPILERSPECIFIC_H */
+#endif /* COMPILERSPECIFIC_H */
 
