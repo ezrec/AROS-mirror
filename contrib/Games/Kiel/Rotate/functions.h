@@ -287,6 +287,7 @@ void getmenu()
 BOOL weiter=FALSE;
 ULONG iclass;
 int xx=-1;
+struct Gadget *gad;
 
   if(MENUNUM(code)!=MENUNULL)
     switch(MENUNUM(code))
@@ -383,6 +384,7 @@ int xx=-1;
                 WaitPort(iWindow->UserPort);
                 msg=(struct IntuiMessage *)GetMsg(iWindow->UserPort);
                 iclass=msg->Class;
+                gad = (struct Gadget *)(msg->IAddress);
                 ReplyMsg((struct Message *)msg);
                 switch(iclass)
                 {
@@ -391,7 +393,7 @@ int xx=-1;
                     break;
 
                   case IDCMP_GADGETUP:
-                    switch(((struct Gadget *)(msg->IAddress))->GadgetID)
+                    switch(gad->GadgetID)
                     {
                       case 0:
                         xx=atoi(numbergad_buf);

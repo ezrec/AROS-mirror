@@ -503,6 +503,7 @@ BYTE map_of_caves()
 {
 BYTE number=0;
 BOOL finish=FALSE;
+struct Gadget *gad;
 
 StopMsg();
   AddGList(Window,FIRSTGADGETL,0,20,NULL);
@@ -515,6 +516,7 @@ ContMsg();
     WaitPort(Window->UserPort);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
     class=msg->Class;
+    gad = (struct Gadget *)(msg->IAddress);
     ReplyMsg((struct Message *)msg);
 
     switch(class)
@@ -523,7 +525,7 @@ ContMsg();
                          end_game=TRUE;
                          finish=TRUE;
                          break;
-      case IDCMP_GADGETUP    : number=(((struct Gadget *)(msg->IAddress))->GadgetID)+1;
+      case IDCMP_GADGETUP    : number=(gad->GadgetID)+1;
                          finish=TRUE;
                          break;
       default          : break;
@@ -579,6 +581,7 @@ BOOL throw(nr)
 BYTE nr;
 {
 BOOL cancel=FALSE,ist=TRUE;
+struct Gadget *gad;
 
   write_text(245,250,"Throw in which cave?     ",1);
   while(!cancel)
@@ -586,6 +589,7 @@ BOOL cancel=FALSE,ist=TRUE;
     WaitPort(Window->UserPort);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
     class=msg->Class;
+    gad = (struct Gadget *)(msg->IAddress);
     ReplyMsg((struct Message *)msg);
     switch(class)
     {
@@ -593,7 +597,7 @@ BOOL cancel=FALSE,ist=TRUE;
                     		cancel=TRUE;
                     		return(FALSE);
             			break;
-      case IDCMP_GADGETUP     : switch(((struct Gadget *)(msg->IAddress))->GadgetID)
+      case IDCMP_GADGETUP     : switch(gad->GadgetID)
         	                {
                         	  case 0  : cancel=TRUE;
                                 	    ist=(cave[nr-1].tunnel[0]==wumpus);
@@ -647,6 +651,7 @@ void game()
 {
 BYTE cave_number,i,count=0;
 BOOL cancel,killed=FALSE,eaten_up,displace,fallen=FALSE,test=TRUE;
+struct Gadget *gad;
 
   end_hunt=FALSE;
   spears=3;
@@ -708,13 +713,14 @@ ContMsg();
         WaitPort(Window->UserPort);
         msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
         class=msg->Class;
+        gad = (struct Gadget *)(msg->IAddress);
         ReplyMsg((struct Message *)msg);
         switch(class)
         {
           case IDCMP_CLOSEWINDOW  : end_hunt=TRUE;
                               cancel=TRUE;
                               break;
-          case IDCMP_GADGETUP     : switch(((struct Gadget *)(msg->IAddress))->GadgetID)
+          case IDCMP_GADGETUP     : switch(gad->GadgetID)
                               {
                                 case 0 : cave_number=cave[cave_number-1].tunnel[0];
                                          draw_cave(cave_number);
