@@ -62,7 +62,7 @@ FILES := \
 #	dynload_shlib 
 #	dynload_win 
 									
-USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR) -DAROS
+USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR) -DAROS -D'PLATFORM="AROS"'
 
 #MM linklibs-python-python : includes
 

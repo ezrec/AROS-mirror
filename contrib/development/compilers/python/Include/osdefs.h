@@ -30,6 +30,11 @@ extern "C" {
 #define DELIM ','
 #endif
 
+#ifdef AROS
+#define SEP '/'
+#define MAXPATHLEN 256  /* FIXME: Not more? */
+#define DELIM ';'
+#endif
 
 /* Filename separator */
 #ifndef SEP

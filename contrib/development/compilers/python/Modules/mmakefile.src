@@ -8,6 +8,7 @@ LIB   := python-modules
 
 FILES := \
 	config \
+	environment \
 	_codecsmodule \
 	_sre \
 	_testcapimodule \

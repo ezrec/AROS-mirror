@@ -156,6 +156,8 @@ if os.sep == ':':
     exit = 'Use Cmd-Q to quit.'
 elif os.sep == '\\':
     exit = 'Use Ctrl-Z plus Return to exit.'
+elif os.name == 'amiga':
+    exit = 'Use Ctrl-Backslash (i.e. EOF) to exit.'
 else:
     exit = 'Use Ctrl-D (i.e. EOF) to exit.'
 import __builtin__

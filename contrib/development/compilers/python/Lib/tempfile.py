@@ -25,6 +25,10 @@ def gettempdir():
     if os.name == 'nt':
         attempdirs.insert(0, 'C:\\TEMP')
         attempdirs.insert(0, '\\TEMP')
+    elif os.name == 'amiga':
+        attempdirs.insert(0, 'SYS:T')
+	attempdirs.insert(0, ':T')
+	attempdirs.insert(0, 'T:')
     elif os.name == 'mac':
         import macfs, MACFS
         try:
@@ -41,7 +45,7 @@ def gettempdir():
     for dir in attempdirs:
         try:
             filename = os.path.join(dir, testfile)
-            if os.name == 'posix':
+            if os.name == 'posix' or os.name == 'amiga':
                 try:
                     fd = os.open(filename,
                                  os.O_RDWR | os.O_CREAT | os.O_EXCL, 0700)

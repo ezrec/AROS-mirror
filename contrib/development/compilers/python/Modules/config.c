@@ -8,15 +8,12 @@ See the file "Misc/COPYRIGHT" for information on usage and
 redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 ******************************************************************/
 
-/* Module configuration */
-
-/* !!! !!! !!! This file is edited by the makesetup script !!! !!! !!! */
-
-/* This file contains the table of built-in modules.
-   See init_builtin() in import.c. */
+/* Handwritten module configuration for AROS */
+/* NOT GENERATED AUTOMATICALLY !!! DO NOT DELETE !!! */
 
 #include "Python.h"
 
+extern void initenvironment(void);
 extern void init_codecs(void);
 extern void init_sre(void);
 extern void init_testcapi(void);
@@ -51,36 +48,37 @@ extern void PyMarshal_Init(void);
 extern void initimp(void);
 
 struct _inittab _PyImport_Inittab[] = {
-//	{"_codecs",     init_codecs},
-//	{"_sre",        init_sre},
-//	{"_testcapi",   init_testcapi},
-//	{"_weakref",    init_weakref},
-//	{"array",       initarray},
-//	{"audioop",     initaudioop},
-//	{"binascii",    initbinascii},
-//	{"cPickle",     initcPickle},
-//	{"cStringIO",   initcStringIO},
-//	{"errno",       initerrno},
-//	{"gc",          initgc},
-//	{"imageop",     initimageop},
-//	{"md5",         initmd5},
-//	{"new",         initnew},
-//	{"operator",    initoperator},
-//	{"parser",      initparser},
-//	{"pure",        initpure},
-//	{"regex",       initregex},
-//	{"rgbimg",      initrgbimg},
-//	{"rotor",       initrotor},
-//-	{"select",      initselect},
-//	{"sha",         initsha},
-//	{"strop",       initstrop},
-//	{"struct",      initstruct},
-//	{"symtable",    init_symtable},
-//-	{"time",        inittime},
-//	{"timing",      inittiming},
-//	{"unicodedata", initunicodedata},
-//	{"xreadlines",  initxreadlines},
-//	{"zlib",        initzlib},
+	{"environment", initenvironment},
+	{"_codecs",     init_codecs},
+	{"_sre",        init_sre},
+	{"_testcapi",   init_testcapi},
+	{"_weakref",    init_weakref},
+	{"array",       initarray},
+	{"audioop",     initaudioop},
+	{"binascii",    initbinascii},
+	{"cPickle",     initcPickle},
+	{"cStringIO",   initcStringIO},
+	{"errno",       initerrno},
+	{"gc",          initgc},
+	{"imageop",     initimageop},
+	{"md5",         initmd5},
+	{"new",         initnew},
+	{"operator",    initoperator},
+	{"parser",      initparser},
+	{"pure",        initpure},
+	{"regex",       initregex},
+	{"rgbimg",      initrgbimg},
+	{"rotor",       initrotor},
+//	{"select",      initselect},
+	{"sha",         initsha},
+	{"strop",       initstrop},
+	{"struct",      initstruct},
+	{"symtable",    init_symtable},
+//	{"time",        inittime},
+	{"timing",      inittiming},
+	{"unicodedata", initunicodedata},
+	{"xreadlines",  initxreadlines},
+	{"zlib",        initzlib},
 
 	/* This module lives in marshal.c */
 	{"marshal", PyMarshal_Init},

@@ -8,6 +8,10 @@
 #include <sys/stat.h>
 #include <string.h>
 
+#ifdef AROS
+#include <proto/dos.h>
+#endif
+
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
@@ -106,7 +110,11 @@
 #endif
 
 #ifndef PREFIX
+#if defined(AROS) || defined(_AMIGA)
+#define PREFIX ""
+#else /* !AROS */
 #define PREFIX "/usr/local"
+#endif
 #endif
 
 #ifndef EXEC_PREFIX
@@ -114,20 +122,96 @@
 #endif
 
 #ifndef PYTHONPATH
+#if defined(AROS) || defined(_AROS)
+#define PYTHONPATH "LIBS:Python" ";" "PROGDIR:Libs/Python"
+#else /* !(AROS || _AMIGA)*/
 #define PYTHONPATH PREFIX "/lib/python" VERSION ":" \
 	      EXEC_PREFIX "/lib/python" VERSION "/lib-dynload"
+#endif
 #endif
 
 #ifndef LANDMARK
 #define LANDMARK "os.py"
 #endif
- 
+
+#if defined(AROS) || defined(_AMIGA)
+#define ISABSPATH(path) (strchr( path, ':' ) != NULL )
+#else /* !(AROS || _AMIGA) */
+#define ISABSPATH(path) (path[0] == SEP)
+#endif
+
 static char prefix[MAXPATHLEN+1];
 static char exec_prefix[MAXPATHLEN+1];
 static char progpath[MAXPATHLEN+1];
 static char *module_search_path = NULL;
 static char lib_python[] = "lib/python" VERSION;
 
+#if defined(AROS) || defined(_AMIGA)
+extern void Py_GetArgcArgv Py_PROTO((int *argc, char ***argv));  /* in main.c */
+
+static const char *
+fullprogrampath( void )
+{
+    static char path[MAXPATHLEN*2];
+    static char prog[MAXPATHLEN];
+    BPTR        dir;
+
+    /* If the program name contains ':' or '/' it's not in the user's
+     * path and probably set by using Py_SetProgramName. In that case,
+     * just use this. If it exists! */
+
+    strcpy( path, Py_GetProgramName() );
+    if (strchr( path, ':' ) || strchr( path, '/' ))
+    {
+        if (!isxfile( path ))
+	{
+            /* Error; the specified file does not exist or is not
+	     * executable. */
+            path[0] = '\0';
+        }
+        
+        return path;
+    }
+    
+    /* Construct the full path of our executable. */
+    /* FIXME: Handle start from Workbench. */
+    if (!isxfile( path ))
+    {
+        path[0] = '\0';
+        return path;
+    }
+    
+    path[0] = '\0';
+    if (dir = GetProgramDir())
+    {
+        NameFromLock( dir, path, MAXPATHLEN );
+        if (!GetProgramName( prog, MAXPATHLEN ))
+            /* FIXME: Better error reporting... */
+            strcpy( prog, "!ERROR!" );
+        if (!AddPart( path, prog, MAXPATHLEN*2 ))
+            /* FIXME: Better error reporting... */
+            strcpy( prog, "!ERROR!" );
+    }
+
+    return path;
+}
+
+static void 
+reduce( char *dir )
+{
+    int i = strlen( dir );
+    if (i > 0 && dir[i-1] == ':') 
+        dir[--i] = '\0';
+    
+    while (i > 0 && dir[i] != SEP && dir[i] != ':') 
+        --i;
+    
+    if (dir[i] != ':') 
+        dir[i] = '\0';
+    else
+        dir[i+1] = '\0';
+}
+#else /* !(AROS || _AMIGA) */
 static void
 reduce(char *dir)
 {
@@ -136,7 +220,7 @@ reduce(char *dir)
         --i;
     dir[i] = '\0';
 }
-
+#endif
 
 #ifndef S_ISREG
 #define S_ISREG(x) (((x) & S_IFMT) == S_IFREG)
@@ -205,6 +289,9 @@ isdir(char *filename)			/* Is directory */
    it guarantees that it will never overflow the buffer.  If stuff
    is too long, buffer will contain a truncated copy of stuff.
 */
+#if defined AROS || defined _AMIGA
+#define joinpath(buffer,stuff) AddPart(buffer,stuff,MAXPATHLEN)
+#else /* !( AROS || _AMIGA ) */
 static void
 joinpath(char *buffer, char *stuff)
 {
@@ -222,6 +309,7 @@ joinpath(char *buffer, char *stuff)
     strncpy(buffer+n, stuff, k);
     buffer[n+k] = '\0';
 }
+#endif /* !( AROS || _AMIGA ) */
 
 /* init_path_from_argv0 requires that path be allocated at least
    MAXPATHLEN + 1 bytes and that argv0_path be no more than MAXPATHLEN
@@ -367,8 +455,10 @@ calculate_path(void)
     char *pythonpath = PYTHONPATH;
     char *rtpypath = getenv("PYTHONPATH");
     char *home = Py_GetPythonHome();
+#if !defined(AROS) && !defined(_AMIGA)
     char *path = getenv("PATH");
     char *prog = Py_GetProgramName();
+#endif
     char argv0_path[MAXPATHLEN+1];
     int pfound, efound; /* 1 if found; -1 if found build directory */
     char *buf;
@@ -378,7 +468,10 @@ calculate_path(void)
 #ifdef WITH_NEXT_FRAMEWORK
     NSModule pythonModule;
 #endif
-	
+
+#if defined(AROS) || defined(_AMIGA)
+    strcpy( progpath, fullprogrampath() );
+#else /* !( AROS || _AMIGA ) */
 #ifdef WITH_NEXT_FRAMEWORK
     /* XXX Need to check this code for buffer overflows */
     pythonModule = NSModuleForSymbol(NSLookupAndBindSymbol("_Py_Initialize"));
@@ -395,7 +488,6 @@ calculate_path(void)
         /* If we're not in a framework, fall back to the old way
            (even though NSNameOfModule() probably does the same thing.) */
 #endif
-	
 	/* If there is no slash in the argv0 path, then we have to
 	 * assume python is on the user's $PATH, since there's no
 	 * other way to find a directory to start the search from.  If
@@ -435,6 +527,7 @@ calculate_path(void)
 #ifdef WITH_NEXT_FRAMEWORK
     }
 #endif
+#endif /* !( AROS || _AMIGA ) */
 
     strncpy(argv0_path, progpath, MAXPATHLEN);
 	
@@ -445,11 +538,11 @@ calculate_path(void)
         while (linklen != -1) {
             /* It's not null terminated! */
             tmpbuffer[linklen] = '\0';
-            if (tmpbuffer[0] == SEP)
+            if (ISABSPATH( tmpbuffer )) {
 		/* tmpbuffer should never be longer than MAXPATHLEN,
 		   but extra check does not hurt */
                 strncpy(argv0_path, tmpbuffer, MAXPATHLEN);
-            else {
+	    } else {
                 /* Interpret relative to progpath */
                 reduce(argv0_path);
                 joinpath(argv0_path, tmpbuffer);
@@ -499,7 +592,7 @@ calculate_path(void)
     while (1) {
         char *delim = strchr(defpath, DELIM);
 
-        if (defpath[0] != SEP)
+        if (!ISABSPATH( defpath ))
             /* Paths are relative to prefix */
             bufsz += prefixsz;
 
@@ -539,7 +632,7 @@ calculate_path(void)
         while (1) {
             char *delim = strchr(defpath, DELIM);
 
-            if (defpath[0] != SEP) {
+            if (!ISABSPATH( defpath )) {
                 strcat(buf, prefix);
                 strcat(buf, separator);
             }

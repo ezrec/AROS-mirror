@@ -590,8 +590,13 @@ PyRun_SimpleFile(FILE *fp, char *filename)
 static int
 maybe_pyc_file(FILE *fp, char* filename, char* ext, int closeit)
 {
+#if defined AROS || defined _AMIGA
+	/* On AROS and Amiga, filenames are case insensitive */
+	if (stricmp(ext, ".pyc") == 0 || stricmp(ext, ".pyo") == 0)
+#else 
 	if (strcmp(ext, ".pyc") == 0 || strcmp(ext, ".pyo") == 0)
 		return 1;
+#endif
 
 #ifdef macintosh
 	/* On a mac, we also assume a pyc file for types 'PYC ' and 'APPL' */

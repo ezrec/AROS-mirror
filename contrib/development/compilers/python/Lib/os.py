@@ -54,6 +54,20 @@ if 'posix' in _names:
     __all__.extend(_get_exports_list(posix))
     del posix
 
+elif 'amiga' in _names:
+    name = 'amiga'
+    linesep = '\n'
+    curdir = ''; pardir = '/'; sep = '/'; pathsep = ';'
+    defpath = 'C:'
+    from amiga import *
+    try:
+        from amiga import _exit
+    except ImportError:
+        pass
+    import amigapath
+    path = amigapath
+    del amigapath
+
 elif 'nt' in _names:
     name = 'nt'
     linesep = '\r\n'

@@ -23,6 +23,10 @@
 #include <fcntl.h>
 #endif
 
+#if defined AROS || defined _AMIGA
+#include <proto/dos.h>
+#endif
+
 #if defined(PYCC_VACPP)
 /* VisualAge C/C++ Failed to Define MountType Field in sys/stat.h */
 #define S_IFMT (S_IFDIR|S_IFCHR|S_IFREG)
@@ -946,6 +950,12 @@ find_module(char *realname, PyObject *path, char *buf, size_t buflen,
 			return &resfiledescr;
 		}
 #endif
+
+#if defined AROS || defined _AMIGA
+		/* Use dos.library to construct the path */
+		AddPart( buf, name, MAXPATHLEN );
+		len = strlen( buf );
+#else /* !( AROS || _AMIGA ) */
 		if (len > 0 && buf[len-1] != SEP
 #ifdef ALTSEP
 		    && buf[len-1] != ALTSEP
@@ -954,7 +964,8 @@ find_module(char *realname, PyObject *path, char *buf, size_t buflen,
 			buf[len++] = SEP;
 		strcpy(buf+len, name);
 		len += namelen;
-
+#endif /* !( AROS || _AMIGA ) */
+		
 		/* Check for package import (buf holds a directory name,
 		   and there's an __init__ module in that directory */
 #ifdef HAVE_STAT

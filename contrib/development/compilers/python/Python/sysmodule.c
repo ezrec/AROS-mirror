@@ -818,6 +818,16 @@ PySys_SetArgv(int argc, char **argv)
 				n--; /* Drop trailing separator */
 #endif /* Unix */
 		}
+#if defined AROS || defined _AMIGA
+		else
+		{
+			/* Check for absolute paths on AROS and Amiga */
+			if( argc > 0 && argv0 != NULL )
+				p = strchr( argv0, ':' );
+			if( p != NULL ) 
+				n = p + 1 - argv0;
+		}
+#endif /* AROS || _AMIGA */
 #endif /* All others */
 		a = PyString_FromStringAndSize(argv0, n);
 		if (a == NULL)

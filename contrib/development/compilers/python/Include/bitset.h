@@ -7,8 +7,12 @@ extern "C" {
 
 /* Bitset interface */
 
-#define BYTE		char
-
+#ifdef AROS
+#  include <exec/types.h>
+#else
+#  define BYTE		char
+#endif
+	
 typedef BYTE *bitset;
 
 bitset newbitset(int nbits);
