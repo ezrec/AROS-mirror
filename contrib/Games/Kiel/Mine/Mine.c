@@ -32,10 +32,11 @@
 	16-Sep-1997	hkiel	  Fixed all casts
 	03-Oct-1998	hkiel	  Added Counter task and fixed random()
 	04-Jun-1999	hkiel	  Wait() for IDCMP_CHANGEWINDOW after WinSize()
+	01-Oct-1999	hkiel	  Optical Update
 
 ******************************************************************************/
 
-static const char version[] = "$VER: Mine 0.4 (04.06.1999)\n";
+static const char version[] = "$VER: Mine 0.5 (01.10.1999)\n";
 
 #include "MineIncl.h"
 
@@ -89,30 +90,11 @@ struct Gadget Name_Gad = {
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
   &Name_Gad_text,0L,(APTR)&Name_Gad_info,Name_Gad_ID,NULL };
 
-struct Gadget *endreqglist = NULL,
-	      *gad = NULL;
 
-#define ID_ENDREQFALSE 0
-struct NewGadget gt_endreqfalse = {
-  25,20, 60,50, /* ng_LeftEdge ng_TopEdge ng_Width ng_Height */
-  "Nein.", /* ng_GadgetText */
-  NULL, /* ng_TextAttr */
-  ID_ENDREQFALSE, /* ng_GadgetID */
-  PLACETEXT_IN, /* ng_Flags */
-  NULL, /* ng_VisualInfo */
-  NULL  /* ng_UserData */
-};
+struct IntuiText p = {1,0,JAM1,10,30,NULL,(UBYTE *)"OK",NULL };
+struct IntuiText n = {1,0,JAM1,70,30,NULL,(UBYTE *)"Cancel",NULL };
+struct IntuiText q_body = {1,0,JAM1,0,0,NULL,(UBYTE *)"Wirklich beenden?",NULL };
 
-#define ID_ENDREQTRUE 1
-struct NewGadget gt_endreqtrue = {
-  105,20, 60,50, /* ng_LeftEdge ng_TopEdge ng_Width ng_Height */
-  "Ja.", /* ng_GadgetText */
-  NULL, /* ng_TextAttr */
-  ID_ENDREQTRUE, /* ng_GadgetID */
-  PLACETEXT_IN, /* ng_Flags */
-  NULL, /* ng_VisualInfo */
-  NULL  /* ng_UserData */
-};
 
 struct NewWindow NeuesWindow =
 {
@@ -292,52 +274,6 @@ BOOL weiter=FALSE,ret=FALSE;
   return(ret);
 }
 
-BOOL endreq()
-{
-BOOL weiter=FALSE,ret=FALSE;
-  if(WinSize(Window,200,100)==FALSE)
-    fprintf(stderr,"Could not resize Window!\n");
-  clearwin();
-
-  write_text(20,13,"Wirklich beenden???",2);
-  AddGList(Window,endreqglist,-1,-1,NULL);
-  RefreshGList(endreqglist,Window,NULL,-1);
-  GT_RefreshWindow(Window,NULL);
-  while(!weiter)
-  {
-    WaitPort(Window->UserPort);
-    while((msg = GT_GetIMsg( Window->UserPort )))
-    {
-      class = msg->Class;
-      code = msg->Code;
-      switch( class )
-      {
-          case IDCMP_GADGETUP:
-        	switch( ( (struct Gadget *)(msg->IAddress) )->GadgetID )
-        	{
-                  case 0:
-                    weiter=TRUE;
-                    break;
-                  case 1:
-                    ret=TRUE;
-                    weiter=TRUE;
-                    break;
-                  default:
-                    break;
-        	}
-        	break;
-          default:
-        	break;
-      }
-      GT_ReplyIMsg(msg);
-    } /* while((msg = GT_GetIMsg( Window->UserPort )) */
-      
-  } while( !weiter );
-  RemoveGList(Window,endreqglist,-1);
-  GT_RefreshWindow(Window,NULL);
-  return(ret);
-}
-
 
 void CleanUp()
 {
@@ -384,7 +320,7 @@ int main()
 	ende=Frage();
       }
     }
-    WEnde=endreq();
+    WEnde=AutoRequest(Window,&q_body,&p,&n,0L,0L,200,75);
   }
   CleanUp();
   return(0);
