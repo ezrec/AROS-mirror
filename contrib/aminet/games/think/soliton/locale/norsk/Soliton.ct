@@ -1,0 +1,698 @@
+## version $VER: Soliton.catalog 1.70 (30.5.02)
+## language norsk
+## codeset 0
+;
+;
+;
+; Catalog Description for Soliton by Kai Nickel
+;
+;
+;
+;******************************************************************************
+;  About
+;******************************************************************************
+;
+MSG_APPDESCRIPTION
+Kabal
+;Solitaire card game
+;
+MSG_ABOUT_VERSION
+Versjon %s (%s)
+;Version %s (%s)
+;
+MSG_ABOUT_OK
+_OK
+;_Ok
+;
+MSG_ABOUT_MUI
+Om _MUI...
+;_About MUI...
+;
+;NOTE: The GPL disclaimer should not be translated. Add an warning
+;about this in translated catalogs and leave it untouched.
+;
+MSG_ABOUT
+
+;This is an MUI based Amiga card game originally developed by\n\
+;Kai Nickel in 1997. It is freely available under the GPL license\n\
+;since 2001 and continued by a development team. See the provided\n\
+;documentation for more information.\n\
+;\n\
+;A larger set of cardsets can be accessed from the site\n\
+;http://go.to/rekonet/\n\
+;which also has lots of links to other information sources.\n\
+;\n\
+;For your information the GPL license disclaimer:\n\
+;\n\
+;This program is free software; you can redistribute it and/or modify\n\
+;it under the terms of the GNU General Public License as published by\n\
+;the Free Software Foundation; either version 2 of the License, or\n\
+;(at your option) any later version.\n\
+;\n\
+;This program is distributed in the hope that it will be useful,\n\
+;but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+;GNU General Public License for more details.\n\
+;\n\
+;You should have received a copy of the GNU General Public License\n\
+;along with this program; if not, write to the Free Software\n\
+;Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+;
+;
+;******************************************************************************
+;  Main Window
+;******************************************************************************
+;
+MSG_WIN_NEW
+_Ny
+;_New
+;
+MSG_WIN_NEW_HELP
+Starter nytt spill
+;Start new game
+;
+MSG_WIN_SWEEP
+_Rydd opp
+;_Clean up
+;
+MSG_WIN_SWEEP_HELP
+Prøver at flytte alle kortene\n\
+til deres slutpositioner.
+;Try to move all cards\n\
+;to their final position\n\
+;auomatically.
+;
+MSG_WIN_UNDO
+_Angre
+;_Undo
+;
+MSG_WIN_UNDO_HELP
+Angrer siste flytting
+;Make last move undone
+;
+MSG_WIN_STATISTICS
+_Statistikk
+;S_tatistics
+;
+MSG_WIN_STATISTICS_HELP
+Viser spillstatistikk
+;Show game statistics
+;
+MSG_WIN_MOVE
+F_lytt
+;_Move
+;
+MSG_WIN_MOVE_HELP
+Denne knappen indikerer en\n\
+mulig flyting - og utfører\n\
+denne hvis du klikker.
+;This button indicates a\n\
+;possible move - and executes\n\
+;that move if you click.
+;
+MSG_TIMER_HELP
+Tid gått siden du startet\n\
+dette spillet. Klokken går\n\
+bare når vinduet er aktivt.
+;Time elapsed since start of\n\
+;this game. Only running while\n\
+;window active.
+;
+MSG_REQ_NEWGAME
+Start et nytt spill nå?
+;Start a new game now?
+;
+MSG_REQ_QUIT
+Vil du avslutte Soliton nå?
+;Quit Soliton now?
+;
+MSG_REQ_GADGETS
+* _OK | _Avbryt
+;* Ok | Cancel
+;
+MSG_SCORE_HELP
+Poeng
+;Game score
+;
+;
+;
+;******************************************************************************
+;  Menu
+;******************************************************************************
+;
+MSG_MENU_PROJECT
+Prosjekt
+;Game
+;
+MSG_MENU_PROJECT_NEW
+N\0Nytt spill
+;N\0New game
+;
+MSG_MENU_PROJECT_SWEEP
+C\0Rydd opp
+;C\0Clean up
+;
+MSG_MENU_PROJECT_UNDO
+U\0Angre
+;U\0Undo
+;
+MSG_MENU_PROJECT_ABOUT
+?\0Om...
+;?\0About...
+;
+MSG_MENU_PROJECT_HELP
+H\0Hjelp...
+;H\0Help...
+;
+MSG_MENU_PROJECT_STATS
+T\0Statistikk...
+;T\0Statistics...
+;
+MSG_MENU_PROJECT_QUIT
+Q\0Avslutt
+;Q\0Quit
+;
+MSG_MENU_SETTINGS
+Instillinger
+;Settings
+;
+MSG_MENU_SETTINGS_SOLITON
+S\0Soliton...
+;S\0Soliton...
+;
+MSG_MENU_SETTINGS_MUI
+M\0MUI...
+;M\0MUI...
+;
+MSG_MENU_PROFILES
+Profiler
+;Profiles
+;
+MSG_MENU_MANPROFILES
+
+;P\0Manage Profiles...
+;
+MSG_MENU_GAME
+
+;Gametype
+;
+MSG_MENU_GAME_KLONDIKE
+
+;K\0Klondike
+;
+MSG_MENU_GAME_FREECELL
+
+;F\0Freecell
+;
+;
+;
+;
+;******************************************************************************
+;  Settings
+;******************************************************************************
+;
+MSG_SETTINGS_TITLE
+Instillinger
+;Soliton <Settings>
+;
+MSG_SETTINGS_TOPIC
+Soliton-instillinger
+;Settings
+;
+MSG_SETTINGS_SAVE
+_Lagre
+;_Save
+;
+MSG_SETTINGS_SAVE_HELP
+Lagrer instillingene permanent
+;Permanently save settings
+;
+MSG_SETTINGS_USE
+_Bruk
+;_Use
+;
+MSG_SETTINGS_USE_HELP
+Bruker instillinger fram til neste\ngang du starter programmet.
+;Use settings until the next time\nyou start the program
+;
+MSG_SETTINGS_CANCEL
+_Avbryt
+;_Cancel
+;
+MSG_SETTINGS_CANCEL_HELP
+Ignorer alle endringer
+;Ignore all changes
+;
+MSG_SETTINGS_PATTERN
+Bakgr_und
+;_Pattern
+;
+MSG_SETTINGS_PATTERN_HELP
+Bakgrundsmønster for spillområdet
+;Background pattern of the playfield
+;
+MSG_SETTINGS_CARDSET
+_Kortsett
+;Ca_rdset
+;
+MSG_SETTINGS_CARDSET_HELP
+Filen som inneholder kortsettet
+;File that contains the cardset
+;
+MSG_SETTINGS_OPEN
+Snu x _kort om gangen
+;_Open cards
+;
+MSG_SETTINGS_OPEN_HELP
+Hvor mange kort skal snus\n\
+når du klikker på bunken?\n\
+Jo flere, desto vanskeligere\n\
+blir spillet.
+;How many cards should be opened\n\
+;when you click the stack?\n\
+;The higher the harder the game\n\
+;will be.
+;
+MSG_SETTINGS_BLOCK
+Kun tillate b_lokkflyttinger
+;B_lock moves
+;
+MSG_SETTINGS_BLOCK_HELP
+Tillater kun å flytte hele blokken\n\
+av kort i stedet for enkelte kort.\n\
+Dette vil gøre spillet vanskeligere.
+;Allow only to move the whole block\n\
+;of cards instead of single ones.\n\
+;This will make the game harder.
+;
+MSG_SETTINGS_BUTTONS
+K_napper
+;_Buttons
+;
+MSG_SETTINGS_BUTTONS_HELP
+Skal knappene vises?
+;Do you want to see the buttons?
+;
+MSG_SETTINGS_DESIGN
+Utseende
+;Appearance
+;
+MSG_SETTINGS_AUTOOPEN
+_Snu toppkort automatisk
+;_Auto open
+;
+MSG_SETTINGS_AUTOOPEN_HELP
+Snur automatisk et lukket kort som ligger\n\
+øverst i en bunke. Dette er bare mer bekvemt\n\
+og påvirker ikke vanskelighetsgraden.
+;Automatically turn around the\n\
+;topmost face-down card of a stack.\n\
+;This is just more comfortable\n\
+;and does not affect difficulty.
+;
+MSG_SETTINGS_INDICATOR
+_Indikere mulig flytting
+;_Indicate moves
+;
+MSG_SETTINGS_INDICATOR_HELP
+Viser 'Flytte'-knappen hver gang det\n\
+er en mulig flytning.
+;Show the 'Move' button every time\n\
+;there is a possible move.
+;
+MSG_SETTINGS_ANIM
+_Flyhastighet
+;_Fly speed
+;
+MSG_SETTINGS_ANIM_HELP
+Kortenes hastighet når de\n\
+flyr til deres mål-bunke.
+;Speed of the cards flying\n\
+;to their destination
+;
+MSG_SETTINGS_NOANIM
+ingen animation
+;no anim
+;
+MSG_SETTINGS_PROFILE
+Pro_fil
+;Pro_file
+;
+MSG_SETTINGS_PROFILE_HELP
+Profilens navn
+;Name of the profile
+;
+MSG_SETTINGS_PROFILES_HELP
+Liste over alle profiler.\n\
+En profil er en kombinasjon\n\
+av et kortset og en bakgrund\n\
+som kan refereres til med et\n\
+enkelt navn.
+;List of all profiles.\n\
+;A profile is a combination\n\
+;of a cardset and a pattern\n\
+;that can be referred by a\n\
+;single name.
+;
+MSG_SETTINGS_NOPROFILE
+<tom>
+;<unnamed>
+;
+MSG_SETTINGS_AUTOTURN
+A_uto-snu
+;A_uto open topleft
+;
+MSG_SETTINGS_AUTOTURN_HELP
+Snur automatisk <n> kort\n\
+av bunken øverst til venstre.\n\
+Dette er bare mer bekvemt\n\
+og påvirker ikke vanskelighets\n\
+graden.
+;Automatically open the <n>\n\
+;cards of the top left stack\n\
+;after turning around that stack.\n\
+;This is just more comfortable\n\
+;and does not affect difficulty.
+;
+MSG_SETTINGS_REQS
+D_ialogboks
+;Re_quester
+;
+MSG_SETTINGS_REQS_HELP
+Spør før et nytt spill\n\
+startes eller programmet\n\
+avsluttes.
+;Ask before starting\n\
+;a new game or quitting\n\
+;the program.
+;
+MSG_SETTINGS_KLONDIKE
+
+;Klondike
+;
+MSG_SETTINGS_FREECELL
+
+;Freecell
+;
+MSG_SETTINGS_STACK
+
+;_Stack cards
+;
+MSG_SETTINGS_STACK_HELP
+
+;How many cards should be already\n\
+;on the stack when game starts?\n\
+;The higher the harder the game\n\
+;will be.
+;
+MSG_SETTINGS_EQUALCOLOR
+
+;_Equal Color
+;
+MSG_SETTINGS_EQUALCOLOR_HELP
+
+;Place cards on equal colored cards\n\
+;instead of red/black mixed.
+;
+;
+;
+;
+;
+;******************************************************************************
+;   Statistics
+;******************************************************************************
+;
+MSG_STATS_TITLE
+Statistikk
+;Soliton <Statistics>
+;
+MSG_STATS_TOPIC
+Spillstatistikk
+;Statistics
+;
+MSG_STATS_CLOSE
+_OK
+;_Ok
+;
+MSG_STATS_SCORE
+Poeng
+;Score
+;
+MSG_STATS_SCORE_HELP
+Poeng for den aktuelle omgang
+;Game score
+;
+MSG_STATS_TURNS
+Vendinger
+;Turns
+;
+MSG_STATS_TURNS_HELP
+Hvor mange ganger har du\n\
+vendt spillbunken?
+;How many times did you\n\
+;turn around the game stack?
+;
+MSG_STATS_WINS
+Vunnet
+;Won
+;
+MSG_STATS_WINS_HELP
+Antallet omganger\n\
+som er gått opp
+;Number of games you\n\
+;finished successfully
+;
+MSG_STATS_LOSSES
+Tapt
+;Lost
+;
+MSG_STATS_LOSSES_HELP
+Antallet spill du har avbrutt
+;Number of games you aborted
+;
+MSG_WINNER_TITLE
+Gratulerer!
+;Congratulations!
+;
+MSG_WINNER_TEXT
+\n\
+Kabalen har gått opp.
+;\n\
+;You finished the game.
+;
+MSG_STATS_ENTERNAME
+Skriv inn ditt navn:
+;Please enter your name:
+;
+MSG_STATS_CLEARSCORES
+_Rydd
+;_Clear
+;
+MSG_STATS_CLEARSCORES_HELP
+Rydder poengtavlen
+;Clear all statistics
+;
+MSG_STATS_DATE
+Beste resultater siden %s
+;since %s
+;
+MSG_STATS_THISGAME
+Dette spill
+;This game
+;
+MSG_STATS_HIGHSCORES
+Beste resultater
+;Highscores
+;
+MSG_STATS_LNAME
+Navn
+;Name
+;
+MSG_STATS_LSCORE
+Poeng
+;Score
+;
+MSG_STATS_LDATE
+Dato
+;Date
+;
+MSG_STATS_TIME
+Tid
+;Time
+;
+MSG_STATS_TIME_HELP
+Spilltid
+;Game time
+;
+MSG_STATS_SESSIONS
+
+;Sessions
+;
+MSG_STATS_THISSESSION
+
+;This\n\
+;Session
+;
+MSG_STATS_ALLSESSION
+
+;All\n\
+;Sessions
+;
+MSG_STATS_QUOTA
+
+;Quota
+;
+MSG_STATS_QUOTA_HELP
+
+;Quota of won games
+;
+MSG_STATS_CLEARREQ
+
+;Clear all statistics?
+;
+;
+;
+;
+;
+;
+;
+;
+;******************************************************************************
+;   Profile Manager
+;******************************************************************************
+;
+MSG_PROFILES_TITLE
+
+;Soliton <Manage Profiles>
+;
+MSG_PROFILES_TOPIC
+
+;Manage Profiles
+;
+MSG_PROFILES_ADD
+
+;_Add
+;
+MSG_PROFILES_ADD_HELP
+
+;Create new profile
+;
+MSG_PROFILES_REM
+
+;_Remove
+;
+MSG_PROFILES_REM_HELP
+
+;Remove selected profile
+;
+MSG_PROFILES_CLOSE
+
+;_Ok
+;
+;
+;
+;
+;
+;
+;
+;******************************************************************************
+;   Miscellaneous new stuff of V2.1 and up
+;******************************************************************************
+;
+MSG_ERROR_REQUEST
+
+;Soliton Error
+;
+MSG_ERROR_OK
+
+;Ok
+;
+MSG_OPENLIB_MUIMASTER
+
+;Failed to open muimaster.library V17!
+;
+MSG_OPENLIB_UTILITY
+
+;Failed to open utility.library V38!
+;
+MSG_OPENLIB_INTUITION
+
+;Failed to open intuition.library V38!
+;
+MSG_OPENLIB_DATATYPES
+
+;Failed to open datatypes.library V38!
+;
+MSG_OPENLIB_LAYERS
+
+;Failed to open layers.library V38!
+;
+MSG_OPENLIB_GRAPHICS
+
+;Failed to open graphics.library V38!
+;
+MSG_CREATE_MAINWINDOW
+
+;Could not open main window!\n\
+;Terminating program.
+;
+MSG_CREATE_APPLICATION
+
+;Failed to create application object!
+;
+MSG_CREATE_ABOUTCLASS
+
+;Failed to create About class!
+;
+MSG_CREATE_PROFILEMANAGERCLASS
+
+;Failed to create ProfileManager class!
+;
+MSG_CREATE_CBUTTONCLASS
+
+;Failed to create CButton class!
+;
+MSG_CREATE_BOARDWINDOWCLASS
+
+;Failed to create BoardWindow class!
+;
+MSG_CREATE_CSOLITAIRECLASS
+
+;Could not create CSolitaire class!
+;
+MSG_CREATE_NONESLIDERCLASS
+
+;Failed to create NoneSlider class!
+;
+MSG_CREATE_SETTINGSCLASS
+
+;Failed to create Settings class!
+;
+MSG_CREATE_SOLITONCLASS
+
+;Failed to create Soliton class!
+;
+MSG_CREATE_STATISTICSCLASS
+
+;Failed to create Statistics class!
+;
+MSG_CREATE_CARDGAMECLASS
+
+;Failed to create Cardgame class!
+;
+MSG_CARDS_STANDARD_BIG
+
+;Standard Big
+;
+MSG_CARDS_STANDARD_MEDIUM
+
+;Standard Medium
+;
+MSG_CARDS_STANDARD_SMALL
+
+;Standard Small
+;
+MSG_LOADING_CARDSET
+
+;\033bLoading...
+;
