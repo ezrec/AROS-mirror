@@ -1,7 +1,5 @@
 /*
- * simpleping.c -- network connectivity testing tool
- *
- * Last modified: Tue Mar  8 00:46:06 1994 ppessi
+ * simpleping.c
  */
 
 #include <stdio.h>
@@ -82,39 +80,73 @@ static void ping(struct sockaddr_in *addr)
 	int s = socket(AF_INET, SOCK_RAW, 1);
 	if (s != -1)
 	{
-		static int ntransmitted;
+		int ntransmitted = 0;
+		int pinged = 0;
 		struct icmp icp;
-		int sent;
+		struct timeval timeout;
+		fd_set readfd;
 
-		icp.icmp_type = ICMP_ECHO;
-		icp.icmp_code = 0;
-		icp.icmp_cksum = 0;
-		icp.icmp_seq = ntransmitted++;
-		icp.icmp_id = 0x728;
-
-		icp.icmp_cksum = in_cksum(&icp,8);
-
-		sent = sendto(s,(char*)&icp,8,0,(struct sockaddr*)addr,sizeof(*addr));
-		if (sent == 8)
+		for (;;)
 		{
-			struct sockaddr_in from;
-			struct icmp *recvicp;
-			int fromlen, read;
-			char buf[128];
-
-			Printf("Echo Request sent, now waiting for the echo...maybe forever\n");
-
-			read = recvfrom(s,buf,sizeof(buf),0,(struct sockaddr*)&from,&fromlen);
-			if (read < 0) Printf("Failed to read from socket...aborting\n");
-			else
+			if (CheckSignal(SIGBREAKF_CTRL_C|SIGBREAKF_CTRL_D))
 			{
-				recvicp = (struct icmp*)(buf + 20);
-				if (recvicp->icmp_id == icp.icmp_id)
-					Printf("Got a reply\n");
-				else Printf("This was no reply\n");
+				PutStr("*** Break\n");
+				break;
 			}
 
-		} else Printf("Unable to send the echo request\n");
+			if (!pinged)
+			{
+				int bytes;
+
+				icp.icmp_type = ICMP_ECHO;
+				icp.icmp_code = 0;
+				icp.icmp_cksum = 0;
+				icp.icmp_seq = ntransmitted;
+				icp.icmp_id = 0x728;
+				icp.icmp_cksum = in_cksum(&icp,8);
+
+				bytes = sendto(s,(char*)&icp,8,0,(struct sockaddr*)addr,sizeof(*addr));
+				if (bytes == 8)
+				{
+					Printf("Echo Request sent...now waiting for the echo\n");
+					pinged = 1;
+				}
+			}
+
+			FD_ZERO(&readfd);
+			FD_SET(s, &readfd);
+
+			timeout.tv_secs = 0;
+			timeout.tv_micro = 100000;
+
+			if (WaitSelect(s+1,&readfd,NULL,NULL,&timeout,NULL))
+			{
+				int read;
+				char buf[256];
+				struct icmp *recvicp;
+				struct sockaddr_in from;
+				int fromlen;
+
+				read = recvfrom(s,buf,sizeof(buf),0,(struct sockaddr*)&from,&fromlen);
+				if (read < 0)
+				{
+					Printf("Failed to read from socket...aborting\n");
+					break;
+				} else
+				{
+					recvicp = (struct icmp*)(buf + 20);
+					if (recvicp->icmp_id == icp.icmp_id && recvicp->icmp_type == ICMP_ECHOREPLY)
+					{
+						Printf("Got a reply\n");
+						pinged = 0;
+					}
+					else Printf("This was no reply to the echo\n");
+				}
+			} else
+			{
+				PutStr("Timeout\n");
+			}
+		}
 
 		CloseSocket(s);
 	}
