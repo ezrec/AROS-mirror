@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/17 07:38:47  chodorowski
+ * Added missing REGFUNC_END.
+ *
  * Revision 42.1  2000/05/15 19:29:50  stegerg
  * replacements for REG macro.
  *
@@ -152,6 +155,7 @@ SAVEDS ASM REGFUNC3(APTR, ResourceHookFunc,
         **/
         return( return_code );
 }
+REGFUNC_END
 
 /*
 **      The listview will have three columns.
@@ -464,6 +468,7 @@ SAVEDS ASM REGFUNC3(UBYTE *, DisplayHookFunc,
         **/
         return( NULL );
 }
+REGFUNC_END
 
 /*
 **      The comparrison hook. We do a simple name, dir/file
@@ -491,6 +496,7 @@ SAVEDS ASM REGFUNC3(LONG, CompareHookFunc,
         **/
         return( stricmp( &a->fi_FileName[ 0 ], &b->fi_FileName[ 0 ] ));
 }
+REGFUNC_END
 
 /*
 **      A IDCMP hook for the window which allows us
@@ -552,7 +558,8 @@ SAVEDS ASM REGFUNC3(VOID, ScrollHookFunc,
                         DoMethod( obj, WM_REPORT_ID, (( struct Gadget * )lv_obj )->GadgetID, 0L );
                         break;
         }
-}
+} 
+REGFUNC_END
 
 /*
 **      The hook structures as added to the

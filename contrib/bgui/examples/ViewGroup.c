@@ -11,6 +11,9 @@
  * Description: Test program for the clipped view groups.
  *
  * $Log$
+ * Revision 42.4  2004/06/17 07:38:47  chodorowski
+ * Added missing REGFUNC_END.
+ *
  * Revision 42.3  2000/07/06 22:42:59  bergers
  * Bugfix.
  *
@@ -113,6 +116,7 @@ SAVEDS ASM REGFUNC3(VOID, TabHookFunc,
       SetGadgetAttrs(( struct Gadget * )mx_obj, window, NULL, MX_Active, pos, TAG_END );
    }
 }
+REGFUNC_END
 
 struct Hook TabHook = { NULL, NULL, ( HOOKFUNC )TabHookFunc, NULL, NULL };
 

@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/17 07:38:47  chodorowski
+ * Added missing REGFUNC_END.
+ *
  * Revision 42.1  2000/05/15 19:29:50  stegerg
  * replacements for REG macro.
  *
@@ -85,6 +88,7 @@ REGFUNC3(,hookFunc,
         }
         Ticks++;
 }
+REGFUNC_END
 
 
 /*

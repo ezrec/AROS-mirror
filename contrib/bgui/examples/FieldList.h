@@ -28,6 +28,9 @@
  *    be positioned by the user.
  *
  * $Log$
+ * Revision 42.2  2004/06/17 07:38:47  chodorowski
+ * Added missing REGFUNC_END.
+ *
  * Revision 42.1  2000/05/15 19:28:19  stegerg
  * REG() macro replacementes
  *
@@ -98,6 +101,7 @@ STATIC ASM REGFUNC2(VOID, SetFLAttr,
 		}
 	}
 }
+REGFUNC_END
 
 /*
  *	Class dispatcher. Remember! NOSTACKCHECK or __interrupt for
@@ -261,7 +265,9 @@ REGFUNC3(,DispatchFL,
 			break;
 	}
 	return( rc );
+
 }
+REGFUNC_END
 
 /*
  *	Simple class initialization.
