@@ -89,7 +89,7 @@ LT_AddL(LayoutHandle *handle,LONG type,ULONG labelID,LONG id,...)	/* link librar
 	if(handle)
 	{
 		struct TagItem *tagList;
-		va_list varArg;
+		va_list varArgs;
 
 		va_start(varArg,id);
 
