@@ -4,6 +4,8 @@
 #
 include $(TOP)/config/make.cfg
 
+%make_common_setup
+
 USER_CFLAGS := -DAROS -I../inc -O2 -DALIGN -DINLINE -Dwchar_t=int -DMAXLONG=0x7FFFFFFF
 
 LIB :=	rexxlstring
@@ -89,7 +91,6 @@ FILES := \
 #MM linklibs-rexxlstring : includes
 
 %make_linklib_setup mmake=linklibs-rexxlstring
-%make_vpath
 %make_linklib
 
 %common
