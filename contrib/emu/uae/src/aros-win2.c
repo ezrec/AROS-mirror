@@ -2,7 +2,7 @@
   * UAE - The Un*x Amiga Emulator
   *
   * Amiga interface
-  * 
+  *
   * Copyright 1996,1997,1998 Samuel Devulder.
   */
 
@@ -68,6 +68,9 @@
 #include <proto/exec.h>
 #include <proto/asl.h>
 #include <proto/dos.h>
+#include <proto/cybergraphics.h>
+
+#include <cybergraphx/cybergraphics.h>
 
 /****************************************************************************/
 
@@ -179,7 +182,7 @@ __inline__ void flush_line(int y)
     int xs = 0, len;
     int yoffset = y*gfxvidinfo.rowbytes;
     char *linebuf = gfxvidinfo.bufmem + yoffset;
-    char *src, *dst;
+    char *src;
 
     if(y<0 || y>=gfxvidinfo.height) {
 //       printf("flush_line out of window: %d\n", y); */
@@ -188,54 +191,7 @@ __inline__ void flush_line(int y)
 
     len = gfxvidinfo.width;
 
-    if(!use_delta_buffer) {
-      dst = linebuf;
-    } else switch(gfxvidinfo.pixbytes) {
-      case 4:
-        {   /* sam: we should not arrive here on the amiga */
-            fprintf(stderr, "Bug in flush_line() !\n");
-            fprintf(stderr, "need_dither=%d\n",need_dither);
-            fprintf(stderr, "depth=%d\n",RPDepth(RP));
-            fprintf(stderr, "Please return those values to maintainer.\n");
-            abort();
-            return;
-        } break;
-      case 2:
-        {   short *newp = (short *)linebuf;
-            short *oldp = (short *)(oldpixbuf + yoffset);
-            while (*newp++ == *oldp++) if(!--len) return;
-            src   = (char *)--newp;
-            dst   = (char *)--oldp;
-            newp += len;
-            oldp += len;
-            while (*--newp == *--oldp);
-            len   = 1 + (oldp - (short *)dst);
-            xs    = (src - linebuf)/2;
-            CopyMem (src, dst, len * 2);
-        } break;
-      case 1:
-        {   char *newp = (char *)linebuf;
-            char *oldp = (char *)(oldpixbuf + yoffset);
-            while (*newp++ == *oldp++) if(!--len) return;
-            src   = (char *)--newp;
-            dst   = (char *)--oldp;
-            newp += len;
-            oldp += len;
-            while (*--newp == *--oldp);
-            len   = 1 + (oldp - (char *)dst);
-            xs    = (src - linebuf);
-            CopyMem (src, dst, len);
-         } break;
-      default:
-        abort();
-        break;
-      }
-
-    if (need_dither) {
-        DitherLine(Line, (UWORD *)dst, xs, y, (len+3)&~3, 8);
-    } else CopyMem(dst, Line, len);
-
-    WritePixelLine8(RP, xs + XOffset, y + YOffset, len, Line, TempRPort);
+    WritePixelArray(linebuf, 0, 0, 0, RP, XOffset, YOffset+y, len, 1, RECTFMT_RAW);
 }
 
 /****************************************************************************/
@@ -272,10 +228,7 @@ void flush_screen (int ystart, int ystop)
 
 static int RPDepth(struct RastPort *RP)
 {
-   int depth = RP->BitMap->Depth;
-   if (depth>8) depth = 8;
-
-   return depth;
+   return GetBitMapAttr(RP->BitMap, BMA_DEPTH);
 }
 
 /****************************************************************************/
@@ -441,7 +394,7 @@ static int init_colors(void)
         alloc_colors64k(5,6,5,11,5,0);
         break;
 
-      case 24: 
+      case 24:
         printf("Using %d bits truecolor.\n",24);
         alloc_colors64k(8,8,8,16,8,0);
         break;
@@ -770,7 +723,91 @@ int graphics_setup(void)
 }
 
 /****************************************************************************/
+#if 0
+int graphics_init (void)
+{
+	int i,j;
 
+#ifdef DEBUG
+	fprintf(stderr, "Function: graphics_init\n");
+#endif
+
+	if (currprefs.color_mode > 5)
+		fprintf (stderr, "Bad color mode selected. Using default.\n"),
+
+	currprefs.color_mode = 0;
+
+	screen_is_picasso = 0;
+
+	fixup_prefs_dimensions (&currprefs);
+
+	gfxvidinfo.width  = currprefs.gfx_width;
+	gfxvidinfo.height = currprefs.gfx_height;
+	current_width     = currprefs.gfx_width;
+	current_height    = currprefs.gfx_height;
+
+	/* Find a SDL video mode with exact width and height */
+	for (i = 0; aScreenDepth[i] != 0; i++)
+	{
+		bitdepth = SDL_VideoModeOK(current_width, current_height, aScreenDepth[i], SDL_SWSURFACE);
+		if (bitdepth)
+		{
+			#ifdef DEBUG
+			fprintf(stderr, "Bit depth: %d\n", bitdepth);
+			#endif
+			break;
+		}
+		else
+		{
+			fprintf(stderr, "Video mode %dx%d@%d not available\n", current_width, current_height, aScreenDepth[i]);
+		}
+	}
+	if (bitdepth == 0)
+	{
+		/* Find a SDL video mode from standard resolutions */
+		for (j = 0; j < MAX_SCREEN_MODES && !bitdepth; j++)
+		{
+			if (x_size_table[j] < current_width || y_size_table[j] < current_height)
+				continue;
+			for (i = 0; aScreenDepth[i] != 0 && !bitdepth; i++)
+			{
+				bitdepth = SDL_VideoModeOK(x_size_table[j], y_size_table[j], aScreenDepth[i], SDL_SWSURFACE);
+				if (bitdepth)
+				{
+					#ifdef DEBUG
+					fprintf(stderr, "Bit depth: %d\n", bitdepth);
+					#endif
+					gfxvidinfo.width = current_width = x_size_table[j];
+					gfxvidinfo.height = current_height = y_size_table[j];
+					break;
+				}
+				else
+				{
+					fprintf(stderr, "Video mode %dx%d@%d not available\n", current_width, current_height, aScreenDepth[i]);
+				}
+			}
+		}
+    		if (bitdepth == 0)
+		{
+    			fprintf(stderr, "No video mode found!\n");
+			return 0;
+		}
+	}
+
+	graphics_subinit ();
+
+
+    if (!init_colors ())
+		return 0;
+
+    buttonstate[0] = buttonstate[1] = buttonstate[2] = 0;
+    for (i = 0; i < 256; i++)
+	keystate[i] = 0;
+
+    return 1;
+}
+#endif
+/*****************************/
 int graphics_init(void)
 {
     int i,bitdepth;
@@ -815,7 +852,7 @@ int graphics_init(void)
         fprintf(stderr,"Unable to allocate raster buffer.\n");
         return 0;
     }
-    BitMap = AllocBitMap(currprefs.gfx_width,1,8,BMF_CLEAR|BMF_MINPLANES,RP->BitMap);
+    BitMap = AllocBitMap(currprefs.gfx_width,1,RPDepth(RP),BMF_CLEAR,RP->BitMap);
     if(!BitMap) {
         fprintf(stderr,"Unable to allocate BitMap.\n");
         return 0;
@@ -1243,7 +1280,7 @@ static void disk_hotkeys(void)
     else if(keystate[AK_F4]) {drive = 3;unrecord(AK_F4);}
     else return;
     DisplayBeep(NULL);
-    unrecord(AK_CTRL);unrecord(AK_LALT); 
+    unrecord(AK_CTRL);unrecord(AK_LALT);
 
     switch(drive) {
       case 0: case 1: case 2: case 3: last_file = currprefs.df[drive]; break;
