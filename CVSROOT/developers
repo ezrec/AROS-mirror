@@ -26,7 +26,6 @@ przemek:Przemys³aw Szczygielski:przemek.szczygielski@polkomtel.com.pl:Alpha port
 schulz:Michael Schulz:schulz@kki.net.pl:x86 standalone
 rodo:Adrian Brown:Support@hamilton.wa.edu.au:Wintel port
 mattiasg:Mattias Gustavsson:f97magu@dd.chalmers.se:Solaris port
-stepan:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:Christopher D. Judd:juddc@rpi.edu:
 frv95tjn:Tommy Johansson:frv95tjn@mds.mdh.se:
 pcosta:Paolo Costabel:pcosta@mbox.vol.it:
@@ -213,3 +212,5 @@ forgoil:John Gustafsson:forgoil@rsn.bth.se:
 zaaag:Amine Bizid:amine_bizid@yahoo.com:
 nosfisk:Petter Lindquist:pollen@astrakan.hig.se:
 Omnicade:Laurent Gleizes:omnicade@fr.st:
+stepan:Stefan Reinauer:stepan@suse.de:
+lanzotti:Carlo Lanzotti:clanzotti@dynadream.com:
