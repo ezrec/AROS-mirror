@@ -11,7 +11,7 @@ static const char version[] = "$VER: "
 "Copyright © 1983 The Regents of the University of California.\n"
 "All rights reserved.\n";
 
-#ifndef _AROS
+#ifndef __AROS
 typedef unsigned long IPTR;
 #endif
 
@@ -292,6 +292,13 @@ struct Library *SocketBase;
 #include <stdlib.h>
 
 
+#define MYDEBUG 1
+#include "debug.h"
+
+#ifdef __AROS
+#undef inet_ntoa
+#endif
+
 char *inet_ntoa( struct in_addr ip )
 {
   return Inet_NtoA(ip.s_addr);
@@ -460,31 +467,32 @@ int main( void ) {
                               FALSE,
                               FALSE };
 
-  extern int errno;
-  struct timeval timeout;
-  struct hostent *hp;
-  struct sockaddr_in *to;
-  struct protoent *proto;
-  register int i;
-  int fdmask, hold, packlen, preload;
-  u_char *datap, *packet;
-  char *target, hnamebuf[MAXHOSTNAMELEN];
+    extern int errno;
+    struct timeval timeout;
+    struct hostent *hp;
+    struct sockaddr_in *to;
+    struct protoent *proto;
+    register int i;
+    int fdmask, hold, packlen, preload;
+    u_char *datap, *packet;
+    char *target, hnamebuf[MAXHOSTNAMELEN];
 #ifdef IP_OPTIONS
-  u_char rspace[3 + 4 * NROUTES + 1]; /* record route space */
+    u_char rspace[3 + 4 * NROUTES + 1]; /* record route space */
 #endif
-  ULONG timermask;
-  outpack = malloc(MAXPACKET);
-  if (outpack == NULL) {
-    //perror("ping");
-    Quit( "Network error." );
-  }
-  preload = 0;
-  datap = &outpack[8 + sizeof(struct timeval)];
+    ULONG timermask;
 
-    Init();
+    outpack = malloc(MAXPACKET);
+    if (outpack == NULL) {
+	//perror("ping");
+	Quit( "Network error." );
+    }
+    preload = 0;
+    datap = &outpack[8 + sizeof(struct timeval)];
 
     if( (rda = ReadArgs( ARG_TEMPLATE, args, NULL )) != NULL ) {
-        if( args[ARG_HOST] != NULL ) {
+	Init();
+
+	if( args[ARG_HOST] != NULL ) {
             target = (STRPTR) args[ARG_HOST];
         }
 
@@ -521,212 +529,216 @@ int main( void ) {
 
         /* Not handled: F_LOOSEROUTE */
 
+	/* Sanity checking of the options */
 
+	if( datalen <= 0 )  Quit( "Packet size too large." );
+	if( preload < 0 )   Quit( "Bad preload value." );
+	if( interval <= 0 ) Quit( "Bad timing interval." );
+	if( npackets < 0 ) /* WAS: <= */ Quit( "Bad number of packets to transmit." );
 
+	if( (options & F_LOOSEROUTE) && (options & F_RROUTE) ) {
+	    Quit( "LOOSEROUTE and RECORDROUTE options cannot be used concurrently." );
+	}
 
-    /* Sanity checking of the options */
+	if( (options & F_FLOOD) && (options & F_INTERVAL) ) {
+	    Quit( "FLOOD and WAIT are incompatible options." );
+	}
 
-    if( datalen <= 0 )  Quit( "Packet size too large." );
-    if( preload < 0 )   Quit( "Bad preload value." );
-    if( interval <= 0 ) Quit( "Bad timing interval." );
-    if( npackets < 0 ) /* WAS: <= */ Quit( "Bad number of packets to transmit." );
+	{
+	    u_char *cp = rspace;
 
-    if( (options & F_LOOSEROUTE) && (options & F_RROUTE) ) {
-        Quit( "LOOSEROUTE and RECORDROUTE options cannot be used concurrently." );
-    }
-
-    if( (options & F_FLOOD) && (options & F_INTERVAL) ) {
-        Quit( "FLOOD and WAIT are incompatible options." );
-    }
-
-    {
-        u_char *cp = rspace;
-
-        if (options & F_LOOSEROUTE) {
+	    if (options & F_LOOSEROUTE) {
 #ifdef IP_OPTIONS
-            rspace[IPOPT_OPTVAL] = IPOPT_LSRR;
-            rspace[IPOPT_OLEN] = 3;
-            rspace[IPOPT_OFFSET] = IPOPT_MINOFF;
-            cp = rspace + IPOPT_OFFSET + 1;
+		rspace[IPOPT_OPTVAL] = IPOPT_LSRR;
+		rspace[IPOPT_OLEN] = 3;
+		rspace[IPOPT_OFFSET] = IPOPT_MINOFF;
+		cp = rspace + IPOPT_OFFSET + 1;
 #else
-            Quit( "Source routing not available in this implementation." );
+		Quit( "Source routing not available in this implementation." );
 #endif				/* IP_OPTIONS */
-        }
+	    }
 
-        if( target != NULL ) {
-            bzero((char *)&whereto, sizeof(struct sockaddr));
-            to = (struct sockaddr_in *)&whereto;
+	    if( target != NULL ) {
+		bzero((char *)&whereto, sizeof(struct sockaddr));
+		to = (struct sockaddr_in *)&whereto;
 #ifdef _SOCKADDR_LEN
-            to->sin_len = sizeof(*to);
+		to->sin_len = sizeof(*to);
 #endif
-            to->sin_family = AF_INET;
-            to->sin_addr.s_addr = inet_addr(target);
-            if (to->sin_addr.s_addr != (u_int)-1) {
-                hostname = target;
-            } else {
-                hp = gethostbyname(target);
-                if( !hp ) {
-                    Quit( "Unknown host." );
-                }
-                to->sin_family = hp->h_addrtype;
-                bcopy(hp->h_addr, (caddr_t)&to->sin_addr, hp->h_length);
-                strncpy(hnamebuf, hp->h_name, sizeof(hnamebuf) - 1);
-                hostname = hnamebuf;
-            }
+		to->sin_family = AF_INET;
+		to->sin_addr.s_addr = inet_addr(target);
+
+		if (to->sin_addr.s_addr != (u_int)-1) {
+		    hostname = target;
+		} else {
+		    hp = gethostbyname(target);
+		    if( !hp ) {
+			Quit( "Unknown host." );
+		    }
+		    to->sin_family = hp->h_addrtype;
+		    bcopy(hp->h_addr, (caddr_t)&to->sin_addr, hp->h_length);
+		    strncpy(hnamebuf, hp->h_name, sizeof(hnamebuf) - 1);
+		    hostname = hnamebuf;
+		}
 
 #ifdef IP_OPTIONS
-            if (options & F_LOOSEROUTE) {
-                if (rspace + sizeof(rspace) - 4 < cp) {
-                    Quit( "Too many hops for source routing." );
-                }
-            }
-            *cp++ = (to->sin_addr.s_addr >> 24);
-            *cp++ = (to->sin_addr.s_addr >> 16);
-            *cp++ = (to->sin_addr.s_addr >> 8);
-            *cp++ = (to->sin_addr.s_addr >> 0);
-            rspace[IPOPT_OLEN] += 4;
-        }
+		if (options & F_LOOSEROUTE) {
+		    if (rspace + sizeof(rspace) - 4 < cp) {
+			Quit( "Too many hops for source routing." );
+		    }
+		}
+		*cp++ = (to->sin_addr.s_addr >> 24);
+		*cp++ = (to->sin_addr.s_addr >> 16);
+		*cp++ = (to->sin_addr.s_addr >> 8);
+		*cp++ = (to->sin_addr.s_addr >> 0);
+		rspace[IPOPT_OLEN] += 4;
+	    }
 #endif
-    }
+	}
 
-    if (datalen >= sizeof(struct timeval)) /* can we time transfer */
-        timing = 1;
-    packlen = datalen + MAXIPLEN + MAXICMPLEN;
-    if (!(packet = (u_char *)malloc((u_int)packlen))) {
-        Quit( "Out of memory." );
-    }
-    if (!(options & F_PINGFILLED))
-        for (i = 8; i < datalen; ++i)
-            *datap++ = i;
+	if (datalen >= sizeof(struct timeval)) /* can we time transfer */
+	    timing = 1;
+	packlen = datalen + MAXIPLEN + MAXICMPLEN;
+	if (!(packet = (u_char *)malloc((u_int)packlen))) {
+	    Quit( "Out of memory." );
+	}
+	if (!(options & F_PINGFILLED))
+	    for (i = 8; i < datalen; ++i)
+		*datap++ = i;
 
-    ident = ((ULONG) FindTask( NULL )) & 0xFFFF;
+	ident = ((ULONG) FindTask( NULL )) & 0xFFFF;
 
-    if (!(proto = getprotobyname("icmp"))) {
-        Quit( "Unknown protocol ICMP." );
-    }
+	/*  if (!(proto = getprotobyname("icmp"))) { */
+/*  	    Quit( "Unknown protocol ICMP." ); */
+/*  	} */
 
-    timerport = CreateMsgPort();
-    if (!timerport) {
-        Quit( "Could not create timer port." );
-    }
-    timermask = 1<<timerport->mp_SigBit;
+	timerport = CreateMsgPort();
+	if (!timerport) {
+	    Quit( "Could not create timer port." );
+	}
+	timermask = 1<<timerport->mp_SigBit;
 
-    timermsg = (struct timerequest *) CreateIORequest(timerport, sizeof(*timermsg));
-    if (!timermsg) {
-        Quit( "Could not create timer message." );
-    }
+	timermsg = (struct timerequest *) CreateIORequest(timerport, sizeof(*timermsg));
+	if (!timermsg) {
+	    Quit( "Could not create timer message." );
+	}
 
-  if( (notopen = OpenDevice("timer.device", UNIT_MICROHZ, (struct IORequest *)timermsg, 0)) ) {
-    Quit( "Could not open timer device.");
-  }
+	if( (notopen = OpenDevice("timer.device", UNIT_VBLANK, (struct IORequest *)timermsg, 0)) ) {
+	    Quit( "Could not open timer device.");
+	}
 
-  timermsg->tr_node.io_Command = TR_ADDREQUEST;
-  timermsg->tr_time.tv_secs = 1L;
-  timermsg->tr_time.tv_micro = 0L;
-  /* don't confuse CheckIO */
-  timermsg->tr_node.io_Message.mn_Node.ln_Type = NT_REPLYMSG;
-  SetSocketSignals(timermask | SIGBREAKF_CTRL_C, 0L, 0L);
+	timermsg->tr_node.io_Command = TR_ADDREQUEST;
+	timermsg->tr_time.tv_secs = 1L;
+	timermsg->tr_time.tv_micro = 0L;
+	/* don't confuse CheckIO */
+	timermsg->tr_node.io_Message.mn_Node.ln_Type = NT_REPLYMSG;
+	SetSocketSignals(timermask | SIGBREAKF_CTRL_C, 0L, 0L);
 
-  if ((s = socket(AF_INET, SOCK_RAW, proto->p_proto)) < 0) {
-    //perror("ping: socket");
-    Quit( "Could not allocate socket." );
-  }
-  hold = 1;
-  if (options & F_SO_DEBUG)
-    (void)setsockopt(s, SOL_SOCKET, SO_DEBUG, (char *)&hold,
-		     sizeof(hold));
-  if (options & F_SO_DONTROUTE)
-    (void)setsockopt(s, SOL_SOCKET, SO_DONTROUTE, (char *)&hold,
-		     sizeof(hold));
+	if ((s = socket(AF_INET, SOCK_RAW, 1 /*proto->p_proto*/)) < 0) {
+	    //perror("ping: socket");
+	    Quit( "Could not allocate socket." );
+	}
+
+	hold = 1;
+	if (options & F_SO_DEBUG)
+	    (void)setsockopt(s, SOL_SOCKET, SO_DEBUG, (char *)&hold,
+			     sizeof(hold));
+	if (options & F_SO_DONTROUTE)
+	    (void)setsockopt(s, SOL_SOCKET, SO_DONTROUTE, (char *)&hold,
+			     sizeof(hold));
 
 #ifdef IP_OPTIONS
-  if (options & F_LOOSEROUTE) {
-    /* pad to long word */
-    rspace[rspace[IPOPT_OLEN]] = IPOPT_EOL;
-    if (setsockopt(s, IPPROTO_IP, IP_OPTIONS, rspace,
-		   rspace[IPOPT_OLEN] + 1) < 0) {
-      //perror("ping: source routing");
-      Quit( "Source routing." );
-    }
-  }
+	if (options & F_LOOSEROUTE) {
+	    /* pad to long word */
+	    rspace[rspace[IPOPT_OLEN]] = IPOPT_EOL;
+	    if (setsockopt(s, IPPROTO_IP, IP_OPTIONS, rspace,
+			   rspace[IPOPT_OLEN] + 1) < 0) {
+		//perror("ping: source routing");
+		Quit( "Source routing." );
+	    }
+	}
 #endif
 
-  /* record route option */
-  if (options & F_RROUTE) {
+	/* record route option */
+	if (options & F_RROUTE) {
 #ifdef IP_OPTIONS
-    rspace[IPOPT_OPTVAL] = IPOPT_RR;
-    rspace[IPOPT_OLEN] = sizeof(rspace)-1;
-    rspace[IPOPT_OFFSET] = IPOPT_MINOFF;
-    rspace[rspace[IPOPT_OLEN]] = IPOPT_EOL;
-    if (setsockopt(s, IPPROTO_IP, IP_OPTIONS, rspace, sizeof(rspace)) < 0) {
-      //perror("ping: record route");
-      Quit( "Record route." );
-    }
+	    rspace[IPOPT_OPTVAL] = IPOPT_RR;
+	    rspace[IPOPT_OLEN] = sizeof(rspace)-1;
+	    rspace[IPOPT_OFFSET] = IPOPT_MINOFF;
+	    rspace[rspace[IPOPT_OLEN]] = IPOPT_EOL;
+	    if (setsockopt(s, IPPROTO_IP, IP_OPTIONS, rspace, sizeof(rspace)) < 0) {
+		//perror("ping: record route");
+		Quit( "Record route." );
+	    }
 #else
-    Quit( "Record route not available in this implementation." );
+	    Quit( "Record route not available in this implementation." );
 #endif				/* IP_OPTIONS */
-  }
+	}
 
-  /*
-   * When pinging the broadcast address, you can get a lot of answers.
-   * Doing something so evil is useful if you are trying to stress the
-   * ethernet, or just want to fill the arp cache to get some stuff for
-   * /etc/ethers.
-   */
-  hold = 48 * 1024;
-  (void)setsockopt(s, SOL_SOCKET, SO_RCVBUF, (char *)&hold,
-		   sizeof(hold));
+	/*
+	 * When pinging the broadcast address, you can get a lot of answers.
+	 * Doing something so evil is useful if you are trying to stress the
+	 * ethernet, or just want to fill the arp cache to get some stuff for
+	 * /etc/ethers.
+	 */
+	hold = 48 * 1024;
+	(void)setsockopt(s, SOL_SOCKET, SO_RCVBUF, (char *)&hold,
+			 sizeof(hold));
 
-  if (to->sin_family == AF_INET)
-    (void)printf("PING %s (%s): %d data bytes\n", hostname,
-		 inet_ntoa(*(struct in_addr *)&to->sin_addr.s_addr),
-		 datalen);
-  else
-    (void)printf("PING %s: %d data bytes\n", hostname, datalen);
+	if (to->sin_family == AF_INET)
+	    (void)printf("PING %s (%s): %d data bytes\n", hostname,
+			 inet_ntoa(*(struct in_addr *)&to->sin_addr.s_addr),
+			 datalen);
+	else
+	    (void)printf("PING %s: %d data bytes\n", hostname, datalen);
 
-  while (preload--)		/* fire off them quickies */
-    pinger();
+	while (preload--)		/* fire off them quickies */
+	    pinger();
 
-  if ((options & F_FLOOD) == 0)
-    catcher();			/* start things going */
+	if ((options & F_FLOOD) == 0)
+	    catcher();			/* start things going */
 
-  for (;;) {
-    struct sockaddr_in from;
-    register int cc;
-    int fromlen;
+	for (;;) {
+	    struct sockaddr_in from;
+	    register int cc;
+	    int fromlen;
 
-    ULONG sm = SetSignal(0L, timermask | SIGBREAKF_CTRL_C);
-    if (sm & SIGBREAKF_CTRL_C)
-      finish();
-    if (sm & timermask && GetMsg(timerport))
-      catcher();
+	    ULONG sm = SetSignal(0L, timermask | SIGBREAKF_CTRL_C);
+	    if (sm & SIGBREAKF_CTRL_C)
+		finish();
+	    if (sm & timermask && GetMsg(timerport))
+		catcher();
 
-    if (options & F_FLOOD) {
-      pinger();
-      timeout.tv_secs = 0;
-      timeout.tv_micro = 10000;
-      fdmask = 1 << s;
-      if (WaitSelect(s + 1, (fd_set *)&fdmask, (fd_set *)NULL,
-		 (fd_set *)NULL, &timeout,NULL) < 1) /* sba: was select() */
-	continue;
+	    if (options & F_FLOOD) {
+		pinger();
+		timeout.tv_secs = 0;
+		timeout.tv_micro = 10000;
+		fdmask = 1 << s;
+		if (WaitSelect(s + 1, (fd_set *)&fdmask, (fd_set *)NULL,
+			       (fd_set *)NULL, &timeout,NULL) < 1) /* sba: was select() */
+		    continue;
+	    }
+	    fromlen = sizeof(from);
+	    if ((cc = recvfrom(s, (char *)packet, packlen, 0,
+			       (struct sockaddr *)&from, &fromlen)) < 0) {
+		if (errno == EINTR)
+		    continue;
+		//perror("ping: recvfrom");
+		fprintf(stderr, "ping: recvfrom" );
+		continue;
+	    }
+	    pr_pack((char *)packet, cc, &from);
+	    if (npackets && nreceived >= npackets)
+		break;
+	}
+	finish();
+	/* NOTREACHED */
     }
-    fromlen = sizeof(from);
-    if ((cc = recvfrom(s, (char *)packet, packlen, 0,
-		       (struct sockaddr *)&from, &fromlen)) < 0) {
-      if (errno == EINTR)
-	continue;
-      //perror("ping: recvfrom");
-      fprintf(stderr, "ping: recvfrom" );
-      continue;
+    else
+    {
+	printf("Usage: ping %s\n", ARG_TEMPLATE);
+	Quit("invalid arguments");
     }
-    pr_pack((char *)packet, cc, &from);
-    if (npackets && nreceived >= npackets)
-      break;
-  }
-  finish();
-  /* NOTREACHED */
-  }
-  return( 0 );
+    return( 0 );
 }
 
 /*
