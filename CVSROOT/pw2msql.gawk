@@ -1,4 +1,10 @@
-BEGIN { FS=":" }
+BEGIN { 
+    FS=":" 
+    print "delete from users where login <> ''"
+    print "\\g"
+}
+/^$/ { next }
+/^#/ { next }
  {
     if ($1!="")
     {
