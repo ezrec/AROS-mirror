@@ -162,13 +162,10 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
 
     statsPHP = '''
         <?php
-            DEFINE( "_BBCLONE_DIR", "%(ROOT)sbbclone/" );
-            DEFINE( "_NEW_COUNTER", _BBCLONE_DIR . "mark_page.php" );
-    
-            if( file_exists( _NEW_COUNTER ) )
-            {
-                include( _NEW_COUNTER );
-            }
+            //define("_BBC_PAGE_NAME", "AROS");
+            define("_BBCLONE_CORE", "bbclone/core/");
+            define("COUNTER", _BBCLONE_CORE."mark_page.php");
+            if (file_exists(COUNTER)) include(COUNTER);
         ?>'''
 
     page = HTML( [
