@@ -198,7 +198,7 @@ Calling a method
 ----------------
 
 Let's see the most called method in a Zune program, the event processing
-method called in your main loop:
+method called in your main loop::
 
     result = DoMethod(obj, MUIM_Application_NewInput, (IPTR)&sigs);
 
