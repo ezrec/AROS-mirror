@@ -3,7 +3,7 @@
 # The apps target points back to config/$(ARCH)/mmakefile:
 #MM- apps : apps-$(ARCH)
 
-#MM- fish : fish-microemacs fish-lotto fish-henon fish-bcubic
+#MM- fish : fish-microemacs fish-lotto fish-henon fish-bcubic fish-input
 #MM- fish : fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines
 
 
