@@ -6,6 +6,8 @@ CFLAGS	:= $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(CONTRIBDIR)/aminet
 
+%make_common_setup
+
 FILES := dice draw game highscores layout localize requesters rules tooltypes \
 	yahzee yahzee_strings
 

@@ -6,6 +6,8 @@ CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(CONTRIBDIR)/aminet
 
+%make_common_setup
+
 FILES := lazymines button counter field highscores images layout localize \
 	requesters timer tooltypes lazymines_strings
 
