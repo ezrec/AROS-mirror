@@ -1,6 +1,7 @@
-source cfg/defaults
-if [ -e cfg/user ]; then
-    source cfg/user
+#!/bin/sh
+source scripts/config/defaults
+if [ -e scripts/config/user ]; then
+    source scripts/config/user
 fi
 
 export PYTHONPATH=$DOCUTILS:$PYTHONPATH
