@@ -45,7 +45,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 A( _N['system-development-manual'], href='%(BASE)sdocumentation/developers/system-development.php' ),
                 #A( _N['reference'], href='%(BASE)sdocumentation/developers/reference' ),
                 A( _N['specifications'], href='%(BASE)sdocumentation/developers/specifications/' ),
-                #A( _N['ui-style-guide'], href='%(BASE)sdocumentation/developers/ui' ),
+                A( _N['ui-style-guide'], href='%(BASE)sdocumentation/developers/ui.php' ),
                 A( _N['documenting'], href='%(BASE)sdocumentation/developers/documenting.php' ),
                 #A( _N['translating'], href='%(BASE)sdocumentation/developers/translating' ),
                 A( _N['summaries'], href='%(BASE)sdocumentation/developers/summaries/' ),

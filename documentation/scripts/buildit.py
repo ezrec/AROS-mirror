@@ -265,6 +265,21 @@ def processHTML( src, depth ):
     else:
         reportSkipping( dst )
 
+def copyImages():
+    imagepath = 'documentation/developers/ui/images'
+    dstpath   = os.path.join( DSTROOT, imagepath )
+    srcpath   = imagepath
+    
+    makedir( dstpath )
+    
+    copy(
+        [
+            os.path.join( srcpath, 'windows-prefs-titlebar.png' ),
+            os.path.join( srcpath, 'windows-prefs-buttons.png' )
+        ],
+        dstpath
+    )
+            
 
 def buildClean():
     shutil.rmtree( DSTROOT )
@@ -314,6 +329,8 @@ def buildWWW():
         imagepath
     )
     
+    copyImages()
+    
     copy( 'targets/www/docutils.css', DSTROOT )
     copy( 'targets/www/aros.css', DSTROOT )
 
@@ -340,6 +357,8 @@ def buildHTML():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
 
     recurse( processHTML )
+
+    copyImages()
 
     copy( 'targets/www/docutils.css', DSTROOT )
     copy( 'targets/html/aros.css', DSTROOT )
