@@ -394,7 +394,7 @@ void view_file_process()
 	ActivateWindow(vdata->view_window);
 
 	view_status_text(vdata,globstring[STR_READING_FILE]);
-tryload:
+/*tryload:*/
 	if (vdata->view_file_size>16) {
 #warning No powerpacker library
 		if (!PPBase || /* AROS: We have no powerpacker library
