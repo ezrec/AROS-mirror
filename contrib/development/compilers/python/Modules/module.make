@@ -2,8 +2,14 @@ LOCAL_FILES := \
 	main \
 	python \
 	config \
+	getbuildinfo \
+	getpath \
+	gcmodule \
+	amigamodule 
+	
+ifneq ($(TINY),yes)
+    LOCAL_FILES += \
 	environment \
-	amigamodule \
 	Doslibmodule \
 	IntuitionLibrary \
 	_codecsmodule \
@@ -17,9 +23,6 @@ LOCAL_FILES := \
 	cStringIO \
 	cgensupport \
 	errnomodule \
-	gcmodule \
-	getbuildinfo \
-	getpath \
 	imageop \
 	md5c \
 	md5module \
@@ -46,6 +49,7 @@ LOCAL_FILES := \
 	pypcre \
 	pcremodule \
 	pyexpat
+endif
 	
 # Modules that need more work to compile.
 #	selectmodule \

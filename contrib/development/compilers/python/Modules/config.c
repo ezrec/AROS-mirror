@@ -14,6 +14,7 @@ redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #include "Python.h"
 
 extern void initamiga(void);
+#ifndef PYTHON_TINY
 extern void initenvironment(void);
 extern void initDoslib(void);
 extern void initIntuitionLibrary(void);
@@ -51,11 +52,13 @@ extern void inittiming(void);
 extern void initunicodedata(void);
 extern void initxreadlines(void);
 extern void initzlib(void);
+#endif
 extern void PyMarshal_Init(void);
 extern void initimp(void);
 
 struct _inittab _PyImport_Inittab[] = {
     	{"amiga",   	     initamiga},
+#ifndef PYTHON_TINY
 	{"environment",      initenvironment},
 	{"Doslib",  	     initDoslib},
 	{"IntuitionLibrary", initIntuitionLibrary},
@@ -93,7 +96,7 @@ struct _inittab _PyImport_Inittab[] = {
 	{"unicodedata",      initunicodedata},
 	{"xreadlines",       initxreadlines},
 	{"zlib",             initzlib},
-
+#endif
 	/* This module lives in marshal.c */
 	{"marshal", PyMarshal_Init},
 

@@ -3,15 +3,22 @@
 # Makefile to make Python.
 
 include $(TOP)/config/make.cfg
-include make.cfg
 
-SUBDIRS := Python Parser Objects Modules Lib
+# Configuration section
+PYTHONDIR := $(CONTRIBDIR)/Development/Python
+TINY      := no
+
+SUBDIRS   := Python Parser Objects Modules Lib
 
 # Every component makefile will add to the variables below, if needed.
 FILES        :=  # Source files to be compiled.
 MODULE_FILES :=  # Module files to be copied to $(PYTHONDIR).
 MODULE_DIRS  :=  # Module directories to be created in $(PYTHONDIR).
 USER_CFLAGS  := -I. -IInclude -DAROS -D'PLATFORM="AROS"'
+
+ifeq ($(TINY),yes)
+    USER_CFLAGS += -DPYTHON_TINY
+endif
 
 include $(patsubst %, %/module.make, $(SUBDIRS))
 

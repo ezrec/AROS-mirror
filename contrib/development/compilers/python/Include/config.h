@@ -1,6 +1,10 @@
 #include <inttypes.h>     /* For uintptr_t */
 #include <aros/machine.h> /* Machine dependant defines */
 
+#ifdef PYTHON_TINY
+#define PYTHON_EXCLUDE_DOCSTRINGS
+#endif
+
 /* Define if type char is unsigned and you are not using gcc.  */
 #ifndef __CHAR_UNSIGNED__
 #undef __CHAR_UNSIGNED__
