@@ -15,11 +15,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
         ( [
             A( _N['status'], href='%(BASE)sintroduction/status/everything.html' ),
             A( _N['screenshots'], href='%(BASE)spictures/screenshots/' ),
-            A( _N['ports'], href='%(BASE)sintroduction/ports.html' ),
-            A( _N['license'], href='%(BASE)slicense.html' )
+            A( _N['ports'], href='%(BASE)sintroduction/ports.php' ),
+            A( _N['license'], href='%(BASE)slicense.php' )
         ] ),
         BR(),
-        A( _N['download'], href='%(BASE)sdownload/' ),
+        A( _N['download'], href='%(BASE)sdownload.php' ),
         BR(),
         _N['documentation'],
         Tree \
@@ -27,39 +27,39 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
             _N['users'],
             Tree \
             ( [
-                A( _N['installation'], href='%(BASE)sdocumentation/users/installation.html' ),
-                A( _N['using'], href='%(BASE)sdocumentation/users/using.html' ),
-                A( _N['faq'], href='%(BASE)sdocumentation/users/faq.html' ),
+                A( _N['installation'], href='%(BASE)sdocumentation/users/installation.php' ),
+                A( _N['using'], href='%(BASE)sdocumentation/users/using.php' ),
+                A( _N['faq'], href='%(BASE)sdocumentation/users/faq.php' ),
                 #_N['ports'],
-                A( _N['links'], href='%(BASE)sdocumentation/users/links.html' )
+                A( _N['links'], href='%(BASE)sdocumentation/users/links.php' )
             ] ),
             _N['developers'],
             Tree \
             ( [
-                A( _N['contribute'], href='%(BASE)sdocumentation/developers/contribute.html' ),
-                A( _N['working-with-cvs'], href='%(BASE)sdocumentation/developers/cvs.html' ),
-                A( _N['compiling'],  href='%(BASE)sdocumentation/developers/compiling.html' ),
-                A( _N['application-development-manual'], href='%(BASE)sdocumentation/developers/application-development.html' ),
-                A( _N['system-development-manual'], href='%(BASE)sdocumentation/developers/system-development.html' ),
+                A( _N['contribute'], href='%(BASE)sdocumentation/developers/contribute.php' ),
+                A( _N['working-with-cvs'], href='%(BASE)sdocumentation/developers/cvs.php' ),
+                A( _N['compiling'],  href='%(BASE)sdocumentation/developers/compiling.php' ),
+                A( _N['application-development-manual'], href='%(BASE)sdocumentation/developers/application-development.php' ),
+                A( _N['system-development-manual'], href='%(BASE)sdocumentation/developers/system-development.php' ),
                 #A( _N['reference'], href='%(BASE)sdocumentation/developers/reference' ),
                 A( _N['specifications'], href='%(BASE)sdocumentation/developers/specifications/' ),
                 #A( _N['ui-style-guide'], href='%(BASE)sdocumentation/developers/ui' ),
-                A( _N['documenting'], href='%(BASE)sdocumentation/developers/documenting.html' ),
+                A( _N['documenting'], href='%(BASE)sdocumentation/developers/documenting.php' ),
                 #A( _N['translating'], href='%(BASE)sdocumentation/developers/translating' ),
                 A( _N['summaries'], href='%(BASE)sdocumentation/developers/summaries/' ),
-                A( _N['links'], href='%(BASE)sdocumentation/developers/links.html' )
+                A( _N['links'], href='%(BASE)sdocumentation/developers/links.php' )
             ] )
         ] ),
         BR(),
-        A( _N['contact'], href='%(BASE)scontact.html' ),
+        A( _N['contact'], href='%(BASE)scontact.php' ),
         Tree \
         ( [
-            A( _N['mailing-lists'], href='%(BASE)scontact.html#mailing-lists' ),
-            #A( _N['forums'], href='%(BASE)scontact.html#forums' ),
-            A( _N['irc-channels'], href='%(BASE)scontact.html#irc-channels' )
+            A( _N['mailing-lists'], href='%(BASE)scontact.php#mailing-lists' ),
+            #A( _N['forums'], href='%(BASE)scontact.php#forums' ),
+            A( _N['irc-channels'], href='%(BASE)scontact.php#irc-channels' )
         ] ),
         BR(),
-        A( _N['credits'], href='%(BASE)scredits.html' ),
+        A( _N['credits'], href='%(BASE)scredits.php' ),
         BR(),
         _N['pictures'],
         Tree \
@@ -68,9 +68,9 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
             A( _N['developers-together'], href='%(BASE)spictures/developers-together/' )
         ] ),
         BR(),
-        A( _N['sponsors'],href='%(BASE)ssponsors.html' ),
-        A( _N['linking'], href='%(BASE)slinking.html' ),
-        A( _N['links'], href='%(BASE)slinks.html' )
+        A( _N['sponsors'],href='%(BASE)ssponsors.php' ),
+        A( _N['linking'], href='%(BASE)slinking.php' ),
+        A( _N['links'], href='%(BASE)slinks.php' )
     ] )
 
     counter = Img(
