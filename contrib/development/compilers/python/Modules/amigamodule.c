@@ -86,7 +86,7 @@ static __inline int dup2(int oldsd, int newsd) { return s_dup2(oldsd, newsd); }
 
 #define __aligned 
 extern int IoErr2errno( int );
-#define __io2errno(x) x // FIXME: This is probably very, very wrong...
+#define __io2errno(x) IoErr2errno(x) 
 static int _OSERR;  // FIXME: What's this for, really?
 #endif
 
