@@ -9,6 +9,17 @@ typedef struct ext_descr {
 
 typedef t_ext_descr t_extdatarec[3];
 
+/* Force word alignment for MorphOS on PowerPC.
+   Note that there are a lot of words and longwords in these
+   structures and there are no endianess checking so MacHFS
+   support is probably broken in AROS on little-endian architectures.
+   Also note that all structures on MacHFS CD are word-aligned as required
+   by Motorola m68000 CPU.
+   All this needs to be fixed - Pavel Fedin <sonic_amiga@rambler.ru> */
+#ifdef __MORPHOS__
+#pragma pack(2)
+#endif
+
 typedef struct mdb {
   t_ushort	SigWord;
   t_ulong	CrDate;
@@ -163,6 +174,9 @@ typedef struct leaf_record_pos {
   char			pad[32]; /* space for name from t_leaf_record */
 } t_leaf_record_pos;
 
+#ifdef __MORPHOS__
+#pragma pack()
+#endif
 
 int HFS_Find_Master_Directory_Block(CDROM *p_cd, t_mdb *p_mdb);
 t_bool Uses_HFS_Protocol(CDROM *p_cd, int *p_skip);

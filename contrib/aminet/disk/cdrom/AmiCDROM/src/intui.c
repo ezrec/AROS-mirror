@@ -41,7 +41,7 @@
 #include "intui.h"
 #include "globals.h"
 
-#define AROS_KERNEL 1
+//#define AROS_KERNEL 1
 
 extern struct Globals *global;
 
@@ -95,9 +95,10 @@ char *g_iconname = "CD-DA";
 #define SysBase global->SysBase
 
 void Init_Intui() {
-struct IconBase *IconBase;
+struct IconBase *IconBase=NULL;
 
 	global->IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 37);
+#ifndef AROS_KERNEL
 	IconBase = (struct IconBase *)OpenLibrary("icon.library", 37);
 	if (!IconBase)
 	      Display_Error ("cannot open icon.library");
@@ -105,11 +106,11 @@ struct IconBase *IconBase;
 	global->WorkbenchBase = (struct WorkbenchBase *)OpenLibrary("workbench.library", 37);
 	if (!global->WorkbenchBase)
 	      Display_Error("cannot open workbench.library");
-
-#ifndef AROS_KERNEL
 	global->g_user_disk_object = GetDiskObject ("env:cdda");
-	if (!global->g_user_disk_object)
+	if ((!IconBase) || (!global->g_user_disk_object))
 	{
+#else
+        global->WorkbenchBase=NULL;
 #endif
 		global->g_xpos = NO_ICON_POSITION;
 		global->g_ypos = NO_ICON_POSITION;
@@ -174,10 +175,6 @@ void Close_Intui() {
 		CloseLibrary ((struct Library *)global->IntuitionBase);
 }
 
-#ifdef SysBase
-#	undef SysBase
-#endif
-#define SysBase global->SysBase
 #ifdef IntuitionBase
 #	undef IntutitionBase
 #endif
