@@ -11,6 +11,16 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/07/06 16:42:03  stegerg
+ * the function ForwardMsg relied on gpInput->gpht_Mouse.X/Y and
+ * gpHitTest.gpht_Mouse.X/Y being of type WORD. For example
+ * it used LONG reads to backup this values and a WORD * pointer
+ * to change them. Does not work with AROS where these are of
+ * type STACKWORD and not WORD.
+ *
+ * This caused the problems with the gadgets which could not be
+ * activated, or only activated by clicking somewhere outside.
+ *
  * Revision 42.5  2000/06/01 01:41:37  bergers
  * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
  *
@@ -1030,8 +1040,13 @@ makeproto ASM REGFUNC3(ULONG, ForwardMsg,
 	REGPARAM(A1, Object *, d),
 	REGPARAM(A2, Msg, msg))
 {
-   WORD          *mouse = NULL;
-   ULONG          rc, storage;
+#ifdef _AROS
+   #define MOUSEWORD STACKWORD
+#else
+   #define MOUSEWORD WORD
+#endif
+   MOUSEWORD      *mousex = NULL, *mousey = NULL, old_mousex, old_mousey;
+   ULONG          rc;
    struct IBox   *b1 = GADGETBOX(s);
    struct IBox   *b2 = GADGETBOX(d);
    
@@ -1042,19 +1057,22 @@ makeproto ASM REGFUNC3(ULONG, ForwardMsg,
    {
    case GM_HITTEST:
    case GM_HELPTEST:
-      mouse = (WORD *)&((struct gpHitTest *)msg)->gpht_Mouse;
+      mousex = &((struct gpHitTest *)msg)->gpht_Mouse.X;
+      mousey = &((struct gpHitTest *)msg)->gpht_Mouse.Y;
       break;
    case GM_GOACTIVE:
    case GM_HANDLEINPUT:
-      mouse = (WORD *)&((struct gpInput *)msg)->gpi_Mouse;
+      mousex = &((struct gpInput *)msg)->gpi_Mouse.X;
+      mousey = &((struct gpInput *)msg)->gpi_Mouse.Y;
       break;
    };
-   if (!mouse) return 0;
+   if (!mousex) return 0;
 
    /*
     * Store the coordinates.
     */
-   storage = *(ULONG *)mouse;
+   old_mousex = *mousex;
+   old_mousey = *mousey;
 
    Get_Attr(s, BT_OuterBox, (ULONG *)&b1);
    Get_Attr(d, BT_OuterBox, (ULONG *)&b2);
@@ -1062,8 +1080,8 @@ makeproto ASM REGFUNC3(ULONG, ForwardMsg,
    /*
     * Adjust the coordinates to be relative to the destination object.
     */
-   mouse[0] += b1->Left - b2->Left;
-   mouse[1] += b1->Top  - b2->Top;
+   *mousex += b1->Left - b2->Left;
+   *mousey += b1->Top  - b2->Top;
 
    /*
     * Send the message to the destination object.
@@ -1073,7 +1091,8 @@ makeproto ASM REGFUNC3(ULONG, ForwardMsg,
    /*
     * Put the coordinates back to what they were originally.
     */
-   *(ULONG *)mouse = storage;
+   *mousex = old_mousex;
+   *mousey = old_mousey;
 
    return rc;
 }
