@@ -31,7 +31,9 @@
 contrib contrib
 
 # Stuff necessary to compile AROS
-necessary -a contrib/README grub bgui
+necessary -a contrib_README grub bgui
+
+contrib_README -d contrib contrib README
 
 # Amiga C Manual
 ACM -d contrib/ACM contrib/ACM
