@@ -1,0 +1,913 @@
+@database Typeface.guide
+@author "David Kinder"
+@$VER: Typeface.guide 1.21 (24.2.97)
+@node main "Typeface Guide"
+
+                        Typeface 1.21
+                        © 1995-97 David Kinder
+
+                        @{" Einleitung                      " link intro}
+                        @{" Installation                    " link install}
+                        @{" Start und Übersicht             " link using}
+                        @{" Zeichensatz öffnen              " link open}
+                        @{" Zeichensatz sichern             " link save}
+                        @{" Zeichensatzverzeichnis wechseln " link dir}
+                        @{" Zeichensatzparameter editieren  " link params}
+                        @{" Zeichenbearbeitung              " link char}
+                        @{" Voreinstellungen                " link prefs}
+                        @{" History                         " link history}
+                        @{" Die deutsche Übersetzung        " link translation}
+                        @{" Über den Autor David Kinder     " link me}
+@endnode
+
+@node intro "Einleitung"
+
+  Der Amiga unterstützt zwei Arten von Zeichensätzen; Bitmap und Outline.
+  Bei Bitmap Zeichensätzen wird jedes Zeichen als Folge von Bits dargestellt,
+  wobei die einzelnen Bits angeben welche Pixel an oder aus sind. Ein Bitmap
+  Zeichensatz hat eine bestimmte Größe. Zeichensätze gleichen Designs aber
+  unterschiedlicher Größe werden normalerweise zusammen im Verzeichnis Fonts:
+  gespeichert, z.B ein Zeichensatz namens "foo":
+
+        foo.font               Informationen zu foo
+        foo/8                  Bitmap Zeichensatz mit der Höhe 8 (Pixel)
+        foo/9                  Bitmap Zeichensatz mit der Höhe 9
+
+  Outline Zeichensäze (eingeführt mit Workbench 2.04) speichern Zeichen als eine
+  Folge von Kurven, so daß eine Definition Zeichensätze in vielen verschie-
+  denen Größen festlegt. Solche Zeichensätze erscheinen normalerweise im
+  Fonts: Verzeichnis als .font und .otag Dateien (die .otag Dateien enthalten
+  spezielle Informationen für den verwendeten Outline-Font Treiber). Seit Workbench
+  3.0 ist der Outline-Font Treiber von der diskfont.library getrennt (und heißt jetzt
+  bullet.library). Dies erlaubt die Verwendung von neuen Font Treiber,
+  z.B. type1.library, welche Postscript Type 1 Zeichensätze unterstützt.
+
+  Typeface ist ein Editor für Bitmap Zeichensätze. Zusätzlich können Outline
+  Zeichensätze mit gegebenen Dimensionen geladen werden, wenn benötigt geändert, und
+  als Bitmap Zeichensatz gespeichert werden. Wenn dann ein Anwendungsprogramm auf
+  einen Outline Zeichensatz zugreift, und in der benötigten Größe ein Bitmap
+  Zeichensatz vorliegt, so wird der Bitmap Zeichensatz verwendet, andernfalls
+  wird der Outline Zeichensatz in die geforderte Größe konvertiert, was grundsätzlich
+  mehr Zeit und Speicher kostet als die Verwendung von Bitmap Zeichensätzen.
+
+  Typeface kann frei vertrieben werden, solange das Copyright des @{"Autors" link me},
+  David Kinder beachtet wird. Für mehr als einen kleinen Betrag, der den Datenträger, etc.
+  abdeckt darf Typeface nicht vertrieben werden, desweiteren darf es ohne die
+  schriftliche Genehmigung des Autors nicht als Teil eines kommerziellen
+  Paketes vertrieben werden. Der Sourcecode wird jedem zur
+  Verfügung gestellt, der Interesse an der Struktur eines Amiga Programms hat,
+  und darf nicht von irgendjemand anderem als dem Autor selbst in diesem oder
+  irgendeinem anderen Font Editor verwendet werden.
+@endnode
+
+@node install "Installation"
+
+  Typeface benötigt die @{"bgui.library" link bgui} v40¹ entweder in "Libs:", oder in
+  einem "libs" Unterverzeichnis des Typeface Verzeichnisses.
+  Die Datei @{"textfield.gadget" link textfield} v3 muß entweder unter "Sys:Classes/Gadgets"
+  stehen, oder in eimen "gadgets" Verzeichnis des Programmverzeichnisses.
+  Folgende Standard-Libraries werden von Typeface benötigt:
+
+        asl.library v37
+        diskfont.library v36
+
+  Typeface müsste, vorrausgesetzt es wurde eine Standard-Workbench geladen,
+  auf Doppelklick starten. bgui.library und textfield.gadget können später
+  noch in die entsprechenden Workbench Verzeichnisse kopiert werden, müssen
+  aber nicht.
+
+  Soll die Online Hilfe zu Typeface verfügbar sein, so muß (in "Libs:") die
+  amigaguide.library v34 vorhanden sein.
+
+  Typeface durchsucht das "catalogs" Unterverzeichnis und den Pfad
+  "Local:catalogs" nach der Datei "Typeface.catalog", welche es ermöglicht
+  Typeface ab Workbench 2.1 und höher an verschiedene Sprachen anzupassen
+  (locale.library v38 wird benötigt). Informationen zu deren Erzeugung sind im
+  "catalogs" Verzeichnis zu finden.
+
+  ¹Alle angegebenen Versionsnummern sind minimale Anforderungen von Typeface
+@endnode
+
+@node bgui "BGUI Library"
+
+  bgui.library ist eine shared library geschrieben von Jan van den Baard
+  welche Zeichensatz sensitives Gadget Layout auf Objekt orientierter
+  Basis ermöglicht.
+@endnode
+
+@node using "Start und Übersicht"
+
+  Nach dem ersten Aufruf öffnet Typeface ein Zeichenauswahl Fenster im
+  linken oberen Bereich der Anzeige. In diesem Fenster kann irgendeins der
+  256 Zeichen, die einen Zeichensatz bilden, zum editieren ausgewählt
+  werden. Der Scrollbalken rechts im Fenster kann zum bewegen innerhalb
+  der verfügbaren Zeichen genutzt werden. Die Größe des Fensters und der
+  benutzte Zeichensatz kann im @{"Voreinstellungs Fenster" link prefs} geändert
+  werden.
+
+  Das Anklicken irgendeines der angezeigten Zeichen bewirkt, das ein
+  @{"Zeichenbearbeitungs Fenster" link char} geöffnet wird, in welchem das Zeichen
+  in einem Gitter dargestellt wird. Es kann eine unbegrenzte Anzahl dieser
+  Fenster geöffnet werden (soviel der Speicher hergibt), da alle im Multi-
+  tasking laufen (z.B. es kann ein neues Zeichenbearbeitungs Fenster geöffnet
+  werden während das Voreinstellungs Fenster bereits offen ist).
+  Das drücken der "Shift" Taste während ein Zeichen angeklickt wird bewirkt,
+  daß Typeface dieses Zeichen in einem bereits geöffneten Bearbeitungsfenster
+  darstellt, falls eins vorhanden ist, ansonsten wird ein neues geöffnet.
+  (Vorrausgesetzt die Einstellungen unter Voreinstellungen/Auswahlfenster stimmen)
+  Alle Fenster haben folgende Menus:
+
+  @{b}Projekt Menu@{ub}          @{" Lade Zeichensatz    " link open}
+                        @{" Sichere Zeichensatz " link save}
+                        @{" Ändere Verzeichnis  " link dir}
+                        @{" Vorschau            " link preview}
+                        @{" Voreinstellungen    " link prefs}
+                        @{" Über                " link about}
+                        @{" Ende                " link quit}
+
+  @{b}Zeichensatz Menu@{ub}      @{" Parameter           " link params}
+                        @{" Bewege links        " link moveleft}
+                        @{" Bewege rechts       " link moveright}
+                        @{" Bewege hoch         " link moveup}
+                        @{" Bewege runter       " link movedown}
+                        @{" Reset Kerning       " link resetkern}
+                        @{" Fenster anordnen    " link cascade}
+@endnode
+
+@node open "Einen Zeichensatz laden"
+
+  @{fg highlight}Projekt Menu/Lade Zeichensatz@{fg text}
+
+  Es öffnet sich ein Standard ASL Zeichensatz Requester, in welchem der
+  Benutzer einen zu ladenden Zeichensatz auswählen kann. Outline Zeichensätze
+  werden genauso angezeigt wie Bitmap Zeichensätze, wobei zu bedenken
+  ist, daß Typeface zwar Bitmap Versionen von Outline Zeichensätzen her-
+  stellen kann, aber die Bearbeitung von Outline Zeichensätzen nicht
+  direkt unterstützt wird.
+
+  Die aufgelisteten Zeichensätzte sind die, die Typeface im Speicher und
+  im "Fonts:" assign findet. Mit der @{"Ändere Verzeichnis" link dir} Option
+  kann das "Fonts:" assign geändert werden.
+
+  Wenn unter @{"Voreinstellungen" link prefsmisc} der Schalter
+  "Frage Breite beim Laden" aktiviert ist, dann wird beim Laden ein Fenster
+  zum eingeben der gewünschten Breite geöffnet. Der Zeichensatz wird durch
+  die diskfont.library auf die ausgewählte Breite gebracht.
+@endnode
+
+@node save "Einen Zeichensatz sichern"
+
+  @{fg highlight}Projekt Menu/Sichere Zeichensatz@{fg text}
+
+  Dieses Fenster ermöglicht die Kontrolle über das Sichern eines Zeichensatzes
+   * "Verzeichnis" ist das Verzeichnis, in welchem die .font Datei und das
+     Zeichensatz Verzeichnis plaziert wird. Die Grundeinstellung ist das ak-
+     tuelle "Fonts:" Verzeichnis.
+   * "Name" ist der Name des zu speichernden Zeichensatzes.
+     Beispiel: Wenn das Zeichensatz Verzeichnis "foo:" heißt, der Zeichensatz
+     den Namen "bar" hat und die Zeichensatzhöhe 8 ist, dann werden folgende
+     Dateien angelegt:
+
+        foo:bar.font
+        foo:bar/8
+
+   * "Anfang" und "Ende" legen fest welche Zeichen eines Zeichensatzes gesichert
+     werden. Es müssen nicht alles Zeichen in einem Zeichensatz definiert sein.
+     Die Zeichen ohne eine Definition erscheinen dann in Anwendungen als  @{"Blank" link blank}
+     Zeichen.
+   * "Kern Info" legt fest, ob die Einstellungen der @{"Kerning" link kern}-Tabellen
+     gesichert werden oder nicht. Dieses Gadget ist ausgewählt und deaktiviert, wenn
+     es sich um einen proportional Zeichensatz handelt, da diese Informationen bei
+     derartigen Zeichensätzen automatisch gesichert werden.
+
+   Für "Anfang", "Ende" und "Kern Info" werden standardmäßig dieselben Parameter
+   genommen, wie sie der zuletzt geladene Zeichensatz hatte.
+
+@endnode
+
+@node blank "Das Blank Zeichen"
+
+  In jedem Bitmap Zeichensatz ist ein "Blank" Zeichen definiert, welches ver-
+  wendet wird, falls ein vom Zeichensatz angefordertes Zeichen nicht existiert.
+  Dieses Zeichen kann in Typeface editiert werden, indem das "Blank" gadget
+  im @{"Zeichensatz Parameter" link params} Fenster angeklickt wird.
+
+@endnode
+
+@node kern "Kerning Einstellung eines Zeichens ändern"
+
+  @{fg highlight}Zeichen Menu/Kerning@{fg text}
+
+  In diesem Fenster können die Spacing und Kerning Werte für ein einzelnes
+  Zeichen geändert werden. Der Kerning Wert legt fest, um wieviele Pixel der
+  Cursor verschoben werden soll, bevor das Zeichen gezeichnet wird.
+  Der Spacing Wert gibt an, wieviele Zeichen der Cursor nach Darstellen des
+  Zeichens bewegt werden soll.
+  Z.B folgendes Zeichen in einem 5x5 Raster:
+                .....
+                .***.   Spacing = 6
+                **.**   Kerning = 1
+                .***.
+                .....
+
+  Wenn der Zeichencursor an Position 1 startet und das Zeichen 2 mal
+  dargestellt wird erhält man folgendes Bild:
+
+                 .....  .....     Bei 1 startet der Cursor und wird um
+                 .***.  .***.     Kerning bis 2 nach rechts verschoben.
+                 **.**  **.**     Dort beginnt das Zeichnen des Zeichens,
+                 .***.  .***.     nach weiteren Spacing Pixeln beginnt das
+                 .....  .....     nächste Zeichen. Die reale Zeichenbreite
+                ^^     ^      ^   beträgt also Kerning + Spacing.
+                12     3      4
+
+  Achtung: Diese Werte werden normalerweise in Zeichensätzen mit fester
+           Breite nicht verändert.
+           Sie werden nur im Zeichensatz gespeichert, wenn die "Kern Info"
+           Checkbox im @{"Zeichensatz sichern" link save} Fenster aktiviert ist.
+
+@endnode
+
+@node width "Ändern der Zeichenbreite"
+
+  @{fg highlight}Zeichen Menu/Ändere Breite@{fg text}
+
+  In diesem Fenster kann die Breite des aktuell bearbeiteten Zeichens geändert
+  werden (die Nummer des Zeichens wird in der Titelleiste angezeigt).
+  Nach eingeben der neuen Breite (in "Neue Breite") kann mit dem Slider
+  darunter festgelegt werden, wo der aktuelle Buchstabe im neuen Raster plaziert
+  werden soll.
+  Folgenderweise arbeitet der Slider:
+  Ist die neue Breite größer als die alte, kann mit dem Slider die Position
+  eingestellt werden (z.B. ist der Slider ganz rechts, wird das Zeichen rechts-
+  bündig im neuen Raster plaziert).
+  Ist die neue Breite kleiner als die alte, gibt der Slider an, welcher Teil
+  des Zeichens in das neue Raster übernommen wird, da nicht das ganze Zeichen
+  übernommen werden kann.
+
+@endnode
+
+@node dir "Zeichensatz Verzeichnis ändern"
+
+  @{fg highlight}Projekt Menu/Ändere Verzeichnis@{fg text}
+
+  Wenn ein @{"Zeichensatz geladen" link open} werden soll, wird das "Fonts:" Verzeichnis
+  durchsucht. Ist der zu editierende Zeichensatz in einem anderen Verzeichnis,
+  kann mit Hilfe dieses Fensters das Assign auf den benötigten Pfad geändert,
+  oder der Pfad zum Fonts: Assign hinzugefügt werden.
+
+  Der Name des neuen Verzeichnisses muß in das String Gadget eingetragen
+  werden, oder kann mit Hilfe eines Requesters (auf das Gadget neben dem
+  String Gadget klicken) eingegeben werden.
+  Mit Assign wird das "Assign" auf dieses Verzeichnis geändert, mit "Assign
+  hinzufügen" wird das neue Verzeichnis an das aktuelle Fonts: Assign gehangen.
+
+@endnode
+
+@node params "Zeichensatzparameter ändern"
+
+  @{fg highlight}Zeichensatz Menu/Parameter@{fg text}
+
+  Dieses Fenster erlaubt es die unterschiedlichen Parameter einer Zeichen-
+  satzdefinition zu verändern:
+
+    @{b}Zeichensatz Typ@{ub}
+
+    Dieses Gadget legt fest, ob es sich um einen proportionalen Zeichensatz
+    oder um einen mit fester Breite handelt.
+    Bei einem Zeichensatz mit fester Breite haben alle Zeichen dieselbe
+    Breite, wogegen Zeichen in einem proportionalen Zeichensatz verschiedene
+    Breiten haben können.
+
+    Achtung: Bei Amiga Zeichensätzen ist diese Festlegung nicht absolut,
+             so können Zeichensätze mit fester Breite Zeichen haben, deren
+             Breite von der festgelegten abweicht. (z.B. der Standard
+             courier Zeichensatz). Aber es ist eine keine gute Idee Zeichen-
+             sätze mit fester Breite zu erzeugen, die Zeichen haben deren
+             Breite mehr als wenige Pixel von der Vorgabe abweicht, da
+             dies der meisten Software, die mit festen Breiten arbeitet,
+             sehr große Probleme beim Fensteraufbau bereitet.
+
+    Wenn dieser Schalter von "Proportional" zu "Fester Breite" geändert
+    wird erscheint ein Requester, der nachfragt, ob die Breiten aller
+    Zeichen auf die im "Breite" Gadget stehende geändert werden soll.
+
+    @{b}Höhe@{ub}
+
+    Die Höhe des Zeichensatzes in Pixeln.
+
+    @{b}Breite@{ub}
+
+    Die Breite des Zeichensatzes in Pixeln. Bei einem proportianalen Zeichen-
+    satz sollte dies der ungefähre Mittelwert der Breiten aller Zeichen sein.
+    Bei einem Zeichensatz mit fester Breite sollten alle Zeichen diese Breite
+    haben (siehe auch weiter oben), wird sie geändert, werden die Breiten
+    aller Zeichen geändert.
+
+    @{b}Basislinie@{ub}
+
+    Die Zeichensatz Basislinie, angegeben in Pixeln vom oberen Ende des
+    Zeichensatzes, wird als Bezugspunkt des vertikalen Cursors bei der
+    Darstellung verwendet. Der Wert der Basislinie muß niedriger als die
+    Zeichensatz Höhe sein. Unterhalb der Basislinie werden normalerweise
+    die Unterlängen der einzelnen Buchstaben dargestellt.
+
+    @{b}Fett Versatz@{ub}
+
+    Wenn ein fett gedruckter Zeichensatz rechnerisch generiert wird,
+    werden die Zeichen auf binärere Ebene um diesen Versatz nach rechts
+    verschoben mit einander verknüpft, so daß die einzelnen Zeichen fett
+    gedruckt wirken.
+
+    Die weiteren Parameter haben keinen Effekt auf die Darstellung des
+    Zeichensatzes, sie legen nur einige Werte, die die Verwendung des
+    Zeichensatzes betreffen fest.
+
+    @{b}Normal@{ub}          Bei diesem Zeichensatz ist keines der folgenden
+                    Attribute aktiviert.
+
+    @{b}Fett@{ub}            Legt fest, das dieser Zeichensatz als Fett-Zeichen-
+                    satz entwickelt wurde.
+
+    @{b}Shräg@{ub}           Dieser Zeichensatz wurde als schrägt gestellter
+                    Zeichensatz entwickelt.
+
+    @{b}Unterstrichen@{ub}   Dieser Zeichensatz wurde als untersctrichener
+                    Zeichensatz entwickelt.
+
+    @{b}Erweitert@{ub}       Dieser Zeichensatz wurde mit größerer Breite als
+                    Höhe entwickelt.
+
+    @{b}Rückwärts@{ub}
+
+    Legt fest, daß dieser Zeichensatz als rechts-nach-links Zeichensatz ent-
+    wickelt wurde (im allgemeinen links-nach-rechts).
+
+    @{b}Aspect@{ub}
+
+    Legt fest für welches Pixel Verhältnis der Zeichensatz entwickelt wurde.
+    * "Normal" gibt an, das die Pixel bei der Darstellung genauso breit wie
+      hoch sein sollten.
+    * "Dünn":  Die Pixel sollten höher als breit sein.
+    * "Breit": Die Pixel sollten breiter als hoch sein. (unüblich)
+
+    Das "Blank" Gadget erlaubt es das @{"Blank" link blank} Zeichen eines Zeichensatzes
+    zu editieren.
+
+@endnode
+
+@node char "Zeichenbearbeitung"
+
+  Jedes Zeichen eines Zeichensatzes kann in einem eigenen Fenster bearbeitet
+  werden, welches durch anklicken des Zeichens im Auswahlfenster geöffnet
+  wird. Der Hauptteil des Fenster besteht aus einer vergrößerten Darstellung
+  des Zeichens. Das Anklicken eines Pixels schaltet es zwischen an und aus
+  hin und her. Festhalten der Maustaste und gleichzeitiges drüberziehen über
+  mehrere Pixel schaltet alle Pixel um, oder an, über die der Mauszeiger gekommen
+  ist. Jenachdem was unter Voreinsteillungen eingestellt wurde.
+
+  Das Fenster hat desweiteren eine Toolbar (oben über dem vergrößerten
+  Zeichen) und ein Zeichen Menu.
+
+  Die Funktionen der Toolbar Elemente sind:
+
+    @{b}Leerer linker Pfeil@{ub}        Senkt die Zeichenbreite um 1 Pixel.
+
+    @{b}Leerer rechter Pfeil@{ub}       Erhöht die Zeichenbreite um 1 Pixel.
+
+    @{b}Gefüllte Pfeile@{ub}            Bewegt das Zeichen um 1 Pixel in die Richtung,
+                               in die der Pfeil zeigt.
+
+    @{b}2 Dreiecke@{ub}                 Öffnet das @{"Kerning" link kern} Fenster.
+
+    @{b}Gefüllter Pfeil mit Rand@{ub}   Öffnet das @{"Breite" link width} Fenster.
+
+    @{b}Plus/Minus@{ub}                 Rein/raus zoomen mit dem Faktor 2 bzw. ½
+
+    @{b}Horizontale Pfeile@{ub}         Spiegelt Zeichen horizontal
+
+    @{b}Vertikale Pfeile@{ub}           Spiegelt Zeichen vertikal.
+
+  Welche dieser Gadgets in der Tool Bar erscheinen kann im @{"Voreinstellungs" link prefs}
+  Fenster eingestellt werden.
+
+  Die Menüpunkte des Zeichen Menüs sind:
+    @{b}Undo@{ub}                       Setzt das Zeichen auf sein Aussehen beim Öffnen
+                               des Bearbeitungsfensters zurück
+
+    @{b}Ausschneiden@{ub}               Schneidet das Zeichen aus und legt es im internen
+                               Clipboard ab.
+
+    @{b}Kopieren@{ub}                   Ein Zeichen in das interne Clipboard kopieren.
+
+    @{b}Einfügen@{ub}                   Das aktuell editierte Zeichen mit dem letzten
+                               aus dem Clipboard ersetzen.
+    @{b}Löschen@{ub}                    Löscht das Zeichen ohne es im Clipboard
+                               abzulegen
+
+    @{b}Bewege@{ub}                     Das Zeichen um einen Pixel in die angegebene
+    @{b}Links/Rechts/Hoch/Runter@{ub}   Richtung bewegen.
+
+    @{b}Spiegele@{ub}                   Spiegeln eines einzelnen Zeichens
+    @{n}horizontal/vertikal@{ub}
+
+    @{b}Zoome Rein/Raus@{ub}            Zoom - Siehe weiter oben bei Plus/Minus.
+
+    @{b}Ändere Breite@{ub}              Öffnet das @{"Breite" link width} Fenster.
+
+    @{b}Kerning@{ub}                    Öffnet das @{"Kerning" link kern} Fenster.
+
+@endnode
+
+@node prefs "Voreinstellungen"
+
+  @{fg highlight}Projekt Menu/Voreinstellungen@{fg text}
+
+  Das Voreinstellungsfenster kann zur Einflußnahme auf das Aussehen und Ver-
+  halten von Typeface herangezogen werden. Das Fenster hat mehere Seiten, die
+  über das Gagdet am oberen Fensterrand erreicht werden können. Auf ihm
+  steht immer der Name der aktuellen Seite. Das Tastenkürzel für dieses
+  Gadget ist '\'.
+
+  Folgende Seiten sind verfügbar:
+
+                @{" Bildschirm          " link prefsscreen}
+                @{" Tool Bar            " link prefstoolbar}
+                @{" Bearbeitungsfenster " link prefsedit}
+                @{" Auswahlfenster      " link prefsselect}
+                @{" Verschiedenes       " link prefsmisc}
+
+  Die Auswahl von "Sichern" sichert die Voreinstellungen entweder unter "Envarc:"
+  oder im Typeface Verzeichnis, je nachdem was auf der @{"Verschiedenes" link prefsmisc} Seite
+  eingestellt ist.
+  Die Auswahl von "Benutzen" veranlaßt Typeface dazu die Voreinstellungen jetzt
+  zu benutzen, sie werden aber nicht gesichert.
+  Bei "Abbruch" werden sämtliche Änderungen verworfen und weiterhin die alten Ein-
+  stellungen (vor dem öffen dieses Fensters) verwendet.
+
+@endnode
+
+@node prefsscreen "Voreinstellungen - Bildschirm"
+
+  Diese Seite hat folgende Gadgets:
+
+    @{b}Eigener Bildschirm@{ub}
+
+    Wenn dieses Gadget aktiviert ist verwendet Typeface seinen eigenen Bild-
+    schirm, ansonsten wird ein öffentlicher Bildschirm verwendet (standard-
+    mäßig der Workbench Bildschirm).
+
+    @{b}Modus@{ub}
+
+    Hier kann der Bildschirmmodus von Typeface eigenem Bildschirm verändert
+    werden, aber nur, wenn "Eigener Bildschirm" aktiv ist. Zum Ändern auf
+    das Gadget rechts vom Stringgadget klicken und dann mit Hilfe des sich
+    öffnenden standard ASL-Screenmode Requesters den gewünschten Modus aus-
+    wählen.
+    Achtung: Dies ist nur ab asl.library v38 oder höher möglich. (Workbench
+             2.1 oder höher)
+
+    @{b}Zeichensatz@{ub}
+
+    Hier kann der von Typeface verwendete Bildschirm-Zeichensatz eingestellt
+    werden, aber nur wenn es sich um einen eigenen Bildschirm handelt.
+
+    @{b}Öffentlicher Bildschirm@{ub}
+
+    Wenn "Eigener Bildschirm" ausgewählt ist, wird hier der Name des öffent-
+    lichen Typeface Bildschirms angegeben (Normalerweise: "Typeface"),
+    ansonsten kann hier ein öffentlicher Bildschirm angegeben werden, auf
+    dem Typeface sein Display öffen soll. Sollte dies nicht möglich sein
+    (z.B der angegebene Bildschirm ist kein öffentlicher Bildschirm) wird
+    der Standard Bildschirm "Workbench" verwendet.
+
+@endnode
+@node prefstoolbar "Voreinstellungen - Tool Bar"
+
+  Das Tool Bar ist die Reihe von Gadgets im oberen Bereich des Zeichen-
+  bearbeitungs-Fensters. Welche Elemente dargestellt werden kann mit
+  den zwei Auswahlgadgets auf dieser Seite eingestellt werden. Das linke
+  Auswahlgadgets enthält alle Elemente der Toolbar welche nicht dargestellt
+  werden sollen, daß rechte die die angeziegt werden. Um ein Element zur
+  Toolbar hinzuzufügen oder aus ihr zu entfernen muß nur das entsprechende
+  Element mit gedrückter Maustaste von einem Auswahlgadget zum anderen gezogen
+  werden. Mehere Elemente gleichzeitig können durch gleichzeitiges drücken
+  der Shift Taste selektiert werden.
+  Eine Beschreibung der Funktion  der einzelnen Elemente
+  kann unter @{"Zeichenbearbeitung" link char} gefunden werden.
+
+  "Höhe" gibt an, wie hoch das Tool Bar sein soll (in Pixeln). Das Minimum
+  ist 11 (sieht auf einem  non-interlaced Bildschirm gut aus). Bei Verwendung
+  einer höheren Auflösung kann dieser Wert jedoch erhöht werden.
+  Ist "Auto" selektiert, so wird "Höhe" deaktiviert und Typeface generiert
+  selbst einen Höhen-Wert in Bezug zum verwendeten Bildschirmmodus.
+
+  Achtung: Änderungen auf dieser Seite haben keinen Einfluß auf bereits
+           geöffnete Bearbeitungs Fenster, sondern nur auf welche, die
+           nach "Benutzen" oder "Sichern" geöffnet werden.
+
+@endnode
+
+@node prefsedit "Voreinstellungen - Bearbeitungs Fenster"
+
+  Auf dieser Seite kann Einfluß auf die Darstellung des @{"Bearbeitungsfensters" link char}
+  genommen werden.
+
+  In der "Pixel Box" stehen mehere Gadgets zur Verfügung:
+
+    @{b}Breite / Höhe@{ub}
+
+    Diese Gadgets geben an, welche Breite/Höhe die einzelnen Pixel des
+    dargestellten Zeichens haben sollen.
+
+    @{b}Rahmen@{ub}
+
+    Es gibt drei Möglickeiten die einzelnen Pixel einzurahmen:
+      "Nein"  : es wird kein Rahmen um die einzelnen Pixel gemalt.
+      "Ja"    : es wird ein heller Rahmen um jedes gesetzte Pixel gemalt.
+      "Gitter": die Oberfläche wird mit einem Gitter überzogen.
+
+    @{b}Basislinie@{ub}
+
+    Dieses Gadget legt fest, ob die Basislinie im Zeichenbearbeitungsfenster
+    angezeigt wird oder nicht.
+
+  Es noch zwei Gadgets außerhalb der Pixel Box:
+
+  "Maximales Fenster" nimmt Einfluß auf die Größe des Fensters beim Öffnen.
+  Ist dieses Gadget nicht selektiert, wird das Bearbeitungsfenster immer
+  rechts vom Auswahlfenster geöffnet, auch wenn nicht genug Platz auf dem
+  Bildschirm ist, es wird dann nur ein Teil des Zeichens dargestellt.
+  Ist das Gagdet selektiert, überlappt, wenn der Platz rechts vom Auswahl-
+  fenster nicht reicht, das Bearbeitungsfenster das Auswahlfenster, das
+  Bearbeitungsfenster wird immer mit voller Größe geöffnet.
+
+  Mit dem Invertieren Gadget kann der Zeichenmodus eingestellt werden:
+  Ist es aktiviert, werden alle Pixel über die der Mauszeiger beim Zeichnen
+  kommt invertiert. Ist es nicht aktiviert, so werden sie immer auf den
+  Status des zuerst geänderten Pixels gesetzt.
+
+  Achtung: Änderungen auf dieser Seite haben keinen Einfluß auf bereits
+           geöffnete Bearbeitungs Fenster, sondern nur auf welche, die
+           nach "Benutzen" oder "Sichern" geöffnet werden.
+
+@endnode
+
+@node prefsselect "Voreinstellungen - Auswahl Fenster"
+
+  Mit dieser Seite wird das Aussehen des Auswahlfensters kontrolliert.
+
+  Vorhandene Einstellungen sind:
+
+    @{b}Fenster Größe@{ub}
+
+    Wenn diese Gadget selektiert ist, hat das Auswahl Fenster rechts
+    unten im Rahmen ein Gadget (sizing gadget), mit dem die vertikale
+    Größe des Fenster verändert werden kann.
+
+    @{b}Shift@{ub}
+
+    Ist dieses Gadget selektiert, so wird bei einfachem Klick auf ein
+    Zeichen versucht das Zeichen in einem bereits geöffneten Bearbei-
+    tungsfenster darzustellen. Bei Shift und Klick wird ein neues
+    Bearbeitungsfenster geöffnet.
+    Ist das Gadget nicht selektiert, verhält sich Klick und Shift Klick
+    genau andersrum.
+
+    @{b}Breite@{ub}
+
+    Gibt an, wiviele Zeichen pro Zeile im Auswahlfenster dargestellt
+    werden.
+
+    @{b}Höhe@{ub}
+
+    Hier kann die Anzahl der Zeichen pro Spalte angegeben werden.
+    Achtung: Höhe * Breite <= 256 (maximale Zeichenanzahl)
+
+    @{b}Zeichensatz@{ub}
+
+    Hier kann der Zeichensatz eingetragen werden, der für das Auswahl
+    Fenster verwendet wird.
+
+@endnode
+
+@node prefsmisc "Voreinstellungen - Verschiedenes"
+
+  "Sichere Voreinstellungen in" gibt an, wo die Voreinstellungen gespeichert
+  werden sollen:
+
+    @{b}Environment Variable@{ub}
+
+    "Typeface.prefs" wird in ENV: und ENVARC: abgelegt.
+    (Anmerkung: Env: und Envarc: haben denselben Inhalt. Normalerweise wird
+                beim Start der Worbench der Inhalt von Envarc: in Ram:Env
+                kopiert, was dann Env: genannt wird. Programme greifen dann
+                auf Env: zurück. Typeface muß beides sichern, damit die Ein-
+                stellungen sowohl sofort, als auch nach dem nächsten reset
+                vorhanden sind.)
+    Achtung: Das speichern der Typeface.prefs Datei kostet bei einer Standard
+             Workbench bei jedem booten der Workbench Speicher, da die Datei,
+             auch wenn Typeface nicht gestartet wird, in Ram:Env kopiert wird.
+             Dies ist aber die Standardmethode .prefs Dateien zu sichern.
+
+    @{b}Typeface Verzeichnis@{ub}
+
+    Die Datei "Typeface.prefs" wird ins Typeface Verzeichnis gesichert, dies
+    benötigt weniger Speicher, da keine zusätzliche Kopie im Ram: vorhanden
+    ist.
+    Anmerkung: Eine Typeface.prefs Datei hat weniger als 400 Bytes, fällt
+               also beim Speicherverbrauch nicht weiter auf. Hat man jedoch
+               mehere Programme, die ihre .prefs Dateien in ENV: sichern
+               kommen schnell einige KBytes zusammen und außerdem kostet
+               es nach jedem booten Zeit, da die Dateien ins RAM: kopiert
+               werden müssen.
+
+    Mit "Ende - Sicherheitsabfrage" kann eingestellt werden, ob Typeface
+    beim Beenden des Programms nachfragen soll.
+
+    Mit "Frage Breite beim Laden" wird festgelegt, on beim Laden eines Zeichen-
+    satzes Breite Requester geöffnet werden soll oder nicht.
+
+@endnode
+
+@node me "Der Autor von Typeface"
+
+  Falls es irgendwelche Kommentare, Fragen oder Vorschläge zu Typeface gibt,
+  kann ich via Internet email erreicht werden:
+
+          kinder@teaching.physics.ox.ac.uk
+  oder    david.kinder@physics.ox.ac.uk
+
+  Zukünftige Versionen von Typeface, die z.B. Colour Fonts unterstützen,
+  hängen vom feedback eurerseits ab. Laßt es mich wissen wenn euch
+  Typeface gefällt.
+
+@endnode
+
+@node about "Über"
+
+  @{fg highlight}Projekt Menu/Über@{fg text}
+
+  Zeigt die Versionsnummer, das Copyright Datum und den @{"Autor" link me} von
+  Typeface.
+  Zusätzlich wird der freie Chip und Fast Memory angezeigt.
+
+@endnode
+
+@node quit "Ende"
+
+  @{fg highlight}Projekt Menu/Ende@{fg text}
+
+  Beendet Typeface. Wurde der geladene Zeichensatz verändert und nicht
+  gesichert ist er verloren !
+
+@endnode
+
+@node history "History"
+
+  @{b}Release 1.21 (24/2/97)@{ub}
+
+  o Absturz behoben, der auftrat beim Bearbeiten eines Zeichens mit Breite
+    Null bei eingeschaltetem Gitter. (Z.B. Leerzeichen bei einem proportional
+    Zeichensatz)
+
+  @{b}Release 1.2 (11/4/96)@{ub}
+
+  o Die Reset Kerning option im Zeichensatz Menu wurde verbessert. Jetzt wird
+    ein Fenster geöffnet, daß es erlaubt einen Wert anzugeben, der zu default
+    spacing und kerning von jedem Zeichen hinzuaddiert wird.
+  o Beim Laden eines Zeichensatzes mit einer gegebenen Höhe kann jetzt im
+    "Frage Breite beim Laden" Fenster die Breite eingegeben werden. Dieses
+    Fenster wird sich nach dem Zeichensatzauswahlfenster öffnen, vorrausgesetzt
+    es wurde in den Voreinstellungen aktiviert.
+  o Verbessertes kopieren und einfügen im Zeichen Menu. Es sind hinzugekommen:
+    Undo, Ausschneiden und löschen.
+  o Zeichen können jetzt horizontal und vertikal gespiegelt werden.
+  o Mit "Fenster anordnen" ist es jetzt möglich die Bearbeitungsfenster neu
+    anzuorden
+  o Neue Tastaturkürzel für rein- und rauszommen beim bearbeiten eines Zeichens
+    (+ und -)
+  o Änderungen bei den Voreinstellungen:
+    o Die Toolbar Seite wurde neu gestaltet.
+    o Zeichenmodus Option auf der Bearbeitungsfenster Seite
+
+  @{b}Release 1.1 (5/10/95)@{ub}
+
+  o Fehlermeldungen verbessert. Wenn Typeface irgendetwas nicht ansprechen
+    kann gibt es jetzt eine Fehlermeldung.
+  o Wenn Typeface seinen eigenen Bildschirm öffnet ist dieser jetzt öffentlich.
+    Wenn nicht kann es einen beliebigen anderen öffentlichen Bildschirm öffnen.
+  o Viele neue Voreinstellungsmöglichkeiten:
+    - Einstellbarer Bildschirm-Zeichensatz und Name.
+    - Das Tool Bar ist jetzt konfigurierbar.
+    - Das Bearbeitungsfenster kann ein Gitter haben und die Basislinie kann
+      dargestellt werden.
+    - Die Größe und der Zeichensatz des Auswahlfensters ist jetzt konfi-
+      gurierbar.
+  o Abstand zwischen Objekten in Fenstern hängt von der Bildschirmauflösung ab.
+  o Alle Fenster (bis auf das Auswahlfenster) können mit "Esc" geschlossen
+    werden.
+  o Neues "Zeichensatz" Menu mit Optionen zur Änderung der Zeichensatz Para-
+    meter (vorher im Projekt Menu), Bewegen aller Zeichen im Zeichensatz und
+    reset der Kerning Einstellungen.
+  o Es kann ein Sicherheitsrequester bei Programmende eingeschaltet werden.
+  o Es können mehere Pixel im Bearbeitungsfenster durch Festhalten der Maus-
+    taste geändert werden.
+  o Klick und Shift Klick im Auswahlfenster.
+  o Neues Zeichensatz Vorschau Fenster.
+  o Zoomfunktion im Bearbeitungsfenster.
+  o Typeface benutzt jetzt .catalog Dateien, falls vorhanden.
+
+  @{b}Release 1.0 (29/5/95)@{ub}
+
+  o Erstes Release.
+@endnode
+
+@node moveleft "Bewege links"
+
+  @{fg highlight}Zeichensatz Menu/Bewege links@{fg text}
+
+  Bewegt alle Zeichen des Zeichensatzes um ein Pixel nach links.
+
+@endnode
+
+@node moveright "Bewege rechts"
+
+  @{fg highlight}Zeichensatz Menu/Bewege rechts@{fg text}
+
+  Bewegt alle Zeichen des Zeichensatzes um ein Pixel nach rechts.
+
+@endnode
+
+@node moveup "Bewege hoch"
+
+  @{fg highlight}Zeichensatz Menu/Bewege hoch@{fg text}
+
+  Bewegt alle Zeichen des Zeichensatzes um ein Pixel nach oben.
+
+@endnode
+
+@node movedown "Bewege runter"
+
+  @{fg highlight}Zeichensatz Menu/Bewege runter@{fg text}
+
+   Bewegt alle Zeichen des Zeichensatzes um ein Pixel nach unten.
+
+@endnode
+
+@node resetkern "Reset Kerning"
+
+  @{fg highlight}Zeichensatz Menu/Reset Kerning@{fg text}
+
+  Diese Option setzt die @{"Kerning" link kern} Einstellung für alle Zeichen
+  im Zeichensatz zurück auf einen Standardwert. In diesem Fenster sind
+  zwei Eingabefelder zu sehen, für Spacing und Kerning. Bei der Auswahl
+  von Reset wird folgendermaßen zurückgesetzt:
+
+    Spacing = Zeichen Breite + Wert im Spacing Gadget
+    Kerning = Wert im Kerning Gadget
+
+  Voreinstellung ist für beide 0.
+@endnode
+
+@node cascade "Fenster anordnen"
+
+  @{fg highlight}Zeichensatz Menu/Fenster anordnen@{fg text}
+
+  Diese Option dienst dazu alle geöffneten Zeichen Bearbeitungsfenster
+  auf dem Bildschirm neu zu arrangieren.
+@endnode
+
+@node preview "Vorschau"
+
+  @{fg highlight}Projekt Menu/Vorschau@{fg text}
+
+  Das Vorschau Fenster erlaubt es sich anzuschauen, wie der aktuell bear-
+  beitete Zeichensatz momentan aussieht.
+  In das obere Multi-Zeilen Gadget kann jeder gewünschte Text eingetippt
+  werden. (siehe auch @{"textfield.gadget" link textfield})
+
+  Darunter liegen folgende vier Gadgets:
+
+    @{b}Aktualisieren@{ub}    Aktualisiert den Zeichensatz im Vorschau Fenster,
+                     so daß Änderungen, die nach dem Öffnen des Vorschau
+                     Fensters am Zeichensatz vorgenommen wurden, auch gezeigt
+                     werden.
+
+    @{b}Zeige Alles@{ub}      Stellt alle Zeichen des Zeichensatzes dar.
+                     (Ausgenommen 0x00, 0x0A und 0x0D, die durch Leerzeichen
+                     ersetzt werden.)
+
+    @{b}Löschen@{ub}          Löscht den Text im Vorschau Fenster.
+
+    @{b}Abbruch@{ub}          Schließt das Vorschau Fenster.
+
+@endnode
+
+@node textfield "TextField Gadget"
+
+  "textfield.gadget" ist ein BOOPSI gadget, welches es Programmen erlaubt
+  mehrzeilige Stringgadgets zu verwenden. "textfield.gadget" ist © 1995
+  Mark Thomas.
+
+  Ab Workbench 3.0 und höher ist der Standard Pfad für diese Datei
+  "Sys:classes/gadgets".
+  Für Workbench 2.0 und 2.1 gibt es keinen Standard Pfad.
+
+  Bei der Benutzung des Gadgets sind folgende Tastenkombinationen verfügbar:
+  (Aus der "textfield.gadget" Dokumentation)
+
+    Shift Cursor Hoch    Gehe zur ersten Zeile der aktuellen Seite, oder
+                         wenn der Cursor in der ersten Zeile ist, gehe eine
+                         Seite zurück.
+
+    Shift Cursor Runter  Analog Shift Cursor Hoch
+
+    Ctrl oder
+    Shift Cursor Rechts  Gehe zum rechten Ende der aktuellen Zeile.
+
+    Ctrl oderr
+    Shift Cursor Links   Gehe zum linken Ende der aktuellen Zeile.
+
+    Shift Backspace      Lösche den gesamten Text links vom Cursor in der
+                         aktuellen Zeile.
+
+    Shift Delete         Lösche den gesamten Text rechts vom Cursor (incl.
+                         Cursor) in der aktuellen Zeile.
+
+    Ctrl Cursor Hoch     Gehe zur ersten Zeile des Textes.
+
+    Ctrl Cursor Runter   Gehe zur letzten Zeile des Textes.
+
+    Alt Cursor Rechts    Gehe zum nächsten Wort.
+
+    Alt Cursor Links     Gehe zum vorherigen Wort.
+
+    Alt Cursor Hoch      Gehe zum ersten Zeichen im Gadget.
+
+    Alt Cursor Runter    Gehe zum letzten Zeichen im Gadget.
+
+    Alt Backspace        Löscht das Wort links vom Cursor.
+
+    Alt Delete           Löscht das Wort rechts vom Cursor.
+
+    Ctrl x               Löscht die ganze Zeile, in der der Cursor steht.
+
+    Rechte Amiga e       Lösche allen Text im Gadget und sichere ihn im
+                         Undelete Speicher.
+
+    Rechte Amiga v       Füge Text aus dem Clipboard an der momentanen
+                         Cursor Position ein.
+
+    Rechte Amiga a       Markiere den ganzen Text.
+
+    Rechte Amiga u       Bringt den letzten markierten Block, oder einem
+                         mit "Rechte Amiga e" gelöschten Text zurück.
+
+  Wenn ein Text markiert ist, sind folgende Tasten verfügbar:
+
+    Delete oder          Löscht markierten Text und speichert ihn im
+    Backspace            Undelete Speicher.
+
+    Rechte Amiga x       Schneided markierten Text aus und legt ihn im
+                         Clipboard ab.
+
+    Rechte Amiga c       Kopiert markierten Text ins Clipboard.
+
+    Rechte Amiga v       Ersetzt markierten Text mit Text aus dem Clipboard.
+                         (der Text wird im Undelete Speicher festgehalten)
+
+    Jede andere Taste    Ersetzt markierten Text mit Buchstabe.
+
+@endnode
+
+@node translation "Die deutsche Übersetzung"
+
+  @{fg highlight}Die deutsche Übersetzung@{fg text}
+
+  Diese Übersetzung ist auf die mitgelieferte .catalog Datei abgetimmt.
+  Sie hält sich weitestgehend an das Original, hat aber einige nicht
+  näher gekennzeichnete Anmerkungen und Erweiterungen, die im Original
+  nicht enthalten sind.
+  Rechtsschreibfehler bitte ich zu entschuldigen.
+  Für Vorschläge und Verbesserungen hier meine email:
+
+    hans@informatik.tu-muenchen.de
+
+  bzw. meine komplette Anschrift:
+
+    Martin Hans
+    Römerstraße 17
+    85232 Bergkirchen
+
+  Viel Spaß mit Typeface
+
+                                                                Martin
+
+
+  PS: Die Namen der nodes dieses .guide files sind identisch mit denen
+      des Originals. Deswegen kann diese Datei, wenn sie in
+      Typeface.guide umbenannt wird, uneingeschränkt für die Online
+      Hilfe von Typeface genutzt werden. (siehe @{"Installation" link install})
+
+@endnode

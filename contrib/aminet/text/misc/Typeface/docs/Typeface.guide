@@ -1,0 +1,827 @@
+@database Typeface.guide
+@author "David Kinder"
+@$VER: Typeface.guide 1.24 (14.1.2001)
+@node main "Typeface Guide"
+
+			Typeface 1.24
+			© 1995-2000 David Kinder
+
+			@{" Introduction                " link intro}
+			@{" Installation                " link install}
+			@{" Using Typeface              " link using}
+			@{" Opening a font              " link open}
+			@{" Saving a font               " link save}
+			@{" Changing the font directory " link dir}
+			@{" Editing the font parameters " link params}
+			@{" Editing a character         " link char}
+			@{" Preferences                 " link prefs}
+			@{" History                     " link history}
+			@{" Contacting the author       " link me}
+@endnode
+@node intro "Introduction"
+
+  The Amiga provides support for two types of font; bitmap and outline.
+  In bitmap fonts each character is stored as a series of bits indicating
+  which pixels should be on or off. A bitmap font has a specific size, and
+  bitmap fonts with the same design but in different sizes are usually
+  stored together in the FONTS: directory, e.g. for a bitmap font "foo":
+
+	foo.font		information about foo
+	foo/8			bitmap font of height eight pixels
+	foo/9			bitmap font of height nine pixels
+
+  Outline fonts (introduced in Release 2.04 of the operating system) store
+  fonts as a series of curves, so that one definition can provide a font
+  in many different sizes. Such fonts usually appear in the FONTS:
+  directory as .font and .otag files (the .otag file contains information
+  specific to the particular font engine to be used). Since Release 3.0 the
+  outline font engine has been separated from diskfont.library (and is now
+  called bullet.library). This allows new font engines to be used, e.g.
+  type1.library, which provides support for Postscript Type 1 fonts.
+
+  Typeface is an editor for bitmap fonts. In addition, outline fonts can
+  be loaded with specific dimensions, altered if required, and saved out as
+  bitmap fonts. Having an outline font also saved as a bitmap font means
+  that if an application requests the font in a size stored as a bitmap,
+  then the bitmap version is used, otherwise the outline font is converted
+  to the correct size, which generally takes time and memory.
+
+  Typeface may be freely distributed but remains the copyright of the
+  @{"author" link me}, David Kinder. Typeface may not be distributed for more than a
+  nominal fee to cover media, etc., and may not be distributed as part of
+  a commercial package without the written permission of the author. Source
+  is provided for the benefit of anyone interested in the structure of an
+  Amiga program, and may not be used by anyone other than the author in
+  this or any other font editing program.
+@endnode
+@node install "Installation"
+
+  Typeface requires that @{"bgui.library" link bgui} v40¹ be in either the LIBS:
+  directory or in a "libs" subdirectory of the directory where the Typeface
+  files are kept, and that @{"textfield.gadget v3 be installed" link textfield}. Other than
+  this, Typeface requires the presence of the following standard libraries
+  in LIBS:
+
+	asl.library v37
+	diskfont.library v36
+
+  Provided that you have booted into a standard Workbench setup, Typeface
+  should start when its icon is double clicked; you can move bgui.library
+  and textfield.gadget to their proper places later, if you want.
+
+  Also, amigaguide.library v34 must be available if on-line help is to be
+  used in the program.
+
+  Typeface searches the catalogs subdirectory and the path LOCALE:catalogs
+  for "Typeface.catalog", which allows Typeface to be localized under
+  Workbench 2.1 and higher (locale.library v38 required). Full information
+  on the creation of such catalogs is available in the "Catalogs"
+  subdirectory.
+
+  ¹All version numbers given are the minimum required.
+@endnode
+@node bgui "BGUI Library"
+
+  bgui.library is a shared library written by Jan van den Baard which
+  provides a font sensitive gadget layout engine in an object orientated
+  manner.
+@endnode
+@node using "Using Typeface"
+
+  When first started, Typeface opens a character selection window in the
+  top-left corner of the display. In this window, any of the 256 characters
+  which make up a font can be chosen for editing. The scroll bar on the
+  right of the window can be used to move through the available characters.
+  The size of the window and the font used can be altered in the
+  @{"preferences window" link prefs}.
+
+  Clicking on any of the characters causes a @{"character editing window" link char} to
+  open, in which the character is displayed on a grid. Any number of these
+  windows may be opened, as all the windows in Typeface multitask (for
+  example, you can open up a new character editing window with the
+  preferences window open). Holding down the shift key while clicking on a
+  character causes Typeface to display the character in one of the already
+  open editing windows, if one is available, rather than opening a new
+  window. All windows also have the following menus:
+
+  @{b}Project Menu@{ub}		@{" Open Font   " link open}
+			@{" Save Font   " link save}
+			@{" Change Dir  " link dir}
+			@{" Preview     " link preview}
+			@{" Preferences " link prefs}
+			@{" About       " link about}
+			@{" Quit        " link quit}
+
+  @{b}Font Menu@{ub}		@{" Edit Parameters " link params}
+			@{" Edit Character  " link editchar}
+			@{" Move Left       " link moveleft}
+			@{" Move Right      " link moveright}
+			@{" Move Up         " link moveup}
+			@{" Move Down       " link movedown}
+			@{" Reset Kerning   " link resetkern}
+			@{" Cascade Windows " link cascade}
+@endnode
+@node open "Opening a font"
+
+  @{fg highlight}Project Menu/Open Font@{fg text}
+
+  A standard ASL font requester will open from which the user can select
+  a font to be loaded into Typeface. Outline fonts will be listed as well
+  as bitmap fonts; remember that while bitmap versions of outline fonts can
+  be created, but Typeface does not support direct editing of outline
+  fonts.
+
+  The fonts listed will be those found in memory and those in the FONTS:
+  assign. To change the FONTS: directory, use the @{"Change Dir" link dir} option.
+
+  If the "Query Width on Load" gadget is selected in @{"preferences" link prefsmisc}, then a
+  window will open in which the width of the font being loaded can be
+  altered. The font will be scaled by diskfont.library to the chosen width.
+@endnode
+@node save "Saving a font"
+
+  @{fg highlight}Project Menu/Save Font@{fg text}
+
+  This window allows control over how the font is to be saved.
+  "Font Directory" is the directory into which the .font file and the font
+  directory will be placed. The default is the current FONTS: directory.
+  "Font" is the name of the font. Thus if the font directory is "foo:",
+  the font name is "bar" and the font height is 8, then the font will be
+  saved as the files
+
+	foo:bar.font
+  and	foo:bar/8
+
+  "First" and "Last" control which characters will be saved. Not all
+  characters in a font need to be defined; those without a definition
+  appear in applications as the @{"blank" link blank} character. "Kern Info" determines
+  whether or not the tables of @{"kerning" link kern} information are saved. This gadget
+  is selected and ghosted if the font is proportional, as such information
+  must be saved in this case. For "First", "Last" and "Kern Info" the
+  default is to save the font with the same parameters as the last loaded
+  font.
+@endnode
+@node blank "The blank character"
+
+  Every bitmap font contains a definition for a "blank" character, which is
+  used if a character requested from the font is not defined. This
+  character can be edited in Typeface by clicking on the "Blank" gadget in
+  the @{"Edit Font Parameters" link params} window.
+@endnode
+@node kern "Changing the kerning information of a character"
+
+  @{fg highlight}Character Menu/Kerning@{fg text}
+
+  In this window the spacing and kerning values for a character can be
+  altered. The kerning value determines how many pixels the cursor position
+  should be advanced before rendering the character, and the spacing value
+  determines how many pixels the cursor should advance after rendering.
+  For example, consider this character, defined on a 5x5 grid:
+
+		.....
+		.***.	Spacing = 6
+		**.**   Kerning = 1
+		.***.
+		.....
+
+  If the rendering cursor starts at position 1, and the character is
+  printed twice:
+	         .....  .....
+		 .***.  .***.		1 and 2 (also 2 and 3) are
+		 **.**  **.**		separated by 7 pixels (i.e.
+		 .***.  .***.		the spacing plus the kerning).
+		 .....  .....
+		^      ^      ^
+		1      2      3
+
+  2 is the position of the cursor after rendering one character, and 3 the
+  position after rendering both characters.
+
+  Note that these values are not usually altered in fixed-width fonts, and
+  are only saved in the font if the "Kern Info" checkbox is set in the
+  @{"Save Font" link save} window.
+
+@endnode
+@node width "Changing the width of a character"
+
+  @{fg highlight}Character Menu/Change Width@{fg text}
+
+  In this window the width of the character currently being edited (the
+  character number is shown in title bar) can be changed. Enter the new
+  width in the string gadget then use the slider gadget below to determine
+  how the character data is placed in the new space.
+
+  The slider gadget works as follows. If the new width is greater than the
+  old width, then the slider represents where the old data will appear in
+  the new space (i.e. if the slider is at the right, then the data will be
+  copied to the new space flush with the right edge of the new space). If
+  the new width is less than the old width, then the slider represents
+  which section of the data will be copied into the new space, as not all
+  the data will fit.
+@endnode
+@node dir "Changing the font directory"
+
+  @{fg highlight}Project Menu/Change Dir@{fg text}
+
+  When @{"opening a font" link open}, the FONTS: directory is scanned. If the font to be
+  edited is not in the FONTS: assign, then this window can be used to
+  change or add to FONTS:.
+
+  The name of the new directory should be entered in the string gadget,
+  optionally by using a file requester (obtained by clicking on the folder
+  gadget to the right of the string gadget). To change the FONTS: assign
+  to this directory, click on "Assign". To add this directory to the FONTS:
+  assign, click on "Assign Add".
+@endnode
+@node params "Editing the font parameters"
+
+  @{fg highlight}Font Menu/Edit Parameters@{fg text}
+
+  This window allows editing of the various flags and parameters that
+  define the font. These are:
+
+    @{b}Font Type@{ub}
+
+    This gadget determines whether the font is fixed-width or
+    proportional. In a fixed-width font, all characters have the same
+    width, whereas in a proportional font, different characters can have
+    different widths.
+
+    Note that for Amiga fonts this distinction is not absolute, as
+    "fixed-width" fonts can have characters with widths different from
+    the nominal (e.g. the standard courier font). However, it is not a
+    good idea to have fixed-width fonts with characters whose widths vary
+    by more than a few pixels from the nominal, as this will confuse most
+    software. If this gadget is changed from proportional to fixed-width,
+    a requester will appear to ask if all the character widths should be
+    changed to the default (given in the "Width" gadget).
+
+    @{b}Height@{ub}
+
+    The height (in pixels) of the font.
+
+    @{b}Width@{ub}
+
+    The width (in pixels) of the font. For a proportional font this
+    should be an approximate average width for all the characters in the
+    font. For a fixed-width font, all characters should have this width
+    (but see above). If the font is fixed-width, then changing this
+    number will change the width of every character in the font.
+
+    @{b}Baseline@{ub}
+
+    The font baseline, measured (in pixels) from the top of the font.
+    When the font is rendered into a RastPort, the vertical cursor
+    position (cp_y) will correspond to the font baseline. The baseline
+    must be less than the font height.
+
+    @{b}Bold Smear@{ub}
+
+    When a bold font is algorithmically generated, the font data is
+    binary or'd with itself, shifted right by this many pixels.
+
+  The next set of parameters do not affect how the font is displayed;
+  they only provide information on how the font should be used.
+
+    @{b}Normal@{ub}		The font does not have any of the following
+			attributes set.
+
+    @{b}Bold@{ub}		Specifies that the font is designed so that
+			it appears as bold.
+
+    @{b}Italic@{ub}		Specifies that the font is designed so that
+			it appears as italic.
+
+    @{b}Underline@{ub}		Specifies that the font is designed so that
+			it appears underlined.
+
+    @{b}Extended@{ub}		Specifies that the font is designed so that
+			it appears wider than it is high.
+
+    @{b}Reversed@{ub}
+
+    Specifies that the font is designed to be rendered right-to-left
+    (i.e. the reverse of the usual).
+
+    @{b}Aspect@{ub}
+
+    Specifies the pixel aspect ratio that the font is designed for.
+    "Normal" indicates that the pixels should be as wide as they are
+    high; "Thin" that the pixels should be higher than they are wide;
+    and "Wide" that the pixels should be wider than they are high.
+
+  The "Blank" gadget allows editing of the font's @{"blank" link blank} character.
+@endnode
+@node char "Editing a character"
+
+  Each character in a font can be edited in its own window, which can be
+  opened by clicking on the character in the character selection window.
+  The main section of the window is given over to an expanded display of
+  the character. Clicking on any pixel in the window toggles the pixel
+  between on and off. Dragging the mouse with the left mouse button held
+  down either toggles or overwrites any subsequent pixels, depending on
+  the preferences setting.
+
+  The window also contains a tool bar along the top and a Character menu.
+  The functions of the gadgets in the tool bar are:
+
+    @{b}Hollow left arrow@{ub}	Decrease the character width by one pixel.
+
+    @{b}Hollow right arrow@{ub}	Increase the character width by one pixel.
+
+    @{b}Filled arrows@{ub}	Move the character data one pixel in the
+			direction specified by the arrow.
+
+    @{b}Triangles@{ub}		Open the @{"kerning" link kern} window.
+
+    @{b}Filled arrow with@{ub}	Open the @{"width" link width} window.
+    @{b}a black border@{ub}
+
+    @{b}Plus/Minus@{ub}		Halves/doubles the size of the rectangle
+			representing each pixel of the character.
+
+    @{b}Horizontal Arrows@{ub}	Flip character horizontally.
+
+    @{b}Vertical Arrows@{ub}	Flip character Vertically.
+
+  Which of these gadgets are shown in the tool bar is controlled in the
+  @{"preferences window" link prefs}. The Character menu items are:
+
+    @{b}Undo@{ub}		Reset the character to its initial design when
+			the editing window was opened.
+
+    @{b}Cut@{ub}			Cut the character into the internal clipboard.
+
+    @{b}Copy@{ub}		Copy the character into the internal clipboard.
+
+    @{b}Paste@{ub}		Replace the character with the last character
+			stored in the internal clipboard.
+
+    @{b}Erase@{ub}		Clear the character without putting it into the
+			internal clipboard.
+
+    @{b}Move@{ub}		Move the character data one pixel in the
+    @{b}Left/Right/Up/Down@{ub}	specified direction.
+
+    @{b}Flip Horizontally@{ub}	Flip the character data along its vertical
+    @{b}/Vertically@{ub}		/horizontal axis.
+
+    @{b}Zoom In/Out@{ub}		Halves/doubles the size of the rectangle
+			representing each pixel of the character.
+			The shortcuts are the "+"/"-" keys.
+
+    @{b}Change Width@{ub}	Open the @{"width" link width} window.
+
+    @{b}Kerning@{ub}		Open the @{"kerning" link kern} window.
+@endnode
+@node prefs "Preferences"
+
+  @{fg highlight}Project Menu/Preferences@{fg text}
+
+  The preferences window can be used to control aspects of Typeface's
+  appearance and behaviour. The window contains a number of "pages", which
+  are accessed from the gadget at the top of the window (for which the
+  keyboard shortcut is '\'). The pages available are:
+
+		@{" Screen           " link prefsscreen}
+		@{" Tool Bar         " link prefstoolbar}
+		@{" Edit Windows     " link prefsedit}
+		@{" Selection Window " link prefsselect}
+		@{" Miscellaneous    " link prefsmisc}
+
+  Selecting "Save" will save the preferences to either ENVARC: or PROGDIR:
+  (the directory containing the Typeface files), depending on the selection
+  made in the @{"Miscellaneous" link prefsmisc} page. "Use" makes Typeface use the current
+  preferences but does not save them. "Cancel" ignores any changes made to
+  the preferences and just closes the preferences window.
+@endnode
+@node prefsscreen "Preferences - Screen Page"
+
+  This page contains the following gadgets:
+
+    @{b}Custom Screen@{ub}
+
+    If this is selected, then Typeface uses its own screen, else it uses
+    a public screen (the Workbench screen by default).
+
+    @{b}Mode@{ub}
+
+    Here the screen mode of Typeface's custom screen is shown. To change,
+    click on the arrow gadget to the right of the mode name. Note that the
+    user can only select the screen mode if asl.library v38 or higher is
+    present (Release 2.1 of the operating system).
+
+    @{b}Font@{ub}
+
+    Here the screen font of Typeface's custom screen is shown. To change,
+    click on the arrow gadget to the right of the font name.
+
+    @{b}Public Screen@{ub}
+
+    If "Custom Screen" is selected, this will be the public name
+    of Typeface's screen. If it is not selected, then Typeface will try
+    to open on the public screen given here. If that screen is not
+    available, the default public screen will be used instead.
+@endnode
+@node prefstoolbar "Preferences - Tool Bar Page"
+
+  The tool bar is the line of gadgets along the top of the character
+  editing windows. Which of these gadgets is displayed is controlled by
+  the two listview gadgets on this page; the left hand contains gadgets
+  which will not be displayed; the right those which will be. To add or
+  remove a gadget from the tool bar, select the appropriate entry by
+  clicking on it and drag it to the other listview by holding the mouse
+  button down while moving the mouse. When the chosen entry is over the
+  destination listview release the mouse button to drop the entry. More
+  than one entry can be selected by holding down the shift key when
+  selecting. For a description of what each gadget does, see
+  @{"editing a character" link char}.
+
+  The "Height" gadget determines the height of the tool bar. The minimum is
+  11 (which looks good for a non-interlaced screen), but if you use a
+  higher resolution display you may want to increase this value. If the
+  "Auto" gadget is selected, then the "Height" gadget is ghosted and
+  Typeface automatically determines the height of the tool bar, based on
+  the screen resolution.
+
+  Note that changing these options does not affect character editing
+  windows currently open, only those opened after "Save" or "Use" has been
+  selected.
+@endnode
+@node prefsedit "Preferences - Edit Windows Page"
+
+  This page controls the appearance of the @{"character editing windows" link char}.
+  In the "Pixels" box are several gadgets which determine the appearance
+  of each bit of the character's definition. These gadgets are:
+
+    @{b}Width / Height@{ub}
+
+    These gadgets determine the width / height of each pixel.
+
+    @{b}Border@{ub}
+
+    This gadget determines how the pixel's border is drawn. The options
+    are "No" (no border); "Yes" (a clear border around each filled pixel)
+    and "Grid" (draws a grid around all pixels).
+
+    @{b}Baseline@{ub}
+
+     This gadget determines whether or not the font baseline is drawn on
+     the character editing window.
+
+  Outside the "Pixels" box, the "Maximize Window" gadget affects the
+  initial size of an edit window. If this is not selected, the window will
+  always open to the right of the character selection window. If it is
+  selected, then the window may overlap the character selection window if
+  there is not enough room to the right. The "Toggle" gadget determines the
+  drawing mode used. If selected, all pixels over which the pointer is
+  moved are inverted; if not, all pixels are set to the state of the first
+  changed pixel.
+
+  Note that changing these options does not affect character editing
+  windows currently open, only those opened after "Save" or "Use" has been
+  selected.
+@endnode
+@node prefsselect "Preferences - Selection Window Page"
+
+  This page controls the appearance of the character selection window.
+  The available options are:
+
+    @{b}Window Sizing@{ub}
+
+    If this gadget is selected, the selection window will have a
+    sizing gadget and can be sized vertically.
+
+    @{b}Shift@{ub}
+
+    If this gadget is selected, then shift clicking on a character in
+    the selection window loads the character into a currently open
+    editing window, while shift-clicking opens a new editing window,
+    i.e. the effect of click and shift-click is inverted.
+
+    @{b}Width@{ub}
+
+    This cycle gadget controls the number of characters shown in each
+    row of the selection window.
+
+    @{b}Height@{ub}
+
+    In this gadget the default height of the selection window can be
+    entered. Since there are 256 characters in a font, this cannot be
+    more than 256 divided by the width defined above.
+
+    @{b}Font@{ub}
+
+    Here the selection window font is shown. To change, click on the
+    arrow gadget to the right of the font name.
+@endnode
+@node prefsmisc "Preferences - Miscellaneous Page"
+
+  In this page the location of the preferences file is determined. The
+  possibilities are:
+
+    @{b}Environment Variable@{ub}
+
+    "Typeface.prefs" is written to ENV: and to ENVARC:. This is the
+    standard place to put preferences files.
+
+    @{b}Typeface Directory@{ub}
+
+    This is the directory containing all the Typeface files. Saving
+    "Typeface.prefs" here saves memory, as there will not be a copy
+    in ENV: (usually assigned to RAM:env).
+
+  The "Confirm Quit" check box can be used to determine whether or not
+  Typeface asks the user for confirmation before quitting.
+
+  The "Query Width on Load" check box determines whether or not the
+  "Query Font Width" requester opens when loading a font.
+@endnode
+@node me "Contacting the author"
+
+  If you have any comments, queries or suggestions about Typeface, I can
+  be contacted via Internet email at
+
+	davidk@monis.co.uk
+
+  Future versions of Typeface supporting colour fonts and with more
+  features may materialise, depending on the level of feedback that I
+  receive. If you like Typeface, let me know.
+@endnode
+@node about "About"
+
+  @{fg highlight}Project Menu/About@{fg text}
+
+  Gives the version number, copyright date and @{"author" link me} of Typeface,
+  plus the amount of free chip and fast memory in the system.
+@endnode
+@node quit "Quit"
+
+  @{fg highlight}Project Menu/Quit@{fg text}
+
+  Quits Typeface. If the font loaded into Typeface has not been saved, it
+  will be lost.
+@endnode
+@node history "History"
+
+  @{b}Release 1.24 (21/12/2000)@{ub}
+
+  o Changed the custom gadgets used by the character selection and
+    editing windows to be subclasses of the BGUI base class, which
+    fixes a problem with them not working under Kickstart 2.0.
+
+  @{b}Release 1.23 (6/2/2000)@{ub}
+
+  o Updated to the latest version of BGUI.
+
+  @{b}Release 1.22 (17/8/97)@{ub}
+
+  o Fixed the size of check box gadgets when using small fonts.
+
+  @{b}Release 1.21 (24/2/97)@{ub}
+
+  o Fixed a crash when editing a character with zero width with the
+    pixel border option set to "Grid".
+
+  o Added a MagicWB icon for Typeface, designed by Marc Severin.
+
+  @{b}Release 1.2 (2/7/96)@{ub}
+
+  o The "Reset Kerning" option in the "Font" menu has been improved. Now
+    a window opens to allow a value to be added to both the default
+    spacing and kerning values of each character.
+
+  o When loading a font of a given height, the width can be changed in
+    the "Query Font Width" window. This window will open after the font
+    selection requester, provided that the "Query Width on Load" gadget
+    is selected in the "Miscellaneous" section of "Preferences".
+
+  o Better copying and pasting support in the "Character" menu. The new
+    menu items are "Undo" (which restores the character's initial data),
+    "Cut" and "Erase".
+
+  o Characters can be mirrored either horizontally or vertically using
+    the new "Flip Horizontally" and "Flip Vertically" items in the
+    "Character" menu.
+
+  o It is now possible to numerically specify a character to edit using
+    the "Edit Character" item in the "Font" menu.
+
+  o Character editing windows can now be tidied up in one go with the
+    "Cascade Windows" item on the "Font" menu.
+
+  o New keyboard shortcuts for changing the pixel size when editing a
+    character: "+" for zoom in and "-" for zoom out.
+
+  o Changes to Preferences:
+    o Redesigned the "Tool Bar" section of preferences to use drag and
+      drop.
+    o New option "Toggle" to control drawing mode added to the "Edit
+      Windows" section.
+
+  @{b}Release 1.1 (5/10/95)@{ub}
+
+  o Better error reporting. If Typeface fails to allocate something it
+    requires, then instead of exiting silently, an explanatory requester
+    will appear.
+
+  o If Typeface opens its own screen, the screen is now public. If not,
+    then Typeface can open on any other public screen.
+
+  o Many new options in Preferences, including:
+    o Selectable screen font and public screen name.
+    o The tool bar in the character editing windows is now configurable.
+    o Edit windows can have a grid overlaid on the editing area, and
+      the font baseline can also be displayed visually.
+    o The size and font used for the character selection window is now
+      configurable.
+
+  o Spacing between objects in windows depends on the screen resolution.
+
+  o All windows (except the character selection window) can be closed by
+    pressing the "Esc" key.
+
+  o New "Font" menu, with options to edit the font parameters (previously
+    on the "Project" menu), move all the characters in the font left/
+    right/up/down and to reset the kerning information.
+
+  o A requester asking for confirmation when quitting Typeface can be
+    enabled, which will report if there are unsaved changes to the
+    currently loaded font.
+
+  o More than one pixel can be changed in the character editing windows
+    by holding the left mouse button down and dragging the mouse.
+
+  o Holding down the shift key while clicking on a character in the
+    selection window causes that character to be loaded into one of the
+    already open editing windows, rather than opening a new window. The
+    operation of click/shift-click can be inverted in the preferences
+    window.
+
+  o New font preview window in which the user can type text in the font
+    currently being defined.
+
+  o The display of the character in an editing window can be zoomed in
+    or out.
+
+  o Typeface can be localized into any language, simply by writing the
+    appropriate catalog file.
+
+  @{b}Release 1.0 (29/5/95)@{ub}
+
+  o First release.
+@endnode
+@node moveleft "Move Left"
+
+  @{fg highlight}Font Menu/Move Left@{fg text}
+
+  Moves all characters in the font one pixel to the left.
+@endnode
+@node moveright "Move Right"
+
+  @{fg highlight}Font Menu/Move Right@{fg text}
+
+  Moves all characters in the font one pixel to the right.
+@endnode
+@node moveup "Move Up"
+
+  @{fg highlight}Font Menu/Move Up@{fg text}
+
+  Moves all characters in the font one pixel upwards.
+@endnode
+@node movedown "Move Down"
+
+  @{fg highlight}Font Menu/Move Down@{fg text}
+
+  Moves all characters in the font one pixel downwards.
+@endnode
+@node resetkern "Reset Kerning"
+
+  @{fg highlight}Font Menu/Reset Kerning@{fg text}
+
+  This option allows the @{"kerning" link kern} information for all characters to be
+  set. In the window are two integer gadgets, for spacing and kerning
+  respectively. If "Reset" is selected, then the kerning information for
+  each character is set as:
+
+    Spacing = Character Width + Value in Spacing Gadget
+    Kerning = Value in Kerning Gadget
+
+  The default is zero for both gadgets.
+@endnode
+@node cascade "Cascade Windows"
+
+  @{fg highlight}Font Menu/Cascade Windows@{fg text}
+
+  This option can be used to rearrange all the character editing windows
+  currently open. The windows are moved so that they form a sequence
+  running from just right of the character selection window to the bottom
+  right of the screen.
+@endnode
+@node editchar "Edit Character"
+
+  @{fg highlight}Font Menu/Edit Character@{fg text}
+
+  This opens a window containing a single numerical string gadget. Enter
+  the number (from 0 to 255) of the character which you wish to edit,
+  then either press return or click on the "Accept" gadget.
+@endnode
+@node preview "Previewing the font"
+
+  @{fg highlight}Project Menu/Preview@{fg text}
+
+  The font preview window allows the user to see what the font being
+  defined actually looks like. Any text required can be entered into the
+  multi-line string gadget (see @{"textfield.gadget" link textfield}). Below this, there are
+  four gadgets:
+
+    @{b}Update@{ub}	Updates the font in the preview window, so that any
+		changes made to the font after opening the preview window
+		are reflected in the preview window font.
+
+    @{b}Show All@{ub}	Displays all the characters in the font, except 0x00,
+		0x0A and 0x0D, which are replaced by spaces.
+
+    @{b}Clear@{ub}	Clears all text from the preview window.
+
+    @{b}Cancel@{ub}	Closes the preview window.
+@endnode
+@node textfield "TextField Gadget"
+
+  "textfield.gadget" is a BOOPSI gadget which allows programs to use
+  multi-line string gadgets. "textfield.gadget" is © 1995 Mark Thomas.
+
+  For Workbench 3.0 and higher, copy the file to SYS:classes/gadgets.
+  Although Workbench 2.0 and 2.1 support the gadget, there is no standard
+  place in the system to install it. It is suggested that you create a
+  subdirectory "gadgets" in your LIBS: directory and copy it there.
+  Alternatively, you can leave it with Typeface in the "gadgets"
+  subdirectory.
+
+  While using the gadget, the following keys are available (reproduced
+  from the "textfield.gadget" documentation):
+
+    Shift Cursor Up	Move to the top line in the current page, or
+			scroll up one page if cursor is on the top line.
+
+    Shift Cursor Down	Move to the bottom line in the current page,
+			or scroll down one page if cursor is on the top
+			line.
+    Ctrl or
+    Shift Cursor Right	Move to the far-right end of the current line.
+
+    Ctrl or
+    Shift Cursor Left	Move to the far-left end of the current line.
+
+    Shift Backspace	Delete all the text to the left of cursor on
+			the current line.
+
+    Shift Delete	Delete all the text to the right of the cursor
+			on the current line, including the highlighted
+			character.
+
+    Ctrl Cursor Up	Move to the top line of the text.
+
+    Ctrl Cursor Down	Move to the bottom line of the text.
+
+    Alt Cursor Right	Move to the next word.
+
+    Alt Cursor Left	Move to the previous word.
+
+    Alt Cursor Up	Move to the first character in the gadget.
+
+    Alt Cursor Down	Move to the last character in the gadget.
+
+    Alt Backspace	Deletes the word to the left of the cursor,
+			starting at the current cursor position.
+
+    Alt Delete		Deletes the word to the right of the cursor,
+			starting at the current cursor position.
+
+    Ctrl x		Deletes the whole line that the cursor is on.
+
+    Right Amiga e	Erase all text in the gadget, and store in the
+			undelete buffer.
+
+    Right Amiga v	Paste text from the clipboard to the current
+			cursor position.
+
+    Right Amiga a	Mark all text.
+
+    Right Amiga u	Undelete the last block of text marked, or
+			recover from Right Amiga e.
+
+  When text is highlighted the following keys are available:
+
+    Delete or		Erase marked text (saved in the undelete buffer).
+    Backspace
+
+    Right Amiga x	Cut marked text to the clipboard.
+
+    Right Amiga c	Copy marked text to the clipboard.
+
+    Right Amiga v	Replace marked text with text from the clipboard
+			(saving marked text in the undelete buffer).
+
+    Any text key	Replace marked text with that character.
+@endnode

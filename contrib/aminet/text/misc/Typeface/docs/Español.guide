@@ -1,0 +1,609 @@
+@database Typeface.guide
+@author "David Kinder"
+@$VER: Typeface.guide 1.21 (28.8.96)
+@wordwrap
+@node main "Guía de Typeface"
+
+			Typeface 1.21
+			© 1995-96 David Kinder
+
+			@{" Introducción                     " link intro}
+			@{" Instalación                      " link install}
+			@{" Uso de Typeface                  " link using}
+			@{" Apertura de una fuente           " link open}
+			@{" Grabación de una fuente          " link save}
+			@{" Cambio del directorio de fuentes " link dir}
+			@{" Parámetros de una fuente         " link params}
+			@{" Edición de un carácter           " link char}
+			@{" Preferencias                     " link prefs}
+			@{" Historia                         " link history}
+			@{" Cómo contactar con el autor      " link me}
+@endnode
+
+@node intro "Introducción"
+@{lindent 2}
+El Amiga soporta dos tipos de fuentes; de mapa de bits y de contorno. En las fuentes de mapa de bits cada carácter se almacena como una serie de bits que indican qué pixels deben estar encendidos o apagados. Una fuente de mapa de bits tiene un tamaño específico. Las fuentes de mapa de bits con el mismo diseño pero diferentes tamaños son normalmente almacenadas juntas en el directorio FONTS:, p.e. para una fuente de mapa de bits "x":
+
+	x.font		información sobre x
+	x/8		fuente de mapa de bits de ocho pixels de altura
+	x/9		fuente de mapa de bits de nueve pixels de altura
+
+Las fuentes de contorno (presentadas en la versión 2.04 del sistema operativo) guardan cada carácter como una serie de curvas, de tal manera que una sola definición puede generar una fuente en diferentes tamaños. Tales fuentes aparecen normalmente en el directorio FONTS: como ficheros .font y .otag (el fichero .otag contiene información específica del sistema de fuentes particular que se debe utilizar). Desde la versión 3.0 el sistema de fuentes ha sido aislado de diskfont.library (pasándose a llamar bullet.library). Esto permite que puedan ser utilizados nuevos sistemas de fuentes, p.e. type1.library, el cual provee soporte para fuentes Postscript del tipo 1.
+
+Typeface es un editor para fuentes de mapa de bits. A pesar de esto, las fuentes de contorno pueden cargarse con dimensiones específicas, alteradas si es necesario, y grabadas como fuentes de mapa de bits. El tener una fuente de contorno grabada también como fuente de mapa de bits implica que si una aplicación pide una fuente en un tamaño almacenado como mapa de bits, entonces se utiliza la versión de mapa de bits, de otro modo la fuente de contorno es convertida al tamaño correcto, lo cual generalmente gasta tiempo y memoria.
+
+Typeface puede ser distribuido libremente, pero no deja de ser copyright del @{"autor" link me}, David Kinder. Typeface no debería ser distribuido por más de una cantidad nominal para cubrir gastos de soporte, etc., y no debería ser distribuido como parte de un paquete comercial sin el permiso escrito del autor. Se incluye el código fuente para el beneficio de cualquiera que esté interesado en la estructura de un programa de Amiga. Éste no debería ser utilizado por nadie más aparte del autor en este u otro programa de edición de fuentes.
+@endnode
+
+@node install "Instalación"
+@{lindent 2}
+Typeface necesita que @{"bgui.library" link bgui} v40¹ esté en el directorio LIBS: o en el subdirectorio "libs" del directorio donde se guardan los ficheros de Typeface, y que @{"textfield.gadget" link textfield} v3 esté instalado. Aparte de esto, Typeface requiere la presencia de las siguientes librerías estándar en LIBS:
+
+	asl.library v37
+	diskfont.library v36
+
+En caso de que haya arrancado en un entorno Workbench estándar, Typeface debería ejecutarse al hacer doble clic sobre su icono; si quiere puede mover bgui.library y textfield.gadget a sus lugares correspondientes más tarde.
+
+Por otra parte, amigaguide.library v34 debe estar disponible si quiere disfrutar de ayuda on-line en el programa.
+
+Typeface busca el fichero "Typeface.catalog" en el subdirectorio "Catalogs" y en "LOCALE:catalogs". Dicho fichero permite a Typeface operar en cualquier idioma bajo Workbench 2.1 y superior (se necesita locale.library v38). Información completa sobre la creación de tales catálogos está disponible en el subdirectorio "Catalogs".
+
+¹Todos los números de versión son los mínimos requeridos.
+@endnode
+
+@node bgui "Librería BGUI"
+@{lindent 2}
+bgui.library es una librería compartida escrita por Jan van den Baard la cual provee un sistema de organización de gadgets sensible a las fuentes de una manera orientada al objeto.
+@endnode
+
+@node using "Uso de Typeface"
+@{lindent 2}
+Al ejecutarse por primera vez, Typeface abre una ventana de selección de caracteres en la esquina superior izquierda de la pantalla. En esta ventana se puede seleccionar cualquiera de los 256 caracteres que constituyen una fuente para su edición. La barra de desplazamiento que está a la derecha de la ventana puede ser utilizada para moverse a través de los caracteres disponibles. El tamaño de la ventana y la fuente que usa pueden ser alterados en la @{"ventana de preferencias" link prefs}.
+
+Haciendo clic sobre un carácter cualquiera se provoca la apertura de una @{"ventana de edición" link char}, en la cual se visualiza el carácter en una rejilla. Se puede abrir cualquier número de estas ventanas, ya que todas las ventanas de Typeface se ejecutan en multitarea (por ejemplo, puede abrir una ventana de edición nueva con la ventana de preferencias abierta). Manteniendo pulsada la tecla shift mientras hace clic sobre un carácter provoca que Typeface visualice el carácter en una de las ventanas de edicion abiertas, si hay alguna disponible, en vez de abrir una ventana nueva. Además, todas las ventanas tienen los siguientes menús:
+
+@{b}Menú 'Proyecto'@{ub}	@{" Abrir fuente       " link open}
+			@{" Grabar fuente      " link save}
+			@{" Cambiar directorio " link dir}
+			@{" Previo             " link preview}
+			@{" Preferencias       " link prefs}
+			@{" Sobre              " link about}
+			@{" Salir              " link quit}
+
+@{b}Menú 'Fuente'@{ub}		@{" Editar parámetros   " link params}
+			@{" Editar carácter     " link editchar}
+			@{" Mover izquierda     " link moveleft}
+			@{" Mover derecha       " link moveright}
+			@{" Mover arriba        " link moveup}
+			@{" Mover abajo         " link movedown}
+			@{" Restaurar kerning   " link resetkern}
+			@{" Ventanas en cascada " link cascade}
+@endnode
+
+@node open "Apertura de una fuente"
+@{lindent 2}
+@{fg highlight}Menú 'Proyecto'/Abrir fuente@{fg text}
+
+Aparecerá un selector de fuentes ASL estándar desde el cual el usuario puede seleccionar una fuente para ser cargada en Typeface. Las fuentes de contorno aparecerán listadas al igual que las de mapa de bits; recuerde que mientras las versiones de mapa de bits de fuentes de contorno pueden ser creadas, Typeface no soporta la edición directa de fuentes de contorno.
+
+Las fuentes listadas serán aquellas que se encuentren en memoria y las que estén en la asignación FONTS:. Para cambiar el directorio FONTS:, use la opción @{"Cambiar directorio" link dir}.
+
+Si el gadget "Preguntar anchura al cargar" está seleccionado en las @{"preferencias" link prefsmisc}, entonces se abrirá una ventana en la cual se puede alterar la anchura de la fuente que se está cargando. La fuente será escalada por diskfont.library a la anchura escogida.
+@endnode
+
+@node save "Grabación de una fuente"
+@{lindent 2}
+@{fg highlight}Menú 'Proyecto'/Grabar fuente@{fg text}
+
+Esta ventana permite controlar cómo se va a grabar la fuente. "Directorio de fuentes" es el directorio dentro del cual se situarán el fichero .font y el directorio de la fuente. Por defecto es el directorio FONTS: actual.
+"Fuente" es el nombre de la fuente. Así si el directorio de fuentes es "Fulano:", el nombre de la fuente es "Mengano" y la altura de la fuente es 8, entonces la fuente será grabada como los ficheros
+
+	Fulano:Mengano.font
+  y	Fulano:Mengano/8
+
+"Primero" y "Último" controlan qué rango de caracteres se debe grabar. No es necesario definir todos los caracteres de una fuente; aquellos sin definición aparecerán en las aplicaciones como el carácter @{"vacío" link blank}. "Info. kern." determina si deben ser grabadas las tablas de @{"kerning" link kern}. Este gadget está seleccionado y enmascarado si la fuente es proporcional, ya que as en ese caso dicha información debe ser grabada obligatoriamente. Para "Primero", "Último" e "Info. kern." la acción por defecto es grabar la fuente con los mismos parámetros que la última fuente cargada.
+@endnode
+
+@node blank "El carácter vacío"
+@{lindent 2}
+Toda fuente de mapa de bits contiene una definición para el carácter "vacío", el cual es utilizado si un carácter solicitado no está definido en la fuente. Este carácter puede ser editado en Typeface pulsando el botón "Vacío" en la ventana de @{"edición de los parámetros de la fuente" link params}.
+@endnode
+
+@node kern "Cambiar la información de kerning de un carácter"
+@{lindent 2}
+@{fg highlight}Menú 'Carácter'/Kerning@{fg text}
+
+En esta ventana se pueden alterar los valores de espaciado y kerning para un carácter determinado. El valor de kerning determina cuántos pixels debe avanzar la posición del cursor antes de dibujar el carácter, y el valor de espaciado determina cuántos pixels debe avanzar el cursor despues de dibujarlo.
+Por ejemplo, considere este carácter, definido en una rejilla de 5 × 5:
+
+		.....
+		.***.	Espaciado = 6
+		**.**   Kerning = 1
+		.***.
+		.....
+
+Si el cursor está en la posición 1, y el carácter se imprime dos veces:
+	         .....  .....
+		 .***.  .***.		1 y 2 (también 2 y 3) están
+		 **.**  **.**		separados por 7 pixels (es decir,
+		 .***.  .***.		el espaciado más el kerning).
+		 .....  .....
+		^      ^      ^
+		1      2      3
+
+2 es la posición del cursor después de dibujar un carácter, y 3 la posición después de dibujar los dos caracteres.
+
+Hay que tener en cuenta que estos valores normalmente no son alterados en fuentes de anchura fija, y sólo son grabados en la fuente si la opción "Info. kern." está activada en la ventana de @{"Grabar fuente" link save}.
+@endnode
+
+@node width "Cambio de la anchura de un carácter"
+@{lindent 2}
+@{fg highlight}Menu 'Carácter'/Cambiar anchura@{fg text}
+
+En esta ventana se puede cambiar la anchura del carácter que se está editando actualmente (el número de carácter se muestra en la barra de título). Introduzca la nueva anchura y use la barra de desplazamiento que hay debajo para determinar cómo se acomodarán los datos del carácter en el nuevo espacio.
+
+La barra de desplazamiento funciona de la siguiente manera. Si la nueva anchura es mayor que la anterior, entonces la barra representa dónde se situarán los datos antiguos en el nuevo espacio (es decir, si la barra está en la derecha, los datos se copiarán en el nuevo espacio pegados al borde derecho). Si la nueva anchura es menor que la anterior, la barra representa qué sección de los datos será copiada en el nuevo espacio, ya que no cabrán todos.
+@endnode
+
+@node dir "Cambio del directorio de fuentes"
+@{lindent 2}
+@{fg highlight}Menú 'Proyecto'/Cambiar directorio@{fg text}
+
+Al @{"abrir una fuente" link open} se examina el directorio FONTS:. Si la fuente a editar no está en la asignación FONTS: puede utilizar esta ventana cambiar o añadir una asignación a FONTS:.
+
+El nombre del nuevo directorio se puede introducir directamente en el gadget de texto o usando el selector de ficheros (pulsando el gadget con el dibujo de una carpeta que está a la derecha). Para cambiar la asignación de FONTS: a este directorio, pulse sobre "Asignar". Para añadir este directorio a la asignación de FONTS:, pulse sobre "Añadir asignación".
+@endnode
+
+@node params "Parámetros de una fuente"
+@{lindent 2}
+@{fg highlight}Menu 'Fuente'/Editar parámetros@{fg text}
+
+Esta ventana permite editar los diversos aspectos y parámetros que definen una fuente. Estos son:
+@{lindent 4}
+@{b}Tipo de fuente@{ub}
+
+Determina si la fuente es de anchura fija o proporcional. En las fuentes de anchura fija todos los caracteres tienen la misma anchura, mientras que en una fuente proporcional cada carácter pueden tener una anchura diferente.
+
+Hay que tener en cuenta que para las fuentes de Amiga esta distinción no es absoluta, ya que las fuentes "de anchura fija" pueden tener caracteres con anchuras diferentes de la nominal (p.e. la fuente courier estándar). De todos modos, no es una buena idea tener fuentes de anchura fija con caracteres cuyas anchuras difieran más de unos pocos pixels del nominal, ya que esto provocaría confusión en muchos programas. Si se cambia de proporcional a anchura fija, aparecerá una petición preguntando si todas las anchuras de carácter deben ser cambiadas al valor por defecto (especificado en el recuadro de "Anchura").
+
+@{b}Altura@{ub}
+
+La altura (en pixels) de la fuente.
+
+@{b}Anchura@{ub}
+
+La anchura (en pixels) de la fuente. Para una fuente proporcional debería ser la media aproximada de todos los caracteres en la fuente. Para una fuente de anchura fija, todos los caracteres deberían tener esta anchura (para excepciones mirar arriba). Si la fuente es de anchura fija, el cambiar este número provoca el cambio de la anchura de todos los caracteres de la fuente.
+
+@{b}Línea base@{ub}
+
+La línea base, medida (en pixels) desde la parte superior de la fuente.
+Cuando se dibuja una fuente en un RastPort, la posición vertical del cursor (cp_y) corresponderá con la línea base de la fuente. La línea base debe ser menor que la altura de la fuente.
+
+@{b}Difusión negrita@{ub}
+
+Cuando se genera algorítmicamente una fuente negrita, los datos de la fuente son 'or-eados' binariamente consigo mismos, pero antes desplazados a la derecha este número de pixels.
+
+El siguiente conjunto de parámetros no afecta a la manera como se visualiza la fuente; tan sólo aporta informacíon sobre cómo debe ser utilizada la fuente.
+
+@{b}Normal@{ub}	La fuente no tiene activados ninguno de los siguientes
+		atributos.
+
+@{b}Negrita@{ub}	Especifica que está diseñada como negrita.
+
+@{b}Cursiva@{ub}	Especifica que está diseñada como cursiva.
+
+@{b}Subrayada@{ub}	Especifica que está diseñada como subrayada.
+
+@{b}Extendida@{ub}	Especifica que está diseñada como más ancha que alta.
+
+@{b}Inversa@{ub}	Especifica que deber ser dibujada de derecha a izquierda
+		(es decir, al revés de lo habitual).
+
+@{b}Aspecto@{ub}
+
+Especifica la proporción de pixel para la que la fuente está diseñada.
+"Normal" indica que los pixels deben ser tan anchos como altos; "Estrecho" que los pixels deben ser más altos que anchos; y "Ancho" que los pixels deben ser más anchos que altos.
+@{lindent 2}
+El botón de "Vacío" permite la edición del carácter @{"vacío" link blank} de la fuente.
+@endnode
+
+@node char "Edición de un carácter"
+@{lindent 2}
+Cada carácter de una fuente puede ser editado en su propia ventana, la cual puede ser abierta pulsando sobre el carácter en la ventana de selección de caracteres. La sección principal de la ventana muestra una vista ampliada del carácter. Pulsando en cualquier pixel se conmuta el estado de éste entre encendido y apagado. Arrastrando el ratón mientras se mantiene pulsado el botón izquierdo se conmutan o sobreescriben los pixels subsecuentes, dependiendo en lo que haya escogido en las preferencias.
+
+La ventana también contiene una barra de herramientas a lo largo de la parte superior y un menú de carácter.
+
+Las funciones de los botones en la barra de herramientas son:
+@{lindent 4}
+@{b}Flecha hueca izq.@{ub}	Decrementa en un pixel la anchura del carácter.
+
+@{b}Flecha hueca der.@{ub}	Incrementa en un pixel la anchura del carácter.
+
+@{b}Flechas rellenas@{ub}	Mueven los datos del carácter un pixel en la
+			dirección especificada por la flecha.
+
+@{b}Triángulos@{ub}		Abre la ventana de @{"kerning" link kern}.
+
+@{b}Flecha rellena con@{ub}	Abre la ventana de @{"anchura" link width}.
+@{b}borde negro@{ub}
+
+@{b}Más/Menos@{ub}		Duplica/divide por dos el tamaño del rectángulo
+			que representa cada pixel del carácter.
+
+@{b}Flechas horiz.@{ub}	Invierte el carácter horizontalmente.
+
+@{b}Flechas vert.@{ub}	Invierte el carácter verticalmente.
+@{lindent 2}
+El que cada uno de estos botones aparezca en la barra de herramientas se controla en la @{"ventana de preferencias" link prefs}. Los elementos del menú de caracteres son:
+@{lindent 4}
+@{b}Deshacer@{ub}		Restaura el diseño que tenía el carácter cuando
+			se abrió la ventana de edición.
+
+@{b}Cortar@{ub}		Corta el carácter en el portapapeles interno.
+
+@{b}Copiar@{ub}		Copia el carácter en el portapapeles interno.
+
+@{b}Pegar@{ub}		Sustituye el carácter por el último carácter
+			almacenado en el portapapeles interno.
+
+@{b}Borrar@{ub}		Borra el carácter sin ponerlo en el portapapeles
+			interno.
+
+@{b}Mover Izq./Der.@{ub}	Mueve los datos del carácter un pixel en la dirección
+@{b}/Arriba/Abajo@{ub}	especificada.
+
+@{b}Invertir horiz.@{ub}	Invierte los datos del carácter sobre su eje
+@{b}/vert.@{ub}		vertical/horizontal.
+
+@{b}Ampliar/Reducir@{ub}	Duplica/divide por dos el tamaño del rectángulo
+			que representa cada pixel del carácter.
+			Los equivalentes del teclado son "+"/"-".
+
+@{b}Cambiar anchura@{ub}	Abre la ventana de @{"anchura" link width}.
+
+@{b}Kerning@{ub}		Abre la ventana de @{"kerning" link kern}.
+@endnode
+
+@node prefs "Preferencias"
+@{lindent 2}
+@{fg highlight}Menú 'Proyecto'/Preferencias@{fg text}
+
+La ventana de preferencias puede ser usada para controlar diversos aspectos de la apariencia y comportamiento de Typeface. La ventana contiene un número determinado de secciones, a las cuales se accede mediante el gadget selector que se encuentra en la parte superior de la ventana (el equivalente del teclado es '\\'). Las secciones disponibles son:
+
+		@{" Pantalla              " link prefsscreen}
+		@{" Barra de herramientas " link prefstoolbar}
+		@{" Ventanas de edición   " link prefsedit}
+		@{" Ventana de selección  " link prefsselect}
+		@{" Varios                " link prefsmisc}
+
+Si selecciona "Grabar" se grabarán las preferencias en ENVARC: o PROGDIR: (el directorio que contiene los ficheros de Typeface), dependiendo de la selección hecha en la sección @{"Varios" link prefsmisc}. "Usar" hace que Typeface use las preferencias actuales pero no las graba. "Cancelar" ignora cualquier cambio hecho en las preferencias y tan sólo cierra esta ventana.
+@endnode
+
+@node prefsscreen "Preferencias - Sección 'Pantalla'"
+@{lindent 2}
+Esta sección contiene los siguientes gadgets:
+@{lindent 4}
+@{b}Pantalla a medida@{ub}
+
+Si está seleccionado, Typeface usa su propia pantalla, de otro modo usa una pantalla pública (la pantalla del Workbench por defecto).
+
+@{b}Modo@{ub}
+
+Aquí se muestra el modo de pantalla de la pantalla a medida de Typeface. Para cambiarlo, pulse en la flecha a la derecha del nombre de modo. El usuario sólo podrá seleccionar el modo de pantalla si está presente asl.library v38 o mayor (versión 2.1 del sistema operativo).
+
+@{b}Fuente@{ub}
+
+Aquí se muestra la fuente de la pantalla a medida de Typeface. Para cambiarla, pulse en la flecha a la derecha del nombre de la fuente.
+
+@{b}Pantalla pública@{ub}
+
+Si está seleccionado "Pantalla a medida", será el nombre público de la pantalla de Typeface. Si no está seleccionado, Typeface intentará abrirse en la pantalla pública aquí especificada. Si esta pantalla no está disponible se utilizará la pantalla pública por defecto.
+@endnode
+
+@node prefstoolbar "Preferencias - Sección 'Barra de herramientas'"
+@{lindent 2}
+La barra de herramientas es la hilera de gadgets situada a lo largo de la parte superior de las ventanas de edición de caracteres. Las dos listas que hay en esta sección controlan qué gadgets se visualizarán; la parte izquierda contiene los gadgets que no se visualizarán; la derecha los que sí. Para añadir o quitar un gadget de la barra de herramientas, seleccione la entrada apropiada pulsando sobre ella y arrástrela a la otra lista mientras mantene pulsado el botón del ratón. Cuando la entrada escogida esté sobre la lista de destino suelte el botón del ratón para depositar la entrada. Se puede seleccionar más de una entrada manteniendo pulsada la tecla shift al seleccionar. Para una descripción de lo que hace cada gadget, vea @{"Edición de un carácter" link char}.
+
+El gadget de "Altura" determina la altura de la barra de herramientas. El mínimo es 11 (apropiado para una pantalla no entrelazada), pero si usa un modo de vídeo de mayor resolución quizá preferirá incrementar este valor. Si el gadget "Auto" está seleccionado, el gadget de "Altura" aparecerá deshabilitado y Typeface determinará automáticamente la altura del panel basándose en la resolución de la pantalla.
+
+El hecho de cambiar estas opciones no afecta a las ventanas de edición de caracteres abiertas actualmente, sólo aquellas que sean abiertas después de seleccionar "Grabar" o "Usar".
+@endnode
+
+@node prefsedit "Preferencias - Sección 'Ventanas de edición'"
+@{lindent 2}
+Esta sección controla la apariencia de las @{"ventanas de edición de caracteres" link char}. En la caja de "Pixels" hay diversos gadgets que determinan la apariencia de cada aspecto de la definición de un carácter. Estos gadgets son:
+@{lindent 4}
+@{b}Anchura / Altura@{ub}
+
+Estos gadgets determinan la anchura / altura de cada pixel.
+
+@{b}Borde@{ub}
+
+Este gadget determina cómo se dibuja el borde de los pixels. Las opciones son "No" (sin borde); "Sí" (un borde definido alrededor de cada pixel relleno) y "Rejilla" (dibuja una rejilla alrededor de todos los pixels).
+
+@{b}Línea base@{ub}
+
+Este gadget determina si se dibuja o no la línea base de la fuente en la ventana de edición de caracteres.
+
+Fuera de la caja de "Pixels", el gadget "Maximizar ventana" afecta al tamaño inicial de una ventana de edición. Si no está seleccionado, la ventana se abrirá siempre a la derecha de la ventana de selección de caracteres. Si está seleccionado, la ventana podría solaparse a la ventana de selección de caracteres si no hay suficiente espacio a la derecha. El gadget "Conmutar" determina el modo de dibujo. Si está seleccionado, todos los pixels bajo el movimiento del puntero son invertidos; sino, todos los pixels son puestos al estado del primer pixel cambiado.
+
+El hecho de cambiar estas opciones no afecta a las ventanas de edición de caracteres abiertas actualmente, sólo aquellas que sean abiertas después de seleccionar "Grabar" o "Usar".
+@endnode
+
+@node prefsselect "Preferencias - Sección 'Ventana de selección'"
+@{lindent 2}
+Esta sección controla la apariencia de la ventana de selección de caracteres.
+Las opciones disponibles son:
+@{lindent 4}
+@{b}Redimensionable@{ub}
+
+Si este gadget está seleccionado, la ventana de selección tendrá un gadget de redimensionamiento y podrá ser redimensionada verticalmente.
+
+@{b}Shift@{ub}
+
+Si este gadget está seleccionado, al hacer clic sobre un carácter en la ventana de selección se carga el carácter en una ventana de edición abierta, mientras que haciendo clic mientras se pulsa la tecla shift se abre una nueva ventana de edición; es decir, el efecto de clic y shift-clic se invierte.
+
+@{b}Anchura@{ub}
+
+Este gadget cíclico controla el número de caracteres visualizados en cada fila de la ventana de selección.
+
+@{b}Altura@{ub}
+
+En este gadget se puede entrar la altura por defecto de la ventana de selección. Debido a que hay 256 caracteres en una fuente, ésta no puede ser más que 256 dividido por la anchura definida arriba.
+
+@{b}Fuente@{ub}
+
+Aquí se muestra la fuente de la ventana de selección. Para cambiarla, pulse la flecha que está a la derecha del nombre de la fuente.
+@endnode
+
+@node prefsmisc "Preferencias - Sección 'Varios'"
+@{lindent 2}
+En esta sección se determina la localización del fichero de preferencias. Las posibilidades son:
+@{lindent 2}
+@{b}Variable de entorno@{ub}
+
+Se escribe "Typeface.prefs" en ENV: y ENVARC:. Éste es el lugar estándar para poner ficheros de preferencias.
+
+@{b}Directorio de Typeface@{ub}
+
+Éste es el directorio que contiene todos los ficheros de Typeface. Grabar "Typeface.prefs" aquí ahorra memoria, ya que no habrá una copia en ENV: (normalmente asignado a RAM:env).
+
+"Confirmar salida" se usa para determinar si Typeface debe pedir confirmación al usuario antes de salir.
+
+"Preguntar anchura al cargar" se usa para determinar si se debe abrir el requester de "Preguntar anchura de la fuente" al cargar una fuente.
+@endnode
+
+@node me "Cómo contactar con el autor"
+@{lindent 2}
+Si tiene algún comentario, pregunta o sugerencia sobre Typeface, puede contactar conmigo por Internet vía correo electrónico. Mis direcciones son
+
+	kinder@teaching.physics.ox.ac.uk
+ó	david.kinder@physics.ox.ac.uk
+
+Pueden llegar a materializarse futuras versiones de Typeface que soporten fuentes con color y con más opciones, dependiendo del nivel de acogida que reciba. Si le gusta Typeface, hágamelo saber.
+@endnode
+
+@node about "Sobre"
+@{lindent 2}
+@{fg highlight}Menú 'Projecto'/Sobre@{fg text}
+
+Muestra el número de versión, fecha del copyright y @{"autor" link me} de Typeface, además de la cantidad de memoria chip y fast libre en el sistema.
+@endnode
+
+@node quit "Salir"
+@{lindent 2}
+@{fg highlight}Menú 'Proyecto'/Salir@{fg text}
+
+Sale de Typeface. Si la fuente cargada en Typeface no ha sido grabada, será perdida.
+@endnode
+
+@node history "Historia"
+@{lindent 2}
+@{b}Versión 1.21@{ub}
+@{lindent 4}
+Corregido bloqueo al editar un carácter de anchura cero con la opción de borde puesta a "Rejilla".
+@{lindent 2}
+@{b}Versión 1.2 (2/7/96)@{ub}
+@{lindent 4}
+La opción "Restaurar kerning" del menú "Fuente" ha sido mejorada. Ahora se abre una ventana que permite sumar un valor tanto al espaciado como al kerning por defecto de cada carácter.
+
+Al cargar una fuente de una altura determinada la anchura puede ser cambiada en la ventana de "Preguntar anchura de la fuente". Esta ventana se abrirá después del requester de selección de fuente, siempre que esté seleccionado el gadget "Preguntar anchura al cargar" en la sección "Varios" de "Preferencias".
+
+Mejor copia y pegado en el menú "Carácter". Los nuevos elementos del menú son "Deshacer" (restaura los datos iniciales del carácter), "Cortar" y "Borrar".
+
+Los caracteres pueden ser invertidos horizontal o verticalmente mediante los nuevos comandos "Invertir horiz." e "Invertir vert." del menú "Carácter".
+
+Ahora es posible especificar numéricamente el carácter a editar mediante el comando "Editar carácter" del menú "Fuente".
+
+Las ventanas de edición de caracteres pueden ser organizadas de una sola vez con el comando "Ventanas en cascada" del menú "Fuente".
+
+Nuevos equivalentes de teclado para cambiar el tamaño de pixel al editar un carácter: "+" para ampliar y "-" para reducir.
+
+Cambios a Preferencias:
+@{lindent 6}
+Sección "Barra de herramientas" rediseñada para usar drag and drop (arrastra y deposita).
+
+Añadida en la sección "Ventanas de edición" nueva opción "Conmutar" para controlar el modo de dibujo.
+@{lindent 2}
+@{b}Versión 1.1 (5/10/95)@{ub}
+@{lindent 4}
+Mejor informe de errores. Si Typeface falla al reservar algo que necesita, aparece un requester explicativo en vez de salir silenciosamente.
+
+Si Typeface abre su propia pantalla, la pantalla es ahora pública. Sinó, Typeface puede ser abierto en cualquier otra pantalla pública.
+
+Nuevas opciones en Preferencias, incluyendo:
+@{lindent 4}
+Fuente de pantalla y nombre de pantalla pública seleccionables.
+
+La barra de herramientas de las ventanas de edición de caracteres es ahora configurable.
+
+Las ventanas de edición pueden tener una rejilla sobrepuesta en el área de edición, y la línea base de la fuente también puede ser mostrada visualmente.
+
+El tamaño y la fuente usados para la ventana de selección de caracteres son ahora configurables.
+
+El espaciado entre objetos en las ventanas depende de la resolución de la pantalla.
+
+Todas las ventanas (excepto la ventana de selección de caracteres) pueden ser cerradas pulsando la tecla "Esc".
+
+Nuevo menú "Fuente", con opciones para editar los parámetros de la fuente (previamente en el menú "Proyecto"), mover todos los caracteres de la fuente izquierda/derecha/arriba/abajo y restaurar la informácion de kerning.
+
+Se puede habilitar un requester para confirmar la salida de Typeface, el cual informará si existen cambios sin grabar en la fuente cargada actualmente.
+
+Más de un pixel puede ser cambiado en las ventanas de edición de caracteres manteniendo pulsado el botón izquierdo del ratón y arrastrándolo.
+
+Manteniendo pulsada la tecla shift al hacer clic sobre un carácter en la ventana de selección provoca que el carácter se cargue en una de las ventanas de edición ya abiertas, en vez de abrir una ventana nueva. El comportamiento de clic/shift-clic puede invertirse en la ventana de preferencias.
+
+Nueva ventana de previo de la fuente en la cual el usuario puede escribir texto con la fuente que se esté definiendo en esos momentos.
+
+Los caracteres en una ventana de edición pueder ser ampliados o reducidos.
+
+Typeface puede funcionar en cualquier lenguaje, simplemente escribiendo el fichero de catálogo apropiado.
+@{lindent 2}
+@{b}Versión 1.0 (29/5/95)@{ub}
+@{lindent 4}
+Primera versión.
+@endnode
+
+@node moveleft "Mover izquierda"
+@{lindent 2}
+@{fg highlight}Menú 'Fuente'/Mover izquierda@{fg text}
+
+Mueve todos los caracteres de la fuente un pixel a la izquierda.
+@endnode
+
+@node moveright "Mover derecha"
+@{lindent 2}
+@{fg highlight}Menú 'Fuente'/Mover derecha@{fg text}
+
+Mueve todos los caracteres de la fuente un pixel a la derecha.
+@endnode
+
+@node moveup "Mover arriba"
+@{lindent 2}
+@{fg highlight}Menú 'Fuente'/Mover arriba@{fg text}
+
+Mueve todos los caracteres de la fuente un pixel hacia arriba.
+@endnode
+
+@node movedown "Mover abajo"
+@{lindent 2}
+@{fg highlight}Menú 'Fuente'/Mover abajo@{fg text}
+
+Mueve todos los caracteres de la fuente un pixel hacia abajo.
+@endnode
+
+@node resetkern "Restaurar kerning"
+@{lindent 2}
+@{fg highlight}Menú 'Fuente'/Restaurar kerning@{fg text}
+
+Esta opción permite ajustar la información de @{"kerning" link kern} para todos los caracteres. Hay dos gadgets numéricos en la ventana, para espaciado y kerning respectivamente. Si se selecciona "Restaurar", la información de kerning para cada carácter se ajusta como:
+@{lindent 4}
+    Espaciado = Anchura del carácter + Valor en el gadget de espaciado
+    Kerning = Valor en el gadget de kerning
+@{lindent 2}
+El valor por defecto es cero para ambos gadgets.
+@endnode
+
+@node cascade "Ventanas en cascada"
+@{lindent 2}
+@{fg highlight}Menú 'Fuente'/Ventanas en cascada@{fg text}
+
+Se puede utilizar esta opción para organizar todas las ventanas de edición de caracteres abiertas en ese momento. Las ventanas son movidas de tal manera que forman una secuencia desde justo la derecha de la ventana de selección de caracteres hasta la parte inferior derecha de la pantalla.
+@endnode
+
+@node editchar "Editar carácter"
+@{lindent 2}
+@{fg highlight}Menú 'Fuente'/Editar carácter@{fg text}
+
+Abre una ventana con un único gadget numérico. Entre el número (entre 0 y 255) del carácter que quiere editar y pulse return o haga clic en el gadget "Aceptar".
+@endnode
+
+@node preview "Previo de la fuente"
+@{lindent 2}
+@{fg highlight}Menú 'Proyecto'/Previo@{fg text}
+
+La ventana de previo de la fuente permite al usuario ver qué aspecto tiene la fuente que se está definiendo. Se puede entrar cualquier texto en el gadget de texto multi-línea (ver @{"textfield.gadget" link textfield}). Bajo esto, hay cuatro gadgets:
+@{lindent 4}
+@{b}Actualizar@{ub}		Actualiza la fuente en la ventana de previo, de tal
+			manera que cualquier cambio realizado sobre la fuente
+			después de abrir la ventana de previo será reflejado.
+
+@{b}Mostrar todos@{ub}	Muestra todos los caracteres de la fuente, excepto
+			0x00, 0x0A and 0x0D, los cuales son reemplazados por
+			espacios.
+
+@{b}Borrar@{ub}		Borra todo el texto de la ventana de previo.
+
+@{b}Cancelar@{ub}		Cierra la ventana de previo.
+@endnode
+
+@node textfield "Gadget TextField"
+@{lindent 2}
+"textfield.gadget" es un gadget BOOPSI que permite a los programas utilizar gadgets de texto multi-línea. "textfield.gadget" es © 1995 Mark Thomas.
+
+Para Workbench 3.0 y superiores, copie el fichero en el directorio SYS:classes/gadgets. Aunque Workbench 2.0 y 2.1 soportan este gadget, no hay un lugar estándar en el sistema para instalarlo. Sugiero que cree un subdirectorio "gadgets" en el directorio LIBS: y lo copie allí. También puede dejarlo con Typeface en el subdirectorio "gadgets".
+
+Al usar el gadget, se dispone de las siguientes teclas (reproducido de la documentación de "textfield.gadget"):
+@{lindent 4}
+Shift cursor arriba	Se sitúa en la línea superior de la página actual, o
+			salta arriba una página si el cursor ya estaba allí.
+
+Shift cursor abajo	Se sitúa en la línea inferior de la página actual, o
+			salta abajo una página si el cursor ya estaba allí.
+
+Ctrl o
+Shift cursor der.	Se sitúa en el extremo derecho de la línea actual.
+
+Ctrl or
+Shift cursor izq.	Se sitúa en el extremo izquierdo de la línea actual.
+
+Shift backspace	Borra todo el texto a la izquierda del cursor en
+			la línea actual line.
+
+Shift delete	Borra todo el texto a la derecha del cursor en
+			la línea actual, incluyendo el carácter bajo el cursor.
+
+Ctrl cursor arriba	Se sitúa en la línea superior del texto.
+
+Ctrl cursor abajo	Se sitúa en la línea inferior del texto.
+
+Alt cursor der.	Se sitúa en la siguiente palabra.
+
+Alt cursor izq.	Se sitúa en la palabra anterior.
+
+Alt cursor arriba	Se sitúa en el primer carácter del gadget.
+
+Alt cursor abajo	Se sitúa en el último carácter del gadget.
+
+Alt backspace	Borra la palabra a la izquierda del cursor,
+			empezando en la posición actual.
+
+Alt delete		Borra la palabra a la derecha del cursor,
+			empezando en la posición actual.
+
+Ctrl x		Borra la línea en la que está el cursor.
+
+Amiga derecha e	Borra todo el texto del gadget, y lo guarda en el
+			buffer de restauración.
+
+Amiga derecha v	Pega texto del clipboard a la posición actual del cursor.
+
+Amiga derecha a	Marca todo el texto.
+
+Amiga derecha u	Restaura el último bloque de texto marcado, o
+			recupera de Amiga derecha e.
+@{lindent 2}
+Cuando el texto está seleccionado se dispone de las siguientes teclas:
+@{lindent 4}
+Delete o		Borra texto marcado (se graba en el buffer de rest.).
+backspace
+
+Amiga derecha x	Corta el texto marcado al clipboard.
+
+Amiga derecha c	Copia el texto marcado al clipboard.
+
+Amiga derecha v	Reemplaza el texto marcado con el del clipboard
+			(grabando el texto marcado en el buffer de rest.).
+
+Tecla de texto	Reemplaza el texto marcado con ese carácter.
+@endnode

@@ -42,7 +42,9 @@ STRPTR GetString(ULONG id)
     if (catalog)
     {
 	retval = GetCatalogStr(catalog, id, CatCompArray[id].cca_Str);
-    } else {
+    }
+    else
+    {
 	retval = CatCompArray[id].cca_Str;
     }
     

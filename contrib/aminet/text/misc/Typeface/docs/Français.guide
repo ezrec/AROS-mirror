@@ -1,0 +1,851 @@
+@database Typeface.guide
+@author "TMT"
+@$VER: Typeface.guide 1.23 (6.2.2000) version française
+@node main "Guide français de Typeface"
+
+			Typeface 1.23
+			© 1995-2000 David Kinder
+
+
+			@{" Introduction                       " link intro}
+			@{" Installation                       " link install}
+			@{" Utiliser Typeface                  " link using}
+			@{" Ouvrir une police                  " link open}
+			@{" Sauver une police                  " link save}
+			@{" Changer le dossier des polices     " link dir}
+			@{" Editer les paramètres d'une police " link params}
+			@{" Editer un caractère                " link char}
+			@{" Préférences                        " link prefs}
+			@{" Historique                         " link history}
+			@{" Contacter l'auteur                 " link me}
+
+			@{" Note du traducteur                 " link trad}
+@endnode
+@node intro "Introduction"
+
+  L'Amiga supporte deux types de polices de caractères, les polices point par
+  point (bitmap en anglais) et les polices vectorisées. Dans les premières,
+  chaque caractère est stocké par une série de bits indiquant si un pixel doit
+  être affiché ou pas. Une police bitmap a une taille spécifique; les polices
+  bitmap avec le même dessin mais de tailles différentes sont rassemblées dans
+  le dossier 'FONTS:'. Par exemple pour la police bitmap 'foo' :
+  
+	foo.font		information à propos de 'foo'
+	foo/8			police bitmap d'une taille de 8 pixels de haut
+	foo/9			idem, mais avec 9 pixels de haut
+
+  Les polices vectorisées (introduites avec l'OS v2.04) stockent les données
+  sous forme de courbes de telle manière qu'une seule définition fournit
+  toutes les tailles pour une seule police. De telles polices apparaissent
+  dans le dossier 'FONTS:' avec le suffixe '.font' et '.otag' (le fichier
+  '.otag' contient des informations spécifiques au moteur qui les utilise).
+  Depuis l'OS v3.0, Ce moteur (qui se nomme 'bullet.library') a été séparé de
+  la bibliothèque 'diskfont.library'. Cette disposition permet l'ajoût d'autres
+  moteurs, par exemple la bibliothèque 'type1.library' qui fournit le support
+  pour les polices Postscript de type 1.
+  
+  Typeface est un éditeur de polices bitmap. Mais les polices vectorisées
+  peuvent être chargées avec une taille spécifique, modifiées si besoin, et
+  sauvées en polices bitmap. Le fait d'avoir une police vectorisée sauvée en
+  police bitmap signifie que si un programme a besoin d'une taille de cette
+  police qui existe déjà en police bitmap, alors il utilisera cette taille en
+  police bitmap plutôt que la police vectorisée. Sinon, la taille voulue sera
+  construite à partir de le police vectorisée, ce qui prend du temps et
+  consomme de la mémoire.
+  
+  Typeface peut être distribué gratuitement mais le copyright reste à son
+  @{"auteur" link me}, David Kinder. Typeface ne peut pas être distribué pour plus de la
+  somme couvrant le prix du support, etc., et ne peut pas faire partie d'un
+  logiciel commercial sans la permission écrite de l'auteur. Le code source
+  est fourni au bénéfice de ceux intéressés par la structure d'un programme
+  Amiga, mais ne peut pas être utilisé par n'importe qui d'autre que l'auteur
+  pour ce programe ou tout autre logiciel d'édition de polices de caractères.
+@endnode
+@node install "Installation"
+
+  Il est indispensable que la bibliothèque @{"bgui.library" link bgui} v40¹ se trouve soit
+  dans le répertoire 'Libs:', soit dans un sous-dossier 'libs' du répertoire dans
+  lequel sont disposés les fichiers de Typeface. De même, le gadget @{"textfield.gadget" link textfield}
+  v3 doit être installé.
+  Typeface nécessite aussi la précence des bibliothèques standard suivantes dans
+  'Libs:' :
+
+	'asl.library' v37
+	'diskfont.library' v36
+
+  Si l'ordinateur a démarré avec des préférences Workbench standard, Typeface
+  devrait se lancer lorsque son icône est double-cliquée; la bibliothèque
+  'bgui.library' et le gadget 'textfield.gadget' pourront être déplacés vers
+  leurs dossiers respectifs plus tard, si nécessaire.
+  
+  De plus, la bibliothèque 'amigaguide.library' v34 doit être présente si l'aide
+  en ligne a besoin d'être utilisée.
+
+  Typeface recherche le catalogue 'Typeface.catalog' dans son sous-répertoire
+  des catalogues et dans le chemin 'LOCALE:catalogs/', ce qui permet à Typeface
+  d'être localisé sous le Workbench v2.1+ ('locale.library' v38 requise).
+  Toutes les informations nécessaires à la création de tels catalogues se
+  trouvent dans le sous-répertoire 'Catalogs'.
+  
+  ¹Toutes les versions indiquées représentent le minimum requis.
+@endnode
+@node bgui "A propos de la bibliothèque 'bgui.library'"
+
+  La 'bgui.library' est une bibliothèque partagée écrite par Jan van der Baard
+  et qui fournit une interface graphique adaptable aux polices de caractères
+  d'une manière orientée objet.
+@endnode
+@node using "Utilisation de Typeface"
+
+  Au démarrage, Typeface ouvre la fenêtre de sélection des caractères en
+  haut et à gauche de l'écran. Depuis cette fenêtre, chacun des 256 caractères
+  qui composent une police peut être sélectionné pour être édité. La barre de
+  défilement à droite peut être utilisée pour faire apparaître les caractères
+  non visibles. Les dimensions de cette fenêtre et la police affichée peuvent
+  être modifiées dans la fenêtre des @{"préférences" link prefs}.
+
+  Cliquer sur un caractère provoque l'ouverture de la @{"fenêtre d'édition du caractère" link char}
+  dans laquelle le caractère est affiché comme une grille. Autant de fenêtres
+  que nécessaire peuvent être ouvertes à la fois, celles-ci étant toutes
+  multitâches (il est possible par exemple d'ouvrir une nouvelle fenêtre
+  d'édition de caractère alors que la fenêtre des préférences est encore
+  ouverte). Maintenir la touche Shift enfoncée tout en cliquant sur un
+  caractère fait apparaître ce caractère dans l'une des fenêtres déjà ouvertes,
+  le cas échéant, plutôt que d'en ouvrir une nouvelle. Toutes les fenêtres
+  possèdent les menus suivants :
+
+  @{b}Menu Projet@{ub}
+			@{" Ouvrir police...   " link open}
+			@{" Sauver police...   " link save}
+			@{" Changer dossier... " link dir}
+			@{" Prévisualiser...   " link preview}
+			@{" Préférences...     " link prefs}
+			@{" A propos...        " link about}
+			@{" Quitter            " link quit}
+
+  @{b}Menu Police@{ub}
+			@{" Editer paramètres...  " link params}
+			@{" Editer caractère...   " link editchar}
+			@{" Déplacer à gauche     " link moveleft}
+			@{" Déplacer à droite     " link moveright}
+			@{" Déplacer vers le haut " link moveup}
+			@{" Déplacer vers le bas  " link movedown}
+			@{" Redéfinir décalage... " link resetkern}
+			@{" Arranger fenêtres     " link cascade}
+@endnode
+@node open "Chargement d'une police"
+
+  @{fg highlight}Menu Projet/Ouvrir police...@{fg text}
+
+  A partir d'une requête ASL standard, l'utilisateur pourra charger une
+  police dans Typeface. Les polices vectorisées seront listées tout comme
+  les polices bitmap; il faut néanmoins se rappeler que, même si des polices
+  bitmap peuvent être créées à partir de polices vectorisées, Typeface ne
+  permet pas l'édition des polices vectorisées proprement dite.
+
+  Les polices listées sont celles trouvées dans 'FONTS:' et en mémoire. Pour
+  modifier le répertoire 'FONTS:', il faut @{"changer le dossier des polices" link dir}.
+
+  Si le gadget "Demander largeur au chargement" est sélectionné dans les
+  @{"Préférences" link prefsmisc}, une fenêtre s'ouvrira dans laquelle la largeur de la police
+  en cours de chargement pourra être choisie. La police sera alors
+  mise à l'échelle par la bibliothèque 'diskfont.library'.
+@endnode
+@node save "Sauvegarde d'une police de caractère"
+
+  @{fg highlight}Menu Projet/Sauver police...@{fg text}
+
+  Cette fenêtre permet de contrôler les paramètres de sauvegarde de la
+  police. "Dossier" représente le répertoire dans lequel sont placés
+  le fichier .font et le sous-dossier de la police proprement dite.
+  C'est par défaut le répertoire FONTS:. "Nom" est le nom avec lequel
+  la police sera sauvée. Donc, si le dossier de sauvegarde s'appelle
+  "foo:" et si la police se nommant "bar" possède une taille de 8,
+  alors elle sera sauvée en temps que :
+  
+	foo:bar.font
+  et	foo:bar/8
+
+  "Premier" et "Dernier" contrôlent quels caractères doivent être sauvés.
+  Tous n'ont pas besoin d'être définis; ceux-ci apparaîtront en tant que
+  caractère @{"blanc" link blank}. "Information décalage" détermine si les informations de
+  @{"décalage" link kern} doivent être sauvées ou pas. Ce gadget est sélectionné et inaccessible
+  pour une police proportionnelle; ces informations doivent être sauvées
+  dans ce cas. Par défaut, les paramètres "Premier", "Dernier" et
+  "Informations décalage" seront ceux  de la dernière police chargée.
+@endnode
+@node blank "Le caractère blanc"
+
+  Chaque police bitmap contient la définition d'un caractère dit "blanc"
+  et qui est affiché lorsqu'un caractère de la police n'est pas défini.
+  Le caractère blanc peut être édité dans Typeface en cliquant sur le
+  gadget "Blanc" dans la fenêtre @{"Paramètres de la police" link params}.
+@endnode
+@node kern "Changement du décalage d'un caractère"
+
+  @{fg highlight}Menu Caractère/Changer décalage...@{fg text}
+
+  L'espacement et le décalage d'un caractère peuvent être modifiés dans
+  cette fenêtre. La valeur de décalage détermine de combien de pixels
+  la position du curseur doit être avancée avant que le caractère ne soit
+  affiché. La valeur d'espacement détermine de combien de pixels la position
+  du curseur doit être avancée après que le caractère ait été affiché. Par
+  exemple, soit un caractère défini sur une grille 5x5 :
+  
+		 .....
+		 .***.	espacement = 6
+		 **.**	décalage = 1
+		 .***.
+		 .....
+
+  Si l'affichage du curseur débute à la position 1, et que le caractère est
+  affiché deux fois :
+  
+		 .....  .....
+		 .***.  .***.		1 et 2 (et aussi 2 et 3) sont
+		 **.**  **.**		sépararés par 7 pixels (c'est à dire
+		 .***.  .***.		l'espacement + le décalage).
+		 .....  .....
+		^      ^      ^
+		1      2      3
+
+  2 est la position du curseur après l'affichage du premier caractère, et 3 sa
+  position après l'affichage du deuxième.
+
+  Ces valeurs ne sont généralement pas modifiées dans une police à largeur fixe,
+  et ne sont seulement sauvées avec celle-ci que si le gadget "Informations décalage"
+  est sélectionné dans la fenêtre de @{"sauvegarde d'une police de caractères" link save}.
+@endnode
+@node width "Changement de la largeur d'un caractère"
+
+  @{fg highlight}Menu Caractère/Changer largeur...@{fg text}
+
+  Dans cette fenêtre, la largeur du caractère actuellement édité (son numéro
+  apparaît dans la barre de titre) peut être modifiée. Entrer la nouvelle
+  largeur dans le gadget de texte et utiliser le gadget en dessous pour
+  déterminer comment le caractère doit être disposé dans sa nouvelle
+  largeur.
+  
+  Ce gadget fonctionne de la manière suivante : si la nouvelle largeur est
+  plus grande que l'ancienne, alors le gadget représente le caractère dans
+  son nouvel espace (si le gadget est à droite, alors le caractère sera
+  déplacé vers la droite de son nouvel espace de largeur). Si, au contraire,
+  la nouvelle largeur est plus petite, alors le gadget représente la partie
+  du caractère qui sera conservée, l'autre partie n'étant plus affichable.
+@endnode
+@node dir "Changement du dossier des polices"
+
+  @{fg highlight}Menu Projet/Changer dossier...@{fg text}
+
+  A l'@{"ouverture" link open} d'une police, le dossier FONTS: est scruté. Si la police devant
+  être éditée ne s'y trouve pas, alors cette fenêtre peut être utilisée
+  pour changer de répertoire ou l'ajouter à FONTS:.
+
+  Le nom du nouveau dossier peut être tapé dans le gadget de texte ou
+  choisi à l'aide d'une requête (en cliquant sur le gadget de sélection à
+  droite du gadget de texte). Pour modifier l'assignation de FONTS: à ce
+  nouveau dossier, cliquer sur "Assigner". Pour l'ajouter à l'assignation
+  de FONTS:, cliquer sur "Ajouter".
+@endnode
+@node params "Edition des paramètres de la police"
+
+  @{fg highlight}Menu Police/Editer paramètres...@{fg text}
+
+  Cette fenêtre permet l'édition des divers paramètres qui définissent
+  la police. Ce sont :
+
+    @{b}Type de la police@{ub}
+
+    Ce gadget détermine si la police est à largeur fixe ou proportionnelle.
+    Dans le premier cas, tous les caractères ont la même largeur, tandis
+    que dans une police proportionnelle, les caractères peuvent posséder
+    une largeur différente.
+
+    Toutefois, pour les polices Amiga, cette distinction n'est pas absolue;
+    en effet certaines polices dites "à largeur fixe" peuvent avoir des
+    caractères avec des largeurs différentes de la largeur nominale (cas
+    de la police standard courier par exemple). Mais il serait raisonnable
+    que ces largeurs ne diffèrent pas de plus de quelques pixels de la
+    valeur nominale du fait de la confusion engendrée dans la plupart
+    des logiciels. Si ce gadget est modifié de "proportionnelle" à
+    "à largeur fixe", une requête sera affichée pour savoir si la largeur
+    de tous les caractères doit être mise à la valeur par défaut (donnée
+    dans le gadget "Largeur").
+
+    @{b}Taille@{ub}
+
+    La hauteur (en pixels) des caractères de la police.
+
+    @{b}Largeur@{ub}
+
+    La largeur (en pixels) de la police. Pour une police proportionnelle,
+    c'est approximativement la moyenne de la largeur de tous ses
+    caractères. Pour une police à largeur fixe, tous les caractères
+    devraient avoir cette largeur (mais voir au-dessus). Changer cette
+    valeur modifiera la largeur de tous les caractères de la police.
+
+    @{b}Ligne de base@{ub}
+
+    La ligne de base de la police donnée en pixels à partir du haut de
+    la police. Quand la police est affichée dans un RastPort, la position
+    verticale du curseur (cp_y) correspond à la ligne de base. Sa valeur
+    doit être inférieure à la valeur de la taille de la police.
+
+    @{b}Graisse@{ub}
+
+    Lorsqu'une police à caractères gras doit être générée, les données des
+    caractères sont dupliquées sur elles-mêmes et décalées vers la droite.
+
+  Les paramètres restants n'affectent pas l'affichage de la police; ils
+  fournissent seulement des informations sur la manière dont la police
+  sera utilisée.
+
+    @{b}Normal@{ub}		Spécifie que la police n'aura aucun des attributs
+			suivants
+
+    @{b}Gras@{ub}		Spécifie que la police est dessinée en caractères
+			gras.
+
+    @{b}Italique@{ub}		Spécifie que la police est dessinée en caractères
+			italiques.
+
+    @{b}Souligné@{ub}		Spécifie que la police est dessinée en caractères
+			soulignés.
+
+    @{b}Etendu@{ub}		Spécifie que la police est dessinée en caractères
+			plus larges que hauts.
+
+    @{b}Inversé@{ub}		Spécifie que la police est dessinée pour s'afficher
+			de droite à gauche (contrairement à l'habitude).
+
+    @{b}Aspect@{ub}		Spécifie l'aspect du pixel avec lequel la police est
+			dessinée. "Normal" indique que les pixels devraient
+			être	aussi large que haut, "Fin" que les pixels
+			devraient être plus	haut que large et "Epais" que
+			les pixels devraient être plus large que haut.
+
+  Le gadget "Blanc" permet l'édition du caractère @{"blanc" link blank}.
+@endnode
+@node char "Edition d'un caractère"
+
+  Chaque caractère d'une police peut être édité dans sa propre fenêtre qui
+  est ouverte en cliquant sur le caractère souhaité dans la fenêtre de
+  sélection des caractères. La partie principale de la fenêtre contient
+  l'affichage du caractère. Cliquer sur un pixel dans cet affichage le
+  fait passer de l'état affiché à non-affiché, ou inversement. Tirer avec
+  le bouton gauche de la souris inverse ou mofifie tous les pixels traversés,
+  suivant les préférences établies.
+  
+  La fenêtre contient aussi une barre d'outils sous la barre de titre et
+  un menu.
+  La fonction des gadgets de la barre d'outils est :
+
+    @{b}Flèche gauche vide@{ub}		Diminue la largeur du caractère d'un pixel.
+
+    @{b}Flèche droite vide@{ub}		Augmente la largeur du caractère d'un pixel.
+
+    @{b}Flèches pleines@{ub}		Déplace les pixels du caractère d'un pixel vers
+				la direction spécifiée par la flèche.
+
+    @{b}Triangles@{ub}			Ouvre la fenêtre de @{"décalage" link kern}.
+
+    @{b}Flèche pleine à@{ub}		Ouvre la fenêtre de @{"largeur" link width}.
+    @{b}bord noir@{ub}
+
+    @{b}Plus/Moins@{ub}			Diminue de moitié/double la surface du rectangle
+				représentant chaque pixel du caractère.
+
+    @{b}Flèches horizontales@{ub}	Inverse le caractère horizontalement.
+
+    @{b}Flèches verticales@{ub}		Inverse le caractère verticalement.
+
+  Il est possible de contrôler dans les @{"préférences" link prefs} quels sont les gadgets qui
+  pourront apparaître dans la barre d'outils.
+  
+  Le menu se compose des fonctions suivantes :
+
+    @{b}Annuler@{ub}			Remet le caractère dans son dessin initial lorsque
+				la fenêtre d'édition s'est ouverte.
+
+    @{b}Couper@{ub}			Coupe le caractère et le place dans le presse-papier.
+
+    @{b}Copier@{ub}			Copie le caractère dans le presse-papier.
+
+    @{b}Coller@{ub}			Remplace le caractère avec le caractère placé
+				dans le presse-papier.
+
+    @{b}Effacer@{ub}			Efface le caractère sans le placer dans le
+				presse-papier.
+
+    @{b}Décaler@{ub}			Déplace le caractère d'un pixel dans la direction
+    @{b}à gauche/à droite/en haut/en bas@{ub}			specifiée.
+
+    @{b}Inverser horiz.@{ub}		Inverse le caractère suivant son axe horizontal
+    @{b}/vert.@{ub}			/vertical.
+
+    @{b}Zoomer avant/arrière@{ub}	Diminue/augmente de 2 fois la surface
+				du rectangle representant chaque pixel du caractère.
+				Les raccourcis-clavier sont les touches "+" et "-".
+
+    @{b}Changer largeur...@{ub}		Ouvre la fenêtre de @{"largeur" link width}.
+
+    @{b}Changer décalage...@{ub}		Ouvre la fenêtre de @{"décalage" link kern}.
+@endnode
+@node prefs "Préférences"
+
+  @{fg highlight}Menu Projet/Préférences...@{fg text}
+
+  Les préférences peuvent être utilisées pour contrôler l'apparence et
+  le comportement de Typeface. Un certain nombre de "pages" sont accessibles
+  par le gadget cyclique situé en haut de la fenêtre (raccourci-clavier '\\').
+  Les pages sont :
+
+		@{" Ecran                  " link prefsscreen}
+		@{" Barre d'outils         " link prefstoolbar}
+		@{" Fenêtres d'édition     " link prefsedit}
+		@{" Fenêtre de sélection   " link prefsselect}
+		@{" Divers                 " link prefsmisc}
+
+  Sélectionner "Sauver" permet de sauvegarder les préférences soit dans ENVARC:
+  soit dans PROGDIR (le répertoire contenant les fichiers de Typeface); cela
+  dépend du choix effectué dans la page @{"Divers" link prefsmisc}. "Utiliser" attribue à Typeface
+  les préférences mais ne les sauvegarde pas. "Abandonner" ferme la fenêtre des
+  préférences en ignorant toute modification.
+@endnode
+@node prefsscreen "Préférences - page Ecran"
+
+  Cette page contient les gadgets suivant :
+
+    @{b}Ecran propre@{ub}
+
+    Si celui-ci est sélectionné, alors Typeface ouvre son propre écran;
+    sinon il s'ouvre sur l'écran public (par défaut l'écran du Workbench).
+
+    @{b}Mode@{ub}
+
+    Mode d'écran propre de Typeface. Pour le changer, cliquer sur la flèche
+    à droite. Il n'est possible de sélectionner un nouveau mode que
+    si la bibliothèque 'asl.library' v38+ est présente (OS version 2.1+).
+
+    @{b}Police@{ub}
+
+    Nom de la police écran de Typeface. Pour la modifier, cliquer sur la
+    flèche à droite.
+
+    @{b}Ecran public@{ub}
+
+    Si "Ecran propre" est sélectionné, alors cela sera le nom public de
+    l'écran de Typeface. Sinon Typeface essaiera de s'ouvrir sur l'écran
+    public donné içi. Si cet écran n'existe pas, alors l'écran public par
+    défaut sera utilisé.
+@endnode
+@node prefstoolbar "Préférences - page Barre d'outils"
+
+  La barre d'outils est la ligne de gadgets située en haut de la fenêtre
+  d'édition des caractères. Deux listes permettent de savoir quels sont
+  les gadgets qui seront affichés. Celle de droite contient les gadgets
+  qui seront affichés et celle de gauche ceux qui ne le seront pas. Pour
+  ajoûter ou retirer un gadget de la barre d'outils, il faut sélectionner
+  l'entrée appropriée et la placer sur l'autre liste en maintenant le
+  bouton de la souris enfoncé pendant le déplacement. Quand l'entrée
+  choisie est par-dessus la liste de destination, il faut alors relâcher
+  le bouton pour lâcher l'entrée. En maintenant la touche Shift enfoncée
+  il est possible de sélectionner plusieurs entrées. Pour une description
+  de chaque gadget, se reporter à l'@{"édition d'un caractère" link char}.
+
+  Le gadget "Hauteur" détermine la hauteur de la barre d'outils. Le minimum
+  est 11 (pour un écran non-entrelacé), mais si vous utiliser une plus
+  grande résolution vous pourrez augmenter cette valeur. Si le gadget
+  "Automatique" est sélectionné, alors le gadget "Hauteur" est inaccessible
+  et Typeface détermine automatiquement la hauteur appropriée de la barre
+  d'outils suivant la résolution d'écran.
+
+  Mofifier ces options n'affecte pas les fenêtres d'édition déjà ouvertes,
+  mais seulement celles qui seront ouvertes après que "Sauver" ou "Utiliser"
+  soit sélectionné.
+@endnode
+@node prefsedit "Préférences - page Fenêtres d'édition"
+
+  Cette page contrôle l'apparence des @{"fenêtres d'édition de caractère" link char}.
+  Dans le cadre "Pixels" apparaissent plusieurs gadgets qui influent sur l'apparence
+  de chaque pixel du caractère. Ces gadgets sont :
+
+    @{b}Largeur / Hauteur@{ub}
+
+    Ces gadgets détermine la largeur / hauteur de chaque pixel.
+
+    @{b}Bordure@{ub}
+
+    Ce gadget détermine la manière dont la bordure des pixel doit être dessinée.
+    Les options sont "Non" (pas de bordure), "Oui" (une petite bordure est dessinée
+    autour de chaque pixel plein) et "Grille" (applique une grille autour de tous
+    les pixels).
+
+    @{b}Ligne de base@{ub}
+
+    Ce gadget détermine si la ligne de base doit être affichée dans les
+    fenêtres d'édition.
+
+  En dessous du cadre "Pixels", le gadget "Etendre fenêtre" affecte la localisation
+  initiale d'une fenêtre d'édition. Non sélectionné, la fenêtre d'édition s'ouvrira
+  toujours à droite de la fenêtre de sélection des caractères, alors que sélectionné,
+  la fenêtre pourra recouvrir la fenêtre de sélection s'il n'y a pas assez de place
+  sur la droite. Le gadget "Permuter" détermine le mode de dessin utilisé. Sélectionné,
+  tous les pixels sous le pointeur enfoncé seront inversés; sinon, ils seront tous
+  affichés comme le premier pixel modifié.
+
+  Mofifier ces options n'affecte pas les fenêtres d'édition déjà ouvertes, mais
+  seulement celles qui seront ouvertes après que "Sauver" ou "Utiliser" soit
+  sélectionné.
+@endnode
+@node prefsselect "Préférences - page Fenêtre de sélection"
+
+  Cette page détermine l'apparence de la fenêtre de sélection des caractères.
+  Les options sont :
+
+    @{b}Dimensionnable@{ub}
+
+    Si ce gadget est sélectionné, la fenêtre de sélection pourra être agrandie
+    verticalement par le gadget d'étirement en bas à droite.
+
+    @{b}Touche Shift@{ub}
+
+    Si ce gadget est sélectionné, le maintien de la touche Shift lors du
+    choix d'un caractère dans la fenêtre de sélection fera apparaître ce
+    caractère dans une fenêtre déjà existante; sinon, le maintien de la
+    touche Shift lors du choix d'un caractère ouvrira une nouvelle fenêtre
+    (i.e les effets de la touche Shift sont opposés suivant la sélection
+    de ce gadget).
+
+    @{b}Largeur@{ub}
+
+    Ce gadget cyclique contrôle le nombre de caractères affichés par ligne
+    dans la fenêtre de sélection.
+
+    @{b}Hauteur@{ub}
+
+    Dans ce gadget est sélectionnée la hauteur par défaut de la fenêtre de
+    sélection. Comme il n'y a pas plus de 256 caractéres par police, la hauteur
+    maximale ne pourra dépasser 256 divisé par la largeur définie ci-dessus.
+
+    @{b}Police@{ub}
+
+    C'est içi qu'il est possible de modifier la police affichée dans la fenêtre
+    de sélection en cliquant sur le bouton à droite du nom de la police.
+@endnode
+@node prefsmisc "Préférences - page Divers"
+
+  Cette page contrôle le dossier où le fichier des préférences peut être sauvé :
+
+    @{b}Variable d'environnement@{ub}
+
+    "Typeface.prefs" est sauvé sous ENV: et sous ENVARC:. Ce sont les
+    dossiers habituels où sauver les fichier préférences.
+
+    @{b}Répertoire de Typeface@{ub}
+
+    C'est le dossier où se situent tous les fichiers de Typeface. Sauver
+    "Typeface.prefs" içi économise de la mémoire du fait qu'il ne sera
+    pas dans ENV: (qui est assigné au dossier 'RAM:env').
+
+  Le gadget "Confirmer avant de quitter" est utilisé pour savoir si Typeface
+  doit quitter directement ou demander une confirmation avant.
+
+  Le gadget "Demander largeur au chargement" détermine si, à la sélection
+  d'une police, Typeface doit demander sa largeur ou non.
+@endnode
+@node me "Contacter l'auteur"
+
+  Si vous avez des commentaires, des demandes ou des suggestions à faire
+  au sujet de Typeface, vous pouvez contacter l'auteur par E-Mail à :
+
+	davidk@monis.co.uk
+
+  De futures versions de Typeface pourront apparaître (support des
+  polices colorées et plus de fonctions) mais seulement si vous faites
+  savoir que vous êtes intéressé. Alors si vous appréciez Typeface,
+  informez-en l'auteur.
+@endnode
+@node trad "Note du traducteur"
+
+  Le documentation en français (catalogue et guide) a été traduite par
+  TMT (The Mangousta Team) à partir de la documentation originale de
+  l'@{"auteur" link me}.
+
+  Pour toutes remarques, suggestions, encouragements  etc, vous pouvez
+  joindre le traducteur à l'adresse ci-dessous :
+
+	frederic.nicolas@free.fr
+@endnode
+@node about "A propos"
+
+  @{fg highlight}Menu Projet/A propos...@{fg text}
+
+  Donne la version, le copyright et l'@{"auteur" link me} de Typeface, ainsi
+  que la mémoire disponible (graphique et autres) dans le système.
+@endnode
+@node quit "Quitter"
+
+  @{fg highlight}Menu Projet/Quitter@{fg text}
+
+  Permet de quitter Typeface. Si la police chargée dans Typeface n'a pas été
+  sauvée, elle sera perdue.
+@endnode
+@node history "Historique"
+
+  @{b}Version 1.23 (6/2/2000)@{ub}
+
+  o Mise à jour avec la dernière version de BGUI.
+
+  @{b}Version 1.22 (17/8/97)@{ub}
+
+  o Correction de la taille des gadgets à cocher lors de l'utilisation de
+    polices de petites taille.
+
+  @{b}Version 1.21 (24/2/97)@{ub}
+
+  o Correction du plantage lors de l'édition d'un caractère de largeur nulle
+    avec l'option "Grille" activée.
+
+  o Ajoût d'une icône MagicWB pour Typeface, dessinée par Marc Severin.
+
+  @{b}Version 1.2 (2/7/96)@{ub}
+
+  o L'option "Redéfinir décalage..." du menu "Police" a été améliorée.
+    Maintenant une fenêtre s'ouvre pour permettre d'ajouter une valeur
+    par défaut d'espacement et de décalage pour chaque caractère.
+
+  o A l'ouverture d'une police d'une taille donnée, la largeur peut être
+    modifiée avec la fenêtre "Demander largeur au chargement". Cette
+    fenêtre s'affiche après la sélection de la police seulement si le
+    gadget correspondant est sélectionné dans la page Divers des
+    préférences.
+
+  o Amélioration du copier-coller dans le menu "Caractère". Les nouvelles
+    fonctions sont "Annuler" (qui restaure le caractère dans son état
+    initial), "Couper" et "Effacer".
+
+  o Les caractères peuvent être inversés soit horizontalement soit vertica-
+    lement en utilisant "Inverser horiz." et "Inverser vert." dans le menu
+    "Caractère".
+
+  o Il est maintenant possible d'éditer un caractère en spécifiant son
+    numéro dans "Editer caractère..." du menu "Police".
+
+  o Les fenêtres d'édition de caractère peuvent maintenant être arrangées
+    en une seule fois avec "Arranger fenêtres" dans le menu "Police".
+
+  o Nouveaux raccourcis-clavier pour changer la surface des pixels du
+    caractère lors d'une édition : "+" pour zoom avant et "-" pour zoom
+    arrière.
+
+  o Changement dans les préférences :
+    o Modification de la page "Barre d'outils" pour utiliser la technique
+      du sélectionner-lâcher.
+    o Nouvelle option "Permuter" afin de contrôler le mode de dessin ajouté
+      à la page "Fenêtre d'édition".
+
+  @{b}Version 1.1 (5/10/95)@{ub}
+
+  o Amélioration des messages d'erreur. Si Typeface n'arrive pas à allouer
+    quelque chose, alors, au lieu de quitter silencieusement, un message
+    d'erreur explicatif est affiché.
+
+  o Si Typeface ouvre son propre écran, celui-ci est maintenant public.
+    Sinon Typeface s'ouvre sur un autre écran public.
+
+  o Plusieurs nouvelles options dans les préférences, dont :
+    o Police et nom d'écran public modifiables.
+    o Barre d'outils des fenêtres d'édition de caractère configurable.
+    o Une grille peut être affichée sur les pixels représentant le caractère
+      dans les fenêtres d'édition, ainsi que la ligne de base.
+    o La police (et sa taille) utilisée pour la fenêtre de sélection de
+      caractère est maintenant configurable.
+
+  o L'espacement entre les objets dans les fenêtres dépend de la résolution
+    de l'écran.
+
+  o Toutes les fenêtres (à l'exception de celle de sélection des caractères)
+    peuvent être fermées avec la touche d'échappement "Esc".
+
+  o Nouveau menu "Police", avec les options d'édition des paramètres concernant
+    la police (situé avant dans le menu "Projet"), de déplacement de tous les
+    caractères à gauche/droite et en haut/bas, ainsi que de la redéfinition
+    du décalage.
+
+  o Une requête de confirmation à la fermeture de Typeface peut être activée;
+    elle informe s'il existe des modifications non sauvegardées de la police
+    actuellement chargée.
+
+  o Plusieurs pixels à la fois peuvent être changés dans les fenêtres
+    d'édition en maintenant enfoncé le bouton gauche de la souris et en
+    déplaçant celle-ci.
+
+  o Maintenir la touche Shift en cliquant sur un caractère dans la fenêtre
+    de sélection affiche celui-ci dans une fenêtre d'édition déjà ouverte
+    au lieu d'en ouvrir une nouvelle. L'action de cliquer/Shift-cliquer peut
+    être inversée dans les préférence.
+
+  o Nouvelle fenêtre de prévisualisation dans laquelle il est possible de
+    taper du texte avec la police actuellement modifiée.
+
+  o La surface d'affichage d'un caractère peut être augmenté ou diminué
+    (zoom avant et arrière).
+
+  o Typeface peut être localisé en toute langue en écrivant simplement le
+    catalogue approprié.
+
+  @{b}Version 1.0 (29/5/95)@{ub}
+
+  o Première version.
+@endnode
+@node moveleft "Déplacement vers la gauche"
+
+  @{fg highlight}Menu Police/Déplacer à gauche@{fg text}
+
+  Décale tous les caractères de la police d'un pixel vers la gauche.
+@endnode
+@node moveright "Déplacement vers la droite"
+
+  @{fg highlight}Menu Police/Déplacer à droite@{fg text}
+
+  Décale tous les caractères de la police d'un pixel vers la droite.
+@endnode
+@node moveup "Déplacement vers le haut"
+
+  @{fg highlight}Menu Police/Déplacer en haut@{fg text}
+
+  Décale tous les caractères d'un pixel vers le haut.
+@endnode
+@node movedown "Déplacement vers le bas"
+
+  @{fg highlight}Menu Police/Déplacer en bas@{fg text}
+
+  Décale tous les caractères d'un pixel vers le bas.
+@endnode
+@node resetkern "Redéfinition du décalage"
+
+  @{fg highlight}Menu Police/Redéfinir décalage...@{fg text}
+
+  Cette option permet de définir pour tous les caractères l'information
+  de @{"décalage" link kern}. Les valeurs pour l'espacement et le décalage sont chacune
+  représentée par un nombre entier. Si "Remettre à zéro" est sélectionné,
+  alors les informations concernant le décalage pour chaque caractère sera
+  calculée comme suit :
+
+    espacement = largeur du caractère + valeur dans le gadget 'espacement'
+    décalage = valeur dans le gadget 'décalage'
+
+  Les deux valeurs sont à 0 par défaut.
+@endnode
+@node cascade "Modifier la disposition des fenêtres d'édition de caractère"
+
+  @{fg highlight}Menu Police/Arranger fenêtres@{fg text}
+
+  Cette option peut être utilisée pour arranger les fenêtres d'édition de
+  caractère ouvertes. Les fenêtres seront déplacées automatiquement depuis
+  la droite de la fenêtre de sélection des caractères vers le bord droit et
+  le bas de l'écran.
+@endnode
+@node editchar "Edition d'un caractère"
+
+  @{fg highlight}Menu Police/Editer caractère...@{fg text}
+
+  Ce menu ouvre une requête demandant le numéro d'un caractère qui sera édité.
+  Entrer un nombre entier compris entre 0 et 255 et "Accepter" (ou presser
+  la touche ENTER).
+@endnode
+@node preview "Prévisualisation de la police"
+
+  @{fg highlight}Menu Projet/Prévisualiser...@{fg text}
+
+  La fenêtre de prévisualisation permet d'afficher la police actuellement
+  chargée. Il est possible de taper un texte dans le gadget à lignes multiples
+  (cf @{"textfield.gadget" link textfield}). En dessous se trouvent quatre boutons :
+
+    @{b}Mettre à jour@{ub}	Permet de raffraichir l'affichage de la police dans la
+			la fenêtre cas où des modifications lui ont été apportées après
+			son ouverture.
+    
+    @{b}Montrer tout@{ub}	Affiche tous les caractères de la police excepté 0x00,
+			0x0A et 0x0D qui seront chacun remplacés par un espace.
+
+    @{b}Effacer@{ub}		Efface le texte de la fenêtre.
+
+    @{b}Abandonner@{ub}		Ferme la fenêtre.
+@endnode
+@node textfield "Gadget 'textfield.gadget'"
+
+  Le 'textfield.gadget' est un gadget BOOPSI qui permet aux logiciels d'utiliser
+  des gadgets texte à lignes multiples.
+  Le 'textfield.gadget' est © 1995 Mark Thomas.
+
+  Pour le Workbench 3.0+, copier le fichier dans 'SYS:classes/gadgets'.
+  Bien que le Workbench v2.0 et v2.1 supportent ce gadget, il n'y pas de dossier
+  standard où l'installer dans le système. Il est suggéré de créer un
+  sous-dossier 'gadgets' dans le répertoire 'Libs:' et d'y copier le gadget.
+  Sinon, il est possible de le laisser dans le répertoire 'gadgets' de Typeface.
+
+
+  Lors de l'utilisation du gadget, les raccourcis-clavier suivants sont accessibles
+  (documentation reproduite à partir de celle du 'textfield.gadget') :
+
+    Shift Flèche haute		Déplace le curseur d'une ligne vers le haut (passe à
+				la page précédente si le curseur est sur la première ligne.
+
+    Shift Flèche basse		Déplace le curseur d'une ligne vers le bas (passe à
+				la page suivante si le curseur est sur la dernière ligne.
+
+    Ctrl ou
+    Shift Flèche droite		Déplace le curseur en fin de ligne.
+
+    Ctrl ou
+    Shift Flèche gauche		Déplace le curseur en début de ligne.
+
+    Shift Retour arrière	Efface tout le texte de la ligne situé avant le curseur.
+
+    Shift Del			Efface tout le texte de la ligne à partir du curseur.
+
+    Ctrl Flèche haute		Déplace le curseur en début de texte.
+
+    Ctrl Flèche basse		Déplace le curseur en fin de texte.
+
+    Alt Flèche droite		Déplace le curseur sur le prochain mot.
+
+    Alt Flèche gauche		Déplace le curseur sur le mot précédent.
+
+    Alt Flèche haute		Déplace le curseur sur le premier caractère du gadget.
+
+    Alt Flèche basse		Déplace le curseur sur le dernier caractère du gadget.
+
+    Alt Retour arrière		Efface le mot avant le curseur.
+
+    Alt Del			Efface le mot après le curseur.
+
+    Ctrl x			Efface toute la ligne sous le curseur.
+
+    Amiga droit e		Efface tout le texte du gadget et le place dans le
+				tampon d'annulation.
+
+    Amiga droit v		Colle le texte du presse-papier au niveau du curseur
+
+    Amiga droit a		Sélectionne tout le texte.
+
+    Amiga droit u		Annule l'effacement du dernier bloc de texte sélectionné
+				ou le retrouve grâce à Amiga droit e.
+
+
+  Lorsque du texte est sélectionné, les raccourcis-claviers suivants sont permis :
+
+    Del ou			Efface le texte sélectionné (et le place dans le
+    Retour arrière		tampon d'annulation).
+
+    Amiga droit x		Coupe le texte sélectionné vers le presse-papier.
+
+    Amiga droit c		Copie le texte sélectionné dans le presse-papier.
+
+    Amiga droit v		Remplace le texte sélectionné par celui du presse-papier
+				(en sauvant le texte seléctionné dans le tampon d'annulation).
+
+    touche quelconque		Remplace le texte sélectionné par ce caractère.
+@endnode
