@@ -167,7 +167,7 @@
 #  endif
 #endif
 
-#ifdef AMIGA
+#if defined(AMIGA) && !defined(__AROS__)
 #  define PATH_SEP2 ':'
 #  define STDC_HEADERS
 #  define OS_CODE  0x01
