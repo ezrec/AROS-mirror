@@ -21,6 +21,7 @@
 #include <intuition/intuition.h>
 #include <intuition/intuitionbase.h>
 #include <proto/intuition.h>
+#include <proto/alib.h>
 
 #include "display_globals.h"
 #include "localize.h"
@@ -163,7 +164,7 @@ string_requester (
          while (!done)
          {
             WaitPort (req_win->UserPort);
-            while (msg = GT_GetIMsg (req_win->UserPort))
+            while ((msg = GT_GetIMsg (req_win->UserPort)))
             {
                switch (msg->Class)
                {
@@ -225,8 +226,8 @@ about_requester (
       /* Image extent */
       if (img != NULL)
       {
-         GetAttr (IA_Width, img, &box_w);
-         GetAttr (IA_Height, img, &box_h);
+         GetAttr (IA_Width, (Object *)img, &box_w);
+         GetAttr (IA_Height, (Object *)img, &box_h);
       }
       /* Name extent */
       SetSoftStyle (&layout_rp,
@@ -359,7 +360,7 @@ about_requester (
             temp = te.te_Extent.MaxY - te.te_Extent.MinY + 1;
             if (img != NULL)
             {
-               GetAttr (IA_Height, img, &win_h);
+               GetAttr (IA_Height, (Object *)img, &win_h);
                if (win_h > temp)
                   temp = win_h;
                DrawImageState (req_win->RPort, img,
@@ -369,7 +370,7 @@ about_requester (
                                LINEHEIGHT + (temp - win_h) / 2,
                                IDS_NORMAL, NULL);
                
-               GetAttr (IA_Width, img, &win_w);
+               GetAttr (IA_Width, (Object *)img, &win_w);
             }
             Move (req_win->RPort,
                   req_win->BorderLeft + 2 * INTERWIDTH + LINEWIDTH +
@@ -659,7 +660,7 @@ request_optional_size (
          while (!done)
          {
             WaitPort (req_win->UserPort);
-            while (msg = GT_GetIMsg (req_win->UserPort))
+            while ((msg = GT_GetIMsg (req_win->UserPort)))
             {
                switch (msg->Class)
                {

@@ -14,6 +14,7 @@
 #include <intuition/intuition.h>
 #include <libraries/locale.h>
 #include <proto/locale.h>
+#include <proto/alib.h>
 
 #include "localize.h"
 
@@ -21,11 +22,7 @@
 struct Library   *LocaleBase = NULL;
 extern struct Library * GadToolsBase;
 
-static struct LocaleInfo
-{
-  struct Library * li_LocaleBase;
-  struct Catalog * li_Catalog; 
-}   li;
+static struct LocaleInfo li;
 
 
 STRPTR 

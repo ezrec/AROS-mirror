@@ -17,6 +17,7 @@
 #include <graphics/gfxmacros.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
+#include <proto/alib.h>
 
 #include "display_globals.h"
 #include "requesters.h"
@@ -287,7 +288,7 @@ display_high_scores (
             sigmask = Wait (winsig | timersig);
             if (sigmask & winsig)
             {
-               while (msg = GT_GetIMsg (req_win->UserPort))
+               while ((msg = GT_GetIMsg (req_win->UserPort)))
                {
                   switch (msg->Class)
                   {
