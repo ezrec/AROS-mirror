@@ -311,7 +311,7 @@ kprintf("CYCLETOP: %p, CYCLEBOT: %p\n"
 	AROS_LHA(struct RastPort *, rp, A0),
 	AROS_LHA(int, x, D0),
 	AROS_LHA(int, y, D1),
-	AROS_LHA(int, clear, D2),
+	AROS_LHA(int, checked, D2),
 
 /*  LOCATION */
 	struct Library *, DOpusBase, 44, DOpus)
@@ -343,24 +343,25 @@ kprintf("CYCLETOP: %p, CYCLEBOT: %p\n"
 	
 	ULONG old_drmd;
 	UBYTE old_apen;
-kprintf("DrawCheckMark\n");	
+
 	old_drmd = GetDrMd(rp);
 	
 	SetDrMd(rp, JAM1);
 	
-	if (clear) {
+	if (!checked) {
 		old_apen = GetAPen(rp);
 		
 	
 		SetAPen(rp, GetBPen(rp));
-	}
+	} else SetAPen(rp, GetAPen(rp));
 	
 	if (DB(DOpusBase)->pdb_check) {
+
 		BltTemplate( (PLANEPTR)DB(DOpusBase)->pdb_check
 			,0, 2, rp, x, y, 13, 7);
 	}
 	
-	if (clear) {
+	if (!checked) {
 		SetAPen(rp, old_apen);
 	}
 	
