@@ -29,6 +29,7 @@ the existing commercial status of Directory Opus 5.
 */
 
 #include "dopus.h"
+#include <rexx/storage.h>
 
 #define MAXRXOUTSTANDING 300
 #define RXERRORIMGONE 100
@@ -42,10 +43,6 @@ static long replies_pending;
 void rexx_dispatch(allfuncs)
 int allfuncs;
 {
-#warning Not implemented
-kprintf("rexx_dispatch(): NOT IMPLEMENTED BECAUSE OF MISSING FUNCTIONALTY\n");
-return;
-#if 0
 	struct RexxMsg *msg;
 	int dontreply,a,cmd;
 	char *command;
@@ -149,8 +146,6 @@ return;
 		else if (msg->rm_Node.mn_Node.ln_Type!=NT_REPLYMSG)
 			ReplyMsg((struct Message *)msg);
 	}
-	
-#endif
 }
 
 struct RexxMsg *send_rexx_command(command,replyfunc,msg)
@@ -158,10 +153,6 @@ char *command;
 int (*replyfunc)();
 struct RexxMsg *msg;
 {
-#warning Not implemented
-kprintf("send_rexx_command(): NOT IMPLEMENTED BECAUSE OF MISSING FUNCTIONALTY\n");
-return NULL;
-#if 0
 	struct MsgPort *rxport;
 	struct RexxMsg *RexxMsg;
 
@@ -189,41 +180,29 @@ return NULL;
 	}
 	if (RexxMsg) DeleteRexxMsg(RexxMsg);
 	return(NULL);
-#endif
 }
 
 void rexx_msg_reply(msg)
 struct RexxMsg *msg;
 {
-#warning Not implemented
-kprintf("rexx_msg_reply(): NOT IMPLEMENTED BECAUSE OF MISSING FUNCTIONALTY\n");
-return;
-#if 0
-
 	struct RexxMsg *oldmsg;
 
 	if ((oldmsg=(struct RexxMsg *)(msg->rm_Args[2]))) {
 		rexx_set_return(oldmsg,msg->rm_Result1,(char *)msg->rm_Result2);
 		ReplyMsg((struct Message *)oldmsg);
 	}
-#endif
 }
 
 struct RexxMsg *rexx_command(command,syncmsg)
 char *command;
 struct RexxMsg *syncmsg;
 {
-#warning Not implemented
-kprintf("rexx_command(): NOT IMPLEMENTED BECAUSE OF MISSING FUNCTIONALTY\n");
-return NULL;
-#if 0
 	struct RexxMsg *msg;
 
 	if (!command || !command[0]) msg=NULL;
 	else if (syncmsg) msg=send_rexx_command(command,(APTR)&rexx_msg_reply,syncmsg);
 	else msg=send_rexx_command(command,NULL,NULL);
 	return(msg);
-#endif
 }
 
 void rexx_set_return(msg,rc,result)
@@ -231,11 +210,6 @@ struct RexxMsg *msg;
 int rc;
 char *result;
 {
-#warning Not implemented
-kprintf("rexx_set_return(): NOT IMPLEMENTED BECAUSE OF MISSING FUNCTIONALTY\n");
-return;
-#if 0
-
 	str_last_rexx_result[0]=0;
 
 	if (msg && RexxSysBase) {
@@ -250,16 +224,10 @@ return;
 		}
 	}
 	else if (result) strcpy(str_last_rexx_result,result);
-#endif
 }
 
 void close_rexx_port()
 {
-#warning Not implemented
-kprintf("close_rexx_port(): NOT IMPLEMENTED BECAUSE OF MISSING FUNCTIONALTY\n");
-return;
-#if 0
-
 	if (RexxSysBase) {
 		rexx_closing=1;
 		if (oldrxmsg) {
@@ -273,5 +241,4 @@ return;
 			rexx_dispatch(0);
 		}
 	}
-#endif
 }

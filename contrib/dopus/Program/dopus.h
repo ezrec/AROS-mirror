@@ -79,6 +79,7 @@ the existing commercial status of Directory Opus 5.
 #include <proto/dopus.h>
 #include <proto/utility.h>
 #include <proto/workbench.h>
+#include <proto/rexxsyslib.h>
 
 #include "ushort.h"
 
