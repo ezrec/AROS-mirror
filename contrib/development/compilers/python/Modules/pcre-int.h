@@ -104,7 +104,7 @@ only some permitted at run or study time. */
 
 #   define FALSE   0
 #   define TRUE    1
-#endif
+#endif /* AROS */
 
 /* These are escaped items that aren't just an encoding of a particular data
 value such as \n. They must have non-zero values, as check_escape() returns
