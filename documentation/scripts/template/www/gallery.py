@@ -22,8 +22,8 @@ def makePicture( path, description ):
             ( 
                 width = '*', contents =
                 [ 
-                    description, BR(), 
-                    A( href = path, contents = '&nbsp;&nbsp;&nbsp;&nbsp;Large version...' ) 
+                    description, BR(), '&nbsp;&nbsp;&nbsp;&nbsp;', 
+                    A( href = path, contents = 'Large version...' ) 
                 ] 
             )
         ] )
