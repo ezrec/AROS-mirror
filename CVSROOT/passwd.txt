@@ -22,3 +22,4 @@ nico:bbHYNBwvWxgYE:aros:Nico Heinz:nico@fh-konstanz.de:
 ykoehler:pomie:aros:Yannick Koehler:yannickk@eicon.com:
 fasten:ccY.p7jBmFL4g:aros:Bernhard Fastenrath:fasten@informatik.uni-bonn.de:
 srittau:aaRBXVNGOCKiY:aros:Sebastian Rittau:jroger@sky.in-berlin.de:
+jaxom:dcZ/NTob1tC2I:Thomas Schwarz:Thomas.Schwarz@munich.netsurf.de:
