@@ -1216,24 +1216,25 @@ def genSnapshots ():
 	    for col in colList:
 		t = Text ()
 		ss = day.get (col, None)
+		print 'ss:',ss
 		if ss:
 		    t.append (Href ('ftp://ftp.aros.org/pub/aros/snapshots/%s' % ss.filename,
 			ss.size
 		    ))
+		
+		    if ss.log:
+			t.append ('(Log: ')
+			t.append (Href (
+			    'ftp://ftp.aros.org/pub/aros/snapshots/%s' % \
+				ss.log.filename,
+			    ss.log.size
+			))
+			t.append (')')
+		    else:
+			if not ss.title in ('contrib', 'source'):
+			    t.append ('(No log)')
 		else:
 		    t.append ('-')
-		
-		if ss.log:
-		    t.append ('(Log: ')
-		    t.append (Href (
-			'ftp://ftp.aros.org/pub/aros/snapshots/%s' % \
-			    ss.log.filename,
-			ss.log.size
-		    ))
-		    t.append (')')
-		else:
-		    if not ss.title in ('contrib', 'source'):
-			t.append ('(No log)')
 
 		row = row + [TD (t)]
 
