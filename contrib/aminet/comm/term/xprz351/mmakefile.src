@@ -39,7 +39,7 @@ DEPS := $(foreach f,$(FILES),$(OBJDIR)/$(f).d)
 #MM linklibs-aminet-comm-term-xprz : linklibs setup-xprz
 
 #First all intermediate files MUST be created so there is a 'defines' file!
-linklibs-aminet-comm-term-xprz: $(INTERMEDIATES) libdefs.h includes-copy  $(AROS_LIBS)/$(MODULE)
+linklibs-aminet-comm-term-xprz: includes-copy $(INTERMEDIATES) libdefs.h $(AROS_LIBS)/$(MODULE)
 
 includes-copy: $(INCDIR)/proto/xpr.h $(INCDIR)/defines/xpr.h
 
