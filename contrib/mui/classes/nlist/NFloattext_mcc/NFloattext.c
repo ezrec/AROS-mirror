@@ -1,3 +1,29 @@
+/***************************************************************************
+
+ NFloattext.mcc - New Floattext MUI Custom Class
+ Registered MUI class, Serial Number: 1d51 (0x9d5100a1 to 0x9d5100aF)
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include <stdlib.h>
 #include <string.h>
@@ -5,9 +31,6 @@
 #include <dos/dos.h>
 #include <exec/types.h>
 #include <exec/io.h>
-#include <libraries/mui.h>
-#include <intuition/intuition.h>
-#include <intuition/classusr.h>
 
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -16,37 +39,16 @@
 #include <proto/layers.h>
 #include <proto/graphics.h>
 #include <proto/utility.h>
-#ifdef __AROS__
 #include <proto/intuition.h>
-#endif
 #include <clib/alib_protos.h>
+#include <libraries/mui.h>
 
 #include <proto/muimaster.h>
-
-
-//extern struct TagItem *FindTagItem(Tag,struct TagItem *);
-
 
 #include "private.h"
 #include "rev.h"
 
-#ifndef __AROS__
 #include "mcc_common.h"
-#else
-#include "../commonaros/mcc_common.h"
-#endif
-
-#include <MUI/NFloattext_mcc.h>
-
-
-/****************************************************************************************/
-/****************************************************************************************/
-/******************************                    **************************************/
-/******************************  NFloattext Class  **************************************/
-/******************************                    **************************************/
-/****************************************************************************************/
-/****************************************************************************************/
-
 
 #define imgbt(nr)\
   ImageObject,\
@@ -56,60 +58,56 @@
     MUIA_Image_Spec, (long) nr,\
   End
 
-
-char *CopyText(char *textin)
+static char *CopyText(char *textin)
 {
   char *textout = NULL;
+
   if (textin)
-  { if ((textout = AllocVec(strlen(textin)+2,0L)))
-    { LONG pos = 0;
+  {
+    if((textout = AllocVec(strlen(textin)+2,0L)))
+    {
+      LONG pos = 0;
       while (textin[pos] != '\0')
-      { textout[pos] = textin[pos];
+      {
+        textout[pos] = textin[pos];
         pos++;
       }
       textout[pos] = '\0';
     }
   }
+
   return (textout);
 }
 
-
-#ifdef MORPHOS
-ULONG DoSuperNew(struct IClass *cl, Object *obj, ...)
+#ifdef __AROS__
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
-	ULONG mav[50];
-	ULONG ret;
-	va_list tags;
-	struct opSet myopSet;
-	int i=0;
+  AROS_SLOWSTACKMETHODS_PRE(tag1)
+  
+  retval = DoSuperNewTagList(cl, obj, NULL,  (struct TagItem *) AROS_SLOWSTACKMETHODS_ARG(tag1));
 
-	va_start(tags, obj);
-	while(i<50)
-	{
-		mav[i] = va_arg(tags, ULONG);
-		if(mav[i] == TAG_DONE) break;
-		mav[i+1] = va_arg(tags, ULONG);
-		if(mav[i] == TAG_MORE) break;
-		i += 2;
-	}
-	va_end(tags);
-
-	myopSet.MethodID = OM_NEW;
-	myopSet.ops_AttrList = (struct TagItem *) &mav;
-	myopSet.ops_GInfo = NULL;
-	ret = DoSuperMethodA(cl, obj, (APTR)&myopSet);
-
-	return ret;
+  AROS_SLOWSTACKMETHODS_POST
 }
-#else
-static LONG __stdargs DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
+#elif !defined(__MORPHOS__)
+Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
-  return((LONG)DoSuperMethod(cl,obj,OM_NEW,(LONG)&tag1,NULL));
+  Object *rc;
+  va_list args;
+
+  #if defined(__amigaos4__)
+  va_startlinear(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, va_getlinearva(args, ULONG), NULL);
+  #else
+  va_start(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, args, NULL);
+  #endif
+
+  va_end(args);
+
+  return rc;
 }
 #endif
 
-
-/* static ULONG mNFT_New(struct IClass *cl,Object *obj,Msg msg) */
 static ULONG mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   register struct NFTData *data;
@@ -121,48 +119,57 @@ static ULONG mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
   LONG tagip = MUIA_NList_Input;
   LONG Copied = FALSE;
 
-  if ((tag = FindTagItem(MUIA_NFloattext_SkipChars, msg->ops_AttrList)))
+  if((tag = FindTagItem(MUIA_NFloattext_SkipChars, msg->ops_AttrList)))
     tag->ti_Tag = MUIA_NList_SkipChars;
-  else if ((tag = FindTagItem(MUIA_Floattext_SkipChars, msg->ops_AttrList)))
+  else if((tag = FindTagItem(MUIA_Floattext_SkipChars, msg->ops_AttrList)))
     tag->ti_Tag = MUIA_NList_SkipChars;
 
-  if ((tag = FindTagItem(MUIA_NFloattext_TabSize, msg->ops_AttrList)))
+  if((tag = FindTagItem(MUIA_NFloattext_TabSize, msg->ops_AttrList)))
     tag->ti_Tag = MUIA_NList_TabSize;
-  else if ((tag = FindTagItem(MUIA_Floattext_TabSize, msg->ops_AttrList)))
+  else if((tag = FindTagItem(MUIA_Floattext_TabSize, msg->ops_AttrList)))
     tag->ti_Tag = MUIA_NList_TabSize;
 
-  if ((tag = FindTagItem(MUIA_NFloattext_Text, msg->ops_AttrList)))
-  { Text = (char *) tag->ti_Data;
+  if((tag = FindTagItem(MUIA_NFloattext_Text, msg->ops_AttrList)))
+  {
+    Text = (char *) tag->ti_Data;
     Copied = FALSE;
   }
-  else if ((tag = FindTagItem(MUIA_Floattext_Text, msg->ops_AttrList)))
-  { Text = (char *) tag->ti_Data;
+  else if((tag = FindTagItem(MUIA_Floattext_Text, msg->ops_AttrList)))
+  {
+    Text = (char *) tag->ti_Data;
     Copied = TRUE;
   }
 
-  if ((tag = FindTagItem(MUIA_NList_TypeSelect, msg->ops_AttrList)))
+  if((tag = FindTagItem(MUIA_NList_TypeSelect, msg->ops_AttrList)))
     tagts = TAG_IGNORE;
-  if ((tag = FindTagItem(MUIA_NList_Input, msg->ops_AttrList)))
-  { tagip = TAG_IGNORE;
+
+  if((tag = FindTagItem(MUIA_NList_Input, msg->ops_AttrList)))
+  {
+    tagip = TAG_IGNORE;
     if (tag->ti_Data)
       tagts = TAG_IGNORE;
   }
 
   if ((tag = FindTagItem(MUIA_NFloattext_Justify, msg->ops_AttrList)) ||
       (tag = FindTagItem(MUIA_Floattext_Justify, msg->ops_AttrList)))
-  { if (tag->ti_Data)
-    { Justify = TRUE;
+  {
+    if (tag->ti_Data)
+    {
+      Justify = TRUE;
       Align = ALIGN_JUSTIFY;
     }
     else
-    { Justify = FALSE;
+    {
+      Justify = FALSE;
       Align = ALIGN_LEFT;
     }
   }
 
-  if ((tag = FindTagItem(MUIA_NFloattext_Align, msg->ops_AttrList)))
-  { data = INST_DATA(cl,obj);
+  if((tag = FindTagItem(MUIA_NFloattext_Align, msg->ops_AttrList)))
+  {
+    data = INST_DATA(cl,obj);
     data->NFloattext_Align = tag->ti_Data & ALIGN_MASK;
+
     if (Align == ALIGN_JUSTIFY)
       Justify = TRUE;
     else
@@ -176,21 +183,26 @@ static ULONG mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
   );
 
   if (obj)
-  { data = INST_DATA(cl,obj);
+  {
+    data = INST_DATA(cl,obj);
     data->NFloattext_Justify = Justify;
     data->NFloattext_Align = Align;
     data->NFloattext_entry = NULL;
     data->NFloattext_entry_len = 0;
     data->NFloattext_Copied = FALSE;
+
     if (Copied && Text)
-    { data->NFloattext_Text = CopyText(Text);
+    {
+      data->NFloattext_Text = CopyText(Text);
       data->NFloattext_Copied = TRUE;
     }
     else
       data->NFloattext_Text = Text;
+
     if (data->NFloattext_Text)
-      DoMethod(obj,MUIM_NList_InsertWrap,(ULONG)data->NFloattext_Text,-2,MUIV_NList_Insert_Bottom,1,data->NFloattext_Align);
+      DoMethod(obj,MUIM_NList_InsertWrap,data->NFloattext_Text,-2,MUIV_NList_Insert_Bottom,1,data->NFloattext_Align);
   }
+
   return((ULONG) obj);
 }
 
@@ -233,7 +245,7 @@ static ULONG mNFT_Set(struct IClass *cl,Object *obj,Msg msg)
         else
           data->NFloattext_Text = (char *) tag->ti_Data;
         if (data->NFloattext_Text)
-          DoMethod(obj,MUIM_NList_InsertWrap,(ULONG)data->NFloattext_Text,-2,MUIV_NList_Insert_Bottom,1,data->NFloattext_Align);
+          DoMethod(obj,MUIM_NList_InsertWrap,data->NFloattext_Text,-2,MUIV_NList_Insert_Bottom,1,data->NFloattext_Align);
         break;
       case MUIA_Floattext_Justify:
       case MUIA_NFloattext_Justify:
@@ -310,7 +322,7 @@ static ULONG mNFT_GetEntry(struct IClass *cl,Object *obj,struct MUIP_NFloattext_
   struct MUI_NList_GetEntryInfo gei;
   gei.pos = msg->pos;
   gei.line = 0;
-  DoMethod(obj, MUIM_NList_GetEntryInfo, (ULONG)&gei);
+  DoMethod(obj, MUIM_NList_GetEntryInfo, &gei);
   if ((gei.entry_pos >= 0) && gei.entry)
   { if (gei.wrapcol)
     { char *entry = gei.entry;
@@ -341,27 +353,10 @@ static ULONG mNFT_GetEntry(struct IClass *cl,Object *obj,struct MUIP_NFloattext_
 }
 
 
-#ifdef MORPHOS
-ULONG _Dispatcher_gate(void)
+DISPATCHERPROTO(_Dispatcher)
 {
-  struct IClass *cl = REG_A0;
-  Msg msg = REG_A1;
-  Object *obj = REG_A2;
-#elif defined(__AROS__)
-AROS_UFH3(IPTR, _Dispatcher,
-    AROS_UFHA(struct IClass *, cl, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(Msg, msg, A1))
-{
-#else
-ULONG ASM SAVEDS _Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) Msg msg GNUCREG(a1) )
-{
-#endif
-
-#ifdef __AROS__
-  AROS_USERFUNC_INIT
-#endif
-
+  DISPATCHER_INIT
+  
   switch (msg->MethodID)
   {
     case OM_NEW                   : return (           mNFT_New(cl,obj,(APTR)msg));
@@ -372,9 +367,7 @@ ULONG ASM SAVEDS _Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Obj
     case MUIM_NFloattext_GetEntry : return (      mNFT_GetEntry(cl,obj,(APTR)msg));
   }
   return(DoSuperMethodA(cl,obj,msg));
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
+  
+  DISPATCHER_EXIT
 }
 

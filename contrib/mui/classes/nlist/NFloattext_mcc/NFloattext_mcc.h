@@ -1,12 +1,32 @@
-/*
-  NFloattext.mcc (c) Copyright 1996 by Gilles Masson
-  Registered MUI class, Serial Number: 1d51                            0x9d5100a1 to 0x9d5100aF
-  *** use only YOUR OWN Serial Number for your public custom class ***
-  NFloattext_mcc.h
-*/
-
 #ifndef MUI_NFloattext_MCC_H
 #define MUI_NFloattext_MCC_H
+
+/***************************************************************************
+
+ NFloattext.mcc - New Floattext MUI Custom Class
+ Registered MUI class, Serial Number: 1d51 (0x9d5100a1 to 0x9d5100aF)
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #ifndef LIBRARIES_MUI_H
 #include <libraries/mui.h>
@@ -17,8 +37,8 @@
 #endif
 
 #define MUIC_NFloattext "NFloattext.mcc"
-#define NFloattextObject MUI_NewObject(MUIC_NFloattext
 
+#define NFloattextObject MUI_NewObject(MUIC_NFloattext
 
 /* Attributes */
 
@@ -30,6 +50,5 @@
 
 #define MUIM_NFloattext_GetEntry            0x9d5100aF /* GM */
 struct  MUIP_NFloattext_GetEntry            { ULONG MethodID; LONG pos; APTR *entry; };
-
 
 #endif /* MUI_NFloattext_MCC_H */
