@@ -1,0 +1,154 @@
+/*
+ Translation rules:
+
+  1. Do not change leading spaces in the string, always leave unchanged
+     any trailing space (except as defined in the comment).
+
+  2. Do not change special characters (e.g. '\n' and '%..') in the string.
+
+  3. Do not change upper case characters to lower case and vice versa.
+
+*/
+
+/* User choices
+  Every word in the next 4 strings should begin with a different upper case
+	letter.
+*/
+
+#define MYesNo        "_Yes_No"
+#define MYesNoAll     "_Yes_No_All"
+#define MYesNoAllRenQ "_Yes_No_All_Rename_Quit"
+#define MContinueQuit "_Continue_Quit"
+
+#define MCmpYesStr    "Yes"
+
+#define MUCopyright "\nUNRAR 2.71 freeware      Copyright (c) 1993-2000 Eugene Roshal\n"
+
+#define MUCHelp1  "\nUsage:     UNRAR <command> -<switch 1> -<switch N> <archive> <files...>"
+#define MUCHelp2  "\n                 <@listfiles...> <path_to_extract\\>"
+#define MUCHelp3  "\n           Specify empty listfile name to read names from stdin\n"
+
+#define MUCHelp4  "\n<Commands>"
+#define MUCHelp5  "\n  x     Extract with full path        e    Extract to current directory"
+#define MUCHelp6  "\n  t     Test archive files            p    Print file to stdout"
+#define MUCHelp7  "\n  l     List contents of archive      v    Verbosely list contents of archive"
+
+#define MUCHelp8  "\n\n<Switches>"
+#define MUCHelp9  "\n  r     Recurse subdirectories        y     Assume Yes on all queries"
+#define MUCHelp10 "\n  o+    Overwrite existing files      o-    Do not overwrite existing files"
+#define MUCHelp11 "\n  f     Freshen files                 u     Update files"
+#define MUCHelp12 "\n  v             List all volumes"
+#define MUCHelp13 "\n  c-            Disable comments show"
+#define MUCHelp14 "\n  x<file>       Exclude specified file"
+#define MUCHelp15 "\n  x@<list>      Exclude files in specified list file"
+#define MUCHelp16 "\n  x@            Read file names to exclude from stdin"
+#define MUCHelp17 "\n  p<password>   Set password"
+#define MUCHelp18 "\n  p-            Do not query password"
+#define MUCHelp19 "\n  kb            Keep broken extracted files"
+#define MUCHelp20 "\n  ierr          Send all messages to stderr"
+#define MUCHelp21 "\n  inul          Disable all messages"
+
+#define MBadArc          "\nERROR: Bad archive %s\n"
+
+#define MAskPsw      "Enter password (will not be echoed)"
+#define MReAskPsw    "\nReenter password: "
+#define MFor         " for "
+
+#define MNotMatchPsw "\nERROR: Passwords do not match\n"
+
+#define MErrWrite      "Write error"
+#define MErrRead       "Read error"
+#define MErrSeek       "Seek error"
+#define MErrFOpen      "File open error"
+#define MErrFCreat     "File create error"
+#define MErrFClose     "File close error"
+#define MErrOutMem     "Not enough memory"
+#define MErrBrokenArc  "Broken archive - use 'Repair' command"
+#define MProgAborted   "Program aborted"
+
+#define MCannotCreate "\nCannot create %s"
+#define MCannotOpen   "\nCannot open %s\n"
+
+#define MOk           " Ok"
+#define MDone         "\nDone"
+
+#define MAbsNextVol   "\nCannot find volume %s"
+#define MLogAbsVol    "Required volume absent"
+
+#define MBreak        "\nUser break\n"
+
+#define MAskCreatVol  "\nCreate next volume ?"
+#define MAskNextDisk  "\nDisk full. Insert next"
+#define MAskNextVol   "\nInsert disk with %s"
+
+#define MTestVol      "\n\nTesting archive %s\n"
+#define MExtrVol      "\n\nExtracting from %s\n"
+#define MNotRAR       "\n%s is not RAR archive"
+#define MUnknownMeth  "\nUnknown method in %s"
+
+#define MCRCFailed        "CRC failed"
+
+#define MExtrTest         "\n\nTesting archive %s\n"
+#define MExtracting       "\n\nExtracting from %s\n"
+
+#define MNeedFirstVol     "\nERROR: Solid archive. First volume required\n"
+
+#define MUseCurPsw        "\n%s - use current password ?"
+
+/*
+The following 7 strings should have '%-56s' in the same position
+*/
+
+#define MExtrSkipDir  "\nSkipping    %-56s"
+#define MExtrTestDir  "\nTesting     %-56s Ok"
+#define MCreatDir     "\nCreating    %-56s Ok"
+#define MExtrSkipFile "\nSkipping    %-56s"
+#define MExtrTestFile "\nTesting     %-56s"
+#define MExtrFile     "\nExtracting  %-56s"
+#define MExtrPoints   "\n...         %-56s"
+
+#define MExtrErrMkDir "\nCannot create directory %s"
+#define MExtrPrinting "\n------ Printing %s\n\n"
+
+#define MEncrBadCRC   "\nEncrypted file:  CRC failed in %s (password incorrect ?)"
+#define MLogEncrBadCRC "CRC failed (password incorrect ?)"
+
+#define MExtrNoFiles  "\nNo files to extract"
+#define MExtrAllOk    "\nAll OK"
+#define MExtrTotalErr "\nTotal errors: %ld"
+#define MFileExists   "\n\n%s already exists. Overwrite it ?"
+
+#define MAskOverwrite "\nOverwrite %s ?"
+#define MAskNewName   "\nEnter new name: "
+
+#define MLogMainHead  "Archive header broken"
+#define MLogFileHead  "file header broken"
+#define MLogCommHead  "Comment header broken"
+
+#define MViewCmtOutMem   "\nWARNING: Not enough memory to extract comment\n"
+#define MLogCommBrk      "Comment broken"
+#define MLogBrokFCmt     "File comment broken"
+
+#define MListSolid     "Solid "
+#define MListSFX       "SFX "
+#define MListVol1      "volume"
+#define MListVol2      "Volume"
+#define MListArc1      "archive"
+#define MListArc2      "Archive"
+#define MListRecRec    "\nRecovery record present\n"
+#define MListLock      "\nLock present\n"
+#define MListPathComm  "\nPathname/Comment\n            "
+
+/*
+Don't change lengths and word postions in the next 3 strings
+*/
+
+#define MListName      "\n Name       "
+#define MListTitle     "      Size   Packed Ratio  Date   Time     Attr      CRC   Meth Ver\n"
+
+#define MListNoFiles   "  0 files\n"
+
+#define MLogUnexpEOF   "Unexpected end of archive"
+
+#define MDataBadCRC       "\n%-20s : packed data CRC failed in volume %s"
+#define MDataLogCRC       "Packed data CRC failed"

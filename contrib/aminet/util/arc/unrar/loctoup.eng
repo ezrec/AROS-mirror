@@ -1,0 +1,22 @@
+/* Converts a character to upper case with regard to particular language rules
+
+   This has caused some confusion amongst the non-programmers amongst you.
+   Some languages, Spanish, Swedish, Finnish, Danish and others use
+   characters which are not in the range 32 - 127 decimal and therefore the
+   standard algorithm to convert to Uppercase needs to be modified.
+
+   The example given below (commented) is of the Spanish conversion, but
+   simply lists the characters which need to be handled in a special way.
+   To modify for YOUR local language, simply replace the lower and
+   Upper-case special characters with your own and add or delete case
+   statements so that you have covered ALL the special characters in your
+   language.  Don't forget to uncomment the lines which you have changed.
+*/
+
+int loctoupper(int ch)
+{
+  if (ch<130)
+    return(toupper(ch));
+  return (ch);
+}
+
