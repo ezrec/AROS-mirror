@@ -15,6 +15,69 @@ AROS System Development Manual
 
 .. Contents::
 
+----------------
+Licensing policy
+----------------
+
+Almost all code written by the AROS Development Team is licensed under the 
+AROS Public License (APL), and this is the recommended choice for all new code 
+written for the project. 
+
+However, we understand that this is not always possible; for example we often 
+want to use good third party libraries and applications instead of reinventing
+the wheel ourselves. Therefore it is allowed to import foreign code into the 
+CVS repository that is not licensed under the APL, as long as the license
+of that code satisfies the requirements below.
+
+
+Requirements on source code in the contrib tree
+===============================================
+
+To include source code in the contrib tree, the following requirements must 
+be satisfied:
+
+1. The license must allow us to:
+
+   a. Redistribute the sources.
+   c. Redistribute the binaries.
+
+   If changes to the source code are necessary to make it compile and work 
+   for AROS, then additionally the license must allow us to make modifications
+   and redistribute sources and binaries containing those modifications.
+
+2. The license must be explicitly stated in a file named LEGAL located in the 
+   root directory of the sources it applies to.
+
+   
+Requirements on source code in the main AROS tree
+=================================================
+
+To include foreign source code, which is not licensed under the APL, in the 
+main AROS tree the following requirements must be satisfied:
+
+1. The source code is required to build some component or is depended upon by
+   some other component (which might or might not be APL) that we want to be 
+   included in the binary base distribution of AROS.
+
+2. The license must be open source as defined by the Open Source Initiative
+   (OSI), meaning that it must be allowed for us to:
+
+   a. Make modifications.
+   b. Redistribute the source (possibly with modifications).
+   c. Redistribute the binaries (possibly based on modified sources).
+
+2. The license does not conflict with the APL:
+   
+   a. If it is a standalone program, almost any license that complies with (2)
+      is allowed.
+
+   b. If it is a library, the license must allow linking with programs and
+      libraries that use a different license without any problems. This means
+      that libraries that are under GPL (as opposed to LGPL) are dissallowed.
+
+3. The license must be explicitly stated in a file named LEGAL located in the
+   root directory of the sources it applies to.
+   
 
 ------------------
 Coding conventions
