@@ -7,6 +7,9 @@ Sponsors
 :Date:      $Date$
 :Status:    Done.
 
+
+The following companies and organizations have donated resources:
+
 + Trustec__
    
   .. RAW:: html
@@ -35,6 +38,21 @@ Sponsors
   SourceForge provides us with several services like a web server with 
   scripting extensions and SQL database, mailing lists, bug database and 
   distributed file release system.  
+
+
+The following individuals have sponsored development work:
+
++ Timothy Rue
++ Jakob Eriksson
++ Serge Guillaume
++ David Ferguson
++ Nils-Erik Reklev Skilnand
++ Jonny Johansson
++ Johan Grip
++ Marcus Karlsson
++ Rne Jensen
++ Joshua Dolan
++ Matthew Parsons
 
 
 __ http://www.trustsec.de/
