@@ -80,7 +80,6 @@
  *  See Documentation for a detailed discussion.
  */
  
-#define AROS_ALMOST_COMPATIBLE
 
 #include <stddef.h>
 #include <stdlib.h>
