@@ -7,9 +7,6 @@
 //INTERRUPT 
 SAVEDS int VBlankInterface( void );
 
-extern struct Library *TimerBase;
-
-
 struct EClockVal eclock;
 ULONG E_Freq;
 UWORD E_Freq_1000;

@@ -43,7 +43,6 @@ extern struct Library			*DatatypesBase;
 extern struct Library			*AslBase;
 extern struct Library			*WorkbenchBase;
 extern struct Library			*CamdBase;
-extern struct Library			*TimerBase;
 extern BOOL				 FPBase;	/* pseudo floating point base */
 
 
