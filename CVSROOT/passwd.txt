@@ -76,5 +76,6 @@ pablo:cdT1Zu9CY2ShM:Pawel Kolodziejski:pablo@rudykot.pl:
 eirikns:ba5EqokvhpnPc:Eirik Nicolai Synnes:eirikns@ifi.uio.no:
 phillwooller:ac4kAjAMFmiLc:Phill Wooller:phillwooller@noelite.freeserve.co.uk:
 stegerg:bdYHJK6vZiYUo:Helmut Steger:steger@pass.dnet.it:
+jadamcze:acf4uH7RbVseI:Jonathan Adamczewski:jadamcze@postoffice.utas.edu.au:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
