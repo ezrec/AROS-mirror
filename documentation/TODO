@@ -7,8 +7,6 @@ site goes public.
 
   - Status (jobs and size)
 
-+ Fix silly amounts of system messages in picture galleries.
-
 + Better language selection system
 
   The current system uses the content negatotiation support using the
@@ -34,7 +32,7 @@ site goes public.
   don't add any more dependencies (ie. a XSLT processing tool). Hard to say
   which would be fastest to implement...
 
-  + Write an explanation of the license and what it entails. Integrate the 
++ Write an explanation of the license and what it entails. Integrate the 
   license page better with the rest of the site.
 
 + Write an announcement about the updated site, pointing out new features like 
