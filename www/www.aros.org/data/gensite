@@ -59,6 +59,7 @@ def genScreenshots ():
     tn3 = Thumbnail ('pics/developers/nlorentz.jpg')
     tn4 = Thumbnail ('pics/developers/periksson.jpg')
     tn5 = Thumbnail ('pics/developers/sheutling.jpg')
+    tn6 = Thumbnail ('pics/developers/falemagn.jpg')
     page.append (
 	Href ('#PicturesAroundAROS', '1. Pictures around AROS'),
 	BR (),
@@ -76,6 +77,8 @@ def genScreenshots ():
 	ThumbnailTable (tn4),
 	Paragraph ('Picture of Sebastian Heutling:'),
 	ThumbnailTable (tn5),
+	Paragraph ('Picture of Fabio Alemagna:'),
+	ThumbnailTable (tn6),
 	Paragraph ('Hopefully, more pictures of AROS developers will'
 	    ' show up here :-)'),
 	Name ('Screenshots'),
@@ -88,6 +91,12 @@ def genScreenshots ():
     page.imagesToFix.append (tn2.img)
     page.linksToFix.append (tn3.href)
     page.imagesToFix.append (tn3.img)
+    page.linksToFix.append (tn4.href)
+    page.imagesToFix.append (tn4.img)
+    page.linksToFix.append (tn5.href)
+    page.imagesToFix.append (tn5.img)
+    page.linksToFix.append (tn6.href)
+    page.imagesToFix.append (tn6.img)
 
     def processDir (dir, page=page):
 	'''Read a directory and put all pictures in it into ThumbnailTables.
@@ -101,7 +110,7 @@ def genScreenshots ():
 	fh = open (os.path.join (dir, 'README'), 'r')
 	text = fh.read ()
 	fh.close ()
-	
+
 	list = [
 	    Paragraph (RawText ('%s - %s' % (date, text))),
 	]
@@ -122,10 +131,10 @@ def genScreenshots ():
 	    pics.append (tn)
 	    page.linksToFix.append (tn.href)
 	    page.imagesToFix.append (tn.img)
-	
+
 	list.append (apply (ThumbnailTable, pics))
 	return list
-	    
+
     # Read all screenshots and sort them by date.
     dirs = glob.glob (os.path.join (screenshoturl, '[0-9]*'))
     dirs.sort ()
