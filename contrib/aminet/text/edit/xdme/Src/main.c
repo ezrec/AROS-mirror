@@ -65,7 +65,7 @@ typedef struct DiskObject   DISKOBJ;
 static WORD	 oMx, oMy;	    /* starting coords */
 static ULONG	 newxdme;	    /* force new xdme */
 
-static const char default_startupfile[] = ".edrc";
+static const char default_startupfile[] = ".XDME.edrc";
 static const char default_projectfile[] = "XDME_Project_File";
 
 static const char tmplate[] = "Files/M,"
@@ -241,23 +241,17 @@ int main (int mac, char ** mav)
     mountrequest (0);
     openrexx ();     /*   do this after the last possible call to exiterr() */
     mountrequest (1);
-DL;
 
     /* Init Keyboard */
     new_menustrip ("default",1);        /* PATCH_NULL [13 Sep 1994] : instead of init_structures(); */
-DL;
     new_keytable  ("default",1);        /* PATCH_NULL [13 Sep 1994] : instead of init_structures(); */
-DL;
 
     /* Init CommandShell */ /* PATCH_NULL [13 Sep 1994] : added */
     CMDSH_Initialize ();
-DL;
     Mask |= CMDSH_SigMask;
-DL;
 
     /* Init AppIcon */ /* PATCH_NULL [21 Sep 1994] : added */
     APIC_Initialize ();
-DL;
     Mask |= APIC_SigMask;
 
     {
@@ -269,7 +263,6 @@ DL;
 
 	newxdme = (!strcmp (RexxPortName, "XDME.1") || !mp);
     }
-DL;
 
     nf = 0;
     /* Here we have to set the names BEFORE the parsing since none of the
@@ -280,7 +273,6 @@ DL;
     /* WB-Startup or CLI ? */
     if (Wbs)
     {
-DL;
 	/* Work on TOOLTypes */
 	if (Wbs->sm_ArgList[0].wa_Lock)
 	{
@@ -322,7 +314,6 @@ DL;
     }
     else
     {
-DL;
 	XDMEArgs.newxdme = newxdme;
 
 	/* Parse CLI-args */
@@ -347,7 +338,6 @@ DL;
 	    }
 	}
     }
-DL;
 
 #ifdef DEBUG
     D(bug("Parsed ARGS\n"));
@@ -389,64 +379,57 @@ DL;
 		XDMEArgs.publicscreenname : "WBench"));
 #endif
 
-DL;
     /* Free args */
     if (XDMEArgs.ra)
 	FreeArgs (XDMEArgs.ra);
-DL;
 
     if (!nf)
     {  /* no files to edit: Open simple empty window */
-DL;
 	if (XDMEArgs.newxdme || newxdme)
 	{
-DL;
 	    do_newwindow ();
-DL;
 	    if (!Ep)
 		goto quit_dme;
-DL;
 
 	    if (XDMEArgs.iconify)
 	    {
-DL;
 		do_iconify ();
 	    }
-DL;
 	}
 	else
 	{
-DL;
 	    if (XDMEArgs.iconify)
 	    {
-DL;
 		do_rexx ("XDME.1", "newwindow iconify");
 	    } else
 	    {
-DL;
 		do_rexx ("XDME.1", "newwindow");
 	    }
 	}
     } /* No files */
-DL;
 
     if (!XDMEArgs.newxdme) /* All done, quit */
 	goto quit_dme;
-DL;
 
     /* Read main .edrc file */
+DL;
     mountrequest (0);
     av[0] = "source";
-    av[1] = (UBYTE *)"s:.edrc";
+    av[1] = (UBYTE *)"S:XDME.edrc";
+DL;
     do_source (TRUE);   /* Display error */
+DL;
 
     /* Read other file (if possible) */
     if (NameFromLock (origlock, tmp_buffer, sizeof(tmp_buffer)))
     {
+DL;
 	AddPart (tmp_buffer, XDMEArgs.startupfile, sizeof(tmp_buffer));
 	av[1] = tmp_buffer;
+DL;
 	do_source (FALSE); /* Not */
     }
+DL;
     mountrequest (1);
 DL;
 
@@ -767,18 +750,21 @@ DL;
 
 		    case IDCMP_RAWKEY: {
 			IMESS	copy;
-			ULONG	prevkeys;		    /* PATCH_NULL 27-06-94 */
+			ULONG	prevkeys;
 
 			/* Keybuttons stop Click-sequences */
-			NumClicks = 0;			    /* PATCH_NULL 22-08-94 */
+			NumClicks = 0;
 			/* Should we add that "NoMoreIntuiticks" here, too? */
 
 			/* Prevent crashing in do_iconify()->
 			   closesharedwindow */
 
 			copy = *im;
-			prevkeys = *(ULONG*)im->IAddress;   /* PATCH_NULL 27-06-94 */
-			copy.IAddress = &prevkeys;	    /* PATCH_NULL 27-06-94 */
+			if (im->IAddress)
+			    prevkeys = *(ULONG*)im->IAddress;
+			else
+			    prevkeys = 0;
+			copy.IAddress = &prevkeys;
 
 			ReplyMsg ((struct Message *)im);
 			im = NULL;
@@ -789,11 +775,10 @@ DL;
 		    break; } /* IDCMP_RAWKEY */
 
 		    case IDCMP_MENUPICK: {
-			/* PATCH_NULL [02 Apr 1993] : menucontrol like keycontrol >>> */
 			IMESS copy;
 
 			/* Menues stop Click-sequences */
-			NumClicks = 0;			    /* PATCH_NULL 22-08-94 */
+			NumClicks = 0;
 			/* Should we add that "NoMoreIntuiticks" here, too? */
 
 			/* Prevent crashing in do_iconify()-> closesharedwindow */
