@@ -502,28 +502,16 @@ fourth of the real pointer. If, for example, a pointer points to address
 ``$80000`` the `BPTR` pointing to the same address would contain ``$20000``.
 On systems without binary-compatibility, a `BPTR` is equal to an `APTR`.
           
-To convert between a normal pointer and a `BPTR` use the macros
+To convert between a normal pointer and a `BPTR` use the macros::
 
-***FIXME: How to handle this in reST??
+    #include <dos/bptr.h>
 
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;dos/bptr.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>APTR <FUNCTION>MKBADDR</FUNCTION></FUNCDEF>
-              <PARAMDEF>BPTR <PARAMETER>bptr</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>BPTR <FUNCTION>BADDR</FUNCTION></FUNCDEF>
-              <PARAMDEF>APTR <PARAMETER>ptr</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
+    APTR MKBADDR( BPTR bptr );
+    BPTR BADDR( APTR ptr );
           
 There also exists something called `BSTR` which is a special kind of string. 
 We will not dicuss this here, though, because it is used only very rarely.
 
-***FIXME: How to handle "sidebar" in reST?
-
-<SIDEBAR>
 
 History
 ^^^^^^^
@@ -614,40 +602,33 @@ knows how to access it. Your compiler may addtionally open some
 libraries for you, so you don't have to open them manually. Read your
 compiler's manual to learn about such features.
 
-To open a library you have to use a function of
-`exec.library`:
-<FUNCSYNOPSIS>
-<FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-<FUNCPROTOTYPE>
-<FUNCDEF>struct Library * <FUNCTION>OpenLibrary</FUNCTION></FUNCDEF>
-<PARAMDEF>STRPTR <PARAMETER>name</PARAMETER></PARAMDEF>
-<PARAMDEF>ULONG <PARAMETER>version</PARAMETER></PARAMDEF>
-</FUNCPROTOTYPE>
-</FUNCSYNOPSIS>
+To open a library you have to use a function of `exec.library`::
+
+    #include <proto/exec.h>
+
+    struct Library *OpenLibrary( STRPTR name, ULONG version );
 
 `OpenLibrary()` takes two arguments:
 
 name 
-    points to the name of
-    the library. Normally this is just the plain name, but this can
-    also be a complete (absolute or relative) path to the library.
+    points to the name of the library. Normally this is just the plain name, but
+    this can also be a complete (absolute or relative) path to the library.
     
     .. Note:: Paths do not work with kernel-based libraries
               (ie. libraries that are included in the kernel).
               Use absolute path only, if you know exactly, what you 
               are doing!
 
-version 
-    is the minimal
-    version of the library to open. If the named library is found, but
-    its version is lower than `version`, the
-    library will not be opened, but an error will be returned. Versions
-    are important, because libraries are supposed to be expandable. Some
-    functions are only available from a certain version of a library on.
-    For example the function `AllocVec()` of `exec.library` was introduced in version 36
-    of the library. If you try to call this function with lower versions
-    of `exec.library` installed, unexpected things
-    will happen (most likely the application will crash).
+version
+    is the minimal version of the library to open. If the named library is
+    found, but its version is lower than `version`, the library will not be
+    opened, but an error will be returned. Versions are important, because
+    libraries are supposed to be expandable. Some functions are only available
+    from a certain version of a library on. For example the function
+    `AllocVec()` of `exec.library` was introduced in version 36 of the library.
+    If you try to call this function with lower versions of `exec.library`
+    installed, unexpected things will happen (most likely the application will
+    crash).
 
 The following procedure is used to load the library to open:
 
@@ -680,39 +661,29 @@ use. Normally it is stored in a variable in the form:
 <libraryname>Base, eg. `IntuitionBase` for the pointer to
 `intuition.library`.
 
-After opening the library, you can use its functions by just
-calling them like any other function in your program. But to let your
-compiler know, what to do, you have to include the
-library-specific header-file. This is normally called
-proto/<libraryname>.h for
-C compilers.
+After opening the library, you can use its functions by just calling them like
+any other function in your program. But to let your compiler know, what to do,
+you have to include the library-specific header-file. This is normally called
+proto/<libraryname>.h for C compilers.
 
-When you have finished using the library you have to close it
-again to free the resources used by it. This is performed with:
-<FUNCSYNOPSIS>
-  <FUNCSYNOPSISINFO>#include <proto/exec.h></FUNCSYNOPSISINFO>
-  <FUNCPROTOTYPE>
-    <FUNCDEF>void <FUNCTION>CloseLibrary</FUNCTION></FUNCDEF>
-    <PARAMDEF>struct Library * <PARAMETER>libbase</PARAMETER></PARAMDEF>
-  </FUNCPROTOTYPE>
-</FUNCSYNOPSIS>
+When you have finished using the library you have to close it again to free the
+resources used by it. This is performed with::
 
-:function:`CloseLibrary()` closes the library pointed
-to by `libbase`. This may also be
-`NULL`, in which case `CloseLibrary()`
-does nothing.
+    #include <proto/exec.h>
 
-We will demonstrate the use of libraries by creating a small
-graphical hello-world program. Instead of printing ``Hello World!`` to
-the console, we will display it in a requester. A function to display
-a requester is :function:`EasyRequestArgs()`,
-being a function of `intuition.library`.
-We will not discuss its usage here. For more information, see the
-section about `Requesters`.
+    void CloseLibrary( struct Library *base );
 
-Example: Usage of libraries
+:function:`CloseLibrary()` closes the library pointed to by `base`. This may
+also be `NULL`, in which case `CloseLibrary()` does nothing.
 
-::
+We will demonstrate the use of libraries by creating a small graphical
+hello-world program. Instead of printing ``Hello World!`` to the console, we
+will display it in a requester. A function to display a requester is
+:function:`EasyRequestArgs()`, being a function of `intuition.library`. We will
+not discuss its usage here. For more information, see the section about
+`Requesters`.
+
+Example usage of libraries::
 
     #include <proto/exec.h>          /* OpenLibrary() and CloseLibrary() */
     #include <exec/libraries.h>      /* struct Library */
@@ -760,25 +731,20 @@ handsome hello-world requester.
 Giving additional arguments with taglists
 """""""""""""""""""""""""""""""""""""""""
 
-Every library function takes a fixed number of arguments. This
-poses quite a problem with complex functions that would need a lot of
-arguments. To avoid this problem, so-called taglists were introduced.
-In `utility/tagitem.h`
-we find a structure `TagItem`, which contains
-the members `ti_Tag` and
-`ti_Data`. A taglist contains of an array of
-this structure. The size of the list is not limited. The field
-`ti_Tag` is an identifier (often referred to
-as Tag) that declares what
-`ti_Data` contains.
-`ti_Data` is either an integer or a pointer.
-It is guaranteed to be at least of the size of a long-word or a
-pointer (whichever is bigger).
+Every library function takes a fixed number of arguments. This poses quite
+a problem with complex functions that would need a lot of arguments. To avoid
+this problem, so-called taglists were introduced. In `utility/tagitem.h` we find
+a structure `TagItem`, which contains the members `ti_Tag` and `ti_Data`.
+A taglist contains of an array of this structure. The size of the list is not
+limited. The field `ti_Tag` is an identifier (often referred to as Tag) that
+declares what `ti_Data` contains. `ti_Data` is either an integer or a pointer.
+It is guaranteed to be at least of the size of a long-word or a pointer
+(whichever is bigger).
 
-In every description of a function that uses a tag-list, all
-possible tags are listed. Functions have to ignore unknown tags and
-use defaults for tags not provided, so taglists are a very flexible
-way of providing arguments to a function.
+In every description of a function that uses a tag-list, all possible tags are
+listed. Functions have to ignore unknown tags and use defaults for tags not
+provided, so taglists are a very flexible way of providing arguments to
+a function.
 
 There are some special tags that all functions understand
 (defined in `utility/tagitem.h`):
@@ -810,63 +776,37 @@ You may always provide `NULL` instead of a pointer to a taglist. All functions
 must be able to handle `NULL` pointers. They are equal to taglists with
 `TAG_DONE` as first tag.
 
-A function that requires a taglist is:
+A function that requires a taglist is::
 
-<FUNCSYNOPSIS>
-  <FUNCSYNOPSISINFO>#include <proto/intuition.h></FUNCSYNOPSISINFO>
-  <FUNCPROTOTYPE>
-    <FUNCDEF>struct Window * <FUNCTION>OpenWindowTagList</FUNCTION></FUNCDEF>
-    <PARAMDEF>struct NewWindow * <PARAMETER>newwin</PARAMETER></PARAMDEF>
-    <PARAMDEF>struct TagList * <PARAMETER>taglist</PARAMETER></PARAMDEF>
-  </FUNCPROTOTYPE>
-</FUNCSYNOPSIS>
-This function will be discussed in detail in the
-<LINK linkend="chap-windows">chapter about windows</LINK>. For
-    now you only have to know that this function opens a new window.
-    We set the argument <PARAMETER>newwin</PARAMETER> to
-    <SYMBOL>NULL</SYMBOL>. The only tags looked at for now are:
-    <INFORMALTABLE colsep="0" rowsep="0" frame="none">
-      <TGROUP cols="3">
-        <COLSPEC align="left">
-        <COLSPEC align="left">
-        <COLSPEC align="left">
-        <THEAD><ROW><ENTRY>Tag</ENTRY><ENTRY>Description</ENTRY><ENTRY><STRUCTFIELD>ti_Data</STRUCTFIELD></ENTRY></ROW></THEAD>
-        <TBODY>
-          <ROW>
-            <ENTRY><SYMBOL>WA_Width</SYMBOL></ENTRY>
-            <ENTRY>width of window in pixel</ENTRY>
-            <ENTRY><SYMBOL>UWORD</SYMBOL>
-          </ROW>
-          <ROW>
-            <ENTRY><SYMBOL>WA_Height</SYMBOL></ENTRY>
-            <ENTRY>height of window in pixel</ENTRY>
-            <ENTRY><SYMBOL>UWORD</SYMBOL>
-          </ROW>
-          <ROW>
-            <ENTRY><SYMBOL>WA_Title</SYMBOL></ENTRY>
-            <ENTRY>string in window title</ENTRY>
-            <ENTRY><SYMBOL>STRPTR</SYMBOL></ENTRY>
-          </ROW>
-        </TBODY>
-      </TGROUP>
-    </INFORMALTABLE>
-    Another function we need for our small example is:
-    <FUNCSYNOPSIS>
-          <FUNCSYNOPSISINFO>#include &lt;proto/intuition.h></FUNCSYNOPSISINFO>
-          <FUNCPROTOTYPE>
-            <FUNCDEF>void <FUNCTION>CloseWindow</FUNCTION></FUNCDEF>
-            <PARAMDEF>struct Window * <PARAMETER>win</PARAMETER></PARAMDEF>
-          </FUNCPROTOTYPE>
-        </FUNCSYNOPSIS>
-        This function is used to close an opened window.
+    #include <proto/intuition.h>
 
-        Now let's have a look at another small hello-world-program.
-        This opens window, which says "Hello World!" in the title-bar,
-        for two seconds.
+    struct Window *OpenWindowTagList
+    ( 
+        struct NewWindow *newwin, struct TagList *taglist 
+    );
 
-Example: Usage of taglists
+This function will be discussed in detail in the `chapter about windows`_. For
+now you only have to know that this function opens a new window. We set the
+argument `newwin` to ``NULL``. The only tags looked at for now are: 
+       
+==========  ===============================  ========
+Tag         Description                      Type
+==========  ===============================  ========
+WA_Width    Width of window in pixels        UWORD
+WA_Height   Height of window in pixels       UWORD
+WA_Title    Window title                     STRPTR
+==========  ===============================  ========
 
-::
+Another function we need for our small example is::
+
+    #include <proto/intuition.h>
+
+    void CloseWindow( struct Window *window );
+
+This function is used to close an opened window.
+
+Now let's have a look at another small hello-world-program. This opens window,
+which says "Hello World!" in the title-bar, for two seconds::
 
     #include <proto/exec.h>
     #include <exec/libraries.h>
@@ -924,47 +864,32 @@ most functions that use taglists short-cuts are available. The link-library
 `amiga.lib` provides these short-cuts for all internal AROS functions. These
 varargs versions can be used like this:
 
-    <FUNCSYNOPSIS>
-          <FUNCSYNOPSISINFO>#include &lt;proto/alib.h></FUNCSYNOPSISINFO>
-          <FUNCPROTOTYPE>
-            <FUNCDEF><FUNCTION><REPLACEABLE>MyFunc</REPLACEABLE></FUNCTION></FUNCDEF>
-            <PARAMDEF><PARAMETER><REPLACEABLE>arg1</REPLACEABLE></PARAMETER></PARAMDEF>
-            <PARAMDEF>...</PARAMDEF>
-            <PARAMDEF><PARAMETER><REPLACEABLE>argn</REPLACEABLE></PARAMETER></PARAMDEF>
-            <PARAMDEF><PARAMETER><REPLACEABLE>TAG1</REPLACEABLE></PARAMETER></PARAMDEF>
-            <PARAMDEF><PARAMETER><REPLACEABLE>data1</REPLACEABLE></PARAMETER></PARAMDEF>
-            <PARAMDEF>...</PARAMDEF>
-            <PARAMDEF><PARAMETER>TAG_DONE</PARAMETER></PARAMDEF>
-          </FUNCPROTOTYPE>
-        </FUNCSYNOPSIS>
+    #include <proto/alib.h>
 
-Our example above would look like this, using the varargs
-version of `OpenWindowTagList()`, called
-`OpenWindowTags()`:
+    Function( arg1, ..., argn, TAG1, data1, ..., TAG_DONE );
 
-Example: Usage of taglists, using varargs
-
-::
+Our example above would look like this, using the varargs version of
+`OpenWindowTagList()`, called `OpenWindowTags()`::
 
     [...]
     
-    if (IntuitionBase);
+    if( IntuitionBase )
     {
         struct Window *win;
 
-        win = OpenWindowTags(NULL, WA_Width, 100,
-                                   WA_Height, 20,
-                                   WA_Title, "Hello World!",
-                                   TAG_DONE);
-        if (win)
+        win = OpenWindowTags
+        (
+            NULL, WA_Width, 100, WA_Height, 20,
+            WA_Title, "Hello World!", TAG_DONE
+        );
+        )
+        if( win )
         {
     
     [...]
           
-Much easier, isn't it?
-
-In the `section about BOOPSI`_, processing of taglists will be
-discussed.
+Much easier, isn't it? In the `section about BOOPSI`_, processing of taglists
+will be discussed.
 
 
 Exec lists and memory management
@@ -1017,113 +942,69 @@ nodes, we have two different kind of lists:
 interchangeable. While it's technically possible to use `Node`s in `MinList`s,
 you loose all their advantages.
 
-.. FIXME: Macros
+FIXME: Macros
 
-***FIXME: Everything beyong this point. ;-)
 
 List Manipulating Functions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-<FILENAME role="library">exec.library</FILENAME> and the link-library
-          <FILENAME role="library">amiga.lib</FILENAME> contain some functions for manipulating
-          exec lists. Before a list can be used, it <EMPHASIS>must</EMPHASIS> be
-          initialized, using
-          the <FILENAME role="library">amiga.lib</FILENAME> function
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/alib.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void <FUNCTION>NewList</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
+exec.library and the link-library amiga.lib contain some functions for
+manipulating exec lists. Before a list can be used, it *must*
+be initialized, using the amiga.lib function::
 
-          Nodes can be added to lists with the <FILENAME role="library">exec.library</FILENAME>
-          functions
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void <FUNCTION>AddHead</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
-              <PARAMDEF>struct Node * <PARAMETER>node</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void <FUNCTION>AddTail</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
-              <PARAMDEF>struct Node * <PARAMETER>node</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void <FUNCTION>Enqueue</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
-              <PARAMDEF>struct Node * <PARAMETER>node</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void <FUNCTION>Insert</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
-              <PARAMDEF>struct Node * <PARAMETER>node</PARAMETER></PARAMDEF>
-              <PARAMDEF>struct Node * <PARAMETER>pred</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          With <FUNCTION>AddHead()</FUNCTION> and <FUNCTION>AddTail()</FUNCTION>
-          <PARAMETER>node</PARAMETER> is inserted at the beginning or the end
-          of <PARAMETER>list</PARAMETER> respectively. <FUNCTION>Enqueue()</FUNCTION>
-          inserts <PARAMETER>node</PARAMETER> according to its
-          <STRUCTFIELD>ln_Pri</STRUCTFIELD> field. A node can be inserted after
-          another by using <FUNCTION>Insert()</FUNCTION>. A pointer to the
-          node that is to predecess <PARAMETER>node</PARAMETER> must be provided
-          as <PARAMETER>pred</PARAMETER>.
+    #include <proto/alib.h>
 
-          Nodes can be removed using the <FILENAME role="library">exec.library</FILENAME>
-          functions
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void <FUNCTION>Remove</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct Node * <PARAMETER>node</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>struct Node * <FUNCTION>RemHead</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>struct Node * <FUNCTION>RemTail</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          While <FUNCTION>RemHead()</FUNCTION> and <FUNCTION>RemTail()</FUNCTION>
-          remove the first or last node of a <PARAMETER>list</PARAMETER>
-          respectively and return a pointer to it, <FUNCTION>Remove()</FUNCTION>
-          removes <PARAMETER>node</PARAMETER> from whatever list it is in.
+    void NewList( struct List *list );
 
-          Of course, all list functions (except <FUNCTION>Enqueue())</FUNCTION>
-          can process struct <STRUCTNAME>MinList</STRUCTNAME>s and
-          struct <STRUCTNAME>MinNode</STRUCTNAME>s, too.
+Nodes can be added to lists with the exec.library functions::
 
-          A list can be searched for a named node, using
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>struct Node * <FUNCTION>FindName</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
-              <PARAMDEF>STRPTR <PARAMETER>name</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          <PARAMETER>name</PARAMETER> is a pointer to a string that is to be
-          compared with the <STRUCTFIELD>ln_Name</STRUCTFIELD> of the nodes
-          in <PARAMETER>list</PARAMETER>. The comparison is case-sensitive!
-          If <PARAMETER>name</PARAMETER> matches any <STRUCTFIELD>ln_Name</STRUCTFIELD>
-          field, a pointer to the corresponding node is returned. If no field
-          matches, <SYMBOL>NULL</SYMBOL> is returned.
+    #include <proto/exec.h>
 
-          <NOTE>A list used with <FUNCTION>FindName()</FUNCTION> must not
-          contain any struct <STRUCTNAME>MinList</STRUCTNAME> entries. If it
-          does, memory could get corrupted!</NOTE>
+    void AddHead( struct List *list, struct Node *node );
+    void AddTail( struct List *list, struct Node *node );
+    void Enqueue( struct List *list, struct Node *node );
+    void Insert( struct List *list, struct Node *node, struct Node *pred );
 
-          In the following example, we create a list, add three nodes to
-          it, search a named node and then remove it.
+With `AddHead()` and `AddTail()` ``node`` is inserted at the beginning or the
+end of ``list`` respectively. `Enqueue()` inserts ``node`` according to its
+``ln_Pri`` field. A node can be inserted after another by using `Insert()`.
+A pointer to the node that is to predecess ``node`` must be provided as
+``pred``.
 
-          <EXAMPLE><TITLE>List example</TITLE>
+Nodes can be removed using the exec.library functions::
 
-::
+    #include <proto/exec.h>
+
+    void Remove( struct Node *node );
+    struct Node *RemHead( sruct List *list );
+    struct Node *RemTail( struct List *list );
+
+While `RemHead()` and `RemTail()` remove the first or last node of a ``list``
+respectively and return a pointer to it, `Remove()` removes ``node`` from
+whatever list it is in.
+
+Of course, all list functions (except `Enqueue()`) can process ``struct
+MinList`` and ``struct MinNode``s, too.
+
+A list can be searched for a named node, using::
+
+#include <proto/exec.h>
+
+struct Node *FindName( struct List *list, STRPTR name );
+
+``name`` is a pointer to a string that is to be compared with the ``ln_Name`` of
+the nodes in ``list``. The comparison is case-sensitive! If ``name`` matches any
+``ln_Name`` field, a pointer to the corresponding node is returned. If no field
+matches, ``NULL`` is returned.
+
+.. Note::
+
+    A list used with `FindName()` must not contain any ``struct MinList``
+    entries. If it does, memory could get corrupted!
+
+In the following example, we create a list, add three nodes to it, search
+a named node and then remove it::
+
     #include <proto/alib.h>
     #include <proto/exec.h>
     #include <exec/types.h>
@@ -1161,23 +1042,25 @@ List Manipulating Functions
         struct Node *node;
 
         /* Prepare the list for use. */
-        NewList(&amp;list);
+        NewList(&list);
 
         /* Add the first two nodes at the end of the list. */
-        AddTail(&amp;list, &amp;node1);
-        AddTail(&amp;list, &amp;node2);
+        AddTail(&list, &node1);
+        AddTail(&list, &node2);
 
         /* Insert the third node after the first node. */
-        Insert(&amp;list, &amp;node3, &amp;node1);
+        Insert(&list, &node3, &node1);
 
         /* Find the second node */
-        node = FindName(&amp;list, "Second node");
+        node = FindName(&list, "Second node");
 
-        /* If the node was found (which is always the case in this example),
-           remove it.
+        /* 
+            If the node was found (which is always the case in this example),
+            remove it.
         */
+
         if (node)
-            Remove(&amp;node);
+            Remove(&node);
 
         return RETURN_OK;
     }
@@ -1186,132 +1069,89 @@ List Manipulating Functions
 Memory Handling
 """""""""""""""
 
-        You need memory for nearly everything in a program. Many things
-        can be done by using the stack. But often you need larger chunks of
-        memory or don't want to use the stack for some reason. In these cases
-        you have to allocate memory by yourself.
-        <FILENAME role="library">exec.library</FILENAME> provides different methods for
-        allocating memory. The two most important functions are
-        <FUNCSYNOPSIS>
-          <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-          <FUNCPROTOTYPE>
-            <FUNCDEF>APTR <FUNCTION>AllocMem</FUNCTION></FUNCDEF>
-            <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
-            <PARAMDEF>ULONG <PARAMETER>flags</PARAMETER></PARAMDEF>
-          </FUNCPROTOTYPE>
-          <FUNCPROTOTYPE>
-            <FUNCDEF>APTR <FUNCTION>AllocVec</FUNCTION></FUNCDEF>
-            <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
-            <PARAMDEF>ULONG <PARAMETER>flags</PARAMETER></PARAMDEF>
-          </FUNCPROTOTYPE>
-        </FUNCSYNOPSIS>
-        Both functions return a pointer to a memory area of the requested
-        <PARAMETER>size</PARAMETER> provided as argument. If not enough memory
-        was available, <SYMBOL>NULL</SYMBOL> is returned, instead. You must check
-        for this condition, before using the memory. If the memory was
-        successfully allocated, you can do with it whatever you want to.
-        You can provide additional <PARAMETER>flags</PARAMETER> to get a
-        special kind of memory. The following flags are defined in
-        <LINK linkend="exec-memory-h"><FILENAME class="headerfile">exec/memory.h</FILENAME></LINK>:
-        <VARIABLELIST id="expl-memf">
-          <VARLISTENTRY>
-            <TERM><SYMBOL>MEMF_CLEAR</SYMBOL></TERM>
-            <LISTITEM>The allocated memory area is initialized with zeros.</LISTITEM>
-          </VARLISTENTRY>
-          <VARLISTENTRY>
-            <TERM><SYMBOL>MEMF_LOCAL</SYMBOL></TERM>
-            <LISTITEM>Get memory that will not be flushed, if the computer
-            is reset.</LISTITEM>
-          </VARLISTENTRY>
-          <VARLISTENTRY>
-            <TERM><SYMBOL>MEMF_CHIP</SYMBOL></TERM>
-            <LISTITEM>Get memory that is accessible by graphics and
-            sound chips. This type of memory is required for some functions.
-            </LISTITEM>
-          </VARLISTENTRY>
-          <VARLISTENTRY>
-            <TERM><SYMBOL>MEMF_FAST</SYMBOL></TERM>
-            <LISTITEM>Get memory that is not accessible by graphics and
-            sound chips. <EMPHASIS>You should normally not set this
-            flag! It is needed only for some very esoteric functions. Many
-            systems don't have this kind of memory.</EMPHASIS></LISTITEM>
-          </VARLISTENTRY>
-          <VARLISTENTRY>
-            <TERM><SYMBOL>MEMF_PUBLIC</SYMBOL></TERM>
-            <LISTITEM>This flag must be set, if the memory you allocate
-            is to be accessible by other tasks. If you do not set it, the
-            allocated memory is <EMPHASIS>private</EMPHASIS> to your task. This
-            issue will be discussed in detail in the chapter about
-            <LINK linkend="sect-intercomm">inter-task communication</LINK>.</LISTITEM>
-          </VARLISTENTRY>
-          <VARLISTENTRY>
-            <TERM><SYMBOL>MEMF_REVERSE</SYMBOL></TERM>
-            <LISTITEM>If this flag is set, the order of the search for
-            empty memory blocks is reversed. Blocks that are at the end of the
-            list of empty memory will be found first.</LISTITEM>
-          </VARLISTENTRY>
-          <VARLISTENTRY>
-            <TERM><SYMBOL>MEMF_NO_EXPUNGE</SYMBOL></TERM>
-            <LISTITEM>Normally, if not enough free memory of the requested
-            size is found, <ACRONYM role="aros">AROS</ACRONYM> tries to free
-            unused memory, for example by flushing unused libraries out of the
-            memory. If this flag is set, this behaviour is turned off.</LISTITEM>
-          </VARLISTENTRY>
-        </VARIABLELIST>
+You need memory for nearly everything in a program. Many things can be done by
+using the stack. But often you need larger chunks of memory or don't want to use
+the stack for some reason. In these cases you have to allocate memory by
+yourself. exec.library provides different methods for allocating memory. The two
+most important functions are::
+        
+    #include <proto/exec.h>
 
-        Memory allocated with these functions <EMPHASIS>must be freed</EMPHASIS>
-        after use with one of the following functions. <EMPHASIS>Note well that
-        you must not use memory that was already freed.</EMPHASIS>
+    APTR AllocMem( ULONG size, ULONG flags );
+    APTR AllocVec( ULONG size, ULONG flags );
 
-        <FUNCSYNOPSIS>
-          <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-          <FUNCPROTOTYPE>
-            <FUNCDEF>void <FUNCTION>FreeMem</FUNCTION></FUNCDEF>
-            <PARAMDEF>APTR <PARAMETER>memory</PARAMETER></PARAMDEF>
-            <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
-          </FUNCPROTOTYPE>
-          <FUNCPROTOTYPE>
-            <FUNCDEF>void <FUNCTION>FreeVec</FUNCTION></FUNCDEF>
-            <PARAMDEF>APTR <PARAMETER>memory</PARAMETER></PARAMDEF>
-            <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
-          </FUNCPROTOTYPE>
-        </FUNCSYNOPSIS>
+Both functions return a pointer to a memory area of the requested ``size``
+provided as argument. If not enough memory was available, ``NULL`` is returned,
+instead. You must check for this condition, before using the memory. If the
+memory was successfully allocated, you can do with it whatever you want to. You
+can provide additional ``flags`` to get a special kind of memory. The following
+flags are defined in :include:`exec/memory.h`:
 
-        Of course, <FUNCTION>FreeMem()</FUNCTION> must be used for memory
-        allocated with <FUNCTION>AllocMem()</FUNCTION> and
-        <FUNCTION>FreeVec()</FUNCTION> for memory allocated with
-        <FUNCTION>AllocVec()</FUNCTION>. The synopsis for these two functions
-        shows the difference between <FUNCTION>AllocMem()</FUNCTION> and
-        <FUNCTION>AllocVec()</FUNCTION>: <FUNCTION>AllocVec()</FUNCTION>
-        remembers the size of the chunk of memory, it allocated. So, if you
-        use <FUNCTION>AllocVec()</FUNCTION>, you don't have to store the
-        requested size, while you have to, if you use
-        <FUNCTION>AllocMem()</FUNCTION>.
+MEMF_CLEAR
+    The allocated memory area is initialized with zeros.
+    
+MEMF_LOCAL
+    Get memory that will not be flushed, if the computer is reset.
+    
+MEMF_CHIP
+    Get memory that is accessible by graphics and sound chips. This type of
+    memory is required for some functions.
+
+MEMF_FAST
+    Get memory that is not accessible by graphics and sound chips. *You should
+    normally not set this flag! It is needed only for some very esoteric
+    functions. Many systems don't have this kind of memory.*
+
+MEMF_PUBLIC
+    This flag must be set, if the memory you allocate is to be accessible by
+    other tasks. If you do not set it, the allocated memory is *private* to your
+    task. This issue will be discussed in detail in the chapter about
+    `inter-task communication`_.
+
+MEMF_REVERSE    
+    If this flag is set, the order of the search for empty memory blocks is
+    reversed. Blocks that are at the end of the list of empty memory will be
+    found first.
+
+MEMF_NO_EXPUNGE
+    Normally, if not enough free memory of the requested size is found, AROS
+    tries to free unused memory, for example by flushing unused libraries out of
+    the memory. If this flag is set, this behaviour is turned off.
+
+Memory allocated with these functions *must be freed* after use with one of the
+following functions. *Note well that you must not use memory that was already
+freed.*
+
+    #include <proto/exec.h>
+
+    void FreeMem( APTR memory, ULONG size );
+    void FreeVec( APTR memory, ULONG size );
+
+Of course, `FreeMem()` must be used for memory allocated with `AllocMem()` and
+`FreeVec()` for memory allocated with `AllocVec()`. The synopsis for these two
+functions shows the difference between `AllocMem()` and `AllocVec()`:
+`AllocVec()` remembers the size of the chunk of memory, it allocated. So, if you
+use `AllocVec()`, you don't have to store the requested size, while you have to,
+if you use `AllocMem()`.
+
 
 Allocating Multiple Regions of Memory at once
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-          Sometimes you may want to make multiple memory allocations at
-          once. The usual way to do this is calling <FUNCTION>AllocVec()</FUNCTION>
-          with the size of all memory-blocks added and then making pointers
-          relative to the returned pointer. But what do you do, if you need
-          memory of different kinds, it with different <SYMBOL>MEMF_</SYMBOL>
-          flags set? You could make multiple allocations or simply use the
-          function
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>struct MemList * <FUNCTION>AllocEntry</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct MemList * <PARAMETER>oldlist</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          As you will have noticed, <FUNCTION>AllocEntry</FUNCTION> uses
-          a pointer to a <LINK linkend="exec-memory-memlist">struct <STRUCTNAME>MemList</STRUCTNAME></LINK>
-          as only argument and as result. We find the definition of this
-          structure in <LINK linkend="exec-memory-h"><FILENAME class="headerfile">exec/memory.h</FILENAME></LINK>:
-          <PROGRAMLISTING>
+Sometimes you may want to make multiple memory allocations at once. The usual
+way to do this is calling `AllocVec()` with the size of all memory-blocks added
+and then making pointers relative to the returned pointer. But what do you do,
+if you need memory of different kinds, it with different ``MEMF_`` flags set?
+You could make multiple allocations or simply use the function::
 
-::
+    #include <proto/exec.h>
+
+    struct MemList *AllocEntry( struct MemList *oldlist );
+
+As you will have noticed, `AllocEntry()` uses a pointer to a ``struct MemList``
+as only argument and as result. We find the definition of this structure in
+:include:`exec/memory.h`::
+
     struct MemEntry
     {
         union
@@ -1330,349 +1170,269 @@ Allocating Multiple Regions of Memory at once
         struct MemEntry ml_ME[1];
     };
 
-          The array <STRUCTFIELD>ml_ME</STRUCTFIELD> of <STRUCTNAME>struct
-          MemList</STRUCTNAME> has a variable number of elements. The number
-          of its elements is set in <STRUCTFIELD>ml_NumEntries</STRUCTFIELD>.
-          The struct <STRUCTNAME>MemEntry</STRUCTNAME> describes one
-          memory-entry. Stored are its size (<STRUCTFIELD>me_Length</STRUCTFIELD>),
-          its requirements (ie the <LINK linkend="expl-memf"><SYMBOL>MEMF_</SYMBOL>
-          flags</LINK>, set in <STRUCTFIELD>me_Un.meu_Reqs</STRUCTFIELD>) and
-          possibly a pointer to the memory-block (<STRUCTFIELD>me_Un.meu_Addr</STRUCTFIELD>).
-          The struct <STRUCTNAME>MemList</STRUCTNAME>, you pass in as
-          <PARAMETER>oldlist</PARAMETER>, must have set the field
-          <STRUCTFIELD>ml_NumEntries</STRUCTFIELD> to the actual number of
-          struct <STRUCTNAME>MemEntry</STRUCTNAME>s contained in
-          <STRUCTFIELD>ml_ME</STRUCTFIELD>. The <STRUCTNAME>struct
-          MemEntry</STRUCTNAME>s must have set the fields
-          <STRUCTFIELD>me_Length</STRUCTFIELD> and
-          <STRUCTFIELD>me_Un.meu_Reqs</STRUCTFIELD>. The other fields are
-          ignored.
-          The function returns a pointer to a copy of the
-          struct <STRUCTNAME>MemEntry</STRUCTNAME>, passed in as
-          <PARAMETER>oldlist</PARAMETER>, with all the relevant fields set
-          (especially <STRUCTFIELD>me_Un.meu_Addr</STRUCTFIELD>). An error is
-          indicated by setting the most significant bit of the pointer
-          returned. So you always have to check it, before using the pointer
-          returned.
-          Memory allocated with <FUNCTION>AllocEntry()</FUNCTION> must
-          be freed using <FUNCTION>FreeMem()</FUNCTION>.
+The array ``ml_ME`` of ``struct MemList`` has a variable number of elements. The
+number of its elements is set in ``ml_NumEntries``. The struct ``MemEntry``
+describes one memory-entry. Stored are its size (``me_Length``), its
+requirements (ie the ``MEMF_``, set in ``me_Un.meu_Reqs``) and possibly
+a pointer to the memory-block (``me_Un.meu_Addr``). The struct ``MemList``, you
+pass in as ``oldlist``, must have set the field ``ml_NumEntries`` to the actual
+number of struct ``MemEntry``s contained in ``ml_ME``. The ``struct MemEntry``s
+must have set the fields ``me_Length`` and ``me_Un.meu_Reqs``. The other fields
+are ignored. The function returns a pointer to a copy of the struct
+``MemEntry``, passed in as ``oldlist``, with all the relevant fields set
+(especially ``me_Un.meu_Addr``). An error is indicated by setting the most
+significant bit of the pointer returned. So you always have to check it, before
+using the pointer returned. Memory allocated with `AllocEntry()` must be freed
+using `FreeMem()`.
 
 
 Memory Pools
 ^^^^^^^^^^^^
 
-<ACRONYM role="aros">AROS</ACRONYM> manages different
-          so-called memory-pools. Each memory-pool contains a list of
-          memory-areas. The most important memory-pool is the pool that
-          contains all free memory in the system. But you also can create
-          memory-pools yourself. This has some advantages:
+AROS manages different so-called memory-pools. Each memory-pool contains a list
+of memory-areas. The most important memory-pool is the pool that contains all
+free memory in the system. But you also can create memory-pools yourself. This
+has some advantages:
 
-          <ITEMIZEDLIST>
-            <LISTITEM>Everytime, you allocate some memory, the memory
-            in the system becomes more fragmented. This fragmentation causes
-            the available memory chunks to become smaller. This way larger
-            allocations will fail. To prevent this problem, memory-pools were
-            introduced. Instead of allocating many small chunks of memory,
-            the pool-management routines allocate large chunks and then
-            return small chunks out of it, when memory-requests are made.</LISTITEM>
++ Everytime, you allocate some memory, the memory in the system becomes more
+  fragmented. This fragmentation causes the available memory chunks to become
+  smaller. This way larger allocations will fail. To prevent this problem,
+  memory-pools were introduced. Instead of allocating many small chunks of
+  memory, the pool-management routines allocate large chunks and then return
+  small chunks out of it, when memory-requests are made.
+  
++ Private memory-pools have the ability to keep track of all the allocations you
+  made so that all memory in a pool can be freed with one simple function-call
+  (but you can also free memory individually).
 
-            <LISTITEM>Private memory-pools have the ability to keep
-            track of all the allocations you made so that all memory in a
-            pool can be freed with one simple function-call (but you can also
-            free memory individually).</LISTITEM>
-          </ITEMIZEDLIST>
+Before a memory-pool can be used, it must be created. This is performed by the
+function::
 
-          Before a memory-pool can be used, it must be created. This is
-          performed by the function
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>APTR <FUNCTION>CreatePool</FUNCTION></FUNCDEF>
-              <PARAMDEF>ULONG <PARAMETER>flags</PARAMETER></PARAMDEF>
-              <PARAMDEF>ULONG <PARAMETER>puddleSize</PARAMETER></PARAMDEF>
-              <PARAMDEF>ULONG <PARAMETER>threshSize</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          <PARAMETER>flags</PARAMETER> specifies the type of memory you want
-          to get from the <FUNCTION>AllocPooled()</FUNCTION> function
-          (<LINK linkend="expl-allocpooled">see below</LINK>). All
-          <SYMBOL>MEMF_</SYMBOL> definitions as <LINK linkend="expl-memf">described
-          above</LINK> are allowed here.
+    #include <proto/exec.h>
+    
+    APTR CreatePool( ULONG flags, ULONG puddleSize, ULONG threshSize );
+          
+The `flags` specifies the type of memory you want to get from the
+`AllocPooled()` function . All ``MEMF_`` definitions as described above are
+allowed here.
 
-          <PARAMETER>puddleSize</PARAMETER> is the size of the chunks
-          of memory that are allocated by the pool functions. Usually a size
-          about ten times bigger than the average memory-size, you need to
-          allocate, is a good guess. But on the other hand the
-          <PARAMETER>puddleSize</PARAMETER> should not be too large. Normally
-          you should limit it to about <LITERAL>50kb</LITERAL>. Note well,
-          though, that these are only suggestions and no real limitations.
+`puddleSize` is the size of the chunks of memory that are allocated by the pool
+functions. Usually a size about ten times bigger than the average memory-size,
+you need to allocate, is a good guess. But on the other hand the `puddleSize`
+should not be too large. Normally you should limit it to about ``50kb``. Note
+well, though, that these are only suggestions and no real limitations.
 
-          Finally, the <PARAMETER>threshSize</PARAMETER> specifies,
-          how large the memory that is to be allocated is allowed to be so
-          that no new chunk is allocated automatically. If, for example,
-          the <PARAMETER>threshSize</PARAMETER> is set to 25kb and you want
-          to allocate a piece of memory with the size of 30kb, the internal
-          lists of chunks of that memory-pool is not searched, but the memory
-          is allocated directly, instead. If the memory to be allocated
-          was only 20kb, the chunk-list would have been searched for a piece
-          of free memory of that size, first. Of course, the
-          <PARAMETER>threshSize</PARAMETER> <EMPHASIS>must not</EMPHASIS> be
-          larger than the <PARAMETER>puddleSize</PARAMETER> and should not
-          be too small, either. Half the <PARAMETER>puddleSize</PARAMETER> is
-          a good guess here.
+Finally, the `threshSize` specifies, how large the memory that is to be
+allocated is allowed to be so that no new chunk is allocated automatically. If,
+for example, the `threshSize` is set to 25kb and you want to allocate a piece of
+memory with the size of 30kb, the internal lists of chunks of that memory-pool
+is not searched, but the memory is allocated directly, instead. If the memory to
+be allocated was only 20kb, the chunk-list would have been searched for a piece
+of free memory of that size, first. Of course, the `threshSize` *must not* be
+larger than the `puddleSize` and should not be too small, either. Half the
+`puddleSize` is a good guess here.
 
-          <FUNCTION>CreatePool()</FUNCTION> returns a private pointer to
-          a pool-structure that must be saved for further use.
-          <SYMBOL>NULL</SYMBOL> is returned, if no memory for the
-          pool-structure was available. You have to check for this condition.
+`CreatePool()` returns a private pointer to a pool-structure that must be saved
+for further use. ``NULL`` is returned, if no memory for the pool-structure was
+available. You have to check for this condition.
 
-          After use, all memory-pools must be destroyed by calling
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void <FUNCTION>DeletePool</FUNCTION></FUNCDEF>
-              <PARAMDEF>APTR <PARAMETER>pool</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          This function deletes the <PARAMETER>pool</PARAMETER> passed in.
-          Additionally all memory that was allocated in this pool is freed.
-          This way, you don't need to remember every single piece of memory,
-          you allocated in a pool. Just call <FUNCTION>DeletePool()</FUNCTION>
-          at the end. Note that you should be careful not to use pooled memory
-          after its pool was deleted!
+After use, all memory-pools must be destroyed by calling::
 
-          <PARA id="expl-allocpooled">If you want to allocate memory out of a
-          pool, you need to call
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void * <FUNCTION>AllocPooled</FUNCTION></FUNCDEF>
-              <PARAMDEF>APTR <PARAMETER>pool</PARAMETER></PARAMDEF>
-              <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          Besides the <PARAMETER>pool</PARAMETER> to allocate memory from,
-          the <PARAMETER>size</PARAMETER> of the memory to allocate must be
-          passed in. Returned is a pointer to a block of memory of the
-          requested size or <SYMBOL>NULL</SYMBOL> to indicate that not
-          enough memory was available.
+    #include <proto/exec.h>
+    
+    void DeletePool( APTR pool );
 
-          Memory allocated with <FUNCTION>AllocPooled()</FUNCTION> can
-          be freed by either destroying the whole pool with
-          <FUNCTION>DeletePool()</FUNCTION> or individually by calling
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void <FUNCTION>FreePooled</FUNCTION></FUNCDEF>
-              <PARAMDEF>APTR <PARAMETER>pool</PARAMETER></PARAMDEF>
-              <PARAMDEF>void * <PARAMETER>memory</PARAMETER></PARAMDEF>
-              <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          This function frees exactly one piece of memory that was previously
-          allocated with <FUNCTION>AllocPooled()</FUNCTION>. The pointer to
-          the <PARAMETER>memory</PARAMETER> pointer, returned by
-          <FUNCTION>AllocPooled()</FUNCTION>, its <PARAMETER>size</PARAMETER>
-          and the pool, it is in, have to be supplied as arguments.
+This function deletes the `pool` passed in. Additionally all memory that was
+allocated in this pool is freed. This way, you don't need to remember every
+single piece of memory, you allocated in a pool. Just call `DeletePool()` at the
+end. Note that you should be careful not to use pooled memory after its pool was
+deleted!
 
-          <SIDEBAR><TITLE><FUNCTION>DeletePool()</FUNCTION> vs <FUNCTION>FreePooled()</FUNCTION></TITLE>
-            You may ask yourself: <QUOTE>If <FUNCTION>DeletePool()</FUNCTION>
-            deletes all the memory of a pool, why should I ever use
-            <FUNCTION>FreePooled()</FUNCTION>?</QUOTE> The answer is easy: to
-            save memory. Normally it's good style to free memory as soon as
-            you don't need it anymore. But sometimes it is easier just to
-            free a memory-pool after a bunch of allocations. Nevertheless
-            you should not use this feature, if you are not sure, when the
-            memory-pool will be deleted. Imagine a program like this (do not
-            try to compile it; it won't):
+If you want to allocate memory out of a pool, you need to call::
 
-            <PROGRAMLISTING>
-::
+    #include <proto/exec.h>
+    
+    void *AllocPooled( APTR pool, ULONG size );
 
-#define <exec/types.h>
-#define <exec/memory.h>
-#define <dos/dos.h>
+Besides the `pool` to allocate memory from, the `size` of the memory to allocate
+must be passed in. Returned is a pointer to a block of memory of the requested
+size or ``NULL`` to indicate that not enough memory was available.
 
-int main(int argc, char *argv[])
-{
-    APTR pool;
-    APTR mem;
+Memory allocated with `AllocPooled()` can be freed by either destroying the
+whole pool with `DeletePool()` or individually by calling::
 
-    /* Create our memory pool and test, if it was successful. */
-    pool = CreatePool(MEMF_ANY, 50*1024, 25*1024);
-    if (pool)
-    {
+    #include <proto/exec.h>
+    
+    void FreePooled( APTR pool, void *memory, ULONG size );
 
-        /* Just a dummy function. Image that this function will open a window,
-           with two buttons "Do Action" and "Quit".
-        */
-        open_our_window();
+This function frees exactly one piece of memory that was previously allocated
+with `AllocPooled()`. The pointer to the `memory` pointer, returned by
+`AllocPooled()`, its `size` and the pool, it is in, have to be supplied as
+arguments.
 
-        for(;;)
+.. Note::
+
+    You may ask yourself: "If `DeletePool()` deletes all the memory of a pool, why
+    should I ever use `FreePooled()`?" The answer is easy: to save memory. Normally
+    it's good style to free memory as soon as you don't need it anymore. But
+    sometimes it is easier just to free a memory-pool after a bunch of allocations.
+    Nevertheless you should not use this feature, if you are not sure, when the
+    memory-pool will be deleted. Imagine a program like this (do not try to compile
+    it; it won't)::
+
+        #define <exec/types.h>
+        #define <exec/memory.h>
+        #define <dos/dos.h>
+
+        int main(int argc, char *argv[])
         {
-            /* Another dummy function that returns one of the definitions
-               below.
-            */
-            switch(get_action())
+            APTR pool;
+            APTR mem;
+
+            /* Create our memory pool and test, if it was successful. */
+            pool = CreatePool(MEMF_ANY, 50*1024, 25*1024);
+            if (pool)
             {
-            /* This is returned, if the button "Do Action" was released. */
-            case DOACTION:
-                mem = AllocPooled(pool, 10*1024);
-                if (mem)
+
+                /* Just a dummy function. Image that this function will open a window,
+                   with two buttons "Do Action" and "Quit".
+                */
+                open_our_window();
+
+                for(;;)
                 {
-                    /* Another dummy function that uses our memory. */
-                    silly_function(mem);
+                    /* Another dummy function that returns one of the definitions
+                       below.
+                    */
+                    switch(get_action())
+                    {
+                    /* This is returned, if the button "Do Action" was released. */
+                    case DOACTION:
+                        mem = AllocPooled(pool, 10*1024);
+                        if (mem)
+                        {
+                            /* Another dummy function that uses our memory. */
+                            silly_function(mem);
+                        }
+                        break;
+                    /* This is returned, if the button "Quit" was released. */
+                    case QUIT:
+                        return RETURN_OK;
+                    }
                 }
-                break;
-            /* This is returned, if the button "Quit" was released. */
-            case QUIT:
-                return RETURN_OK;
+
+                /* Close the window, we have opened above. */
+                close_our_window();
+
+                /* Delete our pool. */
+                DeletePool(pool);
             }
         }
-
-        /* Close the window, we have opened above. */
-        close_our_window();
-
-        /* Delete our pool. */
-        DeletePool(pool);
-    }
-}
          
-            Each time the button <GUIBUTTON>Do Action</GUIBUTTON> is
-            released, some memory is allocated. This memory is freed at the
-            end of the program, when <FUNCTION>DeletePool()</FUNCTION> is
-            called. Of course, the longer the program is used, the more
-            memory will be in use. That is why it would be much better to
-            free the memory after use. This is done by replacing the
-            part between <LITERAL>case DOACTION:</LITERAL> and
-            <LITERAL>case QUIT:</LITERAL> by:
-            <PROGRAMLISTING>
-                mem = AllocPooled(pool, 10*1024);
-                if (mem)
-                {
-                    silly_function(mem);
-                    FreePooled(pool, mem, 10*1024);
-                }
-                break;
-            </PROGRAMLISTING>
-          </SIDEBAR>
+    Each time the button ``Do Action`` is released, some memory is allocated.
+    This memory is freed at the end of the program, when `DeletePool()` is
+    called. Of course, the longer the program is used, the more memory will be
+    in use. That is why it would be much better to free the memory after use.
+    This is done by replacing the part between ``case DOACTION:`` and ``case
+    QUIT:`` by::
+
+        mem = AllocPooled(pool, 10*1024);
+        if (mem)
+        {
+            silly_function(mem);
+            FreePooled(pool, mem, 10*1024);
+        }
+        break;
+
 
 Obsolete Memory Pool Functions
 ''''''''''''''''''''''''''''''
 
-            Memory-pools are managed with <LINK linkend="exec-memory-memheader">struct <STRUCTNAME>MemHeader</STRUCTNAME></LINK>s.
-            If you have a pointer to such a structure, you may try to
-            allocate some memory of its pool:
-            <FUNCSYNOPSIS>
-              <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-              <FUNCPROTOTYPE>
-                <FUNCDEF>void * <FUNCTION>Allocate</FUNCTION></FUNCDEF>
-                <PARAMDEF>struct MemHeader * <PARAMETER>mh</PARAMETER></PARAMDEF>
-                <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
-              </FUNCPROTOTYPE>
-            </FUNCSYNOPSIS>
-            Apart from the pointer to the struct <STRUCTNAME>MemHeader</STRUCTNAME>
-            passed in as <PARAMETER>mh</PARAMETER>, you have to supply the
-            <PARAMETER>size</PARAMETER> of the memory-block you want to
-            allocate. This function returns either a pointer to the first
-            memory-block found or <SYMBOL>NULL</SYMBOL> if no matching block
-            was found.
+Memory-pools are managed with ``struct MemHeader``s. If you have a pointer to
+such a structure, you may try to allocate some memory of its pool::
 
-            You must free every memory-block allocated with
-            <FUNCTION>Allocate()</FUNCTION> with
-            <FUNCSYNOPSIS>
-              <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-              <FUNCPROTOTYPE>
-                <FUNCDEF>void <FUNCTION>Deallocate</FUNCTION></FUNCDEF>
-                <PARAMDEF>struct MemHeader * <PARAMETER>mh</PARAMETER></PARAMDEF>
-                <PARAMDEF>APTR <PARAMETER>mem</PARAMETER></PARAMDEF>
-                <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
-              </FUNCPROTOTYPE>
-            </FUNCSYNOPSIS>
-            You have to pass the same <PARAMETER>mh</PARAMETER> and
-            <PARAMETER>size</PARAMETER> to <FUNCTION>Deallocate()</FUNCTION>
-            as you have passed to <FUNCTION>Allocate()</FUNCTION> and
-            additionally the pointer returned by it.
+    #include <proto/exec.h>
 
-            <FILENAME role="library">intuition.library</FILENAME>
-            provides another way to handle memory pools with the functions
-            <LINK linkend="intuition-allocremember"><FUNCTION>AllocRemember()</FUNCTION></LINK>
-            and <LINK linkend="intuition-freeremember"><FUNCTION>FreeRemember()</FUNCTION></LINK>.
-            Note, though, that these are obsolete. You should use the normal
-            pool-functions of <FILENAME role="library">exec.library</FILENAME>,
-            instead.
+    void *Allocate( struct MemHeader *mh, ULONG size );
+
+Apart from the pointer to the struct ``MemHeader`` passed in as ``mh``, you have
+to supply the ``size`` of the memory-block you want to allocate. This function
+returns either a pointer to the first memory-block found or
+<SYMBOL>NULL</SYMBOL> if no matching block was found.
+
+You must free every memory-block allocated with `Allocate()` with::
+
+    #include <proto/exec.h>
+
+    void Deallocate( struct MemHeader *mh, APTR mem, ULONG size );
+
+You have to pass the same ``mh`` and ``size`` to `Deallocate()` as you have
+passed to `Allocate()` and additionally the pointer returned by it.
+
+intuition.library provides another way to handle memory pools with the functions
+`AllocRemember()` and `FreeRemember()`. Note, though, that these are obsolete.
+You should use the normal pool-functions of exec.library, instead.
+
 
 Allocating a specific memory address
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Under very rare circumstances you may have to allocate
-          memory at a specific memory address. This performed by using
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void * <FUNCTION>AllocAbs</FUNCTION></FUNCDEF>
-              <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
-              <PARAMDEF>APTR <PARAMETER>address</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          This function tries to allocate <PARAMETER>size</PARAMETER> bytes at
-          <PARAMETER>address</PARAMETER>. If this is successful, a pointer
-          to the requested address is returned. If some memory of the
-          requested block is already allocated or is not available in the
-          system, <SYMBOL>NULL</SYMBOL> is returned, instead.
+Under very rare circumstances you may have to allocate memory at a specific
+memory address. This performed by using::
 
-          <WARNING><SIMPARA>The beginning of the memory block requested will
-          be used by exec to store its node-data (the exact size is calculated
-          by (2*sizeof (void *)) ). Therefore, you <EMPHASIS>must not
-          write</EMPHASIS> to the beginning of the memory-block! Because of
-          these obstacles you should not use <FUNCTION>AllocAbs()</FUNCTION>,
-          except if you really need it.</SIMPARA></WARNING>
+    #include <proto/exec.h>
 
-          Memory allocated with <FUNCTION>AllocAbs()</FUNCTION> must
-          be freed, using <FUNCTION>FreeMem()</FUNCTION>.
+    void *AllocAbs( ULONG size, APTR address );
+
+This function tries to allocate `size` bytes at `address`. If this is
+successful, a pointer to the requested address is returned. If some memory of
+the requested block is already allocated or is not available in the system,
+``NULL`` is returned, instead.
+
+.. Warning::
+    
+    The beginning of the memory block requested will be used by exec to store
+    its node-data (the exact size is calculated by ``(2*sizeof (void *)) )``.
+    Therefore, you *must not write* to the beginning of the memory-block!
+    Because of these obstacles you should not use `AllocAbs()`, except if you
+    really need it.
+
+Memory allocated with ``AllocAbs()`` must
+be freed, using ``FreeMem()``.
+
 
 Querying memory size and available memory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-          To get the size of available memory, use the function
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>ULONG <FUNCTION>AvailMem</FUNCTION></FUNCDEF>
-              <PARAMDEF>ULONG <PARAMETER>type</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
+To get the size of available memory, use the function::
 
-          <PARAMETER>type</PARAMETER> are some of the following flags (or'ed),
-          as defined in <LINK linkend="exec-memory-h"><FILENAME class="headerfile">exec/memory.h</FILENAME></LINK>:
-          <VARIABLELIST>
-            <VARLISTENTRY>
-              <TERM><SYMBOL>MEMF_ANY</SYMBOL></TERM>
-              <LISTITEM>Return the size of all free memory in the system.</LISTITEM>
-            </VARLISTENTRY>
-            <VARLISTENTRY>
-              <TERM><SYMBOL>MEMF_CHIP</SYMBOL></TERM>
-              <LISTITEM>Return the size of memory, which is accessible
-              by graphics and sound chips.</LISTITEM>
-            </VARLISTENTRY>
-            <VARLISTENTRY>
-              <TERM><SYMBOL>MEMF_FAST</SYMBOL></TERM>
-              <LISTITEM>Return the size of memory that is not accessible
-              by graphics and sound chips.</LISTITEM>
-            </VARLISTENTRY>
-            <VARLISTENTRY>
-              <TERM><SYMBOL>MEMF_LARGEST</SYMBOL></TERM>
-              <LISTITEM>Return only the largest block, instead of all
-              memory of the type specified.</LISTITEM>
-            </VARLISTENTRY>
-          </VARIABLELIST>
-          You may as well specify other <SYMBOL>MEMF_</SYMBOL> flags,
-          they will be simply ignored.
+    #include <proto/exec.h>
+    
+    ULONG AvailMem( ULONG type );
 
-          <NOTE>Note well that the queried memory-size does not have to
-          reflect the real size of memory available, as this may always
-          change in a multitasking-system, even while <FUNCTION>AvailMem()</FUNCTION>
-          is executed.</NOTE>
+The `type` parameter is some of the following flags (or'ed),
+as defined in `exec/memory.h`:
+
+``MEMF_ANY``              
+    Return the size of all free memory in the system.
+    
+``MEMF_CHIP``
+    Return the size of memory, which is accessible by graphics and sound chips.
+
+``MEMF_FAST``
+    Return the size of memory that is not accessible by graphics and sound
+    chips.
+              
+``MEMF_LARGEST``
+    Return only the largest block, instead of all memory of the type specified.
+              
+You may as well specify other ``MEMF_`` flags, they will be simply ignored.
+
+.. Note::
+
+    Note well that the queried memory-size does not have to reflect the real
+    size of memory available, as this may always change in
+    a multitasking-system, even while `AvailMem()` is executed.
 
 Program to list memory available in the system::
 
@@ -1695,53 +1455,38 @@ Program to list memory available in the system::
 Adding memory to the system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-          This chapter is only of concern to you, if you want to write a
-          hardware-driver for a piece of hardware, which adds memory to the
-          system.
+This chapter is only of concern to you, if you want to write a hardware-driver
+for a piece of hardware, which adds memory to the system::
 
+    #include <proto/exec.h>
+    
+    void AddMemList
+    ( 
+        ULONG size, ULONG type, LONG priority,
+        APTR address, STRPTR name
+    );
           
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void <FUNCTION>AddMemList</FUNCTION></FUNCDEF>
-              <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
-              <PARAMDEF>ULONG <PARAMETER>type</PARAMETER></PARAMDEF>
-              <PARAMDEF>LONG <PARAMETER>priority</PARAMETER></PARAMDEF>
-              <PARAMDEF>APTR <PARAMETER>address</PARAMETER></PARAMDEF>
-              <PARAMDEF>STRPTR <PARAMETER>name</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          adds memory to the list of free memory in the system. You have
-          supply the <PARAMETER>address</PARAMETER> and the
-          <PARAMETER>size</PARAMETER> of the memory to add.
-          <PARAMETER>type</PARAMETER> has to be set to at least one of the
-          <LINK linkend="exec-memory-memf"><SYMBOL>MEMF_</SYMBOL></LINK> flags,
-          which are defined in <LINK linkend="exec-memory-h"><FILENAME class="headerfile">exec/memory.h</FILENAME></LINK>:
-          <VARIABLELIST>
-            <VARLISTENTRY>
-              <TERM><SYMBOL>MEMF_FAST</SYMBOL></TERM>
-              <LISTITEM>Your memory must not be accessed by graphics or
-              sound chips.</LISTITEM>
-            </VARLISTENTRY>
-            <VARLISTENTRY>
-              <TERM><SYMBOL>MEMF_CHIP</SYMBOL></TERM>
-              <LISTITEM>Your memory is reachable by graphics and sound
-              chips.</LISTITEM>
-            </VARLISTENTRY>
-          </VARIABLELIST>
+adds memory to the list of free memory in the system. You have supply the
+`address` and the `size` of the memory to add. `type` has to be set to at least
+one of the ``MEMF_`` flags, which are defined in `exec/memory.h`:
 
-          You can provide a <PARAMETER>priority</PARAMETER>, with which
-          your memory will be added to the memory list. The general rule is:
-          The quicker your memory, the higher the priority should be. If you
-          don't know, what to supply here, supply <LITERAL>0</LITERAL>.
-          Finally, you can provide a <PARAMETER>name</PARAMETER>, with which
-          your memory can be identified by the system and its users. You may
-          provide <SYMBOL>NULL</SYMBOL> instead of a name, but giving your
-          memory a name is recommended.
+``MEMF_FAST``
+    Your memory must not be accessed by graphics or sound chips.
+    
+``MEMF_CHIP``
+    Your memory is reachable by graphics and sound chips.
 
-          Once your memory was added to the list of free memory, it
-          can't be removed anymore.
-        
+You can provide a `priority`, with which your memory will be added to the memory
+list. The general rule is: The quicker your memory, the higher the priority
+should be. If you don't know, what to supply here, supply ``0``. Finally, you
+can provide a `name`, with which your memory can be identified by the system and
+its users. You may provide ``NULL`` instead of a name, but giving your memory
+a name is recommended.
+
+Once your memory was added to the list of free memory, it can't be removed
+anymore.
+
+
 Low memory situations
 ^^^^^^^^^^^^^^^^^^^^^
 
@@ -1796,8 +1541,9 @@ file. Normally, a hardlink can't be distinguished from the orginal filename;
 effectively the file has been given a second name. Due to this, hardlinks can
 not be created over different volumes; they must be at the same volume.
 
-.. Note:: Not all filesystems support both types of links or any
-          links at all.
+.. Note:: 
+
+    Not all filesystems support both types of links or any links at all.
 
 
 Creating Links
@@ -1833,32 +1579,24 @@ don't have this limitation.
 The Task Structure
 ^^^^^^^^^^^^^^^^^^
 
-A task is described by a struct <STRUCTNAME>Task</STRUCTNAME>
-as defined in <LINK linkend="exec-tasks-task"><FILENAME class="headerfile">exec/tasks.h</FILENAME></LINK>.
-This structure contains information about the task like the
-its <LINK linkend="sect-stack">stack</LINK>, its
-<LINK linkend="sect-signals">signals</LINK> and some management
-data. To get the address of a task strucure, use
+A task is described by a struct ``Task`` as defined in :include:`exec/tasks.h`.
+This structure contains information about the task like the its stack, its
+signals and some management data. To get the address of a task strucure, use
 
-	<FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>struct Task * <FUNCTION>FindTask</FUNCTION></FUNCDEF>
-              <PARAMDEF>STRPTR <PARAMETER>name</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          <PARAMETER>name</PARAMETER> is a pointer to the name of the task to
-          find. <EMPHASIS>Note that this name is case-sensitive!</EMPHASIS>
-          If the named task is not found, <SYMBOL>NULL</SYMBOL> is returned,
-          otherwise a pointer to a struct <STRUCTNAME>Task</STRUCTNAME>.
+    #include <proto/exec.h>
 
-          To get a pointer to the current task, supply
-          <SYMBOL>NULL</SYMBOL> as <PARAMETER>name</PARAMETER>. This can never
-          fail.
+    struct Task *FindTask( STRPTR name );
 
-          The task structure contains a field called
-          <STRUCTFIELD>tc_UserData</STRUCTFIELD>. You can use it for your own
-          purposes. It is ignored by <ACRONYM role="aros">AROS</ACRONYM>.
+``name`` is a pointer to the name of the task to find. *Note that this name is
+case-sensitive!* If the named task is not found, ``NULL`` is returned, otherwise
+a pointer to a ``struct Task``.
+
+To get a pointer to the current task, supply ``NULL`` as ``name``. This can
+never fail.
+
+The task structure contains a field called ``tc_UserData``. You can use it for
+your own purposes. It is ignored by AROS.
+
 
 States
 ^^^^^^
@@ -1891,84 +1629,72 @@ TS_EXCEPT
 TS_REMOVED
     FIXME
 
-.. Note:: Do not set these states yourself, unless you know exactly what you are
-          doing!
+.. Note:: 
+
+    Do not set these states yourself, unless you know exactly what you are
+    doing!
 
 
 Priorities
 ^^^^^^^^^^
 
-The field <STRUCTFIELD>tc_Node.ln_Pri</STRUCTFIELD> of the
-          struct <STRUCTNAME>Node</STRUCTNAME> embedded in the task structure
-          (see <LINK linkend="exec-nodes-node"><FILENAME class="headerfile">exec/nodes.h</FILENAME></LINK>
-          and the <LINK linkend="sect-lists">section about exec lists</LINK>)
-          specifies the priority of the task. Possible priorities reach from
-          <LITERAL>-128</LITERAL> to <LITERAL>127</LITERAL>. The higher the
-          priority the more processor time the task gets from the system. To
-          set a task's priority use the function
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>BYTE <FUNCTION>SetTaskPri</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct Task * <PARAMETER>task</PARAMETER></PARAMDEF>
-              <PARAMDEF>BYTE <PARAMETER>newpri</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          The old priority is returned.
-        
+The field ``tc_Node.ln_Pri`` of the ``struct Node`` embedded in the task
+structure (see :include:`exec/nodes.h` and the  `section about exec lists`_)
+specifies the priority of the task. Possible priorities reach from ``-128`` to
+``127``. The higher the priority the more processor time the task gets from the
+system. To set a task's priority use the function::
+
+    #include <proto/exec.h>
+
+    BYTE SetTaskPri( struct Task *task, BYTE newpri );
+
+The old priority is returned.
+
+
 Stack
 ^^^^^
 
-Every task has a stack. A stack is a piece of memory, in
-          which a tasks stores its temorary data. Compilers, for example,
-          use the stack to store variables, you use in your programs. On
-          many architectures, the stack is also used to supply library
-          functions with parameters.
+Every task has a stack. A stack is a piece of memory, in which a tasks stores
+its temorary data. Compilers, for example, use the stack to store variables, you
+use in your programs. On many architectures, the stack is also used to supply
+library functions with parameters.
 
-          The size of the stack is limited. Therefore only a certain
-          amount of data can be stored in the stack. The stack-size of a
-          task is chosen by its caller and must be at least 4096 bytes. Tasks
-          should generally not assume that their stack-size is bigger. So,
-          if a task needs more stack, the stack can be exchanged by using the
-          function
-          <FUNCSYNOPSIS>
-            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
-            <FUNCPROTOTYPE>
-              <FUNCDEF>void <FUNCTION>StackSwap</FUNCTION></FUNCDEF>
-              <PARAMDEF>struct StackSwapStruct * <PARAMETER>sss</PARAMETER></PARAMDEF>
-            </FUNCPROTOTYPE>
-          </FUNCSYNOPSIS>
-          The only argument, <PARAMETER>sss</PARAMETER>, is a pointer to a
-          struct <STRUCTNAME>StackSwapStruct</STRUCTNAME> as defined in
-          <LINK linkend="exec-tasks-stackswapstruct"><FILENAME class="headerfile">exec/tasks.h</FILENAME></LINK>.
+The size of the stack is limited. Therefore only a certain amount of data can be
+stored in the stack. The stack-size of a task is chosen by its caller and must
+be at least 4096 bytes. Tasks should generally not assume that their stack-size
+is bigger. So, if a task needs more stack, the stack can be exchanged by using
+the function::
 
-          struct <STRUCTNAME>StackSwapStack</STRUCTNAME> must contain a
-          pointer to the beginning of the new stack (<STRUCTFIELD>strk_Lower</STRUCTFIELD>),
-          to the end of the new stack (<STRUCTFIELD>stk_Upper</STRUCTFIELD>)
-          and a new stack-pointer (<STRUCTFIELD>stk_Pointer</STRUCTFIELD>).
-          This stack-pointer is normally set either to the same address as
-          <STRUCTFIELD>stk_Lower</STRUCTFIELD> or to the same address as
-          <STRUCTFIELD>stk_Upper</STRUCTFIELD>, depending on the kind of
-          <ACRONYM>CPU</ACRONYM> used.
+    #include <proto/exec.h>
 
-          When calling <FUNCTION>StackSwap()</FUNCTION>, the
-          <STRUCTNAME>StackSwapStruct</STRUCTNAME> structure supplied as
-          <PARAMETER>sss</PARAMETER> will be filled with information
-          about the current stack.
+    void StackSwap( struct StackSwapStruct *sss );
 
-          After finishing using the new stack, the old stack must be
-          restored by calling <FUNCTION>StackSwap()</FUNCTION> a second time
-          with the same <STRUCTNAME>StackSwapStruct</STRUCTNAME>.
+The only argument, ``sss``, is a pointer to a ``struct StackSwapStruct`` as
+defined in :include:`exec/tasks.h`.
 
-.. Note:: Normally, only compilers need this function. Handle it with great care
-          as different architectures use the stack in different ways!
+``struct StackSwapStack`` must contain a pointer to the beginning of the new
+stack (``strk_Lower``), to the end of the new stack (``stk_Upper``) and a new
+stack-pointer (``stk_Pointer``). This stack-pointer is normally set either to
+the same address as ``stk_Lower`` or to the same address as ``stk_Upper``,
+depending on the kind of CPU used.
+
+When calling `StackSwap()`, the ``StackSwapStruct`` structure supplied as
+``sss`` will be filled with information about the current stack.
+
+After finishing using the new stack, the old stack must be restored by calling
+`StackSwap()` a second time with the same ``StackSwapStruct``.
+
+.. Note:: 
+
+    Normally, only compilers need this function. Handle it with great care as
+    different architectures use the stack in different ways!
 
 
 Processes
 """""""""
 
 A process is an expanded task_. Opposed to a task, it can use functions of
-`dos.library`, because a process structure contains some special fields,
+dos.library, because a process structure contains some special fields,
 concerning files and directories. But of course, all functions that can be used
 on tasks can also be used on processes.
 
@@ -1976,10 +1702,10 @@ on tasks can also be used on processes.
 The Process Structure
 ^^^^^^^^^^^^^^^^^^^^^
 
-A process is described by a struct `Process` as defined in `dos/dosextens.h`.
-The first field in struct `Process` is an embedded `struct Task`. The extra
-fields include information about the file-system, the console, the process is
-connected to, and miscellaneous other stuff.
+A process is described by a ``struct Process`` as defined in
+:include:`dos/dosextens.h`. The first field in ``struct Process`` is an embedded
+``struct Task``. The extra fields include information about the file-system, the
+console, the process is connected to, and miscellaneous other stuff.
 
 
 The Current Directory
@@ -2043,79 +1769,54 @@ can be multiple reasons for this: maybe the file named doesn't exist, maybe it
 is read protected. To find this out, you can query the secondary error-code set
 by the last function by using::
 
-.. FIXME: How to handle this in ReST? [docbook: functionsynopsis]
-
 	#include <proto/dos.h>
 
-        LONG IoErr() 
+    LONG IoErr() 
            
-        Dos-functions return one of the <SYMBOL>ERROR_</SYMBOL>
-        definitions from <LINK linkend="dos-dos-error"><FILENAME class="headerfile">dos/dos.h</FILENAME></LINK>.
-        Applications can, of course, process these error-codes by hand (which
-        is useful in many cases), but often we just want to inform the user
-        what went wrong. (Applications normally need not care, if a file
-        could not be opened, because it did not exist or because it was read
-        protected.) To output human-readable error messages,
-        <FILENAME role="library">dos.library</FILENAME> provides two
-        functions:
-        <FUNCSYNOPSIS>
-          <FUNCSYNOPSISINFO>#include &lt;proto/dos.h></FUNCSYNOPSISINFO>
-          <FUNCPROTOTYPE>
-            <FUNCDEF>LONG <FUNCTION>Fault</FUNCTION></FUNCDEF>
-            <PARAMDEF>LONG <PARAMETER>code</PARAMETER></PARAMDEF>
-            <PARAMDEF>STRPTR <PARAMETER>header</PARAMETER></PARAMDEF>
-            <PARAMDEF>STRPTR <PARAMETER>buffer</PARAMETER></PARAMDEF>
-            <PARAMDEF>LONG <PARAMETER>length</PARAMETER></PARAMDEF>
-          </FUNCPROTOTYPE>
-          <FUNCPROTOTYPE>
-            <FUNCDEF>BOOL <FUNCTION>PrintFault</FUNCTION></FUNCDEF>
-            <PARAMDEF>LONG <PARAMETER>code</PARAMETER></PARAMDEF>
-            <PARAMDEF>STRPTR <PARAMETER>header</PARAMETER></PARAMDEF>
-          </FUNCPROTOTYPE>
-        </FUNCSYNOPSIS>
+DOS-functions return one of the ``ERROR_`` definitions from
+:include:`dos/dos.h`. Applications can, of course, process these error-codes by
+hand (which is useful in many cases), but often we just want to inform the user
+what went wrong. (Applications normally need not care, if a file could not be
+opened, because it did not exist or because it was read protected.) To output
+human-readable error messages, dos.library provides two functions::
 
-        While <FUNCTION>PrintFault()</FUNCTION> simply prints an error
-        message to the <GLOSSTERM linkend="glos-stdfh">standard output</GLOSSTERM>,
-        <FUNCTION>Fault()</FUNCTION> fills a supplied buffer
-        with the message. Both functions take a <PARAMETER>code</PARAMETER>
-        argument. This is the code to be converted into a string. You can also
-        supply a <PARAMETER>header</PARAMETER> string, which will prefix the
-        error message. <PARAMETER>header</PARAMETER> may be NULL, in which
-        case nothing is prefixed.
+    #include <proto/dos.h>
 
-        <FUNCTION>Fault()</FUNCTION> also required a pointer to a
-        <PARAMETER>buffer</PARAMETER>, which is to be filled with the converted
-        string. The <PARAMETER>length</PARAMETER> of this buffer (in bytes)
-        is to be passed in as last argument. The total number of characters
-        put into the buffer is returned. You are on the safe side, if your
-        buffer has a size for 83 character plus the size of the header.
+    LONG Fault( LONG code, STRPTR header, STRPTR buffer, LONG length );
+    BOOL PrintFault( LONG code, STRPTR header );
 
-        Examples for the use of these functions can be found in later
-        chapters, especially in the chapter about <LINK linkend="chap-files">Files
-        and Directories</LINK>.
+While `PrintFault()` simply prints an error message to the `standard output`_,
+`Fault()` fills a supplied buffer with the message. Both functions take
+a ``code`` argument. This is the code to be converted into a string. You can
+also supply a ``header`` string, which will prefix the error message. ``header``
+may be ``NULL``, in which case nothing is prefixed.
 
-        Secondary error-codes of a program are handed back to the
-        caller. If this is a shell, the secondary error-code will be put
-        into the field <STRUCTFIELD>cli_Result2</STRUCTFIELD> of the shell
-        structure (struct <STRUCTNAME>CommandLineInterface</STRUCTNAME> as
-        defined in <LINK linkend="dos-dosextens-commandlineinterface"><FILENAME class="headerfile">dos/dosextens.h</FILENAME></LINK>
-        and <LINK linkend="sect-shell">discussed later</LINK>).
+`Fault()` also required a pointer to a ``buffer``, which is to be filled with
+the converted string. The ``length`` of this buffer (in bytes) is to be passed
+in as last argument. The total number of characters put into the buffer is
+returned. You are on the safe side, if your buffer has a size for 83 character
+plus the size of the header.
 
-        You can also set the secondary error-code yourself. This way,
-        you can either to pass it back to another function in your program or
-        to your caller. To set the secondary error, use
-        <FUNCSYNOPSIS>
-          <FUNCSYNOPSISINFO>#include &lt;proto/dos.h></FUNCSYNOPSISINFO>
-          <FUNCPROTOTYPE>
-            <FUNCDEF>LONG <FUNCTION>SetIoErr</FUNCTION></FUNCDEF>
-            <PARAMDEF>LONG <PARAMETER>code</PARAMETER></PARAMDEF>
-          </FUNCPROTOTYPE>
-        </FUNCSYNOPSIS>
-        <PARAMETER>code</PARAMETER> is the new secondary error-code and
-        the old secondary error-code is returned.
+Examples for the use of these functions can be found in later chapters,
+especially in the chapter about `Files and Directoriess`_.
 
-        <FUNCTION>SetIoErr()</FUNCTION> will be used in the
-        <LINK linkend="chap-boopsi">chapter about object orientation</LINK>.
+Secondary error-codes of a program are handed back to the caller. If this is
+a shell, the secondary error-code will be put into the field ``cli_Result2`` of
+the shell structure (struct ``CommandLineInterface`` as defined in
+:include:`dos/dosextens.h` and `discussed later`_.
+
+You can also set the secondary error-code yourself. This way, you can either to
+pass it back to another function in your program or to your caller. To set the
+secondary error, use::
+
+    #include <proto/dos.h>
+
+    LONG SetIoErr( LONG code );
+
+``code`` is the new secondary error-code and the old secondary error-code is
+returned.
+
+`SetIoErr()` will be used in the `chapter about object orientation`_.
 
 
 Parsing Arguments
@@ -2437,7 +2138,7 @@ FIXME
 
       <REFSYNOPSISDIV>
         <FUNCSYNOPSIS>
-          <FUNCSYNOPSISINFO>#include &lt;proto/intuition.h></FUNCSYNOPSISINFO>
+          <FUNCSYNOPSISINFO>#include <proto/intuition.h></FUNCSYNOPSISINFO>
           <FUNCPROTOTYPE>
             <FUNCDEF>APTR <FUNCTION>AllocRemember</FUNCTION></FUNCDEF>
             <PARAMDEF>struct Remember ** <PARAMETER>key</PARAMETER></PARAMDEF>
@@ -2465,7 +2166,7 @@ FIXME
 
       <REFSYNOPSISDIV>
         <FUNCSYNOPSIS>
-          <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+          <FUNCSYNOPSISINFO>#include <proto/exec.h></FUNCSYNOPSISINFO>
           <FUNCPROTOTYPE>
             <FUNCDEF>APTR <FUNCTION>AllocVec</FUNCTION></FUNCDEF>
             <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
@@ -2492,7 +2193,7 @@ FIXME
 
       <REFSYNOPSISDIV>
         <FUNCSYNOPSIS>
-          <FUNCSYNOPSISINFO>#include &lt;proto/intuition.h></FUNCSYNOPSISINFO>
+          <FUNCSYNOPSISINFO>#include <proto/intuition.h></FUNCSYNOPSISINFO>
           <FUNCPROTOTYPE>
             <FUNCDEF>void <FUNCTION>FreeRemember</FUNCTION></FUNCDEF>
             <PARAMDEF>struct Remember ** <PARAMETER>key</PARAMETER></PARAMDEF>
@@ -2519,7 +2220,7 @@ FIXME
 
       <REFSYNOPSISDIV>
         <FUNCSYNOPSIS>
-          <FUNCSYNOPSISINFO>#include &lt;proto/intuition.h></FUNCSYNOPSISINFO>
+          <FUNCSYNOPSISINFO>#include <proto/intuition.h></FUNCSYNOPSISINFO>
           <FUNCPROTOTYPE>
             <FUNCDEF>LONG <FUNCTION>EasyRequestArgsA</FUNCTION></FUNCDEF>
             <PARAMDEF>struct Window * <PARAMETER>window</PARAMETER></PARAMDEF>
@@ -2545,7 +2246,7 @@ FIXME
         <REFPURPOSE>basic features of dos.library</REFPURPOSE>
       </REFNAMEDIV>
 
-      <REFSECT1 id="dos-dos-error" role="defines"><TITLE><STRUCTNAME>DOS Error Codes</STRUCTNAME></TITLE>
+      <REFSECT1 id="dos-dos-error" role="defines"><TITLE>``DOS Error Codes``</TITLE>
         FIXME
       </REFSECT1>
 
@@ -2563,12 +2264,12 @@ FIXME
       </REFNAMEDIV>
 
 
-      <REFSECT1 id="dos-dosextens-commandlineinterface" role="struct"><TITLE>struct <STRUCTNAME>CommandLineInterface</STRUCTNAME></TITLE>
+      <REFSECT1 id="dos-dosextens-commandlineinterface" role="struct"><TITLE>struct ``CommandLineInterface``</TITLE>
         FIXME
       </REFSECT1>
 
 
-      <REFSECT1 id="dos-dosextens-process" role="struct"><TITLE>struct <STRUCTNAME>Process</STRUCTNAME></TITLE>
+      <REFSECT1 id="dos-dosextens-process" role="struct"><TITLE>struct ``Process``</TITLE>
         FIXME
       </REFSECT1>
 
@@ -2586,7 +2287,7 @@ FIXME
       </REFNAMEDIV>
 
 
-      <REFSECT1 id="exec-libraries-library" role="struct"><TITLE>struct <STRUCTNAME>Library</STRUCTNAME></TITLE>
+      <REFSECT1 id="exec-libraries-library" role="struct"><TITLE>struct ``Library``</TITLE>
         FIXME
       </REFSECT1>
 
@@ -2611,72 +2312,72 @@ FIXME
       </REFSECT1>
 
 
-      <REFSECT1 id="exec-lists-list" role="struct"><TITLE>struct <STRUCTNAME>List</STRUCTNAME></TITLE>
+      <REFSECT1 id="exec-lists-list" role="struct"><TITLE>struct ``List``</TITLE>
         A standard exec list structure. This is used for all kinds of
         doubly linked lists. Members of this list are of type
-        <LINK linkend="exec-nodes-node">struct <STRUCTNAME>Node</STRUCTNAME></LINK>.
+        <LINK linkend="exec-nodes-node">struct ``Node``</LINK>.
 
         This structure can be embedded into other structures.
 
         <VARIABLELIST role="fieldlist"><TITLE>Fields</TITLE>
           <VARLISTENTRY>
-            <TERM>struct <STRUCTNAME>Node</STRUCTNAME> * <STRUCTFIELD>lh_Head</STRUCTFIELD></TERM>
+            <TERM>struct ``Node`` * ``lh_Head``</TERM>
             <LISTITEM>Pointer to the first item in the list. If the list is
-            empty, this points to the <STRUCTFIELD>lh_Tail</STRUCTFIELD> field
+            empty, this points to the ``lh_Tail`` field
             of the list.</LISTITEM>
           </VARLISTENTRY>
           <VARLISTENTRY>
-            <TERM>struct <STRUCTNAME>Node</STRUCTNAME> * <STRUCTFIELD>lh_Tail</STRUCTFIELD></TERM>
+            <TERM>struct ``Node`` * ``lh_Tail``</TERM>
             <LISTITEM>Pointer to the last item in the list. If the list
             is empty, this is <SYMBOL>NULL</SYMBOL>.</LISTITEM>
           </VARLISTENTRY>
           <VARLISTENTRY>
-            <TERM>struct <STRUCTNAME>Node</STRUCTNAME> * <STRUCTFIELD>lh_TailPred</STRUCTFIELD></TERM>
+            <TERM>struct ``Node`` * ``lh_TailPred``</TERM>
             <LISTITEM>This is a fake entry that also points to the last
             entry in the list. If the list is empty, it points to the list
             itself, instead.</LISTITEM>
           </VARLISTENTRY>
           <VARLISTENTRY>
-            <TERM>UBYTE <STRUCTFIELD>lh_Type</STRUCTFIELD></TERM>
+            <TERM>UBYTE ``lh_Type``</TERM>
             <LISTITEM>This field specifies the type the nodes in the
-            list. It corresponds to the <STRUCTFIELD>ln_Type</STRUCTFIELD>
-            field of the <LINK linkend="exec-nodes-node"><STRUCTNAME>Node</STRUCTNAME></LINK>
+            list. It corresponds to the ``ln_Type``
+            field of the <LINK linkend="exec-nodes-node">``Node``</LINK>
             structure. See <FILENAME class="headerfile">exec/nodes.h</FILENAME>
             for a <LINK linkend="exec-nodes-types">list of possible types</LINK>.</LISTITEM>
           </VARLISTENTRY>
           <VARLISTENTRY>
-            <TERM>UBYTE <STRUCTFIELD>l_Pad</STRUCTFIELD></TERM>
+            <TERM>UBYTE ``l_Pad``</TERM>
             <LISTITEM>Unused field for word-padding.</LISTITEM>
           </VARLISTENTRY>
         </VARIABLELIST>
       </REFSECT1>
 
 
-      <REFSECT1 id="exec-lists-minlist" role="struct"><TITLE>struct <STRUCTNAME>MinList</STRUCTNAME></TITLE>
+      <REFSECT1 id="exec-lists-minlist" role="struct"><TITLE>struct ``MinList``</TITLE>
         A minimal exec list structure. This is exactly the same as a
-        <LINK linkend="exec-lists-list"><STRUCTNAME>List</STRUCTNAME></LINK>
-        structure, except that the <STRUCTFIELD>lh_Type</STRUCTFIELD> field
-        is missing. Members of a <STRUCTNAME>MinList</STRUCTNAME> are of type
-        <LINK linkend="exec-nodes-minnode">struct <STRUCTNAME>MinNode</STRUCTNAME></LINK>.
-        <STRUCTNAME>Node</STRUCTNAME>s may be used, but you loose all their
+        <LINK linkend="exec-lists-list">``List``</LINK>
+        structure, except that the ``lh_Type`` field
+        is missing. Members of a ``MinList`` are of type
+        <LINK linkend="exec-nodes-minnode">struct ``MinNode``</LINK>.
+        ``Node``s may be used, but you loose all their
         advantages.
 
         This structure can be embedded into other structures.
 
         <VARIABLELIST role="fieldlist"><TITLE>Fields</TITLE>
           <VARLISTENTRY>
-            <TERM>struct <STRUCTNAME>MinNode</STRUCTNAME> * <STRUCTFIELD>mlh_Head</STRUCTFIELD></TERM>
+            <TERM>struct ``MinNode`` * ``mlh_Head``</TERM>
             <LISTITEM>Pointer to the first item in the list. If the list is
-            empty, this points to the <STRUCTFIELD>mlh_Tail</STRUCTFIELD> field
+            empty, this points to the ``mlh_Tail`` field
             of the list.</LISTITEM>
           </VARLISTENTRY>
           <VARLISTENTRY>
-            <TERM>struct <STRUCTNAME>MinNode</STRUCTNAME> * <STRUCTFIELD>mlh_Tail</STRUCTFIELD></TERM>
+            <TERM>struct ``MinNode`` * ``mlh_Tail``</TERM>
             <LISTITEM>Pointer to the last item in the list. If the list
             is empty, this is <SYMBOL>NULL</SYMBOL>.</LISTITEM>
           </VARLISTENTRY>
           <VARLISTENTRY>
-            <TERM>struct <STRUCTNAME>MinNode</STRUCTNAME> * <STRUCTFIELD>mlh_TailPred</STRUCTFIELD></TERM>
+            <TERM>struct ``MinNode`` * ``mlh_TailPred``</TERM>
             <LISTITEM>This is a fake entry that also points to the last
             entry in the list. If the list is empty, it points to the list
             itself, instead.</LISTITEM>
@@ -2700,12 +2401,12 @@ FIXME
       </REFNAMEDIV>
 
 
-      <REFSECT1 id="exec-memory-memheader" role="struct"><TITLE>struct <STRUCTNAME>MemHeader</STRUCTNAME></TITLE>
+      <REFSECT1 id="exec-memory-memheader" role="struct"><TITLE>struct ``MemHeader``</TITLE>
         FIXME
       </REFSECT1>
 
 
-      <REFSECT1 id="exec-memory-memlist" role="header"><TITLE>struct <STRUCTNAME>MemList</STRUCTNAME></TITLE>
+      <REFSECT1 id="exec-memory-memlist" role="header"><TITLE>struct ``MemList``</TITLE>
         FIXME
       </REFSECT1>
 
@@ -2728,12 +2429,12 @@ FIXME
       </REFNAMEDIV>
 
 
-      <REFSECT1 id="exec-nodes-node" role="struct"><TITLE>struct <STRUCTNAME>Node</STRUCTNAME></TITLE>
+      <REFSECT1 id="exec-nodes-node" role="struct"><TITLE>struct ``Node``</TITLE>
         FIXME
       </REFSECT1>
 
 
-      <REFSECT1 id="exec-nodes-minnode" role="struct"><TITLE>struct <STRUCTNAME>MinNode</STRUCTNAME></TITLE>
+      <REFSECT1 id="exec-nodes-minnode" role="struct"><TITLE>struct ``MinNode``</TITLE>
         FIXME
       </REFSECT1>
 
@@ -2756,12 +2457,12 @@ FIXME
       </REFNAMEDIV>
 
 
-      <REFSECT1 id="exec-tasks-stackswapstruct" role="struct"><TITLE>struct <STRUCTNAME>StackSwapStruct</STRUCTNAME></TITLE>
+      <REFSECT1 id="exec-tasks-stackswapstruct" role="struct"><TITLE>struct ``StackSwapStruct``</TITLE>
         FIXME
       </REFSECT1>
 
 
-      <REFSECT1 id="exec-tasks-task" role="struct"><TITLE>struct <STRUCTNAME>Task</STRUCTNAME></TITLE>
+      <REFSECT1 id="exec-tasks-task" role="struct"><TITLE>struct ``Task``</TITLE>
         FIXME
       </REFSECT1>
 
