@@ -13,7 +13,7 @@ include $(TOP)/config/make.cfg
 #MM
 contrib-regina-exes-quick : contrib-regina-module contrib-regina-exes
 
-#MM contrib-regina-module : setup linklibs includes contrib-regina-includes
+#MM contrib-regina-module : includes linklibs
 #MM
 contrib-regina-module-quick : contrib-regina-module contrib-regina-includes
 
@@ -70,7 +70,7 @@ FILES := $(OFILES) \
   files=$(FILES) uselibs="amiga arosc_shared arosm" \
   objdir=$(GENDIR)/$(CURDIR)/shared linklibname=regina_shared
 
-%copy_includes mmake=contrib-regina-includes includes=rexxsaa.h dir=
+%copy_includes includes=rexxsaa.h dir=
 
 %common
 %include_deps
