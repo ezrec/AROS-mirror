@@ -1,0 +1,11 @@
+FROM LIB:c.o "CnvConfig.o"
+TO "CnvConfig"
+LIB sc:lib/debug.lib sc:lib/reqtoolss.lib LIB:sc.lib LIB:amiga.lib
+SMALLCODE
+SMALLDATA
+QUIET
+DEFINE __CXM33=__UCXM33
+DEFINE __CXD33=__UCXD33
+DEFINE __CXM22=__UCXM22
+DEFINE __CXD22=__UCXD22
+

@@ -1,0 +1,38 @@
+
+    Name    : Bernd Noll
+    EMail   : noll@student.uni-kl.de | b_noll@informatik.uni-kl.de
+    Version : XDME V1.83pl13
+    Config  : A3000, 68030/68882 2/4MB RAM, 1 Drive, 2 HD, KS/WB 3.1,
+	      MagicMenu 1.29, ToolsDaemon 2.* (37.84), KingCON 1.3,
+	      AssignWedge 1.1, DragIt 3.0, MMBShift 1.0
+
+    Bug1    : Using the Scrollbar to move the window causes major
+	      redrawproblems (seems, like the scrollbar jumps
+	      in another width, than the display update thinks)
+	      so clicking some times in the jump area of the scrollbar
+	      and then in the textfield (tomouse), a full redraw
+	      with another contents is done before the cursor is placed.
+
+	      Bei Abwechselnder Verwendung des Scrollbars zum Springen und
+	      zum Moven wird der Scrollbar immer kleiner ...
+	     (Fix: ersetze ScrollAndUpdate in main.c/930 wieder durch
+	      scroll_display)
+
+    Bug2 :  Die folgende Befehlssequenz habe ich von der
+	    Commandshell aus eingegeben ... falls der
+	    normale Escape-modus verwendet wird, muß die
+	    gesamte Sequenz komplett eingegeben werden
+	    % first 30 scrollright
+	    # -> Alles Ok
+	    % 25 scrollleft
+	    # -> Display wird nicht wieder dargestellt! (Das
+	    #	 wird wohl mit dem verzögerten Redisplay behoben)
+	    % 10 scrollleft
+	    # -> negative Spaltenangabe! (Aber das nicht!)
+
+    Bug3 :  Die folgende Befehlssequenz bringt Redrawprobleme:
+	    % lineblock down lineblock
+	    # -> der 1. Block wird nicht sauber gelöscht. (Das
+	    #	 wird wohl wiederum mit verzögertem Redisplay behoben)
+
+

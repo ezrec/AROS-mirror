@@ -1,0 +1,41 @@
+Return-Path: <utoddl@guitar.oit.unc.edu>
+Date: Wed, 14 Sep 94 08:37:05 GMT-0500
+From: Todd M. Lewis <utoddl@guitar.oit.unc.edu>
+Subject: New block.c and associated files
+
+The enclosed archive contains all the files that I have changed
+from the pl11 release to implement the new Block structure.  Note
+that it doesn't actually do the cut/copy/paste/bmove/bdelete/...
+stuff yet, but it has taken a bit of work to get the changes in
+to this point.	I wanted to get synchronized with you as far as
+these modules go so that I wouldn't have to fit these changes into
+another patch level release.
+
+I used 'diff -w myxdme:xxxx XDMEpl11:xxxx' for all the files to
+figure out which ones had been changed.  I hope you can work this
+in before other major changes happen.  Now I can start doing what
+I started to do in the first place, and that is to impliment
+block operation on all the block types.  That should be a lot
+easier now.  Unfortunately I wasted a lot of time trying to figure
+out how xdme does block highlighting and text redrawing.  I'm still
+not sure I found all the places that have an effect on the display,
+but redraw.c is much smaller now and never even references
+ActualBlock.type!
+
+Here's the log from lha so you can see what's in here.
+
+Creating new archive 'tml_blk.lha':
+     Frozen: ( 54.5%)    1726 =>    784 : include/defs.h
+     Frozen: ( 68.5%)    9144 =>   2873 : include/global.h
+     Frozen: ( 77.8%)   23539 =>   5210 : include/prog-protos.h
+     Frozen: ( 77.0%)   49048 =>  11272 : src/block.c
+     Frozen: ( 80.9%)   51769 =>   9864 : src/cmd.c
+     Frozen: ( 71.6%)   14534 =>   4125 : src/io.c
+     Frozen: ( 74.6%)   45100 =>  11453 : src/main.c
+     Frozen: ( 75.2%)   22518 =>   5578 : src/redraw.c
+     Frozen: ( 75.8%)   31649 =>   7639 : src/text.c
+     Frozen: ( 82.1%)   17118 =>   3064 : src/var/Jabba.c
+10 files added, all files OK.
+---
+Todd_Lewis@unc.edu   ASDF - Amiga Software Developers Forum
+	       "Where the Pizza Meets the Code"

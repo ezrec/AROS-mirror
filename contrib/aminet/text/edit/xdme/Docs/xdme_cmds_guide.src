@@ -1,0 +1,956 @@
+@DATABASE "xdme_cmds.guide"
+@REMARK $Id$
+@INDEX "index"
+@NODE "MAIN" "XDME commands overview"
+@TOC "MAIN"
+
+This file contains a complete list of all commands of XDME sorted
+alphabetically and by topic.
+
+#toc
+#node general General
+@{B}(text)@{UB}         enter @{B}text@{UB} as if typed
+@{B}key@{UB}		execute a keymap as a macro (example @{B}-return@{UB})
+@{B}header-item@{UB}	execute a menu item as a macro (example: @{B}Project-Save@{UB})
+	       (case independent)
+#node program Control structures
+#node block Blockoperations
+#node requester Requester
+#node searchreplace Search and Replace
+#node var Variable
+#node textedit Text Editing
+#node io IO Operations
+    XDME will always save the text at the place where it came from, expect
+    you have used the @{B}CD@{UB} command to change the current directory.
+
+#node format Text formatting
+#node movement Move in the text
+#node misc Misc
+#node stack Stack
+#node win Windows
+#node keys Keyboard
+#node prefs Preferences and Settings
+    @{B}what@{UB} is one of on, off or toggle to switch the option on,
+    off or to change its state.
+
+#node arexx AREXX
+#cmd textedit READTEMPLATE file - insert @{B}file@{UB} and replace variables
+#cmd block,stack PUSHMARK	 -push the currently marked block onto a stack and unhighlight the block
+#cmd block,stack POPMARK	 -pop the block stack and highlight the popped block
+#cmd block,stack PURGEMARK	 -clear the mark stack
+#cmd block,stack SWAPMARK	 -PUSHMARK, swap top two marks on stack, POPMARK
+#cmd var SET var str	 -create/modify an internal variable (access without $)
+#cmd var SETENV var str  -create/modify an enviroment variable (1.3 ENV:)
+#cmd var SETTVAR var str     -create/modify text-local variable (access without $)
+#cmd var UNSET var	 -delete an internal variable
+#cmd var UNSETTVAR var	     -delete a text-local variable
+#cmd var UNSETENV var	 -delete an enviroment variable
+#cmd var RESETTOGGLE n	 -clear toggle array entry @{B}n@{UB} = 0..255
+#cmd var SETTOGGLE n	 -set toggle array entry @{B}n@{UB} = 0..255
+#cmd var TOGGLE n	 -flip toggle array entry @{B}n@{UB} = 0..255
+#cmd var FLAG name what  -change flag @{B}name@{UB} by @{B}what@{UB}
+#cmd prefs,keys MAP key map	-map a key to a keymap
+#cmd menu MENUADD hdr item cmd -add menu item
+#cmd menu MENUDEL hdr item -delete menu item
+#cmd menu MENUDELHDR hdr  -delete menu header
+#cmd menu MENUCLEAR	 -delete entire menu
+#cmd menu MENUON	 -This command will enable menus.
+#cmd menu MENUOFF	 -disable menus (multiple calls are stacked)
+#cmd prefs,keys UNMAP key	-unmap a key
+#cmd stack,var PUSHVAR varname - push the contents of the variable varname onto variable-stack
+#cmd stack,var POPVAR varname - get the latest to variable-stack pushed contents of the variable varname back and free the stack-entry
+#cmd stack,var PICKVAR varname - get the latest to variable-stack pushed contents of the variable varname back without freeing the stack-entry
+#cmd stack,var SWAPVAR varname - swap the contents of the variable varname and of its first occurancy in variable-stack
+#cmd stack,var PURGEVAR varname - remove all entries with the name varname from varstack
+#cmd program ABORT  - stop macro execution
+#cmd program UNABORT  - clear abort flag (only in an AREXX script)
+#cmd program BREAK  - leave current loop (WHILE, REPEAT)
+#cmd program CONTINUE  - start loop over (WHILE, REPEAT)
+#cmd program EVAL com  - split long commandsequences to keep MAXIA small
+#cmd program FORCE flag command - set special conditions for executing @{B}command@{UB}
+#cmd textedit,format PRINTF format parameters - create a string with @{B}format@{UB} and its (up to 8) @{B}parameters@{UB} and write it into the current text
+#cmd textedit INSERT text - insert some text at the current position
+#cmd textedit OVERWRITE text - overwrite the text at the current position with @{B}text@{UB}
+#cmd math NEG var - negate the value of @{B}var@{UB}
+#cmd math NOT var - logical not for @{B}var@{UB}
+#cmd math INC var - add 1 to @{B}var@{UB}
+#cmd math DEC var - sub 1 from @{B}var@{UB}
+#cmd math ADD var val - add @{B}val@{UB} to @{B}var@{UB}
+#cmd math SUB var val - sub @{B}val@{UB} from @{B}var@{UB}
+#cmd math MUL var val - multiply @{B}var@{UB} by @{B}val@{UB}
+#cmd math DIV var val - divide @{B}var@{UB} by @{B}val@{UB}
+#cmd math MOD var val - module of @{B}var@{UB} by @{B}val@{UB}
+#cmd macro SETMACRO name numargs body - define the macro @{B}name@{UB} with @{B}numargs@{UB} arguments.
+#cmd macro UNSETMACRO name - delete macro @{B}name@{UB}
+#cmd macro,var SETMACROVAR name val - definition of a macro's local variable inside a macro
+#cmd macro,var SMV name val - short for @{B}SETMACROVAR name val@{UB}
+#cmd macro,var UNSETMACROVAR name - deletion of a macro's local variable
+#cmd macro RET	 - terminate macro
+#cmd macro,io MACROSAVE filename - save the current macros into a file with a special format
+#cmd macro,io MACROLOAD filename - load macros from a file
+#cmd menu MENUSETITEM menuname itemname status - set the status of a menu-item with checkmarks
+#cmd menu MENUCHKITEM menuname itemname variablename - write the current status (0 or 1) of an checkmarks in a variable
+#cmd menu,io MENUSAVE filename - write the current menustrip in a file
+#cmd menu,io MENULOAD filename - replace the current menustrip with the one from the file
+#cmd menu USEMENUSTRIP name - switch to menustrip @{B}name@{UB}
+#cmd menu REMMENUSTRIP	 - delete the current menustrip, if it is not the only one
+#cmd menu NEWMENUSTRIP name - use a menustrip or create a new one
+#map keys QUALIFIER qualifierset - set certain qualifiers
+#cmd keys,io KEYSAVE filename - save the current keymap into @{B}filename@{UB}
+#cmd keys,io KEYLOAD filename - replace the current keymap with the contents of @{B}filename@{UB}
+#cmd keys USEKEYTABLE name - search for a certain keytable and use it as the current one
+#cmd keys REMKEYTABLE  - delete the current keytable, if it is not the only one
+#cmd keys NEWKEYTABLE name - use a keytable or create a new one
+#cmd record RECSTART - start macro recording
+#cmd record RECEND - end macro recording
+#cmd record RECPLAY - use previously recorded macro
+#cmd record RECSAVE file - save recorded macro to a file. Execute with @{B}SOURCE@{UB}
+#cmd record SIMPTR x y - simulate a mouse-movement. @{B}x@{UB} and @{B}y@{UB} are in pixels.
+#cmd misc ABOUT - display information about XDME 
+#cmd win,misc REDISPLAY - force XDME to redraw the text 
+#cmd arexx RXRESULT any - Copy @{B}any@{UB} into RESULT in an AREXX-script. 
+#cmd arexx RX - ARexx macro, no args (@{B}RX@{UB} macname) 
+#cmd arexx RX1 - ARexx macro, one arg (@{B}RX1@{UB} macname arg1) 
+#cmd arexx RX2 - ARexx macro, two args (@{B}RX2@{UB} macname arg1 arg2) 
+#cmd arexx PORT name cmd - Send @{B}cmd@{UB} to ARexx-Port @{B}name@{UB} 
+#cmd arexx,win SELECT what - make a window the current one. 
+#cmd arexx PROJECTINFO - Gives some information about the current project. 
+#cmd program,io PROJECTSAVE - Save all window-dimensions, filenames and position of iconified windows. 
+#cmd program,io PROJECTLOAD - Recall session 
+#cmd prefs,io,requester PATTERN pat - sets the pattern for the filerequesters. 
+#cmd requester,io ARPLOAD - NEWFILE with filerequester 
+#cmd requester,io ARPINSFILE - INSFILE with filerequester 
+#cmd requester,font ARPFONT - SETFONT with fontrequester 
+requester,io REQLOAD - NEWFILE with ReqTools filerequester 
+requester,io REQINSFILE - INSFILE with ReqTools filerequester 
+requester,io REQFONT - SETFONT with ReqTools fontrequester 
+#cmd program IF cnd act - if (@{B}cnd@{UB}) @{B}act@{UB} 
+#cmd program IFELSE cnd ifact elseact - if (@{B}cnd@{UB}) @{B}ifact@{UB} else @{B}elseact@{UB} 
+#cmd program WHILE cnd act -while (@{B}cnd@{UB}) @{B}act@{UB} 
+#cmd program REPEAT cnt comm - repeat @{B}comm@{UB} @{B}cnt@{UB} times. 
+#cmd program SCANF ctlstr - scan the string at the current text position (C scanf) example: @{B}scanf %s@{UB} 
+#cmd stack PUSH item - Push an item on the stack. 
+#cmd stack POP item - Pop something from the stack and store it in item. The special item AUTO stores the thing back where it was taken from. 
+#cmd stack PICK item - like POP, but doesn't remove the topmost element from stack ! 
+#cmd stack PEEK item - like POP, but doesn't remove the topmost element from stack ! 
+#cmd stack SWAP item - exchange the topmost item on stack with the actual item 
+#cmd prefs MARGIN n - set WordWrap and paragraph formatting margin (related to WORDWRAP and REFORMAT) 
+#cmd prefs WORDWRAP what - set word wrap mode (related to MARGIN) 
+#cmd searchreplace,prefs GLOBAL what - turn global search on/off. If XDME cannot find a string in one window, it will continue with the next one. 
+#cmd prefs SETPARCOL col - Set the LEFT margin for word wrap mode paragraphing & reformat. MUST be less than MARGIN. 
+#cmd prefs TABSTOP n - Set tab stops every @{B}n@{UB}. does not effect text load. 
+#cmd prefs INSERTMODE what - set INSERTMODE. 
+#cmd prefs,io CHFILENAME name - change the name of the working file 
+#cmd prefs SAVETABS what - Optimize file saves by crunching spaces to tabs. The default is OFF. 
+#cmd prefs SETFONT font sz - Set the window's font. @{B}setfont topaz 11@{UB} 
+#cmd prefs IGNORECASE what -set case ignore for seaches. 
+#cmd prefs,io SAVECONFIG -save current editor configuration to @{I}s:XDME.prefs@{UI} 
+#cmd prefs FGPEN pen - Set pen for text 
+#cmd prefs TFPEN pen - set pen for title bar text 
+#cmd prefs TBPEN pen - set pen for title bar background 
+#cmd prefs BGPEN pen - set background pen for text 
+#cmd prefs HGPEN pen - set highlight (block) pen 
+#cmd prefs BBPEN pen - selects @{B}pen@{UB} as the block-background-pen 
+#cmd prefs MODIFIED what - set modified flag manually (what={on,off,toggle}) 
+#cmd prefs AUTOINDENT what - (De)Activate autoindent with RETURN 
+#cmd prefs,win SIZEWINDOW geo - change size and position of the current window to @{B}geo@{UB} 
+#cmd prefs AUTOSPLIT what - (De)Activate autosplit. This is an alternative to WORDWRAP. AUTOSPLIT only breaks the line if it gets too long and doesn't touch the rest of the text. 
+#cmd prefs TASKPRI n - Set the priority of XDME to @{B}n@{UB} (-5..5) 
+#cmd prefs DEBUG what - @{U}For programmers only@{UB} Allows to set a flag for testing code 
+#cmd prefs DOBACKUP what - specifies if XDME creates a .bak file before actually saving the text 
+#cmd prefs,block AUTOUNBLOCK what - clear old selection when a new block is defined (on) or give an error 
+#cmd prefs FOLLOWCURSOR what - XDME will make sure the cursor is visible if you switch it on with this command. Usefull on screens that extend over the visual area. 
+#cmd prefs NICEPAGING what - Should @{B}PAGEUP@{UB} and @{B}PAGEDOWN@{UB} scroll the page immediately (@{B}on@{UB}) or jump to the border first 
+#cmd prefs ICONACTIVE what - Should XDME activate the iconified window 
+#cmd prefs BLOCKENDSFLOAT what - Should @{B}BSTART@{UB} always appear above @{B}BEND@{UB} (@{B}on@{UB}) or remain static 
+#cmd prefs SLINE what - Should XDME not allow to go beyond the end of line and preserve the length of lines (default: no) 
+#cmd prefs SPACING n - Insert a gap of @{B}n@{UB} pixels between lines 
+#cmd textedit BACK - backspace, (delete char to left of cursor) 
+#cmd textedit BS - backspace, (delete char to left of cursor) 
+#cmd textedit DEL - delete, (deletes char under cursor) 
+#cmd textedit REMEOL - Remove text under and beyond the cursor. 
+#cmd textedit SPLIT - Split line at cursor 
+#cmd textedit JOIN - join next line to line at cursor 
+#cmd textedit,format REFORMAT - reformat paragraph using the margin. 
+#cmd textedit INSLINE - insert line 
+#cmd textedit DELINE - delete line 
+#cmd textedit TLATE how - Modify character under cursor. 
+#cmd textedit,format JUSTIFY how - simple text justification. 
+#cmd textedit UNJUSTIFY - removes extra spaces in a line 
+#cmd textedit INDENT what how - indent text. @{B}what@{UB} specifies what to indent and @{B}how@{UB} how to indent it. 
+#cmd textedit INSLINES n - insert @{B}n@{UB} lines at once 
+DELETE - delete characters upto the next blank (if on a blank) or to the next non-blank (if on non-blank) 
+#cmd textedit DELINES n - delete @{B}n@{UB} lines 
+#cmd misc UNDELINE - insert most recently deleted line (only last line saved) 
+#cmd block,clip CLIPINS - Insert current contents of clipboard in the text 
+SPACE - inserts a single space no matter what insertmode is set to 
+#cmd textedit,movement RETURN - if AUTOINDENT is off: (FIRST DOWNADD) else insert line, split current line and indent like last line above. 
+#cmd misc UNDO - undo current line (must be mapped to a key to work) 
+#cmd movement MAKECURSORVISIBLE - Scrolls an oversized screen so the cursor will become visible. 
+#cmd win ICONIFY - iconify the window 
+#cmd prefs,win SETDEFICONTITLE string - Sets the pattern for the window-title when iconifed 
+#cmd win UNICONIFY - uniconify the window 
+#cmd win NEWWINDOW - open new window using default window parameters 
+#cmd win OPENWINDOW geo -open new window using specified geometry. 
+#cmd prefs,win SETDEFTITLE string - Sets the pattern for the window-title. 
+#cmd prefs,win RESIZE cols rows -Resize current window. E.G: (@{B}resize 70 23@{UB}) 
+#cmd prefs,win TITLE title - set window title manually 
+#cmd win SHOWLOG - XDME collects all warnings internally. These can now be showed again with this command. 
+#cmd win SETGEOMETRY x y width height - Set x/y position and width/height of XDME's window. 
+#cmd win TOBACK - Move active window to back 
+#cmd win TOFRONT - Move active window to front 
+#cmd movement TOMOUSE - moves cursor to mouse position 
+#cmd prefs PUBSCREEN name - open next window on screen @{B}name@{UB}. Use an empty string to turn it off (ie. "pubscreen `'") 
+#cmd prefs,refs ADDPATH path - Add the specified symbolic directory to XDME's special search path (see REF and CTAGS). 
+#cmd prefs,refs REMPATH wild - Remove a directorys from XDME's special path. 
+#cmd refs REFCTAGS - The utimate command for hopping through source. First, we try CTAGS and if we don't find anything, we check REF. 
+#cmd refs VREFCTAGS name - like REFCTAGS, but looks for @{B}name@{UB} 
+#cmd refs CTAGS - search for the tag under the cursor (see below) 
+#cmd refs VCTAGS name - search for tag @{B}name@{UB} 
+#cmd refs REF - reference string under cursor (see below) 
+#cmd refs VREF name - reference @{B}name@{UB} 
+#cmd searchreplace FINDSTR string - Set the search string pattern 
+#cmd searchreplace REPSTR string - SET the replace string pattern 
+#cmd searchreplace FINDR s1 s2 - Set find and replace patterns and do one find&replace. 
+#cmd searchreplace NEXTR - find next occurance and replace 
+#cmd searchreplace PREVR - find previous occurance and replace 
+#cmd searchreplace FIND string - Set the search pattern to @{B}string@{UB} and do a NEXT 
+#cmd searchreplace NEXT - find next occurance of search pattern 
+#cmd searchreplace PREV - find previous occurance of search pattern 
+#cmd searchreplace REPLACE - replaces the next strlen(findstr) chars with repstr 
+#cmd prefs,block BLOCKTYPE type - @{B}type@{UB} is LINE (old), CHARACTER (like everywhere else) or VERTICAL (rectangular block). 
+#cmd block BLOCK - Set start or end (if start is already set) of block 
+#cmd block BSTART - Set start of block 
+#cmd block BEND - Set end of block 
+#cmd block UNBLOCK - clear the block markers for the current window 
+#cmd block LINEBLOCK - mark the current line 
+#cmd block,clip COPY - copy currently marked text into clipboard 
+#cmd block BDELETE - delete currently marked text 
+BCOPY - insert currently marked text before cursor 
+#cmd block BMOVE - delete currently marked text and insert it before cursor line 
+#cmd block,source BSOURCE - execute currently marked text block as if it were a script file 
+#cmd movement UP -cursor up. If in commandline, move to previous line of commandline-history 
+#cmd movement SCROLLDOWN - Scroll down without moving cursor 
+#cmd movement SCROLLUP - Scroll up without moving cursor 
+#cmd movement DOWN - cursor down. If in commandline move to next line of commandline-history 
+#cmd movement PAGEDOWN - pagedown a partial page (see PAGESET) 
+#cmd movement PAGELEFT - page to the left as requested by StyleGuide. 
+#cmd movement PAGERIGHT - dito to the right 
+#cmd movement PAGEUP - pageup a partial page (see PAGESET) 
+#cmd prefs PAGESET n -@{B}n@{UB} PERCENT (0 to 100). page step size relative to the current number of rows in the window. 
+#cmd textedit,movement DOWNADD - cursor down. If at bottom of text, add a line. 
+#cmd movement LEFT - cursor left 
+#cmd movement RIGHT - cursor right 
+#cmd movement TAB - forward tab 
+#cmd movement BACKTAB - backward tab 
+#cmd movement TOP - Move to Top of File 
+#cmd movement BOTTOM - Move to Bottom of File 
+#cmd movement FIRST - move to column 1 
+#cmd movement FIRSTNB - Move to first non-blank in line. 
+#cmd movement LAST - move one beyond the last non-space in a line. 
+#cmd movement GOTO dest - Goto to a position in the text. 
+#cmd movement SCREENTOP - Move cursor to the top of the screen 
+#cmd movement SCREENBOTTOM - Move cursor to the bottom of the screen. 
+#cmd movement WLEFT - move to beginning of previous word. If in the middle of a word, move to beginning of current word. 
+#cmd movement WRIGHT - move to beginning of next word 
+#cmd movement COL n - Move cursor to column @{B}n@{UB} or @{B}n@{UB} characters left (@{B}-n@{UB}) or right (@{B}+n@{UB}) 
+#cmd movement SCROLLLEFT - Scroll left without moving cursor 
+#cmd movement SCROLLRIGHT - Scroll right without moving cursor 
+#cmd movement MATCH - find matching paren. Works with (), [], {}, `' and C-comments 
+#cmd movement PING n - set a text marker (@{B}n@{UB} = 0-9). 
+#cmd movement PONG n - move to a previously set text marker (@{B}n@{UB} = 0-9) 
+#cmd misc RECALL - recall most recently entered command. Must be used from a keymap (c-esc). 
+#cmd misc ESC - toggle manual command entry mode 
+#cmd misc ESCIMM arg - go into command entry mode prompting with @{B}arg@{UB} 
+#cmd misc NULL - no operation 
+#cmd misc NOP - no operation 
+#cmd misc REM com - add commend 
+#cmd program,io SOURCE file - source a script file. '#' in first column for comment 
+#cmd win QUIT - close current window. If text was modified, a safety check is performed 
+#cmd misc QUITALL - leave XDME. If any text was modified, a safety check is performed for that text 
+#cmd misc,io,program EXECUTE comm - Execute a CLI command. 
+#cmd io NEWFILE name - replace current text with new file 
+#cmd textedit,io INSFILE name - insert a file into the current text. 
+#cmd io APPENDSAVE file - Append current text to @{B}file@{UB} 
+#cmd io,block BAPPENDSAVE file - Append currently marked text to @{B}file@{UB} 
+#cmd block,io BSAVE file - save the block to @{B}file@{UB} 
+#cmd block,requester,io BARPSAVE - save the block to a file with filerequester 
+#cmd io SAVEOLD - save current text under current name 
+#cmd io SAVEAS file - save current text under a different name (title line name does change) 
+#cmd io WRITETO file - write text to this file. The current name of the text is not changed. 
+#cmd requester,io ARPSAVE - SAVEAS with filerequester 
+requester,io REQSAVE - SAVEAS with ReqTools filerequester 
+#cmd io CD dir - set directory of current window to @{B}dir@{UB} 
+#cmd misc,io PRINT text - Print @{B}text@{UB} to the shell XDME was started in 
+#cmd requester REQSTRING title format gadgets defvalue - display a synchron ReqTools StringRequest; the result is put in $REQRESULT. 
+#cmd requester REQNUMBER title format gadgets defvalue min max - display a synchron ReqTools NumberRequest; the result is put in $REQRESULT. 
+#cmd requester REQPALETTE title defvalue - display a synch ReqTools PaletteRequest; the result is put in $REQRESULT. 
+#cmd requester REQUEST title body gadgets - display a synch ReqTools EZRequest; the result is put in $REQRESULT. 
+#cmd requester REQFILE title flags defvalue - display a synch ReqTools FileRequest; the result is put in $REQRESULT. 
+#commandshell CLOSECMDSHELL - close the command shell 
+#commandshell OPENCMDSHELL - open the command shell with the filename in $CMDSHELLNAME 
+#commandshell CMDSHELLOUT txt - output a string to the command shell 
+#cmd misc ABORT - abort the current command execution 
+#cmd misc UNABORT - make a previous ABORT or error unseen; that command can only be used in ARexx scripts 
+#cmd misc BREAK - break the current command loop 
+#cmd misc CONTINUE - break the current turn of the current command loop 
+#cmd misc EVAL command - reinvoke the command interpreter;that command can b used to prevent "too many arguments" errors, which occurs, if the user has specified too many variable arguments at the same execution level 
+#cmd misc FORCE flags command - similar to EVAL, but according to flags it can ignore errorvalues (F), disable screenupdates (S) or errorrequesters (R) or title updates (T) or activate Debug Mode (D) 
+#cmd misc QUIET command - short for "FORCE S command" 
+OVERWRITE text - write some text in overwrite mode ignoring $INSERTMODE 
+INSERT text - write some text in insert mode ignoring $INSERTMODE 
+PRINTF format args - write some text w/ printf formatting 
+#cmd math MATH1 arg1 arg2 - long version for NOT INC NEG DEC; $INFIXMODE decides if arg1 or arg2 is operator, the other arg is variablename 
+#cmd math MATH2 arg1 arg2 arg3 - long version for MUL MOD DIV SUB ADD; $INFIXMODE decides if arg1 or arg2 is operator, the other arg is variablename 
+#cmd vars,math INC varname - increment the named variable 
+#cmd vars,math DEC varname - decrement the named variable 
+#cmd vars,math NEG varname - make the named variable negative 
+#cmd vars,math NOT varname - invert the named variable 
+#cmd vars,math ADD varname value - increase the named variable by the given value 
+#cmd vars,math SUB varname value - decrease the named variable by the given value 
+#cmd vars,math MUL varname value - multiply the named variable with the given value 
+#cmd vars,math MOD varname value - modulo divide the named variable by the given value 
+#cmd vars,math DIV varname value - divide the named variable by the given value 
+#cmd vars SWAPV varname1 varname2 - try to swap the contents of 2 variables 
+#cmd recorder RECSTART - start the macro recorder 
+#cmd recorder RECEND - terminate the macro recorder, if it is running 
+#cmd recorder RECPLAY - replay the previously recorded macro 
+#cmd recorder RECSAVE filename - save the previously recorded macro as a XDME script 
+#cmd macros SIMPTR x y - simulate the mouse being at windowpos x/y; that command is needed to replay saved macros, it is not helpful in any other situation 
+#cmd aliases,vars SMV name value - create or redefine a macrolocal variable (same as SETMACROVAR) 
+#cmd aliases,vars SETMACROVAR name value - create or redefine a macrolocal variable (same as SMV) 
+#cmd aliases,vars UNSETMACROVAR name - delete a macrolocal variable 
+#cmd aliases RET - return from a macro (before reaching its end) 
+#cmd aliases SETMACRO name nargs body - create or redefine a commandmacro 
+#cmd aliases UNSETMACRO name - delete a commandmacro 
+#cmd aliases MACROSAVE filename - save all commandmacros into a file 
+#cmd aliases MACROLOAD name -  load commandmacros from a file 
+READTEMPLATE filename - read in a file and replace all occurencies of $(varname) with the contents of that varname 
+#cmd varstack PUSHVAR varname - put a variable onto the variable stack 
+#cmd varstack DROPVAR varname - drop the first entry of a variable from the variable stack 
+#cmd varstack PICKVAR varname - get a variable from the variable stack without modifying the stack 
+#cmd varstack PURGEVAR varname - remove all occurencies of a variable from the variable stack 
+#cmd varstack POPVAR varname - get a variable from the variable stack and remove it 
+#cmd varstack SWAPVAR varname - swap te contents of a variable with that of its 1st entry in the variable stack 
+
+#long MAP,UNMAP
+
+with these commands you can modify the keytable.
+
+@{B}MAP@{UB} adds or modifies an existing key-entry to the keytable
+@{B}UNMAP@{UB} deletes an existing key-entry
+
+key consists of a set of qualifiers, a "-" and one code (both case sensitive)
+
+The qualifiers are:
+
+	s == any shift (caps-lock with alpha-keys)
+	c == control
+	a == any alt
+	A == any amiga
+	L == left mouse button
+	M == middle mouse button
+	R == right mouse button
+	u == key-up ( release of a key )
+	x == extended qualifier x
+	y == extended qualifier y
+	z == extended qualifier z
+	r == repeat
+
+the code-specification is one out of:
+
+    main keyboard:
+	[single lowercase character] == the key on you main keyboard - that shows it
+	[single uppercase alpha]     == the key on .... but that means a set s-qualifier
+
+    numeric keypad:
+	@{B}nk0@{UB} .. @{B}nk9@{UB}		  == numerik keypad 0..9
+	@{B}nk+@{UB}, @{B}nk-@{UB}, @{B}nk*@{UB}, @{B}nk/@{UB}, @{B}nk.@{UB} == numerik keypad +,-,*,/,.
+
+	There are two more keys on your numeric keypad. With
+	american or british mapping, they are used as @{B}nk(@{UB} and @{B}nk)@{UB}. With most
+	european mappings they are used as @{B}nk[@{UB} and @{B}nk]@{UB}. With canadian
+	mapping they are used as @{B}nk\@@{UB} and @{B}nk°@{UB} If there is a standart
+	mapping, that does map these keys in another way, they are NOT
+	supported yet. (please mail)
+
+	other special keys:
+	  @{B}f1 .. f10@{UB}	  == Function keys
+	  @{B}hel@{UB}		  == help-key
+	  @{B}esc@{UB}		  == escape
+	  @{B}del@{UB}		  == delete
+	  @{B}bac@{UB}, @{B}bs@{UB}	   == backspace ( <- )
+	  @{B}tab@{UB}		  == tabulator
+	  @{B}ent@{UB}		  == enter
+	  @{B}spc@{UB}, @{B}spa@{UB}	   == spacebar
+	  @{B}up@{UB}, @{B}dow@{UB}, @{B}rig@{UB},
+	  @{B}lef@{UB}		  == cursor keys
+
+	  @{B}lmb@{UB}, @{B}mmb@{UB}, @{B}rmb@{UB}  == mouse buttons
+	  @{B}mmo@{UB}		  == mouse movement with a mousebutton pressed
+	  @{B}?m2@{UB}, @{B}?m3@{UB}, @{B}?m4@{UB}  == (? in [lmr]) double/triple/qraduple clicks of a
+			    certain mouse button (times out!)
+
+Note that as mousebuttons can act for qualifying as well as for specifying,
+the specifying mousebutton must also be qualifying e.g @{B}L-rmb@{UB} doesn't work,
+but @{B}LR-rmb@{UB} does.
+
+Note that certain keys may be used as dead-keys; keys that are deading when
+pressed without qualifiers are not accessible with this keyboard-interface.
+e.g. on german keyboards there is a key @{B}"'"@{UB} next to @{B}"\\"@{UB} which cannot be
+accessed. On the other hand, if a key is deading on a qualified level, but
+not when pressed without qualifiers, you can remap it e.g on german
+keyboards @{B}alt-f@{UB} is deading, but @{B}-f@{UB} not, so you can access @{B}a-f@{UB}; and if you
+map @{B}a-f@{UB} to any function, it looses its deading function for [X]DME
+
+    EXAMPLE:  @{B}<alt-f> <a>@{UB} creates something like @{B}"á"@{UB}
+	      after a @{B}"MAP a-f (NULL)"@{UB} the same key-sequence
+	      creates a normal @{B}"a"@{UB}
+
+Keys with the x, y or z qualifiers set can't be accessed immediately. First
+you must set the extended qualifiers (see QUALIFIER command), then you may
+press the remaining qualifiers and keys. These qualifiers were introduced
+to allow something like the @{B}CTL-X@{UB} prefix of (Micro)Emacs.
+
+    ATTENTION !
+
+	We check only the first three characters of the code-specification
+	so e.g. @{B}-space@{UB} is recognized as @{B}-spa@{UB}. some people call this a
+	feature, but in fact it is a BUG, as this method makes problems
+	with rexx-commands which start with these 3 first characters. XDME
+	will ignore such commands and do whatever this key is supposed to
+	do.
+
+#long MENUADD
+
+    SUBnames	   are splitted at ^S,
+    AMIGAshortcuts are splitted at ^A,
+    CHECKitems	   are leaded	by ^C (at subs the last/sub name),
+    BARitems	   are called	   ^B (at subs the last/sub name)
+
+EXAMPLES:
+
+    @{B}menuadd demo demo^Stest^AW@{UB} 	Add "demo/demo/test" with Hotkey
+    @{B}menuadd demo demo^S^B@{UB}		Add subitembar
+    @{B}menuadd demo demo^S^Ctest2@{UB} 	Add subitem "test2" with checkmark
+    @{B}menuadd demo ^B@{UB}			Add itembar
+
+#long FORCE
+
+To execute a command under special conditions. @{B}flag@{UB} is
+
+      T 	    don't change title
+      S 	    quiet (no Screen updating)
+      F 	    unable to fail
+      R 	    no Requestors
+      D 	    enable debugging mode
+     `'             simple eval
+
+#long MENUON,MENUOFF,MENUADD
+
+This command will enable/disable menus.  Users who have a whole bunch of
+MENUADD commands in their @{B}.EDRC@{UB} should note that disabling menus at the
+beginning will speed up the MENUADD commands. Then reenable menus at the
+end.  These calls are stackable in that if you call MENUOFF, say, twice, it
+will take two MENUON@ commands to restore menus. The reverse is not true.
+
+#long CTAGS
+
+(1.30B and beyond) Compatible with Aztec's CTAGS program. This command
+searches for the subroutine name under the cursor in the associated tags
+file ("tags" in the directory holding the file currently being edited).
+Also, the file "tags" in directories specified by the special XDME path
+(see ADDPATH and REMPATH) will be searched.
+
+If the tag is found, it loads the file the subroutine resides in if
+neccesary, then WindowToFront()'s the window, ActivateWindow()s it, and
+GOTO's the line where the subroutine starts.  The search within the source
+file is anchored to the left column.  If the file is already loaded, it is
+not reloaded.
+
+This enables a programmer to quickly trace subroutines over an arbitrary
+number of files.
+
+The tags file contains one or more lines of the following format:
+
+@{B}subroutine-name file-name /^search-pattern@{UB}
+			    (that's a slash and a carrot, then the pattern)
+
+    -- EXAMPLE of 'TAGS' file:
+    @{B}setpen cmd1.c /^setpen(@{UB}
+    @{B}do_up cmd1.c /^do_up(@{UB}
+    --
+
+SPECIAL NOTE:  CTAGS will work even if you are not in the directory
+containing the file.  You can thus place a tags file in the directory
+containing the files it references, and the filenames WITHIN the tags file
+need not be a full path.
+
+#long REF
+
+(1.28d and beyond).  This is a very powerful new command that allows you to
+bring up a reference to a keyword with a single keystroke.  This is useful
+for programmers who have on-line documentation or fully commented include
+files. XDME opens a window just big enough to fit the reference.
+
+NOTE:  The new CTAGS command may be more suited to your application.
+
+The reference keyword is the alpha-numeric string currently under the
+cursor.  REF will search the file @{B}DME.REFS@{UB} in the directories listed by
+the special XDME path (see ADDPATH and REMPATH).  The file must be built by
+the user and each line has the following format:
+
+    (@{B}keyword@{UB}) (@{B}nolines@{UB}/@{B}endstring@{UB}) (@{B}file@{UB}) (@{B}searchstr@{UB}/@{B}@@seekpos@{UB})
+
+Surrounding the keywords with `' or () is optional if the keyword does not
+contain spaces.
+
+    @{B}keyword@{UB}	     keyword under cursor
+    @{B}nolines@{UB}/@{B}ends@{UB}    either a number (the number of lines in the reference)
+		    or a string denoting the end of the reference when found.
+    @{B}file@{UB}	     the file containing the reference material
+    @{B}searchstr@{UB}/@{B}@@@{UB}    search string in file that indicates the beginning of
+		    the reference, or two at's (@{B}@@@{UB}) and the seek position
+		    in decimal (like @{B}@@2343@{UB}).  The latter method is used
+		    mainly for reference- generator programs.
+
+Upon finding a successful keyword match the specified file is openned and
+the seach string searched for.	If a seek position was specified no search
+is made and a seek is made to the beginning of the reference.  If found,
+the indicated number of lines (if a number is specified for <nolines/ends>)
+or until a match with the endstring (if a string was specified) will be
+placed in a temporary file and a new XDME window brought up. The temporary
+file is then deleted.
+
+When looking for matches, the compare is anchored at the beginning of each
+line in the file.  Thus, any spaces in front of the string in the file must
+be duplicated.
+
+T: must be assigned to a temporary directory, usually RAM: See the included
+example DME.REFS file.	The most common things referenced are the autodocs
+and commented include files.
+
+Some modification of the included @{B}DME.REFS@{UB} files may be required due to
+differences in include file and autodoc format.
+
+#long SCANF
+
+This is equivalent to the C scanf() function with the restriction that only
+one conversion is allowed, that conversion being a string.  Thus:
+
+    @{B}scanf %s@{UB}	     will place the string under the cursor in the variable
+		    @{B}$scanf@{UB}
+
+    @{B}scanf %4s@{UB}	     The first four chars of the string.
+
+    @{B}scanf %[0123456789]@{UB}
+		    will scan the string while it contains
+		    specified chars (e.g. scan a number)
+
+    @{B}scanf %[~,]@{UB}     will scan the string until it finds a @{B}','@{UB}.
+
+Moreover SCANF now allows to use some more usefull arguments:
+
+    @{B}w@{UB}	 - one word
+    @{B}l@{UB}	 - the WHOLE line
+    @{B}b@{UB}	 - all that matches isalnum()
+    @{B}c@{UB}	 - single character
+    @{B}t@{UB}	 - text in one line
+    @{B}a@{UB}	 - all that matches isalpha()
+    @{B}r@{UB}	 - c-style comment
+
+If you precede one of these with a @{B}'+'@{UB} you will also get everything to the
+left else you get all that is to the right. Example:
+
+    @{B}dummy1[line] =@{UB} ...
+	^
+
+    @{B}w@{UB}:  my1[line]
+    @{B}+w@{UB}: dummy1[line]
+    @{B}a@{UB}:  my
+    @{B}+a@{UB}: dummy
+    @{B}b@{UB}:  my1
+    @{B}+b@{UB}: dummy1
+    @{B}c@{UB}:  m
+    @{B}+c@{UB}: m
+
+The variable @{B}$scanf@{UB} may be used as an argument in any command.  Example:
+(@{B}insfile $scanf@{UB}).
+
+NOTE:  If using @{B}$scanf@{UB} in a macro, you probably want to precede it with a \\
+to prevent it from being evaluated at macro-creation time.
+
+#long REPEAT
+
+Repeat @{B}arg@{UB} @{B}n@{UB} times.  Apart from being a number, @{B}n@{UB} can also be one of:
+
+    @{B}line@{UB}    Current line # (lines begin at 1)
+    @{B}lbot@{UB}    #lines to the bottom, including current line
+    @{B}cleft@{UB}   column # (cols begin at 0)
+    @{B}cright@{UB}  #chars to eol, including current char under cursor
+    @{B}tr@{UB}      #char positions to next tab
+    @{B}tl@{UB}      #char positions to next back tab
+
+Certain commands can abort a REPEAT loop. Specifically, any FIND[R],
+NEXT[R], or PREV[R] in which the search string is NOT found will abort a
+REPEAT. Most operations which can go out of bounds, such as UP, LEFT,
+RIGHT, DOWN, also abort a repeat.
+
+Specifying @{B}-1@{UB} as @{B}n@{UB} causes REPEAT to go on forever (well, actually,
+@{B}0xFFFFFFFF@{UB} times) or until an abort.
+
+REPEAT may also be abreviated. Simply type
+
+    @{B}15 left@{UB}
+
+This will move the cursor 15 times @{B}left@{UB}. In this construction you must
+specify a number as repeat-count.
+
+#long IF,WHILE,IFELSE
+
+If the specified condition is true, execute the argument.  For WHILE, the
+argument is executed until the condition is false (be careful!), but you
+may abort while with CTRL-c (be fast !).
+
+the optional '!' inverts the logic.
+
+    Conditions:
+
+
+    @{B}#@{UB}	     if toggle entry # is SET.	there are 256 toggles (0..255)
+    @{B}t@{UB}	     if On line 1
+    @{B}b@{UB}	     if On last line
+    @{B}l@{UB}	     if At column 0
+    @{B}r@{UB}	     if At end of line (spaces below and beyond)
+    @{B}m@{UB}	     if Text has been modified
+    @{B}i@{UB}	     if in insert mode
+    @{B}x[<=>]#@{UB} if column position (starts at 1) is (any OR combo of
+	    <, =, or >) than some number.  Example:   @{B}x<=20@{UB}
+    @{B}y[<=>]#@{UB} if Line number (starts at 1) is (same as for x)
+    @{B}cl@{UB}      character under cursor is lower case alpha
+    @{B}cu@{UB}      character under cursor is upper case alpha
+    @{B}ca@{UB}      character under cursor is alpha-numeric
+    @{B}cn@{UB}      character under cursor is numeric
+    @{B}cb@{UB}      cursor within a block
+    @{B}c[<=>]#@{UB} character under cursor is ascii code # (# in decimal)
+	    optional conditionals as in '@{B}x@{UB}' and '@{B}y@{UB}'.
+		# can also be a "string":
+
+		@{B}if c="hwllo" `right tlate "e"'@{UB}
+
+	    replaces "@{B}hwllo@{UB}" by "@{B}hello@{UB}". The condition is true, if the
+	    cursor is on the first char of the string and the string
+	    follows behind:
+
+		@{B}This is a test.@{UB}
+		     ^
+
+		@{B}ifelse c="is" `title c=is' `title c<>is'@{UB}:    @{B}c=is@{UB}
+		@{B}ifelse c="test" `title TRUE' `title FALSE'@{UB}:  @{B}FALSE@{UB}
+
+	    # can be a group of chars:
+
+		@{B}while c=[a-zA-Z0-9]@{UB} ...
+
+	    is the same as
+
+		@{B}while ca@{UB} ...
+
+	    Beware of spaces in strings and groups: if there are any, you
+	    MUST NOT forget to put the condition in XDME's parentheses.
+
+#long INDENT
+
+The INDENT-command allows to indent and outdent text. It is intelligent in
+a way that you will NEVER lose any text with it. If the in/outdent would
+push characters over the limit (left or right), the line is left and INDENT
+continues with the next line.
+
+    what:   @{B}.@{UB}	     Current line
+	    @{B}n@{UB}	     line n
+	    @{B}$n@{UB}      line which is marked by PING n
+	    @{B}t@{UB}	     whole text
+	    @{B}b@{UB}	     whole @{"block" LINK "block"}
+	    @{B}bs@{UB}      block start
+	    @{B}be@{UB}      block end
+	    @{B}_@{UB}	     last line
+
+	You may create ranges with "@{B}what,what@{UB}". (This is obviously useless
+	with "@{B}t@{UB}" and "@{B}b@{UB}").
+
+    how:    @{B}-@{UB}	     If there is a minus, text is outdented instead of
+		    indented
+	    @{B}.@{UB}	     Align to multiple of indent-amount instead of just
+		    inserting some spaces at the beginning
+	    @{B}n@{UB}	     Set indent-amount to n
+	    @{B}t@{UB}	     Set indent-amount to tabsize
+	    @{B}c@{UB}	     Insert not at the beginning but at the current column.
+
+    Examples:
+
+	@{B}indent . .ct@{UB}	 Acts like tab. Text under cursor and beyond is
+			aligned to next tabstop.
+	@{B}indent b .t@{UB}	 Indent the current block. NOTE: ALL lines are
+			tabstop-aligned ! This may destroy some of
+			your formating.
+	@{B}indent b -.t@{UB}	 dito but the block is outdented.
+
+#long TLATE
+
+translate character under cursor. @{B}how@{UB} can be one of the following:
+
+    @{B}number@{UB}	 Replace character by the character with the code number.
+		(i.e. @{B}65=A@{UB}). Number can be a decimal-, octal- or hexnumber.
+
+    @{B}[+-]number@{UB}  As above, but the actual character is used as offset:
+		@{B}`tlate +1'@{UB} makes a @{B}'B'@{UB} from an @{B}'A'@{UB}, @{B}`tlate -1'@{UB} does the
+		reverse. The resulting char-code is truncated to 8bit.
+
+    @{B}"x"@{UB}         Replace actual character by @{B}'x'@{UB}.
+
+    @{B}[Uu]@{UB}	 Make character uppercase.
+
+    @{B}[Ll]@{UB}	 Make character lowercase.
+
+#long SETGEOMETRY
+
+Set @{B}x/y@{UB} position and @{B}width/height@{UB} of XDME's window. The width and height
+are ignored in iconified state. If you use negative values, the
+positions/sizes are relative the current screen-size (@{B}0 0 -1 -1@{UB} will open a
+full-sized window !). If a size is null, it's left unchanged (move window
+only).
+
+#long GOTO
+
+Goto to a position in the text. dest is one of
+
+    @{B}BLOCK/START@{UB}     Beginning of @{"block" LINK "block"} (if there's one)
+    @{B}END@{UB}	     Last line of block (dito)
+    @{B}n@{UB}		     to line @{B}n@{UB}
+    @{B}+n@{UB} 	     @{B}n@{UB} lines down
+    @{B}-n@{UB} 	     @{B}n@{UB} lines up
+
+#long REPLACE
+
+replaces the next @{B}strlen(findstr)@{UB} chars with @{B}repstr@{UB} (ie. if deletes as many
+chars as are in @{B}findstr@{UB} and replaces them by the replace-string). Useful in
+a mapping to find the text and another to actually replace the text:
+
+    @{B}map f1 `next'@{UB}
+    @{B}map f2 `replace next'@{UB}
+
+@{B}f1@{UB} searches for the text, @{B}f2@{UB} replaces it and looks for the next occurence.
+
+#long PROJECTINFO
+
+Gives some information about the current project.
+
+    @{B}result_string="%s %d %d %d %d %d %d",
+		name, LeftEdge, TopEdge, Width,
+		Height, IWinX, IWinY@{UB}
+
+i.e. Name of current window, it's dimensions and position when iconified
+
+#long SELECT
+
+make a window the current one. @{B}what@{UB}:
+
+    @{B}FIRST, LAST, NEXT, PREVIOUS@{UB}     obvious, eh ?
+    @{B}WINDOW=name@{UB}		     Make window @{B}name@{UB} the current one
+    @{B}SAVE@{UB}			     Remember current window
+    @{B}LOAD@{UB}			     restore current window
+
+You can @{B}SAVE@{UB} the current window, select another (or more) and @{B}LOAD@{UB} the
+current window again. This gurantees uninterupted work for the user and is
+STRONGLY recommended.
+
+#long PICK,PUSH,POP
+
+Push/pop an item on/from the stack. @{B}Items@{UB} are
+
+    @{B}POS@{UB}	 - actual cursor position (like @{B}PING@{UB})
+    @{B}MODIFIED@{UB}	 - modified flag
+    @{B}ICONMODE@{UB}	 - iconify-state
+    @{B}TABSTOP@{UB}	 - tab-size
+    @{B}SAVETABS@{UB}	 - Should I convert spaces to tabs ?
+    @{B}MARGIN@{UB}	 - right margin
+    @{B}INSERTMODE@{UB}  - obvious :-)
+    @{B}IGNORECASE@{UB}  - for search
+    @{B}WORDWRAP@{UB}	 - word-wrapping on/off
+    @{B}WWCOL@{UB}	 - col. of wordwrap
+    @{B}WINDOW@{UB}	 - position and size of window
+    @{B}ICON@{UB}	 - position of icon
+    @{B}PENS@{UB}	 - all pens
+    @{B}BLOCK@{UB}	 - like @{B}PUSH@{UB}-/POPMARK
+    @{B}ED@{UB} 	 - actual window. Like SELECT SAVE, but can be nested
+    @{B}AUTO@{UB}	 - POP only ! This automatically put the topmost thing from
+		stack to its original place.
+    @{B}DISCARD@{UB}	 - POP only ! Discards the topmost item from the stack.
+
+#long OPENWINDOW
+
+open new window using specified geometry.  Geometry is specified as:
+@{B}+/-leftedge+/-topedge+/-width+/-height@{UB}, where negative numbers denote
+values relative to the width or height of the screen.  For example, the
+following opens a nearly full-screen window leaving 10 pixels above, below,
+to the left, and to the right:
+
+    @{B}openwindow +10+10-10-10@{UB}
+
+The following opens a window in the upper right hand corner of width 320
+and height 100.
+
+    @{B}openwindow  -320+0+320+100@{UB}
+    @{B}openwindow  -320+0-0+100@{UB}	     (same thing)
+    @{B}openwindow  -320-100-0-0@{UB}	     (lower right hand corner)
+
+#long JUSTIFY,UNJUSTIFY
+
+These commands format a single line of text. @{B}UNJUSTIFY@{UB} removes all
+formatting (ie. all obsolete spaces). @{B}JUSTIFY@{UB} inserts spaces. The following
+formats are available:
+
+	@{B}full@{UB}	     insert spaces between words until the last character
+		    in the line is at @{B}MARGIN@{UB}.
+	@{B}left@{UB}	     removes all leading spaces
+	@{B}right@{UB}	     inserts spaces at the beginning of the line until the
+		    last character in the line is at @{B}MARGIN@{UB}.
+	@{B}center@{UB}      center line between left border and @{B}MARGIN@{UB}.
+
+If you want to reformat a whole paragraph, mark it as a block and
+use
+
+	@{B}GOTO BLOCK@{UB}	    goto beginning of paragraph
+	@{B}WHILE CB (@{UB}         while in block ...
+	    @{B}JUSTIFY LEFT@{UB}	remove leading spaces
+	    @{B}UNJUSTIFY@{UB}		remove all interword spaces
+	    @{B}DOWN )@{UB}		next line
+	@{B}GOTO BLOCK@{UB}	    goto beginning of paragraph again
+	@{B}REFORMAT@{UB}	    collect words anew
+	@{B}WHILE CB (@{UB}         while in block
+	    @{B}JUSTIFY @{I}how@{UI}@{UB}	 justify the line
+	    @{B}DOWN )@{UB}		next line
+
+#long SETDEFTITLE,SETDEFICONTITLE
+
+This command allows to specify a pattern from which XDME will built a
+string and display it at the appropriate position. The string can contain
+any characters (like in @{B}printf()@{UB}). The following characters are replaced by
+a special string, however:
+
+	Sequence    Replacement
+
+	   @{B}%%@{UB}	     A single @{B}%@{UB} in the resulting string
+	   @{B}%l@{UB}	     the current line
+	   @{B}%L@{UB}	     the number of lines
+	   @{B}%c@{UB}	     the current column
+	   @{B}%C@{UB}	     the code of the character under the cursor in hex
+	   @{B}%m@{UB}	     modified flag (either @{B}@{UB}- or @{B}*@{UB})
+	   @{B}%f@{UB}	     the current filename
+	   @{B}%p@{UB}	     the last 20 characters of the current path
+	   @{B}%b@{UB}	     the actual blocktype (@{B}L@{UB} for line, @{B}N@{UB} for character oriented
+		    and @{B}V@{UB} for vertical
+
+The defaults for XDME's title are: @{B}%l/%L %C %c %m %f %i@{UB}
+The defaults for XDME's icon are: @{B}%f@{UB}
+
+#long APPICON
+
+That Package allows use of a Workbench AppIcon.
+Currently the whole package is conrolled via some special
+variables, not via commands;
+the following five variables are used:
+
+    $appicon - (BOOL) the status of the appicon:
+	 setting it to "1" makes the AppIcon appear,
+	 setting it to "0" makes the AppIcon disappear.
+
+    $appiconname - (FILE) the icon to be used for the AppIcon Image;
+	plase note, that modification of that variable currently
+	only has effect after the NEXT appearance of the AppIcon,
+	the visible Image is not changed.
+	Defaults to "XDME".
+
+    $appicontitle - (STRING) the titlestring to be used in connection
+	with the AppIcon (the same limit as for $appiconname)
+	Defaults to "XDME".
+
+    $appicondropaction - (COMMAND) the command to be executed,
+	whenever another icon is dropped onto the AppIcon; any
+	"%s" in that variable are expanded to the full name of
+	the dropped icon (w/ sprintf).
+	Defaults to "newwindow newfile `%s'".
+
+    $appiconclickaction - (COMMAND) the command to be executed,
+	whenever user doubleclicks on the AppIcon.
+	Defaults to "newwindow arpload".
+
+
+#long OPENCMDSHELL,CLOSECMDSHELL,CMDSHELLOUT
+
+That Package allows use of an ansynchroneous Commandshell,
+a simple Console window to type commands into.
+
+Most aspects of that package can be controlled via variables,
+but there are also 3 commands:
+
+    OPENCMDSHELL - makes the commandshell appear;
+
+    CLOSECMDSHELL - makes the commandshell dissappear;
+
+    CMDSHELLOUT text - write some to the commandshell
+	please note, that there is a "bug" - we are using
+	a printf function to diplay the string, but there
+	is no possibility to define any argument for the
+	printf template; so all "%" should be duplicated
+	or omitted.
+
+the following special variables complete the package:
+
+    $cmdshell - (BOOL) the status of the commandshell;
+	 setting it to "1" makes the Commandshell open,
+	 setting it to "0" makes the Commandshell close.
+
+    $cmdshellfile - (FILE) the file to be used for the commandshell;
+	that file _must_ be interactive.
+	plase note, that modification of that variable currently
+	only has effect after the NEXT open of the commandshell,
+	the active commandshell is not changed.
+	Defaults to "CON:0/11/640/60/XDME Command Shell/Close".
+
+    $cmdshellprompt - (STRING) the string to displayed to signal
+	the user, that he can enter a command;
+	plase note, that modification of that variable currently
+	only has effect after the NEXT update of the prompt,
+	i.e. after the next time, something was written to the
+	commandshell, or the user pressed return in the cmdshell;
+	the active prompt is not changed.
+	The prompt is expanded (via variable-expansion) each time,
+	it is displayed
+	Defaults to "`XDME> "
+
+    $errorsoncmdshell - (BOOL) as long as that flag is set, and
+	the commandshell is open, all errors are dispayed on the
+	commandshell.
+
+    $warningsoncmdshell - (BOOL) as long as that flag is set, and
+	the commandshell is open, all warnings are dispayed on the
+	commandshell.
+
+
+#long READTEMPLATE
+
+This command inserts @{B}file@{UB}.
+passing all lines starting with "$$" to EVAL
+(lines starting with "$$#" are ignored) and
+replacing all "$(...)" and "$`...'" by their
+values if matching variables do exist.
+
+That function might be very useful for
+handling very formalistic structs, which
+do need only little work by user.
+
+Since the parse is line-oriented, usage of
+linefeeds in "$(...)" and "$`...' is forbidden
+
+

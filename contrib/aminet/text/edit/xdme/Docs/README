@@ -1,0 +1,79 @@
+
+XDME is Public Domain, the original Copyright is by Matthew Dillon,
+XDME Copyright by Aaron Digulla. And I DON'T GIVE ANY WARRANTY that
+this programm is bug-free (instead, I'm sure it isn't) and you use it
+on your own risk. I try to hold it as bug-free as possible, but I do
+make mistakes. Data-loss should be VERY rare (about the same propability
+as through using COPY :-), but Software-Failures may visit you (but no
+GURUs I hope). So take care (i.e. always SAVE before leaving the window
+and don't have any unsaved things hanging around while using XDME).
+This version is pretty stable and I didn't have much problems with it
+(In fact, I had none that are caused by XDME, but one just cannot find
+ALL bugs).
+
+    How to install
+
+Just copy XDME to any desired place, rename your old "S:.edrc" to
+"S:.edrc_user" and copy "s/.edrc" to "S:.edrc". That's it.
+
+    Some comments
+
+This is a Pre-Release of XDME, a new version of the famous DME-Editor
+by Matthew Dillon. "Pre" means, that I'm sure there are many bugs left
+and I want to give OS1.3 users a pretty bug-free version.
+
+DME is very lazy with checking ranges and parameters before doing something
+and so is XDME. Therefore, if you want to help me much, supply ANYTHING
+you can think of to XDME, i.e. stress the AREXX-Port, type impossible things
+and try EVERYTHING, even the weirdest things. If you find anything (from
+a command you are missing to a missing error-message to a free journey to
+india (GURU)), report the circumstances and mail a Message to:
+
+    digulla@rz-uxazs.fh-konstanz.de
+
+I also offer an AUTOUPDATE, i.e. if you give me your EMail-Address, I will
+add you to my list and you will receive the newest XDME FOR FREE via EMail !
+
+I also have an address:
+
+    Aaron Digulla
+    Th.-Heuss-Str. 8
+    7750 Konstanz
+    Germany
+
+You can mail money, if you wish; it's not recommended but I'm not too
+proud to take it :-)
+
+Please don't write to Matt Dillon. He's a very busy guy and won't support
+DME anymore. That's the main point why I enhanced DME to XDME.
+
+If you find something, I will fix it as soon as possible (I'm both busy and
+lasy though, but I too want a bug-free XDME). I also send the full sources.
+If you think of a special command and you can program it in C, do it, test
+it and mail the new source back, along with a comment what this new code
+intends to do. Don't expect this code to appear in XDME though, at least
+not UNCHANGED: I'm perfectionist and cannot stand any code which is not
+coded PERFECTLY :-). For those who want to see what I mean just have a look
+at text.c:text_load().
+
+Well, have fun with this new (X)DME. Btw: There is a UNIX-X11-Version of DME
+which you can order from me via EMail. But you need the standard
+CBM-1.3-includes to compile (just buy a small C-Compiler), Sorry.
+This version won't run if you don't have X11. It supports black&white
+terminals, but it's pretty ugly then :-). Be warned though: This is
+a PRELIMINARY version. It has many bugs and not even all features of
+DME V1.45 ! I would be VERY happy if there's someone out there who could
+help me making this thing run more cleanly ! Upto now, there are many people
+than want to USE it, but won't/can't/couldn't help me. So if you want a real
+good editor on UNIX and you could invest some work, WRITE ME !!!!!
+
+    IMPORTANT
+
+With this release I try to make XDME conform to the StyleGuide. I DO NOT LIKE
+ALL THOSE STUFF THAT CBM TELLS IN THE STYLEGUIDE, THOUGH :-(. Don't blame me
+if you don't like something. I will always keep a trapdoor open for those
+things (like paging) that are CRUEL. Anyway, a StyleGuide is the first step
+for good software even if we have to TALK to CBM about what they did with
+some rules in the Guide. Sigh.
+
+    Aaron Digulla.

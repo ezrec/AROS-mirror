@@ -1,0 +1,1351 @@
+From <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de> Wed Aug	3 16:10 MES 1994
+Received: from stepsun.uni-kl.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.37.109.4/BelWue-1.0HP) id AA26630; Wed, 3 Aug 94 16:10:33 +0200
+Return-Path: <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de>
+Received: from sun.rhrk.uni-kl.de by stepsun.uni-kl.de id aa01457;
+	  3 Aug 94 16:13 MET DST
+Received: from stepsun.uni-kl.de by sun.rhrk.uni-kl.de id aa02765;
+	  3 Aug 94 16:12 MET DST
+Received: from uklirb.informatik.uni-kl.de by stepsun.uni-kl.de id aq01368;
+	  3 Aug 94 16:13 MET DST
+Received: from poker.informatik.uni-kl.de by uklirb.informatik.uni-kl.de
+	  id aa02609; 3 Aug 94 15:44 MET DST
+Date:	  Wed, 3 Aug 94 15:38:36 MET DST
+From: /// <b_noll@informatik.uni-kl.de>
+Subject:  xdme
+To: digulla <@sun.rhrk.uni-kl.de:digulla@fh-konstanz.de>
+Message-Id:  <9408031538.aa27606@poker.informatik.uni-kl.de>
+Status: RO
+
+Hi Aaron!
+
+Habe ein paar Probleme ...
+
+1. Hast Du jemals einen REF-Eintrag ueber refctags gefunden?????
+   ( bei mir geht das eigentlich nie; das Resultat ist immer:
+   ein Fenster "unnamed" mit dem Requester "Cannot find anything" )
+
+2. Ich bekomme regelmig Probleme mit dem Fenstertitel:
+   wenn in einem Fenster einmal "title" aufgerufen wurde, und
+   dieses Fenster dann inaktiv wird, so wird der Fenstertitel
+   auf die Lnge der Letzten Msg. gekrzt (Kick v40)
+   (dazu gibt es einen einfachen Fix: statt Verwendung von
+   Text() nehme SetWindowTitles() in window_title()
+   dann muss jedoch noch nach Moeglichkeit der Cursor weiter
+   nach rechts gesetzt werden, oder EraseRect vorgezofgen werden,
+   da SetWinT. den Cursor nicht verwendet ...)
+   (weiterhin versuchte ich vor dem Aufruf von EraseRect()
+   durch redefinition von SetBPen die Farbe des gelschten
+   Streifens auf die Rahmenfarbe oder den TitleBackground
+   zu legen, doch das schlug irgendwie fehl ... 8( ) ( dafuer
+   funktioniert es, wenn SetAPen mit RectFill verwendet wird...)
+
+3. Wenn, whrend der ASL-Requester aktiv ist, ein Signal BREAK
+   gesendet wird, und der Requester mit OK geantwortet wird
+   (also Diskzugriff stattfindet), dann wird der XDME-Prozess
+   beendet, aber (logischerweise, da wir keine Closedown funkion
+   haben) nicht das Fenster geschlossen (wenn ein CTL-C whrend
+   do_edit erfolgt, kann es sogar zum Absturz kommen).
+   Nun versuchte ich eine ClosedownFkt zu definieren, die zumindest
+   die Fenster schliesst. Diese Funktion wurde, obwohl mit atexit
+   bzw. onexit eingebunden, bei diesem Abbruch nicht aufgerufen ...
+   (ich habe das Problem nun etwas abgemildert, indem xefgets()
+   breakcheck() aufruft, und dort das BreakSignal gelscht wird,
+   aber das ist sicherlich nicht sicher...) (mist, sollte mir
+   doch eine Originalversion zulegen...)
+
+
+4. Das Problem mit "if CA " ist gefixt; freundlicherweise
+   geben die ctype.h-macros Werte >1 zurueck, wenn
+   eine Bedingung erfuellt ist; sobald ein solcher Wert mit
+   "^=" bei "if !CA" invertiert wird, bleibt ein wert != 0
+   stehen 8-} vor die Zeile "istrue ^= ...;" sollte also
+   noch ein "istrue = istrue && 1;"
+
+
+
+mfG "0"
+
+PS ich habe gerade Deine Sources erhalten ...
+   koennte es sein, dass Du ziemlich entnervt warst????
+
+   Das Ding schmiert ab??? ist noch irgendetwas nicht initialisiert?
+   (Reihenfolge!)
+
+    ??? 24 Files von denen Du nix weisst ???
+    in meinem gesamten verzeichnis sind gerade mal
+    ca 30 Files ...
+
+    in dem Diff-Archiv, das ich Dir letztes mal geschickt habe,
+    waren alle notwendigen files, sofern sie sich in meinem
+    Verzeichnis befinden (sofern nix geaendert war mit size==0)
+
+   Vorschlag: es wuerde vermutlich, zumindest bis die KB.lib
+   fertig ist, doch schon einmal ausreichen, fuer eindeutige
+   Funktionalitaeten unterverzeichnisse zu verwenden...
+
+   zB.:
+      Vars/ (flags|vars|varsbases|smallSPC).c
+      Key/  key*.c
+      Menu/ menu*.c
+   (dafuer muesste lediglich das smakefile geaendert werden)
+
+    Nachdem Du die RexxVars in vars.c disabled hast, koennen die
+    Dateien rxadd.c und das gesamte rexx/* verzeichnis verschwinden...
+
+    Nachdem Du die Record-funktionalitaet fuer ungeeignet haelst,
+    kann macro.c gekillt werden ...
+
+    simplex.c steht kurz vor der Ausloeschung ...
+
+    mem.c ist ein Modul, dessen Funktionen ich immer dann verwende,
+    wenn ich nicht weiss, ob autoexit funktionen sauber verwendet werden,
+    zZt koennen alle Dortigen funktionen durch Macros nach AllocMem/FreeMem
+    ersetzt werden ...
+
+    math.c erlaubt einfache Mathematische Befehle, mikro.c bringt einige
+    zusaetzliche befehle
+
+    auto.? werden zZt noch nirgends verwendet, dadurch muessen noch einige
+    init-fktionen in main aufgerufen werden ...
+    (daher vielleicht der guru????)
+
+    COM.? war ein Vorschlag fuer  ein dynamisches Command.c,
+    das hast Du ja bereits abgelehnt ...
+    SPC.? ist ein moeglicher dynamischer Ersatz fuer smallspc.c
+    das duerfte damit ja dann auch gestorben sein ...
+
+    avl.? werden meines wissens noch nicht verwendet;
+    sie wurden in meinen noch nicht adaptierten modulen in varsbases, alias
+    (spc und COM) verwendet, aber im Falle dieser Module habe ich
+    seit ueber 1/2 Jahr nichts mehr gemacht, ich muss sie erst noch einmal
+    durchlesen ...
+
+    tplter.c ist ausgelegt auf die Zusammenarbeit mit einem dynamischen
+    commad-Tree, ist daher zur Zeit noch garbage ...
+
+    wo wird eigentlich wildcmp.a verwendet?
+
+PPS der dynamische command-tree hat mE einen immensen Vorteil:
+    jeder kann ein einzelnes Modul spendieren/weglassen, ohne
+    dass gleich noch in command.c Aenderungen gemacht werden muessen.
+
+
+
+From <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de> Thu Aug	4 13:28 MES 1994
+Received: from stepsun.uni-kl.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.37.109.4/BelWue-1.0HP) id AA06446; Thu, 4 Aug 94 13:27:47 +0200
+Return-Path: <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de>
+Received: from sun.rhrk.uni-kl.de by stepsun.uni-kl.de id aa02603;
+	  4 Aug 94 13:30 MET DST
+Received: from stepsun.uni-kl.de by sun.rhrk.uni-kl.de id aa24800;
+	  4 Aug 94 13:29 MET DST
+Received: from uklirb.informatik.uni-kl.de by stepsun.uni-kl.de id ae02556;
+	  4 Aug 94 13:30 MET DST
+Received: from poker.informatik.uni-kl.de by uklirb.informatik.uni-kl.de
+	  id aa20023; 4 Aug 94 12:50 MET DST
+Date:	  Thu, 4 Aug 94 12:40:41 MET DST
+From: /// <b_noll@informatik.uni-kl.de>
+Subject:  xdme...
+To: digulla <@sun.rhrk.uni-kl.de:digulla@fh-konstanz.de>
+Message-Id:  <9408041240.aa08870@poker.informatik.uni-kl.de>
+Status: RO
+
+Hi Aaron!
+
+>> 1. Hast Du jemals einen REF-Eintrag ueber refctags gefunden?????
+>
+> oeh.... In der Tat habe ich "refs" schon seit Jahren nicht mehr verwendet...
+
+Ja, da gibt es gewisse Probleme mit;
+1. wird in tags nach dem Vollen Pad als Fenstertitel gesucht ...
+2. wird in refctags Abortcommand nicht resettet
+3. Funktioniert es auch dann noch nicht richtig ...
+ich werde evtl. eine alte Version wiederverwenden
+
+>> 2. Ich bekomme regelmig Probleme mit dem Fenstertitel:
+[...]
+>
+> Tja, weil XDME SetWindowTiltes() nicht verwendet.... aber man koennte
+> sich jetzt berlegen, das zu machen, denn das OS ist inzwischen schnell
+> genug (und verplempert nicht Jahre damit den ganzen Rahmen zu refreshen).
+
+klingt echt sinnvoll
+
+>> 3. Wenn, whrend der ASL-Requester aktiv ist, ein Signal BREAK
+>>    gesendet wird, und der Requester mit OK geantwortet wird
+>>    (also Diskzugriff stattfindet), dann wird der XDME-Prozess
+> Mit der ResourceTrackingLibrary von mir wre das nicht so kompliziert,
+> aber es wrde XDME sehr viel langsamer machen... Warum reagiert er
+> berhaupt auf ^C !? Die einzige Stelle, wo das Sinn macht ist in der
+> Hauptschleife. Da kann ich dann einfach nach "quit" springen und das
+> ganze hat sich. Dann beendet sich der XDME auch korrekt.
+
+Die Sache ist ganz einfach: die stdt IO-Befehle von SAS
+regieren auf ctl-C (ich habe keine Ahnung, wie das abgeschaltet
+wird) evtl ist es sogar die DOS.lib selbst, da keine der
+atexit-funktionen aufgerufen wird ...
+
+>> 4. Das Problem mit "if CA " ist gefixt; freundlicherweise
+>
+> Welche Zeile ?
+
+der Fix ist in den Sources bereits durchgefuehrt
+
+>> PS ich habe gerade Deine Sources erhalten ...
+>>    koennte es sein, dass Du ziemlich entnervt warst????
+>
+> Nein, wie kommst Du denn darauf .... es muss ja schliesslich so sein,
+> dass das Programm nach einem Recompile (ie. del *.o ; smake) nicht
+> mehr tut.... *grrrr*
+
+ehrlich gesagt, hatte ich damit keine Probleme
+
+>>    Das Ding schmiert ab??? ist noch irgendetwas nicht initialisiert?
+>>    (Reihenfolge!)
+>
+> Es stuerzt in DeadKeyConvert() ab, wenn auf IAddress in DeadKeyConvert
+> zugegriffen wird. Aber ich denke, das liegt daran, dass ich (vergeblich)
+> versucht hatte, einen Teil der DIFFS von Dir einzubauen. Als ich gemerkt
+> habe, da es nicht geht (weil die Zeilennummern nicht stimmen), hatte ich
+> wohl schon einige lethale Vernderungen vorgenommen und konnte sie nicht
+> mehr rckgngig machen, weil ich keine alte Version hatte.
+
+so was ist latuernich unangenehm ...
+
+>>     ??? 24 Files von denen Du nix weisst ???
+>>     in meinem gesamten verzeichnis sind gerade mal
+>>     ca 30 Files ...
+
+Korrektur : 45 .c files ...
+
+> Bei mir hat sich etwas mehr Mll angelagert: AVL.c AVL.h COM.c COM.h KEY.c
+> MENU.c ... und alles ohne Anleitung. Dann gibt es ein Verzeichnis rxvars
+> und viele lustige Files in Include/. Auerdem wird mal mit "LIBS/AVL.h",
+> mal mit "COM.h" gearbeitet. Ich konnte viele Dateien von Dir so gar nicht
+> uebersetzen. Vorschlag: Bevor Du mir nochmal IRGENDWAS zuschickst, lscht
+> Du bitte alle Objekt-Files und bersetzt es neu. Dann kann ich es
+> wenigstens bersetzen....
+
+alles rubbish: ion dem soeben versendeten Archiv befinden sich alle Files
+die zZt fuer eine Rekompilierung noetig sind ...
+Du musst aber vermutlich scopts umbiegen, da sind bei uns ziemlich
+Unterschiede...
+(ich habe nicht die Geduld fuer Optimierungen...)
+
+>>     in dem Diff-Archiv, das ich Dir letztes mal geschickt habe,
+>>     waren alle notwendigen files, sofern sie sich in meinem
+>>     Verzeichnis befinden (sofern nix geaendert war mit size==0)
+>
+> Stimmt... nur die Zeilennummer haben nicht mit denen bereingestimmt, die
+> in Deinen Files waren. Dazu dient normalerweise auch die Option -C(ontext).
+> Dann gibt DIFF zustzlich noch 3 Zeilen vorher und nachher aus, damit man
+> die nderung selbst dann findet, wenn man zwischendrin ein paar Zeilen
+> eingefgt hat.
+
+NNGRRRRRRRRRR, warumn saaacht mir das denn keiner ????????????
+
+
+>>    Vorschlag: es wuerde vermutlich, zumindest bis die KB.lib
+>>    fertig ist, doch schon einmal ausreichen, fuer eindeutige
+>>    Funktionalitaeten unterverzeichnisse zu verwenden...
+>
+> Es wrde reichen, wenn ich wsste, welche nderung Du vorgenommen hast und
+> warum Du es mal so und mal anders machst. z.B. bei der AUTO-Funktionalitt
+> hast Du manchmal einfach #include "AUTO.h" vergessen. Das macht es fr mich
+> nicht gerade einfach ... mal angesehen, von dem Eindruck, den es AUF mich
+> macht :-)
+
+die Auto-funktionalitaet ist zur Zeit noch GAR NICHT verwendet
+(jedenfalls nicht in der Version, die ich Dir geschickt hatte.)
+
+
+>>    zB.:
+>>	 Vars/ (flags|vars|varsbases|smallSPC).c
+>>	 Key/  key*.c
+>>	 Menu/ menu*.c
+>>    (dafuer muesste lediglich das smakefile geaendert werden)
+>
+> Hrt sich gut an. Auerdem sollest Du mir dann immer eine komplette
+> Liste mit allen Files schicken (oder eine Liste, wo drin steht, welche
+> neu sind und welche wegfallen).
+
+Das tue ich doch eigentlich immer ;-)
+
+>>     Nachdem Du die RexxVars in vars.c disabled hast, koennen die
+>>     Dateien rxadd.c und das gesamte rexx/* verzeichnis verschwinden...
+>
+> Hatte ich ?? Was ist das berhaupt ??? Bei der UNIX-Version hat sich jemand
+> beschwert, da $f1 nicht mehr tut... stimmt, das ist mit #ifdef AMIGA
+> auskommentiert :-P Kannst Du das mal wieder einbauen ?
+
+ich hatte eine moeglichkeit geschaffen, sowohl
+auf die Rexx-Global liste zuzugreifen (wie hiess die noch, das ist 2 Jahre
+her...) als auch auf RexxVariablen aus dem xdme heraus ( sofern ein
+rexxbefehl aktiv ist ), aber dadurch, dass dirk sich nunmehr um Arexx
+kuemmert, und da ich nur ungern in seinem Code 'rumpfuschen wollte,
+habe ich die Patches fuer rxvars Dir nur ein einziges Mal geschickt
+(ganz am Anfang) da bei der Naechsten Version die Patches aus
+drexx.c/hrexx.c verschwunden waren, ging ich davon aus, dass Du es
+als unsinnig angesehen hattest...
+seitdem sind die entsprechenden Zeilen in vars.c ausge'#ifdef't
+
+>>     Nachdem Du die Record-funktionalitaet fuer ungeeignet haelst,
+>>     kann macro.c gekillt werden ...
+>
+> Halte ich ?? Ich habe den Eindruck, da ich, whrend wir Telefonieren,
+> weniger labern sollte... Mein Problem ist folgendes: Ich kann eine
+> Entwicklung nur schlecht berschauen, wenn ich micht darber mit jemand
+> unterhalte. Ich bin besser, wenn ich in Ruhe darber nachdenken kann.
+> Das ist der Grund, warum ich am Telefon oft so einen Mist rede. Nur
+> was tun ? Ich denk mir was aus (= es schwebt mir schon was vor).
+
+Tja ... das koennte sein;
+Dazu muss ich sagen: als ich gestern abend macros.c loeschen wollte, liss sich
+xdme nicht mehr linken, alsio ist es doch noch verwendet; muss es mir dringend
+noch einmal anschauen ...
+
+>>     COM.? war ein Vorschlag fuer  ein dynamisches Command.c,
+>>     das hast Du ja bereits abgelehnt ...
+>
+> Nur vorlufig. Ich bin mir nicht ganz sicher, wie ich das machen will.
+> Dein Vorschlag mit dem AVL-Baum ist ganz vernnftig, aber mir schwebte
+> eher was mit einer guten HASH-Funktion vor. Diese wrde ich aus einer
+> Liste mit Worten und dem HASH-Generator von GNU erzeugen. Ich brauche
+> sowas nmlich auch fr meinen C-Interpreter und spter werden alle
+> XDME-Kommandos ja von diesem verwaltet und nicht mehr im XDME.
+
+klingt nicht schlecht ...
+
+>>     SPC.? ist ein moeglicher dynamischer Ersatz fuer smallspc.c
+>>     das duerfte damit ja dann auch gestorben sein ...
+>
+> Und was tut smallspc.c ?
+
+es ist die kleine/abgespeckte version eines Moduls, das ich seinerzeit schon
+fuer den dme geschrieben hatte, und das die Verwaltung saemtlicher
+[x]dme-interner Specialvars uebernehmen sollte.
+da aber alle Naselang irgendwo eine neue sondervariable auftaucht,
+ist es ein schier Hoffnungsloses Unterfangen; daher dachte ich daran, auch
+diese Spezialvariablen dynamisch verwalten zu lassen (in verschiedene Guppen
+aufgeteilt: Global, Project; LONG, CHAR, BIT, STRING, STRPTR;
+
+>>     avl.? werden meines wissens noch nicht verwendet;
+>>     sie wurden in meinen noch nicht adaptierten modulen in varsbases, alias
+>>     (spc und COM) verwendet, aber im Falle dieser Module habe ich
+>>     seit ueber 1/2 Jahr nichts mehr gemacht, ich muss sie erst noch einmal
+>>     durchlesen ...
+>
+> Ich htte es toll gefunden, wenn Du zu diesen Modulen eine kurze Erklrung
+> gesendet httest. Als ich herausgefunden hatte, da sie nicht ntig sind,
+> hab ich schon einen halber Kollaps erlitten, weil die ganzen Autoinit
+> Funktionen in key* und menu* nach Funktionen aus COM.c geschriene haben :-(
+
+diese Module werden in der Offiziellen xdme-Version gar nicht mehr
+aufgefuehrt in dem Diffbaum waren seinerzeit alle verwendeten Dateien
+zumindest namentlich aufgefuehrt (hoffe ich)
+aus eben diesem Grunde habe ich auch den AutoInit-Part einge'#ifdef't
+ich moechte diesen Part aber nicht 'rauswerfen, da ich hier noch meine
+Entwicklerversion habe, und bei der kann ich, jedesmal, wenn ein Problem
+auftritt selektiv alle veraenderten Module abschalten, bis der jeweilige
+Fehler gefunden ist...
+
+>>     tplter.c ist ausgelegt auf die Zusammenarbeit mit einem dynamischen
+>>     commad-Tree, ist daher zur Zeit noch garbage ...
+>>     wo wird eigentlich wildcmp.a verwendet?
+>
+> In refs.c
+
+Wo da bitte??????????
+
+
+
+mfG "0"
+
+PS
+habe gestern abend eine neue Version fabeizeirt, compiliert, gelinkt,
+getestet ...
+keine Probleme ...
+
+nur ( mit dem gst haperte es etwas ...)
+
+in dieser Version sind aber noch keine Subdirs ...
+(mist ich hab' hunger, melde mich nachher noch einmal ...)
+
+
+
+
+From <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de> Thu Aug	4 16:01 MES 1994
+Received: from stepsun.uni-kl.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.37.109.4/BelWue-1.0HP) id AA08273; Thu, 4 Aug 94 16:01:33 +0200
+Return-Path: <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de>
+Received: from sun.rhrk.uni-kl.de by stepsun.uni-kl.de id aa01295;
+	  4 Aug 94 16:04 MET DST
+Received: from stepsun.uni-kl.de by sun.rhrk.uni-kl.de id aa29814;
+	  4 Aug 94 16:03 MET DST
+Received: from uklirb.informatik.uni-kl.de by stepsun.uni-kl.de id af01249;
+	  4 Aug 94 16:04 MET DST
+Received: from poker.informatik.uni-kl.de by uklirb.informatik.uni-kl.de
+	  id aa22829; 4 Aug 94 15:43 MET DST
+Date:	  Thu, 4 Aug 94 15:40:46 MET DST
+From: /// <b_noll@informatik.uni-kl.de>
+Subject:  ReXY: xdme ...
+To: digulla <@sun.rhrk.uni-kl.de:digulla@fh-konstanz.de>
+Message-Id:  <9408041540.aa18321@poker.informatik.uni-kl.de>
+Status: RO
+
+Hi Aaron!
+
+Diese Mail hier wird etwas chaotisch, ich antworte gerade auf 2
+unterschiedliche Mails, habe aber heute mittag schon die haelfte
+der 1. Antwort getippt ...
+
+> Ich hab ein schlechtes Gedchtnis bei Telefongesprchen (was Dir ja sicher
+> schon aufgefallen ist). Daher kann ich micht, wenn die Files ankommen,
+> meist nicht genau erinnern, was ich damit machen soll. Auerdem ist mir
+> aufgefallen, da auch Du nicht so sorgfltig arbeitest. Da ist es schon mal
+
+das ist aber noch ziemlich gelinde ausgedrueckt ... eher: ich bin
+schlampig meine Dokumentationen hinken meist mindestens 3 Versionen
+hinterher; wirkliche Neuerungen schiebe ich meist auf die lange Bank
+und patche stattdessen im vorhandenen Code 'rum, was ihn z.T unwartbar
+macht, da ich auch meine Patches nicht immer als solche kenntlich mache...
+um allem eine Krone aufzusetzen bearbeite ich immer noch 2 voellig
+unterschiedliche xdme-versionen (eine mit dynamischen kommandos) und
+die offizielle, dadurch weiss ich manchmal nicht, wo nun was geaendert
+wurde ...
+
+> passiert, da eine Datei nicht so war, da ich sie verwenden konnte.
+> Das ist jetzt echt kein "Du Arscht machst alles falsch", denn alle diese
+
+Diesmal fasse ich es auch wirklich nicht so auf
+
+> Fehler mach ich ja auch. Nur mssen wir uns SOFORT eine Methode berlegen,
+> wie z.B. neue Dateien, die Du schreibst sicher in den Baum integriert werden
+> und Dateien von Dir und Mir, die unntig sind, bei BEIDEN wegfallen. Ich hatte
+> auch schon den Fall, da ein Archiv von Dir Dateien enthielt, die ich
+> schon gelscht hatte. Es ist einfach ein Durcheinander und das darf nicht
+> sein. Sonst verschwenden wir mehr Zeit damit solche Probleme auszurumen
+> als XDME weiterzubringen.
+
+* Die brutale Tour waere, jedesmal den kompletten Baum zu schicken; das geht
+jedoch nur bedingt (330 K uucoded)
+* die statische Alternative waere, dass wir uns darauf einigen, welche dateien
+/ Verzeichnisse wessen "Hoheitsgebiet" sind; so dass drin alle Aenderungen
+nach belieben durchgefuehrt werden koennten...
+das wiederum hat den gewaltigen Haken, dass auf die Schnelle nirgends ein
+Bugfix gemacht werden kann, oder ein neues Feature ergaenzt werden kann, daher
+halte ich das fuer keine sinnvolle Loesung ...
+* eine Alternative bestaende darin, eine strikte Trennung zwischen Editor
+(block.c redraw.c text.c win.c main.c), basisfunktionalitaet (keys,
+menues) und macros/modulen (command.c vars alle "befehle") und dabei
+moeglichst eine trennung vorzunehmen zwischen der funktionalitaet und
+dem befehl (z.B do_del() sollte auf eine basisfunktion del_char() o.ae.
+zugreifen); auf diese Weise wuerde dann auch der uebergang zu dem C-inter
+preter wesentlich vereinfacht ... ausserdem koennten dadurch abgespeckte
+Versionen in anderen Projekten verwendet werden...
+* eine andere Alternative waere, dass wiederum eine Trennung zwischen basis-
+und erweiterter funktionalitaet vorgenommen wird, aber dazu der aktuelle
+interpreter als basisfunktionalitaet mitverwendet wird; in diesem falle
+muessten wir tatsaechlich auf dynamische dastru bauen; als riesiges Manko
+erweist sich die Tatsache, dass wir dann so ziemlich alles fuer den C-inter
+preter neu schreiben duerfen (das war der Ansatz, der die Dateien COM/VAR/SPC
+verfolgten jedes neue Modul meldet seine Befehle selbststaendig bei dem Parser
+COM an und gibt bei SPC an, ob es spezialvariablen verwendet/benoetigt; wenn
+eine eigene vartype definiert wird, wird diese in VAR abgemeldet (e.g. flags,
+glovars, rexxvars, shellvars, envvars, textvars, textflags, keys, macrovars,
+menues). in besonderen falle koennten auch weitere funktions-analyser neben
+COM auftreten, die ebenfalls ueber eine gemeinsame schnittstelle verwaltet
+wuerden ( COM, alias, menues, keys, ARexx ) hierzu hatte ich mir aber dann
+keine weiteren gedanken gemacht, da das Problem auftrat, dass die derzeitige
+macro sprache kein befehlsendeerkennen kann, was vor allem bei der Einbindung
+der ARexxuntertuetzung probleme bereitete (bei den anderen Arten waere es
+vergleichsweise einfach gewesen: eine Funktion LOCK um einen Namen zu finden
+und einen Handle zu erzeugen, eine Fkt NARGS, die aus einem Handle die
+#parameter ableitet, eine fkt DO, die den Handle dann ausfuehrt, und eine Fkt
+UNLOCK, die den Handle wieder freigibt; das ware dann alles in allem immer
+noch der alte Parser geblieben; rexx haetten wir mit einem sonderfall
+abgehandelt: prioritaetenvergabe (alle handler stehen in einer liste), durch
+die der rexxport an die letzte pos, rutschte, LOCK==1 NAGRS==-1 und dadurch
+immer ein FOUND erzeugen)
+
+
+Es steht und faellt jedesmal damit, dass wir eine sinnvolle Basisschnittstelle
+haben; ist diese gegeben, so koennen wir eigentlich fast nichts mehr falsch
+machen; dann ist es hoechstens noch sinnvoll, bei jeder Aenderung die Dateien
+zu schicken, die wir geaendert haben, sowie eine Kontrolldatei, die Auschluss
+ueber den bei dem Sender vorliegenden Verzeichnisbaum gibt (evtl jeweils mit
+Datumsangaben und mit RCS-versionsnummern fuer eine verbesserte Abstimmung)
+wir braeuchten uns nun "nur noch" auf die Basisfunktionalitaet mit ihren
+Schnittstellen zu einigen, und das Format der Baumdatei zu klaeren.
+(wir sollten dazu am Besten tatsaechlich jedesmal AUCH ein diff schicken;)
+emphehlenswert waere auch eine ProjektHistory (die der Projectverwalter - Du -
+fuehren muesste; jede Aenderung die gemacht wird, wird mit 3 Zeilen
+Beschreibung sowie betroffenen Dateien vermerkt; die einzelnen SubCoder
+schicken jeweils nur ihre neuesten Aenderungen; der Verwalter fasst sie
+zusammen und schickt jedesmal die komplette Datei zurueck.
+noch geschickter waere es, wenn wir eine Moeglichkeit haetten ein Rechner-
+uebergreifendes RCS zu basteln, so dass jeder von uns auf einem gemeinsamen
+Zentralrechner Schreibrechte an einer Datei anfordern kann (und damit
+gleichzeitig die letzte Version der Datei geschickt bekommt) und diese Datei
+dann wieder zurueckschickt, womit er sie wieder eincheckt; das wuerde aber
+bedeuten dass jemand den Anderen (s)ein Account zur Verfuegung stellt; ich
+biete meines hiermit an, muss aber darauf hinweisen, dass nur noch 300k frei
+sind ... (ausserdem haben wir neuerdings offiziell eine mailbeschraenkung von
+50k/monat)
+
+
+
+> statt mutwillge Zerstrung (dazu kenn ich Dich zu gut). Aber es darf halt
+
+Danke fuer die Blumen
+
+> nicht passieren, Ich hatte wichtige Bugs im 1.83.05 gefixt und konnte
+> ihn nicht rausgeben, weil er in keycontrol.c abstrzte und die Hlfte
+> seiner Keymappings nicht mehr anerkannte. Das war kein tolles Gefl sag
+> ich Dir ... :-)
+
+kein tolles Gefuehl? glaub' ich Dir nicht ;-)
+
+bzgl. Keymappings: Bitte um Nachricht, ob sie immer noch nicht alle verstanden
+werden; (ich hatte ziemlich viel in keycodes.c 'rumgespielt, weiss daher
+ehrlich gesagt nicht, genau woran die Ausfaelle liegen koennten... das
+vorliegende Modul ist einfach kopiert, ich hatte da nicht ueberprueft, ob
+in der Zwischenzeit Erweiterungen aufgetreten waren...)
+
+> Was ist Prass ??
+
+8-))))))))))))))))
+
+
+Zur KeyLib:
+1. sollten alle Funktionen einen Handle mitbekommen, so dass wir
+   sie irgendwann in eine Shared Liub haengen koennen; der Handle
+   wird mit dem Init erzeugt, und mit einer neuen ExitFkt geloescht,
+   auch alle zugehoerigen Mappings.
+2. Sollte es eine Moeglichkeit geben, eine DiposeFunk fuer die Daten-/
+   Macros-Parts der Mappings zu erstellen, so dass beim Loeschen eines
+   Mappings auch die mit uebergebenen Daten geloescht werden koennen
+   (wieder wg. 1)
+3. so weit bin ich noch nicht, ich muss mir den Kram erst noch ein
+   weiteres Mal durchlesen. z.B. vermisse ich eine Unterscheidung
+   zwischen Befehlsdaten und HelpDaten.
+
+
+
+
+
+> Tja, weil XDME SetWindowTiltes() nicht verwendet.... aber man koennte
+> sich jetzt berlegen, das zu machen, denn das OS ist inzwischen schnell
+> genug (und verplempert nicht Jahre damit den ganzen Rahmen zu refreshen).
+
+klingt so, als sollten wir das ganz schnell verwenden ...
+beisst sich das denn dann nicht mit der Moeglichkeit, der Titelhintergrund
+einzufaerben? (TPEN) Waere es nicht sinnvoller, nach jedem Laden
+/chfilename den Titel via SetWindowTitles 1x auf die max. moegliche
+Breite festzulegen (e.g. "999999/999999 FF (mod) <name>") und danach
+auch aus title() SetWindowTitles 'rauszuwerfen, so dass bei WindowDeactivate
+der Titel nicht mehr abgeschnitten wird...
+
+> Es stuerzt in DeadKeyConvert() ab, wenn auf IAddress in DeadKeyConvert
+> zugegriffen wird. Aber ich denke, das liegt daran, dass ich (vergeblich)
+> versucht hatte, einen Teil der DIFFS von Dir einzubauen. Als ich gemerkt
+> habe, da es nicht geht (weil die Zeilennummern nicht stimmen), hatte ich
+> wohl schon einige lethale Vernderungen vorgenommen und konnte sie nicht
+> mehr rckgngig machen, weil ich keine alte Version hatte.
+
+Koennte das evtl auch mit ein-/aus-geschalteter Optimierung zusammenhaengen?
+
+> uebersetzen. Vorschlag: Bevor Du mir nochmal IRGENDWAS zuschickst, lscht
+> Du bitte alle Objekt-Files und bersetzt es neu. Dann kann ich es
+> wenigstens bersetzen....
+
+das tue ich auch meistens...
+Im Allgemeinen gibt es aber ein anderes Problem: die Umgebung
+falls z.B. die von Dir verwendete SymbolTable mit all.h erzeugt
+wurde, so gibt es spaetestens dann Probleme, wenn keyhashes.h
+intern in 2 unterschiedliche Versionen zerfaellt (definiertes
+KEY_INTERNAL oder nicht); dadurch werden die key*.c module tatsaechlich
+unkompilierbar... bei mir werden daher ausschliesslich die CBM-includes
+in der SymbolTable gehalten ...
+Ausserdem verwende ich zumeist andere Linkbibliotheken (debug, reqtools)
+(ich greife aus Gruenden der Faulheit dafuer auf dlib: zurueck)
+
+
+
+Anmerkung zur AUTO-funtionalitaet:
+
+die seinerzeit geschickten Module (keine Ahnung mehr, von wann die waren)
+sind inzwischen etwas modifiziert worden; sie machen aber m.E. erst dann
+einen Sinn, wenn wir auf dynamische Einbindung von Befehlen, wie oben
+vorgeschlagen uebergehen, da sonst der gewuenschte Vorteil - lokale
+Manipulation - durch SmallSPC.c, Vars.c Command.c wieder zum Teufel geht...
+
+unter Umstaenden faellt mir aber eine Moeglichkeit ein, wie wir ueber
+Shellscripts oder ein neues Tool pseudodynamische Specials, VarClasses,
+Commands und ComClasses erreichen, z.B. indem in jedem Modul irgendwo
+ein Block definiert wird, in dem vermerkt ist, ob jeweils etwas exportiert
+wird, und daraus dann include-dateien erstellt werden.
+(dann waeren einesteils die dynamischen strukturen weg, andererseits
+ware eine gewisse lokalitaet gewahrt)
+
+
+mfG "0"
+
+
+Anmerkung zu rexxvars: soll ich den Kram wieder enbinden ???
+
+Anmerkung zu varsbases.c: das Modul wird in den naechsten Tagen umgeschrieben
+Anmerkung zu AVL.c:	  ... deswegen
+
+Anmerkung zu mikro.c: oh himmel, wenn ich meine Version davon sehe und mit der
+		      offiziellen vergleiche wird mir schlecht, da stiummt nix
+		      mehr ueberein
+
+Anmerkung zu tplter.c: kann z.Zt nur verwendet werden mit meiner version
+		    (verwendung von AUTO, COM und einem neuen Befehl in Mikro)
+
+
+Anmerkung zu x11dme: was war auskommentiert?
+	    etwas bzgl. Keyboard-vars ? ... klingt wahrscheinlich:
+	    ich habe so ziemlich alles auskommentiert, was auf Funktionen
+	    zugriff, die im amiga-xdme geaendert wurden, um Schnittstellen
+	    kollisionen zu vermeiden ... (dummerweise habe ich keycodes.c
+	    nicht auf X11 uebertragen, das sollte jemand machen mit X11
+	    kenntnissen, sonst waeren die neueren Key-module verwendbar)
+
+	    eine Aenderung kann von meiner Seite z.Zt nicht stattfinden:
+	    ich habe aus Platzgruenden den x11dme auf einem anderen Cluster
+	    abgelegt, und der Typ, auf dessen Account die Sache laeuft, ist
+	    in Urlaub ... :-}
+
+	    X11... wie waere es, wenn wir einmal checken, wo wir im Amiga-
+	    xdme welche Amiga-spezialitaeten verwenden, und versuchen diese
+	    zu kapseln?
+
+
+
+PS mein Spitzname kommt nicht von ungefaehr =;^)
+
+From <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de> Fri Aug	5 17:27 MES 1994
+Received: from stepsun.uni-kl.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.37.109.4/BelWue-1.0HP) id AA11002; Fri, 5 Aug 94 17:27:30 +0200
+Return-Path: <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de>
+Received: from sun.rhrk.uni-kl.de by stepsun.uni-kl.de id aa02808;
+	  5 Aug 94 17:30 MET DST
+Received: from stepsun.uni-kl.de by sun.rhrk.uni-kl.de id aa11816;
+	  5 Aug 94 17:29 MET DST
+Received: from uklirb.informatik.uni-kl.de by stepsun.uni-kl.de id ag02765;
+	  5 Aug 94 17:30 MET DST
+Received: from poker.informatik.uni-kl.de by uklirb.informatik.uni-kl.de
+	  id ab12894; 5 Aug 94 14:54 MET DST
+Date:	  Fri, 5 Aug 94 14:52:36 MET DST
+From: /// <b_noll@informatik.uni-kl.de>
+Subject:  xdme...
+To: digulla <@sun.rhrk.uni-kl.de:digulla@fh-konstanz.de>
+Message-Id:  <9408051452.aa08223@poker.informatik.uni-kl.de>
+Status: RO
+
+Hi Aaron!
+
+Hier ist ein Backup meines aktuellen xdme-baumes
+
+Folgende Aenderungen ergeben sich zu der xdme183.06-Adaption von
+gestern:
+
+1. eigenes Verzeichnis Src	  (*.c)
+2. eigenes Verzeichnis Src/Key	  (Key*.c)
+3. eigenes Verzeichnis Src/Menu   (Menu*.c)
+4. eigenes Verzeichnis Src/Var	  (Var*.c flags.c smallspc.c)
+5. eigenes Verzeichnis Src/Mod	  (math.c mikro.c alias.c)
+6. Varbases ist ersetzt durch eine (aeltere) Version, die
+   Gebrauch von AVL.c macht
+7. Refs.c ist ersetzt durch eine aeltere Version, die
+   noch den Berkeley-Fix enthaelt...
+8. Subs.c hat eine Aenderung in "xefgets" erfahren
+9. zumindest die Dateien Main.c Win.c Cmd.c bauen noch auf xdme.183.03 auf!
+10. Win.c  ist etwas gepatcht	     (solltest Du nur bedingt uebernehmen)
+11. Main.c hat eine ExitFunktion     (solltest Du nur bedingt uebernehmen)
+12. Cmd.c (do_if) ist etwas gepatcht (solltest Du nur bedingt uebernehmen)
+13. SMakefile ist modifiziert ( wg. des Baumes )
+    "smake protos" fktioniert zZt nicht (CmdLine too long!)
+14. eine Datei MKTAGS wurde ergaenzt
+15. Include/Defs.h wurde leicht modifiziert (wg. varsbases.c)
+
+
+alias.c     ist der naechste Kandidat fuer eine Ersetzung! (AVL verwendung)
+mikro.c     ist der naechste Kandidat fuer eine Ersetzung! (do_printf)
+varsbases.c wird nochmals modifiziert werden ("#if !PATCH_AVL" faellt 'raus)
+smallspc.c  steht ebenso auf der Modifikationsliste
+	    (dafuer werde ich versuchen, an allen Stellen, wo Spezielle
+	     Variablen definiert werden, Vermerke zu erstellen)
+vars.c	    (analog, dabei jedoch Variablentypen: ENV, GFLAGS, TFLAGS,
+	     GVARS, TVARS, MVARS, SVARS, MENUS, KEYS)
+rxadd.c      wird in diesem Aufwasch wohl wieder reaktiviert
+tplter.c     wird eingebunden, nachdem mikro.c ge"update"t wurde
+eine Entsprechung fuer command.c musst Du erst noch absegnen (s.u.)
+
+die Sache wird zunaechst so aussehen, dass ueberall, wo
+eine Spezialvariable definiert wird, eine neue Section eingebaut
+wird; ein Parser sucht zunaechst nach allen passenden Zeilen
+und laesst diese dann durch ReadArgs laufen; als Ergebnis werden
+einige Dateien erzeugt, die fertige Tabellen enthalten;
+dadurch ist kein dynamischer Code mehr noetig
+
+das untenstehende Beispiel zeigt die moeglichen TemplateStrings
+(Kommentare!!!!!!)
+
+/* **************************************************
+		Special XDME Addes
+************************************************** // der Kommentar wird noch NICHT beendet!
+
+// Special Variables
+// (SpcType/A,)Name/A,Type/A,Reference/K,Help/K,Readable/S,Writeable/S,Flags/M
+
+GLOBALVAR Name=scanf	Type=STRPTR Reference=String   Readable Writeable
+GLOBALVAR Name=findstr	Type=STRING Reference=Fstr     Readable Writeable
+GLOBALVAR Name=repstr	Type=STRING Reference=Rstr     Readable Writeable
+TEXTVAR   Name=viewmode Type=FLAG   Reference=ViewMode Readable Writeable
+
+// Commands
+// (SpcType/A,)Name/A,NumArgs/N,Function/A,Help/k,Flags/M
+
+COMMAND if	2 do_if
+COMMAND ifelse	3 do_if
+COMMAND while	2 do_if
+COMMAND insert	1 do_inswrite NoViewMode
+COMMAND esc	1 do_esc      SaveRoCL
+
+// CommandTrees
+// (SpcType/A,)Name/A,Priority/N,Lock/A,Unlock/A,Args/A,Call/A,Flags/M
+
+COMMANDTREE aliases 4 getmacro	    do_null nummacroargs callmacro
+COMMANDTREE menues  3 menu2macro    free    return0	 do_command
+COMMANDTREE keys    2 keyspec2macro free    return0	 do_command
+COMMANDTREE ARexx -128 return1	    do_null returnNot0	 do_rxImplied
+
+// VariableTypes
+// (SpcType/A,)Name/A,Priority/N,Lock/A,Unlock/A,Get/A,Set/A,Unset/A,Flags/M
+//
+// Das hier zeigt noch gewisse Probleme mit dem bisherigen
+// Variable-Interface: bislang wird kein Unterschied gemacht zwischen
+// Lock und Get, zwischen Lock und Set, sowie zwischen Lock und Unset
+// Ein anderes Problem liegt darin, dass ich keine Ahnung habe, wie
+// z.B. GlobalFlags gelockt werden koennten.
+// ebenfalls interessant waere eine Funktion, die bei Eingabe ueberprueft,
+// ob ein Wert Gueltig ist (da z.B. Flags nur einen sehr beschraenkten
+// Wertebereich haben.
+
+
+*/
+
+So, das wars, unsere Terminalraeume werden in 5 min abgeschlossen ...
+
+mfG "0"
+
+PS ... Du hast meine TeleNummer, oder?
+
+From <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de> Mon Aug	8 13:25 MES 1994
+Received: from stepsun.uni-kl.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.37.109.4/BelWue-1.0HP) id AA07107; Mon, 8 Aug 94 13:25:02 +0200
+Return-Path: <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de>
+Received: from sun.rhrk.uni-kl.de by stepsun.uni-kl.de id aa05694;
+	  8 Aug 94 13:28 MET DST
+Received: from stepsun.uni-kl.de by sun.rhrk.uni-kl.de id aa29479;
+	  8 Aug 94 13:27 MET DST
+Received: from uklirb.informatik.uni-kl.de by stepsun.uni-kl.de id aa05688;
+	  8 Aug 94 13:27 MET DST
+Received: from poker.informatik.uni-kl.de by uklirb.informatik.uni-kl.de
+	  id aa24615; 8 Aug 94 13:21 MET DST
+Date:	  Mon, 8 Aug 94 13:19:08 MET DST
+From: /// <b_noll@informatik.uni-kl.de>
+Subject:  Fomate...
+To: digulla <@sun.rhrk.uni-kl.de:digulla@fh-konstanz.de>
+Message-Id:  <9408081319.aa12705@poker.informatik.uni-kl.de>
+Status: RO
+
+Hi Aaron!
+
+Deine Fileformate sind geschickt und sicherlich sehr brauchbar ...
+... sobald wir den C-Interpreter haben;
+meine Vorschlaege bezogen sich aber immer noch auf die vorhandene
+Interpreter Struktur, die beispielsweise keine Moeglichkeit kennt,
+das Ende eines Befehls zu erkennen; (daher verwenden wir doch diese
+dammischen NumVars - oder?)
+Spaetestens bei Auftauchen der C-Interpreter version waeren
+diese von mir vorgeschlagenen Zusaetze obsolet. Natuerlich hast Du
+Recht, wenn Du sagst "aber der Interpreter kommt doch schon im Oktober"
+das Problem daran ist nur: Im Oktober ist vielleicht der Interpreter
+fertig, aber wann der XDME ihn verwendet, steht in den Sternen (Du
+musst zugeben, dass wir ca 60% des Codes dafuer umwerfen muessen);
+ein 2. Punkt ist, dass es mein persoenlicher Wunsch ist, dass auch
+die nicht C-Interpreter Versionen, auch wenn wir sie nicht mehr warten
+werden, dennoch wartbar bleiben/werden (es koennte schliesslich Leute
+geben, die diese primitive Makrosprache C vorziehen, sie entspricht
+zumindest in eingen Belangen eher der interaktiven Eingabe...),
+und das ist bei einer moeglichst starken Kapselung m.E. am ehesten
+zu gewaehrleisten.
+
+noch einmal zu dem Angegebenen Dateiformat;
+
+>    Help scanf "...";
+>    Prototype __var STRPTR scanf (STRPTR Format/A/F)
+>    {
+>    } /* scanf */
+(Scanf (wie es zZt im XDME vorliegt) ist als Beispiel nicht so
+ganz geeignet, da wir tatsaechlich eine Fktion zum setzen haben,
+damit aber nur sehr indirekt setzen; wenn ich das obige Beispiel
+so lese, habe ich eher den Eindruck, es handele sich um eine
+Funktion, die keine interne Variable fuettert, da keine
+Unterscheidung gemacht wird zwischen dem Funktionswert (BOOL)
+und dem VariablenTypen (STRING), der ja ebenfalls dann eine
+Zugriffsfunktion haette erhalten muessen ... aus diesem Grunde
+nehme ich im Folgenden an, wir haetten hier keine Probleme
+in Bezug auf den NameSpace, sondern die Resultatsvariable lautete
+ScanString.)
+
+meiner Meinung nach sollte es staerker Keyword orientiert sein.
+beispielsweise hast Du in dem oben angegebenen Bsp. HilfeTexte in
+Anfuehrungszeichen verpackt als Begrenzer; was, wenn nun in den
+Hilfetexten weitere Sonderzeichen auftauchen, also Definition von
+Escape-Symbolen et c...
+die Alternative waere (sicherlich auch i Bezug auf Parsing einfacher
+zu realisieren), dass wir einige wenige Schluesselworte vergeben
+(die z.B. immer am Zeilenanfang stehen muessen, moeglichst eingeleitet
+von zusaetzlichen Sonderzeichen), die den Anfang und das Ende bestimmter
+Textsektionen bestimmen (das ist ein bei weitem nicht so intergrierter
+professioneller(?) Ansatz wie der von Dir gezeigte, er hat aber m.E.
+der Vorteil, dass er schneller zu realisieren ist.
+
+ein moeglicher Aufbau waere
+
+$SECTION    scanf
+$REPRESENTS function
+$RETVAL     BOOL
+$PROTO
+    STRPTR Format/A/F	// The template to be parsed
+$END_PROTO
+$HELP
+Scan a String at Cursor Position into the ScanString
+Variable, controlled via a C-scanf like Template
+String.
+$END_HELP
+$END_SECTION
+
+$SECTION    time
+$PROJECT
+$REPRESENTS function
+$RETVAL     STRPTR
+$HELP
+get the current System Time
+$END_HELP
+$IMPLEMENATION "C"
+...
+$END_IMPLEMENATION
+$END_SECTION
+
+$SECTION    viewmode
+$REPRESENTS variable
+$TYPE	    BOOL
+$HELP
+Decide, wheather the current Project is ReadOnly (TRUE)
+or also Writable (FALSE)
+$END_HELP
+$END_SECTION
+
+$SECTION    insert
+$REPRESENTS command
+$PROHIBITED viewmode
+$HELP
+Insert some Text into the Current Project at
+cursor position
+$END_HELP
+$IMPLEMENTATION "C"
+...
+$END_IMPLEMENATION
+$END_SECTION
+
+
+Wenn Du Den integrierten Ansatz jedoch trotz Zeitproblemen
+favorisierst, (dann dauert die 1. Interpreter Version ja noch
+laenger =8-?) dann koenntest Du ihn auch noch ein wenig weiter
+treiben:
+
+scanf = %{
+    Help = %{
+Scan a String at Cursor Position into the ScanString
+Variable, controlled via a C-scanf like Template
+String.
+    %};
+    Prototype = BOOL (STRPTR Format/A/F);
+    Implementation = %{
+	...
+    %};
+%};
+
+auf diese Weise ist z.B. der Name eines Befehls nur noch einmal aufgefuehrt,
+wodurch es z.B. im Falle einer Umbenennung gar nicht erst zu inkonsistenzen
+kommen kann; ausserdem ist jede Definition ein in sich geschlossener Ausdruck
+und auch als ein solcher erkennbar.
+Genaugenommen koennten wir sogar auf weitere Hilfetexte fuer die
+Rueckgabewerte und Parameter bestehen, aber das wuerde wohl zu grosse
+Ablehnung hervorrufen...
+
+From <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de> Thu Aug 18 12:43 MES 1994
+Received: from stepsun.uni-kl.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.37.109.4/BelWue-1.0HP) id AA09333; Thu, 18 Aug 94 12:42:58 +0200
+Return-Path: <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de>
+Received: from sun.rhrk.uni-kl.de by stepsun.uni-kl.de id aa01001;
+	  18 Aug 94 12:46 MET DST
+Received: from stepsun.uni-kl.de by sun.rhrk.uni-kl.de id aa02851;
+	  18 Aug 94 12:45 MET DST
+Received: from uklirb.informatik.uni-kl.de by stepsun.uni-kl.de id aa00992;
+	  18 Aug 94 12:45 MET DST
+Received: from poker.informatik.uni-kl.de by uklirb.informatik.uni-kl.de
+	  id aa25140; 18 Aug 94 12:35 MET DST
+Date:	  Thu, 18 Aug 94 12:34:16 MET DST
+From: /// <b_noll@informatik.uni-kl.de>
+Subject:  xdme...
+To: digulla <@sun.rhrk.uni-kl.de:digulla@fh-konstanz.de>
+Message-Id:  <9408181234.aa11885@poker.informatik.uni-kl.de>
+Status: RO
+
+Hi Guy!
+
+'s hat etwas laenger gedauert, aber nun habe ich 'mal wieder
+den Weg nach K'lautern gefunden ...
+
+Ok; Es folgen 2 Archive:
+Das eine enthaelt alle Aenderungen seit der Version auf
+ftp.fh-konstanz.de;
+das Andere zeigt den Stand der Dinge in meiner ToDo Liste
+( habe mich in den letzten Tagen nicht mehr um die Keylib
+gekuemmert - werde damit wohl Ende der Woche wieder weiter-
+machen ...)
+
+Es sollte darauf hingewiesen werden, dass
+
+1. VarStack.c aus Src/Var nach Src/Mod verschoben wurde,
+   da dieses Modul keine Variablen Funktionalitaet im
+   eigentlichen Sinne enthaelt.
+2. Src/Mod/Tplter.c ist neu hinzugekommen
+
+(diese beiden Aenderungen sollten im Smakefile vermerkt werden)
+
+3. den Fehler mit ~0 habe ich immer noch nicht gefixt,
+   das ist m.E. ein Compiler Bug;
+4. SIMPTR ist noch _nicht_ auf Pixels revidiert worden,
+   das ist aber eine Sache von 5 Minuten; ich hatte es
+   vergessen, erst Deine mail erinnerte mich wieder daran.
+5. Alle meine Aenderungen seit der letzten mail sind soweit
+   ich weiss in dem File Docs/History.0 vermerkt (ich habe
+   noch die Flags BR fuer BugReport und CM fuer Code Modification
+   ergaenzt; die BugReports kannst getrost 'rauswerfen, ich
+   will nur immer sicher gehen, dass ich gefundene Bugs auch
+   gemeldet habe)
+6. Die Dateien in Todo/Var werden in naher Zukunft die in
+   Src/Var ersetzen; alle externen Aufruffunktionen bleiben
+   erhalten (getvar, gettypedvar, settypedvar), es wird
+   lediglich ein verbessertes Zugriffskonzept verwendet
+   (lock/create,set/get,delete/unlock), das (abgesehen von ENV
+   und REXX vars) insgesamt schellere Zugriffe ermoeglichen
+   sollte; ( der eigentliche Punkt, in dem sich etwas bemerkbar
+   machen kann ist Src/Mod/Math.c:SwapV und Src/Command.c:do_command
+   da in diesen beiden Faellen z.Zt 2mal gesucht werden muss.)
+
+7. Ich hatte bislang nicht den Nerv, die von Dir betreuten Module
+   gegen gcc zu kontrollieren, wenn ich das mchen sollte, werden aber
+   auch all die Dateien, die lediglich Kommandos exportieren
+   nach Src/Mod wandern ... (refs.c, filereq.c, ...)
+
+so, sonst faellt mir im Augenblick nichts ein
+
+mfG "0"
+
+From: /// <b_noll@informatik.uni-kl.de>
+
+Hi Aaron!
+
+> Nein :-) Ich hab "xdme 1.83.09 update" erhalten, "xdme-todo" und
+> "macros_update". Was ich mit dem TODO soll, weiss ich nicht. Den
+> Rest habe ich jetzt endlich eingebaut.
+>
+> Ueber allem anderen hirne ich noch :-)))
+
+Das sollte lediglich ein Ueberblick sein, wie weit was gediehen ist ...
+Var/* stellt das dar, was ich mir in der naechsten / letzten_Pre-C-Inter
+Release an Variable Support vorstelle ...
+
+Key/* stellte eine Uebersicht ueber die bisherigen Gedanken zu KeyLib
+dar ...
+Parser enthielt einen kleinen (unvollstaengigen) Parser fuer konstrukte
+der Art: [global|project] (bit|int|string) name = %{ help = %{ ... %}; ... %};
+mit dem ich einen vorlaeufigen Specialvariablen Baum erstellen wollte ...
+
+> Ich habe das File "macros_update" erhalten und abgespeichert, aber
+> offensichtlich hat ELM es irgendwo verschwinden lassen :-( Sende
+> es bitte nochmal. Ich warte solange mit der Release von XDME 1.83.09.
+
+Kein Problem ...
+ich schicke Dir hier alle Files, die am Fr/Sa/So/Mo geaendert wurden ...
+(Vor allem in main.c solltest Du einmal nachschauen, ob ich nicht allzuviel
+Mist gebaut habe - Die einzige _notwendige_ Aenderung war die Ergaenzung
+von "New" hinter "GetDiskObject")
+block.c/defs.h/amiga.c sind eigentlich nur um ein paar Klammern erweitert
+worden (gcc)
+
+> Conditionale mssen auf alle Flle rein. Ich mu ja auch Dateien fr
+> verschiedene Benutzer und Sprachen generieren knnen. Nur ber das
+> Aussehen habe ich mir noch keine Gedanken gemacht. Aber ein "formloses"
+> Format wie in C wre auf alle Flle vorzuziehen. Und TeX bringt ja alles
+> wieder in Form :-)
+
+DAs mag stimmen, aber bedenke das Thema debugging ...
+wenn Du tatsaechlich beim Einlesen den Text in Token zerteilst,
+gehen zu 99% Wahrscheinlichkeit die Zeilennummern floeten ...
+
+> :-/ Es ist wohl nicht so aufwendig, aber ich mu mir mal Gedanken ber
+> den Parser machen und wie der das lesen soll.
+
+:-)
+
+Wie waere es mit dem Weg der "kleinen Schritte"?
+
+>  Das Problem bei dem Parser ist der Text. Dinge wie Sonderziechen sind
+> sehr einfach zu managen, aber sag mal einem Parser "alles bis zum
+> nchsten Sonderzeichen ist zu ignorieren". Da wachsen einem graue Haare...
+
+Hmmmmmmm ... Bislang hatte ich mit [f]lex diesbezueglich wenige Probleme ...
+aber vielleicht meine ich ja auch etwas ganz anderes ...
+(Wieso gehst Du nicht nach einem Sonderzeichen in einen anderen Modus,
+dr alle Zeichen ignoriert, bis ein Sonderzeichen kommt?)
+
+>Ja, ich weiss. Aber auf Amerikanischen Tastaturen ist @ direkt erreichbar
+>(liegt auf dem oe, glaub ich). Zusammengesetzte Zeichen _haben_ Vorteile
+
+Ach ja ????
+Ich dachte immer "@" sei "Shift-2" - warum sonst ist es ueber "Alt-2"
+erreichbar??? (Warum ist es sonst auch auf dieser Tastatur anders?)
+
+>(kein Escapen, besser erkennbar). Nachteil: Wir brauchen immer noch
+>Escape (irgendwer wird garantiert eine solche Sequenz eigeben wollen,
+>z.B. wir selber, wenn wir die Doku dazu schreiben !). und es ist mehr
+>zu tippen als ein Zeichen. Aber ich denke, wir mssen so und so zwei
+>Zeichen verwenden. Ich schtze, das beste wre, wenn wir es den
+>Benutzer entscheiden lassen, was er da haben will. Sowas zu realisieren
+>ist einfach.
+
+... aber nicht mit [f]lex - jedenfalls musst Du Dir dann etwas mehr Muehe
+machen ...
+
+> Da gibt es kein Problem, nur ich dachte, Du httest es nicht vorgesehen
+> und das wre nix gewesen.
+
+Was war nicht(s/ vorgesehen)?
+wenn das Ding nicht flexibel ist, warum nenne ich es dann "flex"? ;-)
+Fuer eine Einbindung in ein beliebiges sind lediglich die Definition
+eine Var-Search Funktion (mit einem beliebigen "Handle") und eine
+Ausgabefunktion (dito) notwendig ...
+eigentlich sollte mehr nicht notwendig sein: Stream + AccessFunction
+sowohl fuer Variablen als auch fuer Ausgabe ...
+Was zugegebenermassen noch fehlt ist ein Stream fuer das Template ...
+So weit habe ich bei der Erstellung einfach noch nicht gedacht ...
+(naja, vielleicht kriege ich ja 'mal Lust und Zeit dazu ...)
+
+> Frage: Siehst Du meine Umlaute ? Deine Mail kam nmlich ohne zurck.
+
+_Nein_ ich habe es auch noch nicht herausgefunden, wie ich XTerm
+konfigurieren muss, damit es sie mir anzeigt ...
+habe heute morgen versucht
+XTerm*eightBitOutput:		true
+XTerm*utmpInhibit:		true
+zu verwende, aber das ging gruendlich in die Hose ...
+
+nun weiss ich auch nicht, ob es der Zeichensatz ist, oder XTerm ...
+
+
+
+
+
+Ok , so weit zu den Antwortschreiben ...
+Danksagungen an die uebliche Adresse
+
+nun zu den Aenderungen seit DoTag ...
+schau sie Dir an, wirf 'raus was ueberfluessig ist,
+und gib mir bei Gelegenheit einen Abriss des aktuellen
+xdmes.
+( sie sind in etwa auch noch einmal in Docs/History.0
+vermerkt ... )
+
+- in defs.h habe ich in 2 macros Klammern ergaenzt (gcc)
+- in block.c habe ich ein paar klammern ergaenzt,
+  ebenso in amiga.c (gcc)
+- win.c verlor einen Kommentar (gcc)
+damit war gcc dann soweit zufrieden ...
+
+im cmd.c habe ich aus einem "== BF_INSIDE" ein " & BF_INSIDE == BF_INSIDE"
+gemacht, sonst kann do_if die raender eines Blockes nicht mehr erkennen ...
+
+in macros.c habe ich 2 funktionen auskommentiert und durch
+macros ;-) ersetzt, dadurch ist simptr nun nur noch ein
+einfaches assign ...
+Mir ist noch ein Problem aufgegengen, was das Abspielen
+aufgezeichneter Macros abgeht (es erfolgt mit "source"):
+* zur Zeit werden die Scrollbars nicht unterstuetzt
+* zur Zeit wird WindowClose nicht unterstuetzt
+* zur Zeit werden Fensterwechsel nicht unterstuetzt
+* zur Zeit wird kann es Probleme geben mit dem Kommandozeilenmodus
+-> alles, was nicht explizit auf Befehle uebertragen wird,
+   geht verloren ... (Asche auf mein Haupt)
+* zur Zeit gibt es Probleme mit den Befehlen "Quit"/"Iconify"
+  bei diesem wird in realiter automatisch ein anderers Fenster
+  aktiv, in einem Script aber nicht ...
+
+
+
+mfG "0"
+
+PS
+Ach ja, es koennte sein, dass ich in den naechsten Tagen nicht so viel
+bzgl. xdme mache, es gibt in den von mir betreuten Ressorts augenblicklich
+ausser macros.c keine Fehler, und jemand hat mich gebeten, ihm beim debugging
+zu helfen ... (vielleicht finden sich im source von muibuilder ja interessante
+Anregungen)
+
+
+So, das sollte es nun aber gewesen sein ...
+
+Hi Aaron!
+
+Hier kommt noch ein kleineres Update zusammen mit einem BugFix
+(ja, ich soll die Finger aus main.c 'rauslassen, aber nachdem
+ich ueber 1h lang den Fehler bei mir gesucht hatte, dachte ich,
+das sei so sinnvoller).
+Ob Du die untensteheden Aenderungen wirklich einbaust ist
+Deine Entscheidung, zumindest den Bugfix in main.c solltest
+Du aber uebernehmen; (sobald ich die Aenderung in Macros.c
+noch einmal ueberprueft habe, werde ich sie Dir nocheinmal
+schicken, in der Zwischenzeit haette ich gerne einen Tip:
+soll das Kommando "SIMPTR x y" d.E. besser Bildschirmzeilen/
+Spalten (also eher den Bereich 0..80) oder Pixel (also eher
+den Bereich 0..600) verwenden? (nachdem ich z.Zt Bildschirmzeilen
+implementiert habe, um anderen Zeichensatzgroessen zu entkommen,
+tendiere ich inzwischen eher wieder zu Pixeln...)
+
+die naechsten Aenderungen werden sich auf die Srcs von xdme_1.83.08
+auf ftp.fh-konstanz.de beziehen; ab dann werde ich auch das von Dir
+vorgegebene History Format verwenden ...
+
+die Message die sich unten anschliesst ist etwas chaotisch; das liegt
+daran, dass ich sie waehrend des debuggens erstellt habe; (der
+Code laesst sich compilieren, und des geschieht auch soweit das,
+was ich erwarte, aber er ist noch nicht debuggt worden, nachdem ich
+den Bug in main.c gefixt habe ...)
+
+>====================
+>    if (!a2iqual(string, &newquals)) {
+>Src/Key/KeyAddes.c 116 Warning 88: argument type incorrect
+			^^^^^^^
+			Fehler?
+>				    Expecting "ULONG *", found "long *"
+>
+>	 sc  Src/Key/keycodes.c
+>
+>====================
+>    struct keyspec ks = {0, 0, ~0};
+>Src/Key/KeyCodes.c 946 Warning 62: constant -1 is out of range for type "unsigne
+			^^^^^^^
+			Fehler?
+>				    Valid range is 0 to 255
+>
+>
+>====================
+>0001 | 0x0008 ))&& (( (( ks )->ks_qualifiers)  &  0x0080 ) == 0))?  1 :  0 ;
+>Src/Key/KeyCodes.c 1173 Warning 85: return value mismatch for function "IsRawC"
+			 ^^^^^^^
+			 Fehler?
+>				     Expecting "BOOL", found "int"
+>	 sc  Src/Key/keycom.c
+>
+>====================
+>#endif STATIC_COM
+>Src/Key/KeyCom.c 704 Warning 132: extra tokens after valid preprocessor directiv
+		      ^^^^^^^
+		      Fehler?
+>	 sc  Src/Menu/menucom.c
+>
+>====================
+>#endif STATIC_COM
+>Src/Menu/MenuCom.c 1505 Warning 132: extra tokens after valid preprocessor direc
+			 ^^^^^^^
+			 Fehler?
+
+Die gemeldeten *Warnings* sind mir bekannt, ich sah jedoch ehrlich gesagt
+nur bedingt Veranlassung, sie zu beheben:
+*die tokens nach #endif gehoeren "natuerlich" in Kommentare, das habe ich
+ auch inzwischen gefixt (sah das nicht einer weiteren Msg wert an)
+*den typen von "newquals" in KeyAddes werde ich bei Gelegenheit aendern
+*wie bitte kann ich die msg mit BOOL <-> int wegbekommen, wo doch
+ TRUE und FALSE auch nur #defines fuer 1 und 0 sind????????
+*Warum mokiert der Compiler "-1" wenn ich doch "~0" geschrieben habe?????
+ das habe ich eben deswegen gemacht, damit so eine ver*****e "-1" Warning
+ unterbleibt.
+
+Gibt es auch *Fehler*?
+
+mfG "0"
+
+
+
+
+
+
+
+
+
+
+
+
+
+MNT 1.83.07.009 10-08-94 10:48 null
+	    added simptr command in order to enhance the macro-recorder
+	    for that reason in Main.c "Mx,My" have been declared NON-
+	    static, in Macros.c "presimptr, [do_]simptr have been added.
+	    created a bit of docs for macro.c
+BUG 1.83.07.010 10-08-94 13:09 null
+	    corrected do_tomouse (swapped Columns/Lines)
+
+
+
+
+In dem hier beschriebenen Zusammenhang ...
+Aaron, koenntest Du bitte einmal to_mouse durchchecken?
+Ich finde es etwas sonderbar, dass "cx" auf "Lines"
+gesetzt wird, und "cy" auf "Columns"; von den Namen
+her haette ich eigentlich genau das Gegenteil erwartet
+
+(falls dies tatsaechlich ein Bug sein sollte, muss
+folgende Korektur vorgenommen werden:
+main.c 1077: cx = Columns; statt cx = Lines;
+main.c 1087: cy = Lines; statt cy = Columns;
+) an anderen Stellen wird wieder umgekehrte
+(also normale) Namensgebung verwendet.
+... Es IST ein BUG.
+
+
+
+Following are the things to be changed to use the Modification described above
+
+command.c (307)
+    "simptr",        2,        CF_VWM|CF_COK, (FPTR)do_simptr,
+
+main.c (80)
+       WORD	 Mx, My;	    /* Mouse-Coords */
+instead of
+static WORD	 Mx, My;	    /* Mouse-Coords */
+
+main.c (1077) "cx = Columns;"instead of "cx = Lines;"
+main.c (1087) "cy = Lines;  "instead of "cy = Columns;"
+
+
+From: /// <b_noll@informatik.uni-kl.de>
+
+Hi Aaron!
+
+Hier kommen alle Files, die sich von denen
+in XDME v1.83.09 unterscheiden.
+
+Dummerweise habe ich vergessen, das History
+File mit einzupacken, es wird morgen
+nachgeliefert...
+
+
+Du sagtest "do_bak" hielte sich an die Konventionen
+    in globalflags, aber dort fand ich keine Konventionen
+    (Abortcommand <-> global_search), daher musst Du
+    "smallspc.c" evtl. nochmal korrigieren.
+
+AVL.c ... da war seit dem 1. Tag ein Fehler drin, und keiner bemerkt
+    ihn benutzt denn keiner den xdme? (resp variables/aliases)
+
+die beiden Menu* module unterscheiden sich m.W.
+    nicht von denen, die ich Dir am DoTag geschickt hatte
+
+die beiden Key* module ... ich habe eine Aenderung in der
+    scanfunktion von getcodequal durchgefuehrt, nun sollte
+    auch "nk-" wieder gelesen werden koennen
+    was sich aber in keyaddes geaendert hat ... hmmmmmmm
+    meines Wissens nix, aber dennoch habe ich hier ein
+    "differ", also lass es besser 'raus...
+
+prefs.c ... Du hast bei "tpen" immer noch mit "TEXT_TPEN"
+    verglichen, nicht mit "TITLE_FPEN";
+
+command.c ... also bei mir kommt showlog immer noch _vor_
+    "si*", ansonsten m.W. keine Aenderung
+
+cmd.c ... Mist, was war da nochmal ???
+    ich weiss es nicht mehr, also lass es besser 'raus
+
+win.c ... hmmm hier gibt es einen Streitpunkt, ueber den wir uns
+    einigen muessen: werden _alle_ errormsges ge"log"t (das war
+    das, was ich zu verstehen glaubte) oder nur die, die nicht
+    in einen Requester gehen (das ist Deine implementierung...)
+    vielleicht sollte hier die Doku etwas eindeutiger werden ...
+    (danach kannste das dann auch raus lassen)
+
+Mod/* ... hier habe ich einen Optimiser warnings beseitigt
+
+In Vars.c habe ich eine #ifdef verkuerzt ...
+    Smallspc.c wurde in einem etwas ge"update"t (s.o.)
+    ( Sobald ich den Parser einigermassen gesaeubert habe, werde
+    ich ihn in Utils stecken, und SmallSpc.c auswechseln; er
+    laeuft zwar, ist aber extrem schlecht geschrieben ... )
+
+
+text.c && global.h ...
+    **** ACHTUNG ****
+    global.h solltest Du _nicht_ uebernehmen,
+    die einzige Zeile, die dort Sinn macht, ist
+    die mit "SLines", aber nur ... nachdem Du
+    weitergelesen hast ...
+
+    in text.c habe ich eine Zeile ergaenzt, sie wird
+    ueber einen toggle namens "shortlines"
+    aktiviert (also "SFLAG_shortlines = toggle")
+    dadurch wird tomouse auf der Bereich links von
+    "last" eingeschraenkt ...
+    Du solltest diese Zeile _nicht_ einfach uebernehmen,
+    sondern erst einmal ueberlegen, ob so etwas Sinn macht
+    oder ob das mit der Spaces Optimierung kollidiert ...
+    (wenn es Sinn macht werde ich auch "up/down/right"
+    entsprechend modifizieren)
+
+Hi Aaron!
+
+Nachstehend kommt der Nachtrag des Historyfiles von gestern ...
+
+Ich bin gerade dabei SmallSPC.c zu ersetzen durch ein
+neues File, das mit automatisch generierten Variablenlisten
+arbeitet; das erzeugte Objectfile ist ziemlich genau ebenso
+gross wie SmallSPC.o, jedoch habe ich die Anzahl der Variablen
+auf knapp 50 'raufgeschraubt; ( die Variablen in breakout sind
+dadurch obsolet, ebenso sollte die Funktionalitaet der STACK
+Kommandos nun ueber den Variablenstack realisiert werden
+koennen ). Was mich jedoch etwas verwundert ist die Tatsache,
+dass Variablensuchen _nicht_ oder nur um max 5% beschleunigt
+wurden ... ((4000 mal Suche nach $t1) da muss ich mich noch ein
+wenig mit beschaeftigen - m.E sollten 30 von 40 strcmps weniger
+sich etwas deutlicher zeigen, oder verbraucht die Kommandosuche
+so viel zeit?) Nebenbei musste ich feststellen, dass ich irgendwo
+bei einem Set oder Get einen EnforcerHit eingebaut habe, den ich
+ebenfalls noch fixen muss...
+
+moeglicherweise kommt morgen noch dieses Modul (wahrscheinlich
+wuerde ich mehrere Teile schicken: das Basismodul, das generierte
+Modul, die Generatorvorlage und den Generator selbst (die Sources
+auch?))
+
+
+mfG "0"
+

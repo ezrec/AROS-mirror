@@ -1,0 +1,10 @@
+delete t1 tags QUIET
+ctags `list Src/#?.c files all lformat="%p%n"`
+type tags > t1
+ctags `list Include/#?.h files all lformat="%p%n"`
+type tags >> t1
+ctags `list Src/Key/#?.c Src/Var/#?.c Src/Mod/#?.c Src/Menu/#?.c files all lformat="%p%n"`
+type tags >> t1
+sort t1 to tags
+delete t1 QUIET
+

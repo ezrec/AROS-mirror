@@ -1,0 +1,18 @@
+
+Here is a list of known BUGS (not ! features) in XDME V1.83.03:
+
+    - SOMETIMES, XDME WRITES A 0-BYTE RANDOMLY IN THE TEXT. CAN ANYONE
+      VERIFY THIS ?
+
+    - XDME still has some problems in handling memory. I was reported of
+      unchecked AllocMem()s and malloc()s. Also XDME will surely crash if you
+      e.g. produce too many lines (i.e. "top block bottom block downadd
+      repeat -1 bcopy" will crash XDME).
+    - If you load a file in another directory and select PROJECTSAVE in this
+      window, the XDME_Project_File is written to that directory. This is not
+      actually a bug, but may cause confusion.
+    - two bugs in PREV. I hope the search NEXT is bug-free :-) Has someone a
+      Boyer-Moore search that searches reverse (ie. from the end of the
+      text to the beginning) ???
+
+

@@ -1,0 +1,29 @@
+Short: Text entry BOOPSI gadget, version 1.2
+Type: dev/gui
+Uploader: mthomas@cs.utexas.edu (Mark Thomas)
+Author: mthomas@cs.utexas.edu (Mark Thomas)
+
+This gadget used to be named editor.gadget,
+released in the archive EditorGadget1.0.lha.
+
+The textfield class allows you create an area on
+your screen for text entry.  The class supports a
+number of features including unlimited or limited
+text entry, specifying the font to use, specifying
+the colors for different parts (text, background,
+and lines), two types of borders (with option to
+invert the borders for a total of 4 types of
+borders) or no border, text left/center/right
+alignment, vertical centering, and other options.
+
+This version fixes some bugs:
+
+- TEXTFIELD_Text works correctly now
+- The name has changed from editor.gadget to
+  textfield.gadget
+- The text pen is now TEXTPEN, not SHADOWPEN
+- Undo buffer now clears after use
+- Highlighting text is simpler: click and drag
+- Expunge memory leak fixed
+- TEXTFIELD_CursorPos now scrolls to position if
+  needed

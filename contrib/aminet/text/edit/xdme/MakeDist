@@ -1,0 +1,5 @@
+.key which,version
+
+cd /
+lha -r -x -a a XDME_<version>_<which>.lha @SC:source/XDME/XDME.dist.<which>
+cd XDME

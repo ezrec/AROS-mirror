@@ -1,0 +1,4 @@
+FROM LIB:c.o "Dyn.o"+"fp.o"+"lex.yy.o"+"support.o"+"y.tab.o"
+TO "Parser"
+LIB fl.lib LIB:sc.lib LIB:amiga.lib
+

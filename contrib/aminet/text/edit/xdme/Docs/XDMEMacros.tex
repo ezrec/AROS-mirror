@@ -1,0 +1,8 @@
+\newcommand{\deflabel}[1]{\rm#1\hfill}%
+\newenvironment{mylist}[1]%
+{\begin{list}{}%
+{\settowidth{\labelwidth}{\rm #1}%
+\setlength{\leftmargin}{\labelwidth}%
+\addtolength{\leftmargin}{\labelsep}%
+\renewcommand{\makelabel}{\deflabel}}}%
+{\end{list}}%

@@ -1,0 +1,21 @@
+The installating is pretty simple:
+
+    1. copy XDME to any desired place
+       (that place should be in your path though :-)
+
+    2. Rename your beloved S:.edrc-file to "S:.edrc_user".
+       The new S:.edrc will always source that file. If you
+       do not already have a .edrc-file, you should copy
+       the empty s/.edrc_user file or you will get a
+       (harmless) error that "s:.edrc_user" cannot be read.
+
+    3. Copy s/.edrc to S:.edrc. XDME will always read that file
+       on startup.
+
+    4. If you want to use the EXECUTE-command (start a CLI-command
+       from within XDME, you also need the NULL-handler which is
+       supplied with the old version of DME. I do not ship this
+       because I'll remove the NULL-dependancy as soon as I know
+       WHY EXECUTE needs the NULL:.
+
+Have fun !

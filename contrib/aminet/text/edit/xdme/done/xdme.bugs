@@ -1,0 +1,817 @@
+> Opinions regarding XDME 0.83 (written in FrexxEd 0.87! :-P)
+> ----------------------------
+> (things from 20 minutes of testing)
+>
+> * The very first thing that stroke me when just started and tried the mouse.
+>   Iconifying on right mouse button is *not* style guide behaviour, and I
+>   really dislike it. (yeah, I managed to get some serious menu later)
+
+Well, when I got XDME, it did not follow the style guide in any way...
+The thing with the right mouse button is just a mapping from ancient times
+and should go away, when the config files are read (ie. if there are no
+menus, XDME uses the right mousebutton as any other key). Just map it
+to something else :-)
+
+> * Where do you get the initial window size from? I don't think 640x200 is
+>   too good!
+
+I get this size from 1985 NTSC. But you can change the size to anything
+you want and save it. If XDME cannot open a window at this size, it
+will try to open a shrinked version.
+
+> * Control C in the invoking shell should quit it...
+
+Done.
+
+> * The window title line looks very funny. Your use of pens make XMDE look
+>   as if it bugs. Which I think it does..
+
+XDME uses the title-bar as extra rendering space. This is not what
+it is intended for, but (as many other things), this has historical
+reasons.
+
+> * Your additional gadget in the upper right corner are on top of the other
+>   ones!
+
+??? If it was below the other ones, it would be invisible or what ?
+Can you explain this again, please ?
+
+> * Your custom short-cuts string in the menus should be justified... (just
+>   think it would look better!)
+
+They are justified, as far as I can see... What menu do you mean ?
+
+> * I think the slider should be wider so that there is the same blue space
+>   width on both sides of it.
+
+Done.
+
+> * Long load-time, but I guess that depends on how you store the buffer in
+>   memory. Not criticly long though.
+
+Yeah, this is an old problem. I read the file line by line. I make an
+extensive use of AllocMem() there and this is not too fast :-( I hope
+that XDME2 is better here.
+
+> * When using a window with a size around 500x800, I used the mouse to scroll
+>   the large source I had loaded into XDME. When dragging the mouse below the
+>   bottom border (with left mouse button pressed) of the window and around 20
+>   pixels more, the cursor stopped scrolling and jumped up to 8th line from the
+>   bottom and wouldn't move any more downwards. Moving left and right was OK,
+>   but it remained on that line!
+>   If I moved it up a little bit again, the cursor poped down again and
+>   continued scrolling!
+
+Did you get a marked block ? In fact, I don't have the problem... Can you try
+again, please ?
+
+> * Covering a part of the right side of the XMDE window with a window, while
+>   using the mouse to let XDME scroll the text left (dragging the mouse right)
+>   made XDME get really weird junk in the window. It appears as if the last 3-4
+>   characters of each line that were covered by the window comes out repeated.
+>   Like one of my lines that ended with something like "! */" came out from
+>   under the window as "'string' !!! */! */! */! */! */! */! */" all the way to
+>   the window...
+>   (This is also reproducable when scrolling upwards, draggin the mouse down
+>   when covering parts with a window.)
+
+This has been fixed in V1.83.04.
+
+> * The slider really goes nuts when dragging it quickly up and down on my
+>   screen (when having a window coverting parts of it, otherwise it is OK).
+>   Sometimes it jumps up and down 20-30 pixels, sometimes a lot more
+>   and sometimes it splits up so that I see several knobs...
+>   (Even the screen image can get very wrong after I've used the slider a bit
+>   and then drop it. Not only wrong lines and the wrong place, but also parts
+>   of lines become visible, like only the upper three pixels or so!)
+
+Shit... yes, you are right.... I _hate_ Intuition. This seems to be due to the
+fact, that I must not refresh the gadget after BeginRefresh()... *sigh*
+Others don't have the problem, so I will find a solution.
+
+> System used:
+> ############
+>
+> PROCESSOR:	  CPU 68030/68882fpu/68030mmu
+> CUSTOM CHIPS:   ECS PAL Agnus (id=$0020), ECS Denise (id=$00FC)
+> VERS:   Kickstart version 37.175, Exec version 37.132, Disk version 38.35
+> RAM:	  Node type $A, Attributes $105 (FAST), at $7400000-$7F7FFFF (11.5 meg)
+>	  Node type $A, Attributes $303 (CHIP), at $400-$1FFFFF (~2.0 meg)
+> BOARDS:
+>  Board (unidentified):   Prod=2195/5($893/$5)
+>      (@$40000000, size 2meg, subsize same)
+>  Board + ROM (HD?) (unidentified):   Prod=2195/6($893/$6) (@$E90000 64K)
+>
+> I did the testing using the EGS 6.2 WB emulation, using a 1152x900 screen
+> in 16 colors.
+
+Whow :-) It works with EGS ...
+
+Return-Path: <sdeboer@uoguelph.ca>
+From: Simon J DeBoer <sdeboer@uoguelph.ca>
+Subject: BUGS BUGS BUGS, well not really bugs...
+
+
+    Name    :	Simon de Boer
+    Email   :	sdeboer@uoguelph.ca
+    Version :	XDME V1.83
+    Setup   :	A2000, Dos 2.04, Supra-Turbo Accelerator at 28.9 MHz, GVP Scsi
+		Controller
+    Software:	nocapslock 38.4, csh 5.37, sshell 1.20
+
+    Bug 1   :	The savemap and savesmap commands no longer work.  Simple
+		and short. They used to.  I have just recently become
+		interested in changing my long used keymappings and wanted
+		a copy of the REAL keymappings of all keys.
+
+    Bug 2   :	Just changed to this version and have noticed that the
+		title bar flickers with every keypress.  Not really a bug but
+		something I have not seen before that is annoying.  The
+		flickering is in the border colour and it looks as if it is
+		trying to change the background colour of the text in the
+		titlebar to that border colour.
+
+    Bug 3   :	Again not a real bug but I have just downloaded this version
+		from
+		Aminet and there is no good version numbers on things.	I have
+		an older (I think) version sitting around both this one I am
+		currently typing in and the old one have the Version string:
+			  XDME v1.83
+		The History file has changed format so I am assuming this one is
+		the new one but I have no way to be sure.  Further the bug
+		report page had version 1.81.01 which I know this is not.  It
+		would be nice  if there was a version command within dme that
+		would print out a very complete group of version information.
+		(Version #, Date, Your Email Address).
+
+    UnBug 0 :	I have been using dme for as long as I can remember as my editor
+		to everything.	I was very glad when you picked up the reins
+		from
+		Matt and think that this is an ever improving editor system.
+		Please continue the amazing work!
+
+			Simon
+
+Return-Path: <Tero.Turtiainen@lut.fi>
+From: Tero Turtiainen <Tero.Turtiainen@lut.fi>
+Subject: Re: XDME V1.83.01
+
+Hi!
+Good to see a new version of XDME :)
+
+I found a small feature. Every time I load XDME_Project_File I get a message
+window telling something like "loadconfig: old version of config file, using
+defaults" (or something like that...)
+It does not seem to happen when I load a normal file but it happens every time
+I load a project file.
+
+--
+ <-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->
+ <  Tero Turtiainen	    !  Yes Sir! May I lick Your boots or do	   >
+ <  turtiain@lut.fi	    !  Your Highness use dry cleaning  - Stone	   >
+ <-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->
+
+ ...
+
+Bug 1:
+    Start XDME from WB
+    open LoadRequester with <arpload>
+    drag a WB-icon onto the asl-req and load it with <OK>
+    (I tried w/ Src/Key/KeyCom.c Src/Menu/MenuCom.c)
+    do some changes in the text:
+    <findr (#endif STATIC_COM) (#endif /* STATIC_COM */)>
+    save the text w/ <saveold>
+    -> XDME Error "save:\n Unable to open write file\n`...Com.c'"
+    immedialtely repeating the same <saveold> will work
+
+    oh-ohhhh seems that that problem is not XDME but my own s:.edrc =8-(((((
+    no, it isn't!
+
+    (maybe a problem w/icons?)
+
+	FIXED ... it WAS a problem w/ icons ...
+	just make sure, FIRST the file is saved, and THEN icons are created
+	and anything works ...
+	(btw. I did do some changes ...)
+	xdme Src/io.c Src/main.c include/global.h
+	SFLAG_globalmode = on
+	findr (Wdisable = 1) (Saveicons = 0)
+	999 nextr
+	findr (Wdisable = 0) (Saveicons = 1)
+	999 nextr
+
+Bug 2:
+    Resizing an XDME Window while a asl-requester is active
+    causes a redraw bug:
+    the next time the window is redrawn, then Scrollbar disappears
+    (up to the next redraw)
+
+    try the following:
+    load a file
+    <arpsave>
+    while the requester is active, make the window smaller, so that it is totally hidden
+    by the asl-requester
+    press <ok> on the asl-requester
+    ... look at the result
+
+Bug 3
+    ever tested "showlog"?
+
+    FIX-1
+
+    move the command "showlog" before "sizewindow"
+
+    there is still a bug remaining ...
+    "showlog" only opened a new window (like "newwindow"),
+    no message occured ( before I had produced some "unknown
+    command" errors )
+
+    FIXED .... (Ep->lines had not been updated; makeroom() was missing)
+
+Bug 4
+    newwindow
+    100 (first 10 (writevar lineno ( )) downadd)
+    pageset 80
+    *Fenstergroesse 42 x 27 (oder 31 x 30 TP8)
+    goto 1 bstart
+    goto 24 bend
+    *ein ANDERES Fenster ab Zeile 22ff (oder 24ff TP8) überlappen lassen
+    zweimal pagedown ... und geniessen
+
+Bug 5
+    singleclick auf das XDME-Icon
+    shift-doubleclick auf ein "ShowAll" Icon in einem anderen
+    Verzeichnis...
+    die Datei wird NICHT geladen
+    (executable spielt dabei keine Rolle, wohl aber ob ein Icon
+    existiert)
+
+---------------------------
+
+    Hi,
+
+    I have a few questions about XDME, and I hope you can help. I'll just
+number them off here.
+
+1)  Newer XDME versions (after 1-82-10) have very ugly window cosmetics
+for some reason. There is a skinny 'iconify' gadget wedged in between
+(and partially overwriting) the zoom gad on the left and the depth gadget
+on the right, and the scroll bar is very thin, offset from the actual
+window border, along with the arrows, which are also very small and
+offset from the window border (the whole contraption 'hangs off' from the
+edge of the window, and the effect is quite horrible). I should mention
+here that I run 'sysihack' which is a util that replaces the sizing gad
+with one of a proper size for those of us running hi-res (in my case, an
+1107x778 Picasso WB) and gives the close, etc. gadgets a 3-d look. It
+works with all programs except the newer XDME AFAIK. Versions at and
+before 1-82-10 can scale the UI (scroll bar) in accordance with the
+larger resizing gadget, and do not force that funny-looking skinny gadget
+in there. In short, whatever you did to munge up the cosmetics so badly,
+take it out. :) I'm pretty sure others must have mentioned this to you by
+now. My OS rev. is 3.1. (40.68)
+
+2)  There is a major annoyance in the way XDME handles text, in that you
+cannot backspace at the beginning of the line and have the cursor go back
+to the previous line, preferably dragging the next line's text with it.
+In order to do this, you must arrow over to the end of the previous line
+and issue the 'JOIN' command to get the next line's text appended. I
+found this out only after reading the docs about three times...I was
+mistakenly looking for BS options (perhaps 'continuous BS' or some other
+such feature). Is there one? Perhaps I missed it...
+
+3)  I can't get XDME to paste stuff from the system clipboard (like
+INSCLIP) but it seems to pass stuff around via t:xdme_clip or something.
+Does XDME (any version) have clipboard support? The docs seem to be
+rather vague about this.
+
+4)  If I activate the commands line with ESC and then some of the text in
+XDME's window is obscured by another window, the text will visually get
+trashed (replaced with %'s or garbage or blank space). I'm not sure if
+this is a Picasso thing, but I haven't noticed it with anything else.
+If the text is then scrolled over again, it reappears OK, so it is just a
+cosmetic prob.
+
+    OK, that's about it for this collection of bug reports/complaints.
+Keep up the good work!
+
+
+-- leaves commandlinemode on redraw
+-- lädt files ohne icon nicht
+-- check clipins (und m_write)
+
+From Tero.Turtiainen@lut.fi Mon Aug 22 16:17 MES 1994
+Return-Path: <Tero.Turtiainen@lut.fi>
+Subject: XDME Bugreport
+
+I am quite sure that these bugs has already been reported because they are
+so 'visible'. But just in case...
+
+    Name    :	Tero Turtiainen
+    Version :	XDME 1.83.08
+    Config. :	A500, SupraTurbo 28, no FPU, no MMU, 1/2MB RAM,
+		SupraDrive 500 XP with 105M Quantum,
+		KS 2.04 (37.175), WB 38.12 and lots of Commodities :)
+		(Yak, PowerSnap... This happens also if I have disabled
+		all commodities...)
+
+    Bug 1   :	When I type something or scroll the text (always when the
+		titlebar is updated??) the titlebar of the active window
+		flickers very annoyingly. If I turn off my SupraTurbo
+		it seems to flicker even more (not absolutely sure about
+		this... I *think* it flickers more...)
+
+    Bug 2   :	XDME seems to miss some left mouse clicks (in fact quite
+		a lot of them...) My .edrc is the one that came with this
+		version of XDME and my .edrc_user does not do any mouse
+		button mappings. When I move the mouse pointer and click
+		the left mouse button the cursor used to move to the mouse
+		pointer. Now it needs about 1 to 5 clicks! :-o
+
+
+--
+ <-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->
+ <  Tero Turtiainen	    !  Yes Sir! May I lick Your boots or do	   >
+ <  turtiain@lut.fi	    !  Your Highness use dry cleaning  - Stone	   >
+ <-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->
+
+From sdeboer@uoguelph.ca Tue Aug 23 08:30 MES 1994
+Return-Path: <sdeboer@uoguelph.ca>
+
+
+On Sat, 20 Aug 1994, Aaron Digulla wrote:
+
+> > Bug 1   :	The savemap and savesmap commands no longer work
+>
+> These commands have been replaced with "keysave". Use "keyload" to load
+> the file in again.
+>
+
+Sorry about the version question before, I guess I should read the
+manuals occassionaly and see what the complete arguments to a command
+are.  Never have seen ther Version FULL parameters before.
+
+But your answer to this bug brings up another point that I would like to
+ask.  Why is it that the documentation does not seem to be up to date
+with the program in the most important area, commands?	The savesmap
+commands are no longer there and keysave and keyload are.  I am sure
+there are a bunch of other commands that are available as well.  Now I am
+going to have a look through the source and see what I can figure out,
+and will edit the document file and send it back to you.  I understand
+that this is probably because of time constraints but a lot of users will
+not have any clue why it is some functions don't work and that the .edrc
+file of someone else has all these commands in it that are undocumented.
+(Is it a bug or is it just poorly documented the user might ask...usually
+figure its a bug and use something else)
+
+		Well thanks again,
+			Simon
+
+
+Hi Aaron!
+
+Es scheint dass der taegliche gebrauch der beste Weg ist,
+Bugs zu entdecken ... ;-)
+
+
+    BR - (22.8.94) Join loescht nicht immer alle endstaendigen Whitespaces ...
+	 dadurch entstehen ziemlich schwer nachvollziebare Luecken innerhalb
+	 von vereinigten Zeilen
+	    insfile alpha
+	    # alpha war eine Liste aller *.c Dateien in Src / Src/Classes
+	    42 ( 2 c-b c-d up last ( : ) join insline 2 down
+	    42 (findr Src Obj next)
+	    42 (findr Obj/Classes Obj)
+
+
+mfG "0"
+
+
+
+PS -Hat sich etwas ergeben mit den redrawproblemen bei
+   page/-up/down und bloecken?
+   -beim Refresh bei veraenderten Fensterdimensionen?
+   -irgendwelche sonstigen bugs gefixt?
+   -in meiner vorigen Post irgendwelche Fehler gefunden/
+   Aenderungen verworfen???????????????????????????????
+
+PPS Falls Du eine neue Version zurechtgezimmert hast:
+    vor dem Release erst noch einmal senden/nach
+    ftp.fh-konstanz.de legen, auf dass noch ein letzter
+    Testlauf stattfindet ...
+
+PPPS Sei so nett, und guck Dir bitte einmal "nextr" an...
+     ich hatte immer wieder das gefuehl, dass dabei
+     (vor allem bei sowas wie interaktiven "-1 nextr"
+     nach dem letzen replace - also bei "Pattern not found"
+     uU. ein 0-Byte geschrieben wird ...
+     (nicht reproduzierbar, koennte auch noch eine miese
+     Erinnerung an v1.82 sein ...!)
+     Das ist _kein_ BugReport, die Tatsache, dass ich zumindest
+     schon einen ungerechtfertigen Report geschickt haben (den
+     da oben) weist mich darauf hin, dass Bugs auch wirklich
+     reproduzeirbar sein sollten!
+
+Return-Path: <utoddl@guitar.oit.unc.edu>
+Date: Tue, 23 Aug 94 10:27:08 GMT-0500
+From: Todd M. Lewis <utoddl@guitar.oit.unc.edu>
+Subject: Re: XDME V1.83.08
+
+Aaron,
+
+Congratulations on the recent release of XDME_1.83.08.	I've been
+playing around with it quite a bit and have been tinkering with the
+code a little too.  Allow me to offer the following comments while
+keeping in mind the great appreciation I have for the work you've
+done on my Favorite Editor in the World.
+
+-------------------------PageUp, PageDown--------------------------
+PageUp, PageDown -- We've talked about this before.  Unfortunately
+in the past I didn't have a compilable source to work from, so that
+even though I could make the desired changes I couldn't make a
+runnable XDME.	Let me be specific. (1) The StyleGuide paging model
+is brain-dead and a royal pain. (2) No amount of clever macros I've
+been able to come up with can properly work around the problem. (3) A
+very small coding change (simply commenting out the block after the
+test for being on the top or bottom line) makes it work The One True
+Way, i.e., the way every living creature who can comprehend the
+PageDown concept wants and expects it to work.	Please change this
+behavior.  If you are not willing to do that, could you at least make
+some flag that lets the user select whether to use the StyleGuide
+paging model?
+
+-------------------------Iconification--------------------------
+Iconification -- A couple of lines of "#ifdef'ed out" code keeps the
+iconified window from being active leaving the selection of the next
+active window to the whims of the OS.  The result is that the user
+only knows which window is _not_ active after an iconification.  For
+me this is especially frustrating because of the way I've come to use
+iconification.	I will often iconify a window simply to see something
+underneath it, then immediately uniconify it again.  That used to
+take only two mouse clicks.  Now it takes a mouse click followed by a
+distracting search for the iconified window, a selection, and another
+mouse click.  By removing the "#ifdef" I've been able to make this
+work as I desire.  I tried to get the same effect by using (select
+save iconify select load) or something like that, and it almost
+worked, but it's slow and distracting when the screen has lots of
+windows and requires lots of updates for a window selection.
+
+  The real question is why was this behavior changed in the first
+place?	I've struggled with this behavior for some time now and have
+yet to come up with a reason someone might prefer such an
+unpredictable effect.
+
+  Part two of the iconification question has to do with the layout of
+the iconified windows.	I tend to open the files I'm going to be
+working with, iconify them all, then rearrange them in a column on
+the left side, or stick 'em down toward the bottom of the screen.
+ProjectSave helps later on, but I'm rarely working on a project per
+se--I use XDME for all my text file handling.  (I use it instead of
+More, for example.)  Is there some way we could make the arrangement
+of iconified windows follow a user-selectable pattern?	The little
+windows tend to get lost on my screen when they stretch out across
+the top of the screen....  Maybe I'll work on some code to handle
+user specification of iconified arrangements....
+
+
+-------------------------Block Operations--------------------------
+Block Operations -- I really like the three modes of block selection,
+and I've been thinking long and hard of how to implement the major
+block operations in each of those modes.  Some problems:
+  Problem 1: What to do when a block operation would cause a line
+to become too long?  The two solutions are: (a) allow infinitely long
+lines (could still run out of RAM), and (b) test first and refuse any
+operations which would cause a line to be too long.  The latter is
+probably the best choice given how the rest of the editor works.
+This is a general problem with either CHAR or VERT blocks, but
+shouldn't be a problem for LINE blocks.
+
+  Problem 2: What to do when a block operation would screw up the
+block selection?  To demonstrate, look at the following text.  We
+have a VERT block where 'bbb' is selected text.
+
+      ------- ------- ------  -- bbbbbbb
+      ------- +------ ------- -- bbbbbbb
+      ------- ------- ------- -- bbbbbbb
+      ------- ------- ------- ------- --
+      ------- ------- ------- ------- --
+
+Now, lets do a bcopy to the '+'.  Here's the result ('n' is the
+new copy):
+
+      ------- ------- ------  -- bbbbbbb
+      ------- nnnnnnn------- ------- -- bbbbbbb
+      ------- nnnnnnn------- ------- -- bbbbbbb
+      ------- nnnnnnn------- ------- ------- --
+      ------- ------- ------- ------- --
+
+Obviously this won't work because VERT blocks can't shift around
+to different columns.  A similar problem occurs when we try to
+copy a block into itself.  However, there is no real reason a block
+shouldn't be allowed to be copied into itself.  Consider this text:
+
+   ----
+   push
+   pop
+   ----
+
+Let the lines 'push' and 'pop' be selected.  With the cursor on
+the first 'p' of 'pop' we should be able to copy the block into
+itself with the following result:
+
+   ----
+   push
+   push
+   pop
+   pop
+   ----
+
+Similar operations with CHAR blocks could turn "()" into "(((())))",
+which could be pretty handy, but there is a catch.  The solution to
+both problems is to make the copied (or moved) block become the
+current block. If we do this, then we can revisit the problem from
+above:
+
+      ------- ------- ------  -- bbbbbbb
+      ------- +------ ------- -- bbbbbbb
+      ------- ------- ------- -- bbbbbbb
+      ------- ------- ------- ------- --
+      ------- ------- ------- ------- --
+
+Now, lets do a bcopy to the '+'.  Here's the result ('o' is
+the old block):
+
+      ------- ------- ------  -- ooooooo
+      ------- bbbbbbb------- ------- -- ooooooo
+      ------- bbbbbbb------- ------- -- ooooooo
+      ------- bbbbbbb------- ------- ------- --
+      ------- ------- ------- ------- --
+
+This causes no problems and may be exactly what the user wanted to
+do.
+
+A similar problem with CHAR blocks simply goes away if we make the
+destination copy become the marked block.  This would have the added
+benefit of there still being a selected block of text (with the
+same content) after a block move which isn't the case right now.
+
+Problem 3: What to do with text brought in from the clipboard given
+that it has no indication of what sort of block (CHAR, VERT, or LINE)
+it used to be?	The answer to that one is simple.  Simply treat it
+as if it were the currently chosen block type.	When it comes in it
+should become the selected block (just as after other block
+operations) so the user can delete it if it wasn't to his liking, or
+he can easily move it to a better place.  Care should be taken to pad
+out short lines if we are doing a paste from the clipboard in VERT
+mode, and of course refuse the operation if a line would be made too
+long, but these details are easily handled.
+
+The problem with these solutions is that the nature of block
+operations would change in that the selected block would move.	It
+isn't clear how many macros such a change would break, but the
+benefits seem worth it to me.
+So, would you be interested in block operations of this nature?  What
+problems have I overlooked, or perhaps introduced, by making these
+changes?  Is anyone else working on enhancing the block operations?
+Should I go ahead and start coding?  (I may anyway...)
+---------------------------------------------------------------------
+---
+---
+Todd_Lewis@unc.edu   ASDF - Amiga Software Developers Forum
+	       "Where the Pizza Meets the Code"
+
+Return-Path: <utoddl@guitar.oit.unc.edu>
+Date: Tue, 23 Aug 94 13:20:25 GMT-0500
+From: Todd M. Lewis <utoddl@guitar.oit.unc.edu>
+To: Aaron Digulla <digulla@rz-uxazs.fh-konstanz.de>
+
+Hello again.
+
+A couple of things I forgot to mention on my list of
+very small problems w/ XDME (I really do like the
+program, honest :-)...
+
+* The title bar could use an indication of what type of
+  block mode we are in.  A single character would be fine.
+  'C', 'L', or 'V' should be enough.
+
+* The title bar of the uniconified window could show the
+  $filename rather than just $fname.  Sometimes I've got
+  two files open with the same name but from different
+  directories.	There's no indication what the current
+  directory is for a given window, and if the files are
+  similar it's hard to remember which is which.  Also,
+  if I do a "bsave xxx", is the file "xxx" going to be
+  written in the same directory the current file came from?
+  The docs never really say just what the window/file/
+  directory relationship is.  I remember once a long time
+  ago trying to figure out how to get two windows open
+  on the same file image, i.e., two editable views of the
+  same file image in RAM.  Turns out you can't do that,
+  but I didn't know that at the time....
+
+Hope I'm not bothering you with this stuff.  Later,
+---
+Todd_Lewis@unc.edu   ASDF - Amiga Software Developers Forum
+	       "Where the Pizza Meets the Code"
+
+Return-Path: <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de>
+Date:	  Wed, 24 Aug 94 12:24:40 MET DST
+From: /// <b_noll@informatik.uni-kl.de>
+Subject:  xdme
+
+Hi Aaron!
+
+Nochmal zum nie endenden Thema Blocks ...
+
+Es gibt auch Probleme beim Zusammensoiel zwischen "deline"
+und Bloecken - speziell bei Bloecken, die am Textende liegen
+(falls ich in der (vor)letzten zeile eine einzelne Blockzeile
+habe passiert mit deline der bekannte Effekt, dass statt 0
+ploetzlich 2 Blockzeilen vorhanden sind ...
+
+>wer weiss... ich sehe es mir mal an. Aber der CInterpreter (sprich
+>Diplomarbeit) hat jetzt erst mal Vorrang.
+
+Wie - das kann ich nun aber wirklich gar nicht verstehen ...
+
+>> ( ich spiele mit dem Code 'rum, der vorletzte Woche auf
+>> ftp.fh-konstanz.de lag ... (verwende seit gestern nun sogar
+>Damit kann ich nix anfangen. Bitte immer mit Version (ich hab kein
+>Gedaechtnis fuer Daten).
+
+ich auch nicht, deshalb habe ich es so schwammig ausgedrueckt ...
+(aber es ist, glaube ich v1.83.08)
+
+>Du solltest in "/usr/mail/bnoll" nachsehen, denn ~/.mail geht auch durch
+>mail bzw. elm. In /usr/mail steht es noch so, wie es ueber das Netz
+>gekommen ist.
+
+Dazu muesste ich nur den Augenblick erwischen, in dem in dieser Datei etwas
+steht, bzw. sie existiert ...
+
+>Ich hab alle Bugs gefixt. An Deinem Zeug mache ich aus Prinzip nichts.
+
+Prima =8^)
+
+>Alles was ueber src/*/* kommt wird einfach kopiert und dann bete ich,
+>dass es tut... alle anderen Sourcen werden mit "diff" eingebaut.
+
+Ohne Ueberpruefung, ob es sich nicht mit Deiner changes beisst/
+durch sie ueberfluessig wird ??????????????????????????????????
+
+>ftp.fh-konstanz.de ist bereits eine offizielle XDME Release site. Aber
+>ich koennte Dir vorher eine Mail schicken ?
+
+hmmmm das heisst, dass was auf dieser Site liegt automatisch ein Release
+ist? und wenn Du eine Datei dort mit dem Suffix "beta" hinlegst??????
+
+ok, dann bleibt ja wohl nur der Weg ueber mail ... das heisst
+nicht ganz: Du koenntest auch nach noll@[alma.]student.uni-kl.de
+ftp'en ( ich habe dort "rz-uxazs.fh-konstanz.de digulla" in
+.rhosts aufgenommen ...) (ebenso in
+b_noll@[poker|dame|halma|tangram.]informatik.uni-kl.de,
+wobei hier auch ein funktionierender rcp anschluss existieren
+sollte...)
+
+
+
+mfG "0"
+
+
+From: Arttu K\drpinlehto <karttu@snafu.muncca.fi>
+Subject: XDME 1.83.08 bug report
+Date: Fri, 2 Sep 1994 03:20:45 +0300 (MSD)
+Reply-To: karttu@muncca.fi
+
+
+    Name    :	Arttu Kärpinlehto (karttu@muncca.fi)
+    Version :	XDME 1.83.08 (9.8.94)
+    Config. :	A2000, A2630 (68030/68882), 1MB Chip, 2½MB 16bit Fast,
+		4MB 32bit Fast, 1 Floppy, A2091 + 2 HD + CD-ROM, A2232,
+		KS 2.04 (37.175), WB 2.1 (38.35), lots of stuff on
+		the background...
+    Note    :	Both bugs appeared in v1.83.08.  I used v1.83.03 before
+		and it worked just ok.
+    Bug 1   :	*fixed*
+    Bug 2   :	*fixed*
+		    In my .edrc I have:
+			# Position stack.
+			map nk+ (push pos)
+			map nk- (pop pos)
+		    This worked in previous version (1.83.03) but not
+		anymore.  It looks like you have rewritten the parser
+		and now nk- is translated with nk as a qualifier and
+		with no key to bind with the qualifier.
+    Thanks  :	I must thank you for continuing Matt's work; XDME is
+		the only choice for programmers.
+    Other   :	I've been working on XDME.guide (for my own use).  If
+		it ever finishes, I'll mail it to you along with my
+		scripts to link with SAS/C environment.
+
+--
+ .  Arttu Karpinlehto	 . Snail mail:		    . Amiga 2000/030 ECS
+::  <karttu@muncca.fi>	:: Munkkisaarenkatu 14 B 8 :: A2630, A2091, A2232
+:: Phone: +358-0-654477 :: 00150 Helsinki, FINLAND :: 235MB disk, CD-ROM
+::	** Et Ipsa Scientia Potestas Est! **	   :: 7MB RAM, WB2.1
+
+
+
+    BR - (6.9.94) (cosmetic)
+	 > unblock push block bstart bend pop block
+	 leads into redraw problems (cmd.c, SPC.pre)
+	 *that Bug exists also with the varstack, since I copied the buggy code*
+    BR - (6.9.94) (assume 2 open windows next to each other)
+	 > push ed nextwindow pop ed
+	 won't re-activate the first window (cmd.c, SPC.pre)
+	 *that Bug exists also with the varstack, since I copied the buggy code*
+    BR - (6.9.94) (cosmetic)
+    *fixed*
+	 Refresh requests during an ARexx input are delayed up to the next *input*
+	 and not only to the end of the script ... (main.c)
+	 (hide parts of the active text)
+	 % rx "address XDME.1 '1000 null'"
+	 (click the active text to front *before* the shellcommand returnes)
+
+"%" at the start of a line signalles Shell input
+">" at the start of a line signalles XDME [Commandlinemode] Input
+(or is it better use vice versa?)
+
+
+DDT:
+ about (wrong text)
+ overwrite im titel
+
+
+Return-Path: <utoddl@guitar.oit.unc.edu>
+Date: Mon, 12 Sep 94 09:16:23 GMT-0500
+From: Todd M. Lewis <utoddl@guitar.oit.unc.edu>
+Subject: Re: XDME_1.83pl10_src.lha
+
+Hello again.
+
+I spent this weekend merging my changes into the pl10
+sources with mixed results.  The biggest problem I had
+was with missing files and functions.
+
+The patch level 10 sources are missing these files:
+  src/about.c
+  src/Var/spc.c
+  src/Var/Jabba.c
+
+At least those are the file names mentioned in the
+smakefile which aren't included.  I compiled and linked
+anyway and had to fake the following functions:
+  do_about();
+  SPC_get();
+  SPC_set();
+using the prototypes in the include directory helped a
+bunch there.  I just made dummy functions and got the
+part I was working with to work.  (I suspect variable
+handling suffered quite a bit though :-)
+
+More about blocks....  No sooner do I get something
+working than I go and try to improve things.  I would
+like to make ActualBlock read-only for all the files
+except block.c by doing something like:
+
+   #ifdef BLOCK_C
+   Prototype Block ActualBlock;
+   #else
+   Prototype static Block ActualBlock;
+   #endif
+
+
+The reason is that I want to isolate changes to
+ActualBlock so I can insure consistency within the block
+structure.
+
+One problem with this is that I don't see a clean
+way to get the above code into your automatically
+generated prog-protos.h file.  Any ideas?
+
+I'm setting up a bunch of functions that allow setting
+block values, but they do sanity checks and keep other
+fields in ActualBlock in check.  In particular, I'm
+extending Block to include a small array:
+   Column col[3][2];
+This array holds the left- and right-most columns of
+the first line of a block, the middle lines of a block,
+and the last line of a block.  These values are normalized
+by a call to block_normalize() whenever one of the other
+block values changes which could affect the edges of the
+displayed block.  Using this array we can eliminate
+any special case handling for different block types in
+redraw.c, and most of the special case code everywhere
+else.
+
+Rather than having manipulation of ActualBlock spread
+throughout the program (and having to re-examine that
+manipulation every time the block structure is extended)
+I want to put all the "smarts"--the consistency checks--
+into the block.c file.	How does this sound to you?
+
+Still prefer programming for fun to programming for a living...
+---
+Todd_Lewis@unc.edu   ASDF - Amiga Software Developers Forum
+	       "Where the Pizza Meets the Code"
+

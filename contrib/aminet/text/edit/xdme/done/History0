@@ -1,0 +1,97 @@
+Version 1.83.09
+
+(new Shortcuts added)
+CM - Code Modification
+BR - Bug Report
+
+	Changes Bernd Noll
+
+    CM - (12.8.94) Made the Files Src/Var/* Src/Mod/* Src/Key/* gcc-compilable
+    BF - (12.8.94) wbstarted XDME refused to save a file, that had a Def.icon
+	 (io.c)
+    NF - (12.8.94) Special Flag "saveicons" also for cli-started processes
+	 (replacement of "Wdisabled", which had the opposite effect) (main.c,
+	 io.c, global.h)
+    BF - (12.8.94) "showlog" had obviously never worked (command.c)
+   !BR - (13.8.94) Resizing may lead to Redraw Problems (reported 15.8)
+   !BR - (13.8.94) Overlapping windows may lead to Redraw Problems in
+	 connection w/ blocks (reported 15.8)
+   fBR - (13.8.94) Shift-Selecting Defaulticons won't load them (reported 15.8)
+   !BR - (14.8.94) WindowRefresh on an inactive window causes CommandlineMode
+	 be FALSE (that behaviour was not noticed in XDME v1.82) (reported 15.8)
+    CM - (15.8.94) moved Src/Var/VarStack.c into Src/Mod since this is only a
+	 support module (preparing replacement of Src/Var/* by a more flexible
+	 concept with a little bit more structure)
+    CM - (15.8.94) we are using "IDCMP_INACTIVE" to make sure the title looks ok
+	 (win.c, main.c)
+    NF - (15.8.94) the variable "iconname" (NO Special Variable) is controlling
+	 the used icon image; if there is no such variable set or the according
+	 ".info" file is not found, we use the internal image. (io.c)
+	 (that variable should per default point to "ENV:Sys/def_Text.info")
+    BF - (15.8.94) Removed a bug in "saveicons" (did not use the full appname)
+    BF - (15.8.94) Removed a bug in "showlog" (there is still one left: we do
+	 not check, if there is already a log window open) (win.c)
+    NF - (15.8.94) added command "readtemplate" to insert a file and replace
+	 some variable-references by their values; added file "Src/Mod/tplter.c"
+    BF - (15.8.94) Shell-vars were not recognized like ENV vars; replaced some
+	 FileAccess ("ENV:") by calls to DosLib (Get/Set-Var) (I had forgotten
+	 to replace vars.c by my own module ...) (vars.c)
+   !BR - (15.8.94) "clipins" does not recognize "\n" and "\t"; I would strongly
+	 suggest usage of mikro/m_write instead of text_write (m_write does use
+	 it, however) (same thing for ImpliedWrite) (reported 15.8)
+    NF - Flag to control, if the title is using TPEN or the Intuition color
+	 (not accessible yet) (win.c, global.h)
+
+Version 1.83.09-1ps
+
+	Changes Bernd Noll
+
+    CF - (18.8.94) SIMPTR now uses pixel values ... (macros.c)
+
+Version 1.83.09-2ps
+
+	Changes Bernd Noll
+
+    BF - (21.8.94) "if/ifelse/while cb ..." would not work if Cursor at
+	 blockborder (e.g. block.topline) (cmd.c)
+    BF - (21.8.94) Fixed Bug from 13.8.: DefIcons would not be accepted
+	 via WB-start; (main.c)
+   ?BR - (21.8.94) There seems to be a gap between the Iconify- and the
+	 WindowDepth- Gadgets in WindowTitle (may anyone prove that?)
+	 (reported ?.?)
+   ?BR - (21.8.94) man teste die folgenden schritte ...
+	 1. oeffne 2 Fenster, beide vollstaendig sichtbar
+	 2. >map a-a (pop block)
+	 3. markiere in Fenster 1 einen Block (z.B. >top bstart pagedown bend)
+	 4. >push block
+	 5. gehe nach fenster 2, iconifiziere es, klicke das Icon an
+	 6. bei aktiviertem icon von Fenster 2	a-a druecken
+	 7. Fenster 1 aktivieren, cursor innerhalb des Blocks bewegen ...
+   ?SG - Wir sollten dringend in text.c die Referenzen zu "Ep" tilgen ...
+   ?BR - (21.8.94) Ist es Absicht, dass einige Spcvars in command.c zu
+	 finden sind, und nicht in SmallSpc.c? Da bereits Aenderungen
+	 in SmallSpc. von anderen Personen durchgefuehrt wurden, ist
+	 anzunehmen, dass die Bedeutung dieses Moduls bekannt ist.
+    CM - (22.8.94) made some files gcc-compatible (amiga.c, block.c/defs.h,
+	 win.c) now almost all files compile w/ no gcc-warnings (I had to
+	 modify the c=bm includes/clib/(exec|dos)_protos.h, though)
+   ?BR - (22.8.94) JOIN disturbs Blocks, when LineMode && nextline == only
+	 line in Block, only the join-char appears Blocked, but the current
+	 and the next line are blocked. (reported ?.?)
+
+Version 1.83.10
+
+	Changes Bernd Noll
+
+    NF - (4.9.94) variable interface "intuitiontitles" to switch on
+	 SetWindowTitles instead of the old method (smallspc.c)
+    NF - (4.9.94) variable interface to "dobak" (no effect yet) (s.a.)
+    NF - (4.9.94) variable interface to "tfpen" title foreground pen
+	 (s.a.)
+    CF - (4.9.94) renamed variable interface "tpen" for title background pen
+	 to "tbpen", since there is also "tfpen" (s.a.)
+    CM - (4.9.94) eliminated some "dead assignments" in Mod/*
+    BF - (4.9.94) reported & corrected a newly introduced bug in "showlog"
+    BF - (4.9.94) re-incorporated bugfixes of 1.9.94 (menu*.c)
+    BF - (4.9.94) corrected a +/- sign in AVL.c (why did nobody report that!?)
+

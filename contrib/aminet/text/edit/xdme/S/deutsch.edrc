@@ -1,0 +1,142 @@
+set SystemName (:XDME/)
+set HelpFile   ($(SystemName)docs/xdme.doc)
+
+set macroname  $(SystemName)macros/?.xrc
+set iconname   $(SystemName)icons/icon5.c
+set printout   t:printout
+set PRINTER    prt:
+
+#menuoff
+#newmenustrip auisg
+menuoff
+
+setmacro m+ 2 (menuadd   \$menu \$arg1 \$arg2)
+setmacro m- 0 (menubar   \$menu)
+setmacro mc 3 (menucheck \$menu \$arg1 \$arg3 if (\$arg2) (menusetcheck \\\$menu \\\$arg1 1))
+
+set OkCncl OK|Cancel
+
+set menu Projekt
+m+ (Neues Projekt...^AN)    (newwindow settoggle 2 unfail (arpload toggle 2) if 2 (rem quit))
+m+ (Öffnen...^AO)           reqload
+m-
+m+ (Sichern^AS)             (ifelse ($\\fname="unnamed) (reqsave) (saveold))
+m+ (Sichern Als...^AA)      reqsave
+m-
+m+ (Drucken^AP)             (pushvar modified writeto \$printout popvar modified execute (copy \$printout \$PRINTER))
+m-
+m+ (Verbergen^AI)           iconify
+m+ (Schliessen^AK)          quit
+m-
+m+ (Über...^A?)             about
+m-
+m+ (Programmende^AQ)        quitall
+
+set menu Edit
+m+  (Ausschneiden^AX)  (copy bdelete)
+m+  (Kopieren^AC)      (copy unblock)
+m+  (Einkleben^AV)     (clipins)
+m-
+m+  (Block^SAnfang)       bstart
+m+  (Block^SEnde)         bend
+m+  (Block^S^B) (
+m+  (Block^SLöschen)      bdelete
+m+  (Block^SKopieren)     bcopy
+m+  (Block^SVerschieben)  bmove
+m+  (Block^S^B) (
+m+  (Block^SEinlesen...)  reqinsfile
+m+  (Block^SSichern...)   (if !b abort reqfile (XDME Block Sichern) SP \$filename bsave \$reqresult)
+m+  (Block^S^B) (
+m+  (Block^SModus...)     (request (XDME) (Bitte wählen Sie den Block Modus!) (Zeilen|Spalten|Zeichen|Abbruch) if (\\\$reqresult="0) abort if (\\\$reqresult="1) (blocktype l) if (\\\$reqresult="2) (blocktype v) if (\\\$reqresult="3) (blocktype c))
+m-
+m+  ("Undo"^AZ)     undo
+
+set menu Suchen
+m+  (Finde...^AF)       (reqstring (XDME) (Bitte geben Sie einen Suchbegriff an!) \$OkCncl \$findstr top find \$reqresult)
+m-
+m+  (Finde Nächstes^A<) (next)
+m+  (Finde Voriges^A>)  (prev)
+m-
+m+  (Finde & Ersetze...^AR) (if 1 (escimm (findr `' `)) 4 left)
+m+  (Ersetze Nächstes)  (nextr)
+m+  (Ersetze Voriges)   (prevr)
+
+set menu Bewegen
+m+  (Textanfang)    (top first)
+m+  (Textende)      (bottom last)
+m-
+m+  (Zeilenanfang)  (first)
+m+  (1. Zeichen)    (firstnb)
+m+  (Zeilenende)    (last)
+m-
+m+  (Wortanfang)    (right wleft)
+m+  (Wortende)      (right wleft while ca right)
+m-
+m+  (Zeile...)      (reqnumber (XDME) (Bitte geben Sie die Zeilennummer ein!)  \$OkCncl \$lineno 1 50000 goto \$reqresult)
+m+  (Spalte...)     (reqnumber (XDME) (Bitte geben Sie die Spaltennummer ein!) \$OkCncl \$colno  1 255   col  \$reqresult)
+m-
+m+  (Marker^SSetzen #1)     (ping 1)
+m+  (Marker^SSetzen #2)     (ping 2)
+m+  (Marker^SSetzen #3)     (ping 3)
+m+  (Marker^S^B)            ()
+m+  (Marker^SAufsuchen #1)  (pong 1)
+m+  (Marker^SAufsuchen #2)  (pong 2)
+m+  (Marker^SAufsuchen #3)  (pong 3)
+
+set menu Makros
+m+  (Aufzeichnung beginnen) (recstart title (Recorder an))
+m+  (Aufzeichnung beenden)  (recend   title (Macro beendet))
+m-
+m+  (Abspielen)   (recplay)
+m+  (Laden...)    (reqfile (XDME Makro Lesen)   P  \$macroname set macroname \$reqresult source  \$macroname)
+m+  (Sichern...)  (reqfile (XDME Makro Sichern) SP \$macroname set macroname \$reqresult reqsave \$macroname)
+m-
+m+  (BefehlsShell) opencmdshell
+
+set menu Einstellungen
+mc    (Einfüge Modus?)            $insertmode   (insertmode \$itemcheck)
+mc    (Nurlese Modus?)            $viewmode     (viewmode   \$itemcheck)
+m-
+mc    (Automatisches Einrücken?)  $autoindent   (autoindent \$itemcheck)
+mc    (Automatischer Zeilenumbruch?) $autosplit (autosplit  \$itemcheck)
+mc    (Automatischer Wortumbruch?) $wordwrap    (wordwrap   \$itemcheck)
+m+  (Rechter Rand...)                           (reqnumber (XDME) (Bitte geben Sie den rechten Textrand an!) \$OkCncl \$margin 1 255 margin \$reqresult)
+m-
+mc    (Piktogramme erzeugen?)     $saveicons    (SPC_saveicons = \$itemcheck)
+m+  (Piktogrammname ...)                        (reqfile (XDME Icon Selektieren) P \$iconname set iconname \$reqresult)
+m-
+mc    (Globale Suche?)            $globalsearch (global \$itemcheck)
+mc    (mit Groß=Kleinschreibung?) $ignorecase   (ignorecase \$itemcheck)
+m-
+m-
+m+  (Zeichensatz...)                            (reqfont)
+m+  (Farben^SText Vordergrund...)               (reqcolor (Text Vorder) \$fgpen fgpen \$reqresult)
+m+  (Farben^SText Hintergrund...)               (reqcolor (Text Hinter) \$bgpen bgpen \$reqresult)
+m+  (Farben^S^B) ()
+m+  (Farben^SBlock Vordergrund...)              (reqcolor (Block Vorder) \$hgpen hgpen \$reqresult)
+m+  (Farben^SBlock Hintergrund...)              (reqcolor (Block Hinter) \$bbpen bbpen \$reqresult)
+m+  (Farben^S^B) ()
+m+  (Farben^STitel Vordergrund...)              (reqcolor (Titel Vorder) \$tfpen tfpen = \$reqresult)
+m+  (Farben^STitel Hintergrund...)              (reqcolor (Titel Hinter) \$tbpen tpen \$reqresult)
+mc    (Intuition Titel?)          $windowtitles (windowtitles = \$itemcheck)
+m-
+m+  (Einstellungen Sichern)                     (saveconfig)
+
+#unsetmacro mc
+#unsetmacro m-
+#unsetmacro m+
+#unset	    menu
+
+menuon
+
+setmacro reqcolor 2 (reqpalette (XDME $(arg1)grund) $arg2)
+
+if ($\fname="Edit) (chfilename unnamed)
+if ($\fname="unnamed) (reqload)
+
+
+set SystemName (Start:Heike!/System/)
+set HelpFile   ($(SystemName)LiesMich)
+set macroname  $(SystemName)?.xrc
+set iconname   $(SystemName)def_Text
+

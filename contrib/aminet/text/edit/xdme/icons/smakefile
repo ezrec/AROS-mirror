@@ -1,0 +1,20 @@
+
+DATE1 = $ @ $@ < $< $* ? $? > $>
+D1 = $ date
+D2 = @ date
+D3 = $@ date
+D4 = < date
+D5 = $< date
+D6 = $* date
+D7 = ? date
+D8 = $? date
+D9 = > date
+D10 = $> date
+
+VERDATE = `rx "say translate(date(N),'.',' ')"`
+VERDATE = `rx "say translate(date(E),'.','/')"`
+
+
+all :
+    echo "1=$(D1) 2=$(D2) 3=$(D3) 4=$(D4) 5=$(D5) 6=$(D6) 7=$(D7) 8=$(D8) 9=$(D9) 10=$(D10) "
+    echo $(VERDATE)

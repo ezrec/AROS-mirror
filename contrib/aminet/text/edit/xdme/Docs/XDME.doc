@@ -1,0 +1,1163 @@
+
+XDME.DOC	       XDME version 1.54		 Matthew Dillon
+			   Aug 1994			 Aaron Digulla
+
+DME, (C)Copyright 1987-91, Matthew Dillon.  All Rights Reserved.
+This software may be distributed for non-profit only.  This software is
+FREEWARE, not shareware.
+
+    Matthew Dillon
+    891 Regal Rd
+    Berkeley, Ca. 94708
+    USA
+
+From now (1992) on, I (Aaron) will continue to enhance this thing since
+Matt refuses to do so. My address is :
+
+    Aaron Digulla
+    Th.-Heuss-Str. 8
+    7750 Konstanz
+    Germany
+
+    EMAIL: digulla@rz-uxazs.fh-konstanz.de
+
+Note: From now on I'm (Aaron) responsible for enhancement & bugs. So if you
+have some idea/bugs/wishes/tips/etc., I will do it (if possible). Just write to
+me but don't expect an answer. I'm a VERY lazy letter-writer.
+
+    Source is available on FISH-disk, EMail or you can send a disk with
+    return-envelope. (Note: I won't pay anything, ok ? So if you send a pure
+    disk, there is a 100% propability, that you will never see this disk
+    again. :-)
+
+    Donations welcome but not solicited (We aren't starving artists).
+
+    icon by Bryce Nesbitt
+
+    text markers and the text-block stack by Kevin Seghetti (some of the new
+    commands for 1.30).
+
+    AREXX interface (Bill Hawes' ARexx REXX language interpreter) ported
+    by Kim DeVaughn.
+
+    1.42 additions by Markys Wenzel
+
+    1.50 and up: AREXX of Kim DeVaughn removed and real AREXX interface by
+    D. Heckmann. Many enhancements (bugs removed and speedups) by A. Digulla.
+
+---------------------------------------------------------------------------
+
+   Installation
+   Overview
+   Keymapping	       key and mouse mapping
+   Command Sequences   DME commands
+   File Particulars    notes on loading and saving files,
+   Workbench Support
+   Compiling	       Some notes on compiling this thing
+
+			       INSTALLATION
+
+Copy XDME to any place you want. If you want to run it from WB, copy
+the icon, too.
+
+Copy S/.edrc to S:. If you have an old .edrc, copy it to S:.edrc_user.
+DO NOT EDIT S:.edrc. XDME will come with a new .edrc from time to time.
+Make all modifications in S:.edrc_user and you'll save yourself a lot
+of time.
+
+If you don't have used XDME before, also copy S/XDME.prefs to S:. If you
+have a config file and XDME complains that the version is not correct,
+use Utils/CnvConfig/CnvConfig to update the file. CnvConfig will read
+the old config, make a backup copy and create a new version. All old
+settings will be preserved.
+
+				 OVERVIEW
+
+See history-file section for revisions.  XDME is an editor designed mainly for
+programmers.  Although it is not a word processor, it does include many word
+processing features such as Word-Wrap and automatic paragraph formatting.  Here
+is a quick 'features' list:
+
+	-control language based on a rich command set accessed manually or via
+	 arbitrary mapping of keys.  (Every key may be mapped to 1024 different
+	 things via qualifier and mouse keys)
+
+	-General variables, reference macros as variables, ENV: enviroment
+	 variables (1.30C and beyond).
+
+	-fast visual response (it scrolls quickly)...
+
+	-title-line statistics showing your current position in the file, file
+	 name, whether the file has been modified or not, etc...
+
+	-Multiple Windows, ability to iconify windows
+
+	-Word Wrap and automatic paragraph formatting.
+
+	-ability to map any KEY or MOUSE BUTTON combination.
+
+XDME has been designed to allow easy expansion, and I intend to make many
+future improvments.  It has not been designed for user friendliness, but is
+(mostly) straight forward if you read this document [care]fully.
+
+Normally, XDME will automatically SOURCE two script files, S:.EDRC, and the
+.EDRC in your current directory. These files do not have to exist.  These
+script files usually contain mappings and do things (for example, turn on
+savetabs).
+
+Some really important changes: (See History for less important changes)
+
+	-XDME will no longer hang behind keyboard. You may now PAGEDOWN
+	 and XDME will stop IMMEDIATELY when you release the key.
+
+	-XDME uses less memory now i.e. it less fragments memory
+
+	-Many routines have been improved. You will notice MUCH faster
+	 displaying of text and searching.
+
+	-Even better support of C-programmers. Many thing have been adapted
+	 to suit more the needs of C-programmers. (i.e. paren-matching,
+	 autoindent, splitting of long lines without reformat (!), better
+	 scanf and if[else])
+
+You may have noticed, that the title line changed. The title line is something
+like:
+
+    143/1053   5 00 * xdme.doc
+     |	 |     | |  |  +-------- filename
+     |	 |     | |  +----------- "-": file is unchanged, "*": file has been
+     |	 |     | |		 changed since loading.
+     |	 |     | +-------------- Code of char under cursor (HEX).
+     |	 |     +---------------- Actual column.
+     |	 +---------------------- Length of file in columns.
+     +-------------------------- Actual column
+
+
+				INVOCATION
+
+XDME scans the command-line for the following items:
+
+    -n	    - Open new XDME instead of sending an AREXX-Command to a running
+	      XDME. See below.
+    -i	    - Iconify all new windows.
+    -s file - Read local "file" instead of the local ".edrc". "S:.edrc"
+	      is unaffected by this.
+    -ps name - open all further windows on this public screen
+    -pf file - use this file as projectfile (XDME stores the names of
+		all open windows, positions, etc. in there). If this
+		file exists when XDME is started, XDME will read it
+		and open all windows as specified in the file.
+
+If you don't specify -n, XDME will try to find an already running XDME and
+send the appropriate AREXX-commands to this XDME to open the desired files
+and quit. This will also save some memory, but not much since XDME is PURE.
+The advantage is that you can only copy blocks between windows of ONE XDME
+(This doesn't affect clipboard, though). Also SEARCH/REPLACE-strings are
+global to one XDME.
+
+
+				 KEYMAPPING
+
+			       MOUSE BUTTONS
+
+    The mouse buttons and combinations thereof may now be mapped.  The default
+    mappings for the mouse buttons are as follows:
+
+    Left-button:    Move cursor to current mouse position
+    Right-button:   Iconify window
+    Left-button held down while moving mouse tracks the cursor
+
+    The iconification features:
+	-Remembers original window size and placement
+	-Remembers placement of iconified window when you re-iconify later.
+
+    Currently, you will crash the machine if you run out of memory and XDME is
+    unable to open the icon window or original window, so be careful.
+
+    See below for mapping the mouse buttons and mouse movement.
+
+
+				    KEYBOARD
+
+The rest of the Functional interface for XDME is based on key/mouse/menu
+mappings and a rich command set.  Unlike other text editors, any
+non-qualifier key in XDME may be defined to have any meaning whatsoever.  It
+just so happens that the default keymappings assign such things as the
+(return) key to the RETURN function, the (up) key to the UP function,
+etc...	Keys are named by their keycap labels with the following
+exceptions:
+
+    the name for Back-Space is	BS
+    the name for numeric keypad keys are prepended with an NK, except for
+       the Enter key which is named 'ENTER'.
+    The four cursor control keys are labeled UP, DOWN, LEFT, and RIGHT
+    The three mouse buttons are labeled RMB, MMB, and LMB.
+
+NOTES:
+       You MUST type commands in lower-case, except for text, which can be
+       either lower or upper case, and for upper-case alpha keys when specifying
+       keymaps (i.e.  A and s-a are the same key).  The exception is the AMIGA
+       qualifier key, which uses 'A' instead of 'a'(Alt).
+
+       Each key may be qualified with any combination of CTRL, ALT, SHIFT,
+       AMIGA, or any of the MOUSE buttons.  With 6 qualifiers (7 if your mouse
+       has a middle button), you can assign up to 64 (128) different maps to
+       each physical key on the keyboard.
+
+       The CAPS-LOCK, when lit, is equivalent to SHIFT only for Alpha keys.
+
+       The AMIGA-ALT (aA) combination isn't very usable since Intuition uses the
+       sequence to duplicate a Mouse SELECT.  Other AMIGA sequences are used by
+       intuition for mouse movement and other things. Some other qualifier
+       combinations may not be usable due to other special sequences.
+
+       Some keys must be mapped by their lower-case keycap.  That is, to map the
+       '>' key (USA keyboard), you specify shift dot (s-.)
+
+
+    ***EXAMPLES:***
+
+    tab 	tab
+    a-a 	ALT a
+    A-a 	AMIGA a
+    sA-a	SHIFT AMIGA a
+    s-tab	SHIFT tab
+    c-tab	CTRL tab
+    ac-?	ALT-CTRL ?
+    s-f5	SHIFT F5
+    nk0 	Numeric Keypad 0
+    cs-nk0	CTRL SHIFT Numeric Keypad 0
+    L-lmb	Left Mouse button pressed
+    L-mmove	Mouse moved while left mouse button held down
+    LR-lmb	left mouse button hit while right mouse button held down
+    s-. 	shift . ('>' for USA keyboards)
+
+    ***************
+
+			    MAPPING MOUSE BUTTONS
+
+    Mouse buttons serve both as QUALIFIERS and as KEYS.  Thus, you can map both
+    normal keystrokes which require a mouse button to be held down:
+
+	map L-a ((left button and an a))
+
+    as well as the mouse keys themselves:
+
+	map L-lmb   ((left mouse key))
+
+    note that you had to specify the left mouse button down qualifier L as well
+    as the left mouse button LMB.
+
+    If you map the left mouse button, and also map a sequence such as left mouse
+    button + a:
+
+	map L-lmb   tomouse
+	map L-a     ((hello))
+
+    Note that the first mapping will always get executed even if you intended
+    L-a (that is, BOTH mappings would get executed).  In order to avoid
+    confusion you might want to UNMAP the system default mapping for the right
+    mouse button (mapped to ICONIFY) if you wish to apply combinations to the
+    right mouse button.
+
+    MOUSE MOVEMENT is mapped with one or more mouse qualifiers (L, R, M), plus
+    'MMOVE' for the key.  That is:
+
+	map LR-mmove ((moving the mouse with both buttons held down))
+
+    Or how bout capping the characters under the mouse while moving the mouse?
+
+	map LR-mmove (tomouse if cl (tlate -32))
+
+
+
+			    DEFAULT KEYMAPPINGS:
+
+    All Printable Ascii keys mapped to their ascii equivalent. BS, DEL, UP,
+    DOWN, LEFT, RIGHT, TAB, S-TAB, and ENTER are mapped properly.  These are the
+    default system keymappings.
+
+	c-esc	 recall last command-line
+	tab	 insert tab
+	s-tab	 remove tab, text to the left is OVERWRITTEN !
+	s-return `firstnb down'
+	s-	 shift space to space
+	s-del	 deline
+	c-c	 map break to a nop
+	help	 ref
+
+	A-n	 newwindow arpload
+	A-o	 arpload
+	A-s	 saveold
+	A-a	 arpsave
+	A-q	 quit
+	A-Q	 quitall
+	A-z	 undo
+	A-x	 block bsave t:xdme_clip bdelete
+	A-c	 block bsave t:xdme_clip unblock
+	A-v	 split down first insfile t:xdme_clip
+	A-f	 Ask for a string to search for and look for it
+	A-r	 Ask for a string to search for and for one to replace the
+		 search-string and do one search&replace
+	A-e	 execute a shell-command
+	A-b	 mark a block (mark beginning, mark end, ...)
+	A-i	 iconify
+
+	a-up	 scroll up
+	a-down	 scroll down
+	a-left	 scroll left
+	a-right  scroll right
+
+	s-up	 page up
+	s-down	 page down
+	s-right  page right
+	s-left	 page left
+
+	c-up	 top (goto first line of text)
+	c-down	 bottom (goto last line in text)
+	c-right  goto last character in line
+	c-left	 goto beginning of line or, if already there, to the far left
+
+	c-j	 join lines
+	c-i	 toggle insertmode
+	c-del	 remove all characters to the right
+	c-w	 toggle auto-wordwrap
+	c-g	 execute a GOTO
+	c-l	 insert a FF into the text (^L)
+	c-e	 insert an ESC into the text (^[)
+	c-m	 find matching paren. Supported are (), [], {} and `'.
+
+	a-l	 word-left
+	a-r	 word-right
+	a-n	 find next
+	a-p	 find prev
+	a-f	 reformat paragraph (take care !)
+	a-i	 indent block one tab
+	a-I	 outdent block one tab
+	a-b	 like A-b
+	a-c	 copy block to line ABOVE cursor
+	a-d	 delete block (NO UNDO YET !!)
+	a-m	 move block to line above cursor
+	a-s	 save block to a file with filerequester
+
+	L-lmb	 tomouse
+	L-mmo	 tomouse
+	R-rmb	 iconify (only if no windows !)
+
+
+			     COMMAND SEQUENCES
+
+XDME has a rich command set which allows you to embed commands within
+commands, or specify multiple commands in a row.  A command consists of a
+KEYWORD followed by a FIXED number of arguments (0, 1, 2...).  The argument
+delimeter in XDME is a SPACE.  Therefore, to embed strings containing spaces
+as a single argument, you must surround the string with (string)
+(backsinglequote-string-singlequote). TEXT to be written as if typed is
+also specified via a string in backquote-quotes.  For example:
+
+    right right (hello) right right (hello) enter down
+    map f4 (right right) map f5 (left left)
+    map f4 ((hello))
+
+Reiterating (because this is important!)... If a command expects ONE argument,
+then it really does expect a single argument, and any remaining arguments are
+thought to be the next command... so:
+
+    map f4 right
+				    -right is only one word, so no need for ().
+    map f4 (right right)
+				    -we want to map f4 to two rights... we need
+				     the () or the second right will not be part
+				     of the map.
+
+    map c-del (repeat cright del)
+				    -this is already implimented as REMEOL, but
+				     shown here for clarity.
+
+Some arguments will eventually be fed through the command interpreter more than
+once.  The MAP command is a good example.  When you execute a MAP command, the
+first run through the command interpreter installs the map string minus a set of
+quotes.  So, if you want to specify text, you must enclose the text in two sets
+of ((text)) because the map string gets passed through the command interpreter
+again when you hit the mapped key.  Here are some more complex examples:
+
+    map f4 (right right (hello) left left)      *RIGHT*
+    map f4 right right hello left left		*WRONG*
+
+    map f4 (map f4 ((hello)))
+				    -the first time you hit F4, it's command is
+				     to re-map itself to the TEXT (hello).
+				     (gads!).
+
+    map c-i (repeat tr (( )))
+				    -example of how to embed a space in a map
+				     and repeat (goes through command
+				     interpreter three times!).
+
+
+An easy way to fool around executing commands or making maps is either to use
+the ESC key (which enters command mode), or  a-S (alt-shift-s), which EXECUTES
+the current XDME line that the cursor is on.... so you can use XDME to edit
+and test your new keymappings.
+
+
+				STRING VARIABLES
+
+    String variables are replaced with their contents.	Three specification
+    forms are allowed:
+
+    $varname	    - varname can only consist of a-z,A-Z,0-9,-,_
+    $(varname)      - anything not containing a '(' or ')'
+    $`varname'      - anything not containing a '`' or '''
+
+    Some special variables exist:
+
+	filename    - the current full filename
+	fpath	    - Path in current filename
+	fname	    - Only name of text (without path)
+	scanf	    - the current scanf'd string (see SCANF below)
+	lineno	    - the current cursor line number (1 .. N)
+	colno	    - the current cursor column number (1 .. N)
+	margin	    - Current Margin
+	modified    - (0)1 if (not) modified
+	currentline - full current line
+
+    Other variables cause a search of three variable domains to find the
+    contents.  For example, if you give  $DMEFONT:
+
+	(1) An Internal variable named DMEFONT is searched for.  Internal
+	    variables are case sensitive.  (see SET, UNSET)
+
+	(2) An Enviroment variable name DMEFONT is searched for.  Enviroment
+	    variables are NOT case sensitive.  (see SETENV, UNSETENV).  The 1.3
+	    ENV: is used.
+
+	(3) A XDME keymap or menu definition named DMEFONT is searched for.
+	    This allows you to say something like $sa-tab to insert the
+	    contents of the shift-alt-tab keymap.   (see MAP, UNMAP, and
+	    MENU oriented commands).
+
+    The reason for the other two forms of variable specifiction is to allow one
+    to access strangely named variables (with puncuation and other crap).
+
+    SPECIAL NOTE:  What is wrong with this command?
+
+	repeat 100 (first ($myvar))
+
+    What is wrong is that $myvar is evaluated BEFORE the repeat is executed.
+    myvar might contain characters that would confuse the command specification
+    when.  That is, if myvar contained a '(' you could get something like:
+    repeat 100 (fist ((())  which is obviously incorrect.  By using \ you can
+    cause $myvar to be evaluated at loop-execution time rather than before:
+
+	repeat 100 (first (\$myvar))
+
+    NOTE: This is a highly frustrating thing: If you indent do something like
+	this
+
+	    map key `scanf word `\$scanf' ...'
+
+	you will notice that it ain't work. The reason is that the \ is removed
+	when the mapping is done. When you press your key, the $scanf is
+	replaced PERMANENTLY and on every new invocation you will get same
+	results and not the new word. Therefore you have to do the following:
+
+	    map key `scanf word `\\\$scanf' ...'
+
+	For every level you need two \s. THIS BEHAVIOR WILL BE GONE IN THE NEXT
+	RELEASE !
+
+    These kinds of problems can also occur when you do keymaps... you probably
+    do not want to evaluate the variable at keymap-entry time, but rather would
+    want the variable evaluated at keymap-execution time.
+
+    On the otherhand, this is perfectly allowable:
+
+	set x (tlate +1)
+	repeat 100 ($x)
+
+    Which executes the command (tlate +1) 100 times (i.e. inserts "tlate +1" 100
+    times in the text) ... By NOT surrounding the variable with parens (depends
+    on the situation), the variable is executed rather than inserted as text.
+
+
+			   SPECIAL CHARACTERS
+
+    ^ is used to introduce a control character.  For example, ^c would embed a
+    control-c.	You cannot embed c-@ (ascii code 0).
+
+    backslash \ is used to override special meanings.  The next character is
+    overriden.
+
+    map c-a ((^l))      -map control a to produce a control l
+    map c-a ((\\\^l))   -map control a to produce a "^l".  The first \ overides
+			 the second, and the third overides the ^.
+
+COMMAND LIST:
+
+    General:
+(text)          -enter text as if typed.
+key		-execute a keymap as a macro (example:  c-a)
+header-item	-execute a menu item as a macro (example: Project-Save)
+		(case independent)
+
+    Text-Editing:
+BACK		-same as BS
+BS		-backspace, (delete char to left of cursor)
+CLIPINS 	-Insert contents of clipboard
+DEL		-delete, (deletes char under cursor)
+DELINE		-delete line
+DELINES n	-delete multiple lines
+DOWNADD 	-cursor down.  If at bottom of text, add a line.
+INDENT what how -indent text. See below. This is a very powerfull command.
+		"what" specifies what to indent and "how" how to indent it.
+
+INSFILE name	-insert a file into the current text.
+INSLINE 	-insert line
+INSLINES n	-insert n lines at once
+JOIN		-join next line to line at cursor
+JUSTIFY how	-simple text justification.  Currently only 'full'
+		 justification supported (justify full).
+REFORMAT	-reformat paragraph using the margin.
+REMEOL		-Remove text under and beyond the cursor.
+RETURN		-if AUTOINDENT is off: (FIRST DOWNADD) else insert line,
+		 split current line and indent like last line above.
+SPLIT		-Split line at cursor
+TLATE how	-translate character under cursor. how can be one of the
+		 following:
+
+		    number	- Replace character by the character with the
+				  code number. (i.e. 65=A). Number can be
+				  a decimal-, octal- or hexnumber.
+		    [+-]number	- As above, but the actual character is used
+				  as offset: `tlate +1' makes a 'B' from an
+				  'A', `tlate -1' does the reverse. The
+				  resulting char-code is truncated to 8bit.
+		    "x"         - Replace actual character by 'x'.
+		    [Uu]	- Make character uppercase.
+		    [Ll]	- Make character lowercase.
+
+UNJUSTIFY	-removes extra spaces in a line
+
+    Movement:
+BACKTAB 	-backward tab
+BOTTOM		-Move to Bottom of File
+COL [+/-]n	-Move cursor to column n or n characters left (-) or right (+)
+DOWN		-cursor down. If in commandline move to next line of
+		 commandline-history
+DOWNADD 	-cursor down.  If at bottom of text, add a line.
+FIRST		-move to column 1
+FIRSTNB 	-Move to first non-blank in line.
+GOTO dest	-Goto to a position in the text. dest is one of
+		    BLOCK/START     - Beginning of block (if there's one)
+		    END 	    - Last line of block (dito)
+		    +/-n	    - n lines down/up
+		    n		    - to line n
+LAST		-move one beyond the last non-space in a line.
+LEFT		-cursor left
+MAKECURSORVISIBLE -Scrolls an oversized screen so the cursor will become
+		 visible.
+MATCH		-find matching paren. Works with (), [], {}, `' and /* */
+PAGEDOWN	-pagedown a partial page (see PAGESET)
+PAGELEFT	-page to the left as requested by StyleGuide.
+PAGERIGHT	-dito to the right
+PAGEUP		-pageup a partial page (see PAGESET)
+PING n		-set a text marker (0-9).
+PONG n		-move to a previously set text marker (0-9)
+RETURN		-if AUTOINDENT is off: (FIRST DOWNADD) else insert line,
+		 split current line and indent like last line above.
+RIGHT		-cursor right
+SCREENBOTTOM	-Move cursor to the bottom of the screen.
+SCREENTOP	-Move cursor to the top of the screen
+SCROLLDOWN	-Scroll down without moving cursor
+SCROLLLEFT	-Scroll left without moving cursor
+SCROLLRIGHT	-Scroll right without moving cursor
+SCROLLUP	-Scroll up without moving cursor
+TAB		-forward tab
+TOMOUSE 	-moves cursor to mouse position
+TOP		-Move to Top of File
+UP		-cursor up. If in commandline, move to previous line of
+		 commandline-history
+WLEFT		-move to beginning of previous word.  If in the
+		 middle of a word, move to beginning of current word.
+WRIGHT		-move to beginning of next word
+
+    Requester:
+ARPINSFILE	-INSFILE filerequester \
+ARPLOAD 	-NEWFILE filerequester	\ You need ASL-, REQTOOLS or
+ARPSAVE 	-SAVEAS  filerequester	/ ARP.LIBRARY for this.
+ARPFONT 	-SETFONT fontrequester /
+BARPSAVE	-save the block to a file with filerequester (see above)
+
+
+    Blockoperations:
+BCOPY		-copy block before cursor line
+BDELETE 	-delete the block
+BLOCK		-Set start or end of block
+BMOVE		-move block before cursor line
+BSAVE file	-save the block to a file
+BARPSAVE	-save the block to a file with filerequester (see above)
+BSOURCE 	-source current text block as if it were a script file
+CLIPINS 	-Insert current contents of clipboard in the text
+COPY		-just copies the block to the clipboard
+PUSHMARK	-push the currently marked block onto a stack and
+		 unhighlight the block
+POPMARK 	-pop the block stack and highlight the popped block
+PURGEMARK	-clear the mark stack
+SWAPMARK	-PUSHMARK, swap top two marks on stack, POPMARK
+UNBLOCK 	-clear the block markers for the current window
+
+    Search&Replace:
+FIND string	-Set the search pattern and do a NEXT
+FINDR s1 s2	-Set find and replace patterns and do one find&replace.
+FINDSTR string	-Set the search string pattern
+NEXT		-find next occurance of search pattern
+NEXTR		-find next occurance and replace
+PREV		-find previous occurance of search pattern
+PREVR		-find previous occurance and replace
+REPLACE 	-replaces the next strlen(findstr) chars with repstr
+		 (ie. if deletes as many chars as are in findstr
+		 and replaces them by the replace-string).
+		 Useful in a mapping to find the text and another
+		 to actually replace the text:
+
+		    map f1 `next'
+		    map f2 `replace next'
+
+		 f1 searches for the text, f2 replaces it and looks for
+		 the next occurence.
+REPSTR string	-SET the replace string pattern
+GLOBAL what	-turn global search on/off. If XDME cannot find a string in
+		 one window, it will continue with the next one.
+
+    Program:
+IF cnd act	-SEE BELOW
+IFELSE cnd ifact elseact    -SEE BELOW
+PROJECTLOAD	-Recall session
+PROJECTSAVE	-Save all window-dimensions, filenames and position of
+		 iconified windows.
+REPEAT cnt comm -SEE BELOW
+RESETTOGGLE n	-clear toggle array entry N(0..31)
+SCANF ctlstr	-scan the string at the current text position (C scanf)
+		 example:   (scanf %s)          SEE BELOW
+SET var str	-create/modify an internal variable (access w/ $)
+SETENV var str	-create/modify an enviroment variable (1.3 ENV:)
+SETTOGGLE N	-set toggle array entry N  (0..255)
+SOURCE file	-source a script file. '#' in first column for comment
+TITLE title	-set window title manually
+UNSET var	-delete an internal variable
+UNSETENV var	-delete an enviroment variable
+WHILE cnd act	-(see below)
+TOGGLE n	-flip toggle array entry N (0..255)  (See IF)
+
+    AREXX
+PORT name cmd	-Send cmd to ARexx-Port name
+PROJECTINFO	-Gives some information about the current project:
+		 result_string="%s %s %d %d %d %d %d %d",
+		    name, LeftEdge, TopEdge, Width, Height, IWinX, IWinY
+		 i.e. Name of current window, it's dimensions and position
+		 if iconified
+RX		-ARexx macro, no args	(RX macname)
+RX1		-ARexx macro, one arg	(RX1 macname arg1)
+RX2		-ARexx macro, two args	(RX2 macname arg1 arg2)
+RXRESULT <any>	-Copy <any> into RESULT in an AREXX-script.
+SELECT what	-make a window the current one. what is FIRST,LAST,NEXT,
+		 PREVIOUS,WINDOW=<name>,SAVE or LOAD. SEE BELOW
+
+    Preferences
+AUTOINDENT what -(De)Activate autoindent (what={on,off,toggle}) with RETURN
+AUTOSPLIT what	-(De)Activate autosplit (what={on,off,toggle}). This is an
+		 alternative to WORDWRAP. AUTOSPLIT only break the line if
+		 it gets too long and doesn't touch the rest of the text.
+BBPEN n 	-selects pen n as the block-background-pen
+BGPEN pen	-set background pen
+BLOCKTYPE type	-type is LINE (old), CHARACTER (like everywhere else) or
+		 VERTICAL (rectangular block).
+CHFILENAME name -change the name of the working file
+IGNORECASE what -set case ignore for seaches.  what = on, off, or toggle
+INSERTMODE what -set INSERTMODE.  what = on, off, or toggle
+FGPEN pen	-Set foreground pen
+FOLLOWCURSOR what -XDME will make sure the cursor is visible if you switch
+		 it on with this command. Usefull on screens that extend over
+		 the visual area.
+GLOBAL what	-turn global search on/off. If XDME cannot find a string in
+		 one window, it will continue with the next one.
+HEIGHT n	-set height in PIXELS for any new windows
+HGPEN pen	-set highlight pen
+LEFTEDGE n	-set leftedge on the screen in PIXELS for any new window
+MAP key map	-map a key to a keymap
+MARGIN n	-set WordWrap and paragraph formatting margin
+		 (related to WORDWRAP and REFORMAT)
+MENUADD hdr item cmd	-add menu item
+MENUDEL hdr item	-delete menu item
+MENUDELHDR hdr		-delete menu header
+MENUCLEAR		-delete entire menu
+MENUON			-enable menus  (multiple calls are stacked)
+MENUOFF 		-disable menus (multiple calls are stacked)
+MODIFIED what	-set modified flag manually (what={on,off,toggle})
+NEWFILE name	-replace current text with new file
+PAGESET n	-n PERCENT (0 to 100). page step size relative to the
+		 current number of rows in the window.
+PATTERN pat	-sets the pattern for the filerequesters.
+PUBSCREEN name	-open next window on screen "name". Use an empty string to
+		 turn it off (ie. "pubscreen `'")
+REMPATH wild	-Remove one or more symbolic directorys from XDME's
+		 special path... a */? wildcard is acceptable.
+RESIZE cols rows-Resize current window. E.G:  (resize 70 23)
+SAVECONFIG	-save current editor configuration to s:dme.config
+SAVETABS on/off -Optimize file saves by crunching spaces to tabs.
+		 The default is OFF.
+SETFONT font sz -Set the window's font.  ex:   (setfont topaz.font 11)
+SETPARCOL col	-Set the LEFT margin for word wrap mode paragraphing &
+		 reformat.  MUST be less than MARGIN.
+TITLE title	-set window title manually
+TABSTOP n	-Set tab stops every n.  does not effect text load.
+TMPHEIGHT n	-set window height for next window only, pixels
+TMPWIDTH  n	-set window width for next window only,  pixels
+TOPEDGE n	-set topedge in the screen in PIXELS for any new window
+TPEN pen	-set pen for title bar rendering
+UNMAP key	-unmap a key
+WIDTH n 	-set width in PIXELS for any new window
+WORDWRAP what	-Word Wrap mode {on,off,toggle} (related to MARGIN)
+
+
+    Other:
+ADDPATH path	-Add the specified symbolic directory to XDME's special
+		 search path (see REF and CTAGS).
+CHFILENAME name -change the name of the working file
+CTAGS		-search for the tag under the cursor (see below)
+ESC		-toggle manual command entry mode
+ESCIMM arg	-go into command entry mode prompting with a
+EXECUTE comm	-Execute a CLI command
+		 predefined string.
+NULL		-no operation
+PICK item	-like POP, but doesn't remove the topmost element from
+		 stack !
+POP item	-Pop something from the stack and store it in item. The
+		 special item AUTO stores the thing back where it was taken
+		 from.
+PUSH item	-Push an item on the stack. Items are
+		    POS 	- actual cursor position (like PING)
+		    MODIFIED	- modified flag
+		    ICONMODE	- iconify-state (!! DO NOT USE !!)
+		    TABSTOP	- tab-size
+		    SAVETABS	- Should I convert spaces to tabs ?
+		    MARGIN	- right margin
+		    INSERTMODE	- obvious :-)
+		    IGNORECASE	- for search
+		    WORDWRAP	- word-wrapping on/off
+		    WWCOL	- col. of wordwrap
+		    WINDOW	- position and size of window
+		    ICON	- position of icon
+		    PENS	- all four pens
+		    BLOCK	- like PUSH-/POPMARK
+		    ED		- actual window. Like SELECT SAVE, but can be
+				  nested
+		    AUTO	- POP only ! This automatically put the topmost
+				  thing from stack to its original place.
+		    DISCARD	- POP only ! Discards the topmost item from the
+				  stack.
+QUITALL 	-leave XDME (NO "PROCEED ?" YET ! BE CAREFULL !)
+RECALL		-recall most recently entered command.	Must be used
+		 from a keymap (c-esc).
+REF		-reference string under cursor (see below)
+REFCTAGS	-The utimate command for hopping through source. First, we
+		 try CTAGS and if we don't find anything, we check REF.
+SAVEAS file	-save current text under a different name (title
+		 line name does not change)
+SAVEMAP file	-save user keymappings
+SAVEOLD 	-save current text under current name
+SAVESMAP file	-save all keymappings, including system keymaps
+SWAP item	-exchange the topmost item on stack with the actual item
+UNDELINE	-insert most recently deleted line (only last line saved)
+UNDO		-undo current line (must be mapped to a key to work)
+VREFCTAGS <name> -like REFCTAGS, but looks for <name>
+
+	Windows
+ICONIFY 	-iconify the window
+NEWWINDOW	-open new window using default window parameters
+OPENWINDOW geo	-open new window using specified geometry.  Geometry is
+		 specified as:	+/-leftedge+/-topedge+/-width+/-height,
+		 where negative numbers denote values relative to the
+		 width or height of the screen.  For example, the
+		 following opens a nearly full-screen window leaving
+		 10 pixels above, below, to the left, and to the right:
+
+		    openwindow +10+10-10-10
+
+		 The following opens a window in the upper right hand
+		 corner of width 320 and height 100.
+
+		    openwindow	-320+0+320+100
+		    openwindow	-320+0-0+100	    (same thing)
+		    openwindow	-320-100-0-0	    (lower rght hand corner)
+QUIT		-close actual window
+SETGEOMETRY x y width height -Set x/y position and width/height of
+		  XDME's window. The width and height are ignored in
+		  iconified state. If you use negative values, the
+		  positions/sizes are relative the current
+		  screen-size (0 0 -1 -1 will open a full-sized
+		  window !). If a size is null, it's left unchanged
+		  (move window only).
+SHOWLOG 	-XDME collects all warnings internally. These can now be
+		 showed again with this command. This is especially useful
+		 is you have something wrong in the .edrc-file and the
+		 warning gets obscured before you can read them.
+TITLE title	-set window title manually
+TOBACK		-Move active window to back
+TOFRONT 	-Move active window to front
+
+	-------------------------------------------------------------
+    -------------    More Info on Complicated Commands	-----------------
+	-------------------------------------------------------------
+
+    MENUOFF/ON	    -This command will enable/disable menus.  Users who have a
+		     whole bunch of MENUADD commands in their .EDRC should note
+		     that disabling menus at the beginning will speed up the
+		     MENUADD commands. Then reenable menus at the end.	These
+		     calls are stackable in that if you call MENUOFF, say,
+		     twice, it will take two MENUON commands to restore menus.
+		     The reverse is not true.
+
+    CTAGS   (c-[)   -(1.30B and beyond) Compatible with Aztec's CTAGS program.
+		     This command searches for the subroutine name under the
+		     cursor in the associated tags file ("tags" in the directory
+		     holding the file currently being edited).	Also, the file
+		     "tags" in directories specified by the special XDME path
+		     (see ADDPATH and REMPATH) will be searched.
+
+		     If the tag is found, it loads the file the subroutine
+		     resides in if neccesary, then WindowToFront()'s the window,
+		     ActivateWindow()s it, and GOTO's the line where the
+		     subroutine starts.  The search within the source file is
+		     anchored to the left column.  If the file is already
+		     loaded, it is not reloaded.
+
+		     This enables a programmer to quickly trace subroutines over
+		     an arbitrary number of files.
+
+		     The tags file contains one or more lines of the following
+		     format:
+
+		     subroutine-name file-name /^search-pattern
+		     (that's a slash and a carrot, then the pattern)
+
+		     -- EXAMPLE of 'TAGS' file:
+		     setpen cmd1.c /^setpen(
+		     do_up cmd1.c /^do_up(
+		     --
+
+		    SPECIAL NOTE:  CTAGS will work even if you are not in the
+		    directory containing the file.  You can thus place a tags
+		    file in the directory containing the files it references,
+		    and the filenames WITHIN the tags file need not be a full
+		    path.
+
+    REF     (c-])   -(1.28d and beyond).  This is a very powerful new command
+		     that allows you to bring up a reference to a keyword
+		     with a single keystroke.  This is useful for
+		     programmers who have on-line documentation or fully
+		     commented include files. XDME opens a window just big
+		     enough to fit the reference.
+
+		     NOTE:  The new CTAGS command may be more suited to your
+		     application.
+
+		     The reference keyword is the alpha-numeric string
+		     currently under the cursor.  REF will search the file
+		     XDME.REFS in the directories listed by the special XDME
+		     path (see ADDPATH and REMPATH).  The file must be
+		     built by the user and each line has the following
+		     format:
+
+		     (keyword) (nolines/endstring) (file) (searchstr/@@seekpos)
+
+		     Surrounding the keywords with `' or () is optional if the
+		     keyword does not contain spaces.
+
+			keyword     -keyword under cursor
+			nolines/ends-either a number (the number of lines in the
+				     reference) or a string denoting the end of
+				     the reference when found.
+			file	    -the file containing the reference material
+			searchstr/@@-search string in file that indicates the
+				     beginning of the reference, or two at's
+				     (@@) and the seek position in decimal (like
+				     @@2343).  The latter method is used mainly
+				     for reference- generator programs.
+
+		     Upon finding a successful keyword match the specified
+		     file is openned and the seach string searched for.  If
+		     a seek position was specified no search is made and a
+		     seek is made to the beginning of the reference.  If
+		     found, the indicated number of lines (if a number is
+		     specified for <nolines/ends>) or until a match with
+		     the endstring (if a string was specified) will be
+		     placed in a temporary file and a new XDME window
+		     brought up. The temporary file is then deleted.
+
+		     When looking for matches, the compare is anchored at the
+		     beginning of each line in the file.  Thus, any spaces in
+		     front of the string in the file must be duplicated.
+
+		     T: must be assigned to a temporary directory, usually RAM:
+		     See the included example DME.REFS file.  The most common
+		     things referenced are the autodocs and commented include
+		     files.
+
+		     Some modification of the included DME.REFS.* files may be
+		     required due to differences in include file and autodoc
+		     format.
+
+    SCANF ctlstr    -This is equivalent to the C scanf() function with the
+		     restriction that only one conversion is allowed, that
+		     conversion being a string.  Thus:
+
+		     scanf %s	    will place the string under the cursor in
+				    the variable $scanf
+
+		     scanf %4s	    The first four chars of the string.
+
+		     scanf %[0123456789]
+				    will scan the string while it contains
+				    specified chars (e.g. scan a number)
+
+		     scanf %[~,]    will scan the string until it finds a ','.
+
+		    Moreover SCANF now allows to use some more usefull
+		    arguments:
+
+			w   - one word
+			l   - the WHOLE line
+			b   - all that matches isalnum()
+			c   - single character
+			t   - text in one line
+			a   - all that matches isalpha()
+			r   - c-style comment
+
+		    If you precede one of these with a '+' you will also get
+		    everything to the left else you get all that is to the
+		    right. Example:
+
+			dummy1[line] = ...
+			   ^
+
+			w:  my1[line]
+			+w: dummy1[line]
+			a:  my
+			+a: dummy
+			b:  my1
+			+b: dummy1
+			c:  m
+			+c: m
+
+		    The variable $scanf may be used as an argument in any
+		    command.  Example:	(insfile $scanf).
+
+		    NOTE:  If using $scanf in a macro, you probably want to
+		    precede it with a \ to prevent it from being evaluated at
+		    macro-creation time.
+
+
+    REPEAT n arg    -Repeat (arg) N times.  Apart from being a number, n can
+		     also be one of:
+
+			line	Current line # (lines begin at 1)
+			lbot	#lines to the bottom, including current line
+			cleft	column # (cols begin at 0)
+			cright	#chars to eol, including current char under
+				cursor
+			tr	#char positions to next tab
+			tl	#char positions to next back tab
+
+		    Certain commands can abort a REPEAT loop. Specifically, any
+		    FIND[R], NEXT[R], or PREV[R] in which the search string is
+		    NOT found will abort a REPEAT. Most operations which can go
+		    out of bounds, such as UP, LEFT, RIGHT, DOWN, also abort a
+		    repeat.
+
+		    Specifying -1 as N causes REPEAT to go on forever (well,
+		    actually, 0xFFFFFFFF times) or until an abort.
+
+		    REPEAT may also be abreviated. Simply type
+
+			15 left
+
+		    This will move the cursor 15 time left. In this construction
+		    you must specify a number as repeat-count.
+
+    IF [!]condition arg
+    WHILE [!]condition arg
+    IFELSE [!]condition arg else arg
+
+	    If the specified condition is true, execute the argument.  For
+	    WHILE, the argument is executed until the condition is false (be
+	    careful!), but you may abort while with CTRL-c (be fast !).
+
+	    the optional '!' inverts the logic.
+
+	    Conditions:
+
+
+	    #	    if toggle entry # is SET.  there are 256 toggles (0..255)
+	    t	    if On line 1
+	    b	    if On last line
+	    l	    if At column 0
+	    r	    if At end of line (spaces below and beyond)
+	    m	    if Text has been modified
+	    i	    if in insert mode
+	    x[<=>]# if column position (starts at 1) is (any OR combo of
+		    <, =, or >) than some number.  Example:   x<=20
+	    y[<=>]# if Line number (starts at 1) is (same as for x)
+	    cl	    character under cursor is lower case alpha
+	    cu	    character under cursor is upper case alpha
+	    ca	    character under cursor is alpha-numeric
+	    cn	    character under cursor is numeric
+	    c[<=>]# character under cursor is ascii code # (# in decimal)
+		    optional conditionals as in 'x' and 'y'.
+		    # can also be a "string":
+
+			if c="hwllo" `right tlate "e"'
+
+		    replaces "hwllo" by "hello". The condition is true, if
+		    the cursor is on the first char of the string and the
+		    string follows behind:
+
+			This is a test.
+			     ^
+		    ifelse c="is" `title c=is' `title c<>is':    c=is
+		    ifelse c="test" `title TRUE' `title FALSE':  FALSE
+
+		    # can be a group of chars:
+
+			while c=[a-zA-Z0-9] ...
+
+		    is the same as
+
+			while ca ...
+
+		    Beware of spaces in strings and groups: if there are any,
+		    you MUST NOT forget to put the condition in XDME's
+		    parentheses.
+
+	    cb	    cursor within a block
+
+    INDENT what how
+
+	    The INDENT-command allows to indent and outdent text. It is
+	    intelligent in a way that you will NEVER lose any text with it. If
+	    the in/outdent would push characters over the limit (left or right),
+	    the line is left and INDENT continues with the next line.
+
+		    what:   .	    - Current line
+			    n	    - line n
+			    $n	    - line which is marked by PING n
+			    t	    - whole text
+			    b	    - whole block
+			    bs	    - block start
+			    be	    - block end
+			    _	    - last line
+
+			You may create ranges with "what,what". (This is
+			obviously useless with "t" and "b").
+		    how:    -	    - If there is a minus, text is outdented
+				      instead of indented
+			    .	    - Align to multiple of indent-amount instead
+				      of just inserting some spaces at the
+				      beginning
+
+			    n	    - Set indent-amount to n
+			    t	    - Set indent-amount to tabsize
+			    c	    - Insert not at the beginning but at the
+				      current column.
+
+	    Examples:
+
+		indent . .ct	- Acts like tab. Text under cursor and beyond is
+				  aligned to next tabstop.
+		indent b .t	- Indent the current block. NOTE: ALL lines are
+				  tabstop-aligned ! This may destroy some of
+				  your formating.
+		indent b -.t	- dito but the block is outdented.
+
+    PROJECTS:
+
+	You can save the position of ALL XDME windows via PROJECTSAVE and load
+	them later with PROJECTLOAD or via invoking XDME with
+	XDME_PROJECT_FILE as parameter. This will restore the state of the
+	last PROJECTSAVE. If you are using AREXX, you can get information
+	about the current project via PROJECTINFO which will return the
+	following string in AREXX result-string:
+
+	    path filename winx winy winwidth winheight iconx icony
+
+	To get this from all windows you can use SELECT.
+
+    SELECT what
+
+	SELECT allows to make another window the current one.
+
+	    what:   FIRST, LAST, NEXT, PREVIOUS - obvious, eh ?
+		    WINDOW=<name>   - Make window <name> the current one
+		    SAVE	    - Remember current window
+		    LOAD	    - restore current window
+
+	You can SAVE the current window, select another (or more) and LOAD the
+	current window again. This gurantees uninterupted work for the user and
+	is STRONGLY recommended.
+
+
+
+			     FILE PARTICULARS
+
+No Matter what you set internal tabs to, tabs in disk files will be 8. This
+allows you to use your favorite tabs stops (mine are 4) and still have your
+disk files compatible with TYPE, a printer, etc...  XDME by default doesn't
+bother to optimize when writing out files and simply uses spaces. If you
+(SAVETABS on) before saving (or in your S:.EDRC, etc...), XDME will attempt
+to optimize the file by placing TABS in appropriate places.  XDME will not
+place any TABS after the first single, back, or double quote is encountered
+in a line.  If this does not cover every situation in your particular
+application that you want to be *sure* no tabs will occur in sensitive
+sections, then you should not use (SAVETABS on).
+
+It should be noted that since XDME removes spaces at the end of the line,
+editing UUENCODED ascii files will not work for uuencoded lines which end
+with a space. The nominal fix is to add an extra character after each
+uuencoded line (anything) in the proper column, which is ignored by the
+UUDECODE program.
+
+The command to save the current document under the default name is SAVEOLD,
+*not* SAVE.  SAVE is not a valid command.  This is to prevent people who have
+not read the documentation from assuming 'save' takes an argument (and screwing
+up their work).  SAVEOLD does NOT take an argument, SAVEAS does.
+
+SAVEOLD/SAVEAS do not automatically backup the destination file.  If you are
+working in an enviroment where you are worried about ensuring a viable copy can
+be recovered if your Amiga crashes in the middle of the save, you can write a
+macro to save the file into two places.  Usually, people backup their working
+disks so this is not neccesary.
+
+Workbench Support:  If XDME is run from the workbench, it will automatically
+construct an icon file when you save a document.  If run from a CLI, no icon
+file is generated.
+
+				    V
+			      WORKBENCH SUPPORT
+
+DME V1.26 and beyond support the workbench in the following way:  (1) you can
+click on the XDME icon to bring up DME with the file "unnamed".  (2) you can
+select one or more standard ascii documents which have XDME as the default
+tool. If XDME has no knowlege of a text icon, it uses its own.
+
+				    VI
+				COMPILING
+
+I think you can compile most of XDME with any compiler now (I tried GCC and it
+almost worked but since GCC didn't made better (shorter code than DICE) I
+canceled it)). But I really don't think you will succeed to get a runable
+programm since XDME incorporates some features of DICE which are not found
+anywhere else (what do you think why I use DICE ? :-). Hopefully XDME will
+compile correctly using the DICE-version from FISH. If it ain't work just buy
+DICE from Matthew Dillon. These $50 really don't kill anybody and you get a
+real great compiler.

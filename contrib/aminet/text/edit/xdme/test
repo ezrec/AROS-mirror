@@ -1,0 +1,61 @@
+
+# verschiedene Tests fuer Doubleclicked Buttons
+
+map L-lmb (tomouse title EINS...)
+map L-lm2 (scanf %s title ZWEI...)
+map L-lm3 (ctags title DREI...)
+map L-lm4 (title VIER...)
+map L-mm2 (title FUENF?????????)
+map L-lm2 (title ZWEI...)
+
+map L-lm2 (ctags)
+
+# do_if <- das kann fuer ctags genommen werden ...
+
+addpath autodoc:39
+#AddTail <- das kann fuer refs genommen werden ...
+
+
+
+# verschiedene Tests fuer "R"epeat Qualifier
+
+
+
+# einmal mit einem Threshold ...
+
+unset remove
+unset noremove
+set   trremove 6
+
+setmacro delthresh 1 (ifelse \\\$noremove (dec noremove abort) (set noremove \$trremove eval \$arg1 delcond))
+setmacro delcond   0 (ifelse ca (set remove ca) (set remove !ca))
+
+map    -del (delcond      del)
+map   r-del (delthresh () while $\remove del ur-del)
+map  ur-del (u-del set noremove $trremove)
+map   u-del (set remove 0 set noremove 0)
+
+map    -bs  (left -del)
+map   r-bs  (delthresh left while $\remove (del left) right ur-del)
+map  ur-bs  (ur-del)
+map   u-bs  (u-del)
+
+set   remove 0
+set noremove 0
+
+#original:
+#map	-del (ifelse ca (set _remove ca) (set _remove !ca) del)
+#map   r-del (while $\_remove del u-del)
+#map  ur-del (u-del)
+#map   u-del (set _remove 0)
+#map	-bs  (left -del)
+#map   r-bs  (left while $\_remove (del left) right u-del)
+#map  ur-bs  (u-del)
+#map   u-bs  (u-del)
+
+
+#first down 8 (5 (A) 5 (.))
+
+
+
+menuadd User SMake... (newwindow chfilename (*SCRATCH*) insfile (APIPE:script:mysmake ) modified off viewmode on)

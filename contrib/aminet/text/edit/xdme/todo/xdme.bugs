@@ -1,0 +1,490 @@
+DDT:
+ about (wrong text)
+ overwrite im titel
+
+
+Return-Path: <utoddl@guitar.oit.unc.edu>
+Date: Mon, 12 Sep 94 09:16:23 GMT-0500
+From: Todd M. Lewis <utoddl@guitar.oit.unc.edu>
+Subject: Re: XDME_1.83pl10_src.lha
+
+Hello again.
+
+I spent this weekend merging my changes into the pl10
+sources with mixed results.  The biggest problem I had
+was with missing files and functions.
+
+The patch level 10 sources are missing these files:
+  src/about.c
+  src/Var/spc.c
+  src/Var/Jabba.c
+
+At least those are the file names mentioned in the
+smakefile which aren't included.  I compiled and linked
+anyway and had to fake the following functions:
+  do_about();
+  SPC_get();
+  SPC_set();
+using the prototypes in the include directory helped a
+bunch there.  I just made dummy functions and got the
+part I was working with to work.  (I suspect variable
+handling suffered quite a bit though :-)
+
+More about blocks....  No sooner do I get something
+working than I go and try to improve things.  I would
+like to make ActualBlock read-only for all the files
+except block.c by doing something like:
+
+   #ifdef BLOCK_C
+   Prototype Block ActualBlock;
+   #else
+   Prototype static Block ActualBlock;
+   #endif
+
+
+The reason is that I want to isolate changes to
+ActualBlock so I can insure consistency within the block
+structure.
+
+One problem with this is that I don't see a clean
+way to get the above code into your automatically
+generated prog-protos.h file.  Any ideas?
+
+I'm setting up a bunch of functions that allow setting
+block values, but they do sanity checks and keep other
+fields in ActualBlock in check.  In particular, I'm
+extending Block to include a small array:
+   Column col[3][2];
+This array holds the left- and right-most columns of
+the first line of a block, the middle lines of a block,
+and the last line of a block.  These values are normalized
+by a call to block_normalize() whenever one of the other
+block values changes which could affect the edges of the
+displayed block.  Using this array we can eliminate
+any special case handling for different block types in
+redraw.c, and most of the special case code everywhere
+else.
+
+Rather than having manipulation of ActualBlock spread
+throughout the program (and having to re-examine that
+manipulation every time the block structure is extended)
+I want to put all the "smarts"--the consistency checks--
+into the block.c file.	How does this sound to you?
+
+Still prefer programming for fun to programming for a living...
+---
+Todd_Lewis@unc.edu   ASDF - Amiga Software Developers Forum
+	       "Where the Pizza Meets the Code"
+
+From dwarp!robert.havens@nuchat.sccsi.com Tue Oct  4 02:56 MEZ 1994
+Received: from nuchat.sccsi.com by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA13961; Tue, 4 Oct 1994 02:56:43 +0100
+Return-Path: <dwarp!robert.havens@nuchat.sccsi.com>
+Received: by nuchat.sccsi.com (/\==/\ Smail3.1.25.1 #25.2)
+	id <m0qrz87-00096OC@nuchat.sccsi.com>; Mon, 3 Oct 94 20:57 CDT
+To: digulla@rz-uxazs.fh-konstanz.de
+Subject: XDME Bug! (Oh No!)
+From: robert.havens@dwarp.com (ROBERT HAVENS)
+Message-Id: <89B148A.0190003F94.uuout@dwarp.com>
+Date: Mon, 03 Oct 94 19:22:00 -0600
+Organization: Data Warp Premium BBS - Spring/Houston, TX - 713-355-6107
+Reply-To: robert.havens@dwarp.com (ROBERT HAVENS)
+X-Mailreader: PCBoard Version 15.2
+X-Mailer: PCBoard/UUOUT Version 1.0
+Status: RO
+
+
+-----BEGIN PGP SIGNED MESSAGE-----
+
+
+    Name    :  Robert Havens  Robert.Havens@DWarp.com
+    Version :	XDME V1.83.08
+    Bug 1   :  When using a BGPEN other than 0, a partially obscured
+               area will lose it's background color when the obscuring
+               window is removed.  (Am I being clear, it sure doesn't
+               seem that way!)
+
+               This first cropped up when I tried to quit without first
+               saving my work.  The 'You forgot to save, you dummy'
+               requester popped up, and I selected cancel.  When the
+               requester closed, it left a whole in the background.  All
+               the text within that hole did have the proper background
+               color, however.  It appears as though a raster fill needs
+               be done before redrawing the text?
+
+
+               Thanks for the work you've done on XDME!!
+
+-----BEGIN PGP SIGNATURE-----
+Version: 2.6
+
+iQB1AwUBLpB9RlTBm/t52TU1AQH/vAL9Ex6KFp7TD16wnK+JEXqGZR8vu/XCqWKe
+j0bQJyAG1eB/Vp/62Wym5zo9s/nOBcSu+UD5NSWPOxweboVum8uRgdGDaf6eSd0r
+/bvyrVbe7FxKMp/yquCTmO3x2ufhJTaq
+=NzI2
+-----END PGP SIGNATURE-----
+
+
+---
+
+|  Robert C. Havens    InterNet: Robert.Havens@DWarp.com
+|     _      PGP       FidoNet:  1:106/10.1
+|  _ //    Pub Key     AmigaNet: 40:202/10.1    PGP Key ID
+|  \X/    Available    CLink:    911:5165/2.1   0x79D93535
+
+... Windows is to computers what sand is to machinery.
+
+
+From volker.moerke@ithh.sh.sub.de Fri Sep 30 21:55 MEZ 1994
+Received: from subnet.sub.net by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA17957; Fri, 30 Sep 1994 21:55:04 +0100
+Return-Path: <volker.moerke@ithh.sh.sub.de>
+Received: from shlink.sh.sub.de by subnet.sub.net with bsmtp id <6735>; Fri, 30 Sep 1994 21:58:17 +0100
+Received: from <genepi.sh.sub.de> by shlink.shn.com with bsmtp
+	(Smail3.1.28.1 #6) id m0qqWiM-000SmRC; Fri, 30 Sep 94 02:24 MET
+Received: by genepi.sh.sub.de (Smail3.1.28.1 #6)
+	id m0qqV4a-0003hLC; Fri, 30 Sep 94 00:39 GMT+0100
+To: digulla@rz-uxazs.fh-konstanz.de
+From: VOLKER.MOERKE@ithh.sh.sub.de (Volker Moerke)
+Message-Id: <uiflZMD8Bacz3@v_moerke.ithh.sh.sub.de>
+Subject: Re: Fix for XDME V1.83pl13
+Date: 	Wed, 28 Sep 1994 00:00:00 +0100
+Organization: Creative Computing e.V.
+In-Reply-To: <199409271258.AA27912@noc.BelWue.DE>
+Status: RO
+
+Hallo Aaron!
+
+Du warst am 27.09.1994 um 13:54:15 Uhr an Deinem Rechner, um im Brett
+(bzw. an den User) VOLKER.MOERKE@V_MOERKE unter dem
+Betreff "Fix for XDME V1.83pl13" folgenden Text zu tippern:
+		 ^^^^^^^^^^^^^^
+AD> [...]
+
+Ist angekommen und gleich einen Fehler entdeckt! ;-)
+
+Erst die Formalien:
+    Name:	Volker M"orke
+    Version:	XDME V1.83pl13 (compiled 26. Sept. 1994)
+    Config:	A2000, A2630 mit 4MB RAM, insg. 6655 KByte (etwas
+		merkwuerdige Speicherkonfig wg. Kickstart-File), A2091
+		(ohne RAM) mit 2 HDs, GVP Impact Series-II
+		SCSI-Controller mit 2MB RAM (z.Zt. ohne Laufwerk), 1
+		FD, Kickstart 40.68, Workbench 40.35
+
+Bug1:
+    Beim Bearbeiten von Texten, die laenger als eine Bildschirmseite
+    sind, habe ich folgenden Effekt bemerkt:
+
+    Beim abschnittweisen Rueckwaerts-Scrollen (Richtung Textanfang)
+    durch Klicken in den dunklen Bereich des Scrollbalkens am rechten
+    Fensterrand, manchmal nach mehreren "Versuchen", erscheinen
+    ploetzlich wirre Zeichen im XDME-Fenster, die mit dem Text nichts
+    mehr zutun habe, nur noch scheinbar beliebige Bytes...
+
+    Wenn man dann zum Scrollen die entsprechenden Funktionen von XDME
+    wie bspw. "pageup" oder auch "pagedown" benutzt und mit diesen
+    wieder aufwaerts resp. abwaerts ueber den oberen bzw.
+    unteren Fensterrand hinausscrollt, wird der Inhalt des Fensters
+    wieder refresh`t und alles erscheint wieder normal...
+
+    Ein stoerender aber offenbar nicht zerstoererischer Effekt...
+
+Bug 2:
+    Die Funktion `reqfile` scheint mit der reqtools.library 38.1248
+    nicht richtig zu funktionieren. So erscheint beim Aufruf der
+    Menue-Funktion `Source...` im Menue `Macros` (basierend auf den
+    mitgelieferten `.edrc`- und `.edrc_user`-Dateien) der
+    Reqtools-Requester und zeigt das aktuelle (!) Verzeichnis an. Im
+    untersten Stringgadget, dort wo i.a. der Dateiname eingegeben
+    wird, steht `PROGDIR:Macros/?.xrc`. So war das doch wohl nicht
+    gedacht, was? ;-)
+    Wenn man uebrigens (in der Hoffnung, dass XDME vielleicht nur
+    nicht die Variable `PROGDIR` aufloesen kann) in `.edrc_user` die
+    erste Zeile in `set macroname XDME:Macros/?.xrc` umaendert, wird
+    leider beim beschriebenen Aufruf auch nur das aktuelle Verzeichnis
+    im Requester angezeigt und es steht `XDME:Macros/?.xrc` im
+    Stringgadget fuer den Filenamen. (`XDME:` zeigt bei mir auf die
+    Wurzel des Verzeichnisbaumes, in dem sich die XDME-Dateien und
+    -Verzeichnisse befinden.)
+
+AD> [...]
+
+Aber nicht immer nur Bugreports... ;^)
+
+Mir gefaellt die Word Wrap-Funktion jetzt irgendwie besser, obwohl ich
+nicht einmal genau sagen kann, woran das eigentlich liegt?
+
+Ich benutze uebrigens ab sofort (wie oben schon angedeutet) die
+_mitgelieferte_ .edrc_user-Datei. Die .edrc hab ich eh schon immer
+unveraendert benutzt. Diese Konfig gefaellt mir mittlerweile ganz gut.
+Notfalls kann ich ja auch noch ein bischen dran "feilen"... ;^)
+
+Gibt`s diese Menuestruktur auch in deutscher Sprache? Ist zwar fuer
+Dich wahrscheinlich "Pipifax", aber der eine oder andere Benutzer von
+XDME wuerde sich vielleicht darueber freuen. Ich bin gerne bereit,
+mich hier nuetzlich zu machen... ;^) An die Titel der ReqTools-
+Requester (bspw. `arpinsfile`) komme ich aber ohne Weiteres nicht
+heran...?
+
+Ansonsten bravo und weiter so...
+
+Viele Gruesse aus Hamburg!
+Volker
+  _	_   _______
+ //\   //| /_____ /|  Volker M"orke..................Creative Computing e.V.
+ \\ \ || || __ __| |  ------------------------------------------------------
+  \\ \|| || ||_/ | |  Informationstheater Hamburg - Die Informationszentrale
+   \\_|| || |	 | |  SysOp-Team................volker.moerke@ithh.sh.sub.de
+    \__|/ |/	 |/   V+49-40-60680346Q.............(privat V+49-40-407580Q)
+
+It is better to be roughly right
+than to be precisely wrong.			(John Maynard Keynes)
+
+From Tero.Turtiainen@lut.fi Thu Oct  6 20:35 MEZ 1994
+Received: from mopo.cc.lut.fi by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA21358; Thu, 6 Oct 1994 20:35:09 +0100
+Return-Path: <Tero.Turtiainen@lut.fi>
+Received: (from turtiain@localhost)
+ by mopo.cc.lut.fi (8.6.8/8.6.6/1.17.kim)
+ id VAA16465; Thu, 6 Oct 1994 21:39:28 +0200
+ (for digulla@rz-uxazs.fh-konstanz.de)
+From: Tero Turtiainen <Tero.Turtiainen@lut.fi>
+Message-Id: <199410061939.VAA16465@mopo.cc.lut.fi>
+Subject: Bugreport
+To: digulla@rz-uxazs.fh-konstanz.de (Aaron Digulla)
+Date: Thu, 6 Oct 1994 21:39:28 +0200 (EET)
+X-Mailer: ELM [version 2.4 PL23]
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+Content-Length: 1520      
+Status: RO
+
+Hi!
+
+Damn XDME, it crashed my machine when I was writing a bugreport... :-(
+
+Ok... Here comes Bugreport V2.0 :)
+
+    Name    :	Tero Turtiainen
+    Version :	XDME 1.83pl13
+    Config. :	A500, 68000, no FPU, no MMU, 1/2MB RAM, 2 Drives, 1 HD,
+		KS 2.04 (37.175), WB 38.12
+    Bug 1   :	The scrollbar on the right is buggy. It works ok if I grab
+		the scroller knob and move it around but...
+		I tried this with a file with numbers from 1 to 100, with one
+		number on each line.
+		ie.
+		1
+		2
+		3
+		...
+		100
+
+		Then I clicked below the scrollbar handle (or something... :)
+		(ie. to scroll one screen...) and the lines visible on the
+		screen were... (the window was resized to show only 10 lines)
+		9
+		10
+		19
+		20
+		...
+		26
+		(or something...)
+		Anyway it showed the wrong lines (at least I think
+		10 + 1 != 19 :) Also the cursor was not visible. If I activate
+		another window the contents of the corrupted window comes
+		ok... (10 + 1 == 11 :)
+		And as I a few minutes ago was writing V1.0 of this bugreport
+		I pressed a key right after the corrupted scroll (ie. the
+		cursor was invisble) and.... CRASH! :-(
+
+		I have hardly ever used this scroll-bar so it was good (or
+		bad :) luck that I found this...
+
+-- 
+ <-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->
+ <  Tero Turtiainen         !  Yes Sir! May I lick Your boots or do	   >
+ <  turtiain@lut.fi         !  Your Highness use dry cleaning  - Stone	   >
+ <-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->
+
+From fdnh@riker.cc.rochester.edu Thu Oct 20 03:50 MEZ 1994
+Received: from riker.cc.rochester.edu by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA01989; Thu, 20 Oct 1994 03:50:48 +0100
+Return-Path: <fdnh@riker.cc.rochester.edu>
+Received: (from fdnh@localhost) by riker.cc.rochester.edu (8.6.9/8.6.6) id WAA01727; Wed, 19 Oct 1994 22:55:09 -0400
+Date: Wed, 19 Oct 1994 22:55:09 -0400
+From: Fergus Duniho <fdnh@riker.cc.rochester.edu>
+Message-Id: <199410200255.WAA01727@riker.cc.rochester.edu>
+To: digulla@rz-uxazs.fh-konstanz.de
+Subject: XDME Bug
+Status: RO
+
+
+    Name    :   Fergus Duniho
+    EMail   :   fdnh@troi.cc.rochester.edu
+    Version :   XDME V1.83pl14
+    Bug 1   :   The "qualifier" command isn't working.  Here are some
+                macros that don't work right.  They are supposed to
+		operate the same as in Emacs.
+
+map c-x (qualifier x title `C-X ...')
+map xs-9 (recstart)
+map xs-0 (recend)
+map x-e (recplay)
+
+From iscove@oci.utoronto.ca Mon Jan  9 18:18 MEZ 1995
+Received: from euler.utirc.utoronto.ca by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA06591; Mon, 9 Jan 1995 18:17:47 +0100
+Return-Path: <iscove@oci.utoronto.ca>
+Received: from crick by oci.utoronto.ca (4.1/SMI-4.1)
+	id AA04250; Mon, 9 Jan 95 12:23:21 EST
+Date: Mon, 9 Jan 1995 12:23:18 -0500 (EST)
+From: Norman Iscove <iscove@oci.utoronto.ca>
+X-Sender: iscove@crick
+To: digulla@rz-uxazs.fh-konstanz.de
+Subject: XDME184
+Message-Id: <Pine.SUN.3.90.950109121538.13125A@crick>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Status: RO
+
+Aaron -
+
+I believe there may be a problem with the INSFILE and CLIPINS functions
+at least in your latest release, I haven't checked earlier ones.
+
+INSFILE frequently inserts the text (e.g. t:xdme_clip) at the end of the
+displayed file rather than at the cursor.
+
+CLIPINS seems to insert at the correct place, but only inserts a single
+line of the clip.
+
+Could you confirm these problems, or is there something I'm missing?
+I would appreciate a brief note.
+
+Norman Iscove  iscove@oci.utoronto.ca
+
+
+
+From iscove@oci.utoronto.ca Fri Jan 13 00:55 MEZ 1995
+Received: from euler.utirc.utoronto.ca by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA01164; Fri, 13 Jan 1995 00:55:09 +0100
+Return-Path: <iscove@oci.utoronto.ca>
+Received: from crick by oci.utoronto.ca (4.1/SMI-4.1)
+	id AA17978; Thu, 12 Jan 95 19:01:02 EST
+Date: Thu, 12 Jan 1995 19:01:01 -0500 (EST)
+From: Norman Iscove <iscove@oci.utoronto.ca>
+X-Sender: iscove@crick
+To: digulla@rz-uxazs.fh-konstanz.de
+Subject: Re: XDME184
+In-Reply-To: <Pine.SUN.3.90.950109121538.13125A@crick>
+Message-Id: <Pine.SUN.3.90.950112185727.22033A-100000@crick>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Status: RO
+
+Aaron -
+
+I reported problems witth INSFILE [and CLIPINS] a few days ago.  I should
+add that the INSFILE problem occurs on attempting to insert cut or
+copied text back into the same window that it was taken from.  It is 
+then often inserted at the end of the file rather than at the cursor.
+
+Can you confirm the same behaviour on your setup?
+
+Norman Iscove   iscove@oci.utoronto.ca
+
+
+From Roland.Jesse@Student.Uni-Magdeburg.DE Wed Jan 18 14:24 MEZ 1995
+Received: from dfnserv1.urz.TU-Magdeburg.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA06968; Wed, 18 Jan 1995 14:24:28 +0100
+Return-Path: <Roland.Jesse@Student.Uni-Magdeburg.DE>
+Received: from mus.URZ.Uni-Magdeburg.DE by dfnserv1.urz.tu-magdeburg.de 
+          with Local SMTP (PP) id <11112-0@dfnserv1.urz.tu-magdeburg.de>;
+          Wed, 18 Jan 1995 14:29:33 +0100
+Received: by mus.urz.uni-magdeburg.de (AIX 3.2/UCB 5.64/4.03) id AA18755;
+          Wed, 18 Jan 1995 14:29:26 +0100
+Date: Wed, 18 Jan 1995 14:26:37 +0100 (NFT)
+From: Roland Jesse <Roland.Jesse@Student.Uni-Magdeburg.DE>
+Subject: XDME Bug Report
+To: digulla@rz-uxazs.fh-konstanz.de
+Message-Id: <Pine.3.87.9501181437.A28157-0100000@mus.urz.uni-magdeburg.de>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Status: RO
+
+    Name    :	Roland Jesse
+    EMail   :	jesse@student.uni-magdeburg.de
+    Version :	XDME V1.83pl13 (laut Archivnamen & Versions-String: V1.84)
+    Config. :	A500, 68000, no FPU/MMU, 1Chip- 4Fast-RAM, 1 HD,
+		KS 2.04 (37.175), WB 38.24
+    Bug 1   :	kein wirklicher Bug - nur so eine Anmerkung nebenbei ;-)
+		XDME ist zu langsam. Bei Version machte sich das mit einem
+		Flimmern der Titelleiste bemerkbar. Jetzt (V1.84) ist das zwar
+		wech, aber der Start des Editors dauert dafuer unertraeglich
+		lang. Ich habe das Gefuehl, als ob das an der Analyse des
+		.edrc_user - Files liegt, selbst wenn dieses leer ist, vergeht
+		ein Haufen Zeit, bis der XDME auch Text entgegennimmt.
+
+    Bug 2   :	Wenn das Fenster vom XDME mittels Mausklick neu aktiviert
+		wird, so ist noch ein zweites mal hineinzuklicken, damit auch
+		der Cursor wirklich erscheint - sehr laestig...
+
+    Bug 3   :	Bei eingeschaltetem `Automatic splitting' landet der Cursor
+		nach dem Sprung in die naechste Zeile immer am Zeilenanfang,
+		ob nun `Automatic indenting' eingeschaltet ist, oder nicht...
+
+    Bug 4   :	Auch kein Bug - nur wieder eine Anmerkung...
+		Die Anleitung ("XDME.doc") lag auch schon mal als DVI-File
+		bei (war, glaube ich zu Version 1.82), warum ist das Teil
+		nicht mehr da?
+		Die Anleitung (immer noch "XDME.doc") behauptet, uebrigends
+		genau wie die "Contents"-Datei, das es sich bei dem
+		vorliegenden Archiv um das vom XDME V1.54 handelt - muss doch
+		nicht sein, oder?
+		In der Anleitung (und im "README"-File) steht bei der Adresse
+		ausserdem noch die alte PLZ - Nostalgie ist ja was feines,
+		aber das kann man IMHO auch anders ausleben...
+
+Das wars dann (fuer dieses mal ;-)) soweit. Auf das der beste Editor noch
+besser wird...
+
+
+
+			=RJ=
+
+
+
+
+From iscove@oci.utoronto.ca Sun Jan 15 00:23 MEZ 1995
+Received: from euler.utirc.utoronto.ca by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA26439; Sun, 15 Jan 1995 00:23:16 +0100
+Return-Path: <iscove@oci.utoronto.ca>
+Received: from crick by oci.utoronto.ca (4.1/SMI-4.1)
+	id AA27465; Sat, 14 Jan 95 18:29:02 EST
+Date: Sat, 14 Jan 1995 18:29:00 -0500 (EST)
+From: Norman Iscove <iscove@oci.utoronto.ca>
+X-Sender: iscove@crick
+To: digulla@rz-uxazs.fh-konstanz.de
+Subject: Re: XDME184
+In-Reply-To: <Pine.SUN.3.90.950112185727.22033A-100000@crick>
+Message-Id: <Pine.SUN.3.90.950114182726.26035C-100000@crick>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Status: RO
+
+Aaron -
+
+It seems that the following works properly:
+    map A-v (ping 0 pong 0 insfile T:xdme_clip)
+
+while the following will not reliably insert at the cursor:
+    map A-v (insfile T:xdme_clip)
+
+Well, at least I have found a solution for now.
+
+
+Norman Iscove  iscove@oci.utoronto.ca
+

@@ -1,0 +1,1112 @@
+From utoddl@guitar.oit.unc.edu Tue Aug 30 18:01 MES 1994
+Received: from reggae.ncren.net by rz-uxazs.fh-konstanz.de with SMTP
+	(1.37.109.4/BelWue-1.0HP) id AA02631; Tue, 30 Aug 94 18:01:03 +0200
+Return-Path: <utoddl@guitar.oit.unc.edu>
+Received: from guitar.oit.unc.edu by reggae.ncren.net (5.65/tas-reggae/may94)
+	id AA29317; Tue, 30 Aug 94 12:03:02 -0400
+Received: by guitar.oit.unc.edu (NeXT-1.0 (From Sendmail 5.52)/TAS/11-16-88)
+	id AA07077; Tue, 30 Aug 94 11:02:02 GMT-0500
+Date: Tue, 30 Aug 94 11:02:02 GMT-0500
+From: Todd M. Lewis <utoddl@guitar.oit.unc.edu>
+Message-Id: <9408301602.AA07077@guitar.oit.unc.edu>
+Received: by NeXT Mailer (1.63)
+To: Aaron Digulla <digulla@rz-uxazs.fh-konstanz.de>
+Subject: Block operations in XDME
+Cc: utoddl@guitar.oit.unc.edu
+Status: RO
+
+>I would _never_ hinder anyone to improve XDME. That is the main reason
+>why I give the source with it. If I thought "This is all mine, move
+>you stinking fingers away!", I would not do it :-) So if you want,
+>write it. If you want others to share your improvements, send them to
+>me, and I'll see what I can do with them. ANY work will be appreciated !
+
+Now look what you've done.  I've actually started writing code to
+implement block operations on the other types of blocks.  Like
+I don't have anything better to do than that.  :-)
+
+Ok, about vertical blocks:  How do you want the inserts to work?
+To use the images from before for example, if we copy the block of
+'b's to where the '+'s are what do we get?
+
+    old:
+      Useful informative text before the table
+       ------- ------- ------  -- bbbbbbb
+       ------- +++++++ ------- -- bbbbbbb
+       ------- wwwwwww ------- ----------
+       ------- xxxxxxx ------- ------- --
+       -------  2345   ------- ------- --
+       ------- zzzzzzz ------- ------- --
+      More useful informative text after the
+      table which we really don't want to
+      screw up with block operations above.
+
+What will we end up with in this case?
+
+By the way, at this point I have all the hooks in to support
+horizontal blocks--that is to say horizontal blocks are now
+supported to the same extent that vertical blocks were
+supported in 1.83.08.
+
+One more question: How does that numbering scheme work?
+I mean why 1.83.08?  Why not 94.8.30 or something else?
+Just curious?
+
+One more one more question: Suppose I get this block
+stuff working nicely?  How would you like to get the 
+
+changes?  I could bundle just the files I've changed
+and include a 'diff' listing if that would help.
+I don't know what my time table is on this stuff, but
+it shouldn't take a lot of coding time.  It may take
+a while to _get_ the coding time it will take though.
+I hope to have something to show you in a week or two.
+
+Later,
+---
+Todd_Lewis@unc.edu   ASDF - Amiga Software Developers Forum
+               "Where the Pizza Meets the Code"
+
+From sarel@hacktic.nl Thu Jul 14 20:06 MES 1994
+Received: from xs4all.hacktic.nl by rz-uxazs.fh-konstanz.de with SMTP
+	(1.37.109.4/BelWue-1.0HP) id AA23204; Thu, 14 Jul 94 20:06:04 +0200
+Return-Path: <sarel@hacktic.nl>
+Received: by xs4all.hacktic.nl id AA24002
+  (5.67b/IDA-1.5 for digulla@rz-uxazs.fh-konstanz.de); Thu, 14 Jul 1994 20:08:42 +0200
+Date: Thu, 14 Jul 1994 20:08:42 +0200
+From: sarel <sarel@hacktic.nl>
+Message-Id: <199407141808.AA24002@xs4all.hacktic.nl>
+To: digulla@rz-uxazs.fh-konstanz.de
+Subject: XDME update
+Status: RO
+
+Hello Aaron,
+ 
+I regrettably send you the wrong message. I hope you will not be too
+upset about that. This is the text you should have received:
+ 
+ 
+Hello Aaron,
+ 
+I like the program XDME a lot. I am sure I will make it my favourite
+text writer. I now have Version 1.54. The nice thing about this editor
+is that it is fully and indeed fully programmable.
+ 
+But alas there is always more to hope for. One thing that bothers me
+is that I have to start from a deep-down directory and read the
+project_file from that directory only. I wanted to make a click-and-run
+environment for my Aztec compiler. But now I have to wade through a lot
+of sub-directories to start XDME. Is it possible to save a project at a
+fixed place and on later startup read it from there? From within XDME
+I do not see a way to solve the problem and Arexx and 'select ...' don't
+seem to work together.
+ 
+I hope you will send me your latest update, if you changed the rules
+please let me know.
+ 
+You can send E-Mail to me at sarel@xs4all.hacktic.nl
+ 
+Freindly greetings,
+ 
+Frank.
+file from that directory and not from one central place. I wanted 
+to make a TurboPascal like environment for my AzteC compiler. To start 
+building my projects with just a click from Workbench. From within XDME
+I see no solution and Arexx end the select command don't work. My
+suggestion
+
+
+:
+
+make a command like projectload file-name.
+
+I hope you will send me the latest update of your program.
+
+You can send it to 'sarel@xs4all.hacktic.nl'.
+
+Thank you,
+
+Frank.
+
+From utoddl@guitar.oit.unc.edu Tue Sep 13 16:17 MES 1994
+Received: from reggae.ncren.net by rz-uxazs.fh-konstanz.de with SMTP
+	(1.37.109.4/BelWue-1.0HP) id AA03176; Tue, 13 Sep 94 16:17:11 +0200
+Return-Path: <utoddl@guitar.oit.unc.edu>
+Received: from guitar.oit.unc.edu by reggae.ncren.net (5.65/tas-reggae/may94)
+	id AA22465; Tue, 13 Sep 94 10:19:36 -0400
+Received: by guitar.oit.unc.edu (NeXT-1.0 (From Sendmail 5.52)/TAS/11-16-88)
+	id AA00865; Tue, 13 Sep 94 09:17:43 GMT-0500
+Date: Tue, 13 Sep 94 09:17:43 GMT-0500
+From: Todd M. Lewis <utoddl@guitar.oit.unc.edu>
+Message-Id: <9409131417.AA00865@guitar.oit.unc.edu>
+Received: by NeXT Mailer (1.63)
+To: Aaron Digulla <digulla@rz-uxazs.fh-konstanz.de>
+Subject: Re: XDME_1.83pl10_src.lha
+Cc: utoddl@guitar.oit.unc.edu
+Status: RO
+
+After reviewing which files include which other files, I have
+determined that the proper place for the #defines are as follows: 
+
+
+include/defs.h
+   #ifndef BLOCK_C
+   #   define NOT_BLOCK_C_CONST const
+   #else
+   #   define NOT_BLOCK_C_CONST
+   #endif
+
+src/block.c
+   ...
+   #define BLOCK_C 1
+   ...
+   #include "whatever (didn't write that part down).h"
+   ...
+   Prototype NOT_BLOCK_C_CONST Block ActualBlock;
+   Block ActualBlock = { NULL, BT_NONE, ...whatever
+
+I tried this last night and it works well.  The compiler behaves as it
+should and refuses to compile modules other than block.c which try to
+change fields in ActualBlock.  All the functions I had been using to
+read fields in ActualBlock have been changed back to references, and
+the code is beautiful and clean again. 
+
+
+I highly recommend this technique for other modules with global
+visible data with semantics which need to be controlled.
+
+A couple of other functions that have proven quite handy:
+  Column block_leftcolumn( Line line) and
+  Column block_rightcolumn(Line line)
+They return the left- or right-most column the block covers
+on the given line, or -1 if the block does not extend to that line.
+
+By the way, I hadn't mentioned this before--being stuck in the
+U.S. where one has to go out of his way to notice there are languages
+besides English--but I really do appreciate your using english for
+documentation and comments (and e-mail).  Your command of the
+language (at least written) is good to the extent that I wouldn't be
+surprised if it were your native language.  After looking over
+src/hrexx.c I'm convinced that I couldn't begin to collaborate with
+you on XDME without your skill in my language.  Thanks.
+
+Where exactly is "fh-konstanz.de" anyway?  I mean, what city?
+Just curious really--I was trying to find you on a map...
+=============
+
+On a lighter note: I'm thinking of translating XDME to the language
+called C+-.  Here's a brief description of C+- passed on to me from
+a friend.  Enjoy...
+
+
+C+-
+(pronounced "C more or less")
+
+Unlike C++, C+- is a subject oriented language.  Each C+- class
+instance known as a subject, holds hidden members, known as
+prejudices or undeclared preferences, which are impervious to
+outside messages, as well as public members known as boasts or
+claims.  The following C operators are overridden as shown: 
+
+
+>       better than
+<       worse than
+>>      much better than
+<<      forget it
+!       not on your life
+==      comparable, other things being equal.
+
+C+- is a strongly typed language based on stereotyping and
+self-righteous logic.  The Boolean variables TRUE and FALSE (known
+as constants in less realistic languages) are supplemented with
+CREDIBLE and DUBIOUS, which are fuzzier than Zadeh's traditional
+fuzzy categories.  All Booleans can be declared with the modifiers
+strong and weak.  Weak implication is said to "preserve deniability"
+and was added at the request of the D.O.D. to ensure compatability
+with future versions of Ada. Well-formed falsehoods (WFFs) are
+assignment-compatible with all Booleans. What-if and why-not
+interactions are aided by the special conditional evenifnot X then Y.  
+
+
+C+- supports information hiding and, among friend classes only,
+rumor sharing.  Borrowing from the Eiffel lexicon, non-friend
+classes can be killed by arranging contracts.  Note that friendships
+are intransitive, volatile, and non-Abelian. 
+
+
+Single and multiple inheritance mechanisms are implemented with
+random mutations.  Disinheritance rules are covered by a complex
+probate protocol. In addition to base, derrived, virtual, and
+abstract classes, C+- supports gut classes.  In certian locales,
+polygamous derivations and bastard classes are permitted.
+Elsewhere, loose coupling between classes is illegal, so the
+marriage and divorce operators may be needed: 
+
+
+marriage (MParent1, FParent1);
+// child classes can now be derrived
+sclass MySclass: public MParent1, FParent1
+{       //  define MySclass
+
+sclass YourSclass: public MParent1, FParent2
+// illegitimate
+
+divorce (MParent1, FParent1);
+
+marriage (MParent1, FParent2);
+sclass YourSclass: public MParent1, FParent2
+{  //  OK now
+
+Operator precedence rules can be suspended with the directive
+#pragma  dwim, known as the "Do what I mean" pragma.  ANSIfication will
+be firmly resisted. C+-'s slogan is "Be Your Own Standard." 
+
+
+From fdnh@troi.cc.rochester.edu Sun Oct 30 02:11 MEZ 1994
+Received: from troi.cc.rochester.edu by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA13716; Sun, 30 Oct 1994 02:11:39 +0100
+Return-Path: <fdnh@troi.cc.rochester.edu>
+Received: (fdnh@localhost) by troi.cc.rochester.edu (8.6.9/8.6.4) id VAA23843; Sat, 29 Oct 1994 21:15:48 -0400
+Date: Sat, 29 Oct 1994 21:15:48 -0400
+From: Fergus Duniho <fdnh@troi.cc.rochester.edu>
+Message-Id: <199410300115.VAA23843@troi.cc.rochester.edu>
+To: digulla@rz-uxazs.fh-konstanz.de
+Cc: q99460@pbhrzx.uni-paderborn.de, d1mag@dtek.chalmers.se,
+        gorski@sun.ph-cip.uni-koeln.de, turtiain@lut.fi,
+        b_noll@informatik.uni-kl.de, inrk@verleihnix.rz.tu-clausthal.de,
+        radtechy@cats.ucsc.edu, V.MOERKE@amtrash.comlink.de,
+        Dirk.Heckmann@rus.uni-stuttgart.de, PETZOLD@satan.vmsmail.ethz.ch,
+        Oliver.Hofmann@rus.uni-stuttgart.de,
+        andreash@pool.informatik.rwth-aachen.de,
+        bublath@kirk.fmi.uni-passau.de, Todd_Lewis@unc.edu,
+        myersl@u.washington.edu, al@pool.informatik.rwth-aachen.de,
+        schwingel@rrzc1.rz.uni-regensburg.de, roidl@rrzc1.rz.uni-regensburg.de,
+        rzuw039@sun.rz.uni-wuerzburg.de, mbs@adastra.cvl.va.us
+Subject: XDMD v1.00
+Status: RO
+
+	I have just uploaded version 1.00 of XDMD to the aminet.  It
+should appear as util/rexx/xdmd1.lha.  XDMD stands for "XDME Macros by
+Duniho."  It is the successor to DMD, which I last released a couple
+years ago.  XDMD does for XDME what DMD did for DME, and it does a lot
+more.  XDMD is an integrated system of macros, menus, keymappings,
+ARexx scripts, and programs that together make XDME much more powerful
+that it is by itself.  Its features include spell checking, outlining,
+localized major modes, automatic mode selection upon loading, various
+Emacs-like keymappings, region and rectangle editing a la Emacs, xpk
+support, diary maintenance, pagination, many requesters, a "Windows"
+menu that keeps track of each open file, and many other features.  I
+hope that XDMD will give the authors of XDME a better feel for its
+capabilities and limitations.  And I hope it will inspire further
+development of XDME.
+
+Fergus Duniho, Philosophy Dept., University of Rochester, NY, USA
+INTP, 5w4  | ftp ftp.wustl.edu for /pub/aminet/misc/misc/ddli341.lha
+Amiga 3000 | or oak.oakland.edu for /SimTel/msdos/educatin/ddli341.zip
+"He that lives on hope will die fasting."  -- Benjamin Franklin
+
+
+
+
+From fdnh@troi.cc.rochester.edu Sun Oct 30 19:28 MEZ 1994
+Received: from troi.cc.rochester.edu by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA21536; Sun, 30 Oct 1994 19:28:21 +0100
+Return-Path: <fdnh@troi.cc.rochester.edu>
+Received: (fdnh@localhost) by troi.cc.rochester.edu (8.6.9/8.6.4) id NAA13507; Sun, 30 Oct 1994 13:32:57 -0500
+Date: Sun, 30 Oct 1994 13:32:57 -0500
+From: Fergus Duniho <fdnh@troi.cc.rochester.edu>
+Message-Id: <199410301832.NAA13507@troi.cc.rochester.edu>
+To: digulla@rz-uxazs.fh-konstanz.de
+Cc: fdnh@troi.cc.rochester.edu
+In-Reply-To: <199410301330.AA20504@noc.BelWue.DE> (digulla@fh-konstanz.de)
+Subject: Re: XDMD v1.00
+Status: RO
+
+On Sun, 30 Oct 94 14:25:23 MEZ
+Aaron "Optimizer" Digulla <digulla@fh-konstanz.de> wrote:
+AD> Thanks for your work, dude ! If the archive is not too big, I will
+AD> include it into the main XDME-bin distribution (else, I will put
+AD> an advertisement into XDME's docs :)
+
+	Well, the archive contains a humongous dictionary that makes
+it fairly large.  But if you remove the dictionary, the rest isn't
+very large at all.  So I would recommend including it without the
+dictionary. 
+
+AD> If you need any enhancements to make XDME suit your needs better,
+AD> just ask :)
+
+	I do have some suggestions.  Here they are off the top of my
+head.  Some of these may be different ways around the same problems.  
+
+* A flag for "if" and "while" which indicates whether there is a block
+* at all.
+
+* Make "goto block," "goto start," and "goto end" go nowhere when
+* there is no block.
+
+* Make "bmove," "bcopy," and "bdelete" work with all blocks.
+
+* Make "bsave," "barpsave," and "bappendsave" work properly with
+* character blocks and vertical blocks, i.e. make them save only the
+* text that is actually blocked.
+
+* Make blocktype local.
+
+* A couple flags for "if" that indicate whether the blocktype is line
+* and whether it is character.  These could be used like I currently
+* use toggles 5 and 6 with my "block-type?" macro.
+
+* A flag for "if" and "while" that indicates whether the cursor is at
+* the first non-blank in a line.
+
+* Commands that do what my "spaces" and "string" macros do, since they
+* are a bit slow.  
+
+* Expand scanf, such that if you put a "-" before an argument, you
+* will get everything to the left.  For example, "-w" would give you
+* what "+w" gives you minus what "w" gives you.
+
+* Give the option of regularly refreshing the screen, like XDME used
+* to do.  This is for the sake of using requesters, such as a spell
+* checking requester, that stay up for a while.  The way it currently
+* works, there is a blank area left behind when I move a requester.
+
+* Make wordwrap and "reformat" use a fill-prefix like the filling
+* commands in Emacs do.
+
+* Add array capability.
+
+* Make "select window=" work with complete file names, or let it work
+* with aliases for window names.  Currently, my "Windows" menu doesn't
+* work well with two files from different directories that have the
+* same name.
+
+	That's it for now.  Maybe I'll think of other things another
+time.  I hope you appreciate these suggestions and aren't sorry you
+asked.  :)
+
+Fergus Duniho, Philosophy Dept., University of Rochester, NY, USA
+INTP, 5w4  | ftp ftp.wustl.edu for /pub/aminet/misc/misc/ddli341.lha
+Amiga 3000 | or oak.oakland.edu for /SimTel/msdos/educatin/ddli341.zip
+"He that lives on hope will die fasting."  -- Benjamin Franklin
+
+
+
+
+From fdnh@troi.cc.rochester.edu Mon Oct 31 20:58 MEZ 1994
+Received: from troi.cc.rochester.edu by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA13362; Mon, 31 Oct 1994 20:58:05 +0100
+Return-Path: <fdnh@troi.cc.rochester.edu>
+Received: (fdnh@localhost) by troi.cc.rochester.edu (8.6.9/8.6.4) id PAA27331; Mon, 31 Oct 1994 15:02:35 -0500
+Date: Mon, 31 Oct 1994 15:02:35 -0500
+From: Fergus Duniho <fdnh@troi.cc.rochester.edu>
+Message-Id: <199410312002.PAA27331@troi.cc.rochester.edu>
+To: digulla@rz-uxazs.fh-konstanz.de
+In-Reply-To: <199410310745.AA12897@noc.BelWue.DE> (digulla@fh-konstanz.de)
+Subject: Re: XDMD v1.00
+Status: RO
+
+On Mon, 31 Oct 94 8:40:38 MEZ
+Aaron "Optimizer" Digulla <digulla@fh-konstanz.de> wrote:
+
+AD> > * A flag for "if" and "while" which indicates whether there is a
+AD> > * block at all.
+AD> 
+AD> if bl ... ?
+
+	I was about to say that's as good as anything, but then I
+recalled that "bl" is more appropriate for another flag I suggested
+later on.  I was thinking of "bl" and "bc" for the flags that indicate
+whether the blocktype is line and whether it is character.  Perhaps a
+"bv" as well, just to round things out.  Perhaps "bm" for "Block
+Marked" will do.
+
+AD> > * Add array capability.
+AD> 
+AD> Be a bit more specific here, please.
+
+	OK.  I am thinking of variables that could be accessed by a
+numeric index.  They might look like this: var[1], v[6], etc.  Here is
+a sample line of code that shows how they might work:
+
+(set a 3 set v[3] (DOS ist goot) insert v[\$a])
+
+	This line of code would insert into the text the string "DOS
+ist goot".  What would also be helpful with arrays is a command,
+perhaps called arrayload, which loads a file into an array instead of
+into a window.  It would take an arrayname as an argument, and it
+would load the first line into the first member of the array, the
+second into the second, etc.  It would also return the size, perhaps
+in the zeroeth member of the array.
+
+	This sort of capability would be useful with AlphaSpell, which
+generates a list of misspelled words.  I may experiment with lists and
+stacks to see if I can get a similar effect.  I want to be able to
+store all the misspelled words and retrieve them one-by-one without
+keeping an ARexx script running.  Lists might not work, because as I
+implemented them, they are long strings, and there is a limit to the
+string size.  But a couple variable stacks might do the job.  Arrays
+might not be so necessary after all.  I think I now know how to (sort
+of) simulate an array with a couple variable stacks.  So you can make
+this low priority if it isn't a simple thing to implement.
+
+AD> > That's it for now.  Maybe I'll think of other things another
+AD> > time.  I hope you appreciate these suggestions and aren't sorry
+AD> > you asked.  :)
+AD> 
+AD> NEVER ! For me, it always gives me valuable hints how I can
+AD> improve XDME.  
+
+AD> I _always_ appreciate any comments ! :)
+
+	That's great.  I like your attitude.  I'm sure more will come. 
+
+Fergus Duniho, Philosophy Dept., University of Rochester, NY, USA
+INTP, 5w4  | ftp ftp.wustl.edu for /pub/aminet/misc/misc/ddli341.lha
+Amiga 3000 | or oak.oakland.edu for /SimTel/msdos/educatin/ddli341.zip
+"He that lives on hope will die fasting."  -- Benjamin Franklin
+
+
+
+
+From <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de> Fri Nov  4 16:17 MEZ 1994
+Received: from stepsun.uni-kl.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA22745; Fri, 4 Nov 1994 16:17:15 +0100
+Return-Path: <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de>
+Received: from sun.rhrk.uni-kl.de by stepsun.uni-kl.de id aa13427;
+          4 Nov 94 16:21 MET
+Received: from stepsun.uni-kl.de by sun.rhrk.uni-kl.de id aa16606;
+          4 Nov 94 16:20 MET
+Received: from uklirb.informatik.uni-kl.de by stepsun.uni-kl.de id ab13418;
+          4 Nov 94 16:21 MET
+Received: from poker.informatik.uni-kl.de by uklirb.informatik.uni-kl.de
+          id ab08066; 4 Nov 94 16:15 MET
+Date:     Fri, 4 Nov 94 16:13:57 MET
+From: /// <b_noll@informatik.uni-kl.de>
+Subject:  HI!
+To: digulla <@sun.rhrk.uni-kl.de:digulla@fh-konstanz.de>
+Message-Id:  <9411041613.aa17499@poker.informatik.uni-kl.de>
+Status: RO
+
+
+Hi!
+
+Wie weit bist Du mit der Dipl.Arbeit? Schon abgegeben?
+
+Wenn nicht, weiterhin viel Erfolg ;-)
+
+Wenn ja...
+
+* hast Du schon ueberlegt wann wir/Du mit der Umsetzung
+  des XDME beginnen/-st?
+  Wenn es noch eine laengere Zeit dauert, werde
+  ich naemlich damit beginnen an den Zentralen Funktionen des
+  XDME noch ein wenig rumzupfuschen (main, do_command, error,
+  text[un]init) und dort die bisherige Loesung (Spaghetti) durch
+  eine automatisierte Loesung (machine generated Spaghetti) wie
+  bei gen_spc zu ersetzen und so ein wenig mehr Modularisierung
+  zu erreichen ...
+  (wir haben z.Zt 5 Kommando Trees: command, makro, key,
+  menu, arexx, 5 SigHandler: ctl-c, Arexx, AppIcon, CmdSh und
+  Intuition, 3 Ausgaebemedien: CmdSh, Requestor, Log und bei
+  dem Oeffnen/Loeschen von Projekten muessen auch schon mehrere
+  Module benachrichtigt werden (z.B. Vars fuer TextVars, Cmd fuer
+  Stack, demnaechst von VarStack ...)
+
+* Wollte Bescheid gesagt haben, dass ich von den YADME Sources
+  das REQREPLACE Kommando adaptiert und fuer einige andere
+  Kommandos (sofern moeglich) Simulationsmakros gebastelt habe.
+  (Word-blocks latuernich genausowenig wie Processwnd)
+
+* Hatte hier einen Bugreport mit Keymappings ...
+  Das Problem liess sich auf keinen Fehler im Pgm
+  zurueckfuehren, sondern:
+
+    in 'XDME/s/.edrc' verwendest Du Menushortcuts case sensitiv;
+    das geht in die Hose, da die Menu-shortcuts nicht von uns,
+    sondern von Intuition ausgewertet werden, und Intuition sie
+    case _IN_sensitiv interpretiert ...
+    Da dieses .edrc File den Leuten auch als Example dient, sollten
+    wir das besser beseitigen ...
+
+* Koennen wir dem REQFONT Kommando noch ein paar Parameter geben?
+  (wir verfuegen neuerdings ueber mindestens 2 Fonts:
+   MENUFONT und TEXTFONT; und ich halte es daher fuer sinnvoll,
+   einen variablen FontRequester zur Verfuegung zu stellen ...
+
+* Nein ich habe an den Oberontexten nix weiter gemacht ausser einer
+  rudimentaeren Speicherverwaltung mit Read & Write in C und einem
+  rudimentaeren Insert/Delete ... (wieso heisst das Archiv eingentlich
+  xdme_3_ ?????), dafuer ein paar ungeloeste konzeptionelle Fragen:
+
+  - Wenn ein neues Segment eingebaut wird, um Attribute zu aendern,
+    anzupassen, so bekommen wir bei der Filerepraesentation Inkonsistenzen
+    zwischen der Dateilaenge im RAM und der Dateilaenge auf Disk ...
+    da Du alle Zugriffe aber ueber Offset realisiert hast, kann das zu
+    echten Verwirrungen fuehren ...
+    wir muessten in diesem Augenblick dem Segment n PseudoChars mehr
+    zuordnen, die nicht im Text ersheinen, sondern nur die Umschaltsymbole
+    repraesentieren - ehrlich gesagt klingt das nicht gut...
+    Analog koennte man den Gedaken weitersinnen bei eingebundenen Bldern ...
+    der Cursor sitzt direkt vor einem Icon, der Benutzer drueckt DELETE -
+    nun muesste eigentlich das Bild geloescht werden, aber dann muss
+    das Icon-Segment ebenfalls eine Pseudogroesse von einem Character haben ...
+
+  - Waere es nicht etwas sinnvoller anstatt reinen Offset Cursorn
+    ebenfalls Zeile/Spalte mitzuziehen? das sind Angaben, die imho
+    staendig verfuegbar sein sollten; und es ist m.E. nicht so gut,
+    wenn wir diese Werte nach jeder Aktion neu berechnen lassen,
+    wenn wir sie auch waehrend der Textaenderungen updaten koennten ...
+
+  - Soll im Zuge der Umstellung nach Oberontexten eigentlich die
+    Moeglichkeit bestehen bleiben, dass der Cursor _hinter_ das
+    Zeilenende bewegt wird?
+    (dann stellt sich die Frage, ob das von der Applikation oder
+    der Textverwaltung gemacht wird - ich bin der Meinung, dass es
+    in die Text/Cursorverwaltung hineingehoert ...(aber da koennten
+    unsere Meinungen ebenso divergieren wie bei Wortbloecken))
+
+* Menues koennten nun auch mit einem anderen Font gerendert werden
+  (es fehlt aber noch die Moeglichkeit, ihn zu setzen ...)
+
+* In VarStack habe ich nun eine Cleanuproutine, die bei text_uninit()
+  angesprungen werden kann, sie ist aber noch nicht enabled ...
+
+mfG "0"
+
+
+
+From fdnh@troi.cc.rochester.edu Sat Nov  5 20:50 MEZ 1994
+Received: from troi.cc.rochester.edu by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA14246; Sat, 5 Nov 1994 20:50:01 +0100
+Return-Path: <fdnh@troi.cc.rochester.edu>
+Received: (fdnh@localhost) by troi.cc.rochester.edu (8.6.9/8.6.4) id OAA03176; Sat, 5 Nov 1994 14:54:45 -0500
+Date: Sat, 5 Nov 1994 14:54:45 -0500
+From: Fergus Duniho <fdnh@troi.cc.rochester.edu>
+Message-Id: <199411051954.OAA03176@troi.cc.rochester.edu>
+To: digulla@rz-uxazs.fh-konstanz.de
+In-Reply-To: <199411041848.AA18139@noc.BelWue.DE> (digulla@fh-konstanz.de)
+Subject: Some more suggestions for improving XDME
+Status: RO
+
+	Hi Aaron,
+
+	Here are some more suggestions for improving XDME:
+
+* A whole word search mode.  This would be useful for spell-checking,
+* for searching for short words, and for special macros that need to
+* find a particular word for some reason.  
+
+* A special flag that indicates whether the last command failed.  This
+* could be set by the force command, since "force f" is required for a
+* macro to continue after a command fails.  This flag would be useful
+* for taking different action in case of a failure.
+
+* An ANSI display mode, since no ANSI editor comes close to having the
+* power of XDME.  Ideally, reformat and wordwrap would ignore ANSI
+* codes in this mode, so that lines with ANSI codes wouldn't be
+* prematurely cut off.
+
+On Fri, 4 Nov 94 19:42:16 MEZ
+Aaron "Optimizer" Digulla <digulla@fh-konstanz.de> wrote:
+
+AD> > On Tue, 1 Nov 94 16:15:36 MEZ
+AD> > AD> Well, to preserve compatability, I can't change the name :( So it
+AD> > AD> has to stay BL...
+AD> >	How about "ln", "ch", and "vt" for the blocktypes?
+AD> 
+AD> Hmm... I prefer the "if BT=L/C/N/V..."-way :)
+
+	I didn't think of that.  That's a nice, intuitive way of doing
+it.  Do C and N mean the same thing?  I've noticed that the titlebar
+has an N in it when I select the character blocktype.  What does "N"
+stand for?
+
+AD> Cool :) I'm impressed what can be done with XDME... in fact, you
+AD> could name the variable var[4], since [] are no special characters
+AD> for XDME !
+
+	I haven't tried that, but I'm not so sure that it would work.
+There are some limitations to what you can do with inline ARexx
+scripts, i.e. one-line scripts that get put in .edrc.  For example, I
+tried to write one that would indicate whether an array member
+existed, by returning the value of $(?arrayn), but it wouldn't work.
+
+AD> Or have you ever tried "source con:" ?
+
+	I did after you mentioned it here.  It's impressive, but
+opencmdshell sort of undercuts how impressive it is.
+
+Fergus Duniho, Philosophy Dept., University of Rochester, NY, USA
+INTP, 5w4  | ftp ftp.wustl.edu for /pub/aminet/misc/misc/ddli341.lha
+Amiga 3000 | or oak.oakland.edu for /SimTel/msdos/educatin/ddli341.zip
+"He that lives on hope will die fasting."  -- Benjamin Franklin
+
+
+
+
+From fdnh@troi.cc.rochester.edu Wed Nov  9 05:22 MEZ 1994
+Received: from troi.cc.rochester.edu by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA10362; Wed, 9 Nov 1994 05:22:15 +0100
+Return-Path: <fdnh@troi.cc.rochester.edu>
+Received: (fdnh@localhost) by troi.cc.rochester.edu (8.6.9/8.6.4) id XAA23076; Tue, 8 Nov 1994 23:27:03 -0500
+Date: Tue, 8 Nov 1994 23:27:03 -0500
+From: Fergus Duniho <fdnh@troi.cc.rochester.edu>
+Message-Id: <199411090427.XAA23076@troi.cc.rochester.edu>
+To: digulla@rz-uxazs.fh-konstanz.de
+Subject: Another idea for XDME
+Status: RO
+
+	Hi Aaron,
+
+	Here are a few more ideas for XDME.  I thought of the second
+two while writing the first one.
+
+* A command that executes a CLI command with the contents of the
+* current window as standard input?  It would be some sort of
+* combination of execute and saveold.
+
+* A command that executes a CLI command and loads the standard output
+* from the program into a window, replacing what is already there.
+
+* A command which does both.  It sends the window's current contents
+* to standard input and replaces it with the output from the program.
+
+	Here's another I just thought of:
+
+* A command like the second one, which just inserts the output from
+* the CLI program.
+
+	And another I just thought of while writing the preceding:
+
+* One like the first one, which works on blocks.  And one like the
+* third one, which works on blocks.
+
+	Perhaps some of these ideas could be combined into the same
+command.  Their main purpose would be to eliminate the need to write
+temporary files.  Uses would include sending a file to a
+spell-checker, automatic packing and unpacking of files during saving
+and loading, transforming a file or block in some way, etc.
+Basically, these are things that I already have XDME doing, but
+commands such as these would reduce the constraints caused by limited
+memory.  I wonder if anything could be done for programs that do not
+use standard input or output.
+
+From mk@bones.westfalen.de Tue Jan  3 00:40 MEZ 1995
+Received: from mail.Germany.EU.net by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA17142; Tue, 3 Jan 1995 00:40:06 +0100
+Return-Path: <mk@bones.westfalen.de>
+Received: by mail.Germany.EU.net with SMTP (8.6.5:29/EUnetD-2.5.1.c) via EUnet
+	id AAA13839; Tue, 3 Jan 1995 00:47:29 +0100
+Received: by ruhrgebiet.individual.net (/\==/\ Smail3.1.28.1 #28.1)
+	id <m0rOwDv-000wlkC@ruhrgebiet.individual.net>; Mon, 2 Jan 95 23:31 GMT
+Received: by muenster.westfalen.de (/\oo/\ Smail3.1.29.0 #29.3)
+	id <m0rOnLp-0001J3C@muenster.westfalen.de>; Mon, 2 Jan 95 15:03 MET
+Received: by bones.westfalen.de (UMSRFC 0.7);
+	Mon, 02 Jan 1995 14:44:25 +0100
+To: "Aaron "Optimizer" Digulla" <digulla@rz-uxazs.fh-konstanz.de>
+In-Reply-To: <199412311259.AA20059@noc.BelWue.DE>
+From: "Martin Koyro" <mk@bones.westfalen.de>
+Date: Mon, 02 Jan 1995 14:17:10 +0100
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+X-Mailer: IntuiNews 1.3 Beta 3 (13.12.94)
+Subject: Re: Eine Frage zu XDME
+Message-Id: <30331562@bones.westfalen.de>
+Status: RO
+
+Hallo Aaron!
+
+> Ich packe es in die TODO-liste :)
+> Aber versprechen kann ich es nicht, weil der XDME seine Texte nicht als
+> langen String verwaltet, sondern ihn zerteilt.
+
+Besten Dank!
+
+> Ausserdem werden ja die Leerzeichen am Ende entfernt, d.h. das 50. Byte in
+> der Datei ist nicht das 50. Zeichen im Text.
+
+Mit diesem "bekannten Fehler" könnte ich ohne Probleme Leben, dann wird der
+Text eben einmal abgespeichert und das Problem ist behoben.
+
+Tschau Martin
+
+
+From <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de> Thu Jan  5 15:49 MEZ 1995
+Received: from stepsun.uni-kl.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA14391; Thu, 5 Jan 1995 15:48:58 +0100
+Return-Path: <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de>
+Received: from sun.rhrk.uni-kl.de by stepsun.uni-kl.de id aa03868;
+          5 Jan 95 15:54 MET
+Received: from stepsun.uni-kl.de by sun.rhrk.uni-kl.de id aa06478;
+          5 Jan 95 15:53 MET
+Received: from uklirb.informatik.uni-kl.de by stepsun.uni-kl.de id ak03793;
+          5 Jan 95 15:54 MET
+Received: from poker.informatik.uni-kl.de by uklirb.informatik.uni-kl.de
+          id aa20131; 5 Jan 95 15:25 MET
+Date:     Thu, 5 Jan 95 15:18:07 MET
+From: /// <b_noll@informatik.uni-kl.de>
+Subject:  xdme v 1.84
+To: digulla <@sun.rhrk.uni-kl.de:digulla@fh-konstanz.de>
+Message-Id:  <9501051518.aa10227@poker.informatik.uni-kl.de>
+Status: RO
+
+Hi!
+
+XDME/
+
+    - mktags
+	kann raus - ist m.W. auch im SMakefile enthalten
+
+    - test
+	kann raus - oder ?
+
+
+XDME/Docs/
+
+    - 'History'
+	in xdme..._beta.lha war eine Datei 'XDME/Docs/History.0'
+	die ich verwendete, nachdem ich 'History' abgeschossen hatte
+	Es waere evtl. geschickt, die vor 'History' zu pasten.
+
+    - 'XDME.doc' 'README'
+	sollten in den Trashcan wandern - ich glaube nicht, dass die jemals
+	wieder aufgearbeitet werden.
+
+    - 'Contents' 'INSTALL'
+	sollten einmal ueberarbeitet werden
+	(e.g. NULL: wird doch nicht mehr benoetigt - oder?)
+
+    - 'HINTS'
+	1. warum erwaehnst Du nicht einfach 'nicepaging'
+	2. wie haben wir etwa _kein_ GLOBALSEARCH ?????
+
+XDME/Src/
+
+    - Kalle/* ist ja doch dringeblieben !?
+
+
+
+
+
+
+
+gRgzh - '0'!
+
+From eisbaer!bb.maus.de!s3.maus.de!Martin_Herrmann@aragon.bb.bawue.de Thu Jan  5 23:09 MEZ 1995
+Received: from aragon.bb.bawue.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA19515; Thu, 5 Jan 1995 23:09:02 +0100
+Return-Path: <eisbaer!bb.maus.de!s3.maus.de!Martin_Herrmann@aragon.bb.bawue.de>
+Received: from eisbaer by aragon.bb.bawue.de with uucp
+	(3.1.28.1/ESMTP/bind-4.8.3/ns.bb.bawue.de)
+	id m0rPzhi-001UPXC; Thu, 5 Jan 95 22:26 MET
+Received: from bb.maus.de by eisbaer.bb.bawue.de with uucp
+	(Smail3.1.28.1 #7) id m0rPbhQ-000TL9C; Wed, 4 Jan 95 20:48 MEZ
+Received: from Mausnet by UUCP via Mausgate; Wed, 04 Jan 95 19:35:16 GMT
+Message-Id: <P7332@S3.maus.de>
+From: Martin_Herrmann@s3.maus.de (Martin Herrmann)
+Subject: XDME:Fragen,Vorschlaege
+To: digulla@rz-uxazs.fh-konstanz.de
+Organization: MausNet (Mitglied im IN e.V.)
+Date: Sat, 31 Dec 94 12:17:00 GMT
+X-Gateway: MausGate/Mail 1.25/bb
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+Status: RO
+
+Hallo Aaron,
+
+vielen Dank fuer Deine Arbeit an dem wunderbaren XDME!!
+Ich benutze diesen Editor jetzt schon bestimmt ueber ein Jahr und bin sehr
+zufrieden, aber ein paar Vorschlaege haette ich trotzdem noch:
+
+1. Das Blockmarkieren mit der Maus sollte ueberarbeitet werden. Zur Zeit
+   benutze ich PowerSnap, falls ich einen Block kopieren will.
+2. Die Blockarten (Wort, Zeile, vertikaler Block) sollte automatisch
+   funktioneren. (Ist im CED sehr schoen geloest, ebenso wie das
+   Markieren.)
+3. Einige .edrc Files sollten beigelegt werden um den Usern so viele
+   Beispiele wie moeglich zur Verfuegung zu stellen.
+4. Vielleicht mach ich da nur etwas falsch, aber wenn ich ein File lade,
+   dann mit arpsave in einem anderen Pfad oder unter einem anderen Namen
+   abspeichere, dann editiere und diesmal mit saveold abspeichere, so wird
+   das Originalfile ueberschrieben.
+
+Um Dir gleich beim dritten Punkt unter die Arme zu greifen poste ich mein
+.edrc-File, es ist bestimmt nicht perfekt, entspricht aber einigermassen
+meinen Anforderungen. Falls Du Dich wirklich entschliesst mein .edrc zu
+Veroeffentlichen kann ich natuerlich entweder
+
+a) das .edrc-File selber zeilenweise dokumentieren, oder
+b) ein extra Dokumentent dazu schreiben.
+
+Ausserdem wuerde ich das ganze File nochmal ueberarbeiten (wenn ich mir das
+ganze so anschaue, siehr ja aus wie Kraut und Rueben ;).
+
+------------schnipp---------schnipp-----------schnipp---------
+
+set \$VER: (Martins XDME Konfigurationsfile V0.1)
+
+title (Konfiguration von Martins XDME läuft)
+
+unmap a-c
+unmap a-d
+unmap a-l
+unmap a-m
+unmap a-r
+unmap a-s
+unmap a-u
+unmap sa-s
+unmap A-p
+unmap caA-l
+
+map c-9 `(`') left'
+map c-8 ``()' left'
+
+menuoff
+menuclear
+
+map A-u     (newwindow arpload)
+map A-o      arpload
+map A-s      saveold
+map A-a     (set fname unnamed arpsave)
+map A-i      iconify
+map A-S     (saveold quit)
+map A-e      quit
+
+menuadd Projekt (Lösche)                (saveas t:xdme.temp newfile unnamed)
+menuadd Projekt (Projekt laden)         projectload
+menuadd Projekt (Neu...            A-u) (newwindow arpload)
+menuadd Projekt (Ikon & Neu...)         (iconify newwindow arpload)
+menuadd Projekt (Einfügen...)           arpinsfile
+menuadd Projekt (Öffne erneut)          (newfile $(fname))
+menuadd Projekt (Öffne...          A-o) arpload
+menubar Projekt
+menuadd Projekt (Speichern         A-s) saveold
+menuadd Projekt (Speichern als ... A-a) (set fname unnamed arpsave)
+menuadd Projekt (Speichern unter..    ) arpsave
+menuadd Projekt (Anhängen             ) appendsave
+menuadd Projekt (Speichern & Ikon     ) (saveold iconify)
+menuadd Projekt (Projekt speichern    )  projectsave
+menubar Projekt
+menuadd Projekt (Drucken              ) (push savetabs push modified savetabs
+off saveas prt: pop modified pop savetabs)
+menubar Projekt
+menuadd Projekt (Ikon              A-i) iconify
+menuadd Projekt (Speichern & Ende  A-S) (saveold quit)
+menuadd Projekt (ENDE              A-e) quit
+
+
+map A-f  (escimm (findstr `) next)
+map A-n   next
+map A-v   prev
+map A-ü   (top next)
+map A-d  (scanf %s find `\$scanf' right left)
+map A-r  (escimm (findstr ) escimm (repstr ) up next)
+map A-N  (ifelse !l left (up last) nextr next)
+map A-V  (prevr prev)
+map A-K   match
+
+menuadd Finde (Finde ...          A-f) (escimm (findstr () next)
+menuadd Finde (Finde Nächstes     A-n) next
+menuadd Finde (Finde Vorheriges   A-v) prev
+menuadd Finde (Suche überall      A-ü) (top next)
+menuadd Finde (Finde dieses       A-d) (scanf %s find `\$scanf' right left)
+menubar Finde
+menuadd Finde (Ersetze...         A-r) (escimm (findstr ) escimm (repstr ) up
+next)
+menuadd Finde (Ersetze Nächstes   A-N) (ifelse !l left (up last) nextr next)
+menuadd Finde (Ersetze Vorheriges A-V) (prevr prev)
+menuadd Finde (Ersetze bis Ende      ) (ifelse !l left `up last' repeat lbot
+nextr)
+menuadd Finde (Ersetze bis Anfang    ) (repeat line prevr)
+menuadd Finde (Ersetze dieses        ) (scanf %s escimm (repstr `) findstr
+`\$scanf' up nextr)
+menuadd Finde (Ersetze Alles         ) (push pos top repeat -1 nextr pop pos)
+menubar Finde
+menuadd Finde (Finde Klammer      A-K)  match
+menucheck Finde (Groß=Klein)  (ignorecase toggle)
+
+menusetcheck Finde (Groß=Klein) 1
+
+map A-m     block
+map A-b     bmove
+map A-k     bcopy
+map A-M     unblock
+map A-del  (bsave ram:xdmeblock bdelete)
+map sA-del (insfile ram:xdmeblock)
+map A-tab  (indent b .t)
+map sA-tab (indent b -.t)
+
+menuadd Block (Markieren        A-m)  block
+menuadd Block (Entferne Marken  A-M)  unblock
+menuadd Block (Bewegen          A-b)  bmove
+menuadd Block (Kopieren         A-k)  bcopy
+menuadd Block (Löschen        A-Del)  (bsave ram:xdmeblock bdelete)
+menuadd Block (Einsetzen     sA-Del)  (insfile ram:xdmeblock)
+menuadd Block (Drucken             )  (push savetabs savetabs off bsave par:
+pop savetabs)
+menuadd Block (Speichern als ...   )  barpsave
+menuadd Block (Einrücken      A-Tab)  (indent b .t)
+menuadd Block (Ausrücken     sA-Tab)  (indent b -.t)
+
+map aA-g    (tlate u right)
+map aA-k    (tlate l right)
+map sA-i    (insertmode toggle ifelse i (menusetcheck Format (Einfügen       
+sA-i) 1) (menusetcheck Format (Einfügen        sA-i) 0))
+map A-w     (wordwrap toggle toggle 1 ifelse 1 (menusetcheck Format (Blocksatz 
+      A-w) 1) (menusetcheck Format (Blocksatz        A-w) 0 ))
+map A-u undo
+map sA-f     reformat
+
+menucheck Format (Leer als Tabs) (savetabs toggle)
+menucheck Format (Einfügen        sA-i) (insertmode toggle)
+menucheck Format (Blocksatz        A-w) (wordwrap toggle toggle 1)
+menucheck Format (Umbruch) (autosplit toggle)
+menuadd Format (Formatiere        sA-f) reformat
+menuadd Format (Buchstabe Groß    aA-g) (tlate u right)
+menuadd Format (Buchstabe Klein   aA-k) (tlate l right)
+menuadd Format (Undo A-u) undo
+menusubadd Format Rand (Rechter Rand...) (escimm (margin ))
+menusubadd Format Rand (Linker Rand...) (escimm (setparcol ))
+menuadd Format (IBM to Amiga) (saveas t:IToA execute (wfile t:IToA -IA) newfile
+unnamed insfile t:IToA modified on)
+menuadd Format (Amiga to IBM) (saveas t:AToI execute (wfile t:AToI -AI) newfile
+unnamed insfile t:AToI modified on)
+
+menusetcheck Format (Umbruch) 1
+menusetcheck Format (Einfügen        sA-i) 1
+
+menusubadd Sonstiges Einstellungen (Lade Einstellungen    )  loadconfig
+menusubadd Sonstiges Einstellungen (Speicher Einstellungen)  saveconfig
+menusubadd Sonstiges (Führe aus) (Block            )  bsource
+menusubadd Sonstiges (Führe aus) (Zeile            ) (block block bsource down)
+menusubadd Sonstiges (Führe aus) (File             ) (escimm (source `s:.xd))
+menusubadd Sonstiges (Führe aus) (.edrc        ac-e) (source `s:.edrc')
+menusubadd Sonstiges (Führe aus) (.xdtex           ) (source `s:.xdtex')
+menusubadd Sonstiges (Führe aus) (.xdwub           ) (source `s:.xdwub')
+menusubadd Sonstiges (Führe aus) (.xdTeXUmlaute    ) (source `s:.xdTeXUmlaute')
+menuadd Sonstiges (NewShell             ) (execute newshell)
+menusubadd Sonstiges Öffne (XDME.Doc      ) (newwindow newfile
+dh1:doks/xdme/xdme.doc)
+menusubadd Sonstiges Öffne (.edrc    asc-e) (newwindow newfile s:.edrc)
+menusubadd Sonstiges Öffne (.xdtex        ) (newwindow newfile s:.xdtex)
+menusubadd Sonstiges Öffne (.xdwub        ) (newwindow newfile s:.xdwub)
+menusubadd Sonstiges (Rekorder) (Start) (recstart)
+menusubadd Sonstiges (Rekorder) (Stop) (recend)
+menusubadd Sonstiges (Rekorder) (Play      sA-P) (recplay)
+menusubadd Sonstiges (Rekorder) (Speichern) (recsave t:rec.xdme)
+menuadd    Sonstiges  (Zeichensatz...) (arpfont)
+menusubadd Sonstiges  Bewegen (ping 1 sA-1)  (ping 1)
+menusubadd Sonstiges  Bewegen (ping 2 sA-2)  (ping 2)
+menusubadd Sonstiges  Bewegen (ping 3 sA-3)  (ping 3)
+menusubadd Sonstiges  Bewegen (ping 4 sA-4)  (ping 4)
+menusubadd Sonstiges  Bewegen (pong 1  A-1) (pong 1)
+menusubadd Sonstiges  Bewegen (pong 2  A-2) (pong 2)
+menusubadd Sonstiges  Bewegen (pong 3  A-3) (pong 3)
+menusubadd Sonstiges  Bewegen (pong 4  A-4) (pong 4)
+
+map ac-e  (source `s:.edrc')
+map asc-e (newwindow newfile s:.edrc)
+
+map A-1  (pong 1)
+map As-1 (ping 1)
+map A-2  (pong 2)
+map As-2 (ping 2)
+map A-3  (pong 3)
+map As-3 (ping 3)
+map A-4  (pong 4)
+map As-4 (ping 4)
+
+set Esc (( ) left Tlate 27 right)
+
+menuadd ANSI (ESC               ) ($Esc)
+menuadd ANSI (Reset             ) ($Esc (c))
+menuadd ANSI (Italics an        ) ($Esc ([3m))
+menuadd ANSI (Italics aus       ) ($Esc ([23m))
+menuadd ANSI (Unterstreichen an ) ($Esc ([4m))
+menuadd ANSI (Unterstreichen aus) ($Esc ([24m))
+menuadd ANSI (Dick an           ) ($Esc ([1m))
+menuadd ANSI (Dick aus          ) ($Esc ([22m))
+menuadd ANSI (Vordergrund 0     ) ($Esc ([30m))
+menuadd ANSI (Vordergrund 1     ) ($Esc ([31m))
+menuadd ANSI (Vordergrund 2     ) ($Esc ([32m))
+menuadd ANSI (Vordergrund 3     ) ($Esc ([33m))
+menuadd ANSI (Hintergrund 0     ) ($Esc ([40m))
+menuadd ANSI (Hintergrund 1     ) ($Esc ([41m))
+menuadd ANSI (Hintergrund 2     ) ($Esc ([42m))
+menuadd ANSI (Hintergrund 3     ) ($Esc ([43m))
+
+
+menuon
+savetabs off
+autounblock on
+ignorecase on
+autosplit on
+insertmode on
+
+map return   (split firstnb down repeat cleft (first ( )) up firstnb down)
+
+map sL-lmb (tomouse settoggle 5)
+map sL-mmo (if 5 (bstart resettoggle 5) tomouse bend)
+
+map A-l     deline
+map A-L     undeline
+map A-z     remeol
+
+map left    (ifelse l (up last) left)
+map right   (ifelse r  (down first) right)
+
+map s-left  wleft
+map s-right (ifelse r (down first) (wright if l (up last)))
+map s-down  (pagedown)
+map s-up    (pageup)
+map s-nk2  (20 scrolldown 20 up)
+map s-nk8 (20 scrollup 20 down)
+map a-left  first
+map a-right last
+map a-up   (ping 9 top firstnb)
+map a-down (ping 9 bottom last)
+map sa-up  (pong 9)
+map sa-down (pong 9)
+map c-right pageright
+map c-left  pageleft
+map c-up    scrollup
+map c-down  scrolldown
+
+map bs      (ifelse l (up last join) bs)
+map del     (ifelse r join del)
+map a-del   (wright wleft while c>32 del while c=32 del)
+
+map A-P     (recplay)
+
+map c-d     (execute (date >ram:date) insfile ram:date modified on execute
+(delete ram:date) last)
+map c-n     ((Martin Herrmann))
+map c-e     (bottom last return (Bye) return repeat 3 right (Martin))
+map c-a     ((Meine Adresse: Martin Herrmann @ S3 im Mausnet) return (       
+Sonst: Martin_Herrmann@S3.maus.de) return)
+
+set Suchwort NIX
+map c-q     (ignorecase off wleft ping 8 scanf %s while c>32 del set Suchwort
+(\$scanf) findstr (\$Suchwort) prev ping 7 scanf %s pong 8 (\$scanf) ignorecase
+on)
+map c-Q     (wleft while c>32 del pong 7 prev ping 7 scanf %s pong 8 (\$scanf))
+map ac-q    (($Suchwort))
+
+title (Konfiguration von XDME beendet)
+
+--------schnapp--------schnapp--------schnapp--------schnapp--------schnapp--
+
+
+Meine Adresse: Martin Herrmann @ S3 im Mausnet
+        Sonst: Martin_Herrmann@S3.maus.de
+
+Bye
+   Martin
+
+P.S.: Mach weiter so!
+

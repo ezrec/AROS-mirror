@@ -1,0 +1,65 @@
+.key file
+
+if "" eq "<file>"
+    set old `which xdme`
+else
+    set old <file>
+
+    if exists "$old/XDME"
+	set old "$old/XDME"
+    endif
+endif
+
+
+echo "The new version of XDME will be installed as"
+echo "*"$old*""
+echo "It will be saved to"
+echo "*"$old.old*""
+echo "and THEN I'll try to patch it"
+ask "Continue ? (y/N)"
+
+if not warn
+    echo "In this case, start this script with the complete path"
+    echo "of the file you want to overwrite"
+    echo "example: InstallPath ram:"
+    echo "or: InstallPatch ram:XDME"
+    skip end
+endif
+
+set version `version $old`
+
+if "$version" eq "XDME 1.83pl13"
+    echo "The installed version is up to date. Doing nothing..."
+    skip end
+endif
+
+failat 21
+if not exists "$old"
+    set try "$old/XDME"
+    if not exists "$try"
+	echo "neither *"$old*""
+	echo "nor *"$try*""
+	echo "do exist. Check path and name and try again"
+	skip end
+    endif
+    set old $try
+endif
+failat 10
+
+if exists "$old.old"
+    echo "There is already a backup of"
+    echo "*"$old*""
+    ask "Do you want to continue (and delete it) ? (y/N)"
+    if not warn
+	echo "Aborting ..."
+	skip end
+    endif
+    echo "deleting obsolete backup"
+    delete "$old.old" quiet
+endif
+echo "Saving $old in $old.old"
+rename "$old" "$old.old"
+echo "Making XDME the new current version"
+copy XDME "$old"
+
+lab end

@@ -1,0 +1,108 @@
+@DATABASE "xdme_cmds.guide"
+@REMARK $Id$
+@INDEX "index"
+@NODE "MAIN" "XDME commands overview"
+@TOC "MAIN"
+
+This file contains a complete list of all commands of XDME sorted
+alphabetically and by topic.
+
+#toc
+#node general General
+@{B}(text)@{UB}         enter @{B}text@{UB} as if typed
+@{B}key@{UB}		execute a keymap as a macro (example @{B}-return@{UB})
+@{B}header-item@{UB}	execute a menu item as a macro (example: @{B}Project-Save@{UB})
+	       (case independent)
+#node program Control structures
+#node block Blockoperations
+#node requester Requester
+#node searchreplace Search and Replace
+#node var Variable
+#node textedit Text Editing
+#node io IO Operations
+    XDME will always save the text at the place where it came from, expect
+    you have used the @{B}CD@{UB} command to change the current directory.
+
+#node format Text formatting
+#node movement Move in the text
+#node misc Misc
+#node stack Stack
+#node win Windows
+#node keys Keyboard
+#node prefs Preferences and Settings
+    @{B}what@{UB} is one of on, off or toggle to switch the option on,
+    off or to change its state.
+
+#node arexx AREXX
+#cmd textedit READTEMPLATE file - insert @{B}file@{UB} and replace variables
+#cmd block,stack PUSHMARK	 -push the currently marked block onto a stack and unhighlight the block
+#cmd block,stack POPMARK	 -pop the block stack and highlight the popped block
+#cmd block,stack PURGEMARK	 -clear the mark stack
+#cmd block,stack SWAPMARK	 -PUSHMARK, swap top two marks on stack, POPMARK
+#cmd var SET var str	 -create/modify an internal variable (access without $)
+#cmd var SETENV var str  -create/modify an enviroment variable (1.3 ENV:)
+#cmd var SETTVAR var str     -create/modify text-local variable (access without $)
+#cmd var UNSET var	 -delete an internal variable
+#cmd var UNSETTVAR var	     -delete a text-local variable
+#cmd var UNSETENV var	 -delete an enviroment variable
+#cmd var RESETTOGGLE n	 -clear toggle array entry @{B}n@{UB} = 0..255
+#cmd var SETTOGGLE n	 -set toggle array entry @{B}n@{UB} = 0..255
+#cmd var TOGGLE n	 -flip toggle array entry @{B}n@{UB} = 0..255
+#cmd var FLAG name what  -change flag @{B}name@{UB} by @{B}what@{UB}
+#cmd prefs,keys MAP key map	-map a key to a keymap
+#cmd menu MENUADD hdr item cmd -add menu item
+#cmd menu MENUDEL hdr item -delete menu item
+#cmd menu MENUDELHDR hdr  -delete menu header
+#cmd menu MENUCLEAR	 -delete entire menu
+#cmd menu MENUON	 -This command will enable menus.
+#cmd menu MENUOFF	 -disable menus (multiple calls are stacked)
+#cmd prefs,keys UNMAP key	-unmap a key
+#cmd stack,var PUSHVAR varname - push the contents of the variable varname onto variable-stack
+#cmd stack,var POPVAR varname - get the latest to variable-stack pushed contents of the variable varname back and free the stack-entry
+#cmd stack,var PICKVAR varname - get the latest to variable-stack pushed contents of the variable varname back without freeing the stack-entry
+#cmd stack,var SWAPVAR varname - swap the contents of the variable varname and of its first occurancy in variable-stack
+#cmd stack,var PURGEVAR varname - remove all entries with the name varname from varstack
+#cmd program ABORT  - stop macro execution
+#cmd program UNABORT  - clear abort flag (only in an AREXX script)
+#cmd program BREAK  - leave current loop (WHILE, REPEAT)
+#cmd program CONTINUE  - start loop over (WHILE, REPEAT)
+#cmd program EVAL com  - split long commandsequences to keep MAXIA small
+#cmd program FORCE flag command - set special conditions for executing @{B}command@{UB}
+#cmd textedit,format PRINTF format parameters - create a string with @{B}format@{UB} and its (up to 8) @{B}parameters@{UB} and write it into the current text
+#cmd textedit INSERT text - insert some text at the current position
+#cmd textedit OVERWRITE text - overwrite the text at the current position with @{B}text@{UB}
+#cmd math NEG var - negate the value of @{B}var@{UB}
+#cmd math NOT var - logical not for @{B}var@{UB}
+#cmd math INC var - add 1 to @{B}var@{UB}
+#cmd math DEC var - sub 1 from @{B}var@{UB}
+#cmd math ADD var val - add @{B}val@{UB} to @{B}var@{UB}
+#cmd math SUB var val - sub @{B}val@{UB} from @{B}var@{UB}
+#cmd math MUL var val - multiply @{B}var@{UB} by @{B}val@{UB}
+#cmd math DIV var val - divide @{B}var@{UB} by @{B}val@{UB}
+#cmd math MOD var val - module of @{B}var@{UB} by @{B}val@{UB}
+#cmd macro SETMACRO name numargs body - define the macro @{B}name@{UB} with @{B}numargs@{UB} arguments.
+#cmd macro UNSETMACRO name - delete macro @{B}name@{UB}
+#cmd macro,var SETMACROVAR name val - definition of a macro's local variable inside a macro
+#cmd macro,var SMV name val - short for @{B}SETMACROVAR name val@{UB}
+#cmd macro,var UNSETMACROVAR name - deletion of a macro's local variable
+#cmd macro RET	 - terminate macro
+#cmd macro,io MACROSAVE filename - save the current macros into a file with a special format
+#cmd macro,io MACROLOAD filename - load macros from a file
+#cmd menu MENUSETITEM menuname itemname status - set the status of a menu-item with checkmarks
+#cmd menu MENUCHKITEM menuname itemname variablename - write the current status (0 or 1) of an checkmarks in a variable
+#cmd menu,io MENUSAVE filename - write the current menustrip in a file
+#cmd menu,io MENULOAD filename - replace the current menustrip with the one from the file
+#cmd menu USEMENUSTRIP name - switch to menustrip @{B}name@{UB}
+#cmd menu REMMENUSTRIP	 - delete the current menustrip, if it is not the only one
+#cmd menu NEWMENUSTRIP name - use a menustrip or create a new one
+#map keys QUALIFIER qualifierset - set certain qualifiers
+#cmd keys,io KEYSAVE filename - save the current keymap into @{B}filename@{UB}
+#cmd keys,io KEYLOAD filename - replace the current keymap with the contents of @{B}filename@{UB}
+#cmd keys USEKEYTABLE name - search for a certain keytable and use it as the current one
+#cmd keys REMKEYTABLE  - delete the current keytable, if it is not the only one
+#cmd keys NEWKEYTABLE name - use a keytable or create a new one
+#cmd record RECSTART - start macro recording
+#cmd record RECEND - end macro recording
+#cmd record RECPLAY - use previously recorded macro
+#cmd record RECSAVE file - save recorded macro to a file. Execute with @{B}SOURCE@{UB}
+#cmd record SIMPTR x y - simulate a mouse-movement. @{B}x@{UB} and @{B}y@{UB} are in pixels.

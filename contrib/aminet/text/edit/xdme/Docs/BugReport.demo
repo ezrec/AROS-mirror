@@ -1,0 +1,65 @@
+
+    Name    :	Aaron Digulla
+    Version :	XDME V1.80.01
+    Config. :	A500, 68030, no FPU, no MMU, 1/8MB RAM, 3 Drives, 1 HD,
+		KS 3.0 (39.110), WB 39.39, MFR 2.0e
+    Bug 1   :	When you use the mouse and move to the far left, XDME
+		will scroll in that direction BUT won't stop at column 0 !
+    Bug 2   :	When you have a running XDME and you click on an icon to
+		load another file, XDME responds with `file not found'.
+    Bug 3   :	XDME often crashes, when I open a file-requester.
+    Bug 4   :	Running XDME with
+		    > xdme -x
+		Does nothing.
+    Bug 5   :	Entering
+		    % doback
+		does nothing.
+
+
+    Description:
+	Name - Your full name (so I can name you in the bug-fix-report :-)
+	Version - Version of XDME you were using. You can also specify a
+		range here (ie. V1.60 - V1.80) to indicate that the bug
+		was already in a previous version.
+	Config - What do you use also ? I do not need much info about
+		hardware. Info about additional software, you are running
+		is more informative for me. If you look at bug 3, (the
+		file-requester-problem), the problem is that MFR 2.0e
+		has some bugs and usually crashes when invoked from XDME.
+		Use MFR 2.0d instead.
+	Bug x - Every bug in it's own bug-report. This helps me to answer
+		you (I can insert text after the bug-report) and to
+		check the problem in the code (I can check-mark everything
+		I did fix).
+		    Another thing is the FORM :-) Be specific ! Don't tell
+		long stories (which sometimes help, though) but say
+		"I did this and this and then this and XDME responded with
+		that", ie. a (more or less) straight way that leads to the
+		bug. It does not help much if you say "I cannot read the
+		text". Does that mean "XDME trashes the display" or
+		"it doesn't redraw the screen correctly" or "I cannot see
+		any text in the window at all !" ?
+		    If you have a problem, try to fix it (ie. change the
+		pens for the colors). If you have a solution, I can save much
+		time looking for it. Don't hesitate to change the code and
+		recompile. There should be anything in it to allow this
+		(and if it isn't, you should complain !).
+		    You meet a GURU ? XDME comes with full symbol-table for
+		debugging. Run you favourite debugger and tell me the
+		routine that did it. You should also include some
+		disassembled code since I work on XDME very often and
+		the code-adresses of your version and mine will very well
+		be different.
+		    Enforcer-Hit ? Give me the full output of enforcer or
+		(better :-) hunt the hit down yourself (like the GURU).
+	Bug 4 - If you want to include shell-commands (or stuff I should
+		enter in the shell), use "> " as a prefix for the line
+		and indent it appropriately. If the line is too long, split
+		it between two words and indent the rest, too.
+	Bug 5 - This is like Bug 4, but "% " is used for stuff to be entered
+		in XDME's commandline mode.
+
+	Thanks for making my life easier :-)
+
+	    Aaron Digulla (Optimizer)
+

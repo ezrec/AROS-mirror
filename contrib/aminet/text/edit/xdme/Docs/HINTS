@@ -1,0 +1,37 @@
+
+In this file I'll put some hints&tips together. You can send me such hints
+and I'll incorporate them !
+
+1. The Paging after the StyleGuide:
+
+Well we all have seen much crap from CBM yet and the StypeGuide won't be
+the last thing :-( Anyway most things in the StyleGuide are ok and
+reasonable BUT:
+
+    If you don't like how the SG wants an editor to do PAGING, try the
+following:
+
+    map s-left	c-left
+    map s-right last
+    map s-up	`screentop pageup'
+    map s-down	`screenbottom pagedown'
+
+"Sorry for the inconvenience" :-)
+
+2. Dirk told me a little trick for GLOBAL search. You may have noticed that
+XDME is not yet able to search through ALL open windows. He did the following:
+
+    map A-s `escimm (set searchfor \`) findstr \$searchfor next'
+    map A-r `escimm (set searchfor \`) findstr \$searchfor escimm (set repwith \`) repstr \$repwith nextr'
+
+Now you can iconify the window and type "search #?.c $searchfor" in the shell.
+
+I'm working on a global search right now :-)
+
+3. The following routine walks through all windows:
+
+    select save
+    select first
+    while selnext ``I was here :-)''
+    select load
+

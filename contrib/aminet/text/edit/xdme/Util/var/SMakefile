@@ -1,0 +1,15 @@
+
+
+Parser : Dyn.o fp.o lex.yy.o support.o y.tab.o
+	sc link to Parser dyn.o fp.o lex.yy.o support.o y.tab.o lib fl.lib
+
+Dyn.o : Dyn.c
+fp.o : fp.c
+support.o : support.c
+lex.yy.o : lex.yy.c
+lex.yy.c : Lex.l
+	flex -i -I -d Lex.l
+y.tab.o : y.tab.c
+y.tab.c : Yacc.y
+	bison -y -d Yacc.y
+

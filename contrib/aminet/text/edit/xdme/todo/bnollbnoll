@@ -1,0 +1,322 @@
+From <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de> Fri Dec  9 16:12 MEZ 1994
+Received: from stepsun.uni-kl.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA12179; Fri, 9 Dec 1994 16:12:41 +0100
+Return-Path: <@sun.rhrk.uni-kl.de,@stepsun.uni-kl.de,@uklirb.informatik.uni-kl.de:b_noll@informatik.uni-kl.de>
+Received: from sun.rhrk.uni-kl.de by stepsun.uni-kl.de id aa20325;
+          9 Dec 94 16:18 MET
+Received: from stepsun.uni-kl.de by sun.rhrk.uni-kl.de id aa24748;
+          9 Dec 94 16:16 MET
+Received: from uklirb.informatik.uni-kl.de by stepsun.uni-kl.de id aa20318;
+          9 Dec 94 16:18 MET
+Received: from poker.informatik.uni-kl.de by uklirb.informatik.uni-kl.de
+          id aa02482; 9 Dec 94 16:09 MET
+Date:     Fri, 9 Dec 94 16:04:59 MET
+From: /// <b_noll@informatik.uni-kl.de>
+Subject:  Re: ...
+To: digulla <@sun.rhrk.uni-kl.de:digulla@fh-konstanz.de>
+Message-Id:  <9412091605.aa19676@poker.informatik.uni-kl.de>
+Status: RO
+
+Hi!
+
+
+>>>> daher keinen Platz habe, das Archiv auszupacken und zu uebersetzen =8(
+>>> ok, ich habe jetzt wieder 18MB frei. Ich werds versuchen :)
+>> ff - Viel Vergnuegen ... kleiner Tip ... es gibt ein script mit dem Namen
+>> 'XDME/mkInitial' es bietet sich an, das zum Initialisieren aufzurufen ...
+>> (duerfte jedenfalls besser als Handarbeit gehen ...)
+
+> Danke... werde am Wochenende probieren.
+
+waere nett ....
+
+die aktuelle Version auf Konstanz _koennte_ inzwischen schon ziemlich
+bugbereinigt sein; Fergus hat mir mehrere Probs mit SHORTLINES gemailt,
+die nun hoffentlich alle beseitigt sind (scheint vorher nie jemand
+verwendet zu haben)
+
+[...]
+
+>>> aha.. Sag mir, wenn ich ein Release machen kann. Wahrscheinlich werde
+>> Noch nicht, habe gerade einen Bugreport (sowie ein Enhancementrequest)
+>> bekommen - zumindest den Bug werde ich noch fixen, ehe ich gruenes Licht
+>> gebe (obwohl ... es geht nur um einen Widerspruch zwischen Doku/History
+>> und Code/Verhalten ... naja)
+
+> :) Du hast ja noch einen Tag Zeit :)
+
+jeder Bugfix hat auch nicht laenger gedauert 8)
+
+>>>> der Grund ist, dass ich, wenn wir '~numericpad' angeben faktisch _2_
+>>>> Keycodes ablegen muesste, da numericpad kein einfacher Qualifier ist
+>>>> sondern eine fixe eigenschaft bestimmter Codes ...
+>>>> (daraus ergab sich auch die 2. Frage ... wenn ich naemlich 2 Keycodes
+>>>> zulasse, dann kann ich auch hingehen, und statt Code-Ids ein Bitfield
+>>>> aller moeglichen Codes mitzuziehen ...)
+
+>>> Nun, das OS setzt bei den Zeichen auf den Ziffernblock doch das Bit, oder ?
+>>> Ich moechte eine Taste eigentlich so belegen:
+
+>>>	map 1 (Jede 1, ueber Q und auf dem Numericpad)
+>>>	map (numericpad 1) (nur auf dem pad)
+>>>	map (!numericpad 1) (nur die ueber Q)
+
+>> --- wie weit sollen wir uns von Commodities entfernen ?
+>> dort hiesse das naemlich dann
+>>     map (~numericpad 1) auf beiden Positionen
+>>     map  (numericpad 1) nur numericpad
+>>     map	      1  nur Haupttastatur
+
+>> man beachte, dass die 1. und 3. Zeile annaehernd revertiert sind ...
+
+> :/ Im Zweifel mal die Commodity-Version. Ein Switch waere nett...
+> Ich hatte das aus dem Kopf getippt; daher unterscheidet es sich stark
+> von der CX Version.
+
+>>>> Kaese in gruen mit ~Alt, ~Shift und ~Ctrl, und es kommt noch erschwerend
+>>>> hinzu, dass einige Sondertasten keine Ascii Entsprechungen haben ...)
+>>> Wo liegt das Problem genau ? Ich sehe es hier nicht so ganz. Im Moment
+>> das Problem lag darin, dass ich eigentlich nicht vorgehabt hatte,
+>> etwas anderes als RawCodes zu verwenden; es aber nun so aussieht,
+>> als ob ich alle Input-Codes in eigene Codes transformieren muesste
+>> (dazu war ich zum einen zu faul, zum anderen bedeutet das vermutlich
+>> einen nicht zu unterschaetzenen Zeitverlust ... naja)
+
+> Im Zweifel fuer den User :) Dank immer dran, dass Du jetzt zwar 50
+> Zeilen mehr tippen musst, aber Du spaeter ein paar millionen Mal ein
+> paar Zeichen mehr eintippen darfst :)
+
+Mit Zeitverlust meinte ich eigentlich ein Minus auf lengsameren Machines
+schliesslich wird dadurch eine zusaetzliche Transformation fuer _jeden_
+Keypress (und noch ein wenig mehr) durchgefuehrt ...
+
+>>> betrachte ich es eher aus der Sicht des Users. Ich will eine Taste belegen.
+>>> Dazu brauche ich alle notwendigen und irrelevanten Qualifier und den Namen
+>>> der Taste, etwa:
+
+>>>	"~shift a"              A und a
+>>>	"shift a"               A
+>>>	"~alt shift a"          A mit und ohne Alt
+>>>	"~alt shift A"          A mit und ohne Alt
+>>	 "A"                     A (oder a?)
+>>	 "!shift A"              wie gebe ich eine unmoegliche Tastenkombination
+>>			       aus?
+
+> ok, A und a sollen aequivalent sein. Ich denke immer noch zu sehr in XDME
+> mappings :)
+
+Nein, sollten sie nicht - oder doch ?
+defaulten wir am ende zur Ascii darstellung oder zu rawcode darstellung ? in
+ascii ist es nunmal echt unterschiedlich, waehrend wir in rawcode sagen
+koennten 'tolower(x) == toupper(x)'
+
+>>>	""                      oder alt-f a
+>>>	""                      oder alt-f A
+>> tut mir leid, was da stand ist leider nicht bis zu mir gedrungen,
+>> da hat mmdf mal wieder etwas geschluckt ...
+
+> ah.... "ae" und "AE". PostScript und X11 nennen es Adiaeresis.
+
+>>>	"shift Adiaresis"
+>>>	"f1" oder "F1"          F1-Taste (ohne shift)
+>>>	"1"                     1 irgendwo
+>> hmmmm - das beisst sich mit commodities ...
+>>>	"numericpad 1"          1 auf den Keypad
+>>>	"!numericpad 1"         1 nicht auf dem Keypad
+>> hmmmm - und das auch ...
+>> [...]
+>>> Ich verwende Autopoint, seit es den Amiga gibt und hatte NIE Probleme !
+			      ^^^^^^^^^^^^^^^^^
+>> von welchem Autopoint bzw. welchem Amiga redest Du? m.W. gibt es Autopoint
+>> erst seit WB2.0x - da gab es den Amiga aber etwas laenger ...
+
+> DMouse :)
+    ... dann hast Du Autopoint selbst also gar nicht ausprobiert?
+
+>>> Aeeeh... bei der "in" (Dir Firma, wo ich gerade arbeite) gibts das Teil als
+>>> Demo fuer nur DM 800 (Komplette etwa 30.000). Und es ist gut:
+>> Ist das Werbung ? ;-)
+
+> Eine Aufforderung meinen Arbeitsplatz zu sichern und Dich ins Finanzielle
+> Unglueck zu stuerzen ! ;)
+
+>>>	1.  Alle Widgets werden in Templates geschrieben. Ein Template ist
+>>>	  ein Muster, nach dem spaeter die Widgets generiert werden, d.h.
+>>>	      Button = {
+>>>		  Type = PushButton;
+>>>		  Width = 50;
+>>>		  Height = 20;
+>>>		  Background = "blue";
+>>>		  Forground = "White";
+>>>	      };
+>>>	      OkTemplate = {
+>>>		  Link Button;
+>> wozu dient die Link - direktive? ist das eine Art 'Instance of' oder
+>> 'Subclass of'? hier erscheint genau das, was mich in X11 immer wieder
+>> verwirrt: es gibt keine Trennlinie zwischen Klasse und instanz ...
+>> oder sollte es sich hier um einen Haufen von Klassenvereinbarungen handeln?
+
+> Nein, es ist ein "#include". Es gibt Copy (das steht aber nicht da...
+> stattdessen werden vom GUIBuilder die Attribute des geCopy'ten Objekts
+> eingefuegt). Link erzeugt eine Dynamische Referenz, d.h. Wenn OkTemplate
+> referenziert wird, dann werden die gerade aktuell gueltigen Werte von
+> Button an dieser Stelle eingefuegt. So kann man hierarchische Templates
+> aufbauen.
+
+>>>		  LabelString = "Ok";
+>>>	      };
+>> eyyyyyyyy - Ich wusste gar nicht, dass mein Parser ein kommerzielles
+>> Vorbild hat ... (jedenfalls ist diese Syntax zum verwechseln aehnlich ...)
+
+> :) Es gibt halt immer nur eine wirklich gute Loesung !
+
+>>>	  etc. Nachher kann man mit
+>>>	      widget = CreateFromTemplate ("Sicherheitsabfrage", "sa");
+>> das sollten also dann tatsaechlich alles Klassenvereinbarungen sein,
+>> wenn hier eine Instantiierung stattfindet ... naja
+
+> naja ? Genail !
+
+>>>	  solche Abfragen erzeugen. Wenn der Text von OK nicht gut ist,
+>>>	  dann aendert man ihn oben und unter aendert er sich dann
+>>>	  automatisch mit. Und man kann beliebig viele Widgets von dem
+>>>	  Typ erzeugen, weil man beim Create eigene Namen angeben muss.
+>> schon klar .... das klingt immer noch sinnvoll bis selbstverstaendlich
+>> (sofern eine Interpretersprache zugrundegelegt wird ...)
+
+> Wird. Und die ist echt gut. Mit 2-3 Befehlen wird die Liste aus einem
+> ListWidget geholt und abgearbeitet. Ich glaube es ging so:
+
+>     list l;
+>     l = listWidget.list;
+>     l.rewind ();
+>     while (!l.eof)
+>     {
+>	  text = l.text;
+>	  l.next ();
+>     }
+
+> bin aber nicht mehr ganz sicher.
+
+>>>	2.  Es wird eine Interpreter-Sprache mitgeliefert, die alle Widget-
+>>>	  Attribute in der "."-Notation zugaenglich macht + etwa 1000
+>>>	  Utility-Funktionen.
+>> (... was ja der Fall zu sein scheint)
+>> naja, der Umfang ist zwar gigantisch, aber das Prinzip klingt doch
+>> sehr nach ?ri (? in [AMO]) (abgesehen davon, dass die Klassenvereinbarung
+>> dort etwas anders aussieht)
+
+> Huh ?? Bahnhof ... Was ist AMORI ?
+
+Ari, Mri, Ori, Cri : ( Athena| Motif | Openwin | ???? ) resource interpreter
+
+Hier z.B ein Hello World fuer Ari
+    Ari.wcChildren:	    command
+    *command.wcClass:	    commandWidgetClass
+    *command.Label:	    Hello World
+    *command.callback:	    WcExit()
+(Aufruf Ari -rf <dateiname>) (siehe dazu auch: 'man Wcl')
+
+>>>	3.  Es gibt einen tollen GUI-Builder. Alle wichtigen Attribute sind
+>>>	  entweder direkt ueber ein Popup (rechte Maustaste ueber dem
+>>>	  Objekt) setzbar oder man bekommt einen Requester (z.B. bei
+>>>	  Farben). Er unterstuetzt drag&drop und man kann eigene Paletten
+>>>	  erstellen (muss man sogar, weil diese die Basis fuer ein Projekt
+>>>	  darstellen).
+>> Tja, nie benutzt, kein Kommentar moeglich ... (der einzige guibuilder
+>> unter X, den ich bislang gesehen habe, ist der von Tcl, und auch den
+>> konnte ich bislang nur einmal sehen ...)
+
+> Xf ? ganz nett... Hab ich hier installiert ... *schnell duck*
+
+*nicht geschlagen (dazu warst Du zu schnell unten ...) - getreten*
+
+
+hmmm ist denn das PD ? (Du sagtest weiter unten, dass ausser TeleUse,
+Purify und WP bei Euch keinne Loehnware installiert sei ...)
+
+>>> Das Teil ist einfach gut. Frag mal im RZ, vielleicht hats ja einer. Es
+>>> heisst TeleUSE und wird von einer Schwedischen Firma hergestellt. In
+>>> Deutschland vertreiben wir es (in = integrierte informationssysteme
+>>> in Konstanz).
+>> hier gibts _NICHTS_ (naja, so gut wie nichts ...)
+>> sieh selbst ...
+
+
+[...]
+
+
+>>> machen kann. Ich wollte sowieso C noch um FLEX/BISON-Funktionen erweitern,
+>>> damit man Texte aufgrund von Tokens formatieren bzw. pruefen kann.
+>>> Evtl. wird das so aussehen:
+>>>	int Parse ()
+>>>	{
+>>>	  token file, block, decls, statements;
+>>>	  file <- block ;
+>>>	  block <- '{' [decls] [statements] '}' ;
+>>>	  {
+>>>	      $$ = CreateNewBlock ($2, $3);
+>>>	  }
+>>>	  ...
+>>>	}
+>> klingt lustig, aber fuer mich im Augenblick nicht sonderlich
+>> einleuchtend -	 '<-' ist in C normalerweise '=' oder nicht?
+
+> Naja, ":" kann ich ja nicht nehmen. Evtl. gibt es eine neue Anweisung in
+> C:
+>     parse (stream)
+>     {
+>	  file : block
+>	      { $$ = $1; }
+>	      ;
+>     }
+> ala switch() und while().
+
+klingt gut, sollte aber erst einmal auf eis gelegt bleiben /* Du kannst
+aber schon einmal 'parse' zum reservierten wort erheben 8) */
+
+>>> Nur die Uebergabe-Parameter sind mir noch nicht klar und auch nicht,
+>>> wie ich das FLEX-Patterns einbaue.
+
+    vielleicht ueber regexprs ...
+
+	parse (stream)
+	{
+	    file : /FORM/ header body ;
+	}
+    ok, das ist nicht so faehig wie  lex, wo du nicht nur patterns
+    sondern auch actions zu den patterns angeben kannst, und dadurch
+    welche e.g. ignorieren kannst ...
+
+>> und der Zweck ... - ich hielte es fuer besser, wenn es nur um
+>> das Thema Textcoloring geht, zuallererst einfache C-sources zu
+>> verwenden; (der Interpreter muss endlich verfuegbar werden!)
+>> danach kannst Du Dir ueberlegen, ob es eine Class (SubClass
+>> der Interpreterclass) geben koennte, die die die obige Sprache
+>> realisiert, und die fuer ihre Actionen der C-interpreter
+>> verwenden kann ...
+
+> Ist sowieso Zukunftsmusik. Aber wenn es lange in unseren Koepfen reifen
+> kann, dann wird uns irgendwann eine geniale Loesung einfallen.
+
+wenn dadurch nicht die Vorstelling des Cinterpreters verzoegert wird ...
+
+
+>>> Ich hoffe, durch die Diskussion ueber OS4.0 meine Ideen ueber mein Boopsi
+>>> einzustreuen. Dann waeren die Sachen mit NEW/COPY/DISPOSE kein Problem
+>>> mehr.
+>> unter dem Aspekt der Wiederverwendung (existierender Klassen) - schon ...
+
+> Klar ist es viel Arbeit das einzubauen, aber sieh es mal umgekehrt:
+> Die Arbeit muss nur einer machen und viele 1000 User profitieren davon,
+> weil sie sich diese sparen koennen !
+
+Ich befuerchte eher, dass bis dahin keine Amiga User mehr uebrig sind ...
+
+
+muss allmaehlich heimkommen ...
+
+wir hoeren voneinander ...
+
+mfG 0
+

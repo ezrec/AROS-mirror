@@ -1,0 +1,31 @@
+
+lf = -s -d1
+cf = -d1 -mD
+cc = dcc
+
+cs = y.tab.c lex.yy.c Dyn.c fp.c support.c
+os = $(cs:"*.c":"*.o")
+
+
+Parser : $(os)
+	dcc $(lf) %(right) -o %(left)
+
+test : Parser test.2
+	stack 20000
+	parser jabba < test.3
+
+
+y.tab.c : yacc.y
+	stack 20000
+	bison -y -d  yacc.y
+
+y.tab.h : yacc.y
+
+lex.yy.c : lex.l
+	cp lex.l r:
+	stack 20000
+	flex -i -I -d r:lex.l
+
+$(os) : $(cs)
+	$(cc) $(cf) %(right) -c
+

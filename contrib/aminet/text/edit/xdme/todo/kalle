@@ -1,0 +1,120 @@
+From kalle@gis.geogr.unizh.ch Thu Oct 20 11:23 MEZ 1994
+Received: from ixgate01.dfnrelay.d400.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA15275; Thu, 20 Oct 1994 11:23:35 +0100
+Return-Path: <kalle@gis.geogr.unizh.ch>
+X400-Received: by mta d400relay in /PRMD=dfnrelay/ADMD=d400/C=de/; Relayed;
+               Thu, 20 Oct 1994 11:29:18 +0100
+X400-Received: by /PRMD=Switch/ADMD=Arcom/C=Ch/; Relayed;
+               Thu, 20 Oct 1994 11:27:27 +0100
+X400-Received: by /PRMD=switch/ADMD=arcom/C=ch/; Relayed;
+               Thu, 20 Oct 1994 11:27:12 +0100
+X400-Received: by /PRMD=SWITCH/ADMD=ARCOM/C=CH/; Relayed;
+               Thu, 20 Oct 1994 11:26:31 +0100
+X400-Received: by /PRMD=SWITCH/ADMD=ARCOM/C=CH/; Relayed;
+               Thu, 20 Oct 1994 11:26:30 +0100
+Date: Thu, 20 Oct 1994 11:26:30 +0100
+X400-Originator: kalle@gis.geogr.unizh.ch
+X400-Recipients: non-disclosure:;
+X400-Mts-Identifier: [/PRMD=SWITCH/ADMD=ARCOM/C=CH/;<9410201026.AA25906@gis.geogr.un]
+X400-Content-Type: P2-1984 (2)
+Content-Identifier: Re: YADME
+Alternate-Recipient: Allowed
+From: " (Karl Lukas)" <kalle@gis.geogr.unizh.ch>
+Message-Id: <9410201026.AA25906@gis.geogr.unizh.ch>
+To: digulla@rz-uxazs.fh-konstanz.de
+Subject: Re: YADME
+Status: RO
+
+> Hello,
+> 
+> I just stumbled over YADME on AMINET and I wonder why you have begun to
+> make my work again :) Or better: Would you like to share your work
+> with us. XDME has keyboard shortcuts and submenues already, but
+> character blocks are still missing (Mr. Todd M. Lewis is working
+> on them, though). If you want to have a look, XDME's source is on
+> AMINET.
+
+Vielleicht erinnerst Du Dich an mich, wir hatten im Fruehsommer Kontakt
+wegen der XDME-Sourcen, die ich mir natuerlich auch angeschaut hatte. Es
+gab allerdings einige Gruende, warum ich an meiner eigenen DME-Version
+weitergepopelt habe:
+
+o Ich hatte mich zu diesem Zeitpunkt schon ziemlich in die DME-Sourcen
+  eingearbeitet und hatte den Ueberblick. Die XDME-Sourcen hingegen
+  wurden gegenueber dem Original total umgekrempelt, so dass ich mich
+  von neuem haette einarbeiten muessen. Ausserdem hatte ich schon
+  einige Dinge implementiert, z.B. die Menus.
+
+o XDME ist mit ueber 200K meiner Meinung nach inzwischen etwas gross
+  geraten.
+
+o Ich wollte urspruenglich eigentlich gar nicht so viel Zeit in DME
+  investieren. Irgendwann war's dann doch so viel, dass ich nicht
+  einfach wieder aufhoeren wollte ;)
+
+YADME ist zwar die erste Version, die ich veroeffentlicht habe, es wird
+aber aller Voraussicht nach auch die letzte sein, wenn ich nicht hunderte
+von Bug-Reports erhalte. Die einzige Verbesserung, die ich mir noch 
+wuensche, ist eine einfachere Art, mit Bloecken zu arbeiten: BSTART, 
+Blockende direkt mit Curortasten oder Maustaste `anfahren', wobei die
+Blockmarkierung immer gleich aktualisiert wird, so dass man ohne BEND 
+gleich COPY, CUT etc. ausfuehren kann (im Prinzip koennte man das erreichen,
+indem man nach jeder Cursorbewegung BEND aufruft, was allerdings viel
+zu langsam ist).
+Du kannst natuerlich meine Sourcen nach Sachen durchstoebern, die bei
+mir vielleicht besser laufen als bei XDME. Ich hatte z.B. den Eindruck,
+dass Deine text2string()-(oder so)-Methode (clipboard-support) etwas
+langsam ist (schau vielleicht allgemein mein Clipboard-Zeugs an).
+Ausserdem waeren vielleicht meine DOWNFAST und UPFAST Befehle sinnvolle 
+Erweiterungen fuer XDME, oder die neuen REQ-..Befehle (REQREPLACE, 
+REQFIND etc.). V.a. REQREPLACE solltest Du mal ausprobieren. Von
+meinen Menus kannst Du getrost die Finger lassen, die hat Bernd wesentlich
+eleganter implementiert &(
+
+Karl
+
+
+
+From kalle@gis.geogr.unizh.ch Thu Oct 20 12:01 MEZ 1994
+Received: from ixgate01.dfnrelay.d400.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA16309; Thu, 20 Oct 1994 12:00:57 +0100
+Return-Path: <kalle@gis.geogr.unizh.ch>
+X400-Received: by mta d400relay in /PRMD=dfnrelay/ADMD=d400/C=de/; Relayed;
+               Thu, 20 Oct 1994 12:06:04 +0100
+X400-Received: by /PRMD=Switch/ADMD=Arcom/C=Ch/; Relayed;
+               Thu, 20 Oct 1994 12:04:03 +0100
+X400-Received: by /PRMD=switch/ADMD=arcom/C=ch/; Relayed;
+               Thu, 20 Oct 1994 12:03:46 +0100
+X400-Received: by /PRMD=SWITCH/ADMD=ARCOM/C=CH/; Relayed;
+               Thu, 20 Oct 1994 12:03:00 +0100
+X400-Received: by /PRMD=SWITCH/ADMD=ARCOM/C=CH/; Relayed;
+               Thu, 20 Oct 1994 12:03:00 +0100
+Date: Thu, 20 Oct 1994 12:03:00 +0100
+X400-Originator: kalle@gis.geogr.unizh.ch
+X400-Recipients: non-disclosure:;
+X400-Mts-Identifier: [/PRMD=SWITCH/ADMD=ARCOM/C=CH/;<9410201103.AA26034@gis.geogr.un]
+X400-Content-Type: P2-1984 (2)
+Content-Identifier: Re: YADME
+Alternate-Recipient: Allowed
+From: " (Karl Lukas)" <kalle@gis.geogr.unizh.ch>
+Message-Id: <9410201103.AA26034@gis.geogr.unizh.ch>
+To: digulla@rz-uxazs.fh-konstanz.de
+Subject: Re: YADME
+Status: RO
+
+> Peinlich :) Ich dacht bei 150K Archive kann kein Source dabei sein ! :))
+> 
+> Im Moment sind ein paar neue Ideen aufgekommen, wie z.B. eine zentrale
+> Funktion um den Text zu beeinflussen, etc. so dass die Groesse vom
+> XDME jetzt mal abnehmen sollte. Aber ich werde auf alle Faelle einen
+> Blick in den Quelltext werfen, sofern ich mich darin zurechtfinden
+> sollte :)
+
+Ganz einfach: Lies das History File, dort findest Du alle neuen Befehle
+beschrieben. Lade prog-protos.h und schaue nach, in welchem Sourcefile 
+sich die Funktion befindet. Abgesehen von dem Blockfunktionen sollten
+die meisten Befehle so unabhaengig sein, dass Du sie mit Copy/Paste ohne
+Anpassungen in XDME uebernehmen koennen solltest.
+
+Karl
+

@@ -1,0 +1,1386 @@
+\documentstyle[12pt]{book}
+
+%\textwidth 6in
+%\textheight 8in
+%\parindent .5cm
+%\voffset -.75in
+%\hoffset -.5in
+%\makeindex
+\def\version{ V2.00 }
+\input XDMEMacros
+
+\begin{document}
+
+\title{XDME \version}
+\author{Aaron Digulla\\Dirk Heckmann\\Bernd Noll}
+\maketitle
+
+\tableofcontents
+
+\chapter{Introduction}\index{Introduction}
+
+\section{DME}\index{DME}
+
+This is version \version\ of XDME; an ``update'' to the popular DME by Matthew
+Dillon. Dillon did no further work on DME since V1.45 (because he's too
+busy) and so I asked him whether I might do it. I have done much work on
+the source and on the handling and hope you'll like it.
+
+Although I tried not to change too much, I had to remove several commands
+and did some changes to the handling that are incompatible to the old DME.
+I'm sorry for this, but I think that the advantages of the changes override
+the disadvantage that you have to go through your old scripts.
+
+\section{Copyright}\index{Copyright}
+
+DME © Copyright 1987-91, Matthew Dillon.  All Rights Reserved. \\
+XDME © Copyright 1992-93, Aaron Digulla. All Rights Reserved.
+
+\section{License}\index{License}
+
+Oh well, as always
+
+\begin{itemize}
+\item Don't make profit out of it and don't change the copyright. You can change
+    anything in this package, tough, as long as you make a clear statement
+    what you did change, why and who you are. I don't like being made
+    responsible for somebody else's mistakes.
+\item You can make as many copies of this as you like. But you must not make
+    profit out of it.
+\item This software is to help people, so the usage of this software in
+    organizations that do dubious things like weapons and health-penetrating
+    chemicals is STRICTLY FORBIDDEN !
+\item I don't give any warranty of any kind. So if you find errors, you
+    cannot punish me for it, but if you tell me about it, I'll fix it
+    as soon as possible. I like error-free software, too :-)
+\end{itemize}
+
+\section{Overview}\index{overview}\index{history}
+
+M. Dillon released his DME in 1987 and many programmers liked it first
+view. This was due to the fact that DME was very fast and powerful and the
+only other editor was ed :-). Dillon enhanced and improved his editor
+several times until 1991 when he began his work on DICE. From this point,
+DME wasn't improved anymore although there were many bugs and problems
+pending. I did some bug-fixes and programmed several new commands. When I
+sent this package to Dillon, he told me that he won't support DME anymore
+and I could go on with it if I want, but I do have to change the name. I
+decided to name it XDME, because (1) it is an enhancement of DME and (2)
+I'm working on a X11-Version\index{X11-version}\index{X11DME} for
+UNIX\index{UNIX} :-). I don't like VI very much :-))
+
+Since then much happened. There are many new commands, several speed- and
+memory-improvements have been made and we gave it a more powerful
+AREXX\index{AREXX} and programming-language. Right now, three people work
+on it: Me, Dirk Heckmann and B. Noll. I had the initial idea and began the
+work, Dirk made the AREXX-stuff and B. Noll sent me many new commands. Not
+to forget many Beta-testers that risked their health with testing and using
+this :-)
+
+XDME is a really powerful tool although it has no real WYSIWYG like in any
+DTP-Program. XDME's power is to edit raw ASCII-Text and to automate the work.
+With over 200 commands at your fingertips, XDME is surely the most
+powerful text-editor ever. It has been designed to be fast and usable and
+to aid programmers in the task of programming. It has almost any command
+you can think of and if it has not, then you can create it !
+
+\subsection{The Window}\index{main window}\index{main display}
+
+When you open a new XDME, you will see a new window appearing. This window
+has three significant parts. First the main part is occupied by a large area
+to edit text. This is why we call this thing an ``text-editor'' :-). The next
+vital thing is the status-line which is placed in the window-title. This is
+to give you one more line of text in the main area\index{text area} ! WOW !
+This status line\index{status line} shows several information like your
+actual position, the number of lines the text has, the character you are
+on, a modify-flag and the name of the text you are editing. The third thing
+is the scroller\index{scroller} to the left. See also the picture below.
+
+\begin{center}
+\unitlength5mm
+\begin{picture}(30,22)(0,0)
+\thicklines
+% Rahmen
+\put(0,0){\framebox(20,13){}}
+
+% Close Gadget
+\put(1,12){\line(0,1){1}}
+\put(0.4,12.4){\framebox(.2,.2){}}
+
+% Title
+\put(1.5,12.3){\tt 97/980  17 2a * XDME.tex}
+
+% Scroller/Size
+\put(0,12){\line(1,0){20}}
+
+% Zoom | Depth
+\put(18.5,12){\line(0,1){1}}
+
+% | Zoom
+\put(17,12){\line(0,1){1}}
+
+% ____Title____
+\put(19,0){\line(0,1){12}}
+
+% Size
+\put(19,1){\line(1,0){1}}
+\put(19.1,0.1){\line(1,1){0.8}}
+\put(19.1,0.1){\line(1,0){0.8}}
+\put(19.9,0.1){\line(0,1){0.8}}
+
+% Scroll-container and button
+\put(19.2,1.2){\framebox(0.6,10.6){}}
+\put(19.3,9){\framebox(0.4,2.5){}}
+
+% Zoom
+\put(17.2,12.2){\framebox(1.1,0.6){}}
+\put(17.2,12.5){\framebox(0.3,0.3){}}
+
+% Depth
+\put(18.9,12.2){\framebox(0.9,0.4){}}
+\put(18.7,12.8){\line(1,0){0.9}}
+\put(18.7,12.8){\line(0,-1){0.4}}
+\put(19.6,12.8){\line(0,-1){0.18}}
+\put(18.7,12.4){\line(1,0){0.2}}
+
+% Explanation
+\thinlines
+\put(1.9,19.3){\vector(0,-1){6}}
+\put(1.9,19.3){\line(1,0){7}}
+\put(9  ,18.8){\makebox(0,1)[l]{current line}}
+
+\put(3.1,18.3){\vector(0,-1){5}}
+\put(3.1,18.3){\line(1,0){5.8}}
+\put(9  ,17.8){\makebox(0,1)[l]{lines of text}}
+
+\put(4.6,17.3){\vector(0,-1){4}}
+\put(4.6,17.3){\line(1,0){4.3}}
+\put(9  ,16.8){\makebox(0,1)[l]{current column}}
+
+\put(5.8,16.3){\vector(0,-1){3}}
+\put(5.8,16.3){\line(1,0){3.1}}
+\put(9  ,15.8){\makebox(0,1)[l]{char under cursor as HEX}}
+
+\put(6.9,15.3){\vector(0,-1){2}}
+\put(6.9,15.3){\line(1,0){2}}
+\put(9  ,14.8){\makebox(0,1)[l]{modified flag}}
+
+\put(8.5,14.2){\vector(0,-1){1}}
+\put(8.5,14.2){\line(1,0){.4}}
+\put(9  ,13.8){\makebox(0,1)[l]{title of text}}
+
+\put(0,0){\makebox(19,12){text-area}}
+
+\put(.5,10.8){\vector(0,1){1}}
+\put(.5,10.8){\line(1,0){1.4}}
+\put(2,10.3){\makebox(0,1)[l]{Close-gadget}}
+
+\put(17.75,10.8){\vector(0,1){1}}
+\put(17.75,10.8){\line(-1,0){1.65}}
+\put(16,10.3){\makebox(0,1)[r]{Zoom-gadget}}
+
+\put(17.8,9.8){\vector(1,2){1}}
+\put(17.8,9.8){\line(-1,0){1.7}}
+\put(16,9.3){\makebox(0,1)[r]{Depth-gadget}}
+
+\put(16.1,8.8){\vector(1,0){2.7}}
+\put(16,8.3){\makebox(0,1)[r]{Scroller}}
+
+\put(16.1,0.5){\vector(1,0){2.7}}
+\put(16,0){\makebox(0,1)[r]{Size-gadget}}
+
+\end{picture}
+\end{center}
+
+\section{Features}\index{Features}
+
+XDME has many features that make it one of the best editors ever (``What ? ...
+No, I never had any problems with self-esteem'') including:
+
+\begin{itemize}
+\item powerful programming language with everything you need
+\item full {\tt AREXX} interface
+\item ability to map all keys including mouse-buttons
+\item programmable menus
+\item fast visual response
+\item multiple windows
+\item works with OS 2.0 and higher
+\end{itemize}
+\ \protect\nopagebreak[4]
+\chapter{Invocation}\index{invocation of XDME}\index{arguments or XDME}\index{parameters of XDME}
+
+XDME can of course be started via CLI and WB. It allows an arbitrary number
+of arguments. I don't use the OS20-call for argument-parsing since
+the names of the arguments are likely to interfere with names of texts.
+
+\section{CLI-startup}\index{CLI-startup}\index{calling from CLI}\index{commandline arguments}
+
+CLI-Usage: {\tt XDME FILES/M,SFILE=-S/K,NEW=-N/S,ICONIFY=-I/S,AUTOLOAD=-A/S
+	PUBLICSCREEN=-PS/K,PROJECTFILE=-PF/K}
+
+XDME doesn't bother for the position of the options. They can come anywhere
+in the command-line.
+
+\begin{mylist}{PUBLICSCREEN name}
+\item[{\tt SFILE file}] (Startup-file): XDME reads two files on startup: S:.edrc and
+	    .edrc in the local directory. With this option, you can replace
+	    the local .edrc-file with some other file. The file will be read
+	    automatically if it exists.
+\item[{\tt NEW}] If there is already a XDME running, XDME send this process a
+	    command to open a new window and load the file. If you need a new
+	    process (with own AREXX-port and environment), you have to specify
+	    this option.
+\item[{\tt ICONIFY}] Makes XDME iconify all windows after loading the files.
+\item[{\tt PUBLICSCREEN name}] XDME can open his windows on another screen.
+	    You can specify the name of this screen through this option.
+\item[{PROJECTFILE file}] This sets the name for the projectfile. The default
+	    is {\tt XDME\_Project\_File}. If the file exists, it is ignored
+	    unless you have also specified {\tt AUTOLOAD} (see below). Only
+	    when you try to load a file with that name, it is treated as a
+	    projectfile.
+
+	    NOTE: You cannot edit a projectfile.
+\item[{AUTOLOAD}] This turns the automatic loading of project-files on. XDME
+	    will now try to load a file with the actual projectfile-name
+	    from the actual directory on startup.
+\end{mylist}
+
+Anything that is not an option is treated as a filename.
+
+\section{WB-Startup}\index{WB-startup}\index{calling from WB}\index{arguments for WB-startup}
+
+XDME can be started via WB like any other program. Any other selected files
+are read in and displayed in their own windows. You can put any of the
+above options in the ToolTypes of the XDME-icon and the ToolTypes of the
+selected files.
+
+\chapter{Usage}
+
+Any part of XDME is almost fully user-configurable. XDME consists of the
+following elements:
+
+\begin{itemize}
+\item Programming Language
+\item Variables in XDME
+\item Menus
+\item Keyboard including Mouse
+\end{itemize}
+
+\section{Programming Language}\index{programming language}
+
+XDME has about 200 commands already build in and we'll discuss them here
+and the programming language XDME understands. We made it to be simple
+and fast. The basic XDME programming language is a thing between
+AREXX\index{AREXX}, and C\index{C}. You can use any AREXX-command, the
+style is like C and it accepts all C-expressions. DME had this, too, but it
+was by far not that powerful. It didn't even came close to what XDME offers
+you.
+
+The syntax is a follows:
+
+\begin{itemize}
+\item All commands are separated with \verb/;/
+\item XDME uses {\tt ()} as parentheses.
+\item Strings are enclosed in \verb/""/.
+\item Commands can be made joined with \verb/{}/ to a block. You can
+      use a block instead of one single command.
+\item Anything XDME doesn't understand is passed to AREXX.
+\end{itemize}
+
+XDME offers the following structures for flow-control:
+
+\begin{itemize}
+\item {\tt BREAK}
+\item {\tt CONTINUE}
+\item {\tt DO command WHILE expr}
+\item {\tt FOR ( expr ; expr ; expr ) command }
+\item {\tt IF expr command [ELSE command]}
+\item {\tt WHILE expr command}
+\item {\tt REPEAT expr command}
+\item {\tt SWITCH expr \{ case\_block \}}
+\end{itemize}
+
+but no {\tt GOTO} !
+
+\subsection{\tt BREAK}
+
+The {\tt BREAK}-command is only useful if conjunction with a loop or
+{\tt SWITCH}-statement. The purpose of the {\tt BREAK} is to break out
+of some kind of loop.
+
+\subsubsection{EXAMPLE}
+
+\begin{verbatim}
+FOR ( ; Key = GetKey () ; )
+{
+    IF Key == ESC THEN
+	BREAK;
+
+    ...
+}
+\end{verbatim}
+
+The {\tt FOR}-loop waits for some key. If that key is {\tt ESC}, the
+{\tt IF} aborts the loop. See also the example for {\tt SWITCH}.
+
+\subsection{\tt CONTINUE}
+
+The {\tt CONTINUE}-command is only useful if conjunction with a loop or
+{\tt SWITCH}-statement. The purpose of the {\tt CONTINUE} is to stop the
+execution of the body and to go to the end of the loop. That means, that
+the {\tt after\_expr}essions of the {\tt FOR}- and the condition of the
+{\tt DO \dots WHILE}-command get evaluated before the loop begins it's
+next round. For all loops, after the {\tt CONTINUE} the condition of the
+loop gets evaluated.
+
+\subsubsection{EXAMPLE}
+
+\begin{verbatim}
+FOR ( ; Key = GetKey () ; Count++ )
+{
+    some_code;
+
+    IF Key == ESC THEN
+	CONTINUE;
+
+    some_other_code;
+}
+\end{verbatim}
+
+The {\tt FOR}-loop waits for some key. The {\tt some\_code} is always
+executed. If the key is {\tt ESC}, the
+{\tt IF} prevents the {\tt some\_other\_code} from being executed.
+Instead, the execution goes on with {\tt Count++} and then with the
+loop-condition.
+
+\subsection{\tt DO \dots WHILE}
+
+The {\tt DO \dots WHILE}-command is like the {\tt WHILE}-command, but the
+expression is evaluated at the end of the loop thus the loop is
+executed at least once.
+
+\subsubsection{EXAMPLE}
+
+\begin{verbatim}
+DO
+    left;
+WHILE (column > 5)
+\end{verbatim}
+
+Moves the cursor to the left and checks if it is still to the right of the
+5th column. Note that the cursor is also moved, if it's already to the left
+of the 5th column !
+
+\subsection{\tt FOR}
+
+The {\tt FOR}-command is the most powerful loop-command XDME offers.
+It has several arguments. For more clarity look at this:
+
+\centerline{\tt FOR ( before\_expr ; loop\_expr ; after\_expr ) command }
+
+As you can see, the three expressions have different meanings. The
+{\tt before\_expr} is evaluated before the loop actually starts.
+It is usually used for initializing counters. The second one,
+the {\tt loop\_expr}, determines the condition that ends the loop. If this
+expression gets zero, the loop terminates. The last expression, the
+{\tt after\_expr}, is called every time the whole body of the
+loop has been processed. It is usually used for incrementing counters
+and the like.
+
+This type of loop behaves exactly like the following lines:
+
+\begin{verbatim}
+before_expr;
+
+WHILE loop_expr
+{
+    command;
+
+    after_expr;
+}
+\end{verbatim}
+
+\subsubsection{EXAMPLE}
+
+\begin{verbatim}
+FOR ( counter=0 ; counter<1000 ; counter++ )
+    title "Counter " counter;
+\end{verbatim}
+
+Sets {\tt counter} to zero and increments it up to 999. The progress is
+shown in the title-bar.
+
+\subsection{\tt IF}
+
+The {\tt IF}-command takes two or four parameters. The first parameter is
+an expression that is evaluated. If the expression evaluates to
+something not zero, the second parameter is executed. Otherwise
+{\tt IF} looks for an {\tt ELSE} and if it finds one, the part after
+the {\tt ELSE} is executed.
+
+\subsubsection{EXAMPLE}
+
+\begin{verbatim}
+IF (column > 5)
+    title "Column > 5";
+ELSE
+    title "Column <= 5";
+\end{verbatim}
+
+If the cursor is to the right of column 5, the title is set to
+``X $>$ 5''. Else the title is set to ``X $<=$ 5''.
+
+\subsection{\tt WHILE}
+
+The {\tt WHILE}-command has two parameters. While the {\tt expr} is
+non-zero, the second parameter {\tt command} gets executed.
+
+The difference to the {\tt REPEAT}-command is that {\tt WHILE}
+re-calculates the value of {\tt expr} before every loop.
+If the expression evaluates to zero, {\tt WHILE} stops. That also
+means that, if the expression is already or always zero, the {\tt WHILE}-body
+gets never executed.
+
+\subsubsection{EXAMPLE}
+
+\begin{verbatim}
+WHILE (column > 5)
+    left;
+\end{verbatim}
+
+As long as the cursor is to the right of the 5th column, it is moved to
+the left, resulting in a cursor in column 5. If the cursor is already
+in the 5th column or to the left, nothing happens.
+
+\subsection{\tt REPEAT}
+
+The {\tt REPEAT}-command has two parameters. The value of {\tt expr} is
+evaluated and the second parameter {\tt command} gets executed {\tt expr}
+times.
+
+The difference to the {\tt WHILE}-command is that {\tt REPEAT}
+calculates the value of {\tt expr} only once and takes the result as
+``the number of loops''.
+
+If {\tt expr} is zero or less, the {\tt REPEAT} does nothing.
+
+\subsubsection{EXAMPLE}
+
+\begin{verbatim}
+REPEAT (x - 5)
+    left;
+\end{verbatim}
+
+The distance of the cursor to the left column is calculated and then
+the cursor is moved the appropriate times to the left.
+
+\subsection{\tt SWITCH}
+
+The {\tt SWITCH}-command is one of the most complex control-commands XDME
+has to offer. It has two arguments, an {\tt expr}ession and a block
+of {\tt CASE}-statements. The {\tt expr}ession is evaluated and the
+result is compared with every {\tt CASE-expr}ession. If we encounter
+a {\tt CASE-expr}ession that matches the {\tt SWITCH-expr}ession,
+ie. when both are numerically equal, the body of the {\tt CASE}-statement is
+executed.
+
+Since every {\tt CASE}-statement is only a label, execution is continued
+from there and up to the end of the {\tt CASE}-block. If you want to
+stop the execution and get out of the {\tt SWITCH}, you have to use
+{\tt BREAK}. Also you can use {\tt CONTINUE} to re-evaluate the
+{\tt SWITCH-expr}ession and start over.
+
+The last thing that is important about the {\tt SWITCH} is the
+{\tt DEFAULT}-statement. If none of the {\tt CASE}-statements match and
+there is a {\tt DEFAULT}-statement, the {\tt DEFAULT}-body gets executed.
+
+Phew, this heavy stuff, so we'll try an example:
+
+\subsubsection{EXAMPLE}
+
+\begin{verbatim}
+SWITCH (Key = GetKey ())    /* Wait for a key to be pressed and
+			       remember that key */
+{
+    CASE Return:	    /* If user pressed RETURN */
+	title "RETURN was pressed";  /* tell that */
+    BREAK;		    /* and break out of switch */
+
+    CASE F1..F10:	    /* F-Keys are not allowed ! */
+	error "Huh ? You cannot use the function-keys now !"
+    CONTINUE;		    /* Start over */
+
+    CASE '4':               /* Count 4 times */
+	Count ++;
+
+    CASE '3':               /* Count 3 times */
+	Count ++;
+
+    CASE '2':               /* Count 2 times */
+	Count ++;
+
+    CASE '1':               /* Count 1 time */
+	Count ++;
+    BREAK;		    /* stop it */
+
+    DEFAULT:
+	error "You pressed an unsupported key !"
+    CONTINUE;
+}
+\end{verbatim}
+
+Well, most things are in the commands but a few. The second {\tt CASE}
+shows the usage of {\tt RANGE}s. The four {\tt CASE}-statements that
+accept numbers are not terminated thus if you press {\tt 4}, all four
+{\tt Count ++}-statements are processed. The last thing is that, if you
+press a key that is not recognized by any case, the {\tt DEFAULT}
+tells you just that and repeats the {\tt SWITCH} one more time.
+
+\section{Variables in XDME}
+
+XDME offers a variety of variables which can be internal and external.
+Variables can be stacked and you can calculate with them:
+
+\begin{itemize}
+\item Declaring variables
+\item Scope of variables in XDME
+\item Expressions in XDME
+\end{itemize}
+
+You should also have a look at the chapter ``Macros in XDME'' on page
+\pageref{Macros in XDME}.
+
+\subsection{Declaring variables}
+
+XDME knows the following types for variables:
+
+\begin{center}
+\begin{tabular}{|l|l|} \hline
+ {\tt CHAR}	& ASCII-characters			\\
+ {\tt INTEGER}	& integer class ($-2^{31}..2^{31}-1$)   \\
+ {\tt STRING}	& a string of text			\\
+ {\tt FLOAT}	& a floating-point variable		\\
+% {\tt KEY}	 & a key				 \\
+\hline
+\end{tabular}
+\end{center}
+
+%
+%and the following compound types:
+%
+%\begin{center}
+%\begin{tabular}{|l|l|}
+%\hline
+% Array        & a number of elements of the same type \\
+% {\tt ENUM}   & an enumeration \\
+% {\tt LIST}   & a list of elements of the same type \\
+% Pointers     & a pointer to an element \\
+% {\tt STRUCT} & multiple different elements together \\
+% {\tt UNION}  & like {\tt STRUCT}, but can contain only one \\
+%	       & element at any time \\
+%\hline
+%\end{tabular}
+%\end{center}
+%
+%The last thing are storage-qualifiers. XDME offers those to you:
+%
+%\begin{center}
+%\begin{tabular}{|l|l|}
+%\hline
+% {\tt CONST}  & for constant variables \\
+% {\tt EXTERN} & for external/global variables \\
+% {\tt STATIC} & for static variables \\
+%\hline
+%\end{tabular}
+%\end{center}
+%
+%Now this seems a bit difficult, but XDME's concept of variables is quite
+%straight-forward.
+%
+%\subsection{Integral types}
+%
+%In a {\tt CHAR} you can store one character of text. A {\tt STRING} is
+%an array of characters, but a {\tt STRING} in XDME can be of
+%arbitrary length. The {\tt INTEGER} type can hold any integral value
+%while {\tt FLOAT} is for all numbers with decimal point. The {\tt KEY}
+%can hold one key.
+%
+%\subsection{Compound types}
+%
+%The compound types help in building up more complex structures.
+%The type {\em array} is represented with a pair of brackets after the
+%variable-name like {\tt INTEGER a}$[10]$. Elements in an array can be
+%accessed by their number. The counting starts with 0. Unlike in other
+%programming languages, negative numbers are valid ! They specify an offset
+%from the end of the list, ie. {\tt a}$[-1]$ is the same as {\tt a}$[9]$
+%in the above example. Unlike C, XDME will prevent you from accessing
+%array-elements, that are out of range, ie. {\tt a}$[10]$ will result
+%in an error.
+%
+%The {\tt ENUM}eration is a list of names that create a type. This
+%type can contain only those values that are present within the {\tt ENUM}.
+%A famous example are colors:
+%
+%\begin{verbatim}
+%ENUM colors
+%{
+%    BLACK,
+%    RED,
+%    BLUE,
+%    GREEN,
+%    WHITE
+%};
+%\end{verbatim}
+%
+%This creates a new type called {\tt colors} that can be set to {\tt BLACK},
+%{\tt RED}, {\tt BLUE}, {\tt GREEN} and {\tt WHITE}. You can now declare
+%a variable of type {\tt colors}: {\tt colors x;} and can assign
+%values to {\tt x}. {\tt x = 1;} will yield in an error.
+%
+%{\tt LIST}s are made of one type but, unlike arrays, have an arbitrary
+%number of elements. You can add and remove elements from a list at any
+%time; the list grows and shrinks accordingly. Like arrays, elements in the
+%list can be accessed by their number or by an internal pointer.
+%This pointer can be set by the commands {\tt FIRST}, {\tt NEXT},
+%{\tt PREVIOUS}, {\tt LAST} and some more. The convention for numerical
+%access is like in an array, ie. the element -1 is the last in the list.
+%
+%Pointers are a very powerful tool for both programming and bug-making.
+%If you are not familiar with C-pointers, you should not use them.
+%A pointer is declared by using a star like in {\tt INTEGER * a;}.
+%This makes a pointer called {\tt a} that points to an {\tt INTEGER}
+%{\bf or} it can be interpreted as the base-address of an array of
+%integers. Unlike in C, XDME will check if you try to use an uninitialized
+%pointer.
+%
+%{\tt STRUCT}s and {\tt UNION}s are very similar to each other. Both
+%are made up from several different elements. The difference is that
+%a {\tt STRUCT}ure can hold several different elements at any time, while
+%a {\tt UNION} can only hold one of those elements at any time.
+%
+
+\subsubsection{Accessing ENV:-Variables}
+
+All ENV:-variables can be accessed from within XDME without any special
+notation. If you have, for example, an ENV:-variable called {\tt DATE},
+you can view it with {\tt TITLE DATE}. All ENV:-variables are treated as
+strings. If you assign such a variable to an internal XDME-variable,
+XDME automatically tries to convert the string to the type that's needed
+for the internal variable. The same applies to writing some value in
+ENV:-variables.
+
+\subsection{Scope of variables in XDME}
+
+A variable in XDME is known only inside the actual block and in all blocks
+that are in this block (like in C). If you declare a variable outside
+a function, it's a global variable which is recognised everywhere since
+every block is in that level.
+
+\subsection{Expressions in XDME}
+
+XDME accepts every C-construct. Unlike C, XDME does an internal
+type-conversion. It is perfectly possible to add a number to
+a string or a string to a number. In the first case, the number
+is converted to a string and appended to the string and in the latter,
+the string is converted to a number (ie. we look if the string contains
+a number and make this number to an int or float) and numerically added
+to the number.
+
+\section{Menus}
+
+\subsection*{Menus Overview}
+    XDME allows to add (almost) any number of menus with infinite number of
+    entries. The following commands are available for manipulating menus:
+
+    \begin{itemize}
+	\item {\tt MENUADD	 menuname itemname	   command}
+	\item {\tt MENUCHECK	 menuname itemname	   command}
+	\item {\tt MENUBAR	 menuname}
+	\item {\tt MENUDEL	 menuname itemname}
+	\item {\tt MENUDELBAR	 menuname}
+
+	\item {\tt MENUSUBADD	 menuname itemname subname command}
+	\item {\tt MENUSUBCHECK  menuname itemname subname command}
+	\item {\tt MENUSUBBAR	 menuname itemname}
+	\item {\tt MENUDELSUB	 menuname itemname subname}
+	\item {\tt MENUDELSUBBAR menuname itemname}
+
+	\item {\tt MENUSETITEM menuname itemname	 status}
+	\item {\tt MENUCHKITEM menuname itemname	 variablename}
+	\item {\tt MENUSETSUB  menuname itemname subname status}
+	\item {\tt MENUCHKSUB  menuname itemname subname variablename}
+
+	\item {\tt MENUDELHDR	 menuname}
+	\item {\tt MENUCLEAR}
+
+	\item {\tt MENUOFF}
+	\item {\tt MENUON}
+
+	\item {\tt MENUSAVE filename}
+	\item {\tt MENULOAD filename}
+
+	\item {\tt NEWMENUSTRIP name}
+	\item {\tt USEMENUSTRIP name}
+	\item {\tt REMMENUSTRIP}
+    \end{itemize}
+
+\subsection{\tt MENUADD}
+
+	This command takes three arguments. The name of the menu which you want to
+	add the new item. The menu is created if it does not already exist.
+	The next parameter if the name of the item that is to be added to the
+	menu and the last parameter is the command that is to be executed if
+	the user selects the item. For now, there are no subitems.
+
+	If you have a key that does the same as the menu, it's recommended to
+	add the mapping of the key after the name of the item (for the form
+	of key-mappings, see the page \pageref{mapping keys}).
+
+    \subsubsection{EXAMPLE}
+
+	{\tt MENUADD Edit `Read C-Config' `source DATA:c.xdme'}
+
+	This creates the menu {\tt Edit} with an item {\tt Read C-Config} or just adds the
+	item {\tt Read C-Config} to the menu {\tt Edit} if it's already there. The command
+	{\tt source DATA:c.xdme} gets executed, if the user selects that item.
+	(This macro reads a file and executes all commands in that file).
+
+
+\subsection{\tt MENUCHECK}
+
+	This command does almost the same as {\tt MENUADD} despite, that it creates
+	not only a simple Commanditem, but a toggleitem, which can be toggled with
+	the {\tt MENUSETITEM} and checked with the {\tt MENUCHKITEM}.
+	there is currently no way to connect a variable immediately to a checkitem
+	in order to make the checkitem represent the variable's value or vice versa.
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENUBAR}
+
+	This command does almost the same as {\tt MENUADD} despite that it appends
+	only a simple non-functional separatorbar to the specified menu; since such
+	a
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENUDEL}
+
+    This command is the opposite of {\tt MENUADD} or {\tt MENUCHECK}. It takes two arguments which
+    specify an item in a menu that is to be removed. Note that the menu
+    is also deleted, if that item was the last in the menu.
+    {\tt MENUDEL} may also be used to delete a submenucarrier and all of its subitems.
+
+\subsubsection{EXAMPLE}
+
+    {\tt MENUDEL Edit `Read C-Config'}
+
+    This removes the item we created above.
+
+
+\subsection{\tt MENUDELBAR}
+
+	This command is the opposite of {\tt MENUBAR}. It takes one argument which specifies a menu
+	and deletes the first Itembar found in that menu. (see also {\tt MENUDEL})
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENUSETITEM}
+
+	change the status of a menuitem, which was created with the command {\tt MENUCHECK}.
+	the last argment - status may be one of "set" "reset" or "toggle".
+	I must admit, that the current name is not the best, but I had no other ideas ...
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENUCHKITEM}
+
+	get the current status of a menuitem which was created with the command {\tt MENUCHECK} into a variable, which is given by its name.
+	I must admit, that the current name is not the best, but I had no other ideas ...
+	This command is used in XDME <2.0 to check the status of a Checkitem,
+	since we do not have functions in our command language at that time ...
+	so we have to fetsch the status into a variable and examine the value of that variable;
+	the command is obsolete under XDME >= 2.0, or as soon, as the C-Interpreter
+	is ready to use.
+	Note, that usage of that command to an item, which was not created with {\tt MENUCHECK} is undefined.
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENUSUBADD}
+
+	This command takes four arguments. The name of the menu and the item which you want to
+	add the new subitem. The menu and the menuitem are created if they do not already exist.
+	The next parameter is the name of the subitem that is to be added to the
+	menu and the last parameter is the command that is to be executed if
+	the user selects the item. subitems cannot be added to menuitems which were created with
+	{\tt MENUADD} or {\tt MENUCHECK}.
+
+	If you have a key that does the same as the menu, it's recommended to
+	add the mapping of the key after the name of the item (for the form
+	of key-mappings, see the page \pageref{mapping keys}).
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENUSUBCHECK}
+
+	This command does almost the same as {\tt MENUSUBADD} despite, that it creates
+	not only a simple Commanditem, but a Toggleitem, which can be toggled with
+	the {\tt MENUSETSUB} and checked with the {\tt MENUCHKSUB}.
+	there is currently no way to connect a variable immediately to a checkitem
+	in order to make the checkitem represent the variable's value or vice versa.
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENUSUBBAR}
+
+	This command does almost the same as {\tt MENUSUBADD} despite that
+	only a simple non-functional separatorbar to the specified submenu; since such
+	a bar has no name and no connected command, it has two arguments less.
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENUDELSUB}
+
+	This command is the opposite of {\tt MENUSUBADD} or {\tt MENUSUBCHECK}. It takes three arguments which
+	specify an subitem in a menu that is to be removed. Note that the menu or the item
+	is also deleted, if that subitem was the last in the menuitem and so on.
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENUDELSUBBAR}
+
+	This command is the oppos
+	which must be a subitemcarrier and deletes the first Subitembar found in that menuitem. (see also {\tt MENUDELSUB})
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENUSETSUB}
+
+	change the status of a submenuitem, which was created with the command {\tt MENUSUBCHECK}.
+	the last argment - status may be one of "set" "reset" or "toggle".
+	I must admit, that the current name is not the best,
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENUCHKSUB}
+
+	get the current status of a submenuitem, which was created with the command {\tt MENUSUBCHECK} into a variable, which is given by its name.
+	I must admit, that the cu
+	This command is used in XDME <2.0 to check the status of a Checkitem,
+	since we do not have functions in our command language at that time ...
+	so we have to fetsch the status into a variable and examine the value of that variable;
+	the command is obsolete under XDME >= 2.0, or as soon, as the C-Interpreter
+	is ready to use.
+	Note, that
+	there is currently no way to connect a variable immediately to a checkitem
+	in order to make the checkitem represent the variable's value or vice versa.
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+
+\subsection{\tt MENUSAVE}
+	Save the complete current menustrip to a specified file;
+	this operation might use a special file format, though we are currently
+	using Asciifiles, but this might change ...
+	saved menues can easily be read with the next command
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt MENULOAD}
+	read in a complete menustrip from a specified file; the current menustrip
+	is cleared before that action.
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt NEWMENUSTRIP}
+	Create a new menustrip with the given name;
+	XDME's menues are organised as menustrips, so that You can use different
+	menustrips for different windows; the default menustrip that is created
+	on startup is called ``default''.
+	Normal user will perhaps never use that feature (it had been
+	implemented for over a year before someone decided to document it).
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt USEMENUSTRIP}
+	Activate another menustrip for the current window (and for all those
+	windows, which currently do not have a fixed menustrip).
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt REMMENUSTRIP}
+	Delete the current menustrip
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+
+
+\subsection{\tt MENUDELHDR}
+
+	If you want to remove the whole menu, you can try several {\tt MENUDEL}-commands
+	of use this one. It removes the whole menu at once and takes only one
+	parameter which is the name of the menu that is to be removed.
+
+    \subsubsection{EXAMPLE}
+
+	{\tt MENUDELHDR Edit}
+
+	Makes the whole Edit-menu disappear.
+
+
+\subsection{\tt MENUCLEAR}
+
+	Sometime you might need to remove ALL menus at once. Guess it, this is the
+	command at hand. It removes all menus.
+
+    \subsubsection{EXAMPLE}
+
+	What ???? An example for that easy command ??? Are you NUTS ?? No
+	imagination anymore ?
+
+\subsection{\tt MENUOFF}
+
+	This is the opposite of {\tt MENUON}. {\tt MENUOFF} switches the menus off temporarily.
+	That means that the menus are stored internally, but not accessible by the
+	user anymore. Note that any mapping for the right mousebutton now becomes
+	active ! This is normally {\tt iconify window}. Use this command, if you
+	make changes to the menus thus the user cannot interrupt the creation
+	of the new entries by selecting from the menu.
+
+	Note that multiple calls are stacked, ie. if you call {\tt MENUOFF} five times, you
+	need five calls to {\tt MENUON} to enable the menus again.
+
+    \subsubsection{EXAMPLE}
+
+	Obvious, no ?
+
+\subsection{\tt MENUON}
+
+	This is the opposite of {\tt MENUOFF}. {\tt MENUON} switches the menus on again.
+	That means that the menus made accessible by the
+	user again. Note that any mapping for the right mousebutton now becomes
+	inactive ! Use this command, if you
+	made changes to the menus and called {\tt MENUOFF} to do so undisturbed.
+
+	Note that multiple calls are stacked, ie. if you call {\tt MENUOFF} five times, you
+	need five calls to {\tt MENUON} to enable the menus again.
+
+    \subsubsection{EXAMPLE}
+
+	Try it yourself :-)
+
+
+
+
+
+
+\section{Keyboard including Mouse} \label{mapping keys}
+
+\subsection*{Keyboard Overview}
+
+    We now enter the most {\em simple} part of XDME ... This is of course the most
+    powerful part :-): The mapping of keys and buttons. As mentioned above,
+    XDME has the ability to map functions to all keys. These {\em functions}
+    can be simple text that is to be inserted up to sophisticated programs
+    that aid you in your work. We only have a few commands here:
+
+    \begin{itemize}
+	\item {\tt UNMAP key}
+	\item {\tt MAP key command [comment]}
+	\item {\tt KEYSAVE filename}
+	\item {\tt KEYLOAD filename}
+	\item {\tt NEWKEYTABLE name}
+	\item {\tt USEKEYTABLE name}
+	\item {\tt REMKEYTABLE}
+	\item {\tt QUALIFIER qualifers}
+    \end{itemize}
+
+    but at least the first 2 of them are really complicated to use. Don't worry though. I'll try to
+    guide you through this safely :-)
+
+    first we will check the simple commands ...
+
+\subsection{\tt KEYSAVE}
+	Save the complete current Keytable to a specified file;
+	though that file is currently in Ascci, we might decide
+	to change that to a special file format in order to speed
+	things up.
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt KEYLOAD}
+	Read a Keytable saved with the {\tt KEYSAVE} command, from a specified file.
+	Previously we delete the active Keytable, so a corrupted file might lead You
+	into trouble ...
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt NEWKEYTABLE}
+	Create a new Keytable of a given name;
+	the dafault keytable created on startup is called ``default''.
+	Like Menues, we can use different Keytables for different windows,
+	but normal user will perhaps never use that feature (it had been
+	implemented for over a year before someone decided to document it).
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt USEKEYTABLE}
+	Use the Keytable of the specified name (if exists)
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+\subsection{\tt REMKEYTABLE}
+	Delete the current Keytable. (no arguments)
+
+    \subsubsection{EXAMPLE}
+	Ask Aaron ...
+
+
+\subsection{\tt MAP}
+
+	Maps a command to a key. Simple, eh ? Oh well, not quite :-) You can specify
+	the key by a list of qualifiers that have to be pressed (like {\tt Shift},
+	{\tt Ctrl}, {\tt Alt}) and the key itself.
+
+	The next parameter is the command. If you want to map more than one command,
+	you have to use {\tt\{} and {\tt\}} to form a block.
+
+	The last parameter is optional and contains a short description of the
+	mappings that explains what it does. XDME expects a string here.
+
+	The parameter {\em key} is a bit complicated but the definition is
+	quite straight-forward. The sections following the command descriptions
+	describe the possible forms of a {\em key} parameter.
+
+\subsection{\tt UNMAP}
+
+	This command undoes the mapping of a key. It takes one parameter, the
+	key you want to reset. This is exactly the same as in {\tt MAP} (see below).
+	{\tt UNMAP}ing a key means not to make it a ``do-nothing'', but
+	resetting it to it's default state. If you, for example, mapped
+	the key {\tt M} with some garbage and want to undo it, just
+	enter the command-line-mode and type {\tt unmap m} or better
+	you would try to do that and realize that you can neither type
+	{\tt unmap} nor {\tt m} because you have no {\tt m}. Well,
+	good luck then ! (Just a joke, don't worry, in command-line-mode
+	the normal alpha-chars are remapped to their default meanings)
+
+\subsection{\tt QUALIFIER}
+
+	XDME has the ability to simulate multi-keystroke sequences;
+	in order to achieve that goal, You can specify a key-sequence,
+	that activates a special qualifier, and another one, that uses
+	that qualifier...
+	that feature was added to enable EM*cs like Control-X sequences
+
+    \subsubsection{EXAMPLE}
+
+	MAP c-x (QUALIFIER x) \\
+	MAP x-s (SAVEOLD) \\
+	Now You can save the current file with the following actions:
+	press ``Control'', keep it pressed, press ``X'', release ``X'',
+	release ``Control'', finally press ``S''.
+
+\subsection{Qualifiers}
+
+    A list of available Qualifiers and their meanings can be found on page
+    \pageref{list of qualifiers}. Note that qualifiers, unlike keys, are
+    case-sensitive.
+
+    \begin{table} \centerline{\bf List of all qualifiers that XDME knows of}
+    \begin{center}
+    \begin{tabular}{|l|l|} \hline
+	  {\tt s} & {\tt Shift} and {\tt CapsLock}    \\
+	  {\tt c} & {\tt Ctrl}			 \\
+	  {\tt a} & {\tt Alt}			 \\
+	  {\tt A} & {\tt Amiga} 		 \\
+	  {\tt L} & {\tt Left Mousebutton}	 \\
+	  {\tt M} & {\tt Middle Mousebutton}	 \\
+	  {\tt R} & {\tt Right Mousebutton}	 \\
+	  {\tt x}, {\tt y}, {\tt z} & special qualifiers only settable via {\tt QUALIFIER}\\
+	  {\tt u} & the release of the key \\ \hline
+    \end{tabular}
+    \end{center}
+    \label{list of qualifiers}
+    \end{table}
+
+    EXCEPTION: The {\tt s} qualifier can also be specified for letters by
+    using the capital representation ! Therefore {\tt s-a} and {\tt A} are the
+    same mapping (See below) !
+
+    Notes:
+    \begin{itemize}
+    \item    The {\tt CapsLock}-key is only for alpha-keys (like {\tt a}, {\tt b}, ...)
+	the same as shift. It doesn't work for numbers for example.
+
+    \item    You cannot use the right mousebutton if you use menus. In this
+	case, Intuition removes all events concerning the right mousebutton
+	and displays the menus instead ! Also note that
+	XDME has three special qualifiers that are not keys but can be set via
+	a command ! This allows you to map the same keys according to your needs
+	without the need to remap them if you need another function. Like when you
+	have a text-editing and a program-editing mode with different functions
+	for the {\tt F1}-key for example.
+    \end{itemize}
+
+    All qualifier-keys must be pressed for the test to succeed. {\tt asc} means
+    ``any {\tt Shift} or {\tt CapsLock} with {\tt Ctrl} and any {\tt Alt}'',
+    ie. XDME does not
+    differentiate between the left and the right-keys. Thus, {\tt ascALMR} is a
+    possible qualifier and you can use that, but you should be aware, that
+    the user might get into difficulties if you also specify a key in the right
+    part of the keyboard that is to be pressed like {\tt HELP} :-)
+
+    The {\tt u} qualifier says that you don't want the ``key press'' but the
+    ``key release'' event. This allows two different action on press and on
+    release. You can for example start to mark a block with the press of the
+    key and end the selection of the key-release.
+
+    Now we have the qualifiers and come to the specification of the key itself.
+    The ``key'' is in most cases the letter that is on the key-cap or the string
+    of letters on the cap. (eg. {\tt b} is the {\tt B}-key, {\tt F1} is the
+    {\tt F1}-key, {\tt B} is the {\tt B}-key with {\tt Shift} !).
+
+\subsection{Keys}
+
+    On the page \pageref{list of keys} is a list of all available keys.
+    All keys not mentioned there can be specified by simply pressing them.
+
+    \begin{table}\centerline{\bf List of all keys that XDME knows of}
+    \begin{center}
+    \begin{tabular}{|l|l|} \hline
+	{\tt a}-{\tt z}, {\tt 1}-{\tt 9}, ...	&  Just these keys				   \\
+	{\tt A}-{\tt Z} 	    & letter-keys with {\tt Shift}			     \\
+	{\tt F1}-{\tt F10}	    &  Function-Keys				       \\
+	{\tt ESC}	      & the {\tt ESC}-key				    \\
+	{\tt TAB}	      & the {\tt TAB}-key (below {\tt ESC})                          \\
+	{\tt BS}	      & the backspace key (above {\tt Return})                \\
+	{\tt RETURN}	      & the largest key on the keyboard 		 \\
+	{\tt DEL}	      & the {\tt Delete} key				       \\
+	{\tt HELP}	      & the {\tt Help} key				       \\
+	{\tt UP},{\tt DOWN},{\tt LEFT},{\tt RIGHT} & the cursor-keys				   \\
+	{\tt NK0}-{\tt NK9}	    & the numbers on the numeric keypad 	       \\
+	{\tt NK.}	      & the {\tt .}-key on the numeric pad			 \\
+	{\tt ENTER}	      & the Enter-key on the numeric pad		 \\
+	{\tt NK-},{\tt NK+},{\tt NK*},{\tt NK/} & the {\tt -}, {\tt +}, {\tt *} and {\tt /}-keys on the numeric pad	\\
+	{\tt NK[},{\tt NK]}	    & the {\tt [} and {\tt ]} on the German numeric pad        \\
+	{\tt NK(},{\tt NK)}         & the same keys on the English/USA and         \\
+	{\tt NK@},{\tt $\makebox{NK}^\circ$}	  & on the Canadian numeric pad 		 \\
+	{\tt LMB}, {\tt MMB}, {\tt RMB}   & the left, middle and right mousebutton	     \\
+	{\tt MMOVE}	      & the mouse-movement				 \\ \hline
+    \end{tabular}
+    \end{center}
+    \label{list of keys}
+    \end{table}
+
+    Notes:
+    \begin{itemize}
+    \item Although all keys are listed uppercase here, XDME accepts them
+	in both upper- and lowercase. Also mixed case is allowed, too :-)
+    \item The mappings for the first two keys in the upper left edge of the
+	numeric pad might be wrong. If this is true for you, tell us your
+	mappings and you keyboard/country and we'll fix it.
+    \item There is no way to map ``dead-keys''.
+    \end{itemize}
+
+    A full key-specification consists of two parts: the qualifiers and the
+    key itself.
+
+\subsection{EXAMPLES}
+
+    Example key-mappings can be found on page \pageref{example mappings}.
+
+    \begin{table}\centerline{\bf Examples for key-mappings}
+    \begin{center}
+    \begin{tabular}{|l|l|} \hline
+	{\tt bs} or {\tt BS}	& only the backspace-key			\\
+	{\tt b} 		& the key with the {\tt B} on the cap		\\
+	{\tt B} or {\tt s-b}	& the key {\tt B} with {\tt Shift}		\\
+	{\tt f1} or {\tt F1}	& the {\tt F1}-key				\\
+	{\tt a-a}		& {\tt Alt A}					\\
+	{\tt A-a}		& {\tt Amiga A} 				\\
+	{\tt sA-a} or {\tt A-A} & {\tt Shift Amiga A}				\\
+	{\tt L-lmb}		& the left mousebutton pressed			\\
+	{\tt uL-lmb}		& the left mousebutton released 		\\
+	{\tt L-mmove}		& pressing the {\tt LMB} while moving
+				  the mouse					\\
+	{\tt LR-lmb}		& left mousebutton hit while right		\\
+				& mousebutton is help down			\\
+	{\tt s-.}		& {\tt Shift .} ({\tt >} for USA keyboards,
+				  {\tt :} for Germans)			    \\
+	{\tt ` '}               & the {\tt Space}-bar                           \\
+	{\tt s-` '}             & {\tt Shift Space}                             \\ \hline
+    \end{tabular}
+    \end{center}
+    \label{example mappings}
+    \end{table}
+
+    Ok. This is a bit much stuff so here some more detailed explanations:
+
+\subsection{Mapping Mousebuttons}
+
+    Mousebuttons serve both as QUALIFIERS and KEYS. This is a bit complicated
+    and that you can also map mousemovements doesn't help a bit. But it's really
+    simple. Lets look at two examples
+
+    \hspace*{1cm} {\tt L-a} and {\tt L-lmb}
+
+    The first one maps the key ``{\tt a} while the left mousebutton is pressed''
+    , the
+    second one the left mousebutton itself. This is because of Intuition.
+    If you press a mousebutton, Intuition always sends a message that you have
+    pressed it AND sets the qualifier for ``left mousebutton''. Thus to
+    ask for the any mousebutton, you have to specify both the KEY and the
+    according QUALIFIER.
+
+    Now what happens if you do a mapping on any mousebutton and also use
+    this button as a qualifier in another mapping like:
+
+    \begin{center}
+    \begin{verbatim}
+    map L-lmb tomouse	`move the cursor to the mouse'
+    map L-a ``hello''   `insert "hello" while LMB and a'
+    \end{verbatim}
+    \end{center}
+
+    The first mapping get always executed if you press the left mousebutton.
+    If you press {\tt A} after that while still pressing the left mousebutton,
+    the second mapping gets executed. That is, BOTH mappings get executed
+    even if you only want {\tt L-a}. To avoid this, better do NOT use the mousebuttons
+    as qualifiers if you are not absolutely sure what you want. There
+    are enough qualifiers on the keyboard.
+
+    The next thing is mousemovement. As mentioned before, you can also
+    map the movement of the mouse:
+
+    \begin{center}
+    \begin{tabular}{ll}
+	{\tt L-mmove}  & moving the mouse while left mousebutton is held down  \\
+	{\tt mmove}    & just while moving the mouse. BE CAREFUL !	       \\
+	{\tt LR-mmove} & both Mousebuttons pressed while moving the mouse      \\
+    \end{tabular}
+    \end{center}
+
+    Note: I don't see an actual purpose for mapping the movement of the
+	mouse WITHOUT any qualifiers, but it's possible to do that. But be
+	careful ! XDME will execute the command every time you touch your
+	mouse !
+
+\subsection{Default Mappings}
+
+    XDME does some default mappings for you on startup. These map all
+    printable ASCII keys to just insert the ASCII-equivalent of the
+    key. Also all extra keys like {\tt RETURN}, {\tt BS}, {\tt DEL}, etc. are mapped
+    to their meaning. Here is a list of other mappings that are done:
+
+    \begin{table}\centerline{\bf Default Key-Mappings of XDME}
+    \begin{tabular}{|l|p{2in}|p{2.8in}|}
+    \hline
+	    Key & Mapping & Description \\
+    \hline
+	    {\tt A-n} &      {\tt newwindow arpload} & Open new Window and show file\-re\-quester \\
+	    {\tt A-o} &      {\tt arpload} & Load a new file via file-requester \\
+	    {\tt A-s} &      {\tt saveold} & Save file (overwrite any old file) \\
+	    {\tt A-a} &      {\tt arpsave} & Save file as ... \\
+	    {\tt A-q} &      {\tt quit} & Quit one XDME-Window or XDME, if this was the last window \\
+	    {\tt A-Q} &      {\tt quitall} & Quit XDME. You are asked if you want to save any unsaved work \\
+	    {\tt A-z} &      {\tt undo} & Undo \\
+	    {\tt A-x} &      {\verb/bsave t:xdme\_clip bdelete/} & Move block to Clip \\
+	    {\tt A-c} &      {\verb/bsave t:xdme\_clip unblock/} & Copy block to Clip \\
+	    {\tt A-v} &      {\verb/insfile t:xdme\_clip/} & Paste block from Clip \\
+	    {\tt A-f} &      {\verb/escimm (findstr \`) next/} & Ask and search for string \\
+	    {\tt A-r} &      {\verb/escimm (findstr \`)/} & Ask, search and replace strings \\
+		      &  {\verb/escimm (repstr \`) nextr/} & \\
+	    {\tt A-e} &      {\verb/escimm (execute \`)/} & Execute DOS-Command \\
+	    {\tt A-b} &      {\tt block} & Mark beginning or end of block \\
+	    {\tt A-i} &      {\tt iconify} & iconify actual XDME-window \\
+    \hline
+	    {\tt a-up} &     {\tt scrollup} & Scroll actual window up one line \\
+	    {\tt a-down} &   {\tt scrolldown} & Scroll actual window down one line \\
+	    {\tt a-left} &   {\tt wleft} & Jump to beginning of next word \\
+	    {\tt a-right} &  {\tt wright} & Jump to beginning of previous word \\
+    \hline
+	    {\tt s-up} &     {\tt pageup} & Jump to top of screen or scroll one page up \\
+	    {\tt s-down} &   {\tt pagedown} & Jump to bottom of screen or scroll one page down \\
+	    {\tt s-right} &  {\tt pageright} & Jump to end-of-line, right border or scroll one page right \\
+	    {\tt s-left} &   {\tt pageleft} & Jump to left border, beginning-of-line or scroll one page left \\
+	    {\tt s-return} & {\tt firstnb down} & Go to beginning of line and then one line down \\
+	    \verb/s- / &      {\verb/( )/} & Make {\tt Shift Space} a simple {\tt Space } \\
+    \hline
+    \end{tabular} \\
+    continued on the next page ...
+    \label{default mappings}
+    \end{table}
+
+    \begin{table}\centerline{\bf Default Key-Mappings of XDME (continued)}
+    \begin{tabular}{|l|p{2in}|p{2.8in}|}
+    \hline
+	    Key & Mapping & Description \\
+    \hline
+	    {\tt c-up} &     {\tt top} & Go to beginning of text \\
+	    {\tt c-down} &   {\tt bottom} & Go to end of text \\
+	    {\tt c-right} &  {\tt last} & Go to end-of-line \\
+	    {\tt c-left} &   {\verb/set tmp $colno firstnb/}
+			     {\verb/if x=$tmp first/} &
+					Jump to beginning of line or to the far left \\
+    \hline
+	    {\tt c-esc} &    {\tt recall} & Recall last commandline \\
+	    {\tt c-c} &      {\verb/""/} & On {\tt Ctrl C} do nothing (This is handled internally in XDME) \\
+	    {\tt c-j} &      {\tt join} & Join two lines together \\
+	    {\tt c-i} &      {\tt insertmode toggle} & Switch between {\tt INSERT}- and {\tt OVERWRITE}-mode \\
+	    {\tt c-del} &    {\tt remeol} & Remove all text to the end-of-line \\
+	    {\tt c-w} &      {\tt wordwrap toggle} & Switch {\tt WORDWRAP}-mode on and off \\
+	    {\tt c-g} &      {\tt escimm (goto )} & Ask for a line and go to that line \\
+	    {\tt c-l} &      {\verb/((^L))/} & Insert {\tt FF} \\
+	    {\tt c-e} &      {\verb/((^[))/} & Insert {\tt ESC} \\
+	    {\tt c-m} &      {\tt match} & Find matching parentheses \\
+    \hline
+	    {\tt a-n} &      {\tt next} & Find next occurrence of search-string \\
+	    {\tt as-n} &     {\tt nextr} & Replace next occurrence of search-\\
+		      & 	       & string by replace-string \\
+	    {\tt a-p} &      {\tt prev} & Find previous occurrence of search-string \\
+	    {\tt as-p} &     {\tt prevr} & Replace previous occurrence of search- \\
+		      & 	       & string by replace-string \\
+	    {\tt a-f} &      {\tt reformat} & Reformat paragraph \\
+	    {\tt a-i} &      {\tt indent b .t} & Indent block by one {\tt TAB} to the right \\
+	    {\tt a-I} &      {\tt indent b -.t} & Indent block by one {\tt TAB} to the left \\
+	    {\tt a-b} &      {\tt block} & Mark block (like {\tt A-b} \\
+	    {\tt a-c} &      {\tt bcopy} & Copy block to cursor \\
+	    {\tt a-d} &      {\tt bdelete} & Delete block \\
+	    {\tt a-m} &      {\tt bmove} & Move block to cursor \\
+	    {\tt a-s} &      {\tt barpsave} & Save block to file via file-requester \\
+    \hline
+	    {\tt L-lmb} &    {\tt tomouse} & Jump to mouse \\
+	    {\tt L-mmove} &  {\tt tomouse} & Follow mouse \\
+	    {\tt M-mmb} &    {\tt clipins} & Insert contents of Clip \\
+    \hline
+    \end{tabular}
+    \end{table}
+
+\end{document}
+
+%\begin{itemize}
+%\item {\tt }
+%\end{itemize}
+

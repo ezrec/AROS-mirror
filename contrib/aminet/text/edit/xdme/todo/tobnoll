@@ -1,0 +1,85 @@
+Hallo,
+
+1. Aendere nicht immer das Format von History sondern halte Dich einfach
+mal an mein Format. (z.B. neue Einträge werden OBEN angefuegt und die
+Version ist <Major>.<Minor>pl<patchlevel> -> 1.83pl10. Mit 1.83.10 hatte
+das Version Kommando (CLI) seine Probleme...
+
+2. BugReports NICHT in der History, sondern einzeln. Das Format von
+BugReports ist aus den Demos in docs/ ersichtlich. Eingaben in der
+Shell werden mit "> " eingeleitet, XDME Commandos mit "%".
+
+3. In XDME sind alle Kommandos und Variable grundsaetzlich case_in_sensitiv.
+Bitte passe das im Variablen-Modul entsprechend an. Es gibt keine
+Ueberschneidung zwischen "spc_" und "spc", weil Du immer so viele
+Zeichen wie möglich einlesen musst (munge-most Prinzip, wie in C:
+a+++b heisst a ++ + b und nicht a + + + b oder a + ++ b). D.h. beim
+Vergleich wird mit strnicmp ("spc_", string, 4) verglichen und dieser
+Test schlaegt bei "spc" fehl. Der Vergleich "spc_" muss natuerlich VOR
+"spc" erfolgen.
+    Das gleiche gilt für keymappings. nk- ist nicht "nk -" sondern
+"kein Qualifier und nk-", d.h. zuerst in Token zerlegen (nk- ist ein
+komplettes Token) und dann die Tokens untersuchen. Bei Keymaps sieht
+die Grammatik so aus:
+
+    map     : MAP keyspec command
+	    ;
+    keyspec : KEYID
+	    | QUALIFIER MINUS KEYID
+	    ;
+
+Und der Scanner:
+
+    "nk-"       { yylval = NUMERIC_MINUS; return KEYID; }
+    ...
+    [ascAxyz]	{ yylval = *yytext; return QUALIFIER; }
+    "-"         { return MINUS; }
+
+Man beachte die Reihenfolge, aber ich glaube, dass FLex die Regeln automatisch
+so sortiert, dass moeglichst Lange Sequenzen erkannt werden (schau das aber
+lieber in der Anleitung nach).
+
+4. In Jabba.c habe ich folgende Aenderung vorgenommen:
+
+> #define spc_num_vars	  53
+< #define spc_num_vars	  (sizeof (spc_names) / sizeof (spc_names[0]))
+
+Das erspart Arbeit und Fehler... Tip: Wie waere es, wenn Du statt dem
+Riesen-Switch so arbeitest:
+
+struct
+{
+    char * name;
+    void (*get)(char * dest, int data);
+    void (*set)(char * value, int data);
+    int    data;
+} spc_names[] ... ;
+
+Der Aufruf erfolgt dann etwa so:
+
+    (*spc_names[~lock].get)(buffer, spc_names[~lock].data);
+
+Dann muss man nur noch alle globalen Variablen zusammenfassen.
+Ah, noch was: Warum die vielen ";" in den case-Anweisungen ? Und warum
+ist lock invertiert ?? Und der Name "Jabba"... naja :)
+
+5. Nach dem Uebersetzen fehlt das Symbol "VSTK_Internal". Ich habe es in
+src/var/spc.c ergaenzt. Ausserdem fehlt der Prototype fuer "current_word".
+
+6. "map sA-q quitall" geht nicht mehr. Wenn ich Amiga-Shift-Q druecke,
+dann wird nur QUIT ausgefuehrt. Das ist schon in 1.83.09 so.
+
+7. Aendere das Format der Sourcen dahingehend, dass eine Funktion jetzt
+so aussieht:
+
+    Prototype void do_foo (void);
+    /*DEFCMD "foo", 1, CF_ICO, (FPTR)do_foo, */
+    /*DEFHELP #cmd foo FOO - does foo */
+
+    void do_foo (void)
+    {
+	...
+    } /* do_foo */
+
+Dann kann command.h und die Docs aus den Sourcen generiert werden.
+

@@ -1,0 +1,77 @@
+#
+#	XDME startup-file
+#
+#	$Id$
+#
+
+# give XDME more CPU-time
+taskpri 1
+
+# Make menus
+menuoff
+menuclear
+
+menuadd Project `New...^An'         A-n
+menuadd Project `Load...^Ao'        A-o
+menuadd Project `Insfile...'        arpinsfile
+menuadd Project `Project load'      projectload
+menuadd Project `^B' `'
+menuadd Project `Save^As'           A-s
+menuadd Project `Save as...^Aa'     A-a
+menuadd Project `Save & Iconify'    `A-s A-i'
+menuadd Project `Project save'      projectsave
+menuadd Project `^B' `'
+menuadd Project `Print^Ap'          A-p
+menuadd Project `Print as...'       `title `Not yet :-)''
+menuadd Project `^B' `'
+menuadd Project `Iconify^Ai'        A-i
+menuadd Project `^B' `'
+menuadd Project `Save & Quit'       `A-s A-q'
+menuadd Project `Quit window^Aq'    A-q
+menuadd Project `Quit XDME^AQ'      A-Q
+
+menuadd Edit `Cut^Ax'               A-x
+menuadd Edit `Copy^Ac'              A-c
+menuadd Edit `Paste^Av'             A-v
+menuadd Edit `Erase'                bdelete
+menuadd Edit `^B' `'
+menuadd Edit `Undo^Az'              A-z
+menuadd Edit `^B' `'
+menuadd Edit `Find next...^Af'      A-f
+menuadd Edit `Find prev...^Af'      As-f
+menuadd Edit `Find next    a-n'  a-n
+menuadd Edit `Find prev    a-p'  a-p
+menuadd Edit `^B' `'
+menuadd Edit `Replace Next...^Ar'   A-r
+menuadd Edit `Replace Prev...^Ar'   As-r
+menuadd Edit `Rep. Next   as-n'  as-n
+menuadd Edit `Rep. Prev   as-p'  as-p
+menuadd Edit `Replace all'          `push pos ifelse bl `goto block while cb `next if cb `ifelse x=1 `up last' left nextr'' goto end' `top repeat -1 nextr' pop auto'
+
+menuadd Block `Move block      a-m' bmove
+menuadd Block `Copy Block      a-c' bcopy
+menuadd Block `Delete Block    a-d' bdelete
+menuadd Block `Unhighlite      a-u' a-u
+menuadd Block `^B' `'
+menuadd Block `Print block     a-p' a-p
+menuadd Block `Save as...'          barpsave
+menuadd Block `^B' `'
+menuadd Block `Indent block    a-i' a-i
+menuadd Block `Outdent block   a-I' a-I
+
+menuadd Macros `Not yet :-)' `'
+
+menuadd Settings `Load settings' loadconfig
+menuadd Settings `Save settings' saveconfig
+menuadd Settings `Source file...' (escimm (source `))
+
+menuon
+savetabs on
+autounblock on
+
+map A-p `push savetabs push modified savetabs off writeto prt: pop auto pop auto'
+map a-p `push savetabs savetabs off bsave prt: pop auto'
+map a-u unblock
+
+# Source users .edrc-file
+source s:.edrc_user

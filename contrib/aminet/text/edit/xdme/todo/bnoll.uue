@@ -1,0 +1,20 @@
+Hi Aaron!
+
+> #endif STATIC_COM
+> Src/Menu/MenuCom.c 1505 Warning 132: extra tokens after valid preprocessor directive
+
+Kann es sein, dass Du mir diese Msg schon einmal geschickt hast?
+(OK - es koennte sein, dass ich damals gedacht habe, dass Du das
+direkt auch bei Dir fixt)
+Wie der Zufall es will, habe ich aber noch ein paar Bugs in
+menucom.c gefunden, und habe es daher dabei ...
+
+> Ah, und noch was. Der Text oben ist mit meinem "clipins" eingefuegt worden.
+> Er hat mehrere Zeilen und wie Du siehst, sieht er ok aus.
+
+Ja, wuerde ich auch sagen ...
+(Frag' mich aber bitte nicht, wieso es bei mir nicht funktioniert hat ...)
+
+
+mfG "0"
+

@@ -1,0 +1,433 @@
+
+#ifdef SPC_VAR
+
+BIT default = %{
+    SET = %{ SETF_$(REFERENCE) (Ep, test_arg(value, GETF_$(REFERENCE)(Ep))); %};
+    GET = %{ value = GETF_$(REFERENCE)(Ep) ?"1":"0"; %};
+%};
+
+INT default = %{
+    SET = %{ $(REFERENCE) = atol(value); %};
+    GET = %{ value = ltostr((long)$(REFERENCE)); %};
+%};
+
+STR default = %{
+    SET = %{ strcpy($(REFERENCE), value); %};
+    GET = %{ value = $(REFERENCE); %};
+%};
+
+// the pens ...
+
+int fgpen = %{ reference =  TEXT_FPEN(Ep); %};
+int bgpen = %{ reference =  TEXT_BPEN(Ep); %};
+int hgpen = %{ reference = BLOCK_FPEN(Ep); %};
+int bbpen = %{ reference = BLOCK_BPEN(Ep); %};
+int tfpen = %{ reference = TITLE_FPEN(Ep); %};
+int tbpen = %{ reference = TITLE_BPEN(Ep); %};
+
+// the flags ...
+
+bit activetofront   = %{ reference =ACTIVATETOFRONT; %};
+bit autoindent	    = %{ reference =AUTOINDENT; %};
+bit autosplit	    = %{ reference =AUTOSPLIT; %};
+bit autounblock     = %{ reference =AUTOUNBLOCK; %};
+bit debug	    = %{ reference =DEBUG; %};
+bit dobackup	    = %{ reference =DOBACK; %};
+bit globalsearch    = %{ reference =GLOBALSEARCH; %};
+bit ignorecase	    = %{ reference =IGNORECASE; %};
+//bit infixmode       = %{ reference = MathInfix; %};
+bit insertmode	    = %{ reference =INSERTMODE; %};
+bit modified	    = %{ reference =MODIFIED; %};
+bit saveicons	    = %{ reference =SAVEICONS; %};
+bit savetabs	    = %{ reference =SAVETABS; %};
+bit shortlines	    = %{ reference =SLINE; %};
+bit simpletabs	    = %{ reference =SIMPLETABS; %};
+bit sourcebreaks    = %{ reference =SOURCEBREAKS; %};
+bit viewmode	    = %{ reference =VIEWMODE; %};
+bit windowcycling   = %{ reference =WINDOWCYCLING; %};
+bit windowtitles    = %{ reference =WINDOWTITLES; %};
+bit wordwrap	    = %{ reference =WORDWRAP; %};
+//bit intuitiontitles = windowtitles;
+
+// normal integers
+
+const int ascii     = %{ reference = Current[Ep->column]; %};
+const int colno     = %{ reference = Ep->column + 1;	  %};
+const int lineno    = %{ reference = Ep->line + 1;	  %};
+int margin	    = %{ reference = Ep->config.margin;   %};
+int parcol	    = %{ reference = Ep->config.wwcol;	  %};
+int tabstop	    = %{ reference = Ep->config.tabstop;  %};
+
+str currentline 	= %{ reference = Current; set = %{ strcpy (Current, value); Clen = strlen(Current); while (Clen < Ep->column) Current[Clen++] = ' '; Current[Clen] = '\0'; %}; %};
+const str restofline	= %{ reference = Current + Ep->column; %};
+const str version	= %{ reference = version;	       %};
+const str rexxport	= %{ reference = RexxPortName;	       %};
+
+str findstr	    = %{ reference = Fstr;     %};
+str fname	    = %{ reference = Ep->name; %};
+str repstr	    = %{ reference = Rstr;     %};
+str scanf	    =
+%{  reference = String;
+    set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %};
+%};
+
+const fnc currentword	 = %{
+    get = %{ value = current_word(); %};
+%};
+const project fnc keytable	 = %{
+    get = %{
+	if ((value = (void*)currenthash()))
+	    value = ((struct Node *)value)->ln_Name;
+    %};
+    set = %{
+	av[1] = value;
+	do_use_keytable();
+	av[1] = av1_bak;
+    %};
+%};
+const project fnc menustrip	 = %{
+    get = %{
+	if ((value = (void *)currentmenu()))
+	    value = ((struct Node *)value)->ln_Name;
+    %};
+    set = %{
+	av[1] = value;
+	do_use_menustrip();
+	av[1] = av1_bak;
+    %};
+%};
+fnc rxresult	   = %{
+    get = %{ value = get_rexx_result(); %};
+    set = %{{
+	av[1] = value;
+	put_rexx_result();
+	av[1] = av1_bak;
+    }%};
+%};
+const fnc filename	 = %{
+    get = %{ if (getpathto(Ep->dirlock, Ep->name, tmp_buffer))
+	    value = tmp_buffer; %};
+
+    set = %{
+	av[1] = value;
+	do_chfilename();
+	av[1] = av1_bak;
+    %};
+%};
+const fnc currentdir	 = %{
+    get = %{ if (NameFromLock(Ep->dirlock, tmp_buffer, sizeof(tmp_buffer)))
+	    value = tmp_buffer; %};
+    set = %{
+	av[1] = value;
+	do_cd();
+	av[1] = av1_bak;
+    %};
+%};
+
+const BIT itemcheck = %{
+    get = %{
+      if (active_menu)
+	  value = (((struct MenuItem *)active_menu)->Flags & CHECKED) ? "1": "0";
+    %};
+    set = %{
+      if (active_menu) {
+	  UWORD *flags, fv;;
+	  fv = *(flags = &(((struct MenuItem *)active_menu)->Flags);
+	  *flags = (fv & ~CHECKED) | test_arg(value, (fv & CHECKED) ? 1: 0);
+	  if (fv != *flags)
+	      menu_strip (currentmenu(), Ep->win);
+      } /* if */
+    %};
+%};
+
+const str reqresult = %{ reference = ReqString; %};
+
+
+str cmdshellname = %{
+    reference = CMDSH_FileName;
+    get       = %{ value = $(REFERENCE); %};
+    set       = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %};
+    help      = %{ The filename used for the CommandShell in the next opening; the used file must be interactive, and it must not be a "AUTO" Console window %};
+%};
+
+bit cmdshell  = %{
+    reference = CMDSH_Active;
+    GET = %{ value = $(REFERENCE) ?"1":"0"; %};
+    set       = %{ { char inter; inter = test_arg(value, $(REFERENCE)); if (inter != $(REFERENCE)) if (inter) do_opencmdshell(); else do_closecmdshell(); } %};
+    help      = %{ the IsOpen status of the CommandShell; %};
+%};
+
+str cmdshellprompt = %{
+    reference = CMDSH_Prompt;
+    get       = %{ value = $(REFERENCE); %};
+    set       = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %};
+    help      = %{ the prompt string of the Command Shell %};
+%};
+
+bit errorsoncmdshell  = %{
+    reference = CMDSH_ErrorsOut;
+    GET = %{ value = $(REFERENCE) ?"1":"0"; %};
+    set       = %{ $(REFERENCE) = test_arg (value, $(REFERENCE)); %};
+    help      = %{ Decide if errors shall be displayed on the commandshell; %};
+%};
+
+bit warningsoncmdshell	      = %{
+    reference = CMDSH_WarningsOut;
+    GET = %{ value = $(REFERENCE) ?"1":"0"; %};
+    set       = %{ $(REFERENCE) = test_arg (value, $(REFERENCE)); %};
+    help      = %{ Decide if warnings shall be displayed on the commandshell; %};
+%};
+
+
+
+str appicontitle      = %{ reference = APIC_IconTitle;	    set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
+str appiconname       = %{ reference = APIC_IconFile;	    set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
+str appicondropaction = %{ reference = APIC_ActionDrop;     set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
+str appiconclickaction	      = %{ reference = APIC_ActionDblClick; set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
+
+bit appicon	      = %{
+    reference = APIC_Active;
+    get       = %{ value = $(REFERENCE) ?"1":"0"; %};
+    set       = %{ { char inter; inter = test_arg(value, $(REFERENCE)); if (inter != $(REFERENCE)) if (inter) do_apicshow(); else do_apichide(); } %};
+%};
+
+
+
+#endif
+
+// at least the following flags/variables are MISSING:
+
+
+//fnc qualifiers      = %{ %};
+//const fnc refpaths  = %{ %};
+//const fnc textnames = %{ set = %{  %}; %};
+
+// const int win-x/y/width/height
+// const int iwin-x/y
+// int asl-left/top/width/height
+// fnc font
+// fnc windowsize
+// int taskpri
+// str asl-pattern
+// str icontitle-pattern
+// str title_pattern
+
+// useful would be:
+// str tabline
+// const int tableft
+// const int tabright
+// const bit istab
+// str delimiters
+// bit first_click_activates_window
+// int number_max_click -> 1-4
+// int dble_click_treshold
+
+FNC project icon	    = %{
+    set = %{
+	sscanf (value, "%ld %ld", &array[0], &array[1]);
+
+	Ep->config.iwinx      = array[0];
+	Ep->config.iwiny      = array[1];
+
+	if (Ep->iconmode) {
+	    MoveWindow (Ep->win, Ep->config.iwinx - Ep->win->LeftEdge,
+				 Ep->config.iwiny - Ep->win->TopEdge);
+	} /* if */
+    %};
+    get = %{
+	if (Ep->iconmode) {
+	    array[0] = Ep->config.iwinx;
+	    array[1] = Ep->config.iwiny;
+	} else {
+	    array[0] = Ep->win->LeftEdge;
+	    array[1] = Ep->win->TopEdge;
+	} /* if */
+	sprintf (tmp_buffer, "%ld %ld", array[0], array[1]);
+	value = tmp_buffer;
+    %};
+%};
+FNC project iconmode	    = %{
+    set = %{
+	array[0] = test_arg(value, Ep->iconmode);
+	if (array[0])
+	    iconify ();
+	else
+	    uniconify ();
+    %};
+    get = value = Ep->iconmode? "1": "0";
+%};
+FNC project pens	    = %{
+    set = %{
+	sscanf (value, "%ld %ld %ld %ld %ld %ld", &array[0], &array[1], &array[2], &array[3], &array[4], &array[5]);
+
+	 TEXT_FPEN = array[0];
+	 TEXT_BPEN = array[1];
+	BLOCK_FPEN = array[2];
+	BLOCK_BPEN = array[3];
+	TITLE_FPEN = array[4];
+	TITLE_BPEN = array[5];
+
+	if (!Ep->iconmode)
+	    text_redisplay ();
+
+	SETF_MFORCETITLE(Ep, 1);
+    %};
+    get = %{
+	array[0] =  TEXT_FPEN;
+	array[1] =  TEXT_BPEN;
+	array[2] = BLOCK_FPEN;
+	array[3] = BLOCK_BPEN;
+	array[4] = TITLE_FPEN;
+	array[5] = TITLE_BPEN;
+
+	sprintf (tmp_buffer, "%ld %ld %ld %ld %ld %ld", array[0], array[1], array[2], array[3], array[4], array[5]);
+	value = tmp_buffer;
+    %};
+%};
+FNC project window	    = %{
+    set = %{
+	sscanf (value, "%ld %ld %ld %ld", &array[0], &array[1], &array[2], &array[3]);
+
+	Ep->config.winx      = array[0];
+	Ep->config.winy      = array[1];
+	Ep->config.winwidth  = array[2];
+	Ep->config.winheight = array[3];
+
+	if (!Ep->iconmode) {
+	    MoveWindow (Ep->win, Ep->config.winx - Ep->win->LeftEdge,
+				 Ep->config.winy - Ep->win->TopEdge);
+	    SizeWindow (Ep->win, Ep->config.winwidth  - Ep->win->Width,
+				 Ep->config.winheight - Ep->win->Height);
+	} /* if */
+    %};
+    get = %{
+	if (!Ep->iconmode) {
+	    array[0] = Ep->config.winx;
+	    array[1] = Ep->config.winy;
+	    array[2] = Ep->config.winwidth;
+	    array[3] = Ep->config.winheight;
+	} else {
+	    array[0] = Ep->win->LeftEdge;
+	    array[1] = Ep->win->TopEdge;
+	    array[2] = Ep->win->Width;
+	    array[3] = Ep->win->Height;
+	} /* if */
+
+	sprintf (tmp_buffer, "%d %d %d %d", array[0], array[1], array[2], array[3]);
+	value = tmp_buffer;
+    %};
+%};
+FNC global  block	    = %{
+    set = %{{
+	Block block;
+
+	if (VSTK_Internal)
+	    sscanf (value, "%08lx %lx %08lx %08lx %08lx %08lx", &array[0], &array[1], &array[2], &array[3], &array[4], &array[5]);
+	else {
+	    sscanf (value, "%s %ld %ld %ld %ld %ld", tmp_buffer, &array[1], &array[2], &array[3], &array[4], &array[5]);
+	    array[0] = (long)finded (tmp_buffer, 0);
+	} /* if */
+
+	block.ep	   = (void *)array[0];
+	block.type	   = array[1];
+	block.start_line   = array[2];
+	block.start_column = array[3];
+	block.end_line	   = array[4];
+	block.end_column   = array[5];
+
+	set_block (&block);
+    }%};
+    get = %{{
+	extern Block ActualBlock;
+
+	if (VSTK_Internal)
+	    sprintf (tmp_buffer, "%08lx %lx %08lx %08lx %08lx %08lx",
+				    (long)ActualBlock.ep,
+				    (long)ActualBlock.type,
+				    (long)ActualBlock.start_line,
+				    (long)ActualBlock.start_column,
+				    (long)ActualBlock.end_line,
+				    (long)ActualBlock.end_column);
+	else
+	    sprintf (tmp_buffer, "%s %ld %ld %ld %ld %ld",
+				    (long)ActualBlock.ep->node.ln_Name,
+				    (long)ActualBlock.type,
+				    (long)ActualBlock.start_line,
+				    (long)ActualBlock.start_column,
+				    (long)ActualBlock.end_line,
+				    (long)ActualBlock.end_column);
+	value = tmp_buffer;
+    }%};
+%};
+FNC global  pos = %{
+    set = %{{
+	struct TextMarker pos;
+	if (VSTK_Internal)
+	    sscanf (value, "%08lx %08lx %08lx", &array[0],  &array[1], &array[2]);
+	else {
+	    sscanf (value, "%s %ld %ld", tmp_buffer, &array[1], &array[2]);
+	    array[0] = (long)finded (tmp_buffer, 0);
+	} /* if */
+
+	pos.ep	    = (void*)array[0];
+	pos.line    = array[1];
+	pos.column  = array[2];
+
+	text_sync ();
+
+	text_cursor (1);
+	switch_ed (pos.ep);
+	text_cursor (0);
+
+	if (IntuitionBase->ActiveWindow != Ep->win) {
+	    if (GETF_ACTIVATETOFRONT(Ep))
+		WindowToFront (Ep->win);
+	    ActivateWindow (Ep->win);
+	}
+
+	if (pos.line >= Ep->lines)
+	    Ep->line = Ep->lines - 1;
+	else
+	    Ep->line = pos.line;
+
+	Ep->column = pos.column;
+
+	text_load ();
+	text_adjust (FALSE);
+    }%};
+    get = %{
+	if (VSTK_Internal)
+	    sprintf (tmp_buffer, "%08lx %08lx %08lx", (long)Ep, (long)Ep->line, (long)Ep->column);
+	else
+	    sprintf (tmp_buffer, "%s %ld %ld", Ep->node.ln_Name, (long)Ep->line, (long)Ep->column);
+	value = tmp_buffer;
+    %};
+%};
+fnc ed = %{
+    set = %{
+	if (VSTK_Internal)
+	    sscanf (value, "%08lx", &array[0]);
+	else {
+	    array[0] = (long)finded (value, 0);
+	} /* if */
+
+	//text_cursor (1);
+	switch_ed ((void *)array[0]);
+	//text_cursor (0);
+
+	ActivateWindow (Ep->win);                              /// FIX
+	//text_load ();
+	//text_adjust (FALSE);
+//////////////////////////////////////////////////////////////////
+//  For an unknown reason, SETting eds is not performed success-   FIXED
+//  fully; this is a bug in DO_POP, where I got the code from	   FIXED
+//////////////////////////////////////////////////////////////////
+    %};
+    get = %{
+	if (VSTK_Internal)
+	    sprintf (value = tmp_buffer, "%08lx", Ep);
+	else
+	    value =  Ep->node.ln_Name;
+    %};
+%};
+

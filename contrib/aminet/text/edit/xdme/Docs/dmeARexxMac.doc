@@ -1,0 +1,217 @@
+This is the first general release (vX.29c), of Matt Dillon's DME editor
+with an interface to Bill Hawes' ARexx REXX language interpreter, and is
+functionally identical to Matt's v1.29c release (excepting the ARexx
+interface, of course).
+
+ARexx/REXX provides a powerful macro control language capability that can be
+added to just about any application ... pretty easily, as it turns out.
+
+I chose to add it's macro facilities to my favorite editor for a couple of
+reasons.  First, as an exercise, to find out just how to interface ARexx to
+an application, and second to make true named macros available to DME.
+
+I think I've managed to do both, and would now like for other people to have
+a bash at it, and see what I've overlooked.
+
+With that in mind, here are a few, uh, implementation notes.  I solicit your
+feedback.  Thanks!
+
+
+     0 - The following included ARexx macros actually do something useful
+	 (though relatively simple).  They work, and are setup to process
+	 any ARexx generated or DME generated error conditions (such as
+	 not having enough room to save a file to).  At this time, some
+         of the error messages that DME puts in the titlebar, may get
+         overwritten by an "OK" message.  This is due to the limited number
+         of changes that were made to the DME code, and should improve in
+         subsequent releases.  See further remarks on error handling below.
+
+	 The useful macros are: save.dme, put.dme, putd.dme, get.dme, and
+	 bot.dme.  They are implementations of the VM/CMS XEDIT functions
+	 of the similar names.
+
+	 Any other included macros (.dme files) are mostly nonsense as far
+	 as functionallity.  They were used in helping be to help debug the
+	 interface, and are included only to illustrate some of the things
+	 one might do (like nested macro calls, etc).  So be kind about
+	 them :-)!
+
+
+     1 - ARexx macros for DME must be named the same as the command string
+	 that will be be used to invoke them.
+
+
+     2 - ARexx macros for DME should be given the filename extension ".dme".
+
+
+     3 - ARexx macros for DME must reside in the current directory, or the
+	 directory "rexx:" is assigned to.  The current directory is searched
+	 first, followed by the "rexx:" directory.
+
+
+     4 - ARexx macros for DME may be invoked in three ways:
+
+	 a - Explicitly, using one of the DME "rx" commands (e.g., "rx macname",
+	     "rx1 macname arg", or "rx2 macname arg1 arg2").
+
+	     The "rx" command is used to call an ARexx command without passing
+	     it any arguments; the "rx1" and "rx2" commands are used to pass
+	     the ARexx macro one or two arguments respectively.  If more args
+	     need to be passed to the ARexx macro, rx1 (or rx2) may be used by
+	     quoting them  E.g., to pass a macro 5 args, you might use the
+	     command: "rx2 macname (arg1 arg2) `arg3 arg4 arg5'", or possibly:
+	     "rx1 macname (arg1 arg2 arg3 arg4 arg5)".  The "args.dme" macro
+	     is included for you to experiment with.
+
+	     These forms may be embedded in a DME command string (e.g.,
+	     "bottom rx macname find foo" works), unlike the implicit form of
+	     invocation below.
+
+
+	 b - Implicitly, by specifying the name of a macro on DME's command
+	     line, followed by any arguments to be passed to the macro.
+
+	     The macro name must be the first (or only) token in the command
+	     string (e.g., "macname huey dewey louie"), and must NOT be the
+	     same as an internal DME command.
+
+	     Note that the entire command string is passed to the ARexx
+	     interperter "as is", with the case of any arguments, special
+	     characters, etc. being preserved.
+
+
+	 c - By keystroke.  The implicit form of a macro command line, with
+	     any arguments, may be mapped to a key just as a DME command is.
+	     Currently however, partial bindings are not supported.  That is,
+	     "escimm" cannot be used to bind the macro name to a key, leaving
+	     the argument(s), if any, to added in the command line.  This
+	     will be fixed in a future release.
+
+	     The explicit forms ("rx macname", etc.) may be bound in any
+	     command sequence.
+
+
+     5 - Macro files may contain DME commands, or other macro names.  There
+	 is currently no "depth checking", nor checking for circular calls
+	 (A calls B, with B calling A).  If you create such things, you will
+	 probably get what you deserve :-)!
+
+	 Also, I think there is a problem in getting arguments for a second
+	 macro that are specified in the first macro passed back thru DME and
+	 on to the second macro.  I'm investigating this.
+
+	 Note that ARexx capitalizes arguments that are to be passed to DME
+	 if they are not quoted.  So if you want to give the command: find Foo,
+	 specify it as: find "Foo".  Otherwise you'll be looking for: FOO.
+
+
+     6 - Hitting Ctrl-C will result in an "invalid message packet" error
+	 message from ARexx (code = 10).  This doesn't seem to cause any
+	 problems, but to avoid it, remap c-c to the new "null" command
+	 (which does absolutely nothing functional [i.e., map c-c `null'],
+	 or some other DME command.
+
+
+     7 - I have not tested to see if explicit ARexx macro calls work inside
+	 of complex DME macros, nor with the $scanf facility.
+
+
+     8 - Error handling is not all it should be.  Second level (or lower)
+	 macro error messages (in the title bar), may be overwritten by
+	 a higher level "OK" (or other message).
+
+	 Not all DME commands return completion codes, and the "sense" of
+	 them is opposite that of ARexx (in DME, failure = 0, success = 1).
+	 This makes figuring out who did what, what worked and what didn't,
+	 and what went wrong, a little difficult.  I'm sure I don't have it
+	 all "right" (and probably *can't* without alot of work to DME,
+	 which I explicitely don't want to do ... yet, anyway).
+
+         I have the general definition of an error handling strategy roughed
+         out (see the rexx.h file), but am still considering alternatives.
+         This is likely to change, so don't count on the proposed method
+         just yet.
+
+	 The binding to the ARexx ErrorMsg() function isn't working with
+	 Manx yet (because I need to change the "rexxglue" binding, I think).
+	 So right now I don't display the actual ARexx error messages, and
+	 have to give you just the code.
+
+	 This whole area needs lots of work ...
+
+
+     9 - Yes, I know the title bar blinking while a macro is running can be
+	 distracting.  At least you can sorta see what's happening if *you*
+	 don't blink :-).
+
+
+    10 - Compiled using Manx v3.60a (v3.40a/b works too).
+
+
+    11 - To compile, set AREXX to 1 in defs.h, and "make rexx".  Set AREXX
+         to 0, and use "make norexx"  to create a non-ARexx, vanilla version.
+
+	 The Makefiles assume you have a precompiled header file in vd0:include
+	 called "symbols.m" (all of the Amiga .h's).  Also you need to have
+	 the rexx includes in the "include/rexx" directory, and Matt's sup32lib
+         includes in "include/sup32".  His "sup32.lib" should be in the current
+	 directory, or in the directory with teh Manx libs.
+
+	 For linking, the "rexxbind.o" file is needed.  When make processes
+	 "rexxbind.asm", you'll need to be sure your assembly language .i
+         files are available to the assembler.
+
+
+    12 - The ARexx interface adds about 1.5K to the size of the executable
+	 right now.
+
+	 This can probably be reduced a little, by removing some of the checking
+         done in "rexx.c" following some of the calls to the ARexx functions
+         that create/initialize the messages sent to ARexx.  They're just in
+         there for CYA at the moment (I think).
+
+
+    13 - This implementation uses the COMMAND interface described in the
+	 ARexx documentation (as opposed to the FUNCTION interface).
+
+
+    14 - ARexx is a Copyrighted product by William S. Hawes,  PO Box 308,
+	 Maynard, MA  01754 (617-568-8695), and is available from him with
+	 complete documentation for $49.95 U.S. (plus $2 shipping).
+
+	 It is a very good product, and well worth the money.  *Please* do
+	 not pirate it!  I've received written permission from Bill allowing
+	 the redistribution of his include files with DME, or other example
+	 code, however please note that these files are still Copyrighted
+	 by Bill, and that if *you* want to distribute them with *your* own
+         application, you should obtain your own permission from Bill to
+         do so.
+
+
+    15 - DME is a Copyrighted, freely redistributable program by Matt
+	 Dillon, of Berkeley, CA.  It may be distributed for non-profit
+	 only.	Obviously, I think it's the best editor currently available
+	 for the Amiga ... otherwise I wouldn't have gone to the trouble to
+	 add the ARexx interface.
+
+	 My code falls under the same distribution restrictions as Matt's;
+	 you may redistribute it freely, but may not use it for profit, nor
+	 imbed it in a commercial product without prior written permission
+	 from me.
+
+
+    16 - Please report any problems or bugs found in this version to me at
+	 the address below, and don't bug Matt about them.  He doesn't have
+	 ARexx (yet), and won't be able to help you out.
+
+
+Good luck ... I hope you find the ARexx interface a useful enhancement!
+
+/kim   03/31/88
+
+
+UUCP:  kim@amdahl.amdahl.com
+  or:  {sun,decwrl,hplabs,pyramid,ihnp4,uunet,oliveb,cbosgd,ames}!amdahl!kim
+DDD:   408-746-8462
+USPS:  Amdahl Corp.  M/S 249,  1250 E. Arques Av,  Sunnyvale, CA 94086
+

@@ -1,0 +1,174 @@
+date > gcc_report
+stack 250000
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/alias.s Src/Mod/alias.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Mod/alias.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/amiga.s Src/amiga.c
+   echo >> gcc_report ------------------------------------------
+echo Src/amiga.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/block.s Src/block.c
+   echo >> gcc_report ------------------------------------------
+echo Src/block.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/clipboard.s Src/clipboard.c
+   echo >> gcc_report ------------------------------------------
+echo Src/clipboard.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/cmd.s Src/cmd.c
+   echo >> gcc_report ------------------------------------------
+echo Src/cmd.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/command.s Src/command.c
+   echo >> gcc_report ------------------------------------------
+echo Src/command.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/cursor.s Src/cursor.c
+   echo >> gcc_report ------------------------------------------
+echo Src/cursor.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/drexx.s Src/drexx.c
+   echo >> gcc_report ------------------------------------------
+echo Src/drexx.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/edit.s Src/edit.c
+   echo >> gcc_report ------------------------------------------
+echo Src/edit.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/filereq.s Src/filereq.c
+   echo >> gcc_report ------------------------------------------
+echo Src/filereq.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/flags.s Src/Var/flags.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Var/flags.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 obj/globals.s -o Src/globals.c -DVERSION="" -DVERDATE=""
+   echo >> gcc_report ------------------------------------------
+echo -DVERDATE=""
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/globals.s Src/globals.c
+   echo >> gcc_report ------------------------------------------
+echo Src/globals.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/hrexx.s Src/hrexx.c
+   echo >> gcc_report ------------------------------------------
+echo Src/hrexx.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/io.s Src/io.c
+   echo >> gcc_report ------------------------------------------
+echo Src/io.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/keyaddes.s Src/Key/keyaddes.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Key/keyaddes.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/keycodes.s Src/Key/keycodes.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Key/keycodes.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/keycom.s Src/Key/keycom.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Key/keycom.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/keycontrol.s Src/Key/keycontrol.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Key/keycontrol.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/keytables.s Src/Key/keytables.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Key/keytables.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/macros.s Src/Mod/macros.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Mod/macros.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/main.s Src/main.c
+   echo >> gcc_report ------------------------------------------
+echo Src/main.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/math.s Src/Mod/math.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Mod/math.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/mem.s Src/mem.c
+   echo >> gcc_report ------------------------------------------
+echo Src/mem.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/menu_dme.s Src/Menu/menu_dme.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Menu/menu_dme.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/menucom.s Src/Menu/menucom.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Menu/menucom.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/menucontrol.s Src/Menu/menucontrol.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Menu/menucontrol.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/menustrips.s Src/Menu/menustrips.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Menu/menustrips.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/mikro.s Todo/mikro.c
+   echo >> gcc_report ------------------------------------------
+echo Todo/mikro.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/prefs.s Src/prefs.c
+   echo >> gcc_report ------------------------------------------
+echo Src/prefs.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/redraw.s Src/redraw.c
+   echo >> gcc_report ------------------------------------------
+echo Src/redraw.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/refs.s Src/refs.c
+   echo >> gcc_report ------------------------------------------
+echo Src/refs.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/search.s Src/search.c
+   echo >> gcc_report ------------------------------------------
+echo Src/search.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/simplex.s Src/simplex.c
+   echo >> gcc_report ------------------------------------------
+echo Src/simplex.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/smallspc.s Src/Var/smallspc.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Var/smallspc.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/subs.s Src/subs.c
+   echo >> gcc_report ------------------------------------------
+echo Src/subs.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/text.s Src/text.c
+   echo >> gcc_report ------------------------------------------
+echo Src/text.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/vars.s Src/Var/vars.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Var/vars.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/varsbases.s Src/Var/varsbases.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Var/varsbases.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/varstack.s Src/Var/varstack.c
+   echo >> gcc_report ------------------------------------------
+echo Src/Var/varstack.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/win.s Src/win.c
+   echo >> gcc_report ------------------------------------------
+echo Src/win.c
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/swap.s Src/swap.a
+   echo >> gcc_report ------------------------------------------
+echo Src/swap.a
+   echo >> gcc_report ------------------------------------------
+    gcc >> gcc_report -Wall -S -Idd: -I: -Ipd: -Iinclude/  -O0 -o obj/AVL.s Src/AVL.c
+   echo >> gcc_report ------------------------------------------
+echo Src/AVL.c
+date >> gcc_report

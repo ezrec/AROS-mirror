@@ -1,0 +1,292 @@
+
+    BF = Bug fix, MBF = MAJOR bug fix, NF = New feature, CF = Changed feature
+    CM = Code Modification
+
+Version 1.83pl14
+
+	Changes by Aaron Digulla
+
+    BF - IF CB works again
+    BF - IFELSE works again
+    BF - SPACE has no parameters anymore
+    BF - SLINE ON should not make XDME crash anymore
+
+Version 1.83pl13
+
+	Changes by Aaron Digulla
+
+    BF - (23.9.94) fixed bug in DELINE if there was a block below.
+    BF - fixed bug in BMOVE when two windows were involved
+    NF - the SMakefile now generates the date via `rx date`
+    BF - bug fix in util/var/fd.c (does remove all leading spaces now).
+    NF - (26.9.94) all commands are generated atomatically now
+
+	Changes by B. Noll
+
+    CM - (9.9.94) removed some dead assignments in menu/*, var/*, mod/*, key/*
+    CM - (10.9.94) renamed jabba.c into _SPC_.c,
+	 ** Please note that the commands  usekeytable, usemenustrip, rxresult,
+	 ** chfilename and cd can _not_ be replaced by do_setspecialvar()
+    NF - (11.9.94) special variable "itemcheck" represents the checkvalue of
+	 the current active menuitem, if it is invoked by menuselection
+	 (menucontrol, spc.pre)
+    NF - (11.9.94) added an smaller icon for subs'makemygadget (subs.c)
+    BF - (11.9.94) macros'add_record did not initialize correctly (macros.c)
+    NF - (11.9.94) new commands request, reqstring, reqnumber, reqpalette,
+	 reqfile new module Mod/request.c (request.c (new), spc.pre, command.c)
+	 ok, that module can be eliminated if everybody used some ARexx libs,
+	 but so these commands need only 1.5K (perhaps a non-ReqTools version?)
+    ?? - (12.9.94) Made a nearly AUISG conform menu (german) also usable for
+	 novice users; any place to put it? (Docs/sample.edrc)
+    NF - (13.9.94) simple Commandshell added; command "opencmdshell" opens it;
+	 variables cmdshellname, cmdshellprompt, cmdshell (Mod/CMDSH.c (new),
+	 main.c, command.c, SPC.pre)
+	 ok, the synchroneous method via "source CON:..." worked too, but
+	 that asynchroneous one might be better to use.
+    ?? - (14.9.94) translated the auisg menu to english
+    NF - (14.9.94) Command documentation for Request.c, CmdSh.c
+    CM - (16.9.94) added the File StdCommands.c and the generated File _COM_.c
+	 the first keeps trace of all commands, which are not defined inside
+	 of their modules, the other is a sorted list of all occurencies of
+	 "ENODE"; hat way it is much easier to include/exclude a special
+	 command module into/from the distribution, since we can keep command
+	 definition and implementation together. (better filenames!?)
+	 This is IMHO the more convenient method - just move a file out of the
+	 SourceTree do disable all of its commands (and kill it in the
+	 Makefile) inorder to remove its commands from XDMe
+    NF - (16.9.94) added the commands "dropvar" & "printf"; in fact they
+	 had been present for a while, but I just had forgotten to put them
+	 into command.c (now that job is performed automatically, see
+	 previous CodeModification)
+    CM - (19.9.94) renamed the keyword for COMMAND-nodes from ENODE to COMMAND
+	 since this seems to me a better name.
+    CM - (19.9.94) Macros'saverecord writes "simptr" statements only if the
+	 following record entry is not a single default keypress.
+    BF - (22.9.94) "space" requested an argument it did not use (edit.c)
+    CM - (21.9.94) changed SET for some str-specials to "strrep" (SPC.pre,
+	 spc.c)
+    NF - (21.9.94) added AppIcon (mod/APIC.c (new) main.c SPC.pre) currently
+	 controlable via variables only:
+	    appicon(%|title|name|(drop|click)action)
+    NF - (21.9.94) added some specialflags: norequest, showtitle, comlinemode,
+	 followcursor, nicepaging, iconactive (spc.pre)
+	 Why the hell are so many [string]variables declared "static"
+    CM - (21.9.94) removed commata behind all COMMAND-lines to be able to put
+	 them into code (several ...)
+    NF - (21.9.94) "new" command "SPC spcvarname value" set a specialvar
+	 (vars.c, spc.c) now the probs w/ keymap/SPC vs. var/SPC_* are gone...
+    NF - (21.9.94) some more support for "shortlines"
+    BF - (20.9.94) "closecmdshell" now works! (thanx Aaron - I'll have to buy
+	 the AGB, too!)
+    NF - the SMakefile now generates the date via `rx date`
+
+	Changes by Todd M. Lewis
+
+Version 1.83pl12
+
+	Changes by Aaron Digulla
+
+    NF - (14.9.94) added code by Todd M. Lewis which simplyfies the handling
+	 of blocks. Added his name to the about-window.
+    CF - moved the version string into about.c so only this file needs to
+	 be compiled every time.
+    CF - (15.9.94) changed the code to scroll XDMEs window slightly. Now
+	 XDME scrolls only the absolute neccessary bitplanes. If you choose
+	 a foreground-pen 1,2,4,8,etc, XDME will scroll only one bitplane.
+	 It's FAST now :)
+    NF - (21.9.94) Changed format of XDME-prefs file again. But this time
+	 it's not neccessary to use CnvConfig to adjust. The change was due
+	 to an idea of Mr. Lewis who said "Just add some empty fields so
+	 you can add new stuff at any time without having to run CnvConfig
+	 every time". This should be the last change of Config for quite
+	 some time. If you want to be save, start XDME and save the config
+	 via Menu or SAVECONFIG.
+    BF - IF uses now is_gflagset() instead of do_toggle(). Removed do_toggle.
+    NF - All flags (in Ep, Ep->config and globalflags) are now accessed by
+	 macros GETF_xxx(ed) and SETF_xxx(ed) where xxx is the name of the
+	 flag in uppercase and ed is the editor the flag is requested for
+	 (ignored for global flags). To make sure that everyone accesses
+	 the flags via these macros, the names of all flags have been
+	 changed.
+    NF - instead of Prototype() the macro DEFCMD() can be used like this:
+
+	    DEFCMD(void,foo,(int))
+	    {
+		...
+	    } /* foo */
+
+	 which is short for
+
+	    Prototype void foo (int);
+
+	    void foo (int)
+	    {
+		...
+	    } /* foo */
+
+	 The definition is #define DEFCMD(returntype,name,params). Don't
+	 forget the commas and the parentheses around the parameters.
+
+	Changes by Todd M. Lewis
+
+    NF - With the flag BLOCKENDSFLOAT, you can specify if XDME should always
+	 take the upper end of the block as the start even if the lower end
+	 was set with BSTART (on). The default behaviour is to preserve the
+	 order (ie. if BSTART is below BEND, the next BSTART will change the
+	 lower end and not the upper). Note that you cannot mark blocks
+	 with the mouse anymore if you switch this on if you drag it left/up.
+	 Down/right is not affected.
+
+Version 1.83pl11
+
+	Changes Aaron Digulla
+
+    BF - (13.9.94) fixed bug in ABOUT (comma at wrong position resulting in
+	 a "weird" about-window)
+    BF - XDME did not show the InsertMode in the title anymore. The new
+	 field of the pattern is "%i" which is empty if insertmode is on
+	 and "Ovr" is insertmode is off.
+    BF - some sources were missing in the distribution
+
+Version 1.83pl10
+
+	Changes Aaron Digulla
+
+    NF - (7.9.94) part of the docs and the list of commands are generated
+	 from the sources now.
+    BF - added some missing commands to the docs
+    CF - cleaned the code in Src/prefs.c a bit. Added tas_arg (test and set,
+	 like test_arg(), but also displays the result in the title bar),
+	 SetXDMEPen() to change a pen and check all errors and CheckExt()
+	 to allow "setpen topaz 10" as well as "setpen topaz.font 10"
+    CF - The version is now 1.83plXX instead of 1.83.XX since VERSION
+	 has its problems with the other format.
+    NF - Added command ABOUT which shows version and date of comilation.
+    BF - Join will now ignore all spaces at the end of the current and
+	 at the beginning of the next line in all cases.
+    BF - DELINE would generate an illegal block if the last line of a block
+	 was deleted.
+    NF - added command SETDEFTITLE to set a pattern for the title of XDME.
+	 for the iconified window, the command is SETDEFICONTITLE.
+    NF - the old DME way to scroll (without jumping to the window border
+	 beforehand) can now be activated with the NICEPAGING command.
+    NF - if you want the iconified window be active after ICONIFY, you
+	 set this with ICONACTIVE
+    BF - POP BLOCK will now make sure the display will look correct.
+    BF - POP ED did not activate the current window.
+
+	Changes Bernd Noll
+
+    NF - (4.9.94) variable interface "intuitiontitles" to switch on
+	 SetWindowTitles instead of the old method (smallspc.c)
+    NF - (4.9.94) variable interface to "dobak" (no effect yet) (s.a.)
+    NF - (4.9.94) variable interface to "tfpen" title foreground pen
+	 (s.a.)
+    CF - (4.9.94) renamed variable interface "tpen" for title background pen
+	 to "tbpen", since there is also "tfpen" (s.a.)
+    CM - (4.9.94) eliminated some "dead assignments" in Mod/*
+    BF - (4.9.94) reported & corrected a newly introduced bug in "showlog"
+    BF - (4.9.94) re-incorporated bugfixes of 1.9.94 (menu*.c)
+    BF - (4.9.94) corrected a +/- sign in AVL.c (why did nobody report that!?)
+    NF - (6.9.94) replaced SmallSPC.c by a new partly automatically generated
+	 module; added some new Specialvars, and put Special-Vars, -Flags +
+	 -Ints together. (SmallSPC.c (killed) vars.c spc.c (new) spc.pre (new))
+	 Variable Search is speed up about 5% only (had wished a better value)
+	 (the functionality of PUSH, POP, PEEK can also be reached w/ PUSHVAR,
+	 POPVAR, PICKVAR, DROPVAR now)
+    CF/BF - keycodes now expect longnames like nk0, f10, ... to be lower case
+	 there had been interferences between the "SPC_" prefix in PATCH_JUX
+	 and the "spc" key... (KeyCodes.c)
+
+Version 1.83.09
+
+	Changes Aaron Digulla
+
+    BF - XDME did not check for a window-resize when refreshing was neccessary
+	(ie. when the XDME window becomes exposed).
+    BF - Bug in TOMOUSE. XDME compared the X-position with the number of
+	Lines and the Y-pos with the number of columns. Should be the other
+	way round.
+    NF - added left, right and center to JUSTIFY.
+    BF - Fixed some bugs in search. XDME should find all occurences in
+	both directions, now.
+    BF - another bug fix in window-refresh. Window refresh works now, when
+	a block is visible.
+    BF - XDME uses only those planes for scrolling it needs, again. This
+	results in a much faster scrolling since XDME needs only 2 planes
+	in most cases.
+    BF - The ICONIFY gadget was one pixel too far to the left
+
+	Changes Bernd Noll
+
+    CM - (12.8.94) Made the Files Src/Var/* Src/Mod/* Src/Key/* gcc-compilable
+    BF - (12.8.94) wbstarted XDME refused to save a file, that had a Def.icon
+    NF - (12.8.94) Special Flag "saveicons" also for cli-started processes
+	 (replacement of "Wdisabled", which had the opposite effect)
+    BF - (12.8.94) "showlog" had obviously never worked
+    CM - (15.8.94) moved Src/Var/VarStack.c into Src/Mod since this is only a
+	 support module (preparing replacement of Src/Var/* by a more flexible
+	 concept with a little bit more structure)
+    CM - (15.8.94) we are using "IDCMP_INACTIVE" to make sure the title looks ok
+    NF - (15.8.94) the variable "iconname" (NO Special Variable) is controlling
+	 the used icon image; if there is no such variable set or the according
+	 ".info" file is not found, we use the internal image.
+	 (that variable should per default point to "ENV:Sys/def_Text.info")
+    BF - (15.8.94) Removed a bug in "saveicons" (did not use the full appname)
+    BF - (15.8.94) Removed a bug in "showlog" (there is still one left: we do
+	 not check, if there is already a log window open)
+    NF - (15.8.94) added command "readtemplate" to insert a file and replace some
+	 variable-references by their values; added file "Src/Mod/tplter.c"
+    BF - (15.8.94) Shell-vars were not recognized like ENV vars; replaced some
+	 FileAccess ("ENV:") by calls to DosLib (Get/Set-Var) (I had forgotten to
+	 replace vars.c by my own module ...)
+    NF - Flag to control, if the title is using TPEN or the Intuition color
+	 (not accessible yet)
+    CF - (18.8.94) SIMPTR now uses pixel values ... (macros.c)
+    BF - (21.8.94) "if/ifelse/while cb ..." would not work if Cursor at
+	 blockborder (e.g. block.topline) (cmd.c)
+    BF - (21.8.94) Fixed Bug from 13.8.: DefIcons would not be accepted
+	 via WB-start; (main.c)
+    CM - (22.8.94) made some files gcc-compatible (amiga.c, block.c/defs.h,
+	 win.c) now almost all files compile w/ no gcc-warnings (I had to
+	 modify the c=bm includes/clib/(exec|dos)_protos.h, though)
+
+Version 1.83.08
+
+	Changes Aaron Digulla
+
+    BF - if a window concealed part of the XDME window, the scroller would
+	not follow the mouse
+    BF - if XDME misses the mousebutton-up-message, it looks into the
+	qualifiers. If there is no mousebutton, XDME stops listening
+	to MOUSEMOVE and INTUITICKS.
+    CF - XDME will not allow to resize the window when it refreshes its
+	window.
+    BF - many dead assignments removed
+    NF - XDME is now compiled using all available optimizations
+    NF - new format of History-File
+    NF - A (incomplete) list of all people that reported bugs
+    NF - made refs.c recognise the output of etags
+    MBF - XDME comes now with an AmigaGuide-File with all commands ! YEAH :-)
+
+	Changes Bernd Noll
+
+    NF - the source of XDME is now spread over many different subdirs
+    NF - XDME uses RCS now
+    BF - Added some patches to refs.c
+    BF - much work in src/key/, src/var and src/mod.
+
+Thanks go to (in no order)
+
+    Tero Turtiainen, Andreas Baum, Andreas Mauﬂ, Rudolf Binder, Mikael
+    S‰ker, Walter Haidinger, Willibald Huber, Mario Paul, W. H. Stanton, M.
+    Gounelle Denis, Dirk Heckmann, Bernd Noll, Stephan Becker, Matthias
+    Gerloff, Gunther Nikl, Simon de Boer, Todd Lewis, Simon Brown,
+    Arttu K‰rpinlehto,
+
+	and (of course)
+
+    Matthew Dillon, who made it possible :-)
+
+and to all others that I forgot (because I lost their mail :-( )...
+

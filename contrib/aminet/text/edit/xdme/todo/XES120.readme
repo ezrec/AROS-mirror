@@ -1,0 +1,15 @@
+Short:    Macros, menus & ARexx scripts for XDME
+Author:   Fergus Duniho
+Uploader: fdnh@troi.cc.rochester.edu
+Type:     util/rexx
+
+XDME Excelsior Suite v1.20 - A suite of
+macros, menus, and ARexx scripts for XDME.
+Features include: spell checking, outlining,
+localized major modes, automatic mode
+selection upon loading, various Emacs-like
+keymappings, region and rectangle editing a
+la Emacs, xpk support, diary maintenance,
+pagination, many requesters, a "Windows" menu
+that keeps track of each open file, and many
+other features.  XES is a new name for XDMD.

@@ -1,0 +1,724 @@
+
+extracts from an elder DOC to my old DME-patches
+i have documneted some other commands - you might get their
+" (see below)
+
+PLEASE NOTE, THAT THE MACROS-COMMANDS WILL DIE IN XDME 2.00
+SO DO NOT USE THESE FEATURES TOO MUCH (You might get used to them)
+
+
+    ABORT	    -Unconditionally end current macro
+    BREAK	    -Unconditionally abort the current loop
+    CONTINUE	    -next turn off the loop
+    (DEC vname       -Mathfunc: Decrement (see below))
+    (INC vname       -Mathfunc: Increment (see below))
+    INSERT text     -insert text without respect of insertmode
+    MATH1 func name -long version of INC/DEC/NEG
+    MATH2 func name value  / MATH2 name func value
+		    -long version of ADD/SUB/MUL/DIV/MOD
+		     the two different modes of syntax can be toggled via INFIXMODE
+    (MOD vname N     -Mathfunc: Modulo (see below))
+    (MUL vname N     -Mathfunc: Multiplicate (see below))
+    (NEG vname       -Mathfunc: Negate (see below))
+    OVERWRITE text  -overwrite text without respect of insertmode
+    QUALIFIER [+]which -Add a certain keystroke - qualifier
+		     ( which is out of acsxyzALMR )
+		     for the next keypress ( if + is omitted,
+		     previous calls are forgotten)
+		     With that command multi-key sequences
+		     like MEmacs C-X... are possible
+    REM comment     -don't interpret the next expression
+    SETCLIP var str -create/modify an ARexx-Clip (access w/ $)
+    SETTVAR var str -create/modify a textlocal variable (access w/ $)
+    SETMACRO name numargs macroblock
+		    -define a macro with numargs parameters
+    SETMACROVAR var str
+		    -define a macro's local variable (during execution)
+    SETREXX var str -create/modify an AREXX variable - only if an AREXX script is active
+    SMV var str     -short for SETMACROVAR
+    (SUB vname N     -Mathfunc: Subtract (see below))
+    SWAPV name1 name2 -swap the contents of 2 variables
+    UNABORT	    -Reset Abortion flag (senseful for Rexx-macros only)
+    UNSETTVAR var  -delete a textlocal variable
+    UNSETCLIP var   -delete an ARexx clip
+    UNSETMACRO name -delete a macro
+    UNSETMACROVAR var -delete a macro's local var
+    VCTAGS name     -use the ctags-function with an explicit searchname
+    VREF name	    -use the ref-function with an explicit searchname
+    (INC/DEC/NEG varname)
+    (ADD/SUB/MUL/DIV/MOD varname number)
+    MATH1 INC/DEC/NEG/++/-- varname
+    MATH2 ADD/SUB/MUL/DIV/MOD/+=/-=/*=//=/%= varname number ( == prefix notation)
+    MATH2 varname ADD/SUB/MUL/DIV/MOD/+=/-=/*=//=/%= number ( == infix notation)
+    INFIXMODE what
+
+	Some primitive mathfunctions with simple syntax.
+	They all expect an EXISTING non-special variable as first argument
+	which must contain a valid numberstring (that is to be converted
+	by atoi) (and the latter ones additionally a valid number as 2nd
+	argument).
+	The math-function is performed on the argument(s) and then the
+	result is written back into the variable ( so it must not be a
+	readonly variable but either a normal dme variable, an ENV
+	variable, a rexxclip or a toggle )
+	(toggle between infix notation and prefix notation for math2 with
+	 the specialflag INFIXMODE (see above))
+
+
+
+
+- these docs might be inconsistent to the commands, as they were created
+- for a slightly different system
+
+
+ >ABORT
+ >UNABORT
+      they toggle a flag which controlles macro-executing
+      ABORT sets the break-flag which causes e.g. immediately macro-abortion at keys
+      or terminates line-execution
+      UNABORT allows to reset this flag in a AREXX-script,
+      is the last line produced an error, you may clear the error-flag
+      if UNABORT is the first (or only) command of a line
+
+
+ >BREAK
+ >CONTINUE
+	like their C-equvalents
+
+ >EVAL com
+
+      to split longer commandsequences to fit their length down to MAXIA
+      so MAXIA may stay "small" and anybody can avoid "expression too complex"
+
+
+  >FORCE [T|S|F|R|D] command
+
+      Execute a command in a certain way
+
+	   T == unTitle
+	   S == quiet (no Screen updating)
+	   F == unFail
+	   R == no Requestors
+	   D == enable debugging mode
+	 <no flags> -> simple eval
+
+ >INSERT text
+ >OVERWRITE text
+
+      insert or overwrite text in the current line without respect
+      to the specialflag INSERTMODE
+
+
+*********************************************************************
+
+  PATCH_MACROS - OVERVIEW
+
+  the module supports several commands:
+  SETMACRO	       definition of a new macro
+  UNSETMACRO	       deletion of a macro
+
+  SETMACROVAR  definition of a macro's local variable
+  UNSETMACROVAR        deletion of suh a variable
+		   (at the end of a macrocall all its local variables
+		    are deleted automatically)
+
+
+ >RET
+       return from a macro befor it end is reached
+
+ >UNSETMACRO name
+       remove a macro definition
+
+ >SETMACRO macroname numargs body
+       create a macro definition
+       please note that a macro-body is read twice once on definition
+       and once on execution (variables should be excaped so)
+
+       after such a definition it is possible to use macroname like
+       any DME-command; the following numargs expressions are used
+       as the macros variables, they can be accessed for read with
+       $arg0-$arg<numargs> (not for write)($arg0 returnes the macro's
+       name)
+
+  BUG:	  if numargs is not a number then this command
+	   will assume a value of "0"
+
+  WARNING:     the synopsis of that command MIGHT change in near future, as
+	       I am thinking about use of macros' local flags or static vars
+	       so there might come up another number of local-flags ->
+	       SETMACRO name numargs NUMFLAGS|LIST-OF-NAMES body
+
+**********
+
+ >SETMACROVAR name value
+ >SMV  name value
+       define a local variable for the current macro-call
+       all local vars will be deleted at the end of a macro-execution
+       (SMV is a shortcut for SETMACROVAR as we can't define a short
+	macro for that command)
+
+ >UNSETMACROVAR name
+       drop a local variable before the end of the current macro-call
+       all local vars will be deleted at the end of a macro-execution
+       so that command may be obsolete
+  NOTE:   ARGUMENTS to a macro are READ-ONLY,
+	   You can't alter their values from the body of the called macro
+		   (at the end of a macrocall all its local variables
+		    are deleted automatically)
+
+    [UN]SETMACRO (definement of macros)
+    ([UN]SETMACROVAR, SMV)
+
+	the usage of SETMACRO allows parametered macros:
+	eg. after
+	    SETMACRO x 2 (set \$arg1 \$arg2 title (\$arg1 set))
+	U must call x with 2 arguments, which are accessed with
+	$argX (case sensitive) in the macro-body (arg0 = macroname)
+	in the block of a so defined macro You can define local
+	variables with the command SMV(SETMACROVAR) which are
+	valid only during that macrocall (or until UNSETMACROVAR)
+	so capsulated variables are possible
+	    SETMACRO pseudo 1 (SMV abc \$arg1 TITLE \$abc)
+	    SET abc 10 pseudo 1000 TITLE abc
+	(global abc is set to 10; in the procedure local abc is set
+	 to 5; after execution abc again ha the value 10)
+
+	NOTES * SMV is only a shortcut for SETMACROVAR
+	      * the commands SMV/[UN]SETMACROVAR are usable only
+		during macro-execution
+
+**********************************************
+
+   command.c..
+  PATCH_JUX (reine gaudi)
+
+	Direct assignments of existing vars
+     With that patch something is possible like:
+	set abc 1 ... abc = 3 (instead of set abc 3)
+
+     if arg1 is a "=" we search for a variable of the name in arg0
+     if there is such a variable, we assign its value to the value
+     in arg2  (the correct types are used)
+
+      But what shall we do, if there was not such a variable???
+
+**********************************************************
+
+    >QUALIFIER [+]xyzLMRaAcs
+
+     That Function is to enable an extended qualifier ( or any other one )
+     for the next pressed key - there should be no interaction to calls from
+     macros.
+     '+' at the first position tells dme not to forget previous calls of
+	  QUALIFIER
+
+    NOTE that a call of QUALIFIER only has a menaing for
+	 the NEXT interactive keystroke, it does not concern any later
+	 keystrokes, and does not affect any commands which
+	 use keymapping in any way
+
+*********************************************************
+
+
+  simple calculator:
+  recognizes +,-,*,/,(,)
+  2 numbers must be separated with one operator,
+  !!each operator must be surrounded with whitespaces!!
+  (there are no unique +/- operators allowed, if they are
+   not part of a number: "-1" is allowed, "(- 1)" is not!)
+
+  so each expression has an inequal number of subexpressions -
+  x+1 values and x operators with x in N
+  there should not be more than MAXIA (== 5)
+  expressions on one level (simply use brackets)
+  ( that is in fact no problem, as on any evaluation
+    we try to shorten our results due to operator prorities,
+    as long as there are only 4 operatores, we can never ever
+    run out of space
+   e.g.:>
+       => 1	 => 1*	  => 1*2   => 1*2+   [-> 2+]
+       => 2+3	 => 2+3*  => 2+3*4 => 2+3*4/ [-> 2+12/]
+       => 2+12/5 => 2+12/5- [-> 2+2-] [-> 4-] => 4-6
+       == -2
+  PATCH_MATH
+
+  math-functions , they are all implemented in do_mathfunc
+
+  Very simple syntax:
+  >[MATH1] NEG / INC / DEC / NOT	<varname>
+  >[MATH2] ADD / SUB / MUL / DIV / MOD <varname> (<value>)
+
+       <value>	 is a valid dezimal number
+       <varname> must be given at each function and must be the name
+		 of an existing variable containing a valid number
+
+  (a simple hack to do some increment etc. without arexx)
+
+  PATCH_SMATH:
+
+  8 short mathfuncs:
+   INC, DEC, NEG, NOT	    x
+   ADD, SUB, MUL, DIV, MOD  x y
+      which expect 1 or 2 arguments
+      their function is recognized with their name
+      since they all use the same routines.
+
+  PATCH_LMATH
+
+  2 long math-functions:
+   MATH1 x y
+   MATH2 x y z
+      which expect 2 or 3 arguments
+
+      If You use the Toggle INFIX
+      the second argument defines the mathematical function
+      else the first arg does
+
+ >SWAPV var1 var2
+
+      Swap the contents of 2 variables
+
+      the command should recognize the type of the 2 variables and
+      use the appropriate set-funcions
+
+***************************************************************
+
+  PATCH_VARS - OVERVIEW
+
+
+  ActivateToFront
+  Windowcycling
+
+       These two flags refer to SELECT:
+
+       ActivateToFront invokes a "WindowToFront()" every
+		       time, windows are switched
+       Windowcycling   enables the possibility to switch
+		       to the other end of Textlist, if
+		       one end is reacjed with SELECT next/prev
+
+
+  SourceBreaks
+       That flag refers to SOURCE
+       if an abortcommand or a break occurs on
+       sourcing level, the operation is aborted
+
+  SimpleTabs
+       That flag is an add to SAVETABS and SAVE[old|as]
+       if Savetabs is set, SimpleTabs decides to optimize
+       TAB-Optimisation until the first non-blank only
+
+   smallspc.c..
+  $[SPC_]currentword
+       that read-only special-variable
+       represents "the word under the cursor"
+       that means it finds the beginning of the current word on
+       on its own (but we do not move the cursor) if cursor is
+       not within a word, it returns the next word of the line
+       if there is no next word, an empty string is returned
+  NOTE this variable is not accessible, if PATCH_VARS is not active
+
+
+	activefront - windowtofront when switching to another(0/1)(rw)
+		      window
+	currentword - the "word under the cursor"                 (rO)
+	infixmode   - use math2 with prefix or infixmode (0/1)    (rw)
+		      (see mathfuncs below)
+	restofline  - the name says all
+	viewmode    - no changes in text allowed (0/1)            (rw)
+
+    Other variables cause a search of three variable domains to find the
+    contents.  For example, if you give  $DMEFONT:
+	(1) An internal Special variable named DMEFONT is searched for.
+	    Special variabes are case sensitive.
+
+	(2) A global or local toggle named DMEFONT s searched for.
+	    global toggles are simply numbers and local toggles are numbers
+	    preceded by an 'i'.   (see [[RE]SET]TOGGLE)
+
+	(3) If called from a function it's argumentlist is searched
+	    for DMEFONT (currently all arguments are called $argN with
+	    N >= 1; arg0 == functionname)
+
+	(4) A macrolocal variable named DMEFONT is searched for.
+	    (SMV, SETMACROVAR, UNSETTMACROVAR)
+
+	(5) A textlocal variable named DMEFONT is searched for. Textlocal
+	    variables are case sensitive.  (SETTVAR, UNSETTVAR)
+
+	(6) An Internal variable named DMEFONT is searched for.  Internal
+	    variables are case sensitive.  (see SET, UNSET)
+
+	(7) An Enviroment variable name DMEFONT is searched for.  Enviroment
+	    variables are NOT case sensitive.  (see SETENV, UNSETENV).  The
+	    1.3 ENV: is used.
+
+	(8) A DME keymap or menu definition named DMEFONT is searched for.
+	    This allows you to say something like $sa-tab to insert the
+	    contents of the shift-alt-tab keymap.   (see MAP, UNMAP, and
+	    MENU oriented commands).
+
+
+
+  the vars-module shall support access to different types of
+  variables
+  which are currently "global" vars/flags, "textlocal" vars/flags,
+  "macrolocal" vars and "env" vars
+
+
+  WARNING:
+       as this module is written very close
+       to DME's internal hierachy, it will be object of major changes,
+       as soon as Packages are introduced as a new concept for management
+       of macros, menues, keys, flags and variables
+
+ >SET name value
+ >UNSET name
+
+      set a std DME variable to a new value or drop it and its contents
+      if the name is only a number, set the according dme std flag
+
+      NOTE that if packages are ready, SET should default to PVars/PFlags,
+	   not to GVars/GFlags
+
+ >SETTVAR name value
+ >UNSETTVAR name
+
+      set a text local variable to a new value or drop it and its contents
+      if the name is only a "t"number, set the according text local flag
+
+ >SETENV name value
+ >UNSETENV name
+
+      set an Environment variable to a new value or drop it and its contents
+
+NOT IN XDME: FLAG flagname on/off/toggle/switch/0/1/set/reset/true/false
+
+		  set any flag that is controlled by DME
+		  with flagname is number, "t"number or specialflagname
+
+ >[[RE]SET]TOGGLE flagname
+
+      modify any flag, that is controlled by DME
+      with flagname is number, "i"number or specialflag
+
+**********************************************************
+
+  Variable Stacking:
+
+    PUSHVAR  varname
+    POPVAR   varname
+    PICKVAR  varname
+    SWAPVAR  varname
+    PURGEVAR varname
+
+  Stacking for all structures, which may be read and
+  written via GetTypedVar()
+  (Please notice that stackable are only variables,
+   not macros, menues or mappings (they are stackable, but
+   popping or picking might fail))
+
+  Users should be aware to pop their entries from the stack
+  when they are needed not any more
+  (We have NOT planned to create a garbage-collector :-))
+
+ >PUSHVAR varname
+
+       push the contents of the variable varname onto variable-stack
+
+ >POPVAR varname
+
+       get the latest to variable-stack pushed contents of the variable
+       varname back and free the stack-entry
+
+ >PICKVAR varname
+
+       get the latest to variable-stack pushed contents of the variable
+       varname back without freeing the stack-entry
+
+ >SWAPVAR varname
+
+       swap the contents of the variable varname and of its first occurancy in variable-stack
+
+ >PURGEVAR varname
+
+       remove all entries with the name varname from varstack
+
+
+
+********************************************************
+
+save/load the different parts of the environment in a _special_format_:
+    MENUSAVE  filename
+    MENULOAD  filename
+    KEYSAVE   filename
+    KEYLOAD   filename
+    MACROSAVE filename
+    MACROLOAD filename
+
+
+
+*********************************************************
+
+  MENUES:
+  ******
+
+    the following commands allow access to [X]DME's menustructures;
+  that way it is possible for each user to create an individual
+  GUI for "his" [X]DME, for "his" programming language and for
+  his wishes.
+
+  INTRODUCTION
+  ************
+
+	  we divide menus in several parts:
+	each window may have one _Menustrip_   attached
+	consisting of several	 _Menus_       or MenuHeaders
+	containing at least one  _MenuItem_    or Item
+	which may carry 	 _SubMenutems_ or Subs
+
+
+	  The XDME process can manage multiple _Menustrips_,
+	for that purpose You can access them with
+	NEWMENUSTRIP, USEMENUSTRIP and REMMENUSTRIP (see below)
+
+	  Each menustrip consists of 0 or more _Menuheaders_
+	and their Items;
+	there are currently 2 commands for management of
+	MenuHeaders: MENUDELHDR  (see below)
+	please note that in that version of XDME You cannot
+	explicitely create or modify MenuHeaders but only
+	delete them; creation is done automatically while
+	creating MenuItems or SubItems.
+	  MenuHeaders are inplicitely deleted by delteing their
+	last MenuItem.
+
+
+	  MenuItems are the components of MenuHeaders;
+	(wanna say each MenuHeader contains at least one MenuItem,
+	else it is deleted) they are classified into
+	(normal) Items, CheckItems, ItemBars and SubItemCarriers
+	the class of each Item is defined at creation time
+	(no - I dont wanna forbid redefinition at a later time,
+	 but it is "undefined" which effect that action has)
+	each class has its own characteristics:
+
+	normal Items only may be executed;
+	Checkitems may additionally be toggled or their value
+		   may be asked;
+	ItemBars only may be created or deleted, they have no function
+		 exept their optical accearance;
+	SubItemCarriers can not be executed, too; their only function
+		 is giving their connected SubItems a name;
+
+	there are different commands for each class to be created,
+	but all of them can be deleted in the same way ( pardon:
+	not all - single ItemBars must be deleted with an own command)
+
+	  there are no commands to explicitely create SubItemCarriers -
+	they are implicitely created in the generation of SubItems
+	(the same like menuHeaders and MenuItems) also SubItemCarriers
+	are deleted automatically with their last attached SubItem
+
+
+	  SubItems are nearly the same as MenuItems, only they are not
+	attached to a MenuHeader but to a MenuItem ( = SubItemCarrier)
+	and they can not carry another series of SubItems;
+	so we have (normal) SubItems, SubBars, and SubCheckItems
+
+
+  MENUHEADERS
+  ***********
+
+   >MENUDELHDR menuname
+
+	delete a menuheader and all associated items (and subitems).
+
+	menuheaders are created by using their names in item or
+	subitem definitions.
+
+
+  MENUITEMS
+  *********
+
+   >MENUADD   menuname itemname subname command
+   >MENUBAR   menuname itemname
+   >MENUCHECK menuname itemname subname command
+
+	create a menuitem-entry
+	BAR simply appends an itembar to the item-list
+	ADD creates a full menuitem-entry, if not already one
+	    of the same name exists
+	CHECK also sets the menutoggle flag to an entry created
+	    like ADD
+
+      Not so important notes (they might be obsolete in near future)
+	You cannot add subitems to items that were created with
+	    MENUADD or MENUCHECK as these have commands added
+	    while we expect subitem carrier to have no command added
+	You cannot redefine the type of an menuitem once created
+	    normal items can't be redefined to checkitems
+	    or subitem carriers and vice versa
+
+   >MENUDEL    menuname itemname
+   >MENUDELBAR menuname
+
+	delete a menuitem-entry
+	MENUDELBAR deletes the first(!) itembar in a menu's
+		  itemlist
+	MENUDEL   deletes the menuitem with the name itemname
+		  if itemname is a subitem-carrier, all subs
+		  are deleted, too
+
+	You can delete all items of a menu, if You call MENUDELHDR
+
+   >MENUSETITEM menuname itemname	  status
+   >MENUCHKITEM menuname itemname	  variablename
+
+	these commands set or check the satus of the item-checked
+	flags for items created with the MENUCHECK commands
+	status is one of 0|1 the value set into variable is also 0|1
+
+
+  SUBMENUITEMS
+  ************
+
+   >MENUSUBADD	 menuname itemname subname command
+   >MENUSUBBAR	 menuname itemname
+   >MENUSUBCHECK menuname itemname subname command
+
+	create a submenu-entry
+	SUBBAR simply appends an itembar to the subitem-list
+	SUBADD creates a full subitem-entry, if not already one
+	    of the same name exists
+	SUBCHECK also sets the menutoggle flag to an entry created
+	    like SUBADD
+
+      Not so important notes (they might be obsolete in near future)
+	You cannot add subitems to items that were created with
+	    MENUADD or MENUCHECK as these are managed in a quite
+	    different way, so You create subitem-carrier simply by
+	    using their names in a subitem definition
+	You cannot redefine the type of an subitem once created
+	    normal subs can't be redefined to subcheck and vice versa
+
+   >MENUDELSUB	  menuname itemname subname
+   >MENUDELSUBBAR menuname itemname
+
+	delete a submenu-entry
+	DELSUBBAR deletes the first submenubar in a menuitem's subitemlist
+	DELSUB deletes the submenu with the name subname
+
+	You can delete all an item's subitem if You MENUDEL the carrying item
+
+   >MENUSETSUB	menuname itemname subname status
+   >MENUCHKSUB	menuname itemname subname variablename
+
+	these commands set or check the satus of the subitem-checked
+	flags for subitems created with the MENUSUBCHECK commands
+	status is one of 0|1 the value set into variable is also 0|1
+
+
+
+  MENUSTRIPS:
+  **********
+
+    The following three commands do only make sense, if
+  You are using multiple menustrips
+  at [X]DME's start a menustrip called "default" is created;
+  for "normal" usage, that single strip may suffer.
+
+  (these commands are obsolete as soon as we introduce PACKAGES)
+
+   >USEMENUSTRIP name
+
+	search for a certain menustrip and use it as the current one
+
+   >REMMENUSTRIP
+
+	delete the current menustrip, if it is not the only one
+
+   >NEWMENUSTRIP name
+
+	create a new menustrip called name and use it
+
+	note that it is not defined here, what happens if You
+	     call NEWMENUSTRIP with the name of an existiong MenuStrip
+
+
+    The following commands concern the current Menustrip
+  (Please note that the MENU... commands below apply to the
+  CURRENT menustrip (and only to it))
+
+   >MENUCLEAR
+
+	clean up the menustrip, i.e. delete all of its
+	menuheaders
+
+   >MENUSAVE filename
+
+	save the menustrip as a file that can be
+	read by MENULOAD
+
+   >MENULOAD filename
+
+	clear the menustrip and instead build a new
+	contents out of the file filename
+
+   >MENUON
+   >MENUOFF
+
+	show or hide the whole menustrip
+	MENUOFF is stackable, i.e You need as many MENUON calls
+	to show the menustrip as previously MENUOFF calls
+
+
+
+***************************************************
+
+
+BUGS etc.
+
+  * disappointing is the fact, that esc/escimm
+    are not really functions but more complex switches; so You can't use
+    escimm on higher recursion depths - and neither from functions as
+    these are simply higher recursions - if they are followed by text
+    and/or -return on a calling level:
+
+    #	level x | level x + 1 with escimm  | level x
+	SETMACRO get 1 (ESCIMM (SET $arg1 '))
+		get name		    (void) RETURN
+	       EVAL (ESCIMM (SET name '))   (void) RETURN
+	SETTOGGLE 1
+	       IF 1 (ESCIMM (SET name '))   (void) RETURN
+    # all these 3 functions have the same effect:
+		SET name void
+    # plus  write that line into recall buffer
+
+    that bug is due to the strange management of ESC[IMM] since DME
+    doesn't freeze all recursion levels but only the highest one to
+    ask the user for input - that problem is NOT new (it also occurs with
+    old versions in connection with IF, WHILE & REPEAT), but it gets
+    disturbing in connection with functions.
+     It might be fixed if someone changed the method ESCIMM is done.
+     The simple way was to take the main loop out of main() and put it
+    into an own reentrant function, which whould be called on every call
+    of ESC, ESCIMM and other hypothetic asynchronous commands, which
+    momentary are senseless to be written;
+     but then You could QUIT DME only if all requests were satisfied -
+    or ? not really user friendly if that's right.
+     another way is to make CF_PAR recursible and set CF_PAR for IF[ELSE],
+    WHILE, REPEAT, QUIET, EVAL, UNTITLE and FORCE and extend the macro-
+    definition, SETMACRO and callmacro with a new Flag for CF_PAR.
+
+  * it is NOT possible to implicitly call AREXXMacros whose names start
+    with NKx, F10, ESC, HEL, LEF, BAC, RIG, DOW, RET, ENT, TAB, DEL,
+    LMB, MMB, RMB or MMO as AREXXMacros are searched AFTER Keymappings
+    and the recognition-scheme for Mappings only checks up to 3 letters
+    (so these functions would be recognized as -NKx, -F10, -ESC, -HELP,
+    -LEFT, -RIGHT, -DOWN, -RETURN, -ENTER, -TAB or -DEL ...)
+    That problem does not occur with Macronames beginning with
+    UP or Fx.
+
+
+

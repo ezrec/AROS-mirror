@@ -1,0 +1,9 @@
+XDME		Version 1.54 of Matt's text editor.  XDME is a not so simple
+		WYSIWYG editor designed for programmers.  It is not a
+		WYSIWYG word processor in the traditional sense.  Features
+		include arbitrary key mapping, FAST scrolling, title-line
+		statistics multiple windows, and ability to iconify windows.
+		This new version has some bugs fixed, many new commands and
+		several other new enhancements. Update to version 1.45 on
+		disk number 530, includes source.
+		Author:  Matt Dillon, Enhanced by Aaron Digulla

@@ -1,0 +1,509 @@
+From eisbaer!bb.maus.de!s3.maus.de!Martin_Herrmann@aragon.bb.bawue.de Thu Jan 12 00:14 MEZ 1995
+Received: from aragon.bb.bawue.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA12403; Wed, 11 Jan 1995 22:47:19 +0100
+Return-Path: <eisbaer!bb.maus.de!s3.maus.de!Martin_Herrmann@aragon.bb.bawue.de>
+Received: from eisbaer by aragon.bb.bawue.de with uucp
+	(3.1.28.1/ESMTP/bind-4.8.3/ns.bb.bawue.de)
+	id m0rSARZ-001URnC; Wed, 11 Jan 95 22:19 MET
+Received: from bb.maus.de by eisbaer.bb.bawue.de with uucp
+	(Smail3.1.28.1 #7) id m0rS8Vp-000TLbC; Wed, 11 Jan 95 20:15 MEZ
+Received: from Mausnet by UUCP via Mausgate; Wed, 11 Jan 95 19:05:16 GMT
+Message-Id: <P8598@S3.maus.de>
+From: Martin_Herrmann@s3.maus.de (Martin Herrmann)
+Subject: XDME,.edrc[2/2]
+To: digulla@rz-uxazs.fh-konstanz.de
+Organization: MausNet (Mitglied im IN e.V.)
+Date: Wed, 11 Jan 95 11:08:00 GMT
+X-Gateway: MausGate/Mail 1.25/bb
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+Status: RO
+
+...und noch das README. Keine Ahnung ob das so O.K. ist schau es Dir halt
+mal an.
+
+-------schnipp-------schnipp-------schnipp-------schnipp-------schnipp
+
+
+                .medrc von Martin Herrmann V1.0 vom 10.1.95
+
+                        .edrc-Konfigurationsfile fuer
+
+                                XDME 1.83
+
+                                Freeware
+
+
+VERWENDUNG:
+
+Fuer Leute die den hervorragenden Editor XDME benutzen aber nicht gerne
+tausende Tastaturkuerzel auswendig lernen wollen, sondern lieber ueber das
+Menue bedienen. Alle wichtigen Funktionen lassen sich natuerlich auch ueber
+Tastaturkuerzel bedienen (Aber wer braucht das seit MagicMenu [Danke
+Martin!]?).
+
+
+VORAUSSETZUNGEN:
+
+XDME 1.83 (aeltere und neuere Versionen sollten auch funktioneren).
+
+MuchMore (mm) oder ein aehnliches Anzeigeprogramm fuer das Testen von ANSI
+Texten falls dies benoetigt wird.
+
+Falls das Umwandeln von ASCII-Texten zwischen IBM und Amiga benoetigt wird
+sollte ein Konvertierer wie z.B. WFile 1.32 von Joerg Fenin / Metalworx
+vorhanden sein.
+
+
+INSTALLATION:
+
+Falls bereits ein .edrc-File im s:-Verzeichnis vorhanden ist, dieses
+umbenennen und dann .medrc nach s:.edrc kopieren.
+
+SaveAsReq.xdme nach Rexx: kopieren.
+
+Arexx wird fuer `Save as` benoetigt.
+
+
+Einige
+ANPASSUNGEN
+sind noch vorzunehemen (kann aber auch noch spaeter gemacht werden):
+
+Im Menue `Sonstiges-Oeffnen-XDME.doc` sowie bei dem zugehoerigen map
+Befehl a-help ist der Pfad zum XDME.doc-File einzugeben.
+
+MuchMore (oeder ein aehnliches Anzeigeprogramm) ist im Menue `ANSI Zeige diesen
+Text` einzugeben. (Voreinstellung Irgendwo im Pfad unter dem Namen MM)
+
+Bei `Spezial Mail` entsprechende Adressen und Namen einsetzen.
+
+
+BENUTZUNG:
+
+XDME kann jetzt gestartet werden fast alles laesst sich ueber die Menues
+bedienen. Die Tastaturbelegung sind groesstenteils im Menue ansonsten im
+Konfigfile selber nachzusehen (im XDME Alt-Shift-Ctrl-e druecken), dort ist
+viel dokumentiert.
+
+
+AUTHOR:
+
+Martin Herrmann
+
+Meine Adresse: Martin Herrmann @ S3 im Mausnet
+     Internet: Martin_Herrmann@S3.maus.de
+
+Fragen und Vorschlaege sind immer Willkommen!!!
+
+
+DANKSAGUNGEN:
+
+An Aaron Digulla fuer seinen XDME.
+An Helmut Kindler der mir immer mit Tips zur Seite stand und von dessen .edrc
+ich einige Anregungen ubernommen habe.
+An Fergus Duniho fuer sein XES (XDME Excelsior Suite)!
+
+...und Allen die ich jetzt vergessen habe (Sorry).!
+
+
+SONSTIGES:
+
+Natuerlich uebernehme ich keinerlei Garantien falls Irgendetwas schief geht,
+Festplatten formatiert werden, Files ueberschrieben werden, u.s.w.
+
+-------schnapp-------schnapp-------schnapp-------schnapp-------schnapp
+
+Bye
+   Martin
+
+From eisbaer!bb.maus.de!s3.maus.de!Martin_Herrmann@aragon.bb.bawue.de Thu Jan 12 00:15 MEZ 1995
+Received: from aragon.bb.bawue.de by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA06016; Wed, 11 Jan 1995 22:30:53 +0100
+Return-Path: <eisbaer!bb.maus.de!s3.maus.de!Martin_Herrmann@aragon.bb.bawue.de>
+Received: from eisbaer by aragon.bb.bawue.de with uucp
+	(3.1.28.1/ESMTP/bind-4.8.3/ns.bb.bawue.de)
+	id m0rSARb-001URoC; Wed, 11 Jan 95 22:19 MET
+Received: from bb.maus.de by eisbaer.bb.bawue.de with uucp
+	(Smail3.1.28.1 #7) id m0rS8Vo-000TLLC; Wed, 11 Jan 95 20:15 MEZ
+Received: from Mausnet by UUCP via Mausgate; Wed, 11 Jan 95 19:05:15 GMT
+Message-Id: <P8597@S3.maus.de>
+From: Martin_Herrmann@s3.maus.de (Martin Herrmann)
+Subject: XDMEVorschlaege,.edrc[1/2]
+To: digulla@rz-uxazs.fh-konstanz.de
+Organization: MausNet (Mitglied im IN e.V.)
+Date: Wed, 11 Jan 95 11:06:00 GMT
+X-Gateway: MausGate/Mail 1.25/bb
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+Status: RO
+
+Hallo Aaron,
+
+ich sende Dir hiermit mein .edrc-File, falls Du es als brauchbar befindest
+kannst Du es gerne Veroeffentlichen.
+Als erster Teil kommt mein .medrc und als zweite Mail mein README.
+Ich hoffe die Umlaute kommen bei Dir an falls nicht schick ich es Dir
+nochmal UUDecodiert.
+
+A"D> Tja, mein Zeugs sieht nicht viel besser aus. Ich empfehle: Mach eine
+A"D> Zeilenweise Dokumentation und ein README (mit Autor und was es tun soll)
+A"D> Dann packe ich es mit in die Binaer-Distribution ins Makros/-Verzeichnis.
+
+-----schnipp-----schnipp-----schnipp-----schnipp-----schnipp-----schnipp
+
+set \$VER: (Martins XDME Konfigurationsfile V1.0 vom 10.1.95)
+
+title (Konfiguration von Martins XDME V1.0 vom 10.1.95 läuft...)
+
+# Entfernen einiger Tastaturbelegungen
+unmap a-c
+unmap a-d
+unmap a-l
+unmap a-m
+unmap a-r
+unmap a-s
+unmap a-u
+unmap sa-s
+unmap A-p
+unmap caA-l
+
+# Voreinstellungen:
+savetabs off
+# Leerstellen nicht als Tabs speichern
+autounblock on
+# Blockmarkierungen entfernen
+ignorecase on
+# Großbuchstabe = Kleinbuchstabe beim Suchen
+autosplit on
+# Zeilen werden beim schreiben automatisch geteilt
+insertmode on
+# Einfügen an
+
+# Tastaturbelegung für Projekt-Menü
+map A-u     (newwindow arpload)
+map A-o      arpload
+map A-s      saveold
+map A-a     (set fname unnamed arpsave)
+map A-i      iconify
+map A-I     (saveold iconify)
+map A-S     (saveold quit)
+map A-e      quit
+
+menuoff
+menuclear
+
+menuadd Projekt (Lösche)                (saveas t:xdme.tmp unblock top block
+bottom block bdelete)
+# sichert File in t:xdme.tmp und löscht die Anzeige
+menuadd Projekt (Lösche & Neu)          (saveas t:xdme.tmp newfile unnamed)
+# sichert File in t:xdme.tmp, löscht die Anzeige und öffnet neues File
+menusubadd Projekt (Öffnen Sonstiges) (Projekt laden)   projectload
+menusubadd Projekt (Öffnen Sonstiges) (Neues Fenster)   (openwindow
++200+50-20-100)
+menusubadd Projekt (Öffnen Sonstiges) (Ikon & Neu...)   (iconify newwindow
+arpload)
+menusubadd Projekt (Öffnen Sonstiges) (Einfügen...)     arpinsfile
+menusubadd Projekt (Öffnen Sonstiges) (Öffne erneut)    (newfile $(fname))
+menuadd Projekt (Neu...            A-u) (newwindow arpload)
+menuadd Projekt (Öffne...          A-o) arpload
+menubar Projekt
+menuadd Projekt (Speichern         A-s) saveold
+menuadd Projekt (Speichern als ... A-a) (rx SaveAsReq)
+# Speichert unter neuem Namen/Pfad und benützt dieses neue File als
+# Aktuelles
+menuadd Projekt (Speichern & Ikon  A-I) (saveold iconify)
+menusubadd Projekt (Speichern Sonstiges) (Speichern unter..) arpsave
+# Speichert unter neuem Namen/Pfad und benützt aber weiter altes File als
+# Aktuelles
+menusubadd Projekt (Speichern Sonstiges) (Anhängen         ) appendsave
+menusubadd Projekt (Speichern Sonstiges) (Projekt speichern)  projectsave
+menubar Projekt
+menuadd Projekt (Drucken              ) (push savetabs push modified savetabs
+off saveas prt: pop modified pop savetabs)
+menubar Projekt
+menusubadd Projekt Über (  Martins XDME Konfiguration ) null
+menusubadd Projekt Über (   Version 1.0  vom 1.1.95   ) null
+menusubadd Projekt Über (          Freeware!!!        ) null
+menusubadd Projekt Über ( Vorschläge und Fragen bitte ) null
+menusubadd Projekt Über (an Martin_Herrmann@S3.maus.de) null
+menuadd Projekt (Ikon              A-i) iconify
+menuadd Projekt (Speichern & Ende  A-S) (saveold quit)
+menuadd Projekt (ENDE              A-e) quit
+
+# Tastaturbelegung für Finde-menü
+map A-f  (escimm (findstr `) next)
+map A-n   next
+map A-v   prev
+map A-ü   (top next)
+map A-d  (scanf %s find `\$scanf' right left)
+map A-r  (escimm (findstr ) escimm (repstr ) up next)
+map A-N  (ifelse !l left (up last) nextr next)
+map A-V  (prevr prev)
+map a-K   match
+
+#Finde-Menü
+menuadd Finde (Finde ...          A-f) (escimm (findstr () next)
+menuadd Finde (Finde Nächstes     A-n) next
+menuadd Finde (Finde Vorheriges   A-v) prev
+menuadd Finde (Suche überall      A-ü) (top next)
+# Sucht von Anfang bis Ende
+menuadd Finde (Finde dieses       A-d) (scanf %s find `\$scanf' right left)
+# Sucht Wort unter Cursor
+menubar Finde
+menuadd Finde (Ersetze...         A-r) (escimm (findstr ) escimm (repstr ) up
+next)
+menuadd Finde (Ersetze Nächstes   A-N) (ifelse !l left (up last) nextr next)
+menuadd Finde (Ersetze Vorheriges A-V) (prevr prev)
+menuadd Finde (Ersetze bis Ende      ) (ifelse !l left `up last' repeat lbot
+nextr)
+menuadd Finde (Ersetze bis Anfang    ) (repeat line prevr)
+menuadd Finde (Ersetze dieses        ) (scanf %s escimm (repstr `) findstr
+`\$scanf' up nextr)
+# Ersetzt Wort unter Cursor
+menuadd Finde (Ersetze Alles         ) (push pos top repeat -1 nextr pop pos)
+menubar Finde
+menuadd Finde (Finde Klammer      a-K)  match
+# Sucht die zu der Klammer unter dem Cursor gehörige Klammer
+menucheck Finde (Groß=Klein)  (ignorecase toggle)
+
+menusetcheck Finde (Groß=Klein) 1
+# setzt Checkmark im Menü
+
+# Tastaturbelegung für Block-Menü
+map A-m     block
+map A-b     bmove
+map A-k     bcopy
+map A-M     unblock
+map A-del  (bsave ram:xdmeblock bdelete)
+map sA-del (insfile ram:xdmeblock)
+map A-tab  (indent b .t)
+map sA-tab (indent b -.t)
+
+# Block-Menü
+menuadd Block (Markieren        A-m)  block
+# auch mit Maus s.u.
+menuadd Block (Markiere Alles      )  (unblock bottom block top block)
+menuadd Block (Entferne Marken  A-M)  unblock
+# auch mit Maus s.u.
+menuadd Block (Bewegen          A-b)  bmove
+# auch mit Maus s.u.
+menuadd Block (Kopieren         A-k)  bcopy
+# auch mit Maus s.u.
+menuadd Block (Löschen        A-Del)  (bsave ram:xdmeblock bdelete)
+menuadd Block (Einsetzen     sA-Del)  (insfile ram:xdmeblock)
+menuadd Block (Drucken             )  (push savetabs savetabs off bsave par:
+pop savetabs)
+menuadd Block (Speichern als ...   )  barpsave
+menuadd Block (Einrücken      A-Tab)  (indent b .t)
+menuadd Block (Ausrücken     sA-Tab)  (indent b -.t)
+
+# Tastaturbelegung für Format-Menü
+map A-G    (tlate u right)
+map A-K    (tlate l right)
+map A-O    (insertmode toggle ifelse i (menusetcheck Format (Einfügen        
+A-O) 1) (menusetcheck Format (Einfügen         A-O) 0))
+map A-w     (wordwrap toggle toggle 1 ifelse 1 (menusetcheck Format (Blocksatz 
+      A-w) 1) (menusetcheck Format (Blocksatz        A-w) 0 ))
+map A-u undo
+map A-F     reformat
+
+# Format-Menü
+menucheck Format (Leer als Tabs) (savetabs toggle)
+menucheck Format (Einfügen         A-O) (insertmode toggle)
+menucheck Format (Blocksatz        A-w) (wordwrap toggle toggle 1)
+menucheck Format (Umbruch) (autosplit toggle)
+menuadd Format (Formatiere         A-F) reformat
+menuadd Format (Buchstabe Groß     A-G) (tlate u right)
+menuadd Format (Buchstabe Klein    A-K) (tlate l right)
+menuadd Format (Undo               A-u) undo
+menusubadd Format Rand (Rechter Rand...) (escimm (margin ))
+menusubadd Format Rand (Linker Rand...) (escimm (setparcol ))
+menuadd Format (IBM to Amiga) (saveas t:IToA execute (wfile t:IToA -IA) newfile
+unnamed insfile t:IToA modified on)
+menuadd Format (Amiga to IBM) (saveas t:AToI execute (wfile t:AToI -AI) newfile
+unnamed insfile t:AToI modified on)
+
+menusetcheck Format (Umbruch) 1
+menusetcheck Format (Einfügen         A-O) 1
+
+# Tastaturbelegung für Sonstiges-Menü
+map a-z     (block block bsource down)
+map ac-e  (source `s:.edrc')
+map asc-e (newwindow newfile s:.edrc)
+map s-help  (newwindow newfile dh1:doks/xdme/xdme.doc)
+map ac-e    (source `s:.edrc')
+map a-help  (newwindow newfile dh1:doks/xdme/xdme.doc)
+map asc-e   (newwindow newfile s:.edrc)
+map a-s     (recstart)
+map a-S    (recend)
+map a-p     (recplay)
+map A-1  (pong 1)
+map As-1 (ping 1)
+map A-2  (pong 2)
+map As-2 (ping 2)
+map A-3  (pong 3)
+map As-3 (ping 3)
+map A-4  (pong 4)
+map As-4 (ping 4)
+map A-9  (pong 9)
+
+# Sonstiges-Menü
+menusubadd Sonstiges Einstellungen (Lade Einstellungen    )  loadconfig
+menusubadd Sonstiges Einstellungen (Speicher Einstellungen)  saveconfig
+menusubadd Sonstiges (Führe aus) (Block            )  bsource
+menusubadd Sonstiges (Führe aus) (Zeile         a-z) (block block bsource down)
+menusubadd Sonstiges (Führe aus) (File             ) (escimm (source `s:.xd))
+menusubadd Sonstiges (Führe aus) (.edrc        ac-e) (source `s:.edrc')
+menuadd Sonstiges (NewShell             ) (execute newshell)
+menusubadd Sonstiges Öffne (XDME.Doc a-Help) (newwindow newfile
+dh1:doks/xdme/xdme.doc)
+menusubadd Sonstiges Öffne (.edrc     asc-e) (newwindow newfile s:.edrc)
+menusubadd Sonstiges (Rekorder) (Start     a-s) (recstart)
+menusubadd Sonstiges (Rekorder) (Stop      a-S) (recend)
+menusubadd Sonstiges (Rekorder) (Play      a-s) (recplay)
+menusubadd Sonstiges (Rekorder) (Speichern) (recsave t:rec.xdme)
+menuadd    Sonstiges  (Zeichensatz...) (arpfont)
+menusubadd Sonstiges  Bewegen (ping 1 sA-1)  (ping 1)
+menusubadd Sonstiges  Bewegen (ping 2 sA-2)  (ping 2)
+menusubadd Sonstiges  Bewegen (ping 3 sA-3)  (ping 3)
+menusubadd Sonstiges  Bewegen (ping 4 sA-4)  (ping 4)
+menusubadd Sonstiges  Bewegen (pong 1  A-1) (pong 1)
+menusubadd Sonstiges  Bewegen (pong 2  A-2) (pong 2)
+menusubadd Sonstiges  Bewegen (pong 3  A-3) (pong 3)
+menusubadd Sonstiges  Bewegen (pong 4  A-4) (pong 4)
+menusubadd Sonstiges  Bewegen (pong 9  A-9) (pong 9)
+
+# Tastaturbelegung für ANSI-Menü
+map c-D (wright wleft ( ) left tlate 27 right ([1m) while ca right ( ) left
+tlate 27 right ([0m))
+map c-U (wright wleft ( ) left tlate 27 right ([4m) while ca right ( ) left
+tlate 27 right ([0m))
+map c-K (wright wleft ( ) left tlate 27 right ([3m) while ca right ( ) left
+tlate 27 right ([0m))
+
+# Esc-Variable für ANSI-Menü
+set Esc (( ) left Tlate 27 right)
+
+# ANSI-Menü
+menuadd ANSI (Wort dick           c-D) (wright wleft ( ) left tlate 27 right
+([1m) while ca right ( ) left tlate 27 right ([0m))
+menuadd ANSI (Wort unterstreichen c-U) (wright wleft ( ) left tlate 27 right
+([4m) while ca right ( ) left tlate 27 right ([0m))
+menuadd ANSI (Wort kursiv         c-K) (wright wleft ( ) left tlate 27 right
+([3m) while ca right ( ) left tlate 27 right ([0m))
+# fügt vor und hinter dem Wort auf dem der Cursor steht die entsprechenden
+# ESC-Sequenzen ein
+menusubadd ANSI ESC (Normal an          ) ($Esc ([0m))
+menusubadd ANSI ESC (Italics an         ) ($Esc ([3m))
+menusubadd ANSI ESC (Unterstreichen an  ) ($Esc ([4m))
+menusubadd ANSI ESC (Dick an            ) ($Esc ([1m))
+menusubadd ANSI ESC (ESC                ) ($Esc)
+menusubadd ANSI ESC (Reset              ) ($Esc (c))
+menusubadd ANSI Vordergrund (0       ) ($Esc ([30m))
+menusubadd ANSI Vordergrund (1=Normal) ($Esc ([31m))
+menusubadd ANSI Vordergrund (2       ) ($Esc ([32m))
+menusubadd ANSI Vordergrund (3       ) ($Esc ([33m))
+menusubadd ANSI Hintergrund (0=Normal) ($Esc ([40m))
+menusubadd ANSI Hintergrund (1       ) ($Esc ([41m))
+menusubadd ANSI Hintergrund (2       ) ($Esc ([42m))
+menusubadd ANSI Hintergrund (3       ) ($Esc ([43m))
+menuadd ANSI (Zeige diesen Text ) (set F (\$fname) saveas t:xdme.tmp execute
+(mm t:xdme.tmp) chfilename \$F)
+
+
+# Spezial (Funktionen die nicht im Menü aufgeführt sind)
+
+# Mail
+map c-d     (execute (date >ram:date) insfile ram:date modified on execute
+(delete ram:date) last)
+# setzt aktuelles Datum ein
+map c-n     ((Martin Herrmann))
+# setzt Namen ein
+map c-e     (bottom last return (Bye) return repeat 3 right (Martin))
+# fügt am Ende ein Bye Name ein
+map c-a     ((Meine Adresse: Martin Herrmann @ S3 im Mausnet) return (       
+Sonst: Martin_Herrmann@S3.maus.de) return)
+# fügt die Mailadresse ein
+
+# Wort suchen
+set Suchwort NIX
+map c-q     (ignorecase off wleft ping 8 scanf %s while c>32 del set Suchwort
+(\$scanf) findstr (\$Suchwort) prev ping 7 scanf %s pong 8 (\$scanf) ignorecase
+on)
+# Einfach mal ausprobieren z.B. Desoxydation im Text schreiben, falls
+# später das selbe Wort wieder gebraucht wird einfach `Des' tippen und
+# ctrl-q drücken. Der Text wird nach einem Wort abgesucht das mit Des
+# beginnt. Wird das falsche gefunden einfach nochmal drücken.
+map c-Q     (wleft while c>32 del pong 7 prev ping 7 scanf %s pong 8 (\$scanf))
+# Dasselbe nur ist hier ohne Beachtung der Groß- und Kleinschreibung
+map ac-q    (($Suchwort))
+# Falls das Wort nicht gefunden wurde kann hiermit die Abkürzung wieder
+# eingesetzt werden.
+
+# Klammern und Anführungszeichen
+map c-8 ``()' left'
+map c-9 `(`') left'
+
+# Return Taste
+map return   (split firstnb down repeat cleft (first ( )) up firstnb down)
+# Backspace
+map bs      (ifelse l (up last join) bs)
+# Delete
+map del     (ifelse r join del)
+map a-del   (wright wleft while c>32 del while c=32 del)
+# Wort löschen
+
+# Maus
+map ML-lmb   (tomouse block)
+# linke und mittlere zum Markieren
+map sML-lmb  (unblock)
+# Shift, linke und mittlere zum Löschen der Markierung
+map aML-lmb  (tomouse bcopy)
+# Alt, linke und mittlere zum Kopieren
+map asML-lmb (tomouse bmove)
+# Alt, Shift, linke und mittlere Bewegen
+
+# Linien
+map A-l     deline
+# Löschen
+map A-L     undeline
+# Wiederherstellen
+map A-z     remeol
+# von aktueller Cursorposition bis zum Zeilenende löschen
+
+# Cursor Tasten hier hat wohl jeder seine eigenen Vorlieben
+map left    (ifelse l (up last) left)
+map right   (ifelse r  (down first) right)
+map down    (ifelse l down (ifelse r (down first last) down))
+map up      (ifelse l up (ifelse r (up first last) up))
+
+map s-left  wleft
+map s-right (ifelse r (down first) (wright if l (up last)))
+map s-down  (goto +15)
+map s-up    (goto -15)
+
+map a-left  first
+map a-right last
+map a-up   (ping 9 top firstnb)
+map a-down (ping 9 bottom last)
+# Beim Springen zum Anfang bzw. zum Ende wird die aktuelle Position
+# gespeichert. Mit A-9 kann man zurückspringen.
+
+map c-right pageright
+map c-left  pageleft
+map c-up    scrollup
+map c-down  scrolldown
+
+
+menuon
+
+title (Konfiguration von Martins XDME V1.0 vom 10.1.95 ist beendet!)
+
+-------schnapp-------schnapp-------schnapp-------schnapp-------schnapp
+
+
+Bye
+   Martin
+

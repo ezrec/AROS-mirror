@@ -1,0 +1,134 @@
+set SystemName (:XDME/)
+set HelpFile   ($(SystemName)docs/xdme.doc)
+
+set printout   t:printout
+set PRINTER    prt:
+
+#newmenustrip auisg
+menuoff
+
+setmacro m+ 2 (menuadd \$menu \$arg1 \$arg2)
+setmacro m- 0 (menubar \$menu)
+setmacro mc 3 (menucheck \$menu \$arg1 \$arg3 if (\$arg2) (menusetcheck \\\$menu \\\$arg1 1))
+
+set OkCncl OK|Cancel
+
+set menu Project
+m+ (New Project...^AN)      (newwindow settoggle 2 unfail (reqload toggle 2) if 2 (rem quit))
+m+ (Open...^AO)             (reqload)
+m-
+m+ (Save^AS)                (ifelse ($\\fname="unnamed) (reqsave) (saveold))
+m+ (Save As...^AA)          (reqsave)
+m-
+m+ (Print^AP)               (pushvar modified writeto \$printout popvar modified execute (copy \$printout \$PRINTER))
+m-
+m+ (Hide^AI)                (iconify)
+m+ (Close^AK)               (quit)
+m-
+m+ (About...^A?)            (about)
+m-
+m+ (Quit Program^AQ)        (quitall)
+
+set menu Edit
+m+  (Cut^AX)            (copy bdelete)
+m+  (Copy^AC)           (copy unblock)
+m+  (Paste^AV)          (clipins)
+m-
+m+  (Block^SBegin)      (bstart)
+m+  (Block^SEnd)        (bend)
+m+  (Block^S^B) ()
+m+  (Block^SErase)      (bdelete)
+m+  (Block^SCopy)       (bcopy)
+m+  (Block^SMove)       (bmove)
+m+  (Block^S^B) ()
+m+  (Block^SRead...)    (reqinsfile)
+m+  (Block^SWrite...)   (if !b abort reqfile (XDME Write Block) SP \$filename bsave \$reqresult)
+m+  (Block^S^B) ()
+m+  (Block^SMode...)    (request (XDME) (Select Block Mode!) (Lines|Columns|Characters|Cancel) if (\\\$reqresult="0) abort if (\\\$reqresult="1) (blocktype l) if (\\\$reqresult="2) (blocktype v) if (\\\$reqresult="3) (blocktype c) )
+m-
+m+  (Undo^AZ)           (undo)
+
+set menu Search
+m+  (Find...^AF)        (reqstring (XDME) (Enter a String to Search!) \$OkCncl \$findstr top find \$reqresult)
+m-
+m+  (Find Next^A<)      (next)
+m+  (Find Previous^A>)  (prev)
+m-
+m+  (Find & Replace...^AR)  (if 1 (escimm (findr `' `)) 4 left)
+m+  (Replace Next)          (nextr)
+m+  (Replace Previous)      (prevr)
+
+set menu Move
+m+  (Start of Text)     (top first)
+m+  (End of Text)       (bottom last)
+m-
+m+  (Sart of Line)      (first)
+m+  (1st Character)     (firstnb)
+m+  (End of Line)       (last)
+m-
+m+  (Start of Word)     (right wleft)
+m+  (End of Word)       (right wleft while ca right)
+m-
+m+  (Line...)       (reqnumber (XDME) (Enter a Line   number to go to!) \$OkCncl \$lineno 1 50000 goto \$reqresult)
+m+  (Column...)     (reqnumber (XDME) (Enter a Column number to go to!) \$OkCncl \$colno  1 255   col  \$reqresult)
+m-
+m+  (Marker^SSet #1)     (ping 1)
+m+  (Marker^SSet #2)     (ping 2)
+m+  (Marker^SSet #3)     (ping 3)
+m+  (Marker^S^B)            ()
+m+  (Marker^SGoto #1)  (pong 1)
+m+  (Marker^SGoto #2)  (pong 2)
+m+  (Marker^SGoto #3)  (pong 3)
+
+set menu Macros
+m+  (Start Record) (recstart title (Record Started))
+m+  (End Record)   (recend   title (Record Ended))
+m-
+m+  (Play Record)  (recplay)
+m+  (Read...)       (reqfile (XDME Read Macro) P  \$macroname set macroname \$reqresult source  \$macroname)
+m+  (Save...)       (reqfile (XDME Save Macro) SP \$macroname set macroname \$reqresult reqsave \$macroname)
+m-
+m+  (Command Shell) (opencmdshell)
+
+set menu Settings
+mc    (Insert Mode?)            $insertmode     (insertmode \$itemcheck)
+mc    (ReadOnly Mode?)          $viewmode       (viewmode   \$itemcheck)
+m-
+mc    (Automatic Indenting?)    $autoindent     (autoindent \$itemcheck)
+mc    (Automatic Splitting?)    $autosplit      (autosplit  \$itemcheck)
+mc    (Wordwrap?)               $wordwrap       (wordwrap   \$itemcheck)
+m+  (Right Margin...)                           (reqnumber (XDME) (Enter the right Margin!) \$OkCncl \$margin 1 255 margin \$reqresult)
+m-
+mc    (Create Icons?)           $saveicons      (SPC_saveicons = \$itemcheck)
+m+  (Iconname ...)                              (reqfile (XDME Select Icon) P \$iconname set iconname \$reqresult)
+m-
+mc    (Global Search?)          $globalsearch   (global \$itemcheck)
+mc    (Case Insensitive?)       $ignorecase     (ignorecase \$itemcheck)
+m-
+m-
+m+  (Font...)                                   (reqfont)
+m+  (Colors^SText Foreground...)                (reqcolor (Text Fore) \$fgpen fgpen \$reqresult)
+m+  (Colors^SText Background...)                (reqcolor (Text Back) \$bgpen bgpen \$reqresult)
+m+  (Colors^S^B) ()
+m+  (Colors^SBlock Foreground...)               (reqcolor (Block Fore) \$hgpen hgpen \$reqresult)
+m+  (Colors^SBlock Background...)               (reqcolor (Block Back) \$bbpen bbpen \$reqresult)
+m+  (Colors^S^B) ()
+m+  (Colors^STitle Foreground...)               (reqcolor (Title Fore) \$tfpen SPC_tfpen = \$reqresult)
+m+  (Colors^STitle Background...)               (reqcolor (Title Back) \$tbpen tpen \$reqresult)
+mc    (Intuition Titles?)       $windowtitles   (windowtitles = \$itemcheck)
+m-
+m+  (Save Settings)                             (saveconfig)
+
+#unsetmacro mc
+#unsetmacro m-
+#unsetmacro m+
+#unset	    menu
+
+menuon
+
+setmacro reqcolor 2 (reqpalette (XDME \$(arg1)ground) \$arg2)
+
+if ($\fname="Edit) (chfilename unnamed)
+if ($\fname="unnamed) (reqload)
+
+

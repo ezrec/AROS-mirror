@@ -1,0 +1,12 @@
+FROM LIB:cres.o "obj_debug/about.o"+"obj_debug/amiga.o"+"obj_debug/AVL.o"+"obj_debug/block.o"+"obj_debug/clipboard.o"+"obj_debug/cmd.o"+"obj_debug/command.o"+"obj_debug/cursor.o"+"obj_debug/drexx.o"+"obj_debug/edit.o"+"obj_debug/editor.o"+"obj_debug/filereq.o"+"obj_debug/globals.o"+"obj_debug/hrexx.o"+"obj_debug/io.o"+"obj_debug/main.o"+"obj_debug/mem.o"+"obj_debug/prefs.o"+"obj_debug/redraw.o"+"obj_debug/refs.o"+"obj_debug/search.o"+"obj_debug/subs.o"+"obj_debug/swap.o"+"obj_debug/text.o"+"obj_debug/win.o"+"obj_debug/KeyAddes.o"+"obj_debug/KeyCodes.o"+"obj_debug/KeyCom.o"+"obj_debug/KeyControl.o"+"obj_debug/KeyTables.o"+"obj_debug/Menu_DME.o"+"obj_debug/MenuCom.o"+"obj_debug/MenuControl.o"+"obj_debug/MenuStrips.o"+"obj_debug/Alias.o"+"obj_debug/AppIcon.o"+"obj_debug/CMDSH.o"+"obj_debug/Macros.o"+"obj_debug/Math.o"+"obj_debug/Mikro.o"+"obj_debug/Request.o"+"obj_debug/tplter.o"+"obj_debug/VarStack.o"+"obj_debug/Flags.o"+"obj_debug/spc.o"+"obj_debug/Vars.o"+"obj_debug/VarsBases.o"
+TO "XDME"
+LIB sc:lib/debug.lib sc:lib/reqtoolss.lib /ResTrackLib/restrackr.lib LIB:sc.lib LIB:amiga.lib
+ADDSYM
+SMALLCODE
+SMALLDATA
+QUIET
+DEFINE __CXM33=__UCXM33
+DEFINE __CXD33=__UCXD33
+DEFINE __CXM22=__UCXM22
+DEFINE __CXD22=__UCXD22
+

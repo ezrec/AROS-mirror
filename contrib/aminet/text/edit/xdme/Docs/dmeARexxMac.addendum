@@ -1,0 +1,103 @@
+
+
+This docment covers features added by Thomas J. Moore and MMW (whoever that
+is.. in 1992)
+
+
+First, the rexx port handler has been moved to the main loop, which checks
+now for intuition messages AND AREXX messages.	The AREXX messages are blocked
+when dme is in command line mode.  Thus, a rexx script can now expect input
+from the user via "esc" or, more usefully, "escimm <prompt>".  Care should
+be taken with this new AREXX feature, though.  If dme is closed while macros are
+running, the macros will (hopefully cleanly) die.  The only way to make sure
+that the configuration of dme is the same from one dme command to another
+is to put several dme commands on the same line.  Thus the ARexx script:
+
+"newwindow"
+"newfile (hello)"
+
+will not guarantee that "hello" will be put up in the newwindow created in the
+previous line, whereas :
+"newwindow newfile (hello)"
+can make that guarantee.
+
+There may be other problems, but I'm not going to go into them.  Just be
+careful!
+
+
+Things to implement in the future:
+lock	    -- locks the current window for this rexx script until script returns
+	    -- returns a lock #
+unlock #    -- explicitly unlock the lock before script returns
+golock #    -- make sure the window specified in lock is current
+
+Maybe later, if I feel like it...
+--NOTE--
+The following commands have been added as a temporary fix to the lock problem:
+
+rxblock     - block all intuition messages
+rxunblock   - unblock all intuition messages - if dme appears to lock up, try :
+		rx "address dme rxunblock"
+--END NOTE--
+
+The other addition is the command "getval" which sets the secondary result to
+the parsed/variable-substituted remainder of the command line.	Thus:
+options results
+"getval ($filename)"
+say result
+
+will print the current file name.
+
+Enclosed are several macros.  Most of the ones in s/ were from some Fish disk
+(I don't remember which), with the .edrc modified for my preferences.  These
+should all go into s: to work (the the dmemacros dir macros need modification
+to work.. If you want 'em, modify 'em yourself.)
+
+Some of the rexx macros were included with the dme distribution.  See
+dmeARexxMac.doc.  The rest are documented here:
+
+dmake.dme [<addr>]  - "dmake" the current file. (Mostly written by Paul Cardwell)
+		    - Read the prompts in the title bar.  It will use dmake if
+		    - "makefile" or "dmakefile" are found in $fpath, and it
+		    - will try to dcc -o name name.c if not.  May have to
+		    - be modified slightly; read the macro yourself before
+		    - using.
+		    - Note: the error messages are put in a buffer called
+		    - "*Compiler Errors*" whether you like it or not.  Also,
+		    - dmake does not return all error messages consistently, so
+		    - dcc's "-E" option is used, and only those messages will be
+		    - intercepted.  If you want other messages, either run dme
+		    - from the CLI (w/o >nil:) or using WB 2.0's Execute CMD
+		    - feature.	This will at least display what dmake is
+		    - doing.  It will not, however, intercept the messages.
+		    - bound to as-m in my .edrc
+
+FirstErr.dme	    - Locate the first error in the error message buffer created
+		    - dmake.dme.  Highlights line w/ error (w/ pushmark + block).
+		    - uses ping/pong #9  SO DON'T USE IT ELSEWHERE!
+		    - bound to a-f in my .edrc
+NextErr.dme	    - Locate the next error in the error message buffer created by
+		    - dmake.dme
+		    - bound to a-n in my .edrc
+
+Here's another useful macro (addresses one of Matt's TODO's)
+/* autosave */
+options results
+do while true
+    call delay(600)
+    "getval ($filename)"
+    if upper(result) ~= "UNNAMED" then
+	"saveold"
+    else
+	"escimm (saveas `"
+end
+
+
+Note:
+    Asynchronous operation of ARexx macros does NOT mean Async operation of
+dme commands.  This means that a line of dme code will execute until done.
+Also, a rexx command called from a rexx script will block the caller until
+the callee completes.  This blocking will not, however, block dme or any other
+running macro.
+
+Anyway, have fun!

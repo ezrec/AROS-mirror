@@ -1,0 +1,42 @@
+    - online-help. MAP will get a 4th parameter which is a comment.
+      This comment can be displayed in a new window.
+    - New Items for PUSH:
+	env - push the whole environment (pos, blocks, window, icon, ALL
+	      flags, etc.) on stack.
+    - check for changes in window_title() instead of doing Text() every time.
+      Maybe I move the status-line from the title-bar down one line.
+    - Asynchronous ARexx-commands
+    - I'll do some work on the line-concept of XDME (see all.h:LINE) to
+      allow lines of upto 2^32-1 chars length and some other things.
+    - Other variable concept in XDME (i.e. access of ALL variables via
+      get_var(). Also easier add of new variables).
+    - Documentation of XDME. The current docs are HORRIBLE ! What about
+      XDME.guide ?
+    - Other Search&Replace. First position cursor, ask to replace, and
+      search next.
+    - ARexx (ARexx as defined in Amiga Styleguide).
+    - Specify the amount XDME should scroll, when cursor leaves window.
+    - Folding. Here we will need to save an extra file or find something
+      that we can include in any file or ???? I tend now to the "pattern"
+      solution, i.e. ony can specify a FOLD-START and a FOLD-END pattern.
+    - Multicolumn (incl. vertical blocks)
+    - better Autosplit (automatic splitting of too-long lines WITHOUT
+      reformat !)
+    - Sorting of lines (alphabetically and reverse)
+    - better keymapping with recorder. The recorder must do this:
+	- start recording. Display the new state in the headline
+	- add strings to the macro
+	- allow the following actions:
+	    enter keys, commands in the commandline, change windows
+	- map the macro to a key through a simple key-press
+    - better GUI (graphical user interface), e.g. Search&Replace-Requester,
+      ...)
+    - templates (i.e. fill-in-sheets)
+    - Char-Blocks (incl. Mouse-selection): cut, copy, paste, move, etc.
+	 CBLOCK RECT CUT COPY PASTE MOVE
+    - Every project has to get it's own filename and dirname.
+    - Copy output of a programm into text (i.e. "dir")
+    - real programming language (maybe C-interpreter)
+    - Support of XPK-lib
+    - more and more cmds !
+    - and so on ...

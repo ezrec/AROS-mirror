@@ -1,0 +1,192 @@
+Return-Path: <utoddl@guitar.oit.unc.edu>
+Date: Mon, 19 Sep 94 07:30:43 GMT-0500
+From: Todd M. Lewis <utoddl@guitar.oit.unc.edu>
+Subject: Re: Your patches for XDME
+
+>You don't do this. It's as simple as that. Your case never happens. A user
+>always (almost :) works on his own.
+
+Ok, a more realistic example: I'm editing several files and I've marked
+a block.  I switch somewhere else to look something up and then come back.
+My text looks like
+
+    abcde
+    fghij
+    kmnop
+    qrstu
+    vwxyz
+
+My block extends over 'hijkmn' and I want it to be 'hijkmnopqrst' so I
+move my cursor to the 't' and hit...what?  There's no indication.  Doing
+it the way you suggest you can only guess.  I never have to guess.
+
+>He sets the end position of the block. Whenever es specifies a new
+>start, he will _never_ expect or want the end position to change, ie.
+>every new BSTART should change tha last position where BSTART was
+>issued and NEVER where BEND was given. (Example for CAD software.
+>If you say "Make a rectangle", you expect it to be a rectangle and
+>_not_ four lines). This is what consistency is all about.
+
+Consistency is about predictability.  I expect BSTART and BEND to
+set or adjust the start and end of the _block_ and for the _block_ to
+behave predictably.  You expect BSTART and BEND to specify distinct
+named _points_ in the text and for those _points_ to behave predictably.
+For me the block is the object I'm working on, for you it's the
+end points.  Either way has its merits, and clearly some people
+prefer one (my :-) way and at least one person prefers it the other
+(your :-) way.  So be it.
+
+I added a config option to make block ends behave either way.
+The default is your way (since it's your program after all),
+but I can live with that. :-)  I did try to make the style match.
+
+---ABOUT CONFIG OPTIONS---
+There must be a better way to do configs than having to update
+the config file every time the format changes.  Couldn't you
+reserve a chunck of space for future expansion and just
+ignore fields that have become obsolete and preserve but
+ignore fields beyond those already defined for a given
+version?  It's a little tricky to test new versions and
+switch back and forth if the config files are not compatible.
+Of course you know all this already...
+
+---MORE MISSING FILES IN THE DISTRIBUTION---
+I tried to do an "smake docs" but not all the pieces were
+there.  I've gone through the SMakefile and listed below
+everything that still is not distributed.  I suspect there are
+some things that MakeDisk uses (a list of files maybe) that isn't
+on the list.
+
+  Parts still missing from the distribution:
+      docs/xdme_cmds_guide_src.head
+      docs/xdme_cmds_guide_src.tail
+      include/commands.org
+      etags
+      MakeDist
+      touch
+
+---MORE FREE CODE FROM HALF WAY AROUND THE WORLD!---
+Below is the log from the lha command I used to put together the
+enclosed archive which contains the changes I make to add the new
+prefs option:
+
+Creating new archive 'blk_upd.lha':
+     Frozen: ( 84.9%)    5957 =>    899 : include/config.h
+     Frozen: ( 77.5%)   49903 =>  11201 : src/block.c
+     Frozen: ( 71.2%)   15985 =>   4590 : src/prefs.c
+     Frozen: ( 78.4%)   10793 =>   2324 : util/cnvconfig/CnvConfig.c
+4 files added, all files OK.
+From utoddl@guitar.oit.unc.edu Tue Oct  4 14:35 MEZ 1994
+Received: from reggae.ncren.net by rz-uxazs.fh-konstanz.de with SMTP
+	(1.38.193.4/BelWue-1.0HP) id AA27036; Tue, 4 Oct 1994 14:30:54 +0100
+Return-Path: <utoddl@guitar.oit.unc.edu>
+Received: from guitar.oit.unc.edu by reggae.ncren.net (5.65/tas-reggae/may94)
+	id AA17139; Tue, 4 Oct 94 09:34:13 -0400
+Received: by guitar.oit.unc.edu (NeXT-1.0 (From Sendmail 5.52)/TAS/11-16-88)
+	id AA03562; Tue, 4 Oct 94 08:30:53 GMT-0500
+Date: Tue, 4 Oct 94 08:30:53 GMT-0500
+From: Todd M. Lewis <utoddl@guitar.oit.unc.edu>
+Message-Id: <9410041330.AA03562@guitar.oit.unc.edu>
+Received: by NeXT Mailer (1.63)
+To: Aaron Digulla <digulla@rz-uxazs.fh-konstanz.de>
+Subject: Re: making blocks work on changing text (XDME)
+Cc: utoddl@guitar.oit.unc.edu
+Status: RO
+
+Ok, I've been thinking about this some more and I think I made a mistake
+with respect to dealing with block ends.  Clearly (oh, sure, _now_
+it's clear) the two different ways of setting block ends--"named
+points" (your way) and "visible ends" (my way) are not mutually
+exclusive and, therefore, we should not overload bstart and bend
+with two distinctly different meanings.  This is especially true
+given that it affects how other functions behave (block selection w/
+the mouse, for example). 
+
+
+Therefore, I propose the following (and this is off the top of my
+head--the details will be worked out later): 
+
+
+*Drop the BLOCKENDSFLOAT business altogether.  Perhaps even put in
+  "error("BLOCKENDSFLOAT is obsolete, remove it from your macros."
+         "See BSETTOP and BSETBOTTOM instead.");
+
+*Add the commands BSETTOP and BSETBOTTOM which will move or set the upper
+ or lower end of the block to the current cursor position.  This has the
+ effect that BSTART and BEND have now if BLOCKENDSFLOAT is set.  The
+ behaviour of BSTART and BEND would no longer have different "modes".
+
+*(somewhat related) Change the behaviour of all the block_set_???() functions
+ so that they _only_ affect the actual_block.  The should _never_ do any
+ redisplaying of anything.  The idea here is that while it is probably a
+ good idea to isolate changes to actual_block to a small set of functions,
+ it is also a good idea to isolate global things (like display updates) from
+ those same small, tightly focused functions.  Let them do one thing and
+ do it well.  If the display needs to be updated, the caller of
+ block_set_???() is in a better position to know how best to do that than
+ the block functions are.
+
+*Add another pair of flags to the block flags that indicate whether
+ the block start and end are valid.  Rather than having special values
+ indicating "value not set", having specific flags for that allows you
+ to set block end before you set block start.  After all, why should
+ you not be allowed to do bend first?  This would change the test in 
+
+ block_ok() to (again, this is not actual code):
+
+  if (
+      (actual_block.type != BT_NONE  ) && 
+
+      (actual_block.flags & BF_START ) &&
+      (actual_block.flags & BF_END   )
+     ) ...
+
+These are the changes I'm planning on making the next time I get to work
+on XDME.  Any comments are welcome.
+
+Later,
+---
+Todd_Lewis@unc.edu   ASDF - Amiga Software Developers Forum
+               "Where the Pizza Meets the Code"
+
+Return-Path: <utoddl@guitar.oit.unc.edu>
+Date: Tue, 18 Oct 94 08:04:01 GMT-0500
+From: Todd M. Lewis <utoddl@guitar.oit.unc.edu>
+Subject: Block stuff for XDME
+
+Well, I got a little bit of time to work on my code last
+night, so here are some minor changes to the block related
+code.
+
+* BLOCKENDSFLOAT is gone.  Feel free to reuse the flag for
+  other purposes.
+
+* BSTART and BEND behave only one way now.  Selection with
+  the mouse should work again.
+  
+
+* None of the block_set_???() functions do any redisplaying.
+  They only operate on ActualBlock.  If you need something
+  redisplayed, don't expect block_set_??? to do if for you.
+  
+
+* New pair of block flags: BF_START_SET and BF_END_SET.
+  These and the BF_SWAPPED flags are now defined in global.h.
+
+* do_block() was cleaned up considerably and made more
+  consistent. In particular:
+  * You can now set either end of a block first.
+    You no longer have to BSTART before you BEND.
+  * Highlighting is handled correctly now when one of the
+    block ends is moved.
+
+/users/utoddl/amy/xdme> lha l tml.lzh
+ PERMSSN  UID GID    SIZE  RATIO     STAMP    NAME
+----------------- ------- ------ ------------ --------------------
+[generic]           13379  30.0% Oct 12 21:43 Include/global.h
+[generic]           47412  26.3% Oct 17 21:45 Src/block.c
+[generic]           37764  28.4% Oct 12 22:16 Src/edit.c
+[generic]           14099  32.6% Oct 12 22:11 Src/io.c
+[generic]           14762  32.1% Oct 12 21:16 Src/prefs.c
+----------------- ------- ------ ------------ --------------------
+ Total    5 files  127416  28.7% Oct 18 06:45
