@@ -1,0 +1,175 @@
+=============
+Status Update
+=============
+
+:Author: David Le Corfec <dlc AT aros DOT org>
+:Date:   2003-08-08
+
+I was going to begin by "In these hot summer days" but as we have people
+from both hemispheres it doesn't apply :-) Anyway, we are still busy
+coding, just take a look at the CVS commits. And it's more than enough time
+for a status update !
+
+Hardware
+--------
+
+Michal Schulz is still working on the PPC port, having received the Pegasos
+board donated by Genesi, and more recently a Voodoo3 card donated by
+Randy Vice.
+
+Johan Grip is implementing the OpenPCI__ specification, and also reworking
+our buggy ide.device, which attempts to write too much data at once instead
+of splitting the requests in smaller chunks. However this is going to be
+more a rewrite than a bug fix. If someone just wants to do the bug fix,
+there is an open bounty (currently 40 USD) for the ide.device bug
+at TeamAROS__.
+
+__ http://www.chez.com/titan/OpenPciUK.html
+__ http://www.thenostromo.com/teamaros/
+
+Build system
+------------
+
+GCC 3.2 is now the minimum requirement to compile AROS, which now compiles
+fine with GCC 3.3, thanks to Stefan Reinauer and others who fixed the
+various deprecated bits in the tree.
+
+Staf Verhaegen continued to improve and simplify the build system. Lately,
+he reorganized the kernel build to use only objects, no more static or
+shared libraries.
+
+Iain Templeton, one of our South hemisphere developers, did his fair share
+on the build system too, especially on the configure scripts (which now
+require autoconf 2.53, hopefully a generated configure is kept in CVS
+for those missing it) and to ensure that AROS compiles and runs fine
+hosted on FreeBSD.
+
+Also mawk (which comes as default on Debian GNU/Linux) will generate
+incorrect headers while building AROS, but GNU awk (gawk) and FreeBSD awk
+work fine.
+
+i386-pc Installation
+--------------------
+
+John Gustafsson and Adam Chodorowski earned the first TeamAROS bounty
+for their "Automated Disk Prep and OS Installer". It will install
+AROS on the first disk of the first IDE channel. Don't try this on
+a disk with valuable data anywhere on it, you've been warned.
+Unfortunately it isn't fully usable yet, due to the ide.device bug:
+some files get corrupted during installation.
+
+As part of this work, new Format and Partition commands were implemented.
+
+User Interface
+--------------
+
+We now have a beautiful About__ dialog, thanks to Pixel Art's logo
+and Adam for the code, as well as an in-progress Mesa port by Nic Andrews.
+And before you ask, the beautiful Broken.miho wallpaper is here__.
+
+Adam did major improvements to the workbench and icon libraries
+(which handle much of the "under the hood" desktop work),
+and also to Wanderer itself. The framework for Wanderer commands
+is in place, and there is already the Delete tool implemented.
+
+As a bonus, there is now an identification hook in icon.library
+to display proper icons depending on the file type and take
+appropriate action on double-click, for files without disk icons.
+
+Sebastian Bauer added arbitrary angled gradients to Zune images.
+
+David Le Corfec, Adam and especially Fabio Alemagna,
+who came up with a multitude of ideas and algorithms, brainstormed
+on a "perfectly" MUI-compliant implementation of Zune layout algorithm.
+Hopefully the new one seems to do the trick.
+
+The Zune string gadget also got a rework and is now slightly more usable,
+the prefs program got a few more pages, and many Zune classes were
+put in their own loadable modules.
+
+Georg Steger implemented the Cybergraphics' WritePixelArrayAlpha(), so we
+can show even more eye-candy, with alpha blending this time :)
+Adam used this to implement a nice grayed-out disabled effect for
+Zune gadgets, instead of the usual grid pattern.
+
+Georg is also porting back the intuition.library from MorphOS, and
+still does a lot of impressive bug finding and fixing elsewhere, which for
+example led to find and report an longstanding bug in stipple drawing
+to the XFree86 project. And when you're faced with a strange memory
+corruption, try his invaluable trick : call a check routine in the
+scheduler ! This allowed to fix bugs in several Prefs programs.
+
+But maybe the best for the end ... With WritePixelArrayAlpha()
+to blend the anti-aliased glyphs, and the work from Staf on freetype2,
+diskfont and bullet libraries, TrueType fonts now
+work - and look__ - great! It also draws upon the work of many others,
+including the MorphOS team (and especially Emmanuel Lesueur) and
+the FreeType__ project. The Bitstream Vera__ font family is now included
+in AROS.
+
+Use FTManager to install TrueType fonts in a few mouse clicks, and enjoy
+the new Font Prefs program.
+
+__ http://www.aros.org/pictures/screenshots/20030808/about.png
+__ http://www.megatokyo.com/extra/broken_miho-full.jpg
+__ http://www.aros.org/pictures/screenshots/20030808/fonts.png
+__ http://www.freetype.org
+__ http://www.gnome.org/fonts/
+
+Localizations
+-------------
+
+We got a Spanish keymap contributed by Albert Astals Cid, several French
+catalogs by Olivier Adam and Hungarian catalogs, language and country
+files by Mark "Bôregér" Balogh.
+
+The applications localization system has been cleaned up a bit, and as
+a side effect, much more applications are now localized.
+So if your favorite application has been localized but misses a catalog
+for your language, don't hesitate to send it to us!
+
+TCP/IP
+------
+
+Will be available next week. Nah, just kidding ;-)
+One of the most requested features. A couple of people are working
+part-time on this, so don't hold your breath.
+This is a huge task, spanning from low-level drivers to interface libraries
+and support applications. It's currently not the priority for most of the
+developers. Use another network appliance in the meantime, or come join us :)
+
+Softwares in contrib/
+---------------------
+
+As usual, some new software or updated versions were imported in contrib:
+
++ UAE__ 0.8.22 (a Zune GUI is planned)
++ the free DeluxePaint clone 4P__ 0.09
++ TCC__ 0.9.19 : you can now directly create AROS executables!
++ GNU tools : make 3.80, diffutils 2.8.1, patch 2.5.4, grep 2.5.1, m4 1.4
++ abcm2ps 3.7.1
++ sploiner 1.0,
+
+__ http://www.freiburg.linux.de/~uae/
+__ http://www.cis.rit.edu/~jerry/Software/4p/
+__ http://fabrice.bellard.free.fr/tcc/
+
+Miscellaneous
+-------------
+
++ After some benchmarking, BOOPSI method calls were optimized using macros,
+and are now about 20% faster.
+
++ Roughly 2000 CVS commits since the last status update, with a record of
+1063 in July. Check it there__. So obviously this status update is
+not exhaustive.
+
+__ http://sourceforge.net/mailarchive/forum.php?forum=aros-cvs
+
+Web
+---
+
+You may be interested in this__ OSNews interview posted on 2003-08-05.
+
+__ http://www.osnews.com/story.php?news_id=4202
+
