@@ -11,6 +11,9 @@
  * Description: Simple demonstration of the arexx class.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 20:33:04  mlemos
+ * Bumped to revision 41.11
+ *
  * Revision 1.2  2000/05/09 19:58:27  mlemos
  * Merged with the branch Manuel_Lemos_fixes.
  *

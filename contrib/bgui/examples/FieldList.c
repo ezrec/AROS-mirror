@@ -20,6 +20,9 @@
  * as defined in the "fieldlist.h" file.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 20:33:30  mlemos
+ * Bumped to revision 41.11
+ *
  * Revision 1.2  2000/05/09 19:58:49  mlemos
  * Merged with the branch Manuel_Lemos_fixes.
  *

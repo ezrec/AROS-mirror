@@ -11,6 +11,9 @@
  * Description: Small script for the small arexxclass demo.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 20:34:05  mlemos
+ * Bumped to revision 41.11
+ *
  * Revision 1.2  2000/05/09 19:59:19  mlemos
  * Merged with the branch Manuel_Lemos_fixes.
  *

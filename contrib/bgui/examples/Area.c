@@ -11,6 +11,9 @@
  * Description: Very simple test program for the area class.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 20:33:10  mlemos
+ * Bumped to revision 41.11
+ *
  * Revision 1.2  2000/05/09 19:58:31  mlemos
  * Merged with the branch Manuel_Lemos_fixes.
  *
