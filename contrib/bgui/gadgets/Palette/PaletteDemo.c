@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2004/06/20 12:24:32  verhaegs
+ * Use REGFUNC macro's in BGUI source code, not AROS_UFH
+ *
  * Revision 42.5  2003/01/18 19:10:19  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -111,14 +114,12 @@ UBYTE          *InfoTxt = ISEQ_C "As you can see the colors of the below button\
  *      dispatchers, hook routines or anything else which may get
  *      called by a task other than your own.
  */
-#ifdef __AROS__
-AROS_UFH3(ULONG, myButtonDispatch,
-        AROS_LHA(Class *, cl, A0),
-        AROS_LHA(Object *, obj, A2),
-        AROS_LHA(Msg, msg, A1))
-#else
-SAVEDS ASM ULONG myButtonDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
-#endif
+//SAVEDS ASM ULONG myButtonDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+ASM REGFUNC3(ULONG, myButtonDispatch,
+	     REGPARAM(A0, Class *, cl),
+	     REGPARAM(A2, Object *, obj),
+	     REGPARAM(A1, Msg, msg)
+)
 {
         ULONG                   rc, pen, tag;
 
@@ -186,6 +187,7 @@ SAVEDS ASM ULONG myButtonDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a
         }
         return( rc );
 }
+REGFUNC_END
 
 /*
  *      Setup our button class.

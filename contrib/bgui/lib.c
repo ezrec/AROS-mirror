@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.12  2004/06/20 12:24:31  verhaegs
+ * Use REGFUNC macro's in BGUI source code, not AROS_UFH
+ *
  * Revision 42.11  2004/06/19 20:27:48  verhaegs
  * Added AROS_LIBFUNC_INIT/EXIT
  *
@@ -335,18 +338,17 @@ makeproto VOID InitLocale(void)
 /*
  * Library initialization.
  */
-#ifdef __AROS__
-makeproto
-AROS_UFH3(struct Library *, LibInit,
-       AROS_UFHA(ULONG, dummy, D0),
-       AROS_UFHA(BPTR, segment, A0),
-       AROS_UFHA(struct ExecBase *, syslib, A6))
+//makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struct ExecBase *syslib)
+#ifndef __AROS__
+makeproto SAVEDS
 #else
-makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struct ExecBase *syslib)
+makeproto
 #endif
+ASM REGFUNC2(struct Library *, LibInit,
+	     REGPARAM(A0, BPTR, segment),
+	     REGPARAM(A6, struct ExecBase *, syslib)
+)
 {
-   AROS_USERFUNC_INIT
-   
    struct Library       *lib;
 
    /*
@@ -446,9 +448,8 @@ makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struc
    }
    CloseLibs();
    return NULL;
-   
-   AROS_USERFUNC_EXIT
 }
+REGFUNC_END
 
 /*
  * Open library.

@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2004/06/20 12:24:32  verhaegs
+ * Use REGFUNC macro's in BGUI source code, not AROS_UFH
+ *
  * Revision 42.4  2004/06/16 20:16:49  verhaegs
  * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
  *
@@ -133,17 +136,12 @@ ASM REGFUNCPROTO3(ULONG, TV_Expand,
 *
 *************************************************************************/
 
-#ifdef __AROS__
-AROS_UFH3(ULONG, TV_Expand,
-	AROS_LHA(Class *, cl, A0),
-	AROS_LHA(Object *, obj, A2),
-	AROS_LHA(struct tvEntry *, tve, A1))
+//ASM ULONG TV_Expand(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve)
+ASM REGFUNC3(ULONG, TV_Expand,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvEntry *, tve))
 {
-    AROS_USERFUNC_INIT;
-#else
-ASM ULONG TV_Expand(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve)
-{
-#endif
 struct tvExpand	tvexp;
 struct tvAnchor	tva;
 TVData			*tv;
@@ -305,8 +303,5 @@ if (rc)
 	}
 
 return(rc);
-#ifdef __AROS__
-    AROS_USERFUNC_EXIT;
-#endif
 }
-
+REGFUNC_END

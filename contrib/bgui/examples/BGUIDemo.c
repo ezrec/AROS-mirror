@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2004/06/20 12:24:32  verhaegs
+ * Use REGFUNC macro's in BGUI source code, not AROS_UFH
+ *
  * Revision 42.5  2004/06/16 23:59:30  chodorowski
  * Added missing AROS_USERFUNC_INIT/EXIT.
  *
@@ -729,17 +732,13 @@ ULONG SAVEDS ASM
 SAVEDS ASM ULONG
 #endif
 
-#ifdef __AROS__
-AROS_UFH3(, BackFillHook,
-	AROS_LHA(struct Hook *, hook, A0),
-	AROS_LHA(Object *, imo, A2),
-	AROS_LHA(struct FrameDrawMsg *, fdm, A1))
-#else
-BackFillHook( REG(a0) struct Hook *hook, REG(a2) Object *imo, REG(a1) struct FrameDrawMsg *fdm )
-#endif
+//BackFillHook( REG(a0) struct Hook *hook, REG(a2) Object *imo, REG(a1) struct FrameDrawMsg *fdm )
+REGFUNC3(, BackFillHook,
+	 REGPARAM(A0, struct Hook *, hook),
+	 REGPARAM(A2, Object *, imo),
+	 REGPARAM(A1, struct FrameDrawMsg *, fdm)
+)
 {
-    AROS_USERFUNC_INIT
-
    UWORD pat[] =
    {
       0x0000, 0x0000, 0x0002, 0x0002, 0x000A, 0x000A, 0x002A, 0x002A,
@@ -756,9 +755,8 @@ BackFillHook( REG(a0) struct Hook *hook, REG(a2) Object *imo, REG(a1) struct Fra
    SetAfPt( fdm->fdm_RPort, NULL, 0 );
 
    return( FRC_OK );
-
-    AROS_USERFUNC_EXIT
 }
+REGFUNC_END
 
 /*
 ** The hook structure.
