@@ -1,9 +1,16 @@
-BEGIN { FS=":" }
+BEGIN { FS=":"; names[""] = 1; }
 /^$/ { next }
 /^#/ { next }
  {
     # name:passwd:user:name:email
+    name = $1
+    if (name in names)
+    {
+	print "Duplicate name \""name"\"" > "/dev/stderr"
+	exit (1);
+    }
+    names[name] = 1;
 
-    print $1":"$2":aros" > "passwd"
-    print $1":"$3":"$4":"$5 > "developers"
+    print name":"$2":aros" > "passwd"
+    print name":"$3":"$4":"$5 > "developers"
  }
