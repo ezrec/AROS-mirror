@@ -3,6 +3,14 @@
 from HTMLgen import *
 
 class Link:
+    '''Helper class to store all relevant information about a link.
+    
+    url - The URL of the link.
+    label - The label which should be used in the HTML page.
+	    If not specified, then url is used.
+    text - Text explaining the link
+    logo - Optional logo for this URL.
+    '''
     def __init__ (self, url, label=None, text=None, logo=None):
 	if not label:
 	    label = url
