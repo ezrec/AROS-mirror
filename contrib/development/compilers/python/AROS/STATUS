@@ -1,7 +1,7 @@
 Summary
 -------
 
-92 tests OK, 43 tests SKIPPED and 4 tests FAILED.
+93 tests OK, 43 tests SKIPPED and 3 tests FAILED.
 
 Notes on failed tests
 ---------------------
@@ -10,20 +10,6 @@ test_time
 
     test_time.py, line 3
     attributeerror: 'time' module has no attribute 'altzone'
-
-test_unicode 
-
-    [lots of successfull tests]
-    Testing Unicode contains method... done.
-    Testing Unicode formatting strings... done.
-    Testing builtin codecs...
-
-    Traceback (most recent call last):
-      File "libs/python/test/test_unicode.py", line 444, in ?
-         verify(u'hello'.encode('utf-16-le') == 'h\000e\000l\000l\000o\000')
-      File "libs/python/test/test_support.py", line 91, in verify
-         raise TestFailed(reason)
-    test_support.TestFailed: test failed
 
 test_difflib 
 

@@ -60,7 +60,10 @@
 
 /* Define if your processor stores words with the most significant
    byte first (like Motorola and SPARC, unlike Intel and VAX).  */
-#define WORDS_BIGENDIAN AROS_BIG_ENDIAN
+
+#if AROS_BIG_ENDIAN
+#define WORDS_BIGENDIAN 
+#endif
 
 /* Define for AIX if your compiler is a genuine IBM xlC/xlC_r
    and you want support for AIX C++ shared extension modules. */
