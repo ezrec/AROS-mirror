@@ -1,0 +1,48 @@
+include $(TOP)/config/make.cfg
+
+STARTUP := $(LIBDIR)/startup.o
+LIBS	:= -L$(LIBDIR) -larossupport -lamiga -larosc
+DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a \
+	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(BINDIR)/fish
+
+FILES := main
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+EXE := $(DESTDIR)/worldtime
+
+.PHONY : all clean
+
+#MM fish-worldtime : setup-fish-worldtime
+fish-worldtime 	: $(OBJS) $(EXE) config data
+	@$(NOP)
+
+#MM
+setup-fish-worldtime :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+config : worldtime.cfg
+	@$(ECHO) "Copying config file"
+	@$(CP) worldtime.cfg $(DESTDIR)
+
+data : worldtime.dat
+	@$(ECHO) "Copying data file"
+	@$(CP) worldtime.dat $(DESTDIR)
+
+#MM
+clean-fish :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+
