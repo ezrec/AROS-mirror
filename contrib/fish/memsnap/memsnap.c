@@ -169,9 +169,9 @@ CloseAll()			/* close opened libraries */
     if (GadToolsBase)
 	CloseLibrary(GadToolsBase);
     if (GfxBase)
-	CloseLibrary(GfxBase);
+	CloseLibrary((struct Library *)GfxBase);
     if (IntuitionBase)
-	CloseLibrary(IntuitionBase);
+	CloseLibrary((struct Library *)IntuitionBase);
 }
 
 

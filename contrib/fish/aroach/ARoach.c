@@ -9,10 +9,10 @@
 
 #include "ARoach.h"
 
-/* #define DEBUG			/* general debugging output */
-/* #define ROACHNUMBERING	/* each roach has a number */
-/* #define USE_WB_WINDOW	/* use WB backdrop window if available (Hack!) */
-/* #define CHECK_COLLISION	/* roaches turn when bumping into each other */
+/* #define DEBUG		*//* general debugging output */
+/* #define ROACHNUMBERING	*//* each roach has a number */
+/* #define USE_WB_WINDOW	*//* use WB backdrop window if available (Hack!) */
+/* #define CHECK_COLLISION	*//* roaches turn when bumping into each other */
 #define INTELLIGENT		/* roaches sense near window */
 
 #ifdef DEBUG
@@ -434,7 +434,7 @@ void checkSquish()
 	struct IntuiMessage *imsg;
 
 	/* Check for CLICK*/
-	while (imsg = (struct IntuiMessage *) GetMsg(roachWindow->UserPort)) {
+	while ((imsg = (struct IntuiMessage *) GetMsg(roachWindow->UserPort))) {
 		if (imsg->Class == IDCMP_MOUSEBUTTONS && imsg->Code == SELECTDOWN) {
 			checksquish = TRUE;
 			x = imsg->MouseX;
@@ -465,8 +465,8 @@ void checkSquish()
 			 * access illegal memory. WHY?
 			 *
  			 *	freeBob(r->bob, RasDepth);  / Free its Bob struct /
-			/*
-             * Then change FreeAllRoaches(): for(.. <curRoaches...)
+			 *
+			 * Then change FreeAllRoaches(): for(.. <curRoaches...)
 			 */
 				tmpbob = r->bob;
 
@@ -713,7 +713,7 @@ char *cmdline, tmpbuffer[MAXCMDLINE];
 char **ttarray, *tt;
 int linelen;
 
-	if (ttarray = ArgArrayInit(argc, argv)) {
+	if ((ttarray = ArgArrayInit(argc, argv))) {
 
 		*tmpbuffer = '\0';
 		tt = *ttarray;
@@ -786,7 +786,7 @@ struct Window *rootWin;		/* the window we will draw in */
 		maxRoaches = * (ULONG *) opts[OPT_ROACHES];
 	}
 	if (maxRoaches > ROACH_LIMIT) {
-		printf("Won't use more than %ld roaches.\n", ROACH_LIMIT);
+		printf("Won't use more than %d roaches.\n", ROACH_LIMIT);
 		maxRoaches = ROACH_LIMIT;
 	}
 	if (maxRoaches < 1) {
@@ -900,7 +900,7 @@ BOOL running = TRUE;
 	}
 
 	/* Check for CLOSEWINDOW */
-	while (imsg = (struct IntuiMessage *) GetMsg(userWindow->UserPort)) {
+	while ((imsg = (struct IntuiMessage *) GetMsg(userWindow->UserPort))) {
 		if (imsg->Class == IDCMP_CLOSEWINDOW) {
 			running = FALSE;
 		}
@@ -918,9 +918,9 @@ struct IntuitionBase * IntuitionBase;
 BOOL openlibs(void)
 {
   LayersBase = OpenLibrary("layers.library",0);
-  GfxBase = OpenLibrary("graphics.library",0);
+  GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0);
   IconBase = OpenLibrary("icon.library",0);
-  IntuitionBase = OpenLibrary("intuition.library",0);
+  IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
   
   if (!LayersBase || !GfxBase || !IconBase || !IntuitionBase)
     return FALSE;

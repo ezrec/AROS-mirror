@@ -7,7 +7,7 @@
 /**********************************************************************/
 
 
-/* #define MWDEBUG	1	/* enable Memlib functions */
+/* #define MWDEBUG	1	*//* enable Memlib functions */
 
 #include <dos/dos.h>
 #include <dos/rdargs.h>

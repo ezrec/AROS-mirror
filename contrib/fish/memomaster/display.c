@@ -295,7 +295,7 @@ Display(char **txt, int Mode, int FColour, int BColour)
       while(my_message=(struct IntuiMessage *) GetMsg(my_window->UserPort))
 	{
 	gp = (struct Gadget *)my_message->IAddress;
-	ReplyMsg( my_message );
+	ReplyMsg( (struct Message *)my_message );
 	choice = gp->GadgetID;
 	  close_me=TRUE;
 	}

@@ -499,7 +499,7 @@ SHORT SelectOption()
 			ULONG class = msg->Class;
 			struct Gadget *iaddress = msg->IAddress;
 
-			ReplyMsg(msg);
+			ReplyMsg((struct Message *)msg);
 
 			switch ( class )
 			    {
@@ -604,7 +604,7 @@ BOOL About()
 			if ( (msg->Class == MOUSEBUTTONS) && (msg->Code == SELECTUP) )
 			    loop = FALSE;
 
-			ReplyMsg(msg);
+			ReplyMsg((struct Message *)msg);
 		    }
 	    }
 
@@ -742,7 +742,7 @@ BOOL Game()
 			SHORT mousex = msg->MouseX;
 			SHORT mousey = msg->MouseY;
 
-			ReplyMsg(msg);
+			ReplyMsg((struct Message *)msg);
 
 			switch ( class )
 			    {
@@ -820,7 +820,7 @@ BOOL Game()
 				if ( (msg->Class == MOUSEBUTTONS) && (msg->Code == SELECTUP) )
 				    loop = FALSE;
 
-				ReplyMsg(msg);
+				ReplyMsg((struct Message *)msg);
 			    }
 		    }
 	    }

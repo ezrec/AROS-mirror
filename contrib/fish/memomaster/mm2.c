@@ -132,7 +132,7 @@ CleanUp()
   {
   if(mm_w)CloseWindow(mm_w);
   FreeRemember(&RK,TRUE);
-  if(IntuitionBase)CloseLibrary(IntuitionBase);
+  if(IntuitionBase)CloseLibrary((struct Library *)IntuitionBase);
   return 1;
   }
 /*=====================================================================*/
@@ -162,7 +162,7 @@ void Action()
       {
       Class = msg->Class;
       address = msg->IAddress;
-      ReplyMsg( msg );
+      ReplyMsg( (struct Message *)msg );
       switch( Class )
 	{
 	case CLOSEWINDOW:
@@ -565,7 +565,7 @@ Shrink()
   Wait(1 << sw->UserPort->mp_SigBit);
   while (msg = (struct IntuiMessage *) GetMsg( sw->UserPort ) )
     {
-    ReplyMsg( msg );
+    ReplyMsg( (struct Message *)msg );
     }
   wx = sw->LeftEdge;   /* Save location of shrunk window for next*/
   wy = sw->TopEdge;    /*   time user requests shrink		 */

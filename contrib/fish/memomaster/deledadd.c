@@ -547,7 +547,7 @@ BOOL MemoReq(struct Memo_Item *mim)
   my_window = (struct Window *) OpenWindow( &my_new_window );
   if(my_window == NULL)
     {
-    CloseLibrary( IntuitionBase );
+    CloseLibrary( (struct Library *)IntuitionBase );
     exit();
     }
 
@@ -570,7 +570,7 @@ BOOL MemoReq(struct Memo_Item *mim)
       {
       class = my_message->Class;
       address = my_message->IAddress;
-      ReplyMsg( my_message );
+      ReplyMsg( (struct Message *)my_message );
       switch( class )
 	{
 	case GADGETUP:

@@ -16,7 +16,7 @@ struct Library * GadToolsBase;
 BOOL openlibs(void)
 {
   AslBase = OpenLibrary("asl.library",0);
-  GfxBase = OpenLibrary("graphics.library",0);
+  GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0);
   IconBase = OpenLibrary("icon.library",0);
   IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
   UtilityBase = OpenLibrary("utility.library",0);
@@ -30,7 +30,7 @@ BOOL openlibs(void)
 void closelibs(void)
 {
   if (AslBase) CloseLibrary(AslBase);
-  if (GfxBase) CloseLibrary(GfxBase);
+  if (GfxBase) CloseLibrary((struct Library *)GfxBase);
   if (IconBase) CloseLibrary(IconBase);
   if (IntuitionBase) CloseLibrary((struct Library *)IntuitionBase);
   if (UtilityBase) CloseLibrary(UtilityBase);

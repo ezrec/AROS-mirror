@@ -81,7 +81,7 @@ main()
             secs        =   msg->Seconds;
             micros      =   msg->Micros;
 
-            ReplyMsg( msg );
+            ReplyMsg( (struct Message *)msg );
 
             switch ( class ) {
                 case MOUSEBUTTONS:
@@ -127,13 +127,13 @@ main()
     }
 
     while ( msg = (struct IntuiMessage *)GetMsg( testWnd->UserPort ) )
-        ReplyMsg( msg );
+        ReplyMsg( (struct Message *)msg );
 
     CloseWindow( testWnd );
     puts( "Well, it " ANSI_WHITE "WAS fun" ANSI_NORMAL ". Wasn't it?" );
     ret_val = 0L;
 
 BAD_RETURN:
-    CloseLibrary( IntuitionBase );
+    CloseLibrary( (struct Library *)IntuitionBase );
     return( ret_val );
 }

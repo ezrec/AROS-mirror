@@ -168,8 +168,8 @@ Exit:
 	if (TimerPort)
 		DeleteMsgPort(TimerPort);
 	CloseLibrary(GadToolsBase);
-	CloseLibrary((APTR)GfxBase);
-	CloseLibrary(IntuitionBase);
+	CloseLibrary((struct Library *)GfxBase);
+	CloseLibrary((struct Library *)IntuitionBase);
 	return 0;
 }
 
