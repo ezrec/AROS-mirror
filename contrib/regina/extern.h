@@ -804,7 +804,7 @@ extern const char *months[];
 extern const char *signalnames[];
 extern const streng RC_name;
 extern const streng SIGL_name;
-extern const streng *RESULT_name;
+extern const streng RESULT_name;
 extern const unsigned char u_to_l[];
 extern const char *numeric_forms[] ;
 extern const char *invo_strings[] ;

@@ -48,7 +48,7 @@ FILE *popen( char *command, char *access ) ;
 
 const streng RC_name = { 2, 2, "RC" } ;
 const streng SIGL_name = { 4, 4, "SIGL" };
-const streng *RESULT_name = NULL; /* pseudo const: is set by init_spec_vars */
+const streng RESULT_name = { 6, 6, "RESULT" };
 
 static const char default_action[SIGNALS] = { 1, 1, 0, 1, 1, 0 } ;
 static const char default_ignore[SIGNALS] = { 1, 1, 0, 0, 1, 0 } ;
@@ -148,10 +148,6 @@ int init_spec_vars( tsd_t *TSD )
    it->nvar_rc->u.varbx = NULL ;
    it->nvar_rc->name = Str_dupTSD( &RC_name ) ;
    it->nvar_rc->type = X_SIM_SYMBOL ;
-
-   /* Allocate this only once, it is a global value */
-   if (RESULT_name == NULL)
-      RESULT_name = (const streng *) Str_creTSD( "RESULT" ) ;
 
 #ifdef TRACEMEM
    regmarker( TSD, mark_spec_vars ) ;
@@ -1244,9 +1240,9 @@ endloop: if (s.increment)
             TSD->trace_stat = TSD->currlevel->tracestat ;
 
             if (result)
-               setvalue( TSD, RESULT_name, result ) ;
+               setvalue( TSD, &RESULT_name, result ) ;
             else
-               drop_var( TSD, RESULT_name ) ;
+               drop_var( TSD, &RESULT_name ) ;
 
             break ;
         }
@@ -1264,9 +1260,9 @@ endloop: if (s.increment)
         else
         {
            if (result)
-              setvalue( TSD, RESULT_name, result ) ;
+              setvalue( TSD, &RESULT_name, result ) ;
            else
-              drop_var( TSD, RESULT_name ) ;
+              drop_var( TSD, &RESULT_name ) ;
 
            break ;
         }
@@ -1297,7 +1293,7 @@ endloop: if (s.increment)
 
          if (ptr==command)
          {
-            drop_var( TSD, RESULT_name ) ;
+            drop_var( TSD, &RESULT_name ) ;
             ptr = NULL ;
          }
          if (!ptr)
@@ -1309,7 +1305,7 @@ endloop: if (s.increment)
                 exiterror( ERR_ROUTINE_NOT_FOUND, 0 )  ;
                ptr = nullstringptr() ;
             }
-            setvalue( TSD, RESULT_name, ptr ) ;
+            setvalue( TSD, &RESULT_name, ptr ) ;
          }
 
          Free_stringTSD( command ) ;
@@ -1322,7 +1318,7 @@ endloop: if (s.increment)
 
          if (ptr==this->name) /* MH no idea what this does */
          {
-            drop_var( TSD, RESULT_name ) ;
+            drop_var( TSD, &RESULT_name ) ;
             ptr = NULL ;
          }
 
@@ -1360,7 +1356,7 @@ endloop: if (s.increment)
             }
          }
          if (ptr)
-            setvalue( TSD, RESULT_name, ptr ) ;
+            setvalue( TSD, &RESULT_name, ptr ) ;
          deallocplink( TSD, args ) ;
 
 #endif
