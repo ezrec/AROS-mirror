@@ -215,7 +215,9 @@ class Page (SeriesDocument):
 	#self.home = os.path.join ('pics', 'home.gif')
 
 	# Create the header of every page.
-	table = TableLite ()
+	table = TableLite (
+	    align="CENTER",
+	)
 	self.banner = table
 	row = TR ()
 	table.append (row)
@@ -243,7 +245,8 @@ class Page (SeriesDocument):
 	table2.append (row2)
 	td2 = TD (bgcolor='#40FF80', valign='TOP')
 	row2 = row2 + [td2]
-	self.linkbox = Font (size='-2')
+	#self.linkbox = Font (size='-2')
+	self.linkbox = Font (size='0')
 	td2 = td2 + [self.linkbox]
 
 	# The content will go here
@@ -258,7 +261,7 @@ class Page (SeriesDocument):
 		else:
 		    list.append ((links[0],))
 
-	    for links in list:
+	    for links in mainLinks:
 		nl = Href (links[0].url, links[0].text)
 		self.linksToFix.append (nl)
 		self.linkbox = self.linkbox + [nl, BR (), RawText ('\n')]
@@ -373,10 +376,11 @@ class Page (SeriesDocument):
 	img = Image(self.logo, align='bottom')
 	self.calc_rel_path (img, self.filename)
         s.append('<BR>' + str(img))
-        s.append('\n<FONT SIZE="-1"><P>Amiga is a trademark of Amiga Inc. All other trademarks belong to their respective owners.<BR>\n' \
-        s.append('\n<FONT SIZE="-1"><P>Copyright &#169 %s<BR>All Rights Reserved<BR>\n' \
-            % self.author)
-        s.append('\nComments to author: ' + str(MailTo(self.email)) )
+        s.append('''
+<FONT SIZE="-1"><P>Amiga® is a trademark of Amiga Inc. All other trademarks belong to their respective owners.<BR>
+<FONT SIZE="-1"><P>Copyright &#169 AROS - The Amiga Research OS<BR>
+All Rights Reserved<BR>''')
+        s.append('\nComments to webmaster: ' + str(MailTo(self.email)) )
         s.append('<br>\nGenerated: %s <BR>' % self.date) # can use self.datetime here instead
         s.append('<hr>\n</FONT>')
         return string.join(s, '')
