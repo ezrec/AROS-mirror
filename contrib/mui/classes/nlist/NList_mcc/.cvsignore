@@ -4,3 +4,6 @@
 *.mcc.elf
 *.old
 SCOPTIONS
+*.bak
+*.info
+nlist.mcc.lib
