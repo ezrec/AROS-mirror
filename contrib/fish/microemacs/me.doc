@@ -1,0 +1,59 @@
+<ctrl-@>	Set Mark at current position.
+<ctrl-A>	Move cursor to beginning of line.
+<ctrl-B>	Move cursor BACK one character.
+<ctrl-C>	Push to a new interactive command shell.
+<ctrl-D>	DELETE current current character.
+<ctrl-E>	Move cursor to END of line.
+<ctrl-F>	Move cursor FORWARD one character.
+<ctrl-G>	Abort any command. (shades of Teco).
+<ctrl-H>	(backspace) delete previous character.
+<ctrl-K>	KILL (delete) to end of line.
+<ctrl-L>	Redisplay screen.
+<ctrl-N>	Move cursor to NEXT line.
+<ctrl-O>	OPEN a new line.
+<ctrl-P>	Move to PREVIOUS line.
+<ctrl-Q>	QUOTE the next character (insert the next character typed).
+<ctrl-R>	REVERSE Search.
+<ctrl-S>	Forward SEARCH.
+<ctrl-T>	TRANSPOSE characters.
+<ctrl-U>	Enter repete count for next command.
+<ctrl-V>	VIEW the next screen (scroll up one screen).
+<ctrl-W>	Kill region (all text between cursor and last mark set).
+<ctrl-Y>	YANK (undelete) last text killed (deleted).
+<ctrl-Z>	Save file in current buffer and exit.
+
+<ctrl-X>(	Begin keyboard Macro.
+<ctrl-X>)	End keyboard Macro.
+<ctrl-X>1	Display only current window.
+<ctrl-X>2	Split the current window.
+<ctrl-X>B	Prompt for new BUFFER.
+<ctrl-X>E	EXECUTE keyborad Macro.
+<ctrl-X>K	KILL a buffer.
+<ctrl-X>N	Move to NEXT window.
+<ctrl-X>P	Move to PREVIOUS window.
+<ctrl-X>Z	Enlarge current window by repete count <ctrl-U> lines.
+
+<ctrl-X><ctrl-B> Show active BUFFERS.
+<ctrl-X><ctrl-C> Exit without saveing buffers.
+<ctrl-X><ctrl-F> FIND file.  ?non-working?
+<ctrl-X><ctrl-N> Scroll current window up by repete count lines.
+<ctrl-X><ctrl-P> Scroll current window up by repete count lines.
+<ctrl-X><ctrl-R> READ file into current buffer.
+<ctrl-X><ctrl-S> SAVE (write) current buffer into its file.
+<ctrl-X><ctrl-V> VISIT a file. Read file and display in current window.
+<ctrl-X><ctrl-W> WRITE buffer to file.
+<ctrl-X><ctrl-Z> Reduce current window by repete count lines.
+
+<del>		delete previous character.
+
+<esc>!		Move current line to repete count lines from top of window.
+<esc>>		Move cursor to end of buffer.
+<esc><		Move cursor to beginning of buffer.
+<esc>B		Move cursor BACK one word.
+<esc>C		CAPITALIZE (Capitalize) word.
+<esc>D		DELETE next word.
+<esc><del>	DELETE previous word.
+<esc>F		Move cursor FORWARD one word.
+<esc>L		LOWERCASE (lowercase) next word.
+<esc>U		UPPERCASE (UPPERCASE) next word.
+<esc>V		VIEW the previous screen (scroll down one screen).
