@@ -30,6 +30,8 @@ int             AllowBombs,
 //Startup directory
 char            StartDir [1024];
 
+#include <stdlib.h>
+
 //Function prototypes
 #include "BomberInclude.c"
 
