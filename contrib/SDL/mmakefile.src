@@ -93,16 +93,18 @@ FILES :=    SDL_error 	    	\
  
 USER_CFLAGS := -DENABLE_CYBERGRAPHICS -DNO_SIGNAL_H -DENABLE_AHI
 
-CFLAGS += -I$(GENDIR)/contrib/AHI/Include/gcc
+CFLAGS += -I$(GENDIR)/AHI/Include/gcc
 
 %build_linklib mmake=linklibs-SDL libname=SDL files=$(FILES)
 
 %common
 
 #MM
-linklibs-SDL-config : $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-sdl-config
+linklibs-SDL-config : \
+    $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config
 
-$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-sdl-config: sdl-config.in
+$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config: sdl-config.in
 	@sed 's,@AROS_INCLUDE@,$(AROS_INCLUDES),g; s,@AROS_LIB@,$(AROS_LIB),g' sdl-config.in > $@
 	@chmod a+x $@
+	ln -sf $@ $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)/sdl-config
 
