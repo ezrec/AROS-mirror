@@ -12,6 +12,7 @@
 #include <exec/memory.h>
 #include <intuition/intuition.h>
 #include <dos/dosextens.h>
+#include <dos/dostags.h>
 #include <rexx/storage.h>
 #include <rexx/rxslib.h>
 #include <ctype.h>
@@ -25,13 +26,14 @@ struct RxsLib *RexxSysBase;
 struct IntuitionBase *IntuitionBase;
 
 static void StartFile(struct RexxMsg *);
+static void StartFileSlave(struct RexxMsg *);
 static void AddLib(struct RexxMsg *);
 static void RemLib(struct RexxMsg *);
 static void AddCon(struct RexxMsg *);
 static void RemCon(struct RexxMsg *);
 static void QueryFunclist(struct RexxMsg *);
 
-int main(void)
+int main(int argc, char **argv)
 {
     struct MsgPort *port;
     struct RexxMsg *msg;
@@ -45,15 +47,8 @@ int main(void)
 	NULL,
 	"OK"
     };
-    
+
     IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 0);
-    ReginaBase = OpenLibrary("regina.library", 2);
-    if (ReginaBase == NULL)
-    {
-	es.es_TextFormat = "Error opening regina.library V2";
-	EasyRequest(NULL, &es, NULL);
-	return 20;
-    }
     RexxSysBase = (struct RxsLib *)OpenLibrary("rexxsyslib.library", 44);
     if (RexxSysBase == NULL)
     {
@@ -61,6 +56,27 @@ int main(void)
 	EasyRequest(NULL, &es, NULL);
 	CloseLibrary(ReginaBase);
 	return 20;
+    }
+
+    if (argc==3 && strcmp("SUBTASK", argv[1])==0)
+    {
+        struct RexxMsg *msg;
+      
+        ReginaBase = OpenLibrary("regina.library", 2);
+        if (ReginaBase == NULL)
+        {
+	    es.es_TextFormat = "Error opening regina.library V2";
+	    EasyRequest(NULL, &es, NULL);
+	    return 20;
+        }
+        sscanf(argv[2], "%p", &msg);
+        StartFileSlave(msg);
+        ReplyMsg(msg);
+
+        CloseLibrary(ReginaBase);
+        CloseLibrary((struct Library *)RexxSysBase);
+        CloseLibrary((struct Library *)IntuitionBase);
+        return 0;
     }
 
     port = CreatePort("REXX", 0);
@@ -75,6 +91,8 @@ int main(void)
 	{
 	    while ((msg = (struct RexxMsg *)GetMsg(port)) != NULL)
 	    {
+	        BOOL reply=TRUE;
+
 		if (!IsRexxMsg(msg))
 		{
 		    es.es_TextFormat = "Received message that is not a Rexx message";
@@ -95,11 +113,15 @@ int main(void)
 		        if (msg->rm_Action & RXFF_FUNCLIST)
 			    QueryFunclist(msg);
 		        else
+		        {
 			    StartFile(msg);
+			    reply = FALSE;
+			}
 		        break;
 
 		    case RXCOMM:
 			StartFile(msg);
+		        reply = FALSE;
 			break;
 
 		    case RXADDCON:
@@ -130,14 +152,14 @@ int main(void)
 			break;
 		    }
 		}
-		ReplyMsg((struct Message *)msg);
+	        if (reply)
+		    ReplyMsg(msg);
 	    }
 	}
     } while(!done);
 
     DeletePort(port);
     CloseLibrary((struct Library *)RexxSysBase);
-    CloseLibrary(ReginaBase);
     CloseLibrary((struct Library *)IntuitionBase);
 
     return 0;
@@ -145,14 +167,25 @@ int main(void)
 
 static void StartFile(struct RexxMsg *msg)
 {
+    char text[20];
+
+    sprintf(text, "PROGDIR:RexxMast SUBTASK %p", (void*)msg);
+  
+#warning FIXME: thread should be used to handle more then one message at a time, not SystemTags
+    SystemTags(text, SYS_Asynch, TRUE, SYS_Input, Open("NIL:", MODE_OLDFILE),
+	       SYS_Output, Open("NIL:", MODE_NEWFILE), TAG_DONE);
+}
+
+static void StartFileSlave(struct RexxMsg *msg)
+{
     UBYTE *s, *filename;
     RXSTRING rxresult, rxargs[15];
     USHORT rc;
-    BPTR lock;
+    BPTR lock, oldlock;
     unsigned int len=0, extlen, argcount=0;
     LONG type;
     BOOL iscommand = ((msg->rm_Action & RXCODEMASK) == RXCOMM);
-    struct FileHandle *input = NULL, *output = NULL;
+    struct FileHandle *input = NULL, *output = NULL, *error = NULL;
     struct Process *process = (struct Process *)msg->rm_Node.mn_ReplyPort->mp_SigTask;
     
     if (iscommand)
@@ -241,11 +274,20 @@ static void StartFile(struct RexxMsg *msg)
     /* Set input/output to the task that sent the message */
     if (!(msg->rm_Action & RXFF_NOIO))
     {
+        lock = NULL;
+        oldlock = NULL;
 	if (process->pr_Task.tc_Node.ln_Type == NT_PROCESS)
 	{
 	    input = process->pr_CIS;
 	    output = process->pr_COS;
-	    lock = CurrentDir(process->pr_CurrentDir);
+	    error = process->pr_CES;
+	    lock = DupLock(process->pr_CurrentDir);
+	    if (lock != NULL)
+	    {
+	        lock = CurrentDir(lock);
+	        oldlock = DupLock(lock);
+	        UnLock(lock);
+	    }
 	}
 	if (msg->rm_Stdin != NULL)
 	    input = msg->rm_Stdin;
@@ -254,6 +296,7 @@ static void StartFile(struct RexxMsg *msg)
 	
 	input = SelectInput(input);
 	output = SelectOutput(output);
+        error = SelectError(error);
 	updatestdio();
     }
 
@@ -267,9 +310,11 @@ static void StartFile(struct RexxMsg *msg)
 	    SelectInput(input);
         if (output != NULL)
 	    SelectOutput(output);
+        if (error != NULL)
+	    SelectError(error);
         updatestdio();
-        if (process->pr_Task.tc_Node.ln_Type == NT_PROCESS)
-	  lock = CurrentDir(lock);
+        if (oldlock != NULL)
+	    UnLock(CurrentDir(oldlock));
     }
     
     fflush(stdout);
