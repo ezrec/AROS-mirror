@@ -35,7 +35,7 @@ def genPage (key, filename, items):
 
     page = PageMeat (key, filename)
 
-    if filename == 'index.html':
+    if filename == 'index2.html':
 	page.append (
 	    Paragraph (
 		Text ('You are visitor no. '),
@@ -59,7 +59,7 @@ def genPage (key, filename, items):
 	item = prepareNewsItem (file)
 	table.append (item)
 
-    if filename == 'index.html':
+    if filename == 'index2.html':
 	p = Paragraph ()
 	p.append (Href ('oldnews.html', 'Older News'))
 	page.append (p)
@@ -67,7 +67,7 @@ def genPage (key, filename, items):
     page.write ()
 
 def gen (datadir):
-    '''Create the news page (index.html, oldnews.html).'''
+    '''Create the news page (index2.html, oldnews.html).'''
 
     # Search all known news items, and sort them in reverse order
     list = glob.glob (os.path.join (datadir, 'news', '2002*'))
@@ -77,7 +77,7 @@ def gen (datadir):
     
     # Create a main page with the Top 5 news items and another page
     # with the rest.
-    genPage ('NEWS', 'index.html', list[:5])    
+    genPage ('NEWS', 'index2.html', list[:5])    
     genPage ('NEWS/Old News', 'oldnews.html', list[5:])
     
     list = glob.glob (os.path.join (datadir, 'news', '2001*'))

@@ -32,10 +32,29 @@ def genDocumentation ():
     #print "n.parent.parent=",n.parent.parent
     return page
 
+def my_html_head(self):
+    """Generate the HEAD, TITLE and BODY tags.
+    """
+    return '<HEAD>\n  <META http-equiv="refresh" content="3; \
+            url=http://aros.sourceforge.net/" >\n\
+            <TITLE>%s</TITLE> </HEAD>\n' % self.title
+
+old_html_head = BasicDocument.html_head
+
+SimpleDocument.html_head = my_html_head
+
 #print 'root=',mainLinks2.root
-#pm = PageMeat ('Test1', 'test1.html')
-#pm.append (Text ('Test1'))
-#pm.write ()
+
+pm = PageMeat ('Index', 'index.html')
+pm.append (Text ('You are now being redirected to'),\
+           Href('http://aros.sourceforge.net/', 'http://aros.sourceforge.net/'), \
+           Text('. If it does not work, please click'), \
+           Href('http://aros.sourceforge.net/', 'here'), Text('.'))
+
+pm.write ()
+
+BasicDocument.html_head = old_html_head
+
 #pm = PageMeat ('Test2', 'test1.html')
 #pm.append (Text ('Test2'))
 #pm.write ()
@@ -302,8 +321,9 @@ def genPartialFAQ ():
     pm = PageMeat ('Documentation/FAQ', 'faq.html')
     pm.extend (xml2html.elementToHtml (xml))
     pm.write ()
-    
+
 # Call all generators in turn
+
 import news
 news.gen (datadir)
 
