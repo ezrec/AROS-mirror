@@ -1,3 +1,5 @@
 # $Id$
 
-#MM- aminet-dev-src : aminet-dev-src-hexdump aminet-dev-src-chunkyiclass
+#MM- aminet-dev-src : aminet-dev-src-hexdump \
+#MM	aminet-dev-src-chunkyiclass \
+#MM	aminet-dev-src-rable
