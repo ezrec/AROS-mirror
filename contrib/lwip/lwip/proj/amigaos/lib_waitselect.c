@@ -24,11 +24,16 @@
 #include "debug.h"
 
 
+#ifndef __AROS__
+#define AMITCP_FD_SETSIZE	256
+#else
+#define AMITCP_FD_SETSIZE	64
+#endif
+
 /* Define the fd macros used by AmiTCP. There are different to those actually used in LwIP
  * so they have to be converted */
 #define AMITCP_NBBY	8		/* number of bits in a byte */
 typedef long	amitcp_fd_mask;
-#define AMITCP_FD_SETSIZE	256
 #define AMITCP_NFDBITS	(sizeof(amitcp_fd_mask) * AMITCP_NBBY)	/* bits per mask */
 #define amitcp_howmany(x, y)	(((x)+((y)-1))/(y))
 
@@ -41,7 +46,6 @@ typedef struct amitcp_fd_set {
 #define AMITCP_FD_ISSET(n, p)	((p)->amitcp_fds_bits[(n)/AMITCP_NFDBITS] & (1 << ((n) % AMITCP_NFDBITS)))
 #define AMITCP_FD_COPY(f, t)	bcopy(f, t, sizeof(*(f)))
 #define AMITCP_FD_ZERO(p)	memset((void*)(p),0,sizeof(*(p)))
-
 
 static void amitcp2lwip(int n, amitcp_fd_set *amitcp, fd_set *lwip)
 {
