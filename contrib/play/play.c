@@ -1,12 +1,20 @@
+/*
+   2004/09/10 - Joseph Fenton, changed to support
+      playing audio-only streams. Removed code that
+      killed using audio in AROS. Put conditional
+      around gtk_init() for AROS.
+*/
+
 #include "externs.h"
 #include "freq.h"
 #include <exec/types.h>
 
 int audio_sample_rate, audio_channels = -1;
-int frame_width, frame_height, use_audio = 0;
+int frame_width = 320, frame_height = 240, use_audio = 0;
+int no_video = 1;
 int verbose = 0, debugging = 0;
 int benchmark_mode = 0;
-double frame_rate = 0.0;
+double frame_rate = 20.0;
 
 LONG __stack = 600000;  /* Make it big!! */
 
@@ -93,16 +101,14 @@ int main(int argc, char *argv[])
                 return 0;
         }
     }
-
-#ifdef AROS
-    use_audio = -1; // XXX to fix once we have a working AHI
-#endif
     
     if((argc-optind) != 1) {
         FRequest f;
     
+#ifndef AROS
 #ifdef linux
         gtk_init(&argc, &argv);
+#endif
 #endif
 
         f.Title = "Select a movie to play...";
@@ -170,6 +176,7 @@ int main(int argc, char *argv[])
 
                 break;
             case CODEC_TYPE_VIDEO:
+                no_video = 0;
                 frame_height = enc->height;
                 frame_width = enc->width;
                 frame_rate = (double)ic->streams[i]->r_frame_rate / (double)ic->streams[i]->r_frame_rate_base;
