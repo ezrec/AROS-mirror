@@ -29,6 +29,7 @@ mainLinks = (
 	Href ('hidd-intro.html', 'HIDD Intro'),
 	Href ('hidd-model.html', 'HIDD Model'),
 	Href ('autodocs/index.html', 'AutoDocs'),
+	Href ('ideas.html', 'Random Ideas'),
     ),
     ( Href ('screenshots.html', 'Screenshots'),
 	Href ('screenshots.html#Pictures around AROS', 'Pictures'),
