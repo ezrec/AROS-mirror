@@ -298,11 +298,11 @@ kprintf("Keyboard opened\n");
 
 kprintf("input device opened\n");
 
-#warning The below crashes DOpus and is a BUG in AROS. Must be commented out to work
+//#warning The below crashes DOpus and is a BUG in AROS. Must be commented out to work
 
-#if 0
+/*#if 0*/
 	ramdisk_lock=Lock("RAM:",ACCESS_READ);
-#endif
+/*#endif*/
 	
 kprintf("ramdisk locked\n");
 	strcpy(str_select_pattern[0],"*");
