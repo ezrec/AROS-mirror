@@ -7,39 +7,7 @@ site goes public.
   - download/index.en
     
     Complete it. ;-) Something semi-automated might be usefull...
-
-  - Short descriptions and explenations here and there. For example warnings
-    that the document isn't finished in all the unfinished documents, something
-    in the line of "these summaries contain opinions and ... of individual 
-    developers, and should not be taken as official statements what will or will
-    not be implemented in AROS in the future. opinions might have changed since
-    the summary was done. ..." for eg. the "summaries" page and something
-    similar for the "ideas" page. Warnings for the specifications page / drafts
-    (them not being complete or up-to-date, and some might even be removed
-    later).
-
-    Introductions:
-
-    + Summaries
-      - Also: Warning about that these are personal opinions and ideas, not
-        anything that by force will be implemented or are opinions of the whole
-        project.
-    + Specifications
-
-    Not completed warnings:
-
-    + Translating :)
-    + Documenting 
-    + UI Style Guide :)
-    + Specifications (drafts)
-      - Also: Warn that they might not become actual specifications / be totally
-        removed in the future.
-      - Both the overview page and the individual drafts.
-    + System Development Manual
-    + Application Development Manual
-    + Compiling 
-    + Using
-
+    
 + Add the following pages:
 
     - introduction/license.en
