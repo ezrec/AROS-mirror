@@ -15,39 +15,13 @@ DEVPICS := $(subst $(BINDIR)/developers/,$(HTMLDIR)/pics/developers/,$(wildcard 
 SCREENSHOTS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/*.* $(BINDIR)/screenshots/[0-9]*/*.* $(BINDIR)/screenshots/[0-9]*/README))
 SCREENSHOTDIRS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/[0-9]*))
 
-all : pics makedirs check-html .stamp apache.conf
+all : pics makedirs gen-html apache.conf
 	@$(NOP)
-
-# These two rules will make sure that gensite is run if one of the
-# files gensite creates is missing.
-check-html : $(HTMLDIR)/documentation.html $(HTMLDIR)/download.html \
-	    $(HTMLDIR)/index.html $(HTMLDIR)/links.html \
-	    $(HTMLDIR)/oldnews.html $(HTMLDIR)/screenshots.html \
-	    $(HTMLDIR)/snapshots.html $(HTMLDIR)/status.html
-
-$(HTMLDIR)/%.html :
-	@echo "$@ is missing."
-	$(RM) .stamp
 
 # Run gensite if .stamp is missing or if one of the source files
 # is newer.
-.stamp : HTMLcolors.py HTMLgen.py aros.rc gensite imgsize.py \
-	    config.py htmlautodocs.py mainlinks.py news.py status.py \
-	    util.py code2html.py faq2html.py \
-	    contents2html.py xml2html.py \
-	    $(AROSDIR)/docs/src/contents.py \
-	    $(AROSDIR)/docs/src/xmlsupport.py \
-	    $(AROSDIR)/docs/src/abbreviations.py \
-	    $(AROSDIR)/docs/src/credits.py \
-	    $(AROSDIR)/docs/src/genadocs.py \
-	    $(AROSDIR)/docs/src/archtool.py \
-	    $(AROSDIR)/docs/src/faq.py \
-	    $(AROSDIR)/docs/src/jobs.py \
-	    $(wildcard $(AROSDIR)/docs/src/*.xml) \
-	    $(wildcard $(AROSDIR)/docs/faq/[0-9]*) \
-	    $(wildcard news/*) links.py $(DEVPICS) $(SCREENSHOTS)
-	@python gensite
-	@touch $@
+gen-html :
+	python gensite
 
 apache.conf : genconf apache.conf.in site.conf
 	./genconf apache.conf.in $@
