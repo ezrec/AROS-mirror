@@ -1,0 +1,6 @@
+*.o
+*.oPPC
+*.mcc
+*.mcc.elf
+*.old
+SCOPTIONS

@@ -1,0 +1,41 @@
+#
+# GCC makefile
+#
+
+SHELL = /bin/sh
+CC = gcc
+PERL = perl
+MOSGENINC = /gg/emultools/geninclude.pl
+
+CFLAGS = -O -fomit-frame-pointer -I../common/ -DMORPHOS
+#-DWITH_DEBUG
+LDFLAGS = -noixemul -nostartfiles
+
+%.oPPC: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+#
+
+NList.mcc.elf: library.oPPC NList_mcc.oPPC NList_mcc0.oPPC NList_mcc1.oPPC NList_mcc2.oPPC NList_mcc3.oPPC NList_mcc4.oPPC NList_mcc5.oPPC NList_mcc6.oPPC move.oPPC cbio.oPPC NList_func.oPPC NList_func2.oPPC NList_func3.oPPC NList_func4.oPPC NList_grp.oPPC NList_img.oPPC NList_img2.oPPC
+	$(CC) $(LDFLAGS) $^ -o $@ -lstringio
+
+library.oPPC: library.c ../common/mccheader.c NList_mcc.h private.h
+
+#
+
+./NList_mcc.h: ./NList_mcc.h.orj
+	$(perl) $(MOSGENINC) >$@ $^
+
+#
+
+.PHONY : clean
+clean:
+	rm -f *.oPPC
+
+.PHONY : install
+install:
+	cp NList.mcc.elf MUI:libs/mui/
+
+.PHONY : uninstall
+uninstall:
+	rm -f MUI:libs/mui/NList.mcc.elf

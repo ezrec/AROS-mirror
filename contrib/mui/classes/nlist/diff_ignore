@@ -1,0 +1,13 @@
+CVS
+*.old
+*.bak
+*.bak.info
+*.o
+*.gst
+*.map
+*.lnk
+*.oPPC
+*.mcc
+*.mcc.elf
+SCOPTIONS
+*.tmp

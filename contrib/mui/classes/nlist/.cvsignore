@@ -1,0 +1,9 @@
+*.o
+*.oPPC
+*.mcc
+*.mcc.elf
+*.mcp
+*.mcp.elf
+Test
+*.rej
+*.orig

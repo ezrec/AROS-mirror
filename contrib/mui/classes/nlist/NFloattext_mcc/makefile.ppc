@@ -1,0 +1,36 @@
+#
+# GCC makefile
+#
+
+SHELL = /bin/sh
+CC = gcc
+
+CFLAGS = -O -fomit-frame-pointer -I../common/ -DMORPHOS
+#-DWITH_DEBUG
+LDFLAGS = -noixemul -nostartfiles
+
+%.oPPC: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+#
+
+NFloattext.mcc.elf: library.oPPC NFloattext.oPPC
+	$(CC) $(LDFLAGS) $^ -o $@ -lstringio
+
+library.oPPC: library.c ../common/mccheader.c NFloattext_mcc.h private.h rev.h
+
+NFloattext.oPPC: NFloattext.c NFloattext_mcc.h private.h ../common/mcc_common.h rev.h
+
+#
+
+.PHONY : clean
+clean:
+	rm -f *.oPPC
+
+.PHONY : install
+install:
+	cp NFloattext.mcc.elf MUI:libs/mui/
+
+.PHONY : uninstall
+uninstall:
+	rm -f MUI:libs/mui/NFloattext.mcc.elf
