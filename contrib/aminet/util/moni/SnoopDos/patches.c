@@ -13,7 +13,9 @@
 #define MONITOR_SEMAPHORE       0
 #define STACK_CHECK                     0               /* Not currently used */
 
+#ifdef __SASC
 #pragma libcall SysBase RawPutChar 204 001
+#endif
 
 #include "system.h"
 #include "snoopdos.h"
@@ -29,12 +31,11 @@
 #define PatchCode_Size            (PatchCode_End - PatchCode_Start)
 #define PatchCode_StackAdjust (PatchCode_JumpOrigFunc - PatchCode_NormalReturn)
 
-extern char far PatchCode_Start[];
-extern char far PatchCode_NormalReturn[];
-extern char far PatchCode_JumpOrigFunc[];
-extern char far PatchCode_End[];
+extern char PatchCode_Start[];
+extern char PatchCode_NormalReturn[];
+extern char PatchCode_JumpOrigFunc[];
+extern char PatchCode_End[];
 
-#define ASM     __asm __saveds
 
 #if MONITOR_SEMAPHORE
 Task *LoadTask;                         /* Indicates we're inside LoadSeg() */
@@ -178,8 +179,8 @@ char *MyNameFromLock(BPTR lock, char *filename, char *buf, int maxlen);
 
 typedef unsigned long (*FuncPtr)();
 
-#define FPROTO(name)    ULONG ASM New_##name(){return (0);}
-#define DPROTO(name)    ULONG ASM New_##name();
+#define FPROTO(name)    ULONG ASMCALL New_##name(){return (0);}
+#define DPROTO(name)    ULONG ASMCALL New_##name();
 
 DPROTO(AddDosEntry)
 DPROTO(CurrentDir)
@@ -427,78 +428,78 @@ struct PacketRef {
         UBYTE   numparams;                              /* Number of parameters to display              */
         UBYTE   flags;                                  /* How to interpret the result                  */
 } PacketTable[] = {
-        ACTION_STARTUP,                 MSG_ACT_STARTUP,                 1, PK_1,
-        ACTION_GET_BLOCK,               MSG_ACT_GET_BLOCK,               1, PK_IGNORE,
-        ACTION_SET_MAP,                 MSG_ACT_SET_MAP,                 1, PK_IGNORE,
-        ACTION_DIE,                             MSG_ACT_DIE,                     0, PK_BOOLEAN,
-        ACTION_EVENT,                   MSG_ACT_EVENT,                   1, PK_IGNORE,
-        ACTION_CURRENT_VOLUME,  MSG_ACT_CURRENT_VOLUME,  1, PK_2OK,
-        ACTION_LOCATE_OBJECT,   MSG_ACT_LOCATE_OBJECT,   3, PK_BOOLEAN | PK_COMMON,
-        ACTION_RENAME_DISK,             MSG_ACT_RENAME_DISK,     1, PK_BOOLEAN,
-        ACTION_FREE_LOCK,               MSG_ACT_FREE_LOCK,               1, PK_BOOLEAN,
-        ACTION_DELETE_OBJECT,   MSG_ACT_DELETE_OBJECT,   2, PK_BOOLEAN | PK_COMMON,
-        ACTION_RENAME_OBJECT,   MSG_ACT_RENAME_OBJECT,   4, PK_BOOLEAN | PK_COMMON,
-        ACTION_MORE_CACHE,              MSG_ACT_MORE_CACHE,              1, PKF_BOOL   | PK_2OK,
-        ACTION_COPY_DIR,                MSG_ACT_COPY_DIR,                1, PK_BOOLEAN,
-        ACTION_WAIT_CHAR,               MSG_ACT_WAIT_CHAR,               1, PKF_BOOL   | PK_2OK,
-        ACTION_SET_PROTECT,             MSG_ACT_SET_PROTECT,     4, PK_BOOLEAN,
-        ACTION_CREATE_DIR,              MSG_ACT_CREATE_DIR,              2, PK_BOOLEAN | PK_COMMON,
-        ACTION_EXAMINE_OBJECT,  MSG_ACT_EXAMINE_OBJECT,  2, PK_BOOLEAN,
-        ACTION_EXAMINE_NEXT,    MSG_ACT_EXAMINE_NEXT,    2, PK_BOOLEAN,
-        ACTION_DISK_INFO,               MSG_ACT_DISK_INFO,               1, PK_BOOLEAN,
-        ACTION_INFO,                    MSG_ACT_INFO,                    2, PK_BOOLEAN,
-        ACTION_FLUSH,                   MSG_ACT_FLUSH,                   0, PK_BOOLEAN,
-        ACTION_SET_COMMENT,             MSG_ACT_SET_COMMENT,     4, PK_BOOLEAN,
-        ACTION_PARENT,                  MSG_ACT_PARENT,                  1, PK_BOOLEAN,
-        ACTION_TIMER,                   MSG_ACT_TIMER,                   1, PK_IGNORE,
-        ACTION_INHIBIT,                 MSG_ACT_INHIBIT,                 1, PK_BOOLEAN,
-        ACTION_DISK_TYPE,               MSG_ACT_DISK_TYPE,               1, PK_IGNORE,
-        ACTION_DISK_CHANGE,             MSG_ACT_DISK_CHANGE,     1, PK_1,
-        ACTION_SET_DATE,                MSG_ACT_SET_DATE,                4, PK_BOOLEAN,
-        ACTION_SAME_LOCK,               MSG_ACT_SAME_LOCK,               2, PK_BOOLEAN,
-        ACTION_READ,                    MSG_ACT_READ,                    3, PK_NEGATIVE,
-        ACTION_WRITE,                   MSG_ACT_WRITE,                   3, PK_NEGATIVE,
-        ACTION_SCREEN_MODE,             MSG_ACT_SCREEN_MODE,     1, PK_BOOLEAN,
-        ACTION_CHANGE_SIGNAL,   MSG_ACT_CHANGE_SIGNAL,   3, PKF_BOOL   | PK_2OK,
-        ACTION_READ_RETURN,             MSG_ACT_READ_RETURN,     1, PK_IGNORE,
-        ACTION_WRITE_RETURN,    MSG_ACT_WRITE_RETURN,    1, PK_IGNORE,
-        ACTION_FINDUPDATE,              MSG_ACT_FINDUPDATE,              3, PK_BOOLEAN | PK_COMMON,
-        ACTION_FINDINPUT,               MSG_ACT_FINDINPUT,               3, PK_BOOLEAN | PK_COMMON,
-        ACTION_FINDOUTPUT,              MSG_ACT_FINDOUTPUT,              3, PK_BOOLEAN | PK_COMMON,
-        ACTION_END,                             MSG_ACT_END,                     1, PK_BOOLEAN,
-        ACTION_SEEK,                    MSG_ACT_SEEK,                    3, PK_NEGATIVE,
-        ACTION_FORMAT,                  MSG_ACT_FORMAT,                  2, PK_BOOLEAN,
-        ACTION_MAKE_LINK,               MSG_ACT_MAKE_LINK,               4, PK_BOOLEAN | PK_COMMON,
-        ACTION_SET_FILE_SIZE,   MSG_ACT_SET_FILE_SIZE,   3, PK_NEGATIVE,
-        ACTION_WRITE_PROTECT,   MSG_ACT_WRITE_PROTECT,   2, PK_BOOLEAN,
-        ACTION_READ_LINK,               MSG_ACT_READ_LINK,               4, PK_BOOLEAN,
-        ACTION_FH_FROM_LOCK,    MSG_ACT_FH_FROM_LOCK,    2, PK_BOOLEAN,
-        ACTION_IS_FILESYSTEM,   MSG_ACT_IS_FILESYSTEM,   0, PK_BOOLEAN,
-        ACTION_CHANGE_MODE,             MSG_ACT_CHANGE_MODE,     3, PK_BOOLEAN,
-        ACTION_COPY_DIR_FH,             MSG_ACT_COPY_DIR_FH,     1, PK_BOOLEAN,
-        ACTION_PARENT_FH,               MSG_ACT_PARENT_FH,               1, PK_BOOLEAN,
-        ACTION_EXAMINE_ALL,             MSG_ACT_EXAMINE_ALL,     5, PK_BOOLEAN,
-        ACTION_EXAMINE_FH,              MSG_ACT_EXAMINE_FH,              2, PK_BOOLEAN,
-        ACTION_EXAMINE_ALL_END, MSG_ACT_EXAMINE_ALL_END, 5, PK_BOOLEAN,
-        ACTION_SET_OWNER,               MSG_ACT_SET_OWNER,               4, PK_BOOLEAN,
-        ACTION_DOUBLE,                  MSG_ACT_DOUBLE,                  3, PK_BOOLEAN,
-        ACTION_FORCE,                   MSG_ACT_FORCE,                   3, PK_BOOLEAN,
-        ACTION_STACK,                   MSG_ACT_STACK,                   3, PK_BOOLEAN,
-        ACTION_QUEUE,                   MSG_ACT_QUEUE,                   3, PK_BOOLEAN,
-        ACTION_DROP,                    MSG_ACT_DROP,                    1, PK_BOOLEAN,
-        ACTION_LOCK_RECORD,             MSG_ACT_LOCK_RECORD,     5, PK_BOOLEAN,
-        ACTION_FREE_RECORD,             MSG_ACT_FREE_RECORD,     3, PK_BOOLEAN,
-        ACTION_ADD_NOTIFY,              MSG_ACT_ADD_NOTIFY,              1, PK_BOOLEAN,
-        ACTION_REMOVE_NOTIFY,   MSG_ACT_REMOVE_NOTIFY,   1, PK_BOOLEAN,
-        ACTION_SERIALIZE_DISK,  MSG_ACT_SERIALIZE_DISK,  0, PK_BOOLEAN,
-        ACTION_GET_DISK_FSSM,   MSG_ACT_GET_DISK_FSSM,   0, PK_BOOLEAN,
-        ACTION_FREE_DISK_FSSM,  MSG_ACT_FREE_DISK_FSSM,  0, PK_BOOLEAN,
+        { ACTION_STARTUP,                 MSG_ACT_STARTUP,                 1, PK_1 },
+        { ACTION_GET_BLOCK,               MSG_ACT_GET_BLOCK,               1, PK_IGNORE },
+        { ACTION_SET_MAP,                 MSG_ACT_SET_MAP,                 1, PK_IGNORE },
+        { ACTION_DIE,                             MSG_ACT_DIE,                     0, PK_BOOLEAN },
+        { ACTION_EVENT,                   MSG_ACT_EVENT,                   1, PK_IGNORE },
+        { ACTION_CURRENT_VOLUME,  MSG_ACT_CURRENT_VOLUME,  1, PK_2OK },
+        { ACTION_LOCATE_OBJECT,   MSG_ACT_LOCATE_OBJECT,   3, PK_BOOLEAN | PK_COMMON },
+        { ACTION_RENAME_DISK,             MSG_ACT_RENAME_DISK,     1, PK_BOOLEAN },
+        { ACTION_FREE_LOCK,               MSG_ACT_FREE_LOCK,               1, PK_BOOLEAN },
+        { ACTION_DELETE_OBJECT,   MSG_ACT_DELETE_OBJECT,   2, PK_BOOLEAN | PK_COMMON },
+        { ACTION_RENAME_OBJECT,   MSG_ACT_RENAME_OBJECT,   4, PK_BOOLEAN | PK_COMMON },
+        { ACTION_MORE_CACHE,              MSG_ACT_MORE_CACHE,              1, PKF_BOOL   | PK_2OK },
+        { ACTION_COPY_DIR,                MSG_ACT_COPY_DIR,                1, PK_BOOLEAN },
+        { ACTION_WAIT_CHAR,               MSG_ACT_WAIT_CHAR,               1, PKF_BOOL   | PK_2OK },
+        { ACTION_SET_PROTECT,             MSG_ACT_SET_PROTECT,     4, PK_BOOLEAN },
+        { ACTION_CREATE_DIR,              MSG_ACT_CREATE_DIR,              2, PK_BOOLEAN | PK_COMMON },
+        { ACTION_EXAMINE_OBJECT,  MSG_ACT_EXAMINE_OBJECT,  2, PK_BOOLEAN },
+        { ACTION_EXAMINE_NEXT,    MSG_ACT_EXAMINE_NEXT,    2, PK_BOOLEAN },
+        { ACTION_DISK_INFO,               MSG_ACT_DISK_INFO,               1, PK_BOOLEAN },
+        { ACTION_INFO,                    MSG_ACT_INFO,                    2, PK_BOOLEAN },
+        { ACTION_FLUSH,                   MSG_ACT_FLUSH,                   0, PK_BOOLEAN },
+        { ACTION_SET_COMMENT,             MSG_ACT_SET_COMMENT,     4, PK_BOOLEAN },
+        { ACTION_PARENT,                  MSG_ACT_PARENT,                  1, PK_BOOLEAN },
+        { ACTION_TIMER,                   MSG_ACT_TIMER,                   1, PK_IGNORE },
+        { ACTION_INHIBIT,                 MSG_ACT_INHIBIT,                 1, PK_BOOLEAN },
+        { ACTION_DISK_TYPE,               MSG_ACT_DISK_TYPE,               1, PK_IGNORE },
+        { ACTION_DISK_CHANGE,             MSG_ACT_DISK_CHANGE,     1, PK_1 },
+        { ACTION_SET_DATE,                MSG_ACT_SET_DATE,                4, PK_BOOLEAN },
+        { ACTION_SAME_LOCK,               MSG_ACT_SAME_LOCK,               2, PK_BOOLEAN },
+        { ACTION_READ,                    MSG_ACT_READ,                    3, PK_NEGATIVE },
+        { ACTION_WRITE,                   MSG_ACT_WRITE,                   3, PK_NEGATIVE },
+        { ACTION_SCREEN_MODE,             MSG_ACT_SCREEN_MODE,     1, PK_BOOLEAN },
+        { ACTION_CHANGE_SIGNAL,   MSG_ACT_CHANGE_SIGNAL,   3, PKF_BOOL   | PK_2OK },
+        { ACTION_READ_RETURN,             MSG_ACT_READ_RETURN,     1, PK_IGNORE },
+        { ACTION_WRITE_RETURN,    MSG_ACT_WRITE_RETURN,    1, PK_IGNORE },
+        { ACTION_FINDUPDATE,              MSG_ACT_FINDUPDATE,              3, PK_BOOLEAN | PK_COMMON },
+        { ACTION_FINDINPUT,               MSG_ACT_FINDINPUT,               3, PK_BOOLEAN | PK_COMMON },
+        { ACTION_FINDOUTPUT,              MSG_ACT_FINDOUTPUT,              3, PK_BOOLEAN | PK_COMMON },
+        { ACTION_END,                             MSG_ACT_END,                     1, PK_BOOLEAN },
+        { ACTION_SEEK,                    MSG_ACT_SEEK,                    3, PK_NEGATIVE },
+        { ACTION_FORMAT,                  MSG_ACT_FORMAT,                  2, PK_BOOLEAN },
+        { ACTION_MAKE_LINK,               MSG_ACT_MAKE_LINK,               4, PK_BOOLEAN | PK_COMMON },
+        { ACTION_SET_FILE_SIZE,   MSG_ACT_SET_FILE_SIZE,   3, PK_NEGATIVE },
+        { ACTION_WRITE_PROTECT,   MSG_ACT_WRITE_PROTECT,   2, PK_BOOLEAN },
+        { ACTION_READ_LINK,               MSG_ACT_READ_LINK,               4, PK_BOOLEAN },
+        { ACTION_FH_FROM_LOCK,    MSG_ACT_FH_FROM_LOCK,    2, PK_BOOLEAN },
+        { ACTION_IS_FILESYSTEM,   MSG_ACT_IS_FILESYSTEM,   0, PK_BOOLEAN },
+        { ACTION_CHANGE_MODE,             MSG_ACT_CHANGE_MODE,     3, PK_BOOLEAN },
+        { ACTION_COPY_DIR_FH,             MSG_ACT_COPY_DIR_FH,     1, PK_BOOLEAN },
+        { ACTION_PARENT_FH,               MSG_ACT_PARENT_FH,               1, PK_BOOLEAN },
+        { ACTION_EXAMINE_ALL,             MSG_ACT_EXAMINE_ALL,     5, PK_BOOLEAN },
+        { ACTION_EXAMINE_FH,              MSG_ACT_EXAMINE_FH,              2, PK_BOOLEAN },
+        { ACTION_EXAMINE_ALL_END, MSG_ACT_EXAMINE_ALL_END, 5, PK_BOOLEAN },
+        { ACTION_SET_OWNER,               MSG_ACT_SET_OWNER,               4, PK_BOOLEAN },
+        { ACTION_DOUBLE,                  MSG_ACT_DOUBLE,                  3, PK_BOOLEAN },
+        { ACTION_FORCE,                   MSG_ACT_FORCE,                   3, PK_BOOLEAN },
+        { ACTION_STACK,                   MSG_ACT_STACK,                   3, PK_BOOLEAN },
+        { ACTION_QUEUE,                   MSG_ACT_QUEUE,                   3, PK_BOOLEAN },
+        { ACTION_DROP,                    MSG_ACT_DROP,                    1, PK_BOOLEAN },
+        { ACTION_LOCK_RECORD,             MSG_ACT_LOCK_RECORD,     5, PK_BOOLEAN },
+        { ACTION_FREE_RECORD,             MSG_ACT_FREE_RECORD,     3, PK_BOOLEAN },
+        { ACTION_ADD_NOTIFY,              MSG_ACT_ADD_NOTIFY,              1, PK_BOOLEAN },
+        { ACTION_REMOVE_NOTIFY,   MSG_ACT_REMOVE_NOTIFY,   1, PK_BOOLEAN },
+        { ACTION_SERIALIZE_DISK,  MSG_ACT_SERIALIZE_DISK,  0, PK_BOOLEAN },
+        { ACTION_GET_DISK_FSSM,   MSG_ACT_GET_DISK_FSSM,   0, PK_BOOLEAN },
+        { ACTION_FREE_DISK_FSSM,  MSG_ACT_FREE_DISK_FSSM,  0, PK_BOOLEAN },
         /*
          *              Our final table entry is used as a sentinel -- we key off the
          *              final packet message as an indication that we're finished
          *              searching the table.
          */
-        0,                                              LAST_PACK_MSG,                   4, PK_2OK | PK_RAW
+        { 0,                                              LAST_PACK_MSG,                   4, PK_2OK | PK_RAW }
 };
 
 #define NUM_PACKETS             (sizeof(PacketTable) / sizeof(PacketTable[0]))
@@ -2235,7 +2236,7 @@ void HandlePaused(Event *ev, LONG seqnum)
  *
  *              Searches the system port list looking for a port name
  */
-ULONG ASM New_FindPort(reg_a1 char *name, reg_a6 void *libbase)
+ULONG ASMCALL New_FindPort(reg_a1 char *name, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_FindPort origfunc = (FP_FindPort)PatchList[GID_FINDPORT].origfunc;
@@ -2286,7 +2287,7 @@ ULONG ASM New_FindPort(reg_a1 char *name, reg_a6 void *libbase)
  *
  *              Searches the system resident list looking for a resident module
  */
-ULONG ASM New_FindResident(reg_a1 char *name, reg_a6 void *libbase)
+ULONG ASMCALL New_FindResident(reg_a1 char *name, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_FindResident origfunc = (FP_FindResident)
@@ -2341,7 +2342,7 @@ ULONG ASM New_FindResident(reg_a1 char *name, reg_a6 void *libbase)
  *
  *              Searches the system semaphore list looking for the named semaphore
  */
-ULONG ASM New_FindSemaphore(reg_a1 char *name, reg_a6 void *libbase)
+ULONG ASMCALL New_FindSemaphore(reg_a1 char *name, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_FindSemaphore origfunc = (FP_FindSemaphore)
@@ -2395,7 +2396,7 @@ ULONG ASM New_FindSemaphore(reg_a1 char *name, reg_a6 void *libbase)
  *              We ignore calls to FindTask(0) since this is just
  *              looking for a pointer to the current task.
  */
-ULONG ASM New_FindTask(reg_a1 char *name, reg_a6 void *libbase)
+ULONG ASMCALL New_FindTask(reg_a1 char *name, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_FindTask origfunc = (FP_FindTask)PatchList[GID_FINDTASK].origfunc;
@@ -2451,7 +2452,7 @@ ULONG ASM New_FindTask(reg_a1 char *name, reg_a6 void *libbase)
  *              then the caller is looking for a Lock() on the default screen,
  *              and we ignore it (otherwise we'd get loads of output).
  */
-ULONG ASM New_LockPubScreen(reg_a0 char *name, reg_a6 void *libbase)
+ULONG ASMCALL New_LockPubScreen(reg_a0 char *name, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_LockPubScreen origfunc = (FP_LockPubScreen)
@@ -2513,7 +2514,7 @@ ULONG ASM New_LockPubScreen(reg_a0 char *name, reg_a6 void *libbase)
  *              which does it a lot!) but flag other occurrances of NULL device
  *              names as an error.
  */
-ULONG ASM New_OpenDevice(reg_a0 char *name, reg_d0 long unit,
+ULONG ASMCALL New_OpenDevice(reg_a0 char *name, reg_d0 long unit,
                                              reg_a1 struct IORequest *ioreq,
                                                  reg_d1 long flags, reg_a6 void *libbase)
 {
@@ -2598,7 +2599,7 @@ ULONG ASM New_OpenDevice(reg_a0 char *name, reg_d0 long unit,
  *              call this function first before checking the disk, so patching
  *              this function catches all accesses.
  */
-ULONG ASM New_OpenFont(reg_a0 struct TextAttr *textattr, reg_a6 void *libbase)
+ULONG ASMCALL New_OpenFont(reg_a0 struct TextAttr *textattr, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_OpenFont origfunc = (FP_OpenFont)PatchList[GID_OPENFONT].origfunc;
@@ -2666,7 +2667,7 @@ ULONG ASM New_OpenFont(reg_a0 struct TextAttr *textattr, reg_a6 void *libbase)
  *              We do this by ignoring any call to open dos.library made
  *              by a call originating in ROM.
  */
-ULONG ASM New_OpenLibrary(reg_a1 char *name, reg_d0 long version,
+ULONG ASMCALL New_OpenLibrary(reg_a1 char *name, reg_d0 long version,
                                                   reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -2752,7 +2753,7 @@ ULONG ASM New_OpenLibrary(reg_a1 char *name, reg_d0 long version,
  *
  *              Opens the named resource
  */
-ULONG ASM New_OpenResource(reg_a1 char *name, reg_a6 void *libbase)
+ULONG ASMCALL New_OpenResource(reg_a1 char *name, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_OpenResource origfunc = (FP_OpenResource)
@@ -2804,7 +2805,7 @@ ULONG ASM New_OpenResource(reg_a1 char *name, reg_a6 void *libbase)
  *
  *              Searches the tooltype array for a particular tooltype
  */
-ULONG ASM New_FindToolType(reg_a0 char **array, reg_a1 char *tooltype,
+ULONG ASMCALL New_FindToolType(reg_a0 char **array, reg_a1 char *tooltype,
                                                    reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -2861,7 +2862,7 @@ ULONG ASM New_FindToolType(reg_a0 char **array, reg_a1 char *tooltype,
  *
  *              Checks if a specified tooltype contains a given value
  */
-ULONG ASM New_MatchToolValue(reg_a0 char *tooltype, reg_a1 char *value,
+ULONG ASMCALL New_MatchToolValue(reg_a0 char *tooltype, reg_a1 char *value,
                                                      reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -2918,7 +2919,7 @@ ULONG ASM New_MatchToolValue(reg_a0 char *tooltype, reg_a1 char *value,
  *
  *              Changes current directory to somewhere else
  */
-ULONG ASM New_CurrentDir(reg_d1 BPTR lock, reg_a6 void *libbase)
+ULONG ASMCALL New_CurrentDir(reg_d1 BPTR lock, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_CurrentDir origfunc = (FP_CurrentDir)PatchList[GID_CHANGEDIR].origfunc;
@@ -2956,7 +2957,7 @@ ULONG ASM New_CurrentDir(reg_d1 BPTR lock, reg_a6 void *libbase)
  *
  *              Deletes a file from disk
  */
-ULONG ASM New_DeleteFile(reg_d1 char *name, reg_a6 void *libbase)
+ULONG ASMCALL New_DeleteFile(reg_d1 char *name, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_DeleteFile origfunc = (FP_DeleteFile)PatchList[GID_DELETE].origfunc;
@@ -3007,7 +3008,7 @@ ULONG ASM New_DeleteFile(reg_d1 char *name, reg_a6 void *libbase)
  *
  *              Executes a command from disk. Now superceded by System and RunCommand
  */
-ULONG ASM New_Execute(reg_d1 char *cmdline, reg_d2 BPTR fin, reg_d3 BPTR fout,
+ULONG ASMCALL New_Execute(reg_d1 char *cmdline, reg_d2 BPTR fin, reg_d3 BPTR fout,
                                           reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -3074,7 +3075,7 @@ ULONG ASM New_Execute(reg_d1 char *cmdline, reg_d2 BPTR fin, reg_d3 BPTR fout,
  *
  *              Inquires about the value of an environment variable
  */
-ULONG ASM New_GetVar(reg_d1 char *name, reg_d2 char *buffer,
+ULONG ASMCALL New_GetVar(reg_d1 char *name, reg_d2 char *buffer,
                                          reg_d3 size, reg_d4 flags, reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -3141,7 +3142,7 @@ ULONG ASM New_GetVar(reg_d1 char *name, reg_d2 char *buffer,
  *
  *              Inquires about the value of a local environment variable
  */
-ULONG ASM New_FindVar(reg_d1 char *name, reg_d2 ULONG type,
+ULONG ASMCALL New_FindVar(reg_d1 char *name, reg_d2 ULONG type,
                                           reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -3199,7 +3200,7 @@ ULONG ASM New_FindVar(reg_d1 char *name, reg_d2 ULONG type,
  *
  *              Sets a (possibly new) variable to a particular value
  */
-ULONG ASM New_SetVar(reg_d1 char *name, reg_d2 char *buffer,
+ULONG ASMCALL New_SetVar(reg_d1 char *name, reg_d2 char *buffer,
                                          reg_d3 size, reg_d4 flags, reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -3284,7 +3285,7 @@ ULONG ASM New_SetVar(reg_d1 char *name, reg_d2 char *buffer,
  *
  *              Deletes an environment variable from the environment
  */
-ULONG ASM New_DeleteVar(reg_d1 char *name, reg_d2 ULONG flags,
+ULONG ASMCALL New_DeleteVar(reg_d1 char *name, reg_d2 ULONG flags,
                                                 reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -3346,7 +3347,7 @@ ULONG ASM New_DeleteVar(reg_d1 char *name, reg_d2 ULONG flags,
  *
  *              Tries to load in a module from disk
  */
-ULONG ASM New_LoadSeg(reg_d1 char *name, reg_a6 void *libbase)
+ULONG ASMCALL New_LoadSeg(reg_d1 char *name, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_LoadSeg origfunc = (FP_LoadSeg)PatchList[GID_LOADSEG].origfunc;
@@ -3403,7 +3404,7 @@ ULONG ASM New_LoadSeg(reg_d1 char *name, reg_a6 void *libbase)
  *
  *              Tries to load in a module from disk
  */
-ULONG ASM New_NewLoadSeg(reg_d1 char *name, reg_d2 TAGPTR tags,
+ULONG ASMCALL New_NewLoadSeg(reg_d1 char *name, reg_d2 TAGPTR tags,
                                                  reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -3455,7 +3456,7 @@ ULONG ASM New_NewLoadSeg(reg_d1 char *name, reg_d2 TAGPTR tags,
  *
  *              Tries to load in a module from disk
  */
-ULONG ASM New_Lock(reg_d1 char *name, reg_d2 LONG mode, reg_a6 void *libbase)
+ULONG ASMCALL New_Lock(reg_d1 char *name, reg_d2 LONG mode, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_Lock origfunc = (FP_Lock)PatchList[GID_LOCKFILE].origfunc;
@@ -3516,7 +3517,7 @@ ULONG ASM New_Lock(reg_d1 char *name, reg_d2 LONG mode, reg_a6 void *libbase)
  *
  *              Creates a new directory on disk
  */
-ULONG ASM New_CreateDir(reg_d1 char *name, reg_a6 void *libbase)
+ULONG ASMCALL New_CreateDir(reg_d1 char *name, reg_a6 void *libbase)
 {
         MarkCallAddr;
         FP_CreateDir origfunc = (FP_CreateDir)PatchList[GID_MAKEDIR].origfunc;
@@ -3567,7 +3568,7 @@ ULONG ASM New_CreateDir(reg_d1 char *name, reg_a6 void *libbase)
  *
  *              Creates a new hard or soft link
  */
-ULONG ASM New_MakeLink(reg_d1 char *name, reg_d2 LONG dest, reg_d3 LONG soft,
+ULONG ASMCALL New_MakeLink(reg_d1 char *name, reg_d2 LONG dest, reg_d3 LONG soft,
                                            reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -3653,7 +3654,7 @@ ULONG ASM New_MakeLink(reg_d1 char *name, reg_d2 LONG dest, reg_d3 LONG soft,
  *
  *              Opens a new file on disk
  */
-ULONG ASM New_Open(reg_d1 char *name, reg_d2 LONG accessMode,
+ULONG ASMCALL New_Open(reg_d1 char *name, reg_d2 LONG accessMode,
                                   reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -3713,7 +3714,7 @@ ULONG ASM New_Open(reg_d1 char *name, reg_d2 LONG accessMode,
  *              to generate two events: one containing the source name and
  *              one containing the destination name.
  */
-ULONG ASM New_Rename(reg_d1 char *oldname, reg_d2 char *newname,
+ULONG ASMCALL New_Rename(reg_d1 char *oldname, reg_d2 char *newname,
                                      reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -3773,7 +3774,7 @@ ULONG ASM New_Rename(reg_d1 char *oldname, reg_d2 char *newname,
  *
  *              Runs a command from disk. Like Execute() only with more control.
  */
-ULONG ASM New_RunCommand(reg_d1 BPTR seglist,  reg_d2 ULONG stack,
+ULONG ASMCALL New_RunCommand(reg_d1 BPTR seglist,  reg_d2 ULONG stack,
                                                  reg_d3 char *cmdline, reg_d4 cmdlen,
                                          reg_a6 void *libbase)
 {
@@ -3868,7 +3869,7 @@ ULONG ASM New_RunCommand(reg_d1 BPTR seglist,  reg_d2 ULONG stack,
  *
  *              Executes a command line. Like Execute() only more powerful.
  */
-ULONG ASM New_SystemTagList(reg_d1 char *cmdline, reg_d2 TAGPTR tags,
+ULONG ASMCALL New_SystemTagList(reg_d1 char *cmdline, reg_d2 TAGPTR tags,
                                                 reg_a6 void *libbase)
 {
         MarkCallAddr;
@@ -3956,7 +3957,7 @@ ULONG ASM New_SystemTagList(reg_d1 char *cmdline, reg_d2 TAGPTR tags,
  *              the device list whenever a new device is added to the DOS device
  *              list.
  */
-ULONG ASM New_AddDosEntry(reg_d1 struct DosList *dlist, reg_a6 void *libbase)
+ULONG ASMCALL New_AddDosEntry(reg_d1 struct DosList *dlist, reg_a6 void *libbase)
 {
         FP_AddDosEntry origfunc = (FP_AddDosEntry)
                                                            PatchList[GID_ADDDOSENTRY].origfunc;
@@ -4429,7 +4430,7 @@ void HandleRawPacket(ULONG calladdr, struct DosPacket *dp,
  *              If any of these conditions fail, we ignore the message.
  *
  */
-ULONG ASM New_PutMsg(reg_a0 struct MsgPort *port, reg_a1 struct Message *msg,
+ULONG ASMCALL New_PutMsg(reg_a0 struct MsgPort *port, reg_a1 struct Message *msg,
                                          reg_a6 void *libbase)
 {
         MarkCallAddr;
