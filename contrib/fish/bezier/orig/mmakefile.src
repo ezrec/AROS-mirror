@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-TARGET_CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(TARGET_CFLAGS))
+CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(CFLAGS))
 
 %build_prog mmake=fish-bezier1 \
     progname=bezier1 targetdir=$(CONTRIBDIR)/fish \

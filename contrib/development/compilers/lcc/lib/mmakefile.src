@@ -1,9 +1,9 @@
 #
 include $(TOP)/config/make.cfg
 
-TARGET_CFLAGS := $(subst -O2,,$(TARGET_CFLAGS))
-
 USER_CFLAGS	:= -Iinclude
+
+CFLAGS := $(subst -O2,,$(CFLAGS))
 
 #MM- linklibs : linklibs-liblcc-$(CPU)
 #MM- linklibs-liblcc : linklibs-liblcc-$(CPU)

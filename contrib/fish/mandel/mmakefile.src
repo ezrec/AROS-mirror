@@ -1,8 +1,9 @@
 include $(TOP)/config/make.cfg
 
-TARGET_CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(TARGET_CFLAGS))
-
 USER_CFLAGS := -D__NOLIBBASE__
+
+CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(CFLAGS))
+
 %build_prog mmake=fish-mandel \
     progname=mand targetdir=$(CONTRIBDIR)/fish \
     files="mand mand1 mand2 mand3 mand4" \

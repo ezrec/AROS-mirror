@@ -18,7 +18,7 @@ FILES := ansi \
 	window \
 	word
 
-TARGET_CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(TARGET_CFLAGS))
+CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(CFLAGS))
 
 %build_prog mmake=fish-microemacs \
     progname=microemacs targetdir=$(CONTRIBDIR)/fish \
