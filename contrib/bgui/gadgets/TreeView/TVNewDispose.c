@@ -8,6 +8,14 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/03/24 12:40:28  stegerg
+ * Real bug fix (not AROS related): in dispose method
+ * do LVM_CLEAR method on listview, because otherwise
+ * the superclass (listclass) might try to access
+ * the resource hook, although treeview class already
+ * has freed that hook, before making the DoSuperMethodA
+ * call.
+ *
  * Revision 42.1  2000/05/15 19:29:08  stegerg
  * replacements for REG macro
  *
@@ -454,6 +462,12 @@ tv = (TVData *) INST_DATA(cl,obj);
  */
 
 TV_FreeTreeNodeList(tv,RootList(tv));
+
+/* stegerg: CHECKME: Added following line, because
+   of real bug. superclass might access the resource
+   hook, which was killed before calling superclass,
+   otherwise */
+DoMethod(tv->tv_Listview,LVM_CLEAR,0);
 
 /*
  * Free the images, if default ones were created
