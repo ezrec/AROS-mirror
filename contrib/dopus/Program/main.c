@@ -806,10 +806,10 @@ tryfonts:
 	scrdata_gadget_offset+=scrdata_xoffset;
 	scrdata_gadget_xpos=scrdata_gadget_offset+scrdata_drive_width;
 
-#warning Always assuming SCR_GENERAL_NEWLOOKPROP because AROS prop gadgets dont support non AUTOKNOB (= custom image as knob) yet
+/*#warning Always assuming SCR_GENERAL_NEWLOOKPROP because AROS prop gadgets dont support non AUTOKNOB (= custom image as knob) yet*/
 
-/*	if (config->generalscreenflags&SCR_GENERAL_NEWLOOKPROP && system_version2) { */
-	if (1) {
+	if (config->generalscreenflags&SCR_GENERAL_NEWLOOKPROP && system_version2) { 
+/*	if (1) {*/
 		status_flags|=STATUS_NEWLOOK;
 		for (a=0;a<2;a++) {
 			vert_propinfo[a].Flags=AUTOKNOB|PROPNEWLOOK|FREEVERT|PROPBORDERLESS;
