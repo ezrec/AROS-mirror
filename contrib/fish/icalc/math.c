@@ -6,7 +6,7 @@
 #include <math.h>
 #include <errno.h>
 #include "complex.h"
-#include <libraries/mathieeedp.h>
+//#include <libraries/mathieeedp.h>
 
 extern	int	errno;
 extern struct Library MathIeeeDoubTransBase;

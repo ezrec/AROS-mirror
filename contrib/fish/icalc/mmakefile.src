@@ -1,7 +1,7 @@
 include $(TOP)/config/make.cfg
 
 STARTUP := $(LIBDIR)/startup.o
-LIBS	:= -L$(LIBDIR) -larossupport -lamiga -larosc
+LIBS	:= -L$(LIBDIR) -larossupport -larosc -lamiga
 DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a \
 	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
 CFLAGS	:= $(USER_DEFINES) -O0 $(SPECIAL_CFLAGS) $(INCLUDES)
