@@ -1,0 +1,42 @@
+.c.o:
+	LC $(CFLAGS) $*.c
+
+.asm.o:
+	ASM -IASM: $*.asm
+
+CFLAGS		= -cimqws -b1 -r1 -v -mt0 -n65 -HShutdown.SYM
+LFLAGS		= SC SD ND
+
+LIBS		= LIB:amiga.lib LIB:lc.lib
+
+OBJS1		= RomTag.o LibMain.o FileWatch.o DevWatch.o Patch.o LibCode.o LocaleSupport.o ShutdownData.o
+OBJS2		= ShutdownSetup.o LocaleSupport.o
+
+all:		Shutdown.SYM shutdown.library ShutdownSetup Shutdown Catalogs/Deutsch/shutdown.catalog
+
+LocaleSupport.o:	LocaleSupport.c LocaleSupport.h shutdown.h
+LibMain.o:	LibMain.c shutdown.library.h shutdown.h Shutdown.SYM
+RomTag.o:	RomTag.asm shutdown.library.i
+FileWatch.o:	FileWatch.c LocaleSupport.h ShutdownGlobal.h Shutdown.SYM
+DevWatch.o:	DevWatch.c LocaleSupport.h shutdown.h Shutdown.SYM
+LibCode.o:	LibCode.c LocaleSupport.h ShutdownGlobal.h shutdown.h Shutdown.SYM
+ShutdownData.o:	ShutdownGlobal.h
+ShutdownSetup.o:	ShutdownSetup.c ShutdownSetup.h LocaleSupport.h shutdownbase.h shutdown.h
+
+shutdown.library:	$(OBJS1)
+		BLINK $(OBJS1) TO $@ LIB $(LIBS) $(LFLAGS)
+
+ShutdownSetup:	$(OBJS2)
+		BLINK $(OBJS2) TO $@ LIB $(LIBS) $(LFLAGS)
+
+Shutdown:	Shutdown.c
+		LC -cimqws -b -r -v -mt -Lcdi -tr Shutdown.c
+
+Catalogs/Deutsch/shutdown.catalog:	shutdown_deutsch.ct
+		CatComp shutdown.cd shutdown_deutsch.ct Catalog $@
+
+shutdown.h:	shutdown.cd
+		CatComp shutdown.cd CFile $@
+
+Shutdown.SYM:	PreInclude.c
+		LC -cimqws -ph -o$@ PreInclude.c

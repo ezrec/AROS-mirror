@@ -1,0 +1,9 @@
+##base _ShutdownBase
+##bias 30
+##private
+RexxDispatch(Code)(A0)
+##public
+AddShutdownInfoTagList(Hook,Name,TagList)(A0,A1,A2)
+RemShutdownInfo(Info)(A0)
+Shutdown(Mode)(D0)
+##end

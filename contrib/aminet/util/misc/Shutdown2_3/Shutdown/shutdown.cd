@@ -1,0 +1,74 @@
+;#header SHUTDOWN
+;
+MSG_HEADER_TXT (//)
+%s © Copyright by Olaf Barthel, all rights reserved.\n
+;
+MSG_REMOVING_TXT (//)
+Removing monitoring tasks... 
+;
+MSG_INSTALLING_TXT (//)
+Installing monitoring tasks... 
+;
+MSG_TASKNAME_NAME (//)
+« File monitor »
+;
+MSG_DEVTASKNAME_NAME (//)
+« Device monitor »
+;
+MSG_DONE_TXT (//)
+done.\n
+;
+MSG_FAILED_TXT (//)
+failed!\a\n
+;
+MSG_OPENFAIL_TXT (//)
+Could not open \"%s\"!\a\n
+;
+MSG_TURNOFF_TXT (//)
+You may now turn off your Amiga
+;
+MSG_WAIT_A_MINUTE_TXT (//)
+Wait a minute... devices are still busy
+;
+MSG_RETURN_TXT (//)
+Return to _Workbench
+;
+MSG_RESTART_TXT (//)
+_Restart the Amiga
+;
+MSG_RETURN_SHORTCUT (/1/1)
+W
+;
+MSG_RESTART_SHORTCUT (/1/1)
+R
+;
+MSG_FILESOPEN1_TXT (//)
+Stop! This file is still open
+;
+MSG_FILESOPEN2_TXT (//)
+Stop! These files are still open
+;
+MSG_WORKING1_TXT (//)
+Stop! This program is still busy
+;
+MSG_WORKING2_TXT (//)
+Stop! These programs are still busy
+;
+MSG_RESET_TXT (//)
+Restarting...
+;
+MSG_BROKERNAME_TXT (//)
+« Restart »
+;
+MSG_BROKERTITLE_TXT (//)
+Restart
+;
+MSG_BROKERDESCRIPTION_TXT (//)
+Restarts the Amiga
+;
+MSG_PROCESS_CREATION_FAILED_TXT (//)
+failed (could not install file monitor)!\a\n
+;
+MSG_HOTKEYS_FAILED_TXT (//)
+failed (could not install keyboard handler, error code #%ld)!\a\n
+;

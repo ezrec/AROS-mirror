@@ -1,0 +1,47 @@
+.c.o:
+	SC $(CFLAGS) $(GST) $(OPTIMIZE) $*.c
+
+.asm.o:
+	ASM -IASM: $*.asm
+
+CFLAGS			= MCCONS STREQ STRMERGE NOSTKCHK IDLEN=65
+LFLAGS			= SC SD ND
+
+OPTIMIZE		= OPTIMIZE OPTINLOCAL OPTTIME
+
+GST			= GSTIMM GST=Shutdown.gst
+
+LIBS			= LIB:amiga.lib LIB:sc.lib
+
+OBJS1			= RomTag.o LibMain.o FileWatch.o DevWatch.o Patch.o LibCode.o LocaleSupport.o ShutdownData.o
+OBJS2			= ShutdownSetup.o LocaleSupport.o
+
+all:			Shutdown.gst shutdown.library ShutdownSetup Shutdown \
+			Catalogs/Deutsch/shutdown.catalog
+
+LocaleSupport.o:	LocaleSupport.c LocaleSupport.h shutdown.h
+LibMain.o:		LibMain.c shutdown.library.h shutdown.h Shutdown.gst
+RomTag.o:		RomTag.asm shutdown.library.i
+FileWatch.o:		FileWatch.c LocaleSupport.h ShutdownGlobal.h Shutdown.gst
+DevWatch.o:		DevWatch.c LocaleSupport.h shutdown.h Shutdown.gst
+LibCode.o:		LibCode.c LocaleSupport.h ShutdownGlobal.h shutdown.h Shutdown.gst
+ShutdownData.o:		ShutdownGlobal.h
+ShutdownSetup.o:	ShutdownSetup.c ShutdownSetup.h LocaleSupport.h shutdownbase.h shutdown.h
+
+shutdown.library:	$(OBJS1)
+			SLINK $(OBJS1) TO $@ LIB $(LIBS) $(LFLAGS)
+
+ShutdownSetup:		$(OBJS2)
+			SLINK $(OBJS2) TO $@ LIB $(LIBS) $(LFLAGS)
+
+Shutdown:		Shutdown.c
+			SC MCCONS STREQ STRMERGE NOSTKCHK LINK SMALLCODE SMALLDATA NOSTDIO STARTUP=CRES Shutdown.c
+
+Catalogs/Deutsch/shutdown.catalog:	shutdown_deutsch.ct
+			NewCatComp shutdown.cd shutdown_deutsch.ct Catalog $@
+
+shutdown.h:		shutdown.cd
+			CatComp shutdown.cd CFile $@
+
+Shutdown.gst:		PreInclude.c
+			SC NOOBJNAME MAKEGST=$@ IDLEN=65 PreInclude.c

@@ -1,0 +1,8 @@
+FROM LIB:CRES.o "Shutdown.o"
+TO "Shutdown"
+LIB LIB:sc.lib LIB:amiga.lib
+SMALLCODE
+SMALLDATA
+NOICONS
+define ___main=___tinymain
+

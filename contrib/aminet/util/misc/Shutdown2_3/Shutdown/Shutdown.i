@@ -1,0 +1,14 @@
+VERSION		EQU	1
+REVISION	EQU	2
+DATE	MACRO
+		dc.b	'1.4.92'
+	ENDM
+VERS	MACRO
+		dc.b	'Shutdown 1.2'
+	ENDM
+VSTRING	MACRO
+		dc.b	'Shutdown 1.2 (1.4.92)',13,10,0
+	ENDM
+VERSTAG	MACRO
+		dc.b	0,'$VER: Shutdown 1.2 (1.4.92)',0
+	ENDM

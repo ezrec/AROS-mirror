@@ -1,0 +1,358 @@
+============================== Shutdown 2.2 ===============================
+===========================================================================
+Ein  Paket, das das Neustarten und Ausschalten des Rechners sicherer macht.
+© Copyright 1992 by Olaf Barthel, alle Rechte vorbehalten.
+   Es   wird   keinerlei   Gewährleistungspflicht   für   die  vollständige
+Funktionsfähigkeit   der   in   diesem   Dokument   beschriebenen  Software
+übernommen.  Jegliche Nutzung geschieht auf eigene Gefahr.
+
+================================ WICHTIG! =================================
+===========================================================================
+Aufgrund   notwendiger  Veränderungen  ist  die  neue  Bibliothek  und  die
+beiliegende      Unterstützungssoftware      inkompatibel     mit     alten
+`Shutdown'-Versionen.    Vor   der   Neuinstallation   bitte   alle   alten
+`Shutdown'-Bestandteile aus dem System enfernen!
+
+=============================== Motivation ================================
+===========================================================================
+Eine  der  wohl nützlichsten Funktionen im `Finder' des Apple Macintosh ist
+der  Menüpunkt  `Ausschalten',  mit  dem  das Betriebssystem dazu veranlaßt
+wird,  alle  noch  ausstehenden  Datenpuffer  zurückzuschreiben,  Disketten
+auszuwerfen  und  auf  den  teureren  Macintosh  II-Modellen sogar wirklich
+Rechner und Monitor ausschaltet.  Auf diese Weise sinkt die Chance, daß der
+Benutzer   durch  Tolpatschigkeit  den  Disketten-  oder  Festplatteninhalt
+zerstört,   weil   der  Rechner  noc  während  Dateien  bearbeitet  wurden,
+ausgeschaltet  wurde  (daß  man sich trotzdem auf dem Macintosh ohne großen
+Aufwand  und  mit Bravour den Festplatteninhalt zertrümmern kann, steht auf
+einem anderen Blatt).
+   Das  beiliegende  Programmpaket,  bestehend  aus  einer Bibliothek, zwei
+Programmen und einem ARexx-Skript, ermöglicht es dem Anwender, in ähnlicher
+Manier  auf  eine  relativ  sichere  Weise den Rechner neu zu starten, bzw.
+auszuschalten.
+
+==================== Bestandteile des Shutdown-Paketes ====================
+===========================================================================
+             Die folgenden Dateien gehören zum Shutdown-Paket:
+
+Shutdown.dok...................	Die Dokumentation
+
+shutdown.library............... Die     alle     Funktionen    beinhaltende
+                                Bibliothek.
+shutdown_lib.fd................	Funktionsdefinitionen der Bibliothek.
+shutdownbase.h.................	Header-Datei für `C' Programmierer
+
+ShutdownSetup.................. Das Programm, das die Bibliothek öffnet und
+                                die notwendigen Initialisierungen vornimmt,
+                                um  das Öffnen und Schließen von Dateien zu
+                                überwachen.
+Shutdown....................... Ein  Beispielprogramm, das die Funktion der
+                                Bibliothek demonstriert.
+Shutdown.c..................... Der  in  `C'  geschriebene  Quellcode   des
+                                Programmes.
+Shutdown.rexx.................. Ein     ARexx-Beispielskript,    das    die
+                                Ansteuerung  der  Bibliothek  von ARexx aus
+                                demonstriert.
+
+================= Installation und Arbeitsvoraussetzungen =================
+===========================================================================
+Das Shutdown-Paket benötigt zum korrekten Funktionieren Kickstart 2.04 oder
+eine Nachfolgeversion.  Läuft das Programmsystem auf einem Rechner, der die
+Verwendung  von  sogenannten  `Keyboard-Resethandlern' unterstützt, so wird
+versucht, daraus Vorteil zu ziehen.
+
+    Um das Paket zu installieren, sind folgende Schritte durchzuführen:
+
+1. Die  Datei `shutdown.library' muß ins Verzeichnis `Libs:' kopiert werden
+   (aus der Shell heraus:  `Copy shutdown.library Libs:').
+
+2. Die  Datei `ShutdownSetup'  muß ins Verzeichnis `C:' kopiert werden (aus
+   der Shell heraus: `Copy ShutdownSetup C:').
+
+3. An  das  Ende  der Datei `S:User-Startup' muß der Befehl `ShutdownSetup'
+   gestellt   werden   (aus  der  Shell  heraus:  "Echo  >>  S:User-Startup
+   ShutdownSetup").
+
+                Hiermit ist die Installation abgeschlossen.
+
+============================= Funktionsweise ==============================
+===========================================================================
+Wird das Programmsystem mit dem Aufruf `ShutdownSetup' aktiviert, so werden
+alle  nachfolgend  durchgeführten  Dateizugriffe  vermerkt und insbesondere
+darauf  geachtet,  ob  schreibend  auf Dateien zugegriffen wurde (zu diesem
+Zweck  wird  eine  Handvoll  Systemfunktionen umgelenkt, falls also diverse
+Virenerkennungsfunktionen  zu  meckern  beginnen,  sollte  man  sich  nicht
+wundern).
+   Zusätzlich  haben  Anwenderprogramme  die Möglichkeit, sich als Klienten
+eintragen  zu  lassen,  um  dem  Anwender  vor dem Ausschalten des Rechners
+mitzuteilen, daß sie noch arbeiten und der Rechner noch nicht ausgeschaltet
+werden sollte.
+
+   Wird  dem  Programmsystem  mitgeteilt,  daß der Anwender den Rechner neu
+starten   oder   ausschalten   möchte,   so  werden  zunächst  einmal  alle
+Dateizugriffe  blockiert.   Danach  werden  alle als Klienten registrierten
+Anwenderprogramme  befragt, ob sie ihre Arbeit beendet haben.  Anschließend
+wird  nachgeprüft,  ob  noch  Dateien  geöffnet  sind,  auf  die schreibend
+zugegriffen wurde.
+
+   Wurden  Klienten  gefunden, die ihre Arbeit noch nicht beendet haben, so
+wird  der Anwender auf die Namen der Programme aufmerksam gemacht, die noch
+aktiv  sind.  Wurden noch geöffnete Dateien ermittelt, so werden ihre Namen
+in einer Liste angezeigt.
+
+   Stehen dem Neustart bzw.  Ausschalten des Rechners keinerlei Hindernisse
+im  Wege,  so  wird  dem  Anwender  signalisiert,  daß er den Rechner jetzt
+ausschalten  könnte.  Wird im Augenblick des Aufrufs noch auf eine Diskette
+oder Festplatte zugegriffen, so wird solange gewartet, bis die noch aktiven
+Laufwerke zur Ruhe gekommen sind.
+
+   Zusätzlich  besteht über zwei Knöpfe die Möglichkeit, den Rechner neu zu
+starten und sofort zur Workbench zurückzukehren, als sei nichts passiert.
+
+                                WARNUNG!!!
+
+   Das  Programmsystem  ist nicht 100%-ig dazu in der Lage, Schreibzugriffe
+auf  Festplatte  und  Diskette zu ermitteln und zu sperren.  Sollte nachdem
+der   Ausschalt-Bildschirm   geöffnet   wurde,   noch   Festplatten-   oder
+Diskettenaktivität zu beobachten sein, sollte man lieber noch etwas warten,
+bis  der  Rechner  vollständig  zur  Ruhe  gekommen ist!  WER DURCH BLINDES
+VERTRAUEN IN DIE FÄHIGKEITEN DIESES PROGRAMMPAKETES DATEN ZERSTÖRT, DER IST
+SELBER SCHULD -- MAN BENUTZE BITTE SEINEN GESUNDEN MENSCHENVERSTAND, DIESES
+PROGRAMMSYSTEM  GIBT NUR RATSCHLÄGE UND ÄUßERT VERMUTUNGEN, GIBT ABER KEINE
+100%-IGE SICHERHEIT!
+
+============================== ShutdownSetup ==============================
+===========================================================================
+Dieses  Programm dient zum Initialisieren und Entfernen der Dateiverfolgung
+und  Geräteüberwachung,  die  das  Herzstück  des `Shutdown'-Programmpakets
+bilden.    Zusätzlich   wird   über  das  Commodities-Toolkit  ein  Routine
+installiert,  die  beim  Drücken  einer  bestimmten  Tastenkombination  den
+Rechner  neu  startet,  gerade so, als hätte man die Tasten Control + Amiga
+links  +  Amiga  rechts  gedrückt.   `ShutdownSetup' kann nur von der Shell
+gestartet werden und unterstützt drei Aufrufparameter:
+
+   CX_POPKEY........... Die Tastenkombination, die gedrückt werden muß,  um
+                        den Rechner neu zu starten. Standardmäßig ist  hier
+                        `lamiga ramiga tab' vorgegeben.
+
+   CX_PRIORITY......... Die Priorität,  unter  der  die  Tastenabfrage  ins
+                        System eingebunden werden soll.
+
+   NoCX................ Wird  dieser  Parameter  angegeben,  so  wird   die
+                        Tastenkombination  zum   Neustarten   des  Rechners
+                        nicht aktiviert.
+
+Es  ist  in  jedem Fall vorzuziehen, den Amiga über die von `ShutdownSetup'
+zur  Verfügung  gestellte  Tastenkombination  anstatt  über Control + Amiga
+links   +   Amiga  rechts  neu  zu  starten,  da  die  von  `ShutdownSetup'
+installierte  Routine  mehr Zeit zur Überwachung und zum sicheren Schließen
+von  Dateien zur Verfügung hat, als die Neustartroutine des Betriebssystems
+hat.
+
+   Ein  zweiter Aufruf von `ShutdownSetup' entfernt die Dateiverfolgung und
+Geräteüberwachung.   Die  Routine,  die auf den Druck der Tastenkombination
+zum  neustarten  des  Rechners wartet, läßt sich sowohl über die Shell (per
+`Break  <Prozessnummer>', <Prozessnummer> ist die Zahl, die neben dem Namen
+`« Neustart »' ausgegeben wird, wenn der `Status' Befehl benutzt wird), als
+auch mit Hilfe des Programmes `Exchange' beenden.
+
+======================= Programmiererdokumentation ========================
+===========================================================================
+Herzstück des Programmsystems ist die shutdown.library, die drei Funktionen
+enthält, die im folgenden beschrieben werden.
+
+                                     *
+
+Erfolg = Shutdown(Modus)
+  D0                D0
+
+   Diese  Funktion  öffnet  den Ausschaltbildschirm, fragt die Klienten ab,
+zeigt  das  Ergebnis  an  und führt den Neustart durch.  Wurde vom Anwender
+kein  Neustart  durchgeführt,  so  liefert  die  Funktion einen Erfolgswert
+zurück:
+
+   FALSE - Das Öffnen des Ausschaltbildschirms ist fehlgeschlagen.
+   TRUE  - Der   Ausschaltbildschirm   wurde  korrekt  geöffnet,  aber  der
+           Anwender  hat  sich  dazu entschlossen, den Rechner nicht neu zu
+           starten.
+
+   In  Version  2.0  wurde  für die Shutdown()-Funktion ein Aufrufparameter
+eingeführt:
+
+   Modus - Ein  Wert, der angibt, ob das System sofort neu gestartet werden
+           soll,  oder  ob der Anwender noch eine Chance erhalten soll, zur
+           Workbench zurückzukehren, oder den Rechner auszuschalten:
+
+           - SHUTDOWN_NORMAL
+
+             Normales Verhalten, der  Benutzer  wird  auf  noch  arbeitende
+             Programme und offene Dateien aufmerksam gemacht und erhält die
+             Möglichkeit, anstatt den Rechner neu zu  starten,  wieder  zur
+             Workbench zurückzukehren.
+
+           - SHUTDOWN_FAST
+
+             Der Rechner wird nachdem alle offenen Dateien `geflusht' und
+             alle Laufwerke zur Ruhe  gekommen  sind,  ohne  Einfluß  des
+             Anwenders neu  gestartet.  Diese  Funktionsaufruf  wird  vom
+             Programm   `ShutdownSetup'   genutzt,  dessen   Commodities-
+             Interface auf Tastendruck den Rechner neu startet.
+
+                                     *
+
+Info = AddShutdownInfoTagList(Hook,Name,Tags)
+ D0                            A0   A1   A2
+
+   Diese Funktion erzeugt und vermerkt eine Struktur, in der eine  Funktion
+eingetragen wird, die vor dem Öffnen des Ausschaltbildschirms  und vor  der
+Durchführung des Neustarts aufgerufen werden.
+
+Info -  Im  Erfolgsfall  die Adresse eines privaten Datenbereiches, der zum
+        Entfernen  des `Hooks' später einmal an RemShutdownInfo() übergeben
+        werden kann.
+
+Hook -  Eine  unter  Kickstart 2.0 gebräuchliche und korrekt initialisierte
+        `Hook'-Struktur,   mit   der   eine  Funktion  mit  wohldefinierten
+        Parametern  aufgerufen  werden  kann.   shutdown.library fragt über
+        diese  Funktion  das  sich  registrieren  lassende Programm, ob ein
+        Neustart  durchgeführt werden soll, oder informiert es darüber, daß
+        ein  Neustart  kurz bevorsteht.  Zu den jeweiligen Aufrufparametern
+        der Funktion später mehr.
+
+Name -  Der  Name, unter dem das sich anmeldende Programme in der Liste der
+        noch aktiven Programme aufgeführt werden soll.
+
+Tags -  Eine   Liste   von   `TagItems'   zur  Kontrolle  von  zusätzlichen
+        Funktionen,  etc.   Derzeit  sind noch keine Werte für diesen Zweck
+        definiert.
+
+   Der  übergebene  Name wird in einen privaten Speicherbereich kopiert und
+muß  deshalb nicht notwendigerweise auch nach Aufruf dieser Funktion gültig
+bleiben.
+
+   Die   über   den  `Hook'  anzuspringende  Funktion  wird  mit  folgenden
+Parametern aufgerufen:
+
+Ergebnis = Hook(Hook,Action,Info)
+   D0            A0    A1   A2
+
+Ergebnis - Ein  Rückgabewert,  der  erwartet wird, falls als Modus der Wert
+           `SD_CHECK'  übergeben  wurde,  in  allen  anderen Fällen wird er
+           ignoriert.   Das so aufgerufene Programm meldet auf diese Weise,
+           ob  es  zu einem Systemneustart zustimmt oder diesen verweigert.
+           Wird  der  Neustart  nicht  genehmigt,  so  wird  der  Name  des
+           Programmes   in  eine  Liste  von  noch  aktiven,  registrierten
+           Programmen eingetragen, die später dem Anwender gezeigt wird.
+
+Hook     - Die  Adresse  einer  korrekt  initialisierten  Struktur  vom Typ
+           "struct   Hook"  (siehe  utility/hooks.h  und  die  dazugehörige
+           Dokumentation).
+
+Action   - Die  Adresse einer Struktur vom Typ "struct ShutdownAction", die
+           im  Wert  "sdm_Mode"  den  Aufrufsmodus  enthält.   Dies  können
+           derzeit zwei verschiedene Werte sein:
+
+           - SD_CHECK
+
+             Das jeweilige Programm  wird  gefragt, ob  ein  Systemneustart
+             durchgeführt werden soll. Stimmt es zu, so muß es  einen  Wert
+             ungleich Null (TRUE), stimmt es nicht  zu, den Wert  0 (FALSE)
+             zurückliefern.
+
+           - SD_EXIT
+
+             Dem Programm wird mitgeteilt, daß ein Systemneustart unmittel-
+             bar bevorsteht. Es sollte den dritten  Aufrufparameter  (Info)
+             untersuchen, um festzustellen, wieviel Zeit ihm noch zur  Ver-
+             fügung steht und  notwendige  Aufräumarbeiten  erledigen,  wie
+             z.B. noch offene Dateien schließen. Sobald der Aufruf  beendet
+             ist, ist davon auszugehen, daß der Neustart sofort erfolgt.
+
+Info     - Die Adresse einer Struktur vom Typ "struct ShutdownInfo", die im
+           Bitfeld  "sdi_Flags"  zusätzliche Informationen über die Art der
+           auszuführenden Aktion enthält.  Gegenwärtig können das folgenden
+           Bit gesetzt sein:
+
+           - SDF_RESET
+
+             Dieses Bit ist nur im Zusammenhang mit  der  Aktion  "SD_EXIT"
+             gesetzt und gibt an, daß dem Programm  nicht  viel  Zeit  ver-
+             bleibt, um notwendige Aufräumarbeiten zu erledigen. Typischer-
+             weise erfolgt der Aufruf durch  Auslösen  des  Systemneustarts
+             durch Drücken der berühmten Dreitastenkombination.  In  diesem
+             Fall können keinerlei Zugriffe mehr auf die Diskettenlaufwerke
+             durchgeführt werden  und  von  Dateioperationen  ist  generell
+             abzuraten. Dem Programm verbleibt wenig Zeit zum Aufräumen, da
+             nach spätestens 20 Sekunden automatisch  ein  Neustart  durch-
+             geführt wird.
+
+                                     *
+
+Erfolg = RemShutdownInfo(Info)
+  D0                      A0
+
+   Diese      Funktion      entfernt     einen     mit     der     Funktion
+`AddShutdownInfoTagList()'  eingebundenen  `Hook' aus der Liste der vor dem
+Neustarten des Rechners abzufragenden Programme.
+
+Erfolg - Erfolgswert,  der  angibt,  ob  der  `Hook' korrekt entfernt werden
+         konnte.
+
+============== Verwendung der shutdown.library von ARexx aus ==============
+===========================================================================
+Die  Bibliothek  stellt  eine  einzige Funktion zur Verfügung, die nach dem
+Einbinden der Bibliothek folgendermaßen anzusprechen ist:
+
+                      Ergebnis = shutdown(Parameter)
+
+Diese  Funktion  verhält  sich  exakt  so  wie  auch die schon beschriebene
+Shutdown()-Funktion  der  Bibliothek.   Konnte  die  Funktion nicht korrekt
+ausgeführt  werden,  so  kehrt sie mit Fehlerwert 10 (= Fehlschlag) zurück.
+   Es   ist   außerdem   möglich,   daß   sie  als  Ergebniswert  `aborted'
+zurückliefert, wenn der Anwender den Rechner nicht neu starten wollte.  Als
+Anwendungsbeispiel  ist  dem  Programmpaket  die  Datei `ShutdownTest.rexx'
+beigefügt.
+   Als  Parameter  kann der Wert `immediately' übergeben werden.  In diesem
+Fall  wird  der Rechner ohne Einflußmöglichkeit des Anwenders neu gestartet
+(ähnlich  als  hätte man die Libraryfunktion `Shutdown()' mit dem Parameter
+`SHUTDOWN_FAST' aufgerufen).
+
+====================== Anschrift & Bitte des Autors =======================
+===========================================================================
+Die  Veröffentlichung  dieses  Paketes ist zunächst einmal nur ein Test, ob
+Anwender mit  einer `Ausschaltfunktion' überhaupt etwas anfangen können und
+ob Programmierer sie unterstützen wollen.  Außerdem möchte ich erfahren, ob
+noch Verbesserungen am Leistungsumfang des Paketes notwendig sind.  Bis zur
+internationalen    Veröffentlichung    ist   jedermann   freigestellt   das
+Programmpaket zu nutzen, soweit es nicht kommerziellen Zwecken dient.  Wenn
+jemand  am Verkauf oder der Vermarktung meiner Produkte Geld verdient, dann
+bin ich das, und niemand anders!
+
+   Fehlermeldungen und Vorschläge sind an folgende Adressen zu richten:
+
+                              Postanschrift:
+
+                               Olaf Barthel
+                             Brabeckstraße 35
+                            D-3000 Hannover 71
+
+                        Elektronische Postdienste:
+
+                        Z-Netz: O.BARTHEL@A-Link-H
+                      Internet: olsen@sourcery.mxm.sub.org
+                                o.barthel@a-link-h.comlink.de
+
+========================= Entwicklungsgeschichte ==========================
+===========================================================================
+V2.2    Umstellung der Library  auf  Verwendung von  Hooks,  fontsensitives
+        User-Interface-Layout.
+
+V2.0    Kleinere interne Veränderungen, `ShutdownSetup' erweitert.
+
+V1.8    Auch Lese- und Schreibzugriffe auf Device-Ebene werden jetzt erfaßt
+        und verfolgt.
+
+V1.7    Internationalisierung des Systems, Dateiverfolgung verbessert.
+
+V1.2    Kleinere Veränderungen in der Umlenkung von Systemroutinen.
+
+V1.1    Erste Verbreitung im deutschsprachigen Raum.
