@@ -142,6 +142,7 @@ def makePictures():
         
         file \
         ( 
+            #os.path.join( DSTROOT, root, 'index.html.en' ), 'w'
             os.path.join( DSTROOT, root, 'index.html.en' ), 'w'
         ).write( TEMPLATE_DATA % strings )
 
@@ -230,7 +231,7 @@ def processWWW( src, depth ):
     suffix = os.path.splitext( src )[1][1:]
     if suffix not in LANGUAGES: return
     
-    dst     = prefix + '.html.' + suffix
+    dst     = prefix + '.html' # .' + suffix
     dst_abs = os.path.normpath( os.path.join( DSTROOT, dst ) )
     src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
     dst_dir = os.path.dirname( dst_abs )
@@ -354,7 +355,8 @@ def buildWWW():
     )
     
     os.system( 'chmod -R go+r %s' % DSTROOT )
-    os.system( 'chmod +x %s' % os.path.join( DSTROOT, 'download/index.html.en' ) )
+    #os.system( 'chmod +x %s' % os.path.join( DSTROOT, 'download/index.html.en' ) )
+    os.system( 'chmod +x %s' % os.path.join( DSTROOT, 'download/index.html' ) )
 
 def buildHTML():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
