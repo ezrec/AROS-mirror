@@ -3,8 +3,8 @@ matthias:Matthias Fleischer:fleischr@IZFM.Uni-Stuttgart.DE:Exec, DOS, drivers
 pgpeter:Peter Boeckmann:pgpeter@informatik.uni-siegen.de:Sparc, Alpha
 iaint:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:FreeBSD, utility
 zino:Peter Bortas:zino@lysator.liu.se:WWW site
-mreckt:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, misc.
-ldp:Lennard voor den Dag:ldp@worldonline.nl:Amiga port
+mreckt:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, layers
+ldp:Lennard voor den Dag:ldp@worldonline.nl:Amiga port, layers
 quango:Chris Lawrence:quango@socomm.net:Linux/m68k
 geert:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
 turrican:Kars de Jong:jongk@prac.cs.utwente.nl:misc
@@ -12,8 +12,9 @@ nlorentz:Nils Henrik Lorentzen:nlorentz@sn.no:diskfont,icons
 ruppert:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 vmc:Harald Frank:support@isdntown.east.de:Amiga port
 helios:Martin Steigerwald:steigerw@stud.uni-frankfurt.de:Beta tester
-srittau:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Misc
+srittau:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Gadtools
 laguest:L. A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
+SDuvan:Johan Alfredsson:d95duvan@dtek.chalmers.se:Commodities
 stepan:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:Christopher D. Judd:juddc@rpi.edu:
 frv95tjn:Tommy Johansson:frv95tjn@mds.mdh.se:
@@ -27,5 +28,4 @@ ykoehler:Yannick Koehler:yannick@generation.net:
 hansvi:Hans Van Ingelgom:hansvi@igwe1.vub.ac.be:
 rycohen:Ross Cohen:rycohen@ACSU.Buffalo.EDU:
 chexum:Janos Farkas:chexum@shadow.banki.hu:
-SDuvan:Johan Alfredsson:d95duvan@dtek.chalmers.se:
 morten-h:Morten Holm:morten-h@post3.tele.dk:

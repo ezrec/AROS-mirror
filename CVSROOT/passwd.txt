@@ -3,8 +3,8 @@ matthias:bbxf6C1JfqE7U:Matthias Fleischer:fleischr@IZFM.Uni-Stuttgart.DE:Exec, D
 pgpeter:ggX6o8c4l:Peter Boeckmann:pgpeter@informatik.uni-siegen.de:Sparc, Alpha
 iaint:adwVPoZf6iJ6U:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:FreeBSD, utility
 zino:bdYh/q95S4cmU:Peter Bortas:zino@lysator.liu.se:WWW site
-mreckt:cbWLerEivCr6I:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, misc.
-ldp:6u5hVWs926luc:Lennard voor den Dag:ldp@worldonline.nl:Amiga port
+mreckt:cbWLerEivCr6I:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, layers
+ldp:6u5hVWs926luc:Lennard voor den Dag:ldp@worldonline.nl:Amiga port, layers
 quango:cbSYvfdxV/owQ:Chris Lawrence:quango@socomm.net:Linux/m68k
 geert:cbGlFwvZi5iZY:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
 turrican:bcRFEzJmi8r7Y:Kars de Jong:jongk@prac.cs.utwente.nl:misc
@@ -12,8 +12,9 @@ nlorentz:aaoEn/1St7MB7JtA8mAs:Nils Henrik Lorentzen:nlorentz@sn.no:diskfont,icon
 ruppert:bbtwjwdJnQGas:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 vmc:abVary.zhDODw:Harald Frank:support@isdntown.east.de:Amiga port
 helios:acwZVMiQtI78o:Martin Steigerwald:steigerw@stud.uni-frankfurt.de:Beta tester
-srittau:aaRBXVNGOCKiY:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Misc
+srittau:aaRBXVNGOCKiY:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Gadtools
 laguest:baLtYMMsFjGms:L. A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
+SDuvan:dbfBDWZL8B0q.:Johan Alfredsson:d95duvan@dtek.chalmers.se:Commodities
 
 stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
@@ -26,8 +27,7 @@ nico:bbHYNBwvWxgYE:Nico Heinz:nico@fh-konstanz.de:
 fasten:ccY.p7jBmFL4g:Bernhard Fastenrath:fasten@informatik.uni-bonn.de:
 jaxom:dcZ/NTob1tC2I:Thomas Schwarz:Thomas.Schwarz@munich.netsurf.de:
 ykoehler:acabfgzf8gWEk:Yannick Koehler:yannick@generation.net:
-hansvi:bdbUGoMZXsB.o:Hans Van Ingelgom:hansvi@igwe1.vub.ac.be:
+hansvi:aaoWAgKjckBIc:Hans Van Ingelgom:hansvi@igwe1.vub.ac.be:
 rycohen:aaNueBFiMeKmI:Ross Cohen:rycohen@ACSU.Buffalo.EDU:
 chexum:mV/zpVIfJW9yY:Janos Farkas:chexum@shadow.banki.hu:
-SDuvan:dbfBDWZL8B0q.:Johan Alfredsson:d95duvan@dtek.chalmers.se:
 morten-h:9KDC6O.tUkOCg:Morten Holm:morten-h@post3.tele.dk:
