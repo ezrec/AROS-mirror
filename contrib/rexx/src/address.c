@@ -1,6 +1,9 @@
 /*
  * $Header$
  * $Log$
+ * Revision 1.2  2001/04/05 16:58:26  stegerg
+ * AROS does not have system() and chmod() functions, so for now #if 0 them out
+ *
  * Revision 1.1  2001/04/04 05:43:38  wang
  * First commit: compiles on Linux, Amiga, Windows, Windows CE, generic gcc
  *
@@ -163,7 +166,13 @@ RxRedirectCmd(PLstr cmd, int in, int out, PLstr resultstr)
 #if defined(__BORLANDC__) && !defined(__WIN32__)
 	RxReturnCode = systemx(LSTR(*cmd));
 #else
+
+#ifdef AROS
+#warning: AROS does not have a system function
+#else
 	RxReturnCode = system(LSTR(*cmd));
+#endif
+
 #endif
 
 	/* --- restore input --- */
@@ -179,7 +188,7 @@ RxRedirectCmd(PLstr cmd, int in, int out, PLstr resultstr)
 		close(LOW_STDOUT);
 		dup2(old_stdout,LOW_STDOUT);  /* restore stdout */
 		close(old_stdout);
-#ifndef MSDOS
+#if !defined(MSDOS) && !defined(AROS)
 		chmod(fnout,0666);
 #endif
 		if ((f=fopen(fnout,"r"))!=NULL) {
