@@ -14,6 +14,9 @@
 #include <proto/exec.h>
 #include <string.h>
 
+#define MYDEBUG 1
+#include "debug.h"
+
 /**************************************
 	    Globale Variable
 **************************************/
@@ -86,7 +89,10 @@ int do_command (char * str)
     WORD       diff;
     static int level = 0;
     COMM     * comm;
+#if 0
 #define DEBUG_FILE  /* Logging on ? */
+#endif
+    D(bug("cmd: %s\n", str));
 #ifdef DEBUG_FILE
     static FILE * debug_file = NULL;
 
@@ -466,7 +472,11 @@ DEFUSERCMD("source", 1, CF_VWM|CF_COK|CF_ICO, void, do_source, (long do_err),)
     char   buf[MAXLINELEN];
     FILE * fi;
     char * str;
-    BPTR   oldlock = CurrentDir(DupLock(Ep->dirlock));
+    BPTR   oldlock;
+
+DL;
+    oldlock = CurrentDir(DupLock(Ep->dirlock));
+DL;
 
     if ( (fi = fopen(av[1], "r")) )
     {
