@@ -5,7 +5,6 @@
     Desc: Mine Game
     Lang: german
 */
-#define ENABLE_RT   1
 
 /*****************************************************************************
 
@@ -37,7 +36,6 @@
 static const char version[] = "$VER: Mine 0.2 (16.09.1997)\n";
 
 #include "Mineincl.h"
-#include <aros/rt.h>
 
 #define maxbreite 30
 #define maxhoehe 20
@@ -236,7 +234,6 @@ void CleanUp()
 
 int main()
 {
-  RT_Init ();
   WEnde=FALSE;
   globalInit();
   while(!WEnde)
@@ -255,6 +252,5 @@ int main()
     WEnde=endreq();
   }
   CleanUp();
-  RT_Exit ();
   return(0);
 }

@@ -5,7 +5,6 @@
     Desc: JumpEd Game
     Lang: english
 */
-#define ENABLE_RT 1
 
 /*****************************************************************************
 
@@ -38,7 +37,6 @@ static const char version[] = "$VER: JumpEd 0.2 (16.09.1997)\n";
 
 #include "../prec.c"
 #include "JumpEd.h"
-#include <aros/rt.h>
 
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
@@ -90,7 +88,6 @@ int number,i;
 BOOL end_editor=FALSE;
 
 /* Do some initting, including loading of existing defaults-file */
-  RT_Init() ;
   open_lib();
   open_window();
   open_file();
@@ -159,6 +156,5 @@ BOOL end_editor=FALSE;
 /* Quit editor, do some clean up */
   close_window();
   close_lib();
-  RT_Exit ();
   return(0);
 }

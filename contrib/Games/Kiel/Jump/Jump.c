@@ -5,7 +5,6 @@
     Desc: Jump Game
     Lang: english
 */
-#define ENABLE_RT 1
 
 /*****************************************************************************
 
@@ -38,7 +37,6 @@ static const char version[] = "$VER: Jump 0.2 (16.09.1997)\n";
 
 #include "../prec.c"
 #include "Jump.h"
-#include <aros/rt.h>
 
 #define FIRST 1
 #define SECOND 2
@@ -140,7 +138,6 @@ int first=0,number,middle;
 
 /* As usual some initting, including loading defaults-file or setting
    playfield to default if no defaults-file found */
-  RT_Init ();
   open_lib();
   open_window();
   open_file();
@@ -254,6 +251,5 @@ int first=0,number,middle;
 /* Terminated game, clean up */
   close_window();
   close_lib();
-  RT_Exit ();
   return(0);
 }

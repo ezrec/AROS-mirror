@@ -5,7 +5,6 @@
     Desc: Wumpus Game
     Lang: german
 */
-#define ENABLE_RT 1
 
 /*****************************************************************************
 
@@ -37,7 +36,6 @@
 static const char version[] = "$VER: Wumpus 0.2 (16.09.1997)\n";
 
 #include "WumpusIncl.h"
-#include <aros/rt.h>
 
 #define NICHT 0
 #define WENIG 1
@@ -764,7 +762,6 @@ ContMsg();
 
 int main()
 {
-  RT_Init() ;
   srand((unsigned)time(NULL));
   open_lib();
   open_window(new_window);
@@ -774,6 +771,5 @@ int main()
 
   close_window();
   close_lib();
-  RT_Exit() ;
   return(0);
 }
