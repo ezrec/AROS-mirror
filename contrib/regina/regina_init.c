@@ -18,18 +18,20 @@
 
 #include "rexx.h"
 
+#include <aros/symbolsets.h>
+#include LC_LIBDEFS_FILE
+
 struct ExecBase* SysBase;
 struct DosLibrary* DOSBase;
 struct Library* aroscbase;
 struct MinList *__regina_tsdlist = NULL;
 
-/****************************************************************************************/
 
-ULONG SAVEDS STDARGS Regina_L_InitLib (struct LibHeader *ReginaBase)
+AROS_SET_LIBFUNC(InitLib, LIBBASETYPE, LIBBASE)
 {
     D(bug("Inside Init func of regina.library\n"));
 
-    SysBase = ReginaBase->lh_SysBase;
+    SysBase = LIBBASE->lh_SysBase;
     if (!(DOSBase = OpenLibrary("dos.library",0))) return FALSE;
 
     if (!(aroscbase = OpenLibrary("arosc.library",41)))
@@ -46,7 +48,7 @@ ULONG SAVEDS STDARGS Regina_L_InitLib (struct LibHeader *ReginaBase)
     return TRUE;
 }
 
-void  SAVEDS STDARGS Regina_L_ExpungeLib (struct LibHeader *ReginaBase)
+AROS_SET_LIBFUNC(ExpungeLib, LIBBASETYPE, LIBBASE)
 {
     D(bug("Inside Expunge func of regina.library\n"));
 
@@ -55,3 +57,5 @@ void  SAVEDS STDARGS Regina_L_ExpungeLib (struct LibHeader *ReginaBase)
     CloseLibrary((struct Library *)DOSBase);
 }
 
+ADD2INITLIB(InitLib, 0);
+ADD2EXPUNGELIB(ExpungeLib, 0);
