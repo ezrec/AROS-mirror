@@ -2,16 +2,16 @@
 #
 #   Makefile to make XDME
 
+include $(TOP)/config/make.cfg
+
 VERSION := 1.84
 VERDATE := $(shell date +"%d.%m.%Y")
 INCDIR := ./include
 USER_CFLAGS := -DVERSION="\"$(VERSION)\"" -DVERDATE="\"$(VERDATE)\"" -I$(INCDIR)
-EXTRACT := Util/extract/extract
-MAKEGUIDE:= Util/cag/cag
-PARSER	:= Util/var/Parser
+EXTRACT := $(OBJDIR)/Util/extract/extract
+MAKEGUIDE:= $(OBJDIR)/Util/cag/cag
+PARSER	:= $(OBJDIR)/Util/var/Parser
 DOCDIR := Docs
-
-include $(TOP)/config/make.cfg
 
 FILES := $(filter-out %_SPC_,$(subst .c,,$(wildcard Src/*.c Src/*/*.c)))
 
