@@ -16,6 +16,7 @@ Date and time functions are assumed to be standard **IX-style functions.
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdio.h>
 #include <time.h>
 
 /* Function isadir() returns 1 if the supplied handle is a directory, 
@@ -63,8 +64,11 @@ long gettz()
 #define SEC_IN_DAY	(24L * 60L * 60L)
 #define INV_VALUE		(SEC_IN_DAY + 1L)
 	static long retval = INV_VALUE;	     /* cache, init to impossible value */
+#ifndef __AROS__
+	/* AROS has some perfectly good prototypes */
 	extern long time();
 	extern struct tm *localtime();
+#endif
 	long now;
 	long noon;
 	struct tm *noontm;
