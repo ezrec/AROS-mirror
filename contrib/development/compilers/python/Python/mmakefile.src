@@ -21,7 +21,6 @@ FILES := \
 	getargs \
 	getcompiler \
 	getcopyright \
-	getcwd \
 	getmtime \
 	getopt \
 	getplatform \
@@ -30,6 +29,7 @@ FILES := \
 	hypot \
 	import \
 	importdl \
+	dynload_stub \
 	marshal \
 	memmove \
 	modsupport \
@@ -37,9 +37,6 @@ FILES := \
 	pyfpe \
 	pystate \
 	sigcheck \
-	strdup \
-	strerror \
-	strtod \
 	structmember \
 	symtable \
 	sysmodule \
@@ -47,7 +44,11 @@ FILES := \
 	traceback \
 	pythonrun
 
-# Needs more work to compile.
+# Already implemented in AROS (don't need these replacements).
+#	strerror
+#	strdup
+#	strtod
+#	getcwd
 #	dup2
 
 # Highly platform-specific stuff, not for AROS.
@@ -59,7 +60,6 @@ FILES := \
 #	dynload_next 
 #	dynload_os2 
 #	dynload_shlib 
-#	dynload_stub 
 #	dynload_win 
 									
 USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR) -DAROS
