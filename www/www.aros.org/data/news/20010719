@@ -1,11 +1,11 @@
-Henning Kiel improved in the build a bit (fixed paths were files
+Henning Kiel improved the build a bit (fixed paths were files
 are created, make sure that this path exists before files are
 created, etc). He also added "strip --strip-unneeded" for all
 programs which are installed on the bootdisk to be able to cram
 more on it (AROS binaries are very large because they still contain
 all symbols - stripping them makes them *much* smaller).
 Also, archtool creates now libdefs.h for all libraries. No need for
-the old AWK scrips anymore.
+the old AWK scripts anymore.
 
 Fabio Alemagna made c.lib more stable (fputs() was often called
 with the arguments in the wrong order. Plus it won't crash when

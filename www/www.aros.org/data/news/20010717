@@ -42,7 +42,7 @@ various places.
 Sebastian Heutling created a single-floppy bootdisk (contains the
 kernel and workbench files on one floppy disk) which boots with
 GRUB. This GRUB has support for AFFS. The build process was
-adjusted accordingly. And he fixed a couple of bug in the AFFS.handler.
+adjusted accordingly. And he fixed a couple of bugs in the AFFS.handler.
 There is also now a C:Install command which makes a floppy bootable
 using GRUB.
 

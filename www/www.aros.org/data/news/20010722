@@ -8,9 +8,9 @@ Sebastian Heutling fixed two bugs in trackdisk.device and optimized
 createNewEntry() in the AFFS code. Cause() and Enable() now use the code from
 Michael Schulz's new core.
 
-Fabio Alemagna moved all shell commands into a subdirectory if their
+Fabio Alemagna moved all shell commands into a subdirectory of their
 own. The ide.device has now complete 64bit support (which means we can
-support *large* harddisks :-) Also, more shell commands where converted
+support *large* harddisks :-) Also, more shell commands were converted
 to the new system. NIL: supports DupLock() now.
 
 Iain Templeton fixed a couple of typos in the code, missing headers,
