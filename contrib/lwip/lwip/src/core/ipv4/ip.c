@@ -1,36 +1,33 @@
 /*
- * Copyright (c) 2001, Swedish Institute of Computer Science.
+ * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
  * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
- * are met: 
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
- *    documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Institute nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
- *    without specific prior written permission. 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
- * SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: ip.c,v 1.3 2002/07/07 18:57:57 sebauer Exp $
  */
 
 
@@ -47,10 +44,10 @@
 #include "lwip/def.h"
 #include "lwip/mem.h"
 #include "lwip/ip.h"
+#include "lwip/ip_frag.h"
 #include "lwip/inet.h"
 #include "lwip/netif.h"
 #include "lwip/icmp.h"
-#include "lwip/raw.h"
 #include "lwip/udp.h"
 #include "lwip/tcp.h"
 
@@ -58,6 +55,9 @@
 
 #include "arch/perf.h"
 
+#if LWIP_SNMP > 0
+#  include "snmp.h"
+#endif
 #if LWIP_DHCP
 #include "lwip/dhcp.h"
 #endif /* LWIP_DHCP */
@@ -158,7 +158,7 @@ ip_route(struct ip_addr *dest)
 static void
 ip_forward(struct pbuf *p, struct ip_hdr *iphdr, struct netif *inp)
 {
-  static struct netif *netif;
+  struct netif *netif;
   
   PERF_START;
   
@@ -167,6 +167,9 @@ ip_forward(struct pbuf *p, struct ip_hdr *iphdr, struct netif *inp)
     DEBUGF(IP_DEBUG, ("ip_forward: no forwarding route for 0x%lx found\n",
 		      iphdr->dest.addr));
 
+#if LWIP_SNMP > 0
+    snmp_inc_ipnoroutes();
+#endif
     return;
   }
 
@@ -175,6 +178,9 @@ ip_forward(struct pbuf *p, struct ip_hdr *iphdr, struct netif *inp)
   if(netif == inp) {
     DEBUGF(IP_DEBUG, ("ip_forward: not forward packets back on incoming interface.\n"));
 
+#if LWIP_SNMP > 0
+    snmp_inc_ipnoroutes();
+#endif
     return;
   }
   
@@ -184,6 +190,9 @@ ip_forward(struct pbuf *p, struct ip_hdr *iphdr, struct netif *inp)
     /* Don't send ICMP messages in response to ICMP messages */
     if(IPH_PROTO(iphdr) != IP_PROTO_ICMP) {
       icmp_time_exceeded(p, ICMP_TE_TTL);
+#if LWIP_SNMP > 0
+      snmp_inc_icmpouttimeexcds();
+#endif
     }
     return;       
   }
@@ -199,177 +208,18 @@ ip_forward(struct pbuf *p, struct ip_hdr *iphdr, struct netif *inp)
 		    iphdr->dest.addr));
 
 #ifdef IP_STATS
-  ++stats.ip.fw;
-  ++stats.ip.xmit;
+  ++lwip_stats.ip.fw;
+  ++lwip_stats.ip.xmit;
 #endif /* IP_STATS */
+#if LWIP_SNMP > 0
+    snmp_inc_ipforwdatagrams();
+#endif
 
   PERF_STOP("ip_forward");
   
   netif->output(netif, p, (struct ip_addr *)&(iphdr->dest));
 }
 #endif /* IP_FORWARD */
-/*-----------------------------------------------------------------------------------*/
-/* ip_reass:
- *
- * Tries to reassemble a fragmented IP packet.
- */
-/*-----------------------------------------------------------------------------------*/
-#define IP_REASSEMBLY 0
-#define IP_REASS_BUFSIZE 5760
-#define IP_REASS_MAXAGE 10
-
-#if IP_REASSEMBLY
-static u8_t ip_reassbuf[IP_HLEN + IP_REASS_BUFSIZE];
-static u8_t ip_reassbitmap[IP_REASS_BUFSIZE / (8 * 8)];
-static const u8_t bitmap_bits[8] = {0xff, 0x7f, 0x3f, 0x1f,
-				    0x0f, 0x07, 0x03, 0x01};
-static u16_t ip_reasslen;
-static u8_t ip_reassflags;
-#define IP_REASS_FLAG_LASTFRAG 0x01
-static u8_t ip_reasstmr;
-
-static struct pbuf *
-ip_reass(struct pbuf *p)
-{
-  struct pbuf *q;
-  struct ip_hdr *fraghdr, *iphdr;
-  u16_t offset, len;
-  u16_t i;
-  
-  iphdr = (struct ip_hdr *)ip_reassbuf;
-  fraghdr = (struct ip_hdr *)p->payload;
-
-  /* If ip_reasstmr is zero, no packet is present in the buffer, so we
-     write the IP header of the fragment into the reassembly
-     buffer. The timer is updated with the maximum age. */
-  if(ip_reasstmr == 0) {
-    DEBUGF(IP_REASS_DEBUG, ("ip_reass: new packet\n"));
-    bcopy(fraghdr, iphdr, IP_HLEN);
-    ip_reasstmr = IP_REASS_MAXAGE;
-    ip_reassflags = 0;
-    /* Clear the bitmap. */
-    bzero(ip_reassbitmap, sizeof(ip_reassbitmap));
-  }
-
-  /* Check if the incoming fragment matches the one currently present
-     in the reasembly buffer. If so, we proceed with copying the
-     fragment into the buffer. */
-  if(ip_addr_cmp(&iphdr->src, &fraghdr->src) &&
-     ip_addr_cmp(&iphdr->dest, &fraghdr->dest) &&
-     IPH_ID(iphdr) == IPH_ID(fraghdr)) {
-    DEBUGF(IP_REASS_DEBUG, ("ip_reass: matching old packet\n"));
-    /* Find out the offset in the reassembly buffer where we should
-       copy the fragment. */
-    len = ntohs(IPH_LEN(fraghdr)) - IPH_HL(fraghdr) * 4;
-    offset = (ntohs(IPH_OFFSET(fraghdr)) & IP_OFFMASK) * 8;
-
-    /* If the offset or the offset + fragment length overflows the
-       reassembly buffer, we discard the entire packet. */
-    if(offset > IP_REASS_BUFSIZE ||
-       offset + len > IP_REASS_BUFSIZE) {
-      DEBUGF(IP_REASS_DEBUG, ("ip_reass: fragment outside of buffer (%d:%d/%d).\n",
-			      offset, offset + len, IP_REASS_BUFSIZE));
-      ip_reasstmr = 0;
-      goto nullreturn;
-    }
-
-    /* Copy the fragment into the reassembly buffer, at the right
-       offset. */
-    DEBUGF(IP_REASS_DEBUG, ("ip_reass: copying with offset %d into %d:%d\n",
-			    offset, IP_HLEN + offset, IP_HLEN + offset + len));
-    bcopy((u8_t *)fraghdr + IPH_HL(fraghdr) * 4,
-	  &ip_reassbuf[IP_HLEN + offset], len);
-
-    /* Update the bitmap. */
-    if(offset / (8 * 8) == (offset + len) / (8 * 8)) {
-      DEBUGF(IP_REASS_DEBUG, ("ip_reass: updating single byte in bitmap.\n"));
-      /* If the two endpoints are in the same byte, we only update
-	 that byte. */
-      ip_reassbitmap[offset / (8 * 8)] |=
-	bitmap_bits[(offset / 8 ) & 7] &
-	~bitmap_bits[((offset + len) / 8 ) & 7];
-    } else {
-      /* If the two endpoints are in different bytes, we update the
-	 bytes in the endpoints and fill the stuff inbetween with
-	 0xff. */
-      ip_reassbitmap[offset / (8 * 8)] |= bitmap_bits[(offset / 8 ) & 7];
-      DEBUGF(IP_REASS_DEBUG, ("ip_reass: updating many bytes in bitmap (%d:%d).\n",
-			      1 + offset / (8 * 8), (offset + len) / (8 * 8)));
-      for(i = 1 + offset / (8 * 8); i < (offset + len) / (8 * 8); ++i) {
-	ip_reassbitmap[i] = 0xff;
-      }      
-      ip_reassbitmap[(offset + len) / (8 * 8)] |= ~bitmap_bits[((offset + len) / 8 ) & 7];
-    }
-    
-    /* If this fragment has the More Fragments flag set to zero, we
-       know that this is the last fragment, so we can calculate the
-       size of the entire packet. We also set the
-       IP_REASS_FLAG_LASTFRAG flag to indicate that we have received
-       the final fragment. */
-
-    if((ntohs(IPH_OFFSET(fraghdr)) & IP_MF) == 0) {
-      ip_reassflags |= IP_REASS_FLAG_LASTFRAG;
-      ip_reasslen = offset + len;
-      DEBUGF(IP_REASS_DEBUG, ("ip_reass: last fragment seen, total len %d\n", ip_reasslen));
-    }
-    
-    /* Finally, we check if we have a full packet in the buffer. We do
-       this by checking if we have the last fragment and if all bits
-       in the bitmap are set. */
-    if(ip_reassflags & IP_REASS_FLAG_LASTFRAG) {
-      /* Check all bytes up to and including all but the last byte in
-	 the bitmap. */
-      for(i = 0; i < ip_reasslen / (8 * 8) - 1; ++i) {
-	if(ip_reassbitmap[i] != 0xff) {
-	  DEBUGF(IP_REASS_DEBUG, ("ip_reass: last fragment seen, bitmap %d/%d failed (%x)\n", i, ip_reasslen / (8 * 8) - 1, ip_reassbitmap[i]));
-	  goto nullreturn;
-	}
-      }
-      /* Check the last byte in the bitmap. It should contain just the
-	 right amount of bits. */
-      if(ip_reassbitmap[ip_reasslen / (8 * 8)] !=
-	 (u8_t)~bitmap_bits[ip_reasslen / 8 & 7]) {
-	DEBUGF(IP_REASS_DEBUG, ("ip_reass: last fragment seen, bitmap %d didn't contain %x (%x)\n",
-				ip_reasslen / (8 * 8), ~bitmap_bits[ip_reasslen / 8 & 7],
-				ip_reassbitmap[ip_reasslen / (8 * 8)]));
-	goto nullreturn;
-      }
-
-      /* Pretend to be a "normal" (i.e., not fragmented) IP packet
-	 from now on. */
-      IPH_OFFSET_SET(iphdr, 0);
-      IPH_CHKSUM_SET(iphdr, 0);
-      IPH_CHKSUM_SET(iphdr, inet_chksum(iphdr, IP_HLEN));
-      
-      /* If we have come this far, we have a full packet in the
-	 buffer, so we allocate a pbuf and copy the packet into it. We
-	 also reset the timer. */
-      ip_reasstmr = 0;
-      pbuf_free(p);
-      p = pbuf_alloc(PBUF_LINK, ip_reasslen, PBUF_POOL);
-      if(p != NULL) {
-	i = 0;
-	for(q = p; q != NULL; q = q->next) {
-	  /* Copy enough bytes to fill this pbuf in the chain. The
-	     avaliable data in the pbuf is given by the q->len
-	     variable. */
-	  DEBUGF(IP_REASS_DEBUG, ("ip_reass: bcopy from %p (%d) to %p, %d bytes\n",
-				  &ip_reassbuf[i], i, q->payload, q->len > ip_reasslen - i? ip_reasslen - i: q->len));
-	  bcopy(&ip_reassbuf[i], q->payload,
-		q->len > ip_reasslen - i? ip_reasslen - i: q->len);
-	  i += q->len;
-	}
-      }
-      DEBUGF(IP_REASS_DEBUG, ("ip_reass: p %p\n", p));
-      return p;
-    }
-  }
-
- nullreturn:
-  pbuf_free(p);
-  return NULL;
-}
-#endif /* IP_REASSEMBLY */
 /*-----------------------------------------------------------------------------------*/
 /* ip_input:
  *
@@ -391,8 +241,11 @@ ip_input(struct pbuf *p, struct netif *inp) {
   
   
 #ifdef IP_STATS
-  ++stats.ip.recv;
+  ++lwip_stats.ip.recv;
 #endif /* IP_STATS */
+#if LWIP_SNMP > 0
+    snmp_inc_ipinreceives();
+#endif
 
   /* identify the IP header */
   iphdr = p->payload;
@@ -403,9 +256,12 @@ ip_input(struct pbuf *p, struct netif *inp) {
 #endif /* IP_DEBUG */
     pbuf_free(p);
 #ifdef IP_STATS
-    ++stats.ip.err;
-    ++stats.ip.drop;
+    ++lwip_stats.ip.err;
+    ++lwip_stats.ip.drop;
 #endif /* IP_STATS */
+#if LWIP_SNMP > 0
+    snmp_inc_ipunknownprotos();
+#endif
     return ERR_OK;
   }
   
@@ -416,9 +272,12 @@ ip_input(struct pbuf *p, struct netif *inp) {
 
     pbuf_free(p);
 #ifdef IP_STATS
-    ++stats.ip.lenerr;
-    ++stats.ip.drop;
+    ++lwip_stats.ip.lenerr;
+    ++lwip_stats.ip.drop;
 #endif /* IP_STATS */
+#if LWIP_SNMP > 0
+    snmp_inc_ipindiscards();
+#endif
     return ERR_OK;
   }
 
@@ -431,9 +290,12 @@ ip_input(struct pbuf *p, struct netif *inp) {
 #endif /* IP_DEBUG */
     pbuf_free(p);
 #ifdef IP_STATS
-    ++stats.ip.chkerr;
-    ++stats.ip.drop;
+    ++lwip_stats.ip.chkerr;
+    ++lwip_stats.ip.drop;
 #endif /* IP_STATS */
+#if LWIP_SNMP > 0
+    snmp_inc_ipindiscards();
+#endif
     return ERR_OK;
   }
   
@@ -450,10 +312,14 @@ ip_input(struct pbuf *p, struct netif *inp) {
 		      netif->ip_addr.addr & netif->netmask.addr,
 		      iphdr->dest.addr & ~(netif->netmask.addr)));
 
+    /* interface unconfigured? */
     if(ip_addr_isany(&(netif->ip_addr)) ||
+       /* or unicast to this interface address? */
        ip_addr_cmp(&(iphdr->dest), &(netif->ip_addr)) ||
+       /* or broadcast on this interface network address ? */
        (ip_addr_isbroadcast(&(iphdr->dest), &(netif->netmask)) &&
 	ip_addr_maskcmp(&(iphdr->dest), &(netif->ip_addr), &(netif->netmask))) ||
+       /* or restricted broadcast? */
        ip_addr_cmp(&(iphdr->dest), IP_ADDR_BROADCAST)) {
       break;
     }
@@ -466,7 +332,7 @@ ip_input(struct pbuf *p, struct netif *inp) {
      node (as recommended by RFC 1542 section 3.1.1, referred by RFC
      2131). */
   if(IPH_PROTO(iphdr) == IP_PROTO_UDP &&
-     ((struct udp_hdr *)((u8_t *)iphdr + IPH_HL(iphdr) * 4/sizeof(u8_t)))->src ==
+     ((struct udp_hdr *)((u8_t *)iphdr + IPH_HL(iphdr) * 4))->src ==
      DHCP_SERVER_PORT) {
     netif = inp;
   }  
@@ -479,7 +345,13 @@ ip_input(struct pbuf *p, struct netif *inp) {
     if(!ip_addr_isbroadcast(&(iphdr->dest), &(inp->netmask))) {
       ip_forward(p, iphdr, inp);
     }
+    else
 #endif /* IP_FORWARD */
+    {
+#if LWIP_SNMP > 0
+      snmp_inc_ipindiscards();
+#endif
+    }
     pbuf_free(p);
     return ERR_OK;
   }
@@ -498,9 +370,12 @@ ip_input(struct pbuf *p, struct netif *inp) {
     DEBUGF(IP_DEBUG, ("IP packet dropped since it was fragmented (0x%x).\n",
 		      ntohs(IPH_OFFSET(iphdr))));
 #ifdef IP_STATS
-    ++stats.ip.opterr;
-    ++stats.ip.drop;
+    ++lwip_stats.ip.opterr;
+    ++lwip_stats.ip.drop;
 #endif /* IP_STATS */
+#if LWIP_SNMP > 0
+    snmp_inc_ipunknownprotos();
+#endif
     return ERR_OK;
   }
 #endif /* IP_REASSEMBLY */
@@ -511,9 +386,12 @@ ip_input(struct pbuf *p, struct netif *inp) {
 
     pbuf_free(p);    
 #ifdef IP_STATS
-    ++stats.ip.opterr;
-    ++stats.ip.drop;
+    ++lwip_stats.ip.opterr;
+    ++lwip_stats.ip.drop;
 #endif /* IP_STATS */
+#if LWIP_SNMP > 0
+    snmp_inc_ipunknownprotos();
+#endif
     return ERR_OK;
   }  
 #endif /* IP_OPTIONS == 0 */
@@ -526,22 +404,27 @@ ip_input(struct pbuf *p, struct netif *inp) {
   DEBUGF(IP_DEBUG, ("ip_input: p->len %d p->tot_len %d\n", p->len, p->tot_len));
 #endif /* IP_DEBUG */   
 
-#if LWIP_RAW > 0
-  raw_input(p,inp); /* This will not free p! */
-#endif
-
   switch(IPH_PROTO(iphdr)) {
 #if LWIP_UDP > 0    
   case IP_PROTO_UDP:
+#if LWIP_SNMP > 0
+    snmp_inc_ipindelivers();
+#endif
     udp_input(p, inp);
     break;
 #endif /* LWIP_UDP */
 #if LWIP_TCP > 0    
   case IP_PROTO_TCP:
+#if LWIP_SNMP > 0
+    snmp_inc_ipindelivers();
+#endif
     tcp_input(p, inp);
     break;
 #endif /* LWIP_TCP */
   case IP_PROTO_ICMP:
+#if LWIP_SNMP > 0
+    snmp_inc_ipindelivers();
+#endif
     icmp_input(p, inp);
     break;
   default:
@@ -556,9 +439,12 @@ ip_input(struct pbuf *p, struct netif *inp) {
     DEBUGF(IP_DEBUG, ("Unsupported transportation protocol %d\n", IPH_PROTO(iphdr)));
 
 #ifdef IP_STATS
-    ++stats.ip.proterr;
-    ++stats.ip.drop;
+    ++lwip_stats.ip.proterr;
+    ++lwip_stats.ip.drop;
 #endif /* IP_STATS */
+#if LWIP_SNMP > 0
+    snmp_inc_ipunknownprotos();
+#endif
 
   }
   return ERR_OK;
@@ -582,15 +468,20 @@ ip_output_if(struct pbuf *p, struct ip_addr *src, struct ip_addr *dest,
   static u16_t ip_id = 0;
 
   
+#if LWIP_SNMP > 0
+    snmp_inc_ipoutrequests();
+#endif
   
   if(dest != IP_HDRINCL) {
     if(pbuf_header(p, IP_HLEN)) {
       DEBUGF(IP_DEBUG, ("ip_output: not enough room for IP header in pbuf\n"));
       
 #ifdef IP_STATS
-      ++stats.ip.err;
+      ++lwip_stats.ip.err;
 #endif /* IP_STATS */
-      pbuf_free(p);
+#if LWIP_SNMP > 0
+    snmp_inc_ipoutdiscards();
+#endif
       return ERR_BUF;
     }
     
@@ -604,7 +495,8 @@ ip_output_if(struct pbuf *p, struct ip_addr *src, struct ip_addr *dest,
     IPH_VHLTOS_SET(iphdr, 4, IP_HLEN / 4, 0);
     IPH_LEN_SET(iphdr, htons(p->tot_len));
     IPH_OFFSET_SET(iphdr, htons(IP_DF));
-    IPH_ID_SET(iphdr, htons(++ip_id));
+    IPH_ID_SET(iphdr, htons(ip_id));
+    ++ip_id;
 
     if(ip_addr_isany(src)) {
       ip_addr_set(&(iphdr->src), &(netif->ip_addr));
@@ -619,14 +511,20 @@ ip_output_if(struct pbuf *p, struct ip_addr *src, struct ip_addr *dest,
     dest = &(iphdr->dest);
   }
 
+#if IP_FRAG	
+  if (p->tot_len > netif->mtu)
+    return ip_frag(p,netif,dest);
+#endif
+  
 #ifdef IP_STATS
-  stats.ip.xmit++;
+  lwip_stats.ip.xmit++;
 #endif /* IP_STATS */
   DEBUGF(IP_DEBUG, ("ip_output_if: %c%c ", netif->name[0], netif->name[1]));
 #if IP_DEBUG
   ip_debug_print(p);
 #endif /* IP_DEBUG */
 
+   DEBUGF(IP_DEBUG, ("netif->output()"));
 
   return netif->output(netif, p, dest);  
 }
@@ -641,16 +539,17 @@ err_t
 ip_output(struct pbuf *p, struct ip_addr *src, struct ip_addr *dest,
 	  u8_t ttl, u8_t proto)
 {
-  static struct netif *netif;
-
+  struct netif *netif;
   
   if((netif = ip_route(dest)) == NULL) {
     DEBUGF(IP_DEBUG, ("ip_output: No route to 0x%lx\n", dest->addr));
 
 #ifdef IP_STATS
-    ++stats.ip.rterr;
+    ++lwip_stats.ip.rterr;
 #endif /* IP_STATS */
-    pbuf_free(p);
+#if LWIP_SNMP > 0
+    snmp_inc_ipoutdiscards();
+#endif
     return ERR_RTE;
   }
 
@@ -664,7 +563,7 @@ ip_debug_print(struct pbuf *p)
   struct ip_hdr *iphdr = p->payload;
   u8_t *payload;
 
-  payload = (u8_t *)iphdr + IP_HLEN/sizeof(u8_t);
+  payload = (u8_t *)iphdr + IP_HLEN;
   
   DEBUGF(IP_DEBUG, ("IP header:\n"));
   DEBUGF(IP_DEBUG, ("+-------------------------------+\n"));

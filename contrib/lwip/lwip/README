@@ -1,5 +1,3 @@
-$Id: README,v 1.1 2001/12/12 10:00:52 adam Exp $
-
 lwIP is a small independent implementation of the TCP/IP protocol
 suite that has been developed by Adam Dunkels at the Computer and
 Networks Architectures (CNA) lab at the Swedish Institute of Computer
@@ -22,9 +20,40 @@ lwIP features:
  * Specialized API for enhanced performance
  * Optional Berkeley socket API
 
-lwIP is freely avaliable under a BSD-style license.
+lwIP is freely available under a BSD license.
 
-For more information, go to the lwIP homepage at 
-http://www.sics.se/~adam/lwip/
+lwIP has grown into an excellent TCP/IP stack for embedded devices,
+and developers using the stack often submit bug fixes, improvements,
+and additions to the stack to further increase its usefulness.
 
-Adam Dunkels <adam@sics.se>		    
+Development of lwIP is hosted on Savannah, a central point for
+software development, maintenance and distribution. A core team
+will improve lwIP by the use of Savannah's interface and CVS.
+
+The current lwIP CVS tree can be checked out by doing:
+  cvs -d:pserver:anoncvs@subversions.gnu.org:/cvsroot/lwip login
+  cvs -z3 -d:pserver:anoncvs@subversions.gnu.org:/cvsroot/lwip co lwip
+
+Last night's CVS tar ball can be downloaded from:
+  http://savannah.gnu.org/cvs.backups/lwip.tar.gz
+
+The current CVS tree is web-browsable:
+http://savannah.nongnu.org/cgi-bin/viewcvs/lwip/lwip/
+
+Submit patches and bugs via the lwIP project page:
+  http://savannah.nongnu.org/projects/lwip/
+
+Stable releases have not been released yet. For development we
+suggest downloading the latest CVS and keeping track of the
+lwIP mailing list.
+
+The mailing list (with searchable archives), as well as Adam
+Dunkels' papers on lwIP are at the official lwIP home page:
+  http://www.sics.se/~adam/lwip/
+
+Reading Adam's papers and browsing the mailing list archives
+is a good way to become familiar with the design of lwIP.
+
+Adam Dunkels <adam@sics.se>
+Leon Woestenberg <leon.woestenberg@gmx.net>		    
+

@@ -1,36 +1,33 @@
 /*
- * Copyright (c) 2001, Swedish Institute of Computer Science.
+ * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
  * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
- * are met: 
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
- *    documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Institute nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
- *    without specific prior written permission. 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
- * SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: tcp.h,v 1.6 2002/03/04 10:47:56 adam Exp $
  */
 #ifndef __LWIP_TCP_H__
 #define __LWIP_TCP_H__
@@ -47,6 +44,8 @@
 
 #include "lwip/err.h"
 
+#include "lwip/event.h"
+
 struct tcp_pcb;
 
 /* Functions for interfacing with TCP: */
@@ -59,6 +58,7 @@ void             tcp_tmr     (void);  /* Must be called every
 					 ms. (Typically 100 ms). */
 /* Application program's interface: */
 struct tcp_pcb * tcp_new     (void);
+struct tcp_pcb * tcp_alloc   (u8_t prio);
 
 void             tcp_arg     (struct tcp_pcb *pcb, void *arg);
 void             tcp_accept  (struct tcp_pcb *pcb,
@@ -76,6 +76,7 @@ void             tcp_poll    (struct tcp_pcb *pcb,
 void             tcp_err     (struct tcp_pcb *pcb,
 			      void (* err)(void *arg, err_t err));
 
+#define          tcp_mss(pcb)      ((pcb)->mss)
 #define          tcp_sndbuf(pcb)   ((pcb)->snd_buf)
 
 void             tcp_recved  (struct tcp_pcb *pcb, u16_t len);
@@ -91,6 +92,12 @@ err_t            tcp_close   (struct tcp_pcb *pcb);
 err_t            tcp_write   (struct tcp_pcb *pcb, const void *dataptr, u16_t len,
 			      u8_t copy);
 
+void             tcp_setprio (struct tcp_pcb *pcb, u8_t prio);
+
+#define TCP_PRIO_MIN    1
+#define TCP_PRIO_NORMAL 64
+#define TCP_PRIO_MAX    127
+
 /* It is also possible to call these two functions at the right
    intervals (instead of calling tcp_tmr()). */
 void             tcp_slowtmr (void);
@@ -101,7 +108,7 @@ void             tcp_fasttmr (void);
 void             tcp_input   (struct pbuf *p, struct netif *inp);
 /* Used within the TCP code only: */
 err_t            tcp_output  (struct tcp_pcb *pcb);
-
+void             tcp_rexmit  (struct tcp_pcb *pcb);
 
 
 
@@ -117,16 +124,26 @@ err_t            tcp_output  (struct tcp_pcb *pcb);
 #define TCP_ACK 0x10
 #define TCP_URG 0x20
 
+#define TCP_FLAGS 0x3f
+
 /* Length of the TCP header, excluding options. */
 #define TCP_HLEN 20
 
+#ifndef TCP_TMR_INTERVAL
 #define TCP_TMR_INTERVAL       100  /* The TCP timer interval in
-				       milliseconds. */
+                                       milliseconds. */
+#endif /* TCP_TMR_INTERVAL */
 
+#ifndef TCP_FAST_INTERVAL
 #define TCP_FAST_INTERVAL      200  /* the fine grained timeout in
-				       milliseconds */
+                                       milliseconds */
+#endif /* TCP_FAST_INTERVAL */
+
+#ifndef TCP_SLOW_INTERVAL
 #define TCP_SLOW_INTERVAL      500  /* the coarse grained timeout in
-				       milliseconds */
+                                       milliseconds */
+#endif /* TCP_SLOW_INTERVAL */
+
 #define TCP_FIN_WAIT_TIMEOUT 20000 /* milliseconds */
 #define TCP_SYN_RCVD_TIMEOUT 20000 /* milliseconds */
 
@@ -134,6 +151,10 @@ err_t            tcp_output  (struct tcp_pcb *pcb);
 
 #define TCP_MSL 60000  /* The maximum segment lifetime in microseconds */
 
+#ifdef PACK_STRUCT_USE_INCLUDES
+#  include "arch/bpstruct.h"
+#endif
+PACK_STRUCT_BEGIN
 struct tcp_hdr {
   PACK_STRUCT_FIELD(u16_t src);
   PACK_STRUCT_FIELD(u16_t dest);
@@ -144,6 +165,10 @@ struct tcp_hdr {
   PACK_STRUCT_FIELD(u16_t chksum);
   PACK_STRUCT_FIELD(u16_t urgp);
 } PACK_STRUCT_STRUCT;
+PACK_STRUCT_END
+#ifdef PACK_STRUCT_USE_INCLUDES
+#  include "arch/epstruct.h"
+#endif
 
 #define TCPH_OFFSET(hdr) (NTOHS((hdr)->_offset_flags) >> 8)
 #define TCPH_FLAGS(hdr) (NTOHS((hdr)->_offset_flags) & 0xff)
@@ -172,13 +197,8 @@ enum tcp_state {
 /* the TCP protocol control block */
 struct tcp_pcb {
   struct tcp_pcb *next;   /* for the linked list */
-
-  enum tcp_state state;   /* TCP state */
-
+  u8_t prio;
   void *callback_arg;
-  
-  /* Function to call when a listener has been connected. */
-  err_t (* accept)(void *arg, struct tcp_pcb *newpcb, err_t err);
 
   struct ip_addr local_ip;
   u16_t local_port;
@@ -190,26 +210,29 @@ struct tcp_pcb {
   u32_t rcv_nxt;   /* next seqno expected */
   u16_t rcv_wnd;   /* receiver window */
 
+  enum tcp_state state;   /* TCP state */
+  
   /* Timers */
-  u16_t tmr;
-
+  u32_t tmr;
+  u8_t polltmr, pollinterval;
+  
   /* Retransmission timer. */
   u8_t rtime;
   
   u16_t mss;   /* maximum segment size */
 
   u8_t flags;
-#define TF_ACK_DELAY 0x01   /* Delayed ACK. */
-#define TF_ACK_NOW   0x02   /* Immediate ACK. */
-#define TF_INFR      0x04   /* In fast recovery. */
-#define TF_RESET     0x08   /* Connection was reset. */
-#define TF_CLOSED    0x10   /* Connection was sucessfully closed. */
-#define TF_GOT_FIN   0x20   /* Connection was closed by the remote end. */
+#define TF_ACK_DELAY 0x01U   /* Delayed ACK. */
+#define TF_ACK_NOW   0x02U   /* Immediate ACK. */
+#define TF_INFR      0x04U   /* In fast recovery. */
+#define TF_RESET     0x08U   /* Connection was reset. */
+#define TF_CLOSED    0x10U   /* Connection was sucessfully closed. */
+#define TF_GOT_FIN   0x20U   /* Connection was closed by the remote end. */
   
   /* RTT estimation variables. */
   u16_t rttest; /* RTT estimate in 500ms ticks */
   u32_t rtseq;  /* sequence number being timed */
-  s32_t sa, sv;
+  s16_t sa, sv;
 
   u16_t rto;    /* retransmission time-out */
   u8_t nrtx;    /* number of retransmissions */
@@ -226,30 +249,15 @@ struct tcp_pcb {
   u32_t snd_nxt,       /* next seqno to be sent */
     snd_max,       /* Highest seqno sent. */
     snd_wnd,       /* sender window */
-    snd_wl1, snd_wl2,
-    snd_lbb;      
+    snd_wl1, snd_wl2, /* Sequence and acknowledgement numbers of last
+			 window update. */
+    snd_lbb;       /* Sequence number of next byte to be buffered. */
 
-  u16_t snd_buf;   /* Avaliable buffer space for sending. */
-  u8_t snd_queuelen;
-
-  /* Function to be called when more send buffer space is avaliable. */
-  err_t (* sent)(void *arg, struct tcp_pcb *pcb, u16_t space);
   u16_t acked;
   
-  /* Function to be called when (in-sequence) data has arrived. */
-  err_t (* recv)(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err);
-  struct pbuf *recv_data;
-
-  /* Function to be called when a connection has been set up. */
-  err_t (* connected)(void *arg, struct tcp_pcb *pcb, err_t err);
-
-  /* Function which is called periodically. */
-  err_t (* poll)(void *arg, struct tcp_pcb *pcb);
-
-  /* Function to be called whenever a fatal error occurs. */
-  void (* errf)(void *arg, err_t err);
+  u16_t snd_buf;   /* Avaliable buffer space for sending (in bytes). */
+  u8_t snd_queuelen; /* Avaliable buffer space for sending (in tcp_segs). */
   
-  u8_t polltmr, pollinterval;
   
   /* These are ordered by sequence number: */
   struct tcp_seg *unsent;   /* Unsent (queued) segments. */
@@ -258,23 +266,76 @@ struct tcp_pcb {
   struct tcp_seg *ooseq;    /* Received out of sequence segments. */
 #endif /* TCP_QUEUE_OOSEQ */
 
+#if LWIP_CALLBACK_API
+  /* Function to be called when more send buffer space is avaliable. */
+  err_t (* sent)(void *arg, struct tcp_pcb *pcb, u16_t space);
+  
+  /* Function to be called when (in-sequence) data has arrived. */
+  err_t (* recv)(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err);
+
+  /* Function to be called when a connection has been set up. */
+  err_t (* connected)(void *arg, struct tcp_pcb *pcb, err_t err);
+
+  /* Function to call when a listener has been connected. */
+  err_t (* accept)(void *arg, struct tcp_pcb *newpcb, err_t err);
+
+  /* Function which is called periodically. */
+  err_t (* poll)(void *arg, struct tcp_pcb *pcb);
+
+  /* Function to be called whenever a fatal error occurs. */
+  void (* errf)(void *arg, err_t err);
+#endif /* LWIP_CALLBACK_API */
 };
 
 struct tcp_pcb_listen {  
   struct tcp_pcb_listen *next;   /* for the linked list */
-  
-  enum tcp_state state;   /* TCP state */
-
+  u8_t prio;
   void *callback_arg;
   
-  /* Function to call when a listener has been connected. */
-  void (* accept)(void *arg, struct tcp_pcb *newpcb);
-
   struct ip_addr local_ip;
-  u16_t local_port;
+  u16_t local_port;  
+
+#if LWIP_CALLBACK_API
+  /* Function to call when a listener has been connected. */
+  err_t (* accept)(void *arg, struct tcp_pcb *newpcb, err_t err);
+#endif /* LWIP_CALLBACK_API */
 };
 
-/* This structure is used to repressent TCP segments. */
+#if LWIP_EVENT_API
+#define TCP_EVENT_ACCEPT(pcb,err,ret)    ret = lwip_tcp_event((pcb)->callback_arg, (pcb),\
+						    LWIP_EVENT_ACCEPT, NULL, 0, err)
+#define TCP_EVENT_SENT(pcb,space,ret) ret = lwip_tcp_event((pcb)->callback_arg, (pcb),\
+					   	    LWIP_EVENT_SENT, NULL, space, ERR_OK)
+#define TCP_EVENT_RECV(pcb,p,err,ret) ret = lwip_tcp_event((pcb)->callback_arg, (pcb),\
+						    LWIP_EVENT_RECV, (p), 0, (err))
+#define TCP_EVENT_CONNECTED(pcb,err,ret) ret = lwip_tcp_event((pcb)->callback_arg, (pcb),\
+						    LWIP_EVENT_CONNECTED, NULL, 0, (err))
+#define TCP_EVENT_POLL(pcb,ret)       ret = lwip_tcp_event((pcb)->callback_arg, (pcb),\
+						    LWIP_EVENT_POLL, NULL, 0, ERR_OK)
+#define TCP_EVENT_ERR(errf,arg,err)  lwip_tcp_event((arg), NULL, \
+						    LWIP_EVENT_ERR, NULL, 0, (err))
+#else /* LWIP_EVENT_API */
+#define TCP_EVENT_ACCEPT(pcb,err,ret)     \
+                        if((pcb)->accept != NULL) \
+                        (ret = (pcb)->accept((pcb)->callback_arg,(pcb),(err)))
+#define TCP_EVENT_SENT(pcb,space,ret) \
+                        if((pcb)->sent != NULL) \
+                        (ret = (pcb)->sent((pcb)->callback_arg,(pcb),(space)))
+#define TCP_EVENT_RECV(pcb,p,err,ret) \
+                        if((pcb)->recv != NULL) \
+                        (ret = (pcb)->recv((pcb)->callback_arg,(pcb),(p),(err)))
+#define TCP_EVENT_CONNECTED(pcb,err,ret) \
+                        if((pcb)->connected != NULL) \
+                        (ret = (pcb)->connected((pcb)->callback_arg,(pcb),(err)))
+#define TCP_EVENT_POLL(pcb,ret) \
+                        if((pcb)->poll != NULL) \
+                        (ret = (pcb)->poll((pcb)->callback_arg,(pcb)))
+#define TCP_EVENT_ERR(errf,arg,err) \
+                        if((errf) != NULL) \
+                        (errf)((arg),(err))
+#endif /* LWIP_EVENT_API */
+
+/* This structure is used to repressent TCP segments when queued. */
 struct tcp_seg {
   struct tcp_seg *next;    /* used when putting segements on a queue */
   struct pbuf *p;          /* buffer containing data + TCP header */
@@ -293,6 +354,7 @@ u8_t tcp_seg_free(struct tcp_seg *seg);
 struct tcp_seg *tcp_seg_copy(struct tcp_seg *seg);
 
 #define tcp_ack(pcb)     if((pcb)->flags & TF_ACK_DELAY) { \
+                            (pcb)->flags &= ~TF_ACK_DELAY; \
                             (pcb)->flags |= TF_ACK_NOW; \
                             tcp_output(pcb); \
                          } else { \
@@ -315,6 +377,7 @@ void tcp_rst(u32_t seqno, u32_t ackno,
 
 u32_t tcp_next_iss(void);
 
+extern struct tcp_pcb *tcp_input_pcb;
 extern u32_t tcp_ticks;
 
 #if TCP_DEBUG || TCP_INPUT_DEBUG || TCP_OUTPUT_DEBUG
@@ -346,7 +409,7 @@ extern struct tcp_pcb *tcp_tmp_pcb;      /* Only used for temporary storage. */
 
 /* Define two macros, TCP_REG and TCP_RMV that registers a TCP PCB
    with a PCB list or removes a PCB from a list, respectively. */
-#ifdef LWIP_DEBUG
+#if 0
 #define TCP_REG(pcbs, npcb) do {\
                             DEBUGF(TCP_DEBUG, ("TCP_REG %p local port %d\n", npcb, npcb->local_port)); \
                             for(tcp_tmp_pcb = *pcbs; \
@@ -357,7 +420,7 @@ extern struct tcp_pcb *tcp_tmp_pcb;      /* Only used for temporary storage. */
                             ASSERT("TCP_REG: pcb->state != CLOSED", npcb->state != CLOSED); \
                             npcb->next = *pcbs; \
                             ASSERT("TCP_REG: npcb->next != npcb", npcb->next != npcb); \
-                            *pcbs = npcb; \
+                            *(pcbs) = npcb; \
                             ASSERT("TCP_RMV: tcp_pcbs sane", tcp_pcbs_sane()); \
                             } while(0)
 #define TCP_RMV(pcbs, npcb) do { \
@@ -379,11 +442,11 @@ extern struct tcp_pcb *tcp_tmp_pcb;      /* Only used for temporary storage. */
 #else /* LWIP_DEBUG */
 #define TCP_REG(pcbs, npcb) do { \
                             npcb->next = *pcbs; \
-                            *pcbs = npcb; \
+                            *(pcbs) = npcb; \
                             } while(0)
 #define TCP_RMV(pcbs, npcb) do { \
-                            if(*pcbs == npcb) { \
-                               *pcbs = (*pcbs)->next; \
+                            if(*(pcbs) == npcb) { \
+                               (*(pcbs)) = (*pcbs)->next; \
                             } else for(tcp_tmp_pcb = *pcbs; tcp_tmp_pcb != NULL; tcp_tmp_pcb = tcp_tmp_pcb->next) { \
                                if(tcp_tmp_pcb->next != NULL && tcp_tmp_pcb->next == npcb) { \
                                   tcp_tmp_pcb->next = npcb->next; \

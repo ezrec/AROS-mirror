@@ -1,36 +1,34 @@
 /*
- * Copyright (c) 2001, Swedish Institute of Computer Science.
+ * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
  * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
- * are met: 
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
- *    documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Institute nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
- *    without specific prior written permission. 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
- * SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: udp.c,v 1.9 2002/03/04 10:47:56 adam Exp $
+ * $Id: udp.c,v 1.6 2002/12/19 09:04:58 jani Exp $
  */
 
 /*-----------------------------------------------------------------------------------*/
@@ -52,13 +50,18 @@
 #include "lwip/stats.h"
 
 #include "arch/perf.h"
+#if LWIP_SNMP > 0
+#  include "snmp.h"
+#endif
 
 /*-----------------------------------------------------------------------------------*/
 
 /* The list of UDP PCBs. */
+#if LWIP_UDP
 static struct udp_pcb *udp_pcbs = NULL;
 
 static struct udp_pcb *pcb_cache = NULL;
+#endif /* LWIP_UDP */
 
 #if UDP_DEBUG
 int udp_debug_print(struct udp_hdr *udphdr);
@@ -68,7 +71,12 @@ int udp_debug_print(struct udp_hdr *udphdr);
 void
 udp_init(void)
 {
+#if LWIP_UDP
+  udp_pcbs = pcb_cache = NULL;
+#endif /* LWIP_UDP */
 }
+
+#if LWIP_UDP
 /*-----------------------------------------------------------------------------------*/
 /* udp_lookup:
  *
@@ -86,7 +94,7 @@ udp_lookup(struct ip_hdr *iphdr, struct netif *inp)
   
   PERF_START;
   
-  udphdr = (struct udp_hdr *)(u8_t *)iphdr + IPH_HL(iphdr) * 4/sizeof(u8_t);
+  udphdr = (struct udp_hdr *)(u8_t *)iphdr + IPH_HL(iphdr) * 4;
 
   src = NTOHS(udphdr->src);
   dest = NTOHS(udphdr->dest);
@@ -115,7 +123,8 @@ udp_lookup(struct ip_hdr *iphdr, struct netif *inp)
 
     if(pcb == NULL) {
       for(pcb = udp_pcbs; pcb != NULL; pcb = pcb->next) {
-	if(pcb->local_port == dest &&
+	if(pcb->remote_port == 0 &&
+	   pcb->local_port == dest &&
 	   (ip_addr_isany(&pcb->remote_ip) ||
 	    ip_addr_cmp(&(pcb->remote_ip), &(iphdr->src))) &&
 	   (ip_addr_isany(&pcb->local_ip) ||
@@ -147,7 +156,7 @@ udp_input(struct pbuf *p, struct netif *inp)
   PERF_START;
   
 #ifdef UDP_STATS
-  ++stats.udp.recv;
+  ++lwip_stats.udp.recv;
 #endif /* UDP_STATS */
 
   iphdr = p->payload;
@@ -211,9 +220,12 @@ udp_input(struct pbuf *p, struct netif *inp)
 			    IP_PROTO_UDPLITE, ntohs(udphdr->len)) != 0) {
 	DEBUGF(UDP_DEBUG, ("udp_input: UDP Lite datagram discarded due to failing checksum\n"));
 #ifdef UDP_STATS
-	++stats.udp.chkerr;
-	++stats.udp.drop;
+	++lwip_stats.udp.chkerr;
+	++lwip_stats.udp.drop;
 #endif /* UDP_STATS */
+#if LWIP_SNMP > 0
+    snmp_inc_udpinerrors();
+#endif
 	pbuf_free(p);
 	goto end;
       }
@@ -225,9 +237,12 @@ udp_input(struct pbuf *p, struct netif *inp)
 	  DEBUGF(UDP_DEBUG, ("udp_input: UDP datagram discarded due to failing checksum\n"));
 	  
 #ifdef UDP_STATS
-	  ++stats.udp.chkerr;
-	  ++stats.udp.drop;
+	  ++lwip_stats.udp.chkerr;
+	  ++lwip_stats.udp.drop;
 #endif /* UDP_STATS */
+#if LWIP_SNMP > 0
+    snmp_inc_udpinerrors();
+#endif
 	  pbuf_free(p);
 	  goto end;
 	}
@@ -235,6 +250,9 @@ udp_input(struct pbuf *p, struct netif *inp)
     }
     pbuf_header(p, -UDP_HLEN);    
     if(pcb != NULL) {
+#if LWIP_SNMP > 0
+      snmp_inc_udpindatagrams();
+#endif
       pcb->recv(pcb->recv_arg, pcb, p, &(iphdr->src), src);
     } else {
       DEBUGF(UDP_DEBUG, ("udp_input: not for us.\n"));
@@ -254,9 +272,12 @@ udp_input(struct pbuf *p, struct netif *inp)
 	icmp_dest_unreach(p, ICMP_DUR_PORT);
       }
 #ifdef UDP_STATS
-      ++stats.udp.proterr;
-      ++stats.udp.drop;
+      ++lwip_stats.udp.proterr;
+      ++lwip_stats.udp.drop;
 #endif /* UDP_STATS */
+#if LWIP_SNMP > 0
+    snmp_inc_udpnoports();
+#endif
       pbuf_free(p);
     }
   } else {
@@ -274,16 +295,23 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
   struct netif *netif;
   struct ip_addr *src_ip;
   err_t err;
-  struct pbuf *q;
+  struct pbuf *hdr;
+
+
+  DEBUGF(UDP_DEBUG, ("udp_send"));
+  /* hdr will point to the UDP header pbuf if an extra header pbuf has
+     to be allocated. */
+  hdr = NULL;
   
   if(pbuf_header(p, UDP_HLEN)) {
-    q = pbuf_alloc(PBUF_IP, UDP_HLEN, PBUF_RAM);
-    if(q == NULL) {
+    hdr = pbuf_alloc(PBUF_IP, UDP_HLEN, PBUF_RAM);
+    if(hdr == NULL) {
       return ERR_MEM;
     }
-    pbuf_chain(q, p);
-    p = q;
+    pbuf_chain(hdr, p);
+    p = hdr;
   }
+  DEBUGF(UDP_DEBUG, ("udp_send: got pbuf"));
 
   udphdr = p->payload;
   udphdr->src = htons(pcb->local_port);
@@ -293,7 +321,7 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
   if((netif = ip_route(&(pcb->remote_ip))) == NULL) {
     DEBUGF(UDP_DEBUG, ("udp_send: No route to 0x%lx\n", pcb->remote_ip.addr));
 #ifdef UDP_STATS
-    ++stats.udp.rterr;
+    ++lwip_stats.udp.rterr;
 #endif /* UDP_STATS */
     return ERR_RTE;
   }
@@ -307,6 +335,7 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
   DEBUGF(UDP_DEBUG, ("udp_send: sending datagram of length %d\n", p->tot_len));
   
   if(pcb->flags & UDP_FLAGS_UDPLITE) {
+    DEBUGF(UDP_DEBUG, ("udp_send: UDP LITE packet length %u", p->tot_len));
     udphdr->len = htons(pcb->chksum_len);
     /* calculate checksum */
     udphdr->chksum = inet_chksum_pseudo(p, src_ip, &(pcb->remote_ip),
@@ -315,7 +344,11 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
       udphdr->chksum = 0xffff;
     }
     err = ip_output_if(p, src_ip, &pcb->remote_ip, UDP_TTL, IP_PROTO_UDPLITE, netif);    
+#if LWIP_SNMP > 0
+    snmp_inc_udpoutdatagrams();
+#endif
   } else {
+    DEBUGF(UDP_DEBUG, ("udp_send: UDP packet length %u", p->tot_len));
     udphdr->len = htons(p->tot_len);
     /* calculate checksum */
     if((pcb->flags & UDP_FLAGS_NOCHKSUM) == 0) {
@@ -325,11 +358,21 @@ udp_send(struct udp_pcb *pcb, struct pbuf *p)
 	udphdr->chksum = 0xffff;
       }
     }
+    DEBUGF(UDP_DEBUG, ("udp_send: UDP checksum %x", udphdr->chksum));
+#if LWIP_SNMP > 0
+    snmp_inc_udpoutdatagrams();
+#endif
+    DEBUGF(UDP_DEBUG, ("udp_send: ip_output_if(,,,,IP_PROTO_UDP,)"));
     err = ip_output_if(p, src_ip, &pcb->remote_ip, UDP_TTL, IP_PROTO_UDP, netif);    
+  }
+
+  if(hdr != NULL) {
+    pbuf_dechain(hdr);
+    pbuf_free(hdr);
   }
   
 #ifdef UDP_STATS
-  ++stats.udp.xmit;
+  ++lwip_stats.udp.xmit;
 #endif /* UDP_STATS */
   return err;
 }
@@ -407,7 +450,7 @@ udp_new(void) {
   struct udp_pcb *pcb;
   pcb = memp_malloc(MEMP_UDP_PCB);
   if(pcb != NULL) {
-    bzero(pcb, sizeof(struct udp_pcb));
+    memset(pcb, 0, sizeof(struct udp_pcb));
     return pcb;
   }
   return NULL;
@@ -430,7 +473,7 @@ udp_debug_print(struct udp_hdr *udphdr)
 }
 #endif /* UDP_DEBUG */
 /*-----------------------------------------------------------------------------------*/
-
+#endif /* LWIP_UDP */
 
 
 

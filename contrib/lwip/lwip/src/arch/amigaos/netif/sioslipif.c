@@ -125,7 +125,7 @@ sioslipif_output(struct netif *netif, struct pbuf *p, struct ip_addr *ipaddr)
     }
   }
 #ifdef LINK_STATS
-  stats.link.xmit++;
+  lwip_stats.link.xmit++;
 #endif /* LINK_STATS */  
   SIO_SEND(slip_end);
 
@@ -155,7 +155,7 @@ sioslipif_input(void)
         /* Received whole packet. */
         pbuf_realloc(q, recved);
 #ifdef LINK_STATS
-        stats.link.recv++;
+        lwip_stats.link.recv++;
 #endif /* LINK_STATS */         
         return q;
       }
@@ -176,7 +176,7 @@ sioslipif_input(void)
         p = pbuf_alloc(PBUF_LINK, 128, PBUF_POOL);
 #ifdef LINK_STATS           
         if(p == NULL) {
-          stats.link.drop++;
+          lwip_stats.link.drop++;
         }
 #endif /* LINK_STATS */                  
         if(q != NULL) {

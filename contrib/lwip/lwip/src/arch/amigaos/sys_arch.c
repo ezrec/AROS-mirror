@@ -55,6 +55,7 @@
 
 #include "lwip/sys.h"
 #include "lwip/def.h"
+#include "lwip/stats.h"
 
 struct PtrMessage
 {
@@ -297,11 +298,11 @@ sys_mbox_t sys_mbox_new(void)
     mbox->first = mbox->last = 0;
     mbox->mail = sys_sem_new(0);
     mbox->mutex = sys_sem_new(1);
-  
+
 #ifdef SYS_STATS
-    stats.sys.mbox.used++;
-    if(stats.sys.mbox.used > stats.sys.mbox.max) {
-	stats.sys.mbox.max = stats.sys.mbox.used;
+    lwip_stats.sys.mbox.used++;
+    if(lwip_stats.sys.mbox.used > lwip_stats.sys.mbox.max) {
+      lwip_stats.sys.mbox.max = lwip_stats.sys.mbox.used;
     }
 #endif /* SYS_STATS */
 
@@ -315,7 +316,7 @@ void sys_mbox_free(sys_mbox_t mbox)
 
     if(mbox != SYS_MBOX_NULL) {
 #ifdef SYS_STATS
-	stats.sys.mbox.used--;
+	lwip_stats.sys.mbox.used--;
 #endif /* SYS_STATS */
 	sys_sem_wait(mbox->mutex);
     

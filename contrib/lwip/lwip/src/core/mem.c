@@ -1,36 +1,33 @@
 /*
- * Copyright (c) 2001, Swedish Institute of Computer Science.
+ * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
  * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
- * are met: 
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
- *    documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Institute nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
- *    without specific prior written permission. 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
- * SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: mem.c,v 1.4 2002/02/08 13:30:00 adam Exp $
  */
 
 /*-----------------------------------------------------------------------------------*/
@@ -51,24 +48,21 @@
 
 #include "lwip/stats.h"
 
-#if MEM_RECLAIM
-struct mem_reclaim_ {
-  struct mem_reclaim_ *next;
-  mem_reclaim_func f;
-  void *arg;  
-};
-#endif /* MEM_RECLAIM */
-
 struct mem {
   mem_size_t next, prev;
+#if MEM_ALIGNMENT == 1
   u8_t used;
-#if MEM_ALIGNMENT == 2
-  u8_t dummy;
-#endif /* MEM_ALIGNEMNT == 2 */
-};
+#elif MEM_ALIGNMENT == 2
+  u16_t used;
+#elif MEM_ALIGNMENT == 4
+  u32_t used;
+#else
+#error "unhandled MEM_ALIGNMENT size"
+#endif /* MEM_ALIGNMENT */
+}; 
 
 static struct mem *ram_end;
-static u8_t ram[MEM_ALIGN_SIZE(MEM_SIZE + sizeof(struct mem))];
+static u8_t ram[MEM_SIZE + sizeof(struct mem) + MEM_ALIGNMENT];
 
 #define MIN_SIZE 12
 #define SIZEOF_STRUCT_MEM MEM_ALIGN_SIZE(sizeof(struct mem))
@@ -78,10 +72,6 @@ static u8_t ram[MEM_ALIGN_SIZE(MEM_SIZE + sizeof(struct mem))];
 
 
 static struct mem *lfree;   /* pointer to the lowest free block */
-
-#if MEM_RECLAIM
-static struct mem_reclaim_ *mrlist;
-#endif /* MEM_RECLAIM */
 
 static sys_sem_t mem_sem;
 
@@ -125,7 +115,7 @@ mem_init(void)
 {
   struct mem *mem;
 
-  bzero(ram, MEM_SIZE);
+  memset(ram, 0, MEM_SIZE);
   mem = (struct mem *)ram;
   mem->next = MEM_SIZE;
   mem->prev = 0;
@@ -139,46 +129,9 @@ mem_init(void)
 
   lfree = (struct mem *)ram;
 
-#if MEM_RECLAIM
-  mrlist = NULL;
-#endif /* MEM_RECLAIM */
-  
 #ifdef MEM_STATS
-  stats.mem.avail = MEM_SIZE;
+  lwip_stats.mem.avail = MEM_SIZE;
 #endif /* MEM_STATS */
-}
-/*-----------------------------------------------------------------------------------*/
-#if MEM_RECLAIM
-void
-mem_reclaim(unsigned int size)
-{
-  struct mem_reclaim_ *mr;
-  int rec;
-
-  rec = 0;
-      
-  for(mr = mrlist; mr != NULL; mr = mr->next) {
-    DEBUGF(MEM_DEBUG, ("mem_malloc: calling reclaimer\n"));
-    rec += mr->f(mr->arg, size);
-  }
-#ifdef MEM_STATS
-  stats.mem.reclaimed += rec;
-#endif /* MEM_STATS */
-}
-#endif /* MEM_RECLAIM */
-/*-----------------------------------------------------------------------------------*/
-void *
-mem_malloc2(mem_size_t size)
-{
-  void *mem;
-  mem = mem_malloc(size);
-#if MEM_RECLAIM      
-  if(mem == NULL) {
-    mem_reclaim(size);    
-    mem = mem_malloc(size);
-  }
-#endif /* MEM_RECLAIM */
-  return mem;
 }
 /*-----------------------------------------------------------------------------------*/
 void *
@@ -220,16 +173,13 @@ mem_malloc(mem_size_t size)
       mem2->used = 0;      
       mem->used = 1;
 #ifdef MEM_STATS
-      stats.mem.used += size;
-      /*      if(stats.mem.max < stats.mem.used) {
-        stats.mem.max = stats.mem.used;
+      lwip_stats.mem.used += size;
+      /*      if(lwip_stats.mem.max < lwip_stats.mem.used) {
+        lwip_stats.mem.max = lwip_stats.mem.used;
 	} */
-      if(stats.mem.max < ptr2) {
-        stats.mem.max = ptr2;
+      if(lwip_stats.mem.max < ptr2) {
+        lwip_stats.mem.max = ptr2;
       }      
-#ifdef MEM_PERF
-      mem_perf_output();
-#endif /* MEM_PERF */  
 #endif /* MEM_STATS */
 
       if(mem == lfree) {
@@ -249,7 +199,7 @@ mem_malloc(mem_size_t size)
   }
   DEBUGF(MEM_DEBUG, ("mem_malloc: could not allocate %d bytes\n", (int)size));
 #ifdef MEM_STATS
-  ++stats.mem.err;
+  ++lwip_stats.mem.err;
 #endif /* MEM_STATS */  
   sys_sem_signal(mem_sem);
   return NULL;
@@ -273,7 +223,7 @@ mem_free(void *rmem)
   if((u8_t *)rmem < (u8_t *)ram || (u8_t *)rmem >= (u8_t *)ram_end) {
     DEBUGF(MEM_DEBUG, ("mem_free: illegal memory\n"));
 #ifdef MEM_STATS
-    ++stats.mem.err;
+    ++lwip_stats.mem.err;
 #endif /* MEM_STATS */
     return;
   }
@@ -288,10 +238,7 @@ mem_free(void *rmem)
   }
   
 #ifdef MEM_STATS
-  stats.mem.used -= mem->next - ((u8_t *)mem - ram) - SIZEOF_STRUCT_MEM;
-#ifdef MEM_PERF
-  mem_perf_output();
-#endif /* MEM_PERF */
+  lwip_stats.mem.used -= mem->next - ((u8_t *)mem - ram) - SIZEOF_STRUCT_MEM;
   
 #endif /* MEM_STATS */
   plug_holes(mem);
@@ -306,7 +253,7 @@ mem_reallocm(void *rmem, mem_size_t newsize)
   if(nmem == NULL) {
     return mem_realloc(rmem, newsize);
   }
-  bcopy(rmem, nmem, newsize);
+  memcpy(nmem, rmem, newsize);
   mem_free(rmem);
   return nmem;
 }
@@ -324,7 +271,7 @@ mem_realloc(void *rmem, mem_size_t newsize)
 	 (u8_t *)rmem < (u8_t *)ram_end);
   
   if((u8_t *)rmem < (u8_t *)ram || (u8_t *)rmem >= (u8_t *)ram_end) {
-    DEBUGF(MEM_DEBUG, ("mem_free: illegal memory\n"));
+    DEBUGF(MEM_DEBUG, ("mem_realloc: illegal memory\n"));
     return rmem;
   }
   mem = (struct mem *)((u8_t *)rmem - SIZEOF_STRUCT_MEM);
@@ -333,10 +280,7 @@ mem_realloc(void *rmem, mem_size_t newsize)
 
   size = mem->next - ptr - SIZEOF_STRUCT_MEM;
 #ifdef MEM_STATS
-  stats.mem.used -= (size - newsize);
-#ifdef MEM_PERF
-  mem_perf_output();
-#endif /* MEM_PERF */ 
+  lwip_stats.mem.used -= (size - newsize);
 #endif /* MEM_STATS */
   
   if(newsize + SIZEOF_STRUCT_MEM + MIN_SIZE < size) {
@@ -355,21 +299,4 @@ mem_realloc(void *rmem, mem_size_t newsize)
   sys_sem_signal(mem_sem);  
   return rmem;
 }
-/*-----------------------------------------------------------------------------------*/
-#if MEM_RECLAIM
-void
-mem_register_reclaim(mem_reclaim_func f, void *arg)
-{
-  struct mem_reclaim_ *mr;
-
-  mr = mem_malloc(sizeof(struct mem_reclaim_));
-  if(mr == NULL) {
-    return;
-  }
-  mr->next = mrlist;
-  mrlist = mr;
-  mr->f = f;
-  mr->arg = arg;
-}     
-#endif /* MEM_RECLAIM */
 /*-----------------------------------------------------------------------------------*/

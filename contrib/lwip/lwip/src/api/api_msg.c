@@ -1,36 +1,33 @@
 /*
- * Copyright (c) 2001, Swedish Institute of Computer Science.
+ * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
  * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
- * are met: 
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
- *    documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Institute nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
- *    without specific prior written permission. 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
- * SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: api_msg.c,v 1.3 2002/07/07 18:57:57 sebauer Exp $
  */
 
 #include "lwip/debug.h"
@@ -52,7 +49,7 @@ recv_tcp(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
     pbuf_free(p);
     return ERR_VAL;
   }
-  
+
   if(conn->recvmbox != SYS_MBOX_NULL) {
     conn->err = err;
     sys_mbox_post(conn->recvmbox, p);
@@ -60,6 +57,7 @@ recv_tcp(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
   return ERR_OK;
 }
 /*-----------------------------------------------------------------------------------*/
+#if LWIP_UDP
 static void
 recv_udp(void *arg, struct udp_pcb *pcb, struct pbuf *p,
 	 struct ip_addr *addr, u16_t port)
@@ -89,37 +87,7 @@ recv_udp(void *arg, struct udp_pcb *pcb, struct pbuf *p,
     sys_mbox_post(conn->recvmbox, buf);
   }
 }
-/*-----------------------------------------------------------------------------------*/
-static void
-recv_raw(void *arg, struct raw_pcb *pcb, struct pbuf *p,
-	 struct ip_addr *addr)
-{
-  struct netbuf *buf;
-  struct netconn *conn;
-
-  conn = arg;
-  
-  if(conn == NULL) {
-    pbuf_free(p);
-    return;
-  }
-
-  if(conn->recvmbox != SYS_MBOX_NULL) {
-    buf = memp_mallocp(MEMP_NETBUF);
-    if(buf == NULL) {
-      pbuf_free(p);
-      return;
-    } else {
-      buf->p = p;
-      buf->ptr = p;
-      buf->fromaddr = addr;
-      buf->fromport = conn->pcb.raw->protocol;
-    }
-    
-    sys_mbox_post(conn->recvmbox, buf);
-  }
-}
-
+#endif /* LWIP_UDP */
 /*-----------------------------------------------------------------------------------*/
 static err_t
 poll_tcp(void *arg, struct tcp_pcb *pcb)
@@ -238,10 +206,7 @@ do_delconn(struct api_msg_msg *msg)
 {
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
-    case NETCONN_RAW:
-      msg->conn->pcb.raw->recv_arg = NULL;
-      raw_remove(msg->conn->pcb.raw);
-      break;
+#if LWIP_UDP
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
@@ -250,16 +215,17 @@ do_delconn(struct api_msg_msg *msg)
       msg->conn->pcb.udp->recv_arg = NULL;
       udp_remove(msg->conn->pcb.udp);
       break;
+#endif /* LWIP_UDP */
     case NETCONN_TCP:
-      tcp_arg(msg->conn->pcb.tcp, NULL);
-      tcp_sent(msg->conn->pcb.tcp, NULL);
-      tcp_recv(msg->conn->pcb.tcp, NULL);
-      tcp_accept(msg->conn->pcb.tcp, NULL);
-      tcp_poll(msg->conn->pcb.tcp, NULL, 0);
-      tcp_err(msg->conn->pcb.tcp, NULL);
       if(msg->conn->pcb.tcp->state == LISTEN) {
+	tcp_accept(msg->conn->pcb.tcp, NULL);	
 	tcp_close(msg->conn->pcb.tcp);
       } else {
+	tcp_arg(msg->conn->pcb.tcp, NULL);
+	tcp_sent(msg->conn->pcb.tcp, NULL);
+	tcp_recv(msg->conn->pcb.tcp, NULL);	
+	tcp_poll(msg->conn->pcb.tcp, NULL, 0);
+	tcp_err(msg->conn->pcb.tcp, NULL);
 	if(tcp_close(msg->conn->pcb.tcp) != ERR_OK) {
 	  tcp_abort(msg->conn->pcb.tcp);
 	}
@@ -275,10 +241,9 @@ do_delconn(struct api_msg_msg *msg)
 static void
 do_bind(struct api_msg_msg *msg)
 {
-  if (msg->conn->type == NETCONN_RAW) return;
-
   if(msg->conn->pcb.tcp == NULL) {
     switch(msg->conn->type) {
+#if LWIP_UDP
     case NETCONN_UDPLITE:
       msg->conn->pcb.udp = udp_new();
       udp_setflags(msg->conn->pcb.udp, UDP_FLAGS_UDPLITE);
@@ -293,6 +258,7 @@ do_bind(struct api_msg_msg *msg)
       msg->conn->pcb.udp = udp_new();
       udp_recv(msg->conn->pcb.udp, recv_udp, msg->conn);
       break;
+#endif /* LWIP_UDP */
     case NETCONN_TCP:
       msg->conn->pcb.tcp = tcp_new();
       setup_tcp(msg->conn);
@@ -300,6 +266,7 @@ do_bind(struct api_msg_msg *msg)
     }
   }
   switch(msg->conn->type) {
+#if LWIP_UDP
   case NETCONN_UDPLITE:
     /* FALLTHROUGH */
   case NETCONN_UDPNOCHKSUM:
@@ -307,6 +274,7 @@ do_bind(struct api_msg_msg *msg)
   case NETCONN_UDP:
     udp_bind(msg->conn->pcb.udp, msg->msg.bc.ipaddr, msg->msg.bc.port);
     break;
+#endif /* LWIP_UDP */
   case NETCONN_TCP:
     msg->conn->err = tcp_bind(msg->conn->pcb.tcp,
 			      msg->msg.bc.ipaddr, msg->msg.bc.port);
@@ -341,15 +309,7 @@ do_connect(struct api_msg_msg *msg)
 {
   if(msg->conn->pcb.tcp == NULL) {
     switch(msg->conn->type) {
-    case NETCONN_RAW:
-      msg->conn->pcb.raw = raw_new();
-      if(msg->conn->pcb.raw == NULL) {
-	msg->conn->err = ERR_MEM;
-	sys_mbox_post(msg->conn->mbox, NULL);
-	return;
-      }
-      raw_recv(msg->conn->pcb.raw, recv_raw, msg->conn);
-      break;
+#if LWIP_UDP
     case NETCONN_UDPLITE:
       msg->conn->pcb.udp = udp_new();
       if(msg->conn->pcb.udp == NULL) {
@@ -379,6 +339,7 @@ do_connect(struct api_msg_msg *msg)
       }
       udp_recv(msg->conn->pcb.udp, recv_udp, msg->conn);
       break;
+#endif /* LWIP_UDP */
     case NETCONN_TCP:
       msg->conn->pcb.tcp = tcp_new();      
       if(msg->conn->pcb.tcp == NULL) {
@@ -390,10 +351,7 @@ do_connect(struct api_msg_msg *msg)
     }
   }
   switch(msg->conn->type) {
-  case NETCONN_RAW:
-    raw_connect(msg->conn->pcb.raw, msg->msg.bc.ipaddr, msg->msg.bc.port); /* the last arg is actually the protocol, not a port */
-    sys_mbox_post(msg->conn->mbox, NULL);
-    break;
+#if LWIP_UDP
   case NETCONN_UDPLITE:
     /* FALLTHROUGH */
   case NETCONN_UDPNOCHKSUM:
@@ -402,6 +360,7 @@ do_connect(struct api_msg_msg *msg)
     udp_connect(msg->conn->pcb.udp, msg->msg.bc.ipaddr, msg->msg.bc.port);
     sys_mbox_post(msg->conn->mbox, NULL);
     break;
+#endif 
   case NETCONN_TCP:
     /*    tcp_arg(msg->conn->pcb.tcp, msg->conn);*/
     setup_tcp(msg->conn);
@@ -417,9 +376,7 @@ do_listen(struct api_msg_msg *msg)
 {
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
-    case NETCONN_RAW:
-      DEBUGF(API_MSG_DEBUG, ("api_msg: listen RAW: cannot listen for RAW.\n"));
-      break;
+#if LWIP_UDP
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
@@ -427,6 +384,7 @@ do_listen(struct api_msg_msg *msg)
     case NETCONN_UDP:
       DEBUGF(API_MSG_DEBUG, ("api_msg: listen UDP: cannot listen for UDP.\n"));
       break;
+#endif /* LWIP_UDP */
     case NETCONN_TCP:
       msg->conn->pcb.tcp = tcp_listen(msg->conn->pcb.tcp);
       if(msg->conn->pcb.tcp == NULL) {
@@ -453,9 +411,7 @@ do_accept(struct api_msg_msg *msg)
 {
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
-    case NETCONN_RAW:
-      DEBUGF(API_MSG_DEBUG, ("api_msg: accept RAW: cannot accept for RAW.\n"));
-      break;
+#if LWIP_UDP
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
@@ -463,6 +419,7 @@ do_accept(struct api_msg_msg *msg)
     case NETCONN_UDP:    
       DEBUGF(API_MSG_DEBUG, ("api_msg: accept UDP: cannot accept for UDP.\n"));
       break;
+#endif /* LWIP_UDP */
     case NETCONN_TCP:
       break;
     }
@@ -474,9 +431,7 @@ do_send(struct api_msg_msg *msg)
 {
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
-    case NETCONN_RAW:
-      raw_send(msg->conn->pcb.raw, msg->msg.p);
-      break;
+#if LWIP_UDP
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
@@ -484,6 +439,7 @@ do_send(struct api_msg_msg *msg)
     case NETCONN_UDP:
       udp_send(msg->conn->pcb.udp, msg->msg.p);
       break;
+#endif /* LWIP_UDP */
     case NETCONN_TCP:
       break;
     }
@@ -508,8 +464,7 @@ do_write(struct api_msg_msg *msg)
   err_t err;
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
-    case NETCONN_RAW:
-      /* FALLTHROUGH */
+#if LWIP_UDP 
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
@@ -517,6 +472,7 @@ do_write(struct api_msg_msg *msg)
     case NETCONN_UDP:
       msg->conn->err = ERR_VAL;
       break;
+#endif /* LWIP_UDP */
     case NETCONN_TCP:      
       err = tcp_write(msg->conn->pcb.tcp, msg->msg.w.dataptr,
                       msg->msg.w.len, msg->msg.w.copy);
@@ -538,20 +494,21 @@ static void
 do_close(struct api_msg_msg *msg)
 {
   err_t err;
+
+  err = ERR_OK;
+
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
-    case NETCONN_RAW:
-      break;
+#if LWIP_UDP
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
       /* FALLTHROUGH */
     case NETCONN_UDP:
       break;
+#endif /* LWIP_UDP */
     case NETCONN_TCP:
       if(msg->conn->pcb.tcp->state == LISTEN) {
-	err = tcp_close(msg->conn->pcb.tcp);
-      } else {
 	err = tcp_close(msg->conn->pcb.tcp);
       }
       msg->conn->err = err;      

@@ -1,36 +1,33 @@
 /*
- * Copyright (c) 2001, Swedish Institute of Computer Science.
+ * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
  * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
- * are met: 
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
- *    documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Institute nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
- *    without specific prior written permission. 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
- * SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: icmp6.c,v 1.1 2001/12/12 10:00:59 adam Exp $
  */
 
 /* Some ICMP messages should be passed to the transport protocols. This
@@ -56,7 +53,7 @@ icmp_input(struct pbuf *p, struct netif *inp)
   
  
 #ifdef ICMP_STATS
-  ++stats.icmp.recv;
+  ++lwip_stats.icmp.recv;
 #endif /* ICMP_STATS */
 
   type = ((char *)p->payload)[0];
@@ -70,7 +67,7 @@ icmp_input(struct pbuf *p, struct netif *inp)
 
       pbuf_free(p);
 #ifdef ICMP_STATS
-      ++stats.icmp.lenerr;
+      ++lwip_stats.icmp.lenerr;
 #endif /* ICMP_STATS */
 
       return;      
@@ -81,7 +78,7 @@ icmp_input(struct pbuf *p, struct netif *inp)
       DEBUGF(ICMP_DEBUG, ("icmp_input: checksum failed for received ICMP echo (%x)\n", inet_chksum_pseudo(p, &(iphdr->src), &(iphdr->dest), IP_PROTO_ICMP, p->tot_len)));
 
 #ifdef ICMP_STATS
-      ++stats.icmp.chkerr;
+      ++lwip_stats.icmp.chkerr;
 #endif /* ICMP_STATS */
     /*      return;*/
     }
@@ -98,7 +95,7 @@ icmp_input(struct pbuf *p, struct netif *inp)
     }
     DEBUGF(ICMP_DEBUG, ("icmp_input: checksum failed for received ICMP echo (%x)\n", inet_chksum_pseudo(p, &(iphdr->src), &(iphdr->dest), IP_PROTO_ICMP, p->tot_len)));
 #ifdef ICMP_STATS
-    ++stats.icmp.xmit;
+    ++lwip_stats.icmp.xmit;
 #endif /* ICMP_STATS */
 
     /*    DEBUGF("icmp: p->len %d p->tot_len %d\n", p->len, p->tot_len);*/
@@ -109,8 +106,8 @@ icmp_input(struct pbuf *p, struct netif *inp)
     DEBUGF(ICMP_DEBUG, ("icmp_input: ICMP type not supported.\n"));
 
 #ifdef ICMP_STATS
-    ++stats.icmp.proterr;
-    ++stats.icmp.drop;
+    ++lwip_stats.icmp.proterr;
+    ++lwip_stats.icmp.drop;
 #endif /* ICMP_STATS */
   }
 
@@ -133,13 +130,13 @@ icmp_dest_unreach(struct pbuf *p, enum icmp_dur_type t)
   idur->type = (char)ICMP6_DUR;
   idur->icode = (char)t;
 
-  bcopy(p->payload, (char *)q->payload + 8, IP_HLEN + 8);
+  memcpy((char *)q->payload + 8, p->payload, IP_HLEN + 8);
   
   /* calculate checksum */
   idur->chksum = 0;
   idur->chksum = inet_chksum(idur, q->len);
 #ifdef ICMP_STATS
-  ++stats.icmp.xmit;
+  ++lwip_stats.icmp.xmit;
 #endif /* ICMP_STATS */
 
   ip_output(q, NULL,
@@ -165,13 +162,13 @@ icmp_time_exceeded(struct pbuf *p, enum icmp_te_type t)
   tehdr->icode = (char)t;
 
   /* copy fields from original packet */
-  bcopy((char *)p->payload, (char *)q->payload + 8, IP_HLEN + 8);
+  memcpy((char *)q->payload + 8, (char *)p->payload, IP_HLEN + 8);
   
   /* calculate checksum */
   tehdr->chksum = 0;
   tehdr->chksum = inet_chksum(tehdr, q->len);
 #ifdef ICMP_STATS
-  ++stats.icmp.xmit;
+  ++lwip_stats.icmp.xmit;
 #endif /* ICMP_STATS */
   ip_output(q, NULL, 
 	    (struct ip_addr *)&(iphdr->src), ICMP_TTL, IP_PROTO_ICMP);

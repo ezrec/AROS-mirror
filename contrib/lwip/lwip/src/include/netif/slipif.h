@@ -30,14 +30,14 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: tcpdump.h,v 1.1 2001/12/12 10:01:01 adam Exp $
+ * $Id: slipif.h,v 1.1 2002/10/22 12:32:58 likewise Exp $
  */
-#ifndef __NETIF_TCPDUMP_H__
-#define __NETIF_TCPDUMP_H__
+#ifndef __NETIF_SLIPIF_H__
+#define __NETIF_SLIPIF_H__
 
-#include "lwip/pbuf.h"
+#include "lwip/netif.h"
 
-void tcpdump_init(void);
-void tcpdump(struct pbuf *p);
+void slipif_init(struct netif * netif);
+ 
+#endif 
 
-#endif /* __NETIF_TCPDUMP_H__ */

@@ -1,36 +1,33 @@
 /*
- * Copyright (c) 2001, Swedish Institute of Computer Science.
+ * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
  * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
- * are met: 
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
- *    documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Institute nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
- *    without specific prior written permission. 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
- * SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: memp.c,v 1.3 2002/07/07 18:57:57 sebauer Exp $
  */
 
 #include "lwipopts.h"
@@ -38,7 +35,6 @@
 #include "lwip/memp.h"
 
 #include "lwip/pbuf.h"
-#include "lwip/raw.h"
 #include "lwip/udp.h"
 #include "lwip/tcp.h"
 #include "lwip/api.h"
@@ -71,7 +67,6 @@ static const u16_t memp_sizes[MEMP_MAX] = {
 
 static const u16_t memp_num[MEMP_MAX] = {
   MEMP_NUM_PBUF,
-  MEMP_NUM_RAW_PCB,
   MEMP_NUM_UDP_PCB,
   MEMP_NUM_TCP_PCB,
   MEMP_NUM_TCP_PCB_LISTEN,
@@ -85,9 +80,6 @@ static const u16_t memp_num[MEMP_MAX] = {
 
 static u8_t memp_memory[(MEMP_NUM_PBUF *
 			 MEM_ALIGN_SIZE(sizeof(struct pbuf) +
-					sizeof(struct memp)) +
-			MEMP_NUM_RAW_PCB *
-			 MEM_ALIGN_SIZE(sizeof(struct raw_pcb) +
 					sizeof(struct memp)) +
 			MEMP_NUM_UDP_PCB *
 			 MEM_ALIGN_SIZE(sizeof(struct udp_pcb) +
@@ -117,18 +109,6 @@ static u8_t memp_memory[(MEMP_NUM_PBUF *
 			 MEM_ALIGN_SIZE(sizeof(struct sys_timeout) +
 					sizeof(struct memp)))];
 
-#if MEMP_RECLAIM
-struct memp_reclaim_ {
-  struct memp_reclaim_ *next;
-  memp_reclaim_func f;
-  void *arg;  
-};
-
-static struct memp_reclaim_ *memp_reclaim_funcs[MEMP_MAX];
-
-static u8_t memp_reclaim(memp_t type);
-#endif /* MEMP_RECLAIM */
-
 /*-----------------------------------------------------------------------------------*/
 static sys_sem_t mutex;
 /*-----------------------------------------------------------------------------------*/
@@ -138,16 +118,15 @@ memp_sanity(void)
 {
   int i, c;
   struct memp *m, *n;
-  
+
   for(i = 0; i < MEMP_MAX; i++) {
     for(m = memp_tab[i]; m != NULL; m = m->next) {
       c = 1;
       for(n = memp_tab[i]; n != NULL; n = n->next) {
-	if(n == m) {
-	  --c;
-	}
-	if(c < 0)
-	  abort();
+       	if(n == m) {
+	        --c;
+        }
+	      if(c < 0) return 0; /* LW was: abort(); */
       }
     }
   }
@@ -164,9 +143,9 @@ memp_init(void)
       
 #ifdef MEMP_STATS
   for(i = 0; i < MEMP_MAX; ++i) {
-    stats.memp[i].used = stats.memp[i].max =
-      stats.memp[i].err = stats.memp[i].reclaimed = 0;
-    stats.memp[i].avail = memp_num[i];
+    lwip_stats.memp[i].used = lwip_stats.memp[i].max =
+      lwip_stats.memp[i].err = 0;
+    lwip_stats.memp[i].avail = memp_num[i];
   }
 #endif /* MEMP_STATS */
 
@@ -191,11 +170,6 @@ memp_init(void)
 
   mutex = sys_sem_new(1);
 
-#if MEMP_RECLAIM
-  for(i = 0; i < MEMP_MAX; ++i) {
-    memp_reclaim_funcs[i] = NULL;
-  }
-#endif /* MEMP_RECLAIM */
   
 }
 /*-----------------------------------------------------------------------------------*/
@@ -203,7 +177,8 @@ void *
 memp_malloc(memp_t type)
 {
   struct memp *memp;
-
+  void *mem;
+ 
   ASSERT("memp_malloc: type < MEMP_MAX", type < MEMP_MAX);
 
   memp = memp_tab[type];
@@ -212,19 +187,22 @@ memp_malloc(memp_t type)
     memp_tab[type] = memp->next;    
     memp->next = NULL;
 #ifdef MEMP_STATS
-    ++stats.memp[type].used;
-    if(stats.memp[type].used > stats.memp[type].max) {
-      stats.memp[type].max = stats.memp[type].used;
+    ++lwip_stats.memp[type].used;
+    if(lwip_stats.memp[type].used > lwip_stats.memp[type].max) {
+      lwip_stats.memp[type].max = lwip_stats.memp[type].used;
     }
 #endif /* MEMP_STATS */
     ASSERT("memp_malloc: memp properly aligned",
 	   ((u32_t)MEM_ALIGN((u8_t *)memp + sizeof(struct memp)) % MEM_ALIGNMENT) == 0);
 
-    return MEM_ALIGN((u8_t *)memp + sizeof(struct memp));
+    mem = MEM_ALIGN((u8_t *)memp + sizeof(struct memp));
+    /* initialize memp memory with zeroes */
+    memset(mem, 0, memp_sizes[type]);	
+    return mem;
   } else {
     DEBUGF(MEMP_DEBUG, ("memp_malloc: out of memory in pool %d\n", type));
 #ifdef MEMP_STATS
-    ++stats.memp[type].err;
+    ++lwip_stats.memp[type].err;
 #endif /* MEMP_STATS */
     return NULL;
   }
@@ -240,21 +218,7 @@ memp_mallocp(memp_t type)
   return mem;
 }
 /*-----------------------------------------------------------------------------------*/
-void *
-memp_malloc2(memp_t type)
-{
-  void *mem;
-
-  mem = memp_malloc(type);
-#if MEMP_RECLAIM
-  if(mem == NULL) {
-    memp_reclaim(type);
-    mem = memp_malloc(type);
-  }
-#endif /* MEMP_RECLAIM */
-  return mem;
-}
-/*-----------------------------------------------------------------------------------*/
+#if 0
 void *
 memp_realloc(memp_t fromtype, memp_t totype, void *mem)
 {
@@ -276,6 +240,7 @@ memp_realloc(memp_t fromtype, memp_t totype, void *mem)
   }
   return rmem;
 }
+#endif /* 0 */
 /*-----------------------------------------------------------------------------------*/
 void
 memp_free(memp_t type, void *mem)
@@ -288,13 +253,14 @@ memp_free(memp_t type, void *mem)
   memp = (struct memp *)((u8_t *)mem - sizeof(struct memp));
 
 #ifdef MEMP_STATS
-  stats.memp[type].used--; 
+  lwip_stats.memp[type].used--; 
 #endif /* MEMP_STATS */
   
   memp->next = memp_tab[type]; 
   memp_tab[type] = memp;
 
   ASSERT("memp sanity", memp_sanity());
+
   return;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -305,39 +271,4 @@ memp_freep(memp_t type, void *mem)
   memp_free(type, mem);
   sys_sem_signal(mutex);
 }
-/*-----------------------------------------------------------------------------------*/
-#if MEMP_RECLAIM
-static u8_t
-memp_reclaim(memp_t type)
-{
-  struct memp_reclaim_ *mr;
-    
-  for(mr = memp_reclaim_funcs[type]; mr != NULL; mr = mr->next) {
-    DEBUGF(MEMP_DEBUG, ("memp_reclaim: calling reclaimer for type %d\n", type));
-    if(mr->f(mr->arg, type) != 0) {
-#ifdef MEMP_STATS
-      ++stats.memp[type].reclaimed;
-#endif /* MEMP_STATS */
-      return 1;
-    }
-  }
-  return 0;
-}
-/*-----------------------------------------------------------------------------------*/
-void
-memp_register_reclaim(memp_t type, memp_reclaim_func f, void *arg)
-{
-  struct memp_reclaim_ *mr;
-
-  mr = mem_malloc(sizeof(struct memp_reclaim_));
-  if(mr == NULL) {
-    return;
-  }
-  mr->next = memp_reclaim_funcs[type];
-  memp_reclaim_funcs[type] = mr;  
-  mr->f = f;
-  mr->arg = arg;
-  DEBUGF(MEMP_DEBUG, ("memp_register_reclaim: registering reclaimer for type %d\n", type));
-}
-#endif /* MEMP_RECLAIM */
 /*-----------------------------------------------------------------------------------*/

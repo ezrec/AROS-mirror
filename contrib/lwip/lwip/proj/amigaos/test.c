@@ -189,6 +189,7 @@ void main(void)
   
     netif_add(&ipaddr, &netmask, &gw, loopif_init, tcpip_input);
 
+#if 0
     {
       struct icmp_echo_hdr echo;
       struct pbuf *p;
@@ -219,6 +220,7 @@ void main(void)
 //      lwip_recvfrom(s,buf,sizeof(buf),0,&from,&from_len);
 //      printf("received something from 0x%lx: 0x%x 0x%x 0x%x 0x%x 0x%x\n",from.sin_addr.s_addr,buf[0],buf[1],buf[2],buf[3],buf[4]);
     }
+#endif
   } 
 
   start();

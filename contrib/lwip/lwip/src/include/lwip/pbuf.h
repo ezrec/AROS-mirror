@@ -1,36 +1,33 @@
 /*
- * Copyright (c) 2001, Swedish Institute of Computer Science.
+ * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
  * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
- * are met: 
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
- *    documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Institute nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
- *    without specific prior written permission. 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
- * SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: pbuf.h,v 1.2 2002/01/23 10:54:00 adam Exp $
  */
 /*-----------------------------------------------------------------------------------*/
 #ifndef __LWIP_PBUF_H__
@@ -53,6 +50,7 @@ typedef enum {
 typedef enum {
   PBUF_RAM,
   PBUF_ROM,
+  PBUF_REF,
   PBUF_POOL
 } pbuf_flag;
 
@@ -62,18 +60,22 @@ typedef enum {
 #define PBUF_FLAG_ROM   0x01    /* Flags that pbuf data is stored in ROM. */
 #define PBUF_FLAG_POOL  0x02    /* Flags that the pbuf comes from the
 				   pbuf pool. */
+#define PBUF_FLAG_REF   0x03
 
 struct pbuf {
   struct pbuf *next;
-  
-  /* high 4 bits, flags, low 4 bits reference count */
-  u8_t flags, ref;
+
+  /* Pointer to the actual data in the buffer. */
   void *payload;
   
   /* Total length of buffer + additionally chained buffers. */
   u16_t tot_len;
+  
   /* Length of this buffer. */
   u16_t len;  
+
+  /* Flags and reference count. */
+  u16_t flags, ref;
   
 };
 
@@ -100,7 +102,7 @@ void pbuf_init(void);
                 prepended by allocating another pbuf and chain in to
                 the front of the ROM pbuf.
 
-   * PBUF_ROOL: the pbuf is allocated as a pbuf chain, with pbufs from
+   * PBUF_POOL: the pbuf is allocated as a pbuf chain, with pbufs from
                 the pbuf pool that is allocated during pbuf_init().  */
 struct pbuf *pbuf_alloc(pbuf_layer l, u16_t size, pbuf_flag flag);
 
@@ -123,12 +125,12 @@ u8_t pbuf_header(struct pbuf *p, s16_t header_size);
    Increments the reference count of the pbuf p.
  */
 void pbuf_ref(struct pbuf *p);
-
+void pbuf_ref_chain(struct pbuf *p);
 /* pbuf_free():
 
    Decrements the reference count and deallocates the pbuf if the
    reference count is zero. If the pbuf is a chain all pbufs in the
-   chain are deallocated.  */
+   chain are deallocated. */
 u8_t pbuf_free(struct pbuf *p);
 
 /* pbuf_clen():
@@ -148,5 +150,8 @@ void pbuf_chain(struct pbuf *h, struct pbuf *t);
    Picks off the first pbuf from the pbuf chain p. Returns the tail of
    the pbuf chain or NULL if the pbuf p was not chained. */
 struct pbuf *pbuf_dechain(struct pbuf *p);
+
+struct pbuf *pbuf_unref(struct pbuf *f);
+
 
 #endif /* __LWIP_PBUF_H__ */

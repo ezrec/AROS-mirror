@@ -1,36 +1,33 @@
 /*
- * Copyright (c) 2001, Swedish Institute of Computer Science.
+ * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
  * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
- * are met: 
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
- *    documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Institute nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
- *    without specific prior written permission. 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
- * SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: tcp.c,v 1.14 2002/03/04 10:47:56 adam Exp $
  */
 
 /*-----------------------------------------------------------------------------------*/
@@ -51,11 +48,13 @@
 
 #include "lwip/tcp.h"
 
+#include "lwipopts.h"
+
 /* Incremented every coarse grained timer shot
    (typically every 500 ms, determined by TCP_COARSE_TIMEOUT). */
 u32_t tcp_ticks;
 const u8_t tcp_backoff[13] =
-    { 1, 2, 4, 8, 16, 32, 64, 64, 64, 64, 64, 64, 64 };
+    { 1, 2, 3, 4, 5, 6, 7, 7, 7, 7, 7, 7, 7};
 
 /* The TCP PCB lists. */
 struct tcp_pcb_listen *tcp_listen_pcbs;  /* List of all TCP PCBs in LISTEN state. */
@@ -67,13 +66,6 @@ struct tcp_pcb *tcp_tw_pcbs;      /* List of all TCP PCBs in TIME-WAIT. */
 struct tcp_pcb *tcp_tmp_pcb;
 
 #define MIN(x,y) (x) < (y)? (x): (y)
-
-#if MEMP_RECLAIM
-static u8_t tcp_memp_reclaim(void *arg, memp_t type);
-#endif
-#if MEM_RECLAIM
-static mem_size_t tcp_mem_reclaim(void *arg, mem_size_t size);
-#endif
 
 static u8_t tcp_timer;
 
@@ -93,17 +85,6 @@ tcp_init(void)
   tcp_tw_pcbs = NULL;
   tcp_tmp_pcb = NULL;
   
-  /* Register memory reclaim function */
-#if MEM_RECLAIM
-  mem_register_reclaim((mem_reclaim_func)tcp_mem_reclaim, NULL);
-#endif /* MEM_RECLAIM */
-
-#if MEMP_RECLAIM
-  memp_register_reclaim(MEMP_PBUF, (memp_reclaim_func)tcp_memp_reclaim, NULL);
-  memp_register_reclaim(MEMP_TCP_SEG, (memp_reclaim_func)tcp_memp_reclaim, NULL);
-  memp_register_reclaim(MEMP_TCP_PCB, (memp_reclaim_func)tcp_memp_reclaim, NULL);
-#endif /* MEMP_RECLAIM */
-
   /* initialize timer */
   tcp_ticks = 0;
   tcp_timer = 0;
@@ -118,7 +99,7 @@ tcp_init(void)
  */
 /*-----------------------------------------------------------------------------------*/
 void
-tcp_tmr()
+tcp_tmr(void)
 {
   ++tcp_timer;
   if(tcp_timer == 10) {
@@ -213,7 +194,9 @@ tcp_abort(struct tcp_pcb *pcb)
   u32_t seqno, ackno;
   u16_t remote_port, local_port;
   struct ip_addr remote_ip, local_ip;
+#if LWIP_CALLBACK_API  
   void (* errf)(void *arg, err_t err);
+#endif /* LWIP_CALLBACK_API */
   void *errf_arg;
 
   
@@ -223,9 +206,6 @@ tcp_abort(struct tcp_pcb *pcb)
   if(pcb->state == TIME_WAIT) {
     tcp_pcb_remove(&tcp_tw_pcbs, pcb);
     memp_free(MEMP_TCP_PCB, pcb);
-  } else if(pcb->state == LISTEN) {
-    tcp_pcb_remove((struct tcp_pcb **)&tcp_listen_pcbs, pcb);
-    memp_free(MEMP_TCP_PCB_LISTEN, pcb);
   } else {
     seqno = pcb->snd_nxt;
     ackno = pcb->rcv_nxt;
@@ -233,13 +213,24 @@ tcp_abort(struct tcp_pcb *pcb)
     ip_addr_set(&remote_ip, &(pcb->remote_ip));
     local_port = pcb->local_port;
     remote_port = pcb->remote_port;
+#if LWIP_CALLBACK_API
     errf = pcb->errf;
+#endif /* LWIP_CALLBACK_API */
     errf_arg = pcb->callback_arg;
     tcp_pcb_remove(&tcp_active_pcbs, pcb);
-    memp_free(MEMP_TCP_PCB, pcb);
-    if(errf != NULL) {
-      errf(errf_arg, ERR_ABRT);
+    if(pcb->unacked != NULL) {
+      tcp_segs_free(pcb->unacked);
     }
+    if(pcb->unsent != NULL) {
+      tcp_segs_free(pcb->unsent);
+    }
+#if TCP_QUEUE_OOSEQ    
+    if(pcb->ooseq != NULL) {
+      tcp_segs_free(pcb->ooseq);
+    }
+#endif /* TCP_QUEUE_OOSEQ */
+    memp_free(MEMP_TCP_PCB, pcb);
+    TCP_EVENT_ERR(errf, errf_arg, ERR_ABRT);
     DEBUGF(TCP_RST_DEBUG, ("tcp_abort: sending RST\n"));
     tcp_rst(seqno, ackno, &local_ip, &remote_ip, local_port, remote_port);
   }
@@ -287,6 +278,13 @@ tcp_bind(struct tcp_pcb *pcb, struct ip_addr *ipaddr, u16_t port)
   DEBUGF(TCP_DEBUG, ("tcp_bind: bind to port %d\n", port));
   return ERR_OK;
 }
+#if LWIP_CALLBACK_API
+static err_t
+tcp_accept_null(void *arg, struct tcp_pcb *pcb, err_t err)
+{
+  return ERR_ABRT;
+}
+#endif /* LWIP_CALLBACK_API */
 /*-----------------------------------------------------------------------------------*/
 /*
  * tcp_listen():
@@ -301,13 +299,28 @@ tcp_bind(struct tcp_pcb *pcb, struct ip_addr *ipaddr, u16_t port)
 struct tcp_pcb *
 tcp_listen(struct tcp_pcb *pcb)
 {
-  pcb->state = LISTEN;
-  pcb = memp_realloc(MEMP_TCP_PCB, MEMP_TCP_PCB_LISTEN, pcb);
-  if(pcb == NULL) {
+  struct tcp_pcb_listen *lpcb;
+
+  lpcb = memp_malloc(MEMP_TCP_PCB_LISTEN);
+  if(lpcb == NULL) {
     return NULL;
   }
-  TCP_REG((struct tcp_pcb **)&tcp_listen_pcbs, pcb);
-  return pcb;
+  lpcb->callback_arg = pcb->callback_arg;
+  lpcb->local_port = pcb->local_port;
+  ip_addr_set(&lpcb->local_ip, &pcb->local_ip);
+  memp_free(MEMP_TCP_PCB, pcb);
+#if LWIP_CALLBACK_API
+  lpcb->accept = tcp_accept_null;
+#endif /* LWIP_CALLBACK_API */
+/* workaround for compile error: assignment requires modifiable lvalue in TCP_REG */ 
+#if LWIP_TCP_REG_COMPILE_ERROR
+  /* place this pcb at the start the "listening pcbs" list */
+  lpcb->next = tcp_listen_pcbs;
+  tcp_listen_pcbs = lpcb;
+#else
+  TCP_REG((struct tcp_pcb **)&tcp_listen_pcbs, (struct tcp_pcb *)lpcb);
+#endif
+  return (struct tcp_pcb *)lpcb;
 }
 /*-----------------------------------------------------------------------------------*/
 /*
@@ -326,7 +339,7 @@ tcp_recved(struct tcp_pcb *pcb, u16_t len)
   if(pcb->rcv_wnd > TCP_WND) {
     pcb->rcv_wnd = TCP_WND;
   }
-  if(!(pcb->flags & TF_ACK_DELAY) ||
+  if(!(pcb->flags & TF_ACK_DELAY) &&
      !(pcb->flags & TF_ACK_NOW)) {
     tcp_ack(pcb);
   }
@@ -407,7 +420,9 @@ tcp_connect(struct tcp_pcb *pcb, struct ip_addr *ipaddr, u16_t port,
   pcb->cwnd = 1;
   pcb->ssthresh = pcb->mss * 10;
   pcb->state = SYN_SENT;
+#if LWIP_CALLBACK_API  
   pcb->connected = connected;
+#endif /* LWIP_CALLBACK_API */  
   TCP_REG(&tcp_active_pcbs, pcb);
   
   /* Build an MSS option */
@@ -434,17 +449,21 @@ tcp_connect(struct tcp_pcb *pcb, struct ip_addr *ipaddr, u16_t port,
 void
 tcp_slowtmr(void)
 {
-  static struct tcp_pcb *pcb, *pcb2, *prev;
-  static struct tcp_seg *seg, *useg;
-  static u32_t eff_wnd;
-  static u8_t pcb_remove;      /* flag if a PCB should be removed */
+  struct tcp_pcb *pcb, *pcb2, *prev;
+  u32_t eff_wnd;
+  u8_t pcb_remove;      /* flag if a PCB should be removed */
+  err_t err;
+  
+  err = ERR_OK;
 
   ++tcp_ticks;
   
   /* Steps through all of the active PCBs. */
   prev = NULL;
   pcb = tcp_active_pcbs;
+  if (pcb == NULL) DEBUGF(TCP_DEBUG, ("tcp_slowtmr: no active pcbs"));
   while(pcb != NULL) {
+    DEBUGF(TCP_DEBUG, ("tcp_slowtmr: processing active pcb"));
     ASSERT("tcp_timer_coarse: active pcb->state != CLOSED", pcb->state != CLOSED);
     ASSERT("tcp_timer_coarse: active pcb->state != LISTEN", pcb->state != LISTEN);
     ASSERT("tcp_timer_coarse: active pcb->state != TIME-WAIT", pcb->state != TIME_WAIT);
@@ -453,13 +472,16 @@ tcp_slowtmr(void)
 
     if(pcb->state == SYN_SENT && pcb->nrtx == TCP_SYNMAXRTX) {
       ++pcb_remove;
-    } else if(pcb->nrtx == TCP_MAXRTX) {
+      DEBUGF(TCP_DEBUG, ("tcp_slowtmr: max SYN retries reached"));
+    }
+    else if(pcb->nrtx == TCP_MAXRTX) {
       ++pcb_remove;
+      DEBUGF(TCP_DEBUG, ("tcp_slowtmr: max DATA retries reached"));
     } else {
       ++pcb->rtime;
-      seg = pcb->unacked;
-      if(seg != NULL && pcb->rtime >= pcb->rto) {
-        
+      if(pcb->unacked != NULL && pcb->rtime >= pcb->rto) {
+
+	/* Time for a retransmission. */
         DEBUGF(TCP_RTO_DEBUG, ("tcp_timer_coarse: rtime %ld pcb->rto %d\n",
                                tcp_ticks - pcb->rtime, pcb->rto));
 
@@ -469,19 +491,8 @@ tcp_slowtmr(void)
 	  pcb->rto = ((pcb->sa >> 3) + pcb->sv) << tcp_backoff[pcb->nrtx];
 	}
 
-        /* Move all other unacked segments to the unsent queue. */
-        if(seg->next != NULL) {
-          for(useg = seg->next; useg->next != NULL; useg = useg->next);
-          /* useg now points to the last segment on the unacked queue. */
-          useg->next = pcb->unsent;
-          pcb->unsent = seg->next;
-          seg->next = NULL;
-          pcb->snd_nxt = ntohl(pcb->unsent->tcphdr->seqno);
-        }
-
-	/* Do the actual retransmission. */
-        tcp_rexmit_seg(pcb, seg);
-
+	tcp_rexmit(pcb);
+	
         /* Reduce congestion window and ssthresh. */
         eff_wnd = MIN(pcb->cwnd, pcb->snd_wnd);
         pcb->ssthresh = eff_wnd >> 1;
@@ -500,6 +511,7 @@ tcp_slowtmr(void)
       if((u32_t)(tcp_ticks - pcb->tmr) >
 	 TCP_FIN_WAIT_TIMEOUT / TCP_SLOW_INTERVAL) {
         ++pcb_remove;
+        DEBUGF(TCP_DEBUG, ("tcp_slowtmr: removing pcb stuck in FIN-WAIT-2"));
       }
     }
 
@@ -512,6 +524,7 @@ tcp_slowtmr(void)
        pcb->rto * TCP_OOSEQ_TIMEOUT) {
       tcp_segs_free(pcb->ooseq);
       pcb->ooseq = NULL;
+      DEBUGF(TCP_CWND_DEBUG, ("tcp: dropping OOSEQ queued data\n"));
     }
 #endif /* TCP_QUEUE_OOSEQ */
 
@@ -520,6 +533,7 @@ tcp_slowtmr(void)
       if((u32_t)(tcp_ticks - pcb->tmr) >
 	 TCP_SYN_RCVD_TIMEOUT / TCP_SLOW_INTERVAL) {
         ++pcb_remove;
+        DEBUGF(TCP_DEBUG, ("tcp_slottmr: removing pcb stuck in SYN-RCVD\n"));
       }
     }
 
@@ -537,9 +551,7 @@ tcp_slowtmr(void)
         tcp_active_pcbs = pcb->next;
       }
 
-      if(pcb->errf != NULL) {
-	pcb->errf(pcb->callback_arg, ERR_ABRT);
-      }
+      TCP_EVENT_ERR(pcb->errf, pcb->callback_arg, ERR_ABRT);
 
       pcb2 = pcb->next;
       memp_free(MEMP_TCP_PCB, pcb);
@@ -548,11 +560,13 @@ tcp_slowtmr(void)
 
       /* We check if we should poll the connection. */
       ++pcb->polltmr;
-      if(pcb->polltmr >= pcb->pollinterval &&
-	 pcb->poll != NULL) {
+      if(pcb->polltmr >= pcb->pollinterval) {
 	pcb->polltmr = 0;
-	pcb->poll(pcb->callback_arg, pcb);
-	tcp_output(pcb);
+        DEBUGF(TCP_DEBUG, ("tcp_slottmr: polling application\n"));
+	TCP_EVENT_POLL(pcb, err);
+	if(err == ERR_OK) {
+	  tcp_output(pcb);
+	}
       }
       
       prev = pcb;
@@ -611,7 +625,7 @@ tcp_fasttmr(void)
   /* send delayed ACKs */  
   for(pcb = tcp_active_pcbs; pcb != NULL; pcb = pcb->next) {
     if(pcb->flags & TF_ACK_DELAY) {
-      DEBUGF(TCP_DEBUG, ("tcp_timer_fine: delayed ACK\n"));
+      DEBUGF(TCP_DEBUG, ("tcp_fasttmr: delayed ACK\n"));
       tcp_ack_now(pcb);
       pcb->flags &= ~(TF_ACK_DELAY | TF_ACK_NOW);
     }
@@ -667,6 +681,19 @@ tcp_seg_free(struct tcp_seg *seg)
 }
 /*-----------------------------------------------------------------------------------*/
 /*
+ * tcp_setprio():
+ *
+ * Sets the priority of a connection.
+ *
+ */
+/*-----------------------------------------------------------------------------------*/
+void
+tcp_setprio(struct tcp_pcb *pcb, u8_t prio)
+{
+  pcb->prio = prio;
+}
+/*-----------------------------------------------------------------------------------*/
+/*
  * tcp_seg_copy():
  *
  * Returns a copy of the given TCP segment.
@@ -682,28 +709,99 @@ tcp_seg_copy(struct tcp_seg *seg)
   if(cseg == NULL) {
     return NULL;
   }
-  bcopy(seg, cseg, sizeof(struct tcp_seg));
+  memcpy((char *)cseg, (const char *)seg, sizeof(struct tcp_seg)); 
   pbuf_ref(cseg->p);
   return cseg;
 }
 /*-----------------------------------------------------------------------------------*/
-/*
- * tcp_new():
- *
- * Creates a new TCP protocol control block but doesn't place it on
- * any of the TCP PCB lists.
- *
- */
+#if LWIP_CALLBACK_API
+static err_t
+tcp_recv_null(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
+{
+  arg = arg;
+  if(p != NULL) {
+    pbuf_free(p);
+  } else if(err == ERR_OK) {
+    return tcp_close(pcb);
+  }
+  return ERR_OK;
+}
+#endif /* LWIP_CALLBACK_API */
+/*-----------------------------------------------------------------------------------*/
+static void
+tcp_kill_prio(u8_t prio)
+{
+  struct tcp_pcb *pcb, *inactive;
+  u32_t inactivity;
+  u8_t mprio;
+
+
+  mprio = TCP_PRIO_MAX;
+  
+  /* We kill the oldest active connection that has lower priority than
+     prio. */
+  inactivity = 0;
+  inactive = NULL;
+  for(pcb = tcp_active_pcbs; pcb != NULL; pcb = pcb->next) {
+    if(pcb->prio <= prio &&
+       pcb->prio <= mprio &&
+       (u32_t)(tcp_ticks - pcb->tmr) >= inactivity) {
+      inactivity = tcp_ticks - pcb->tmr;
+      inactive = pcb;
+      mprio = pcb->prio;
+    }
+  }
+  if(inactive != NULL) {
+    DEBUGF(TCP_DEBUG, ("tcp_kill_prio: killing oldest PCB 0x%p (%ld)\n",
+		       (void *)inactive, inactivity));
+    tcp_abort(inactive);
+  }      
+}
+
+/*-----------------------------------------------------------------------------------*/
+static void
+tcp_kill_timewait(void)
+{
+  struct tcp_pcb *pcb, *inactive;
+  u32_t inactivity;
+
+  inactivity = 0;
+  inactive = NULL;
+  for(pcb = tcp_tw_pcbs; pcb != NULL; pcb = pcb->next) {
+    if((u32_t)(tcp_ticks - pcb->tmr) >= inactivity) {
+      inactivity = tcp_ticks - pcb->tmr;
+      inactive = pcb;
+    }
+  }
+  if(inactive != NULL) {
+    DEBUGF(TCP_DEBUG, ("tcp_kill_timewait: killing oldest TIME-WAIT PCB 0x%p (%ld)\n",
+		       (void *)inactive, inactivity));
+    tcp_abort(inactive);
+  }      
+}
+
+/*-----------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------*/
 struct tcp_pcb *
-tcp_new(void)
+tcp_alloc(u8_t prio)
 {
   struct tcp_pcb *pcb;
   u32_t iss;
   
-  pcb = memp_malloc2(MEMP_TCP_PCB);
+  pcb = memp_malloc(MEMP_TCP_PCB);
+  if(pcb == NULL) {
+    /* Try killing oldest connection in TIME-WAIT. */
+    DEBUGF(TCP_DEBUG, ("tcp_alloc: killing off oldest TIME-WAIT connection\n"));
+    tcp_kill_timewait();
+    pcb = memp_malloc(MEMP_TCP_PCB);
+    if(pcb == NULL) {
+      tcp_kill_prio(prio);    
+      pcb = memp_malloc(MEMP_TCP_PCB);
+    }
+  }
   if(pcb != NULL) {
-    bzero(pcb, sizeof(struct tcp_pcb));
+    memset(pcb, 0, sizeof(struct tcp_pcb));
+    pcb->prio = TCP_PRIO_NORMAL;
     pcb->snd_buf = TCP_SND_BUF;
     pcb->snd_queuelen = 0;
     pcb->rcv_wnd = TCP_WND;
@@ -723,117 +821,26 @@ tcp_new(void)
 
     pcb->polltmr = 0;
 
-    return pcb;
+#if LWIP_CALLBACK_API
+    pcb->recv = tcp_recv_null;
+#endif /* LWIP_CALLBACK_API */  
   }
-  return NULL;
+  return pcb;
 }
 /*-----------------------------------------------------------------------------------*/
 /*
- * tcp_mem_reclaim():
+ * tcp_new():
  *
- * Tries to free up TCP memory. This function is called from the memory manager
- * when memory is scarce.
- *
- */
-/*-----------------------------------------------------------------------------------*/
-#if MEM_RECLAIM
-static mem_size_t
-tcp_mem_reclaim(void *arg, mem_size_t size)
-{
-  static struct tcp_pcb *pcb, *inactive;
-  static u32_t inactivity;
-  static mem_size_t reclaimed;
-
-  reclaimed = 0;
-
-  /* Kill the oldest active connection, hoping that there may be
-     memory associated with it. */
-  inactivity = 0;
-  inactive = NULL;
-  for(pcb = tcp_active_pcbs; pcb != NULL; pcb = pcb->next) {
-    if((u32_t)(tcp_ticks - pcb->tmr) > inactivity) {
-      inactivity = tcp_ticks - pcb->tmr;
-      inactive = pcb;
-    }
-  }
-  if(inactive != NULL) {
-    DEBUGF(TCP_DEBUG, ("tcp_mem_reclaim: killing oldest PCB 0x%p (%ld)\n",
-		       inactive, inactivity));
-    tcp_abort(inactive);
-  }
-  return reclaimed;
-}
-#endif /* MEM_RECLAIM */
-/*-----------------------------------------------------------------------------------*/
-/*
- * tcp_memp_reclaim():
- *
- * Tries to free up TCP memory. This function is called from the
- * memory pool manager when memory is scarce.
+ * Creates a new TCP protocol control block but doesn't place it on
+ * any of the TCP PCB lists.
  *
  */
 /*-----------------------------------------------------------------------------------*/
-#if MEMP_RECLAIM
-static u8_t
-tcp_memp_reclaim(void *arg, memp_t type)
+struct tcp_pcb *
+tcp_new(void)
 {
-  struct tcp_pcb *pcb, *inactive;
-  u32_t inactivity;
-
-  switch(type) {
-  case MEMP_TCP_SEG:
-#if TCP_QUEUE_OOSEQ
-    /* Try to find any buffered out of sequence data. */
-    for(pcb = tcp_active_pcbs; pcb != NULL; pcb = pcb->next) {
-      if(pcb->ooseq) {
-	DEBUGF(TCP_DEBUG, ("tcp_memp_reclaim: reclaiming memory from PCB 0x%lx\n", (long)pcb));
-	tcp_segs_free(pcb->ooseq);
-	pcb->ooseq = NULL;
-	return 1;
-      }
-    }
-   
-#else /* TCP_QUEUE_OOSEQ */
-    return 0;
-#endif /* TCP_QUEUE_OOSEQ */
-    break;
-    
-  case MEMP_PBUF:
-    return tcp_memp_reclaim(arg, MEMP_TCP_SEG);
-
-  case MEMP_TCP_PCB:
-    /* We either kill off a connection in TIME-WAIT, or the oldest
-       active connection. */
-    pcb = tcp_tw_pcbs;
-    if(pcb != NULL) {
-      tcp_tw_pcbs = tcp_tw_pcbs->next;
-      memp_free(MEMP_TCP_PCB, pcb);
-      return 1;
-    } else {
-      inactivity = 0;
-      inactive = NULL;
-      for(pcb = tcp_active_pcbs; pcb != NULL; pcb = pcb->next) {
-	if((u32_t)(tcp_ticks - pcb->tmr) > inactivity) {
-	  inactivity = tcp_ticks - pcb->tmr;
-	  inactive = pcb;
-	}
-      }
-      if(inactive != NULL) {
-	DEBUGF(TCP_DEBUG, ("tcp_mem_reclaim: killing oldest PCB 0x%p (%ld)\n",
-			   inactive, inactivity));
-	tcp_abort(inactive);
-	return 1;
-      }      
-    }
-    break;
-    
-  default:
-    ASSERT("tcp_memp_reclaim: called with wrong type", 0);
-    break;
-  }
-  return 0;
+  return tcp_alloc(TCP_PRIO_NORMAL);
 }
-#endif /* MEM_RECLAIM */
 /*-----------------------------------------------------------------------------------*/
 /*
  * tcp_arg():
@@ -857,12 +864,14 @@ tcp_arg(struct tcp_pcb *pcb, void *arg)
  *
  */ 
 /*-----------------------------------------------------------------------------------*/
+#if LWIP_CALLBACK_API
 void
 tcp_recv(struct tcp_pcb *pcb,
 	 err_t (* recv)(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err))
 {
   pcb->recv = recv;
 }
+#endif /* LWIP_CALLBACK_API */
 /*-----------------------------------------------------------------------------------*/
 /*
  * tcp_sent():
@@ -872,12 +881,14 @@ tcp_recv(struct tcp_pcb *pcb,
  *
  */ 
 /*-----------------------------------------------------------------------------------*/
+#if LWIP_CALLBACK_API
 void
 tcp_sent(struct tcp_pcb *pcb,
 	 err_t (* sent)(void *arg, struct tcp_pcb *tpcb, u16_t len))
 {
   pcb->sent = sent;
 }
+#endif /* LWIP_CALLBACK_API */
 /*-----------------------------------------------------------------------------------*/
 /*
  * tcp_err():
@@ -887,12 +898,14 @@ tcp_sent(struct tcp_pcb *pcb,
  *
  */ 
 /*-----------------------------------------------------------------------------------*/
+#if LWIP_CALLBACK_API
 void
 tcp_err(struct tcp_pcb *pcb,
 	 void (* errf)(void *arg, err_t err))
 {
   pcb->errf = errf;
 }
+#endif /* LWIP_CALLBACK_API */
 /*-----------------------------------------------------------------------------------*/
 /*
  * tcp_poll():
@@ -907,7 +920,9 @@ void
 tcp_poll(struct tcp_pcb *pcb,
 	 err_t (* poll)(void *arg, struct tcp_pcb *tpcb), u8_t interval)
 {
+#if LWIP_CALLBACK_API
   pcb->poll = poll;
+#endif /* LWIP_CALLBACK_API */  
   pcb->pollinterval = interval;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -919,12 +934,14 @@ tcp_poll(struct tcp_pcb *pcb,
  *
  */ 
 /*-----------------------------------------------------------------------------------*/
+#if LWIP_CALLBACK_API
 void
 tcp_accept(struct tcp_pcb *pcb,
 	   err_t (* accept)(void *arg, struct tcp_pcb *newpcb, err_t err))
 {
-  pcb->accept = accept;
+  ((struct tcp_pcb_listen *)pcb)->accept = accept;
 }
+#endif /* LWIP_CALLBACK_API */
 /*-----------------------------------------------------------------------------------*/
 /*
  * tcp_pcb_purge():
@@ -940,6 +957,8 @@ tcp_pcb_purge(struct tcp_pcb *pcb)
      pcb->state != TIME_WAIT &&
      pcb->state != LISTEN) {
 
+    DEBUGF(TCP_DEBUG, ("tcp_pcb_purge\n"));
+    
 #if TCP_DEBUG
     if(pcb->unsent != NULL) {    
       DEBUGF(TCP_DEBUG, ("tcp_pcb_purge: not all data sent\n"));
@@ -947,9 +966,11 @@ tcp_pcb_purge(struct tcp_pcb *pcb)
     if(pcb->unacked != NULL) {    
       DEBUGF(TCP_DEBUG, ("tcp_pcb_purge: data left on ->unacked\n"));
     }
+#if TCP_QUEUE_OOSEQ /* LW */
     if(pcb->ooseq != NULL) {    
       DEBUGF(TCP_DEBUG, ("tcp_pcb_purge: data left on ->ooseq\n"));
     }
+#endif
 #endif /* TCP_DEBUG */
     tcp_segs_free(pcb->unsent);
 #if TCP_QUEUE_OOSEQ
@@ -1139,9 +1160,6 @@ tcp_pcbs_sane(void)
   }
   for(pcb = tcp_tw_pcbs; pcb != NULL; pcb = pcb->next) {
     ASSERT("tcp_pcbs_sane: tw pcb->state == TIME-WAIT", pcb->state == TIME_WAIT);
-  }
-  for(pcb = (struct tcp_pcb *)tcp_listen_pcbs; pcb != NULL; pcb = pcb->next) {
-    ASSERT("tcp_pcbs_sane: listen pcb->state == LISTEN", pcb->state == LISTEN);
   }
   return 1;
 }

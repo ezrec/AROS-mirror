@@ -1,36 +1,33 @@
 /*
- * Copyright (c) 2001, Swedish Institute of Computer Science.
+ * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
  * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
- * are met: 
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
- *    documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Institute nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
- *    without specific prior written permission. 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
- * SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: ethernetif.c,v 1.5 2002/02/08 13:30:01 adam Exp $
  */
 
 /*
@@ -38,6 +35,8 @@
  * drivers for lwIP. Add code to the low_level functions and do a
  * search-and-replace for the word "ethernetif" to replace it with
  * something that better describes your network interface.
+ *
+ * THIS CODE NEEDS TO BE FIXED - IT IS NOT In SYNC WITH CURRENT ETHARP API
  */
 
 #include "lwip/debug.h"
@@ -109,7 +108,7 @@ low_level_output(struct ethernetif *ethernetif, struct pbuf *p)
   signal that packet should be sent();
   
 #ifdef LINK_STATS
-  stats.link.xmit++;
+  lwip_stats.link.xmit++;
 #endif /* LINK_STATS */      
 
   return ERR_OK;
@@ -147,13 +146,13 @@ low_level_input(struct ethernetif *ethernetif)
     }
     acknowledge that packet has been read();
 #ifdef LINK_STATS
-    stats.link.recv++;
+    lwip_stats.link.recv++;
 #endif /* LINK_STATS */      
   } else {
     drop packet();
 #ifdef LINK_STATS
-    stats.link.memerr++;
-    stats.link.drop++;
+    lwip_stats.link.memerr++;
+    lwip_stats.link.drop++;
 #endif /* LINK_STATS */      
   }
 
@@ -190,8 +189,8 @@ ethernetif_output(struct netif *netif, struct pbuf *p,
     q = pbuf_alloc(PBUF_LINK, 14, PBUF_RAM);
     if(q == NULL) {
 #ifdef LINK_STATS
-      stats.link.drop++;
-      stats.link.memerr++;
+      lwip_stats.link.drop++;
+      lwip_stats.link.memerr++;
 #endif /* LINK_STATS */      
       return ERR_MEM;
     }
@@ -241,8 +240,8 @@ ethernetif_output(struct netif *netif, struct pbuf *p,
       return err;
     }
 #ifdef LINK_STATS
-    stats.link.drop++;
-    stats.link.memerr++;
+    lwip_stats.link.drop++;
+    lwip_stats.link.memerr++;
 #endif /* LINK_STATS */          
     return ERR_MEM;
   }
@@ -284,7 +283,7 @@ ethernetif_input(struct netif *netif)
   if(p != NULL) {
 
 #ifdef LINK_STATS
-    stats.link.recv++;
+    lwip_stats.link.recv++;
 #endif /* LINK_STATS */
 
     ethhdr = p->payload;

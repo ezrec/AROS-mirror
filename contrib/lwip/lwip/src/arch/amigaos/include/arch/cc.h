@@ -44,6 +44,7 @@ typedef signed     short   s16_t;
 typedef unsigned   long    u32_t;
 typedef signed     long    s32_t;
 
+typedef u32_t mem_ptr_t;
 
 #define PACK_STRUCT_FIELD(x) x //__attribute__((packed))
 #define PACK_STRUCT_STRUCT //__attribute__((packed))

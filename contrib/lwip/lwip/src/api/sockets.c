@@ -1,36 +1,33 @@
 /*
- * Copyright (c) 2001, Swedish Institute of Computer Science.
+ * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
  * All rights reserved. 
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, 
+ * are permitted provided that the following conditions are met:
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
- * are met: 
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in the 
- *    documentation and/or other materials provided with the distribution. 
- * 3. Neither the name of the Institute nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
- *    without specific prior written permission. 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE 
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
- * SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: sockets.c,v 1.3 2002/07/07 18:57:57 sebauer Exp $
  */
 
 #include "lwip/debug.h"
@@ -44,11 +41,10 @@ struct lwip_socket {
   struct netconn *conn;
   struct netbuf *lastdata;
   u16_t lastoffset;
-  u16_t protocol;
 };
 
 static struct lwip_socket sockets[NUM_SOCKETS];
-void netbuf_copy_partial(struct netbuf *buf, void *dataptr, u16_t len, u16_t offset);
+
 /*-----------------------------------------------------------------------------------*/
 static struct lwip_socket *
 get_socket(int s)
@@ -178,11 +174,7 @@ lwip_connect(int s, struct sockaddr *name, int namelen)
   }
   
   remote_addr.addr = ((struct sockaddr_in *)name)->sin_addr.s_addr;
-  if (sock->conn->type == NETCONN_RAW) {
-    remote_port = htons(sock->protocol);
-  } else {
-    remote_port = ((struct sockaddr_in *)name)->sin_port;
-  }
+  remote_port = ((struct sockaddr_in *)name)->sin_port;
   
   err = netconn_connect(sock->conn, &remote_addr, ntohs(remote_port));
 
@@ -257,7 +249,6 @@ lwip_recvfrom(int s, void *mem, int len, unsigned int flags,
   
   /* copy the contents of the received buffer into
      the supplied memory pointer mem */
-
   netbuf_copy_partial(buf, mem, copylen, sock->lastoffset);
 
   /* If this is a TCP socket, check if there is data left in the
@@ -265,7 +256,7 @@ lwip_recvfrom(int s, void *mem, int len, unsigned int flags,
      time around. */
   if(netconn_type(sock->conn) == NETCONN_TCP && buflen - copylen > 0) {
     sock->lastdata = buf;
-    sock->lastoffset = buflen - copylen;
+    sock->lastoffset += copylen;
   } else {
     sock->lastdata = NULL;
     sock->lastoffset = 0;
@@ -275,22 +266,13 @@ lwip_recvfrom(int s, void *mem, int len, unsigned int flags,
   /* Check to see from where the data was. */
   if(from != NULL && fromlen != NULL) {
     addr = netbuf_fromaddr(buf);
-    port = htons(netbuf_fromport(buf));  
+    port = netbuf_fromport(buf);  
     ((struct sockaddr_in *)from)->sin_addr.s_addr = addr->addr;
     ((struct sockaddr_in *)from)->sin_port = port;
     *fromlen = sizeof(struct sockaddr_in);
   }
-
   
-  /* if the length of the received data is larger than
-     len, this data is discarded and we return len.
-     otherwise we return the actual length of the received
-     data */
-  if(len > copylen) {
-    return copylen;
-  } else {
-    return len;
-  }
+  return copylen;
 }
 /*-----------------------------------------------------------------------------------*/
 int
@@ -320,7 +302,6 @@ lwip_send(int s, void *data, int size, unsigned int flags)
   }  
   
   switch(netconn_type(sock->conn)) {
-  case NETCONN_RAW:
   case NETCONN_UDP:
     /* create a buffer */
     buf = netbuf_new();
@@ -363,7 +344,6 @@ lwip_sendto(int s, void *data, int size, unsigned int flags,
   struct ip_addr remote_addr, *addr;
   u16_t remote_port, port;
   int ret;
-  int conn;
 
   sock = get_socket(s);
   if(sock == NULL) {
@@ -371,31 +351,23 @@ lwip_sendto(int s, void *data, int size, unsigned int flags,
   }
   
   /* get the peer if currently connected */
-  if (netconn_peer(sock->conn, &addr, &port) != ERR_CONN) conn = 1;
-  else conn = 0;
-
-  sock->conn->err = 0;
-
+  netconn_peer(sock->conn, &addr, &port);
+  
   remote_addr.addr = ((struct sockaddr_in *)to)->sin_addr.s_addr;
-  if (sock->conn->type == NETCONN_RAW) {
-    remote_port = htons(sock->protocol);
-  } else {
-    remote_port = ((struct sockaddr_in *)to)->sin_port;
-  }
+  remote_port = ((struct sockaddr_in *)to)->sin_port;
   netconn_connect(sock->conn, &remote_addr, remote_port);
   
   ret = lwip_send(s, data, size, flags);
 
   /* reset the remote address and port number
      of the connection */
-  if (conn) netconn_connect(sock->conn, addr, port);
+  netconn_connect(sock->conn, addr, port);
   return ret;
 }
 /*-----------------------------------------------------------------------------------*/
 int
 lwip_socket(int domain, int type, int protocol)
 {
-  struct lwip_socket *sock;
   struct netconn *conn;
   int i;
 
@@ -406,9 +378,6 @@ lwip_socket(int domain, int type, int protocol)
     break;
   case SOCK_STREAM:
     conn = netconn_new(NETCONN_TCP);
-    break;
-  case SOCK_RAW:
-    conn = netconn_new(NETCONN_RAW);
     break;
   default:
     /* errno = ... */
@@ -427,42 +396,12 @@ lwip_socket(int domain, int type, int protocol)
     /* errno = ENOBUFS; */
     netconn_delete(conn);
   }
-
-  sock = get_socket(i); /* should not fail here */
-  sock->protocol = protocol;
-
   return i;
 }
 /*-----------------------------------------------------------------------------------*/
 int
 lwip_write(int s, void *data, int size)
 {
-  struct lwip_socket *sock;
-  err_t err;
-
-  DEBUGF(SOCKETS_DEBUG, ("write: socket %d, size %d\n", s, size));
-
-  sock = get_socket(s);
-  if(sock == NULL) {
-    return -1;
-  }
-    
-  switch(netconn_type(sock->conn)) {
-  case NETCONN_RAW:
-  case NETCONN_UDP:
-    return lwip_send(s, data, size, 0);
-
-  case NETCONN_TCP:
-    err = netconn_write(sock->conn, data, size, NETCONN_COPY);
-    break;
-  default:
-    err = ERR_ARG;
-    break;
-  }
-  if(err != ERR_OK) {
-    /* errno = ... */
-    return -1;
-  }
-  return size;
+   return lwip_send(s, data, size, 0);
 }
 /*-----------------------------------------------------------------------------------*/
