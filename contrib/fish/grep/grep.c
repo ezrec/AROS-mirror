@@ -20,7 +20,21 @@
  */
 #include <stdio.h>
 #include <ctype.h>
- /*
+
+void file(char *);
+void cant(char *);
+void help(char **);
+void usage(char *);
+void compile(char *);
+char *cclass(char *,char *);
+void store(int);
+void badpat(char *,char *,char *);
+void grep(FILE *, char *);
+int match();
+char * pmatch(char *,char *);
+void error(char *);
+
+/*
  * grep.
  *
  * Runs on the Decus compiler or on vms.
@@ -117,7 +131,7 @@ char	file_name[81];
 char	lbuf[LMAX];
 char	pbuf[PMAX];
 /*******************************************************/
-main(argc, argv)
+int main(argc, argv)
 char *argv[];
 {
    register char   *p;
@@ -137,7 +151,7 @@ char *argv[];
       p = argv[i];
       if (*p == '-') {
 	 ++p;
-	 while (c = *p++) {
+	 while ((c = *p++)) {
 	    switch(tolower(c)) {
 	    case '?':
 	       help(documentation);
@@ -182,7 +196,7 @@ char *argv[];
    else {
       fflag = fflag ^ (nfile > 0);
       for (i=1; i < argc; ++i) {
-	 if (p = argv[i]) {
+	 if ((p = argv[i])) {
 	    if ((f=fopen(p, "r")) == NULL)
 	       cant(p);
 	    else {
@@ -195,19 +209,19 @@ char *argv[];
    return (0);
 }
 /*******************************************************/
-file(s)
+void file(s)
 char *s;
 {
    printf("File %s:\n", s);
 }
 /*******************************************************/
-cant(s)
+void cant(s)
 char *s;
 {
    fprintf(stderr, "%s: cannot open\n", s);
 }
 /*******************************************************/
-help(hp)
+void help(hp)
 char **hp;
 /*
  * Give good help
@@ -218,7 +232,7 @@ char **hp;
       printf("%s\n", *dp);
 }
 /*******************************************************/
-usage(s)
+void usage(s)
 char	*s;
 {
    fprintf(stderr, "?GREP-E-%s\n", s);
@@ -227,7 +241,7 @@ char	*s;
    exit(1);
 }
 /*******************************************************/
-compile(source)
+void compile(source)
 char	   *source;   /* Pattern to compile	    */
 /*
  * Compile the pattern into global pbuf[]
@@ -243,7 +257,7 @@ char	   *source;   /* Pattern to compile	    */
    if (debug)
       printf("Pattern = \"%s\"\n", s);
    lp = pp = pbuf;
-   while (c = *s++) {
+   while ((c = *s++)) {
       /*
        * STAR, PLUS and MINUS are special.
        */
@@ -376,14 +390,15 @@ char	   *src;      /* Class start	       */
    return(s);
 }
 /*******************************************************/
-store(op)
+void store(op)
+int op;
 {
    if (pp > &pbuf[PMAX-1])
       error("Pattern too complex\n");
    *pp++ = op;
 }
 /*******************************************************/
-badpat(message, source, stop)
+void badpat(message, source, stop)
 char  *message;       /* Error message */
 char  *source;	      /* Pattern start */
 char  *stop;	      /* Pattern end   */
@@ -394,7 +409,7 @@ char  *stop;	      /* Pattern end   */
    error("?GREP-E-Bad pattern\n");
 }
 /*******************************************************/
-grep(fp, fn)
+void grep(fp, fn)
 FILE	   *fp;       /* File to process	    */
 char	   *fn;       /* File name (for -f option)  */
 /*
@@ -427,7 +442,7 @@ char	   *fn;       /* File name (for -f option)  */
    }
 }
 /*******************************************************/
-match()
+int match()
 /*
  * Match the current line (in lbuf[]), return 1 if it does.
  */
@@ -537,7 +552,7 @@ char		   *pattern;  /* (partial) pattern to match   */
 	    l = e;		 /* Get longest match	*/
 	 while (*p++ != ENDPAT); /* Skip over pattern	*/
 	 while (l >= are) {	 /* Try to match rest	*/
-	    if (e = pmatch(l, p))
+	    if ((e = pmatch(l, p)))
 	       return(e);
 	    --l;		 /* Nope, try earlier	*/
 	 }
@@ -550,7 +565,7 @@ char		   *pattern;  /* (partial) pattern to match   */
    return(l);
 }
 /*******************************************************/
-error(s)
+void error(s)
 char *s;
 {
    fprintf(stderr, "%s", s);

@@ -14,6 +14,9 @@
 #include <intuition/intuition.h>
 #include <graphics/gfxmacros.h>
 #include <graphics/view.h>
+#include <stdlib.h>
+
+
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
 
@@ -22,6 +25,14 @@ struct Pt {
 	int y;
 };
 typedef struct Pt _Point;
+
+/* Prototypes */
+void die(char *);
+void init();
+int range_rand(int,int);
+void mv_point(_Point *,_Point *);
+void newdelta(_Point *,_Point *);
+int getdelta();
 
 #define Q 5
 #define N (Q*12)	/* N is the number of lines displayed on the screen */
@@ -66,7 +77,7 @@ struct   Window   *Window;
 struct   Screen   *Screen;
 struct   RastPort  *RP;
 
-main()
+int main()
 {
 
 	struct   NewWindow NewWindow;
@@ -218,7 +229,7 @@ main()
 	exit(TRUE);
 }
 
-die(s)
+void die(s)
 char	*s;
 {
 		
@@ -229,7 +240,7 @@ char	*s;
 	exit(0);
 }
 
-init()
+void init()
 {
 	ULONG	seconds,micros;
 	
@@ -274,7 +285,7 @@ int range_rand(minv,maxv)
 	return i1;
 }
 
-mv_point(p,dp)
+void mv_point(p,dp)
 register _Point *p, *dp;
 {
 	if ((p->x += dp->x) > maxx || p->x < minx)
@@ -288,7 +299,7 @@ register _Point *p, *dp;
 		p->y += dp->y;
 	}
 }
-newdelta(p,dp)
+void newdelta(p,dp)
 register _Point *p, *dp;
 {
 	for (dp->x = getdelta() ;

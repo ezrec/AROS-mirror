@@ -38,6 +38,8 @@ struct GfxBase { int dummy; };
 #include <exec/types.h>
 #include <intuition/intuition.h>
 #include <exec/memory.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 /* Structures needed for libraries */
 
@@ -49,6 +51,24 @@ struct GfxBase *GfxBase;
 struct Screen *BdScr;
 struct Window *BdWdw;
 struct ViewPort *WVPort;
+
+/* Prototypes */
+void roll_dice(USHORT[]);
+USHORT IMsg();
+USHORT Shake(USHORT[]);
+void score_turn(int[],USHORT[],USHORT);
+USHORT Rollrep(USHORT);
+void Deselect(USHORT);
+unsigned int Evaluate(USHORT*,USHORT);
+void ShowScore(USHORT,USHORT,USHORT);
+void ShowDots(USHORT,USHORT);
+void ClearRow(USHORT,USHORT);
+void Name(USHORT);
+void init_scr();
+void init_pad();
+int InitImages();
+void FreeImages();
+void Cleanup();
 
 /***************** Program Constants ****************************/
 
@@ -362,7 +382,7 @@ struct Gadget DieGadg [6] ={
    NULL,                  /* Special info for proportional, string */
    NULL,         
 
-         /* Gadget ID/*
+         /* Gadget ID */
    NULL,                  /* User Data */
 },
 
@@ -397,7 +417,7 @@ struct Gadget ButtonGadget =
    NULL,                  /* Intuitext structure for gadget text */
    NULL,                  /* Mutual exclude, non-functional */
    NULL,                  /* Special info for proportional, string */
-   NULL,                  /* Gadget ID/*
+   NULL,                  /* Gadget ID */
    NULL,                  /* User Data */
 };
 
@@ -413,7 +433,7 @@ struct Gadget ScoreGadget ={
    NULL,                  /* Intuitext structure for gadget text */
    NULL,                  /* Mutual exclude, non-functional */
    NULL,                  /* Special info for proportional, string */
-   NULL,                  /* Gadget ID/*
+   NULL,                  /* Gadget ID */
    NULL                  /* User Data */
 };
 /************* finally, the Menus and their ITexts *************/
@@ -603,7 +623,7 @@ struct NewWindow NewBoardWindow =
 
 /* *************************Program Begins Here******************* */
 
-main()
+void main()
 {
    USHORT bones [DICE];         /* The array for dice values */
    USHORT cats;
@@ -663,7 +683,7 @@ for (turns=0;turns<13;turns++)
 }   /* while */
 }   /* end of main */
 
-roll_dice(bones)
+void roll_dice(bones)
 USHORT bones [];
 
 {
@@ -692,10 +712,10 @@ OffGadget(&ButtonGadget,BdWdw,NULL);
 for(dieno = 0; dieno < DICE ; dieno++)      /* turn gadgets off */
    DieGadg[dieno].Activation = NULL;
 
-}/* end of roll_ */
+}/* end of roll_dice */
 
 
-score_turn(scores,bones,cur_player)
+void score_turn(scores,bones,cur_player)
 
 int scores[];
 USHORT bones[];
@@ -786,7 +806,7 @@ USHORT IMsg()
 
 flag = 35;
 Wait (1 << BdWdw->UserPort->mp_SigBit);
-while (BdMsg = (struct IntuiMessage *)GetMsg(BdWdw->UserPort))
+while ((BdMsg = (struct IntuiMessage *)GetMsg(BdWdw->UserPort)))
    {
    Mclass = BdMsg->Class;
    Mcode = BdMsg->Code;
@@ -870,7 +890,7 @@ DieGadg[dieno].GadgetRender=(APTR)&DieImage[throw];
 return(throw);
 }
 
-Deselect (dieno)
+void Deselect (dieno)
 USHORT dieno;
 {
 USHORT Gadgetno ;
@@ -882,9 +902,7 @@ USHORT Gadgetno ;
 
 Gadgetno = RemoveGadget(BdWdw, &DieGadg[dieno]);
 DieGadg[dieno].Flags ^= SELECTED;               /* toggle SELECTED flag */
-AddGadget(BdWdw,&DieGadg[
-
-dieno],Gadgetno);
+AddGadget(BdWdw,&DieGadg[dieno],Gadgetno);
 }
 
 
@@ -992,7 +1010,7 @@ switch(row)
 }
 
 
-ShowScore(score,row,player)
+void ShowScore(score,row,player)
 USHORT score,row,player;
 {
 int length;
@@ -1009,7 +1027,7 @@ char *score_str = "0000";
 }
 
 
-ShowDots (row,player)
+void ShowDots (row,player)
 USHORT row,player;
 {
    Move (BdRp,DOTL + (DOTS*player), (row*TEXTS)+DOTT );
@@ -1018,7 +1036,7 @@ USHORT row,player;
 
 }
 
-ClearRow (row,player)
+void ClearRow (row,player)
 USHORT row,player;
 {
 
@@ -1028,7 +1046,7 @@ USHORT row,player;
 
 }
 
-Name (player)
+void Name (player)
 USHORT player;
 {
 
@@ -1039,7 +1057,7 @@ USHORT player;
 
 
 
-init_scr()
+void init_scr()
 {
  
 /* move image data to chip memory*/
@@ -1079,7 +1097,7 @@ init_pad();      /* draw the score pad */
 
 }   /* end of init_scr */
 
-init_pad()
+void init_pad()
 {
 /* Set up the board outline */
 
@@ -1154,7 +1172,7 @@ srand(Micros);
 
 }   /* end of init_pad */
 
-InitImages()
+int InitImages()
 {
    extern USHORT (*SpotData_chip)[57];
    int row,col;
@@ -1175,7 +1193,7 @@ InitImages()
 
 }
 
-FreeImages()
+void FreeImages()
 {
 extern USHORT (*SpotData_chip)[57];
 
@@ -1185,7 +1203,7 @@ extern USHORT (*SpotData_chip)[57];
 
 }
 
-Cleanup()
+void Cleanup()
 {
    FreeImages();
    CloseWindow(BdWdw);
