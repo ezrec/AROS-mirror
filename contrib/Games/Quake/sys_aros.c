@@ -16,6 +16,7 @@
 #include <exec/memory.h>
 
 #include <dos/dos.h>
+#include <utility/tagitem.h>
 
 
 #include "quakedef.h"
