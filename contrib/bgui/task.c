@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.10  2000/08/09 14:54:19  stegerg
+ * fixed a bug which was introduced by one of us AROS guys and which caused
+ * enforcer hits on Amiga.
+ *
  * Revision 42.9  2000/08/09 11:45:57  chodorowski
  * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
  *
@@ -416,7 +420,7 @@ makeproto UWORD AddTaskMember(void)
       DefPrefs();
       sprintf(buffer, "ENV:BGUI/%s.prefs", "Default");
       LoadPrefs(buffer);
-      if(!Cli())
+      if(Cli())
       {
 	 STRPTR command_name,insert;
 	 size_t offset;
