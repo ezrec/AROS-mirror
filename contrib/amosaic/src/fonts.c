@@ -19,7 +19,7 @@ void setup_font(struct TextAttr *t, char *name, char *pref)
     printf("Malformed fontpref: %s\n", pref);
     exit(1);
   }
-//  ++p;
+  ++p;
   stccpy(name, pref, (p - pref));
   strcat(name, ".font");
 
