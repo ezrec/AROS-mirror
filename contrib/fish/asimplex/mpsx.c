@@ -142,7 +142,7 @@ STRPTR  str;
   LONG    t;
   TEXT    ch;
   VOID    PrintError();
-  SHORT   GetExpr();
+  /* SHORT   GetExpr(); */
   STRPTR  ptr;
 
   symbflag = 0;
@@ -283,8 +283,9 @@ BOOL Pass1()
   ITEMPTR iptr;
   BOOL    ParseLine();
   VOID    PrintError(), UpdateLine();
-  SHORT   GetExpr();
-  ITEMPTR NewListEl(), SearchEl();
+  /* SHORT   GetExpr(); */
+  /* ITEMPTR NewListEl(), SearchEl(); */
+  ITEMPTR NewListEl();
 
   printf("P1 0");
   sprintf(line_nr,"%ld",count);
@@ -741,7 +742,8 @@ BOOL ChooseSymbols()
 
 {
   ITEMPTR dptr;
-  ITEMPTR Select(), SearchEl();
+  /* ITEMPTR Select(), SearchEl(); */
+  ITEMPTR Select();
   VOID    DeleteList();
 
 
@@ -892,10 +894,10 @@ BOOL Pass2()
   STRPTR  ptr[5];
   ITEMPTR iptr;
   DOUBLE  *ptr1, *ptr2;
-  ITEMPTR SearchEl();
-  SHORT   GetExpr();
+  /* ITEMPTR SearchEl(); */
+  /* SHORT   GetExpr(); */
   BOOL    TakeMem(), SearchExpr();
-  VOID    Cap();
+  /* VOID    Cap(); */
   DOUBLE  atof();
 
 

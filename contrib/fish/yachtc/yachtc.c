@@ -630,7 +630,8 @@ void main()
    USHORT bones [DICE];         /* The array for dice values */
    USHORT cats;
    int scores [MAXPLAYERS] [SCORECATS];
-   USHORT IMsg(), flag;
+   /* USHORT IMsg(), flag; */
+   USHORT flag;
    USHORT players, cur_player, turns;
 
 
@@ -690,7 +691,7 @@ USHORT bones [];
 
 {
    USHORT changed,dieno,flag;
-   USHORT Shake(),Rollrep(),IMsg();
+   /* USHORT Shake(),Rollrep(),IMsg(); */
 
 for(dieno=0;dieno<DICE;dieno++)      /* do first roll */
 
@@ -725,7 +726,8 @@ USHORT cur_player;
 
 {
    USHORT IMsg();
-   unsigned int Evaluate(),score;
+   /* unsigned int Evaluate(),score; */
+   unsigned int score;
    USHORT row;
 
    /* position score gadget */
@@ -861,7 +863,8 @@ return(flag);
 USHORT Shake(bones)
 USHORT bones[];
 {
-   USHORT dieno,changed,Rollrep();
+   /* USHORT dieno,changed,Rollrep(); */
+   USHORT dieno,changed;
    for(dieno=changed=0;dieno<DICE;dieno++)
    {
       OnGadget(&DieGadg[dieno],BdWdw,NULL);
