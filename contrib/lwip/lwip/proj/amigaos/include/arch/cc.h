@@ -63,8 +63,14 @@ typedef signed     long    s32_t;
 
 typedef u32_t mem_ptr_t;
 
-#define PACK_STRUCT_FIELD(x) x //__attribute__((packed))
-#define PACK_STRUCT_STRUCT //__attribute__((packed))
+#ifdef __AROS__
+#define PACK_STRUCT_FIELD(x) x __attribute__((packed))
+#define PACK_STRUCT_STRUCT __attribute__((packed))
+#else
+#define PACK_STRUCT_FIELD(x) x
+#define PACK_STRUCT_STRUCT
+#endif
+
 #define PACK_STRUCT_BEGIN
 #define PACK_STRUCT_END
 
