@@ -34,7 +34,7 @@
 #include "nmglobal.h"
 
 #ifndef MAC
-#ifndef __AROS
+#ifndef __AROS__
 #include <malloc.h>
 #endif
 #endif

@@ -199,7 +199,7 @@ static int add_elf_sym(Section *s, unsigned long value, unsigned long size,
                        sym_bind, sh_num, esym_bind, esym->st_shndx);
 #endif
                 /* NOTE: we accept that two DLL define the same symbol */
-#ifndef _AROS
+#ifndef __AROS__
 		   if (s != tcc_state->dynsymtab_section)
                    error_noabort("'%s' defined twice", name);
 #else
@@ -745,7 +745,7 @@ static void tcc_add_runtime(TCCState *s1)
     char buf[1024];
     int i;
     Section *s;
-#ifndef _AROS
+#ifndef __AROS__
     snprintf(buf, sizeof(buf), "%s/%s", tcc_lib_path, "libtcc1.o");
 #else
     snprintf(buf, sizeof(buf), "%s/%s", tcc_lib_path, "libtcc1.a");

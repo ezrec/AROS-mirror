@@ -19,7 +19,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_bind(register __d0 long s, register __a0 struct sockaddr *name, register __d1 long namelen)
 #else
 	AROS_LH3(int, LIB_bind,

@@ -11,8 +11,11 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2003/01/18 19:09:59  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.2  2000/05/29 00:40:24  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
@@ -53,7 +56,7 @@
  *
  */
 
-#ifdef _AROS
+#ifdef __AROS__
 #include "include/bgui_macros.h"
 #endif
 
@@ -79,7 +82,7 @@ makeproto ASM REGFUNC2(LONG, min,
 	REGPARAM(D1, LONG, b))
 { return (a < b) ? a : b; }
 
-#ifdef _AROS
+#ifdef __AROS__
 #warning No abs function here, since it is 'built in'.
 #else
 //makeproto ASM LONG abs(REG(d0) LONG a)

@@ -31,7 +31,7 @@
 #include <string.h>
 #include <libraries/reqtools.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <aros/asmcall.h>
 #endif
 
@@ -848,7 +848,7 @@ if(!cmc->moreconfig) {
 }
 return(cmc->moreconfig);
 }
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(APTR, dlldisplayhookfunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -858,7 +858,7 @@ AROS_UFH3(APTR, dlldisplayhookfunc,
 __saveds __asm APTR dlldisplayhookfunc(register __a0 struct Hook *hook,register __a2 Object *obj,register __a1 struct lvRender *lvr)
 #endif
 {
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_INIT
 #endif
    
@@ -884,12 +884,12 @@ break;
 }
 return(str);
 
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_EXIT
 #endif
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(APTR, dllresourcehookfunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -898,7 +898,7 @@ AROS_UFH3(APTR, dllresourcehookfunc,
 __saveds __asm APTR dllresourcehookfunc(register __a0 struct Hook *hook,register __a2 Object *obj,register __a1 struct lvResource *lvr)
 #endif
 {
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_INIT
 #endif
 
@@ -917,7 +917,7 @@ FreeVec(lvr->lvr_Entry);
 break;
 }
 return(dll);
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_EXIT
 #endif
 }
@@ -1414,7 +1414,7 @@ BGUI_DoGadgetMethod(gs[1]->obj,gb->win,0,LVM_REFRESH,0);
 BGUI_DoGadgetMethod(gs[2]->obj,gb->win,0,LVM_REFRESH,0);
 BGUI_DoGadgetMethod(gs[3]->obj,gb->win,0,LVM_REFRESH,0);
 }
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(APTR, comdisplayhookfunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -1423,17 +1423,17 @@ AROS_UFH3(APTR, comdisplayhookfunc,
 __saveds __asm APTR comdisplayhookfunc(register __a0 struct Hook *hook,register __a2 Object *obj,register __a1 struct lvRender *lvr)
 #endif
 {
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_INIT
 #endif
 struct cmenudata *cmd=(struct cmenudata*)lvr->lvr_Entry;
 return(cmd->name);
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_EXIT
 #endif
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(APTR, comresourcehookfunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -1442,7 +1442,7 @@ AROS_UFH3(APTR, comresourcehookfunc,
 __saveds __asm APTR comresourcehookfunc(register __a0 struct Hook *hook,register __a2 Object *obj,register __a1 struct lvResource *lvr)
 #endif
 {
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_INIT
 #endif
 
@@ -1474,7 +1474,7 @@ FreeVec(lvr->lvr_Entry);
 break;
 }
 return(cmd);
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_EXIT
 #endif
 }

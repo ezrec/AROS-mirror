@@ -443,7 +443,7 @@ int main (argc, argv)
     env = add_envopt(&argc, &argv, OPTIONS_VAR);
     if (env != NULL) args = argv;
 
-#ifndef __AROS
+#ifndef __AROS__
     foreground = signal(SIGINT, SIG_IGN) != SIG_IGN;
     if (foreground) {
 	(void) signal (SIGINT, (sig_type)abort_gzip);

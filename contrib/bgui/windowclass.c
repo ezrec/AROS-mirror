@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.9  2003/01/18 19:10:03  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.8  2000/08/17 15:09:18  chodorowski
  * Fixed compiler warnings.
  *
@@ -29,10 +32,10 @@
  * (UWORD --> STACKUWORD, ...)
  *
  * Revision 42.4  2000/06/01 01:41:38  bergers
- * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
+ * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef __AROS__), please.
  *
  * Revision 42.3  2000/05/29 00:40:24  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.2  2000/05/15 19:27:03  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
@@ -967,7 +970,7 @@ STATIC ASM REGFUNC1(VOID, KillAppWindow,
     */
    if (wd->wd_AppWindow)
    {
-#ifdef _AROS
+#ifdef __AROS__
 #warning Commented RemoveAppWindow
 #else
       RemoveAppWindow(wd->wd_AppWindow);
@@ -1006,7 +1009,7 @@ STATIC ASM REGFUNC1(BOOL, MakeAppWindow,
       /*
        * Create the app window.
        */
-#ifdef _AROS
+#ifdef __AROS__
 #warning Commented AddAppWindowA
 #else
       if (wd->wd_AppWindow = AddAppWindowA(0, 0, wd->wd_WindowPtr, wd->wd_AppPort, NULL))
@@ -2218,7 +2221,7 @@ METHOD(WindowClassHelp, Msg, msg)
 {
    WD                   *wd = INST_DATA( cl, obj );
    struct bmShowHelp     bsh;
-#ifdef _AROS
+#ifdef __AROS__
 #warning Commented the following line
 #else
    struct NewAmigaGuide  nag = { NULL };
@@ -2269,7 +2272,7 @@ METHOD(WindowClassHelp, Msg, msg)
 	       }
 	       else
 	       {
-#ifdef _AROS
+#ifdef __AROS__
 #warning Commented the following lines
 #else
 		  nag.nag_Name   = (STRPTR)wd->wd_HelpFile;
@@ -2384,7 +2387,7 @@ STATIC ULONG KeyGadget(Class *cl, Object *obj, struct IntuiMessage *imsg)
       code = code | 0xFF00;
    };
 
-   #ifdef _AROS
+   #ifdef __AROS__
    if (!(ob = (Object *)AsmDoMethod(obj, BASE_FINDKEY, qual, code)))
       goto end;
    #else
@@ -3810,7 +3813,7 @@ WW(kprintf("WindowClassRelease: clearing WDF_REMOVED flag\n"));
 WW(kprintf("WindowClassRelease: calling RefreshGList: gad = %x\n", (struct Gadget *)wd->wd_Gadgets));
 
 #warning temp AROS fix to fix refresh problem after an automatic window-resize done by BGUI
-#ifdef _AROS
+#ifdef __AROS__
 RefreshGList((struct Gadget *)wd->wd_Gadgets, w, 0, 1);
 #endif
 
@@ -3943,7 +3946,7 @@ METHOD(WindowClassWhichObject, Msg, msg)
 	  * Let's see what the master returns to us.
 	  */
 	  
-	 #ifdef _AROS
+	 #ifdef __AROS__
 	 rc = AsmDoMethod(wd->wd_Gadgets, GRM_WHICHOBJECT, mx, my);
 	 #else
 	 rc = AsmDoMethod(wd->wd_Gadgets, GRM_WHICHOBJECT, (mx << 16) | my);

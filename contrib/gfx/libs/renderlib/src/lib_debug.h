@@ -12,7 +12,7 @@
 	void dprintf(char *, ... );
 	#undef kprintf
 	#define kprintf dprintf
-#elif defined(_AROS)
+#elif defined(__AROS__)
     	#include <aros/debug.h>
 #else
 	VOID kprintf(STRPTR,...);

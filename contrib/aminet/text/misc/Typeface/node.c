@@ -32,7 +32,7 @@ struct Node *node;
   {
     while ((node = RemHead(*list)))
     {
-      #ifdef _AROS
+      #ifdef __AROS__
       if (hook)
       {
       	 ((void (*)(struct Node *))hook)(node);

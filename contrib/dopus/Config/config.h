@@ -816,7 +816,7 @@ extern char
 extern struct StringInfo namesinfo,funcsinfo;
 
 /* AROS: No point in __chip keyword */
-#ifdef _AROS
+#ifdef __AROS__
 #define __chip
 #endif
 

@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2003/01/18 19:10:21  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.5  2000/08/08 20:57:28  chodorowski
  * Minor fixes to build on Amiga.
  *
@@ -23,7 +26,7 @@
  * fixed/activated REGFUNC/REGPARAM macros.
  *
  * Revision 42.2  2000/05/29 00:40:25  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.1  2000/05/15 19:28:20  stegerg
  * REG() macro replacementes
@@ -58,7 +61,7 @@
 #endif /* LIBRARIES_BGUI_H */
 
 #ifndef CLIB_ALIB_PROTOS_H
-#ifdef _AROS
+#ifdef __AROS__
 #include <proto/alib.h>
 #else
 #include <clib/alib_protos.h>

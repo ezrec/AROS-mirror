@@ -37,7 +37,7 @@ Object *all, *cancel, *update, *clear;
     ActivateWindow(PreviewWnd);
     SetPreviewFont();
     SetPreviewScroller();
-#ifdef _AROS
+#ifdef __AROS__
 #warning No textfield.gadget in AROS
 #else
     ActivateGadget((struct Gadget *)PreviewStr,PreviewWnd,NULL);
@@ -71,7 +71,7 @@ Object *all, *cancel, *update, *clear;
 		HOffset(SizeX(8)),VOffset(SizeY(4)),
 		ButtonFrame,
 		FRM_Recessed,TRUE,
-#ifdef _AROS
+#ifdef __AROS__
 #warning No textfield.gadget in AROS
 #else
 		StartMember,
@@ -132,7 +132,7 @@ Object *all, *cancel, *update, *clear;
     if ((PreviewWnd = WindowOpen(PreviewWndObj)) == NULL)
       ErrorCode(OPENWINDOW);
     SetPreviewScroller();
-#ifdef _AROS
+#ifdef __AROS__
 #warning No textfield.gadget in AROS
 #else
     ActivateGadget((struct Gadget *)PreviewStr,PreviewWnd,NULL);
@@ -165,7 +165,7 @@ UBYTE *oldfont;
   PreviewFont = SaveFont(TRUE,TRUE);
   FirstChar = fchar;
   LastChar = lchar;
-#ifdef _AROS
+#ifdef __AROS__
 #warning No textfield.gadget in AROS
 #warning When we have textfield.gadget, dont forget that PreviewFont is in <disk format>!!
 #warning That is: always big endian! And structure format/aligning like on Amiga. Must convert
@@ -192,7 +192,7 @@ ULONG top;
   switch (code)
   {
     case ID_CLEAR:
-#ifdef _AROS
+#ifdef __AROS__
 #warning No textfield.gadget in AROS
 #else
       SetGadgetAttrs((struct Gadget *)PreviewStr,PreviewWnd,NULL,
@@ -208,7 +208,7 @@ ULONG top;
       break;
     case ID_PREVIEWSCROLL:
       GetAttr(PGA_Top,PreviewScroll,&top);
-#ifdef _AROS
+#ifdef __AROS__
 #warning No textfield.gadget in AROS
 #else
       SetGadgetAttrs((struct Gadget *)PreviewStr,PreviewWnd,NULL,
@@ -226,7 +226,7 @@ ULONG top;
 
 void SetPreviewScroller()
 {
-#ifdef _AROS
+#ifdef __AROS__
 #warning No textfield.gadget in AROS
 #else
 ULONG lines,visible,top;
@@ -267,7 +267,7 @@ char listtext[((PREVIEW_WIDTH+1)*(256/PREVIEW_WIDTH))+1];
     listtext[(i*(PREVIEW_WIDTH+1))+PREVIEW_WIDTH] = '\n';
   }
   listtext[((PREVIEW_WIDTH+1)*(256/PREVIEW_WIDTH))] = '\0';
-#ifdef _AROS
+#ifdef __AROS__
 #warning No textfield.gadget in AROS
 #else
   SetGadgetAttrs((struct Gadget *)PreviewStr,PreviewWnd,NULL,
@@ -320,7 +320,7 @@ struct FileDiskFontHeader
   UBYTE dfh_TF_tf_CharKern[4];
 };
 
-#ifdef _AROS
+#ifdef __AROS__
 #if !AROS_BIG_ENDIAN
 
 void FixFontContentsEndianess(struct FontContentsHeader *fch)
@@ -446,7 +446,7 @@ BPTR fontfile, contfile, lock;
     fontkernptr = (WORD *)((UBYTE *)fontlocptr+
       numchars*sizeof(struct charDef));
 
-#ifdef _AROS
+#ifdef __AROS__
     tfh = (struct TextFont *)0xBAADC0DE;
 #else
     tfh = (struct TextFont *)(&dfh->dfh_TF_tf_Message_mn_Node_ln_Succ);
@@ -595,7 +595,7 @@ BPTR fontfile, contfile, lock;
 	  if (contfile != 0)
 	  {
 	    WindowBusy(SaveWndObj);
-#ifdef _AROS
+#ifdef __AROS__
 #if !AROS_BIG_ENDIAN
     	    FixFontContentsEndianess(fch);
 #endif
@@ -662,7 +662,7 @@ ULONG i,j,width,widthi,modi,offset;
 	*(fontdataptr+modi+((offset+j)>>3)) |= 128>>((offset+j)&7);
     }
   }
-#ifdef _AROS
+#ifdef __AROS__
   ((WORD *)(cd+dest))[0] = WORD2BE(offset);
   ((WORD *)(cd+dest))[1] = WORD2BE(width);
 #else

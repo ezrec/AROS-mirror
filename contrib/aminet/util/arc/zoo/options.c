@@ -18,7 +18,7 @@ system are in machine.c for the appropriate system.
 #include "zoofns.h"
 #include "errors.i"
 
-#ifndef __AROS
+#ifndef __AROS__
 /* rename using link() followed by unlink() */
 /* 
 The following code assumes that if unlink() returns nonzero, then the

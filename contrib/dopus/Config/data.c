@@ -412,7 +412,7 @@ char *fileclasstype[4];
 
 char maxlength[5]={30,80,40,32,32};
 
-#ifdef _AROS
+#ifdef __AROS__
 #define __chip
 #endif
 

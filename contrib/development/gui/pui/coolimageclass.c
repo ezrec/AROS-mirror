@@ -1,6 +1,6 @@
 #include <OSIncludes.h>
 
-#ifndef _AROS
+#ifndef __AROS__
 #pragma header
 #endif
 
@@ -31,7 +31,7 @@ static struct lookup
 	{infodata,infopal,INFOWIDTH,INFOHEIGHT,INFODEPTH}
 };
 
-#ifdef _AROS
+#ifdef __AROS__
 
 LONG _WritePixelLine8(struct RastPort *rp, LONG x1, LONG y1, LONG width,
     	    	      UBYTE *array, struct RastPort *temprp)
@@ -280,14 +280,14 @@ ULONG CoolImageDispatcher(struct IClass *cl,Object *obj,Msg msg)
 		case GM_RENDER:
 			if (data->imageok && (rp = RENDERMSG->gpr_RPort) && PUI_MayRender(obj))
 			{
-			#ifndef _AROS
+			#ifndef __AROS__
 				if (data->mask)
 				{
 					BltMaskBitMapRastPort(data->bm,0,1,rp,GAD->LeftEdge,GAD->TopEdge,data->width,data->height,ANBC|ABNC|ABC,data->mask);
 				} else {
     	    	    	#endif
 					BltBitMapRastPort(data->bm,0,1,rp,GAD->LeftEdge,GAD->TopEdge,data->width,data->height,192);
-			#ifndef _AROS
+			#ifndef __AROS__
 				}
 			#endif
 			}

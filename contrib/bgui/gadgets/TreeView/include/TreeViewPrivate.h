@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2003/01/18 19:10:21  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.6  2000/08/09 10:17:25  chodorowski
  * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
  * macros. Some of these files didn't need them at all...
@@ -85,7 +88,7 @@
 
 extern struct IntuitionBase     *IntuitionBase;         /* V37+ */
 extern struct GfxBase   *GfxBase;                               /* V37+ */
-#ifdef _AROS
+#ifdef __AROS__
 extern struct UtilityBase       *UtilityBase;                   /* V37+ */
 #else
 extern struct Library   *UtilityBase;                   /* V37+ */
@@ -96,7 +99,7 @@ extern struct Library   *BGUIBase;                              /* V40+ */
  * Only referenced while debugging:
  */
 
-#ifdef _AROS
+#ifdef __AROS__
 #else
 extern void __stdargs KPrintF(char *fmt,...);
 #endif

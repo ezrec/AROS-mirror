@@ -18,7 +18,7 @@ struct GfxBase  *GfxBase=NULL;
 struct Library  *MUIMasterBase=NULL;
 struct Library  *UtilityBase=NULL;
 
-#ifndef _AROS
+#ifndef __AROS__
 
 /* On AmigaOS we build a fake library base, because it's not compiled as sharedlibrary yet */
 #include "muimaster_intern.h"

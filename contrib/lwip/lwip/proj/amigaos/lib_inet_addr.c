@@ -21,7 +21,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm unsigned long LIB_inet_addr(register __a0 char *cp)
 #else
 	AROS_LH1(unsigned long, LIB_inet_addr,

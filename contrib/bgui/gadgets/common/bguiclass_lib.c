@@ -46,7 +46,7 @@ extern UWORD _LibRevision;     /* Revision of library    */
 
 
 
-#ifdef _AROS
+#ifdef __AROS__
 
 struct Library * LibInit();
 AROS_LD1(struct Library *, LibOpen,
@@ -77,7 +77,7 @@ static const LONG Vectors[] = {
    /*
     * System interface.
     */
-#ifdef _AROS
+#ifdef __AROS__
    (LONG)BGUIGadget_LibOpen,
    (LONG)BGUIGadget_LibClose,
    (LONG)BGUIGadget_LibExpunge,
@@ -119,7 +119,7 @@ ULONG _LibInit[4] =
 /*
  * Library initialization.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(struct Library *, LibInit,
         AROS_UFHA(struct Library *, lib, D0),
         AROS_UFHA(BPTR, segment, A0),
@@ -176,7 +176,7 @@ SAVEDS ASM struct Library *LibInit(REG(d0) struct Library *lib, REG(a0) BPTR seg
 /*
  * Open library.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_LH1(struct Library *, LibOpen,
     AROS_LHA(ULONG, version, D0),
     struct Library *, lib, 1, BGUIGadget)
@@ -203,7 +203,7 @@ SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0) ULONG li
 /*
  * Close library.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_LH0(BPTR, LibClose,
          struct Library *, lib, 2, BGUIGadget)
 #else
@@ -221,7 +221,7 @@ SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     * Delayed expunge pending?
     */
    if (lib->lib_Flags & LIBF_DELEXP)
-#ifdef _AROS
+#ifdef __AROS__
       return AROS_UFC2(BPTR, BGUIGadget_LibExpunge,
                 AROS_UFCA(struct Library *, lib, D0),
                 AROS_UFCA(struct ExecBase *, SysBase, A6));
@@ -238,7 +238,7 @@ SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
 /*
  * Expunge library.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_LH1(BPTR, LibExpunge,
     AROS_LHA(struct Library *, lib, D0),
     struct ExecBase *, sysBase, 3, BGUIGadget)
@@ -289,7 +289,7 @@ SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
 /*
  * Reserved routine.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_LH0(LONG, LibVoid,
      struct Library *, lib, 4, BGUIGadget)
 #else

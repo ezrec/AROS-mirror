@@ -35,7 +35,7 @@ int getopt(int argc, char *argv[], char *optstring) {
      }
 
      c = *scan++;
-#ifndef __AROS  
+#ifndef __AROS__  
    place = index(optstring, c);
      if (place == NULL || c == ':') {
           fprintf(stderr, "%s: unknown option -%c\n", argv[0], c);

@@ -7,7 +7,7 @@
 /*************************************************************/
 
 #ifdef USE_ZUNE
-#ifndef _AROS
+#ifndef __AROS__
 #define USE_ZUNE_ON_AMIGA
 #endif
 #endif

@@ -14,7 +14,7 @@
 
 #include "include/classdefs.h"
 
-#ifdef _AROS
+#ifdef __AROS__
 extern struct Library * AslBase;
 #endif
 

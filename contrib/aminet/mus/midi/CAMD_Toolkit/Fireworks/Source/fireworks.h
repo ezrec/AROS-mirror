@@ -3,7 +3,7 @@
 
 #include <libcore/compiler.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #  define CHIP
 #endif
 

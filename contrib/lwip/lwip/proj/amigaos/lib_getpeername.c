@@ -12,7 +12,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_getpeername(register __d0 long s, register __a0 struct sockaddr *h, register __a1 long *n)
 #else
 	AROS_LH3(int, LIB_getpeername,

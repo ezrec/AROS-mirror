@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2003/01/18 19:10:09  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.3  2000/08/10 11:50:54  chodorowski
  * Cleaned up and prettyfied the GUIs a bit.
  *
@@ -723,7 +726,7 @@ ULONG SAVEDS ASM
 SAVEDS ASM ULONG
 #endif
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(, BackFillHook,
 	AROS_LHA(struct Hook *, hook, A0),
 	AROS_LHA(Object *, imo, A2),
@@ -876,7 +879,7 @@ VOID SAVEDS ASM
 #else
 SAVEDS ASM VOID
 #endif
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(,TabHookFunc,
 	AROS_LHA(struct Hook *, hook, A0),
 	AROS_LHA(Object *, obj, A2),

@@ -29,7 +29,7 @@
 #include <proto/intuition.h>
 #include <clib/alib_protos.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <proto/muimaster.h>
 #endif
 
@@ -49,7 +49,7 @@ extern struct Library *MUIMasterBase;
 #ifdef __GNUC__
 #include "../NListviews_mcp/NListviews_mcp.h"
 #include "../NList_mcc/NList_mcc.h"
-#ifndef _AROS
+#ifndef __AROS__
 #include "../common/mcc_common.h"
 #else
 #include "../commonaros/mcc_common.h"
@@ -605,7 +605,7 @@ ULONG _Dispatcher_gate(void)
   struct IClass *cl = REG_A0;
   Msg msg = REG_A1;
   Object *obj = REG_A2;
-#elif defined(_AROS)
+#elif defined(__AROS__)
 AROS_UFH3(IPTR, _Dispatcher,
     AROS_UFHA(struct IClass *, cl, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -616,7 +616,7 @@ ULONG ASM SAVEDS NListview_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), RE
 {
 #endif
 
-#ifdef _AROS
+#ifdef __AROS__
   AROS_USERFUNC_INIT
 #endif
 
@@ -688,7 +688,7 @@ ULONG ASM SAVEDS NListview_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), RE
   }
   return(DoSuperMethodA(cl,obj,msg));
 
-#ifdef _AROS
+#ifdef __AROS__
   AROS_USERFUNC_EXIT
 #endif
 }

@@ -831,7 +831,7 @@ void DisplayPart( long von, long bis, struct DisplayData *DD )
 
 	ypos = DD->bby + DD->DI->fbase + startzeile * DD->DI->fhoehe;
 
-#ifdef _AROS
+#ifdef __AROS__
     #warning "stegerg: check why this is needed!"
     SetDrMd(DD->Wnd->RPort, JAM2);
 #endif

@@ -19,7 +19,7 @@
 #include <proto/intuition.h>
 #include <proto/exec.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <proto/alib.h>
 #else
 #include <clib/alib_protos.h>

@@ -37,7 +37,7 @@
 #include <time.h>
 
 
-#ifndef __AROS
+#ifndef __AROS__
 #include <dos.h>
 #else
 #include <dos/dos.h>
@@ -253,7 +253,7 @@ static int Thread_Entry(void)
 {
     struct Process *proc;
     struct StartupMsg *mess;
-#ifndef __AROS
+#ifndef __AROS__
     struct ExecBase *SysBase = *((struct ExecBase **)4);
 #endif
     __regargs int (*fp)(void *, void *, void *);
@@ -273,7 +273,7 @@ static int Thread_Entry(void)
 
     /* replace this with the proper #asm for Aztec */
 
-#ifndef __AROS
+#ifndef __AROS__
     putreg(REG_A4, (long)mess->global_data);
 #endif
 
@@ -577,7 +577,7 @@ void sys_thread_new(void (* function)(void *arg), void *arg)
     start_msg->msg.mn_Node.ln_Type = NT_MESSAGE;
     start_msg->child = pr;
 
-#ifndef __AROS  
+#ifndef __AROS__  
     start_msg->global_data = (void *)getreg(REG_A4);  /* Save global data reg (A4) */
 #endif
 

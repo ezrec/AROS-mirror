@@ -19,7 +19,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_CloseSocket(register __d0 LONG s)
 #else
 	AROS_LH1(int, LIB_CloseSocket,

@@ -587,7 +587,7 @@ struct Gadget
 			GTYP_BOOLGADGET,NULL,NULL,NULL,GAD_CYCLE,NULL,SCREEN_SLIDER_RIGHTCYCLE,NULL}};
 
 
-#ifdef _AROS
+#ifdef __AROS__
 #define __chip
 #endif
 

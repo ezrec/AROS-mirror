@@ -11,11 +11,14 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2003/01/18 19:09:56  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.4  2000/08/09 11:45:57  chodorowski
  * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
  *
  * Revision 42.3  2000/05/29 00:40:23  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.2  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
@@ -484,7 +487,7 @@ makeproto ASM REGFUNC3(ULONG, GadgetState,
 		 : (ULONG)(normal ? IDS_INACTIVENORMAL : IDS_INACTIVESELECTED);
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH6(VOID, BGUI_FillRectPattern,
     AROS_LHA(struct RastPort *, r, A1),

@@ -164,7 +164,7 @@
 //      #define UNUSED(var)     var __attribute__((unused))
 //      #define REG(reg,arg) arg __asm(#reg)
 
-#ifdef _AROS
+#ifdef __AROS__
 
 	#define makearosproto
 
@@ -332,13 +332,13 @@
 
 /*** AROS compatability for AmigaOS *********************************/
 
-#ifndef _AROS
+#ifndef __AROS__
 #define IPTR ULONG
 #endif
 
 /*** Disable these macros when not building on AROS *****************/
 
-#ifndef _AROS
+#ifndef __AROS__
 #define AROS_LIBFUNC_INIT
 #define AROS_LIBFUNC_EXIT
 #define AROS_LIBBASE_EXT_DECL(a,b)
@@ -346,7 +346,7 @@
 
 /*** METHOD macro ***************************************************/
 
-#ifdef _AROS
+#ifdef __AROS__
   #define METHOD(f,mtype,m) STATIC ASM AROS_UFH3(ULONG, f, \
 			  AROS_UFHA(Class *, cl, A0), \
 			  AROS_UFHA(Object *, obj, A2), \
@@ -357,7 +357,7 @@
 
 /*** REGFUNC and REGPARAM macros ************************************/
 
-#ifdef _AROS
+#ifdef __AROS__
 
   #ifndef AROS_ASMCALL_H
   #include <aros/asmcall.h>

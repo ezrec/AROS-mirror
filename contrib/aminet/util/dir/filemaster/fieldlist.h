@@ -133,7 +133,7 @@ STATIC void __saveds __asm SetFLAttr(register __a0 FLD *fld, register __a1 struc
  *	SAS users!
  */
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3S(ULONG, DispatchFL,
     AROS_UFHA(Class *, cl, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -142,7 +142,7 @@ AROS_UFH3S(ULONG, DispatchFL,
 STATIC ULONG __saveds __asm DispatchFL(register __a0 Class *cl,register __a2 Object *obj, register __a1 Msg msg )
 #endif
 {
-#ifdef _AROS
+#ifdef __AROS__
     	AROS_USERFUNC_INIT
 #endif
 
@@ -306,7 +306,7 @@ WORD cnt1;
 			break;
 	}
 	return( rc );
-#ifdef _AROS
+#ifdef __AROS__
     	AROS_USERFUNC_EXIT
 #endif
 }

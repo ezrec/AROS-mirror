@@ -22,7 +22,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_accept(register __d0 long s, register __a0 struct sockaddr *addr, register __a1 int *addrlen)
 #else
 	AROS_LH3(int, LIB_accept,

@@ -11,7 +11,7 @@
 #include <proto/keymap.h>
 #include <proto/gadtools.h>
 #include <clib/alib_protos.h>
-#ifdef _AROS
+#ifdef __AROS__
 #include <aros/asmcall.h>
 #endif
 
@@ -793,7 +793,7 @@ void SendMsg( struct Window * w, UBYTE Key )
 	}
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3S(ULONG, SearchHookFunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(struct SGWork *, sgw, A2),
@@ -1021,7 +1021,7 @@ static ULONG __saveds __asm SearchHookFunc(	register __a0 struct Hook *hook,
 
    return(return_code);
 
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_EXIT
 #endif
 }

@@ -27,7 +27,7 @@
 #   include <graphics/gfxbase.h>
 #endif
 
-#ifdef _AROS
+#ifdef __AROS__
 #ifndef AROS_ASMCALL_H
 #   include <aros/asmcall.h>
 #endif
@@ -57,7 +57,7 @@
 
 
 /* Sometype defs in AROS */
-#ifndef _AROS
+#ifndef __AROS__
 #ifndef _AROS_TYPES_DEFINED
 typedef unsigned long IPTR;
 typedef long STACKLONG;
@@ -97,7 +97,7 @@ struct SocketBase_intern
 #undef SOCKB
 #define SOCKB(b)	((struct SocketBase_intern *)b)
 
-#ifdef _AROS
+#ifdef __AROS__
 
 #undef SysBase
 #define SysBase     	(SOCKB(SocketBase)->sysbase)

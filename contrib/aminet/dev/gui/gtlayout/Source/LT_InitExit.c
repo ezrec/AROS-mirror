@@ -98,7 +98,7 @@ LT_Init(VOID)
 	#endif	// LINK_LIB
 
 	if(SysBase == NULL
-#ifndef _AROS
+#ifndef __AROS__
 	 || SysBase->lib_Version < 37
 #endif
 	 )
@@ -154,7 +154,7 @@ LT_Init(VOID)
 
 		LONG i;
 
-#ifndef _AROS
+#ifndef __AROS__
 		V39 = (BOOLEAN)(SysBase->lib_Version >= 39);
 		V40 = (BOOLEAN)(SysBase->lib_Version >= 40);
 #else
@@ -269,7 +269,7 @@ VOID LIBENT
 LT_Exit(VOID)
 {
 	if(SysBase != NULL 
-#ifndef _AROS
+#ifndef __AROS__
 	   && SysBase->lib_Version >= 37
 #endif
 	   )

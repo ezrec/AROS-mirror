@@ -368,7 +368,7 @@ void init_menus()
 		menu_menus[a].Flags=MENUENABLED;
 	}
 	for (a=0;a<MENUCOUNT;a++) {
-#ifdef _AROS
+#ifdef __AROS__
 		menu_intuitext[a*2].DrawMode=JAM1;
 #else
 		menu_intuitext[a*2].DrawMode=JAM2;
@@ -377,7 +377,7 @@ void init_menus()
 		menu_intuitext[a*2].IText=(UBYTE *)menu_spaceitemnames[a/20];
 		menu_intuitext[a*2].NextText=&menu_intuitext[(a*2)+1];
 
-#ifdef _AROS
+#ifdef __AROS__
 		menu_intuitext[(a*2)+1].DrawMode=JAM1;
 #else
 		menu_intuitext[(a*2)+1].DrawMode=JAM2;

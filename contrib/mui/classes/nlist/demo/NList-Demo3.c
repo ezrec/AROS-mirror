@@ -54,7 +54,7 @@ extern struct Library *SysBase,*IntuitionBase,*UtilityBase,*GfxBase,*DOSBase,*Ic
 
 extern struct Library *MUIMasterBase;
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <proto/intuition.h>
 #include <proto/graphics.h>
 #include <proto/utility.h>
@@ -65,7 +65,7 @@ extern struct Library *MUIMasterBase;
 
 #include <MUI/NListview_mcc.h>
 
-#ifndef _AROS
+#ifndef __AROS__
 #include <MUI/NFloattext_mcc.h>
 #endif
 
@@ -244,7 +244,7 @@ SAVEDS ASM ULONG NLI_Dispatcher(REG(a0) struct IClass *cl, REG(a2) Object *obj, 
 {
 #endif
 #ifdef __GNUC__
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(ULONG, NLI_Dispatcher,
     AROS_UFHA(struct IClass *, cl, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -268,7 +268,7 @@ ULONG NLI_Dispatcher(void)
   }
   return(DoSuperMethodA(cl,obj,msg));
 
-#ifdef _AROS
+#ifdef __AROS__
   AROS_USERFUNC_EXIT
 #endif
 }

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2003/01/18 19:10:00  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.3  2000/08/09 11:45:57  chodorowski
  * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
  *
@@ -275,7 +278,7 @@ static struct Hook ReqHook = { NULL, NULL, (HOOKFUNC)ReqHookFunc, NULL, NULL };
 /*
  * Put up a BGUI requester.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH3(ULONG, BGUI_RequestA,
     AROS_LHA(struct Window *, win, A0),

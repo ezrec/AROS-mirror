@@ -58,7 +58,7 @@ void chkabort(void) {}
 
 struct Library *MUIMasterBase;
 
-#ifdef _AROS
+#ifdef __AROS__
 #define MUIMASTER_VMIN 1
 #include <proto/intuition.h>
 #include <MUI/NList_mcc.h>
@@ -66,7 +66,7 @@ struct Library *MUIMasterBase;
 
 #include <MUI/NListview_mcc.h>
 
-#ifndef _AROS
+#ifndef __AROS__
 #include <MUI/NFloattext_mcc.h>
 #endif
 
@@ -548,7 +548,7 @@ int main(int argc,char *argv[])
       MUIA_Window_ID   , MAKE_ID('W','I','N','2'),
       MUIA_Window_UseBottomBorderScroller, TRUE,
       WindowContents, VGroup,
-#ifndef _AROS
+#ifndef __AROS__
         Child, NFloattext(MainTextString2),
         Child, BalanceObject, End,
 #endif

@@ -16,7 +16,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_Errno(void)
 #else
 	AROS_LH0(int, LIB_Errno,

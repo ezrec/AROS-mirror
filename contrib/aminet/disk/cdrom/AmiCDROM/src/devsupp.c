@@ -140,7 +140,7 @@ int OpenCDRom() {
 	return FALSE;
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 int Get_Startup(struct FileSysStartupMsg *fssm) {
 struct DosEnvec *de = (struct DosEnvec *)BADDR(fssm->fssm_Environ);
 

@@ -46,7 +46,7 @@
 #include <midi/mididefs.h>
 #include <proto/camd.h>
 
-#ifndef _AROS
+#ifndef __AROS__
 #  include "camdlists.h"
 #  include "listreq.h"
 #endif

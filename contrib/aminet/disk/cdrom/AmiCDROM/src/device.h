@@ -17,7 +17,7 @@
 #include "filehandles.h"
 #include "generic.h"
 
-#ifdef _AROS
+#ifdef __AROS__
 struct FileLock
 {
     BPTR             fl_Link;   /* (struct FileLock *) Pointer to next lock. */

@@ -22,7 +22,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm char *LIB_Inet_NtoA(register __d0 unsigned long ip)
 #else
 	AROS_LH1(char *, LIB_Inet_NtoA,

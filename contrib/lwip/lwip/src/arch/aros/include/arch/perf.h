@@ -35,7 +35,7 @@
 #ifndef __ARCH_PERF_H__
 #define __ARCH_PERF_H__
 
-#ifdef __AROS
+#ifdef __AROS__
 struct tms
   {
     int tms_utime;
@@ -45,7 +45,7 @@ struct tms
   };
 #elif
 #include <sys/times.h>
-#endif __AROS
+#endif __AROS__
 
 
 #define PERF_START    /* null definition */

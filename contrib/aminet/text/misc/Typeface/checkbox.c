@@ -5,7 +5,7 @@
 #include <libraries/bgui_macros.h>
 #include "checkbox.h"
 
-#ifdef _AROS
+#ifdef __AROS__
 extern struct Library *BGUIBase;
 #endif
 
@@ -41,7 +41,7 @@ ULONG Check_NEW(Class *cl, Object *obj, struct opSet *ops)
   return rc;
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(ULONG, DispatchCheckGadg,
     AROS_UFHA(Class *, cl, A0),
     AROS_UFHA(Object *, obj, A2),

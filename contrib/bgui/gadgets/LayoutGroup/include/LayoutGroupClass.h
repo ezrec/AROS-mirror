@@ -8,9 +8,12 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2003/01/18 19:10:18  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.1  2000/07/07 17:13:31  stegerg
  * in method structures use STACKULONG, STACKUWORD; etc. Should still
- * work on Amiga, because if _AROS is NOT defined, then STACKULONG
+ * work on Amiga, because if __AROS__ is NOT defined, then STACKULONG
  * is defined back to ULONG, STACKUWORD to UWORD, etc. ==> like it
  * was initially.
  *
@@ -31,7 +34,7 @@
 
 #include <intuition/classes.h>
 
-#ifndef _AROS
+#ifndef __AROS__
 #undef STACKULONG
 #define STACKULONG ULONG
 #endif

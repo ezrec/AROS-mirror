@@ -248,7 +248,7 @@ avoid_trivial (
          r |= 4;
       if (r == 0)
       {
-#ifdef _AROS
+#ifdef __AROS__
          if ((rand() & 1) == 0)
 #else
          if ((int)(2 * drand48 ()) == 0)
@@ -260,7 +260,7 @@ avoid_trivial (
       
       while (row0 == 0 && col0 == 0)
       {
-#ifdef _AROS
+#ifdef __AROS__
 	 rr = rand() % 3;
 #else
          rr = 3 * drand48 ();
@@ -369,7 +369,7 @@ generate_path (
          
          if (count > 0)
          {
-#ifdef _AROS
+#ifdef __AROS__
             next_pos = possible_pos[rand() % count];
 #else
             next_pos = possible_pos[(int)(count * drand48 ())];
@@ -706,7 +706,7 @@ field_reset (
    
    while (n > 0)
    {
-#ifdef _AROS
+#ifdef __AROS__
       r = rand() % field->rows;
       c = rand() % field->columns;
 #else

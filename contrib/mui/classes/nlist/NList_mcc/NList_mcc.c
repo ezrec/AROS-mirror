@@ -83,7 +83,7 @@ static APTR NL_ConstructHook_String_gate(void)
 {
     APTR pool = (void *)REG_A2;
     char *str = (void *)REG_A1;
-#elif defined(_AROS)
+#elif defined(__AROS__)
 AROS_UFH3S(APTR, NL_ConstructHook_String,
     AROS_UFHA(struct Hook *, unusedhook, A0),
     AROS_UFHA(APTR, pool, A2),
@@ -108,7 +108,7 @@ static APTR ASM SAVEDS NL_ConstructHook_String( REG(a2) APTR pool GNUCREG(a2), R
 
     return((APTR) new);
 
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_EXIT
 #endif
 }
@@ -147,7 +147,7 @@ static void NL_DestructHook_String_gate(void)
 {
     APTR pool = (void *)REG_A2;
     char *entry = (void *)REG_A1;
-#elif defined(_AROS)
+#elif defined(__AROS__)
 AROS_UFH3S(void, NL_DestructHook_String,    
     AROS_UFHA(struct Hook *, unusedhook, A0),
     AROS_UFHA(APTR, pool, A2),
@@ -161,7 +161,7 @@ static void ASM SAVEDS NL_DestructHook_String( REG(a2) APTR pool GNUCREG(a2), RE
 
   NL_Free2(pool,(void *) entry,"DestructHook_String");
 
-#ifdef _AROS
+#ifdef __AROS__
   AROS_USERFUNC_EXIT
 #endif
 }
@@ -173,7 +173,7 @@ static ULONG NL_LayoutFuncNList_gate(void)
     struct Hook *h = (void *)REG_A0;
     Object *obj = (void *)REG_A2;
     struct MUI_LayoutMsg *lm = (void *)REG_A1;
-#elif defined(_AROS)
+#elif defined(__AROS__)
 AROS_UFH3S(ULONG, NL_LayoutFuncNList,
     AROS_UFHA(struct Hook *, h, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -220,7 +220,7 @@ static ULONG ASM SAVEDS NL_LayoutFuncNList( REG(a0) struct Hook *h, REG(a2) Obje
   }
   return(MUILM_UNKNOWN);
 
-#ifdef _AROS
+#ifdef __AROS__
   AROS_USERFUNC_EXIT
 #endif
 }
@@ -232,7 +232,7 @@ static ULONG NL_LayoutFuncGroup_gate(void)
     struct Hook *h = (void *)REG_A0;
     Object *obj = (void *)REG_A2;
     struct MUI_LayoutMsg *lm = (void *)REG_A1;
-#elif defined(_AROS)
+#elif defined(__AROS__)
 AROS_UFH3S(ULONG, NL_LayoutFuncGroup,
     AROS_UFHA(struct Hook *, h, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -287,7 +287,7 @@ static ULONG ASM SAVEDS NL_LayoutFuncGroup( REG(a0) struct Hook *h, REG(a2) Obje
   }
   return(MUILM_UNKNOWN);
 
-#ifdef _AROS
+#ifdef __AROS__
   AROS_USERFUNC_EXIT
 #endif
 }
@@ -333,7 +333,7 @@ static LONG Calc_Stack(Object *obj,struct NLData *data)
 {
   LONG total;
 
-#if defined(MORPHOS) || defined(_AROS)
+#if defined(MORPHOS) || defined(__AROS__)
     return 100000;
 #endif
 

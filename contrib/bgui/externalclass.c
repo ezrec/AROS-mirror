@@ -11,8 +11,11 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2003/01/18 19:09:56  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.3  2000/06/01 01:41:37  bergers
- * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
+ * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef __AROS__), please.
  *
  * Revision 42.2  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
@@ -73,7 +76,7 @@ typedef struct {
 /*
  * Module prototypes.
  */
-#ifdef _AROS
+#ifdef __AROS__
 /* looks like proto isn't needed, because ExtClassDispatch is defined
    before it is used (or better: accessed) the first time */
 #else
@@ -429,7 +432,7 @@ SAVEDS ASM STATIC REGFUNC3(ULONG, ExtClassDispatch,
    ULONG              rc;
    APTR               stk;
 
-#ifdef _AROS
+#ifdef __AROS__
 #warning Commented EnsureStack
 #else
    stk = EnsureStack();
@@ -493,7 +496,7 @@ SAVEDS ASM STATIC REGFUNC3(ULONG, ExtClassDispatch,
       break;
    }
 
-#ifdef _AROS
+#ifdef __AROS__
 #else
    RevertStack(stk);
 #endif

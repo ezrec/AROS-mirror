@@ -8,7 +8,7 @@
 
 /* Prototypes */
 #include <proto/gadtools.h>
-#ifdef _AROS
+#ifdef __AROS__
 #include <proto/alib.h>
 #else
 #include <clib/alib_protos.h>

@@ -255,7 +255,7 @@ main( int argc, char **argv )
    /* set a buffer for jump: program execution returns to this point
       in case of a jump (error, interrupt, or finish program) */
 
-#ifndef __AROS
+#ifndef __AROS__
    signal( SIGINT, break_mes );
 #endif
 
@@ -1023,7 +1023,7 @@ break_handler( void )
 
    /* reset the break handler */
 
-#ifndef __AROS
+#ifndef __AROS__
    signal( SIGINT, break_mes );
 #endif
 

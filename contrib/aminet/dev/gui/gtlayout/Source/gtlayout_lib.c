@@ -586,7 +586,7 @@ LibClose(REG(a6) struct GTLayoutBase *GTLayoutBase)
 	ReleaseSemaphore(&GTLayoutBase->LockSemaphore);
 
 	if(GTLayoutBase->LibNode.lib_OpenCnt == 0 && (GTLayoutBase->LibNode.lib_Flags & LIBF_DELEXP))
-#ifdef __AROS
+#ifdef __AROS__
                 result = GTLayout_LibExpunge(GTLayoutBase);
 #else
                 result = LibExpunge(GTLayoutBase);
@@ -608,7 +608,7 @@ LibNull(VOID)
 /*****************************************************************************/
 
 
-#ifdef _AROS
+#ifdef __AROS__
 extern const void *  GTLayout_LT_LevelWidth();
 extern const void *  GTLayout_LT_DeleteHandle();
 extern const void *  GTLayout_LT_CreateHandle();
@@ -657,7 +657,7 @@ extern const void *  GTLayout_LT_GetWindowUserData();
 
 STATIC const APTR LibVectors[] =
 {
-#ifndef _AROS
+#ifndef __AROS__
 	LibOpen,
 	LibClose,
 	LibExpunge,

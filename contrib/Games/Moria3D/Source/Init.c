@@ -14,14 +14,14 @@
 #include <intuition/intuition.h>
 #include <intuition/screens.h>
 #include <utility/tagitem.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <libraries/asl.h>
 #endif
 
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/intuition.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <proto/asl.h>
 #endif
 #include <proto/graphics.h>
@@ -107,14 +107,14 @@ int16 InitLibs(void)
 	if (NULL != GfxBase)
 	{
 	    GfxNode = EnterCleanNode (CleanUpLib,GfxBase,0);
-#ifndef _AROS
+#ifndef __AROS__
 	    AslBase = OpenLibrary((uint8 *)"asl.library",39);
 	    if (NULL != AslBase)
 	    {
 		AslNode = EnterCleanNode (CleanUpLib,AslBase,0);
 #endif
 		return 0;
-#ifndef _AROS
+#ifndef __AROS__
 	    }
 	    else
 	    {
@@ -137,7 +137,7 @@ int16 InitLibs(void)
 
 int16 RequestScreen(void)
 {
-#ifndef _AROS
+#ifndef __AROS__
     struct ScreenModeRequester * MyScreenRequester;
     struct TagItem MyScrReqTags[] =
 	 {
@@ -342,7 +342,7 @@ void CleanupScreen(void)
 
 void CleanupLibs(void)
 {
-#ifndef _AROS
+#ifndef __AROS__
     if (NULL != AslNode)
 	RemoveCleanNode(AslNode);
 #endif

@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2003/01/18 19:10:20  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.2  2000/07/09 03:05:09  bergers
  * Makes the gadgets compilable.
  *
@@ -127,7 +130,7 @@ ASM REGFUNC3(ULONG, TV_Expand,
 *
 *************************************************************************/
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(ULONG, TV_Expand,
 	AROS_LHA(Class *, cl, A0),
 	AROS_LHA(Object *, obj, A2),

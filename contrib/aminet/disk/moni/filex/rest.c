@@ -615,7 +615,7 @@ BOOL MyRequestFile( char *FullName, char *Title, char *Pattern, BOOL Buffered)
 
 void ExecuteARexxCommand(char *Name)
 {
-#ifdef _AROS
+#ifdef __AROS__
 #warning "stegerg: disabled for quick test!!"
 #else
 	BPTR fh;

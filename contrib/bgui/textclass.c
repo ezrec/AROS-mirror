@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2003/01/18 19:10:02  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.5  2001/02/02 21:06:50  stegerg
  * used TextFit() with strDirection param = 0, but it must be -1 or 1
  * (autodocs)
@@ -360,7 +363,7 @@ makeproto Class *InitTextClass(void)
  * Figure out the total text width and height
  * of an text with info-style command sequences.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH4(VOID, BGUI_InfoTextSize,
     AROS_LHA(struct RastPort *, rp, A0),
@@ -386,7 +389,7 @@ makeproto SAVEDS ASM VOID BGUI_InfoTextSize(REG(a0) struct RastPort *rp, REG(a1)
  * inside the bounding box. Text is automatically
  * trucated when out of bounds.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH4(VOID, BGUI_InfoText,
     AROS_LHA(struct RastPort *, rp, A0),

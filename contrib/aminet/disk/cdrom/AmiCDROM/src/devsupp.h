@@ -25,7 +25,7 @@ void dbuninit (void);
 void dbprintf (char *, ...);
 #endif
 
-#ifdef _AROS
+#ifdef __AROS__
 int Get_Startup (struct FileSysStartupMsg *);
 #else
 int Get_Startup (LONG p_startup);

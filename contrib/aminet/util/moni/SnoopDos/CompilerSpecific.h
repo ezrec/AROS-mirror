@@ -267,7 +267,7 @@
  * Using "const" where it is appropriate helps the compiler optimizing
  * code better, so this mess is probably worth it.
  */
-#if (!defined(_AROS)) && (INCLUDE_VERSION < 44)
+#if (!defined(__AROS__)) && (INCLUDE_VERSION < 44)
 typedef char *CONST_STRPTR;
 #endif
 

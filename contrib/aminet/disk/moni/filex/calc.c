@@ -10,7 +10,7 @@
 #include <proto/utility.h>
 #include <clib/alib_protos.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <aros/asmcall.h>
 #endif
 
@@ -112,7 +112,7 @@ static long DoCalcOp( UWORD Op, long eins, long zwei )
 	return 0;
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3S(ULONG, CalcHookFunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(struct SGWork *, sgw, A2),
@@ -197,7 +197,7 @@ static ULONG __saveds __asm CalcHookFunc(	register __a0 struct Hook *hook,
 
    return(return_code);
 
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_EXIT
 #endif
 }

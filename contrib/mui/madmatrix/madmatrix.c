@@ -8,7 +8,7 @@
 #include <time.h>
 
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <proto/muimaster.h>
 #endif
 
@@ -468,7 +468,7 @@ ULONG Madmatrix_Cleanup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *m
 
 /// ULONG __attribute__((regparm(3))) Madmatrix_Dispatcher(struct IClass *cl , void *msg,Object *obj  )
 
-#ifndef _AROS
+#ifndef __AROS__
 __asm ULONG Madmatrix_Dispatcher(register __a0 struct IClass *cl, register __a2 Object *obj, register __a1 Msg msg)
 #else
 AROS_UFH3(IPTR, Madmatrix_Dispatcher,

@@ -31,7 +31,7 @@ static char rcsid =
 #include "SDL_thread.h"
 #include "SDL_systhread_c.h"
 
-#ifdef _AROS
+#ifdef __AROS__
 #include "SDL_timer.h"
 #include <stdlib.h>
 #endif

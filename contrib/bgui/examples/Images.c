@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2003/01/18 19:10:12  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.3  2000/08/08 19:29:54  chodorowski
  * Minor changes.
  *
@@ -45,7 +48,7 @@ quit
 /*
 **      Generated with IconEdit.
 **/
-#ifdef _AROS
+#ifdef __AROS__
 UBYTE HelpI1Data[] =
 #else
 CHIP UBYTE HelpI1Data[] =
@@ -84,7 +87,7 @@ struct Image HelpI1 =
     NULL                        /* Next image */
 };
 
-#ifdef _AROS
+#ifdef __AROS__
 UBYTE HelpI2Data[] =
 #else
 CHIP UBYTE HelpI2Data[] =

@@ -1,6 +1,6 @@
 #include <OSIncludes.h>
 
-#ifndef _AROS
+#ifndef __AROS__
 #pragma header
 #endif
 

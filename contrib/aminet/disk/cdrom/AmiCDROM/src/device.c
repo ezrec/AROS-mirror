@@ -120,7 +120,7 @@
 #include "debug.h"
 #include "volumes.h"
 
-#if defined(__GNUC__) && !defined(_AROS)
+#if defined(__GNUC__) && !defined(__AROS__)
 struct Library *ixemulbase;
 #endif
 
@@ -151,7 +151,7 @@ void Send_Timer_Request (void);
 void Cleanup_Timer_Device (void);
 int Open_Timer_Device (void);
 void Send_Event (int);
-#ifndef _AROS
+#ifndef __AROS__
 void Remove_Seglist (void);
 #endif
 BPTR Make_FSSM (void);
@@ -166,13 +166,13 @@ LONG SystemOwnTags(STRPTR, Tag, ...);
  *  with the compile options you'll get a link error.
  */
 
-#if defined(__GNUC__) && !defined(_AROS)
+#if defined(__GNUC__) && !defined(__AROS__)
 asm(".text; jmp pc@(_handler-.+2)");
 #endif
 
 #if defined(LATTICE)
 int __saveds handler (void)
-#elif defined(_AROS)
+#elif defined(__AROS__)
 LONG handler(struct ExecBase *SysBase)
 #else
 int handler (void)
@@ -190,7 +190,7 @@ ULONG signals;
      *  process only.
      */
 
-#ifdef _AROS
+#ifdef __AROS__
     global->SysBase = SysBase;
 #else
     global->SysBase = *(struct ExecBase **) 4L;
@@ -199,7 +199,7 @@ ULONG signals;
     if (global->DosProc->pr_CLI)
       return RETURN_FAIL;
     global->DOSBase = (struct DOSBase *)OpenLibrary("dos.library",37);
-#if defined(__GNUC__) && !defined(_AROS)
+#if defined(__GNUC__) && !defined(__AROS__)
     ixemulbase = OpenLibrary ("ixemul.library", 0);
 #endif
     global->UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",37);
@@ -225,24 +225,24 @@ ULONG signals;
 	 *  Set dn_Task field which tells DOS not to startup a new
 	 *  process on every reference.
 	 */
-#ifndef _AROS
+#ifndef __AROS__
         global->DosNode->dn_Task = &global->DosProc->pr_MsgPort;
 	global->DosTask = global->DosNode->dn_Task;
 #endif
 
 	Init_Intui ();
 
-#if defined(__GNUC__) && !defined(_AROS)
+#if defined(__GNUC__) && !defined(__AROS__)
 	if (!ixemulbase)
 	  Display_Error ("Cannot open ixemul.library");
 #endif
 
 	if (
 			global->UtilityBase && global->DOSBase &&
-#if defined(__GNUC__) && !defined(_AROS)
+#if defined(__GNUC__) && !defined(__AROS__)
 			ixemulbase &&
 #endif
-#ifdef _AROS
+#ifdef __AROS__
 			Get_Startup ((struct FileSysStartupMsg *)(BADDR(packet->dp_Arg3)))
 #else
 			Get_Startup (packet->dp_Arg2)
@@ -265,7 +265,7 @@ ULONG signals;
 	    packet->dp_Res2 = 333; /* any error code */
 	    returnpacket(packet);
 	    Forbid ();
-#ifndef _AROS
+#ifndef __AROS__
 	    Remove_Seglist ();
 #endif
 	    if (global->DOSBase) {
@@ -374,7 +374,7 @@ char    buf[256];
 register WORD   error;
 UBYTE   notdone = 1;
  
-#ifdef _AROS
+#ifdef __AROS__
 	global = global->acdrbase->GetData(global->acdrbase);
 #endif
 	if (signals & global->g_timer_sigbit)
@@ -384,7 +384,7 @@ UBYTE   notdone = 1;
 		/* retry opening the SCSI device (every 2 seconds): */
 		if (!global->g_cd && (global->g_time & 1))
 		{
-#ifdef _AROS
+#ifdef __AROS__
 			Get_Startup((struct FileSysStartupMsg *)-1);
 #else
 			Get_Startup (-1);
@@ -1117,7 +1117,7 @@ int packetsqueued (void)
 
 void btos(BSTR bstr, char *buf)
 {
-#ifdef _AROS
+#ifdef __AROS__
     LONG len = AROS_BSTR_strlen(bstr);
     buf[len] = 0;
     while (len--)
@@ -1217,7 +1217,7 @@ int Check_For_Volume_Name_Prefix (char *p_pathname)
 
 void Fill_FileInfoBlock (FIB *p_fib, CDROM_INFO *p_info, VOLUME *p_volume) {
 char *src = p_info->name;
-#ifndef _AROS
+#ifndef __AROS__
 char *dest = p_fib->fib_FileName+1;
 #endif
 int len = p_info->name_length;
@@ -1232,7 +1232,7 @@ int len = p_info->name_length;
 		/* root of file system: */
 		p_fib->fib_DirEntryType = ST_ROOT;
 		/* file name == volume name: */
-#ifdef _AROS
+#ifdef __AROS__
 		AROS_BSTR_setstrlen(p_fib->fib_FileName, (short)global->g_vol_name[0]);
 		strncpy(AROS_BSTR_ADDR(p_fib->fib_FileName), global->g_vol_name+1, global->g_vol_name[0]);
 #else
@@ -1244,7 +1244,7 @@ int len = p_info->name_length;
 		/* copy file name: */
 		if (global->g_show_version_numbers)
 		{
-#ifdef _AROS
+#ifdef __AROS__
 			AROS_BSTR_setstrlen(p_fib->fib_FileName, len);
 			while (--len>=0)
 				AROS_BSTR_putchar(p_fib->fib_FileName, len, src[len]);
@@ -1261,13 +1261,13 @@ int len = p_info->name_length;
 			{
 				if (src[i] == ';')
 					real_len = i;
-#ifdef _AROS
+#ifdef __AROS__
 				AROS_BSTR_putchar(p_fib->fib_FileName, i, src[i]);
 #else
 				dest[i] = src[i];
 #endif
 			}
-#ifdef _AROS
+#ifdef __AROS__
 			AROS_BSTR_setstrlen(p_fib->fib_FileName, real_len);
 #else
 			p_fib->fib_FileName[0] = real_len;
@@ -1280,7 +1280,7 @@ int len = p_info->name_length;
 			)
 		{
 			/* convert ISO filename to lowercase: */
-#ifdef _AROS
+#ifdef __AROS__
 			int i, len = AROS_BSTR_strlen(p_fib->fib_FileName);
 			char *cp = AROS_BSTR_ADDR(p_fib->fib_FileName);
 #else
@@ -1293,7 +1293,7 @@ int len = p_info->name_length;
 
 		/* truncate to 30 characters and terminate with null: */
 		{
-#ifdef _AROS
+#ifdef __AROS__
 			int len = AROS_BSTR_strlen(p_fib->fib_FileName);
 			if (len > 30)
 				AROS_BSTR_setstrlen(p_fib->fib_FileName, 30);
@@ -1316,7 +1316,7 @@ int len = p_info->name_length;
 	p_fib->fib_NumBlocks = p_info->file_length >> 11;
 	if (p_info->symlink_f)
 	{
-#ifdef _AROS
+#ifdef __AROS__
 		AROS_BSTR_setstrlen(p_fib->fib_Comment, 0x0D);
 		strcpy(AROS_BSTR_ADDR(p_fib->fib_Comment), "Symbolic link");
 #else
@@ -1325,7 +1325,7 @@ int len = p_info->name_length;
 	}
 	else
 	{
-#ifdef _AROS
+#ifdef __AROS__
 		AROS_BSTR_setstrlen(p_fib->fib_Comment, 0);
 #else
 		p_fib->fib_Comment[0] = 0;
@@ -1352,7 +1352,7 @@ struct DeviceList *dl;
 		BUG(dbprintf("[Reusing old volume node]");)
 		Forbid ();
 		global->DevList = dl;
-#ifdef _AROS
+#ifdef __AROS__
 		dl->dl_Device = &global->acdrbase->device;
 #else
 		dl->dl_Task = &global->DosProc->pr_MsgPort;
@@ -1362,7 +1362,7 @@ struct DeviceList *dl;
 	else
 	{
 		global->DevList = dl = (struct DeviceList *)MakeDosEntry(global->g_vol_name+1, DLT_VOLUME);
-#ifdef _AROS
+#ifdef __AROS__
 		dl->dl_Device = &global->acdrbase->device;
 		dl->dl_Unit = (struct Unit *)&global->device->rootfh;
 #else
@@ -1430,7 +1430,7 @@ void Mount (void)
   Send_Event (TRUE);
 }
 
-#ifndef _AROS
+#ifndef __AROS__
 void Remove_Seglist (void)
 {
 DOSINFO *di;
@@ -1524,7 +1524,7 @@ void Unmount (int p_remove_seglist)
       		   global->g_volume->locks);)
       BUG(dbprintf("[there are still %d file handles on this volume]",
       		   global->g_volume->file_handles);)
-#ifndef _AROS
+#ifndef __AROS__
       global->DevList->dl_Task = NULL;
 #endif
     }
@@ -1544,7 +1544,7 @@ void Unmount (int p_remove_seglist)
    */
 
   if (p_remove_seglist) {
-#ifndef _AROS
+#ifndef __AROS__
     Remove_Seglist ();
 #endif
   } else

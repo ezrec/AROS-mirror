@@ -16,7 +16,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_inet_network(register __a0 char *cp)
 #else
 	AROS_LH1(int, LIB_inet_network,

@@ -22,7 +22,7 @@
 #define MULTI_SUFFIX ".multi"   /* Extension for scanning formats */
 
 #include <stdio.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <sys/param.h>
 #endif
 #include "HText.h"

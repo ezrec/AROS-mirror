@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2003/01/18 19:10:21  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.2  2000/07/08 20:14:06  stegerg
  * fixed the BITOFFSET_OF macro which did not work on little endian machines.
  *
@@ -346,7 +349,7 @@ struct bguiPattern {
 
 /* Render a text graphic. */
 
-#ifndef _AROS
+#ifndef __AROS__
 
 #undef STACKULONG
 #define STACKULONG ULONG
@@ -493,7 +496,7 @@ struct rmRefresh {
                                   ((LENGTH_OF(type,field) == 4) ? RAF_LONG : RAF_BYTE))
 #define BITOFFSET_OF(type,field,f) (LENGTH_OF(type,field) - (f>>8?(f>>16?(f>>24?4:3):2):1))
 
-#ifdef _AROS
+#ifdef __AROS__
  #if !AROS_BIG_ENDIAN
   #undef  BITOFFSET_OF
   #define BITOFFSET_OF(type,field,f) (f>>8?(f>>16?(f>>24?3:2):1):0)

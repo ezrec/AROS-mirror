@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.10  2003/01/18 19:09:58  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.9  2002/03/07 21:33:00  stegerg
  * These used still AROS_LHA for the arguments of libinit,
  * instead of AROS_UFHA.
@@ -32,13 +35,13 @@
  * Update. Test1 now successfully opens the library. In LibOpen the AddTaskMember function seems to trash the stack somehow (return address is trashed) and therefore I had to take it out.
  *
  * Revision 42.3  2000/06/01 01:41:37  bergers
- * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
+ * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef __AROS__), please.
  *
  * Revision 42.2  2000/05/31 01:23:10  bergers
  * Changes to make BGUI compilable and linkable.
  *
  * Revision 42.1  2000/05/29 00:40:24  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.0  2000/05/09 22:09:20  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
@@ -72,7 +75,7 @@
 
 #include "include/classdefs.h"
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <aros/debug.h>
 #endif
 
@@ -90,7 +93,7 @@ struct ExecBase      *SysBase       = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
 struct GfxBase       *GfxBase       = NULL;
 struct Library       *GadToolsBase  = NULL; /* Menu stuff. */
-#ifdef _AROS
+#ifdef __AROS__
 struct UtilityBase   *UtilityBase   = NULL;
 #else
 struct Library       *UtilityBase   = NULL;
@@ -109,7 +112,7 @@ struct Task          *InputDevice   = NULL;
 APTR                  InputStack    = NULL;
 
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_LD1(struct Library *, LibOpen,
     AROS_LHA(ULONG, version, D0),
     struct Library *, lib, 1, BGUI);
@@ -167,7 +170,7 @@ AROS_LD0(LONG, LibVoid,
  * Library function table.
  */
 STATIC const LONG Vectors[] = {
-#ifdef _AROS
+#ifdef __AROS__
    /*
     * System interface.
     */
@@ -329,7 +332,7 @@ makeproto VOID InitLocale(void)
 /*
  * Library initialization.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makeproto
 AROS_UFH3(struct Library *, LibInit,
        AROS_UFHA(ULONG, dummy, D0),
@@ -376,7 +379,7 @@ makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struc
    WorkbenchBase  = OpenLibrary("workbench.library",     37);
    DataTypesBase  = OpenLibrary("datatypes.library",     39);
 
-#ifdef _AROS
+#ifdef __AROS__
 #warning Commented InitInputStack
 #else
    InitInputStack();
@@ -447,7 +450,7 @@ makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struc
 /*
  * Open library.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makeproto
 AROS_LH1(struct Library *, LibOpen,
     AROS_LHA(ULONG, version, D0),
@@ -487,7 +490,7 @@ makeproto SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0
 /*
  * Close library.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_LH0(BPTR, LibClose,
          struct Library *, lib, 2, BGUI)
 #else
@@ -510,7 +513,7 @@ makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     * Delayed expunge pending?
     */
    if (lib->lib_Flags & LIBF_DELEXP)
-#ifdef _AROS
+#ifdef __AROS__
       return AROS_UFC2(BPTR, BGUI_LibExpunge,
                 AROS_UFCA(struct Library *, lib, D0),
                 AROS_UFCA(struct ExecBase *, SysBase, A6));
@@ -526,7 +529,7 @@ makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
 /*
  * Expunge library.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_LH1(BPTR, LibExpunge,
     AROS_LHA(struct Library *, lib, D0),
     struct ExecBase *, sysBase, 3, BGUI)
@@ -554,7 +557,7 @@ makeproto SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
    if (Catalog)
       CloseCatalog(Catalog);
 
-#ifdef _AROS
+#ifdef __AROS__
 #warning Commented FreeInputStack
 #else
    FreeInputStack();
@@ -584,7 +587,7 @@ makeproto SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
 /*
  * Reserved routine.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_LH0(LONG, LibVoid,
      struct Library *, lib, 4, BGUI)
 #else

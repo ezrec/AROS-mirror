@@ -16,7 +16,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_ReleaseCopyOfSocket(register __d0 long s, register __d1 long id)
 #else
 	AROS_LH2(int, LIB_ReleaseCopyOfSocket,

@@ -1,6 +1,6 @@
 #include <OSIncludes.h>
 
-#ifndef _AROS
+#ifndef __AROS__
 #pragma header
 #endif
 
@@ -424,7 +424,7 @@ ULONG CycleDispatcher(struct IClass *cl,Object *obj,Msg msg)
 				} /* if (x < GAD->LeftEdge + GAD->Width - CYCLEIMAGEWIDTH) */
 				
 			} /* if (data->maypopup) */
-	    	#ifndef _AROS
+	    	#ifndef __AROS__
 			break;
 		#endif
 		

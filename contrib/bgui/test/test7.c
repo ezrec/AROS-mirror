@@ -14,7 +14,7 @@
 #include <libraries/bgui_macros.h>
 #endif
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <proto/bgui.h>
 #include <proto/intuition.h>
 #else

@@ -36,7 +36,7 @@ static ULONG About_AboutMUI(/*struct IClass* cl,*/ Object* obj/*, Msg msg*/)
 {
   Object* app = (Object*)xget(obj, MUIA_ApplicationObject);
 
-#if !defined(USE_ZUNE) && !defined(_AROS)
+#if !defined(USE_ZUNE) && !defined(__AROS__)
   Object* aboutwin = AboutmuiObject,
                        MUIA_Window_RefWindow    , obj,
                        MUIA_Aboutmui_Application, app,
@@ -115,7 +115,7 @@ static ULONG About_New(struct IClass* cl, Object* obj, struct opSet* msg)
 
         Child, VBarObject,
 
-#if !defined(USE_ZUNE) && !defined(_AROS)
+#if !defined(USE_ZUNE) && !defined(__AROS__)
         Child, ListviewObject,
           MUIA_Listview_Input, FALSE,
           MUIA_Weight        , 250,

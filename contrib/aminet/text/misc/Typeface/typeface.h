@@ -14,7 +14,7 @@
 #include <proto/utility.h>
 #include <proto/keymap.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #warning No textfield.gadget in AROS yet
 #else
 #include <clib/textfield_protos.h>
@@ -22,7 +22,7 @@
 
 #include <exec/exec.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #warning No textfield.gadget in AROS yet
 #else
 #include <gadgets/textfield.h>
@@ -37,7 +37,7 @@
 #include <intuition/intuitionbase.h>
 #include <libraries/bgui_macros.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #define CATCOMP_NUMBERS
 #include "locale.h"
 
@@ -219,7 +219,7 @@ enum scroll { GADG_HORIZ,
   ((((*((UBYTE *)(buffer)+((offset)>>3)))&(128>>((offset)&7))) != 0) \
   ? 1 : 0)
 
-#ifdef _AROS
+#ifdef __AROS__
 struct charDef
 {
 #if AROS_BIG_ENDIAN

@@ -164,7 +164,7 @@
 #   include <utime.h>
 #   include <unistd.h>
 #   include <sys/stat.h>
-#   ifndef __AROS
+#   ifndef __AROS__
 #       include <sys/times.h>
 #   endif
 
@@ -1142,7 +1142,7 @@ void applySavedMetaInfoToOutputFile ( Char *dstName )
    retVal = utime ( dstName, &uTimBuf );
    ERROR_IF_NOT_ZERO ( retVal );
 
-#  ifndef __AROS
+#  ifndef __AROS__
    retVal = chown ( dstName, fileMetaInfo.st_uid, fileMetaInfo.st_gid );
    /* chown() will in many cases return with EPERM, which can
       be safely ignored.
@@ -1877,7 +1877,7 @@ IntNative main ( IntNative argc, Char *argv[] )
    exitValue               = 0;
    i = j = 0; /* avoid bogus warning from egcs-1.1.X */
 
-#  ifndef __AROS
+#  ifndef __AROS__
    /*-- Set up signal handlers for mem access errors --*/
    signal (SIGSEGV, mySIGSEGVorSIGBUScatcher);
 #  if BZ_UNIX
@@ -2024,7 +2024,7 @@ IntNative main ( IntNative argc, Char *argv[] )
    if (opMode != OM_Z) blockSize100k = 0;
 
    if (srcMode == SM_F2F) {
-#     ifndef __AROS
+#     ifndef __AROS__
       signal (SIGINT,  mySignalCatcher);
       signal (SIGTERM, mySignalCatcher);
 #     if BZ_UNIX

@@ -202,7 +202,7 @@ if(global_allstats)
                 output_string("============================== ALL STATISTICS ===============================\n");
         time(&time_and_date);
         loctime=localtime(&time_and_date);
-#ifndef __AROS
+#ifndef __AROS__
         sprintf(buffer,"**Date and time of benchmark run: %s",asctime(loctime));
         output_string(buffer);
 #endif

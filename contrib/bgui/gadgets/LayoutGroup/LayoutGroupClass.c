@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2003/01/18 19:10:16  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.6  2000/08/11 08:09:14  chodorowski
  * Removed METHOD #define, already defined in bgui_compilerspecific.h.
  *
@@ -43,7 +46,7 @@
  *
  */
 
-#ifdef _AROS
+#ifdef __AROS__
 extern struct Library * BGUIBase;
 #endif
 

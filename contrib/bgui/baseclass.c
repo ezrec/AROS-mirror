@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2003/01/18 19:09:55  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.7  2000/08/17 15:09:18  chodorowski
  * Fixed compiler warnings.
  *
@@ -26,7 +29,7 @@
  * I changed all methods to use STACKULONG/STACKUWORD/??? types.
  *
  * Revision 42.3  2000/05/29 00:40:23  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.2  2000/05/15 19:27:00  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
@@ -113,7 +116,7 @@
 
 /* Get the prototype for kprintf() */
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <clib/arossupport_protos.h>
 #else
 #include <clib/debug_protos.h>
@@ -201,7 +204,7 @@ makeproto ULONG CalcDimensions(Class *cl, Object *obj, struct bmDimensions *bmd,
 }
 ///
 
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH3(VOID, BGUI_PostRender,
     AROS_LHA(Class *, cl, A0),
@@ -952,7 +955,7 @@ METHOD(BaseClassRender, struct bmRender *, bmr)
 METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
 {
    BD                   *bd = INST_DATA(cl, obj);
-#ifdef _AROS
+#ifdef __AROS__
 #warning Commented the following line
 #else
    struct NewAmigaGuide  nag = { NULL };
@@ -966,7 +969,7 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
     */
    if (bd->bd_HelpFile || bd->bd_HelpText || bd->bd_HelpHook)
    {
-#ifdef _AROS
+#ifdef __AROS__
 #warning A comment within a comment makes gcc puke...
 #if 0
       /*
@@ -1034,7 +1037,7 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
 	    /*
 	     * Initialize the NewAmigaGuide structure.
 	     */
-#ifdef _AROS
+#ifdef __AROS__
 #warning Commented the following lines...
 #else
 	    nag.nag_Name   = (STRPTR)bd->bd_HelpFile;
@@ -1231,7 +1234,7 @@ METHOD(BaseClassKeyActive, struct wmKeyInput *, wmki)
  */
 //#define PACKW(w1,w2) (((w1<<16)&0xFFFF0000)|(w2&0xFFFF))
 
-#ifdef _AROS
+#ifdef __AROS__
 #define PACKW(w1,w2) w1,w2
 #else
 #define PACKW(w1,w2) ( (((UWORD)w1) << 16) | ((UWORD)w2) )

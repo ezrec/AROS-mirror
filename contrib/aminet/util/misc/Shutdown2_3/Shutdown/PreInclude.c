@@ -12,7 +12,7 @@
 #include <exec/execbase.h>
 #include <dos/dosextens.h>
 #include <exec/devices.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <rexx/storage.h>
 #include <rexx/rxslib.h>
 #include <rexx/errors.h>
@@ -21,7 +21,7 @@
 #include <exec/memory.h>
 
 #include <clib/commodities_protos.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <clib/rexxsyslib_protos.h>
 #endif
 #include <clib/intuition_protos.h>
@@ -38,7 +38,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#ifndef _AROS
+#ifndef __AROS__
 #include <dos.h>
 #endif
 

@@ -2,7 +2,7 @@
 #include <proto/graphics.h>
 #include <proto/exec.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <aros/asmcall.h>
 #endif
 
@@ -39,7 +39,7 @@ struct Madmatrix_Data
 
 };
 
-#ifndef _AROS
+#ifndef __AROS__
 __asm ULONG Madmatrix_Dispatcher(register __a0 struct IClass *cl, register __a2 Object *obj, register __a1 Msg msg);
 #else
 AROS_UFH3(IPTR, Madmatrix_Dispatcher,

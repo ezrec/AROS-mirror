@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2003/01/18 19:10:11  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.7  2000/08/10 17:53:19  stegerg
  * removed a debug output.
  *
@@ -95,7 +98,7 @@ BPTR   StdOut;
 
 struct Library        *BGUIBase;
 
-#ifdef _AROS
+#ifdef __AROS__
 struct IntuitionBase  *IntuitionBase;
 struct GfxBase        *GfxBase;
 struct UtilityBase    *UtilityBase;

@@ -35,7 +35,7 @@
 #include <proto/gadtools.h>
 #include <proto/asl.h>
 #include <proto/layers.h>
-#if !defined(USE_ZUNE) || defined (_AROS)
+#if !defined(USE_ZUNE) || defined (__AROS__)
 #include <proto/muimaster.h>
 #endif
 

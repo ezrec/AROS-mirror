@@ -18,7 +18,7 @@
 struct ThreadData *Thread_Alloc(void);
 void Thread_Free(struct ThreadData *data);
 
-#ifdef __AROS
+#ifdef __AROS__
 
 AROS_UFH3(struct SocketBase_intern *,LIB_init,
         AROS_LHA(struct SocketBase_intern *, SocketBase, D0),
@@ -52,7 +52,7 @@ __asm struct SocketBase_intern *LIB_init(register __d0 struct SocketBase_intern 
     return SocketBase;
 }
 
-#ifndef __AROS
+#ifndef __AROS__
 __asm struct SocketBase_intern *LIB_open(register __a6 struct SocketBase_intern *SocketBase)
 #else
 AROS_LH1(struct SocketBase_intern *, LIB_open,
@@ -100,7 +100,7 @@ AROS_LH1(struct SocketBase_intern *, LIB_open,
     return SocketBase; /* return library base */
 }
 
-#ifndef __AROS
+#ifndef __AROS__
 __asm ULONG LIB_expunge(register __a6 struct SocketBase_intern *SocketBase)
 #else
 AROS_LH0(struct SocketBase_intern *, LIB_expunge,
@@ -131,7 +131,7 @@ AROS_LH0(struct SocketBase_intern *, LIB_expunge,
     return NULL;
 }
 
-#ifndef __AROS
+#ifndef __AROS__
 __asm ULONG LIB_close(register __a6 struct SocketBase_intern *SocketBase)
 #else
 AROS_LH0(struct SocketBase_intern *, LIB_close,
@@ -160,7 +160,7 @@ AROS_LH0(struct SocketBase_intern *, LIB_close,
 	if (SocketBase->library.lib_Flags & LIBF_DELEXP)
 	{
 	    /* There is a delayed expunge waiting */
-#ifndef __AROS
+#ifndef __AROS__
 	    ret = LIB_expunge(SocketBase);
 #else
 	    ret = AROS_LC0(BPTR, LIB_expunge, struct SocketBase_intern *, SocketBase, 3, Socket);
@@ -179,7 +179,7 @@ int LIB_reserved(void)
 
 static struct Library *socketlib;
 
-#ifndef __AROS
+#ifndef __AROS__
 #define AROS_SLIB_ENTRY(a,b) a
 #endif
 

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2003/01/18 19:10:03  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.1  2000/05/30 03:24:35  bergers
  * Changes for build process.
  *
@@ -38,7 +41,7 @@
  *
  */
 
-#ifdef _AROS
+#ifdef __AROS__
 #include "bgui.library_rev.h"
 #else
 #include "o/bgui.library_rev.h"

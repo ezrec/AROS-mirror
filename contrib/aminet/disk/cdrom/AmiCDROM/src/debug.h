@@ -4,7 +4,7 @@
 #define NDEBUG
 //#define DEBUG_SECTORS
 
-#ifdef _AROS
+#ifdef __AROS__
 #	undef DEBUG
 #	define DEBUG 0
 #	include <aros/debug.h>

@@ -54,7 +54,7 @@ extern UBYTE hsparwed[];
 WORD format(struct FMList*,struct FMNode*,UBYTE*,struct CMenuConfig *cmc);
 WORD openicon(struct FMList*);
 WORD diskio(struct FMList*,struct IOStdReq*);
-#ifdef _AROS
+#ifdef __AROS__
 void bootsum(UBYTE *);
 #else
 void __asm bootsum(register __a0 UBYTE *);

@@ -13,7 +13,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_shutdown(register __d0 long s, register __d1 long how)
 #else
 	AROS_LH2(int, LIB_shutdown,

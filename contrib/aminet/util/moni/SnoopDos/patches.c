@@ -990,7 +990,7 @@ void UpdateDeviceList(int method)
         while ((dlist = NextDosEntry(dlist, LDF_DEVICES))
                          && i < (MAX_DOS_DEVICES-1))
         {
-#ifdef _AROS
+#ifdef __AROS__
 	#warning Add AROS specific code for DosList access
 #else
                 if (dlist->dol_Task)
@@ -1418,7 +1418,7 @@ void GetVolName(BPTR lock, char *buf, int maxlen)
                 NameFromLock(lock, buf, maxlen);
                 return;
         }
-#ifdef _AROS
+#ifdef __AROS__
         vol = BTOC(lock);
 #else
         vol = BTOC(((struct FileLock *)BTOC(lock))->fl_Volume);
@@ -1432,7 +1432,7 @@ void GetVolName(BPTR lock, char *buf, int maxlen)
                  */
 				UBYTE *volname;
 				int len;
-#ifdef _AROS
+#ifdef __AROS__
 				volname = vol->dl_DevName;
 				len = MIN(maxlen-2,strlen(volname));
 #else
@@ -2259,7 +2259,7 @@ void HandlePaused(Event *ev, LONG seqnum)
  *
  *              Searches the system port list looking for a port name
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_FindPort,
     AROS_UFHA (char *, name, A1),
     AROS_UFHA (void *, libbase, A6)
@@ -2317,7 +2317,7 @@ ULONG ASMCALL New_FindPort(reg_a1 char *name, reg_a6 void *libbase)
  *
  *              Searches the system resident list looking for a resident module
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_FindResident,
     AROS_UFHA (char *, name, A1),
     AROS_UFHA (void *, libbase, A6)
@@ -2379,7 +2379,7 @@ ULONG ASMCALL New_FindResident(reg_a1 char *name, reg_a6 void *libbase)
  *
  *              Searches the system semaphore list looking for the named semaphore
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_FindSemaphore,
     AROS_UFHA (char *, name, A1),
     AROS_UFHA (void *, libbase, A6)
@@ -2440,7 +2440,7 @@ ULONG ASMCALL New_FindSemaphore(reg_a1 char *name, reg_a6 void *libbase)
  *              We ignore calls to FindTask(0) since this is just
  *              looking for a pointer to the current task.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_FindTask,
     AROS_UFHA (char *, name, A1),
     AROS_UFHA (void *, libbase, A6)
@@ -2503,7 +2503,7 @@ ULONG ASMCALL New_FindTask(reg_a1 char *name, reg_a6 void *libbase)
  *              then the caller is looking for a Lock() on the default screen,
  *              and we ignore it (otherwise we'd get loads of output).
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_LockPubScreen,
     AROS_UFHA (char *, name, A0),
     AROS_UFHA (void *, libbase, A6)
@@ -2572,7 +2572,7 @@ ULONG ASMCALL New_LockPubScreen(reg_a0 char *name, reg_a6 void *libbase)
  *              which does it a lot!) but flag other occurrances of NULL device
  *              names as an error.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH5 (ULONG, New_OpenDevice,
     AROS_UFHA (char *, name, A0),
     AROS_UFHA (long, unit, D0),
@@ -2667,7 +2667,7 @@ ULONG ASMCALL New_OpenDevice(reg_a0 char *name, reg_d0 long unit,
  *              call this function first before checking the disk, so patching
  *              this function catches all accesses.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_OpenFont,
     AROS_UFHA (struct TextAttr *, textattr, A0),
     AROS_UFHA (void *, libbase, A6)
@@ -2742,7 +2742,7 @@ ULONG ASMCALL New_OpenFont(reg_a0 struct TextAttr *textattr, reg_a6 void *libbas
  *              We do this by ignoring any call to open dos.library made
  *              by a call originating in ROM.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3 (ULONG, New_OpenLibrary,
     AROS_UFHA (char *, name, A1),
     AROS_UFHA (long, version, D0),
@@ -2836,7 +2836,7 @@ ULONG ASMCALL New_OpenLibrary(reg_a1 char *name, reg_d0 long version,
  *
  *              Opens the named resource
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_OpenResource,
     AROS_UFHA (char *, name, A1),
     AROS_UFHA (void *, libbase, A6)
@@ -2895,7 +2895,7 @@ ULONG ASMCALL New_OpenResource(reg_a1 char *name, reg_a6 void *libbase)
  *
  *              Searches the tooltype array for a particular tooltype
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3 (ULONG, New_FindToolType,
     AROS_UFHA (char **, array, A0),
     AROS_UFHA (char *, tooltype, A1),
@@ -2960,7 +2960,7 @@ ULONG ASMCALL New_FindToolType(reg_a0 char **array, reg_a1 char *tooltype,
  *
  *              Checks if a specified tooltype contains a given value
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3 (ULONG, New_MatchToolValue,
     AROS_UFHA (char *, tooltype, A0),
     AROS_UFHA (char *, value, A1),
@@ -3025,7 +3025,7 @@ ULONG ASMCALL New_MatchToolValue(reg_a0 char *tooltype, reg_a1 char *value,
  *
  *              Changes current directory to somewhere else
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_CurrentDir,
     AROS_UFHA (BPTR, lock, D1),
     AROS_UFHA (void *, libbase, A6)
@@ -3070,7 +3070,7 @@ ULONG ASMCALL New_CurrentDir(reg_d1 BPTR lock, reg_a6 void *libbase)
  *
  *              Deletes a file from disk
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_DeleteFile,
     AROS_UFHA (char *, name, D1),
     AROS_UFHA (void *, libbase, A6)
@@ -3128,7 +3128,7 @@ ULONG ASMCALL New_DeleteFile(reg_d1 char *name, reg_a6 void *libbase)
  *
  *              Executes a command from disk. Now superceded by System and RunCommand
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH4 (ULONG, New_Execute,
     AROS_UFHA (char *, cmdline, D1),
     AROS_UFHA (BPTR, fin, D2),
@@ -3204,7 +3204,7 @@ ULONG ASMCALL New_Execute(reg_d1 char *cmdline, reg_d2 BPTR fin, reg_d3 BPTR fou
  *
  *              Inquires about the value of an environment variable
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH5 (ULONG, New_GetVar,
     AROS_UFHA (char *, name, D1),
     AROS_UFHA (char *, buffer, D2),
@@ -3281,7 +3281,7 @@ ULONG ASMCALL New_GetVar(reg_d1 char *name, reg_d2 char *buffer,
  *
  *              Inquires about the value of a local environment variable
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3 (ULONG, New_FindVar,
     AROS_UFHA (char *, name, D1),
     AROS_UFHA (ULONG, type, D2),
@@ -3347,7 +3347,7 @@ ULONG ASMCALL New_FindVar(reg_d1 char *name, reg_d2 ULONG type,
  *
  *              Sets a (possibly new) variable to a particular value
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH5 (ULONG, New_SetVar,
     AROS_UFHA (char *, name, D1),
     AROS_UFHA (char *, buffer, D2),
@@ -3442,7 +3442,7 @@ ULONG ASMCALL New_SetVar(reg_d1 char *name, reg_d2 char *buffer,
  *
  *              Deletes an environment variable from the environment
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3 (ULONG, New_DeleteVar,
     AROS_UFHA (char *, name, D1),
     AROS_UFHA (ULONG, flags, D2),
@@ -3512,7 +3512,7 @@ ULONG ASMCALL New_DeleteVar(reg_d1 char *name, reg_d2 ULONG flags,
  *
  *              Tries to load in a module from disk
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_LoadSeg,
     AROS_UFHA (char *, name, D1),
     AROS_UFHA (void *, libbase, A6)
@@ -3576,7 +3576,7 @@ ULONG ASMCALL New_LoadSeg(reg_d1 char *name, reg_a6 void *libbase)
  *
  *              Tries to load in a module from disk
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3 (ULONG, New_NewLoadSeg,
     AROS_UFHA (char *, name, D1),
     AROS_UFHA (TAGPTR, tags, D2),
@@ -3636,7 +3636,7 @@ ULONG ASMCALL New_NewLoadSeg(reg_d1 char *name, reg_d2 TAGPTR tags,
  *
  *              Tries to load in a module from disk
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3 (ULONG, New_Lock,
     AROS_UFHA (char *, name, D1),
     AROS_UFHA (LONG, mode, D2),
@@ -3705,7 +3705,7 @@ ULONG ASMCALL New_Lock(reg_d1 char *name, reg_d2 LONG mode, reg_a6 void *libbase
  *
  *              Creates a new directory on disk
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_CreateDir,
     AROS_UFHA (char *, name, D1),
     AROS_UFHA (void *, libbase, A6)
@@ -3763,7 +3763,7 @@ ULONG ASMCALL New_CreateDir(reg_d1 char *name, reg_a6 void *libbase)
  *
  *              Creates a new hard or soft link
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH4 (ULONG, New_MakeLink,
     AROS_UFHA (char *, name, D1),
     AROS_UFHA (LONG, dest, D2),
@@ -3858,7 +3858,7 @@ ULONG ASMCALL New_MakeLink(reg_d1 char *name, reg_d2 LONG dest, reg_d3 LONG soft
  *
  *              Opens a new file on disk
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3 (ULONG, New_Open,
     AROS_UFHA (char *, name, D1),
     AROS_UFHA (LONG, accessMode, D2),
@@ -3926,7 +3926,7 @@ ULONG ASMCALL New_Open(reg_d1 char *name, reg_d2 LONG accessMode,
  *              to generate two events: one containing the source name and
  *              one containing the destination name.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3 (ULONG, New_Rename,
     AROS_UFHA (char *, oldname, D1),
     AROS_UFHA (char *, newname, D2),
@@ -3994,7 +3994,7 @@ ULONG ASMCALL New_Rename(reg_d1 char *oldname, reg_d2 char *newname,
  *
  *              Runs a command from disk. Like Execute() only with more control.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH5 (ULONG, New_RunCommand,
     AROS_UFHA (BPTR, seglist, D1),
     AROS_UFHA (ULONG, stack, D2),
@@ -4099,7 +4099,7 @@ ULONG ASMCALL New_RunCommand(reg_d1 BPTR seglist,  reg_d2 ULONG stack,
  *
  *              Executes a command line. Like Execute() only more powerful.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3 (ULONG, New_SystemTagList,
     AROS_UFHA (char *, cmdline, D1),
     AROS_UFHA (TAGPTR, tags, D2),
@@ -4195,7 +4195,7 @@ ULONG ASMCALL New_SystemTagList(reg_d1 char *cmdline, reg_d2 TAGPTR tags,
  *              the device list whenever a new device is added to the DOS device
  *              list.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH2 (ULONG, New_AddDosEntry,
     AROS_UFHA (struct DosList *, dlist, D1),
     AROS_UFHA (void *, libbase, A6)
@@ -4675,7 +4675,7 @@ void HandleRawPacket(ULONG calladdr, struct DosPacket *dp,
  *              If any of these conditions fail, we ignore the message.
  *
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3 (ULONG, New_PutMsg,
     AROS_UFHA (struct MsgPort *, port, A0),
     AROS_UFHA (struct Message *, msg, A1),

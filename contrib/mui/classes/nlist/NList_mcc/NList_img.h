@@ -1,4 +1,4 @@
-#ifndef _AROS
+#ifndef __AROS__
 #include "/common/mcc_common.h"
 #else
 #include "mcc_common.h"
@@ -16,7 +16,7 @@ struct NLIData
 
 #ifdef MORPHOS
 struct EmulLibEntry NLI_Dispatcher;
-#elif defined(_AROS)
+#elif defined(__AROS__)
 AROS_UFP3(ULONG, NLI_Dispatcher,
     AROS_UFPA(struct IClass *, cl, A0),
     AROS_UFPA(Object *, obj, A2),

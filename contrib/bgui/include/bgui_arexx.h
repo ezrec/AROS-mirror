@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.10  2003/01/18 19:10:21  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.9  2000/08/09 10:17:25  chodorowski
  * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
  * macros. Some of these files didn't need them at all...
@@ -40,7 +43,7 @@
  * Removed a noisy warning.
  *
  * Revision 42.2  2000/05/29 00:40:25  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.1  2000/05/15 19:28:20  stegerg
  * REG() macro replacementes
@@ -80,7 +83,7 @@
 #include <dos/rdargs.h>
 #endif
 
-#ifdef _AROS
+#ifdef __AROS__
 // Not including any AREXX includes
 #else
 
@@ -96,7 +99,7 @@
 #include <rexx/errors.h>
 #endif
 
-#endif /* _AROS */
+#endif /* __AROS__ */
 
 #ifndef INTUITION_CLASSES_H
 #include <intuition/classes.h>
@@ -128,7 +131,7 @@
 /* Execute a host command. */
 #define AREXXM_EXECUTE                  (AREXX_MB+2)
 
-#ifndef _AROS
+#ifndef __AROS__
 #undef STACKULONG
 #define STACKULONG ULONG
 #endif
@@ -157,7 +160,7 @@ typedef struct {
 /*
 **      An array of these structures must be passed at object-create time.
 **/
-#ifdef _AROS
+#ifdef __AROS__
 //#warning Deactivated the following typedef
 #else
 typedef struct {

@@ -35,7 +35,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm struct hostent *LIB_gethostbyname(register __a0 const char *name)
 #else
 	AROS_LH1(struct hostent *, LIB_gethostbyname,

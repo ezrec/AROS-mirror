@@ -120,7 +120,7 @@ static void tcpip_init_done(void *arg)
   sys_sem_t *sem;
   sem = arg;
 
-#ifndef __AROS
+#ifndef __AROS__
   /* We must add the interface here because this is the task where the output happens and we create a message port in
    * sioslipif_input. This needs of course improvements */
   IP4_ADDR(&gw, 192,168,6,100);

@@ -83,7 +83,7 @@ struct dopus_func_start *func;
     	{
 	    ULONG stacksize = func->stack;
 
-#ifdef _AROS
+#ifdef __AROS__
     	    if (stacksize < AROS_STACKSIZE) stacksize = AROS_STACKSIZE;
 #endif	    
 	    func->startup.wbstartup.sm_Segment=func->segment;

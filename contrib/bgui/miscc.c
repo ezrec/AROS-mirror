@@ -13,7 +13,7 @@
 #include <bgui/bgui_compilerspecific.h>
 #endif
 
-#ifndef _AROS
+#ifndef __AROS__
 BOOL DisplayAGuideInfo(struct NewAmigaGuide *nag, struct TagItem * tags)
 {
   BOOL success = FALSE;

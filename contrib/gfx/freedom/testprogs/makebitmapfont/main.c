@@ -15,7 +15,7 @@
 #include <proto/graphics.h>
 #include <proto/utility.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 
 #include <aros/debug.h>
 #include <aros/macros.h>

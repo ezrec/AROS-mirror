@@ -16,7 +16,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_Inet_LnaOf(register __d0 unsigned long in)
 #else
 	AROS_LH1(int, LIB_Inet_LnaOf,

@@ -12,14 +12,14 @@
 #endif
 
 #ifndef LINK_LIB
-#ifndef _AROS
+#ifndef __AROS__
 struct Library * SysBase;
 #else
 struct ExecBase * SysBase;
 #endif
 #endif /* !LINK_LIB */
 
-#ifndef _AROS
+#ifndef __AROS__
 struct Library *	IntuitionBase;
 struct Library *	GfxBase;
 struct Library *	UtilityBase;

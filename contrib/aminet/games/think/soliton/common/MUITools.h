@@ -29,7 +29,7 @@
   MUI
 ****************************************************************************************/
 
-#ifdef _AROS
+#ifdef __AROS__
 #warning hack! fix it!
 #define HOOKPROTO(name, ret, obj, param) \
     static ret name(struct Hook *hook, obj, param)

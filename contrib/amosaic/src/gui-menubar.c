@@ -834,7 +834,7 @@ static void mo_try_to_grok_menubar (void)
 
 static int grokked_menubar = 0;
 
-#ifndef __AROS
+#ifndef __AROS__
 XmxMenuRecord *mo_make_document_view_menubar (Widget form)
 {
   /* If we've never tried to set up the user's configurable menubar by

@@ -57,7 +57,7 @@ struct GfxBase *GfxBase = NULL;
 
 
 
-#if !defined(_AROS) && defined(USE_ZUNE)
+#if !defined(__AROS__) && defined(USE_ZUNE)
 
 /* On AmigaOS we build a fake library base, because it's not compiled as sharedlibrary yet */
 #include "muimaster_intern.h"
@@ -100,7 +100,7 @@ static BOOL InitAll(void)
 
   if((IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library", 38)))
   {
-#if defined(USE_ZUNE) && !defined(_AROS)
+#if defined(USE_ZUNE) && !defined(__AROS__)
     if (openmuimaster())
 #else
     if((MUIMasterBase = OpenLibrary(MUIMASTER_NAME, 17)))
@@ -170,7 +170,7 @@ static void ExitAll(void)
     CloseLibrary(DataTypesBase);
   if(UtilityBase)
     CloseLibrary((struct Library *) UtilityBase);
-#if defined(USE_ZUNE) && !defined(_AROS)
+#if defined(USE_ZUNE) && !defined(__AROS__)
   closemuimaster();
 #else
   if(MUIMasterBase)

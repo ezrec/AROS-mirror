@@ -1437,7 +1437,7 @@ void __saveds NewTaskStart( void )
 	}
 	else
 	{
-	#ifndef _AROS
+	#ifndef __AROS__
 		if( 1 != ChecksumCorrect())
 			Gedenken();
     	#endif
@@ -1451,7 +1451,7 @@ void __saveds NewTaskStart( void )
 	 *	it exits.
 	 */
 
-#ifdef _AROS
+#ifdef __AROS__
 STATIC VOID ProcessCleanup(ULONG retcode, BPTR SegList)
 #else
 STATIC VOID __saveds __asm
@@ -2497,7 +2497,7 @@ void __saveds DoWindow(void)
 		if( mainflags & MF_CLIPCONV )
 			CloseClipConv();
 
-#ifdef _AROS
+#ifdef __AROS__
 #warning "stegerg: disabled for quick test!!"
 #else
 		CloseCommandShell();

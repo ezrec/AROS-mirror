@@ -209,7 +209,7 @@
 #   endif
 #   define mach_type_known
 # endif
-# if defined(_AROS) && (defined(i386) || defined(__i386__))
+# if defined(__AROS__) && (defined(i386) || defined(__i386__))
 #   define AROS
 #   define I386
 #   define mach_type_known

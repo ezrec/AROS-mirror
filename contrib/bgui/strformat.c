@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2003/01/18 19:10:01  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.5  2000/08/08 20:57:26  chodorowski
  * Minor fixes to build on Amiga.
  *
@@ -27,7 +30,7 @@
  * Replaced stch_l & stcu_d and had to make a few changes in other places because of that.
  *
  * Revision 42.2  2000/05/29 00:40:24  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
@@ -127,7 +130,7 @@ makeproto ASM REGFUNC3(VOID, DoSPrintF,
       SPrintfA(buffer, fstring, args);
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 #else
 //makeproto void sprintf(char *buffer, const char *format, ...)
 //{

@@ -188,7 +188,7 @@ void Amiga_initplayer2(void){
 
 extern char *screenname;
 
-#ifdef _AROS
+#ifdef __AROS__
 APTR CreatePlayer(Tag tag, ...){
 	return CreatePlayerA((struct TagItem *)&tag );
 }

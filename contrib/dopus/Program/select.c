@@ -31,7 +31,7 @@ the existing commercial status of Directory Opus 5.
 #include "dopus.h"
 
 #include <graphics/gels.h>
-#ifdef _AROS
+#ifdef __AROS__
 #include <cybergraphx/cybergraphics.h>
 #endif
 

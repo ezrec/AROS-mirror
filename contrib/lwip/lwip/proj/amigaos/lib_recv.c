@@ -19,7 +19,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_recv(register __d0 long s, register __a0 unsigned char *buf, register __d1 long len, register __d2 long flags)
 #else
 	AROS_LH4(int, LIB_recv,

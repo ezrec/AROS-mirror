@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.11  2003/01/18 19:10:21  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.10  2000/08/09 11:40:43  chodorowski
  * Moved the METHOD macro to bgui_compilerspecific.h.
  *
@@ -38,7 +41,7 @@
  * Changes to make BGUI compilable and linkable.
  *
  * Revision 42.3  2000/05/29 00:40:25  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.2  2000/05/28 21:46:40  stegerg
  * *** empty log message ***
@@ -110,7 +113,7 @@
  *
  */
 
-#ifdef _AROS
+#ifdef __AROS__
 
 #include <aros/libcall.h>
 #include "include/aros/bgui_defines.h"
@@ -142,7 +145,7 @@ extern struct Library * BGUIBase;
 #include <graphics/rpattr.h>
 #include <graphics/gels.h>
 #include <libraries/gadtools.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <libraries/amigaguide.h>
 #endif
 #include <libraries/commodities.h>
@@ -150,7 +153,7 @@ extern struct Library * BGUIBase;
 #include <libraries/iffparse.h>
 #include <devices/timer.h>
 #include <workbench/workbench.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <gadgets/colorwheel.h>
 #include <gadgets/gradientslider.h>
 #endif
@@ -165,23 +168,23 @@ extern struct Library * BGUIBase;
 #include <proto/asl.h>
 #include <proto/layers.h>
 #include <proto/gadtools.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <proto/amigaguide.h>
 #endif
 #include <proto/commodities.h>
 #include <proto/locale.h>
 #include <proto/keymap.h>
 #include <proto/dos.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <proto/wb.h>
 #endif
 #include <proto/datatypes.h>
 #include <proto/iffparse.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <proto/rexxsyslib.h>
 #endif
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <proto/alib.h>
 #else
 #include <clib/alib_protos.h>
@@ -418,7 +421,7 @@ typedef struct {
 #define BGUI_SPACING_OBJECT   0xF001
 #define BGUI_DGM_OBJECT       0xF002
 
-#ifndef _AROS
+#ifndef __AROS__
 
 #undef STACKULONG
 #define STACKULONG ULONG
@@ -569,7 +572,7 @@ typedef struct BaseClassData
  * Call the IM_EXTENT method.
  */
 
-#ifdef _AROS
+#ifdef __AROS__
     #define DoExtentMethod(obj, rp, ibox, lw, lh, flags) \
     AsmDoMethod(obj, IM_EXTENT, rp, ibox, lw, lh, flags)
 #else
@@ -591,7 +594,7 @@ typedef struct BaseClassData
 /*
  * Library constants.
  */
-#ifndef _AROS
+#ifndef __AROS__
 #include "o/bgui.library_rev.h"
 #else
 #include "include/aros/bgui.library_rev.h"
@@ -612,7 +615,7 @@ extern const UBYTE LibID[];
 
 #include "include/aros/class-protos.h"
 
-#ifndef _AROS
+#ifndef __AROS__
 
 #ifndef NO_MEMORY_ALLOCATION_DEBUG_ALIASING
 #define BGUI_AllocPoolMem(size) BGUI_AllocPoolMemDebug(size,__FILE__,__LINE__)
@@ -623,7 +626,7 @@ extern const UBYTE LibID[];
 #endif
 #endif
 
-#endif /* _AROS */
+#endif /* __AROS__ */
 
 #ifdef DEBUG_BGUI
 #define BGUI_OpenFont(textAttr) BGUI_OpenFontDebug(textAttr,__FILE__,__LINE__)
@@ -633,7 +636,7 @@ extern const UBYTE LibID[];
 #define BGUI_CloseFont(font) CloseFont(font)
 #endif
 
-#ifndef _AROS
+#ifndef __AROS__
 
 #ifdef DEBUG_BGUI
 #define SRectFill(rp,l,t,r,b) SRectFillDebug(rp,l,t,r,b,__FILE__,__LINE__)
@@ -666,5 +669,5 @@ ASM REGFUNC4(VOID, RenderBackFillRaster,
 	REGPARAM(D1, UWORD, bpen));
 #endif
 
-#endif /* _AROS */
+#endif /* __AROS__ */
 #endif

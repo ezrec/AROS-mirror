@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 struct IntuitionBase    *IntuitionBase;
 struct LocaleBase       *LocaleBase;
 #endif
@@ -51,7 +51,7 @@ enum
     NUM_ARGS
 };
 
-#ifndef _AROS
+#ifndef __AROS__
 const 
 #endif
 enum
@@ -175,7 +175,7 @@ static void OpenTape( void );
 
 /*** Functions ***************************************************************/
 
-#ifdef _AROS
+#ifdef __AROS__
 
 #undef AROS_TAGRETURNTYPE
 #define AROS_TAGRETURNTYPE Object *
@@ -232,7 +232,7 @@ static void OpenLibs( void )
 
     LocaleBase = (struct LocaleBase *)OpenLibrary("locale.library",39);
     
-    #ifdef _AROS
+    #ifdef __AROS__
     IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 39);
     if (!IntuitionBase) Cleanup("Can't open intuition.librarv V39!");
     #endif
@@ -244,7 +244,7 @@ static void CloseLibs( void )
     if( BGUIBase ) CloseLibrary( BGUIBase );
     if( LocaleBase ) CloseLibrary( (struct Library *) LocaleBase );
     
-    #ifdef _AROS
+    #ifdef __AROS__
     if ( IntuitionBase ) CloseLibrary( (struct Library *) IntuitionBase);
     #endif
 } /// CloseLibs()

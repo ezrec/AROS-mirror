@@ -11,7 +11,7 @@ static const char version[] = "$VER: "
 "Copyright © 1983 The Regents of the University of California.\n"
 "All rights reserved.\n";
 
-#ifndef __AROS
+#ifndef __AROS__
 typedef unsigned long IPTR;
 #endif
 
@@ -295,7 +295,7 @@ struct Library *SocketBase;
 #define MYDEBUG 1
 #include "debug.h"
 
-#ifdef __AROS
+#ifdef __AROS__
 #undef inet_ntoa
 #endif
 

@@ -42,7 +42,7 @@
 #include "mm2.h"
 #include <stdio.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #define remove DeleteFile
 #define rename Rename
 #endif

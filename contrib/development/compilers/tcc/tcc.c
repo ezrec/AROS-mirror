@@ -33,7 +33,7 @@
 #endif
 #ifndef WIN32
 #include <sys/time.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <sys/ucontext.h>
 #endif
 #endif
@@ -86,7 +86,7 @@
 #define TOK_STR_ALLOC_INCR (1 << TOK_STR_ALLOC_INCR_BITS)
 #define TOK_MAX_SIZE        4 /* token max size in int unit when stored in string */
 
-#ifdef _AROS
+#ifdef __AROS__
 typedef struct mcontext
 {
      int *gregs;
@@ -2896,7 +2896,7 @@ void parse_number(const char *p)
             if (t == 'F') {
                 ch = *p++;
                 tok = TOK_CFLOAT;
-#ifndef _AROS
+#ifndef __AROS__
                 tokc.f = strtof(token_buf, NULL);
 #else
 		tokc.f = strtod(token_buf, NULL);
@@ -2904,7 +2904,7 @@ void parse_number(const char *p)
             } else if (t == 'L') {
                 ch = *p++;
                 tok = TOK_CLDOUBLE;
-#ifndef _AROS
+#ifndef __AROS__
                 tokc.ld = strtold(token_buf, NULL);
 #else
 		tokc.ld = strtod(token_buf, NULL);
@@ -8512,7 +8512,7 @@ int tcc_run(TCCState *s1, int argc, char **argv)
         struct sigaction sigact;
         /* install TCC signal handlers to print debug info on fatal
            runtime errors */
-#ifndef _AROS
+#ifndef __AROS__
         sigact.sa_flags = SA_SIGINFO | SA_ONESHOT;
 #else
 	sigact.sa_flags = SA_SIGINFO;
@@ -8557,7 +8557,7 @@ TCCState *tcc_new(void)
     /* default include paths */
     tcc_add_sysinclude_path(s, "/tcc");
     tcc_add_sysinclude_path(s, "sys:include");
-#ifndef _AROS
+#ifndef __AROS__
     tcc_add_sysinclude_path(s, "/usr/include");
     tcc_add_sysinclude_path(s, CONFIG_TCC_PREFIX "/lib/tcc/include");
 #endif
@@ -8598,7 +8598,7 @@ TCCState *tcc_new(void)
     tcc_define_symbol(s, "__WCHAR_TYPE__", "int");
     
     /* default library paths */
-#ifndef _AROS 
+#ifndef __AROS__ 
     tcc_add_library_path(s, "/usr/local/lib");
     tcc_add_library_path(s, "/usr/lib");
     tcc_add_library_path(s, "/lib");

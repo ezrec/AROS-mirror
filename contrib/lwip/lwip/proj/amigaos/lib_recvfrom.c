@@ -14,7 +14,7 @@
 
     NAME */
 
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_recvfrom(register __d0 long s, register __a0 unsigned char *buf, register __d1 long len, register __d2 long flags, register __a1 struct sockaddr *addr, register __a2 long *addrlen)
 #else
 	AROS_LH6(int, LIB_recvfrom,

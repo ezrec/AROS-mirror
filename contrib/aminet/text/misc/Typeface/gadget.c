@@ -6,7 +6,7 @@
 
 #include "typeface.h"
 
-#ifdef _AROS
+#ifdef __AROS__
 extern struct Library *BGUIBase;
 #endif
 
@@ -91,7 +91,7 @@ struct TextFont *gadget_font;
   return (gadget_font->tf_YSize+(CG_YOFFSET*2))*height;
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(ULONG, DispatchCharGadg,
     AROS_UFHA(Class *, cl, A0),
     AROS_UFHA(Object *, o, A2),
@@ -532,7 +532,7 @@ struct RastPort *rp;
   }
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(ULONG, DispatchEditGadg,
     AROS_UFHA(Class *, cl, A0),
     AROS_UFHA(Object *, o, A2),
@@ -1028,7 +1028,7 @@ Class *super, *cl = NULL;
   return cl;
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(ULONG, DispatchSlideGadg,
     AROS_UFHA(Class *, cl, A0),
     AROS_UFHA(Object *, o, A2),
@@ -1140,7 +1140,7 @@ struct TagItem *tag,*tstate = attr;
   }
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(ULONG, DispatchFL,
     AROS_UFHA(Class *, cl, A0),
     AROS_UFHA(Object *, obj, A2),

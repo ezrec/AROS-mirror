@@ -1,6 +1,6 @@
 #include <OSIncludes.h>
 
-#ifndef _AROS
+#ifndef __AROS__
 #pragma header
 #endif
 
@@ -256,7 +256,7 @@ ULONG ButtonDispatcher(struct IClass *cl,Object *obj,Msg msg)
 			if (PUI_MayRender(obj)) mRender(cl,(struct Gadget *)obj,(struct gpRender *)msg);
 			break;
  
-#ifdef _AROS
+#ifdef __AROS__
     	    	case GM_GOACTIVE:
 #endif
 		case GM_HANDLEINPUT:

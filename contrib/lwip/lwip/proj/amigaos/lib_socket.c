@@ -19,7 +19,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_socket(register __d0 long domain, register __d1 long type, register __d2 long protocol)
 #else
 	AROS_LH3(int, LIB_socket,

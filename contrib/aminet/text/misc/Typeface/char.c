@@ -548,7 +548,7 @@ Object *CreateButtonGadg(Object *image,Tag tag1,...)
     TAG_MORE,&tag1));
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(void, CharHook,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(Object *, o, A2),

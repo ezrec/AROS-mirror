@@ -83,7 +83,7 @@ struct Globals {
 	struct	DiskObject g_disk_object;
 	LONG		g_xpos;								/* NO_ICON_POSITION */
 	LONG		g_ypos;								/* NO_ICON_POSITION */
-#ifndef _AROS
+#ifndef __AROS__
 	struct MsgPort *DosTask;
 #endif
 	t_fh_node *g_fh_list;

@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #define DT_V44_SUPPORT
 #define HAVE_XAD 0
 #else

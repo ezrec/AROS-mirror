@@ -253,7 +253,7 @@ Regular BSD unix versions
 #include <dirent.h>
 #define direct dirent
 #else
-#ifndef _AROS
+#ifndef __AROS__
 #include <sys/dir.h>
 #endif
 #endif

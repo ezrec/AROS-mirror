@@ -86,7 +86,7 @@
 #define FAST register
 
 /* typedef short WORD; */
-#ifndef _AROS
+#ifndef __AROS__
 typedef unsigned short UWORD;
 typedef unsigned long ULONG;
 typedef long LONG;

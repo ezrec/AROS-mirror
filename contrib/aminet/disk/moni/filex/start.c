@@ -46,7 +46,7 @@ LONG __saveds Start(void)
 		"\0$VER:FileX "VSTRING" ("DATE") © 1993-1994 by Klaas Hermanns.";
 		/* Get SysBase. */
 
-#ifdef _AROS
+#ifdef __AROS__
     	(void)versionstring;
 #else
 	SysBase = *(struct ExecBase **)4;

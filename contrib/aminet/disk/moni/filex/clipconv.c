@@ -11,7 +11,7 @@
 #include <proto/utility.h>
 #include <clib/alib_protos.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <aros/asmcall.h>
 #endif
 
@@ -580,7 +580,7 @@ static void UpdateClipConvSignal( void )
 	UpdateClipConv( FALSE );
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3S(ULONG, ClipHookFunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(APTR, Obj, A2),
@@ -595,7 +595,7 @@ static ULONG __saveds __asm ClipHookFunc(	register __a0 struct Hook *hook,
 #endif
 	Signal( hook->h_Data, SIGBREAKF_CTRL_E );
    return(0);
-#ifdef _AROS
+#ifdef __AROS__
     AROS_USERFUNC_EXIT
 #endif
 }

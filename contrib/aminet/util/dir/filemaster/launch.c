@@ -254,7 +254,7 @@ D(bug("launch.c 222...........\n"));
 void
 priority (struct CMenuConfig *cmc)
 {
-#ifndef _AROS
+#ifndef __AROS__
   if (cmc)
     SetTaskPri (FindTask (0), fmconfig->pri[cmc->priority]);
 #endif

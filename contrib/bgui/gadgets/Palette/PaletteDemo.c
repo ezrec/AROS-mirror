@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2003/01/18 19:10:19  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.4  2000/08/09 10:17:25  chodorowski
  * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
  * macros. Some of these files didn't need them at all...
@@ -108,7 +111,7 @@ UBYTE          *InfoTxt = ISEQ_C "As you can see the colors of the below button\
  *      dispatchers, hook routines or anything else which may get
  *      called by a task other than your own.
  */
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3(ULONG, myButtonDispatch,
         AROS_LHA(Class *, cl, A0),
         AROS_LHA(Object *, obj, A2),

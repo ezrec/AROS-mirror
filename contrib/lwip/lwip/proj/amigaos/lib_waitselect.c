@@ -14,7 +14,7 @@
 #include "debug.h"
 
 /* temporary */
-#ifndef __AROS
+#ifndef __AROS__
 typedef int fd_set;
 #else
 #include <sys/types.h>
@@ -22,7 +22,7 @@ typedef int fd_set;
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_WaitSelect(register __d0 long nfds, register __a0 fd_set *readfds, register __a1 fd_set *writefds, register __a2 fd_set *exceptfds,
        register __a3 struct timeval *timeout, register __d1 ULONG *signals)
 #else

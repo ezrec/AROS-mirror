@@ -207,7 +207,7 @@ static ULONG ProfileManager_LoadProfiles(struct IClass* cl, Object* obj/*, Msg m
     if((p = (struct Profil *) AllocVec(sizeof(struct Profil), MEMF_PUBLIC)))
     {
       strncpy(p->name, GetStr(MSG_CARDS_STANDARD_MEDIUM), sizeof(p->name));
-#ifdef _AROS
+#ifdef __AROS__
       strcpy(p->cardset, "Graphics/Cards_Standard_Medium.iff");
       strcpy(p->pattern, "Graphics/Pattern_Standard.iff");
 #else

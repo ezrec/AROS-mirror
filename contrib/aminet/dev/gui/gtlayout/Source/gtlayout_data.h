@@ -11,7 +11,7 @@
 extern BOOLEAN			V39,
 				V40;
 
-#ifndef _AROS
+#ifndef __AROS__
 extern struct Library *		SysBase;
 extern struct Library *		IntuitionBase;
 extern struct Library *		GfxBase;

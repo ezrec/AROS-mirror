@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2003/01/18 19:09:57  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.6  2000/08/17 15:09:18  chodorowski
  * Fixed compiler warnings.
  *
@@ -25,7 +28,7 @@
  * errors
  *
  * Revision 42.2  2000/05/29 00:40:24  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.1  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
@@ -168,7 +171,7 @@ METHOD(LabelClassNew, struct opSet *, ops)
        */
       AsmCoerceMethod(cl, (Object *)rc, RM_SETM, ops->ops_AttrList, RAF_INITIAL);
 
-#if _AROS
+#if __AROS__
 #warning A comment within a comment makes gcc puke...
 #if 0
 
@@ -549,7 +552,7 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
       {
 	 *d++ = '\33';
 	 *d++ = c;
-#ifdef _AROS
+#ifdef __AROS__
 	d += sprintf(d, "%u", pen);
 #else         
 	 d += stcu_d(d, pen);

@@ -16,7 +16,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_SetErrnoPtr(void)
 #else
 	AROS_LH2(int, LIB_SetErrnoPtr,

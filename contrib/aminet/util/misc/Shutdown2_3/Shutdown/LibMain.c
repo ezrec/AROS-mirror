@@ -79,7 +79,7 @@ struct ShutdownBase * __saveds __asm
 LibInit(register __d0 struct ShutdownBase *ShutdownBase,register __a0 BPTR SegList)
 {
 #warning This would kill AROS!!!
-#ifndef _AROS
+#ifndef __AROS__
 	SysBase = *(struct ExecBase **)4;
 #endif
 

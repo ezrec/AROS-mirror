@@ -28,7 +28,7 @@
 	 Defines und Strukturen
 ***************************************/
 /* DICE defines these (but this file hides the other definition) */
-#ifndef __AROS
+#ifndef __AROS__
 #define GetHead(list)       ((APTR) \
 	(((struct List *)(list))->lh_Head->ln_Succ ? \
 		((struct List *)(list))->lh_Head : NULL ))

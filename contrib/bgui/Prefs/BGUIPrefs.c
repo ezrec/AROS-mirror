@@ -10,6 +10,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2003/01/18 19:10:07  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.1  2000/07/09 18:06:21  bergers
  * Made the Preferences tool compilable for AROS. This one has an MMakefile!
  *
@@ -38,7 +41,7 @@
  *
  */
 
-#ifdef _AROS
+#ifdef __AROS__
 extern struct Library * BGUIBase;
 #endif
 
@@ -189,7 +192,7 @@ GetFilename( int mode )
 
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 
 struct IntuitionBase * IntuitionBase;
 struct UtilityBase * UtilityBase;
@@ -232,7 +235,7 @@ int main( int count, char **args )
 						 frame = 0;
 	BOOL				 running = TRUE;
 
-#ifdef _AROS
+#ifdef __AROS__
 	if (FALSE == openlibs())
 	{
 	  closelibs();
@@ -574,7 +577,7 @@ int main( int count, char **args )
 		CloseLibrary( BGUIBase );
 	}
 
-#ifdef _AROS
+#ifdef __AROS__
 	closelibs();
 #endif
 

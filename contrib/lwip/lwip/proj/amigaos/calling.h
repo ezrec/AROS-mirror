@@ -22,7 +22,7 @@
 #define LIBMSG_SHUTDOWN 15
 #define LIBMSG_SOCKET 16
 
-#ifndef _AROS
+#ifndef __AROS__
 int CallStackFunction(struct SocketBase_intern *SocketBase, int type, int argc, ...);
 #endif
 struct LibMsg

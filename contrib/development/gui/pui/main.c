@@ -1,6 +1,6 @@
 #include <OSIncludes.h>
 
-#ifndef _AROS
+#ifndef __AROS__
 #pragma header
 #endif
 
@@ -401,7 +401,7 @@ void Test(void)
                     WA_Gadgets,obj,
                     TAG_DONE)))
                 {
-		#ifdef _AROS
+		#ifdef __AROS__
 		    {
 		    	/* hack because of font "bug" in AROS gagdet code */
 			

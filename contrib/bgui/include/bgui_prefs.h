@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2003/01/18 19:10:21  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.1  2000/07/09 18:08:09  bergers
  * Copies some more include files and changed the include files to work with AROS.
  * Added entry to comp to compile the Preferences program.
@@ -52,7 +55,7 @@
 /*
  * Private library functions.
  */
-#ifdef _AROS
+#ifdef __AROS__
 
 #else
 #pragma libcall BGUIBase BGUI_GetDefaultTags a8 001

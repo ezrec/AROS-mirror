@@ -16,7 +16,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 
 __asm int LIB_SocketBaseTagList(register __a0 struct TagItem *tags)
 #else

@@ -16,7 +16,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_Inet_MakeAddr(register __d0 unsigned long net, register __d1 unsigned long host)
 #else
 	AROS_LH2(int, LIB_Inet_MakeAddr,

@@ -18,6 +18,9 @@
  * enable/disable status of an item.
 
  * $Log$
+ * Revision 42.8  2003/01/18 19:10:20  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.7  2002/09/17 17:11:16  stegerg
  * inversvid drawmode together with Text() works now, so no
  * workaround needed.
@@ -72,7 +75,7 @@
 #include <proto/bgui.h>
 #include <proto/utility.h>
 #include <proto/layers.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <proto/rexxsyslib.h>
 #endif
 #include <proto/dos.h>
@@ -85,7 +88,7 @@
 #include <bgui/bgui_compilerspecific.h>
 #endif
 
-#ifdef _AROS
+#ifdef __AROS__
 extern struct Library * BGUIBase;
 #endif
 

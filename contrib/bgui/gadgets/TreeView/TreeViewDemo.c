@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2003/01/18 19:10:20  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.5  2000/08/09 10:17:25  chodorowski
  * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
  * macros. Some of these files didn't need them at all...
@@ -107,7 +110,7 @@ ASM SAVEDS REGFUNC3(ULONG, WindowHandler,
         REGPARAM(A2, Object *, obj),
         REGPARAM(A1, struct IntuiMessage *, imsg));
 
-#ifdef _AROS
+#ifdef __AROS__
 #else
 extern void __stdargs KPrintF(char *fmt,...);
 #endif

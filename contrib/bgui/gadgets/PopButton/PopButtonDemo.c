@@ -12,6 +12,9 @@
  *			and disabling.
  *
  * $Log$
+ * Revision 42.2  2003/01/18 19:10:20  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.1  2000/07/11 17:07:40  stegerg
  * Did not open intuition.library (SAS auto lib opening?)
  *
@@ -109,7 +112,7 @@ struct PopMenu	Able[] = {
  *	Library base and class base.
  */
 struct Library *BGUIBase;
-#ifdef _AROS
+#ifdef __AROS__
 struct IntuitionBase *IntuitionBase;
 #endif
 
@@ -138,7 +141,7 @@ int main( int argc, char **argv )
 	/*
 	 *	Open BGUI.
 	 */
-#ifdef _AROS
+#ifdef __AROS__
 	IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",39);
 	if (IntuitionBase)
 #endif

@@ -203,7 +203,7 @@ static struct EasyStruct req =
 	va_start (arg, p_message);
 	if (IntuitionBase)
 	{
-#ifdef _AROS
+#ifdef __AROS__
 		if (IntuitionBase->FirstScreen)
 		{
 #endif
@@ -211,11 +211,11 @@ static struct EasyStruct req =
 			EasyRequestArgs (NULL, &req, NULL, arg);
 			va_end (p_message);
 			return;
-#ifdef _AROS
+#ifdef __AROS__
 		}
 #endif
 	}
-#ifdef _AROS
+#ifdef __AROS__
 	kprintf("cdrom.handler error: ");
 	vkprintf(p_message, arg);
 	va_end (p_message);

@@ -89,7 +89,7 @@ program so feel free to send whatever you think would be helpful
 #include <unistd.h>
 #include <stdlib.h>
 
-#ifdef __AROS
+#ifdef __AROS__
 #define SHORTNAMES
 #include <exec/types.h>
 #include <sys/stat.h>
@@ -144,7 +144,7 @@ program so feel free to send whatever you think would be helpful
 
 #define F_NAMELEN  63
 #ifdef SHORTNAMES
-#ifdef __AROS
+#ifdef __AROS__
 #define I_NAMELEN  31 /* 30 char file names + '\0' terminator */
 #else
 #define I_NAMELEN  15 /* 14 char file names + '\0' terminator */
@@ -375,7 +375,7 @@ int extract(char *parent, int skip) {
             fprintf(stderr, "Directory name %s already in use\n", uname);
             return(-1);
           }
-#ifndef __AROS
+#ifndef __AROS__
           if (chdir(uname) == -1) {
             fprintf(stderr, "Can't chdir to %s\n", uname);
             return(-1);
@@ -390,7 +390,7 @@ int extract(char *parent, int skip) {
           break;  /* problem with folder */
         if (depth == 0) /* count how many top-level files done */
           numfiles++;
-#ifndef __AROS
+#ifndef __AROS__
         if (!flatten)
           chdir("..");
 #endif
@@ -553,7 +553,7 @@ int readfilehdr(struct fileHdr *f, int skip) {
     mp = mname;
     up = uname;
     while ((ch = *mp++) != '\0') {
-#ifndef __AROS
+#ifndef __AROS__
       if (ch <= ' ' || ch > '~' || index("/!()[]*<>?\\\"$\';&`", ch) != NULL)
         ch = '_';
 #endif
@@ -668,7 +668,7 @@ write_file(char *fname, long ibytes, long obytes, unsigned char type) {
     int i, n, ch, lastch;
     FILE *outf;
     char temp[256];
-#ifdef __AROS
+#ifdef __AROS__
     BPTR lock;
 #endif
 
@@ -735,7 +735,7 @@ write_file(char *fname, long ibytes, long obytes, unsigned char type) {
 
       case lzwComp:  /* LZW compression */
 
-#ifdef __AROS
+#ifdef __AROS__
        sprintf(temp, "%s%s%s%s", COMPRESS, " >\"", fname, "\" -d -c -n -b 14");
        /* sorry, we don't support txtmode yet */
 #else

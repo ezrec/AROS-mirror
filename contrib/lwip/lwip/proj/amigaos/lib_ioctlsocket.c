@@ -12,7 +12,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_IoctlSocket(register __d0 long s, register __d1 unsigned long req, register __a0 char *argp)
 #else
 	AROS_LH3(int, LIB_IoctlSocket,

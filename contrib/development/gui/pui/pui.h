@@ -396,7 +396,7 @@ ULONG PropDispatcher(struct IClass *cl,Object *obj,Msg msg);
 
 /* remap.asm */
 
-#ifdef _AROS
+#ifdef __AROS__
 extern void RemapBytes(APTR mem,APTR remaptable,LONG size);
 #else
 extern "ASM" void RemapBytes(register __a0 APTR mem,register __a1 APTR remaptable,register __d0 LONG size);
@@ -404,7 +404,7 @@ extern "ASM" void RemapBytes(register __a0 APTR mem,register __a1 APTR remaptabl
 
 /* p2c.asm */
 
-#ifdef _AROS
+#ifdef __AROS__
 extern void Planar2Chunky(APTR source,APTR dest,WORD breite,WORD planes);
 #else
 extern "ASM" void Planar2Chunky(APTR source,APTR dest,WORD breite,WORD planes);

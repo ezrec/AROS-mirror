@@ -54,14 +54,14 @@ extern struct Library *SysBase,*IntuitionBase,*UtilityBase,*GfxBase,*DOSBase,*Ic
 
 extern struct Library *MUIMasterBase;
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <aros/asmcall.h>
 #include <MUI/NList_mcc.h>
 #endif
 
 #include <MUI/NListview_mcc.h>
 
-#ifndef _AROS
+#ifndef __AROS__
 #include <MUI/NFloattext_mcc.h>
 #endif
 
@@ -89,7 +89,7 @@ SAVEDS ASM APTR ConstructLI_TextFunc(REG(a0) struct Hook *hook, REG(a2) Object *
 #endif
 
 #ifdef __GNUC__
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3S(APTR, ConstructLI_TextFunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -121,7 +121,7 @@ static APTR ConstructLI_TextFunc(void)
     return (new_entry);
   }
   return (NULL);
-#ifdef _AROS
+#ifdef __AROS__
   AROS_USERFUNC_EXIT
 #endif
 }
@@ -136,7 +136,7 @@ SAVEDS ASM void DestructLI_TextFunc(REG(a0) struct Hook *hook, REG(a2) Object *o
 {
 #endif
 #ifdef __GNUC__
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3S(void, DestructLI_TextFunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -152,7 +152,7 @@ static void DestructLI_TextFunc(void)
 #endif
   if (ndm->entry)
     FreeVec((void *) ndm->entry);
-#ifdef _AROS
+#ifdef __AROS__
   AROS_USERFUNC_EXIT
 #endif
 }
@@ -169,7 +169,7 @@ SAVEDS ASM void DisplayLI_TextFunc(REG(a0) struct Hook *hook, REG(a2) Object *ob
 {
 #endif
 #ifdef __GNUC__
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3S(void, DisplayLI_TextFunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -215,7 +215,7 @@ static void DisplayLI_TextFunc(void)
     ndm->strings[2]  = "This is the list title !\033n\033b   :-)";
   }
 
-#ifdef _AROS
+#ifdef __AROS__
   AROS_USERFUNC_EXIT
 #endif
 }
@@ -231,7 +231,7 @@ SAVEDS ASM LONG CompareLI_TextFunc(REG(a0) struct Hook *hook, REG(a2) Object *ob
 {
 #endif
 #ifdef __GNUC__
-#ifdef _AROS
+#ifdef __AROS__
 AROS_UFH3S(LONG, CompareLI_TextFunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -303,7 +303,7 @@ kprintf("%lx|Compare() %lx / %lx / %lx\n",obj,ncm->sort_type,st,ncm->sort_type2)
 
   return (result);
 
-#ifdef _AROS
+#ifdef __AROS__
   AROS_USERFUNC_EXIT
 #endif
 }

@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2003/01/18 19:10:05  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.5  2000/08/09 10:17:24  chodorowski
  * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
  * macros. Some of these files didn't need them at all...
@@ -74,7 +77,7 @@
 #include <proto/utility.h>
 #include <proto/locale.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <proto/alib.h>
 #else
 #include <clib/alib_protos.h>

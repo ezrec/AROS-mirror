@@ -16,7 +16,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 
 __asm void LIB_SetSocketSignals(register __d0 unsigned long intmask, register __d1 unsigned long iomask, register __d2 unsigned long urgentmask )
 #else

@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2003/01/18 19:10:13  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.6  2000/08/11 08:09:38  chodorowski
  * Removed METHOD #define, already defined in bgui_compilerspecific.h.
  *
@@ -44,7 +47,7 @@
  */
 
 
-#ifdef _AROS
+#ifdef __AROS__
 extern struct Library * BGUIBase;
 #endif
 
@@ -947,7 +950,7 @@ void __exit(int errcode)
 {
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 UBYTE _LibName[]   = "bgui_bar.gadget";
 UBYTE _LibID[]     = "\0$VER: bgui_bar.gadget 41.10 (3.5.00) ©1996 Manuel Lemos ©2000 BGUI Developers Team";
 UWORD _LibVersion  = 41;

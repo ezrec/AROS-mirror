@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "dopus.h"
 
-#ifdef _AROS
+#ifdef __AROS__
 #define __chip
 #endif
 

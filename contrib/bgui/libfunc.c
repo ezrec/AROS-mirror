@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2003/01/18 19:09:58  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.7  2000/08/09 11:45:57  chodorowski
  * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
  *
@@ -21,10 +24,10 @@
  * Makes the gadgets compilable.
  *
  * Revision 42.4  2000/06/01 01:41:37  bergers
- * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
+ * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef __AROS__), please.
  *
  * Revision 42.3  2000/05/29 00:40:24  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.2  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
@@ -234,7 +237,7 @@ STATIC CLASSDEF Classes[] =
    { NULL, InitViewClass,        BGUI_VIEW_GADGET,        "gadgets/bgui_view.gadget",        NULL, FALSE, FALSE },
 
 
-#ifdef _AROS
+#ifdef __AROS__
    { NULL, NULL,                 BGUI_PALETTE_GADGET,     "Gadgets/bgui_palette.gadget",     NULL, FALSE, FALSE },
    { NULL, NULL,                 BGUI_POPBUTTON_GADGET,   "Gadgets/bgui_popbutton.gadget",   NULL, FALSE, FALSE },
    { NULL, NULL,                 BGUI_TREEVIEW_GADGET,    "Gadgets/bgui_treeview.gadget",    NULL, FALSE, FALSE },
@@ -257,7 +260,7 @@ STATIC CLASSDEF Classes[] =
    { NULL, InitFontReqClass,     BGUI_FONTREQ_OBJECT,     "bgui_fontreq.class",              NULL, FALSE, FALSE },
    { NULL, InitScreenReqClass,   BGUI_SCREENREQ_OBJECT,   "bgui_screenreq.class",            NULL, FALSE, FALSE },
 
-#ifdef _AROS
+#ifdef __AROS__
 #define InitArexxClass NULL
 #warning InitArexxClass defined as NULL
 #endif
@@ -373,7 +376,7 @@ makeproto void MarkFreedClass(Class *cl)
  * Obtain a class pointer. This routine will only fail if you pass it
  * a non-existing class ID, or the class fails to initialize.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH1(Class *, BGUI_GetClassPtr,
     AROS_LHA(ULONG, classID, D0),
@@ -434,7 +437,7 @@ makeproto Object *BGUI_NewObject(ULONG classID, Tag tag1, ...)
 /*
  * Create an object from a class.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH2(Object *, BGUI_NewObjectA,
     AROS_LHA(ULONG, classID, D0),
@@ -461,7 +464,7 @@ makeproto SAVEDS ASM Object *BGUI_NewObjectA( REG(d0) ULONG classID, REG(a0) str
 /*
  * Allocate a bitmap.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH5(struct BitMap *, BGUI_AllocBitMap,
     AROS_LHA(ULONG, width, D0),
@@ -526,7 +529,7 @@ makeproto SAVEDS ASM struct BitMap *BGUI_AllocBitMap( REG(d0) ULONG width, REG(d
 /*
  * Free a bitmap.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH1(VOID, BGUI_FreeBitMap,
     AROS_LHA(struct BitMap *, bm, A0),
@@ -584,7 +587,7 @@ makeproto SAVEDS ASM VOID BGUI_FreeBitMap( REG(a0) struct BitMap *bm )
 /*
  * Allocate a rastport with bitmap.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH4(struct RastPort *, BGUI_CreateRPortBitMap,
     AROS_LHA(struct RastPort *, source, A0),
@@ -662,7 +665,7 @@ makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap( REG(a0) struct Ras
 /*
  * Free a buffer rastport and bitmap.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH1(VOID, BGUI_FreeRPortBitMap,
     AROS_LHA(struct RastPort *, rp, A0),
@@ -705,7 +708,7 @@ makeproto SAVEDS ASM VOID BGUI_FreeRPortBitMap( REG(a0) struct RastPort *rp )
  * Show AmigaGuide file.
  */
 #
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH4(BOOL, BGUI_Help,
     AROS_LHA(struct Window *, win, A0),
@@ -720,7 +723,7 @@ makeproto SAVEDS ASM BOOL BGUI_Help( REG(a0) struct Window *win, REG(a1) UBYTE *
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
-#ifdef _AROS
+#ifdef __AROS__
 #warning Commented a bunch of lines!!!!!!
 #else
    struct NewAmigaGuide       nag = { NULL };
@@ -785,7 +788,7 @@ STATIC ASM REGFUNC2(VOID, Busy, REGPARAM(a0, struct Window *, win), REGPARAM(d0,
 /*
  * Lock a window.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH1(APTR, BGUI_LockWindow,
     AROS_LHA(struct Window *, win, A0),
@@ -838,7 +841,7 @@ makeproto SAVEDS ASM APTR BGUI_LockWindow( REG(a0) struct Window *win )
 /*
  * Unlock a window.
  */
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH1(VOID, BGUI_UnlockWindow,
     AROS_LHA(APTR, lock, A0),
@@ -880,7 +883,7 @@ makeproto SAVEDS ASM VOID BGUI_UnlockWindow( REG(a0) APTR lock )
    AROS_LIBFUNC_EXIT
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH2(STRPTR, BGUI_GetLocaleStr,
     AROS_LHA(struct bguiLocale *, bl, A0),
@@ -914,7 +917,7 @@ makeproto SAVEDS ASM STRPTR BGUI_GetLocaleStr( REG(a0) struct bguiLocale *bl, RE
    AROS_LIBFUNC_EXIT
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH3(STRPTR, BGUI_GetCatalogStr,
     AROS_LHA(struct bguiLocale *, bl, A0),
@@ -960,13 +963,13 @@ static ULONG CallHookWithStack(struct CallHookData *call_hook_data)
    register APTR stack;
    register ULONG result;
 
-#ifdef _AROS
+#ifdef __AROS__
 #warning Commented EnsureStack
 #else
    stack=EnsureStack();
 #endif
    result=CallHookPkt(call_hook_data->Hook,call_hook_data->Object,call_hook_data->Message);
-#ifdef _AROS
+#ifdef __AROS__
 #else
    RevertStack(stack);
 #endif

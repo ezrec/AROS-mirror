@@ -19,7 +19,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_listen(register __d0 long s, register __d1 long backlog)
 #else
 	AROS_LH2(int, LIB_listen,

@@ -27,8 +27,8 @@
 
 /*****************************************************************************/
 
-#ifndef _AROS
-#warning _AROS is not defined!
+#ifndef __AROS__
+#warning __AROS__ is not defined!
 #include <clib/intuition_protos.h>
 #include <clib/graphics_protos.h>
 #include <clib/gadtools_protos.h>

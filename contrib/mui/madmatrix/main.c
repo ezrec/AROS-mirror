@@ -6,7 +6,7 @@
 #include <proto/graphics.h>
 #include <proto/exec.h>
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <proto/muimaster.h>
 extern struct Library *MUIMasterBase;
 #endif

@@ -142,7 +142,7 @@ AROS_UFH3(long, URLStrObjFunc,
 
 struct Hook URLStrObjHook={{NULL,NULL},(VOID *)URLStrObjFunc,NULL,NULL};
 
-#ifndef __AROS
+#ifndef __AROS__
 SAVEDS ASM void URLObjStrFunc(REG(a2) Object *pop,REG(a1) Object *str)
 {
 #else
@@ -727,7 +727,7 @@ AROS_UFH3(void, HotlistSortFunc,
 struct Hook HotlistSortHook={{NULL,NULL},(VOID *)HotlistSortFunc,NULL,NULL};
 
 
-#ifndef __AROS
+#ifndef __AROS__
 SAVEDS ASM void HotlistMoveFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
 #else
@@ -2064,7 +2064,7 @@ VOID fail(APTR app,char *str)
 	if (app)
 		MUI_DisposeObject(app);
 
-#if defined(USE_ZUNE) && !defined(_AROS)
+#if defined(USE_ZUNE) && !defined(__AROS__)
 #else
 	if (MUIMasterBase){
 		CloseLibrary(MUIMasterBase);
@@ -2090,7 +2090,7 @@ VOID fail(APTR app,char *str)
 
 extern int lib_version;
 
-#if defined(USE_ZUNE) && !defined(_AROS)
+#if defined(USE_ZUNE) && !defined(__AROS__)
 
 /* On AmigaOS we build a fake library base, because it's not compiled as sharedlibrary yet */
 #include "muimaster_intern.h"
@@ -2131,7 +2131,7 @@ void closemuimaster(void)
 
 VOID init(VOID)
 {
-#if defined(USE_ZUNE) && !defined(_AROS)
+#if defined(USE_ZUNE) && !defined(__AROS__)
 
   openmuimaster();
 #else
@@ -2190,7 +2190,7 @@ void SetSearchIndex(long state)
 	set(SearchIndex,MUIA_ShowMe,state);
 }
 
-#ifndef _AROS
+#ifndef __AROS__
 __near
 #endif
 LONG __stack = 32768;  /* Make it big for egs users */

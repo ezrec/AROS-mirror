@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2003/01/18 19:10:20  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.4  2002/02/19 22:08:06  stegerg
  * The demo programs for the external bgui gadget classes did not work,
  * because they were not linked against autoinit lib. And in TreeViewClass.c
@@ -235,7 +238,7 @@ STATIC DPFUNC ClassFunc[] = {
    DF_END,           NULL,
 };
 
-#ifdef _AROS
+#ifdef __AROS__
 UBYTE _LibName[]   = "bgui_treeview.gadget";
 UBYTE _LibID[]     = "\0$VER: bgui_treeview.gadget 41.10 (29.5.99) ©1996 Nick Christie ©1999 BGUI Developers Team";
 UWORD _LibVersion  = 41;

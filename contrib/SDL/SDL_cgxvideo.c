@@ -61,7 +61,7 @@ static char rcsid =
 #include "SDL_cgximage_c.h"
 #include "SDL_cgxyuv_c.h"
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <stdlib.h>
 #include <proto/alib.h>
 #endif

@@ -8,7 +8,7 @@
 #   include <exec/types.h>
 #endif
 
-#ifdef _AROS
+#ifdef __AROS__
 
 /* AROS */
 

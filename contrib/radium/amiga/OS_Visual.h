@@ -15,7 +15,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 
 
-#ifdef _AROS
+#ifdef __AROS__
 #  include <intuition/intuition.h>
 #else
 //Following code is to speed up the compilation-time:
@@ -40,7 +40,7 @@ struct OS_visual{
 };
 
 
-#ifdef _AROS
+#ifdef __AROS__
 #  include <dos/dos.h>
 #else
   // Following ripeed from dos/dos.h : (to speed up compilation time)

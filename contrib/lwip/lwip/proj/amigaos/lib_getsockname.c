@@ -12,7 +12,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_getsockname(register __d0 long s, register __a0 struct sockaddr *name, register __a1 long *namelen)
 #else
 	AROS_LH3(int, LIB_getsockname,

@@ -227,7 +227,7 @@ static char *OptimizeAndFix(struct IconRepresentation *ico);
 /*     The Amiga specific interface                                         */
 /****************************************************************************/
 
-#if defined(AMIGA) || defined(__AROS)
+#if defined(AMIGA) || defined(__AROS__)
 #include <exec/memory.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
@@ -258,7 +258,7 @@ static void ViewOneImage(struct GfxBase *GfxBase, LONG *pens, struct IconImage *
 static int  CheckArgs(struct Args *args);
 static void MakeName(char *buf, char *name);
 
-#ifdef __AROS
+#ifdef __AROS__
 ULONG main(void)
 #else
 ULONG start(void)
@@ -266,7 +266,7 @@ ULONG start(void)
 {
   ULONG ret = RETURN_FAIL;
 
-#ifndef __AROS
+#ifndef __AROS__
 #ifndef DEBUG
   struct DosLibrary *DOSBase;
 #endif
@@ -374,7 +374,7 @@ ULONG start(void)
     }
     else
       Printf("Not enough memory.\n");
-#ifndef __AROS
+#ifndef __AROS__
     CloseLibrary((struct Library *) DOSBase);
   }
 #endif  
@@ -475,7 +475,7 @@ Printf("Error %ld >= %ld\n", r, im->NumColors);
 static char *ViewImages(struct IconRepresentation *ico)
 {
   char *ret = 0;
-#ifndef __AROS
+#ifndef __AROS__
   struct ExecBase * SysBase = (*((struct ExecBase **) 4));
 #endif
   struct IntuitionBase * IntuitionBase;

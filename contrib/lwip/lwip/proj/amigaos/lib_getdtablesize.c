@@ -16,7 +16,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_getdtablesize(void)
 #else
 	AROS_LH0(APTR, LIB_getdtablesize,

@@ -53,7 +53,7 @@
 #include <workbench/startup.h>
 
 #include <proto/amigaguide.h>
-#ifndef _AROS
+#ifndef __AROS__
 #include <proto/rexxsyslib.h>
 #endif
 #include <proto/exec.h>
@@ -78,7 +78,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
-#ifdef _AROS
+#ifdef __AROS__
 	extern struct WBStartup * WBenchMsg;
 #else
 	/* for WBenchMsg */

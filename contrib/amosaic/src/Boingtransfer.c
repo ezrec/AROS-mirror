@@ -205,7 +205,7 @@ void __inline __regargs GetXYPos(double Offset,long x,long y,double Radius,long 
   double rx,ry;
   double XAbstand, YAbstand;
   
-#ifdef _AROS
+#ifdef __AROS__
 #warning otherwise crash because of -1 coords passed to Area functions
   Radius -= 1.0;
 #endif

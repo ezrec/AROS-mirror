@@ -13,7 +13,7 @@
 /*****************************************************************************
 
     NAME */
-#ifndef __AROS
+#ifndef __AROS__
 __asm int LIB_setsockopt(register __d0 long s, register __d1 long level, register __d2 long optname, register __a0 void *optval, register __a1 long *optlen)
 #else
 	AROS_LH3(int, LIB_setsockopt,

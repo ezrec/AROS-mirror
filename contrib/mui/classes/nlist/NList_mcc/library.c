@@ -52,7 +52,7 @@ struct Library *DiskfontBase = NULL;
 struct Device *ConsoleDevice = NULL;
 struct IOStdReq ioreq;
 
-#ifdef _AROS
+#ifdef __AROS__
 int errno;
 #endif
 
@@ -62,7 +62,7 @@ BOOL PreClassInitFunc( void )
 	{
 		if ( ( DiskfontBase = OpenLibrary( "diskfont.library", 37L ) ) )
 		{
-		#ifdef _AROS
+		#ifdef __AROS__
 		    ioreq.io_Message.mn_Length = sizeof(ioreq);
 		#endif
 			if ( !OpenDevice( "console.device", -1L, (struct IORequest *)&ioreq, 0L ) )

@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2003/01/18 19:10:21  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.1  2000/07/07 17:14:13  stegerg
  * again STACKULONG/STACKUWORD/STACK??? stuff.
  *
@@ -150,7 +153,7 @@
  * Message structure for TVM_INSERT, TVM_MOVE:
  */
 
-#ifndef _AROS
+#ifndef __AROS__
 #undef STACKULONG
 #define STACKULONG ULONG
 #endif

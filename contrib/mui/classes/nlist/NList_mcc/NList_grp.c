@@ -1,7 +1,7 @@
 
 #include "private.h"
 
-#ifdef _AROS
+#ifdef __AROS__
 #include <proto/intuition.h>
 #endif
 
@@ -94,7 +94,7 @@ ULONG NGR_Dispatcher_gate(void)
   struct IClass *cl = REG_A0;
   Msg msg = REG_A1;
   Object *obj = REG_A2;
-#elif defined(_AROS)
+#elif defined(__AROS__)
 AROS_UFH3(ULONG, NGR_Dispatcher,
     AROS_UFHA(struct IClass *, cl, A0),
     AROS_UFHA(Object *, obj, A2),
@@ -116,7 +116,7 @@ ULONG ASM SAVEDS NGR_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) 
     case MUIM_NoNotifySet : return (0);
   }
   return(DoSuperMethodA(cl,obj,msg));
-#ifdef _AROS
+#ifdef __AROS__
   AROS_USERFUNC_EXIT
 #endif
 }

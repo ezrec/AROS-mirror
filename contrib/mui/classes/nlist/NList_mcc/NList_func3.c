@@ -10,7 +10,7 @@
 
 #include "private.h"
 
-#ifdef _AROS
+#ifdef __AROS__
 extern struct Device *ConsoleDevice;
 #endif
 
@@ -183,7 +183,7 @@ char *ltoa(ULONG val, char *buf, int len)
 
 
 /*char *stpcpy(char *to,const char *from)*/
-#if !defined(__SASC) && !defined(_AROS)
+#if !defined(__SASC) && !defined(__AROS__)
 char *stpcpy(char *to,char *from)
 {
   register char *to2 = to;

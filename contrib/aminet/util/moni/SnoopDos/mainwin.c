@@ -49,7 +49,7 @@
 #ifdef __SASC
 #pragma libcall SysBase RawPutChar 204 001
 #endif
-#ifndef _AROS
+#ifndef __AROS__
 void RawPutChar(char);
 #endif
 

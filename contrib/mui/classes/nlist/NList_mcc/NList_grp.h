@@ -1,4 +1,4 @@
-#ifndef _AROS
+#ifndef __AROS__
 #include "/common/mcc_common.h"
 #else
 #include "mcc_common.h"
@@ -22,7 +22,7 @@ struct NGRData
 
 #ifdef MORPHOS
 struct EmulLibEntry NGR_Dispatcher;
-#elif defined(_AROS)
+#elif defined(__AROS__)
 AROS_UFP3(ULONG, NGR_Dispatcher,
     AROS_UFPA(struct IClass *, cl, A0),
     AROS_UFPA(Object *, obj, A2),

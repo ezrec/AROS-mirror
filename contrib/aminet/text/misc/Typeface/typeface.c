@@ -8,7 +8,7 @@
 #include "typeface.h"
 #include "checkbox.h"
 
-#ifdef _AROS
+#ifdef __AROS__
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
 struct UtilityBase *UtilityBase;
@@ -130,7 +130,7 @@ static struct TextAttr topaz8 = { "topaz.font",8,FS_NORMAL,FPF_ROMFONT };
 BPTR lock;
 int i;
 
-#ifdef _AROS
+#ifdef __AROS__
   IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 37);
   GfxBase = (struct GfxBase *)OpenLibrary("graphics.library", 37);
   UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library", 0);
@@ -156,7 +156,7 @@ int i;
     if ((BGUIBase = OpenLibrary("PROGDIR:libs/bgui.library",41)) == NULL)
       MyError(GetString(msgNoBguiLib));
   }
-#ifdef _AROS
+#ifdef __AROS__
 #warning AROS does not yet have a textfield.gadget
 #else
   if ((TextFieldBase = OpenLibrary("gadgets/textfield.gadget",3)) == NULL)
@@ -422,7 +422,7 @@ void Quit(void)
   if (KeymapBase) CloseLibrary(KeymapBase);
   if (DiskfontBase) CloseLibrary(DiskfontBase);
   if (AslBase) CloseLibrary(AslBase);
-#ifdef _AROS
+#ifdef __AROS__
   CleanupLocale();
   
   if (IntuitionBase) CloseLibrary((struct Library *)IntuitionBase);
@@ -2870,7 +2870,7 @@ static struct EasyStruct req =
   SleepWindows();
   req.es_GadgetFormat = GetString(msgContinue);
   EasyRequest(FontWnd,&req,NULL,
-#ifdef _AROS
+#ifdef __AROS__
     "<no textfield.gadget in AROS>",
 #else
     TEXTFIELD_GetCopyright(),

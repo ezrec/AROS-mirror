@@ -37,7 +37,7 @@ extern struct MidiNode *midinode;
 
 extern struct Root *root;
 
-#ifdef _AROS
+#ifdef __AROS__
 extern struct InputBase *InputBase;
 #endif
 

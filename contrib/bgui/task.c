@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.12  2003/01/18 19:10:01  chodorowski
+ * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
+ *
  * Revision 42.11  2001/01/28 04:53:21  bergers
  * Fixed some compiler complaints (some casts were missing.).
  *
@@ -35,13 +38,13 @@
  * which BGUI expected to be a BSTR with size in first byte.
  *
  * Revision 42.5  2000/06/01 01:41:37  bergers
- * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
+ * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef __AROS__), please.
  *
  * Revision 42.4  2000/05/31 01:23:10  bergers
  * Changes to make BGUI compilable and linkable.
  *
  * Revision 42.3  2000/05/29 00:40:24  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define __AROS__. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 42.2  2000/05/15 19:27:02  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
@@ -432,7 +435,7 @@ makeproto UWORD AddTaskMember(void)
 	 command_name=BADDR(Cli()->cli_CommandName);
 	 strcpy(buffer,"ENV:BGUI/");
 	 insert=buffer+sizeof("ENV:BGUI/")-1;
-	 #ifdef _AROS
+	 #ifdef __AROS__
 	 strcpy(insert,command_name);
 	 command_len = strlen(command_name);
 	 #else
@@ -963,7 +966,7 @@ static ASM REGFUNC2(VOID, FreeVecMem,
  * Allocate memory from the pool.
  */
 #ifdef DEBUG_BGUI
-   #ifdef _AROS
+   #ifdef __AROS__
    AROS_LH1(APTR, BGUI_AllocPoolMem,
        AROS_LHA(ULONG, size, D0),
        struct Library *, BGUIBase, 12, BGUI)
@@ -980,7 +983,7 @@ static ASM REGFUNC2(VOID, FreeVecMem,
       AROS_LIBFUNC_EXIT
    }
 
-   #ifdef _AROS
+   #ifdef __AROS__
    makearosproto
    AROS_LH3(APTR, BGUI_AllocPoolMemDebug,
        AROS_LHA(ULONG, size, D0),
@@ -993,7 +996,7 @@ static ASM REGFUNC2(VOID, FreeVecMem,
 
 #else
 
-   #ifdef _AROS
+   #ifdef __AROS__
    makearosproto
    AROS_LH3(APTR, BGUI_AllocPoolMemDebug,
        AROS_LHA(ULONG, size, D0),
@@ -1013,7 +1016,7 @@ static ASM REGFUNC2(VOID, FreeVecMem,
       AROS_LIBFUNC_EXIT
    }
 
-   #ifdef _AROS
+   #ifdef __AROS__
    makearosproto
    AROS_LH1(APTR, BGUI_AllocPoolMem,
        AROS_LHA(ULONG, size, D0),
@@ -1057,7 +1060,7 @@ static ASM REGFUNC2(VOID, FreeVecMem,
  * Free memory from the pool.
  */
 #ifdef DEBUG_BGUI
-   #ifdef _AROS
+   #ifdef __AROS__
    AROS_LH1(VOID, BGUI_FreePoolMem,
        AROS_LHA(APTR, memPtr, A0),
        struct Library *, BGUIBase, 13, BGUI)
@@ -1074,7 +1077,7 @@ static ASM REGFUNC2(VOID, FreeVecMem,
       AROS_LIBFUNC_EXIT
    }
 
-   #ifdef _AROS
+   #ifdef __AROS__
    makearosproto
    AROS_LH3(VOID, BGUI_FreePoolMemDebug,
        AROS_LHA(APTR, memPtr, A0),
@@ -1087,7 +1090,7 @@ static ASM REGFUNC2(VOID, FreeVecMem,
     
 #else
 
-   #ifdef _AROS
+   #ifdef __AROS__
    makearosproto
    AROS_LH3(VOID, BGUI_FreePoolMemDebug,
        AROS_LHA(APTR, memPtr, A0),
@@ -1107,7 +1110,7 @@ static ASM REGFUNC2(VOID, FreeVecMem,
       AROS_LIBFUNC_EXIT
    }
 
-   #ifdef _AROS
+   #ifdef __AROS__
    makearosproto
    AROS_LH1(VOID, BGUI_FreePoolMem,
        AROS_LHA(APTR, memPtr, A0),
@@ -1786,7 +1789,7 @@ makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_CleanTagItems,
    return tag;
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH1(struct TagItem *, BGUI_GetDefaultTags,
     AROS_LHA(ULONG, id, D0),
@@ -1823,7 +1826,7 @@ makeproto SAVEDS ASM struct TagItem *BGUI_GetDefaultTags(REG(d0) ULONG id)
    AROS_LIBFUNC_EXIT
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH0(VOID, BGUI_DefaultPrefs,
     struct Library *, BGUIBase, 29, BGUI)
@@ -1850,7 +1853,7 @@ makeproto SAVEDS ASM VOID BGUI_DefaultPrefs(VOID)
    AROS_LIBFUNC_EXIT
 }
 
-#ifdef _AROS
+#ifdef __AROS__
 makearosproto
 AROS_LH1(VOID, BGUI_LoadPrefs,
     AROS_LHA(UBYTE *, name, A0),
