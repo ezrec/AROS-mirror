@@ -566,3 +566,13 @@ ULONG ASM SAVEDS NList_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2
   return (retval);
 }
 
+#ifdef USE_ZUNE
+
+const struct __MUIBuiltinClass _MUI_List_desc = { 
+    MUIC_List, 
+    MUIC_Area, 
+    sizeof(struct NLData), 
+    (void*)NList_Dispatcher 
+};
+
+#endif

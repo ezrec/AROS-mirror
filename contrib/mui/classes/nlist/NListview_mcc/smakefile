@@ -86,11 +86,12 @@ uninstall:
 clean:
 	@echo "*e[32m*e[1m$(CLASS): *e[22m*e[33mDeleting trash of $(CLASS)...*e[0m"
 	@echo "Trash" >Trash.o
-	@list pat (\#?.o|\#?.oPPC|\#?.obj|\#?.bak|\#?.lnk|$(PROJECT).mcc|$(PROJECT).mcp|$(PROJECT)\#?.elf) lformat "delete %p%n" >pipe:$(PROJECT)_delete
+	@list pat (\#?.o|\#?.oPPC|\#?.obj|\#?.bak|\#?.lnk|$(PROJECT).mcc|$(PROJECT).mcp|$(PROJECT)\#?.elf|\#?.lib) lformat "delete %p%n" >pipe:$(PROJECT)_delete
 	@execute pipe:$(PROJECT)_delete
 
 zune: nlistview.mcc.lib
 
 nlistview.mcc.lib: NListview.c
   sc NListview.c DEF=USE_ZUNE IDIR=///libs/muimaster
+  -delete nlistview.mcc.lib
   oml nlistview.mcc.lib A NListview.o

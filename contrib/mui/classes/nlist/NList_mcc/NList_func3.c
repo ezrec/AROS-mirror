@@ -1,5 +1,13 @@
 #include <proto/intuition.h>
 
+#ifndef USE_ZUNE
+#include <proto/console.h>
+#else
+
+#include "support.h"
+
+#endif
+
 #include "private.h"
 
 /****************************************************************************************/
@@ -114,6 +122,16 @@ LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,UBYTE *buf,LONG
     case 0x59 : strcpy(text,"f10"); break;
     case 0x5F : strcpy(text,"help"); break;
     default:
+#ifdef USE_ZUNE
+      {
+				LONG code = ConvertKey(msg);
+				if (code)
+				{
+					posraw = 1;
+					*text = code;
+				} else posraw = 0;
+      }
+#else
       data->ievent.ie_NextEvent = NULL;
       data->ievent.ie_Class = IECLASS_RAWKEY;
       data->ievent.ie_SubClass = 0;
@@ -121,6 +139,7 @@ LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,UBYTE *buf,LONG
       data->ievent.ie_Qualifier = 0;
       data->ievent.ie_position.ie_addr = *((APTR *) msg->IAddress);
       posraw = RawKeyConvert(&data->ievent,text,bufsize-postext-1,kmap);
+#endif
       if (posraw >= 0)
         text[posraw+postext] = '\0';
       if (posraw > 0)

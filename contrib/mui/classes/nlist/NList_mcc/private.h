@@ -38,7 +38,6 @@
 #if !defined(USE_ZUNE) || defined (_AROS)
 #include <proto/muimaster.h>
 #endif
-#include <proto/console.h>
 
 #include <clib/alib_protos.h>
 

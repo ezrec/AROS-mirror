@@ -123,7 +123,8 @@ clean:
 #	@list pat ($(OBJECTS)#?.(o|oPPC|obj|lnk|mcc|mcp|elf)) lformat "delete %p%n" >>pipe:$(PROJECT)_delete
 #	@execute pipe:$(PROJECT)_delete
 	@echo "\#?.(o|oPPC|obj|lnk|mcc|mcp|elf)"
-	@delete $(OBJECTS)\#?.(o|oPPC|obj|lnk|mcc|mcp|elf)
+	-delete $(OBJECTS)\#?.(o|oPPC|obj|lnk|mcc|mcp|elf)
+	-delete \#?.(o|oPPC|obj|lnk|mcc|mcp|elf|lib)
 # It doesn't work here !?
 #	@list pat (\$(OBJECTS)#?.(o|oPPC)|\$(OBJECTS)#?.oPPC|\#?.o|\#?.oPPC|\#?.obj|\#?.bak|\#?.lnk|$(PROJECT).mcc|$(PROJECT).mcp|$(PROJECT)\#?.elf) lformat "delete %p%n" >pipe:$(PROJECT)_delete
 #	@execute pipe:$(PROJECT)_delete

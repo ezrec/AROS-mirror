@@ -674,3 +674,13 @@ ULONG ASM SAVEDS NListview_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), RE
   return(DoSuperMethodA(cl,obj,msg));
 }
 
+#ifdef USE_ZUNE
+
+const struct __MUIBuiltinClass _MUI_Listview_desc = { 
+    MUIC_Listview, 
+    MUIC_Group, 
+    sizeof(struct NLVData), 
+    (void*)NListview_Dispatcher 
+};
+
+#endif

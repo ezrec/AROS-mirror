@@ -14,14 +14,14 @@
 
 /*#define DO_CLIPPING*/
 
-
+#ifndef USE_ZUNE
 LONG xget(Object *obj,ULONG attribute)
 {
   LONG x;
   get(obj,attribute,&x);
   return(x);
 }
-
+#endif
 
 
 #define MUIA_Group_Forward  0x80421422
