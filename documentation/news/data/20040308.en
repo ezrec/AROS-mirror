@@ -89,7 +89,7 @@ finally decided to come out of the bag and show up what brave man he
 is: he has taken up on the TeamAROS `bounty #3`__, which requires him
 to write a complete TCP/IP stack!
 
-Ian Templeton committed his usual fixes to make AROS hosted compile and work also on FreeBSD, and
+Iain Templeton committed his usual fixes to make AROS hosted compile and work also on FreeBSD, and
 he also fixed a bug__ in the timer.device.
 
 Fabio Alemagna fixed some bugs in the libc, and made the necessary changes to the AROS system
