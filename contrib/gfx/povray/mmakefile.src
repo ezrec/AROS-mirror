@@ -1,10 +1,7 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
-
-CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/povray
+EXEDIR := $(CONTRIBDIR)/povray
+EXE := $(EXEDIR)/povray
 
 FILES = aros     \
 	atmosph  \
@@ -76,36 +73,26 @@ FILES = aros     \
 	vlbuffer \
 	warps
 
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-DEPS := $(foreach f, $(FILES), $(OBJDIR)/$(f).d)
+USE_CLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_ZLIB := yes
 
-LIBS := $(LIBS) -lpng -larosz -larosc
+#MM povray : includes linklibs
 
-EXE := $(DESTDIR)/povray
+%make_prog_setup mmake=povray
 
-.PHONY : all clean
+povray : setup $(EXE)
 
-#MM povray : setup-povray
-povray : $(OBJS) $(EXE)
-	@$(NOP)
+LIBS := -lpng $(LIBS)
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
 
-#MM
-setup-povray :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	%link_q from=$(OBJS)
-
-$(OBJDIR)/%.o : %.c
-%compile_q
-
-$(OBJDIR)/%.d : %.c
-%mkdepend_q 
-
-%include_deps
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
 #MM
 clean-aminet :
 	@$(RM) $(OBJDIR) $(DESTDIR)
+
+%common
+%include_deps
 
