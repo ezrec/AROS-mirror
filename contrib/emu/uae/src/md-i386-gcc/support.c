@@ -92,6 +92,7 @@ static RETSIGTYPE illhandler(int foo)
 }
 
 #endif /* !__AROS__ */
+#include <aros/debug.h>
 
 void machdep_init (void)
 {
@@ -119,24 +120,32 @@ void machdep_init (void)
     while (loops_to_go != 0)
 	usleep (10000);
 #else
-    best_time = (frame_time_t)-1;
+        best_time = (frame_time_t)-1;
         last_time = read_processor_time();
 
         for (loops_to_go = 5; loops_to_go>0; loops_to_go--)
         {
-                frame_time_t bar;
+            frame_time_t bar, diff;
 
-                sleep(1);
-                bar = read_processor_time ();
-        if (bar - last_time < best_time)
-                best_time = bar - last_time;
+            sleep(1);
+            bar = read_processor_time ();
+	    
+	    diff = bar - last_time;
+	    if (bar < last_time)
+	        diff += (frame_time_t)-1;
+		
+            if (diff < best_time)
+                best_time = diff;
+
+	    last_time = bar;
+	    D(bug("diff = %u - best = %u\n", diff, best_time))
         }
 
 #endif /* !__AROS__ */
 
     write_log ("ok - %.2f BogoMIPS\n",
 	     ((double)best_time / TIME_UNIT), best_time);
-    syncbase = best_time * (1000000 / TIME_UNIT);
+    syncbase = best_time / (1000000 / TIME_UNIT);
 }
 
 #endif
