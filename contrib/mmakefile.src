@@ -7,8 +7,8 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-complete : contrib-aminet contrib-fish contrib-games \
 #MM	contrib-misc contrib-demos contrib-dopus contrib-bgui \
-#MM	contrib-gfx contrib-radium contrib-gc contrib-development
-
+#MM	contrib-gfx contrib-radium contrib-gc contrib-development \
+#MM     contrib-gnu
 
 CONTRIB_SRC_DIR := $(AROSDIR)/contrib
 
