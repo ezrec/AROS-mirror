@@ -29,7 +29,6 @@
 
 # You need an ANSI C compiler. gcc is a popular one.
 #CC= gcc
-CC=/home/adam/Projekt/AROS-Misc/AROS/bin/linux-i386/tools/i386-linux-aros-gcc -DAROS
 #WARN= -ansi -pedantic -Wall
 WARN=
 
