@@ -26,6 +26,10 @@
 
 /* MUI */
 #include <libraries/mui.h>
+#include <classes/bitmap.h>
+#include <classes/bodychunk.h>
+#include <classes/virtgroup.h>
+#include <classes/window.h>
 
 /* System */
 #include <dos/dos.h>
