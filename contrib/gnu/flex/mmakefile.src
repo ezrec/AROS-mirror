@@ -4,7 +4,6 @@
 
 include $(TOP)/config/make.cfg
 
-LIB     := fl
 FILES   := libmain libyywrap
 GNUDIR  := $(CONTRIBDIR)/Development/gnu
 
@@ -17,10 +16,7 @@ USER_CFLAGS := $(DEFS) -I.
 
 #MM linklibs-fl : setup
 
-%make_linklib_setup mmake=linklibs-fl
-
-%make_linklib
+%build_linklib mmake=linklibs-fl libname=fl files=$(FILES)
 
 %common
-%include_deps
 

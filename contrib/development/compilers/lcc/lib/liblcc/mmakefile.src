@@ -3,10 +3,6 @@ include $(TOP)/config/make.cfg
 
 TARGET_CFLAGS := $(subst -O2,,$(TARGET_CFLAGS))
 
-LIB :=	liblcc
-
-FILES := assert bbexit yynull
-
 USER_CFLAGS	:= -Iinclude
 
 #MM- linklibs : linklibs-liblcc-$(CPU)
@@ -14,11 +10,6 @@ USER_CFLAGS	:= -Iinclude
 #MM- linklibs-liblcc-i386 : linklibs-liblcc-hasfpu
 #MM linklibs-liblcc-hasfpu : includes
 
-%make_linklib_setup mmake=linklibs-liblcc-hasfpu
-%make_linklib
-
-linklibs-$(LIB)-hasfpu: setup $(LIBDIR)/lib$(LIB).a
-	@$(NOP)
+%build_linklib mmake=linklibs-liblcc-hasfpu libname=liblcc files="assert bbexit yynull"
 
 %common
-%include_deps

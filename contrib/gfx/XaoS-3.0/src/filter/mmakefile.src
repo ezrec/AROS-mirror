@@ -4,20 +4,16 @@
 #
 include $(TOP)/config/make.cfg
 
-USER_CFLAGS := -DAROS -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
-
-LIB :=	xaosfilter
+#MM linklibs-xaosfilter : includes setup-gfx-xaos
 
 FILES := \
 	image \
 	palette \
 	random \
 	filter
-	
-#MM linklibs-xaosfilter : includes setup-gfx-xaos
 
-%make_linklib_setup mmake=linklibs-xaosfilter
-%make_linklib
+USER_CFLAGS := -DAROS -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
+
+%build_linklib mmake=linklibs-xaosfilter libname=xaosfilter files=$(FILES)
 
 %common
-%include_deps

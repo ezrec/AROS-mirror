@@ -1,7 +1,8 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-LIB := freetype1
+#MM contrib-freetype1-linklib : contrib-freetype1-includes
+#MM contrib-freetype1-module : contrib-freetype1-includes
 
 FILESDIR := \
       arch/amigaos/freetype \
@@ -26,18 +27,9 @@ FILESDIR := \
       extend/ftxsbit \
       extend/ftxwidth
 
-DIRS := $(sort $(dir $(FILESDIR)))
-vpath %.c $(DIRS)
-
-FILES := $(notdir $(FILESDIR))
-
 USER_INCLUDES := -I. -Iarch/amigaos -I$(AROS_INCLUDES)/freetype1
 
-#MM contrib-freetype1-linklib : contrib-freetype1-includes
-#MM contrib-freetype1-module : contrib-freetype1-includes
-
-%make_linklib_setup mmake=contrib-freetype1-linklib
-%make_linklib mmake=contrib-freetype1-linklib
+%build_linklib mmake=contrib-freetype1-linklib libname=freetype1 files=$(FILESDIR)
 
 %build_module mmake=contrib-freetype1-module modname=freetype1 modtype=library \
     files="$(FILES) freetype1_init" linklibname=freetype1_shared \
@@ -48,8 +40,3 @@ INCLUDE_FILES = freetype.h fterrid.h ftnameid.h
 %copy_includes mmake=contrib-freetype1-includes includes=$(INCLUDE_FILES) dir= path=freetype1/freetype
 
 %common
-%include_deps
-
-# A hack to copy includes first to include/freetype1
-
-$(GENDIR)/$(CURDIR)/%.d : contrib-freetype1-includes

@@ -4,16 +4,10 @@
 #
 include $(TOP)/config/make.cfg
 
-USER_CFLAGS := -DAROS -I../../../include
-
-LIB :=	xaosuiaros
-
-FILES := ui_aros
-	
 #MM linklibs-xaosuiaros : includes setup-gfx-xaos
 
-%make_linklib_setup mmake=linklibs-xaosuiaros
-%make_linklib
+USER_CFLAGS := -DAROS -I../../../include
+
+%build_linklib mmake=linklibs-xaosuiaros libname=xaosuiaros files=ui_aros
 
 %common
-%include_deps

@@ -2,7 +2,10 @@
 #
 include $(TOP)/config/make.cfg
 
-LIB :=	SDL
+##MM- linklibs : linklibs-SDL
+
+#MM linklibs-SDL : linklibs-SDL-config includes
+#MM includes-copy
 
 INCLUDE_FILES	:= SDL.h    	    \
     	    	   SDL_active.h     \
@@ -31,6 +34,7 @@ INCLUDE_FILES	:= SDL.h    	    \
 		   begin_code.h     \
 		   close_code.h 
 		   
+%copy_includes path=SDL dir= includes=$(INCLUDE_FILES)
 
 FILES :=    SDL_error 	    	\
     	    SDL_fatal       	\
@@ -88,20 +92,12 @@ FILES :=    SDL_error 	    	\
  
 USER_CFLAGS := -DENABLE_CYBERGRAPHICS -DNO_SIGNAL_H -DAROS -D_AROS
 
-##MM- linklibs : linklibs-SDL
-
-#MM linklibs-SDL : includes
-#MM includes-copy
-
-%copy_includes path=SDL dir=
-
-%make_linklib_setup mmake=linklibs-SDL
-%make_linklib
+%build_linklib mmake=linklibs-SDL libname=SDL files=$(FILES)
 
 %common
-%include_deps
 
-setup :: $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-sdl-config
+#MM
+linklibs-SDL-config : $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-sdl-config
 
 $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-sdl-config: sdl-config.in
 	@sed s,@AROS_INCLUDE@,$(AROS_INCLUDES),g sdl-config.in > $@

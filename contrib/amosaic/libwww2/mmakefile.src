@@ -2,8 +2,8 @@
 #
 include $(TOP)/config/make.cfg
 
-LIB :=	www2
-USER_CFLAGS := $(USER_CFLAGS) -DUSE_DIRENT
+#MM- linklibs : linklibs-www2
+#MM linklibs-www2 : includes
 
 FILES := \
 	aros_tcphack \
@@ -47,11 +47,9 @@ FILES := \
 # Don't use these:
 #	HTFTP \
 
-#MM- linklibs : linklibs-www2
-#MM linklibs-www2 : includes
+USER_CFLAGS := $(USER_CFLAGS) -DUSE_DIRENT
 
-%make_linklib_setup mmake=linklibs-www2
-%make_linklib
+%build_linklib mmake=linklibs-www2 libname=www2 files=$(FILES)
 
 #MM
 includes-copy :
@@ -61,4 +59,3 @@ includes-copy :
 	@$(CP) *.h $(INCDIR)/libwww2
 
 %common
-%include_deps

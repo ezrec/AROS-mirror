@@ -4,9 +4,7 @@
 #
 include $(TOP)/config/make.cfg
 
-USER_CFLAGS := -DAROS -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
-
-LIB :=	xaosui
+#MM linklibs-xaosui : includes setup-gfx-xaos
 
 FILES := \
 	autopilot \
@@ -18,10 +16,8 @@ FILES := \
 	keywords \
 	param
 	
-#MM linklibs-xaosui : includes setup-gfx-xaos
+USER_CFLAGS := -DAROS -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
 
-%make_linklib_setup mmake=linklibs-xaosui
-%make_linklib
+%build_linklib mmake=linklibs-xaosui libname=xaosui files=$(FILES)
 
 %common
-%include_deps
