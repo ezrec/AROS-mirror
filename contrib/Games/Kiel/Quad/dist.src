@@ -1,3 +1,2 @@
 *.[ch]
-*.dat
-makefile
+mmakefile.src
