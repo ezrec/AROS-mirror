@@ -27,6 +27,7 @@ mainLinks = (
 	Href ('faq.html', 'FAQ'),
 	Href ('cvs.html', 'CVS'),
 	Href ('mmake.html', 'MetaMake'),
+	Href ('filesys.html', 'Filesystems'),
 	Href ('hidd-intro.html', 'HIDD Intro'),
 	Href ('hidd-model.html', 'HIDD Model'),
 	Href ('contents/contents.html', 'Contents'),

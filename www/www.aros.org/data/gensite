@@ -259,6 +259,7 @@ genXmlPage ('hidd-intro', 'HIDD Intro')
 genXmlPage ('hidd-model', 'HIDD Model')
 genXmlPage ('ideas', 'Random Ideas')
 genXmlPage ('faq', 'FAQ')
+genXmlPage ('filesys', 'Filesystems')
 
 import contents2html
 contents2html.gen ()
