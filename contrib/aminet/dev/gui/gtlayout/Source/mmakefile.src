@@ -157,10 +157,10 @@ LINKLIB_FILES = \
 DEPS := $(DEPS) $(foreach f,$(FILES) $(LINKLIB_FILES) $(OTHERS) $(UFC_SOURCE) $(API_SOURCE),$(OBJDIR)/$(f).d)
 
 #MM- aminet-dev-gui-gtlayout : linklibs-aminet-dev-gui-gtlayout
-#MM linklibs-aminet-dev-gui-gtlayout : linklibs setup-gtlayoutlib
+#MM linklibs-aminet-dev-gui-gtlayout : linklibs setup-aminet-dev-gui-gtlayout
 
 #First all intermediate files MUST be created so there is a 'defines' file!
-linklibs-aminet-dev-gui-gtlayout: $(INTERMEDIATES) $(STATIC_LIB) $(AROS_LIBS)/gtlayout.library  $(TESTDIR)/gtlayout_test includes-copy
+linklibs-aminet-dev-gui-gtlayout: $(INTERMEDIATES) $(STATIC_LIB) $(AROS_LIBS)/$(MODULE)  $(TESTDIR)/gtlayout_test includes-copy
 
 includes-copy: $(INCDIR)/gtlayout.h $(INCDIR)/proto/gtlayout.h $(INCDIR)/defines/gtlayout.h
 
@@ -195,7 +195,7 @@ $(OBJDIR)/%.d : %.c
 
 
 #MM
-setup-gtlayoutlib :
+setup-aminet-dev-gui-gtlayout ::
 	%mkdirs_q $(AROS_INCLUDES) $(OBJDIR) $(OBJDIR)/test $(OBJDIR)/aros_src
 	%mkdirs_q $(AROS_LIB) $(AROS_LIBS)
 

@@ -361,10 +361,12 @@ LT_NewMenuTagList(REG(a0) struct TagItem *TagList)
 /*****************************************************************************/
 
 
+#ifndef __AROS__
 struct Menu *
 LT_NewMenuTags(Tag FirstTag,...)
 {
 	return(LT_NewMenuTagList((struct TagItem *)&FirstTag));
 }
+#endif
 
 #endif	/* DO_MENUS */
