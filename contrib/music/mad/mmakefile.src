@@ -29,4 +29,26 @@ CFLAGS += -DHAVE_CONFIG_H -O2 -DFPM_INTEL
     progname=madoss targetdir=$(EXEDIR) \
     files="$(FILES)" uselibs="arosc"
 
+
+FILES  := madahi \
+	  bit \
+	  decoder \
+	  fixed \
+	  frame \
+	  huffman \
+	  layer12 \
+	  layer3 \
+	  stream \
+	  synth \
+	  timer \
+	  version
+
+CFLAGS += -I$(GENDIR)/contrib/AHI/Include/gcc
+
+#MM sound-madahi : contrib-AHI
+
+%build_prog mmake=sound-madahi \
+    progname=madahi targetdir=$(EXEDIR) \
+    files="$(FILES)" uselibs="arosc"
+
 %common
