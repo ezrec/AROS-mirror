@@ -4,6 +4,7 @@ The 'print' command doesn't work, you always get an exception right away.
 However, using sys.stdout.write() works fine. This might be connected 
 with the disapearing-exception-problem, described below.
 
+
 #0002 chodorowski 10/10/2001 CRITICAL FIXED
 
 Exceptions aren't printed properly, only the beginning headers are 
@@ -15,9 +16,26 @@ TraceBack (most recent call last):
    File "<stdin>", line 1, in ?
 >>>
 
+
 #0003 chodorowski 10/10/2001 CRITICAL FIXED
 
 Importing modules written in Python doesn't work (you get an exception 
 right away), even after having hacked getpath.c and friends to be 
 AROS-compatible. Hmmm...
   
+
+#0004 chodorowski 25/11/2001 MEDIUM OPEN
+
+The following regression tests fail: test_builtin, test_cpickle,
+test_import, test_time, test_unicode, test_sax, test_minidom,
+test_difflib, test_format, test_string, test_strop.
+See STATUS for more information.
+
+#0005 chodorowski 25/11/2001 MEDIUM OPEN
+
+The regression tests test_longexp and test_bufio take a lot longer
+to complete under AROS than under, say, Linux. On my machine,
+test_longexp takes 2.20 s under Linux and 17 MINUTES under AROS,
+and test_bufio takes 1 s and 2 MINUTES respectively! That's a *HUGE*
+difference in time. Also, if the stack is set to low they crash AROS.
+Maybe some recursion related thing?
