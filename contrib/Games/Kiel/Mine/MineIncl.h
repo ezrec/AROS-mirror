@@ -50,7 +50,7 @@ void open_window(struct NewWindow *newwindow)
   rp=Window->RPort;
 }
 
-void write_text(LONG x, LONG y, char *text, ULONG color)
+void write_text(LONG x, LONG y, CONST_STRPTR text, ULONG color)
 {
   SetAPen(rp,color);
   Move(rp, x, y);

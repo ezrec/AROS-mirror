@@ -184,10 +184,10 @@ BYTE i;
   open_window(&NeuesWindow);
   Locale_Initialize();
 
-  p.IText = _(MSG_OK);
-  n.IText = _(MSG_CANCEL);
-  q_body.IText = _(MSG_REALLYQUIT);
-  q_gbody.IText = _(MSG_REALLYABORT);
+  p.IText = (STRPTR)_(MSG_OK);
+  n.IText = (STRPTR)_(MSG_CANCEL);
+  q_body.IText = (STRPTR)_(MSG_REALLYQUIT);
+  q_gbody.IText = (STRPTR)_(MSG_REALLYABORT);
   time( &tstart );
   srand(tstart);
   width=22;

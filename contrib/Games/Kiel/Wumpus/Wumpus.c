@@ -770,8 +770,8 @@ int main()
   srand((unsigned)time(NULL));
   open_lib();
   Locale_Initialize();
-  shout_text.IText = _(MSG_SHOUT);
-  spear_text.IText = _(MSG_THROW);
+  shout_text.IText = (STRPTR)_(MSG_SHOUT);
+  spear_text.IText = (STRPTR)_(MSG_THROW);
   open_window(&new_window);
 
   while(!end_game)
