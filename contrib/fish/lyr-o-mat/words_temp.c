@@ -17,10 +17,14 @@ struct EasyStruct ExitReq =
        
 int templatestringClicked( void )
 {
+ char gadstring[256];
+ 
+ strcpy(gadstring, GetString(Project0Gadgets[GDX_templatestring]));
+
  /* routine when gadget "" is clicked. */
- if(*(GetString(Project0Gadgets[GDX_templatestring])))
+ if(gadstring[0])
  {
-  list_off(LIST_PT);newpattern(GetString(Project0Gadgets[GDX_templatestring]));list_on(LIST_PT);
+  list_off(LIST_PT);newpattern(gadstring);list_on(LIST_PT);
 
   GT_SetGadgetAttrs(Project0Gadgets[GDX_templatelist],Project0Wnd,NULL,
                      GTLV_Selected,NodeToNum(&winfo.pattern,(struct Node *)winfo.currentpattern),NULL,TAG_DONE);
@@ -57,10 +61,14 @@ int wordlistClicked( void )
 
 int class_stringClicked( void )
 {
+ char gadstring[256];
+ 
+ strcpy(gadstring, GetString(Project0Gadgets[GDX_class_string]));
+
 	/* routine when gadget "" is clicked. */
- if(*(GetString(Project0Gadgets[GDX_class_string])))
+ if(gadstring[0])
  {
-  list_off(LIST_CL);newclass(GetString(Project0Gadgets[GDX_class_string]));list_on(LIST_CL);
+  list_off(LIST_CL);newclass(gadstring);list_on(LIST_CL);
   GT_SetGadgetAttrs(Project0Gadgets[GDX_classlist],Project0Wnd,NULL,
                      GTLV_Selected,NodeToNum(&winfo.class,(struct Node *)winfo.currentclass),NULL,TAG_DONE);
   list_off(LIST_WD);
@@ -102,10 +110,13 @@ int classlistClicked( void )
 
 int wordstringClicked( void )
 {
+ char gadstring[256];
+ 
+ strcpy(gadstring, GetString(Project0Gadgets[GDX_wordstring]));
 	/* routine when gadget "" is clicked. */
- if(*(GetString(Project0Gadgets[GDX_wordstring])))
+ if(gadstring[0])
  {
-  list_off(LIST_WD);newword(GetString(Project0Gadgets[GDX_wordstring]));list_on(LIST_WD);
+  list_off(LIST_WD);newword(gadstring);list_on(LIST_WD);
   if(winfo.currentclass)
   {
    GT_SetGadgetAttrs(Project0Gadgets[GDX_wordlist],Project0Wnd,NULL,
@@ -156,6 +167,7 @@ int generateClicked( void )
  int i;
  int pattern;
  struct Node *n;
+
  if(edit.pmode)
  {
   if(winfo.numpattern)
@@ -168,6 +180,7 @@ int generateClicked( void )
     ReplaceLine();
     line_out(winfo.nach);
     free(winfo.nach);
+    winfo.nach=NULL;
    }
   }
  }
@@ -181,6 +194,7 @@ int generateClicked( void )
     ReplaceLine();
     line_out(winfo.nach);
     free(winfo.nach);
+    winfo.nach=NULL;
    }
   }
  }
@@ -405,7 +419,11 @@ int Project0CloseWindow( void )
 
 void line_out(UBYTE *line)
 {
- if(winfo.outfile)   fprintf(winfo.outfile,"%s\n",line);
+ if(winfo.outfile)
+ {
+    fprintf(winfo.outfile,"%s\n",line);
+    fflush(winfo.outfile);
+ }
  if(winfo.printfile) fprintf(winfo.printfile,"%s\n",line);
 }
 
