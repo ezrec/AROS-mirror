@@ -478,3 +478,34 @@ Removed Files:
         userstate.c 
 Log Message:
 These files were not used anywhere
+Update of /home/cvs/aros/AROS/config/i386-native/Drivers/serial.hidd
+In directory sebigbos:/var/tmp/cvs-serv26022/serial.hidd
+
+Log Message:
+Directory /home/cvs/aros/AROS/config/i386-native/Drivers/serial.hidd added to the repository
+
+Update of /home/cvs/aros/AROS/config/i386-native/Drivers/serial.hidd/include
+In directory sebigbos:/var/tmp/cvs-serv26028/include
+
+Log Message:
+Directory /home/cvs/aros/AROS/config/i386-native/Drivers/serial.hidd/include added to the repository
+
+Update of /home/cvs/aros/AROS/config/i386-native/Drivers/serial.hidd
+In directory sebigbos:/var/tmp/cvs-serv26034
+
+Added Files:
+        SerialClass.c SerialUnitClass.c lib.conf mmakefile.src 
+        serial_end.c serial_init.c serial_intern.h serial_stubs.c 
+Log Message:
+Beginning of serial hidd for i386 native. Is not included in build process.
+
+
+Update of /home/cvs/aros/AROS/config/i386-native/Drivers/serial.hidd/include
+In directory sebigbos:/var/tmp/cvs-serv26045
+
+Added Files:
+        serial.h 
+Log Message:
+Include file for i386 native serial hidd.
+
+
