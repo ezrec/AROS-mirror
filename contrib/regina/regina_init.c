@@ -14,6 +14,7 @@
 #include <aros/debug.h>
 
 #include <proto/exec.h>
+#include <proto/alib.h>
 
 #include "regina_intern.h"
 #include "libdefs.h"
@@ -35,6 +36,7 @@
 struct ExecBase* SysBase;
 struct DosLibrary* DOSBase;
 struct Library* aroscbase;
+struct MinList *__regina_tsdlist = NULL;
 
 /****************************************************************************************/
 
@@ -53,6 +55,9 @@ ULONG SAVEDS STDARGS LC_BUILDNAME(L_InitLib) (LC_LIBHEADERTYPEPTR ReginaBase)
 
     __regina_semaphorepool = CreatePool(MEMF_PUBLIC, 1024, 256);
   
+    __regina_tsdlist = (struct MinList *)AllocPooled (__regina_semaphorepool, sizeof(struct MinList));
+    NewList((struct List *)__regina_tsdlist);
+
     return TRUE;
 }
 

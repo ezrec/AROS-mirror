@@ -14,7 +14,6 @@
 #include <assert.h>
 
 APTR __regina_semaphorepool;
-struct MinList *__regina_tsdlist = NULL;
 
 typedef struct _mt_tsd_t {
   APTR mempool;
@@ -144,20 +143,6 @@ tsd_t *__regina_get_tsd(void)
 {
   struct Task *thistask = FindTask(NULL);
   tsd_node_t *node;
-
-  /* Allocate list of TSDs if it is not yet present */
-  if (__regina_tsdlist == NULL)
-  {
-    Forbid();
-    
-    if (__regina_tsdlist == NULL)
-    {
-      __regina_tsdlist = (struct MinList *)AllocPooled (__regina_semaphorepool, sizeof(struct MinList));
-      NewList((struct List *)__regina_tsdlist);
-    }
-    
-    Permit();
-  }
 
   node = (tsd_node_t *)GetHead(__regina_tsdlist);
   while (node!=NULL && node->task!=thistask)
