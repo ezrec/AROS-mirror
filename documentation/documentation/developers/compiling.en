@@ -72,7 +72,7 @@ First of all, you need to run configure in the root of the AROS sources::
 You can specify several options to configure. The following options are 
 available for all targets:
 
-``--enable--debug=LIST [default: none]`` 
+``--enable-debug=LIST [default: none]`` 
     Enable different types of debug. Commas or whitespaces can be used to 
     separate the items in the list. If no list is provided then ``all`` is 
     assumed. If ``--enable-debug`` is not specified at all, ``none`` is the
