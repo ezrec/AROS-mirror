@@ -12,6 +12,10 @@
 # All Rights Reserved.
 #
 # $Log$
+# Revision 42.5  2000/08/09 10:58:50  chodorowski
+# Added rules and targets to make the docs in AmigaGuide and HTML format.
+# The new rule "all_docs" makes all formats.
+#
 # Revision 42.4  2000/08/09 10:14:14  chodorowski
 # Fixed broken rule.
 #
@@ -460,7 +464,13 @@ CAD_PROGRAM: $(includes) cad/cad_main.c cad/cad_file.c cad/cad_support.c CAD/cad
    @smake -s -f makefile BUILD_TYPE=D bin/CAD
 
 .cad.doc: libs:bgui.library bin/CAD
-   @bin/CAD $*.cad TO $@
+   @bin/CAD $*.cad TO $@ DOC
+
+.cad.guide: libs:bgui.library bin/CAD
+   @bin/CAD $*.cad TO $@ GUIDE
+
+.cad.html: libs:bgui.library bin/CAD
+   @bin/CAD $*.cad TO $@ HTML
 
 docs= \
 CAD/doc/aslreqclass.doc \
@@ -491,7 +501,69 @@ CAD/doc/windowclass.doc \
 CAD/doc/popbuttonclass.doc \
 CAD/doc/paletteclass.doc
 
+guides= \
+CAD/doc/aslreqclass.guide \
+CAD/doc/baseclass.guide \
+CAD/doc/bgui.guide \
+CAD/doc/buttonclass.guide \
+CAD/doc/checkboxclass.guide \
+CAD/doc/commodityclass.guide \
+CAD/doc/cycleclass.guide \
+CAD/doc/externalclass.guide \
+CAD/doc/filereqclass.guide \
+CAD/doc/frameclass.guide \
+CAD/doc/groupclass.guide \
+CAD/doc/indicatorclass.guide \
+CAD/doc/infoclass.guide \
+CAD/doc/labelclass.guide \
+CAD/doc/listviewclass.guide \
+CAD/doc/methods.guide \
+CAD/doc/mxclass.guide \
+CAD/doc/pageclass.guide \
+CAD/doc/progressclass.guide \
+CAD/doc/propclass.guide \
+CAD/doc/separatorclass.guide \
+CAD/doc/sliderclass.guide \
+CAD/doc/stringclass.guide \
+CAD/doc/vectorclass.guide \
+CAD/doc/windowclass.guide \
+CAD/doc/popbuttonclass.guide \
+CAD/doc/paletteclass.guide
+
+htmls= \
+CAD/doc/aslreqclass.html \
+CAD/doc/baseclass.html \
+CAD/doc/bgui.html \
+CAD/doc/buttonclass.html \
+CAD/doc/checkboxclass.html \
+CAD/doc/commodityclass.html \
+CAD/doc/cycleclass.html \
+CAD/doc/externalclass.html \
+CAD/doc/filereqclass.html \
+CAD/doc/frameclass.html \
+CAD/doc/groupclass.html \
+CAD/doc/indicatorclass.html \
+CAD/doc/infoclass.html \
+CAD/doc/labelclass.html \
+CAD/doc/listviewclass.html \
+CAD/doc/methods.html \
+CAD/doc/mxclass.html \
+CAD/doc/pageclass.html \
+CAD/doc/progressclass.html \
+CAD/doc/propclass.html \
+CAD/doc/separatorclass.html \
+CAD/doc/sliderclass.html \
+CAD/doc/stringclass.html \
+CAD/doc/vectorclass.html \
+CAD/doc/windowclass.html \
+CAD/doc/popbuttonclass.html \
+CAD/doc/paletteclass.html
+
 doc: $(docs)
+guide: $(guides)
+html: $(htmls)
+
+all_docs: $(doc) $(guide) $(html)
 
 bin/BGUI: $(includes) Prefs/BGUIPrefs.c Prefs/BGUIPrefs_gui.c Prefs/BGUIPrefs_iff.c Prefs/BGUIPrefs.h Prefs/BGUIPrefs_rev.h
    @echo Making $@...
@@ -1032,9 +1104,13 @@ $(FD_DIRECTORY)/bgui_lib.fd:          $(FD_DIRECTORY) include/bgui_lib.fd
 clean:
    @echo "Deleting installed includes..."
    -@delete QUIET $(includes)
-   @echo "Deleting generated AutoDoc files ..."
+   @echo "Deleting generated AutoDoc files..."
    -@delete QUIET CAD/doc/\#?.doc
-   @echo "Deleting generated HTML files ..."
+   @echo "Deleting generated AmigaGuide files..."
+   -@delete QUIET CAD/doc/\#?.guide
+   @echo "Deleting generated HTML files..."
+   -@delete QUIET CAD/doc/\#?.html
+   @echo "Deleting generated website files..."
    -delete QUIET website/bgui_documentation/~(.cvsignore|CVS|.htaccess)
    @echo "Deleting example programs..."
    -@delete QUIET $(examples)
