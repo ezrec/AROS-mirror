@@ -1,9 +1,9 @@
 # Copyright © 2004, The AROS Development Team. All rights reserved.
 # $Id$
 
-include ../make.cfg
+-include $(TOP)/config/make.cfg
 
-#MM- contrib-gnu : contrib-gnu-sed
-	
-%build_with_configure mmake=contrib-gnu-sed nix=yes prefix=$(GNUDIR)/sed \
-    extraoptions="--disable-nls"
+##MM- contrib-gnu : contrib-gnu-sed
+##MM- contrib-gnu-sed : development-sed
+
+%fetch_and_build_gnu_development package=sed version=4.0.9

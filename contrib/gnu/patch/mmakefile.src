@@ -1,8 +1,9 @@
-# Copyright © 2003-2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004, The AROS Development Team. All rights reserved.
 # $Id$
 
-include ../make.cfg
+-include $(TOP)/config/make.cfg
 
-#MM- contrib-gnu : contrib-gnu-patch
-	
-%build_with_configure mmake=contrib-gnu-patch nix=yes prefix=$(GNUDIR)/patch
+##MM- contrib-gnu : contrib-gnu-patch
+##MM- contrib-gnu-patch : development-patch
+
+%fetch_and_build_gnu_development package=patch version=2.5.4

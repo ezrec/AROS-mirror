@@ -1,8 +1,9 @@
 # Copyright © 2004, The AROS Development Team. All rights reserved.
 # $Id$
 
-include ../make.cfg
+-include $(TOP)/config/make.cfg
 
-#MM- contrib-gnu : contrib-gnu-bc
-	
-%build_with_configure mmake=contrib-gnu-bc nix=yes prefix=$(GNUDIR)/bc
+##MM- contrib-gnu : contrib-gnu-bc
+##MM- contrib-gnu-bc : development-bc
+
+%fetch_and_build_gnu_development package=bc version=1.06
