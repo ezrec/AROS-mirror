@@ -1516,7 +1516,7 @@ Host_Give_f
 void Host_Give_f (void)
 {
 	char	*t;
-	int		v, w;
+	int	v;
 	eval_t	*val;
 
 	if (cmd_source == src_command)

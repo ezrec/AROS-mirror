@@ -1110,4 +1110,3 @@ void V_Init (void)
 	Cvar_RegisterVariable (&v_gamma);
 }
 
-

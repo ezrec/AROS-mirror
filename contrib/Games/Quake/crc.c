@@ -79,3 +79,4 @@ unsigned short CRC_Value(unsigned short crcvalue)
 {
 	return crcvalue ^ CRC_XOR_VALUE;
 }
+
