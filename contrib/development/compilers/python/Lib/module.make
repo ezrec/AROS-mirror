@@ -1,11 +1,4 @@
-# $Id$
-#
-# Makefile to copy the Python modules.
-
-include $(TOP)/config/make.cfg
-include ../make.cfg
-
-FILES := \
+LOCAL_FILES := \
 	__future__.py \
 	Bastion.py \
 	ConfigParser.py \
@@ -176,16 +169,8 @@ FILES := \
 #	statvfs.py \
 #	tty.py \
 				
+MODULE_FILES += $(LOCAL_FILES)
 
-#MM- contrib-development-python : contrib-development-python-modules
-#MM contrib-development-python-modules
-
-contrib-development-python-modules : setup files-copy
-	
-%copy_files_q dst=$(PYTHONDIR)/Libs/Python/
-
-#MM
-setup ::
-	%mkdirs_q $(PYTHONDIR)/Libs
-	
-%common
+include Lib/xml/module.make
+include Lib/encodings/module.make
+include Lib/test/module.make

@@ -1,12 +1,4 @@
-#   $Id$
-#
-#   Makefile to make the Python objects.
-
-include $(TOP)/config/make.cfg
-
-LIB   := python-objects
-
-FILES := \
+LOCAL_FILES := \
 	abstract \
 	bufferobject \
 	cellobject \
@@ -39,12 +31,5 @@ FILES := \
 # for speed reasons and AROS' malloc uses memory pools, it's probably
 # not needed. Investigate further...
 
-USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR) -DAROS
-
-#MM linklibs-python-objects : includes
-
-%make_linklib_setup mmake=linklibs-python-objects
-%make_linklib 
-
-%common
-%include_deps
+USER_CFLAGS += -IObjects
+FILES       += $(patsubst %, Objects/%, $(LOCAL_FILES))

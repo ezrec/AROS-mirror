@@ -1,12 +1,4 @@
-#   $Id$
-#
-#   Makefile to make the Python support functions.
-
-include $(TOP)/config/make.cfg
-
-LIB   := python-python
-
-FILES := \
+LOCAL_FILES := \
 	bltinmodule \
 	ceval \
 	codecs \
@@ -36,9 +28,12 @@ FILES := \
 	structmember \
 	symtable \
 	sysmodule \
-	thread \
 	traceback \
 	pythonrun
+
+# Needs some work to compile.
+#	thread \
+
 
 # Already implemented in AROS (don't need these replacements).
 #	strerror
@@ -61,13 +56,7 @@ FILES := \
 #	dynload_os2 
 #	dynload_shlib 
 #	dynload_win 
-									
-USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR) -DAROS -D'PLATFORM="AROS"'
 
-#MM linklibs-python-python : includes
 
-%make_linklib_setup mmake=linklibs-python-python
-%make_linklib 
-
-%common
-%include_deps
+USER_CFLAGS += -IPython
+FILES       += $(patsubst %, Python/%, $(LOCAL_FILES))

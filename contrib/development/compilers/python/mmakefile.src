@@ -1,13 +1,19 @@
-#   $Id$
+# $Id$
 #
-#   Makefile to make Python.
+# Makefile to make Python.
 
 include $(TOP)/config/make.cfg
 include make.cfg
 
-FILES := \
-	Modules/main \
-	Modules/python
+SUBDIRS := Python Parser Objects Modules Lib
+
+# Every component makefile will add to the variables below, if needed.
+FILES        :=  # Source files to be compiled.
+MODULE_FILES :=  # Module files to be copied to $(PYTHONDIR).
+MODULE_DIRS  :=  # Module directories to be created in $(PYTHONDIR).
+USER_CFLAGS  := -I. -IInclude -DAROS -D'PLATFORM="AROS"'
+
+include $(patsubst %, %/module.make, $(SUBDIRS))
 
 EXEDIR := $(PYTHONDIR)
 EXE    := $(EXEDIR)/Python
@@ -19,36 +25,22 @@ USE_MLIB := yes
 USE_ZLIB := yes
 USE_EXPATLIB := yes
 
-USER_CFLAGS  := -I$(TOP)/$(CURDIR)/Include -DAROS
-
 #MM- contrib-development : contrib-development-python
 #MM contrib-development-python : setup-contrib-development-python 
-#MM contrib-development-python : linklibs-python-modules linklibs-python-objects
-#MM contrib-development-python : linklibs-python-python linklibs-python-parser
 
 %make_prog_setup mmake=contrib-development-python
 
-LIBS := \
-	-lpython-python \
-	-lpython-objects \
-	-lpython-modules \
-	-lpython-parser \
-	-lpython-python \
-	$(LIBS)
-
-DEPLIBS := $(DEPLIBS) \
-	$(LIBDIR)/libpython-python.a \
-	$(LIBDIR)/libpython-objects.a \
-	$(LIBDIR)/libpython-modules.a \
-	$(LIBDIR)/libpython-parser.a
-
-contrib-development-python : setup $(EXE)
+contrib-development-python : setup files-copy $(EXE)
 
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%copy_files_q files=$(MODULE_FILES) src=Lib dst=$(PYTHONDIR)/Libs/Python
 
 #MM
 setup ::
 	%mkdirs_q $(PYTHONDIR)
+	%mkdirs_q $(PYTHONDIR)/Libs 
+	%mkdirs_q $(patsubst %, $(PYTHONDIR)/Libs/Python/%, $(MODULE_DIRS))
 
 %common
 %include_deps
