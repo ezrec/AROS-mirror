@@ -96,3 +96,5 @@ def gen ():
 
     convertContents (c, (), None)
 
+if __name__ == '__main__':
+    gen ()
