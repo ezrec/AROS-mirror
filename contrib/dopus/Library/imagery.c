@@ -30,6 +30,7 @@ the existing commercial status of Directory Opus 5.
 */
 
 #include "dopuslib.h"
+#include <aros/macros.h>
 
 #define DB(x) ((struct DOpusBase *)x)
 
@@ -323,8 +324,6 @@ int x1,y1,x2,y2;
 	struct BitMap tbm;
 	struct RastPort trp;
 	
-kprintf("GetCheckImage\n");
-
 	b=(fg>bg)?fg:bg;
 	depth=2;
 	for (a=0;a<8;a++) if (b&(1<<a)) depth=a+1;
@@ -333,14 +332,34 @@ kprintf("GetCheckImage\n");
 
 	SetDrMd(&trp,JAM1);
 	SetAPen(&trp,bg);
+	
+#warning AROS: graphics.library functions dont seem to work on standard hand made (InitBitmap = no AllocBitmap) planar bitmaps
+
+#if 0
 	RectFill(&trp,0,0,12,6);
+
 	if (pen) {
 		SetAPen(&trp,fg);
 		BltTemplate((char *)DB(DOpusBase)->pdb_check,0,2,&trp,0,0,13,7);
 	}
-
+#else
+	if (pen) {
+	    UWORD *src = (UWORD *)DB(DOpusBase)->pdb_check;
+	    UWORD *dest = (UWORD *)tbm.Planes[0];
+	    
+	    WORD y;
+	
+	    for(y = 0; y < 7; y++)
+	    {
+	    	UWORD gfx = *src++;
+	        *dest = AROS_WORD2BE(gfx);
+		dest += (tbm.BytesPerRow / 2);
+	    }
+	}
+#endif
 	image->LeftEdge=7;
 	image->TopEdge=2;
+
 	return(image);
 	
 	AROS_LIBFUNC_EXIT
@@ -459,7 +478,8 @@ extern UBYTE /* __chip */ glass_image2[];
 	int x,y;
 	char op,om;
 
-kprintf("DoGlassImage\n");
+	rp = &IntuitionBase->ActiveScreen->RastPort;
+	
 	om=rp->DrawMode; op=rp->FgPen;
 	SetDrMd(rp,JAM1);
 
@@ -467,6 +487,8 @@ kprintf("DoGlassImage\n");
 		x=gadget->LeftEdge+((gadget->Width-16)/2);
 		y=gadget->TopEdge+((gadget->Height-8)/2);
 
+		x = y = 0;
+		
 		SetAPen(rp,shine);
 		BltTemplate((char *)glass_image2,0,2,rp,x,y,16,8);
 		SetAPen(rp,shadow);
@@ -489,9 +511,7 @@ struct RastPort *rp;
 	USHORT *data;
 	short a,words;
 	
-
 	words=(width+15)/16;
-
 
 	if (!(image=LAllocRemember(key,sizeof(struct Image),MEMF_CLEAR)) ||
 		!(data=LAllocRemember(key,words*2*height*depth,MEMF_CHIP|MEMF_CLEAR))) {
