@@ -4,17 +4,7 @@
 #include "lib_init.h"
 #include "render_funcs.h"
 
-AROS_LH1(APTR, CreateRMHandlerA,
-    AROS_LHA(struct TagItem *, tags, A1),
-    struct Library *, RenderBase, 7, Render)
-{
-    AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
-    
-    return CreateRMHandlerA(tags);
-    
-    AROS_LIBFUNC_EXIT
-}
+static int dummy;
 
 AROS_LH1(void, DeleteRMHandler,
     AROS_LHA(APTR, rmh, A0),
@@ -24,6 +14,18 @@ AROS_LH1(void, DeleteRMHandler,
     AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     DeleteRMHandler(rmh);
+    
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH1(APTR, CreateRMHandlerA,
+    AROS_LHA(struct TagItem *, tags, A1),
+    struct Library *, RenderBase, 7, Render)
+{
+    AROS_LIBFUNC_INIT
+    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
+    
+    return CreateRMHandlerA(tags);
     
     AROS_LIBFUNC_EXIT
 }
