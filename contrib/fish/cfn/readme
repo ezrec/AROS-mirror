@@ -1,0 +1,153 @@
+
+     CFN
+    -----
+
+
+(Complete FileName !)
+
+
+author:   Andreas Günther
+date:     21-june-1993
+version:  1.0
+
+requires OS 2.0 or higher !
+
+
+CFN is public domain. Do with it whatever you want. I am not taking any
+responsibility for the program, you are using CFN at YOUR OWN RISK !
+
+
+
+
+What is CFN ?
+-------------
+
+CFN takes a lot of typing from you, when you are working in the Shell
+and have to type long file- or directorynames. It's enough to type the
+first few characters of the name and to press the TAB key. CFN completes
+the filename immediately, but just as long as there is just one
+possibility. Let's have a look at an example:
+
+Say, you have a directory with the following files:
+
+contents.doc
+MegaProgrammiximo.readme
+MegaProgrammiximo.c
+MegaProgrammiximo
+MegaProgrammiximoPictures/ superpicture1    [ <-- subdirectory ]
+                          superpicture2
+
+Now, you want to read the ...readme file (that is what it is for :)
+Assuming, you are in the Shell, simply type:
+
+> more M
+
+and press the "TAB"-key.
+The result:
+
+> more MegaProgrammiximo
+
+as there is only one possibility to complete the name so far.
+Now, type ".r" and press the TAB key again:
+
+> more MegaProgrammiximo.readme
+
+Simply press RETURN and you're ready !
+
+
+The whole thing also works with directories, e.g.:
+
+> show M                     <TAB-key>
+> show MegaProgrammiximo
+> show MegaProgrammiximoP    <TAB-key>
+> show MegaProgrammiximoPictures/
+> show MegaProgrammiximoPictures/s  <TAB-key>
+> show MegaProgrammiximoPictures/superpicture
+> show MegaProgrammiximoPictures/superpicture1   <RETURN>
+
+
+
+History
+-------
+
+This method to complete filenames is common in UNIX-shells. As you get
+accustomed to it very quickly, I often hit the TAB key on my AMIGA
+at home without any effect (apart from the inverted "I")...
+So I looked for a program that adds this feature to the AmigaShell,
+but couldn't find one. I guess, something like that exists, but I'll
+find it tomorrow (according to Murphy) ;-)
+Well, then I spent one night at my AMIGA and wrote CFN myself. To 
+include the filename completion into the system in a clean way, you 
+normally had to put very much effort in it (program a new Shell).
+But with some tricks, you get it working with just two little programs.
+
+Perhaps, someone wants to improve or rewrite the program or have
+other good ideas (e.g. making a commodity out of it) .?
+For interested programmers, I have included the sourcecode.
+(I use CFN with Kickstart 39.106, Workbench 39.29)
+
+
+
+Restrictions
+------------
+
+A filename have to be typed without any interruptions to be recognized
+by CFN. In other words, if you type half of the name, doing some
+business in another window and then type the remaining part, CFN will
+not be able to complete the name correctly. But as you normally stay
+in one window while typing a filename, that's not too bad... It may hit
+you worse, that you are not able to edit the typed name with the cursor
+keys, but only with the backspace key. (You CAN of course edit it,
+but the trick with the TAB key does not work in that case !)
+BTW: Filenames that end with ".info", are ignored.
+
+As the Shell stays the same and keeps ALL its functions, CFN is
+nevertheless a wonderful supplement for the Shell.
+
+
+
+Installation
+------------
+
+Finally, let's start !
+The installation is simple:
+
+insert the line
+
+    cfn_newshell
+
+into your file
+
+  S:Shell-Startup
+
+and the line
+
+    run >NIL: cfn
+
+into your file
+
+  S:User-Startup
+
+
+The programs "cfn" and "cfn_newshell" should stay in your path, e.g.
+in the "C:"-directory.
+
+
+That's all.
+
+
+-------------------------------------------------------------------------
+
+
+And now, happy TABbing !
+
+
+                  Andreas
+
+
+my address:
+
+Andreas Günther               Tel.:  05251/63412
+Alfener Weg 10                email: guenther@uni-paderborn.de
+D-33100 Paderborn
+Germany

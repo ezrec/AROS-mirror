@@ -1,0 +1,74 @@
+Here is a brief description of how CFN works:
+
+
+Generally, all input have to be filtered just before the console device.
+So I install an input handler at priority 1 (console.device has 0,
+intuition 50).
+
+This input handler gets all input for a console window (== a Shell),
+but it does only look at the keys.
+
+Normally, all incoming characters are buffered (all RAWKEY-events)
+and returned to the input.device.
+The buffer is cleared when either a SPACE, a RETURN or an Arrow-Key 
+is pressed. So, when the user is typing a filename, the buffer contains 
+the part of the filename which is typed so far.
+Just the plain RAWKEY-events are buffered for speed reasons. (The
+RKM says it is best to write an input handler in assembler, but for
+convenience, I used C...)
+
+When the TAB-key is encoutered, the buffer is locked (buf_busy=TRUE;)
+so that no more characters are buffered, and the main process
+(serve_handler()) gets a signal. This process converts the RAWKEY-events
+contained in the buffer to a sensible string (using the keymap.device)
+and tries to complete the filename whose first part is in the buffer.
+
+
+And here is one of the problems I had:
+I did not found any possibility to find out, in which CLI-process the user
+is working. But I need the process structure to find the current
+directory :(
+As a solution, I use the following method:
+The program "cfn_newshell" is started whenever a new shell process is
+launched, because it's executed in the S:shell-startup script. This
+little program gets a pointer to the current process structure and
+stores it in the window->UserData pointer of the currently active
+window (which is the Shell-window) if there is one.
+I told you it's a hack :)
+
+To get the process pointer back, I examine the UserData field of the
+currently active window. btw: The current window is contained in the
+IntuitionBase structure.
+
+
+Now, back to our process:
+It sets its current dir to the one of the Shell process, searches the
+typed file/directory with a concatenated pattern and filters the 
+biggest common part of all found names.
+Then the found completion is send to the input.device, the buffer is
+unlocked and the CurrentDir is set back (to prevent the locks from
+staying unused in memory).
+
+The input.device then handles the completion as if they were typed
+on the keyboard, which has the nice effect that our input-handler
+gets them and appends them to our buffer and that they are received
+by the console.device and the Shell itself.
+
+
+
+For more details, look into the source code and the RKM's (especially
+the "Devices"-part for the input-handler).
+
+
+
+Yours,
+        Andreas
+
+
+
+
+my address:
+
+Andreas Günther               Tel.:  05251/63412
+Alfener Weg 10                email: guenther@uni-paderborn.de
+D-33100 Paderborn

@@ -1,0 +1,156 @@
+
+     CFN
+    -----
+
+
+(Complete FileName ! = vervollständige Dateiname !)
+
+
+Autor:   Andreas Günther
+Datum:   21.Juni 1993
+Version: 1.0
+
+Benötigt OS 2.0 oder höher !
+
+
+CFN ist Public Domain, ich beanspruche also keinerlei Rechte an dem 
+Programm. Natürlich übernehme ich auch keinerlei Verantwortung für
+das Programm, Sie benutzen es also auf EIGENE GEFAHR !
+
+
+
+
+Also, was ist CFN ?
+-------------------
+
+CFN nimmt Ihnen in der Shell eine Menge Tipparbeit bei langen Datei- und
+Verzeichnisnamen ab. Es reicht, wenn der Anfang eingegeben wird und
+dann die TAB-Taste betätigt wird. CFN vervollständigt dann den Dateinamen
+soweit, wie er eindeutig ist. Hier ein kurzes Beispiel:
+
+Angenommen, man hat folgendes Verzeichnis:
+
+Inhalt.doc
+MegaProgrammiximo.readme
+MegaProgrammiximo.c
+MegaProgrammiximo
+MegaProgrammiximoBilder/ superbild1    [ <-- Unterverzeichnis ]
+                         superbild2
+
+Jetzt möchte man sich die ....readme-Datei anzeigen lassen.
+Einfach
+
+> more M
+
+eingeben und die "TAB"-Taste drücken.
+Das Ergebnis:
+in der Shell steht jetzt
+
+> more MegaProgrammiximo
+
+da es bis dahin nur diese Möglichkeit für den Namen gibt.
+Jetzt ".r" eingeben und nochmal "TAB" drücken:
+
+> more MegaProgrammiximo.readme
+
+RETURN drücken und fertig.
+
+
+Das ganze geht natürlich auch mit Verzeichnissen, also z.B.
+
+> show M                     <TAB-Taste>
+> show MegaProgrammiximo
+> show MegaProgrammiximoB    <TAB-Taste>
+> show MegaProgrammiximoBilder/
+> show MegaProgrammiximoBilder/s  <TAB-Taste>
+> show MegaProgrammiximoBilder/superbild
+> show MegaProgrammiximoBilder/superbild1   <RETURN>
+
+
+
+Entstehung
+----------
+
+Diese Methode der Dateinamenvervollständigung ist in UNIX-Shells schon
+lange üblich. Da man sich schnell daran gewöhnt, habe ich zuhause auf
+dem AMIGA auch oft die TAB-Taste gedrückt, leider vergeblich...
+Ich konnte bisher auch kein Programm finden, was die AmigaShell um 
+dieses Feature ergänzt. Wahrscheinlich gibt's so etwas schon, ich werd's
+dann sicherlich morgen finden (Murphy läßt grüßen) ;-)
+Nun ja, dann hab' ich halt mal eine Nacht geopfert und CFN programmiert.
+Um die Dateinamenvervollständigung sauber ins System einzubauen, muß
+man eigentlich einen hohen Aufwand treiben (eine neue Shell schreiben),
+mit einigen Tricks klappts aber auch so. Daher sind einige Sachen
+auch nicht ganz systemkonform programmiert.
+Vielleich findet sich ja jemand, der bereit ist, das Programm zu
+überarbeiten oder neu zu schreiben oder weitere gute Ideen und
+Verbesserungen hat (z.B. das ganze als Commodity, wenn's möglich ist).
+Für interessierte Programmierer habe ich den Quellcode beigelegt.
+(bei mir läuft CFN unter Kickstart 39.106, Workbench 39.29)
+
+
+
+Einschränkungen
+---------------
+
+Ein Dateiname muß am Stück getippt werden, damit CFN ihn erkennt.
+Es geht also nicht, den Namen halb einzutippen, kurz in einem anderen
+Fenster etwas erledigen und weiterzuschreiben. Da man sich aber meist
+für die Zeit der Dateinameneingabe sowieso nur in einem Fenster 
+aufhält, ist das nicht so tragisch. Härter trifft es da schon, daß
+man außer mit der Backspace-Taste nicht mehr editieren kann (man
+kann schon, aber der Trick mit der TAB-Taste klappt dann nicht mehr !).
+Übrigens werden Dateinamen, die mit ".info" enden, ignoriert. Das
+macht das Leben oft leichter.
+
+Da die Shell natürlich voll funktionsfähig bleibt, ist CFN trotz
+der Einschränkungen eine prima Ergänzung.
+
+
+
+Installation
+------------
+
+So, jetzt geht's endlich los !
+Die Installation ist recht einfach:
+
+In die Datei 
+
+  S:Shell-Startup 
+
+die Zeile
+
+    cfn_newshell
+
+einfügen
+und in die Datei
+
+  S:User-Startup
+
+die Zeile
+
+    run >NIL: cfn
+
+einfügen.
+Die beiden Programme "cfn" und "cfn_newshell" sollten im Pfad stehen,
+also z.B. im "C:"-Verzeichnis.
+
+
+
+Das war's.
+
+
+----------------------------------------------------------------------
+
+
+Und nun Happy TABbing !
+
+
+                  Andreas
+
+
+meine Anschrift:
+
+Andreas Günther               Tel.:  05251/63412
+Alfener Weg 10                email: guenther@uni-paderborn.de
+D-33100 Paderborn
