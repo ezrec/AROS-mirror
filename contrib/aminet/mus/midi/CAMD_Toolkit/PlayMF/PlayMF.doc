@@ -1,0 +1,247 @@
+
+            --------------------------------------------------
+               PlayMF - a MIDI file player with XPK support
+            --------------------------------------------------
+
+   Original Design and coding by Dan Baker, Commodore Business Machines.
+
+            Modified and Bugfixed in 1998 by Christian Buchner
+
+
+This  is a MIDI file player that reads SMF (.MID) Files and sends them to a
+Midi port using the Commodore Amiga MIDI Library (camd.library).
+
+The  original  playmf was part of an example package showing how to program
+CAMD  applications.   It lacked proper SysEx support and had a buggy timing
+routine.
+
+I re-arranged the source code and rewrote most of the functions.
+
+The  program  has  been  optimized  for  use with the Waveblaster Hack (see
+Aminet:    hard/hack/Waveblaster.lha).   Also  known  as  "Project  XG"  in
+England.   This is basically connecting a Wavetable soundcard to the serial
+port  of  your Amiga.  Try it!  it's easy and quite cheap.  What you get is
+excellent MIDI sound.
+
+
+Requirements
+------------
+
+* any MIDI synthesizer connected to your Amiga
+  (IMPORTANT: use GMPlay instead if you don't have any synthesizer!)
+
+* OS 3.0 or better.
+
+* 020  processor or better  (this program uses 64 bit instructions for very
+  exact timing calculations)
+
+* installed camd.library (available on Aminet)
+
+* installed realtime.library (part of Workbench 3.0 or 3.1 ?)
+
+
+Usage
+-----
+
+This  program  can  be started from both Workbench and Shell.  When started
+from  Workbench  or  from  Shell without filename, the program opens an ASL
+requester and asks for any MIDI file.
+
+The command template is "FILE,LINK/K,REPLACE/S,GM/S,GS/S,XG/S,MT32/S"
+
+* FILE   (Argument, does not require the FILE keyword)
+
+The  MIDI  file to play.  No wildcards, no multiple filenames (yet).  Loads
+standard  .MID files type 0 and 1.  May be packed with any (installed!) XPK
+sublibrary.    XPK   compressed   files   require   xpkmaster.library   for
+decompression.   New:   Specifying  a  directory name here will open an ASL
+filerequester with this directory as default.
+
+* LINK/K   (Keyword)
+
+Specify  the MIDI output cluster (link) to send the data to.  By specifying
+a non-existing cluster, you will create a new one.  The default is "out.0".
+This  is  usually  the  internal  serial port.  You can use the preferences
+program  "MidiPorts"  (which  is  part  of  the CAMD package) to define the
+connections  between  MIDI  hardware  and  cluster name.  Refer to the CAMD
+documentation for more information.
+
+* REPLACE/S   (Switch)
+
+Replace  the currently playing MIDI file (to the specified MIDI cluster) by
+the  selected  one.   This  will  send a CTRL-C (break signal) to the other
+PlayMF task.
+
+
+The  following  switches  will  probably  work with Yamaha synthesizers (XG
+compatible) only.  If you do not specify any of these switches, PlayMF will
+only  send  a  ResetAllControllers  message  on every channel and reset all
+programs to 0 (Grand Piano).
+
+* GM/S   (Switch)
+
+send a General MIDI initialisation.  Only 1 sample and 1 drum bank.  Strict
+General MIDI only.
+
+* GS/S   (Switch)
+
+Enable Roland GS compatibility (TG300B) mode of the XG synthesizer.  Should
+be  tried  first when listening to unknown MIDI files that are not known to
+be in XG format.  If problems occur, switch back to GM, then try MT32.
+
+* XG/S   (Switch)
+
+Reset  to  Yamaha XG mode, which is the default mode of any XG synthesizer.
+Use this switch if the XG MIDI file you want to play doesn't properly reset
+the  synthesizer.   Some  composers  forget  to  include  a XG reset at the
+beginning of their files.  Shame on them!
+
+* MT32/S   (Switch)
+
+Enable  Roland  MT32 synth emulation.  Use this if you have MIDI files that
+identify  themselves  as  MT32 files (e.g.  something32.MID) and sound ugly
+using the other initialisations.
+
+
+
+General Tips
+------------
+
+There  can  be  multiple PlayMF tasks running playing different MIDI files.
+However each task must be sending to a different MIDI cluster (It would not
+make  any  sense to mix two different MIDI files to one MIDI cluster).  Use
+the REPLACE switch if you want to interrupt the currently playing MIDI file
+by calling another PlayMF.
+
+When  started  from  Workbench,  the  REPLACE  option is on by default.  So
+selecting a MIDI file by ASL requester will interrupt any playing PlayMF.
+
+The ASL requester allows MultiSelect and displays only MIDI files (also see
+Bugs).
+
+When   PlayMF  has  been  started  from  Workbench,  it  cannot  be  easily
+interrupted.  You will have to use a task manager and send a break (CTRL-C)
+signal to it.
+
+From the shell a simple CTRL-C interrupts the currently playing MIDI file.
+
+
+
+Bugs
+----
+
+well, seems to work fine, except...
+
+*  The  ASL  filerequester  of  PlayMF  uses  callback  hooks  for filetype
+recognition.   The Mui-ASL replacement has not implemented this, so it will
+show _NO_ files at all!  Ask the author to fix this (or at least show _all_
+files).
+
+
+History
+-------
+
+Release 1: initial release on Aminet, about Feb 25th 1998, 21h 
+
+Release 2: First bugfix three hours later:
+           The tracks of (only a few) midifiles used to get out of
+           sync. Found the bug in the routine that skipped unused
+           events. This one already existed in the original playmf.
+           So not my fault, really ;-)
+
+           Added ASL filerequester code by cdtv. Thanks, man!
+
+           Added Workbench startup code.
+
+           Added Link keyword (MIDI cluster specification) and
+           the detection of another PlayMF task sending to the
+           same Link.
+
+           Added REPLACE switch. See above.
+
+           Passing a directory name as FILE argument will open
+           the ASL requester with that default directory.
+
+Release 3: added the fireworks to the distribution
+
+Release 4: speeded up the BOOPSI classes and the fireworks
+
+           PlayMF now sends an All Notes Off *and* All Sounds Off
+           channel mode message upon termination. This should fix
+           all cases hanging notes (especially those held by
+           sostenuto pedal)
+
+Bugfixed
+Release 4: argh, sending AllSoundsOff didn't work. Fixed.
+
+Release 5: Improved Fireworks tool a lot. Can now even control
+           PlayMF.
+
+Release 6: again loaded Fireworks tool with new features. Seems
+           to be my favourite toy now.
+
+Release 7: if no GM, GS or XG init is specified, PlayMF will
+           send a ResetAllControllers message on every channel
+           and reset all programs to 0 (Grand Piano).
+
+
+Future
+------
+
+* pattern matching, mutiple file names
+
+* add ability to directly play from .zip files (e.g. from the Internet)
+
+* WB App Icon
+
+* implement a GUI.  Will be object oriented and use the "Betty" BOOPSI GUI
+  system. See http://www.cs.utah.edu/~stack/betty/
+
+* create a midi.datatype and doin' better than Martin Gierich ;-)
+
+* create a GMPlay version that hooks into camd.library
+
+
+See Also
+--------
+
+PianoMeter  -  an  experimental  graphical note visualisation utility using
+BOOPSI  classes.   Try  it!   It  is  a real eyecandy ;-) Based on the "vu"
+example in the CAMD developer package.
+
+"Fireworks"  from  this  distribution  -  a  thrilling MIDI fireworks tool.
+Makes your music explode. Amazingly fast with Picasso 96.
+
+GMPlay  1.3 - available on Aminet.  Uses your CPU to play MIDI music.  Does
+not require any MIDI synthesizer, but lots of CPU power and RAM.
+
+
+Contact
+-------
+
+for comments, bug reports and suggestions:
+
+The author: Christian Buchner
+
+            flowerp@eikon.e-technik.tu-muenchen.de
+
+
+Greetings
+---------
+
+Rafai Mantiuk - for the BCC precompiler that allows to programm
+                MUI/BOOPSI classes with C++ syntax.
+
+Tim Stack     - for his excellent Betty GUI system. This really
+                deserves more public attention. My future application
+                programs will be based on Betty. 
+                see http://www.cs.utah.edu/~stack/betty.html
+
+CDTV (Tino    - for organizing the cool computer meetings in Erfurt
+Wildenhain)     and for testing PlayMF and PianoMeter and for his
+                suggestions
+
+Martin Gierich- for his midi.datatype which is based on the original
+                "playmf" as well. However it is not reentrant and
+                will crash when loading the second MIDI file.
+                Hey, have a look at my playmf source code! ;-)
