@@ -20,6 +20,35 @@
 
 #include "lwip/sockets.h"
 
+#include <proto/exec.h>
+#include <proto/dos.h>
+
+void client_test(void *arg)
+{
+	  int sock = lwip_socket(0,SOCK_STREAM,0);
+	  Delay(10);
+	  if (sock != -1)
+	  {
+        struct sockaddr_in src;
+
+        kprintf("Client: Client socket at 0x%ld\n",sock);
+
+        src.sin_family = AF_INET;
+        src.sin_addr.s_addr = htonl(0x7f000001);
+        src.sin_port = htons(6000);
+
+        kprintf("Client: connects\n");
+
+				if (lwip_connect(sock, (struct sockaddr *) &src, sizeof(src)) != -1)
+				{
+            kprintf("Client: Connected to socket\n");
+            lwip_write(sock,"test string",12);
+				}
+
+				lwip_close(sock);
+    }
+}
+
 void server_init(void)
 {
   int sock = lwip_socket(0,SOCK_STREAM,0);
@@ -31,14 +60,32 @@ void server_init(void)
     src.sin_addr.s_addr = htonl(INADDR_ANY);
     src.sin_port = htons(6000);
 
-    printf("bind\n");
+    Printf("Server: bind\n");
 
     if(lwip_bind(sock, (struct sockaddr *)&src, sizeof(src)) != -1)
     {
-    	printf("listen\n");
-      if(lwip_listen(sock, 10) != -1)
+    	Printf("Server: listen\n");
+
+      if(lwip_listen(sock, 4) != -1)
       {
-      	printf("listen() success\n");
+      	char buf[200];
+      	int s;
+
+        int fromlen;
+        struct sockaddr_in fromend;
+
+      	Printf("Server: listen() success\n");
+
+      	sys_thread_new(client_test,NULL);
+
+        s = lwip_accept(sock,(struct sockaddr *) &fromend, &fromlen);
+        if (s != -1)
+        {
+					Printf("Server: accept() ok\n");
+					lwip_read(s, &buf, sizeof(buf));
+          Printf("Server: Received %s\n",buf);
+          lwip_close(s);
+        } else Printf("Server: accept() failed\n");
       }
     }
   	lwip_close(sock);

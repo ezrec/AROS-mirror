@@ -31,7 +31,7 @@
  * Author: Adam Dunkels <adam@sics.se>
  *         Sebastian Bauer <sebauer@t-online.de>
  *
- * $Id: sys_arch.c,v 1.3 2002/07/07 18:41:59 sebauer Exp $
+ * $Id: sys_arch.c,v 1.4 2002/07/07 20:42:54 sebauer Exp $
  */
 
 #include <time.h>
@@ -266,13 +266,13 @@ sys_mbox_t sys_mbox_new(void)
     }
 #endif /* SYS_STATS */
 
-    kprintf("sys_mbox_new()=0x%lx\n",mbox);
+//    kprintf("sys_mbox_new()=0x%lx\n",mbox);
     return (sys_mbox_t)mbox;
 }
 /*-----------------------------------------------------------------------------------*/
 void sys_mbox_free(sys_mbox_t mbox)
 {
-    kprintf("sys_mbox_free(mbox=0x%lx)\n",mbox);
+//    kprintf("sys_mbox_free(mbox=0x%lx)\n",mbox);
 
     if(mbox != SYS_MBOX_NULL) {
 #ifdef SYS_STATS
@@ -293,11 +293,11 @@ void sys_mbox_post(sys_mbox_t mbox, void *msg)
 
     if (!mbox)
     {
-	kprintf("sys_mbox_post(mbox=0x%lx,data=0x%lx)  no mbox!\n",mbox,msg);
+//	kprintf("sys_mbox_post(mbox=0x%lx,data=0x%lx)  no mbox!\n",mbox,msg);
 	return;
     }
 
-    kprintf("sys_mbox_post(mbox=0x%lx,data=0x%lx)\n",mbox,msg);
+//    kprintf("sys_mbox_post(mbox=0x%lx,data=0x%lx)\n",mbox,msg);
 
     sys_sem_wait(mbox->mutex);
     mbox->msgs[mbox->last] = msg;
@@ -323,7 +323,7 @@ void sys_mbox_post(sys_mbox_t mbox, void *msg)
 u16_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u16_t timeout)
 {
     u16_t time = 1;
-    kprintf("sys_arch_mbox_fetch(mbox=0x%lx,timeout=%d)\n",mbox,timeout);
+//    kprintf("sys_arch_mbox_fetch(mbox=0x%lx,timeout=%d)\n",mbox,timeout);
 
     /* The mutex lock is quick so we don't bother with the timeout
        stuff here. */
@@ -364,7 +364,7 @@ sys_sem_t sys_sem_new(u8_t count)
     if (!(sem = AllocVec(sizeof(struct sys_sem),MEMF_PUBLIC)))
 	return NULL;
 
-    kprintf("sys_sem_new(%ld) sem at 0x%lx\n",count,sem);
+//    kprintf("sys_sem_new(%ld) sem at 0x%lx\n",count,sem);
 
     sem->c = count;
     InitSemaphore(&sem->sem);
@@ -378,7 +378,7 @@ u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
     struct ThreadData *data = (struct ThreadData*)FindTask(NULL)->tc_UserData;
     u16_t time = 1;
 
-    kprintf("sys_arch_sem_wait(0x%lx,%ld)\n",sem,timeout);
+//    kprintf("sys_arch_sem_wait(0x%lx,%ld)\n",sem,timeout);
 
     ObtainSemaphore(&sem->sem);
 
@@ -400,9 +400,7 @@ u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
 		AddTail((struct List*)&sem->queue,(struct Node*)&data->task_node);
 
 		ReleaseSemaphore(&sem->sem);
-		kprintf("0x%lx Released Sem:\n",sem);
 		sigs = Wait((1UL<<data->sem_signal)|(1UL<<data->TimerPort->mp_SigBit));
-		kprintf("0x%lx Obtain Sem:\n",sem);
 		ObtainSemaphore(&sem->sem);
 
                 /* Now we remove us again */
@@ -437,11 +435,7 @@ u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
 	    AddTail((struct List*)&sem->queue,(struct Node*)&data->task_node);
 
 	    ReleaseSemaphore(&sem->sem);
-	    kprintf("0x%lx 2 Released Sem:\n",sem);
-
 	    Wait(1UL<<data->sem_signal);
-
-	    kprintf("0x%lx Obtain Sem:\n",sem);
 	    ObtainSemaphore(&sem->sem);
 
 	    /* Now we remove us again */
@@ -456,9 +450,7 @@ u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
 /*-----------------------------------------------------------------------------------*/
 void sys_sem_signal(sys_sem_t sem)
 {
-    kprintf("sys_sem_signal(0x%lx)\n",sem);
-
-    kprintf("obtainsem(0x%lx)\n",sem);
+//    kprintf("sys_sem_signal(0x%lx)\n",sem);
 
     ObtainSemaphore(&sem->sem);
 
@@ -477,25 +469,25 @@ void sys_sem_signal(sys_sem_t sem)
 /*-----------------------------------------------------------------------------------*/
 void sys_sem_free(sys_sem_t sem)
 {
-    kprintf("sys_sem_free(%lx)\n",sem);
+//    kprintf("sys_sem_free(%lx)\n",sem);
     if (sem) FreeVec(sem);
 }
 /*-----------------------------------------------------------------------------------*/
 void sys_init(void)
 {
-    kprintf("sys_init() ");
+//    kprintf("sys_init() ");
     if (Thread_Init(&mainThread))
     {
-    	kprintf("successfull\n");
+//    	kprintf("successfull\n");
     	FindTask(NULL)->tc_UserData = &mainThread;
-    } else kprintf("failed\n");
+    }// else kprintf("failed\n");
 }
 /*-----------------------------------------------------------------------------------*/
 struct sys_timeouts *sys_arch_timeouts(void)
 {
     struct ThreadData *data = (struct ThreadData*)FindTask(NULL)->tc_UserData;
 
-    kprintf("sys_arch_timeouts()\n");
+//    kprintf("sys_arch_timeouts()\n");
     return &data->timeouts;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -505,7 +497,7 @@ void sys_thread_new(void (* function)(void *arg), void *arg)
     struct StartupMsg *start_msg;
     struct MsgPort *child_port;
 
-    kprintf("sys_thread_new()\n");
+//    kprintf("sys_thread_new()\n");
 
     if (!(start_msg = (struct StartupMsg *)AllocMem(sizeof(struct StartupMsg), MEMF_PUBLIC|MEMF_CLEAR)))
     {

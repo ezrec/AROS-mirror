@@ -24,7 +24,8 @@ $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) test.o lib:debug.lib
 
 
 .c.o:
-		$(CC) $(DEF)IPv4 $(DEF)LWIP_DEBUG=1 $(CFLAGS) $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
+		$(CC) $(DEF)IPv4 $(CFLAGS) $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
+#		$(CC) $(DEF)IPv4 $(DEF)LWIP_DEBUG=1 $(CFLAGS) $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
 
 dirs:
   execute <<

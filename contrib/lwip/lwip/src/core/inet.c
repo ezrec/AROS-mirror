@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: inet.c,v 1.4 2002/02/15 23:00:52 adam Exp $
+ * $Id: inet.c,v 1.4 2002/07/07 18:57:57 sebauer Exp $
  */
 
 /*-----------------------------------------------------------------------------------*/
@@ -68,6 +68,7 @@ chksum(void *dataptr, int len)
   for(acc = 0; len > 1; len -= 2) {
     u16_t *dat = (u16_t *)dataptr;
     acc += *dat++;
+    dataptr = dat;
   }
 
   /* add up any odd byte */

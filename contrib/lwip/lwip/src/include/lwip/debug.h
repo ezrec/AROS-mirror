@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: debug.h,v 1.12 2002/03/04 10:47:56 adam Exp $
+ * $Id: debug.h,v 1.3 2002/07/07 18:57:58 sebauer Exp $
  */
 #ifndef __LWIP_DEBUG_H__
 #define __LWIP_DEBUG_H__
@@ -55,29 +55,29 @@
 #define UNIXIF_DEBUG     0
 #define TAPIF_DEBUG      0
 
-#define API_LIB_DEBUG    0
-#define API_MSG_DEBUG    0
+#define API_LIB_DEBUG     1
+#define API_MSG_DEBUG     1
 #define SOCKETS_DEBUG    1
-#define ICMP_DEBUG       0
-#define INET_DEBUG       0
-#define IP_DEBUG         0
+#define ICMP_DEBUG        1
+#define INET_DEBUG        1
+#define IP_DEBUG          1
 #define IP_REASS_DEBUG   1
 #define MEM_DEBUG        0
 #define MEMP_DEBUG       0
-#define SYS_DEBUG        0
-#define TCP_DEBUG        0
-#define TCP_INPUT_DEBUG  0
-#define TCP_FR_DEBUG     0
-#define TCP_RTO_DEBUG    0
-#define TCP_REXMIT_DEBUG 0
-#define TCP_CWND_DEBUG   0
-#define TCP_WND_DEBUG    0
-#define TCP_OUTPUT_DEBUG 0
-#define TCP_RST_DEBUG    0
-#define TCP_QLEN_DEBUG   0
-#define UDP_DEBUG        0
-#define TCPIP_DEBUG      0
-#define TCPDUMP_DEBUG    0
+#define SYS_DEBUG         1
+#define TCP_DEBUG         1
+#define TCP_INPUT_DEBUG   1
+#define TCP_FR_DEBUG      1
+#define TCP_RTO_DEBUG     1
+#define TCP_REXMIT_DEBUG  1
+#define TCP_CWND_DEBUG    1
+#define TCP_WND_DEBUG     1
+#define TCP_OUTPUT_DEBUG  1
+#define TCP_RST_DEBUG     1
+#define TCP_QLEN_DEBUG    1
+#define UDP_DEBUG         1
+#define TCPIP_DEBUG       1
+#define TCPDUMP_DEBUG     1
 #define DHCP_DEBUG       1
 
 #include <stdio.h>
