@@ -12,29 +12,8 @@ Mitwirken
 
 .. Inhalt::
 
-.. START ABSTRACT
+.. Include:: contribute-abstract.de
 
-Wir brauchen Eure Hilfe!
-========================
-
-Zur Zeit arbeiten nur etwa 6 aktive Entwickler an AROS, was leider
-bedeutet, dass der Fortschritt nur mäßig ist. Wir brauchen einfach
-mehr Entwickler die bei uns mit anfassen! Es gibt noch eine große
-Anzahl an Aufgaben die darauf warten angefasst zu werden. Die
-Palette reicht von kleinen bis großen Aufgaben, von "Hardware Hacking"
-bis hin zur high-level System- und Applikationsprogrammierung.
-Im prinzip ist für jeden was zu tun, der mithelfen will, egal wie
-erfahren Du ist in der Programmierung.
-
-Auch für diejenigen von Euch, die keine Programmierer sind, gibt es
-eine Vielzahl von Tätigkeiten mit denen Ihr uns helfen könnt! Zum
-Beispiel durch das Schreiben von Dokumentation, der Übersetzung von
-Programmen und schon vorhandener Dokumentation in andere Sprachen,
-das Kreieren von hübschen Grafiken und Icons und zu guter letzt
-bei der Suche nach Bugs. Diese Aufgaben sind genau so wichtig wie
-das Programmieren selbst!
-
-.. END ABSTRACT
 
 Freie Aufgaben
 ==============

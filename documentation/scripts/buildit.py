@@ -38,23 +38,6 @@ if (not os.path.exists( 'credits.en' ) ) \
     )
     file( 'credits.en', 'w' ).write( CREDITS_DATA )
 
-
-def extractAbstract( file ):
-    result = '' 
-    output = False
-
-    for line in file:
-        stripped = line.strip()
-    
-        if stripped == '.. START ABSTRACT':
-            output = True
-        elif stripped == '.. END ABSTRACT':
-            output = False
-        elif output:
-            result += line
-
-    return result
-
 def recurse( function, path='.', depth=0 ):
     for name in os.listdir( path ):
         name = os.path.join( path, name )
@@ -300,19 +283,6 @@ def buildWWW():
     makePictures()
     makeStatus()
 
-    _src_1 = os.path.join( SRCROOT, 'introduction/index.en' )
-    _src_2 = os.path.join( SRCROOT, 'documentation/developers/contribute.en' )
-    _src_3 = os.path.join( SRCROOT, 'news/index.en' )
-    _dst   = os.path.join( SRCROOT, 'index.en' )
-
-    if newer( [ _src_1, _src_2, _src_3 ], _dst ):
-        text  = extractAbstract( file( _src_1, 'r' ) )
-        text += '\n`Read more...`__\n\n__ introduction/\n\n'
-        text += extractAbstract( file( _src_2, 'r' ) )
-        text += '\n`Read more...`__\n\n__ documentation/developers/contribute\n\n'
-        text += file( _src_3, 'r' ).read()
-        file( _dst, 'w' ).write( text )
-
     recurse( processWWW )
 
     copy( '../license.html', DSTROOT )
@@ -341,7 +311,7 @@ def buildWWW():
             'targets/www/images/v_arc.png',
             'targets/www/images/vertical_border.png',
             'targets/www/images/spacer.gif',
-
+            'targets/www/images/disk.png'
         ],
         imagepath
     )
