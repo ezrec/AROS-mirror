@@ -116,6 +116,9 @@ articles = (
 )
 
 homepages = (
+    Link ('http://www.bloodline.freeserve.co.uk/',
+	"Homepage of Matt 'Crazy' Parsons",
+    ),
 )
 
 lessRelated = (
