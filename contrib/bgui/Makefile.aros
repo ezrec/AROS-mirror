@@ -56,7 +56,8 @@ INCLUDE_FILES = \
 	$(INCLUDES_DIR)/bgui/bgui_treeview.h \
 	$(INCLUDES_DIR)/libraries/bgui_treeview.h \
 	$(INCLUDES_DIR)/bgui/bgui_layoutgroup.h \
-	$(INCLUDES_DIR)/libraries/bgui_layoutgroup.h
+	$(INCLUDES_DIR)/libraries/bgui_layoutgroup.h \
+	$(INCLUDES_DIR)/bgui/bgui_prefs.h
 
 
 standard_build :
@@ -347,6 +348,9 @@ $(INCLUDES_DIR)/bgui/bgui_layoutgroup.h : gadgets/LayoutGroup/include/LayoutGrou
 	$(CP) $^ $@
 
 $(INCLUDES_DIR)/libraries/bgui_layoutgroup.h : include/libraries_bgui_layoutgroup.h
+	$(CP) $^ $@
+
+$(INCLUDES_DIR)/bgui/bgui_prefs.h : include/bgui_prefs.h
 	$(CP) $^ $@
 
 bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \

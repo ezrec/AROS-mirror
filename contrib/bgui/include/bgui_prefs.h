@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/07/09 18:08:09  bergers
+ * Copies some more include files and changed the include files to work with AROS.
+ * Added entry to comp to compile the Preferences program.
+ *
  * Revision 42.0  2000/05/09 22:23:25  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -48,6 +52,9 @@
 /*
  * Private library functions.
  */
+#ifdef _AROS
+
+#else
 #pragma libcall BGUIBase BGUI_GetDefaultTags a8 001
 #pragma libcall BGUIBase BGUI_DefaultPrefs ae 0
 #pragma libcall BGUIBase BGUI_LoadPrefs b4 801
@@ -65,7 +72,6 @@ struct TagItem *BGUI_GetDefaultTags(ULONG id);
  * This will get the default normal vertical spacing (or 4 if the taglist wasn't found).
  */
 
-
 VOID BGUI_DefaultPrefs(VOID);
 /*
  * Resets all class defaults to internal defaults.  No files are loaded.
@@ -76,4 +82,6 @@ VOID BGUI_LoadPrefs(UBYTE *name);
 /*
  * Loads the specified BGUI prefs file into BGUI.  Effective for current task only.
  */
+#endif
+
 #endif
