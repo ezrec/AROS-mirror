@@ -54,13 +54,13 @@
  */
 #define FlipWord(A) \
    ({ \
-      UWORD _FlipWord_A = (A); \
+      uint16_t _FlipWord_A = (A); \
       _FlipWord_A = (_FlipWord_A << 8) | (_FlipWord_A >> 8); \
    })
 
 #define FlipLong(A) \
    ({ \
-      ULONG _FlipLong_A = (A); \
+      uint32_t _FlipLong_A = (A); \
       _FlipLong_A = \
          (FlipWord(_FlipLong_A) << 16) | FlipWord(_FlipLong_A >> 16); \
    })
