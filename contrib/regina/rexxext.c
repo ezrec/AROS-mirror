@@ -48,8 +48,6 @@ static char *RCSid = "$Id$";
 # endif
 #endif
 
-static int actually_pause = 1;
-
 streng *rex_userid( tsd_t *TSD, cparamboxptr parms )
 {
 #if defined(WIN32)
@@ -199,6 +197,9 @@ char *mygetenv( const tsd_t *TSD, const char *name, char *buf, int bufsize )
 }
 
 #if defined(WIN32) && !defined(__WINS__) && !defined(__EPOC32__)
+
+static int actually_pause = 1;
+
 /*
  * These functions are used to allow Regina to display "Press ENTER key to exit..."
  * in the console if it is NOT started from a console.

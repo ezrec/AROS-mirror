@@ -125,19 +125,24 @@
 #define DEFAULT_ENVIRONMENT     ENV_SYSTEM
 #define NESTEDCOMMENTS          /* The Standard wants them ....         */
 
-#ifndef REXX_PATH_MAX
-# ifndef PATH_MAX
-#  ifndef _POSIX_PATH_MAX
-#   ifndef _MAX_PATH
-#    define REXX_PATH_MAX 1024
+#if defined(__WINS__) || defined(__EPOC32__)
+# include "epoc32.h"
+# define REXX_PATH_MAX MAXPATHLEN
+#else
+# ifndef REXX_PATH_MAX
+#  ifndef PATH_MAX
+#   ifndef _POSIX_PATH_MAX
+#    ifndef _MAX_PATH
+#     define REXX_PATH_MAX 1024
+#    else
+#     define REXX_PATH_MAX _MAX_PATH
+#    endif
 #   else
-#    define REXX_PATH_MAX _MAX_PATH
+#    define REXX_PATH_MAX _POSIX_PATH_MAX
 #   endif
 #  else
-#   define REXX_PATH_MAX _POSIX_PATH_MAX
+#   define REXX_PATH_MAX PATH_MAX
 #  endif
-# else
-#  define REXX_PATH_MAX PATH_MAX
 # endif
 #endif
 
@@ -159,17 +164,6 @@
 #define HEXNUM(c) (((c>='0')&&(c<='9'))||((c>='a')&&(c<='f')))
 #define HEXVAL(c) (((c)>'9')?(RXTOLOW(c)-'a'+10):((c)-'0'))
 
-#define REGINA_VERSION_MAJOR "2"
-#define REGINA_VERSION_MINOR "2"
-
-#define PARSE_VERSION_STRING    "REXX-Regina_" REGINA_VERSION_MAJOR "." \
-                                REGINA_VERSION_MINOR " " \
-                                "4.80 17 Jun 2001"
-
-#define INSTORE_VERSION 2 /* Must be incremented each time the parser/lexer
-                           * or data structure changes something.
-                           */
-
 /*
  * Which character is used to delimit lines in text files? Actually,
  * this should have been a bit more general, since the use of LF as
@@ -183,8 +177,12 @@
 # define REGINA_EOL (0x0a)
 #endif
 
+#ifndef TRUE
 #define TRUE 1
+#endif
+#ifndef FALSE
 #define FALSE 0
+#endif
 
 /* Things you probably don't want to change ....                        */
 
@@ -247,5 +245,22 @@
 
 /* NOFUNC must be different from NULL and illegal, too */
 #define NOFUNC ((streng *) (void *) -1l)
+
+#if defined(MULTI_THREADED)
+# define REGINA_VERSION_THREAD "(MT)"
+#else
+# define REGINA_VERSION_THREAD ""
+#endif
+
+#define REGINA_VERSION_MAJOR "3"
+#define REGINA_VERSION_MINOR "0"
+
+#define PARSE_VERSION_STRING    "REXX-Regina_" REGINA_VERSION_MAJOR "." \
+                                REGINA_VERSION_MINOR REGINA_VERSION_THREAD \
+                                " 4.95 25 Apr 2002"
+
+#define INSTORE_VERSION 3 /* Must be incremented each time the parser/lexer
+                           * or data structure changes something.
+                           */
 
 #endif

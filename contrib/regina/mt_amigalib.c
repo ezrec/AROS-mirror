@@ -154,7 +154,7 @@ tsd_t *__regina_get_tsd(void)
     node = (tsd_node_t *)AllocPooled(__regina_semaphorepool, sizeof(tsd_node_t));
     node->task = thistask;
     node->TSD = ReginaInitializeThread();
-    AddTail(__regina_tsdlist, node);
+    AddTail((struct List *)__regina_tsdlist, (struct Node *)node);
     on_exit(cleanup, node);
   }
   else if (node->TSD==NULL) /* Was MTExit called on this task ? */

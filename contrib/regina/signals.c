@@ -268,7 +268,7 @@ static void halt_handler( int num )
    return ;
 }
 
-#if !defined(__WINS__) && !defined(__EPOC32__)
+#if !defined(__WINS__) && !defined(__EPOC32__) && !defined(__AROS__)
 # if defined(SIGHUP)
 static void hup_handler( int dummy )
 {

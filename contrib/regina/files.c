@@ -150,6 +150,13 @@ static char *RCSid = "$Id$";
 # endif
 #endif
 
+#if (defined(_AMIGA) || defined(__AROS__)) && defined(ACCESS_READ)
+# undef ACCESS_READ
+#endif
+#if (defined(_AMIGA) || defined(__AROS__)) && defined(ACCESS_WRITE)
+# undef ACCESS_WRITE
+#endif
+
 /*
  * The macrodefinition below defines the various modes in which a
  * file may be opened. These modes are:

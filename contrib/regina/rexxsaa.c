@@ -1,5 +1,5 @@
 #ifndef lint
-static char *RCSid = "$Id";
+static char *RCSid = "$Id$";
 #endif
 /*
  *  The Regina Rexx Interpreter
@@ -121,7 +121,9 @@ static char *RCSid = "$Id";
 #include "rexxsaa.h"
 #include "defs.h"
 #define DONT_TYPEDEF_PFN
+#ifndef RXLIB
 #define RXLIB
+#endif
 #include "rexx.h"
 #include "rxiface.h"
 #include "extstack.h"
@@ -140,6 +142,18 @@ static char *RCSid = "$Id";
 #include <fcntl.h>
 #include <ctype.h>
 #include <setjmp.h>
+
+#if defined(__EPOC32__) || defined(__WINS__)
+# ifdef APIRET
+#  undef APIRET
+# endif
+# define APIRET unsigned long
+# ifdef APIENTRY
+#  undef APIENTRY
+# endif
+#else
+# define EXPORT_C
+#endif
 
 struct funcbox2 {
    struct funcbox2 *next, *prev ;
@@ -559,7 +573,7 @@ int IfcSubCmd( const tsd_t *TSD, int EnvLen, const char *EnvStr,
          else if (Flags==RXSUBCOM_FAILURE)
             RCode = RXFLAG_FAILURE ;
          else
-            exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+            exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
       }
       else
       {
@@ -738,7 +752,7 @@ int IfcDoExit( const tsd_t *TSD, int Code,
          break ;
 
       default:
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          break;
    }
 
@@ -773,7 +787,7 @@ int IfcDoExit( const tsd_t *TSD, int Code,
          break ;
 
       default:
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
    }
 
    if (rc==RXEXIT_HANDLED)
@@ -804,7 +818,7 @@ int IfcDoExit( const tsd_t *TSD, int Code,
 /* ================ general purpose API functions ================= */
 
 /* You are not allowed to use TSD or __regina_get_tsd() here! */
-APIRET APIENTRY RexxFreeMemory(PVOID MemoryBlock )
+EXPORT_C APIRET APIENTRY RexxFreeMemory(PVOID MemoryBlock )
 {
    if (!MemoryBlock)
       return(RXFUNC_BADTYPE);
@@ -813,7 +827,7 @@ APIRET APIENTRY RexxFreeMemory(PVOID MemoryBlock )
 }
 
 /* You are not allowed to use TSD or __regina_get_tsd() here! */
-PVOID APIENTRY RexxAllocateMemory(ULONG size )
+EXPORT_C PVOID APIENTRY RexxAllocateMemory(ULONG size )
 {
    return IfcAllocateMemory( size );
 }
@@ -821,7 +835,7 @@ PVOID APIENTRY RexxAllocateMemory(ULONG size )
 /* ================================================================ */
 /* ================ in order to start Rexx scripts ================ */
 
-APIRET APIENTRY RexxStart(LONG       ArgCount,
+EXPORT_C APIRET APIENTRY RexxStart(LONG       ArgCount,
                           PRXSTRING  ArgList,
                           PCSZ       ProgName,
                           PRXSTRING  Instore,
@@ -851,6 +865,7 @@ APIRET APIENTRY RexxStart(LONG       ArgCount,
    PCSZ ProgramName=ProgName;
    tsd_t *TSD;
    rex_tsd_t *rt;
+   int restricted = 0;
 
    TSD = GLOBAL_ENTRY_POINT();
    rt = TSD->rex_tsd;
@@ -860,6 +875,14 @@ APIRET APIENTRY RexxStart(LONG       ArgCount,
       return(RXFUNC_BADTYPE);
    if (!ProgName)
       return(RXFUNC_BADTYPE);
+   /*
+    * Check if running in restricted mode first.
+    */
+   if ( CallType & RXRESTRICTED )
+   {
+      restricted = 1;
+      CallType -= RXRESTRICTED;
+   }
    if ((CallType != RXCOMMAND) &&
        (CallType != RXSUBROUTINE) &&
        (CallType != RXFUNCTION))
@@ -895,6 +918,10 @@ APIRET APIENTRY RexxStart(LONG       ArgCount,
    ExitFlags = 0x00000000 ;
    for (cnt=0; Exits && Exits->sysexit_code!=RXENDLST; Exits++ )
    {
+      if ( Exits->sysexit_name == NULL
+      ||   strlen( Exits->sysexit_name ) == 0 )
+         return(RX_START_BADP);
+
       EnvPtr = FindExit( Exits->sysexit_name , strlen(Exits->sysexit_name) ) ;
       if (!EnvPtr)
          continue ;
@@ -935,7 +962,7 @@ APIRET APIENTRY RexxStart(LONG       ArgCount,
             break ;
 
          default:
-            exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+            return(RX_START_BADP);
       }
    }
 
@@ -976,7 +1003,7 @@ APIRET APIENTRY RexxStart(LONG       ArgCount,
 
    rc = IfcExecScript( strlen(ProgramName), ProgramName,
           ArgCount, ParLengths, (const char **) ParStrings, MAP_TYPE(CallType),
-          ExitFlags, EnvNamLen, EnvNamStr,  WhereCode,
+          ExitFlags, EnvNamLen, EnvNamStr,  WhereCode, restricted,
           SourcePtr, SourceLen, TinPtr, TinLen,
           &RLength, &RString, &instore_buf, &instore_length) ;
    Handlers = rt->CurrentHandlers ;
@@ -1039,7 +1066,7 @@ APIRET APIENTRY RexxStart(LONG       ArgCount,
 /* ============================================================= */
 /* subcom handler subsystem */
 
-APIRET APIENTRY RexxRegisterSubcomExe(PCSZ EnvName,
+EXPORT_C APIRET APIENTRY RexxRegisterSubcomExe(PCSZ EnvName,
                                       PFN EntryPoint,
                                       PUCHAR UserArea )
 {
@@ -1069,7 +1096,7 @@ APIRET APIENTRY RexxRegisterSubcomExe(PCSZ EnvName,
 }
 
 
-APIRET APIENTRY RexxRegisterSubcomDll(PCSZ EnvName,
+EXPORT_C APIRET APIENTRY RexxRegisterSubcomDll(PCSZ EnvName,
                                       PCSZ ModuleName,
                                       PCSZ ProcedureName,
                                       PUCHAR UserArea,
@@ -1088,7 +1115,7 @@ APIRET APIENTRY RexxRegisterSubcomDll(PCSZ EnvName,
 }
 
 
-APIRET APIENTRY RexxQuerySubcom(PCSZ EnvName,
+EXPORT_C APIRET APIENTRY RexxQuerySubcom(PCSZ EnvName,
                                 PCSZ ModuleName,
                                 PUSHORT Flag, /* Who knows what this is used for ... */
                                 PUCHAR UserWord )
@@ -1120,7 +1147,7 @@ APIRET APIENTRY RexxQuerySubcom(PCSZ EnvName,
    return ret ;
 }
 
-APIRET APIENTRY RexxDeregisterSubcom(PCSZ EnvName,
+EXPORT_C APIRET APIENTRY RexxDeregisterSubcom(PCSZ EnvName,
                                      PCSZ ModuleName )
 {
    tsd_t *TSD;
@@ -1164,7 +1191,7 @@ APIRET APIENTRY RexxDeregisterSubcom(PCSZ EnvName,
  *    checks to split it back out.
  *
  ****************************************************************************/
-APIRET APIENTRY RexxVariablePool(PSHVBLOCK RequestBlockList )
+EXPORT_C APIRET APIENTRY RexxVariablePool(PSHVBLOCK RequestBlockList )
 {
    int Code=0, RetCode=0, IVPcode;
    int Lengths[2] ;
@@ -1217,7 +1244,7 @@ APIRET APIENTRY RexxVariablePool(PSHVBLOCK RequestBlockList )
             else if (Code==RX_CODE_INVNAME)
                Req->shvret |= RXSHV_BADN ;
             else if (Code!=RXSHV_OK)
-               exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+               exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
             TSD->var_indicator=0;
             break ;
          }
@@ -1239,7 +1266,7 @@ APIRET APIENTRY RexxVariablePool(PSHVBLOCK RequestBlockList )
             else if (Code==RX_CODE_INVNAME)
                Req->shvret |= RXSHV_BADN ;
             else if (Code!=RXSHV_OK)
-               exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+               exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
             FillReqValue( Req, Lengths[1], Strings[1] ) ;
             TSD->var_indicator=0;
             break ;
@@ -1337,7 +1364,7 @@ APIRET APIENTRY RexxVariablePool(PSHVBLOCK RequestBlockList )
 /* ================================================================ */
 /* system exit handler subsystem */
 
-APIRET APIENTRY RexxRegisterExitExe(PCSZ EnvName,
+EXPORT_C APIRET APIENTRY RexxRegisterExitExe(PCSZ EnvName,
                                     PFN EntryPoint,
                                     PUCHAR UserArea )
 {
@@ -1363,7 +1390,7 @@ APIRET APIENTRY RexxRegisterExitExe(PCSZ EnvName,
    return RXEXIT_OK ;
 }
 
-APIRET APIENTRY RexxRegisterExitDll(PCSZ EnvName,
+EXPORT_C APIRET APIENTRY RexxRegisterExitDll(PCSZ EnvName,
                                     PCSZ ModuleName,
                                     PCSZ ProcedureName,
                                     PUCHAR UserArea,
@@ -1381,7 +1408,7 @@ APIRET APIENTRY RexxRegisterExitDll(PCSZ EnvName,
 }
 
 
-APIRET APIENTRY RexxDeregisterExit(PCSZ EnvName,
+EXPORT_C APIRET APIENTRY RexxDeregisterExit(PCSZ EnvName,
                                    PCSZ ModuleName )
 {
    tsd_t *TSD;
@@ -1400,7 +1427,7 @@ APIRET APIENTRY RexxDeregisterExit(PCSZ EnvName,
    return RXEXIT_OK ;
 }
 
-APIRET APIENTRY RexxQueryExit(PCSZ EnvName,
+EXPORT_C APIRET APIENTRY RexxQueryExit(PCSZ EnvName,
                               PCSZ ModuleName,
                               PUSHORT Flag,
                               PUCHAR UserArea)
@@ -1440,8 +1467,9 @@ APIRET APIENTRY RexxQueryExit(PCSZ EnvName,
 static struct funcbox2 *findfunc( const tsd_t *TSD, const char *name )
 {
    struct funcbox2 *fptr=NULL ;
-   int hashbox, hash ;
+   int hashbox ;
    rex_tsd_t *rt;
+   unsigned hash;
 
    rt = TSD->rex_tsd;
    hash = hashvalue( name, -1 ) ;
@@ -1517,7 +1545,7 @@ static int addfunc2( const tsd_t *TSD, const char *name, RexxFunctionHandler *En
 }
 
 
-APIRET APIENTRY RexxRegisterFunctionExe( PCSZ Name,
+EXPORT_C APIRET APIENTRY RexxRegisterFunctionExe( PCSZ Name,
                                          PFN EntryPoint )
 {
    int code;
@@ -1554,7 +1582,7 @@ APIRET APIENTRY RexxRegisterFunctionExe( PCSZ Name,
    return RXFUNC_OK ;
 }
 
-APIRET APIENTRY RexxRegisterFunctionDll( PCSZ ExternalName,
+EXPORT_C APIRET APIENTRY RexxRegisterFunctionDll( PCSZ ExternalName,
                                          PCSZ LibraryName,
                                          PCSZ InternalName )
 {
@@ -1568,7 +1596,7 @@ APIRET APIENTRY RexxRegisterFunctionDll( PCSZ ExternalName,
    return ((ULONG)IfcRegDllFunc(TSD,ExternalName,LibraryName,InternalName));
 }
 
-APIRET APIENTRY RexxQueryFunction( PCSZ Name )
+EXPORT_C APIRET APIENTRY RexxQueryFunction( PCSZ Name )
 {
    tsd_t *TSD;
 
@@ -1581,7 +1609,7 @@ APIRET APIENTRY RexxQueryFunction( PCSZ Name )
 }
 
 
-APIRET APIENTRY RexxDeregisterFunction( PCSZ Name )
+EXPORT_C APIRET APIENTRY RexxDeregisterFunction( PCSZ Name )
 {
    int rc;
    tsd_t *TSD;
@@ -1772,7 +1800,7 @@ int IfcHaveFunctionExit(const tsd_t *TSD)
 /* ============================================================= */
 /* Asynchronous Rexx API interface */
 
-APIRET APIENTRY RexxSetHalt(LONG dummyProcess,
+EXPORT_C APIRET APIENTRY RexxSetHalt(LONG dummyProcess,
                             LONG dummyThread )
 {
    tsd_t *TSD;
@@ -1789,7 +1817,7 @@ APIRET APIENTRY RexxSetHalt(LONG dummyProcess,
 /* ============================================================= */
 /* Named queue interface */
 
-APIRET APIENTRY RexxCreateQueue( PSZ Buffer,
+EXPORT_C APIRET APIENTRY RexxCreateQueue( PSZ Buffer,
                                  ULONG BuffLen,
                                  PSZ RequestedName,
                                  ULONG* DupFlag)
@@ -1806,7 +1834,7 @@ APIRET APIENTRY RexxCreateQueue( PSZ Buffer,
    return code;
 }
 
-APIRET APIENTRY RexxDeleteQueue( PSZ QueueName )
+EXPORT_C APIRET APIENTRY RexxDeleteQueue( PSZ QueueName )
 {
    int code;
    tsd_t *TSD;
@@ -1823,7 +1851,7 @@ APIRET APIENTRY RexxDeleteQueue( PSZ QueueName )
    return code;
 }
 
-APIRET APIENTRY RexxQueryQueue( PSZ QueueName, 
+EXPORT_C APIRET APIENTRY RexxQueryQueue( PSZ QueueName, 
                                 ULONG* Count)
 {
    int code;
@@ -1841,7 +1869,7 @@ APIRET APIENTRY RexxQueryQueue( PSZ QueueName,
    return code;
 }
 
-APIRET APIENTRY RexxAddQueue( PSZ QueueName, 
+EXPORT_C APIRET APIENTRY RexxAddQueue( PSZ QueueName, 
                               PRXSTRING EntryData, 
                               ULONG AddFlag)
 {
@@ -1860,7 +1888,7 @@ APIRET APIENTRY RexxAddQueue( PSZ QueueName,
    return code;
 }
 
-APIRET APIENTRY RexxPullQueue( PSZ QueueName, 
+EXPORT_C APIRET APIENTRY RexxPullQueue( PSZ QueueName, 
                                PRXSTRING DataBuf,   
                                PDATETIME TimeStamp,
                                ULONG WaitFlag)
@@ -1913,45 +1941,45 @@ APIRET APIENTRY RexxPullQueue( PSZ QueueName,
 /* ============================================================= */
 /* MacroSpace Rexx API interface */
 
-APIRET APIENTRY RexxAddMacro( PSZ FuncName,
+EXPORT_C APIRET APIENTRY RexxAddMacro( PSZ FuncName,
                               PSZ SourceFile,
                               ULONG Position )
 {
    return 0;
 }
 
-APIRET APIENTRY RexxDropMacro( PSZ FuncName)
+EXPORT_C APIRET APIENTRY RexxDropMacro( PSZ FuncName)
 {
    return 0;
 }
 
-APIRET APIENTRY RexxSaveMacroSpace( ULONG FuncCount,
+EXPORT_C APIRET APIENTRY RexxSaveMacroSpace( ULONG FuncCount,
                                     PSZ * FuncNames,
                                     PSZ MacroLibFile)
 {
    return 0;
 }
 
-APIRET APIENTRY RexxLoadMacroSpace( ULONG FuncCount,
+EXPORT_C APIRET APIENTRY RexxLoadMacroSpace( ULONG FuncCount,
                                     PSZ * FuncNames,
                                     PSZ MacroLibFile)
 {
    return 0;
 }
 
-APIRET APIENTRY RexxQueryMacro( PSZ FuncName,
+EXPORT_C APIRET APIENTRY RexxQueryMacro( PSZ FuncName,
                                 PUSHORT Position )
 {
    return 0;
 }
 
-APIRET APIENTRY RexxReorderMacro( PSZ FuncName,
+EXPORT_C APIRET APIENTRY RexxReorderMacro( PSZ FuncName,
                                   ULONG Position )
 {
    return 0;
 }
 
-APIRET APIENTRY RexxClearMacroSpace( VOID )
+EXPORT_C APIRET APIENTRY RexxClearMacroSpace( VOID )
 {
    return 0;
 }
@@ -1959,7 +1987,7 @@ APIRET APIENTRY RexxClearMacroSpace( VOID )
 /* ============================================================= */
 /* Regina extensions */
 /* see rexxsaa.h for a description */
-APIRET APIENTRY ReginaVersion( PRXSTRING VersionString )
+EXPORT_C APIRET APIENTRY ReginaVersion( PRXSTRING VersionString )
 {
    char low[3];
    unsigned len;

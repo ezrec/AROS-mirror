@@ -100,7 +100,7 @@ static struct envir *find_envir( const tsd_t *TSD, const streng *name )
    struct envir *ptr=NULL ;
 
 #if defined(_AMIGA) || defined(__AROS__)
-   if (ptr=amiga_find_envir( TSD, name))
+   if ((ptr=amiga_find_envir( TSD, name))!=NULL)
       return ptr;
 #endif
 

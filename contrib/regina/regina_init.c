@@ -32,7 +32,7 @@ AROS_SET_LIBFUNC(InitLib, LIBBASETYPE, LIBBASE)
     D(bug("Inside Init func of regina.library\n"));
 
     SysBase = LIBBASE->lh_SysBase;
-    if (!(DOSBase = OpenLibrary("dos.library",0))) return FALSE;
+    if (!(DOSBase = (struct DosLibrary *)OpenLibrary("dos.library",0))) return FALSE;
 
     if (!(aroscbase = OpenLibrary("arosc.library",41)))
     {
@@ -55,6 +55,8 @@ AROS_SET_LIBFUNC(ExpungeLib, LIBBASETYPE, LIBBASE)
     DeletePool(__regina_semaphorepool);
     CloseLibrary(aroscbase);
     CloseLibrary((struct Library *)DOSBase);
+    
+    return TRUE;
 }
 
 ADD2INITLIB(InitLib, 0);

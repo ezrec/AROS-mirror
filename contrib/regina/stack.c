@@ -88,6 +88,14 @@ static char *RCSid = "$Id$";
 # define DEBUGDUMP(x) {}
 #endif
 
+/* We need temporary queues while executing a command under some circumstances.
+ * This is the case if we either redirect from/to a queue and when a
+ * redirection of an INPUT STEM takes place.
+ */
+#define TMP_OUT_STACK 0
+#define TMP_IN_STACK  1
+#define TMP_STACKS    (TMP_IN_STACK+1)  /* [0..x] == x+1 */
+
 #define NUMBER_QUEUES 100
 /*
  * Queue 0 is SESSION and cannot be added/deleted
@@ -149,15 +157,15 @@ typedef struct { /* stk_tsd: static variables of this module (thread-safe) */
     */
    int buffers[NUMBER_QUEUES] ;
    /*
-    * Pointers to first and last entry in the temporary stack
+    * Pointers to first and last entry in the temporary stacks
     */
-   stacklineptr firstbox ;
-   stacklineptr lastbox ;
+   stacklineptr firstbox[TMP_STACKS] ;
+   stacklineptr lastbox[TMP_STACKS] ;
 } stk_tsd_t; /* thread-specific but only needed by this module. see
               * init_stacks
               */
 
-#if !defined(NOEXTERNAL_QUEUES)
+#if !defined(NO_EXTERNAL_QUEUES)
 static int get_socket_details_and_connect( tsd_t *TSD, streng *server_name, int server_address, int portno );
 #endif
 
@@ -217,6 +225,33 @@ void delete_an_internal_queue( const tsd_t *TSD, int idx )
    }
 }
 
+/* KillTmpStack cleans up one of the internal stacks by freeing its content. */
+static void KillTmpStack(const tsd_t *TSD, stk_tsd_t *st, unsigned Number)
+{
+   stacklineptr run,hlp;
+
+   assert( Number < TMP_STACKS );
+   assert( (st->lastbox[Number] && st->firstbox[Number]) ||
+           (!st->lastbox[Number] && !st->firstbox[Number]) );
+
+   if ((run = st->firstbox[Number]) == NULL)
+      return;
+
+   st->firstbox[Number] = st->lastbox[Number] = NULL;
+
+   /* Cleanup the stack now available in run only */
+   while (run)
+   {
+      hlp = run->next;
+
+      if (run->contents)
+         Free_stringTSD(run->contents);
+      FreeTSD(run);
+
+      run = hlp;
+   }
+}
+
 /*
  * This routine clears all the internal queues we have made
  * and if we have a connection to rxstack, disconnetcs from it
@@ -238,6 +273,8 @@ void purge_stacks( const tsd_t *TSD )
       st->external_server_address = 0;
    }
 #endif
+   KillTmpStack(TSD, st, TMP_OUT_STACK);
+   KillTmpStack(TSD, st, TMP_IN_STACK);
 }
 
 /*
@@ -273,7 +310,8 @@ void tmp_stack( tsd_t *TSD, streng *value, int is_fifo )
    stk_tsd_t *st;
 
    st = TSD->stk_tsd;
-   assert( ((st->lastbox)&&(st->firstbox)) || ((!st->lastbox)&&(!st->firstbox)) ) ;
+   assert( (st->lastbox[TMP_OUT_STACK] && st->firstbox[TMP_OUT_STACK]) ||
+           (!st->lastbox[TMP_OUT_STACK] && !st->firstbox[TMP_OUT_STACK]) ) ;
    assert( (value) && (Str_max(value) >= Str_len(value)) ) ;
 
    if ( get_options_flag( TSD->currlevel, EXT_FLUSHSTACK ) )
@@ -288,14 +326,14 @@ void tmp_stack( tsd_t *TSD, streng *value, int is_fifo )
       ptr = MallocTSD( sizeof(struct stacklinestruct) ) ;
       ptr->contents = value ;
       ptr->next = NULL ;
-      ptr->prev = st->lastbox ;
+      ptr->prev = st->lastbox[TMP_OUT_STACK] ;
 
 
-      if (st->firstbox)
-         st->lastbox->next = ptr ;
+      if (st->firstbox[TMP_OUT_STACK])
+         st->lastbox[TMP_OUT_STACK]->next = ptr ;
       else
-         st->firstbox = ptr ;
-      st->lastbox = ptr ;
+         st->firstbox[TMP_OUT_STACK] = ptr ;
+      st->lastbox[TMP_OUT_STACK] = ptr ;
    }
 }
 
@@ -313,10 +351,10 @@ void flush_stack( const tsd_t *TSD, int is_fifo )
    stk_tsd_t *st;
 
    st = TSD->stk_tsd;
-   if (st->firstbox==NULL)
+   if (st->firstbox[TMP_OUT_STACK]==NULL)
    {
       /* nothing in temporary stack to flush */
-      assert(st->lastbox==NULL) ;
+      assert(st->lastbox[TMP_OUT_STACK]==NULL) ;
       return ;
    }
 
@@ -325,7 +363,7 @@ void flush_stack( const tsd_t *TSD, int is_fifo )
    {
       /* if fifo, temporary stack must be reversed first */
       /* travelling in 'prev' direction, since stack is reversed */
-      for (ptr=st->firstbox; ptr; ptr=ptr->prev )
+      for (ptr=st->firstbox[TMP_OUT_STACK]; ptr; ptr=ptr->prev )
       {
          tptr = ptr->prev ;
          ptr->prev = ptr->next ;
@@ -333,29 +371,181 @@ void flush_stack( const tsd_t *TSD, int is_fifo )
       }
 
       /* temporary stack now in right order, link to top of real stack */
-      st->firstbox->next = st->firstline[st->current_queue] ;
+      st->firstbox[TMP_OUT_STACK]->next = st->firstline[st->current_queue] ;
       if (st->firstline[st->current_queue])
-         st->firstline[st->current_queue]->prev = st->firstbox ;
+         st->firstline[st->current_queue]->prev = st->firstbox[TMP_OUT_STACK] ;
       else
-         st->lastline[st->current_queue] = st->firstbox ;
-      st->firstline[st->current_queue] = st->lastbox ;
+         st->lastline[st->current_queue] = st->firstbox[TMP_OUT_STACK] ;
+      st->firstline[st->current_queue] = st->lastbox[TMP_OUT_STACK] ;
    }
    else
    {
       /* everything is in right order, just link them together */
-      st->firstbox->prev = st->lastline[st->current_queue] ;
+      st->firstbox[TMP_OUT_STACK]->prev = st->lastline[st->current_queue] ;
       if (st->lastline[st->current_queue])
-         st->lastline[st->current_queue]->next = st->firstbox ;
+         st->lastline[st->current_queue]->next = st->firstbox[TMP_OUT_STACK] ;
       else
-         st->firstline[st->current_queue] = st->firstbox ;
-      st->lastline[st->current_queue] = st->lastbox ;
+         st->firstline[st->current_queue] = st->firstbox[TMP_OUT_STACK] ;
+      st->lastline[st->current_queue] = st->lastbox[TMP_OUT_STACK] ;
    }
 
    /* reset the pointers, to signify that temporary stack is empty */
-   st->lastbox = st->firstbox = NULL ;
+   st->lastbox[TMP_OUT_STACK] = st->firstbox[TMP_OUT_STACK] = NULL ;
 }
 
+/*
+ * stack_to_line converts the content of the temporary stack created by
+ * (possibly multiple) calls to tmp_stack() to one single line.
+ *
+ * The stack is converted from lifo to fifo first. The lineends are
+ * translated to a single blank.
+ */
+streng *stack_to_line( const tsd_t *TSD )
+{
+   stacklineptr ptr, tptr ;
+   unsigned size = 0;
+   char *dest;
+   stk_tsd_t *st;
+   streng *retval;
 
+   st = TSD->stk_tsd;
+   if (st->firstbox[TMP_OUT_STACK]==NULL)
+   {
+      /* nothing in temporary stack to flush */
+      assert(st->lastbox[TMP_OUT_STACK]==NULL) ;
+      return(nullstringptr());
+   }
+
+   /* first, count the needed string length. */
+   for (ptr=st->firstbox[TMP_OUT_STACK]; ptr; ptr=ptr->next )
+   {
+      if (ptr->contents)
+         size += Str_len(ptr->contents) + 1; /* blank is delimiter */
+      else
+         size++;
+   }
+
+   retval = Str_makeTSD(size);
+   dest = retval->value;
+
+   ptr = st->firstbox[TMP_OUT_STACK];
+   for (;;)
+   {
+      if (ptr->contents)
+      {
+         memcpy(dest, ptr->contents->value, Str_len(ptr->contents));
+         dest += Str_len(ptr->contents);
+         Free_stringTSD(ptr->contents);
+      }
+      tptr = ptr->next;
+      FreeTSD(ptr);
+
+      if ((ptr = tptr) == NULL)
+      {
+         /* strip any blanks at the end of the string. */
+         while ((dest != retval->value) && (dest[-1] == ' '))
+            dest--;
+         /* finally, terminate the string */
+         *dest = '\0'; /* DON'T increment dest */
+         Str_len(retval) = (int)(dest - retval->value);
+         break;
+      }
+      *dest++ = ' ';
+   }
+
+   /* reset the pointers, to signify that temporary stack is empty */
+   st->lastbox[TMP_OUT_STACK] = st->firstbox[TMP_OUT_STACK] = NULL ;
+   return(retval);
+}
+
+/*
+ * purge_input_queue shall be used if the rest of the TMP_IN_STACK queue isn't
+ * needed any longer.
+ * feed_input_queue() fills a temporary input queue, but this hasn't be read
+ * completely. There may be garbage in the stack after the use. This will
+ * be cleared here.
+ */
+void purge_input_queue(const tsd_t *TSD)
+{
+   KillTmpStack(TSD, TSD->stk_tsd, TMP_IN_STACK);
+}
+
+/*
+ * The input for a command may be overwritten if both input and output or
+ * input and error are STEM values. A temporary queue is created in this
+ * case to prevent the destruction of an unread value.
+ * fill_input_queue fills up the TMP_IN_STACK with a copy of a stems
+ * content. stemname must end with a period and stem0 is the count of lines
+ * in stem.
+ * OPTIMIZING HINT: The function can be rewritten to access just only the
+ * stem leaves.
+ */
+void fill_input_queue(tsd_t *TSD, streng *stemname, int stem0)
+{
+   stk_tsd_t *st = TSD->stk_tsd;
+   int i,stemlen = Str_len( stemname ) ;
+   streng *stem, *new;
+   stacklineptr line, prev, *tail;
+
+
+   purge_input_queue(TSD);              /* Be sure to be clean               */
+
+   stem = Str_makeTSD(stemlen + 1 + 3*sizeof(int));
+   memcpy(stem->value, stemname->value, stemlen);
+
+   prev = NULL;
+   tail = &st->lastbox[TMP_IN_STACK];
+   for (i = 1; i <= stem0; i++)
+   {                                    /* Fetch the value:                  */
+      stem->len = stemlen + sprintf(stem->value + stemlen, "%d", i);
+      new = Str_dupTSD(get_it_anyway_compound(TSD, stem));
+
+      line = MallocTSD(sizeof(stackline));
+      line->contents = new;
+      line->next = NULL;
+
+      *tail = line;                     /* trivial, but:                     */
+      if (prev == NULL)
+      {
+         st->firstbox[TMP_IN_STACK] = line;
+         line->prev = NULL;
+      }
+      else
+      {
+         prev->next = line;
+         line->prev = prev;
+      }
+      prev = line;
+   }
+
+   Free_stringTSD(stem);
+}
+
+/*
+ * get_input_queue fetches the next line from the TMP_IN_STACK created by
+ * feed_input_queue() in FIFO manner.
+ * NULL is returned if the stack is empty.
+ * The returned value must be freed by the caller.
+ */
+streng *get_input_queue(const tsd_t *TSD)
+{
+   stk_tsd_t *st = TSD->stk_tsd;
+   streng *retval = NULL;
+   stacklineptr sl;
+
+   if ((sl = st->firstbox[TMP_IN_STACK]) != NULL)
+   {
+      if ((st->firstbox[TMP_IN_STACK] = sl->next) == NULL)
+         st->firstbox[TMP_IN_STACK] = st->lastbox[TMP_IN_STACK] = NULL;
+      else if (sl->next == st->lastbox[TMP_IN_STACK]) /* last line? */
+         sl->next->prev = NULL;
+
+      retval = sl->contents;
+      FreeTSD(sl);
+   }
+
+   return(retval);
+}
 
 /*
  * Pushes 'line' onto the REXX stack, lifo, and sets 'lastline' to
@@ -371,7 +561,7 @@ int stack_lifo( tsd_t *TSD, streng *line, streng *queue_name )
    int server_address,portno;
 
    st = TSD->stk_tsd;
-   if ( get_options_flag( TSD->currlevel, EXT_INTERNAL_QUEUES ) 
+   if ( get_options_flag( TSD->currlevel, EXT_INTERNAL_QUEUES )
    ||    st->external_queue_portno == 0 )
    {
       if ( queue_name )
@@ -399,7 +589,7 @@ int stack_lifo( tsd_t *TSD, streng *line, streng *queue_name )
       }
       if (!line)
          st->buffers[idx]++ ;
-   
+
       newbox->next = NULL ;
       newbox->contents = line ;
       st->lastline[idx] = newbox ;
@@ -446,7 +636,7 @@ int stack_fifo( tsd_t *TSD, streng *line, streng *queue_name )
    int server_address,portno;
 
    st = TSD->stk_tsd;
-   if ( get_options_flag( TSD->currlevel, EXT_INTERNAL_QUEUES ) 
+   if ( get_options_flag( TSD->currlevel, EXT_INTERNAL_QUEUES )
    ||    st->external_queue_portno == 0 )
    {
       if ( queue_name )
@@ -463,14 +653,14 @@ int stack_fifo( tsd_t *TSD, streng *line, streng *queue_name )
        */
       if (!line)
          st->buffers[idx]++ ;
-   
+
       /* Bug: inserts into bottom of stack, not bottom of current buffer */
       newbox = (stacklineptr)MallocTSD(sizeof(stackline)) ;
       newbox->prev = newbox->next = NULL ;
       newbox->contents = line ;
-   
+
       for (ptr=st->lastline[idx];(ptr)&&(ptr->contents);ptr=ptr->prev) ;
-   
+
       if (ptr)
       {
          newbox->prev = ptr ;
@@ -582,10 +772,11 @@ streng *popline( tsd_t *TSD, streng *queue_name, int *result, unsigned long wait
    int need_line_from_stdin=0,idx;
    streng *server_name;
    int server_address,portno;
+   int rc=0;
 
    st = TSD->stk_tsd;
 
-   if ( get_options_flag( TSD->currlevel, EXT_INTERNAL_QUEUES ) 
+   if ( get_options_flag( TSD->currlevel, EXT_INTERNAL_QUEUES )
    ||    st->external_queue_portno == 0 )
    {
       if ( queue_name )
@@ -609,7 +800,7 @@ streng *popline( tsd_t *TSD, streng *queue_name, int *result, unsigned long wait
             st->firstline[idx] = NULL ;
          else
             line->prev->next = NULL ;
-   
+
          FreeTSD(line) ;
          if (!contents)
          {
@@ -640,7 +831,8 @@ streng *popline( tsd_t *TSD, streng *queue_name, int *result, unsigned long wait
        * rc can be 0; line pulled off stack, or 1; queue empty. Error; 2
        * handled by get_line_from_rxstack()
        */
-      if ( get_line_from_rxstack( TSD, st->external_queue_socket, &contents ) == 1 )
+      rc = get_line_from_rxstack( TSD, st->external_queue_socket, &contents );
+      if ( rc == 1 || rc == 4 )
          need_line_from_stdin = 1;
    }
 #else
@@ -653,15 +845,17 @@ streng *popline( tsd_t *TSD, streng *queue_name, int *result, unsigned long wait
    {
       if ( TSD->called_from_saa )
          contents = NULL; /* indicate that queue is empty */
+      else if ( rc == 4 )
+         contents = nullstringptr();
       else
       {
          int rc = HOOK_GO_ON ;
          if (TSD->systeminfo->hooks & HOOK_MASK(HOOK_PULL))
             rc = hookup_input( TSD, HOOK_PULL, &contents ) ;
-   
+
          if (rc==HOOK_GO_ON)
             contents = readkbdline( TSD ) ;
-   
+
          assert( contents ) ;
       }
    }
@@ -682,7 +876,7 @@ int lines_in_stack( tsd_t *TSD, streng *queue_name )
    stk_tsd_t *st;
 
    st = TSD->stk_tsd;
-   if ( get_options_flag( TSD->currlevel, EXT_INTERNAL_QUEUES ) 
+   if ( get_options_flag( TSD->currlevel, EXT_INTERNAL_QUEUES )
    ||    st->external_queue_portno == 0 )
    {
       if ( queue_name )
@@ -932,7 +1126,7 @@ int create_queue( tsd_t *TSD, streng *queue_name, streng **result )
          /*
           * Create a unique queue name
           */
-         sprintf(buf,"S%d%ld%d", getpid(), clock(), find_free_slot( TSD ) );
+         sprintf(buf,"S%d%ld%d", (int)getpid(), clock(), find_free_slot( TSD ) );
          new_queue = Str_cre_TSD( TSD, buf );
       }
       else
@@ -967,7 +1161,7 @@ int create_queue( tsd_t *TSD, streng *queue_name, streng **result )
                   /*
                    * Create a unique queue name
                    */
-                  sprintf(buf,"S%d%ld%d", getpid(), clock(), find_free_slot( TSD ) );
+                  sprintf(buf,"S%d%ld%d", (int)getpid(), clock(), find_free_slot( TSD ) );
                   new_queue = Str_cre_TSD( TSD, buf );
                }
             }
@@ -983,7 +1177,7 @@ int create_queue( tsd_t *TSD, streng *queue_name, streng **result )
             idx = find_free_slot( TSD );
          else
             idx = false_queue_idx;
-      
+
          if ( idx == UNKNOWN_QUEUE )
          {
             exiterror( ERR_STORAGE_EXHAUSTED, 0 );
@@ -1094,6 +1288,72 @@ int delete_queue( tsd_t *TSD, streng *queue_name )
 #endif
    return rc;
 }
+/*
+ * Set timeout for queue
+ * RXQUEUE( 'Timeout' )
+ */
+int timeout_queue( tsd_t *TSD, streng *timeout, streng *queue_name )
+{
+   streng *server_name;
+   int server_address,portno;
+   int idx ;
+   stk_tsd_t *st;
+#if !defined(NO_EXTERNAL_QUEUES)
+   long int_timeout=0;
+#endif
+   int rc=0;
+
+   st = TSD->stk_tsd;
+   if ( get_options_flag( TSD->currlevel, EXT_INTERNAL_QUEUES )
+   ||    st->external_queue_portno == 0 )
+   {
+      if ( queue_name )
+      {
+         if ( ( idx = find_queue( TSD, queue_name ) ) == UNKNOWN_QUEUE )
+         {
+            return -9;
+         }
+      }
+      else
+         idx = st->current_queue;
+      /*
+       * This call is irrelevant on internal queues
+       */
+      return -9;
+   }
+#if !defined(NO_EXTERNAL_QUEUES)
+   else
+   {
+      if ( queue_name )
+      {
+         if ( parse_queue( TSD, queue_name, &server_name, &server_address, &portno ) != 0 )
+            exiterror( ERR_EXTERNAL_QUEUE, ERR_RXSTACK_INVALID_QUEUE, tmpstr_of(TSD, queue_name ) ) ;
+         st->external_queue_socket = get_socket_details_and_connect( TSD, server_name, server_address, portno );
+         DROPSTRENG( st->external_server_name );
+         st->external_server_name = server_name;
+      }
+      else
+      {
+         st->external_queue_socket = get_socket_details_and_connect( TSD, st->external_server_name, st->external_server_address, st->external_queue_portno );
+      }
+      /*
+       * Convert incoming streng to positive (or zero) integer
+       */
+      if ( myiswnumber(TSD, timeout) )
+      {
+         int_timeout = myatol( TSD, timeout );
+         rc = timeout_queue_on_rxstack( TSD, st->external_queue_socket, int_timeout );
+      }
+      else
+         exiterror( ERR_INVALID_INTEGER, 0 );
+   }
+#else
+   server_name = server_name; /* keep compiler happy */
+   server_address = server_address; /* keep compiler happy */
+   portno = portno; /* keep compiler happy */
+#endif
+   return rc ;
+}
 
 /*
  * Return the name of the current queue
@@ -1104,7 +1364,6 @@ streng *get_queue( tsd_t *TSD )
 {
    streng *result;
    stk_tsd_t *st;
-   int rc=0;
 
    st = TSD->stk_tsd;
 #if !defined(NO_EXTERNAL_QUEUES)
@@ -1123,7 +1382,7 @@ streng *get_queue( tsd_t *TSD )
       /*
        * result created by get_queue_from_stack(); up to caller to free it
        */
-      rc = get_queue_from_rxstack( TSD, st->external_queue_socket, &result );
+      get_queue_from_rxstack( TSD, st->external_queue_socket, &result );
    }
 #endif
    return result;

@@ -22,6 +22,7 @@ static char *RCSid = "$Id$";
  */
 
 #include "rexx.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -248,7 +249,7 @@ static const char *sourceline( int line, const internal_parser_type *ipt, unsign
       * instore[0] of RexxStart!
       */
       otp = ipt->srclines; /* NULL if incore_source==NULL */
-      while (otp && (otp->num < line)) {
+      while (otp && (otp->num < (unsigned long) line)) {
          line -= otp->num;
          otp = otp->next;
       }
@@ -293,7 +294,7 @@ streng *getsourceline( const tsd_t *TSD, int line, int charnr, const internal_pa
 
    ptr = sourceline(line,ipt,&len) ;
 /*   assert( ptr ) ; */
-   if (!ptr || (charnr >= len))
+   if (!ptr || (charnr >= (int) len))
       return nullstringptr() ;
 
    chptr = ptr + --charnr ;
