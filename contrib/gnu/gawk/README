@@ -1,0 +1,23 @@
+What is this?
+ Directory contains a set of diffs and this file of instructions
+ on how to obtain and build the gnu gawk command for AROS.
+
+Basic instructions:
+
+> fetch ftp://ftp.gnu.org/pub/gnu/gawk/gawk-3.1.3.tar.gz
+> tar -zxvf gawk-3.1.3.tar.gz
+> cd gawk-3.1.3
+> patch -p1 < ../gawk-3.1.3-aros.diff
+
+Now a mmakefile is generated which integrates gawk in the contrib-gnu
+MetaTarget.
+
+TODO:
+
+I wrote a fix to tzset() using the missing_d/tzset.c emulation.
+Other things were creating dummy clib functions execl(), fork(),
+getpgrp(), getppid() and wait().
+
+Henning Kiel <hkiel@aros.org>
+2004-05-10
+
