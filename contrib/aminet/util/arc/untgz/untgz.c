@@ -32,6 +32,7 @@ extern struct GfxBase *GfxBase;
 extern struct IntuitionBase *IntuitionBase;
 int archlen = 0;
 int use_gui = 0;
+int close_wb = 0;
 struct Window *win;
 struct Screen *scr;
 struct RastPort *rp;
@@ -42,6 +43,7 @@ void close_gui( )
 {
     if (scr)   UnlockPubScreen(NULL, scr);
     if (win)   CloseWindow(win);
+    if (close_wb) CloseWorkBench();
     if (title) free(title);
 }
 
@@ -227,11 +229,19 @@ int main(int argc, char **argv)
         return 20;
     }
 
-    if(argc==3)
+    if(argc>=3)
     {
 	if(strcasecmp("GUI",argv[2])==0)
 	{
 	    use_gui = 1;
+	}
+    }
+
+    if(argc>=4)
+    {
+	if(strcasecmp("CLOSEWB",argv[3])==0)
+	{
+	    close_wb = 1;
 	}
     }
 
