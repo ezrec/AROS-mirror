@@ -28,6 +28,7 @@
 
 /* $Header$ */
 
+#include <stdlib.h> /* for exit() */
 #include "flexdef.h"
 
 

@@ -34,7 +34,7 @@ char copyright[] =
 
 /* $Header$ */
 
-
+#include <stdlib.h> /* for exit() */
 #include "flexdef.h"
 #include "version.h"
 
