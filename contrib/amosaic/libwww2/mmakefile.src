@@ -48,5 +48,12 @@ FILES := \
 %make_linklib_setup mmake=linklibs-www2
 %make_linklib
 
+#MM
+includes-copy :
+	$(MKDIR) $(GENINCDIR)/libwww2
+	@$(CP) *.h $(GENINCDIR)/libwww2
+	$(MKDIR) $(INCDIR)/libwww2
+	@$(CP) *.h $(INCDIR)/libwww2
+
 %common
 %include_deps
