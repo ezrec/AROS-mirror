@@ -36,7 +36,7 @@ BOOT_TAR_FILES := \
     S/Shell-Startup  \
     Utilities/MultiView \
     System/FixFonts \
-    Libs/gtlayout.library contrib/aminet/Term
+    Libs/gtlayout.library Contrib/aminet/Term
 
 BOOT_SRC_DIR    := $(AROSDIR)
 BOOT_DEST_DIR   := $(OSGENDIR)/termbootdisk
@@ -59,7 +59,7 @@ termbootdisk-pc-i386: $(BOOT_DEST_FILES) $(BOOT_DEST_DIR)/AROS.pkg
 	@$(CP) $(TOP)/config/i386-native/boot/menu.lst $(AROSDIR)/boot/grub/
 	@$(CP) $(BINDIR)/boot/aros-pc-i386 $(BOOT_DEST_DIR)/boot
 	@gzip -9 -f $(BOOT_DEST_DIR)/boot/aros-pc-i386
-	@$(TOOLDIR)/createhdfile $(OSGENDIR)/boot/arosterm.bin floppy1440 $(BOOT_DEST_DIR)
+	@$(COPYTOAFS) $(OSGENDIR)/boot/arosterm.bin --size floppy1440 $(BOOT_DEST_DIR)
 	@$(TOP)/config/i386-native/boot/install $(OSGENDIR)/boot/arosterm.bin
 
 $(BOOT_DEST_DIR)/AROS.pkg :

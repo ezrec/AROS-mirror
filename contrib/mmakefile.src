@@ -18,7 +18,7 @@ include $(TOP)/config/make.cfg
 #MM- contrib-complete : contrib-development
 #MM- contrib-complete : contrib-gnu
 
-CONTRIB_SRC_DIR := $(AROSDIR)/contrib
+CONTRIB_SRC_DIR := $(AROSDIR)/Contrib
 
 CONTRIB_DISK1_FILES := aminet
 CONTRIB_DISK2_FILES := DOpus
@@ -36,13 +36,13 @@ CONTRIB_DISK2_DEST_DIR := $(GENDIR)/contrib-disk2
 contrib-disk1:
 	@-$(RM) -r $(CONTRIB_DISK1_DEST_DIR)/*
 	@$(CP) -r $(CONTRIB_DISK1_SRC_FILES) $(CONTRIB_DISK1_DEST_DIR)
-	@$(TOOLDIR)/createhdfile $(GENDIR)/contrib-disks/contrib-disk1.img floppy1440 $(CONTRIB_DISK1_DEST_DIR)
+	@$(COPYTOAFS) $(GENDIR)/contrib-disks/contrib-disk1.img --size floppy1440 $(CONTRIB_DISK1_DEST_DIR)
 
 #MM contrib-disk2 : contrib-dopus contrib-setup 
 contrib-disk2:
 	@-$(RM) -r $(CONTRIB_DISK2_DEST_DIR)/*
 	@$(CP) -r $(CONTRIB_DISK2_SRC_FILES) $(CONTRIB_DISK2_DEST_DIR)
-	@$(TOOLDIR)/createhdfile $(GENDIR)/contrib-disks/contrib-disk2.img floppy1440 $(CONTRIB_DISK2_DEST_DIR)
+	@$(COPYTOAFS) $(GENDIR)/contrib-disks/contrib-disk2.img --size floppy1440 $(CONTRIB_DISK2_DEST_DIR)
 
 #MM
 contrib-setup :
