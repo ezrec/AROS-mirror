@@ -1,0 +1,62 @@
+include $(TOP)/config/make.cfg
+# Things you might add to DEFS (configure usually figures out what to do):
+# -DGNU_STANDARD        Behave as gzip even if invoked as gunzip (GNU standard)
+# -DDIRENT              Use <dirent.h>  for recursion (-r)
+# -DSYSDIR              Use <sys/dir.h> for recursion (-r)
+# -DSYSNDIR             Use <sys/ndir.h> for recursion (-r)
+# -DNDIR                Use <ndir.h> for recursion (-r)
+# -DSTDC_HEADERS        Use <stdlib.h>
+# -DHAVE_UNISTD_H	Use <unistd.h>
+# -DNO_FCNTL_H          Don't use <fcntl.h>
+# -DNO_UTIME_H		Don't use <utime.h>
+# -DHAVE_SYSUTIME_H	Use <sys/utime.h>
+# -DNO_MEMORY_H         Don't use <memory.h>. Not needed if STDC_HEADERS.
+# -DNO_STRING_H         Use strings.h, not string.h. Not needed if STDC_HEADERS
+# -DRETSIGTYPE=int      Define this if signal handlers must return an int.
+# -DNO_SYMLINK          OS defines S_IFLNK but does not support symbolic links
+# -DNO_MULTIPLE_DOTS    System does not allow file names with multiple dots
+# -DNO_UTIME		System does not support setting file modification time
+# -DNO_CHOWN		System does not support setting file owner
+# -DNO_DIR		System does not support readdir()
+# -DPROTO		Force function prototypes even if __STDC__ not defined
+# -DASMV		Use asm version match.S
+# -DMSDOS		MSDOS specific
+# -DOS2			OS/2 specific
+# -DVAXC		Vax/VMS with Vax C compiler
+# -DVMS			Vax/VMS with gcc
+# -DDEBUG		Debug code
+# -DDYN_ALLOC		Use dynamic allocation of large data structures
+# -DMAXSEG_64K		Maximum array size is 64K (for 16 bit system)
+# -DRECORD_IO           read() and write() are rounded to record sizes.
+# -DNO_STDIN_FSTAT      fstat() is not available on stdin
+# -DNO_FSTAT            fstat() is not available
+# -DNO_SIZE_CHECK       stat() does not give a reliable file size
+
+DEFS =  -DHAVE_UNISTD_H=1 -DDIRENT=1  -DNO_UNDERLINE=1 -DASMV=1 -DNO_CHOWN=1
+
+FILES = gzip zip deflate trees bits unzip inflate util crypt\
+       lzw unlzw unpack unlzh getopt match
+
+
+EXEDIR := $(CONTRIBDIR)/gnu
+EXE    := $(EXEDIR)/gzip
+
+USE_CLIB := yes
+USE_MLIB := yes
+
+USER_CFLAGS := -O2 -Wunused -Wall $(DEFS)
+
+#MM- contrib-gnu-gzip : gzip
+#MM- contrib-gnu      : gzip
+#MM
+gzip : setup $(EXE)
+
+$(OBJDIR)/%.o: %.S
+	%compile_q opt=$(USER_CFLAGS)
+
+%make_prog_setup mmake=gzip
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
+
