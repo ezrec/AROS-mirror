@@ -21,6 +21,7 @@
 ------------------------------------------------------------------*/
 #include "game.h"
 #include "gtext.h"
+#include <string.h>
 
 #define SW_UPDATE  gv->sw_t += gv->msec
 #define SW_PAUSE   gv->sw_save = gv->sw_t
