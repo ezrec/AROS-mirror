@@ -12,6 +12,9 @@
 # All Rights Reserved.
 #
 # $Log$
+# Revision 42.4  2000/08/09 10:14:14  chodorowski
+# Fixed broken rule.
+#
 # Revision 42.3  2000/08/08 21:47:46  chodorowski
 # Added contrib/bgui/include/bgui_compilerspecific.h to be copied to
 # include:bgui/bgui_compilerspecific.h at build-time (like the other
@@ -1008,6 +1011,7 @@ include:bgui/bgui_arexx.h:            include/bgui_arexx.h
 include:bgui/bgui_cx.h:               include/bgui_cx.h
 include:bgui/bgui_obsolete.h:         include/bgui_obsolete.h
 include:bgui/bgui_prefs.h:            include/bgui_prefs.h
+include:bgui/bgui_compilerspecific.h: include/bgui_compilerspecific.h
 include:libraries/bgui_macros.h:      include/libraries_bgui_macros.h
 include:bgui/bgui_macros.h:           include/bgui_macros.h
 include:libraries/bgui_treeview.h:    include/libraries_bgui_treeview.h
