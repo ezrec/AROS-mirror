@@ -10,6 +10,10 @@
 
 #include "private.h"
 
+#ifdef _AROS
+extern struct Device *ConsoleDevice;
+#endif
+
 /****************************************************************************************/
 /****************************************************************************************/
 /******************************                    **************************************/
@@ -179,7 +183,7 @@ char *ltoa(ULONG val, char *buf, int len)
 
 
 /*char *stpcpy(char *to,const char *from)*/
-#ifndef __SASC
+#if !defined(__SASC) && !defined(_AROS)
 char *stpcpy(char *to,char *from)
 {
   register char *to2 = to;
@@ -349,25 +353,25 @@ VOID	NL_Pool_FreeVec( APTR pool, APTR memory )
  * Memory allocated by this routine will be freed when object is disposing
  * but it should never happened!
  */
-APTR	NL_Pool_Internal_Alloc( struct NLData *data, ULONG size )
+APTR	NL_Pool_Internal_Alloc( APTR data, ULONG size )
 {
-	return( NL_Pool_Alloc( data->Pool, size ) );
+	return( NL_Pool_Alloc( ((struct NLData *)data)->Pool, size ) );
 }
 
-APTR	NL_Pool_Internal_AllocVec( struct NLData *data, ULONG size )
+APTR	NL_Pool_Internal_AllocVec( APTR data, ULONG size )
 {
-	return( NL_Pool_AllocVec( data->Pool, size ) );
+	return( NL_Pool_AllocVec( ((struct NLData *)data)->Pool, size ) );
 }
 
 /* High level free memory. */
-VOID	NL_Pool_Internal_Free( struct NLData *data, APTR memory, ULONG size )
+VOID	NL_Pool_Internal_Free( APTR data, APTR memory, ULONG size )
 {
-	NL_Pool_Free( data->PoolInternal, memory, size );
+	NL_Pool_Free( ((struct NLData *)data)->PoolInternal, memory, size );
 }
 
-VOID	NL_Pool_Internal_FreeVec( struct NLData *data, APTR memory )
+VOID	NL_Pool_Internal_FreeVec( APTR data, APTR memory )
 {
-	NL_Pool_FreeVec( data->PoolInternal, memory );
+	NL_Pool_FreeVec( ((struct NLData *)data)->PoolInternal, memory );
 }
 
 /* These wrappers slow down, we should use macros or correct functions directly instead... */
