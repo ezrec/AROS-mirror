@@ -1,0 +1,23 @@
+# $Id$
+#
+# Makefile to make the expat linklib.
+
+include $(TOP)/config/make.cfg
+
+LIB           := expat
+INCLUDE_FILES := expat.h
+FILES         := xmlparse xmlrole xmltok 
+
+USER_CFLAGS   := -I.. -D'VERSION="1.95.2"'
+
+#MM- linklibs : linklibs-expat
+#MM linklibs-expat : includes
+#MM includes-copy
+
+%copy_includes_cwd path=.
+
+%make_linklib_setup mmake=linklibs-expat
+%make_linklib
+
+%common
+%include_deps
