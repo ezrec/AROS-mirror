@@ -94,6 +94,11 @@ static void OpenLibs( void )
 	sprintf( tempstring, getString( ERR_OPENLIBRARY ), "intuition.library", 39 );
 	Cleanup( tempstring );
     }
+    if( !(GfxBase = (struct GfxBase *) OpenLibrary( "graphics.library", 39L )) )
+    {
+	sprintf( tempstring, getString( ERR_OPENLIBRARY ), "graphics.library", 39 );
+	Cleanup( tempstring );
+    }
 
     if( !(DOSBase = (struct DosLibrary *) OpenLibrary( "dos.library", 39L )) )
     {
@@ -112,6 +117,7 @@ static void CloseLibs( void )
 {
     if( BGUIBase ) CloseLibrary( BGUIBase );
     if( DOSBase ) CloseLibrary( (struct Library *) DOSBase );
+    if( GfxBase ) CloseLibrary( (struct Library *) GfxBase );
     if( IntuitionBase ) CloseLibrary( (struct Library *) IntuitionBase );
 } /// CloseLibs()
 
@@ -128,7 +134,7 @@ static void MakeGUI( void )
      * an other pattern...
      */
 
-#if 0
+#if 1
     InitBitMap(&patternbm, PATTERN_DEPTH, PATTERN_WIDTH, PATTERN_HEIGHT);
     for(i = 0; i < PATTERN_DEPTH; i++)
     {
@@ -161,7 +167,7 @@ static void MakeGUI( void )
 	WINDOW_ScreenTitle,  "AROS Workbench",
 
 	WINDOW_MasterGroup,
-      VGroupObject, NormalOffset, NormalSpacing, /*FRM_FillPattern, &pattern,*/ FRM_Type, FRTYPE_NONE,
+      VGroupObject, NormalOffset, NormalSpacing, FRM_FillPattern, &pattern, FRM_Type, FRTYPE_NONE,
 		    /* Nothing here, yet. */
 		EndMember,
 	    EndObject,
