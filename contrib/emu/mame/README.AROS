@@ -36,7 +36,7 @@ games. But first let's build AROS Mame:
 
 This will take some time as the source code is really big. The first
 "make" is necessary because otherwise the build directories aren't
-generated and compiling fails ofter some time. I still have some problems
+generated and compiling fails after some time. I still have some problems
 with this mmakefiles so maybe someone is so kind to check the Mame
 mmakefile.src ("contrib/emu/mame/mmakefile.src") and let me know what is
 wrong with it.
@@ -80,10 +80,12 @@ CD into the created directory and unzip the game archive:
 
    unzip <download-dir>/<coolgamefilename.zip>
 
-CD back to where the Mame executable is and start the game:
+Start AROS and CD to where the Mame executable is. Note that Mame needs
+lots of memory, even 32 MByte might not be enough for some Games!!!!
+Then you can start Mame:
 
-   cd ..
-   cd ..
+   aros --memsize 64
+   cd contrib/Emu/Mame
    mame <coolgamefilename>
 
 For example if you had downloaded raiden.zip to "/usr/download"
@@ -94,8 +96,9 @@ Linux-i386 target:
   mkdir raiden
   cd raiden
   unzip /usr/download/raiden.zip
-  cd ..
-  cd ..
+  
+  aros --memsize 64
+  cd contrib/Emu/Mame
   mame raiden
 
 During game press TAB for information about input keys, etc. You can also
