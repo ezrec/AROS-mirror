@@ -7,15 +7,16 @@ EXEDIR   := $(CONTRIBDIR)/AHI
 BUILDDIR := $(GENDIR)/$(CURDIR)
 
 #MM contrib-AHI
-contrib-AHI: $(BUILDDIR)/.configured
-	PATH=$$PATH:$(TOOLDIR) $(MAKE) -C $(BUILDDIR)
+contrib-AHI: $(BUILDDIR)/.configured 
+	PATH=$$PATH:$(TOOLDIR) $(MAKE) -C $(BUILDDIR) all install
 
 $(BUILDDIR)/.configured:
 	%mkdirs_q $(BUILDDIR)
-	cd $(BUILDDIR) ; \
-	$(RM) config.cache ; \
-	PATH=$$PATH:$(TOOLDIR) \
-	$(TOP)/$(CURDIR)/configure --host=$(CPU)-$(ARCH)-aros
+	cd $(BUILDDIR)                                          ; \
+	$(RM) config.cache                                      ; \
+	PATH=$$PATH:$(TOOLDIR) $(TOP)/$(CURDIR)/configure         \
+            --host=$(CPU)-$(ARCH)-aros --prefix=$(EXEDIR)       ; \
+	$(ECHO) YES >$@
 
 #MM contrib-AHI-clean
 contrib-AHI-clean:
