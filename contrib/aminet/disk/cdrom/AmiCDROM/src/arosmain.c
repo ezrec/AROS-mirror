@@ -7,7 +7,9 @@
 #include <dos/filesystem.h>
 #include <exec/memory.h>
 #include <utility/tagitem.h>
+
 #include <stddef.h>
+#include <string.h> 
 
 #ifdef DEBUG
 #undef DEBUG
