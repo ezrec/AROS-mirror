@@ -2,7 +2,7 @@
 AROS Application Development Manual
 ===================================
 
-:Authors:   Sebastian Rittau, Stefan Rieken, Matt Parsons, Adam Chodorowski 
+:Authors:   Staf Verhaegen. Sebastian Rittau, Stefan Rieken, Matt Parsons, Adam Chodorowski 
 :Copyright: Copyright © 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
@@ -653,6 +653,7 @@ default value of an argument. If this is needed this can be done by
 surrounding the value with double quotes (").
 
 Also two switches can be given:
+
 + \A: Is the switch to always need a value for this. When the macro is
   instantiated always a value need to be assigned to this argument.
 + \M: Is the switch to turn on multi words. This means that all the words
@@ -669,6 +670,7 @@ by the name of the macro to instantiate (without a round brackets around it).
     %macro_name [option1=]value [option2=]value
 
 Two ways are possible to specify value for arguments to a macro:
+
 + value: This will assign the value to the argument defined as the first
   argument to this macro. The time this format is used it will be assigned to
   the second argument and so on.
@@ -685,6 +687,7 @@ Examples
 """"""""
 
 FIXME (whole rules to be shown as well as action to be used in make rules)
+
 
 AROS usage and configuration of the build tool
 ==============================================
@@ -705,24 +708,24 @@ High level mmakefile.src macro's
 FIXME: Other high level macro's ?
 
 Building programs
-^^^^^^^^^^^^^^^^^
+"""""""""""""""""
 
 FIXME
 
 Building static linklibraries
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""
 
 FIXME
 
 Building modules
-^^^^^^^^^^^^^^^^
+""""""""""""""""
 
 Building modules consists of two parts. First is a macro to use in
 mmakefile.src files. Another is a configuration file that describes the
 contents of the module.
 
 The mmakefile.src macro
-'''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^
 
 This is the definition header of the build_module macro:
 
@@ -793,7 +796,7 @@ uselibs=
     By default no libraries are used when linking the module.
 
 The module configuration file
-'''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The module configuration file is subdived in several sections. A section is
 defined with the following lines:
