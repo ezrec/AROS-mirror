@@ -43,6 +43,9 @@ AROSBASE=$HOME/packages/AROS
 # Where is the AROS repository ?
 AROSDIR=$AROSBASE/AROS
 
+# Where is the CVSROOT repository ?
+CVSROOTDIR="$AROSBASE/CVSROOT"
+
 # Where is the binaries repository (screenshots, etc) ?
 BINDIR=$AROSBASE/binaries
 
