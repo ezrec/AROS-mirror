@@ -1,0 +1,60 @@
+#   $Id$
+#
+#   Makefile to make Rexx.
+
+include $(TOP)/config/make.cfg
+
+FILES := \
+	main \
+	rexx \
+	compile \
+	expr \
+	template \
+	interpre \
+	nextsymb \
+	rexxfunc \
+	builtin \
+	rxstr \
+	rxconv \
+	rxmath \
+	rxword \
+	rxfiles \
+	address \
+	variable \
+	trace \
+	error \
+	stack \
+	dqueue \
+	bintree \
+	bmem
+
+EXEDIR := $(CONTRIBDIR)/Rexx
+EXE := $(EXEDIR)/rx
+
+USE_AROSLIB := yes
+USE_CLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+
+USER_CFLAGS := -DAROS -I../inc -O2 -DALIGNED -Wunused -Wall -Dwchar_t=int
+
+#MM contrib-rexx-program : includes linklibs linklibs-rexxlstring
+
+%make_prog_setup mmake=contrib-rexx-program
+
+contrib-rexx-program : setup $(EXE)
+
+##%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+##
+## 
+%make_prog_common dir=$(EXEDIR)
+
+$(EXE) : $(EXEDIR)/% : $(OBJS)
+    %link_q cmd=$(STATIC_LD) opt=$(LDFLAGS) libs="$(LIBDIR)/librexxlstring.a $(LIBS)" from=$^
+
+##
+##
+##
+
+%common
+%include_deps

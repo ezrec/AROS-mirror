@@ -1,0 +1,8 @@
+#   $Id$
+#
+#   Makefile to make Rexx.
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-rexx : contrib-rexx-program contrib-rexx-demos
+

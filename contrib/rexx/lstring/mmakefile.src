@@ -1,0 +1,96 @@
+#   $Id$
+#
+#
+#
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS := -DAROS -I../inc -O2 -DALIGN -DINLINE -Dwchar_t=int -DMAXLONG=0x7FFFFFFF
+
+LIB :=	rexxlstring
+
+FILES := \
+	abbrev \
+	abs \
+	add \
+	atan2 \
+	b2x \
+	bitand \
+	bitor \
+	bitxor \
+	bool \
+	c2d \
+	c2x \
+	center \
+	changest \
+	countstr \
+	charin \
+	charout \
+	chars \
+	compare \
+	copies \
+	d2c \
+	d2x \
+	datatype \
+	date \
+	dec \
+	delstr \
+	delword \
+	div \
+	equal \
+	errortxt \
+	expose \
+	format \
+	hashvalu \
+	inc \
+	index \
+	insert \
+	intdiv \
+	justify \
+	lastpos \
+	linein \
+	lineout \
+	lines \
+	lmath \
+	lower \
+	lstring \
+	mod \
+	mult \
+	neg \
+	overlay \
+	pow \
+	print \
+	read \
+	reverse \
+	right \
+	sign \
+	space \
+	stderr \
+	strip \
+	soundex \
+	sub \
+	substr \
+	subword \
+	time \
+	translat \
+	trunc \
+	upper \
+	verify \
+	word \
+	wordidx \
+	wordlen \
+	wordpos \
+	words \
+	write \
+	x2b \
+	x2c \
+	x2d \
+	xrange
+	
+#MM linklibs-rexxlstring : includes
+
+%make_linklib_setup mmake=linklibs-rexxlstring
+%make_vpath
+%make_linklib
+
+%common
+%include_deps

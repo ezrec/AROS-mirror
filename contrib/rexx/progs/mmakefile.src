@@ -1,0 +1,54 @@
+#   $Id$
+#
+#   Makefile to make Rexx.
+
+include $(TOP)/config/make.cfg
+
+REXXDIR = $(CONTRIBDIR)/Rexx
+DESTDIR = $(REXXDIR)/progs
+
+FILES = 3dplot.r \
+	animal.r \
+	ansitest.r \
+	awari.r \
+	banner.r \
+	block.r \
+	buffer.r \
+	bugintr.r \
+	buzzword.r \
+	calc.r \
+	circle.r \
+	code.r \
+	dostest.r \
+	exts.r \
+	fact.r \
+	gudemo.r \
+	intr.r \
+	kaleid.r \
+	largecpi.r \
+	lines.r \
+	monday.r \
+	panel15.r \
+	poetry.r \
+	qt.r \
+	rexxcps.r \
+	set_demo.r \
+	soundex.r \
+	stars.r \
+	tb.r \
+	uniq.r
+
+DESTFILES := $(foreach f, $(FILES), $(DESTDIR)/$(f))
+	
+#MM contrib-rexx-demos :
+contrib-rexx-demos : setup $(DESTFILES)
+	@$(NOP)
+
+$(DESTDIR)/%.r : %.r
+	@$(CP) $< $@
+
+
+#MM setup :
+setup :
+	%mkdirs_q $(REXXDIR) $(DESTDIR)
+
