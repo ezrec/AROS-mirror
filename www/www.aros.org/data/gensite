@@ -587,7 +587,7 @@ class AutoDocPage (Page):
 	for img in self.imagesToFix:
 	    #print img
 	    self.calc_rel_path (img, self.filename)
-	    print img
+	    #print img
 
 	SeriesDocument.write (self, self.filename)
 
@@ -816,12 +816,8 @@ class ThumbnailTable (TableLite):
     '''Helper class to create a table with thumbnails.'''
 
     def __init__ (self, *pics):
-	if len (pics) == 1:
-	    width = "40%"
-	    itemwidth = 'width="40%"'
-	else:
-	    width = "80%"
-	    itemwidth = 'width="40%"'
+	width = "80%"
+	itemwidth = 'width="40%"'
 
 	TableLite.__init__ (self,
 	    border="0",
@@ -829,6 +825,7 @@ class ThumbnailTable (TableLite):
 	    align="center",
 	    bgcolor="#000066",
 	    cellpadding=0,
+	    cellspacing=0,
 	)
 	row = TR ()
 	self.append (row)
@@ -836,9 +833,11 @@ class ThumbnailTable (TableLite):
 	row = row + [td]
 	table2 = TableLite (
 	    border="0",
-	    bgcolor="#CCCCCC",
-	    cellspacing="2",
-	    cellpadding="5",
+	    width="100%",
+	    align="center",
+	    bgcolor="#000066",
+	    cellpadding=5,
+	    cellspacing=2,
 	)
 	td = td + [table2]
 
@@ -846,7 +845,7 @@ class ThumbnailTable (TableLite):
 	    pics = list (pics) + [None]
 	i, n = 0, len (pics)
 	while i < n:
-	    row = TR ()
+	    row = TR (bgcolor="#000066")
 	    left, right = pics[i], pics[i+1]
 	    i = i + 2
 	    left = left.toHtml ()
@@ -855,12 +854,9 @@ class ThumbnailTable (TableLite):
 	    #print dir (left[1])
 	    #print left[1].attr_dict
 	    if not right:
-		if n == 2:
-		    right = []
-		else:
-		    td = TD (colspan="2")
-		    td = td + [Nbsp ()]
-		    right = [td]
+		td = TD (colspan="2", bgcolor="#CCCCCC", width="50%")
+		td = td + [Nbsp ()]
+		right = [td]
 	    else:
 		right = right.toHtml ()
 		right[1].attr_dict['width'] = itemwidth
@@ -1065,6 +1061,7 @@ class Thumbnail (FileInfo):
 		self.href,
 		width="64",
 		valign="TOP",
+		bgcolor="#CCCCCC",
 	    ),
 	    TD (
 		Paragraph (RawText (self.text)),
@@ -1075,6 +1072,7 @@ class Thumbnail (FileInfo):
 		)), size="-1"),
 		#width="35%",
 		valign="TOP",
+		bgcolor="#CCCCCC",
 	    ),
 	]
 
