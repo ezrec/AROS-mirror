@@ -63,14 +63,26 @@ def expandpath (path):
 htmldir = expandpath (config.HTMLDIR)
 ftpdir = expandpath (config.FTPDIR)
 convert = config.__dict__.get ('CONVERT', None)
+basedir = config.__dict__.get ('BASEDIR', None)
+if not basedir:
+    basedir = os.path.dirname (os.getcwd ())
+basedir = os.path.abspath (basedir)
+datadir = os.path.join (basedir, 'data')
+sys.path.append (datadir)
 
 # Allow to read in python modules from AROS
-arosdir = expandpath (config.AROSDIR)
+arosdir = os.path.abspath (expandpath (config.AROSDIR))
 path = os.path.join (arosdir, 'docs', 'src')
 sys.path.append (path)
 
-# The relative URL for the screenshots dir.
+# The relative URL from htmldir to the screenshots dir.
 screenshoturl = 'pics/screenshots'
+
+# Do everything in htmldir
+os.chdir (htmldir)
+
+# Make all paths absolute
+htmldir = os.getcwd ()
 
 # This is a list of links which is used to generate the linkbox
 # at the beginning of every page. The format is as follows:
@@ -146,8 +158,10 @@ def relpath(path1, path2):
 
     return result
 
+arosRC = os.path.join (datadir, 'aros.rc')
+
 class Page (SeriesDocument):
-    def __init__ (self, rcFile='aros.rc', linkBoxItem='', **kw):
+    def __init__ (self, rcFile=arosRC, linkBoxItem='', **kw):
 	'''Base class to generate a page. linkBoxItem must be the
 	Title of the main page in the linkbox (see the list mainLinks
 	above).
@@ -167,12 +181,12 @@ class Page (SeriesDocument):
 	self.imagesToFix = []
 	self.navbar = []
 
-	self.logo = os.path.join (htmldir, 'pics', 'minilogo.gif')
-	self.blank = os.path.join (htmldir, 'pics', 'blank.gif')
-	self.next = os.path.join (htmldir, 'pics', 'next.gif')
-	self.back = os.path.join (htmldir, 'pics', 'back.gif')
-	self.top = os.path.join (htmldir, 'pics', 'top.gif')
-	self.home = os.path.join (htmldir, 'pics', 'home.gif')
+	#self.logo = os.path.join ('pics', 'minilogo.gif')
+	#self.blank = os.path.join ('pics', 'blank.gif')
+	#self.next = os.path.join ('pics', 'next.gif')
+	#self.back = os.path.join ('pics', 'back.gif')
+	#self.top = os.path.join ('pics', 'top.gif')
+	#self.home = os.path.join ('pics', 'home.gif')
 
 	# Create the header of every page.
 	table = TableLite ()
@@ -181,7 +195,7 @@ class Page (SeriesDocument):
 	table.append (row)
 	td = TD (valign='TOP')
 	img = Image (
-	    os.path.join (htmldir, 'pics/logo.gif'),
+	    'pics/logo.gif',
 	    alt='AROS',
 	)
 	self.imagesToFix.append (img)
@@ -254,9 +268,9 @@ class Page (SeriesDocument):
 	    return path2
 	
 	if path1[0] != '/':
-	    path1 = os.path.abspath (os.path.join (htmldir, path1))
+	    path1 = os.path.abspath (path1)
 	if path2[0] != '/':
-	    path2 = os.path.abspath (os.path.join (htmldir, path2))
+	    path2 = os.path.abspath (path2)
 
 	#print "relurl(%s,%s)" % (path1, path2)
 	result = relpath (path1, path2)
@@ -267,11 +281,9 @@ class Page (SeriesDocument):
 	# filename contains a valid path to the image
 	# srcUrl is the URL of the document which contains the image
 	if srcUrl[0] != '/':
-	    srcUrl = os.path.abspath (os.path.join (htmldir, 
-		os.path.dirname (srcUrl)))
+	    srcUrl = os.path.abspath (os.path.dirname (srcUrl))
 
-	path2 = os.path.abspath (os.path.join (htmldir,
-	    img.filename))
+	path2 = os.path.abspath (img.filename)
 	
 	#print srcUrl, path2
 	newUrl = relpath (srcUrl, path2)
@@ -375,7 +387,7 @@ class Page (SeriesDocument):
 	    if top:
 		break
 	
-	path = os.path.abspath (os.path.join (htmldir, os.path.dirname (filename)))
+	path = os.path.abspath (os.path.dirname (filename))
 	self.goprev = prev
 	self.gonext = next
 	self.gotop = top
@@ -395,7 +407,7 @@ class Page (SeriesDocument):
 	    #print img
 
 	# Convert myself into HTML
-	SeriesDocument.write (self, os.path.join (htmldir, filename))
+	SeriesDocument.write (self, filename)
 
 parSep = re.compile ('\n\n+', re.MULTILINE)
 
@@ -452,8 +464,8 @@ def genNews ():
 	page.write (filename)
 
     # Search all known news items, and sort them in reverse order
-    list = glob.glob ('news/*')
-    list.remove ('news/CVS')
+    list = glob.glob (os.path.join (datadir, 'news', '*'))
+    list.remove (os.path.join (datadir, 'news', 'CVS'))
     list.sort ()
     list.reverse ()
     
@@ -512,12 +524,12 @@ def genStatus ():
     
     body.append (chart)
     body.append (Heading (2, 'Size of AROS sources'))
-    img = Image (os.path.join (htmldir, 'aros_size.png'))
+    img = Image ('aros_size.png')
     page.imagesToFix.append (img)
     body.append (Paragraph (img))
     body.append (Paragraph (Href ('aros_size.jpg', 'Also as JPEG')))
     body.append (Heading (2, 'Size of contributed sources'))
-    img = Image (os.path.join (htmldir, 'contrib_size.png'))
+    img = Image ('contrib_size.png')
     page.imagesToFix.append (img)
     body.append (Paragraph (img))
     body.append (Paragraph (Href ('contrib_size.jpg', 'Also as JPEG')))
@@ -535,10 +547,9 @@ def genStatus ():
     page.meat = page.meat + body
 
     # Fix paths
-    path = os.path.abspath (htmldir)
+    path = os.getcwd ()
     for color in chart.colors:
-	colorFile = os.path.abspath (os.path.join (htmldir,
-	    chart.barfiles[color]))
+	colorFile = os.path.abspath (chart.barfiles[color])
 	chart.barfiles[color] = page.relurl (path, colorFile)
 	
     page.write ('credits.html')
@@ -550,9 +561,9 @@ def genDocumentation ():
     page.meat = page.meat + [Text ('FIXME')]
     page.write ('documentation.html')
 
-autodocdir = os.path.join (htmldir, 'autodocs')
-includedir = os.path.join (htmldir, 'includes')
-sourcedir = os.path.join (htmldir, 'sources')
+autodocdir = 'autodocs'
+includedir = 'includes'
+sourcedir = 'sources'
 
 class AutoDocPage (Page):
     def __init__ (self, lib, func):
@@ -573,7 +584,7 @@ class AutoDocPage (Page):
 #	return url
 
     def write (self):
-	self.gotop = self.relurl (htmldir,
+	self.gotop = self.relurl (os.getcwd (),
 	    os.path.join (autodocdir, 'index.html'))
 	self.background = self.relurl (autodocdir, self.background)
 
@@ -653,7 +664,7 @@ def genAutodocs ():
 		    include = match.group (1)
 		    list.append (Text ('#include <'))
 		    href = Href (
-			os.path.join (htmldir, 'include', include),
+			os.path.join ('include', include),
 			include
 		    )
 		    page.linksToFix.append (href)
@@ -700,6 +711,7 @@ def genAutodocs ():
 		os.path.join (autodocdir, 'index.html#%s' % lib.longName),
 		lib.longName
 	    )
+	    page.linksToFix.append (href)
 	    list.append (href)
 	    dl.append (('SEE ALSO', AutoDocItem (list)))
 	    
@@ -727,7 +739,8 @@ def genAutodocs ():
     page = Page (linkBoxItem='Documentation')
 
     meat = []
-    meat.append (Heading (2, 'Libraries sorted by Name'))
+    # --- Create table of libraries -----------------------------------------
+    meat.append (Heading (1, 'Libraries sorted by Name'))
 
     list = []
     libs = adocs.libs.values ()
@@ -748,8 +761,9 @@ def genAutodocs ():
 	keylist.append (Text (' '))
     meat.append (apply (Paragraph, keylist))
 
+    # --- Create table of libraries -----------------------------------------
     meat.append (Name ('Functions sorted by Library'))
-    meat.append (Heading (2, 'Functions sorted by Library'))
+    meat.append (Heading (1, 'Functions sorted by Library'))
 
     for lib in libs:
 	list.append (Font (
@@ -759,24 +773,18 @@ def genAutodocs ():
 
     meat.append (NonBulletList (list))
 
-    def makecell (page, func, absolute=os.path.abspath(autodocdir)):
-	return TD (
-	    Font (
-		Href (relpath (absolute, os.path.abspath (func.url)),
-		    func.name),
-		size="-1",
-	    ),
-	    width="33%",
-	    align="LEFT",
-	)
+    def processFuncList (funcs, meat):
+	def makelibcell (func, absolute=os.path.abspath(autodocdir)):
+	    return TD (
+		Font (
+		    Href (relpath (absolute, os.path.abspath (func.url)),
+			func.name),
+		    size="-1",
+		),
+		width="33%",
+		align="LEFT",
+	    )
 
-    for lib in libs:
-	meat.append (Name (lib.longName))
-	meat.append (Heading (2, lib.longName))
-
-	funcs = lib.functions.values ()
-	funcs.sort ()
-	
 	table = TableLite (
 	    width="100%",
 	    border="0",
@@ -796,20 +804,67 @@ def genAutodocs ():
 		right = funcs[i+2]
 	    i = i + 3
 	    
-	    list = [makecell (page, left)]
+	    list = [makelibcell (left)]
 	    if middle:
-		list.append (makecell (page, middle))
+		list.append (makelibcell (middle))
 	    if right:
-		list.append (makecell (page, right))
+		list.append (makelibcell (right))
 
 	    row = TR ()
 	    row = row + list
 	    table.append (row)
-	    
-    meat.append (Heading (2, 'Functions sorted by Name'))
+	
+    allFunctions = []
+
+    for lib in libs:
+	meat.append (Name (lib.longName))
+	meat.append (Heading (2, lib.longName))
+
+	funcs = lib.functions.values ()
+	funcs.sort ()
+	allFunctions = allFunctions + funcs
+
+	processFuncList (funcs, meat)
+
+    # --- Create table of functions -----------------------------------------
+    meat.append (Heading (1, 'Functions sorted by Name'))
+    
+    allFunctions.sort ()
+    funcAnchors = {}
+
+    for func in allFunctions:
+	key = string.upper (func.name[0])
+	if not funcAnchors.has_key (key):
+	    funcAnchors[key] = Href ('#%s' % func.name, 
+		Font (key, size="-1")
+	    )
+
+    keys = funcAnchors.keys ()
+    keys.sort ()
+    keylist = []
+    for key in keys:
+	keylist.append (funcAnchors[key])
+	keylist.append (Text (' '))
+    meat.append (apply (Paragraph, keylist))
+
+    key = ''
+    list = []
+    for func in allFunctions:
+	if key != string.upper (func.name[0]):
+	    if list:
+		processFuncList (list, meat)
+		list = []
+
+	    key = string.upper (func.name[0])
+	    meat.append (Name (func.name))
+	    meat.append (Heading (2, key))
+	
+	list.append (func)
+
+    if list:
+	processFuncList (list, meat)
 
     page.meat = page.meat + meat
-    # Path here is relative to htmldir
     page.write (os.path.join ('autodocs', 'index.html'))
 
 class ThumbnailTable (TableLite):
@@ -870,9 +925,9 @@ def genScreenshots ():
     page = Page (linkBoxItem='Screenshots')
 
     # First, the pictures of AROS developers, etc.
-    tn1 = Thumbnail (os.path.join (htmldir, 'pics/developers/Digulla-2.jpg'))
-    tn2 = Thumbnail (os.path.join (htmldir, 'pics/developers/Digulla-1.jpg'))
-    tn3 = Thumbnail (os.path.join (htmldir, 'pics/developers/nlorentz.jpg'))
+    tn1 = Thumbnail ('pics/developers/Digulla-2.jpg')
+    tn2 = Thumbnail ('pics/developers/Digulla-1.jpg')
+    tn3 = Thumbnail ('pics/developers/nlorentz.jpg')
     page.meat = page.meat + [
 	Name ('Pictures around AROS'),
 	Heading (2, 'Pictures around AROS'),
@@ -918,7 +973,7 @@ def genScreenshots ():
 		continue
 
 	    tn = Thumbnail (
-		os.path.join (htmldir, 
+		os.path.join (
 		    screenshoturl,
 		    str,
 		    os.path.basename (file)
@@ -932,7 +987,7 @@ def genScreenshots ():
 	return list
 	    
     # Read all screenshots and sort them by date.
-    dirs = glob.glob (os.path.join (htmldir, screenshoturl, '[0-9]*'))
+    dirs = glob.glob (os.path.join (screenshoturl, '[0-9]*'))
     dirs.sort ()
     dirs.reverse ()
     for dir in dirs:
