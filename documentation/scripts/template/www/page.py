@@ -16,63 +16,63 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
         title    = _T['contents'],
         contents = Tree \
         ( [
-            A( _N['news'], hclass='almost', href='%(BASE)snews/' ),
-            Tree ( A( _N['archive'], hclass='done', href='%(BASE)snews/archive/' ) ),
-            A( _N['introduction'], hclass='done', href='%(BASE)sintroduction/' ),
+            A( _N['news'],  href='%(BASE)snews/' ),
+            Tree ( A( _N['archive'], href='%(BASE)snews/archive/' ) ),
+            A( _N['introduction'], href='%(BASE)sintroduction/' ),
             Tree \
             ( [
-                A( _N['status'], hclass='almost', href='%(BASE)sintroduction/status/everything.html' ),
-                A( _N['screenshots'], hclass='done', href='%(BASE)spictures/screenshots/' ),
-                A( _N['ports'], hclass='done', href='%(BASE)sintroduction/ports.html' ),
-                A( _N['license'], hclass='almost', href='%(BASE)slicense.html' )
+                A( _N['status'], href='%(BASE)sintroduction/status/everything.html' ),
+                A( _N['screenshots'], href='%(BASE)spictures/screenshots/' ),
+                A( _N['ports'], href='%(BASE)sintroduction/ports.html' ),
+                A( _N['license'], href='%(BASE)slicense.html' )
             ] ),
-            A( _N['download'], hclass='almost', href='%(BASE)sdownload/' ),
+            A( _N['download'], href='%(BASE)sdownload/' ),
             _N['documentation'],
             Tree \
             ( [
                 _N['users'],
                 Tree \
                 ( [
-                    A( _N['installation'], hclass='done', href='%(BASE)sdocumentation/users/installation.html' ),
-                    A( _N['using'], hclass='nope', href='%(BASE)sdocumentation/users/using.html' ),
-                    A( _N['faq'], hclass='done', href='%(BASE)sdocumentation/users/faq.html' ),
+                    A( _N['installation'], href='%(BASE)sdocumentation/users/installation.html' ),
+                    A( _N['using'], href='%(BASE)sdocumentation/users/using.html' ),
+                    A( _N['faq'], href='%(BASE)sdocumentation/users/faq.html' ),
                     #_N['ports'],
-                    A( _N['links'], hclass='done', href='%(BASE)sdocumentation/users/links.html' )
+                    A( _N['links'], href='%(BASE)sdocumentation/users/links.html' )
                 ] ),
                 _N['developers'],
                 Tree \
                 ( [
-                    A( _N['contribute'], hclass='done', href='%(BASE)sdocumentation/developers/contribute.html' ),
-                    A( _N['working-with-cvs'], hclass='done', href='%(BASE)sdocumentation/developers/cvs.html' ),
-                    A( _N['compiling'], hclass='nope', href='%(BASE)sdocumentation/developers/compiling.html' ),
-                    A( _N['application-development-manual'], hclass='nope', href='%(BASE)sdocumentation/developers/application-development.html' ),
-                    A( _N['system-development-manual'], hclass='almost', href='%(BASE)sdocumentation/developers/system-development.html' ),
-                    #A( _N['reference'], hclass='nope', href='%(BASE)sdocumentation/developers/reference' ),
-                    A( _N['specifications'], hclass='nope', href='%(BASE)sdocumentation/developers/specifications/' ),
-                    #A( _N['ui-style-guide'], hclass='nope', href='%(BASE)sdocumentation/developers/ui' ),
-                    A( _N['documenting'], hclass='nope', href='%(BASE)sdocumentation/developers/documenting.html' ),
-                    #A( _N['translating'], hclass='nope', href='%(BASE)sdocumentation/developers/translating' ),
-                    A( _N['summaries'], hclass='nope', href='%(BASE)sdocumentation/developers/summaries/' ),
-                    A( _N['links'], hclass='done', href='%(BASE)sdocumentation/developers/links.html' )
+                    A( _N['contribute'], href='%(BASE)sdocumentation/developers/contribute.html' ),
+                    A( _N['working-with-cvs'], href='%(BASE)sdocumentation/developers/cvs.html' ),
+                    A( _N['compiling'],  href='%(BASE)sdocumentation/developers/compiling.html' ),
+                    A( _N['application-development-manual'], href='%(BASE)sdocumentation/developers/application-development.html' ),
+                    A( _N['system-development-manual'], href='%(BASE)sdocumentation/developers/system-development.html' ),
+                    #A( _N['reference'], href='%(BASE)sdocumentation/developers/reference' ),
+                    A( _N['specifications'], href='%(BASE)sdocumentation/developers/specifications/' ),
+                    #A( _N['ui-style-guide'], href='%(BASE)sdocumentation/developers/ui' ),
+                    A( _N['documenting'], href='%(BASE)sdocumentation/developers/documenting.html' ),
+                    #A( _N['translating'], href='%(BASE)sdocumentation/developers/translating' ),
+                    A( _N['summaries'], href='%(BASE)sdocumentation/developers/summaries/' ),
+                    A( _N['links'], href='%(BASE)sdocumentation/developers/links.html' )
                 ] )
             ] ),
-            A( _N['contact'], hclass='done', href='%(BASE)scontact.html' ),
+            A( _N['contact'], href='%(BASE)scontact.html' ),
             Tree \
             ( [
-                A( _N['mailing-lists'], hclass='done', href='%(BASE)scontact.html#mailing-lists' ),
-                #A( _N['forums'], hclass='done', href='%(BASE)scontact.html#forums' ),
-                A( _N['irc-channels'], hclass='done', href='%(BASE)scontact.html#irc-channels' )
+                A( _N['mailing-lists'], href='%(BASE)scontact.html#mailing-lists' ),
+                #A( _N['forums'], href='%(BASE)scontact.html#forums' ),
+                A( _N['irc-channels'], href='%(BASE)scontact.html#irc-channels' )
             ] ),
-            A( _N['credits'], hclass='done', href='%(BASE)scredits.html' ),
+            A( _N['credits'], href='%(BASE)scredits.html' ),
             _N['pictures'],
             Tree \
             ( [
-                A( _N['developers'], hclass='done', href='%(BASE)spictures/developers/' ),
-                A( _N['developers-together'], hclass='done', href='%(BASE)spictures/developers-together/' )
+                A( _N['developers'], href='%(BASE)spictures/developers/' ),
+                A( _N['developers-together'], href='%(BASE)spictures/developers-together/' )
             ] ),
-            A( _N['sponsors'], hclass='done', href='%(BASE)ssponsors.html' ),
-            A( _N['linking'], hclass='done', href='%(BASE)slinking.html' ),
-            A( _N['links'], hclass='done', href='%(BASE)slinks.html' )
+            A( _N['sponsors'],href='%(BASE)ssponsors.html' ),
+            A( _N['linking'], href='%(BASE)slinking.html' ),
+            A( _N['links'], href='%(BASE)slinks.html' )
         ] )
     )
 
@@ -208,10 +208,10 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 TD( bar ),
                 TD \
                 (
-                    width = '100%%',
+                    align='center', width = '100%%',
                     contents = Table \
                     (
-                        width = '100%%', cellspacing = 1, cellpadding = 3,
+                        width = '100%%', cellspacing = 1, cellpadding = 1,
                         bgcolor = Box.BORDER,
                         contents = TR \
                         ( 
