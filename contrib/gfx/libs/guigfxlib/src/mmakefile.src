@@ -2,6 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- contrib-gfx-libs : contrib-gfx-libs-guigfx
 #MM- contrib-gfx-libs-guigfx : includes linklibs contrib-gfx-libs-render 
 
 FILES := guigfx_bitmap 		\

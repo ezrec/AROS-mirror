@@ -11,7 +11,7 @@ EXEDIR := $(CONTRIBDIR)/Gfx/MystiCube
 
 USER_CFLAGS := -D__far
 
-##MM- contrib-gfx : contrib-gfx-mysticube
+#MM- contrib-gfx : contrib-gfx-mysticube
 #MM contrib-gfx-mysticube : includes linklibs contrib-gfx-libs-guigfx
 
 %build_prog mmake=contrib-gfx-mysticube \

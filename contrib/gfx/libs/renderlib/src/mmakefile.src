@@ -2,6 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- contrib-gfx-libs : contrib-gfx-libs-render
 #MM- contrib-gfx-libs-render : includes linklibs
 
 FILES := lib_global 	\
