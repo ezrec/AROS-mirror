@@ -104,16 +104,7 @@
 
 /****************************************************************************/
 
-#define use_dither      (!currprefs.no_xhair)
-#define use_gray	(0)
-
-#define UAEIFF "UAEIFF"        /* env: var to trigger iff dump */
 #define UAESM  "UAESM"         /* env: var for screen mode */
-
-static int need_dither;        /* well.. guess :-) */
-static int use_delta_buffer;   /* this will redraw only needed places */
-static int use_approx_color;
-int dump_iff;
 
 extern xcolnr xcolors[4096];
 
@@ -158,7 +149,6 @@ static LONG ObtainColor(ULONG, ULONG, ULONG);
 static void ReleaseColors(void);
 static int  DoSizeWindow(struct Window *,int,int);
 static void disk_hotkeys(void);
-static int  SaveIFF(char *filename, struct Screen *scr);
 static int  init_ham(void);
 static void ham_conv(UWORD *src, UBYTE *buf, UWORD len);
 static int  RPDepth(struct RastPort *RP);
@@ -179,43 +169,29 @@ extern UBYTE cidx[4][8*4096];
 
 __inline__ void flush_line(int y)
 {
-    int xs = 0, len;
-    int yoffset = y*gfxvidinfo.rowbytes;
-    char *linebuf = gfxvidinfo.bufmem + yoffset;
-    char *src;
-
-    if(y<0 || y>=gfxvidinfo.height) {
-//       printf("flush_line out of window: %d\n", y); */
-       return;
-    }
-
-    len = gfxvidinfo.width;
-
-    WritePixelArray(linebuf, 0, 0, 0, RP, XOffset, YOffset+y, len, 1, RECTFMT_RAW);
+    //abort();
 }
 
 /****************************************************************************/
 
 void flush_block (int ystart, int ystop)
 {
-    int y;
-    for(y=ystart; y<=ystop; ++y) flush_line(y);
+    if(ystart<0 || ystart>=gfxvidinfo.height) {
+//       printf("flush_line out of window: %d\n", y); */
+       return;
+    }
+
+    WritePixelArray
+    (
+        gfxvidinfo.bufmem,
+	0, ystart, gfxvidinfo.rowbytes,
+	RP, XOffset, YOffset+ystart, gfxvidinfo.width, ystop-ystart+1, RECTFMT_RAW
+    );
+
 }
 
 /****************************************************************************/
 
-static void save_frame(void)
-{
-    char *file;
-    static int cpt = 0;
-    char name[80];
-
-    if(!dump_iff) return;
-    if(!(file = getenv(UAEIFF))) return;
-    if(strchr(file,'%')) sprintf(name,file,cpt++);
-    else sprintf(name,"%s.%05d",file,cpt++);
-    if(W->WScreen) SaveIFF(name,W->WScreen);
-}
 
 /****************************************************************************/
 
@@ -237,8 +213,7 @@ static int get_color(int r, int g, int b, xcolnr *cnp)
 {
     int col;
 
-    if(use_gray) r = g = b = (77*r + 151*g + 29*b) / 16;
-    else {r *= 0x11;g *= 0x11;b *= 0x11;}
+    r *= 0x11;g *= 0x11;b *= 0x11;
 
     r *= 0x01010101;
     g *= 0x01010101;
@@ -285,8 +260,6 @@ static int get_nearest_color(int r, int g, int b)
     int colors;
     int br=0,bg=0,bb=0;
 
-   if(use_gray) r = g = b = (77*r + 151*g + 29*b) / 256;
-
     best    = 0;
     besterr = calc_err(0,0,0, 15,15,15);
     colors  = 1<<RPDepth(RP);
@@ -317,55 +290,12 @@ static int get_nearest_color(int r, int g, int b)
 static int init_colors(void)
 {
     gfxvidinfo.can_double = 0;
-    if (need_dither) {
-        /* first try color allocation */
-        int bitdepth = usepub ? 8 : RPDepth(RP);
-        int maxcol;
-
-        if(!use_gray && bitdepth>=3)
-        do {
-            get_color_failed = 0;
-            setup_dither(bitdepth, get_color);
-            if(get_color_failed) ReleaseColors();
-        } while(get_color_failed && --bitdepth>=3);
-        
-        if(!use_gray && bitdepth>=3) {
-            printf("Color dithering with %d bits\n",bitdepth);
-            return 1;
-        }
-
-        /* if that fail then try grey allocation */
-        maxcol = 1<<(usepub ? 8 : RPDepth(RP));
-
-        do {
-            get_color_failed = 0;
-            setup_greydither_maxcol(maxcol, get_color);
-            if(get_color_failed) ReleaseColors();
-        } while(get_color_failed && --maxcol>=2);
-
-        /* extra pass with approximated colors */
-        if(get_color_failed) do {
-            maxcol=2;
-            use_approx_color = 1;
-            get_color_failed = 0;
-            setup_greydither_maxcol(maxcol, get_color);
-            if(get_color_failed) ReleaseColors();
-        } while(get_color_failed && --maxcol>=2);
-
-        if (maxcol >= 2) {
-            printf("Gray dither with %d shades.\n",maxcol);
-            return 1;
-        }
-
-        return 0; /* everything failed :-( */
-    }
-
     /* No dither */
     switch(RPDepth(RP)) {
       case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: {
         int maxcol = 1<<RPDepth(RP);
 
-        if(maxcol>=8 && !use_gray) do {
+        if(maxcol>=8) do {
             get_color_failed = 0;
             setup_maxcol(maxcol);
             alloc_colors256(get_color);
@@ -812,9 +742,6 @@ int graphics_init(void)
 {
     int i,bitdepth;
 
-    use_delta_buffer = 0;
-    need_dither = 0;
-
     if (currprefs.gfx_width < 320)
         currprefs.gfx_width = 320;
     if (!currprefs.gfx_correct_aspect && (currprefs.gfx_height < 64/*200*/))
@@ -871,13 +798,8 @@ int graphics_init(void)
     bitdepth = RPDepth(RP);
     if(bitdepth <= 8) {
         /* chunk2planar is slow so we define use_delta_buffer for all modes */
-        use_delta_buffer    = 1;
-        need_dither         = use_dither || (bitdepth<=1);
-        gfxvidinfo.pixbytes = need_dither?2:1;
     } else {
         /* Cybergfx mode */
-        use_delta_buffer    = 0;
-        need_dither         = 0;
         gfxvidinfo.pixbytes = (bitdepth >= 24) ? 4 : (bitdepth >= 12) ? 2 : 1;
     }
 
@@ -886,23 +808,14 @@ int graphics_init(void)
 
     gfxvidinfo.rowbytes = gfxvidinfo.pixbytes * currprefs.gfx_width;
     gfxvidinfo.bufmem = (char *)calloc(gfxvidinfo.rowbytes, currprefs.gfx_height+1);
+    gfxvidinfo.maxblocklines = currprefs.gfx_height-1;
+
         /*                                                           ^^ */
         /*            This is because DitherLine may read one extra row */
 
     if(!gfxvidinfo.bufmem) {
         fprintf(stderr,"Not enough memory for video bufmem.\n");
         return 0;
-    } 
-
-    if (use_delta_buffer) {
-        gfxvidinfo.maxblocklines = currprefs.gfx_height-1; /* it seems to increase the speed */
-        oldpixbuf = (char *)calloc(gfxvidinfo.rowbytes, currprefs.gfx_height);
-        if(!oldpixbuf) {
-            fprintf(stderr,"Not enough memory for oldpixbuf.\n");
-            return 0;
-        }
-    } else {
-        gfxvidinfo.maxblocklines = 0; /* whatever... */
     }
 
     if (!init_colors()) {
@@ -933,11 +846,6 @@ int graphics_init(void)
     newmousecounters = 0;
     inwindow = 0;
 
-    if(getenv(UAEIFF)) {
-        dump_iff = 1;
-        fprintf(stderr,"Saving to \"%s\"\n",getenv(UAEIFF));
-    }
-
     return 1;
 }
 
@@ -964,7 +872,7 @@ void graphics_leave(void)
     if(Line) {
         FreeVec(Line);
         Line = NULL;
-    } 
+    }
     if(CM) {
         ReleaseColors();
         CM = NULL;
@@ -1017,17 +925,6 @@ void handle_events(void)
             break;
 
           case IDCMP_REFRESHWINDOW:
-            if(use_delta_buffer) {
-                /* hack: this forces refresh */
-                char *ptr = oldpixbuf;
-                int i, len = gfxvidinfo.width;
-                len *= gfxvidinfo.pixbytes;
-                for(i=0;i<currprefs.gfx_height;++i) {
-                    ptr[00000] ^= 255;
-                    ptr[len-1] ^= 255;
-                    ptr += gfxvidinfo.rowbytes;
-                }
-            }
             BeginRefresh(W);
             flush_block(0,currprefs.gfx_height-1);
             EndRefresh(W, TRUE);
@@ -1348,8 +1245,7 @@ static LONG ObtainColor(ULONG r,ULONG g,ULONG b)
 
     if(usepub && CM) {
         i = ObtainBestPen(CM,r,g,b,
-                          OBP_Precision, (use_approx_color?PRECISION_GUI:
-                                                           PRECISION_EXACT),
+                          OBP_Precision, PRECISION_GUI,
                           OBP_FailIfBad, TRUE,
                           TAG_DONE);
         if(i != -1) {
@@ -1370,7 +1266,6 @@ static LONG ObtainColor(ULONG r,ULONG g,ULONG b)
 
     /* public => find exact match */
     r >>= 28; g >>= 28; b >>= 28;
-    if(use_approx_color) return get_nearest_color(r,g,b);
     crgb = (r<<8)|(g<<4)|b;
     for(i=0; i<colors; i++ ) {
         int rgb = GetRGB4(CM, i);
@@ -1426,202 +1321,7 @@ static int DoSizeWindow(struct Window *W,int wi,int he)
 
 /****************************************************************************/
 
-#define MAKEID(a,b,c,d) ((a<<24)|(b<<16)|(c<<8)|d)
 
-static int SaveIFF(char *filename, struct Screen *scr)
-{
-    struct DisplayInfo DI;
-    FILE *file;
-    ULONG BODYsize;
-    ULONG modeid;
-    ULONG count;
-    ULONG i;
-    
-    struct {ULONG iff_type, iff_length;} chunk;
-    struct {ULONG fc_type, fc_length, fc_subtype;} FORM;
-    struct {
-        UWORD w,h,x,y;
-        UBYTE depth,masking,compression,pad1;
-        UWORD transparentColor;
-        UBYTE xAspect,yAspect;
-        WORD  pagewidth,pageheight;
-    } BMHD;
-    
-    BODYsize = scr->BitMap.Depth * scr->BitMap.Rows * 2 * ((scr->Width+15)/16);
-    modeid   = GetVPModeID(&S->ViewPort);
-    count    = scr->ViewPort.ColorMap->Count;
-    
-    FORM.fc_type    = MAKEID('F','O','R','M');
-    FORM.fc_length  = 4 +                 /* ILBM */
-                      8 + sizeof(BMHD) +  /* BMHD */
-                      8 + 4 +             /* CAMG */
-                      8 + 3*count +       /* CMAP */
-                      8 + BODYsize;       /* BODY */
-    FORM.fc_subtype = MAKEID('I','L','B','M');
-    
-    if(!(file = fopen(filename,"w"))) return 0;
-    if(fwrite(&FORM,sizeof(FORM),1,file)!=1) goto err;
-
-    BMHD.w           = 
-    BMHD.pagewidth   = scr->Width;
-    BMHD.h           = 
-    BMHD.pageheight  = scr->Height;
-    BMHD.x           = 0;
-    BMHD.y           = 0;
-    BMHD.depth       = scr->BitMap.Depth;
-    BMHD.masking     = 0;
-    BMHD.compression = 0;
-    BMHD.pad1        = 0;
-    BMHD.transparentColor = 0;
-    BMHD.xAspect     = 22;
-    BMHD.yAspect     = 11;
-
-    if(GetDisplayInfoData(NULL, (UBYTE *)&DI, sizeof(struct DisplayInfo), 
-                          DTAG_DISP, modeid)) {
-    BMHD.xAspect     = DI.Resolution.x;
-    BMHD.yAspect     = DI.Resolution.y;
-    }
-
-    chunk.iff_type   = MAKEID('B','M','H','D');
-    chunk.iff_length = sizeof(BMHD);
-    if(fwrite(&chunk,sizeof(chunk),1,file)!=1 
-    || fwrite(&BMHD, sizeof(BMHD), 1,file)!=1) goto err;
-
-    chunk.iff_type   = MAKEID('C','A','M','G');
-    chunk.iff_length = sizeof(modeid);
-    if(fwrite(&chunk, sizeof(chunk),   1,file)!=1
-    || fwrite(&modeid,chunk.iff_length,1,file)!=1) goto err;
-
-   chunk.iff_type    = MAKEID('C','M','A','P');
-   chunk.iff_length  = 3 * count;
-   if(fwrite(&chunk,sizeof(chunk),1,file)!=1) goto err;
-   for(i=0; i<count; ++i) {
-      ULONG c = GetRGB4(scr->ViewPort.ColorMap, i);
-      UBYTE d;
-      d = (c>>8)&15;d |= d<<4;if(fwrite(&d,1,1,file)!=1) goto err;
-      d = (c>>4)&15;d |= d<<4;if(fwrite(&d,1,1,file)!=1) goto err;
-      d = (c>>0)&15;d |= d<<4;if(fwrite(&d,1,1,file)!=1) goto err;
-   }
-
-   chunk.iff_type    = MAKEID('B','O','D','Y');
-   chunk.iff_length  = BODYsize;
-   if(fwrite(&chunk,sizeof(chunk),1,file)!=1) goto err;
-   {
-   int r,p;
-   struct BitMap *bm = S->RastPort.BitMap;
-   for(r=0; r<bm->Rows; ++r) for(p=0; p<bm->Depth; ++p)
-   if(fwrite(bm->Planes[p] + r*bm->BytesPerRow, 2*((S->Width+15)/16), 1, file)!=1) goto err;
-   }
-   
-   fclose(file);
-   return 1;
-err: 
-   fprintf(stderr,"Error writing to \"%s\"\n",filename);
-   fclose(file);
-   return 0;
-   }
-
-/****************************************************************************/
-/* Here lies an algorithm to convert a 12bits truecolor buffer into a HAM
- * buffer. That algorithm is quite fast and if you study it closely, you'll
- * understand why there is no need for MMX cpu to subtract three numbers in
- * the same time. I can think of a quicker algorithm but it'll need 4096*4096
- * = 1<<24 = 16Mb of memory. That's why I'm quite proud of this one which
- * only need roughly 64Kb (could be reduced down to 40Kb, but it's not
- * worth as I use cidx as a buffer which is 128Kb long)..
- ****************************************************************************/
-
-static int dist4(LONG rgb1, LONG rgb2) /* computes distance very quickly */
-{
-    int d = 0, t;
-    t = (rgb1&0xF00)-(rgb2&0xF00); t>>=8; if (t<0) d -= t; else d += t;
-    t = (rgb1&0x0F0)-(rgb2&0x0F0); t>>=4; if (t<0) d -= t; else d += t;
-    t = (rgb1&0x00F)-(rgb2&0x00F); t>>=0; if (t<0) d -= t; else d += t;
-#if 0
-    t = rgb1^rgb2; 
-    if(t&15) ++d; t>>=4;
-    if(t&15) ++d; t>>=4;
-    if(t&15) ++d;
-#endif
-    return d;
-}
-
-#define d_dst (00000+(UBYTE*)cidx) /* let's use cidx as a buffer */
-#define d_cmd (16384+(UBYTE*)cidx)
-#define h_buf (32768+(UBYTE*)cidx)
-
-static int init_ham(void)
-{
-    int i,t,RGB;
-
-    /* try direct color first */
-    for(RGB=0;RGB<4096;++RGB) {
-        int c,d;
-        c = d = 50;
-        for(i=0;i<16;++i) {
-            t = dist4(i*0x111, RGB);
-            if(t<d) {
-                d = t;
-                c = i;
-            }
-        }
-        i = (RGB&0x00F) | ((RGB&0x0F0)<<1) | ((RGB&0xF00)<<2);
-        d_dst[i] = (d<<2)|3; /* the "|3" is a trick to speedup comparison */
-        d_cmd[i] = c;        /* in the conversion process */
-    }
-    /* then hold & modify */
-    for(i=0;i<32768;++i) {
-        int dr, dg, db, d, c;
-        dr = (i>>10) & 0x1F; dr -= 0x10;if(dr<0) dr = -dr;
-        dg = (i>>5)  & 0x1F; dg -= 0x10;if(dg<0) dg = -dg;
-        db = (i>>0)  & 0x1F; db -= 0x10;if(db<0) db = -db;
-        c  = 0; d = 50;
-        t = dist4(0,  0*256 + dg*16 + db); if(t < d) {d = t;c = 0;}
-        t = dist4(0, dr*256 +  0*16 + db); if(t < d) {d = t;c = 1;}
-        t = dist4(0, dr*256 + dg*16 +  0); if(t < d) {d = t;c = 2;}
-        h_buf[i] = (d<<2) | c;
-    }
-    return 1;
-}
-
-/* great algorithm: convert trucolor into ham using precalc buffers */
-#undef USE_BITFIELDS
-static void ham_conv(UWORD *src, UBYTE *buf, UWORD len)
-{
-    /* A good compiler (ie. gcc :) will use bfext/bfins instructions */
-    union { struct { ULONG _:17,r:5,g:5,b:5;} _; ULONG all;} rgb, RGB;
-
-    rgb.all = 0;
-    while(len--) {
-        UBYTE c,t;
-        RGB.all = *src++;
-        c = d_cmd[RGB.all];
-        /* cowabonga! */
-        t = h_buf[16912 + RGB.all - rgb.all];
-#ifndef USE_BITFIELDS
-        if(t<=d_dst[RGB.all]) {
-	    static int ht[]={32+10,48+5,16+0}; ULONG m;
-	    t &= 3; m = 0x1F<<(ht[t]&15);
-            m = ~m; rgb.all &= m;
-            m = ~m; m &= RGB.all;rgb.all |= m;
-	    m >>= ht[t]&15;
-	    c = (ht[t]&~15) | m;
-        } else {
-	    rgb.all = c;
-	    rgb.all <<= 5; rgb.all |= c;
-	    rgb.all <<= 5; rgb.all |= c;
-        }
-#else
-        if(t<=d_dst[RGB.all]) {
-            t&=3;
-            if(!t)        {c = 32; c |= (rgb._.r = RGB._.r);}
-            else {--t; if(!t) {c = 48; c |= (rgb._.g = RGB._.g);}
-            else              {c = 16; c |= (rgb._.b = RGB._.b);} }
-        } else rgb._.r = rgb._.g = rgb._.b = c;
-#endif
-        *buf++ = c;
-    }
-}
 
 /****************************************************************************/
 /* support routines to handle unix filename convention
