@@ -1,17 +1,14 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-# Must be the same as in $(TOP)/docs/src/mmakefile
-DEST := $(HOME)/www/www.aros.org/www/
-
 #MM
 setup-docs : 
-	%mkdir_q $(DEST)screenshots
+	%mkdir_q $(HTMLDIR)/screenshots
 
 FILES := $(wildcard *.gif *.jpg *.png *.html)
 
 #MM
-copy-pics : $(foreach f,$(FILES),$(DEST)screenshots/$(f))
+copy-pics : $(foreach f,$(FILES),$(HTMLDIR)/screenshots/$(f))
 
-$(DEST)screenshots/% : %
+$(HTMLDIR)/screenshots/% : %
 	cp $< $@
