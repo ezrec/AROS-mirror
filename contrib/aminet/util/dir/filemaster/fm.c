@@ -55,7 +55,7 @@
 #include <datatypes/datatypes.h>
 #include "fmnode.h"
 #include "fmlocale.h"
-#include "launch.h"
+#include "child.h"
 
 #include "filemaster_strings.h"
 #define OK        (0)

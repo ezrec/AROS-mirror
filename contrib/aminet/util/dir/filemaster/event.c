@@ -67,7 +67,7 @@
 #include "fmgui.h"
 #include "audio.h"
 #include "commodity.h"
-#include "launch.h"
+#include "child.h"
 
 extern struct UtilityBase *UtilityBase;
 extern struct ExecBase *SysBase;
