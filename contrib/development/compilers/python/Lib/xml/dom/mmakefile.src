@@ -1,0 +1,21 @@
+# $Id$
+#
+# Makefile to copy the Python modules.
+
+include $(TOP)/config/make.cfg
+include ../../../make.cfg
+
+FILES := \
+    	__init__.py \
+    	domreg.py \
+    	minidom.py \
+    	pulldom.py \
+
+#MM- contrib-development-python-modules-xml : contrib-development-python-modules-xml-dom
+#MM contrib-development-python-modules-xml-dom
+
+contrib-development-python-modules-xml-dom : files-copy
+	
+%copy_files_q dst=$(PYTHONDIR)/Libs/Python/xml/dom
+	
+%common
