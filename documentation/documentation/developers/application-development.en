@@ -2,7 +2,8 @@
 AROS Application Development Manual
 ===================================
 
-:Authors:   Staf Verhaegen. Sebastian Rittau, Stefan Rieken, Matt Parsons, Adam Chodorowski 
+:Authors:   Staf Verhaegen. Sebastian Rittau, Stefan Rieken, Matt Parsons, Adam Chodorowski,
+            Fabio Alemagna
 :Copyright: Copyright © 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
@@ -25,54 +26,30 @@ Quick guide to developing for AROS
 Developing for the AROS platform
 ================================
 
-This chapter tells you how to develop code (in the C language) that will run 
-on the AROS platform. It also tells you how to compile it on the different 
-machines that AROS runs on. I assume that you have been coding in C before, 
-and that you have a basic idea of the term "library".
+This chapter talks about how to develop programs that will run on the AROS platform.
+It also tells you how to compile them on the different machines that AROS runs on.
+It assumes that you have an average knowledge of the C language and basic concepts like `linking`.
 
 How AROS libraries work
 -----------------------
 
-Libraries are an important part of most modern OSes. But this topic can be 
-addressed in several ways. On AROS, there are two kinds of libraries: dynamic 
-libraries ("libraries", comparable to Linux' .so and Windows' .DLL) and 
-linker libraries ("libs"). Note: for the reader with a Linux background, it is 
-important to know that AROS dynamic libraries work slightly different than 
-Linux dynamic libraries.
+The term `library` usually refers to an object whose purpose is to collect in a single
+place functions that programs may want to use more often than others, and usually such functions
+all serve one common purpose, so that there can be libraries to parse configuration files, to
+handle localization, and other kind of tasks which a program might want to perform.
 
-The linker libraries are the most simple to explain. They contain functions 
-that you can call from your program. Each function that you call is copied and 
-made part of your binary program by the linker.
+There generally are 2 kinds of libraries: link-time libraries, and run-time libraries. The link
+time libraries, as the name suggests, are used only at program linking stage: the linker simply takes note of which functions the main program references and tries to take them from the provided libraries. The run-time ones, instead, are only used when the program is run, that is the operating system, the program itself or even a link-time library, take care, at run-time, of `resolving` the references to library functions.
 
-But AROS linker libraries are different. They are also different from e.g. 
-Linux linker libraries; AROS libraries do not (FIXME: or not necessarilly?) 
-contain symbols, and an AROS executable doesn't need to be linked with the 
-dynamic libraries on execution. But let me explain how it *does* work instead.
+Whilst link-time libraries are handled more or less the same way across all Operating Systems, since they're independent from the OS itself, run-time libraries may be handled differently by different OSs. In particular, AROS run-time libraries are quite different than unix-style run-time libraries, and both are different than Windows (TM) run-time libraries. Since run-time libraries implementation and use differs among the various OS's, such libraries also get a more `specialized` name depending on which OS they are meant to run on and on which specific feature such name wants to enphatize. In fact, unix-style run-time libraries are also named `shared objects`, because such libraries preserve the semantics of link-time objects, although they're used at run-time and shared among many programs. Windows (TM) run-time libraries are instead named `Dynamic Link Libraries`, or DLL's, to enphatize that they're mainly a collection of functions which a `dynamic` or runtime linker takes care of resolving references to, and the way user programs can access such functions differs from the way user programs can access link-time library functions. Finally, AROS run-time libraries are simply named `shared libraries`, and they're totally different than link-time libraries, in a way which will be explained below.
 
-For every function in an AROS library, there must also be a static lib function. 
-These lib functions are linked into your program. When you call a dynamic 
-library function from your program, you actually call this lib function first. 
-This function then calculates to which address it has got to jump to perform 
-the actual library call, and then it jumps to the calculated memory address. 
-The lib function also takes care of low-level things, such as translating 
-calling conventions so that the library can work with arguments and return 
-values. Such a special lib function is called a "stub". The stub calculates 
-the address of the library function it has got to call by adding a library 
-"offset" to the library "base". The "offset" is relative to the "base" and is 
-different for each function. It enables you to locate the place of a function 
-within a library. The "base" enables you to locate the place of the library 
-itself. You don't have to tell the stub what the offset is of the function that 
-it is supposed to call - the offset is a constant value, and the stub knows 
-what value. But the library base is not constant: it depends on the location of 
-the library within memory. To get the base address of a library, you must open 
-the library first. The AROS kernel provides functions to open and close a 
-library. The AROS kernel is treated as a library itself (the "exec" library), 
-but lucky for you, it is opened by default by the C startup code, so you can 
-use all of its functions directly. (Note: because you can't really "open" exec 
-- the first library -, the C startup code finds the ExecBase by a trick instead. 
-This trick usually involves a pointer to ExecBase stored on an absolute memory 
-address, but it might differ from platform to platform, and it is not important 
-for writing C code.)
+AROS `shared` libraries are collections of functions indexed in the library by a `function vectors table`. This table is simply an array of pointers to the library's functions, and user programs access these functions by knowing their address' index in the table. Every function in the library gets passed a parameter (which may be explicit or implicit, depending on the ABI chosen for a particular AROS' flavour) which points to a zone of memory that both holds the function vectors and the library's own data [#]_. Such memory area is named `library base`, and libraries are free to chose, trough a particular implementation of some of their mandatory functions, whether the library base is to be shared among various instances of the library or if it's to be used by all of its instances. User programs are generally not invited to access this area directly, but rather trough the use of accessor functions, but again this is not a mandatory policy, rather it's up to the library to decide how to do certain things.
+
+Libraries can of course `open` other libraries and use their funtions and data the way described above, but since the main program is not a library, libraries have no means to access the program's data and functions other than the program itself telling the interested library how to do so, in a way that is library-dependent. In contrast, unix-style run-time libraries, being at all effects `compiler objects`, can share functions and data with both other libraries and the main program: basically all symbols, be them functions or data identifiers, are resolved just like if the program were linked with those libraries at link-time, rather than at run-time.
+
+Both approaches have their pros and cons, and it may be possible to make one kind of library appear as the other kind provided that certain rules are established and met by all elements involved. Currently, in AROS, when a shared object would be needed, a special wrapper around a shared library is built - and certain tools used by the AROS build system can do this automatically - so that programs can transparently use the shared version of what they think are link-time, or `static` libraries. This approach only works in part, since it doesn't replicate all functionalities of the shared objects, but it's sufficient in many cases.
+
+.. [#] If you know C++, you might think of the vectors table as the `VTable` used for virtual methods, and the library base pointer as the `this` pointer.
 
 The AROS "Hello, World!" program
 --------------------------------
