@@ -340,13 +340,15 @@ long npackets;          /* max packets to transmit */
 long nreceived;         /* # of packets we got back */
 long nrepeats;          /* number of duplicates */
 long ntransmitted;      /* sequence # for outbound packets = #sent */
-int interval = 1;       /* interval between packets */
+int  interval = 1;       /* interval between packets */
 
 /* timing */
-int timing;             /* flag to do timing */
+int  timing;             /* flag to do timing */
 long tmin = LONG_MAX;   /* minimum round trip time */
 long tmax;              /* maximum round trip time */
 u_long tsum;            /* sum of all times, for doing average */
+
+/*** Prototypes **************************************************************/
 
 char *pr_addr(u_long l);
 void catcher(void), pinger(void), finish(void);
@@ -356,31 +358,62 @@ void pr_iph(struct ip *ip);
 void pr_retip(struct ip *ip);
 void fill(char *bp, char *patp);
 int in_cksum(u_short *addr, int len);
-void tvsub(register struct timeval *out, register struct timeval *in);
+void clean_time( void );
+
+void Init( void );
+void Quit( STRPTR message );
 
 struct MsgPort *timerport = NULL;
 struct timerequest *timermsg = NULL;
 BOOL notopen = TRUE;
 #define TimerBase (timermsg->tr_node.io_Device)
 
-void clean_timer(void) {
-  if (timermsg) {
-    if (!notopen) {
-      if (!CheckIO((struct IORequest*)timermsg)) {
-        AbortIO((struct IORequest*)timermsg);
-        WaitIO((struct IORequest*)timermsg);
-      }
-      CloseDevice((struct IORequest*)timermsg);
-      notopen = TRUE;
+struct RDArgs *rda = NULL;
+
+void clean_timer() {
+    if (timermsg) {
+        if (!notopen) {
+            if (!CheckIO((struct IORequest*)timermsg)) {
+                AbortIO((struct IORequest*)timermsg);
+                WaitIO((struct IORequest*)timermsg);
+            }
+            CloseDevice((struct IORequest*)timermsg);
+            notopen = TRUE;
+        }
+        DeleteIORequest( (struct IORequest *) timermsg );
+        timermsg = NULL;
     }
-    DeleteIORequest( (struct IORequest *) timermsg );
-    timermsg = NULL;
-  }
-  if (timerport) {
-    DeleteMsgPort(timerport);
-    timerport = NULL;
-  }
+    if (timerport) {
+        DeleteMsgPort(timerport);
+        timerport = NULL;
+    }
 }
+
+void Init() {
+    if( !(SocketBase = OpenLibrary( "bsdsocket.library", 0L )) ) {
+        Quit( "Could not open bsdsocket.library!" );
+    }
+}
+
+void Quit( STRPTR message ) {
+    WORD rc;
+
+    if( message ) {
+        printf( "Ping: %s\n", message );
+        rc = RETURN_WARN;
+    } else {
+        rc = RETURN_OK;
+    }
+
+    if( rda ) FreeArgs( rda );
+
+    clean_timer();
+
+    if( SocketBase ) CloseLibrary( SocketBase );
+
+    exit( rc );
+}
+
 
 #define ARG_TEMPLATE "HOST/A,COUNT/K/N,WAIT/K/N,PACKETSIZE/K/N,PATTERN/K,FLOOD/S,PRELOAD/K/N," \
                      "DEBUG/S,VERBOSE/S,QUIET/S,RECORDROUTE/S,NOROUTE/S,NUMERIC/S"
@@ -402,7 +435,6 @@ enum {
 };
 
 int main( void ) {
-    struct RDArgs *rda;
     IPTR           args[] = { NULL,
                               NULL,
                               NULL,
@@ -433,17 +465,16 @@ int main( void ) {
   outpack = malloc(MAXPACKET);
   if (outpack == NULL) {
     //perror("ping");
-    fprintf( stderr, "ping: network error.\n" );
-    exit(1);
+    Quit( "Network error." );
   }
   preload = 0;
   datap = &outpack[8 + sizeof(struct timeval)];
 
+    Init();
+
     if( (rda = ReadArgs( ARG_TEMPLATE, args, NULL )) != NULL ) {
         if( args[ARG_HOST] != NULL ) {
-            target = AllocVec( strlen( (STRPTR) args[ARG_HOST] ) + 1, MEMF_ANY | MEMF_CLEAR );
-
-            if( target ) strcpy( target, (STRPTR) args[ARG_HOST] );
+            target = (STRPTR) args[ARG_HOST];
         }
 
         if( args[ARG_COUNT] != NULL ) {
@@ -479,83 +510,64 @@ int main( void ) {
 
         /* Not handled: F_LOOSEROUTE */
 
-        FreeArgs( rda );
-    }
+
+
 
     /* Sanity checking of the options */
 
-    if( datalen <= 0 ) {
-        fprintf( stderr, "ping: Packet size too large.\n" );
-        exit( 1 );
-    }
-    if( preload < 0 ) {
-        fprintf( stderr, "ping: Bad preload value.\n");
-        exit( 1 );
-    }
-    if( interval <= 0 ) {
-        fprintf( stderr, "ping: Bad timing interval.\n");
-        exit( 1 );
-    }
-
-    if( npackets <= 0 ) {
-        fprintf( stderr, "ping: Bad number of packets to transmit.\n");
-        exit( 1 );
-    }
+    if( datalen <= 0 )  Quit( "Packet size too large." );
+    if( preload < 0 )   Quit( "Bad preload value." );
+    if( interval <= 0 ) Quit( "Bad timing interval." );
+    if( npackets < 0 ) /* WAS: <= */ Quit( "Bad number of packets to transmit." );
 
     if( (options & F_LOOSEROUTE) && (options & F_RROUTE) ) {
-        fprintf( stderr, "ping: LOOSEROUTE and RECORDROUTE options cannot be used concurrently\n" );
-        exit( 1 );
+        Quit( "LOOSEROUTE and RECORDROUTE options cannot be used concurrently." );
     }
 
     if( (options & F_FLOOD) && (options & F_INTERVAL) ) {
-        fprintf( stderr, "ping: FLOOD and WAIT are incompatible options.\n");
-        exit( 1 );
+        Quit( "FLOOD and WAIT are incompatible options." );
     }
 
+    {
+        u_char *cp = rspace;
 
-  {
-    u_char *cp = rspace;
-
-    if (options & F_LOOSEROUTE) {
+        if (options & F_LOOSEROUTE) {
 #ifdef IP_OPTIONS
-      rspace[IPOPT_OPTVAL] = IPOPT_LSRR;
-      rspace[IPOPT_OLEN] = 3;
-      rspace[IPOPT_OFFSET] = IPOPT_MINOFF;
-      cp = rspace + IPOPT_OFFSET + 1;
+            rspace[IPOPT_OPTVAL] = IPOPT_LSRR;
+            rspace[IPOPT_OLEN] = 3;
+            rspace[IPOPT_OFFSET] = IPOPT_MINOFF;
+            cp = rspace + IPOPT_OFFSET + 1;
 #else
-      (void)fprintf(stderr, "ping: source routing not "
-		    "available in this implementation.\n");
-      exit(1);
+            Quit( "Source routing not available in this implementation." );
 #endif				/* IP_OPTIONS */
-    }
-
-    if( target != NULL ) {
-        bzero((char *)&whereto, sizeof(struct sockaddr));
-        to = (struct sockaddr_in *)&whereto;
-#ifdef _SOCKADDR_LEN
-        to->sin_len = sizeof(*to);
-#endif
-        to->sin_family = AF_INET;
-        to->sin_addr.s_addr = inet_addr(target);
-        if (to->sin_addr.s_addr != (u_int)-1) {
-            hostname = target;
-        } else {
-            hp = gethostbyname(target);
-            if (!hp) {
-                fprintf(stderr, "ping: unknown host %s\n", target);
-                exit(1);
-            }
-            to->sin_family = hp->h_addrtype;
-            bcopy(hp->h_addr, (caddr_t)&to->sin_addr, hp->h_length);
-            (void)strncpy(hnamebuf, hp->h_name, sizeof(hnamebuf) - 1);
-            hostname = hnamebuf;
         }
 
+        if( target != NULL ) {
+            bzero((char *)&whereto, sizeof(struct sockaddr));
+            to = (struct sockaddr_in *)&whereto;
+#ifdef _SOCKADDR_LEN
+            to->sin_len = sizeof(*to);
+#endif
+            to->sin_family = AF_INET;
+            to->sin_addr.s_addr = inet_addr(target);
+            if (to->sin_addr.s_addr != (u_int)-1) {
+                hostname = target;
+            } else {
+                hp = gethostbyname(target);
+                if( !hp ) {
+                    Quit( "Unknown host." );
+                }
+                to->sin_family = hp->h_addrtype;
+                bcopy(hp->h_addr, (caddr_t)&to->sin_addr, hp->h_length);
+                strncpy(hnamebuf, hp->h_name, sizeof(hnamebuf) - 1);
+                hostname = hnamebuf;
+            }
+
 #ifdef IP_OPTIONS
-        if (options & F_LOOSEROUTE) {
-            if (rspace + sizeof(rspace) - 4 < cp) {
-                fprintf(stderr, "ping: too many hops for source routing %s\n", target);
-                exit(1);
+            if (options & F_LOOSEROUTE) {
+                if (rspace + sizeof(rspace) - 4 < cp) {
+                    Quit( "Too many hops for source routing." );
+                }
             }
             *cp++ = (to->sin_addr.s_addr >> 24);
             *cp++ = (to->sin_addr.s_addr >> 16);
@@ -566,41 +578,35 @@ int main( void ) {
 #endif
     }
 
+    if (datalen >= sizeof(struct timeval)) /* can we time transfer */
+        timing = 1;
+    packlen = datalen + MAXIPLEN + MAXICMPLEN;
+    if (!(packet = (u_char *)malloc((u_int)packlen))) {
+        Quit( "Out of memory." );
+    }
+    if (!(options & F_PINGFILLED))
+        for (i = 8; i < datalen; ++i)
+            *datap++ = i;
 
-  if (datalen >= sizeof(struct timeval)) /* can we time transfer */
-    timing = 1;
-  packlen = datalen + MAXIPLEN + MAXICMPLEN;
-  if (!(packet = (u_char *)malloc((u_int)packlen))) {
-    (void)fprintf(stderr, "ping: out of memory.\n");
-    exit(1);
-  }
-  if (!(options & F_PINGFILLED))
-    for (i = 8; i < datalen; ++i)
-      *datap++ = i;
+    ident = ((ULONG) FindTask( NULL )) & 0xFFFF;
 
-  ident = ((ULONG) FindTask( NULL )) & 0xFFFF;
+    if (!(proto = getprotobyname("icmp"))) {
+        Quit( "Unknown protocol ICMP." );
+    }
 
-  if (!(proto = getprotobyname("icmp"))) {
-    (void)fprintf(stderr, "ping: unknown protocol icmp.\n");
-    exit(1);
-  }
+    timerport = CreateMsgPort();
+    if (!timerport) {
+        Quit( "Could not create timer port." );
+    }
+    timermask = 1<<timerport->mp_SigBit;
 
-  timerport = CreateMsgPort();
-  if (!timerport) {
-    (void)fprintf(stderr, "ping: could not create timer port.\n");
-    exit(1);
-  }
-  timermask = 1<<timerport->mp_SigBit;
-
-  timermsg = (struct timerequest *) CreateIORequest(timerport, sizeof(*timermsg));
-  if (!timermsg) {
-    (void)fprintf(stderr, "ping: could not create timer message.\n");
-    exit(1);
-  }
+    timermsg = (struct timerequest *) CreateIORequest(timerport, sizeof(*timermsg));
+    if (!timermsg) {
+        Quit( "Could not create timer message." );
+    }
 
   if( (notopen = OpenDevice("timer.device", UNIT_MICROHZ, (struct IORequest *)timermsg, 0)) ) {
-    (void)fprintf(stderr, "ping: could not open timer device.\n");
-    exit(1);
+    Quit( "Could not open timer device.");
   }
 
   timermsg->tr_node.io_Command = TR_ADDREQUEST;
@@ -612,8 +618,7 @@ int main( void ) {
 
   if ((s = socket(AF_INET, SOCK_RAW, proto->p_proto)) < 0) {
     //perror("ping: socket");
-    fprintf( stderr, "ping: could not allocate socket.\n" );
-    exit(1);
+    Quit( "Could not allocate socket." );
   }
   hold = 1;
   if (options & F_SO_DEBUG)
@@ -630,8 +635,7 @@ int main( void ) {
     if (setsockopt(s, IPPROTO_IP, IP_OPTIONS, rspace,
 		   rspace[IPOPT_OLEN] + 1) < 0) {
       //perror("ping: source routing");
-      fprintf( stderr, "ping: source routing.\n" );
-      exit(1);
+      Quit( "Source routing." );
     }
   }
 #endif
@@ -643,16 +647,12 @@ int main( void ) {
     rspace[IPOPT_OLEN] = sizeof(rspace)-1;
     rspace[IPOPT_OFFSET] = IPOPT_MINOFF;
     rspace[rspace[IPOPT_OLEN]] = IPOPT_EOL;
-    if (setsockopt(s, IPPROTO_IP, IP_OPTIONS, rspace,
-		   sizeof(rspace)) < 0) {
+    if (setsockopt(s, IPPROTO_IP, IP_OPTIONS, rspace, sizeof(rspace)) < 0) {
       //perror("ping: record route");
-      fprintf( stderr, "ping: record route" );
-      exit(1);
+      Quit( "Record route." );
     }
 #else
-    (void)fprintf(stderr,
-		  "ping: record route not available in this implementation.\n");
-    exit(1);
+    Quit( "Record route not available in this implementation." );
 #endif				/* IP_OPTIONS */
   }
 
@@ -714,9 +714,9 @@ int main( void ) {
   }
   finish();
   /* NOTREACHED */
-
+  }
   return( 0 );
-}}
+}
 
 /*
  * catcher --
@@ -1022,61 +1022,33 @@ int in_cksum( u_short *addr, int len ) {
 }
 
 /*
- * tvsub --
- *	Subtract 2 timeval structs:  out = out - in.  Out is assumed to
- * be >= in.
- */
-void tvsub(register struct timeval *out, register struct timeval *in ) {
-	if ((out->tv_micro -= in->tv_micro) < 0) {
-		--out->tv_micro;
-		out->tv_micro += 1000000;
-	}
-	out->tv_secs -= in->tv_secs;
-}
-
-/*
  * finish --
  *	Print out statistics, and give up.
  */
 void finish() {
-	(void)putchar('\n');
-	(void)fflush(stdout);
-	(void)printf("--- %s ping statistics ---\n", hostname);
-	(void)printf("%ld packets transmitted, ", ntransmitted);
-	(void)printf("%ld packets received, ", nreceived);
-	if (nrepeats)
-		(void)printf("+%ld duplicates, ", nrepeats);
-	if (ntransmitted) {
-		if (nreceived > ntransmitted) {
-			(void)printf("-- somebody's printing up packets!");
-		} else {
-			(void)printf("%d%% packet loss",
-			    (int) (((ntransmitted - nreceived) * 100) /
-			    ntransmitted));
-       }
+    putchar('\n');
+    fflush(stdout);
+    printf("--- %s ping statistics ---\n", hostname);
+    printf("%ld packets transmitted, ", ntransmitted);
+    printf("%ld packets received, ", nreceived);
+    if( nrepeats ) {
+        printf( "+%ld duplicates, ", nrepeats );
     }
-	(void)putchar('\n');
-	if (nreceived && timing)
-		(void)printf("round-trip min/avg/max = %ld/%lu/%ld ms\n",
-		    tmin, tsum / (nreceived + nrepeats), tmax);
-	exit(0);
-}
+    if( ntransmitted ) {
+        if (nreceived > ntransmitted) {
+            printf("-- somebody's printing up packets!");
+        } else {
+            printf("%ld%% packet loss", (((ntransmitted - nreceived) * 100) / ntransmitted));
+        }
+    }
+    putchar('\n');
+    if (nreceived && timing) {
+        printf("round-trip min/avg/max = %ld/%lu/%ld ms\n",
+                tmin, tsum / (nreceived + nrepeats), tmax);
+    }
 
-#ifdef notdef
-static char *ttab[] = {
-	"Echo Reply",		/* ip + seq + udata */
-	"Dest Unreachable",	/* net, host, proto, port, frag, sr + IP */
-	"Source Quench",	/* IP */
-	"Redirect",		/* redirect type, gateway, + IP  */
-	"Echo",
-	"Time Exceeded",	/* transit, frag reassem + IP */
-	"Parameter Problem",	/* pointer + IP */
-	"Timestamp",		/* id + seq + three timestamps */
-	"Timestamp Reply",	/* " */
-	"Info Request",		/* id + sq */
-	"Info Reply"		/* " */
-};
-#endif
+    Quit( NULL );
+}
 
 /*
  * pr_icmph --
@@ -1287,9 +1259,7 @@ void fill( char *bp, char *patp) {
 
 	for (cp = patp; *cp; cp++)
 		if (!isxdigit(*cp)) {
-			(void)fprintf(stderr,
-			    "ping: patterns must be specified as hex digits.\n");
-			exit(1);
+			Quit( "Patterns must be specified as hex digits.");
 		}
 	ii = sscanf(patp,
 	    "%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x%2x",
