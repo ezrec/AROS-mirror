@@ -108,19 +108,66 @@ if (node&&node->succ) {
 	}
 	rlen=fmmain.maxdirlistwidth-offset;
 	if (rlen>maxlen) rlen=maxlen;
+#ifdef _AROS
+#warning INVERSVID DrMode not yet working in AROS
+
+  {
+    BOOL is_inverse = FALSE;
+    
+if (GetDrMd(fmmain.rp) & INVERSVID)
+{
+    is_inverse = TRUE;
+    SetABPenDrMd(fmmain.rp, GetBPen(fmmain.rp), GetAPen(fmmain.rp), GetDrMd(fmmain.rp) & ~INVERSVID);
+}
+  
+#endif
 	if (rlen>0) Text(fmmain.rp,&varatxt[offset],rlen); else rlen=0;
+
+#ifdef _AROS
+#warning INVERSVID DrMode not yet working in AROS
+    if (is_inverse)
+    {
+       SetABPenDrMd(fmmain.rp, GetBPen(fmmain.rp), GetAPen(fmmain.rp), GetDrMd(fmmain.rp) | INVERSVID);
+    }
+  }
+#endif
+
 } else {
 	SetDrMd(fmmain.rp,JAM2);
 }
+
+#ifdef _AROS
+#warning INVERSVID DrMode not yet working in AROS
+
+  {
+    BOOL is_inverse = FALSE;
+    
+if (GetDrMd(fmmain.rp) & INVERSVID)
+{
+    is_inverse = TRUE;
+    SetABPenDrMd(fmmain.rp, GetBPen(fmmain.rp), GetAPen(fmmain.rp), GetDrMd(fmmain.rp) & ~INVERSVID);
+}
+  
+#endif
+
 if (rlen<maxlen) Text(fmmain.rp,space,maxlen-rlen);
+
+#ifdef _AROS
+#warning INVERSVID DrMode not yet working in AROS
+    if (is_inverse)
+    {
+       SetABPenDrMd(fmmain.rp, GetBPen(fmmain.rp), GetAPen(fmmain.rp), GetDrMd(fmmain.rp) | INVERSVID);
+    }
+  }
+#endif
 }
 
 void scrollndraw(void)
 {
-//fline=line to draw
-//liney=pixel offset
-//samount=scroll amount
-//nlines=lines to draw
+/* fline=line to draw */
+/* liney=pixel offset */
+/* samount=scroll amount */
+/* nlines=lines to draw */
 
 WORD xx,yy,aa;
 struct FMList *list;

@@ -120,17 +120,11 @@ if(!dev) {
 	devname[strlen(devname)-1]=0;
 	doslist=LockDosList(LDF_DEVICES|LDF_READ);
 	doslist=FindDosEntry(doslist,devname,LDF_DEVICES);
-#ifndef AROS
-	fssm=(struct FileSysStartupMsg*)(doslist->dol_misc.dol_handler.dol_Startup<<2);
-#else
- 	 fssm=(struct FileSysStartupMsg*)(doslist->dol_misc.dol_handler.dol_Startup);  
-#endif
+
+	fssm=(struct FileSysStartupMsg*)BADDR((doslist->dol_misc.dol_handler.dol_Startup));
+
 	if(fssm) {
-#ifndef AROS
-		de=(struct DosEnvec*)(fssm->fssm_Environ<<2);
-#else
-		de=(struct DosEnvec*)(fssm->fssm_Environ);
-#endif
+		de=(struct DosEnvec*)BADDR(fssm->fssm_Environ);
 
 		if(de->de_Surfaces*de->de_BlocksPerTrack*(de->de_HighCyl+1)*de->de_SizeBlock<786432) {
 			reqbuttonmsg(gb,MSG_OPERATE_FORMATINSTALL,4,guiUC);
@@ -177,7 +171,7 @@ return(1);
 }
 
 
-// combined Rename/Comment/Protect
+/*  combined Rename/Comment/Protect */
 
 void __saveds operate(void)
 {
@@ -302,7 +296,7 @@ if (!(setalloc(list,1))) {
 	goto endi;
 }
 initproc(list,pm->cmc->label);
-//priority(pm->cmc);
+priority(pm->cmc);
 if(!sselected(list,0)) goto crerr;
 if (!(node=allocnode())) {
 	endproc(list);
@@ -416,18 +410,13 @@ doslist=FindDosEntry(doslist,devname,LDF_DEVICES);
 res1=FindResident("filesystem");
 res2=FindResident("fastfilesystem");
 
-#ifndef AROS
-fssm=(struct FileSysStartupMsg*)(doslist->dol_misc.dol_handler.dol_Startup<<2);
-de=(struct DosEnvec*)(fssm->fssm_Environ<<2);
-#else
-fssm=(struct FileSysStartupMsg*)(doslist->dol_misc.dol_handler.dol_Startup);
-de=(struct DosEnvec*)(fssm->fssm_Environ);
-#endif
+fssm=(struct FileSysStartupMsg*)BADDR(doslist->dol_misc.dol_handler.dol_Startup);
+de=(struct DosEnvec*)BADDR(fssm->fssm_Environ);
 
 dostype=de->de_DosType;
 
 #ifndef AROS
-seglist=(APTR)(doslist->dol_misc.dol_handler.dol_SegList<<2);
+seglist=(APTR)BADDR(doslist->dol_misc.dol_handler.dol_SegList);
 #else
 seglist=(APTR)(doslist->dol_misc.dol_handler.dol_Handler);
 #endif
@@ -474,12 +463,10 @@ if(ret==1) {
 		apuptr+=4;
 		apu1-=4;
 	}	
-	*(ULONG*)formatdata=0x42414400;	//BAD0
-#ifndef AROS
-	ioreq=(struct IOStdReq*)opendevice(list,(UBYTE*)(fssm->fssm_Device<<2)+1,fssm->fssm_Unit,fssm->fssm_Flags,sizeof(struct IOStdReq));
-#else
- ioreq=(struct IOStdReq*)opendevice(list,(UBYTE*)(fssm->fssm_Device)+1,fssm->fssm_Unit,fssm->fssm_Flags,sizeof(struct IOStdReq));
-#endif
+	*(ULONG*)formatdata=0x42414400;	/* BAD0 */
+
+	ioreq=(struct IOStdReq*)opendevice(list,(UBYTE*)BADDR(fssm->fssm_Device)+1,fssm->fssm_Unit,fssm->fssm_Flags,sizeof(struct IOStdReq));
+
 	if(!ioreq) goto fend;
 	list->fmmessage2[0]=0;
 	ioreq->io_Command=TD_FORMAT;
@@ -550,11 +537,9 @@ if(ret==3||jatko) {
 	formatlen=de->de_SizeBlock*4;
 	formatdata=allocvec(list,formatlen,MEMF_PUBLIC);
 	if(!formatdata) goto fend;
-#ifndef AROS
-	ioreq=(struct IOStdReq*)opendevice(list,(UBYTE*)(fssm->fssm_Device<<2)+1,fssm->fssm_Unit,fssm->fssm_Flags,48);
-#else
-	 ioreq=(struct IOStdReq*)opendevice(list,(UBYTE*)(fssm->fssm_Device)+1,fssm->fssm_Unit,fssm->fssm_Flags,48);   
-#endif
+
+	ioreq=(struct IOStdReq*)opendevice(list,(UBYTE*)BADDR(fssm->fssm_Device)+1,fssm->fssm_Unit,fssm->fssm_Flags,48);
+
 	if(!ioreq) goto fend;
 	ioreq->io_Command=CMD_READ;
 	ioreq->io_Offset=0;

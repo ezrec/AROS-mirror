@@ -62,7 +62,7 @@ if (!(setalloc(list,1))) {
 	goto endi;
 }
 initproc(list,pm->cmc->label);
-//priority(pm->cmc);
+priority(pm->cmc);
 if((node=findselnode(list))) {
 	if (h=openfile(list,NDFILE(node),OFNORMAL)) {
 		executefile(h,pm->cmc);
@@ -91,7 +91,7 @@ struct ExecuteConfig *ec;
 struct ExecuteFlags ef={0};
 
 changename(h->owner,cmc->label);
-//priority(cmc);
+priority(cmc);
 ec=getconfig(cmc);
 if(h->filename[0]) sformatmsg(h->owner->fmmessage1,MSG_FILECLICK_EXECUTABLE,h->filename);
 fmmessage(h->owner);
@@ -156,18 +156,14 @@ if(!lock) goto xerror;
 
 apu1=0;len=101;
 
-cli=(struct CommandLineInterface*)(fmmain.myproc->pr_CLI); 
-//cli=(struct CommandLineInterface*)(fmmain.myproc->pr_CLI<<2);
+cli=(struct CommandLineInterface*)BADDR(fmmain.myproc->pr_CLI); 
 
-fl=(ULONG*)(cli->cli_CommandDir); 
-//fl=(ULONG*)(cli->cli_CommandDir<<2);
+fl=(ULONG*)BADDR(cli->cli_CommandDir); 
 if(!fl) {
 	proc2=(struct Process*)FindTask("Workbench");
 	if(proc2) {
-		cli=(struct CommandLineInterface*)(proc2->pr_CLI); 
-		//cli=(struct CommandLineInterface*)(proc2->pr_CLI<<2);
-		fl=(ULONG*)(cli->cli_CommandDir); 
-		//fl=(ULONG*)(cli->cli_CommandDir<<2);
+		cli=(struct CommandLineInterface*)BADDR(proc2->pr_CLI); 
+		fl=(ULONG*)BADDR(cli->cli_CommandDir); 
 	}
 }
 while(fl) {
@@ -299,7 +295,7 @@ if (!(setalloc(list,1))) {
 	goto endi;
 }
 initproc(list,pm->cmc->label);
-//priority(pm->cmc);
+priority(pm->cmc);
 executeown(list,fmmain.destdir,0,pm->cmc);
 endproc(list);
 endi:
@@ -318,7 +314,7 @@ WORD dalloc=0;
 
 oc=getconfig(cmc);
 changename(slist,cmc->label);
-//priority(cmc);
+priority(cmc);
 
 if(oc->ef.rescan&2) {
 	if(!(setalloc(dlist,1))) goto endi;

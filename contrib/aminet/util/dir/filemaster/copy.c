@@ -90,7 +90,7 @@ struct DelStr {
 	UBYTE	token3[500];
 };
 
-// ********* COPY **************
+/********* COPY **************/
 
 void __saveds copyfiles(void)
 {
@@ -112,7 +112,7 @@ WORD ret;
 UBYTE varaname[32];
 UBYTE aputxt[80];
 
-//priority(cmc);
+priority(cmc);
 slist=fmmain.sourcedir;
 dlist=fmmain.destdir;
 if (!(setalloc(slist,1))) { initproc(0,0); return; }
@@ -217,8 +217,8 @@ if (lock) UnLock(lock);
 lock=0;
 strcpy(path1,slist->path);
 strcpy(path2,dlist->path);
-//*(PathPart(slist->path))=0;
-//*(PathPart(dlist->path))=0;
+// *(PathPart(slist->path))=0;
+// *(PathPart(dlist->path))=0;
 copyflags(ds->cconfig,slist,dlist,dirname,dirname);
 strcpy(slist->path,path1);
 strcpy(dlist->path,path2);
@@ -253,8 +253,8 @@ if(dflag) {
 ret=1;
 dderr:
 if(ret>0) ds->dircnt++;
-//*(PathPart(slist->path))=0;
-//*(PathPart(dlist->path))=0;
+// *(PathPart(slist->path))=0;
+// *(PathPart(dlist->path))=0;
 UnLock(lock);
 freemem(fib);
 return(ret);
@@ -273,7 +273,7 @@ UBYTE varaname[32];
 ULONG size,dstsize;
 BPTR lock=0,olock=0;
 LONG dstdate=0;
-//struct DeleteConfig dc;
+/* struct DeleteConfig dc; */
 WORD c=0;
 UBYTE text[100];
 UBYTE date1[80],date2[80];
@@ -292,7 +292,7 @@ if ((hs=openfile(slist,varaname,OFBUFFER|(ds->cconfig->bufsize?ds->cconfig->bufs
 
 	if(askcopyname(dlist,name,ds)) {
 
-		// freespace check
+		/*  freespace check */
 	
 		fib=allocmem(sizeof(struct FileInfoBlock));
 		if(currentdir(dlist)) olock=Lock(name,SHARED_LOCK);
@@ -339,7 +339,7 @@ if ((hs=openfile(slist,varaname,OFBUFFER|(ds->cconfig->bufsize?ds->cconfig->bufs
 
 		size=hs->size;
 
-		// overwrite check
+		/*  overwrite check */
 
 		if(!ds->owflag&&ds->cconfig->overwrite&&currentdir(dlist)) {
 			if (olock) {
@@ -457,7 +457,7 @@ if(cconfig->comment|cconfig->flags|cconfig->date) {
 freemem(fib);
 }
 
-// ************ DELETE **************
+/************ DELETE **************/
 
 
 void __saveds deletefiles(void)
@@ -471,7 +471,7 @@ WORD first=1;
 WORD apu1;
 
 pm=sinitproc();
-//priority(pm->cmc);
+priority(pm->cmc);
 list=fmmain.sourcedir;
 if (!(setalloc(list,1))) { initproc(0,0); return; }
 if (!(delstr=createtoken(list))) {
@@ -620,7 +620,7 @@ if(!ret) ret=1;
 dderr:
 if (lock) UnLock(lock);
 freemem(fib);
-//*(PathPart(list->path))=0;
+// *(PathPart(list->path))=0;
 return(ret);
 }
 
@@ -673,7 +673,7 @@ if(ds->dconfig->askdelete) {
 return(1);
 }
 
-/// **************** MOVE ****************
+/**************** MOVE ****************/
 
 void __saveds movefiles(void)
 {
@@ -692,7 +692,7 @@ BPTR lock1=0,lock2=0;
 UBYTE varaname[32];
 
 pm=sinitproc();
-//priority(pm->cmc);
+priority(pm->cmc);
 slist=fmmain.sourcedir;
 dlist=fmmain.destdir;
 if (!(setalloc(slist,1))) { initproc(0,0); return; }
@@ -822,8 +822,8 @@ if(fmsetrename(slist,slist->path,dlist->path)) {
 } else {
 	ret=askcontinue(slist);
 }
-//*(PathPart(slist->path))=0;
-//*(PathPart(dlist->path))=0;
+// *(PathPart(slist->path))=0;
+// *(PathPart(dlist->path))=0;
 return(ret);
 }
 
@@ -839,7 +839,7 @@ return(1);
 }
 
 
-/// ************** DISKSIZE ******************
+/************** DISKSIZE ******************/
 
 void __saveds disksize(void)
 {
@@ -851,7 +851,7 @@ LONG dsize;
 WORD apu1;
 
 pm=sinitproc();
-//priority(pm->cmc);
+priority(pm->cmc);
 list=fmmain.sourcedir;
 if (!(setalloc(list,1))) { initproc(0,0); return; }
 if (!(delstr=createtoken(list))) {

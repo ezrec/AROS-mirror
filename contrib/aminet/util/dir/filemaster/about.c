@@ -60,7 +60,7 @@ UWORD *ptr;
 struct Library *versionbase;
 
 pm=sinitproc();
-//priority(pm->cmc);
+priority(pm->cmc);
 list=fmmain.sourcedir;
 if (!(setalloc(list,1))) { initproc(0,0); return; }
 initproc(list,pm->cmc->label);
@@ -151,7 +151,7 @@ about (void)
 D(bug("about.c 155...........\n"));    
   pm = sinitproc ();
 D(bug("about.c 157...........\n")); 
-  //priority (pm->cmc);
+  priority (pm->cmc);
   fmmain.wincnt++;
   initproc (0, 0);
 D(bug("about 161...........\n")); 

@@ -111,7 +111,7 @@ if (!(setalloc(slist,1))) {
 	goto endi;
 }
 initproc(slist,pm->cmc->label);
-//priority(pm->cmc);
+priority(pm->cmc);
 ret=0;
 if(sselected(slist,1)) {
 	while((node=findselnode(slist))) {
@@ -154,7 +154,7 @@ LONG type;
 WORD ret=0;
 
 changename(h->owner,cmc->label);
-//priority(cmc);
+priority(cmc);
 
 memseti(&shows,0,sizeof(struct ShowScreen));
 dth=dt->dtn_Header;
@@ -227,7 +227,7 @@ WORD apu2;
 memseti(&shows,0,sizeof(struct ShowScreen));
 list=h->owner;
 changename(list,cmc->label);
-//priority(cmc);
+priority(cmc);
 if (readbufferfile(h,&longi1,4)!=4) goto serr;
 sformat(list->fmmessage1,getstring(MSG_FILECLICK_PICTURE),"ILBM",h->filename);
 fmmessage(list);
@@ -344,7 +344,7 @@ UBYTE *bufptr,*bufend;
 WORD apu1,ret=0;
 UBYTE *ptr1;
 struct BitMap *bm;
-//struct BitMap bm2;
+/*struct BitMap bm2;*/
 struct Window *win;
 
 win=shows->window;

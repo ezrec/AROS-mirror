@@ -1457,7 +1457,7 @@ draw3dbox (struct RastPort *rp, WORD x, WORD y, WORD w, WORD h, WORD type)
 {
   UBYTE col1, col2;
 
-//1=raised 0=lowered
+/* 1=raised 0=lowered */
   SetAPen (rp, fmconfig->backpen);
   RectFill (rp, x, y, x + w, y + h);
   if (type)

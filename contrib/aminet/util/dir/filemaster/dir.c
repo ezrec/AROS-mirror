@@ -48,7 +48,7 @@ extern struct FMMain fmmain;
 extern struct Gadget string1;
 extern struct Gadget string2;
 
-//*****
+/*****/
 
 void __saveds getdir(void)
 {
@@ -188,7 +188,7 @@ freemem(ptr1);
 freemem(fib);
 }
 
-//*****
+/*****/
 
 void endofdirtxt(struct FMList *list,struct FMNode *node)
 {
@@ -229,7 +229,7 @@ if(list->flags&LDIRLIST) {
 fmmessage(list);
 }
 
-//*****
+/*****/
 
 
 void dirmeters(void)

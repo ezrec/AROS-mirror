@@ -130,14 +130,14 @@ typedef struct {
 #endif /* IFFP_ILBM_H */
 
 struct ShowScreen {
-	WORD system;			//00
-	struct Screen *screen;		//02
-	struct Window *window;		//06
-	struct BitMap *bitmap;		//10
-	UWORD *mouse;			//14
-	struct Task *keytask;		//18
-	struct GfxBase *gfxbase;	//22
-	struct BitMap *tempbm;		//26
+	WORD system;			/* 00 */
+	struct Screen *screen;		/* 02 */
+	struct Window *window;		/* 06 */
+	struct BitMap *bitmap;		/* 10 */
+	UWORD *mouse;			/* 14 */
+	struct Task *keytask;		/* 18 */
+	struct GfxBase *gfxbase;	/* 22 */
+	struct BitMap *tempbm;		/* 26 */
 	struct RastPort temprp;
 };
 

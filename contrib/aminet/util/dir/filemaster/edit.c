@@ -251,7 +251,7 @@ if(!lock) {
 	if(doslist) apu1=1;
 } else if(finddevice(lock,&doslist,&vollist)) {
 #ifndef AROS
-	siirrabstr((UBYTE*)(doslist->dol_Name<<2),edit->devname);
+	siirrabstr((UBYTE*)BADDR(doslist->dol_Name),edit->devname);
 #else
 	 siirrabstr((UBYTE*)(doslist->dol_OldName),edit->devname);
 	
@@ -260,26 +260,15 @@ if(!lock) {
 }
 edit->devname[strlen(edit->devname)]=':';
 if(apu1) {
-#ifndef AROS
-	fssm=(struct FileSysStartupMsg*)(doslist->dol_misc.dol_handler.dol_Startup<<2);
-#else
-	fssm=(struct FileSysStartupMsg*)(doslist->dol_misc.dol_handler.dol_Startup);
-#endif
+
+	fssm=(struct FileSysStartupMsg*)BADDR(doslist->dol_misc.dol_handler.dol_Startup);
 	if(fssm) {
 
-		#ifndef AROS
-		de=edit->dosenv=(struct DosEnvec*)(fssm->fssm_Environ<<2);
-		#else
-		de=edit->dosenv=(struct DosEnvec*)(fssm->fssm_Environ);
-		#endif
+		de=edit->dosenv=BADDR(struct DosEnvec*)(fssm->fssm_Environ);
 
 		edit->blocklen=edit->dosenv->de_SizeBlock<<2;
 
-		#ifndef AROS
-edit->ioreq=(struct IOStdReq*)opendevice(edit->list,(UBYTE*)(fssm->fssm_Device<<2)+1,fssm->fssm_Unit,fssm->fssm_Flags,sizeof(struct IOStdReq));
-		#else
-edit->ioreq=(struct IOStdReq*)opendevice(edit->list,(UBYTE*)(fssm->fssm_Device)+1,fssm->fssm_Unit,fssm->fssm_Flags,sizeof(struct IOStdReq));
-		#endif
+edit->ioreq=(struct IOStdReq*)opendevice(edit->list,(UBYTE*)BADDR(fssm->fssm_Device)+1,fssm->fssm_Unit,fssm->fssm_Flags,sizeof(struct IOStdReq));
 		apu1=de->de_Surfaces*de->de_BlocksPerTrack*512L;
 		if(!edit->dec->lowcyl) edit->lowoffset=de->de_LowCyl*apu1;
 		edit->maxoffset=(de->de_HighCyl+1)*apu1;
@@ -404,26 +393,26 @@ while(!quit) {
 	if(edit->mode>=0) {
 		switch(code)
 		{
-		case 0x1b:	//esc
+		case 0x1b:	/* esc */
 		mode=-1;
 		editcursor(edit,-1,-1);
 		break;
-		case 0x2e:	//5
+		case 0x2e:	/* 5 */
 		mode^=1;
 		break;
-		case 0x4c:	//up
+		case 0x4c:	/* up */
 		case 0x3e:
 			if(cury) cury--;
 		break;
-		case 0x4d:	//down
+		case 0x4d:	/* down */
 		case 0x1e:
 			if(cury<edit->rows-1) cury++;
 		break;
-		case 0x4f:	//left
+		case 0x4f:	/* left */
 		case 0x2d:
 			if(curx) curx--;
 		break;
-		case 0x4e:	//right
+		case 0x4e:	/* right */
 		case 0x2f:
 			if(curx<edit->columns-1) curx++;
 		break;
@@ -436,54 +425,54 @@ while(!quit) {
 	} else {
 		switch(code)
 		{
-		case 0x3d:	//home
+		case 0x3d:	/* home */
 		offset=0;
 		break;
-		case 0x1d:	//end
+		case 0x1d:	/* end */
 		if(edit->type)
 			offset=edit->maxoffset-edit->blocklen;
 			else
 			offset=edit->handle->size;
 		break;
-		case 0x4f:	//left
+		case 0x4f:	/* left */
 		case 0x3e:
 		if(edit->type)
 			offset-=edit->bufsize;
 			else
 			offset-=edit->columns;
 		break;
-		case 0x4e:	//right
+		case 0x4e:	/* right */
 		case 0x1e:
 		if(edit->type)
 			offset+=edit->bufsize;
 			else
 			offset+=edit->columns;
 		break;
-		case 0x3f:	//page up
+		case 0x3f:	/* page up */
 		if(edit->type) {
 			edit->screenoffset-=edit->screenbytes-edit->columns;
 			editoutput(edit);
 			break;
 		}
-		case 0x4c:	//up
+		case 0x4c:	/* up */
 		if(edit->type)
 			offset-=edit->bufsize;
 			else
 			offset-=edit->screenbytes-edit->columns;
 		break;
-		case 0x1f:	//page down
+		case 0x1f:	/* page down */
 		if(edit->type) {
 			edit->screenoffset+=edit->screenbytes-edit->columns;
 			editoutput(edit);
 			break;
 		}
-		case 0x4d:	//down
+		case 0x4d:	/* down */
 		if(edit->type)
 			offset+=edit->bufsize;
 			else
 			offset+=edit->screenbytes-edit->columns;
 		break;
-		case 0x2e:	//root
+		case 0x2e:	/* root */
 		if(edit->type) offset=edit->rootoffset;
 		break;
 		}
@@ -499,7 +488,7 @@ while(!quit) {
 		asciicode=chartab[0];
 		switch(edit->mode)
 		{
-		case -1:	//none
+		case -1:	/* none */
 		asciicode=ToUpper(asciicode);
 		if(!(code&0x80)) {
 			if(asciicode==0x0d&&!edit->type) askline(edit);
@@ -523,8 +512,8 @@ while(!quit) {
 			}
 		}
 		break;
-		case 0:		//hex
-		case 1:		//asc
+		case 0:		/* hex */
+		case 1:		/* asc */
 			if(code&0x80) break;
 			if(edit->mode==0) {
 				asciicode=ToUpper(asciicode);
@@ -862,14 +851,14 @@ edit->infoliney=edit->yoffset+edit->editheight+fmconfig->spaceh-1;
 
 switch(edit->type)
 {
-case 0: //file editor
+case 0: /* file editor */
 draw3dbox(fmmain.rp,edit->xoffsethex-1,edit->infoliney,edit->hexwidth,tfh,0);
 draw3dbox(fmmain.rp,edit->xoffsetasc-1,edit->infoliney,edit->ascwidth,tfh,0);
 fittext(fmmain.rp,edit->handle->filename,-1,edit->xoffsethex-1,edit->infoliney+1,edit->hexwidth,0);
 edit->bufsize=edit->screenbytes;
 if(edit->handle->size<edit->bufsize) edit->bufsize=edit->handle->size;
 break;
-case 1: //disk editor
+case 1: /* disk editor */
 draw3dbox(fmmain.rp,edit->xoffsethex-1,edit->infoliney,64,tfh,0);
 fittext(fmmain.rp,edit->devname,-1,edit->xoffsethex-1,edit->infoliney+1,64,0);
 edit->xoffsetbtsh=edit->xoffsethex+64+fmconfig->spacew-1;

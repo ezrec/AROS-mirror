@@ -76,7 +76,7 @@ if (!(setalloc(slist,1))) {
 	goto endi;
 }
 initproc(slist,pm->cmc->label);
-//priority(pm->cmc);
+priority(pm->cmc);
 if(sselected(slist,1)) {
 	while((node=findselnode(slist))) {
 		if (h=openfile(slist,NDFILE(node),OFNORMAL|OFDECRUNCH)) {
@@ -104,12 +104,12 @@ struct STL {
 	struct STN *tail;
 	struct STN *tailpred;
 	struct FMHandle *handle;
-	LONG lines;		//loaded lines
-	LONG bytes;		//loaded bytes
-	LONG remain;		//remaining bytes
+	LONG lines;		/* loaded lines */
+	LONG bytes;		/* loaded bytes */
+	LONG remain;		/* remaining bytes */
 	LONG topline;
-	WORD numlines;		//screen lines
-	WORD numrows;		//screen rows
+	WORD numlines;		/* screen lines */
+	WORD numrows;		/* screen rows */
 	struct Screen *screen;
 	struct Window *window;
 	struct BitMap *bitmap;
@@ -117,17 +117,17 @@ struct STL {
 	struct BitMap *cbitmap;
 	WORD flag;
 	WORD scroll;
-	LONG pointer1;		//downscroll pointer
+	LONG pointer1;		/* downscroll pointer */
 	struct STN *usenode1;
-	LONG pointer2;		//upscroll pointer
+	LONG pointer2;		/* upscroll pointer */
 	struct STN *usenode2;
 	UBYTE *buffer;
 	UBYTE *ascbuffer;
-	WORD height;		//total height
-	WORD rows;		//number of characters per line
-	WORD hexrows;		//=rows/3-1;
+	WORD height;		/* total height */
+	WORD rows;		/* number of characters per line */
+	WORD hexrows;		/* =rows/3-1; */
 	WORD scrollvalue;
-	WORD xx;		//start x
+	WORD xx;		/* start x */
 	BYTE loaded;
 	BYTE newsearch;
 	struct ShowTxt *config;
@@ -170,7 +170,7 @@ penlist[0]=-1;penlist[1]=-1;
 list=h->owner;
 ie.ie_Class=IECLASS_RAWKEY;
 ie.ie_SubClass=0;
-//priority(cmc);
+priority(cmc);
 changename(list,cmc->label);
 memseti(&stl,0,sizeof(struct STL));
 NewList((struct List*)&stl);
@@ -346,16 +346,16 @@ while(!quit) {
 			keypressed=1;
 			if (mode==4||mode==3) mode=0; else mode=4;
 			break;
-			case 0x3f:	//pageup
+			case 0x3f:	/* ageup */
 			mode=5;
 			break;
-			case 0x1f:	//pagedown
+			case 0x1f:	/* pagedown */
 			mode=6;
 			break;
-			case 0x3d:	//home
+			case 0x3d:	/* home */
 			mode=7;
 			break;
-			case 0x1d:	//end
+			case 0x1d:	/* end */
 			mode=8;
 			break;
 			default:
@@ -393,25 +393,25 @@ while(!quit) {
 	}
 	switch(mode)
 	{
-	case 1:	//fast down
+	case 1:	/* ast down */
 	textscrolldown(&stl,0);
 	break;
-	case 2:	//fast up
+	case 2:	/* fast up */
 	textscrollup(&stl,0);
 	break;
-	case 3:	//slow down
+	case 3:	/* slow down */
 	textscrolldown(&stl,1);
 	break;
-	case 4:	//slow up
+	case 4:	/* slow up */
 	textscrollup(&stl,1);
 	break;
-	case 5: //page down
+	case 5: /* page down */
 	for(apu1=1;apu1<stl.numlines;apu1++) textscrolldown(&stl,-1);
 	break;
-	case 6: //page up
+	case 6: /* page up */
 	for(apu1=1;apu1<stl.numlines;apu1++) textscrollup(&stl,-1);
 	break;
-	case 7: //home
+	case 7: /* home */
 	stl.usenode2=stl.head; stl.usenode1=stl.head;
 	stl.pointer2=0;stl.pointer1=0;
 	stl.topline=-stl.numlines;
@@ -419,7 +419,7 @@ while(!quit) {
 	stl.usenode2=stl.head; stl.pointer2=0;
 	stl.firstinfo=0;
 	break;
-	case 8: //end
+	case 8: /* end */
 	stl.usenode1=stl.usenode2=(struct STN*)&stl.tail;
 	stl.pointer1=stl.pointer2=0;
 	stl.topline=stl.lines;
@@ -427,14 +427,14 @@ while(!quit) {
 	stl.usenode1=(struct STN*)&stl.tail; stl.pointer1=0;
 	stl.firstinfo=0;
 	break;
-	case 9: //jump
+	case 9: /* jump */
 	getjump(&stl);
 	mode=0;
 	break;
-	case 10: //infoblock
+	case 10: /* infoblock */
 	mode=0;
 	break;
-	case 11: //search
+	case 11: /* search */
 	textsearch(&stl,qualifier);
 	mode=0;
 	break;
@@ -544,8 +544,8 @@ UBYTE cha1,cha2;
 UBYTE vstyle,vcolor1,vcolor2;
 WORD len;
 
-// first byte = 1 | style<<1
-// second byte = 1 | color1<<5|color2<<1
+/*  first byte = 1 | style<<1 */
+/*  second byte = 1 | color1<<5|color2<<1 */
 
 src=*ssrc;
 dst=*ddst;

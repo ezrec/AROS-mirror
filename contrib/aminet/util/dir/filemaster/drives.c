@@ -44,7 +44,7 @@ extern struct Library *UtilityBase;
 extern struct FMMain fmmain;
 extern struct FMList fmlist[];
 
-void getkeybytes(void); //HC
+void getkeybytes(void); /* HC */
 
 UBYTE* siirrabstr(UBYTE *ptr1,UBYTE *ptr2)
 {

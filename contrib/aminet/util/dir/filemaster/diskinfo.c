@@ -57,7 +57,7 @@ WORD apu1,apu2,apu3;
 extern struct FMMain fmmain;
 
 pm=sinitproc();
-//priority(pm->cmc);
+priority(pm->cmc);
 list=fmmain.sourcedir;
 fmmain.wincnt++;
 if (!(setalloc(list,1))) {
@@ -85,13 +85,8 @@ if ((lock=fmlock(list,ptr2))) {
 		doslist=LockDosList(LDF_VOLUMES|LDF_DEVICES|LDF_READ);
 		if(finddevice(lock,&doslist,&vollist)) {
 
-			#ifndef AROS
-			fssm=(struct FileSysStartupMsg*)(doslist->dol_misc.dol_handler.dol_Startup<<2);
-			de=(struct DosEnvec*)(fssm->fssm_Environ<<2); 
-			#else
-			fssm=(struct FileSysStartupMsg*)(doslist->dol_misc.dol_handler.dol_Startup);
-			de=(struct DosEnvec*)(fssm->fssm_Environ);
- 			#endif
+			fssm=(struct FileSysStartupMsg*)BADDR(doslist->dol_misc.dol_handler.dol_Startup);
+			de=(struct DosEnvec*)BADDR(fssm->fssm_Environ); 
 
 			if (fssm) {
 				switch(id->id_DiskState)
@@ -110,8 +105,8 @@ if ((lock=fmlock(list,ptr2))) {
 				break;
 				}
 				#ifndef AROS
-				siirrabstr((UBYTE*)(vollist->dol_Name<<2),volname);
-				siirrabstr((UBYTE*)(doslist->dol_Name<<2),devname);   
+				siirrabstr((UBYTE*)BADDR(vollist->dol_Name),volname);
+				siirrabstr((UBYTE*)BADDR(doslist->dol_Name),devname);   
 				#else
 				siirrabstr((UBYTE*)(vollist->dol_OldName),volname); 
 				siirrabstr((UBYTE*)(doslist->dol_OldName),devname);
@@ -133,17 +128,10 @@ if ((lock=fmlock(list,ptr2))) {
 					apu2-=8;
 				}
 				*ptr2=0;
-#ifndef AROS				
 sformatmsg(text,MSG_DISKINFO,id->id_NumSoftErrors,fssm->fssm_Unit,ptr1,id->id_NumBlocks,id->id_NumBlocksUsed,id->
-id_BytesPerBlock,dtype,disktype,volname,devname,cdate,(fssm->fssm_Device<<2)+1,de->de_Surfaces,tsecs,de->de_Reserved+de->
-de_PreAlloc,de->de_LowCyl,de->de_HighCyl,de->de_NumBuffers,de->de_BufMemType,de->de_MaxTransfer,de->de_Mask);
-#else
-
-sformatmsg(text,MSG_DISKINFO,id->id_NumSoftErrors,fssm->fssm_Unit,ptr1,id->id_NumBlocks,id->id_NumBlocksUsed,id->
-id_BytesPerBlock,dtype,disktype,volname,devname,cdate,(fssm->fssm_Device)+1,de->de_Surfaces,tsecs,de->de_Reserved+de->
+id_BytesPerBlock,dtype,disktype,volname,devname,cdate,BADDR(fssm->fssm_Device)+1,de->de_Surfaces,tsecs,de->de_Reserved+de->
 de_PreAlloc,de->de_LowCyl,de->de_HighCyl,de->de_NumBuffers,de->de_BufMemType,de->de_MaxTransfer,de->de_Mask);
 
-#endif
 				UnLockDosList(LDF_VOLUMES|LDF_DEVICES|LDF_READ);
 				endproc(list);	
 				reqinfowindow(pm->cmc->label,text,guiLEFT,MSG_OK,1,0);
@@ -170,7 +158,7 @@ struct DosList *vollist;
 
 doslist=*dl;
 #ifndef AROS
-vollist=(struct DosList*)((((struct FileLock*)(lock<<2))->fl_Volume)<<2);
+vollist=(struct DosList*)(BADDR(((struct FileLock*)BADDR(lock))->fl_Volume));
 while(doslist=NextDosEntry(doslist,LDF_DEVICES)) {
 	if (doslist->dol_Task==vollist->dol_Task) {
 		*dl=doslist;

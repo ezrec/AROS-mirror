@@ -56,9 +56,7 @@ struct GUIBase {
 
 WORD reqinfowindow(UBYTE*,UBYTE*,UWORD,LONG,...);
 
-//#ifndef AROS
 struct GUISlot *getguislot(struct GUIBase*,Object*,WORD,WORD,void*);
-//#endif
 
 struct GUIBase *getguibase(UBYTE*);
 void setguigroup(struct GUIBase*,WORD,WORD);

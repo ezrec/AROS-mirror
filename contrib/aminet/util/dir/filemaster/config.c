@@ -31,6 +31,10 @@
 #include <string.h>
 #include <libraries/reqtools.h>
 
+#ifdef _AROS
+#include <aros/asmcall.h>
+#endif
+
 #define HELPCONFIGSIZE 500
 
 #include "fmlocale.h"
@@ -213,9 +217,9 @@ if(req) {
 return(ret);
 }
 
-// ********************************
-//		DATATYPES
-// ********************************
+/********************************
+*		DATATYPES
+*********************************/
 
 WORD datatypesconfig(struct FMConfig *ofmc)
 {
@@ -275,9 +279,9 @@ freemem(fmc);
 return(retcode);
 }
 
-// ********************************
-//		GENERAL
-// ********************************
+/*********************************
+*		GENERAL
+*********************************/
 
 WORD generalconfig(struct FMConfig *ofmc)
 {
@@ -368,7 +372,7 @@ if(openinitreq(gb)) {
 		c=reqmsghandler(gb);
 		switch(c)
 			{
-			case 2:	// OK
+			case 2:	/*  OK */
 			ptr2=&fmc->devicepen;
 			for(cnt1=0;cnt1<FMPENS;cnt1++) {
 				if(pens[cnt1]!=*ptr2) {
@@ -475,7 +479,7 @@ front=cmc->frontpen;
 reqpalette(gb,102,&front);
 back=cmc->backpen;
 reqpalette(gb,103,&back);
-//pri=cmc->priority;
+pri=cmc->priority;
 reqcyclemsg(gb,104,&pri,MSG_CONFIG_COMLOWPRI,MSG_CONFIG_COMMEDPRI,MSG_CONFIG_COMHIGHPRI,0);
 
 if(cmc->cmenucount==100) {
@@ -552,7 +556,7 @@ if(apu1==1) {
 	retcode=1;
 	cmc->frontpen=front;
 	cmc->backpen=back;
-	//cmc->priority=pri;
+	cmc->priority=pri;
 	CopyMem(cmc,&fmc->cmenuconfig[cmc-ofmc->cmenuconfig],sizeof(struct CMenuConfig));
 	if(oc) {
 		oc->ef.shellwindow=sw;
@@ -615,7 +619,7 @@ for(cnt1=0;cnt1<MAXCOMMANDS3022;cnt1++) {
 			cmc->position=1;
 			cmc->frontpen=ptr[3];
 			cmc->backpen=ptr[4];
-			//cmc->priority=ptr[5];
+			cmc->priority=ptr[5];
 			strcpy(cmc->label,ocold->gadgetname);
 			strcpy(oc->namematch,ocold->namematch);
 			strcpy(oc->matchbytes,ocold->matchbytes);
@@ -844,9 +848,20 @@ if(!cmc->moreconfig) {
 }
 return(cmc->moreconfig);
 }
-#ifndef AROS
+#ifdef _AROS
+AROS_UFH3(APTR, dlldisplayhookfunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(struct lvRender *, lvr, A1))
+    
+#else
 __saveds __asm APTR dlldisplayhookfunc(register __a0 struct Hook *hook,register __a2 Object *obj,register __a1 struct lvRender *lvr)
+#endif
 {
+#ifdef _AROS
+    AROS_USERFUNC_INIT
+#endif
+   
 UBYTE *str;
 struct DirListLayout *dll=(struct DirListLayout*)lvr->lvr_Entry;
 switch(dll->type)
@@ -868,10 +883,25 @@ str=getstring(MSG_PARSE_COMMENTMATCH);
 break;
 }
 return(str);
+
+#ifdef _AROS
+    AROS_USERFUNC_EXIT
+#endif
 }
 
+#ifdef _AROS
+AROS_UFH3(APTR, dllresourcehookfunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(struct lvResource *, lvr, A1))
+#else
 __saveds __asm APTR dllresourcehookfunc(register __a0 struct Hook *hook,register __a2 Object *obj,register __a1 struct lvResource *lvr)
+#endif
 {
+#ifdef _AROS
+    AROS_USERFUNC_INIT
+#endif
+
 struct DirListLayout *dll=0;
 
 switch(lvr->lvr_Command)
@@ -887,11 +917,13 @@ FreeVec(lvr->lvr_Entry);
 break;
 }
 return(dll);
+#ifdef _AROS
+    AROS_USERFUNC_EXIT
+#endif
 }
 
-struct Hook dllresourcehook = { NULL, NULL, (HOOKFUNC)dllresourcehookfunc, NULL, NULL };
-struct Hook dlldisplayhook  = { NULL, NULL, (HOOKFUNC)dlldisplayhookfunc,  NULL, NULL };
-#endif
+struct Hook dllresourcehook = { {NULL, NULL}, (HOOKFUNC)dllresourcehookfunc, NULL, NULL };
+struct Hook dlldisplayhook  = { {NULL, NULL}, (HOOKFUNC)dlldisplayhookfunc,  NULL, NULL };
 
 struct DirListLayout *setdllgads(struct GUIBase *gb,struct GUISlot *gs)
 {
@@ -933,8 +965,8 @@ gs1=getguislot(gb,NewObject(ddlistclass,0,
 	LISTV_MinEntriesShown,8,
 	LISTV_SortEntryArray,FALSE,
 	LISTV_ListFont,&fmc->listfontattr,
-	//LISTV_ResourceHook,&dllresourcehook,
-	//LISTV_DisplayHook,&dlldisplayhook,
+	LISTV_ResourceHook,&dllresourcehook,
+	LISTV_DisplayHook,&dlldisplayhook,
 	BT_DragObject,TRUE,
 	BT_DropObject,TRUE,
 	TAG_DONE),20,LISTVIEW_KIND,0);
@@ -1000,9 +1032,9 @@ return(0);
 }
 
 
-// ***************************
-// 	SCREEN
-// ***************************
+/****************************
+** 	SCREEN
+****************************/
 
 WORD screenconfig(struct FMConfig *ofmc)
 {
@@ -1105,7 +1137,7 @@ for(;;) {
 	refresh=askfont(&fmc->txtshowfontattr,MSG_CONFIG_SHOWFONT,FALSE);
 	break;
 	case 16:
-//	refresh=layoutconfig(fmc);
+/*	refresh=layoutconfig(fmc); */
 	break;
 	case 17:
 	refresh=dirlayoutconfig(fmc);
@@ -1153,7 +1185,7 @@ cmcbuf=allocmem(TOTALCOMMANDS*sizeof(struct CMenuConfig));
 if(!cmcbuf) return;
 cnt1=0;
 cmc=cmcbuf;
-// CORNER
+/*  CORNER */
 if((entry=(APTR)DoMethod(gs[2]->obj,LVM_FIRSTENTRY,NULL,0L))) {
 	do {
 		cmd=(struct cmenudata*)entry;
@@ -1164,7 +1196,7 @@ if((entry=(APTR)DoMethod(gs[2]->obj,LVM_FIRSTENTRY,NULL,0L))) {
 		entry=(APTR)DoMethod(gs[2]->obj,LVM_NEXTENTRY,(IPTR)entry,0L);
 	} while(entry);
 }
-// BAR
+/*  BAR */
 if((entry=(APTR)DoMethod(gs[1]->obj,LVM_FIRSTENTRY,NULL,0L))) {
 	do {
 		cmd=(struct cmenudata*)entry;
@@ -1175,7 +1207,7 @@ if((entry=(APTR)DoMethod(gs[1]->obj,LVM_FIRSTENTRY,NULL,0L))) {
 		entry=(APTR)DoMethod(gs[1]->obj,LVM_NEXTENTRY,(IPTR)entry,0L);
 	} while(entry);
 }
-// HIDDEN
+/*  HIDDEN */
 if((entry=(APTR)DoMethod(gs[3]->obj,LVM_FIRSTENTRY,NULL,0L))) {
 	do {
 		cmd=(struct cmenudata*)entry;
@@ -1210,7 +1242,7 @@ if(cnt1==TOTALCOMMANDS) {
 	request(getstring(MSG_CONFIG_NAME),MSG_OK,0,getstring(MSG_CONFIG_COMSLOTSFULL));
 }
 if(cmc) {
-	//cmc->priority=1;
+	cmc->priority=1;
 	cmc->frontpen=fmc->txtpen;
 	cmc->backpen=fmc->backpen;
 }
@@ -1380,15 +1412,38 @@ BGUI_DoGadgetMethod(gs[1]->obj,gb->win,0,LVM_REFRESH,0);
 BGUI_DoGadgetMethod(gs[2]->obj,gb->win,0,LVM_REFRESH,0);
 BGUI_DoGadgetMethod(gs[3]->obj,gb->win,0,LVM_REFRESH,0);
 }
-#ifndef AROS
+#ifdef _AROS
+AROS_UFH3(APTR, comdisplayhookfunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(struct lvRender *, lvr, A1))
+#else
 __saveds __asm APTR comdisplayhookfunc(register __a0 struct Hook *hook,register __a2 Object *obj,register __a1 struct lvRender *lvr)
+#endif
 {
+#ifdef _AROS
+    AROS_USERFUNC_INIT
+#endif
 struct cmenudata *cmd=(struct cmenudata*)lvr->lvr_Entry;
 return(cmd->name);
+#ifdef _AROS
+    AROS_USERFUNC_EXIT
+#endif
 }
 
+#ifdef _AROS
+AROS_UFH3(APTR, comresourcehookfunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(struct lvResource *, lvr, A1))
+#else
 __saveds __asm APTR comresourcehookfunc(register __a0 struct Hook *hook,register __a2 Object *obj,register __a1 struct lvResource *lvr)
+#endif
 {
+#ifdef _AROS
+    AROS_USERFUNC_INIT
+#endif
+
 struct CMenuConfig *cmc;
 struct cmenudata *cmd;
 UBYTE *vara;
@@ -1417,12 +1472,14 @@ FreeVec(lvr->lvr_Entry);
 break;
 }
 return(cmd);
+#ifdef _AROS
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 
-struct Hook comresourcehook = { NULL, NULL, (HOOKFUNC)comresourcehookfunc, NULL, NULL };
-struct Hook comdisplayhook  = { NULL, NULL, (HOOKFUNC)comdisplayhookfunc,  NULL, NULL };
-#endif
+struct Hook comresourcehook = { {NULL, NULL}, (HOOKFUNC)comresourcehookfunc, NULL, NULL };
+struct Hook comdisplayhook  = { {NULL, NULL}, (HOOKFUNC)comdisplayhookfunc,  NULL, NULL };
 
 WORD commands(struct FMConfig *ofmc)
 {
@@ -1464,8 +1521,8 @@ gs[1]=getguislot(gb,NewObject(ddlistclass,0,
 	LISTV_MinEntriesShown,20,
 	LISTV_SortEntryArray,FALSE,
 	LISTV_ListFont,&fmc->listfontattr,
-	//LISTV_ResourceHook,&comresourcehook,
-	//LISTV_DisplayHook,&comdisplayhook,
+	LISTV_ResourceHook,&comresourcehook,
+	LISTV_DisplayHook,&comdisplayhook,
 	BT_DragObject,TRUE,
 	BT_DropObject,TRUE,
 	TAG_DONE),0,LISTVIEW_KIND,0);
@@ -1477,8 +1534,8 @@ gs[2]=getguislot(gb,NewObject(ddlistclass,0,
 	LISTV_MinEntriesShown,20,
 	LISTV_SortEntryArray,FALSE,
 	LISTV_ListFont,&fmc->listfontattr,
-	//LISTV_ResourceHook,&comresourcehook,
-	//LISTV_DisplayHook,&comdisplayhook,
+	LISTV_ResourceHook,&comresourcehook,
+	LISTV_DisplayHook,&comdisplayhook,
 	BT_DragObject,TRUE,
 	BT_DropObject,TRUE,
 	TAG_DONE),0,LISTVIEW_KIND,0);
@@ -1490,8 +1547,8 @@ gs[3]=getguislot(gb,NewObject(ddlistclass,0,
 	LISTV_MinEntriesShown,20,
 	LISTV_SortEntryArray,FALSE,
 	LISTV_ListFont,&fmc->listfontattr,
-	//LISTV_ResourceHook,&comresourcehook,
-	//LISTV_DisplayHook,&comdisplayhook,
+	LISTV_ResourceHook,&comresourcehook,
+	LISTV_DisplayHook,&comdisplayhook,
 	BT_DragObject,TRUE,
 	BT_DropObject,TRUE,
 	FL_SortDrops,TRUE,
@@ -1650,6 +1707,6 @@ freemem(fmc);
 fmc=0;
 if(ReqToolsBase) CloseLibrary((struct Library*)ReqToolsBase);
 ReqToolsBase=0;
-return((WORD)(apu1<<8|retcode)); //0=no refresh,1=redraw,2=reopen window,3=screen/window reopen,bit7=recalculate all
+return((WORD)(apu1<<8|retcode)); /* 0=no refresh,1=redraw,2=reopen window,3=screen/window reopen,bit7=recalculate all */
 }
 

@@ -150,7 +150,7 @@
 
 struct CMenuConfig {
         UBYTE   cmenucount;
-        UBYTE   position; // 0=invisible,1=gadget bar,2=corner,4=menubar
+        UBYTE   position; /*  0=invisible,1=gadget bar,2=corner,4=menubar */
         UBYTE   frontpen;
         UBYTE   backpen;
         UBYTE   priority;
@@ -245,11 +245,11 @@ struct FMConfig {
 	UBYTE	doubleclick;
 	UBYTE	rightmouse;
 	UBYTE	middlemouse;
-	UBYTE	screentype;	//0=custom,1=public custom,2=workbench,3=on public
+	UBYTE	screentype;	/* 0=custom,1=public custom,2=workbench,3=on public */
 	ULONG	flags;
 	BYTE	mainpriority;
 	BYTE	subpriority;
-	LONG	dosbuffersize;	// HACKCHECK bits 31-24 = zero
+	LONG	dosbuffersize;	/*  HACKCHECK bits 31-24 = zero */
 
 	struct	DirListLayout dl[5];
 
@@ -261,7 +261,7 @@ struct FMConfig {
 
 	WORD	listinfo[COLS+1][ROWS+2];
 	UBYTE	cmenutype;
-	UBYTE	cmenucolumns;	//rows and columns!
+	UBYTE	cmenucolumns;	/* rows and columns! */
 	UBYTE	cmenuposition;
 
 	UBYTE	colors[COLORS*3];
@@ -405,7 +405,7 @@ struct ListInfo {
 	UWORD	linumber;
 	WORD	xy1[2*5];
 	WORD	xy2[2*5];
-//	WORD	lihack; // lihack==number
+/* 	WORD	lihack;  lihack==number */
 };
 
 struct FMMain {
@@ -450,11 +450,11 @@ struct FMMain {
 	WORD	gadgetxy[TOTALCOMMANDS*4];
 	WORD	cmenux,cmenuy;
 	WORD	totalcmenuwidth,totalcmenuheight;
-	WORD	cmenuwidth;		//min gadget width
-	WORD	realcmenuspace;		//width/height of cmenu space
-	WORD	cmenugadnumperline;	//number of gadgets per line
-	WORD	cmenu;			//first gadget
-	UBYTE	*cmenuptr;		//ptr to texts
+	WORD	cmenuwidth;		/* min gadget width */
+	WORD	realcmenuspace;		/* width/height of cmenu space */
+	WORD	cmenugadnumperline;	/* number of gadgets per line */
+	WORD	cmenu;			/* first gadget */
+	UBYTE	*cmenuptr;		/* ptr to texts */
 
 	UWORD	leftoffset;
 	UWORD	lenoffset;
@@ -475,7 +475,7 @@ struct FMMain {
 	UBYTE	betaversion;
 	UBYTE	betarevision;
 
-	// global clock-task variables
+	/*  global clock-task variables */
 
 	volatile signed clock:2;
 	volatile unsigned kill:1;

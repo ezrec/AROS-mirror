@@ -259,7 +259,7 @@ D(bug("event.c 258 processclick func \n"));
 		D(bug("event.c 260 processclick func \n")); 
 		launch(launchtable[PARENTCONFIG],getconfignumber(PARENTCONFIG),0,0);
 		D(bug("event.c 262 processclick func \n")); 
-		//gparent();
+		/* gparent(); */
 		return(dragtype);
 	}
 	if (yy>=li->topliney&&yy<=li->topliney+fmmain.txtysize+1) {
@@ -270,7 +270,7 @@ D(bug("event.c 258 processclick func \n"));
 	}
 	if(fmconfig->rightmouse==1) {
 		launch(launchtable[PARENTCONFIG],getconfignumber(PARENTCONFIG),0,0);
-		//gparent();
+		/* gparent(); */
 		return(dragtype);
 	}
 }
@@ -311,12 +311,12 @@ static void processgadget(WORD id,ULONG class)
 if (id>=301 && id<(301+TOTALCOMMANDS)) {
 	if(id-301<TOTALCOMMANDS) runcommand(&fmmain.gadkeytab[id-301+LISTGADGETS*WINDOWLISTS]);
 }
-	// slider1s 101->
-	// slider2s 111->
-	// string gadgets 201->
-	// taskgadget 401->
-	// ltaskgadget 411->
-	// rtaskgadget 421->
+	/*  slider1s 101-> */
+	/*  slider2s 111-> */
+	/*  string gadgets 201-> */
+	/*  taskgadget 401-> */
+	/*  ltaskgadget 411-> */
+	/*  rtaskgadget 421-> */
 
 if (id>=401&&id<=410) {
 	setsource(fmmain.li[id-401]->list);
@@ -535,21 +535,21 @@ while(!fmmain.quitti) {
 		 D(bug("event.c 494 \n"));
 		switch(code)
 		{
-		case 0x4c:	//cursor up
+		case 0x4c:	/* cursor up */
 		 D(bug("event.c 491 case cursor up \n"));
 		if(message->Qualifier&0x0003) fmmain.sourcedir->keyline-=fmmain.sourcedir->li->visiblelines-2;
 		if(message->Qualifier&0x0008) fmmain.sourcedir->keyline=1;
 		fmmain.sourcedir->keyline--;
 		frameoutput(fmmain.sourcedir);
 		break;
-		case 0x4d:	//cursor down
+		case 0x4d:	/* cursor down */
 		   D(bug("event.c 498 case cursor down \n")); 
 		if(message->Qualifier&0x0003) fmmain.sourcedir->keyline+=fmmain.sourcedir->li->visiblelines-2;
 		if(message->Qualifier&0x0008) fmmain.sourcedir->keyline=fmmain.sourcedir->totlines-2;
 		fmmain.sourcedir->keyline++;
 		frameoutput(fmmain.sourcedir);
 		break;
-		case 0x4e:	//cursor left
+		case 0x4e:	/* cursor left */
 		   D(bug("event.c 505 case cursor left \n")); 
 		if(message->Qualifier&0x0008)
 			fmmain.sourcedir->keylinew=fmmain.sourcedir->totlinesw-1;
@@ -557,7 +557,7 @@ while(!fmmain.quitti) {
 			fmmain.sourcedir->keylinew+=fmmain.sourcedir->li->visiblelinesw;
 		frameoutput(fmmain.sourcedir);
 		break;
-		case 0x4f:	//cursor right
+		case 0x4f:	/* cursor right */
 		   D(bug("event.c 513 case cursor right \n")); 
 		if(message->Qualifier&0x0008)
 			fmmain.sourcedir->keylinew=0;
@@ -572,12 +572,12 @@ while(!fmmain.quitti) {
 		apu1=0;
 		switch(code)
 		{
-		case 0x00:	//~pushed
+		case 0x00:	/* ~pushed */
 		 D(bug("event.c 528 if IDCMP_RAWKEY \n"));  
 		if(fmmain.modflag==MODPLAY) *((UBYTE*)(fmmain.modptr))=1;
 		apu1=1;
 		break;
-		case 0x80:	//~released
+		case 0x80:	/* ~released */
 		 D(bug("event.c 533 if IDCMP_RAWKEY \n"));  
 		if(fmmain.modflag==MODPLAY) *((UBYTE*)(fmmain.modptr))=0;
 		 D(bug("event.c 535 if IDCMP_RAWKEY \n"));  
@@ -628,8 +628,8 @@ while(!fmmain.quitti) {
 			 D(bug("event.c 587 if IDCMP_RAWKEY \n")); 
 			switch(asciicode)
 			{
-			//break;
-			case 13:	//return
+			/*break;*/
+			case 13:	/* return */
 			 D(bug("event.c 592 case 13 \n")); 
 			fakeintu.MouseX=fmmain.sourcedir->li->dirx+fmmain.ikkuna->BorderLeft;
 			fakeintu.MouseY=(fmmain.sourcedir->keyline-fmmain.sourcedir->firstline)*fmmain.listysize+fmmain.sourcedir->li->diry+fmmain.ikkuna->BorderTop;
@@ -780,9 +780,9 @@ D(bug("event.c 572 before switch(class)\n"));
 			  D(bug("event.c 704"));  
 		} else {	
 			  D(bug("event.c 706"));
-		//#ifndef AROS  
+
 			draggi=processclick(message);
-		//#endif
+
 			  D(bug("event.c 708"));  
 			if(code==SELECTDOWN&&draggi>=0) ReportMouse(1,fmmain.ikkuna);
 			 D(bug("event.c 710")); 

@@ -19,19 +19,19 @@
 
 struct ReqScrollStruct
 	{
-	ULONG	TopEntryNumber;		//0
-	ULONG	NumEntries;		//4
-	UWORD	LineSpacing;		//8
-	ULONG	NumLines;		//10
-	struct Gadget *PropGadget;	//14
-	APTR	RedrawAll;		//18
-	APTR	ReadMore;		//22
-	APTR	ScrollAndDraw;		//26
-	WORD	VersionNumber;		//30
-	LONG	rfu1;			//32
-	LONG	rfu2;			//36
-	struct	GfxBase *gfxbase;	//40
-	struct	FMList *fmlist;		//44
-	UWORD	flags;			//48
+	ULONG	TopEntryNumber;		/* 0 */
+	ULONG	NumEntries;		/* 4 */
+	UWORD	LineSpacing;		/* 8 */
+	ULONG	NumLines;		/* 10 */
+	struct Gadget *PropGadget;	/* 14 */
+	APTR	RedrawAll;		/* 18 */
+	APTR	ReadMore;		/* 22 */
+	APTR	ScrollAndDraw;		/* 26 */
+	WORD	VersionNumber;		/* 30 */
+	LONG	rfu1;			/* 32 */
+	LONG	rfu2;			/* 36 */
+	struct	GfxBase *gfxbase;	/* 40 */
+	struct	FMList *fmlist;		/* 44 */
+	UWORD	flags;			/* 48 */
 };
 

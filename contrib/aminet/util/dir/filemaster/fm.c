@@ -376,9 +376,7 @@ D(bug("fm.c 352 \n"));
     }
 D(bug("fm.c 357 \n")); 
 
-//#ifndef AROS
   deloldexe (1);
-//#endif
 
   for (aa = 0; aa < LISTS; aa++)
 

@@ -59,22 +59,22 @@ if(match->mflags) {
 if(match->msize&&(node->flags&NFILE)) {
 	switch(match->msize)
 	{
-	case 1: //same
+	case 1: /* same */
 	if(node->numlen==match->patsize) newnode=1;
 	break;
-	case 2: //notsame
+	case 2: /* notsame */
 	if(node->numlen!=match->patsize) newnode=1;
 	break;
-	case 3: //smaller
+	case 3: /* smaller */
 	if(node->numlen<match->patsize) newnode=1;
 	break;
-	case 4: //larger
+	case 4: /* larger */
 	if(node->numlen>match->patsize) newnode=1;
 	break;
-	case 5: //between
+	case 5: /* between */
 	if(node->numlen>=match->patsize&&node->numlen<=match->patsize2) newnode=1;
 	break;
-	case 6: //notbetween
+	case 6: /* notbetween */
 	if(node->numlen<match->patsize||node->numlen>match->patsize2) newnode=1;
 	break;
 	}
@@ -82,16 +82,16 @@ if(match->msize&&(node->flags&NFILE)) {
 if(match->mdate) {
 	switch(match->mdate)
 	{
-	case 1: //older
+	case 1: /* older */
 	if(node->numdate<match->patdate) newnode=1;
 	break;
-	case 2: //newer
+	case 2: /* newer */
 	if(node->numdate>match->patdate) newnode=1;
 	break;
-	case 3: //between
+	case 3: /* between */
 	if(node->numdate>=match->patdate&&node->numdate<=match->patdate) newnode=1;
 	break;
-	case 4: //notbetween
+	case 4: /* notbetween */
 	if(node->numdate<match->patdate||node->numdate>match->patdate) newnode=1;
 	break;
 	}

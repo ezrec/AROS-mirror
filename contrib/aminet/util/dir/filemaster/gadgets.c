@@ -71,7 +71,7 @@ void draw3dbox(struct RastPort *rp,WORD x,WORD y,WORD w,WORD h,WORD type)
 {
 UBYTE col1,col2;
 
-//1=raised 0=lowered
+/* 1=raised 0=lowered */
 
 SetAPen(rp,fmconfig->backpen);
 RectFill(rp,x,y,x+w,y+h);
@@ -153,7 +153,7 @@ newwindow.IDCMPFlags=IDCMP_CLOSEWINDOW|IDCMP_VANILLAKEY|IDCMP_MOUSEBUTTONS,
 newwindow.DetailPen=fmconfig->txtpen;
 newwindow.BlockPen=fmconfig->hilipen;
 newwindow.FirstGadget=0;
-//newwindow.CheckMark=0;
+/* newwindow.CheckMark=0; */
 newwindow.Title=title;
 newwindow.Screen=fmmain.naytto;
 newwindow.Type=CUSTOMSCREEN;
@@ -233,8 +233,6 @@ endofline=100,endoftaulu=101
 */
 
 
-//void initproc(void); //HC
-
 WORD reqwindow(ULONG *taulu)
 {
 struct NewWindow newwindow;
@@ -256,8 +254,8 @@ UWORD code;
 ULONG *tauluptr,*realtaulu,*super=0;
 ULONG gadgettype;
 UBYTE asciicode;
-WORD txtlentab[72];		//gadget widths
-WORD txtmaxlentab[64];		//maximum widths (cleared)
+WORD txtlentab[72];		/* gadget widths */
+WORD txtmaxlentab[64];		/* maximum widths (cleared) */
 WORD rowwidth[64];
 UBYTE shortcuts[72];
 ULONG addressi[144];
@@ -438,7 +436,7 @@ newwindow.Flags=WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_SMART_REFRES
 newwindow.IDCMPFlags=IDCMP_REFRESHWINDOW|IDCMP_GADGETDOWN|IDCMP_GADGETUP|IDCMP_CLOSEWINDOW|IDCMP_ACTIVEWINDOW|IDCMP_RAWKEY,
 newwindow.DetailPen=fmconfig->txtpen; newwindow.BlockPen=fmconfig->hilipen;
 newwindow.FirstGadget=0;
-//newwindow.CheckMark=0;
+/* newwindow.CheckMark=0; */
 newwindow.Title=(UBYTE*)(*realtaulu);
 newwindow.Screen=screen;
 newwindow.Type=CUSTOMSCREEN;
@@ -466,7 +464,7 @@ while(txtlentab[kplcnt1]!=-1) {
 			tags[0]=GTIN_Number;
 			tags[1]=((struct IntString*)*(tauluptr+2))->value;
 			tags[2]=STRINGA_Justification;
-			//tags[3]=STRINGCENTER;
+			tags[3]=GACT_STRINGCENTER;
 			break;
 			case STRING_KIND:
 			tags[0]=GTST_String;
@@ -474,7 +472,7 @@ while(txtlentab[kplcnt1]!=-1) {
 			tags[2]=GTST_MaxChars;
 			tags[3]=*(tauluptr+3);
 			tags[4]=STRINGA_Justification;
-			//tags[5]=STRINGCENTER;
+			tags[5]=GACT_STRINGCENTER;
 			break;
 			case TEXT_KIND:
 			if((*(tauluptr+1)&GADGTEXTNUC)==0) {
@@ -729,7 +727,7 @@ while (quit==-2) {
 					if (*(tauluptr+3)) *(tauluptr+3)=0; else *(tauluptr+3)=1;
 					break;
 					case BUTTON_KIND:
-					quit=vgad->GadgetID; //shortcuts[apu1];
+					quit=vgad->GadgetID; /* shortcuts[apu1]; */
 					break;
 					case CYCLE_KIND:
 					*(tauluptr+((*(tauluptr+1))&0xff)+1)=code;

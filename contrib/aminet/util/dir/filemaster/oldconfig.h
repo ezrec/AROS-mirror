@@ -20,18 +20,18 @@
 
 #define OLDCONFIGVERSION 14
 
-//#define MAXPATH 512
+/* #define MAXPATH 512 */
 #define MAXCOLORS3022 16
 #define MAXCOLS3022 4
 #define MAXROWS3022 2
-//#define MAXLISTS 10
+/* #define MAXLISTS 10 */
 #define MAXWINDOWLISTS3022 8
-//#define MAXPATHLISTS 10
+/* #define MAXPATHLISTS 10 */
 #define MAXPATTERN3022 128
-//#define MAXMSG 256
-//#define BOTTOMGADGETS 4
+/* #define MAXMSG 256 */
+/* #define BOTTOMGADGETS 4 */
 #define MAXCOMMANDS3022 20
-//#define FMPENS 11
+/* #define FMPENS 11 */
 #define MAXCMENUS3022 27
 #define CONFIGSIZE3022 64
 #define CMENUCONFIGSIZE3022 8
@@ -71,9 +71,9 @@ struct FMConfig3022 {
 	WORD	windowwidth;
 	WORD	sleepwindowtop;
 	WORD	sleepwindowleft;
-	UBYTE	pad1;	//HACKCHECK must be zero
+	UBYTE	pad1;	/* HACKCHECK must be zero */
 	UBYTE	sliderh;
-	UBYTE	pad2;	//HACKCHECK must be nonzero
+	UBYTE	pad2;	/* HACKCHECK must be nonzero */
 	UBYTE	sliderw;
 	UBYTE	pad3;
 	UBYTE	spaceh;
@@ -96,7 +96,7 @@ struct FMConfig3022 {
 	UBYTE	doubleclick;
 	UBYTE	rightmouse;
 	UBYTE	middlemouse;
-	UBYTE	screentype;	//0=custom,1=public custom,2=workbench,3=on public
+	UBYTE	screentype;	/* 0=custom,1=public custom,2=workbench,3=on public */
 	UBYTE	pubscreen[MAXPUBSCREENNAME+1];
 	ULONG	flags;
 	UWORD	filelen;
@@ -104,7 +104,7 @@ struct FMConfig3022 {
 	UWORD	datelen;
 	BYTE	mainpriority;
 	BYTE	subpriority;
-	LONG	dosbuffersize;	// HACKCHECK bits 31-24 = zero
+	LONG	dosbuffersize;	/*  HACKCHECK bits 31-24 = zero */
 
 	UBYTE	pad[128];
 
@@ -119,7 +119,7 @@ struct FMConfig3022 {
 	struct	TextAttr smallfontattr;
 	UBYTE	smallfontname[80];
 
-	//letter,shortcut,scqualifier,frontpen,backpen,priority
+	/* letter,shortcut,scqualifier,frontpen,backpen,priority */
 	WORD	listinfocmenu;
 	WORD	listinfo[MAXCOLS3022+1][MAXROWS3022+2];
 

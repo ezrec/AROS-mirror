@@ -25,23 +25,23 @@ struct IntString {
 };
 
 #define TOGGLE_KIND 10
-#define GADGDEFAULT 0x8000	// default (return) gadget
-#define GADGMAXSIZE 0x4000	// make gadgets as wide as possible
-#define GADGTEXTNUC 0x2000	// no underscore converting on TEXT_KIND
-#define GADGTEXTLEFT 0x1000	// left justify TEXT_KIND (default=center)
-#define GADGTEXTRIGHT 0x0800	// right justify TEXT_KIND (default=center)
-#define GADGEOF 0x0001		// end of line
+#define GADGDEFAULT 0x8000	/*  default (return) gadget */
+#define GADGMAXSIZE 0x4000	/*  make gadgets as wide as possible */
+#define GADGTEXTNUC 0x2000	/*  no underscore converting on TEXT_KIND */
+#define GADGTEXTLEFT 0x1000	/*  left justify TEXT_KIND (default=center) */
+#define GADGTEXTRIGHT 0x0800	/*  right justify TEXT_KIND (default=center) */
+#define GADGEOF 0x0001		/*  end of line */
 
-// bits 16-23 = same size number
-// bits 24-31 = gadgetid number
+/*  bits 16-23 = same size number */
+/*  bits 24-31 = gadgetid number */
 
-#define GADSCREEN 0		// open on struct Screen*
-#define GADCENTER 1		// center window
-#define GADSUPER 2		// super table
+#define GADSCREEN 0		/*  open on struct Screen* */
+#define GADCENTER 1		/*  center window */
+#define GADSUPER 2		/*  super table */
 
-//supertable;
-//16-24 = clicked gadget,8-15=gadget's value,0-7=number of modify lines
-//SENABLE/SDISABLE/SCHANGE,0-7 gadget to be modified
+/* supertable; */
+/* 16-24 = clicked gadget,8-15=gadget's value,0-7=number of modify lines */
+/* SENABLE/SDISABLE/SCHANGE,0-7 gadget to be modified */
 
 #define SDISABLE 0x80000000
 #define SCHANGE 0x40000000

@@ -50,7 +50,8 @@
 #include <libraries/bgui_macros.h>
 
 #ifdef AROS
-struct Library          *BGUIBase=NULL;
+/* ruct Library          *BGUIBase=NULL; */
+#include <aros/asmcall.h>
 #endif
 
 /*
@@ -84,8 +85,11 @@ typedef struct {
 /*
  *	Set attributes.
  */
-#ifndef AROS
+#ifdef AROS
+void SetFLAttr(FLD *fld, struct TagItem *attr)
+#else
 STATIC void __saveds __asm SetFLAttr(register __a0 FLD *fld, register __a1 struct TagItem *attr )
+#endif
 {
 	struct TagItem		*tag, *tstate = attr;
 
@@ -129,8 +133,19 @@ STATIC void __saveds __asm SetFLAttr(register __a0 FLD *fld, register __a1 struc
  *	SAS users!
  */
 
+#ifdef _AROS
+AROS_UFH3S(ULONG, DispatchFL,
+    AROS_UFHA(Class *, cl, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(Msg, msg, A1))
+#else
 STATIC ULONG __saveds __asm DispatchFL(register __a0 Class *cl,register __a2 Object *obj, register __a1 Msg msg )
+#endif
 {
+#ifdef _AROS
+    	AROS_USERFUNC_INIT
+#endif
+
 	FLD		       *fld,*fld2;
 	APTR			entry;
 	struct IBox	       *ib;
@@ -291,8 +306,10 @@ WORD cnt1;
 			break;
 	}
 	return( rc );
-}
+#ifdef _AROS
+    	AROS_USERFUNC_EXIT
 #endif
+}
 /*
  *	Simple class initialization.
  */
@@ -308,13 +325,11 @@ Class *InitFLClass( void )
 		/*
 		 *	Create the class.
 		 */
-	#ifndef AROS
 		if ( cl = MakeClass( NULL, NULL, super, sizeof( FLD ), 0L ))
 			/*
 			 *	Setup dispatcher.
 			 */ 
 			cl->cl_Dispatcher.h_Entry = ( HOOKFUNC  )DispatchFL;
-	#endif		
 		}
 	return( cl );
 }

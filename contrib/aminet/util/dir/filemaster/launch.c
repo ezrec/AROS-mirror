@@ -106,7 +106,7 @@ launch (void (*address) (void), struct CMenuConfig *cmc, WORD flag,
   D(bug("launch.c 106...........\n")); 
   if (subproc & MSUBPROC)
     {
-      //flag?"FM Timer":"<<<FileMaster Unknown>>>"
+      /* flag?"FM Timer":"<<<FileMaster Unknown>>>" */
       if (!
 	  (proc =
 	   CreateNewProcTags (NP_Entry, address, NP_StackSize, 10000,
@@ -249,14 +249,14 @@ D(bug("launch.c 222...........\n"));
   return (msg);
 }
 
-#ifndef AROS  
 void
 priority (struct CMenuConfig *cmc)
 {
+#ifndef _AROS
   if (cmc)
     SetTaskPri (FindTask (0), fmconfig->pri[cmc->priority]);
-}
 #endif
+}
 
 void
 initproc (struct FMList *list, UBYTE * txt)
@@ -298,7 +298,7 @@ initproc (struct FMList *list, UBYTE * txt)
 void
 changename (struct FMList *list, UBYTE * name)
 {
-//struct Task *task;
+/* struct Task *task; */
 
   if (!list || !name)
     return;
@@ -373,7 +373,7 @@ retry:
   return (0);
 }
 
-// 0=free,1=alloc
+/*  0=free,1=alloc */
 
 #define GNUM 4
 
