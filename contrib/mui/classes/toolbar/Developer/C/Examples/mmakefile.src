@@ -11,10 +11,18 @@ USER_INCLUDES := -I../../../../nlist/commonaros
 
 #MM contrib-zune-classes-toolbar-demo : includes linklibs \
 #MM 	    	    	    	      contrib-zune-classes-toolbar \
-#MM				      contrib-zune-classes-nfloattext
+#MM				      contrib-zune-classes-nfloattext \
+#MM				      mcc_toolbar-demo-images
 
 %build_prog mmake=contrib-zune-classes-toolbar-demo \
     progname=Toolbar-Demo targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="mui arossupport amiga arosc"
+
+#MM mcc_toolbar-demo-images :
+
+%copy_files_q src=../../../Demos/Images \
+	      dst=$(EXEDIR)/Images \
+	      files="ButtonBank1.bsh ButtonBank2.bsh" \
+	      maketarget=mcc_toolbar-demo-images
 
 %common
