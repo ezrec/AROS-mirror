@@ -1140,7 +1140,7 @@ streng *std_date( tsd_t *TSD, cparamboxptr parms )
 
    checkparam(  parms,  0,  3 , "DATE" ) ;
    if ((parms)&&(parms->value))
-      format = getoptionchar( TSD, parms->value, "DATE", 1, "BCDEMNOSUW" ) ;
+      format = getoptionchar( TSD, parms->value, "DATE", 1, "BCDEIJMNOSUW" ) ;
 
    if (parms->next)
    {
@@ -1154,7 +1154,7 @@ streng *std_date( tsd_t *TSD, cparamboxptr parms )
          if (tmpptr->value)
          {
             str_suppformat = tmpptr->value;
-            suppformat = getoptionchar( TSD, tmpptr->value, "DATE", 3, "BDENOSU" ) ;
+            suppformat = getoptionchar( TSD, tmpptr->value, "DATE", 3, "BDEINOSU" ) ;
          }
       }
       else
@@ -1228,6 +1228,16 @@ streng *std_date( tsd_t *TSD, cparamboxptr parms )
       case 'E':
          sprintf(answer->value, fmt, tmdata.tm_mday, tmdata.tm_mon+1,
                               tmdata.tm_year%100) ;
+         answer->len = strlen(answer->value);
+         break ;
+
+      case 'I':
+         sprintf(answer->value, "%d", tmdata.tm_yday + (basedays(tmdata.tm_year)-basedays(1978)) + 1);
+         answer->len = strlen(answer->value);
+         break ;
+
+      case 'J':
+         sprintf(answer->value, "%02d%d", tmdata.tm_year%100, tmdata.tm_yday + 1);
          answer->len = strlen(answer->value);
          break ;
 

@@ -723,6 +723,8 @@ int convert_date(const streng *suppdate, char suppformat, struct tm *indate)
    switch(suppformat)
    {
       case 'B':
+         if (suppdate->len > 19)
+            return(1);
          memcpy(buf,ptr,suppdate->len);
          buf[suppdate->len] = '\0';
          if ((num1 = atol(buf)) == 0)
@@ -732,6 +734,8 @@ int convert_date(const streng *suppdate, char suppformat, struct tm *indate)
          base2date(num1,indate);
          break;
       case 'D':
+         if (suppdate->len > 19)
+            return(1);
          memcpy(buf,ptr,suppdate->len);
          buf[suppdate->len] = '\0';
          if ((num1 = atol(buf)) == 0)
@@ -739,6 +743,17 @@ int convert_date(const streng *suppdate, char suppformat, struct tm *indate)
                if (buf[i] != '0')
                   return(1);
          base2date(num1+basedays(indate->tm_year)-1,indate);
+         break;
+      case 'I':
+         if (suppdate->len > 19)
+            return(1);
+         memcpy(buf,ptr,suppdate->len);
+         buf[suppdate->len] = '\0';
+         if ((num1 = atol(buf)) == 0)
+            for (i=0;i<suppdate->len;i++)
+	       if (buf[i] != '0')
+	          return(1);
+         base2date(num1+basedays(1978)-1,indate);
          break;
       case 'E':
       case 'O':
