@@ -85,7 +85,7 @@ BOOL WildCmp (const char *, const char *);
 #define allocb(bytes)       AllocMem ((bytes), 0)
 #define allocl(lwords)      AllocMem ((lwords)<<2, 0)
 #define bmovl(s,d,n)        memmove ((d), (s), (n) << 2)
-#define movmem(s,d,n)       memmove ((d), (s), (n) << 2)
+#define movmem(s,d,n)       memmove ((d), (s), (n))
 #define setmem(d,n,c)       memset ((d), (c), (n))
 
 #define GETLINE(ed,nr)      ((ed)->list[(nr)])
