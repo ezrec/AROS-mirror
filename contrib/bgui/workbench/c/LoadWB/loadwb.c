@@ -6,6 +6,12 @@
 
 struct Library *BGUIBase;
 
+#ifdef _AROS
+struct IntuitionBase *IntuitionBase;
+struct GfxBase *GfxBase;
+struct DosLibrary *DOSBase;
+#endif
+
 /*** Defines *****************************************************************/
 
 enum
