@@ -15,11 +15,11 @@ all:  $(PROJECTNAME)
 install:
 	cp $(PROJECTNAME) $(BASEDIR)/AROS/Tests/
     
-libavformat/libavformat.a:
-	cd libavformat && make && cd ..
+libavformat/libavformat.a: libavformat/*.c libavformat/*.h
+	make -C libavformat
 
-libavcodec/libavcodec.a:
-	cd libavcodec && make && cd ..
+libavcodec/libavcodec.a: libavcodec/*.c libavcodec/*.h
+	make -C libavcodec
 
 $(OBJ)%.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -28,7 +28,7 @@ $(PROJECTNAME): libavcodec/libavcodec.a libavformat/libavformat.a $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LIBS)
 
 clean:
-	cd libavcodec && make clean && cd ..
-	cd libavformat && make clean && cd ..
+	make -C libavcodec clean 
+	make -C libavformat clean 
 	rm -f $(OBJ)*.o $(PROJECTNAME)
 
