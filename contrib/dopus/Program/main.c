@@ -806,7 +806,10 @@ tryfonts:
 	scrdata_gadget_offset+=scrdata_xoffset;
 	scrdata_gadget_xpos=scrdata_gadget_offset+scrdata_drive_width;
 
-	if (config->generalscreenflags&SCR_GENERAL_NEWLOOKPROP && system_version2) {
+#warning Always assuming SCR_GENERAL_NEWLOOKPROP because AROS prop gadgets dont support non AUTOKNOB (= custom image as knob) yet
+
+/*	if (config->generalscreenflags&SCR_GENERAL_NEWLOOKPROP && system_version2) { */
+	if (1) {
 		status_flags|=STATUS_NEWLOOK;
 		for (a=0;a<2;a++) {
 			vert_propinfo[a].Flags=AUTOKNOB|PROPNEWLOOK|FREEVERT|PROPBORDERLESS;
@@ -1082,7 +1085,6 @@ void setupdisplay(all)
 int all;
 {
 	int a;
-
 	drawscreen();
 	for (a=0;a<2;a++) {
 		if (config->generalscreenflags&SCR_GENERAL_NEWLOOKPROP && system_version2)
@@ -1290,7 +1292,8 @@ void allocdragbuffers()
 
 	freedragbuffers();
 	drag_sprite.Depth=Window->WScreen->RastPort.BitMap->Depth;
-
+	if (drag_sprite.Depth > 8) drag_sprite.Depth = 8; /* AROS FIX sg */
+	
 	a=35;
 	w=(gettextlength(scr_font[FONT_DIRS],str_space_string,&a,0)+15);
 	a=(scrdata_dispwin_width[0]>scrdata_dispwin_width[1])?scrdata_dispwin_width[0]:scrdata_dispwin_width[1];
@@ -1300,6 +1303,7 @@ void allocdragbuffers()
 
 	if (!(drag_bob_buffer=AllocRaster(drag_sprite.Width*16,drag_sprite.Height*drag_sprite.Depth)))
 		return;
+
 	if (!(drag_bob_savebuffer=AllocRaster(drag_sprite.Width*16,drag_sprite.Height*drag_sprite.Depth))) {
 		freedragbuffers();
 		return;
@@ -1319,6 +1323,7 @@ void allocdragbuffers()
 	drag_sprite.ImageData=(WORD *)drag_bob_buffer;
 	drag_sprite.PlanePick=(1<<drag_sprite.Depth)-1;
 	drag_bob.SaveBuffer=(WORD *)drag_bob_savebuffer;
+
 }
 
 void freedragbuffers()
@@ -1370,7 +1375,8 @@ ULONG *palette;
 	int numcols;
 
 	numcols=1<<screen->RastPort.BitMap->Depth;
-
+	if (numcols > 256) numcols = 256; /* AROS FIX sg */
+	
 	if (system_version2>=OSVER_39) {
 		GetRGB32(screen->ViewPort.ColorMap,0,numcols,palette);
 	}
