@@ -22,8 +22,13 @@
 # $Id$
 
 # $Log$
-# Revision 1.1  2003/08/09 00:22:54  chodorowski
-# Initial revision
+# Revision 1.2  2004/02/25 03:31:53  NicJA
+# updates updates updates... now builds with the standard aros mmakefile.src system - use make contrib-mesa2 to build
+#
+# N.B - theres something wrong somewhere causing some demos,samples and book files to not compile (if you can see the problem please fix it ;))
+#
+# Revision 1.1.1.1  2003/08/09 00:22:54  chodorowski
+# Amiga Mesa 2.2 ported to AROS by Nic Andrews. Build with 'make aros'. Not built by default.
 #
 # Revision 1.11  1996/12/13 22:09:50  brianp
 # replaced -mieee-fp with -ffast-math in linux CFLAGS
@@ -201,13 +206,26 @@ amiga-gcc:
 	"RANLIB = ranlib" \
 	"XLIBS = -s" "AMIGA = 1"
 	
-aros:
+aros-hosted:
 	$(MAKE) $(MFLAGS) targets \
 	"GL_LIB = libMesaGL.a" \
 	"GLU_LIB = libMesaGLU.a" \
 	"TK_LIB = libMesatk.a" \
 	"AUX_LIB = libMesaaux.a" \
 	"CC = i386-linux-aros-gcc" \
+	"CFLAGS = -O2 $(LOCALFLAGS) -Werror-implicit-function-declaration" \
+	"MAKELIB = ar ruv" \
+	"RANLIB = ranlib" \
+	"XLIBS = -s" "AMIGA = 1" \
+	"AROS = 1"
+
+aros-native:
+	$(MAKE) $(MFLAGS) targets \
+	"GL_LIB = libMesaGL.a" \
+	"GLU_LIB = libMesaGLU.a" \
+	"TK_LIB = libMesatk.a" \
+	"AUX_LIB = libMesaaux.a" \
+	"CC = i386-pc-aros-gcc" \
 	"CFLAGS = -O2 $(LOCALFLAGS) -Werror-implicit-function-declaration" \
 	"MAKELIB = ar ruv" \
 	"RANLIB = ranlib" \

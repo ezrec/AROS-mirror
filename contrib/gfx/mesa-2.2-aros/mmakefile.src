@@ -5,16 +5,18 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-mesa2 : includes linklibs
-#MM- contrib-mesa2 : linklibs-mesagl linklibs-mesaglu linklibs-mesatk linklibs-mesaaux contrib-mesa2-demos contrib-mesa2-samples contrib-mesa2-book
-#MM linklibs-mesagl : includes linklibs
-#MM linklibs-mesaglu : includes linklibs
-#MM linklibs-mesatk : includes linklibs
-#MM linklibs-mesaaux : includes linklibs
 
-#MM contrib-mesa2-demos : includes mesa-includes linklibs-mesagl linklibs-mesaglu linklibs-mesatk linklibs-mesaaux
-#MM contrib-mesa2-samples : includes mesa-includes linklibs-mesagl linklibs-mesaglu linklibs-mesatk linklibs-mesaaux
-#MM contrib-mesa2-book : includes mesa-includes linklibs-mesagl linklibs-mesaglu linklibs-mesatk linklibs-mesaaux
+#MM contrib-mesa2 : includes
+#MM- contrib-mesa2 : contrib-mesa2-common contrib-mesa2-demos contrib-mesa2-samples contrib-mesa2-book
+#MM- contrib-mesa2-common : setup-contrib-mesa2-directories includes mesa-includes linklibs-mesagl linklibs-mesaglu linklibs-mesatk linklibs-mesaaux
+#MM linklibs-mesagl : includes
+#MM linklibs-mesaglu : includes
+#MM linklibs-mesatk : includes
+#MM linklibs-mesaaux : includes
+
+#MM contrib-mesa2-demos : contrib-mesa2-common
+#MM contrib-mesa2-samples : contrib-mesa2-common
+#MM contrib-mesa2-book : contrib-mesa2-common
 
 AMIGASRCDIR := amiga
 MESASRCDIR := src
@@ -225,16 +227,19 @@ USER_CFLAGS	:= -DNO_ERRNO_H
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
 
 %build_progs mmake=contrib-mesa2-demos \
-    files=$(MESADEMOS) targetdir=$(CONTRIBDIR)/Gfx/Mesa2/Demos \
+    files=$(MESADEMOS) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
     uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
     
 %build_progs mmake=contrib-mesa2-samples \
-    files=$(MESASAMPLES) targetdir=$(CONTRIBDIR)/Gfx/Mesa2/Samples \
-    uselibs="Mesatk MesaGLU MesaGL arossupport amiga arosc m"    
+    files=$(MESASAMPLES) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
+    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"    
 
 %build_progs mmake=contrib-mesa2-book \
-    files=$(MESABOOK) targetdir=$(CONTRIBDIR)/Gfx/Mesa2/Book \
+    files=$(MESABOOK) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
     uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
 
-%common
+#MM
+setup-contrib-mesa2-directories :
+	%mkdirs_q $(CONTRIBDIR)/Gfx $(CONTRIBDIR)/Gfx/Mesa2 $(CONTRIBDIR)/Gfx/Mesa2/demos $(CONTRIBDIR)/Gfx/Mesa2/samples $(CONTRIBDIR)/Gfx/Mesa2/book
 
+%common
