@@ -1932,6 +1932,20 @@ LONG SAVEDS picdrawfunc(APTR subtask, BYTE abortsignal)
 						{
 							if (drawmainpic) 
 							{
+							    /*if (DrawPicture(drawhandle, view->showpic, view->viewx + dx, view->viewy + dy,
+										RND_DestCoordinates, view->angle && (view->displaymode != MVDISPMODE_FIT) ? (IPTR)view->coordinates : NULL,
+										GGFX_DestWidth, dw, GGFX_DestHeight, dh,
+										GGFX_SourceWidth, sw, GGFX_SourceHeight, sh,
+										GGFX_SourceX, sx, GGFX_SourceY, sy,
+										GGFX_RastLock, (IPTR)view->rastlock,
+
+				GGFX_AutoDither, (view->dither == MVDITHERMODE_AUTO),
+				GGFX_AutoDither, FALSE,
+				GGFX_DitherMode, view->autodither ? view->dithermode : DITHERMODE_NONE,
+
+									GGFX_DitherMode, view->dither == MVDITHERMODE_OFF ? DITHERMODE_NONE : view->dithermode,
+										GGFX_CallBackHook, (IPTR)&drawsubhook,
+										TAG_DONE))*/
 								if (DrawPicture(drawhandle, view->showpic, view->viewx + dx, view->viewy + dy,
 										RND_DestCoordinates, view->angle && (view->displaymode != MVDISPMODE_FIT) ? (IPTR)view->coordinates : NULL,
 										GGFX_DestWidth, dw, GGFX_DestHeight, dh,
@@ -1939,11 +1953,9 @@ LONG SAVEDS picdrawfunc(APTR subtask, BYTE abortsignal)
 										GGFX_SourceX, sx, GGFX_SourceY, sy,
 										GGFX_RastLock, (IPTR)view->rastlock,
 
-			//	GGFX_AutoDither, (view->dither == MVDITHERMODE_AUTO),
 				GGFX_AutoDither, FALSE,
 				GGFX_DitherMode, view->autodither ? view->dithermode : DITHERMODE_NONE,
 
-									//	GGFX_DitherMode, view->dither == MVDITHERMODE_OFF ? DITHERMODE_NONE : view->dithermode,
 										GGFX_CallBackHook, (IPTR)&drawsubhook,
 										TAG_DONE))
 								{
