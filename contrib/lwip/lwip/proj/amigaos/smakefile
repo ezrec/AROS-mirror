@@ -1,0 +1,43 @@
+# How to tell the compiler the destination of object files
+TO  = OBJNAME=
+# How to tell the compiler include directories
+INC = IDIR=
+# How to tell the compiler new defines
+DEF = DEFINE=
+CFLAGS = NOVERS
+
+CC = sc
+
+SRCDIR = //src
+
+COREOBJS=$(SRCDIR)/core/inet.o $(SRCDIR)/core/mem.o $(SRCDIR)/core/memp.o $(SRCDIR)/core/netif.o $(SRCDIR)/core/pbuf.o $(SRCDIR)/core/stats.o $(SRCDIR)/core/sys.o $(SRCDIR)/core/tcp.o $(SRCDIR)/core/tcp_input.o $(SRCDIR)/core/tcp_output.o $(SRCDIR)/core/udp.o $(SRCDIR)/core/ipv4/icmp.o $(SRCDIR)/core/ipv4/ip.o $(SRCDIR)/core/ipv4/ip_addr.o
+ARCHOBJS=$(SRCDIR)/arch/amigaos/sys_arch.o $(SRCDIR)/arch/amigaos/lib_arch.o
+NETIFOBJS=$(SRCDIR)/netif/loopif.o $(SRCDIR)/netif/tcpdump.o $(SRCDIR)/netif/arp.o
+APIOBJS=$(SRCDIR)/api/api_lib.o $(SRCDIR)/api/api_msg.o $(SRCDIR)/api/err.o $(SRCDIR)/api/sockets.o $(SRCDIR)/api/tcpip.o
+
+all: test
+
+test: $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) test.o
+  sc NOVERS TO test link with <<
+$(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) test.o lib:debug.lib
+<
+
+
+.c.o:
+		$(CC) $(DEF)IPv4 $(DEF)LWIP_DEBUG=1 $(CFLAGS) $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
+
+dirs:
+  execute <<
+  if not exists objs
+    makedir objs
+  endif
+  if not exists objs/core
+    makedir objs/core
+  endif
+  if not exists objs/netif
+    makedir objs/netif
+  endif
+<
+
+clean:
+  -delete $(SRCDIR)/core/\#?.o $(SRCDIR)/core/ipv4/\#?.o $(SRCDIR)/netif/\#?.o $(SRCDIR)/arch/amigaos/\#?.o $(SRCDIR)/api/\#?.o

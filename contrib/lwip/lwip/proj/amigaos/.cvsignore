@@ -1,0 +1,5 @@
+SCOPTIONS
+*.o
+*.bak
+*.info
+*.lnk
