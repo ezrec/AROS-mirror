@@ -16,11 +16,11 @@ USE_MLIB := yes
 
 USER_CFLAGS := -DAROS -DV39 
 
-#MM aminet-development-compiler-lcc-cpp
+#MM contrib-development-compilers-lcc-cpp
 
-%make_prog_setup mmake=aminet-development-compiler-lcc-cpp
+%make_prog_setup mmake=contrib-development-compilers-lcc-cpp
 
-aminet-development-compiler-lcc-cpp : setup $(EXE)
+contrib-development-compilers-lcc-cpp : setup $(EXE)
 
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
