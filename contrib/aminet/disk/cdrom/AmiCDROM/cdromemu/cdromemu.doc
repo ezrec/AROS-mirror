@@ -1,0 +1,43 @@
+cdromemu.device   Version 1.1
+===============
+
+Cdromemu.device emulates a trackdisk device which reads a CDROM image from
+an AmigaDOS file. It is useful for CDROM manufacturers which want to verify
+the output of their pre-mastering program.
+
+Installation:
+
+  1. Copy "cdromemu.device" to the directory DEVS:
+
+  2. Set the environment variable CDROM_FILE to the name of the file
+     which contains the CDROM image.
+
+  3. Set the following options in the Startup field for AmiCDROM:
+  
+       "DEVICE=cdromemu.device UNIT=0 TRACKDISK"
+     
+     Add other startup options according to the AmiCDROM manual (e.g.
+     "ROCKRIDGE".)
+
+  4. If you also want to use the "cdrom" or "cdcheck", then set the
+     following environment variables:
+     
+           variable           value
+           ---------------    ---------------
+           CDROM_DEVICE       cdromemu.device
+	   CDROM_UNIT         0
+	   CDROM_TRACKDISK    1
+
+
+The following commands are possible:
+
+  cdromemu remove	remove the image file (CDROM_FILE) from the
+  			virtual drive (i.e. the lock on the file will
+			be removed; it can now be replaced by another
+			file).
+
+  cdromemu insert	inserts the image file (CDROM_FILE) into the
+  			virtual drive.
+
+The commands "insert" and "remove" also modify the results of the
+TD_CHANGESTATE and TD_CHANGENUM commands.
