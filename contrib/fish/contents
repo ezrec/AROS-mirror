@@ -1,3 +1,12 @@
+304_lines/    From Fish Disk 304
+304_clines/   From Fish Disk 304
+
+362_rubik/    From Fish Disk 362
+              (doesn't work, yet)
+
+371_fractals  From Fish Disk 371
+              (doesn't work, yet)
+
 bezier/bouncing
 bezier/cubic
 bezier/orig   From Fish Disk 75
@@ -11,6 +20,7 @@ henon/        From Fish Disk 636
 
 layers/       From Fish Disk 5
 
+
 lotto/        From Fish Disk 430 (lotto/program)
 
 mand/         From Fish Disk 
@@ -20,8 +30,12 @@ microemacs/   From Fish Disk 2
                There is also a version on Fish Disk 6, but it contains
                assembly code.
 
+mosaic/      From Fish Disk 466  (game)
+
 rubik/        From Fish Disk 29
                (Unfortunately some functions are still missing.)
+
+screenzap/   From Fish Disk 303
 
 tree/         From Fish Disk 31
 
