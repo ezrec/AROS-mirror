@@ -199,7 +199,7 @@ void handle_msgs(FileHandleInfo *fhi)
       fhi->flags |= FHI_READRETURNED;
     else if (iofs == fhi->pendingwrite)
     {
-      FreeMem(iofs->io_Union.io_WRITE.io_Buffer, iofs->io_Union.io_WRITE.io_Length);
+      FreeVec(iofs->io_Union.io_WRITE.io_Buffer);
       FreeMem(iofs, sizeof(struct IOFileSys));
       fhi->pendingwrite = NULL;
     }
@@ -223,11 +223,15 @@ int __regina_close(int handle, void *async_info)
   {
     AbortIO((struct IORequest *)fhi->pendingread);
     WaitIO((struct IORequest *)fhi->pendingread);
+    FreeVec(fhi->pendingread->io_Union.io_READ.io_Buffer);
+    FreeMem(fhi->pendingread, sizeof(struct IOFileSys));
   }
   if (fhi->pendingwrite != NULL)
   {
     AbortIO((struct IORequest *)fhi->pendingwrite);
     WaitIO((struct IORequest *)fhi->pendingwrite);
+    FreeVec(fhi->pendingwrite->io_Union.io_READ.io_Buffer);
+    FreeMem(fhi->pendingwrite, sizeof(struct IOFileSys));
   }
   if (fhi->isinput)
     Close(fhi->fhout);
@@ -318,6 +322,8 @@ int __regina_write(int handle, const void *buf, unsigned size, void *async_info)
     if (fhi->pendingwrite!=NULL)
     {
       WaitIO((struct IORequest *)fhi->pendingwrite);
+      FreeVec(fhi->pendingwrite->io_Union.io_READ.io_Buffer);
+      FreeMem(fhi->pendingwrite, sizeof(struct IOFileSys));
       fhi->pendingwrite = NULL;
     }
     return 0;
@@ -336,7 +342,7 @@ int __regina_write(int handle, const void *buf, unsigned size, void *async_info)
     if (iofs == NULL)
       return -ENOMEM;
     
-    iofs->io_Union.io_WRITE.io_Buffer = AllocMem(size, MEMF_PUBLIC);
+    iofs->io_Union.io_WRITE.io_Buffer = AllocVec(size, MEMF_PUBLIC);
     memcpy(iofs->io_Union.io_WRITE.io_Buffer, buf, size);
     iofs->io_Union.io_WRITE.io_Length = size;
     
