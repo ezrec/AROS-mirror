@@ -261,6 +261,10 @@ Next you'll use the ``add-symbol-file`` command to load the given file
 at the given text address::
 
     (gdb) add-symbol-file Tests/Zune/list1 0x402bd460
+    add symbol table from file "Tests/Zune/list1" at
+    	    .text_addr = 0x402bd460
+    (y or n) y
+    Reading symbols from Tests/Zune/list1...done.
     
 Hopefully it has resolved the addresses::
 
