@@ -30,8 +30,6 @@
 #include "d_think.h"
 
 
-#pragma options align=mac68k
-
 
 typedef enum
 {
@@ -1339,13 +1337,14 @@ typedef struct
 extern FAR mobjinfo_t mobjinfo[NUMMOBJTYPES];
 
 
-#pragma options align=power
-
 
 #endif
 //-----------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.2  2000/06/28 20:43:46  bernie
+// remove alien #pragma directives. Perhaps for Metrowerks?
+//
 // Revision 1.1  2000/02/29 18:21:06  stegerg
 // Doom port based on ADoomPPC. Read README.AROS!
 //

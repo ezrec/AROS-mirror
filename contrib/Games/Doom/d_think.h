@@ -31,8 +31,6 @@
 #endif
 
 
-#pragma options align=mac68k
-
 
 //
 // Experimental stuff.
@@ -72,13 +70,14 @@ typedef struct thinker_s
 } thinker_t;
 
 
-#pragma options align=power
-
 
 #endif
 //-----------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.2  2000/06/28 20:43:47  bernie
+// remove alien #pragma directives. Perhaps for Metrowerks?
+//
 // Revision 1.1  2000/02/29 18:21:06  stegerg
 // Doom port based on ADoomPPC. Read README.AROS!
 //
