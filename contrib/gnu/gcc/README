@@ -18,7 +18,7 @@ INDEX
 
   A cross compiler is a compiler able to produce binaries usable by a
   "target" system, which however runs on a different system than the
-  host's one. This is useful to speed up development, in case the
+  target's one. This is useful to speed up development, in case the
   "host" system is faster than the "target" one, or if the "host"
   system has any other advantages over the "target" one.
 
