@@ -27,6 +27,27 @@ def escape(data, entities={}):
         data = data.replace(chars, entity)
     return data
 
+def quoteattr(data, entities={}):
+    """Escape and quote an attribute value.
+
+    Escape &, <, and > in a string of data, then quote it for use as
+    an attribute value.  The \" character will be escaped as well, if
+    necessary.
+
+    You can escape other strings of data by passing a dictionary as
+    the optional entities parameter.  The keys and values must all be
+    strings; each key will be replaced with its corresponding value.
+    """
+    data = escape(data, entities)
+    if '"' in data:
+        if "'" in data:
+            data = '"%s"' % data.replace('"', "&quot;")
+        else:
+            data = "'%s'" % data
+    else:
+        data = '"%s"' % data
+    return data
+
 
 class XMLGenerator(handler.ContentHandler):
 
@@ -59,7 +80,7 @@ class XMLGenerator(handler.ContentHandler):
     def startElement(self, name, attrs):
         self._out.write('<' + name)
         for (name, value) in attrs.items():
-            self._out.write(' %s="%s"' % (name, escape(value)))
+            self._out.write(' %s=%s' % (name, quoteattr(value)))
         self._out.write('>')
 
     def endElement(self, name):
@@ -80,7 +101,7 @@ class XMLGenerator(handler.ContentHandler):
 
         for (name, value) in attrs.items():
             name = self._current_context[name[0]] + ":" + name[1]
-            self._out.write(' %s="%s"' % (name, escape(value)))
+            self._out.write(' %s=%s' % (name, quoteattr(value)))
         self._out.write('>')
 
     def endElementNS(self, name, qname):
@@ -231,7 +252,7 @@ def prepare_input_source(source, base = ""):
             source.setSystemId(os.path.join(basehead, sysid))
             f = open(sysid, "rb")
         else:
-	    import urllib
+            import urllib
             source.setSystemId(urlparse.urljoin(base, sysid))
             f = urllib.urlopen(source.getSystemId())
 
