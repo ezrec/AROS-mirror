@@ -64,13 +64,13 @@ Now to install the game <coolgamefilename.zip> you can either copy it
 to Mame's rom directory and leave it there as it is, because Mame
 can handle zip files itself:
 
-   cp <download-dir>/<coolgamefilename.zip> bin/$(TARGET_ARCH)-$(TARGET_CPU)/AROS/contrib/Emu/Mame/roms
+   cp <download-dir>/<coolgamefilename.zip> bin/$(AROS_TARGET_ARCH)-$(TARGET_CPU)/AROS/contrib/Emu/Mame/roms
    
 or unzip it to it's own directory which takes a bit longer:
 
    First cd into the Mame ROMS directory:
 
-       cd bin/$(TARGET_ARCH)-$(TARGET_CPU)/AROS/contrib/Emu/Mame/roms
+       cd bin/$(AROS_TARGET_ARCH)-$(TARGET_CPU)/AROS/contrib/Emu/Mame/roms
    
    Then make a new dir with the same name as the game archive
    name (without the .zip suffix):
