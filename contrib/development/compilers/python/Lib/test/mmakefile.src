@@ -5,7 +5,7 @@
 include $(TOP)/config/make.cfg
 include ../../make.cfg
 
-FILES := README $(wildcard *.py) $(wildcard *.uue)
+FILES := README $(wildcard *.py) $(wildcard *.uue) $(wildcard test.*)
 
 #MM- contrib-development-python-modules : contrib-development-python-modules-test
 #MM contrib-development-python-modules-test
