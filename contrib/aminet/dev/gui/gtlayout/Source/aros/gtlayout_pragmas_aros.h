@@ -9,7 +9,7 @@
 
 #pragma usrcall(LibInit(D0,A0,A6))
 //#pragma amicall(GTLayoutBase,0x00,LibInit(D0,A0))
-#pragma amicall(GTLayoutBase,0x06,LibOpen())
+#pragma amicall(GTLayoutBase,0x06,LibOpen(D0))
 #pragma amicall(GTLayoutBase,0x0c,LibClose())
 #pragma amicall(GTLayoutBase,0x12,LibExpunge())
 #pragma amicall(GTLayoutBase,0x18,LibNull())
