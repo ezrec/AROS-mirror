@@ -105,7 +105,6 @@ launch (void (*address) (void), struct CMenuConfig *cmc, WORD flag,
   fmmain.pmsg = pmsg;
   D(bug("launch.c 106...........\n")); 
 
-#ifndef AROS
   if (subproc & MSUBPROC)
     {
       /* flag?"FM Timer":"<<<FileMaster Unknown>>>" */
@@ -123,13 +122,11 @@ launch (void (*address) (void), struct CMenuConfig *cmc, WORD flag,
     }
   else
     {
-#endif
       Signal ((struct Task *) fmmain.myproc, SIGBREAKF_CTRL_F);
       address ();
       ret = 1;
-#ifndef AROS
+
     }
-#endif
   SetSignal (0, SIGBREAKF_CTRL_F);
 fail:
   if (fmmain.ikkuna)
