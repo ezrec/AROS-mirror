@@ -30,6 +30,18 @@
 
 #define min(a,b) ((a)<(b)?(a):(b))
 
+#define BIG_ENDIAN_MACHINE 1
+
+#ifdef __AROS__
+
+#if !AROS_BIG_ENDIAN
+#undef BIG_ENDIAN_MACHINE
+#define BIT_ENDIAN_MACHINE 0
+#endif
+
+#endif
+
+
 #ifdef __AMIGAOS4__
 # define CallHookA CallHookPkt
 #endif
@@ -188,7 +200,7 @@ PlaybackInterrupt( struct EMU10kxData* dd )
   struct AHIAudioCtrlDrv* AudioCtrl = dd->audioctrl;
   struct DriverBase*  AHIsubBase = (struct DriverBase*) dd->ahisubbase;
   struct EMU10kxBase* EMU10kxBase = (struct EMU10kxBase*) AHIsubBase;
-    
+
   if( dd->mix_buffer != NULL && dd->current_buffers[0] != NULL )
   {
     BOOL   skip_mix;
@@ -311,6 +323,7 @@ PlaybackInterrupt( struct EMU10kxData* dd )
   }
 
   dd->playback_interrupt_enabled = TRUE;
+
 }
 
 
@@ -323,7 +336,11 @@ copy_mono( WORD* src, WORD* dst, int count, int stride, BOOL flush_caches )
 
   for( x = 0, y = 0; y < count; x += stride, ++y )
   {
+#if !BIG_ENDIAN_MACHINE
+    dst[y] = src[x];
+#else
     dst[y] = ( ( src[x] & 0xff ) << 8 ) | ( ( src[x] & 0xff00 ) >> 8 );
+#endif
   }
 
   if( flush_caches )
@@ -344,8 +361,13 @@ copy_stereo( WORD* lsrc, WORD* rsrc, WORD* dst, int count, int stride, BOOL flus
 
   for( x = 0, y = 0; y < count * 2; x += stride, y += 2 )
   {
+#if !BIG_ENDIAN_MACHINE
+    dst[y+0] = lsrc[x];
+    dst[y+1] = rsrc[x];
+#else
     dst[y+0] = ( ( lsrc[x] & 0xff ) << 8 ) | ( ( lsrc[x] & 0xff00 ) >> 8 );
     dst[y+1] = ( ( rsrc[x] & 0xff ) << 8 ) | ( ( rsrc[x] & 0xff00 ) >> 8 );
+#endif
   }
 
   if( flush_caches )
