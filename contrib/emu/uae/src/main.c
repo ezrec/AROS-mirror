@@ -428,7 +428,6 @@ void do_start_program (void)
 
 void do_leave_program (void)
 {
-    graphics_leave ();
     close_joystick ();
     close_sound ();
     dump_counts ();

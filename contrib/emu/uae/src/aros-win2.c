@@ -130,11 +130,6 @@ static char *oldpixbuf;
 /*
  * prototypes & global vars
  */
-struct IntuitionBase    *IntuitionBase;
-struct GfxBase          *GfxBase;
-struct Library          *AslBase;
-struct Library          *CyberGfxBase;
-
 unsigned long            frame_num; /* for arexx */
 
 static UBYTE            *Line;
@@ -150,8 +145,6 @@ static int              XOffset,YOffset;
 
 static int usepub;      /* use public screen */
 static int usecyb;      /* use cybergraphics.library */
-static int is_halfbrite;
-static int is_ham;
 
 static int   get_color_failed;
 static int   maxpen;
@@ -194,12 +187,6 @@ __inline__ void flush_line(int y)
     }
 
     len = gfxvidinfo.width;
-
-    if(is_ham) {
-        ham_conv((void*)linebuf,Line,len);
-        WritePixelLine8(RP, 0, y, len, Line, TempRPort);
-        return;
-    }
 
     if(!use_delta_buffer) {
       dst = linebuf;
@@ -349,7 +336,7 @@ static int get_nearest_color(int r, int g, int b)
 
     best    = 0;
     besterr = calc_err(0,0,0, 15,15,15);
-    colors  = is_halfbrite?32:(1<<RPDepth(RP));
+    colors  = 1<<RPDepth(RP);
   
 
     for(i=0; i<colors; i++ ) {
@@ -367,16 +354,6 @@ static int get_nearest_color(int r, int g, int b)
             best = i;
             besterr = err;
             br=cr; bg=cg; bb=cb;
-        }
-
-        if(is_halfbrite) {
-            cr /= 2; cg /= 2; cb /= 2;
-            err = calc_err(r,g,b, cr,cg,cb);
-            if(err < besterr) {
-                best = i + 32;
-                besterr = err;
-                br=cr; bg=cg; bb=cb;
-            }
         }
     }
     return best;
@@ -432,27 +409,7 @@ static int init_colors(void)
 
     /* No dither */
     switch(RPDepth(RP)) {
-      case 6: if (is_halfbrite) {
-        static int tab[]={
-        0x000, 0x00f, 0x0f0, 0x0ff, 0x08f, 0x0f8, 0xf00, 0xf0f,
-        0x80f, 0xff0, 0xfff, 0x88f, 0x8f0, 0x8f8, 0x8ff, 0xf08,
-        0xf80, 0xf88, 0xf8f, 0xff8, /* end of regular pattern */
-        0xa00, 0x0a0, 0xaa0, 0x00a, 0xa0a, 0x0aa, 0xaaa,
-        0xfaa, 0xf6a, 0xa80, 0x06a, 0x6af };
-        int i;
-        for(i=0;i<32;++i) get_color(tab[i]>>8, (tab[i]>>4)&15, tab[i]&15, xcolors);
-        for(i=0;i<4096;++i) xcolors[i] = get_nearest_color(i>>8, (i>>4)&15, i&15);
-        printf("Using %d colors + halfbrite\n",32);
-        break;
-      } else if(is_ham) {
-        int i;
-        for(i=0;i<16;++i) get_color(i,i,i, xcolors);
-        printf("Using %d bits pseudo-truecolor (HAM).\n",12);
-        alloc_colors64k(4,4,4,10,5,0);
-        return init_ham();
-      }
-
-      case 1: case 2: case 3: case 4: case 5: case 7: case 8: {
+      case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: {
         int maxcol = 1<<RPDepth(RP);
 
         if(maxcol>=8 && !use_gray) do {
@@ -464,13 +421,13 @@ static int init_colors(void)
         else {
             int i;
             for(i=0;i<maxcol;++i) {
-                get_color((i*15)/(maxcol-1), (i*15)/(maxcol-1), 
+                get_color((i*15)/(maxcol-1), (i*15)/(maxcol-1),
                           (i*15)/(maxcol-1), xcolors);
             }
         }
         printf("Using %d colors.\n",maxcol);
         for(maxcol=0; maxcol<4096; ++maxcol)
-            xcolors[maxcol] = get_nearest_color(maxcol>>8, (maxcol>>4)&15, 
+            xcolors[maxcol] = get_nearest_color(maxcol>>8, (maxcol>>4)&15,
                                                 maxcol&15);
         } break;
 
@@ -678,6 +635,8 @@ static int setup_userscreen(void)
     UWORD OverscanType=OSCAN_STANDARD;
     BOOL AutoScroll=TRUE;
 
+    static struct Library *AslBase = NULL;
+
     if(!AslBase) AslBase = OpenLibrary("asl.library",38);
     if(!AslBase) {
         fprintf(stderr,"Can't open asl.library v38 !");
@@ -706,8 +665,8 @@ static int setup_userscreen(void)
                       ASLSM_DoDepth,             TRUE,
                       ASLSM_DoOverscanType,      TRUE,
                       ASLSM_PropertyFlags,       0,
-                      ASLSM_PropertyMask,        DIPF_IS_DUALPF | 
-                                                 DIPF_IS_PF2PRI | 
+                      ASLSM_PropertyMask,        DIPF_IS_DUALPF |
+                                                 DIPF_IS_PF2PRI |
                                                  0,
                       TAG_DONE)) {
         ScreenWidth  = ScreenRequest->sm_DisplayWidth;
@@ -720,7 +679,7 @@ static int setup_userscreen(void)
     else DisplayID = INVALID_ID;
     }
     FreeAslRequest(ScreenRequest);
-    
+
     if(DisplayID == (ULONG)INVALID_ID) return 0;
 
     if(DisplayID & HAM_KEY) Depth = 6; /* only ham6 for the moment */
@@ -749,10 +708,8 @@ static int setup_userscreen(void)
         fprintf(stderr,"Unable to open the screen.\n");
         return 0;
     }
-    
-    CM           = S->ViewPort.ColorMap;
-    is_halfbrite = (S->ViewPort.Modes & EXTRA_HALFBRITE);
-    is_ham       = (S->ViewPort.Modes & HAM);
+
+    CM  = S->ViewPort.ColorMap;
 
     PointerLine  = malloc(4);/* autodocs says it needs not be in chip memory */
     if(PointerLine) PointerLine[0]=PointerLine[1]=0;
@@ -807,29 +764,7 @@ static int setup_userscreen(void)
 
 int graphics_setup(void)
 {
-#ifdef OS_IS_AMIGAOS
-    if(ix_os != OS_IS_AMIGAOS) {
-        ix_req(NULL, "Abort", NULL, "That version of %s is only for AmigaOS!", __progname);
-        exit(20);
-    }
-#endif
-    if(((struct ExecBase *)SysBase)->LibNode.lib_Version < 36) {
-        fprintf(stderr, "UAE needs OS 2.0+ !\n");
-        return 0;
-    }
-
-//    atexit(graphics_leave);
-
-    IntuitionBase = (void*)OpenLibrary("intuition.library",0L);
-    if(!IntuitionBase) {
-        fprintf(stderr,"No intuition.library ?\n");
-        return 0;
-    }
-    GfxBase = (void*)OpenLibrary("graphics.library",0L);
-    if(!GfxBase) {
-        fprintf(stderr,"No graphics.library ?\n");
-        return 0;
-    }
+    atexit(graphics_leave);
 
     return 1;
 }
@@ -842,7 +777,7 @@ int graphics_init(void)
 
     use_delta_buffer = 0;
     need_dither = 0;
-    
+
     if (currprefs.gfx_width < 320)
         currprefs.gfx_width = 320;
     if (!currprefs.gfx_correct_aspect && (currprefs.gfx_height < 64/*200*/))
@@ -852,7 +787,7 @@ int graphics_init(void)
 
     if (currprefs.color_mode > 5)
         fprintf(stderr, "Bad color mode selected. Using default.\n"), currprefs.color_mode = 0;
-    
+
     gfxvidinfo.width  = currprefs.gfx_width;
     gfxvidinfo.height = currprefs.gfx_height;
 
@@ -872,7 +807,6 @@ int graphics_init(void)
     }
 	*/
       fprintf(stderr,"Trying on public screen...\n");
-      is_halfbrite = 0;
       if(setup_publicscreen()) usepub = 1;
       else return 0;
 
@@ -898,14 +832,9 @@ int graphics_init(void)
     if(usepub) set_title();
 
     bitdepth = RPDepth(RP);
-    if(is_ham) {
-        /* ham 6 */
-        use_delta_buffer    = 0; /* needless as the line must be fully */
-        need_dither         = 0; /* recomputed */
-        gfxvidinfo.pixbytes = 2;
-    } else if(bitdepth <= 8) {
+    if(bitdepth <= 8) {
         /* chunk2planar is slow so we define use_delta_buffer for all modes */
-        use_delta_buffer    = 1; 
+        use_delta_buffer    = 1;
         need_dither         = use_dither || (bitdepth<=1);
         gfxvidinfo.pixbytes = need_dither?2:1;
     } else {
@@ -1022,22 +951,6 @@ void graphics_leave(void)
 	   do Delay(50); while(!CloseScreen(S));
 	}
         S = NULL;
-    }
-    if(AslBase) {
-        CloseLibrary((void*)AslBase);
-        AslBase = NULL;
-    }
-    if(GfxBase) {
-        CloseLibrary((void*)GfxBase);
-        GfxBase = NULL;
-    }
-    if(IntuitionBase) {
-        CloseLibrary((void*)IntuitionBase);
-        IntuitionBase = NULL;
-    }
-    if(CyberGfxBase) {
-        CloseLibrary((void*)CyberGfxBase);
-        CyberGfxBase = NULL;
     }
 }
 
@@ -1409,7 +1322,7 @@ static LONG ObtainColor(ULONG r,ULONG g,ULONG b)
         return i;
     }
 
-    colors = is_halfbrite?32:(1<<RPDepth(RP));
+    colors = 1<<RPDepth(RP);
 
     /* private screen => standard allocation */
     if(!usepub) {
