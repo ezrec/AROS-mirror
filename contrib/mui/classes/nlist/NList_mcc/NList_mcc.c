@@ -1,3 +1,6 @@
+#include <limits.h>
+
+#include <proto/intuition.h>
 
 #include "private.h"
 

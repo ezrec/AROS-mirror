@@ -1,3 +1,4 @@
+#include <proto/intuition.h>
 
 #include "private.h"
 
@@ -351,7 +352,7 @@ VOID	NL_Pool_Internal_FreeVec( struct NLData *data, APTR memory )
 }
 
 /* These wrappers slow down, we should use macros or correct functions directly instead... */
-APTR	NL2_Malloc2( APTR pool, ULONG size, STRPTR string )
+APTR	NL2_Malloc2( APTR pool, ULONG size, char *string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
@@ -359,7 +360,7 @@ APTR	NL2_Malloc2( APTR pool, ULONG size, STRPTR string )
 
 }
 
-VOID	NL2_Free2( APTR pool, APTR memory, STRPTR string )
+VOID	NL2_Free2( APTR pool, APTR memory, char * string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
@@ -367,7 +368,7 @@ VOID	NL2_Free2( APTR pool, APTR memory, STRPTR string )
 
 }
 
-APTR	NL2_Malloc( struct NLData *data, ULONG size, STRPTR string )
+APTR	NL2_Malloc( struct NLData *data, ULONG size, char *string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
@@ -375,7 +376,7 @@ APTR	NL2_Malloc( struct NLData *data, ULONG size, STRPTR string )
 
 }
 
-VOID	NL2_Free( struct NLData *data, APTR memory, STRPTR string )
+VOID	NL2_Free( struct NLData *data, APTR memory, char *string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!

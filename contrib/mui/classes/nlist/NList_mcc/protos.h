@@ -19,7 +19,7 @@ extern ULONG mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
 extern ULONG mNL_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg);
 extern ULONG mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg);
 extern ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg);
-extern ULONG mNL_Get(struct IClass *cl,Object *obj,Msg msg);
+extern ULONG mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg);
 
 /* NList_mcc2.c */
 

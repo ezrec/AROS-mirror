@@ -35,7 +35,9 @@
 #include <proto/gadtools.h>
 #include <proto/asl.h>
 #include <proto/layers.h>
+#if !defined(USE_ZUNE) || defined (_AROS)
 #include <proto/muimaster.h>
+#endif
 #include <proto/console.h>
 
 #include <clib/alib_protos.h>
@@ -50,13 +52,14 @@
 #ifdef __GNUC__
   #include "../NListviews_mcp/NListviews_mcp.h"
   #include "../NListview_mcc/NListview_mcc.h"
+  #include "../common/mcc_common.h"
+  #include "../common/mcc_debug.h"
 #else
   #include "/NListviews_mcp/NListviews_mcp.h"
   #include "/NListview_mcc/NListview_mcc.h"
+  #include "/common/mcc_common.h"
+  #include "/common/mcc_debug.h"
 #endif
-
-#include <mcc_common.h>
-#include <mcc_debug.h>
 
 
 #ifndef MUI_NList_priv_MCC_H
@@ -64,8 +67,10 @@
 
 extern UWORD LIBVER;
 
+#ifndef USE_ZUNE
 #ifndef MUI_MUI_H
 #include "mui.h"
+#endif
 #endif
 
 

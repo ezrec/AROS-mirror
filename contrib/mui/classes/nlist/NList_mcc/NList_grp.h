@@ -1,4 +1,4 @@
-#include <mcc_common.h>
+#include "/common/mcc_common.h"
 
 
 extern struct MUI_CustomClass *NGR_Class;

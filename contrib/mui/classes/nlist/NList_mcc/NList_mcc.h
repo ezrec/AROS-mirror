@@ -16,8 +16,12 @@
 #ifndef MUI_NList_MCC_H
 #define MUI_NList_MCC_H
 
+#ifdef USE_ZUNE
+#include <mui.h>
+#else
 #ifndef LIBRARIES_MUI_H
 #include <libraries/mui.h>
+#endif
 #endif
 
 

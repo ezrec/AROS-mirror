@@ -1,3 +1,5 @@
+#include <proto/intuition.h>
+
 #include "private.h"
 
 #ifdef __SASC

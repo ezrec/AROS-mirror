@@ -128,3 +128,61 @@ clean:
 #	@list pat (\$(OBJECTS)#?.(o|oPPC)|\$(OBJECTS)#?.oPPC|\#?.o|\#?.oPPC|\#?.obj|\#?.bak|\#?.lnk|$(PROJECT).mcc|$(PROJECT).mcp|$(PROJECT)\#?.elf) lformat "delete %p%n" >pipe:$(PROJECT)_delete
 #	@execute pipe:$(PROJECT)_delete
 
+
+zune: nlist.mcc.lib
+
+nlist.mcc.lib: NList_mcc.o NList_mcc0.o NList_mcc1.o NList_mcc2.o NList_mcc3.o NList_mcc4.o NList_mcc5.o NList_mcc6.o move.o cbio.o NList_func.o NList_func2.o NList_func3.o NList_func4.o NList_grp.o NList_img.o NList_img2.o
+  oml nlist.mcc.lib A NList_mcc.o NList_mcc0.o NList_mcc1.o NList_mcc2.o NList_mcc3.o NList_mcc4.o NList_mcc5.o NList_mcc6.o move.o cbio.o NList_func.o NList_func2.o NList_func3.o NList_func4.o NList_grp.o NList_img.o NList_img2.o
+
+NList_mcc.o: NList_mcc.c
+  sc NList_mcc.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc0.o: NList_mcc0.c
+  sc NList_mcc0.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc1.o: NList_mcc1.c
+  sc NList_mcc1.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc2.o: NList_mcc2.c
+  sc NList_mcc2.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc3.o: NList_mcc3.c
+  sc NList_mcc3.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc4.o: NList_mcc4.c
+  sc NList_mcc4.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc5.o: NList_mcc5.c
+  sc NList_mcc5.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc6.o: NList_mcc6.c
+  sc NList_mcc6.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+move.o: move.c
+  sc move.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+cbio.o: cbio.c
+  sc cbio.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_func.o: NList_func.c
+  sc NList_func.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_func2.o: NList_func2.c
+  sc NList_func2.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_func3.o: NList_func3.c
+  sc NList_func3.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_func4.o: NList_func4.c
+  sc NList_func4.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_grp.o: NList_grp.c
+  sc NList_grp.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_img.o: NList_img.c
+  sc NList_img.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_img2.o: NList_img2.c
+  sc NList_img2.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+
