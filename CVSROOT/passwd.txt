@@ -188,3 +188,4 @@ pawn:dbtdyqTb7/ArM:Michael Haynes:pawn@mchsi.com:
 darklite:cdiUSRq9Ml946:Brecht Machiels:darklite@gmx.net:
 ljl:dcU/holkBpX5o:Lorenzo J. Lucchini:ljlbox@inwind.it:
 kolla:8YlrXWx8TjW3s:Kolbjørn Barmen:kolla@nvg.ntnu.no:
+hassel:bcGA71xRz1XUk:Anders Hasselqvist:hassel@acc.umu.se:
