@@ -30,8 +30,8 @@ extern UBYTE   correction, chosen_correction;
 
 extern UBYTE   current_row;
 extern BYTE   active_color;
-extern BYTE   guess[][];
-extern BYTE   answer[][];
+extern BYTE   guess[11][4];
+extern BYTE   answer[10][4];
 
 
 BOOL

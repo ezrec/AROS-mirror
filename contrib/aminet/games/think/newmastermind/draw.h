@@ -37,8 +37,8 @@ void
 draw_playfield (
    struct Window  *win,
    APTR            vis_info,
-   BYTE            guess[][],
-   BYTE            answer[][],
+   BYTE            guess[][4],
+   BYTE            answer[][4],
    BOOL            show_solution);
 
 void

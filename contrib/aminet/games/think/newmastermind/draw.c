@@ -98,7 +98,7 @@ draw_large_brick (
    WORD              y,
    BYTE              color)
 {
-   char   num_str[2];
+   unsigned char   num_str[2];
    
    if (color == NOPEN)
       SetAPen (rp, gui_pens[BACKGROUNDPEN]);
