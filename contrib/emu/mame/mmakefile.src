@@ -18,7 +18,7 @@ OBJDIR   				:= $(GENDIR)/$(CURDIR)
 
 EXE 					:= $(INSTDIR)/mame
 
-#MM- contrib-emu : MameSourceFix Mame
+#MM- contrib-emu : Mame
 #MM
 Mame : setup $(EXE)
 
