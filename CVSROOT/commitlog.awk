@@ -94,8 +94,8 @@ function dump(t,flist)
 	    flist=flist file[t] ":";
     }
     flist=wrap(flist,70);
-    gsub ("\n","\n\t",flist);
-    gsub ("\t\n","\n",flist);
+    gsub ("\n","\n    ",flist);
+    gsub (" +\n","\n",flist);
     pout("    "flist);
     pout("\n");
 
