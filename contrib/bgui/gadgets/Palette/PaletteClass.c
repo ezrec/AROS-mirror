@@ -10,6 +10,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/07/11 17:17:24  stegerg
+ * struct Library *BGUIBase, not struct BGUIBase *BGUIBase.
+ * fixed a "comparison always 0 due to limited ..." bug.
+ *
  * Revision 42.2  2000/07/09 03:05:09  bergers
  * Makes the gadgets compilable.
  *
@@ -64,7 +68,7 @@
 #include <ctype.h>
 
 #ifdef _AROS
-extern struct BGUIBase * BGUIBase;
+extern struct Library * BGUIBase;
 #endif
 
 /*
@@ -87,7 +91,7 @@ extern struct BGUIBase * BGUIBase;
 /*
  * Clamp a value in a range.
  */
-#define CLAMP(v,i,a) if (v < i) v = i; else if (v > a) v = a;
+#define CLAMP(v,i,a) if ((v) < (i)) (v) = (i); else if ((v) > (a)) (v) = (a);
 
 /*
  * Simple type-cast.
@@ -251,7 +255,9 @@ METHOD(PaletteClassNew, struct opSet *,ops)
       /*
        * Make sure the offset stays in range.
        */
-      CLAMP(pd->pd_ColorOffset, 0, 256 - pd->pd_NumColors);
+       
+      /* AROS FIX: (WORD) typecast, otherwise gcc error "comparison always 0, due to limited datatype..."
+      CLAMP((WORD)pd->pd_ColorOffset, 0, 256 - (WORD)pd->pd_NumColors); 
 
       /*
        * The color must remain OK.
