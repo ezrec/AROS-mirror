@@ -26,6 +26,7 @@ static char rcsid =
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include <signal.h>
 #include <unistd.h>
@@ -66,7 +67,7 @@ static struct GfxBase *GfxBase;
 #if !defined(__PPC__) || defined(MORPHOS)
 static clock_t start;
 
-// #define USE_SYSTIME
+#define USE_SYSTIME
 
 #ifdef USE_SYSTIME
 #include <devices/timer.h>
@@ -110,6 +111,7 @@ void SDL_StartTicks(void)
      fallback = 1;
      return;
   }
+
   if (!(TimerIO = (struct timerequest *)
               CreateIORequest(TimerMP, sizeof(struct timerequest)))) {
      DeleteMsgPort(TimerMP);
@@ -117,6 +119,7 @@ void SDL_StartTicks(void)
      fallback = 1;
      return;
   }
+
   if (OpenDevice("timer.device", UNIT_VBLANK, &TimerIO->tr_node, 0)) {
       DeleteMsgPort(TimerMP);
       DeleteIORequest((struct IORequest *)TimerIO);
@@ -124,6 +127,7 @@ void SDL_StartTicks(void)
       fallback = 1;
       return;
   }
+
   TimerBase = TimerIO->tr_node.io_Device;
   D(bug("Timer resource allocated.\n"));
 
