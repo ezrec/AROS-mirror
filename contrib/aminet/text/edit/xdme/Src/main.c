@@ -1,4 +1,4 @@
-/******************************************************************************
+re/******************************************************************************
 
     MODUL
 	$Id$
@@ -211,7 +211,7 @@ int main (int mac, char ** mav)
 	exiterr ("cannot open intuition or graphics library");
 
     AslBase = OpenLibrary ("asl.library", 37L); */
-/*    ReqToolsBase = (struct ReqToolsBase *)OpenLibrary ("reqtools.library", 37);*/
+    ReqToolsBase = (struct ReqToolsBase *)OpenLibrary ("reqtools.library", 37);
 
     PageJump = 80;	    /* 80% of page for Propgad & pageup/down */
 
