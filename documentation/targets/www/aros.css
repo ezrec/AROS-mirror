@@ -14,25 +14,15 @@ h2
     margin:             0px -2px 0px -2px;
 }
 
-.footer
-{
-    margin-top:         1em;
-    text-align:         center;
-    font-size:          0.8em;
-}
-
+/* FIXME: Don't forget to remove these when the site goes public... */
 a.done   { background: green; }
 a.almost { background: yellow; }
 a.nope   { background: red; }
 
-a.footnote-reference {
-  font-size: smaller ;
-  vertical-align: super }
-
 a.target {
   color: blue }
 
-h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+a.toc-backref {
   text-decoration: none ;
   color: black }
 
@@ -63,6 +53,15 @@ div.hint p.admonition-title, div.important p.admonition-title,
 div.note p.admonition-title, div.tip p.admonition-title {
   font-weight: bold ;
   font-family: sans-serif }
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
 
 div.figure {
   margin-left: 2em }
@@ -133,6 +132,16 @@ p.label {
 p.topic-title {
   font-weight: bold }
 
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font-family: serif ;
+  font-size: 100% }
+
+pre.line-block {
+  font-family: serif ;
+  font-size: 100% }
+
 pre.literal-block, pre.doctest-block {
   margin-left: 2em ;
   margin-right: 2em ;
@@ -146,26 +155,22 @@ span.classifier-delimiter {
   font-family: sans-serif ;
   font-weight: bold }
 
-span.field-argument {
-  font-style: italic }
-
 span.interpreted {
   font-family: sans-serif }
 
 span.option-argument {
   font-style: italic }
 
+span.pre {
+  white-space: pre }
+
 span.problematic {
   color: red }
 
-/*table {
+/*
+table {
   margin-top: 0.5em ;
   margin-bottom: 0.5em }
-*/
-
-/*table.layout {
-  margin-top: 0;
-  margin-bottom: 0 }
 */
 
 table.citation {
@@ -179,21 +184,26 @@ table.footnote {
   border-left: solid thin black ;
   padding-left: 0.5ex }
 
-/*td, th {
+/*
+td, th {
   padding-left: 0.5em ;
   padding-right: 0.5em ;
-  vertical-align: baseline }
+  vertical-align: top }
 */
 
-/*td.layout, th.layout {
-  padding-left: 0;
-  padding-right: 0;
-  vertical-align: none }
-*/
+td > p:first-child, th > p:first-child {
+  margin-top: 0em }
 
-td.docinfo-name {
+th.docinfo-name, th.field-name {
   font-weight: bold ;
-  text-align: right }
+  text-align: left ;
+  white-space: nowrap }
 
-td.field-name {
-  font-weight: bold }
+h1 tt, h2 tt, h3 tt, h4 tt, h5 tt, h6 tt {
+  font-size: 100% }
+
+tt {
+  background-color: #eeeeee }
+
+ul.auto-toc {
+  list-style-type: none }
