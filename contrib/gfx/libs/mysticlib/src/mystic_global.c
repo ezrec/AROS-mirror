@@ -12,6 +12,42 @@
 #ifdef USEPOOLS
 	APTR mainpool;
 	struct SignalSemaphore memsemaphore;
+
+#ifdef __AROS__
+#include <aros/symbolsets.h>
+#include LC_LIBDEFS_FILE
+
+AROS_SET_LIBFUNC(InitMem, LIBBASETYPE, LIBBASE)
+{
+    AROS_SET_LIBFUNC_INIT
+    
+    mainpool = CreatePool(MEMF_ANY, 4096, 4096);
+    InitSemaphore(&memsemaphore);
+    
+    return mainpool != NULL;
+    
+    AROS_SET_LIBFUNC_EXIT
+}
+
+AROS_SET_LIBFUNC(CleanUpMem, LIBBASETYPE, LIBBASE)
+{
+    AROS_SET_LIBFUNC_INIT
+
+    if (mainpool != NULL)
+    {
+	DeletePool(mainpool);
+	mainpool = NULL;
+    }
+    
+    return TRUE;
+    
+    AROS_SET_LIBFUNC_EXIT
+}
+
+ADD2INITLIB(InitMem, 0);
+ADD2EXPUNGELIB(CleanUpMem, 0);
+#endif
+
 #endif
 
 
