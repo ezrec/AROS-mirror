@@ -1,0 +1,69 @@
+diff -r -u which-2.16/bash.c which-2.16-aros/bash.c
+--- which-2.16/bash.c	Sun Sep 14 21:58:55 2003
++++ which-2.16-aros/bash.c	Wed Apr 21 10:58:54 2004
+@@ -92,9 +92,9 @@
+       current_user.user_name = current_user.shell = current_user.home_dir = (char *)NULL;
+     }
+   current_user.uid = u;
+-  current_user.gid = getgid ();
+-  current_user.euid = geteuid ();
+-  current_user.egid = getegid ();
++  current_user.gid = 0;
++  current_user.euid = 0;
++  current_user.egid = 0;
+ 
+   /* See whether or not we are running setuid or setgid. */
+   return (current_user.uid != current_user.euid) ||
+@@ -158,7 +158,7 @@
+   group_array = (GETGROUPS_T *)xrealloc (group_array, maxgroups * sizeof (GETGROUPS_T));
+ 
+ #if defined (HAVE_GETGROUPS)
+-  ngroups = getgroups (maxgroups, group_array);
++  ngroups = 0;
+ #endif
+ 
+   /* If getgroups returns nothing, or the OS does not support getgroups(),
+@@ -413,3 +413,4 @@
+   strcpy (full_path + path_len + 1, name);
+   return (full_path);
+ }
++
+Only in which-2.16-aros: bash.c.orig
+diff -r -u which-2.16/tilde/tilde.c which-2.16-aros/tilde/tilde.c
+--- which-2.16/tilde/tilde.c	Thu May 27 20:15:55 1999
++++ which-2.16-aros/tilde/tilde.c	Wed Apr 21 11:00:33 2004
+@@ -327,7 +327,11 @@
+   /* No preexpansion hook, or the preexpansion hook failed.  Look in the
+      password database. */
+   dirname = (char *)NULL;
++#ifndef AROS
+   user_entry = getpwnam (username);
++#else
++  user_entry = 0;
++#endif
+   if (user_entry == 0)
+     {
+       /* If the calling program has a special syntax for expanding tildes,
+@@ -352,8 +356,9 @@
+       free (username);
+       dirname = glue_prefix_and_suffix (user_entry->pw_dir, filename, user_len);
+     }
+-
++#ifndef AROS
+   endpwent ();
++#endif
+   return (dirname);
+ }
+ 
+diff -r -u which-2.16/which.c which-2.16-aros/which.c
+--- which-2.16/which.c	Thu Sep 11 20:58:49 2003
++++ which-2.16-aros/which.c	Wed Apr 21 10:58:54 2004
+@@ -673,3 +673,7 @@
+   return ptr;
+ }
+ #endif /* NEED_XMALLOC */
++int isspace(char sp) {
++return(0);
++}
++
+Only in which-2.16-aros: which.c.orig
