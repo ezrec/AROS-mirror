@@ -8,6 +8,7 @@
  *		version 0.3
  */
 
+#include <aros/oldprograms.h>
 #include <exec/types.h>
 #include <intuition/intuition.h>
 
