@@ -16,6 +16,9 @@ CATALOGFILES	:= $(foreach f, $(CATALOGS), $(CATALOGDIR)/$(notdir $(f)))
 EXAMPLEFILES	:= $(foreach f, $(EXAMPLES), $(EXAMPLEDIR)/$(notdir $(f)))
 TUTORIALFILES	:= $(foreach f, $(TUTORIALS), $(TUTORIALDIR)/$(notdir $(f)))
 
+ICONS 	    	:= XaoS
+ICONFILES   	:= $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
+
 #MM gfx-xaos : setup-gfx-xaos linklibs-xaosengine \
 #MM			      linklibs-xaosfilter \
 #MM			      linklibs-xaosutil \
@@ -35,7 +38,7 @@ gfx-xaos-quick :
 	@$(NOP)
 
 #MM setup-gfx-xaos : setup-gfx-xaos-directories
-setup-gfx-xaos : $(INCLUDES) $(CATALOGFILES) $(EXAMPLEFILES) $(TUTORIALFILES)
+setup-gfx-xaos : $(INCLUDES) $(CATALOGFILES) $(EXAMPLEFILES) $(TUTORIALFILES) $(ICONFILES)
 	@$(NOP)
 
 #MM
@@ -56,3 +59,6 @@ $(EXAMPLEDIR)/% : examples/%
 
 $(TUTORIALDIR)/% : tutorial/%
 	@$(CP) $< $@
+
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+	%makeicon2
