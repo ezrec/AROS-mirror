@@ -1,0 +1,32 @@
+# Copyright © 2003, The AROS Development Team. All rights reserved.
+# $Id$
+
+# Have a look at doc/PATENTS
+
+
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(CONTRIBDIR)/Sound
+
+FILES  := madoss \
+	  bit \
+	  decoder \
+	  fixed \
+	  frame \
+	  huffman \
+	  layer12 \
+	  layer3 \
+	  stream \
+	  synth \
+	  timer \
+	  version
+
+CFLAGS += -DHAVE_CONFIG_H -O2 -DFPM_INTEL
+
+#MM sound-madoss : workbench-libs-oss-unix
+
+%build_prog mmake=sound-madoss \
+    progname=madoss targetdir=$(EXEDIR) \
+    files="$(FILES)" uselibs="arosc"
+
+%common
