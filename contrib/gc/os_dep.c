@@ -45,7 +45,7 @@
 #     endif /* 2 <= __GLIBC__ */
 #   endif
 # endif
-# if !defined(OS2) && !defined(PCR) && !defined(AMIGA) && !defined(MACOS) \
+# if !defined(OS2) && !defined(PCR) && !defined(AROS) && !defined(AMIGA) && !defined(MACOS) \
     && !defined(MSWINCE)
 #   include <sys/types.h>
 #   if !defined(MSWIN32) && !defined(SUNOS4)
@@ -88,8 +88,9 @@
 #  include <machine/trap.h>
 #endif
 
-#ifdef AMIGA
+#if defined(AMIGA) || defined(AROS)
 # define GC_AMIGA_DEF
+# include "exec/execbase.h"
 # include "AmigaOS.c"
 # undef GC_AMIGA_DEF
 #endif
@@ -331,7 +332,7 @@ void GC_enable_signals(void)
 
 # else
 
-#  if !defined(PCR) && !defined(AMIGA) && !defined(MSWIN32) \
+#  if !defined(PCR) && !defined(AROS) && !defined(AMIGA) && !defined(MSWIN32) \
       && !defined(MSWINCE) \
       && !defined(MACOS) && !defined(DJGPP) && !defined(DOS4GW)
 
@@ -510,6 +511,11 @@ ptr_t GC_get_stack_base()
 
 # endif /* OS2 */
 
+# ifdef AROS
+ptr_t GC_get_stack_base(){
+  return (char *)SysBase->ThisTask->tc_SPUpper;
+}
+# endif
 # ifdef AMIGA
 #   define GC_AMIGA_SB
 #   include "AmigaOS.c"
@@ -750,7 +756,7 @@ ptr_t GC_get_stack_base()
 
 #endif /* FREEBSD_STACKBOTTOM */
 
-#if !defined(BEOS) && !defined(AMIGA) && !defined(MSWIN32) \
+#if !defined(BEOS) && !defined(AROS) && !defined(AMIGA) && !defined(MSWIN32) \
     && !defined(MSWINCE) && !defined(OS2) && !defined(ECOS)
 
 ptr_t GC_get_stack_base()
@@ -1068,12 +1074,41 @@ int * etext_addr;
 # endif
 
 
-#ifdef AMIGA
+#ifdef AROS
+  void GC_register_data_segments()
+  {
+    struct Process	*proc;
+    struct CommandLineInterface *cli;
+    BPTR myseglist;
+    ULONG *data;
 
+    if ((proc = (struct Process *)FindTask(0)) == 0) {
+      GC_err_puts("Cannot find process structure\n");
+      return;
+    }
+    if ((cli = BADDR(proc->pr_CLI)) == 0) {
+      GC_err_puts("No CLI\n");
+      return;
+    }
+    if ((myseglist = cli->cli_Module) == 0) {
+      GC_err_puts("No seglist from CLI\n");
+      return;
+    }
+
+    for (data = (ULONG *)BADDR(myseglist); data != 0;
+         data = (ULONG *)BADDR(data[0])) {
+      if (((ULONG) GC_register_data_segments < (ULONG) &data[1]) ||
+	  ((ULONG) GC_register_data_segments > (ULONG) &data[1] + data[-1])) {
+	GC_add_roots_inner((char *)&data[1],
+			   ((char *)&data[1]) + data[-1], FALSE);
+      }
+    }
+  }
+#else
+#ifdef AMIGA
 #  define GC_AMIGA_DS
 #  include "AmigaOS.c"
 #  undef GC_AMIGA_DS
-
 #else /* !OS2 && !Windows && !AMIGA */
 
 void GC_register_data_segments()
@@ -1135,6 +1170,7 @@ void GC_register_data_segments()
 }
 
 # endif  /* ! AMIGA */
+# endif  /* ! AROS */
 # endif  /* ! MSWIN32 && ! MSWINCE*/
 # endif  /* ! OS2 */
 
@@ -1142,7 +1178,7 @@ void GC_register_data_segments()
  * Auxiliary routines for obtaining memory from OS.
  */
 
-# if !defined(OS2) && !defined(PCR) && !defined(AMIGA) \
+# if !defined(OS2) && !defined(PCR) && !defined(AROS) && !defined(AMIGA) \
 	&& !defined(MSWIN32) && !defined(MSWINCE) \
 	&& !defined(MACOS) && !defined(DOS4GW)
 

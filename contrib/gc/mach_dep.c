@@ -224,6 +224,7 @@ void GC_push_regs()
 	&& (defined(__MINGW32__) || !defined(MSWIN32)) \
 	&& !defined(SCO) && !defined(SCO_ELF) \
  	&& !(defined(LINUX) && defined(__ELF__)) \
+ 	&& !(defined(AROS) && defined(__ELF__)) \
 	&& !(defined(FREEBSD) && defined(__ELF__)) \
 	&& !(defined(NETBSD) && defined(__ELF__)) \
 	&& !(defined(OPENBSD) && defined(__ELF__)) \
@@ -245,7 +246,8 @@ void GC_push_regs()
 	|| ( defined(I386) && defined(FREEBSD) && defined(__ELF__) ) \
 	|| ( defined(I386) && defined(NETBSD) && defined(__ELF__) ) \
 	|| ( defined(I386) && defined(OPENBSD) && defined(__ELF__) ) \
-	|| ( defined(I386) && defined(HURD) && defined(__ELF__) )
+	|| ( defined(I386) && defined(HURD) && defined(__ELF__) ) \
+	|| ( defined(I386) && defined(AROS) && defined(__ELF__) )
 
 	/* This is modified for Linux with ELF (Note: _ELF_ only) */
 	/* This section handles FreeBSD with ELF. */

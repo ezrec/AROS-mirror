@@ -209,6 +209,11 @@
 #   endif
 #   define mach_type_known
 # endif
+# if defined(_AROS) && (defined(i386) || defined(__i386__))
+#   define AROS
+#   define I386
+#   define mach_type_known
+# endif
 # if defined(_AMIGA) && !defined(AMIGA)
 #   define AMIGA
 # endif
@@ -846,6 +851,13 @@
 #     define GETPAGESIZE() B_PAGE_SIZE
       extern int etext;
 #     define DATASTART ((ptr_t)((((word) (&etext)) + 0xfff) & ~0xfff))
+#   endif
+#   ifdef AROS
+#	define OS_TYPE "AMIGA"
+ 	    	/* STACKBOTTOM and DATASTART handled specially	*/
+ 	    	/* in os_dep.c					*/
+# 	define DATAEND	/* not needed */
+#	define GETPAGESIZE() 4096
 #   endif
 #   ifdef SUNOS5
 #	define OS_TYPE "SUNOS5"

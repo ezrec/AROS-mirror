@@ -1,0 +1,31 @@
+#   $Id$
+#
+
+#
+# This is just temporarily. Gc is really a linklib.
+#
+
+include $(TOP)/config/make.cfg
+
+FILES := alloc reclaim allchblk misc mach_dep os_dep mark_rts headers mark obj_map blacklst finalize new_hblk real_malloc dyn_load dbg_mlc malloc stubborn checksums typd_mlc ptr_chck mallocx tests/test
+
+EXEDIR := $(CONTRIBDIR)/gc
+EXE := $(EXEDIR)/gctest
+
+USE_AROSLIB := yes
+USE_CLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+
+USER_CFLAGS := -O2 -Wunused -Wall -Uunix -Ulinux -U__linux__ -DATOMIC_UNCOLLECTABLE -DSILENT -Iinclude
+
+#MM contrib-gc : includes linklibs setup-contrib-gc
+
+%make_prog_setup mmake=contrib-bc
+
+contrib-gc : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
