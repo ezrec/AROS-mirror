@@ -27,6 +27,9 @@
 # to checkout parts of it. The advantage is that you will not get the
 # others.
 
+# Complete contrib
+contrib contrib
+
 # Amiga C Manual
 ACM -d contrib/ACM contrib/ACM
 
@@ -36,18 +39,21 @@ AHI -d contrib/AHI contrib/AHI
 # Aminet
 aminet -d contrib/aminet contrib/aminet
 
-# Self-contained version of crypt(3)
-crypt -d contrib/tools/crypt contrib/tools/crypt
-
 # BGUI
 bgui -d contrib/bgui contrib/bgui
 
-# DOpus
-dopus -d contrib/dopus contrib/dopus
+# Self-contained version of crypt(3)
+crypt -d contrib/tools/crypt contrib/tools/crypt
 
 # Demo
 Demo -d contrib/Demo contrib/Demo
 Voxel -d contrib/Demo/Voxel contrib/Demo/Voxel
+
+# DOpus
+dopus -d contrib/dopus contrib/dopus
+
+# Emu
+emu -d contrib/emu contrib/emu
 
 # Fish
 fish -d contrib/fish contrib/fish
@@ -60,6 +66,12 @@ Kiel -d contrib/Games/Kiel contrib/Games/Kiel
 Moria3D -d contrib/Games/Moria3D contrib/Games/Moria3D
 Quake -d contrib/Games/Quake contrib/Games/Quake
 
+# Gfx
+gfx -d contrib/gfx contrib/gfx
+
+# GNU
+gnu -d contrib/gnu contrib/gnu
+
 # Network includes
 network -d contrib/network contrib/network
 
@@ -70,9 +82,13 @@ Misc -d contrib/Misc contrib/Misc
 rexx -d contrib/rexx contrib/rexx
 
 # Standalone stuff
+freetype -d contrib/freetype contrib/freetype
 ScalosV2 -d contrib/ScalosV2 contrib/ScalosV2
-Freetype -d contrib/freetype contrib/freetype
+uae -d contrib/uae-0.8.16 contrib/uae-0.8.16
 
 # (Large) binaries
 screenshots binaries/screenshots
 developers binaries/developers
+
+# WWW
+www www
