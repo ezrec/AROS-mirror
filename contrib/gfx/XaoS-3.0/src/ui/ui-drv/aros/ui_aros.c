@@ -11,6 +11,7 @@
 #include <proto/intuition.h>
 #include <proto/cybergraphics.h>
 #include <proto/keymap.h>
+#include <string.h>
 
 #define USE_GZZ     	1
 
