@@ -6,6 +6,11 @@
 
 #include <stdio.h>
 
+#if defined(__AROS__)
+#include "aros-inc.h"
+#include <aros/macros.h>
+#endif
+
 #include "main.h"
 #include "types.h"
 
@@ -48,6 +53,15 @@ int get_type(char *filename)
     fclose(file);
 
     debug_printf("HEADER: %08lx, %08lx, %08lx, %08lx\n", data[0], data[1], data[2], data[3]);
+
+#if defined(__AROS__)
+	data[0] = AROS_BE2LONG(data[0]);
+	data[1] = AROS_BE2LONG(data[1]);
+	data[2] = AROS_BE2LONG(data[2]);
+	data[3] = AROS_BE2LONG(data[3]);
+
+	debug_printf("DECODED HEADER: %08lx, %08lx, %08lx, %08lx\n", data[0], data[1], data[2], data[3]);
+#endif	  
 
     switch(data[0])
     {
@@ -109,7 +123,11 @@ int get_type(char *filename)
       file = fopen(filename, "rb");
       fread(&startCode, 1, 4, file);
 
-      for (;;) {
+#if defined(__AROS__)
+	startCode = AROS_BE2LONG(startCode);
+#endif
+
+	    for (;;) {
         unsigned char byte;
 
         /* MPEG system/video stream */
