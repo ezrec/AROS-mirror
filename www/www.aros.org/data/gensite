@@ -91,27 +91,27 @@ screenshoturl = 'pics/screenshots'
 # could always open all items. That would allow the user to navigate
 # much more quickly.
 mainLinks = (
-    ( Href ('/index.html', 'NEWS'),
-	Href ('/status.html', 'Status'),
-	Href ('/credits.html', 'Credits'),
-	Href ('/oldnews.html', 'Old News'),
+    ( Href ('index.html', 'NEWS'),
+	Href ('status.html', 'Status'),
+	Href ('credits.html', 'Credits'),
+	Href ('oldnews.html', 'Old News'),
     ),
-    ( Href ('/documentation.html', 'Documentation'),
-	Href ('/autodocs/index.html', 'AutoDocs'),
+    ( Href ('documentation.html', 'Documentation'),
+	Href ('autodocs/index.html', 'AutoDocs'),
     ),
-    ( Href ('/screenshots.html', 'Screenshots'),
-	Href ('/screenshots.html#Pictures around AROS', 'Pictures'),
-	Href ('/screenshots.html#Screenshots', 'Screenshots'),
+    ( Href ('screenshots.html', 'Screenshots'),
+	Href ('screenshots.html#Pictures around AROS', 'Pictures'),
+	Href ('screenshots.html#Screenshots', 'Screenshots'),
     ),
-    ( Href ('/download.html', 'Download'),
+    ( Href ('download.html', 'Download'),
 	Href ('ftp://ftp.aros.org/pub/aros/', 'FTP Server'),
-	Href ('/snapshots.html', 'Snapshots'),
+	Href ('snapshots.html', 'Snapshots'),
     ),
-    ( Href ('/links.html', 'Links'),
-	Href ('/links.html#More Related', 'More Related'),
-	Href ('/links.html#Articles', 'Articles'),
-	Href ('/links.html#Homepages', 'Homepages'),
-	Href ('/links.html#Less Related', 'Less Related'),
+    ( Href ('links.html', 'Links'),
+	Href ('links.html#More Related', 'More Related'),
+	Href ('links.html#Articles', 'Articles'),
+	Href ('links.html#Homepages', 'Homepages'),
+	Href ('links.html#Less Related', 'Less Related'),
     ),
 )
 
@@ -163,18 +163,30 @@ class Page (SeriesDocument):
 	'''
 	apply (SeriesDocument.__init__, (self, rcFile,), kw)
 
+	self.linksToFix = []
+	self.imagesToFix = []
+	self.navbar = []
+
+	self.logo = os.path.join (htmldir, 'pics', 'minilogo.gif')
+	self.blank = os.path.join (htmldir, 'pics', 'blank.gif')
+	self.next = os.path.join (htmldir, 'pics', 'next.gif')
+	self.back = os.path.join (htmldir, 'pics', 'back.gif')
+	self.top = os.path.join (htmldir, 'pics', 'top.gif')
+	self.home = os.path.join (htmldir, 'pics', 'home.gif')
+
 	# Create the header of every page.
 	table = TableLite ()
 	self.banner = table
 	row = TR ()
 	table.append (row)
 	td = TD (valign='TOP')
-	logo = Href ('/', Image (
-		('/pics/logo.gif', 300, 123),
-		alt='AROS',
-		#absolute=os.path.abspath (os.path.join (htmldir, 'pics')),
-	    )
+	img = Image (
+	    os.path.join (htmldir, 'pics/logo.gif'),
+	    alt='AROS',
 	)
+	self.imagesToFix.append (img)
+	logo = Href ('index.html', img)
+	self.linksToFix.append (logo)
 	td = td + [logo]
 	row = row + [td, TD (Text ('Amiga Research OS'))]
 
@@ -198,9 +210,6 @@ class Page (SeriesDocument):
 	self.meat = TD (valign='TOP')
 	row = row + [self.meat]
 
-	# Link to the main page
-	self.gohome = '/'
-
 	if linkBoxItem:
 	    list = []
 	    for links in mainLinks:
@@ -210,18 +219,38 @@ class Page (SeriesDocument):
 		    list.append ((links[0],))
 
 	    for links in list:
-		self.linkbox = self.linkbox + [links[0], BR ()]
+		nl = Href (links[0].url, links[0].text)
+		self.linksToFix.append (nl)
+		self.linkbox = self.linkbox + [nl, BR (), RawText ('\n')]
 		for link in links[1:]:
+		    nl = Href (link.url, link.text)
+		    self.linksToFix.append (nl)
 		    self.linkbox = self.linkbox + [
 			RawText ('&nbsp;&nbsp;&nbsp;'),
-			link, BR ()]
+			nl,
+			BR (),
+			RawText ('\n')
+		    ]
+
+    # Fix because of broken Image URLs
+    def nav_buttons (self):
+        """Generate hyperlinked navigation buttons.
+
+        If a self.go* attribute is null that corresponding button is
+        replaced with a transparent gif to properly space the remaining
+        buttons.
+        """
+	s = ''
+	for item in self.navbar:
+	    s = s + str (item) + '\n'
+	return s
 
     def relurl (self, path1, path2):
 	#print self.relurl, path1, path2
 	if not path2:
 	    return None
 	
-	if string.find (path2, '://'):
+	if string.find (path2, '://') != -1:
 	    return path2
 	
 	if path1[0] != '/':
@@ -229,12 +258,75 @@ class Page (SeriesDocument):
 	if path2[0] != '/':
 	    path2 = os.path.abspath (os.path.join (htmldir, path2))
 
-	return relpath (path1, path2)
+	#print "relurl(%s,%s)" % (path1, path2)
+	result = relpath (path1, path2)
+	#print "relurl(%s,%s)->%s" % (path1, path2, result)
+	return result
+
+    def calc_rel_path(self, img, srcUrl):
+	# filename contains a valid path to the image
+	# srcUrl is the URL of the document which contains the image
+	if srcUrl[0] != '/':
+	    srcUrl = os.path.abspath (os.path.join (htmldir, 
+		os.path.dirname (srcUrl)))
+
+	path2 = os.path.abspath (os.path.join (htmldir,
+	    img.filename))
+	
+	#print srcUrl, path2
+	newUrl = relpath (srcUrl, path2)
+	#print newUrl
+
+	img.src = newUrl
+
+    def createNavBar (self):
+        s = []
+        if self.goprev: # place an image button for previous page
+            btn = Image(self.prev, border=0, alt='Previous')
+            link = Href(self.goprev, btn)
+	    self.linksToFix.append (link)
+            s.append(link)
+        else: # place a blank gif as spacer
+            btn = Image(self.blank)
+            s.append(btn)
+	self.imagesToFix.append (btn)
+        if self.gonext: # place an image button for next page
+            btn = Image(self.next, border=0, alt='Next')
+            link = Href(self.gonext, btn)
+	    self.linksToFix.append (link)
+            s.append(link)
+        else: # place a blank gif as spacer
+            btn = Image(self.blank)
+            s.append(btn)
+	self.imagesToFix.append (btn)
+        if self.gotop: # place an image button for top of manual page
+            btn = Image(self.top, border=0, alt='Top of Manual')
+            link = Href(self.gotop, btn)
+	    self.linksToFix.append (link)
+            s.append(link)
+        else: # place a blank gif as spacer
+            btn = Image(self.blank)
+            s.append(btn)
+	self.imagesToFix.append (btn)
+        if self.gohome: # place an image button for site home page
+            btn = Image(self.home, border=0, alt='Home Page')
+            link = Href(self.gohome, btn)
+	    self.linksToFix.append (link)
+            s.append(link)
+        else: # place a blank gif as spacer
+            btn = Image(self.blank)
+            s.append(btn)
+	self.imagesToFix.append (btn)
+        self.navbar = s
 
     def write (self, filename):
+	# For self.nav_buttons
+	self.filename = filename
+
 	# Create relative paths to other pages
-	for links in mainLinks:
-	    prev = next = top = None
+	prev = next = top = None
+	for j in range (len (mainLinks)):
+	    links = mainLinks[j]
 	    for i in range (len (links)):
 		url = links[i].url
 		pos = string.find (url, '#')
@@ -243,17 +335,55 @@ class Page (SeriesDocument):
 		if url == filename:
 		    if i > 0:
 			prev = links[i-1].url
+		    else:
+			# Wenn j==0 ist, dann wird die letzte Reihe
+			# ausgewählt
+			prev = mainLinks[j-1][-1].url
+
 		    if i+1 < len (links):
 			next = links[i+1].url
+		    elif j+1 < len (mainLinks):
+			next = mainLinks[j+1][0].url
+		    else:
+			next = mainLinks[0][0].url
+
 		    top = links[0].url
 		    break
 	    if top:
 		break
 	
 	path = os.path.abspath (os.path.join (htmldir, os.path.dirname (filename)))
-	self.goprev = self.relurl (path, prev)
-	self.gonext = self.relurl (path, next)
-	self.gotop = self.relurl (path, top)
+	self.goprev = prev
+	self.gonext = next
+	self.gotop = top
+	#self.goprev = self.relurl (path, prev)
+	#self.gonext = self.relurl (path, next)
+	#self.gotop = self.relurl (path, top)
+	#print prev, self.goprev
+	#print next, self.gonext
+
+	# Link to the main page
+	#self.gohome = self.relurl (path, 'index.html')
+
+	#self.logoImg.calc_rel_path (filename)
+	#self.logoUrl.url = self.relurl (path, self.logoUrl.url)
+	self.background = self.relurl (path, self.background)
+	#print path
+	#print self.logoImg.filename
+	#print self.logoImg.absolute
+	#print self.logoImg
+
+	self.createNavBar ()
+
+	for link in self.linksToFix:
+	    #print link
+	    link.url = self.relurl (path, link.url)
+	    #print link
+
+	for img in self.imagesToFix:
+	    #print img
+	    self.calc_rel_path (img, self.filename)
+	    #print img
 
 	# Convert myself into HTML
 	SeriesDocument.write (self, os.path.join (htmldir, filename))
@@ -331,13 +461,13 @@ class MyDataList (barchart.DataList):
 
     def load_tuple (self, t):
 	label, total, rest = t[0], t[1], t[2:]
-	barchart.DataList.load_tuple (self, [label]+list (rest))
+	barchart.DataList.load_tuple (self, [label] + list (rest))
 	self[-1]['total'] = total
 
 class MyStackedBarChart (barchart.StackedBarChart):
     def initialize (self):
 	barchart.StackedBarChart.initialize (self)
-	self.colors = ('red', 'yellow', 'green')
+	self.colors = ('green', 'yellow', 'red')
 
 def genStatus ():
     '''Create the status page. This page contains two images (jpg&png)
@@ -360,11 +490,11 @@ def genStatus ():
 	lib = jobs.jobs[key]
 	data.append ((lib.longName,
 	    lib.jobsTotal,
-	    lib.status[0], lib.status[1], lib.status[2])
+	    lib.status[2], lib.status[1], lib.status[0])
 	)
 
     dataList = MyDataList ()
-    dataList.segment_names = ('Todo', 'In Work', 'Done')
+    dataList.segment_names = ('Done', 'In Work', 'Todo')
     dataList.load_tuples (data)
     dataList.sort ()
     chart = MyStackedBarChart (dataList)
@@ -373,10 +503,14 @@ def genStatus ():
     
     body.append (chart)
     body.append (Heading (2, 'Size of AROS sources'))
-    body.append (Paragraph (Image ('aros_size.png')))
+    img = Image (os.path.join (htmldir, 'aros_size.png'))
+    page.imagesToFix.append (img)
+    body.append (Paragraph (img))
     body.append (Paragraph (Href ('aros_size.jpg', 'Also as JPEG')))
     body.append (Heading (2, 'Size of contributed sources'))
-    body.append (Paragraph (Image ('contrib_size.png')))
+    img = Image (os.path.join (htmldir, 'contrib_size.png'))
+    page.imagesToFix.append (img)
+    body.append (Paragraph (img))
     body.append (Paragraph (Href ('contrib_size.jpg', 'Also as JPEG')))
     page.meat = page.meat + body
     page.write ('status.html')
@@ -390,6 +524,14 @@ def genStatus ():
 	body.append (Heading (3, area))
 	body.append (Paragraph (string.join (names, ', ')))
     page.meat = page.meat + body
+
+    # Fix paths
+    path = os.path.abspath (htmldir)
+    for color in chart.colors:
+	colorFile = os.path.abspath (os.path.join (htmldir,
+	    chart.barfiles[color]))
+	chart.barfiles[color] = page.relurl (path, colorFile)
+	
     page.write ('credits.html')
 
 def genDocumentation ():
@@ -418,6 +560,7 @@ class AutoDocPage (Page):
     def relurl (self, dest):
 	absdest = os.path.abspath (dest)
 	url = relpath (self.absname, absdest)
+	#print "AD::relurl(%s)->%s" % (dest, url)
 	return url
 
     def write (self):
@@ -708,26 +851,31 @@ def genScreenshots ():
     page = Page (linkBoxItem='Screenshots')
 
     # First, the pictures of AROS developers, etc.
+    tn1 = Thumbnail (os.path.join (htmldir, 'pics/developers/Digulla-2.jpg'))
+    tn2 = Thumbnail (os.path.join (htmldir, 'pics/developers/Digulla-1.jpg'))
+    tn3 = Thumbnail (os.path.join (htmldir, 'pics/developers/nlorentz.jpg'))
     page.meat = page.meat + [
 	Name ('Pictures around AROS'),
 	Heading (2, 'Pictures around AROS'),
 	Paragraph ('If you ever wanted to know what Aaron "Optimizer" Digulla'
 	    ' looks like, here are two pictures:'),
-	ThumbnailTable (
-	    Thumbnail ('pics/developers/Digulla-2.jpg'),
-	    Thumbnail ('pics/developers/Digulla-1.jpg'),
-	),
+	ThumbnailTable (tn1, tn2),
 	Paragraph ('Picture of Nils Henrik Lorentzen:'),
-	ThumbnailTable (
-	    Thumbnail ('pics/developers/nlorentz.jpg'),
-	),
+	ThumbnailTable (tn3),
 	Paragraph ('Hopefully, more pictures of AROS developers will'
 	    ' show up here :-)'),
 	Name ('Screenshots'),
 	Heading (2, 'Screenshots'),
     ]
 
-    def processDir (dir):
+    page.linksToFix.append (tn1.href)
+    page.imagesToFix.append (tn1.img)
+    page.linksToFix.append (tn2.href)
+    page.imagesToFix.append (tn2.img)
+    page.linksToFix.append (tn3.href)
+    page.imagesToFix.append (tn3.img)
+
+    def processDir (dir, page=page):
 	'''Read a directory and put all pictures in it into ThumbnailTables.
 	The name of the directory must be YYYYMMDD.'''
 	str = os.path.basename (dir)
@@ -750,8 +898,16 @@ def genScreenshots ():
 	    if file[-4:] == '.txt' or string.find (file, '_mini.') != -1:
 		continue
 
-	    pics.append (Thumbnail (os.path.join (screenshoturl, str,
-		os.path.basename (file))))
+	    tn = Thumbnail (
+		os.path.join (htmldir, 
+		    screenshoturl,
+		    str,
+		    os.path.basename (file)
+		)
+	    )
+	    pics.append (tn)
+	    page.linksToFix.append (tn.href)
+	    page.imagesToFix.append (tn.img)
 	
 	list.append (apply (ThumbnailTable, pics))
 	return list
@@ -876,11 +1032,14 @@ class Thumbnail (FileInfo):
 	else:
 	    self.text = ''
 
+	self.img = Image (self.thumbnailURL)
+	self.href = Href (self.url, self.img)
+
     def toHtml (self):
 	'''Convert this into HTML code.'''
 	return [
 	    TD (
-		Href (self.url, Image ((self.thumbnailURL, 0,0))),
+		self.href,
 		width="64",
 		valign="TOP",
 	    ),
