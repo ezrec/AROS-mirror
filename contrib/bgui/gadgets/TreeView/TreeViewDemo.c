@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/07/09 11:03:10  stegerg
+ * bug fix.
+ *
  * Revision 42.2  2000/07/09 03:05:09  bergers
  * Makes the gadgets compilable.
  *
@@ -133,7 +136,7 @@ int main(int argc,char **argv)
 
 IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
 
-if (BGUIBase = OpenLibrary("bgui.library",40) && IntuitionBase)
+if ((BGUIBase = OpenLibrary("bgui.library",40)) && IntuitionBase)
 	{
 		struct Hook	idcmphook;
 		Object		*WI_Main,*TV_Test,*BT_Add,*BT_Remove,*BT_Quit;
