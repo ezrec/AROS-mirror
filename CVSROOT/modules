@@ -31,7 +31,7 @@
 contrib contrib
 
 # Stuff necessary to compile AROS
-necessary -a Format64 AmiCDROM
+necessary -a AmiCDROM
 
 zune -a zune-libs-muimaster zune-prefs  zune-tests zune-demos zune-wanderer
 
@@ -82,9 +82,6 @@ emu -d contrib/emu contrib/emu
 # Fish
 fish -d contrib/fish contrib/fish
 microemacs -d contrib/fish/microemacs contrib/fish/microemacs
-
-# Format64
-Format64 -d contrib/aminet/disk/misc/Format64 contrib/aminet/disk/misc/Format64
 
 # Games
 Games -d contrib/Games contrib/Games
