@@ -66,6 +66,10 @@
 #include "XtoI.h"
 #include "globals.h"
 #include "htmlgad.h"
+#include "HTML.h"
+
+void DisposeForms(FormInfo *Form);
+
 #endif /* _AMIGA */
 
 #include <stdio.h>
