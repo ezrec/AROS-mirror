@@ -5,7 +5,11 @@ AROS_HOST_ARCH   ?= linux
 AROS_TARGET_CPU  ?= i386
 AROS_TARGET_ARCH ?= linux
 
+
+
 include $(TOP)/config/make.cfg
+
+STARTUP=$(LIBDIR)/startup.o
 
 LOCALINCLUDES = -I. -I../Include
 
@@ -20,8 +24,21 @@ aros/%_aros.c : %.c
 %.o : aros/%_aros.c
 	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
 
+LT_DeleteHandle.ol : aros/LT_DeleteHandle_aros.c
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
+	$(OBJCOPY) $@ --redefine-sym GTLayout_LT_DeleteHandle=LT_DeleteHandle
+
+LT_HandleInput.ol : aros/LT_HandleInput_aros.c
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
+	$(OBJCOPY) $@ --redefine-sym GTLayout_LT_HandleInput=LT_HandleInput
+
+%.ol : aros/%_aros.c
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
+
+
 test/%.o : test/%.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(STARTUP) $(LOCALINCLUDES) -c $^ -o $@
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(LOCALINCLUDES) -c $^ -o $@
+
 
 API_SOURCE = \
 	LT_Activate \
@@ -50,6 +67,7 @@ API_SOURCE = \
 	LT_SetAttributes \
 	LT_ShowWindow \
 	LT_UpdateStrings
+
 
 UFC_SOURCE = \
 	LTP_ImageClass \
@@ -130,20 +148,26 @@ FILES = \
 	min_max \
 	asmpoolfunctions
 
+
 TESTFILES = test/gui test/Tools
 
-OBJS = $(foreach f,$(API_SOURCE) $(UFC_SOURCE) $(FILES) ,$(f).o)
+OBJS         = $(foreach f,$(API_SOURCE) $(API_SOURCE_EXTRA) $(UFC_SOURCE) $(FILES),$(f).o)
+LINKLIB_OBJS = $(foreach f,$(API_SOURCE)                     $(UFC_SOURCE) $(FILES),$(f).ol)
 TESTOBJS = test/gui.o test/Tools.o
 
 #First all intermediate files MUST be created so there is a 'defines' file!
-all: gtlayout.library test_aros
+all: gtlayout.library libgtlayout.a test_aros
 
 gtlayout.library : $(INTERMEDIATES) $(OBJS) gtlayout_lib.o gtlayout_data.o
 	$(CC) gtlayout_lib.o gtlayout_data.o $(OBJS) -static -lamiga -o $@ -nostartfiles
 
+libgtlayout.a : $(LINKLIB_OBJS) gtlayout_data.ol
+	$(AR) $@ $^
+
 test_aros: $(TESTOBJS)
-	$(CC) $(TESTOBJS) -L$(LIBDIR) -lamiga -o $@
+	$(CC) $(TESTOBJS) -L$(LIBDIR) -lgtlayout -lamiga -L./ -o $@
  
 clean:
-	$(RM) $(INTERMEDIATES) $(OBJS) gtlayout.library aros/gtlayout_defines_aros.h gtlayout_lib.o gtlayout_data.o
+	$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) gtlayout.library aros/gtlayout_defines_aros.h gtlayout_lib.o gtlayout_data.o libgtlayout.a
+
 
