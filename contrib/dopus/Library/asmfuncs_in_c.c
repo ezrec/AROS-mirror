@@ -281,7 +281,11 @@ kprintf("GetWB()\n");
 	AROS_LIBFUNC_INIT
 	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
-	if (!(gad->Flags & GFLG_DISABLED)) {
+	if (!(gad->Flags & GFLG_DISABLED)) {				
+		Forbid();
+		gad->Flags |= GFLG_DISABLED;
+		Permit();
+
 		GhostGadget(gad, rp, xoff, yoff);
 	}
 	
@@ -330,6 +334,10 @@ kprintf("GetWB()\n");
 	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	if (gad->Flags & GFLG_DISABLED) {
+		Forbid();
+		gad->Flags &= ~GFLG_DISABLED;
+		Permit();
+		
 		GhostGadget(gad, rp, xoff, yoff);
 	}
 	
