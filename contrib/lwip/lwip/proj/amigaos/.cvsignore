@@ -3,3 +3,7 @@ SCOPTIONS
 *.bak
 *.info
 *.lnk
+test
+testserver
+testclient
+ping
