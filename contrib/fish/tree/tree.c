@@ -51,6 +51,15 @@
 #include <intuition/intuitionbase.h>
 #include <stdio.h>
 
+/* Function Prototypes */
+void chk_done();
+void draw_ground();
+long my_rand();
+void init_rand();
+void drawbranch(int x,int y,int ex,int ey,int d,int l);
+void branch(int xs,int ys,int len,int dir,int rl);
+void abort(char *s);
+
 /* Library Pointers */
 
 struct IntuitionBase *IntuitionBase = 0;
@@ -131,7 +140,7 @@ struct s_dir {
 	{  1, -1 }
 };
 
-main()
+int main()
 {
 	int i;
 
@@ -173,7 +182,7 @@ main()
 	abort("");
 }
 
-abort(s)
+void abort(s)
 char *s;
 {
 	if (win)
@@ -188,7 +197,7 @@ char *s;
 	exit(0);
 }
 
-branch(xs,ys,len,dir,rl)
+void branch(xs,ys,len,dir,rl)
 int xs,ys,len,dir;
 {
 	int r,xe,ye;
@@ -247,7 +256,7 @@ int xs,ys,len,dir;
 	branch(xe,ye,len,dir,-1);	/* Draw left branch */
 }
 
-drawbranch(x,y,ex,ey,d,l)
+void drawbranch(x,y,ex,ey,d,l)
 int x,y,ex,ey,d,l;
 {
 	SetAPen(rp,l+2);
@@ -264,12 +273,12 @@ int x,y,ex,ey,d,l;
 	Draw(rp,ex,ey);
 }
 
-init_rand()
+void init_rand()
 {
 	long sec,mic,x;
 	int i;
 
-	//CurrentTime(&sec,&mic);
+	CurrentTime(&sec,&mic);
 
 	x = sec*(mic | 1);
 
@@ -283,7 +292,7 @@ init_rand()
 	seedp3 = 0;
 }
 
-my_rand()
+long my_rand()
 {
 	long result;
 
@@ -299,7 +308,7 @@ my_rand()
 	return (result & 31);
 }
 
-draw_ground()
+void draw_ground()
 {
 	int i,j,x,y,c;
 
@@ -312,7 +321,7 @@ draw_ground()
 		for (j=0;j<2;j++) {
 			for (i=0;i<c;i++,y--) {
 				if (y < 118)
-					return (0);
+					return;
 				Move(rp,318-x,y);
 				Draw(rp,322+x,y);
 			}
@@ -321,13 +330,13 @@ draw_ground()
 	}
 }
 
-chk_done()
+void chk_done()
 {
 	struct IntuiMessage *message;
 	ULONG class;
 	USHORT code;
 
-	while (message = (struct IntuiMessage *)GetMsg(win->UserPort)) {
+	while ((message = (struct IntuiMessage *)GetMsg(win->UserPort))) {
 		class = message->Class;
 		code = message->Code;
 		ReplyMsg((struct Message *)message);

@@ -4,6 +4,7 @@
 *  This code is public domain.
 ********************************/
 
+#include <aros/oldprograms.h>
 #include <devices/console.h>
 #include <exec/devices.h>
 #include <exec/types.h>
