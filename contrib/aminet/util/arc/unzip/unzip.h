@@ -228,11 +228,11 @@
 #ifdef AMIGA
 # if defined(__GNUC__)
 /* T. Walter 28-april-1996 compiled with gcc2.7.0 */
-#  if __GNUC__ >= 2
-#   if __GNUC_MINOR__ < 7
-#    error You have to use AM*GA gcc2.7.0 or better
-#   endif /* __GNUC_MINOR__ < 7 */
-#  endif /* __GNUC__ >= 2 */
+#  if __GNUC__ <= 2
+#    if __GNUC__ < 2 || __GNUC_MINOR__ < 7
+#      error GCC 2.7.0 or later required
+#    endif /* __GNUC__ < 2 || __GNUC_MINOR__ < 7 */
+#  endif /* __GNUC__ <= 2 */
 # else /* !__GNUC__ */
 #  include "amiga/amiga.h"
 #  ifndef AZTEC_C
