@@ -1,0 +1,62 @@
+TOP = ../../../..
+
+#include $(TOP)/config/make.cfg
+
+CC = gcc
+DEFINES = -D_AROS
+MAKE = make
+ECHO = echo
+RM = rm
+CP = cp
+
+BINDIR = $(TOP)/bin/linux-i386/AROS
+LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
+
+OS_INCLUDES_DIR = $(BINDIR)/Include
+
+OS_INCLUDES = -I$(OS_INCLUDES_DIR)
+USER_INCLUDES = -Iinclude
+
+INCLUDES = $(USER_INCLUDES) $(OS_INCLUDES)
+
+CFLAGS = $(INCLUDES) $(DEFINES)
+
+COMMONDIR = ../common
+
+LIBS = -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -lbgui
+
+FLAGS = -nostartfiles -nostdlib -Wl,-i
+
+
+GADGET = bgui_bar.gadget
+
+DEMO = BarDemo
+
+LIBTARGETS = iIntersectRectangles.o \
+	iSubtractRectangles.o \
+	BarClass.o
+
+STARTUP = $(LIBDIR)/startup.o
+
+$(GADGET) : $(LIBTARGETS)
+	@$(CC) -nostartfiles -nostdlib -Wl,-i \
+		$(COMMONDIR)/bguiclass_libtag.o \
+		$(COMMONDIR)/bguiclass_lib.o \
+		$(LIBTARGETS) \
+		$(COMMONDIR)/bguiclass_libendtag.o \
+		-static  \
+		$(LIBS) \
+		-o $@
+	@$(ECHO) Installing $@...
+	@$(CP) $@ $(BINDIR)/Classes/Gadgets
+
+$(DEMO) : $(DEMO).c
+	@$(CC) $(OS_INCLUDES) $(DEFINES) -c $^ -o $@.o
+	@$(CC) $(FLAGS) $(STARTUP) $@.o -o $@ $(LIBS)
+	@$(ECHO) Installing $@
+	@$(CP) $@ $(BINDIR)
+
+all : $(LIBTARGETS) $(GADGET) $(DEMO)
+
+clean :
+	$(RM) -rf $(LIBTARGETS) $(GADGET) $(DEMO)
