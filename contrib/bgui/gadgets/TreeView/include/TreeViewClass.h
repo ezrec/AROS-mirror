@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/07/07 17:14:13  stegerg
+ * again STACKULONG/STACKUWORD/STACK??? stuff.
+ *
  * Revision 42.0  2000/05/09 22:22:26  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -147,13 +150,18 @@
  * Message structure for TVM_INSERT, TVM_MOVE:
  */
 
+#ifndef _AROS
+#undef STACKULONG
+#define STACKULONG ULONG
+#endif
+
 struct tvInsert {
-	ULONG				tvi_MethodID;	/* TVM_INSERT, TVM_MOVE */
+	STACKULONG		tvi_MethodID;	/* TVM_INSERT, TVM_MOVE */
 	struct GadgetInfo	*tvi_GInfo;		/* GadgetInfo */
-	APTR				tvi_Entry;		/* entry to insert or move */
-	APTR				tvi_Relation;	/* parent or sibling entry */
-	ULONG				tvi_Where;		/* see below */
-	ULONG				tvi_Flags;		/* see below */
+	APTR			tvi_Entry;		/* entry to insert or move */
+	APTR			tvi_Relation;	/* parent or sibling entry */
+	STACKULONG		tvi_Where;		/* see below */
+	STACKULONG		tvi_Flags;		/* see below */
 };
 
 /*
@@ -161,12 +169,12 @@ struct tvInsert {
  */
 
 struct tvReplace {
-	ULONG				tvr_MethodID;	/* TVM_REPLACE */
+	STACKULONG				tvr_MethodID;	/* TVM_REPLACE */
 	struct GadgetInfo	*tvr_GInfo;		/* GadgetInfo */
 	APTR				tvr_NewEntry;	/* entry to replace with */
 	APTR				tvr_OldEntry;	/* entry to replace */
-	ULONG				tvr_Where;		/* see below */
-	ULONG				tvr_Flags;		/* see below */
+	STACKULONG				tvr_Where;		/* see below */
+	STACKULONG				tvr_Flags;		/* see below */
 };
 
 /*
@@ -174,10 +182,10 @@ struct tvReplace {
  */
 
 struct tvGet {
-	ULONG				tvg_MethodID;	/* TVM_GET */
+	STACKULONG				tvg_MethodID;	/* TVM_GET */
 	APTR				tvg_Entry;		/* parent or sibling, etc */
-	ULONG				tvg_Which;		/* see below */
-	ULONG				tvg_Flags;		/* see below */
+	STACKULONG				tvg_Which;		/* see below */
+	STACKULONG				tvg_Flags;		/* see below */
 };
 
 /*
@@ -186,11 +194,11 @@ struct tvGet {
  */
 
 struct tvEntry {
-	ULONG				tve_MethodID;	/* TVM_REMOVE, etc */
+	STACKULONG				tve_MethodID;	/* TVM_REMOVE, etc */
 	struct GadgetInfo	*tve_GInfo;		/* GadgetInfo */
 	APTR				tve_Entry;		/* entry, parent or sibling, etc */
-	ULONG				tve_Which;		/* see below */
-	ULONG				tve_Flags;		/* see below */
+	STACKULONG				tve_Which;		/* see below */
+	STACKULONG				tve_Flags;		/* see below */
 };
 
 /*
@@ -203,7 +211,7 @@ struct tvEntry {
  */
 
 struct tvCommand {
-	ULONG				tvc_MethodID;	/* method ID value */
+	STACKULONG				tvc_MethodID;	/* method ID value */
 	struct GadgetInfo	*tvc_GInfo;		/* GadgetInfo */
 };
 
