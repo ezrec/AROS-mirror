@@ -24,23 +24,25 @@ EMail ?)
 - Publish the changelogs on the web.
 
 o Merge old docs
-    - core.src
     - devinfo_inside.src
     - devinfo_outside.src
     - differences.src
-    * faq.src
-    - filesys.src
-    * hidd-intro.src
-    * hidd-model.src
+    o filesys.src
     - hidd.src
-    - ideas.src
-    - included.src
     - missing.src
     - style.src
+    (- core.src)
+    * hidd-intro.src
+    * hidd-model.src
+    * ideas.src
+    * included.src
+    * faq.src
 
 - Mirror Matts Diskimage
 
 DONE
+
+* Implement filtermakefile
 
 * Make the current item in the navbar stand out
 
