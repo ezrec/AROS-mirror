@@ -165,7 +165,7 @@ int KDPopen(KDPscreen *screen)
 		WA_RMBTrap				, TRUE			,
 		wbscreen ? TAG_IGNORE : WA_Borderless	, TRUE			,
 		wbscreen ? TAG_IGNORE : TAG_DONE	, 0			,
-		WA_Title				, (IPTR)"Knp Window"	,
+		WA_Title				, (IPTR)"Knp Window: Try pressing LMB or RMB"	,
 		WA_DragBar				, TRUE			,
 		WA_DepthGadget				, TRUE			,
 		WA_CloseGadget				, TRUE			,
@@ -384,19 +384,5 @@ int KDPwriteIlong(LONG llng,FILE *file)
   return !EOF;
   }
 
-clock_t clock (void)
-{
-  static ULONG base = 0;
-  ULONG secs, micro;
-  
-  if (!IntuitionBase) return 0;
-  
-  CurrentTime(&secs, &micro);
-  if (!base) base = secs;
-  
-  secs -= base;
-  
-  return secs * 1000 + (micro / 1000);  
-}
 
 

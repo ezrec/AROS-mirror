@@ -13,14 +13,6 @@
 
 #include <exec/types.h>
 
-#ifdef _AROS
-
-/* no clock() and CLOCKS_PER_SEC in AROS, yet :-( */
-
-#define CLOCKS_PER_SEC 1000
-
-#endif
-
 #include <stdio.h>
 
 typedef struct
