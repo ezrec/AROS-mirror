@@ -38,7 +38,7 @@
 #include "simplex.h"
 
 
-IMPORT STRPTR ctime();
+//IMPORT STRPTR ctime();
 IMPORT VOID   SetM();
 IMPORT FILE   *fopen();
 IMPORT INT    fseek();
