@@ -1,0 +1,36 @@
+Short:    UnARJ 2.41 - 68k 1.04
+Uploader: T.Knuppe@Outside.in-berlin.de (Thomas Knuppe)
+Author:   Cannon@BigPlanet.tobcv.de (Ronny Schulz)
+Type:     util/arc
+Version:  1.04
+
+
+Other Authors:
+ - Robert K. Jung (originalauthor)
+ - Mark Adler
+ - Andreas R. Kleinert (Amiga 68k- and powerUP-port)
+
+With  this  version, you can extract files with patternmatching and extract
+files  to a specified dir.  The destination-dirs will be created now.  Read
+infos  about the "X"-command.  Patternmatching works also with "L" and "T"-
+command.
+
+This  is  an  special  nonportable  amiga-version,  because  there are some
+library-calls:
+ - MatchPatternNoCase()
+ - ParsePatternNoCase()
+
+If  you  like  a  portable  version, contact me or another author.  I think
+there  is no requirement for a portable version and the LibCalls are better
+than an own routine.
+
+There  is  a  smakefilePPC for owner of the SASC-PPC-Compiler.  I don't now
+where and how I can get them and I'm not a owner of a Phase 5-PPC-Board.  I
+think it should be easy to compile for PPC.  Try "smake -f smakefilePPC".
+
+For further information read the manual inside the archive!
+
+---------------------------------------------------------------------------
+
+Special  thanks  goes  to  Andreas R.  Kleinert, because he has ported many
+tools to the amiga (includes this unarj-port).
