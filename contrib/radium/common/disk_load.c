@@ -26,7 +26,7 @@
 #include "player_proc.h"
 
 #ifdef AMIAROS
-#include "mmd2loader/mmd2load_proc.h"
+#include "../mmd2loader/mmd2load_proc.h"
 #endif
 
 #include "disk_load_proc.h"
