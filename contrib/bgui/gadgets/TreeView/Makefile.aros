@@ -63,7 +63,7 @@ $(GADGET) : $(LIBTARGETS)
 	@$(CP) $@ $(BINDIR)/Classes/Gadgets
 
 $(DEMO) : $(DEMO).c
-	@$(CC) $(OS_INCLUDES) $(DEFINES) -c $^ -o $@.o
+	@$(CC) $(INCLUDES) $(DEFINES) -c $^ -o $@.o
 	@$(CC) $(FLAGS) $(STARTUP) $@.o -o $@ $(LIBS)
 	@$(ECHO) Installing $@
 	@$(CP) $@ $(BINDIR)
