@@ -6,6 +6,7 @@
 #ifdef MANX
 #include <functions.h>
 #endif
+#include <stdio.h>
 
 #include "scrndef.h"
 #include "gadgetdef.h"
@@ -17,7 +18,9 @@
 extern struct GfxBase * GfxBase;
 
 void SetPolyDraw();
-void SetBezMesh( value );
+void SetBezMesh( int );
+void OutErr(char *);
+void CloseDisplay();
 
 void GadgetSetVal(gad)
     struct Gadget *gad;
