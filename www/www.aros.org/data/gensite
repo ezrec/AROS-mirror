@@ -62,7 +62,7 @@ def genScreenshots ():
     page.append (
 	Href ('#PicturesAroundAROS', '1. Pictures around AROS'),
 	BR (),
-	Href ('#Screenshots', '1. Screenshots'),
+	Href ('#Screenshots', '2. Screenshots'),
 	BR (),
 	BR(), HR(), BR(),
 	Name ('PicturesAroundAROS'),
