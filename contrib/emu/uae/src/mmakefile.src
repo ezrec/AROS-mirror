@@ -8,7 +8,8 @@ include $(TOP)/config/make.cfg
 SRCDIR := $(TOP)/$(CURDIR)
 
 FILES := \
-    aros-win2 \
+    aros-gui \
+    aros-win \
     audio \
     autoconf \
     blitfunc \
@@ -44,7 +45,6 @@ FILES := \
     missing \
     native2amiga \
     newcpu \
-    nogui \
     od-joy \
     picasso96 \
     readcpu \
@@ -152,7 +152,8 @@ cpudefs.o: cpudefs.c
 %make_prog_setup mmake=uae
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
-LIBS += -lgcc
+LIBS2  := -larossupport $(LIBS) -lgcc
+LIBS := $(LIBS2)
 
 %common
 %include_deps
