@@ -7,14 +7,12 @@ include $(TOP)/config/make.cfg
 LIB   := python-python
 
 FILES := \
-	atof \
 	bltinmodule \
 	ceval \
 	codecs \
 	compile \
 	errors \
 	exceptions \
-	fmod \
 	frozen \
 	frozenmain \
 	future \
@@ -26,12 +24,10 @@ FILES := \
 	getplatform \
 	getversion \
 	graminit \
-	hypot \
 	import \
 	importdl \
 	dynload_stub \
 	marshal \
-	memmove \
 	modsupport \
 	mystrtoul \
 	pyfpe \
@@ -50,6 +46,10 @@ FILES := \
 #	strtod
 #	getcwd
 #	dup2
+#	memmove
+#	atof
+#	fmod	
+#	hyport
 
 # Highly platform-specific stuff, not for AROS.
 #	dynload_aix 
