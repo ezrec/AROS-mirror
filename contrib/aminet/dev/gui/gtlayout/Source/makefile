@@ -18,34 +18,40 @@ CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros-gcc
 DEFINES =
 OPTIMIZE = -O2 -g3
 
-PRELIBS := -lgtlayout -lamiga -larosc -lamiga -lautoinit -larosm
+PRELIBS := -lautoinit -lgtlayout -lamiga -larosc_shared -lamiga -larosm -lautoinit
 
 LIBS := -L$(LIBDIR) -L./ $(PRELIBS)
 
 #First all intermediate files MUST be created so there is a 'defines' file!
-all: gtlayout.library libgtlayout.a test_aros
+all: $(AROS_LIBS)/gtlayout.library $(AROS_LIB)/libgtlayout.a $(TESTDIR)/gtlayout_test
 
 
 aros/%_aros.c : %.c
-	$(ARCHTOOL) -R aros/gtlayout_pragmas_aros.h  $^ $@ aros/gtlayout_defines_aros.h
+	@$(ECHO) Generating $@...
+	@$(ARCHTOOL) -R aros/gtlayout_pragmas_aros.h  $^ $@ aros/gtlayout_defines_aros.h >/dev/null
 
 %.o : aros/%_aros.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
+	@$(ECHO) Compiling $@...
+	@$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
 
 LT_DeleteHandle.ol : aros/LT_DeleteHandle_aros.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
-	$(OBJCOPY) $@ --redefine-sym GTLayout_LT_DeleteHandle=LT_DeleteHandle
+	@$(ECHO) Compiling $@...
+	@$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
+	@$(OBJCOPY) $@ --redefine-sym GTLayout_LT_DeleteHandle=LT_DeleteHandle
 
 LT_HandleInput.ol : aros/LT_HandleInput_aros.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
-	$(OBJCOPY) $@ --redefine-sym GTLayout_LT_HandleInput=LT_HandleInput
+	@$(ECHO) Compiling $@...
+	@$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
+	@$(OBJCOPY) $@ --redefine-sym GTLayout_LT_HandleInput=LT_HandleInput
 
 %.ol : aros/%_aros.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
+	@$(ECHO) Compiling $@...
+	@$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
 
 
 test/%.o : test/%.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(LOCALINCLUDES) -c $^ -o $@
+	@$(ECHO) Compiling $@...
+	@$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(LOCALINCLUDES) -c $^ -o $@
 
 
 API_SOURCE = \
@@ -87,7 +93,7 @@ UFC_SOURCE = \
 
 OTHERS = gtlayout_lib
 
-INTERMEDIATES = $(foreach f,$(API_SOURCE) $(UFC_SOURCE),aros/$(f)_aros.c)
+INTERMEDIATES = $(foreach f,$(API_SOURCE) $(UFC_SOURCE) $(OTHERS),aros/$(f)_aros.c)
 
 FILES = \
 	LTP_AddGadgets \
@@ -159,22 +165,22 @@ FILES = \
 
 TESTFILES = test/gui test/Tools
 
-OBJS         = $(foreach f,$(API_SOURCE) $(API_SOURCE_EXTRA) $(UFC_SOURCE) $(FILES),$(f).o)
-LINKLIB_OBJS = $(foreach f,$(API_SOURCE)                     $(UFC_SOURCE) $(FILES),$(f).ol)
+OBJS         = $(foreach f,$(API_SOURCE) $(API_SOURCE_EXTRA) $(UFC_SOURCE) $(FILES) $(OTHERS),$(f).o)
+LINKLIB_OBJS = $(foreach f,$(API_SOURCE)                     $(UFC_SOURCE) $(FILES)          ,$(f).ol)
 TESTOBJS = test/gui.o test/Tools.o
 
 
-gtlayout.library : $(INTERMEDIATES) $(OBJS) gtlayout_lib.o gtlayout_data.o
-	$(CC) gtlayout_lib.o gtlayout_data.o $(OBJS) -static -lamiga -o $@ -nostartfiles
+$(AROS_LIBS)/gtlayout.library : $(INTERMEDIATES) $(OBJS) gtlayout_data.o
+	@$(ECHO) Compiling $@...
+	@$(CC) gtlayout_data.o $(OBJS) -static -lamiga -o $@ -nostartfiles
 
-libgtlayout.a : $(LINKLIB_OBJS) gtlayout_data.ol
-	$(AR) $@ $^
+$(AROS_LIB)/libgtlayout.a : $(LINKLIB_OBJS) gtlayout_data.ol
+	@$(ECHO) Generating $@...
+	@$(AR) $@ $^
 
-test_aros: $(TESTOBJS)
-	$(ECHO) Linking $^ to $@
-	$(STATIC_LD) $(LDFLAGS) $(STARTUP) $^ -o $@ $(LIBS) $(COMPILER_LIBS)
+$(TESTDIR)/gtlayout_test: $(TESTOBJS)
+	@$(ECHO) Linking $^ to $@
+	@$(STATIC_LD) $(LDFLAGS) $(STARTUP) $^ -o $@ $(LIBS) $(COMPILER_LIBS)
  
 clean:
-	$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) gtlayout.library aros/gtlayout_defines_aros.h gtlayout_lib.o gtlayout_data.o gtlayout_data.ol libgtlayout.a
-
-
+	@$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) $(AROS_LIBS)/gtlayout.library aros/gtlayout_defines_aros.h gtlayout_data.o gtlayout_data.ol $(AROS_LIB)/libgtlayout.a
