@@ -1,0 +1,36 @@
+diff -urN bison-1.875.orig/config/config.sub bison-1.875/config/config.sub
+--- bison-1.875.orig/config/config.sub	2003-01-01 10:06:37.000000000 +0100
++++ bison-1.875/config/config.sub	2003-01-01 10:12:59.000000000 +0100
+@@ -382,6 +382,10 @@
+ 		basic_machine=m68k-unknown
+ 		os=-sysv4
+ 		;;
++	aros)
++		basic_machine=i386-unknown
++		os=-aros
++		;;
+ 	apollo68)
+ 		basic_machine=m68k-apollo
+ 		os=-sysv
+@@ -1099,7 +1103,7 @@
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -solaris* | -sym* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* \
++	      | -aos* | -aros* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -netbsd* | -openbsd* | -freebsd* | -riscix* \
+diff -urN bison-1.875.orig/mmakefile.src bison-1.875/mmakefile.src
+--- bison-1.875.orig/mmakefile.src	1970-01-01 01:00:00.000000000 +0100
++++ bison-1.875/mmakefile.src	2003-01-01 10:12:59.000000000 +0100
+@@ -0,0 +1,9 @@
++# Copyright © 2004, The AROS Development Team. All rights reserved.
++# $Id$
++
++include ../../make.cfg
++
++#MM- contrib-gnu : contrib-gnu-bison
++	
++%build_with_configure mmake=contrib-gnu-bison nix=yes prefix=$(GNUDIR)/bison extraoptions="--disable-nls"
++
