@@ -8,7 +8,6 @@ import db.credits.format.rest
 import db.tasks.parse
 import db.tasks.format.html
 
-from docutils.core import publish
 from docutils.core import Publisher
 from docutils.io import NullOutput
 
