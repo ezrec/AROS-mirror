@@ -17,9 +17,9 @@
 #include <clib/bgui_protos.h>
 
 #if defined(_AMIGA) && defined(__GNUC__)
-#include <inline/icon.h>
+#include <inline/bgui.h>
 #else
-#include <defines/icon.h>
+#include <defines/bgui.h>
 #endif
 
 #endif /* PROTO_BGUI_H */
