@@ -90,7 +90,7 @@ int mx,my,ax=0,ay=0;
       case IDCMP_CLOSEWINDOW:
         if(!game)
           MenuOff();
-        ende=AutoRequest(Window,&q_body,&p,&n,NULL,NULL,200,75);
+        ende=AutoRequest(Window,&q_body,&p,&n,0L,0L,200,75);
         if(!game)
           MenuOn();
         break;

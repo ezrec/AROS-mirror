@@ -200,7 +200,7 @@ BOOL result;
   remcount+=bremove();
   if(win())
   {
-    result=AutoRequest(Window,&w_body,&p,&w,NULL,NULL,200,75);
+    result=AutoRequest(Window,&w_body,&p,&w,0L,0L,200,75);
 
     open_xWindow();
 
@@ -245,7 +245,7 @@ BOOL result=FALSE;
 int i,j;
 
   if(game)
-    result=AutoRequest(Window,&s_body,&p,&n,NULL,NULL,200,75);
+    result=AutoRequest(Window,&s_body,&p,&n,0L,0L,200,75);
 
   if(!game||result)
   {
@@ -298,7 +298,7 @@ struct Gadget *gad;
           case 0:
             if(!game)
               MenuOff();
-            AutoRequest(Window,&i_body,&p,&p,NULL,NULL,200,75);
+            AutoRequest(Window,&i_body,&p,&p,0L,0L,200,75);
             if(!game)
               MenuOn();
             break;
@@ -306,7 +306,7 @@ struct Gadget *gad;
           case 1:
             if(!game)
               MenuOff();
-            ende=AutoRequest(Window,&q_body,&p,&n,NULL,NULL,200,75);
+            ende=AutoRequest(Window,&q_body,&p,&n,0L,0L,200,75);
             if(!game)
               MenuOn();
             break;
@@ -322,7 +322,7 @@ struct Gadget *gad;
           case 4:
             if(!game)
               MenuOff();
-            if(AutoRequest(Window,&a_body,&p,&n,NULL,NULL,200,75))
+            if(AutoRequest(Window,&a_body,&p,&n,0L,0L,200,75))
             {
               game=FALSE;
               menue04.Flags=ITEMTEXT|HIGHBOX;

@@ -69,7 +69,7 @@ struct Gadget cancelgad = {
 UBYTE numbergad_buf[4]="15";
 
 struct StringInfo numbergad_info = {
-  (UBYTE *)&numbergad_buf[0],NULL,0,4,0,0,0,0,0,0,NULL,NULL,NULL };
+  numbergad_buf,NULL,0,4,0,0,0,0,0,0,NULL,0L,NULL };
 
 #define numbergad_ID 0
 
@@ -86,7 +86,7 @@ struct TagItem InfoWindowItem[] =
   {WA_Left,       5},
   {WA_Width,      255},
   {WA_Height,     110},
-  {WA_CustomScreen,  NULL},
+  {WA_CustomScreen,  0L},
 /*  {WA_PubScreen,  NULL}, */
   {WA_IDCMP,      IDCMP_CLOSEWINDOW|IDCMP_GADGETUP},
   {WA_Flags,      WFLG_ACTIVATE|WFLG_SMART_REFRESH|WFLG_CLOSEGADGET|WFLG_DEPTHGADGET|WFLG_DRAGBAR|WFLG_RMBTRAP},
@@ -105,7 +105,7 @@ struct TagItem ResultWindowItem[] =
   {WA_Left,       5},
   {WA_Width,      400},
   {WA_Height,     110},
-  {WA_CustomScreen,  NULL},
+  {WA_CustomScreen,  (IPTR)NULL},
 /*  {WA_PubScreen,  NULL}, */
   {WA_IDCMP,      IDCMP_CLOSEWINDOW|IDCMP_GADGETUP},
   {WA_Flags,      WFLG_ACTIVATE|WFLG_SMART_REFRESH|WFLG_CLOSEGADGET|WFLG_DEPTHGADGET|WFLG_DRAGBAR|WFLG_RMBTRAP},
@@ -116,7 +116,7 @@ struct TagItem ResultWindowItem[] =
 
 struct TagItem WindowItem[] =
 { {WA_AutoAdjust, TRUE},
-  {WA_CustomScreen,  NULL},
+  {WA_CustomScreen,  0L},
 /*  {WA_PubScreen,  NULL}, */
   {WA_Width,     724},
   {WA_Height,    480},
@@ -472,8 +472,10 @@ int i;
 
 void clearwin()
 {
+/*
   SetAPen(rp, 0);
   RectFill(rp,4,12,Window->Width-5,Window->Height-3);
+*/
 }
 
 void close_screen()

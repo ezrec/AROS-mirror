@@ -26,7 +26,7 @@
 /* Functions */
 #define random(max) (rand()%((int)(max)))
 
-#define StopMsg() ModifyIDCMP(Window,NULL)
+#define StopMsg() ModifyIDCMP(Window,0L)
 #define ContMsg() ModifyIDCMP(Window,iflags)
 #define MenuOn()  menu1.Flags=MENUENABLED
 #define MenuOff() menu1.Flags=0
