@@ -44,7 +44,7 @@ def convert (outputfile, sizefile, title, xaxis = None):
     cmd = '%s %s' % (config.GNUPLOT, gpFile)
     status, output = commands.getstatusoutput (cmd)
     if status:
-	sys.stderr.write ("'" cmd + "' failed: ")
+	sys.stderr.write ("'" + cmd + "' failed: ")
 	sys.stderr.write (output)
 	sys.exit (os.WEXITSTATUS (status))
 
