@@ -28,8 +28,20 @@ brackets ("[]").
 
 200305??: STATUS UPDATE [???] ================================================
 
-200305??:
+200305:
  <next day here>
+
+20030527: STATUS UPDATE [dlc] ================================================
+
+20030526:
+
++ Gradients in Zune [falemagn]
+
+200308:
+
++ atomic cleanup [stegerg]
++ headers.tmpl cleanup [falemagn]
++ french translation for dos.library [oliveradam]
 
 20030507:
 
@@ -39,7 +51,7 @@ brackets ("[]").
 
 + TeamAROS support site goes online (http://thenostromo.com/teamaros/)
   [damocles]
-+ Preliminary AROS PPC PReP sources available [mschulz]
++ [HD] Preliminary AROS PPC PReP sources available [mschulz]
 + bug fix in exec/AddTask() (caused problems with "term") [bergers]
 + bug fix in dos_init.c (caused problem on native soft reset with module debug
   enabled) [stegerg]
@@ -51,7 +63,7 @@ brackets ("[]").
 
 + experimenting with pth instead of custom routines for hosted's multitasking
   [falemagn]
-+ Unfortunately Johan Grip no longer has the time to work on the Pegasos port.
++ [HD] Unfortunately Johan Grip no longer has the time to work on the Pegasos port.
   The board will be sent to Michal Schulz.
 + graphics/WeighTAMatch() made more conform to the original [verhaegs]
 
@@ -98,7 +110,7 @@ brackets ("[]").
 20030425:
 
 + desktop.library updated, different views possible [psmith]
-+ Johan Grip received the Pegasos and installed Debian on it
++ [HD] Johan Grip received the Pegasos and installed Debian on it
 + gtlayout.library fixes [bergers]
 + HDToolbox fixes [sheutlin]
 
