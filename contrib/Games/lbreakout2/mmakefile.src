@@ -18,7 +18,8 @@ lb2_real: .files-touched $(GENDIR)/$(CURDIR)/.configured
 	@DATADIR=$(EXEDIR)/data $(MAKE) -C $(GENDIR)/$(CURDIR) install
 
 .files-touched:
-	@$(TOUCH) config.h.in configure
+	@$(TOUCH) config.h.in
+        @$(TOUCH) configure
 	@$(ECHO) YES > $@
 
 $(GENDIR)/$(CURDIR)/.configured: mmakefile
