@@ -143,3 +143,4 @@ dsmx:Agt/QlJ/X2zJU:Michael Lothian:darkwalker@bigfoot.com:
 hinkka:dbOEkKaagIJGI:Olli Hinkka:olli.hinkka@springtoys.com:
 stuntzi:SU4JSvYKZ2GQI:Stefan Stuntz:stuntz@sasg.com:
 bjoern:dbOcnIS9MyjqM:Bjoern Paschen:bjoern@amigascne.org:
+evogt:adzN5khz8PJkc:Etienne Vogt:etienne@astro.gla.ac.uk:
