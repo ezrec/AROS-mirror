@@ -63,6 +63,9 @@ network -d contrib/network contrib/network
 # Misc
 Misc -d contrib/Misc contrib/Misc
 
+# REXX port
+rexx -d contrib/rexx contrib/rexx
+
 # Standalone stuff
 ScalosV2 -d contrib/ScalosV2 contrib/ScalosV2
 Freetype -d contrib/freetype contrib/freetype
