@@ -1,9 +1,8 @@
 @import url(docutils.css);
 
-/* FIXME: Breaks underline in links on Phoenix?!?
 body {
     font-family: arial, verdana, helvetica, sans-serif
-}*/
+}
 
 .tree {
     font-size:   smaller ;
