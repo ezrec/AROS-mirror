@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <assert.h>
 
 typedef struct _amiga_tsd_t {
   proclevel amilevel;
@@ -150,21 +151,22 @@ streng *arexx_open( tsd_t *TSD, cparamboxptr parm1 )
     mode=0;
   else switch( getoptionchar( TSD, parm3->value, "OPEN", 3, "WRA" ) )
   {
-    case 'W':
-      mode=0;
-      break;
+  case 'W':
+    mode=0;
+    break;
     
-    case 'R':
-      mode=1;
-      break;
+  case 'R':
+    mode=1;
+    break;
       
-    case 'A':
-      mode=2;
-      break;
+  case 'A':
+    mode=2;
+    break;
       
-    default:
-      assert(0);
-      break;
+  default:
+    mode=0;
+    assert(0);
+    break;
   }
 
   file = fopen( filename, modestrings[mode] );
@@ -266,21 +268,22 @@ streng *arexx_seek( tsd_t *TSD, cparamboxptr parm1 )
     wench = SEEK_CUR;
   else switch( getoptionchar( TSD, parm3->value, "SEEK", 3, "CBE" ) )
   {
-    case 'C':
-      wench = SEEK_CUR;
-      break;
+  case 'C':
+    wench = SEEK_CUR;
+    break;
       
-    case 'B':
-      wench = SEEK_SET;
-      break;
+  case 'B':
+    wench = SEEK_SET;
+    break;
       
-    case 'E':
-      wench = SEEK_END;
-      break;
+  case 'E':
+    wench = SEEK_END;
+    break;
       
-    default:
-      assert(0);
-      break;
+  default:
+    wench = SEEK_CUR;
+    assert(0);
+    break;
   }
   
   pos = fseek( file, offset, wench );
@@ -533,7 +536,7 @@ streng *arexx_bitcomp( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2, parm3;
   const streng *s1, *s2;
-  char *cp1, *cp2;
+  const char *cp1, *cp2;
   char pad;
   int i;
   
@@ -627,13 +630,16 @@ streng *arexx_compress( tsd_t *TSD, cparamboxptr parm1 )
 
 
 static const streng T_str = { 1, 1, "T" };
-static const parambox T_parm = { NULL, 0, &T_str };
+static const parambox T_parm = { NULL, 0, (streng *)&T_str };
 
 streng *arexx_trim( tsd_t *TSD, cparamboxptr parm1 )
 {
+  parambox parm;
+  
   checkparam( parm1, 1, 1, "TRIM" );
 
-  parm1->next = &T_parm;
+  parm = *parm1;
+  parm.next = &T_parm;
   
   return std_strip( TSD, parm1 );
 }
@@ -641,14 +647,13 @@ streng *arexx_trim( tsd_t *TSD, cparamboxptr parm1 )
 
 streng *arexx_upper( tsd_t *TSD, cparamboxptr parm1 )
 {
-  int i;
   streng *ret;
   
   checkparam( parm1, 1, 1, "UPPER" );
   
   ret = Str_dup_TSD( TSD, parm1->value );
 
-   return Str_upper( ret );
+  return Str_upper( ret );
 }
 
 
