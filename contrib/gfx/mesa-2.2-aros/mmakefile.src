@@ -1,0 +1,240 @@
+
+#   $Id$
+#
+#   Generate liblibinit.a
+#
+include $(TOP)/config/make.cfg
+
+#MM contrib-mesa2 : includes linklibs
+#MM- contrib-mesa2 : linklibs-mesagl linklibs-mesaglu linklibs-mesatk linklibs-mesaaux contrib-mesa2-demos contrib-mesa2-samples contrib-mesa2-book
+#MM linklibs-mesagl : includes linklibs
+#MM linklibs-mesaglu : includes linklibs
+#MM linklibs-mesatk : includes linklibs
+#MM linklibs-mesaaux : includes linklibs
+
+#MM contrib-mesa2-demos : includes mesa-includes linklibs-mesagl linklibs-mesaglu linklibs-mesatk linklibs-mesaaux
+#MM contrib-mesa2-samples : includes mesa-includes linklibs-mesagl linklibs-mesaglu linklibs-mesatk linklibs-mesaaux
+#MM contrib-mesa2-book : includes mesa-includes linklibs-mesagl linklibs-mesaglu linklibs-mesatk linklibs-mesaaux
+
+AMIGASRCDIR := amiga
+MESASRCDIR := src
+MESAGLUSRCDIR := src-glu
+MESATKSRCDIR := src-tk
+MESAAUXSRCDIR := src-aux
+
+MESADEMOSRCDIR := demos
+MESASAMPSRCDIR := samples
+MESABOOKSRCDIR := book
+
+LIBMESAGL :=  $(MESASRCDIR)/accum \
+            $(MESASRCDIR)/alpha \
+            $(MESASRCDIR)/alphabuf \
+            $(MESASRCDIR)/api \
+            $(MESASRCDIR)/attrib \
+            $(MESASRCDIR)/bitmap \
+            $(MESASRCDIR)/blend \
+            $(MESASRCDIR)/bresenhm \
+            $(MESASRCDIR)/clip \
+            $(MESASRCDIR)/context \
+            $(MESASRCDIR)/copypix \
+            $(MESASRCDIR)/depth \
+            $(MESASRCDIR)/dlist \
+            $(MESASRCDIR)/draw \
+            $(MESASRCDIR)/drawpix \
+            $(MESASRCDIR)/enable \
+            $(MESASRCDIR)/eval \
+            $(MESASRCDIR)/feedback \
+            $(MESASRCDIR)/fog \
+            $(MESASRCDIR)/get \
+            $(AMIGASRCDIR)/misc/ht_colors \
+            $(MESASRCDIR)/interp \
+            $(MESASRCDIR)/image \
+            $(MESASRCDIR)/light \
+            $(MESASRCDIR)/lines \
+            $(MESASRCDIR)/logic \
+            $(MESASRCDIR)/masking \
+            $(MESASRCDIR)/matrix \
+            $(MESASRCDIR)/misc \
+            $(MESASRCDIR)/osmesa \
+            $(MESASRCDIR)/pb \
+            $(MESASRCDIR)/pixel \
+            $(MESASRCDIR)/points \
+            $(MESASRCDIR)/pointers \
+            $(MESASRCDIR)/polygon \
+            $(MESASRCDIR)/readpix \
+            $(MESASRCDIR)/scissor \
+            $(MESASRCDIR)/span \
+            $(MESASRCDIR)/stencil \
+            $(MESASRCDIR)/teximage \
+            $(MESASRCDIR)/texobj \
+            $(MESASRCDIR)/texture \
+            $(MESASRCDIR)/triangle \
+            $(MESASRCDIR)/varray \
+            $(MESASRCDIR)/vb \
+            $(MESASRCDIR)/vertex \
+            $(MESASRCDIR)/winpos \
+            $(MESASRCDIR)/xform \
+            $(MESASRCDIR)/ADisp_Cyb \
+            $(MESASRCDIR)/ADisp_AGA \
+            $(MESASRCDIR)/AmigaMesa
+
+LIBMESAGLU :=  $(MESAGLUSRCDIR)/glu \
+            $(MESAGLUSRCDIR)/mipmap \
+            $(MESAGLUSRCDIR)/nurbs \
+            $(MESAGLUSRCDIR)/nurbscrv \
+            $(MESAGLUSRCDIR)/nurbssrf \
+            $(MESAGLUSRCDIR)/nurbsutl \
+            $(MESAGLUSRCDIR)/project \
+            $(MESAGLUSRCDIR)/quadric \
+            $(MESAGLUSRCDIR)/tess \
+            $(MESAGLUSRCDIR)/tesselat \
+            $(MESAGLUSRCDIR)/polytest
+
+LIBMESATK :=  $(MESATKSRCDIR)/Awindow \
+            $(MESATKSRCDIR)/font \
+            $(MESATKSRCDIR)/shapes \
+            $(MESATKSRCDIR)/image
+
+LIBMESAAUX :=  $(MESAAUXSRCDIR)/glaux \
+            $(MESAAUXSRCDIR)/font \
+            $(MESAAUXSRCDIR)/image \
+            $(MESAAUXSRCDIR)/shapes \
+            $(MESAAUXSRCDIR)/teapot \
+            $(MESAAUXSRCDIR)/vect3d \
+            $(MESAAUXSRCDIR)/xxform
+
+MESADEMOS :=  $(MESADEMOSRCDIR)/bounce \
+            $(MESADEMOSRCDIR)/gamma \
+            $(MESADEMOSRCDIR)/gears \
+            $(MESADEMOSRCDIR)/isosurf \
+            $(MESADEMOSRCDIR)/osdemo \
+            $(MESADEMOSRCDIR)/spin \
+            $(MESADEMOSRCDIR)/test0 \
+            $(MESADEMOSRCDIR)/texobj \
+            $(MESADEMOSRCDIR)/reflect \
+            $(MESADEMOSRCDIR)/winpos
+
+MESASAMPLES :=  $(MESASAMPSRCDIR)/accum \
+            $(MESASAMPSRCDIR)/bitmap1 \
+            $(MESASAMPSRCDIR)/bitmap2 \
+            $(MESASAMPSRCDIR)/blendeq \
+            $(MESASAMPSRCDIR)/blendxor \
+            $(MESASAMPSRCDIR)/copy \
+            $(MESASAMPSRCDIR)/cursor \
+            $(MESASAMPSRCDIR)/depth \
+            $(MESASAMPSRCDIR)/eval \
+            $(MESASAMPSRCDIR)/fog \
+            $(MESASAMPSRCDIR)/font \
+            $(MESASAMPSRCDIR)/line \
+            $(MESASAMPSRCDIR)/logo \
+            $(MESASAMPSRCDIR)/nurb \
+            $(MESASAMPSRCDIR)/overlay \
+            $(MESASAMPSRCDIR)/point \
+            $(MESASAMPSRCDIR)/prim \
+            $(MESASAMPSRCDIR)/quad \
+            $(MESASAMPSRCDIR)/select \
+            $(MESASAMPSRCDIR)/shape \
+            $(MESASAMPSRCDIR)/sphere \
+            $(MESASAMPSRCDIR)/star \
+            $(MESASAMPSRCDIR)/stencil \
+            $(MESASAMPSRCDIR)/stretch \
+            $(MESASAMPSRCDIR)/texture \
+            $(MESASAMPSRCDIR)/tri \
+            $(MESASAMPSRCDIR)/wave
+
+MESABOOK :=  $(MESABOOKSRCDIR)/robot \
+            $(MESABOOKSRCDIR)/accanti \
+            $(MESABOOKSRCDIR)/accnot \
+            $(MESABOOKSRCDIR)/accpersp \
+            $(MESABOOKSRCDIR)/accum \
+            $(MESABOOKSRCDIR)/aim \
+            $(MESABOOKSRCDIR)/alpha \
+            $(MESABOOKSRCDIR)/alpha3D \
+            $(MESABOOKSRCDIR)/anti \
+            $(MESABOOKSRCDIR)/antiindex \
+            $(MESABOOKSRCDIR)/antipindex \
+            $(MESABOOKSRCDIR)/antipoint \
+            $(MESABOOKSRCDIR)/antipoly \
+            $(MESABOOKSRCDIR)/bezcurve \
+            $(MESABOOKSRCDIR)/bezmesh \
+            $(MESABOOKSRCDIR)/bezsurf \
+            $(MESABOOKSRCDIR)/checker \
+            $(MESABOOKSRCDIR)/checker2 \
+            $(MESABOOKSRCDIR)/chess \
+            $(MESABOOKSRCDIR)/clip \
+            $(MESABOOKSRCDIR)/colormat \
+            $(MESABOOKSRCDIR)/cone \
+            $(MESABOOKSRCDIR)/cube \
+            $(MESABOOKSRCDIR)/curve \
+            $(MESABOOKSRCDIR)/depthcue \
+            $(MESABOOKSRCDIR)/disk \
+            $(MESABOOKSRCDIR)/dof \
+            $(MESABOOKSRCDIR)/dofnot \
+            $(MESABOOKSRCDIR)/double \
+            $(MESABOOKSRCDIR)/drawf \
+            $(MESABOOKSRCDIR)/feedback \
+            $(MESABOOKSRCDIR)/fog \
+            $(MESABOOKSRCDIR)/fogindex \
+            $(MESABOOKSRCDIR)/font \
+            $(MESABOOKSRCDIR)/light \
+            $(MESABOOKSRCDIR)/linelist \
+            $(MESABOOKSRCDIR)/lines \
+            $(MESABOOKSRCDIR)/list \
+            $(MESABOOKSRCDIR)/list2 \
+            $(MESABOOKSRCDIR)/maplight \
+            $(MESABOOKSRCDIR)/material \
+            $(MESABOOKSRCDIR)/mipmap \
+            $(MESABOOKSRCDIR)/model \
+            $(MESABOOKSRCDIR)/movelight \
+            $(MESABOOKSRCDIR)/nurbs \
+            $(MESABOOKSRCDIR)/pickdepth \
+            $(MESABOOKSRCDIR)/pickline \
+            $(MESABOOKSRCDIR)/picksquare \
+            $(MESABOOKSRCDIR)/plane \
+            $(MESABOOKSRCDIR)/planet \
+            $(MESABOOKSRCDIR)/planetup \
+            $(MESABOOKSRCDIR)/polys \
+            $(MESABOOKSRCDIR)/sccolorlight \
+            $(MESABOOKSRCDIR)/scene \
+            $(MESABOOKSRCDIR)/scenebamb \
+            $(MESABOOKSRCDIR)/sceneflat \
+            $(MESABOOKSRCDIR)/select \
+            $(MESABOOKSRCDIR)/simple \
+            $(MESABOOKSRCDIR)/smooth \
+            $(MESABOOKSRCDIR)/sphere \
+            $(MESABOOKSRCDIR)/stencil \
+            $(MESABOOKSRCDIR)/stroke \
+            $(MESABOOKSRCDIR)/surface \
+            $(MESABOOKSRCDIR)/tea \
+            $(MESABOOKSRCDIR)/teaambient \
+            $(MESABOOKSRCDIR)/teapots \
+            $(MESABOOKSRCDIR)/texgen \
+            $(MESABOOKSRCDIR)/texturesurf
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
+USER_CFLAGS	:= -DNO_ERRNO_H
+
+%build_linklib mmake=linklibs-mesagl libname=MesaGL files=$(LIBMESAGL)
+
+%build_linklib mmake=linklibs-mesaglu libname=MesaGLU files=$(LIBMESAGLU)
+
+%build_linklib mmake=linklibs-mesatk libname=Mesatk files=$(LIBMESATK)
+
+%build_linklib mmake=linklibs-mesaaux libname=Mesaaux files=$(LIBMESAAUX)
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
+
+%build_progs mmake=contrib-mesa2-demos \
+    files=$(MESADEMOS) targetdir=$(CONTRIBDIR)/Gfx/Mesa2/Demos \
+    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+    
+%build_progs mmake=contrib-mesa2-samples \
+    files=$(MESASAMPLES) targetdir=$(CONTRIBDIR)/Gfx/Mesa2/Samples \
+    uselibs="Mesatk MesaGLU MesaGL arossupport amiga arosc m"    
+
+%build_progs mmake=contrib-mesa2-book \
+    files=$(MESABOOK) targetdir=$(CONTRIBDIR)/Gfx/Mesa2/Book \
+    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+
+%common
+

@@ -38,8 +38,6 @@
  *  simple.c
  *  This program draws a white rectangle on a black background.
  */
-#define AROS
-
 #include <GL/gl.h>
 #include <stdlib.h>
 #include "glaux.h"
@@ -65,7 +63,7 @@ int main(int argc, char** argv)
 	glEnd();
 	glFlush();
 
-#ifndef AROS
+#ifndef __AROS__
 	sleep(10);
 #endif
 	return 0;

@@ -23,8 +23,13 @@
 
 /*
 $Log$
-Revision 1.1  2003/08/09 00:23:14  chodorowski
-Initial revision
+Revision 1.2  2004/02/25 02:46:04  NicJA
+updates updates updates... now builds with the standard aros mmakefile.src system - use make contrib-mesa2 to build
+
+N.B - theres something wrong somewhere causing some demos,samples and book files to not compile (if you can see the problem please fix it ;))
+
+Revision 1.1.1.1  2003/08/09 00:23:14  chodorowski
+Amiga Mesa 2.2 ported to AROS by Nic Andrews. Build with 'make aros'. Not built by default.
 
  * Revision 1.16  1997/06/25  19:16:56  StefanZ
  * New drawing rutines:
@@ -574,7 +579,8 @@ __asm __saveds GLenum AmigaMesaReportError(register __a0 struct amigamesa_contex
 	{
 	GLenum error;
 	error=LastError;
-	LastError=NULL;
+#warning :TODO fix next line
+        //LastError=NULL;
 	return(error);
 	}
 

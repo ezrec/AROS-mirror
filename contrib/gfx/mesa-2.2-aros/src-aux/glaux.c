@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#if !defined(AMIGA) && !defined(__WIN32__) && !defined(__QUICKDRAW__) && !defined(DOSVGA) && !defined(NeXT) && !defined(__BEOS__)
+#if !defined(AMIGA) && !defined(__AROS__) && !defined(__WIN32__) && !defined(__QUICKDRAW__) && !defined(DOSVGA) && !defined(NeXT) && !defined(__BEOS__)
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
@@ -369,7 +369,7 @@ void auxSwapBuffers(void)
     tkSwapBuffers();
 }
 
-#if !defined(AMIGA) && !defined(__WIN32__) && !defined(__QUICKDRAW__) && !defined(DOSVGA) && !defined(NeXT) && !defined(__BEOS__)
+#if !defined(AMIGA) && !defined(__AROS__) && !defined(__WIN32__) && !defined(__QUICKDRAW__) && !defined(DOSVGA) && !defined(NeXT) && !defined(__BEOS__)
 /* for systems with X only... */
 Display *auxXDisplay(void)
 {

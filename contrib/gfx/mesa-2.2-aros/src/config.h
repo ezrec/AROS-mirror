@@ -23,8 +23,13 @@
 
 /*
  * $Log$
- * Revision 1.1  2003/08/09 00:23:12  chodorowski
- * Initial revision
+ * Revision 1.2  2004/02/25 02:46:04  NicJA
+ * updates updates updates... now builds with the standard aros mmakefile.src system - use make contrib-mesa2 to build
+ *
+ * N.B - theres something wrong somewhere causing some demos,samples and book files to not compile (if you can see the problem please fix it ;))
+ *
+ * Revision 1.1.1.1  2003/08/09 00:23:12  chodorowski
+ * Amiga Mesa 2.2 ported to AROS by Nic Andrews. Build with 'make aros'. Not built by default.
  *
  * Revision 1.4  1997/01/08 20:54:02  brianp
  * added DITHER666 option from Michael Pichler
@@ -96,7 +101,11 @@
 #ifdef AMIGA
 #   define MAX_EVAL_ORDER 12
 #else
+#ifdef __AROS__
+#   define MAX_EVAL_ORDER 12
+#else
 #   define MAX_EVAL_ORDER 30
+#endif
 #endif
 
 /* Maximum Name stack depth */
@@ -118,8 +127,13 @@
 #  define MAX_WIDTH 640
 #  define MAX_HEIGHT 400
 #else
+#ifdef __AROS__
+#  define MAX_WIDTH 640
+#  define MAX_HEIGHT 400
+#else
 #  define MAX_WIDTH 1280
 #  define MAX_HEIGHT 1024
+#endif
 #endif
 
 

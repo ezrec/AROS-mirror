@@ -1,15 +1,14 @@
-Short:	 3D library, OpenGL based, Amiga v1.6 Aros v1.0
+Short:	 3D library, OpenGL based, Amiga v1.6 Aros v1.2
 Uploader: NicJA@Yahoo.com (Kalamatee)
 Author:	 brianp@ssec.wisc.edu (BrianP) Amiga Port: d94sz@efd.lth.se (Stefan Zivkovic) AROS Port: NicJA@Yahoo.com (Kalamatee)
 Type: 	 dev/c
 Requires: AROS System Files and Link Libs, GCC.
-Version:  Mesa v2.0 Amiga version 1.6
-Replaces: dev/c/Mesa-2.0_Amiga-1.5.lha
+Version:  Mesa v2.0 AROS version 1.7
 
-				The Mesa 3-D graphics library
+			    The Mesa 3-D graphics library
 
 			 Copyright (C) 1995-1996  Brian Paul
-			       Changes (C) 2003 Kalamatee
+			  Changes (C) 2003-2004 Nic Andrews
 
 
 
@@ -32,6 +31,7 @@ Miscellaneous
 
 There is a Amiga Mesa WWW page:	http://www.efd.lth.se/~d94sz/amesa
 and the orginal  Mesa WWW page:	http://www.ssec.wisc.edu/~brianp/Mesa.html
+The AROS Homepage             : http://www.aros.org/
 
 
 Since the OpenGL API is used, OpenGL documentation can serve as the
@@ -41,44 +41,40 @@ documentation for Mesa's core functions.  Here are a few sources:
   Spec doc: 	 http://www.sgi.com/Technology/openGL/glspec/glspec.html
 
 
-Author
-======
+                Author
+                ======
 
-Brian Paul
-Space Science and Engineering Center
-University of Wisconsin - Madison
-1225 W. Dayton St.
-Madison, WI  53706
+                Brian Paul
+                Space Science and Engineering Center
+                University of Wisconsin - Madison
+                1225 W. Dayton St.
+                Madison, WI  53706
 
-brianp@ssec.wisc.edu
+                brianp@ssec.wisc.edu
 
 
 AROS PORT of MESA: THE OPENGL SOFTWARE EMULATION by Kalamatee
 ====================================================================
-After hearing of the lack of 3d softwar on AROS i decided to try and get one of the amiga
-ports up and running..
+After hearing of the lack of 3d software on AROS i decided to try and get
+one of the amiga ports up and running..
 
 For AROS or the Amiga there are only three important files + one directory.
 
 src/AmigaMesa.c         The Mesa GL Amiga/AROS implementation 
-			      (ddsample.c with some Amiga code)
+			 (ddsample.c with some Amiga/AROS code)
 src-tk/AWindow.c        The TK (and AUX) machine specific code.
 include/GL/AmigaMesa.h	The prototypes for AmigaMesa.
 
 Amiga/#?
 
-Installing
-==========
-If you have the big archive you just have to unpack is where you want it.
-If you have the updatepackage you need the orginal mesa archive and then
-you will nead lha in your path and run the installer script in /amiga 
-(or just unpack AMesa.lha yourself)
-
-
 Compiling
 =========
-For compiling with gcc you have to enter the command "make aros". Via the 
-environment variable LOCALFLAGS you can specify additional optimizations.
+For compiling with gcc you have to enter the command "make contrib-mesa2"
+in the AROS source root folder.
+
+there is currently something not being built correctly i think (one of the
+linklibs) so a lot of the demos wont compile just yet - though im looking into
+the problem .. feel free to fix it though if you notice it.
 
 ADISP_CYBERGFX is defined in include/gl/amigamesa.h since aros has native
 support for CyberGfx.  If u wish to use the normal Amiga Gfx Functions
@@ -242,11 +238,12 @@ Release:
     
 1.6 I haved splitted amigamesa into amigamesa and ADisp_AGA.c
     this ensures higer modularity, and becomes easier to se what is neaded to port
-    if you want to make your own gfx rutines.
+    if you want to make your own gfx routines.
     ADisp_Cyb.c contains CyberGFX drawer rutines (Joerg Nilson)
     It's also posible to use gcc now. (Joerg Nilson)
     Now works with mesa 2.2.
 
+1.7 now builds on AROS!!
 
 Due to my lack of time this will be my last relese of mesa, If you are interested to take over and mainten the source
 please feel free to do so, Just please let me know so I can put some info on my webpage.

@@ -23,8 +23,13 @@
 
 /*
 $Log$
-Revision 1.1  2003/08/09 00:23:30  chodorowski
-Initial revision
+Revision 1.2  2004/02/25 02:51:02  NicJA
+updates updates updates... now builds with the standard aros mmakefile.src system - use make contrib-mesa2 to build
+
+N.B - theres something wrong somewhere causing some demos,samples and book files to not compile (if you can see the problem please fix it ;))
+
+Revision 1.1.1.1  2003/08/09 00:23:30  chodorowski
+Amiga Mesa 2.2 ported to AROS by Nic Andrews. Build with 'make aros'. Not built by default.
 
  * Revision 1.16	1996/02/15	16:00:00  brianp
  * added vertex array extension symbols and functions
@@ -1274,8 +1279,12 @@ __asm __saveds extern void glDrawArraysEXT(register __d0 GLenum mode,register __
 #ifdef AMIGALIB
 
 #else
+#ifdef __AROS__
+
+#else
 extern struct Library *glBase;
 #include "gl_pragma.h"
+#endif
 #endif
 
 
