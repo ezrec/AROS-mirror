@@ -107,48 +107,48 @@
 #endif
 
 #ifdef __SASC
-        /* SAS/C 6.58 or better */
+	/* SAS/C 6.58 or better */
 
-        #define INLINE          static __inline
-        #define STDARGS         __stdargs
-        #define ASMCALL         __asm
-        #define ASM             ASMCALL
-        #define REGCALL         __regcall
-        #define CONSTCALL       /* unsupported */
-        #define FORMATCALL      /* unsupported */
-        #define SAVEDS          __saveds
-        #define INTERRUPT       __interrupt
-        #define NORETURN        /* unsupported */
-        #define ALIGNED         __aligned
-        #define UNUSED(var)     var /* unsupported */
-        #define CHIP            __chip
-        #define REG(reg)        register __##reg
-        #define _COMPILED_WITH  "SAS/C"
+	#define INLINE          static __inline
+	#define STDARGS         __stdargs
+	#define ASMCALL         __asm
+	#define ASM             ASMCALL
+	#define REGCALL         __regcall
+	#define CONSTCALL       /* unsupported */
+	#define FORMATCALL      /* unsupported */
+	#define SAVEDS          __saveds
+	#define INTERRUPT       __interrupt
+	#define NORETURN        /* unsupported */
+	#define ALIGNED         __aligned
+	#define UNUSED(var)     var /* unsupported */
+	#define CHIP            __chip
+	#define REG(reg)        register __##reg
+	#define _COMPILED_WITH  "SAS/C"
 
-        #define __D0 __d0
-        #define __D1 __d1
-        #define __D2 __d2
-        #define __D3 __d3
-        #define __D4 __d4
-        #define __D5 __d5
-        #define __D6 __d6
-        #define __D7 __d7
-        #define __A0 __a0
-        #define __A1 __a1
-        #define __A2 __a2
-        #define __A3 __a3
-        #define __A4 __a4
-        #define __A5 __a5
-        #define __A6 __a6
-        #define __A7 __a7
+	#define __D0 __d0
+	#define __D1 __d1
+	#define __D2 __d2
+	#define __D3 __d3
+	#define __D4 __d4
+	#define __D5 __d5
+	#define __D6 __d6
+	#define __D7 __d7
+	#define __A0 __a0
+	#define __A1 __a1
+	#define __A2 __a2
+	#define __A3 __a3
+	#define __A4 __a4
+	#define __A5 __a5
+	#define __A6 __a6
+	#define __A7 __a7
 
 
-        /* For min(), max() and abs() */
-        //#define USE_BUILTIN_MATH
-        //#include <string.h>
+	/* For min(), max() and abs() */
+	//#define USE_BUILTIN_MATH
+	//#include <string.h>
 #else
 #ifdef __GNUC__
-        /* GeekGadgets GCC 2.7.2.1 or better */
+	/* GeekGadgets GCC 2.7.2.1 or better */
 
 //      #define INLINE          static inline
 //      #define STDARGS         __attribute__((stkparm))
@@ -166,133 +166,133 @@
 
 #ifdef _AROS
 
-        #define makearosproto
+	#define makearosproto
 
-        #define REG(reg)
-        #define ASM
-        #define __stdargs
-        #define __chip
-        #define __saveds
+	#define REG(reg)
+	#define ASM
+	#define __stdargs
+	#define __chip
+	#define __saveds
 #endif
-        #define _COMPILED_WITH  "GCC"
+	#define _COMPILED_WITH  "GCC"
 
 //      #define min(a,b)        (((a)<(b))?(a):(b))
 //      #define max(a,b)        (((a)>(b))?(a):(b))
 #else
 #ifdef __STORM__
-        /* StormC 2.00.23 or better */
-        #define INLINE          __inline
-        #define STDARGS         /* nothing */
-        #define ASMCALL         /* nothing */
-        #define REGCALL         register
-        #define CONSTCALL       /* unsupported */
-        #define FORMATCALL      /* unsupported */
-        #define SAVEDS          __saveds
-        #define INTERRUPT       __interrupt
-        #define NORETURN        /* unsupported */
-        #define ALIGNED         /* unsupported */
-        #define UNUSED(var)     var /* unsupported */
-        #define CHIP            __chip
-        #define REG(reg)        register __##reg
-        #define _COMPILED_WITH  "StormC"
+	/* StormC 2.00.23 or better */
+	#define INLINE          __inline
+	#define STDARGS         /* nothing */
+	#define ASMCALL         /* nothing */
+	#define REGCALL         register
+	#define CONSTCALL       /* unsupported */
+	#define FORMATCALL      /* unsupported */
+	#define SAVEDS          __saveds
+	#define INTERRUPT       __interrupt
+	#define NORETURN        /* unsupported */
+	#define ALIGNED         /* unsupported */
+	#define UNUSED(var)     var /* unsupported */
+	#define CHIP            __chip
+	#define REG(reg)        register __##reg
+	#define _COMPILED_WITH  "StormC"
 
-        #define min(a,b)        (((a)<(b))?(a):(b))
-        #define max(a,b)        (((a)>(b))?(a):(b))
-        #define abs(a)          (((a)>0)?(a):-(a))
+	#define min(a,b)        (((a)<(b))?(a):(b))
+	#define max(a,b)        (((a)>(b))?(a):(b))
+	#define abs(a)          (((a)>0)?(a):-(a))
 
-        #define _INLINE_INCLUDES
-        #include <string.h>
+	#define _INLINE_INCLUDES
+	#include <string.h>
 #else
 #ifdef __VBCC__
-        /* VBCC 0.7 (m68k) or better */
+	/* VBCC 0.7 (m68k) or better */
 
-        #define INLINE          static __inline
-        #define STDARGS         /* unsupported */
-        #define ASMCALL         /* nothing */
-        #define REGCALL         /* nothing */
-        #define CONSTCALL       /* unsupported */
-        #define FORMATCALL      /* unsupported */
-        #define SAVEDS          __saveds
-        #define INTERRUPT       /* unsupported */
-        #define NORETURN        /* unsupported */
-        #define ALIGNED         /* unsupported */
-        #define UNUSED(var)     var /* unsupported */
-        #define CHIP            __chip
-        #define REG(reg)        __reg(##reg)
-        #define _COMPILED_WITH  "VBCC"
+	#define INLINE          static __inline
+	#define STDARGS         /* unsupported */
+	#define ASMCALL         /* nothing */
+	#define REGCALL         /* nothing */
+	#define CONSTCALL       /* unsupported */
+	#define FORMATCALL      /* unsupported */
+	#define SAVEDS          __saveds
+	#define INTERRUPT       /* unsupported */
+	#define NORETURN        /* unsupported */
+	#define ALIGNED         /* unsupported */
+	#define UNUSED(var)     var /* unsupported */
+	#define CHIP            __chip
+	#define REG(reg)        __reg(##reg)
+	#define _COMPILED_WITH  "VBCC"
 
-        #error VBCC compiler support is untested. Please check all the above definitions
+	#error VBCC compiler support is untested. Please check all the above definitions
 #else
 #ifdef __MAXON__
-        /* Maxon C/C++ 3.0 */
+	/* Maxon C/C++ 3.0 */
 
-        #define INLINE          static inline
-        #define STDARGS         /* ? */
-        #define ASMCALL         /* ? */
-        #define REGCALL         /* ? */
-        #define CONSTCALL       /* unsupported */
-        #define FORMATCALL      /* unsupported */
-        #define SAVEDS          /* unsupported */
-        #define INTERRUPT       /* unsupported */
-        #define NORETURN        /* unsupported */
-        #define ALIGNED         /* unsupported */
-        #define UNUSED(var)     var /* unsupported */
-        #define REG(reg)        register __##reg
-        #define _COMPILED_WITH  "Maxon C"
+	#define INLINE          static inline
+	#define STDARGS         /* ? */
+	#define ASMCALL         /* ? */
+	#define REGCALL         /* ? */
+	#define CONSTCALL       /* unsupported */
+	#define FORMATCALL      /* unsupported */
+	#define SAVEDS          /* unsupported */
+	#define INTERRUPT       /* unsupported */
+	#define NORETURN        /* unsupported */
+	#define ALIGNED         /* unsupported */
+	#define UNUSED(var)     var /* unsupported */
+	#define REG(reg)        register __##reg
+	#define _COMPILED_WITH  "Maxon C"
 
-        /* For min(), max() and abs() */
-        #define USE_BUILTIN_MATH
-        #include <string.h>
+	/* For min(), max() and abs() */
+	#define USE_BUILTIN_MATH
+	#include <string.h>
 
-        #error Maxon C compiler support is untested. Please check all the above definitions
+	#error Maxon C compiler support is untested. Please check all the above definitions
 #else
 #ifdef _DCC
-        /* DICE C 3.15 */
+	/* DICE C 3.15 */
 
-        #define INLINE          static __inline
-        #define STDARGS         __stdargs
-        #define ASMCALL         /* nothing */
-        #define REGCALL         /* ? */
-        #define CONSTCALL       /* unsupported */
-        #define FORMATCALL      /* unsupported */
-        #define SAVEDS          __geta4
-        #define INTERRUPT       /* unsupported */
-        #define NORETURN        /* unsupported */
-        #define ALIGNED         __aligned
-        #define UNUSED(var)     var /* unsupported */
-        #define REG(reg)        __##reg
-        #define _COMPILED_WITH  "DICE"
+	#define INLINE          static __inline
+	#define STDARGS         __stdargs
+	#define ASMCALL         /* nothing */
+	#define REGCALL         /* ? */
+	#define CONSTCALL       /* unsupported */
+	#define FORMATCALL      /* unsupported */
+	#define SAVEDS          __geta4
+	#define INTERRUPT       /* unsupported */
+	#define NORETURN        /* unsupported */
+	#define ALIGNED         __aligned
+	#define UNUSED(var)     var /* unsupported */
+	#define REG(reg)        __##reg
+	#define _COMPILED_WITH  "DICE"
 
-        #define min(a,b)        (((a)<(b))?(a):(b))
-        #define max(a,b)        (((a)>(b))?(a):(b))
-        #define abs(a)          (((a)>0)?(a):-(a))
+	#define min(a,b)        (((a)<(b))?(a):(b))
+	#define max(a,b)        (((a)>(b))?(a):(b))
+	#define abs(a)          (((a)>0)?(a):-(a))
 
-        #error DICE compiler support is untested. Please check all the above definitions
+	#error DICE compiler support is untested. Please check all the above definitions
 #else
 #ifdef AZTEC_C
-        /* Aztec/Manx C */
+	/* Aztec/Manx C */
 
-        #define INLINE          static
-        #define STDARGS         /* ? */
-        #define ASMCALL         /* ? */
-        #define REGCALL         /* ? */
-        #define CONSTCALL       /* unsupported */
-        #define FORMATCALL      /* unsupported */
-        #define SAVEDS          __geta4
-        #define INTERRUPT       /* unsupported */
-        #define NORETURN        /* unsupported */
-        #define ALIGNED         __aligned
-        #define UNUSED(var)     var /* unsupported */
-        #define REG(reg)    __  ##reg
-        #define _COMPILED_WITH  "Manx C"
+	#define INLINE          static
+	#define STDARGS         /* ? */
+	#define ASMCALL         /* ? */
+	#define REGCALL         /* ? */
+	#define CONSTCALL       /* unsupported */
+	#define FORMATCALL      /* unsupported */
+	#define SAVEDS          __geta4
+	#define INTERRUPT       /* unsupported */
+	#define NORETURN        /* unsupported */
+	#define ALIGNED         __aligned
+	#define UNUSED(var)     var /* unsupported */
+	#define REG(reg)    __  ##reg
+	#define _COMPILED_WITH  "Manx C"
 
-        #define min(a,b)        (((a)<(b))?(a):(b))
-        #define max(a,b)        (((a)>(b))?(a):(b))
-        #define abs(a)          (((a)>0)?(a):-(a))
+	#define min(a,b)        (((a)<(b))?(a):(b))
+	#define max(a,b)        (((a)>(b))?(a):(b))
+	#define abs(a)          (((a)>0)?(a):-(a))
 
-        #error Aztec/Manx C compiler support is untested. Please check all the above definitions
+	#error Aztec/Manx C compiler support is untested. Please check all the above definitions
 #else
-        #error Please add compiler specific definitions for your compiler
+	#error Please add compiler specific definitions for your compiler
 #endif
 #endif
 #endif
@@ -320,21 +320,42 @@
 #define LIBCALL         ASMCALL SAVEDS
 #define HOOKCALL        ASMCALL SAVEDS
 #ifdef __cplusplus
-        #define GLOBALCALL extern "C"
+	#define GLOBALCALL extern "C"
 #else
-        #define GLOBALCALL
+	#define GLOBALCALL
 #endif
 
 /* special variable attributes */
+
 #define XDEF
 #define XREF extern
+
+/*** AROS compatability for AmigaOS *********************************/
 
 #ifndef _AROS
 #define IPTR ULONG
 #endif
 
+/*** Disable these macros when not building on AROS *****************/
 
-/*** REGFUNC and REGPARAM macros ***/
+#ifndef _AROS
+#define AROS_LIBFUNC_INIT
+#define AROS_LIBFUNC_EXIT
+#define AROS_LIBBASE_EXT_DECL(a,b)
+#endif
+
+/*** METHOD macro ***************************************************/
+
+#ifdef _AROS
+  #define METHOD(f,mtype,m) STATIC ASM AROS_UFH3(ULONG, f, \
+			  AROS_UFHA(Class *, cl, A0), \
+			  AROS_UFHA(Object *, obj, A2), \
+			  AROS_UFHA(mtype, m, A1))
+#else
+  #define METHOD(f,mtype,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) mtype m)
+#endif
+
+/*** REGFUNC and REGPARAM macros ************************************/
 
 #ifdef _AROS
 
