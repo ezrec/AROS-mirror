@@ -558,6 +558,8 @@ SAVEDS ASM void CharHook(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, O
   TF_REGPARAM(a1, struct IntuiMessage *, msg))
 #endif
 {
+    AROS_USERFUNC_INIT
+
 struct InputEvent *ievent;
 char trans[2];
 
@@ -586,6 +588,8 @@ char trans[2];
       }
       break;
   }
+
+    AROS_USERFUNC_EXIT
 }
 
 void ForceResizeChar(struct CharNode *node)

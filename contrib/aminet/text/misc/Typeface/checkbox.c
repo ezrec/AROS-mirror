@@ -50,6 +50,8 @@ AROS_UFH3(ULONG, DispatchCheckGadg,
 SAVEDS ASM ULONG DispatchCheckGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, obj), TF_REGPARAM(a1, Msg, msg))
 #endif
 {
+    AROS_USERFUNC_INIT
+
   ULONG retval;
 
   switch (msg->MethodID)
@@ -62,6 +64,8 @@ SAVEDS ASM ULONG DispatchCheckGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2,
     break;
   }
   return retval;
+
+    AROS_USERFUNC_EXIT
 }
 
 Class *InitCheckClass(void)

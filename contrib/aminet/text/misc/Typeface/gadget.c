@@ -100,6 +100,8 @@ AROS_UFH3(ULONG, DispatchCharGadg,
 SAVEDS ASM ULONG DispatchCharGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg))
 #endif
 {
+    AROS_USERFUNC_INIT
+
 ULONG retval;
 
   switch (msg->MethodID)
@@ -137,6 +139,8 @@ ULONG retval;
       break;
   }
   return retval;
+
+    AROS_USERFUNC_EXIT
 }
 
 ULONG CharGadg_NEW(Class *cl,Object *o,struct opSet *ops)
@@ -541,6 +545,8 @@ AROS_UFH3(ULONG, DispatchEditGadg,
 SAVEDS ASM ULONG DispatchEditGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg))
 #endif
 {
+    AROS_USERFUNC_INIT
+
 ULONG retval;
 
   switch (msg->MethodID)
@@ -575,6 +581,8 @@ ULONG retval;
       break;
   }
   return retval;
+
+    AROS_USERFUNC_EXIT
 }
 
 ULONG EditGadg_NEW(Class *cl,Object *o,struct opSet *ops)
@@ -1037,6 +1045,8 @@ AROS_UFH3(ULONG, DispatchSlideGadg,
 SAVEDS ASM ULONG DispatchSlideGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg))
 #endif
 {
+    AROS_USERFUNC_INIT
+
 ULONG retval;
 
   switch (msg->MethodID)
@@ -1056,6 +1066,8 @@ ULONG retval;
       break;
   }
   return retval;
+
+    AROS_USERFUNC_EXIT
 }
 
 ULONG SlideGadg_NEW(Class *cl,Object *o,struct opSet *ops)
@@ -1149,6 +1161,8 @@ AROS_UFH3(ULONG, DispatchFL,
 SAVEDS ASM ULONG DispatchFL(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, obj), TF_REGPARAM(a1, Msg, msg))
 #endif
 {
+    AROS_USERFUNC_INIT
+
 FLD *fld;
 APTR entry;
 struct IBox *ib;
@@ -1208,6 +1222,8 @@ ULONG rc,spot;
       break;
   }
   return rc;
+
+    AROS_USERFUNC_EXIT
 }
 
 Class *InitFLClass(void)
