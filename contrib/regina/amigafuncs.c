@@ -100,6 +100,7 @@ int init_amigaf ( tsd_t *TSD )
   if (on_exit( exit_amigaf, atsd ) == -1)
     return 0;
 #endif
+  
   TSD->ami_tsd = (void *)atsd;
 
   return 1;
@@ -153,12 +154,28 @@ static proclevel setamilevel( tsd_t *TSD )
   amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
   proclevel oldlevel = TSD->currlevel;
   
-  if (atsd->amilevel==NULL)
+  if (atsd->amilevel!=NULL)
+    TSD->currlevel = atsd->amilevel;
+  else
   {
+    char txt[20];
+  
     atsd->amilevel = newlevel( TSD, NULL );
-  }
+    
+    TSD->currlevel = atsd->amilevel;
+    
+    setvalue( TSD, &_fname, Str_cre_TSD( TSD, "STDIN" ) );
+    sprintf( txt, "%p", stdin );
+    setvalue( TSD, &_fstem, Str_cre_TSD( TSD, txt ) );
+    
+    setvalue( TSD, &_fname, Str_cre_TSD( TSD, "STDOUT" ) );
+    sprintf( txt, "%p", stdout );
+    setvalue( TSD, &_fstem, Str_cre_TSD( TSD, txt ) );
 
-  TSD->currlevel = atsd->amilevel;
+    setvalue( TSD, &_fname, Str_cre_TSD( TSD, "STDERR" ) );
+    sprintf( txt, "%p", stderr );
+    setvalue( TSD, &_fstem, Str_cre_TSD( TSD, txt ) );
+  }
   
   return oldlevel;
 }
@@ -265,6 +282,7 @@ static void rmfile( tsd_t *TSD, const streng *name )
   
   TSD->currlevel = oldlevel;
 }
+
 
 
 /*

@@ -10,7 +10,6 @@
   that they need to be avoided because the error handling is difficult
   to do with multiple line strings. Without them the interpreter knows
   when a close string character is forgotten at the end of a line.
-* STDOUT and STDIN file names are not handled at the moment.
 * In ARexx the pragma function can be used to increase the stack size of the
   running script. At the moment this is not implemented in regina. I think
   this will need some hacking with setjmp/longjmp because in normal
