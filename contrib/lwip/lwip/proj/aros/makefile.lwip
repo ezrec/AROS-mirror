@@ -30,7 +30,7 @@
 # 
 # Author: Adam Dunkels <adam@sics.se>
 #
-# $Id: Makefile.lwip,v 1.1 2001/12/12 10:00:53 adam Exp $
+# $Id: makefile.lwip,v 1.1.1.1 2002/05/27 00:41:17 henrik Exp $
 
 
 LIB4=liblwip4.a
@@ -39,12 +39,11 @@ IPV4=$(LWIPDIR)/core/ipv4/icmp.c $(LWIPDIR)/core/ipv4/ip.c $(LWIPDIR)/core/inet.
 
 CWFILES=$(LWIPDIR)/api/api_lib.c $(LWIPDIR)/api/api_msg.c $(LWIPDIR)/api/tcpip.c $(LWIPDIR)/api/err.c \
 	$(LWIPDIR)/netif/loopif.c $(LWIPDIR)/netif/nullif.c $(LWIPDIR)/netif/tcpdump.c \
-	$(LWIPDIR)/netif/arp.c \
+	$(LWIPDIR)/netif/arp.c $(LWIPDIR)/core/dhcp.c\
 	$(LWIPDIR)/core/mem.c $(LWIPDIR)/core/memp.c $(LWIPDIR)/core/netif.c $(LWIPDIR)/core/pbuf.c \
 	$(LWIPDIR)/core/stats.c $(LWIPDIR)/core/sys.c \
 	$(LWIPDIR)/core/tcp.c $(LWIPDIR)/core/tcp_input.c \
-	$(LWIPDIR)/core/tcp_output.c $(LWIPDIR)/core/udp.c 
-
+	$(LWIPDIR)/core/tcp_output.c $(LWIPDIR)/core/udp.c
 CWFILES4=$(CWFILES) $(IPV4)
 
 CFILES4=$(wildcard $(CWFILES4))
