@@ -32,6 +32,7 @@
 
 #ifdef __AROS__
 #include <proto/intuition.h>
+#include <MUI/NFloattext_mcc.h>
 #endif
 
 #ifndef MAKE_ID
@@ -171,6 +172,25 @@ int main(int argc,char *argv[])
 								End,
 								Child, RectangleObject, End,
 							End,
+#ifdef __AROS__
+							Child, TX_Status = TextObject,
+							    	TextFrame,
+								MUIA_Background, MUII_TextBack,
+								/*	MUIA_Text_SetVMax,	FALSE, */
+							End,
+							Child, TX_About = NFloattextObject,
+								MUIA_Background, MUII_TextBack,
+								TextFrame,
+								MUIA_Floattext_Text,	"This is a simple demonstration of the features "
+															"offered by the Toolbar class. If you want to know "
+															"all the details then just take a quick look in "
+															"the autodoc.\n\n"
+															"Comments, suggestions, bugreports, etc. can be "
+															"e-mailed to Floyd@Amiga.DK or Benny@DIKU.DK.\n\n"
+															"Latest release is available at:\n"
+															"  http://www.diku.dk/students/benny",
+							End,
+#else
 							Child, TX_Status = MUI_NewObject("InfoText.mcc",
 								/*	MUIA_Text_SetVMax,	FALSE, */
 							End,
@@ -186,6 +206,7 @@ int main(int argc,char *argv[])
 															"Latest release is available at:\n"
 															"  http://www.diku.dk/students/benny",
 							End,
+#endif
 						End,
 						Child, VGroup,
 							Child, RectangleObject, End,
