@@ -191,7 +191,7 @@ LTP_LayoutGroup(LayoutHandle *Handle,ObjectNode *Group)
 		{
 			LONG x,y,w,MaxTop = 0,MaxWidth = 0,MaxHeight = 0,Count = 0;
 
-			if(Group->Node.mln_Pred->mln_Pred && Group->Special.Group.LastAttributes)
+			if(Group->Node.mln_Pred && Group->Node.mln_Pred->mln_Pred && Group->Special.Group.LastAttributes)
 			{
 				ObjectNode *LastGroup = (ObjectNode *)Group->Node.mln_Pred;
 
@@ -409,7 +409,7 @@ LTP_LayoutGroup(LayoutHandle *Handle,ObjectNode *Group)
 		{
 			LONG x,y,w,MaxLeft = 0,MaxWidth = 0,MaxHeight = 0,Count = 0;
 
-			if(Group->Node.mln_Pred->mln_Pred && Group->Special.Group.LastAttributes)
+			if(Group->Node.mln_Pred && Group->Node.mln_Pred->mln_Pred && Group->Special.Group.LastAttributes)
 			{
 				ObjectNode *LastGroup = (ObjectNode *)Group->Node.mln_Pred;
 
