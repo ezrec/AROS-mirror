@@ -95,7 +95,7 @@ def format( root, directory, template ):
 
     strings = {
         'ROOT' : '../../',
-        'BASE' : '../..',
+        'BASE' : '../../',
         'CONTENT' : '<h1>Status: ' + root.description + '</h1>' + str( content )
     }
 
