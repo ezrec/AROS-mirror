@@ -1,0 +1,205 @@
+@database "SWitch.guide"
+@author John Haubrich
+@(C) 1996  John M Haubrich Jr
+@$VER: SWitch 1.2 (31.05.96)
+@Node MAIN "SWitch 1.2 -- May 31, 1996"
+
+                             SWitch
+                          Release  1.2
+                          May 31, 1996
+
+>>>>>>>>>>>>>>>>>>> THIS PROGRAM IS FREEWARE <<<<<<<<<<<<<<<<<<<
+
+· Requires AmigaDOS 2.04 or higher.
+· Extra features are available under AmigaDOS 3.0 or higher.
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>X<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+   @{"   " link "whatis"   }  What is SWitch?
+   @{"   " link "useful"   }  How's this useful?
+   @{"   " link "work"     }  How does it work?
+   @{"   " link "install"  }  How do I install?
+   @{"   " link "customize"}  How do I customize?
+   @{"   " link "errors"   }  Where will error messages appear?
+         
+   @{"   " link "byline"   }  About the author
+         
+   @{"   " link "releases" }  Revision History
+         
+   @{"   " link "thanks"   }  Thanks To...
+@endnode
+
+
+@node "whatis" "What is SWitch?"
+>>>>>>>>>> What is SWitch?
+
+   SWitch is a commodity (requires AmigaDOS 2.04 or higher) that pops up
+   a list of all screens and windows currently open.  You may select the
+   screen or window you want to jump to via mouse or keyboard.  Plus, if
+   you're on a autoscrolling or "Super Bitmap" screen and using
+   AmigaDOS 3.0 or higher, SWitch moves the display to bring the window
+   into view.
+@endnode
+
+@node "useful" "How's this useful?"
+>>>>>>>>>> How's this useful?
+
+   Well, it gives you the ability to jump to screens and windows with the
+   keyboard.  And, if you're using a "Super Bitmap" screen, SWitch
+   will snap the display to the window location so you don't have to go
+   hunting!
+@endnode
+
+@node "work" "How does it work?"
+>>>>>>>>>> How does it work?
+
+   When you press the hotkey (default is left-alt and ESC), a window pops
+   up with a list of all open screens and windows, like this:
+
+      Workbench
+         System 3.1
+         Prefs
+         Exchange
+         Unnamed window at (0,16)
+      Multiview
+         intuition.doc
+      TURBOTEXT
+         SWitch.c
+         SWitch.guide
+
+   Window names are indented below the screen name.  You can click or
+   double-click the mouse to jump to any screen or window you want.
+   Also, you can use the keyboard cursor keys:
+
+   Up   Cursor  = move up one item
+   Down Cursor  = move down one item
+   SHIFT + Up   = move to previous screen in list
+   SHIFT + Down = move to next screen in list
+     ALT + Up   = move to the top of the list
+     ALT + Down = move to the bottom of the list
+   RETURN/Enter = jump to the highlighted screen or window
+   ESC          = close the jump window
+
+   Also, clicking outside the jump window or otherwise making it
+   inactive, will close the jump window.
+
+   See the @{" How do I customize SWitch? " link "customize"} link for more info.
+@endnode
+
+@node "install" "How do I install this utility?"
+>>>>>>>>>> How do I install this utility?
+
+   To install, just drop the icon in your WBStartup drawer!
+@endnode
+
+@node "customize" "How do I customize SWitch?"
+>>>>>>>>>> How do I customize SWitch?
+
+   ***********************************************************************
+   * This program MUST read its startup options from the icon tooltypes. *
+   * It may be started from the Shell or CLI but no options may be       *
+   * specified.                                                          *
+   ***********************************************************************
+
+   From Workbench......................
+
+      Use the Icon/Information menu to gain access to the icon's tooltypes.
+      The ToolTypes available are:
+
+      DONOTWAIT
+         Supported by Workbench.  Without this tooltype, Workbench will
+         wait until you quit this program before its launches the next.
+
+      QUIET
+         QUIET allows you to supress any warnings or error information
+         SWitch outputs if not successful in setting itself up.
+         Defaults to NOT being quiet.  (QUIET=FALSE).
+
+      HOTKEY
+         This is the key to press to make the jump window appear.
+         Default is "rawkey lalt esc".  <- that's the LEFT ALT and ESC.
+
+      POINTERRELATIVE
+         When present, jump window will appear relative to the position
+         of the mouse.  To stop this from happening, change this tooltype
+         to (POINTERRELATIVE).
+         Defaults to not being pointer-relative.
+
+      LEFTEDGE
+         The left edge coordinate of the jump window.
+         Defaults to 0.
+
+      TOPEDGE
+         The top edge coordinate of the jump window.
+         Defaults to 20.
+
+      WIDTH
+         The width of the jump window.
+         Defaults to 300.
+
+      HEIGHT
+         The height of the jump window.
+         Defaults to 150.
+
+      JUMPCLICKS
+         The number of clicks needed to jump to a window.  This value can
+         be set to 1 or 2.  If the value is one, clicking once on a screen
+         or window name will activate the window.  If the value is two, you
+         must double-click the screen or window name.
+         Defaults to 1.
+@endnode
+
+@node "releases" "Release History"
+   Release 1.0    -  May 17, 1996
+      Initial release.
+
+   Release 1.1    -  May 24, 1996
+      - Scrolling the window list via keyboard will not force the active
+        item to stay at the top of the list.  This feature is available
+        only for AmigaDOS 3.0 or higher due to GadTools limitations.
+      - Pressing the hotkey more than once will not cause the window list
+        to appear again after closing it.
+
+   Release 1.2    -  May 31, 1996
+      - Stupid mistake!  Minimum Intuition library requirement is now
+        V37 (not V39).  Although V39 does offer enhanced features...
+@endnode
+
+@node "thanks" "Thanks To..."
+
+   The following people have made suggestions for improvements to this
+   program:
+
+      Walter Watzl
+         This program was his idea.
+
+      Eivind 'Leo' Nordseth
+         Suggested the improvements for Release 1.1.
+
+
+   And, of course, thanks to all Amiga-heads who keep computing an
+   interesting and worthwhile pursuit.
+@endnode
+
+@node "errors" "Where will the error messages appear?"
+>>>>>>>>>> Where will the error messages appear?
+
+   If you run from the CLI/Shell, errors are output to stdout (that is, the
+   CLI/Shell window).  If you start from Workbench, a requester will appear
+   with the error message.  Dropping the icon in the WBStartup drawer is
+   considered as 'running from Workbench'.
+@endnode
+
+@node "byline" "About the great author..."
+>>>>>>>>>> Who was the great, wonderful, fantastic, brilliant, creative,
+>>>>>>>>>> omnipotent Amiga genius who wrote this ultra-advanced
+>>>>>>>>>> technological breakthrough software?
+
+            John Haubrich
+            Kansas City, MO   USA
+
+
+            Problems?  Ideas?  Suggestions?  Requests?
+            e-mail:   johnh@tyrell.net
+@endnode
