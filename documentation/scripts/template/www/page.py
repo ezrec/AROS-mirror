@@ -59,7 +59,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
         Tree \
         ( [
             A( _N['mailing-lists'], href='%(BASE)scontact.php#mailing-lists' ),
-            A( _N['forums'], href='%(BASE)scontact.php#forums' ),
+            #A( _N['forums'], href='%(BASE)scontact.php#forums' ),
             A( _N['irc-channels'], href='%(BASE)scontact.php#irc-channels' )
         ] ),
         BR(),
