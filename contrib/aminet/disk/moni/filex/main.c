@@ -57,7 +57,7 @@ struct IntuitionBase *IntuitionBase;
 struct Library *GadToolsBase;
 struct Library *DiskfontBase;
 struct Library *AslBase;
-struct Library *RexxSysBase;
+struct RxsLib *RexxSysBase;
 struct ReqToolsBase *ReqToolsBase;
 struct GfxBase *GfxBase;
 struct Library *IconBase;

@@ -16,7 +16,7 @@ extern struct Library * DiskfontBase;
 
 extern struct Library * AslBase;
 
-extern struct Library * RexxSysBase;
+extern struct RxsLib * RexxSysBase;
 
 extern struct ReqToolsBase * ReqToolsBase;
 
