@@ -18,7 +18,7 @@ EXE := $(DESTDIR)/newmastermind
 
 .PHONY : all clean
 
-#MM aminet-games-think-newmastermind : setup-aminet-games-think-newmastermind setup-aminet-games-think-newmastermind-catalogs
+#MM aminet-games-think-newmastermind : aminet-dev-src-chunkyiclass setup-aminet-games-think-newmastermind setup-aminet-games-think-newmastermind-catalogs
 aminet-games-think-newmastermind 	: $(OBJS) $(EXE)
 	@$(NOP)
 

@@ -18,7 +18,7 @@ EXE := $(DESTDIR)/yahzee
 
 .PHONY : all clean
 
-#MM aminet-games-think-yahzee : setup-aminet-games-think-yahzee setup-aminet-games-think-yahzee-catalogs
+#MM aminet-games-think-yahzee : aminet-dev-src-chunkyiclass setup-aminet-games-think-yahzee setup-aminet-games-think-yahzee-catalogs
 aminet-games-think-yahzee 	: $(OBJS) $(EXE)
 	@$(NOP)
 
