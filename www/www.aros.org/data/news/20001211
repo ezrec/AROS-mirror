@@ -1,5 +1,5 @@
 Stefan Berger has commited a completely rewritten layers.library which
-is much faster and much more simple then the one we had. It's now
+is much faster and much more simple than the one we had. It's now
 based on OO techniques, much easier to extend (we're currently thinking
 about child layers and layer groups which will keep their stacking
 order). Also, the new layers.library allows to move windows outside
