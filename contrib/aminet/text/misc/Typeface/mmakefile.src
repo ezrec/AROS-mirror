@@ -8,23 +8,13 @@ FILES  := char checkbox error node locale \
           gadget text fontio typeface
 
 EXEDIR := $(CONTRIBDIR)/aminet/
-EXE    := $(EXEDIR)/Typeface
 
-USE_AROSLIB  := yes
-USE_CLIB     := yes
-USE_AMIGALIB := yes
-USE_MLIB     := yes
-USE_BGUILIB  := yes
+USER_CFLAGS := -DINTUITION_NO_INLINE_STDARG
 
-USER_CFLAGS := -O2 -Wunused -Wall -DINTUITION_NO_INLINE_STDARG
+#MM aminet-text-misc-typeface : setup-typeface-catalogs
 
-#MM aminet-text-misc-typeface : includes linklibs setup-typeface-catalogs
-
-%make_prog_setup mmake=aminet-text-misc-typeface
-
-aminet-text-misc-typeface : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=aminet-text-misc-typeface \
+    progname=Typeface targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="bgui arossupport amiga arosc_shared m"
 
 %common
-%include_deps

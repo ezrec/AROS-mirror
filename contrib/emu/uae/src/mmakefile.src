@@ -58,11 +58,6 @@ FILES := \
     zfile
 
 EXEDIR := $(CONTRIBDIR)/Emu/UAE
-EXE    := $(EXEDIR)/uae
-
-USE_CLIB_SHARED := yes
-USE_MLIB := yes
-USE_AMIGALIB := yes
 
 USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
                -Wno-format -W -Wmissing-prototypes\
@@ -75,10 +70,9 @@ USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
 
 #MM- contrib-complete: uae
 #MM uae : uae-setup
-uae : $(EXE)
 
 #MM
-uae-setup :  $(OBJDIR)/.build_setup_check
+uae-setup ::  $(OBJDIR)/.build_setup_check
 
 $(OBJDIR)/.build_setup_check:
 	rm -f machdep; ln -s md-i386-gcc/ machdep
@@ -148,14 +142,10 @@ cpudefs.c: table68k  build68k
 readcpu.o: readcpu.c
 cpudefs.o: cpudefs.c
 
-
-%make_prog_setup mmake=uae
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
-
-LIBS2  := -larossupport $(LIBS) -lgcc
-LIBS := $(LIBS2)
+%build_prog mmake=uae \
+    progname=uae targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc m" usehostlibs=gcc
 
 %common
-%include_deps
 
 .DELETE_ON_ERROR:

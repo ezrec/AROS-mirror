@@ -31,13 +31,11 @@ USE_BGUILIB := yes
 USE_REQTOOLSLIB := yes
 
 #MM aminet-text-edit-xdme-quick : setup-xdme
-#MM aminet-text-edit-xdme : includes linklibs aminet-text-edit-xdme-quick
+#MM aminet-text-edit-xdme : setup-xdme
 
-%make_prog_setup mmake=aminet-text-edit-xdme
-
-aminet-text-edit-xdme : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=aminet-text-edit-xdme \
+    progname=XDME targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="reqtoolsstubs bgui arossupport amiga arosc_shared m"
 
 #MM setup-xdme : setup-xdme-parser
 setup-xdme : make-dirs protos docs sources copy-files
@@ -89,4 +87,3 @@ $(MAKEGUIDE) : $(MAKEGUIDE_C)
 	$(HOST_CC) -o $@ $<
 
 %common
-%include_deps

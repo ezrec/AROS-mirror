@@ -3,21 +3,20 @@ include $(TOP)/config/make.cfg
 FILES  := tcc
 
 EXEDIR := $(CONTRIBDIR)/Development/TCC
-EXE    := $(EXEDIR)/tcc
-
-USE_CLIB_SHARED := yes
-USE_AMIGALIB    := yes
-USE_MLIB        := yes
 
 USER_CFLAGS  := -O2 -g -Wall -DCONFIG_TCC_STATIC -DAROSC
 USER_LDFLAGS := -ltcc1
 
-#MM contrib-development-compilers-tcc : linklibs-tcc1
+#MM contrib-development-compilers-tcc : linklibs-tcc1 includes-tcc
 
-contrib-development-compilers-tcc : setup $(EXE)
-%make_prog_setup mmake=contrib-development-compilers-tcc
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
-setup ::
-	cp ./stdarg.h $(EXEDIR)
+%build_prog mmake=contrib-development-compilers-tcc \
+    progname=tcc targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="tcc1 amiga arosc_shared m"
+
+#MM
+includes-tcc : $(EXEDIR)/stdarg.h
+
+$(EXEDIR)/stdarg.h : stdarg.h
+	$(CP) stdarg.h $(EXEDIR)
+
 %common
-%include_deps

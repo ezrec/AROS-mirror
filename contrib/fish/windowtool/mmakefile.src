@@ -7,25 +7,14 @@ include $(TOP)/config/make.cfg
 FILES := checkstartup functions gadgets windowtool
 
 EXEDIR := $(CONTRIBDIR)/fish
-EXE := $(EXEDIR)/windowtool
-
-USE_AROSLIB := yes
-USE_CLIB := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
-USE_REQTOOLSLIB := yes
-
-USER_CFLAGS := -O2 -Wunused -Wall
 
 #MM fish-windowtool : includes linklibs
 
-%make_prog_setup mmake=fish-windowtool
-
-fish-windowtool : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
-
+%build_prog mmake=fish-windowtool \
+    progname=windowtool targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="reqtoolsstubs arossupport amiga arosc_shared m"
+    
 %common
-%include_deps
+
 
 

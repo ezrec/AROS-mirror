@@ -9,12 +9,6 @@ FILES := NList-Demo \
 	 NList-Demo3
 
 EXEDIR := $(AROSDIR)/Demos
-EXE    := $(EXEDIR)/NList-Demo
-
-USE_CLIB     := yes
-USE_AMIGALIB := yes
-USE_MUILIB   := yes
-USE_AROSLIB  := yes
 
 USER_CFLAGS := -DNO_INLINE_STDARG
 
@@ -23,11 +17,8 @@ USER_CFLAGS := -DNO_INLINE_STDARG
 #MM 	    	    	    	      contrib-zune-classes-nlistview \
 #MM 	    	    	    	      contrib-zune-classes-nfloattext
 
-%make_prog_setup mmake=contrib-zune-classes-nlist-demo
-
-contrib-zune-classes-nlist-demo : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=contrib-zune-classes-nlist-demo \
+    progname=NList-Demo targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="mui arossupport amiga arosc_shared"
 
 %common
-%include_deps

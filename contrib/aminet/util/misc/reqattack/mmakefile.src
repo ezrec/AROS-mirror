@@ -30,23 +30,14 @@ FILES := addicon    	\
 	 reqoffexec 
 
 EXEDIR := $(CONTRIBDIR)/aminet/reqattack
-EXE := $(EXEDIR)/ReqAttack
-
-USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
 
 USER_CFLAGS := -DNO_POPUPMENU -DNO_SOUND -DNO_ASM
 
 ##MM- aminet-util-misc : aminet-util-misc-reqattack
 #MM aminet-util-misc-reqattack : includes linklibs
 
-%make_prog_setup mmake=aminet-util-misc-reqattack
-
-aminet-util-misc-reqattack : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=aminet-util-misc-reqattack \
+    progname=ReqAttack targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
 
 %common
-%include_deps

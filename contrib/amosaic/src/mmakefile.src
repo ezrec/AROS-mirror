@@ -39,24 +39,13 @@ FILES := globals \
 #
 
 EXEDIR := $(AROSDIR)/AMosaic
-EXE := $(EXEDIR)/AMosaic
-
-USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MUILIB := yes
-
-PRELIBS := $(PRELIBS) -lwww2
 
 USER_INCLUDES := -I../libwww2
 
 #MM mui-amosaic : includes linklibs 
 
-%make_prog_setup mmake=mui-amosaic
-
-mui-amosaic : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=mui-amosaic \
+    progname=AMosaic targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="www2 mui arossupport amiga arosc_shared"
 
 %common
-%include_deps

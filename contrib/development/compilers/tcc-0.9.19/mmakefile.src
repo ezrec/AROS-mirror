@@ -3,23 +3,24 @@ include $(TOP)/config/make.cfg
 FILES  := tcc
 
 EXEDIR := $(CONTRIBDIR)/Development/TCC-0.9.19
-EXE    := $(EXEDIR)/tcc
-
-USE_CLIB_SHARED := yes
-USE_AMIGALIB    := yes
-USE_MLIB        := yes
 
 USER_CFLAGS  := -Wall -DCONFIG_TCC_STATIC -DCONFIG_TCC_ALWAYS_RELOCATABLE
 USER_LDFLAGS := -ltcc1
 
-#MM contrib-development-compilers-tcc-0.9.19 : linklibs-tcc1
+#MM contrib-development-compilers-tcc-0.9.19 : linklibs-tcc1 setup-tcc-0.9.19
 
-contrib-development-compilers-tcc-0.9.19 : setup $(EXE)
-%make_prog_setup mmake=contrib-development-compilers-tcc-0.9.19
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
-setup ::
-	$(CC) -c bcheck.c
-	cp ./bcheck.o $(LIBDIR)		
-	cp ./stdarg.h $(EXEDIR)
+%build_prog mmake=contrib-development-compilers-tcc-0.9.19 \
+    progname=tcc targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="amiga arosc_shared m"
+
+#MM
+setup-tcc-0.9.19 : $(LIBDIR)/bcheck.o $(EXEDIR)/stdarg.h
+
+$(LIBDIR)/bcheck.o : bcheck.c
+	$(CC) -c bcheck.c -o $(LIBDIR)/bcheck.o
+
+$(EXEDIR)/stdarg.h : stdarg.h
+	$(CP) ./stdarg.h $(EXEDIR)
+
 %common
-%include_deps
+

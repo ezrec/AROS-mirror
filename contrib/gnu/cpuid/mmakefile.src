@@ -2,26 +2,17 @@ include $(TOP)/config/make.cfg
 
 FILES = cpuid
 
-
 EXEDIR := $(CONTRIBDIR)/gnu
-EXE    := $(EXEDIR)/cpuid
-
-USE_CLIB := yes
-USE_MLIB := yes
-
-USER_CFLAGS := -O2
 
 #MM- contrib-gnu-cpuid : cpuid
 #MM- contrib-gnu      : cpuid
-#MM
-cpuid : setup $(EXE)
 
 $(OBJDIR)/%.o: %.S
 	%compile_q opt=$(USER_CFLAGS)
 
-%make_prog_setup mmake=cpuid
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=cpuid \
+    progname=cpuid targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arosc_shared m"
 
 %common
-%include_deps
 

@@ -21,27 +21,17 @@ FILES = $(bobjects) $(fobjects)
 
 
 EXEDIR := $(CONTRIBDIR)/vbcc
-EXE    := $(EXEDIR)/vbcc
-
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
 
 USER_CFLAGS := -O2 -DAROS -D_QUAD_HIGHWORD=1 -D_QUAD_LOWWORD=0 -DNO_UCPP_ERROR_FUNCTIONS -I./ -I./machines/i386
-#MM- contrib-development-compilers-vbcc : contrib-development-compilers-vbcc-frontend 
-#MM- contrib-development-compilers-vbcc : contrib-development-compilers-vbcc-datatypes
-#MM- contrib-development-compilers-vbcc : contrib-development-compilers-vbcc-vprof
-#MM- contrib-development-compilers-vbcc : contrib-development-compilers-vbcc-aros
-#MM- contrib-development-compilers-vbcc : vbcc
-#MM
-vbcc : setup $(EXE) cleanup
+#MM- contrib-development-compilers-vbcc : \
+#MM      contrib-development-compilers-vbcc-frontend \
+#MM      contrib-development-compilers-vbcc-datatypes \
+#MM      contrib-development-compilers-vbcc-vprof \
+#MM      contrib-development-compilers-vbcc-aros \
+#MM      vbcc
 
-$(OBJDIR)/%.o: %.S
-	%compile_q opt=$(USER_CFLAGS)
-cleanup :: 
-	rm -rf tmp.c
-%make_prog_setup mmake=vbcc
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=vbcc \
+    progname=vbcc targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="amiga arosc_shared m"
 
 %common
-%include_deps

@@ -10,22 +10,14 @@ zoo zooadd zooadd2 zoodel zooext zoofilt zoolist zoopack io lzh maketbl\
 maketree huf encode decode
 
 EXEDIR := $(CONTRIBDIR)/aminet
-EXE := $(EXEDIR)/zoo
-
-USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
 
 USER_CFLAGS := -DGENERIC -DNOSIGNAL
 
 ##MM aminet-util-arc-zoo : includes linklibs
 
-%make_prog_setup mmake=aminet-util-arc-zoo
-
-aminet-util-arc-zoo : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+#%build_prog mmake=aminet-util-arc-zoo \
+#    progname=zoo targetdir=$(EXEDIR) \
+#    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
 
 %common
-%include_deps
+

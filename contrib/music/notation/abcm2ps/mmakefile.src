@@ -6,18 +6,11 @@ include $(TOP)/config/make.cfg
 FILES := abc2ps abcparse buffer deco draw format music parse subs syms
 
 EXEDIR := $(CONTRIBDIR)/music
-EXE := $(EXEDIR)/abcm2ps
-
-USE_MLIB := yes
-USE_CLIB_SHARED := yes
 
 #MM contrib-music-notation-abcm2ps : includes linklibs
 
-%make_prog_setup mmake=contrib-music-notation-abcm2ps
-
-contrib-music-notation-abcm2ps : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=contrib-music-notation-abcm2ps \
+    progname=abcm2ps targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arosc_shared m"
 
 %common
-%include_deps

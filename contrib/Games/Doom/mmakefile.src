@@ -2,24 +2,6 @@
 include $(TOP)/config/make.cfg
 
 EXEDIR := $(CONTRIBDIR)/Games/Doom
-EXE    := $(EXEDIR)/Doom
-
-USE_CLIB_SHARED := yes
-USE_MLIB     := yes
-USE_AMIGALIB := yes
-
-STARTSCRIPTS := start2 start3 start4
-SCRIPTFILES  := $(foreach f, $(STARTSCRIPTS), $(EXEDIR)/$(f)) 
-
-ICONS := Doom
-ICONFILES := $(foreach f, $(ICONS), $(EXEDIR)/$(f).info)
-
-#MM- contrib-games : Doom
-#MM
-Doom : setup $(EXE) $(SCRIPTFILES) $(ICONFILES)
-
-#MM
-Doom-quick : setup $(EXE) $(SCRIPTFILES) $(ICONFILES)
 
 USER_CFLAGS = -DAROS -DNORMALUNIX -DUNROLL -O3 -ffast-math -funroll-loops \
               -fomit-frame-pointer -fexpensive-optimizations
@@ -101,15 +83,36 @@ FILES :=             \
 #	amiga_sega       \
 #	amiga_main	
 
+#MM- contrib-games : Doom
+#MM Doom : Doom-extra
+
+%build_prog mmake=Doom \
+    progname=Doom targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="amiga arosc_shared m"
+
+
+STARTSCRIPTS := start2 start3 start4
+SCRIPTFILES  := $(foreach f, $(STARTSCRIPTS), $(EXEDIR)/$(f)) 
+
+#MM Doom-extra : Doom-setup
+Doom-extra : Doom-scriptfiles Doom-iconfiles
+
+
+Doom-scriptfiles : $(SCRIPTFILES)
+
 $(EXEDIR)/start% : startscripts/start%
 	@$(CP) $< $@
 
-%make_prog_setup mmake=Doom
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+ICONS := Doom
+ICONFILES := $(foreach f, $(ICONS), $(EXEDIR)/$(f).info)
+
+
+Doom-iconfiles : $(ICONFILES)
 
 $(EXEDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
 
 
 %common
-%include_deps
+

@@ -7,22 +7,13 @@ include $(TOP)/config/make.cfg
 FILES :=emfloat misc nbench0 nbench1 sysspec
 
 EXEDIR := $(CONTRIBDIR)/aminet
-EXE := $(EXEDIR)/nbench
-
-USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
 
 USER_CFLAGS := -s -static -Wall -O3 -fomit-frame-pointer -funroll-loops -DLINUX
 
 #MM aminet-util-moni-nbench : includes linklibs
 
-%make_prog_setup mmake=aminet-util-moni-nbench
-
-aminet-util-moni-nbench : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=aminet-util-moni-nbench \
+    progname=nbench targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
 
 %common
-%include_deps

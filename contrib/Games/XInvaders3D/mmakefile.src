@@ -4,22 +4,14 @@ include $(TOP)/config/make.cfg
 FILES := game aliens player effects object camera vec4x1 mat4x4 main-aros
 
 EXEDIR := $(CONTRIBDIR)/Games/XInvaders3D
-EXE    := $(EXEDIR)/XInvaders3D
-
-USE_CLIB_SHARED := yes
-USE_MLIB := yes
-USE_AMIGALIB := yes
-USE_AROSLIB := yes
 
 USER_CFLAGS = -DGAME_AROS -O2 -ffast-math -funroll-loops \
                  -fomit-frame-pointer -fexpensive-optimizations
 
 #MM- contrib-games : XInvaders3D
-#MM
-XInvaders3D : setup $(EXE)
 
-%make_prog_setup mmake=XInvaders3D
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=XInvaders3D \
+    progname=XInvaders3D targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
 
 %common
-%include_deps

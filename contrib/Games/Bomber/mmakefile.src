@@ -1,24 +1,23 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Games/Bomber
-EXE    := $(EXEDIR)/Bomber
+FILES := Main
 
-USE_CLIB_SHARED := yes
-USE_MLIB     := yes
-USE_AMIGALIB := yes
+EXEDIR := $(CONTRIBDIR)/Games/Bomber
+
+#MM- contrib-games : Bomber
+#MM Bomber : Bomber-datafiles
+
+%build_prog mmake=Bomber \
+    progname=Bomber targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="amiga arosc_shared m"
+
 
 DATAFILES := BombSnds.ssf Bomber.mid Bomber0.ssf Bomber1.ssf
 DESTDATAFILES  := $(foreach f, $(DATAFILES), $(EXEDIR)/$(f)) 
 
-#MM- contrib-games : Bomber
-#MM
-Bomber : setup $(EXE) $(DESTDATAFILES)
-
-#MM
-Bomber-quick : setup $(EXE) $(DESTDATAFILES)
-
-FILES := Main
+#MM Bomber-datafiles : Bomber-setup
+Bomber-datafiles : $(DESTDATAFILES)
 
 $(EXEDIR)/%.ssf : %.ssf
 	@$(CP) $< $@
@@ -26,8 +25,4 @@ $(EXEDIR)/%.ssf : %.ssf
 $(EXEDIR)/%.mid : %.mid
 	@$(CP) $< $@
 
-%make_prog_setup mmake=Bomber
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
-
 %common
-%include_deps

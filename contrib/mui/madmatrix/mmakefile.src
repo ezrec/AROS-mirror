@@ -7,22 +7,13 @@ include $(TOP)/config/make.cfg
 FILES := main alloctab libs madmatrix
 
 EXEDIR := $(CONTRIBDIR)/aminet
-EXE    := $(EXEDIR)/MadMatrix
-
-USE_AROSLIB     := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB    := yes
-USE_MUILIB      := yes
 
 USER_INCLUDES := -I../libs/muimaster
 
 #MM contrib-aminet-games-think-madmatrix : includes linklibs
 
-%make_prog_setup mmake=contrib-aminet-games-think-madmatrix
-
-contrib-aminet-games-think-madmatrix : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=contrib-aminet-games-think-madmatrix \
+    progname=MadMatrix targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="mui arossupport arosc_shared"
 
 %common
-%include_deps

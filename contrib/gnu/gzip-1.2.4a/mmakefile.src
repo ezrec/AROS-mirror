@@ -39,24 +39,14 @@ FILES = gzip zip deflate trees bits unzip inflate util crypt\
 
 
 EXEDIR := $(CONTRIBDIR)/gnu
-EXE    := $(EXEDIR)/gzip
 
-USE_CLIB := yes
-USE_MLIB := yes
-
-USER_CFLAGS := -O2 -Wunused -Wall $(DEFS)
+USER_CFLAGS := $(DEFS)
 
 #MM- contrib-gnu-gzip : gzip
 #MM- contrib-gnu      : gzip
-#MM
-gzip : setup $(EXE)
 
-$(OBJDIR)/%.o: %.S
-	%compile_q opt=$(USER_CFLAGS)
-
-%make_prog_setup mmake=gzip
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=gzip \
+    progname=gzip targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arosc_shared m"
 
 %common
-%include_deps
-

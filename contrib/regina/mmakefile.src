@@ -9,21 +9,15 @@ include $(TOP)/config/make.cfg
 #MM- contrib-regina : contrib-regina-exes contrib-regina-module
 #MM- contrib-regina-quick : contrib-regina-exes-quick contrib-regina-module-quick
 
-#MM contrib-regina-exes : contrib-regina-module
-#MM
-contrib-regina-exes-quick : contrib-regina-module contrib-regina-exes
+#MM- contrib-regina-exes : contrib-regina-module \
+#MM     contrib-regina-rexx \
+#MM     contrib-regina-regina
 
 #MM contrib-regina-module : includes linklibs
 #MM
 contrib-regina-module-quick : contrib-regina-module
 
 EXEDIR := $(CONTRIBDIR)/Regina
-
-REXXEXE := $(EXEDIR)/rexx
-REGINAEXE := $(EXEDIR)/regina
-EXES := $(REXXEXE) $(REGINAEXE)
-
-contrib-regina-exes : setup $(EXES)
 
 # At the moment don't support threads.
 # Files shared by executables and shared library
@@ -36,23 +30,19 @@ OFILES := \
   rexxbif arscmd arxfuncs amifuncs
 
 USER_INCLUDES := -I.
-OBJDIR1 := $(GENDIR)/$(CURDIR)/static
 USER_CFLAGS := -DNO_EXTERNAL_QUEUES -DAREXXIO
 
-#Libraries to use
-USE_AROSLIB     := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB    := yes
-USE_MLIB        := yes
-
-%make_prog_setup mmake=contrib-regina id=1
-
-# Compile the statically linked executables
 FILES := $(OFILES) rexx nosaa mt_notmt
-%make_prog_multi dir=$(EXEDIR) target=$(REXXEXE) id=1
+%build_prog mmake=contrib-regina-rexx \
+    progname=rexx targetdir=$(EXEDIR) objdir=$(GENDIR)/$(CURDIR)/static \
+    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
 
 FILES := regina
-%make_prog_multi dir=$(EXEDIR) target=$(REGINAEXE) id=1
+%build_prog mmake=contrib-regina-regina \
+    progname=regina targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
+
+
 
 USER_INCLUDES := -I.
 USER_CFLAGS   := -DRXLIB -DINCL_REXXSAA -DAPIENTRY= \
@@ -66,11 +56,11 @@ FILES := $(OFILES) \
 	 isreginamsg \
 	 regina_init
 
-%build_module mmake=contrib-regina-module modname=regina modtype=library \
-  files=$(FILES) uselibs="amiga arosc_shared arosm" \
-  objdir=$(GENDIR)/$(CURDIR)/shared linklibname=regina_shared
+%build_module mmake=contrib-regina-module \
+    modname=regina modtype=library \
+    files=$(FILES) uselibs="amiga arosc_shared arosm" \
+    objdir=$(GENDIR)/$(CURDIR)/shared linklibname=regina_shared
 
 %copy_includes includes=rexxsaa.h dir=
 
 %common
-%include_deps

@@ -108,26 +108,14 @@ OBJ=  $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) $(OBJ5) $(OBJ6) $(OBJ7) $(OBJ8) $(OBJ9) $(
 FILES := $(OBJ)
 
 EXEDIR := $(CONTRIBDIR)/radium
-EXE := $(EXEDIR)/Radium
 
-USE_AROSLIB := yes
-USE_CLIB := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
-
-USER_CFLAGS := -O2 -Wunused -Wall -I$(AD) -I$(AR) $(DEFINES)
+USER_CFLAGS := -I$(AD) -I$(AR) $(DEFINES)
 
 #MM contrib-radium : contrib-radium-setup
 
-%make_prog_setup mmake=contrib-radium
-
-contrib-radium : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
-
-#MM
-contrib-radium-setup ::
-	%mkdirs_q $(CONTRIBDIR)/radium
+%build_prog mmake=contrib-radium \
+    progname=Radium targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
 
 #MM
 setup-contrib-radium : setup $(CONTRIBDIR)/radium/Execute.Me
@@ -136,7 +124,6 @@ $(CONTRIBDIR)/radium/Execute.Me : RADIUM.RUN
 	$(CP) $< $@
 
 %common
-%include_deps
 
 
 

@@ -3,22 +3,14 @@ include $(TOP)/config/make.cfg
 FILES := uac_crc globals uac_crt unace uac_sys uac_dcpr uac_comm
 
 EXEDIR := $(CONTRIBDIR)/aminet
-EXE := $(EXEDIR)/unace
-
-USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
 
 USER_CFLAGS :=-DUNIX
 
 #MM aminet-util-arc-unace : includes linklibs
 
-%make_prog_setup mmake=aminet-util-arc-unace
-
-aminet-util-arc-unace : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=aminet-util-arc-unace \
+    progname=unace targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
 
 %common
-%include_deps
+

@@ -3,22 +3,12 @@ include $(TOP)/config/make.cfg
 FILES = vc
 
 EXEDIR := $(CONTRIBDIR)/vbcc
-EXE    := $(EXEDIR)/vc
 
-USE_CLIB_SHARED := yes
+#MM- contrib-development-compilers-vbcc-frontend : vbcc-frontend
 
-USER_CFLAGS := -O2
-
-#MM- contrib-development-compilers-vbcc-frontend : frontend
-#MM
-frontend : setup $(EXE)
-
-$(OBJDIR)/%.o: %.S
-	%compile_q opt=$(USER_CFLAGS)
-
-%make_prog_setup mmake=frontend
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=vbcc-frontend \
+    progname=vc targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs=arosc_shared
 
 %common
-%include_deps
 

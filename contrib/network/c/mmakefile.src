@@ -9,20 +9,11 @@ USER_CFLAGS := -idirafter /usr/include
 FILES  := Ping
 
 EXEDIR := $(CONTRIBDIR)/Network
-EXE    := $(EXEDIR)/Ping
-
-USE_CLIB_SHARED := yes
-USE_AMIGALIB    := yes
-USE_MLIB        := yes
-USE_AROSLIB     := yes
 
 #DISABLE MM workbench-c : includes linklibs network-includes
 
-%make_prog_setup mmake=workbench-c
-
-workbench-c : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+#%build_prog mmake=workbench-c \
+#    progname=Ping targetdir=$(EXEDIR) \
+#    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
 
 %common
-%include_deps

@@ -22,22 +22,13 @@ FILES := \
 	 vars
 
 EXEDIR := $(AROSDIR)/PUI
-EXE := $(EXEDIR)/pui
-
-USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
 
 USER_INCLUDES := -I.
 
 #MM contrib-development-gui-pui : includes linklib
 
-%make_prog_setup mmake=contrib-development-gui-pui
-
-contrib-development-gui-pui : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=contrib-development-gui-pui \
+    progname=pui targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
 
 %common
-%include_deps

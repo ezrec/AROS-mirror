@@ -6,24 +6,14 @@ include $(TOP)/config/make.cfg
 FILES := fireworks async message timer libopen stubs fwmodes linear parabolic
 
 EXEDIR := $(CONTRIBDIR)/aminet
-EXE := $(EXEDIR)/Fireworks
-
-USE_AROSLIB := yes
-USE_CLIB := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
-
 USER_CFLAGS := -O2 -Wunused -Wall -DNO_INLINE_STDARG
 
-#MM aminet-mus-midi-CAMD_Toolkit-Fireworks : includes linklibs setup-aminet-mus-midi-CAMD_Toolkit-Fireworks
+#MM aminet-mus-midi-CAMD_Toolkit-Fireworks : setup-aminet-mus-midi-CAMD_Toolkit-Fireworks
 
-%make_prog_setup mmake=aminet-mus-midi-CAMD_Toolkit-Fireworks
-
-aminet-mus-midi-CAMD_Toolkit-Fireworks : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=aminet-mus-midi-CAMD_Toolkit-Fireworks \
+    progname=Fireworks targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc m"
 
 %common
-%include_deps
 
 

@@ -3,20 +3,19 @@ include $(TOP)/config/make.cfg
 FILES = about
 
 EXEDIR := $(CONTRIBDIR)/vbcc
-EXE    := $(EXEDIR)/about
 
-USE_CLIB_SHARED := yes
+#MM- contrib-development-compilers-vbcc-aros : \
+#MM      vbcc-about-aros vbcc-tmp
 
-USER_CFLAGS := -O2
+%build_prog mmake=vbcc-about-aros \
+    progname=about targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs=arosc_shared
 
-#MM- contrib-development-compilers-vbcc-aros : aros
 #MM
-aros : setup $(EXE)
+vbcc-tmp : ../tmp.c
 
-%make_prog_setup mmake=aros
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
-setup ::
-	cp aros.c ../tmp.c
+../tmp.c : aros.c ../supp.c
+	$(CP) aros.c ../tmp.c
 	cat ../supp.c >> ../tmp.c
 
 %common

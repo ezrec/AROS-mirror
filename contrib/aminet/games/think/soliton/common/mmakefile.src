@@ -18,23 +18,12 @@ FILES := About \
 	 Cardgame
 
 EXEDIR := $(CONTRIBDIR)/aminet/Soliton
-EXE := $(EXEDIR)/Soliton
-
 USER_INCLUDES := -I../images
 
-USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
-USE_MUILIB := yes
+#MM aminet-games-think-soliton-program : setup-soliton-catalogs
 
-#MM aminet-games-think-soliton-program : includes linklibs setup-soliton-catalogs
-
-%make_prog_setup mmake=aminet-games-think-soliton-program
-
-aminet-games-think-soliton-program : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=aminet-games-think-soliton-program \
+    progname=Soliton targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="mui arossupport amiga arosc_shared m"
 
 %common
-%include_deps

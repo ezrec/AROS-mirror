@@ -6,70 +6,77 @@ include $(TOP)/config/make.cfg
 
 EXEDIR := $(CONTRIBDIR)/freetype1
 
-EXES := ftdump \
-     	fterror \
-	ftlint \
-	ftmetric \
-	ftsbit \
-	ftstring \
-	ftstrpnm \
-	ftstrtto \
-	fttimer \
-	ftview \
-	ftzoom
+#MM- contrib-freetype1-test : \
+#MM      contrib-freetype1-test-ftdump \
+#MM      contrib-freetype1-test-fterror \
+#MM      contrib-freetype1-test-ftlint \
+#MM      contrib-freetype1-test-ftmetric \
+#MM      contrib-freetype1-test-ftsbit \
+#MM      contrib-freetype1-test-ftstring \
+#MM      contrib-freetype1-test-ftstrpnm \
+#MM      contrib-freetype1-test-ftstrtto \
+#MM      contrib-freetype1-test-fttimer \
+#MM      contrib-freetype1-test-ftview \
+#MM      contrib-freetype1-test-ftzoom
 
-EXES := $(addprefix $(EXEDIR)/,$(EXES))
-
-#MM
-contrib-freetype1-test : setup $(EXES)
 
 USER_INCLUDES := -I. -I../lib -I../lib/extend -I../lib/arch/amigaos #-Iarch/amigaos
 
-#Libraries to use
-USE_CLIB_SHARED := yes
-USE_AMIGALIB    := yes
-USE_MLIB        := yes
+GFILES := gmain display blitter arch/amigaos/gw_amiga
 
-%make_prog_setup mmake=contrib-freetype1-test
+%build_prog mmake=contrib-freetype1-test-ftzoom \
+    progname=ftzoom targetdir=$(EXEDIR) \
+    files="$(GFILES) ftzoom common" \
+    uselibs="freetype1 amiga arosc_shared m"
 
-LIBS := -lfreetype1 $(LIBS)
+%build_prog mmake=contrib-freetype1-test-ftview \
+    progname=ftview targetdir=$(EXEDIR) \
+    files="$(GFILES) ftview common" \
+    uselibs="freetype1 amiga arosc_shared m"
 
-vpath %.c arch/amigaos
+%build_prog mmake=contrib-freetype1-test-ftlint \
+    progname=ftlint targetdir=$(EXEDIR) \
+    files="ftlint common" \
+    uselibs="freetype1 amiga arosc_shared m"
 
-GFILES := gmain display blitter gw_amiga
+%build_prog mmake=contrib-freetype1-test-ftdump \
+    progname=ftdump targetdir=$(EXEDIR) \
+    files="ftdump common" \
+    uselibs="freetype1 amiga arosc_shared m"
 
-FILES := $(GFILES) ftzoom common
-%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftzoom
+%build_prog mmake=contrib-freetype1-test-ftstring \
+    progname=ftstring targetdir=$(EXEDIR) \
+    files="$(GFILES) ftstring common" \
+    uselibs="freetype1 amiga arosc_shared m"
 
-FILES := $(GFILES) ftview common
-%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftview
+%build_prog mmake=contrib-freetype1-test-fttimer \
+    progname=fttimer targetdir=$(EXEDIR) \
+    files="$(GFILES) fttimer common" \
+    uselibs="freetype1 amiga arosc_shared m"
 
-FILES := ftlint common
-%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftlint
+%build_prog mmake=contrib-freetype1-test-ftsbit \
+    progname=ftsbit targetdir=$(EXEDIR) \
+    files="ftsbit common" \
+    uselibs="freetype1 amiga arosc_shared m"
 
-FILES := ftdump common
-%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftdump
+%build_prog mmake=contrib-freetype1-test-ftstrpnm \
+    progname=ftstrpnm targetdir=$(EXEDIR) \
+    files="ftstrpnm common" \
+    uselibs="freetype1 amiga arosc_shared m"
 
-FILES := $(GFILES) ftstring common
-%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftstring
+%build_prog mmake=contrib-freetype1-test-ftmetric \
+    progname=ftmetric targetdir=$(EXEDIR) \
+    files="ftmetric common" \
+    uselibs="freetype1 amiga arosc_shared m"
 
-FILES := $(GFILES) fttimer common
-%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/fttimer
+%build_prog mmake=contrib-freetype1-test-ftstrtto \
+    progname=ftstrtto targetdir=$(EXEDIR) \
+    files="$(GFILES) ftstrtto common arabic" \
+    uselibs="freetype1 amiga arosc_shared m"
 
-FILES := ftsbit common
-%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftsbit
-
-FILES := ftstrpnm common
-%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftstrpnm
-
-FILES := ftmetric common
-%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftmetric
-
-FILES := $(GFILES) ftstrtto common arabic
-%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftstrtto
-
-FILES := fterror
-%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/fterror
+%build_prog mmake=contrib-freetype1-test-fterror \
+    progname=fterror targetdir=$(EXEDIR) \
+    files="fterror" \
+    uselibs="freetype1 amiga arosc_shared m"
 
 %common
-%include_deps

@@ -3,22 +3,20 @@ include $(TOP)/config/make.cfg
 FILES = dtgen
 
 EXEDIR := $(CONTRIBDIR)/vbcc
-EXE    := $(EXEDIR)/dtgen
 
-USE_CLIB_SHARED := yes
+#MM- contrib-development-compilers-vbcc-datatypes : \
+#MM     vbcc-dtgen vbcc-datatypes
 
-USER_CFLAGS := -O2
+%build_prog mmake=vbcc-dtgen \
+    progname=dtgen targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs=arosc_shared
 
-#MM- contrib-development-compilers-vbcc-datatypes : datatypes
 #MM
-datatypes : setup $(EXE)
+vbcc-datatypes : ../dt.h ../dt.c
 
-%make_prog_setup mmake=datatypes
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
-setup ::
-	gcc dtgen.c -o dtgen
+../dt.h ../dt.c : dtgen.c ../machines/i386/machine.dt
+	$(HOST_CC) dtgen.c -o dtgen
 	./dtgen ../machines/i386/machine.dt ../dt.h ../dt.c
 
 %common
-%include_deps
 

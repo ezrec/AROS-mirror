@@ -7,22 +7,13 @@ include $(TOP)/config/make.cfg
 FILES := lcc linux
 
 EXEDIR := $(CONTRIBDIR)/aminet/lcc
-EXE := $(EXEDIR)/lcc
-
-USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
 
 USER_CFLAGS := -DAROS -DV39 
 
 #MM contrib-development-compilers-lcc-etc
 
-%make_prog_setup mmake=contrib-development-compilers-lcc-etc
-
-contrib-development-compilers-lcc-etc : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=contrib-development-compilers-lcc-etc \
+    progname=lcc targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
 
 %common
-%include_deps

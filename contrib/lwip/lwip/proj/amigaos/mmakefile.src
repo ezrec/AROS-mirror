@@ -31,22 +31,22 @@ localdata
 FILES = $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) $(LIBOBJS) test
 
 EXEDIR := $(CONTRIBDIR)/lwip
-EXE    := $(EXEDIR)/lwip
-
-USE_CLIB := yes
-USE_MLIB := yes
-USE_AMIGALIB := yes
 
 USER_CFLAGS := -DLWIP_DEBUG -O2 -I$(SRCDIR)/include -I$(ARCHINCLUDE) -I$(IPVXINCLUDE) -I./ -I./include
 
 #MM
 lwip : setup $(EXE)
 
-%make_prog_setup mmake=lwip
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=lwip \
+    progname=lwip targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="amiga arosc_shared m"
 
 FILES := testserver testclient ping simpleping
 EXES := $(foreach f,$(FILES), $(EXEDIR)/$(f))
+
+USE_CLIB := yes
+USE_MLIB := yes
+USE_AMIGALIB := yes
 
 %make_prog_setup mmake=lwip-tests
 

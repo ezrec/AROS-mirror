@@ -10,23 +10,14 @@ FILES  := nasm nasmlib float insnsa assemble labels \
        preproc listing eval
 
 EXEDIR := $(CONTRIBDIR)/Development/nasm
-EXE    := $(EXEDIR)/Nasm
-
-USE_AROSLIB  := yes
-USE_CLIB     := yes
-USE_AMIGALIB := yes
-USE_MLIB     := yes
-USE_ZLIB     := yes
 
 #MM- contrib-development : contrib-development-nasm
+#MM contrib-development-nasm : contrib-development-nasm-setup \
+#MM     contrib-development-nasm-asm-includes
 
-%make_prog_setup mmake=contrib-development-nasm
-
-contrib-development-nasm : contrib-development-nasm-setup asm_includes $(EXE) \
-                $(EXEDIR)/test/arostest.s $(EXEDIR)/test/arostest.README
-
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=contrib-development-nasm \
+    progname=Nasm targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga z arosc_shared m"
 
 #MM
 contrib-development-nasm-setup ::
@@ -38,8 +29,8 @@ $(EXEDIR)/test/arostest.s : test/arostest.s
 $(EXEDIR)/test/arostest.README : test/arostest.README
 	@$(CP) test/arostest.README $(EXEDIR)
 
-
-asm_includes:
+#MM
+contrib-development-nasm-asm-includes:
 	$(foreach f, \
 		$(wildcard $(INCDIR)/defines/*.h), \
 		$(AWK) -f genasminc.awk $(f) \
@@ -49,5 +40,3 @@ asm_includes:
 		sort -n -k 4 $(f) >$(f:%.i=%.inc) ; )
 
 %common
-%include_deps
-

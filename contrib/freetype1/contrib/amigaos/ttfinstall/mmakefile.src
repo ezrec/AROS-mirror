@@ -4,21 +4,12 @@ include $(TOP)/config/make.cfg
 
 EXEDIR := $(CONTRIBDIR)/freetype1
 
-EXE := $(EXEDIR)/ttfinstall
-
-USE_AMIGALIB := yes
-USE_CLIB_SHARED := yes
+FILES := ttfinscore ttfinstall
 
 USER_INCLUDES := -I$(AROS_INCLUDES)/freetype1
 
-contrib-freetype1-ttfinstall : $(EXE)
-
-%make_prog_setup mmake=contrib-freetype1-ttfinstall
-
-LIBS := -lfreetype1_shared $(LIBS)
-
-FILES := ttfinscore ttfinstall
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=contrib-freetype1-ttfinstall \
+    progname=ttfinstall targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="freetype1_shared amiga arosc_shared"
 
 %common
-%include_deps

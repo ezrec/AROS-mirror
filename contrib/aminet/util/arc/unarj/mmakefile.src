@@ -7,22 +7,12 @@ include $(TOP)/config/make.cfg
 FILES := decode environ unarj
 
 EXEDIR := $(CONTRIBDIR)/aminet
-EXE := $(EXEDIR)/unarj
-
-USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
-
-USER_CFLAGS := -D_ANSI_SOURCE
 
 #MM aminet-util-arc-unarj : includes linklibs
 
-%make_prog_setup mmake=aminet-util-arc-unarj
-
-aminet-util-arc-unarj : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=aminet-util-arc-unarj \
+    progname=unarj targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
 
 %common
-%include_deps
+

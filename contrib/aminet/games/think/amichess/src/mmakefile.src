@@ -41,23 +41,12 @@ FILES := atak \
 USER_CFLAGS := -DHAVE64BIT
 
 EXEDIR := $(CONTRIBDIR)/aminet/AmiChess
-EXE := $(EXEDIR)/AmiChess
 
-USER_INCLUDES :=
+#MM aminet-games-think-amichess-program : \
+#MM     contrib-zune-classes-nlist contrib-zune-classes-nlistview
 
-USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
-USE_MUILIB := yes
-
-#MM aminet-games-think-amichess-program : includes linklibs contrib-zune-classes-nlist contrib-zune-classes-nlistview
-
-%make_prog_setup mmake=aminet-games-think-amichess-program
-
-aminet-games-think-amichess-program : setup $(EXE)
-
-%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%build_prog mmake=aminet-games-think-amichess-program \
+    progname=AmiChess targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="mui arossupport amiga arosc_shared m"
 
 %common
-%include_deps
