@@ -1,3 +1,8 @@
+/*
+   2004/09/10 - Joseph Fenton, added calculation of
+      samples per frame.
+*/
+
 #include "externs.h"
 
 static SDL_Surface *screen;
@@ -49,7 +54,7 @@ int write_audio(char *buffer, int len)
 
 		memcpy(audioport_buffer+bytes_in_buffer, buffer, len);
 
-        bytes_in_buffer += len;
+                bytes_in_buffer += len;
 
 		SDL_UnlockAudio();
 
@@ -57,7 +62,7 @@ int write_audio(char *buffer, int len)
 	}
 	else if (bytes_in_buffer < AUDIOPORT_BUFFERSIZE) {
 	    // XXX controllare questo codice, non mi convince
-        fprintf(stderr, "Written in buffer %d bytes, trashed remaining %d bytes\n",
+            fprintf(stderr, "Written in buffer %d bytes, trashed remaining %d bytes\n",
                 AUDIOPORT_BUFFERSIZE - bytes_in_buffer,
                 len -  (AUDIOPORT_BUFFERSIZE - bytes_in_buffer) );
 		SDL_LockAudio();
@@ -71,7 +76,7 @@ int write_audio(char *buffer, int len)
 		return AUDIOPORT_BUFFERSIZE - bytes_in_buffer;
 	}
 
-    fprintf(stderr, "Audio port BUFFER full!!!!\n");
+        fprintf(stderr, "Audio port BUFFER full!!!!\n");
 
 	return -1;
 }
@@ -90,24 +95,22 @@ void my_audio_callback(void *userdata, Uint8 *stream, int len)
 		SDL_MixAudio(stream, audioport_buffer, amount,
 			SDL_MIX_MAXVOLUME);
 
-        samples_played += ((amount/audio_channels)/2);
+                samples_played += ((amount/audio_channels)/2);
 
 //		memcpy(stream, audioport_buffer, amount);
 
 		if(amount < bytes_in_buffer) {
 			bytes_in_buffer -= amount;
 			memcpy(audioport_buffer, audioport_buffer + amount, bytes_in_buffer);
-		}
-		else {
-            if(amount < len) {
-                memset(stream+amount, silence, len - amount);
-			}
-			bytes_in_buffer = 0;
+		} else {
+                    if(amount < len) {
+                        memset(stream+amount, silence, len - amount);
+	            }
+		    bytes_in_buffer = 0;
 		}
 
-	}
-	else {
-        memset(stream, silence, len);
+	} else {
+            memset(stream, silence, len);
 	}
 
 }
@@ -169,16 +172,18 @@ void init_system(char *title)
     
     if(use_audio) {
         SDL_AudioSpec desired;
+        unsigned long samples_per_frame;
 
         if(verbose)
             fprintf(stderr, "   Opening audio...\n");
         
-    if(debugging)
-        SDL_Delay(2000);
+        if(debugging)
+            SDL_Delay(2000);
 
+        samples_per_frame = (unsigned long) ((double)audio_sample_rate / frame_rate + 0.5);
         desired.freq = audio_sample_rate;
         desired.channels = audio_channels;
-        desired.samples = 1024;
+        desired.samples = samples_per_frame;
 
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
         desired.format = AUDIO_S16LSB;
