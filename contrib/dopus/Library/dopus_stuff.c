@@ -28,6 +28,7 @@ the existing commercial status of Directory Opus 5.
 
 */
 
+#include <aros/debug.h>
 #include "dopuslib.h"
 #include "config.h"
 #include "configflags.h"

@@ -31,6 +31,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "dopuslib.h"
 #include <aros/macros.h>
+#include <aros/debug.h>
 
 #define DB(x) ((struct DOpusBase *)x)
 

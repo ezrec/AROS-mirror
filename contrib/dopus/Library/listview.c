@@ -28,6 +28,7 @@ the existing commercial status of Directory Opus 5.
 
 */
 
+#include <intuition/iobsolete.h>
 #include "dopuslib.h"
 
 #define LIST_IDBASE 32767

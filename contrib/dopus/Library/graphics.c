@@ -1,3 +1,4 @@
+#include <aros/debug.h>
 #include "dopuslib.h"
 
 /* NOTE !! This file is rewritten from the graphics.a asm file */

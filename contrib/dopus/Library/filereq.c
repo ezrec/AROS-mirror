@@ -30,6 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include <libraries/asl.h>
 #include <dos/dosextens.h>
+#include <intuition/iobsolete.h>
 
 #include "dopuslib.h"
 #include "filereq.h"
@@ -683,6 +684,7 @@ struct FileReqData *freqdata;
 	return(-1);
 }
 #else
+#include <aros/debug.h>
 int listdevices(freqdata)
 struct FileReqData *freqdata;
 {

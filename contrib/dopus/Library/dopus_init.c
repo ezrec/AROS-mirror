@@ -19,7 +19,7 @@
 /* #include "initstruct.h" */
 #include "dopuslib.h"
 #include "initstruct.h"
-#include "libdefs.h"
+#include LC_LIBDEFS_FILE
 
 #define INIT AROS_SLIB_ENTRY(init, DOpus)
 
