@@ -94,6 +94,18 @@
 **              A string containing the name of the compiler
 */
 
+#ifdef REG
+#undef REG
+#endif
+
+#ifdef ASM
+#undef ASM
+#endif
+
+#ifdef SAVEDS
+#undef SAVEDS
+#endif
+
 #ifdef __SASC
         /* SAS/C 6.58 or better */
 
@@ -330,13 +342,10 @@
   #include <aros/asmcall.h>
   #endif
 
-  #undef ASM
   #define ASM
-  #undef SAVEDS
   #define SAVEDS
 
-  #if 1
-    #ifndef REGPARAM
+  #ifndef REGPARAM
     #define REGPARAM(reg,type,name) type,name,reg
 
     #define REGFUNC1(r,n,a1) AROS_UFH1(r,n,AROS_UFHA(a1))
@@ -348,12 +357,12 @@
     #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFH7(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7))
     #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8))
     #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8),AROS_UFHA(a9))
-    #endif
+  #endif
 
-  #else
+#else
 
-    #ifndef REGPARAM
-    #define REGPARAM(reg,type,name) type name
+  #ifndef REGPARAM
+    #define REGPARAM(reg,type,name) REG(reg) type name
 
     #define REGFUNC1(r,n,a1) r n(a1)
     #define REGFUNC2(r,n,a1,a2) r n(a1,a2)
@@ -364,23 +373,6 @@
     #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
     #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
     #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
-    #endif
-  #endif
-
-#else
-
-  #ifndef REGPARAM
-  #define REGPARAM(reg,type,name) REG(reg) type name
-
-  #define REGFUNC1(r,n,a1) r n(a1)
-  #define REGFUNC2(r,n,a1,a2) r n(a1,a2)
-  #define REGFUNC3(r,n,a1,a2,a3) r n(a1,a2,a3)
-  #define REGFUNC4(r,n,a1,a2,a3,a4) r n(a1,a2,a3,a4)
-  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) r n(a1,a2,a3,a4,a5)
-  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) r n(a1,a2,a3,a4,a5,a6)
-  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
-  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
-  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
   #endif
 
 #endif
