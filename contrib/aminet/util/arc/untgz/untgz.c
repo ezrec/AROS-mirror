@@ -36,8 +36,7 @@ struct Window *win;
 struct Screen *scr;
 struct RastPort *rp;
 char *title;
-#define G_WIDTH 150
-#define G_HEIGHT 16
+int G_WIDTH, G_HEIGHT;
 
 void close_gui( )
 {
@@ -57,6 +56,8 @@ int open_gui( char *file )
     if (title)
     {
         scr = LockPubScreen(NULL);
+	G_WIDTH = scr->Width/3;
+	G_HEIGHT = G_WIDTH/12;
 
         if (scr)
         {
@@ -86,14 +87,17 @@ int open_gui( char *file )
 
     return 0;
 }
+
 void update_gui( int pos )
 {
-    static int oldpos = 0;
+    static int oldx = 0;
+    int x;
 
-    if(pos>oldpos)
+    x = (pos*G_WIDTH)/archlen;
+    if(x>oldx)
     {
-	RectFill( rp, 0, 0, (pos*G_WIDTH)/archlen, G_HEIGHT );
-	oldpos = pos;
+	RectFill( rp, oldx, 0, x, G_HEIGHT );
+	oldx = x;
     }
 }
 
