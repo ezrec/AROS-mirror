@@ -139,6 +139,9 @@ extern void LIB_getsockname(void);
 extern void LIB_getpeername(void);
 extern void LIB_IoctlSocket(void);
 extern void LIB_CloseSocket(void);
+extern void LIB_WaitSelect(void);
+extern void LIB_SetSocketSignals(void);
+extern void LIB_SocketBaseTagList(void); /* -294 */
 
 static void *function_array[] =
 {
@@ -158,10 +161,12 @@ static void *function_array[] =
   LIB_shutdown,
   LIB_setsockopt,
   LIB_getsockopt,
-  LIB_getsockname,
-  LIB_getpeername,
-  LIB_IoctlSocket,
-  LIB_CloseSocket,
+  LIB_getsockname,         /* -102 */
+  LIB_getpeername,         /* -108 */
+  LIB_IoctlSocket,         /* -114 */
+  LIB_CloseSocket,         /* -120 */
+  LIB_WaitSelect,          /* -126 */
+  LIB_SetSocketSignals,    /* -132 */
   (void*)~0,
 };
 

@@ -14,9 +14,9 @@ COREOBJS=$(SRCDIR)/core/inet.o $(SRCDIR)/core/mem.o $(SRCDIR)/core/memp.o $(SRCD
 ARCHOBJS=$(SRCDIR)/arch/amigaos/sys_arch.o $(SRCDIR)/arch/amigaos/lib_arch.o $(SRCDIR)/arch/amigaos/netif/sioslipif.o
 NETIFOBJS=$(SRCDIR)/netif/loopif.o $(SRCDIR)/netif/tcpdump.o $(SRCDIR)/netif/arp.o
 APIOBJS=$(SRCDIR)/api/api_lib.o $(SRCDIR)/api/api_msg.o $(SRCDIR)/api/err.o $(SRCDIR)/api/sockets.o $(SRCDIR)/api/tcpip.o
-LIBOBJS=calling.o lib_accept.o lib_bind.o lib_connect.o lib_getpeername.o lib_getsockname.o lib_getsockopt.o lib_ioctlsocket.o lib_listen.o lib_recv.o lib_recvfrom.o lib_send.o lib_sendto.o lib_setsockopt.o lib_shutdown.o lib_closesocket.o lib_socket.o lib_stuff.o
+LIBOBJS=calling.o lib_accept.o lib_bind.o lib_connect.o lib_getpeername.o lib_getsockname.o lib_getsockopt.o lib_ioctlsocket.o lib_listen.o lib_recv.o lib_recvfrom.o lib_send.o lib_sendto.o lib_setsockopt.o lib_shutdown.o lib_closesocket.o lib_socket.o lib_stuff.o lib_waitselect.o lib_setsocketsignals.o lib_socketbasetaglist.o
 
-all: test testserver testclient
+all: test testserver testclient ping
 
 test: $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) $(LIBOBJS) test.o
   sc NOVERS TO test link with <<
@@ -28,6 +28,19 @@ testserver: testserver.o
 
 testclient: testclient.o
   sc TO testclient link testclient.o
+
+ping: ping.o
+  sc TO ping link ping.o
+
+testserver.o: testserver.c
+	$(CC) RESOPT $(CFLAGS) $(INC)netinclude: $(INC)include: $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
+
+testclient.o: testclient.c
+	$(CC) RESOPT $(CFLAGS) $(INC)netinclude: $(INC)include: $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
+
+ping.o: ping.c
+	$(CC) RESOPT $(CFLAGS) $(INC)netinclude: $(INC)include: $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
+
 
 .c.o:
 		$(CC) $(DEF)IPv4 $(CFLAGS) $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
