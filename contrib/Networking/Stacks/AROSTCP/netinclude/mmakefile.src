@@ -1,0 +1,33 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+INCSUBDIRS :=	arpa \
+		bsdsocket \
+		libraries \
+		net \
+            netinet \
+		sys
+
+INCFILES :=  netdb.h \
+          syslog.h
+
+INCLUDES      := $(foreach d,$(INCSUBDIRS),$(wildcard $(d)/*.h)) $(INCFILES)
+DEST_INCLUDES := $(foreach f,$(INCLUDES),$(AROS_INCLUDES)/$(f))
+GEN_INCLUDES  := $(foreach f,$(INCLUDES),$(GENINCDIR)/$(f))
+INCL_DIRS     := $(foreach dir,$(INCSUBDIRS),$(AROS_INCLUDES)/$(dir)) \
+                 $(foreach dir,$(INCSUBDIRS),$(GENINCDIR)/$(dir))
+
+#MM-
+includes-copy : aros-network-includes-setup $(DEST_INCLUDES) $(GEN_INCLUDES)
+
+$(AROS_INCLUDES)/%.h : %.h
+	@$(CP) $< $@
+
+$(GENINCDIR)/%.h : %.h
+	@$(CP) $< $@
+
+aros-network-includes-setup : $(INCL_DIRS)
+
+$(INCL_DIRS) :
+	@$(MKDIR) $@
+
