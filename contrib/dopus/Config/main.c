@@ -1504,6 +1504,16 @@ pen = 0;
 
 		configscr.Depth=config->scrdepth;
 		if (!onworkbench) {
+			/* AROS FIX */
+			struct Screen *wbscr = LockPubScreen(NULL);
+			
+			if (wbscr)
+			{
+			    configscr.Height = 192 + wbscr->BarHeight + 1 +
+			    		       wbscr->WBorTop + wbscr->Font->ta_YSize + 1;
+			    UnlockPubScreen(NULL, wbscr);
+			}
+			
 			while (!(Screen=OpenScreen((struct NewScreen *)&configscr))) {
 				if (configscr.Depth<=2) quit();
 				--configscr.Depth;
@@ -1518,10 +1528,10 @@ pen = 0;
 		screen_depth=configscr.Depth;
 
 		configwin.Screen=usescreen;
-		configwin.Height=usescreen->WBorTop+usescreen->Font->ta_YSize+189;
+		configwin.Height=usescreen->WBorTop+usescreen->Font->ta_YSize+1+192;
 
 		configwin.LeftEdge=0;
-		configwin.TopEdge=usescreen->Font->ta_YSize+3;
+		configwin.TopEdge=usescreen->WBorTop + usescreen->Font->ta_YSize+1+1;
 
 		if (!Screen) {
 			if (config->config_x>-1) configwin.LeftEdge=config->config_x;
