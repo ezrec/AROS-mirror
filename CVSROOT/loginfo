@@ -17,4 +17,4 @@
 # name and listing the modified file names.
 #
 # For example:
-DEFAULT		gawk -f $CVSROOT/CVSROOT/commitlog.awk --assign File="%s" --assign Out="$CVSROOT/CVSROOT/commitlog"
+DEFAULT		gawk -f $CVSROOT/CVSROOT/commitlog.awk --assign User="$USER" --assign File="%s" --assign Out="$CVSROOT/CVSROOT/commitlog"
