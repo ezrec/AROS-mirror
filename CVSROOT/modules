@@ -21,4 +21,10 @@
 # character to interpose another module into the current module.  This
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
-Quake -d contrib/Quake contrib/Quake
+
+# Stuff in the contrib tree. contrib is also a standalone repository.
+# You can do cvs checkout contrib. These module definitions just allow
+# to checkout parts of it. The advantage is that you will not get the
+# others.
+Quake -d contrib/Games/Quake contrib/Games/Quake
+Moria3D -d contrib/Games/Moria3D contrib/Games/Moria3D
