@@ -218,25 +218,29 @@ int first=0,number,middle;
                       case SECOND:
 /* clicked on first stone again, so unmark it */
                             if(field[number-1]==AWAY)
+                            {
                               if(first==number)
                               {
                                 field[number-1]=THERE;
                                 status=FIRST;
                               }
+                            }
 /* clicked on different stone than first, so check if move is OK
    and remove stones or do nothing */
-                              else
-                                if((middle=check[first-1][number-1])!=0&&field[middle-1]==THERE)
-                                {
-                                  field[number-1]=THERE;
-                                  field[middle-1]=AWAY;
-                                  history[movecount][0]=first;
-                                  history[movecount][1]=number;
-                                  history[movecount][2]=middle;
-                                  first=0;
-                                  status=FIRST;
-                                  movecount++;
-                                }
+                            else
+			    {
+                              if((middle=check[first-1][number-1])!=0&&field[middle-1]==THERE)
+                              {
+                                field[number-1]=THERE;
+                                field[middle-1]=AWAY;
+                                history[movecount][0]=first;
+                                history[movecount][1]=number;
+                                history[movecount][2]=middle;
+                                first=0;
+                                status=FIRST;
+                                movecount++;
+                              }
+			    }
                             break;
                     }
             }
