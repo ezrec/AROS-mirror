@@ -1,0 +1,2 @@
+Linux Desktop with the Workbench Screen and ConfigOpus running on it's own
+screen .
