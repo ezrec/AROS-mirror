@@ -1,5 +1,0 @@
-FROM LIB:c.o "execute.o"+"about.o"+"loadwb.o"
-TO "loadwb"
-LIB LIB:sc.lib LIB:amiga.lib
-NOICONS
-
