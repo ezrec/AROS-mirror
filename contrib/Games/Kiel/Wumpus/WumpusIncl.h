@@ -1,5 +1,4 @@
 #include "../prec.c"
-#include <string.h>
 
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
