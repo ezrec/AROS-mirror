@@ -10,6 +10,9 @@ FILES  := \
 
 #MM uae-gui : includes linklibs uae-gui-catalogs
 
+# Hack: do not strip object
+STRIP := $(NOP)
+
 %build_prog mmake=uae-gui \
     progname=uae-gui.o targetdir=$(EXEDIR) \
     files=$(FILES) ldflags="-Wl,-r" uselibs=""

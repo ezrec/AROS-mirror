@@ -19,6 +19,9 @@ USER_CFLAGS := -O2  -Wall -Wno-unused\
                -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
                -I$(SRCDIR)/.. -I$(SRCDIR)/../include
 
+# Hack: do not strip object
+STRIP := $(NOP)
+
 %build_prog mmake=uae-od-aros \
     progname=od-aros.o targetdir=$(EXEDIR) \
     files=$(FILES) ldflags="-Wl,-r" uselibs=""
