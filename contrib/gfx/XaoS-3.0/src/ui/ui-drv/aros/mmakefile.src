@@ -10,7 +10,6 @@ LIB :=	xaosuiaros
 
 FILES := ui_aros
 	
-#MM- linklibs : linklibs-xaosuiaros
 #MM linklibs-xaosuiaros : includes setup-gfx-xaos
 
 %make_linklib_setup mmake=linklibs-xaosuiaros

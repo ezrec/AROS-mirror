@@ -15,7 +15,6 @@ FILES := \
 	arosstdio \
 	aros_thread
 
-#MM- linklibs : linklibs-xaosutil
 #MM linklibs-xaosutil : includes setup-gfx-xaos
 
 %make_linklib_setup mmake=linklibs-xaosutil

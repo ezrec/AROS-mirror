@@ -29,7 +29,6 @@ FILES := \
 	julia \
 	i386
 	
-#MM- linklibs : linklibs-xaosengine
 #MM linklibs-xaosengine : includes setup-gfx-xaos
 
 %make_linklib_setup mmake=linklibs-xaosengine

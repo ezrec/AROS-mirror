@@ -268,32 +268,38 @@ aros_init ()
 {
     if (!(IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 39)))
     {
+    	printf("Can't open intuition.library V39!\n");
         return 0;
     }
     
     if (!(GfxBase = (struct GfxBase *)OpenLibrary("graphics.library", 40)))
     {
+    	printf("Can't open graphics.library V40!\n");
         return 0;
     }
     
     if (!(CyberGfxBase = OpenLibrary("cybergraphics.library", 0)))
     {
+    	printf("Can't open cybergraphics.library\n");
         return 0;	
     }
     
     if (!(KeymapBase = OpenLibrary("keymap.library", 0)))
     {
+    	printf("Can't open keymap.library!\n");
     	return 0;
     }
     
     scr = LockPubScreen(NULL);
     if (!scr)
     {
+    	printf("Can't lock pub screen!\n");
     	return 0;
     }
     
     if (!(dri = GetScreenDrawInfo(scr)))
     {
+    	printf("Can't get screen drawinfo!\n");
     	return 0;
     }
     
@@ -328,13 +334,12 @@ aros_init ()
     
     if (!win)
     {
+    	printf("Can't open window!\n");
     	return 0;
     }	
     
     rp = win->RPort;
-        
-//    Wait(0);  
-  	    	    
+          	    	    
     return 1;
 }
 
@@ -345,7 +350,7 @@ aros_uninitialise ()
     if (dri) FreeScreenDrawInfo(scr, dri); dri = NULL;
     if (scr) UnlockPubScreen(0, scr); scr = NULL;
     
-    if (KeymapBase) CloseLibrary(KeymapBase);
+    if (KeymapBase) CloseLibrary(KeymapBase); KeymapBase = NULL;
     if (CyberGfxBase) CloseLibrary((struct Library *)CyberGfxBase); CyberGfxBase = NULL;
     if (GfxBase) CloseLibrary((struct Library *)GfxBase); GfxBase = NULL;
     if (IntuitionBase) CloseLibrary((struct Library *)IntuitionBase); IntuitionBase = NULL;
@@ -362,7 +367,7 @@ aros_getmouse (int *x, int *y, int *b)
 static void
 aros_clearscreen ()
 {
-    SetAPen(rp, 0);
+    SetAPen(rp, dri->dri_Pens[SHADOWPEN]);
     RectFill(rp, BORDERLEFT,
     	    	 BORDERTOP,
 		 BORDERLEFT + win->GZZWidth - 1,

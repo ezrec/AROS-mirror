@@ -18,7 +18,6 @@ FILES := \
 	keywords \
 	param
 	
-#MM- linklibs : linklibs-xaosui
 #MM linklibs-xaosui : includes setup-gfx-xaos
 
 %make_linklib_setup mmake=linklibs-xaosui
