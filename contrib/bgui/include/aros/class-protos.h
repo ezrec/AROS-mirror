@@ -586,10 +586,10 @@ extern ASM REGFUNC2(ULONG, StrLenfA, REGPARAM(A0, UBYTE *,), REGPARAM(A1, ULONG 
 extern ASM REGFUNC3(VOID, SPrintfA, REGPARAM(A3, UBYTE *,), REGPARAM(A0, UBYTE *,), REGPARAM(A1, ULONG *,));
 
 //extern ASM VOID LHook_Count(REG(a0) struct Hook *hook, REG(a1) ULONG chr, REG(a2) struct Locale *loc);
-extern ASM REGFUNC3(VOID, LHook_Count, REGPARAM(A0, struct Hook *,), REGPARAM(A1, ULONG,), REGPARAM(A2, struct Locale *,));
+extern ASM REGFUNC3(VOID, LHook_Count, REGPARAM(A0, struct Hook *,), REGPARAM(A2, struct Locale *,), REGPARAM(A1, ULONG,));
 
 //extern ASM VOID LHook_Format(REG(a0) struct Hook *hook, REG(a1) ULONG chr, REG(a2) struct Locale *loc);
-extern ASM REGFUNC3(VOID, LHook_Format, REGPARAM(A0, struct Hook *,), REGPARAM(A1, ULONG,), REGPARAM(A2, struct Locale *,));
+extern ASM REGFUNC3(VOID, LHook_Format, REGPARAM(A0, struct Hook *,), REGPARAM(A2, struct Locale *,), REGPARAM(A1, ULONG,));
 
 //extern ASM struct RastPort *BGUI_ObtainGIRPort( REG(a0) struct GadgetInfo * );
 extern ASM REGFUNC1(struct RastPort *, BGUI_ObtainGIRPort, REGPARAM(A0, struct GadgetInfo *,));
