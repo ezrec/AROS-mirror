@@ -40,6 +40,7 @@ notice is retained.
 #include <intuition/intuition.h>
 #include <intuition/intuitionbase.h>
 #include <stdio.h>
+#include <ctype.h>
 
 
 /*-------------------*/

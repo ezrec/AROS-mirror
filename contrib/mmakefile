@@ -7,19 +7,13 @@
 #MM- fish : fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines
 #MM- fish : fish-304_clines fish-304_lines fish-screenzap fish-watchman
 #MM- fish : fish-sunmaze fish-fiveinline fish-362_rubik fish-yachtc
-#MM- fish : fish-rubik fish-icalc fish-worldtime fish-mosaic
-
+#MM- fish : fish-rubik fish-icalc fish-worldtime fish-mosaic fish-surf
+#MM- fish : fish-371_fractal fish-asimplex fish-layers fish-snowfall
 
 #MM- contrib : contrib-ddemo7 contrib-switch contrib-linie12
-
-# The apps below are not working yet as functions are still missing
-
-# M fish : fish-371_fractal
-#   SetMenuStrip, ShowTitle
 
 #These do not compile properly, yet!
 # MM fish-mandelbrotsrc 
 # MM fish-mandel
-# MM fish-layers
 
 # MM fish-cube

@@ -43,7 +43,7 @@
 #include "aros/oldprograms.h"
 #include "exec/types.h"
 #include "graphics/gfx.h"
-#include "hardware/dmabits.h"
+//#include "hardware/dmabits.h"
 #include "hardware/custom.h"
 #include "hardware/blit.h"
 #include "graphics/gfxmacros.h"
@@ -80,7 +80,6 @@ struct RastPort *rp[3];		/* rastport for each layer */
 /* dynamically created RastPorts from the calls to CreateUpfrontLayer */
 
 short i,j,k,n;
-struct ColorMap *GetColorMap();
 struct GfxBase *GfxBase;
 
 SHORT  boxoffsets[] = { 802, 2010, 3218 };
@@ -89,18 +88,18 @@ USHORT colortable[] = { 0x000, 0xf00, 0x0f0, 0x00f };
 UBYTE *displaymem;
 UBYTE *colorpalette;
 
-long LayersBase;
+struct LayersBase *LayersBase;
 struct Layer_Info *li;
 struct Layer *layer[3];
-extern struct Layer *CreateUpfrontLayer();
-extern struct Layer_Info *NewLayerInfo();
  
-main()
+void FreeMemory();
+
+void main()
 {
 	GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0);
 	if (GfxBase == NULL) exit(1);
 
-	LayersBase = OpenLibrary("layers.library",0); 
+	LayersBase = (struct LayersBase *)OpenLibrary("layers.library",0); 
 	if(LayersBase == NULL) exit(2);
 
 	oldview = GfxBase->ActiView;	/* save current view, go back later */
@@ -190,35 +189,35 @@ main()
 	Text(rp[2],"Layer 2",7);
 	
 	Delay(120);	/* 2 seconds before first change */
-	BehindLayer(li,layer[2]);
+	BehindLayer((LONG)li,layer[2]);
 
 	Delay(120);	/* another change 2 seconds later */
 
-	UpfrontLayer(li,layer[0]);
+	UpfrontLayer((LONG)li,layer[0]);
 
 	for(i=0; i<30; i++)
 	{
-		MoveLayer(li,layer[1],1,3);
+		MoveLayer((LONG)li,layer[1],1,3);
 		Delay(10);	/* wait .16 seconds (uses DOS function) */
 		
 	}
 
     cleanup3:
 	LoadView(oldview);              /* put back the old view  */
-	DeleteLayer(li,layer[2]);
+	DeleteLayer((LONG)li,layer[2]);
     cleanup2:
-	DeleteLayer(li,layer[1]);
+	DeleteLayer((LONG)li,layer[1]);
     cleanup1:
-	DeleteLayer(li,layer[0]);
+	DeleteLayer((LONG)li,layer[0]);
 
 	DisposeLayerInfo(li);
 	FreeMemory();	
-	CloseLibrary(GfxBase);
+	CloseLibrary((struct Library *)GfxBase);
 
 }	/* end of main() */
 
 
-FreeMemory()
+void FreeMemory()
 {      		/* return user and system-allocated memory to sys manager */
 
   	for(i=0; i<DEPTH; i++)			/* free the drawing area */
@@ -227,5 +226,4 @@ FreeMemory()
 		/* free dynamically created structures */
 	FreeVPortCopLists(&vp);		
  	FreeCprList(v.LOFCprList);   
-	return(0);
 }	
