@@ -1,6 +1,9 @@
 /*
  * $Header$
  * $Log$
+ * Revision 1.2  2001/04/05 16:57:00  stegerg
+ * don't include <malloc.h> as this include does not exist in AROS
+ *
  * Revision 1.1  2001/04/04 05:43:36  wang
  * First commit: compiles on Linux, Amiga, Windows, Windows CE, generic gcc
  *
@@ -13,7 +16,9 @@
 #define __BMEM_H__
 
 #include <stdlib.h>
+#ifndef AROS
 #include <malloc.h>
+#endif
 
 #ifdef __DEBUG__
 #	define	MALLOC(s,d)	mem_malloc(s,d)
