@@ -1,12 +1,10 @@
 # $Id$
 
 # The apps target points back to config/$(ARCH)/mmakefile:
-#MM apps : apps-$(ARCH)
-apps :
-	@$(NOP)
+#MM- apps : apps-$(ARCH)
 
-#MM fish : fish-microemacs fish-lotto fish-henon fish-bcubic
-#MM fish : fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines
+#MM- fish : fish-microemacs fish-lotto fish-henon fish-bcubic
+#MM- fish : fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines
 
 
 # The apps below are not working yet as functions are still missing
@@ -19,7 +17,7 @@ apps :
 # M fish : fish-rubik
 
 # Missing for fish-yachtc
-#   CurrentTime SetMenuStrip
+#   SetMenuStrip
 
 # M fish : fish-yachtc
 
