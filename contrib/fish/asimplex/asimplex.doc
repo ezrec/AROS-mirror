@@ -1,0 +1,282 @@
+
+                          ASimplex Version 1.2
+                          ====================
+
+                        THE AMIGA-Simplex-Program
+
+                      (c) 18.03.1989 Stefan Foerster
+
+
+
+"ASimplex" is placed in the Public Domain. Nevertheless no part of this
+program may be sold or used in any commercial program. Private use is free.
+
+If there are any bugs (I hope not!) or if you like the program so much that
+you have the desire to send me (poor student) a small donation, write to:
+
+          Stefan Foerster
+          Weinbergstr. 29
+          8877 Burtenbach
+          West-Germany
+
+
+ASimplex is an implementation of the famous simplex-algorithm for solving
+linear programs. It was developed as a project in the course "Optimierung I"
+held at the university of Augsburg by Prof. Dr. Groetschel. It is written
+in C using the Manx Aztec C Compiler V3.6a.
+
+
+In general, linear programs are of the form
+
+  max dx (or min dx), Ax = a, Bx <= b, Cx >= c, l <= x <= u,
+
+where A, B and C are matrices and a,b,c,d,x,l and u are vectors.
+dx is called the objective (or cost) function that is to be maximized (or
+minimized) subject to the constraints Ax = a, Bx <=b, Cx >=c and l <= x <= u.
+
+For example:
+
+  min           x1 +   x2 -   x3
+
+  subject to    x1 - 4*x2 + 3*x3 <= 6
+                x1 + 2*x2 -   x3 <= 1
+                x1 + 2*x2 +   x3 <= 8
+
+                         0 <= x1 <= 1
+                         0 <= x2 <= 1
+                         0 <= x3 <= 3
+
+with
+
+      / 1  -4   3 \      / 6 \      / 1 \      / 0 \      / 1 \      / x1 \
+  B = | 1   2  -1 |, b = | 1 |, d = | 1 |, u = | 0 |, l = | 1 |, x = | x2 |
+      \ 1   2   1 /      \ 8 /      \-1 /      \ 0 /      \ 3 /      \ x3 /
+
+
+
+Starting ASimplex:
+------------------
+
+i)  CLI:       Type "ASimplex" (Do not "run" ASimplex. This will cause an
+               EOF-error)
+ii) Workbench: Use the icon and a CON:-window will open. 
+
+
+
+
+
+Commands of ASimplex:
+---------------------
+
+HELP
+
+HELP lets you see all possible commands.
+
+
+VERBOSE
+
+VERBOSE is a flag that can be ON or OFF. If it is ON, you get further
+information what ASimplex is currently doing. Default is OFF.
+
+
+PRIORITY [N]
+
+PRIORITY N sets the task-priority of ASimplex to N (0<=N<=20).
+PRIORITY gives the current task-priority. Default is 0.
+
+
+QUIT
+
+Leave ASimplex.
+
+
+LOAD <file> [-cGOAL] [-bRHS] [-rRANGE] [-uBOUND] [-m] [-fFILE]
+
+With LOAD ASimplex reads the data of a linear program. The data must be
+in the standardized MPSX-format (MPSX is a trademark of IBM). A brief
+description of this format follows later; now you should only know, that
+the data is subdivided into sections and it is possible for some sections
+to contain data for different linear programs (e.g. different objective
+functions: Data belonging to a certain objective function has a unique
+identifier).
+
+<file>   The file-name of the file you want to load.
+
+-cGOAL   GOAL is the identifier of the objective function you want to use.
+         if -cGOAL is not specified then ASimplex uses the objective
+         function it finds (if there is only one) or it asks you to choose
+         one.
+
+-bRHS    RHS is the identifier of the right hand side you want to use.
+         (b in the above example).
+
+-rRANGE  RANGE is the identifier of the range you want to use.
+
+-uBOUND  BOUND is the identifier of the bounds (l and u in the above
+         example).
+
+-m       If -m is specified, ASimplex tries to minimize the objective
+         functions; otherwise it tries to maximize it.
+
+-fFILE   If -fFILE is specified, ASimplex writes the result (also) to the
+         file "FILE" (FILE could also be PRT: to get the results to
+         printer).
+
+
+
+The MPSX-format
+---------------
+
+The data of a linear program is subdivided into sections. This sections are
+
+  NAME
+  ROWS
+  COLUMNS
+  RHS
+  RANGES
+  BOUNDS
+  ENDATA
+
+where RANGES and BOUNDS are optional.
+
+
+i)    NAME-section:
+      The NAME-section determines the name of the linear program. In the
+      above example you could write
+
+      NAME example
+
+
+ii)   ROWS-section:
+      You have to give every constraint of the linear program a name. This
+      name and the type of the constraint is determined in the ROWS-section.
+      The possible types are:
+      N   no constraint, objective function
+      E   "="   equality
+      L   "<="  less than or equal
+      G   ">="  greater than or equal
+      In the above example you could write:
+
+      ROWS
+        N goal
+        L constr1
+        L constr2
+        L constr3
+
+
+iii)  COLUMNS-section:
+      The COLUMNS-section determines the variables and the coefficients
+      for every variable (in the constraints and in the objective function).
+      If a coefficient is not specified, it is assumed to be 0.
+      In the above example you could write:
+
+      COLUMNS
+        x1  goal      1
+        x1  constr1   1
+        x1  constr2   1
+        x1  constr3   1
+        x2  goal      1
+        x2  constr1   -4
+        x2  constr2   2
+        x2  constr3   2
+        x3  goal      -1
+        x3  constr1   3
+        x3  constr2   -1
+        x3  constr3   1
+
+      It is possible to use two fields in one line, e.g.
+
+        x1  goal      1     constr1     1
+
+
+iv)   RHS-section:
+      In this section every value of the right hand side is determined.
+      If a value is missing it is assumed to be 0. Our example:
+
+      RHS
+        b   constr1   6     constr2     1
+        b   constr3   8
+
+      b is the name of this right hand side. If you want to define a second
+      right hand side, you could write
+
+        b2  constr1   -2    constr2     9
+        b2  constr3   3.5
+
+      It is possible to use two fields in one line.
+
+
+v)    RANGES-section:
+      Say you have the two constraints      2*x1 + x2  <= 10  and
+                                            2*x1 + x2  >= 8   .
+      You could write them in the form 8 <= 2*x1 + x2  <= 10  .
+      Then it is possible to define only one constraint in the ROWS-section
+      and define a range (a left hand side) in the RANGES-section, e.g.:
+
+      ROWS
+        l constr
+        ...
+      RHS
+        b constr  10
+        ...
+      RANGES
+        r constr  2   ( IMPORTANT: not 8, but 2 = 10-8 !!! )
+
+      r is the name of the range. It is possible to have several different
+      ranges in one RANGES-section and to specify two fields in one line.
+      The RANGES-section is optional.
+
+
+vi)   BOUNDS-section:
+      The BOUNDS-section defines the lower and upper bound (l and u) of the
+      linear program. Missing values in l are assumed to be 0 and missing
+      values in u are assumed to be "infinite". The BOUNDS-section is
+      optional. Every line begins with a "UP" (for upper bound) or "LO"
+      (for lower bound), followed by the name of the bounds. It is possible
+      to specify more than one bounds-name. Our exaple:
+
+      BOUNDS
+        UP  bound   x1    1
+        UP  bound   x2    1
+        UP  bound   x3    3
+
+vii)  ENDATA-section:
+      ENDATA simply is the end of the data.
+
+
+
+
+
+Further notes on MPSX:
+----------------------
+
+- Identifiers are restricted to 8 characters. They can consist of every
+  printable character (except of space- and tab-characters). Lowercase
+  letters are converted to uppercase letters.
+
+- Fields don't have to start in special columns (as in the original MPSX-
+  format coming from hollerith-cards). The only restriction is, that
+  section names have to start in column 1 the other lines mustn't start in
+  column 1.
+
+- Lines can have a maximum length of 255 charcters. Every line must have a
+  new-line-character ('\n') at the end.
+
+
+
+Technical notes:
+----------------
+
+- ASimplex uses double precision IEEE-arithmetic. "infinite" is represented
+  as NAN (Not A Number).
+
+- The linear programs can have any size that fits into memory. The only
+  "restriction" is that you can't have more than 32767 rows or columns.
+  But that's not really restricting, because if you'd have a LP with e.g.
+  10000 rows and 20000 columns you'd need 2.2GBytes!
+
+
+
+
+------------
+EOF
