@@ -259,6 +259,9 @@ int x1,y1,x2,y2;
 		return(NULL);
 	}
 
+#warning AROS: graphics.library functions dont seem to work on standard hand made (InitBitmap = no AllocBitmap) planar bitmaps
+
+#if 0
 	SetAPen(&trp,bpen);
 	RectFill(&trp,0,0,w-1,h-1);
 	DrawRadioButton(&trp,2,1,w-4,h,(fpen!=bpen)?bg:fg,(fpen!=bpen)?fg:bg);
@@ -272,6 +275,75 @@ int x1,y1,x2,y2;
 		WritePixel(&trp,w-7,2);
 		WritePixel(&trp,w-7,h-3);
 	}
+#else
+	if ((w != 19) || (h != 9))
+	{
+	    kprintf("AROS-DOpus (contrib/dopus/Library/imagery.c): I can handle only 19 x 9 images here\n");
+	}
+	else
+	{
+	    static ULONG radio_data1[2*9] =
+	    {
+		0x00000000,
+		0x00018000,
+		0x0000C000,
+		0x0000C000,
+		0x0000C000,
+		0x0000C000,
+		0x0000C000,
+		0x00018000,
+		0x1FFF0000,
+		
+		0x1FFF0000,
+		0x30000000,
+		0x60000000,
+		0x60000000,
+		0x60000000,
+		0x60000000,
+		0x60000000,
+		0x30000000,
+		0x00000000
+	    };
+
+	    static ULONG radio_data2[2*9] =
+	    {
+                0x1FFF0000,
+		0x30000000,
+		0x63F80000,
+		0x67FC0000,
+		0x67FC0000,
+		0x67FC0000,
+		0x63F80000,
+		0x30000000,
+		0x00000000,
+		
+		0x00000000,
+		0x00018000,
+		0x03F8C000,
+		0x07FCC000,
+		0x07FCC000,
+		0x07FCC000,
+		0x03F8C000,
+		0x00018000,
+		0x1FFF0000
+		
+	    };
+
+	    ULONG *src = (fpen != bpen) ? radio_data2 : radio_data1;
+	    ULONG *dest = (ULONG *)tbm.Planes[0];
+	    
+	    WORD y;
+	
+	    for(y = 0; y < 9 * 2; y++)
+	    {
+	    	ULONG gfx = *src++;
+		
+	        *dest = AROS_LONG2BE(gfx);
+		dest += (tbm.BytesPerRow / 4);
+	    }	    
+	}
+	
+#endif
 
 	image->LeftEdge=-2;
 	image->TopEdge=-1;
@@ -352,7 +424,11 @@ int x1,y1,x2,y2;
 	    for(y = 0; y < 7; y++)
 	    {
 	    	UWORD gfx = *src++;
-	        *dest = AROS_WORD2BE(gfx);
+		
+		/* no need to fix endianess here, because the read above plus the write
+		   below cause two byte swappings on little endian machines => it ends
+		   up as it was in src = big endian = correct */
+	        *dest = gfx; /* AROS_WORD2BE(gfx); */
 		dest += (tbm.BytesPerRow / 2);
 	    }
 	}
