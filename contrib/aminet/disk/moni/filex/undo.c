@@ -173,7 +173,7 @@ BOOL Redo( struct FileData *FD )
 				DD->Flags |= DD_HEXEDITPOS;
 				SetCursor(u->pos, DD);
 			}
-			FD->Mem[u->pos]=u->wert;
+			FD->Mem[u->pos]=u->neuwert;
 			AllDisplayChar( FD, FD->Undos[ FD->UndoTiefe ].pos );
 			UpdateAllStatusZeilen( FD );
 			if( DD ) SetCursor(u->pos+1, DD);
@@ -185,7 +185,7 @@ BOOL Redo( struct FileData *FD )
 				DD->Flags &= ~DD_HEXEDITPOS;
 				SetCursor(u->pos, DD);
 			}
-			FD->Mem[u->pos]=u->wert;
+			FD->Mem[u->pos]=u->neuwert;
 			AllDisplayChar( FD, FD->Undos[ FD->UndoTiefe ].pos );
 			UpdateAllStatusZeilen( FD );
 			break;
