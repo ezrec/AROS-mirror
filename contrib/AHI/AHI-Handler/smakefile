@@ -1,0 +1,13 @@
+
+
+dist:
+	smake clean
+	dmake -f AHI-Handler.DICE -DVMAKEPORT " "
+	smake clean
+
+clean:
+	--delete \#?.(o|lnktmp|info) AHI-Handler-protos.h QUIET
+
+allclean:
+	smake clean
+	--delete AHI:User/L/AHI-Handler

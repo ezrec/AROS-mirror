@@ -1,0 +1,48 @@
+PROJECT= AHI-Handler
+DIR= 
+SRCS= main.c
+HDRS= 
+EXTRAS= 
+PDEFAULT= 
+EXEDIR= AHI:User/L/
+OD= 
+PRECOMP= 
+TYPE= Normal
+RUN= 
+CLIARGS= 
+CFLAGS= -3.0 -proto -R -r -// -f 
+
+#### AUTOMATICALLY GENERATED - DO NOT EDIT BELOW THIS LINE
+# $VER: Normal.DMakefile 3.2 (2.11.94)
+PROTOS= $(OD)$(PROJECT)-protos.h
+EXE= $(EXEDIR)$(PROJECT)
+COMPFLAGS = -no-env $(CFLAGS) $(OD:"*":-I*) $(PRECOMP:"*.h":"-HT:%1.m=%1.h") $(VMAKEPORT:"*":"-R0 *")
+PCOMPFILE = $(PRECOMP:"*.h":"T:*.m")
+
+OBJS= $(SRCS:"*.c":"$(OD)*.o") $(SRCS:"*.a":"$(OD)*.o")
+
+all: $(PCOMPFILE) $(PROTOS) $(EXE)
+
+nopro: $(EXE)
+
+$(EXE): $(OBJS)
+    fwrite $(OD)$(PROJECT).lnktmp $(OBJS)
+    dcc $(COMPFLAGS) @$(OD)$(PROJECT).lnktmp -o %(left)
+
+$(OBJS) : $(SRCS)
+    dcc %(right) -o %(left) -c $(COMPFLAGS)
+
+$(PROTOS) : $(SRCS)
+    -delete %(left)
+    makeproto -o %(left) %(right)
+
+$(PCOMPFILE:"":"CANT.EXIST.RULE") : $(HDRS)
+    -delete %(left)
+
+clean:
+    -delete $(OBJS) $(PROTOS) $(PCOMPFILE)
+
+relink: rmexe $(EXE)
+
+rmexe:
+    -delete $(EXE)

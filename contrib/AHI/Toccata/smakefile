@@ -1,0 +1,75 @@
+#
+# $Id$
+# $Log$
+# Revision 1.1  2003/03/12 12:53:13  chodorowski
+# Initial revision
+#
+# Revision 1.6  2002/01/03 09:02:35  martin
+# smake clean now deletes toccata.library too.
+#
+# Revision 1.5  2002/01/03 09:01:58  martin
+# Tweaked smakefile so I could build a binary.
+#
+# Revision 1.4  2002/01/03 08:51:06  martin
+# Imported RCS archive to the AHI CVS tree.
+# Imported the last source snapshot I got from Teemu.
+#
+# Revision 1.3  1997/07/27 22:07:32  lcs
+# Last check-in, Leviticus signing off... ;)
+#
+# Revision 1.2  1997/06/29 03:04:02  lcs
+# RawPlayback() seems to work now!
+#
+# Revision 1.1  1997/06/25 19:45:09  lcs
+# Initial revision
+#
+#
+
+DEST	= toccata.library
+OBJECTS	= libinit.o toccata.o slaveproc.o stubs.o 
+RCSFILES= libinit.c slaveproc.c smakefile stubs.a toccata.c toccata.h
+
+VERSION = 12
+REVISION= 1000
+VSTRING = toccata.library 12.1000 (9.9.97) ©1997 Martin Blom & Teemu Suikki. Emulation library using AHI.
+
+CFLAGS	= CPU=68060 SAVEDS\
+PARAMS=REGISTER LIBCODE NOSTACKCHECK DEBUG=FULL STRINGMERGE\
+DATA=NEAR NOVERSION UTILITYLIB OPTIMIZE OPTTIME OPTSCHED
+
+AFLAGS  = SYMDEBUG LINEDEBUG QUIET NOEXE OPT NRQBPSMD INCPATH=Include:
+
+LFLAGS	= \
+LIBFD FD:toccata_lib.fd NOICONS SMALLDATA SMALLCODE \
+LIBVERSION $(VERSION) LIBREVISION $(REVISION) LIBID "$(VSTRING)"
+
+all:		$(DEST)
+
+$(DEST):	$(OBJECTS)
+	slink $(LFLAGS) TO $@ FROM lib:libent.o $(OBJECTS) \
+		LIB LIB:sc.lib LIB:amiga.lib
+	slink toccata.library to $(DEST) nodebug
+	--flushmem
+
+.c.o:
+	sc $(CFLAGS) $*.c
+
+.a.o:
+  	phxass $(AFLAGS) $*.a
+
+libinit.o:	libinit.c
+	sc $(CFLAGS) DEF ONE_GLOBAL_SECTION $<
+
+toccata.o:	toccata.c toccata.h version.h
+slaveproc.o:	slaveproc.c toccata.h
+stubs.o:	stubs.a
+version.h:	toccata.c toccata.h
+	echo >$@ "const static char VersTag[] = *"$$VER: $(VSTRING)*"" NOLINE
+	echo >>$@ ";"
+
+ci:
+	ci -l $(RCSFILES)
+
+clean:
+	--delete \#?.o \#?.tmp \#?.info version.h $(DEST) QUIET
+
