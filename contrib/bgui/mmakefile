@@ -14,7 +14,7 @@ CP = cp
 RM = rm
 #DEFINES should really not define ENHANCED but for AROS it's fine.
 DEFINES = -D_AROS -DENHANCED
-MAKE = make
+#MAKE = make
 ECHO = echo
 
 BINDIR = $(AROSDIR)
