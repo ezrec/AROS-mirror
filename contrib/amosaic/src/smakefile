@@ -8,7 +8,7 @@
 .c.o:
 		SC $(OPTIONS) OBJNAME=$*.o $*.c
 
-OPTIMIZE	= OPTIMIZE
+OPTIMIZE	= #OPTIMIZE
 #DEBUGOPT	= DEBUG=FULLFLUSH
 
 OPTIONS 	= ANSI $(OPTIMIZE) $(DEBUGOPT)
@@ -39,8 +39,8 @@ local:		Mosaic-local
 dnet:		Mosaic-dnet
 
 AMosaic_rev.h:	gui.h globals.h includes.h Mosaic.h htmlgad.h protos.h spinner.h globals.c mui.c fonts.c history.c gui-documents.c globalhist.c gui.c gui-dialogs.c main.c HTML_img.c picread.c rexx.c spinner.c HTMLamiga.c HTMLlists.c HTMLparse.c HTMLformat.c HTMLimages.c	HTML.c TO_HTML.c TO_HTML.h HTML.h  HTMLamp.h  htmlgad.h  HTMLP.h  TextEditField.c $(WWWAMITCP)
-		echo >> Bump.log "Bumpint $@ because of change in $?"
-		bumprev 14 AMosaic
+#		echo >> Bump.log "Bumpint $@ because of change in $?"
+#		bumprev 14 AMosaic
 
 Version.c:	AMosaic_rev.h
 		sc $@
@@ -51,7 +51,7 @@ Mosaic-dnet:	$(OBJS) smakefile  $(WWWDNET) mo-www.o socketbase.o
 		delete $@.lnk QUIET
 
 Mosaic-amitcp:	$(OBJS) smakefile $(HMTL) $(WWWAMITCP) mo-www.o
-		SC link pname $@ $(OBJS) mo-www.o lib  $(WWWAMITCP) $(NETAMITCP) $(DEB)
+		SC link pname $@ $(OBJS) mo-www.o lib  $(WWWAMITCP) $(NETAMITCP) $(DEB) //mui/libs/muimaster/muimaster.lib
 		delete $@.lnk QUIET
 
 Mosaic-as225:	$(OBJS) smakefile  $(WWWAS225) mo-www.o as225.o
@@ -60,7 +60,7 @@ Mosaic-as225:	$(OBJS) smakefile  $(WWWAS225) mo-www.o as225.o
 		delete $@.lnk QUIET
 
 mosaic.gst:	includes.h
-		SC NOVER NOICONS NOOBJNAME IDLEN=68 MAKEGST=$@ includes.c
+#		SC NOVER NOICONS NOOBJNAME IDLEN=68 MAKEGST=$@ includes.c
 
 clean:
 		delete *.o *! mosaic-local mosaic-dnet mosaic-as225 mosaic-amitcp *.lnk FORCE

@@ -1,18 +1,18 @@
 VERSION		EQU	14
-REVISION	EQU	1685
+REVISION	EQU	1687
 
 DATE	MACRO
 		dc.b '2.4.2002'
 		ENDM
 
 VERS	MACRO
-		dc.b 'AMosaic 14.1685'
+		dc.b 'AMosaic 14.1687'
 		ENDM
 
 VSTRING	MACRO
-		dc.b 'AMosaic 14.1685 (2.4.2002)',13,10,0
+		dc.b 'AMosaic 14.1687 (2.4.2002)',13,10,0
 		ENDM
 
 VERSTAG	MACRO
-		dc.b 0,'$VER: AMosaic 14.1685 (2.4.2002)',0
+		dc.b 0,'$VER: AMosaic 14.1687 (2.4.2002)',0
 		ENDM

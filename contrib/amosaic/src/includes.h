@@ -30,9 +30,9 @@
 
 /* MUI */
 #define MUI_OBSOLETE
+#ifdef _AROS
 #define MUIMASTER_NAME "muimaster.library"
 #include <libraries/mui.h>
-#ifdef _AROS
 #include <classes/application.h>
 #include <classes/area.h>
 #include <classes/bitmap.h>
@@ -45,6 +45,12 @@
 #include <classes/virtgroup.h>
 #include <classes/window.h>
 #include <priv/Image.h>
+#else
+#ifdef USE_ZUNE
+#include <mui.h>
+#else
+#include <libraries/mui.h>
+#endif
 #endif
 
 /* System */

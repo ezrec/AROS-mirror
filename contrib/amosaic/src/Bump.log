@@ -1599,3 +1599,5 @@ Bumpint AMosaic_rev.h because of change in gui.h globals.h includes.h Mosaic.h h
 Bumpint AMosaic_rev.h because of change in includes.h
 Bumpint AMosaic_rev.h because of change in includes.h
 Bumpint AMosaic_rev.h because of change in /libwww2/www.lib
+Bumpint AMosaic_rev.h because of change in includes.h
+Bumpint AMosaic_rev.h because of change in includes.h mui.c

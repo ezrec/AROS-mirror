@@ -188,12 +188,12 @@ BOOL HTMLGadClFree(struct MUI_CustomClass *mcc)
 	MUI_DeleteCustomClass(mcc);
 	return 0;
 }
-
+#ifndef USE_ZUNE
 ULONG __stdargs DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
 {
 	return(DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL));
 }
-
+#endif
 /*************** INSTANCE HANDLING (METHODS) *************/
 /*
 ** AskMinMax method will be called before the window is opened

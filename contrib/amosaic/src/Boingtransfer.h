@@ -3,7 +3,11 @@
 #include <dos/dosextens.h>
 #include <dos/dostags.h>
 #include <exec/execbase.h>
+#ifndef USE_ZUNE
 #include <libraries/mui.h>
+#else
+#include <mui.h>
+#endif
 #include <math.h>
 #include <proto/dos.h>
 #include <proto/exec.h>

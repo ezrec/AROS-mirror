@@ -3,7 +3,12 @@
 
 #include <exec/types.h>
 #include <proto/graphics.h>
+
+#ifdef USE_ZUNE
+#include <mui.h>
+#else
 #include <proto/muimaster.h>
+#endif
 
 typedef struct TextFont XFontStruct;
 typedef struct Hook XtCallbackList;

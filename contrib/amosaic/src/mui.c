@@ -2064,11 +2064,13 @@ VOID fail(APTR app,char *str)
 	if (app)
 		MUI_DisposeObject(app);
 
+#if defined(USE_ZUNE) && !defined(_AROS)
+#else
 	if (MUIMasterBase){
 		CloseLibrary(MUIMasterBase);
 		MUIMasterBase = NULL;
 		}
-
+#endif
 	if (DataTypesBase){
 		CloseLibrary (DataTypesBase);
 		DataTypesBase = NULL;
@@ -2088,10 +2090,54 @@ VOID fail(APTR app,char *str)
 
 extern int lib_version;
 
+#if defined(USE_ZUNE) && !defined(_AROS)
+
+/* On AmigaOS we build a fake library base, because it's not compiled as sharedlibrary yet */
+#include "muimaster_intern.h"
+#include "prefs.h"
+
+int openmuimaster(void)
+{
+    static struct MUIMasterBase_intern MUIMasterBase_instance;
+    MUIMasterBase = (struct Library*)&MUIMasterBase_instance;
+
+    MUIMasterBase_instance.sysbase = *((struct ExecBase **)4);
+    MUIMasterBase_instance.dosbase = (void*)OpenLibrary("dos.library",37);
+    MUIMasterBase_instance.utilitybase = (void*)OpenLibrary("utility.library",37);
+    MUIMasterBase_instance.aslbase = OpenLibrary("asl.library",37);
+    MUIMasterBase_instance.gfxbase = (void*)OpenLibrary("graphics.library",37);
+    MUIMasterBase_instance.layersbase = OpenLibrary("layers.library",37);
+    MUIMasterBase_instance.intuibase = (void*)OpenLibrary("intuition.library",37);
+    MUIMasterBase_instance.cxbase = OpenLibrary("commodities.library",37);
+    MUIMasterBase_instance.keymapbase = OpenLibrary("keymap.library",37);
+    MUIMasterBase_instance.gadtoolsbase = OpenLibrary("gadtools.library",37);
+    __zune_prefs_init(&__zprefs);
+
+    return 1;
+}
+
+void closemuimaster(void)
+{
+}
+
+#undef SysBase
+#undef IntuitionBase
+#undef GfxBase
+#undef LayersBase
+#undef UtilityBase
+
+#endif
+
+
 VOID init(VOID)
 {
+#if defined(USE_ZUNE) && !defined(_AROS)
+
+  openmuimaster();
+#else
 	if (!(MUIMasterBase = OpenLibrary(MUIMASTER_NAME,8)))
 		fail(NULL,"Failed to open "MUIMASTER_NAME".");
+#endif
 
 	if (lib_version >= 39) {
 		if (!(DataTypesBase = OpenLibrary("datatypes.library", 0L)))
@@ -2144,4 +2190,7 @@ void SetSearchIndex(long state)
 	set(SearchIndex,MUIA_ShowMe,state);
 }
 
+#ifndef _AROS
+__near
+#endif
 LONG __stack = 32768;  /* Make it big for egs users */
