@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/07/03 20:58:42  bergers
+ * Automatically installs library and test program in AROS work directory.
+ *
  * Revision 42.3  2000/07/02 04:32:45  bergers
  * Removed a noisy warning.
  *
@@ -219,7 +222,7 @@ typedef struct {
 **      An array of these structures must be passed at object-create time.
 **/
 #ifdef _AROS
-#warning Deactivated the following typedef
+//#warning Deactivated the following typedef
 #else
 typedef struct {
         UBYTE                   *rc_Name;         /* Command name. */

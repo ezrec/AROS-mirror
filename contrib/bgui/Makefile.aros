@@ -19,6 +19,7 @@ ECHO = echo
 
 BINDIR = $(TOP)/bin/linux-i386/AROS
 LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
+AROSLIBDIR = $(TOP)/bin/linux-i386/AROS/Libs
 
 OS_INCLUDES_DIR = $(BINDIR)/Include
 INCLUDES_DIR = $(BINDIR)/Include
@@ -235,6 +236,8 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
 	      o/plgroupclasses$(o) o/endtag.o \
 	      -static -i -L$(LIBDIR) -lamiga -larosc -larosm -o $@
+	@$(ECHO) Installing bgui.library...
+	@$(CP) $@ $(AROSLIBDIR)/bgui.library
 
 main_o=o/lib$(o) o/libfunc$(o) o/task$(o) o/request$(o) \
 	o/misc$(o) o/bgui_locale$(o) o/miscc$(o)

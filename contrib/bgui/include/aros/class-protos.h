@@ -302,7 +302,10 @@ extern void RenderText(struct BaseInfo *, UBYTE *, struct IBox *);
 
 extern BOOL OS30;
 extern VOID InitLocale(void);
+#ifdef _AROS
+#else
 extern SAVEDS ASM struct Library *LibInit(REG(a0) BPTR, REG(a6) struct ExecBase *);
+#endif
 extern SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *, REG(d0) ULONG);
 extern SAVEDS ASM BPTR LibClose(REG(a6) struct Library *);
 extern SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *);
