@@ -281,7 +281,6 @@ def buildWWW():
     copy( os.path.join( SRCROOT, 'images/sourceforge.png' ), imagepath )
     copy( os.path.join( SRCROOT, 'images/amigados-online-reference-manual.png' ), imagepath )
     copy( os.path.join( SRCROOT, 'targets/www/images/trustec-small.png' ), imagepath )
-    copy( os.path.join( SRCROOT, 'targets/www/images/sourceforge-small.png' ), imagepath )
     copy( os.path.join( SRCROOT, 'targets/www/images/bullet.png' ), imagepath )
     copy( os.path.join( SRCROOT, 'targets/www/images/aros.png' ), imagepath )
 
