@@ -85,7 +85,7 @@ def SOF(self, marker):
     for i in range(6, len(s), 3):
 	t = s[i:i+3]
 	# 4-tuples: id, vsamp, hsamp, qtable
-	self.layer.append(t[0], ord(t[1])/16, ord(t[1])&15, ord(t[2]))
+	self.layer.append((t[0], ord(t[1])/16, ord(t[1])&15, ord(t[2])))
 
 def DQT(self, marker):
     #
