@@ -11,6 +11,12 @@
 
 #include <exec/types.h>
 
+#elif defined __AROS__
+#include <exec/types.h>
+
+typedef unsigned short USHORT;
+typedef short          SHORT;
+
 #else /* AMIGA */
 
 typedef unsigned short USHORT;
