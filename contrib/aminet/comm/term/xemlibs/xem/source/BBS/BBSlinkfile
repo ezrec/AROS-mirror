@@ -1,0 +1,28 @@
+Define __CXM33=__UCXM33
+Define __CXD33=__UCXD33
+Define __CXM22=__UCXM22
+Define __CXD22=__UCXD22
+ROOT
+lib:libent.o
+lib:libinit.o
+obj:BBSfuncs.o
+obj:BBS_ESCfuncs.o
+obj:BBS_CSIfuncs.o
+obj:BBS_Suppfuncs.o
+obj:BBS_hidden.o
+obj:utils.o
+LIB
+lib:amiga.lib
+lib:sc.lib
+TO
+;ram:xembbs.library
+DH1:lrc/code/xem/xembbs.library
+LibPrefix _
+LibFD DH1:lrc/ownincs/xem.fd
+LibVersion 4 LibRevision 4
+Batch
+NoDebug
+;AddSym
+SmallData
+SmallCode
+NoIcons

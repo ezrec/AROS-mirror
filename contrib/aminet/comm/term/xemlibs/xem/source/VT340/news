@@ -1,0 +1,36 @@
+
+                         xemvt340.library  History
+                        ---------------------------
+
+v4.3   (29.1.93)
+----
+- der VT340 verfügt nun über ein optimiertes Scrolling, dh es werden
+  nur die Bitplanes gescrollt, in denen auch etwas steht..
+
+
+v4.4   (1.3.93)
+----
+- Die Versions-Nummer der v4.3 war irrtümlich auf 5.0 gesetzt..
+
+- Das optimierte Scrolling hatte noch einen kleinen Bug.
+  Wenn der Bildschirm leer war und in der letzten Zeile mit dem BOLD-
+  Attribut etwas geschrieben wurde, so wurde fälschlicherweise eine
+  BitPlane zu wenig gescrollt..
+
+- Das Cursor-Blinken war vorher mittels VBR-Interrupts gesteuert. Dies
+  bereitete einige Timing-Probleme. Nun habe ich den Server(Handler?)
+  so umgekrempelt, dass er nun das timer.device benutzt, um den `Takt'
+  anzugeben. Das spart einen separaten Task und ausserdem wird so
+  nur dann geblinkt, wenn die Console `ready' ist, da die Funktion
+  XEmulatorSignal() ja nur benutzt werden kann, wenn das Comm-Proggy
+  sich in der Main-Schleife befindet. Während Downloads und anderen
+  zeitkritischen Angelegenheiten klaut das Cursor-Blinken also
+  keine CPU-Zeit.. Zufrieden..??
+
+- Nach einigen berechtigen Zweifeln betreffs wbench Kompatibilität habe
+  ich dem xemvt340 einen Display-Manager aufgepfropft. Der achtet nun
+  darauf, dass xemvt340 evtl. bestehende Ränder des Windows(: nicht
+  verletzt werden. Die eigentlichen Funktionen arbeiten wie vorher..
+
+
+ -Ueli   (Ueli_Kaufmann@augs1.adsp.sub.org)

@@ -1,0 +1,100 @@
+
+
+
+                            about this archive:
+                            -------------------
+
+
+This archive contains the newest/latest versions of
+the following xem.libraries:
+
+
+
+short description:
+------------------
+
+ xemascii.library   a pure and simple ascii/tty emulator..
+
+/********************/
+
+ xemamiga.library   the amigas console.device embedded in an xem.lib..
+                     it's 100% compatible because it uses the original..
+
+/********************/
+
+ xembbs.library     a simple MS_ansi.sys compatible emulator..
+
+/********************/
+
+ xemvt340.library   a DEC compatible terminal supporting:
+                    - VT52, VT100, VT220, VT300 series.
+                    - technical, graphics, iso, dec, us-ascii fonts/registers.
+                    - display buffers full text AND text-styles.
+                      (in the next release, it also supports page commands)
+                    - selective erasing in line/display.
+                    - very stable. (as far as I could test it..) 
+
+                    In the next release:
+                    - full page support.
+                    - tex 4010/4014 support.
+                    - less gurus. (if YOU send me bug-reports)
+
+      DEC                 Amiga
+      ---                 -----
+      Arrow keys          Arrow keys
+    
+      PF1                 Numpad [ on Amiga 500/2000
+      PF2                 Numpad ] on Amiga 500/2000
+      PF3                 Numpad / on Amiga 500/2000
+      PF4                 Numpad * on Amiga 500/2000
+
+      F1 (Hold Screen)             F1
+      F2 (Print Screen)            F2
+ CTRL F2 (Auto Print)         CTRL F2
+  ALT F2 (Print Controlled)    ALT F2
+      F3 (Set Up)                  F3
+      F4 (Data/Talk)               F4
+      F5 (Send Break)              F5
+ CTRL F5 (Send Answer)        CTRL F5
+SHIFT F5 (Disconnect)        SHIFT F5
+
+      F6 - F20            F6 - F20 on all Amigas
+    
+      HELP                Help on all Amigas
+      DO                  Shifted-Help on all Amigas
+
+      FIND                Shifted-Numpad 7 on all Amigas
+      INSERT              Shifted-Numpad 8 on all Amigas
+      REMOVE              Shifted-Numpad 9 on all Amigas
+      SELECT              Shifted-Numpad 4 on all Amigas
+      PREV SCREEN         Shifted-Numpad 5 on all Amigas
+      NEXT SCREEN         Shifted-Numpad 6 on all Amigas
+
+/********************/
+
+
+
+It also contains the includes you need to add
+xem-support in your own terminal proggy..
+
+
+
+
+
+
+ Docs/Readmes:
+ -------------
+This time, there no docs for the emulators, sorry.
+As soon as I can I write them in german. I hope there
+is someone that can translate it to english.
+
+
+
+
+
+
+ Send bugreports/captures to:
+ Z-NET:  U.KAUFMANN@LINK-CH1.ZER
+usenet:  Ueli_Kaufmann@augs1.adsp.sub.org
+
+  BB   Ueli

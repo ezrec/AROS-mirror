@@ -1,0 +1,21 @@
+##base _XEmulatorBase
+##bias 30
+XEmulatorSetup(xem_io)(a0)
+XEmulatorOpenConsole(xem_io)(a0)
+XEmulatorCloseConsole(xem_io)(a0)
+XEmulatorCleanup(xem_io)(a0)
+XEmulatorWrite(xem_io, string, len)(a0, a1, d0)
+XEmulatorSignal(xem_io, signal)(a0, d0)
+XEmulatorHostMon(xem_io, hostData, len)(a0, a1, d0)
+XEmulatorUserMon(xem_io, buf, len, imsg)(a0, a1, d0, a2)
+XEmulatorOptions(xem_io)(a0)
+XEmulatorClearConsole(xem_io)(a0)
+XEmulatorResetConsole(xem_io)(a0)
+XEmulatorResetTextStyles(xem_io)(a0)
+XEmulatorResetCharset(xem_io)(a0)
+XEmulatorGetFreeMacroKeys(xem_io, qualifier)(a0, d0)
+XEmulatorMacroKeyFilter(xem_io, list)(a0, a1)
+XEmulatorInfo(xem_io, type)(a0, d0)
+XEmulatorPreferences(xem_io, fileName, mode)(a0, a1, d0)
+XEmulatorNewSize(xem_io, frame)(a0, a1)
+##end

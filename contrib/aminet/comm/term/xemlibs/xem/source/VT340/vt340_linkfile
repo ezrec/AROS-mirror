@@ -1,0 +1,43 @@
+Define __CXM33=__UCXM33
+Define __CXD33=__UCXD33
+Define __CXM22=__UCXM22
+Define __CXD22=__UCXD22
+ROOT
+lib:libent.o
+lib:libinit.o
+obj:VT340_funcs.o
+obj:VT340_writecon.o
+obj:VT340_VT52funcs.o
+obj:VT340_ESCfuncs.o
+obj:VT340_CSIfuncs.o
+obj:VT340_transfer.o
+obj:VT340_TEKfuncs.o
+obj:VT340_Suppfuncs.o
+obj:VT340_ParseInit.o
+obj:VT340_hidden.o
+obj:VT340_page.o
+; obj:VT340_raster.o
+; obj:VT220_stretch.o
+obj:VT340_charloc.o
+obj:VT340_ASCII.o
+obj:VT340_graphics.o
+obj:VT340_technical.o
+obj:VT340_DECsuppl.o
+obj:VT340_ISOsuppl.o
+obj:utils.o
+LIB
+lib:amiga.lib
+lib:sc.lib
+lib:debug.lib
+TO
+DH1:lrc/code/xem/xemvt340.library
+;ram:xemvt340.library
+LIBPREFIX _
+LIBFD DH1:lrc/ownincs/xem.fd 
+LibVersion 4 LibRevision 4
+Batch
+;AddSym
+NoDebug
+SmallData
+SmallCode
+NoIcons

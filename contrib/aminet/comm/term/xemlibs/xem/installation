@@ -1,0 +1,7 @@
+
+to use the emulations, just copy the libs-directory into your libs:
+You should also create a directory called xem in ENV: and ENVARC:
+Then copy the env-variables (placed in the env/xem directory)
+in ENV:xem and ENVARC:xem.
+
+Then you can start lrcomm, xcomm or term  and enjoy :)

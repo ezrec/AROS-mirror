@@ -1,0 +1,26 @@
+.ts=8
+/* Prefs for external vt340 */
+/* Command-words are case sensitive..!! */
+
+SetClass	'VT340_8'
+SetIdent	'VT340'
+NewlineMode	'OFF'
+InsertMode	'OFF'
+WrapMode	'OFF'
+CursorVisible	'ON'
+SmoothScroll	'OFF'
+QuickRend	'OFF'
+Use24lines	'OFF'
+AdjustLines	'OFF'
+DestructiveBS	'OFF'
+DestructiveFF	'ON'
+DestructiveDEL	'OFF'
+BackspaceBS	'ON'
+UseISOLatin1	'ON'
+TitleBar	'ON'
+AnsiColors	'ON'
+CursorBlinking	'ON'
+CursorUnderscore	'OFF'
+SaveScreenTo	'ram:screen.asc'
+PrinterName	'prt:'
+AnswerBackMsg	''

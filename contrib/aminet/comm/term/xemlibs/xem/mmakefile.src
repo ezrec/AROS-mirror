@@ -1,0 +1,55 @@
+include $(TOP)/config/make.cfg
+
+LOCALINCLUDES = -I. -I../Include
+
+LIBS := -L$(LIBDIR) -lamiga
+
+
+$(INCDIR)/defines/xem.h : aros/xem_defines.h
+	@$(ECHO) Copying $^ ...
+	@$(CP) $^ $@
+
+$(INCDIR)/proto/xem.h : aros/xem_proto.h
+	@$(ECHO) Copying $^ ...
+	@$(CP) $^ $@
+
+
+$(OBJDIR)/ASCII/%_aros.c : source/ASCII/%.c
+	@$(ECHO) Generating $@...
+	@$(ARCHTOOL) -R include/xem_proto.h  $^ $@ aros/xem_defines_aros.h >/dev/null
+
+$(OBJDIR)/%.o : $(OBJDIR)/aros_src/%_aros.c
+	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES) $(DEFINES)"
+
+
+$(OBJDIR)/%.ol : $(OBJDIR)/aros_src/%_aros.c
+	%compile_q opt="$(CFLAGS) -DLINK_LIB $(LOCALINCLUDES)"
+
+
+DIRS = ASCII
+
+SOURCE_ASCII = ASCII_hidden ASCII_funcs 
+
+OBJDIRS = $(foreach f,$(DIRS),$(OBJDIR)/$(f))
+INTERMEDIATES := $(foreach f,$(SOURCE_ASCII),$(OBJDIR)/ASCII/$(f)_aros.c)
+
+DEPS := $(foreach f,$(FILES),$(OBJDIR)/$(f).d)
+
+#MM- aminet-comm-term-xem : linklibs-aminet-comm-term-xem
+#MM linklibs-aminet-comm-term-xem : linklibs setup-xem
+
+#First all intermediate files MUST be created so there is a 'defines' file!
+linklibs-aminet-comm-term-xem: $(INTERMEDIATES) includes-copy
+
+includes-copy: $(INCDIR)/proto/xem.h $(INCDIR)/defines/xem.h
+
+#MM
+setup-xem :
+	%mkdirs_q $(AROS_INCLUDES) $(OBJDIRS)
+	%mkdirs_q $(AROS_LIB) $(AROS_LIBS) 
+
+clean ::
+	-$(RM) $(INTERMEDIATES) $(OBJS) 
+
+%common
+%include_deps
