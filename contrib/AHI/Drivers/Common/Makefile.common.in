@@ -72,7 +72,7 @@ distclean:	clean
 maintainer-clean: distclean
 
 install:	all
-	$(INSTALL) --directory $(PREFIX)/Devs/AHI $(PREFIX)/Devs/AudioModes
+	$(INSTALL) -d $(PREFIX)/Devs/AHI $(PREFIX)/Devs/AudioModes
 	$(INSTALL_PROGRAM) $(DRIVER) $(PREFIX)/Devs/AHI/
 	$(INSTALL_DATA) $(MODEFILE) $(PREFIX)/Devs/AudioModes/
 
@@ -83,7 +83,7 @@ revup:
 	@cat $(srcdir)/version.rev
 
 bindist:	all
-	$(INSTALL) --directory $(DRIVERDIR) $(MODEFILEDIR)
+	$(INSTALL) -d $(DRIVERDIR) $(MODEFILEDIR)
 
 	$(INSTALL_PROGRAM) $(DRIVER) $(DRIVERDIR)/$(DRIVER)
 	$(STRIP) $(DRIVERDIR)/$(DRIVER)
