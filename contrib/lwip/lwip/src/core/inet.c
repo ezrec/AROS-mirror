@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: inet.c,v 1.1 2002/05/27 01:20:03 henrik Exp $
+ * $Id: inet.c,v 1.2 2002/06/10 11:11:47 chodorowski Exp $
  */
 
 /*-----------------------------------------------------------------------------------*/
@@ -49,7 +49,6 @@
 #include "lwip/def.h"
 #include "lwip/inet.h"
 
-
 /*-----------------------------------------------------------------------------------*/
 /* chksum:
  *
@@ -66,7 +65,8 @@ chksum(void *dataptr, int len)
   u32_t acc;
     
   for(acc = 0; len > 1; len -= 2) {
-    acc += *((u16_t *)dataptr)++;
+  	u16_t *dat = (u16_t *)dataptr;
+    acc += *dat++;
   }
 
   /* add up any odd byte */
