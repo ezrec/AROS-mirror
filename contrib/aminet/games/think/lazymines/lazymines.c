@@ -177,11 +177,7 @@ main (
    
    if (initialize ())
    {
-#ifdef _AROS
-      srand (time (NULL));
-#else
       srand48 (time (NULL));
-#endif
       load_high_scores (AUTHOR);
       event_loop ();
       save_high_scores ();
