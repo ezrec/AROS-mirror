@@ -1,0 +1,234 @@
+==========
+Contribute
+==========
+
+:Authors:   Adam Chodorowski, Henning Kiel (translation) 
+:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Done. 
+
+.. Contents::
+
+.. START ABSTRACT
+
+Wir brauchen Eure Hilfe!
+========================
+
+Zur Zeit arbeiten nur etwa 6 aktive Entwickler an AROS, was leider
+bedeutet, dass der Fortschritt nur mäßig ist. Wir brauchen einfach
+mehr Entwickler die bei uns mit anfassen! Es gibt noch eine große
+Anzahl an Aufgaben die darauf warten angefasst zu werden. Die
+Palette reicht von kleinen bis großen Aufgaben, von "Hardware Hacking"
+bis hin zur high-level System- und Applikationsprogrammierung.
+Im prinzip ist für jeden was zu tun, der mithelfen will, egal wie
+erfahren Du ist in der Programmierung.
+
+Auch für diejenigen von Euch, die keine Programmierer sind, gibt es
+eine Vielzahl von Tätigkeiten mit denen Ihr uns helfen könnt! Zum
+Beispiel durch das Schreiben von Dokumentation, der Übersetzung von
+Programmen und schon vorhandener Dokumentation in andere Sprachen,
+das Kreieren von hübschen Grafiken und Icons und zu guter letzt
+bei der Suche nach Bugs. Diese Aufgaben sind genau so wichtig wie
+das Programmieren selbst!
+
+.. END ABSTRACT
+
+Freie Aufgaben
+==============
+
+Es folgt eine Liste von Aufgaben bei denen wir noch Hilfe benötigen
+und wo zur Zeit niemand dran arbeitet. Es ist keine vollständige
+Liste, sondern soll nur die zur Zeit wichtigsten Gebiete aufzeigen
+wo wir dringend Hilfe benötigen.
+
+
+Programmierung
+--------------
+
++ Implementierung von fehlenden Libraries, Resources, Devices oder
+  Teilen von diesen. 
+  Siehe detailierten Status Report für mehr Information über welche
+  Teile immer noch fehlen.
+
++ Implementierung oder Verbesserung von Hardware Treibern:
+  
+  - AROS/palm-native:
+    
+    + Graphik
+    + Input (Touchscreen, Buttons)
+    + Sound
+ 
+  - AROS/i386-native:
+    
+    + Spezifische Graphikkarten Treiber (wir gaben zur Zeit nur
+      generische, unbeschleunigte Treiber). Eine kurze Wunschliste:
+      
+      - nVidia TNT/TNT2/GeForce (angefangen, aber nicht komplett) 
+      - S3 Virge
+      - Matrox Millenium
+    
+    + USB
+    + SCSI
+    + Spezifische IDE Chipsets (z.B. Promise UltraATA)
+    + ...alles sonst, was irgendwie brauchbar ist.
+
+  - Generische Drucker Unterstützung.
+ 
+  - Generische Sound Unterstützung. 
+
+    Dies wird wahrscheinlich die Protierung einer aktuellen Version von
+    AHI nach AROS, und die Implementierung des audio.device in Bezug auf
+    AHI bedeuten.
+    Als ersten Schritt wäre die Ausgabe in eine Sound-Datei das einfachste,
+    bevor Treiber für spezielle Hardware, wie SB16, entwickelt werden müssen.
+
++ Portierung auf andere Architekturen. Einige Beispiele für Hardware auf
+  denen bisher kein AROS Port existiert oder gepflegt wird:
+
+  - Amiga,m68k und PPC.
+  - Atari.
+  - HP 300 series.
+  - SUN Sparc.
+  - iPaq.
+  - Macintosh, m68k und PPC.
+
++ Implementierung von fehlenden Preferences Editoren:
+
+  - IControl
+  - Overscan
+  - Palette
+  - Pointer
+  - Printer
+  - ScreenMode
+  - Sound
+  - Time
+  - WBPattern
+  - Workbench 
+ 
++ Verbesserung der C Link Library
+
+  Das bedeutet die Implementierung von fehlenden ANSI (und einigen POSIX)
+  Funktionen in der clib, um die Portierung von UNIX Software (z.B. GCC,
+  make und binutils) zu vereinfachen. Der größte fehlende Teil ist die
+  Unterstützung von POSIX-style Signalen, aber auch anderen Funktionen.
+
++ Implementierung von mehr Datatypes und Verbessung existierender
+
+  Die Anzahl der in AROS verfügbaren Datatypes ist recht klein. Einige
+  Beispiele von Datatypes, die eine Verbesserung benötigen um benutzbar
+  zu werden oder die überhaupt erst mal geschrieben werden müssen sind:
+
+  - picture.datatype
+    
+    + ilbm.datatype
+    + png.datatyoe
+    + jpeg.datatype
+  
+  - amigaguide.datatype
+  - sound.datatype
+    
+    + 8svx.datatype
+
+  - animation.datatype
+    
+    + anim.datatype
+    + cdxl.datatype
+    
+  
++ Portierung von Dritt-Programmen:
+
+  - Text Editoren, wie ViM und Emacs.
+  - Eine Development Tool Chain, bestehend aus GCC, make, binutils und
+    anderen GNU Development Tools.
+  
+
+Dokumentation
+-------------
+
++ Benutzer Dokumentation, bestehend aus einer allgemeinen
+  Benutzeranleitung für Anfänger und Experten, sowie einer Referenz-
+  Dokumentation für alle standard AROS Programme.
+
++ Entwickler Dokumentation. Obwohl dieser Punkt in einem etwas besseren
+  Zustand ist als die Benutzer Dokumentation gibt es immer noch eine
+  Menge zu tun. Z.B. gibt es noch kein gutes Tutorial für Programmier-
+  anfänger. Ein Äquivalent zu den ROM Kernel Manuals für AROS wäre
+  ebenfalls eine schöne Sache.
+
+
+Übersetzungen
+-------------
+
++ Übersetzung von AROS selbst in andere Sprachen. Zur Zeit werden nur die
+  folgenden Sprachen mehr oder weniger unterstützt:
+
+  - Englisch
+  - Deutsch
+  - Schwedisch
+  - Norwegisch
+  - Italienisch
+
++ Übersetzung der Dokumentation und Website in mehr Sprachen. Zur Zeit
+  ist sie komplett nur in Englisch verfügbar. Teile wurden bereits nach
+  Norwegisch und Deutsch übersetzt, es gibt aber noch viel zu tun.
+
+
+Anderes
+-------
+
++ Koordination des GUI Designs für AROS Programme, wie die Prefs, Tools
+  und Utilities.
+
+
+Mitmachen im Team
+=================
+
+Du hast Lust bekommen mitzumachen? Großartig! Melde Dich einfach bei
+einer der `Mailinglisten`__ an (zumindest bei der Hauptliste "aros-dev"
+ist *sehr* zu empfehlen) und fordere einen Zugang zum CVS Repositoryi an.
+Das war's schon. :)
+
+Schreib eine kurze Mail an aros-dev mit einer kleinen Einführung über Dich
+selbst und was Du gerne tun willst um uns zu helfen. Wenn Du irgendwelche
+Probleme hast, zögere nicht sie an die Mailingliste zu schicken oder in den
+`IRC Channels`__ zu fragen. Ebenso, bevor Du mit irgendeiner speziellen
+Arbeit anfängst, teile doch bitte der Mailingliste mit, dass Du damit
+starten möchtest oder aktualisiere die Task Database. Nur so können wir
+vermeiden, dass nicht mehrere Leute an der gleiche Sache arbeiten und
+einer am Ende umsonst gearbeitet hat...
+
+__ ../../contact#mailing-lists
+__ ../../contact#irc-channels
+
+
+Das CVS Repository
+------------------
+
+Das AROS Repository liegt auf einem passwortgeschützen CVS Server, das
+bedeutet, dass Du einen persönlichen Zugang benötigst um Dich an der
+Entwicklung zu beteiligen. Die Passworte sind verschlüsselt und können
+mit unserem `online password encryption tool`__ generiert werden.
+Durch Aufforderung von Amiga Inc. wurden wir angewiesen den anonymen
+Read-Only Zugang zu unserem Repository zu sperren. 
+
+Bitte maile Dein verschlüsseltes Passwort zusammen mit Deinem
+gewünschten Usernamen und deinem realen Namen an `Aaron Digulla`__ und
+warte auf Antwort. Um eine schnelle Antwort zu ermöglichen, benutze
+bitte das Subject "Access to the AROS CVS server" und im Text
+"Please add <username> <password>", z.B.:
+
+    Please add digulla xx1LtbDbOY4/E
+
+Es kann einige Tage in Anspruch nehmen, weil Aaron ziemlich beschäftigt
+ist, also sei geduldig ;-)
+
+Zu Informationen über die Benutzung des AROS CVS Servers, lies bitte
+"`Working with CVS`__". Auch wenn Du schon weisst wie man CVS nutzt ist
+es dennoch nützlich dort rein zu schauen, da es Informationen und Tips
+speziell für das AROS Repository (z.B. zum Login) enthält.
+
+__ http://aros.sourceforge.net/tools/password.html 
+__ mailto:digulla@aros.org?subject=[AROS]
+__ cvs
+ 
