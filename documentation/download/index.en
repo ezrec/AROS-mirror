@@ -98,10 +98,6 @@ Nightly builds
 
 Nightly builds are done, as the name implies, automatically every night directly
 from the CVS tree and contain the latest code. However, they have not been
-tested in any way and can be horrible broken and extremely buggy if your
+tested in any way and can be horribly broken and extremely buggy if your are
 unlucky. Most of the time though, they work fine.
-
-Unfortunately, there are no nightly builds available at this time because of
-problems with the AROS FTP server. We are working to fix this as soon as
-possible...
 
