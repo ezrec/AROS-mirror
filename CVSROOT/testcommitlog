@@ -1,0 +1,3 @@
+#!/bin/sh
+CVSROOT=/home/cvs/aros ; export CVSROOT
+cat commitlog.demo | gawk -f ./commitlog.awk --assign File="%s" --assign Out="./test.commitlog"
