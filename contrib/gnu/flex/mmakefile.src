@@ -6,4 +6,4 @@
 ##MM- contrib-gnu : contrib-gnu-flex
 ##MM- contrib-gnu-flex : development-flex
 
-%fetch_and_build_gnu_development package=flex version=2.5.4a srcdir=flex-2.5.4 patch=yes
+#%fetch_and_build_gnu_development package=flex version=2.5.4a srcdir=flex-2.5.4 patch=yes
