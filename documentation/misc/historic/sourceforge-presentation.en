@@ -1,3 +1,8 @@
+:Author: Adam Chodorowski
+:Copyright: Copyright © 2001, The AROS Development Team
+:Version: $Revision$
+:Date: $Date$
+
 The Amiga Research OS (AROS, http://www.aros.org/) is an effort to implement an
 Open Source and portable operating system that is API compatible (and binary
 compatible on Amiga computers) with AmigaOS 3.1. Originally, it was meant as
