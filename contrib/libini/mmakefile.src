@@ -44,14 +44,14 @@ FUNCS := \
     iniToUpper \
     iniValue
 
-#MM libs-libini-includes : \
-#MM     includes-copy
-#MM- libs-libini-module : linklibs
+#MM- workbench-libs-libini-includes : includes-copy
+#MM- workbench-libs-libini : linklibs
 
 USER_CFLAGS := -I./ -I./include
 
-%build_module mmake=libs-libini-module modname=inifile \
+%build_module mmake=workbench-libs-libini modname=inifile \
     modtype=library files="inifile_init $(INILBFILES) $(FUNCS)" \
     uselibs="amiga arosc rom m"
- 
+
+%copy_includes includes=include/ini.h path=inifile 
 %common
