@@ -1,0 +1,40 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES) -I/usr/include
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(CONTRIBDIR)/Misc/Berger
+ILDFLAGS := -nostartfiles -Xlinker -i -g
+
+FILES := m68kemul kernellibs addressingmodes conditioncodes
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+EXE := $(DESTDIR)/m68kemul
+
+.PHONY : all clean
+
+#MM contrib-misc-m68kemul : setup-contrib-misc-m68kemul contrib-misc-m68kemul-copysamples
+contrib-misc-m68kemul 	: $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-contrib-misc-m68kemul :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+
+#MM
+clean-contrib-misc :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+
