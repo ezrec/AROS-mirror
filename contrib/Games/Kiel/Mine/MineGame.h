@@ -455,6 +455,7 @@ BOOL weiter=TRUE,Abbr=FALSE;
 void Spiel()
 {
 BOOL start=FALSE;
+int oldx=-1, oldy=-1;
 
   /* Init timer */
   finish = FALSE;
@@ -481,37 +482,71 @@ BOOL start=FALSE;
                             time(&tstart);
                           }
 if(mausx<5&&mausy<5)Fehler=loesen();
-                          if((code==SELECTUP)&&(mausx>left)&&(mausy>oben)&&(mausx<maxx)&&(mausy<maxy)&&((mausx-left) % box_width)&&(((mausx-left) % box_width)<(box_width-1))&&((mausy-oben) % box_width)&&(((mausy-oben) % box_width)<(box_width-1)))
+                          if(code==SELECTUP&&oldx!=-1)
                           {
                             Feldx=(mausx-left) / box_width +1;
                             Feldy=(mausy-oben) / box_width +1;
-                            if(Spielfeld[Feldx][Feldy]==GESCHLOSSEN) 
+                            drawfield((oldx-1)*box_width+left+1,(oldy-1)*box_width+oben+1,oldx*box_width+left-1,oldy*box_width+oben-1);
+                            if(Feldx==oldx&&Feldy==oldy)
                             {
-                              if(Karte[Feldx][Feldy])
+                              if(Spielfeld[Feldx][Feldy]==GESCHLOSSEN) 
                               {
-                                Fehler=TRUE;
-                              }
-                              else
-                              {
-                                aufdecken();
+                                if(Karte[Feldx][Feldy])
+                                {
+                                  Fehler=TRUE;
+                                }
+                                else
+                                {
+                                  aufdecken();
+                                }
                               }
                             }
+                            oldx=-1;
+                            oldy=-1;
                           }
                           if((code==SELECTUP)&&(mausx>left+box_width*width/2-25)&&(mausy>5)&&(mausx<left+box_width*width/2+25)&&(mausy<35))
                           {
                             SpielAbbr=TRUE;
                           }
-                          if(code==MENUUP&&(mausx>left)&&(mausy>oben)&&(mausx<maxx)&&(mausy<maxy)&&((mausx-left) % box_width)&&(((mausx-left) % box_width)<(box_width-1))&&((mausy-oben) % box_width)&&(((mausy-oben) % box_width)<(box_width-1)))
+                          if(code==MENUUP&&oldx!=-1)
                           {
                             Feldx=(mausx-left) / box_width +1;
                             Feldy=(mausy-oben) / box_width +1;
-                            switch(Spielfeld[Feldx][Feldy])
+                            if(Feldx==oldx&&Feldy==oldy)
                             {
-                              case GESCHLOSSEN : markesetzen();
-                                                 break;
-                              case MARKE       : markeentfernen();
-                                                 break;
-                              default          : break;
+                              switch(Spielfeld[Feldx][Feldy])
+                              {
+                                case GESCHLOSSEN : markesetzen();
+                                                   break;
+                                case MARKE       : markeentfernen();
+                                                   break;
+                                default          : break;
+                              }
+                            }
+                            else
+                            {
+                              SetAPen(rp,0);
+                              RectFill(rp,(oldx-1)*box_width+2+left,(oldy-1)*box_width+2+oben,oldx*box_width-2+left,oldy*box_width-2+oben);
+                            }
+                            oldx=-1;
+                            oldy=-1;
+                          }
+                          if(code==MENUDOWN&&(mausx>left)&&(mausy>oben)&&(mausx<maxx)&&(mausy<maxy)&&((mausx-left) % box_width)&&(((mausx-left) % box_width)<(box_width-1))&&((mausy-oben) % box_width)&&(((mausy-oben) % box_width)<(box_width-1)))
+                          {
+                            oldx=Feldx=(mausx-left) / box_width +1;
+                            oldy=Feldy=(mausy-oben) / box_width +1;
+                            SetAPen(rp,2);
+                            RectFill(rp,(Feldx-1)*box_width+2+left,(Feldy-1)*box_width+2+oben,Feldx*box_width-2+left,Feldy*box_width-2+oben);
+                          }
+                          if((code==SELECTDOWN)&&(mausx>left)&&(mausy>oben)&&(mausx<maxx)&&(mausy<maxy)&&((mausx-left) % box_width)&&(((mausx-left) % box_width)<(box_width-1))&&((mausy-oben) % box_width)&&(((mausy-oben) % box_width)<(box_width-1)))
+                          {
+                            Feldx=(mausx-left) / box_width +1;
+                            Feldy=(mausy-oben) / box_width +1;
+                            if(Spielfeld[Feldx][Feldy]==GESCHLOSSEN) 
+                            {
+                              drawfield(Feldx*box_width+left-1,Feldy*box_width+oben-1,(Feldx-1)*box_width+left+1,(Feldy-1)*box_width+oben+1);
+                              oldx=Feldx;
+                              oldy=Feldy;
                             }
                           }
                           break;
@@ -558,7 +593,7 @@ char Zeit[30];
             RectFill(rp,(x-1)*box_width+2+left,(y-1)*box_width+2+oben,x*box_width-2+left,y*box_width-2+oben);
 
       sprintf(Zeit,"Fertig! %4d Sek.",(int)(tend-tstart));
-      write_text(left+width*box_width/2-65,oben+height*box_width+20,Zeit,1);
+      write_text(left+width*box_width/2-65,oben+height*box_width+15,Zeit,1);
       if((tend-tstart)<Zeiten[Spielart])
       {
         clearwin();
@@ -566,8 +601,7 @@ char Zeit[30];
         Name_Gad.LeftEdge=(width*box_width+left+right)/2-100;
         AddGadget(Window,&Name_Gad,0);
         RefreshGadgets(&Name_Gad,Window,NULL);
-        sprintf(Zeit,"Fertig! %4d Sek.",(int)(tend-tstart));
-        write_text(left+width*box_width/2-65,oben+height*box_width+20,Zeit,1);
+        write_text(left+width*box_width/2-65,oben+height*box_width+15,Zeit,1);
 
         while(!weiter)
         {

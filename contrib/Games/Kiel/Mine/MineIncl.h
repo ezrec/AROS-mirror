@@ -1,8 +1,13 @@
 #include "../prec.c"
 
 extern struct ExecBase *SysBase;
+extern struct Gadget *endreqglist, *gad;
+extern struct NewGadget gt_endreqfalse, gt_endreqtrue;
 struct IntuitionBase *IntuitionBase;
+struct Library *GadToolsBase;
 struct GfxBase *GfxBase;
+struct Screen *scr;
+APTR vi;
 struct Window *Window;
 struct RastPort *rp;
 struct IntuiMessage *msg;
@@ -14,8 +19,33 @@ void close_lib();
 
 void open_lib()
 {
+struct TagItem ti1[] = {
+  { GA_Immediate, TRUE },
+  { TAG_DONE }
+};
+
   IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library",0L);
   GfxBase = (struct GfxBase *) OpenLibrary("graphics.library",0L);
+  GadToolsBase = OpenLibrary( "gadtools.library", 0L );
+  if (GadToolsBase == NULL)
+  {
+    fprintf(stderr,"Could not open gadtools.library\n");
+    exit(-1);
+  }
+
+  scr = LockPubScreen( NULL );
+  vi = GetVisualInfoA( scr, NULL );
+
+  gt_endreqtrue.ng_VisualInfo = vi;
+  gt_endreqfalse.ng_VisualInfo = vi;
+
+  gad = CreateContext( &endreqglist );
+  if(gad==NULL)
+    printf("CreateContext() failed\n");
+
+  gad = CreateGadgetA( BUTTON_KIND, gad, &gt_endreqtrue, ti1 );
+  gad = CreateGadgetA( BUTTON_KIND, gad, &gt_endreqfalse, ti1 );
+
 }
 
 void open_window(struct NewWindow *newwindow)
@@ -53,15 +83,18 @@ BOOL WinSize(struct Window *Win, LONG x, LONG y)
 {
 ULONG class;
 
-  ChangeWindowBox(Win, 10, 10, x, y);
-  while(1)
+  if(Win->Width!=x && Win->Height!=y)
   {
-    WaitPort(Win->UserPort);
-    msg=(struct IntuiMessage *)GetMsg(Win->UserPort);
-    class=msg->Class;
-    ReplyMsg((struct Message *)msg);
-    if(msg->Class==IDCMP_CHANGEWINDOW)
-      break;
+    ChangeWindowBox(Win, 10, 10, x, y);
+    while(1)
+    {
+      WaitPort(Win->UserPort);
+      msg=(struct IntuiMessage *)GetMsg(Win->UserPort);
+      class=msg->Class;
+      ReplyMsg((struct Message *)msg);
+      if(msg->Class==IDCMP_CHANGEWINDOW)
+        break;
+    }
   }
 return((Win->Width==x) && (Win->Height==y));
 }
@@ -73,6 +106,10 @@ void close_window()
 
 void close_lib()
 {
+  FreeGadgets( endreqglist );
+  FreeVisualInfo( vi );
+  UnlockPubScreen( NULL, scr );
+  CloseLibrary( (struct Library *)GadToolsBase );
   CloseLibrary((struct Library *)IntuitionBase);
   CloseLibrary((struct Library *)GfxBase);
 }

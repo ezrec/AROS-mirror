@@ -29,3 +29,5 @@
 #include <proto/intuition.h>
 #include <proto/console.h>
 #include <aros/machine.h>
+#include <proto/gadtools.h>
+#include <libraries/gadtools.h>

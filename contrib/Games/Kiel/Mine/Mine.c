@@ -89,6 +89,31 @@ struct Gadget Name_Gad = {
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
   &Name_Gad_text,0L,(APTR)&Name_Gad_info,Name_Gad_ID,NULL };
 
+struct Gadget *endreqglist = NULL,
+	      *gad = NULL;
+
+#define ID_ENDREQFALSE 0
+struct NewGadget gt_endreqfalse = {
+  25,20, 60,50, /* ng_LeftEdge ng_TopEdge ng_Width ng_Height */
+  "Nein.", /* ng_GadgetText */
+  NULL, /* ng_TextAttr */
+  ID_ENDREQFALSE, /* ng_GadgetID */
+  PLACETEXT_IN, /* ng_Flags */
+  NULL, /* ng_VisualInfo */
+  NULL  /* ng_UserData */
+};
+
+#define ID_ENDREQTRUE 1
+struct NewGadget gt_endreqtrue = {
+  105,20, 60,50, /* ng_LeftEdge ng_TopEdge ng_Width ng_Height */
+  "Ja.", /* ng_GadgetText */
+  NULL, /* ng_TextAttr */
+  ID_ENDREQTRUE, /* ng_GadgetID */
+  PLACETEXT_IN, /* ng_Flags */
+  NULL, /* ng_VisualInfo */
+  NULL  /* ng_UserData */
+};
+
 struct NewWindow NeuesWindow =
 {
   10,10,350,200,
@@ -275,35 +300,41 @@ BOOL weiter=FALSE,ret=FALSE;
   clearwin();
 
   write_text(20,13,"Wirklich beenden???",2);
-  drawfield(50,25,100,75);
-  write_text(60,55,"Ja.",1);
-  drawfield(110,25,160,75);
-  write_text(115,55,"Nein.",1);
+  AddGList(Window,endreqglist,-1,-1,NULL);
+  RefreshGList(endreqglist,Window,NULL,-1);
+  GT_RefreshWindow(Window,NULL);
   while(!weiter)
   {
     WaitPort(Window->UserPort);
-    msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
-    class=msg->Class;
-    code=msg->Code;
-    mausx=msg->MouseX-Window->BorderLeft;
-    mausy=msg->MouseY-Window->BorderTop;
-    ReplyMsg((struct Message *)msg);
-    switch(class)
+    while((msg = GT_GetIMsg( Window->UserPort )))
     {
-      case IDCMP_MOUSEBUTTONS : if(code==SELECTUP)
-                          {
-                            if((mausx>50)&&(mausy>25)&&(mausx<100)&&(mausy<75))
-                            {
-                              weiter=TRUE;
-                              ret=TRUE;
-  			    }
-                            if((mausx>110)&&(mausy>25)&&(mausx<160)&&(mausy<75))
-                              weiter=TRUE;
-                          }
-                          break;
-      default           : break;
-    }
-  }
+      class = msg->Class;
+      code = msg->Code;
+      switch( class )
+      {
+          case IDCMP_GADGETUP:
+        	switch( ( (struct Gadget *)(msg->IAddress) )->GadgetID )
+        	{
+                  case 0:
+                    weiter=TRUE;
+                    break;
+                  case 1:
+                    ret=TRUE;
+                    weiter=TRUE;
+                    break;
+                  default:
+                    break;
+        	}
+        	break;
+          default:
+        	break;
+      }
+      GT_ReplyIMsg(msg);
+    } /* while((msg = GT_GetIMsg( Window->UserPort )) */
+      
+  } while( !weiter );
+  RemoveGList(Window,endreqglist,-1);
+  GT_RefreshWindow(Window,NULL);
   return(ret);
 }
 
@@ -358,4 +389,5 @@ int main()
   CleanUp();
   return(0);
 }
+
 
