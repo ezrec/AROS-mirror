@@ -542,7 +542,7 @@ class Page (SeriesDocument):
 	self.linkBoxItem = linkBoxItem
 	if linkBoxItem:
 	    for link in mainLinks2.root.order:
-		print link.__dict__
+		#print link.__dict__
 		text = link.name
 		text = RawText (string.replace (text, ' ', '&nbsp;'))
 		if text == linkBoxItem:
@@ -551,7 +551,7 @@ class Page (SeriesDocument):
 		self.linksToFix.append (nl)
 		self.linkbox = self.linkbox + [nl, BR (), RawText ('\n')]
 		for childLink in link.order:
-		    print childLink.__dict__
+		    #print childLink.__dict__
 		    text = childLink.name
 		    text = RawText (string.replace (text, ' ', '&nbsp;'))
 		    if string.find (childLink.data.url,'#') == -1 and text == linkBoxItem:
