@@ -153,7 +153,7 @@ def genPage (db, lib, func):
 	dl.append (('SYNOPSIS', AutoDocItem (list)))
 
 	#print `func.section['FUNCTION']`
-	print func.section.keys ()
+	#print func.section.keys ()
 	dl.append (('FUNCTION', AutoDocItem (func.section['FUNCTION'])))
 	parList = DefinitionList ()
 	for parameter in func.parameters:
