@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.10  2000/08/09 11:40:43  chodorowski
+ * Moved the METHOD macro to bgui_compilerspecific.h.
+ *
  * Revision 42.9  2000/08/09 10:17:26  chodorowski
  * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
  * macros. Some of these files didn't need them at all...
@@ -339,15 +342,6 @@ typedef struct {
    LONG              bf_X, bf_Y;   /* Offsets for fancy backfills. */
 }  BFINFO;
 
-#ifdef _AROS
-  #define METHOD(f,mtype,m) STATIC ASM AROS_UFH3(ULONG, f, \
-                          AROS_UFHA(Class *, cl, A0), \
-                          AROS_UFHA(Object *, obj, A2), \
-                          AROS_UFHA(mtype, m, A1))  
-#else
-  #define METHOD(f,mtype,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) mtype m)
-#endif
-
 #define BGUI_PMB  0x000FF000
 #define BGUI_PB   0x800FF000
 /*
@@ -648,28 +642,28 @@ extern const UBYTE LibID[];
 #else
 //ASM VOID SRectFill(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
 ASM REGFUNC5(VOID, SRectFill,
-        REGPARAM(A0, struct RastPort *, rp),
-        REGPARAM(D0, LONG, l),
-        REGPARAM(D1, LONG, t),
-        REGPARAM(D2, LONG, r),
-        REGPARAM(D3, LONG, b));
+	REGPARAM(A0, struct RastPort *, rp),
+	REGPARAM(D0, LONG, l),
+	REGPARAM(D1, LONG, t),
+	REGPARAM(D2, LONG, r),
+	REGPARAM(D3, LONG, b));
 
 
 //ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
 ASM REGFUNC5(VOID, BRectFill,
-        REGPARAM(A0, struct BaseInfo *, bi),
-        REGPARAM(D0, LONG, l),
-        REGPARAM(D1, LONG, t),
-        REGPARAM(D2, LONG, r),
-        REGPARAM(D3, LONG, b));
+	REGPARAM(A0, struct BaseInfo *, bi),
+	REGPARAM(D0, LONG, l),
+	REGPARAM(D1, LONG, t),
+	REGPARAM(D2, LONG, r),
+	REGPARAM(D3, LONG, b));
 
 
 //ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen);
 ASM REGFUNC4(VOID, RenderBackFillRaster,
-        REGPARAM(A0, struct RastPort *, rp),
-        REGPARAM(A1, struct IBox *, ib),
-        REGPARAM(D0, UWORD, apen),
-        REGPARAM(D1, UWORD, bpen));
+	REGPARAM(A0, struct RastPort *, rp),
+	REGPARAM(A1, struct IBox *, ib),
+	REGPARAM(D0, UWORD, apen),
+	REGPARAM(D1, UWORD, bpen));
 #endif
 
 #endif /* _AROS */
