@@ -1,21 +1,10 @@
 This is *not* a complete TODO list (which would be far to long and depressing),
 but what I think is a minimal set of features that *must* be done before the new
 site goes public.
-
-    
+   
 + Finish the following scripts:
 
   - Status (jobs and size)
-
-+ Better language selection system
-
-  The current system uses the content negatotiation support using the
-  "Multiviews" option available in Apache, which does however have some annoying
-  problems with browsers that do not default to english (for example Internet
-  Explorer). Perhaps it is possible to make this work better with typemap files
-  (generated at build-time), or an explicit language selection by the user could
-  be used (which however requires some sort of session handling to remember the
-  language chosen by the user).
 
 + Generated HTML that does not require CSS support to be displayed correctly.
   
@@ -46,3 +35,4 @@ goes public, but are IMHO not *necessary*:
   introduction/index to a couple of languages.
 + Better build system (not the ad-hoc thing it is now)
 + Nicer looking graphical design.
++ Support for different languages.
