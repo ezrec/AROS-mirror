@@ -1,3 +1,5 @@
+#if 0
+
 /*
   NListview.mcc (c) Copyright 1996 by Gilles Masson
   Registered MUI class, Serial Number: 1d51                            0x9d510020 to 0x9d51002F
@@ -35,3 +37,5 @@ struct NLVData
 };
 
 #endif /* MUI_NListview_priv_MCC_H */
+
+#endif

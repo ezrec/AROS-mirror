@@ -9,7 +9,11 @@
 #include <exec/io.h>
 #include <libraries/dos.h>
 #include <libraries/dosextens.h>
+#ifndef USE_ZUNE
 #include <libraries/mui.h>
+#else
+#include <mui.h>
+#endif
 #include <devices/clipboard.h>
 #include <workbench/workbench.h>
 #include <intuition/intuition.h>
@@ -22,24 +26,51 @@
 #include <proto/layers.h>
 #include <proto/graphics.h>
 #include <proto/utility.h>
+#include <proto/intuition.h>
 #include <clib/alib_protos.h>
 
+#ifdef _AROS
 #include <proto/muimaster.h>
+#endif
+
+#ifdef USE_ZUNE
+#include "muimaster_intern.h"
+#include "support.h"
+extern struct Library *MUIMasterBase;
+#endif
 
 //extern struct TagItem *FindTagItem(Tag,struct TagItem *);
+//#include "private.h"
 
-#include "private.h"
 #include "rev.h"
+
+#include "NListview_mcc.h"
 
 #ifdef __GNUC__
 #include "../NListviews_mcp/NListviews_mcp.h"
+#include "../NList_mcc/NList_mcc.h"
+#include "../common/mcc_common.h"
 #else
 #include "/NListviews_mcp/NListviews_mcp.h"
+#include "/NList_mcc/NList_mcc.h"
+#include "/common/mcc_common.h"
 #endif
 
-#include "mcc_common.h"
-
-#include <MUI/NList_mcc.h>
+struct NLVData
+{
+  Object *LI_NList;
+  Object *PR_Vert;
+  Object *PR_Horiz;
+  Object *Group;
+  LONG   Vert_Attached;
+  LONG   Horiz_Attached;
+  LONG   VertSB;
+  LONG   HorizSB;
+  LONG   Vert_ScrollBar;
+  LONG   Horiz_ScrollBar;
+  BOOL   sem;
+  BOOL   SETUP;
+};
 
 
 /****************************************************************************************/
@@ -274,10 +305,12 @@ ULONG DoSuperNew(struct IClass *cl, Object *obj, ...)
 	return ret;
 }
 #else
+#ifndef USE_ZUNE
 ULONG STDARGS DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
 {
   return(DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL));
 }
+#endif
 #endif
 
 /* static ULONG mNLV_New(struct IClass *cl,Object *obj,Msg msg) */

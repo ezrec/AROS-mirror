@@ -8,13 +8,17 @@
 #ifndef MUI_NListview_MCC_H
 #define MUI_NListview_MCC_H
 
+#ifdef USE_ZUNE
+#include <mui.h>
+#else
 #ifndef LIBRARIES_MUI_H
 #include <libraries/mui.h>
 #endif
-
-#ifndef MUI_NList_MCC_H
-#include <MUI/NList_mcc.h>
 #endif
+
+//#ifndef MUI_NList_MCC_H
+//#include <MUI/NList_mcc.h>
+//#endif
 
 #define MUIC_NListview "NListview.mcc"
 #define NListviewObject MUI_NewObject(MUIC_NListview
