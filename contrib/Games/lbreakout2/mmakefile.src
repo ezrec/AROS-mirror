@@ -14,15 +14,16 @@ lb2_real: $(GENDIR)/$(CURDIR)/.configured
 	@DATADIR=PROGDIR:data $(MAKE) -C $(GENDIR)/$(CURDIR) LIBS='-lSDL -lpng -larosz'
 	@DATADIR=$(EXEDIR)/data $(MAKE) -C $(GENDIR)/$(CURDIR) install
 
-$(GENDIR)/$(CURDIR)/.configured:
-	%mkdirs_q $(GENDIR)/$(CURDIR)
+$(GENDIR)/$(CURDIR)/.configured: mmakefile
+	@%mkdirs_q $(GENDIR)/$(CURDIR)
 	@(\
             cd $(GENDIR)/$(CURDIR);\
+	    $(RM) config.cache; \
 	    SDL_CONFIG=$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-sdl-config \
                 CC=$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros-gcc \
                 $(TOP)/$(CURDIR)/configure --with-highscore-path='$$(DATADIR)' \
                 --with-inst-path='$$(DATADIR)' --disable-audio --disable-sdltest \
-                --disable-network  --bindir=$(EXEDIR) \
+                --disable-network  --bindir=$(EXEDIR) --with-doc-path=$(EXEDIR)/docs\
                 --host=$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros;\
         )
 	@$(ECHO) YES > $@
@@ -30,4 +31,4 @@ $(GENDIR)/$(CURDIR)/.configured:
 #MM lbreakout2-clean :
 lbreakout2-clean :
 	@$(RM) $(GENDIR)/$(CURDIR)/.configured
-	$(MAKE) -C $(GENDIR)/$(CURDIR) clean uninstall
+	@$(MAKE) -C $(GENDIR)/$(CURDIR) uninstall distclean
