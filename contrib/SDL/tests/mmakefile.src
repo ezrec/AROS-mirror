@@ -4,17 +4,39 @@
 
 include $(TOP)/config/make.cfg
 
-FILES  := testsprite
-DATAFILES := icon.bmp
+FILES  := testalpha \
+    	  testbitmap \
+	  testcdrom \
+	  testgamma \
+	  testgl \
+	  testjoystick \
+	  testsprite \
+	  testtimer \
+	  testtypes \
+	  testwin \
+	  testwm
+
+#	  testerror \
+#	  testhread \
+#	  testkeys \
+#	  testlock \
+#	  testpalette \
+#	  testsem \
+#	  testver \
+#	  testvidinfo \
+
+	  
+DATAFILES := icon.bmp picture.xbm sail.bmp sample.bmp sample.wav
 
 EXEDIR := $(CONTRIBDIR)/sdl/test
 EXES   := $(foreach f,$(FILES),$(EXEDIR)/$(f))
 DATAS  := $(foreach f,$(DATAFILES),$(EXEDIR)/$(f))
 
-USE_CLIB_SHARED := yes
+USE_CLIB_SHARED	:= yes
 USE_AMIGALIB    := yes
 USE_AROSLIB     := yes
 USE_SDLLIB  	:= yes
+USE_MLIB    	:= yes
 
 USER_INCLUDES := -I$(AROS_INCLUDES)/SDL
 
@@ -33,6 +55,12 @@ setup ::
 	%mkdirs_q $(EXEDIR)
 
 $(EXEDIR)/%.bmp : %.bmp
+	@$(CP) $< $@
+
+$(EXEDIR)/%.xbm : %.xbm
+	@$(CP) $< $@
+
+$(EXEDIR)/%.wav : %.wav
 	@$(CP) $< $@
 
 %common
