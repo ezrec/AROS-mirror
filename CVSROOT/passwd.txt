@@ -12,7 +12,7 @@ nlorentz:db6KtfPCmtZIQ:Nils Henrik Lorentzen:nlorentz@sn.no:GadTools, Asl, input
 ruppert:aaIqf1gX0RDUU:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 vmc:abw2.qX7kAnnM:Harald Frank:support@isdntown.east.de:Amiga port
 helios:acwZVMiQtI78o:Martin Steigerwald:steigerw@stud.uni-frankfurt.de:Beta tester
-srittau:aaRBXVNGOCKiY:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Gadtools, Docs
+srittau:bcTJngqBSdc4U:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Gadtools, Docs
 laguest:baLtYMMsFjGms:L. A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
 SDuvan:dbfBDWZL8B0q.:Johan Alfredsson:d95duvan@dtek.chalmers.se:Commodities
 bergers:bdKC5UL24VXQI:Stefan Berger:bergers@cip.e-technik.uni-erlangen.de:Math, DOS, Arp
