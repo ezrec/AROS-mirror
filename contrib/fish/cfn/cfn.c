@@ -28,6 +28,8 @@
 #include <devices/input.h>
 #include <dos/dosextens.h>
 #include <dos/exall.h>
+#include <proto/keymap.h>
+#include <proto/utility.h>
 
 #include <aros/oldprograms.h>
 
@@ -41,7 +43,7 @@ char *ver="$VER: cfn 1.0 (21.6.93)  by Andreas Günther";
 
 struct IntuitionBase *IntuitionBase=NULL;
 struct Library *KeymapBase=NULL;
-struct Library *UtilityBase=NULL;
+struct UtilityBase *UtilityBase=NULL;
 ULONG ilock,sig;
 BOOL ready;
 struct InputEvent event, *cur_ev;
@@ -61,7 +63,7 @@ BOOL open_libs()
 {
   IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library",37);
   KeymapBase = OpenLibrary("keymap.library",37);
-  UtilityBase = OpenLibrary("utility.library",37);
+  UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",37);
   return(IntuitionBase!=NULL && KeymapBase!=NULL && UtilityBase!=NULL);
 }
 
@@ -72,7 +74,7 @@ void close_libs()
   if(NULL!=KeymapBase)
     CloseLibrary(KeymapBase);
   if(NULL!=UtilityBase)
-    CloseLibrary(UtilityBase);
+    CloseLibrary((struct Library *)UtilityBase);
 }
 
 
