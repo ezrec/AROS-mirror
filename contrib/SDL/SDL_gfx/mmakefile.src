@@ -1,0 +1,12 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+##MM- contrib-sdl-sdl-gfx : development-SDL_gfx
+
+##MM- development-SDL_gfx : linklibs-SDL
+
+#%fetch_and_build_gnu_development package=SDL_gfx version=2.0.12 patch=yes \
+#    package_repo=http://www.ferzkopp.net/~aschiffler/Software/SDL_gfx-2.0/
+
