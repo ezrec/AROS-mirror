@@ -938,11 +938,14 @@ int tcc_output_file(TCCState *s1, const char *filename)
     dynamic = NULL;
     dynstr = NULL; /* avoid warning */
     saved_dynamic_data_offset = 0; /* avoid warning */
+        
+    if (s1->force_common_allocation)
+        relocate_common_syms();
     
     if (file_type != TCC_OUTPUT_OBJ) {
-
-        relocate_common_syms();
-
+        if (!s1->force_common_allocation) /* already done */
+            relocate_common_syms();
+        
         if (!s1->static_link) {
             const char *name;
             int sym_index, index;

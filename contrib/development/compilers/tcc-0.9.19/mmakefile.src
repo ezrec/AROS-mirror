@@ -9,7 +9,7 @@ USE_CLIB_SHARED := yes
 USE_AMIGALIB    := yes
 USE_MLIB        := yes
 
-USER_CFLAGS  := -Wall -DCONFIG_TCC_STATIC
+USER_CFLAGS  := -Wall -DCONFIG_TCC_STATIC -DCONFIG_TCC_ALWAYS_RELOCATABLE
 USER_LDFLAGS := -ltcc1
 
 #MM contrib-development-compilers-tcc-0.9.19 : linklibs-tcc1

@@ -429,6 +429,10 @@ struct TCCState {
     /* if true, all symbols are exported */
     int rdynamic;
 
+    /* if true, allocate space for common symbols even when creating 
+       relocatable output */
+    int force_common_allocation;
+
     /* if true, only link in referenced objects from archive */
     int alacarte_link;
 
@@ -9648,7 +9652,11 @@ void help(void)
            "  -shared     generate a shared library\n"
            "  -static     static linking\n"
            "  -rdynamic   export all global symbols to dynamic linker\n"
+#ifndef CONFIG_TCC_ALWAYS_RELOCATABLE
            "  -r          relocatable output\n"
+           "  -d          force allocation of space for common symbols,\n"
+           "              even when creating relocatable output\n"
+#endif
            "Debugger options:\n"
            "  -g          generate runtime debug info\n"
 #ifdef CONFIG_TCC_BCHECK
@@ -9694,6 +9702,7 @@ enum {
     TCC_OPTION_rdynamic,
     TCC_OPTION_run,
     TCC_OPTION_v,
+    TCC_OPTION_d
 };
 
 static const TCCOption tcc_options[] = {
@@ -9717,7 +9726,10 @@ static const TCCOption tcc_options[] = {
     { "o", TCC_OPTION_o, TCC_OPTION_HAS_ARG },
     { "run", TCC_OPTION_run, 0 },
     { "rdynamic", TCC_OPTION_rdynamic, 0 },
+#ifndef CONFIG_TCC_ALWAYS_RELOCATABLE
     { "r", TCC_OPTION_r, 0 },
+    { "d", TCC_OPTION_d, 0 },
+#endif
     { "W", TCC_OPTION_W, TCC_OPTION_HAS_ARG | TCC_OPTION_NOSEP },
     { "O", TCC_OPTION_O, TCC_OPTION_HAS_ARG | TCC_OPTION_NOSEP },
     { "m", TCC_OPTION_m, TCC_OPTION_HAS_ARG },
@@ -9743,7 +9755,14 @@ int main(int argc, char **argv)
     int print_search_dirs;
 
     s = tcc_new();
+#ifdef CONFIG_TCC_ALWAYS_RELOCATABLE
+    output_type = TCC_OUTPUT_OBJ;
+    reloc_output = 1;
+    s->force_common_allocation = 1;
+#else
     output_type = TCC_OUTPUT_EXE;
+    reloc_output = 0;
+#endif
 
     optind = 1;
     outfile = NULL;
@@ -9752,7 +9771,6 @@ int main(int argc, char **argv)
     files = NULL;
     nb_files = 0;
     nb_libraries = 0;
-    reloc_output = 0;
     print_search_dirs = 0;
     while (1) {
         if (optind >= argc) {
@@ -9871,6 +9889,9 @@ int main(int argc, char **argv)
                 /* generate a .o merging several output files */
                 reloc_output = 1;
                 output_type = TCC_OUTPUT_OBJ;
+                break;
+            case TCC_OPTION_d:
+                s->force_common_allocation = 1;
                 break;
             case TCC_OPTION_nostdinc:
                 s->nostdinc = 1;
