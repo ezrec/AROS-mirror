@@ -26,7 +26,7 @@ Quick guide to developing for AROS
 Developing for the AROS platform
 ================================
 
-This chapter talks about how to develop programs that will run on the AROS platform.
+This chapter explains how to develop programs that will run on the AROS platform.
 It also tells you how to compile them on the different machines that AROS runs on.
 It assumes that you have an average knowledge of the C language and basic concepts like `linking`.
 
