@@ -21,8 +21,9 @@ the which command in is the which executeable itself.
 
 Todo:
 
- I need to go through and redo some of the brutal workarounds 
-with proper ifndefs and the like.
+I think that's it. The only thing in the diff is a change to 
+which.c which is an ifdef AROS to include ctype.h 
 
 Jack Patton <jpatton@aros.org>
-4/21/04
+4/25/04
+
