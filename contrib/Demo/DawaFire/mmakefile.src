@@ -1,0 +1,42 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
+		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
+	
+OBJDIR		:= $(GENDIR)/$(CURDIR)
+DESTDIR 	:= $(CONTRIBDIR)/Demos/DawaFire
+
+FILES 		:= dawafire 
+
+SRCS 		:= $(foreach f, $(FILES), $(f).c)
+OBJS 		:= $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+EXE 		:= $(DESTDIR)/dawafire
+
+.PHONY : all clean
+
+#MM demo-dawafire : setup-demo-dawafire
+demo-dawafire : $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-demo-dawafire :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+#MM
+clean-contrib-demos :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+
+
+
