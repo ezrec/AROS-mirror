@@ -16,21 +16,8 @@
 
 #include <libraries/bgui.h>
 
-/*
- * Compiler specific stuff.
- */
-#ifdef _AROS
-#else
-#ifdef _DCC
-#define SAVEDS    __geta4
-#define ASM
-#define REG(x)    __ ## x
-#else
-#define SAVEDS    __saveds
-#define ASM       __asm
-#define REG(x)    register __ ## x
-#endif
-#endif
+#include "compilerspecific.h"
+
 /*
  * Global data (written to once at initalization time).
  */
@@ -132,9 +119,9 @@ ULONG _LibInit[4] =
  */
 #ifdef _AROS
 AROS_UFH3(struct Library *, LibInit,
-	AROS_LHA(struct Library *, lib, D0),
-	AROS_LHA(BPTR, segment, A0),
-	AROS_LHA(struct ExecBase *, syslib, A6))
+        AROS_LHA(struct Library *, lib, D0),
+        AROS_LHA(BPTR, segment, A0),
+        AROS_LHA(struct ExecBase *, syslib, A6))
 #else
 SAVEDS ASM struct Library *LibInit(REG(d0) struct Library *lib, REG(a0) BPTR segment, REG(a6) struct ExecBase *syslib)
 #endif
@@ -231,8 +218,8 @@ SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
    if (lib->lib_Flags & LIBF_DELEXP)
 #ifdef _AROS
       return AROS_UFC2(BPTR, BGUIGadget_LibExpunge,
-      		AROS_UFCA(struct Library *, lib, D0),
-      		AROS_UFCA(struct ExecBase *, SysBase, A6));
+                AROS_UFCA(struct Library *, lib, D0),
+                AROS_UFCA(struct ExecBase *, SysBase, A6));
 #else
       return LibExpunge(lib);
 #endif

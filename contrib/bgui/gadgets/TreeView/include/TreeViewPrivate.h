@@ -8,6 +8,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/08/08 14:02:08  chodorowski
+ * Removed all REGFUNC, REGPARAM and REG macros. Now includes
+ * contrib/bgui/compilerspecific.h where they are defined.
+ *
  * Revision 42.3  2000/08/07 21:49:51  stegerg
  * fixed/activated REGPARAM/REGFUNC macros.
  *
@@ -60,6 +64,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "compilerspecific.h"
+
 #include "TreeViewClass.h"
 
 /************************************************************************
@@ -70,14 +76,14 @@
  * Client code must open these libraries:
  */
 
-extern struct IntuitionBase	*IntuitionBase;		/* V37+ */
-extern struct GfxBase	*GfxBase;				/* V37+ */
+extern struct IntuitionBase     *IntuitionBase;         /* V37+ */
+extern struct GfxBase   *GfxBase;                               /* V37+ */
 #ifdef _AROS
-extern struct UtilityBase	*UtilityBase;			/* V37+ */
+extern struct UtilityBase       *UtilityBase;                   /* V37+ */
 #else
-extern struct Library	*UtilityBase;			/* V37+ */
+extern struct Library   *UtilityBase;                   /* V37+ */
 #endif
-extern struct Library	*BGUIBase;				/* V40+ */
+extern struct Library   *BGUIBase;                              /* V40+ */
 
 /*
  * Only referenced while debugging:
@@ -92,173 +98,95 @@ extern void __stdargs KPrintF(char *fmt,...);
 *************************  GLOBAL DEFINITIONS  **************************
 ************************************************************************/
 
-/*
- * Compiler stuff.
- */
-
-#ifdef _DCC
-#define SAVEDS	__geta4
-#define ASM
-#define REG(x)	__ ## x
-#else
-#ifdef __SASC
-#define SAVEDS	__saveds
-#define ASM		__asm
-#define REG(x)	register __ ## x
-#endif
-#endif
-
-#ifdef DEBUG
-#define LOCAL
-#else
-#define LOCAL	static
-#endif
-
-#ifdef _AROS
-
-  #ifndef AROS_ASMCALL_H
-  #include <aros/asmcall.h>
-  #endif
-  
-  #undef ASM
-  #define ASM
-  #undef SAVEDS
-  #define SAVEDS
-
-#if 1
-  #ifndef REGPARAM
-  #define REGPARAM(reg,type,name) type,name,reg
-  
-  #define REGFUNC1(r,n,a1) AROS_UFH1(r,n,AROS_UFHA(a1))
-  #define REGFUNC2(r,n,a1,a2) AROS_UFH2(r,n,AROS_UFHA(a1),AROS_UFHA(a2))
-  #define REGFUNC3(r,n,a1,a2,a3) AROS_UFH3(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3))
-  #define REGFUNC4(r,n,a1,a2,a3,a4) AROS_UFH4(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4))
-  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) AROS_UFH5(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5))
-  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) AROS_UFH6(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6))
-  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFH7(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7))
-  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8))
-  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8),AROS_UFHA(a9))
-  #endif
-#else
-  #ifndef REGPARAM
-  #define REGPARAM(reg,type,name) type name
-  
-  #define REGFUNC1(r,n,a1) r n(a1)
-  #define REGFUNC2(r,n,a1,a2) r n(a1,a2)
-  #define REGFUNC3(r,n,a1,a2,a3) r n(a1,a2,a3)
-  #define REGFUNC4(r,n,a1,a2,a3,a4) r n(a1,a2,a3,a4)
-  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) r n(a1,a2,a3,a4,a5)
-  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) r n(a1,a2,a3,a4,a5,a6)
-  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
-  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
-  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
-  #endif
-#endif
-  
-#else
-  #define REGPARAM(reg,type,name) REG(reg) type name
-  
-  #define REGFUNC1(r,n,a1) r n(a1)
-  #define REGFUNC2(r,n,a1,a2) r n(a1,a2)
-  #define REGFUNC3(r,n,a1,a2,a3) r n(a1,a2,a3)
-  #define REGFUNC4(r,n,a1,a2,a3,a4) r n(a1,a2,a3,a4)
-  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) r n(a1,a2,a3,a4,a5)
-  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) r n(a1,a2,a3,a4,a5,a6)
-  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
-  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
-  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
-  
-#endif
-/*
  * Members of the treeview are held in this derivation of an Exec
  * node. The node's ln_Type is used as a flags field, the flag bits
  * are defined below. The ln_Pri is unused.
  */
 
 struct TreeNode {
-	struct Node		tn_Node;		/* next/prev/flags/pri/name */
-	struct TreeNode	*tn_Parent;		/* ptr to the parent treenode */
-	struct MinList	tn_Children;	/* list of child treenodes */
-	ULONG			tn_NumChildren;	/* count of child treenodes */
+        struct Node             tn_Node;                /* next/prev/flags/pri/name */
+        struct TreeNode *tn_Parent;             /* ptr to the parent treenode */
+        struct MinList  tn_Children;    /* list of child treenodes */
+        ULONG                   tn_NumChildren; /* count of child treenodes */
 };
 
-#define tn_Flags		tn_Node.ln_Type	 /* redefinition of Node member */
-#define tn_Entry		tn_Node.ln_Name	 /* abbreviation for entry */
+#define tn_Flags                tn_Node.ln_Type  /* redefinition of Node member */
+#define tn_Entry                tn_Node.ln_Name  /* abbreviation for entry */
 
-#define TNF_EXPANDED	(1<<0)		/* entry's children are expanded */
-#define TNF_SELECTED	(1<<1)		/* entry is currently selected */
+#define TNF_EXPANDED    (1<<0)          /* entry's children are expanded */
+#define TNF_SELECTED    (1<<1)          /* entry is currently selected */
 
 /*
  * Object instance data.
  */
 
 typedef struct {
-		struct TreeNode	tv_RootNode;		/* dummy root level treenode */
+                struct TreeNode tv_RootNode;            /* dummy root level treenode */
 
-		Class			*tv_TreeViewClass;	/* back-reference to class */
-		Object			*tv_TreeView;		/* back-reference to object */
+                Class                   *tv_TreeViewClass;      /* back-reference to class */
+                Object                  *tv_TreeView;           /* back-reference to object */
 
-		APTR			tv_MemPool;			/* private memory pool */
+                APTR                    tv_MemPool;                     /* private memory pool */
 
-		struct Hook		*tv_ResourceHook;	/* user's add/delete hook */
-		struct Hook		*tv_DisplayHook;	/* user's custom rendering hook */
-		struct Hook		*tv_CompareHook;	/* user's custom sorting hook */
-		struct Hook		*tv_ExpandHook;		/* user's expand/contract hook */
+                struct Hook             *tv_ResourceHook;       /* user's add/delete hook */
+                struct Hook             *tv_DisplayHook;        /* user's custom rendering hook */
+                struct Hook             *tv_CompareHook;        /* user's custom sorting hook */
+                struct Hook             *tv_ExpandHook;         /* user's expand/contract hook */
 
-		Object			*tv_Listview;		/* embedded listview object */
-		struct Hook		*tv_LVRsrcHook;		/* internal LV resource hook */
-		struct Hook		*tv_LVDispHook;		/* internal LV display hook */
-		struct Hook		*tv_LVCompHook;		/* internal LV compare hook */
-		struct Hook		*tv_LVNotifyHook;	/* internal LV notification hook */
+                Object                  *tv_Listview;           /* embedded listview object */
+                struct Hook             *tv_LVRsrcHook;         /* internal LV resource hook */
+                struct Hook             *tv_LVDispHook;         /* internal LV display hook */
+                struct Hook             *tv_LVCompHook;         /* internal LV compare hook */
+                struct Hook             *tv_LVNotifyHook;       /* internal LV notification hook */
 
-		Object			*tv_ExpandedImage;	 /* image for expanded nodes */
-		Object			*tv_ContractedImage; /* image for contracted nodes */
-		BOOL			tv_DefExpImage;		/* used built-in expanded image */
-		BOOL			tv_DefConImage;		/* used built-in contracted image */
+                Object                  *tv_ExpandedImage;       /* image for expanded nodes */
+                Object                  *tv_ContractedImage; /* image for contracted nodes */
+                BOOL                    tv_DefExpImage;         /* used built-in expanded image */
+                BOOL                    tv_DefConImage;         /* used built-in contracted image */
 
-		ULONG			tv_CopyEntries;		/* copy (string) entries */
-		ULONG			tv_Indentation;		/* pixel indent of children */
-		ULONG			tv_LineStyle;		/* lines connecting entries */
-		ULONG			tv_LeftAlignImage;	/* align images with LHS */
-		ULONG			tv_NoLeafImage;		/* no image for leaf nodes */
+                ULONG                   tv_CopyEntries;         /* copy (string) entries */
+                ULONG                   tv_Indentation;         /* pixel indent of children */
+                ULONG                   tv_LineStyle;           /* lines connecting entries */
+                ULONG                   tv_LeftAlignImage;      /* align images with LHS */
+                ULONG                   tv_NoLeafImage;         /* no image for leaf nodes */
 
-		ULONG			tv_NumEntries;		/* total number of entries */
+                ULONG                   tv_NumEntries;          /* total number of entries */
 
-		ULONG			tv_LockCount;		/* lock count for node list */
+                ULONG                   tv_LockCount;           /* lock count for node list */
 
-		BOOL			tv_GoingActive;		/* during GM_GOACTIVE? */
-		WORD			tv_LastClickX;		/* mouse x of last LMB click */
-		WORD			tv_LastClickY;		/* mouse y of last LMB click */
-		struct TreeNode	*tv_LastClicked;	/* last entry clicked on */
-		struct TreeNode	*tv_ImageClicked; 	/* entry whose image was clicked */
-		ULONG			tv_LastClickTime[2]; /* timestamp of last click */
+                BOOL                    tv_GoingActive;         /* during GM_GOACTIVE? */
+                WORD                    tv_LastClickX;          /* mouse x of last LMB click */
+                WORD                    tv_LastClickY;          /* mouse y of last LMB click */
+                struct TreeNode *tv_LastClicked;        /* last entry clicked on */
+                struct TreeNode *tv_ImageClicked;       /* entry whose image was clicked */
+                ULONG                   tv_LastClickTime[2]; /* timestamp of last click */
 } TVData;
 
 /*
  * Convenient type-casts
  */
 
-typedef struct Node		*NODEPTR;
-typedef struct TreeNode	*TNPTR;
-typedef struct List		*LISTPTR;
-typedef struct Gadget	*GADPTR;
-typedef struct Image	*IMGPTR;
-typedef struct Hook		*HOOKPTR;
+typedef struct Node             *NODEPTR;
+typedef struct TreeNode *TNPTR;
+typedef struct List             *LISTPTR;
+typedef struct Gadget   *GADPTR;
+typedef struct Image    *IMGPTR;
+typedef struct Hook             *HOOKPTR;
 
 /*
  * Macros for walking trees, inspecting treenodes, etc
  */
 
-#define RootList(tv)		((LISTPTR) &(tv)->tv_RootNode.tn_Children)
+#define RootList(tv)            ((LISTPTR) &(tv)->tv_RootNode.tn_Children)
 
-#define ParentOf(child)		(((TNPTR) (child))->tn_Parent)
-#define ChildListOf(child)	((LISTPTR) &((TNPTR) (child))->tn_Children)
+#define ParentOf(child)         (((TNPTR) (child))->tn_Parent)
+#define ChildListOf(child)      ((LISTPTR) &((TNPTR) (child))->tn_Children)
 
-#define FirstChildIn(list)	((TNPTR) TV_GetHead((LISTPTR) (list)))
-#define FirstChildOf(child)	((TNPTR) TV_GetHead(ChildListOf(child)))
+#define FirstChildIn(list)      ((TNPTR) TV_GetHead((LISTPTR) (list)))
+#define FirstChildOf(child)     ((TNPTR) TV_GetHead(ChildListOf(child)))
 
-#define LastChildIn(list)	((TNPTR) TV_GetTail((LISTPTR) (list)))
-#define LastChildOf(child)	((TNPTR) TV_GetTail(ChildListOf(child)))
+#define LastChildIn(list)       ((TNPTR) TV_GetTail((LISTPTR) (list)))
+#define LastChildOf(child)      ((TNPTR) TV_GetTail(ChildListOf(child)))
 
 #define FirstSiblingOf(child) (FirstChildOf(ParentOf(child)))
 #define LastSiblingOf(child)  (LastChildOf(ParentOf(child)))
@@ -266,9 +194,9 @@ typedef struct Hook		*HOOKPTR;
 #define NextSiblingOf(child)  ((TNPTR) TV_GetSucc((NODEPTR) (child)))
 #define PrevSiblingOf(child)  ((TNPTR) TV_GetPred((NODEPTR) (child)))
 
-#define IsExpanded(child)	(((TNPTR) (child))->tn_Flags & TNF_EXPANDED)
-#define IsSelected(child)	(((TNPTR) (child))->tn_Flags & TNF_SELECTED)
-#define HasChildren(child)	(((TNPTR) (child))->tn_NumChildren)
+#define IsExpanded(child)       (((TNPTR) (child))->tn_Flags & TNF_EXPANDED)
+#define IsSelected(child)       (((TNPTR) (child))->tn_Flags & TNF_SELECTED)
+#define HasChildren(child)      (((TNPTR) (child))->tn_NumChildren)
 
 /*
  * Anchor used by TV_MatchNextEntry() for matching Treeview entries
@@ -276,27 +204,27 @@ typedef struct Hook		*HOOKPTR;
  */
 
 struct tvAnchor {
-	TNPTR				tva_Ref;		/* reference entry */
-	TNPTR				tva_Last;		/* last match */
-	ULONG				tva_Category;	/* TVWC bits of tve_Which */
-	ULONG				tva_Style;		/* TVWS bits of tve_Which */
-	ULONG				tva_Flags;		/* same as tve_Flags */
-	ULONG				tva_RefDepth;	/* depth of reference entry */
-	BOOL				tva_RefRoot;	/* reference entry is root */
-	BOOL				tva_Multiple;	/* potentially multiple matches */
-	BOOL				tva_Visible;	/* match visible entries only */
-	BOOL				tva_Selected;	/* match selected entries only */
+        TNPTR                           tva_Ref;                /* reference entry */
+        TNPTR                           tva_Last;               /* last match */
+        ULONG                           tva_Category;   /* TVWC bits of tve_Which */
+        ULONG                           tva_Style;              /* TVWS bits of tve_Which */
+        ULONG                           tva_Flags;              /* same as tve_Flags */
+        ULONG                           tva_RefDepth;   /* depth of reference entry */
+        BOOL                            tva_RefRoot;    /* reference entry is root */
+        BOOL                            tva_Multiple;   /* potentially multiple matches */
+        BOOL                            tva_Visible;    /* match visible entries only */
+        BOOL                            tva_Selected;   /* match selected entries only */
 };
 
 /*
  * Useful abbreviations
  */
 
-#define MEMF_STD		(MEMF_ANY|MEMF_CLEAR)
+#define MEMF_STD                (MEMF_ANY|MEMF_CLEAR)
 
 #ifndef max
-#define max(a,b)		((a) > (b) ? (a) : (b))
+#define max(a,b)                ((a) > (b) ? (a) : (b))
 #endif
 #ifndef min
-#define min(a,b)		((a) <= (b) ? (a) : (b))
+#define min(a,b)                ((a) <= (b) ? (a) : (b))
 #endif

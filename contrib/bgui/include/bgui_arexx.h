@@ -13,6 +13,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2000/08/08 14:02:08  chodorowski
+ * Removed all REGFUNC, REGPARAM and REG macros. Now includes
+ * contrib/bgui/compilerspecific.h where they are defined.
+ *
  * Revision 42.6  2000/08/07 21:50:30  stegerg
  * fixed/activated REGFUNC/REGPARAM macros.
  *
@@ -92,6 +96,13 @@
 #include <intuition/classusr.h>
 #endif
 
+/* Compiler-specific macros */
+
+#ifndef COMPILERSPECIFIC_H
+#include "compilerspecific.h"
+#endif
+
+
 /* Tags */
 #define AREXX_TB                        (TAG_USER+0x30000)
 
@@ -137,100 +148,6 @@ typedef struct {
 }       REXXARGS;
 
 /*
- * Compiler specific stuff.
- */
-#ifdef _DCC
-#ifndef ASM
-#define ASM
-#endif
-#ifndef REG
-#define REG(x)    __ ## x
-#endif
-#elif __STORM__
-#ifndef SAVEDS
-#define SAVEDS    __saveds
-#endif
-#ifndef ASM
-#define ASM
-#endif
-#ifndef REG
-#define REG(x)    register __ ## x
-#endif
-#else
-#ifndef _AROS
-  #ifndef ASM
-  #define ASM       __asm
-  #endif
-  #ifndef REG
-  #define REG(x)    register __ ## x
-  #endif
-  #endif
-#endif
-
-#ifdef _AROS
-
-  #ifndef AROS_ASMCALL_H
-  #include <aros/asmcall.h>
-  #endif
-  
-  #ifdef ASM
-  #undef ASM
-  #endif
-  #define ASM
-  
-  #ifdef SAVEDS
-  #undef SAVEDS
-  #endif
-  #define SAVEDS
-
-#if 1
-
-  #ifndef REGPARAM
-  #define REGPARAM(reg,type,name) type,name,reg
-  
-  #define REGFUNC1(r,n,a1) AROS_UFH1(r,n,AROS_UFHA(a1))
-  #define REGFUNC2(r,n,a1,a2) AROS_UFH2(r,n,AROS_UFHA(a1),AROS_UFHA(a2))
-  #define REGFUNC3(r,n,a1,a2,a3) AROS_UFH3(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3))
-  #define REGFUNC4(r,n,a1,a2,a3,a4) AROS_UFH4(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4))
-  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) AROS_UFH5(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5))
-  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) AROS_UFH6(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6))
-  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFH7(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7))
-  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8))
-  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8),AROS_UFHA(a9))
-  #endif
-#else
-  #ifndef REGPARAM
-  #define REGPARAM(reg,type,name) type name
-  
-  #define REGFUNC1(r,n,a1) r n(a1)
-  #define REGFUNC2(r,n,a1,a2) r n(a1,a2)
-  #define REGFUNC3(r,n,a1,a2,a3) r n(a1,a2,a3)
-  #define REGFUNC4(r,n,a1,a2,a3,a4) r n(a1,a2,a3,a4)
-  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) r n(a1,a2,a3,a4,a5)
-  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) r n(a1,a2,a3,a4,a5,a6)
-  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
-  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
-  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
-  #endif
-#endif
-  
-#else
-  #ifndef REGPARAM
-  #define REGPARAM(reg,type,name) REG(reg) type name
-  
-  #define REGFUNC1(r,n,a1) r n(a1)
-  #define REGFUNC2(r,n,a1,a2) r n(a1,a2)
-  #define REGFUNC3(r,n,a1,a2,a3) r n(a1,a2,a3)
-  #define REGFUNC4(r,n,a1,a2,a3,a4) r n(a1,a2,a3,a4)
-  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) r n(a1,a2,a3,a4,a5)
-  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) r n(a1,a2,a3,a4,a5,a6)
-  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
-  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
-  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
-  #endif
-  
-#endif
-/*
 **      An array of these structures must be passed at object-create time.
 **/
 #ifdef _AROS
@@ -241,8 +158,8 @@ typedef struct {
         UBYTE                   *rc_ArgTemplate;  /* DOS-style argument template. */
 //        ASM VOID                (*rc_Func)( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
         ASM REGFUNC2(VOID, (*rc_Func),
-		REGPARAM(A0, REXXARGS *,),
-		REGPARAM(A1, struct RexxMsg *, ));
+                REGPARAM(A0, REXXARGS *,),
+                REGPARAM(A1, struct RexxMsg *, ));
 }       REXXCOMMAND;
 #endif
 /*
