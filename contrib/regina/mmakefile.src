@@ -4,15 +4,19 @@
 
 include $(TOP)/config/make.cfg
 
-USER_INCLUDES := -I. -I$(TOP)/rom/exec
-OBJDIR := $(GENDIR)/$(CURDIR)/static
-USER_CFLAGS := -DNO_EXTERNAL_QUEUES -DAREXXIO
+#MM contrib-regina : setup linklibs includes contrib-regina-libs
+#MM contrib-regina-quick : contrib-regina-libs-quick
 
-#Libraries to use
-USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
+#MM- contrib-regina-libs : setup linklibs includes contrib-regina-libs-module
+#MM- contrib-regina-libs-quick : contrib-regina-libs-module-quick contrib-regina-libs-linklib-quick
+
+EXEDIR := $(CONTRIBDIR)/Regina
+
+REXXEXE := $(EXEDIR)/rexx
+REGINAEXE := $(EXEDIR)/regina
+EXES := $(REXXEXE) $(REGINAEXE)
+
+contrib-regina : setup $(EXES)
 
 # At the moment don't support threads.
 # Files shared by executables and shared library
@@ -24,35 +28,83 @@ OFILES := \
   instore extlib yaccsrc lexsrc wrappers options doscmd \
   rexxbif aroscmd amigafuncs
 
-# Compile the statically linked executable
+USER_INCLUDES := -I.
+OBJDIR1 := $(GENDIR)/$(CURDIR)/static
+USER_CFLAGS := -DNO_EXTERNAL_QUEUES -DAREXXIO
+
+#Libraries to use
+USE_AROSLIB     := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB    := yes
+USE_MLIB        := yes
+
+%make_prog_setup mmake=contrib-regina id=1
+
+# Compile the statically linked executables
 FILES := $(OFILES) rexx nosaa mt_notmt
+%make_prog_multi dir=$(EXEDIR) target=$(REXXEXE) id=1
 
-EXEDIR := $(CONTRIBDIR)/Regina
+FILES := regina
+%make_prog_multi dir=$(EXEDIR) target=$(REGINAEXE) id=1
 
-REXXEXE := $(EXEDIR)/rexx
-REGINAEXE := $(EXEDIR)/regina
-EXES := $(REXXEXE) $(REGINAEXE)
+USER_INCLUDES := -I. -Iaros_funcs
+USER_CFLAGS   := -DRXLIB -DINCL_REXXSAA -DAPIENTRY="" \
+-DNO_EXTERNAL_QUEUES -DAREXXIO
 
-#MM contrib-regina : setup linklibs includes contrib-regina-libs
-#MM contrib-regina-quick : contrib-regina-libs-quick
+OBJDIR2 := $(GENDIR)/$(CURDIR)/shared
 
-contrib-regina-quick: setup contrib-regina
+#Libraries to use
+USE_AROS_LIB     :=
+USE_CLIB_SHARED  :=
+USE_CLIB_LIBRARY := yes
+USE_AMIGALIB     := yes
+USE_MLIB         := YES
 
-%make_prog_setup mmake=contrib-regina
+MODNAME := regina
+MODTYPE := library
 
-#MM
-contrib-regina : setup $(EXES)
+FILES := $(OFILES) \
+         rexxsaa \
+	 rexx \
+	 client \
+	 mt_amigalib
 
-%make_prog_common dir=$(EXEDIR)
+FUNCS := aros_funcs/rexxstart \
+      	 aros_funcs/rexxregistersubcomexe \
+      	 aros_funcs/rexxregistersubcomdll \
+      	 aros_funcs/rexxquerysubcom \
+      	 aros_funcs/rexxderegistersubcom \
+      	 aros_funcs/rexxvariablepool \
+      	 aros_funcs/rexxregisterexitexe \
+      	 aros_funcs/rexxregisterexitdll \
+      	 aros_funcs/rexxderegisterexit \
+      	 aros_funcs/rexxqueryexit \
+      	 aros_funcs/rexxregisterfunctionexe \
+      	 aros_funcs/rexxregisterfunctiondll \
+      	 aros_funcs/rexxqueryfunction \
+      	 aros_funcs/rexxderegisterfunction \
+      	 aros_funcs/rexxsethalt \
+      	 aros_funcs/rexxcreatequeue \
+      	 aros_funcs/rexxdeletequeue \
+      	 aros_funcs/rexxqueryqueue \
+      	 aros_funcs/rexxaddqueue \
+      	 aros_funcs/rexxpullqueue \
+      	 aros_funcs/rexxaddmacro \
+      	 aros_funcs/rexxclearmacrospace \
+      	 aros_funcs/rexxdropmacro \
+      	 aros_funcs/rexxloadmacrospace \
+      	 aros_funcs/rexxquerymacro \
+      	 aros_funcs/rexxreordermacro \
+      	 aros_funcs/rexxsavemacrospace \
+      	 aros_funcs/rexxfreememory \
+      	 aros_funcs/rexxallocatememory \
+      	 aros_funcs/reginaversion \
+      	 aros_funcs/__regina_faked_main
 
-REXXFILES := $(OFILES) rexx nosaa mt_notmt
-REXXOBJS := $(foreach f,$(REXXFILES),$(OBJDIR)/$(f).o)
-$(REXXEXE) : $(EXEDIR)/% : $(REXXOBJS)
-    %link_q from=$(REXXOBJS)
-
-REGINAOBJS := $(OBJDIR)/regina.o
-$(REGINAEXE) : $(EXEDIR)/% : $(REGINAOBJS)
-    %link_q from=$(REGINAOBJS)
+%make_module_setup mmake=contrib-regina-libs id=2
+%make_module_cpak id=2
+%make_module mmake=contrib-regina-libs id=2
+%make_lib_includes id=2
 
 %common
 %include_deps
