@@ -35,7 +35,9 @@ asl00001;2;nlorentz;Write FreeFileRequest
 asl00002;2;nlorentz;Write RequestFile
 asl00003;2;nlorentz;Write AllocAslRequest
 asl00004;2;nlorentz;Write FreeAslRequest
-asl00005;1;nlorentz;Write AslRequest
+asl00005;2;nlorentz;Write AslRequest
+asl00006;2;stegerg;Write AbortAslRequest
+asl00007;2;stegerg;Write ActivateAslRequest
 battclock00000;2;iaint;Write ResetBattClock
 battclock00001;2;iaint;Write ReadBattClock
 battclock00002;2;iaint;Write WriteBattClock
@@ -289,6 +291,11 @@ clib00171;1;bergers;Write sigsuspend
 clib00172;2;hkiel;Write stpsym
 clib00173;2;hkiel;Write stccpy
 clib00174;1;hkiel;Write tmpnam
+clib00175;2;stegerg;Write stco_l
+clib00176;2;stegerg;Write stcd_l
+clib00177;2;stegerg;Write stcl_d
+clib00178;2;stegerg;Write stcl_h
+clib00179;2;stegerg;Write stcl_o
 c00000;2;srittau;Write C:AddBuffers
 c00001;2;laguest;Write C:Alias
 c00002;2;srittau;Write C:Ask
@@ -415,7 +422,7 @@ datatypes00027;2;SDuvan;SaveDTObjectA
 datatypes00028;2;SDuvan;StartDragSelect
 datatypes00029;1;SDuvan;LaunchToolA
 DataType00000;0;;Implement 8svx.datatype
-DataType00001;0;;Implement amigaguide.datatype
+DataType00001;0;gierich;Implement amigaguide.datatype
 DataType00002;0;;Implement animation.datatype
 DataType00003;2;stegerg;Implement ascii.datatype
 DataType00004;0;;Implement ilbm.datatype
@@ -1429,14 +1436,14 @@ potgo00000;0;digulla;Write AllocPotBits
 potgo00001;0;digulla;Write FreePotBits
 potgo00002;0;digulla;Write WritePotgo
 prefs00000;2;stegerg;Write Locale prefs program
-prefs00001;1;petah;Write Font prefs program
+prefs00001;1;chodorowski,petah;Write Font prefs program
 prefs00002;1;stegerg;Write Input prefs program
 prefs00003;0;stegerg;Write IControl prefs program
 prefs00004;0;stegerg;Write Palette prefs program
 prefs00005;0;stegerg;Write Pointer prefs program
-prefs00006;0;stegerg;Write Screenmode prefs program
-prefs00007;0;stegerg;Write Serial prefs program
-prefs00008;0;stegerg;Write Time prefs program
+prefs00006;1;chodorowski;Write Screenmode prefs program
+prefs00007;1;bergers;Write Serial prefs program
+prefs00008;1;stegerg;Write Time prefs program
 prefs00009;1;holmen;Write WBPattern prefs program
 prefs00010;0;stegerg;Write Printer prefs program
 ramdrive00000;0;digulla;Write KillRAD
@@ -1473,7 +1480,18 @@ reqtools00018;2;SDuvan;rtUnlockPrefs
 reqtools00019;2;SDuvan;rtCloseWindowSafely
 reqtools00020;2;SDuvan;rtLockWindow
 reqtools00021;2;SDuvan;rtUnlockWindow
-rexxmast00001;1;verhaegs;Write RexxMast with the "REXX" port
+rexxmast00001;2;verhaegs;Write RexxMast with the "REXX" port
+rexxsupport00000;2;verhaegs;Write ALLOCMEM
+rexxsupport00001;2;verhaegs;Write CLOSEPORT
+rexxsupport00002;2;verhaegs;Write FREEMEM
+rexxsupport00003;2;verhaegs;Write GETARG
+rexxsupport00004;2;verhaegs;Write GETPKT
+rexxsupport00005;2;verhaegs;Write OPENPORT
+rexxsupport00006;2;verhaegs;Write REPLY
+rexxsupport00007;2;verhaegs;Write SHOWDIR
+rexxsupport00008;2;verhaegs;Write SHOWLIST
+rexxsupport00009;2;verhaegs;Write STATEF
+rexxsupport00010;2;verhaegs;Write WAITPKT
 rexxsyslib00000;2;verhaegs;Write CreateArgstring
 rexxsyslib00001;2;verhaegs;Write DeleteArgstring
 rexxsyslib00002;2;verhaegs;Write LengthArgstring
