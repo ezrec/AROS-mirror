@@ -4,10 +4,10 @@
 
 include $(TOP)/config/make.cfg
 
-FILES := false_int 
+FILES  := false_int 
 
-EXEDIR := $(CONTRIBDIR)/False
-EXE := $(EXEDIR)/False
+EXEDIR := $(CONTRIBDIR)/Development/False
+EXE    := $(EXEDIR)/False
 
 USE_AROSLIB := yes
 USE_CLIB := yes
@@ -15,17 +15,18 @@ USE_AMIGALIB := yes
 USE_MLIB := yes
 USE_ZLIB := yes
 
-#MM contrib-false : setup-contrib-false 
+#MM- contrib-development : contrib-development-false
+#MM contrib-development-false : setup-contrib-development-false 
 
-%make_prog_setup mmake=contrib-false
+%make_prog_setup mmake=contrib-development-false
 
-contrib-false : setup $(EXE)
+contrib-development-false : setup $(EXE)
 
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
 #MM
 setup ::
-	%mkdirs_q $(CONTRIBDIR)/False
+	%mkdirs_q $(EXEDIR)
 
 %common
 %include_deps
