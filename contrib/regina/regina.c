@@ -56,6 +56,7 @@ static char *RCSid = "$Id$";
 #include <proto/regina.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #endif
 
 struct Library *ReginaBase;

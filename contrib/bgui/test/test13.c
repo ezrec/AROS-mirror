@@ -9,7 +9,7 @@
 #include <proto/bgui.h>
 #include <proto/exec.h>
 #include <proto/intuition.h>
-
+#include <stdio.h>
 
 
 Object *WO_Window, *PG_TestProp;

@@ -461,6 +461,12 @@
    int my_win32_setenv( const char *name, const char *value ) ;
    int create_tmpname( const tsd_t *TSD, char *name );
 
+/*
+ * Routines in aroscmd.c
+ */
+#ifdef __AROS__
+   pid_t getpid(void);
+#endif
 
 /*
  * Routines in options.c
@@ -785,6 +791,7 @@
 /*
  * Routines in amiga_funcs.c
  */
+   int init_amigaf( tsd_t *TSD );
    streng *arexx_open ( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_close( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_writech( tsd_t *TSD, cparamboxptr parm1 );

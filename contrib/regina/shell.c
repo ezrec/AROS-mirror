@@ -39,8 +39,11 @@ static char *RCSid = "$Id$";
 #include "rexx.h"
 #include <limits.h>
 #include <stdio.h>
-#if defined(VMS) || defined(MAC) || defined(__AROS__)
+#if defined(VMS) || defined(MAC)
 # include <time.h>
+#elif defined(__AROS__)
+# include <time.h>
+# include <unistd.h>
 #else
 # ifdef HAVE_UNISTD_H
 #  include <unistd.h>

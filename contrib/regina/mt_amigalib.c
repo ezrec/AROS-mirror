@@ -8,6 +8,8 @@
 
 #include "rexx.h"
 
+#include <proto/alib.h>
+
 #include <exec/memory.h>
 #include <exec/semaphores.h>
 #include <exec/lists.h>
@@ -165,7 +167,7 @@ tsd_t *__regina_get_tsd(void)
     if (__regina_tsdlist == NULL)
     {
       __regina_tsdlist = (struct MinList *)AllocPooled (__regina_semaphorepool, sizeof(struct MinList));
-      NewList(__regina_tsdlist);
+      NewList((struct List *)__regina_tsdlist);
     }
     
     Permit();

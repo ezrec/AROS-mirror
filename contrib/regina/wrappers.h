@@ -231,6 +231,7 @@
 #define hookup_output                __regina_hookup_output
 #define hookup_output2               __regina_hookup_output2
 #define identify_trap                __regina_identify_trap
+#define init_amigaf                  __regina_init_amigaf
 #define init_builtin                 __regina_init_builtin
 #define init_client                  __regina_init_client
 #define init_envir                   __regina_init_envir
