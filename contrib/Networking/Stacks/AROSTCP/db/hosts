@@ -1,12 +1,9 @@
 ;
-; hosts -- the hosts database file for AmiTCP/IP
+; hosts -- the hosts database file for AROSTCP
 ;
 ; Copyright © 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
 ;                  Helsinki University of Technology, Finland.
 ;                  All rights reserved.
-;
-; Created      : Thu Jul  1 18:26:01 1993 puhuri
-; Last modified: Mon Jul 12 22:25:17 1993 ppessi
 ;
 ; Comments are from ';' or '#' to end of line
 ;

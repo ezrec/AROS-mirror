@@ -1,19 +1,16 @@
 ;
-; inet.access -- Access control list for AmiTCP/IP
+; inet.access -- Access control list for AROSTCP
 ;
 ; Copyright © 1993, 1994  AmiTCP/IP Group, <amitcp-group@hut.fi>
 ;                         Helsinki University of Technology, Finland.
 ;                         All rights reserved.
 ;
-; Created      : Sat Mar 26 14:07:22 1994 too
-; Last modified: Wed Apr  6 19:08:50 1994 too
-;
 ; Comments are from ';' or '#' to end of line
 ;
-; This file shouls be included from netdb-file with following line:
+; This file should be included from netdb-file with following line:
 ; WITH inet.access PREFIX=ACCESS
 ;
-; AmiTCP/IP implements an access control feature similar to `tcpd' inside the 
+; AROSTCP implements an access control feature similar to `tcpd' inside the 
 ; protocol stack. This means connection doesn't even get established if the
 ; connection is to be denied, remote end just gets the usual 
 ; `connection refused' error message.

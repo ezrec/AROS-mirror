@@ -5,7 +5,7 @@
 ;                  Helsinki University of Technology, Finland.
 ;                  All rights reserved.
 ;
-; This file shouls be included from netdb-file with following line:
+; This file should be included from netdb-file with following line:
 ; WITH services PREFIX=S
 ;
 echo		7/tcp
