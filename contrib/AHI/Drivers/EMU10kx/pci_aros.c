@@ -64,9 +64,13 @@ void ahi_pci_exit(void)
 {
 KPrintF("== ahi_pci_exit 1\n");
     if (irqobj) OOP_DisposeObject(irqobj);
+KPrintF("== ahi_pci_exit 2\n");
     if (pciobj) OOP_DisposeObject(pciobj);
+KPrintF("== ahi_pci_exit 3\n");
     if (__IHidd_PCIDev) OOP_ReleaseAttrBase(IID_Hidd_PCIDevice);
+KPrintF("== ahi_pci_exit 4\n");
     if (OOPBase) CloseLibrary(OOPBase);
+KPrintF("== ahi_pci_exit 5\n");
 }
 
 struct enum_data
@@ -299,8 +303,7 @@ static void interrupt_code(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
 {
     struct Interrupt *i = (struct Interrupt *)irq->h_Data;
 
-    AROS_UFC4(void, i->is_Code,
-    	AROS_UFCA(APTR, 0, A0),
+    AROS_UFC3(void, i->is_Code,
 	AROS_UFCA(APTR, i->is_Data, A1),
 	AROS_UFCA(APTR, i->is_Code, A5),
 	AROS_UFCA(struct ExecBase *, SysBase, A6));	
@@ -355,7 +358,7 @@ KPrintF("ahi_pci_rem_intserver\n");
 APTR ahi_pci_logic_to_physic_addr(APTR addr, APTR dev)
 {
     struct pHidd_PCIDriver_CPUtoPCI __msg__, *msg = &__msg__;
-    IPTR      	    	    	    driverobj;
+    IPTR      	    	    	    driverobj, retval;
    
     OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Driver, &driverobj);
 
@@ -364,7 +367,11 @@ APTR ahi_pci_logic_to_physic_addr(APTR addr, APTR dev)
 
 KPrintF("ahi_pci_logic_to_physic_addr(%lx)\n", msg->address);
     
-    return (APTR)OOP_DoMethod((OOP_Object *)driverobj, (OOP_Msg)msg);
+    retval =  (APTR)OOP_DoMethod((OOP_Object *)driverobj, (OOP_Msg)msg);
+
+KPrintF("ahi_pci_logic_to_physic_addr(%lx) = %lx\n", msg->address, retval);
+
+    return retval;
 }
 
 APTR ahi_pci_get_base_address(WORD which, APTR dev)
