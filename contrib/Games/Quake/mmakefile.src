@@ -11,7 +11,7 @@ DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a	\
 EXE := $(INSTDIR)/quake
 
 #MM- contrib-games : Quake
-#MM
+#MM Quake : linklibs includes
 Quake : make-dirs $(EXE)
 
 make-dirs :
