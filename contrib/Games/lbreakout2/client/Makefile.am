@@ -1,3 +1,4 @@
+
 DEFS = @network_flag@ @arch_flag@ @warp_flag@ @audio_flag@ @inst_flag@ @hi_inst_flag@ @DEFS@
 
 lbreakout2res.o: win32.ico 
@@ -35,7 +36,7 @@ editor.c help.c hint.c theme.c client.c client_recv.c \
 client_data.c client_game.c client_handlers.c comm.c \
 display.c main.c win32.ico
 lbreakout2_DEPENDENCIES = @win32_deps@
-lbreakout2_LDADD = @win32_deps@ @mixer_flag@ ../common/libcommon.a ../gui/libGui.a
+lbreakout2_LDADD = @win32_deps@ ../common/libcommon.a ../gui/libGui.a @mixer_flag@ 
 
 EXTRA_DIST = credit.h shine.h extras.h balls.h shrapnells.h  \
 shots.h event.h paddle.h frame.h misc.h bricks.h difficulty.h player.h game.h \
