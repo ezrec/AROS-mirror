@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/08/07 21:49:51  stegerg
+ * fixed/activated REGPARAM/REGFUNC macros.
+ *
  * Revision 42.2  2000/07/09 03:05:10  bergers
  * Makes the gadgets compilable.
  *
@@ -122,19 +125,19 @@ extern void __stdargs KPrintF(char *fmt,...);
   #undef SAVEDS
   #define SAVEDS
 
-#if 0
+#if 1
   #ifndef REGPARAM
-  #define REGPARAM(reg,type,name) AROS_UFHA(type, name, reg)
+  #define REGPARAM(reg,type,name) type,name,reg
   
-  #define REGFUNC1(r,n,a1) AROS_UFH1(r,n,a1)
-  #define REGFUNC2(r,n,a1,a2) AROS_UFH2(r,n,a1,a2)
-  #define REGFUNC3(r,n,a1,a2,a3) AROS_UFH3(r,n,a1,a2,a3)
-  #define REGFUNC4(r,n,a1,a2,a3,a4) AROS_UFH4(r,n,a1,a2,a3,a4)
-  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) AROS_UFH5(r,n,a1,a2,a3,a4,a5)
-  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) AROS_UFH6(r,n,a1,a2,a3,a4,a5,a6)
-  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFH7(r,n,a1,a2,a3,a4,a5,a6,a7)
-  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,a1,a2,a3,a4,a5,a6,a7,a8)
-  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9)
+  #define REGFUNC1(r,n,a1) AROS_UFH1(r,n,AROS_UFHA(a1))
+  #define REGFUNC2(r,n,a1,a2) AROS_UFH2(r,n,AROS_UFHA(a1),AROS_UFHA(a2))
+  #define REGFUNC3(r,n,a1,a2,a3) AROS_UFH3(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3))
+  #define REGFUNC4(r,n,a1,a2,a3,a4) AROS_UFH4(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4))
+  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) AROS_UFH5(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5))
+  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) AROS_UFH6(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6))
+  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFH7(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7))
+  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8))
+  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8),AROS_UFHA(a9))
   #endif
 #else
   #ifndef REGPARAM
