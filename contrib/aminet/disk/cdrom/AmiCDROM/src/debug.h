@@ -1,12 +1,12 @@
 #ifndef ACDR_DEBUG_H
 #define ACDR_DEBUG_H
 
-//#define NDEBUG
+#define NDEBUG
 //#define DEBUG_SECTORS
 
 #if defined(__AROS__) || defined(__MORPHOS__)
 #	undef DEBUG
-#	define DEBUG 1
+#	define DEBUG 0
 #ifdef __AROS__
 #	include <aros/debug.h>
 #else
