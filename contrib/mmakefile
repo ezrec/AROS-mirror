@@ -5,4 +5,26 @@
 apps :
 	@$(NOP)
 
-#MM fish : fish-microemacs fish-lotto fish-henon
+#MM fish : fish-microemacs fish-lotto fish-henon fish-bcubic
+#MM fish : fish-bezier1 fish-bezier2 fish-tree fish-grep
+
+
+# The apps below are not working yet as functions are still missing
+
+
+# Missing for fish-rubik:
+#   AreaEnd, ClipBlit, Flood, InitBitMap, MakeScreen, RethinkDisplay, ScrollVPort
+#   WaitBlit
+
+# M fish : fish-rubik
+
+# Missing for fish-yachtc
+#   CurrentTime SetMenuStrip
+
+# M fish : fish-yachtc
+
+
+#These do not compile properly, yet!
+# MM fish-mandelbrotsrc 
+# MM fish-mandel
+# MM fish-layers
