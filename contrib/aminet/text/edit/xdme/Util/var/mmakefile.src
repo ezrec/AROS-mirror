@@ -1,0 +1,46 @@
+#   $Id$
+#
+#   Makefile to make XDME
+
+USER_CFLAGS := -I.
+
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(OBJDIR)
+EXE := $(EXEDIR)/Parser
+
+FILES := Dyn fp lex.yy support Yacc.tab
+
+USE_AROSLIB := yes
+USE_CLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_BGUILIB := yes
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+#MM 
+setup-xdme-parser : make-dirs Parser
+
+make-dirs :
+	$(MKDIR) $(OBJDIR)
+
+PARSER_OBJS := $(foreach f,$(FILES),$(OBJDIR)/$(f).o)
+
+$(EXE) : $(PARSER_OBJS)
+	$(HOST_CC) -o $@ $(PARSER_OBJS)
+
+$(OBJDIR)/Yacc.tab.o : Yacc.tab.c
+	$(HOST_CC) $(CFLAGS) -c -o $@ $<
+
+Yacc.tab.c : Yacc.y
+	bison -d Yacc.y
+
+$(OBJDIR)/lex.yy.o : lex.yy.c Dyn.h Yacc.tab.c
+	$(HOST_CC) $(CFLAGS) -c -o $@ $<
+
+lex.yy.c : Lex.l
+	lex -d Lex.l
+
+%common
+%include_deps
