@@ -401,16 +401,6 @@ SetAPen(rp,3);
   AnzMarken++;
 }
 
-void Anzeige()
-{
-char outtext[4];
-  time(&tend);
-  sprintf(outtext,"%3d",Anzahl-AnzMarken);
-  write_text(left+box_width*width/2-55,25,outtext,1);
-  sprintf(outtext,"%3d",(int)(tend-tstart));
-  write_text(left+box_width*width/2+35,25,outtext,1);
-}
-
 int anzfelder(int x, int y)
 {
 int a,b,wert;
@@ -479,9 +469,10 @@ BOOL weiter=TRUE,Abbr=FALSE;
 void Spiel()
 {
 BOOL start=FALSE;
-  time(&tstart);
-  tend=tstart;
-  Anzeige();
+
+  /* Init timer */
+  finish = FALSE;
+
   while(!Fehler && Rest>Anzahl && !ende && !SpielAbbr)
   {
     Wait(1L<<Window->UserPort->mp_SigBit);
@@ -497,7 +488,10 @@ BOOL start=FALSE;
                           break;
       case IDCMP_MOUSEBUTTONS : if(start==FALSE)
                           {
+                            time(&tstart);
                             start=TRUE;
+                            Signal(t,1<<sigbit2); /* Tell timer to start off */
+                            Wait(1<<sigbit1); /* Wait for his signal */
                             time(&tstart);
                           }
 if(mausx<5&&mausy<5)Fehler=loesen();
@@ -534,11 +528,13 @@ if(mausx<5&&mausy<5)Fehler=loesen();
                               default          : break;
                             }
                           }
-                          Anzeige();
                           break;
     }
   }
-  time(&tend);
+
+  /* stop timer */
+  finish = TRUE;
+  Wait(1<<sigbit1); /* Wait for timer to stop */
 }
 
 void Auswertung()

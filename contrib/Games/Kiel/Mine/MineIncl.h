@@ -1,5 +1,6 @@
 #include "../prec.c"
 
+extern struct ExecBase *SysBase;
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
 struct Window *Window;

@@ -9,6 +9,8 @@
 #include <dos/datetime.h>
 #include <exec/types.h>
 #include <exec/memory.h>
+#include <exec/tasks.h>
+#include <exec/execbase.h>
 #include <graphics/gfxbase.h>
 #include <graphics/gfx.h>
 #include <graphics/rastport.h>
@@ -26,3 +28,4 @@
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <proto/console.h>
+#include <aros/machine.h>

@@ -1,5 +1,5 @@
 /*
-    (C) 1995-97 AROS - The Amiga Replacement OS
+    (C) 1995-98 AROS - The Amiga Research OS
     $Id$
 
     Desc: Mine Game
@@ -30,10 +30,11 @@
 
 	24-Aug-1997	hkiel	  Initial inclusion into the AROS tree
 	16-Sep-1997	hkiel	  Fixed all casts
+	03-Oct-1998	hkiel	  Added Counter task and fixed random()
 
 ******************************************************************************/
 
-static const char version[] = "$VER: Mine 0.2 (16.09.1997)\n";
+static const char version[] = "$VER: Mine 0.3 (03.10.1998)\n";
 
 #include "MineIncl.h"
 
@@ -53,7 +54,7 @@ static const char version[] = "$VER: Mine 0.2 (16.09.1997)\n";
 #define FORTGESCHRITTENE 2
 #define PROFIS 3
 
-#define random(min,max) ((rand() % (int)(((max)+1)-(min)))+(min))
+#define random(min,max) (((int)((float)(((float)(rand()))/((float)(RAND_MAX))*(max-min+1))))+min)
 
 
 /* ---------------------------------- Gadgets ------------------------------- */
@@ -112,6 +113,56 @@ char names[4][21];
 
 #include "MineFile.h"
 
+/* Timer-Task */
+#define NEWLIST(l)                          \
+((l)->lh_Head=(struct Node *)&(l)->lh_Tail, \
+ (l)->lh_Tail=NULL,                         \
+ (l)->lh_TailPred=(struct Node *)(l))
+
+struct Task *t=NULL;
+UBYTE *s=NULL;
+
+/* shared */
+int finish = FALSE, killme = FALSE;
+int sigbit1, sigbit2;
+struct Task *parent;
+
+#define STACKSIZE 4096
+
+static void entry(void)
+{
+char outtext[4];
+
+  sigbit2=AllocSignal(-1);
+  Signal(parent,1<<sigbit1); /* Tell creator that we are ready */
+  if( sigbit2!=0 )
+  {
+    for(;;)
+    {
+      Wait(1<<sigbit2); /* Wait for being restarted or killed */
+      if( killme == TRUE )
+      {
+        FreeSignal(sigbit2);
+        Signal(parent,1<<sigbit1); /* We have freed our resources */
+        Wait(0);
+      }
+      finish = FALSE;
+      Signal(parent,1<<sigbit1); /* We are ready for counting */
+      while(!finish)
+      {
+        time(&tend);
+        sprintf(outtext,"%3d",Anzahl-AnzMarken);
+        write_text(left+box_width*width/2-55,25,outtext,1);
+        sprintf(outtext,"%3d",(int)(tend-tstart));
+        write_text(left+box_width*width/2+35,25,outtext,1);
+        Delay(50);
+      }
+      Signal(parent,1<<sigbit1); /* We stopped counting */
+    }
+  }
+}
+
+
 void globalInit()
 {
 BYTE i;
@@ -130,6 +181,33 @@ BYTE i;
     strcpy(names[i],"Keiner");
   }
   open_hsfile();
+  killme = FALSE;
+  parent=SysBase->ThisTask;
+  sigbit1=AllocSignal(-1);
+  if(sigbit1!=0)
+  {
+    t=(struct Task *)AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
+    if(t!=NULL)
+    {
+      s=(UBYTE *)AllocMem(STACKSIZE, MEMF_PUBLIC|MEMF_CLEAR);
+      if(s!=NULL)
+      {
+        t->tc_Node.ln_Type=NT_TASK;
+        t->tc_Node.ln_Pri=1;
+        t->tc_Node.ln_Name="counter";
+        t->tc_SPLower=s;
+        t->tc_SPUpper=s+STACKSIZE;
+#if AROS_STACK_GROWS_DOWNWARDS
+        t->tc_SPReg=(UBYTE *)t->tc_SPUpper-SP_OFFSET;
+#else
+        t->tc_SPReg=(UBYTE *)t->tc_SPLower-SP_OFFSET;
+#endif
+        NEWLIST(&t->tc_MemEntry);
+        AddTask(t,&entry,NULL);
+        Wait(1<<sigbit1); /* Wait for child to init */
+      }
+    }
+  }
 }
 
 #include "MineGame.h"
@@ -223,6 +301,25 @@ BOOL weiter=FALSE,ret=FALSE;
 
 void CleanUp()
 {
+  /* stop timer task */
+  if(sigbit1!=0)
+  {
+    if(t!=NULL)
+    {
+      if(s!=NULL)
+      {
+        killme = TRUE; /* tell child to go to sleep */
+        Signal(t,1<<sigbit2); /* Tell child to react */
+        Wait(1<<sigbit1); /* He's gone asleep, but wait a moment */
+        Delay(5);
+        RemTask(t);
+        FreeMem(s,STACKSIZE);
+      }
+      FreeMem(t,sizeof(struct Task));
+    }
+    FreeSignal(sigbit1);
+  }
+
   close_hsfile();
   close_window();
   close_lib();
@@ -252,3 +349,4 @@ int main()
   CleanUp();
   return(0);
 }
+
