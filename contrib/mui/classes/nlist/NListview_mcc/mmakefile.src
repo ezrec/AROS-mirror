@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 USER_INCLUDES = -I../commonaros
 
 %build_module_macro mmake=contrib-zune-classes-nlistview \
-  modname=NListview modtype=mcc dir=$(CONTRIBDIR)/NList \
+  modname=NListview modtype=mcc dir=$(CONTRIBDIR)/NList/Classes/Zune \
   initfile=library files=NListview \
   uselibs="amiga mui rom m"
 

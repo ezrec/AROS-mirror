@@ -1,0 +1,13 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup Package-Shutdown
+
+#MM contrib-zune-classes-nlist-startup :
+
+#MM- contrib-zune-classes-nlist      : contrib-zune-classes-nlist-startup
+#MM- contrib-zune-classes-nlistview  : contrib-zune-classes-nlist-startup
+#MM- contrib-zune-classes-nfloattext : contrib-zune-classes-nlist-startup
+
+%copy_files_q dst=$(CONTRIBDIR)/NList/S maketarget=contrib-zune-classes-nlist-startup
+
