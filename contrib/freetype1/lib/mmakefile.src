@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-#MM contrib-freetype1-linklib : contrib-freetype1-includes
+#MM contrib-freetype1-linklib : contrib-freetype1-includes linklibs-freetype-config
 #MM contrib-freetype1-module : contrib-freetype1-includes
 
 FILESDIR := \
@@ -40,3 +40,12 @@ INCLUDE_FILES = freetype.h fterrid.h ftnameid.h
 %copy_includes mmake=contrib-freetype1-includes includes=$(INCLUDE_FILES) dir= path=freetype1/freetype
 
 %common
+
+#MM
+linklibs-freetype-config : \
+    $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-freetype-config
+
+$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-freetype-config: freetype-config.in
+	@sed 's,@AROS_INCLUDE@,$(AROS_INCLUDES),g; s,@AROS_LIB@,$(AROS_LIB),g' freetype-config.in > $@
+	@chmod a+x $@
+	ln -sf $@ $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)/freetype-config
