@@ -114,7 +114,7 @@ rexx -d contrib/rexx contrib/rexx
 # Standalone stuff
 freetype -d contrib/freetype contrib/freetype
 ScalosV2 -d contrib/ScalosV2 contrib/ScalosV2
-uae -d contrib/uae-0.8.16 contrib/uae-0.8.16
+uae -d contrib/emu/uae contrib/emu/uae
 
 # (Large) binaries
 screenshots binaries/screenshots
