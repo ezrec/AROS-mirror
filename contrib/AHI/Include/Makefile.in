@@ -18,6 +18,7 @@ DEVDIR		= ${DISTDIR}/Developer
 DEVINCDIR	= ${DEVDIR}/Include
 
 host		= @host@
+host_cpu	= @host_cpu@
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -30,31 +31,40 @@ VPATH		= @srcdir@
 
 FD2INLINE_TARGET= --target=${host}
 
-#ifeq  ($(host_alias),i686be-amithlon)
-#FD2INLINE_TARGET= --target=ix86be-amithlon
-#else
-#ifneq ($(host_alias),m68k-amigaos)
-#FD2INLINE_TARGET= --target=$(host_alias)
-#endif
-#endif
 
 #
 # Files
 ########################################
 
-ASMFILES	= Asm-lvo-ahi_lib.i Asm-lvo-ahi_sub_lib.i
+ASMTARGETS	= Asm-lvo-ahi_lib.i Asm-lvo-ahi_sub_lib.i
 
-STORMFILES	= Storm-pragma-ahi_lib.h Storm-pragma-ahi_sub_lib.h \
+STORMTARGETS	= Storm-pragma-ahi_lib.h Storm-pragma-ahi_sub_lib.h \
 		  Storm-proto-ahi.h Storm-proto-ahi_sub.h
 
-SASFILES	= SAS-pragmas-ahi_pragmas.h SAS-pragmas-ahi_sub_pragmas.h \
+SASTARGETS	= SAS-pragmas-ahi_pragmas.h SAS-pragmas-ahi_sub_pragmas.h \
 		  SAS-proto-ahi.h SAS-proto-ahi_sub.h
 
-GCCFILES	= gcc-inline-ahi.h gcc-inline-ahi_sub.h \
-		  gcc-proto-ahi.h gcc-proto-ahi_sub.h \
-#		  gcc-ppcinline-ahi.h gcc-ppcinline-ahi_sub.h
+GCCTARGETS	= gcc-inline-ahi.h gcc-inline-ahi_sub.h \
+		  gcc-proto-ahi.h gcc-proto-ahi_sub.h
 
-TARGETS		= $(ASMFILES) $(STORMFILES) $(SASFILES) $(GCCFILES)
+
+
+ASMFILES	= Asm/devices/ahi.i Asm/libraries/ahi_sub.i
+
+CFILES		= C/clib/ahi_protos.h C/clib/ahi_sub_protos.h \
+		  C/libraries/ahi_sub.h C/devices/ahi.h
+
+FDFILES		= FD/ahi_lib.fd  FD/ahi_sub_lib.fd
+
+
+
+TARGETS		= $(GCCTARGETS)
+FILES		= $(CFILES) $(FDFILES)
+
+ifeq ($(host_cpu),m68k)
+TARGETS		+= $(ASMTARGETS) $(STORMTARGETS) $(SASTARGETS)
+FILES		+= $(ASMFILES)
+endif
 
 #
 # Targets
@@ -75,19 +85,17 @@ maintainer-clean: distclean
 install:
 
 bindist:	$(TARGETS)
-	$(INSTALL) --directory $(DEVINCDIR) $(DEVINCDIR)/gcc \
-	           $(DEVINCDIR)/SAS $(DEVINCDIR)/Storm
-
-	cd $(srcdir) && for dir in `find Asm C FD -type d -not -name CVS`; do \
-	 $(INSTALL) --directory $(DEVINCDIR)/$$dir; \
-	done
-	cd $(srcdir) && for file in `find Asm C FD -type f -not -path "*CVS/*"`; do \
-	 $(INSTALL_DATA) $$file $(DEVINCDIR)/$$file; \
-	done
-
 	for file in $(TARGETS); do \
 	 $(INSTALL) --directory $(DEVINCDIR)/`echo $$file | sed -e 's,\(.*\)-.*.,\1,' | sed -e 's,-,/,g'`; \
 	 $(INSTALL_DATA) $$file $(DEVINCDIR)/`echo $$file | sed -e 's,-,/,g'`; \
+	done
+
+	for dir in $(dir $(FILES)); do \
+	 $(INSTALL) --directory $(DEVINCDIR)/$$dir; \
+	done
+
+	for file in $(FILES); do \
+	 $(INSTALL_DATA) $(srcdir)/$$file $(DEVINCDIR)/$$file; \
 	done
 
 gcc-include: FD/ahi_lib.fd FD/ahi_sub_lib.fd \
@@ -166,10 +174,10 @@ SAS-proto-ahi_sub.h:	FD/ahi_sub_lib.fd
 	mv ahi_sub.h $@
 
 gcc-inline-ahi.h:	FD/ahi_lib.fd C/clib/ahi_protos.h
-	$(FD2INLINE) --new $< $(srcdir)/C/clib/ahi_protos.h -o $@
+	$(FD2INLINE) --new $(FD2INLINE_TARGET) $< $(srcdir)/C/clib/ahi_protos.h -o $@
 
 gcc-inline-ahi_sub.h:	FD/ahi_sub_lib.fd C/clib/ahi_sub_protos.h
-	$(FD2INLINE) --new $< $(srcdir)/C/clib/ahi_sub_protos.h -o $@
+	$(FD2INLINE) --new $(FD2INLINE_TARGET) $< $(srcdir)/C/clib/ahi_sub_protos.h -o $@
 
 #gcc-ppcinline-ahi.h:	FD/ahi_lib.fd C/clib/ahi_protos.h
 #	$(FD2INLINE) --new --powerup $< $(srcdir)/C/clib/ahi_protos.h -o $@
@@ -178,7 +186,7 @@ gcc-inline-ahi_sub.h:	FD/ahi_sub_lib.fd C/clib/ahi_sub_protos.h
 #	$(FD2INLINE) --new --powerup $< $(srcdir)/C/clib/ahi_sub_protos.h -o $@
 
 gcc-proto-ahi.h:		FD/ahi_lib.fd
-	$(FD2INLINE) --proto $< -o $@
+	$(FD2INLINE) --proto $(FD2INLINE_TARGET) $< -o $@
 
 gcc-proto-ahi_sub.h:	FD/ahi_sub_lib.fd
-	$(FD2INLINE) --proto $< -o $@
+	$(FD2INLINE) --proto $(FD2INLINE_TARGET) $< -o $@
