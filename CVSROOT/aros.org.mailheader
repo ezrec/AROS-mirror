@@ -16,11 +16,12 @@ aros-user-owner:         aros-user-admin
 
 ## aros-announce mailing list
 ## created: 06-Mar-2000 root
-aros-announce:           "|/var/lib/mailman/mail/wrapper post aros-announce"
-aros-announce-admin:     "|/var/lib/mailman/mail/wrapper mailowner aros-announce"
-aros-announce-request:   "|/var/lib/mailman/mail/wrapper mailcmd aros-announce"
-owner-aros-announce:     aros-announce-admin
-aros-announce-owner:     aros-announce-admin
+# 21.12.2002 digulla Disabled because of too much spam
+#aros-announce:           "|/var/lib/mailman/mail/wrapper post aros-announce"
+#aros-announce-admin:     "|/var/lib/mailman/mail/wrapper mailowner aros-announce"
+#aros-announce-request:   "|/var/lib/mailman/mail/wrapper mailcmd aros-announce"
+#owner-aros-announce:     aros-announce-admin
+#aros-announce-owner:     aros-announce-admin
 
 www:                    digulla@hepe.com
 postmaster:             digulla@hepe.com
