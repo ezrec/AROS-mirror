@@ -15,12 +15,12 @@ EXE := $(DESTDIR)/GadgetTest
 
 .PHONY : all clean
 
-#MM aminet-gadgedtest : setup-aminet-gadgedtest
-aminet-gadgedtest	: $(OBJS) $(EXE)
+#MM aminet-gadgettest : setup-aminet-gadgettest
+aminet-gadgettest	: $(OBJS) $(EXE)
 	@$(NOP)
 
 #MM
-setup-aminet-gadgedtest :
+setup-aminet-gadgettest :
 	%mkdirs_q $(DESTDIR) $(OBJDIR)
 
 $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
