@@ -1,4 +1,7 @@
 aminet/ - A collection of sourcecodes from AmiNet.
 
+fish/ - Various programs copied from Fish disks and compiled with AROS.
+
 Games/ - A collection of games for AROS.
 
+Misc/ - Small contributed demo and test programs.
