@@ -1,13 +1,13 @@
 #   $Id$
 #
-#   Makefile to make LoadWB.
+#   Makefile to make C:Workbench.
 
 include $(TOP)/config/make.cfg
 
-FILES := loadwb execute about
+FILES := main execute about
 
 EXEDIR := $(AROSDIR)/C
-EXE := $(EXEDIR)/LoadWB
+EXE    := $(EXEDIR)/Workbench
 
 USE_CLIB := yes
 USE_AMIGALIB := yes
