@@ -232,11 +232,6 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 #	@$(CC) $(ENHANCED_OPTIONS) $(DEFINES) -c ver.c -o o/ver.o
 #	endif
 	@$(ECHO) Linking $@...
-#	@$(CC) -nostartfiles -nostdlib -Wl,-i \
-#	      o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
-#	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
-#	      o/plgroupclasses$(o) o/endtag.o \
-#	      -static -i -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -o $@
 	@$(AROS_LD) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) \
 	      o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
 	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
@@ -309,4 +304,3 @@ o/endtag.o: endtag.c
 
 o/%$(o): %.c
 	@$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@ 2>&1|tee $@.err
-
