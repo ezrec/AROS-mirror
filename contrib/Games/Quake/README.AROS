@@ -13,10 +13,10 @@ a few minor changes:
 
 memory: Quake needs at least 8 megs of contigous memory.
 So you have to change the amount of memory allocated
-at startup. This can be doen through setting
-the memSize variable in
-config/linux/exec/init.c to for example 12 instead of 2.
-(or config/freebsd/exec/init.c if you run FreeBSD).
+at startup. This can be done in the UNIX version using
+the -m parameter of the "aros" command. For example:
+
+    ./aros -m 12
 
 stack: Quake needs lots of stack !
 In workbench/c/shell.c you can change the
@@ -26,11 +26,8 @@ second parameter of the RunCommand() call from
 speed:
 To increase the speed of quake you can enable
 the XShm support in the gfx hidd (if you have the
-XShm extensions installed). This is done by changing
-in config/x11/hidd/xshm.h
-#define USE_XSHM 0
-to
-#define USE_XSHM 1
+XShm extensions installed). The configure script
+will automatically detect and activate XShm.
 
 Because of optimizations for 16 bit X displays
 in the gfx hidd, quake will run fastest at this depth.
@@ -43,7 +40,7 @@ which will run quake on its own screen (default is on WB screen)
 and
 -cgfx
 
-This will use cypergraphics.library emulation
+This will use cybergraphics.library emulation
 for rendering. The upside is that the screen palette
 won't get messed up. Downside is that it is a
 little slower, but it should hardly be noticable
