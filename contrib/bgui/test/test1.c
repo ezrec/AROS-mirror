@@ -19,6 +19,10 @@
 #include <proto/intuition.h>
 #include <proto/exec.h>
 
+#ifdef _AROS
+#include <proto/alib.h>
+#endif
+
 struct Library *BGUIBase=NULL;
 
 enum

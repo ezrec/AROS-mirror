@@ -1,0 +1,49 @@
+# $Id$
+
+TOP=../../..
+
+include $(TOP)/config/make.cfg
+
+CFLAGS	        := $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR		:= $(GENDIR)/$(CURDIR)
+LIB		:= $(LIBDIR)/libbgui.a
+
+%define_libs
+
+FILES		:= bgui_newobject
+
+%prepare_replace compiler/alib
+
+OBJS := $(foreach f,$(FILES) $(ADDITIONAL_OBJS),$(OBJDIR)/$(f).o)
+DEPS := $(foreach f,$(FILES) $(ADDITIONAL_OBJS),$(OBJDIR)/$(f).d)
+
+#MM linklib-bgui : setup-linklib-bgui
+linklib-bgui : $(LIB)
+	@$(NOP)
+
+#MM
+setup-linklib-bgui :
+	%mkdirs_q $(OBJDIR) $(LIBDIR)
+
+#MM
+clean-bgui ::
+	-$(RM) $(OBJDIR) *.err $(LIB)
+
+
+TEST_ILDFLAGS := -DTEST $(ILDFLAGS)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q cmd=$(SYS_CC)
+
+$(LIBDIR)/%.o : %.c
+	%compile_q cmd=$(SYS_CC)
+
+$(LIB) : $(OBJS)
+	%mklib_q
+
+$(OBJDIR)/%.d : %.c
+	%mkdepend_q
+
+
+%common
+%include_deps

@@ -17,11 +17,11 @@ DEFINES = -D_AROS -DENHANCED
 MAKE = make
 ECHO = echo
 
-BINDIR = $(TOP)/bin/linux-i386/gen
+BINDIR = $(TOP)/bin/linux-i386/AROS
 LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
 
-OS_INCLUDES_DIR = $(BINDIR)/include
-INCLUDES_DIR = $(BINDIR)/include
+OS_INCLUDES_DIR = $(BINDIR)/Include
+INCLUDES_DIR = $(BINDIR)/Include
 
 OS_INCLUDES = -I$(OS_INCLUDES_DIR)
 USER_INCLUDES = -I. -I$(INCLUDES_DIR)
@@ -48,7 +48,8 @@ INCLUDE_FILES = \
 	$(INCLUDES_DIR)/pragma/bgui_lib.h \
 	$(INCLUDES_DIR)/bgui/bgui_lib.fd \
 	$(INCLUDES_DIR)/clib/bgui_protos.h \
-	$(INCLUDES_DIR)/defines/bgui.h
+	$(INCLUDES_DIR)/defines/bgui.h \
+	$(INCLUDES_DIR)/proto/bgui.h
 
 
 standard_build :
@@ -59,6 +60,73 @@ enhanced_build:
 	@$(ECHO) "Making BGUI enhanced version..."
 	@$(MAKE) -f Makefile.aros BUILD_TYPE=E build
 
+build: bin/bgui.library.$(BUILD_TYPE) test 
+#examples tools
+
+bin/test1: test/test1.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test1
+
+bin/test2: test/test2.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test2
+
+bin/test3: test/test3.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test3
+
+bin/test4: test/test4.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test4
+
+bin/test5: test/test5.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test5
+
+bin/test6: test/test6.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test6
+
+bin/test7: test/test7.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test7
+
+bin/test8: test/test8.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test8
+
+bin/test9: test/test9.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test9
+
+bin/test10: test/test10.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test10
+
+bin/test11: test/test11.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test11
+
+bin/test13: test/test13.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Ctest -fMakefile.aros test13
+
+
+test = \
+bin/test1 \
+bin/test2 \
+bin/test3 \
+bin/test4 \
+bin/test5 \
+bin/test6 \
+bin/test7 \
+bin/test8 \
+bin/test9 \
+bin/test10 \
+bin/test11 \
+bin/test13
+
+test: $(INCLUDE_FILES) $(test)
 
 OBJECTS =  \
 	o/plmain$(o) \
@@ -75,8 +143,6 @@ all: makedirs \
 	$(INCLUDE_FILES) \
 	$(OBJECTS)
 
-build: bin/bgui.library.$(BUILD_TYPE)
-#test examples tools
 
 clean:
 	$(RM) $(INCLUDE_FILES) o/*.o
@@ -139,6 +205,8 @@ $(INCLUDES_DIR)/clib/bgui_protos.h : include/aros/bgui_protos_clib.h
 $(INCLUDES_DIR)/defines/bgui.h : include/aros/bgui_defines.h
 	$(CP) include/aros/bgui_defines.h $@
 
+$(INCLUDES_DIR)/proto/bgui.h : include/bgui_proto_aros.h
+	$(CP) $^ $@
 
 bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 		o/plmain$(o) \

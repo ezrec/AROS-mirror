@@ -1,2 +1,4 @@
 make -f Makefile.aros all
 make -f Makefile.aros enhanced_build
+mmake AROS.linklib-bgui
+make -f Makefile.aros test

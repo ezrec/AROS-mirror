@@ -17,10 +17,10 @@ AROS_LP2(Object *, BGUI_NewObjectA,
 	AROS_LPA(struct TagItem *, tags, A0),
 	struct Library *, BGUIBase, 6, BGUI)
 
-AROS_LP2(ULONG, BGUI_RequestA,
+AROS_LP3(ULONG, BGUI_RequestA,
 	AROS_LPA(struct Window *, win, A0),
 	AROS_LPA(struct bguiRequest *, estruct, A1),
-	AROS_LPA(ULOING * , args, A2),
+	AROS_LPA(ULONG * , args, A2),
 	struct Library *, BGUIBase, 7, BGUI)
 
 AROS_LP4(BOOL, BGUI_Help,
@@ -137,11 +137,11 @@ AROS_LP3(ULONG, BGUI_UnpackStructureTags,
 	struct Library *, BGUIBase, 27, BGUI)
 
 /* private */
-AROS_LP1(, BGUI_GetDefaultTags,
-	AROS_LPA(, id, D0),
+AROS_LP1(struct TagItem *, BGUI_GetDefaultTags,
+	AROS_LPA(ULONG, id, D0),
 	struct Library *, BGUIBase, 28, BGUI)
 	
-AROS_LP0(, GetDefaultPrefs,
+AROS_LP0(VOID, GetDefaultPrefs,
 	struct Library *, BGUIBase, 29, BGUI)
 	
 AROS_LP1(void, BGUI_LoadPrefs,
