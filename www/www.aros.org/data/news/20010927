@@ -1,13 +1,13 @@
 Peter Eriksson committed an update to his Font prefs. It now supports
 full localization and does some IFF sanity checking. There is a
-swedish and a german translation available.
+Swedish and a German translation available.
 
 Johan Grip committed a skeleton for a PCI.hidd which will allow us
 to access PCI hardware directly (graphics cards *YES* :-).
 
 Henning Kiel added <shell>SetClock LOAD</shell> to the 
 <filename>Startup-Sequence</filename> so we have the correct
-system time after bootup. There is now a test script for the
+system time after boot up. There is now a test script for the
 Installer on the boot disk, so you can play around with it
 (<filename>Utilities/test.script</filename>) and some demos
 (at least until we implement C:DiskChange so you can use the
