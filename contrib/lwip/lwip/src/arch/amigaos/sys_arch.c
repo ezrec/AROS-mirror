@@ -31,7 +31,7 @@
  * Author: Adam Dunkels <adam@sics.se>
  *         Sebastian Bauer <sebauer@t-online.de>
  *
- * $Id: sys_arch.c,v 1.7 2002/07/09 22:26:02 sebauer Exp $
+ * $Id: sys_arch.c,v 1.8 2002/07/20 14:39:37 sebauer Exp $
  */
 
 #include <time.h>
@@ -460,7 +460,7 @@ u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
 		    return 0;
 		}
 	    }
-	}   else
+	}  else
 	{
 	    /* We add us now in the wait queue, so sys_sem_signal() knows which signal has to be set */
 	    AddTail((struct List*)&sem->queue,(struct Node*)&data->task_node);
