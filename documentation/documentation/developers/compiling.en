@@ -27,7 +27,7 @@ Requirements
 
 The following software is required for compiling AROS:
 
-+ GCC 2.95.3+
++ GCC 3.2.2+
 + GNU Binutils
 + GNU Make
 + GNU AWK (GAWK)
