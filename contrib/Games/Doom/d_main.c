@@ -15,6 +15,9 @@
 // for more details.
 //
 // $Log$
+// Revision 1.2  2001/03/28 23:13:35  bernie
+// use putchar() instead of printf() (this fixes a missing prototype warning).
+//
 // Revision 1.1  2000/02/29 18:21:04  stegerg
 // Doom port based on ADoomPPC. Read README.AROS!
 //
@@ -1069,7 +1072,7 @@ void D_DoomMain (void)
         time = atoi(myargv[p+1]);
         printf("Levels will end after %d minute",time);
         if (time>1)
-            printf("s");
+            putchar('s');
         printf(".\n");
     }
 
