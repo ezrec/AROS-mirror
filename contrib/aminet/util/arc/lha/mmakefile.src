@@ -15,7 +15,7 @@ USE_CLIB_SHARED := yes
 USE_AMIGALIB := yes
 USE_MLIB := yes
 
-USER_CFLAGS := -DAROS
+USER_CFLAGS := -DAROS -D_ANSI_SOURCE
 
 #MM aminet-util-arc-lha : includes linklibs
 
