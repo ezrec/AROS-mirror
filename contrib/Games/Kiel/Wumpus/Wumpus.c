@@ -1,3 +1,39 @@
+/*
+    (C) 1995-97 AROS - The Amiga Replacement OS
+    $Id$
+
+    Desc: Wumpus Game
+    Lang: german
+*/
+
+/*****************************************************************************
+
+    NAME
+
+        Wumpus
+
+    SYNOPSIS
+
+    LOCATION
+
+        Workbench:Games
+
+    BUGS
+
+    SEE ALSO
+
+        Jump JumpEd Mine Quad
+
+    INTERNALS
+
+    HISTORY
+
+        24-Aug-1997     hkiel     Initial inclusion into the AROS tree
+
+******************************************************************************/
+
+static const char version[] = "$VER: Wumpus 0.1 (29.08.1997)\n";
+
 #include "WumpusIncl.h"
 
 #define NICHT 0
@@ -345,7 +381,7 @@ struct Border SharedBorders1[] = {
   0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs14[0],NULL };
 
 struct IntuiText Rufen_text = {
-  1,0,JAM1,18,10,NULL,(UBYTE *)"Rufen!",NULL };
+  1,0,JAM1,18,18,NULL,(UBYTE *)"Rufen!",NULL };
 
 #define Rufen_ID    4
 
@@ -370,6 +406,12 @@ struct Gadget Speer = {
   (APTR)&SharedBorders1[4],(APTR)&SharedBorders1[6],
   &Speer_text,NULL,NULL,Speer_ID,NULL };
 
+struct IntuiText Ausgang_text[3] = {
+  1,0,JAM1,18,18,NULL,(UBYTE *)"xx",NULL,
+  1,0,JAM1,18,18,NULL,(UBYTE *)"yy",NULL,
+  1,0,JAM1,18,18,NULL,(UBYTE *)"zz",NULL
+};
+
 #define Ausgang3_ID    2
 
 struct Gadget Ausgang3 = {
@@ -378,7 +420,7 @@ struct Gadget Ausgang3 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders1[0],(APTR)&SharedBorders1[2],
-  NULL,NULL,NULL,Ausgang3_ID,NULL };
+  &(Ausgang_text[2]),NULL,NULL,Ausgang3_ID,NULL };
 
 #define Ausgang2_ID    1
 
@@ -388,7 +430,7 @@ struct Gadget Ausgang2 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders1[0],(APTR)&SharedBorders1[2],
-  NULL,NULL,NULL,Ausgang2_ID,NULL };
+  &(Ausgang_text[1]),NULL,NULL,Ausgang2_ID,NULL };
 
 #define Ausgang1_ID    0
 
@@ -398,14 +440,14 @@ struct Gadget Ausgang1 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders1[0],(APTR)&SharedBorders1[2],
-  NULL,NULL,NULL,Ausgang1_ID,NULL };
+  &(Ausgang_text[0]),NULL,NULL,Ausgang1_ID,NULL };
 
 
 #define FIRSTGADGETH &Ausgang1
 
 struct NewWindow new_window = {
   0,0,640,400,0,1,
-  IDCMP_GADGETUP|IDCMP_CLOSEWINDOW,
+  IDCMP_GADGETUP|IDCMP_CLOSEWINDOW|IDCMP_RAWKEY,
   WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_ACTIVATE|WFLG_GIMMEZEROZERO|WFLG_RMBTRAP|WFLG_SMART_REFRESH,
   NULL,NULL,
   (UBYTE *)"   »» Wumpus-Quest ««        by Henning Kiel",NULL,NULL,
@@ -498,6 +540,7 @@ ContMsg();
 
     switch(class)
     {
+      case IDCMP_RAWKEY      :
       case IDCMP_CLOSEWINDOW : ende=TRUE;
                          wende=TRUE;
                          nummer=0;
@@ -522,14 +565,11 @@ SHORT a,b,stinken;
 StopMsg();
   LoescheWin();
   OnGadget(&Speer,Window,NULL);
+  for(a=0;a<3;a++)
+    sprintf(Ausgang_text[a].IText,"%2d",Hoehlensystem[nr-1].Ausgang[a]);
   RefreshGadgets(FIRSTGADGETH,Window,NULL);
   sprintf(outtext,"Höhle %2d",nr);
   schreibe(100,50,outtext,1);
-  for(a=0;a<3;a++)
-  {
-    sprintf(outtext,"%2d",Hoehlensystem[nr-1].Ausgang[a]);
-    schreibe(178+a*155,175,outtext,1);
-  }
   maleFeld(239,239,450,257);
   maleFeld(447,255,241,241);
   stinken=NICHT;
@@ -572,6 +612,7 @@ BOOL abbruch=FALSE,ist;
     ReplyMsg((struct Message *)msg);
     switch(class)
     {
+      case IDCMP_RAWKEY       :
       case IDCMP_CLOSEWINDOW  : ende=TRUE;
                           abbruch=TRUE;
                           return(FALSE);
@@ -607,6 +648,7 @@ StopMsg();
 ContMsg();
   }
   OffGadget(&Speer,Window,NULL);
+  RefreshGadgets(FIRSTGADGETH,Window,NULL);
   return(ist);
 }
 
@@ -694,6 +736,7 @@ ContMsg();
         ReplyMsg((struct Message *)msg);
         switch(class)
         {
+          case IDCMP_RAWKEY       :
           case IDCMP_CLOSEWINDOW  : ende=TRUE;
                               abbruch=TRUE;
                               break;

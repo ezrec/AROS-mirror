@@ -1,3 +1,39 @@
+/*
+    (C) 1995-97 AROS - The Amiga Replacement OS
+    $Id$
+
+    Desc: Quad Game
+    Lang: german
+*/
+
+/*****************************************************************************
+
+    NAME
+
+        Quad
+
+    SYNOPSIS
+
+    LOCATION
+
+        Workbench:Games
+
+    BUGS
+
+    SEE ALSO
+
+        Jump JumpEd Mine Wumpus
+
+    INTERNALS
+
+    HISTORY
+
+        24-Aug-1997     hkiel     Initial inclusion into the AROS tree
+
+******************************************************************************/
+
+static const char version[] = "$VER: Quad 0.1 (29.08.1997)\n";
+
 #include "../prec.c"
 #include "Quad.h"
 #include "QuadIncl.h"

@@ -1,3 +1,39 @@
+/*
+    (C) 1995-97 AROS - The Amiga Replacement OS
+    $Id$
+
+    Desc: JumpEd Game
+    Lang: german
+*/
+
+/*****************************************************************************
+
+    NAME
+
+        JumpEd
+
+    SYNOPSIS
+
+    LOCATION
+
+        Workbench:Games
+
+    BUGS
+
+    SEE ALSO
+
+        Jump Mine Quad Wumpus
+
+    INTERNALS
+
+    HISTORY
+
+        24-Aug-1997     hkiel     Initial inclusion into the AROS tree
+
+******************************************************************************/
+
+static const char version[] = "$VER: JumpEd 0.1 (29.08.1997)\n";
+
 #include "../prec.c"
 #include "JumpEd.h"
 
