@@ -7,7 +7,7 @@ mreckt:cbWLerEivCr6I:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, layers
 ldp:6u5hVWs926luc:Lennard voor den Dag:ldp@xs4all.nl:Amiga port, layers
 quango:cbSYvfdxV/owQ:Chris Lawrence:quango@socomm.net:Linux/m68k
 geert:cbGlFwvZi5iZY:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
-turrican:bcRFEzJmi8r7Y:Kars de Jong:jongk@prac.cs.utwente.nl:misc
+turrican:bcRFEzJmi8r7Y:Kars de Jong:jongk@linux-m68k.org:misc
 nlorentz:db6KtfPCmtZIQ:Nils Henrik Lorentzen:nlorentz@online.no:GadTools, Asl, input.device
 ruppert:aaIqf1gX0RDUU:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 vmc:abZN7WlNN.1yU:Harald Frank:support@isdntown.east.de:Amiga port
@@ -191,3 +191,4 @@ kolla:abDBb2PjDjm.g:Kolbjørn Barmen:kolla@nvg.ntnu.no:
 hassel:bcGA71xRz1XUk:Anders Hasselqvist:hassel@acc.umu.se:
 jdiffend:dauQTNAbLF0Aw:James Diffendaffer:jdiffend@earthlink.net:
 mrzammler:cdJ564A6Pj5q6:Emm Vasilakis:evas@agn.forthnet.gr:
+Vomit:adRgjEzdgQRG.:Hendrik De Vloed:Hendrik.DeVloed@rug.ac.be:

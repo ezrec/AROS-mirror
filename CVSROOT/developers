@@ -7,7 +7,7 @@ mreckt:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, layers
 ldp:Lennard voor den Dag:ldp@xs4all.nl:Amiga port, layers
 quango:Chris Lawrence:quango@socomm.net:Linux/m68k
 geert:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
-turrican:Kars de Jong:jongk@prac.cs.utwente.nl:misc
+turrican:Kars de Jong:jongk@linux-m68k.org:misc
 nlorentz:Nils Henrik Lorentzen:nlorentz@online.no:GadTools, Asl, input.device
 ruppert:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 vmc:Harald Frank:support@isdntown.east.de:Amiga port
@@ -186,3 +186,4 @@ kolla:Kolbjørn Barmen:kolla@nvg.ntnu.no:
 hassel:Anders Hasselqvist:hassel@acc.umu.se:
 jdiffend:James Diffendaffer:jdiffend@earthlink.net:
 mrzammler:Emm Vasilakis:evas@agn.forthnet.gr:
+Vomit:Hendrik De Vloed:Hendrik.DeVloed@rug.ac.be:
