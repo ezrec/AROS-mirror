@@ -1,0 +1,13 @@
+# Makefile to build AHI.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(CONTRIBDIR)/AHI
+
+#MM contrib-AHI
+contrib-AHI : config.cache
+	( export PATH=$$PATH:$(TOOLDIR) ; $(MAKE) )
+
+config.cache :
+	( export PATH=$$PATH:$(TOOLDIR) ; ./configure --host=$(CPU)-$(ARCH)-aros )
