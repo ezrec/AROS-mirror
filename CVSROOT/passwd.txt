@@ -8,7 +8,7 @@ ldp:6u5hVWs926luc:Lennard voor den Dag:ldp@xs4all.nl:Amiga port, layers
 quango:cbSYvfdxV/owQ:Chris Lawrence:quango@socomm.net:Linux/m68k
 geert:cbGlFwvZi5iZY:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
 turrican:bcRFEzJmi8r7Y:Kars de Jong:jongk@prac.cs.utwente.nl:misc
-nlorentz:db6KtfPCmtZIQ:Nils Henrik Lorentzen:nlorentz@sn.no:GadTools, Asl, input.device
+nlorentz:db6KtfPCmtZIQ:Nils Henrik Lorentzen:nlorentz@online.no:GadTools, Asl, input.device
 ruppert:aaIqf1gX0RDUU:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 vmc:abw2.qX7kAnnM:Harald Frank:support@isdntown.east.de:Amiga port
 helios:acwZVMiQtI78o:Martin Steigerwald:steigerw@stud.uni-frankfurt.de:Beta tester
