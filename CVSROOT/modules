@@ -30,6 +30,10 @@
 # Aminet
 aminet -d contrib/aminet contrib/aminet
 
+# Demo
+Demo -d contrib/Demo contrib/Demo
+Voxel -d contrib/Demo/Voxel contrib/Demo/Voxel
+
 # Fish
 fish -d contrib/fish contrib/fish
 microemacs -d contrib/fish/microemacs contrib/fish/microemacs
