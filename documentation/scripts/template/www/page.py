@@ -36,7 +36,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                     A( _N['installation'], hclass='done', href='%(BASE)sdocumentation/users/installation' ),
                     A( _N['using'], hclass='nope', href='%(BASE)sdocumentation/users/using' ),
                     A( _N['faq'], hclass='done', href='%(BASE)sdocumentation/users/faq' ),
-                    _N['ports'],
+                    #_N['ports'],
                     A( _N['links'], hclass='done', href='%(BASE)sdocumentation/users/links' )
                 ] ),
                 _N['developers'],
@@ -47,11 +47,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                     A( _N['compiling'], hclass='nope', href='%(BASE)sdocumentation/developers/compiling' ),
                     A( _N['application-development-manual'], hclass='nope', href='%(BASE)sdocumentation/developers/application-development' ),
                     A( _N['system-development-manual'], hclass='almost', href='%(BASE)sdocumentation/developers/system-development' ),
-                    A( _N['reference'], hclass='nope', href='%(BASE)sdocumentation/developers/reference' ),
+                    #A( _N['reference'], hclass='nope', href='%(BASE)sdocumentation/developers/reference' ),
                     A( _N['specifications'], hclass='nope', href='%(BASE)sdocumentation/developers/specifications' ),
-                    A( _N['ui-style-guide'], hclass='nope', href='%(BASE)sdocumentation/developers/ui' ),
+                    #A( _N['ui-style-guide'], hclass='nope', href='%(BASE)sdocumentation/developers/ui' ),
                     A( _N['documenting'], hclass='nope', href='%(BASE)sdocumentation/developers/documenting' ),
-                    A( _N['translating'], hclass='nope', href='%(BASE)sdocumentation/developers/translating' ),
+                    #A( _N['translating'], hclass='nope', href='%(BASE)sdocumentation/developers/translating' ),
                     A( _N['summaries'], hclass='nope', href='%(BASE)sdocumentation/developers/summaries' ),
                     A( _N['links'], hclass='done', href='%(BASE)sdocumentation/developers/links' )
                 ] )
@@ -60,7 +60,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
             Tree \
             ( [
                 A( _N['mailing-lists'], hclass='done', href='%(BASE)scontact#mailing-lists' ),
-                A( _N['forums'], hclass='done', href='%(BASE)scontact#forums' ),
+                #A( _N['forums'], hclass='done', href='%(BASE)scontact#forums' ),
                 A( _N['irc-channels'], hclass='done', href='%(BASE)scontact#irc-channels' )
             ] ),
             A( _N['credits'], hclass='done', href='%(BASE)scredits' ),
