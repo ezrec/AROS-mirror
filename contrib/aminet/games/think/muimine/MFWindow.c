@@ -769,6 +769,7 @@ static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
 
                     case MENU_MUI_ABOUT:
                     {
+#ifndef USE_ZUNE
                         if (!data->MUIAboutWindow)
                         {
                             data->MUIAboutWindow = AboutmuiObject,
@@ -782,6 +783,7 @@ static ULONG mSet(struct IClass *cl, Object *obj, struct opSet * msg)
                             SetAttrs(data->MUIAboutWindow, MUIA_Window_Open, TRUE,
                                                            TAG_DONE);
                         }
+#endif
                         break;
                     }
 

@@ -41,7 +41,47 @@ char dobjname[256];
 
 #endif /* _DCC */
 
+#ifdef USE_ZUNE_ON_AMIGA
+__near
+#endif
 LONG __stack = 10000;
+
+#ifdef USE_ZUNE_ON_AMIGA
+
+/* On AmigaOS we build a fake library base, because it's not compiled as sharedlibrary yet */
+#include "muimaster_intern.h"
+
+int openmuimaster(void)
+{
+    static struct MUIMasterBase_intern MUIMasterBase_instance;
+    MUIMasterBase = (struct Library*)&MUIMasterBase_instance;
+
+    MUIMasterBase_instance.sysbase = *((struct ExecBase **)4);
+    MUIMasterBase_instance.dosbase = (void*)OpenLibrary("dos.library",37);
+    MUIMasterBase_instance.utilitybase = (void*)OpenLibrary("utility.library",37);
+    MUIMasterBase_instance.aslbase = OpenLibrary("asl.library",37);
+    MUIMasterBase_instance.gfxbase = (void*)OpenLibrary("graphics.library",37);
+    MUIMasterBase_instance.layersbase = OpenLibrary("layers.library",37);
+    MUIMasterBase_instance.intuibase = (void*)OpenLibrary("intuition.library",37);
+    MUIMasterBase_instance.cxbase = OpenLibrary("commodities.library",37);
+    MUIMasterBase_instance.keymapbase = OpenLibrary("keymap.library",37);
+    MUIMasterBase_instance.gadtoolsbase = OpenLibrary("gadtools.library",37);
+    __zune_prefs_init(&__zprefs);
+
+    return 1;
+}
+
+void closemuimaster(void)
+{
+}
+
+#undef SysBase
+#undef IntuitionBase
+#undef GfxBase
+#undef LayersBase
+#undef UtilityBase
+
+#endif
 
 
 /*************************/
@@ -57,10 +97,14 @@ static void fail(APTR app, char *str)
 
 #ifndef _DCC
 
+#ifndef USE_ZUNE_ON_AMIGA
     if (MUIMasterBase)
     {
         CloseLibrary(MUIMasterBase);
     }
+#else
+    closemuimaster();
+#endif
 
     if (DataTypesBase)
     {
@@ -116,7 +160,12 @@ static VOID init(VOID)
 
 #ifndef _DCC
 
+#ifndef USE_ZUNE_ON_AMIGA
     if (!(MUIMasterBase = OpenLibrary(MUIMASTER_NAME,MUIMASTER_VMIN)))
+#else
+#define MUIMASTER_NAME "muimaster.library"
+	  if (!openmuimaster())
+#endif
     {
         fail(NULL, "Failed to open "MUIMASTER_NAME".");
     }
@@ -149,11 +198,12 @@ static VOID stccpy(char *dest,char *source,int len)
 #endif
 
 
+#ifndef USE_ZUNE_ON_AMIGA
 ULONG __stdargs DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
 {
         return(DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL));
 }
-
+#endif
 
 
 /*
@@ -332,7 +382,7 @@ int LoadBitMap(struct LoadBitMapData * data)
                                                 PDTA_Remap           ,TRUE,
                                                 PDTA_Screen          ,data->Screen,
                                                 PDTA_FreeSourceBitMap,TRUE,
-                                                PDTA_DestMode        ,MODE_V43,
+                                                PDTA_DestMode        ,PMODE_V43,
                                                 PDTA_UseFriendBitMap ,TRUE,
                                                 OBP_Precision        ,PRECISION_IMAGE,
                                                 TAG_DONE))

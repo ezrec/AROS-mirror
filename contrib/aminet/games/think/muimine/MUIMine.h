@@ -6,15 +6,26 @@
 /* Includes and other common stuff for the MUI demo programs */
 /*************************************************************/
 
+#ifdef USE_ZUNE
+#ifndef _AROS
+#define USE_ZUNE_ON_AMIGA
+#endif
+#endif
+
+#define MUI_OBSOLETE
+
 /* MUI */
+#ifndef USE_ZUNE_ON_AMIGA
 #include <libraries/mui.h>
+#else
+#include <mui.h>
+#endif
 
 /* System */
 #include <dos/dos.h>
 #include <graphics/gfxmacros.h>
 #include <workbench/workbench.h>
 #include <exec/memory.h>
-#include <datatypes/PictureClassExt.h>
 
 /* Prototypes */
 #include <clib/alib_protos.h>
@@ -28,11 +39,7 @@
 #include <clib/utility_protos.h>
 #include <clib/asl_protos.h>
 
-#ifndef __GNUC__
-#include <clib/muimaster_protos.h>
-#else
-#include <inline/muimaster.h>
-#endif
+#include <proto/muimaster.h>
 
 /* ANSI C */
 #include <stdlib.h>
@@ -79,7 +86,6 @@
 #include <pragmas/gadtools_pragmas.h>
 #include <pragmas/utility_pragmas.h>
 #include <pragmas/asl_pragmas.h>
-#include <pragmas/muimaster_pragmas.h>
 
 #ifndef DATATYPES_PICTURECLASS_H
 #include <datatypes/pictureclass.h>
