@@ -76,7 +76,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
     ] )
 
     counter = Img(
-        src = 'http://www.aros.org/cgi-bin/wwwcount.cgi?df=aros.dat&dd=C&ft=0'
+        src = 'http://sbb.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&dd=C&ft=0'
     )
     
     sponsors = Table\
