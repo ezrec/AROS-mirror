@@ -37,6 +37,7 @@ AROS_UFH3
     AROS_UFHA(struct Drive *, entry,   A1)
 )
 {
+    AROS_USERFUNC_INIT;
     if (entry)
     {
         strings[0] = entry->d_Path;
@@ -53,6 +54,7 @@ AROS_UFH3
         strings[1] = _(MSG_CFG_DRV_DL_TYPE);
         strings[2] = _(MSG_CFG_DRV_DL_MODE);
     }
+    AROS_USERFUNC_EXIT;
 }
 
 struct Hook DriveList_DisplayHook = { { 0 }, 0 };
