@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/07/11 17:04:41  stegerg
+ * temp fix for small gfx bug which happens because of INVERSVID
+ * drawmode not yet working in AROS.
+ *
  * Revision 42.3  2000/05/29 15:42:49  stegerg
  * fixed some "comparison is always 1 due to limited range of data type"
  * errors
@@ -345,8 +349,14 @@ STATIC VOID RenderPopupEntry(struct BaseInfo *bi, CD *cd, ULONG num, BOOL sel)
    /*
     * Setup pens for text.
     */
+#ifdef _AROS
+#warning INVERSVID DrawMode does not work yet in AROS. Remove this temp fix once it does.
+   BSetDPenA(bi, sel ? BARBLOCKPEN : BARDETAILPEN);
+   BSetDPenB(bi, sel ? BARDETAILPEN : BARBLOCKPEN);
+#else
    BSetDPenA(bi, BARDETAILPEN);
    BSetDPenB(bi, BARBLOCKPEN);
+#endif
 
    /*
     * Move to the desired location and render.
