@@ -2,6 +2,8 @@
 #define CONFIG_H
 
 #include <float.h> /* for DBL_MAX definition */
+#include <stdlib.h> /* for qsort */
+#include <unistd.h> /* for unlink */
 
 /*
  * These two are used if POV is being called from within another program
