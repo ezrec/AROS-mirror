@@ -1,0 +1,26 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+##MM- contrib-gnu : contrib-gnu-pdksh
+##MM- contrib-gnu-pdksh : development-pdksh
+
+#MM- development : development-pdksh
+#MM development-pdksh-quick : development-pdksh-fetch
+
+ORIGINS := http://gd.tuwien.ac.at/utils/shells/pdksh/ ftp://ftp.cs.mun.ca/pub/pdksh
+
+ARCHBASE := pdksh-5.2.14
+
+#MM
+development-pdksh-fetch :
+	%fetch archive=$(ARCHBASE).tar.gz destination=$(PORTDIR)/pdksh archive_origins="$(ORIGINS)" \
+	patches_specs=pdksh-5.2.14-aros.diff:pdksh-5.2.14:-p1
+	
+
+%build_with_configure mmake=development-pdksh configure=$(PORTDIR)/pdksh/$(ARCHBASE)/configure \
+     nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
+     extraoptions="--target=$(AROS_TARGET_CPU)-aros  --build=local --disable-nls"
+
+
