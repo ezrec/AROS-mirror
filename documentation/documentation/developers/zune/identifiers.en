@@ -73,6 +73,7 @@ Base                      Name                       Class
 (MUIB_AROS | 0x00000000)  MUIB_Clock                 Clock.mcc
 (MUIB_AROS | 0x00000100)  MUIB_Calendar              Calendar.mcc
 (MUIB_AROS | 0x00000200)  MUIB_PreferencesWindow     PreferencesWindow.mcc
+(MUIB_AROS | 0x00000300)  MUIB_IconImage             IconImage.mcc
 ========================  =========================  ========================
 
 
@@ -134,6 +135,19 @@ Identifier                             Name                                  P
 (MUIB_PreferencesWindow | 0x00000003)  MUIM_PreferencesWindow_Use
 (MUIB_PreferencesWindow | 0x00000004)  MUIM_PreferencesWindow_Cancel
 =====================================  ====================================  =
+
+
+Class: IconImage.mcc
+--------------------
+
+=============================  ===============================  =  =  =  =  ====================
+Attributes
+------------------------------------------------------------------------------------------------
+Identifier                     Name                             I  S  G  P  Type                
+=============================  ===============================  =  =  =  =  ====================
+(MUIB_IconImage | 0x00000000)  MUIA_IconImage_DiskObject        X           struct DiskObject *
+(MUIB_IconImage | 0x00000001)  MUIA_IconImage_File              X           CONST_STRPTR
+=============================  ===============================  =  =  =  =  ====================
 
 
 Zune core classes
