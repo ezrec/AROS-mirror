@@ -114,7 +114,7 @@ static void OpenTimer(void)
         Cleanup("Can't open timer.device!");
     }
     
-    TimerBase = &TimerIO->tr_node.io_Device;
+    TimerBase = TimerIO->tr_node.io_Device;
     
     TimerIO->tr_node.io_Message.mn_Node.ln_Type = NT_FREEMSG;
 }
