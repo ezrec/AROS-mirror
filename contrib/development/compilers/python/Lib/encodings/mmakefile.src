@@ -1,25 +1,17 @@
-#   $Id$
+# $Id$
 #
-#   Makefile to copy the Python modules.
+# Makefile to copy the Python modules.
 
 include $(TOP)/config/make.cfg
+include ../../make.cfg
 
-PYTHONDIR := $(CONTRIBDIR)/Python
-DST_DIR   := $(PYTHONDIR)/Libs/Python/encodings
+FILES := $(wildcard *.py)
 
-SRC_FILES := $(wildcard *.py)
-DST_FILES := $(subst %.py,$(DST_DIR)/%.py,$(SRC_FILES))
+#MM- contrib-development-python-modules : contrib-development-python-modules-encodings
+#MM contrib-development-python-modules-encodings
 
-#MM contrib-python-modules 
-
-contrib-python-modules : setup 
-	@$(ECHO) "Copying Python modules to "$(DST_DIR)"..."
-	@$(CP) $(SRC_FILES) $(DST_DIR)
-
-#MM
-setup ::
-	%mkdirs_q $(CONTRIBDIR)/Python/Libs
-	%mkdirs_q $(CONTRIBDIR)/Python/Libs/Python
-	%mkdirs_q $(CONTRIBDIR)/Python/Libs/Python/encodings
-
+contrib-development-python-modules-encodings : files-copy
+	
+%copy_files_q dst=$(PYTHONDIR)/Libs/Python/encodings
+	
 %common
