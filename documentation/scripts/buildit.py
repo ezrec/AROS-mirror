@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 # Copyright © 2002-2003, The AROS Development Team. All rights reserved.
 # $Id$
 
