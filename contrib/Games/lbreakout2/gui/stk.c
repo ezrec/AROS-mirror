@@ -606,6 +606,10 @@ static int is_path_relative(char *path)
     is_relative = ((*path != '\\') && ((strchr(path,':') == NULL)));
 #elif defined(__AROS__)
     is_relative = (strchr(path,':') == NULL);
+    #if defined(__NIX__)
+    is_relative = is_relative && (*path != '/');
+    #endif
+    printf("%s - %d\n", path, is_relative);
 #else			    
     is_relative = (*path != '/');
 #endif
