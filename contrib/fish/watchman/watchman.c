@@ -18,7 +18,6 @@
 /* Figure out the #includes for yourself - or use the trick... */
 
 #include <aros/oldprograms.h>
-#include <aros/machine.h>
 #include <exec/memory.h>
 
 #define Lx 29		/* The eyes offset from upper left corner */

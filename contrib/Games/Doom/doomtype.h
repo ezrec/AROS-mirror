@@ -42,10 +42,6 @@ typedef unsigned char byte;
 
 #define iabs abs
 
-#ifndef AROS_MACHINE_H
-#include <aros/machine.h>
-#endif
-
 #endif
 
 // Predefined with some OS.
@@ -77,6 +73,10 @@ typedef unsigned char byte;
 //-----------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.2  2003/07/19 02:59:04  iaint
+// Remove unnecessary inclusion of <aros/machine.h>. No file should really
+// include this directly, except for one or two other headers.
+//
 // Revision 1.1  2000/02/29 18:21:06  stegerg
 // Doom port based on ADoomPPC. Read README.AROS!
 //

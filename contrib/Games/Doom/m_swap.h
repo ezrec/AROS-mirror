@@ -30,8 +30,9 @@
 
 #ifdef AROS
 
-#ifndef AROS_MACHINE_H
-#include <aros/machine.h>
+
+#ifndef AROS_SYSTEM_H
+#include <aros/system.h>
 #endif
 
 #if AROS_BIG_ENDIAN
@@ -59,6 +60,10 @@ unsigned long	SwapLONG(unsigned long);
 //-----------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.2  2003/07/19 02:59:04  iaint
+// Remove unnecessary inclusion of <aros/machine.h>. No file should really
+// include this directly, except for one or two other headers.
+//
 // Revision 1.1  2000/02/29 18:21:06  stegerg
 // Doom port based on ADoomPPC. Read README.AROS!
 //

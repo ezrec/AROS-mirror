@@ -18,7 +18,6 @@
 */
 
 #define CATCOMP_ARRAY 
-#include <aros/machine.h> 
 #include <libraries/reqtools.h>
 #include <aros/debug.h>
 #include <aros/bigendianio.h>

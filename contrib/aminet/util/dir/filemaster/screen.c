@@ -17,7 +17,6 @@
      Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#include <aros/machine.h> 
 #include <aros/debug.h>  
 #include <aros/bigendianio.h>
 #include <graphics/gfxbase.h>
