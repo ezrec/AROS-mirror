@@ -1,0 +1,15 @@
+Run <>NIL: NetStack
+;WaitForPort NETSTACK
+Wait 1 ; AROS doesn't have WaitForPort
+; configure loop-back device
+ifconfig lo0 localhost
+; Configure first Ethernet device
+ifconfig eth0 192.168.0.3 netmask 255.255.255.0
+; Add route to this host
+route add turtle.localdomain localhost
+; Add route to the default gateway
+route add default 192.168.0.1
+;Assign TCP: Exists > NIL:
+;IF Warn
+;  Mount TCP: from AmiTCP:devs/Inet-Mountlist
+;EndIf

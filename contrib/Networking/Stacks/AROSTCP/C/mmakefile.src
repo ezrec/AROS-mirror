@@ -1,0 +1,12 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+USER_INCLUDES := -isystem ../netinclude
+USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
+
+%build_progs mmake=contrib-Networking-Stacks-AROSTCP-C \
+    files="ifconfig route ping" \
+    targetdir=$(AROSDIR)/AROSTCP/C
+
+#%common
+

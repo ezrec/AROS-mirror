@@ -1,0 +1,33 @@
+;
+; netdb -- the network database file for AROSTCP
+;
+; Copyright © 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
+;                  Helsinki University of Technology, Finland.
+;                  All rights reserved.
+;
+; Include information from local networking environment
+; (File created by installer)
+WITH netdb-myhost
+;
+; hosts
+;
+H 127.0.0.1	localhost
+WITH hosts PREFIX=H
+;
+; Local networks
+;
+N loopback-net	127		software-loopback-net
+;
+; Protocols
+; 
+WITH protocols PREFIX=P
+;
+; Network services, Internet style
+;
+WITH services PREFIX=S
+;
+; Access control list for incoming connections.
+;
+WITH inet.access PREFIX=ACCESS
+;;;; EOF
+
