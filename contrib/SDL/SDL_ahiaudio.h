@@ -30,7 +30,7 @@ static char rcsid =
 
 #include <exec/exec.h>
 #include <dos/dos.h>
-#if defined(__SASC) || defined(WARPOS)
+#if defined(__SASC) || defined(WARPOS) || defined(__AROS__)
 #include <proto/exec.h>
 #else
 #include <inline/exec.h>

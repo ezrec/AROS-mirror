@@ -34,6 +34,7 @@ static char rcsid =
 #include "SDL_audiomem.h"
 #include "SDL_audio_c.h"
 #include "SDL_ahiaudio.h"
+#include "SDL_timer.h"
 
 /* Audio driver functions */
 static int AHI_OpenAudio(_THIS, SDL_AudioSpec *spec);
@@ -248,7 +249,11 @@ static int AHI_OpenAudio(_THIS, SDL_AudioSpec *spec)
 
 		case 16: { /* Signed 16 bit audio data */
 			D(bug("Samples a 16 bit...\n"));
+#if AROS_BIG_ENDIAN
 			spec->format = AUDIO_S16MSB;
+#else
+			spec->format = AUDIO_S16LSB;
+#endif
 			this->hidden->bytespersample=2;
 			if(spec->channels<2)
 				this->hidden->type = AHIST_M16S;

@@ -9,6 +9,7 @@ include $(TOP)/config/make.cfg
 INCLUDE_FILES	:= SDL.h    	    \
     	    	   SDL_active.h     \
 		   SDL_audio.h	    \
+		   SDL_ahiaudio.h   \
 		   SDL_byteorder.h  \
 		   SDL_cdrom.h      \
 		   SDL_copying.h    \
@@ -52,6 +53,7 @@ FILES :=    SDL_error 	    	\
     	    SDL_yuv_sw	    	\
     	    SDL_yuv_mmx     	\
     	    SDL_video	    	\
+	    SDL_ahiaudio	\
     	    SDL_audio	    	\
     	    SDL_audiocvt    	\
     	    SDL_audiomem    	\
@@ -89,7 +91,9 @@ FILES :=    SDL_error 	    	\
     	    SDL_cgxgl_wrapper	\
     	    SDL_gamma
  
-USER_CFLAGS := -DENABLE_CYBERGRAPHICS -DNO_SIGNAL_H
+USER_CFLAGS := -DENABLE_CYBERGRAPHICS -DNO_SIGNAL_H -DENABLE_AHI
+
+CFLAGS += -I$(GENDIR)/contrib/AHI/Include/gcc
 
 %build_linklib mmake=linklibs-SDL libname=SDL files=$(FILES)
 
