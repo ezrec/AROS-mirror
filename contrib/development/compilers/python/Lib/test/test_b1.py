@@ -23,6 +23,10 @@ if abs(0L) != 0L: raise TestFailed, 'abs(0L)'
 if abs(1234L) != 1234L: raise TestFailed, 'abs(1234L)'
 if abs(-1234L) != 1234L: raise TestFailed, 'abs(-1234L)'
 
+try: abs('a')
+except TypeError: pass
+else: raise TestFailed, 'abs("a")'
+
 print 'apply'
 def f0(*args):
     if args != (): raise TestFailed, 'f0 called with ' + `args`
@@ -118,8 +122,18 @@ if complex(0j, 3.14j) != -3.14+0j: raise TestFailed, 'complex(0j, 3.14j)'
 if complex(0.0, 3.14j) != -3.14+0j: raise TestFailed, 'complex(0.0, 3.14j)'
 if complex(0j, 3.14) != 3.14j: raise TestFailed, 'complex(0j, 3.14)'
 if complex(0.0, 3.14) != 3.14j: raise TestFailed, 'complex(0.0, 3.14)'
+if complex("1") != 1+0j: raise TestFailed, 'complex("1")'
+if complex("1j") != 1j: raise TestFailed, 'complex("1j")'
+try: complex("1", "1")
+except TypeError: pass
+else: raise TestFailed, 'complex("1", "1")'
+try: complex(1, "1")
+except TypeError: pass
+else: raise TestFailed, 'complex(1, "1")'
 if complex("  3.14+J  ") != 3.14+1j:  raise TestFailed, 'complex("  3.14+J  )"'
-if complex(u"  3.14+J  ") != 3.14+1j:  raise TestFailed, 'complex(u"  3.14+J  )"'
+if have_unicode:
+    if complex(unicode("  3.14+J  ")) != 3.14+1j:
+        raise TestFailed, 'complex(u"  3.14+J  )"'
 class Z:
     def __complex__(self): return 3.14j
 z = Z()
@@ -174,18 +188,20 @@ if eval('b', globals, locals) != 200:
     raise TestFailed, "eval(3)"
 if eval('c', globals, locals) != 300:
     raise TestFailed, "eval(4)"
-if eval(u'1+1') != 2: raise TestFailed, 'eval(u\'1+1\')'
-if eval(u' 1+1\n') != 2: raise TestFailed, 'eval(u\' 1+1\\n\')'
+if have_unicode:
+    if eval(unicode('1+1')) != 2: raise TestFailed, 'eval(u\'1+1\')'
+    if eval(unicode(' 1+1\n')) != 2: raise TestFailed, 'eval(u\' 1+1\\n\')'
 globals = {'a': 1, 'b': 2}
 locals = {'b': 200, 'c': 300}
-if eval(u'a', globals) != 1:
-    raise TestFailed, "eval(1) == %s" % eval(u'a', globals)
-if eval(u'a', globals, locals) != 1:
-    raise TestFailed, "eval(2)"
-if eval(u'b', globals, locals) != 200:
-    raise TestFailed, "eval(3)"
-if eval(u'c', globals, locals) != 300:
-    raise TestFailed, "eval(4)"
+if have_unicode:
+    if eval(unicode('a'), globals) != 1:
+        raise TestFailed, "eval(1) == %s" % eval(unicode('a'), globals)
+    if eval(unicode('a'), globals, locals) != 1:
+        raise TestFailed, "eval(2)"
+    if eval(unicode('b'), globals, locals) != 200:
+        raise TestFailed, "eval(3)"
+    if eval(unicode('c'), globals, locals) != 300:
+        raise TestFailed, "eval(4)"
 
 print 'execfile'
 z = 0
@@ -249,17 +265,37 @@ if float(3.14) != 3.14: raise TestFailed, 'float(3.14)'
 if float(314) != 314.0: raise TestFailed, 'float(314)'
 if float(314L) != 314.0: raise TestFailed, 'float(314L)'
 if float("  3.14  ") != 3.14:  raise TestFailed, 'float("  3.14  ")'
-if float(u"  3.14  ") != 3.14:  raise TestFailed, 'float(u"  3.14  ")'
-if float(u"  \u0663.\u0661\u0664  ") != 3.14:
-    raise TestFailed, 'float(u"  \u0663.\u0661\u0664  ")'
+if have_unicode:
+    if float(unicode("  3.14  ")) != 3.14:
+        raise TestFailed, 'float(u"  3.14  ")'
+    if float(unicode("  \u0663.\u0661\u0664  ",'raw-unicode-escape')) != 3.14:
+        raise TestFailed, 'float(u"  \u0663.\u0661\u0664  ")'
 
 print 'getattr'
 import sys
 if getattr(sys, 'stdout') is not sys.stdout: raise TestFailed, 'getattr'
+try:
+    getattr(sys, 1)
+except TypeError:
+    pass
+else:
+    raise TestFailed, "getattr(sys, 1) should raise an exception"
+try:
+    getattr(sys, 1, "foo")
+except TypeError:
+    pass
+else:
+    raise TestFailed, 'getattr(sys, 1, "foo") should raise an exception'
 
 print 'hasattr'
 import sys
 if not hasattr(sys, 'stdout'): raise TestFailed, 'hasattr'
+try:
+    hasattr(sys, 1)
+except TypeError:
+    pass
+else:
+    raise TestFailed, "hasattr(sys, 1) should raise an exception"
 
 print 'hash'
 hash(None)
@@ -306,7 +342,9 @@ if int(3.5) != 3: raise TestFailed, 'int(3.5)'
 if int(-3.5) != -3: raise TestFailed, 'int(-3.5)'
 # Different base:
 if int("10",16) != 16L: raise TestFailed, 'int("10",16)'
-if int(u"10",16) != 16L: raise TestFailed, 'int(u"10",16)'
+if have_unicode:
+    if int(unicode("10"),16) != 16L:
+        raise TestFailed, 'int(u"10",16)'
 # Test conversion from strings and various anomalies
 L = [
         ('0', 0),
@@ -325,23 +363,26 @@ L = [
         ('  1\02  ', ValueError),
         ('', ValueError),
         (' ', ValueError),
-        ('  \t\t  ', ValueError),
-        (u'0', 0),
-        (u'1', 1),
-        (u'9', 9),
-        (u'10', 10),
-        (u'99', 99),
-        (u'100', 100),
-        (u'314', 314),
-        (u' 314', 314),
-        (u'\u0663\u0661\u0664 ', 314),
-        (u'  \t\t  314  \t\t  ', 314),
-        (u'  1x', ValueError),
-        (u'  1  ', 1),
-        (u'  1\02  ', ValueError),
-        (u'', ValueError),
-        (u' ', ValueError),
-        (u'  \t\t  ', ValueError),
+        ('  \t\t  ', ValueError)
+]
+if have_unicode:
+    L += [
+        (unicode('0'), 0),
+        (unicode('1'), 1),
+        (unicode('9'), 9),
+        (unicode('10'), 10),
+        (unicode('99'), 99),
+        (unicode('100'), 100),
+        (unicode('314'), 314),
+        (unicode(' 314'), 314),
+        (unicode('\u0663\u0661\u0664 ','raw-unicode-escape'), 314),
+        (unicode('  \t\t  314  \t\t  '), 314),
+        (unicode('  1x'), ValueError),
+        (unicode('  1  '), 1),
+        (unicode('  1\02  '), ValueError),
+        (unicode(''), ValueError),
+        (unicode(' '), ValueError),
+        (unicode('  \t\t  '), ValueError),
 ]
 for s, v in L:
     for sign in "", "+", "-":
@@ -366,13 +407,30 @@ except ValueError:
     pass
 else:
     raise TestFailed, "int(%s)" % `s[1:]` + " should raise ValueError"
+try:
+    int(1e100)
+except OverflowError:
+    pass
+else:
+    raise TestFailed("int(1e100) expected OverflowError")
+try:
+    int(-1e100)
+except OverflowError:
+    pass
+else:
+    raise TestFailed("int(-1e100) expected OverflowError")
+
 
 # SF bug 434186:  0x80000000/2 != 0x80000000>>1.
 # Worked by accident in Windows release build, but failed in debug build.
 # Failed in all Linux builds.
 x = -1-sys.maxint
-if x >> 1 != x/2:
+if x >> 1 != x//2:
     raise TestFailed("x >> 1 != x/2 when x == -1-sys.maxint")
+
+try: int('123\0')
+except ValueError: pass
+else: raise TestFailed("int('123\0') didn't raise exception")
 
 print 'isinstance'
 class C:
@@ -418,6 +476,16 @@ if len([1, 2, 3, 4]) != 4: raise TestFailed, 'len([1, 2, 3, 4])'
 if len({}) != 0: raise TestFailed, 'len({})'
 if len({'a':1, 'b': 2}) != 2: raise TestFailed, 'len({\'a\':1, \'b\': 2})'
 
+print 'list'
+if list([]) != []: raise TestFailed, 'list([])'
+l0_3 = [0, 1, 2, 3]
+l0_3_bis = list(l0_3)
+if l0_3 != l0_3_bis or l0_3 is l0_3_bis: raise TestFailed, 'list([0, 1, 2, 3])'
+if list(()) != []: raise TestFailed, 'list(())'
+if list((0, 1, 2, 3)) != [0, 1, 2, 3]: raise TestFailed, 'list((0, 1, 2, 3))'
+if list('') != []: raise TestFailed, 'list('')'
+if list('spam') != ['s', 'p', 'a', 'm']: raise TestFailed, "list('spam')"
+
 print 'long'
 if long(314) != 314L: raise TestFailed, 'long(314)'
 if long(3.14) != 3L: raise TestFailed, 'long(3.14)'
@@ -429,16 +497,23 @@ if long(-3.9) != -3L: raise TestFailed, 'long(-3.9)'
 if long(3.5) != 3L: raise TestFailed, 'long(3.5)'
 if long(-3.5) != -3L: raise TestFailed, 'long(-3.5)'
 if long("-3") != -3L: raise TestFailed, 'long("-3")'
-if long(u"-3") != -3L: raise TestFailed, 'long(u"-3")'
+if have_unicode:
+    if long(unicode("-3")) != -3L:
+        raise TestFailed, 'long(u"-3")'
 # Different base:
 if long("10",16) != 16L: raise TestFailed, 'long("10",16)'
-if long(u"10",16) != 16L: raise TestFailed, 'long(u"10",16)'
+if have_unicode:
+    if long(unicode("10"),16) != 16L:
+        raise TestFailed, 'long(u"10",16)'
 # Check conversions from string (same test set as for int(), and then some)
 LL = [
         ('1' + '0'*20, 10L**20),
-        ('1' + '0'*100, 10L**100),
-        (u'1' + u'0'*20, 10L**20),
-        (u'1' + u'0'*100, 10L**100),
+        ('1' + '0'*100, 10L**100)
+]
+if have_unicode:
+    L+=[
+        (unicode('1') + unicode('0')*20, 10L**20),
+        (unicode('1') + unicode('0')*100, 10L**100),
 ]
 for s, v in L + LL:
     for sign in "", "+", "-":
@@ -454,6 +529,10 @@ for s, v in L + LL:
                 pass
             except ValueError, e:
                 raise TestFailed, "long(%s) raised ValueError: %s" % (`ss`, e)
+
+try: long('123\0')
+except ValueError: pass
+else: raise TestFailed("long('123\0') didn't raise exception")
 
 print 'map'
 if map(None, 'hello world') != ['h','e','l','l','o',' ','w','o','r','l','d']:

@@ -5,22 +5,24 @@ Simple statements are comprised within a single logical line.
 Several simple statements may occur on a single line separated
 by semicolons.  The syntax for simple statements is:
 
-\begin{verbatim}
-simple_stmt:    expression_stmt
-              | assert_stmt
-              | assignment_stmt
-              | augmented_assignment_stmt
-              | pass_stmt
-              | del_stmt
-              | print_stmt
-              | return_stmt
-              | raise_stmt
-              | break_stmt
-              | continue_stmt
-              | import_stmt
-              | global_stmt
-              | exec_stmt
-\end{verbatim}
+\begin{productionlist}
+  \production{simple_stmt}{\token{expression_stmt}}
+  \productioncont{| \token{assert_stmt}}
+  \productioncont{| \token{assignment_stmt}}
+  \productioncont{| \token{augmented_assignment_stmt}}
+  \productioncont{| \token{pass_stmt}}
+  \productioncont{| \token{del_stmt}}
+  \productioncont{| \token{print_stmt}}
+  \productioncont{| \token{return_stmt}}
+  \productioncont{| \token{yield_stmt}}
+  \productioncont{| \token{raise_stmt}}
+  \productioncont{| \token{break_stmt}}
+  \productioncont{| \token{continue_stmt}}
+  \productioncont{| \token{import_stmt}}
+  \productioncont{| \token{global_stmt}}
+  \productioncont{| \token{exec_stmt}}
+\end{productionlist}
+
 
 \section{Expression statements \label{exprstmts}}
 \indexii{expression}{statement}
@@ -31,9 +33,10 @@ returns no meaningful result; in Python, procedures return the value
 \code{None}).  Other uses of expression statements are allowed and
 occasionally useful.  The syntax for an expression statement is:
 
-\begin{verbatim}
-expression_stmt: expression_list
-\end{verbatim}
+\begin{productionlist}
+  \production{expression_stmt}
+             {\token{expression_list}}
+\end{productionlist}
 
 An expression statement evaluates the expression list (which may be a
 single expression).
@@ -42,9 +45,9 @@ single expression).
 In interactive mode, if the value is not \code{None}, it is converted
 to a string using the built-in \function{repr()}\bifuncindex{repr}
 function and the resulting string is written to standard output (see
-section \ref{print}) on a line by itself.  (Expression statements
-yielding None are not written, so that procedure calls do not cause
-any output.)
+section~\ref{print}) on a line by itself.  (Expression statements
+yielding \code{None} are not written, so that procedure calls do not
+cause any output.)
 \ttindex{None}
 \indexii{string}{conversion}
 \index{output}
@@ -52,14 +55,16 @@ any output.)
 \indexii{writing}{values}
 \indexii{procedure}{call}
 
+
 \section{Assert statements \label{assert}}
 
 Assert statements\stindex{assert} are a convenient way to insert
 debugging assertions\indexii{debugging}{assertions} into a program:
 
-\begin{verbatim}
-assert_statement: "assert" expression ["," expression]
-\end{verbatim}
+\begin{productionlist}
+  \production{assert_statement}
+             {"assert" \token{expression} ["," \token{expression}]}
+\end{productionlist}
 
 The simple form, \samp{assert expression}, is equivalent to
 
@@ -89,6 +94,7 @@ it will be displayed as part of the stack trace.
 Assignments to \code{__debug__} are illegal.  The value for the
 built-in variable is determined when the interpreter starts.
 
+
 \section{Assignment statements \label{assignment}}
 
 Assignment statements\indexii{assignment}{statement} are used to
@@ -99,14 +105,21 @@ objects:
 \obindex{mutable}
 \indexii{attribute}{assignment}
 
-\begin{verbatim}
-assignment_stmt: (target_list "=")+ expression_list
-target_list:     target ("," target)* [","]
-target:          identifier | "(" target_list ")" | "[" target_list "]"
-               | attributeref | subscription | slicing
-\end{verbatim}
+\begin{productionlist}
+  \production{assignment_stmt}
+             {(\token{target_list} "=")+ \token{expression_list}}
+  \production{target_list}
+             {\token{target} ("," \token{target})* [","]}
+  \production{target}
+             {\token{identifier}}
+  \productioncont{| "(" \token{target_list} ")"}
+  \productioncont{| "[" \token{target_list} "]"}
+  \productioncont{| \token{attributeref}}
+  \productioncont{| \token{subscription}}
+  \productioncont{| \token{slicing}}
+\end{productionlist}
 
-(See section \ref{primaries} for the syntax definitions for the last
+(See section~\ref{primaries} for the syntax definitions for the last
 three symbols.)
 
 An assignment statement evaluates the expression list (remember that
@@ -121,7 +134,7 @@ reference, subscription or slicing), the mutable object must
 ultimately perform the assignment and decide about its validity, and
 may raise an exception if the assignment is unacceptable.  The rules
 observed by various types and the exceptions raised are given with the
-definition of the object types (see section \ref{types}).
+definition of the object types (see section~\ref{types}).
 \index{target}
 \indexii{target}{list}
 
@@ -250,22 +263,22 @@ print x
 \end{verbatim}
 
 
-\subsection{Augmented Assignment statements \label{augassign}}
+\subsection{Augmented assignment statements \label{augassign}}
 
 Augmented assignment is the combination, in a single statement, of a binary
 operation and an assignment statement:
 \indexii{augmented}{assignment}
 \index{statement!assignment, augmented}
 
-\begin{verbatim}
-augmented_assignment_stmt: target augop expression_list
-augop:           "+=" | "-=" | "*=" | "/=" | "%=" | "**="
-               | ">>=" | "<<=" | "&=" | "^=" | "|="
-target:          identifier | "(" target_list ")" | "[" target_list "]"
-               | attributeref | subscription | slicing
-\end{verbatim}
+\begin{productionlist}
+  \production{augmented_assignment_stmt}
+             {\token{target} \token{augop} \token{expression_list}}
+  \production{augop}
+             {"+=" | "-=" | "*=" | "/=" | "\%=" | "**="}
+  \productioncont{| ">>=" | "<<=" | "\&=" | "\textasciicircum=" | "|="}
+\end{productionlist}
 
-(See section \ref{primaries} for the syntax definitions for the last
+(See section~\ref{primaries} for the syntax definitions for the last
 three symbols.)
 
 An augmented assignment evaluates the target (which, unlike normal
@@ -284,16 +297,17 @@ modified instead.
 With the exception of assigning to tuples and multiple targets in a single
 statement, the assignment done by augmented assignment statements is handled
 the same way as normal assignments. Similarly, with the exception of the
-possible \emph{in-place} behaviour, the binary operation performed by
+possible \emph{in-place} behavior, the binary operation performed by
 augmented assignment is the same as the normal binary operations.
 
 
 \section{The \keyword{pass} statement \label{pass}}
 \stindex{pass}
 
-\begin{verbatim}
-pass_stmt:      "pass"
-\end{verbatim}
+\begin{productionlist}
+  \production{pass_stmt}
+             {"pass"}
+\end{productionlist}
 
 \keyword{pass} is a null operation --- when it is executed, nothing
 happens.  It is useful as a placeholder when a statement is
@@ -306,12 +320,14 @@ def f(arg): pass    # a function that does nothing (yet)
 class C: pass       # a class with no methods (yet)
 \end{verbatim}
 
+
 \section{The \keyword{del} statement \label{del}}
 \stindex{del}
 
-\begin{verbatim}
-del_stmt:       "del" target_list
-\end{verbatim}
+\begin{productionlist}
+  \production{del_stmt}
+             {"del" \token{target_list}}
+\end{productionlist}
 
 Deletion is recursively defined very similar to the way assignment is
 defined. Rather that spelling it out in full details, here are some
@@ -334,25 +350,32 @@ is in general equivalent to assignment of an empty slice of the
 right type (but even this is determined by the sliced object).
 \indexii{attribute}{deletion}
 
+
 \section{The \keyword{print} statement \label{print}}
 \stindex{print}
 
-\begin{verbatim}
-print_stmt:     "print" [ expression ("," expression)* [","] ]
-\end{verbatim}
+\begin{productionlist}
+  \production{print_stmt}
+             {"print" ( \optional{\token{expression} ("," \token{expression})* \optional{","}}}
+  \productioncont{| ">\code{>}" \token{expression}
+                  \optional{("," \token{expression})+ \optional{","}} )}
+\end{productionlist}
 
 \keyword{print} evaluates each expression in turn and writes the
 resulting object to standard output (see below).  If an object is not
-a string, it is first converted to a string using the rules for string 
+a string, it is first converted to a string using the rules for string
 conversions.  The (resulting or original) string is then written.  A
-space is written before each object is (converted and) written, unless 
+space is written before each object is (converted and) written, unless
 the output system believes it is positioned at the beginning of a
 line.  This is the case (1) when no characters have yet been written
 to standard output, (2) when the last character written to standard
 output is \character{\e n}, or (3) when the last write operation on
 standard output was not a \keyword{print} statement.  (In some cases
 it may be functional to write an empty string to standard output for
-this reason.)
+this reason.)  \note{Objects which act like file objects but which are
+not the built-in file objects often do not properly emulate this
+aspect of the file object's behavior, so it is best not to rely on
+this.}
 \index{output}
 \indexii{writing}{values}
 
@@ -371,13 +394,9 @@ exception is raised.
 \withsubitem{(in module sys)}{\ttindex{stdout}}
 \exindex{RuntimeError}
 
-\keyword{print} also has an extended form, defined as
-\index{extended print statement}
-
-\begin{verbatim}
-print_stmt: "print" ">>" expression [ ("," expression)+ [","] ]
-\end{verbatim}
-
+\keyword{print} also has an extended\index{extended print statement}
+form, defined by the second portion of the syntax described above.
+This form is sometimes referred to as ``\keyword{print} chevron.''
 In this form, the first expression after the \code{>}\code{>} must
 evaluate to a ``file-like'' object, specifically an object that has a
 \method{write()} method as described above.  With this extended form,
@@ -385,12 +404,14 @@ the subsequent expressions are printed to this file object.  If the
 first expression evaluates to \code{None}, then \code{sys.stdout} is
 used as the file for output.
 
+
 \section{The \keyword{return} statement \label{return}}
 \stindex{return}
 
-\begin{verbatim}
-return_stmt:    "return" [expression_list]
-\end{verbatim}
+\begin{productionlist}
+  \production{return_stmt}
+             {"return" [\token{expression_list}]}
+\end{productionlist}
 
 \keyword{return} may only occur syntactically nested in a function
 definition, not within a nested class definition.
@@ -408,12 +429,78 @@ with a \keyword{finally} clause, that \keyword{finally} clause is executed
 before really leaving the function.
 \kwindex{finally}
 
+In a generator function, the \keyword{return} statement is not allowed
+to include an \grammartoken{expression_list}.  In that context, a bare
+\keyword{return} indicates that the generator is done and will cause
+\exception{StopIteration} to be raised.
+
+
+\section{The \keyword{yield} statement \label{yield}}
+\stindex{yield}
+
+\begin{productionlist}
+  \production{yield_stmt}
+             {"yield" \token{expression_list}}
+\end{productionlist}
+
+\index{generator!function}
+\index{generator!iterator}
+\index{function!generator}
+\exindex{StopIteration}
+
+The \keyword{yield} statement is only used when defining a generator
+function, and is only used in the body of the generator function.
+Using a \keyword{yield} statement in a function definition is
+sufficient to cause that definition to create a generator function
+instead of a normal function.
+
+When a generator function is called, it returns an iterator known as a
+generator iterator, or more commonly, a generator.  The body of the
+generator function is executed by calling the generator's
+\method{next()} method repeatedly until it raises an exception.
+
+When a \keyword{yield} statement is executed, the state of the
+generator is frozen and the value of \grammartoken{expression_list} is
+returned to \method{next()}'s caller.  By ``frozen'' we mean that all
+local state is retained, including the current bindings of local
+variables, the instruction pointer, and the internal evaluation stack:
+enough information is saved so that the next time \method{next()} is
+invoked, the function can proceed exactly as if the \keyword{yield}
+statement were just another external call.
+
+The \keyword{yield} statement is not allowed in the \keyword{try}
+clause of a \keyword{try} ...\ \keyword{finally} construct.  The
+difficulty is that there's no guarantee the generator will ever be
+resumed, hence no guarantee that the \keyword{finally} block will ever
+get executed.
+
+\begin{notice}
+In Python 2.2, the \keyword{yield} statement is only allowed
+when the \code{generators} feature has been enabled.  It will always
+be enabled in Python 2.3.  This \code{__future__} import statment can
+be used to enable the feature:
+
+\begin{verbatim}
+from __future__ import generators
+\end{verbatim}
+\end{notice}
+
+
+\begin{seealso}
+  \seepep{0255}{Simple Generators}
+         {The proposal for adding generators and the \keyword{yield}
+          statement to Python.}
+\end{seealso}
+
+
 \section{The \keyword{raise} statement \label{raise}}
 \stindex{raise}
 
-\begin{verbatim}
-raise_stmt:     "raise" [expression ["," expression ["," expression]]]
-\end{verbatim}
+\begin{productionlist}
+  \production{raise_stmt}
+             {"raise" [\token{expression} ["," \token{expression}
+              ["," \token{expression}]]]}
+\end{productionlist}
 
 If no expressions are present, \keyword{raise} re-raises the last
 expression that was raised in the current scope.
@@ -442,18 +529,20 @@ determined in the previous step, with the instance as
 its parameter.
 
 If a third object is present, and it is not \code{None}, it should be
-a traceback object (see section \ref{traceback}), and it is
+a traceback object (see section~\ref{traceback}), and it is
 substituted instead of the current location as the place where the
 exception occurred.  This is useful to re-raise an exception
 transparently in an except clause.
 \obindex{traceback}
 
+
 \section{The \keyword{break} statement \label{break}}
 \stindex{break}
 
-\begin{verbatim}
-break_stmt:     "break"
-\end{verbatim}
+\begin{productionlist}
+  \production{break_stmt}
+             {"break"}
+\end{productionlist}
 
 \keyword{break} may only occur syntactically nested in a \keyword{for}
 or \keyword{while} loop, but not nested in a function or class definition
@@ -475,12 +564,14 @@ with a \keyword{finally} clause, that \keyword{finally} clause is executed
 before really leaving the loop.
 \kwindex{finally}
 
+
 \section{The \keyword{continue} statement \label{continue}}
 \stindex{continue}
 
-\begin{verbatim}
-continue_stmt:  "continue"
-\end{verbatim}
+\begin{productionlist}
+  \production{continue_stmt}
+             {"continue"}
+\end{productionlist}
 
 \keyword{continue} may only occur syntactically nested in a \keyword{for} or
 \keyword{while} loop, but not nested in a function or class definition or
@@ -494,16 +585,21 @@ It continues with the next cycle of the nearest enclosing loop.
 \indexii{loop}{statement}
 \kwindex{finally}
 
+
 \section{The \keyword{import} statement \label{import}}
 \stindex{import}
 
-\begin{verbatim}
-import_stmt:    "import" module ["as" name] ("," module ["as" name] )* 
-              | "from" module "import" identifier ["as" name]
-                ("," identifier ["as" name] )*
-              | "from" module "import" "*" 
-module:         (identifier ".")* identifier
-\end{verbatim}
+\begin{productionlist}
+  \production{import_stmt}
+             {"import" \token{module} ["as" \token{name}]
+                ( "," \token{module} ["as" \token{name}] )*}
+  \productioncont{| "from" \token{module} "import" \token{identifier}
+                    ["as" \token{name}]}
+  \productioncont{  ( "," \token{identifier} ["as" \token{name}] )*}
+  \productioncont{| "from" \token{module} "import" "*"}
+  \production{module}
+             {(\token{identifier} ".")* \token{identifier}}
+\end{productionlist}
 
 Import statements are executed in two steps: (1) find a module, and
 initialize it if necessary; (2) define a name or names in the local
@@ -566,10 +662,19 @@ list of identifiers, looks each one of them up in the module found in step
 As with the first form of \keyword{import}, an alternate local name can be
 supplied by specifying "\keyword{as} localname".  If a name is not found,
 \exception{ImportError} is raised.  If the list of identifiers is replaced
-by a star (\samp{*}), all names defined in the module are bound, except
-those beginning with an underscore (\character{_}).
+by a star (\character{*}), all public names defined in the module are
+bound in the local namespace of the \keyword{import} statement..
 \indexii{name}{binding}
 \exindex{ImportError}
+
+The \emph{public names} defined by a module are determined by checking
+the module's namespace for a variable named \code{__all__}; if
+defined, it must be a sequence of strings which are names defined or
+imported by that module.  The names given in \code{__all__} are all
+considered public and are required to exist.  If \code{__all__} is not
+defined, the set of public names includes all names found in the
+module's namespace which do not begin with an underscore character
+(\character{_}).
 
 Names bound by \keyword{import} statements may not occur in
 \keyword{global} statements in the same scope.
@@ -591,15 +696,22 @@ file \file{__init__.py}.\ttindex{__init__.py}
 \url{http://www.python.org/doc/essays/packages.html} for more details, also
 about how the module search works from inside a package.]
 
-[XXX Also should mention __import__().]
+The built-in function \function{__import__()} is provided to support
+applications that determine which modules need to be loaded
+dynamically; refer to \ulink{Built-in
+Functions}{../lib/built-in-funcs.html} in the
+\citetitle[../lib/lib.html]{Python Library Reference} for additional
+information.
 \bifuncindex{__import__}
+
 
 \section{The \keyword{global} statement \label{global}}
 \stindex{global}
 
-\begin{verbatim}
-global_stmt:    "global" identifier ("," identifier)*
-\end{verbatim}
+\begin{productionlist}
+  \production{global_stmt}
+             {"global" \token{identifier} ("," \token{identifier})*}
+\end{productionlist}
 
 The \keyword{global} statement is a declaration which holds for the
 entire current code block.  It means that the listed identifiers are to be
@@ -634,18 +746,21 @@ containing the \keyword{exec} statement.  The same applies to the
 \bifuncindex{execfile}
 \bifuncindex{compile}
 
+
 \section{The \keyword{exec} statement \label{exec}}
 \stindex{exec}
 
-\begin{verbatim}
-exec_stmt:    "exec" expression ["in" expression ["," expression]]
-\end{verbatim}
+\begin{productionlist}
+  \production{exec_stmt}
+             {"exec" \token{expression}
+              ["in" \token{expression} ["," \token{expression}]]}
+\end{productionlist}
 
 This statement supports dynamic execution of Python code.  The first
 expression should evaluate to either a string, an open file object, or
 a code object.  If it is a string, the string is parsed as a suite of
 Python statements which is then executed (unless a syntax error
-occurs).  If it is an open file, the file is parsed until EOF and
+occurs).  If it is an open file, the file is parsed until \EOF{} and
 executed.  If it is a code object, it is simply executed.
 
 In all cases, if the optional parts are omitted, the code is executed

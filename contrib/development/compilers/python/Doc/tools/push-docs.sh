@@ -3,7 +3,10 @@
 #  Script to push docs from my development area to SourceForge, where the
 #  update-docs.sh script unpacks them into their final destination.
 
-TARGET=python.sourceforge.net:/home/users/f/fd/fdrake/tmp
+TARGETHOST=www.python.org
+TARGETDIR=/usr/home/fdrake/tmp
+
+TARGET="$TARGETHOST:$TARGETDIR"
 
 ADDRESSES='python-dev@python.org doc-sig@python.org python-list@python.org'
 
@@ -18,13 +21,42 @@ else
 fi
 
 EXPLANATION=''
+ANNOUNCE=true
 
-if [ "$1" = '-m' ] ; then
-    EXPLANATION="$2"
-    shift 2
-elif [ "$1" ] ; then
-    EXPLANATION="`cat $1`"
-    shift 1
+while [ "$#" -gt 0 ] ; do
+  case "$1" in
+      -m)
+          EXPLANATION="$2"
+          shift 2
+          ;;
+      -q)
+          ANNOUNCE=false
+          shift 1
+          ;;
+      -t)
+          DOCTYPE="$2"
+          shift 2
+          ;;
+      -F)
+          EXPLANATION="`cat $2`"
+          shift 2
+          ;;
+      -*)
+          echo "Unknown option: $1" >&2
+          exit 2
+          ;;
+      *)
+          break
+          ;;
+  esac
+done
+if [ "$1" ] ; then
+    if [ "$EXPLANATION" ] ; then
+        echo "Explanation may only be given once!" >&2
+        exit 2
+    fi
+    EXPLANATION="$1"
+    shift
 fi
 
 START="`pwd`"
@@ -35,18 +67,24 @@ MYDIR="`pwd`"
 cd ..
 
 # now in .../Doc/
-make --no-print-directory || exit $?
 make --no-print-directory bziphtml || exit $?
 RELEASE=`grep '^RELEASE=' Makefile | sed 's|RELEASE=||'`
 PACKAGE="html-$RELEASE.tar.bz2"
 scp "$PACKAGE" tools/update-docs.sh $TARGET/ || exit $?
-ssh python.sourceforge.net tmp/update-docs.sh $DOCTYPE $PACKAGE '&&' rm tmp/update-docs.sh || exit $?
+ssh "$TARGETHOST" tmp/update-docs.sh $DOCTYPE $PACKAGE '&&' rm tmp/update-docs.sh || exit $?
 
-Mail -s "[$DOCLABEL doc updates]" $ADDRESSES <<EOF
-The development version of the documentation has been updated:
+if $ANNOUNCE ; then
+    sendmail $ADDRESSES <<EOF
+To: $ADDRESSES
+From: "Fred L. Drake" <fdrake@acm.org>
+Subject: [$DOCLABEL doc updates]
+X-No-Archive: yes
 
-	http://python.sourceforge.net/$DOCTYPE-docs/
+The $DOCLABEL version of the documentation has been updated:
+
+    http://$TARGETHOST/dev/doc/$DOCTYPE/
 
 $EXPLANATION
 EOF
-exit $?
+    exit $?
+fi

@@ -3,7 +3,7 @@
  *
  * regular expression matching engine
  *
- * Copyright (c) 1997-2000 by Secret Labs AB.  All rights reserved.
+ * Copyright (c) 1997-2001 by Secret Labs AB.  All rights reserved.
  *
  * See the _sre.c file for information on usage and redistribution.
  */
@@ -13,18 +13,24 @@
 
 #include "sre_constants.h"
 
-/* size of a code word (must be unsigned short or larger) */
+/* size of a code word (must be unsigned short or larger, and
+   large enough to hold a Py_UNICODE character) */
+#ifdef Py_UNICODE_WIDE
+#define SRE_CODE unsigned long
+#else
 #define SRE_CODE unsigned short
+#endif
 
 typedef struct {
     PyObject_VAR_HEAD
-    int groups;
+    int groups; /* must be first! */
     PyObject* groupindex;
     PyObject* indexgroup;
     /* compatibility */
     PyObject* pattern; /* pattern source (or None) */
     int flags; /* flags used when compiling pattern source */
     /* pattern code */
+    int codesize;
     SRE_CODE code[1];
 } PatternObject;
 
@@ -32,7 +38,7 @@ typedef struct {
 
 typedef struct {
     PyObject_VAR_HEAD
-    PyObject* string; /* link to the target string */
+    PyObject* string; /* link to the target string (must be first) */
     PyObject* regs; /* cached list of matching spans */
     PatternObject* pattern; /* link to the regex (pattern) object */
     int pos, endpos; /* current target slice */

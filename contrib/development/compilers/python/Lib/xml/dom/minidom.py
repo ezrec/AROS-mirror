@@ -18,7 +18,7 @@ import string
 _string = string
 del string
 
-from xml.dom import HierarchyRequestErr
+from xml.dom import HierarchyRequestErr, EMPTY_NAMESPACE
 
 # localize the types, and allow support for Unicode values if available:
 import types
@@ -30,19 +30,34 @@ except AttributeError:
 del types
 
 import xml.dom
-_Node = xml.dom.Node
 
-class Node(_Node):
+
+if list is type([]):
+    class NodeList(list):
+        def item(self, index):
+            if 0 <= index < len(self):
+                return self[index]
+
+        length = property(lambda self: len(self),
+                          doc="The number of nodes in the NodeList.")
+
+else:
+    def NodeList():
+        return []
+    
+
+class Node(xml.dom.Node):
     allnodes = {}
     _debug = 0
     _makeParentNodes = 1
     debug = None
     childNodeTypes = ()
     namespaceURI = None # this is non-null only for elements and attributes
+    parentNode = None
+    ownerDocument = None
 
     def __init__(self):
-        self.childNodes = []
-        self.parentNode = self.ownerDocument = None
+        self.childNodes = NodeList()
         if Node._debug:
             index = repr(id(self)) + repr(self.__class__)
             Node.allnodes[index] = repr(self.__dict__)
@@ -50,33 +65,6 @@ class Node(_Node):
                 Node.debug = _get_StringIO()
                 #open("debug4.out", "w")
             Node.debug.write("create %s\n" % index)
-
-    def __getattr__(self, key):
-        if key[0:2] == "__":
-            raise AttributeError, key
-        # getattr should never call getattr!
-        if self.__dict__.has_key("inGetAttr"):
-            del self.inGetAttr
-            raise AttributeError, key
-
-        prefix, attrname = key[:5], key[5:]
-        if prefix == "_get_":
-            self.inGetAttr = 1
-            if hasattr(self, attrname):
-                del self.inGetAttr
-                return (lambda self=self, attrname=attrname:
-                                getattr(self, attrname))
-            else:
-                del self.inGetAttr
-                raise AttributeError, key
-        else:
-            self.inGetAttr = 1
-            try:
-                func = getattr(self, "_get_" + key)
-            except AttributeError:
-                raise AttributeError, key
-            del self.inGetAttr
-            return func()
 
     def __nonzero__(self):
         return 1
@@ -107,9 +95,44 @@ class Node(_Node):
         if self.childNodes:
             return self.childNodes[-1]
 
+    try:
+        property
+    except NameError:
+        def __getattr__(self, key):
+            if key[0:2] == "__":
+                raise AttributeError, key
+            # getattr should never call getattr!
+            if self.__dict__.has_key("inGetAttr"):
+                del self.inGetAttr
+                raise AttributeError, key
+
+            prefix, attrname = key[:5], key[5:]
+            if prefix == "_get_":
+                self.inGetAttr = 1
+                if hasattr(self, attrname):
+                    del self.inGetAttr
+                    return (lambda self=self, attrname=attrname:
+                                    getattr(self, attrname))
+                else:
+                    del self.inGetAttr
+                    raise AttributeError, key
+            else:
+                self.inGetAttr = 1
+                try:
+                    func = getattr(self, "_get_" + key)
+                except AttributeError:
+                    raise AttributeError, key
+                del self.inGetAttr
+                return func()
+    else:
+        firstChild = property(_get_firstChild,
+                              doc="First child node, or None.")
+        lastChild = property(_get_lastChild,
+                             doc="Last child node, or None.")
+
     def insertBefore(self, newChild, refChild):
         if newChild.nodeType == self.DOCUMENT_FRAGMENT_NODE:
-            for c in newChild.childNodes:
+            for c in tuple(newChild.childNodes):
                 self.insertBefore(c, refChild)
             ### The DOM does not clearly specify what to return in this case
             return newChild
@@ -137,7 +160,7 @@ class Node(_Node):
 
     def appendChild(self, node):
         if node.nodeType == self.DOCUMENT_FRAGMENT_NODE:
-            for c in node.childNodes:
+            for c in tuple(node.childNodes):
                 self.appendChild(c)
             ### The DOM does not clearly specify what to return in this case
             return node
@@ -234,7 +257,7 @@ class Node(_Node):
         clone = new.instance(self.__class__, self.__dict__.copy())
         if self._makeParentNodes:
             clone.parentNode = None
-        clone.childNodes = []
+        clone.childNodes = NodeList()
         if deep:
             for child in self.childNodes:
                 clone.appendChild(child.cloneNode(1))
@@ -279,7 +302,7 @@ def _getElementsByTagNameHelper(parent, name, rc):
 def _getElementsByTagNameNSHelper(parent, nsURI, localName, rc):
     for node in parent.childNodes:
         if node.nodeType == Node.ELEMENT_NODE:
-            if ((localName == "*" or node.tagName == localName) and
+            if ((localName == "*" or node.localName == localName) and
                 (nsURI == "*" or node.namespaceURI == nsURI)):
                 rc.append(node)
             _getElementsByTagNameNSHelper(node, nsURI, localName, rc)
@@ -306,7 +329,7 @@ class Attr(Node):
     ownerElement = None
     childNodeTypes = (Node.TEXT_NODE, Node.ENTITY_REFERENCE_NODE)
 
-    def __init__(self, qName, namespaceURI="", localName=None, prefix=None):
+    def __init__(self, qName, namespaceURI=EMPTY_NAMESPACE, localName=None, prefix=None):
         # skip setattr for performance
         d = self.__dict__
         d["localName"] = localName or qName
@@ -341,14 +364,21 @@ class NamedNodeMap:
     attributes as found in an input document.
     """
 
-    def __init__(self, attrs, attrsNS):
+    def __init__(self, attrs, attrsNS, ownerElement):
         self._attrs = attrs
         self._attrsNS = attrsNS
+        self._ownerElement = ownerElement
 
-    def __getattr__(self, name):
-        if name == "length":
-            return len(self._attrs)
-        raise AttributeError, name
+    try:
+        property
+    except NameError:
+        def __getattr__(self, name):
+            if name == "length":
+                return len(self._attrs)
+            raise AttributeError, name
+    else:
+        length = property(lambda self: len(self._attrs),
+                          doc="Number of nodes in the NamedNodeMap.")
 
     def item(self, index):
         try:
@@ -365,7 +395,7 @@ class NamedNodeMap:
     def itemsNS(self):
         L = []
         for node in self._attrs.values():
-            L.append(((node.URI, node.localName), node.value))
+            L.append(((node.namespaceURI, node.localName), node.value))
         return L
 
     def keys(self):
@@ -401,6 +431,7 @@ class NamedNodeMap:
         if type(value) in _StringTypes:
             node = Attr(attname)
             node.value = value
+            node.ownerDocument = self._ownerElement.ownerDocument
         else:
             if not isinstance(value, Attr):
                 raise TypeError, "value must be a string or Attr object"
@@ -416,6 +447,7 @@ class NamedNodeMap:
             old.unlink()
         self._attrs[node.name] = node
         self._attrsNS[(node.namespaceURI, node.localName)] = node
+        node.ownerElement = self._ownerElement
         return old
 
     def setNamedItemNS(self, node):
@@ -439,7 +471,7 @@ class Element(Node):
                       Node.COMMENT_NODE, Node.TEXT_NODE,
                       Node.CDATA_SECTION_NODE, Node.ENTITY_REFERENCE_NODE)
 
-    def __init__(self, tagName, namespaceURI=None, prefix="",
+    def __init__(self, tagName, namespaceURI=EMPTY_NAMESPACE, prefix=None,
                  localName=None):
         Node.__init__(self)
         self.tagName = self.nodeName = tagName
@@ -489,14 +521,18 @@ class Element(Node):
     def setAttribute(self, attname, value):
         attr = Attr(attname)
         # for performance
-        attr.__dict__["value"] = attr.__dict__["nodeValue"] = value
+        d = attr.__dict__
+        d["value"] = d["nodeValue"] = value
+        d["ownerDocument"] = self.ownerDocument
         self.setAttributeNode(attr)
 
     def setAttributeNS(self, namespaceURI, qualifiedName, value):
         prefix, localname = _nssplit(qualifiedName)
         # for performance
         attr = Attr(qualifiedName, namespaceURI, localname, prefix)
-        attr.__dict__["value"] = attr.__dict__["nodeValue"] = value
+        d = attr.__dict__
+        d["value"] = d["nodeValue"] = value
+        d["ownerDocument"] = self.ownerDocument
         self.setAttributeNode(attr)
 
     def getAttributeNode(self, attrname):
@@ -548,10 +584,11 @@ class Element(Node):
         return self._attrsNS.has_key((namespaceURI, localName))
 
     def getElementsByTagName(self, name):
-        return _getElementsByTagNameHelper(self, name, [])
+        return _getElementsByTagNameHelper(self, name, NodeList())
 
     def getElementsByTagNameNS(self, namespaceURI, localName):
-        _getElementsByTagNameNSHelper(self, namespaceURI, localName, [])
+        return _getElementsByTagNameNSHelper(self, namespaceURI, localName,
+                                             NodeList())
 
     def __repr__(self):
         return "<DOM Element: %s at %s>" % (self.tagName, id(self))
@@ -579,7 +616,15 @@ class Element(Node):
             writer.write("/>%s"%(newl))
 
     def _get_attributes(self):
-        return AttributeList(self._attrs, self._attrsNS)
+        return NamedNodeMap(self._attrs, self._attrsNS, self)
+
+    try:
+        property
+    except NameError:
+        pass
+    else:
+        attributes = property(_get_attributes,
+                              doc="NamedNodeMap of attributes on the element.")
 
     def hasAttributes(self):
         if self._attrs or self._attrsNS:
@@ -709,7 +754,7 @@ class CDATASection(Text):
     nodeName = "#cdata-section"
 
     def writexml(self, writer, indent="", addindent="", newl=""):
-        _write_data(writer, "<![CDATA[%s]]>" % self.data)
+        writer.write("<![CDATA[%s]]>" % self.data)
 
 
 def _nssplit(qualifiedName):
@@ -717,7 +762,7 @@ def _nssplit(qualifiedName):
     if len(fields) == 2:
         return fields
     elif len(fields) == 1:
-        return ('', fields[0])
+        return (None, fields[0])
 
 
 class DocumentType(Node):
@@ -824,6 +869,14 @@ class Document(Node):
             if node.nodeType == Node.ELEMENT_NODE:
                 return node
 
+    try:
+        property
+    except NameError:
+        pass
+    else:
+        documentElement = property(_get_documentElement,
+                                   doc="Top-level element of this document.")
+
     def unlink(self):
         if self.doctype is not None:
             self.doctype.unlink()
@@ -879,13 +932,12 @@ class Document(Node):
         a.value = ""
         return a
 
-    def getElementsByTagNameNS(self, namespaceURI, localName):
-        _getElementsByTagNameNSHelper(self, namespaceURI, localName)
-
     def getElementsByTagName(self, name):
-        rc = []
-        _getElementsByTagNameHelper(self, name, rc)
-        return rc
+        return _getElementsByTagNameHelper(self, name, NodeList())
+
+    def getElementsByTagNameNS(self, namespaceURI, localName):
+        return _getElementsByTagNameNSHelper(self, namespaceURI, localName,
+                                             NodeList())
 
     def writexml(self, writer, indent="", addindent="", newl=""):
         writer.write('<?xml version="1.0" ?>\n')

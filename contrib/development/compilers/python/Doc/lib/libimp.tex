@@ -57,7 +57,7 @@ search is unsuccessful, \exception{ImportError} is raised.  Other
 exceptions indicate problems with the arguments or environment.
 
 This function does not handle hierarchical module names (names
-containing dots).  In order to find \var{P}.\var{M}, i.e., submodule
+containing dots).  In order to find \var{P}.\var{M}, that is, submodule
 \var{M} of package \var{P}, use \function{find_module()} and
 \function{load_module()} to find and load package \var{P}, and then use
 \function{find_module()} with the \var{path} argument set to
@@ -91,6 +91,19 @@ is raised.  This is best done using a \keyword{try}
 \begin{funcdesc}{new_module}{name}
 Return a new empty module object called \var{name}.  This object is
 \emph{not} inserted in \code{sys.modules}.
+\end{funcdesc}
+
+\begin{funcdesc}{lock_held}{}
+Return 1 if the import lock is currently held, else 0.
+On platforms without threads, always return 0.
+
+On platforms with threads, a thread executing an import holds an internal
+lock until the import is complete.
+This lock blocks other threads from doing an import until the original
+import completes, which in turn prevents other threads from seeing
+incomplete module objects constructed by the original thread while in
+the process of completing its import (and the imports, if any,
+triggered by that).
 \end{funcdesc}
 
 The following constants with integer values, defined in this module,
@@ -211,7 +224,7 @@ source file.
 \label{examples-imp}
 
 The following function emulates what was the standard import statement
-up to Python 1.4 (i.e., no hierarchical module names).  (This
+up to Python 1.4 (no hierarchical module names).  (This
 \emph{implementation} wouldn't work in that version, since
 \function{find_module()} has been extended and
 \function{load_module()} has been added in 1.4.)
@@ -242,6 +255,4 @@ def __import__(name, globals=None, locals=None, fromlist=None):
 
 A more complete example that implements hierarchical module names and
 includes a \function{reload()}\bifuncindex{reload} function can be
-found in the standard module \module{knee}\refstmodindex{knee} (which
-is intended as an example only --- don't rely on any part of it being
-a standard interface).
+found in the module \module{knee}\refmodindex{knee}.

@@ -12,7 +12,6 @@
 
 #include "Python.h"
 
-#include <assert.h>
 #include <sys/types.h>		/* For size_t */
 
 /*
@@ -63,7 +62,7 @@
 
 #include "gmp.h"
 
-#if __GNU_MP__ + 0 == 2
+#if __GNU_MP__ + 0 >= 2
 #define GMP2
 #define BITS_PER_MP_LIMB mp_bits_per_limb
 #else
@@ -1592,7 +1591,7 @@ static PyNumberMethods mpz_as_number = {
 static PyTypeObject MPZtype = {
 	PyObject_HEAD_INIT(NULL)
 	0,			/*ob_size*/
-	"mpz",			/*tp_name*/
+	"mpz.mpz",		/*tp_name*/
 	sizeof(mpzobject),	/*tp_size*/
 	0,			/*tp_itemsize*/
 	/* methods */

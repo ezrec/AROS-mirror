@@ -26,8 +26,10 @@
 \newif\ifpy@doing@page@targets
 \py@doing@page@targetsfalse
 
+\newif\ifpdf\pdffalse
 \ifx\pdfoutput\undefined\else\ifcase\pdfoutput
 \else
+  \pdftrue
   \input{pdfcolor}
   \let\py@LinkColor=\NavyBlue
   \let\py@NormalColor=\Black
@@ -46,15 +48,23 @@
   %
   \let\py@OldContentsline=\contentsline
   %
+  % Backward compatibility hack: pdfTeX 0.13 defined \pdfannotlink,
+  % but it changed to \pdfstartlink in 0.14.  This let's us use either
+  % version and still get useful behavior.
+  %
+  \@ifundefined{pdfstartlink}{
+    \let\pdfstartlink=\pdfannotlink
+  }{}
+  %
   % Macro that takes two args: the name to link to and the content of
   % the link.  This takes care of the PDF magic, getting the colors
   % the same for each link, and avoids having lots of garbage all over 
   % this style file.
   \newcommand{\py@linkToName}[2]{%
-    \pdfannotlink attr{/Border [0 0 0]} goto name{#1}%
+    \pdfstartlink attr{/Border [0 0 0]} goto name{#1}%
       \py@LinkColor#2\py@NormalColor%
     \pdfendlink%
-  }    
+  }
   % Compute the padded page number separately since we end up with a pair of
   % \relax tokens; this gets the right string computed and works.
   \renewcommand{\contentsline}[3]{%
@@ -165,24 +175,30 @@
 \let\py@OldVerbatim=\verbatim
 \let\py@OldEndVerbatim=\endverbatim
 \RequirePackage{verbatim}
+\let\py@OldVerbatimInput=\verbatiminput
 
 % Variable used by begin code command
 \newlength{\py@codewidth}
 
 \renewcommand{\verbatim}{%
-  \setlength{\parindent}{1cm}%
-  % Calculate the text width for the minipage:
-  \setlength{\py@codewidth}{\linewidth}%
-  \addtolength{\py@codewidth}{-\parindent}%
-  %
-  \par\indent%
-  \begin{minipage}[t]{\py@codewidth}%
-    \small%
+  \begingroup%
+  \small%
+  \begin{list}{}{\setlength{\leftmargin}{1cm}}
+    \item%
     \py@OldVerbatim%
 }
 \renewcommand{\endverbatim}{%
     \py@OldEndVerbatim%
-  \end{minipage}%
+  \end{list}%
+  \endgroup
+}
+\renewcommand{\verbatiminput}[1]{%
+  {\small%
+   \begin{list}{}{\setlength{\leftmargin}{1cm}}
+     \item%
+     \py@OldVerbatimInput{#1}%
+   \end{list}
+  }%
 }
 
 % This does a similar thing for the {alltt} environment:
@@ -253,14 +269,14 @@
 
 % Refer to a module's documentation using a hyperlink of the module's
 % name, at least if we're building PDF:
-\@ifundefined{pdfannotlink}{%
-  \newcommand{\refmodule}[2][\py@modulebadkey]{\module{#2}}
-}{%
+\ifpdf
   \newcommand{\refmodule}[2][\py@modulebadkey]{%
     \ifx\py@modulebadkey#1\def\py@modulekey{#2}\else\def\py@modulekey{#1}\fi%
     \py@linkToName{label-module-\py@modulekey}{\module{#2}}%
   }
-}
+\else
+  \newcommand{\refmodule}[2][\py@modulebadkey]{\module{#2}}
+\fi
 
 % support for the module index
 \newif\ifpy@UseModuleIndex
@@ -434,13 +450,13 @@
   }{}
 }
 
-\@ifundefined{pdfoutput}{
-  \newcommand{\py@ModSynopsisSummary}[4]{\bfcode{#2} & #4\\}
-}{
+\ifpdf
   \newcommand{\py@ModSynopsisSummary}[4]{%
     \py@linkToName{label-module-#1}{\bfcode{#2}} & #4\\
   }
-}
+\else
+  \newcommand{\py@ModSynopsisSummary}[4]{\bfcode{#2} & #4\\}
+\fi
 \newenvironment{synopsistable}{
   % key, name, type, synopsis
   \let\modulesynopsis=\py@ModSynopsisSummary
@@ -752,6 +768,9 @@
 \newcommand{\C}{C}
 \newcommand{\EOF}{{\sc eof}}
 \newcommand{\NULL}{\constant{NULL}}
+\newcommand{\infinity}{\ensuremath{\infty}}
+\newcommand{\plusminus}{\ensuremath{\pm}}
+\newcommand{\menuselection}[1]{{\def\sub{ \ensuremath{>} }#1}}
 
 % Also for consistency: spell Python "Python", not "python"!
 
@@ -781,18 +800,18 @@
 
 % Use this def/redef approach for \url{} since hyperref defined this already,
 % but only if we actually used hyperref:
-\@ifundefined{pdfannotlink}{
-  \newcommand{\py@url}[1]{\mbox{\small\textsf{#1}}}
-}{
-  \newcommand{\py@url}[1]{{%
-    \pdfannotlink attr{/Border [0 0 0]} user{/S /URI /URI (#1)}%
+\ifpdf
+  \newcommand{\url}[1]{{%
+    \noindent%
+    \pdfstartlink attr{/Border [0 0 0]} user{/S /URI /URI (#1)}%
     \py@LinkColor%                              color of the link text
-    \mbox{\small\textsf{#1}}%
+    \small\sf #1%
     \py@NormalColor%                    Turn it back off; these are declarative
     \pdfendlink}%                       and don't appear bound to the current
   }%                                    formatting "box".
-}
-\let\url=\py@url
+\else
+  \newcommand{\url}[1]{\mbox{\small\textsf{#1}}}
+\fi
 \newcommand{\email}[1]{{\small\textsf{#1}}}
 \newcommand{\newsgroup}[1]{{\small\textsf{#1}}}
 
@@ -830,6 +849,7 @@
 \newcommand{\ctype}[1]{\texttt{#1}}     % C struct or typedef name
 \newcommand{\cdata}[1]{\texttt{#1}}     % C variable, typically global
 
+\newcommand{\mailheader}[1]{{\small\textsf{#1:}}}
 \newcommand{\mimetype}[1]{{\small\textsf{#1}}}
 % The \! is a "negative thin space" in math mode.
 \newcommand{\regexp}[1]{%
@@ -839,7 +859,7 @@
   }}
 \newcommand{\envvar}[1]{%
   #1%
-  \index{#1@{#1}}%
+  \index{#1}%
   \index{environment variables!{#1}}%
 }
 \newcommand{\makevar}[1]{#1}            % variable in a Makefile
@@ -856,10 +876,61 @@
 % Note that \longprogramopt provides the '--'!
 \newcommand{\longprogramopt}[1]{\strong{-{}-#1}}
 
+% \ulink{link text}{URL}
+\ifpdf
+  % The \noindent here is a hack -- we're forcing pdfTeX into
+  % horizontal mode since \pdfstartlink requires that.
+  \newcommand{\ulink}[2]{\noindent{%
+    \pdfstartlink attr{/Border [0 0 0]} user{/S /URI /URI (#2)}%
+    \py@LinkColor%                              color of the link text
+    #1%
+    \py@NormalColor%                    Turn it back off; these are declarative
+    \pdfendlink}%                       and don't appear bound to the current
+  }%                                    formatting "box".
+\else
+  \newcommand{\ulink}[2]{#1}
+\fi
+
 % cited titles:  \citetitle{Title of Work}
 %       online:  \citetitle[url-to-resource]{Title of Work}
-\newcommand{\citetitle}[2][URL]{\emph{#2}}
+\ifpdf
+  \newcommand{\citetitle}[2][\py@modulebadkey]{%
+    \ifx\py@modulebadkey#1\emph{#2}\else\ulink{\emph{#2}}{#1}\fi%
+  }
+\else
+  \newcommand{\citetitle}[2][URL]{\emph{#2}}
+\fi
 
+
+
+% This version is being checked in for the historical record; it shows
+% how I've managed to get some aspects of this to work.  It will not
+% be used in practice, so a subsequent revision will change things
+% again.  This version has problems, but shows how to do something
+% that proved more tedious than I'd expected, so I don't want to lose
+% the example completely.
+%
+\newcommand{\grammartoken}[1]{\texttt{#1}}
+\newenvironment{productionlist}[1][\py@badkey]{
+  \def\optional##1{{\Large[}##1{\Large]}}
+  \def\production##1##2{\code{##1}&::=&\code{##2}\\}
+  \def\productioncont##1{& &\code{##1}\\}
+  \def\token##1{##1}
+  \let\grammartoken=\token
+  \parindent=2em
+  \indent
+  \begin{tabular}{lcl}
+}{%
+  \end{tabular}
+}
+
+\newcommand{\py@noticelabel@note}{Note:}
+\newcommand{\py@noticelabel@warning}{Warning:}
+\newenvironment{notice}[1][note]{
+  \par\strong{\csname py@noticelabel@#1\endcsname}
+}{}
+\newcommand{\note}[1]{\strong{\py@noticelabel@note} #1}
+\newcommand{\warning}[1]{\strong{\py@noticelabel@warning} #1}
 
 % Deprecation stuff.
 % Should be extended to allow an index / list of deprecated stuff.  But
@@ -961,6 +1032,27 @@
   \end{center}%
 }
 
+\newenvironment{tablev}[7]{%
+  \begin{center}%
+    \def\linev##1##2##3##4##5{\csname#2\endcsname{##1}&##2&##3&##4&##5\\}%
+    \begin{tabular}{#1}\strong{#3}&\strong{#4}&\strong{#5}&\strong{#6}&\strong{#7} \\%
+      \hline%
+}{%
+    \end{tabular}%
+  \end{center}%
+}
+
+\newenvironment{longtablev}[7]{%
+  \begin{center}%
+    \def\linev##1##2##3##4##5{\csname#2\endcsname{##1}&##2&##3&##4&##5\\}%
+    \begin{longtable}[c]{#1}\strong{#3}&\strong{#4}&\strong{#5}&\strong{#6}&\strong{#7}%
+      \\%
+      \hline\endhead%
+}{%
+    \end{longtable}%
+  \end{center}%
+}
+
 % Cross-referencing (AMK, new impl. FLD)
 % Sample usage:
 %  \begin{seealso}
@@ -975,16 +1067,8 @@
 % Note that the last parameter for \seemodule and \seetext should be complete
 % sentences and be terminated with the proper punctuation.
 
-\@ifundefined{pdfannotlink}{%
+\ifpdf
   \newcommand{\py@seemodule}[3][\py@modulebadkey]{%
-    \par%
-    \ifx\py@modulebadkey#1\def\py@modulekey{#2}\else\def\py@modulekey{#1}\fi%
-    \begin{fulllineitems}
-      \item[Module \module{#2} (section \ref{module-\py@modulekey}):]
-      #3
-    \end{fulllineitems}
-  }
-}{\newcommand{\py@seemodule}[3][\py@modulebadkey]{%
     \par%
     \ifx\py@modulebadkey#1\def\py@modulekey{#2}\else\def\py@modulekey{#1}\fi%
     \begin{fulllineitems}
@@ -993,7 +1077,17 @@
       #3
     \end{fulllineitems}
   }
-}
+\else
+  \newcommand{\py@seemodule}[3][\py@modulebadkey]{%
+    \par%
+    \ifx\py@modulebadkey#1\def\py@modulekey{#2}\else\def\py@modulekey{#1}\fi%
+    \begin{fulllineitems}
+      \item[Module \module{#2} (section \ref{module-\py@modulekey}):]
+      #3
+    \end{fulllineitems}
+  }
+\fi
+
 % \seetitle[url]{title}{why it's interesting}
 \newcommand{\py@seetitle}[3][\py@modulebadkey]{%
   \par
@@ -1029,9 +1123,9 @@
     #2
   \end{fulllineitems}
 }
-\newenvironment{seealso}[0]{
+
+\newenvironment{seealso*}{
   \par
-  \strong{See Also:}\par
   \def\seetext##1{\par{##1}}
   \let\seemodule=\py@seemodule
   \let\seepep=\py@seepep
@@ -1039,7 +1133,17 @@
   \let\seetitle=\py@seetitle
   \let\seeurl=\py@seeurl
 }{\par}
-
+\newenvironment{seealso}{
+  \par
+  \strong{See Also:}
+  \par
+  \def\seetext##1{\par{##1}}
+  \let\seemodule=\py@seemodule
+  \let\seepep=\py@seepep
+  \let\seerfc=\py@seerfc
+  \let\seetitle=\py@seetitle
+  \let\seeurl=\py@seeurl
+}{\par}
 
 % Allow the Python release number to be specified independently of the
 % \date{}.  This allows the date to reflect the document's date and

@@ -55,7 +55,7 @@ currently defined:
 \begin{tableii}{l|l}{exception}{Class}{Description}
 
 \lineii{Warning}{This is the base class of all warning category
-classes.  It itself a subclass of Exception.}
+classes.  It is a subclass of \exception{Exception}.}
 
 \lineii{UserWarning}{The default category for \function{warn()}.}
 
@@ -153,7 +153,7 @@ this:
 
 \begin{verbatim}
 def deprecation(message):
-    warnings.warn(message, DeprecationWarning, level=2)
+    warnings.warn(message, DeprecationWarning, stacklevel=2)
 \end{verbatim}
 
 This makes the warning refer to \function{deprecation()}'s caller,

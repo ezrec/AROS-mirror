@@ -42,9 +42,6 @@ ConfigParser -- responsible for for parsing a list of
     options(section)
         return list of configuration options for the named section
 
-    has_option(section, option)
-        return whether the given section has the given option
-
     read(filenames)
         read and parse the list of named configuration files, given by
         name.  A single filename is also allowed.  Non-existing files
@@ -69,8 +66,9 @@ ConfigParser -- responsible for for parsing a list of
         like get(), but convert value to a float
 
     getboolean(section, options)
-        like get(), but convert value to a boolean (currently defined as 0 or
-        1, only)
+        like get(), but convert value to a boolean (currently case
+        insensitively defined as 0, false, no, off for 0, and 1, true,
+        yes, on for 1).  Returns 0 or 1.
 
     remove_section(section)
         remove the given file section and all its options
@@ -85,8 +83,7 @@ ConfigParser -- responsible for for parsing a list of
         write the configuration state in .ini format
 """
 
-import sys
-import string
+import string, types
 import re
 
 __all__ = ["NoSectionError","DuplicateSectionError","NoOptionError",
@@ -216,10 +213,6 @@ class ConfigParser:
             del opts['__name__']
         return opts.keys()
 
-    def has_option(self, section, option):
-        """Return whether the given section has the given option."""
-        return option in self.options(section)
-
     def read(self, filenames):
         """Read and parse a filename or a list of filenames.
 
@@ -230,7 +223,7 @@ class ConfigParser:
         configuration files in the list will be read.  A single
         filename may also be given.
         """
-        if type(filenames) in [type(''), type(u'')]:
+        if type(filenames) in types.StringTypes:
             filenames = [filenames]
         for filename in filenames:
             try:
@@ -314,11 +307,12 @@ class ConfigParser:
         return self.__get(section, string.atof, option)
 
     def getboolean(self, section, option):
+        states = {'1': 1, 'yes': 1, 'true': 1, 'on': 1,
+                  '0': 0, 'no': 0, 'false': 0, 'off': 0}
         v = self.get(section, option)
-        val = int(v)
-        if val not in (0, 1):
+        if not states.has_key(v.lower()):
             raise ValueError, 'Not a boolean: %s' % v
-        return val
+        return states[v.lower()]
 
     def optionxform(self, optionstr):
         return optionstr.lower()
@@ -350,7 +344,7 @@ class ConfigParser:
         if self.__defaults:
             fp.write("[DEFAULT]\n")
             for (key, value) in self.__defaults.items():
-                fp.write("%s = %s\n" % (key, value))
+                fp.write("%s = %s\n" % (key, str(value).replace('\n', '\n\t')))
             fp.write("\n")
         for section in self.sections():
             fp.write("[" + section + "]\n")
@@ -358,7 +352,7 @@ class ConfigParser:
             for (key, value) in sectdict.items():
                 if key == "__name__":
                     continue
-                fp.write("%s = %s\n" % (key, value))
+                fp.write("%s = %s\n" % (key, str(value).replace('\n', '\n\t')))
             fp.write("\n")
 
     def remove_option(self, section, option):

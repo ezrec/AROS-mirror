@@ -1,7 +1,7 @@
 #ifndef Py_PYPORT_H
 #define Py_PYPORT_H
 
-#include "config.h" /* include for defines */
+#include "pyconfig.h" /* include for defines */
 
 /**************************************************************************
 Symbols and macros to supply platform-independent interfaces to basic
@@ -63,16 +63,25 @@ Used in:  LONG_LONG
 
 /* uintptr_t is the C9X name for an unsigned integral type such that a
  * legitimate void* can be cast to uintptr_t and then back to void* again
- * without loss of information.
+ * without loss of information.  Similarly for intptr_t, wrt a signed
+ * integral type.
  */
 #ifdef HAVE_UINTPTR_T
-typedef uintptr_t Py_uintptr_t;
+typedef uintptr_t	Py_uintptr_t;
+typedef intptr_t	Py_intptr_t;
+
 #elif SIZEOF_VOID_P <= SIZEOF_INT
-typedef unsigned int Py_uintptr_t;
+typedef unsigned int	Py_uintptr_t;
+typedef int		Py_intptr_t;
+
 #elif SIZEOF_VOID_P <= SIZEOF_LONG
-typedef unsigned long Py_uintptr_t;
+typedef unsigned long	Py_uintptr_t;
+typedef long		Py_intptr_t;
+
 #elif defined(HAVE_LONG_LONG) && (SIZEOF_VOID_P <= SIZEOF_LONG_LONG)
-typedef unsigned LONG_LONG Py_uintptr_t;
+typedef unsigned LONG_LONG	Py_uintptr_t;
+typedef LONG_LONG		Py_intptr_t;
+
 #else
 #   error "Python needs a typedef for Py_uintptr_t in pyport.h."
 #endif /* HAVE_UINTPTR_T */
@@ -128,7 +137,7 @@ typedef unsigned LONG_LONG Py_uintptr_t;
  *      #define DONT_HAVE_STAT
  * and/or
  *      #define DONT_HAVE_FSTAT
- * to your config.h. Python code beyond this should check HAVE_STAT and
+ * to your pyconfig.h. Python code beyond this should check HAVE_STAT and
  * HAVE_FSTAT instead.
  * Also
  *      #define DONT_HAVE_SYS_STAT_H
@@ -144,10 +153,27 @@ typedef unsigned LONG_LONG Py_uintptr_t;
 #define HAVE_FSTAT
 #endif
 
+#ifdef RISCOS
+#include <sys/types.h>
+#endif
+
 #ifndef DONT_HAVE_SYS_STAT_H
 #include <sys/stat.h>
 #elif defined(HAVE_STAT_H)
 #include <stat.h>
+#endif
+
+#if defined(PYCC_VACPP)
+/* VisualAge C/C++ Failed to Define MountType Field in sys/stat.h */
+#define S_IFMT (S_IFDIR|S_IFCHR|S_IFREG)
+#endif
+
+#ifndef S_ISREG
+#define S_ISREG(x) (((x) & S_IFMT) == S_IFREG)
+#endif
+
+#ifndef S_ISDIR
+#define S_ISDIR(x) (((x) & S_IFMT) == S_IFDIR)
 #endif
 
 
@@ -207,6 +233,92 @@ extern "C" {
  *    it really can't be implemented correctly (& easily) before C99.
  */
 #define Py_IS_INFINITY(X) ((X) && (X)*0.5 == (X))
+
+/* According to
+ * http://www.cray.com/swpubs/manuals/SN-2194_2.0/html-SN-2194_2.0/x3138.htm
+ * on some Cray systems HUGE_VAL is incorrectly (according to the C std)
+ * defined to be the largest positive finite rather than infinity.  We need
+ * the std-conforming infinity meaning (provided the platform has one!).
+ *
+ * Then, according to a bug report on SourceForge, defining Py_HUGE_VAL as
+ * INFINITY caused internal compiler errors under BeOS using some version
+ * of gcc.  Explicitly casting INFINITY to double made that problem go away.
+ */
+#ifdef INFINITY
+#define Py_HUGE_VAL ((double)INFINITY)
+#else
+#define Py_HUGE_VAL HUGE_VAL
+#endif
+
+/* Py_OVERFLOWED(X)
+ * Return 1 iff a libm function overflowed.  Set errno to 0 before calling
+ * a libm function, and invoke this macro after, passing the function
+ * result.
+ * Caution:
+ *    This isn't reliable.  C99 no longer requires libm to set errno under
+ *	  any exceptional condition, but does require +- HUGE_VAL return
+ *	  values on overflow.  A 754 box *probably* maps HUGE_VAL to a
+ *	  double infinity, and we're cool if that's so, unless the input
+ *	  was an infinity and an infinity is the expected result.  A C89
+ *	  system sets errno to ERANGE, so we check for that too.  We're
+ *	  out of luck if a C99 754 box doesn't map HUGE_VAL to +Inf, or
+ *	  if the returned result is a NaN, or if a C89 box returns HUGE_VAL
+ *	  in non-overflow cases.
+ *    X is evaluated more than once.
+ */
+#define Py_OVERFLOWED(X) ((X) != 0.0 && (errno == ERANGE ||    \
+					 (X) == Py_HUGE_VAL || \
+					 (X) == -Py_HUGE_VAL))
+
+/* Py_SET_ERANGE_ON_OVERFLOW(x)
+ * If a libm function did not set errno, but it looks like the result
+ * overflowed, set errno to ERANGE.  Set errno to 0 before calling a libm
+ * function, and invoke this macro after, passing the function result.
+ * Caution:
+ *    This isn't reliable.  See Py_OVERFLOWED comments.
+ *    X is evaluated more than once.
+ */
+#define Py_SET_ERANGE_IF_OVERFLOW(X) \
+	do { \
+		if (errno == 0 && ((X) == Py_HUGE_VAL ||  \
+				   (X) == -Py_HUGE_VAL))  \
+			errno = ERANGE; \
+	} while(0)
+
+/* Py_ADJUST_ERANGE1(x)
+ * Py_ADJUST_ERANGE2(x, y)
+ * Set errno to 0 before calling a libm function, and invoke one of these
+ * macros after, passing the function result(s) (Py_ADJUST_ERANGE2 is useful
+ * for functions returning complex results).  This makes two kinds of
+ * adjustments to errno:  (A) If it looks like the platform libm set
+ * errno=ERANGE due to underflow, clear errno. (B) If it looks like the
+ * platform libm overflowed but didn't set errno, force errno to ERANGE.  In
+ * effect, we're trying to force a useful implementation of C89 errno
+ * behavior.
+ * Caution:
+ *    This isn't reliable.  See Py_OVERFLOWED comments.
+ *    X and Y may be evaluated more than once.
+ */
+#define Py_ADJUST_ERANGE1(X)						\
+	do {								\
+		if (errno == 0) {					\
+			if ((X) == Py_HUGE_VAL || (X) == -Py_HUGE_VAL)	\
+				errno = ERANGE;				\
+		}							\
+		else if (errno == ERANGE && (X) == 0.0)			\
+			errno = 0;					\
+	} while(0)
+
+#define Py_ADJUST_ERANGE2(X, Y)						\
+	do {								\
+		if ((X) == Py_HUGE_VAL || (X) == -Py_HUGE_VAL ||	\
+		    (Y) == Py_HUGE_VAL || (Y) == -Py_HUGE_VAL) {	\
+				if (errno == 0)				\
+					errno = ERANGE;			\
+		}							\
+		else if (errno == ERANGE)				\
+			errno = 0;					\
+	} while(0)
 
 /**************************************************************************
 Prototypes that are missing from the standard include files on some systems
@@ -273,70 +385,8 @@ extern int fsync(int fd);
  * WRAPPER FOR <math.h> *
  ************************/
 
-/* On the 68K Mac, when using CFM (Code Fragment Manager),
-   <math.h> requires special treatment -- we need to surround it with
-   #pragma lib_export off / on...
-   This is because MathLib.o is a static library, and exporting its
-   symbols doesn't quite work...
-   XXX Not sure now...  Seems to be something else going on as well... */
-
 #ifndef HAVE_HYPOT
 extern double hypot(double, double);
-#ifdef MWERKS_BEFORE_PRO4
-#define hypot we_dont_want_faulty_hypot_decl
-#endif
-#endif
-
-#ifndef HAVE_HYPOT
-#ifdef __MWERKS__
-#undef hypot
-#endif
-#endif
-
-#if defined(USE_MSL) && defined(__MC68K__)
-/* CodeWarrior MSL 2.1.1 has weird define overrides that don't work
-** when you take the address of math functions. If I interpret the
-** ANSI C standard correctly this is illegal, but I haven't been able
-** to convince the MetroWerks folks of this...
-*/
-#undef acos
-#undef asin
-#undef atan
-#undef atan2
-#undef ceil
-#undef cos
-#undef cosh
-#undef exp
-#undef fabs
-#undef floor
-#undef fmod
-#undef log
-#undef log10
-#undef pow
-#undef sin
-#undef sinh
-#undef sqrt
-#undef tan
-#undef tanh
-#define acos acosd
-#define asin asind
-#define atan atand
-#define atan2 atan2d
-#define ceil ceild
-#define cos cosd
-#define cosh coshd
-#define exp expd
-#define fabs fabsd
-#define floor floord
-#define fmod fmodd
-#define log logd
-#define log10 log10d
-#define pow powd
-#define sin sind
-#define sinh sinhd
-#define sqrt sqrtd
-#define tan tand
-#define tanh tanhd
 #endif
 
 
@@ -349,8 +399,16 @@ extern double hypot(double, double);
 #endif
 
 #ifdef MALLOC_ZERO_RETURNS_NULL
-/* XXX Always allocate one extra byte, since some malloc's return NULL
-   XXX for malloc(0) or realloc(p, 0). */
+/* Allocate an extra byte if the platform malloc(0) returns NULL.
+   Caution:  this bears no relation to whether realloc(p, 0) returns NULL
+   when p != NULL.  Even on platforms where malloc(0) does not return NULL,
+   realloc(p, 0) may act like free(p) and return NULL.  Examples include
+   Windows, and Python's own obmalloc.c (as of 2-Mar-2002).  For whatever
+   reason, our docs promise that PyMem_Realloc(p, 0) won't act like
+   free(p) or return NULL, so realloc() calls may have to be hacked
+   too, but MALLOC_ZERO_RETURNS_NULL's state is irrelevant to realloc (it
+   needs a different hack).
+*/
 #define _PyMem_EXTRA 1
 #else
 #define _PyMem_EXTRA 0
@@ -422,18 +480,6 @@ typedef	struct fd_set {
 #error "LONG_BIT definition appears wrong for platform (bad gcc/glibc config?)."
 #endif
 
-#ifdef __NeXT__
-#ifdef __sparc__
-/*
- * This works around a bug in the NS/Sparc 3.3 pre-release
- * limits.h header file.
- * 10-Feb-1995 bwarsaw@cnri.reston.va.us
- */
-#undef LONG_MIN
-#define LONG_MIN (-LONG_MAX-1)
-#endif
-#endif
-
 /*
  * Rename some functions for the Borland compiler
  */
@@ -445,6 +491,16 @@ typedef	struct fd_set {
 
 #ifdef __cplusplus
 }
+#endif
+
+/*
+ * Hide GCC attributes from compilers that don't support them.
+ */
+#if (!defined(__GNUC__) || __GNUC__ < 2 || \
+     (__GNUC__ == 2 && __GNUC_MINOR__ < 7) || \
+     defined(NEXT) ) && \
+    !defined(RISCOS)
+#define __attribute__(__x)
 #endif
 
 #endif /* Py_PYPORT_H */

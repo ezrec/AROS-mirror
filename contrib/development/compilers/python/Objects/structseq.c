@@ -84,39 +84,79 @@ static PyObject *
 structseq_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
 	PyObject *arg = NULL;
+	PyObject *dict = NULL;
+	PyObject *ob;
 	PyStructSequence *res = NULL;
-	int len, required_len, i;
-	static char *kwlist[] = {"sequence", 0};
-	static char msgbuf[128];
+	int len, min_len, max_len, i;
+	static char *kwlist[] = {"sequence", "dict", 0};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O:structseq", 
-					 kwlist, &arg))
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|O:structseq", 
+					 kwlist, &arg, &dict))
 		return NULL;
 
-	if (!PySequence_Check(arg)) {
-		PyErr_SetString(PyExc_TypeError,
-				"constructor requires a sequence");
+	arg = PySequence_Fast(arg, "constructor requires a sequence");
+
+	if (!arg) {				
 		return NULL;
 	}
 
-	len = PySequence_Length(arg);
-	required_len = REAL_SIZE_TP(type);
-	if (len != required_len) {
-		PyOS_snprintf(
-			msgbuf, sizeof(msgbuf),
-			"constructor takes exactly %d arguments (%d given)",
-			required_len,
-			len);
-		PyErr_SetString(PyExc_TypeError, msgbuf);
+	if (dict && !PyDict_Check(dict)) {
+		PyErr_Format(PyExc_TypeError, 
+			     "%.500s() takes a dict as second arg, if any",
+			     type->tp_name);
+		Py_DECREF(arg);
 		return NULL;
+	}
+
+	len = PySequence_Fast_GET_SIZE(arg);
+	min_len = VISIBLE_SIZE_TP(type);
+	max_len = REAL_SIZE_TP(type);
+
+	if (min_len != max_len) {
+		if (len < min_len) {
+			PyErr_Format(PyExc_TypeError, 
+	       "%.500s() takes an at least %d-sequence (%d-sequence given)",
+				     type->tp_name, min_len, len);
+			Py_DECREF(arg);
+			return NULL;
+		}
+
+		if (len > max_len) {
+			PyErr_Format(PyExc_TypeError, 
+	       "%.500s() takes an at most %d-sequence (%d-sequence given)",
+				     type->tp_name, max_len, len);
+			Py_DECREF(arg);
+			return NULL;
+		}
+	} 
+	else {
+		if (len != min_len) {
+			PyErr_Format(PyExc_TypeError, 
+	       "%.500s() takes a %d-sequence (%d-sequence given)",
+				     type->tp_name, min_len, len);
+			Py_DECREF(arg);
+			return NULL;
+		}
 	}
 
 	res = (PyStructSequence*) PyStructSequence_New(type);
 	for (i = 0; i < len; ++i) {
-		/* INCREF???? XXXX */
-		res->ob_item[i] = PySequence_GetItem(arg, i);
+		PyObject *v = PySequence_Fast_GET_ITEM(arg, i);
+		Py_INCREF(v);
+		res->ob_item[i] = v;
+	}
+	for (; i < max_len; ++i) {
+		if (dict && (ob = PyDict_GetItemString(
+			dict, type->tp_members[i].name))) {
+		}
+		else {
+			ob = Py_None;
+		}
+		Py_INCREF(ob);
+		res->ob_item[i] = ob;
 	}
 	
+	Py_DECREF(arg);
 	return (PyObject*) res;
 }
 
@@ -188,6 +228,46 @@ structseq_richcompare(PyObject *obj, PyObject *o2, int op)
 	return result;
 }
 
+static PyObject *
+structseq_reduce(PyStructSequence* self)
+{
+	PyObject* tup;
+	PyObject* dict;
+	PyObject* result;
+	long n_fields, n_visible_fields;
+	int i;
+	
+	n_fields = REAL_SIZE(self);
+	n_visible_fields = VISIBLE_SIZE(self);
+	tup = PyTuple_New(n_visible_fields);
+	if (!tup) {
+		return NULL;
+	}
+
+	dict = PyDict_New();
+	if (!dict) {
+		Py_DECREF(tup);
+		return NULL;
+	}
+
+	for (i = 0; i < n_visible_fields; i++) {
+		Py_INCREF(self->ob_item[i]);
+		PyTuple_SET_ITEM(tup, i, self->ob_item[i]);
+	}
+	
+	for (; i < n_fields; i++) {
+		PyDict_SetItemString(dict, self->ob_type->tp_members[i].name,
+				     self->ob_item[i]);
+	}
+
+	result = Py_BuildValue("(O(OO))", self->ob_type, tup, dict);
+
+	Py_DECREF(tup);
+	Py_DECREF(dict);
+
+	return result;
+}
+
 static PySequenceMethods structseq_as_sequence = {
 	(inquiry)structseq_length,
 	(binaryfunc)structseq_concat,           /* sq_concat */
@@ -197,6 +277,12 @@ static PySequenceMethods structseq_as_sequence = {
 	0,					/* sq_ass_item */
 	0,					/* sq_ass_slice */
 	(objobjproc)structseq_contains,	        /* sq_contains */
+};
+
+static PyMethodDef structseq_methods[] = {
+	{"__reduce__", (PyCFunction)structseq_reduce, 
+	 METH_NOARGS, NULL},
+	{NULL, NULL}
 };
 
 static PyTypeObject _struct_sequence_template = {
@@ -228,7 +314,7 @@ static PyTypeObject _struct_sequence_template = {
 	0,					/* tp_weaklistoffset */
 	0,					/* tp_iter */
 	0,					/* tp_iternext */
-	0,	             			/* tp_methods */
+	structseq_methods,      		/* tp_methods */
         NULL,			             	/* tp_members */
 	0,			          	/* tp_getset */
 	0,					/* tp_base */
@@ -282,4 +368,6 @@ PyStructSequence_InitType(PyTypeObject *type, PyStructSequence_Desc *desc)
 		       PyInt_FromLong((long) desc->n_in_sequence));
 	PyDict_SetItemString(dict, real_length_key, 
 		       PyInt_FromLong((long) n_members));
+	PyDict_SetItemString(dict, "__safe_for_unpickling__", 
+		       PyInt_FromLong(1));
 }

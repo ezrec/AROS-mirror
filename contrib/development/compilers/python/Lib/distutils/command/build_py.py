@@ -12,6 +12,7 @@ from glob import glob
 
 from distutils.core import Command
 from distutils.errors import *
+from distutils.util import convert_path
 
 
 class build_py (Command):
@@ -50,7 +51,10 @@ class build_py (Command):
         # options -- list of packages and list of modules.
         self.packages = self.distribution.packages
         self.py_modules = self.distribution.py_modules
-        self.package_dir = self.distribution.package_dir
+        self.package_dir = {}
+        if self.distribution.package_dir:
+            for name, path in self.distribution.package_dir.items():
+                self.package_dir[name] = convert_path(path)
 
         # Ick, copied straight from install_lib.py (fancy_getopt needs a
         # type system!  Hell, *everything* needs a type system!!!)
@@ -106,7 +110,7 @@ class build_py (Command):
         self.byte_compile(self.get_outputs(include_bytecode=0))
 
     # run ()
-        
+
 
     def get_package_dir (self, package):
         """Return the directory, relative to the top of the source
@@ -178,13 +182,13 @@ class build_py (Command):
         # Either not in a package at all (__init__.py not expected), or
         # __init__.py doesn't exist -- so don't return the filename.
         return
-                
+
     # check_package ()
 
 
     def check_module (self, module, module_file):
         if not os.path.isfile(module_file):
-            self.warn("file %s (for module %s) not found" % 
+            self.warn("file %s (for module %s) not found" %
                       (module_file, module))
             return 0
         else:

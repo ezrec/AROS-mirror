@@ -193,7 +193,7 @@ PyCursesPanel_Dealloc(PyCursesPanelObject *po)
     (void)del_panel(po->pan);
     Py_DECREF(po->wo);
     remove_lop(po);
-    PyMem_DEL(po);
+    PyObject_DEL(po);
 }
 
 /* panel_above(NULL) returns the bottom panel in the stack. To get
@@ -304,7 +304,7 @@ PyCursesPanel_set_panel_userptr(PyCursesPanelObject *self, PyObject *args)
     }
     obj = PyTuple_GetItem(args, 0);
     Py_INCREF(obj);
-    return PyCursesCheckERR(set_panel_userptr(self->pan, obj),
+    return PyCursesCheckERR(set_panel_userptr(self->pan, (void*)obj),
                             "set_panel_userptr");
 }
 
@@ -352,7 +352,7 @@ PyCursesPanel_GetAttr(PyCursesPanelObject *self, char *name)
 PyTypeObject PyCursesPanel_Type = {
     PyObject_HEAD_INIT(NULL)
     0,			/*ob_size*/
-    "curses panel",	/*tp_name*/
+    "_curses_panel.curses panel",	/*tp_name*/
     sizeof(PyCursesPanelObject),	/*tp_basicsize*/
     0,			/*tp_itemsize*/
     /* methods */

@@ -36,7 +36,7 @@ def ismodule(object):
     Module objects provide these attributes:
         __doc__         documentation string
         __file__        filename (missing for built-in modules)"""
-    return type(object) is types.ModuleType
+    return isinstance(object, types.ModuleType)
 
 def isclass(object):
     """Return true if the object is a class.
@@ -44,7 +44,7 @@ def isclass(object):
     Class objects provide these attributes:
         __doc__         documentation string
         __module__      name of module in which this class was defined"""
-    return type(object) is types.ClassType or hasattr(object, '__bases__')
+    return isinstance(object, types.ClassType) or hasattr(object, '__bases__')
 
 def ismethod(object):
     """Return true if the object is an instance method.
@@ -55,7 +55,27 @@ def ismethod(object):
         im_class        class object in which this method belongs
         im_func         function object containing implementation of method
         im_self         instance to which this method is bound, or None"""
-    return type(object) is types.MethodType
+    return isinstance(object, types.MethodType)
+
+def ismethoddescriptor(object):
+    """Return true if the object is a method descriptor.
+
+    But not if ismethod() or isclass() or isfunction() are true.
+
+    This is new in Python 2.2, and, for example, is true of int.__add__.
+    An object passing this test has a __get__ attribute but not a __set__
+    attribute, but beyond that the set of attributes varies.  __name__ is
+    usually sensible, and __doc__ often is.
+
+    Methods implemented via descriptors that also pass one of the other
+    tests return false from the ismethoddescriptor() test, simply because
+    the other tests promise more -- you can, e.g., count on having the
+    im_func attribute (etc) when an object passes ismethod()."""
+    return (hasattr(object, "__get__")
+            and not hasattr(object, "__set__") # else it's a data descriptor
+            and not ismethod(object)           # mutual exclusion
+            and not isfunction(object)
+            and not isclass(object))
 
 def isfunction(object):
     """Return true if the object is a user-defined function.
@@ -68,7 +88,7 @@ def isfunction(object):
         func_doc        (same as __doc__)
         func_globals    global namespace in which this function was defined
         func_name       (same as __name__)"""
-    return type(object) in [types.FunctionType, types.LambdaType]
+    return isinstance(object, types.FunctionType)
 
 def istraceback(object):
     """Return true if the object is a traceback.
@@ -78,7 +98,7 @@ def istraceback(object):
         tb_lasti        index of last attempted instruction in bytecode
         tb_lineno       current line number in Python source code
         tb_next         next inner traceback object (called by this level)"""
-    return type(object) is types.TracebackType
+    return isinstance(object, types.TracebackType)
 
 def isframe(object):
     """Return true if the object is a frame object.
@@ -96,7 +116,7 @@ def isframe(object):
         f_locals        local namespace seen by this frame
         f_restricted    0 or 1 if frame is in restricted execution mode
         f_trace         tracing function for this frame, or None"""
-    return type(object) is types.FrameType
+    return isinstance(object, types.FrameType)
 
 def iscode(object):
     """Return true if the object is a code object.
@@ -114,7 +134,7 @@ def iscode(object):
         co_nlocals      number of local variables
         co_stacksize    virtual machine stack space required
         co_varnames     tuple of names of arguments and local variables"""
-    return type(object) is types.CodeType
+    return isinstance(object, types.CodeType)
 
 def isbuiltin(object):
     """Return true if the object is a built-in function or method.
@@ -123,11 +143,14 @@ def isbuiltin(object):
         __doc__         documentation string
         __name__        original name of this function or method
         __self__        instance to which a method is bound, or None"""
-    return type(object) is types.BuiltinFunctionType
+    return isinstance(object, types.BuiltinFunctionType)
 
 def isroutine(object):
     """Return true if the object is any kind of function or method."""
-    return isbuiltin(object) or isfunction(object) or ismethod(object)
+    return (isbuiltin(object)
+            or isfunction(object)
+            or ismethod(object)
+            or ismethoddescriptor(object))
 
 def getmembers(object, predicate=None):
     """Return all members of an object as (name, value) pairs sorted by name.
@@ -139,6 +162,94 @@ def getmembers(object, predicate=None):
             results.append((key, value))
     results.sort()
     return results
+
+def classify_class_attrs(cls):
+    """Return list of attribute-descriptor tuples.
+
+    For each name in dir(cls), the return list contains a 4-tuple
+    with these elements:
+
+        0. The name (a string).
+
+        1. The kind of attribute this is, one of these strings:
+               'class method'    created via classmethod()
+               'static method'   created via staticmethod()
+               'property'        created via property()
+               'method'          any other flavor of method
+               'data'            not a method
+
+        2. The class which defined this attribute (a class).
+
+        3. The object as obtained directly from the defining class's
+           __dict__, not via getattr.  This is especially important for
+           data attributes:  C.data is just a data object, but
+           C.__dict__['data'] may be a data descriptor with additional
+           info, like a __doc__ string.
+    """
+
+    mro = getmro(cls)
+    names = dir(cls)
+    result = []
+    for name in names:
+        # Get the object associated with the name.
+        # Getting an obj from the __dict__ sometimes reveals more than
+        # using getattr.  Static and class methods are dramatic examples.
+        if name in cls.__dict__:
+            obj = cls.__dict__[name]
+        else:
+            obj = getattr(cls, name)
+
+        # Figure out where it was defined.
+        homecls = getattr(obj, "__objclass__", None)
+        if homecls is None:
+            # search the dicts.
+            for base in mro:
+                if name in base.__dict__:
+                    homecls = base
+                    break
+
+        # Get the object again, in order to get it from the defining
+        # __dict__ instead of via getattr (if possible).
+        if homecls is not None and name in homecls.__dict__:
+            obj = homecls.__dict__[name]
+
+        # Also get the object via getattr.
+        obj_via_getattr = getattr(cls, name)
+
+        # Classify the object.
+        if isinstance(obj, staticmethod):
+            kind = "static method"
+        elif isinstance(obj, classmethod):
+            kind = "class method"
+        elif isinstance(obj, property):
+            kind = "property"
+        elif (ismethod(obj_via_getattr) or
+              ismethoddescriptor(obj_via_getattr)):
+            kind = "method"
+        else:
+            kind = "data"
+
+        result.append((name, kind, homecls, obj))
+
+    return result
+
+# ----------------------------------------------------------- class helpers
+def _searchbases(cls, accum):
+    # Simulate the "classic class" search order.
+    if cls in accum:
+        return
+    accum.append(cls)
+    for base in cls.__bases__:
+        _searchbases(base, accum)
+
+def getmro(cls):
+    "Return tuple of base classes (including cls) in method resolution order."
+    if hasattr(cls, "__mro__"):
+        return cls.__mro__
+    else:
+        result = []
+        _searchbases(cls, result)
+        return tuple(result)
 
 # -------------------------------------------------- source code extraction
 def indentsize(line):
@@ -152,8 +263,17 @@ def getdoc(object):
     All tabs are expanded to spaces.  To clean up docstrings that are
     indented to line up with blocks of code, any whitespace than can be
     uniformly removed from the second line onwards is removed."""
-    if hasattr(object, '__doc__') and object.__doc__:
-        lines = string.split(string.expandtabs(object.__doc__), '\n')
+    try:
+        doc = object.__doc__
+    except AttributeError:
+        return None
+    if not isinstance(doc, (str, unicode)):
+        return None
+    try:
+        lines = string.split(string.expandtabs(doc), '\n')
+    except UnicodeError:
+        return None
+    else:
         margin = None
         for line in lines[1:]:
             content = len(string.lstrip(line))
@@ -295,6 +415,7 @@ def findsource(object):
             if pat.match(lines[lnum]): break
             lnum = lnum - 1
         return lines, lnum
+    raise IOError, 'could not find code object'
 
 def getcomments(object):
     """Get lines of comments immediately preceding an object's source code."""
@@ -588,7 +709,7 @@ def getframeinfo(frame, context=1):
     filename = getsourcefile(frame)
     lineno = getlineno(frame)
     if context > 0:
-        start = lineno - 1 - context/2
+        start = lineno - 1 - context//2
         try:
             lines, lnum = findsource(frame)
         except IOError:

@@ -5,8 +5,39 @@ Written by Marc-Andre Lemburg (mal@lemburg.com).
 (c) Copyright CNRI, All Rights Reserved. NO WARRANTY.
 
 """#"
-from test_support import verify, verbose
+from test_support import verify, verbose, TestFailed
 import sys
+
+if not sys.platform.startswith('java'):
+    # Test basic sanity of repr()
+    verify(repr(u'abc') == "u'abc'")
+    verify(repr(u'ab\\c') == "u'ab\\\\c'")
+    verify(repr(u'ab\\') == "u'ab\\\\'")
+    verify(repr(u'\\c') == "u'\\\\c'")
+    verify(repr(u'\\') == "u'\\\\'")
+    verify(repr(u'\n') == "u'\\n'")
+    verify(repr(u'\r') == "u'\\r'")
+    verify(repr(u'\t') == "u'\\t'")
+    verify(repr(u'\b') == "u'\\x08'")
+    verify(repr(u"'\"") == """u'\\'"'""")
+    verify(repr(u"'\"") == """u'\\'"'""")
+    verify(repr(u"'") == '''u"'"''')
+    verify(repr(u'"') == """u'"'""")
+    verify(repr(u''.join(map(unichr, range(256)))) ==
+       "u'\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r"
+       "\\x0e\\x0f\\x10\\x11\\x12\\x13\\x14\\x15\\x16\\x17\\x18\\x19\\x1a"
+       "\\x1b\\x1c\\x1d\\x1e\\x1f !\"#$%&\\'()*+,-./0123456789:;<=>?@ABCDEFGHI"
+       "JKLMNOPQRSTUVWXYZ[\\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\\x7f"
+       "\\x80\\x81\\x82\\x83\\x84\\x85\\x86\\x87\\x88\\x89\\x8a\\x8b\\x8c\\x8d"
+       "\\x8e\\x8f\\x90\\x91\\x92\\x93\\x94\\x95\\x96\\x97\\x98\\x99\\x9a\\x9b"
+       "\\x9c\\x9d\\x9e\\x9f\\xa0\\xa1\\xa2\\xa3\\xa4\\xa5\\xa6\\xa7\\xa8\\xa9"
+       "\\xaa\\xab\\xac\\xad\\xae\\xaf\\xb0\\xb1\\xb2\\xb3\\xb4\\xb5\\xb6\\xb7"
+       "\\xb8\\xb9\\xba\\xbb\\xbc\\xbd\\xbe\\xbf\\xc0\\xc1\\xc2\\xc3\\xc4\\xc5"
+       "\\xc6\\xc7\\xc8\\xc9\\xca\\xcb\\xcc\\xcd\\xce\\xcf\\xd0\\xd1\\xd2\\xd3"
+       "\\xd4\\xd5\\xd6\\xd7\\xd8\\xd9\\xda\\xdb\\xdc\\xdd\\xde\\xdf\\xe0\\xe1"
+       "\\xe2\\xe3\\xe4\\xe5\\xe6\\xe7\\xe8\\xe9\\xea\\xeb\\xec\\xed\\xee\\xef"
+       "\\xf0\\xf1\\xf2\\xf3\\xf4\\xf5\\xf6\\xf7\\xf8\\xf9\\xfa\\xfb\\xfc\\xfd"
+       "\\xfe\\xff'")
 
 def test(method, input, output, *args):
     if verbose:
@@ -347,10 +378,7 @@ if sys.platform[:4] != 'java':
 
 verify(u"%(x)s, %(y)s" % {'x':u"abc", 'y':"def"} == u'abc, def')
 try:
-    if sys.platform[:4] != 'java':
-        value = u"%(x)s, %(ä)s" % {'x':u"abc", u'ä'.encode('utf-8'):"def"}
-    else:
-        value = u"%(x)s, %(ä)s" % {'x':u"abc", u'ä':"def"}
+    value = u"%(x)s, %(ä)s" % {'x':u"abc", u'ä':"def"}
 except KeyError:
     print '*** formatting failed for "%s"' % "u'abc, def'"
 else:
@@ -374,8 +402,97 @@ verify('%i %*.*s' % (10, 5,3,u'abc',) == u'10   abc')
 verify('%i%s %*.*s' % (10, 3, 5,3,u'abc',) == u'103   abc')
 print 'done.'
 
+print 'Testing builtin unicode()...',
+
+# unicode(obj) tests (this maps to PyObject_Unicode() at C level)
+
+verify(unicode(u'unicode remains unicode') == u'unicode remains unicode')
+
+class UnicodeSubclass(unicode):
+    pass
+
+verify(unicode(UnicodeSubclass('unicode subclass becomes unicode'))
+       == u'unicode subclass becomes unicode')
+
+verify(unicode('strings are converted to unicode')
+       == u'strings are converted to unicode')
+
+class UnicodeCompat:
+    def __init__(self, x):
+        self.x = x
+    def __unicode__(self):
+        return self.x
+
+verify(unicode(UnicodeCompat('__unicode__ compatible objects are recognized'))
+       == u'__unicode__ compatible objects are recognized')
+
+class StringCompat:
+    def __init__(self, x):
+        self.x = x
+    def __str__(self):
+        return self.x
+
+verify(unicode(StringCompat('__str__ compatible objects are recognized'))
+       == u'__str__ compatible objects are recognized')
+
+# unicode(obj) is compatible to str():
+
+o = StringCompat('unicode(obj) is compatible to str()')
+verify(unicode(o) == u'unicode(obj) is compatible to str()')
+verify(str(o) == 'unicode(obj) is compatible to str()')
+
+for obj in (123, 123.45, 123L):
+    verify(unicode(obj) == unicode(str(obj)))
+
+# unicode(obj, encoding, error) tests (this maps to
+# PyUnicode_FromEncodedObject() at C level)
+
+if not sys.platform.startswith('java'):
+    try:
+        unicode(u'decoding unicode is not supported', 'utf-8', 'strict')
+    except TypeError:
+        pass
+    else:
+        raise TestFailed, "decoding unicode should NOT be supported"
+
+verify(unicode('strings are decoded to unicode', 'utf-8', 'strict')
+       == u'strings are decoded to unicode')
+
+if not sys.platform.startswith('java'):
+    verify(unicode(buffer('character buffers are decoded to unicode'),
+                   'utf-8', 'strict')
+           == u'character buffers are decoded to unicode')
+
+print 'done.'
+
 # Test builtin codecs
 print 'Testing builtin codecs...',
+
+# UTF-7 specific encoding tests:
+utfTests = [(u'A\u2262\u0391.', 'A+ImIDkQ.'),  # RFC2152 example
+ (u'Hi Mom -\u263a-!', 'Hi Mom -+Jjo--!'),     # RFC2152 example
+ (u'\u65E5\u672C\u8A9E', '+ZeVnLIqe-'),        # RFC2152 example
+ (u'Item 3 is \u00a31.', 'Item 3 is +AKM-1.'), # RFC2152 example
+ (u'+', '+-'),
+ (u'+-', '+--'),
+ (u'+?', '+-?'),
+ (u'\?', '+AFw?'),
+ (u'+?', '+-?'),
+ (ur'\\?', '+AFwAXA?'),
+ (ur'\\\?', '+AFwAXABc?'),
+ (ur'++--', '+-+---')]
+
+for x,y in utfTests:
+    verify( x.encode('utf-7') == y )
+
+try:
+    unicode('+3ADYAA-', 'utf-7') # surrogates not supported
+except UnicodeError:
+    pass
+else:
+    raise TestFailed, "unicode('+3ADYAA-', 'utf-7') failed to raise an exception"
+
+verify(unicode('+3ADYAA-', 'utf-7', 'replace') == u'\ufffd')
 
 # UTF-8 specific encoding tests:
 verify(u'\u20ac'.encode('utf-8') == \
@@ -386,9 +503,9 @@ verify(u'\ud84d\udc56'.encode('utf-8') == \
        ''.join((chr(0xf0), chr(0xa3), chr(0x91), chr(0x96))) )
 # UTF-8 specific decoding tests
 verify(unicode(''.join((chr(0xf0), chr(0xa3), chr(0x91), chr(0x96))),
-               'utf-8') == u'\ud84d\udc56' )
+               'utf-8') == u'\U00023456' )
 verify(unicode(''.join((chr(0xf0), chr(0x90), chr(0x80), chr(0x82))),
-               'utf-8') == u'\ud800\udc02' )
+               'utf-8') == u'\U00010002' )
 verify(unicode(''.join((chr(0xe2), chr(0x82), chr(0xac))),
                'utf-8') == u'\u20ac' )
 
@@ -396,28 +513,12 @@ verify(unicode(''.join((chr(0xe2), chr(0x82), chr(0xac))),
 # * strict decoding testing for all of the
 #   UTF8_ERROR cases in PyUnicode_DecodeUTF8
 
-
-
 verify(unicode('hello','ascii') == u'hello')
 verify(unicode('hello','utf-8') == u'hello')
 verify(unicode('hello','utf8') == u'hello')
 verify(unicode('hello','latin-1') == u'hello')
 
-class String:
-    x = ''
-    def __str__(self):
-        return self.x
-
-o = String()
-
-o.x = 'abc'
-verify(unicode(o) == u'abc')
-verify(str(o) == 'abc')
-
-o.x = u'abc'
-verify(unicode(o) == u'abc')
-verify(str(o) == 'abc')
-
+# Error handling
 try:
     u'Andr\202 x'.encode('ascii')
     u'Andr\202 x'.encode('ascii','strict')
@@ -438,16 +539,34 @@ else:
 verify(unicode('Andr\202 x','ascii','ignore') == u"Andr x")
 verify(unicode('Andr\202 x','ascii','replace') == u'Andr\uFFFD x')
 
+verify("\\N{foo}xx".decode("unicode-escape", "ignore") == u"xx")
+try:
+    "\\".decode("unicode-escape")
+except ValueError:
+    pass
+else:
+    raise TestFailed, '"\\".decode("unicode-escape") should fail'
+
 verify(u'hello'.encode('ascii') == 'hello')
+verify(u'hello'.encode('utf-7') == 'hello')
 verify(u'hello'.encode('utf-8') == 'hello')
 verify(u'hello'.encode('utf8') == 'hello')
 verify(u'hello'.encode('utf-16-le') == 'h\000e\000l\000l\000o\000')
 verify(u'hello'.encode('utf-16-be') == '\000h\000e\000l\000l\000o')
 verify(u'hello'.encode('latin-1') == 'hello')
 
+# Roundtrip safety for BMP (just the first 1024 chars)
 u = u''.join(map(unichr, range(1024)))
-for encoding in ('utf-8', 'utf-16', 'utf-16-le', 'utf-16-be',
+for encoding in ('utf-7', 'utf-8', 'utf-16', 'utf-16-le', 'utf-16-be',
                  'raw_unicode_escape', 'unicode_escape', 'unicode_internal'):
+    verify(unicode(u.encode(encoding),encoding) == u)
+
+# Roundtrip safety for non-BMP (just a few chars)
+u = u'\U00010001\U00020002\U00030003\U00040004\U00050005'
+for encoding in ('utf-8',
+                 'utf-16', 'utf-16-le', 'utf-16-be',
+                 #'raw_unicode_escape',
+                 'unicode_escape', 'unicode_internal'):
     verify(unicode(u.encode(encoding),encoding) == u)
 
 u = u''.join(map(unichr, range(256)))
@@ -493,10 +612,13 @@ for encoding in (
     'cp856', 'cp857', 'cp864', 'cp869', 'cp874',
 
     'mac_greek', 'mac_iceland','mac_roman', 'mac_turkish',
-    'cp1006', 'cp875', 'iso8859_8',
+    'cp1006', 'iso8859_8',
 
     ### These have undefined mappings:
     #'cp424',
+
+    ### These fail the round-trip:
+    #'cp875'
 
     ):
     try:
@@ -544,4 +666,16 @@ verify(("abc" u"def") == u"abcdef")
 verify((u"abc" "def") == u"abcdef")
 verify((u"abc" u"def" "ghi") == u"abcdefghi")
 verify(("abc" "def" u"ghi") == u"abcdefghi")
+print 'done.'
+
+print 'Testing Unicode printing...',
+print u'abc'
+print u'abc', u'def'
+print u'abc', 'def'
+print 'abc', u'def'
+print u'abc\n'
+print u'abc\n',
+print u'abc\n',
+print u'def\n'
+print u'def\n'
 print 'done.'

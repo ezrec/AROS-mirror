@@ -52,15 +52,8 @@ import socket
 import sys
 
 import os
-if os.name == 'nt':
-    EWOULDBLOCK = 10035
-    EINPROGRESS = 10036
-    EALREADY    = 10037
-    ECONNRESET  = 10054
-    ENOTCONN    = 10057
-    ESHUTDOWN   = 10058
-else:
-    from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, ENOTCONN, ESHUTDOWN
+from errno import EALREADY, EINPROGRESS, EWOULDBLOCK, ECONNRESET, \
+     ENOTCONN, ESHUTDOWN, EINTR, EISCONN
 
 try:
     socket_map
@@ -73,7 +66,6 @@ class ExitNow (exceptions.Exception):
 DEBUG = 0
 
 def poll (timeout=0.0, map=None):
-    global DEBUG
     if map is None:
         map = socket_map
     if map:
@@ -83,7 +75,12 @@ def poll (timeout=0.0, map=None):
                 r.append (fd)
             if obj.writable():
                 w.append (fd)
-        r,w,e = select.select (r,w,e, timeout)
+        try:
+            r,w,e = select.select (r,w,e, timeout)
+        except select.error, err:
+            if err[0] != EINTR:
+                raise
+            r = []; w = []; e = []
 
         if DEBUG:
             print r,w,e
@@ -91,33 +88,36 @@ def poll (timeout=0.0, map=None):
         for fd in r:
             try:
                 obj = map[fd]
-                try:
-                    obj.handle_read_event()
-                except ExitNow:
-                    raise ExitNow
-                except:
-                    obj.handle_error()
             except KeyError:
-                pass
+                continue
+
+            try:
+                obj.handle_read_event()
+            except ExitNow:
+                raise ExitNow
+            except:
+                obj.handle_error()
 
         for fd in w:
             try:
                 obj = map[fd]
-                try:
-                    obj.handle_write_event()
-                except ExitNow:
-                    raise ExitNow
-                except:
-                    obj.handle_error()
             except KeyError:
-                pass
+                continue
+
+            try:
+                obj.handle_write_event()
+            except ExitNow:
+                raise ExitNow
+            except:
+                obj.handle_error()
 
 def poll2 (timeout=0.0, map=None):
     import poll
     if map is None:
         map=socket_map
-    # timeout is in milliseconds
-    timeout = int(timeout*1000)
+    if timeout is not None:
+        # timeout is in milliseconds
+        timeout = int(timeout*1000)
     if map:
         l = []
         for fd, obj in map.items():
@@ -132,27 +132,28 @@ def poll2 (timeout=0.0, map=None):
         for fd, flags in r:
             try:
                 obj = map[fd]
-                try:
-                    if (flags  & poll.POLLIN):
-                        obj.handle_read_event()
-                    if (flags & poll.POLLOUT):
-                        obj.handle_write_event()
-                except ExitNow:
-                    raise ExitNow
-                except:
-                    obj.handle_error()
             except KeyError:
-                pass
+                continue
+
+            try:
+                if (flags  & poll.POLLIN):
+                    obj.handle_read_event()
+                if (flags & poll.POLLOUT):
+                    obj.handle_write_event()
+            except ExitNow:
+                raise ExitNow
+            except:
+                obj.handle_error()
 
 def poll3 (timeout=0.0, map=None):
     # Use the poll() support added to the select module in Python 2.0
     if map is None:
         map=socket_map
-    # timeout is in milliseconds
-    timeout = int(timeout*1000)
+    if timeout is not None:
+        # timeout is in milliseconds
+        timeout = int(timeout*1000)
     pollster = select.poll()
     if map:
-        l = []
         for fd, obj in map.items():
             flags = 0
             if obj.readable():
@@ -161,21 +162,27 @@ def poll3 (timeout=0.0, map=None):
                 flags = flags | select.POLLOUT
             if flags:
                 pollster.register(fd, flags)
-        r = pollster.poll (timeout)
+        try:
+            r = pollster.poll (timeout)
+        except select.error, err:
+            if err[0] != EINTR:
+                raise
+            r = []
         for fd, flags in r:
             try:
                 obj = map[fd]
-                try:
-                    if (flags  & select.POLLIN):
-                        obj.handle_read_event()
-                    if (flags & select.POLLOUT):
-                        obj.handle_write_event()
-                except ExitNow:
-                    raise ExitNow
-                except:
-                    obj.handle_error()
             except KeyError:
-                pass
+                continue
+
+            try:
+                if (flags  & select.POLLIN):
+                    obj.handle_read_event()
+                if (flags & select.POLLOUT):
+                    obj.handle_write_event()
+            except ExitNow:
+                raise ExitNow
+            except:
+                obj.handle_error()
 
 def loop (timeout=30.0, use_poll=0, map=None):
 
@@ -206,28 +213,28 @@ class dispatcher:
             # I think it should inherit this anyway
             self.socket.setblocking (0)
             self.connected = 1
+            # XXX Does the constructor require that the socket passed
+            # be connected?
+            try:
+                self.addr = sock.getpeername()
+            except socket.error:
+                # The addr isn't crucial
+                pass
+        else:
+            self.socket = None
 
     def __repr__ (self):
-        try:
-            status = []
-            if self.accepting and self.addr:
-                status.append ('listening')
-            elif self.connected:
-                status.append ('connected')
-            if self.addr:
-                status.append ('%s:%d' % self.addr)
-            return '<%s %s at %x>' % (
-                self.__class__.__name__,
-                ' '.join (status),
-                id(self)
-                )
-        except:
+        status = [self.__class__.__module__+"."+self.__class__.__name__]
+        if self.accepting and self.addr:
+            status.append ('listening')
+        elif self.connected:
+            status.append ('connected')
+        if self.addr is not None:
             try:
-                ar = repr(self.addr)
-            except:
-                ar = 'no self.addr!'
-
-            return '<__repr__ (self) failed for object at %x (addr=%s)>' % (id(self),ar)
+                status.append ('%s:%d' % self.addr)
+            except TypeError:
+                status.append (repr(self.addr))
+        return '<%s at %#x>' % (' '.join (status), id (self))
 
     def add_channel (self, map=None):
         #self.log_info ('adding channel %s' % self)
@@ -251,7 +258,8 @@ class dispatcher:
         self.add_channel()
 
     def set_socket (self, sock, map=None):
-        self.__dict__['socket'] = sock
+        self.socket = sock
+##        self.__dict__['socket'] = sock
         self._fileno = sock.fileno()
         self.add_channel (map)
 
@@ -260,9 +268,10 @@ class dispatcher:
         try:
             self.socket.setsockopt (
                 socket.SOL_SOCKET, socket.SO_REUSEADDR,
-                self.socket.getsockopt (socket.SOL_SOCKET, socket.SO_REUSEADDR) | 1
+                self.socket.getsockopt (socket.SOL_SOCKET,
+                                        socket.SO_REUSEADDR) | 1
                 )
-        except:
+        except socket.error:
             pass
 
     # ==================================================
@@ -299,15 +308,15 @@ class dispatcher:
 
     def connect (self, address):
         self.connected = 0
-        try:
-            self.socket.connect (address)
-        except socket.error, why:
-            if why[0] in (EINPROGRESS, EALREADY, EWOULDBLOCK):
-                return
-            else:
-                raise socket.error, why
-        self.connected = 1
-        self.handle_connect()
+        err = self.socket.connect_ex(address)
+        if err in (EINPROGRESS, EALREADY, EWOULDBLOCK):
+            return
+        if err in (0, EISCONN):
+            self.addr = address
+            self.connected = 1
+            self.handle_connect()
+        else:
+            raise socket.error, err
 
     def accept (self):
         try:
@@ -393,7 +402,7 @@ class dispatcher:
         self.handle_expt()
 
     def handle_error (self):
-        (file,fun,line), t, v, tbinfo = compact_traceback()
+        nil, t, v, tbinfo = compact_traceback()
 
         # sometimes a user repr method will crash.
         try:
@@ -502,10 +511,8 @@ def close_all (map=None):
 #
 # Regardless, this is useful for pipes, and stdin/stdout...
 
-import os
 if os.name == 'posix':
     import fcntl
-    import FCNTL
 
     class file_wrapper:
         # here we override just enough to make a file
@@ -533,9 +540,9 @@ if os.name == 'posix':
             dispatcher.__init__ (self)
             self.connected = 1
             # set it to non-blocking mode
-            flags = fcntl.fcntl (fd, FCNTL.F_GETFL, 0)
-            flags = flags | FCNTL.O_NONBLOCK
-            fcntl.fcntl (fd, FCNTL.F_SETFL, flags)
+            flags = fcntl.fcntl (fd, fcntl.F_GETFL, 0)
+            flags = flags | os.O_NONBLOCK
+            fcntl.fcntl (fd, fcntl.F_SETFL, flags)
             self.set_file (fd)
 
         def set_file (self, fd):

@@ -1,6 +1,7 @@
-from __future__ import nested_scopes
+from test_support import verify, TestFailed, check_syntax
 
-from test.test_support import verify, TestFailed, check_syntax
+import warnings
+warnings.filterwarnings("ignore", r"import \*", SyntaxWarning, "<string>")
 
 print "1. simple nesting"
 
@@ -179,7 +180,7 @@ verify(f(6) == 720)
 
 print "11. unoptimized namespaces"
 
-check_syntax("""from __future__ import nested_scopes
+check_syntax("""\
 def unoptimized_clash1(strip):
     def f(s):
         from string import *
@@ -187,7 +188,7 @@ def unoptimized_clash1(strip):
     return f
 """)
 
-check_syntax("""from __future__ import nested_scopes
+check_syntax("""\
 def unoptimized_clash2():
     from string import *
     def f(s):
@@ -195,7 +196,7 @@ def unoptimized_clash2():
     return f
 """)
 
-check_syntax("""from __future__ import nested_scopes
+check_syntax("""\
 def unoptimized_clash2():
     from string import *
     def g():
@@ -205,7 +206,7 @@ def unoptimized_clash2():
 """)
 
 # XXX could allow this for exec with const argument, but what's the point
-check_syntax("""from __future__ import nested_scopes
+check_syntax("""\
 def error(y):
     exec "a = 1"
     def f(x):
@@ -213,14 +214,14 @@ def error(y):
     return f
 """)
 
-check_syntax("""from __future__ import nested_scopes
+check_syntax("""\
 def f(x):
     def g():
         return x
     del x # can't del name
 """)
 
-check_syntax("""from __future__ import nested_scopes
+check_syntax("""\
 def f():
     def g():
          from string import *
@@ -229,6 +230,7 @@ def f():
 
 # and verify a few cases that should work
 
+exec """
 def noproblem1():
     from string import *
     f = lambda x:x
@@ -243,6 +245,7 @@ def noproblem3():
     def f(x):
         global y
         y = x
+"""
 
 print "12. lambdas"
 
@@ -467,3 +470,45 @@ class TestClass:
 sys.settrace(tracer)
 adaptgetter("foo", TestClass, (1, ""))
 sys.settrace(None)
+
+try: sys.settrace()
+except TypeError: pass
+else: raise TestFailed, 'sys.settrace() did not raise TypeError'
+
+print "20. eval and exec with free variables"
+
+def f(x):
+    return lambda: x + 1
+
+g = f(3)
+try:
+    eval(g.func_code)
+except TypeError:
+    pass
+else:
+    print "eval() should have failed, because code contained free vars"
+
+try:
+    exec g.func_code
+except TypeError:
+    pass
+else:
+    print "exec should have failed, because code contained free vars"
+
+print "21. list comprehension with local variables"
+
+try:
+    print bad
+except NameError:
+    pass
+else:
+    print "bad should not be defined"
+
+def x():
+    [bad for s in 'a b' for bad in s.split()]
+
+x()
+try:
+    print bad
+except NameError:
+    pass

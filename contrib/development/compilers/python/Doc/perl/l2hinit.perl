@@ -33,6 +33,10 @@ $VERBOSITY = 0;
 $INDEX_COLUMNS = 2;
 $MODULE_INDEX_COLUMNS = 4;
 
+$HAVE_MODULE_INDEX = 0;
+$HAVE_GENERAL_INDEX = 0;
+$HAVE_TABLE_OF_CONTENTS = 0;
+
 
 # A little painful, but lets us clean up the top level directory a little,
 # and not be tied to the current directory (as far as I can tell).  Testing
@@ -176,6 +180,14 @@ sub make_nav_panel {
     # remove these; they are unnecessary and cause errors from validation
     $s =~ s/ NAME="tex2html\d+"\n */ /g;
     return $s;
+}
+
+sub add_child_links {
+    my $toc = add_real_child_links(@_);
+    $toc =~ s|\s*</[aA]>|</a>|g;
+    $toc =~ s/ NAME=\"tex2html\d+\"\s*href=/ href=/gi;
+    $toc =~ s|</UL>(\s*<BR>)?|</ul>|gi;
+    return $toc;
 }
 
 sub get_version_text {
@@ -325,11 +337,11 @@ sub add_module_idx {
 	my $plat = '';
 	$key =~ s/<tt>([a-zA-Z0-9._]*)<\/tt>/\1/;
 	if ($ModulePlatforms{$key} && !$allthesame) {
-	    $plat = (" <em>(<span class='platform'>$ModulePlatforms{$key}"
+	    $plat = (" <em>(<span class=\"platform\">$ModulePlatforms{$key}"
 		     . '</span>)</em>');
 	}
 	print MODIDXFILE $moditem . $IDXFILE_FIELD_SEP
-              . "<tt class='module'>$key</tt>$plat###\n";
+              . "<tt class=\"module\">$key</tt>$plat###\n";
     }
     close(MODIDXFILE);
 
@@ -418,11 +430,15 @@ sub do_cmd_textohtmlinfopage {
 	    $the_version .= ", Release $PACKAGE_VERSION$RELEASE_INFO";
 	}
     }
+    my $about;
+    open(ABOUT, "<$ABOUT_FILE") || die "\n$!\n";
+    sysread(ABOUT, $about, 1024*1024);
+    close(ABOUT);
     $_ = (($INFO == 1)
           ? join('',
                  $close_all,
                  "<strong>$t_title</strong>$the_version\n",
-                 `cat $ABOUT_FILE`,
+                 $about,
                  $open_all, $_)
           : join('', $close_all, $INFO,"\n", $open_all, $_));
     $_;
@@ -472,12 +488,16 @@ sub do_cmd_textohtmlmoduleindex {
 sub add_bbl_and_idx_dummy_commands {
     my $id = $global{'max_id'};
 
+    if (/[\\]tableofcontents/) {
+        $HAVE_TABLE_OF_CONTENTS = 1;
+    }
     s/([\\]begin\s*$O\d+$C\s*thebibliography)/$bbl_cnt++; $1/eg;
     s/([\\]begin\s*$O\d+$C\s*thebibliography)/$id++; "\\bibliography$O$id$C$O$id$C $1"/geo;
     my(@parts) = split(/\\begin\s*$O\d+$C\s*theindex/);
     if (scalar(@parts) == 3) {
         # Be careful to re-write the string in place, since $_ is *not*
         # returned explicity;  *** nasty side-effect dependency! ***
+        print "\nadd_bbl_and_idx_dummy_commands ==> adding general index";
         print "\nadd_bbl_and_idx_dummy_commands ==> adding module index";
         my $rx = "([\\\\]begin\\s*$O\\d+$C\\s*theindex[\\s\\S]*)"
           . "([\\\\]begin\\s*$O\\d+$C\\s*theindex)";
@@ -486,13 +506,25 @@ sub add_bbl_and_idx_dummy_commands {
         $CUSTOM_BUTTONS .= ('<a href="modindex.html" title="Module Index">'
                             . get_my_icon('modules')
                             . '</a>');
+        $HAVE_MODULE_INDEX = 1;
+        $HAVE_GENERAL_INDEX = 1;
     }
-    else {
+    elsif (scalar(@parts) == 2) {
+        print "\nadd_bbl_and_idx_dummy_commands ==> adding general index";
+        my $rx = "([\\\\]begin\\s*$O\\d+$C\\s*theindex)";
+        s/$rx/\\textohtmlindex \1/o;
+        $HAVE_GENERAL_INDEX = 1;
+    }
+    elsif (scalar(@parts) == 1) {
+        print "\nadd_bbl_and_idx_dummy_commands ==> no index found";
         $CUSTOM_BUTTONS .= get_my_icon('blank');
         $global{'max_id'} = $id; # not sure why....
         s/([\\]begin\s*$O\d+$C\s*theindex)/\\textohtmlindex $1/o;
 	    s/[\\]printindex/\\textohtmlindex /o;
-	}
+    }
+    else {
+        die "\n\nBad number of index environments!\n\n";
+    }
     #----------------------------------------------------------------------
     lib_add_bbl_and_idx_dummy_commands()
         if defined(&lib_add_bbl_and_idx_dummy_commands);
@@ -550,6 +582,7 @@ sub set_depth_levels {
 # This is added to get rid of the long comment that follows the
 # doctype declaration; MSIE5 on NT4 SP4 barfs on it and drops the
 # content of the page.
+$MY_PARTIAL_HEADER = '';
 sub make_head_and_body {
     my($title, $body) = @_;
     $body = " $body" unless ($body eq '');
@@ -575,20 +608,38 @@ sub make_head_and_body {
 	$DTDcomment = "<!DOCTYPE html PUBLIC \"$DOCTYPE//"
 	    . ($ISO_LANGUAGE ? $ISO_LANGUAGE : $isolanguage) . "\">\n";
     }
+    if ($MY_PARTIAL_HEADER eq '') {
+        $STYLESHEET = $FILE.".css" unless $STYLESHEET;
+        $MY_PARTIAL_HEADER = join('',
+            ($CHARSET && $HTML_VERSION ge "2.1"
+             ? ('<meta http-equiv="Content-Type" content="text/html; '
+                . "charset=$CHARSET\">\n")
+             : ''),
+            ($BASE ? "<base href=\"$BASE\">\n" : ''),
+            "<link rel=\"STYLESHEET\" href=\"$STYLESHEET\">\n",
+            "<link rel=\"first\" href=\"$FILE.html\">\n",
+            ($HAVE_TABLE_OF_CONTENTS
+             ? ('<link rel="contents" href="contents.html" title="Contents">'
+                . "\n")
+             : ''),
+            ($HAVE_GENERAL_INDEX
+             ? '<link rel="index" href="genindex.html" title="Index">'
+             : ''),
+            # disable for now -- Mozilla doesn't do well with multiple indexes
+            # ($HAVE_MODULE_INDEX
+            #  ? '<link rel="index" href="modindex.html" title="Module Index">'
+            #    . "\n"
+            #  : ''),
+            $more_links_mark);
+    }
 
-    $STYLESHEET = $FILE.".css" unless $STYLESHEET;
     if (!$charset && $CHARSET) { $charset = $CHARSET; $charset =~ s/_/\-/go; }
 
     join('', ($DOCTYPE ? $DTDcomment : '' )
-	,"<html>\n<head>\n<title>", $title, "</title>\n"
-	, &meta_information($title)
-	, ($CHARSET && $HTML_VERSION ge "2.1" ?
-           "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=$charset\">\n"
-           : "" )
-	, ($BASE ? "<base href=\"$BASE\">\n" : "" )
-	, "<link rel=\"STYLESHEET\" href=\"$STYLESHEET\">"
-	, $more_links_mark
-	, "\n</head>\n<body$body>");
+         , "<html>\n<head>\n<title>", $title, "</title>\n"
+         , &meta_information($title)
+         , $MY_PARTIAL_HEADER
+         , "\n</head>\n<body$body>");
 }
 
 1;	# This must be the last line

@@ -14,6 +14,7 @@ def basic(src):
     verify(L == [r'Commented Bar',
                  r'Foo Bar',
                  r'Internationalized Stuff',
+                 r'Long Line',
                  r'Section\with$weird%characters[' '\t',
                  r'Spacey Bar',
                  ],
@@ -47,7 +48,26 @@ def basic(src):
             "remove_option() failed to report non-existance of option"
             " that never existed")
 
+    verify(cf.get('Long Line', 'foo', raw=1) ==
+           'this line is much, much longer than my editor\nlikes it.')
 
+
+def write(src):
+    print "Testing writing of files..."
+    cf = ConfigParser.ConfigParser()
+    sio = StringIO.StringIO(src)
+    cf.readfp(sio)
+    output = StringIO.StringIO()
+    cf.write(output)
+    verify(output, """[DEFAULT]
+foo = another very
+        long line
+
+[Long Line]
+foo = this line is much, much longer than my editor
+        likes it.
+""")
+           
 def case_sensitivity():
     print "Testing case sensitivity..."
     cf = ConfigParser.ConfigParser()
@@ -76,6 +96,25 @@ def case_sensitivity():
     cf.readfp(sio)
     verify(cf.options("MySection") == ["option"])
     verify(cf.get("MySection", "Option") == "first line\nsecond line")
+
+
+def boolean(src):
+    print "Testing interpretation of boolean Values..."
+    cf = ConfigParser.ConfigParser()
+    sio = StringIO.StringIO(src)
+    cf.readfp(sio)
+    for x in range(1, 5):
+        verify(cf.getboolean('BOOLTEST', 't%d' % (x)) == 1)
+    for x in range(1, 5):
+        verify(cf.getboolean('BOOLTEST', 'f%d' % (x)) == 0)
+    for x in range(1, 5):
+        try:
+            cf.getboolean('BOOLTEST', 'e%d' % (x))
+        except ValueError:
+            pass
+        else:
+            raise TestFailed(
+                "getboolean() failed to report a non boolean value")
 
 
 def interpolation(src):
@@ -172,6 +211,9 @@ foo=bar
 foo = bar
 [Commented Bar]
 foo: bar ; comment
+[Long Line]
+foo: this line is much, much longer than my editor
+   likes it.
 [Section\with$weird%characters[""" '\t' r"""]
 [Internationalized Stuff]
 foo[bg]: Bulgarian
@@ -179,7 +221,31 @@ foo=Default
 foo[en]=English
 foo[de]=Deutsch
 """)
+write("""[Long Line]
+foo: this line is much, much longer than my editor
+   likes it.
+[DEFAULT]
+foo: another very
+ long line""")
 case_sensitivity()
+boolean(r"""
+[BOOLTEST]
+T1=1
+T2=TRUE
+T3=True
+T4=oN
+T5=yes
+F1=0
+F2=FALSE
+F3=False
+F4=oFF
+F5=nO
+E1=2
+E2=foo
+E3=-1
+E4=0.1
+E5=FALSE AND MORE
+""")
 interpolation(r"""
 [Foo]
 bar=something %(with1)s interpolation (1 step)

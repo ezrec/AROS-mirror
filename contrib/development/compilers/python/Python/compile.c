@@ -61,7 +61,7 @@ int Py_OptimizeFlag = 0;
 "name '%.400s' is used prior to global declaration"
 
 #define LOCAL_GLOBAL \
-"name '%.400s' is a function paramter and declared global"
+"name '%.400s' is a function parameter and declared global"
 
 #define LATE_FUTURE \
 "from __future__ imports must occur at the beginning of the file"
@@ -73,7 +73,7 @@ int Py_OptimizeFlag = 0;
 
 #define OFF(x) offsetof(PyCodeObject, x)
 
-static struct memberlist code_memberlist[] = {
+static PyMemberDef code_memberlist[] = {
 	{"co_argcount",	T_INT,		OFF(co_argcount),	READONLY},
 	{"co_nlocals",	T_INT,		OFF(co_nlocals),	READONLY},
 	{"co_stacksize",T_INT,		OFF(co_stacksize),	READONLY},
@@ -90,12 +90,6 @@ static struct memberlist code_memberlist[] = {
 	{"co_lnotab",	T_OBJECT,	OFF(co_lnotab),		READONLY},
 	{NULL}	/* Sentinel */
 };
-
-static PyObject *
-code_getattr(PyCodeObject *co, char *name)
-{
-	return PyMember_Get((char *)co, code_memberlist, name);
-}
 
 static void
 code_dealloc(PyCodeObject *co)
@@ -126,8 +120,9 @@ code_repr(PyCodeObject *co)
 		filename = PyString_AS_STRING(co->co_filename);
 	if (co->co_name && PyString_Check(co->co_name))
 		name = PyString_AS_STRING(co->co_name);
-	sprintf(buf, "<code object %.100s at %p, file \"%.300s\", line %d>",
-		name, co, filename, lineno);
+	PyOS_snprintf(buf, sizeof(buf),
+		      "<code object %.100s at %p, file \"%.300s\", line %d>",
+		      name, co, filename, lineno);
 	return PyString_FromString(buf);
 }
 
@@ -189,16 +184,40 @@ PyTypeObject PyCode_Type = {
 	"code",
 	sizeof(PyCodeObject),
 	0,
-	(destructor)code_dealloc, /*tp_dealloc*/
-	0,	/*tp_print*/
-	(getattrfunc)code_getattr, /*tp_getattr*/
-	0,		/*tp_setattr*/
-	(cmpfunc)code_compare, /*tp_compare*/
-	(reprfunc)code_repr, /*tp_repr*/
-	0,		/*tp_as_number*/
-	0,		/*tp_as_sequence*/
-	0,		/*tp_as_mapping*/
-	(hashfunc)code_hash, /*tp_hash*/
+	(destructor)code_dealloc, 	/* tp_dealloc */
+	0,				/* tp_print */
+	0, 				/* tp_getattr */
+	0,				/* tp_setattr */
+	(cmpfunc)code_compare, 		/* tp_compare */
+	(reprfunc)code_repr,		/* tp_repr */
+	0,				/* tp_as_number */
+	0,				/* tp_as_sequence */
+	0,				/* tp_as_mapping */
+	(hashfunc)code_hash, 		/* tp_hash */
+	0,				/* tp_call */
+	0,				/* tp_str */
+	PyObject_GenericGetAttr,	/* tp_getattro */
+	0,				/* tp_setattro */
+	0,				/* tp_as_buffer */
+	Py_TPFLAGS_DEFAULT,		/* tp_flags */
+	0,				/* tp_doc */
+	0,				/* tp_traverse */
+	0,				/* tp_clear */
+	0,				/* tp_richcompare */
+	0,				/* tp_weaklistoffset */
+	0,				/* tp_iter */
+	0,				/* tp_iternext */
+	0,				/* tp_methods */
+	code_memberlist,		/* tp_members */
+	0,				/* tp_getset */
+	0,				/* tp_base */
+	0,				/* tp_dict */
+	0,				/* tp_descr_get */
+	0,				/* tp_descr_set */
+	0,				/* tp_dictoffset */
+	0,				/* tp_init */
+	0,				/* tp_alloc */
+	0,				/* tp_new */
 };
 
 #define NAME_CHARS \
@@ -250,7 +269,6 @@ PyCode_New(int argcount, int nlocals, int stacksize, int flags,
 {
 	PyCodeObject *co;
 	int i;
-	PyBufferProcs *pb;
 	/* Check argument types */
 	if (argcount < 0 || nlocals < 0 ||
 	    code == NULL ||
@@ -261,16 +279,8 @@ PyCode_New(int argcount, int nlocals, int stacksize, int flags,
 	    cellvars == NULL || !PyTuple_Check(cellvars) ||
 	    name == NULL || !PyString_Check(name) ||
 	    filename == NULL || !PyString_Check(filename) ||
-		lnotab == NULL || !PyString_Check(lnotab)) {
-		PyErr_BadInternalCall();
-		return NULL;
-	}
-	pb = code->ob_type->tp_as_buffer;
-	if (pb == NULL ||
-	    pb->bf_getreadbuffer == NULL ||
-	    pb->bf_getsegcount == NULL ||
-	    (*pb->bf_getsegcount)(code, NULL) != 1)
-	{
+	    lnotab == NULL || !PyString_Check(lnotab) ||
+	    !PyObject_CheckReadBuffer(code)) {
 		PyErr_BadInternalCall();
 		return NULL;
 	}
@@ -455,14 +465,21 @@ com_error(struct compiling *c, PyObject *exc, char *msg)
 		Py_INCREF(Py_None);
 		line = Py_None;
 	}
-	t = Py_BuildValue("(ziOO)", c->c_filename, c->c_lineno,
-			  Py_None, line);
-	if (t == NULL)
-		goto exit;
-	w = Py_BuildValue("(OO)", v, t);
-	if (w == NULL)
-		goto exit;
-	PyErr_SetObject(exc, w);
+	if (exc == PyExc_SyntaxError) {
+		t = Py_BuildValue("(ziOO)", c->c_filename, c->c_lineno,
+				  Py_None, line);
+		if (t == NULL)
+			goto exit;
+		w = Py_BuildValue("(OO)", v, t);
+		if (w == NULL)
+			goto exit;
+		PyErr_SetObject(exc, w);
+	} else {
+		/* Make sure additional exceptions are printed with
+		   file and line, also. */
+		PyErr_SetObject(exc, v);
+		PyErr_SyntaxLocation(c->c_filename, c->c_lineno);
+	}
  exit:
 	Py_XDECREF(t);
 	Py_XDECREF(v);
@@ -520,8 +537,8 @@ static void com_assign_name(struct compiling *, node *, int);
 static PyCodeObject *icompile(node *, struct compiling *);
 static PyCodeObject *jcompile(node *, char *, struct compiling *,
 			      PyCompilerFlags *);
-static PyObject *parsestrplus(node *);
-static PyObject *parsestr(char *);
+static PyObject *parsestrplus(struct compiling*, node *);
+static PyObject *parsestr(struct compiling *, char *);
 static node *get_rawdocstring(node *);
 
 static int get_ref_type(struct compiling *, char *);
@@ -650,20 +667,21 @@ static void
 com_push(struct compiling *c, int n)
 {
 	c->c_stacklevel += n;
-	if (c->c_stacklevel > c->c_maxstacklevel)
+	if (c->c_stacklevel > c->c_maxstacklevel) {
 		c->c_maxstacklevel = c->c_stacklevel;
+		/*
+		fprintf(stderr, "%s:%s:%d max stack nexti=%d level=%d n=%d\n",
+			c->c_filename, c->c_name, c->c_lineno,
+			c->c_nexti, c->c_stacklevel, n);
+		*/
+	}
 }
 
 static void
 com_pop(struct compiling *c, int n)
 {
-	if (c->c_stacklevel < n) {
-		/* fprintf(stderr,
-			"%s:%d: underflow! nexti=%d, level=%d, n=%d\n",
-			c->c_filename, c->c_lineno,
-			c->c_nexti, c->c_stacklevel, n); */
+	if (c->c_stacklevel < n) 
 		c->c_stacklevel = 0;
-	}
 	else
 		c->c_stacklevel -= n;
 }
@@ -677,26 +695,26 @@ com_done(struct compiling *c)
 		_PyString_Resize(&c->c_lnotab, c->c_lnotab_next);
 }
 
+static int
+com_check_size(PyObject **s, int offset)
+{
+	int len = PyString_GET_SIZE(*s);
+	if (offset >= len) 
+		return _PyString_Resize(s, len * 2);
+	return 0;
+}
+
 static void
 com_addbyte(struct compiling *c, int byte)
 {
-	int len;
 	/*fprintf(stderr, "%3d: %3d\n", c->c_nexti, byte);*/
 	assert(byte >= 0 && byte <= 255);
-	if (byte < 0 || byte > 255) {
-		com_error(c, PyExc_SystemError,
-			  "com_addbyte: byte out of range");
-	}
-	if (c->c_code == NULL)
+	assert(c->c_code);
+	if (com_check_size(&c->c_code, c->c_nexti)) {
+		c->c_errors++;
 		return;
-	len = PyString_Size(c->c_code);
-	if (c->c_nexti >= len) {
-		if (_PyString_Resize(&c->c_code, len+1000) != 0) {
-			c->c_errors++;
-			return;
-		}
 	}
-	PyString_AsString(c->c_code)[c->c_nexti++] = byte;
+	PyString_AS_STRING(c->c_code)[c->c_nexti++] = byte;
 }
 
 static void
@@ -709,18 +727,14 @@ com_addint(struct compiling *c, int x)
 static void
 com_add_lnotab(struct compiling *c, int addr, int line)
 {
-	int size;
 	char *p;
 	if (c->c_lnotab == NULL)
 		return;
-	size = PyString_Size(c->c_lnotab);
-	if (c->c_lnotab_next+2 > size) {
-		if (_PyString_Resize(&c->c_lnotab, size + 1000) < 0) {
-			c->c_errors++;
-			return;
-		}
+	if (com_check_size(&c->c_lnotab, c->c_lnotab_next + 2)) {
+		c->c_errors++;
+		return;
 	}
-	p = PyString_AsString(c->c_lnotab) + c->c_lnotab_next;
+	p = PyString_AS_STRING(c->c_lnotab) + c->c_lnotab_next;
 	*p++ = addr;
 	*p++ = line;
 	c->c_lnotab_next += 2;
@@ -786,7 +800,7 @@ com_addfwref(struct compiling *c, int op, int *p_anchor)
 static void
 com_backpatch(struct compiling *c, int anchor)
 {
-	unsigned char *code = (unsigned char *) PyString_AsString(c->c_code);
+	unsigned char *code = (unsigned char *) PyString_AS_STRING(c->c_code);
 	int target = c->c_nexti;
 	int dist;
 	int prev;
@@ -1014,7 +1028,8 @@ com_addop_varname(struct compiling *c, int kind, char *name)
 			break;
 		case NAME_CLOSURE: {
 			char buf[500];
-			sprintf(buf, DEL_CLOSURE_ERROR, name);
+			PyOS_snprintf(buf, sizeof(buf),
+				      DEL_CLOSURE_ERROR, name);
 			com_error(c, PyExc_SyntaxError, buf);
 			i = 255;
 			break;
@@ -1084,11 +1099,8 @@ parsenumber(struct compiling *co, char *s)
 	else
 		x = PyOS_strtol(s, &end, 0);
 	if (*end == '\0') {
-		if (errno != 0) {
-			com_error(co, PyExc_OverflowError,
-				  "integer literal too large");
-			return NULL;
-		}
+		if (errno != 0)
+			return PyLong_FromString(s, (char **)0, 0);
 		return PyInt_FromLong(x);
 	}
 	/* XXX Huge floats may silently fail */
@@ -1111,7 +1123,7 @@ parsenumber(struct compiling *co, char *s)
 }
 
 static PyObject *
-parsestr(char *s)
+parsestr(struct compiling *com, char *s)
 {
 	PyObject *v;
 	size_t len;
@@ -1122,11 +1134,19 @@ parsestr(char *s)
 	int first = *s;
 	int quote = first;
 	int rawmode = 0;
+#ifdef Py_USING_UNICODE
 	int unicode = 0;
+#endif
 	if (isalpha(quote) || quote == '_') {
 		if (quote == 'u' || quote == 'U') {
+#ifdef Py_USING_UNICODE
 			quote = *++s;
 			unicode = 1;
+#else
+			com_error(com, PyExc_SyntaxError,
+				  "Unicode literals not supported in this Python");
+			return NULL;
+#endif
 		}
 		if (quote == 'r' || quote == 'R') {
 			quote = *++s;
@@ -1140,7 +1160,8 @@ parsestr(char *s)
 	s++;
 	len = strlen(s);
 	if (len > INT_MAX) {
-		PyErr_SetString(PyExc_OverflowError, "string to parse is too long");
+		com_error(com, PyExc_OverflowError, 
+			  "string to parse is too long");
 		return NULL;
 	}
 	if (s[--len] != quote) {
@@ -1155,14 +1176,20 @@ parsestr(char *s)
 			return NULL;
 		}
 	}
+#ifdef Py_USING_UNICODE
 	if (unicode || Py_UnicodeFlag) {
 		if (rawmode)
-			return PyUnicode_DecodeRawUnicodeEscape(
-				s, len, NULL);
+			v = PyUnicode_DecodeRawUnicodeEscape(
+				 s, len, NULL);
 		else
-			return PyUnicode_DecodeUnicodeEscape(
+			v = PyUnicode_DecodeUnicodeEscape(
 				s, len, NULL);
+		if (v == NULL)
+			PyErr_SyntaxLocation(com->c_filename, com->c_lineno);
+		return v;
+			
 	}
+#endif
 	if (rawmode || strchr(s, '\\') == NULL)
 		return PyString_FromStringAndSize(s, len);
 	v = PyString_FromStringAndSize((char *)NULL, len);
@@ -1223,9 +1250,9 @@ parsestr(char *s)
 				*p++ = x;
 				break;
 			}
-			PyErr_SetString(PyExc_ValueError, 
-					"invalid \\x escape");
 			Py_DECREF(v);
+			com_error(com, PyExc_ValueError, 
+				  "invalid \\x escape");
 			return NULL;
 		default:
 			*p++ = '\\';
@@ -1238,16 +1265,16 @@ parsestr(char *s)
 }
 
 static PyObject *
-parsestrplus(node *n)
+parsestrplus(struct compiling* c, node *n)
 {
 	PyObject *v;
 	int i;
 	REQ(CHILD(n, 0), STRING);
-	if ((v = parsestr(STR(CHILD(n, 0)))) != NULL) {
+	if ((v = parsestr(c, STR(CHILD(n, 0)))) != NULL) {
 		/* String literal concatenation */
 		for (i = 1; i < NCH(n); i++) {
 		    PyObject *s;
-		    s = parsestr(STR(CHILD(n, i)));
+		    s = parsestr(c, STR(CHILD(n, i)));
 		    if (s == NULL)
 			goto onError;
 		    if (PyString_Check(v) && PyString_Check(s)) {
@@ -1255,6 +1282,7 @@ parsestrplus(node *n)
 			if (v == NULL)
 			    goto onError;
 		    }
+#ifdef Py_USING_UNICODE
 		    else {
 			PyObject *temp;
 			temp = PyUnicode_Concat(v, s);
@@ -1264,6 +1292,7 @@ parsestrplus(node *n)
 			Py_DECREF(v);
 			v = temp;
 		    }
+#endif
 		}
 	}
 	return v;
@@ -1276,21 +1305,15 @@ parsestrplus(node *n)
 static void
 com_list_for(struct compiling *c, node *n, node *e, char *t)
 {
-	PyObject *v;
 	int anchor = 0;
 	int save_begin = c->c_begin;
 
 	/* list_iter: for v in expr [list_iter] */
 	com_node(c, CHILD(n, 3)); /* expr */
-	v = PyInt_FromLong(0L);
-	if (v == NULL)
-		c->c_errors++;
-	com_addoparg(c, LOAD_CONST, com_addconst(c, v));
-	com_push(c, 1);
-	Py_XDECREF(v);
+	com_addbyte(c, GET_ITER);
 	c->c_begin = c->c_nexti;
 	com_addoparg(c, SET_LINENO, n->n_lineno);
-	com_addfwref(c, FOR_LOOP, &anchor);
+	com_addfwref(c, FOR_ITER, &anchor);
 	com_push(c, 1);
 	com_assign(c, CHILD(n, 1), OP_ASSIGN, NULL);
 	c->c_loops++;
@@ -1299,7 +1322,7 @@ com_list_for(struct compiling *c, node *n, node *e, char *t)
 	com_addoparg(c, JUMP_ABSOLUTE, c->c_begin);
 	c->c_begin = save_begin;
 	com_backpatch(c, anchor);
-	com_pop(c, 2); /* FOR_LOOP has popped these */
+	com_pop(c, 1); /* FOR_ITER has popped this */
 }  
 
 static void
@@ -1357,8 +1380,8 @@ static void
 com_list_comprehension(struct compiling *c, node *n)
 {
 	/* listmaker: test list_for */
-	char tmpname[12];
-	sprintf(tmpname, "_[%d]", ++c->c_tmpname);
+	char tmpname[30];
+	PyOS_snprintf(tmpname, sizeof(tmpname), "_[%d]", ++c->c_tmpname);
 	com_addoparg(c, BUILD_LIST, 0);
 	com_addbyte(c, DUP_TOP); /* leave the result on the stack */
 	com_push(c, 2);
@@ -1451,7 +1474,7 @@ com_atom(struct compiling *c, node *n)
 		com_push(c, 1);
 		break;
 	case STRING:
-		v = parsestrplus(n);
+		v = parsestrplus(c, n);
 		if (v == NULL) {
 			c->c_errors++;
 			i = 255;
@@ -1846,18 +1869,117 @@ com_power(struct compiling *c, node *n)
 }
 
 static void
+com_invert_constant(struct compiling *c, node *n)
+{
+	/* Compute the inverse of int and longs and use them directly,
+	   but be prepared to generate code for all other
+	   possibilities (invalid numbers, floats, complex).
+	*/
+	PyObject *num, *inv = NULL;
+	int i;
+
+	REQ(n, NUMBER);
+	num = parsenumber(c, STR(n));
+	if (num == NULL) 
+		i = 255;
+	else {
+		inv = PyNumber_Invert(num);
+		if (inv == NULL) {
+			PyErr_Clear();
+			i = com_addconst(c, num);
+		} else {
+			i = com_addconst(c, inv);
+			Py_DECREF(inv);
+		}
+		Py_DECREF(num);
+	}
+	com_addoparg(c, LOAD_CONST, i);
+	com_push(c, 1);
+	if (num != NULL && inv == NULL)
+		com_addbyte(c, UNARY_INVERT);
+}
+
+static int
+is_float_zero(const char *p)
+{
+	int found_radix_point = 0;
+	int ch;
+	while ((ch = Py_CHARMASK(*p++)) != '\0') {
+		switch (ch) {
+		case '0':
+			/* no reason to believe it's not 0 -- continue */
+			break;
+
+		case 'e': case 'E': case 'j': case 'J':
+			/* If this was a hex constant, we already would have
+			   returned 0 due to the 'x' or 'X', so 'e' or 'E'
+			   must be an exponent marker, and we haven't yet
+			   seen a non-zero digit, and it doesn't matter what
+			   the exponent is then.  For 'j' or 'J' similarly,
+			   except that this is an imaginary 0 then. */
+			return 1;
+
+		case '.':
+			found_radix_point = 1;
+			break;
+
+		default:
+			return 0;
+		}
+	}
+	return found_radix_point;
+}
+
+static void
 com_factor(struct compiling *c, node *n)
 {
+	int childtype = TYPE(CHILD(n, 0));
+	node *pfactor, *ppower, *patom, *pnum;
 	REQ(n, factor);
-	if (TYPE(CHILD(n, 0)) == PLUS) {
+	/* If the unary +, -, or ~ operator is applied to a constant,
+	   don't generate a UNARY_xxx opcode.  Just store the
+	   approriate value as a constant.  If the value is negative,
+	   extend the string containing the constant and insert a
+	   negative in the 0th position -- unless we're doing unary minus
+	   of a floating zero!  In that case the sign is significant, but
+	   the const dict can't distinguish +0.0 from -0.0.
+	 */
+	if ((childtype == PLUS || childtype == MINUS || childtype == TILDE)
+	    && NCH(n) == 2
+	    && TYPE((pfactor = CHILD(n, 1))) == factor
+ 	    && NCH(pfactor) == 1
+	    && TYPE((ppower = CHILD(pfactor, 0))) == power
+ 	    && NCH(ppower) == 1
+	    && TYPE((patom = CHILD(ppower, 0))) == atom
+	    && TYPE((pnum = CHILD(patom, 0))) == NUMBER
+	    && !(childtype == MINUS && is_float_zero(STR(pnum)))) {
+		if (childtype == TILDE) {
+			com_invert_constant(c, pnum);
+			return;
+		}
+		if (childtype == MINUS) {
+			char *s = malloc(strlen(STR(pnum)) + 2);
+			if (s == NULL) {
+				com_error(c, PyExc_MemoryError, "");
+				com_addbyte(c, 255);
+				return;
+			}
+			s[0] = '-';
+			strcpy(s + 1, STR(pnum));
+			free(STR(pnum));
+			STR(pnum) = s;
+		}
+		com_atom(c, patom);
+	}
+	else if (childtype == PLUS) {
 		com_factor(c, CHILD(n, 1));
 		com_addbyte(c, UNARY_POSITIVE);
 	}
-	else if (TYPE(CHILD(n, 0)) == MINUS) {
+	else if (childtype == MINUS) {
 		com_factor(c, CHILD(n, 1));
 		com_addbyte(c, UNARY_NEGATIVE);
 	}
-	else if (TYPE(CHILD(n, 0)) == TILDE) {
+	else if (childtype == TILDE) {
 		com_factor(c, CHILD(n, 1));
 		com_addbyte(c, UNARY_INVERT);
 	}
@@ -1880,14 +2002,20 @@ com_term(struct compiling *c, node *n)
 			op = BINARY_MULTIPLY;
 			break;
 		case SLASH:
-			op = BINARY_DIVIDE;
+			if (c->c_flags & CO_FUTURE_DIVISION)
+				op = BINARY_TRUE_DIVIDE;
+			else
+				op = BINARY_DIVIDE;
 			break;
 		case PERCENT:
 			op = BINARY_MODULO;
 			break;
+		case DOUBLESLASH:
+			op = BINARY_FLOOR_DIVIDE;
+			break;
 		default:
 			com_error(c, PyExc_SystemError,
-				  "com_term: operator not *, / or %");
+				  "com_term: operator not *, /, // or %");
 			op = 255;
 		}
 		com_addbyte(c, op);
@@ -2157,10 +2285,7 @@ com_and_test(struct compiling *c, node *n)
 static int
 com_make_closure(struct compiling *c, PyCodeObject *co)
 {
-	int i, free = PyTuple_GET_SIZE(co->co_freevars);
-	/* If the code is compiled with st->st_nested_scopes == 0,
-	   then no variable will ever be added to co_freevars. 
-	*/
+	int i, free = PyCode_GetNumFree(co);
 	if (free == 0)
 		return 0;
 	for (i = 0; i < free; ++i) {
@@ -2203,26 +2328,27 @@ com_test(struct compiling *c, node *n)
 {
 	REQ(n, test); /* and_test ('or' and_test)* | lambdef */
 	if (NCH(n) == 1 && TYPE(CHILD(n, 0)) == lambdef) {
-		PyObject *co;
+		PyCodeObject *co;
 		int i, closure;
 		int ndefs = com_argdefs(c, CHILD(n, 0));
 		symtable_enter_scope(c->c_symtable, "lambda", lambdef,
 				     n->n_lineno);
-		co = (PyObject *) icompile(CHILD(n, 0), c);
+		co = icompile(CHILD(n, 0), c);
 		if (co == NULL) {
 			c->c_errors++;
 			return;
 		}
 		symtable_exit_scope(c->c_symtable);
-		i = com_addconst(c, co);
-		closure = com_make_closure(c, (PyCodeObject *)co);
-		Py_DECREF(co);
+		i = com_addconst(c, (PyObject *)co);
+		closure = com_make_closure(c, co);
 		com_addoparg(c, LOAD_CONST, i);
 		com_push(c, 1);
-		if (closure)
+		if (closure) {
 			com_addoparg(c, MAKE_CLOSURE, ndefs);
-		else
+			com_pop(c, PyCode_GetNumFree(co));
+		} else
 			com_addoparg(c, MAKE_FUNCTION, ndefs);
+		Py_DECREF(co);
 		com_pop(c, ndefs);
 	}
 	else {
@@ -2481,7 +2607,14 @@ com_augassign(struct compiling *c, node *n)
 	switch (STR(CHILD(CHILD(n, 1), 0))[0]) {
 	case '+': opcode = INPLACE_ADD; break;
 	case '-': opcode = INPLACE_SUBTRACT; break;
-	case '/': opcode = INPLACE_DIVIDE; break;
+	case '/':
+		if (STR(CHILD(CHILD(n, 1), 0))[1] == '/')
+			opcode = INPLACE_FLOOR_DIVIDE;
+		else if (c->c_flags & CO_FUTURE_DIVISION)
+			opcode = INPLACE_TRUE_DIVIDE;
+		else
+			opcode = INPLACE_DIVIDE;
+		break;
 	case '%': opcode = INPLACE_MODULO; break;
 	case '<': opcode = INPLACE_LSHIFT; break;
 	case '>': opcode = INPLACE_RSHIFT; break;
@@ -2640,6 +2773,12 @@ com_return_stmt(struct compiling *c, node *n)
 	if (!c->c_infunction) {
 		com_error(c, PyExc_SyntaxError, "'return' outside function");
 	}
+	if (c->c_flags & CO_GENERATOR) {
+		if (NCH(n) > 1) {
+			com_error(c, PyExc_SyntaxError,
+				  "'return' with argument inside generator");
+		}
+	}
 	if (NCH(n) < 2) {
 		com_addoparg(c, LOAD_CONST, com_addconst(c, Py_None));
 		com_push(c, 1);
@@ -2647,6 +2786,28 @@ com_return_stmt(struct compiling *c, node *n)
 	else
 		com_node(c, CHILD(n, 1));
 	com_addbyte(c, RETURN_VALUE);
+	com_pop(c, 1);
+}
+
+static void
+com_yield_stmt(struct compiling *c, node *n)
+{
+	int i;
+	REQ(n, yield_stmt); /* 'yield' testlist */
+	if (!c->c_infunction) {
+		com_error(c, PyExc_SyntaxError, "'yield' outside function");
+	}
+	
+	for (i = 0; i < c->c_nblocks; ++i) {
+		if (c->c_block[i] == SETUP_FINALLY) {
+			com_error(c, PyExc_SyntaxError,
+				  "'yield' not allowed in a 'try' block "
+				  "with a 'finally' clause");
+			return;
+		}
+	}
+	com_node(c, CHILD(n, 1));
+	com_addbyte(c, YIELD_VALUE);
 	com_pop(c, 1);
 }
 
@@ -2841,7 +3002,7 @@ is_constant_false(struct compiling *c, node *n)
 		return i == 0;
 
 	case STRING:
-		v = parsestr(STR(n));
+		v = parsestr(c, STR(n));
 		if (v == NULL) {
 			PyErr_Clear();
 			break;
@@ -2854,6 +3015,45 @@ is_constant_false(struct compiling *c, node *n)
 	return 0;
 }
 
+
+/* Look under n for a return stmt with an expression.
+ * This hack is used to find illegal returns under "if 0:" blocks in
+ * functions already known to be generators (as determined by the symtable
+ * pass).
+ * Return the offending return node if found, else NULL.
+ */
+static node *
+look_for_offending_return(node *n)
+{
+	int i;
+
+	for (i = 0; i < NCH(n); ++i) {
+		node *kid = CHILD(n, i);
+
+		switch (TYPE(kid)) {
+			case classdef:
+			case funcdef:
+			case lambdef:
+				/* Stuff in nested functions & classes doesn't
+				   affect the code block we started in. */
+				return NULL;
+
+			case return_stmt:
+				if (NCH(kid) > 1)
+					return kid;
+				break;
+
+			default: {
+				node *bad = look_for_offending_return(kid);
+				if (bad != NULL)
+					return bad;
+			}
+		}
+	}
+
+	return NULL;
+}			
+
 static void
 com_if_stmt(struct compiling *c, node *n)
 {
@@ -2864,8 +3064,24 @@ com_if_stmt(struct compiling *c, node *n)
 	for (i = 0; i+3 < NCH(n); i+=4) {
 		int a = 0;
 		node *ch = CHILD(n, i+1);
-		if (is_constant_false(c, ch))
+		if (is_constant_false(c, ch)) {
+			/* We're going to skip this block.  However, if this
+			   is a generator, we have to check the dead code
+			   anyway to make sure there aren't any return stmts
+			   with expressions, in the same scope. */
+			if (c->c_flags & CO_GENERATOR) {
+				node *p = look_for_offending_return(n);
+				if (p != NULL) {
+					int savelineno = c->c_lineno;
+					c->c_lineno = p->n_lineno;
+					com_error(c, PyExc_SyntaxError,
+			  	   		"'return' with argument "
+			  	   		"inside generator");
+			  	   	c->c_lineno = savelineno;
+				}
+			}
 			continue;
+		}
 		if (i > 0)
 			com_addoparg(c, SET_LINENO, ch->n_lineno);
 		com_node(c, ch);
@@ -2917,7 +3133,6 @@ com_while_stmt(struct compiling *c, node *n)
 static void
 com_for_stmt(struct compiling *c, node *n)
 {
-	PyObject *v;
 	int break_anchor = 0;
 	int anchor = 0;
 	int save_begin = c->c_begin;
@@ -2926,15 +3141,10 @@ com_for_stmt(struct compiling *c, node *n)
 	com_addfwref(c, SETUP_LOOP, &break_anchor);
 	block_push(c, SETUP_LOOP);
 	com_node(c, CHILD(n, 3));
-	v = PyInt_FromLong(0L);
-	if (v == NULL)
-		c->c_errors++;
-	com_addoparg(c, LOAD_CONST, com_addconst(c, v));
-	com_push(c, 1);
-	Py_XDECREF(v);
+	com_addbyte(c, GET_ITER);
 	c->c_begin = c->c_nexti;
 	com_addoparg(c, SET_LINENO, n->n_lineno);
-	com_addfwref(c, FOR_LOOP, &anchor);
+	com_addfwref(c, FOR_ITER, &anchor);
 	com_push(c, 1);
 	com_assign(c, CHILD(n, 1), OP_ASSIGN, NULL);
 	c->c_loops++;
@@ -2943,7 +3153,7 @@ com_for_stmt(struct compiling *c, node *n)
 	com_addoparg(c, JUMP_ABSOLUTE, c->c_begin);
 	c->c_begin = save_begin;
 	com_backpatch(c, anchor);
-	com_pop(c, 2); /* FOR_LOOP has popped these */
+	com_pop(c, 1); /* FOR_ITER has popped this */
 	com_addbyte(c, POP_BLOCK);
 	block_pop(c, SETUP_LOOP);
 	if (NCH(n) > 8)
@@ -3186,7 +3396,7 @@ get_rawdocstring(node *n)
 }
 
 static PyObject *
-get_docstring(node *n)
+get_docstring(struct compiling *c, node *n)
 {
 	/* Don't generate doc-strings if run with -OO */
 	if (Py_OptimizeFlag > 1)
@@ -3194,7 +3404,7 @@ get_docstring(node *n)
 	n = get_rawdocstring(n);
 	if (n == NULL)
 		return NULL;
-	return parsestrplus(n);
+	return parsestrplus(c, n);
 }
 
 static void
@@ -3357,7 +3567,8 @@ static void
 com_classdef(struct compiling *c, node *n)
 {
 	int i;
-	PyObject *co, *v;
+	PyObject *v;
+	PyCodeObject *co;
 	char *name;
 
 	REQ(n, classdef);
@@ -3380,23 +3591,25 @@ com_classdef(struct compiling *c, node *n)
 		com_bases(c, CHILD(n, 3));
 	name = STR(CHILD(n, 1));
 	symtable_enter_scope(c->c_symtable, name, TYPE(n), n->n_lineno);
-	co = (PyObject *)icompile(n, c);
+	co = icompile(n, c);
 	symtable_exit_scope(c->c_symtable);
 	if (co == NULL)
 		c->c_errors++;
 	else {
-		int closure = com_make_closure(c, (PyCodeObject *)co);
-		i = com_addconst(c, co);
+		int closure = com_make_closure(c, co);
+		i = com_addconst(c, (PyObject *)co);
 		com_addoparg(c, LOAD_CONST, i);
 		com_push(c, 1);
-		if (closure)
+		if (closure) {
 			com_addoparg(c, MAKE_CLOSURE, 0);
-		else
+			com_pop(c, PyCode_GetNumFree(co));
+		} else
 			com_addoparg(c, MAKE_FUNCTION, 0);
 		com_addoparg(c, CALL_FUNCTION, 0);
 		com_addbyte(c, BUILD_CLASS);
 		com_pop(c, 2);
 		com_addop_varname(c, VAR_STORE, STR(CHILD(n, 1)));
+		com_pop(c, 1);
 		Py_DECREF(co);
 	}
 }
@@ -3467,6 +3680,9 @@ com_node(struct compiling *c, node *n)
 	case return_stmt:
 		com_return_stmt(c, n);
 		break;
+	case yield_stmt:
+		com_yield_stmt(c, n);
+		break;
 	case raise_stmt:
 		com_raise_stmt(c, n);
 		break;
@@ -3500,6 +3716,7 @@ com_node(struct compiling *c, node *n)
 	/* Expression nodes */
 	
 	case testlist:
+	case testlist_safe:
 		com_list(c, n, 0);
 		break;
 	case test:
@@ -3586,7 +3803,7 @@ com_arglist(struct compiling *c, node *n)
 {
 	int nch, i, narg;
 	int complex = 0;
-	char nbuf[10];
+	char nbuf[30];
 	REQ(n, varargslist);
 	/* varargslist:
 		(fpdef ['=' test] ',')* (fpdef ['=' test] | '*' .....) */
@@ -3595,14 +3812,12 @@ com_arglist(struct compiling *c, node *n)
 	for (i = 0, narg = 0; i < nch; i++) {
 		node *ch = CHILD(n, i);
 		node *fp;
-		char *name;
 		if (TYPE(ch) == STAR || TYPE(ch) == DOUBLESTAR)
 			break;
 		REQ(ch, fpdef); /* fpdef: NAME | '(' fplist ')' */
 		fp = CHILD(ch, 0);
 		if (TYPE(fp) != NAME) {
-			name = nbuf;
-			sprintf(nbuf, ".%d", i);
+			PyOS_snprintf(nbuf, sizeof(nbuf), ".%d", i);
 			complex = 1;
 		}
 		narg++;
@@ -3649,7 +3864,7 @@ com_file_input(struct compiling *c, node *n)
 	int i;
 	PyObject *doc;
 	REQ(n, file_input); /* (NEWLINE | stmt)* ENDMARKER */
-	doc = get_docstring(n);
+	doc = get_docstring(c, n);
 	if (doc != NULL) {
 		int i = com_addconst(c, doc);
 		Py_DECREF(doc);
@@ -3674,7 +3889,7 @@ compile_funcdef(struct compiling *c, node *n)
 	node *ch;
 	REQ(n, funcdef); /* funcdef: 'def' NAME parameters ':' suite */
 	c->c_name = STR(CHILD(n, 1));
-	doc = get_docstring(CHILD(n, 4));
+	doc = get_docstring(c, CHILD(n, 4));
 	if (doc != NULL) {
 		(void) com_addconst(c, doc);
 		Py_DECREF(doc);
@@ -3723,8 +3938,11 @@ compile_classdef(struct compiling *c, node *n)
 	/* classdef: 'class' NAME ['(' testlist ')'] ':' suite */
 	c->c_name = STR(CHILD(n, 1));
 	c->c_private = c->c_name;
+	/* Initialize local __module__ from global __name__ */
+	com_addop_name(c, LOAD_GLOBAL, "__name__");
+	com_addop_name(c, STORE_NAME, "__module__");
 	ch = CHILD(n, NCH(n)-1); /* The suite */
-	doc = get_docstring(ch);
+	doc = get_docstring(c, ch);
 	if (doc != NULL) {
 		int i = com_addconst(c, doc);
 		Py_DECREF(doc);
@@ -3833,9 +4051,12 @@ PyNode_CompileSymtable(node *n, char *filename)
 	ff = PyNode_Future(n, filename);
 	if (ff == NULL)
 		return NULL;
+
 	st = symtable_init();
-	if (st == NULL)
+	if (st == NULL) {
+		PyMem_Free((void *)ff);
 		return NULL;
+	}
 	st->st_future = ff;
 	symtable_enter_scope(st, TOP, TYPE(n), n->n_lineno);
 	if (st->st_errors > 0)
@@ -3843,7 +4064,7 @@ PyNode_CompileSymtable(node *n, char *filename)
 	symtable_node(st, n);
 	if (st->st_errors > 0)
 		goto fail;
-
+	
 	return st;
  fail:
 	PyMem_Free((void *)ff);
@@ -3873,6 +4094,7 @@ jcompile(node *n, char *filename, struct compiling *base,
 		if (base->c_nested 
 		    || (sc.c_symtable->st_cur->ste_type == TYPE_FUNCTION))
 			sc.c_nested = 1;
+		sc.c_flags |= base->c_flags & PyCF_MASK;
 	} else {
 		sc.c_private = NULL;
 		sc.c_future = PyNode_Future(n, filename);
@@ -3881,10 +4103,10 @@ jcompile(node *n, char *filename, struct compiling *base,
 			return NULL;
 		}
 		if (flags) {
-			if (flags->cf_nested_scopes)
-				sc.c_future->ff_nested_scopes = 1;
-			else if (sc.c_future->ff_nested_scopes)
-				flags->cf_nested_scopes = 1;
+			int merged = sc.c_future->ff_features |
+				flags->cf_flags;
+			sc.c_future->ff_features = merged;
+			flags->cf_flags = merged;
 		}
 		if (symtable_build(&sc, n) < 0) {
 			com_free(&sc);
@@ -3973,50 +4195,36 @@ PyCode_Addr2Line(PyCodeObject *co, int addrq)
 static int
 get_ref_type(struct compiling *c, char *name)
 {
+	char buf[350];
 	PyObject *v;
-	if (c->c_symtable->st_nested_scopes) {
-		if (PyDict_GetItemString(c->c_cellvars, name) != NULL)
-			return CELL;
-		if (PyDict_GetItemString(c->c_locals, name) != NULL)
-			return LOCAL;
-		if (PyDict_GetItemString(c->c_freevars, name) != NULL)
-			return FREE;
-		v = PyDict_GetItemString(c->c_globals, name);
-		if (v) {
-			if (v == Py_None)
-				return GLOBAL_EXPLICIT;
-			else {
-				return GLOBAL_IMPLICIT;
-			}
-		}
-	} else {
-		if (PyDict_GetItemString(c->c_locals, name) != NULL)
-			return LOCAL;
-		v = PyDict_GetItemString(c->c_globals, name);
-		if (v) {
-			if (v == Py_None)
-				return GLOBAL_EXPLICIT;
-			else {
-				return GLOBAL_IMPLICIT;
-			}
-		}
-	}
-	{
-		char buf[350];
-		sprintf(buf, 
-			"unknown scope for %.100s in %.100s(%s) "
-			"in %s\nsymbols: %s\nlocals: %s\nglobals: %s\n",
-			name, c->c_name, 
-			PyObject_REPR(c->c_symtable->st_cur->ste_id),
-			c->c_filename,
-			PyObject_REPR(c->c_symtable->st_cur->ste_symbols),
-			PyObject_REPR(c->c_locals),
-			PyObject_REPR(c->c_globals)
-		    );
 
-		Py_FatalError(buf);
+	if (PyDict_GetItemString(c->c_cellvars, name) != NULL)
+		return CELL;
+	if (PyDict_GetItemString(c->c_locals, name) != NULL)
+		return LOCAL;
+	if (PyDict_GetItemString(c->c_freevars, name) != NULL)
+		return FREE;
+	v = PyDict_GetItemString(c->c_globals, name);
+	if (v) {
+		if (v == Py_None)
+			return GLOBAL_EXPLICIT;
+		else {
+			return GLOBAL_IMPLICIT;
+		}
 	}
-	return -1; /* can't get here */
+	PyOS_snprintf(buf, sizeof(buf),
+		"unknown scope for %.100s in %.100s(%s) "
+		"in %s\nsymbols: %s\nlocals: %s\nglobals: %s\n",
+		name, c->c_name, 
+		PyObject_REPR(c->c_symtable->st_cur->ste_id),
+		c->c_filename,
+		PyObject_REPR(c->c_symtable->st_cur->ste_symbols),
+		PyObject_REPR(c->c_locals),
+		PyObject_REPR(c->c_globals)
+		);
+
+	Py_FatalError(buf);
+	return -1;
 }
 
 /* Helper functions to issue warnings */
@@ -4053,8 +4261,6 @@ symtable_build(struct compiling *c, node *n)
 	if ((c->c_symtable = symtable_init()) == NULL)
 		return -1;
 	c->c_symtable->st_future = c->c_future;
-	if (c->c_future->ff_nested_scopes)
-		c->c_symtable->st_nested_scopes = 1;
 	c->c_symtable->st_filename = c->c_filename;
 	symtable_enter_scope(c->c_symtable, TOP, TYPE(n), n->n_lineno);
 	if (c->c_symtable->st_errors > 0)
@@ -4134,7 +4340,7 @@ symtable_resolve_free(struct compiling *c, PyObject *name, int flags,
 		   anything here.
 		*/
 		if (is_free(flags ^ DEF_FREE_CLASS) 
-		    || flags == DEF_FREE_CLASS)
+		    || (flags == DEF_FREE_CLASS))
 			return 0;
 		v = PyInt_FromLong(si->si_nfrees++);
 		dict = c->c_freevars;
@@ -4258,7 +4464,7 @@ symtable_check_unoptimized(struct compiling *c,
 "unqualified exec is not allowed in function '%.100s' it %s"
 
 #define ILLEGAL_EXEC_AND_IMPORT_STAR \
-"function '%.100s' uses import * and bare exec, which are illegal" \
+"function '%.100s' uses import * and bare exec, which are illegal " \
 "because it %s"
 
 	/* XXX perhaps the linenos for these opt-breaking statements
@@ -4266,95 +4472,54 @@ symtable_check_unoptimized(struct compiling *c,
 
 	if (ste->ste_child_free) {
 		if (ste->ste_optimized == OPT_IMPORT_STAR)
-			sprintf(buf, ILLEGAL_IMPORT_STAR, 
-				PyString_AS_STRING(ste->ste_name),
-				ILLEGAL_CONTAINS);
+			PyOS_snprintf(buf, sizeof(buf),
+				      ILLEGAL_IMPORT_STAR, 
+				      PyString_AS_STRING(ste->ste_name),
+				      ILLEGAL_CONTAINS);
 		else if (ste->ste_optimized == (OPT_BARE_EXEC | OPT_EXEC))
-			sprintf(buf, ILLEGAL_BARE_EXEC,
-				PyString_AS_STRING(ste->ste_name),
-				ILLEGAL_CONTAINS);
+			PyOS_snprintf(buf, sizeof(buf),
+				      ILLEGAL_BARE_EXEC,
+				      PyString_AS_STRING(ste->ste_name),
+				      ILLEGAL_CONTAINS);
 		else {
-			sprintf(buf, ILLEGAL_EXEC_AND_IMPORT_STAR,
-				PyString_AS_STRING(ste->ste_name),
-				ILLEGAL_CONTAINS);
+			PyOS_snprintf(buf, sizeof(buf),
+				      ILLEGAL_EXEC_AND_IMPORT_STAR,
+				      PyString_AS_STRING(ste->ste_name),
+				      ILLEGAL_CONTAINS);
 		}
 	} else {
 		if (ste->ste_optimized == OPT_IMPORT_STAR)
-			sprintf(buf, ILLEGAL_IMPORT_STAR, 
-				PyString_AS_STRING(ste->ste_name),
-				ILLEGAL_IS);
+			PyOS_snprintf(buf, sizeof(buf),
+				      ILLEGAL_IMPORT_STAR, 
+				      PyString_AS_STRING(ste->ste_name),
+				      ILLEGAL_IS);
 		else if (ste->ste_optimized == (OPT_BARE_EXEC | OPT_EXEC))
-			sprintf(buf, ILLEGAL_BARE_EXEC,
-				PyString_AS_STRING(ste->ste_name),
-				ILLEGAL_IS);
+			PyOS_snprintf(buf, sizeof(buf),
+				      ILLEGAL_BARE_EXEC,
+				      PyString_AS_STRING(ste->ste_name),
+				      ILLEGAL_IS);
 		else {
-			sprintf(buf, ILLEGAL_EXEC_AND_IMPORT_STAR,
-				PyString_AS_STRING(ste->ste_name),
-				ILLEGAL_IS);
+			PyOS_snprintf(buf, sizeof(buf),
+				      ILLEGAL_EXEC_AND_IMPORT_STAR,
+				      PyString_AS_STRING(ste->ste_name),
+				      ILLEGAL_IS);
 		}
 	}
 
-	if (c->c_symtable->st_nested_scopes) {
-		PyErr_SetString(PyExc_SyntaxError, buf);
-		PyErr_SyntaxLocation(c->c_symtable->st_filename,
-				     ste->ste_opt_lineno);
-		return -1;
-	}
-	else {
-		return issue_warning(buf, c->c_filename, ste->ste_lineno);
-	}
-	return 0;
-}
-
-static int
-symtable_check_shadow(struct symtable *st, PyObject *name, int flags)
-{
-	char buf[500];
-	PyObject *children, *v;
-	PySymtableEntryObject *child = NULL;
-	int i;
-
-	if (!(flags & DEF_BOUND))
-		return 0;
-	/* The semantics of this code will change with nested scopes.
-	   It is defined in the current scope and referenced in a
-	   child scope.  Under the old rules, the child will see a
-	   global.  Under the new rules, the child will see the
-	   binding in the current scope.
-	*/
-
-	/* Find name of child function that has free variable */
-	children = st->st_cur->ste_children;
-	for (i = 0; i < PyList_GET_SIZE(children); i++) {
-		int cflags;
-		child = (PySymtableEntryObject *)PyList_GET_ITEM(children, i);
-		v = PyDict_GetItem(child->ste_symbols, name);
-		if (v == NULL)
-			continue;
-		cflags = PyInt_AS_LONG(v);
-		if (!(cflags & DEF_BOUND))
-			break;
-	}
-
-	assert(child != NULL);
-
-	sprintf(buf, "local name '%.100s' in '%.100s' shadows "
-		"use of '%.100s' as global in nested scope '%.100s'",
-		PyString_AS_STRING(name),
-		PyString_AS_STRING(st->st_cur->ste_name),
-		PyString_AS_STRING(name),
-		PyString_AS_STRING(child->ste_name)
-		);
-
-	return symtable_warn(st, buf);
+	PyErr_SetString(PyExc_SyntaxError, buf);
+	PyErr_SyntaxLocation(c->c_symtable->st_filename,
+			     ste->ste_opt_lineno);
+	return -1;
 }
 
 static int
 symtable_update_flags(struct compiling *c, PySymtableEntryObject *ste,
 		      struct symbol_info *si)
 {
-	if (c->c_future && c->c_future->ff_nested_scopes)
-		c->c_flags |= CO_NESTED;
+	if (c->c_future)
+		c->c_flags |= c->c_future->ff_features;
+	if (ste->ste_generator)
+		c->c_flags |= CO_GENERATOR;
 	if (ste->ste_type != TYPE_MODULE)
 		c->c_flags |= CO_NEWLOCALS;
 	if (ste->ste_type == TYPE_FUNCTION) {
@@ -4405,24 +4570,17 @@ symtable_load_symbols(struct compiling *c)
 	while (PyDict_Next(ste->ste_symbols, &pos, &name, &v)) {
 		flags = PyInt_AS_LONG(v);
 
-		if (st->st_nested_scopes == 0 
-		    && (flags & (DEF_FREE | DEF_FREE_CLASS))) {
-			if (symtable_check_shadow(st, name, flags) < 0)
-				goto fail;
-		}
-
 		if (flags & DEF_FREE_GLOBAL)
 			/* undo the original DEF_FREE */
 			flags &= ~(DEF_FREE | DEF_FREE_CLASS);
 
 		/* Deal with names that need two actions:
-		   1. Cell variables, which are also locals.
+		   1. Cell variables that are also locals.
 		   2. Free variables in methods that are also class
 		   variables or declared global.
 		*/
-		if (flags & (DEF_FREE | DEF_FREE_CLASS)) {
+		if (flags & (DEF_FREE | DEF_FREE_CLASS))
 			symtable_resolve_free(c, name, flags, &si);
-		}
 
 		if (flags & DEF_STAR) {
 			c->c_argcount--;
@@ -4458,7 +4616,7 @@ symtable_load_symbols(struct compiling *c)
 				if (PyList_Append(c->c_varnames, name) < 0)
 					goto fail;
 		} else if (is_free(flags)) {
-			if (ste->ste_nested && st->st_nested_scopes) {
+			if (ste->ste_nested) {
 				v = PyInt_FromLong(si.si_nfrees++);
 				if (v == NULL)
 					goto fail;
@@ -4467,27 +4625,20 @@ symtable_load_symbols(struct compiling *c)
 				Py_DECREF(v);
 			} else {
 				si.si_nimplicit++;
-				if (PyDict_SetItem(c->c_globals, name,
-						   implicit) < 0)
-					goto fail;
-				if (st->st_nscopes != 1) {
-					v = PyInt_FromLong(flags);
-					if (PyDict_SetItem(st->st_global, 
-							   name, v)) 
-						goto fail;
-					Py_DECREF(v);
-				}
+ 				if (PyDict_SetItem(c->c_globals, name,
+ 						   implicit) < 0)
+ 					goto fail;
+ 				if (st->st_nscopes != 1) {
+ 					v = PyInt_FromLong(flags);
+ 					if (PyDict_SetItem(st->st_global, 
+ 							   name, v)) 
+ 						goto fail;
+ 					Py_DECREF(v);
+ 				}
 			}
 		}
 	}
 
-	/*
-	fprintf(stderr, 
-		"cells %d: %s\n"
-		"frees %d: %s\n",
-		si.si_ncells, PyObject_REPR(c->c_cellvars),
-		si.si_nfrees, PyObject_REPR(c->c_freevars));
-	*/
 	assert(PyDict_Size(c->c_freevars) == si.si_nfrees);
 
 	if (si.si_ncells > 1) { /* one cell is always in order */
@@ -4513,7 +4664,7 @@ symtable_init()
 	if (st == NULL)
 		return NULL;
 	st->st_pass = 1;
-	st->st_nested_scopes = NESTED_SCOPES_DEFAULT;
+
 	st->st_filename = NULL;
 	if ((st->st_stack = PyList_New(0)) == NULL)
 		goto fail;
@@ -4594,7 +4745,9 @@ symtable_update_free_vars(struct symtable *st)
 			   referenced in scope B contained (perhaps
 			   indirectly) in A and there are no scopes
 			   with bindings for N between B and A, then N
-			   is global in B.
+			   is global in B.  Unless A is a class scope,
+			   because class scopes are not considered for
+			   nested scopes.
 			*/
 			if (v && (ste->ste_type != TYPE_CLASS)) {
 				int flags = PyInt_AS_LONG(v); 
@@ -4820,10 +4973,42 @@ symtable_add_def_o(struct symtable *st, PyObject *dict,
 
 #define symtable_add_use(ST, NAME) symtable_add_def((ST), (NAME), USE)
 
+/* Look for a yield stmt under n.  Return 1 if found, else 0.
+   This hack is used to look inside "if 0:" blocks (which are normally
+   ignored) in case those are the only places a yield occurs (so that this
+   function is a generator). */
+static int
+look_for_yield(node *n)
+{
+	int i;
+
+	for (i = 0; i < NCH(n); ++i) {
+		node *kid = CHILD(n, i);
+
+		switch (TYPE(kid)) {
+
+		case classdef:
+		case funcdef:
+		case lambdef:
+			/* Stuff in nested functions and classes can't make
+			   the parent a generator. */
+			return 0;
+
+		case yield_stmt:
+			return 1;
+
+		default:
+			if (look_for_yield(kid))
+				return 1;
+		}
+	}
+	return 0;
+}			
+
 static void
 symtable_node(struct symtable *st, node *n)
 {
-	int i, start = 0;
+	int i;
 
  loop:
 	switch (TYPE(n)) {
@@ -4863,8 +5048,12 @@ symtable_node(struct symtable *st, node *n)
 	}
 	case if_stmt:
 		for (i = 0; i + 3 < NCH(n); i += 4) {
-			if (is_constant_false(NULL, (CHILD(n, i + 1))))
+			if (is_constant_false(NULL, (CHILD(n, i + 1)))) {
+				if (st->st_cur->ste_generator == 0)
+					st->st_cur->ste_generator =
+						look_for_yield(CHILD(n, i+3));
 				continue;
+			}
 			symtable_node(st, CHILD(n, i + 1));
 			symtable_node(st, CHILD(n, i + 3));
 		}
@@ -4913,6 +5102,10 @@ symtable_node(struct symtable *st, node *n)
 	case del_stmt:
 		symtable_assign(st, CHILD(n, 1), 0);
 		break;
+	case yield_stmt:
+		st->st_cur->ste_generator = 1;
+		n = CHILD(n, 1);
+		goto loop;
 	case expr_stmt:
 		if (NCH(n) == 1)
 			n = CHILD(n, 0);
@@ -4929,36 +5122,62 @@ symtable_node(struct symtable *st, node *n)
 			}
 		}
 		goto loop;
-		/* watchout for fall-through logic below */
+	case list_iter:
+		n = CHILD(n, 0);
+		if (TYPE(n) == list_for) {
+			st->st_tmpname++;
+			symtable_list_comprehension(st, n);
+			st->st_tmpname--;
+		} else {
+			REQ(n, list_if);
+			symtable_node(st, CHILD(n, 1));
+			if (NCH(n) == 3) {
+				n = CHILD(n, 2); 
+				goto loop;
+			}
+		}
+		break;
+	case for_stmt:
+		symtable_assign(st, CHILD(n, 1), 0);
+		for (i = 3; i < NCH(n); ++i)
+			if (TYPE(CHILD(n, i)) >= single_input)
+				symtable_node(st, CHILD(n, i));
+		break;
+	/* The remaining cases fall through to default except in
+	   special circumstances.  This requires the individual cases
+	   to be coded with great care, even though they look like
+	   rather innocuous.  Each case must double-check TYPE(n).
+	*/
 	case argument:
-		if (NCH(n) == 3) {
+		if (TYPE(n) == argument && NCH(n) == 3) {
 			n = CHILD(n, 2);
 			goto loop;
 		}
+		/* fall through */
 	case listmaker:
 		if (NCH(n) > 1 && TYPE(CHILD(n, 1)) == list_for) {
 			st->st_tmpname++;
 			symtable_list_comprehension(st, CHILD(n, 1));
 			symtable_node(st, CHILD(n, 0));
 			st->st_tmpname--;
-			return;
+			break;
 		}
+		/* fall through */
 	case atom:
 		if (TYPE(n) == atom && TYPE(CHILD(n, 0)) == NAME) {
 			symtable_add_use(st, STR(CHILD(n, 0)));
 			break;
 		}
-	case for_stmt:
-		if (TYPE(n) == for_stmt) {
-			symtable_assign(st, CHILD(n, 1), 0);
-			start = 3;
-		}
+		/* fall through */
 	default:
+		/* Walk over every non-token child with a special case
+		   for one child.
+		*/
 		if (NCH(n) == 1) {
 			n = CHILD(n, 0);
 			goto loop;
 		}
-		for (i = start; i < NCH(n); ++i)
+		for (i = 0; i < NCH(n); ++i)
 			if (TYPE(CHILD(n, i)) >= single_input)
 				symtable_node(st, CHILD(n, i));
 	}
@@ -5035,8 +5254,8 @@ symtable_params(struct symtable *st, node *n)
 		if (TYPE(CHILD(c, 0)) == NAME)
 			symtable_add_def(st, STR(CHILD(c, 0)), DEF_PARAM);
 		else {
-			char nbuf[10];
-			sprintf(nbuf, ".%d", i);
+			char nbuf[30];
+			PyOS_snprintf(nbuf, sizeof(nbuf), ".%d", i);
 			symtable_add_def(st, nbuf, DEF_PARAM);
 			complex = i;
 		}
@@ -5122,10 +5341,12 @@ symtable_global(struct symtable *st, node *n)
 			}
 			else {
 				if (flags & DEF_LOCAL)
-					sprintf(buf, GLOBAL_AFTER_ASSIGN,
-						name);
+					PyOS_snprintf(buf, sizeof(buf),
+						      GLOBAL_AFTER_ASSIGN,
+						      name);
 				else
-					sprintf(buf, GLOBAL_AFTER_USE, name);
+					PyOS_snprintf(buf, sizeof(buf),
+						      GLOBAL_AFTER_USE, name);
 				symtable_warn(st, buf);
 			}
 		}
@@ -5136,9 +5357,9 @@ symtable_global(struct symtable *st, node *n)
 static void
 symtable_list_comprehension(struct symtable *st, node *n)
 {
-	char tmpname[12];
+	char tmpname[30];
 
-	sprintf(tmpname, "_[%d]", st->st_tmpname);
+	PyOS_snprintf(tmpname, sizeof(tmpname), "_[%d]", st->st_tmpname);
 	symtable_add_def(st, tmpname, DEF_LOCAL);
 	symtable_assign(st, CHILD(n, 1), 0);
 	symtable_node(st, CHILD(n, 3));
@@ -5169,6 +5390,11 @@ symtable_import(struct symtable *st, node *n)
 			}
 		}
 		if (TYPE(CHILD(n, 3)) == STAR) {
+			if (st->st_cur->ste_type != TYPE_MODULE) {
+				if (symtable_warn(st,
+				  "import * only allowed at module level") < 0)
+					return;
+			}
 			st->st_cur->ste_optimized |= OPT_IMPORT_STAR;
 			st->st_cur->ste_opt_lineno = n->n_lineno;
 		} else {
@@ -5189,8 +5415,14 @@ symtable_import(struct symtable *st, node *n)
 	}
 }
 
+/* The third argument to symatble_assign() is a flag to be passed to
+   symtable_add_def() if it is eventually called.  The flag is useful
+   to specify the particular type of assignment that should be
+   recorded, e.g. an assignment caused by import.
+ */
+
 static void 
-symtable_assign(struct symtable *st, node *n, int flag)
+symtable_assign(struct symtable *st, node *n, int def_flag)
 {
 	node *tmp;
 	int i;
@@ -5222,7 +5454,7 @@ symtable_assign(struct symtable *st, node *n, int flag)
 			return;
 		} else {
 			for (i = 0; i < NCH(n); i += 2)
-				symtable_assign(st, CHILD(n, i), flag);
+				symtable_assign(st, CHILD(n, i), def_flag);
 		}
 		return;
 	case exprlist:
@@ -5234,36 +5466,40 @@ symtable_assign(struct symtable *st, node *n, int flag)
 		else {
 			int i;
 			for (i = 0; i < NCH(n); i += 2)
-				symtable_assign(st, CHILD(n, i), flag);
+				symtable_assign(st, CHILD(n, i), def_flag);
 			return;
 		}
-		goto loop;
 	case atom:
 		tmp = CHILD(n, 0);
 		if (TYPE(tmp) == LPAR || TYPE(tmp) == LSQB) {
 			n = CHILD(n, 1);
 			goto loop;
 		} else if (TYPE(tmp) == NAME) {
-			if (strcmp(STR(tmp), "__debug__") == 0)
-				symtable_warn(st, ASSIGN_DEBUG);
-			symtable_add_def(st, STR(tmp), DEF_LOCAL | flag);
+			if (strcmp(STR(tmp), "__debug__") == 0) {
+				PyErr_SetString(PyExc_SyntaxError, 
+						ASSIGN_DEBUG);
+				PyErr_SyntaxLocation(st->st_filename,
+						     n->n_lineno);
+				st->st_errors++;
+			}
+			symtable_add_def(st, STR(tmp), DEF_LOCAL | def_flag);
 		}
 		return;
 	case dotted_as_name:
 		if (NCH(n) == 3)
 			symtable_add_def(st, STR(CHILD(n, 2)),
-					 DEF_LOCAL | flag);
+					 DEF_LOCAL | def_flag);
 		else
 			symtable_add_def(st,
 					 STR(CHILD(CHILD(n,
 							 0), 0)),
-					 DEF_LOCAL | flag);
+					 DEF_LOCAL | def_flag);
 		return;
 	case dotted_name:
-		symtable_add_def(st, STR(CHILD(n, 0)), DEF_LOCAL | flag);
+		symtable_add_def(st, STR(CHILD(n, 0)), DEF_LOCAL | def_flag);
 		return;
 	case NAME:
-		symtable_add_def(st, STR(n), DEF_LOCAL | flag);
+		symtable_add_def(st, STR(n), DEF_LOCAL | def_flag);
 		return;
 	default:
 		if (NCH(n) == 0)
@@ -5276,6 +5512,6 @@ symtable_assign(struct symtable *st, node *n, int flag)
 		   which will be caught in the next pass. */
 		for (i = 0; i < NCH(n); ++i)
 			if (TYPE(CHILD(n, i)) >= single_input)
-				symtable_assign(st, CHILD(n, i), flag);
+				symtable_assign(st, CHILD(n, i), def_flag);
 	}
 }

@@ -10,10 +10,6 @@
 #include <process.h>
 #endif
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 #include <signal.h>
 
 #ifndef SIG_ERR
@@ -156,7 +152,7 @@ signal_alarm(PyObject *self, PyObject *args)
 	if (!PyArg_Parse(args, "i", &t))
 		return NULL;
 	/* alarm() returns the number of seconds remaining */
-	return PyInt_FromLong(alarm(t));
+	return PyInt_FromLong((long)alarm(t));
 }
 
 static char alarm_doc[] =
@@ -381,6 +377,11 @@ initsignal(void)
 #ifdef SIGINT
 	x = PyInt_FromLong(SIGINT);
 	PyDict_SetItemString(d, "SIGINT", x);
+        Py_XDECREF(x);
+#endif
+#ifdef SIGBREAK
+	x = PyInt_FromLong(SIGBREAK);
+	PyDict_SetItemString(d, "SIGBREAK", x);
         Py_XDECREF(x);
 #endif
 #ifdef SIGQUIT

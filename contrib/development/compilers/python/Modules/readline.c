@@ -12,10 +12,6 @@
 #include <signal.h>
 #include <errno.h>
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h> /* For isatty() */
-#endif
-
 /* GNU readline definitions */
 #undef HAVE_CONFIG_H /* Else readline/chardefs.h includes strings.h */
 #include <readline/readline.h>
@@ -158,12 +154,82 @@ get_history_length(PyObject *self, PyObject *args)
 	return Py_BuildValue("i", history_length);
 }
 
+/* Generic hook function setter */
 
+static PyObject *
+set_hook(const char * funcname, PyObject **hook_var, PyThreadState **tstate, PyObject *args)
+{
+	PyObject *function = Py_None;
+	char buf[80];
+	PyOS_snprintf(buf, sizeof(buf), "|O:set_%.50s", funcname);
+	if (!PyArg_ParseTuple(args, buf, &function))
+		return NULL;
+	if (function == Py_None) {
+		Py_XDECREF(*hook_var);
+		*hook_var = NULL;
+		*tstate = NULL;
+	}
+	else if (PyCallable_Check(function)) {
+		PyObject *tmp = *hook_var;
+		Py_INCREF(function);
+		*hook_var = function;
+		Py_XDECREF(tmp);
+		*tstate = PyThreadState_Get();
+	}
+	else {
+		PyOS_snprintf(buf, sizeof(buf),
+			      "set_%.50s(func): argument not callable",
+			      funcname);
+		PyErr_SetString(PyExc_TypeError, buf);
+		return NULL;
+	}
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+/* Exported functions to specify hook functions in Python */
+
+static PyObject *startup_hook = NULL;
+static PyThreadState *startup_hook_tstate = NULL;
+
+#ifdef HAVE_RL_PRE_INPUT_HOOK
+static PyObject *pre_input_hook = NULL;
+static PyThreadState *pre_input_hook_tstate = NULL;
+#endif
+
+static PyObject *
+set_startup_hook(PyObject *self, PyObject *args)
+{
+	return set_hook("startup_hook", &startup_hook, &startup_hook_tstate, args);
+}
+
+static char doc_set_startup_hook[] = "\
+set_startup_hook([function]) -> None\n\
+Set or remove the startup_hook function.\n\
+The function is called with no arguments just\n\
+before readline prints the first prompt.\n\
+";
+
+#ifdef HAVE_RL_PRE_INPUT_HOOK
+static PyObject *
+set_pre_input_hook(PyObject *self, PyObject *args)
+{
+	return set_hook("pre_input_hook", &pre_input_hook,  &pre_input_hook_tstate, args);
+}
+
+static char doc_set_pre_input_hook[] = "\
+set_pre_input_hook([function]) -> None\n\
+Set or remove the pre_input_hook function.\n\
+The function is called with no arguments after the first prompt\n\
+has been printed and just before readline starts reading input\n\
+characters.\n\
+";
+#endif
 
 /* Exported function to specify a word completer in Python */
 
 static PyObject *completer = NULL;
-static PyThreadState *tstate = NULL;
+static PyThreadState *completer_tstate = NULL;
 
 static PyObject *begidx = NULL;
 static PyObject *endidx = NULL;
@@ -219,6 +285,23 @@ static char doc_set_completer_delims[] = "\
 set_completer_delims(string) -> None\n\
 set the readline word delimiters for tab-completion";
 
+static PyObject *
+py_add_history(PyObject *self, PyObject *args)
+{
+	char *line;
+
+	if(!PyArg_ParseTuple(args, "s:add_history", &line)) {
+		return NULL;
+	}
+	add_history(line);
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static char doc_add_history[] = "\
+add_history(string) -> None\n\
+add a line to the history buffer";
+
 
 /* get the tab-completion word-delimiters that readline uses */
 
@@ -238,35 +321,14 @@ get the readline word delimiters for tab-completion";
 static PyObject *
 set_completer(PyObject *self, PyObject *args)
 {
-	PyObject *function = Py_None;
-	if (!PyArg_ParseTuple(args, "|O:set_completer", &function))
-		return NULL;
-	if (function == Py_None) {
-		Py_XDECREF(completer);
-		completer = NULL;
-		tstate = NULL;
-	}
-	else if (PyCallable_Check(function)) {
-		PyObject *tmp = completer;
-		Py_INCREF(function);
-		completer = function;
-		Py_XDECREF(tmp);
-		tstate = PyThreadState_Get();
-	}
-	else {
-		PyErr_SetString(PyExc_TypeError,
-				"set_completer(func): argument not callable");
-		return NULL;
-	}
-	Py_INCREF(Py_None);
-	return Py_None;
+	return set_hook("completer", &completer, &completer_tstate, args);
 }
 
 static char doc_set_completer[] = "\
 set_completer([function]) -> None\n\
 Set or remove the completer function.\n\
 The function is called as function(text, state),\n\
-for i in [0, 1, 2, ...] until it returns a non-string.\n\
+for state in 0, 1, 2, ..., until it returns a non-string.\n\
 It should return the next possible completion starting with 'text'.\
 ";
 
@@ -328,10 +390,62 @@ static struct PyMethodDef readline_methods[] =
 
 	{"set_completer_delims", set_completer_delims, 
 	 METH_VARARGS, doc_set_completer_delims},
+	{"add_history", py_add_history, METH_VARARGS, doc_add_history},
 	{"get_completer_delims", get_completer_delims, 
 	 METH_OLDARGS, doc_get_completer_delims},
+	
+	{"set_startup_hook", set_startup_hook, METH_VARARGS, doc_set_startup_hook},
+#ifdef HAVE_RL_PRE_INPUT_HOOK
+	{"set_pre_input_hook", set_pre_input_hook, METH_VARARGS, doc_set_pre_input_hook},
+#endif
 	{0, 0}
 };
+
+/* C function to call the Python hooks. */
+
+static int
+on_hook(PyObject *func, PyThreadState *tstate)
+{
+	int result = 0;
+	if (func != NULL) {
+		PyObject *r;
+		PyThreadState *save_tstate;
+		/* Note that readline is called with the interpreter
+		   lock released! */
+		save_tstate = PyThreadState_Swap(NULL);
+		PyEval_RestoreThread(tstate);
+		r = PyObject_CallFunction(func, NULL);
+		if (r == NULL)
+			goto error;
+		if (r == Py_None) 
+			result = 0;
+		else 
+			result = PyInt_AsLong(r);
+		Py_DECREF(r);
+		goto done;
+	  error:
+		PyErr_Clear();
+		Py_XDECREF(r);
+	  done:
+		PyEval_SaveThread();
+		PyThreadState_Swap(save_tstate);
+	}
+	return result;
+}
+
+static int
+on_startup_hook(void)
+{
+	return on_hook(startup_hook, startup_hook_tstate);
+}
+
+#ifdef HAVE_RL_PRE_INPUT_HOOK
+static int
+on_pre_input_hook(void)
+{
+	return on_hook(pre_input_hook, pre_input_hook_tstate);
+}
+#endif
 
 /* C function to call the Python completer. */
 
@@ -345,7 +459,7 @@ on_completion(char *text, int state)
 		/* Note that readline is called with the interpreter
 		   lock released! */
 		save_tstate = PyThreadState_Swap(NULL);
-		PyEval_RestoreThread(tstate);
+		PyEval_RestoreThread(completer_tstate);
 		r = PyObject_CallFunction(completer, "si", text, state);
 		if (r == NULL)
 			goto error;
@@ -395,6 +509,11 @@ setup_readline(void)
 	/* Bind both ESC-TAB and ESC-ESC to the completion function */
 	rl_bind_key_in_map ('\t', rl_complete, emacs_meta_keymap);
 	rl_bind_key_in_map ('\033', rl_complete, emacs_meta_keymap);
+	/* Set our hook functions */
+	rl_startup_hook = (Function *)on_startup_hook;
+#ifdef HAVE_RL_PRE_INPUT_HOOK
+	rl_pre_input_hook = (Function *)on_pre_input_hook;
+#endif
 	/* Set our completion function */
 	rl_attempted_completion_function = (CPPFunction *)flex_complete;
 	/* Set Python word break characters */

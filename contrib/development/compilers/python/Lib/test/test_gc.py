@@ -1,35 +1,36 @@
 from test_support import verify, verbose, TestFailed
+import sys
 import gc
+
+def expect(actual, expected, name):
+    if actual != expected:
+        raise TestFailed, "test_%s: actual %d, expected %d" % (
+            name, actual, expected)
+
+def expect_nonzero(actual, name):
+    if actual == 0:
+        raise TestFailed, "test_%s: unexpected zero" % name
 
 def run_test(name, thunk):
     if verbose:
         print "testing %s..." % name,
-    try:
-        thunk()
-    except TestFailed:
-        if verbose:
-            print "failed (expected %s but got %s)" % (result,
-                                                       test_result)
-        raise TestFailed, name
-    else:
-        if verbose:
-            print "ok"
+    thunk()
+    if verbose:
+        print "ok"
 
 def test_list():
     l = []
     l.append(l)
     gc.collect()
     del l
-    if gc.collect() != 1:
-        raise TestFailed
+    expect(gc.collect(), 1, "list")
 
 def test_dict():
     d = {}
     d[1] = d
     gc.collect()
     del d
-    if gc.collect() != 1:
-        raise TestFailed
+    expect(gc.collect(), 1, "dict")
 
 def test_tuple():
     # since tuples are immutable we close the loop with a list
@@ -39,8 +40,7 @@ def test_tuple():
     gc.collect()
     del t
     del l
-    if gc.collect() != 2:
-        raise TestFailed
+    expect(gc.collect(), 2, "tuple")
 
 def test_class():
     class A:
@@ -48,8 +48,14 @@ def test_class():
     A.a = A
     gc.collect()
     del A
-    if gc.collect() == 0:
-        raise TestFailed
+    expect_nonzero(gc.collect(), "class")
+
+def test_newstyleclass():
+    class A(object):
+        pass
+    gc.collect()
+    del A
+    expect_nonzero(gc.collect(), "staticclass")
 
 def test_instance():
     class A:
@@ -58,8 +64,25 @@ def test_instance():
     a.a = a
     gc.collect()
     del a
-    if gc.collect() == 0:
-        raise TestFailed
+    expect_nonzero(gc.collect(), "instance")
+
+def test_newinstance():
+    class A(object):
+        pass
+    a = A()
+    a.a = a
+    gc.collect()
+    del a
+    expect_nonzero(gc.collect(), "newinstance")
+    class B(list):
+        pass
+    class C(B, A):
+        pass
+    a = C()
+    a.a = a
+    gc.collect()
+    del a
+    expect_nonzero(gc.collect(), "newinstance(2)")
 
 def test_method():
     # Tricky: self.__init__ is a bound method, it references the instance.
@@ -69,8 +92,7 @@ def test_method():
     a = A()
     gc.collect()
     del a
-    if gc.collect() == 0:
-        raise TestFailed
+    expect_nonzero(gc.collect(), "method")
 
 def test_finalizer():
     # A() is uncollectable if it is part of a cycle, make sure it shows up
@@ -87,14 +109,13 @@ def test_finalizer():
     gc.collect()
     del a
     del b
-    if gc.collect() == 0:
-        raise TestFailed
+    expect_nonzero(gc.collect(), "finalizer")
     for obj in gc.garbage:
         if id(obj) == id_a:
             del obj.a
             break
     else:
-        raise TestFailed
+        raise TestFailed, "didn't find obj in garbage (finalizer)"
     gc.garbage.remove(obj)
 
 def test_function():
@@ -104,8 +125,15 @@ def test_function():
     exec("def f(): pass\n") in d
     gc.collect()
     del d
-    if gc.collect() != 2:
-        raise TestFailed
+    expect(gc.collect(), 2, "function")
+
+def test_frame():
+    def f():
+        frame = sys._getframe()
+    gc.collect()
+    f()
+    expect(gc.collect(), 1, "frame")
+
 
 def test_saveall():
     # Verify that cyclic garbage like lists show up in gc.garbage if the
@@ -123,7 +151,7 @@ def test_saveall():
                 del obj[:]
                 break
         else:
-            raise TestFailed
+            raise TestFailed, "didn't find obj in garbage (saveall)"
         gc.garbage.remove(obj)
     finally:
         gc.set_debug(debug)
@@ -143,18 +171,51 @@ def test_del():
     gc.disable()
     apply(gc.set_threshold, thresholds)
 
+class Ouch:
+    n = 0
+    def __del__(self):
+        Ouch.n = Ouch.n + 1
+        if Ouch.n % 7 == 0:
+            gc.collect()
+
+def test_trashcan():
+    # "trashcan" is a hack to prevent stack overflow when deallocating
+    # very deeply nested tuples etc.  It works in part by abusing the
+    # type pointer and refcount fields, and that can yield horrible
+    # problems when gc tries to traverse the structures.
+    # If this test fails (as it does in 2.0, 2.1 and 2.2), it will
+    # most likely die via segfault.
+
+    gc.enable()
+    N = 200
+    for count in range(3):
+        t = []
+        for i in range(N):
+            t = [t, Ouch()]
+        u = []
+        for i in range(N):
+            u = [u, Ouch()]
+        v = {}
+        for i in range(N):
+            v = {1: v, 2: Ouch()}
+    gc.disable()
 
 def test_all():
+    gc.collect() # Delete 2nd generation garbage
     run_test("lists", test_list)
     run_test("dicts", test_dict)
     run_test("tuples", test_tuple)
     run_test("classes", test_class)
+    run_test("new style classes", test_newstyleclass)
     run_test("instances", test_instance)
+    run_test("new instances", test_newinstance)
     run_test("methods", test_method)
     run_test("functions", test_function)
+    run_test("frames", test_frame)
     run_test("finalizers", test_finalizer)
     run_test("__del__", test_del)
     run_test("saveall", test_saveall)
+    run_test("trashcan", test_trashcan)
 
 def test():
     if verbose:

@@ -426,6 +426,19 @@ def numops(a, b, skip=[]):
 def ints():
     if verbose: print "Testing int operations..."
     numops(100, 3)
+    # The following crashes in Python 2.2
+    vereq((1).__nonzero__(), 1)
+    vereq((0).__nonzero__(), 0)
+    # This returns 'NotImplemented' in Python 2.2
+    class C(int):
+        def __add__(self, other):
+            return NotImplemented
+    try:
+        C() + ""
+    except TypeError:
+        pass
+    else:
+        raise TestFailed, "NotImplemented should have caused TypeError"
 
 def longs():
     if verbose: print "Testing long operations..."
@@ -1195,6 +1208,19 @@ def classmethods():
     vereq(d.goo(1), (D, 1))
     vereq(d.foo(1), (d, 1))
     vereq(D.foo(d, 1), (d, 1))
+    # Test for a specific crash (SF bug 528132)
+    def f(cls, arg): return (cls, arg)
+    ff = classmethod(f)
+    vereq(ff.__get__(0, int)(42), (int, 42))
+    vereq(ff.__get__(0)(42), (int, 42))
+
+    # Test super() with classmethods (SF bug 535444)
+    veris(C.goo.im_self, C)
+    veris(D.goo.im_self, D)
+    veris(super(D,D).goo.im_self, D)
+    veris(super(D,d).goo.im_self, D)
+    vereq(super(D,D).goo(), (D,))
+    vereq(super(D,d).goo(), (D,))
 
 def staticmethods():
     if verbose: print "Testing static methods..."
@@ -1747,6 +1773,11 @@ def inherits():
     a = longclone(1)
     verify((a + 0).__class__ is long)
     verify((0 + a).__class__ is long)
+
+    # Check that negative clones don't segfault
+    a = longclone(-1)
+    vereq(a.__dict__, {})
+    vereq(long(a), -1)  # verify PyNumber_Long() copies the sign bit
 
     class precfloat(float):
         __slots__ = ['prec']
@@ -2432,6 +2463,94 @@ def pickles():
         print "a = x =", a
         print "b = y =", b
 
+def pickleslots():
+    if verbose: print "Testing pickling of classes with __slots__ ..."
+    import pickle, cPickle
+    # Pickling of classes with __slots__ but without __getstate__ should fail
+    global B, C, D, E
+    class B(object):
+        pass
+    for base in [object, B]:
+        class C(base):
+            __slots__ = ['a']
+        class D(C):
+            pass
+        try:
+            pickle.dumps(C())
+        except TypeError:
+            pass
+        else:
+            raise TestFailed, "should fail: pickle C instance - %s" % base
+        try:
+            cPickle.dumps(C())
+        except TypeError:
+            pass
+        else:
+            raise TestFailed, "should fail: cPickle C instance - %s" % base
+        try:
+            pickle.dumps(C())
+        except TypeError:
+            pass
+        else:
+            raise TestFailed, "should fail: pickle D instance - %s" % base
+        try:
+            cPickle.dumps(D())
+        except TypeError:
+            pass
+        else:
+            raise TestFailed, "should fail: cPickle D instance - %s" % base
+        # Give C a __getstate__ and __setstate__
+        class C(base):
+            __slots__ = ['a']
+            def __getstate__(self):
+                try:
+                    d = self.__dict__.copy()
+                except AttributeError:
+                    d = {}
+                try:
+                    d['a'] = self.a
+                except AttributeError:
+                    pass
+                return d
+            def __setstate__(self, d):
+                for k, v in d.items():
+                    setattr(self, k, v)
+        class D(C):
+            pass
+        # Now it should work
+        x = C()
+        y = pickle.loads(pickle.dumps(x))
+        vereq(hasattr(y, 'a'), 0)
+        y = cPickle.loads(cPickle.dumps(x))
+        vereq(hasattr(y, 'a'), 0)
+        x.a = 42
+        y = pickle.loads(pickle.dumps(x))
+        vereq(y.a, 42)
+        y = cPickle.loads(cPickle.dumps(x))
+        vereq(y.a, 42)
+        x = D()
+        x.a = 42
+        x.b = 100
+        y = pickle.loads(pickle.dumps(x))
+        vereq(y.a + y.b, 142)
+        y = cPickle.loads(cPickle.dumps(x))
+        vereq(y.a + y.b, 142)
+        # But a subclass that adds a slot should not work
+        class E(C):
+            __slots__ = ['b']
+        try:
+            pickle.dumps(E())
+        except TypeError:
+            pass
+        else:
+            raise TestFailed, "should fail: pickle E instance - %s" % base
+        try:
+            cPickle.dumps(E())
+        except TypeError:
+            pass
+        else:
+            raise TestFailed, "should fail: cPickle E instance - %s" % base
+
 def copies():
     if verbose: print "Testing copy.copy() and copy.deepcopy()..."
     import copy
@@ -2702,8 +2821,27 @@ def strops():
     vereq('%c' % 5, '\x05')
     vereq('%c' % '5', '5')
 
+def deepcopyrecursive():
+    if verbose: print "Testing deepcopy of recursive objects..."
+    class Node:
+        pass
+    a = Node()
+    b = Node()
+    a.b = b
+    b.a = a
+    z = deepcopy(a) # This blew up before
 
-
+def modules():
+    if verbose: print "Testing uninitialized module objects..."
+    from types import ModuleType as M
+    m = M.__new__(M)
+    str(m)
+    vereq(hasattr(m, "__name__"), 0)
+    vereq(hasattr(m, "__file__"), 0)
+    vereq(hasattr(m, "foo"), 0)
+    vereq(m.__dict__, None)
+    m.foo = 1
+    vereq(m.__dict__, {"foo": 1})
 
 def test_main():
     class_docstrings()
@@ -2759,6 +2897,9 @@ def test_main():
     delhook()
     hashinherit()
     strops()
+    deepcopyrecursive()
+    modules()
+    pickleslots()
     if verbose: print "All OK"
 
 if __name__ == "__main__":

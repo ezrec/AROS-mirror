@@ -147,11 +147,14 @@ class config (Command):
                headers, include_dirs,
                libraries, library_dirs, lang):
         (src, obj) = self._compile(body, headers, include_dirs, lang)
-        prog = os.path.splitext(os.path.basename(src))[0] 
-        self.temp_files.append(prog)    # XXX should be prog + exe_ext
+        prog = os.path.splitext(os.path.basename(src))[0]
         self.compiler.link_executable([obj], prog,
                                       libraries=libraries,
                                       library_dirs=library_dirs)
+
+        prog = prog + self.compiler.exe_extension
+        self.temp_files.append(prog)
+
         return (src, obj, prog)
 
     def _clean (self, *filenames):
@@ -187,7 +190,7 @@ class config (Command):
         self._check_compiler()
         ok = 1
         try:
-            self._preprocess(body, headers, lang)
+            self._preprocess(body, headers, include_dirs, lang)
         except CompileError:
             ok = 0
 
@@ -205,7 +208,7 @@ class config (Command):
         """
 
         self._check_compiler()
-        (src, out) = self._preprocess(body, headers, lang)
+        (src, out) = self._preprocess(body, headers, include_dirs, lang)
 
         if type(pattern) is StringType:
             pattern = re.compile(pattern)
@@ -216,7 +219,7 @@ class config (Command):
             line = file.readline()
             if line == '':
                 break
-            if pattern.search(pattern):
+            if pattern.search(line):
                 match = 1
                 break
 
@@ -231,7 +234,7 @@ class config (Command):
         from distutils.ccompiler import CompileError
         self._check_compiler()
         try:
-            self._compile(body, headers, lang)
+            self._compile(body, headers, include_dirs, lang)
             ok = 1
         except CompileError:
             ok = 0
@@ -260,7 +263,7 @@ class config (Command):
         self.announce(ok and "success!" or "failure.")
         self._clean()
         return ok
-            
+
     def try_run (self, body,
                  headers=None, include_dirs=None,
                  libraries=None, library_dirs=None,
@@ -272,8 +275,8 @@ class config (Command):
         from distutils.ccompiler import CompileError, LinkError
         self._check_compiler()
         try:
-            self._link(body, headers, include_dirs,
-                       libraries, library_dirs, lang)
+            src, obj, exe = self._link(body, headers, include_dirs,
+                                       libraries, library_dirs, lang)
             self.spawn([exe])
             ok = 1
         except (CompileError, LinkError, DistutilsExecError):

@@ -1,5 +1,5 @@
 /***********************************************************
-Copyright (C) 1997 Martin von Loewis
+Copyright (C) 1997, 2002 Martin von Loewis
 
 Permission to use, copy, modify, and distribute this software and its
 documentation for any purpose and without fee is hereby granted,
@@ -16,6 +16,10 @@ This software comes with no warranty. Use at your own risk.
 #include <locale.h>
 #include <string.h>
 #include <ctype.h>
+
+#ifdef HAVE_LANGINFO_H
+#include <langinfo.h>
+#endif
 
 #if defined(MS_WIN32)
 #define WINDOWS_LEAN_AND_MEAN
@@ -149,7 +153,10 @@ fixup_ulcase(void)
         PyDict_SetItemString(string, "letters", ulo);
     Py_DECREF(ulo);
 }
-  
+
+#if defined(HAVE_LANGINFO_H) && defined(CODESET)
+static int fileencoding_uses_locale = 0;
+#endif
 
 static PyObject*
 PyLocale_setlocale(PyObject* self, PyObject* args)
@@ -199,6 +206,22 @@ PyLocale_setlocale(PyObject* self, PyObject* args)
             fixup_ulcase();
         /* things that got wrong up to here are ignored */
         PyErr_Clear();
+#if defined(HAVE_LANGINFO_H) && defined(CODESET)
+	if (Py_FileSystemDefaultEncoding == NULL)
+	    fileencoding_uses_locale = 1;
+	if (fileencoding_uses_locale) {
+	    char *codeset = nl_langinfo(CODESET);
+	    PyObject *enc = NULL;
+	    if (*codeset && (enc = PyCodec_Encoder(codeset))) {
+		/* Release previous file encoding */
+		if (Py_FileSystemDefaultEncoding)
+		    free((char *)Py_FileSystemDefaultEncoding);
+		Py_FileSystemDefaultEncoding = strdup(codeset);
+		Py_DECREF(enc);
+	    } else
+		PyErr_Clear();
+	}
+#endif
     } else {
         /* get locale */
         /* restore LC_NUMERIC first, if appropriate */
@@ -353,7 +376,7 @@ PyLocale_getdefaultlocale(PyObject* self, PyObject* args)
     if (!PyArg_NoArgs(args))
         return NULL;
 
-    sprintf(encoding, "cp%d", GetACP());
+    PyOS_snprintf(encoding, sizeof(encoding), "cp%d", GetACP());
 
     if (GetLocaleInfo(LOCALE_USER_DEFAULT,
                       LOCALE_SISO639LANGNAME,
@@ -391,6 +414,121 @@ PyLocale_getdefaultlocale(PyObject* self, PyObject* args)
 }
 #endif
 
+#ifdef HAVE_LANGINFO_H
+#define LANGINFO(X) {#X, X}
+struct langinfo_constant{
+	char* name;
+	int value;
+} langinfo_constants[] = 
+{
+    /* These constants should exist on any langinfo implementation */
+    LANGINFO(DAY_1),
+    LANGINFO(DAY_2),
+    LANGINFO(DAY_3),
+    LANGINFO(DAY_4),
+    LANGINFO(DAY_5),
+    LANGINFO(DAY_6),
+    LANGINFO(DAY_7),
+
+    LANGINFO(ABDAY_1),
+    LANGINFO(ABDAY_2),
+    LANGINFO(ABDAY_3),
+    LANGINFO(ABDAY_4),
+    LANGINFO(ABDAY_5),
+    LANGINFO(ABDAY_6),
+    LANGINFO(ABDAY_7),
+
+    LANGINFO(MON_1),
+    LANGINFO(MON_2),
+    LANGINFO(MON_3),
+    LANGINFO(MON_4),
+    LANGINFO(MON_5),
+    LANGINFO(MON_6),
+    LANGINFO(MON_7),
+    LANGINFO(MON_8),
+    LANGINFO(MON_9),
+    LANGINFO(MON_10),
+    LANGINFO(MON_11),
+    LANGINFO(MON_12),
+
+    LANGINFO(ABMON_1),
+    LANGINFO(ABMON_2),
+    LANGINFO(ABMON_3),
+    LANGINFO(ABMON_4),
+    LANGINFO(ABMON_5),
+    LANGINFO(ABMON_6),
+    LANGINFO(ABMON_7),
+    LANGINFO(ABMON_8),
+    LANGINFO(ABMON_9),
+    LANGINFO(ABMON_10),
+    LANGINFO(ABMON_11),
+    LANGINFO(ABMON_12),
+
+#ifdef RADIXCHAR
+    /* The following are not available with glibc 2.0 */
+    LANGINFO(RADIXCHAR),
+    LANGINFO(THOUSEP),
+    /* YESSTR and NOSTR are deprecated in glibc, since they are
+       a special case of message translation, which should be rather
+       done using gettext. So we don't expose it to Python in the
+       first place.
+    LANGINFO(YESSTR),
+    LANGINFO(NOSTR),
+    */
+    LANGINFO(CRNCYSTR),
+#endif
+
+    LANGINFO(D_T_FMT),
+    LANGINFO(D_FMT),
+    LANGINFO(T_FMT),
+    LANGINFO(AM_STR),
+    LANGINFO(PM_STR),
+
+    /* The following constants are available only with XPG4. AIX 3.2. only has
+       CODESET. */
+#ifdef CODESET
+    LANGINFO(CODESET),
+#endif
+#ifdef T_FMT_AMPM
+    LANGINFO(T_FMT_AMPM),
+    LANGINFO(ERA),
+    LANGINFO(ERA_D_FMT),
+    LANGINFO(ERA_D_T_FMT),
+    LANGINFO(ERA_T_FMT),
+    LANGINFO(ALT_DIGITS),
+    LANGINFO(YESEXPR),
+    LANGINFO(NOEXPR),
+#endif
+#ifdef _DATE_FMT
+    /* This is not available in all glibc versions that have CODESET. */
+    LANGINFO(_DATE_FMT),
+#endif
+    {0, 0}
+};
+
+static char nl_langinfo__doc__[] =
+"nl_langinfo(key) -> string\n"
+"Return the value for the locale information associated with key."
+;
+
+static PyObject*
+PyLocale_nl_langinfo(PyObject* self, PyObject* args)
+{
+    int item, i;
+    if (!PyArg_ParseTuple(args, "i:nl_langinfo", &item))
+        return NULL;
+    /* Check whether this is a supported constant. GNU libc sometimes
+       returns numeric values in the char* return value, which would
+       crash PyString_FromString.  */
+    for (i = 0; langinfo_constants[i].name; i++)
+	    if (langinfo_constants[i].value == item)
+		    return PyString_FromString(nl_langinfo(item));
+    PyErr_SetString(PyExc_ValueError, "unsupported langinfo constant");
+    return NULL;
+}
+#endif /* HAVE_LANGINFO_H */
+    
+
 static struct PyMethodDef PyLocale_Methods[] = {
   {"setlocale", (PyCFunction) PyLocale_setlocale, 
    METH_VARARGS, setlocale__doc__},
@@ -403,6 +541,11 @@ static struct PyMethodDef PyLocale_Methods[] = {
 #if defined(MS_WIN32) || defined(macintosh)
   {"_getdefaultlocale", (PyCFunction) PyLocale_getdefaultlocale, 0},
 #endif
+#ifdef HAVE_LANGINFO_H
+  {"nl_langinfo", (PyCFunction) PyLocale_nl_langinfo,
+   METH_VARARGS, nl_langinfo__doc__},
+#endif
+  
   {NULL, NULL}
 };
 
@@ -410,6 +553,9 @@ DL_EXPORT(void)
 init_locale(void)
 {
     PyObject *m, *d, *x;
+#ifdef HAVE_LANGINFO_H
+    int i;
+#endif
 
     m = Py_InitModule("_locale", PyLocale_Methods);
 
@@ -455,4 +601,11 @@ init_locale(void)
     x = PyString_FromString(locale__doc__);
     PyDict_SetItemString(d, "__doc__", x);
     Py_XDECREF(x);
+
+#ifdef HAVE_LANGINFO_H
+    for (i = 0; langinfo_constants[i].name; i++) {
+	    PyModule_AddIntConstant(m, langinfo_constants[i].name,
+				    langinfo_constants[i].value);
+    }
+#endif
 }

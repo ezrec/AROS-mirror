@@ -20,13 +20,13 @@ versions of Python that introduce incompatible changes to the
 language.  It allows use of the new features on a per-module basis
 before the release in which the feature becomes standard.
 
-\begin{verbatim}
-future_statement: "from" "__future__" "import" feature ["as" name]
-                 ("," feature ["as" name])*
-
-feature: identifier
-name: identifier
-\end{verbatim}
+\begin{productionlist}[*]
+  \production{future_statement}
+             {"from" "__future__" "import" feature ["as" name]}
+  \productioncont{("," feature ["as" name])*}
+  \production{feature}{identifier}
+  \production{name}{identifier}
+\end{productionlist}
 
 A future statement must appear near the top of the module.  The only
 lines that can appear before a future statement are:
@@ -40,14 +40,17 @@ lines that can appear before a future statement are:
 
 \end{itemize}
 
-The only feature recognized by Python 2.1 is \samp{nested_scopes}.
+The features recognized by Python 2.2 are \samp{generators},
+\samp{division} and \samp{nested_scopes}.  \samp{nested_scopes} 
+is redundant in 2.2 as the nested scopes feature is active by default.
 
-A future statement is recognized and treated specially at compile time:
-Changes to the semantics of core constructs are often implemented by
-generating different code.  It may even be the case that a new feature
-introduces new incompatible syntax (such as a new reserved word), in
-which case the compiler may need to parse the module differently.  Such
-decisions cannot be pushed off until runtime.
+A future statement is recognized and treated specially at compile
+time: Changes to the semantics of core constructs are often
+implemented by generating different code.  It may even be the case
+that a new feature introduces new incompatible syntax (such as a new
+reserved word), in which case the compiler may need to parse the
+module differently.  Such decisions cannot be pushed off until
+runtime.
 
 For any given release, the compiler knows which feature names have been
 defined, and raises a compile-time error if a future statement contains
@@ -72,8 +75,11 @@ no special semantics or syntax restrictions.
 
 Code compiled by an exec statement or calls to the builtin functions
 \function{compile()} and \function{execfile()} that occur in a module
-\module{M} containing a future statement will use the new syntax or
-semantics associated with the future statement.
+\module{M} containing a future statement will, by default, use the new 
+syntax or semantics associated with the future statement.  This can,
+starting with Python 2.2 be controlled by optional arguments to
+\function{compile()} --- see the documentation of that function in the 
+library reference for details.
 
 A future statement typed at an interactive interpreter prompt will
 take effect for the rest of the interpreter session.  If an
@@ -83,7 +89,7 @@ will be in effect in the interactive session started after the script
 is executed.
 
 \section{\module{__future__} ---
-	 Future statement definitions}
+         Future statement definitions}
 
 \declaremodule[future]{standard}{__future__}
 \modulesynopsis{Future statement definitions}
@@ -110,7 +116,8 @@ is executed.
 Each statment in \file{__future__.py} is of the form:
 
 \begin{verbatim}
-FeatureName = "_Feature(" OptionalRelease "," MandatoryRelease ")"
+FeatureName = "_Feature(" OptionalRelease "," MandatoryRelease ","
+                        CompilerFlag ")"
 \end{verbatim}
 
 where, normally, OptionalRelease is less then MandatoryRelease, and
@@ -143,6 +150,11 @@ feature got dropped.
 Instances of class \class{_Feature} have two corresponding methods,
 \method{getOptionalRelease()} and \method{getMandatoryRelease()}.
 
+CompilerFlag is the (bitfield) flag that should be passed in the
+fourth argument to the builtin function \function{compile()} to enable
+the feature in dynamically compiled code.  This flag is stored in the
+\member{compiler_flag} attribute on \class{_Future} instances.
+
 No feature description will ever be deleted from \module{__future__}.
 
 \section{Nested scopes \label{nested-scopes}}
@@ -153,16 +165,16 @@ in Python 2.2.  They are available in Python 2.1 by using the future
 statement \samp{nested_scopes}.  This section begins with a bit of
 terminology. 
 
-\subsection{Definitions and rules \label{defintions}}
+\subsection{Definitions and rules \label{definitions}}
 
 \dfn{Names} refer to objects.  Names are introduced by name binding
 operations.  Each occurrence of a name in the program text refers to
 the binding of that name established in the innermost function block
 containing the use.
 
-A \dfn{block} is a pice of Python program text that can is executed as
+A \dfn{block} is a piece of Python program text that is executed as
 a unit.  The following are blocks: a module, a function body, and a
-class defintion.
+class definition.
 
 A \dfn{scope} defines the visibility of a name within a block.  If a
 local variable is defined in a block, it's scope includes that block.

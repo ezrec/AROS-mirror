@@ -23,9 +23,12 @@ class Bdb:
         self.fncache = {}
 
     def canonic(self, filename):
+        if filename == "<" + filename[1:-1] + ">":
+            return filename
         canonic = self.fncache.get(filename)
         if not canonic:
             canonic = os.path.abspath(filename)
+            canonic = os.path.normcase(canonic)
             self.fncache[filename] = canonic
         return canonic
 
@@ -74,6 +77,7 @@ class Bdb:
         if self.stop_here(frame) or frame == self.returnframe:
             self.user_return(frame, arg)
             if self.quitting: raise BdbQuit
+        return self.trace_dispatch
 
     def dispatch_exception(self, frame, arg):
         if self.stop_here(frame):

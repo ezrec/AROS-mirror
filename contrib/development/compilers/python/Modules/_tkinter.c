@@ -41,8 +41,13 @@ Copyright (C) 1994 Steen Lumholt.
 #define MAC_TCL
 #endif
 
+#ifdef TK_FRAMEWORK
+#include <Tcl/tcl.h>
+#include <Tk/tk.h>
+#else
 #include <tcl.h>
 #include <tk.h>
+#endif
 
 #define TKMAJORMINOR (TK_MAJOR_VERSION*1000 + TK_MINOR_VERSION)
 
@@ -183,16 +188,9 @@ int TkMacConvertEvent(EventRecord *eventPtr);
 
 staticforward int PyMacConvertEvent(EventRecord *eventPtr);
 
-#if defined(__CFM68K__) && !defined(__USING_STATIC_LIBS__)
-	#pragma import on
-#endif
-
 #include <SIOUX.h>
 extern int SIOUXIsAppWindow(WindowPtr);
 
-#if defined(__CFM68K__) && !defined(__USING_STATIC_LIBS__)
-	#pragma import reset
-#endif
 #endif /* macintosh */
 
 #ifndef FREECAST
@@ -262,6 +260,7 @@ AsString(PyObject *value, PyObject *tmp)
 {
 	if (PyString_Check(value))
 		return PyString_AsString(value);
+#ifdef Py_USING_UNICODE
 	else if (PyUnicode_Check(value)) {
 		PyObject *v = PyUnicode_AsUTF8String(value);
 		if (v == NULL)
@@ -273,6 +272,7 @@ AsString(PyObject *value, PyObject *tmp)
 		Py_DECREF(v);
 		return PyString_AsString(v);
 	}
+#endif
 	else {
 		PyObject *v = PyObject_Str(value);
 		if (v == NULL)
@@ -459,6 +459,7 @@ Tkapp_New(char *screenName, char *baseName, char *className, int interactive)
 	ClearMenuBar();
 	TkMacInitMenus(v->interp);
 #endif
+
 	/* Delete the 'exit' command, which can screw things up */
 	Tcl_DeleteCommand(v->interp, "exit");
 
@@ -527,6 +528,7 @@ AsObj(PyObject *value)
 		ckfree(FREECAST argv);
 		return result;
 	}
+#ifdef Py_USING_UNICODE
 	else if (PyUnicode_Check(value)) {
 #if TKMAJORMINOR <= 8001
 		/* In Tcl 8.1 we must use UTF-8 */
@@ -549,6 +551,7 @@ AsObj(PyObject *value)
 					 PyUnicode_GET_SIZE(value));
 #endif /* TKMAJORMINOR > 8001 */
 	}
+#endif
 	else {
 		PyObject *v = PyObject_Str(value);
 		if (!v)
@@ -623,13 +626,16 @@ Tkapp_Call(PyObject *self, PyObject *args)
 		   so would confuse applications that expect a string. */
 		char *s = Tcl_GetStringResult(interp);
 		char *p = s;
+
 		/* If the result contains any bytes with the top bit set,
 		   it's UTF-8 and we should decode it to Unicode */
+#ifdef Py_USING_UNICODE
 		while (*p != '\0') {
 			if (*p & 0x80)
 				break;
 			p++;
 		}
+
 		if (*p == '\0')
 			res = PyString_FromStringAndSize(s, (int)(p-s));
 		else {
@@ -641,6 +647,10 @@ Tkapp_Call(PyObject *self, PyObject *args)
 			    res = PyString_FromStringAndSize(s, (int)(p-s));
 			}
 		}
+#else
+		p = strchr(p, '\0');
+		res = PyString_FromStringAndSize(s, (int)(p-s));
+#endif
 	}
 
 	LEAVE_OVERLAP_TCL
@@ -1181,7 +1191,7 @@ Tkapp_SplitList(PyObject *self, PyObject *args)
 	PyObject *v;
 	int i;
 
-	if (!PyArg_ParseTuple(args, "s:splitlist", &list))
+	if (!PyArg_ParseTuple(args, "et:splitlist", "utf-8", &list))
 		return NULL;
 
 	if (Tcl_SplitList(Tkapp_Interp(self), list, &argc, &argv) == TCL_ERROR)
@@ -1209,7 +1219,7 @@ Tkapp_Split(PyObject *self, PyObject *args)
 {
 	char *list;
 
-	if (!PyArg_ParseTuple(args, "s:split", &list))
+	if (!PyArg_ParseTuple(args, "et:split", "utf-8", &list))
 		return NULL;
 	return Split(list);
 }
@@ -1575,8 +1585,8 @@ Tktt_Repr(PyObject *self)
 	TkttObject *v = (TkttObject *)self;
 	char buf[100];
 
-	sprintf(buf, "<tktimertoken at %p%s>", v,
-		v->func == NULL ? ", handler deleted" : "");
+	PyOS_snprintf(buf, sizeof(buf), "<tktimertoken at %p%s>", v,
+	                v->func == NULL ? ", handler deleted" : "");
 	return PyString_FromString(buf);
 }
 
@@ -1852,7 +1862,7 @@ _bump(FlattenContext* context, int size)
 
 	context->maxsize = maxsize;
 
-	return _PyTuple_Resize(&context->tuple, maxsize, 0) >= 0;
+	return _PyTuple_Resize(&context->tuple, maxsize) >= 0;
 }
 
 static int
@@ -1936,7 +1946,7 @@ Tkinter_Flatten(PyObject* self, PyObject* args)
 	if (!_flatten1(&context, item,0))
 		return NULL;
 
-	if (_PyTuple_Resize(&context.tuple, context.size, 0))
+	if (_PyTuple_Resize(&context.tuple, context.size))
 		return NULL;
 
 	return context.tuple;
@@ -2132,6 +2142,22 @@ init_tkinter(void)
 
 	Tktt_Type.ob_type = &PyType_Type;
 	PyDict_SetItemString(d, "TkttType", (PyObject *)&Tktt_Type);
+
+
+#ifdef TK_AQUA
+	/* Tk_MacOSXSetupTkNotifier must be called before Tcl's subsystems
+	 * start waking up.  Note that Tcl_FindExecutable will do this, this
+	 * code must be above it! The original warning from
+	 * tkMacOSXAppInit.c is copied below.
+	 *
+	 * NB - You have to swap in the Tk Notifier BEFORE you start up the
+	 * Tcl interpreter for now.  It probably should work to do this
+	 * in the other order, but for now it doesn't seem to.
+	 *
+	 */
+	Tk_MacOSXSetupTkNotifier();
+#endif
+
 
 	/* This helps the dynamic loader; in Unicode aware Tcl versions
 	   it also helps Tcl find its encodings. */

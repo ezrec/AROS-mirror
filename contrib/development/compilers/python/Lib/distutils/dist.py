@@ -13,7 +13,6 @@ import sys, os, string, re
 from types import *
 from copy import copy
 from distutils.errors import *
-from distutils import sysconfig
 from distutils.fancy_getopt import FancyGetopt, translate_longopt
 from distutils.util import check_environ, strtobool, rfc822_escape
 
@@ -77,10 +76,10 @@ class Distribution:
          "print the maintainer's email address if known, else the author's"),
         ('url', None,
          "print the URL for this package"),
-        ('licence', None,
-         "print the licence of the package"),
         ('license', None,
-         "alias for --licence"),
+         "print the license of the package"),
+        ('licence', None,
+         "alias for --license"),
         ('description', None,
          "print the package description"),
         ('long-description', None,
@@ -98,7 +97,7 @@ class Distribution:
 
 
     # -- Creation/initialization methods -------------------------------
-    
+
     def __init__ (self, attrs=None):
         """Construct a new Distribution instance: initialize all the
         attributes of a Distribution, and then use 'attrs' (a dictionary
@@ -123,9 +122,7 @@ class Distribution:
         # worth it.  Also delegate 'get_XXX()' methods to the 'metadata'
         # object in a sneaky and underhanded (but efficient!) way.
         self.metadata = DistributionMetadata()
-        method_basenames = dir(self.metadata) + \
-                           ['fullname', 'contact', 'contact_email']
-        for basename in method_basenames:
+        for basename in self.metadata._METHOD_BASENAMES:
             method_name = "get_" + basename
             setattr(self, method_name, getattr(self.metadata, method_name))
 
@@ -211,7 +208,7 @@ class Distribution:
                           "invalid distribution option '%s'" % key
 
         self.finalize_options()
-        
+
     # __init__ ()
 
 
@@ -254,7 +251,7 @@ class Distribution:
                     print indent + "  " + line
 
     # dump_option_dicts ()
-            
+
 
 
     # -- Config file finding/parsing methods ---------------------------
@@ -265,14 +262,11 @@ class Distribution:
         should be parsed.  The filenames returned are guaranteed to exist
         (modulo nasty race conditions).
 
-        On Unix, there are three possible config files: pydistutils.cfg in
-        the Distutils installation directory (ie. where the top-level
-        Distutils __inst__.py file lives), .pydistutils.cfg in the user's
-        home directory, and setup.cfg in the current directory.
-
-        On Windows and Mac OS, there are two possible config files:
-        pydistutils.cfg in the Python installation directory (sys.prefix)
-        and setup.cfg in the current directory.
+        There are three possible config files: distutils.cfg in the
+        Distutils installation directory (ie. where the top-level
+        Distutils __inst__.py file lives), a file in the user's home
+        directory named .pydistutils.cfg on Unix and pydistutils.cfg
+        on Windows/Mac, and setup.cfg in the current directory.
         """
         files = []
         check_environ()
@@ -376,15 +370,15 @@ class Distribution:
         help).
         """
         #
-        # We now have enough information to show the Macintosh dialog that allows
-        # the user to interactively specify the "command line".
+        # We now have enough information to show the Macintosh dialog
+        # that allows the user to interactively specify the "command line".
         #
         if sys.platform == 'mac':
             import EasyDialogs
             cmdlist = self.get_command_list()
             self.script_args = EasyDialogs.GetArgv(
                 self.global_options + self.display_options, cmdlist)
- 
+
         # We have to parse the command line a bit at a time -- global
         # options, then the first command, then its options, and so on --
         # because each command will be handled by a different class, and
@@ -395,14 +389,14 @@ class Distribution:
         self.commands = []
         parser = FancyGetopt(self.global_options + self.display_options)
         parser.set_negative_aliases(self.negative_opt)
-        parser.set_aliases({'license': 'licence'})
+        parser.set_aliases({'licence': 'license'})
         args = parser.getopt(args=self.script_args, object=self)
         option_order = parser.get_option_order()
 
         # for display options we return immediately
         if self.handle_display_options(option_order):
             return
-            
+
         while args:
             args = self._parse_command_opts(parser, args)
             if args is None:            # user asked for help (and got it)
@@ -509,12 +503,12 @@ class Distribution:
                     if callable(func):
                         func()
                     else:
-                        raise DistutilsClassError, \
-                            ("invalid help function %s for help option '%s': "
-                             "must be a callable object (function, etc.)") % \
-                            (`func`, help_option)
+                        raise DistutilsClassError(
+                            "invalid help function %s for help option '%s': "
+                            "must be a callable object (function, etc.)"
+                            % (`func`, help_option))
 
-            if help_option_found: 
+            if help_option_found:
                 return
 
         # Put the options from the command-line into their official
@@ -580,7 +574,7 @@ class Distribution:
             print
 
         for command in self.commands:
-            if type(command) is ClassType and issubclass(klass, Command):
+            if type(command) is ClassType and issubclass(command, Command):
                 klass = command
             else:
                 klass = self.get_command_class(command)
@@ -807,7 +801,7 @@ class Distribution:
         (from 'self.command_options').
         """
         from distutils.core import DEBUG
-        
+
         command_name = command_obj.get_command_name()
         if option_dict is None:
             option_dict = self.get_option_dict(command_name)
@@ -847,7 +841,7 @@ class Distribution:
         user-supplied values from the config files and command line.
         You'll have to re-finalize the command object (by calling
         'finalize_options()' or 'ensure_finalized()') before using it for
-        real.  
+        real.
 
         'command' should be a command name (string) or command object.  If
         'reinit_subcommands' is true, also reinitializes the command's
@@ -874,11 +868,11 @@ class Distribution:
 
         if reinit_subcommands:
             for sub in command.get_sub_commands():
-                self.reinitialize_command(sub, reinit_subcommands)            
+                self.reinitialize_command(sub, reinit_subcommands)
 
         return command
 
-        
+
     # -- Methods that operate on the Distribution ----------------------
 
     def announce (self, msg, level=1):
@@ -963,6 +957,12 @@ class DistributionMetadata:
     author, and so forth.
     """
 
+    _METHOD_BASENAMES = ("name", "version", "author", "author_email",
+                         "maintainer", "maintainer_email", "url",
+                         "license", "description", "long_description",
+                         "keywords", "platforms", "fullname", "contact",
+                         "contact_email", "licence")
+
     def __init__ (self):
         self.name = None
         self.version = None
@@ -971,12 +971,12 @@ class DistributionMetadata:
         self.maintainer = None
         self.maintainer_email = None
         self.url = None
-        self.licence = None
+        self.license = None
         self.description = None
         self.long_description = None
         self.keywords = None
         self.platforms = None
-        
+
     def write_pkg_info (self, base_dir):
         """Write the PKG-INFO file into the release tree.
         """
@@ -990,7 +990,7 @@ class DistributionMetadata:
         pkg_info.write('Home-page: %s\n' % self.get_url() )
         pkg_info.write('Author: %s\n' % self.get_contact() )
         pkg_info.write('Author-email: %s\n' % self.get_contact_email() )
-        pkg_info.write('License: %s\n' % self.get_licence() )
+        pkg_info.write('License: %s\n' % self.get_license() )
 
         long_desc = rfc822_escape( self.get_long_description() )
         pkg_info.write('Description: %s\n' % long_desc)
@@ -1003,16 +1003,16 @@ class DistributionMetadata:
             pkg_info.write('Platform: %s\n' % platform )
 
         pkg_info.close()
-        
+
     # write_pkg_info ()
-    
+
     # -- Metadata query methods ----------------------------------------
 
     def get_name (self):
         return self.name or "UNKNOWN"
 
     def get_version(self):
-        return self.version or "???"
+        return self.version or "0.0.0"
 
     def get_fullname (self):
         return "%s-%s" % (self.get_name(), self.get_version())
@@ -1042,8 +1042,9 @@ class DistributionMetadata:
     def get_url(self):
         return self.url or "UNKNOWN"
 
-    def get_licence(self):
-        return self.licence or "UNKNOWN"
+    def get_license(self):
+        return self.license or "UNKNOWN"
+    get_licence = get_license
 
     def get_description(self):
         return self.description or "UNKNOWN"

@@ -7,13 +7,13 @@ Implements the Distutils 'build_scripts' command."""
 __revision__ = "$Id$"
 
 import sys, os, re
+from distutils import sysconfig
 from distutils.core import Command
 from distutils.dep_util import newer
+from distutils.util import convert_path
 
-# check if Python is called on the first line with this expression.
-# This expression will leave lines using /usr/bin/env alone; presumably
-# the script author knew what they were doing...)
-first_line_re = re.compile(r'^#!(?!\s*/usr/bin/env\b).*python(\s+.*)?')
+# check if Python is called on the first line with this expression
+first_line_re = re.compile(r'^#!.*python(\s+.*)?$')
 
 class build_scripts (Command):
 
@@ -52,10 +52,10 @@ class build_scripts (Command):
         ie. starts with "\#!" and contains "python"), then adjust the first
         line to refer to the current Python interpreter as we copy.
         """
-        outfiles = []
         self.mkpath(self.build_dir)
         for script in self.scripts:
             adjust = 0
+            script = convert_path(script)
             outfile = os.path.join(self.build_dir, os.path.basename(script))
 
             if not self.force and not newer(script, outfile):
@@ -80,15 +80,23 @@ class build_scripts (Command):
                 match = first_line_re.match(first_line)
                 if match:
                     adjust = 1
-                    post_interp = match.group(1)
+                    post_interp = match.group(1) or ''
 
             if adjust:
                 self.announce("copying and adjusting %s -> %s" %
                               (script, self.build_dir))
                 if not self.dry_run:
                     outf = open(outfile, "w")
-                    outf.write("#!%s%s\n" % 
-                               (os.path.normpath(sys.executable), post_interp))
+                    if not sysconfig.python_build:
+                        outf.write("#!%s%s\n" % 
+                                   (os.path.normpath(sys.executable),
+                                    post_interp))
+                    else:
+                        outf.write("#!%s%s" %
+                                   (os.path.join(
+                            sysconfig.get_config_var("BINDIR"),
+                            "python" + sysconfig.get_config_var("EXE")),
+                                    post_interp))
                     outf.writelines(f.readlines())
                     outf.close()
                 if f:

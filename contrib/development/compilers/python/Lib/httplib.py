@@ -66,8 +66,10 @@ Req-started-unread-response    _CS_REQ_STARTED    <response_class>
 Req-sent-unread-response       _CS_REQ_SENT       <response_class>
 """
 
-import socket
+import errno
 import mimetools
+import socket
+from urlparse import urlsplit
 
 try:
     from cStringIO import StringIO
@@ -357,10 +359,24 @@ class HTTPConnection:
 
     def connect(self):
         """Connect to the host and port specified in __init__."""
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        if self.debuglevel > 0:
-            print "connect: (%s, %s)" % (self.host, self.port)
-        self.sock.connect((self.host, self.port))
+        msg = "getaddrinfo returns an empty list"
+        for res in socket.getaddrinfo(self.host, self.port, 0, socket.SOCK_STREAM):
+            af, socktype, proto, canonname, sa = res
+            try:
+                self.sock = socket.socket(af, socktype, proto)
+                if self.debuglevel > 0:
+                    print "connect: (%s, %s)" % (self.host, self.port)
+                self.sock.connect(sa)
+            except socket.error, msg:
+                if self.debuglevel > 0:
+                    print 'connect fail:', (self.host, self.port)
+                if self.sock:
+                    self.sock.close()
+                self.sock = None
+                continue
+            break
+        if not self.sock:
+            raise socket.error, msg
 
     def close(self):
         """Close the connection to the HTTP server."""
@@ -388,13 +404,13 @@ class HTTPConnection:
         if self.debuglevel > 0:
             print "send:", repr(str)
         try:
-            self.sock.send(str)
+            self.sock.sendall(str)
         except socket.error, v:
             if v[0] == 32:      # Broken pipe
                 self.close()
             raise
 
-    def putrequest(self, method, url):
+    def putrequest(self, method, url, skip_host=0):
         """Send a request to the server.
 
         `method' specifies an HTTP request method, e.g. 'GET'.
@@ -445,18 +461,31 @@ class HTTPConnection:
         if self._http_vsn == 11:
             # Issue some standard headers for better HTTP/1.1 compliance
 
-            # this header is issued *only* for HTTP/1.1 connections. more
-            # specifically, this means it is only issued when the client uses
-            # the new HTTPConnection() class. backwards-compat clients will
-            # be using HTTP/1.0 and those clients may be issuing this header
-            # themselves. we should NOT issue it twice; some web servers (such
-            # as Apache) barf when they see two Host: headers
+            if not skip_host:
+                # this header is issued *only* for HTTP/1.1
+                # connections. more specifically, this means it is
+                # only issued when the client uses the new
+                # HTTPConnection() class. backwards-compat clients
+                # will be using HTTP/1.0 and those clients may be
+                # issuing this header themselves. we should NOT issue
+                # it twice; some web servers (such as Apache) barf
+                # when they see two Host: headers
 
-            # if we need a non-standard port,include it in the header
-            if self.port == HTTP_PORT:
-                self.putheader('Host', self.host)
-            else:
-                self.putheader('Host', "%s:%s" % (self.host, self.port))
+                # If we need a non-standard port,include it in the
+                # header.  If the request is going through a proxy,
+                # but the host of the actual URL, not the host of the
+                # proxy.
+
+                netloc = ''
+                if url.startswith('http'):
+                    nil, netloc, nil, nil, nil = urlsplit(url)
+
+                if netloc:
+                    self.putheader('Host', netloc)
+                elif self.port == HTTP_PORT:
+                    self.putheader('Host', self.host)
+                else:
+                    self.putheader('Host', "%s:%s" % (self.host, self.port))
 
             # note: we are assuming that clients will not attempt to set these
             #       headers since *this* library must deal with the
@@ -514,7 +543,14 @@ class HTTPConnection:
             self._send_request(method, url, body, headers)
 
     def _send_request(self, method, url, body, headers):
-        self.putrequest(method, url)
+        # If headers already contains a host header, then define the
+        # optional skip_host argument to putrequest().  The check is
+        # harder because field names are case insensitive.
+        if (headers.has_key('Host')
+            or [k for k in headers.iterkeys() if k.lower() == "host"]):
+            self.putrequest(method, url, skip_host=1)
+        else:
+            self.putrequest(method, url)
 
         if body:
             self.putheader('Content-Length', str(len(body)))
@@ -590,14 +626,27 @@ class FakeSocket:
         while 1:
             try:
                 buf = self.__ssl.read()
-            except socket.sslerror, msg:
-                break
+            except socket.sslerror, err:
+                if (err[0] == socket.SSL_ERROR_WANT_READ
+                    or err[0] == socket.SSL_ERROR_WANT_WRITE
+                    or 0):
+                    continue
+                if err[0] == socket.SSL_ERROR_ZERO_RETURN:
+                    break
+                raise
+            except socket.error, err:
+                if err[0] == errno.EINTR:
+                    continue
+                raise
             if buf == '':
                 break
             msgbuf.append(buf)
         return StringIO("".join(msgbuf))
 
     def send(self, stuff, flags = 0):
+        return self.__ssl.write(stuff)
+
+    def sendall(self, stuff, flags = 0):
         return self.__ssl.write(stuff)
 
     def recv(self, len = 1024, flags = 0):
@@ -650,7 +699,7 @@ class HTTP:
 
     _connection_class = HTTPConnection
 
-    def __init__(self, host='', port=None, **x509):
+    def __init__(self, host='', port=None):
         "Provide a default host, since the superclass requires one."
 
         # some joker passed 0 explicitly, meaning default port
@@ -660,18 +709,19 @@ class HTTP:
         # Note that we may pass an empty string as the host; this will throw
         # an error when we attempt to connect. Presumably, the client code
         # will call connect before then, with a proper host.
-        self._conn = self._connection_class(host, port)
-        # set up delegation to flesh out interface
-        self.send = self._conn.send
-        self.putrequest = self._conn.putrequest
-        self.endheaders = self._conn.endheaders
-        self._conn._http_vsn = self._http_vsn
-        self._conn._http_vsn_str = self._http_vsn_str
+        self._setup(self._connection_class(host, port))
 
-        # we never actually use these for anything, but we keep them here for
-        # compatibility with post-1.5.2 CVS.
-        self.key_file = x509.get('key_file')
-        self.cert_file = x509.get('cert_file')
+    def _setup(self, conn):
+        self._conn = conn
+
+        # set up delegation to flesh out interface
+        self.send = conn.send
+        self.putrequest = conn.putrequest
+        self.endheaders = conn.endheaders
+        self.set_debuglevel = conn.set_debuglevel
+
+        conn._http_vsn = self._http_vsn
+        conn._http_vsn_str = self._http_vsn_str
 
         self.file = None
 
@@ -681,9 +731,6 @@ class HTTP:
         if host is not None:
             self._conn._set_hostport(host, port)
         self._conn.connect()
-
-    def set_debuglevel(self, debuglevel):
-        self._conn.set_debuglevel(debuglevel)
 
     def getfile(self):
         "Provide a getfile, since the superclass' does not use this concept."
@@ -741,6 +788,19 @@ if hasattr(socket, 'ssl'):
         """
 
         _connection_class = HTTPSConnection
+
+        def __init__(self, host='', port=None, **x509):
+            # provide a default host, pass the X509 cert info
+
+            # urf. compensate for bad input.
+            if port == 0:
+                port = None
+            self._setup(self._connection_class(host, port, **x509))
+
+            # we never actually use these for anything, but we keep them
+            # here for compatibility with post-1.5.2 CVS.
+            self.key_file = x509.get('key_file')
+            self.cert_file = x509.get('cert_file')
 
 
 class HTTPException(Exception):
@@ -820,6 +880,17 @@ def test():
         for header in headers.headers: print header.strip()
     print
     print h.getfile().read()
+
+    # minimal test that code to extract host from url works
+    class HTTP11(HTTP):
+        _http_vsn = 11
+        _http_vsn_str = 'HTTP/1.1'
+
+    h = HTTP11('www.python.org')
+    h.putrequest('GET', 'http://www.python.org/~jeremy/')
+    h.endheaders()
+    h.getreply()
+    h.close()
 
     if hasattr(socket, 'ssl'):
         host = 'sourceforge.net'

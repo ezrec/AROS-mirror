@@ -22,11 +22,17 @@ PyIntObject _Py_TrueStruct = {
 	1
 };
 
-static PyObject *
+/* Return 1 if exception raised, 0 if caller should retry using longs */
+static int
 err_ovf(char *msg)
 {
-	PyErr_SetString(PyExc_OverflowError, msg);
-	return NULL;
+	if (PyErr_Warn(PyExc_OverflowWarning, msg) < 0) {
+		if (PyErr_ExceptionMatches(PyExc_OverflowWarning))
+			PyErr_SetString(PyExc_OverflowError, msg);
+		return 1;
+	}
+	else
+		return 0;
 }
 
 /* Integers are quite normal objects, to make object handling uniform.
@@ -128,8 +134,12 @@ PyInt_FromLong(long ival)
 static void
 int_dealloc(PyIntObject *v)
 {
-	v->ob_type = (struct _typeobject *)free_list;
-	free_list = v;
+	if (PyInt_CheckExact(v)) {
+		v->ob_type = (struct _typeobject *)free_list;
+		free_list = v;
+	}
+	else
+		v->ob_type->tp_free((PyObject *)v);
 }
 
 long
@@ -138,16 +148,16 @@ PyInt_AsLong(register PyObject *op)
 	PyNumberMethods *nb;
 	PyIntObject *io;
 	long val;
-	
+
 	if (op && PyInt_Check(op))
 		return PyInt_AS_LONG((PyIntObject*) op);
-	
+
 	if (op == NULL || (nb = op->ob_type->tp_as_number) == NULL ||
 	    nb->nb_int == NULL) {
 		PyErr_SetString(PyExc_TypeError, "an integer is required");
 		return -1;
 	}
-	
+
 	io = (PyIntObject*) (*nb->nb_int) (op);
 	if (io == NULL)
 		return -1;
@@ -156,10 +166,10 @@ PyInt_AsLong(register PyObject *op)
 				"nb_int should return int object");
 		return -1;
 	}
-	
+
 	val = PyInt_AS_LONG(io);
 	Py_DECREF(io);
-	
+
 	return val;
 }
 
@@ -188,12 +198,14 @@ PyInt_FromString(char *s, char **pend, int base)
 		end++;
 	if (*end != '\0') {
   bad:
-		sprintf(buffer, "invalid literal for int(): %.200s", s);
+		PyOS_snprintf(buffer, sizeof(buffer),
+			      "invalid literal for int(): %.200s", s);
 		PyErr_SetString(PyExc_ValueError, buffer);
 		return NULL;
 	}
 	else if (errno != 0) {
-		sprintf(buffer, "int() literal too large: %.200s", s);
+		PyOS_snprintf(buffer, sizeof(buffer),
+			      "int() literal too large: %.200s", s);
 		PyErr_SetString(PyExc_ValueError, buffer);
 		return NULL;
 	}
@@ -202,11 +214,12 @@ PyInt_FromString(char *s, char **pend, int base)
 	return PyInt_FromLong(x);
 }
 
+#ifdef Py_USING_UNICODE
 PyObject *
 PyInt_FromUnicode(Py_UNICODE *s, int length, int base)
 {
 	char buffer[256];
-	
+
 	if (length >= sizeof(buffer)) {
 		PyErr_SetString(PyExc_ValueError,
 				"int() literal too large to convert");
@@ -216,6 +229,7 @@ PyInt_FromUnicode(Py_UNICODE *s, int length, int base)
 		return NULL;
 	return PyInt_FromString(buffer, NULL, base);
 }
+#endif
 
 /* Methods */
 
@@ -244,8 +258,8 @@ int_print(PyIntObject *v, FILE *fp, int flags)
 static PyObject *
 int_repr(PyIntObject *v)
 {
-	char buf[20];
-	sprintf(buf, "%ld", v->ob_ival);
+	char buf[64];
+	PyOS_snprintf(buf, sizeof(buf), "%ld", v->ob_ival);
 	return PyString_FromString(buf);
 }
 
@@ -275,9 +289,11 @@ int_add(PyIntObject *v, PyIntObject *w)
 	CONVERT_TO_LONG(v, a);
 	CONVERT_TO_LONG(w, b);
 	x = a + b;
-	if ((x^a) < 0 && (x^b) < 0)
-		return err_ovf("integer addition");
-	return PyInt_FromLong(x);
+	if ((x^a) >= 0 || (x^b) >= 0)
+		return PyInt_FromLong(x);
+	if (err_ovf("integer addition"))
+		return NULL;
+	return PyLong_Type.tp_as_number->nb_add((PyObject *)v, (PyObject *)w);
 }
 
 static PyObject *
@@ -287,54 +303,58 @@ int_sub(PyIntObject *v, PyIntObject *w)
 	CONVERT_TO_LONG(v, a);
 	CONVERT_TO_LONG(w, b);
 	x = a - b;
-	if ((x^a) < 0 && (x^~b) < 0)
-		return err_ovf("integer subtraction");
-	return PyInt_FromLong(x);
+	if ((x^a) >= 0 || (x^~b) >= 0)
+		return PyInt_FromLong(x);
+	if (err_ovf("integer subtraction"))
+		return NULL;
+	return PyLong_Type.tp_as_number->nb_subtract((PyObject *)v,
+						     (PyObject *)w);
 }
 
 /*
-Integer overflow checking used to be done using a double, but on 64
-bit machines (where both long and double are 64 bit) this fails
-because the double doesn't have enough precision.  John Tromp suggests
-the following algorithm:
+Integer overflow checking for * is painful:  Python tried a couple ways, but
+they didn't work on all platforms, or failed in endcases (a product of
+-sys.maxint-1 has been a particular pain).
 
-Suppose again we normalize a and b to be nonnegative.
-Let ah and al (bh and bl) be the high and low 32 bits of a (b, resp.).
-Now we test ah and bh against zero and get essentially 3 possible outcomes.
+Here's another way:
 
-1) both ah and bh > 0 : then report overflow
+The native long product x*y is either exactly right or *way* off, being
+just the last n bits of the true product, where n is the number of bits
+in a long (the delivered product is the true product plus i*2**n for
+some integer i).
 
-2) both ah and bh = 0 : then compute a*b and report overflow if it comes out
-                        negative
+The native double product (double)x * (double)y is subject to three
+rounding errors:  on a sizeof(long)==8 box, each cast to double can lose
+info, and even on a sizeof(long)==4 box, the multiplication can lose info.
+But, unlike the native long product, it's not in *range* trouble:  even
+if sizeof(long)==32 (256-bit longs), the product easily fits in the
+dynamic range of a double.  So the leading 50 (or so) bits of the double
+product are correct.
 
-3) ah > 0 and bh = 0  : compute ah*bl and report overflow if it's >= 2^31
-                        compute al*bl and report overflow if it's negative
-                        add (ah*bl)<<32 to al*bl and report overflow if
-                        it's negative
-
-In case of no overflow the result is then negated if necessary.
-
-The majority of cases will be 2), in which case this method is the same as
-what I suggested before. If multiplication is expensive enough, then the
-other method is faster on case 3), but also more work to program, so I
-guess the above is the preferred solution.
-
+We check these two ways against each other, and declare victory if they're
+approximately the same.  Else, because the native long product is the only
+one that can lose catastrophic amounts of information, it's the native long
+product that must have overflowed.
 */
 
 static PyObject *
 int_mul(PyObject *v, PyObject *w)
 {
-	long a, b, ah, bh, x, y;
-	int s = 1;
+	long a, b;
+	long longprod;			/* a*b in native long arithmetic */
+	double doubled_longprod;	/* (double)longprod */
+	double doubleprod;		/* (double)a * (double)b */
 
-	if (v->ob_type->tp_as_sequence &&
-			v->ob_type->tp_as_sequence->sq_repeat) {
+	if (!PyInt_Check(v) &&
+	    v->ob_type->tp_as_sequence &&
+	    v->ob_type->tp_as_sequence->sq_repeat) {
 		/* sequence * int */
 		a = PyInt_AsLong(w);
 		return (*v->ob_type->tp_as_sequence->sq_repeat)(v, a);
 	}
-	else if (w->ob_type->tp_as_sequence &&
-			w->ob_type->tp_as_sequence->sq_repeat) {
+	if (!PyInt_Check(w) &&
+	    w->ob_type->tp_as_sequence &&
+	    w->ob_type->tp_as_sequence->sq_repeat) {
 		/* int * sequence */
 		a = PyInt_AsLong(v);
 		return (*w->ob_type->tp_as_sequence->sq_repeat)(w, a);
@@ -342,112 +362,59 @@ int_mul(PyObject *v, PyObject *w)
 
 	CONVERT_TO_LONG(v, a);
 	CONVERT_TO_LONG(w, b);
-	ah = a >> (LONG_BIT/2);
-	bh = b >> (LONG_BIT/2);
+	longprod = a * b;
+	doubleprod = (double)a * (double)b;
+	doubled_longprod = (double)longprod;
 
-	/* Quick test for common case: two small positive ints */
+	/* Fast path for normal case:  small multiplicands, and no info
+	   is lost in either method. */
+	if (doubled_longprod == doubleprod)
+		return PyInt_FromLong(longprod);
 
-	if (ah == 0 && bh == 0) {
-		x = a*b;
-		if (x < 0)
-			goto bad;
-		return PyInt_FromLong(x);
+	/* Somebody somewhere lost info.  Close enough, or way off?  Note
+	   that a != 0 and b != 0 (else doubled_longprod == doubleprod == 0).
+	   The difference either is or isn't significant compared to the
+	   true value (of which doubleprod is a good approximation).
+	*/
+	{
+		const double diff = doubled_longprod - doubleprod;
+		const double absdiff = diff >= 0.0 ? diff : -diff;
+		const double absprod = doubleprod >= 0.0 ? doubleprod :
+							  -doubleprod;
+		/* absdiff/absprod <= 1/32 iff
+		   32 * absdiff <= absprod -- 5 good bits is "close enough" */
+		if (32.0 * absdiff <= absprod)
+			return PyInt_FromLong(longprod);
+		else if (err_ovf("integer multiplication"))
+			return NULL;
+		else
+			return PyLong_Type.tp_as_number->nb_multiply(v, w);
 	}
-
-	/* Arrange that a >= b >= 0 */
-
-	if (a < 0) {
-		a = -a;
-		if (a < 0) {
-			/* Largest negative */
-			if (b == 0 || b == 1) {
-				x = a*b;
-				goto ok;
-			}
-			else
-				goto bad;
-		}
-		s = -s;
-		ah = a >> (LONG_BIT/2);
-	}
-	if (b < 0) {
-		b = -b;
-		if (b < 0) {
-			/* Largest negative */
-			if (a == 0 || (a == 1 && s == 1)) {
-				x = a*b;
-				goto ok;
-			}
-			else
-				goto bad;
-		}
-		s = -s;
-		bh = b >> (LONG_BIT/2);
-	}
-
-	/* 1) both ah and bh > 0 : then report overflow */
-
-	if (ah != 0 && bh != 0)
-		goto bad;
-
-	/* 2) both ah and bh = 0 : then compute a*b and report
-				   overflow if it comes out negative */
-
-	if (ah == 0 && bh == 0) {
-		x = a*b;
-		if (x < 0)
-			goto bad;
-		return PyInt_FromLong(x*s);
-	}
-
-	if (a < b) {
-		/* Swap */
-		x = a;
-		a = b;
-		b = x;
-		ah = bh;
-		/* bh not used beyond this point */
-	}
-
-	/* 3) ah > 0 and bh = 0  : compute ah*bl and report overflow if
-				   it's >= 2^31
-                        compute al*bl and report overflow if it's negative
-                        add (ah*bl)<<32 to al*bl and report overflow if
-                        it's negative
-			(NB b == bl in this case, and we make a = al) */
-
-	y = ah*b;
-	if (y >= (1L << (LONG_BIT/2 - 1)))
-		goto bad;
-	a &= (1L << (LONG_BIT/2)) - 1;
-	x = a*b;
-	if (x < 0)
-		goto bad;
-	x += y << (LONG_BIT/2);
-	if (x < 0)
-		goto bad;
- ok:
-	return PyInt_FromLong(x * s);
-
- bad:
-	return err_ovf("integer multiplication");
 }
 
-static int
+/* Return type of i_divmod */
+enum divmod_result {
+	DIVMOD_OK,		/* Correct result */
+	DIVMOD_OVERFLOW,	/* Overflow, try again using longs */
+	DIVMOD_ERROR		/* Exception raised */
+};
+
+static enum divmod_result
 i_divmod(register long x, register long y,
          long *p_xdivy, long *p_xmody)
 {
 	long xdivy, xmody;
-	
+
 	if (y == 0) {
 		PyErr_SetString(PyExc_ZeroDivisionError,
 				"integer division or modulo by zero");
-		return -1;
+		return DIVMOD_ERROR;
 	}
 	/* (-sys.maxint-1)/-1 is the only overflow case. */
 	if (y == -1 && x < 0 && x == -x) {
-		err_ovf("integer division");
-		return -1;
+		if (err_ovf("integer division"))
+			return DIVMOD_ERROR;
+		return DIVMOD_OVERFLOW;
 	}
 	xdivy = x / y;
 	xmody = x - xdivy * y;
@@ -463,7 +430,7 @@ i_divmod(register long x, register long y,
 	}
 	*p_xdivy = xdivy;
 	*p_xmody = xmody;
-	return 0;
+	return DIVMOD_OK;
 }
 
 static PyObject *
@@ -473,9 +440,49 @@ int_div(PyIntObject *x, PyIntObject *y)
 	long d, m;
 	CONVERT_TO_LONG(x, xi);
 	CONVERT_TO_LONG(y, yi);
-	if (i_divmod(xi, yi, &d, &m) < 0)
+	switch (i_divmod(xi, yi, &d, &m)) {
+	case DIVMOD_OK:
+		return PyInt_FromLong(d);
+	case DIVMOD_OVERFLOW:
+		return PyLong_Type.tp_as_number->nb_divide((PyObject *)x,
+							   (PyObject *)y);
+	default:
 		return NULL;
-	return PyInt_FromLong(d);
+	}
+}
+
+static PyObject *
+int_classic_div(PyIntObject *x, PyIntObject *y)
+{
+	long xi, yi;
+	long d, m;
+	CONVERT_TO_LONG(x, xi);
+	CONVERT_TO_LONG(y, yi);
+	if (Py_DivisionWarningFlag &&
+	    PyErr_Warn(PyExc_DeprecationWarning, "classic int division") < 0)
+		return NULL;
+	switch (i_divmod(xi, yi, &d, &m)) {
+	case DIVMOD_OK:
+		return PyInt_FromLong(d);
+	case DIVMOD_OVERFLOW:
+		return PyLong_Type.tp_as_number->nb_divide((PyObject *)x,
+							   (PyObject *)y);
+	default:
+		return NULL;
+	}
+}
+
+static PyObject *
+int_true_divide(PyObject *v, PyObject *w)
+{
+	/* If they aren't both ints, give someone else a chance.  In
+	   particular, this lets int/long get handled by longs, which
+	   underflows to 0 gracefully if the long is too big to convert
+	   to float. */
+	if (PyInt_Check(v) && PyInt_Check(w))
+		return PyFloat_Type.tp_as_number->nb_true_divide(v, w);
+	Py_INCREF(Py_NotImplemented);
+	return Py_NotImplemented;
 }
 
 static PyObject *
@@ -485,9 +492,15 @@ int_mod(PyIntObject *x, PyIntObject *y)
 	long d, m;
 	CONVERT_TO_LONG(x, xi);
 	CONVERT_TO_LONG(y, yi);
-	if (i_divmod(xi, yi, &d, &m) < 0)
+	switch (i_divmod(xi, yi, &d, &m)) {
+	case DIVMOD_OK:
+		return PyInt_FromLong(m);
+	case DIVMOD_OVERFLOW:
+		return PyLong_Type.tp_as_number->nb_remainder((PyObject *)x,
+							      (PyObject *)y);
+	default:
 		return NULL;
-	return PyInt_FromLong(m);
+	}
 }
 
 static PyObject *
@@ -497,32 +510,40 @@ int_divmod(PyIntObject *x, PyIntObject *y)
 	long d, m;
 	CONVERT_TO_LONG(x, xi);
 	CONVERT_TO_LONG(y, yi);
-	if (i_divmod(xi, yi, &d, &m) < 0)
+	switch (i_divmod(xi, yi, &d, &m)) {
+	case DIVMOD_OK:
+		return Py_BuildValue("(ll)", d, m);
+	case DIVMOD_OVERFLOW:
+		return PyLong_Type.tp_as_number->nb_divmod((PyObject *)x,
+							   (PyObject *)y);
+	default:
 		return NULL;
-	return Py_BuildValue("(ll)", d, m);
+	}
 }
 
 static PyObject *
 int_pow(PyIntObject *v, PyIntObject *w, PyIntObject *z)
 {
-#if 1
 	register long iv, iw, iz=0, ix, temp, prev;
 	CONVERT_TO_LONG(v, iv);
 	CONVERT_TO_LONG(w, iw);
 	if (iw < 0) {
-		if (iv)
-			PyErr_SetString(PyExc_ValueError,
-					"cannot raise integer to a negative power");
-		else
-			PyErr_SetString(PyExc_ZeroDivisionError,
-					"cannot raise 0 to a negative power");
-		return NULL;
+		if ((PyObject *)z != Py_None) {
+			PyErr_SetString(PyExc_TypeError, "pow() 2nd argument "
+			     "cannot be negative when 3rd argument specified");
+			return NULL;
+		}
+		/* Return a float.  This works because we know that
+		   this calls float_pow() which converts its
+		   arguments to double. */
+		return PyFloat_Type.tp_as_number->nb_power(
+			(PyObject *)v, (PyObject *)w, (PyObject *)z);
 	}
  	if ((PyObject *)z != Py_None) {
 		CONVERT_TO_LONG(z, iz);
 		if (iz == 0) {
 			PyErr_SetString(PyExc_ValueError,
-					"pow() arg 3 cannot be 0");
+					"pow() 3rd argument cannot be 0");
 			return NULL;
 		}
 	}
@@ -538,19 +559,29 @@ int_pow(PyIntObject *v, PyIntObject *w, PyIntObject *z)
 	ix = 1;
 	while (iw > 0) {
 	 	prev = ix;	/* Save value for overflow check */
-	 	if (iw & 1) {	
+	 	if (iw & 1) {
 		 	ix = ix*temp;
 			if (temp == 0)
 				break; /* Avoid ix / 0 */
-			if (ix / temp != prev)
-				return err_ovf("integer exponentiation");
+			if (ix / temp != prev) {
+				if (err_ovf("integer exponentiation"))
+					return NULL;
+				return PyLong_Type.tp_as_number->nb_power(
+					(PyObject *)v,
+					(PyObject *)w,
+					(PyObject *)z);
+			}
 		}
 	 	iw >>= 1;	/* Shift exponent down by 1 bit */
 	        if (iw==0) break;
 	 	prev = temp;
 	 	temp *= temp;	/* Square the value of temp */
-	 	if (prev!=0 && temp/prev!=prev)
-			return err_ovf("integer exponentiation");
+	 	if (prev!=0 && temp/prev!=prev) {
+			if (err_ovf("integer exponentiation"))
+				return NULL;
+			return PyLong_Type.tp_as_number->nb_power(
+				(PyObject *)v, (PyObject *)w, (PyObject *)z);
+		}
 	 	if (iz) {
 			/* If we did a multiplication, perform a modulo */
 		 	ix = ix % iz;
@@ -559,37 +590,19 @@ int_pow(PyIntObject *v, PyIntObject *w, PyIntObject *z)
 	}
 	if (iz) {
 	 	long div, mod;
-	 	if (i_divmod(ix, iz, &div, &mod) < 0)
-			return(NULL);
-	 	ix=mod;
+		switch (i_divmod(ix, iz, &div, &mod)) {
+		case DIVMOD_OK:
+			ix = mod;
+			break;
+		case DIVMOD_OVERFLOW:
+			return PyLong_Type.tp_as_number->nb_power(
+				(PyObject *)v, (PyObject *)w, (PyObject *)z);
+		default:
+			return NULL;
+		}
 	}
 	return PyInt_FromLong(ix);
-#else
-	register long iv, iw, ix;
-	CONVERT_TO_LONG(v, iv);
-	CONVERT_TO_LONG(w, iw);
-	if (iw < 0) {
-		PyErr_SetString(PyExc_ValueError,
-				"integer to the negative power");
-		return NULL;
-	}
-	if ((PyObject *)z != Py_None) {
-		PyErr_SetString(PyExc_TypeError,
-				"pow(int, int, int) not yet supported");
-		return NULL;
-	}
-	ix = 1;
-	while (--iw >= 0) {
-		long prev = ix;
-		ix = ix * iv;
-		if (iv == 0)
-			break; /* 0 to some power -- avoid ix / 0 */
-		if (ix / iv != prev)
-			return err_ovf("integer exponentiation");
-	}
-	return PyInt_FromLong(ix);
-#endif
-}				
+}
 
 static PyObject *
 int_neg(PyIntObject *v)
@@ -597,16 +610,23 @@ int_neg(PyIntObject *v)
 	register long a, x;
 	a = v->ob_ival;
 	x = -a;
-	if (a < 0 && x < 0)
-		return err_ovf("integer negation");
+	if (a < 0 && x < 0) {
+		if (err_ovf("integer negation"))
+			return NULL;
+		return PyNumber_Negative(PyLong_FromLong(a));
+	}
 	return PyInt_FromLong(x);
 }
 
 static PyObject *
 int_pos(PyIntObject *v)
 {
-	Py_INCREF(v);
-	return (PyObject *)v;
+	if (PyInt_CheckExact(v)) {
+		Py_INCREF(v);
+		return (PyObject *)v;
+	}
+	else
+		return PyInt_FromLong(v->ob_ival);
 }
 
 static PyObject *
@@ -640,14 +660,12 @@ int_lshift(PyIntObject *v, PyIntObject *w)
 		PyErr_SetString(PyExc_ValueError, "negative shift count");
 		return NULL;
 	}
-	if (a == 0 || b == 0) {
-		Py_INCREF(v);
-		return (PyObject *) v;
-	}
+	if (a == 0 || b == 0)
+		return int_pos(v);
 	if (b >= LONG_BIT) {
 		return PyInt_FromLong(0L);
 	}
-	a = (unsigned long)a << b;
+	a = (long)((unsigned long)a << b);
 	return PyInt_FromLong(a);
 }
 
@@ -661,10 +679,8 @@ int_rshift(PyIntObject *v, PyIntObject *w)
 		PyErr_SetString(PyExc_ValueError, "negative shift count");
 		return NULL;
 	}
-	if (a == 0 || b == 0) {
-		Py_INCREF(v);
-		return (PyObject *) v;
-	}
+	if (a == 0 || b == 0)
+		return int_pos(v);
 	if (b >= LONG_BIT) {
 		if (a < 0)
 			a = -1;
@@ -704,6 +720,17 @@ int_or(PyIntObject *v, PyIntObject *w)
 	return PyInt_FromLong(a | b);
 }
 
+static int
+int_coerce(PyObject **pv, PyObject **pw)
+{
+	if (PyInt_Check(*pw)) {
+		Py_INCREF(*pv);
+		Py_INCREF(*pw);
+		return 0;
+	}
+	return 1; /* Can't do it */
+}
+
 static PyObject *
 int_int(PyIntObject *v)
 {
@@ -731,7 +758,7 @@ int_oct(PyIntObject *v)
 	if (x == 0)
 		strcpy(buf, "0");
 	else
-		sprintf(buf, "0%lo", x);
+		PyOS_snprintf(buf, sizeof(buf), "0%lo", x);
 	return PyString_FromString(buf);
 }
 
@@ -740,15 +767,79 @@ int_hex(PyIntObject *v)
 {
 	char buf[100];
 	long x = v -> ob_ival;
-	sprintf(buf, "0x%lx", x);
+	PyOS_snprintf(buf, sizeof(buf), "0x%lx", x);
 	return PyString_FromString(buf);
 }
+
+staticforward PyObject *
+int_subtype_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
+
+static PyObject *
+int_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+	PyObject *x = NULL;
+	int base = -909;
+	static char *kwlist[] = {"x", "base", 0};
+
+	if (type != &PyInt_Type)
+		return int_subtype_new(type, args, kwds); /* Wimp out */
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "|Oi:int", kwlist,
+					 &x, &base))
+		return NULL;
+	if (x == NULL)
+		return PyInt_FromLong(0L);
+	if (base == -909)
+		return PyNumber_Int(x);
+	if (PyString_Check(x))
+		return PyInt_FromString(PyString_AS_STRING(x), NULL, base);
+#ifdef Py_USING_UNICODE
+	if (PyUnicode_Check(x))
+		return PyInt_FromUnicode(PyUnicode_AS_UNICODE(x),
+					 PyUnicode_GET_SIZE(x),
+					 base);
+#endif
+	PyErr_SetString(PyExc_TypeError,
+			"int() can't convert non-string with explicit base");
+	return NULL;
+}
+
+/* Wimpy, slow approach to tp_new calls for subtypes of int:
+   first create a regular int from whatever arguments we got,
+   then allocate a subtype instance and initialize its ob_ival
+   from the regular int.  The regular int is then thrown away.
+*/
+static PyObject *
+int_subtype_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+	PyObject *tmp, *new;
+
+	assert(PyType_IsSubtype(type, &PyInt_Type));
+	tmp = int_new(&PyInt_Type, args, kwds);
+	if (tmp == NULL)
+		return NULL;
+	assert(PyInt_Check(tmp));
+	new = type->tp_alloc(type, 0);
+	if (new == NULL)
+		return NULL;
+	((PyIntObject *)new)->ob_ival = ((PyIntObject *)tmp)->ob_ival;
+	Py_DECREF(tmp);
+	return new;
+}
+
+static char int_doc[] =
+"int(x[, base]) -> integer\n\
+\n\
+Convert a string or number to an integer, if possible.  A floating point\n\
+argument will be truncated towards zero (this does not include a string\n\
+representation of a floating point number!)  When converting a string, use\n\
+the optional base.  It is an error to supply a base when converting a\n\
+non-string.";
 
 static PyNumberMethods int_as_number = {
 	(binaryfunc)int_add,	/*nb_add*/
 	(binaryfunc)int_sub,	/*nb_subtract*/
 	(binaryfunc)int_mul,	/*nb_multiply*/
-	(binaryfunc)int_div,	/*nb_divide*/
+	(binaryfunc)int_classic_div, /*nb_divide*/
 	(binaryfunc)int_mod,	/*nb_remainder*/
 	(binaryfunc)int_divmod,	/*nb_divmod*/
 	(ternaryfunc)int_pow,	/*nb_power*/
@@ -762,7 +853,7 @@ static PyNumberMethods int_as_number = {
 	(binaryfunc)int_and,	/*nb_and*/
 	(binaryfunc)int_xor,	/*nb_xor*/
 	(binaryfunc)int_or,	/*nb_or*/
-	0,			/*nb_coerce*/
+	int_coerce,		/*nb_coerce*/
 	(unaryfunc)int_int,	/*nb_int*/
 	(unaryfunc)int_long,	/*nb_long*/
 	(unaryfunc)int_float,	/*nb_float*/
@@ -779,6 +870,10 @@ static PyNumberMethods int_as_number = {
 	0,			/*nb_inplace_and*/
 	0,			/*nb_inplace_xor*/
 	0,			/*nb_inplace_or*/
+	(binaryfunc)int_div,	/* nb_floor_divide */
+	int_true_divide,	/* nb_true_divide */
+	0,			/* nb_inplace_floor_divide */
+	0,			/* nb_inplace_true_divide */
 };
 
 PyTypeObject PyInt_Type = {
@@ -787,22 +882,41 @@ PyTypeObject PyInt_Type = {
 	"int",
 	sizeof(PyIntObject),
 	0,
-	(destructor)int_dealloc, /*tp_dealloc*/
-	(printfunc)int_print, /*tp_print*/
-	0,		/*tp_getattr*/
-	0,		/*tp_setattr*/
-	(cmpfunc)int_compare, /*tp_compare*/
-	(reprfunc)int_repr, /*tp_repr*/
-	&int_as_number,	/*tp_as_number*/
-	0,		/*tp_as_sequence*/
-	0,		/*tp_as_mapping*/
-	(hashfunc)int_hash, /*tp_hash*/
-        0,			/*tp_call*/
-        0,			/*tp_str*/
-	0,			/*tp_getattro*/
-	0,			/*tp_setattro*/
-	0,			/*tp_as_buffer*/
-	Py_TPFLAGS_CHECKTYPES	/*tp_flags*/
+	(destructor)int_dealloc,		/* tp_dealloc */
+	(printfunc)int_print,			/* tp_print */
+	0,					/* tp_getattr */
+	0,					/* tp_setattr */
+	(cmpfunc)int_compare,			/* tp_compare */
+	(reprfunc)int_repr,			/* tp_repr */
+	&int_as_number,				/* tp_as_number */
+	0,					/* tp_as_sequence */
+	0,					/* tp_as_mapping */
+	(hashfunc)int_hash,			/* tp_hash */
+        0,					/* tp_call */
+        (reprfunc)int_repr,			/* tp_str */
+	PyObject_GenericGetAttr,		/* tp_getattro */
+	0,					/* tp_setattro */
+	0,					/* tp_as_buffer */
+	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_CHECKTYPES |
+		Py_TPFLAGS_BASETYPE,		/* tp_flags */
+	int_doc,				/* tp_doc */
+	0,					/* tp_traverse */
+	0,					/* tp_clear */
+	0,					/* tp_richcompare */
+	0,					/* tp_weaklistoffset */
+	0,					/* tp_iter */
+	0,					/* tp_iternext */
+	0,					/* tp_methods */
+	0,					/* tp_members */
+	0,					/* tp_getset */
+	0,					/* tp_base */
+	0,					/* tp_dict */
+	0,					/* tp_descr_get */
+	0,					/* tp_descr_set */
+	0,					/* tp_dictoffset */
+	0,					/* tp_init */
+	0,					/* tp_alloc */
+	int_new,				/* tp_new */
 };
 
 void
@@ -836,7 +950,7 @@ PyInt_Fini(void)
 		for (i = 0, p = &list->objects[0];
 		     i < N_INTOBJECTS;
 		     i++, p++) {
-			if (PyInt_Check(p) && p->ob_refcnt != 0)
+			if (PyInt_CheckExact(p) && p->ob_refcnt != 0)
 				irem++;
 		}
 		next = list->next;
@@ -846,7 +960,8 @@ PyInt_Fini(void)
 			for (i = 0, p = &list->objects[0];
 			     i < N_INTOBJECTS;
 			     i++, p++) {
-				if (!PyInt_Check(p) || p->ob_refcnt == 0) {
+				if (!PyInt_CheckExact(p) ||
+				    p->ob_refcnt == 0) {
 					p->ob_type = (struct _typeobject *)
 						free_list;
 					free_list = p;
@@ -888,7 +1003,7 @@ PyInt_Fini(void)
 			for (i = 0, p = &list->objects[0];
 			     i < N_INTOBJECTS;
 			     i++, p++) {
-				if (PyInt_Check(p) && p->ob_refcnt != 0)
+				if (PyInt_CheckExact(p) && p->ob_refcnt != 0)
 					fprintf(stderr,
 				"#   <int at %p, refcnt=%d, val=%ld>\n",
 						p, p->ob_refcnt, p->ob_ival);

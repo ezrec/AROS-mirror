@@ -74,7 +74,7 @@ def _synthesize(browser):
         controller.basename = os.path.basename(browser)
         register(browser, None, controller)
         return [None, controller]
-    ret
+    return [None, None]
 
 
 def _iscommand(cmd):
@@ -98,6 +98,7 @@ class GenericBrowser:
         self.basename = os.path.basename(self.name)
 
     def open(self, url, new=0, autoraise=1):
+        assert "'" not in url
         command = "%s %s" % (self.name, self.args)
         os.system(command % url)
 
@@ -148,7 +149,8 @@ class Konqueror:
             self.name = self.basename = "kfm"
 
     def _remote(self, action):
-        cmd = "kfmclient %s >/dev/null 2>&1" % action
+        assert "'" not in action
+        cmd = "kfmclient '%s' >/dev/null 2>&1" % action
         rc = os.system(cmd)
         if rc:
             import time
@@ -163,7 +165,7 @@ class Konqueror:
     def open(self, url, new=1, autoraise=1):
         # XXX Currently I know no way to prevent KFM from
         # opening a new win.
-        self._remote("openURL %s" % url)
+        self._remote("openURL '%s'" % url)
 
     open_new = open
 
@@ -179,7 +181,7 @@ class Grail:
         import tempfile
         tempdir = os.path.join(tempfile.gettempdir(),
                                ".grail-unix")
-        user = pwd.getpwuid(_os.getuid())[0]
+        user = pwd.getpwuid(os.getuid())[0]
         filename = os.path.join(tempdir, user + "-*")
         maybes = glob.glob(filename)
         if not maybes:
@@ -232,32 +234,32 @@ class WindowsDefault:
 # the TERM and DISPLAY cases, because we might be running Python from inside
 # an xterm.
 if os.environ.get("TERM") or os.environ.get("DISPLAY"):
-    _tryorder = ("mozilla","netscape","kfm","grail","links","lynx","w3m")
+    _tryorder = ["mozilla","netscape","kfm","grail","links","lynx","w3m"]
 
     # Easy cases first -- register console browsers if we have them.
     if os.environ.get("TERM"):
         # The Links browser <http://artax.karlin.mff.cuni.cz/~mikulas/links/>
         if _iscommand("links"):
-            register("links", None, GenericBrowser("links %s"))
+            register("links", None, GenericBrowser("links '%s'"))
         # The Lynx browser <http://lynx.browser.org/>
         if _iscommand("lynx"):
-            register("lynx", None, GenericBrowser("lynx %s"))
+            register("lynx", None, GenericBrowser("lynx '%s'"))
         # The w3m browser <http://ei5nazha.yz.yamagata-u.ac.jp/~aito/w3m/eng/>
         if _iscommand("w3m"):
-            register("w3m", None, GenericBrowser("w3m %s"))
+            register("w3m", None, GenericBrowser("w3m '%s'"))
 
     # X browsers have more in the way of options
     if os.environ.get("DISPLAY"):
         # First, the Netscape series
-        if _iscommand("netscape") or _iscommand("mozilla"):
-            if _iscommand("mozilla"):
-                register("mozilla", None, Netscape("mozilla"))
-            if _iscommand("netscape"):
-                register("netscape", None, Netscape("netscape"))
+        if _iscommand("mozilla"):
+            register("mozilla", None, Netscape("mozilla"))
+        if _iscommand("netscape"):
+            register("netscape", None, Netscape("netscape"))
 
         # Next, Mosaic -- old but still in use.
         if _iscommand("mosaic"):
-            register("mosaic", None, GenericBrowser("mosaic %s >/dev/null &"))
+            register("mosaic", None, GenericBrowser(
+                "mosaic '%s' >/dev/null &"))
 
         # Konqueror/kfm, the KDE browser.
         if _iscommand("kfm") or _iscommand("konqueror"):
@@ -281,7 +283,7 @@ class InternetConfig:
 #
 
 if sys.platform[:3] == "win":
-    _tryorder = ("netscape", "windows-default")
+    _tryorder = ["netscape", "windows-default"]
     register("windows-default", WindowsDefault)
 
 #
@@ -295,8 +297,17 @@ except ImportError:
 else:
     # internet-config is the only supported controller on MacOS,
     # so don't mess with the default!
-    _tryorder = ("internet-config")
+    _tryorder = ["internet-config"]
     register("internet-config", InternetConfig)
+
+#
+# Platform support for OS/2
+#
+
+if sys.platform[:3] == "os2" and _iscommand("netscape.exe"):
+    _tryorder = ["os2netscape"]
+    register("os2netscape", None,
+             GenericBrowser("start netscape.exe %s"))
 
 # OK, now that we know what the default preference orders for each
 # platform are, allow user to override them with the BROWSER variable.
@@ -304,12 +315,13 @@ else:
 if os.environ.has_key("BROWSER"):
     # It's the user's responsibility to register handlers for any unknown
     # browser referenced by this value, before calling open().
-    _tryorder = os.environ["BROWSER"].split(":")
+    _tryorder = os.environ["BROWSER"].split(os.pathsep)
 
 for cmd in _tryorder:
     if not _browsers.has_key(cmd.lower()):
         if _iscommand(cmd.lower()):
-            register(cmd.lower(), None, GenericBrowser("%s %%s" % cmd.lower()))
+            register(cmd.lower(), None, GenericBrowser(
+                "%s '%%s'" % cmd.lower()))
 
 _tryorder = filter(lambda x: _browsers.has_key(x.lower())
                    or x.find("%s") > -1, _tryorder)

@@ -128,7 +128,7 @@ Notes:
 \code{<>} and \code{!=} are alternate spellings for the same operator.
 (I couldn't choose between \ABC{} and C! :-)
 \index{ABC language@\ABC{} language}
-\index{language!ABC@\ABC{}}
+\index{language!ABC@\ABC}
 \indexii{C}{language}
 \code{!=} is the preferred spelling; \code{<>} is obsolescent.
 
@@ -313,6 +313,57 @@ division by \code{pow(2, \var{n})} without overflow check.
 \end{description}
 
 
+\subsection{Iterator Types \label{typeiter}}
+
+\versionadded{2.2}
+\index{iterator protocol}
+\index{protocol!iterator}
+\index{sequence!iteration}
+\index{container!iteration over}
+
+Python supports a concept of iteration over containers.  This is
+implemented using two distinct methods; these are used to allow
+user-defined classes to support iteration.  Sequences, described below
+in more detail, always support the iteration methods.
+
+One method needs to be defined for container objects to provide
+iteration support:
+
+\begin{methoddesc}[container]{__iter__}{}
+  Return an iterator object.  The object is required to support the
+  iterator protocol described below.  If a container supports
+  different types of iteration, additional methods can be provided to
+  specifically request iterators for those iteration types.  (An
+  example of an object supporting multiple forms of iteration would be
+  a tree structure which supports both breadth-first and depth-first
+  traversal.)  This method corresponds to the \member{tp_iter} slot of
+  the type structure for Python objects in the Python/C API.
+\end{methoddesc}
+
+The iterator objects themselves are required to support the following
+two methods, which together form the \dfn{iterator protocol}:
+
+\begin{methoddesc}[iterator]{__iter__}{}
+  Return the iterator object itself.  This is required to allow both
+  containers and iterators to be used with the \keyword{for} and
+  \keyword{in} statements.  This method corresponds to the
+  \member{tp_iter} slot of the type structure for Python objects in
+  the Python/C API.
+\end{methoddesc}
+
+\begin{methoddesc}[iterator]{next}{}
+  Return the next item from the container.  If there are no further
+  items, raise the \exception{StopIteration} exception.  This method
+  corresponds to the \member{tp_iternext} slot of the type structure
+  for Python objects in the Python/C API.
+\end{methoddesc}
+
+Python defines several iterator objects to support iteration over
+general and specific sequence types, dictionaries, and other more
+specialized forms.  The specific types are not important beyond their
+implementation of the iterator protocol.
+
+
 \subsection{Sequence Types \label{typesseq}}
 
 There are six sequence types: strings, Unicode strings, lists,
@@ -328,21 +379,27 @@ separating items with commas: \code{[a, b, c]}.  Tuples are
 constructed by the comma operator (not within square brackets), with
 or without enclosing parentheses, but an empty tuple must have the
 enclosing parentheses, e.g., \code{a, b, c} or \code{()}.  A single
-item tuple must have a trailing comma, e.g., \code{(d,)}.  Buffers are
-not directly supported by Python syntax, but can be created by calling the
-builtin function \function{buffer()}.\bifuncindex{buffer}  XRanges
-objects are similar to buffers in that there is no specific syntax to
-create them, but they are created using the \function{xrange()}
-function.\bifuncindex{xrange}
+item tuple must have a trailing comma, e.g., \code{(d,)}.
 \obindex{sequence}
 \obindex{string}
 \obindex{Unicode}
-\obindex{buffer}
 \obindex{tuple}
 \obindex{list}
+
+Buffer objects are not directly supported by Python syntax, but can be
+created by calling the builtin function
+\function{buffer()}.\bifuncindex{buffer}.  They don't support
+concatenation or repetition.
+\obindex{buffer}
+
+Xrange objects are similar to buffers in that there is no specific
+syntax to create them, but they are created using the \function{xrange()}
+function.\bifuncindex{xrange}  They don't support slicing,
+concatenation or repetition, and using \code{in}, \code{not in},
+\function{min()} or \function{max()} on them is inefficient.
 \obindex{xrange}
 
-Sequence types support the following operations.  The \samp{in} and
+Most sequence types support the following operations.  The \samp{in} and
 \samp{not in} operations have the same priorities as the comparison
 operations.  The \samp{+} and \samp{*} operations have the same
 priority as the corresponding numeric operations.\footnote{They must
@@ -359,7 +416,7 @@ and \var{j} are integers:
 equal to \var{x}, else \code{1}}{}
   \hline
   \lineiii{\var{s} + \var{t}}{the concatenation of \var{s} and \var{t}}{}
-  \lineiii{\var{s} * \var{n}\textrm{,} \var{n} * \var{s}}{\var{n} copies of \var{s} concatenated}{(1)}
+  \lineiii{\var{s} * \var{n}\textrm{,} \var{n} * \var{s}}{\var{n} shallow copies of \var{s} concatenated}{(1)}
   \hline
   \lineiii{\var{s}[\var{i}]}{\var{i}'th item of \var{s}, origin 0}{(2)}
   \lineiii{\var{s}[\var{i}:\var{j}]}{slice of \var{s} from \var{i} to \var{j}}{(2), (3)}
@@ -385,10 +442,34 @@ Notes:
 \begin{description}
 \item[(1)] Values of \var{n} less than \code{0} are treated as
   \code{0} (which yields an empty sequence of the same type as
-  \var{s}).
+  \var{s}).  Note also that the copies are shallow; nested structures
+  are not copied.  This often haunts new Python programmers; consider:
+
+\begin{verbatim}
+>>> lists = [[]] * 3
+>>> lists
+[[], [], []]
+>>> lists[0].append(3)
+>>> lists
+[[3], [3], [3]]
+\end{verbatim}
+
+  What has happened is that \code{lists} is a list containing three
+  copies of the list \code{[[]]} (a one-element list containing an
+  empty list), but the contained list is shared by each copy.  You can
+  create a list of different lists this way:
+
+\begin{verbatim}
+>>> lists = [[] for i in range(3)]
+>>> lists[0].append(3)
+>>> lists[1].append(5)
+>>> lists[2].append(7)
+>>> lists
+[[3], [5], [7]]
+\end{verbatim}
 
 \item[(2)] If \var{i} or \var{j} is negative, the index is relative to
-  the end of the string, i.e., \code{len(\var{s}) + \var{i}} or
+  the end of the string: \code{len(\var{s}) + \var{i}} or
   \code{len(\var{s}) + \var{j}} is substituted.  But note that \code{-0} is
   still \code{0}.
   
@@ -419,6 +500,16 @@ using spaces.
 Return the number of occurrences of substring \var{sub} in string
 S\code{[\var{start}:\var{end}]}.  Optional arguments \var{start} and
 \var{end} are interpreted as in slice notation.
+\end{methoddesc}
+
+\begin{methoddesc}[string]{decode}{\optional{encoding\optional{, errors}}}
+Decodes the string using the codec registered for \var{encoding}.
+\var{encoding} defaults to the default string encoding.  \var{errors}
+may be given to set a different error handling scheme.  The default is
+\code{'strict'}, meaning that encoding errors raise
+\exception{ValueError}.  Other possible values are \code{'ignore'} and
+\code{replace'}.
+\versionadded{2.2}
 \end{methoddesc}
 
 \begin{methoddesc}[string]{encode}{\optional{encoding\optional{,errors}}}
@@ -481,7 +572,7 @@ the string is not empty, false otherwise.
 \end{methoddesc}
 
 \begin{methoddesc}[string]{istitle}{}
-Return true if the string is a titlecased string, i.e.\ uppercase
+Return true if the string is a titlecased string: uppercase
 characters may only follow uncased characters and lowercase characters
 only cased ones.  Return false otherwise.
 \end{methoddesc}
@@ -571,7 +662,7 @@ lowercase and vice versa.
 \end{methoddesc}
 
 \begin{methoddesc}[string]{title}{}
-Return a titlecased version of, i.e.\ words start with uppercase
+Return a titlecased version of the string: words start with uppercase
 characters, all remaining cased characters are lowercase.
 \end{methoddesc}
 
@@ -589,20 +680,25 @@ Return a copy of the string converted to uppercase.
 
 \subsubsection{String Formatting Operations \label{typesseq-strings}}
 
-\index{formatting, string}
+\index{formatting, string (\%{})}
+\index{interpolation, string (\%{})}
 \index{string!formatting}
+\index{string!interpolation}
 \index{printf-style formatting}
 \index{sprintf-style formatting}
+\index{\protect\%{} formatting}
+\index{\protect\%{} interpolation}
 
 String and Unicode objects have one unique built-in operation: the
-\code{\%} operator (modulo).  Given \code{\var{format} \%
-\var{values}} (where \var{format} is a string or Unicode object),
-\code{\%} conversion specifications in \var{format} are replaced with
-zero or more elements of \var{values}.  The effect is similar to the
-using \cfunction{sprintf()} in the C language.  If \var{format} is a
-Unicode object, or if any of the objects being converted using the
-\code{\%s} conversion are Unicode objects, the result will be a
-Unicode object as well.
+\code{\%} operator (modulo).  This is also known as the string
+\emph{formatting} or \emph{interpolation} operator.  Given
+\code{\var{format} \% \var{values}} (where \var{format} is a string or
+Unicode object), \code{\%} conversion specifications in \var{format}
+are replaced with zero or more elements of \var{values}.  The effect
+is similar to the using \cfunction{sprintf()} in the C language.  If
+\var{format} is a Unicode object, or if any of the objects being
+converted using the \code{\%s} conversion are Unicode objects, the
+result will be a Unicode object as well.
 
 If \var{format} requires a single argument, \var{values} may be a
 single non-tuple object. \footnote{A tuple object in this case should
@@ -710,10 +806,9 @@ are replaced by \code{\%g} conversions.\footnote{
   point values on a particular machine.
 }  All other errors raise exceptions.
 
-Additional string operations are defined in standard module
-\refmodule{string} and in built-in module \refmodule{re}.
-\refstmodindex{string}
-\refstmodindex{re}
+Additional string operations are defined in standard modules
+\refmodule{string}\refstmodindex{string} and
+\refmodule{re}.\refstmodindex{re} 
 
 
 \subsubsection{XRange Type \label{typesseq-xrange}}
@@ -724,12 +819,8 @@ xrange object will always take the same amount of memory, no matter the
 size of the range it represents.  There are no consistent performance
 advantages.
 
-XRange objects behave like tuples, and offer a single method:
-
-\begin{methoddesc}[xrange]{tolist}{}
-  Return a list object which represents the same values as the xrange
-  object.
-\end{methoddesc}
+XRange objects have very little behavior: they only support indexing
+and the \function{len()} function.
 
 
 \subsubsection{Mutable Sequence Types \label{typesseq-mutable}}
@@ -762,15 +853,15 @@ The following operations are defined on mutable sequence types (where
     {return smallest \var{i} such that \code{\var{s}[\var{i}] == \var{x}}}{(3)}
   \lineiii{\var{s}.insert(\var{i}, \var{x})}
 	{same as \code{\var{s}[\var{i}:\var{i}] = [\var{x}]}
-	  if \code{\var{i} >= 0}}{}
+	  if \code{\var{i} >= 0}}{(4)}
   \lineiii{\var{s}.pop(\optional{\var{i}})}
-    {same as \code{\var{x} = \var{s}[\var{i}]; del \var{s}[\var{i}]; return \var{x}}}{(4)}
+    {same as \code{\var{x} = \var{s}[\var{i}]; del \var{s}[\var{i}]; return \var{x}}}{(5)}
   \lineiii{\var{s}.remove(\var{x})}
 	{same as \code{del \var{s}[\var{s}.index(\var{x})]}}{(3)}
   \lineiii{\var{s}.reverse()}
-	{reverses the items of \var{s} in place}{(5)}
+	{reverses the items of \var{s} in place}{(6)}
   \lineiii{\var{s}.sort(\optional{\var{cmpfunc}})}
-	{sort the items of \var{s} in place}{(5), (6)}
+	{sort the items of \var{s} in place}{(6), (7)}
 \end{tableiii}
 \indexiv{operations on}{mutable}{sequence}{types}
 \indexiii{operations on}{sequence}{types}
@@ -797,18 +888,22 @@ Notes:
 \item[(3)] Raises \exception{ValueError} when \var{x} is not found in
   \var{s}.
 
-\item[(4)] The \method{pop()} method is only supported by the list and
+\item[(4)] When a negative index is passed as the first parameter to
+  the \method{insert()} method, the new element is prepended to the
+  sequence.
+
+\item[(5)] The \method{pop()} method is only supported by the list and
   array types.  The optional argument \var{i} defaults to \code{-1},
   so that by default the last item is removed and returned.
 
-\item[(5)] The \method{sort()} and \method{reverse()} methods modify the
+\item[(6)] The \method{sort()} and \method{reverse()} methods modify the
   list in place for economy of space when sorting or reversing a large
-  list.  They don't return the sorted or reversed list to remind you
-  of this side effect.
+  list.  To remind you that they operate by side effect, they don't return
+  the sorted or reversed list.
 
-\item[(6)] The \method{sort()} method takes an optional argument
+\item[(7)] The \method{sort()} method takes an optional argument
   specifying a comparison function of two arguments (list items) which
-  should return \code{-1}, \code{0} or \code{1} depending on whether
+  should return a negative, zero or positive number depending on whether
   the first argument is considered smaller than, equal to, or larger
   than the second argument.  Note that this slows the sorting process
   down considerably; e.g. to sort a list in reverse order it is much
@@ -867,23 +962,23 @@ arbitrary objects):
           {(1)}
   \lineiii{\var{a}.clear()}{remove all items from \code{a}}{}
   \lineiii{\var{a}.copy()}{a (shallow) copy of \code{a}}{}
-  \lineiii{\var{k} \code{in} \var{a}}
+  \lineiii{\var{a}.has_key(\var{k})}
           {\code{1} if \var{a} has a key \var{k}, else \code{0}}
           {}
+  \lineiii{\var{k} \code{in} \var{a}}
+          {Equivalent to \var{a}.has_key(\var{k})}
+          {(2)}
   \lineiii{\var{k} not in \var{a}}
-          {\code{0} if \var{a} has a key \var{k}, else \code{1}}
-          {}
-  \lineiii{\var{a}.has_key(\var{k})}
-          {Equivalent to \var{k} \code{in} \var{a}}
-          {}
+          {Equivalent to \code{not} \var{a}.has_key(\var{k})}
+          {(2)}
   \lineiii{\var{a}.items()}
           {a copy of \var{a}'s list of (\var{key}, \var{value}) pairs}
-          {(2)}
-  \lineiii{\var{a}.keys()}{a copy of \var{a}'s list of keys}{(2)}
+          {(3)}
+  \lineiii{\var{a}.keys()}{a copy of \var{a}'s list of keys}{(3)}
   \lineiii{\var{a}.update(\var{b})}
           {\code{for k in \var{b}.keys(): \var{a}[k] = \var{b}[k]}}
-          {(3)}
-  \lineiii{\var{a}.values()}{a copy of \var{a}'s list of values}{(2)}
+          {}
+  \lineiii{\var{a}.values()}{a copy of \var{a}'s list of values}{(3)}
   \lineiii{\var{a}.get(\var{k}\optional{, \var{x}})}
           {\code{\var{a}[\var{k}]} if \code{\var{k} in \var{a}},
            else \var{x}}
@@ -895,6 +990,15 @@ arbitrary objects):
   \lineiii{\var{a}.popitem()}
           {remove and return an arbitrary (\var{key}, \var{value}) pair}
           {(6)}
+  \lineiii{\var{a}.iteritems()}
+          {return an iterator over (\var{key}, \var{value}) pairs}
+          {(2)}
+  \lineiii{\var{a}.iterkeys()}
+          {return an iterator over the mapping's keys}
+          {(2)}
+  \lineiii{\var{a}.itervalues()}
+          {return an iterator over the mapping's values}
+          {(2)}
 \end{tableiii}
 
 \noindent
@@ -903,14 +1007,14 @@ Notes:
 \item[(1)] Raises a \exception{KeyError} exception if \var{k} is not
 in the map.
 
-\item[(2)] Keys and values are listed in random order.  If
+\item[(2)] \versionadded{2.2}
+
+\item[(3)] Keys and values are listed in random order.  If
 \method{keys()} and \method{values()} are called with no intervening
 modifications to the dictionary, the two lists will directly
 correspond.  This allows the creation of \code{(\var{value},
-\var{key})} pairs using \function{map()}: \samp{pairs = map(None,
-\var{a}.values(), \var{a}.keys())}.
-
-\item[(3)] \var{b} must be of the same type as \var{a}.
+\var{key})} pairs using \function{zip()}: \samp{pairs =
+zip(\var{a}.values(), \var{a}.keys())}.
 
 \item[(4)] Never raises an exception if \var{k} is not in the map,
 instead it returns \var{x}.  \var{x} is optional; when \var{x} is not
@@ -923,6 +1027,195 @@ the dictionary as the value of \var{k}.
 \item[(6)] \function{popitem()} is useful to destructively iterate
 over a dictionary, as often used in set algorithms.
 \end{description}
+
+
+\subsection{File Objects
+            \label{bltin-file-objects}}
+
+File objects\obindex{file} are implemented using C's \code{stdio}
+package and can be created with the built-in constructor
+\function{file()}\bifuncindex{file} described in section 
+\ref{built-in-funcs}, ``Built-in Functions.''\footnote{\function{file()}
+is new in Python 2.2.  The older built-in \function{open()} is an
+alias for \function{file()}.}
+They are also returned
+by some other built-in functions and methods, such as
+\function{os.popen()} and \function{os.fdopen()} and the
+\method{makefile()} method of socket objects.
+\refstmodindex{os}
+\refbimodindex{socket}
+
+When a file operation fails for an I/O-related reason, the exception
+\exception{IOError} is raised.  This includes situations where the
+operation is not defined for some reason, like \method{seek()} on a tty
+device or writing a file opened for reading.
+
+Files have the following methods:
+
+
+\begin{methoddesc}[file]{close}{}
+  Close the file.  A closed file cannot be read or written anymore.
+  Any operation which requires that the file be open will raise a
+  \exception{ValueError} after the file has been closed.  Calling
+  \method{close()} more than once is allowed.
+\end{methoddesc}
+
+\begin{methoddesc}[file]{flush}{}
+  Flush the internal buffer, like \code{stdio}'s
+  \cfunction{fflush()}.  This may be a no-op on some file-like
+  objects.
+\end{methoddesc}
+
+\begin{methoddesc}[file]{isatty}{}
+  Return true if the file is connected to a tty(-like) device, else
+  false.  \note{If a file-like object is not associated
+  with a real file, this method should \emph{not} be implemented.}
+\end{methoddesc}
+
+\begin{methoddesc}[file]{fileno}{}
+  \index{file descriptor}
+  \index{descriptor, file}
+  Return the integer ``file descriptor'' that is used by the
+  underlying implementation to request I/O operations from the
+  operating system.  This can be useful for other, lower level
+  interfaces that use file descriptors, such as the
+  \refmodule{fcntl}\refbimodindex{fcntl} module or
+  \function{os.read()} and friends.  \note{File-like objects
+  which do not have a real file descriptor should \emph{not} provide
+  this method!}
+\end{methoddesc}
+
+\begin{methoddesc}[file]{read}{\optional{size}}
+  Read at most \var{size} bytes from the file (less if the read hits
+  \EOF{} before obtaining \var{size} bytes).  If the \var{size}
+  argument is negative or omitted, read all data until \EOF{} is
+  reached.  The bytes are returned as a string object.  An empty
+  string is returned when \EOF{} is encountered immediately.  (For
+  certain files, like ttys, it makes sense to continue reading after
+  an \EOF{} is hit.)  Note that this method may call the underlying
+  C function \cfunction{fread()} more than once in an effort to
+  acquire as close to \var{size} bytes as possible.
+\end{methoddesc}
+
+\begin{methoddesc}[file]{readline}{\optional{size}}
+  Read one entire line from the file.  A trailing newline character is
+  kept in the string\footnote{
+	The advantage of leaving the newline on is that an empty string 
+	can be returned to mean \EOF{} without being ambiguous.  Another 
+	advantage is that (in cases where it might matter, for example. if you 
+	want to make an exact copy of a file while scanning its lines) 
+	you can tell whether the last line of a file ended in a newline
+	or not (yes this happens!).
+  } (but may be absent when a file ends with an
+  incomplete line).  If the \var{size} argument is present and
+  non-negative, it is a maximum byte count (including the trailing
+  newline) and an incomplete line may be returned.
+  An empty string is returned when \EOF{} is hit
+  immediately.  \note{Unlike \code{stdio}'s \cfunction{fgets()}, the
+  returned string contains null characters (\code{'\e 0'}) if they
+  occurred in the input.}
+\end{methoddesc}
+
+\begin{methoddesc}[file]{readlines}{\optional{sizehint}}
+  Read until \EOF{} using \method{readline()} and return a list containing
+  the lines thus read.  If the optional \var{sizehint} argument is
+  present, instead of reading up to \EOF, whole lines totalling
+  approximately \var{sizehint} bytes (possibly after rounding up to an
+  internal buffer size) are read.  Objects implementing a file-like
+  interface may choose to ignore \var{sizehint} if it cannot be
+  implemented, or cannot be implemented efficiently.
+\end{methoddesc}
+
+\begin{methoddesc}[file]{xreadlines}{}
+  Equivalent to
+  \function{xreadlines.xreadlines(\var{file})}.\refstmodindex{xreadlines}
+  (See the \refmodule{xreadlines} module for more information.)
+  \versionadded{2.1}
+\end{methoddesc}
+
+\begin{methoddesc}[file]{seek}{offset\optional{, whence}}
+  Set the file's current position, like \code{stdio}'s \cfunction{fseek()}.
+  The \var{whence} argument is optional and defaults to \code{0}
+  (absolute file positioning); other values are \code{1} (seek
+  relative to the current position) and \code{2} (seek relative to the
+  file's end).  There is no return value.  Note that if the file is
+  opened for appending (mode \code{'a'} or \code{'a+'}), any
+  \method{seek()} operations will be undone at the next write.  If the
+  file is only opened for writing in append mode (mode \code{'a'}),
+  this method is essentially a no-op, but it remains useful for files
+  opened in append mode with reading enabled (mode \code{'a+'}).
+\end{methoddesc}
+
+\begin{methoddesc}[file]{tell}{}
+  Return the file's current position, like \code{stdio}'s
+  \cfunction{ftell()}.
+\end{methoddesc}
+
+\begin{methoddesc}[file]{truncate}{\optional{size}}
+  Truncate the file's size.  If the optional \var{size} argument
+  present, the file is truncated to (at most) that size.  The size
+  defaults to the current position.  Availability of this function
+  depends on the operating system version (for example, not all
+  \UNIX{} versions support this operation).
+\end{methoddesc}
+
+\begin{methoddesc}[file]{write}{str}
+  Write a string to the file.  There is no return value.  Due to
+  buffering, the string may not actually show up in the file until
+  the \method{flush()} or \method{close()} method is called.
+\end{methoddesc}
+
+\begin{methoddesc}[file]{writelines}{sequence}
+  Write a sequence of strings to the file.  The sequence can be any
+  iterable object producing strings, typically a list of strings.
+  There is no return value.
+  (The name is intended to match \method{readlines()};
+  \method{writelines()} does not add line separators.)
+\end{methoddesc}
+
+
+Files support the iterator protocol.  Each iteration returns the same
+result as \code{\var{file}.readline()}, and iteration ends when the
+\method{readline()} method returns an empty string.
+
+
+File objects also offer a number of other interesting attributes.
+These are not required for file-like objects, but should be
+implemented if they make sense for the particular object.
+
+\begin{memberdesc}[file]{closed}
+Boolean indicating the current state of the file object.  This is a
+read-only attribute; the \method{close()} method changes the value.
+It may not be available on all file-like objects.
+\end{memberdesc}
+
+\begin{memberdesc}[file]{mode}
+The I/O mode for the file.  If the file was created using the
+\function{open()} built-in function, this will be the value of the
+\var{mode} parameter.  This is a read-only attribute and may not be
+present on all file-like objects.
+\end{memberdesc}
+
+\begin{memberdesc}[file]{name}
+If the file object was created using \function{open()}, the name of
+the file.  Otherwise, some string that indicates the source of the
+file object, of the form \samp{<\mbox{\ldots}>}.  This is a read-only
+attribute and may not be present on all file-like objects.
+\end{memberdesc}
+
+\begin{memberdesc}[file]{softspace}
+Boolean that indicates whether a space character needs to be printed
+before another value when using the \keyword{print} statement.
+Classes that are trying to simulate a file object should also have a
+writable \member{softspace} attribute, which should be initialized to
+zero.  This will be automatic for most classes implemented in Python
+(care may be needed for objects that override attribute access); types
+implemented in C will have to provide a writable
+\member{softspace} attribute.
+\note{This attribute is not used to control the
+\keyword{print} statement, but to allow the implementation of
+\keyword{print} to keep track of its internal state.}
+\end{memberdesc}
 
 
 \subsection{Other Built-in Types \label{typesother}}
@@ -946,7 +1239,7 @@ A special member of every module is \member{__dict__}.
 This is the dictionary containing the module's symbol table.
 Modifying this dictionary will actually change the module's symbol
 table, but direct assignment to the \member{__dict__} attribute is not
-possible (i.e., you can write \code{\var{m}.__dict__['a'] = 1}, which
+possible (you can write \code{\var{m}.__dict__['a'] = 1}, which
 defines \code{\var{m}.a} to be \code{1}, but you can't write
 \code{\var{m}.__dict__ = \{\}}.
 
@@ -985,19 +1278,14 @@ Function objects also support getting and setting arbitrary
 attributes, which can be used to, e.g. attach metadata to functions.
 Regular attribute dot-notation is used to get and set such
 attributes. \emph{Note that the current implementation only supports
-function attributes on functions written in Python.  Function
-attributes on built-ins may be supported in the future.}
+function attributes on user-defined functions.  Function attributes on
+built-in functions may be supported in the future.}
 
 Functions have another special attribute \code{\var{f}.__dict__}
 (a.k.a. \code{\var{f}.func_dict}) which contains the namespace used to
-support function attributes.  \code{__dict__} can be accessed
-directly, set to a dictionary object, or \code{None}.  It can also be
-deleted (but the following two lines are equivalent):
-
-\begin{verbatim}
-del func.__dict__
-func.__dict__ = None
-\end{verbatim}
+support function attributes.  \code{__dict__} and \code{func_dict} can
+be accessed directly or set to a dictionary object.  A function's
+dictionary cannot be deleted.
 
 \subsubsection{Methods \label{typesmethods}}
 \obindex{method}
@@ -1025,7 +1313,7 @@ subclass of that class), otherwise a \code{TypeError} is raised.
 
 Like function objects, methods objects support getting
 arbitrary attributes.  However, since method attributes are actually
-stored on the underlying function object (i.e. \code{meth.im_func}),
+stored on the underlying function object (\code{meth.im_func}),
 setting method attributes on either bound or unbound methods is
 disallowed.  Attempting to set a method attribute results in a
 \code{TypeError} being raised.  In order to set a method attribute,
@@ -1098,184 +1386,6 @@ special operations.  There is exactly one ellipsis object, named
 It is written as \code{Ellipsis}.
 
 
-\subsubsection{File Objects\obindex{file}
-               \label{bltin-file-objects}}
-
-File objects are implemented using C's \code{stdio} package and can be
-created with the built-in function
-\function{open()}\bifuncindex{open} described in section 
-\ref{built-in-funcs}, ``Built-in Functions.''  They are also returned
-by some other built-in functions and methods, e.g.,
-\function{os.popen()} and \function{os.fdopen()} and the
-\method{makefile()} method of socket objects.
-\refstmodindex{os}
-\refbimodindex{socket}
-
-When a file operation fails for an I/O-related reason, the exception
-\exception{IOError} is raised.  This includes situations where the
-operation is not defined for some reason, like \method{seek()} on a tty
-device or writing a file opened for reading.
-
-Files have the following methods:
-
-
-\begin{methoddesc}[file]{close}{}
-  Close the file.  A closed file cannot be read or written anymore.
-  Any operation which requires that the file be open will raise a
-  \exception{ValueError} after the file has been closed.  Calling
-  \method{close()} more than once is allowed.
-\end{methoddesc}
-
-\begin{methoddesc}[file]{flush}{}
-  Flush the internal buffer, like \code{stdio}'s
-  \cfunction{fflush()}.  This may be a no-op on some file-like
-  objects.
-\end{methoddesc}
-
-\begin{methoddesc}[file]{isatty}{}
-  Return true if the file is connected to a tty(-like) device, else
-  false.  \strong{Note:} If a file-like object is not associated
-  with a real file, this method should \emph{not} be implemented.
-\end{methoddesc}
-
-\begin{methoddesc}[file]{fileno}{}
-  \index{file descriptor}
-  \index{descriptor, file}
-  Return the integer ``file descriptor'' that is used by the
-  underlying implementation to request I/O operations from the
-  operating system.  This can be useful for other, lower level
-  interfaces that use file descriptors, e.g.\ module
-  \refmodule{fcntl}\refbimodindex{fcntl} or \function{os.read()} and
-  friends.  \strong{Note:} File-like objects which do not have a real
-  file descriptor should \emph{not} provide this method!
-\end{methoddesc}
-
-\begin{methoddesc}[file]{read}{\optional{size}}
-  Read at most \var{size} bytes from the file (less if the read hits
-  \EOF{} before obtaining \var{size} bytes).  If the \var{size}
-  argument is negative or omitted, read all data until \EOF{} is
-  reached.  The bytes are returned as a string object.  An empty
-  string is returned when \EOF{} is encountered immediately.  (For
-  certain files, like ttys, it makes sense to continue reading after
-  an \EOF{} is hit.)  Note that this method may call the underlying
-  C function \cfunction{fread()} more than once in an effort to
-  acquire as close to \var{size} bytes as possible.
-\end{methoddesc}
-
-\begin{methoddesc}[file]{readline}{\optional{size}}
-  Read one entire line from the file.  A trailing newline character is
-  kept in the string\footnote{
-	The advantage of leaving the newline on is that an empty string 
-	can be returned to mean \EOF{} without being ambiguous.  Another 
-	advantage is that (in cases where it might matter, e.g. if you 
-	want to make an exact copy of a file while scanning its lines) 
-	you can tell whether the last line of a file ended in a newline
-	or not (yes this happens!).
-  } (but may be absent when a file ends with an
-  incomplete line).  If the \var{size} argument is present and
-  non-negative, it is a maximum byte count (including the trailing
-  newline) and an incomplete line may be returned.
-  An empty string is returned when \EOF{} is hit
-  immediately.  Note: Unlike \code{stdio}'s \cfunction{fgets()}, the
-  returned string contains null characters (\code{'\e 0'}) if they
-  occurred in the input.
-\end{methoddesc}
-
-\begin{methoddesc}[file]{readlines}{\optional{sizehint}}
-  Read until \EOF{} using \method{readline()} and return a list containing
-  the lines thus read.  If the optional \var{sizehint} argument is
-  present, instead of reading up to \EOF{}, whole lines totalling
-  approximately \var{sizehint} bytes (possibly after rounding up to an
-  internal buffer size) are read.  Objects implementing a file-like
-  interface may choose to ignore \var{sizehint} if it cannot be
-  implemented, or cannot be implemented efficiently.
-\end{methoddesc}
-
-\begin{methoddesc}[file]{xreadlines}{}
-  Equivalent to
-  \function{xreadlines.xreadlines(\var{file})}.\refstmodindex{xreadlines}
-  (See the \refmodule{xreadlines} module for more information.)
-  \versionadded{2.1}
-\end{methoddesc}
-
-\begin{methoddesc}[file]{seek}{offset\optional{, whence}}
-  Set the file's current position, like \code{stdio}'s \cfunction{fseek()}.
-  The \var{whence} argument is optional and defaults to \code{0}
-  (absolute file positioning); other values are \code{1} (seek
-  relative to the current position) and \code{2} (seek relative to the
-  file's end).  There is no return value.  Note that if the file is
-  opened for appending (mode \code{'a'} or \code{'a+'}), any
-  \method{seek()} operations will be undone at the next write.  If the
-  file is only opened for writing in append mode (mode \code{'a'}),
-  this method is essentially a no-op, but it remains useful for files
-  opened in append mode with reading enabled (mode \code{'a+'}).
-\end{methoddesc}
-
-\begin{methoddesc}[file]{tell}{}
-  Return the file's current position, like \code{stdio}'s
-  \cfunction{ftell()}.
-\end{methoddesc}
-
-\begin{methoddesc}[file]{truncate}{\optional{size}}
-  Truncate the file's size.  If the optional \var{size} argument
-  present, the file is truncated to (at most) that size.  The size
-  defaults to the current position.  Availability of this function
-  depends on the operating system version (for example, not all
-  \UNIX{} versions support this operation).
-\end{methoddesc}
-
-\begin{methoddesc}[file]{write}{str}
-  Write a string to the file.  There is no return value.  Note: Due to
-  buffering, the string may not actually show up in the file until
-  the \method{flush()} or \method{close()} method is called.
-\end{methoddesc}
-
-\begin{methoddesc}[file]{writelines}{list}
-  Write a list of strings to the file.  There is no return value.
-  (The name is intended to match \method{readlines()};
-  \method{writelines()} does not add line separators.)
-\end{methoddesc}
-
-
-File objects also offer a number of other interesting attributes.
-These are not required for file-like objects, but should be
-implemented if they make sense for the particular object.
-
-\begin{memberdesc}[file]{closed}
-Boolean indicating the current state of the file object.  This is a
-read-only attribute; the \method{close()} method changes the value.
-It may not be available on all file-like objects.
-\end{memberdesc}
-
-\begin{memberdesc}[file]{mode}
-The I/O mode for the file.  If the file was created using the
-\function{open()} built-in function, this will be the value of the
-\var{mode} parameter.  This is a read-only attribute and may not be
-present on all file-like objects.
-\end{memberdesc}
-
-\begin{memberdesc}[file]{name}
-If the file object was created using \function{open()}, the name of
-the file.  Otherwise, some string that indicates the source of the
-file object, of the form \samp{<\mbox{\ldots}>}.  This is a read-only
-attribute and may not be present on all file-like objects.
-\end{memberdesc}
-
-\begin{memberdesc}[file]{softspace}
-Boolean that indicates whether a space character needs to be printed
-before another value when using the \keyword{print} statement.
-Classes that are trying to simulate a file object should also have a
-writable \member{softspace} attribute, which should be initialized to
-zero.  This will be automatic for most classes implemented in Python
-(care may be needed for objects that override attribute access); types
-implemented in C will have to provide a writable
-\member{softspace} attribute.
-\strong{Note:}  This attribute is not used to control the
-\keyword{print} statement, but to allow the implementation of
-\keyword{print} to keep track of its internal state.
-\end{memberdesc}
-
-
 \subsubsection{Internal Objects \label{typesinternal}}
 
 See the \citetitle[../ref/ref.html]{Python Reference Manual} for this
@@ -1294,16 +1404,13 @@ object's (writable) attributes.
 \end{memberdesc}
 
 \begin{memberdesc}[object]{__methods__}
-List of the methods of many built-in object types,
-e.g., \code{[].__methods__} yields
-\code{['append', 'count', 'index', 'insert', 'pop', 'remove',
-'reverse', 'sort']}.  This usually does not need to be explicitly
-provided by the object.
+\deprecated{2.2}{Use the built-in function \function{dir()} to get a
+list of an object's attributes.  This attribute is no longer available.}
 \end{memberdesc}
 
 \begin{memberdesc}[object]{__members__}
-Similar to \member{__methods__}, but lists data attributes.  This
-usually does not need to be explicitly provided by the object.
+\deprecated{2.2}{Use the built-in function \function{dir()} to get a
+list of an object's attributes.  This attribute is no longer available.}
 \end{memberdesc}
 
 \begin{memberdesc}[instance]{__class__}
@@ -1311,5 +1418,6 @@ The class to which a class instance belongs.
 \end{memberdesc}
 
 \begin{memberdesc}[class]{__bases__}
-The tuple of base classes of a class object.
+The tuple of base classes of a class object.  If there are no base
+classes, this will be an empty tuple.
 \end{memberdesc}

@@ -20,7 +20,7 @@ tail part.  For the head part, it uses \code{sys.prefix} and
 \code{sys.exec_prefix}; empty heads are skipped.  For
 the tail part, it uses the empty string (on Macintosh or Windows) or
 it uses first \file{lib/python\shortversion/site-packages} and then
-\file{lib/site-python} (on \UNIX{}).  For each of the distinct
+\file{lib/site-python} (on \UNIX).  For each of the distinct
 head-tail combinations, it sees if it refers to an existing directory,
 and if so, adds to \code{sys.path}, and also inspects the path for
 configuration files.
@@ -67,8 +67,8 @@ Then the following directories are added to \code{sys.path}, in this
 order:
 
 \begin{verbatim}
-/usr/local/lib/python1.5/site-packages/bar
-/usr/local/lib/python1.5/site-packages/foo
+/usr/local/lib/python2.2/site-packages/bar
+/usr/local/lib/python2.2/site-packages/foo
 \end{verbatim}
 
 Note that \file{bletch} is omitted because it doesn't exist; the

@@ -18,9 +18,6 @@
 #define FD_SETSIZE 512
 #endif 
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #if defined(HAVE_POLL_H)
 #include <poll.h>
 #elif defined(HAVE_SYS_POLL_H)
@@ -52,14 +49,6 @@ extern void bzero(void *, int);
 #endif
 #endif
 
-#ifdef RISCOS
-#define NO_DUP
-#undef off_t
-#undef uid_t
-#undef gid_t
-#undef errno
-#include "socklib.h"
-#endif /* RISCOS */
 
 static PyObject *SelectError;
 
@@ -71,10 +60,10 @@ typedef struct {
 } pylist;
 
 static void
-reap_obj(pylist fd2obj[FD_SETSIZE + 3])
+reap_obj(pylist fd2obj[FD_SETSIZE + 1])
 {
 	int i;
-	for (i = 0; i < FD_SETSIZE + 3 && fd2obj[i].sentinel >= 0; i++) {
+	for (i = 0; i < FD_SETSIZE + 1 && fd2obj[i].sentinel >= 0; i++) {
 		Py_XDECREF(fd2obj[i].obj);
 		fd2obj[i].obj = NULL;
 	}
@@ -86,7 +75,7 @@ reap_obj(pylist fd2obj[FD_SETSIZE + 3])
    returns a number >= 0
 */
 static int
-list2set(PyObject *list, fd_set *set, pylist fd2obj[FD_SETSIZE + 3])
+list2set(PyObject *list, fd_set *set, pylist fd2obj[FD_SETSIZE + 1])
 {
 	int i;
 	int max = -1;
@@ -141,7 +130,7 @@ list2set(PyObject *list, fd_set *set, pylist fd2obj[FD_SETSIZE + 3])
 
 /* returns NULL and sets the Python exception if an error occurred */
 static PyObject *
-set2list(fd_set *set, pylist fd2obj[FD_SETSIZE + 3])
+set2list(fd_set *set, pylist fd2obj[FD_SETSIZE + 1])
 {
 	int i, j, count=0;
 	PyObject *list, *o;
@@ -181,18 +170,27 @@ set2list(fd_set *set, pylist fd2obj[FD_SETSIZE + 3])
 	return NULL;
 }
 
-    
+#undef SELECT_USES_HEAP
+#if FD_SETSIZE > 1024
+#define SELECT_USES_HEAP
+#endif /* FD_SETSIZE > 1024 */
+
 static PyObject *
 select_select(PyObject *self, PyObject *args)
 {
-#ifdef MS_WINDOWS
-	/* This would be an awful lot of stack space on Windows! */
+#ifdef SELECT_USES_HEAP
 	pylist *rfd2obj, *wfd2obj, *efd2obj;
-#else
-	pylist rfd2obj[FD_SETSIZE + 3];
-	pylist wfd2obj[FD_SETSIZE + 3];
-	pylist efd2obj[FD_SETSIZE + 3];
-#endif
+#else  /* !SELECT_USES_HEAP */
+	/* XXX: All this should probably be implemented as follows:
+	 * - find the highest descriptor we're interested in
+	 * - add one
+	 * - that's the size
+	 * See: Stevens, APitUE, $12.5.1
+	 */
+	pylist rfd2obj[FD_SETSIZE + 1];
+	pylist wfd2obj[FD_SETSIZE + 1];
+	pylist efd2obj[FD_SETSIZE + 1];
+#endif /* SELECT_USES_HEAP */
 	PyObject *ifdlist, *ofdlist, *efdlist;
 	PyObject *ret = NULL;
 	PyObject *tout = Py_None;
@@ -217,7 +215,8 @@ select_select(PyObject *self, PyObject *args)
 	}
 	else {
 		if (timeout > (double)LONG_MAX) {
-			PyErr_SetString(PyExc_OverflowError, "timeout period too long");
+			PyErr_SetString(PyExc_OverflowError,
+					"timeout period too long");
 			return NULL;
 		}
 		seconds = (long)timeout;
@@ -237,18 +236,18 @@ select_select(PyObject *self, PyObject *args)
 		return NULL;
 	}
 
-#ifdef MS_WINDOWS
+#ifdef SELECT_USES_HEAP
 	/* Allocate memory for the lists */
-	rfd2obj = PyMem_NEW(pylist, FD_SETSIZE + 3);
-	wfd2obj = PyMem_NEW(pylist, FD_SETSIZE + 3);
-	efd2obj = PyMem_NEW(pylist, FD_SETSIZE + 3);
+	rfd2obj = PyMem_NEW(pylist, FD_SETSIZE + 1);
+	wfd2obj = PyMem_NEW(pylist, FD_SETSIZE + 1);
+	efd2obj = PyMem_NEW(pylist, FD_SETSIZE + 1);
 	if (rfd2obj == NULL || wfd2obj == NULL || efd2obj == NULL) {
 		if (rfd2obj) PyMem_DEL(rfd2obj);
 		if (wfd2obj) PyMem_DEL(wfd2obj);
 		if (efd2obj) PyMem_DEL(efd2obj);
 		return NULL;
 	}
-#endif
+#endif /* SELECT_USES_HEAP */
 	/* Convert lists to fd_sets, and get maximum fd number
 	 * propagates the Python exception set in list2set()
 	 */
@@ -302,11 +301,11 @@ select_select(PyObject *self, PyObject *args)
 	reap_obj(rfd2obj);
 	reap_obj(wfd2obj);
 	reap_obj(efd2obj);
-#ifdef MS_WINDOWS
+#ifdef SELECT_USES_HEAP
 	PyMem_DEL(rfd2obj);
 	PyMem_DEL(wfd2obj);
 	PyMem_DEL(efd2obj);
-#endif
+#endif /* SELECT_USES_HEAP */
 	return ret;
 }
 
@@ -332,7 +331,7 @@ staticforward PyTypeObject poll_Type;
 static int
 update_ufd_array(pollObject *self)
 {
-	int i, j, pos;
+	int i, pos;
 	PyObject *key, *value;
 
 	self->ufd_len = PyDict_Size(self->dict);
@@ -343,9 +342,9 @@ update_ufd_array(pollObject *self)
 	}
 
 	i = pos = 0;
-	while ((j = PyDict_Next(self->dict, &pos, &key, &value))) {
+	while (PyDict_Next(self->dict, &pos, &key, &value)) {
 		self->ufds[i].fd = PyInt_AsLong(key);
-		self->ufds[i].events = PyInt_AsLong(value);
+		self->ufds[i].events = (short)PyInt_AsLong(value);
 		i++;
 	}
 	self->ufd_uptodate = 1;
@@ -355,7 +354,8 @@ update_ufd_array(pollObject *self)
 static char poll_register_doc[] =
 "register(fd [, eventmask] ) -> None\n\n\
 Register a file descriptor with the polling object.\n\
-fd -- either an integer, or an object with a fileno() method returning an int.\n\
+fd -- either an integer, or an object with a fileno() method returning an\n\
+      int.\n\
 events -- an optional bitmask describing the type of events to check for";
 
 static PyObject *
@@ -363,6 +363,7 @@ poll_register(pollObject *self, PyObject *args)
 {
 	PyObject *o, *key, *value;
 	int fd, events = POLLIN | POLLPRI | POLLOUT;
+	int err;
 
 	if (!PyArg_ParseTuple(args, "O|i:register", &o, &events)) {
 		return NULL;
@@ -373,11 +374,20 @@ poll_register(pollObject *self, PyObject *args)
 
 	/* Add entry to the internal dictionary: the key is the 
 	   file descriptor, and the value is the event mask. */
-	if ( (NULL == (key = PyInt_FromLong(fd))) ||
-	     (NULL == (value = PyInt_FromLong(events))) ||
-	     (PyDict_SetItem(self->dict, key, value)) == -1) {
+	key = PyInt_FromLong(fd);
+	if (key == NULL)
+		return NULL;
+	value = PyInt_FromLong(events);
+	if (value == NULL) {
+		Py_DECREF(key);
 		return NULL;
 	}
+	err = PyDict_SetItem(self->dict, key, value);
+	Py_DECREF(key);
+	Py_DECREF(value);
+	if (err < 0)
+		return NULL;
+
 	self->ufd_uptodate = 0;
 		       
 	Py_INCREF(Py_None);
@@ -554,7 +564,7 @@ statichere PyTypeObject poll_Type = {
 	 * to be portable to Windows without using C++. */
 	PyObject_HEAD_INIT(NULL)
 	0,			/*ob_size*/
-	"poll",			/*tp_name*/
+	"select.poll",		/*tp_name*/
 	sizeof(pollObject),	/*tp_basicsize*/
 	0,			/*tp_itemsize*/
 	/* methods */

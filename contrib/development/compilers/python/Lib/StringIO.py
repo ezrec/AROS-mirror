@@ -28,7 +28,7 @@ Notes:
   bytes that occupy space in the buffer.
 - There's a simple test set (see end of this file).
 """
-
+import types
 try:
     from errno import EINVAL
 except ImportError:
@@ -38,12 +38,18 @@ __all__ = ["StringIO"]
 
 class StringIO:
     def __init__(self, buf = ''):
+        # Force self.buf to be a string or unicode
+        if type(buf) not in types.StringTypes:
+            buf = str(buf)
         self.buf = buf
         self.len = len(buf)
         self.buflist = []
         self.pos = 0
         self.closed = 0
         self.softspace = 0
+
+    def __iter__(self):
+        return iter(self.readline, '')
 
     def close(self):
         if not self.closed:
@@ -131,6 +137,9 @@ class StringIO:
         if self.closed:
             raise ValueError, "I/O operation on closed file"
         if not s: return
+        # Force s to be a string or unicode
+        if type(s) not in types.StringTypes:
+            s = str(s)
         if self.pos > self.len:
             self.buflist.append('\0'*(self.pos - self.len))
             self.len = self.pos

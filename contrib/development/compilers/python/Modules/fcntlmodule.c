@@ -3,16 +3,24 @@
 
 #include "Python.h"
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 #ifdef HAVE_SYS_FILE_H
 #include <sys/file.h>
 #endif
 
 #include <sys/ioctl.h>
 #include <fcntl.h>
+
+
+static int
+conv_descriptor(PyObject *object, int *target)
+{
+    int fd = PyObject_AsFileDescriptor(object);
+
+    if (fd < 0)
+        return 0;
+    *target = fd;
+    return 1;
+}
 
 
 /* fcntl(fd, opt, [arg]) */
@@ -28,7 +36,8 @@ fcntl_fcntl(PyObject *self, PyObject *args)
 	int len;
 	char buf[1024];
 
-	if (PyArg_ParseTuple(args, "iis#:fcntl", &fd, &code, &str, &len)) {
+	if (PyArg_ParseTuple(args, "O&is#:fcntl",
+                             conv_descriptor, &fd, &code, &str, &len)) {
 		if (len > sizeof buf) {
 			PyErr_SetString(PyExc_ValueError,
 					"fcntl string arg too long");
@@ -47,8 +56,10 @@ fcntl_fcntl(PyObject *self, PyObject *args)
 
 	PyErr_Clear();
 	arg = 0;
-	if (!PyArg_ParseTuple(args, "ii|i;fcntl requires 2 integers and optionally a third integer or a string", 
-			      &fd, &code, &arg)) {
+	if (!PyArg_ParseTuple(args,
+             "O&i|i;fcntl requires a file or file descriptor,"
+             " an integer and optionally a third integer or a string", 
+			      conv_descriptor, &fd, &code, &arg)) {
 	  return NULL;
 	}
 	Py_BEGIN_ALLOW_THREADS
@@ -66,13 +77,13 @@ static char fcntl_doc [] =
 "fcntl(fd, opt, [arg])\n\
 \n\
 Perform the requested operation on file descriptor fd.  The operation\n\
-is defined by op and is operating system dependent.  Typically these\n\
-codes can be retrieved from the library module FCNTL.  The argument arg\n\
-is optional, and defaults to 0; it may be an int or a string. If arg is\n\
-given as a string, the return value of fcntl is a string of that length,\n\
-containing the resulting value put in the arg buffer by the operating system.\n\
-The length of the arg string is not allowed to exceed 1024 bytes. If the arg\n\
-given is an integer or if none is specified, the result value is an integer\n\
+is defined by op and is operating system dependent.  These constants are\n\
+available from the fcntl module.  The argument arg is optional, and\n\
+defaults to 0; it may be an int or a string. If arg is given as a string,\n\
+the return value of fcntl is a string of that length, containing the\n\
+resulting value put in the arg buffer by the operating system.The length\n\
+of the arg string is not allowed to exceed 1024 bytes. If the arg given\n\
+is an integer or if none is specified, the result value is an integer\n\
 corresponding to the return value of the fcntl call in the C code.";
 
 
@@ -89,7 +100,8 @@ fcntl_ioctl(PyObject *self, PyObject *args)
 	int len;
 	char buf[1024];
 
-	if (PyArg_ParseTuple(args, "iis#:ioctl", &fd, &code, &str, &len)) {
+	if (PyArg_ParseTuple(args, "O&is#:ioctl",
+                             conv_descriptor, &fd, &code, &str, &len)) {
 		if (len > sizeof buf) {
 			PyErr_SetString(PyExc_ValueError,
 					"ioctl string arg too long");
@@ -108,8 +120,10 @@ fcntl_ioctl(PyObject *self, PyObject *args)
 
 	PyErr_Clear();
 	arg = 0;
-	if (!PyArg_ParseTuple(args, "ii|i;ioctl requires 2 integers and optionally a third integer or a string", 
-			      &fd, &code, &arg)) {
+	if (!PyArg_ParseTuple(args,
+	     "O&i|i;ioctl requires a file or file descriptor,"
+	     " an integer and optionally a third integer or a string",
+			      conv_descriptor, &fd, &code, &arg)) {
 	  return NULL;
 	}
 	Py_BEGIN_ALLOW_THREADS
@@ -145,7 +159,8 @@ fcntl_flock(PyObject *self, PyObject *args)
 	int code;
 	int ret;
 
-	if (!PyArg_ParseTuple(args, "ii:flock", &fd, &code))
+	if (!PyArg_ParseTuple(args, "O&i:flock",
+                              conv_descriptor, &fd, &code))
 		return NULL;
 
 #ifdef HAVE_FLOCK
@@ -202,7 +217,8 @@ fcntl_lockf(PyObject *self, PyObject *args)
 	int fd, code, ret, whence = 0;
 	PyObject *lenobj = NULL, *startobj = NULL;
 
-	if (!PyArg_ParseTuple(args, "ii|OOi:lockf", &fd, &code,
+	if (!PyArg_ParseTuple(args, "O&i|OOi:lockf",
+                              conv_descriptor, &fd, &code,
 			      &lenobj, &startobj, &whence))
 	    return NULL;
 
@@ -324,6 +340,121 @@ all_ins(PyObject* d)
         if (ins(d, "LOCK_EX", (long)LOCK_EX)) return -1;
         if (ins(d, "LOCK_NB", (long)LOCK_NB)) return -1;
         if (ins(d, "LOCK_UN", (long)LOCK_UN)) return -1;
+/* GNU extensions, as of glibc 2.2.4 */
+#ifdef LOCK_MAND
+        if (ins(d, "LOCK_MAND", (long)LOCK_MAND)) return -1;
+#endif
+#ifdef LOCK_READ
+        if (ins(d, "LOCK_READ", (long)LOCK_READ)) return -1;
+#endif
+#ifdef LOCK_WRITE
+        if (ins(d, "LOCK_WRITE", (long)LOCK_WRITE)) return -1;
+#endif
+#ifdef LOCK_RW
+        if (ins(d, "LOCK_RW", (long)LOCK_RW)) return -1;
+#endif
+
+#ifdef F_DUPFD
+        if (ins(d, "F_DUPFD", (long)F_DUPFD)) return -1;
+#endif
+#ifdef F_GETFD
+        if (ins(d, "F_GETFD", (long)F_GETFD)) return -1;
+#endif
+#ifdef F_SETFD
+        if (ins(d, "F_SETFD", (long)F_SETFD)) return -1;
+#endif
+#ifdef F_GETFL
+        if (ins(d, "F_GETFL", (long)F_GETFL)) return -1;
+#endif
+#ifdef F_SETFL
+        if (ins(d, "F_SETFL", (long)F_SETFL)) return -1;
+#endif
+#ifdef F_GETLK
+        if (ins(d, "F_GETLK", (long)F_GETLK)) return -1;
+#endif
+#ifdef F_SETLK
+        if (ins(d, "F_SETLK", (long)F_SETLK)) return -1;
+#endif
+#ifdef F_SETLKW
+        if (ins(d, "F_SETLKW", (long)F_SETLKW)) return -1;
+#endif
+#ifdef F_GETOWN
+        if (ins(d, "F_GETOWN", (long)F_GETOWN)) return -1;
+#endif
+#ifdef F_SETOWN
+        if (ins(d, "F_SETOWN", (long)F_SETOWN)) return -1;
+#endif
+#ifdef F_GETSIG
+        if (ins(d, "F_GETSIG", (long)F_GETSIG)) return -1;
+#endif
+#ifdef F_SETSIG
+        if (ins(d, "F_SETSIG", (long)F_SETSIG)) return -1;
+#endif
+#ifdef F_RDLCK
+        if (ins(d, "F_RDLCK", (long)F_RDLCK)) return -1;
+#endif
+#ifdef F_WRLCK
+        if (ins(d, "F_WRLCK", (long)F_WRLCK)) return -1;
+#endif
+#ifdef F_UNLCK
+        if (ins(d, "F_UNLCK", (long)F_UNLCK)) return -1;
+#endif
+/* LFS constants */
+#ifdef F_GETLK64
+        if (ins(d, "F_GETLK64", (long)F_GETLK64)) return -1;
+#endif
+#ifdef F_SETLK64
+        if (ins(d, "F_SETLK64", (long)F_SETLK64)) return -1;
+#endif
+#ifdef F_SETLKW64
+        if (ins(d, "F_SETLKW64", (long)F_SETLKW64)) return -1;
+#endif
+/* GNU extensions, as of glibc 2.2.4. */
+#ifdef F_SETLEASE
+        if (ins(d, "F_SETLEASE", (long)F_SETLEASE)) return -1;
+#endif
+#ifdef F_GETLEASE
+        if (ins(d, "F_GETLEASE", (long)F_GETLEASE)) return -1;
+#endif
+#ifdef F_NOTIFY
+        if (ins(d, "F_NOTIFY", (long)F_NOTIFY)) return -1;
+#endif
+/* Old BSD flock(). */
+#ifdef F_EXLCK
+        if (ins(d, "F_EXLCK", (long)F_EXLCK)) return -1;
+#endif
+#ifdef F_SHLCK
+        if (ins(d, "F_SHLCK", (long)F_SHLCK)) return -1;
+#endif
+
+/* For F_{GET|SET}FL */
+#ifdef FD_CLOEXEC
+        if (ins(d, "FD_CLOEXEC", (long)FD_CLOEXEC)) return -1;
+#endif
+
+/* For F_NOTIFY */
+#ifdef DN_ACCESS
+        if (ins(d, "DN_ACCESS", (long)DN_ACCESS)) return -1;
+#endif
+#ifdef DN_MODIFY
+        if (ins(d, "DN_MODIFY", (long)DN_MODIFY)) return -1;
+#endif
+#ifdef DN_CREATE
+        if (ins(d, "DN_CREATE", (long)DN_CREATE)) return -1;
+#endif
+#ifdef DN_DELETE
+        if (ins(d, "DN_DELETE", (long)DN_DELETE)) return -1;
+#endif
+#ifdef DN_RENAME
+        if (ins(d, "DN_RENAME", (long)DN_RENAME)) return -1;
+#endif
+#ifdef DN_ATTRIB
+        if (ins(d, "DN_ATTRIB", (long)DN_ATTRIB)) return -1;
+#endif
+#ifdef DN_MULTISHOT
+        if (ins(d, "DN_MULTISHOT", (long)DN_MULTISHOT)) return -1;
+#endif
+
 	return 0;
 }
 

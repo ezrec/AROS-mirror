@@ -5,6 +5,9 @@
 #include "structmember.h"
 #include <string.h>
 
+#define WARN(msg) if (PyErr_Warn(PyExc_DeprecationWarning, msg) < 0) \
+			return NULL;
+
 typedef struct {
 	PyObject_HEAD
 	long	start;
@@ -35,10 +38,16 @@ long_mul(long i, long j, long *kk)
 	if (c == NULL)
 		return 0;
 
+	if (!PyInt_Check(c)) {
+		Py_DECREF(c);
+		goto overflow;
+	}
+
 	*kk = PyInt_AS_LONG(c);
 	Py_DECREF(c);
 
 	if (*kk > INT_MAX) {
+	  overflow:
 		PyErr_SetString(PyExc_OverflowError,
 				"integer multiplication");
 		return 0;
@@ -55,6 +64,9 @@ PyRange_New(long start, long len, long step, int reps)
 
 	if (obj == NULL)
 		return NULL;
+		
+	if (reps != 1)
+		WARN("PyRange_New's 'repetitions' argument is deprecated");
 
 	if (len == 0 || reps <= 0) {
 		start = 0;
@@ -66,8 +78,8 @@ PyRange_New(long start, long len, long step, int reps)
 	else {
 		long last = start + (len - 1) * step;
 		if ((step > 0) ?
-		    (last > (PyInt_GetMax() - step))
-		    :(last < (-1 - PyInt_GetMax() - step))) {
+		    (last > (PyInt_GetMax() - step)) : 
+		    (last < (-1 - PyInt_GetMax() - step))) {
 			PyErr_SetString(PyExc_OverflowError,
 					"integer addition");
 			return NULL;
@@ -120,43 +132,39 @@ range_length(rangeobject *r)
 static PyObject *
 range_repr(rangeobject *r)
 {
-	/* buffers must be big enough to hold 3 longs + an int +
-	 * a bit of "(xrange(...) * ...)" text.
-	 */
-	char buf1[250];
-	char buf2[250];
-
+	PyObject *rtn;
+	
 	if (r->start == 0 && r->step == 1)
-		sprintf(buf1, "xrange(%ld)", r->start + r->len * r->step);
+		rtn = PyString_FromFormat("xrange(%ld)",
+					  r->start + r->len * r->step);
 
 	else if (r->step == 1)
-		sprintf(buf1, "xrange(%ld, %ld)",
-			r->start,
-			r->start + r->len * r->step);
+		rtn = PyString_FromFormat("xrange(%ld, %ld)",
+					  r->start,
+					  r->start + r->len * r->step);
 
 	else
-		sprintf(buf1, "xrange(%ld, %ld, %ld)",
-			r->start,
-			r->start + r->len * r->step,
-			r->step);
-
-	if (r->reps != 1)
-		sprintf(buf2, "(%s * %d)", buf1, r->reps);
-
-	return PyString_FromString(r->reps == 1 ? buf1 : buf2);
-}
-
-static PyObject *
-range_concat(rangeobject *r, PyObject *obj)
-{
-	PyErr_SetString(PyExc_TypeError, "cannot concatenate xrange objects");
-	return NULL;
+		rtn = PyString_FromFormat("xrange(%ld, %ld, %ld)",
+					  r->start,
+					  r->start + r->len * r->step,
+					  r->step);
+	if (r->reps != 1) {
+		PyObject *extra = PyString_FromFormat(
+			"(%s * %d)",
+			PyString_AS_STRING(rtn), r->reps);
+		Py_DECREF(rtn);
+		rtn = extra;
+	}
+	return rtn;
 }
 
 static PyObject *
 range_repeat(rangeobject *r, int n)
 {
 	long lreps = 0;
+
+	WARN("xrange object multiplication is deprecated; "
+	     "convert to list instead");
 
 	if (n <= 0)
 		return (PyObject *) PyRange_New(0, 0, 1, 1);
@@ -180,6 +188,12 @@ range_repeat(rangeobject *r, int n)
 static int
 range_compare(rangeobject *r1, rangeobject *r2)
 {
+
+        if (PyErr_Warn(PyExc_DeprecationWarning,
+        	       "xrange object comparison is deprecated; "
+        	       "convert to list instead") < 0)
+        	return -1;
+
 	if (r1->start != r2->start)
 		return r1->start - r2->start;
 
@@ -196,6 +210,9 @@ range_compare(rangeobject *r1, rangeobject *r2)
 static PyObject *
 range_slice(rangeobject *r, int low, int high)
 {
+	WARN("xrange object slicing is deprecated; "
+	     "convert to list instead");
+
 	if (r->reps != 1) {
 		PyErr_SetString(PyExc_TypeError,
 				"cannot slice a replicated xrange");
@@ -230,8 +247,7 @@ range_tolist(rangeobject *self, PyObject *args)
 	PyObject *thelist;
 	int j;
 
-	if (! PyArg_ParseTuple(args, ":tolist"))
-		return NULL;
+	WARN("xrange.tolist() is deprecated; use list(xrange) instead");
 
 	if (self->totlen == -1)
 		return PyErr_NoMemory();
@@ -253,9 +269,10 @@ range_getattr(rangeobject *r, char *name)
 	PyObject *result;
 
 	static PyMethodDef range_methods[] = {
-		{"tolist",	(PyCFunction)range_tolist, METH_VARARGS,
+		{"tolist",	(PyCFunction)range_tolist, METH_NOARGS,
                  "tolist() -> list\n"
-                 "Return a list object with the same values."},
+                 "Return a list object with the same values.\n"
+                 "(This method is deprecated; use list() instead.)"},
 		{NULL,		NULL}
 	};
 	static struct memberlist range_members[] = {
@@ -272,42 +289,22 @@ range_getattr(rangeobject *r, char *name)
 			result = PyInt_FromLong(r->start + (r->len * r->step));
 		else
 			result = PyMember_Get((char *)r, range_members, name);
+		if (result)
+			WARN("xrange object's 'start', 'stop' and 'step' "
+			     "attributes are deprecated");
 	}
 	return result;
 }
 
-static int
-range_contains(rangeobject *r, PyObject *obj)
-{
-	long num = PyInt_AsLong(obj);
-
-	if (num < 0 && PyErr_Occurred())
-		return -1;
-
-	if (r->step > 0) {
-		if ((num < r->start) || ((num - r->start) % r->step))
-			return 0;
-		if (num >= (r->start + (r->len * r->step)))
-			return 0;
-	}
-	else {
-		if ((num > r->start) || ((num - r->start) % r->step))
-			return 0;
-		if (num <= (r->start + (r->len * r->step)))
-			return 0;
-	}
-	return 1;
-}
-
 static PySequenceMethods range_as_sequence = {
 	(inquiry)range_length,	/*sq_length*/
-	(binaryfunc)range_concat, /*sq_concat*/
+	0,			/*sq_concat*/
 	(intargfunc)range_repeat, /*sq_repeat*/
 	(intargfunc)range_item, /*sq_item*/
 	(intintargfunc)range_slice, /*sq_slice*/
 	0,			/*sq_ass_item*/
 	0,			/*sq_ass_slice*/
-	(objobjproc)range_contains, /*sq_contains*/
+	0, 			/*sq_contains*/
 };
 
 PyTypeObject PyRange_Type = {
@@ -316,20 +313,34 @@ PyTypeObject PyRange_Type = {
 	"xrange",		/* Name of this type */
 	sizeof(rangeobject),	/* Basic object size */
 	0,			/* Item size for varobject */
-	(destructor)range_dealloc, /*tp_dealloc*/
-	0,			/*tp_print*/
-	(getattrfunc)range_getattr, /*tp_getattr*/
-	0,			/*tp_setattr*/
-	(cmpfunc)range_compare, /*tp_compare*/
-	(reprfunc)range_repr,	/*tp_repr*/
-	0,			/*tp_as_number*/
-	&range_as_sequence,	/*tp_as_sequence*/
-	0,			/*tp_as_mapping*/
-	0,			/*tp_hash*/
-	0,			/*tp_call*/
-	0,			/*tp_str*/
-	0,			/*tp_getattro*/
-	0,			/*tp_setattro*/
-	0,			/*tp_as_buffer*/
-	Py_TPFLAGS_DEFAULT,	/*tp_flags*/
+	(destructor)range_dealloc,		/*tp_dealloc*/
+	0,					/*tp_print*/
+	(getattrfunc)range_getattr,		/*tp_getattr*/
+	0,					/*tp_setattr*/
+	(cmpfunc)range_compare,			/*tp_compare*/
+	(reprfunc)range_repr,			/*tp_repr*/
+	0,					/*tp_as_number*/
+	&range_as_sequence,			/*tp_as_sequence*/
+	0,					/*tp_as_mapping*/
+	0,					/*tp_hash*/
+	0,					/*tp_call*/
+	0,					/*tp_str*/
+	PyObject_GenericGetAttr,		/*tp_getattro*/
+	0,					/*tp_setattro*/
+	0,					/*tp_as_buffer*/
+	Py_TPFLAGS_DEFAULT,			/*tp_flags*/
+	0,					/* tp_doc */
+	0,					/* tp_traverse */
+	0,					/* tp_clear */
+	0,					/* tp_richcompare */
+	0,					/* tp_weaklistoffset */
+	0,					/* tp_iter */
+	0,					/* tp_iternext */
+	0,					/* tp_methods */
+	0,					/* tp_members */
+	0,					/* tp_getset */
+	0,					/* tp_base */
+	0,					/* tp_dict */
 };
+
+#undef WARN

@@ -3,7 +3,14 @@
 
 #include <stdlib.h>
 #include <string.h>
+#ifdef __APPLE__
+#define destructor xxdestructor
+#endif
 #include <pthread.h>
+#ifdef __APPLE__
+#undef destructor
+#endif
+#include <signal.h>
 
 
 /* try to determine what version of the Pthread Standard is installed.
@@ -48,6 +55,13 @@
 
 #endif
 
+#ifdef USE_GUSI
+/* The Macintosh GUSI I/O library sets the stackspace to
+** 20KB, much too low. We up it to 64K.
+*/
+#define THREAD_STACK_SIZE 0x10000
+#endif
+
 
 /* set default attribute object for different versions */
 
@@ -59,6 +73,18 @@
 #  define pthread_attr_default ((pthread_attr_t *)NULL)
 #  define pthread_mutexattr_default ((pthread_mutexattr_t *)NULL)
 #  define pthread_condattr_default ((pthread_condattr_t *)NULL)
+#endif
+
+
+/* On platforms that don't use standard POSIX threads pthread_sigmask()
+ * isn't present.  DEC threads uses sigprocmask() instead as do most
+ * other UNIX International compliant systems that don't have the full
+ * pthread implementation.
+ */
+#ifdef HAVE_PTHREAD_SIGMASK
+#  define SET_THREAD_SIGMASK pthread_sigmask
+#else
+#  define SET_THREAD_SIGMASK sigprocmask
 #endif
 
 
@@ -123,14 +149,35 @@ PyThread__init_thread(void)
  */
 
 
-int 
+long
 PyThread_start_new_thread(void (*func)(void *), void *arg)
 {
 	pthread_t th;
 	int success;
+ 	sigset_t oldmask, newmask;
+#if defined(THREAD_STACK_SIZE) || defined(PTHREAD_SYSTEM_SCHED_SUPPORTED)
+	pthread_attr_t attrs;
+#endif
 	dprintf(("PyThread_start_new_thread called\n"));
 	if (!initialized)
 		PyThread_init_thread();
+
+#if defined(THREAD_STACK_SIZE) || defined(PTHREAD_SYSTEM_SCHED_SUPPORTED)
+	pthread_attr_init(&attrs);
+#endif
+#ifdef THREAD_STACK_SIZE
+	pthread_attr_setstacksize(&attrs, THREAD_STACK_SIZE);
+#endif
+#ifdef PTHREAD_SYSTEM_SCHED_SUPPORTED
+        pthread_attr_setscope(&attrs, PTHREAD_SCOPE_SYSTEM);
+#endif
+
+	/* Mask all signals in the current thread before creating the new
+	 * thread.  This causes the new thread to start with all signals
+	 * blocked.
+	 */
+	sigfillset(&newmask);
+	SET_THREAD_SIGMASK(SIG_BLOCK, &newmask, &oldmask);
 
 	success = pthread_create(&th, 
 #if defined(PY_PTHREAD_D4)
@@ -146,12 +193,22 @@ PyThread_start_new_thread(void (*func)(void *), void *arg)
 				 func,
 				 arg
 #elif defined(PY_PTHREAD_STD)
+#if defined(THREAD_STACK_SIZE) || defined(PTHREAD_SYSTEM_SCHED_SUPPORTED)
+				 &attrs,
+#else
 				 (pthread_attr_t*)NULL,
+#endif
 				 (void* (*)(void *))func,
 				 (void *)arg
 #endif
 				 );
 
+	/* Restore signal mask for original thread */
+	SET_THREAD_SIGMASK(SIG_SETMASK, &oldmask, NULL);
+
+#if defined(THREAD_STACK_SIZE) || defined(PTHREAD_SYSTEM_SCHED_SUPPORTED)
+	pthread_attr_destroy(&attrs);
+#endif
 	if (success == 0) {
 #if defined(PY_PTHREAD_D4) || defined(PY_PTHREAD_D6) || defined(PY_PTHREAD_D7)
 		pthread_detach(&th);
@@ -159,7 +216,11 @@ PyThread_start_new_thread(void (*func)(void *), void *arg)
 		pthread_detach(th);
 #endif
 	}
-	return success != 0 ? 0 : 1;
+#if SIZEOF_PTHREAD_T <= SIZEOF_LONG
+	return (long) th;
+#else
+	return (long) *(long *) &th;
+#endif
 }
 
 /* XXX This implementation is considered (to quote Tim Peters) "inherently

@@ -1,7 +1,7 @@
-This is Python version 2.1.1
+This is Python version 2.2.1
 ============================
 
-Copyright (c) 2001 Python Software Foundation.
+Copyright (c) 2001, 2002 Python Software Foundation.
 All rights reserved.
 
 Copyright (c) 2000 BeOpen.com.
@@ -41,9 +41,12 @@ If you don't read instructions
 Congratulations on getting this far. :-)
 
 To start building right away (on UNIX): type "./configure" in the
-current directory and when it finishes, type "make".  The section
-`Build Instructions' below is still recommended reading, especially
-the part on customizing Modules/Setup.
+current directory and when it finishes, type "make".  This creates an
+executable "./python"; to install in /usr/local, first do "su root"
+and then "make install".
+
+The section `Build Instructions' below is still recommended reading,
+especially the part on customizing Modules/Setup.
 
 
 What is Python anyway?
@@ -84,6 +87,11 @@ occasional reference, or can be downloaded in many formats for faster
 access.  The documentation is available in HTML, PostScript, PDF, and
 LaTeX formats; the LaTeX version is primarily for documentation
 authors, translators, and people with special formatting requirements.
+
+The best documentation for the new (in Python 2.2) type/class unification
+features is Guido's tutorial introduction, at
+
+    http://www.python.org/2.2/descrintro.html
 
 
 Web sites
@@ -143,32 +151,36 @@ efficient way to ask public questions.
 Build instructions
 ==================
 
-Before you can build Python, you must first configure it.  Fortunately,
-the configuration and build process has been streamlined for most Unix
-installations, so all you have to do is type a few commands,
-optionally edit one file, and sit back.  There are some platforms
-where things are not quite as smooth; see the platform specific notes
-below.  If you want to build for multiple platforms sharing the same
-source tree, see the section on VPATH below.
+Before you can build Python, you must first configure it.
+Fortunately, the configuration and build process has been automated
+for Unix and Linux installations, so all you usually have to do is
+type a few commands and sit back.  There are some platforms where
+things are not quite as smooth; see the platform specific notes below.
+If you want to build for multiple platforms sharing the same source
+tree, see the section on VPATH below.
 
-Start by running the script "./configure", which determines your system
-configuration and creates the Makefile.  (It takes a minute or two --
-please be patient!)  You may want to pass options to the configure
-script or edit the Modules/Setup file after running configure -- see the
-section below on configuration options and variables.  When it's done,
-you are ready to run make.
+Start by running the script "./configure", which determines your
+system configuration and creates the Makefile.  (It takes a minute or
+two -- please be patient!)  You may want to pass options to the
+configure script -- see the section below on configuration options and
+variables.  When it's done, you are ready to run make.
 
-To build Python, you normally type "make" in the toplevel directory.  If
-you have changed the configuration or have modified Modules/Setup, the
-Makefile may have to be rebuilt.  In this case you may have to run make
-again to correctly build your desired target.  The interpreter
-executable is built in the top level directory.
+To build Python, you normally type "make" in the toplevel directory.
+If you have changed the configuration, the Makefile may have to be
+rebuilt.  In this case you may have to run make again to correctly
+build your desired target.  The interpreter executable is built in the
+top level directory.
 
 Once you have built a Python interpreter, see the subsections below on
-testing, configuring additional modules, and installation.  If you run
-into trouble, see the next section.  Editing the Modules/Setup file
-after running make is supported; just run "make" again after making
-the desired changes.
+testing and installation.  If you run into trouble, see the next
+section.
+
+Previous versions of Python used a manual configuration process that
+involved editing the file Modules/Setup.  While this file still exists
+and manual configuration is still supported, it is rarely needed any
+more: almost all modules are automatically built as appropriate under
+guidance of the setup.py script, which is run by Make after the
+interpreter has been built.
 
 
 Troubleshooting
@@ -220,16 +232,16 @@ submit a documentation bug report to SourceForge (see Bug Reports
 above) so we can remove them!)
 
 64-bit platforms: The modules audioop, imageop and rgbimg don't work.
+	The setup.py script disables them on 64-bit installations.
 	Don't try to enable them in the Modules/Setup file.  They
 	contain code that is quite wordsize sensitive.  (If you have a
 	fix, let us know!)
 
-Solaris: When using Sun's C compiler, it's necessary to compile in
-        strict ANSI mode with multithreading enabled. This can be done
-        by setting the 'CC' environment variable to 'cc -Xc -mt'
-        before running the configure script. ANSI-compatibility mode
-        ('-Xa') has been seen to compile the code without problems,
-        but generate faulty code.
+Solaris: When using Sun's C compiler with threads, at least on Solaris
+	2.5.1, you need to add the "-mt" compiler option (the simplest
+	way is probably to specify the compiler with this option as
+	the "CC" environment variable when running the configure
+	script).
 
 Linux:  A problem with threads and fork() was tracked down to a bug in
 	the pthreads code in glibc version 2.0.5; glibc version 2.0.7
@@ -237,9 +249,15 @@ Linux:  A problem with threads and fork() was tracked down to a bug in
 	problem and solution reported by Pablo Bleyer.
 
 	Under Linux systems using GNU libc 2 (aka libc6), the crypt
-	module now needs the -lcrypt option.  Uncomment this flag in
-	Modules/Setup, or comment out the crypt module in the same
-	file. Most modern Linux systems use glibc2.
+	module now needs the -lcrypt option.  The setup.py script
+	takes care of this automatically.
+
+Red Hat Linux: There's an executable /usr/bin/python which is Python
+	1.5.2 on most Red Hat installations; several key Red Hat tools
+	require this version.  Python 2.1.x may be installed as
+	/usr/bin/python2.  The Makefile installs Python as
+	/usr/local/bin/python, which may or may not take precedence
+	over /usr/bin/python, depending on how you have set up $PATH.
 
 FreeBSD 3.x and probably platforms with NCurses that use libmytinfo or
 	similar: When using cursesmodule, the linking is not done in
@@ -297,12 +315,17 @@ SCO:	The following apply to SCO 3 only; Python builds out of the box
 
 		LIBS=' -lsocket -lcrypt_i'
 
+UnixWare: There are known bugs in the math library of the system, as well as
+        problems in the handling of threads (calling fork in one
+        thread may interrupt system calls in others). Therefore, test_math and
+        tests involving threads will fail until those problems are fixed.
+
 SunOS 4.x: When using the SunPro C compiler, you may want to use the
 	'-Xa' option instead of '-Xc', to enable some needed non-ANSI
 	Sunisms.
 
-NeXT:   To build fat binaries, use the --with-next-archs switch
-	described below.
+NeXT:   Not supported anymore. Start with the MacOSX/Darwin code if you
+	want to revive it.
 
 QNX:	Chris Herborth (chrish@qnx.com) writes:
 	configure works best if you use GNU bash; a port is available on
@@ -387,54 +410,92 @@ Reliant UNIX: The thread support does not compile on Reliant UNIX, and
         platform as well.  This should be resolved in time for a
         future release.
 
-Mac OS X 10.0: Run configure with "OPT='-no-cpp-precomp' ./configure
-        --with-suffix=.exe --with-dyld".  This generates executable
-        file: 'python.exe' (it cannot be named 'python' on an HFS or
-        HFS+ disk as the file name clashes with directory 'Python').
-        The '-no-cpp-precomp' option prevents a large number of
-        compilation warnings.  One of the regular expression tests
-        fails with a SEGV due to the small stack size used by default
-        (how to change this?), and the test_largefile test is only
-        expected to work on a Unix UFS filesystem (how to check for
-        this on Mac OS X?).
+Mac OS X 10: One of the regular expression tests fails
+        with a SEGV due to the small stack size used by default, if you do
+        "limit stacksize 2048" before "make test" it should work.
 
-Cygwin: Cygwin Python builds OOTB when configured as follows:
+        On naked Darwin you may want to add the configure option
+        "--disable-toolbox-glue" to disable the glue code for the Carbon
+        interface modules. The modules themselves are currently only built
+        if you add the --enable-framework option, see below.
 
-            configure --with-threads=no
+        On a clean OSX /usr/local does not exist. Do a
+	"sudo mkdir -m 775 /usr/local"
+        before you do a make install. Alternatively, do "sudo make install"
+        which installs everything as superuser.
 
-        assuming Cygwin 1.1.8-2 and gcc 2.95.3-1 or later.  At the time
-        of this writing, Cygwin pthread support is being significantly
-        enhanced.  Hopefully, there will be a Cygwin Python with thread
-        support soon.
+        You may want to try the configure option "--enable-framework"
+        which installs Python as a framework. The location can be set
+        as argument to the --enable-framework option (default
+        /Library/Frameworks). You may also want to check out ./Mac/OSX
+        for building a Python.app. You may also want to manually
+        install a symlink in /usr/local/bin/python to the executable
+        deep down in the framework.
 
-        Cygwin Python supports the building of shared extensions via the
-        traditional Misc/Makefile.pre.in and the newer distutils methods.
+Cygwin: With recent (relative to the time of writing, 2001-12-19)
+        Cygwin installations, there are problems with the interaction
+        of dynamic linking and fork().  This manifests itself in build
+        failures during the execution of setup.py.
 
-        On NT/2000, the following regression tests fail:
+        There are two workarounds that both enable Python (albeit
+        without threading support) to build and pass all tests on
+        NT/2000 (and most likely XP as well, though reports of testing
+        on XP would be appreciated).
 
-            test_poll (hang)
-            test_strftime
+        The workarounds:
 
-        Due to the test_poll hang on NT/2000, one should run the
-        regression test using the following:
+        (a) the band-aid fix is to link the _socket module statically
+        rather than dynamically (which is the default).
 
-            PYTHONPATH= ./python.exe -tt ./Lib/test/regrtest.py -l -x test_poll
+        To do this, run "./configure --with-threads=no" including any
+        other options you need (--prefix, etc.).  Then in Modules/Setup
+         uncomment the lines:
 
-        On 9X/Me, in addition the above NT/2000 failures, it has been
-        reported that the following regression tests also fail:
+        #SSL=/usr/local/ssl
+        #_socket socketmodule.c \
+        #	-DUSE_SSL -I$(SSL)/include -I$(SSL)/include/openssl \
+        #	-L$(SSL)/lib -lssl -lcrypto
+
+        and remove "local/" from the SSL variable.  Finally, just run
+        "make"!
+
+        (b) The "proper" fix is to rebase the Cygwin DLLs to prevent
+        base address conflicts.  Details on how to do this can be
+        found in the following mail:
+
+           http://sources.redhat.com/ml/cygwin/2001-12/msg00894.html
+
+        It is hoped that a version of this solution will be
+        incorporated into the Cygwin distribution fairly soon.
+
+        Two additional problems:
+
+        (1) Threading support should still be disabled due to a known
+        bug in Cygwin pthreads that causes test_threadedtempfile to
+        hang.
+
+        (2) The _curses module does not build.  This is a known
+        Cygwin ncurses problem that should be resolved the next time
+        that this package is released.
+
+        On older versions of Cygwin, test_poll may hang and test_strftime
+        may fail.
+
+        The situation on 9X/Me is not accurately known at present.
+        Some time ago, there were reports that the following
+        regression tests failed:
 
             test_pwd
             test_select (hang)
             test_socket
 
-        Due to the test_poll and test_select hang on 9X/Me, one should
-        run the regression test using the following:
+        Due to the test_select hang on 9X/Me, one should run the
+        regression test using the following:
 
-            PYTHONPATH= ./python.exe -tt ./Lib/test/regrtest.py -l -x test_poll -x test_select
+            make TESTOPTS='-l -x test_select' test
 
-        Help trying to track down the root causes for these known problems
-        will be greatly appreciated.
-
+        News regarding these platforms with more recent Cygwin
+        versions would be appreciated!
 
 Configuring threads
 -------------------
@@ -502,16 +563,20 @@ Configuring additional built-in modules
 Starting with Python 2.1, the setup.py script at the top of the source
 distribution attempts to detect which modules can be built and
 automatically compiles them.  Autodetection doesn't always work, so
-you can customize the configuration by editing the Modules/Setup file.
+you can still customize the configuration by editing the Modules/Setup
+file; but this should be considered a last resort.  The rest of this
+section only applies if you decide to edit the Modules/Setup file.
+You also need this to enable static linking of certain modules (which
+is needed to enable profiling on some systems).
+
 This file is initially copied from Setup.dist by the configure script;
 if it does not exist yet, create it by copying Modules/Setup.dist
 yourself (configure will never overwrite it).  Never edit Setup.dist
 -- always edit Setup or Setup.local (see below).  Read the comments in
 the file for information on what kind of edits are allowed.  When you
 have edited Setup in the Modules directory, the interpreter will
-automatically be rebuilt the next time you run make in the toplevel
-directory.  (When working inside the Modules directory, use "make
-Makefile; make".)
+automatically be rebuilt the next time you run make (in the toplevel
+directory).
 
 Many useful modules can be built on any Unix system, but some optional
 modules can't be reliably autodetected.  Often the quickest way to
@@ -549,6 +614,21 @@ Additional debugging code to help debug memory management problems can
 be enabled by using the --with-pydebug option to the configure script.
 
 
+Profiling
+---------
+
+If you want C profiling turned on, the easiest way is to run configure
+with the CC environment variable to the necessary compiler
+invocation.  For example, on Linux, this works for profiling using
+gprof(1):
+
+    CC="gcc -pg" ./configure
+
+Note that on Linux, gprof apparently does not work for shared
+libraries.  The Makefile/Setup mechanism can be used to compile and
+link most extension module statically.
+
+
 Testing
 -------
 
@@ -556,8 +636,7 @@ To test the interpreter, type "make test" in the top-level directory.
 This runs the test set twice (once with no compiled files, once with
 the compiled files left by the previous test run).  The test set
 produces some output.  You can generally ignore the messages about
-skipped tests due to optional features which can't be imported.  (If
-you want to test those modules, edit Modules/Setup to configure them.)
+skipped tests due to optional features which can't be imported.
 If a message is printed about a failed test or a traceback or core
 dump is produced, something is wrong.  On some Linux systems (those
 that are not yet using glibc 6), test_strftime fails due to a
@@ -568,9 +647,9 @@ IMPORTANT: If the tests fail and you decide to mail a bug report,
 *don't* include the output of "make test".  It is useless.  Run the
 failing test manually, as follows:
 
-	python ../Lib/test/test_whatever.py
+	./python ./Lib/test/test_whatever.py
 
-(substituting the top of the source tree for .. if you built in a
+(substituting the top of the source tree for '.' if you built in a
 different directory).  This runs the test in verbose mode.
 
 
@@ -619,6 +698,11 @@ Emacs found in Misc/python-mode.el.  (But then again, more recent
 versions of Emacs may already have it.)  Follow the instructions that
 came with Emacs for installation of site-specific files.
 
+On Mac OS X, if you have configured Python with --enable-framework, you
+should use "make frameworkinstall" to do the installation. Note that this
+installs the Python executable in a place that is not normally on your
+PATH, you may want to set up a symlink in /usr/local/bin.
+
 
 Configuration options and variables
 -----------------------------------
@@ -655,8 +739,8 @@ Modules/getpath.o.
 	than re-running the configure script if you change your mind
 	about the install prefix.
 
---with-readline: This option is no longer supported.  To use GNU
-	readline, enable module "readline" in the Modules/Setup file.
+--with-readline: This option is no longer supported.  GNU
+	readline is automatically enabled by setup.py when present.
 
 --with-threads: On most Unix systems, you can now use multiple
 	threads, and support for this is enabled by default.  To
@@ -701,11 +785,6 @@ Modules/getpath.o.
 	compiler to use the shared C library, you can pass
 	--with-libc=-lc_s. These libraries are passed after all other
 	libraries, the C library last.
-
---with-next-archs='arch1 arch2': Under NEXTSTEP, this will build
-	all compiled binaries with the architectures listed.  This will
-	also correctly set the target architecture-specific resource
-	directory.  (This option is not supported on other platforms.)
 
 --with-libs='libs': Add 'libs' to the LIBS that the python interpreter
 	is linked against.
@@ -790,6 +869,11 @@ configuration of your system.  Most symbols must simply be defined as
 otherwise; however the *_t type symbols must be defined as some variant
 of int if they need to be defined at all.
 
+For all platforms, it's important that the build arrange to define the
+preprocessor symbol NDEBUG on the compiler command line in a release
+build of Python (else assert() calls remain in the code, hurting
+release-build performance).  The Unix, Windows and Mac builds already
+do this.
 
 
 Miscellaneous issues
@@ -811,25 +895,12 @@ files.  (Newer versions of Emacs or XEmacs may already come with the
 latest version of python-mode.)
 
 
-The Tk interface
-----------------
+Tkinter
+-------
 
-Tk (the user interface component of John Ousterhout's Tcl language) is
-also usable from Python.  Since this requires that you first build and
-install Tcl/Tk, the Tk interface is not enabled by default when
-building Python from source.  Python supports Tcl/Tk version 8.0 and
+The setup.py script automatically configures this when it detects a
+usable Tcl/Tk installation.  This requires Tcl/Tk version 8.0 or
 higher.
-
-See http://dev.ajubasolutions.com/ for more info on Tcl/Tk, including
-the on-line manual pages.
-
-
-To enable the Python/Tk interface, once you've built and installed
-Tcl/Tk, load the file Modules/Setup into your favorite text editor and
-search for the string "_tkinter".  Then follow the instructions found
-there.  If you have installed Tcl/Tk or X11 in unusual places, you
-will have to edit the first line to fix or add the -I and -L options.
-(Also see the general instructions at the top of that file.)
 
 For more Tkinter information, see the Tkinter Resource page:
 http://www.python.org/topics/tkinter/
@@ -842,15 +913,11 @@ Note that there's a Python module called "Tkinter" (capital T) which
 lives in Lib/lib-tk/Tkinter.py, and a C module called "_tkinter"
 (lower case t and leading underscore) which lives in
 Modules/_tkinter.c.  Demos and normal Tk applications import only the
-Python Tkinter module -- the latter uses the C _tkinter module
-directly.  In order to find the C _tkinter module, it must be compiled
-and linked into the Python interpreter -- the _tkinter line in the
-Setup file does this.  In order to find the Python Tkinter module,
-sys.path must be set correctly -- the TKPATH assignment in the Setup
-file takes care of this, but only if you install Python properly
-("make install libinstall").  (You can also use dynamic loading for
-the C _tkinter module, in which case you must manually fix up sys.path
-or set $PYTHONPATH for the Python Tkinter module.)
+Python Tkinter module -- only the latter imports the C _tkinter
+module.  In order to find the C _tkinter module, it must be compiled
+and linked into the Python interpreter -- the setup.py script does
+this.  In order to find the Python Tkinter module, sys.path must be
+set correctly -- normal installation takes care of this.
 
 
 Distribution structure

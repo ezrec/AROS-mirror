@@ -26,6 +26,33 @@ class CalendarTestCase(unittest.TestCase):
         self.assertEqual(calendar.firstweekday(), calendar.MONDAY)
         calendar.setfirstweekday(orig)
 
+    def test_enumerateweekdays(self):
+        self.assertRaises(IndexError, calendar.day_abbr.__getitem__, -10)
+        self.assertRaises(IndexError, calendar.day_name.__getitem__, 10)
+        self.assertEqual(len([d for d in calendar.day_abbr]), 7)
+
+    def test_days(self):
+        for attr in "day_name", "day_abbr":
+            value = getattr(calendar, attr)
+            self.assertEqual(len(value), 7)
+            self.assertEqual(len(value[:]), 7)
+            # ensure they're all unique
+            d = {}
+            for v in value:
+                d[v] = 1
+            self.assertEqual(len(d), 7)
+
+    def test_months(self):
+        for attr in "month_name", "month_abbr":
+            value = getattr(calendar, attr)
+            self.assertEqual(len(value), 13)
+            self.assertEqual(len(value[:]), 13)
+            self.assertEqual(value[0], "")
+            # ensure they're all unique
+            d = {}
+            for v in value:
+                d[v] = 1
+            self.assertEqual(len(d), 13)
 
 def test_main():
     run_unittest(CalendarTestCase)

@@ -18,10 +18,6 @@
 #include "pythread.h"
 #endif
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -677,7 +673,7 @@ bsddb_getattr(PyObject *dp, char *name)
 static PyTypeObject Bsddbtype = {
 	PyObject_HEAD_INIT(NULL)
 	0,
-	"bsddb",
+	"bsddb.bsddb",
 	sizeof(bsddbobject),
 	0,
 	(destructor)bsddb_dealloc, /*tp_dealloc*/
