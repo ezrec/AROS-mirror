@@ -66,7 +66,7 @@ $(DEMO) : $(DEMO).c
 	@$(CC) $(INCLUDES) $(DEFINES) -c $^ -o $@.o
 	@$(CC) $(FLAGS) $(STARTUP) $@.o -o $@ $(LIBS)
 	@$(ECHO) Installing $@
-	@$(CP) $@ $(BINDIR)
+	@$(CP) $@ $(BINDIR)/bgui
 
 all : $(LIBTARGETS) $(GADGET) $(DEMO)
 
