@@ -311,7 +311,8 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                             )                                
                         ] )
                     ]
-                )
+                ),
+                statsPHP
             ]
         )
     ] )
