@@ -28,9 +28,7 @@
 #include <graphics/layers.h>
 #include <graphics/text.h>
 #include <graphics/monitor.h>
-#ifndef _AROS
 #include <graphics/videocontrol.h>
-#endif
 #include <graphics/displayinfo.h>
 #include <intuition/intuition.h>
 #include <intuition/intuitionbase.h>
@@ -48,15 +46,14 @@
 #include <libraries/asl.h>
 #include <libraries/locale.h>
 #include <libraries/commodities.h>
-#ifndef _AROS
 #include <libraries/amigaguide.h>
-#endif
 #include <rexx/errors.h>
 #include <rexx/storage.h>
 #include <workbench/workbench.h>
 #include <workbench/startup.h>
-#ifndef _AROS
+
 #include <proto/amigaguide.h>
+#ifndef _AROS
 #include <proto/rexxsyslib.h>
 #endif
 #include <proto/exec.h>
@@ -72,6 +69,8 @@
 #include <proto/locale.h>
 #include <proto/utility.h>
 #include <proto/commodities.h>
+#include <proto/asl.h>
+#include <proto/keymap.h>
 #include <clib/alib_protos.h>
 
 #include <string.h>
