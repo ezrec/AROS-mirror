@@ -246,7 +246,7 @@ import xmlsupport
 def writeVerbatim (p, xmlfile, item):
     if isinstance (item, xmlsupport.Tag):
 	# Give a hint if a tag might be unsupported
-	if not item.name in ('p', 'ul', 'li', 'strong', 'i', 'a',):
+	if not item.name in ('p', 'ul', 'li', 'strong', 'i', 'a', 'img', 'tt'):
 	    print item.name
 	p.fh.write ('<%s' % item.name)
 	for attr, value in item.attr.items ():
@@ -263,6 +263,10 @@ def chapterToHtml (p, xmlfile, item):
 
 def sectionToHtml (p, xmlfile, item):
     p.fh.write (str (Heading (2, item.attr['title'])))
+    xmlfile.processRecursive (p, item.content)
+
+def subsectionToHtml (p, xmlfile, item):
+    p.fh.write (str (Heading (3, item.attr['title'])))
     xmlfile.processRecursive (p, item.content)
 
 def emailToHtml (p, xmlfile, item):
@@ -334,6 +338,11 @@ def filenameToHtml (p, xmlfile, item):
     xmlfile.processRecursive (p, item.content)
     p.fh.write ('</tt>')
 
+def classToHtml (p, xmlfile, item):
+    p.fh.write ('<strong><tt>')
+    xmlfile.processRecursive (p, item.content)
+    p.fh.write ('</tt></strong>')
+
 def descriptionToHtml (p, xmlfile, item):
     p.fh.write ('<p><dl>\n')
     for line in item.content:
@@ -370,6 +379,64 @@ def insertHtml (p, xmlfile, item):
 	p.fh.write (p.extraInfo[item.content[0].text])
 
 
+def recursiveTreeItemToHtml (p, xmlfile, item, level, hasSuccessor):
+    p.fh.write ('<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0"><TR>')
+    for l in level:
+	l = (l != ' ')
+	p.fh.write ('<TD WIDTH="16" ALIGN="CENTER"><IMG SRC="pics/parent%d.png" ALT="%s"></TD>' % (
+	    l, ' |'[l]
+	))
+    subtree, descr = None, None
+    for child in item.content:
+	if isinstance (child, xmlsupport.Tag):
+	    if child.name == 'tree':
+		assert subtree == None
+		subtree = child
+	    elif child.name == 'description':
+		assert descr == None
+		descr = child
+	    else:
+		raise 'Element %s not allowed in tree item' % child.name
+
+    p.fh.write ('<TD WIDTH="16" ALIGN="CENTER"><IMG SRC="pics/child%d%d.png" ALT="%s"</TD>' % (
+	(subtree != None), (hasSuccessor != 0), '+'
+    ))
+    p.fh.write ('<TD>%s</TD>\n' % item.attr['title'])
+    if descr:
+	p.fh.write ('<TD>')
+	xmlfile.processRecursive (p, descr.content)
+	p.fh.write ('</TD>\n')
+    p.fh.write ('</TABLE>\n')
+    if subtree:
+	if hasSuccessor:
+	    level = level + '|'
+	else:
+	    level = level + ' '
+	recursiveTreeToHtml (p, xmlfile, subtree, level)
+
+def recursiveTreeToHtml (p, xmlfile, item, level):
+    children = []
+    for child in item.content:
+	if isinstance (child, xmlsupport.Tag):
+	    if child.name == 'item':
+		children.append (child)
+	    else:
+		raise 'Element %s not allowed in tree' % child.name
+    
+    if children:
+	for child in children[:-1]:
+	    recursiveTreeItemToHtml (p, xmlfile, child, level, 1)
+	recursiveTreeItemToHtml (p, xmlfile, children[-1], level, 0)
+
+def treeToHtml (p, xmlfile, item):
+    '''The structure of a tree is 
+	<tree><item title="...">...</item>...</tree>
+	where every <tree> element can contain any number of <item>
+	elements and an item can contain exactly one <tree> and one
+	<description> element.
+    '''
+    recursiveTreeToHtml (p, xmlfile, item, '')
+
 class XmlPage (Page):
     def __init__ (self, xmlfilename, rcFile=arosRC, linkBoxItem='', **kw):
 	apply (Page.__init__, (self, rcFile, linkBoxItem,), kw)
@@ -381,6 +448,7 @@ class XmlPage (Page):
 	XML2HTML.setDefault (writeVerbatim)
 	XML2HTML.add ('chapter', chapterToHtml)
 	XML2HTML.add ('section', sectionToHtml)
+	XML2HTML.add ('subsection', subsectionToHtml)
 	XML2HTML.add ('email', emailToHtml)
 	XML2HTML.add ('insert', insertHtml)
 	XML2HTML.add ('example', exampleToHtml)
@@ -388,26 +456,35 @@ class XmlPage (Page):
 	XML2HTML.add ('shell', shellToHtml)
 	XML2HTML.add ('filename', filenameToHtml)
 	XML2HTML.add ('description', descriptionToHtml)
+	XML2HTML.add ('class', classToHtml)
+	XML2HTML.add ('tree', treeToHtml)
+	xmlfile.addEntity ('AROS', 'AROS')
+	xmlfile.addEntity ('AMIGA', 'Amiga®')
+	xmlfile.addEntity ('AMIGAOS', 'AmigaOS')
 	XML2HTML.extraInfo = extraInfo
 
+	xmlfile.parse ()
 	xmlfile.process (XML2HTML)
 	self.meat = self.meat + [RawText (XML2HTML.fh.getvalue ())]
 	XML2HTML.fh.close ()
 
 # Call all generators in turn
 genDocumentation ()
-page = XmlPage (os.path.join (datadir, 'background.xml'),
+XmlPage (os.path.join (datadir, 'background.xml'),
     linkBoxItem='Background',
-)
-page.write ('background.html')
-page = XmlPage (os.path.join (datadir, 'cvs.xml'),
+).write ('background.html')
+XmlPage (os.path.join (datadir, 'cvs.xml'),
     linkBoxItem='CVS',
-)
-page.write ('cvs.html')
-page = XmlPage (os.path.join (datadir, 'mmake.xml'),
+).write ('cvs.html')
+XmlPage (os.path.join (datadir, 'mmake.xml'),
     linkBoxItem='MetaMake',
-)
-page.write ('mmake.html')
+).write ('mmake.html')
+XmlPage (os.path.join (datadir, 'hidd-intro.xml'),
+    linkBoxItem='HIDD Intro',
+).write ('hidd-intro.html')
+XmlPage (os.path.join (datadir, 'hidd-model.xml'),
+    linkBoxItem='HIDD Model',
+).write ('hidd-model.html')
 
 import htmlautodocs
 htmlautodocs.gen ()
