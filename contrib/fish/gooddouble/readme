@@ -1,0 +1,61 @@
+
+                        ReadMe for GoodClick v0.3
+
+This is a function (in two versions) and a couple of macros which (in my
+opinion), make Intuition programming a little easier. They recognize namely
+double clicks with ANY mouse-button, taking as parameters ONLY the CURRENT
+seconds & micros. They remembers by itself their previous values. You should
+call the appropriate macros for EVERY MOUSEBUTTON event you are likely to
+receive, even if you are not very interested in e.g. double-clicks with the
+right button, if you don't want subtle (?) errors in double-click
+recognition. There might be too much of them -- the reason is that if you
+give Intuition for example left-right-left in even very quick tact, it still
+shouldn't be treated as a real double-click. And it won't be treated as such
+by this package, but this right button must be fed to the macros/functions as
+well. Get it?
+
+The function (and macros) returns TRUE if the time you give it was inside the
+double-click time-distance from the last time it got the SAME button; and NO
+OTHER button was clicked IN BETWEEN. Otherwise it return FALSE. This routine
+understands all the three available on the Amiga mouse-buttons, i.e. the
+MIDDLE one too.
+
+More formally,
+
+    these are the macros #defined in "good_double.h":
+
+        BOOL = LeftDouble( ULONG seconds, ULONG micros )
+        BOOL = MiddleDouble( ULONG seconds, ULONG micros )
+        BOOL = RightDouble( ULONG seconds, ULONG micros )
+
+    and they all call a function like that:
+
+        BOOL = GoodDouble( LONG button_num, ULONG seconds, ULONG micros )
+
+        where
+
+            button_num =    0   for the left,
+                            1   for the middle
+                            2   for right button
+
+The source-code in C, objects, and an example program are included. Included
+is also a more stupid (and c. 200 bytes smaller) version that doesn't know
+anything about the MIDDLE-button.
+
+This whole stuff compiles cleanly with DICE. I tried it even with Lattice
+v5.10, it compiles cleanly as well, though the test program spits the
+messages AFTER it has terminated! I'm certainly not Lattice programmer
+myself, and every such person will certainly be able fix this in seconds...
+My source looks like a portable C to me (except for the DICE' '__regargs'
+which are taken hand of automatically by the preprocessor). The objects
+provided here are produced by DICE, and take non-registerized function-
+parameters, so you should be able to link them with anything. If you must or
+want to recompile them and your compiler doesn't support registerized
+function arguments, keep GDC_REGARGS in good_double.h #undefine'd.
+
+
+                   	this is Public Domain, enjoy s'il vous plaît!
+
+
+                                            Piotr Obminski
+
