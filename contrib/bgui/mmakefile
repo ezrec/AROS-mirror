@@ -100,7 +100,8 @@ OBJECTS =  \
 #MM bgui-setup
 bgui-setup : makedirs
 	@$(CP) s/Package-Startup $(BGUISDIR)
-
+	@$(CP) s/Package-Shutdown $(BGUISDIR)
+        
 #MM bgui-includes-copy
 bgui-includes-copy : $(INCLUDE_FILES)
 
