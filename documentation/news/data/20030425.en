@@ -1,0 +1,198 @@
+=============
+Status Update
+=============
+
+:Author: Adam Chodorowski <chodorowski@aros.org>
+:Date:   2003-04-25
+
+Almost another whole months has gone by, which means that it's definately time
+for another status update. I'm sure you're all perched for information about
+what's happening with AROS. ;-)
+
+
+Hardware
+--------
+
+Ports
+"""""
+
+Matthew Parsons contacted Genesi__ and asked if they would be interested in
+sponsoring a Pegasos board to get AROS ported to it, and they thought it was a
+great idea! After some discussion on the ML and hard thinking on Johan Grip's 
+part, he decided to accept the offer and try his outmost to port AROS to the 
+Pegasos. All agree that he's the best suited for this task. The Pegasos board
+is at the time of writing on it's way to Johan. Hopefully this will result in 
+AROS running on it in the near future!
+
+Stefan Berger did some more work on the m68k-pp (Palm) port, which include 
+bits of an input driver for the touchscreen and several fixes. He also 
+commited parts of a native ARM port (it's not complete, and there are no 
+promises that he will continue working on it).
+
+__ http://www.thendic-france.com/
+
+
+Drivers
+"""""""
+
+When it comes to drivers, several things have happened:
+
++ Georg Steger has worked hard on improving the stability in ide.device and 
+  cdrom.handler. The former had several ugly race conditions, which could 
+  result in bad things happening if several programs tried to access the disk
+  at the same time. Also added was better support for removable drives. As for
+  cdrom.handler, there were several bugs in the startup routines and the 
+  filesystem interface (which meant ``PROGDIR:`` didn't work for programs 
+  started from CDROM).
+
++ Sebastian Heutling commited parts of a USB/UHCI driver, but it is far from 
+  being usable at this point. Before it makes sense to develop it further more
+  work has to be done on the general driver architecture in AROS. 
+  
++ Martin Blom found some free time and ported AHI__, although there are no 
+  drivers yet (except for the filesave and dummy ones). This is a great step
+  forward for providing sound support to AROS! Writing a driver for hosted 
+  should be fairly simple (the only problem is time, as always) and it will 
+  probably the first one. You can see the preferences program running in a
+  screenshot_.
+
+__ http://www.lysator.liu.se/~lcs/ahi.html
+
+
+User Interface
+--------------
+
+On the user interface front, there has been discussions about using 
+render.library and guigfx.library in Zune, picture.datatype and other places
+that would benefit greatly from them. The author was very positive to this,
+and while render.library already has been ported long ago (although it has 
+some endianness issues), guigfx.library will take a while to materialize 
+(since it is originally written in m68k assember, although there is a rewrite
+under way by the author to make it portable). 
+
+There was also a heated discussion on the mailing list about which buttons 
+should be available in prefs programs, since there was a feeling that the 
+traditional Save/Use/Cancel triad of AmigaOS is not enough. After a *lot* of
+discussion, it was finally decided on a compromise where the Save/Use/Cancel
+buttons where kept but the additional Test/Revert buttons (which don't close
+the window) was added.
+
+Other developments of interest:
+
++ David Le Corfec, Georg Steger and Sebastian Bauer continued to code on Zune
+  and made the Test button in the prefs program work, added a bitmap preview
+  in the imageadjust dialog and worked on a experimental feature to reduce
+  the flickering when resizing windows.
+
++ David Le Corfec managed to dig up some artistic skills and created some new
+  def_Tool and def_Project icons to replace the 4-color ones. Some days later, 
+  Martin "Mason" Mertz contributed several more icons, including ones for 
+  def_Tool and def_Project. ;-) Some nice striped patterns were also created
+  by David. Have a look at the screenshot_.
+
++ Georg Steger fixed a bug in the hosted flavour which meant that the X SHM
+  extension always was disabled. The graphics performance should now be a bit
+  better.
+
+
+Datatypes
+---------
+
+Thanks to Martin Gierich who wrote jpeg.datatype based on libjpeg__ and 
+Georg Steger who wrote png.datatype based on libpng__, AROS now supports most
+popular image formats! The png.datatype supports transparancy with palettized
+(256 colors or less) images. You can see them in action in the screenshot_.
+
+__ http://www.libpng.org/pub/png/libpng.html
+__ http://www.ijg.org/
+
+
+Miscellanous
+------------
+
+Some miscellanous things that have happened:
+
++ Staf Verhaegen merged the diskfont.library sources with the MorphOS version,
+  and then continued with reworking it in several ways. 
+
++ Georg Steger fixed a bug in Locale Prefs which caused random crashes on 
+  i386-pc (but oddly enough not on hosted).
+  
++ Fabio Alemagna fixed several bugs all over the place, after Martin Blom 
+  reported them during the course of porting AHI.
+
++ Stefan Berger worked some more on the port of gtlayout.library in contrib,
+  aiming on being able to port Term in the future. He also ported another 
+  contrib program: MUImine (a rather nice minesweeper game clone).
+
++ Fabio Alemagna ported `LBreakout 2`__, which is a very nice and polished 
+  breakout style game that uses SDL. There are however some problems when
+  running in windowed mode or in 16bit screen depth (works fine in 24bit modes
+  though). Take a look at the screenshot__!
+  
++ Olivier Adam wrote french translations for many programs.
+
+__ http://lgames.sourceforge.net/index.php?project=LBreakout2
+__ http://www.aros.org/pictures/screenshots/20030425/lbreakout2.png
+
+
+Repository Cleanup
+-------------------
+
+During the last month there has also been an effort to clean up the CVS 
+repository, mostly spearheaded by Adam Chodorowski. Basically there are two
+parts to this effort: 
+
+1. Make sure that all software in the main tree follows the 
+   `licensing policy`__ (which entails checking the copyright and making sure 
+   the license are compatible with the APL, and make sure it is are 
+   documented).
+   
+2. Moving software that we want to be part of the standard AROS distribution
+   from contrib to the main tree, and moving things that don't belong in the 
+   main tree to contrib.
+
+The following things have resultet from this effort:
+
++ The authors of FlexCat, which we use in development, have been contacted to 
+  clarify the license since the documentation is very vague about it. They 
+  confirmed that it is indeed licensed under the 
+  `GNU General Public License (GPL)`__.
+
++ GRUB__ (our bootloader for i386-pc), libjpeg, jpeg.datatype, libbz2 (bzip2__
+  compression library) and JanoEditor (nice text editor which will become the
+  standard one in AROS) have been moved from contrib to the main tree. On the
+  other hand, liblcc (part of the LCC__ compiler) has been moved from the main 
+  tree to contrib. Aaron  Digulla did the actual moving directly on the CVS 
+  server, to avoid loosing the CVS history.
+
+  In the near future more software will most likely be moved to the main 
+  tree, like Regina (to provide ARexx compatability), FreeType__ 2 (support 
+  for scaleable TrueType fonts), libpng and png.datatype. 
+
+__ http://www.aros.org/documentation/developers/system-development.php#licensing-policy
+__ http://www.gnu.org/licenses/gpl.html
+__ http://www.gnu.org/software/grub/
+__ http://sources.redhat.com/bzip2/
+__ http://www.cs.princeton.edu/software/lcc/
+__ http://www.freetype.org/
+
+
+Documentation
+-------------
+
+After a consensus had been reached in the discussion about buttons in prefs 
+programs, Adam Chodorowski decided to write the first part of the AROS `User
+Interface Style Guide`__ about this topic. It's still a long way from being 
+a comprehensive guide on user interface issues, but atleast it's a start. 
+
+__ http://www.aros.org/documentation/developers/ui
+
+
+Website
+-------
+
+To avoid redirection and better handle the load, www.aros.org now directly 
+points to the SourceForge web server. 
+
+.. _screenshot: http://www.aros.org/pictures/screenshots/20030425/icons+ahi+datatypes.png
