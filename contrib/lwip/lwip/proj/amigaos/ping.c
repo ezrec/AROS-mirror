@@ -294,7 +294,8 @@ struct Library *SocketBase;
 
 char *inet_ntoa( struct in_addr ip )
 {
-  return Inet_NtoA(ip.s_addr);
+  return "inet_ntoa()";
+//  return Inet_NtoA(ip.s_addr);
 }
 
 

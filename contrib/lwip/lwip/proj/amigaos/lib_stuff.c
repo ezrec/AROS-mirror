@@ -141,6 +141,9 @@ extern void LIB_IoctlSocket(void);
 extern void LIB_CloseSocket(void);
 extern void LIB_WaitSelect(void);
 extern void LIB_SetSocketSignals(void);
+extern void LIB_getdtablesize(void);
+extern void LIB_ObtainSocket(void);
+extern void LIB_ReleaseSocket(void);
 extern void LIB_SocketBaseTagList(void); /* -294 */
 
 static void *function_array[] =
@@ -167,6 +170,9 @@ static void *function_array[] =
   LIB_CloseSocket,         /* -120 */
   LIB_WaitSelect,          /* -126 */
   LIB_SetSocketSignals,    /* -132 */
+  LIB_getdtablesize,       /* -138 */
+  LIB_ObtainSocket,        /* -144 */
+  LIB_ReleaseSocket,       /* -152 */
   (void*)~0,
 };
 
