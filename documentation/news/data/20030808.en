@@ -87,8 +87,9 @@ The Zune string gadget also got a rework and is now slightly more usable,
 the prefs program got a few more pages, and many Zune classes were
 put in their own loadable modules.
 
-Georg Steger implemented the Cybergraphics' WritePixelArrayAlpha(), so we
-can show even more eye-candy, with alpha blending this time :)
+Georg Steger implemented the Cybergraphics' WritePixelArrayAlpha()
+and BltTemplateAlpha(), so we can show even more eye-candy, with
+alpha blending this time :)
 Adam used this to implement a nice grayed-out disabled effect for
 Zune gadgets, instead of the usual grid pattern.
 
@@ -99,7 +100,7 @@ to the XFree86 project. And when you're faced with a strange memory
 corruption, try his invaluable trick : call a check routine in the
 scheduler ! This allowed to fix bugs in several Prefs programs.
 
-But maybe the best for the end ... With WritePixelArrayAlpha()
+But maybe the best for the end ... With BltTemplateAlpha()
 to blend the anti-aliased glyphs, and the work from Staf on freetype2,
 diskfont and bullet libraries, TrueType fonts now
 work - and look__ - great! It also draws upon the work of many others,
