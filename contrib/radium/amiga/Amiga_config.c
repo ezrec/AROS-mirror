@@ -99,7 +99,7 @@ bool AmigaConfig(void){
 				screenmodesel=1;
 				FreeAslRequest(requester);
 			}else{
-				fprintf(
+				if (file) fprintf(
 					file,
 					"%d\n%d\n%d\n%d\n%d\n%d\n",
 					requester->sm_DisplayID,
@@ -121,9 +121,9 @@ bool AmigaConfig(void){
 				if(frequester!=NULL){
 					if(AslRequestTags(frequester,0L)==NULL){
 						fprintf(stderr,"Could not open font. Using topaz8.\n");
-						fprintf(file,"topaz.font\n8\n0\n0");
+						if (file) fprintf(file,"topaz.font\n8\n0\n0");
 					}else{
-						fprintf(
+						if (file) fprintf(
 							file,
 							"%s\n%d\n%d\n%d\n",
 							frequester->fo_Attr.ta_Name,
@@ -139,9 +139,9 @@ bool AmigaConfig(void){
 	}
 
 	if(screenmodesel==1){
-		fprintf(file,"workbench\n");
+		if (file) fprintf(file,"workbench\n");
 	}
-	fclose(file);
+	if (file) fclose(file);
 
 	Amiga_memory_config();
 
