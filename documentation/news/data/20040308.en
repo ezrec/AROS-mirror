@@ -1,0 +1,127 @@
+=============
+Status Update
+=============
+
+:Authors: David Le Corfec <dlc AT aros DOT org>, Fabio Alemagna <falemagn AT aros DOT org>,
+          Adam Chodorowski <chodorowski AT aros DOT org>
+:Date:    2004-03-08
+
+Progress continues steadily underground, yet nobody dares to write status
+updates. :) So this one will be short and necessarily incomplete.
+
+Today's headlines are new PCI subsystem, and PNG icons support (eye-candy lovers,
+rejoice).
+
+Hardware
+--------
+
+Michal Schulz has completed the new PCI driver, thus earning the TeamAROS__
+`bounty #10`__. It is hardware independent and currently has linux-i386 and
+pc-i386 (native) drivers. This is a good foundation for the future PCI
+device drivers. He also made a little tool that allows one to browse a list of all
+PCI peripherals attached to the computer. A screenshot can be seen here__.
+
+Michal is now working on a nVidia graphics card driver
+(TeamAROS `bounty #9`__). Let's wish him good luck. :)
+
+Johan Grip fixed some IDE bugs and is planning to do a rewrite
+of the floppy and IDE drivers.
+Let's wish him good luck too, as these are not the easiest pieces of
+hardware to code for, given their various quirks and other chipset issues.
+
+Nic Andrews, a welcome addition to our resident hardware hackers, is working on
+CPU detection, cpu.resource and ACPI__ support
+on i386, maybe the first step on a long road to SMP support. :)
+
+__ http://thenostromo.com/teamaros/
+__ http://thenostromo.com/teamaros/bounty_details_10.html
+__ http://www.aros.org/pictures/screenshots/20040308/pci.jpeg
+__ http://thenostromo.com/teamaros/bounty_details_9.html
+__ http://www.acpi.info/
+
+User Interface
+--------------
+
+Adam Chodorowski changed the name of the `PreferencesWindow` class to the
+shorter `PrefsWindow` and improved its implementation. He also added a
+dedicated preferences application for `Wanderer`, our Workbench(TM) lookalike,
+implemented by using the PrefsWindow class. It allows you to test and set your Wanderer backgrounds in a much user-friendly way than before. :)
+
+Adam Chodorowski and Georg Steger finally completed the integration of the MorphOS__ modifications
+to our `intuition.library`.
+
+Georg Steger reworked the graphics driver subsystem to allow better
+optimization, most notably under X11. As a consequence, antialiased
+fonts render faster. and are actually quite usable now.
+
+He also added PNG support to the icon.library, which now can use plain 
+PNG images as icons. The format used is the same as MorphOS' or AmigaOS'
+with `PowerIcon patch`__, with a little extension: it also allows to use a 
+PNG image to represent an icon's selected state. A screenshots of this new feature
+can be found here__.
+
+David Le Corfect fixed many bugs and visual quirks in Zune. For example, now relayouting a group
+doesn't cause the whole window to relayout, which makes for a much better visual experience.
+
+Georg Steger also improved `intuition.library` so that resizing a window would not redraw the whole
+window borders if not strictly needed. This, coupled with opaque window moving, again provides a much better visual experience than before.
+
+__ http://www.morphos.net/
+__ http://www.elena-fractals.it/Downloads/PowerIcons.readme
+__ http://www.aros.org/pictures/screenshots/20040308/pngicons+wandererprefs.jpeg
+
+Miscellaneous
+-------------
+
+Olivier Adam added French catalogs for all the applications in the main tree,
+as well as some apps in contrib.
+
+Nic Andrews is working together with Olivier on a multiuser permissions library
+(MuFSv2 compatible), for which he did a GUI login Zune class.
+As if it was not enough, he's also devoting some time to the following ports:
+lwIP network stack (with help from Adam Chodorowski and earlier work from
+Sebastian Bauer), ODBC library, Bochs and finally Mesa 6.
+
+Nate Downes is now working on TeamAROS `bounty #12`__, FAT32 filesystem.
+
+Michal Shulz and Frederic Requin started working on TeamAROS `bounty #11`__, which aims at rewriting the device driver that is in charge of handling ATA/ATAPI devices, to make it faster
+and more reliable. Johan Grip will be helping them out along the way.
+
+Ian Templeton committed his usual fixes to make AROS hosted compile and work also on FreeBSD, and
+he also fixed a bug__ in the timer.device.
+
+Fabio Alemagna fixed some bugs in the libc, and made the necessary changes to the AROS system
+header files so that C++ programs can use them seamlessy. He also fixed a bug in dos.library/ExAll() and did some improvements to the build system.
+
+__ http://thenostromo.com/teamaros/bounty_details_12.html
+__ http://thenostromo.com/teamaros/bounty_details_11.html
+__ http://sourceforge.net/tracker/index.php?func=detail&aid=741580&group_id=43586&atid=439463
+
+Documentation
+-------------
+
+David Le Corfec wrote some documentation about AROS debugging__, and began a Zune
+`developer guide`__.
+
+__ /documentation/developers/debugging.php
+__ /documentation/developers/zune-application-development.php 
+
+CVS Stats
+---------
+
+As usual there were still many other changes in AROS, in the build system, the
+libraries, the headers...
+
+Since 2003-11-25, 18 people committed changes in the CVS repository:
+Olivier Adam, Ali Akcaagac, Fabio Alemagna, Nic Andrews, Stefan Berger,
+Adam Chodorowski, Martin Gierich, Johan Grip, Sebastian Heutling,
+Henning Kiel, David Le Corfec, Jack Patton, Kalle Räisänen, Michael Schulz,
+Georg Steger, Iain Templeton, Staf Verhaegen and Markus Weiss.
+
+There was a total of 1080 commits, the top 3 committers being
+Adam (250), Fabio (229) and Georg (150).
+
+Conclusion
+----------
+
+You may drool now. See you in the next status update! ;)
