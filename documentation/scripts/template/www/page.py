@@ -130,18 +130,6 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
         ]
     )
 
-    quotesPHP = '''
-        <?php
-            $quotes = file( '%(ROOT)sdb/quotes' );
-            $size   = count( $quotes );
-            $index = rand( 0, $size - 1 );
-            $line = trim( $quotes[$index] );
-            list( $quote, $person ) = split( ';', $line );
-            echo $quote;
-            echo "<br>&nbsp;&nbsp;&nbsp;&nbsp;-- ";
-            echo $person;
-        ?>'''
-
     statsPHP = '''
         <?php
             DEFINE( "_BBCLONE_DIR", "%(ROOT)sbbclone/" );
@@ -242,7 +230,6 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                                 width = 1, height = 40, colspan = 2,
                                 bgcolor = '#ffffff', contents = Font(
                                     size = '-1', color = '#aaaaaa',
-                                    #contents = quotesPHP
                                     contents = Img(
                                         width = '100%%', height = 40,
                                         src = '%(ROOT)simages/spacer.gif'
@@ -256,13 +243,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                                 height = '100%%',
                                 background = '%(ROOT)simages/bright_bg.png',
                                 style = 'width: 184px; height: 100%%',
-                                contents = [
-                                    #Img(
-                                    #    width = 184, height = 1,
-                                    #    src = '%(ROOT)simages/spacer.gif'
-                                    #),
-                                    bar
-                                ]
+                                contents = [ bar ]
                             ),
                             TD(
                                 background = '%(ROOT)simages/vertical_border.png',
@@ -320,5 +301,3 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
     ] )
 
     return str( page )
-
-
