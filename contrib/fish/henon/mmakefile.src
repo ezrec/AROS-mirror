@@ -1,7 +1,7 @@
 include $(TOP)/config/make.cfg
 
 STARTUP := $(LIBDIR)/startup.o
-LIBS	:= -L$(LIBDIR) -larossupport -lamiga -larosc -lm
+LIBS	:= -L$(LIBDIR) -larossupport -lamiga -larosc
 DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a \
 	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
 #Please do NOT turn optimization on! 
