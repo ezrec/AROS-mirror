@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2000/08/08 18:16:12  stegerg
+ * bug fix in BGUI_FreePoolMem/FreePoolMemDebug.
+ *
  * Revision 42.7  2000/08/08 14:17:30  chodorowski
  * Fixes to compile on Amiga. There was some wrongly nested #ifdefs here,
  * around the BGUI_FreePooled and BGUI_FreePooledDebug functions.
@@ -96,6 +99,12 @@
 #define NO_MEMORY_ALLOCATION_DEBUG_ALIASING
 
 #include "include/classdefs.h"
+
+#ifndef _AROS
+#define AROS_LIBFUNC_INIT
+#define AROS_LIBFUNC_EXIT
+#define AROS_LIBBASE_EXT_DECL(a,b)
+#endif
 
 /*
  * Global data.
@@ -949,79 +958,69 @@ static ASM REGFUNC2(VOID, FreeVecMem,
  * Allocate memory from the pool.
  */
 #ifdef DEBUG_BGUI
-#ifdef _AROS
-AROS_LH1(APTR, BGUI_AllocPoolMem,
-    AROS_LHA(ULONG, size, D0),
-    struct Library *, BGUIBase, 12, BGUI)
+   #ifdef _AROS
+   AROS_LH1(APTR, BGUI_AllocPoolMem,
+       AROS_LHA(ULONG, size, D0),
+       struct Library *, BGUIBase, 12, BGUI)
+   #else
+   SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
+   #endif
+   {
+      AROS_LIBFUNC_INIT
+      AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+
+     D(bug("BGUI_AllocPoolMem is being called from unknown location\n"));
+           return(BGUI_AllocPoolMemDebug(size,__FILE__,__LINE__));
+
+      AROS_LIBFUNC_EXIT
+   }
+
+   #ifdef _AROS
+   makearosproto
+   AROS_LH3(APTR, BGUI_AllocPoolMemDebug,
+       AROS_LHA(ULONG, size, D0),
+       AROS_LHA(STRPTR, file, A0),
+       AROS_LHA(ULONG, line, D1),
+       struct Library *BGUIBase, 31, BGUI)
+   #else
+   makeproto SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG size, REG(a0) STRPTR file, REG(d1) ULONG line)
+   #endif
+
 #else
-SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
+
+   #ifdef _AROS
+   makearosproto
+   AROS_LH3(APTR, BGUI_AllocPoolMemDebug,
+       AROS_LHA(ULONG, size, D0),
+       AROS_LHA(STRPTR, file, A0),
+       AROS_LHA(ULONG, line, D1),
+       struct Library *, BGUIBase, 31, BGUI)
+   #else
+   SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG size, REG(a0) STRPTR file, REG(d1) ULONG line)
+   #endif
+   {
+      AROS_LIBFUNC_INIT
+      AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+
+     bug("BGUI_AllocPoolMemDebug is being called from (%s,%lu)\n",file ? file : (STRPTR)"unknown",line);
+           return(BGUI_AllocPoolMem(size));
+
+      AROS_LIBFUNC_EXIT
+   }
+
+   #ifdef _AROS
+   makearosproto
+   AROS_LH1(APTR, BGUI_AllocPoolMem,
+       AROS_LHA(ULONG, size, D0),
+       struct Library *, BGUIBase, 12, BGUI)
+   #else
+   makeproto SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
+   #endif
 #endif
+
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
-
-  D(bug("BGUI_AllocPoolMem is being called from unknown location\n"));
-        return(BGUI_AllocPoolMemDebug(size,__FILE__,__LINE__));
-
-#ifdef _AROS
-   AROS_LIBFUNC_EXIT
-#endif
-}
-
-#ifdef _AROS
-makearosproto
-AROS_LH3(APTR, BGUI_AllocPoolMemDebug,
-    AROS_LHA(ULONG, size, D0),
-    AROS_LHA(STRPTR, file, A0),
-    AROS_LHA(ULONG, line, D1),
-    struct Library *BGUIBase, 31, BGUI)
-#else
-makeproto SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG size, REG(a0) STRPTR file, REG(d1) ULONG line)
-#endif
-{
-
-#else
-
-#ifdef _AROS
-makearosproto
-AROS_LH3(APTR, BGUI_AllocPoolMemDebug,
-    AROS_LHA(ULONG, size, D0),
-    AROS_LHA(STRPTR, file, A0),
-    AROS_LHA(ULONG, line, D1),
-    struct Library *, BGUIBase, 31, BGUI)
-#else
-SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG size, REG(a0) STRPTR file, REG(d1) ULONG line)
-#endif
-{
-#ifdef _AROS
-   AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
-
-  bug("BGUI_AllocPoolMemDebug is being called from (%s,%lu)\n",file ? file : (STRPTR)"unknown",line);
-        return(BGUI_AllocPoolMem(size));
-
-#ifdef _AROS
-   AROS_LIBFUNC_EXIT
-#endif
-}
-
-#ifdef _AROS
-makearosproto
-AROS_LH1(APTR, BGUI_AllocPoolMem,
-    AROS_LHA(ULONG, size, D0),
-    struct Library *, BGUIBase, 12, BGUI)
-#else
-makeproto SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
-#endif
-{
-#endif
-#ifdef _AROS
-   AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    APTR        memPtr;
 
@@ -1046,105 +1045,107 @@ makeproto SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
 
    return memPtr;
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 /*
  * Free memory from the pool.
  */
 #ifdef DEBUG_BGUI
-    #ifdef _AROS
-    AROS_LH1(VOID, BGUI_FreePoolMem,
-        AROS_LHA(APTR, memPtr, A0),
-        struct Library *, BGUIBase, 13, BGUI)
-    #else
-    SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
-    #endif
-    {
-    #ifdef _AROS
-       AROS_LIBFUNC_INIT
-       AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-    #endif
+   #ifdef _AROS
+   AROS_LH1(VOID, BGUI_FreePoolMem,
+       AROS_LHA(APTR, memPtr, A0),
+       struct Library *, BGUIBase, 13, BGUI)
+   #else
+   SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
+   #endif
+   {
+      AROS_LIBFUNC_INIT
+      AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
       D(bug("BGUI_FreePoolMem is being called from unknown location\n"));
-            BGUI_FreePoolMemDebug(memPtr,__FILE__,__LINE__);
+           BGUI_FreePoolMemDebug(memPtr,__FILE__,__LINE__);
 
-    #ifdef _AROS
-       AROS_LIBFUNC_EXIT
-    #endif
-    }
+      AROS_LIBFUNC_EXIT
+   }
 
-    #ifdef _AROS
-    makearosproto
-    AROS_LH3(VOID, BGUI_FreePoolMemDebug,
-        AROS_LHA(APTR, memPtr, A0),
-        AROS_LHA(STRPTR, file, A1),
-        AROS_LHA(ULONG, line, D0),
-        struct Library *, BGUIBase, 32, BGUI)
-    #else
-    makeproto SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR memPtr, REG(a1) STRPTR file, REG(d0) ULONG line)
-    #endif
-    {
-    #ifdef _AROS
-       AROS_LIBFUNC_INIT
-       AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-    #endif
+   #ifdef _AROS
+   makearosproto
+   AROS_LH3(VOID, BGUI_FreePoolMemDebug,
+       AROS_LHA(APTR, memPtr, A0),
+       AROS_LHA(STRPTR, file, A1),
+       AROS_LHA(ULONG, line, D0),
+       struct Library *, BGUIBase, 32, BGUI)
+   #else
+   makeproto SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR memPtr, REG(a1) STRPTR file, REG(d0) ULONG line)
+   #endif
+    
+#else
+
+   #ifdef _AROS
+   makearosproto
+   AROS_LH3(VOID, BGUI_FreePoolMemDebug,
+       AROS_LHA(APTR, memPtr, A0),
+       AROS_LHA(STRPTR, file, A1),
+       AROS_LHA(ULONG, line, D0),
+       struct Library *, BGUIBase, 32, BGUI)
+   #else
+   makeproto SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR memPtr, REG(a1) STRPTR file, REG(d0) ULONG line)
+   #endif
+   {
+      AROS_LIBFUNC_INIT
+      AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
       bug("BGUI_FreePoolMemDebug is being called from (%s,%lu)\n",file ? file : (STRPTR)"unknown",line);
-            BGUI_FreePoolMem(memPtr);
+           BGUI_FreePoolMem(memPtr);
 
-    #ifdef _AROS
-       AROS_LIBFUNC_EXIT
-    #endif
-    }
-#else
-    #ifdef _AROS
-    makearosproto
-    AROS_LH1(VOID, BGUI_FreePoolMem,
-        AROS_LHA(APTR, memPtr, A0),
-        struct Library *, BGUIBase, 13, BGUI)
-    #else
-    makeproto SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
-    #endif
-    {
-    #ifdef _AROS
-       AROS_LIBFUNC_INIT
-       AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-    #endif
+      AROS_LIBFUNC_EXIT
+   }
 
-       if (memPtr)
-       {
-          /*
-           * Lock the list.
-           */
-          ObtainSemaphore(&TaskLock);
+   #ifdef _AROS
+   makearosproto
+   AROS_LH1(VOID, BGUI_FreePoolMem,
+       AROS_LHA(APTR, memPtr, A0),
+       struct Library *, BGUIBase, 13, BGUI)
+   #else
+   makeproto SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
+   #endif
 
-          /*
-           * Free the memory.
-           */
-    #ifdef DEBUG_BGUI
-          FreeVecMemDebug(MemPool, memPtr, file, line);
-    #else
-          FreeVecMem(MemPool, memPtr);
-    #endif
-
-          /*
-           * Unlock the list.
-           */
-          ReleaseSemaphore(&TaskLock);
-       }
-    #ifdef DEBUG_BGUI
-       else
-          D(bug("*** Attempt to free memory with a NULL pointer\n"));
-    #endif
-
-    #ifdef _AROS
-       AROS_LIBFUNC_EXIT
-    #endif
-    }
 #endif
+
+{
+   AROS_LIBFUNC_INIT
+   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+
+   if (memPtr)
+   {
+      /*
+       * Lock the list.
+       */
+      ObtainSemaphore(&TaskLock);
+
+      /*
+       * Free the memory.
+       */
+#ifdef DEBUG_BGUI
+      FreeVecMemDebug(MemPool, memPtr, file, line);
+#else
+      FreeVecMem(MemPool, memPtr);
+#endif
+
+      /*
+       * Unlock the list.
+       */
+      ReleaseSemaphore(&TaskLock);
+   }
+#ifdef DEBUG_BGUI
+   else
+      D(bug("*** Attempt to free memory with a NULL pointer\n"));
+#endif
+
+   AROS_LIBFUNC_EXIT
+}
+
 /*
  *  Add an ID to the list.
  *
@@ -1789,10 +1790,8 @@ AROS_LH1(struct TagItem *, BGUI_GetDefaultTags,
 makeproto SAVEDS ASM struct TagItem *BGUI_GetDefaultTags(REG(d0) ULONG id)
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    PI             *pi;
    TM             *tm;
@@ -1816,9 +1815,7 @@ makeproto SAVEDS ASM struct TagItem *BGUI_GetDefaultTags(REG(d0) ULONG id)
 
    return tags;
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 #ifdef _AROS
@@ -1829,10 +1826,8 @@ AROS_LH0(VOID, BGUI_DefaultPrefs,
 makeproto SAVEDS ASM VOID BGUI_DefaultPrefs(VOID)
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    PI        *pi;
    TM        *tm;
@@ -1847,9 +1842,7 @@ makeproto SAVEDS ASM VOID BGUI_DefaultPrefs(VOID)
 
    DefPrefs();
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 #ifdef _AROS
@@ -1861,15 +1854,11 @@ AROS_LH1(VOID, BGUI_LoadPrefs,
 makeproto SAVEDS ASM VOID BGUI_LoadPrefs(REG(a0) UBYTE *name)
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    BGUI_DefaultPrefs();
    LoadPrefs(name);
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
