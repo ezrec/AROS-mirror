@@ -11,11 +11,14 @@
 *********************************************/
 
 #include <aros/oldprograms.h>
+#include <proto/console.h>
 
 #include <devices/inputevent.h>
 #include <exec/types.h>
 #include <intuition/intuition.h>
 #include "input.h"
+
+extern ConsoleDevice;
 
 /*************
 *  INPUT KEY
