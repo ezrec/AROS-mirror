@@ -1,2 +1,0 @@
-vid_aros.c:164: warning: #warning Move this to main() ?
-vid_aros.c:428: warning: #warning Optimize this. Just rerender the part inside the rect
