@@ -22,6 +22,7 @@ LOCAL_FILES := \
 	marshal \
 	modsupport \
 	mystrtoul \
+	mysnprintf \
 	pyfpe \
 	pystate \
 	sigcheck \

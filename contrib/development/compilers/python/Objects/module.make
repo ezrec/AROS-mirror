@@ -5,11 +5,14 @@ LOCAL_FILES := \
 	classobject \
 	cobject \
 	complexobject \
+	descrobject \
 	dictobject \
 	fileobject \
+	floatobject \
 	frameobject \
 	funcobject \
 	intobject \
+	iterobject \
 	listobject \
 	longobject \
 	methodobject \
@@ -18,12 +21,13 @@ LOCAL_FILES := \
 	rangeobject \
 	sliceobject \
 	stringobject \
+	structseq \
 	tupleobject \
 	typeobject \
-	floatobject \
 	unicodectype \
-	unicodeobject 
-
+	unicodeobject \
+	weakrefobject
+        
 # Don't compile obmalloc unless WITH_PYMALLOC is defined, or we'll crash 
 # and burn (since then _THIS_MALLOC == _SYSTEM_MALLOC in obmalloc then
 # --> shadows clib's malloc --> infinite recursion --> segfault.

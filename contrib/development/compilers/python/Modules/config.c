@@ -98,16 +98,16 @@ struct _inittab _PyImport_Inittab[] = {
 	{"zlib",             initzlib},
 #endif
 	/* This module lives in marshal.c */
-	{"marshal", PyMarshal_Init},
+	{"marshal",          PyMarshal_Init},
 
 	/* This lives in import.c */
-	{"imp", initimp},
+	{"imp",              initimp},
 
 	/* These entries are here for sys.builtin_module_names */
-	{"__main__", NULL},
-	{"__builtin__", NULL},
-	{"sys", NULL},
-	{"exceptions", init_exceptions},
+	{"__main__",         NULL},
+	{"__builtin__",      NULL},
+	{"sys",              NULL},
+	{"exceptions",       NULL}, 
 
 	/* Sentinel */
 	{0, 0}
