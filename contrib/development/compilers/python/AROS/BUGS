@@ -39,3 +39,8 @@ test_longexp takes 2.20 s under Linux and 17 MINUTES under AROS,
 and test_bufio takes 1 s and 2 MINUTES respectively! That's a *HUGE*
 difference in time. Also, if the stack is set to low they crash AROS.
 Maybe some recursion related thing?
+
+#0006 chodorowski 20/12/2001 CRITICAL OPEN
+
+Running test_gzip crashes AROS. It seems to happen when data is 
+written in append mode to a file.
