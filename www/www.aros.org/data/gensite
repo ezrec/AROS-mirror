@@ -194,7 +194,7 @@ def genSnapshots ():
                    ,('lx86-bin',  'Binaries to be run under x86 linux',              1)
 
     def snapLink(date, package, ext):
-        file     = 'AROS-' + package + '-' + '%d%d%d' % date + '.' + ext
+        file     = 'AROS-' + package + '-' + '%02d%02d%02d' % date + '.' + ext
         location = 'http://aros.sourceforge.net/cgi-bin/snapdownload.cgi?' + file
 	return Href(location, file)
 
