@@ -11,7 +11,6 @@ ifneq ($(TINY),yes)
     LOCAL_FILES += \
 	environment \
 	Doslibmodule \
-	IntuitionLibrary \
 	_codecsmodule \
 	_sre \
 	_testcapimodule \

@@ -17,7 +17,6 @@ extern void initamiga(void);
 #ifndef PYTHON_TINY
 extern void initenvironment(void);
 extern void initDoslib(void);
-extern void initIntuitionLibrary(void);
 extern void init_codecs(void);
 extern void init_sre(void);
 extern void init_testcapi(void);
@@ -61,7 +60,6 @@ struct _inittab _PyImport_Inittab[] = {
 #ifndef PYTHON_TINY
 	{"environment",      initenvironment},
 	{"Doslib",  	     initDoslib},
-	{"IntuitionLibrary", initIntuitionLibrary},
 	{"_codecs",          init_codecs},
 	{"_sre",             init_sre},
 	{"_testcapi",        init_testcapi},
