@@ -11,5 +11,6 @@ MSQL=/usr/local/Hughes/bin/msql
 
 if [ -x $MSQL ]; then
     gawk -f pw2msql.gawk passwd.txt | \
-    $MSQL -h aros.fh-konstanz.de jobserv
+    $MSQL -h aros.fh-konstanz.de jobserv | \
+    egrep -v '^($|mSQL >|Welcome|Query OK.|Bye!)'
 fi
