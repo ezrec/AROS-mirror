@@ -1,0 +1,32 @@
+# $Id$
+#
+# Makefile for Zune Demos
+
+include $(TOP)/config/make.cfg
+
+FILES := NList-Demo \
+    	 NList-Demo2 \
+	 NList-Demo3
+
+EXEDIR := $(AROSDIR)/Demos
+EXE    := $(EXEDIR)/NList-Demo
+
+USE_CLIB     := yes
+USE_AMIGALIB := yes
+USE_MUILIB   := yes
+USE_AROSLIB  := yes
+
+#MM contrib-zune-classes-nlist-demo : includes linklibs contrib-zune-classes-nlist contrib-zune-classes-nlistview
+
+%make_prog_setup mmake=contrib-zune-classes-nlist-demo
+
+contrib-zune-classes-nlist-demo : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+#MM setup
+setup ::
+	%mkdirs_q $(EXEDIR)
+
+%common
+%include_deps
