@@ -269,13 +269,19 @@ void main(void)
     netif_add(&ipaddr, &netmask, &gw, loopif_init, tcpip_input);
 
     {
-    	struct raw_pcb *raw = raw_new(1);
-    	struct ip_addr to;
       struct icmp_echo_hdr echo;
       struct pbuf *p;
+      int s = lwip_socket(0,SOCK_RAW,1);
+      struct sockaddr_in to;
+      struct sockaddr_in from;
+      int buf[100];
+      int from_len = sizeof(from);
 
-    	IP4_ADDR(&to,192,168,6,100);
-    	raw_connect(raw,&to);
+      to.sin_len =  sizeof(to);
+      to.sin_family = AF_INET;
+      to.sin_port = 1; /* protocol */
+      to.sin_addr.s_addr = (193 << 24)|(168 << 16)|(6<<8)|100;
+      memset(&to.sin_zero,0,sizeof(to));
 
       ICMPH_TYPE_SET(&echo, ICMP_ECHO);
       ICMPH_CODE_SET(&echo,0);
@@ -283,12 +289,14 @@ void main(void)
       echo.seqno = 100;
       echo.id = 100;			/* ID */
 
-      p = pbuf_alloc(PBUF_TRANSPORT, 0, PBUF_ROM);
-      p->payload = &echo;
-      p->len = sizeof(echo);
+      lwip_sendto(s,&echo,sizeof(echo),0,&to,sizeof(to));
+      printf("sent some stuff\n");
 
-      raw_recv(raw,raw_recv_func,NULL);
-      raw_send(raw,p);
+      lwip_recvfrom(s,buf,sizeof(buf),0,&from,&from_len);
+      printf("received something from 0x%lx: 0x%x 0x%x 0x%x 0x%x 0x%x\n",from.sin_addr.s_addr,buf[0],buf[1],buf[2],buf[3],buf[4]);
+
+      lwip_recvfrom(s,buf,sizeof(buf),0,&from,&from_len);
+      printf("received something from 0x%lx: 0x%x 0x%x 0x%x 0x%x 0x%x\n",from.sin_addr.s_addr,buf[0],buf[1],buf[2],buf[3],buf[4]);
     }
   } 
 

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: api_msg.c,v 1.3 2002/01/23 11:08:23 adam Exp $
+ * $Id: api_msg.c,v 1.3 2002/07/07 18:57:57 sebauer Exp $
  */
 
 #include "lwip/debug.h"
@@ -89,6 +89,37 @@ recv_udp(void *arg, struct udp_pcb *pcb, struct pbuf *p,
     sys_mbox_post(conn->recvmbox, buf);
   }
 }
+/*-----------------------------------------------------------------------------------*/
+static void
+recv_raw(void *arg, struct raw_pcb *pcb, struct pbuf *p,
+	 struct ip_addr *addr)
+{
+  struct netbuf *buf;
+  struct netconn *conn;
+
+  conn = arg;
+  
+  if(conn == NULL) {
+    pbuf_free(p);
+    return;
+  }
+
+  if(conn->recvmbox != SYS_MBOX_NULL) {
+    buf = memp_mallocp(MEMP_NETBUF);
+    if(buf == NULL) {
+      pbuf_free(p);
+      return;
+    } else {
+      buf->p = p;
+      buf->ptr = p;
+      buf->fromaddr = addr;
+      buf->fromport = conn->pcb.raw->protocol;
+    }
+    
+    sys_mbox_post(conn->recvmbox, buf);
+  }
+}
+
 /*-----------------------------------------------------------------------------------*/
 static err_t
 poll_tcp(void *arg, struct tcp_pcb *pcb)
@@ -207,6 +238,10 @@ do_delconn(struct api_msg_msg *msg)
 {
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
+    case NETCONN_RAW:
+      msg->conn->pcb.raw->recv_arg = NULL;
+      raw_remove(msg->conn->pcb.raw);
+      break;
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
@@ -240,6 +275,8 @@ do_delconn(struct api_msg_msg *msg)
 static void
 do_bind(struct api_msg_msg *msg)
 {
+  if (msg->conn->type == NETCONN_RAW) return;
+
   if(msg->conn->pcb.tcp == NULL) {
     switch(msg->conn->type) {
     case NETCONN_UDPLITE:
@@ -304,6 +341,15 @@ do_connect(struct api_msg_msg *msg)
 {
   if(msg->conn->pcb.tcp == NULL) {
     switch(msg->conn->type) {
+    case NETCONN_RAW:
+      msg->conn->pcb.raw = raw_new();
+      if(msg->conn->pcb.raw == NULL) {
+	msg->conn->err = ERR_MEM;
+	sys_mbox_post(msg->conn->mbox, NULL);
+	return;
+      }
+      raw_recv(msg->conn->pcb.raw, recv_raw, msg->conn);
+      break;
     case NETCONN_UDPLITE:
       msg->conn->pcb.udp = udp_new();
       if(msg->conn->pcb.udp == NULL) {
@@ -344,6 +390,10 @@ do_connect(struct api_msg_msg *msg)
     }
   }
   switch(msg->conn->type) {
+  case NETCONN_RAW:
+    raw_connect(msg->conn->pcb.raw, msg->msg.bc.ipaddr, msg->msg.bc.port); /* the last arg is actually the protocol, not a port */
+    sys_mbox_post(msg->conn->mbox, NULL);
+    break;
   case NETCONN_UDPLITE:
     /* FALLTHROUGH */
   case NETCONN_UDPNOCHKSUM:
@@ -367,6 +417,9 @@ do_listen(struct api_msg_msg *msg)
 {
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
+    case NETCONN_RAW:
+      DEBUGF(API_MSG_DEBUG, ("api_msg: listen RAW: cannot listen for RAW.\n"));
+      break;
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
@@ -400,6 +453,9 @@ do_accept(struct api_msg_msg *msg)
 {
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
+    case NETCONN_RAW:
+      DEBUGF(API_MSG_DEBUG, ("api_msg: accept RAW: cannot accept for RAW.\n"));
+      break;
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
@@ -418,6 +474,9 @@ do_send(struct api_msg_msg *msg)
 {
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
+    case NETCONN_RAW:
+      raw_send(msg->conn->pcb.raw, msg->msg.p);
+      break;
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
@@ -449,6 +508,8 @@ do_write(struct api_msg_msg *msg)
   err_t err;
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
+    case NETCONN_RAW:
+      /* FALLTHROUGH */
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:
@@ -479,6 +540,8 @@ do_close(struct api_msg_msg *msg)
   err_t err;
   if(msg->conn->pcb.tcp != NULL) {
     switch(msg->conn->type) {
+    case NETCONN_RAW:
+      break;
     case NETCONN_UDPLITE:
       /* FALLTHROUGH */
     case NETCONN_UDPNOCHKSUM:

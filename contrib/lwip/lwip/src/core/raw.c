@@ -32,7 +32,7 @@
  *
  * This file: Sebastian Bauer <sebauer@t-online.de>
  *
- * $Id$
+ * $Id: raw.c,v 1.2 2002/07/23 17:25:29 sebauer Exp $
  */
 
 /*-----------------------------------------------------------------------------------*/
@@ -86,16 +86,33 @@ raw_input(struct pbuf *p, struct netif *inp)
 
   /* Demultiplex packet */
   for (pcb = raw_pcbs; pcb != NULL; pcb = pcb->next) {
-    if (pcb->protocol == protocol)
-    {
-      if (pcb->recv)
-      {
-	pcb->recv(pcb->recv_arg, pcb, p, &(iphdr->src));
+    if (pcb->protocol == protocol) {
+      if (pcb->recv) {
+        /* sba: As the recv function frees the given pbuf we must duplicate it
+         * A real pbuf_duplicate() would probably nice, or a semaphore protected pbuf_ref() */
+	struct pbuf *dup_p = pbuf_alloc(PBUF_RAW, p->tot_len, PBUF_FLAG_RAM);
+	if (dup_p) {
+	  struct pbuf *ip = p; /* iterator for p */
+	  int tot_len = p->tot_len;
+	  char *dest = (char*)dup_p->payload;
+
+	  while (tot_len && ip) {
+	    int len = ip->len;
+	    char *src = (char*)ip->payload;
+
+	    while (len) {
+	      *dest++ = *src++; /* sba: memcpy() would be better here, but I don't know if we can use it here */
+	      len--;
+            }
+            tot_len -= len;
+            ip = ip->next;
+	  }
+
+      	  pcb->recv(pcb->recv_arg, pcb, dup_p, &(iphdr->src));
+      	}
       }
     }
   }
-
-  if (!pcb) goto end;
 
   end:
     
@@ -159,7 +176,7 @@ udp_bind(struct udp_pcb *pcb, struct ip_addr *ipaddr, u16_t port)
 #endif
 /*-----------------------------------------------------------------------------------*/
 err_t
-raw_connect(struct raw_pcb *pcb, struct ip_addr *ipaddr)
+raw_connect(struct raw_pcb *pcb, struct ip_addr *ipaddr, u16_t protocol)
 {
   struct raw_pcb *ipcb;
   ip_addr_set(&pcb->remote_ip, ipaddr);
@@ -174,6 +191,7 @@ raw_connect(struct raw_pcb *pcb, struct ip_addr *ipaddr)
   /* We need to place the PCB on the list. */
   pcb->next = raw_pcbs;
   raw_pcbs = pcb;
+  pcb->protocol = protocol;
   return ERR_OK;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -204,12 +222,11 @@ raw_remove(struct raw_pcb *pcb)
 }
 /*-----------------------------------------------------------------------------------*/
 struct raw_pcb *
-raw_new(int protocol) {
+raw_new(void) {
   struct raw_pcb *pcb;
   pcb = memp_malloc(MEMP_RAW_PCB);
   if(pcb != NULL) {
     bzero(pcb, sizeof(struct raw_pcb));
-    pcb->protocol = protocol;
     return pcb;
   }
   return NULL;

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: sockets.c,v 1.4 2002/02/18 13:11:34 adam Exp $
+ * $Id: sockets.c,v 1.3 2002/07/07 18:57:57 sebauer Exp $
  */
 
 #include "lwip/debug.h"
@@ -44,6 +44,7 @@ struct lwip_socket {
   struct netconn *conn;
   struct netbuf *lastdata;
   u16_t lastoffset;
+  u16_t protocol;
 };
 
 static struct lwip_socket sockets[NUM_SOCKETS];
@@ -177,7 +178,11 @@ lwip_connect(int s, struct sockaddr *name, int namelen)
   }
   
   remote_addr.addr = ((struct sockaddr_in *)name)->sin_addr.s_addr;
-  remote_port = ((struct sockaddr_in *)name)->sin_port;
+  if (sock->conn->type == NETCONN_RAW) {
+    remote_port = htons(sock->protocol);
+  } else {
+    remote_port = ((struct sockaddr_in *)name)->sin_port;
+  }
   
   err = netconn_connect(sock->conn, &remote_addr, ntohs(remote_port));
 
@@ -314,6 +319,7 @@ lwip_send(int s, void *data, int size, unsigned int flags)
   }  
   
   switch(netconn_type(sock->conn)) {
+  case NETCONN_RAW:
   case NETCONN_UDP:
     /* create a buffer */
     buf = netbuf_new();
@@ -356,6 +362,7 @@ lwip_sendto(int s, void *data, int size, unsigned int flags,
   struct ip_addr remote_addr, *addr;
   u16_t remote_port, port;
   int ret;
+  int conn;
 
   sock = get_socket(s);
   if(sock == NULL) {
@@ -363,23 +370,31 @@ lwip_sendto(int s, void *data, int size, unsigned int flags,
   }
   
   /* get the peer if currently connected */
-  netconn_peer(sock->conn, &addr, &port);
-  
+  if (netconn_peer(sock->conn, &addr, &port) != ERR_CONN) conn = 1;
+  else conn = 0;
+
+  sock->conn->err = 0;
+
   remote_addr.addr = ((struct sockaddr_in *)to)->sin_addr.s_addr;
-  remote_port = ((struct sockaddr_in *)to)->sin_port;
+  if (sock->conn->type == NETCONN_RAW) {
+    remote_port = htons(sock->protocol);
+  } else {
+    remote_port = ((struct sockaddr_in *)to)->sin_port;
+  }
   netconn_connect(sock->conn, &remote_addr, remote_port);
   
   ret = lwip_send(s, data, size, flags);
 
   /* reset the remote address and port number
      of the connection */
-  netconn_connect(sock->conn, addr, port);
+  if (conn) netconn_connect(sock->conn, addr, port);
   return ret;
 }
 /*-----------------------------------------------------------------------------------*/
 int
 lwip_socket(int domain, int type, int protocol)
 {
+  struct lwip_socket *sock;
   struct netconn *conn;
   int i;
 
@@ -390,6 +405,9 @@ lwip_socket(int domain, int type, int protocol)
     break;
   case SOCK_STREAM:
     conn = netconn_new(NETCONN_TCP);
+    break;
+  case SOCK_RAW:
+    conn = netconn_new(NETCONN_RAW);
     break;
   default:
     /* errno = ... */
@@ -408,6 +426,10 @@ lwip_socket(int domain, int type, int protocol)
     /* errno = ENOBUFS; */
     netconn_delete(conn);
   }
+
+  sock = get_socket(i); /* should not fail here */
+  sock->protocol = protocol;
+
   return i;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -425,6 +447,7 @@ lwip_write(int s, void *data, int size)
   }
     
   switch(netconn_type(sock->conn)) {
+  case NETCONN_RAW:
   case NETCONN_UDP:
     return lwip_send(s, data, size, 0);
 

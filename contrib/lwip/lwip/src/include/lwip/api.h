@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: api.h,v 1.1 2001/12/12 10:01:00 adam Exp $
+ * $Id: api.h,v 1.3 2002/07/07 18:57:58 sebauer Exp $
  */
 #ifndef __LWIP_API_H__
 #define __LWIP_API_H__
@@ -41,6 +41,7 @@
 
 #include "lwip/ip.h"
 
+#include "lwip/raw.h"
 #include "lwip/udp.h"
 #include "lwip/tcp.h"
 
@@ -53,7 +54,8 @@ enum netconn_type {
   NETCONN_TCP,
   NETCONN_UDP,
   NETCONN_UDPLITE,
-  NETCONN_UDPNOCHKSUM
+  NETCONN_UDPNOCHKSUM,
+  NETCONN_RAW,
 };
 
 enum netconn_state {
@@ -78,6 +80,7 @@ struct netconn {
   union {
     struct tcp_pcb *tcp;
     struct udp_pcb *udp;
+    struct raw_pcb *raw;
   } pcb;
   err_t err;
   sys_mbox_t mbox;

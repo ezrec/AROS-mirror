@@ -32,7 +32,7 @@
  *
  * This File: Sebastian Bauer <sebauer@t-online.de>
  *
- * $Id$
+ * $Id: raw.h,v 1.2 2002/07/23 17:25:53 sebauer Exp $
  */
 #ifndef __LWIP_RAW_H__
 #define __LWIP_RAW_H__
@@ -58,9 +58,9 @@ struct raw_pcb {
 
 /* The following functions is the application layer interface to the
    RAW code. */
-struct raw_pcb * raw_new        (int protcol);
+struct raw_pcb * raw_new        (void);
 void             raw_remove     (struct raw_pcb *pcb);
-err_t            raw_connect    (struct raw_pcb *pcb, struct ip_addr *ipaddr);
+err_t            raw_connect    (struct raw_pcb *pcb, struct ip_addr *ipaddr, u16_t protocol);
 void             raw_recv       (struct raw_pcb *pcb,
 				 void (* recv)(void *arg, struct raw_pcb *upcb,
 					       struct pbuf *p,

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: api_lib.c,v 1.8 2002/03/18 13:08:47 adam Exp $
+ * $Id: api_lib.c,v 1.3 2002/07/07 18:57:57 sebauer Exp $
  */
 
 /* This is the part of the API that is linked with
@@ -284,7 +284,14 @@ err_t
 netconn_peer(struct netconn *conn, struct ip_addr **addr,
 	     u16_t *port)
 {
+  if (!conn->pcb.tcp) {
+    return conn->err = ERR_CONN;
+  }
   switch(conn->type) {
+  case NETCONN_RAW:
+    *addr = &(conn->pcb.raw->remote_ip);
+    *port = conn->pcb.raw->protocol;
+    break;
   case NETCONN_UDPLITE:
   case NETCONN_UDPNOCHKSUM:
   case NETCONN_UDP:
