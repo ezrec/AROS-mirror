@@ -31,7 +31,9 @@
 contrib contrib
 
 # Stuff necessary to compile AROS
-necessary -a AmiCDROM
+necessary -a AmiCDROM nlist
+
+nlist -d contrib/mui/classes/nlist contrib/mui/classes/nlist
 
 # Zune stuff
 zune -a zune-libs-muimaster zune-prefs  zune-tests zune-demos zune-wanderer
