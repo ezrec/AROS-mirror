@@ -1,0 +1,10 @@
+Georg Steger committed rewritten routines for the DOS functions
+MatchFirst(), MatchNext() and MatchEnd(). These should work in all
+cases, now. This fixes all those pety bugs like <TT>List C:</TT>.
+
+Joerg Dietrich committed dtdesc, a tool to create and examine DataType
+descriptors. Georg Steger improved the building of the FTXT Datatype with
+it. Later that day, Joerg backported our binary.datatype to AmigaOS 3.5.
+
+Johan Alfredsson commited a first version of a nonvolatile.library
+and nvdisk.library.

@@ -1,0 +1,9 @@
+Georg Steger finished gadtools.library. Cool Work ! He also fixed some
+bugs in the graphics.library-to-HIDD driver. On the following day, he
+fixed bugs and committed new code for the C library while Johan Alfredsson
+cleaned the dos.library. Again one day later, Georg committed the first
+version of a port of reqtools.library and fixed some bugs in the 
+workbench.library.
+
+Johan Alfredsson finished his nonvolatile.library and C:Which. Two days
+later, he fixed some more Amiga Shell commands and internals.

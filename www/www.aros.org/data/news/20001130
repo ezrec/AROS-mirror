@@ -1,0 +1,9 @@
+Michael Schulz is back and has begun to work on an abstract Mouse.HIDD for AROS
+x86/Native. Georg Steger finished porting of reqtools.library and ports now all
+the reqtools utilities (prefs program) and updated all AROS programs which use
+reqtools (for example, MultiView and the text.datatype). He also fixed a few
+bugs in diskfont.library and FixFonts, in Intuition and Gadtools.  Adam
+Chodorowski is working on LoadWB.  Johan Alfredsson and Stefan Berger have
+finished more and more CLI commands. Henning Kiel is working together
+with the author of plex86 to make AROS work with plex86. AROS boots
+but it crashes soon after.

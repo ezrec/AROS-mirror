@@ -1,0 +1,9 @@
+Joerg Dietrich committed a ppm.datatype (for PPM pictures).
+Tobias Seiler fixed a long standing bug in the keyboard initialization
+of AROS Native/i386, so PS/2 keyboards should work now.
+Georg Steger ported more and more programs which use Reqtools and
+fixed a lot of bugs in the code. The port of Reqtools should be
+finished, soon.
+
+Johan Alfredsson worked on more DOS commands (Info, Status, Execute)
+and fixed a lot of bugs in the dos.library.
