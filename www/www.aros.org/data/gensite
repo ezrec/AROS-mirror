@@ -91,27 +91,27 @@ screenshoturl = 'pics/screenshots'
 # could always open all items. That would allow the user to navigate
 # much more quickly.
 mainLinks = (
-    ( Href ('index.html', 'NEWS'),
-	Href ('status.html', 'Status'),
-	Href ('credits.html', 'Credits'),
-	Href ('oldnews.html', 'Old News'),
+    ( Href ('/index.html', 'NEWS'),
+	Href ('/status.html', 'Status'),
+	Href ('/credits.html', 'Credits'),
+	Href ('/oldnews.html', 'Old News'),
     ),
-    ( Href ('documentation.html', 'Documentation'),
-	Href ('autodocs/index.html', 'AutoDocs'),
+    ( Href ('/documentation.html', 'Documentation'),
+	Href ('/autodocs/index.html', 'AutoDocs'),
     ),
-    ( Href ('screenshots.html', 'Screenshots'),
-	Href ('screenshots.html#Pictures around AROS', 'Pictures'),
-	Href ('screenshots.html#Screenshots', 'Screenshots'),
+    ( Href ('/screenshots.html', 'Screenshots'),
+	Href ('/screenshots.html#Pictures around AROS', 'Pictures'),
+	Href ('/screenshots.html#Screenshots', 'Screenshots'),
     ),
-    ( Href ('download.html', 'Download'),
+    ( Href ('/download.html', 'Download'),
 	Href ('ftp://ftp.aros.org/pub/aros/', 'FTP Server'),
-	Href ('snapshots.html', 'Snapshots'),
+	Href ('/snapshots.html', 'Snapshots'),
     ),
-    ( Href ('links.html', 'Links'),
-	Href ('links.html#More Related', 'More Related'),
-	Href ('links.html#Articles', 'Articles'),
-	Href ('links.html#Homepages', 'Homepages'),
-	Href ('links.html#Less Related', 'Less Related'),
+    ( Href ('/links.html', 'Links'),
+	Href ('/links.html#More Related', 'More Related'),
+	Href ('/links.html#Articles', 'Articles'),
+	Href ('/links.html#Homepages', 'Homepages'),
+	Href ('/links.html#Less Related', 'Less Related'),
     ),
 )
 
@@ -643,6 +643,7 @@ def genAutodocs ():
     meat.append (Heading (2, 'Functions sorted by Name'))
 
     page.meat = page.meat + meat
+    # Path here is relative to htmldir
     page.write (os.path.join ('autodocs', 'index.html'))
 
 class ThumbnailTable (TableLite):
