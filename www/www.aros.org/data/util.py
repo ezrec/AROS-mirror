@@ -344,7 +344,7 @@ class Page (SeriesDocument):
         s.append('<BR>' + str(img))
         s.append('''
 <FONT SIZE="-1"><P>Amiga® is a trademark of Amiga Inc. All other trademarks belong to their respective owners.<BR>
-<FONT SIZE="-1"><P>Copyright &#169 AROS - The Amiga Research OS<BR>
+<FONT SIZE="-1"><P>Copyright &#169; AROS - The Amiga Research OS<BR>
 All Rights Reserved<BR>''')
         s.append('\nComments to webmaster: ' + str(MailTo(self.email)) )
         s.append('<br>\nGenerated: %s <BR>' % self.date) # can use self.datetime here instead
