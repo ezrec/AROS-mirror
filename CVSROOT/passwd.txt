@@ -17,7 +17,7 @@ laguest:baLtYMMsFjGms:Luke A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
 SDuvan:dbfBDWZL8B0q.:Johan Alfredsson:d95duvan@dtek.chalmers.se:Commodities
 bergers:bdKC5UL24VXQI:Stefan Berger:bergers@cip.e-technik.uni-erlangen.de:Math, DOS, Arp
 jskov:bdclJpF6gyfHU:Jesper Skov:jskov@cs.auc.dk:Linux/m68k
-Wez:CpNbY8XL8Vcy2:Wez Furlong:wez@thebrainroom.com:Shell
+Wez:83bzjTX9Mo1gw:Wez Furlong:wez@thebrainroom.com:Shell
 usul:abeqjOyocW2Ec:Stefan Czinczoll:scholle@unidui.uni-duisburg.de:WWW
 karcher:*:John J. Karcher:jkarcher@cynet.net:Slim Binaries
 adieb:*:Adrian Brown:adieb@carmen.murdoch.edu.au:Win95 port
