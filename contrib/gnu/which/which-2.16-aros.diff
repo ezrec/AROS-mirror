@@ -5,7 +5,7 @@ diff -r -u which-2.16/which.c which-2.16-aros/which.c
  #include "getopt.h"
  #include "tilde/tilde.h"
  #include "bash.h"
-+#ifdef AROS
++#ifdef __AROS__
 +#include <ctype.h>
 +#endif
  
