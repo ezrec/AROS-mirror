@@ -137,6 +137,18 @@ Identifier                             Name                                  P
 (MUIB_PreferencesWindow | 0x00000004)  MUIM_PreferencesWindow_Cancel
 =====================================  ====================================  =
 
+=====================================  ======================================  =  =  =  =  ====================
+Attributes
+---------------------------------------------------------------------------------------------------------------
+Identifier                             Name                                    I  S  G  P  Type                
+=====================================  ======================================  =  =  =  =  ====================
+(MUIB_PreferencesWindow | 0x00000000)  MUIM_PreferencesWindow_Test_Disabled    X  X  X     BOOL
+(MUIB_PreferencesWindow | 0x00000001)  MUIM_PreferencesWindow_Revert_Disabled  X  X  X     BOOL
+(MUIB_PreferencesWindow | 0x00000002)  MUIM_PreferencesWindow_Save_Disabled    X  X  X     BOOL
+(MUIB_PreferencesWindow | 0x00000003)  MUIM_PreferencesWindow_Use_Disabled     X  X  X     BOOL
+(MUIB_PreferencesWindow | 0x00000004)  MUIM_PreferencesWindow_Cancel_Disabled  X  X  X     BOOL
+=====================================  ======================================  =  =  =  =  ====================
+
 
 Class: IconImage.mcc
 --------------------
