@@ -12,7 +12,7 @@ nlorentz:abyWOzyxgCj4KAkKJNxz:aros:Nils Henrik Lorentzen:nlorentz@sn.no:diskfont
 ruppert:bbtwjwdJnQGas:aros:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 
 stepan:dcIM.xvdbd/R.:aros:Stefan Reinauer:stepan@home.culture.mipt.ru:
-judd:ddVIpcsgleKFM:aros:Christopher D. Judd:cdj@gmk02.chem.rpi.edu:
+judd:ddVIpcsgleKFM:aros:Christopher D. Judd:juddc@rpi.edu:
 frv95tjn:caYBHmdz7UdCU:aros:Tommy Johansson:frv95tjn@mds.mdh.se:
 pcosta:bbFkszi19YU6M:aros:Paolo Costabel:pcosta@mbox.vol.it:
 #winter:dbg5HYnm/h.ZQ:aros:Bill Boatman:winter@freebsd1.foo.bar:
