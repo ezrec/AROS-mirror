@@ -63,6 +63,5 @@
 		
 	FORM_END
 
-	.balign	4,0
 	.END
 	
