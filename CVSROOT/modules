@@ -27,6 +27,9 @@
 # to checkout parts of it. The advantage is that you will not get the
 # others.
 
+# Amiga C Manual
+ACM -d contrib/ACM contrib/ACM
+
 # Aminet
 aminet -d contrib/aminet contrib/aminet
 
