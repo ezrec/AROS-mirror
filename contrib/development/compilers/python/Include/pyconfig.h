@@ -576,7 +576,7 @@
 /* #undef HAVE_SIGRELSE */
 
 /* Define if you have the snprintf function.  */
-/* #undef HAVE_SNPRINTF */
+#define HAVE_SNPRINTF 
 
 /* Define if you have the statvfs function.  */
 /* #undef HAVE_STATVFS */
