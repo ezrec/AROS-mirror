@@ -46,6 +46,8 @@
 #include "GUI.h"
 #include "string.h"
 #include "stdio.h"
+#include "stdlib.h"
+
 
 /* Global Variables */
 
@@ -61,7 +63,7 @@ struct Library *IconBase = NULL;
 BPTR StdErr = NULL;
 
 LONG args[7] = { NULL,NULL,0,0,0,0,0 };
-ULONG ffs = ID_DOS_DISK;
+ULONG ffs_format = ID_DOS_DISK;
 
 extern Rect box;
 struct WBStartup *WBenchMsg = NULL;
@@ -71,7 +73,7 @@ char temp[32];
 
 //int main(int a, char **arg);
 
-main()
+int main()
 	{
    UWORD disk;
 	ULONG i;
@@ -85,8 +87,8 @@ main()
 
 
    /*Open the various shared libraries that are needed*/
-   IntuitionBase = (struct Library *)OpenLibrary("intuition.library",37L);
-   GfxBase = (struct Library *)OpenLibrary("graphics.library",37L);
+   IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",37L);
+   GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",37L);
    IconBase = (struct Library *)OpenLibrary("icon.library",37L);
    GadToolsBase = (struct Library *)OpenLibrary("gadtools.library",37L);
 
@@ -176,16 +178,16 @@ main()
 
 		if (FFS == TRUE)
       	{
-			if (intl == TRUE) ffs = ID_INTER_FFS_DISK;
-			else ffs = ID_FFS_DISK;
+			if (intl == TRUE) ffs_format = ID_INTER_FFS_DISK;
+			else ffs_format = ID_FFS_DISK;
 			}
 		else
       	{
-			if (intl == TRUE) ffs = ID_INTER_DOS_DISK;
-			else ffs = ID_DOS_DISK;
+			if (intl == TRUE) ffs_format = ID_INTER_DOS_DISK;
+			else ffs_format = ID_DOS_DISK;
 			}
 
-//	printf("%ld %ld $%lx\n", FFS, intl, ffs);
+//	printf("%ld %ld $%lx\n", FFS, intl, ffs_format);
 
       /*Get a lock on the selected drive*/
       /*(note:  NULL is a valid return value;  it means that the disk we*/
@@ -203,7 +205,7 @@ main()
 			Read(Input(),temp2,1);
 */
 			/*Format the disk*/
-			formatVolume(&driveLock,temp,volumeName,ffs,QuickFmt,Verify,Icon,statusString);
+			formatVolume(&driveLock,temp,volumeName,ffs_format,QuickFmt,Verify,Icon,statusString);
 			}
       else Write(Output(),"Cannot find the specified drive!\n",33);
 
@@ -220,13 +222,13 @@ main()
 
 /*Exit from the program, closing any open libraries*/
 void cleanup(ULONG err)
-	{
-   if(IntuitionBase != NULL) CloseLibrary(IntuitionBase);
-   if(GfxBase != NULL) CloseLibrary(GfxBase);
-   if(GadToolsBase != NULL) CloseLibrary(GadToolsBase);
-   if(IconBase != NULL) CloseLibrary(IconBase);
-   exit(err);
-	}
+{
+  if(IntuitionBase != NULL) CloseLibrary((struct Library *)IntuitionBase);
+  if(GfxBase != NULL) CloseLibrary((struct Library *)GfxBase);
+  if(GadToolsBase != NULL) CloseLibrary(GadToolsBase);
+  if(IconBase != NULL) CloseLibrary(IconBase);
+  exit(err);
+}
 
 
 /*Update the status window (from Workbench), or CLI output (from the CLI)*/
