@@ -1,0 +1,18 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+FUNCS	:= \
+	opentapinterface \
+	readtapinterface \
+	waittapinterface \
+	writetapinterface
+
+#MM- lwip-tapinterface-kobj : includes linklibs
+
+OS_INCLUDES := -I$(SYS_INCLUDES) -I$(GENINCDIR)
+
+%build_module_macro mmake=lwip-tapinterface modname=tapinterface \
+  modtype=library funcs=$(FUNCS) \
+  conffile=lib.conf compiler=host
+
+%common
