@@ -1,14 +1,15 @@
-digulla:Aaron Digulla:digulla@wi-pc44.fh-konstanz.de
-pgpeter:Peter Boeckmann:pgpeter@informatik.uni-siegen.de
-matthias::fleischr@IZFM.Uni-Stuttgart.DE
-stepan:Stefan Reinauer:stepan@home.culture.mipt.ru
-judd:Christopher D. Judd:cdj@gmk02.chem.rpi.edu
-frv95tjn:Tommy Johansson:frv95tjn@mds.mdh.se
-iaint:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au
-pcosta:Paolo Costabel:pcosta@mbox.vol.it
-zino:Peter Bortas:zino@lysator.liu.se
-daniel:Daniel Verite:daniel@brainstorm.eu.org
-mroth:Michael Roth:mroth@inlet.lake.de
-mreckt:Martin Recktenwald:klaus21@t-online.de
-ldp:Lennard voor den Dag:ldp@worldonline.nl
-nico:Nico Heinz:nico@fh-konstanz.de
+digulla:Aaron Digulla:digulla@wi-pc44.fh-konstanz.de:Coordinator
+pgpeter:Peter Boeckmann:pgpeter@informatik.uni-siegen.de:
+matthias::fleischr@IZFM.Uni-Stuttgart.DE:Exec, DOS, drivers
+stepan:Stefan Reinauer:stepan@home.culture.mipt.ru:
+judd:Christopher D. Judd:cdj@gmk02.chem.rpi.edu:
+frv95tjn:Tommy Johansson:frv95tjn@mds.mdh.se:
+iaint:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:FreeBSD
+pcosta:Paolo Costabel:pcosta@mbox.vol.it:
+zino:Peter Bortas:zino@lysator.liu.se:WWW site
+daniel:Daniel Verite:daniel@brainstorm.eu.org:
+mroth:Michael Roth:mroth@inlet.lake.de:
+mreckt:Martin Recktenwald:klaus21@t-online.de:
+ldp:Lennard voor den Dag:ldp@worldonline.nl:Amiga port
+nico:Nico Heinz:nico@fh-konstanz.de:
+quango:Chris Lawrence:quango@socomm.net:Linux/m68k

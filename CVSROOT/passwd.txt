@@ -1,15 +1,16 @@
-digulla:db1zGovyufSmw:aros:Aaron Digulla:digulla@wi-pc44.fh-konstanz.de
+digulla:db1zGovyufSmw:aros:Aaron Digulla:digulla@wi-pc44.fh-konstanz.de:Coordinator
 pgpeter:ggX6o8c4l:aros:Peter Boeckmann:pgpeter@informatik.uni-siegen.de
-matthias:dbilZL0JhJurg:aros::fleischr@IZFM.Uni-Stuttgart.DE
+matthias:dbilZL0JhJurg:aros::fleischr@IZFM.Uni-Stuttgart.DE:Exec, DOS, drivers
 stepan:dcIM.xvdbd/R.:aros:Stefan Reinauer:stepan@home.culture.mipt.ru
 judd:ddVIpcsgleKFM:aros:Christopher D. Judd:cdj@gmk02.chem.rpi.edu
 frv95tjn:caYBHmdz7UdCU:aros:Tommy Johansson:frv95tjn@mds.mdh.se
-iaint:adwVPoZf6iJ6U:aros:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au
+iaint:adwVPoZf6iJ6U:aros:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:FreeBSD
 pcosta:bbFkszi19YU6M:aros:Paolo Costabel:pcosta@mbox.vol.it
-zino:bdYh/q95S4cmU:aros:Peter Bortas:zino@lysator.liu.se
+zino:bdYh/q95S4cmU:aros:Peter Bortas:zino@lysator.liu.se:WWW site
 #winter:dbg5HYnm/h.ZQ:aros:Bill Boatman:winter@freebsd1.foo.bar
 daniel:b9bwcTjXjo3Gc:aros:Daniel Verite:daniel@brainstorm.eu.org
 mroth:da/M1jS3sNsHg:aros:Michael Roth:mroth@inlet.lake.de
 mreckt:cbWLerEivCr6I:aros:Martin Recktenwald:klaus21@t-online.de
-ldp:6u5hVWs926luc:aros:Lennard voor den Dag:ldp@worldonline.nl
+ldp:6u5hVWs926luc:aros:Lennard voor den Dag:ldp@worldonline.nl:Amiga port
 nico:bbHYNBwvWxgYE:aros:Nico Heinz:nico@fh-konstanz.de
+quango:cbSYvfdxV/owQ:aros:Chris Lawrence:quango@socomm.net:Linux/m68k
