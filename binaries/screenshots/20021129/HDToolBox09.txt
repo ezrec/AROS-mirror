@@ -1,1 +1,0 @@
-A partition named DH0 is now created. Let's rename it to "HD0".

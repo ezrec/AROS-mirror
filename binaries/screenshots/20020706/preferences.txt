@@ -1,1 +1,0 @@
-The Locale, Input, Serial and Font preference programs.

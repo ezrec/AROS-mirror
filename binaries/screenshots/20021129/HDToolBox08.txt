@@ -1,1 +1,0 @@
-A RDB partition table was created and with a doubleclick we can now see the partitions of the newly created table. We currently don't have any so "AddEntry" displays this window.
