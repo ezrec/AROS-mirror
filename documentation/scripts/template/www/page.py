@@ -164,7 +164,45 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
         cellspacing = 20,
         contents = \
         [
-            TR( TD( colspan = 2, align = 'center', contents = 'Image a spiffy logo here.' ) ),
+            TR \
+            ( 
+                TD \
+                ( 
+                    colspan = 2, align = 'center', 
+                    contents = Table \
+                    (
+                        border = 0, contents = \
+                        [
+                            TR \
+                            ( [
+                                TD \
+                                (
+                                    rowspan = 2, contents = Img \
+                                    (
+                                        src='%(BASE)simages/kitty_small.png',
+                                        alt='Kitty, the AROS mascot'
+                                    )
+                                ),
+                                TD \
+                                ( 
+                                    align = 'center', contents = Img \
+                                    ( 
+                                        src='%(BASE)simages/aros-logo.png' 
+                                    )
+                                )
+                            ] ),
+                            TR \
+                            (
+                                height = '*', contents = TD \
+                                ( 
+                                    valign = 'top', align = 'center', 
+                                    contents = B( 'Amiga Research OS' ) 
+                                )
+                            )
+                        ]
+                    )
+                )
+            ),
             TR \
             ( [ 
                 TD( bar ),
@@ -216,7 +254,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 content = 'AROS, Amiga, OS, operating system, research, open source, portable' 
             )
         ] ),
-        Body( bgcolor = '#EFEFEF', contents = layout )
+        Body( bgcolor = '#FFFFFF', contents = layout )
     ] )
 
     return str( page )
