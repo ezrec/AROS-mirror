@@ -1,0 +1,16 @@
+/*
+ */
+
+address filex
+options results
+
+help stem d
+ 
+say dcommandlist.count
+
+do k = 0 to dcommandlist.count - 1
+  say dcommandlist.k
+  help dcommandlist.k
+/*;  say result*/
+  end
+

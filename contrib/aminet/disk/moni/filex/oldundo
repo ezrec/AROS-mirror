@@ -1,0 +1,167 @@
+
+/*static void PrüfeUndomemsizeRedo( void )
+{
+	while(undomemsize>maxundomemsize*1024)
+	{
+		long k=AktuDD->FD->UndoStart;
+
+		if(!AktuDD->FD->Undos[k].typ)break;
+
+			/* Letzes Element suchen */
+
+		while(AktuDD->FD->Undos[k].typ){k++;if(k==UndoLevel)k=0;};
+
+		k--;
+		if(k<0)k+=UndoLevel;
+
+		if(AktuDD->FD->Undos[k].typ&(UT_INSERT|UT_PASTE|UT_CUT))
+		{
+				/* Typ auf NONE, damit ein Block von dieser Undostruct */
+				/* nicht gebraucht wird */
+
+			AktuDD->FD->Undos[k].typ=0;
+
+				/* Nun Blöcke freigeben, wenn sie nicht anders gebraucht werden */
+
+			if( AktuDD->FD->Undos[k].rblock )
+				FreeBlock( AktuDD->FD->Undos[k].rblock );
+			if( AktuDD->FD->Undos[k].ublock )
+				FreeBlock( AktuDD->FD->Undos[k].ublock );
+		}
+		else AktuDD->FD->Undos[k].typ=0;
+	}
+}
+static void PrüfeUndomemsize( void )
+{
+	while( undomemsize > maxundomemsize * 1024 )
+	{
+		long k = AktuDD->FD->UndoStart;
+
+			/* Falls kein Eintrag mehr in Liste, abbrechen */
+
+		if(!AktuDD->FD->Undos[AktuDD->FD->UndoStart].typ)break;
+
+				/* Falls wir an aktueller Stelle ankommen, von hinten freigeben */
+
+		if(AktuDD->FD->UndoStart==AktuDD->FD->UndoTiefe)
+		{
+			PrüfeUndomemsizeRedo();
+			break;
+		}
+
+		AktuDD->FD->UndoStart++;
+
+		if(AktuDD->FD->UndoStart==UndoLevel)AktuDD->FD->UndoStart=0;
+
+		if(AktuDD->FD->Undos[k].typ&(UT_INSERT|UT_PASTE|UT_CUT))
+		{
+				/* Typ auf NONE, damit ein Block von dieser Undostruct */
+				/* nicht gebraucht wird */
+
+			AktuDD->FD->Undos[k].typ=0;
+
+				/* Nun Blöcke freigeben, wenn sie nicht anders gebraucht werden */
+
+			if( AktuDD->FD->Undos[k].rblock )
+				FreeBlock( AktuDD->FD->Undos[k].rblock );
+			if( AktuDD->FD->Undos[k].ublock )
+				FreeBlock( AktuDD->FD->Undos[k].ublock );
+		}
+	}
+}
+
+
+void SetUndoLevel(long neu)
+{
+/*	struct Undostruct *neuundos;
+
+	if(neu!=UndoLevel)
+	{
+		if(neuundos = AllocMem(sizeof(struct Undostruct)*neu,MEMF_CLEAR|MEMF_ANY))
+		{
+			long k;
+
+			undomemsize+=sizeof(struct Undostruct)*neu;
+			undomemsize-=sizeof(struct Undostruct)*UndoLevel;
+		}
+		else
+		{
+			MyRequest( MSG_INFO_GLOBAL_CANTALLOCMEM, sizeof( struct Undostruct ) * MAX_UNDO_LEVEL );
+			return;
+		}
+
+		if(undostart!=undotiefe)
+		{
+			long undolaenge;
+
+			if(undostart>undotiefe)
+			{
+				undolaenge=UndoLevel+undotiefe-undostart;
+			}
+			else
+			{
+				undolaenge=undotiefe-undostart;
+			}
+
+			if(neu>=undolaenge)
+			{
+				if(undostart>undotiefe)
+				{
+					memcpy(neuundos,undos+undostart,(UndoLevel-undostart)*sizeof(struct Undostruct));
+					memcpy(neuundos+(UndoLevel-undostart),undos,undotiefe*sizeof(struct Undostruct));
+				}
+				else
+					memcpy(neuundos,undos+undostart,undolaenge*sizeof(struct Undostruct));
+
+				undotiefe=undolaenge;
+				undostart=0;
+			}
+			else
+			{
+				long k,e;
+
+				for(k=0;k<undolaenge-neu+1;k++)
+				{
+					e=undostart;
+
+					undostart++;
+
+					if(undostart==UndoLevel)undostart=0;
+
+					if(undos[e].typ&(UT_INSERT|UT_PASTE|UT_CUT))
+					{
+							/* Typ auf NONE, damit ein Block von dieser Undostruct */
+							/* nicht gebraucht wird */
+
+						undos[e].typ=0;
+
+						/* Nun Blöcke freigeben, wenn sie nicht anders gebraucht werden */
+
+						if( undos[e].rblock )
+							FreeBlock( undos[e].rblock );
+						if( undos[e].ublock )
+							FreeBlock( undos[e].ublock );
+					}
+				}
+
+				if(undostart>undotiefe)
+				{
+					memcpy(neuundos,undos+undostart,(UndoLevel-undostart)*sizeof(struct Undostruct));
+					memcpy(neuundos+(UndoLevel-undostart),undos,undotiefe*sizeof(struct Undostruct));
+				}
+				else
+					memcpy(neuundos,undos+undostart,neu*sizeof(struct Undostruct));
+
+				undotiefe=neu-1;
+				undostart=0;
+			}
+		}
+	
+		FreeMem(undos,UndoLevel*sizeof(struct Undostruct));
+
+		undos=neuundos;
+		UndoLevel=neu;
+	}
+*/
+}
+*/
