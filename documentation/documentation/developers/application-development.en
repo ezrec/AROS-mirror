@@ -9,6 +9,11 @@ AROS Application Development Manual
 :Status:    Unfinished; integration started (looong way left to go).
 :ToDo:      Integrate the various parts. Update and revise. Complete... 
 
+.. Warning::
+
+   This document is not finished! It is highly likely that many parts are
+   out-of-date, contain incorrect information or are simply missing 
+   altogether. If you want to help rectify this, please contact us.
 
 .. Contents::
 
