@@ -284,7 +284,7 @@ VOID    Leave(str)
 STRPTR  str;
 
 {
-  if(IntuitionBase) CloseLibrary(IntuitionBase);
+  if(IntuitionBase) CloseLibrary((struct Library *)IntuitionBase);
 
   fprintf(stderr,"\n%s\n\n",str);
   exit(0);
