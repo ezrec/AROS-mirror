@@ -2,7 +2,7 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM- linklibs : linklibs-www2
+##MM- linklibs : linklibs-www2
 #MM linklibs-www2 : includes
 
 FILES := \
