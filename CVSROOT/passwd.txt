@@ -78,5 +78,7 @@ phillwooller:ac4kAjAMFmiLc:Phill Wooller:phillwooller@noelite.freeserve.co.uk:
 stegerg:bdYHJK6vZiYUo:Helmut Steger:steger@pass.dnet.it:
 jadamcze:acf4uH7RbVseI:Jonathan Adamczewski:jadamcze@utas.edu.au:
 rmt:cbqm.TnecbSvE:Richard Tew:RMT38@student.canterbury.ac.nz:
+teras:bdqhmYMZSoI36:Panagiwths Katsaloulis:teras@writeme.com: 
+aldredmr:bddQ44oj139YU:Michael Aldred:bluey@amitar.com.au:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
