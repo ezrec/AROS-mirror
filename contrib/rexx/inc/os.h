@@ -1,6 +1,9 @@
 /*
  * $Header$
  * $Log$
+ * Revision 1.2  2001/04/05 16:57:37  stegerg
+ * added AROS specifc defines. Might not be 100% correct
+ *
  * Revision 1.1  2001/04/04 05:43:37  wang
  * First commit: compiles on Linux, Amiga, Windows, Windows CE, generic gcc
  *
@@ -69,6 +72,19 @@
 #	define	FILESEP  '\\'
 #	define	PATHSEP  ';'
 
+#	define	HAS_STRING
+#	define	HAS_CTYPE
+#	define	HAS_XTOY
+
+#elif defined(AROS)
+
+#	define	OS       "AROS"
+#	define	SHELL    "SHELL"
+#	define	FILESEP  '/'
+#	define	PATHSEP  ':'
+
+#	define	HAS_TERMINALIO
+#	define	HAS_STDIO
 #	define	HAS_STRING
 #	define	HAS_CTYPE
 #	define	HAS_XTOY
