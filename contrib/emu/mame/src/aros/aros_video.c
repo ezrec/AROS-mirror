@@ -516,6 +516,9 @@ void osd_update_video_and_audio(void)
 		       CTABFMT_XRGB8);
 
     AROS_Input_Update();
+    
+    SetTaskPri(FindTask(NULL), -1);
+    SetTaskPri(FindTask(NULL), 0);
 }
 
 /************************************************************************************/
