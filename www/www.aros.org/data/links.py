@@ -33,10 +33,14 @@ moreRelated = (
 	' license (no point in adding 23K of license to each file'
 	' and what about binary files ?).',
     ),
-    Link ('ftp://ftp.aros.org/pub/aros/', 'The official AROS FTP server',
-	'You can find releases, nightly snapshots and other'
-	' stuff on this server.',
+    Link ('http://sourceforge.net/projects/aros/', 'AROS on SourceForge',
+	'You can find releases, snapshots and other'
+	' stuff on this server.'
     ),
+#    Link ('ftp://ftp.aros.org/pub/aros/', 'The official AROS FTP server',
+#	'You can find releases, nightly snapshots and other'
+#	' stuff on this server.',
+#    ),
     Link ('ftp://ftp.aros.org/pub/aros/snapshots/', 
 	'Snapshots',
 	'Here, you find daily snapshots of AROS sources and binaries'
