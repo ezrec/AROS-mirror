@@ -50,8 +50,9 @@ descriptions = {
 # the group.
 #
 groups = {
-    'Sources'  : r'.*source',
-    'Binaries' : r'i386-.*' 
+    'Sources'       : r'.*source',
+    'Documentation' : r'.*docs.*',
+    'Binaries'      : r'i386-.*'
 }
 
 ## Path to the nightly build directory, relative to the CGI script
