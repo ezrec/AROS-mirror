@@ -39,6 +39,9 @@
 #define FILTER_LEN 10
 #pragma amicall(SysBase, 0, observe_input(a0))
 
+#define int_start()
+#define int_end()
+
 char *ver="$VER: cfn 1.0 (21.6.93)  by Andreas Günther";
 
 struct IntuitionBase *IntuitionBase=NULL;
@@ -96,6 +99,8 @@ void find_completion(char *part, BPTR dir)
   struct ExAllData *alldata, *ead;
   BPTR lock;
 
+kprintf("cfn: find_completion(%s dir = %x)\n", part, dir);
+
   compl[0]=0;
   if(NULL!=(alldata=(struct ExAllData *)malloc(3000)))
    {
@@ -152,6 +157,7 @@ struct InputEvent *observe_input(struct InputEvent *oldevent)
        {
         if(cur_ev->ie_Code==0x42)    /* TAB */
          {
+kprintf("cfn: tab rawkey :-)\n");
           event=*cur_ev;
           buf_busy=TRUE;
           Signal(task,sig);
@@ -210,10 +216,13 @@ serve_handler()
   task=FindTask(NULL);    /* for signaling from interrupt */
   for(;;)
    {
+kprintf("cfn: waiting for sig\n");
     Wait(sig);
+kprintf("cfn: received sig\n");
     ilock=LockIBase(0);
     proc=IntuitionBase->ActiveWindow->UserData; /* set by cfn_newshell */
     UnlockIBase(ilock);
+kprintf("cfn: proc = %x\n", proc);
     if(proc!=NULL)    /* set by "cfn_newshell" (should be started first) */
      {
       strpos=0;
@@ -221,12 +230,15 @@ serve_handler()
        {
         ie_buffer[i].ie_NextEvent=NULL;
         if(ie_buffer[i].ie_Code==0x41)  /* Backspace */
-          buf[strpos ? strpos--:0]=0;
+          buf[strpos ? strpos:0]=0;
         else
           strpos+=MapRawKey(&ie_buffer[i],&buf[strpos],20,NULL);
        }
+
       buf_busy=FALSE;
       buf[strpos]=0;  /* buf is now the incomplete filename */
+kprintf("cfn: buf = [%s]\n",buf);
+
       old_lock=CurrentDir(proc->pr_CurrentDir);   /* CDir of the input shell */
       strpos=(int)((int)PathPart(buf)-(int)buf);
       tmp=buf[strpos];

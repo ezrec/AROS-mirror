@@ -7,16 +7,21 @@ OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(CONTRIBDIR)/fish
 
 FILES := cfn
+FILES2 := cfn_newshell
 
 SRCS := $(foreach f, $(FILES), $(f).c)
 OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
 
+SRCS2 := $(foreach f, $(FILES2), $(f).c)
+OBJS2 := $(foreach f, $(FILES2), $(OBJDIR)/$(f).o)
+
 EXE := $(DESTDIR)/cfn
+EXE2 := $(DESTDIR)/cfn_newshell
 
 .PHONY : all clean
 
 #MM fish-cfn : setup-fish-cfn
-fish-cfn 	: $(OBJS) $(EXE)
+fish-cfn 	: $(EXE) $(EXE2)
 	@$(NOP)
 
 #MM
@@ -29,6 +34,11 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 	@$(ECHO) "Checking $@..."
 	@$(CHECKUDS) $@
 
+$(EXE2) : $(DESTDIR)/% : $(OBJS2) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS2) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
 
 #MM
 clean-fish :

@@ -27,7 +27,10 @@
 
 #include "exec/types.h"
 #include "intuition/intuitionbase.h"
-#include "functions.h"
+#include <proto/exec.h>
+#include <proto/intuition.h>
+
+//#include "functions.h"
 
 
 char *ver="$VER: cfn 1.0 (21.6.93)  by Andreas Günther";
