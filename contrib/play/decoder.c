@@ -185,7 +185,7 @@ redo:
             continue;
         }
 
-        if(verbose)
+        if(verbose && debugging)
             printf("stream #%d, size=%d \n", 
                     pkt.stream_index, pkt.size);
 

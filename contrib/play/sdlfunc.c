@@ -1,6 +1,5 @@
 #include "externs.h"
 
-
 static SDL_Surface *screen;
 static SDL_Overlay *yuv;
 static SDL_Rect rect;
@@ -11,6 +10,10 @@ static unsigned char *audioport_buffer = NULL;
 static volatile unsigned long samples_played = 0;
 
 extern int use_audio, audio_sample_rate, audio_channels, frame_width, frame_height;
+
+#ifndef min
+#define min(a,b) ((a) > (b) ? (b) : (a))
+#endif
 
 void os_delay(int msec)
 {
@@ -54,7 +57,7 @@ int write_audio(char *buffer, int len)
 	}
 	else if (bytes_in_buffer < AUDIOPORT_BUFFERSIZE) {
 	    // XXX controllare questo codice, non mi convince
-        fprintf(stderr, "Scrivo nel buffer %d bytes e scarto gli altri %d\n",
+        fprintf(stderr, "Written in buffer %d bytes, trashed remaining %d bytes\n",
                 AUDIOPORT_BUFFERSIZE - bytes_in_buffer,
                 len -  (AUDIOPORT_BUFFERSIZE - bytes_in_buffer) );
 		SDL_LockAudio();
@@ -68,7 +71,7 @@ int write_audio(char *buffer, int len)
 		return AUDIOPORT_BUFFERSIZE - bytes_in_buffer;
 	}
 
-    fprintf(stderr, "BUFFER porta audio pieno!!!!\n");
+    fprintf(stderr, "Audio port BUFFER full!!!!\n");
 
 	return -1;
 }
@@ -260,43 +263,69 @@ terminate_app:
                         case SDLK_p:
                             paused ^= 1;
 
-                            if(paused)
+                            if(paused) {
+                                if(verbose)
+                                    fprintf(stderr, "\nEntering pause mode.\n");
                                 stop_audio();
-                            else
+                            }
+                            else {
+                                if(verbose)
+                                    fprintf(stderr, "\nExiting pause mode.\n");
                                 start_audio();
-
+                            }
+                            
                             sample_frame = get_elapsed_samples();
                                 
                             break;
                         case SDLK_SPACE:
                             SDL_FreeYUVOverlay(yuv);
 
+                            rect.x = 0;
+
                             if(fullscreen) {
+                                if(verbose)
+                                    fprintf(stderr, "\nEntering windowed mode...\n");
+                                
                                 screen = SDL_SetVideoMode(frame_width, frame_height,
                                         0 , SDL_RESIZABLE);
                                 fullscreen = 0;
+
+                                rect.y = 0;
+                                rect.h = screen->h;
                             }
                             else {
+                                if(verbose)
+                                    fprintf(stderr, "\nEntering fullscreen mode..\n");
+
                                 screen = SDL_SetVideoMode(800, 600,
-                                        0 , SDL_FULLSCREEN|SDL_SWSURFACE);
+                                        32 , SDL_FULLSCREEN|SDL_SWSURFACE);
 
                                 fullscreen = 1;
+
+                                rect.h = min(screen->h, (screen->w * frame_height)/frame_width);
+
+                                if(rect.h < screen->h) {
+                                    rect.y = (screen->h - rect.h) / 2;
+                                }
                             }
 
+                            rect.w=screen->w;
+
                             if(!screen) {
-                                fprintf(stderr, "Impossibile passare in modalita' %s\n",
+                                fprintf(stderr, "Impossible to switch to %s mode.\n",
                                         fullscreen ? "fullscreen" : "windowed");
                                 exit(0);
                             }
 
                             if(!(yuv = SDL_CreateYUVOverlay(frame_width, frame_height, 
                                             SDL_YV12_OVERLAY, screen))) {
-                                fprintf(stderr,  "Errore nell'inizializzazione dell'overlay!\n");
+                                fprintf(stderr,  "Impossible to recreate video overlay!\n");
                                 exit(0);
                             }
-
-                            rect.w=screen->w;
-                            rect.h=screen->h;
+                               
+                            if(verbose)
+                                fprintf(stderr, "Setting rectangle to (%d,%d) %dx%d\n",
+                                        rect.x, rect.y, rect.w, rect.h);
                             break;
                     }
                     break;

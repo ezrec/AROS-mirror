@@ -68,7 +68,9 @@
  */
 #include <stdio.h>                  /* for EOF */ 
 #include <string.h>                 /* for strchr() */
- 
+
+#ifndef linux
+
 /* static (global) variables that are specified as exported by getopt() */ 
 char *optarg = NULL;    /* pointer to the start of the option argument  */ 
 int   optind = 1;       /* number of the next argv[] to be evaluated    */ 
@@ -166,4 +168,4 @@ int getopt(int argc, char *argv[], char *opstring)
         return (int)*pArgString;    /* return the letter that matched */ 
 	} 
 }
-
+#endif
