@@ -640,7 +640,7 @@ class Page (SeriesDocument):
         s.append('\nComments to webmaster: ' + str(MailTo(self.email)) )
         s.append('<br>\nGenerated: %s <BR>' % self.date) # can use self.datetime here instead
         s.append('<hr>\n</FONT>')
-        s.append('<A href="http://sourceforge.net"> <IMG src="http://sourceforge.net/sflogo.php?group_id=43586%type=1" width="88" height="31" border="0" alt="SourceForge Logo"></A><BR>')
+        s.append('<BR><P><A href="http://sourceforge.net"> <IMG src="http://sourceforge.net/sflogo.php?group_id=43586&type=1" width="88" height="31" border="0" alt="SourceForge Logo"></A><BR><P>')
 
         return string.join(s, '')
 
