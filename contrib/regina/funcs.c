@@ -54,6 +54,7 @@ static const struct function_type functions[] = {
   { 0,              std_bitand, "BITAND" },
   { 0,              arexx_bitchg, "BITCHG" },
   { 0,              arexx_bitclr, "BITCLR" },
+  { 0,              arexx_bitcomp, "BITCOMP" },
   { 0,              std_bitor, "BITOR" },
   { 0,              arexx_bitset, "BITSET" },
   { 0,              arexx_bittst, "BITTST" },

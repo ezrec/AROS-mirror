@@ -404,7 +404,7 @@ streng *arexx_c2b( tsd_t *TSD, cparamboxptr parm )
 
 /*
  * Implementation of the bitwise function from ARexx
- * Functions: BITCHG, BITCLR, BITSET, BITTST
+ * Functions: BITCHG, BITCLR, BITSET, BITTST, BITCOMP
  */
 streng *arexx_bitchg( tsd_t *TSD, cparamboxptr parm1 )
 {
@@ -506,6 +506,73 @@ streng *arexx_bittst( tsd_t *TSD, cparamboxptr parm1 )
   
   ret = int_to_streng( TSD, (parm1->value->value[byte] & (char)(1<<dt.rem))!=0 );
   return ret;
+}
+
+
+/* Help function for arexx_bitcomp */
+static int firstbit(char c)
+{
+  assert(c!=0);
+  int i;
+  
+  for( i=0; i<8; i++)
+  {
+    if (c & 1)
+      return i;
+    else
+      c = c >> 1;
+  }
+  
+  return 8;
+}
+
+/* This ARexx function has very weird usage of the pad byte,
+ * the shortest string is padded on the left wiht this byte
+ */
+streng *arexx_bitcomp( tsd_t *TSD, cparamboxptr parm1 )
+{
+  cparamboxptr parm2, parm3;
+  const streng *s1, *s2;
+  char *cp1, *cp2;
+  char pad;
+  int i;
+  
+  checkparam( parm1, 2, 3, "BITCOMP" );
+  parm2 = parm1->next;
+  
+  /* Make s2 always shorter or equal to s1 */
+  if( parm1->value->len < parm2->value->len )
+  {
+    s1 = parm2->value;
+    s2 = parm1->value;
+  } else {
+    s1 = parm1->value;
+    s2 = parm2->value;
+  }
+  
+  for( cp1=s1->value+s1->len-1, cp2=s2->value+s2->len-1, i=0;
+       cp2 >= s2->value;
+       cp1--, cp2--, i++ )
+  {
+    if ( *cp1 != *cp2 )
+      return int_to_streng( TSD, i*8 + firstbit( *cp1 ^ *cp2 ) );
+  }
+  
+  parm3 = parm2->next;
+  if ( parm3==NULL || parm3->value==NULL || parm3->value->len==0 )
+    pad = 0;
+  else
+    pad = parm3->value->value[0];
+  
+  for ( ;
+	cp1 >= s1->value;
+	cp1--, i++ )
+  {
+    if ( *cp1 != pad )
+      return int_to_streng( TSD, i*8 + firstbit( *cp1 ^ pad ) );
+  }
+  
+  return int_to_streng( TSD, -1 );
 }
 
 

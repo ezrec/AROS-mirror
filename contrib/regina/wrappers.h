@@ -90,6 +90,7 @@
 #define arexx_bitclr                 __regina_arexx_bitclr
 #define arexx_bitset                 __regina_arexx_bitset
 #define arexx_bittst                 __regina_arexx_bittst
+#define arexx_bitcomp                __regina_arexx_bitcomp
 #define arexx_compress               __regina_arexx_compress
 #define arexx_c2b                    __regina_arexx_c2b
 #define arexx_close                  __regina_arexx_close
