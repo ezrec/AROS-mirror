@@ -151,6 +151,7 @@ void ReginaHandleMessages(void)
     }
   }
 
+  FreeSignal(atsd->subtasksignal);
   if ( listenport != NULL )
     DeletePort( listenport );
 }
@@ -194,7 +195,8 @@ int init_amigaf ( tsd_t *TSD )
   if ( atsd->child != NULL )
     Wait(1<<atsd->maintasksignal);
   THREAD_UNPROTECT(createtask)
-      
+  FreeSignal(atsd->maintasksignal);
+    
   if ( atsd->child == NULL )
     return 0;
 #endif
