@@ -61,7 +61,6 @@ static void MTExit(int code)
 
 static void cleanup(int dummy, void *ptr)
 {
-  struct Task *thistask = FindTask(NULL);
   tsd_node_t *node = (tsd_node_t *)ptr;
   mt_tsd_t *mt = (mt_tsd_t *)node->TSD->mt_tsd;
 
