@@ -1,23 +1,20 @@
-#   $Id$
+# $Id$
 #
-#   Makefile to make Typeface.
+# Makefile to make Typeface.
 
 include $(TOP)/config/make.cfg
 
-FILES := char checkbox error node locale \
-         gadget text fontio typeface
+FILES  := char checkbox error node locale \
+          gadget text fontio typeface
 
-## 
-##         typeface
+EXEDIR := $(CONTRIBDIR)/aminet/
+EXE    := $(EXEDIR)/Typeface
 
-EXEDIR := $(AROSDIR)/Utilities
-EXE := $(EXEDIR)/Typeface
-
-USE_AROSLIB := yes
-USE_CLIB := yes
+USE_AROSLIB  := yes
+USE_CLIB     := yes
 USE_AMIGALIB := yes
-USE_MLIB := yes
-USE_BGUILIB := yes
+USE_MLIB     := yes
+USE_BGUILIB  := yes
 
 USER_CFLAGS := -O2 -Wunused -Wall
 
