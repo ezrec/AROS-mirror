@@ -147,10 +147,14 @@ int clockwise(register int i)
 	return (d > 0);
 	}
 
+
 void draw_square(register int i)
 	{
 	register int d;
+
 	SetAPen (window->RPort,square[i].colour);
+	SetDrMd(window->RPort, JAM1);
+		
 	AreaMove (window->RPort,x1,y1);
 	AreaDraw (window->RPort,x2,y2);
 	AreaDraw (window->RPort,x3,y3);
