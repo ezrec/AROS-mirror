@@ -70,7 +70,6 @@ void formatVolume(BPTR *volumeLock,char *volumeName,char *newName,ULONG ffs,
 
    /*Inhibit the drive*/
 //   DoPkt(devPort,ACTION_INHIBIT,DOSTRUE,NULL,NULL,NULL,NULL);
-	Inhibit(deviceName, DOSTRUE);
 
    /*If we got a lock to the volume that we're going to format it, destroy*/
    /*it, since the volume that it points to is about to be erased anyway*/
@@ -79,6 +78,7 @@ void formatVolume(BPTR *volumeLock,char *volumeName,char *newName,ULONG ffs,
       UnLock(*volumeLock);
       *volumeLock=NULL;
 		}
+	Inhibit(deviceName, DOSTRUE);
 
    /*Open the disk device*/
    if((io1=OpenDrive(layout.devName,layout.unit,layout.flags))!=NULL)
