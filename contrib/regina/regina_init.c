@@ -47,7 +47,7 @@ ULONG SAVEDS STDARGS LC_BUILDNAME(L_InitLib) (LC_LIBHEADERTYPEPTR ReginaBase)
 
     if (!(aroscbase = OpenLibrary("arosc.library",41)))
     {
-        CloseLibrary(DOSBase);
+        CloseLibrary((struct Library *)DOSBase);
         return FALSE;
     }
 
@@ -80,7 +80,7 @@ void  SAVEDS STDARGS LC_BUILDNAME(L_ExpungeLib) (LC_LIBHEADERTYPEPTR ReginaBase)
 
     DeletePool(__regina_semaphorepool);
     CloseLibrary(aroscbase);
-    CloseLibrary(DOSBase);
+    CloseLibrary((struct Library *)DOSBase);
 }
 
 /****************************************************************************************/
