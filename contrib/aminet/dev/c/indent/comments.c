@@ -15,6 +15,7 @@
 
 #include "sys.h"
 #include "indent.h"
+#include <string.h>
 
 int inc_pstack ();
 INLINE int current_column ();
