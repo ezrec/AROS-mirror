@@ -1,28 +1,3 @@
 # $Id$
 
-# The workbench-libs target points back to config/$(ARCH)/mmakefile:
-##MM- workbench-libs : workbench-libs-$(ARCH)
-
-# A general catch-all target. You can use this if everything compiles on your
-# machine, and you want to save yourself some typing.
-##MM- workbench-libs-complete : \
-##MM	    workbench-libs-amigaguide \
-##MM         workbench-libs-asl \
-##MM         workbench-libs-commodities \
-##MM         workbench-libs-camd \
-##MM         workbench-libs-datatypes \
-##MM         workbench-libs-diskfont \
-##MM         workbench-libs-gadtools \
-##MM         workbench-libs-icon \
-##MM         workbench-libs-iffparse \
-##MM         workbench-libs-locale \
-##MM         workbench-libs-lowlevel \
-##MM         workbench-libs-mathieeesingtrans \
-##MM         workbench-libs-mathtrans \
-##MM         workbench-libs-mathieeedoubbas \
-##MM         workbench-libs-mathieeedoubtrans \
-##MM         workbench-libs-muimaster \
-##MM         workbench-libs-reqtools \
-##MM         workbench-libs-realtime \
-##MM         workbench-libs-nonvolatile \
-##MM         workbench-libs-nvdisk
+#MM contrib-zune-libs : contrib-zune-libs-muimaster
