@@ -16,9 +16,8 @@ CFLAGS = $(INCLUDES) $(DEFINES)
 
 COMMONDIR = ../common
 
-LIBS = -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -lbgui -lautoinit
+EXELIBS = -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -lbgui -lautoinit
 
-FLAGS = -nostartfiles -nostdlib -Wl,-i
 
 
 GADGET = bgui_popbutton.gadget
@@ -29,28 +28,30 @@ LIBTARGETS = PopButtonClass.o
 
 STARTUP = $(LIBDIR)/startup.o
 
-$(GADGET) : $(LIBTARGETS)
-	@$(CC) -nostartfiles -nostdlib -Wl,-i \
+$(BGUIGADGETSDIR)/$(GADGET) : $(GADGET)
+	@$(ECHO) Installing $@...
+	@$(CP) $< $@
+
+$(GADGET) : $(LIBTARGETS) Makefile.aros
+	$(STATIC_LD) $(STATIC_LDFLAGS) $(LDFLAGS) \
 		$(COMMONDIR)/bguiclass_libtag.o \
 		$(COMMONDIR)/bguiclass_lib.o \
 		$(LIBTARGETS) \
 		$(COMMONDIR)/bguiclass_libendtag.o \
-		-static  \
-		$(LIBS) \
+		-lamiga -larossupport -lbgui -lrom \
 		-o $@
-	@$(ECHO) Installing $@...
-	@$(CP) $@ $(BGUIGADGETSDIR)
 
-$(DEMO) : $(DEMO).c
-	@$(CC) $(INCLUDES) $(USER_INCLUDES) $(DEFINES) -c $^ -o $@.o
-	@$(CC) $(FLAGS) $(STARTUP) $@.o -o $@ $(LIBS)
+$(BGUIEXAMPLESDIR)/$(DEMO) : $(DEMO)
 	@$(ECHO) Installing $@
-	@$(CP) $@ $(BGUIEXAMPLESDIR)
+	@$(CP) $< $@
+
+$(DEMO) : $(DEMO).o Makefile.aros
+	@$(CC) $(LDFLAGS) $(STARTUP) $< -o $@ $(EXELIBS)
 
 %.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-all : $(LIBTARGETS) $(GADGET) $(DEMO)
+all : $(LIBTARGETS) $(BGUIGADGETSDIR)/$(GADGET) $(BGUIEXAMPLESDIR)/$(DEMO)
 
 clean :
 	$(RM) -rf $(LIBTARGETS) $(GADGET) $(DEMO)
