@@ -117,3 +117,19 @@ diff -u -r textutils-2.1/src/sort.c textutils-2.1-aros/src/sort.c
    have_read_stdin = 0;
    inittables ();
  
+diff -urN textutils-2.1/lib/getpass.c textutils-2.1-aros/lib/getpass.c
+--- textutils-2.1/lib/getpass.c	2004-08-31 23:32:01.000000000 +0200
++++ textutils-2.1-aros/lib/getpass.c	2004-08-31 23:34:14.000000000 +0200
+@@ -16,6 +16,7 @@
+    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.  */
+ 
++#ifndef __AROS__
+ #if HAVE_CONFIG_H
+ # include <config.h>
+ #endif
+@@ -100,3 +101,4 @@
+ 
+   return buf;
+ }
++#endif
