@@ -1346,7 +1346,7 @@ int len = p_info->name_length;
 void Create_Volume_Node (LONG p_disk_type, ULONG p_volume_date) {
 struct DeviceList *dl;
 
-	dl = Find_Volume_Node (global->g_vol_name);
+	dl = Find_Volume_Node (global->g_vol_name + 1);
 	if (dl)
 	{
 		BUG(dbprintf("[Reusing old volume node]");)
