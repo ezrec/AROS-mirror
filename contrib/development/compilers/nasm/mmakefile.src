@@ -19,16 +19,17 @@ USE_MLIB     := yes
 USE_ZLIB     := yes
 
 #MM- contrib-development : contrib-development-nasm
-#MM contrib-development-nasm : contrib-development-nasm-setup
 
 %make_prog_setup mmake=contrib-development-nasm
 
-contrib-development-nasm : setup $(EXE) asm_includes
+contrib-development-nasm : contrib-development-nasm-setup asm_includes $(EXE) \
+                $(EXEDIR)/test/arostest.s $(EXEDIR)/test/arostest.README
+
 
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
 #MM
-contrib-development-nasm-setup :: $(EXEDIR)/test/arostest.s $(EXEDIR)/test/arostest.README
+contrib-development-nasm-setup ::
 	%mkdirs_q $(EXEDIR) $(EXEDIR)/include
 
 $(EXEDIR)/test/arostest.s : test/arostest.s
