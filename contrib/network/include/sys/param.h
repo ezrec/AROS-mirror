@@ -56,10 +56,10 @@
 #endif
 #endif
 
-#ifndef _LOCORE
-#include <sys/types.h>
-#include <sys/simplelock.h>
-#endif
+//#ifndef _LOCORE
+//#include <sys/types.h>
+//#include <sys/simplelock.h>
+//#endif
 
 /*
  * Machine-independent constants (some used in following include files).
@@ -68,7 +68,7 @@
  * MAXCOMLEN should be >= sizeof(ac_comm) (see <acct.h>)
  * MAXLOGNAME should be >= UT_NAMESIZE (see <utmp.h>)
  */
-#include <sys/syslimits.h>
+//#include <sys/syslimits.h>
 
 #define	MAXCOMLEN	16		/* max command name remembered */
 #define	MAXINTERP	64		/* max interpreter file name length */
@@ -92,11 +92,11 @@
 #endif
 
 /* Signals. */
-#include <sys/signal.h>
+//#include <sys/signal.h>
 
 /* Machine type dependent parameters. */
-#include <machine/param.h>
-#include <machine/limits.h>
+//#include <machine/param.h>
+//#include <machine/limits.h>
 
 /*
  * Priorities.  Note that with 32 run queues, differences less than 4 are
@@ -123,7 +123,7 @@
 #define	CMASK	022		/* default file mask: S_IWGRP|S_IWOTH */
 #define	NODEV	(dev_t)(-1)	/* non-existent device */
 #define NETDEV	(dev_t)(-2)	/* network device (for nfs swap) */
-	
+
 /*
  * Clustering of hardware pages on machines with ridiculously small
  * page sizes is done here.  The paging subsystem deals with units of
@@ -239,7 +239,7 @@
 #define RFNOTEG		(1<<3)	/* UNIMPL create new plan9 `note group' */
 #define RFPROC		(1<<4)	/* change child (else changes curproc) */
 #define RFMEM		(1<<5)	/* share `address space' */
-#define RFNOWAIT	(1<<6)	/* parent need not wait() on child */ 
+#define RFNOWAIT	(1<<6)	/* parent need not wait() on child */
 #define RFCNAMEG	(1<<10) /* UNIMPL zero plan9 `name space' */
 #define RFCENVG		(1<<11) /* UNIMPL zero plan9 `env space' */
 #define RFCFDG		(1<<12)	/* zero fd table */

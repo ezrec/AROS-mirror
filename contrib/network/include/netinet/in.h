@@ -478,9 +478,9 @@ struct ip_mreq {
 }
 
 /* INET6 stuff */
-#define __KAME_NETINET_IN_H_INCLUDED_
-#include <netinet6/in6.h>
-#undef __KAME_NETINET_IN_H_INCLUDED_
+//#define __KAME_NETINET_IN_H_INCLUDED_
+//#include <netinet6/in6.h>
+//#undef __KAME_NETINET_IN_H_INCLUDED_
 
 #ifndef _KERNEL
 

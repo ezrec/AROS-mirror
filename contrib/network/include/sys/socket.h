@@ -43,6 +43,8 @@
  * Definitions related to sockets: types, address families, options.
  */
 
+#include <sys/types.h>
+
 /*
  * Types
  */

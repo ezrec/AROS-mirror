@@ -42,17 +42,18 @@
  */
 #define	IPVERSION	4
 
+#include <aros/machine.h>
+
 /*
  * Structure of an internet header, naked of options.
  */
 struct ip {
-#if BYTE_ORDER == LITTLE_ENDIAN
-	u_int8_t  ip_hl:4,		/* header length */
-		  ip_v:4;		/* version */
-#endif
-#if BYTE_ORDER == BIG_ENDIAN
+#if AROS_BIG_ENDIAN
 	u_int8_t  ip_v:4,		/* version */
 		  ip_hl:4;		/* header length */
+#else
+	u_int8_t  ip_hl:4,		/* header length */
+		  ip_v:4;		/* version */
 #endif
 	u_int8_t  ip_tos;		/* type of service */
 	u_int16_t ip_len;		/* total length */
@@ -132,13 +133,12 @@ struct	ip_timestamp {
 	u_int8_t ipt_code;		/* IPOPT_TS */
 	u_int8_t ipt_len;		/* size of structure (variable) */
 	u_int8_t ipt_ptr;		/* index of current entry */
-#if BYTE_ORDER == LITTLE_ENDIAN
-	u_int8_t ipt_flg:4,		/* flags, see below */
-		 ipt_oflw:4;		/* overflow counter */
-#endif
-#if BYTE_ORDER == BIG_ENDIAN
+#if AROS_BIG_ENDIAN
 	u_int8_t ipt_oflw:4,		/* overflow counter */
 		 ipt_flg:4;		/* flags, see below */
+#else
+	u_int8_t ipt_flg:4,		/* flags, see below */
+		 ipt_oflw:4;		/* overflow counter */
 #endif
 	union ipt_timestamp {
 		 n_time	ipt_time[1];
