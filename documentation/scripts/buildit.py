@@ -343,6 +343,7 @@ def buildHTML():
 
     recurse( processHTML )
 
+    copy( 'targets/www/docutils.css', DSTROOT )
     copy( 'targets/html/aros.css', DSTROOT )
     
     os.system( 'chmod -R go+r %s' % DSTROOT )
