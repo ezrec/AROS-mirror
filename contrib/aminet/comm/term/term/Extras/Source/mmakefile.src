@@ -151,7 +151,7 @@ EXE := $(DESTDIR)/Term
 
 .PHONY : all clean
 
-#MM aminet-comm-term-term : setup-aminet-comm-term-term
+#MM aminet-comm-term-term : aminet-dev-gui-gtlayout setup-aminet-comm-term-term
 aminet-comm-term-term 	: $(OBJS) $(EXE)
 	@$(NOP)
 
