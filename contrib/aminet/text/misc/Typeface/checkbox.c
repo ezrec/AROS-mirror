@@ -70,7 +70,7 @@ Class *InitCheckClass(void)
   {
     Class *super;
 
-    if (super = BGUI_GetClassPtr(BGUI_BUTTON_GADGET))
+    if ((super = BGUI_GetClassPtr(BGUI_BUTTON_GADGET)))
     {
       CheckClass = MakeClass(NULL,NULL,super,0,0);
       if (CheckClass)

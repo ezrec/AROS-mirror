@@ -25,8 +25,10 @@
 #define SAVEDS
 #define ASM
 #define TF_REGPARAM(reg,type,name) type name
+
 #define LONG2BE(x) AROS_LONG2BE(x)
 #define WORD2BE(x) AROS_WORD2BE(x)
+#define BE2WORD(x) AROS_BE2WORD(x)
 
 #else
 
@@ -34,6 +36,7 @@
 
 #define LONG2BE(x) x
 #define WORD2BE(x) x
+#define BE2WORD(x) x
 
 #ifdef __GNUC__
 

@@ -75,9 +75,9 @@ Class *InitCharGadgClass(void)
 {
 Class *super,*cl = NULL;
 
-  if (super = BGUI_GetClassPtr(BGUI_BASE_GADGET))
+  if ((super = BGUI_GetClassPtr(BGUI_BASE_GADGET)))
   {
-    if (cl = MakeClass(NULL,NULL,super,sizeof(struct CharGadgData),0))
+    if ((cl = MakeClass(NULL,NULL,super,sizeof(struct CharGadgData),0)))
       cl->cl_Dispatcher.h_Entry = (HOOKFUNC)DispatchCharGadg;
   }
   return cl;
@@ -301,7 +301,7 @@ ULONG retval;
     gi = gpgi->gpgi_GInfo;
     if (cgd->cg_Pressed == TRUE)
     {
-      if (rp = ObtainGIRPort(gi))
+      if ((rp = ObtainGIRPort(gi)))
       {
 	if (rp->Font != cgd->cg_TextFont)
 	{
@@ -338,16 +338,16 @@ ULONG retval;
   tags = ops->ops_AttrList;
   if (tags)
   {
-    if (tag = FindTagItem(CG_Pos,tags))
+    if ((tag = FindTagItem(CG_Pos,tags)))
       cgd->cg_Pos = tag->ti_Data;
-    if (tag = FindTagItem(CG_SizeY,tags))
+    if ((tag = FindTagItem(CG_SizeY,tags)))
       cgd->cg_SizeY = tag->ti_Data;
-    if (tag = FindTagItem(CG_Pressed,tags))
+    if ((tag = FindTagItem(CG_Pressed,tags)))
       cgd->cg_LastPressed = tag->ti_Data;
 
-    if (tag = FindTagItem(CG_Redraw,tags))
+    if ((tag = FindTagItem(CG_Redraw,tags)))
     {
-      if (rp = ObtainGIRPort(ops->ops_GInfo))
+      if ((rp = ObtainGIRPort(ops->ops_GInfo)))
       {
 	cgd->cg_Redraw = TRUE;
 	DoMethod((Object *)gadg,GM_RENDER,ops->ops_GInfo,rp,
@@ -449,7 +449,7 @@ void CharGadg_DrawCurrent(struct GadgetInfo *gi,struct CharGadgData *cgd,
 struct TextFont *old_tf = NULL;
 struct RastPort *rp;
 
-  if (rp = ObtainGIRPort(gi))
+  if ((rp = ObtainGIRPort(gi)))
   {
     if (rp->Font != cgd->cg_TextFont)
     {
@@ -499,9 +499,9 @@ Class *InitEditGadgClass(void)
 {
 Class *super,*cl = NULL;
 
-  if (super = BGUI_GetClassPtr(BGUI_BASE_GADGET))
+  if ((super = BGUI_GetClassPtr(BGUI_BASE_GADGET)))
   {
-    if (cl = MakeClass(NULL,NULL,super,sizeof(struct EditGadgData),0))
+    if ((cl = MakeClass(NULL,NULL,super,sizeof(struct EditGadgData),0)))
       cl->cl_Dispatcher.h_Entry = (HOOKFUNC)DispatchEditGadg;
   }
   return cl;
@@ -514,7 +514,7 @@ struct Character *chr;
 
   *ew_ptr = (w-(2*EG_XOFFSET))/(egd->eg_PixelX);
   *eh_ptr = (h-(2*EG_YOFFSET))/(egd->eg_PixelY);
-  if (chr = egd->eg_Char)
+  if ((chr = egd->eg_Char))
   {
     if (*ew_ptr > chr->chr_Width) *ew_ptr = chr->chr_Width;
     if (*eh_ptr > chr->chr_Height) *eh_ptr = chr->chr_Height;
@@ -525,7 +525,7 @@ void EditGadg_Draw(Object *o, struct GadgetInfo *gi,ULONG draw)
 {
 struct RastPort *rp;
 
-  if (rp = ObtainGIRPort(gi))
+  if ((rp = ObtainGIRPort(gi)))
   {
     DoMethod(o,GM_RENDER,gi,rp,draw);
     ReleaseGIRPort(rp);
@@ -754,17 +754,17 @@ struct EditGadgData *egd = INST_DATA(cl,(Object *)gadg);
   tags = ops->ops_AttrList;
   if (tags)
   {
-    if (tag = FindTagItem(EG_Baseline,tags))
+    if ((tag = FindTagItem(EG_Baseline,tags)))
       egd->eg_Baseline = tag->ti_Data;
-    if (tag = FindTagItem(EG_CharNode,tags))
+    if ((tag = FindTagItem(EG_CharNode,tags)))
       egd->eg_Node = (struct CharNode *)(tag->ti_Data);
-    if (tag = FindTagItem(EG_CharStruct,tags))
+    if ((tag = FindTagItem(EG_CharStruct,tags)))
       egd->eg_Char = (struct Character *)(tag->ti_Data);
-    if (tag = FindTagItem(EG_PixelX,tags))
+    if ((tag = FindTagItem(EG_PixelX,tags)))
       egd->eg_PixelX = tag->ti_Data;
-    if (tag = FindTagItem(EG_PixelY,tags))
+    if ((tag = FindTagItem(EG_PixelY,tags)))
       egd->eg_PixelY = tag->ti_Data;
-    if (tag = FindTagItem(EG_Update,tags))
+    if ((tag = FindTagItem(EG_Update,tags)))
     {
       switch (tag->ti_Data)
       {
@@ -849,7 +849,7 @@ struct EditGadgData *egd = INST_DATA(cl,(Object *)gadg);
 	  break;
       }
     }
-    if (tag = FindTagItem(EG_XOffset,tags))
+    if ((tag = FindTagItem(EG_XOffset,tags)))
     {
       if (egd->eg_XOffset != tag->ti_Data)
       {
@@ -857,7 +857,7 @@ struct EditGadgData *egd = INST_DATA(cl,(Object *)gadg);
 	EditGadg_Draw((Object *)gadg,ops->ops_GInfo,GREDRAW_UPDATE);
       }
     }
-    if (tag = FindTagItem(EG_YOffset,tags))
+    if ((tag = FindTagItem(EG_YOffset,tags)))
     {
       if (egd->eg_YOffset != tag->ti_Data)
       {
@@ -872,7 +872,7 @@ struct EditGadgData *egd = INST_DATA(cl,(Object *)gadg);
 ULONG EditGadg_GOACTIVE(Class *cl,struct Gadget *gadg,struct gpInput *gpi)
 {
 struct EditGadgData *egd = INST_DATA(cl,(Object *)gadg);
-struct DrawInfo *dri = gpi->gpi_GInfo->gi_DrInfo;
+/*struct DrawInfo *dri = gpi->gpi_GInfo->gi_DrInfo;*/
 WORD i,j;
 UWORD ew,eh;
 ULONG retval;
@@ -897,7 +897,7 @@ ULONG EditGadg_HANDLEINPUT(Class *cl,struct Gadget *gadg,
 struct GadgetInfo *gi = gpi->gpi_GInfo;
 struct InputEvent *ie = gpi->gpi_IEvent;
 struct EditGadgData *egd = INST_DATA(cl,(Object *)gadg);
-struct DrawInfo *dri = gpi->gpi_GInfo->gi_DrInfo;
+/*struct DrawInfo *dri = gpi->gpi_GInfo->gi_DrInfo;*/
 ULONG retval = GMR_MEACTIVE;
 WORD i,j;
 UWORD ew,eh;
@@ -974,7 +974,7 @@ UWORD px,py;
   }
   pixel =
     chr->chr_Data+((j+egd->eg_YOffset)*chr->chr_Width)+i+egd->eg_XOffset;
-  if (rp = ObtainGIRPort(gpi->gpi_GInfo))
+  if ((rp = ObtainGIRPort(gpi->gpi_GInfo)))
   {
     pen1 = dri->dri_Pens[SHADOWPEN];
     pen2 = dri->dri_Pens[BACKGROUNDPEN];
@@ -1019,7 +1019,7 @@ Class *InitSlideGadgClass(void)
 {
 Class *super, *cl = NULL;
 
-  if (super = BGUI_GetClassPtr(BGUI_PROP_GADGET))
+  if ((super = BGUI_GetClassPtr(BGUI_PROP_GADGET)))
   {
     cl = MakeClass(NULL,NULL,super,0,0);
     if (cl)
@@ -1086,8 +1086,8 @@ ULONG retval;
   tags = ops->ops_AttrList;
   if (tags)
   {
-    if (tag = FindTagItem(PGA_Total,tags)) sgd->sg_Total = tag->ti_Data;
-    if (tag = FindTagItem(PGA_Visible,tags)) sgd->sg_Visible = tag->ti_Data;
+    if ((tag = FindTagItem(PGA_Total,tags))) sgd->sg_Total = tag->ti_Data;
+    if ((tag = FindTagItem(PGA_Visible,tags))) sgd->sg_Visible = tag->ti_Data;
     Gadg_SetTag(&inactive,TAG_DONE,0);
     DoMethod(o,OM_NOTIFY,&inactive,gi,0);
   }
@@ -1122,11 +1122,11 @@ typedef struct
 #define QUERY(x) ((struct bmDragPoint *)x)
 #define DROP(x)	 ((struct bmDropped *)x)
 
-SetFLAttr(FLD *fld,struct TagItem *attr)
+void SetFLAttr(FLD *fld,struct TagItem *attr)
 {
 struct TagItem *tag,*tstate = attr;
 
-  while (tag = NextTagItem(&tstate))
+  while ((tag = NextTagItem(&tstate)))
   {
     switch (tag->ti_Tag)
     {
@@ -1157,7 +1157,7 @@ ULONG rc,spot;
   switch (msg->MethodID)
   {
     case OM_NEW:
-      if (rc = DoSuperMethodA(cl,obj,msg))
+      if ((rc = DoSuperMethodA(cl,obj,msg)))
       {
 	fld = (FLD *)INST_DATA(cl,rc);
 	fld->fld_Accept = NULL;
@@ -1189,7 +1189,7 @@ ULONG rc,spot;
 
       fld = (FLD *)INST_DATA(cl,obj);
       GetAttr( LISTV_DropSpot,obj,&spot);
-      while (entry = (APTR)FirstSelected(DROP(msg)->bmd_Source))
+      while ((entry = (APTR)FirstSelected(DROP(msg)->bmd_Source)))
       {
 	if (fld->fld_SortDrops == FALSE)
 	  DoMethod(obj,LVM_INSERTSINGLE,NULL,spot,entry,LVASF_SELECT);
@@ -1214,9 +1214,9 @@ Class *InitFLClass(void)
 {
 Class *super,*cl = NULL;
 
-  if (super = BGUI_GetClassPtr(BGUI_LISTVIEW_GADGET))
+  if ((super = BGUI_GetClassPtr(BGUI_LISTVIEW_GADGET)))
   {
-    if (cl = MakeClass(NULL,NULL,super,sizeof(FLD),0))
+    if ((cl = MakeClass(NULL,NULL,super,sizeof(FLD),0)))
       cl->cl_Dispatcher.h_Entry = (HOOKFUNC)DispatchFL;
   }
   return cl;

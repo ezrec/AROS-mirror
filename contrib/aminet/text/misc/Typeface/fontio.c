@@ -167,6 +167,9 @@ UBYTE *oldfont;
   LastChar = lchar;
 #ifdef _AROS
 #warning No textfield.gadget in AROS
+#warning When we have textfield.gadget, dont forget that PreviewFont is in <disk format>!!
+#warning That is: always big endian! And structure format/aligning like on Amiga. Must convert
+#warning the font first if we want to memory-preview it in AROS!!!
 #else
   if (PreviewWnd)
   {
@@ -223,11 +226,11 @@ ULONG top;
 
 void SetPreviewScroller()
 {
-ULONG lines,visible,top;
-
 #ifdef _AROS
 #warning No textfield.gadget in AROS
 #else
+ULONG lines,visible,top;
+
   GetAttr(TEXTFIELD_Lines,PreviewStr,&lines);
   GetAttr(TEXTFIELD_Visible,PreviewStr,&visible);
   GetAttr(TEXTFIELD_Top,PreviewStr,&top);
@@ -316,6 +319,59 @@ struct FileDiskFontHeader
   UBYTE dfh_TF_tf_CharSpace[4];
   UBYTE dfh_TF_tf_CharKern[4];
 };
+
+#ifdef _AROS
+#if !AROS_BIG_ENDIAN
+
+void FixFontContentsEndianess(struct FontContentsHeader *fch)
+{
+  WORD i;
+    
+  for(i = 0; i < fch->fch_NumEntries; i++)
+  {
+    if(fch->fch_FileID == FCH_ID)
+    {
+      struct FontContents *fc;
+
+      fc = (struct FontContents *)(fch + 1);
+      fc += i;
+
+      fc->fc_YSize = AROS_WORD2BE(fc->fc_YSize);
+    }
+    else if ((fch->fch_FileID == TFCH_ID) ||
+	     (fch->fch_FileID == OFCH_ID))
+    {
+      struct TFontContents *tfc;
+
+      tfc = (struct TFontContents *)(fch + 1);
+      tfc += i;
+
+      if (tfc->tfc_TagCount)
+      {
+	ULONG *tags;
+	WORD t;
+
+	tags = (ULONG *)(&tfc->tfc_FileName[MAXFONTPATH-(tfc->tfc_TagCount*8)]);
+	for (t = 0; t < tfc->tfc_TagCount * 2; t++)
+	{
+	  tags[t] = AROS_LONG2BE(tags[t]);
+	}
+
+      }
+      tfc->tfc_TagCount = AROS_WORD2BE(tfc->tfc_TagCount);
+      tfc->tfc_YSize = AROS_WORD2BE(tfc->tfc_YSize);
+
+    }
+
+  } /* for(i = 0; i < fch->fch_NumEntries; i++) */
+
+  fch->fch_FileID = AROS_WORD2BE(fch->fch_FileID);
+  fch->fch_NumEntries = AROS_WORD2BE(fch->fch_NumEntries);
+    
+}
+
+#endif
+#endif
 
 UBYTE *SaveFont(BOOL tables,BOOL preview)
 {
@@ -436,12 +492,14 @@ BPTR fontfile, contfile, lock;
     for (i = FirstChar, offbit = 0; i < LastChar+1; i++)
     {
       WriteCharData(fontlocptr,fontdataptr,i-FirstChar,i,&offbit,bitwidth/8);
+
       if (tables)
       {
 	*(fontkernptr+(i-FirstChar)) = WORD2BE(SpaceTable[i]);
 	*(fontkernptr+(i-FirstChar+numchars)) = WORD2BE(KernTable[i]);
       }
     }
+
     WriteCharData(fontlocptr,fontdataptr,numchars-1,256,&offbit,bitwidth/8);
     if (tables)
     {
@@ -537,8 +595,13 @@ BPTR fontfile, contfile, lock;
 	  if (contfile != 0)
 	  {
 	    WindowBusy(SaveWndObj);
+#ifdef _AROS
+#if !AROS_BIG_ENDIAN
+    	    FixFontContentsEndianess(fch);
+#endif
+#endif
 	    Write(contfile,fch,sizeof(struct FontContentsHeader)+
-	      (fch->fch_NumEntries*sizeof(struct FontContents)));
+	      (BE2WORD(fch->fch_NumEntries)*sizeof(struct FontContents)));
 	    Close(contfile);
 	    WindowReady(SaveWndObj);
 	  }
@@ -599,8 +662,13 @@ ULONG i,j,width,widthi,modi,offset;
 	*(fontdataptr+modi+((offset+j)>>3)) |= 128>>((offset+j)&7);
     }
   }
+#ifdef _AROS
+  ((WORD *)(cd+dest))[0] = WORD2BE(offset);
+  ((WORD *)(cd+dest))[1] = WORD2BE(width);
+#else
   (cd+dest)->charOffset = offset;
   (cd+dest)->charBitWidth = width;
+#endif
   *off += width;
 }
 

@@ -1725,7 +1725,7 @@ SAVEDS ASM LONG TBCompareFunc(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(
 SAVEDS ASM LONG TBResourceFunc(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
   TF_REGPARAM(a1, struct lvResource *, lvr))
 {
-  if (lvr->lvr_Command == LVRC_MAKE) return lvr->lvr_Entry;
+  if (lvr->lvr_Command == LVRC_MAKE) return (LONG)lvr->lvr_Entry;
   return 0;
 }
 
@@ -1769,12 +1769,13 @@ Object *save, *use, *cancel, *select, *page;
 static STRPTR width_labels[] = { "4","8","16","32",NULL };
 static ULONG map[] = { CYC_Active,PAGE_Active,TAG_DONE };
 
+/*
 extern struct VectorItem LineArrowLeft[], LineArrowRight[];
 extern struct VectorItem SolidArrowLeft[], SolidArrowRight[];
 extern struct VectorItem SolidArrowUp[], SolidArrowDown[];
 extern struct VectorItem KernImage[], WidthImage[];
 extern struct VectorItem ZoomInImage[], ZoomOutImage[];
-
+*/
   if (PrefsWnd)
   {
     WindowToFront(PrefsWnd);
@@ -2999,7 +3000,7 @@ BPTR file;
       Prefs.Flags |= PREFS_PIXELGRID;
       break;
   }
-  if (file = Open(filename,MODE_NEWFILE))
+  if ((file = Open(filename,MODE_NEWFILE)))
   {
     Write(file,&Prefs,sizeof(struct TFPreferences));
     Close(file);
@@ -3058,7 +3059,7 @@ struct ViewPortExtra *vpe;
     vti[1] = 0;
     vti[2] = VTAG_END_CM;
     vti[3] = 0;
-    if (VideoControl(scr->ViewPort.ColorMap,vti) == 0)
+    if (VideoControl(scr->ViewPort.ColorMap,(struct TagItem *)vti) == 0)
     {
       vpe = (struct ViewPortExtra *)vti[1];
       ScrWidth = vpe->DisplayClip.MaxX - vpe->DisplayClip.MinX + 1;
@@ -3084,7 +3085,7 @@ void WriteFont(char *buffer, char *name, UWORD height)
 char *endptr;
 
   strcpy(buffer,name);
-  if (endptr = strstr(buffer,".font")) *endptr = 0;
+  if ((endptr = strstr(buffer,".font"))) *endptr = 0;
   sprintf(buffer+strlen(buffer),"/%d",height);
 }
 
@@ -3107,7 +3108,7 @@ void WarnVisitors(void)
 {
 struct bguiRequest *visitors;
 
-  if (visitors = AllocVec(sizeof(struct bguiRequest),MEMF_CLEAR))
+  if ((visitors = AllocVec(sizeof(struct bguiRequest),MEMF_CLEAR)))
   {
     visitors->br_Flags = BREQF_FAST_KEYS;
     visitors->br_Title = NAME;
