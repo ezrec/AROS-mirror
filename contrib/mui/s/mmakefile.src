@@ -1,0 +1,9 @@
+include $(TOP)/config/make.cfg
+include ../make.cfg
+
+FILES := Package-Startup Package-Shutdown
+
+#MM contrib-zune-s
+contrib-zune-s : files-copy
+	
+%copy_files_q dst=$(ZUNEDIR)/S
