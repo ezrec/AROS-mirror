@@ -1,11 +1,6 @@
 include $(TOP)/config/make.cfg
 include ../../make.cfg
 
-MAKE = make
-ECHO = echo
-RM = rm
-CP = cp
-
 AROSDIR = $(ARCHDIR)/AROS
 BINDIR = $(AROSDIR)
 LIBDIR = $(AROSDIR)/lib
