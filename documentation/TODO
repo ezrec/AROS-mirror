@@ -2,18 +2,7 @@ This is *not* a complete TODO list (which would be far to long and depressing),
 but what I think is a minimal set of features that *must* be done before the new
 site goes public.
 
-+ Finish the following documentation:
-   
-  - download/index.en
     
-    Complete it. ;-) Something semi-automated might be usefull...
-    
-+ Add the following pages:
-
-    - introduction/license.en
-
-    An introduction and explenation of the license, and the actual license itself. 
-
 + Finish the following scripts:
 
   - Status (jobs and size)
@@ -44,6 +33,9 @@ site goes public.
   writer and replace bits... The advantages of coding a new writer is that we
   don't add any more dependencies (ie. a XSLT processing tool). Hard to say
   which would be fastest to implement...
+
+  + Write an explanation of the license and what it entails. Integrate the 
+  license page better with the rest of the site.
 
 + Write an announcement about the updated site, pointing out new features like 
   the forums and such. Post everywhere. ;-)
