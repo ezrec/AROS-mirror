@@ -548,7 +548,7 @@ BOOL MemoReq(struct Memo_Item *mim)
   if(my_window == NULL)
     {
     CloseLibrary( (struct Library *)IntuitionBase );
-    exit();
+    exit(0);
     }
 
   result=Request( &my_requester, my_window );
