@@ -7,6 +7,6 @@ def makeThumbnailPath( originalPath ):
 
 def makeThumbnail( src, dst, size ):
     image = Image.open( src )
-    image.thumbnail( size )
+    image.thumbnail( size, Image.ANTIALIAS )
     image.save( dst )
 
