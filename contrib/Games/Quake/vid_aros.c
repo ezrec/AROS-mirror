@@ -272,6 +272,8 @@ void	VID_Init (unsigned char *palette)
 	, WA_DepthGadget,	TRUE
 	, WA_SizeGadget,	TRUE
 	, WA_CloseGadget,	TRUE
+	, WA_SizeBBottom,	TRUE
+	, WA_Activate,		TRUE
 	, TAG_DONE
      );
      
@@ -281,6 +283,10 @@ void	VID_Init (unsigned char *palette)
 	return;
      }
 
+     WindowLimits(aros_win, 320  + aros_win->BorderLeft + aros_win->BorderRight,
+     			    200  + aros_win->BorderTop  + aros_win->BorderBottom,
+			    1024 + aros_win->BorderLeft + aros_win->BorderRight,
+			    1024 + aros_win->BorderTop  + aros_win->BorderBottom);
      
      VID_SetPalette(palette);
      
