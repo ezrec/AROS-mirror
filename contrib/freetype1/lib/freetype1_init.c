@@ -23,17 +23,23 @@ struct ExecBase *SysBase;
 
 AROS_SET_LIBFUNC(InitData, LIBBASETYPE, LIBBASE)
 {
+	    AROS_SET_LIBFUNC_INIT
+
     SysBase = LIBBASE->lh_SysBase;
     
     if (!(aroscbase = OpenLibrary("arosc.library",41)))
         return FALSE;
 
     return TRUE;
+    AROS_SET_LIBFUNC_EXIT
 }
 
 AROS_SET_LIBFUNC(CleanUp, LIBBASETYPE, LIBBASE)
 {
-    CloseLibrary(aroscbase);
+    AROS_SET_LIBFUNC_INIT
+
+	CloseLibrary(aroscbase);
+    AROS_SET_LIBFUNC_EXIT
 }
 
 ADD2INITLIB(InitData, 0);
