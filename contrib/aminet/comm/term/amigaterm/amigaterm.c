@@ -284,7 +284,9 @@ if(( mywindow = (struct Window *)OpenWindow(&NewWindow) ) == NULL)
 
 Read_Request = (struct IOExtSer *)AllocMem(sizeof(*Read_Request),MEMF_PUBLIC|MEMF_CLEAR);
 Read_Request->io_SerFlags = SERF_SHARED | SERF_XDISABLED;
+Read_Request->IOSer.io_Message.mn_Length = sizeof(*Read_Request);
 Read_Request->IOSer.io_Message.mn_ReplyPort = CreatePort("Read_RS",0);
+
 if(OpenDevice(SERIALNAME,NULL,Read_Request,NULL))
    {
    puts("Cant open Read device\n");
@@ -299,6 +301,7 @@ Read_Request->IOSer.io_Data = (APTR) &rs_in[0];
 
 Write_Request = (struct IOExtSer *)AllocMem(sizeof(*Write_Request),MEMF_PUBLIC|MEMF_CLEAR);
 Write_Request->io_SerFlags = SERF_SHARED | SERF_XDISABLED;
+Write_Request->IOSer.io_Message.mn_Length = sizeof(*Write_Request);
 Write_Request->IOSer.io_Message.mn_ReplyPort = CreatePort("Write_RS",0);
 if(OpenDevice(SERIALNAME,NULL,Write_Request,NULL))
    {
