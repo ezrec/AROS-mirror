@@ -9,7 +9,7 @@ struct IntuiMessage *msg;
 
 ULONG iflags;
 
-#define StopMsg() ModifyIDCMP(Window,0L)
+#define StopMsg() ModifyIDCMP(Window,IDCMP_NEWSIZE)
 #define ContMsg() ModifyIDCMP(Window,iflags)
 #define clearwin() EraseRect(rp,0,0,Window->Width-5,Window->Height-11)
 
