@@ -65,10 +65,8 @@ User Interface
 On the user interface front, there has been discussions about using 
 render.library and guigfx.library in Zune, picture.datatype and other places
 that would benefit greatly from them. The author was very positive to this,
-and while render.library already has been ported long ago (although it has 
-some endianness issues), guigfx.library will take a while to materialize 
-(since it is originally written in m68k assember, although there is a rewrite
-under way by the author to make it portable). 
+and render.library already has been ported long ago (although it has some 
+endianness issues).
 
 There was also a heated discussion on the mailing list about which buttons 
 should be available in prefs programs, since there was a feeling that the 
@@ -145,8 +143,7 @@ parts to this effort:
 
 1. Make sure that all software in the main tree follows the 
    `licensing policy`__ (which entails checking the copyright and making sure 
-   the license are compatible with the APL, and make sure it is are 
-   documented).
+   the license are compatible with the APL, and make sure it is documented).
    
 2. Moving software that we want to be part of the standard AROS distribution
    from contrib to the main tree, and moving things that don't belong in the 
