@@ -176,7 +176,7 @@ $(STATIC_OBJ) : $(OBJDIR)/%.ol : $(OBJDIR)/aros_src/%_aros.c
 #I need to create all $(INTERMEDIATES) first (!) for the compile to be successful!
 $(AROS_LIBS)/$(MODULE) : $(MODULE_OBJ)
 	@$(ECHO) "Building $(notdir $@) ..."
-	$(STATIC_LD) $(STATIC_LDFLAGS) $(LDFLAGS) $(MODULE_OBJ) -static -lamiga -lgtlayout -larosc -lautoinit -o $@ -nostartfiles
+	@$(STATIC_LD) $(STATIC_LDFLAGS) $(LDFLAGS) $(MODULE_OBJ) -static -lamiga -lgtlayout -lrom -o $@ -nostartfiles
 
 $(STATIC_LIB) : $(STATIC_OBJ)
 	%mklib_q from=$^
