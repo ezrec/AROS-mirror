@@ -6,45 +6,42 @@ CFLAGS	:= $(USER_DEFINES) -O2 -Wunused -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(BINDIR)
 
-UNFILES := \
-	BitmapClass \
-	DOSIconClass \
-	DOSListIconClass \
-	GroupClass \
-	IconClass \
-	MainTask \
-	MenuItemClass \
-	MethodSenderClass \
-	PPCRootClass \
-	PPCThreadRootClass \
-	PopupMenuClass \
-	ScreenClass \
-	TextClass \
-	scalosmaster.library
-
-
 FILES := \
         AmigaIconClass \
 	AreaClass \
+	BitmapClass \
 	Chunky8TestClass \
 	DOSDeviceIconClass \
 	DOSDirIconClass \
 	DOSFileIconClass \
+	DOSIconClass \
+	DOSListIconClass \
 	DebugPPC \
 	GFXTestClass \
 	GraphicClass \
+	GroupClass \
+	IconClass \
 	IconPanelClass \
+	MainTask \
+	MenuItemClass \
+	MethodSenderClass \
 	NodeListClass \
+	PPCRootClass \
+	PPCThreadRootClass \
 	PanelClass \
 	PanelViewClass \
 	PlanarTestClass \
+	PopupMenuClass \
 	RectFillClass \
 	RootClass \
+	ScreenClass \
 	SubRoutines \
 	TableClass \
+	TextClass \
 	ThreadRootClass \
 	WindowClass \
 	WindowTaskClass \
+	scalosmaster.library
 
 SRCS := $(foreach f, $(FILES), $(f).c)
 OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
