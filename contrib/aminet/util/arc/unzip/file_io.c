@@ -573,7 +573,7 @@ time_t dos_to_unix_time(ddate, dtime)
 #endif /* !MACOS */
     TTrace((stderr, "  m_time after timezone =  %ld\n", m_time));
 
-#ifdef BSD4_4               /* see comments in unix.c */
+#ifndef __AROS       //#ifdef BSD4_4    /* see comments in unix.c */
     m_time -= localtime((time_t *) &m_time)->tm_gmtoff;
 #else /* !BSD4_4 */
 #ifndef WIN32
