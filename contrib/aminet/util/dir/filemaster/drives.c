@@ -53,7 +53,7 @@ siirrabstr (UBYTE * ptr1, UBYTE * ptr2)
 {
 
   UBYTE cnt;
-  cnt = *ptr1;
+  cnt = *ptr1++;
   while (cnt--)
     *ptr2++ = *ptr1++;
   *ptr2 = 0;
@@ -73,19 +73,24 @@ adddevice (struct FMList *list, struct DosList *doslist, WORD type)
     return (0);
 
 
-#ifndef AROS
-  if (type == DLT_DEVICE && !doslist->dol_Task)
-    return (0);
-  ptr = siirrabstr ((UBYTE *) ((doslist->dol_Name) << 2), empty);
-#else
+
   D (bug ("drives.c 77 entering.........\n"));
-  ptr = siirrabstr ((UBYTE *) ((doslist->dol_OldName)), empty);
+ {
+    int i, l = AROS_BSTR_strlen(doslist->dol_OldName);
+ 
+    ptr = empty;
+ 
+    for(i = 0; i < l; i++)
+        *ptr++ = AROS_BSTR_getchar(doslist->dol_OldName, i);
+ 
+ 
+  }
+
   *ptr++ = ':';
   *ptr = 0;
 
 
   D (bug ("drives.c 80 entering.........\n"));
-#endif
 
   *ptr++ = ':';
   *ptr = 0;
