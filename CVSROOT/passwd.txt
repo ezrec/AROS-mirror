@@ -1,0 +1,12 @@
+digulla:db1zGovyufSmw:aros:digulla@wi-pc44.fh-konstanz.de
+pgpeter:ggX6o8c4l:aros
+matthias:dbilZL0JhJurg:aros:fleischr@IZFM.Uni-Stuttgart.DE
+stepan:dcIM.xvdbd/R.:aros:stepan@home.culture.mipt.ru
+judd:ddVIpcsgleKFM:aros:cdj@gmk02.chem.rpi.edu
+frv95tjn:caYBHmdz7UdCU:aros:frv95tjn@mds.mdh.se
+iaint:adwVPoZf6iJ6U:aros:iaint@cu-seeme.educ.utas.edu.au
+pcosta:bbFkszi19YU6M:aros:pcosta@mbox.vol.it
+zino:bdYh/q95S4cmU:aros:zino@lysator.liu.se
+winter:dbg5HYnm/h.ZQ:aros:winter@freebsd1.foo.bar
+daniel:b9bwcTjXjo3Gc:aros:daniel@brainstorm.eu.org
+mroth:da/M1jS3sNsHg:aros:mroth@inlet.lake.de
