@@ -1,9 +1,9 @@
 include $(TOP)/config/make.cfg
 
 STARTUP := $(LIBDIR)/startup.o
-LIBS	:= -L$(LIBDIR) -laros -lamiga -larosc
+LIBS	:= -L$(LIBDIR) -larossupport -lamiga -larosc
 DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a \
-	    $(LIBDIR)/libamiga.a $(LIBDIR)/libaros.a
+	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
 CFLAGS	:= $(USER_DEFINES) -O2 -Wunused -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(BINDIR)/Games
@@ -22,7 +22,7 @@ games : $(EXES)
 setup-games :
 	%mkdirs_q $(DESTDIR) $(OBJDIR)
 
-$(DESTDIR)/% : $(OBJDIR)/%.o $(DEPLIBS)
+$(EXES) : $(DESTDIR)/% : $(OBJDIR)/%.o $(DEPLIBS)
 	@$(ECHO) "Linking $@..."
 	@$(CC) $(ILDFLAGS) -o $@ $(STARTUP) $< $(LIBS)
 	@$(ECHO) "Checking $@..."
