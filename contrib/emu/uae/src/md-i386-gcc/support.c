@@ -145,7 +145,7 @@ void machdep_init (void)
 
     write_log ("ok - %.2f BogoMIPS\n",
 	     ((double)best_time / TIME_UNIT), best_time);
-    syncbase = best_time / (1000000 / TIME_UNIT);
+    syncbase = best_time * (1000000 / TIME_UNIT);
 }
 
 #endif
