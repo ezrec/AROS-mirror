@@ -710,7 +710,9 @@ struct ConfigGadget {
 #define COLOURS_STRINGS      (1<<COLBIT_STRINGS)
 #define COLOURS_SELSTRINGS   (1<<COLBIT_SELSTRINGS)
 
-#define COLOURS_ALL          (1<<32)-1
+/* AROS FIX */
+/*#define COLOURS_ALL          (1<<32)-1*/
+#define COLOURS_ALL 0xFFFFFFFF
 
 struct ColourSel {
 	char item;
