@@ -358,7 +358,7 @@ static void makewin(void)
 	    	    	       WA_Activate	, TRUE,
 			       WA_IDCMP		, IDCMP_CLOSEWINDOW |
 			       			  IDCMP_RAWKEY,
-			       TAG_MORE     	, wbscreen ? winonwbtags : winonscrtags);
+			       TAG_MORE     	, wbscreen ? (IPTR) winonwbtags : (IPTR) winonscrtags);
 			       
 			       
    if (!win) cleanup("Can't open window");
