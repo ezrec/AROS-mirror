@@ -119,7 +119,8 @@ FILES = \
 	LTP_SPrintf \
 	LTP_Storage \
 	LTP_TabClass \
-	LT_InitExit
+	LT_InitExit \
+	min_max
 
 TESTFILES = test/gui test/Tools
 
