@@ -1,8 +1,13 @@
 
 
-
+#define timeval arostimeval
 #include <exec/types.h>
 #include <exec/lists.h>
+
+#include <proto/alib.h>
+#include <proto/exec.h>
+#undef timeval
+
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
@@ -12,9 +17,6 @@
 /* #include <lists.h> */
 
 #include "main.h"
-
-#include <proto/alib.h>
-#include <proto/exec.h>
 
 BOOL flexprintf (void* outstream, int (*writestring)(void*, char *), char * tmplt, void* instream, char * (*getstring)(void*, char *));
 
@@ -58,7 +60,7 @@ void node_add (struct carrier *c, char *name, char *data) {
 struct node * node_lock (char *name) {
     struct node *n;
     for (n = GetHead(&current->nodes); n; n = GetSucc(n))
-	if (stricmp (n->node.ln_Name, name) == 0)
+	if (strcasecmp (n->node.ln_Name, name) == 0)
 	    return n;
     return NULL;
 } /* node_lock */
@@ -182,7 +184,7 @@ char *getvalue(struct carrier *c, char *name) {
     struct node *n;
     current = c;
 
-    if (!stricmp(name, "name")) {
+    if (!strcasecmp(name, "name")) {
 	query = 1;
 	return c->node.ln_Name;
     }
