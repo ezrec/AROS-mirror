@@ -10,6 +10,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2001/06/09 10:53:11  hkiel
+ * Added a newline at end of file to make compiler happy
+ *
  * Revision 42.0  2000/05/09 22:16:58  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
