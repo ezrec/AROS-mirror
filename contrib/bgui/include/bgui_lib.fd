@@ -1,0 +1,46 @@
+**
+** @(#) $Header$
+**
+** $VER: bgui_lib.fd 41.10 (11.11.96)
+** bgui.library fd file.
+**
+** (C) Copyright 1998 Manuel Lemos.
+** (C) Copyright 1996-1997 Ian J. Einman.
+** (C) Copyright 1993-1996 Jaba Development.
+** (C) Copyright 1993-1996 Jan van den Baard.
+** All Rights Reserved.
+**
+** $Log$
+** Revision 1.1  1998/02/25 17:15:53  mlemos
+** Ian sources
+**
+**
+##base _BGUIBase
+##bias 30
+##public
+BGUI_GetClassPtr(num)(D0)
+BGUI_NewObjectA(num,tags)(D0,A0)
+BGUI_RequestA(win,estruct,args)(A0/A1/A2)
+BGUI_Help(win,name,node,line)(A0/A1/A2,D0)
+BGUI_LockWindow(win)(A0)
+BGUI_UnlockWindow(lock)(A0)
+BGUI_DoGadgetMethodA(object,win,req,msg)(A0/A1/A2/A3)
+##private
+BGUI_AllocPoolMem(size)(D0)
+BGUI_FreePoolMem(mem)(A0)
+##public
+BGUI_AllocBitMap(width,height,depth,flags,friend)(D0/D1/D2/D3,A0)
+BGUI_FreeBitMap(bitmap)(A0)
+BGUI_CreateRPortBitMap(rport,width,height,depth)(A0,D0/D1/D2)
+BGUI_FreeRPortBitMap(rport)(A0)
+BGUI_InfoTextSize(rp,text,width,height)(A0/A1/A2/A3)
+BGUI_InfoText(rp,text,bounds,drawinfo)(A0/A1/A2/A3)
+BGUI_GetLocaleStr(bl,id)(A0,D0)
+BGUI_GetCatalogStr(bl,id,def)(A0,D0,A1)
+BGUI_FillRectPattern(rport,bpat,x1,y1,x2,y2)(A1,A0,D0/D1/D2/D3)
+BGUI_PostRender(cl,obj,gpr)(A0,A2,A1)
+BGUI_MakeClassA(tags)(A0)
+BGUI_FreeClass(cl)(A0)
+BGUI_PackStructureTags(pack,tab,tags)(A0/A1/A2)
+BGUI_UnpackStructureTags(pack,tab,tags)(A0/A1/A2)
+##end
