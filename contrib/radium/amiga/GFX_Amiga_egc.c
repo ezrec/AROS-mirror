@@ -126,7 +126,7 @@ int maxcol;
 //struct TextAttr fontstruct={"Condensed60.font",9,0,0};
 //struct TextAttr fontstruct={"topaz.font",9,0,0};
 #ifdef _AROS
-struct TextAttr fontstruct={"ttcourier.font",13,0,0};
+struct TextAttr fontstruct={"ttcourier.font",17,0,0};
 #else
 struct TextAttr fontstruct={"courier.font",13,0,0};
 #endif
