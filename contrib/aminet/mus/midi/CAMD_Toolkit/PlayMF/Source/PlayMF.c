@@ -18,6 +18,8 @@ Some fixes here and there to make it compile under AROS/gcc.
 
 =======================================================================*/
 
+#define NO_INLINE_STDARG
+
 #include "playmf_includes.h"
 #include <aros/64bit.h>
 
@@ -536,7 +538,6 @@ BOOL SetMidiAttrs(struct MidiNode *mi, Tag tag, ...);
 struct MidiLink *AddMidiLink(struct MidiNode *mi, LONG type, Tag tag, ...);
 BOOL SetPlayerAttrs(struct Player *pi, Tag tag, ...);
 struct Player *CreatePlayer(Tag tag, ...);
-
                               /* SPrintf.a */
 APTR __stdargs SPrintf(char *, const char *, ...);
 APTR __stdargs VSprintf(char *, const char *, va_list);
