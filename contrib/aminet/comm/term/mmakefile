@@ -1,5 +1,7 @@
 # $Id$
 
-#MM- aminet-comm-term : aminet-comm-term-microterm \
-#MM	aminet-comm-term-termlite \
+#MM- aminet-comm-term : aminet-comm-term-termlite \
 #MM	aminet-comm-term-amigaterm
+
+# These do not compile properly yet!
+# MM	aminet-comm-term-microterm
