@@ -11,7 +11,7 @@ CC = sc
 SRCDIR = //src
 
 COREOBJS=$(SRCDIR)/core/inet.o $(SRCDIR)/core/mem.o $(SRCDIR)/core/memp.o $(SRCDIR)/core/netif.o $(SRCDIR)/core/pbuf.o $(SRCDIR)/core/stats.o $(SRCDIR)/core/sys.o $(SRCDIR)/core/tcp.o $(SRCDIR)/core/tcp_input.o $(SRCDIR)/core/tcp_output.o $(SRCDIR)/core/udp.o $(SRCDIR)/core/ipv4/icmp.o $(SRCDIR)/core/ipv4/ip.o $(SRCDIR)/core/ipv4/ip_addr.o
-ARCHOBJS=$(SRCDIR)/arch/amigaos/sys_arch.o $(SRCDIR)/arch/amigaos/lib_arch.o
+ARCHOBJS=$(SRCDIR)/arch/amigaos/sys_arch.o $(SRCDIR)/arch/amigaos/lib_arch.o $(SRCDIR)/arch/amigaos/netif/sioslipif.o
 NETIFOBJS=$(SRCDIR)/netif/loopif.o $(SRCDIR)/netif/tcpdump.o $(SRCDIR)/netif/arp.o
 APIOBJS=$(SRCDIR)/api/api_lib.o $(SRCDIR)/api/api_msg.o $(SRCDIR)/api/err.o $(SRCDIR)/api/sockets.o $(SRCDIR)/api/tcpip.o
 LIBOBJS=calling.o lib_accept.o lib_bind.o lib_connect.o lib_getpeername.o lib_getsockname.o lib_getsockopt.o lib_ioctlsocket.o lib_listen.o lib_recv.o lib_recvfrom.o lib_send.o lib_sendto.o lib_setsockopt.o lib_shutdown.o lib_closesocket.o lib_socket.o lib_stuff.o

@@ -22,6 +22,10 @@
 
 /* ----------------------------------------------- */
 
+#include "netif/sioslipif.h"
+
+/* ----------------------------------------------- */
+
 #include "lib_stuff.h"
 #include "calling.h"
 
@@ -103,8 +107,20 @@ void server_init(void)
 
 static void tcpip_init_done(void *arg)
 {
+  struct ip_addr ipaddr, netmask, gw;
+
   sys_sem_t *sem;
   sem = arg;
+
+  /* We must add the interface here because this is the task where the output happens and we create a message port in
+   * sioslipif_input. This needs of course improvements */
+  IP4_ADDR(&gw, 192,168,6,100);
+  IP4_ADDR(&ipaddr, 192,168,6,1);
+  IP4_ADDR(&netmask, 255,255,255,0);
+  
+  netif_set_default(netif_add(&ipaddr, &netmask, &gw, sioslipif_init,
+			      tcpip_input));
+
   sys_sem_signal(*sem);
 }
 
@@ -121,6 +137,8 @@ void start(void)
     while (1)
     {
     	LONG sigs = Wait((1UL<<port->mp_SigBit)|4096);
+
+      /* This stuff is not really needed anymore */
 
 			if (sigs & (1UL<<port->mp_SigBit))
 			{
@@ -232,7 +250,6 @@ void main(void)
     sys_sem_wait(sem);
     sys_sem_free(sem);
     printf("TCP/IP initialized.\n");
-
 
     IP4_ADDR(&gw, 127,0,0,1);
     IP4_ADDR(&ipaddr, 127,0,0,1);
