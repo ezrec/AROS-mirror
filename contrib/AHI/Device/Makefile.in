@@ -183,7 +183,7 @@ $(srcdir)/localize.h:	ahi.cd C_c_AHI.sd
 	$(FLEXCAT) $(srcdir)/ahi.cd $< CATALOG=$@
 
 %.ct:
-	$(FLEXCAT) $(srcdir)/ahi.cd $@ NEWCTFILE $@
+	$(FLEXCAT) $(srcdir)/ahi.cd $@ NEWCTFILE=$@
 
 # Just some test code...
 
