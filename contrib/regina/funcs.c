@@ -411,7 +411,8 @@ streng *buildtinfunc( tsd_t *TSD, nodeptr this )
       TSD->bif_first = initplist( TSD, this );
       ptr = try_func_amiga( TSD, this->name, TSD->bif_first, (char) this->called );
       deallocplink( TSD, TSD->bif_first );
-      
+      TSD->bif_first = NULL;
+     
       if (ptr)
 	 return ptr;
 #endif
