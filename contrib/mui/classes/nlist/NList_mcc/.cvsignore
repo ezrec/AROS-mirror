@@ -7,3 +7,4 @@ SCOPTIONS
 *.bak
 *.info
 nlist.mcc.lib
+mmakefile
