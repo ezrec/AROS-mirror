@@ -568,7 +568,7 @@ int SelectFile(char *newname, char *defname, struct Window *win, int type)
 		reqfont = &SystemFontAttr;
 		
 	strcpy(filename, FilePart(defname));
-	n = PathPart(defname) - defname;
+	n = PathPart(defname) - (STRPTR) defname;
 	if (n)
 		strncpy(pathname, defname, n);
 	pathname[n] = '\0';
