@@ -11,6 +11,9 @@
 #include "DriverData.h"
 #include "pci_wrapper.h"
 
+#include <aros/debug.h>
+#define KPrintF kprintf
+
 struct Library *OOPBase;
 
 static OOP_AttrBase __IHidd_PCIDev;
