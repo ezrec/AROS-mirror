@@ -141,7 +141,11 @@ VOID DrawButton(struct TB_Element *tool, struct Toolbar_Data *data, Object *obj,
     get(obj, MUIA_Parent, &par);
     if (par) {
       get(par, MUIA_Background, &back);
+#ifdef __AROS__
+#warning "FIXME: This causes endless recursion!"
+#else
       set(obj, MUIA_Background, back);
+#endif      
     }
     DoMethod(obj, MUIM_DrawBackground, x,   y, data->ButtonWidth, data->ButtonHeight, x, y);
   } else if (data->BorderType == BORDERTYPE_NEW) {
@@ -281,7 +285,11 @@ VOID DrawButtons(struct Toolbar_Data *data, Object *obj, BOOL complete)
   get(obj, MUIA_Parent, &par);
   if (par) {
     get(par, MUIA_Background, &back);
+#ifdef __AROS__
+#warning "FIXME: This causes endless recursion!"
+#else
     set(obj, MUIA_Background, back);
+#endif
   }
 
   if(data->SingleGone) // Just a single button which is going to disappear
@@ -396,6 +404,7 @@ ULONG Toolbar_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 
   if (msg->flags & MADF_DRAWUPDATE)
   {
+
     if(data->UpdateFlag)
       DrawButton(data->Update, data, obj, data->UpdateFlag == UPDATE_DOWN, NOT_THREE_D);
 
