@@ -134,10 +134,10 @@ import links
 def genDownload ():
     page = PageMeat ('Downloads', 'download.html')
     # Create the page for downloads
-    page.extend ((
+    page.extend ([
 	Heading (2, 'Downloads'),
 	Paragraph ('Some places where you can find files related to AROS:'),
-    ))
+    ])
     page.append (processLinks (links.downloadLinks))
     page.write ()
 
@@ -312,7 +312,7 @@ class XmlPageMeat (PageMeat):
 	xmlfile.process (XML2HTML)
 	if XML2HTML.toc:
 	    self.extend (XML2HTML.toc)
-	    self.extend ((BR(), HR (), BR()))
+	    self.extend ([BR(), HR (), BR()])
 	self.append (RawText (XML2HTML.fh.getvalue ()))
 	XML2HTML.fh.close ()
 
