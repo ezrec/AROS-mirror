@@ -96,13 +96,13 @@ void Init_Intui() {
 struct IconBase *IconBase;
 
 	global->IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 37);
-	IconBase = (struct IconBase *)OpenLibrary("icon.library", 37);
-	if (IconBase)
-		Display_Error ("cannot open icon.library");
-	global->IconBase = IconBase;
-	global->WorkbenchBase = (struct WorkbenchBase *)OpenLibrary("workbench.library", 37);
-	if (!global->WorkbenchBase)
-		Display_Error("cannot open workbench.library");
+	//IconBase = (struct IconBase *)OpenLibrary("icon.library", 37);
+	//if (IconBase)
+	//	Display_Error ("cannot open icon.library");
+	//global->IconBase = IconBase;
+	//global->WorkbenchBase = (struct WorkbenchBase *)OpenLibrary("workbench.library", 37);
+	//if (!global->WorkbenchBase)
+	//	Display_Error("cannot open workbench.library");
 
 #ifndef AROS_KERNEL
 	global->g_user_disk_object = GetDiskObject ("env:cdda");
