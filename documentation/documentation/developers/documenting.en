@@ -119,8 +119,8 @@ Requirements
 
 You will need the following to build the AROS documentation from scratch:
 
-+ Python__ 2.2
-+ Docutils__ dated 2002-08-24 or later (from CVS)
++ Python__ 2.2.1
++ Docutils__ dated 2002-09-24 or later (from CVS)
 
 To build the website you will additionally need:
 
