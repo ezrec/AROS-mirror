@@ -89,7 +89,12 @@
 #define addfunc                      __regina_addfunc
 #define addr_io_file                 __regina_addr_io_file
 #define addr_reopen_file             __regina_addr_reopen_file
-#define arexx_addlib                 __regina_arexx_addlib
+#define amiga_addlib                 __regina_amiga_addlib
+#define amiga_getclip                __regina_amiga_getclip
+#define amiga_pragma                 __regina_amiga_pragma
+#define amiga_remlib                 __regina_amiga_remlib
+#define amiga_setclip                __regina_amiga_setclip
+#define amiga_show                   __regina_amiga_show
 #define arexx_b2c                    __regina_arexx_b2c
 #define arexx_bitchg                 __regina_arexx_bitchg
 #define arexx_bitclr                 __regina_arexx_bitclr
@@ -103,7 +108,6 @@
 #define arexx_exists                 __regina_arexx_exists
 #define arexx_export                 __regina_arexx_export
 #define arexx_freespace              __regina_arexx_freespace
-#define arexx_getclip                __regina_arexx_getclip
 #define arexx_getspace               __regina_arexx_getspace
 #define arexx_hash                   __regina_arexx_hash
 #define arexx_import                 __regina_arexx_import
@@ -112,9 +116,7 @@
 #define arexx_randu                  __regina_arexx_randu
 #define arexx_readch                 __regina_arexx_readch
 #define arexx_readln                 __regina_arexx_readln
-#define arexx_remlib                 __regina_arexx_remlib
 #define arexx_seek                   __regina_arexx_seek
-#define arexx_setclip                __regina_arexx_setclip
 #define arexx_show                   __regina_arexx_show
 #define arexx_storage                __regina_arexx_storage
 #define arexx_trim                   __regina_arexx_trim
