@@ -1,7 +1,7 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-USER_INCLUDES := -I../commonaros -DUSE_ZUNE
+USER_INCLUDES := -I../commonaros
 
 MODNAME 	:= NList
 MODTYPE		:= mcc
