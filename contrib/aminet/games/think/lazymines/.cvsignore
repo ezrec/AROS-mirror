@@ -1,4 +1,4 @@
 mmakefile
-strings.h
-strings.c
+lazymines_strings.h
+lazymines_strings.c
 *.err
