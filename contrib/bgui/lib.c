@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2000/08/08 20:57:26  chodorowski
+ * Minor fixes to build on Amiga.
+ *
  * Revision 42.6  2000/08/08 14:08:00  chodorowski
  * Minor fixes to make BGUI compile on Amiga.
  *
@@ -91,11 +94,7 @@ struct Library       *CxBase        = NULL;
 struct Library       *KeymapBase    = NULL;
 struct Library       *IFFParseBase  = NULL;
 struct Library       *DataTypesBase = NULL;
-#ifdef _AROS
 struct LocaleBase    *LocaleBase    = NULL;
-#else
-struct Library       *LocaleBase    = NULL;
-#endif
 struct Library       *WorkbenchBase = NULL;
 struct Catalog       *Catalog       = NULL;
 
@@ -270,19 +269,19 @@ STATIC const LONG Vectors[] = {
  */
 SAVEDS STATIC VOID CloseLibs(void)
 {
-   if (LocaleBase)      CloseLibrary(LocaleBase);
-   if (KeymapBase)      CloseLibrary(KeymapBase);
-   if (CxBase)          CloseLibrary(CxBase);
-   if (AslBase)         CloseLibrary(AslBase);
-   if (LayersBase)      CloseLibrary(LayersBase);
-   if (UtilityBase)     CloseLibrary(UtilityBase);
-   if (GadToolsBase)    CloseLibrary(GadToolsBase);
-   if (DataTypesBase)   CloseLibrary(DataTypesBase);
-   if (IFFParseBase)    CloseLibrary(IFFParseBase);
-   if (WorkbenchBase)   CloseLibrary(WorkbenchBase);
-   if (GfxBase)         CloseLibrary((struct Library *)GfxBase);
-   if (IntuitionBase)   CloseLibrary((struct Library *)IntuitionBase);
-   if (DOSBase)         CloseLibrary((struct Library *)DOSBase);
+   if( LocaleBase )      CloseLibrary( (struct Library *) LocaleBase);
+   if( KeymapBase )      CloseLibrary( KeymapBase );
+   if( CxBase )          CloseLibrary( CxBase );
+   if( AslBase )         CloseLibrary( AslBase );
+   if( LayersBase )      CloseLibrary( LayersBase );
+   if( UtilityBase )     CloseLibrary( UtilityBase );
+   if( GadToolsBase )    CloseLibrary( GadToolsBase );
+   if( DataTypesBase )   CloseLibrary( DataTypesBase );
+   if( IFFParseBase )    CloseLibrary( IFFParseBase );
+   if( WorkbenchBase )   CloseLibrary( WorkbenchBase );
+   if( GfxBase )         CloseLibrary( (struct Library *) GfxBase );
+   if( IntuitionBase )   CloseLibrary( (struct Library *) IntuitionBase );
+   if( DOSBase )         CloseLibrary( (struct Library *) DOSBase );
 }
 
 /*
@@ -356,6 +355,7 @@ makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struc
    GfxBase        = (struct GfxBase *)      OpenLibrary("graphics.library",  37);
    #endif
 
+   LocaleBase     = (struct LocaleBase *) OpenLibrary("locale.library",        38);
 
    GadToolsBase   = OpenLibrary("gadtools.library",      37);
    UtilityBase    = OpenLibrary("utility.library",       37);
@@ -365,7 +365,6 @@ makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struc
    KeymapBase     = OpenLibrary("keymap.library",        37);
    IFFParseBase   = OpenLibrary("iffparse.library",      37);
    WorkbenchBase  = OpenLibrary("workbench.library",     37);
-   LocaleBase     = OpenLibrary("locale.library",        38);
    DataTypesBase  = OpenLibrary("datatypes.library",     39);
 
 #ifdef _AROS

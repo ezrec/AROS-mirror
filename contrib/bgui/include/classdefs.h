@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2000/08/08 20:57:28  chodorowski
+ * Minor fixes to build on Amiga.
+ *
  * Revision 42.7  2000/08/08 14:02:08  chodorowski
  * Removed all REGFUNC, REGPARAM and REG macros. Now includes
  * contrib/bgui/compilerspecific.h where they are defined.
@@ -167,6 +170,12 @@ extern struct Library * BGUIBase;
 #include <proto/iffparse.h>
 #ifndef _AROS
 #include <proto/rexxsyslib.h>
+#endif
+
+#ifdef _AROS
+#include <proto/alib.h>
+#else
+#include <clib/alib_protos.h>
 #endif
 
 #define abs x_abs

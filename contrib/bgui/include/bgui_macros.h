@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/08/08 20:57:28  chodorowski
+ * Minor fixes to build on Amiga.
+ *
  * Revision 42.4  2000/08/08 14:03:07  chodorowski
  * Removed all REGFUNC, REGPARAM and REG macros (not needed here).
  *
@@ -53,6 +56,15 @@
 #ifndef LIBRARIES_BGUI_H
 #include <libraries/bgui.h>
 #endif /* LIBRARIES_BGUI_H */
+
+#ifndef CLIB_ALIB_PROTOS_H
+#ifdef _AROS
+#include <proto/alib.h>
+#else
+#include <clib/alib_protos.h>
+#endif
+#endif /* CLIB_ALIB_PROTOS_H */
+
 
 /*****************************************************************************
  *

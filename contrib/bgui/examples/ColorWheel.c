@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/08/08 20:57:28  chodorowski
+ * Minor fixes to build on Amiga.
+ *
  * Revision 42.0  2000/05/09 22:19:32  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -76,7 +79,7 @@ struct load32 {
 /*
 **      The program even does version checking... sjeez...
 **/
-extern struct Library *SysBase;
+extern struct ExecBase *SysBase;
 
 /*
 **      And were in...
@@ -101,7 +104,7 @@ VOID StartDemo( void )
         /*
         **      Need OS 3.0.
         **/
-        if ( SysBase->lib_Version < 39 ) {
+        if ( SysBase->LibNode.lib_Version < 39 ) {
                 Tell( "OS 3.0 required!" );
                 exit( 0 );
         }

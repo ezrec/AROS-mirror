@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/08/08 20:57:26  chodorowski
+ * Minor fixes to build on Amiga.
+ *
  * Revision 42.4  2000/08/08 14:11:55  chodorowski
  * Fixes to make BGUI compile on Amiga. Most notably this file defined
  * it's own sprintf() which clashed quite severely with the one in clib.
@@ -60,11 +63,8 @@
 
 #include "include/classdefs.h"
 
-#ifdef _AROS
 extern struct LocaleBase *LocaleBase;
-#else
-extern struct Library *LocaleBase;
-#endif
+
 
 //makeproto ASM ULONG CompStrlenF(REG(a0) UBYTE *fstring, REG(a1) ULONG *args)
 makeproto ASM REGFUNC2(ULONG, CompStrlenF,

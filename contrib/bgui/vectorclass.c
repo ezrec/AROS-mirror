@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/08/08 20:57:26  chodorowski
+ * Minor fixes to build on Amiga.
+ *
  * Revision 42.4  2000/05/29 15:42:49  stegerg
  * fixed some "comparison is always 1 due to limited range of data type"
  * errors
@@ -825,7 +828,7 @@ METHOD(VectorClassRender, struct bmRender *, bmr)
          continue;
       };
 
-      if      (f & VIF_AOLPEN)  SetOPen(rp, x)
+      if      (f & VIF_AOLPEN)  SetOPen(rp, x);
       else if (f & VIF_ENDOPEN) BNDRYOFF(rp);
 
       if      (f & VIF_SHADOWPEN) BSetDPenA(bi, SHADOWPEN);

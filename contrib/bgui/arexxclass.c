@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/08/08 20:57:26  chodorowski
+ * Minor fixes to build on Amiga.
+ *
  * Revision 42.1  2000/05/15 19:27:00  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -123,7 +126,7 @@ STATIC VOID ReplyRexxCommand(Class *cl, struct RexxMsg *rxm, LONG prim, LONG sec
                         **      Setup ARexx it's "RC2" variable to
                         **      the result.
                         **/
-                        SetRexxVar(( struct Message * )rxm, "RC2", res, strlen( res ));
+                        SetRexxVar( rxm, "RC2", res, strlen( res ));
 
                         /*
                         **      Clear secondary result.
