@@ -348,6 +348,9 @@ Attributes
 Identifier                       Name                             I  S  G  P  Type                
 ===============================  ===============================  =  =  =  =  ====================
 (MUIB_Application | 0x00000000)  MUIA_Application_Configdata         X        Object *
+(MUIB_Application | 0x00000001)  MUIA_Application_Version_Number  X     X     CONST_STRPTR
+(MUIB_Application | 0x00000002)  MUIA_Application_Version_Date    X     X     CONST_STRPTR
+(MUIB_Application | 0x00000003)  MUIA_Application_Version_Extra   X     X     CONST_STRPTR
 ===============================  ===============================  =  =  =  =  ====================
 
 
