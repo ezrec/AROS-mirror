@@ -666,6 +666,8 @@ AROS_UFH2(struct InputEvent *, keyhandler,
     AROS_UFHA(APTR,         userdata,        A1)
 )
 {
+    AROS_USERFUNC_INIT
+
 	int wakeup=0;
 	struct dopushotkey *hotkey;
 
@@ -709,6 +711,8 @@ AROS_UFH2(struct InputEvent *, keyhandler,
 		}
 	}
 	return(oldevent);
+
+    AROS_USERFUNC_EXIT
 }
 
 void /* __saveds */ clocktask()
