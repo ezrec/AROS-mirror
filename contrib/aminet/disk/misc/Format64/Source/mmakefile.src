@@ -1,0 +1,31 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+OBJDIR := $(GENDIR)/$(CURDIR)
+EXEDIR := $(CONTRIBDIR)/aminet
+EXE := $(EXEDIR)/Format64
+FILES := \
+			64bit \
+			Device \
+			DoFullFormat \
+			Format \
+			FormatVolume \
+			GUI \
+			GetPrepInput \
+			Misc \
+			ParseArgs
+
+USE_CLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+
+#MM aminet-disk-misc-format64:
+aminet-disk-misc-format64: setup $(EXE)
+
+%make_use_linklibs
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
+
