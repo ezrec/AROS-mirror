@@ -1,47 +1,5 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-CFLAGS	        := $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR		:= $(GENDIR)/$(CURDIR)
-EXEDIR		:= $(CONTRIBDIR)/test
-LIB		:= $(LIBDIR)/libchunkyiclass.a
-
-%define_libs
-
-FILES		:= chunkyiclass
-
-%prepare_replace compiler/alib
-
-OBJS := $(foreach f,$(FILES) $(ADDITIONAL_OBJS),$(OBJDIR)/$(f).o)
-DEPS := $(foreach f,$(FILES) $(ADDITIONAL_OBJS),$(OBJDIR)/$(f).d)
-
-#MM aminet-dev-src-chunkyiclass : setup-aminet-dev-src-chunkyiclass
-aminet-dev-src-chunkyiclass : $(LIB)
-	@$(NOP)
-
-#MM
-setup-aminet-dev-src-chunkyiclass :
-	%mkdirs_q $(OBJDIR) $(LIBDIR)
-
-#MM
-clean-aminet ::
-	-$(RM) $(OBJDIR) *.err $(LIB)
-
-
-TEST_ILDFLAGS := -DTEST $(ILDFLAGS)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q cmd=$(SYS_CC)
-
-$(LIBDIR)/%.o : %.c
-	%compile_q cmd=$(SYS_CC)
-
-$(LIB) : $(OBJS)
-	%mklib_q
-
-$(OBJDIR)/%.d : %.c
-	%mkdepend_q
-
-
-%common
-%include_deps
+%build_linklib mmake=aminet-dev-src-chunkyiclass \
+    libname=chunkyiclass files=chunkyiclass

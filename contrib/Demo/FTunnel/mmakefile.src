@@ -1,44 +1,18 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+DESTDIR := $(CONTRIBDIR)/Demos/FTunnel
 
-CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR		:= $(GENDIR)/$(CURDIR)
-DESTDIR 	:= $(CONTRIBDIR)/Demos/FTunnel
+#MM demo-ftunnel : demo-ftunnel-data
 
-FILES 		:= ftunnel
+%build_prog mmake=demo-ftunnel \
+    progname=ftunnel targetdir=$(DESTDIR) \
+    files=ftunnel uselibs="arossupport amiga arosc m"
+
+
 DATAFILES	:= pattern.data pattern.pal
 
-SRCS 		:= $(foreach f, $(FILES), $(f).c)
-OBJS 		:= $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+#MM demo-ftunnel-data : demo-ftunnel-setup
+demo-ftunnel-data : $(addprefix $(DESTDIR)/,$(DATAFILES))
 
-EXE 		:= $(DESTDIR)/ftunnel
-
-.PHONY : all clean
-
-#MM demo-ftunnel : setup-demo-ftunnel
-demo-ftunnel : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-demo-ftunnel :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-	@$(CP) $(DATAFILES) $(DESTDIR)
-	
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
-
-
+$(addprefix $(DESTDIR)/,$(DATAFILES)) : $(DESTDIR)/% : %
+	@$(CP) $< $@

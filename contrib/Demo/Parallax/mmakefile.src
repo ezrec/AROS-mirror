@@ -1,49 +1,19 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM demo-parallax : demo-parallax-icons
 
-CFLAGS	:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-	-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(CONTRIBDIR)/Demos/Parallax
 
-FILES := parallax
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+%build_prog mmake=demo-parallax \
+    progname=Parallax targetdir=$(DESTDIR) \
+    files=parallax uselibs="arossupport amiga arosc m"
 
-EXE := $(DESTDIR)/Parallax
 
 ICONS := Parallax
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-.PHONY : all clean
-
-#MM demo-parallax : setup-demo-parallax icons-demo-parallax
-demo-parallax : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-demo-parallax :
-	%mkdirs_q $(OBJDIR) $(DESTDIR) 
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-icons-demo-parallax : setup-demo-parallax $(ICONFILES)
-	@$(NOP)
+#MM demo-parallax-icons : demo-parallax-setup
+demo-parallax-icons : $(ICONFILES)
 	
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-

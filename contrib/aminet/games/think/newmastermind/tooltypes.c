@@ -11,6 +11,7 @@
 #include <workbench/workbench.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "tooltypes.h"
 
 #include <proto/dos.h>

@@ -1,53 +1,19 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM demo-flamme : demo-flamme-icons
 
-CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR		:= $(GENDIR)/$(CURDIR)
-DESTDIR 	:= $(CONTRIBDIR)/Demos/Flamme
+DESTDIR := $(CONTRIBDIR)/Demos/Flamme
 
-FILES 		:= flamme
+%build_prog mmake=demo-flamme \
+    progname=Flamme targetdir=$(DESTDIR) \
+    files=flamme uselibs="arossupport amiga arosc m"
 
-SRCS 		:= $(foreach f, $(FILES), $(f).c)
-OBJS 		:= $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE 		:= $(DESTDIR)/Flamme
 
 ICONS := Flamme
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-.PHONY : all clean
-
-#MM demo-flamme : setup-demo-flamme icons-demo-flamme
-demo-flamme : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-demo-flamme :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-icons-demo-infplane : setup-demo-flamme $(ICONFILES)
-	@$(NOP)
+#MM demo-flamme-icons : demo-flamme-setup
+demo-flamme-icons : $(ICONFILES)
 	
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
-
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
-
-

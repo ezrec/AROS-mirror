@@ -1,52 +1,21 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM demo-rubberstrings : demo-rubberstrings-icons
 
-CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR		:= $(GENDIR)/$(CURDIR)
-DESTDIR 	:= $(CONTRIBDIR)/Demos/RubberStrings
+DESTDIR := $(CONTRIBDIR)/Demos/RubberStrings
 
-FILES 		:= rubberstrings
+%build_prog mmake=demo-rubberstrings \
+    progname=Rubberstrings targetdir=$(DESTDIR) \
+    files=rubberstrings uselibs="arossupport amiga arosc m"
 
-SRCS 		:= $(foreach f, $(FILES), $(f).c)
-OBJS 		:= $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE 		:= $(DESTDIR)/Rubberstrings
 
 ICONS := Rubberstrings
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
-
-.PHONY : all clean
-
-#MM demo-rubberstrings : setup-demo-rubberstrings icons-demo-rubberstrings
 demo-rubberstrings : $(OBJS) $(EXE)
 	@$(NOP)
 
-#MM
-setup-demo-rubberstrings :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-icons-demo-rubberstrings : setup-demo-rubberstrings $(ICONFILES)
-	@$(NOP)
+#MM demo-rubberstrings-icons : demo-rubberstrings-setup
+demo-rubberstrings-icons : $(ICONFILES)
 	
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
-
-

@@ -1,50 +1,19 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM demo-voxel : demo-voxel-icons
 
-CFLAGS	:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-	-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(CONTRIBDIR)/Demos/Voxel
 
-FILES := voxel
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+%build_prog mmake=demo-voxel \
+    progname=Voxel targetdir=$(DESTDIR) \
+    files=voxel uselibs="arossupport amiga arosc m"
 
-EXE := $(DESTDIR)/Voxel
 
 ICONS := Voxel
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-.PHONY : all clean
-
-#MM demo-voxel : setup-demo-voxel icons-demo-voxel
-demo-voxel : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-demo-voxel :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-	$(CP) *.pcx $(DESTDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-icons-demo-voxel : setup-demo-voxel $(ICONFILES)
-	@$(NOP)
+#MM demo-voxel-icons : demo-voxel-setup
+demo-voxel-icons : $(ICONFILES)
 	
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-

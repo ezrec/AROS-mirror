@@ -1,54 +1,27 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM demo-tunnel : demo-tunnel-icons demo-tunnel-data
 
-CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR		:= $(GENDIR)/$(CURDIR)
-DESTDIR 	:= $(CONTRIBDIR)/Demos/Tunnel
+DESTDIR := $(CONTRIBDIR)/Demos/Tunnel
 
-FILES 		:= tunnel
+%build_prog mmake=demo-tunnel \
+    progname=Tunnel targetdir=$(DESTDIR) \
+    files=tunnel uselibs="arossupport amiga arosc m"
+
+
 DATAFILES	:= pattern.data pattern.pal
 
-SRCS 		:= $(foreach f, $(FILES), $(f).c)
-OBJS 		:= $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+#MM demo-tunnel-data : demo-tunnel-setup
+%copy_files_q files=$(DATAFILES) dst=$(DESTDIR) \
+    maketarget=demo-tunnel-data
 
-EXE 		:= $(DESTDIR)/Tunnel
 
 ICONS := Tunnel
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-.PHONY : all clean
-
-#MM demo-tunnel : setup-demo-tunnel icons-demo-tunnel
-demo-tunnel : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-demo-tunnel :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-	@$(CP) $(DATAFILES) $(DESTDIR)
-	
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-icons-demo-tunnel : setup-demo-tunnel $(ICONFILES)
-	@$(NOP)
+#MM demo-tunnel-icons : demo-tunnel-setup
+demo-tunnel-icons : $(ICONFILES)
 	
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
-
 

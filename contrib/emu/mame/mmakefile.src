@@ -4,12 +4,10 @@ include $(TOP)/config/make.cfg
 AROSMAME_USEZLIB			:= "yes"
 
 ifeq ($(AROSMAME_USEZLIB),"yes")
-    %define_libs prelibs=-lz
-
+    ZLIB 				:= z
     AROSMAME_EXTRADEFS			:= -DAROSMAME_USEZLIB
 else
-    %define_libs
-
+    ZLIB 				:=
     AROSMAME_EXTRADEFS			:=
 endif
 
@@ -915,12 +913,8 @@ ALL_OBJS = $(COREOBJS) $(AROSOBJS) $(OBJS)
 
 all: $(EMULATOR_EXE)
 
-$(EMULATOR_EXE):  $(ALL_OBJS)
-	%link_q from="$(ALL_OBJS) $(GCCLIB)"
-
-
-$(OBJDIR)/%.o: src/%.c
-	%compile_q
+%rule_link_prog prog=$(EMULATOR_EXE) objs="$(ALL_OBJS) $(GCCLIB)" \
+    uselibs="$(ZLIB) arossupport amiga arosc m"
 
 #$(OBJDIR)/%.d: src/%.c
 #	@echo "******* Make depend ** $< ** $@ **"

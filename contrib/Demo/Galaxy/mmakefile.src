@@ -1,57 +1,20 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM demo-galaxy : demo-galaxy-icons
 
-CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR		:= $(GENDIR)/$(CURDIR)
-DESTDIR 	:= $(CONTRIBDIR)/Demos/Galaxy
+DESTDIR := $(CONTRIBDIR)/Demos/Galaxy
 
-FILES 		:= galaxy schedul_fx
-ASMFILES 	:= memshd
-
-SRCS 		:= $(foreach f, $(FILES), $(f).c)
-ASMSRCS		:= $(foreach f, $(ASMFILES), $(f).S)
-
-OBJS 		:= $(foreach f, $(FILES) $(ASMFILES), $(OBJDIR)/$(f).o)
-
-EXE 		:= $(DESTDIR)/Galaxy
+%build_prog mmake=demo-galaxy \
+    progname=Galaxy targetdir=$(DESTDIR) \
+    files="galaxy schedul_fx" asmfiles=memshd \
+    uselibs="arossupport amiga arosc m"
 
 ICONS := Galaxy
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-.PHONY : all clean
-
-#MM demo-galaxy : setup-demo-galaxy icons-demo-galaxy
-demo-galaxy : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-icons-demo-galaxy : setup-demo-galaxy $(ICONFILES)
-	@$(NOP)
+#MM demo-galaxy-icons : demo-galaxy-setup
+demo-galaxy-icons : $(ICONFILES)
 	
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
-
-#MM
-setup-demo-galaxy :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
-$(OBJDIR)/%.o : %.S
-	%compile_q
-
 

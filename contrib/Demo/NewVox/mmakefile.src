@@ -1,49 +1,19 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM demo-newvox : demo-newvox-icons
 
-CFLAGS	:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-	-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(CONTRIBDIR)/Demos/NewVox
 
-FILES := newvox
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+%build_prog mmake=demo-newvox \
+    progname=NewVow targetdir=$(DESTDIR) \
+    files=newvox uselibs="arossupport amiga arosc m"
 
-EXE := $(DESTDIR)/NewVox
 
 ICONS := NewVox
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-.PHONY : all clean
-
-#MM demo-newvox : setup-demo-newvox icons-demo-newvox
-demo-newvox : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-demo-newvox :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-icons-demo-newvox : setup-demo-newvox $(ICONFILES)
-	@$(NOP)
+#MM demo-newvox-icons : demo-newvox-setup
+demo-newvox-icons : $(ICONFILES)
 	
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-

@@ -1,41 +1,10 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
-
-CFLAGS	:= $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/aminet
-
-%make_common_setup
-
 FILES := dice draw game highscores layout localize requesters rules tooltypes \
 	yahzee yahzee_strings
 
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+%build_prog mmake=aminet-games-think-yahzee \
+    progname=yahzee targetdir=$(CONTRIBDIR)/aminet \
+    files=$(FILES) uselibs="chunkyiclass arossupport amiga arosc m"
 
-LIBS := -L$(LIBDIR) -lchunkyiclass -larosc -lamiga -larossupport \
-	-larosm -lautoinit
-
-EXE := $(DESTDIR)/yahzee
-
-.PHONY : all clean
-
-#MM aminet-games-think-yahzee : aminet-dev-src-chunkyiclass setup-aminet-games-think-yahzee setup-aminet-games-think-yahzee-catalogs
-aminet-games-think-yahzee 	: $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-aminet-games-think-yahzee :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	%link_q from=$(OBJS)
-
-#MM
-clean-aminet :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
+#MM aminet-games-think-yahzee : aminet-dev-src-chunkyiclass aminet-games-think-yahzee-catalogs

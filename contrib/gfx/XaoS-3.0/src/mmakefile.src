@@ -1,14 +1,6 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
-%make_common_setup
-
-OBJDIR		:= $(GENDIR)/$(CURDIR)
-DESTDIR		:= $(CONTRIBDIR)/Gfx/XaoS
-PROG		:= $(DESTDIR)/XaoS
-
-XAOSLIBS	:= ui engine util filter uiaros
-XAOSLIBFILES	:= $(foreach f, $(XAOSLIBS), $(LIBDIR)/libxaos$(f).a)
+PROG := $(CONTRIBDIR)/Gfx/Xaos/Xaos
 
 #MM gfx-xaos-prog : setup-gfx-xaos linklibs-xaosengine \
 #MM			      	   linklibs-xaosfilter \
@@ -16,7 +8,6 @@ XAOSLIBFILES	:= $(foreach f, $(XAOSLIBS), $(LIBDIR)/libxaos$(f).a)
 #MM			           linklibs-xaosui \
 #MM			           linklibs-xaosuiaros
 gfx-xaos-prog : $(PROG)
-	@$(NOP)
 
 #MM gfx-xaos-prog-quick : setup-gfx-xaos linklibs-xaosengine-quick \
 #MM			      	   	 linklibs-xaosfilter-quick \
@@ -24,7 +15,12 @@ gfx-xaos-prog : $(PROG)
 #MM			           	 linklibs-xaosui-quick \
 #MM			           	 linklibs-xaosuiaros-quick
 gfx-xaos-prog-quick : $(PROG)
-	@$(NOP)
 
-$(PROG) : $(XAOSLIBFILES)
-	%link_q from= libs="$(XAOSLIBFILES) $(LIBS)"
+XAOSLIBS	:= ui engine util filter uiaros
+XAOSLIBFILES	:= $(foreach f, $(XAOSLIBS), $(LIBDIR)/libxaos$(f).a)
+
+%rule_link_prog prog=$(PROG) objs=$(XAOSLIBFILES) \
+    uselibs="arossupport amiga arosc m"
+
+#MM setup-gfx-xaos
+%rule_makedirs dirs=$(CONTRIBDIR)/Gfx/Xaos setuptarget=setup-gfx-xaos

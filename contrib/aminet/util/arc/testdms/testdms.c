@@ -47,6 +47,8 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /*************************************************************************
 *
@@ -206,6 +208,10 @@ typedef struct {
 
 void 	main		( int 		argc, 
 					  char** 	argv );
+
+int		ParseParams( int		argc,
+					 char*		argv[],
+					 t_Flags*	Options_PT );
 
 void	ParseCommand( int       argc,       
 					  char**    argv,       

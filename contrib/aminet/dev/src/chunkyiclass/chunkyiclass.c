@@ -15,6 +15,8 @@
 #include <proto/intuition.h>
 #include <proto/utility.h>
 
+#include <aros/debug.h>
+
 #include "chunkyiclass.h"
 
 struct rp_info {

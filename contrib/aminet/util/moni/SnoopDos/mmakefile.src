@@ -1,44 +1,8 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
-
-CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/aminet
-
 FILES := buffer language subwin mainwin system hotkey \
 	settings miscwin patches snoopdos 
 
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-DEPS := $(foreach f, $(FILES), $(OBJDIR)/$(f).d)
-
-LIBS := -L$(LIBDIR) -larosc -lamiga -larossupport -larosm
-
-EXE := $(DESTDIR)/SnoopDos
-
-.PHONY : all clean
-
-#MM aminet-util-moni-snoopdos : setup-aminet-util-moni-snoopdos
-aminet-util-moni-snoopdos : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-aminet-util-moni-snoopdos :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	%link_q from=$(OBJS)
-
-$(OBJDIR)/%.o : %.c
-%compile_q
-
-$(OBJDIR)/%.d : %.c
-%mkdepend_q 
-
-%include_deps
-
-#MM
-clean-aminet :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
+%build_prog mmake=aminet-util-moni-snoopdos \
+    progname=SnoopDos targetdir=$(CONTRIBDIR)/aminet \
+    files=$(FILES) uselibs="arossupport amiga arosc m"

@@ -1,52 +1,21 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM demo-firework : demo-firework-icons
 
-CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR		:= $(GENDIR)/$(CURDIR)
-DESTDIR 	:= $(CONTRIBDIR)/Demos/Firework
+DESTDIR	:= $(CONTRIBDIR)/Demos/Firework
 
-FILES 		:= firework
+%build_prog mmake=demo-firework \
+    progname=Firework targetdir=$(DESTDIR) \
+    files=firework uselibs="arossupport amiga arosc m"
 
-SRCS 		:= $(foreach f, $(FILES), $(f).c)
-OBJS 		:= $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE 		:= $(DESTDIR)/Firework
 
 ICONS := Firework
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-.PHONY : all clean
-
-#MM demo-firework : setup-demo-firework icons-demo-firework
-demo-firework : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-demo-firework :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-icons-demo-firework : setup-demo-firework $(ICONFILES)
-	@$(NOP)
+#MM demo-firework-icons : demo-firework-setup
+demo-firework-icons : $(ICONFILES)
 	
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
 
 

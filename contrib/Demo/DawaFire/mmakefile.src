@@ -1,52 +1,21 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM demo-dawafire : demo-dawafire-icons
 
-CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR		:= $(GENDIR)/$(CURDIR)
-DESTDIR 	:= $(CONTRIBDIR)/Demos/DawaFire
+DESTDIR := $(CONTRIBDIR)/Demos/DawaFire
 
-FILES 		:= dawafire 
+%build_prog mmake=demo-dawafire \
+    progname=DawaFire targetdir=$(DESTDIR) \
+    files=dawafire uselibs="arossupport amiga arosc m"
 
-SRCS 		:= $(foreach f, $(FILES), $(f).c)
-OBJS 		:= $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE 		:= $(DESTDIR)/DawaFire
 
 ICONS := DawaFire
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-.PHONY : all clean
-
-#MM demo-dawafire : setup-demo-dawafire icons-demo-dawafire
-demo-dawafire : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-demo-dawafire :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-icons-demo-dawafire : setup-demo-dawafire $(ICONFILES)
-	@$(NOP)
+#MM demo-dawafire-icons : demo-dawafire-setup
+demo-dawafire-icons : $(ICONFILES)
 
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
 
 

@@ -8,7 +8,6 @@
 */
 
 #ifndef unlzx_unlzx_h
-#define AMIGA 
 #define UNLZX_VERSION "2.16"
 #define UNLZX_VERDATE "14.11.2000"
 /*
@@ -16,16 +15,19 @@
 #define UNLZX_TIME
 */
 
-#ifndef AMIGA
-#include <windows.h>
-#else
+#if !defined(AMIGA) && !defined(__AROS__)
+# include <windows.h>
+#endif
+#ifdef AMIGA
 #include <exec/types.h>
 LONG mkdir(STRPTR path, UWORD perm);
+#else
+#include <sys/stat.h>
 #endif
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
-//#include <string.h>
+#include <string.h>
 #ifdef UNLZX_TIME
 #include <time.h>
 #endif

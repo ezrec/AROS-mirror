@@ -1,52 +1,21 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM demo-metaballs : demo-metaballs-icons
 
-CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR		:= $(GENDIR)/$(CURDIR)
-DESTDIR 	:= $(CONTRIBDIR)/Demos/Metaballs
+DESTDIR := $(CONTRIBDIR)/Demos/Metaballs
 
-FILES 		:= metaballs
+%build_prog mmake=demo-metaballs \
+    progname=Metaballs targetdir=$(DESTDIR) \
+    files=metaballs uselibs="arossupport amiga arosc m"
 
-SRCS 		:= $(foreach f, $(FILES), $(f).c)
-OBJS 		:= $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE 		:= $(DESTDIR)/Metaballs
 
 ICONS := Metaballs
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-.PHONY : all clean
-
-#MM demo-metaballs : setup-demo-metaballs icons-demo-metaballs
-demo-metaballs : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-demo-metaballs :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-icons-demo-metaballs : setup-demo-metaballs $(ICONFILES)
-	@$(NOP)
+#MM demo-metaballs-icons : demo-metaballs-setup
+demo-metaballs-icons : $(ICONFILES)
 	
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
 
 

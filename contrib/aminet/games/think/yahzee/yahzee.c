@@ -6,6 +6,7 @@
  * Copyright © 1994-1998 Håkan L. Younes (lorens@hem.passagen.se)
  */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>

@@ -1,14 +1,5 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
-
-USER_DEFINES = -DINCLUDEALL -DCPU_ANY
-CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/aminet
-
-%make_common_setup
-
 FILES := \
 	About \
 	Accountant \
@@ -141,35 +132,13 @@ FILES := \
 	StackCall \
 	VersionTag
 
+USER_CFLAGS = -DINCLUDEALL -DCPU_ANY
 
-
-SRCS := $(foreach f, $(FILES), $(f).c )
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-DEPS := $(foreach f, $(FILES), $(OBJDIR)/$(f).d)
-
-LIBS := -L$(LIBDIR) -lgtlayout -larosc -lamiga -larossupport -larosm -larosc -lautoinit
-
-EXE := $(DESTDIR)/Term
-
-.PHONY : all clean
+%build_prog mmake=aminet-comm-term-term \
+    progname=Term targetdir=$(CONTRIBDIR)/aminet \
+    files=$(FILES) uselibs="gtlayout arossupport amiga arosc m"
 
 #MM aminet-comm-term-term : aminet-dev-gui-gtlayout aminet-comm-term-xprz aminet-comm-term-xem setup-aminet-comm-term-term
-aminet-comm-term-term 	: $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-aminet-comm-term-term :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	%link_q from=$(OBJS)
-
-#MM
-clean-aminet :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c 
-	%compile_q
 
 %common
-%include_deps
+

@@ -1,57 +1,27 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM demo-infplane : demo-infplane-icons demo-infplane-data
 
-CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
-		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
-	
-OBJDIR		:= $(GENDIR)/$(CURDIR)
 DESTDIR 	:= $(CONTRIBDIR)/Demos/InfPlane
 
-FILES 		:= infplane
-ASMFILES	:= refresh
+%build_prog mmake=demo-infplane \
+    progname=InfPlane targetdir=$(DESTDIR) \
+    files=infplane asmfiles=refresh \
+    uselibs="arossupport amiga arosc m"
+
+
 DATAFILES	:= pattern.data pattern.pal
 
-SRCS 		:= $(foreach f, $(FILES), $(f).c)
-OBJS 		:= $(foreach f, $(FILES) $(ASMFILES), $(OBJDIR)/$(f).o)
+#MM demo-infplane-data : demo-infplane-setup
+%copy_files_q files=$(DATAFILES) dst=$(DESTDIR) \
+    maketarget=demo-infplane-data
 
-EXE 		:= $(DESTDIR)/InfPlane
 
 ICONS := InfPlane
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-.PHONY : all clean
-
-#MM demo-infplane : setup-demo-infplane icons-demo-infplane
-demo-infplane : $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-demo-infplane :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-	@$(CP) $(DATAFILES) $(DESTDIR)
-	
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-icons-demo-infplane : setup-demo-infplane $(ICONFILES)
-	@$(NOP)
+#MM demo-infplane-icons : demo-infplane-setup
+demo-infplane-icons : $(ICONFILES)
 	
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
-
-#MM
-clean-contrib-demos :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
-$(OBJDIR)/%.o : %.S
-	%compile_q
-
-
