@@ -45,16 +45,14 @@ while test $# -gt 0; do
 
           includes=-I${prefix}/include
       fi
-      echo $includes -I@AROS_INCLUDE@/SDL  -D_REENTRANT
+      echo -I@AROS_INCLUDE@/SDL  -D_REENTRANT
       ;;
     --libs)
-      libdirs=""
-      echo $libdirs -lSDL
+      echo -L@AROS_LIB@ $libdirs -lSDL
       ;;
     --static-libs)
 #    --libs|--static-libs)
-      libdirs=""
-      echo $libdirs -lSDL -larosm
+      echo -L@AROS_LIB@ -lSDL
       ;;
     *)
       echo "${usage}" 1>&2
