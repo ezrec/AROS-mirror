@@ -350,9 +350,17 @@
   #define METHOD(f,mtype,m) STATIC ASM AROS_UFH3(ULONG, f, \
 			  AROS_UFHA(Class *, cl, A0), \
 			  AROS_UFHA(Object *, obj, A2), \
-			  AROS_UFHA(mtype, m, A1))
+			  AROS_UFHA(mtype, m, A1)) {AROS_USERFUNC_INIT
+  #define METHODPROTO(f,mtype,m) STATIC ASM AROS_UFP3(ULONG, f, \
+                          AROS_UFPA(Class *, cl, A0), \
+			  AROS_UFPA(Object *, obj, A2), \
+			  AROS_UFPA(mtype, m, A1))
+ 
+  #define METHOD_END AROS_USERFUNC_EXIT}
 #else
   #define METHOD(f,mtype,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) mtype m)
+  #define METHODPROTO(f,mtype,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) mtype m)
+  #define METHOD_END
 #endif
 
 /*** REGFUNC and REGPARAM macros ************************************/
@@ -369,15 +377,27 @@
   #ifndef REGPARAM
     #define REGPARAM(reg,type,name) type,name,reg
 
-    #define REGFUNC1(r,n,a1) AROS_UFH1(r,n,AROS_UFHA(a1))
-    #define REGFUNC2(r,n,a1,a2) AROS_UFH2(r,n,AROS_UFHA(a1),AROS_UFHA(a2))
-    #define REGFUNC3(r,n,a1,a2,a3) AROS_UFH3(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3))
-    #define REGFUNC4(r,n,a1,a2,a3,a4) AROS_UFH4(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4))
-    #define REGFUNC5(r,n,a1,a2,a3,a4,a5) AROS_UFH5(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5))
-    #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) AROS_UFH6(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6))
-    #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFH7(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7))
-    #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8))
-    #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8),AROS_UFHA(a9))
+    #define REGFUNC1(r,n,a1) AROS_UFH1(r,n,AROS_UFHA(a1)) {AROS_USERFUNC_INIT
+    #define REGFUNC2(r,n,a1,a2) AROS_UFH2(r,n,AROS_UFHA(a1),AROS_UFHA(a2)) {AROS_USERFUNC_INIT
+    #define REGFUNC3(r,n,a1,a2,a3) AROS_UFH3(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3)) {AROS_USERFUNC_INIT
+    #define REGFUNC4(r,n,a1,a2,a3,a4) AROS_UFH4(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4)) {AROS_USERFUNC_INIT
+    #define REGFUNC5(r,n,a1,a2,a3,a4,a5) AROS_UFH5(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5)) {AROS_USERFUNC_INIT
+    #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) AROS_UFH6(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6)) {AROS_USERFUNC_INIT
+    #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFH7(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7)) {AROS_USERFUNC_INIT
+    #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8)) {AROS_USERFUNC_INIT
+    #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8),AROS_UFHA(a9)) {AROS_USERFUNC_INIT
+
+    #define REGFUNCPROTO1(r,n,a1) AROS_UFP1(r,n,AROS_UFHA(a1))
+    #define REGFUNCPROTO2(r,n,a1,a2) AROS_UFP2(r,n,AROS_UFHA(a1),AROS_UFHA(a2))
+    #define REGFUNCPROTO3(r,n,a1,a2,a3) AROS_UFP3(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3))
+    #define REGFUNCPROTO4(r,n,a1,a2,a3,a4) AROS_UFP4(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4))
+    #define REGFUNCPROTO5(r,n,a1,a2,a3,a4,a5) AROS_UFP5(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5))
+    #define REGFUNCPROTO6(r,n,a1,a2,a3,a4,a5,a6) AROS_UFP6(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6))
+    #define REGFUNCPROTO7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFP7(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7))
+    #define REGFUNCPROTO8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFP8(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8))
+    #define REGFUNCPROTO9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFP9(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8),AROS_UFHA(a9))
+
+    #define REGFUNC_END AROS_USERFUNC_EXIT}
   #endif
 
 #else
@@ -394,6 +414,18 @@
     #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
     #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
     #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
+
+    #define REGFUNCPROTO1(r,n,a1) r n(a1)
+    #define REGFUNCPROTO2(r,n,a1,a2) r n(a1,a2)
+    #define REGFUNCPROTO3(r,n,a1,a2,a3) r n(a1,a2,a3)
+    #define REGFUNCPROTO4(r,n,a1,a2,a3,a4) r n(a1,a2,a3,a4)
+    #define REGFUNCPROTO5(r,n,a1,a2,a3,a4,a5) r n(a1,a2,a3,a4,a5)
+    #define REGFUNCPROTO6(r,n,a1,a2,a3,a4,a5,a6) r n(a1,a2,a3,a4,a5,a6)
+    #define REGFUNCPROTO7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
+    #define REGFUNCPROTO8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
+    #define REGFUNCPROTO9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
+
+    #define REGFUNC_END
   #endif
 
 #endif
