@@ -181,7 +181,7 @@ static const char UserLibName[] = CLASS;
 struct Library *MUIClassBase;
 struct Library *MUIMasterBase;
 struct ExecBase *SysBase;
-struct Library *UtilityBase;
+struct UtilityBase *UtilityBase;
 struct DosLibrary *DOSBase;
 struct GfxBase *GfxBase;
 struct IntuitionBase *IntuitionBase;
@@ -494,7 +494,7 @@ BOOL UserLibOpen(struct Library *base)
                 #define THISCLASS ThisClassP
                 #endif
 
-                UtilityBase   = (struct Library *)THISCLASS->mcc_UtilityBase;
+                UtilityBase   = (struct UtilityBase *)THISCLASS->mcc_UtilityBase;
                 DOSBase       = (struct DosLibrary *)THISCLASS->mcc_DOSBase;
                 GfxBase       = (struct GfxBase *)THISCLASS->mcc_GfxBase;
                 IntuitionBase = (struct IntuitionBase *)THISCLASS->mcc_IntuitionBase;
