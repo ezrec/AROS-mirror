@@ -536,9 +536,11 @@ static int setup_io( tsd_t *TSD, int io_flags, environment *env )
    else if (io_flags & REDIR_OUTSTRING)
       env->output.type = STRING ;
 
+   st->AsyncInfo = create_async_info(TSD);
+
    if (env->input.type != STD_IO)
    {
-      if (open_subprocess_connection(TSD, &env->input) != 0)
+      if (open_subprocess_connection(TSD, &env->input, st->AsyncInfo) != 0)
       {
          cleanup( TSD, env ) ;
          exiterror( ERR_SYSTEM_FAILURE, 920, "creating redirection", "for input", strerror(errno) )  ;
@@ -547,7 +549,7 @@ static int setup_io( tsd_t *TSD, int io_flags, environment *env )
    }
    if (env->output.type != STD_IO)
    {
-      if (open_subprocess_connection(TSD, &env->output) != 0)
+      if (open_subprocess_connection(TSD, &env->output, st->AsyncInfo) != 0)
       {
          cleanup( TSD, env ) ;
          exiterror( ERR_SYSTEM_FAILURE, 920, "creating redirection", "for output", strerror(errno) )  ;
@@ -558,7 +560,7 @@ static int setup_io( tsd_t *TSD, int io_flags, environment *env )
       fflush(stdout);
    if (env->error.type != STD_IO)
    {
-      if (open_subprocess_connection(TSD, &env->error) != 0)
+      if (open_subprocess_connection(TSD, &env->error, st->AsyncInfo) != 0)
       {
          cleanup( TSD, env ) ;
          exiterror( ERR_SYSTEM_FAILURE, 920, "creating redirection", "for error", strerror(errno) )  ;
@@ -567,7 +569,7 @@ static int setup_io( tsd_t *TSD, int io_flags, environment *env )
    }
    else
       fflush(stderr);
-   st->AsyncInfo = create_async_info(TSD);
+
    return( 1 ) ;
 }
 
@@ -810,7 +812,7 @@ int posix_do_command( tsd_t *TSD, const streng *command, int io_flags, environme
    }
 
    cmdline = str_ofTSD( command ) ;
-   child = fork_exec(TSD, env, cmdline);
+   child = fork_exec(TSD, env, cmdline, st->AsyncInfo);
    FreeTSD( cmdline ) ;
    if ((child == -1) || (child == -2))
    {

@@ -176,7 +176,7 @@ int my_win32_setenv( const char *name, const char *value )
  * Never use TSD after the fork() since this is not only a different thread,
  * it's a different process!
  */
-int fork_exec(tsd_t *TSD, environment *env, const char *cmdline)
+int fork_exec(tsd_t *TSD, environment *env, const char *cmdline, void *async_info)
 {
    static const char *interpreter[] = { "regina.exe", /* preferable even if */
                                                       /* not dynamic        */
@@ -216,7 +216,7 @@ int fork_exec(tsd_t *TSD, environment *env, const char *cmdline)
          strcat(new_cmdline, "\" ");
          strcat(new_cmdline, cmdline);
          e.subtype = SUBENVIR_COMMAND;
-         if ((rc = fork_exec(TSD, &e, new_cmdline)) != -1)
+         if ((rc = fork_exec(TSD, &e, new_cmdline, async_info)) != -1)
          {
             free(new_cmdline);
             return(rc);
@@ -230,7 +230,7 @@ int fork_exec(tsd_t *TSD, environment *env, const char *cmdline)
          strcat(new_cmdline, " ");
          strcat(new_cmdline, cmdline);
          e.subtype = SUBENVIR_COMMAND;
-         if ((rc = fork_exec(TSD, &e, new_cmdline)) != -1)
+         if ((rc = fork_exec(TSD, &e, new_cmdline, async_info)) != -1)
          {
             free(new_cmdline);
             return(rc);
@@ -365,7 +365,7 @@ int __regina_wait(int process)
  * Close the handles with __regina_close later.
  * Do IO by using __regina_read() and __regina_write().
  */
-int open_subprocess_connection(const tsd_t *TSD, environpart *ep)
+int open_subprocess_connection(const tsd_t *TSD, environpart *ep, void *async_info)
 {
 #define MAGIC_MAX 2000000 /* Much beyond maximum, see below */
    static unsigned BaseIndex = MAGIC_MAX;
@@ -967,7 +967,7 @@ void wait_async_info(void *async_info)
  * use the "wrong" escape character. Note the difference between EMX and OS/2.
  * Maybe, I'm wrong. Drop me an email in this case. FGC
  */
-int fork_exec(tsd_t *TSD, environment *env, const char *cmdline)
+int fork_exec(tsd_t *TSD, environment *env, const char *cmdline, void *async_info)
 {
    static const char *interpreter[] = { "regina.exe", /* preferable even if */
                                                       /* not dynamic        */
@@ -1004,7 +1004,7 @@ int fork_exec(tsd_t *TSD, environment *env, const char *cmdline)
          strcat(new_cmdline, " ");
          strcat(new_cmdline, cmdline);
          e.subtype = SUBENVIR_COMMAND;
-         if ((rc = fork_exec(TSD, &e, new_cmdline)) != -1)
+         if ((rc = fork_exec(TSD, &e, new_cmdline, async_info)) != -1)
          {
             free(new_cmdline);
             return(rc);
@@ -1018,7 +1018,7 @@ int fork_exec(tsd_t *TSD, environment *env, const char *cmdline)
          strcat(new_cmdline, " ");
          strcat(new_cmdline, cmdline);
          e.subtype = SUBENVIR_COMMAND;
-         if ((rc = fork_exec(TSD, &e, new_cmdline)) != -1)
+         if ((rc = fork_exec(TSD, &e, new_cmdline, async_info)) != -1)
          {
             free(new_cmdline);
             return(rc);
@@ -1041,9 +1041,9 @@ int fork_exec(tsd_t *TSD, environment *env, const char *cmdline)
 # undef fork_exec
 # define fork_exec __regina_fork_exec_dos
    {
-      int fork_exec(tsd_t *TSD, environment *env, const char *cmdline);
+      int fork_exec(tsd_t *TSD, environment *env, const char *cmdline, void *async_info);
       if ((_osmode != OS2_MODE) && (env->subtype != SUBENVIR_REXX))
-      return(fork_exec(TSD, env, cmdline));
+      return(fork_exec(TSD, env, cmdline, async_info));
    }
 #endif
 
@@ -1184,7 +1184,7 @@ int __regina_wait(int process)
  * Close the handles with __regina_close later.
  * Do IO by using __regina_read() and __regina_write().
  */
-int open_subprocess_connection(const tsd_t *TSD, environpart *ep)
+int open_subprocess_connection(const tsd_t *TSD, environpart *ep, void *async_info)
 {
 #define MAGIC_MAX 2000000 /* Much beyond maximum, see below */
    static unsigned BaseIndex = MAGIC_MAX;
@@ -1728,7 +1728,7 @@ static int MaxFiles(void)
  * Never use TSD after the fork() since this is not only a different thread,
  * it's a different process!
  */
-int fork_exec(tsd_t *TSD, environment *env, const char *cmdline)
+int fork_exec(tsd_t *TSD, environment *env, const char *cmdline, void *async_info)
 {
    static const char *interpreter[] = { "regina", /* preferable even if not */
                                                   /* dynamic                */
@@ -1919,7 +1919,7 @@ int __regina_wait(int process)
  * ep->RedirectedFile if necessary. Just in the latter case ep->data
  * is set to the filename.
  */
-int open_subprocess_connection(const tsd_t *TSD, environpart *ep)
+int open_subprocess_connection(const tsd_t *TSD, environpart *ep, void *async_info)
 {
    return(pipe(ep->hdls));
 }
@@ -2187,7 +2187,7 @@ void wait_async_info(void *async_info)
  * Never use TSD after the fork() since this is not only a different thread,
  * it's a different process!
  */
-int fork_exec(tsd_t *TSD, environment *env, const char *cmdline)
+int fork_exec(tsd_t *TSD, environment *env, const char *cmdline, void *async_info)
 {
    static const char *interpreter[] = { "regina", /* preferable even if not */
                                                   /* dynamic                */
@@ -2223,7 +2223,7 @@ int fork_exec(tsd_t *TSD, environment *env, const char *cmdline)
          strcat(new_cmdline, " ");
          strcat(new_cmdline, cmdline);
          e.subtype = SUBENVIR_COMMAND;
-         if ((rc = fork_exec(TSD, &e, new_cmdline)) != -1)
+         if ((rc = fork_exec(TSD, &e, new_cmdline, async_info)) != -1)
          {
             free(new_cmdline);
             return(rc);
@@ -2237,7 +2237,7 @@ int fork_exec(tsd_t *TSD, environment *env, const char *cmdline)
          strcat(new_cmdline, " ");
          strcat(new_cmdline, cmdline);
          e.subtype = SUBENVIR_SYSTEM;
-         if ((rc = fork_exec(TSD, &e, new_cmdline)) != -1)
+         if ((rc = fork_exec(TSD, &e, new_cmdline, async_info)) != -1)
          {
             free(new_cmdline);
             return(rc);
@@ -2360,7 +2360,7 @@ int __regina_wait(int process)
  * Close the handles with __regina_close later.
  * Do IO by using __regina_read() and __regina_write().
  */
-int open_subprocess_connection(const tsd_t *TSD, environpart *ep)
+int open_subprocess_connection(const tsd_t *TSD, environpart *ep, void *async_info)
 {
    char *name;
    int eno;

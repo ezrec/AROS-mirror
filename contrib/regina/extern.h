@@ -469,9 +469,9 @@
  * Routines in doscmd.c
  */
    int my_win32_setenv( const char *name, const char *value ) ;
-   int fork_exec(tsd_t *TSD, environment *env, const char *cmdline);
+   int fork_exec(tsd_t *TSD, environment *env, const char *cmdline, void *async_info);
    int __regina_wait(int process);
-   int open_subprocess_connection(const tsd_t *TSD, environpart *ep);
+   int open_subprocess_connection(const tsd_t *TSD, environpart *ep, void *async_info);
    void unblock_handle( int *handle, void *async_info );
    void restart_file(int hdl);
    int __regina_close(int handle, void *async_info);

@@ -27,7 +27,7 @@ OFILES := \
   memory parsing files misc unxfuncs cmsfuncs os2funcs \
   shell rexxext stack tracing interp cmath convert \
   strings library strmath signals macros envir expr \
-  instore extlib yaccsrc lexsrc wrappers options doscmd \
+  instore extlib yaccsrc lexsrc wrappers options \
   rexxbif aroscmd amigafuncs
 
 USER_INCLUDES := -I.
