@@ -103,15 +103,16 @@
 	#define REGCALL		/* nothing */
 	#define CONSTCALL	__attribute__((const))
 	#define FORMATCALL(a,s,f)	__attribute__((format(a,s,f)))
-	#define SAVEDS		__attribute__((saveds))
 	#define INTERRUPT	__attribute__((interrupt))
 	#define NORETURN	__attribute__((noreturn))
 	#define ALIGNED		__attribute__((aligned(4)))
 	#define UNUSED(var)	var __attribute__((unused))
 	#if defined(__mc68000__)
+	#define SAVEDS		__attribute__((saveds))
 	# define SECTION_CHIP	__attribute__((chip))
 	# define REG(reg,arg)	arg __asm(#reg)
 	#else
+	# define SAVEDS		/* nothing */
 	# define SECTION_CHIP	/* nothing */
 	# define REG(reg,arg)	arg
 	#endif
