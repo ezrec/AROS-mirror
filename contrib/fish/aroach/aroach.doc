@@ -1,0 +1,124 @@
+
+                                ARoach
+
+                              Version 1.0
+
+
+       © Copyright Stefan Winterstein 1993. Freely Distributable.
+
+
+
+NAME
+    ARoach - cockroaches hide under your windows
+
+
+SYNOPSIS
+    ARoach ROACHES/K/N,SPEED/K/N,SQUISH/S,SCREEN=PUBSCREEN/K,HELP/S
+
+
+DESCRIPTION
+    ARoach displays disgusting cockroaches on your screen.  These creepy
+    crawlies  scamper  around  until  they  find a window to hide under.
+    Whenever  you move or resize a window, the exposed orthopteras again
+    scamper for cover.
+
+    ARoach  is  based  on  Xroach  for  X-Windows.  It requires at least
+    AmigaDOS Release 2.
+
+    The  roaches live in a backdrop window behind all other windows.  So
+    if  your Workbench window is NOT a backdrop window and you don't see
+    any roaches, look behind it!
+
+    To  quit the program, you can either close its window, break it with
+    CTRL-C or squish all roaches with the mouse (see option SQUISH).
+
+
+OPTIONS
+    All  options  can  be  given  either  as  Tooltypes  or command line
+    options.  Tooltypes are parsed _exactly_ like options given from the
+    shell.
+
+    ROACHES=<n>
+        This is the number of the little critters.  Default is 10.
+
+        Note:   The  BOB  routines  of  graphics.library  can use a fair
+        amount of stack with large numbers of objects.  So the number of
+        roaches  is  currently  limited  to  1000,  which  is OK for the
+        current (internal) stack size of 16000 Bytes.
+
+    SPEED=<n>
+        Use  the  given speed for the insects instead of the default 20.
+        For example, in winter the speed should be set to 5.  In summer,
+        30 might be about right.
+
+    SQUISH
+        Enables  roach  squishing.   Point and shoot with the left mouse
+        button.
+
+    PUBSCREEN=<string>
+        Drop  the  roaches  on  the  given public screen.  Make sure the
+        screen is nearby, so you can hear the screams.
+
+    HELP
+        Displays a short help text.
+
+
+EXAMPLE
+        ARoach ROACHES 5 SPEED=30 SQUISH PUBSCREEN="DOPUS.1"
+
+    gives  birth  to  5  squishable  roaches  of speed 30, living on the
+    public screen of DirectoryOPUS.
+
+
+BUGS
+    As given by the ROACHES option. Default is 10.
+
+    Under  AmigaOS  3.0,  there  is some garbage under a window when you
+    move  it  away.  This is a bug with graphics.library and interleaved
+    bitmaps, I suppose.
+
+
+REVISION HISTORY
+
+    1.0 (24-Jun-93)
+        First public release.
+
+
+AUTHORS & COPYRIGHT
+    I  can be reached on internet as "winter@cs.uni-sb.de".  Suggestions
+    and comments on the program are welcome.
+
+    My snail mail address is
+        Stefan Winterstein
+        Schwarzbachstr.7
+        66424 Homburg
+        Germany
+
+    The   original   XRoach   is   copyright   1991  by  J.T.   Anderson
+    (jta@locus.com),  who  kindly  gave  me the permission for releasing
+    this port.
+
+    ARoach  is  copyright  ©  1993  by  Stefan  Winterstein,  all rights
+    reserved.   This  program  is  not  in the public domain, but freely
+    distributable,  provided  it  is  not  modified  in  its  operation,
+    distributed   together   with   this   documentation  and  used  for
+    non-commercial purposes only.
+
+    Though  it  was  tested  rather thoroughly, ARoach is made available
+    "as-is", without warranty of any kind.  Any damage caused by the use
+    of this program is the sole responsibility of the user.
+
+    ARoach  uses  some  of  the `animtool' routines from the `ROM Kernel
+    Reference   Manual:    Libraries',   which  is  Copyright  (c)  1992
+    Commodore-Amiga, Inc.
+
+
+ACKNOWLEDGEMENTS
+    Many thanks to J.T. Anderson  for his hilarious Xroach.  ARoach uses
+    the  original  Bitmaps,  data  structures and many of its functions.
+    This documentation contains parts of the Xroach man-page.
+
+
+SEE ALSO
+     roachmotel (Fish 807)
+
