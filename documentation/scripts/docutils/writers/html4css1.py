@@ -53,6 +53,9 @@ class Writer(writers.Writer):
           'stylesheet, do not embed it.',
           ['--embed-stylesheet'],
           {'action': 'store_true'}),
+         ('Suffix to append to relative targets, if necessary.',
+          ['--target-suffix'],
+          {'default': 'html'}),          
          ('Format for footnote references: one of "superscript" or '
           '"brackets".  Default is "superscript".',
           ['--footnote-references'],
@@ -878,13 +881,14 @@ class HTMLTranslator(nodes.NodeVisitor):
 
     def visit_reference(self, node):
         if node.has_key('refuri'):
+            suffix = '.' + self.settings.target_suffix
             href = node['refuri']
             if ':' not in href:
                 # This is a relative URL, so we assume we want to mangle it. :-)
                 words = href.split( '#' )
-                if not words[0].endswith( '.html' ) and not words[0].endswith( '.php' ) and not words[0].endswith( '/' ):
+                if not words[0].endswith( suffix ) and not words[0].endswith( '/' ):
                     # It doesn't have the correct suffix...
-                    words[0] = words[0] + '.php'
+                    words[0] = words[0] + suffix
                 
                 href = words[0]
                 if len( words ) > 1:
