@@ -101,5 +101,6 @@ poellman:cd6d0HVQZXWKs:Markus Poellmann:poellman@informatik.tu-muenchen.de:
 starhawk:ddNinopA8D95Q:Mathias Spjuth:f95msp@student.tdb.uu.se:
 stefan:sriVodMaf7alo:Stefan Rieken:StefanRieken@SoftHome.net:
 whorfin:batXXPLWTtzZ2:Eric Johnson:jwhorfin@pacbell.net:
+akuptel:aa6h2NGA7yr.A:Artur P. Kuptel:nemerle@teleinfo.pb.bialystok.pl:
 
 anon:bbrG5BSjRBYPU:Anonymous Access::
