@@ -4,6 +4,9 @@
 #include "execute.h"
 #include "about.h"
 
+#define DEBUG 1
+#include <aros/debug.h>
+
 struct Library *BGUIBase;
 
 #ifdef _AROS
@@ -119,6 +122,13 @@ static void MakeGUI( void )
     static struct BitMap      patternbm;
     int i;
 
+    /* It seems that AROS is missing something to make BGUI patterns 
+     * work, as this just segfaults (works on AmigaOS though). 
+     * bgui/BGUIDemo-->BackFill segfaults also when trying to use 
+     * an other pattern...
+     */
+
+#if 0
     InitBitMap(&patternbm, PATTERN_DEPTH, PATTERN_WIDTH, PATTERN_HEIGHT);
     for(i = 0; i < PATTERN_DEPTH; i++)
     {
@@ -139,6 +149,7 @@ static void MakeGUI( void )
     pattern.bp_Height = PATTERN_HEIGHT;
     pattern.bp_BitMap = &patternbm;
     pattern.bp_Object = NULL;
+#endif
 
     WO_Window = WindowObject,
 	WINDOW_SmartRefresh,  TRUE,
@@ -150,7 +161,7 @@ static void MakeGUI( void )
 	WINDOW_ScreenTitle,  "AROS Workbench",
 
 	WINDOW_MasterGroup,
-	    VGroupObject, NormalOffset, NormalSpacing, FRM_FillPattern, &pattern, FRM_Type, FRTYPE_NONE,
+      VGroupObject, NormalOffset, NormalSpacing, /*FRM_FillPattern, &pattern,*/ FRM_Type, FRTYPE_NONE,
 		    /* Nothing here, yet. */
 		EndMember,
 	    EndObject,
@@ -207,6 +218,7 @@ static void HandleAll( void )
 int main( void )
 {
     OpenLibs();
+
     MakeGUI();
     OpenGUI();
 
