@@ -107,14 +107,32 @@ button_render (void)
 {
    if (used)
    {
+      struct impDraw id;
+
       button_box (btn_rp,
                   left, top, width, height,
                   highlighted);
-      
+#if 0
+kprintf("left: %d, top: %d\n",left,top);
+kprintf("width: %d\n",width-2*LINEWIDTH - INTERWIDTH);
+kprintf("height: %d\n",height-2*LINEHEIGHT-INTERHEIGHT);
+
       DoMethod ((Object *)image, IM_DRAWFRAME, btn_rp, (left << 16) + top,
                 ((highlighted) ? IDS_SELECTED : IDS_NORMAL), NULL,
-                (width - 2 * LINEWIDTH - INTERWIDTH << 16) +
+                (width - 2 * LINEWIDTH - INTERWIDTH) << 16 +
                 height - 2 * LINEHEIGHT - INTERHEIGHT);
+#endif
+
+      id.MethodID = IM_DRAWFRAME;
+      id.imp_RPort = btn_rp;
+      id.imp_Offset.X = left;
+      id.imp_Offset.Y = top;
+      id.imp_State = (highlighted) ? IDS_SELECTED : IDS_NORMAL;
+      id.imp_DrInfo = NULL;
+      id.imp_Dimensions.Width  = width  - 2 * LINEWIDTH  - INTERWIDTH;
+      id.imp_Dimensions.Height = height - 2 * LINEHEIGHT - INTERHEIGHT;
+      
+      DoMethodA((Object *)image, &id);
    }
 }
 

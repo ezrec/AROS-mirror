@@ -708,8 +708,8 @@ if (r >= field->rows || c >= field->columns)
   continue;
 }
 
-kprintf("drand48(): %d\n",(int)(drand48() * 1000.0));
-kprintf("n: %d;  IS_MINE(field,r(%d),c(%d)) : %d\n",n,r,c,IS_MINE(field,r,c));   
+//kprintf("drand48(): %d\n",(int)(drand48() * 1000.0));
+//kprintf("n: %d;  IS_MINE(field,r(%d),c(%d)) : %d\n",n,r,c,IS_MINE(field,r,c));   
 #endif
 
 

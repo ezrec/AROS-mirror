@@ -170,7 +170,7 @@ layout_display (
    
    *rom_font = FALSE;
 #warning Changed digital_display variable to FALSE!! Otherwise it crashes.
-   digital_display = FALSE; //TRUE; previous value
+   digital_display = TRUE; //previous value
    for (i = 0; i < 4; ++i)
    {
       cell_space = i & NO_SPACE;
