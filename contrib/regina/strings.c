@@ -304,7 +304,7 @@ streng *Str_cat_TSD( const tsd_t *TSD, streng *first, const streng *second )
    int tmp=0 ;
 
    ptr = assure( TSD, first, (tmp=Str_len(first)+Str_len(second)) ) ;
-   memcpy( &first->value[Str_len(first)], second->value, Str_len(second) ) ;
+   memcpy( &ptr->value[Str_len(first)], second->value, Str_len(second) ) ;
    ptr->len = tmp ;
 
    return ptr ;
@@ -322,7 +322,7 @@ streng *Str_ncat_TSD( const tsd_t *TSD, streng *first, const streng *second, int
    int tmp=0 ;
 
    ptr = assure( TSD, first, Str_len(first) + (tmp=MIN(length,Str_len(second))) ) ;
-   memcpy( &first->value[Str_len(first)], second->value, tmp ) ;
+   memcpy( &ptr->value[Str_len(first)], second->value, tmp ) ;
 
    ptr->len += tmp ;
    return ptr ;
