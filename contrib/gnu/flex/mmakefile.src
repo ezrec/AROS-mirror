@@ -1,8 +1,9 @@
-# Copyright © 2003, The AROS Development Team. All rights reserved.
+# Copyright © 2004, The AROS Development Team. All rights reserved.
 # $Id$
 
-include ../make.cfg
+-include $(TOP)/config/make.cfg
 
-#MM- contrib-gnu : contrib-gnu-flex
-	
-%build_with_configure mmake=contrib-gnu-flex nix=yes prefix=$(GNUDIR)/flex
+##MM- contrib-gnu : contrib-gnu-flex
+##MM- contrib-gnu-flex : development-flex
+
+%fetch_and_build_gnu_development package=flex version=2.5.4a srcdir=flex-2.5.4 patch=yes
