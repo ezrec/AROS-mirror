@@ -1,0 +1,26 @@
+-Wall
+# Heck, all those inlines...
+-Wno-unused
+-Wno-uninitialized
+-Wimplicit
+-Wreturn-type
+-Wswitch
+-Wcomment
+-Wformat
+-Wchar-subscripts
+-Wparentheses
+-DAMITCP
+-DKERNEL
+-DSOCKBUF_DEBUG
+-DTCPDEBUG
+-DDIRECTED_BROADCAST
+-DICMPPRINTFS  
+-nostdinc
+-I../netinclude
+-I.
+-Iconf
+-Iprotos
+-I/p/projects/amiga-gcc/amigados/include
+# For RCS macros...
+-include conf/rcs.h
+-finline  -O

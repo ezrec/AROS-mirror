@@ -1,0 +1,26 @@
+
+* Squash bugs
+* figure out what exactly the config_vars.awk script does
+  and what config_vars.c is used for.
+
+  After it starts working:
+
+* Remove any dependencies on environment variables, if at all
+  possible.
+* Relocate configuration files to a sensible place in the
+  ADE: tree.
+
+* Get the devices and inet-handler ported.  Someone could start
+working on this now.  No reliance on amitcp-specific includes if
+possible.
+
+* Someone outside the US should work on usergroup.library, since 
+ it has a working crypt.c, though I'm not sure what Fred will do about
+ this.  
+
+* Port the amitcp utilities with ixemul/ixnet. Hopefully most won't be
+  any harder than ifconfig (write a Makefile, fix a couple of headers).
+  Note having a NetBSD source tree can be handy if there are some 
+  undefined structures.  Eventually, these could/will be replaced by
+  NetBSD ports (but those will also rely on more networking capability
+  than ixemul provides currently).

@@ -1,0 +1,102 @@
+   
+  This directory contains modified source for the 
+Amitcp executable from the Amitcp 3.0b2 distribution
+which is under the GPL (see COPYING in the root
+directory for the actual license).
+
+    If you are reading this, you should be warned
+that this code is "for developer's eyes only" in
+the sense that it does not work.  What it does is
+compile under gcc, and it does run.  Although it
+hasn't caused my system to crash (yet), I don't
+know that it won't.
+
+
+   To compile, assign netinclude: to the amitcp
+directory (should be the one this file is in) and
+use make.  (The netinclude: is a remnant of
+when I was using a separate directory for all
+includes to figure out what needed in/out, and
+should be removed). There are some problems with
+the makefiles (or maybe the make from the 961012
+snapshot was buggy).  If you invoke the top-level
+makefile and it attempts to make in the api
+subdirectory, the -I /netinclude directive is
+ignored, so nothing will compile.  So I've been
+making each directory by hand.  Also, if you look,
+the same variables are used in all the makefiles
+so that I could just change options in the 
+top-level (except for -noixemul which I hacked into
+the CC variable at the last minute).  Unfortunately
+these variables didn't seem to get passed down.
+If anyone can fix these problems, please do!
+
+  Also, netlib contains the pared down net.lib and
+sana2.lib source.  It is not made at all by  the
+top-level makefile (this should be changed), 
+so you need to make it first.  Also, it
+doesn't copy the libraries to the libb subdir (for
+linker flavors) so you will have to do so by hand
+so ld doesn't link to an older library. I'm not sure
+what ld does if there is no libb available since
+amitcp is compiled with fbaserel enabled.
+
+   debugging is enabled (both via macros and -g) in
+all made files.
+
+Problems: Many.
+
+    The executable doesn't seem to make the Amitcp
+REXX port, and when I tried the ifconfig executable
+(also available here)  the function socket was
+"not implemented".  Sounds like ixemul opened the
+library but there's no function there (!).  (I used
+ixprefs to set networking to Amitcp, in case it wasn't
+detected properly).
+
+   More information:  When Amitcp starts up it does
+many initialization routines, in particular it launches
+the logging task, called NETTRACE, and initializes the 
+api (bsdsocket.library).  When it is done initializing
+it goes into a loop.  Between those two I have it print
+out its task number.  Now NETTRACE does get started and
+seems to work (as there was a small bug that caused many
+error messages to be logged, and they seemed correct).
+Using a system monitor, you can see bsdsocket.library
+is added to the list of libraries.  But the ifconfig 
+provided (in the ADE cvs repository somewhere) gives the
+"function not implemented" error above, while the ifconfig
+from the Amitcp 3.0b2 binary dist. gives a requester saying
+that "Amitcp 3.0 has to be started first".  Mind you, those
+to ifconfig's come from the same source, so I guess Amitcp's
+original perror code (in netlib) used requesters, while I rely
+on the stuff in ixemul or libnix.  Though that doesn't explain
+the different error messages.
+
+  There are still a number of warnings from some of the
+source files (I believe -Wall is on in the makefiles).
+These are generally mismatches between pointers and integers
+with a lot of "Parentheses should be used around truth values"
+thrown in.  Also some type mismatches in function calls.  These
+actually require some investigation as to the nature of what is
+going on, which is why I put them off for "last".  So whoever
+wants to do some work can start squashing these warnings.
+
+   Also, the api setup should be double-checked for runtime
+errors, by someone with a good understanding of the issues
+involved.  My understanding is better than it used to be, but
+still foggy at times.  There's lots of macros you should watch
+out for too.  NSDi didn't feel the need to make macros obvious.  
+
+You may also want to get the original sources for
+amitcp 3.0b2 to compare my hacking to.  These should
+also be available from ftp.ninemoons.com (since they're
+no longer on Aminet).
+
+Lynn Winebarger
+owinebar@indiana.edu
+
+
+
+
+

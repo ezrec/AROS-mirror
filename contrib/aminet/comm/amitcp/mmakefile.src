@@ -1,0 +1,54 @@
+#   Makefile to make amitcp.
+
+include $(TOP)/config/make.cfg
+
+NET:=	net/sana2perror net/raw_cb net/raw_usrreq\
+	net/route net/rtsock net/radix net/netisr\
+	net/sana2config net/sana2copybuff net/sana2arp net/if net/if_loop net/if_sana
+
+NETINET:=	netinet/in netinet/in_cksum netinet/in_pcb netinet/in_proto\
+	netinet/ip_icmp netinet/ip_input netinet/ip_output netinet/raw_ip\
+	netinet/tcp_debug netinet/tcp_input netinet/tcp_output\
+	netinet/tcp_subr netinet/tcp_timer netinet/tcp_usrreq\
+	netinet/udp_usrreq
+
+KERN:=	kern/amiga_main kern/amiga_time kern/amiga_config kern/amiga_netdb\
+	kern/kern_synch kern/kern_malloc kern/uipc_mbuf\
+	kern/uipc_domain kern/uipc_socket kern/uipc_socket2\
+	kern/amiga_log kern/amiga_cstat kern/amiga_rexx\
+	kern/subr_prf kern/accesscontrol
+
+API:=	api/amiga_api api/amiga_libtables api/amiga_syscalls\
+	api/amiga_sendrecv api/amiga_generic api/amiga_generic2\
+	api/amiga_libcalls api/amiga_errlists\
+	api/getxbyy api/gethostnamadr api/allocdatabuffer\
+	api/res_comp api/res_debug api/res_init\
+	api/res_mkquery api/res_query api/res_send
+
+#api/gethna_nores.c
+
+FILES :=   $(NET) $(KERN) $(NETINET) $(API)
+
+EXEDIR := $(CONTRIBDIR)/aminet
+EXE := $(EXEDIR)/amitcp
+
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USER_DEFINES:= -DRCS_ID_C=// -DAMITCP -DKERNEL -DNO_DEBUG -DNDEBUG\
+-DNO_ARP_DEBUG -DNO_TCPDEBUG -DNO_ICMPPRINTFS -DNO_SOCKBUF_DEBUG -DAROS
+
+USER_CFLAGS := -w -Wall -O0 $(USER_DEFINES) -I./ -I./conf -I./protos 
+
+#MM aminet-comm-amitcp : 
+#includes linklibs
+
+%make_prog_setup mmake=aminet-comm-amitcp
+
+aminet-comm-amitcp : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
