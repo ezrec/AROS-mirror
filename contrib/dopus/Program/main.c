@@ -598,7 +598,11 @@ tryfonts:
 	if (status_publicscreen) {
 		if (MainScreen) {
 			scrdata_xoffset=MainScreen->WBorLeft;	
+#if 0
 			scrdata_yoffset=MainScreen->WBorTop+scr_font[FONT_SCREEN]->tf_YSize+1;
+#else
+			scrdata_yoffset=MainScreen->WBorTop+MainScreen->Font->ta_YSize+1;
+#endif
 		}
 		else {
 			scrdata_xoffset=scrbuf.WBorLeft;
@@ -606,6 +610,7 @@ tryfonts:
 		}
 	}
 	else {
+
 		scrdata_xoffset=0;
 		if (status_flags&STATUS_IANSCRAP2) scrdata_yoffset=0;
 		else if (MainScreen) scrdata_yoffset=MainScreen->BarHeight+1;
