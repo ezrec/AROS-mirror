@@ -1,0 +1,5 @@
+/*
+** common header
+*/
+
+#define STDARGS
