@@ -1,0 +1,98 @@
+##
+## Smakefile
+## =========
+## Makefile for lazymines.  Requires SAS/SMAKE.
+##
+## Copyright (C) 1994-1998 Håkan L. Younes (lorens@hem.passagen.se)
+##
+
+.ct.catalog:
+	-makedir $*
+	CatComp catalogs/lazymines.cd $< CATALOG $@
+
+CDEFINES = 
+CDEBUGFLAGS = #debug=sf
+COPTFLAGS = opt optsched utillib
+CFLAGS = $(CDEFINES) $(CDEBUGFLAGS) $(COPTFLAGS) \
+         ansi nochkabort noicons nover nostkchk nostkext math=ffp
+
+OBJS = lazymines.o button.o counter.o field.o highscores.o images.o layout.o \
+       localize.o requesters.o timer.o tooltypes.o strings.o
+
+all: lazymines \
+     convscorefile \
+     catalogs/dansk/lazymines.catalog \
+     catalogs/deutsch/lazymines.catalog \
+     catalogs/italiano/lazymines.catalog \
+     catalogs/norsk/lazymines.catalog \
+     catalogs/polski/lazymines.catalog \
+     catalogs/svenska/lazymines.catalog \
+     catalogs/template.ct
+
+lazymines: $(OBJS)
+	$(LD) FROM LIB:c.o $(OBJS) TO $@ \
+	LIB LIB:scmffp.lib LIB:sc.lib LIB:amiga.lib chunkyiclass.lib \
+	STRIPDEBUG
+
+convscorefile: convscorefile.c
+	$(CC) $(CFLAGS) link $<
+
+catalogs/dansk/lazymines.catalog: catalogs/dansk.ct
+catalogs/deutsch/lazymines.catalog: catalogs/deutsch.ct
+catalogs/italiano/lazymines.catalog: catalogs/italiano.ct
+catalogs/norsk/lazymines.catalog: catalogs/norsk.ct
+catalogs/polski/lazymines.catalog: catalogs/polski.ct
+catalogs/svenska/lazymines.catalog: catalogs/svenska.ct
+
+catalogs/template.ct: catalogs/lazymines.cd
+	CatComp $< CTFILE $@
+
+lazymines.o:  lazymines.c button.h timer.h game.h images.h layout.h \
+              counter.h field.h highscores.h requesters.h tooltypes.h \
+              localize.h display_globals.h
+button.o:     button.c button.h display_globals.h
+counter.o:    counter.c counter.h images.h display_globals.h
+field.o:      field.c field.h game.h counter.h images.h layout.h \
+              display_globals.h localize.h
+highscores.o: highscores.c highscores.h game.h localize.h requesters.h \
+              display_globals.h
+images.o:     images.c images.h layout.h display_globals.h
+layout.o:     layout.c layout.h counter.h display_globals.h game.h
+requesters.o: requesters.c requesters.h game.h localize.h display_globals.h
+timer.o:      timer.c timer.h
+tooltypes.o:  tooltypes.c tooltypes.h game.h
+
+localize.o: localize.c localize.h
+
+localize.h: strings.o
+	setdate localize.h
+
+strings.o: catalogs/lazymines.cd
+	CatComp $< CFILE strings.h OBJFILE $@
+
+
+clean:
+	-delete ALL \#?.o strings.h lazymines catalogs/~(\#?.\#?) \
+	lazymines.hiscore catalogs/template.ct \#?.lha
+
+
+archive:
+	makedir t:lazymines
+	copy install t:lazymines/
+	copy install.info t:lazymines/
+	copy lazymines t:lazymines/
+	copy lazymines.info t:lazymines/
+	copy convscorefile t:lazymines/
+	copy lazymines.guide t:lazymines/
+	copy lazymines.guide.info t:lazymines/
+	makedir t:lazymines/catalogs
+	copy ALL catalogs/~(\#?.\#?) t:lazymines/catalogs/
+	copy catalogs/lazymines.cd t:lazymines/catalogs/
+	copy catalogs/template.ct t:lazymines/catalogs/
+	makedir t:lazymines/misc
+	copy misc/palette.ilbm t:lazymines/misc/
+	copy misc/palette3.0 t:lazymines/misc/
+	copy misc/lazymines.info t:lazymines/misc/
+	copy misc/lazymines.guide.info t:lazymines/misc/
+	lha -aemqrx r lazymines.lha t:lazymines
+	delete ALL t:lazymines

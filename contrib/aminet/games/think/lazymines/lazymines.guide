@@ -1,0 +1,352 @@
+@database lazymines.guide
+@author "Håkan L. Younes"
+@(c) "Copyright (C) 1994-1998 Håkan L. Younes"
+@$VER: LazyMines.guide 3.2 (15.12.98)
+
+
+@node Main "LazyMines Documentation"
+
+@{b}Welcome to LazyMines - the most complete minesweeper game for Amiga!@{ub}
+
+   @{"Copyright Notice     " link Copyright}
+   @{"Acknowledgements     " link Acknowledgements}
+   @{b}----------------------@{ub}
+   @{"Installation         " link Installation}
+   @{"System Requirements  " link Requirements}
+   @{"Troubleshooting      " link Troubleshooting}
+   @{b}----------------------@{ub}
+   @{"The Game             " link Game}
+   @{"The Menu             " link Menu}
+   @{"The Gadgets          " link Gadgets}
+   @{"The Display          " link Display}
+   @{"Tooltypes            " link Tooltypes}
+   @{b}----------------------@{ub}
+   @{"Version History      " link History}
+   @{"Plans for the Future " link Future}
+   @{b}----------------------@{ub}
+   @{"Localization         " link Localization}
+   @{"Contacting the Author" link Address}
+
+If you like LazyMines you might want to take a look at my @{"Other Products" link Products}.
+
+@endnode
+
+
+@node Copyright "Copyright Notice"
+
+Install, LazyMines, LazyMines.info, LazyMines.guide, the Swedish
+catalog, and convscorefile
+Copyright (C) 1994-1998 Håkan L. Younes.
+
+Danish translation by Kenneth Fribert.
+German translation by Niels Knoop.
+Italian translation by Luca Del Buono and Alessandro Basso.
+Norwegian translation by Lars Christian Schreiner.
+Polish translation by Piotr Grygiel.
+
+LazyMines.guide.info (MagicWB style) by Martin Huttenloher (from his wonderful
+MagicWB-package).
+
+This program may be freely distributed except for commercial purpose, so long
+as the @{"files" link Files} included are not separated or modified. It may not be included in
+any commercial packages without the author's written permission. If included
+on coverdisks, the author's name must be mentioned inside the magazine.
+
+THIS SOFTWARE IS PROVIDED "AS-IS". NO WARRANTIES ARE MADE. ALL USE IS AT YOUR
+OWN RISK. NO LIABILITY OR RESPONSIBILITY IS ASSUMED.
+
+@endnode
+
+
+@node Files "The Files"
+
+A complete archive includes the following files:
+   lazymines
+   lazymines.info
+   convscorefile
+   install
+   install.info
+   lazymines.guide
+   lazymines.guide.info
+   catalogs/lazymines.cd
+   catalogs/template.ct
+   catalogs/dansk/lazymines.catalog
+   catalogs/deutsch/lazymines.catalog
+   catalogs/italiano/lazymines.catalog
+   catalogs/norsk/lazymines.catalog
+   catalogs/polski/lazymines.catalog
+   catalogs/svenska/lazymines.catalog
+   misc/lazymines.info
+   misc/lazymines.guide.info
+   misc/palette.ilbm
+   misc/palette3.0
+
+@endnode
+
+
+@node Acknowledgements "Acknowledgements"
+
+Many people have shared their feelings about LazyMines with me, but there are
+a few who's ideas, comments and work have helped me a lot in improving this
+game. These people include David Slonosky, Lars Christian Schreiner, Niels
+Knoop, Paymon Yau, Piotr Grygiel,"C.A.", Kenneth Fribert and Luca Del Buono.
+
+I hope that you will always let me know your feelings about my products. It's
+through such communication that the progress of Amiga software continues to be
+accomplished.
+
+This program is dedicated to Odd Möller, a great source of inspiration to me.
+
+@endnode
+
+
+@node Installation "Installation"
+
+To install LazyMines from scratch or to update an old version just run the
+installation script. (The script requires Commodore's Installer to run. If you
+don't have it, it can be found on aminet).
+
+If you update from a version prior to 3.0 your old highscore file will
+automatically be converted to a new highscore file.
+
+If you choose to install the MagicWB style icons without having MagicWB
+installed you can still get them look nice. For this purpose you need at least
+an 8 color Workbench screen and you will have to load the correct color
+palette into the Palette Preferences. The palette can be found in the misc dir
+(one for 2.x and one for 3.x).
+
+@endnode
+
+
+@node Requirements "System Requirements"
+
+LazyMines will run on any Amiga computer with AmigaOS 2.0 or higher (or at
+least I hope it will).
+
+If you have AmigaOS 2.1 or higher, LazyMines will try to use the @{"language" link Localization} you
+have selected through Preferences.
+
+To get the most out of LazyMines (i.e. colorful graphics) you need at least
+AmigaOS 3.0.
+
+@endnode
+
+
+@node Troubleshooting "Troubleshooting"
+
+If you get the message "Screen is too small!" when you run LazyMines, you're
+either using a too big screen font or you're trying to run LazyMines on a too
+small public screen. LazyMines is guaranteed to open on a 640 x 200 screen
+with a screen font of resonable size.
+
+When there are no public screens open you will get the message "Couldn't lock
+public screen!".
+
+If you get a message about opening libraries make sure you've got at least
+version 37 of the system libraries.
+
+Any other messages are probably due to lack of memory. They're not likely
+to show up.
+
+@endnode
+
+
+@node Game "The Game"
+
+Your task is to sweep a minefield. You can either choose to sweep the entire
+field or just a path from the top/left corner to the bottom/right corner of
+the field.
+
+Use the left mousebutton to reveal a cell.
+Use the right mousebutton to lock an unlocked cell. Pressing the right button
+over a locked cell will remove the lock (if you have selected Warnings from
+the @{"Settings menu" link Menu} this will place a warning on that cell instead. Press the
+right button once more to remove the warning too).
+Use both (left and right) mousebuttons to reveal all cells around the cell
+you clicked on. This will also make the game place flags on cells that
+obviously must be mines.
+
+The numbers printed in revealed cells tell you how many neighbours that
+contain mines.
+
+@endnode
+
+
+@node Menu "The Menu"
+
+@{u}Game@{uu}
+New                 - Starts a new game (same as pressing the @{"Smiley gadget" link Gadgets}).
+Novice              - Sets the level to novice and starts a new game.
+Amateur             - Sets the level to amateur and starts a new game.
+Expert              - Sets the level to expert and starts a new game.
+Optional...         - Allows you to set the properties of the minefield before
+                      a new game is started (no highscores are saved for this
+                      level).
+Fastest Sweepers... - Shows the fastest sweepers of the current level.
+About...            - Shows info about the program (i.e. version number, name
+                      of the author and creation year).
+Quit LazyMines      - Quits the program (same effect as pressing the
+                      @{"Closegadget" link Gadgets}).
+
+@{u}Settings@{uu}
+Task              - Lets you choose if you want to sweep the entire field or
+                    just a path and then starts a new game.
+Warnings          - When this is checked warnings can be placed.
+No Colors         - Check this if you want the system pens to be used for the
+                    graphics (default on versions prior to 3.0 of AmigaOS).
+Automatic Opening - Allows you to have 0-10% of the field opened automatically
+                    when starting a new game. On automatic openings a penelty
+                    second is added for every four cells revealed.
+Save Settings     - Saves the settings using @{"tooltypes" link Tooltypes}.
+
+@endnode
+
+
+@node Gadgets "The Gadgets"
+
+The Smiley gadget - Starts a new game. Depending on the size of the @{"screen" link Display}
+                    LazyMines is run on this gadget might not appear.
+The Closegadget   - Quits LazyMines.
+The Zoomgadget    - Pauses the game and shrinks the window.
+
+@endnode
+
+
+@node Display "The Display"
+
+Depending on the size of the screen you are opening LazyMines on the display
+might look different. If the screen is small the timer and the flag counter
+will be displayed in the title bar of the window and there will be no Smiley
+gadget, otherwise you will get nice digital counters. The counter to the left
+is the flag counter and the one to the right is the timer.
+
+By default LazyMines will use the system font set through preferences. If this
+is too big LazyMines will fall back on the topaz8 font.
+
+@endnode
+
+
+@node Tooltypes "Tooltypes"
+
+The following tooltypes are recognized by LazyMines:
+
+@{b}PUBSCREEN@{ub}=<name of public screen>
+Use this to open the window on other public screens than the default one (if
+there is no public screen with the given name, the program will try to open
+its window on the default public screen).
+
+@{b}LEFT@{ub}=<left edge of game window>
+@{b}TOP@{ub}=<top edge of game window>
+These tooltypes are used to set the location of the game window at startup.
+
+@{b}LEVEL@{ub}=<Novice, Amateur, Expert, or Optional>
+Use this to set the initial level.
+
+@{b}OPTIONALROWS@{ub}=<number of rows for optional level>
+@{b}OPTIONALCOLS@{ub}=<number of columns for optional level>
+@{b}OPTIONALMINES@{ub}=<number of mines for optional level>
+These tooltypes set the initial properties for the optional level.
+
+@{b}TASK@{ub}=<All, or Path>
+Sets the initial task.
+
+@{b}AUTOOPEN@{ub}=<0-10>
+Initial value for automatic openings.
+
+@{b}WARNINGS@{ub}, @{b}NOCOLORS@{ub}
+These tooltypes are used to activate the corresponding menu items in the
+@{"Settings menu" link Menu} at startup.
+
+@endnode
+
+
+@node History "Version History"
+
+v1.0 (21.4.94)  First public release.
+v2.0 (27.8.94)  LazyMines will now adjust the display so that it will fit on
+                almost any screen.
+                Added timer and High Scores.
+                Now with three difficulty levels.
+                Added Save Settings menuitem in the Settings menu.
+                Localized LazyMines.
+                Improved graphics.
+v2.1 (3.12.94)  Saves ten high scores for each difficulty level.
+                Now with installation script for Commodore's Installer.
+v2.2 (31.12.94) LazyMines now uses timer.device for the timer.
+v2.3 (8.2.95)   Now the PUBSCREEN tooltype really works!
+v3.0 (23.5.95)  Scalable graphics.
+                Option to use system pens for graphics.
+                Smiley gadget for starting a new game.
+                Zoomgadget added which will pause a game.
+                Better looking requesters which will not stop the timer.
+                Reintroduction of smarter automatic opening.
+                Optional level.
+                Iterative sweep algorithm makes it more stable (faster?).
+                Tooltypes for saving position of game window.
+                Now with option to sweep path.
+v3.1 (29.6.95)  Fixed bug that caused software failure when LazyMines was
+                opened on small screens (i.e. 640 x 200).
+                Highlights your name when you enter the highscore list.
+                Requesters now sized to fit thier titles.
+                LazyMines no longer crashes on machines with the 68000 or
+                68010 processor. (This was a tough one to solve. Thanks "C.A."
+                for having patiens with me. I hope it was worth it).
+v3.2 (15.12.98) No changes. Source code made public!
+
+@endnode
+
+
+@node Future "Plans for the Future"
+
+Write more @{"catalogs" link Localization} (if you help me).
+Add "online-help".
+Let the user select colors for the graphics.
+Enable HOTKEYS even with the right mousebutton trapped.
+Add support for third mousebutton.
+
+@endnode
+
+
+@node Localization "Localization"
+
+LazyMines is localized, so if you have AmigaOS 2.1 or higher LazyMines will
+try to use the language you have set in Preferences. If there is no catalog
+for your language, English will be used as default.
+
+Since I'm not very good at languages I've only written one additional catalog
+(the Swedish one). However I've included some files so that you easily can
+make LazyMines support your language too.
+
+Translate the strings in template.ct and save it as <language>.ct. Then send
+that file to me so that I can include it in my package.
+NOTE! The first two characters in menuitems are used for menu shortcuts.
+The first one is the shortcut (space means no shortcut) and the second is
+always a nullbyte. Make sure you don't use the same character as shortcut
+for different items in the same Menu!
+
+@endnode
+
+
+@node Address "Contacting the Author"
+
+Since the source code has been made public, you can fix bugs or make
+improvements yourself. Of course, if you do so I still would like to know
+about it.
+
+This is where you can reach me:
+snail-mail: Håkan L. Younes
+            Sandkullsv. 16
+            S-163 41 Spånga
+            Sweden
+Internet:   lorens@hem.passagen.se
+            http://hem.passagen.se/lorens/
+
+@endnode
+
+
+@node Products "Other Products"
+
+Take a look at http://hem.passagen.se/lorens/amiga/ for a list of other Amiga
+products made by me.
+
+@endnode

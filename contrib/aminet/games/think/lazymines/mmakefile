@@ -1,0 +1,55 @@
+####################################################################
+####################################################################
+############# THIS IS A GENERATED FILE ! DO NOT EDIT ###############
+####################################################################
+####################################################################
+include $(TOP)/config/make.cfg
+
+STARTUP := $(LIBDIR)/startup.o
+LIBS	:= -L$(LIBDIR) -larossupport -lamiga -larosc
+DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a \
+	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(BINDIR)/aminet
+
+FILES := lazymines button counter field highscores images layout localize \
+	requesters timer tooltypes strings
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+EXE := $(DESTDIR)/lazymines
+
+.PHONY : all clean
+
+#MM aminet-lazymines : setup-aminet-lazymines
+aminet-lazymines 	: $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-aminet-lazymines :
+	@$(FOR) dir in $(DESTDIR) $(OBJDIR) ; do \
+	    $(IF) $(TEST) ! -d $$dir ; then $(MKDIR) $$dir ; else $(NOP) ; fi ; \
+	done
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+
+#MM
+clean-aminet :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	@$(ECHO) "Compiling $(CURDIR)/$<..."
+	@$(CC) $(CFLAGS) -c $< -o $@ 2>&1|tee $*.err
+	@$(IF) $(TEST) -s $*.err; then $(TOUCH) $(TOP)/errors ; else $(RM) $*.err ; fi
+
+# Delete generated makefiles
+clean ::
+	$(RM) mmakefile mmakefile.bak
+

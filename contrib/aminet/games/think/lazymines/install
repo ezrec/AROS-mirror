@@ -1,0 +1,171 @@
+; $VER: install 3.2 (15.12.98)
+; Script to install LazyMines 3.2
+
+;=============================================================================
+;English strings
+
+(set #bad-kick
+     "You need at least version 37 of AmigaOS to run LazyMines.")
+
+(set #how-install
+     (cat "Do you want to install the whole program or just update the "
+          "language catalogs?"))
+
+(set #how-install-help
+     (cat "Choose \"Install whole program\" if you are installing from "
+          "scratch or if you are updating an old version.\n"
+          "\nChoose \"Update languages\" if you want to install or remove "
+          "language catalogs."))
+
+(set #how-install-1 "Install whole program")
+(set #how-install-2 "Update languages")
+
+(set #where-install
+     "Choose location where you want to install LazyMines.")
+
+(set #which-documentation
+     "Which documentation do you want to install with LazyMines?")
+
+(set #which-documentation-help
+     "Check the language you want to install with LazyMines.")
+
+(set #which-icons
+     "Which icons do you want to install with LazyMines?")
+
+(set #which-icons-help
+     (cat "Choose \"MagicWB icons\" if you have MagicWB installed, "
+          "otherwise choose \"Standard icons\"."))
+
+(set #which-icons-2 "MagicWB icons")
+(set #which-icons-1 "Standard icons")
+
+(set #no-languages
+     (cat "You need at least version 38 of AmigaOS to have any use for the "
+          "language catalogs."))
+
+(set #where-languages
+     "Where do you want to install the language catalogs?")
+
+(set #where-languages-help
+     (cat "This lets you choose if you want the language catalogs to be "
+          "copied to the same location as the rest of the program, or if "
+          "you want to have them in the global Catalog dir."))
+
+(set #which-languages
+     "Which language catalogs do you want to install with LazyMines?")
+
+(set #which-languages-help
+     (cat "Check all languages you want to install with LazyMines.\n"
+          "\nIf a language already installed is not checked, "
+          "it will be removed."))
+
+
+;=============================================================================
+;Procedures
+
+(procedure install-program
+  (set @default-dest prog-dest)
+  (copylib (source (tackon sourcedir "LazyMines"))
+           (dest prog-dest))
+  (copylib (source (tackon sourcedir "LazyMines.guide"))
+           (dest prog-dest)))
+
+(procedure install-icons
+  (set which-icons (askchoice (prompt #which-icons)
+                              (help #which-icons-help)
+                              (choices #which-icons-1 #which-icons-2)))
+  (if (= which-icons 1)
+      (set icon-srcdir (tackon icon-srcdir "misc")))
+  (copyfiles (source icon-srcdir)
+             (dest prog-dest)
+             (choices "LazyMines.info" "LazyMines.guide.info"))
+  (tooltype (dest (tackon prog-dest "LazyMines"))
+            (noposition))
+  (tooltype (dest (tackon prog-dest "LazyMines.guide"))
+            (noposition)))
+
+(procedure install-locales
+  (set where-languages (askchoice (prompt #where-languages)
+                                  (help #where-languages-help)
+                                  (choices locale-dest
+                                           locale-sysdest)))
+  (if (= where-languages 1)
+      (set locale-dest locale-sysdest))
+  (set which-languages (askoptions (prompt #which-languages)
+                                   (help #which-languages-help)
+                                   (choices "Dansk"
+                                            "Deutsch"
+                                            "Italiano"
+                                            "Norsk"
+                                            "Polski"
+                                            "Svenska")))
+  (set locale "dansk")
+  (if (IN which-languages 0)
+      (install-locale)
+      (remove-locale))
+  (set locale "deutsch")
+  (if (IN which-languages 1)
+      (install-locale)
+      (remove-locale))
+  (set locale "italiano")
+  (if (IN which-languages 2)
+      (install-locale)
+      (remove-locale))
+  (set locale "norsk")
+  (if (IN which-languages 3)
+      (install-locale)
+      (remove-locale))
+  (set locale "polski")
+  (if (IN which-languages 4)
+      (install-locale)
+      (remove-locale))
+  (set locale "svenska")
+  (if (IN which-languages 5)
+      (install-locale)
+      (remove-locale)))
+
+(procedure install-locale
+  (makedir locale-dest)
+  (makedir (tackon locale-dest locale))
+  (copylib (source (tackon (tackon locale-srcdir locale) "lazymines.catalog"))
+           (dest (tackon locale-dest locale))))
+
+(procedure remove-locale
+  (delete (tackon (tackon locale-dest locale) "lazymines.catalog"))
+  (if (NOT (= locale-dest locale-sysdest))
+      ((delete (tackon locale-dest locale))
+       (delete locale-dest))))
+
+
+;=============================================================================
+; Main program
+
+(if (< (/ (getversion) 65536) 37)
+    (abort #bad-kick))
+
+(welcome)
+
+(set sourcedir (pathonly @icon))
+(set icon-srcdir sourcedir)
+(set locale-srcdir (tackon sourcedir "Catalogs"))
+(set locale-sysdest "LOCALE:Catalogs")
+
+(set prog-dest (askdir (prompt #where-install)
+                       (help @askdir-help)
+                       (default @default-dest)))
+
+(set how-install (askchoice (prompt #how-install)
+                            (help #how-install-help)
+                            (choices #how-install-1 #how-install-2)))
+
+(if (= how-install 0)
+    ((install-program)
+     (install-icons)
+     (run (cat "convscorefile \"" prog-dest "\"")))
+    (set @default-dest ""))
+
+(if (= (exists "LOCALE:") 0)
+    (exit #no-languages))
+
+(set locale-dest (tackon prog-dest "Catalogs"))
+(install-locales)

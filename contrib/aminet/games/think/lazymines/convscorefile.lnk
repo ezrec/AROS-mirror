@@ -1,0 +1,12 @@
+FROM LIB:c.o "convscorefile.o"
+TO "convscorefile"
+LIB LIB:scmffp.lib
+    LIB:sc.lib LIB:amiga.lib
+QUIET
+NOICONS
+DEFINE @__chkabort=@__dummy
+DEFINE __CXM33=__UCXM33
+DEFINE __CXD33=__UCXD33
+DEFINE __CXM22=__UCXM22
+DEFINE __CXD22=__UCXD22
+
