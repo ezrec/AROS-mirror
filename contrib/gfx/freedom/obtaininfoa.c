@@ -365,6 +365,7 @@ static UBYTE emptybitmap[4];
 
             default:
                 D(bug("  OT_??? tag = 0x%lx data = %ld (0x%lx) \n", ti->ti_Tag, data, data));
+		rc = OTERR_UnknownTag;
     	    	break;
 		
         } /* switch(ti->ti_Tag) */
