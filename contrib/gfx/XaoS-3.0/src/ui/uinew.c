@@ -49,9 +49,7 @@
 #include <unistd.h>
 #endif
 
-#ifndef AROS
 #include <signal.h>
-#endif
 #endif
 
 #include <config.h>
@@ -1818,12 +1816,8 @@ main_loop (void)
 	    {
 	      driver->print (0, 0, uih->errstring);
 	      ui_flush ();
-#ifndef AROS
 	      uih->errstring = NULL, sleep (1);
-#else
-#warning AROS has no sleep
 	      uih->errstring = NULL;
-#endif
 	    }
 	  if (uih->clearscreen)
 	    driver->clrscr (), uih_cleared (uih);
@@ -2125,11 +2119,7 @@ MAIN_FUNCTION (int argc, char **argv)
 	{
 	  driver->free_buffers (NULL, NULL);
 	  driver->uninit ();
-#ifndef AROS
 	  perror (loadfile);
-#else
-#warning AROS has no perror
-#endif
 	  exit (1);
 	}
       uih_load (uih, f, loadfile);
@@ -2150,11 +2140,7 @@ MAIN_FUNCTION (int argc, char **argv)
 	{
 	  driver->free_buffers (NULL, NULL);
 	  driver->uninit ();
-#ifndef AROS
 	  perror (playfile);
-#else
-#warning AROS has no perror
-#endif
 	  exit (1);
 	}
       uih_replayenable (uih, f, playfile);
