@@ -44,7 +44,6 @@ FILES := \
     native2amiga \
     newcpu \
     od-joy \
-    od-aros \
     picasso96 \
     readcpu \
     savestate \
@@ -54,7 +53,9 @@ FILES := \
     uaeexe \
     uaelib \
     writelog \
-    zfile
+    zfile \
+    od-aros
+#    nogui
 
 EXEDIR := $(CONTRIBDIR)/Emu/UAE
 
@@ -69,8 +70,8 @@ USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
 	       -UAMIGA -U_AMIGA
 
 #MM- contrib-complete: uae
-#MM uae : setup includes uae-setup uae-od-aros
-#MM- uae-quick : uae-setup uae-od-aros-quick
+#MM uae : setup includes uae-setup uae-od-aros uae-docs-copy
+#MM- uae-quick : uae-setup uae-od-aros-quick uae-docs-copy
 
 #MM
 uae-setup ::  $(OBJDIR)/.build_setup_check
@@ -148,8 +149,12 @@ cpudefs.o: cpudefs.c
 
 %build_prog mmake=uae \
     progname=uae targetdir=$(EXEDIR) \
-    files=$(FILES)  uselibs="arossupport amiga arosc m" usehostlibs=gcc nix=yes
+    files=$(FILES)  uselibs="SDL arossupport amiga arosc m" usehostlibs=gcc nix=yes
 
 %common
 
 .DELETE_ON_ERROR:
+
+#MM
+uae-docs-copy :
+	cp -dpRu ../docs $(EXEDIR)/Docs
