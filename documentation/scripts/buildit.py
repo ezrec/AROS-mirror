@@ -313,7 +313,7 @@ def buildWWW():
     TEMPLATE_DATA = file( TEMPLATE, 'r' ).read()
 
     makePictures()
-    makeStatus()
+    #makeStatus()
 
     recurse( processWWW )
 
