@@ -20,6 +20,7 @@ class Link:
 
 # More related to the AROS project
 moreRelated = (
+    Link ('http://aros.planetmirror.com', 'AROS Mirror in Australia'),
     Link ('ftp://ftp.aros.org/pub/aros/', 'The official AROS FTP server',
 	'You can find releases, nightly snapshots and other'
 	' stuff on this server.',
