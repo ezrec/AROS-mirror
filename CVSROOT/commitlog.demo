@@ -1,0 +1,372 @@
+Update of /home/cvs/aros/CVSROOT
+In directory sebigbos:/var/tmp/cvs-serv22292
+
+Modified Files:
+	loginfo 
+Log Message:
+Should append the data; not overwrite :-)
+Update of /home/cvs/aros/AROS
+In directory sebigbos:/var/tmp/cvs-serv22365
+
+Added Files:
+	xxx yyy 
+Log Message:
+Test
+Update of /home/cvs/aros/AROS
+In directory sebigbos:/var/tmp/cvs-serv22372
+
+Modified Files:
+	xxx yyy 
+Log Message:
+Test
+Update of /home/cvs/aros/AROS
+In directory sebigbos:/var/tmp/cvs-serv22384
+
+Removed Files:
+	xxx yyy 
+Log Message:
+Test
+Update of /home/cvs/aros/CVSROOT
+In directory sebigbos:/var/tmp/cvs-serv22964
+
+Modified Files:
+	commitlog.awk 
+Log Message:
+Better code to process CVS commitlogs
+Update of /home/cvs/aros/CVSROOT
+In directory sebigbos:/var/tmp/cvs-serv22978
+
+Modified Files:
+	commitlog.awk 
+Log Message:
+Better code to process CVS commitlogs
+Update of /home/cvs/aros/CVSROOT
+In directory sebigbos:/var/tmp/cvs-serv22992
+
+Modified Files:
+	commitlog.awk 
+Log Message:
+Better code to process CVS commitlogs
+Update of /home/cvs/aros/CVSROOT
+In directory sebigbos:/var/tmp/cvs-serv23011
+
+Modified Files:
+	commitlog.awk 
+Log Message:
+Area is not passed on
+Update of /home/cvs/aros/CVSROOT
+In directory sebigbos:/var/tmp/cvs-serv23026
+
+Modified Files:
+	commitlog.awk 
+Log Message:
+Removed debug output
+Update of /home/cvs/aros/AROS/compiler/c_lib/source/lib_source
+In directory sebigbos:/var/tmp/cvs-serv26990/compiler/c_lib/source/lib_source
+
+Modified Files:
+	genclib.awk gendefines.awk geninline.awk genlibdefs.awk 
+	genshared 
+Log Message:
+Finally fixes wb/workbench naming anomaly by introducing new headers
+(workbench) and providing wrappers for old (now obsolete) versions (wb)
+
+Update of /home/cvs/aros/AROS/compiler/include/clib
+In directory sebigbos:/var/tmp/cvs-serv26990/compiler/include/clib
+
+Added Files:
+	wb_protos.h 
+Log Message:
+Finally fixes wb/workbench naming anomaly by introducing new headers
+(workbench) and providing wrappers for old (now obsolete) versions (wb)
+
+Update of /home/cvs/aros/AROS/compiler/include/defines
+In directory sebigbos:/var/tmp/cvs-serv26990/compiler/include/defines
+
+Added Files:
+	wb.h 
+Log Message:
+Finally fixes wb/workbench naming anomaly by introducing new headers
+(workbench) and providing wrappers for old (now obsolete) versions (wb)
+
+Update of /home/cvs/aros/AROS/compiler/include/inline
+In directory sebigbos:/var/tmp/cvs-serv26990/compiler/include/inline
+
+Modified Files:
+	wb.h 
+Added Files:
+	workbench.h 
+Log Message:
+Finally fixes wb/workbench naming anomaly by introducing new headers
+(workbench) and providing wrappers for old (now obsolete) versions (wb)
+
+Update of /home/cvs/aros/AROS/compiler/include/pragmas
+In directory sebigbos:/var/tmp/cvs-serv26990/compiler/include/pragmas
+
+Modified Files:
+	wb_pragmas.h 
+Log Message:
+Finally fixes wb/workbench naming anomaly by introducing new headers
+(workbench) and providing wrappers for old (now obsolete) versions (wb)
+
+Update of /home/cvs/aros/AROS/compiler/include/proto
+In directory sebigbos:/var/tmp/cvs-serv26990/compiler/include/proto
+
+Modified Files:
+	wb.h 
+Added Files:
+	workbench.h 
+Log Message:
+Finally fixes wb/workbench naming anomaly by introducing new headers
+(workbench) and providing wrappers for old (now obsolete) versions (wb)
+
+Update of /home/cvs/aros/AROS/config
+In directory sebigbos:/var/tmp/cvs-serv26990/config
+
+Modified Files:
+	make.tmpl 
+Log Message:
+Finally fixes wb/workbench naming anomaly by introducing new headers
+(workbench) and providing wrappers for old (now obsolete) versions (wb)
+
+Update of /home/cvs/aros/AROS/rom/workbench
+In directory sebigbos:/var/tmp/cvs-serv26990/rom/workbench
+
+Modified Files:
+	addappicona.c addappmenuitema.c addappwindowa.c lib.conf 
+	mmakefile.src removeappicon.c removeappmenuitem.c 
+	removeappwindow.c 
+Log Message:
+Finally fixes wb/workbench naming anomaly by introducing new headers
+(workbench) and providing wrappers for old (now obsolete) versions (wb)
+
+Update of /home/cvs/aros/AROS/tools/archtools
+In directory sebigbos:/var/tmp/cvs-serv26990/tools/archtools
+
+Modified Files:
+	archtool.c 
+Log Message:
+Finally fixes wb/workbench naming anomaly by introducing new headers
+(workbench) and providing wrappers for old (now obsolete) versions (wb)
+
+Update of /home/cvs/aros/AROS/docs/src
+In directory sebigbos:/var/tmp/cvs-serv27107
+
+Modified Files:
+	differences.src 
+Log Message:
+Mention the wb/workbench include naming anomaly. We now prefer
+workbench over wb.
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30420
+
+Removed Files:
+	dirlist.c dirlist.h dirlistfuncs.c 
+Log Message:
+not needed anymore
+
+Update of /home/cvs/aros/AROS/workbench/c
+In directory sebigbos:/var/tmp/cvs-serv30454/workbench/c
+
+Modified Files:
+	stacksnoop.c 
+Log Message:
+now also shows stack info about the running task (stacksnoop)
+
+
+Update of /home/cvs/aros/AROS/rom/intuition
+In directory sebigbos:/var/tmp/cvs-serv30460/rom/intuition
+
+Modified Files:
+	strgclass.c 
+Log Message:
+check whether mouse click was inside gadgetbox was wrong.
+
+
+Update of /home/cvs/aros/AROS/rom/intuition
+In directory sebigbos:/var/tmp/cvs-serv30466/rom/intuition
+
+Modified Files:
+	strgadgets.c 
+Log Message:
+use window->MouseX instead of InputEvent->ie_position.ie_X
+in DoSGHClick as one day InputEvent mouse coordinates will
+have to be relative like in AmigaOS.
+
+
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30472
+
+Modified Files:
+	basicfuncs.c 
+Log Message:
+fixes (look at ASL??_Screen, ASL??_PubScreenName,
+ASL??_Window in this order to find screen on which
+to open window). additions to LayoutData struct.
+
+lots of changes and new stuff because of filereq improvements
+
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30478
+
+Modified Files:
+	asl_intern.h 
+Log Message:
+added aslpropclass, aslarrowclass, asllistviewclass,
+aslstringclass and aslbuttonclass to AslBase_intern
+struct. added protos for initialization of this classes.
+several changes/new stuff because of improved filereq.
+
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30487
+
+Added Files:
+	classes.c 
+Log Message:
+private asl gadget classes.
+
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30506
+
+Added Files:
+	gadgets.c 
+Log Message:
+gadget support functions
+
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30516
+
+Added Files:
+	filereqsupport.c 
+Log Message:
+filerequster support functions
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30524
+
+Added Files:
+	filereqsupport.h 
+Log Message:
+header for filereq support functions
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30530
+
+Modified Files:
+	mmakefile.src 
+Log Message:
+added classes, gadgets, filereqsupport and coolimagedata to FILES,
+and removed files which do not exist anymore.
+added mkdepend_q stuff (please check)
+
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30536
+
+Modified Files:
+	asl_init.c 
+Log Message:
+create private asl classes in libopen and
+free them in libclose.
+small fixes/changes because of improved filereq
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30542
+
+Modified Files:
+	layout.h 
+Log Message:
+added some #defines for asl gadget classes.
+
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30548
+
+Modified Files:
+	filereqhooks.c filereqhooks.h 
+Log Message:
+reworked GUI, because it really looked
+terrible.
+changes in FRUserData structure because
+of GUI changes.
+
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30554
+
+Modified Files:
+	aslrequest.c 
+Log Message:
+fixes
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30560
+
+Modified Files:
+	freeaslrequest.c 
+Log Message:
+fixes and changes because of filereq improvements
+
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30571
+
+Modified Files:
+	allocaslrequest.c 
+Log Message:
+fixes and changes because of improved filereq
+
+Update of /home/cvs/aros/AROS/workbench/demos
+In directory sebigbos:/var/tmp/cvs-serv30594
+
+Modified Files:
+	filereq.c 
+Log Message:
+create several file requesters with different options (tags).
+
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30681
+
+Added Files:
+	coolimagedata.c 
+Log Message:
+some cool images
+
+Update of /home/cvs/aros/AROS/workbench/libs/asl
+In directory sebigbos:/var/tmp/cvs-serv30687
+
+Added Files:
+	coolimages.h 
+Log Message:
+cool images header
+
+Update of /home/cvs/aros/binaries/screenshots
+In directory sebigbos:/var/tmp/cvs-serv32307
+
+Modified Files:
+	index.html 
+Added Files:
+	quake1.jpg quake2.jpg quake3.jpg quake4.jpg 
+Log Message:
+Added Quake screenshots
+Update of /home/cvs/aros/CVSROOT
+In directory sebigbos:/var/tmp/cvs-serv32415
+
+Modified Files:
+	commitlog.awk 
+Log Message:
+Better code to determine the first name in the path
+Update of /home/cvs/aros/binaries/screenshots
+In directory sebigbos:/var/tmp/cvs-serv32443
+
+Modified Files:
+	index.html 
+Log Message:
+Added link to voxel demo
