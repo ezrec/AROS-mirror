@@ -1,0 +1,9 @@
+GNU ed is an 8-bit clean, POSIX-compliant line editor.
+Extensions to and deviations from the POSIX are described
+in the file `POSIX'.
+
+For a description of the ed algorithm, see Kernighan and Plauger's book
+"Software Tools in Pascal," Addison-Wesley, 1981.
+
+Bugs reports/suggestions for GNU ed are welcomed and may be sent
+to bug-gnu-utils@prep.ai.mit.edu.

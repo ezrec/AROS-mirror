@@ -1,0 +1,836 @@
+\input texinfo @c -*-texinfo-*-
+@c %**start of header
+@setfilename ed.info
+@settitle GNU @code{ed} reference manual
+@finalout
+@setchapternewpage odd
+@c %**end of header
+
+@ifinfo
+This file documents the @code{ed} command, which has the purpose of
+editing text files.
+
+Copyright (C) 1993 by the Free Software Foundation, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Foundation.
+@end ifinfo
+
+@titlepage
+@title GNU ed, version 0.2
+@subtitle A text editor
+@subtitle Edition 0.2, November 1994
+@author by Andrew Moore
+
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1993, 1994 Free Software Foundation, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Foundation.
+@end titlepage
+
+@ifinfo
+@node Top, Intro, (dir), (dir)
+@top
+
+This info file documents the @code{ed} text editor, as of release 0.2.
+You may find in this document:
+
+@end ifinfo
+
+@menu
+* Intro::                       An introduction to line editing with  @code{ed}
+* Invoking ed::                 GNU @code{ed} command-line options
+* Line addressing::             Specifying lines/ranges in the buffer
+* Regular expressions::         Patterns for selecting text
+* Commands::                    Commands recognized by GNU @code{ed}
+* Limitations::                 Intrinsic limits of GNU @code{ed}
+* Diagnostics::                 GNU @code{ed} error handling
+@end menu
+
+@node Intro, Invoking ed, Top, Top
+@chapter Intro
+
+@code{ed} is a line-oriented text editor.  It is used to create,
+display, modify and otherwise manipulate text files, both interactively
+and via shell scripts.  A restricted version of @code{ed}, @code{red},
+can only edit files in the current directory and cannot execute shell
+commands.  @code{ed} is the ``standard'' text editor in the sense that
+it is the original editor for Unix, and thus widely available.  For
+most purposes, however, it is superceded by full-screen editors such as
+Emacs and Vi.
+
+The sample sessions below illustrate some basic concepts of line editing
+with @code{ed}.  We begin by creating a file, @samp{sonnet}, with some
+help from Shakespeare.  As with the shell, all input to @code{ed} must
+be followed by a @key{newline} character.  Comments begin with a @samp{#}.
+
+@example
+$ ed
+# The `a' command is for appending text to the editor buffer.
+a
+No more be grieved at that which thou hast done.
+Roses have thorns, and filvers foutians mud.
+Clouds and eclipses stain both moon and sun,
+And loathsome canker lives in sweetest bud.
+.
+# Entering a single period on a line returns @code{ed} to command mode.
+# Now write the buffer to the file @samp{sonnet} and quit:
+w sonnet
+183
+# @code{ed} reports the number of characters written.
+q
+$ ls -l
+total 2
+-rw-rw-r--    1 alm           183 Nov 10 01:16 sonnet
+$
+@end example
+
+Editing with @code{ed} is done in two distinct
+modes: @dfn{command} and @dfn{input}.  When first invoked, @code{ed} is
+in command mode.  In this mode commands are read from the standard input
+and executed to manipulate the contents of the editor buffer.  When an
+input command, such as @samp{a} (append), @samp{i} (insert) or @samp{c}
+(change), is given, @code{ed} enters input mode.  This is the primary
+means of adding text to a file.  In this mode, no commands are
+available; instead, the standard input is written directly to the editor
+buffer. A @dfn{line} consists of the text up to and including a
+@key{newline} character.  Input mode is terminated by
+entering a single period (@samp{.}) on a line.
+
+In the next example, some typos are corrected in the file @samp{sonnet}.
+
+@example
+$ ed sonnet
+183
+# Begin by printing the buffer to the terminal with the @samp{p} command.
+# The `,' means ``all lines.''
+,p
+No more be grieved at that which thou hast done.
+Roses have thorns, and filvers foutians mud.
+Clouds and eclipses stain both moon and sun,
+And loathsome canker lives in sweetest bud.
+# Select line 2 for editing.
+2
+Roses have thorns, and filvers foutians mud.
+# Use the substitute command, @samp{s}, to replace `filvers' with `silver',
+# and print the result.
+s/filvers/silver/p
+Roses have thorns, and silver foutians mud.
+# And correct the spelling of `fountains'.
+s/utia/untai/p
+Roses have thorns, and silver fountains mud.
+w sonnet
+183
+q
+$
+@end example
+
+@code{ed} may be invoked with or without arguments @xref{Invoking ed}.  When
+invoked with a @var{file} argument, a copy of @var{file} is read into
+the editor's buffer.  Changes are made to this copy and not directly to
+@var{file} itself.  Upon quitting @code{ed}, any changes not explicitly
+saved with a @samp{w} command @xref{Commands} are lost.
+
+Since @code{ed} is line-oriented, we have to tell it which line, or
+range of lines we want to edit.  In the above example, we do this by
+specifying the line's number, or sequence in the buffer.  Alternatively,
+we could have specified a unique string in the line, e.g.,
+@samp{/filvers/}, where the @samp{/}s delimit the string in question.
+Subsequent commands affect only the selected line, a.k.a. the
+@dfn{current} line.  Portions of that line are then replaced with the
+substitute command, whose syntax is
+@samp{s/@var{old}/@var{new}/}.
+
+Although @code{ed} accepts only one command per line,
+the print command @samp{p} is an exception, and may be appended to the
+end of most commands.
+
+In the next example, a title is added to our sonnet.
+
+@example
+$ ed sonnet
+183
+a
+ Sonnet #50
+.
+,p
+No more be grieved at that which thou hast done.
+Roses have thorns, and silver fountains mud.
+Clouds and eclipses stain both moon and sun,
+And loathsome canker lives in sweetest bud.
+ Sonnet #50
+# The title got appended to the end; we should have used `0a'
+# to append ``before the first line.''
+# Move the title to its proper place.
+5m0p
+ Sonnet #50
+# The title is now the first line, and the current line has been
+# set to this line as well.
+,p
+ Sonnet #50
+No more be grieved at that which thou hast done.
+Roses have thorns, and silver fountains mud.
+Clouds and eclipses stain both moon and sun,
+And loathsome canker lives in sweetest bud.
+wq sonnet
+195
+$
+@end example
+
+When @code{ed} opens a file, the current line is initially set to the last
+line of that file.   Similarly, the move command @samp{m} sets the current
+line to the last line moved.
+
+In summary: All @code{ed} commands operate on whole lines or ranges of
+lines; e.g., the @samp{d} command deletes lines; the @samp{m} command
+moves lines, and so on.  It is possible to modify only a portion of a
+line by means of replacement, as in the second example above.  However even
+there, the @samp{s} command is applied to whole lines at a time.
+
+Structurally, @code{ed} commands consist of zero or more line addresses,
+followed by a single character command and possibly additional
+parameters; i.e., commands have the structure:
+
+@example
+[@var{address} [,@var{address}]]@var{command}[@var{parameters}]
+@end example
+
+The @var{address}(es) indicate the line or range of lines to be affected
+by the command.  If fewer addresses are given than the command accepts,
+then default addresses are supplied.
+
+Related programs or routines are @code{vi (1)}, @code{sed (1)},
+@code{regex (3)},  @code{sh (1)}.  Relevant documents
+are:
+
+@quotation
+Unix User's Manual Supplementary Documents: 12 --- 13
+@end quotation
+
+@quotation
+B. W. Kernighan and P. J. Plauger: ``Software Tools in Pascal'',
+Addison-Wesley, 1981.
+@end quotation
+
+@node Invoking ed, Line addressing, Intro, Top
+@chapter Invoking GNU @code{ed}
+
+@example
+ed [-] [-Gs] [-p @var{string}] [@var{file}]
+red [-] [-Gs] [-p @var{string}] [@var{file}]
+@end example
+
+@table @code
+
+@item -G
+Forces backwards compatibility.  This affects the behavior of the @code{ed}
+commands @samp{G}, @samp{V}, @samp{f}, @samp{l}, @samp{m}, @samp{t}
+and @samp{!!}.  If the default behavior of these commands does not seem
+familiar, then try invoking @code{ed} with this switch.
+
+@item -s
+@item -
+Suppresses diagnostics. This should be used if @code{ed}'s standard
+input is from a script.
+
+@item -p @var{string}
+Specifies a command prompt.  This may be toggled on and off with the
+@samp{P} command.
+
+@end table
+
+@var{file} specifies the name of a file to read.  If @var{file} is
+prefixed with a bang (!), then it is interpreted as a shell command.  In
+this case, what is read is the standard output of @var{file} executed
+via @code{sh (1)}.  To read a file whose name begins with a bang, prefix
+the name with a backslash (@kbd{\}).  The default filename is set to
+@var{file} only if it is not prefixed with a bang.
+
+@node Line addressing, Regular expressions, Invoking ed, Top
+@chapter Line addressing
+
+An address represents the number of a line in the buffer.  @code{ed}
+maintains a @dfn{current address} which is typically supplied to
+commands as the default address when none is specified.  When a file is
+first read, the current address is set to the last line of the file.  In
+general, the current address is set to the last line affected by a
+command.
+
+A line address is constructed from one of the bases in the list below,
+optionally followed by a numeric offset.  The offset may include any
+combination of digits, operators (i.e., @samp{+}, @samp{-} and @samp{^})
+and whitespace.  Addresses are read from left to right, and their values
+are computed relative to the current address.
+
+One exception to the rule that addresses represent line numbers is the
+address @samp{0} (zero).  This means ``before the first line,'' and is
+legal wherever it makes sense.
+
+An address range is two addresses separated either by a comma or
+semicolon. The value of the first address in a range cannot exceed the
+value of the the second.  If only one address is given in a range, then
+the second address is set to the given address.  If an @var{n}-tuple of
+addresses is given where @var{n} > 2, then the corresponding range is
+determined by the last two addresses in the @var{n}-tuple.  If only one
+address is expected, then the last address is used.
+
+Each address in a comma-delimited range is interpreted relative to the
+current address.  In a semicolon-delimited range, the first address is
+used to set the current address, and the second address is interpreted
+relative to the first.
+
+The following address symbols are recognized.
+
+@table @code
+
+@item .
+The current line (address) in the buffer.
+
+@item $
+The last line in the buffer.
+
+@item @var{n}
+The @var{n}th, line in the buffer where @var{n} is a number in the range
+@samp{0,$}.
+
+@item -
+@itemx ^
+The previous line.  This is equivalent to @samp{-1} and may be repeated
+with cumulative effect.
+
+@item -@var{n}
+@itemx ^@var{n}
+The @var{n}th previous line, where @var{n} is a non-negative number.
+
+@item +
+The next line.  This is equivalent to @samp{+1} and may be repeated with
+cumulative effect.
+
+@item +@var{n}
+@itemx @var{whitespace} @var{n}
+The @var{n}th next line, where @var{n} is a non-negative number.
+Whitespace followed by a number @var{n} is interpreted as
+@samp{+@var{n}}.
+
+@item ,
+@itemx %
+The first through last lines in the buffer.  This is equivalent to the
+address range @samp{1,$}.
+
+@item ;
+The current through last lines in the buffer.  This is equivalent to the
+address range @samp{.,$}.
+
+@item /@var{re}/
+The next line containing the regular expression @var{re}.  The search
+wraps to the beginning of the buffer and continues down to the current
+line, if necessary.  @samp{//} repeats the last search.
+
+@item ?@var{re}?
+The previous line containing the regular expression @var{re}.  The
+search wraps to the end of the buffer and continues up to the current
+line, if necessary.  @samp{??} repeats the last search.
+
+@item '@var{lc}
+The line previously marked by a @samp{k} (mark) command, where @var{lc}
+is a lower case letter.
+
+@end table
+
+@node Regular expressions, Commands, Line addressing, Top
+@chapter Regular expressions
+
+Regular expressions are patterns used in selecting text.  For example,
+the @code{ed} command
+
+@example
+g/@var{string}/
+@end example
+
+@noindent
+prints all lines containing @var{string}.  Regular expressions are also
+used by the @samp{s} command for selecting old text to be replaced with
+new.
+
+In addition to a specifying string literals, regular expressions can
+represent classes of strings.  Strings thus represented are said to be
+matched by the corresponding regular expression.  If it is possible for
+a regular expression to match several strings in a line, then the
+left-most longest match is the one selected.
+
+The following symbols are used in constructing regular expressions:
+
+@table @code
+
+@item @var{c}
+Any character @var{c} not listed below, including @samp{@{}, @samp{@}},
+@samp{(}, @samp{)}, @samp{<} and @samp{>}, matches itself.
+
+@item \@var{c}
+Any backslash-escaped character @var{c}, other than @samp{@{},
+`@samp{@}}, @samp{(}, @samp{)}, @samp{<}, @samp{>}, @samp{b}, @samp{B},
+@samp{w}, @samp{W}, @samp{+} and @samp{?}, matches itself.
+
+@item .
+Matches any single character.
+
+@item [@var{char-class}]
+Matches any single character in @var{char-class}.  To include a @samp{]}
+in @var{char-class}, it must be the first character.  A range of
+characters may be specified by separating the end characters of the
+range with a @samp{-}, e.g., @samp{a-z} specifies the lower case
+characters.  The following literal expressions can also be used in
+@var{char-class} to specify sets of characters:
+
+@example
+[:alnum:] [:cntrl:] [:lower:] [:space:]
+[:alpha:] [:digit:] [:print:] [:upper:]
+[:blank:] [:graph:] [:punct:] [:xdigit:]
+@end example
+
+If @samp{-} appears as the first or last character of @var{char-class},
+then it matches itself.  All other characters in @var{char-class} match
+themselves.
+
+Patterns in
+@var{char-class}
+of the form:
+@example
+[.@var{col-elm}.]
+[=@var{col-elm}=]
+@end example
+
+@noindent
+where @var{col-elm} is a @dfn{collating element} are interpreted
+according to @code{locale (5)} (not currently supported).  See
+@code{regex (3)} for an explanation of these constructs.
+
+@item [^@var{char-class}]
+Matches any single character, other than newline, not in
+@var{char-class}.  @var{char-class} is defined as above.
+
+@item ^
+If @samp{^} is the first character of a regular expression, then it
+anchors the regular expression to the beginning of a line.  Otherwise,
+it matches itself.
+
+@item $
+If @samp{$} is the last character of a regular expression, it anchors
+the regular expression to the end of a line.  Otherwise, it matches
+itself.
+
+@item \(@var{re}\)
+Defines a (possibly null) subexpression @var{re}.
+Subexpressions may be nested.  A
+subsequent backreference of the form @samp{\@var{n}}, where @var{n} is a
+number in the range [1,9], expands to the text matched by the @var{n}th
+subexpression. For example, the regular expression @samp{\(a.c\)\1} matches
+the string @samp{abcabc}, but not @samp{abcadc}.
+Subexpressions are ordered relative to their left delimiter.
+
+@item *
+Matches the single character regular expression or subexpression
+immediately preceding it zero or more times.  If @samp{*} is the first
+character of a regular expression or subexpression, then it matches
+itself.  The @samp{*} operator sometimes yields unexpected results.  For
+example, the regular expression @samp{b*} matches the beginning of the
+string @samp{abbb}, as opposed to the substring @samp{bbb}, since a
+null match is the only left-most match.
+
+@item \@{@var{n,m}\@}
+@itemx \@{@var{n,}\@}
+@itemx \@{@var{n}\@}
+Matches the single character regular expression or subexpression
+immediately preceding it at least @var{n} and at most @var{m} times.  If
+@var{m} is omitted, then it matches at least @var{n} times.  If the
+comma is also omitted, then it matches exactly @var{n} times.
+If any of these forms occurs first in a regular expression or subexpression,
+then it is interpreted literally (i.e., the regular expression @samp{\@{2\@}}
+matches the string @samp{@{2@}}, and so on).
+
+@item \<
+@itemx \>
+Anchors the single character regular expression or subexpression
+immediately following it to the beginning (in the case of @samp{\<})
+or ending (in the case of @samp{\>}) of
+a @dfn{word}, i.e., in ASCII, a maximal string of alphanumeric characters,
+including the underscore (_).
+
+@end table
+
+The following extended operators are preceded by a backslash @samp{\} to
+distinguish them from traditional @code{ed} syntax.
+
+@table @code
+
+@item  \`
+@itemx \'
+Unconditionally matches the beginning @samp{\`} or ending @samp{\'} of a line.
+
+@item \?
+Optionally matches the single character regular expression or subexpression
+immediately preceding it.  For example, the regular expression @samp{a[bd]\?c}
+matches the strings @samp{abc}, @samp{adc} and @samp{ac}.
+If @samp{\?} occurs at the beginning
+of a regular expressions or subexpression, then it matches a literal @samp{?}.
+
+@item \+
+Matches the single character regular expression or subexpression
+immediately preceding it one or more times.  So the regular expression
+@samp{a+} is shorthand for @samp{aa*}.  If @samp{\+} occurs at the
+beginning of a regular expression or subexpression, then it matches a
+literal @samp{+}.
+
+@item \b
+Matches the beginning or ending (null string) of a word.  Thus the regular
+expression @samp{\bhello\b} is equivalent to @samp{\<hello\>}.
+However, @samp{\b\b}
+is a valid regular expression whereas @samp{\<\>} is not.
+
+@item \B
+Matches (a null string) inside a word.
+
+@item \w
+Matches any character in a word.
+
+@item \W
+Matches any character not in a word.
+
+@end table
+
+@node Commands, Limitations, Regular expressions, Top
+@chapter Commands
+
+All @code{ed} commands are single characters, though some require
+additonal parameters.  If a command's parameters extend over several
+lines, then each line except for the last must be terminated with a
+backslash (@samp{\}).
+
+In general, at most one command is allowed per line.  However, most
+commands accept a print suffix, which is any of @samp{p} (print),
+@samp{l} (list), or @samp{n} (enumerate), to print the last line
+affected by the command.
+
+An interrupt (typically @key{^C}) has the effect of aborting the current
+command and returning the editor to command mode.
+
+@code{ed} recognizes the following commands.  The commands are shown
+together with the default address or address range supplied if none is
+specified (in parenthesis).
+
+@table @code
+
+@item (.)a
+Appends text to the buffer after the addressed line, which may be the address
+@samp{0} (zero).  Text is entered in
+input mode.  The current address is set to last line entered.
+
+@item (.,.)c
+Changes lines in the buffer.  The addressed lines are deleted from the
+buffer, and text is appended in their place.  Text is entered in input
+mode.  The current address is set to last line entered.
+
+@item (.,.)d
+Deletes the addressed lines from the buffer.  If there is a line after
+the deleted range, then the current address is set to this line.
+Otherwise the current address is set to the line before the deleted
+range.
+
+@item e @var{file}
+Edits @var{file}, and sets the default filename.  If @var{file} is not
+specified, then the default filename is used.  Any lines in the buffer
+are deleted before the new file is read.  The current address is set to
+the last line read.
+
+@item e !@var{command}
+Edits the standard output of @samp{!@var{command}}, (see the @samp{!}
+command below).  The default filename is unchanged.  Any lines in the
+buffer are deleted before the output of @var{command} is read.  The
+current address is set to the last line read.
+
+@item E @var{file}
+Edits @var{file} unconditionally.  This is similar to the @samp{e}
+command, except that unwritten changes are discarded without warning.
+The current address is set to the last line read.
+
+@item f @var{file}
+Sets the default filename to @var{file}.  If @var{file} is not
+specified, then the default unescaped filename is printed.
+
+@item (1,$)g /@var{re}/@var{command-list}
+Applies @var{command-list} to each of the addressed lines matching a
+regular expression @var{re}.  The current address is set to the line
+currently matched before @var{command-list} is executed.  At the end of
+the @samp{g} command, the current address is set to the last line
+affected by @var{command-list}.
+
+Each command in @var{command-list} must be on a separate line, and every
+line except for the last must be terminated by a backslash (@samp{\}).
+Any commands are allowed, except for @samp{g}, @samp{G}, @samp{v}, and
+@samp{V}.  By default, a newline alone in @var{command-list} is
+equivalent to a @samp{p} command.  If @code{ed} is invoked with the
+command-line option @samp{-G}, then a newline in @var{command-list}
+is equivalent to a @samp{.+1p} command.
+
+@item (1,$)G /@var{re}/
+Interactively edits the addressed lines matching a regular expression
+@var{re}.  For each matching line, the line is printed, the current
+address is set, and the user is prompted to enter a @var{command-list}.
+At the end of the @samp{G} command, the current address is set to the
+last line affected by (the last) @var{command-list}.
+
+The format of @var{command-list} is the same as that of the @samp{g}
+command.  A newline alone acts as a null command list.  A single
+@samp{&} repeats the last non-null command list.
+
+@item H
+Toggles the printing of error explanations.  By default, explanations
+are not printed.  It is recommended that ed scripts begin with this
+command to aid in debugging.
+
+@item h
+Prints an explanation of the last error.
+
+@item (.)i
+Inserts text in the buffer before the current line.  Text is entered in
+input mode.  The current address is set to the last line entered.
+
+@item (.,.+1)j
+Joins the addressed lines.  The addressed lines are deleted from the
+buffer and replaced by a single line containing their joined text.  The
+current address is set to the resultant line.
+
+@item (.)k @var{lc}
+Marks a line with a lower case letter @var{lc}.  The line can then be
+addressed as @samp{'@var{lc}} (i.e., a single quote followed by
+@var{lc}) in subsequent commands.  The mark is not cleared until the
+line is deleted or otherwise modified.
+
+@item (.,.)l
+Prints the addressed lines unambiguously.  If invoked from a terminal,
+@code{ed} pauses at the end of each page until a @key{newline} is entered.
+The current address is set to the last line printed.
+
+@item (.,.)m(.)
+Moves lines in the buffer.  The addressed lines are moved to after the
+right-hand destination address, which may be the address @samp{0}
+(zero).  The current address is set to the last line moved.
+
+@item (.,.)n
+Prints the addressed lines along with their line numbers.  The current
+address is set to the last line printed.
+
+@item (.,.)p
+Prints the addressed lines.  If invoked from a terminal, @code{ed} pauses
+at the end of each page until a @key{newline} is entered.
+The current address is set to the last line
+printed.
+
+@item P
+Toggles the command prompt on and off.  Unless a prompt is specified
+with command-line option @samp{-p @var{string}}, the command prompt is
+by default turned off.
+
+@item q
+Quits @code{ed}.
+
+@item Q
+Quits @code{ed} unconditionally.  This is similar to the @code{q}
+command, except that unwritten changes are discarded without warning.
+
+@item ($)r @var{file}
+Reads @var{file} to after the addressed line.  If @var{file} is not
+specified, then the default filename is used.  If there is no default
+filename prior to the command, then the default filename is set to
+@var{file}.  Otherwise, the default filename is unchanged.  The current
+address is set to the last line read.
+
+@item ($)r !@var{command}
+Reads to after the addressed line the standard output of
+@samp{!command}, (see the @samp{!} command below).  The default filename
+is unchanged.  The current address is set to the last line read.
+
+@item (.,.)s /@var{re}/@var{replacement}/
+@itemx (.,.)s /@var{re}/@var{replacement}/g
+@itemx (.,.)s /@var{re}/@var{replacement}/n
+Replaces text in the addressed lines matching a regular expression
+@var{re} with @var{replacement}.  By default, only the first match in
+each line is replaced.  If the @samp{g} (global) suffix is given, then
+every match to be replaced.  The @samp{n} suffix, where @var{n} is a
+postive number, causes only the @var{n}th match to be replaced.  It is
+an error if no substitutions are performed on any of the addressed
+lines.  The current address is set the last line affected.
+
+@var{re} and @var{replacement} may be delimited by any character other
+than @key{space} and @key{newline} (see the @samp{s} command below).  If
+one or two of the last delimiters is omitted, then the last line
+affected is printed as though the print suffix @samp{p} were specified.
+
+An unescaped @samp{&} in @var{replacement} is replaced by the currently
+matched text.  The character sequence @samp{\@var{m}} where @var{m} is a
+number in the range [1,9], is replaced by the @var{m}th backreference
+expression of the matched text.  If @var{replacement} consists of a
+single @samp{%}, then @var{replacement} from the last substitution is
+used.  Newlines may be embedded in @var{replacement} if they are escaped
+with a backslash (@samp{\}).
+
+@item (.,.)s
+Repeats the last substitution.  This form of the @samp{s} command
+accepts a count suffix @var{n}, or any combination of the characters
+@samp{r}, @samp{g}, and @samp{p}.  If a count suffix @var{n} is given,
+then only the @var{n}th match is replaced.  The @samp{r} suffix causes
+the regular expression of the last search to be used instead of the that
+of the last substitution.  The @samp{g} suffix toggles the global suffix
+of the last substitution.  The @samp{p} suffix toggles the print suffix
+of the last substitution The current address is set to the last line
+affected.
+
+@item (.,.)t(.)
+Copies (i.e., transfers) the addressed lines to after the right-hand
+destination address, which may be the address @samp{0} (zero).  The
+current address is set to the last line copied.
+
+@item u
+Undoes the last command and restores the current address to what it was
+before the command.  The global commands @samp{g}, @samp{G}, @samp{v},
+and @samp{V} are treated as a single command by undo.  @samp{u} is its
+own inverse.
+
+@item (1,$)v /@var{re}/@var{command-list}
+Applies @var{command-list} to each of the addressed lines not matching a
+regular expression @var{re}.  This is similar to the @samp{g} command.
+
+@item (1,$)V /@var{re}/
+Interactively edits the addressed lines not matching a regular
+expression @var{re}.  This is similar to the @samp{G} command.
+
+@item (1,$)w @var{file}
+Writes the addressed lines to @var{file}.  Any previous contents of
+@var{file} is lost without warning.  If there is no default filename,
+then the default filename is set to @var{file}, otherwise it is
+unchanged.  If no filename is specified, then the default filename is
+used.  The current address is unchanged.
+
+@item (1,$)wq @var{file}
+Writes the addressed lines to @var{file}, and then executes a @samp{q}
+command.
+
+@item (1,$)w !@var{command}
+Writes the addressed lines to the standard input of
+@samp{!@var{command}}, (see the @samp{!} command below).  The default
+filename and current address are unchanged.
+
+@item (1,$)W @var{file}
+Appends the addressed lines to the end of @var{file}.  This is similar
+to the @samp{w} command, expect that the previous contents of file is
+not clobbered.  The current address is unchanged.
+
+
+@item (.)x
+Copies (puts) the contents of the cut buffer to after the addressed line.
+The current address is set to the last line copied.
+
+@item (.,.)y
+Copies (yanks) the addressed lines to the cut buffer.
+The cut buffer is overwritten by subsequent
+@samp{y}, @samp{s}, @samp{j}, @samp{d}, or @samp{c} commands.
+The current address is unchanged.
+
+@item (.+1)z @var{n}
+Scrolls @var{n} lines at a time starting at addressed line.  If @var{n}
+is not specified, then the current window size is used.  The current
+address is set to the last line printed.
+
+@item ! @var{command}
+Executes @var{command} via @code{sh (1)}.  If the first character of
+@var{command} is @samp{!}, then it is replaced by text of the previous
+@samp{!@var{command}}.  @code{ed} does not process @var{command} for
+backslash (@samp{\}) escapes.  However, an unescaped @samp{%} is
+replaced by the default filename.  When the shell returns from
+execution, a @samp{!} is printed to the standard output.  The current
+line is unchanged.
+
+@item (.,.)#
+Begins a comment;  the rest of the line, up to a newline, is ignored.
+If a line address followed by a semicolon is given, then the
+current address is set to that address.  Otherwise, the current address
+is unchanged.
+
+@item ($)=
+Prints the line number of the addressed line.
+
+@item (.+1)@key{newline}
+Prints the addressed line, and sets the current address to that line.
+
+@end table
+
+@node Limitations, Diagnostics, Commands, Top
+@chapter Limitations
+
+The buffer files are kept in @file{/tmp/ed.*}.  If the terminal hangs
+up, @code{ed} attempts to write the buffer to file @file{ed.hup}.
+
+@code{ed} processes @var{file} arguments for backslash escapes, i.e., in
+a filename, any characters preceded by a backslash (@samp{\}) are
+interpreted literally.
+
+If a text (non-binary) file is not terminated by a newline character,
+then @code{ed} appends one on reading/writing it.  In the case of a
+binary file, @code{ed} does not append a newline on reading/writing.
+
+Per line overhead: 4 @code{int}s.
+
+@node Diagnostics,  , Limitations, Top
+@chapter Diagnostics
+
+When an error occurs,
+if @code{ed}'s input is from a regular file or here document, then it
+exits, otherwise it prints a @samp{?} and returns to
+command mode.  An explanation of
+the last error can be printed with the @samp{h} (help) command.
+
+@noindent
+If the @samp{u}
+(undo) command occurs in a global command list, then the command list is
+executed only once.
+
+Attempting to quit @code{ed} or edit
+another file before writing a modified buffer results in an error.  If
+the command is entered a second time, it succeeds, but any changes to
+the buffer are lost.
+
+@code{ed} exits with 0 if no errors occurred; otherwise >0.
+
+@contents
+@bye
