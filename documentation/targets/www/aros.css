@@ -1,209 +1,36 @@
-h1
-{
-    margin:             10px -15px 10px -15px;
-    padding:            2px   13px 2px   13px;
-    border:             thin solid black;
-    background:         #ccf;
-}
+@import url(docutils.css);
 
-h2
-{
-    border:             thin dotted black;
-    background:         #bbb;
-    padding:            2px  2px 2px  2px;
-    margin:             0px -2px 0px -2px;
-}
+h1 {
+    margin:             10px -15px 10px -15px ;
+    padding:            2px   13px 2px   13px ;
+    border:             thin solid black      ;
+    background:         #ccccff               }
 
-/* FIXME: Don't forget to remove these when the site goes public... */
-/* a.done   { background: green; } */
-/* a.almost { background: yellow; } */
-/* a.nope   { background: red; } */
+h1.title {
+    text-align: left ;
+    background: #9999ff }
 
-a.target {
-  color: blue }
-
-a.toc-backref {
-  text-decoration: none ;
-  color: black }
-
-dd {
-  margin-bottom: 0.5em }
-
-div.abstract {
-  margin: 2em 5em }
-
-div.abstract p.topic-title {
-  font-weight: bold ;
-  text-align: center }
-
-div.attention, div.caution, div.danger, div.error, div.hint,
-div.important, div.note, div.tip, div.warning {
-  margin: 2em ;
-  border: medium outset ;
-  padding: 1em }
-
-div.attention p.admonition-title, div.caution p.admonition-title,
-div.danger p.admonition-title, div.error p.admonition-title,
-div.warning p.admonition-title {
-  color: red ;
-  font-weight: bold ;
-  font-family: sans-serif }
-
-div.hint p.admonition-title, div.important p.admonition-title,
-div.note p.admonition-title, div.tip p.admonition-title {
-  font-weight: bold ;
-  font-family: sans-serif }
-
-div.dedication {
-  margin: 2em 5em ;
-  text-align: center ;
-  font-style: italic }
-
-div.dedication p.topic-title {
-  font-weight: bold ;
-  font-style: normal }
-
-div.figure {
-  margin-left: 2em }
-
-div.footer, div.header {
-  font-size: smaller }
-
-div.system-messages {
-  margin: 5em }
-
-div.system-messages h1 {
-  color: red }
-
-div.system-message {
-  border: medium outset ;
-  padding: 1em }
-
-div.system-message p.system-message-title {
-  color: red ;
-  font-weight: bold }
-
-div.topic {
-  margin: 2em }
-
-h1.title 
-{
-    text-align: left;
-    background: #99f;
-}
-
-h2.subtitle {
-  text-align: center }
-
-hr {
-  width: 75% }
-
-ol.simple, ul.simple {
-  margin-bottom: 1em }
-
-ol.arabic {
-  list-style: decimal }
-
-ol.loweralpha {
-  list-style: lower-alpha }
-
-ol.upperalpha {
-  list-style: upper-alpha }
-
-ol.lowerroman {
-  list-style: lower-roman }
-
-ol.upperroman {
-  list-style: upper-roman }
-
-p.caption {
-  font-style: italic }
-
-p.credits {
-  font-style: italic ;
-  font-size: smaller }
-
-p.first {
-  margin-top: 0 }
-
-p.label {
-  white-space: nowrap }
-
-p.topic-title {
-  font-weight: bold }
-
-pre.address {
-  margin-bottom: 0 ;
-  margin-top: 0 ;
-  font-family: serif ;
-  font-size: 100% }
-
-pre.line-block {
-  font-family: serif ;
-  font-size: 100% }
+h2 {
+    border:             thin dotted black ;
+    background:         #bbbbbb           ;
+    padding:            2px  2px 2px  2px ;
+    margin:             0px -2px 0px -2px }
 
 pre.literal-block, pre.doctest-block {
-  margin-left: 2em ;
-  margin-right: 2em ;
-  background-color: #cccccc }
-
-span.classifier {
-  font-family: sans-serif ;
-  font-style: oblique }
-
-span.classifier-delimiter {
-  font-family: sans-serif ;
-  font-weight: bold }
-
-span.interpreted {
-  font-family: sans-serif }
-
-span.option-argument {
-  font-style: italic }
-
-span.pre {
-  white-space: pre }
-
-span.problematic {
-  color: red }
-
-/*
-table {
-  margin-top: 0.5em ;
-  margin-bottom: 0.5em }
-*/
-
-table.citation {
-  border-left: solid thin gray ;
-  padding-left: 0.5ex }
-
-table.docinfo {
-  margin: 2em 4em }
-
-table.footnote {
-  border-left: solid thin black ;
-  padding-left: 0.5ex }
-
-/*
-td, th {
-  padding-left: 0.5em ;
-  padding-right: 0.5em ;
-  vertical-align: top }
-*/
-
-td > p:first-child, th > p:first-child {
-  margin-top: 0em }
-
-th.docinfo-name, th.field-name {
-  font-weight: bold ;
-  text-align: left ;
-  white-space: nowrap }
-
-h1 tt, h2 tt, h3 tt, h4 tt, h5 tt, h6 tt {
-  font-size: 100% }
+    background-color: #cccccc }
 
 tt {
-  background-color: #eeeeee }
+    background-color: #cccccc }
 
-ul.auto-toc {
-  list-style-type: none }
+
+/* FIXME: This breakes "inline" tables too. Layout tables should perhaps
+   have class = "layout"? */
+   
+td, th {
+  padding-left: 0.0em  ;
+  padding-right: 0.0em ;
+  vertical-align: top  }
+
+table {
+  margin-top: 0.0em    ;
+  margin-bottom: 0.0em }
