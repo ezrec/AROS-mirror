@@ -5,7 +5,8 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-mesa2-demos : contrib-mesa2-common setup-mesa2-demosfiles
+#MM contrib-mesa2-demos : contrib-mesa2-common setup-mesa2-demos
+#MM setup-mesa2-demos : setup
 
 MESADEMOSFILES := isosurf.dat 
 
@@ -26,8 +27,7 @@ USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
     targetdir=$(CONTRIBDIR)/Gfx/Mesa2/Demos \
     uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
 
-#MM
-setup-mesa2-demosfiles :
-	%copy_files_q files="$(MESADEMOSFILES)" src=$(CURDIR) dst=$(CONTRIBDIR)/Gfx/Mesa2/Demos
+setup-mesa2-demos : files-copy
+%copy_files_q files="$(MESADEMOSFILES)" dst=$(CONTRIBDIR)/Gfx/Mesa2/Demos
 
 %common
