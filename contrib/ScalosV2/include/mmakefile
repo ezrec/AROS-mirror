@@ -1,0 +1,35 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+INCSUBDIRS := \
+	clib \
+	guigfx \
+	pragma \
+	pragmas \
+	proto \
+	render \
+	scalos
+
+INCLUDES      := $(foreach d,$(INCSUBDIRS),$(wildcard $(d)/*.h))
+DEST_INCLUDES := $(foreach f,$(INCLUDES),$(INCDIR)/$(f))
+
+#MM includes-scalos : setup-includes-scalos
+includes-scalos : $(DEST_INCLUDES)
+	@$(NOP)
+
+$(INCDIR)/%.h : %.h
+	$(CP) $< $@
+
+#MM
+setup-includes-scalos :
+	@$(FOR) dir in $(INCDIR)         \
+		$(foreach f,$(INCSUBDIRS),$(INCDIR)/$(f)) \
+		$(GENINCDIR) \
+		$(foreach f,$(INCSUBDIRS),$(GENINCDIR)/$(f)) \
+	; do \
+	   $(IF) $(TEST) ! -d "$$dir" ; then $(MKDIR) "$$dir" ; else true ; fi ;\
+	done
+
+#MM
+clean :
+	-$(RM) $(DEST_INCLUDES)
