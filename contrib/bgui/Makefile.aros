@@ -330,7 +330,7 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 	      o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
 	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
 	      o/plgroupclasses$(o) o/endtag.o \
-	      -static -i -L$(LIBDIR) -lamiga -larosc -larosm -o $@
+	      -static -i -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -o $@
 	@$(ECHO) Installing bgui.library...
 	@$(CP) $@ $(AROSLIBDIR)/bgui.library
 
