@@ -89,7 +89,7 @@ void quit()
 	if (WorkbenchBase) CloseLibrary(WorkbenchBase);
 	if (CxBase) CloseLibrary(CxBase);
 	if (RexxSysBase) CloseLibrary(RexxSysBase);
-	if (UtilityBase) CloseLibrary(UtilityBase);
+	if (UtilityBase) CloseLibrary((struct Library *)UtilityBase);
 	if (AccountsBase) {
 #warning We do not have this library
 #if 0	

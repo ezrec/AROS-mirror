@@ -116,7 +116,7 @@ char *argv[];
 	WorkbenchBase=OpenLibrary("workbench.library",37);
 	CxBase=OpenLibrary("commodities.library",37);
 	RexxSysBase=OpenLibrary("rexxsyslib.library",0);
-	UtilityBase=OpenLibrary("utility.library",37);
+	UtilityBase=(struct UtilityBase *)OpenLibrary("utility.library",37);
 
 	AccountsBase=NULL;
 

@@ -933,7 +933,7 @@ int new;
 					case IDCMP_GADGETUP:
 						switch (gadgetid) {
 							case CLASS_OKAY:
-								makeclassrecog(fclass,classlist,classtype);
+								makeclassrecog(fclass,(unsigned char **)classlist,classtype);
 								strcpy(fclass->type,edit_namebuf);
 								strcpy(fclass->typeid,edit_typeidbuf);
 							case CLASS_CANCEL:
