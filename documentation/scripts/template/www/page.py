@@ -90,6 +90,17 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 ( 
                     A
                     ( 
+                        Img( src = '%(ROOT)simages/genesi-small.gif', border = 0 ), 
+                        href = 'http://www.genesi.lu/' 
+                    )
+                )
+            ),
+            TR
+            ( 
+                TD
+                ( 
+                    A
+                    ( 
                         Img( src = '%(ROOT)simages/trustec-small.png', border = 0 ), 
                         href = 'http://www.trustsec.de/' 
                     )

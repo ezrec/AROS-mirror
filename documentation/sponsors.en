@@ -7,24 +7,28 @@ Sponsors
 :Date:      $Date$
 :Status:    Done.
 
++ Genesi__
 
-+ Trustsec__
+  Genesi have generously donated a Pegasos motherboard, in an effort to bring
+  AROS to that hardware platform. Thanks!
+
++ Trustec__
    
   .. Image:: images/trustec.png
     
-  The nice people at Trustec donate space and bandwidth for the AROS webserver,
-  CVS server, FTP server and several mailing lists. If you need Java development
-  or courses in Germany, contact them!
+  The nice people at Trustec donate space and bandwidth for the AROS 
+  webserver, CVS server, FTP server and several mailing lists. If you need 
+  Java development or courses in Germany, contact them!
 
 + SourceForge__
 
   .. Image:: images/sourceforge.png
 
-  SourceForge provides us with several services like a web server with scripting
-  extensions and SQL database, mailing lists, bug database and distributed file
-  release system.  
+  SourceForge provides us with several services like a web server with 
+  scripting extensions and SQL database, mailing lists, bug database and 
+  distributed file release system.  
 
 
+__ http://www.genesi.lu/
 __ http://www.trustsec.de/
 __ http://www.sourceforge.net/
-
