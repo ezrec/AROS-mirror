@@ -13,6 +13,18 @@
 #include "Global.h"
 #endif
 
+#ifdef __AROS__
+#include <aros/asmcall.h>
+#ifdef Dispatch
+#undef Dispatch
+#endif
+AROS_UFP3(STATIC ULONG, Dispatch,
+ AROS_UFPA(Class *        , class , A0),
+ AROS_UFPA(Object *       , obj, A2),
+ AROS_UFPA(Msg            , msg, A1));
+#endif
+
+
 #define MIA_CellWidth	(TAG_USER+0x70000)
 #define MIA_CellHeight	(TAG_USER+0x70001)
 #define MIA_Width		(TAG_USER+0x70002)
@@ -542,8 +554,15 @@ HitTestMethod(Class *class,Object *object,struct gpHitTest *HitInfo)
 		return(0);
 }
 
+#ifndef __AROS__
 STATIC ULONG SAVE_DS ASM
 Dispatch(REG(a0) Class *class,REG(a2) Object *object,REG(a1) Msg msg)
+#else
+AROS_UFH3(STATIC ULONG, Dispatch,
+ AROS_UFHA(Class *        , class , A0),
+ AROS_UFHA(Object *       , object, A2),
+ AROS_UFHA(Msg            , msg, A1))
+#endif
 {
 	switch(msg->MethodID)
 	{

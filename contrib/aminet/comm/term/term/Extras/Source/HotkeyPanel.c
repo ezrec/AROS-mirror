@@ -40,8 +40,15 @@ GoodCode(STRPTR Code)
 	 *	combination input.
 	 */
 
+#ifndef __AROS__
 STATIC ULONG SAVE_DS ASM
 EditRoutine(REG(a0) struct Hook *UnusedHook,REG(a2) struct SGWork *Work,REG(a1) Msg msg)
+#else
+AROS_UFH3(STATIC ULONG, EditRoutine,
+ AROS_UFHA(struct Hook *      , UnusedHook, A0),
+ AROS_UFHA(struct SGWork *    , Work      , A2),
+ AROS_UFHA(Msg                , msg       , A1))
+#endif
 {
 		/* ANSI key codes. */
 

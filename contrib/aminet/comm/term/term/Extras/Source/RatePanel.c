@@ -86,8 +86,15 @@ String2Rate(STRPTR String)
 	return(Lead * 10000 + Follow);
 }
 
+#ifndef __AROS__
 STATIC ULONG SAVE_DS ASM
 RateEditRoutine(REG(a0) struct Hook *UnusedHook,REG(a2) struct SGWork *Work,REG(a1) Msg msg)
+#else
+AROS_UFH3(STATIC ULONG, RateEditRoutine,
+ AROS_UFHA(struct Hook *  , UnusedHook, A0),
+ AROS_UFHA(struct SGWork *, Work, A2),
+ AROS_UFHA(Msg            , msg, A1))
+#endif
 {
 	switch(msg->MethodID)
 	{
@@ -166,8 +173,15 @@ RateEditRoutine(REG(a0) struct Hook *UnusedHook,REG(a2) struct SGWork *Work,REG(
 	 *	the single listview entries.
 	 */
 
+#ifndef __AROS__
 STATIC ULONG SAVE_DS ASM
 RateListViewRender(REG(a0) struct Hook *Hook,REG(a2) struct Node *Node,REG(a1) struct LVDrawMsg *Msg)
+#else
+AROS_UFH3(STATIC ULONG, RateListViewRender,
+ AROS_UFHA(struct Hook *     , Hook, A0),
+ AROS_UFHA(struct Node *     , Node, A2),
+ AROS_UFHA(struct LVDrawMsg *, Msg , A1))
+#endif
 {
 		/* We only know how to redraw lines. */
 

@@ -679,8 +679,15 @@ CreateEditorHandle(PhoneListContext *Context,BOOL Activate)
 	 *	the single listview entries.
 	 */
 
+#ifndef __AROS__
 STATIC ULONG SAVE_DS ASM
 PhoneListViewRender(REG(a0) struct Hook *Hook,REG(a2) struct PhoneNode *Node,REG(a1) struct LVDrawMsg *Msg)
+#else
+AROS_UFH3(STATIC ULONG, PhoneListViewRender,
+ AROS_UFHA(struct Hook *        , Hook , A0),
+ AROS_UFHA(struct PhoneNode *   , Node, A2),
+ AROS_UFHA(struct LVDrawMsg *   , Msg, A1))
+#endif
 {
 		/* We only know how to redraw lines. */
 

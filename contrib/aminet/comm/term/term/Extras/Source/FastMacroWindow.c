@@ -904,8 +904,15 @@ HandleInputMethod(Class *class,struct Gadget *gadget,struct gpInput *msg)
 	return(GMR_MEACTIVE);
 }
 
+#ifdef __AROS__
 STATIC ULONG ASM SAVE_DS
 ClassDispatcher(REG(a0) Class *class,REG(a2) struct Gadget *gadget,REG(a1) Msg msg)
+#else
+AROS_UFH3(STATIC ULONG, ClassDispatch,
+ AROS_UFHA(Class *        , class , A0),
+ AROS_UFHA(struct Gadget *, gadget, A2),
+ AROS_UFHA(Msg            , msg, A1))
+#endif
 {
 	switch(msg->MethodID)
 	{

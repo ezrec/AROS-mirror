@@ -16,8 +16,15 @@
 STATIC BOOL	StatusChanged		= FALSE;
 STATIC LONG	TransferInfoCount	= 0;
 
+#ifndef __AROS__
 STATIC ULONG SAVE_DS ASM
 TransferListViewRender(REG(a0) struct Hook *UnusedHook,REG(a2) struct Node *Node,REG(a1) struct LVDrawMsg *Msg)
+#else
+AROS_UFH3(STATIC ULONG, TransferListViewRender,
+ AROS_UFHA(struct Hook *       , UnusedHook , A0),
+ AROS_UFHA(struct Node *       , Node, A2),
+ AROS_UFHA(struct LVDrawMsg *  , Msg, A1))
+#endif
 {
 		/* We only know how to redraw lines. */
 

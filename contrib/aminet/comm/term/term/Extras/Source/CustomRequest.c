@@ -77,8 +77,14 @@ CentreWindow(struct Screen *Screen,WORD Width,WORD Height,WORD *Left,WORD *Top)
 	*Top	= ScreenTop + (ScreenHeight - Height) / 2;
 }
 
+#ifndef __AROS__
 VOID SAVE_DS ASM
 CustomStuffText(REG(a3) LONG *Data,REG(d0) UBYTE Char)
+#else
+AROS_UFH2(VOID, CustomStuffText,
+ AROS_UFHA(LONG *         , Data, A3),
+ AROS_UFHA(UBYTE          , Char, D0))
+#endif
 {
 	struct IntuiText *IText;
 	STRPTR Buffer;
@@ -137,8 +143,14 @@ CustomStuffText(REG(a3) LONG *Data,REG(d0) UBYTE Char)
 	Data[0] = (LONG)Buffer;						/* Remember for next char */
 }
 
+#ifndef __AROS__
 VOID ASM
 CustomCountChar(REG(a3) LONG *Count,REG(d0) UBYTE Char)
+#else
+AROS_UFH2(VOID, CustomCountChar,
+ AROS_UFHA(LONG *        , Count, A3),
+ AROS_UFHA(UBYTE         , Char , D0))
+#endif
 {
 	if(Char == Count[2] || Char == '\0')	/* Count the number of lines */
 		Count[1]++;

@@ -48,9 +48,7 @@
 
 #include <devices/inputevent.h>
 #include <devices/clipboard.h>
-#ifndef __AROS__
 #include <devices/narrator.h>
-#endif
 #include <devices/console.h>
 #include <devices/conunit.h>
 #include <devices/serial.h>

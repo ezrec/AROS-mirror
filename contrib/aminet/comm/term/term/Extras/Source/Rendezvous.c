@@ -24,8 +24,15 @@ TaskDestructor(struct DataMsg *Item)
 	Signal((struct Task *)Item->Data,SIGBREAKF_CTRL_F);
 }
 
+#ifdef __AROS__
 struct RendezvousData * SAVE_DS ASM
 RendezvousLogin(REG(a0) struct MsgPort *ReadPort,REG(a1) struct MsgPort *WritePort,REG(a2) struct TagItem *UnusedTagList)
+#else
+AROS_UFH3(struct RendezvousData, RendezvousLogin,
+ AROS_UFHA(struct MsgPort * , ReadPort , A0),
+ AROS_UFHA(struct MsgPort * , WritePort, A2),
+ AROS_UFHA(struct TagItem * , UnusedTagList, A1))
+#endif
 {
 	struct RendezvousData *Data;
 

@@ -612,14 +612,28 @@ LocaleString(ULONG ID)
 	return(Builtin);
 }
 
+#ifndef __AROS__
 STRPTR SAVE_DS ASM
 LocaleHookFunc(REG(a0) struct Hook *UnusedHook,REG(a2) APTR Unused,REG(a1) LONG ID)
+#else
+AROS_UFH3(STRPTR, LocaleHookFun,
+ AROS_UFHA(struct Hook * , UnusedHook , A0),
+ AROS_UFHA(APTR          , Unused, A2),
+ AROS_UFHA(LONG          , ID, A1))
+#endif
 {
 	return(LocaleString(ID));
 }
 
+#ifndef __AROS__
 STATIC LONG SAVE_DS ASM
 FormatDateHookFunc(REG(a0) struct Hook *Hook,REG(a2) APTR Unused,REG(a1) UBYTE Char)
+#else
+AROS_UFH3(STATIC ULONG, FormatDateHookFunc,
+ AROS_UFHA(struct Hook *  , Hook , A0),
+ AROS_UFHA(APTR           , Unused, A2),
+ AROS_UFHA(UBYTE          , Char, A1))
+#endif
 {
 	struct FormatContext *Context = Hook->h_Data;
 

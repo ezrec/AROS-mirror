@@ -31,8 +31,15 @@ ShowSerialSize(struct Gadget *UnusedGadget,LONG Level)
 	return(Sizes[Level]);
 }
 
+#ifndef __AROS__
 STATIC LONG SAVE_DS ASM
 RateHookFunc(REG(a0) struct Hook *UnusedHook,REG(a2) LONG Current,REG(a1) LONG Command)
+#else
+AROS_UFH3(STATIC LONG, RateHookFunc,
+ AROS_UFHA(struct Hook *   , UnusedHook , A0),
+ AROS_UFHA(LONG            , Current, A2),
+ AROS_UFHA(LONG            , Command, A1))
+#endif
 {
 	LONG Index;
 

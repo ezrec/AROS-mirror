@@ -34,6 +34,7 @@ DeleteSpeech()
 			WaitIO((struct IORequest *)NarratorRequest);
 	}
 
+#ifndef __AROS__
 	if(NarratorRequest)
 	{
 		if(NarratorRequest->message.io_Device)
@@ -42,6 +43,7 @@ DeleteSpeech()
 		DeleteIORequest((struct IORequest *)NarratorRequest);
 		NarratorRequest = NULL;
 	}
+#endif
 
 	if(NarratorPort)
 	{
@@ -67,6 +69,7 @@ DeleteSpeech()
 BOOL
 CreateSpeech()
 {
+#ifndef __AROS__
 	if(TranslatorBase = OpenLibrary("translator.library",0))
 	{
 		if(NarratorPort = CreateMsgPort())
@@ -102,7 +105,7 @@ CreateSpeech()
 	}
 
 	DeleteSpeech();
-
+#endif
 	return(FALSE);
 }
 
@@ -114,6 +117,7 @@ CreateSpeech()
 VOID
 Say(STRPTR String,...)
 {
+#ifndef __AROS__
 	if(SpeechConfig.Enabled && English)
 	{
 		if(!TranslatorBase)
@@ -147,6 +151,7 @@ Say(STRPTR String,...)
 				DidSpeak = FALSE;
 		}
 	}
+#endif
 }
 
 	/* SpeechSetup():
@@ -157,6 +162,7 @@ Say(STRPTR String,...)
 VOID
 SpeechSetup()
 {
+#ifndef __AROS__
 	if(NarratorRequest)
 	{
 		NarratorRequest->rate		= SpeechConfig.Rate;
@@ -165,4 +171,5 @@ SpeechSetup()
 		NarratorRequest->volume		= SpeechConfig.Volume;
 		NarratorRequest->sampfreq	= SpeechConfig.Frequency;
 	}
+#endif
 }

@@ -127,15 +127,19 @@ FILES := \
 	Serial \
 	SerialIO \
 	XEM \
-	XPR \
-	ARexxAttributes \
-	Config \
-	FileBuffer \
-	Launch \
-	Matrix \
 	Speech \
 	SpeechPanel \
-	Tools
+	\
+	ARexxAttributes \
+	Config \
+	\
+	FileBuffer \
+	Launch \
+	Tools \
+	\
+	Matrix \
+	XPR \
+
 
 
 SRCS := $(foreach f, $(FILES), $(f).c )

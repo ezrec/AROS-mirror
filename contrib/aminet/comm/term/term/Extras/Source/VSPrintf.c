@@ -19,8 +19,14 @@
 	 *	enough room left.
 	 */
 
+#ifndef __AROS__
 VOID ASM
 StuffChar(REG(a3) struct FormatContext *Context,REG(d0) UBYTE Char)
+#else
+AROS_UFH2(VOID, StuffChar,
+ AROS_UFHA(struct FormatContext *, Context, A3),
+ AROS_UFHA(UBYTE                 , Char   , D0))
+#endif
 {
 	if(Context->Size > 0)
 	{
@@ -102,8 +108,13 @@ SPrintf(STRPTR Buffer,STRPTR FormatString,...)
 	 *	Counts the number of bytes to stuff into the output buffer.
 	 */
 
+#ifndef __AROS__
 VOID ASM
 CountChar(REG(a3) ULONG *Count)
+#else
+AROS_UFH1(VOID, CountChar,
+ AROS_UFHA(ULONG *        , Count, A3))
+#endif
 {
 	*Count = *Count + 1;
 }

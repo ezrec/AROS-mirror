@@ -2267,8 +2267,15 @@ SplitFileName(STRPTR FullName,STRPTR *FileName,STRPTR DrawerName)
 	 *	Window layer backfill routine.
 	 */
 
+#ifndef __AROS__
 VOID SAVE_DS ASM
 BackfillRoutine(REG(a0) struct Hook *UnusedHook,REG(a2) struct RastPort *RPort,REG(a1) LayerMsg *Bounds)
+#else
+AROS_UFH3(VOID, Dispatch,
+ AROS_UFHA(struct Hook *        , UnusedHook , A0),
+ AROS_UFHA(struct RastPort *    , RPort, A2),
+ AROS_UFHA(LayerMsg *           , Bounds, A1))
+#endif
 {
 	struct RastPort RastPort;
 

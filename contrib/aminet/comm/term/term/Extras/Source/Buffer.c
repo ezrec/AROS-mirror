@@ -1146,8 +1146,15 @@ SearchTextBuffer(struct SearchInfo *Info)
 	return(-1);
 }
 
+#ifndef __AROS__
 STATIC ULONG SAVE_DS ASM
 HistoryFunc(REG(a0) struct Hook *Hook,REG(a2) APTR Unused,REG(a1) STRPTR NewString)
+#else
+AROS_UFH3(STATIC ULONG, HistoryFunc,
+ AROS_UFHA(struct Hook *  , Hook , A0),
+ AROS_UFHA(APTR           , Unused, A2),
+ AROS_UFHA(STRPTR         , NewString, A1))
+#endif
 {
 	struct List *List = (struct List *)Hook->h_Data;
 
