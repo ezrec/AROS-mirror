@@ -1,6 +1,6 @@
 CCFLAGS=data=far code=far noversion
 
-MadMatrix: alloctab.o libs.o madmatrix.o main.o
+MadMatrix: alloctab.o libs.o madmatrix.o main.o /libs/muimaster/muimaster.lib
   sc to $@ link alloctab.o libs.o madmatrix.o main.o /libs/muimaster/muimaster.lib lib:debug.lib
 
 alloctab.o: alloctab.c
