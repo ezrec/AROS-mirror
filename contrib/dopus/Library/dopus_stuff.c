@@ -397,7 +397,7 @@ void freestring(char *);
 						}
 					}
 					b=strlen(buf);
-					if (buf[b-1]==FTYC_AND) buf[b-1]=0;
+					if (((unsigned char)buf[b-1])==FTYC_AND) buf[b-1]=0; /* AROS FIX: was comparison always 0 */
 				}
 				if ((newtype->recognition=LAllocRemember(&cstuff->typekey,strlen(buf)+1,MEMF_CLEAR)))
 					strcpy(newtype->recognition,buf);
