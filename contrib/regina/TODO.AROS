@@ -1,4 +1,3 @@
-* Store thread specific data not in rc_UserData field of the current Task.
 * Remove the wrapper functions in aros_funcs: either by using the C calling
   convention for the functions in the library (e.g. like arosc.library) or
   by changing rexxsaa.c so that the registers are used overthere.
