@@ -16,6 +16,12 @@ struct RastPort *rp;
 struct IntuiMessage *Mesg;
 struct timerequest timereq;
 struct MsgPort *timerport;
+struct TextFont *myfont;
+
+struct TextAttr topaz8 =
+{
+    "topaz.font", 8, 0, 0
+};
 
 struct NewWindow
 	win={

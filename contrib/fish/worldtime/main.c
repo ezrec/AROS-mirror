@@ -18,6 +18,27 @@ void drawtimes();
 int yestom(int here, float heretime, float theretime);
 void CalcDate(int *day, int *month, int *year2);
 
+#define BORDERY     2
+#define BORDERX     8
+#define SPACEX      6
+
+#define FONTWIDTH   (myfont->tf_XSize)
+#define FONTHEIGHT  (myfont->tf_YSize)
+#define FONTBASE    (myfont->tf_Baseline)
+
+#define NUMCITIES   84
+#define CITYROWS    21
+#define CITYCOLS    (NUMCITIES / CITYROWS)
+
+#define OTHERROW    (CITYROWS + 1)
+#define TOTALROWS   (CITYROWS + 2)
+
+#define CITYCHARS   13
+#define CITYSPACE   1
+#define TIMEPOS     (CITYCHARS + CITYSPACE)
+#define TIMECHARS   5
+#define COLCHARSX   (CITYCHARS + CITYSPACE + TIMECHARS)
+#define COLWIDTH    (COLCHARSX * FONTWIDTH + SPACEX)
 
 void main(argc,argv)
 int argc;
@@ -91,7 +112,14 @@ char *argv[];
 
 	IntuitionBase=(struct IntuitionBase *)OpenLibrary("intuition.library",0);
 	GfxBase=(struct GfxBase *)OpenLibrary("graphics.library",0);
+
+	Forbid();
+	myfont = GfxBase->DefaultFont;
+	myfont->tf_Accessors++; /* hacky */
+	Permit();
+
 	if (!(timerport=CreatePort(0,0))) quit();
+	timereq.tr_node.io_Message.mn_Length = sizeof(timereq);
 	OpenDevice(TIMERNAME,UNIT_VBLANK,(struct IORequest *)&timereq,0);
 
 	timereq.tr_node.io_Message.mn_ReplyPort=timerport;
@@ -101,6 +129,14 @@ char *argv[];
 	timereq.tr_time.tv_micro=0;
 	SendIO((struct IORequest *)&timereq.tr_node);
 
+	win.Width  = BORDERX * 2 + CITYCOLS * COLWIDTH - SPACEX;
+    	win.Height = IntuitionBase->ActiveScreen->WBorTop +
+	    	     IntuitionBase->ActiveScreen->Font->ta_YSize + 1 +
+		     BORDERY +
+		     TOTALROWS * FONTHEIGHT +
+		     BORDERY +
+		     IntuitionBase->ActiveScreen->WBorBottom;
+		     
 	if (starticon) {
 		strcpy(otherplace,defotherplace);
 		othertime=defothertime;
@@ -109,6 +145,7 @@ char *argv[];
 	else {
 		if (!(Window=OpenWindow(&win))) quit();
 		rp=Window->RPort;
+		SetFont(rp, myfont);
 	}
 
 	drawtimes();
@@ -130,15 +167,16 @@ char *argv[];
 			ReplyMsg((struct Message *)Mesg);
 			if (class==CLOSEWINDOW) quit();
 			if (class==MOUSEBUTTONS && code==SELECTDOWN) {
-				if (y>185 && y<195) {
+				if ((y > Window->BorderTop + BORDERY + FONTHEIGHT * OTHERROW - 2) && 
+				    (y < Window->BorderTop + BORDERY + FONTHEIGHT * (OTHERROW + 1) + 2)) {
 					strcpy(otherplace,defotherplace);
 					othertime=defothertime;
 				}
 				else {
-					x-=8; y-=12;
-					x/=156; y/=8;
-					if (x>3 || x<0 || y>20 || y<0) continue;
-					a=(x*21)+y;
+					x-=BORDERX; y-=Window->BorderTop+BORDERY;
+					x/=COLWIDTH; y/= FONTHEIGHT;
+					if (x>(CITYCOLS-1) || x<0 || y>(CITYROWS-1) || y<0) continue;
+					a=(x*CITYROWS)+y;
 					strcpy(otherplace,TimeZones[a].name);
 					othertime=TimeZones[a].time;
 				}
@@ -160,6 +198,7 @@ void quit()
 		CloseDevice((struct IORequest *)&timereq);
 		DeletePort(timerport);
 	}
+	if (myfont) CloseFont(myfont);
 	CloseLibrary((struct Library *)IntuitionBase);
 	CloseLibrary((struct Library *)GfxBase);
 	exit(0);
@@ -180,7 +219,6 @@ int dotimes()
 		if (gmttot>1439) gmttot-=1440;
 		else if (gmttot<0) gmttot+=1440;
 
-		x=112; y=18;
 		for (a=0;a<84;a++) {
 			mytot=gmttot+(int)(TimeZones[a].time*(float)60);
 			if (mytot>1439) mytot-=1440;
@@ -201,17 +239,15 @@ int dotimes()
 			}
 			hour=mytot/60; min=mytot%60;
 			sprintf(buf,"%c%2d:%02d",c,hour,min);
-			Move(rp,x,y);
+			x = (a / CITYROWS) * COLWIDTH + TIMEPOS * FONTWIDTH;
+			y = (a % CITYROWS) * FONTHEIGHT + Window->BorderTop + BORDERY;
+			Move(rp,x,y+rp->TxBaseline);
 			Text(rp,buf,6);
-			y+=8;
-			if (y>=184) {
-				x+=158; y=18;
-			}
 		}
 	}
 	sprintf(buf,"%2d:%02d:%02d, ",myhour,myminute,now.ds_Tick/TICKS_PER_SECOND);
 	SetAPen(rp,clockcol);
-	Move(rp,timeoff,192);
+	Move(rp,timeoff,Window->BorderTop + BORDERY + OTHERROW * FONTHEIGHT + FONTBASE);
 	Text(rp,buf,10);
 	day=now.ds_Days;
 	if (day==lastday) return(0);
@@ -222,7 +258,7 @@ int dotimes()
 	else if (day==2 || day==22) ptr="nd";
 	else if (day==3 || day==23) ptr="rd";
 	else ptr="th";
-	sprintf(buf,"%s, the %d%s of %s, 19%d",days[wday],day,ptr,months[month],year);
+	sprintf(buf,"%s, the %d%s of %s, %d",days[wday],day,ptr,months[month],1900 + year);
 	sprintf(buf1,"%-40s",buf);
 	Text(rp,buf1,40);
 return 0;
@@ -258,22 +294,26 @@ int iconify()
 	char buf[60];
 	int day,month,year,hour,min,sec,x,y,gmttot,dayoff,len=-1,xp=-1,h,w,v2=0;
 	struct DateStamp now;
+	struct Screen *scr;
+	
 	ULONG class;
 	USHORT code;
 
 	if (GfxBase->LibNode.lib_Version>=36) v2=1;
-
 	if (Window) CloseWindow(Window);
-	if (otherplace[0]==0) iconwin.Height=10;
-	else iconwin.Height=21;
+	
+	iconwin.Width=FONTWIDTH*47+BORDERX*2;
+	iconwin.Height=IntuitionBase->ActiveScreen->WBorTop + IntuitionBase->ActiveScreen->Font->ta_YSize + 1; // 10	
+	if (otherplace[0]!=0) iconwin.Height += FONTHEIGHT + BORDERY * 2 + IntuitionBase->ActiveScreen->WBorBottom;
 	h=IntuitionBase->ActiveScreen->Height;
 	w=IntuitionBase->ActiveScreen->Width;
 	if (iconwin.Height+iconwin.TopEdge>h) iconwin.TopEdge=h-iconwin.Height;
-	if (iconwin.LeftEdge+388>w) iconwin.LeftEdge=w-388;
+	if (iconwin.LeftEdge+iconwin.Width>w) iconwin.LeftEdge=w-iconwin.Width;
 
 	if (!(Window=OpenWindow(&iconwin))) quit();
 	rp=Window->RPort;
-
+    	SetFont(rp, myfont);
+	
 	FOREVER {
 		Wait(1<<Window->UserPort->mp_SigBit|1<<timerport->mp_SigBit);
 		if (CheckIO((struct IORequest *)&timereq.tr_node)) {
@@ -283,9 +323,9 @@ int iconify()
 			sec=now.ds_Tick/TICKS_PER_SECOND;
 			day=now.ds_Days;
 			CalcDate(&day,&month,&year);
-			sprintf(buf,"CHIP:%4d FAST:%4d %02d-%3s-%2d %2d:%02d:%02d",
+			sprintf(buf,"CHIP:%4d FAST:%4d %02d-%3s-%02d %2d:%02d:%02d",
 				AvailMem(MEMF_CHIP)>>10,AvailMem(MEMF_FAST)>>10,
-				day,shortmonths[month],year,hour,min,sec);
+				day,shortmonths[month],year%100,hour,min,sec);
 			if (v2) {
 				if (IntuitionBase->ActiveWindow==Window) {
 					SetAPen(rp,2); SetBPen(rp,3);
@@ -297,7 +337,8 @@ int iconify()
 			else {
 				SetAPen(rp,2); SetBPen(rp,1);
 			}
-			Move(rp,30,7); Text(rp,buf,38);
+			Move(rp,30,(Window->BorderTop - rp->TxHeight) / 2 + rp->TxBaseline);
+			Text(rp,buf,strlen(buf));
 			gmttot=now.ds_Minute-(int)(yourtime*(float)60);
 			if (gmttot>1439) gmttot-=1440;
 			else if (gmttot<0) gmttot+=1440;
@@ -308,15 +349,15 @@ int iconify()
 			hour=gmttot/60; min=gmttot%60;
 			day=now.ds_Days+dayoff; x=day;
 			CalcDate(&day,&month,&year);
-			sprintf(buf,"%s : %9s, %02d-%3s-%2d, %2d:%02d:%02d",
-				otherplace,days[x%7],day,shortmonths[month],year,hour,min,sec);
+			sprintf(buf,"%s : %9s, %02d-%3s-%02d, %2d:%02d:%02d",
+				otherplace,days[x%7],day,shortmonths[month],year%100,hour,min,sec);
 			if (len==-1) {
 				len=strlen(buf);
-				xp=(388-(len*8))/2;
+				xp=(iconwin.Width-(len*FONTWIDTH))/2;
 				if (xp<0) xp=0;
 			}
 			SetAPen(rp,1); SetBPen(rp,0);
-			Move(rp,xp,17); Text(rp,buf,len);
+			Move(rp,xp,Window->BorderTop + BORDERY + rp->TxBaseline); Text(rp,buf,len);
 			timereq.tr_time.tv_secs=1;		
 			timereq.tr_time.tv_micro=0;
 			SendIO((struct IORequest *)&timereq.tr_node);
@@ -331,6 +372,7 @@ int iconify()
 				CloseWindow(Window);
 				if (!(Window=OpenWindow(&win))) quit();
 				rp=Window->RPort;
+				SetFont(rp, myfont);
 				return(0);
 			}
 		}
@@ -366,23 +408,20 @@ void drawtimes()
 {
 	int a,x,y,b;
 
-	x=8; y=18;
 	SetAPen(rp,citycol);
 	SetBPen(rp,0);
 	SetDrMd(rp,JAM2);
-	for (a=0;a<84;a++) {
-		Move(rp,x,y);
+	for (a=0;a<NUMCITIES;a++) {
+	    	y = (a % CITYROWS) * FONTHEIGHT + Window->BorderTop + BORDERY;
+		x = (a / CITYROWS) * COLWIDTH + BORDERX;
+		Move(rp,x,y+rp->TxBaseline);
 		Text(rp,TimeZones[a].name,strlen(TimeZones[a].name));
-		y+=8;
-		if (y>=184) {
-			x+=158; y=18;
-		}
 	}
 
 	SetAPen(rp,clockcol);
-	Move(rp,8,192);
+	Move(rp,BORDERX,Window->BorderTop + BORDERY + OTHERROW * FONTHEIGHT + FONTBASE);
 	b=strlen(yourplace);
 	Text(rp,yourplace,b);
 	Text(rp,",",1);
-	timeoff=24+(b*8);
+	timeoff=BORDERX+(FONTWIDTH*2)+(b*FONTWIDTH);
 }
