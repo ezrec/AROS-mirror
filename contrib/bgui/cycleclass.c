@@ -11,6 +11,11 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/07/18 18:32:38  stegerg
+ * The AllocBaseInfo/AllocBaseInfoDebug calls in OpenPopUpWindow method
+ * missed a TAG_DONE. Manuel, if you read this: this is a real (also in AmigaOS)
+ * bug, not just AROS!!!
+ *
  * Revision 42.4  2000/07/11 17:04:41  stegerg
  * temp fix for small gfx bug which happens because of INVERSVID
  * drawmode not yet working in AROS.
@@ -504,10 +509,11 @@ METHOD(OpenPopupWindow, struct gpInput *, gpi)
        */
       cd->cd_Previous = (UWORD)~0;
 
+      /* AROS BUGFIX --> AMIGAOS BUGFIX: TAG_DONE missed in both AllocBaseInfoDebug and AllocBaseInfo call below */
 #ifdef DEBUG_BGUI
-      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_Screen, gi->gi_Screen, BI_RastPort, rp = cd->cd_PopWindow->RPort))
+      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_Screen, gi->gi_Screen, BI_RastPort, rp = cd->cd_PopWindow->RPort, TAG_DONE))
 #else
-      if (bi = AllocBaseInfo(BI_Screen, gi->gi_Screen, BI_RastPort, rp = cd->cd_PopWindow->RPort))
+      if (bi = AllocBaseInfo(BI_Screen, gi->gi_Screen, BI_RastPort, rp = cd->cd_PopWindow->RPort, TAG_DONE))
 #endif
       {
          /*
