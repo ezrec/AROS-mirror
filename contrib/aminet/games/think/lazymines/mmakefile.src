@@ -1,41 +1,29 @@
+# $Id$
 include $(TOP)/config/make.cfg
 
-%define_libs
+FILES	:= lazymines button counter field highscores images layout \
+	    localize requesters timer tooltypes lazymines_strings
 
-CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/aminet
+EXEDIR	:= $(CONTRIBDIR)/aminet
+EXE	:= $(EXEDIR)/lazymines
 
-%make_common_setup
+USE_CLIB := yes
+USE_AROSLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
 
-FILES := lazymines button counter field highscores images layout localize \
-	requesters timer tooltypes lazymines_strings
-
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-LIBS := -L$(LIBDIR) -lchunkyiclass -larosc_shared -lamiga -larossupport \
-	-larosm -lautoinit
-
-EXE := $(DESTDIR)/lazymines
-
-.PHONY : all clean
+USER_CFLAGS := -D_ANSI_SOURCE
+USER_LDFLAGS := -lchunkyiclass
 
 #MM aminet-games-think-lazymines : aminet-dev-src-chunkyiclass setup-aminet-games-think-lazymines setup-aminet-lazymines-catalogs
-aminet-games-think-lazymines 	: $(OBJS) $(EXE)
-	@$(NOP)
+%make_prog_setup mmake=aminet-games-think-lazymines
 
-#MM
-setup-aminet-games-think-lazymines :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
+aminet-games-think-lazymines 	: setup $(EXE)
 
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	%link_q from=$(OBJS)
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
 #MM
 clean-aminet :
 	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
+%common
+%include_deps
