@@ -24,6 +24,8 @@
 #define HTParseInet		HTPaInet
 #endif
 
+#include <proto/bsdsocket.h>
+#include <unistd.h>
 #ifdef __STDC__
 #include <stdlib.h>
 #endif
