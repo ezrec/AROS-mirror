@@ -1,7 +1,7 @@
 Summary
 -------
 
-84 tests OK, 43 tests SKIPPED and 12 tests FAILED.
+85 tests OK, 43 tests SKIPPED and 11 tests FAILED.
 
 Notes on failed tests
 ---------------------
@@ -22,15 +22,6 @@ test_import
     libs/python/test/test_import.py, line 14, in ?
     import RaNdOm should have failed (case mitmatch)
 
-test_gzip 
-
-    line 27
-    f = gzip.GzipFile( filename, 'rb' ); d = f.read(); f.close()
-    libs/gzip.py, line 105, in _read_gzip_header
-    IOError: Not a gzipped file
-    
-    -> Appending to a file doesn't seem to work -> bug in open/fopen/fdopen?
-    
 test_time
 
     test_time.py, line 3
