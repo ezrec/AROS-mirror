@@ -1045,8 +1045,8 @@ calculatenew (void *data, struct taskinfo *task, int r1, int r2)
 	 frames2 += 1);
 }
 
-static void
-addprices (realloc_t * r, realloc_t * r2) REGISTERS (3);
+// static void
+// addprices (realloc_t * r, realloc_t * r2) REGISTERS (3);
 static void
 addprices (realloc_t * r, realloc_t * r2)
 {

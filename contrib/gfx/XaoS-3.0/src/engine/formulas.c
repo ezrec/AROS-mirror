@@ -157,8 +157,8 @@ char *tcolorname[] =
                         } \
                       }
 
-static INLINE void
-hsv_to_rgb (int h, int s, int v, int *red, int *green, int *blue) CONSTF;
+// static INLINE void
+// hsv_to_rgb (int h, int s, int v, int *red, int *green, int *blue) CONSTF;
 static INLINE void
 hsv_to_rgb (int h, int s, int v, int *red, int *green, int *blue)
 {
@@ -220,8 +220,8 @@ hsv_to_rgb (int h, int s, int v, int *red, int *green, int *blue)
     }
 }
 
-static int
-truecolor_output (number_t zre, number_t zim, number_t pre, number_t pim, int iter, int mode, int inset) CONSTF REGISTERS (3);
+// static int
+// truecolor_output (number_t zre, number_t zim, number_t pre, number_t pim, int iter, int mode, int inset) CONSTF REGISTERS (3);
 static int
 truecolor_output (number_t zre, number_t zim, number_t pre, number_t pim, int iter, int mode, int inset)
 {
@@ -401,8 +401,8 @@ truecolor_output (number_t zre, number_t zim, number_t pre, number_t pim, int it
 #ifdef __alpha__
 #define __TEST__
 #endif
-static int
-color_output (number_t zre, number_t zim, number_t pre, number_t pim, int iter) CONSTF REGISTERS (3);
+// static int
+// color_output (number_t zre, number_t zim, number_t pre, number_t pim, int iter) CONSTF REGISTERS (3);
 static int
 color_output (number_t zre, number_t zim, number_t pre, number_t pim, int iter)
 {
@@ -474,8 +474,8 @@ color_output (number_t zre, number_t zim, number_t pre, number_t pim, int iter)
 
 }
 
-static int
-incolor_output (number_t zre, number_t zim, number_t pre, number_t pim, int iter) CONSTF REGISTERS (3);
+// static int
+// incolor_output (number_t zre, number_t zim, number_t pre, number_t pim, int iter) CONSTF REGISTERS (3);
 static int
 incolor_output (number_t zre, number_t zim, number_t pre, number_t pim, int iter)
 {

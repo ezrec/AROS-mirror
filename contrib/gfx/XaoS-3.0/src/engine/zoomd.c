@@ -1,5 +1,5 @@
 #ifndef UNSUPPORTED
-static void calcline (realloc_t * ry) REGISTERS (3);
+// static void calcline (realloc_t * ry) REGISTERS (3);
 static void
 calcline (realloc_t * ry)
 {
@@ -131,7 +131,7 @@ calcline (realloc_t * ry)
   ry->recalculate = 0;
   ry->dirty = 0;
 }
-static void calccolumn (realloc_t * rx) REGISTERS (3);
+// static void calccolumn (realloc_t * rx) REGISTERS (3);
 static void
 calccolumn (realloc_t * rx)
 {
