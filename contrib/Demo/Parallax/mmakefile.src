@@ -12,11 +12,14 @@ FILES := parallax
 SRCS := $(foreach f, $(FILES), $(f).c)
 OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
 
-EXE := $(DESTDIR)/parallax
+EXE := $(DESTDIR)/Parallax
+
+ICONS := Parallax
+ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
 .PHONY : all clean
 
-#MM demo-parallax : setup-demo-parallax
+#MM demo-parallax : setup-demo-parallax icons-demo-parallax
 demo-parallax : $(OBJS) $(EXE)
 	@$(NOP)
 
@@ -29,6 +32,13 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
 	@$(ECHO) "Checking $@..."
 	@$(CHECKUDS) $@
+
+#MM
+icons-demo-parallax : setup-demo-parallax $(ICONFILES)
+	@$(NOP)
+	
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+	%makeicon2
 
 #MM
 clean-contrib-demos :

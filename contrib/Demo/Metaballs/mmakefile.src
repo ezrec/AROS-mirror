@@ -13,11 +13,14 @@ FILES 		:= metaballs
 SRCS 		:= $(foreach f, $(FILES), $(f).c)
 OBJS 		:= $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
 
-EXE 		:= $(DESTDIR)/metaballs
+EXE 		:= $(DESTDIR)/Metaballs
+
+ICONS := Metaballs
+ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
 .PHONY : all clean
 
-#MM demo-metaballs : setup-demo-metaballs
+#MM demo-metaballs : setup-demo-metaballs icons-demo-metaballs
 demo-metaballs : $(OBJS) $(EXE)
 	@$(NOP)
 
@@ -30,6 +33,13 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
 	@$(ECHO) "Checking $@..."
 	@$(CHECKUDS) $@
+
+#MM
+icons-demo-metaballs : setup-demo-metaballs $(ICONFILES)
+	@$(NOP)
+	
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+	%makeicon2
 
 #MM
 clean-contrib-demos :

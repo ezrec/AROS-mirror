@@ -13,11 +13,14 @@ FILES 		:= dawafire
 SRCS 		:= $(foreach f, $(FILES), $(f).c)
 OBJS 		:= $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
 
-EXE 		:= $(DESTDIR)/dawafire
+EXE 		:= $(DESTDIR)/DawaFire
+
+ICONS := DawaFire
+ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
 .PHONY : all clean
 
-#MM demo-dawafire : setup-demo-dawafire
+#MM demo-dawafire : setup-demo-dawafire icons-demo-dawafire
 demo-dawafire : $(OBJS) $(EXE)
 	@$(NOP)
 
@@ -30,6 +33,13 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
 	@$(ECHO) "Checking $@..."
 	@$(CHECKUDS) $@
+
+#MM
+icons-demo-dawafire : setup-demo-dawafire $(ICONFILES)
+	@$(NOP)
+
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+	%makeicon2
 
 #MM
 clean-contrib-demos :

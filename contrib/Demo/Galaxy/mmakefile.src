@@ -16,13 +16,23 @@ ASMSRCS		:= $(foreach f, $(ASMFILES), $(f).S)
 
 OBJS 		:= $(foreach f, $(FILES) $(ASMFILES), $(OBJDIR)/$(f).o)
 
-EXE 		:= $(DESTDIR)/galaxy
+EXE 		:= $(DESTDIR)/Galaxy
+
+ICONS := Galaxy
+ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
 .PHONY : all clean
 
-#MM demo-galaxy : setup-demo-galaxy
+#MM demo-galaxy : setup-demo-galaxy icons-demo-galaxy
 demo-galaxy : $(OBJS) $(EXE)
 	@$(NOP)
+
+#MM
+icons-demo-galaxy : setup-demo-galaxy $(ICONFILES)
+	@$(NOP)
+	
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+	%makeicon2
 
 #MM
 setup-demo-galaxy :

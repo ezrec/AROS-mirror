@@ -11,11 +11,14 @@ C_IMAGES    := $(foreach f, $(IMAGES), $(f)_image.c)
 EXEDIR      := $(CONTRIBDIR)/Demos/Kitty
 EXE 	    := $(EXEDIR)/Kitty
 
+ICONS := Kitty
+ICONFILES := $(foreach f, $(ICONS), $(EXEDIR)/$(f).info)
+
 USE_AROSLIB := yes
 USE_CLIB_SHARED := yes
 USE_AMIGALIB := yes
 
-#MM demo-kitty : includes linklibs demo-kitty
+#MM demo-kitty : includes linklibs icons-demo-kitty
 
 %make_prog_setup mmake=demo-kitty
 demo-kitty : setup $(C_IMAGES) $(EXE)
@@ -24,6 +27,14 @@ demo-kitty : setup $(C_IMAGES) $(EXE)
 
 ./%_image.c : pics/%.ilbm
 	@$(ILBMTOC) $< >$@    	
+
+#MM
+icons-demo-kitty : setup $(ICONFILES)
+	@$(NOP)
+	
+$(EXEDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+	%makeicon2
+
 
 %common
 %include_deps

@@ -15,11 +15,14 @@ DATAFILES	:= pattern.data pattern.pal
 SRCS 		:= $(foreach f, $(FILES), $(f).c)
 OBJS 		:= $(foreach f, $(FILES) $(ASMFILES), $(OBJDIR)/$(f).o)
 
-EXE 		:= $(DESTDIR)/infplane
+EXE 		:= $(DESTDIR)/InfPlane
+
+ICONS := InfPlane
+ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
 .PHONY : all clean
 
-#MM demo-infplane : setup-demo-infplane
+#MM demo-infplane : setup-demo-infplane icons-demo-infplane
 demo-infplane : $(OBJS) $(EXE)
 	@$(NOP)
 
@@ -33,6 +36,13 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
 	@$(ECHO) "Checking $@..."
 	@$(CHECKUDS) $@
+
+#MM
+icons-demo-infplane : setup-demo-infplane $(ICONFILES)
+	@$(NOP)
+	
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+	%makeicon2
 
 #MM
 clean-contrib-demos :
