@@ -21,6 +21,7 @@
 #include <intuition/intuition.h>
 #include <intuition/screens.h>
 #include <proto/intuition.h>
+#include <proto/alib.h>
 
 #include "display_globals.h"
 #include "localize.h"
@@ -947,7 +948,7 @@ init_display (void)
                                               levels[current_level].columns,
                                               levels[current_level].bombs))
                         {
-                           return (BOOL)(timer_obj = timer_create ());
+                           return (BOOL)(timer_obj = mytimer_create ());
                         }
                      }
                      else

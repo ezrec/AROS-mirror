@@ -18,7 +18,7 @@ typedef struct timer  *timer_ptr;
 
 /* Creates a new timer object */
 timer_ptr              /* created timer */
-timer_create (void);
+mytimer_create (void);
 
 /* Frees a timer object */
 void

@@ -24,7 +24,7 @@ struct timer
 
 /* Creates a new timer object */
 timer_ptr             /* created timer */
-timer_create (void)
+mytimer_create (void)
 {
    timer_ptr   timer;
    
