@@ -51,7 +51,7 @@ struct Library *MUSICBase;                /* music.library */
 struct Library *CxBase;                   /* commodities.library */
 struct Library *RexxSysBase;              /* rexxsyslib.library */
 struct Library *AccountsBase;             /* accounts.library */
-struct Library *UtilityBase;              /* utility.library */
+struct UtilityBase *UtilityBase;              /* utility.library */
 
 
 /* Intuition objects */
