@@ -14,7 +14,7 @@
 #include "Assert.h"
 
 ULONG SAVE_DS ASM
-LTP_DefaultHistoryHook(REG(a0) struct Hook *Hook,REG(a1) STRPTR NewString,REG(a2) struct Gadget *Gadget)
+LTP_DefaultHistoryHook(REG(a0) struct Hook *Hook,REG(a2) struct Gadget *Gadget,REG(a1) STRPTR NewString)
 {
 	ObjectNode			*Node	= (ObjectNode *)Gadget->UserData;
 	struct LayoutHandle	*Handle = Node->Special.String.LayoutHandle;

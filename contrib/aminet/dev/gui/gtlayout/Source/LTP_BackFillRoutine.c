@@ -25,8 +25,9 @@ struct LayerMsg
 VOID SAVE_DS ASM
 LTP_BackfillRoutine(
 	REG(a0) struct Hook *		Hook,
-	REG(a1) struct LayerMsg *	Bounds,
-	REG(a2) struct RastPort *	RPort)
+	REG(a2) struct RastPort *	RPort,
+	REG(a1) struct LayerMsg *	Bounds
+)
 {
 	LayoutHandle *Handle = (LayoutHandle *)Hook->h_Data;
 

@@ -32,7 +32,7 @@ VOID LTP_AdjustMenuPosition(RootMenu *Root);
 ULONG LTP_Atol(STRPTR String);
 
 /* LTP_BackFillRoutine.c */
-VOID SAVE_DS ASM LTP_BackfillRoutine(REG(a0) struct Hook *Hook, REG(a1) struct LayerMsg *Bounds, REG(a2) struct RastPort *RPort);
+VOID SAVE_DS ASM LTP_BackfillRoutine(REG(a0) struct Hook *Hook, REG(a2) struct RastPort *RPort, REG(a1) struct LayerMsg *Bounds);
 
 /* LTP_BitMap.c */
 LONG LTP_GetDepth(struct BitMap *BitMap);
@@ -76,7 +76,7 @@ ObjectNode *LTP_CreateObjectNode(LayoutHandle *handle, LONG type, ULONG id, STRP
 ULONG SAVE_DS ASM LTP_DefaultEditRoutine(REG(a0) struct Hook *Hook, REG(a2) struct SGWork *Work, REG(a1) Msg msg);
 
 /* LTP_DefaultHistoryHook.c */
-ULONG SAVE_DS ASM LTP_DefaultHistoryHook(REG(a0) struct Hook *Hook, REG(a1) STRPTR NewString, REG(a2) struct Gadget *Gadget);
+ULONG SAVE_DS ASM LTP_DefaultHistoryHook(REG(a0) struct Hook *Hook, REG(a2) struct Gadget *Gadget, REG(a1) STRPTR NewString);
 
 /* LTP_Delay.c */
 VOID LTP_Delay(ULONG Seconds, ULONG Micros);
