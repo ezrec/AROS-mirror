@@ -1,7 +1,7 @@
 Summary
 -------
 
-85 tests OK, 43 tests SKIPPED and 11 tests FAILED.
+86 tests OK, 43 tests SKIPPED and 10 tests FAILED.
 
 Notes on failed tests
 ---------------------
@@ -16,11 +16,6 @@ test_cpickle
       libs/python/test/pickletester.py, line 96, in dotest
       x2 = pickle.loads(s)
       ValueError: could not convert string to float
-
-test_import
-
-    libs/python/test/test_import.py, line 14, in ?
-    import RaNdOm should have failed (case mitmatch)
 
 test_time
 
