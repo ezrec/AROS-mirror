@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/07/03 20:45:44  bergers
+ * Update. Test1 now successfully opens the library. In LibOpen the AddTaskMember function seems to trash the stack somehow (return address is trashed) and therefore I had to take it out.
+ *
  * Revision 42.3  2000/06/01 01:41:37  bergers
  * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
  *
@@ -52,6 +55,8 @@
 
 #include "include/classdefs.h"
 
+#include <aros/debug.h>
+
 /*
  * Global data (written to once at initalization time).
  */
@@ -90,6 +95,20 @@ APTR                  InputStack    = NULL;
 
 
 #ifdef _AROS
+AROS_LD1(struct Library *, LibOpen,
+    AROS_LHA(ULONG, version, D0),
+    struct Library *, lib, 1, BGUI);
+
+AROS_LD0(BPTR, LibClose,
+         struct Library *, lib, 2, BGUI);
+
+AROS_LD1(BPTR, LibExpunge,
+    AROS_LHA(struct Library *, lib, D0),
+    struct ExecBase *, sysBase, 3, BGUI);
+
+AROS_LD0(LONG, LibVoid,
+     struct Library *, lib, 4, BGUI);
+
    extern BGUI_BGUI_GetClassPtr();
    extern BGUI_BGUI_NewObjectA();
    extern BGUI_BGUI_RequestA();
@@ -133,17 +152,17 @@ APTR                  InputStack    = NULL;
  * Library function table.
  */
 STATIC const LONG Vectors[] = {
+#ifdef _AROS
    /*
     * System interface.
     */
-   (LONG)LibOpen,
-   (LONG)LibClose,
-   (LONG)LibExpunge,
-   (LONG)LibVoid,
+   (LONG)BGUI_LibOpen,
+   (LONG)BGUI_LibClose,
+   (LONG)BGUI_LibExpunge,
+   (LONG)BGUI_LibVoid,
    /*
     * Public routines.
     */
-#ifdef _AROS
    (LONG)BGUI_BGUI_GetClassPtr,
    (LONG)BGUI_BGUI_NewObjectA,
    (LONG)BGUI_BGUI_RequestA,
@@ -182,6 +201,17 @@ STATIC const LONG Vectors[] = {
    (LONG)BGUI_BGUI_AllocPoolMemDebug,
    (LONG)BGUI_BGUI_FreePoolMemDebug,
 #else
+   /*
+    * System interface.
+    */
+   (LONG)LibOpen,
+   (LONG)LibClose,
+   (LONG)LibExpunge,
+   (LONG)LibVoid,
+   /*
+    * Public routines.
+    */
+
    (LONG)BGUI_GetClassPtr,
    (LONG)BGUI_NewObjectA,
    (LONG)BGUI_RequestA,
@@ -284,13 +314,22 @@ makeproto VOID InitLocale(void)
 /*
  * Library initialization.
  */
+#ifdef _AROS
+makeproto
+AROS_UFH3(struct Library *, LibInit,
+       AROS_LHA(ULONG, dummy, D0),
+       AROS_LHA(BPTR, segment, A0),
+       AROS_LHA(struct ExecBase *, syslib, A6))
+#else
 makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struct ExecBase *syslib)
+#endif
 {
    struct Library       *lib;
 
    /*
     * Assign SysBase.
     */
+
    SysBase  = syslib;
 
    /*
@@ -307,6 +346,7 @@ makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struc
    IntuitionBase  = (struct IntuitionBase *)OpenLibrary("intuition.library", 37);
    GfxBase        = (struct GfxBase *)      OpenLibrary("graphics.library",  37);
    #endif
+
 
    GadToolsBase   = OpenLibrary("gadtools.library",      37);
    UtilityBase    = OpenLibrary("utility.library",       37);
@@ -388,21 +428,29 @@ makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struc
 /*
  * Open library.
  */
+#ifdef _AROS
+makeproto
+AROS_LH1(struct Library *, LibOpen,
+    AROS_LHA(ULONG, version, D0),
+    struct Library *, lib, 1, BGUI)
+#else
 makeproto SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0) ULONG libver)
+#endif
 {
    UWORD       tc;
 
    /*
     * Add this task to the list.
     */
-   if ((tc = AddTaskMember()) != TASK_FAILED)
+printf("%s: Had to take out AddTaskMember since it trashes stack somehow\n",__FUNCTION__);
+//   if ((tc = AddTaskMember()) != TASK_FAILED)
    {
       /*
        * Increase open counter when necessary.
        */
       if (tc == TASK_ADDED)
          lib->lib_OpenCnt++;
-         
+
       /*
        * Clear delayed expunge flag.
        */
@@ -413,13 +461,20 @@ makeproto SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0
        */
       return lib;
    }
+ALIVE
+
    return NULL;
 }
 
 /*
  * Close library.
  */
+#ifdef _AROS
+AROS_LH0(BPTR, LibClose,
+         struct Library *, lib, 2, BGUI)
+#else
 makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
+#endif
 {
    /*
     * Remove the task from the member list.
@@ -437,8 +492,13 @@ makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     * Delayed expunge pending?
     */
    if (lib->lib_Flags & LIBF_DELEXP)
+#ifdef _AROS
+      return AROS_UFC2(BPTR, BGUI_LibExpunge,
+      		AROS_UFCA(struct Library *, lib, D0),
+      		AROS_UFCA(struct ExecBase *, SysBase, A6));
+#else
       return LibExpunge(lib);
-
+#endif
    /*
     * Otherwise we remain in memory.
     */
@@ -448,7 +508,13 @@ makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
 /*
  * Expunge library.
  */
+#ifdef _AROS
+AROS_LH1(BPTR, LibExpunge,
+    AROS_LHA(struct Library *, lib, D0),
+    struct ExecBase *, sysBase, 3, BGUI)
+#else
 makeproto SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
+#endif
 {
    /*
     * No expunge when we still
@@ -500,7 +566,12 @@ makeproto SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
 /*
  * Reserved routine.
  */
+#ifdef _AROS
+AROS_LH0(LONG, LibVoid,
+     struct Library *, lib, 4, BGUI)
+#else
 makeproto SAVEDS LONG LibVoid(void)
+#endif
 {
    return 0;
 }

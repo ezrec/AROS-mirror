@@ -137,7 +137,8 @@ OBJECTS =  \
 	o/plgroupclasses$(o) \
 	o/plimageclasses$(o) \
 	o/plgadgetclasses$(o) \
-	o/plaslclasses$(o) 
+	o/plaslclasses$(o) \
+	o/endtag.o
 
 
 
@@ -217,7 +218,8 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 		o/plimageclasses$(o) \
 		o/plgadgetclasses$(o) \
 		o/plgroupclasses$(o) \
-		o/plaslclasses$(o)
+		o/plaslclasses$(o) \
+		o/endtag.o
 #	if ($(BUILD_TYPE) eq D)
 	@$(CC) $(DEBUG_OPTIONS) $(DEFINES) -c ver.c -o o/ver.o
 #	endif
@@ -231,10 +233,11 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 	@$(CC) -nostartfiles -nostdlib -Wl,-i \
 	      o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
 	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
-	      o/plgroupclasses$(o) -static -L$(LIBDIR) -lamiga -larosc -o $@
+	      o/plgroupclasses$(o) o/endtag.o \
+	      -static -i -L$(LIBDIR) -lamiga -larosc -larosm -o $@
 
 main_o=o/lib$(o) o/libfunc$(o) o/task$(o) o/request$(o) \
-	o/misc$(o) o/bgui_locale$(o) o/miscc$(o) 
+	o/misc$(o) o/bgui_locale$(o) o/miscc$(o)
 #o/stkext$(o)
 
 boopsi_o=o/classes$(o) o/dgm$(o) o/rootclass$(o)
@@ -292,6 +295,8 @@ o/plaslclasses$(o) : $(asl_o)
 o/libtag.o: libtag.c
 	$(CC) $(INCLUDES) -c $^ -o $@
 
+o/endtag.o: endtag.c
+	$(CC) $(INCLUDES) -c $^ -o $@
 
 o/lib$(o): lib.c
 	$(CC) $(CFLAGS) $(DEFINES) -c lib.c -o $@ 2>&1|tee $@.err

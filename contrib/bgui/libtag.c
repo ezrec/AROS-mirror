@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 1.2  2000/07/03 20:45:44  bergers
+ * Update. Test1 now successfully opens the library. In LibOpen the AddTaskMember function seems to trash the stack somehow (return address is trashed) and therefore I had to take it out.
+ *
  * Revision 1.1  2000/05/30 03:25:24  bergers
  * Instead of libtag.asm.
  *
@@ -28,9 +31,11 @@ extern unsigned char LibName[];
 extern const unsigned char LibID[];;
 extern const unsigned char LibVer[];
 extern struct Library * LibInit();
+extern int BGUI_end;
 
 int entry(void)
 {
+  printf("entry called. Doing nothing!\n");
   return -1;
 }
 
@@ -38,7 +43,7 @@ struct Resident ROMTag =
 {
   RTC_MATCHWORD,
   (struct Resident *)&ROMTag,
-  NULL, //BGUI_end,
+  &BGUI_end,
   0,
   41,
   NT_LIBRARY,
