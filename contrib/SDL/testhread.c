@@ -11,13 +11,13 @@ static int alive = 0;
 
 int ThreadFunc(void *data)
 {
-	printf("Started thread %s: My thread id is %u\n",
+	kprintf("----Started thread %s: My thread id is %u\n",
 				(char *)data, SDL_ThreadID());
 	while ( alive ) {
-		printf("Thread '%s' is alive!\n", (char *)data);
+		kprintf("----Thread '%s' is alive!\n", (char *)data);
 		SDL_Delay(1*1000);
 	}
-	printf("Thread '%s' exiting!\n", (char *)data);
+	kprintf("----Thread '%s' exiting!\n", (char *)data);
 	return(0);
 }
 

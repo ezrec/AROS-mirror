@@ -17,13 +17,13 @@ int ThreadFunc(void *data)
 {
 	while ( alive ) {
 		SDL_SemWait(sem);
-		fprintf(stderr, "Thread number %d has got the semaphore (value = %d)!\n", (int)data, SDL_SemValue(sem));
+		kprintf("----Thread number %d has got the semaphore (value = %d)!\n", (int)data, SDL_SemValue(sem));
 		SDL_Delay(200);
 		SDL_SemPost(sem);
-		fprintf(stderr, "Thread number %d has released the semaphore (value = %d)!\n", (int)data, SDL_SemValue(sem));
+		kprintf("----Thread number %d has released the semaphore (value = %d)!\n", (int)data, SDL_SemValue(sem));
 		SDL_Delay(1); /* For the scheduler */
 	}
-	printf("Thread number %d exiting.\n", (int)data);
+	kprintf("Thread number %d exiting.\n", (int)data);
 	return 0;
 }
 
