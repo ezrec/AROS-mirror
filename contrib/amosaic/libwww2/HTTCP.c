@@ -61,7 +61,7 @@ PRIVATE char *hostname=0;		/* The name of this host */
 ** On return,
 **	returns 	a negative status in the unix way.
 */
-#if !defined(_AMIGA) && !defined(_AROS)
+#if !defined(_AMIGA) && !defined(__AROS__)
 #ifndef errno
 extern int errno;
 #endif /* errno */
@@ -143,6 +143,7 @@ PUBLIC unsigned int HTCardinal ARGS3
 **		it is to be kept.
 */
 
+#ifndef __AROS__
 PUBLIC CONST char * HTInetString ARGS1(SockA*,sin)
 {
     static char string[16];
@@ -153,6 +154,7 @@ PUBLIC CONST char * HTInetString ARGS1(SockA*,sin)
 	    (int)*((unsigned char *)(&sin->sin_addr)+3));
     return string;
 }
+#endif
 
 
 /*	Parse a network node address and port
@@ -167,6 +169,7 @@ PUBLIC CONST char * HTInetString ARGS1(SockA*,sin)
 **	*sin	is filled in. If no port is specified in str, that
 **		field is left unchanged in *sin.
 */
+#ifndef __AROS__
 PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 {
   char *port;
@@ -263,6 +266,7 @@ PUBLIC int HTParseInet ARGS2(SockA *,sin, CONST char *,str)
 
   return 0;	/* OK */
 }
+#endif
 
 
 /*	Derive the name of the host on which we are

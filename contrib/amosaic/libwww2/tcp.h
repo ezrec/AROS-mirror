@@ -232,12 +232,14 @@ Regular BSD unix versions
 #include <errno.h>	    /* independent */
 #include <sys/time.h>	    /* independent */
 #include <sys/stat.h>
+#ifndef __AROS__
 #include <sys/param.h>
-#if defined(_AMIGA) || defined(__AROS__)
+#if defined(_AMIGA)
 #include <fcntl.h>
 #include <limits.h>
 #else
 #include <sys/file.h>	    /* For open() etc */
+#endif
 #endif
 #define INCLUDES_DONE
 #endif	/* Normal includes */
@@ -310,6 +312,7 @@ Defaults
   INCLUDE FILES FOR TCP
 
  */
+#ifndef __AROS__
 #ifndef TCP_INCLUDES_DONE
 //#include <sys/ioctl.h> /* EJB */
 #include <sys/socket.h>
@@ -319,6 +322,9 @@ Defaults
 #endif
 #include <netdb.h>
 #endif	/* TCP includes */
+#else
+#include <unistd.h>
+#endif
 
 
 /*
