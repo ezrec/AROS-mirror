@@ -5,7 +5,7 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-mesa2-demos-book : contrib-mesa2-common
+#MM contrib-mesa-demos-book : contrib-mesa-common
 
 MESABOOKSRCDIR = book
 
@@ -59,7 +59,7 @@ MESABOOK :=  accanti \
 
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
 
-%build_progs mmake=contrib-mesa2-demos-book files=$(MESABOOK) \
+%build_progs mmake=contrib-mesa-demos-book files=$(MESABOOK) \
     targetdir=$(CONTRIBDIR)/Gfx/Mesa/Book \
     uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
 

@@ -5,7 +5,7 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-mesa2-demos-samples : contrib-mesa2-demos-common setup-mesa2-samples 
+#MM contrib-mesa-demos-samples : contrib-mesa-demos-common setup-mesa2-samples 
 #MM setup-mesa2-samples : setup
 #MM setup-mesa2-sampdemos : setup
 
@@ -46,7 +46,7 @@ MESAOGLINFO = oglinfo
 
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
     
-%build_progs mmake=contrib-mesa2-demos-samples files=$(MESASAMPLES) \
+%build_progs mmake=contrib-mesa-demos-samples files=$(MESASAMPLES) \
     targetdir=$(CONTRIBDIR)/Gfx/Mesa/Samples \
     uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
 
