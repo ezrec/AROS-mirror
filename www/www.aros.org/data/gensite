@@ -260,6 +260,7 @@ faq2html.gen (arosRC, 'FAQ', os.path.join (arosdir, 'docs', 'faq')).write ('faq.
 
 genXmlPage ('mmake', 'MetaMake')
 genXmlPage ('style', 'Coding Style')
+genXmlPage ('xml', 'AROS XML')
 genXmlPage ('hidd-intro', 'HIDD Intro')
 genXmlPage ('hidd-model', 'HIDD Model')
 genXmlPage ('filesys', 'Filesystems')

@@ -28,6 +28,7 @@ mainLinks = (
 	Href ('cvs.html', 'CVS'),
 	Href ('mmake.html', 'MetaMake'),
 	Href ('style.html', 'Coding Style'),
+	Href ('xml.html', 'AROS XML'),
 	Href ('filesys.html', 'Filesystems'),
 	Href ('hidd-intro.html', 'HIDD Intro'),
 	Href ('hidd-model.html', 'HIDD Model'),
