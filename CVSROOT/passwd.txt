@@ -218,3 +218,4 @@ forgoil:796DwFlXhTxjs:John Gustafsson:forgoil@rsn.bth.se:
 zaaag:e6UeafcuCYqIY:Amine Bizid:amine_bizid@yahoo.com:
 nosfisk:orE5S7O6QddeI:Petter Lindquist:pollen@astrakan.hig.se:
 Omnicade:b2GvD5rMiD6kc:Laurent Gleizes:omnicade@fr.st:
+stepan:c68IdHLj3KCTE:Stefan Reinauer:stepan@suse.de:
