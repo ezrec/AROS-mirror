@@ -1,0 +1,522 @@
+Archive member included       because of file (symbol)
+
+/home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(data.o)
+                              /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/dopus_init.o (pdb_cycletop)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o)
+                              /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/functable.o (DOpus_DoSimpleRequest)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(atoi.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o) (atoi)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(rand.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o) (rand)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcat.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o) (strcat)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcmp.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o) (strcmp)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcpy.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o) (strcpy)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strlen.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o) (strlen)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strncmp.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o) (strncmp)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strncpy.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o) (strncpy)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strtol.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(atoi.o) (strtol)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strtoul.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strtol.o) (strtoul)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(ctype.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strtol.o) (__ctype_b)
+/home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(errno.o)
+                              /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strtol.o) (errno)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/dopus_init.o
+LOAD /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/functable.o
+LOAD /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a
+LOAD /home/aros/AROS/bin/linux-i386/AROS/lib/libarossupport.a
+LOAD /home/aros/AROS/bin/linux-i386/AROS/lib/libamiga.a
+LOAD /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a
+LOAD /home/aros/AROS/bin/linux-i386/AROS/lib/libarosm.a
+LOAD /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/dopus_endtag.o
+
+.interp
+ *(.interp)
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.text
+ *(.rel.text)
+
+.rela.text
+ *(.rela.text)
+
+.rel.data
+ *(.rel.data)
+
+.rela.data
+ *(.rela.data)
+
+.rel.rodata
+ *(.rel.rodata)
+
+.rela.rodata
+ *(.rela.rodata)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.init
+ *(.init)
+
+.plt
+ *(.plt)
+
+.text           0x00000000    0x1f9d8
+ *(.text)
+ .text          0x00000000      0x4c4 /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/dopus_init.o
+                0x00000000                entry
+                0x00000320                DOpus_expunge
+                0x000004b0                DOpus_null
+                0x00000030                DOpus_init
+                0x00000280                DOpus_open
+                0x000002c0                DOpus_close
+                0x00000020                set_global_dopusbase
+ *fill*         0x000004c4        0xc 37008
+ .text          0x000004d0    0x1ee73 /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o)
+                0x000083b0                initrequester
+                0x0001d950                DOpus_AddRequesterObject
+                0x00005630                get_uscore_text
+                0x0000ae90                DOpus_LStrCat
+                0x0000b4b0                DOpus_StrConcat
+                0x00009720                getintuimsg
+                0x00013bc0                view_valid
+                0x0000afb0                DOpus_LStrnCpy
+                0x0000ebb0                HighlightRMBGad
+                0x0000bc00                drawline
+                0x00006870                get_filenames
+                0x0000c4f0                DOpus_DoGlassImage
+                0x00007dc0                repeatscroll
+                0x00016ae0                DOpus_DefaultConfig
+                0x00013a80                scroll_view
+                0x0001a7c0                DOpus_LMatchPatternI
+                0x00011be0                DOpus_GetSliderPos
+                0x0001a850                DoMatchPattern
+                0x0000f410                DOpus_LAllocRemember
+                0x000163a0                getstringcopy
+                0x00019ab0                DOpus_SetBusyPointer
+                0x0001a6e0                DOpus_FreeStringFile
+                0x00016430                DOpus_SaveConfig
+                0x0000ae10                DOpus_LToUpper
+                0x0000ccb0                fill_out_border
+                0x00017ca0                readline
+                0x0000d970                DOpus_AddGadgets
+                0x0000b750                DOpus_DoArrow
+                0x0000c700                get_image_data
+                0x00013730                DOpus_RefreshListView
+                0x0000a860                DOpus_Seed
+                0x00013c20                DOpus_ReadConfig
+                0x00007850                listdevices
+                0x0000ecf0                makeusstring
+                0x000082a0                refreshdrawergad
+                0x0001bfe0                calcdate
+                0x000004d0                DOpus_DoSimpleRequest
+                0x0000a9a0                DOpus_DisableGadget
+                0x0000b3c0                DOpus_RefreshStrGad
+                0x000099d0                DOpus_Do3DBox
+                0x0000cc00                fill_out_border_data
+                0x000199d0                DOpus_Decode_RLE
+                0x0000e3b0                DOpus_DoRMBGadget
+                0x000186d0                DOpus_AssignMenu
+                0x0001b720                findendor
+                0x0000ab80                SwapMem
+                0x00018e40                DOpus_FindSystemFile
+                0x0000b1a0                DOpus_LStrnCmp
+                0x0000a460                DOpus_DrawCheckMark
+                0x00013610                savepens
+                0x0000efd0                DOpus_UScoreText
+                0x0001f010                DOpus_ObjectText
+                0x000139a0                DOpus_RemoveListView
+                0x0000d380                DOpus_TackOn
+                0x00008020                doprops
+                0x0000cfb0                DOpus_BaseName
+                0x000189a0                DOpus_FreeConfig
+                0x0000abe0                stuffChar
+                0x0000d080                DOpus_PathName
+                0x0001cf10                DOpus_CompareDate
+                0x00011240                DisplayView
+                0x00006080                close_req
+                0x00009cd0                DOpus_Do3DStringBox
+                0x0000b550                DOpus_Atoh
+                0x0000d7e0                DOpus_CheckExist
+                0x00006810                doposprop
+                0x0000b010                DOpus_LStrCmpI
+                0x00010760                DOpus_FixSliderBody
+                0x0000f670                DOpus_AddListView
+                0x0000d440                DOpus_CompareLock
+                0x00016a20                writestring
+                0x0000c200                DOpus_Do3DFrame
+                0x0001a820                DOpus_LParsePatternI
+                0x00007a70                addfileentry
+                0x0001d000                DOpus_OpenRequester
+                0x000191f0                DOpus_RawkeyToStr
+                0x000198d0                DOpus_CheckHexGad
+                0x0000d490                DOpus_SearchPathList
+                0x000067a0                deallocate_entries
+                0x00008080                fixprop
+                0x00017d60                DOpus_GetDevices
+                0x0000b0d0                DOpus_LStrnCmpI
+                0x0000a630                DOpus_HiliteGad
+                0x0001a790                DOpus_LMatchPattern
+                0x0000ac00                LSprintf
+                0x0001cc70                getnextbit
+                0x00010a70                DOpus_FixSliderPot
+                0x0001ea90                DOpus_RefreshRequesterObject
+                0x0001d8a0                DOpus_CloseRequester
+                0x0000ac50                DOpus_LCreateExtIO
+                0x0000edb0                DOpus_DoCycleGadget
+                0x0000af70                DOpus_LStrCpy
+                0x00010d60                DOpus_ShowSlider
+                0x000098e0                getfileentry
+                0x0000e8b0                ShowRMBGadName
+                0x0000a940                DOpus_StrToLower
+                0x00018d50                freestring
+                0x000098a0                activatefilegad
+                0x0001c1a0                DOpus_StrToStamp
+                0x0000a010                DOpus_Do3DCycleBox
+                0x000080e0                doparent
+                0x0000cd10                DOpus_SelectGadget
+                0x0000b440                DOpus_StrCombine
+                0x0000ad60                DOpus_LDeleteExtIO
+                0x0000ada0                DOpus_LDeletePort
+                0x0001a7f0                DOpus_LParsePattern
+                0x0000b9c0                DOpus_DrawRadioButton
+                0x0000a740                DOpus_GetWBScreen
+                0x0000f560                DOpus_LFreeRemEntry
+                0x00019800                DOpus_CheckNumGad
+                0x0000bc80                DOpus_GetButtonImage
+                0x00018da0                DOpus_CheckConfig
+                0x0000acc0                DOpus_LCreatePort
+                0x0000cf00                DOpus_Assign
+                0x0000a880                DOpus_Random
+                0x00009820                gettingdirmsg
+                0x00018800                DoAssignDrive
+                0x0000f4e0                DOpus_LFreeRemember
+                0x0000ae50                DOpus_LToLower
+                0x00018910                linkinnewfiletype
+                0x0000a8e0                DOpus_StrToUpper
+                0x0001ad90                WildMatch
+                0x00013660                restorepens
+                0x00008310                activatestrgad
+                0x00009980                freemulti
+                0x0000b230                DOpus_LStrCmp
+                0x0000f160                DOpus_SendPacket
+                0x00008230                checkdrawer
+                0x00006bf0                getnewdrawer
+                0x00005720                DOpus_FileRequest
+                0x000184b0                DOpus_AssignGadget
+                0x0001a9a0                DoParsePattern
+                0x0001a170                DOpus_ReadStringFile
+                0x0000c900                DOpus_AddGadgetBorders
+                0x00019b90                DOpus_FSSetMenuStrip
+                0x0000a9f0                DOpus_EnableGadget
+                0x0000c010                DOpus_GetCheckImage
+                0x000134d0                dohilite
+                0x00006c90                getnew_file
+                0x0001b7c0                DOpus_StampToStr
+                0x0000aa40                DOpus_GhostGadget
+                0x0000ca70                DOpus_CreateGadgetBorders
+                0x0000aef0                DOpus_LStrnCat
+                0x00011d20                DOpus_ListViewIDCMP
+                0x00006e30                do_idcmp
+                0x0000b2b0                DOpus_ActivateStrGad
+                0x00006c50                clearfiles
+                0x00006390                displayfiles
+ *fill*         0x0001f343        0xd 37008
+ .text          0x0001f350       0x24 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(atoi.o)
+                0x0001f350                atoi
+ *fill*         0x0001f374        0xc 37008
+ .text          0x0001f380       0x7f /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(rand.o)
+                0x0001f380                rand
+                0x0001f3f0                srand
+ *fill*         0x0001f3ff        0x1 37008
+ .text          0x0001f400       0x74 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcat.o)
+                0x0001f400                strcat
+ *fill*         0x0001f474        0xc 37008
+ .text          0x0001f480       0x64 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcmp.o)
+                0x0001f480                strcmp
+ *fill*         0x0001f4e4        0xc 37008
+ .text          0x0001f4f0       0x44 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcpy.o)
+                0x0001f4f0                strcpy
+ *fill*         0x0001f534        0xc 37008
+ .text          0x0001f540       0x44 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strlen.o)
+                0x0001f540                strlen
+ *fill*         0x0001f584        0xc 37008
+ .text          0x0001f590       0x74 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strncmp.o)
+                0x0001f590                strncmp
+ *fill*         0x0001f604        0xc 37008
+ .text          0x0001f610       0x84 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strncpy.o)
+                0x0001f610                strncpy
+ *fill*         0x0001f694        0xc 37008
+ .text          0x0001f6a0       0xf4 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strtol.o)
+                0x0001f6a0                strtol
+ *fill*         0x0001f794        0xc 37008
+ .text          0x0001f7a0      0x237 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strtoul.o)
+                0x0001f7a0                strtoul
+ *fill*         0x0001f9d7        0x1 37008
+ *(.stub)
+ *(.gnu.warning)
+
+.fini
+ *(.fini)
+
+.rodata         0x00000000     0x222d
+ *(.rodata)
+ .rodata        0x00000000      0x173 /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/dopus_init.o
+                0x00000040                version
+                0x00000060                inittabl
+                0x00000080                datatable
+                0x0000001c                name
+ *fill*         0x00000173        0x1
+ .rodata        0x00000174      0x198 /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/functable.o
+                0x00000174                DOpus_functable
+ .rodata        0x0000030c       0xe6 /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(data.o)
+                0x0000034a                busydata13
+                0x0000032a                glass_image1
+                0x00000318                pdb_cyclebot
+                0x0000030c                pdb_cycletop
+                0x0000033a                glass_image2
+                0x0000031c                pdb_check
+                0x000003aa                busydata20
+ *fill*         0x000003f2        0xe
+ .rodata        0x00000400      0xf14 /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o)
+                0x00000570                ditherdata
+ *fill*         0x00001314        0xc
+ .rodata        0x00001320      0xf0c /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(ctype.o)
+                0x00002220                __ctype_b
+                0x00001620                __ctype_toupper_array
+                0x00002224                __ctype_toupper
+                0x00001320                __ctype_b_array
+                0x00001c20                __ctype_tolower_array
+                0x00002228                __ctype_tolower
+ .rodata        0x0000222c        0x1 /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/dopus_endtag.o
+                0x0000222c                DOpus_end
+
+.rodata1
+ *(.rodata1)
+
+.data           0x00000000      0xb1c
+ *(.data)
+ .data          0x00000000      0xb14 /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o)
+                0x000002b4                devtypes
+                0x00000ac0                def_months
+                0x00000300                nullstring
+                0x00000a9c                def_weekdays
+                0x00000af0                def_special_days
+                0x00000a48                look_dirs
+                0x00000958                defmenkeys2
+                0x00000b0c                topazfont
+                0x0000094e                defmenqual1
+                0x00000961                defmenqual2
+                0x00000b00                mondays
+                0x00000944                defmenkeys1
+ .data          0x00000b14        0x4 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(rand.o)
+ .data          0x00000b18        0x4 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(errno.o)
+                0x00000b18                errno
+
+.data1
+ *(.data1)
+
+.ctors
+ *(.ctors)
+
+.dtors
+ *(.dtors)
+
+.got
+ *(.got.plt)
+ *(.got)
+
+.dynamic
+ *(.dynamic)
+
+.sdata
+ *(.sdata)
+
+.sbss
+ *(.sbss)
+ *(.scommon)
+
+.bss            0x00000000        0x0
+ *(.dynbss)
+ *(.bss)
+ *(COMMON)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000      0x3a7
+ *(.comment)
+ .comment       0x00000000       0x37 /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/dopus_init.o
+ .comment       0x00000037       0x37 /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/functable.o
+ .comment       0x0000006e       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(data.o)
+ .comment       0x000000a5       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o)
+ .comment       0x000000dc       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(atoi.o)
+ .comment       0x00000113       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(rand.o)
+ .comment       0x0000014a       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcat.o)
+ .comment       0x00000181       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcmp.o)
+ .comment       0x000001b8       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcpy.o)
+ .comment       0x000001ef       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strlen.o)
+ .comment       0x00000226       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strncmp.o)
+ .comment       0x0000025d       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strncpy.o)
+ .comment       0x00000294       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strtol.o)
+ .comment       0x000002cb       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strtoul.o)
+ .comment       0x00000302       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(ctype.o)
+ .comment       0x00000339       0x37 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(errno.o)
+ .comment       0x00000370       0x37 /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/dopus_endtag.o
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges
+ *(.debug_aranges)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info
+ *(.debug_info)
+
+.debug_abbrev
+ *(.debug_abbrev)
+
+.debug_line
+ *(.debug_line)
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str
+ *(.debug_str)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+OUTPUT(/home/aros/AROS/bin/linux-i386/AROS/Libs/dopus.library elf32-i386)
+
+.note           0x000003a7      0x154
+ .note          0x000003a7       0x14 /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/dopus_init.o
+ .note          0x000003bb       0x14 /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/functable.o
+ .note          0x000003cf       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(data.o)
+ .note          0x000003e3       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libdopus.a(functions.o)
+ .note          0x000003f7       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(atoi.o)
+ .note          0x0000040b       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(rand.o)
+ .note          0x0000041f       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcat.o)
+ .note          0x00000433       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcmp.o)
+ .note          0x00000447       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strcpy.o)
+ .note          0x0000045b       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strlen.o)
+ .note          0x0000046f       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strncmp.o)
+ .note          0x00000483       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strncpy.o)
+ .note          0x00000497       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strtol.o)
+ .note          0x000004ab       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(strtoul.o)
+ .note          0x000004bf       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(ctype.o)
+ .note          0x000004d3       0x14 /home/aros/AROS/bin/linux-i386/AROS/lib/libarosc.a(errno.o)
+ .note          0x000004e7       0x14 /home/aros/AROS/bin/linux-i386/gen/contrib/dopus/Library/dopus_endtag.o

@@ -1,0 +1,538 @@
+; Directory Opus 4
+; Original GPL release version 4.12
+; Copyright 1993-2000 Jonathan Potter
+; 
+; This program is free software; you can redistribute it and/or
+; modify it under the terms of the GNU General Public License
+; as published by the Free Software Foundation; either version 2
+; of the License, or (at your option) any later version.
+; 
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+; 
+; You should have received a copy of the GNU General Public License
+; along with this program; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+; 
+; All users of Directory Opus 4 (including versions distributed
+; under the GPL) are entitled to upgrade to the latest version of
+; Directory Opus version 5 at a reduced price. Please see
+; http://www.gpsoft.com.au for more information.
+; 
+; The release of Directory Opus 4 under the GPL in NO WAY affects
+; the existing commercial status of Directory Opus 5.
+
+
+	SECTION	code
+
+	INCLUDE "exec/types.i"
+	INCLUDE "exec/initializers.i"
+	INCLUDE "exec/libraries.i"
+	INCLUDE "exec/lists.i"
+	INCLUDE "exec/alerts.i"
+	INCLUDE "exec/resident.i"
+	INCLUDE "exec/ports.i"
+	INCLUDE "exec/io.i"
+	INCLUDE "libraries/dos.i"
+	INCLUDE "graphics/rastport.i"
+
+	INCLUDE "asmsupp.i"
+	INCLUDE "dopusbase.i"
+
+* Functions.a
+
+	XREF endcode
+	XREF GetWBScreen
+	XREF Seed
+	XREF Random
+	XREF StrToUpper
+	XREF StrToLower
+	XREF DisableGadget
+	XREF EnableGadget
+	XREF GhostGadget
+	XREF _SwapMem
+	XREF _LSprintf
+	XREF LSprintf
+	XREF LCreateExtIO
+	XREF LCreatePort
+	XREF LDeleteExtIO
+	XREF LDeletePort
+	XREF LToUpper
+	XREF LToLower
+	XREF LStrCat
+	XREF LStrnCat
+	XREF LStrCpy
+	XREF LStrnCpy
+	XREF LStrCmpI
+	XREF LStrnCmpI
+	XREF LStrCmp
+	XREF LStrnCmp
+
+* Functions2.a
+
+	XREF BtoCStr
+	XREF ActivateStrGad
+	XREF RefreshStrGad
+
+* Graphics.a
+
+	XREF Do3DBox
+	XREF Do3DStringBox
+	XREF Do3DCycleBox
+	XREF DrawCheckMark
+	XREF HiliteGad
+
+* Filereq.c
+
+	XREF _DoFileRequest
+	XREF _DoSetBusyPointer
+
+* Wildcard.c
+
+	XREF _DoParsePattern
+	XREF _DoMatchPattern
+
+* Dosstuff.c
+
+	XREF _DoAssign
+	XREF _DoBaseName
+	XREF _DoCompareLock
+	XREF _DoPathName
+	XREF _DoSendPacket
+	XREF _DoTackOn
+	XREF _DoStampToStr
+	XREF _DoStrToStamp
+	XREF _DoAllocRemember
+	XREF _DoFreeRemember
+	XREF _DoFreeRemEntry
+	XREF _DoCompareDate
+	XREF _DoDoArrow
+	XREF _DoStrCombine
+	XREF _DoStrConcat
+	XREF _DoDecode_RLE
+
+* Dosstuff2.c
+
+	XREF _DoSearchPathList
+	XREF _DoCheckExist
+	XREF _DoRawkeyToStr
+	XREF _DoDoRMBGadget
+	XREF _DoAddGadgets
+	XREF _DoCheckNumGad
+	XREF _DoCheckHexGad
+	XREF _DoAtoh
+	XREF _DoDoSimpleRequest
+	XREF _DoDoCycleGadget
+	XREF _DoDrawRadioButton
+	XREF _DoGetButtonImage
+	XREF _DoGetCheckImage
+	XREF _DoUScoreText
+	XREF _DoDo3DFrame
+	XREF _DoDoGlassImage
+
+* Dosstuff3.c
+
+	XREF _DoReadConfig
+	XREF _DoSaveConfig
+	XREF _DoDefaultConfig
+	XREF _DoGetDevices
+	XREF _DoAssignGadget
+	XREF _DoAssignMenu
+	XREF _DoFreeConfig
+	XREF _DoCheckConfig
+	XREF _DoFindSystemFile
+
+* Listview.c
+
+	XREF _DoAddListView
+	XREF _DoListViewIDCMP
+	XREF _DoRemoveListView
+	XREF _DoRefreshListView
+	XREF _DoFixSliderBody
+	XREF _DoFixSliderPot
+	XREF _DoGetSliderPos
+	XREF _DoShowSlider
+
+* Requesters.c
+
+	XREF _R_OpenRequester
+	XREF _R_CloseRequester
+	XREF _R_AddRequesterObject
+	XREF _R_RefreshRequesterObject
+	XREF _R_ObjectText
+
+* Language.c
+
+	XREF _DoReadStringFile
+	XREF _DoFreeStringFile
+
+* Borders.c
+
+	XREF _DoAddGadgetBorders
+	XREF _DoCreateGadgetBorders
+	XREF _DoSelectGadget
+
+* Menus.c
+
+	XREF _DoFSSetMenuStrip
+
+* Chip data
+
+	XREF _pdb_cycletop
+	XREF _pdb_cyclebot
+	XREF _pdb_check
+
+* Objects
+
+	XREF _SysBase
+	XREF _DOpusBase
+	XREF _IntuitionBase
+	XREF _GfxBase
+	XREF _DOSBase
+	XREF _LayersBase
+
+start:
+	moveq #0,d0
+	rts
+
+romtag:
+	dc.w RTC_MATCHWORD
+	dc.l romtag
+	dc.l endcode
+	dc.b RTF_AUTOINIT
+	dc.b VERSION
+	dc.b NT_LIBRARY
+	dc.b 0
+	dc.l dopusname
+	dc.l idstring
+	dc.l init
+
+VERSION  equ 22
+REVISION equ 6
+
+dopusname:
+	DOPUSNAME
+
+idstring:
+	dc.b 'dopus.library 22.6 (30 Jul 93) Copyright © 1993 Jonathan Potter',13,10,0
+
+dosname:
+	dc.b 'dos.library',0
+intuitionname:
+	dc.b 'intuition.library',0
+graphicsname:
+	dc.b 'graphics.library',0
+layersname:
+	dc.b 'layers.library',0
+
+	ds.w 0
+
+init:
+	dc.l DOpusBase_SIZEOF
+	dc.l functable
+	dc.l datatable
+	dc.l initroutine
+
+functable:
+	dc.l Open
+	dc.l Close
+	dc.l Expunge
+	dc.l Null
+	dc.l _DoFileRequest
+	dc.l Do3DBox
+	dc.l Do3DStringBox
+	dc.l Do3DCycleBox
+	dc.l _DoDoArrow
+	dc.l LSprintf
+	dc.l LCreateExtIO
+	dc.l LCreatePort
+	dc.l LDeleteExtIO
+	dc.l LDeletePort
+	dc.l LToUpper
+	dc.l LToLower
+	dc.l LStrCat
+	dc.l LStrnCat
+	dc.l LStrCpy
+	dc.l LStrnCpy
+	dc.l LStrCmp
+	dc.l LStrnCmp
+	dc.l LStrCmpI
+	dc.l LStrnCmpI
+	dc.l _DoStrCombine
+	dc.l _DoStrConcat
+	dc.l LParsePattern
+	dc.l LMatchPattern
+	dc.l LParsePatternI
+	dc.l LMatchPatternI
+	dc.l BtoCStr
+	dc.l _DoAssign
+	dc.l _DoBaseName
+	dc.l _DoCompareLock
+	dc.l _DoPathName
+	dc.l _DoSendPacket
+	dc.l _DoTackOn
+	dc.l _DoStampToStr
+	dc.l _DoStrToStamp
+	dc.l _DoAddListView
+	dc.l _DoListViewIDCMP
+	dc.l _DoRefreshListView
+	dc.l _DoRemoveListView
+	dc.l DrawCheckMark
+	dc.l FixSliderBody
+	dc.l FixSliderPot
+	dc.l GetSliderPos
+	dc.l _DoAllocRemember
+	dc.l _DoFreeRemember
+	dc.l _DoSetBusyPointer
+	dc.l GetWBScreen
+	dc.l _DoSearchPathList
+	dc.l _DoCheckExist
+	dc.l _DoCompareDate
+	dc.l Seed
+	dc.l Random
+	dc.l StrToUpper
+	dc.l StrToLower
+	dc.l _DoRawkeyToStr
+	dc.l _DoDoRMBGadget
+	dc.l _DoAddGadgets
+	dc.l ActivateStrGad
+	dc.l RefreshStrGad
+	dc.l _DoCheckNumGad
+	dc.l _DoCheckHexGad
+	dc.l _DoAtoh
+	dc.l HiliteGad
+	dc.l _DoDoSimpleRequest
+	dc.l _DoReadConfig
+	dc.l _DoSaveConfig
+	dc.l _DoDefaultConfig
+	dc.l _DoGetDevices
+	dc.l _DoAssignGadget
+	dc.l _DoAssignMenu
+	dc.l _DoFindSystemFile
+	dc.l _DoDo3DFrame
+	dc.l _DoFreeConfig
+	dc.l _DoDoCycleGadget
+	dc.l _DoUScoreText
+	dc.l DisableGadget
+	dc.l EnableGadget
+	dc.l GhostGadget
+	dc.l _DoDrawRadioButton
+	dc.l _DoGetButtonImage
+	dc.l _DoShowSlider
+	dc.l _DoCheckConfig
+	dc.l _DoGetCheckImage
+	dc.l _R_OpenRequester
+	dc.l _R_CloseRequester
+	dc.l _R_AddRequesterObject
+	dc.l _R_RefreshRequesterObject
+	dc.l DoObjectText
+	dc.l _DoDoGlassImage
+	dc.l _DoDecode_RLE
+	dc.l _DoReadStringFile
+	dc.l _DoFreeStringFile
+	dc.l _DoFreeRemEntry
+	dc.l _DoAddGadgetBorders
+	dc.l _DoCreateGadgetBorders
+	dc.l _DoSelectGadget
+	dc.l _DoFSSetMenuStrip
+	dc.l -1
+
+datatable:
+	INITBYTE LN_TYPE,NT_LIBRARY
+	INITLONG LN_NAME,dopusname
+	INITBYTE LIB_FLAGS,LIBF_SUMUSED!LIBF_CHANGED
+	INITWORD LIB_VERSION,VERSION
+	INITWORD LIB_REVISION,REVISION
+	INITLONG LIB_IDSTRING,idstring
+	dc.l 0
+
+initroutine:
+	move.l a5,-(sp)
+	move.l d0,a5
+	move.l a6,db_ExecBase(a5)
+	move.l a6,_SysBase
+	move.l a0,db_SegList(a5)
+
+	move.l a5,_DOpusBase
+
+	lea	dosname(pc),a1
+	moveq.l #0,d0
+	move.l 4,a6
+	jsr _LVOOpenLibrary(a6)
+	move.l d0,db_DOSBase(a5)
+	move.l d0,_DOSBase
+
+	lea intuitionname(pc),a1
+	moveq.l #0,d0
+	jsr _LVOOpenLibrary(a6)
+	move.l d0,db_IntuitionBase(a5)
+	move.l d0,_IntuitionBase
+
+	lea graphicsname(pc),a1
+	moveq.l #0,d0
+	jsr _LVOOpenLibrary(a6)
+	move.l d0,db_GfxBase(a5)
+	move.l d0,_GfxBase
+
+	lea layersname(pc),a1
+	moveq.l #0,d0
+	jsr _LVOOpenLibrary(a6)
+	move.l d0,db_LayersBase(a5)
+	move.l d0,_LayersBase
+
+;	jsr _init_dopus_library
+
+	lea.l _pdb_cycletop,a0
+	move.l a0,pdb_cycletop(a5)
+
+	lea.l _pdb_cyclebot,a0
+	move.l a0,pdb_cyclebot(a5)
+
+	lea.l _pdb_check,a0
+	move.l a0,pdb_check(a5)
+
+	move.l #0,pdb_Flags(a5)
+
+	move.l 4,a6
+	move.l a5,d0
+	move.l (sp)+,a5
+	rts
+
+Open:
+	addq.w #1,LIB_OPENCNT(a6)
+	bclr #LIBB_DELEXP,db_Flags(a6)
+	move.l a6,d0
+	rts
+
+Close:
+	moveq.l #0,d0
+	subq.w #1,LIB_OPENCNT(a6)
+	bne.s	stillopen
+	btst #LIBB_DELEXP,db_Flags(a6)
+	beq.s	stillopen
+	bsr	Expunge
+stillopen:
+	rts
+
+Expunge:
+	movem.l	d2/a5/a6,-(sp)
+	move.l a6,a5
+	tst.w	LIB_OPENCNT(a5)
+	beq.s	notopen
+	bset #LIBB_DELEXP,db_Flags(a5)
+	moveq.l #0,d0
+	bra expungeend
+notopen:
+	move.l db_SegList(a5),d2
+	move.l a5,a1
+	move.l 4,a6
+	jsr _LVORemove(a6)
+
+	move.l db_DOSBase(a5),a1
+	jsr _LVOCloseLibrary(a6)
+	move.l db_IntuitionBase(a5),a1
+	jsr _LVOCloseLibrary(a6)
+	move.l db_GfxBase(a5),a1
+	jsr _LVOCloseLibrary(a6)
+	move.l db_LayersBase(a5),a1
+	jsr _LVOCloseLibrary(a6)
+
+	moveq.l #0,d0
+	move.l a5,a1
+	move.w LIB_NEGSIZE(a5),d0
+	sub.l d0,a1
+	add.w LIB_POSSIZE(a5),d0
+	move.l 4,a6
+	jsr _LVOFreeMem(a6)
+	move.l d2,d0
+
+expungeend:
+	movem.l (sp)+,d2/a5/a6
+	rts
+
+Null:
+	moveq.l #0,d0
+	rts
+
+LParsePattern:
+	moveq.l #0,d0
+	bra doparse
+LParsePatternI:
+	moveq.l #1,d0
+doparse:
+	movem.l a2-a6/d2-d7,-(sp)
+	move.l d0,-(sp)
+	move.l a1,-(sp)
+	move.l a0,-(sp)
+	jsr _DoParsePattern
+	add.l #12,sp
+	movem.l (sp)+,a2-a6/d2-d7
+	rts
+
+LMatchPattern:
+	moveq.l #0,d0
+	bra domatch
+LMatchPatternI:
+	moveq.l #1,d0
+domatch:
+	movem.l a2-a6/d2-d7,-(sp)
+	move.l d0,-(sp)
+	move.l a1,-(sp)
+	move.l a0,-(sp)
+	jsr _DoMatchPattern
+	add.l #12,sp
+	movem.l (sp)+,a2-a6/d2-d7
+	rts
+
+DoObjectText:
+	movem.l a2-a6/d2-d7,-(sp)
+	move.l d4,-(sp)
+	move.l a1,-(sp)
+	move.l d3,-(sp)
+	move.l d2,-(sp)
+	move.l d1,-(sp)
+	move.l d0,-(sp)
+	move.l a0,-(sp)
+	jsr _R_ObjectText
+	add.l #28,sp
+	movem.l (sp)+,a2-a6/d2-d7
+	rts
+
+FixSliderBody:
+	movem.l a2-a6/d2-d7,-(sp)
+	move.l d2,-(sp)
+	move.l d1,-(sp)
+	move.l d0,-(sp)
+	move.l a1,-(sp)
+	move.l a0,-(sp)
+	jsr _DoFixSliderBody
+	add.l #20,sp
+	movem.l (sp)+,a2-a6/d2-d7
+	rts
+
+FixSliderPot:
+	movem.l a2-a6/d2-d7,-(sp)
+	move.l d3,-(sp)
+	move.l d2,-(sp)
+	move.l d1,-(sp)
+	move.l d0,-(sp)
+	move.l a1,-(sp)
+	move.l a0,-(sp)
+	jsr _DoFixSliderPot
+	add.l #24,sp
+	movem.l (sp)+,a2-a6/d2-d7
+	rts
+
+GetSliderPos:
+	movem.l a2-a6/d2-d7,-(sp)
+	move.l d1,-(sp)
+	move.l d0,-(sp)
+	move.l a0,-(sp)
+	jsr _DoGetSliderPos
+	add.l #12,sp
+	movem.l (sp)+,a2-a6/d2-d7
+	rts
+
+	END

@@ -1,0 +1,437 @@
+; Directory Opus 4
+; Original GPL release version 4.12
+; Copyright 1993-2000 Jonathan Potter
+; 
+; This program is free software; you can redistribute it and/or
+; modify it under the terms of the GNU General Public License
+; as published by the Free Software Foundation; either version 2
+; of the License, or (at your option) any later version.
+; 
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+; 
+; You should have received a copy of the GNU General Public License
+; along with this program; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+; 
+; All users of Directory Opus 4 (including versions distributed
+; under the GPL) are entitled to upgrade to the latest version of
+; Directory Opus version 5 at a reduced price. Please see
+; http://www.gpsoft.com.au for more information.
+; 
+; The release of Directory Opus 4 under the GPL in NO WAY affects
+; the existing commercial status of Directory Opus 5.
+
+
+	SECTION	code
+
+	INCLUDE "asmsupp.i"
+	INCLUDE "dopusbase.i"
+
+	XDEF Do3DBox
+	XDEF Do3DStringBox
+	XDEF Do3DCycleBox
+	XDEF DrawCheckMark
+	XDEF HiliteGad
+	
+Do3DBox:
+	movem.l a2-a4/a6/d2-d7,-(sp)
+
+	move.l db_GfxBase(a6),a6
+	move.l a0,a2		; rp in a2
+	move.l d0,d6		; x in d6
+	move.l d1,d7		; y in d7
+
+	move.l a2,a1		; rp in a1
+	move.l d4,d0		; tp in d0
+	jsr _LVOSetAPen(a6)	; set apen
+
+	move.l a2,a1		; rp in a1
+	move.l d6,d0		; x in d0
+	subq.l #2,d0		; x - 2
+	move.l d0,a3		; new x preserved in a3
+	move.l d7,d1		; y to d1
+	subq.l #1,d1		; y - 2
+	move.l d1,a4		; preserv y in a4
+	jsr _LVOMove(a6)	; move to (x, y)
+
+	move.l a2,a1		; rp
+	move.l d6,d0		; orig x
+	add.l d2,d0		; x + w
+	move.l a4,d1		; Get the new y coord
+	jsr _LVODraw(a6)
+
+	move.l a2,a1		; rp
+	move.l a3,d0		; new x
+	move.l a4,d1		; new y
+	jsr _LVOMove(a6)	; move
+
+	move.l a2,a1		; rp
+	move.l a3,d0		; new x
+	move.l d7,d1		; old y
+	add.l d3,d1		; y + h
+	jsr _LVODraw(a6)
+
+	move.l a2,a1		; rp
+	move.l d6,d0		; orig x
+	subq.l #1,d0		; x - 1
+	move.l d0,a3		; store
+	move.l a4,d1		; get new y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1		; rp
+	move.l a3,d0		; new x
+	move.l d7,d1		; old y
+	add.l d3,d1		; y + h
+	move.l d1,a4		; store y + h in low_y
+	subq.l #1,d1		; low_y - 1
+	jsr _LVODraw(a6)
+
+	move.l a2,a1		; rp
+	move.l d5,d0		; bpen
+	jsr _LVOSetAPen(a6)
+
+	move.l a2,a1
+	move.l a3,d0		; new_x
+	move.l a4,d1		; low_y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1	
+	move.l d6,d0		; orig x
+	add.l d2,d0		; x + w
+	move.l d0,a3		; store in right_x
+	addq.l #1,d0		;right_x + 1
+	move.l a4,d1		; low_y
+	jsr _LVODraw(a6)
+
+	move.l a2,a1
+	move.l a3,d0		; right_x
+	addq.l #1,d0		; right_x + 1
+	move.l d7,d1		; orig y
+	subq.l #1,d1		; y - 1
+	jsr _LVODraw(a6)
+
+	move.l a2,a1
+	move.l a3,d0		; right_x
+	move.l a4,d1		; low_y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1
+	move.l a3,d0		; right_x
+	move.l d7,d1		; y
+	jsr _LVODraw(a6)
+
+	movem.l (sp)+,a2-a4/a6/d2-d7
+	rts
+
+Do3DStringBox:
+	movem.l a0/d0-d3,-(sp)	; preserve the registers we change below
+	subq.l #2,d0	; x -= 2
+	subq.l #1,d1	; y -= 1
+	addq.l #4,d2	; w += 4
+	addq.l #2,d3	; h += 2
+	bsr Do3DBox
+	movem.l (sp)+,a0/d0-d3	; get back the orignal params
+
+	movem.l a2-a4/a6/d2-d7,-(sp) 
+
+	move.l db_GfxBase(a6),a6
+	move.l a0,a2		; rp
+	move.l d0,d6		; save orig x
+	move.l d1,d7		; save orig y
+
+	move.l a2,a1		; rp
+	move.l d5,d0		; bp
+	jsr _LVOSetAPen(a6)
+
+	move.l a2,a1		; rp
+	move.l d6,d0		; orig x
+	subq.l #2,d0		; x - 2
+	move.l d0,a3		; store in left_x
+	move.l d7,d1		; orig y
+	subq.l #1,d1		; y - 1
+	move.l d1,a4		; store in top_y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1		; rp
+	move.l d6,d0		; orig x
+	add.l d2,d0		; x + w
+	addq.l #1,d0		; + 1
+	move.l a4,d1		; top_y
+	jsr _LVODraw(a6)
+
+	move.l a2,a1
+	move.l a3,d0		; left_x
+	move.l a4,d1		; top_y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1
+	move.l a3,d0		; left_x
+	move.l d7,d1		; orig y
+	add.l d3,d1		; + h
+	addq.l #1,d1		; + 1
+	jsr _LVODraw(a6)
+
+	move.l a2,a1
+	move.l d6,d0		; orig x
+	subq.l #1,d0		; - 1
+	move.l d0,a3		; store in left_x
+	move.l a4,d1		; top_y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1
+	move.l a3,d0		; left_x
+	move.l d7,d1		; orig y
+	add.l d3,d1		; + h
+	move.l d1,a4		; store in bot_y
+	subq.l #1,d1		; - 1
+	jsr _LVODraw(a6)
+
+	move.l a2,a1
+	move.l d4,d0		; tp
+	jsr _LVOSetAPen(a6)
+
+	move.l a2,a1
+	move.l a3,d0		; left_x
+	move.l a4,d1		; bot_y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1
+	move.l d6,d0		; orig x
+	add.l d2,d0		; + w
+	addq.l #1,d0		; + 1
+	move.l d0,a3		; store in right_x
+	move.l a4,d1		; bot_y
+	jsr _LVODraw(a6)
+
+	move.l a2,a1
+	move.l a3,d0		; right_x
+	move.l d7,d1		; orig y
+	subq.l #1,d1		; - 1
+	jsr _LVODraw(a6)
+
+	move.l a2,a1
+	sub.l #1,a3		; right_x --
+	move.l a3,d0		; right_x
+	move.l a4,d1		; bot_y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1
+	move.l a3,d0		; right_x
+	move.l d7,d1		; orig y
+	jsr _LVODraw(a6)
+
+	movem.l (sp)+,a2-a4/a6/d2-d7
+	rts
+
+Do3DCycleBox:
+	movem.l a0/d0/d1,-(sp)
+	bsr Do3DBox
+	movem.l (sp)+,a0/d0/d1
+
+	movem.l a2-a6/d2-d7,-(sp)
+
+	move.l a6,a5
+	move.l db_GfxBase(a6),a6
+	move.l a0,a2		; rp
+	move.l d0,d6		; preserve orig x
+	move.l d1,d7		; preserve orig y
+
+	move.l a2,a1
+	move.l d5,d0		; bp
+	jsr _LVOSetAPen(a6)
+
+	move.l a2,a1
+	moveq.l #0,d0
+	move.b 28(a1),d0	; preserve old drmd
+	move.l d0,-(sp)
+	moveq.l #0,d0
+	jsr _LVOSetDrMd(a6)
+
+	movem.l d0-d5,-(sp)
+	move.l pdb_cycletop(a5),d0	; Get the pdb_cycletop template
+	tst.l d0			; does it exist ?
+	beq.s nocycletopdraw
+	move.l d0,a0			; template
+	move.l d6,d2			; orig x
+	addq.l #4,d2			; tmpl_x = x + 4
+	move.l d3,a3			; new_h = h
+	move.l d7,d3			; orig y
+	addq.l #1,d3			; tmpl_y = y + 1
+	sub.l #12,a3			; new_h -= 12
+	add.l d3,a3			; new_h += tmpl_y
+	add.l #7,a3			; new_h += 7
+	moveq.l #0,d0			; xsrc
+	moveq.l #2,d1			; modulo
+	move.l a2,a1			; rp
+	moveq.l #11,d4			; xsize
+	moveq.l #6,d5			; ysize
+	jsr _LVOBltTemplate(a6)
+
+nocycletopdraw:
+	move.l pdb_cyclebot(a5),d0
+	tst.l d0
+	beq.s nocyclebotdraw
+	move.l d0,a0
+	moveq.l #0,d0
+	moveq.l #2,d1
+	move.l a2,a1
+	move.l a3,d3
+	moveq.l #2,d5
+	jsr _LVOBltTemplate(a6)
+nocyclebotdraw:
+	movem.l (sp)+,d0-d5
+
+	move.l a2,a1
+	move.l d6,d0	; orig x
+	addq.l #4,d0	; + 4
+	move.l d0,a3	; store in new_x
+	move.l d7,d1	; orig y
+	addq.l #7,d1	; + 7
+	move.l d1,a4	; store in new_y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1
+	move.l a3,d0	; new_x
+	move.l a4,d1	; new_y
+	move.l d3,a5	; store height in new_h
+	sub.l #12,a5	; height - 12
+	add.l a5,d1	; add new height to y
+	jsr _LVODraw(a6)
+
+	move.l a2,a1
+	move.l d6,d0	; orig x
+	addq.l #5,d0	; + 5
+	move.l d0,a3	; store as new_x
+	move.l a4,d1	; new_y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1
+	move.l a3,d0	; new_x
+	move.l a4,d1	; new_y
+	add.l a5,d1	; + new_h
+	jsr _LVODraw(a6)
+
+	move.l a2,a1
+	move.l d6,d0	; orig x
+	add.l #18,d0	; + 18
+	move.l d0,a3	; store as new_x
+	move.l d7,d1	; orig y
+	addq.l #1,d1	; + 1
+	move.l d1,a4	; store as new_y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1
+	move.l a3,d0	; new_x
+	move.l d7,d1	; orig y
+	move.l d3,a5	
+	sub.l #2,a5	; new_h = h - 2
+	add.l a5,d1	; + new_h
+	jsr _LVODraw(a6)
+
+	move.l a2,a1
+	move.l d4,d0	; tp
+	jsr _LVOSetAPen(a6)
+
+	move.l a2,a1
+	move.l d6,d0	; orig x
+	add.l #19,d0	; + 19
+	move.l d0,a3	; store in new_x
+	move.l a4,d1	; new_y
+	jsr _LVOMove(a6)
+
+	move.l a2,a1
+	move.l a3,d0	; new_x
+	move.l d7,d1	; orig y
+	add.l a5,d1	; add new_h
+	jsr _LVODraw(a6)
+
+	move.l a2,a1
+	move.l (sp)+,d0
+	jsr _LVOSetDrMd(a6)
+
+	movem.l (sp)+,a2-a6/d2-d7
+	rts
+
+DrawCheckMark:
+	movem.l a2/a5/a6/d2-d7,-(sp)
+	move.l d2,d6	;  preserve clear
+	move.l a6,a5
+
+	move.l a0,a2	; preserve rp
+	move.l a2,a1	; get rp
+	move.l d0,d2	; preserve x
+	move.l d1,d3	; preserve y
+	moveq.l #13,d4	
+	moveq.l #7,d5
+	move.l db_GfxBase(a6),a6
+	move.b 28(a1),-(sp)	; preserve drmd
+	moveq.l #0,d0
+	jsr _LVOSetDrMd(a6)	; JAM1
+
+	tst.l d6		; clear ?
+	bne.s notclear
+	move.l a2,a1		; rp
+	moveq.l #0,d7
+	move.b 25(a1),d7	; get apen into d7
+	ext.l d7
+	moveq.l #0,d0
+	move.b 26(a1),d0	; get bpen into d0
+	jsr _LVOSetAPen(a6)
+
+notclear:
+	move.l pdb_check(a5),a0	; get checkmark template
+	move.l a0,d0
+	tst.l d0
+	beq nodrawcheck
+	moveq.l #0,d0		; xsrc
+	moveq.l #2,d1		; modulo
+	move.l a2,a1		; rp
+	jsr _LVOBltTemplate(a6)
+nodrawcheck:		; Put back old apen
+	tst.l d6
+	bne.s notclear2
+	move.l d7,d0
+	move.l a2,a1
+	jsr _LVOSetAPen(a6)
+notclear2:			; put back old drmd
+	moveq.l #0,d0
+	move.b (sp)+,d0
+	ext.l d0
+	move.l a2,a1
+	jsr _LVOSetDrMd(a6)
+	movem.l (sp)+,a2/a5/a6/d2-d7
+	rts
+
+HiliteGad:
+	movem.l a2/a3/a6/d2-d4,-(sp)
+	moveq.l #0,d4		
+	move.b 28(a1),d4	; preserve old drmd
+	move.l a0,a2		; preserve gadget
+	move.l a1,a3		; preserve rp
+	moveq.l #2,d0		; new drmd : COMPLEMENT
+	move.l db_GfxBase(a6),a6
+	jsr _LVOSetDrMd(a6)
+	move.l a3,a1		; rp
+	moveq.l #0,d0		; clear for use
+	moveq.l #0,d1
+	move.w 4(a2),d0		; gad leftedge
+	move.w 6(a2),d1		; gad topedge
+	
+	move.l d0,d2		
+	add.w 8(a2),d2		
+	subq.w #1,d2		; gad rightedge in d2
+	
+	move.l d1,d3		
+	add.w 10(a2),d3		
+	subq.w #1,d3		; gad bottomedge in d3
+	jsr _LVORectFill(a6)
+	move.l a3,a1		
+	move.l d4,d0
+	jsr _LVOSetDrMd(a6)	; put back old drmd
+	movem.l (sp)+,a2/a3/a6/d2-d4
+	rts
+
+	end

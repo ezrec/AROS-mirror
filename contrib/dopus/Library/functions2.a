@@ -1,0 +1,110 @@
+; Directory Opus 4
+; Original GPL release version 4.12
+; Copyright 1993-2000 Jonathan Potter
+; 
+; This program is free software; you can redistribute it and/or
+; modify it under the terms of the GNU General Public License
+; as published by the Free Software Foundation; either version 2
+; of the License, or (at your option) any later version.
+; 
+; This program is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+; 
+; You should have received a copy of the GNU General Public License
+; along with this program; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+; 
+; All users of Directory Opus 4 (including versions distributed
+; under the GPL) are entitled to upgrade to the latest version of
+; Directory Opus version 5 at a reduced price. Please see
+; http://www.gpsoft.com.au for more information.
+; 
+; The release of Directory Opus 4 under the GPL in NO WAY affects
+; the existing commercial status of Directory Opus 5.
+
+	SECTION	code
+
+	INCLUDE "exec/types.i"
+	INCLUDE "exec/initializers.i"
+	INCLUDE "exec/libraries.i"
+	INCLUDE "exec/lists.i"
+	INCLUDE "exec/alerts.i"
+	INCLUDE "exec/resident.i"
+	INCLUDE "exec/ports.i"
+	INCLUDE "exec/io.i"
+	INCLUDE "libraries/dos.i"
+	INCLUDE "graphics/rastport.i"
+
+	INCLUDE "asmsupp.i"
+	INCLUDE "dopusbase.i"
+
+	XDEF BtoCStr
+	XDEF ActivateStrGad
+	XDEF RefreshStrGad
+	
+BtoCStr:
+	subq.l #1,d0
+	move.l a0,d1
+	lsl.l #2,d1
+	move.l d1,a0
+	moveq.l #0,d1
+	move.b (a0)+,d1
+	cmp.l d0,d1
+	ble conloop
+	move.l d0,d1
+conloop:
+	move.b (a0)+,(a1)+
+	dbeq d1,conloop
+	move.b #0,(a1)
+	rts
+
+ActivateStrGad:
+	movem.l d2/a2-a4/a6,-(sp)
+	btst.b #0,12(a0)		; test for disabled flag
+	bne.s noact
+	move.l 34(a0),a2		; Get specialinfo
+	move.l (a2),a3			; Get pointer to buffer
+	moveq.l #0,d2
+lenloop:
+	addq.w #1,d2
+	tst.b (a3)+
+	bne lenloop
+	subq.w #1,d2
+	btst.b #2,14(a0)
+	beq strleft
+	move.w #0,8(a2)
+	bra doact
+strleft:
+	move.w d2,8(a2)
+doact:
+	move.l a0,a3		; preserve gadget
+	move.l a1,a4		; preserve window
+	move.l #0,a2		; requester
+	moveq.l #1,d0		; numgads
+	move.l db_IntuitionBase(a6),a6
+	jsr _LVORefreshGList(a6)
+	move.l a3,a0		; gadget
+	move.l a4,a1		; window
+	move.l #0,a2		; requester
+	jsr _LVOActivateGadget(a6)
+noact:
+	movem.l (sp)+,d2/a2-a4/a6
+	rts
+
+RefreshStrGad:
+	movem.l a2/a3/a6,-(sp)
+	move.l 34(a0),a2	; get special info
+	move.w #0,8(a2)		; BufferPos = 0
+	move.l a0,a3		; preserve gadget
+	or.w #3,12(a3)		; set GFLG_RELBOTTOM
+	move.l #0,a2
+	moveq.l #1,d0
+	move.l db_IntuitionBase(a6),a6
+	jsr _LVORefreshGList(a6)
+	and.w #-4,12(a3)
+	movem.l (sp)+,a2/a3/a6
+	rts
+
+	end
