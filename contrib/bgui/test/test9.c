@@ -10,7 +10,7 @@
 #include <proto/exec.h>
 #include <proto/intuition.h>
 
-
+#include <stdio.h>
 
 Object *Win, *ra,*HD_List,*HD_Add_Entry,*HD_Exit;
 struct Window *win;

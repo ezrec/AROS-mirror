@@ -35,6 +35,8 @@
 #include <proto/exec.h>
 #include <proto/bgui.h>
 
+#include <stdio.h>
+
 #define Local static
 
 struct PrefsWindow {

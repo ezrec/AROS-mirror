@@ -10,7 +10,7 @@
 #include <proto/exec.h>
 #include <proto/intuition.h>
 
-
+#include <stdio.h>
 
 Object *Win, *ra;
 struct Window *win;

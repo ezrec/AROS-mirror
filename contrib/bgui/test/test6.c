@@ -19,6 +19,8 @@
 #include <proto/intuition.h>
 #include <proto/exec.h>
 
+#include <stdio.h>
+
 struct Library *BGUIBase=NULL;
 struct IntuitionBase * IntuitionBase;
 
@@ -44,12 +46,12 @@ ULONG umweights[]={50,7,100};
 
 Object *InitTest_6( void )
 {
-	Object *win;
+        Object *win;
 
-	win = WindowObject,
-		WINDOW_SmartRefresh, TRUE,
-		WINDOW_AutoAspect, TRUE,
-		WINDOW_MasterGroup, 
+        win = WindowObject,
+                WINDOW_SmartRefresh, TRUE,
+                WINDOW_AutoAspect, TRUE,
+                WINDOW_MasterGroup, 
       VGroupObject,NormalSpacing,NormalOffset,
 /*
         StartMember,HGroupObject,NarrowSpacing,
@@ -66,49 +68,49 @@ Object *InitTest_6( void )
         EndObject,FixMinHeight,EndMember,
 */
       EndObject,
-		EndObject;
+                EndObject;
 
-	return( win );
+        return( win );
 }
 
 int main(argc,argv)
 {
-	Object *window;
+        Object *window;
 
-	if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
-	{
-	  printf("Could not open Intuition.library!\n");
-	  return -1;
-	}
+        if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+        {
+          printf("Could not open Intuition.library!\n");
+          return -1;
+        }
 
-	if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
-	{
-		if((window=InitTest_6())!=NULL
-		&& WindowOpen(window)!=NULL)
-		{
-			ULONG signal;
+        if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
+        {
+                if((window=InitTest_6())!=NULL
+                && WindowOpen(window)!=NULL)
+                {
+                        ULONG signal;
 
-			if(GetAttr(WINDOW_SigMask,window,&signal)
-			&& signal!=0)
-			{
-				for(;;)
-				{
-					Wait(signal);
-					switch(HandleEvent(window))
-					{
-						case WMHI_CLOSEWINDOW:
-							break;
-						case WMHI_NOMORE:
-						default:
-							continue;
-					}
-					break;
-				}
-			}
-			DisposeObject(window);
-		}
-		CloseLibrary(BGUIBase);
-	}
-	CloseLibrary((struct Library *)IntuitionBase);
+                        if(GetAttr(WINDOW_SigMask,window,&signal)
+                        && signal!=0)
+                        {
+                                for(;;)
+                                {
+                                        Wait(signal);
+                                        switch(HandleEvent(window))
+                                        {
+                                                case WMHI_CLOSEWINDOW:
+                                                        break;
+                                                case WMHI_NOMORE:
+                                                default:
+                                                        continue;
+                                        }
+                                        break;
+                                }
+                        }
+                        DisposeObject(window);
+                }
+                CloseLibrary(BGUIBase);
+        }
+        CloseLibrary((struct Library *)IntuitionBase);
 
 }

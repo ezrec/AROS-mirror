@@ -20,14 +20,16 @@
 #include <proto/exec.h>
 #include <gadgets/gradientslider.h>
 
+#include <stdio.h>
+
 struct Library *BGUIBase=NULL;
 struct IntuitionBase * IntuitionBase;
 
 enum
 {
-	WIN4_MASTER, WIN4_GRSLIDER1,
+        WIN4_MASTER, WIN4_GRSLIDER1,
 
-	WIN4_NUMGADS
+        WIN4_NUMGADS
 };
 
 Object *Test_4Objs[WIN4_NUMGADS];
@@ -44,77 +46,77 @@ static WORD penns[ GRADCOLORS + 1 ] =
 
 Object *InitTest_4( void )
 {
-	Object *win;
-	Object **ar = Test_4Objs;
+        Object *win;
+        Object **ar = Test_4Objs;
 
-	win = WindowObject,
-		WINDOW_SmartRefresh, TRUE,
-		WINDOW_AutoAspect, TRUE,
-		WINDOW_MasterGroup, ar[WIN4_MASTER] = VGroupObject,
-			FRM_Type,FRTYPE_NEXT,
-			FRM_Title,NULL,
-			StartMember, ar[WIN4_GRSLIDER1]= ExternalObject,
-        		  EXT_MinWidth,           10,
-        		  EXT_MinHeight,          10,
-        		  EXT_ClassID,            "gradientslider.gadget",
-        		  EXT_NoRebuild,          TRUE,
-        		  GRAD_PenArray,          penns,
-        		  PGA_Freedom,            LORIENT_VERT,
-        		  GA_ID,                  WIN4_GRSLIDER1,
-        		  EndObject,
-			EndMember,
-		EndObject,
-	EndObject;
+        win = WindowObject,
+                WINDOW_SmartRefresh, TRUE,
+                WINDOW_AutoAspect, TRUE,
+                WINDOW_MasterGroup, ar[WIN4_MASTER] = VGroupObject,
+                        FRM_Type,FRTYPE_NEXT,
+                        FRM_Title,NULL,
+                        StartMember, ar[WIN4_GRSLIDER1]= ExternalObject,
+                          EXT_MinWidth,           10,
+                          EXT_MinHeight,          10,
+                          EXT_ClassID,            "gradientslider.gadget",
+                          EXT_NoRebuild,          TRUE,
+                          GRAD_PenArray,          penns,
+                          PGA_Freedom,            LORIENT_VERT,
+                          GA_ID,                  WIN4_GRSLIDER1,
+                          EndObject,
+                        EndMember,
+                EndObject,
+        EndObject;
 
-	return( win );
+        return( win );
 }
 
 int main(argc,argv)
 {
-	Object *window;
-	struct Library *GradientSliderBase;
+        Object *window;
+        struct Library *GradientSliderBase;
 
-	if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
-	{
-	  printf("Could not open Intuition.library!\n");
-	  return -1;
-	}
+        if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+        {
+          printf("Could not open Intuition.library!\n");
+          return -1;
+        }
 
-	if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
-	{
+        if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
+        {
 printf("trying to open gradientslider.gadget\n");
     if(GradientSliderBase=OpenLibrary("Gadgets/gradientslider.gadget",39L))
     {
 printf("opened gradientslider.gadget\n");
-			if((window=InitTest_4())!=NULL
-			&& WindowOpen(window)!=NULL)
-			{
-				ULONG signal;
+                        if((window=InitTest_4())!=NULL
+                        && WindowOpen(window)!=NULL)
+                        {
+                                ULONG signal;
 
-				if(GetAttr(WINDOW_SigMask,window,&signal)
-				&& signal!=0)
-				{
-					for(;;)
-					{
-						Wait(signal);
-						switch(HandleEvent(window))
-						{
-							case WMHI_CLOSEWINDOW:
-								break;
-							case WMHI_NOMORE:
-							default:
-								continue;
-						}
-						break;
-					}
-				}
-				DisposeObject(window);
-			}
-			CloseLibrary(GradientSliderBase);
-		}
-		CloseLibrary(BGUIBase);
-	}
+                                if(GetAttr(WINDOW_SigMask,window,&signal)
+                                && signal!=0)
+                                {
+                                        for(;;)
+                                        {
+                                                Wait(signal);
+                                                switch(HandleEvent(window))
+                                                {
+                                                        case WMHI_CLOSEWINDOW:
+                                                                break;
+                                                        case WMHI_NOMORE:
+                                                        default:
+                                                                continue;
+                                                }
+                                                break;
+                                        }
+                                }
+                                DisposeObject(window);
+                        }
+                        CloseLibrary(GradientSliderBase);
+                }
+                CloseLibrary(BGUIBase);
+        }
 
-	CloseLibrary((struct Library *)IntuitionBase);
+        CloseLibrary((struct Library *)IntuitionBase);
 
 }

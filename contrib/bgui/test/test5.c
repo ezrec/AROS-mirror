@@ -19,6 +19,8 @@
 #include <proto/intuition.h>
 #include <proto/exec.h>
 
+#include <stdio.h>
+
 struct Library *BGUIBase=NULL;
 struct IntuitionBase * IntuitionBase;
 
@@ -39,66 +41,66 @@ Object *w[1] = { NULL };
    
 Object *InitTest_5( void )
 {
-	Object *win;
+        Object *win;
 
-	win = WindowObject,
-		WINDOW_SmartRefresh, TRUE,
-		WINDOW_AutoAspect, TRUE,
-		WINDOW_MasterGroup, 
-			VGroupObject, NormalSpacing,
-				StartMember, w[0]=NWObj( 25, ID_W0), EndMember,
-			EndObject,
-		EndObject;
+        win = WindowObject,
+                WINDOW_SmartRefresh, TRUE,
+                WINDOW_AutoAspect, TRUE,
+                WINDOW_MasterGroup, 
+                        VGroupObject, NormalSpacing,
+                                StartMember, w[0]=NWObj( 25, ID_W0), EndMember,
+                        EndObject,
+                EndObject;
 
-	return( win );
+        return( win );
 }
 
 int main(argc,argv)
 {
-	Object *window;
+        Object *window;
 
-	if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
-	{
-	  printf("Could not open Intuition.library!\n");
-	  return -1;
-	}
+        if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+        {
+          printf("Could not open Intuition.library!\n");
+          return -1;
+        }
 
-	if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
-	{
-		if((window=InitTest_5())!=NULL
-		&& WindowOpen(window)!=NULL)
-		{
-			ULONG signal;
+        if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
+        {
+                if((window=InitTest_5())!=NULL
+                && WindowOpen(window)!=NULL)
+                {
+                        ULONG signal;
 
-			if(GetAttr(WINDOW_SigMask,window,&signal)
-			&& signal!=0)
-			{
-				for(;;)
-				{
-					ULONG rc,id;
+                        if(GetAttr(WINDOW_SigMask,window,&signal)
+                        && signal!=0)
+                        {
+                                for(;;)
+                                {
+                                        ULONG rc,id;
 
-					Wait(signal);
-					switch((rc=HandleEvent(window)))
-					{
-						case ID_W0:
-							id = rc - ID_W0;
-							GetAttr(STRINGA_LongVal, w[id], &rc);
-							SetAttrs(w[id], LGO_Weight, rc, TAG_DONE);
-							continue;
-						case WMHI_CLOSEWINDOW:
-							break;
-						case WMHI_NOMORE:
-						default:
-							continue;
-					}
-					break;
-				}
-			}
-			DisposeObject(window);
-		}
-		CloseLibrary(BGUIBase);
-	}
+                                        Wait(signal);
+                                        switch((rc=HandleEvent(window)))
+                                        {
+                                                case ID_W0:
+                                                        id = rc - ID_W0;
+                                                        GetAttr(STRINGA_LongVal, w[id], &rc);
+                                                        SetAttrs(w[id], LGO_Weight, rc, TAG_DONE);
+                                                        continue;
+                                                case WMHI_CLOSEWINDOW:
+                                                        break;
+                                                case WMHI_NOMORE:
+                                                default:
+                                                        continue;
+                                        }
+                                        break;
+                                }
+                        }
+                        DisposeObject(window);
+                }
+                CloseLibrary(BGUIBase);
+        }
 
-	CloseLibrary((struct Library *)IntuitionBase);
+        CloseLibrary((struct Library *)IntuitionBase);
 
 }
