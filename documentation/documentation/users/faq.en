@@ -365,3 +365,14 @@ you can mount the disk image with::
 
     > mount AFD0: 
 
+
+What is Zune?
+-------------
+
+In case you read on this site about Zune, it's simply an open-source
+reimplementation of MUI, which is a powerful (as in user- and
+developer-friendly) object-oriented shareware GUI toolkit and de-facto
+standard on AmigaOS. Zune is the preferred GUI toolkit to develop
+native AROS applications. As for the name itself, it means nothing,
+but sounds good.
+
