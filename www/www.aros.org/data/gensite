@@ -1216,7 +1216,6 @@ def genSnapshots ():
 	    for col in colList:
 		t = Text ()
 		ss = day.get (col, None)
-		print 'ss:',ss
 		if ss:
 		    t.append (Href ('ftp://ftp.aros.org/pub/aros/snapshots/%s' % ss.filename,
 			ss.size
