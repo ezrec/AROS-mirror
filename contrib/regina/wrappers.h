@@ -90,13 +90,17 @@
 #define arexx_bitclr                 __regina_arexx_bitclr
 #define arexx_bitset                 __regina_arexx_bitset
 #define arexx_bittst                 __regina_arexx_bittst
+#define arexx_compress               __regina_arexx_compress
 #define arexx_c2b                    __regina_arexx_c2b
 #define arexx_close                  __regina_arexx_close
 #define arexx_eof                    __regina_arexx_eof
+#define arexx_hash                   __regina_arexx_hash
 #define arexx_open                   __regina_arexx_open
 #define arexx_readch                 __regina_arexx_readch
 #define arexx_readln                 __regina_arexx_readln
 #define arexx_seek                   __regina_arexx_seek
+#define arexx_trim                   __regina_arexx_trim
+#define arexx_upper                  __regina_arexx_upper
 #define arexx_writech                __regina_arexx_writech
 #define arexx_writeln                __regina_arexx_writeln
 #define atopos                       __regina_atopos

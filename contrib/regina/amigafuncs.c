@@ -101,7 +101,7 @@ int init_amigaf ( tsd_t *TSD )
 }
 
 /* Open a file */
-streng *arexx_open ( tsd_t *TSD, cparamboxptr parm1 )
+streng *arexx_open( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2, parm3;
   char *filename;
@@ -444,5 +444,75 @@ streng *arexx_bittst( tsd_t *TSD, cparamboxptr parm1 )
     exiterror( ERR_INCORRECT_CALL, 0 );
   
   ret = int_to_streng( TSD, (parm1->value->value[byte] & (char)(1<<dt.rem))!=0 );
+  return ret;
+}
+
+streng *arexx_hash( tsd_t *TSD, cparamboxptr parm1 )
+{
+  unsigned char *uc;
+  int i, sum=0;
+  
+  checkparam( parm1, 1, 1, "HASH" );
+
+  uc = (unsigned char *)parm1->value->value;
+  for( i=0; i<parm1->value->len; i++)
+  {
+    sum = (sum + uc[i]) & 255;
+  }
+  
+  return int_to_streng( TSD, sum );
+}
+
+streng *arexx_compress( tsd_t *TSD, cparamboxptr parm1 )
+{
+  const char *match;
+  int i, start;
+  streng *ret;
+  
+  checkparam( parm1, 1, 2, "COMPRESS" );
+
+  match = ( parm1->next!=NULL ) ? str_of( TSD, parm1->next->value ) : " ";
+
+  ret = Str_dup_TSD( TSD, parm1->value );
+  for( i=start=0; i<ret->len; i++ )
+  {
+    /* Copy char if not found */
+    if ( strchr( match, ret->value[i] )==NULL )
+    {
+      ret->value[start] = ret->value[i];
+      start++;
+    }
+  }
+  ret->len = start;
+
+  if ( parm1->next!=NULL )
+    FreeTSD( (char *)match );
+  
+  return ret;
+}
+
+static const streng T_str = { 1, 1, "T" };
+static const parambox T_parm = { NULL, 0, &T_str };
+
+streng *arexx_trim( tsd_t *TSD, cparamboxptr parm1 )
+{
+  checkparam( parm1, 1, 1, "TRIM" );
+
+  parm1->next = &T_parm;
+  
+  return std_strip( TSD, parm1 );
+}
+
+streng *arexx_upper( tsd_t *TSD, cparamboxptr parm1)
+{
+  int i;
+  streng *ret;
+  
+  checkparam( parm1, 1, 1, "UPPER" );
+  
+  ret = Str_dup_TSD( TSD, parm1->value );
+  for( i=0; i<ret->len; i++)
+    ret->value[i] = toupper( ret->value[i] );
+  
   return ret;
 }

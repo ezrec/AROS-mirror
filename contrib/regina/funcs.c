@@ -77,6 +77,7 @@ static const struct function_type functions[] = {
   { 0,              arexx_close, "CLOSE" },
 #endif
   { 0,              std_compare, "COMPARE" },
+  { 0,              arexx_compress, "COMPRESS" },
   { 0,              std_condition, "CONDITION" },
   { 0,              std_copies, "COPIES" },
   { 0,              std_countstr, "COUNTSTR" },   /* ANSI Std 1996 - MH 10-06-96 */
@@ -152,6 +153,7 @@ static const struct function_type functions[] = {
   { 0,              unx_getpath, "GETPATH" },
   { 0,              unx_getpid, "GETPID" },
   { 0,              unx_gettid, "GETTID" },
+  { 0,              arexx_hash, "HASH" },
   { 0,              cms_index, "INDEX" },
   { 0,              std_insert, "INSERT" },
   { 0,              cms_justify, "JUSTIFY" },
@@ -214,9 +216,11 @@ static const struct function_type functions[] = {
   { 0,              dbg_traceback, "TRACEBACK" },
 #endif
   { 0,              std_translate, "TRANSLATE" },
+  { 0,              arexx_trim, "TRIM" },
   { 0,              std_trunc, "TRUNC" },
   { 0,              unx_uname, "UNAME" },
   { 0,              unx_unixerror, "UNIXERROR" },
+  { 0,              arexx_upper, "UPPER" },
   { 0,              rex_userid, "USERID" },
   { 0,              std_value, "VALUE" },
   { 0,              std_verify, "VERIFY" },

@@ -799,6 +799,10 @@
    streng *arexx_bitclr( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_bitset( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_bittst( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_hash( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_compress( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_trim( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_upper( tsd_t *TSD, cparamboxptr parm1 );
 
 /*
  ******************************************************************************
