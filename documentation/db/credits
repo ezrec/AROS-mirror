@@ -69,6 +69,8 @@ Workbench:
     Adam Chodorowski
     Stefan Berger
     Henning Kiel
+    Sebastian Bauer
+    Paul Smith
 
 Tools:
     Adam Chodorowski
@@ -86,6 +88,12 @@ BGUI:
     Adam Chodorowski
     Georg Steger
     Stefan Berger
+
+Zune:
+    David le Corfec
+    Sebastian Bauer
+    Georg Steger
+    Fabio Alemagna
 
 Kernel:
     Iain Templeton
@@ -116,6 +124,7 @@ Documentation:
     Peter Eriksson
     Kjetil S. Matheussen
     Michal Schulz
+    Daniel Holmen
 
 Translation:
     Henning Kiel
@@ -127,3 +136,8 @@ Artistry:
     Martin "Mason" Merz
     Cyb0rg / Resistance
     Alien / Paradox
+    Daniel Holmen
+
+Web site:
+    Adam Chodorowski
+    Daniel Holmen
