@@ -1,14 +1,6 @@
 Short term / relatively easy
 ----------------------------
-
-+ Clean up the build system so Python can be built automatically.
-  - Fix dependencies between the python executable and the various
-    linklibs (rebuilt exe if linklibs change, rebuild linklibs if
-    linklib functions change).
-    - Seem to be a general problem with linklibs in AROS. :-/
-  - Already built by default since the nightly builds basically
-    do a fresh build (-> no dependency problems on linklibs).
-    
+  
 + Make config.h smarter about things (ie. 'autodetect' stuff that
   should be autodetected (eg. SIZEOF_INT etc)). It assumes to much
   right now.
