@@ -15,6 +15,8 @@ struct	hostent {
 #define	h_addr	h_addr_list[0]	/* address, for backward compatiblity */
 };
 
+#ifndef __AROS
 struct hostent *gethostbyname(const char *);
+#endif
 
 #endif
