@@ -167,11 +167,9 @@ lwip_accept(int s, struct sockaddr *addr, socklen_t *addrlen)
     set_errno(EBADF);
     return -1;
   }
-  LWIP_DEBUGF(SOCKETS_DEBUG, ("netconn_accept...\n", s));//
 
   newconn = netconn_accept(sock->conn);
 
-  LWIP_DEBUGF(SOCKETS_DEBUG, ("netconn_peer...\n", s));//
   /* get the IP address and port of the remote host */
   netconn_peer(newconn, &naddr, &port);
 
@@ -629,12 +627,8 @@ lwip_selscan(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset)
        currently match */
     for(i = 0; i < maxfdp1; i++)
     {
-	LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_selscan: checking now fd=%d\n", i));
-    	
         if (FD_ISSET(i, readset))
         {
-	    LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_selscan: fd=%d is set for read\n", i));
-
             /* See if netconn of this socket is ready for read */
             p_sock = get_socket(i);
             if (p_sock && (p_sock->lastdata || p_sock->rcvevent))
@@ -818,8 +812,6 @@ event_callback(struct netconn *conn, enum netconn_evt evt, u16_t len)
     struct lwip_socket *sock;
     struct lwip_select_cb *scb;
 
-    LWIP_DEBUGF(SOCKETS_DEBUG, ("event_callback: conn=%p evt=%d len=%d\n", conn,evt,len));
-
     /* Get socket */
     if (conn)
     {
@@ -852,11 +844,9 @@ event_callback(struct netconn *conn, enum netconn_evt evt, u16_t len)
     {
       case NETCONN_EVT_RCVPLUS:
         sock->rcvevent++;
-        LWIP_DEBUGF(SOCKETS_DEBUG, ("event_callback: received NETCONN_EVT_RCVPLUS rcvevent=%d\n",sock->rcvevent));
         break;
       case NETCONN_EVT_RCVMINUS:
         sock->rcvevent--;
-        LWIP_DEBUGF(SOCKETS_DEBUG, ("event_callback: received NETCONN_EVT_RCVMINUS rcvevent=%d\n",sock->rcvevent));
         break;
       case NETCONN_EVT_SENDPLUS:
         sock->sendevent = 1;
@@ -892,12 +882,10 @@ event_callback(struct netconn *conn, enum netconn_evt evt, u16_t len)
         }
         if (scb)
         {
-            LWIP_DEBUGF(SOCKETS_DEBUG, ("event_callback: waked up a select() call\n",sock->rcvevent));
             scb->sem_signalled = 1;
             sys_sem_signal(selectsem);
             sys_sem_signal(scb->sem);
         } else {
-            LWIP_DEBUGF(SOCKETS_DEBUG, ("event_callback: no select() call waked up\n",sock->rcvevent));
             sys_sem_signal(selectsem);
             break;
         }
@@ -1003,11 +991,11 @@ int lwip_getsockopt (int s, int level, int optname, void *optval, socklen_t *opt
 
   /* Do length and type checks for the various options first, to keep it readable. */
   switch( level ) {
-
+   
 /* Level: SOL_SOCKET */
   case SOL_SOCKET:
       switch(optname) {
-
+         
       case SO_ACCEPTCONN:
       case SO_BROADCAST:
       /* UNIMPL case SO_DEBUG: */
@@ -1033,7 +1021,7 @@ int lwip_getsockopt (int s, int level, int optname, void *optval, socklen_t *opt
         err = ENOPROTOOPT;
       }  /* switch */
       break;
-
+                     
 /* Level: IPPROTO_IP */
   case IPPROTO_IP:
       switch(optname) {
@@ -1052,14 +1040,14 @@ int lwip_getsockopt (int s, int level, int optname, void *optval, socklen_t *opt
         err = ENOPROTOOPT;
       }  /* switch */
       break;
-
+         
 /* Level: IPPROTO_TCP */
   case IPPROTO_TCP:
       if( *optlen < sizeof(int) ) {
         err = EINVAL;
         break;
     }
-
+      
       /* If this is no TCP socket, ignore any options. */
       if ( sock->conn->type != NETCONN_TCP ) return 0;
 
@@ -1067,7 +1055,7 @@ int lwip_getsockopt (int s, int level, int optname, void *optval, socklen_t *opt
       case TCP_NODELAY:
       case TCP_KEEPALIVE:
         break;
-
+         
       default:
         LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_getsockopt(%d, IPPROTO_TCP, UNIMPL: optname=0x%x, ..)\n", s, optname));
         err = ENOPROTOOPT;
@@ -1080,18 +1068,18 @@ int lwip_getsockopt (int s, int level, int optname, void *optval, socklen_t *opt
       err = ENOPROTOOPT;
   }  /* switch */
 
-
+   
   if( 0 != err ) {
     sock_set_errno(sock, err);
     return -1;
   }
-
+   
 
 
   /* Now do the actual option processing */
 
   switch(level) {
-
+   
 /* Level: SOL_SOCKET */
   case SOL_SOCKET:
     switch( optname ) {
@@ -1256,7 +1244,7 @@ int lwip_setsockopt (int s, int level, int optname, const void *optval, socklen_
     }  /* switch */
     break;
 
-/* UNDEFINED LEVEL */
+/* UNDEFINED LEVEL */      
   default:
     LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_setsockopt(%d, level=0x%x, UNIMPL: optname=0x%x, ..)\n", s, level, optname));
     err = ENOPROTOOPT;
@@ -1323,7 +1311,7 @@ int lwip_setsockopt (int s, int level, int optname, const void *optval, socklen_
       LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_setsockopt(%d, IPPROTO_TCP, TCP_NODELAY) -> %s\n", s, (*(int *)optval)?"on":"off") );
       break;
     case TCP_KEEPALIVE:
-      sock->conn->pcb.tcp->keepalive = (u32_t)(*(int*)optval);;
+      sock->conn->pcb.tcp->keepalive = (u32_t)(*(int*)optval);
       LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_setsockopt(%d, IPPROTO_TCP, TCP_KEEPALIVE) -> %u\n", s, sock->conn->pcb.tcp->keepalive));
       break;
     }  /* switch */

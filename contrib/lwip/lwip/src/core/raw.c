@@ -157,9 +157,9 @@ raw_connect(struct raw_pcb *pcb, struct ip_addr *ipaddr)
  */
 void
 raw_recv(struct raw_pcb *pcb,
-   int (* recv)(void *arg, struct raw_pcb *upcb, struct pbuf *p,
-           struct ip_addr *addr),
-   void *recv_arg)
+         int (* recv)(void *arg, struct raw_pcb *upcb, struct pbuf *p,
+                      struct ip_addr *addr),
+         void *recv_arg)
 {
   /* remember recv() callback and user data */
   pcb->recv = recv;
@@ -185,9 +185,9 @@ raw_send_to(struct raw_pcb *pcb, struct pbuf *p, struct ip_addr *ipaddr)
   struct netif *netif;
   struct ip_addr *src_ip;
   struct pbuf *q; /* q will be sent down the stack */
-
+  
   LWIP_DEBUGF(RAW_DEBUG | DBG_TRACE | 3, ("raw_send_to\n"));
-
+  
   /* not enough space to add an IP header to first pbuf in given p chain? */
   if (pbuf_header(p, IP_HLEN)) {
     /* allocate header in new pbuf */
@@ -206,11 +206,11 @@ raw_send_to(struct raw_pcb *pcb, struct pbuf *p, struct ip_addr *ipaddr)
     q = p;
     pbuf_header(q, -IP_HLEN);
   }
-
+  
   if ((netif = ip_route(ipaddr)) == NULL) {
     LWIP_DEBUGF(RAW_DEBUG | 1, ("raw_send_to: No route to 0x%lx\n", ipaddr->addr));
 #ifdef RAW_STATS
-/*    ++lwip_stats.raw.rterr;*/
+    /*    ++lwip_stats.raw.rterr;*/
 #endif /* RAW_STATS */
     if (q != p) {
       pbuf_free(q);
