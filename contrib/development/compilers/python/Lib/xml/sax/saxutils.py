@@ -3,7 +3,7 @@ A library of useful helper classes to the SAX classes, for the
 convenience of application and driver writers.
 """
 
-import os, urlparse, urllib, types
+import os, urlparse, types
 import handler
 import xmlreader
 
@@ -231,6 +231,7 @@ def prepare_input_source(source, base = ""):
             source.setSystemId(os.path.join(basehead, sysid))
             f = open(sysid, "rb")
         else:
+	    import urllib
             source.setSystemId(urlparse.urljoin(base, sysid))
             f = urllib.urlopen(source.getSystemId())
 
