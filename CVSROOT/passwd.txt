@@ -6,6 +6,7 @@ zino:bdYh/q95S4cmU:aros:Peter Bortas:zino@lysator.liu.se:WWW site
 mreckt:cbWLerEivCr6I:aros:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, misc.
 ldp:6u5hVWs926luc:aros:Lennard voor den Dag:ldp@worldonline.nl:Amiga port
 quango:cbSYvfdxV/owQ:aros:Chris Lawrence:quango@socomm.net:Linux/m68k
+geert:cbGlFwvZi5iZY:aros:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
 
 stepan:dcIM.xvdbd/R.:aros:Stefan Reinauer:stepan@home.culture.mipt.ru:
 judd:ddVIpcsgleKFM:aros:Christopher D. Judd:cdj@gmk02.chem.rpi.edu:
