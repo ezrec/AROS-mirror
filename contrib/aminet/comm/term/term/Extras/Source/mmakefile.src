@@ -153,18 +153,18 @@ EXE := $(DESTDIR)/Term
 
 .PHONY : all clean
 
-#MM aminet-comm-term-term : aminet-dev-gui-gtlayout aminet-comm-term-xprz aminet-comm-term-xem setup-aminet-comm-term-term
+##MM aminet-comm-term-term : aminet-dev-gui-gtlayout aminet-comm-term-xprz aminet-comm-term-xem setup-aminet-comm-term-term
 aminet-comm-term-term 	: $(OBJS) $(EXE)
 	@$(NOP)
 
-#MM
+##MM
 setup-aminet-comm-term-term :
 	%mkdirs_q $(DESTDIR) $(OBJDIR)
 
 $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 	%link_q from=$(OBJS)
 
-#MM
+##MM
 clean-aminet :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
