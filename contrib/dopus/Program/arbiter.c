@@ -343,9 +343,6 @@ short *pens;
 	screentags[4].ti_Data=0;
 
 
-#warning GetDisplayInfoData not implemented
-kprintf("open_subprocess_screen(): GetDisplayInfoData() not implemented\n");
-#if 0
 	if (system_version2) {
 		struct DimensionInfo dimbuf;
 		int width,height;
@@ -363,7 +360,6 @@ kprintf("open_subprocess_screen(): GetDisplayInfoData() not implemented\n");
 		}
 	}
 
-#endif
 	screenattr->ta_Name=font->tf_Message.mn_Node.ln_Name;
 	screenattr->ta_YSize=font->tf_YSize;
 

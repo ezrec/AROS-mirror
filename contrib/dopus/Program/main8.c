@@ -625,10 +625,6 @@ ULONG *cmap;
 int count,dir,fadetime;
 {
 
-#warning Unimplmented DisplayInfo OS calls
-kprintf("FadeRGB32: Unimplmented DisplayInfo OS calls\n");
-return;
-#if 0
 	if (system_version2<OSVER_39) {
 		UWORD *cmap4;
 		int a,b;
@@ -717,7 +713,6 @@ return;
 		if (tempmap) FreeMem(tempmap,((count*3)+2)*sizeof(ULONG));
 	}
 	return;
-#endif
 }
 
 void FadeRGB4(screen,cmap,count,dir,fadetime)

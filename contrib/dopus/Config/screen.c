@@ -625,13 +625,9 @@ int mode;
 		case SCREEN_PALETTE:
 			bpg=4;
 			if (version2>=OSVER_39) {
-#warning Need unimplemented missing funcs
-kprintf("CANNOT GET DISPLAY INFO BECAUSE OF UNIMPLEMENTED FUNCS\n");
-#if 1
 	(void)handle;
 	(void)dispinfo;
 	(void)modeid;
-#else			
 				modeid=GetVPModeID(vp);
 				if ((handle=FindDisplayInfo(config->screenmode)) ||
 					(handle=FindDisplayInfo(modeid))) {
@@ -639,7 +635,6 @@ kprintf("CANNOT GET DISPLAY INFO BECAUSE OF UNIMPLEMENTED FUNCS\n");
 					dispinfo=(struct DisplayInfo *)buf;
 					bpg=(dispinfo->RedBits+dispinfo->GreenBits+dispinfo->BlueBits)/3;
 				}
-#endif			
 			}
 			for (a=0;a<3;a++) {
 				fix_slider(&palettegads[a]);

@@ -168,11 +168,6 @@ static char *sham;
 int LoadPic(name)
 char *name;
 {
-#warning LoadPic() not implemented becasuse of missing DisplayInfo funcs
-
-kprintf("LoadPic() not implemented becasuse of missing DisplayInfo funcs\n");
-return IFFERR_NOMEMORY;
-#if 0
 
 	int
 		retcode,a,gotbody,brush,scroll,mp=1,isanim,extflag=0,
@@ -689,7 +684,6 @@ endiff:
 	first_anim_frame=NULL;
 	colourtable_8=NULL; colourtable_4=NULL;
 	return(retcode);
-#endif	
 }
 
 struct BitMap *getbitmap(width,height,depth)

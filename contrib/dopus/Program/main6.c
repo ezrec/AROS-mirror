@@ -190,13 +190,9 @@ int getpal()
 
 	p=(GfxBase->DisplayFlags&PAL)?1:0;
 	
-#warning Unimplemented DisplayInfo funcs
-kprintf("getpal(): Unimplemented DisplayInfo funcs\n");
-#if 1
 	(void)displayinfo;
 	(void)modeid;
 	(void)screen;
-#else
 	if (system_version2>=OSVER_37) {
 		if ((screen=LockPubScreen(NULL))) {
 			if ((modeid=GetVPModeID(&(screen->ViewPort)))!=INVALID_ID) {
@@ -211,7 +207,6 @@ kprintf("getpal(): Unimplemented DisplayInfo funcs\n");
 			else p=0;
 		}
 	}
-#endif	
 	return(p);
 }
 

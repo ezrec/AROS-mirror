@@ -451,13 +451,10 @@ int tit;
 			if (config->screenmode==HIRESLACE_KEY) main_scr.ViewModes|=LACE;
 		}
 		else {
-#warning Unimplemeted DisplayInfo funcs
-kprintf("Setup(): Unimplemeted DisplayInfo funcs\n");
-			if ( 0 /* AROS (handle=FindDisplayInfo(config->screenmode)) &&
+			if ( (handle=FindDisplayInfo(config->screenmode)) &&
 				(GetDisplayInfoData(handle,(UBYTE *)&dims,sizeof(struct DimensionInfo),
 				DTAG_DIMS,0))
-			*/ ) {
-#if 0			
+			) {
 				mainscreen_tags[SCREENTAGS_DISPLAYID].ti_Data=(ULONG)config->screenmode;
 				if (config->screenflags&SCRFLAGS_DEFWIDTH)
 					main_scr.Width=(dims.TxtOScan.MaxX-dims.TxtOScan.MinX)+1;
@@ -465,7 +462,6 @@ kprintf("Setup(): Unimplemeted DisplayInfo funcs\n");
 				if (config->screenflags&SCRFLAGS_DEFHEIGHT)
 					main_scr.Height=(dims.TxtOScan.MaxY-dims.TxtOScan.MinY)+1;
 				else main_scr.Height=config->scrh;
-#endif
 			}
 			else {
 				main_scr.Width=scrbuf.Width;

@@ -433,21 +433,17 @@ int mode;
 		if (mode==HIRES_KEY || mode==HIRESLACE_KEY) return(mode);
 		return(MODE_WORKBENCHCLONE);
 	}
-#warning Unimplemeted DisplayInfo funcs
-kprintf("checkscreenmode(): Unimplemeted DisplayInfo funcs\n");
 	
-	if ( 0 /* AROS: !(handle=FindDisplayInfo(mode)) ||
+	if ( !(handle=FindDisplayInfo(mode)) ||
 		!(GetDisplayInfoData(handle,buf,256,DTAG_DISP,0)) ||
 		((struct DisplayInfo *)buf)->NotAvailable
-	*/ ) 
+	 ) 
 		return(MODE_WORKBENCHCLONE);
 	flags=((struct DisplayInfo *)buf)->PropertyFlags;
 
-#warning Unimplemented func GetDisplayInfoData()
-kprintf("checkscreenmode(): Unimplemented func GetDisplayInfoData()\n");
 	if (flags&DIPF_IS_DUALPF || flags&DIPF_IS_PF2PRI || flags&DIPF_IS_HAM
-		/* AROS || !(GetDisplayInfoData(handle,buf,256,DTAG_DIMS,0))
-	*/ )
+		|| !(GetDisplayInfoData(handle,buf,256,DTAG_DIMS,0))
+	 )
 		return(MODE_WORKBENCHCLONE);
 	dimension=(struct DimensionInfo *)buf;
 	if (mode&HIRES_KEY || mode&HIRESLACE_KEY) minw=640;

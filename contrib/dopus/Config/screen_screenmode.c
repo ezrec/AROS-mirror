@@ -32,10 +32,6 @@ the existing commercial status of Directory Opus 5.
 
 int initscreenmodes()
 {
-#warning Need unimplemented missing funcs
-kprintf("CANNOT GET DISPLAY INFO BECAUSE OF UNIMPLEMENTED FUNCS\n");
-	return 0;
-#if 0			
 	int pal,count,minw,minh,defw,depth,needdef=0,overx,overy,oldcount=0;
 	struct Screen scrbuf,*wbscreen;
 	char buf[256],namebuf[180];
@@ -158,7 +154,6 @@ kprintf("CANNOT GET DISPLAY INFO BECAUSE OF UNIMPLEMENTED FUNCS\n");
 	if (count>oldcount) sortscreenmodes(count-oldcount,oldcount);
 	return(count);
 	
-#endif	
 }
 
 int addscreenmode(name,minw,minh,maxw,maxh,defw,defh,depth,mode)
