@@ -123,7 +123,7 @@ CSRCFILES = $(REG_DIR)/funcs.c $(REG_DIR)/builtin.c $(REG_DIR)/error.c $(REG_DIR
 	$(REG_DIR)/tracing.c $(REG_DIR)/interp.c $(REG_DIR)/cmath.c $(REG_DIR)/convert.c $(REG_DIR)/strings.c $(REG_DIR)/library.c \
 	$(REG_DIR)/strmath.c $(REG_DIR)/signals.c $(REG_DIR)/macros.c $(REG_DIR)/envir.c $(REG_DIR)/expr.c \
 	$(REG_DIR)/extlib.c $(REG_DIR)/wrappers.c $(REG_DIR)/options.c $(REG_DIR)/doscmd.c \
-	$(REG_DIR)/alloca.c $(REG_DIR)/vmscmd.c $(REG_DIR)/vmsfuncs.c \
+	$(REG_DIR)/alloca.c $(REG_DIR)/vmscmd.c $(REG_DIR)/vmsfuncs.c $(REG_DIR)/amigafuncs.c \
 	$(REG_DIR)/mt_notmt.c $(REG_DIR)/mt_win32.c $(REG_DIR)/mt_posix.c $(REG_DIR)/mt_os2.c $(REG_DIR)/nosaa.c $(REG_DIR)/instore.c \
 	$(REG_DIR)/ntservice/service.c
 ZIP_CSRCFILES = funcs.c builtin.c error.c variable.c \
@@ -132,13 +132,14 @@ ZIP_CSRCFILES = funcs.c builtin.c error.c variable.c \
 	tracing.c interp.c cmath.c convert.c strings.c library.c \
 	strmath.c signals.c macros.c envir.c expr.c \
 	extlib.c wrappers.c options.c doscmd.c \
-	alloca.c vmscmd.c vmsfuncs.c \
+	alloca.c vmscmd.c vmsfuncs.c amigafuncs.c \
 	mt_notmt.c mt_win32.c mt_posix.c mt_os2.c nosaa.c instore.c \
 	ntservice/service.c
 
 OFILES = funcs.$(OBJ) builtin.$(OBJ) error.$(OBJ) variable.$(OBJ) \
 	interprt.$(OBJ) debug.$(OBJ) dbgfuncs.$(OBJ) memory.$(OBJ) parsing.$(OBJ) files.$(OBJ) \
 	misc.$(OBJ) unxfuncs.$(OBJ) cmsfuncs.$(OBJ) os2funcs.$(OBJ) shell.$(OBJ) rexxext.$(OBJ) stack.$(OBJ) \
+	amigafuncs.$(OBJ) \
 	tracing.$(OBJ) interp.$(OBJ) cmath.$(OBJ) convert.$(OBJ) strings.$(OBJ) library.$(OBJ) \
 	strmath.$(OBJ) signals.$(OBJ) macros.$(OBJ) envir.$(OBJ) expr.$(OBJ) extstack.$(OBJ) \
 	extlib.$(OBJ) yaccsrc.$(OBJ) lexsrc.$(OBJ) options.$(OBJ) doscmd.$(OBJ) rexxbif.$(OBJ) \
@@ -150,8 +151,9 @@ SHOFILES = funcs.sho builtin.sho error.sho variable.sho \
 	tracing.sho interp.sho cmath.sho convert.sho strings.sho library.sho \
 	strmath.sho signals.sho macros.sho envir.sho expr.sho extstack.sho \
 	extlib.sho yaccsrc.sho lexsrc.sho wrappers.sho options.sho doscmd.sho rexxbif.sho \
-	drexx.sho client.sho rexxsaa.sho $(ALLOCA_SHO) $(MT_FILE).sho instore.sho
-
+	drexx.sho client.sho rexxsaa.sho $(ALLOCA_SHO) $(MT_FILE).sho instore.sho \
+	amigafuncs.sho
+	
 DEMODIR = $(REG_DIR)/demo
 ZIP_DEMODIR = demo
 DEMOFILES = $(DEMODIR)/*.rexx
@@ -307,6 +309,9 @@ os2funcs.$(OBJ) :$(srcdir)/os2funcs.c
 
 cmsfuncs.$(OBJ) :$(srcdir)/cmsfuncs.c
 	$(CC) $(COPT) $(CC2O) -c $(srcdir)/cmsfuncs.c
+
+amigafuncs.$(OBJ) :$(srcdir)/amigafuncs.c
+	$(CC) $(COPT) $(CC2O) -c $(srcdir)/amigafuncs.c
 
 shell.$(OBJ) : $(srcdir)/shell.c
 	$(CC) $(COPT) $(CC2O) -c $(srcdir)/shell.c
@@ -500,6 +505,12 @@ misc.sho :    $(srcdir)/misc.c
 unxfuncs.sho :$(srcdir)/unxfuncs.c
 	$(O2SAVE)
 	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(srcdir)/unxfuncs.c
+	$(O2SHO)
+	$(SAVE2O)
+
+amigafuncs.sho :$(srcdir)/amigafuncs.c
+	$(O2SAVE)
+	$(CC) $(COPT) $(CC2O) $(DYN_COMP) -c $(srcdir)/amigafuncs.c
 	$(O2SHO)
 	$(SAVE2O)
 
