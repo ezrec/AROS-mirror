@@ -12,6 +12,10 @@ o Convert the C source files into hyperlinked HTML docs.
 - Think about a way to update the news section remotely (CGI ? Form ?
 EMail ?)
 
+- Create a list of contributors and publish it
+
+- Publish the changelogs on the web.
+
 DONE
 
 * If a news item is very long, include only part of it in the news page
