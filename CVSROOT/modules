@@ -35,8 +35,10 @@ necessary -a grub bgui
 
 ## This doesn't work :-/ How can I make sure when contrib/ is checked out,
 ## that the README gets created ?
+## Error message: cvs server: existing repository /home/cvs/aros/CVSROOT/Emptydir does not match /home/cvs/aros/contrib
+## cvs server: ignoring module contrib_README
 #necessary -a contrib_README grub bgui
-contrib_README -d contrib contrib README
+#contrib_README -d contrib contrib README
 
 # Amiga C Manual
 ACM -d contrib/ACM contrib/ACM
