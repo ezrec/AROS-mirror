@@ -1,6 +1,48 @@
 * Remove the wrapper functions in aros_funcs: either by using the C calling
   convention for the functions in the library (e.g. like arosc.library) or
   by changing rexxsaa.c so that the registers are used overthere.
+  PS: Probably don't want to remove the wrapper functions so regina can be
+      backported to Classic Amiga OS.
 * Implement the external queue function (compile without NO_EXTERNAL_QUEUES).
-* Add ARexx specific functions.
+* Add ARexx specific functions
+  To implement:
+  - ADDLIB
+  - BITCHG
+  - BITCLR
+  - BITCOND
+  - BITSET
+  - BITTST
+  - COMPRESS
+  - EXISTS
+  - EXPORT
+  - FREESPACE
+  - GETCLIP
+  - GETSPACE
+  - HASH
+  - IMPORT
+  - PRAGMA
+  - RANDU
+  - REMLIB
+  - SETCLIP
+  - SHOW
+  - STORAGE
+  - TRIM
+  - UPPER
+  Implemented:
+  - CLOSE
+  - EOF
+  - OPEN
+  - READCH
+  - READLN
+  - SEEK
+  - WRITECH
+  - WRITECH
+  - B2C
+  - C2B
+* Fix the ARexx vs. ANSI REXX incompatibilies.
+  These are: ^ is XOR in ARexx but is not in ANSI REXX.
+  Multiple line strings in ARexx are not there in ASNI REXX and are said
+  that they need to be avoided because the error handling is difficult
+  to do with multiple line strings. Without them the interpreter knows
+  when a close string character is forgotten at the end of a line.
 * and probably a lot more ...
