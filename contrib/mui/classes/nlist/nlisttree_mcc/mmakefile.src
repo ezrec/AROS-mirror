@@ -1,0 +1,19 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+#MM contrib-zune-classes-nlisttree : includes linklibs
+
+USER_INCLUDES = -I../commonaros
+
+%build_module_macro mmake=contrib-zune-classes-nlisttree \
+  modname=NListtree modtype=mcc dir=$(CONTRIBDIR)/NList/Classes/Zune \
+  initfile=library files="NListtree QuickSort" \
+  uselibs="amiga mui rom m"
+
+
+#MM includes-copy
+
+INCLUDE_FILES := $(TOP)/$(CURDIR)/NListtree_mcc.h
+%copy_includes path=MUI dir=$(TOP)/$(CURDIR)
+
+%common

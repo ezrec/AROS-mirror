@@ -15,8 +15,18 @@ USER_CFLAGS := -DNO_INLINE_STDARG
 #MM 	    	    	    	      contrib-zune-classes-nlistview \
 #MM 	    	    	    	      contrib-zune-classes-nfloattext
 
+#MM contrib-zune-classes-nlisttree-demo : includes linklibs \
+#MM 	    	    	    	      contrib-zune-classes-nlist \
+#MM 	    	    	    	      contrib-zune-classes-nlistview \
+#MM 	    	    	    	      contrib-zune-classes-nfloattext \
+#MM 	    	    	    	      contrib-zune-classes-nlisttree
+
 %build_prog mmake=contrib-zune-classes-nlist-demo \
     progname=NList-Demo targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="mui arossupport amiga arosc"
+
+%build_prog mmake=contrib-zune-classes-nlisttree-demo \
+    progname=NListtree-Demo targetdir=$(EXEDIR) \
+    files=NListtree-Demo uselibs="mui arossupport amiga arosc"
 
 %common
