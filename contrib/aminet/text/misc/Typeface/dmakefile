@@ -1,0 +1,10 @@
+SRCS = typeface.c char.c error.c fontio.c gadget.c node.c text.c locale.c \
+       checkbox.c
+OBJS = $(SRCS:"*.c":"*.o")
+EXE  = Typeface
+
+$(EXE) : $(OBJS)
+    dcc %(right) -o %(left) -l bgui -l textfield
+
+$(OBJS) : $(SRCS)
+    dcc -c -mi %(right) -o %(left)

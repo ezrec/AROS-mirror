@@ -1,0 +1,577 @@
+## version
+## codeset 0
+## language italiano
+;
+; Typeface.catalog
+;
+; Italian translation by
+; Andrea Suatoni (and@itaca.it)
+;
+msgContinue
+Continua
+;
+msgCancel
+Annulla
+;
+msgYesNo
+Si|No
+;
+gadgAccept
+_OK
+;
+gadgCancel
+_Annulla
+;
+msgNoAslLib
+Non riesco ad aprire la asl.library v37+.
+;
+msgNoDiskfontLib
+Non riesco ad aprire la diskfont.library v36+.
+;
+msgNoIFFParseLib
+Non riesco ad aprire la iffparse.library v37+.
+;
+msgNoBguiLib
+Non riesco ad aprire la bgui.library v39+.
+;
+msgNoTextFieldGadget
+Non riesco ad aprire il textfield.gadget v3+.
+;
+msgFatalError
+Si è verificato un errore:\n\
+è fallita una chiamata a %s.
+;
+msgOpenFont
+Apri font
+;
+msgNoOpenFont
+Non riesco ad aprire %s.
+;
+msgCharTitle
+%c (%lu decimale/$%.2lX esadecimale)
+;
+msgZeroTitle
+(0 decimale/$00 esadecimale)
+;
+msgBlankTitle
+vuoto
+;
+msgFreeChip
+Memoria Chip libera
+;
+msgFreeFast
+Memoria Fast libera
+;
+msgTranslator
+Traduzione a cura di Andrea Suatoni\n\n
+;
+msgCheckQuit
+%sVuoi uscire?
+;
+msgCharsChanged
+I dati del carattere sono stati\n\
+modificati.
+;
+msgQuitCancel
+Esci|Annulla
+;
+msgVisitors
+Chiudi tutte le finestre ospiti.
+;
+msgPutPositive
+%s deve essere maggiore di %ld.
+;
+msgFontParamsTitle
+Modifica parametri font
+;
+msgFontFixed
+Larghezza fissa
+;
+msgFontProp
+Proporzionale
+;
+msgAspectNormal
+Normale
+;
+msgAspectThin
+Sottile
+;
+msgAspectWide
+Largo
+;
+gadgFontType
+Tipo di _font
+;
+gadgFontHeight
+_Altezza
+;
+gadgFontBaseline
+Linea _base
+;
+gadgFontWidth
+_Larghezza
+;
+gadgBoldSmear
+Grassetto _macchiato
+;
+gadgFontNormal
+_Normale
+;
+gadgFontItalic
+_Italico
+;
+gadgFontBold
+Grassett_o
+;
+gadgFontUnderline
+_Sottolineato
+;
+gadgFontExtended
+_Esteso
+;
+gadgFontReversed
+Ne_gativo
+;
+gadgFontAspect
+As_petto
+;
+gadgFontBlank
+Vuo_to
+;
+msgErrorBaseline
+La linea base del font deve essere\n\
+minore dell'altezza del font.
+;
+msgErrorFontWidth
+La larghezza del font deve essere positiva.
+;
+msgWarnPropChange
+Il font verrà cambiato da proporzionale\n\
+a larghezza fissa. Vuoi che tutti i caratteri\n\
+abbiano la stessa larghezza (consigliato)?
+;
+msgBoldSmear
+grassetto macchiato
+;
+msgFontBaseline
+linea base font
+;
+msgFontHeight
+altezza font
+;
+msgPrefsTitle
+Preferenze
+;
+msgPrefsScreen
+Schermo
+;
+msgPrefsToolBar
+Barra strumenti
+;
+msgPrefsEdit
+Modifica finestre
+;
+msgPrefsSelect
+Finestra di selezione
+;
+msgPrefsMisc
+Miscellanea
+;
+gadgPrefsSave
+_Salva
+;
+gadgPrefsUse
+_Usa
+;
+msgPrefsSaveError
+Non riesco a salvare le preferenze in\n\
+\"%s\"
+;
+msgScreenFont
+Modifica font schermo
+;
+msgScreenMode
+Modifica modo schermo
+;
+gadgCustomScr
+Schermo cus_tom
+;
+gadgMode
+_Modo
+;
+gadgScreenFont
+_Font
+;
+gadgPubScreen
+Schermo _pubblico
+;
+msgNeedAslV38
+È richiesta la asl.library v38 o superiore.
+;
+gadgToolBarIn
+Incluso nella barra strumenti
+;
+gadgToolBarOut
+Non incluso nella barra strumenti
+;
+prefsDecWidth
+Aumenta larghezza
+;
+prefsIncWidth
+Diminuisci larghezza
+;
+prefsMoveLeft
+Muovi a sinistra
+;
+prefsMoveRight
+Muovi a destra
+;
+prefsMoveUp
+Muovi in alto
+;
+prefsMoveDown
+Muovi in basso
+;
+prefsKerning
+Kerning
+;
+prefsWidthWin
+Finestra larghezza
+;
+prefsZoomIn
+Zoom avanti
+;
+prefsZoomOut
+Zoom indietro
+;
+prefsFlipHoriz
+Ribalta orizz.
+;
+prefsFlipVert
+Ribalta vert.
+;
+gadgToolBarHeight
+Alte_zza
+;
+gadgAuto
+_Auto
+;
+msgToolbarHeight
+altezza barra strumenti
+;
+msgPixels
+Pixel
+;
+gadgPixelWidth
+_Larghezza
+;
+gadgPixelHeight
+Alte_zza
+;
+gadgPixelBorder
+_Bordo
+;
+msgBorderNo
+No
+;
+msgBorderYes
+Si
+;
+msgBorderGrid
+Griglia
+;
+gadgMaxWindow
+_Estendi finestra
+;
+gadgShowBLine
+Li_nea base
+;
+gadgToggle
+Inver_ti
+;
+msgPixelWidth
+larghezza pixel
+;
+msgPixelHeight
+altezza pixel
+;
+gadgSizeWin
+Dimensionamento finestra
+;
+gadgShift
+Sh_ift
+;
+gadgWidthCycle
+_Larghezza
+;
+gadgSelWinHeight
+Alte_zza
+;
+gadgSelWinFont
+_Font
+;
+msgSelWndWidth
+larghezza finestra
+;
+msgSavePrefsTo
+Salva le preferenze in
+;
+gadgQuit
+Conferma _Uscita
+;
+gadgQueryWidth
+Chiedi _Larghezza in caricamento
+;
+msgPrefsEnv
+Variabile di environment
+;
+msgPrefsProg
+Directory di Typeface
+;
+msgFontDirTitle
+Cambia directory dei font
+;
+gadgAssign
+_Assegna
+;
+gadgAssignAdd
+A_ggiungi
+;
+msgNoDir
+Non riesco a trovare la directory\n\
+\"%s\"
+;
+msgResetTitle
+Reimposta Kerning
+;
+gadgReset
+_Reimposta
+;
+infoPlusWidth
++ Larghezza
+;
+infoWarnReset
+Attenzione: verranno reimpostati\n\
+i valori di kerning e spaziatura\n\
+per tutti i caratteri.\n
+;
+msgEditCharTitle
+Modifica carattere
+;
+gadgCharNum
+Codice carattere
+;
+msgSaveTitle
+Salva il font
+;
+gadgFontDir
+_Directory dei font
+;
+gadgFontName
+_Font
+;
+msgSize
+Dimensioni
+;
+gadgFirst
+Pr_imo
+;
+gadgLast
+U_ltimo
+;
+gadgKernInfo
+Inform. _Kern
+;
+gadgSave
+_Salva
+;
+msgFirstRange
+Il primo carattere deve essere compreso tra 0 e 255.
+;
+msgLastRange
+L'ultimo carattere deve essere compreso tra 0 e 255.
+;
+msgFirstGreaterLast
+Il primo carattere non può essere maggiore dell'ultimo.
+;
+msgSaveNoDir
+La directory \"%s\"\n\
+non esiste.
+;
+msgSaveNoDirGadgets
+Crea|Annulla
+;
+msgSaveCreateError
+Non riesco a creare la directory\n\
+\"%s\".
+;
+msgSaveWarnExists
+Il file \"%s\" già esiste.
+;
+msgSaveWarnExistsGadgets
+Sovrascrivi|Annulla
+;
+msgSaveWriteHeader
+Non riesco a scrivere l'header del font in \n\
+\"%s\".
+;
+msgSaveCreateHeader
+Non riesco a creare l'header del font.
+;
+msgSaveWriteData
+Non riesco a scrivere i dati del font in \n\
+\"%s\".
+;
+msgSaveNoMemory
+Memoria esaurita.
+;
+msgQueryWidthTitle
+Ricerca larghezza del font...
+;
+msgQueryFont
+Font
+;
+gadgQueryNewWidth
+_Larghezza
+;
+gadgLoad
+_Carica font
+;
+msgWidthTitle
+Cambia larghezza di %lu (da %d)
+;
+msgWidthTitleBlank
+Cambia larghezza dello spazio (da %d)
+;
+gadgNewWidth
+Nuova _larghezza
+;
+msgLeftOffset
+Spostamento sinistro: %ld
+;
+msgRightOffset
+Spostamento destro: %ld
+;
+msgKernTitle
+Kerning per %lu
+;
+msgKernTitleBlank
+Kerning per lo spazio
+;
+gadgSpacing
+_Spaziatura
+;
+gadgKerning
+_Kerning
+;
+msgPreviewTitle
+Anteprima del font
+;
+gadgUpdate
+A_ggiorna
+;
+gadgShowAll
+_Mostra tutti
+;
+gadgClear
+Cance_lla
+;
+msgMenuProjectTitle
+Progetto
+;
+msgMenuOpen
+Carica font...
+;
+msgMenuSave
+Salva font...
+;
+msgMenuChangeDir
+Cambia dir...
+;
+msgMenuPreview
+Anteprima...
+;
+msgMenuPrefs
+Preferenze...
+;
+msgMenuAbout
+Informazioni...
+;
+msgMenuQuit
+Esci
+;
+msgMenuFontTitle
+Font
+;
+msgMenuEditFont
+Modifica parametri...
+;
+msgMenuEditChar
+Modifica carattere...
+;
+msgMenuMoveLeft
+Muovi a sinistra
+;
+msgMenuMoveRight
+Muovi a destra
+;
+msgMenuMoveUp
+Muovi in alto
+;
+msgMenuMoveDown
+Muovi in basso
+;
+msgMenuResetKern
+Reimposta kerning...
+;
+msgMenuCascade
+Finestre in cascata
+;
+msgMenuCharTitle
+Carattere
+;
+msgMenuUndo
+Annulla modifica
+;
+msgMenuCut
+Taglia
+;
+msgMenuCopy
+Copia
+;
+msgMenuPaste
+Incolla
+;
+msgMenuErase
+Cancella
+;
+msgMenuFlipHoriz
+Ribalta orizzontalmente
+;
+msgMenuFlipVert
+Ribalta verticalmente
+;
+msgMenuZoomIn
+Zoom avanti
+;
+msgMenuZoomOut
+Zoom indietro
+;
+msgMenuChangeWidth
+Modifica larghezza...
+;
+msgMenuKerning
+Kerning...
+;
+msgMenuPreviewTitle
+Anteprima
+;
+msgMenuUpdate
+Aggiorna
+;
+msgMenuShowAll
+Mostra tutti
+;
+msgMenuClear
+Cancella
+;

@@ -1,0 +1,33 @@
+#   $Id$
+#
+#   Makefile to make Typeface.
+
+include $(TOP)/config/make.cfg
+
+FILES := char checkbox error node locale \
+         gadget text fontio typeface
+
+## 
+##         typeface
+
+EXEDIR := $(AROSDIR)/Utilities
+EXE := $(EXEDIR)/Typeface
+
+USE_AROSLIB := yes
+USE_CLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_BGUILIB := yes
+
+USER_CFLAGS := -O2 -Wunused -Wall
+
+#MM contrib-typeface : includes linklibs setup-typeface-catalogs
+
+%make_prog_setup mmake=contrib-typeface
+
+contrib-typeface : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
