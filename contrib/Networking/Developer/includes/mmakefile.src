@@ -1,0 +1,52 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+INCSUBDIRS :=	amitcp \
+		arpa \
+		clib \
+		devices \
+		libraries \
+		net \
+                netinet \
+		pragmas \
+		proto \
+		protocols \
+		rpc \
+                rpcsvc \
+		sys
+
+INCFILES :=  bsdsocket.h \
+          charread.h \
+          getopt.h \
+          grp.h \
+          inetd.h \
+          ios1.h \
+          lineread.h \
+          netdb.h \
+          pkts.h \
+          pwd.h \
+          stat.h \
+          syslog.h \
+          utime.h \
+          utmp.h
+
+INCLUDES      := $(foreach d,$(INCSUBDIRS),$(wildcard $(d)/*.h)) $(INCFILES)
+DEST_INCLUDES := $(foreach f,$(INCLUDES),$(AROS_INCLUDES)/$(f))
+GEN_INCLUDES  := $(foreach f,$(INCLUDES),$(GENINCDIR)/$(f))
+INCL_DIRS     := $(foreach dir,$(INCSUBDIRS),$(AROS_INCLUDES)/$(dir)) \
+                 $(foreach dir,$(INCSUBDIRS),$(GENINCDIR)/$(dir))
+
+##MM-
+includes-copy : aros-network-includes-setup $(DEST_INCLUDES) $(GEN_INCLUDES)
+
+$(AROS_INCLUDES)/%.h : %.h
+	@$(CP) $< $@
+
+$(GENINCDIR)/%.h : %.h
+	@$(CP) $< $@
+
+aros-network-includes-setup : $(INCL_DIRS)
+
+$(INCL_DIRS) :
+	@$(MKDIR) $@
+

@@ -1,0 +1,15 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+CLISERVTESTS = test.server test.client
+
+STACKTESTS = test.gethostbyname
+
+TFILES = ping simpleping
+
+%build_progs mmake=contrib-net-developer-tests files="$(TFILES) $(STACKTESTS) $(CLISERVTESTS)" targetdir=$(CONTRIBDIR)/Networking/Tests uselibs="arossupport amiga arosc m"
+
+##MM contrib-net-developer-tests : aros-tcpip
+
+%common

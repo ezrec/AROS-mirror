@@ -1,0 +1,12 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+TFILES = accept nonblock send sockbind
+## Disabled TFILES = multi
+
+%build_progs mmake=contrib-net-developer-basictests files="$(TFILES)" targetdir=$(CONTRIBDIR)/Networking/Tests uselibs="arossupport amiga arosc m"
+
+##MM contrib-net-developer-basictests : aros-tcpip
+
+%common
