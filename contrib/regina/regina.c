@@ -54,18 +54,22 @@ static char *RCSid = "$Id$";
 #include <exec/libraries.h>
 #include <proto/exec.h>
 #include <proto/regina.h>
+
+#include <stdio.h>
 #endif
 
 struct Library *ReginaBase;
 
 int main(int argc, char *argv[])
 {
+   int rc;
+
 #if defined(__AROS__) || defined(_AMIGA)
    if (!(ReginaBase=OpenLibrary("regina.library", 0))) {
       puts("Error opening regina.library");
    }
 #endif
-   int rc;
+
    rc = __regina_faked_main(argc,argv);
    return(rc);
 #if defined(__AROS__) || defined(_AMIGA)
