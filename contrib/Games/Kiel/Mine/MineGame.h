@@ -2,10 +2,9 @@ void MaleMenue()
 {
 char number[4];
 
-StopMsg();
-
 clearwin();
-  WinSize(Window,350,200);
+  if(WinSize(Window,350,200)==FALSE)
+    fprintf(stderr,"Could not resize Window!\n");
 /*  clearwin();*/
   drawfield(40,60,130,75);
   drawfield(40,90,130,105);
@@ -50,8 +49,6 @@ clearwin();
 
   write_text(160,87,"Menü",2);
 
-ContMsg();
-
 }
 
 void zeigehighscores()
@@ -60,7 +57,8 @@ char outtext[27];
 BOOL weiter=FALSE;
 
 clearwin();
-  WinSize(Window,250,200);
+  if(WinSize(Window,250,200)==FALSE)
+    fprintf(stderr,"Could not resize Window!\n");
 /*  clearwin();*/
   write_text(75,25,"HighScores:",1);
   sprintf(outtext,"%3d sek. Anfänger",Zeiten[ANFAENGER]);
@@ -263,10 +261,9 @@ void GameInit()
   if(!ende)
   {
 
-StopMsg();
-
 clearwin();
-    WinSize(Window,width*box_width+left+right,height*box_width+oben+unten);
+    if(WinSize(Window,width*box_width+left+right,height*box_width+oben+unten)==FALSE)
+      fprintf(stderr,"Could not resize Window!\n");
 /*    clearwin();*/
 
 
@@ -308,8 +305,6 @@ clearwin();
     MaleSpielfeld();
     write_text(left+box_width*width/2-16,25,"Stop",2);
 
-ContMsg();
-
   }
 }
 
@@ -333,8 +328,6 @@ void aufdecken()
 {
 BYTE naechster[maxheight*maxwidth][2],neuer[9][2],anzmin,a,b,x,y;
 int nr=0,neu;
-
-StopMsg();
 
   naechster[nr][0]=Feldx;
   naechster[nr][1]=Feldy;
@@ -385,8 +378,6 @@ StopMsg();
   {
     FeldZahl(Feldx,Feldy,anzmin);
   }
-
-ContMsg();
 
 }
 
@@ -542,9 +533,7 @@ if(mausx<5&&mausy<5)Fehler=loesen();
 
   /* stop timer */
   finish = TRUE;
-StopMsg();
   Wait(1<<sigbit1); /* Wait for timer to stop */
-ContMsg();
 }
 
 void Auswertung()
@@ -554,8 +543,6 @@ int x,y;
 char Zeit[30];
   if(!ende&&!SpielAbbr)
   {
-
-StopMsg();
 
     if(Fehler)
     {
@@ -595,8 +582,6 @@ StopMsg();
         sprintf(Zeit,"Fertig! %4d Sek.",(int)(tend-tstart));
         write_text(left+width*box_width/2-65,oben+height*box_width+20,Zeit,1);
 
-ContMsg();
-
         while(!weiter)
         {
           msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
@@ -612,8 +597,6 @@ ContMsg();
             weiter=TRUE;
         }
 
-StopMsg();
-
         Zeiten[Spielart]=tend-tstart;
         strcpy(names[Spielart],Name_Gad_buf);
         RemoveGadget(Window,&Name_Gad);
@@ -622,8 +605,6 @@ StopMsg();
       }
     }
     write_text(left+box_width*width/2-23,25,"Weiter",2);
-
-ContMsg();
 
     while(!weiter)
     {

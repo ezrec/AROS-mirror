@@ -94,7 +94,7 @@ struct NewWindow NeuesWindow =
   10,10,350,200,
   -1,-1,
   IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_GADGETUP|IDCMP_RAWKEY|IDCMP_CHANGEWINDOW,
-  WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_GIMMEZEROZERO,
+  WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_GIMMEZEROZERO,
   NULL,
   NULL,
   (UBYTE *)"MineSweeper by Henning Kiel",
@@ -218,8 +218,6 @@ BOOL Frage()
 {
 BOOL weiter=FALSE,ret=FALSE;
 
-StopMsg();
-
   MaleSpielfeld();
   write_text(left+box_width*width/2-19,25,"Start",2);
 
@@ -228,8 +226,6 @@ StopMsg();
   drawfield(left+box_width*width/2-29,oben+box_width*height/2-29,left+box_width*width/2+29,oben+box_width*height/2+29);
   drawfield(left+box_width*width/2-28,oben+box_width*height/2-28,left+box_width*width/2+28,oben+box_width*height/2+28);
   write_text(left+box_width*width/2-20,oben+box_width*height/2+5,"Menue",2);
-
-ContMsg();
 
   while(!weiter)
   {
@@ -273,7 +269,8 @@ ContMsg();
 BOOL endreq()
 {
 BOOL weiter=FALSE,ret=FALSE;
-  WinSize(Window,200,100);
+  if(WinSize(Window,200,100)==FALSE)
+    fprintf(stderr,"Could not resize Window!\n");
   clearwin();
 
   write_text(20,13,"Wirklich beenden???",2);
@@ -352,7 +349,10 @@ int main()
     while(!ende)
     {
       GameInit();
-      Spiel();
+      if(!ende)
+      {
+        Spiel();
+      }
       if(!ende)
       {
 	Auswertung();

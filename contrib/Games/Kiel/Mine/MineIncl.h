@@ -7,11 +7,8 @@ struct Window *Window;
 struct RastPort *rp;
 struct IntuiMessage *msg;
 
-ULONG iflags;
-
-#define StopMsg() ModifyIDCMP(Window,IDCMP_CHANGEWINDOW)
-#define ContMsg() ModifyIDCMP(Window,iflags)
 #define clearwin() EraseRect(rp,0,0,Window->Width-5,Window->Height-11)
+#define copypic(x1,y1,dx,dy,x2,y2) ClipBlit(rp,x1,y1,rp,x2,y2,dx,dy,192)
 
 void close_lib();
 
@@ -31,8 +28,6 @@ void open_window(struct NewWindow *newwindow)
     exit(-1);
   }
   rp=Window->RPort;
-  iflags=Window->IDCMPFlags;
-  ActivateWindow(Window);
 }
 
 void write_text(LONG x, LONG y, char *text, ULONG color)
@@ -54,12 +49,7 @@ SetAPen(rp,1);
   Draw(rp,x1,y2);
 }
 
-void copypic(x1,y1,dx,dy,x2,y2)
-{
-  ClipBlit(rp,x1,y1,rp,x2,y2,dx,dy,192);
-}
-
-void WinSize(struct Window *Win, LONG x, LONG y)
+BOOL WinSize(struct Window *Win, LONG x, LONG y)
 {
 ULONG class;
 
@@ -77,6 +67,7 @@ ULONG class;
     if(msg->Class==IDCMP_CHANGEWINDOW)
       break;
   }
+return((Win->Width==x) && (Win->Height==y));
 }
 
 void close_window()
