@@ -1,0 +1,18 @@
+Short: Source code of Amiga PPC port of DOOM v1.2
+Author: Joseph Fenton (jlfenton@ctaz.com)
+Type: game/shoot
+Uploader: Joseph Fenton (jlfenton@ctaz.com)
+
+
+This archive contains the SAS/C PPC Amiga source code of ADoomPPC 1.2.
+It is not needed to play ADoomPPC; it is intended for educational
+purposes only.
+
+The archive contains a few files that are not used.
+
+ADoomPPC was derived from Peter McGavin's ADoom.
+
+ADoom was derived from the original ID Software Linux DOOM source
+which you can download from:
+
+   ftp://ftp.cdrom.com/pub/idgames/idstuff/source/doomsrc.zip

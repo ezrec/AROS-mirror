@@ -1,0 +1,154 @@
+
+#DBUG=DEBUG=FULL DEFINE=DEBUGGING
+#DBUG=DEBUG=FULL DEFINE=RANGECHECK
+#DBUG=DEBUG=FULL OPTIMIZE OPTTIME NOSTACKCHECK
+DBUG=NODEBUG OPTIMIZE OPTTIME NOSTACKCHECK \
+     OPTIMIZERINLINELOCAL OPTIMIZERSCHEDULER \
+     OPTIMIZERCOMPLEXITY=15 OPTIMIZERDEPTH=15 \
+     OPTIMIZERRECURDEPTH=15
+
+
+CFLAGS=$(DBUG) STRINGMERGE ABSFUNCPOINTER DATA=FAR VERBOSE \
+       PARM=REG DEFINE=__BIG_ENDIAN__ DEFINE=NORMALUNIX \
+       IGNORE=79 DEFINE=AMIGA DEFINE=UNROLL DEFINE=PPCTCP\
+       DEFINE=strcasecmp=stricmp DEFINE=strncasecmp=strnicmp \
+       DEFINE=AMIPX
+
+LDFLAGS=
+
+# not too sophisticated dependency
+OBJS1= \
+	doomdef.o \
+	doomstat.o \
+	dstrings.o \
+	amiga_cgxtagfns.o \
+	amiga_socket_lib.o \
+	amiga_timer.o \
+	amiga_system.o \
+	amiga_sound.o \
+        amiga_c2p.o \
+	amiga_video.o \
+	amiga_net.o \
+	amiga_sega.o \
+	amiga_fixed.o \
+	dehacked.o \
+	tables.o \
+	f_finale.o \
+	f_wipe.o \
+	d_main.o \
+	d_net.o \
+	d_items.o \
+	g_game.o
+
+#	amiga_draw.o \
+
+OBJS2= \
+	m_menu.o \
+	m_misc.o \
+	m_argv.o \
+	m_bbox.o \
+	amiga_swap.o \
+	m_cheat.o \
+	m_random.o \
+	am_map.o \
+	p_ceilng.o \
+	p_doors.o \
+	p_enemy.o \
+	p_floor.o \
+	p_inter.o \
+	p_lights.o \
+	p_map.o \
+	p_maputl.o \
+	p_plats.o \
+	p_pspr.o \
+	p_setup.o \
+	p_sight.o \
+	p_spec.o \
+	p_switch.o \
+	p_mobj.o \
+	p_telept.o \
+	p_tick.o \
+	p_saveg.o \
+	p_user.o
+
+OBJS3 = \
+	r_bsp.o \
+	r_data.o \
+	r_draw.o \
+	r_main.o \
+	r_plane.o \
+	r_segs.o \
+	r_sky.o \
+	r_things.o \
+	w_wad.o \
+	wi_stuff.o \
+	v_video.o \
+	st_lib.o \
+	st_stuff.o \
+	hu_stuff.o \
+	hu_lib.o \
+	s_sound.o \
+	z_zone.o \
+	info.o \
+	sounds.o \
+	amiga_main.o
+
+
+OBJS= \
+	temp1.o temp2.o temp3.o
+
+.c.o:
+	@echo "Compiling $*.c..."
+	@scppc $(CFLAGS) $*.c
+
+all : ADoomPPC
+
+ADoomPPC	: $(OBJS1) $(OBJS2) $(OBJS3)
+	@echo "Linking $@..."
+	@ppc-amigaos-ld $(LDFLAGS) -r -o temp1.o $(OBJS1)
+	@ppc-amigaos-ld $(LDFLAGS) -r -o temp2.o $(OBJS2)
+	@ppc-amigaos-ld $(LDFLAGS) -r -o temp3.o $(OBJS3)
+	@ppc-amigaos-ld $(LDFLAGS) -r -o $@ lib:c_ppc.o $(OBJS) lib:scppc.a lib:end.o
+	protect $@ REWD
+
+
+amiga_net.o: amiga_net.c
+	@echo "Compiling $<..."
+	@scppc $(CFLAGS) INCLUDEDIRECTORY=sc:netinclude $<
+
+#amiga_draw.o: amiga_draw.s
+#	@echo "Assembling $<..."
+#	@pasm $<
+
+amiga_cgxtagfns.o: amiga_cgxtagfns.s
+	@echo "Assembling $<..."
+	@pasm $<
+
+amiga_socket_lib.o: amiga_socket_lib.s
+	@echo "Assembling $<..."
+	@pasm $<
+
+amiga_timer.o: amiga_timer.s
+	@echo "Assembling $<..."
+	@pasm $<
+
+amiga_c2p.o: amiga_c2p.s
+	@echo "Assembling $<..."
+	@pasm $<
+
+amiga_fixed.o: amiga_fixed.s
+	@echo "Assembling $<..."
+	@pasm $<
+
+amiga_sega.o: amiga_sega.s
+	@echo "Assembling $<..."
+	@pasm $<
+
+amiga_swap.o: amiga_swap.s
+	@echo "Assembling $<..."
+	@pasm $<
+
+
+#############################################################
+#
+#############################################################

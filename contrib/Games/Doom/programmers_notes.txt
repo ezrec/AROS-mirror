@@ -1,0 +1,88 @@
+
+Some notes concerning the PPC version:
+
+ - Most of the C routines that were replaced by assembly where
+ put back; some have been done as ppc assembly, most notably,
+ the fixed point math.  The assembly routines show how to mix
+ C and assembly in PPC projects.  The amiga_draw.s assembly
+ works, but was not used as it didn't improve the speed; more
+ work on optimizing amiga_draw.s should result in a little 
+ better performance.  The file is included so that readers can
+ see how to access global variables from within ppc assembly files.
+
+ - The fixed point routines use an integer multiply and a floating
+ point divide.  The time needed to convert an integer to a floating
+ point number makes it quicker to use an integer multiply than to
+ use the floating point multiply.  The integer divide takes long
+ enough that it is better to do the int -> fp conversion and do
+ a floating point divide.  Look at the divide code to see how to
+ convert an integer to a double precision floating point number.
+
+ - I use the ppc's timebase for all timing in DOOM.  You want to
+ avoid having to switch to the 68K side as much as possible.  The
+ time function in DOOM is called so often that using the C time
+ function or calling the timer.device for the system time slows
+ the game down (3 FPS instead of 30 FPS).  Do whatever you can to
+ avoid calling the 68K side; if you have to, try to avoid cache
+ flushing.  Notice in amiga_sound.c that the doomsound.library
+ functions only flush the cache if needed.  This gains you an extra
+ 15% in speed compared to if the functions all flushed the caches.
+
+ - In the amiga_sound.c file, notice that I use PPCCallM68k instead
+ of PPCCallOS for the doomsound.library; due to a bug in ppc.library
+ v45.17 and earlier, if the caos structure is not 32 byte aligned,
+ PPCCallOS() will crash if the caches are not flushed by specifying
+ IF_CACHEFLUSHALL.  PPCCallM68k() does not have this problem. Either
+ require people to use v45.20 or newer, or use PPCCallM68k() to call
+ functions that don't need the caches flushed.
+
+ - Using a 68K library or code segment is a great way to make use
+ of the 68K side from a PPC program.  The library is not much harder
+ to code than a code segment and is easier to initialize and cleanup
+ from the PPC side; just OpenLibrary()/CloseLibrary().  In the
+ doomsound.library, I setup an audio interrupt driven 68K routine
+ that handles the audio mixing and output.  The PPC is free to do
+ other things while the 68K side handles all the audio computation.
+ This is very helpful, especially if one is trying to do 3D audio
+ in a game.  The doomsound.library does stereo panning on up to 16
+ sound effects and plays 16 channel stereo music with almost no effect
+ on the performance of the PPC side.  Adding full 3D audio would use
+ more 68K processing time, but would have NO additional effect on the
+ PPC side.  Notice in the FillBuffer routine in the 060 version how
+ a quad multiply should be replaced in an interrupt handler.  It is
+ not as fast as a floating-point multiply, but avoids the problems
+ associated with trying to do floating-point arithmetic in an interrupt.
+
+ - Look at amiga_main.c for an example of using WB support provided
+ by the ppc.library and ELFLoadSeg.  This file also contains the
+ code needed to compute the bus clock for use in converting the
+ ppc timebase to microseconds.  Look at this file and amiga_system.c
+ to see how to scale the timebase values; look at amiga_timer.s to
+ see how to read the timebase.
+
+ - Look at amiga_net.c to see an example of how to force the alignment
+ of structures and includes.  The readme for SAS/C PPC does not state
+ what happens to a file included from somewhere other than INCLUDE: or
+ PPCINCLUDE:.  What happens is that it takes the current alignment,
+ which is usually ppc; if you need includes that are not in INCLUDE:
+ to have a 68K alignment, be SURE to use the alignment pragmas.
+
+ - amiga_c2p.s shows how I do chunky to planar on the PPC; you'll
+ notice I do it one line at a time.  This allows the use of screenmodes
+ where the BitMap BytesPerRow is not the same as the screen width with
+ less hassle.  I use the brute force conversion method because it is
+ still faster than chip memory; using r0 and r21 for every other long
+ allows the accumulation of the next bitplane while the previous is
+ being written to chip memory.  As a result of the scheduled PPC C2P
+ and triple buffering, I get AGA speed nearly equal to a video card.
+
+ - Notice in the makefile how large numbers of files must be linked
+ (if using ELF format); thanks go to Frank Wille for this tip.
+
+ - I use PASM to do the PPC assembly.  This is a great assembler!
+ PASM is written by Frank Wille and is available on AmiNet.  I use
+ SAS/C PPC by Steve Krueger for C compilations.  I tried vbcc, but
+ it was too buggy for my tastes.  If you have SAS/C 6.5, get the
+ PPC updater!  A link to Steve's site can be found on the CyberGraphX
+ web site (www.vgr.com) in the PPC page.
+

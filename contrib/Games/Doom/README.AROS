@@ -1,0 +1,146 @@
+You need a game file (.wad file) for Doom first. The shareware
+version of Doom uses the WAD "doom1.wad", the full version of
+Doom "doom.wad", Doom II  "doom2.wad", Ultimate Doom "doomu.wad".
+You can download the shareware version of Doom from:
+
+   http://www.idsoftware.com/archives/doomarc.html
+
+AROS Doom is a Port of ADoomPPC which was done by Joseph Fenton
+(jlfenton@ctaz.com). ADoomPPC itself is based on ADoom which
+was done by Peter McGavin. ADoom was derived from the original
+ID Software Linux DOOM source which you can download from:
+
+   ftp://ftp.cdrom.com/pub/idgames/idstuff/source/doomsrc.zip
+
+To play Doom under AROS you should have at least 8 megabyte
+of RAM for AROS:
+
+   aros --memsize 8
+
+AROS Doom should already work with the default AROS stacksize.
+If you have problems try "Stack 50000" or "Stack 100000" before
+starting Doom.
+
+Like with Quake you can speed up the game by enabling
+XShm support in the gfx hidd (if you have the XShm
+extensions installed). This is done by changing
+in config/x11/hidd/xshm.h
+
+    #define USE_XSHM 0
+
+    to
+
+    #define USE_XSHM 1
+
+The AROS specific files are:
+
+   aros_main.c
+   aros_net.c
+   aros_net_local.c aros_net_local.h
+   aros_netspecial.h
+   aros_sound.c
+   aros_system.c
+   aros_video.c
+   
+   There are also some minor changes in other files. Look for
+   "#ifdef AROS"!
+   
+Unlike ADoomPPC AROS Doom by default runs in a window. This uses
+cybergaphics.library and does not work on 8 Bit Screens.
+
+You can play AROS Doom on it's own screen by using the option -scr:
+
+  doom -scr
+  
+
+Another special feature of AROS Doom is the possibility to do a
+deathmatch game with upto 4 players on one computer. The routines
+for this are in aros_net_local.c. You have to start the doom exe
+multiple times for this (make sure AROS has enough memory: start
+it with --memsize 16 or --memsize 32):
+
+  2 player game:  Open 2 Shells:
+
+                  Shell 1: doom -netlocal 1 1
+		  
+		  Shell 2: doom -netlocal 2 2
+		  
+	
+  3 player game:  Open 3 Shells:
+  
+                  Shell 1: doom -netlocal 1 1 1
+		  
+		  Shell 2: doom -netlocal 2 2 2
+		  
+		  Shell 3: doom -netlocal 3 3 3
+		  
+
+  4 player game:  Open 4 Shells:	  
+
+                  Shell 1: doom -netlocal 1 1 1 1
+		  
+		  Shell 2: doom -netlocal 2 2 2 2
+		  
+		  Shell 3: doom -netlocal 3 3 3 3
+
+                  Shell 4: doom -netlocal 4 4 4 4
+		  
+		  
+Actually there is the problem that only the player of the active
+window can be controlled, so you have to activate another player's
+window to control that player. This will be fixed with a special
+InputHandler, but there probably won't be enough space for more than
+two players on the keyboard, because of Doom having many control
+possibilites (switch weapons, ...)
+
+Important start options (for others see ADoomPPC_13.readme):
+
+-width
+
+ width of Doom "screen". must be a multiple of 32.
+ 
+
+-height
+
+ height of Doom "screen"
+ 
+ 
+-forcedemo
+
+ Force playing demos. Doom often thinks a demo was done with a
+ another version of Doom and therefore by default doesn't play
+ them back.
+
+ 
+-timedemo demo1 -forcedemo
+
+ Benchmark. Instead of demo1 you can also try demo2 or demo3.
+ 
+ P2/300/66, 128 MB RAM, Matrox G400, XFree86 3.3.4-14 SVGA Server,
+ 1024x768x16 X11 resolution, default Doom resolution (320 x 200),
+ full Doom screen size (no status bar visible), doom.wad (Doom 1
+ full version):
+ 
+                  
+    demo1: 79 FPS
+    demo2: 84 FPS
+    demo3: 88 FPS
+
+
+-fps
+
+ show framerate in upper right window edge. is not very accurate
+ because the timer.device of AROS under Linux actually has only
+ a precision of 1/50 sec.
+
+
+-rotatemap
+
+ rotate the map (BTW: activate with TAB) for better orientation.
+ 
+
+-maponhu
+
+ display map over game gfx.
+ 
+

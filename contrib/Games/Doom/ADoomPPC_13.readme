@@ -1,0 +1,850 @@
+Short:    Amiga PPC port of ADoom v1.2
+Author:   Joseph Fenton (jlfenton@ctaz.com)
+Uploader: Peter McGavin (p.mcgavin@irl.cri.nz)
+Type:     game/shoot
+
+==========================================================================
+                         ADoom PPC 1.3
+==========================================================================
+
+By Joseph Fenton (jlfenton@ctaz.com) based on the code by Peter McGavin
+
+April 9, 1998
+
+==========================================================================
+
+This archive contains a PowerUP PPC port of Peter McGavin's ADoom.
+
+ADoom is a port of ID Software's Linux DOOM.  You can get the original
+ID Software Linux DOOM source from:
+
+   ftp://ftp.cdrom.com/pub/idgames/idstuff/source/doomsrc.zip
+
+Source code for ADoomPPC is in a seperate archive available on AmiNet
+and Amiga DOOM sites.
+
+ADoomPPC multitasks and complies with PowerUP PPC standards; it uses
+an Amiga standard library for high-quality sound effects and music.
+
+ADoomPPC uses ASL to request the screen mode unless overridden by
+the user in the parameters.  ECS & OCS are not supported and AGA is
+not recommended, but allowed.
+
+ADoomPPC allows the selection of resolutions higher than 320x200.
+Resolutions up to 1600x1280 are allowable, but require a fast PPC.
+For people who really need the speed, low detail mode is also
+supported.
+
+All the features of ADoom 1.2 are supported by ADoomPPC; these
+include: DeHackEd file support (.DEH config files), IPX, TCP/IP,
+null modem cable link-up, frames-per-second display, and auto-map
+on the heads-up display.
+
+ADoomPPC 1.3 adds native AGA support; AGA graphics are nearly the
+same speed as a video card! It also makes the save games compatible
+with ADoom (and other DOOM conversions).
+
+Installation
+============
+
+Copy ADoomPPC to any drawer you wish.  If you have gotten the MIDI
+instruments file (available in another archive due to its size), copy
+it to the same drawer.
+
+Included are two libraries for playing music and sound effects.
+Copy doomsound.library to your libs: drawer if you have a 68040/PPC
+combo card; copy doomsound.library.060 as doomsound.library to your
+libs: drawer if you have a 68060/PPC combo card.  The only difference
+between the two is that the normal version uses a quad multiply for
+pitch bending and the 060 version uses a floating point multiply.  The
+normal version WILL work on the 060; it is just slightly slower.
+
+If you do not copy one of the two libraries into the libs: drawer,
+you will only get 4 channel, non-panned sound effects.
+
+Copy a WAD file to the same drawer; if you wish to use the WAD file in
+a different drawer, see the instructions concerning WAD files below.
+
+Requirements
+============
+
+ADoomPPC requires an Amiga PPC accelerator with ppc.library v45.13
+or later, and OS 3.0 or newer.
+
+ADoomPPC requires AGA video or a graphics card (recommended).
+
+ADoomPPC requires a WAD file compatible with DOOM for the PC or
+Macintosh; Hastings is selling a compilation of The Ultimate DOOM,
+DOOM II, and Final DOOM for around $20 (US); get it.  Only whimps
+use the shareware wad file.
+
+WAD Files
+=========
+
+WAD files must be in the program directory or in the directory
+specified by the environment variable DOOMWADDIR.  E.G.,
+
+   SetEnv DOOMWADDIR "GAMES:DOOM/WAD_FILES/"
+
+will check GAMES:DOOM/WAD_FILES/ for the WAD files.
+
+The -waddir option can also be used to specify the directory of the
+main WAD file.  E.G.,
+
+   ADoomPPC -waddir WAD_FILES/
+
+will check the directory WAD_FILES relative to the current directory
+for a main WAD file.  The '/' is optional.  The path may also be an
+absolute path like in the environment example above.
+
+Some older Registered WAD files may not work due to later changes
+made to the WAD file contents.
+
+It is possible to upgrade at least some old main WAD files using
+freely available patches from ftp://ftp.idsoftware.com/idstuff/doom/.
+You need a PC to apply the patches.
+
+Playstation WAD files do not work as they are split by level and
+compressed.
+
+WAD files from games derived from DOOM (such as Heretic or Hexen)
+do not work due to differences in WAD contents.
+
+The Ultimate DOOM WAD file must be named DOOMU.WAD to work.
+
+Patch WAD Files
+===============
+
+Patch WAD files are used to change graphics, sounds, and level
+designs on DOOM; many are available on CDROM and the net.  A
+patch wad file is specified with ADoomPPC using the -file option.
+E.G., ADoomPPC -file DMINATOR.WAD (my personal favorite).
+Patch wads can only be used with the appropriate Registered
+WAD file (DOOM, DOOMU, or DOOM2).  Please read the readme that
+accompanies the patch wad for more specific information on the
+patch wad requirements.
+
+A full path can be used with the -file option in case the patch
+wad is in another drawer.  Multiple patch wads may be specified.
+E.G.,
+
+   ADoomPPC -file patch1.wad patch2.wad patch3.wad
+
+Do not ask me about specific patch wads as I have neither to
+time nor the inclination to bother with them.
+
+Disk Loading
+============
+
+ADoomPPC is faster when some kind of disk cacheing is used. Either
+a disk cache program such as DynamiCache, or the use of AddBuffers
+make a tremendous difference in the performance of ADoomPPC.
+AddBuffers is used as follows:
+
+   AddBuffers GAMES: 1024
+
+where you substitute the name of the partition ADoomPPC is on for
+GAMES:.  I recommend adding at least 500 buffers; the more the
+better.  In fact, if you have enough RAM, copy the WAD file to
+RAM: for the best speed.
+
+PPC Specifics
+=============
+
+The bus clock controls the timing in ADoomPPC; if it is not set to
+the right value, ADoomPPC may run funny and the FPS counter will be
+inaccurate.  The bus clock is automatically computed at the start
+using information supplied by the ppc.library.  If the information
+is not correct (some versions of the ppc.library return the wrong
+clock information on newer PPC accelerators), you can override the
+computed value; to do this, specify -bus <frequncy>.  E.G.,
+
+   ADoomPPC -bus 40000000
+
+runs ADoomPPC with the bus clock set to 40MHz.
+
+Resolution
+==========
+
+The default resolution for ADoomPPC is 320x200 and is the fastest
+resolution to run in.  If you have more CPU power than you know
+what to do with, you can run ADoomPPC in higher resolutions by
+using the -width & -height options.  E.G.,
+
+   ADoomPPC -width 640 -height 480
+
+runs ADoomPPC in 640x480 resolution; select a 640x480 display
+mode when the ASL screenmode requester appears.
+
+The resolution must be a multiple of 64 for AGA graphics, and
+32 for graphics cards.
+
+Pressing F5 toggles between high detail and low detail in any
+resolution.
+
+The maximum resolution is 1600x1280.  Don't bother unless you
+have a 275MHz G3 PPC.
+
+Note that certain resolutions may overflow the cache, slowing
+the performance of the game.
+
+The following table was done by Peter McGavin.  It shows for each
+standard resolution how many pixels can be rendered vertically in
+the cache and whether it's expected to be fast or not on a 603e or
+604e. O means yes, x means no.
+
+ Resolution  Pix in cache  Fast or not
+   W    H     603e  604e   603e  604e
+-------------------------------------
+  320x 200     256   512     O     O
+  320x 240     256   512     O     O
+  352x 220     512  1024     O     O
+  352x 264     512  1024     O     O
+  384x 240     128   256     x     O
+  384x 288     128   256     x     x
+  416x 260     512  1024     O     O
+  416x 312     512  1024     O     O
+  448x 280     256   512     x     O
+  448x 336     256   512     x     O
+  480x 300     512  1024     O     O
+  480x 360     512  1024     O     O
+  512x 320      32    64     x     x
+  512x 384      32    64     x     x
+  544x 340     512  1024     O     O
+  544x 408     512  1024     O     O
+  576x 360     256   512     x     O
+  576x 432     256   512     x     O
+  608x 380     512  1024     O     O
+  608x 456     512  1024     O     O
+  640x 400     128   256     x     x
+  640x 480     128   256     x     x
+  672x 420     512  1024     O     O
+  672x 504     512  1024     O     O
+  704x 440     256   512     x     O
+  704x 528     256   512     x     x
+  736x 460     512  1024     O     O
+  736x 552     512  1024     x     O
+  768x 480      64   128     x     x
+  768x 576      64   128     x     x
+  800x 500     512  1024     O     O
+  800x 600     512  1024     x     O
+  832x 520     256   512     x     x
+  832x 624     256   512     x     x
+  864x 540     512  1024     x     O
+  864x 648     512  1024     x     O
+  896x 560     128   256     x     x
+  896x 672     128   256     x     x
+  928x 580     512  1024     x     O
+  928x 696     512  1024     x     O
+  960x 600     256   512     x     x
+  960x 720     256   512     x     x
+  992x 620     512  1024     x     O
+  992x 744     512  1024     x     O
+ 1024x 640      16    32     x     x
+ 1024x 768      16    32     x     x
+ 1056x 660     512  1024     x     O
+ 1056x 792     512  1024     x     O
+ 1088x 680     256   512     x     x
+ 1088x 816     256   512     x     x
+ 1120x 700     512  1024     x     O
+ 1120x 840     512  1024     x     O
+ 1152x 720     128   256     x     x
+ 1152x 864     128   256     x     x
+ 1184x 740     512  1024     x     O
+ 1184x 888     512  1024     x     O
+ 1216x 760     256   512     x     x
+ 1216x 912     256   512     x     x
+ 1248x 780     512  1024     x     O
+ 1248x 936     512  1024     x     O
+ 1280x 800      64   128     x     x
+ 1280x 960      64   128     x     x
+ 1312x 820     512  1024     x     O
+ 1312x 984     512  1024     x     O
+ 1344x 840     256   512     x     x
+ 1344x1008     256   512     x     x
+ 1376x 860     512  1024     x     O
+ 1376x1032     512  1024     x     x
+ 1408x 880     128   256     x     x
+ 1408x1056     128   256     x     x
+ 1440x 900     512  1024     x     O
+ 1440x1080     512  1024     x     x
+ 1472x 920     256   512     x     x
+ 1472x1104     256   512     x     x
+ 1504x 940     512  1024     x     O
+ 1504x1128     512  1024     x     x
+ 1536x 960      32    64     x     x
+ 1536x1152      32    64     x     x
+ 1568x 980     512  1024     x     O
+ 1568x1176     512  1024     x     x
+ 1600x1000     256   512     x     x
+ 1600x1200     256   512     x     x
+
+To avoid cache overflow, the -mmu option may be used to allocate
+the screen buffers with the memory mapped as non-cacheable by
+the ppc.library.  E.G.,
+
+   ADoomPPC -width 640 -height 480 -mmu
+
+allocates the screen buffers for a 640x480 display and makes it
+non-cacheable.
+
+Music
+=====
+
+ADoomPPC uses the doomsound.library to play music.  If the library
+is not present, or if the MIDIInstruments file cannot be found,
+music is not available in ADoomPPC.  The doomsound.library supports
+16 stereo panned sound effects and 16 channels of stereo music;
+if the library is not present; only 4 channel, non-stereo sound
+effects will be played.  To get no sound effects or music, use
+the -nosfx option.  To get only sound effects, do not use -nosfx
+and -music; to get sound effects and music, use -music and do not
+use -nosfx.
+
+The MIDIInstruments file is very big and is in another archive.
+
+Keyboard
+========
+
+The keys are generally mapped the same as on a PC.  On the Amiga,
+use '[' or Del for F11, ']' for F12, and Help for Pause.
+
+The keymap may be customized by changing the .doomrc file.
+
+The Right Amiga key sends the same code as Ctrl and the Left Amiga
+key is disabled so that Intuition commands (like screen flipping)
+may be done without ADoomPPC trying to use the key.
+
+By default, the numeric keypad controls the player movement;
+4, 5, 6 and 8 control movement and turning; 1, 3, 7, and 9
+are used for strafe.  '<', ',', '>', and '.' can also be used
+for strafe.  All key mappings can be changed in the .doomrc.
+
+Use the -rawkey option for use of raw keycodes rather than translated
+keycodes.
+
+Mouse
+=====
+
+To use the mouse with ADoomPPC, use the -mouse option.  This slows
+the game down while enabled.
+
+CD32 Joypad
+===========
+
+If the lowlevel.library is present, the -joypad option enables the
+CD32 joypad for ADoomPPC.  Red is Fire, Blue is Action, Yellow is
+Fast, Green is Return, Start/Pause is Esc, and Forward & Reverse
+are strafe.
+
+SEGA Genesis Controller
+=======================
+
+To use a SEGA Genesis controller, use the -sega3 option for a three
+button Genesis controller, and the -sega6 option for a six button
+Genesis controller.
+
+The button mapping is as follows:
+Start = Space (Action)
+A     = Strafe Right
+B     = Fire
+C     = Strafe Left
+On the 6 button controller you also get
+Mode  = Esc (Menu)
+X     = Return (Enter/Show last message)
+Y     = Shift (Fast/Run)
+Z     = Tab (Map on/off)
+
+A Sega Genesis controller may be use on the Amiga as long
+as you swap lines 5 & 7, and put a 470 ohm resistor
+between lines 5 & 7.
+
+The controller plug pinout is:
+     1   2   3   4   5
+        6   7   8   9
+
+The best way to switch the lines is to open up the
+controller and change them on the circuit card.
+Note: doing this will make the controller incompatible
+with SEGA equipment; if you make the changes, you
+are on your own; I will not be held responsible for any
+damage incurred by performing the above procedure.
+If you aren't comfortable doing your own conversion
+and don't know anyone who can help, DON'T TRY IT!
+Get yourself a CD32 joypad.  This is ONLY for people
+who know what they are doing and want the range of
+controllers available for SEGA equipment.
+
+Specifying the Screenmode
+=========================
+
+If you do not want the ASL screenmode requester every time you run
+ADoomPPC, you can specify the screenmode you want using the -screenmode
+option.  E.G.,
+
+   ADoomPPC -screenmode $40420007
+
+If you are not sure what the screenmode ID is, run ADoomPPC without
+the -screenmode option, select the screenmode you wish to use, then
+check the mode ID printed to ADoomPPC's output window or the CLI if
+you ran it from a CLI.
+
+Memory
+======
+
+ADoomPPC automatically caches game information in a memory block
+allocated when the program is run.  The default is to try to allocate
+6MB of RAM.  You can override this with the -heapsize option.  E.G.,
+
+   ADoomPPC -heapsize 2048
+
+runs ADoomPPC with 2048KB (or 2MB for those not familiar with base
+16); selecting less memory makes ADoomPPC go to the harddrive more
+often, slowing down gameplay; selecting too little memory may cause
+the game to error out.
+
+FPS Counter
+===========
+
+Use the -fps option to get a frames-per-second display in the upper
+right hand corner of the display.  This shows the speed of rendering
+at that particular moment.  The proper way to get the average speed
+of DOOM is to do the following:
+
+   ADoomPPC -forcedemo -timedemo demo3
+
+with the DOOM window set to 2 steps below maximum.  The speed is
+calculated using the formula:
+
+   FPS = gameticks / realticks * 35
+
+My 150MHz 603e+ gets about 28 FPS on my Spectrum card, and about 31
+FPS on my CV3D card.
+
+Remember, the FPS Counter will not be accurate if the bus clock is
+not set to the proper value.
+
+Rotating Map and Map On Heads Up Display
+========================================
+
+Use the -maponhu option to have the automap displayed on the main 3D
+view window, and use the -rotatemap option to have the automap rotate
+as the player turns.
+
+You can toggle through various map types by pressing 'z' while the map
+is displayed.
+
+DeHackEd
+========
+
+DeHackEd is a PC program that patches certain internal tables inside
+DOOM so that certain effects can be achieved; these include, a rapid
+fire shotgun, floating barrels, and many other things.
+
+ADoomPPC supports the use of DeHackEd configuration files; they have
+a .DEH extension on them.  To use them, use the -deh option. E.G.,
+
+   ADoomPPC -deh TURBO.DEH
+
+Many DEH files are available on the net.  Not all the features in DeHackEd
+are supported.  Do not bug me about any additional features you want; I have
+neither the time nor the inclination to add more features.  The original
+author of the DeHackEd support is Cyril Deble <Cyril.Deble@inforoute.cgs.fr>.
+Bug him about it. :^}
+
+NetWorking
+==========
+
+ADoomPPC supports three types of networking: TCP/IP, IPX, and raw null-
+modem.  I have not had the chance to test these yet.
+
+ADoomPPC generates ALOT of network traffic, so use a fast connection.
+Having one slow machine connected slows everyone down.
+
+The following is from the ADoom readme by Peter McGavin:
+
+TCP/IP:
+-------
+
+AmiTCP networking in ADoom is based on the Linux DOOM source code.  It
+works between Amigas and also with Linux PCs using TCP/IP on a fast
+network.  You need either AmiTCP or Miami on your Amiga for it to
+work.  Make sure you are using a recent version of AmiTCP or Miami.
+Fast Amigas and a fast connection help a lot too.  It's best over
+ethernet and OK over AmigaLink.  It works over a serial line with SLIP
+or PPP too, but people with 68030s reported unplayably poor
+performance.
+
+TCP/IP does not work to PCs running MSDOS or Win95, unless perhaps you
+can find a PC version of DOOM compiled from the Linux source code
+which supports TCP/IP.  Several people told me Win95Doom TCP/IP does
+not work with ADoom.
+
+To start ADoom across 2 computers called fred and bob, say:
+
+  1:  Make certain both computers are using identical WAD files;
+
+  2:  Make certain you can PING fred from bob and vice versa;
+
+  3:  On bob, enter:    "ADoom -net 1 fred"
+
+  4:  On fred, enter:   "ADoom -net 2 bob"
+
+
+If there are 3 computers, called fred, bob and sue, say:
+
+  1:  Make certain all 3 computers are using identical WAD files;
+
+  2:  Make certain you can PING between all computers by name;
+
+  3:  On bob, enter:    "ADoom -net 1 fred sue"
+
+  4:  On fred, enter:   "ADoom -net 2 bob sue"
+
+  5:  On sue, enter:    "ADoom -net 3 fred bob"
+
+
+It's normal for screens to go blank sometimes during the startup phase.
+
+On Linux I used DOOM compiled from the source code available from:
+
+   ftp://ftp.cdrom.com/pub/idgames/idstuff/source/doomsrc.zip
+
+
+I don't know whether other Linux DOOM implementations are compatible.
+
+So far I have tested up to 3 computers.  The code is pretty untested
+and your mileage may vary.
+
+
+
+IPX:
+----
+
+IPX is the ethernet protocol used by MSDOS versions of DOOM.  ADoom
+uses G.J.Peltenburg's amipx.library version 1.1 or higher for IPX.
+You can get this library from Aminet.  After several evenings of
+struggling with the library and with checksums and
+big-endian/little-endian problems and with version number problems,
+the protocol finally seems to work, sort of...
+
+Unfortunately I did not foresee another problem.  The PC version of
+the DOOM program I've tried so far does not exactly match Linux DOOM,
+even when using exactly the same WAD file.  In my experience, the game
+often gets out of sync (consistency failure) or quits unexpectedly.
+So far I've only used DOOM2 version 1.666 on the PC.  Perhaps version
+1.9 would work better, because that's the PC version recommended for
+net-play with MacDOOM.
+
+Between 2 fast Amigas, ADoom with IPX works reasonably well using
+a2065.device.  Hopefully it also works using ariadne.device and other
+Sana2 ethernet devices.
+
+First you should install G.J.Peltenburg's amipx.library version 1.1 or
+higher (from Aminet) and configure your Network number, Node, Device
+driver, Unit number and Frame Type in amipx_prefs.  I use the Frame
+Type "Ethernet 802.2" and just set everything else to 0.
+
+Note that you need amipx.library at least version 1.1.  Version 1.0
+doesn't work.  (Well, v1.0 might work with ariadne.device...)
+
+The syntax for starting ADoom with IPX is:
+
+  ADoom -netipx <number-of-nodes>
+
+For example:
+
+  ADoom -netipx 2
+
+ADoom automatically waits until the number of nodes specified are
+found on the local ethernet, then starts the game.  You should all
+specify the same number of nodes and you should all use the same WAD
+files and other options.
+
+So far I have tested up to 2 Amigas and 1 PC all at once.  The code is
+pretty untested and your mileage may vary.
+
+If you try IPX between an Amiga and a PC, there are 2 more options you
+MUST know about.
+
+The -pcchecksum option tells ADoom to calculate net packet checksums
+the same way the PC version does.  By default, ADoom calculates net
+packet checksums the same way Linux DOOM does, which is different.
+(Linux DOOM just sets the net packet checksum to 0.)  If you don't use
+-pcchecksum, the PC will reject and ignore (nearly) all game packets.
+
+The -forceversion <number> option fools a PC into thinking you are
+running a particular version of DOOM.  I use -forceversion 106 with
+DOOM2 version 1.666, for example.  The default is -forceversion 110
+for version 1.10.  PC DOOM rejects any DOOM program that identifies
+itself as a different version number.  Sorry I don't know an easy way
+of working out what number you need after -forceversion to impersonate
+a particular version of PC DOOM.  Try -forceversion 109 with DOOM2
+version 1.9, perhaps.
+
+I'm very interested to know your experiences with ADoom between PCs
+and Amigas using IPX.
+
+I'm told ADoom works with MacDOOM over IPX too, by the way.
+
+Thanks to G.J.Peltenburg for sending me the freely available IPX
+support source code from ID Software's ftp site, after modifying it
+for his amipx.library.
+
+
+
+DIRECT NULL-MODEM:
+------------------
+
+So many people requested a raw null-modem protocol that I sat down and
+implemented it for version 0.9.  Well it was mainly an exercise to
+prepare myself for IPX.
+
+It only works between 2 Amigas with the serial ports connected by a
+null-modem cable.  It uses 7-wire CTS/RTS handshaking, so a simple
+3-conductor cable won't work.  I'm pretty sure null-modem won't work
+between an Amiga and a PC, because I made no attempt to match the
+protocol.  In other words, it requires 2 Amigas.
+
+I suppose it would work between 2 Amigas over a telephone line with
+modems.  You would need to manually dial and make the connection
+first.  Then you would need to shutdown the connection program before
+starting ADoom.  The Hayes modem command at&d0 might be useful for
+leaving the modem on-line between shutting down the connection program
+and starting ADoom.
+
+The ADoom syntax is:
+
+  ADoom -netserial <node-number> <serialdevice> <unit> <speed>
+
+For example, you could enter:
+
+  ADoom -netserial 1 serial.device 0 38400
+
+on one Amiga and
+
+  ADoom -netserial 2 serial.device 0 38400
+
+on the other.  One of the Amigas is always node 1 and the other one
+is always node 2.
+
+It is not necessary to use serial.device.  In fact artser.device or
+8n1.device, if you have them, probably work more reliably or at higher
+speeds than serial.device.
+
+I think you should use the highest speed that both Amigas cope with.
+My experience is that 38400 is about the limit for 68030 Amigas.  My
+68040 WarpEngine works OK with artser.device at 57600.  If you set the
+speed too high, ADoom will probably behave erratically or lock-up
+after a while.  If you set the speed too low, I suspect the game will
+run only very slowly.
+
+The game tends to slow right down when there are lots of active
+monsters anyway.  Try -deathmatch -nomonsters perhaps.
+
+I recommend you start ADoom on node 2 first.  That's because node 2 is
+the "listener" during the setup phase.  If you start ADoom on node 1
+first, ADoom on node 2 is likely to open serial.device while node 1 is
+part way through sending a setup packet.  That could lead to
+synchronisation problems and possible lockups.
+
+
+
+CONSISTENCY FAILURE:
+--------------------
+
+Several people reported their net games ended unexpectedly with a
+message like: "Error: consistency failure (24805 should be 24806)"
+
+What's going on is that DOOM calculates a kind of checksum of the
+game's status --- player and monster positions and that kind of thing
+--- and sends it to all the other players in every net packet.  If all
+the programs and WADs are identical, then they all calculate exactly
+the same checksum.  However, if someone is using a slightly different
+WAD version or an incompatible version of DOOM, then a monster might
+be one more pixel to the left, say, and the result is "consistency
+failure".
+
+The test is very precise.  All net nodes must run compatible versions
+of DOOM and all must use exactly the same WAD file and game options.
+To be compatible, 2 versions of DOOM must provide exactly the same
+features.  Furthermore, they must use exactly the same random number
+generator and they must round arithmetic calculations exactly the same
+way.
+
+I have to be careful adding new features to ADoom.  For example, I
+can't use the random number generator for anything new, nor can I add
+any new features that might change player and monster positions.  If I
+optimise anything, I can't make any approximations.  Otherwise ADoom
+definitely won't work with PC DOOM any more.  Please keep this in mind
+if you send me source code for inclusion in ADoom.
+
+(The ideal solution would be to compile DOOM for all different
+platforms, MSDOS, Win95, Mac, Linux, Amiga, PSX,... from a single
+source.  Then new features can be added simultaneously on all
+platforms.  Now there's a job for someone...)
+
+I suspect "consistency failure" might also happen if you get network
+errors, such as serial line overruns.  Try lowering your serial line
+speed, and make sure hardware handshaking is working properly.  Also,
+if you all specify -pcchecksum things might be more reliable.  That's
+because the default Linux net packet checksum isn't really a checksum
+at all.  It's always 0.  So any errors in the net packet are not
+detected unless you all use -pcchecksum.  (The net packet checksum is
+different to the consistency checksum.)
+
+
+In the above, substitute ADoomPPC for ADoom.  I was too lazy to
+retype all the above. :^}
+
+
+Picasso96
+=========
+
+ADoomPPC should work with the Picasso96 API as long as you don't
+specify -directcgx.  In fact, -directcgx slows down ADoomPPC, so
+don't use it unless you like running slower. :^}
+
+Graffiti
+========
+
+The Graffiti card is not yet supported, but I have written drivers
+for it for something else, so expect it in some revision of ADoomPPC.
+
+WorkBench
+=========
+
+If you use ELFLoadSeg (and you should), ADoomPPC can be run from Workbench.
+To get the options, set the tooltypes EXACTLY like if you were using it
+from a CLI.  E.G., if the CLI line is
+
+   ADoomPPC -forcedemo -music -joypad -screenmode $40420007
+
+the tooltypes should be
+
+   -forcedemo
+   -music
+   -joypad
+   -screenmode
+   $40420007
+
+Options that take a value directly after them should have that value
+in the tooltype IMMEDIATELY FOLLOWING the tooltype specifying the option
+(see -screenmode option above).
+
+Bugs
+====
+
+Peter McGavin reports that the IPX only works in ADoomPPC if the PPC
+machine is the sender (lowest address on network).
+
+You get one column of crap on the far left in the view for resolutions
+wider than 320; some resolutions don't put the border patch between the
+view and the status bar.
+
+As far as I can tell, a bug in ppc.library v45.17 causes allocating
+memory as non-cacheable not to work.  I am working with Phase 5
+to fix the problem in a future revision of the library.  Until
+then, stick to a resolution that has an O next to it for your
+processor type.  Peter McGavin reports that this option DOES work
+on his brother's 604 PPC Amiga; you'll just have to try it on your
+own system to see if it works for you.
+
+Also under v45.17, on my PPC (the developer card for the Mark 2 060),
+ADoomPPC crashes if the PPC accesses memory at certain locations.  Use
+the -heapsize option to lower memory if ADoomPPC crashes while doing
+the R_Init routine (watch the cli output).
+
+Both problems are probably PPC MMU mapping bugs in ppc.library.
+
+WWW Sites
+=========
+
+There are several web pages specialising in DOOM for the Amiga.  Some
+good ones are:
+
+    http://adoom.ml.org/     has about 6 other Amiga DOOM ports
+
+    http://surf.to/adoom/    fast mirror of http://adoom.ml.org/
+
+    http://homepages.which.net/~bartlett/    the Amiga DOOM Bible
+
+    http://hem2.passagen.se/sids/adoom/    an ADoom-only page
+
+    http://www.balldesi.demon.co.uk/    for the latest speed benchmarks
+
+    http://www.boehme.demon.co.uk/aliens.html    some tested 3rd party WADs
+
+    http://fiction.pb.owl.de/~frank/    for another PPC port of ADoom
+
+and Aminet, of course.
+
+History
+=======
+
+1.3 April 9, 1998
+
+Added native AGA support with triple buffering; I get 24 FPS under
+NTSC Low-Res 320x200 and 9 FPS under NTSC High-Res 608x380.  Fixed
+problem with the sky not being vertically centered.  Made ADoomPPC
+save games compatible with the 68K version; this makes it incompatible
+with ADoomPPC 1.2.x version save games.  Fixed problem with doom-
+sound.library.060; you may or may not have noticed any trouble on
+ADoomPPC, but 060 versions of DOOM had trouble with it.
+
+
+1.2.6 April 6, 1998
+
+First public release.  Added -waddir option.  Fixed PCX screenshot header.
+
+
+1.2.5 April 5, 1998
+
+Not publicly released.  Finally fixed AMIPX.
+
+
+1.2.3 April 3, 1998
+
+Not publicly released.  Made another fix for AMIPX.  Now using
+ppc.library to set the bus clock instead of using a fixed default.
+Prints cpu type, cpu clock, PLL divisor, and bus clock on startup.
+
+1.2.1 April 2, 1998
+
+Not publicly released.  Fixed a minor problem with low detail spans.
+
+
+1.2  March 31, 1998
+
+Not publicly released.  ADoomPPC uses the doomsound.library based
+on the ADoom_SndSrvr by yours truely.  Fixed the clipped sfx problem
+in the sound server and reversed the channels (had them backwards).
+
+Fixed low detail problem with the Linux DOOM C code.  Tried PPC 
+assembly for R_DrawColumn and found it was only 10 ticks faster;
+went back to C code for column rendering.
+
+Added -bus to set the bus clock for different PPC systems.
+
+Added -mmu to allocate screen buffers as non-cacheable.  Thanks
+to Peter McGavin for all his work on PPC caches.
+
+Acknowledgements
+================
+
+My thanks go to Peter McGavin for one of the finest ports of DOOM
+for the Amiga, and for making the code available so that I could do
+this version for the PPC.
+
+My thanks go to Peter's brother for getting a PPC for his Amiga
+so that Peter could beta test ADoomPPC for me; especially all the
+networking.
+
+My thanks go to Frank Wille for hints on linking and using PASM.
+
+Thanks also go to the people who contributed to certain features in
+ADoom/ADoomPPC to help make it extra special.  You'll find them in
+the source code archives of both ADoom and ADoomPPC.  If you contibuted
+and want credit in this readme, email me. :^}
+
+Thanks to John Carmack and ID Software for one of the best games ever!

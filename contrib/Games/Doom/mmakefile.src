@@ -1,0 +1,114 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+INSTDIR  := $(CONTRIBDIR)/Games/Doom
+BUILDDIR := $(GENDIR)/$(CURDIR)
+
+EXE := $(INSTDIR)/doom
+
+#MM- contrib-games : Doom
+#MM
+Doom : make-dirs $(EXE)
+
+make-dirs :
+	%mkdirs_q $(INSTDIR) $(BUILDDIR)
+
+SPECIAL_CFLAGS = -DAROS -DNORMALUNIX -DUNROLL -O3 -ffast-math -funroll-loops \
+	-fomit-frame-pointer -fexpensive-optimizations
+
+FILES = \
+	doomdef \
+	doomstat \
+	dstrings \
+	dehacked \
+	tables \
+	f_finale \
+	f_wipe \
+	d_main \
+	d_net \
+	d_items \
+	g_game \
+	m_menu \
+	m_misc \
+	m_argv \
+	m_bbox \
+	m_cheat \
+	m_random \
+	am_map \
+	p_ceilng \
+	p_doors \
+	p_enemy \
+	p_floor \
+	p_inter \
+	p_lights \
+	p_map \
+	p_maputl \
+	p_plats \
+	p_pspr \
+	p_setup \
+	p_sight \
+	p_spec \
+	p_switch \
+	p_mobj \
+	p_telept \
+	p_tick \
+	p_saveg \
+	p_user \
+	r_bsp \
+	r_data \
+	r_draw \
+	r_main \
+	r_plane \
+	r_segs \
+	r_sky \
+	r_things \
+	w_wad \
+	wi_stuff \
+	v_video \
+	st_lib \
+	st_stuff \
+	hu_stuff \
+	hu_lib \
+	s_sound \
+	z_zone \
+	info \
+	sounds \
+	m_fixed \
+	aros_main \
+	aros_sound \
+	aros_net \
+	aros_system \
+	aros_video \
+	aros_net_local \
+#	amiga_swap \
+#	amiga_draw \
+#	amiga_cgxtagfns \
+#	amiga_socket_lib \
+#	amiga_timer \
+#	amiga_system \
+#	amiga_sound \
+#       amiga_c2p \
+#	amiga_video \
+#	amiga_net \
+#	amiga_sega \
+#	amiga_main	
+
+OBJS = $(foreach f, $(FILES), $(BUILDDIR)/$(f).o)
+
+$(BUILDDIR)/%.o: %.c
+	%compile_q
+
+$(BUILDDIR)/%.d: %.c
+	%mkdepend_q
+	
+$(EXE) : $(OBJS) $(DEPLIBS)
+	%link_q from=$(OBJS)
+
+%common
+%include_deps $(foreach f,$(FILES),$(BUILDDIR)/$(f).d)
+
+#############################################################
+#
+#############################################################
