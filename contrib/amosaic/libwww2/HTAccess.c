@@ -44,7 +44,7 @@
 /* #define TRACE 1 */
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
  /* in the mean time, looks ar X resources, may want to make
     it look in prefs file later */
 extern char *mo_check_for_proxy (char *);
@@ -163,7 +163,7 @@ PRIVATE int get_physical ARGS2(
 	 * The environment variables have precedence over the X resources,
 	 * But if we got no proxy from them, check the X resources now.
 	 */
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /* see above */
 	if ((proxy == NULL)||(proxy[0] == '\0'))
 	{

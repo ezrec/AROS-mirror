@@ -78,7 +78,7 @@ PUBLIC void HTFormatInit NOARGS
 
   if (use_default_type_map)
     {
-#if defined (_AMIGA)
+#if defined(_AMIGA) || defined(__AROS__)
 	 /* It is an amiga, use multiview for just about everything */
 	  /* For the amiga @ at the end of the line will be replaced
 	    by pubscreen="name of screen mosaic is running on" */
@@ -484,7 +484,7 @@ PUBLIC void HTFileInit NOARGS
       HTSetSuffix(".mv",    "video/x-sgi-movie", "binary", 1.0);
 
       HTSetSuffix(".mime", "message/rfc822", "binary", 1.0);
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
   HTSetSuffix(".LHA",   "application/octet-stream", "binary", 1.0);
   HTSetSuffix(".lha",   "application/octet-stream", "binary", 1.0);
   HTSetSuffix(".LZH",   "application/octet-stream", "binary", 1.0);

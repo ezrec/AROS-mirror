@@ -18,7 +18,7 @@
 #define WWW_TraceFlag HTTrFlag
 #endif
 
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
  #include <exec/types.h>
  #ifndef BOOLEAN_DEFINED
   typedef BOOL BOOLEAN;

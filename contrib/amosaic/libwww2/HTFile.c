@@ -311,7 +311,7 @@ PUBLIC char * HTLocalName ARGS1(CONST char *,name)
 
   HTUnEscape(path);	/* Interpret % signs */
 
-  #if _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
    /* Amiga files are stored as volume:file instead of /volume/file
     *  or whatever. This little bit of code massages the string
     *	appropriately */
@@ -327,7 +327,7 @@ PUBLIC char * HTLocalName ARGS1(CONST char *,name)
 	 path = newpath;
       }
    }
-  #endif
+#endif
 
   if (0==strcmp(access, "file"))
     {
@@ -707,7 +707,7 @@ PUBLIC float HTFileValue ARGS1 (CONST char *,filename)
 #ifdef vms
 #define NO_GROUPS
 #endif
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 /* AS225r2 does have groups -- FIXME later */
 #define NO_GROUPS
 #endif

@@ -233,7 +233,7 @@ Regular BSD unix versions
 #include <sys/time.h>	    /* independent */
 #include <sys/stat.h>
 #include <sys/param.h>
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 #include <fcntl.h>
 #include <limits.h>
 #else

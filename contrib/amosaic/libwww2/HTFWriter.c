@@ -16,7 +16,7 @@
 #include "HText.h"
 #include "tcp.h"
 #include "HTCompressed.h"
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 #include <string.h>
 
 #include <proto/dos.h>
@@ -144,7 +144,7 @@ PRIVATE void HTFWriter_free ARGS1(HTStream *, me)
   if (me->write_error)
     {
       char *cmd = (char *)malloc ((strlen (me->fnam) + 32));
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
       sprintf (cmd, "run >NIL: <NIL: delete %s", me->fnam);
 #else
       sprintf (cmd, "/bin/rm -f %s &", me->fnam);
@@ -194,7 +194,7 @@ PRIVATE void HTFWriter_free ARGS1(HTStream *, me)
       else if (!strstr (me->end_command, "mosaic-internal-reference"))
 	{
 	  HTProgress("Spawning external viewer.");
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 #if 1
 	  {
 		  /* MBS 28 Jan 95
@@ -360,7 +360,7 @@ PRIVATE void HTFWriter_handle_interrupt ARGS1(HTStream *, me)
   fclose (me->fp);
 
   cmd = (char *)malloc ((strlen (me->fnam) + 32) * sizeof (char));
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
       sprintf (cmd, "run >NIL: <NIL: delete %s", me->fnam);
 #else
       sprintf (cmd, "/bin/rm -f %s &", me->fnam);
@@ -480,7 +480,7 @@ PUBLIC HTStream* HTSaveAndExecute ARGS5(
 	      /* Cute.	pres->command will be something like "xv %s"; me->fnam
 		 gets filled in as many times as appropriate.  */
 	      sprintf (command, pres->command, me->fnam, me->fnam, me->fnam);
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 	   { /* For the amiga only, if @ appears in the string,
 		terminate the string there, and append the screen name
 	       to the command, so the program will run on
@@ -518,7 +518,7 @@ PUBLIC HTStream* HTSaveAndExecute ARGS5(
 	    {
 	      /* Make command to process file -- but we have to cat
 		 to the viewer's stdin. */
-	    #ifdef _AMIGA
+#ifdef _
 	      {
 		fprintf(stderr," Please send email to witbrock@cs.cmu.edu\n"
 			"telling him that you passed through the unsupported\n"

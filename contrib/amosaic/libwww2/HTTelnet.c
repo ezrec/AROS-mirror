@@ -31,7 +31,7 @@
 #include "HTAccess.h"
 #include "HTAlert.h"
 
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 #include <dos/dos.h>
 #include <dos/dostags.h>
 #include <proto/dos.h>
@@ -162,7 +162,7 @@ PRIVATE int remote_session ARGS2(char *, access, char *, host)
   char *xterm_str;
   enum _login_protocol { telnet, rlogin, tn3270 } login_protocol;
   extern char *global_xterm_str;
-#ifdef	      _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
   /* FIXME: remote_session doesn't do tn3270 properly for Amiga */
   BPTR seglist;
   extern char *amiga_telnet;
@@ -207,7 +207,7 @@ PRIVATE int remote_session ARGS2(char *, access, char *, host)
       portnum = atoi(port);
     }
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
   /*
    * Make user and hostname secure by removing leading '-' or '+'.
    * and allowing only alphanumeric, '.', '_', '+', and '-'.

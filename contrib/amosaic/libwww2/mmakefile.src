@@ -3,6 +3,7 @@
 include $(TOP)/config/make.cfg
 
 LIB :=	www2
+USER_CFLAGS := $(USER_CFLAGS) -DUSE_DIRENT
 
 FILES := \
 	HTAAUtil \
@@ -13,6 +14,7 @@ FILES := \
 	HTAtom \
 	HTChunk \
 	HTCompressed \
+	HTFile \
 	HTFTP \
 	HTFWriter \
 	HTFormat \

@@ -61,17 +61,16 @@ PRIVATE char *hostname=0;		/* The name of this host */
 ** On return,
 **	returns 	a negative status in the unix way.
 */
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(_AROS)
 #ifndef errno
 extern int errno;
 #endif /* errno */
 
 extern char *sys_errlist[];		/* see man perror on cernvax */
 extern int sys_nerr;
-#endif /* _AMIGA */
-#ifdef _AMIGA
+
  #define ioctl(s,f,v) IoctlSocket(s,f,v)
-#endif
+#endif /* _AMIGA */
 
 #ifndef _DNET
 /*	Report Internet Error
@@ -86,7 +85,7 @@ PUBLIC int HTInetStatus(where)
 {
     CTRACE(tfp, "TCP: Error %d in `errno' after call to %s() failed.\n\t%s\n",
 	    errno,  where,
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 #ifdef _AS225
 	    strerror (errno));
 #else
@@ -607,7 +606,7 @@ PUBLIC int HTDoConnect (char *url, char *protocol, int default_port, int *s)
 #endif
 }
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(_AROS)
 /* This is so interruptible reads can be implemented cleanly. */
 int HTDoRead (int fildes, void *buf, unsigned nbyte)
 {

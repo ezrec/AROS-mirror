@@ -56,7 +56,7 @@ void HTCompressedFileToFile (char *fnam, int compressed)
     sprintf (znam, "%s.gz", fnam);
 
   cmd = (char *)malloc (sizeof (char) * (strlen (fnam) + strlen (znam) + 32));
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
   sprintf (cmd, "rename >NIL: <NIL:  %s %s", fnam, znam);
 #else
   sprintf (cmd, "/bin/mv %s %s", fnam, znam);  
@@ -194,7 +194,7 @@ void HTCompressedHText (HText *text, int compressed, int plain)
     fprintf (stderr, "[HTCompressedHText] I think we're done...\n");
 
   cmd = (char *)malloc (sizeof (char) * (strlen (fnam) + 32));
-#ifdef _AMIGA  
+#if defined(_AMIGA) || defined(__AROS__)
   sprintf (cmd, "delete <NIL: >NIL: %s", fnam);
 #else
   sprintf (cmd, "/bin/rm -f %s", fnam);
