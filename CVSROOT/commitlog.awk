@@ -32,7 +32,7 @@ BEGIN {
 	    # Skip until the filenames
 	    while (getline > 0)
 	    {
-		if ($0 == "Modified Files:" || $0 == "Added Files:")
+		if ($0 == "Modified Files:" || $0 == "Added Files:" || $0 == "Removed Files:")
 		    break;
 	    }
 
@@ -40,8 +40,10 @@ BEGIN {
 	    nfiles=0;
 	    if ($0 == "Modified Files:")
 		app="(M)";
-	    else
+	    else if ($0 == "Added Files:")
 		app="(A)";
+	    else
+		app="(R)";
 
 	    while (getline > 0)
 	    {
@@ -53,6 +55,11 @@ BEGIN {
 		if ($0 == "Added Files:")
 		{
 		    app="(A)";
+		    continue;
+		}
+		if ($0 == "Removed Files:")
+		{
+		    app="(R)";
 		    continue;
 		}
 
