@@ -85,20 +85,20 @@ INDEX
        of all tools involved in the build process with the text that
        you've noted in the previous step. This is so because the 
        build process will not be looking for, say, "gcc", but rather,
-       in the example above, "i686-pc-linug-gnu-gcc".
+       in the example above, "i686-pc-linux-gnu-gcc".
        
        I don't suggest you to really rename the executables, because
        then you would have to always invoke them with the new names, 
-       what I suggest you to is to make symlinks to the various 
+       what I suggest you is to make symlinks to the various 
        executables. For example:
        
          $ ln -s /usr/bin/gcc /usr/bin/i686-pc-linux-gnu-gcc
 	 
-       If for any reasons you can't create the symlink in /usr/bin, 
-       create it wherever you want, as long as the place you chose
+       If for any reasons you can't create the symlinks in /usr/bin, 
+       create them wherever you want, as long as the place you chose
        is in the PATH. 
        
-       The names of the executables you need to create link for are, in 
+       The names of the executables you need to create links for are, in 
        sparse order: as, nm, objcopy, ld, gcc, ar, ranlib.
        
        I might have forgotten some, but you will notice because the 
@@ -120,11 +120,10 @@ INDEX
        the build system will install files and executables in. 
        For instance, the gcc executable will be installed in 
        <prefix>/bin, thus if you set the prefix to "GCC:" (or /GCC), for 
-       instance, then the gcc executable will be isntalled in GCC:/bin
-       (or /GCC/bin),
-       which actually is the same as GCC:bin (from gcc's point of 
-       view, which uses some unix path conversion routines built in the
-       AROS libc). Feel free to set that prefix to whatever you want.
+       instance, then the gcc executable will be installed in GCC:/bin
+       (or /GCC/bin), which actually is the same as GCC:bin (from gcc's
+       point of view, which uses some unix path conversion routines built
+       in the  AROS libc). Feel free to set that prefix to whatever you want.
        
     4) Type "make", without quotes.
     
@@ -137,14 +136,14 @@ INDEX
        in. This *must* be the same prefix that you specified at 
        configuration time, except that this time it must be specified
        as seen by the build system. However, If at configuration time
-       you used a volume name as prefix, then at thios stage you can
+       you used a volume name as prefix, then at this stage you can
        specify whatever prefix you want, as long as you take care
        of mounting the previously specified volume in AROS, or 
        assigning it to the directory where gcc's stuff really is.
   
   IMPORTANT: You still need the native binutils if you want to 
              do anything with the native compiler. The steps you need
-	     to go trough to built the native binutils are pretty much
+	     to go trough to build the native binutils are pretty much
 	     the same as the ones for gcc, except you needn't apply
 	     any patches, as the AROS support for the binutils is 
              already in the main archive. All that was said about the
