@@ -93,7 +93,9 @@ void give_version_info()
 		ptr=*ptr2;
 
 		ver=ptr>>16;
-		rev=ptr&(((1L<<32)-(1L<<16))-1);
+		/* AROS FIX: check!! */
+		/* rev=ptr&(((1L<<32)-(1L<<16))-1); */
+		rev = ptr & 0xFFFEFFFF; /* ??? */
 
 		lsprintf(kick_ver_buf,"v%ld.%ld",ver,rev);
 	}
