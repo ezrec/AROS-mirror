@@ -69,7 +69,7 @@ int act,inact,rexx;
 	
 	struct DOpusArgsList arglist;
 	struct ViewData *viewdata=NULL;
-	BPTR filelock;
+	/* BPTR filelock; */
 	static int entry_depth;
 	char progress_copy=0,prog_indicator=0;
 	
