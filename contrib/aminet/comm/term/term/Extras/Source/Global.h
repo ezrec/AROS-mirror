@@ -624,7 +624,7 @@ enum	{	MOVE_HEAD,MOVE_PRED,MOVE_SUCC,MOVE_TAIL };
 	/* These signal masks will make life a bit easier. */
 
 #define SIG_WINDOW	(1L << Window -> UserPort -> mp_SigBit)
-#define SIG_SERIAL	(ReadPort ? 1L << ReadPort -> mp_SigBit : NULL)
+#define SIG_SERIAL	(ReadPort ? 1L << ReadPort -> mp_SigBit : 0)
 #define SIG_TIMER	(1L << TimePort -> mp_SigBit)
 #define SIG_QUEUE	(SpecialQueue -> SigMask)
 #define SIG_CHECK	(1L << CheckBit)
