@@ -514,13 +514,7 @@ struct DOpusListView *view;
 
 	if (!dir && view->flags&DLVF_CHECK)
 	{
-	    /* AROSBUG */
-#warning AROS-DOpus (Library/listview.c) uses ScrollRaster with a dy which is bigger than the scroll area height. AROS does not like this.
-
-	    kprintf("AROS-dopus: buggy scrollraster: rp = %x  dx = %d  dy = %d area = %d,%d - %d,%d\n",
-	    	     rp,0,view->lines*view->fh,view->x,view->yo,view->xo-1,view->my);
-		     
-	    //ScrollRaster(rp,0,view->lines*view->fh,view->x,view->yo,view->xo-1,view->my);
+	    ScrollRaster(rp,0,view->lines*view->fh,view->x,view->yo,view->xo-1,view->my);
 	}
 
 	w=view->w-(view->xo-view->x);
