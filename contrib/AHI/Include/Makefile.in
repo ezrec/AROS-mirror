@@ -45,6 +45,8 @@ FDTARGETS	= FD-ahi_lib.fd FD-ahi_sub_lib.fd
 
 GCCTARGETS	= C-inline-ahi.h C-inline-ahi_sub.h
 
+AROSTARGETS	= C-defines-ahi.h C-defines-ahi_sub.h
+
 PRAGMATARGETS	= C-pragmas-ahi_pragmas.h C-pragmas-ahi_sub_pragmas.h
 
 
@@ -55,7 +57,7 @@ CFILES		= C/libraries/ahi_sub.h C/devices/ahi.h
 SFDFILES	= SFD/ahi_lib.sfd  SFD/ahi_sub_lib.sfd
 
 
-TARGETS		= $(CTARGETS) $(FDTARGETS) $(GCCTARGETS)
+TARGETS		= $(CTARGETS) $(FDTARGETS) $(GCCTARGETS) $(AROSTARGETS)
 FILES		= $(CFILES) $(SFDFILES)
 
 ifeq ($(host_cpu),m68k)
@@ -100,9 +102,9 @@ gcc-include: INCDIR := gcc
 gcc-include: gcc-include-comp.stamp
 
 gcc-include%.stamp:	SFD/ahi_lib.sfd SFD/ahi_sub_lib.sfd \
-			$(CTARGETS) $(GCCTARGETS)
+			$(CTARGETS) $(GCCTARGETS) $(AROSTARGETS)
 	 $(INSTALL) -d $(INCDIR)/clib $(INCDIR)/devices $(INCDIR)/libraries \
-	                        $(INCDIR)/inline $(INCDIR)/proto
+	                        $(INCDIR)/defines $(INCDIR)/inline $(INCDIR)/proto
 
 	for file in `cd $(srcdir)/C && find . -type f -not -path "*CVS/*"`; do \
 	 $(INSTALL_DATA) $(srcdir)/C/$$file $(INCDIR)/$$file; \
@@ -112,6 +114,8 @@ gcc-include%.stamp:	SFD/ahi_lib.sfd SFD/ahi_sub_lib.sfd \
 	$(INSTALL_DATA) C-clib-ahi_sub_protos.h	$(INCDIR)/clib/ahi_sub_protos.h
 	$(INSTALL_DATA) C-inline-ahi.h		$(INCDIR)/inline/ahi.h
 	$(INSTALL_DATA) C-inline-ahi_sub.h	$(INCDIR)/inline/ahi_sub.h
+	$(INSTALL_DATA) C-defines-ahi.h		$(INCDIR)/defines/ahi.h
+	$(INSTALL_DATA) C-defines-ahi_sub.h	$(INCDIR)/defines/ahi_sub.h
 	$(INSTALL_DATA) C-proto-ahi.h		$(INCDIR)/proto/ahi.h
 	$(INSTALL_DATA) C-proto-ahi_sub.h	$(INCDIR)/proto/ahi_sub.h
 	touch $@
@@ -145,6 +149,12 @@ C-inline-ahi.h:		SFD/ahi_lib.sfd
 	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=macros
 
 C-inline-ahi_sub.h:	SFD/ahi_sub_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=macros
+
+C-defines-ahi.h:		SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=macros
+
+C-defines-ahi_sub.h:	SFD/ahi_sub_lib.sfd
 	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=macros
 
 C-pragmas-ahi_pragmas.h:	SFD/ahi_lib.sfd
