@@ -1,0 +1,27 @@
+include $(TOP)/config/make.cfg
+
+TRGDIR = ./
+FILES = $(TRGDIR)/tcc
+
+EXEDIR := $(CONTRIBDIR)/tcc
+EXE    := $(EXEDIR)/tcc
+
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+
+USER_CFLAGS := -O2 -g -Wall -mcpu=i686  -DCONFIG_TCC_STATIC
+#MM- contrib-development-compilers-tcc : tcc
+#MM- contrib-development-compilers-tcc : contrib-development-compilers-tcc-libtcc1
+#MM
+tcc : setup $(EXE) cleanup
+
+$(OBJDIR)/%.o: %.S
+	%compile_q opt=$(USER_CFLAGS)
+cleanup :: 
+	rm -rf tmp.c
+%make_prog_setup mmake=tcc
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
