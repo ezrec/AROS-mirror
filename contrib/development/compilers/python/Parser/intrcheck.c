@@ -100,6 +100,8 @@ PyOS_InterruptOccurred(void)
 #endif /* macintosh */
 
 #ifdef AROS
+#include <proto/dos.h>
+#include <dos/dos.h>
 
 void
 PyOS_InitInterrupts(void)
@@ -114,8 +116,10 @@ PyOS_FiniInterrupts(void)
 int
 PyOS_InterruptOccurred(void)
 {
-    // FIXME: Check SIGF_CTRL_C signal
-    return FALSE;
+    if( CheckSignal( SIGBREAKF_CTRL_C ) ) 
+    	return TRUE;
+    else
+    	return FALSE;
 }
 
 #define OK
