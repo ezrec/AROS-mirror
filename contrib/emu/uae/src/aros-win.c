@@ -19,6 +19,9 @@
 #include <exec/types.h>
 #include <dos/dos.h>
 
+#define DEBUG 1
+#include <aros/debug.h>
+
 #include "aros-gui.h"
 
 #undef  timeval
@@ -71,8 +74,9 @@ extern int lastmx, lastmy;
 extern int newmousecounters;
 
 static void uaedisplay_eventhandler(struct IntuiMessage *imsg);
+static void set_screen_for_picasso(void);
 
-__inline__ void flush_line(int y)
+void flush_line(int y)
 {
     printf("Shouldn't have arrived here\n");
     abort();
@@ -178,8 +182,7 @@ int graphics_init(void)
     }
 
     buttonstate[0] = buttonstate[1] = buttonstate[2] = 0;
-    for(i=0; i<256; i++)
-        keystate[i] = 0;
+    memset(keystate, 0, sizeof(keystate));
 
     lastmx = lastmy = 0;
     newmousecounters = 0;
@@ -341,6 +344,7 @@ void LED(int on)
 
 void DX_Invalidate (int first, int last)
 {
+//    D(bug("DX_Invalidate(%d, %d)\n", first, last));
     if (first < picasso_invalid_start)
         picasso_invalid_start = first;
 
@@ -352,11 +356,13 @@ void DX_Invalidate (int first, int last)
 
 int DX_BitsPerCannon (void)
 {
+    D(bug("DX_BitsPerCannon()\n"));
     return 8;
 }
 
 void DX_SetPalette(int start, int count)
 {
+    D(bug("DX_SetPalette(%d, %d)\n", start, count));
     if (!screen_is_picasso || picasso_vidinfo.pixbytes != 1)
 	return;
 
@@ -365,77 +371,144 @@ void DX_SetPalette(int start, int count)
 
 int DX_FillResolutions (uae_u16 *ppixel_format)
 {
+    D(bug("DX_FillResolutions()\n"));
     int count = 0;
+    ULONG j;
 
-    DisplayModes[count].res.width  = 640;
-    DisplayModes[count].res.height = 480;
-    DisplayModes[count].depth      = 4;
-    DisplayModes[count].refresh    = 75;
+    static struct
+    {
+        int width, height;
+    } modes [] =
+    {
+        { 320,  200 },
+	{ 320,  240 },
+	{ 320,  256 },
+	{ 640,  200 },
+	{ 640,  240 },
+	{ 640,  256 },
+	{ 640,  400 },
+	{ 640,  480 },
+	{ 640,  512 },
+	{ 800,  600 },
+	{ 1024, 768 }
+    };
 
-    count++;
-    *ppixel_format |= RGBFF_B8G8R8A8;
+    for (j = 0; (j < (sizeof(modes)/sizeof(modes[0]))) && (j < MAX_PICASSO_MODES); j++)
+    {
+	if (modes[j].width > 640 || modes[j].height > 480)
+	    continue;
+
+	DisplayModes[count].res.width  = modes[j].width;
+        DisplayModes[count].res.height = modes[j].height;
+        DisplayModes[count].depth      = 4;
+        DisplayModes[count].refresh    = 75;
+
+        count++;
+        *ppixel_format |= RGBFF_B8G8R8A8;
+    }
 
     return count;
 }
 
 void gfx_set_picasso_modeinfo (int w, int h, int depth, int rgbfmt)
 {
-    kprintf ("::: %d %d %d, %d\n", w, h, depth, rgbfmt);
+    D(bug("gfx_set_picasso_modeinfo(%d ,%d, %d, %d)\n", w, h, depth, rgbfmt));
     picasso_vidinfo.width = w;
     picasso_vidinfo.height = h;
     picasso_vidinfo.depth = depth;
     picasso_vidinfo.rgbformat = (depth == 8 ? RGBFB_CHUNKY
 				 : depth == 16 ? RGBFB_R5G6B5PC
 				 : RGBFB_B8G8R8A8);
+
+    if (screen_is_picasso)
+        set_screen_for_picasso();
 }
 
 void gfx_set_picasso_baseaddr (uaecptr a)
 {
+    D(bug("gfx_set_picasso_baseaddr(0x%08lx)\n", a));
 }
 
-void gfx_set_picasso_state (int on)
+static APTR picasso_memory;
+
+static void set_screen_for_picasso(void)
 {
-    if (on == screen_is_picasso)
-	return;
-    screen_is_picasso = on;
-    if (on)
-    {
-        SetAttrs
+    if
+    (
+       !SetAttrs
         (
             uaedisplay,
             MUIA_UAEDisplay_Width,  picasso_vidinfo.width,
 	    MUIA_UAEDisplay_Height, picasso_vidinfo.height,
 	    TAG_DONE
-        );
-	picasso_vidinfo.extra_mem = 1;
-        picasso_vidinfo.rowbytes = XGET(uaedisplay, MUIA_UAEDisplay_BytesPerRow);
-        picasso_vidinfo.pixbytes = XGET(uaedisplay, MUIA_UAEDisplay_BytesPerPix);
+        )
+    )
+    {
+	abort();
+    };
 
-	picasso_invalid_start = picasso_vidinfo.height + 1;
-	picasso_invalid_end   = -1;
+    picasso_vidinfo.extra_mem = 1;
+    picasso_vidinfo.rowbytes = XGET(uaedisplay, MUIA_UAEDisplay_BytesPerRow);
+    picasso_vidinfo.pixbytes = XGET(uaedisplay, MUIA_UAEDisplay_BytesPerPix);
+    picasso_memory           = (APTR)XGET(uaedisplay, MUIA_UAEDisplay_Memory);
 
-	//picasso_vidinfo.pixbytes = depth>>3;
-        //picasso_vidinfo.rowbytes = info->linewidth;
+    picasso_invalid_start = picasso_vidinfo.height + 1;
+    picasso_invalid_end   = -1;
+
+    kprintf
+    (
+	"Width:  %d\n"
+	"Height: %d\n"
+	"BPP:    %d\n"
+	"BPR:    %d\n",
+        XGET(uaedisplay, MUIA_UAEDisplay_Width),
+        XGET(uaedisplay, MUIA_UAEDisplay_Height),
+        XGET(uaedisplay, MUIA_UAEDisplay_BytesPerPix),
+        XGET(uaedisplay, MUIA_UAEDisplay_BytesPerRow)
+    );
+}
+
+void gfx_set_picasso_state (int on)
+{
+    D(bug("gfx_set_picasso_state(%d)\n", on));
+
+    if (screen_is_picasso == on )
+	return;
+
+    screen_is_picasso = on;
+    if (on)
+    {
+        set_screen_for_picasso();
     }
     else
     {
-        SetAttrs
-        (
-            uaedisplay,
-            MUIA_UAEDisplay_Width,  currprefs.gfx_width,
-	    MUIA_UAEDisplay_Height, currprefs.gfx_height,
-	    TAG_DONE
-        );
-        gfxvidinfo.bufmem = (APTR)XGET(uaedisplay, MUIA_UAEDisplay_Memory);
+        if
+	(
+	   !SetAttrs
+            (
+                uaedisplay,
+                MUIA_UAEDisplay_Width,  currprefs.gfx_width,
+	        MUIA_UAEDisplay_Height, currprefs.gfx_height,
+	        TAG_DONE
+            )
+	)
+	{
+	    abort();
+	};
+
+	gfxvidinfo.bufmem = (APTR)XGET(uaedisplay, MUIA_UAEDisplay_Memory);
     }
 }
 
+
 uae_u8 *gfx_lock_picasso (void)
 {
-    return (APTR)XGET(uaedisplay, MUIA_UAEDisplay_Memory);
+//    D(bug("gfx_lock_picasso()\n"));
+    return picasso_memory;
 }
 void gfx_unlock_picasso (void)
 {
+//    D(bug("gfx_unlock_picasso()\n"));
 }
 
 #endif
