@@ -1,2 +1,4 @@
 mmakefile
+strings.h
+strings.c
 *.err

@@ -7,7 +7,7 @@ OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(BINDIR)/aminet
 
 FILES := lazymines button counter field highscores images layout localize \
-	requesters timer tooltypes strings
+	requesters timer tooltypes
 
 SRCS := $(foreach f, $(FILES), $(f).c)
 OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
