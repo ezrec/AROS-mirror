@@ -1,4 +1,3 @@
-#include <aros/machine.h>
 #include <aros/asmcall.h>
 
 #include "m68k.h"
