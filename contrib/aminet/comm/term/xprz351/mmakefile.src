@@ -47,7 +47,7 @@ MODULE_OBJ   = $(foreach f,$(FILES),$(OBJDIR)/$(f).o)
 
 $(AROS_LIBS)/$(MODULE) : $(MODULE_OBJ)
 	@$(ECHO) "Building $(notdir $@) ..."
-	@$(STATIC_LD) $(STATIC_LDFLAGS) $(LDFLAGS) $(MODULE_OBJ) -static -lamiga -larosc -lautoinit -llibinit -o $@ -nostartfiles
+	@$(AROS_LD) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) $(MODULE_OBJ) -o $@
 
 $(OBJDIR)/test/%.d : %.c
 	%mkdepend_q flags=$(CFLAGS)
@@ -64,7 +64,7 @@ setup-xprz :
 	%mkdirs_q $(AROS_LIB) $(AROS_LIBS)
 
 clean ::
-	-$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) $(AROS_LIBS)/gtlayout.library aros/gtlayout_defines_aros.h $(OBJDIR)/gtlayout_data.o $(OBJDIR)/gtlayout_data.ol $(STATIC_LIB)
+	-$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) $(AROS_LIBS)/gtlayout.library aros/gtlayout_defines_aros.h $(OBJDIR)/gtlayout_data.o $(OBJDIR)/gtlayout_data.ol
 
 %libdefs_rule
 %common

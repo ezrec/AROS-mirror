@@ -237,11 +237,11 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 #	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
 #	      o/plgroupclasses$(o) o/endtag.o \
 #	      -static -i -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -o $@
-	@$(STATIC_LD) $(STATIC_LDFLAGS) $(LDFLAGS) \
+	@$(AROS_LD) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) \
 	      o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
 	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
 	      o/plgroupclasses$(o) o/endtag.o \
-	      -L$(AROS_LIB) -lamiga -larossupport -lrom -larosm -o $@
+	      -L$(AROS_LIB) -lrom -o $@
 	@$(ECHO) Installing bgui.library...
 	@$(CP) $@ $(BGUIDIR)/Libs/bgui.library
 

@@ -1,7 +1,5 @@
 include $(TOP)/config/make.cfg
 
-STARTUP=$(LIBDIR)/startup.o
-
 MODULE     := gtlayout.library
 STATIC_LIB := $(AROS_LIB)/libgtlayout.a
 
@@ -176,14 +174,14 @@ $(STATIC_OBJ) : $(OBJDIR)/%.ol : $(OBJDIR)/aros_src/%_aros.c
 #I need to create all $(INTERMEDIATES) first (!) for the compile to be successful!
 $(AROS_LIBS)/$(MODULE) : $(MODULE_OBJ)
 	@$(ECHO) "Building $(notdir $@) ..."
-	@$(STATIC_LD) $(STATIC_LDFLAGS) $(LDFLAGS) $(MODULE_OBJ) -static -lamiga -lgtlayout -lrom -o $@ -nostartfiles
+	@$(AROS_LD) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) $(MODULE_OBJ) -lgtlayout -lrom -o $@
 
 $(STATIC_LIB) : $(STATIC_OBJ)
 	%mklib_q from=$^
 
 $(TESTDIR)/gtlayout_test: $(TESTOBJS)
 	@$(ECHO) "Building $(notdir $@) ..."
-	@$(STATIC_LD) $(LDFLAGS) $(STARTUP) $^ -o $@ $(APP_LIBS) $(COMPILER_LIBS)
+	@$(AROS_LD) $(LDFLAGS) $^ -o $@ $(APP_LIBS) $(COMPILER_LIBS)
 
 $(OBJDIR)/test/%.d : %.c
 	%mkdepend_q flags=$(CFLAGS)
