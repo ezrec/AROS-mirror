@@ -454,7 +454,7 @@ class PageMeat:
 	while current.parent:
 	    parentList.insert (0, current)
 	    current = current.parent
-	
+
 	indent = 0
 	for node in parentList:
 	    linkBox.extend (self.nodeToUrl (node, indent))
@@ -640,6 +640,9 @@ class Page (SeriesDocument):
         s.append('\nComments to webmaster: ' + str(MailTo(self.email)) )
         s.append('<br>\nGenerated: %s <BR>' % self.date) # can use self.datetime here instead
         s.append('<hr>\n</FONT>')
+        s.append('<A href="http://sourceforge.net"> <IMG src="http://sourceforge.net/sflogo.php?group_id=43586%type=1" width="88" height="31" border="0" alt="SourceForge Logo"></A>')
+        s.append('<hr>\n</FONT>')
+
         return string.join(s, '')
 
     def write (self, filename):
