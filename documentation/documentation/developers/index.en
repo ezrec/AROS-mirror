@@ -8,6 +8,7 @@ Developers Resources
 + `Applications development manual`__
 + `Zune Applications development manual`__
 + `System development manual`__
++ `PCI subsystem manual`__
 + `Debugging manual`__
 + `Specifications`__
 + `Documenting`__
@@ -20,6 +21,7 @@ __ compiling
 __ application-development
 __ zune-application-development
 __ system-development
+__ hardware/pci
 __ debugging
 __ specifications/index
 __ documenting
