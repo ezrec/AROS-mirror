@@ -139,7 +139,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <signal.h>
+#ifndef __AROS
+#   include <signal.h>
+#endif
 #include <math.h>
 #include <errno.h>
 #include <ctype.h>
@@ -160,7 +162,9 @@
 #   include <utime.h>
 #   include <unistd.h>
 #   include <sys/stat.h>
-#   include <sys/times.h>
+#   ifndef __AROS
+#      include <sys/times.h>
+#   endif
 
 #   define PATH_SEP    '/'
 #   define MY_LSTAT    lstat
@@ -1134,10 +1138,12 @@ void copyDatePermissionsAndOwner ( Char *srcName, Char *dstName )
    retVal = utime ( dstName, &uTimBuf );
    ERROR_IF_NOT_ZERO ( retVal );
 
+#ifndef __AROS
    retVal = chown ( dstName, statBuf.st_uid, statBuf.st_gid );
    /* chown() will in many cases return with EPERM, which can
       be safely ignored.
    */
+#endif
 #endif
 }
 
@@ -1816,11 +1822,13 @@ IntNative main ( IntNative argc, Char *argv[] )
    exitValue               = 0;
    i = j = 0; /* avoid bogus warning from egcs-1.1.X */
 
+#ifndef __AROS
    /*-- Set up signal handlers for mem access errors --*/
    signal (SIGSEGV, mySIGSEGVorSIGBUScatcher);
 #if BZ_UNIX
 #ifndef __DJGPP__
    signal (SIGBUS,  mySIGSEGVorSIGBUScatcher);
+#endif
 #endif
 #endif
 
@@ -1959,10 +1967,12 @@ IntNative main ( IntNative argc, Char *argv[] )
    if (opMode != OM_Z) blockSize100k = 0;
 
    if (srcMode == SM_F2F) {
+#     ifndef __AROS       
       signal (SIGINT,  mySignalCatcher);
       signal (SIGTERM, mySignalCatcher);
 #     if BZ_UNIX
       signal (SIGHUP,  mySignalCatcher);
+#     endif
 #     endif
    }
 
