@@ -7,10 +7,11 @@ OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(CONTRIBDIR)/aminet
 
 FILES := buffer language subwin mainwin system hotkey \
-	settings miscwin patches snoopdos testcalls 
+	settings miscwin patches snoopdos 
 
 SRCS := $(foreach f, $(FILES), $(f).c)
 OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+DEPS := $(foreach f, $(FILES), $(OBJDIR)/$(f).d)
 
 LIBS := -L$(LIBDIR) -larosc -lamiga -larossupport -larosm
 
@@ -29,9 +30,15 @@ setup-aminet-util-moni-snoopdos :
 $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 	%link_q from=$(OBJS)
 
+$(OBJDIR)/%.o : %.c
+%compile_q
+
+$(OBJDIR)/%.d : %.c
+%mkdepend_q 
+
+%include_deps
+
 #MM
 clean-aminet :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
-$(OBJDIR)/%.o : %.c
-	%compile_q
