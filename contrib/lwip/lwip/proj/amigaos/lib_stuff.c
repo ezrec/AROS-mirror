@@ -171,6 +171,10 @@ int LIB_reserved(void)
 
 static struct Library *socketlib;
 
+#ifndef __AROS
+#define AROS_SLIB_ENTRY(a,b) a
+#endif
+
 extern void AROS_SLIB_ENTRY(LIB_socket, Socket)(void);
 extern void AROS_SLIB_ENTRY(LIB_bind, Socket)(void);
 extern void AROS_SLIB_ENTRY(LIB_listen, Socket)(void);

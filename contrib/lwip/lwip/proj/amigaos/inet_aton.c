@@ -7,7 +7,7 @@
 #include "lwip/inet.h"
 
 /* defined in AROS/Include/sys/types.h */
-#if 0
+#ifndef __AROS
 typedef u32_t u_long;
 typedef u32_t u_int;
 #endif
