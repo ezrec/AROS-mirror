@@ -19,4 +19,4 @@ typedef char bool;
 #endif
 
 
-#endif MYTYPES_H_FILE
+#endif /* MYTYPES_H_FILE */

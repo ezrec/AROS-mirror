@@ -4,7 +4,7 @@
 #include "scrnio.ih"
 #ifdef MANX
 #include <functions.h>
-#endif MANX
+#endif /* MANX */
 
 #include "scrndef.h"
 #include "scrnio.h"

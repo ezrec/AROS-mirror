@@ -12,5 +12,5 @@ extern struct NewWindow CntrlWinDef;
 extern struct NewScreen SurfScrnDef;
 extern struct NewWindow GadWinDef;
 
-#endif !SCRNDEF_H_FILE
+#endif /* !SCRNDEF_H_FILE */
 

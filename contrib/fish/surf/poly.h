@@ -40,4 +40,4 @@ extern void RevNoShade();
 extern void RevShade();
 extern void RevMap();
 
-#endif !POLY_H_FILE
+#endif /* !POLY_H_FILE */

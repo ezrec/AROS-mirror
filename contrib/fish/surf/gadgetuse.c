@@ -109,7 +109,7 @@ void GadgetUpdate(gad, exists)
         sprintf(dbuff,"%f   ", temp);
 #else
         ftoa(temp, dbuff, sizeof(dbuff)-4, 1);
-#endif !MANX
+#endif /* !MANX */
     }
     else {
         long temp;

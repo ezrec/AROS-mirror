@@ -3,7 +3,7 @@
 
 #ifndef INTUITION_INTUITION_H
 #include <intuition/intuition.h>
-#endif  INTUITION_INTUITION_H
+#endif  /* INTUITION_INTUITION_H */
 
 #include <aros/oldprograms.h>
 
@@ -14,4 +14,4 @@ extern USHORT *DebugOnPtr;
 #define ClrAbort() { *AbortDrawPtr &= ~CHECKED; }
 #define DebugOn (*DebugOnPtr & CHECKED)
 
-#endif MENUEXP_H_FILE
+#endif /* MENUEXP_H_FILE */

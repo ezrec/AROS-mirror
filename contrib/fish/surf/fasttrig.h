@@ -3,12 +3,12 @@
 
 #ifndef MYTYPES_H_FILE
 #include "mytypes.h"
-#endif !MYTYPES_H_FILE
+#endif /* !MYTYPES_H_FILE */
 
 #define MaxTrigEntries 512
 #ifndef PI
 #define PI 3.1415927
-#endif PI
+#endif /* PI */
 extern float *sintab;
 extern float *costab;
 
@@ -17,4 +17,4 @@ extern float *costab;
 
 bool InitFastTrig(/* float, int */);
 
-#endif !FASTTRIG_H_FILE
+#endif /* !FASTTRIG_H_FILE */

@@ -180,7 +180,7 @@ static float AverageShade(pts)
     if( DebugOn ) {
         printf("AverageShade top is %d, bot = %d\n", top, bot );
     }
-#endif DEBUG
+#endif /* DEBUG */
 
     while( bot <= top ) {
         register int hori;
@@ -189,7 +189,7 @@ static float AverageShade(pts)
     if( DebugOn ) {
         printf("....row %d    \t%d -> %d\n", bot, left, right );
     }
-#endif DEBUG
+#endif /* DEBUG */
 
         left =  (int) ceil(tab->left - SingleTinyVal);
         right = (int)floor(tab->right+ SingleTinyVal);
@@ -328,7 +328,7 @@ void DrawRhomMap(mpr)
     if( DebugOn ) {
         DBMAP(mpr->rhom.pt, mpr->bezindex, mpr->revindex);
     }
-#endif DEBUG
+#endif /* DEBUG */
     ShadeQuad(tab, top, bottom, mpr->rhom.intensity);
 }
 
@@ -351,7 +351,7 @@ short bindex, rindex;
     printf(" bezmin %f  bezdiff %f index = %d \n", bezmin, bezdiff, bindex );
     printf(" revmin %f  revdiff %f index = %d \n", revmin, revdiff, rindex );
 }
-#endif DEBUG
+#endif /* DEBUG */
 
 
 /*

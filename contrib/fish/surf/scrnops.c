@@ -82,7 +82,7 @@ bool AllocDither()
             }
             GrayPat[DitherLoc(i)+j] = x;
         }
-#else MANX
+#else /* MANX */
         for( j = 0; j < DitherLoc(1); j++ ) {
             register long k, x;
             for( k = 16, x = 0; k--; ) {
@@ -91,7 +91,7 @@ bool AllocDither()
             }
             GrayPat[DitherLoc(i)+j] = x;
         }
-#endif MANX
+#endif /* MANX */
     }
     return(true);
 }

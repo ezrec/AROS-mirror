@@ -4,7 +4,7 @@
 
 #ifndef MYTYPES_H_FILE
 #include "mytypes.h"
-#endif MYTYPES_H_FILE
+#endif /* MYTYPES_H_FILE */
 
 #define DefRepV 1
 #define DefRepH 1
@@ -31,5 +31,5 @@ extern void PrepImgPix(/* void */);
 extern void FlipImgPix( /* bool flip */);
 extern void SetGreyModel( /* int */);
 
-#endif READILBM_H_FILE
+#endif /* READILBM_H_FILE */
 

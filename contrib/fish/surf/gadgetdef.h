@@ -26,4 +26,4 @@ struct GadExtens {
     bool isfloat;   /* true if value is floating, false if short */
 };
 
-#endif GADGETDEF_H_FILE
+#endif /* GADGETDEF_H_FILE */

@@ -45,4 +45,4 @@ extern void SetRevMesh( /* Panel_item, int, struct input_event */);
 extern void SetSurfDist(/* Panel_item, int, struct input_event */);
 extern void SetViewDist();
 extern void SetPerspective();
-#endif !REVOLVE_H_FILE
+#endif /* !REVOLVE_H_FILE */

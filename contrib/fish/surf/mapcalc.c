@@ -8,7 +8,7 @@
 #ifdef TEST
 #undef DebugOn
 #define DebugOn 1
-#endif TEST
+#endif /* TEST */
 
 extern struct Library * MathBase;
 extern struct Library * MathTransBase;
@@ -124,7 +124,7 @@ void CalcMapConsts(vp)
         Na.x, Na.y, Nb.x, Nb.y, Nc.x, Nc.y );
         printf("IsQuad =(%c, %c)\n", IsQuadu?'t':'f', IsQuadv? 't': 'f' );
     }
-#endif DEBUG
+#endif /* DEBUG */
 
 }
 
@@ -164,7 +164,7 @@ void  MapXYRatio(px, py, outx, outy, SweepCode)
             printf("dux=%f, duy = %f, ka = %f, kb = %f\n",
                 Dux, Duy, Ka, Kb );
         }
-#endif DEBUG
+#endif /* DEBUG */
 
     }
 
@@ -188,14 +188,14 @@ void  MapXYRatio(px, py, outx, outy, SweepCode)
             printf("dvx=%f, dvy = %f, ka = %f, kb = %f\n",
                 Dvx, Dvy, Ka, Kb );
         }
-#endif DEBUG
+#endif /* DEBUG */
     }
 
 #ifdef DEBUG
     if( DebugOn ) {
         printf("(%f,%f) -> (%f, %f)\n", px, py, resu, resv );
     }
-#endif DEBUG
+#endif /* DEBUG */
 
     if( resu > 1.0 || resu < 0.0 ) {
         resu = ( SweepCode & MP_XMAX)? 1.0: 0.0;
@@ -248,4 +248,4 @@ main() {
         printf("p(%f,%f)->p(%f,%f)\n", inx, iny, outx, outy);
     }
 }
-#endif TEST
+#endif /* TEST */

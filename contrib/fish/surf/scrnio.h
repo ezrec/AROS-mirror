@@ -24,4 +24,4 @@ extern bool AllocDither();
 #define UCntrX(XVAL) ((XVAL) + WinHOrig)
 #define UCntrY(YVAL) (WinVOrig - (YVAL))
 
-#endif SCRNIO_H
+#endif /* SCRNIO_H */
