@@ -5,10 +5,18 @@ include $(TOP)/config/make.cfg
 # The apps target points back to config/$(ARCH)/mmakefile:
 #MM- contrib : contrib-$(ARCH)
 
-#MM- contrib-complete : contrib-aminet contrib-fish contrib-games \
-#MM	contrib-misc contrib-demos contrib-dopus contrib-bgui \
-#MM	contrib-gfx contrib-radium contrib-gc contrib-development \
-#MM     contrib-gnu
+#MM- contrib-complete : contrib-aminet
+#MM- contrib-complete : contrib-fish
+#MM- contrib-complete : contrib-games
+#MM- contrib-complete : contrib-misc
+#MM- contrib-complete : contrib-demos
+#MM- contrib-complete : contrib-dopus
+#MM- contrib-complete : contrib-bgui
+#MM- contrib-complete : contrib-gfx
+#MM- contrib-complete : contrib-radium
+#DISABLE MM- contrib-complete : contrib-gc
+#MM- contrib-complete : contrib-development
+#DISABLE MM- contrib-complete : contrib-gnu
 
 CONTRIB_SRC_DIR := $(AROSDIR)/contrib
 
