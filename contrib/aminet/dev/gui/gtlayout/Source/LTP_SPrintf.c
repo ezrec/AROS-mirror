@@ -21,12 +21,32 @@
 
 /*****************************************************************************/
 
+#ifdef __AROS__
+AROS_UFH2S(void, cpy_func,
+    AROS_UFHA(UBYTE, chr, D0),
+    AROS_UFHA(STRPTR *, strPtrPtr, A3))
+{
+    AROS_USERFUNC_INIT
+    
+    *(*strPtrPtr)++ = chr;
+    
+    AROS_USERFUNC_EXIT
+}
+#endif
+
 VOID
 SPrintf(STRPTR buffer, STRPTR formatString,...)
 {
+#ifdef __AROS__
+	STRPTR buffer_ptr = buffer;
+#endif
 	va_list varArgs;
 
 	va_start(varArgs,formatString);
+#ifdef __AROS__
+	RawDoFmt(formatString,varArgs,cpy_func,&buffer_ptr);
+#else
 	RawDoFmt(formatString,varArgs,(VOID (*)())"\x16\xC0\x4E\x75",buffer);
+#endif
 	va_end(varArgs);
 }
