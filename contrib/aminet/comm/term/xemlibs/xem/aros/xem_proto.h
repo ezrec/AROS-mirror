@@ -15,10 +15,6 @@ extern struct Library * XEmulatorBase;
 
 //#include <clib/xem_protos.h>
 
-#if defined(_AMIGA) && defined(__GNUC__)
-#   include <inline/xem.h>
-#else
-#   include <defines/xem.h>
-#endif
+#include <defines/xem.h>
 
 #endif /* PROTO_XEM_H */
