@@ -1,0 +1,30 @@
+#   $Id$
+#
+#   Makefile to make FileMaster.
+
+include $(TOP)/config/make.cfg
+
+FILES := bwbasic bwb_int bwb_tbl bwb_cmd bwb_prn\
+bwb_exp bwb_var bwb_inp bwb_fnc bwb_cnd\
+bwb_ops bwb_dio bwb_str bwb_elx bwb_mth
+
+EXEDIR := $(CONTRIBDIR)/aminet
+EXE := $(EXEDIR)/bwbasic
+
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+
+USER_CFLAGS :=
+
+#MM aminet-dev-basic-bwBASIC : includes linklibs
+
+%make_prog_setup mmake=aminet-dev-basic-bwBASIC
+
+aminet-dev-basic-bwBASIC : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
