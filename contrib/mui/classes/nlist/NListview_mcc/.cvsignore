@@ -7,3 +7,4 @@ SCOPTIONS
 *.bak
 *.mdbi
 nlistview.mcc.lib
+mmakefile
