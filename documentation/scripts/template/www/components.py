@@ -11,8 +11,10 @@ class Tree( Container ):
         
     def __str__( self ):
         depth    = self.getDepth()
-        contents = self.buildLevel( self, 0, depth )
-        table    = Table( contents )
+        table    = Table( 
+            border = 1, cellpadding = 0, cellspacing = 2, CLASS = 'tree', valign = 'top',
+            contents = self.buildLevel( self, 0, depth )
+        )
 
         return table.__str__()
                         
@@ -31,7 +33,12 @@ class Tree( Container ):
                             tr.append( TD( '', width=Tree.INDENT ) )
 
                     #tr.append( TD( '+', width=Tree.INDENT ) )
-                    tr.append( TD( Img( src='%(ROOT)simages/bullet.png' ), width=Tree.INDENT ) )
+                    tr.append( 
+                        TD( 
+                            Img( src='%(ROOT)simages/bullet.gif' ), 
+                            align = 'right', valign = 'middle', width=Tree.INDENT 
+                        ) 
+                    )
                 
                 if colspan >= 2:
                     tr.append( TD( child, colspan=`colspan` ) )
@@ -58,9 +65,8 @@ class Tree( Container ):
 
 class Box( Container ):
     # Colors
-    BORDER  = '#000000'
-    TITLE   = '#aaaaaa'
-    CONTENT = '#dddddd'
+    TITLE_BG = '#c97f30'
+    TITLE_FG = '#000000'
     
     def __init__( self, contents=None, title=None ):
         Container.__init__( self, contents )
@@ -68,48 +74,23 @@ class Box( Container ):
         self.title = title
         
     def __str__( self ):
-        contents = TD( align = 'center', bgcolor = Box.CONTENT )
+        contents = TD( align = 'center' )
         for child in self:
             contents.append( child )
         
-#        table = Table \
-#        ( [
-#            TR \
-#            ( [
-#                TD( bgcolor=Box.BORDER, width=10 ),
-#                TD( bgcolor=Box.BORDER, width='*' ),
-#                TD( bgcolor=Box.BORDER, width=10 )
-#              ], height=10 
-#            ),
-#            TR \
-#            ( [
-#                TD( bgcolor=Box.BORDER ),
-#                TD( bgcolor=Box.TITLE, contents=B(self.title), align='center' ),
-#                TD( bgcolor=Box.BORDER )
-#            ] ),
-#            TR \
-#            ( [
-#                TD( bgcolor=Box.BORDER ),
-#                contents,
-#                TD( bgcolor=Box.BORDER ),
-#            ] ),
-#            TR \
-#            ( [ 
-#                TD( bgcolor=Box.BORDER ),
-#                TD( bgcolor='yellow' ),
-#                TD( bgcolor=Box.BORDER )
-#              ], height=10 
-#            )
-#        ], width='100%' )
-        
-        table = Table \
-        (
-            width    = '100%%', cellspacing = 1, cellpadding = 3, 
-            bgcolor  = Box.BORDER, 
-            contents = \
-            [
-                TR( TD( bgcolor = Box.TITLE, align='center', contents = B(self.title) ) ),
-                TR( contents )
+        table = Table(
+            width = '100%%', cellspacing = 4, cellpadding = 0, border = 0,
+            contents = [
+                TR( 
+                    TD( 
+                        bgcolor = self.TITLE_BG, align = 'center', 
+                        contents = Font(
+                            size = '-1', color = self.TITLE_FG,
+                            contents = B( self.title ) 
+                        ) 
+                    )
+                ),
+                TR( contents )                    
             ]
         )
         

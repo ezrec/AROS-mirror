@@ -5,256 +5,313 @@ from html import *
 from components import *
 
 def makePage( _T, _N, _M, MIRRORS_DATA ):
-    mirrors = Box \
-    (
-        title    = _T['mirrors'],
-        contents = MIRRORS_DATA
-    )
-
-    navigation = Box \
-    (
-        title    = _T['contents'],
-        contents = Tree \
+    navigation = Tree \
+    ( [
+        A( _N['news'], href='%(BASE)snews/' ),
+        Tree ( A( _N['archive'], href='%(BASE)snews/archive/' ) ),
+        BR(),
+        A( _N['introduction'], href='%(BASE)sintroduction/' ),
+        Tree \
         ( [
-            A( _N['news'],  href='%(BASE)snews/' ),
-            Tree ( A( _N['archive'], href='%(BASE)snews/archive/' ) ),
-            A( _N['introduction'], href='%(BASE)sintroduction/' ),
+            A( _N['status'], href='%(BASE)sintroduction/status/everything.html' ),
+            A( _N['screenshots'], href='%(BASE)spictures/screenshots/' ),
+            A( _N['ports'], href='%(BASE)sintroduction/ports.html' ),
+            A( _N['license'], href='%(BASE)slicense.html' )
+        ] ),
+        BR(),
+        A( _N['download'], href='%(BASE)sdownload/' ),
+        BR(),
+        _N['documentation'],
+        Tree \
+        ( [
+            _N['users'],
             Tree \
             ( [
-                A( _N['status'], href='%(BASE)sintroduction/status/everything.html' ),
-                A( _N['screenshots'], href='%(BASE)spictures/screenshots/' ),
-                A( _N['ports'], href='%(BASE)sintroduction/ports.html' ),
-                A( _N['license'], href='%(BASE)slicense.html' )
+                A( _N['installation'], href='%(BASE)sdocumentation/users/installation.html' ),
+                A( _N['using'], href='%(BASE)sdocumentation/users/using.html' ),
+                A( _N['faq'], href='%(BASE)sdocumentation/users/faq.html' ),
+                #_N['ports'],
+                A( _N['links'], href='%(BASE)sdocumentation/users/links.html' )
             ] ),
-            A( _N['download'], href='%(BASE)sdownload/' ),
-            _N['documentation'],
+            _N['developers'],
             Tree \
             ( [
-                _N['users'],
-                Tree \
-                ( [
-                    A( _N['installation'], href='%(BASE)sdocumentation/users/installation.html' ),
-                    A( _N['using'], href='%(BASE)sdocumentation/users/using.html' ),
-                    A( _N['faq'], href='%(BASE)sdocumentation/users/faq.html' ),
-                    #_N['ports'],
-                    A( _N['links'], href='%(BASE)sdocumentation/users/links.html' )
-                ] ),
-                _N['developers'],
-                Tree \
-                ( [
-                    A( _N['contribute'], href='%(BASE)sdocumentation/developers/contribute.html' ),
-                    A( _N['working-with-cvs'], href='%(BASE)sdocumentation/developers/cvs.html' ),
-                    A( _N['compiling'],  href='%(BASE)sdocumentation/developers/compiling.html' ),
-                    A( _N['application-development-manual'], href='%(BASE)sdocumentation/developers/application-development.html' ),
-                    A( _N['system-development-manual'], href='%(BASE)sdocumentation/developers/system-development.html' ),
-                    #A( _N['reference'], href='%(BASE)sdocumentation/developers/reference' ),
-                    A( _N['specifications'], href='%(BASE)sdocumentation/developers/specifications/' ),
-                    #A( _N['ui-style-guide'], href='%(BASE)sdocumentation/developers/ui' ),
-                    A( _N['documenting'], href='%(BASE)sdocumentation/developers/documenting.html' ),
-                    #A( _N['translating'], href='%(BASE)sdocumentation/developers/translating' ),
-                    A( _N['summaries'], href='%(BASE)sdocumentation/developers/summaries/' ),
-                    A( _N['links'], href='%(BASE)sdocumentation/developers/links.html' )
-                ] )
-            ] ),
-            A( _N['contact'], href='%(BASE)scontact.html' ),
-            Tree \
-            ( [
-                A( _N['mailing-lists'], href='%(BASE)scontact.html#mailing-lists' ),
-                #A( _N['forums'], href='%(BASE)scontact.html#forums' ),
-                A( _N['irc-channels'], href='%(BASE)scontact.html#irc-channels' )
-            ] ),
-            A( _N['credits'], href='%(BASE)scredits.html' ),
-            _N['pictures'],
-            Tree \
-            ( [
-                A( _N['developers'], href='%(BASE)spictures/developers/' ),
-                A( _N['developers-together'], href='%(BASE)spictures/developers-together/' )
-            ] ),
-            A( _N['sponsors'],href='%(BASE)ssponsors.html' ),
-            A( _N['linking'], href='%(BASE)slinking.html' ),
-            A( _N['links'], href='%(BASE)slinks.html' )
-        ] )
-    )
+                A( _N['contribute'], href='%(BASE)sdocumentation/developers/contribute.html' ),
+                A( _N['working-with-cvs'], href='%(BASE)sdocumentation/developers/cvs.html' ),
+                A( _N['compiling'],  href='%(BASE)sdocumentation/developers/compiling.html' ),
+                A( _N['application-development-manual'], href='%(BASE)sdocumentation/developers/application-development.html' ),
+                A( _N['system-development-manual'], href='%(BASE)sdocumentation/developers/system-development.html' ),
+                #A( _N['reference'], href='%(BASE)sdocumentation/developers/reference' ),
+                A( _N['specifications'], href='%(BASE)sdocumentation/developers/specifications/' ),
+                #A( _N['ui-style-guide'], href='%(BASE)sdocumentation/developers/ui' ),
+                A( _N['documenting'], href='%(BASE)sdocumentation/developers/documenting.html' ),
+                #A( _N['translating'], href='%(BASE)sdocumentation/developers/translating' ),
+                A( _N['summaries'], href='%(BASE)sdocumentation/developers/summaries/' ),
+                A( _N['links'], href='%(BASE)sdocumentation/developers/links.html' )
+            ] )
+        ] ),
+        BR(),
+        A( _N['contact'], href='%(BASE)scontact.html' ),
+        Tree \
+        ( [
+            A( _N['mailing-lists'], href='%(BASE)scontact.html#mailing-lists' ),
+            #A( _N['forums'], href='%(BASE)scontact.html#forums' ),
+            A( _N['irc-channels'], href='%(BASE)scontact.html#irc-channels' )
+        ] ),
+        BR(),
+        A( _N['credits'], href='%(BASE)scredits.html' ),
+        BR(),
+        _N['pictures'],
+        Tree \
+        ( [
+            A( _N['developers'], href='%(BASE)spictures/developers/' ),
+            A( _N['developers-together'], href='%(BASE)spictures/developers-together/' )
+        ] ),
+        BR(),
+        A( _N['sponsors'],href='%(BASE)ssponsors.html' ),
+        A( _N['linking'], href='%(BASE)slinking.html' ),
+        A( _N['links'], href='%(BASE)slinks.html' )
+    ] )
 
-    search = Box \
+    counter = Img(
+        src = 'http://www.aros.org/cgi-bin/wwwcount.cgi?df=aros.dat&dd=C&ft=0'
+    )
+    
+    sponsors = Table\
     ( 
-        title    = _T['search'],
-        contents = Form \
-        (
-            action   = 'http://aros.sourceforge.net/tools/search', method='post',
-            contents = Table \
-            (
-                cellspacing = 2, cellpadding = 0,
-                contents = TR \
-                ( [
-                    TD( Input( type='text', name='text', size=17 ) ),
-                    TD( Input( type='submit', value=_M['search'] ) )
-                ] )
-            )
-        )
-    )
-
-    visitors = Box \
-    (
-        title    = _T['visitors'],
-        contents = Img \
-        (
-            src = 'http://www.aros.org/cgi-bin/wwwcount.cgi?df=aros.dat&dd=B&comma=Y&pad=Y&md=7', 
-            height = 30, width = 94
-        )
-    )
-
-    sponsors = Box \
-    (
-        title    = _T['sponsors'],
-        contents = Table\
-        ( 
-            cellspacing = 5, cellpadding = 0,
-            contents =
-            [
-                TR
-                ( 
-                    TD
-                    ( 
-                        A
-                        ( 
-                            Img( src = '%(ROOT)simages/trustec-small.png', border = 0 ), 
-                            href = 'http://www.trustsec.de/' 
-                        )
-                    )
-                ),
-                TR
-                (
-                    TD
-                    (
-                        A \
-                        (
-                            Img \
-                            (
-                                src = 'http://sourceforge.net/sflogo.php?group_id=43586&type=1', 
-                                width = 88, height = 31, border = 0, alt = 'SourceForge Logo'
-                            ),
-                            href = 'http://sourceforge.net'
-                        )
-                    )
-                )
-            ] 
-        )
-    )
-
-    bar = Table \
-    ( 
-        cellspacing = 0, cellpadding = 0, 
-        contents = \
+        cellspacing = 5, cellpadding = 0,
+        contents =
         [
-            TR( TD( mirrors ) ),
-            TR( TD(), height=15 ),
-            TR( TD( navigation ) ),
-            TR( TD(), height=15 ),
-            #TR( TD( search ) ),
-            #TR( TD(), height=15 ),
-            TR( TD( visitors ) ),
-            TR( TD(), height=15 ),
-            TR( TD( sponsors ) )
-        ] 
-    )
-
-    layout = Table \
-    ( 
-        cellspacing = 20,
-        contents = \
-        [
-            TR \
+            TR
             ( 
-                TD \
+                TD
                 ( 
-                    colspan = 2, align = 'center', 
-                    contents = Table \
-                    (
-                        border = 0, contents = \
-                        [
-                            TR \
-                            ( [
-                                TD \
-                                ( 
-                                    align = 'center', height='100%%', contents = Img \
-                                    ( 
-                                        src='%(BASE)simages/aros-logo.png' 
-                                    )
-                                ),
-                                TD \
-                                (
-                                    rowspan = 2, contents = Img \
-                                    (
-                                        src='%(BASE)simages/kitty_small.png',
-                                        alt='Kitty, the AROS mascot'
-                                    )
-                                )
-                            ] ),
-                            TR \
-                            (
-                                height = '*', contents = TD \
-                                ( 
-                                    valign = 'top', align = 'center', 
-                                    contents = B( 'Amiga Research OS' ) 
-                                )
-                            )
-                        ]
+                    A
+                    ( 
+                        Img( src = '%(ROOT)simages/trustec-small.png', border = 0 ), 
+                        href = 'http://www.trustsec.de/' 
                     )
                 )
             ),
-            TR \
-            ( [ 
-                TD( bar ),
-                TD \
+            TR
+            (
+                TD
                 (
-                    align='center', width = '100%%',
-                    contents = Table \
+                    A \
                     (
-                        width = '100%%', cellspacing = 1, cellpadding = 1,
-                        bgcolor = Box.BORDER,
-                        contents = TR \
-                        ( 
-                            TD \
-                            ( 
-                                width = '100%%', bgcolor = Box.CONTENT, 
-                                contents = '%(CONTENT)s' 
-                            )
-                        )
+                        Img \
+                        (
+                            src = 'http://sourceforge.net/sflogo.php?group_id=43586&type=1', 
+                            width = 88, height = 31, border = 0, alt = 'SourceForge Logo'
+                        ),
+                        href = 'http://sourceforge.net'
                     )
                 )
-            ] ),
-            TR \
-            ( 
-                TD \
-                ( 
-                    colspan  = 2, align = 'center', 
-                    contents = Font \
-                    ( 
-                        size = '-1',
-                        contents = \
-                        [
-                            _M['copyright'], BR(), _M['trademarks']
-                        ] 
-                    ) 
-                )
             )
+        ] 
+    )
+    
+    bar = Table(
+        border = 0, cellpadding = 0, cellspacing = 0, valign = 'top',
+        contents = [
+            TR( 
+                valign = 'top', contents = [
+                    TD( rowspan = 6, width = 10 ),
+                    TD()
+                ]
+            ),
+            TR( valign = 'top', contents = TD( navigation ) ),
+            TR( TD(), height=15 ),
+            TR( valign = 'top', contents = TD( align = 'center', contents = counter ) ),
+            TR( TD(), height=15 ),
+            TR( valign = 'top', contents = TD( align = 'center', contents = sponsors ) )
         ]
     )
 
-    page = HTML \
-    ( [
-        Head \
-        ( [
-            Title( 'The Amiga Research OS' ),
-            Link( href='%(ROOT)saros.css', type='text/css', rel='stylesheet' ),
-            Meta \
-            ( 
-                name    = 'keywords', 
-                content = 'AROS, Amiga, OS, operating system, research, open source, portable' 
+    quotesPHP = '''
+        <?php
+            $quotes = file( '%(ROOT)sdb/quotes' );
+            $size   = count( $quotes );
+            $index = rand( 0, $size - 1 );
+            $line = trim( $quotes[$index] );
+            list( $quote, $person ) = split( ';', $line );
+            echo $quote;
+            echo "<br>&nbsp;&nbsp;&nbsp;&nbsp;-- ";
+            echo $person;
+        ?>'''
+
+    statsPHP = '''
+        <?php
+            DEFINE( "_BBCLONE_DIR", "%(ROOT)sbbclone/" );
+            DEFINE( "_NEW_COUNTER", _BBCLONE_DIR . "mark_page.php" );
+    
+            if( file_exists( _NEW_COUNTER ) )
+            {
+                include( _NEW_COUNTER );
+            }
+        ?>'''
+
+    page = HTML( [
+        Head( [
+            Title( 'AROS: Amiga® Research Operating System' ),
+            Link( href = '%(ROOT)saros.css', type = 'text/css', rel = 'stylesheet' ),
+            Meta(
+                name    = 'keywords',
+                content = 'AROS, Amiga, OS, operating system, research, open source, portage'
             )
         ] ),
-        Body( bgcolor = '#FFFFFF', contents = layout )
+        Body( 
+            style = 'margin: 0px;',
+            bgcolor = '#ffffff', contents = [
+                Table(
+                    border = 0, cellspacing = 0, cellpadding = 0, 
+                    width = '100%%', height = '100%%', contents = [
+                        TR( [
+                            TD( 
+                                valign = 'top', width = 184, rowspan = 4,
+                                contents = Img(
+                                    width = 184, height = 190,
+                                    src = '%(ROOT)simages/kitty_1.png'
+                                )
+                            ),
+                            TD(
+                                valign = 'top', width = 65, rowspan = 4,
+                                contents = Img(
+                                    width = 65, height = 190,
+                                    src = '%(ROOT)simages/kitty_2.png'
+                                )
+                            ),
+                            TD(
+                                valign = 'top', width = 53, rowspan = 4,
+                                contents = Img(
+                                    width = 53, height = 190,
+                                    src = '%(ROOT)simages/kitty_3.png'
+                                )
+                            ),
+                            TD(
+                                valign = 'top', align = 'left', width = 344, 
+                                background = '%(ROOT)simages/dark_bg.png',
+                                contents = Img(
+                                    width = 344, height = 81,
+                                    src = '%(ROOT)simages/aros.png'
+                                )
+                            ),
+                            TD(
+                                valign = 'top', align = 'right', width = '100%%',
+                                background = '%(ROOT)simages/dark_bg.png',
+                                contents = Table(
+                                    border = 0, cellpadding = 0, cellspacing = 2,
+                                    contents = [
+                                        TR( 
+                                            TD( Font( size = '-2', color = '#ffffff', contents = B( _T['mirrors'] ) ) )
+                                        ),
+                                        TR(
+                                            TD( MIRRORS_DATA )
+                                        )
+                                    ]
+                                )
+                                #contents = Img(
+                                #    width = '100%%', height = 1,
+                                #    src = '%(ROOT)simages/spacer.gif'
+                                #)
+                            )
+                        ] ),
+                        TR(
+                            TD(
+                                background = '%(ROOT)simages/dark_bg.png',
+                                align = 'center', colspan = 2, contents = Img(
+                                    width = 367, height = 36,
+                                    src = '%(ROOT)simages/aros_text.png'
+                                )
+                            )
+                        ),
+                        TR( [
+                            TD(
+                                background = '%(ROOT)simages/horizontal_border.png',
+                                width = 344, contents = Img(
+                                    width = 344, height = 33,
+                                    src = '%(ROOT)simages/h_arc.png'
+                                )
+                            ),
+                            TD( background = '%(ROOT)simages/horizontal_border.png' )
+                        ] ),
+                        TR( 
+                            TD(
+                                width = 1, height = 40, colspan = 2,
+                                bgcolor = '#ffffff', contents = Font(
+                                    size = '-1', color = '#aaaaaa',
+                                    #contents = quotesPHP
+                                    contents = Img(
+                                        width = '100%%', height = 40,
+                                        src = '%(ROOT)simages/spacer.gif'
+                                    )
+                                )
+                            )
+                        ),
+                        TR( [
+                            TD(
+                                rowspan = 2, valign = 'top', width = 184,
+                                height = '100%%',
+                                background = '%(ROOT)simages/bright_bg.png',
+                                style = 'width: 184px; height: 100%%',
+                                contents = [
+                                    #Img(
+                                    #    width = 184, height = 1,
+                                    #    src = '%(ROOT)simages/spacer.gif'
+                                    #),
+                                    bar
+                                ]
+                            ),
+                            TD(
+                                background = '%(ROOT)simages/vertical_border.png',
+                                width = 65, height = 393, contents = Img(
+                                    width = 65, height = 393, 
+                                    src = '%(ROOT)simages/v_arc.png'
+                                )
+                            ),
+                            TD(
+                                colspan = 3, rowspan = 1, valign = 'top',
+                                width = '100%%', height = '100%%',
+                                contents = [
+                                    Img(
+                                        width = '100%%', height = 1,
+                                        src = '%(ROOT)simages/spacer.gif'
+                                    ),
+                                    BR(),
+                                    Table(
+                                        border = 0, cellspacing = 0, 
+                                        cellpadding = 0, width = '100%%',
+                                        bgcolor = '#ffffff',
+                                        contents = TR( TD( '%(CONTENT)s' ) )
+                                    )
+                                ]
+                            )
+                        ] ),
+                        TR( [
+                            TD(
+                                width = 65, height = '100%%', style = 'height: 100%%',
+                                background = '%(ROOT)simages/vertical_border.png',
+                                contents = Img(
+                                    width = 1, height = '100%%',
+                                    src = '%(ROOT)simages/spacer.gif'
+                                )
+                            ),
+                            TD(
+                                colspan = 3, valign = 'bottom', align = 'center',
+                                contents = Font(
+                                    size = '-1', color = '#aaaaaa',
+                                    contents = [
+                                        _M['copyright'],
+                                        BR(),
+                                        _M['trademarks'] 
+                                    ]
+                                )
+                            )                                
+                        ] )
+                    ]
+                )
+            ]
+        )
     ] )
 
     return str( page )

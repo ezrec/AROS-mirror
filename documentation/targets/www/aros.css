@@ -1,30 +1,60 @@
 @import url(docutils.css);
 
+/* FIXME: Breaks underline in links on Phoenix?!?
+body {
+    font-family: arial, verdana, helvetica, sans-serif
+}*/
+
+.tree {
+    font-size:   smaller ;
+    font-weight: bold    ;
+    color:       #ffffff }
+
+.tree :link {
+    text-decoration: none    ;
+    font-weight:     bold    ;
+    color:           #ffffff }
+    
+.tree :link:hover {
+    text-decoration: underline }
+    
+.tree :visited {
+    text-decoration: none    ;
+    font-weight:     bold    ;
+    color:           #ffffff }
+
+.tree :visited:hover {
+    text-decoration: underline }
+
 div.document {
     padding: 0px 10px 0px 10px }
-
-h1 {
-    margin:             10px -25px 10px -25px ;
-    padding:            2px   23px 2px   23px ;
-    border:             thin solid black      ;
-    background:         #ccccff               }
+    
+/*h1 {
+    padding:            2px              ;
+    border:             thin solid black ;
+    /*color:              #fffc1a          ;*/
+    color:              #b83939;
+    background:         #ded19d}
+    /*
+    background:         #b83939          } */
+*/
 
 h1.title {
-    text-align: left    ;
-    background: #9999ff }
-
+    text-align: left    }
+    
+    /*background: #b83939  } */
+    /*
 h2 {
-    border:             thin dotted black   ;
-    background:         #bbbbbb             ;
-    padding:            2px   9px 2px   9px ;
-    margin:             0px -10px 0px -10px }
+    padding:            2px               ;
+    border:             thin dotted black ;
+    color:              #ffffff           ;
+    background:         #d67171           }
+  */  
 
-pre.literal-block, pre.doctest-block {
-    background-color: #cccccc }
+table.layout {
+  margin-top:    0 ;
+  margin-bottom: 0 }
 
-tt {
-    background-color: #cccccc }
-   
-table.layout, td.layout, th.layout {
-    padding-left: 0.0em  ;
-    padding-right: 0.0em }
+td.layout, th.layout {
+  padding-left:  0 ;
+  padding-right: 0 }

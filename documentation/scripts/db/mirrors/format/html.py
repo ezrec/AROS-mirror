@@ -2,14 +2,14 @@
 # $Id$
 
 def format( mirrors ):
-    output  = '<form action="http://aros.sourceforge.net/tools/redirect.php" method="get">'
-    output += '<select name="url">'
+    output  = '<form name="mirrors" action="http://aros.sourceforge.net/tools/redirect.php" method="get">'
+    output += '<select name="url" onChange="mirrors.submit()">'
 
     for mirror in mirrors:
         output += '<option value="' + mirror[1] + '">' + mirror[0] + '</option>'
 
     output += '</select>'
-    output += '<input type="submit" value="Go">'
+    output += '<noscript><input type="submit" value="Go"></noscript>'
     output += '</form>'
 
     return output

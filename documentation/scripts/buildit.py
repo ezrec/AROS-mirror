@@ -143,7 +143,7 @@ def makePictures():
         file \
         ( 
             #os.path.join( DSTROOT, root, 'index.html.en' ), 'w'
-            os.path.join( DSTROOT, root, 'index.html' ), 'w'
+            os.path.join( DSTROOT, root, 'index.php' ), 'w'
         ).write( TEMPLATE_DATA % strings )
 
 
@@ -231,16 +231,16 @@ def processWWW( src, depth ):
     suffix = os.path.splitext( src )[1][1:]
     if suffix not in LANGUAGES: return
     
-    dst     = prefix + '.html' # .' + suffix
+    dst     = prefix + '.php' # .' + suffix
     dst_abs = os.path.normpath( os.path.join( DSTROOT, dst ) )
     src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
     dst_dir = os.path.dirname( dst_abs )
     
     makedir( dst_dir )
     
-    _tmp_src = os.path.join( SRCROOT, 'targets/www/htaccess' )
-    _tmp_dst = os.path.join( dst_dir, '.htaccess' )
-    copy( _tmp_src, _tmp_dst )
+    #_tmp_src = os.path.join( SRCROOT, 'targets/www/htaccess' )
+    #_tmp_dst = os.path.join( dst_dir, '.htaccess' )
+    #copy( _tmp_src, _tmp_dst )
     
     if newer( [ TEMPLATE, src_abs ], dst_abs ):
         reportBuilding( src )
@@ -324,25 +324,40 @@ def buildWWW():
     imagepath = os.path.join( DSTROOT, 'images' ) 
     makedir( imagepath )
 
-    copy \
-    ( [
-        'images/aros-banner.gif',
-        'images/trustec.png',
-        'images/sourceforge.png',
-        'images/amigados-online-reference-manual.png',
-        'images/kitty_small.jpeg',
-        'images/kitty_small.png',
-        'images/aros-logo.png',
-        'targets/www/images/trustec-small.png',
-        'targets/www/images/bullet.png', 
-        'targets/www/images/aros.png'
-      ], 
-      imagepath 
+    copy( 
+        [
+            'images/aros-banner.gif',
+            'images/trustec.png',
+            'images/sourceforge.png',
+            'images/amigados-online-reference-manual.png',
+            'targets/www/images/trustec-small.png',
+            'targets/www/images/bullet.gif', 
+            'targets/www/images/aros.png',
+            'targets/www/images/aros.png',
+            'targets/www/images/aros_text.png',
+            'targets/www/images/bright_bg.png',
+            'targets/www/images/dark_bg.png',
+            'targets/www/images/h_arc.png',
+            'targets/www/images/horizontal_border.png',
+            'targets/www/images/kitty_1.png',
+            'targets/www/images/kitty_2.png',
+            'targets/www/images/kitty_3.png',
+            'targets/www/images/v_arc.png',
+            'targets/www/images/vertical_border.png',
+            'targets/www/images/spacer.gif',
+           
+        ], 
+        imagepath 
     )
     
     copy( 'targets/www/docutils.css', DSTROOT )
     copy( 'targets/www/aros.css', DSTROOT )
+
+    dbpath = os.path.join( DSTROOT, 'db' )
+    makedir( dbpath )
     
+    copy( 'db/quotes', dbpath )
+
     toolpath = os.path.join( DSTROOT, 'tools' )
     makedir( toolpath )
 
@@ -357,7 +372,7 @@ def buildWWW():
     
     os.system( 'chmod -R go+r %s' % DSTROOT )
     #os.system( 'chmod +x %s' % os.path.join( DSTROOT, 'download/index.html.en' ) )
-    os.system( 'chmod +x %s' % os.path.join( DSTROOT, 'download/index.html' ) )
+    #os.system( 'chmod +x %s' % os.path.join( DSTROOT, 'download/index.html' ) )
 
 def buildHTML():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
