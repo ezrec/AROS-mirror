@@ -22,6 +22,43 @@ notice is retained.
 
 #include <aros/oldprograms.h>
 
+#define USE_MATHFFP 0
+
+#if USE_MATHFFP
+
+#define KLUDGE_INT int
+
+#else
+
+#undef KLUDGE_INT
+#define KLUDGE_INT float
+
+#undef SPDiv
+#define SPDiv(a,b) ((b) / (a))
+
+#undef SPFlt
+#define SPFlt(a)   ((float)(a))
+
+#undef SPSub
+#define SPSub(a,b) ((b) - (a))
+
+#undef SPAdd
+#define SPAdd(a,b) ((a) + (b))
+
+#undef SPMul
+#define SPMul(a,b) ((a) * (b))
+
+#undef SPNeg
+#define SPNeg(a)   (-(a))
+
+#undef SPFix
+#define SPFix(a)   ((LONG)(a))
+
+#undef SPFieee
+#define SPFieee(a) (a)
+
+#endif
+
 #include <exec/types.h>
 #include <exec/tasks.h>
 #include <exec/libraries.h>
@@ -127,3 +164,5 @@ extern   int     SPFieee();
 #define ZOOM_ZOOMOUT2     4
 #define ZOOM_ZOOMOUT10    5
 #define ZOOM_COUNT        6
+
+void ZoomAlongDarling(KLUDGE_INT rzoom, KLUDGE_INT izoom);

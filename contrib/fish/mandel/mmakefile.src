@@ -38,6 +38,6 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 clean-fish :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
-$(OBJDIR)/%.o : %.c
+$(OBJDIR)/%.o : %.c mand.h
 	%compile_q
 

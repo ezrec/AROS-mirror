@@ -20,7 +20,6 @@ notice is retained.
 
 #include "mand.h"
 
-
 extern struct MathBase		*MathBase;
 extern struct MathTransBase	*MathTransBase;
 
@@ -47,7 +46,7 @@ extern BOOL SettingCenter, SettingBoxSize;
 
 extern union kludge {
    float f;
-   int i;
+   KLUDGE_INT i;
 } start_r,end_r,start_i,end_i;  /* Block bounds for set */
 extern int max_x,max_y;  /* Graphics window size */
 extern int max_count,color_inc,color_offset,color_set,color_mode,color_div;
@@ -208,7 +207,19 @@ gen_mand()
          z_i.i = const0.i;
          u_r.i = SPAdd(start_r.i,SPMul(SPFlt(x_coord),x_gap.i));
          u_i.i = SPAdd(start_i.i,SPMul(SPFlt(max_y-y_coord-1),y_gap.i));
+
+#if 0
+kprintf("%d %d %d %d\n", (LONG)(start_r.f * 1000.0),
+    	    	    	 (LONG)(x_gap.f * 1000.0),
+    	    	    	 (LONG)(start_i.f * 1000.0),
+    	    	    	 (LONG)(y_gap.f * 1000.0));
+			 
+u_r.f = -2.0  + (((float)x_coord) * 4.0 / 320.0);
+u_i.f = -2.0  + (((float)y_coord) * 4.0 / 200.0);
+#endif
+
          count = 0;
+
          for (count = 0;
               SPFix( SPAdd( SPMul(z_r.i, z_r.i), SPMul(z_i.i,z_i.i))) < 4
                  && (count < max_count);
@@ -285,6 +296,7 @@ int count,x,y;
 
       if (count == 0) color = 2;
       else color = (((count - 1) / color_div) % modulus) + 3;
+//kprintf("writepixel: color = %d count = %d\n", color, count);
       SetAPen(rp, color);
       WritePixel(rp, x, y);
    }

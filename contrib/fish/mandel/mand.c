@@ -109,7 +109,7 @@ return 0;
 
 union kludge {
    float f;
-   int i;
+   KLUDGE_INT i;
 } start_r,end_r,start_i,end_i;
 int max_x,max_y,max_mem_y;
 int max_count,color_inc,color_offset,color_set,color_mode,color_div;
@@ -136,7 +136,12 @@ main()
 {
    FILE *fopen();
    char *fgets(),*stpblk();
+#if USE_MATHFFP
    float cnvf();
+#else
+#define cnvf(x) (x)
+#endif
+
    void anal_mand(),wait_close();
 
    int temp,y;
@@ -578,6 +583,7 @@ ill_cmd()
    fputs("Unknown command!\n",console);
 }
 
+#if USE_MATHFFP
 float cnvf(i)
 int i;
 {
@@ -587,7 +593,7 @@ int i;
    n.i = SPTieee(n.i);
    return (n.f);
 }
-
+#endif
 
 /*-----------------------------------------*/
 /* Non-intelligent virtual memory handling */

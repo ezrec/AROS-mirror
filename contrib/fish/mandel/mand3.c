@@ -98,7 +98,7 @@ BOOL SettingCenter, SettingBoxSize;
 
 extern union kludge {
    float f;
-   int i;
+   KLUDGE_INT i;
 } start_r,end_r,start_i,end_i;  /* Block bounds for set */
 extern int max_x,max_y;  /* Graphics window size */
 extern int max_count,color_inc,color_offset,color_set,color_mode,color_div;
@@ -476,8 +476,7 @@ anal_mand()
    }
 }
 
-ZoomAlongDarling(rzoom, izoom)
-int rzoom, izoom;
+void ZoomAlongDarling(KLUDGE_INT rzoom, KLUDGE_INT izoom)
 {
    union kludge center,distance,scale;
 
