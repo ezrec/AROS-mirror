@@ -49,7 +49,7 @@
 		
 		/* Compute the length of chars in the buffer */
 		
-		for (len = 0; *str ++; )
+		for (len = 0; *str ++; len++ )
 			;
 			
 		if (gadget->Activation & GACT_STRINGRIGHT) {
@@ -113,12 +113,15 @@
 	
 	si->BufferPos = 0;
 	
+	Forbid();
 	gadget->Flags |= GFLG_GADGHNONE;
+	Permit();
 	
 	RefreshGList(gadget, window, NULL, 1);
-	
+
+	Forbid();	
 	gadget->Flags &= ~GFLG_GADGHNONE;
-	
+	Permit();
 
 	AROS_LIBFUNC_EXIT
 }
