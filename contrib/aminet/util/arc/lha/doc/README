@@ -1,0 +1,50 @@
+/* README (In Japanese) */
+LHa for UNIX version 1.00	Mar 31 1992 by Masaru Oki.
+
+新しくサポートされた -lh5- 圧縮形式での圧縮/展開が
+可能なアーカイバ LHa の UNIX 版です。
+
+UNIX 版 LHarc 1.02 (by Y.Tagawa) を改造し MS-DOS 版 LHx C2.01E
+(by 吉崎　栄泰) のアルゴリズムを付加した LHx(arc) V2.00 for OSK
+(by Sakura Tomozou) を、さらに私が UNIX 上で動作するようにしました。
+
+MACHINES, config.jpn (config.eng), src/INSTALL を参考にして
+Makefile を適宜変更し、make してください。
+
+コンパイル時および動作に問題が発生した場合は連絡をお願いします。
+対象プラットフォーム (機種、OS バージョン、コンパイラ) および
+症状を詳しくお知らせ下さい。また、LHa のソース変更によって正し
+く動作させることができた時には変更点をお知らせ下さい。
+可能ならば次回配布に反映したいと思います。
+
+また、新しいプラットフォームでのコンパイルおよび動作確認ができ
+ましたら、お知らせ下さい。動作確認プラットフォームの情報を更新
+したいと思います。
+
+MACHINES にこれまで報告のあったプラットフォームのコンパイル
+オプションについて記述しています。
+2版では、これを元に config.h を作成するつもりですので、修正、
+追加などあれば御連絡下さい。
+
+前回配布との変更点
+	CHANGES を参照して下さい。
+
+わかっている不具合
+	PROBLEMS を参照して下さい。
+
+連絡先
+	LHa for UNIX MainingList admin:	LHa-Admin@oki.CO.JP
+
+	my E-Mail address:		oki@wbg.telcom.oki.co.JP
+	my NIFTY-Serve ID:		GGC02412
+
+	(それぞれ 1992 年 3 月 31 日現在)
+
+謝辞
+	LHarc および LHa の原作者である吉崎栄泰さん、LHarc UNIX
+	の作者である Y.Tagawa さん、LHx(arc) for OSK を作成され
+	た Sakura Tomozou さん、それから LHa for UNIX メーリング
+	リスト等にて協力してくれた皆様に感謝致します。
+
+						1992 年  3 月 31 日
+							    沖   勝
