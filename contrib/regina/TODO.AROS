@@ -1,9 +1,7 @@
 * Store thread specific data not in rc_UserData field of the current Task.
-* Join the two mmakefiles or adapt mmake so that mmakefile-libs is
-  automatically generated
 * Remove the wrapper functions in aros_funcs: either by using the C calling
   convention for the functions in the library (e.g. like arosc.library) or
   by changing rexxsaa.c so that the registers are used overthere.
 * Implement the external queue function (compile without NO_EXTERNAL_QUEUES).
-* Implement true multithreading.
+* Add ARexx specific functions.
 * and probably a lot more ...
