@@ -3,14 +3,51 @@
 '''Generate the AROS WWW site.'''
 
 import glob, os, os.path
+
+# Fix nameclash between Image and HTMLgen.Image
+try: #Following switcheroo ensures that if PIL is installed it's used instead
+    # of the HTMLgen-bundled copies.
+    import Image
+    _Image = Image
+    del Image
+except ImportError:
+    import ImageH
+    _Image = ImageH
+    del ImageH
+import GifImagePluginH, JpegImagePluginH, PngImagePluginH
+
+# Import HTML generator
 from HTMLcolors import *
 from HTMLgen import *
-import PIL.Image
 
-htmldir = os.environ['HTMLDIR']
-ftpdir = os.environ['FTPDIR']
+# Import global config (mostly paths)
+import config
+
+# Copy the "interesting" items of the config into local variables.
+htmldir = config.HTMLDIR
+ftpdir = config.FTPDIR
+
+# The relative URL for the screenshots dir.
 screenshoturl = 'pics/screenshots'
 
+# This is a list of links which is used to generate the linkbox
+# at the beginning of every page. The format is as follows:
+#
+#  ( 
+#    ( main-page, sub-page-1, sub-page-2, ... ),
+#    ( next-main-page, ... ),
+#    ( ... ),
+#  )
+#
+# All items in the lists must be objects of the class Href.
+#
+# Whenever a page is generated, you must pass the title of the main
+# page (second parameter to Href()) to Page() in the parameter
+# linkBoxItem. This will then "open" this item (ie. the subitems
+# will be shown).
+# FIXME Most pages are much bigger then the link box, therefore, we
+# could always open all items. That would allow the user to navigate
+# much more quickly.
 mainLinks = (
     ( Href ('/index.html', 'NEWS'),
 	Href ('/status.html', 'Status'),
@@ -37,8 +74,22 @@ mainLinks = (
 
 class Page (SeriesDocument):
     def __init__ (self, rcFile='aros.rc', linkBoxItem='', **kw):
+	'''Base class to generate a page. linkBoxItem must be the
+	Title of the main page in the linkbox (see the list mainLinks
+	above).
+
+	The "meat" of the page goes into self.meat. To add something
+	to the page, use this code:
+
+	    page = Page (...)
+	    page.meat = page.meat + [item]
+	
+	Note that you must add a list (not a tuple or a single element)
+	to page.meat.
+	'''
 	apply (SeriesDocument.__init__, (self, rcFile,), kw)
 
+	# Create the header of every page.
 	table = TableLite ()
 	self.banner = table
 	row = TR ()
@@ -48,9 +99,7 @@ class Page (SeriesDocument):
 	td = td + [logo]
 	row = row + [td, TD (Text ('Amiga Research OS'))]
 
-	# HTMLgen expects a tuple in self.logo
-	#self.logo = Href ('/', Image (('pics/minilogo.gif', 71, 28), alt='AROS'))
-
+	# Create another table for the page content. 
 	table = TableLite ()
 	self.append (table)
 	row = TR ()
@@ -66,12 +115,15 @@ class Page (SeriesDocument):
 	self.linkbox = Font (size='-2')
 	td2 = td2 + [self.linkbox]
 
+	# The content will go here
 	self.meat = TD (valign='TOP')
 	row = row + [self.meat]
 
+	# Link to the main page
 	self.gohome = '/'
 
 	if linkBoxItem:
+	    # FIXME add links for the next/previous section.
 	    list = []
 	    for links in mainLinks:
 		if links[0].text == linkBoxItem:
@@ -79,7 +131,6 @@ class Page (SeriesDocument):
 		else:
 		    list.append ((links[0],))
 
-	    
 	    for links in list:
 		self.linkbox = self.linkbox + [links[0], BR ()]
 		for link in links[1:]:
@@ -88,16 +139,20 @@ class Page (SeriesDocument):
 			link, BR ()]
 
     def write (self, filename):
+	# Convert myself into HTML
 	SeriesDocument.write (self, os.path.join (htmldir, filename))
 
 def genNews ():
-    list = glob.glob ('news/*')
-    list.remove ('news/CVS')
-    list.sort ()
-    list.reverse ()
-    
+    '''Create the news page (index.html, oldnews.html).'''
+
     def genPage (items, filename):
+	'''Convert a list of news items into an HTML page and save
+	it in filename. items must be a list of files with newsitems.
+	The filenames must be dates in the form YYYYMMDD.'''
+
 	def prepareNewsItem (filename):
+	    '''Convert a single news item into HTML.'''
+
 	    row = TR ()
 	    td = TD (bgcolor='#80C0F0', valign='TOP')
 	    row = row + [td]
@@ -138,10 +193,22 @@ def genNews ():
 
 	page.write (filename)
 
+    # Search all known news items, and sort them in reverse order
+    list = glob.glob ('news/*')
+    list.remove ('news/CVS')
+    list.sort ()
+    list.reverse ()
+    
+    # Create a main page with the Top 5 news items and another page
+    # with the rest.
     genPage (list[:5], 'index.html')
     genPage (list[5:], 'oldnews.html')
 
 def genStatus ():
+    '''Create the status page. This page contains two images (jpg&png)
+    with graphs of the sizes of repositories.'''
+
+    # FIXME Read jobs.dat and create a table.
     page = Page (linkBoxItem='NEWS')
     body = []
     body.append (Heading (2, 'Size of AROS sources'))
@@ -155,10 +222,13 @@ def genStatus ():
 
 def genDocumentation ():
     page = Page (linkBoxItem='Documentation')
+    # Put the old docs here
     page.meat = page.meat + [Text ('FIXME')]
     page.write ('documentation.html')
 
 class ThumbnailTable (TableLite):
+    '''Helper class to create a table with thumbnails.'''
+
     def __init__ (self, *pics):
 	if len (pics) == 1:
 	    width = "40%"
@@ -204,8 +274,11 @@ class ThumbnailTable (TableLite):
 	    table2.append (row)
 
 def genScreenshots ():
+    '''Create a page with screenshots.'''
+
     page = Page (linkBoxItem='Screenshots')
 
+    # First, the pictures of AROS developers, etc.
     page.meat = page.meat + [
 	Name ('Pictures around AROS'),
 	Heading (2, 'Pictures around AROS'),
@@ -226,6 +299,8 @@ def genScreenshots ():
     ]
 
     def processDir (dir):
+	'''Read a directory and put all pictures in it into ThumbnailTables.
+	The name of the directory must be YYYYMMDD.'''
 	str = os.path.basename (dir)
 	date = '%d.%d.%d' % (
 	    int (str[6:8]),
@@ -252,6 +327,7 @@ def genScreenshots ():
 	list.append (apply (ThumbnailTable, pics))
 	return list
 	    
+    # Read all screenshots and sort them by date.
     dirs = glob.glob (os.path.join (htmldir, screenshoturl, '[0-9]*'))
     dirs.sort ()
     dirs.reverse ()
@@ -262,10 +338,20 @@ def genScreenshots ():
 
 def genDownload ():
     page = Page (linkBoxItem='Download')
+    # Create the page for downloads
     page.meat = page.meat + [Text ('FIXME')]
     page.write ('download.html')
 
 class FileInfo:
+    '''Helper class which stores some useful information about a file,
+    namely it's size (nicely formatted), the filename and the path
+    to the file.
+    
+    self.filename - Name of the file (last element in the path)
+    self.path - Full path to the file (might be relative)
+    self.size - Nicely formatted size
+    '''
+
     def __init__ (self, path):
 	filename = os.path.basename (path)
 	self.filename, self.path = filename, path
@@ -280,7 +366,19 @@ class FileInfo:
 		self.size = '%dMB' % size
 
 class Snapshot (FileInfo):
+    '''Helper class to store information about a snapshot. This is derived
+    from the FileInfo class and contains this additional info:
+
+    self.ext - Extension of the file
+    self.date - Creation date (derived from the filename)
+    self.title - Middle part of the filename
+    self.log - FileInfo object about the logfile which belongs to
+	    this snapshot or None.
+    '''
+    
     def __init__ (self, path):
+	'''path must be a snapshot (Format:
+	AROS-%(title)s-%(date)s.%(ext)s).'''
 	FileInfo.__init__ (self, path)
 
 	filename = self.filename
@@ -297,39 +395,22 @@ class Snapshot (FileInfo):
 	    self.log = None
 	#print self.__dict__
 
-def thumbnail(self, size):
-    "Create thumbnail representation (modifies image in place)"
-
-    # preserve aspect ratio
-    x, y = self.size
-    if x > size[0]: y = y * size[0] / x; x = size[0]
-    if y > size[1]: x = x * size[1] / y; y = size[1]
-    size = x, y
-
-    if size == self.size:
-	return
-
-    self.draft(None, size)
-
-    self.load()
-
-    im = self.resize(size, PIL.Image.BICUBIC)
-
-    self.im = im.im
-    self.mode = im.mode
-    self.size = size
-
 class Thumbnail (FileInfo):
+    '''Helper class for thumbnails. Pass it the name of a picture and
+    it will contain FileInfo plus:
+
+    self.width, self.height - Size of the picture
+    self.format - Format of the file (GIF, JPEG, PNG, ...)
+    self.thumbnailURL - URL of the thumbnail picture
+
+    The thumbnail of the picture is created with ImageMagick if it
+    doesn't exist or if it is outdated (the picture is newer).'''
     def __init__ (self, url):
 	path = os.path.join (htmldir, url)
 	FileInfo.__init__ (self, path)
 
 	self.url = url
-	try:
-	    pic = PIL.Image.open (path)
-	except:
-	    print path
-	    raise
+	pic = _Image.open (path)
 	self.width, self.height = pic.size
 	self.format = pic.format
 
@@ -355,11 +436,15 @@ class Thumbnail (FileInfo):
 	    ))
 
 	infoFile = path[:pos] + '.txt'
-	fh = open (infoFile)
-	self.text = fh.read ()
-	fh.close ()
+	if os.path.exists (infoFile):
+	    fh = open (infoFile)
+	    self.text = fh.read ()
+	    fh.close ()
+	else:
+	    self.text = ''
 
     def toHtml (self):
+	'''Convert this into HTML code.'''
 	return [
 	    TD (
 		Href (self.url, Image ((self.thumbnailURL, 0,0))),
@@ -379,6 +464,8 @@ class Thumbnail (FileInfo):
 	]
 
 def genSnapshots ():
+    '''Create the page with the snapshots with sizes and links for
+    download.'''
     page = Page (linkBoxItem='Download')
 
     files = glob.glob (os.path.join (ftpdir, 'snapshots/*.tgz'))
@@ -489,6 +576,7 @@ def processLinks (links):
     return list
 
 def genLinks ():
+    '''Create a page with links from links.py.'''
     def processSection (links, title):
 	body = []
 
@@ -513,6 +601,7 @@ def genLinks ():
 
     page.write ('links.html')
 
+# Call all generators in turn
 genNews ()
 genStatus ()
 genDocumentation ()
