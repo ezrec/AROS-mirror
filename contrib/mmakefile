@@ -7,7 +7,7 @@
 #MM- fish : fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines
 #MM- fish : fish-304_clines fish-304_lines fish-screenzap fish-watchman
 #MM- fish : fish-sunmaze fish-fiveinline fish-362_rubik fish-yachtc
-#MM- fish : fish-rubik fish-icalc fish-asimplex fish-worldtime fish-mosaic
+#MM- fish : fish-rubik fish-icalc fish-worldtime fish-mosaic
 
 # The apps below are not working yet as functions are still missing
 
