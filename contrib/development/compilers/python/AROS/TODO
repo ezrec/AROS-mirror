@@ -14,10 +14,8 @@ Short term / relatively easy
 
 + Clean up and finish amigamodule.
   - Change all functions to use METH_VARARGS.
-  - Implement chdir() (needs clib/chdir())
   - See if other functions could work on AROS but are disabled by
     #ifdefs regarding AMITCP/INET225 (eg. dup2()?).
-  - Make __io2errno() work (changes in clib, probably).
 
 Medium term / more work
 -----------------------
