@@ -7,7 +7,7 @@ frv95tjn:caYBHmdz7UdCU:aros:Tommy Johansson:frv95tjn@mds.mdh.se
 iaint:adwVPoZf6iJ6U:aros:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au
 pcosta:bbFkszi19YU6M:aros:Paolo Costabel:pcosta@mbox.vol.it
 zino:bdYh/q95S4cmU:aros:Peter Bortas:zino@lysator.liu.se
-winter:dbg5HYnm/h.ZQ:aros:Bill Boatman:winter@freebsd1.foo.bar
+#winter:dbg5HYnm/h.ZQ:aros:Bill Boatman:winter@freebsd1.foo.bar
 daniel:b9bwcTjXjo3Gc:aros:Daniel Verite:daniel@brainstorm.eu.org
 mroth:da/M1jS3sNsHg:aros:Michael Roth:mroth@inlet.lake.de
 mreckt:cbWLerEivCr6I:aros:Martin Recktenwald:klaus21@t-online.de
