@@ -7,6 +7,7 @@ Developers Resources
 + `How to compile`__
 + `Applications development manual`__
 + `System development manual`__
++ `Debugging manual`__
 + `Specifications`__
 + `Documenting`__
 + `Summaries`__
@@ -17,6 +18,7 @@ __ cvs
 __ compiling
 __ application-development
 __ system-development
+__ debugging
 __ specifications/index
 __ documenting
 __ summaries/index
