@@ -143,7 +143,7 @@ def blast_mail(mailcmd, filestodiff, contextlines):
         fp = os.popen(mailcmd, 'w')
         fp.write(sys.stdin.read())
         fp.write('User:\n')
-        fp.write(os.getenv('USER')+'\n')
+        fp.write(os.environ['USER']+'\n')
         fp.write('\n')
         # append the diffs if available
         #for file in filestodiff:
