@@ -1,22 +1,9 @@
-#   $Id$
-#
-#   Makefile to make libfl.a
+# Copyright © 2003, The AROS Development Team. All rights reserved.
+# $Id$
 
 include $(TOP)/config/make.cfg
 
-FILES   := libmain libyywrap
-GNUDIR  := $(CONTRIBDIR)/Development/gnu
+#MM- contrib-gnu : contrib-gnu-flex
 
-#-------------------------------------------------
-
-DEFS = -DHAVE_CONFIG_H
-USER_CFLAGS := $(DEFS) -I.
-
-#-------------------------------------------------
-
-#MM linklibs-fl : setup
-
-%build_linklib mmake=linklibs-fl libname=fl files=$(FILES)
-
-%common
-
+	
+%build_with_configure mmake=contrib-gnu-flex nix=yes prefix=$(CONTRIBDIR)/gnu
