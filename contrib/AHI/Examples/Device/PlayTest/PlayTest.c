@@ -9,13 +9,20 @@
 ** that sometimes DeleteIORequest'ed a pointer that was AllocMem'ed!
 */
 
+#include <exec/memory.h>
+#include <exec/types.h>
 #include <devices/ahi.h>
 #include <dos/dosasl.h>
-#include <exec/memory.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/ahi.h>
 #include <stdlib.h>
+
+#ifdef __AROS__
+#   define FAR
+#else
+#   define FAR __far
+#endif
 
 #define FREQUENCY  8000
 #define TYPE       AHIST_M8S
@@ -27,8 +34,8 @@ struct AHIRequest *AHIio     = NULL;
 APTR               AHIiocopy = NULL;
 BYTE               AHIDevice = -1;
 
-__far BYTE buffer1[BUFFERSIZE];
-__far BYTE buffer2[BUFFERSIZE];
+FAR BYTE buffer1[BUFFERSIZE];
+FAR BYTE buffer2[BUFFERSIZE];
 
 void cleanup(LONG rc)
 {
