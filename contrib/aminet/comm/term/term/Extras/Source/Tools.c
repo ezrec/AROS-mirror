@@ -3895,10 +3895,15 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 
 		/* Try the allocation. */
 
+#ifdef __AROS__
+    	if(NewAllocEntry(LocalMemList, &MemList, NULL))
+#else
 	if(MemList = AllocEntry(LocalMemList))
+#endif
 	{
+	#ifndef __AROS__
 			/* Check if the allocation did work. */
-
+    	
 		if((ULONG)MemList & 0x80000000)
 		{
 				/* Strip the failure bit. */
@@ -3906,6 +3911,7 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 			MemList = (struct MemList *)((ULONG)MemList & ~0x80000000);
 		}
 		else
+	#endif
 		{
 				/* So we got the memory for the Task. */
 
