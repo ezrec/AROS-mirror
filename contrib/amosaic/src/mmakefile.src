@@ -47,6 +47,9 @@ USE_AMIGALIB := yes
 USE_MUILIB := yes
 
 PRELIBS := $(PRELIBS) -lwww2
+
+USER_INCLUDES := -I../libwww2
+
 #MM mui-amosaic : includes linklibs 
 
 %make_prog_setup mmake=mui-amosaic
