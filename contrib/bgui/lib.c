@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.11  2004/06/19 20:27:48  verhaegs
+ * Added AROS_LIBFUNC_INIT/EXIT
+ *
  * Revision 42.10  2003/01/18 19:09:58  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -459,6 +462,8 @@ AROS_LH1(struct Library *, LibOpen,
 makeproto SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0) ULONG libver)
 #endif
 {
+   AROS_LIBFUNC_INIT
+
    UWORD       tc;
 
    /*
@@ -485,6 +490,8 @@ makeproto SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0
    }
 
    return NULL;
+    
+   AROS_LIBFUNC_EXIT
 }
 
 /*
@@ -497,6 +504,8 @@ AROS_LH0(BPTR, LibClose,
 makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
 #endif
 {
+   AROS_LIBFUNC_INIT
+
    /*
     * Remove the task from the member list.
     */
@@ -524,6 +533,8 @@ makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     * Otherwise we remain in memory.
     */
    return NULL;
+    
+   AROS_LIBFUNC_EXIT
 }
 
 /*
@@ -537,6 +548,8 @@ AROS_LH1(BPTR, LibExpunge,
 makeproto SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
 #endif
 {
+   AROS_LIBFUNC_INIT
+
    /*
     * No expunge when we still
     * have accessors or when the classes
@@ -582,6 +595,8 @@ makeproto SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
     * system can unload us.
     */
    return SegList;
+    
+   AROS_LIBFUNC_EXIT
 }
 
 /*
@@ -594,5 +609,9 @@ AROS_LH0(LONG, LibVoid,
 makeproto SAVEDS LONG LibVoid(void)
 #endif
 {
+   AROS_LIBFUNC_INIT
+
    return 0;
+
+   AROS_LIBFUNC_EXIT
 }
