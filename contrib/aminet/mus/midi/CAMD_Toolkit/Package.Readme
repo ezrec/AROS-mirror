@@ -1,0 +1,50 @@
+
+       ------------------------------------------------------------
+                        Flowerpower's CAMD Toolkit:
+               PlayMF + SoftSynth + Piano Meter + Fireworks
+       ------------------------------------------------------------
+
+                          >>> Eighth release <<<
+
+What is this?
+-------------
+
+This  software  package contains a MIDI player, a MIDI software synthesizer
+(based  on  GMPlay  1.3)  and  and  two  graphically  appealing  monitoring
+programs.  I wrote them because I thought I might like them.  And besides I
+needed a reason for not learning for my upcoming exams (any reason was good
+enough).
+
+All  software  is  based  on  the  camd.library.   It  is  included  in the
+PlayMF/libs directory.
+
+For  more details about the supplied programs, please see the documentation
+files in the specific directories.
+
+Source code is included (except the source code of the Software Synthesizer
+and  my  BOOPSI  classes).   CAMD  programming  is just so easy.  I want to
+encourage all programmers to do the same.  Try it and like it!
+
+
+History
+-------
+
+For  details,  see  the history sections in the documentation files for the
+specific programs.
+
+
+The Future
+----------
+
+Release  9  will  get  a  GUI  for PlayMF and perhaps a datatype version of
+PlayMF including a cool control panel.
+
+
+Contact
+-------
+
+for comments, bug reports and suggestions:
+
+The author: Christian Buchner
+
+            flowerp@eikon.e-technik.tu-muenchen.de
