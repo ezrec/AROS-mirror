@@ -51,12 +51,28 @@ struct PtrMessage
   void *ptr;
 };
 
+struct sys_mbox_msg {
+  struct sys_mbox_msg *next;
+  void *msg;
+};
+
+#define SYS_MBOX_SIZE 100
+
+struct sys_mbox {
+  u16_t first, last;
+  void *msgs[SYS_MBOX_SIZE];
+  struct sys_sem *mail;
+  struct sys_sem *mutex;
+};
+
+/* The structure used for sys_sem->queue */
 struct TaskNode
 {
   struct MinNode node;
   struct Task *task;
   LONG sem_signal;
 };
+
 
 struct sys_sem {
   unsigned int c;
@@ -183,49 +199,114 @@ static void Thread_Cleanup(struct ThreadData *data)
 
 
 /*-----------------------------------------------------------------------------------*/
-void sys_arch_block(u16_t time)
-{
-    kprintf("block for %ld ms\n",time);
-}
-/*-----------------------------------------------------------------------------------*/
 sys_mbox_t sys_mbox_new(void)
 {
-    sys_mbox_t mbox = (sys_mbox_t)CreateMsgPort();
+    struct sys_mbox *mbox;
+
+    mbox = AllocVec(sizeof(struct sys_mbox),MEMF_PUBLIC|MEMF_CLEAR);
+    if (!mbox) return SYS_MBOX_NULL;
+
+    mbox->first = mbox->last = 0;
+    mbox->mail = sys_sem_new(0);
+    mbox->mutex = sys_sem_new(1);
+  
+#ifdef SYS_STATS
+    stats.sys.mbox.used++;
+    if(stats.sys.mbox.used > stats.sys.mbox.max) {
+	stats.sys.mbox.max = stats.sys.mbox.used;
+    }
+#endif /* SYS_STATS */
+
     kprintf("sys_mbox_new()=0x%lx\n",mbox);
-    return mbox;
+    return (sys_mbox_t)mbox;
 }
 /*-----------------------------------------------------------------------------------*/
 void sys_mbox_free(sys_mbox_t mbox)
 {
     kprintf("sys_mbox_free(mbox=0x%lx)\n",mbox);
-//    if (mbox) DeleteMsgPort((struct MsgPort*)mbox);
+
+    if(mbox != SYS_MBOX_NULL) {
+#ifdef SYS_STATS
+	stats.sys.mbox.used--;
+#endif /* SYS_STATS */
+	sys_sem_wait(mbox->mutex);
+    
+	sys_sem_free(mbox->mail);
+	sys_sem_free(mbox->mutex);
+	mbox->mail = mbox->mutex = NULL;
+	FreeVec(mbox);
+    }
 }
 /*-----------------------------------------------------------------------------------*/
-void sys_mbox_post(sys_mbox_t mbox, void *data)
+void sys_mbox_post(sys_mbox_t mbox, void *msg)
 {
-    struct PtrMessage *msg;
+    u8_t first;
 
     if (!mbox)
     {
-	kprintf("sys_mbox_post(mbox=0x%lx,data=0x%lx)  no mbox!\n",mbox,data);
+	kprintf("sys_mbox_post(mbox=0x%lx,data=0x%lx)  no mbox!\n",mbox,msg);
 	return;
     }
 
-    msg = AllocVec(sizeof(struct PtrMessage),MEMF_CLEAR|MEMF_PUBLIC);
-    kprintf("sys_mbox_post(mbox=0x%lx,data=0x%lx)  msg at 0x%lx\n",mbox,data,msg);
-//    if (msg)
-//    {
-//    	msg->msg.mn_Length = sizeof(struct PtrMessage);
-//    	msg->ptr = data;
-//    	PutMsg((struct MsgPort*)mbox,(struct Message*)msg);
-//    }
+    kprintf("sys_mbox_post(mbox=0x%lx,data=0x%lx)\n",mbox,msg);
+
+    sys_sem_wait(mbox->mutex);
+    mbox->msgs[mbox->last] = msg;
+
+    if(mbox->last == mbox->first) {
+        first = 1;
+    } else {
+        first = 0;
+    }
+  
+    mbox->last++;
+    if(mbox->last == SYS_MBOX_SIZE) {
+	mbox->last = 0;
+    }
+
+    if(first) {
+      sys_sem_signal(mbox->mail);
+    }
+  
+    sys_sem_signal(mbox->mutex);
 }
 /*-----------------------------------------------------------------------------------*/
-u16_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **data, u16_t timeout)
+u16_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u16_t timeout)
 {
+    u16_t time = 1;
     kprintf("sys_arch_mbox_fetch(mbox=0x%lx,timeout=%d)\n",mbox,timeout);
-    return 0;
+
+    /* The mutex lock is quick so we don't bother with the timeout
+       stuff here. */
+    sys_arch_sem_wait(mbox->mutex, 0);
+  
+    while(mbox->first == mbox->last)
+    {
+        sys_sem_signal(mbox->mutex);
+    
+        /* We block while waiting for a mail to arrive in the mailbox. We
+           must be prepared to timeout. */
+        if(timeout != 0)
+        {
+            time = sys_arch_sem_wait(mbox->mail, timeout);
+      
+          /* If time == 0, the sem_wait timed out, and we return 0. */
+            if(time == 0) return 0;
+        } else sys_arch_sem_wait(mbox->mail, 0);
+	sys_arch_sem_wait(mbox->mutex, 0);
+    }
+  
+    if (msg)
+	*msg = mbox->msgs[mbox->first];
+  
+    mbox->first++;
+    if(mbox->first == SYS_MBOX_SIZE)
+        mbox->first = 0;
+
+    sys_sem_signal(mbox->mutex);
+    return time;
 }
+
 /*-----------------------------------------------------------------------------------*/
 sys_sem_t sys_sem_new(u8_t count)
 {
