@@ -18,9 +18,10 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
             A( _N['introduction'], hclass='done', href='%(ROOT)sintroduction' ),
             Tree \
             ( [
-                _N['status'],
+                A( _N['status'], hclass='almost', href='%(ROOT)sintroduction/status/everything.html' ),
                 A( _N['screenshots'], hclass='done', href='%(ROOT)spictures/screenshots' ),
-                A( _N['ports'], hclass='done', href='%(ROOT)sintroduction/ports' )
+                A( _N['ports'], hclass='done', href='%(ROOT)sintroduction/ports' ),
+                A( _N['license'], hclass='almost', href='%(ROOT)slicense.html' )
             ] ),
             A( _N['download'], hclass='almost', href='%(ROOT)sdownload' ),
             _N['documentation'],
