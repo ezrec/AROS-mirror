@@ -13,6 +13,12 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2003/07/24 08:41:42  iaint
+ * Convert the type of any tag values to be Tag. This means they get mapped to
+ * STACKULONG as appropriate.
+ *
+ * Discussed (with general approval) on the aros-dev list.
+ *
  * Revision 42.2  2003/01/18 19:10:21  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -78,5 +84,5 @@ ULONG BGUI_UnpackStructureTags( APTR pack, ULONG *packTable, struct TagItem *tag
 Object *BGUI_NewObject( ULONG, Tag, ... );
 ULONG BGUI_Request( struct Window *, struct bguiRequest *, ... );
 ULONG BGUI_DoGadgetMethod( Object *, struct Window *, struct Requester *, ULONG, ... );
-Class *BGUI_MakeClass( ULONG, ... );
+Class *BGUI_MakeClass( Tag, ... );
 #endif

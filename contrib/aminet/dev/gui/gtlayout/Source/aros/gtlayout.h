@@ -692,7 +692,6 @@ typedef LONG (* DISPFUNC)(struct Gadget *gad,LONG value,...);
  BOOL LT_RebuildTags(LayoutHandle *handle, BOOL clear, unsigned long tag1,... );
  struct Menu *LT_NewMenuTags(Tag firstTag, ... );
  VOID LT_MenuControlTags(struct Window *window, struct Menu *intuitionMenu, unsigned long tag1,... );
- struct Menu * LT_NewMenuTags(unsigned long tag1,...);
 
 /*****************************************************************************/
 
