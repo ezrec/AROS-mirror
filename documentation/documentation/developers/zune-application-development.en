@@ -61,7 +61,7 @@ found here__. In this LHA archive, 2 documents are warmly recommended:
 
 __ http://aminet.net/dev/mui/mui38dev.lha
 
-Additionnaly, this archive contains MUI autodocs, which are the reference
+Additionally, this archive contains MUI autodocs, which are the reference
 documentations for all Zune classes.
 
 
@@ -83,20 +83,20 @@ A class is defined by its name, its parent class and a dispatcher.
 
 + parent class: all BOOPSI classes are forming a hierarchy rooted at the
   class aptly named rootclass. It allows each subclass to implement its own
-  version of specific parent operation, or to fallback on the one provided
-  by its parent. Also known as baseclass or superclass.
+  version of specific parent operation, or to fall back on the one provided
+  by its parent. Also known as base class or super class.
 
 + dispatcher: it gives access to all operations (called methods) provided
   by this class, ensuring that each operation is handled by the proper
-  code or passed to its superclass.
+  code or passed to its super class.
 
 BOOPSI type for a class is ``Class *`` also known as ``IClass``.
 
 Object
 ------
 
-An object is an instance of class: each object has its specific datas, but all
-objects of the same class share the same behaviour.
+An object is an instance of class: each object has its specific data, but all
+objects of the same class share the same behavior.
 An object has several classes if we count the parents of its true class
 (the most derived one) up to the rootclass.
 
@@ -106,8 +106,8 @@ access.
 Attribute
 ---------
 
-An attribute is related to the instance datas of each object: you can't
-access these datas directly, you can only set or get the attributes
+An attribute is related to the instance data of each object: you can't
+access these data directly, you can only set or get the attributes
 provided by an object to modify its internal state. An attribute is
 implemented as a Tag (``ULONG`` value or'ed with ``TAG_USER``).
 
@@ -130,7 +130,7 @@ a class and a message:
 
 + object: the object you act on
 + class: the considered class for this object.
-+ message: contains a MethodID which determines the function to call
++ message: contains a method ID which determines the function to call
   within a dispatcher, and is followed by its parameters.
 
 To send a message to an object, use ``DoMethod()``. It will use the true
@@ -296,7 +296,7 @@ We don't manually open libraries, it's done automatically for us.
 GUI creation
 ------------
 
-We use a macro-based langage to easily build our GUI.
+We use a macro-based language to easily build our GUI.
 A Zune application has always 1 and only 1 Application object::
 
     :	app = ApplicationObject,
@@ -310,7 +310,7 @@ Be nice, give a title to the window::
     :		MUIA_Window_Title, "Hello world!",
 
 A window must have 1 and only 1 child, usually a group. This one is vertical,
-that means that its childs will be arranged vertically::
+that means that its children will be arranged vertically::
 
     :		WindowContents, VGroup,
 
@@ -459,7 +459,7 @@ Notification actions
 As seen in hello.c, you use MUIM_Notify to call a method if a certain condition
 happens.
 If you want your application to react in a specific way to events, you can use
-one of these technics:
+one of these schemes:
 
 + MUIM_Application_ReturnID: you can ask your application to return an
   arbitrary ID on the next loop iteration, and check for the value in
