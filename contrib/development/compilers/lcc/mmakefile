@@ -1,6 +1,6 @@
 # $Id$
 
-#MM- aminet-development-compiler-lcc : aminet-development-compiler-lcc-cpp
+#MM- contrib-development-compilers-lcc : contrib-development-compilers-lcc-cpp
 
 #dont work need fork and more
-##MM- aminet-development-compiler-lcc : aminet-development-compiler-lcc-etc
+##MM- contrib-development-compilers-lcc : contrib-development-compilers-lcc-etc
