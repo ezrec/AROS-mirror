@@ -42,7 +42,7 @@ static char *RCSid = "$Id$";
 # endif
 #endif
 
-#if defined(_AMIGA)
+#if defined(_AMIGA) && !defined(__AROS__)
 const char *Version="$VER: "PARSE_VERSION_STRING" "__AMIGADATE__" $";
 # if defined(__SASC)
 static const long __stack = 0x6000;
