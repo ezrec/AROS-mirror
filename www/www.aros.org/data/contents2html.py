@@ -56,7 +56,7 @@ def convertContents (Page, c, dirlist, parent):
     if dirlist:
 	partPath = apply (os.path.join, dirlist)
     else:
-	partPath = '.'
+	partPath = ''
     path = os.path.join ('contents', partPath)
     filename = os.path.join (path, 'contents.html')
 
