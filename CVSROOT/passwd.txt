@@ -76,7 +76,7 @@ mchouinard:sy7IPD6eXxoU6:Mathieu Chouinard:mchouinard@sprint.ca:
 pablo:cdT1Zu9CY2ShM:Pawel Kolodziejski:pablo@rudykot.pl:
 eirikns:ba5EqokvhpnPc:Eirik Nicolai Synnes:eirikns@ifi.uio.no:
 phillwooller:ac4kAjAMFmiLc:Phill Wooller:phillwooller@noelite.freeserve.co.uk:
-stegerg:bdYHJK6vZiYUo:Helmut Steger:georg.steger@rolmail.net:
+stegerg:bdYHJK6vZiYUo:Georg Steger:georg.steger@rolmail.net:
 jadamcze:acf4uH7RbVseI:Jonathan Adamczewski:jadamcze@utas.edu.au:
 rmt:cbqm.TnecbSvE:Richard Tew:RMT38@student.canterbury.ac.nz:
 teras:bdqhmYMZSoI36:Panagiwths Katsaloulis:teras@writeme.com: 
