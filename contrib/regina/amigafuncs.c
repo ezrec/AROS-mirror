@@ -27,6 +27,9 @@
 #include "envir.h"
 #include <exec/ports.h>
 
+#include <proto/alib.h>
+#include <proto/exec.h>
+
 struct amiga_envir {
   struct envir envir;
   struct MsgPort *port;
@@ -37,9 +40,11 @@ typedef struct _amiga_tsd_t {
   proclevel amilevel;
 #if defined(_AMIGA) || defined(__AROS__)
   struct amiga_envir portenvir;
+  struct Library *rexxsysbase;
 #endif
 } amiga_tsd_t;
 
+#define RexxSysBase (((amiga_tsd_t *)TSD->ami_tsd)->rexxsysbase)
 
 /* Init amiga specific thread data, this function is called during initialisation
  * of the thread specific data
@@ -55,6 +60,9 @@ int init_amigaf ( tsd_t *TSD )
 #if defined(_AMIGA) || defined(__AROS__)
   atsd->portenvir.envir.name = NULL;
   atsd->portenvir.envir.type = ENVIR_AMIGA;
+  atsd->rexxsysbase = OpenLibrary( "rexxsyslib.library", 44 );
+  if ( atsd->rexxsysbase == NULL )
+    return 0;
 #endif
   TSD->ami_tsd = (void *)atsd;
 
@@ -547,7 +555,7 @@ static int firstbit(char c)
 }
 
 /* This ARexx function has very weird usage of the pad byte,
- * the shortest string is padded on the left wiht this byte
+ * the shortest string is padded on the left with this byte
  */
 streng *arexx_bitcomp( tsd_t *TSD, cparamboxptr parm1 )
 {
@@ -656,7 +664,7 @@ streng *arexx_trim( tsd_t *TSD, cparamboxptr parm1 )
   checkparam( parm1, 1, 1, "TRIM" );
 
   parm = *parm1;
-  parm.next = &T_parm;
+  parm.next = (paramboxptr)&T_parm;
   
   return std_strip( TSD, parm1 );
 }
@@ -699,10 +707,9 @@ streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 )
   return retval;
 }
 
+
 #if defined(_AMIGA) || defined(__AROS__)
 
-#include <proto/alib.h>
-#include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/rexxsyslib.h>
 #include <rexx/storage.h>
@@ -733,7 +740,6 @@ struct envir *amiga_find_envir( const tsd_t *TSD, const streng *name )
 
 streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envir, int *rc )
 {
-  struct Library *RexxSysBase;
   struct RexxMsg *msg;
   struct MsgPort *port = ((struct amiga_envir *)envir)->port, *replyport;
   
@@ -747,15 +753,173 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
   replyport = CreatePort( NULL, 0 );
   msg = CreateRexxMsg( port, NULL, NULL );
   msg->rm_Action = RXCOMM;
-  msg->rm_Args[0] = CreateArgstring( command->value, command->len );
+  msg->rm_Args[0] = (IPTR)CreateArgstring( (STRPTR)command->value, command->len );
   fflush(stdout);
   msg->rm_Stdin = Input();
   msg->rm_Stdout = Output();
-  PutMsg(port, msg);
+  PutMsg(port, (struct Message *)msg);
 
   *rc = RXFLAG_OK;
   DeleteRexxMsg( msg );
   CloseLibrary( RexxSysBase );
   return Str_crestrTSD( "Message sent and replied" );
 }
+
+
+/*
+ * Here follows now the support function for ARexx style function hosts and libraries
+ * At the moment also here the validity of an entry in the list will be checked the
+ * first time an unknown function is executed.
+ */
+
+/* When addlib is called with tqo arguments the first argument is considered as a function
+ * host name. When it is called with three or four arguments a function library is assumed
+ */
+streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
+{
+
+  cparamboxptr parm2 = NULL, parm3 = NULL, parm4 = NULL;
+  struct MsgPort *replyport, *rexxport;
+  struct RexxMsg *msg, *retmsg;
+  int pri, offset, version, error, count;
+  char *name;
+  streng *retval;
+  
+  checkparam( parm1, 2, 4, "ADDLIB" );
+  parm2 = parm1->next;
+  pri = streng_to_int( TSD, parm2->value, &error );
+  if (error || abs(pri) > 100 )
+    exiterror( ERR_INCORRECT_CALL, 11, "ADDLIB", 2, tmpstr_of( TSD, parm2->value ) );
+  
+  parm3 = parm2->next;
+  if ( parm3 != NULL && parm3->value != NULL && parm3->value->len == 0 )
+    exiterror( ERR_INCORRECT_CALL, 21, "ADDLIB", 3 );
+  if ( parm3 == NULL || parm3->value == NULL )
+    offset = -30;
+  else
+  {
+    offset = streng_to_int( TSD, parm2->value, &error );
+    if ( error || offset >= 0 )
+      exiterror( ERR_INCORRECT_CALL, 11, "ADDLIB", 3, tmpstr_of( TSD, parm3->value ) );
+  }
+  
+  if ( parm3 != NULL )
+    parm4 = parm3->next;
+  if ( parm4 == NULL || parm4->value == NULL || parm4->value->len == 0 )
+    version = 0;
+  else
+  {
+    version = streng_to_int( TSD, parm4->value, &error );
+    if ( error || version < 0 )
+      exiterror( ERR_INCORRECT_CALL, 13, "ADDLIB", 4, tmpstr_of( TSD, parm2->value ) );
+  }
+
+  name = str_of( TSD, parm1->value );
+  replyport = CreatePort( NULL, 0 );
+  if ( replyport == NULL )
+      exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  msg = CreateRexxMsg( replyport, NULL, NULL );
+  if ( msg == NULL )
+      exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  
+  if (parm3 == NULL || parm3->value == NULL || parm3->value->len == 0)
+  {
+    msg->rm_Action = RXADDFH | RXFF_RESULT;
+    msg->rm_Args[0] = (IPTR)name;
+    msg->rm_Args[1] = (IPTR)pri;
+    count = 2;
+    if ( !FillRexxMsg( msg, 2, 1<<1 ) )
+      exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  }
+  else
+  {
+    msg->rm_Action = RXADDLIB | RXFF_RESULT;
+    msg->rm_Args[0] = (IPTR)name;
+    msg->rm_Args[1] = (IPTR)pri;
+    msg->rm_Args[2] = (IPTR)offset;
+    msg->rm_Args[3] = (IPTR)version;
+    count = 4;
+    if ( !FillRexxMsg( msg, 4, 1<<1 | 1<<2 | 1<<3 ) )
+      exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  }
+
+  rexxport = FindPort( "REXX" );
+  if (rexxport == NULL)
+    exiterror( ERR_EXTERNAL_QUEUE, 0 );
+  PutMsg( rexxport, (struct Message *)msg );
+    
+  do
+  {
+    retmsg = (struct RexxMsg *)WaitPort( replyport );
+  } while( retmsg != msg );
+    
+  Free_TSD( TSD, name );
+  DeletePort( replyport );
+  ClearRexxMsg( msg, count );
+    
+  if ( msg->rm_Result1 != 0 )
+    exiterror( ERR_INCORRECT_CALL, 0 );
+
+  if ( msg->rm_Result2 != NULL )
+  {
+    retval = Str_ncre_TSD( TSD, (const char *)msg->rm_Result2, LengthArgstring( (UBYTE *)msg->rm_Result2 ) );
+    DeleteArgstring( (UBYTE *)msg->rm_Result2 );
+  }
+  else
+    retval = nullstringptr();
+  
+  DeleteRexxMsg( msg );
+  
+  return retval;
+}
+
+streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 )
+{
+  struct MsgPort *replyport, *rexxport;
+  struct RexxMsg *msg, *retmsg;
+  streng *retval;
+  
+  checkparam( parm1, 1, 1, "REMLIB" );
+  
+  replyport = CreatePort( NULL, 0 );
+  if ( replyport == NULL )
+    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  msg = CreateRexxMsg( replyport, NULL, NULL );
+  if ( msg == NULL )
+    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+
+  msg->rm_Action = RXREMLIB | RXFF_RESULT;
+  msg->rm_Args[0] = (IPTR)CreateArgstring( parm1->value->value, parm1->value->len );
+  
+  rexxport = FindPort( "REXX" );
+  if (rexxport == NULL)
+    exiterror( ERR_EXTERNAL_QUEUE, 0 );
+  PutMsg( rexxport, (struct Message *)msg );
+
+  do
+  {
+    retmsg = WaitPort( replyport );
+  } while( retmsg != msg );
+    
+  if ( msg->rm_Result1 != 0)
+      exiterror( ERR_INCORRECT_CALL, 0 );
+  
+  if ( msg->rm_Result2 != NULL )
+  {
+    retval = Str_ncre_TSD( TSD, (const char *)msg->rm_Result2, LengthArgstring( (UBYTE *)msg->rm_Result2 ) );
+    DeleteArgstring( (UBYTE *)msg->rm_Result2 );
+  }
+  else
+    retval = nullstringptr();
+
+  DeleteArgstring( (UBYTE *)msg->rm_Args[0] );
+  DeleteRexxMsg( msg );
+  
+  return retval;
+}
+
+streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char called )
+{
+  return NULL;
+};
 #endif /* _AMIGA || __AROS__ */

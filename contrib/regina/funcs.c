@@ -43,6 +43,9 @@ struct function_type
 static const struct function_type functions[] = {
   { 0,              std_abbrev, "ABBREV" },
   { 0,              std_abs, "ABS" },
+#if defined(_AMIGA) || defined(__AROS__)
+  { 0,              arexx_addlib, "ADDLIB" },
+#endif
   { 0,              std_address, "ADDRESS" },
 #ifdef TRACEMEM
   { 0,              dbg_allocated, "ALLOCATED" },
@@ -189,6 +192,9 @@ static const struct function_type functions[] = {
 #ifdef AREXXIO
   { 0,              arexx_readch, "READCH" },
   { 0,              arexx_readln, "READLN" },
+#endif
+#if defined(_AMIGA) || defined(__AROS__)
+  { 0,              arexx_remlib, "REMLIB" },
 #endif
   { 0,              std_reverse, "REVERSE" },
   { 0,              std_right, "RIGHT" },
@@ -383,6 +389,26 @@ streng *buildtinfunc( tsd_t *TSD, nodeptr this )
    }
    else
    {
+#if defined(_AMIGA) || defined(__AROS__)
+      /* Function was not found: so on amiga/AROS try the function
+       * libraries and hosts
+       */
+      if (TSD->bif_first)
+	 deallocplink( TSD, TSD->bif_first ) ;
+      TSD->bif_first = NULL; /* NEVER delete this! initplist
+			      * may setjmp to the line above
+			      * which results to a twice-called
+			      * deallocplink. FGC
+			      */
+
+      TSD->bif_first = initplist( TSD, this );
+      ptr = try_func_amiga( TSD, this->name, TSD->bif_first, (char) this->called );
+      deallocplink( TSD, TSD->bif_first );
+      
+      if (ptr)
+	 return ptr;
+#endif
+
       if (IfcHaveFunctionExit( TSD )) /* we have an exit handler */
       {
          if (TSD->bif_first)

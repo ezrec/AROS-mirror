@@ -812,6 +812,11 @@
    streng *arexx_trim( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_upper( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 );
+#if defined(_AMIGA) || defined(__AROS__)
+   streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 );
+   streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char called );
+#endif
 
 /*
  ******************************************************************************
