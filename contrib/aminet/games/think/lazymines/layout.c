@@ -8,7 +8,6 @@
 
 #include <exec/types.h>
 #include <graphics/gfxbase.h>
-#include <graphics/view.h>
 #include <proto/graphics.h>
 #include <libraries/gadtools.h>
 #include <intuition/screens.h>
@@ -170,7 +169,8 @@ layout_display (
                  &field_w[3], &field_h[3]);
    
    *rom_font = FALSE;
-   digital_display = TRUE;
+#warning Changed digital_display variable to FALSE!! Otherwise it crashes.
+   digital_display = FALSE; //TRUE; previous value
    for (i = 0; i < 4; ++i)
    {
       cell_space = i & NO_SPACE;

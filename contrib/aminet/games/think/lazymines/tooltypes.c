@@ -48,7 +48,7 @@ read_tooltypes (void)
 {
    struct DiskObject  *disk_obj;
    char  *tool_val;
-   BPTR   old_dir = (BPTR)-1;
+   BPTR   old_dir = -1;
    
    if (NULL != (IconBase = OpenLibrary ("icon.library", 33L)))
    {
@@ -57,49 +57,49 @@ read_tooltypes (void)
       
       if (NULL != (disk_obj = GetDiskObject (prg_name)))
       {
-         if (NULL !=(tool_val = FindToolType ((UBYTE **)disk_obj->do_ToolTypes, "PUBSCREEN")))
+         if (NULL != (tool_val = FindToolType (disk_obj->do_ToolTypes, "PUBSCREEN")))
             strncpy (pubscr_name, tool_val, 128);
-         if (NULL !=(tool_val = FindToolType ((UBYTE **)disk_obj->do_ToolTypes, "LEFT")))
+         if (NULL != (tool_val = FindToolType (disk_obj->do_ToolTypes, "LEFT")))
             win_left = atoi (tool_val);
-         if (NULL != (tool_val = FindToolType ((UBYTE **)disk_obj->do_ToolTypes, "TOP")))
+         if (NULL != (tool_val = FindToolType (disk_obj->do_ToolTypes, "TOP")))
             win_top = atoi (tool_val);
-         if (NULL != (tool_val = FindToolType ((UBYTE **)disk_obj->do_ToolTypes, "LEVEL")))
+         if (NULL != (tool_val = FindToolType (disk_obj->do_ToolTypes, "LEVEL")))
          {
-            if ((TRUE == MatchToolValue ((UBYTE *)tool_val, "Novice")))
+            if (MatchToolValue (tool_val, "Novice"))
                current_level = 1;
-            else if (TRUE == MatchToolValue ((UBYTE *)tool_val, "Amateur"))
+            else if (MatchToolValue (tool_val, "Amateur"))
                current_level = 2;
-            else if (TRUE == MatchToolValue ((UBYTE *)tool_val, "Expert"))
+            else if (MatchToolValue (tool_val, "Expert"))
                current_level = 3;
-            else if (TRUE == MatchToolValue ((UBYTE *)tool_val, "Optional"))
+            else if (MatchToolValue (tool_val, "Optional"))
                current_level = 0;
          }
-         if (NULL != (tool_val = FindToolType ((UBYTE **)disk_obj->do_ToolTypes, "OPTIONALROWS")))
+         if (NULL != (tool_val = FindToolType (disk_obj->do_ToolTypes, "OPTIONALROWS")))
             levels[0].rows = atoi (tool_val);
-         if (NULL != (tool_val = FindToolType ((UBYTE **)disk_obj->do_ToolTypes, "OPTIONALCOLS")))
+         if (NULL != (tool_val = FindToolType (disk_obj->do_ToolTypes, "OPTIONALCOLS")))
             levels[0].columns = atoi (tool_val);
-         if (NULL != (tool_val = FindToolType ((UBYTE **)disk_obj->do_ToolTypes,
+         if (NULL != (tool_val = FindToolType (disk_obj->do_ToolTypes,
                                       "OPTIONALMINES")))
          {
             levels[0].bombs = atoi (tool_val);
          }
-         if (NULL != (tool_val = FindToolType ((UBYTE **)disk_obj->do_ToolTypes, "TASK")))
+         if (NULL != (tool_val = FindToolType (disk_obj->do_ToolTypes, "TASK")))
          {
-            if (TRUE == MatchToolValue ((UBYTE *)tool_val, "All"))
+            if (MatchToolValue (tool_val, "All"))
                chosen_task = 0;
-            else if (TRUE == MatchToolValue ((UBYTE *)tool_val, "Path"))
+            else if (MatchToolValue (tool_val, "Path"))
                chosen_task = 1;
          }
-         if (NULL != (tool_val = FindToolType ((UBYTE **)disk_obj->do_ToolTypes, "AUTOOPEN")))
+         if (NULL != (tool_val = FindToolType (disk_obj->do_ToolTypes, "AUTOOPEN")))
             auto_opening = atoi (tool_val);
-         if (NULL != (tool_val = FindToolType ((UBYTE **)disk_obj->do_ToolTypes, "WARNINGS")))
+         if (NULL != (tool_val = FindToolType (disk_obj->do_ToolTypes, "WARNINGS")))
             place_warnings = TRUE;
-         if (NULL != (tool_val = FindToolType ((UBYTE **)disk_obj->do_ToolTypes, "NOCOLORS")))
+         if (NULL != (tool_val = FindToolType (disk_obj->do_ToolTypes, "NOCOLORS")))
             display_colors = FALSE;
          FreeDiskObject (disk_obj);
       }
       
-      if (old_dir != (BPTR)-1)
+      if (old_dir != -1)
          CurrentDir (old_dir);
       
       CloseLibrary (IconBase);
@@ -114,7 +114,7 @@ save_tooltypes (void)
    char **old_toolarray;
    char  *old_toolval[NUM_TOOLTYPES];
    char   tooltypes[NUM_TOOLTYPES][129];
-   BPTR   old_dir = (BPTR)-1;
+   BPTR   old_dir = -1;
    struct DiskObject  *disk_obj;
    
    if (NULL != (IconBase = OpenLibrary ("icon.library", 33L)))
@@ -128,17 +128,17 @@ save_tooltypes (void)
          while (old_toolarray[n] != NULL)
             ++n;
          
-         old_toolval[0] = FindToolType ((UBYTE **)old_toolarray, "PUBSCREEN");
-         old_toolval[1] = FindToolType ((UBYTE **)old_toolarray, "LEFT");
-         old_toolval[2] = FindToolType ((UBYTE **)old_toolarray, "TOP");
-         old_toolval[3] = FindToolType ((UBYTE **)old_toolarray, "LEVEL");
-         old_toolval[4] = FindToolType ((UBYTE **)old_toolarray, "OPTIONALROWS");
-         old_toolval[5] = FindToolType ((UBYTE **)old_toolarray, "OPTIONALCOLS");
-         old_toolval[6] = FindToolType ((UBYTE **)old_toolarray, "OPTIONALMINES");
-         old_toolval[7] = FindToolType ((UBYTE **)old_toolarray, "TASK");
-         old_toolval[8] = FindToolType ((UBYTE **)old_toolarray, "AUTOOPEN");
-         old_toolval[9] = FindToolType ((UBYTE **)old_toolarray, "WARNINGS");
-         old_toolval[10] = FindToolType ((UBYTE **)old_toolarray, "NOCOLORS");
+         old_toolval[0] = FindToolType (old_toolarray, "PUBSCREEN");
+         old_toolval[1] = FindToolType (old_toolarray, "LEFT");
+         old_toolval[2] = FindToolType (old_toolarray, "TOP");
+         old_toolval[3] = FindToolType (old_toolarray, "LEVEL");
+         old_toolval[4] = FindToolType (old_toolarray, "OPTIONALROWS");
+         old_toolval[5] = FindToolType (old_toolarray, "OPTIONALCOLS");
+         old_toolval[6] = FindToolType (old_toolarray, "OPTIONALMINES");
+         old_toolval[7] = FindToolType (old_toolarray, "TASK");
+         old_toolval[8] = FindToolType (old_toolarray, "AUTOOPEN");
+         old_toolval[9] = FindToolType (old_toolarray, "WARNINGS");
+         old_toolval[10] = FindToolType (old_toolarray, "NOCOLORS");
          for (i = 0; i < NUM_TOOLTYPES; ++i)
          {
             if (old_toolval[i] == NULL)
@@ -313,7 +313,7 @@ save_tooltypes (void)
          FreeDiskObject (disk_obj);
       }
       
-      if (old_dir != (BPTR)-1)
+      if (old_dir != -1)
          CurrentDir (old_dir);
       
       CloseLibrary (IconBase);

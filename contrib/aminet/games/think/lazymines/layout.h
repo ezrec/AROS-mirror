@@ -10,7 +10,7 @@
 #define LAYOUT_H
 
 #include <exec/types.h>
-#include <graphics/view.h>
+
 
 #define NORMAL_SPACE   0
 #define NO_SPACE       1

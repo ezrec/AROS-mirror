@@ -14,22 +14,22 @@
 #include <intuition/intuition.h>
 #include <libraries/locale.h>
 #include <proto/locale.h>
-#include <proto/alib.h>
 
 #include "localize.h"
 
 
 struct Library   *LocaleBase = NULL;
-extern struct Library * GadToolsBase;
 
-static struct LocaleInfo li;
+static struct LocaleInfo   li;
 
-
-STRPTR 
+#if 0
+STRPTR __asm
 GetString (
-   struct LocaleInfo *li,
-   LONG stringNum);
+   register __a0 struct LocaleInfo *li,
+   register __d0 LONG stringNum);
+#endif
 
+extern struct Library * GadToolsBase;
 
 void
 init_locale (
@@ -96,7 +96,7 @@ CreateLocMenus (
       }
    }
    
-   if (NULL !=(menus = CreateMenusA (nm, (struct TagItem *)&tag)))
+   if (NULL != (menus = CreateMenusA (nm, (struct TagItem *)&tag)))
    {
       if (!(LayoutMenus (menus, vis_info,
                          GTMN_NewLookMenus, TRUE,

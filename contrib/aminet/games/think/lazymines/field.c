@@ -560,7 +560,7 @@ field_init (
    field_ptr   field;
    
    
-   if (NULL != (field = AllocVec (sizeof (*field), MEMF_PUBLIC)))
+   if (field = AllocVec (sizeof (*field), MEMF_PUBLIC))
    {
       field->rp = rp;
       field->left = left;
@@ -694,8 +694,25 @@ field_reset (
    
    while (n > 0)
    {
-      r = drand48 () * field->rows;
-      c = drand48 () * field->columns;
+#if 0
+      r = drand48() * field->rows;
+      c = drand48() * field->columns;
+#else
+// Added this to make it work.
+r = ((double)rand() * field->rows)/(RAND_MAX+1.0);
+c = ((double)rand() * field->columns)/(RAND_MAX+1.0);
+
+if (r >= field->rows || c >= field->columns)
+{
+  kprintf("Error!\n");
+  continue;
+}
+
+kprintf("drand48(): %d\n",(int)(drand48() * 1000.0));
+kprintf("n: %d;  IS_MINE(field,r(%d),c(%d)) : %d\n",n,r,c,IS_MINE(field,r,c));   
+#endif
+
+
       if (!(IS_MINE (field, r, c) ||
             (IS_PATH (field, r, c) && chosen_task == SWEEP_PATH)))
       {
@@ -703,7 +720,7 @@ field_reset (
          --n;
       }
    }
-   
+
    for (r = 0; r < field->rows; ++r)
       for (c = 0; c < field->columns; ++c)
          if (!IS_MINE (field, r, c))
@@ -741,7 +758,6 @@ field_reset (
       time_on = TRUE;
       timer_start (timer_obj, 0L, 1000000L);
    }
-   
    return TRUE;
 }
 

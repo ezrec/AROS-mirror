@@ -516,7 +516,7 @@ init_images (
    def_pens[9] = real_pens[9] = (UWORD)~0;
    
    /* Create image objects */
-   if (NULL != (chunkyiclass = init_chunkyiclass ()))
+   if (chunkyiclass = init_chunkyiclass ())
    {
       flag_image = NewObject (chunkyiclass, NULL,
                               IA_Left, LINEWIDTH *
