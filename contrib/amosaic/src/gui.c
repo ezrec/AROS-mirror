@@ -1752,10 +1752,10 @@ void amiga_load_prefs(void)
   Rdata.h4font = "arial/13";
   Rdata.h5font = "arial/11";
   Rdata.h6font = "arial/11";
-  Rdata.fixedfont = "courier/13";
+  Rdata.fixedfont = "ttcourier/13";
   Rdata.addressfont = "arial/13/italic";
-  Rdata.listingfont = "courier/11";
-  Rdata.plainfont = "courier/11";
+  Rdata.listingfont = "ttcourier/11";
+  Rdata.plainfont = "ttcourier/11";
 #endif
   Rdata.home_document = "http://www.omnipresence.com/amosaic/2.0/";
   Rdata.use_global_history = True;
