@@ -1,0 +1,3 @@
+AROS runs on Bochs now, if a bit slow. Georg Steger, who fixed the
+last bugs, added a README.Bochs how to make it work. Right now,
+he's trying to make AROS work with plex86.
