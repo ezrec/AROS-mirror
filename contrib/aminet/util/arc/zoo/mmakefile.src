@@ -1,0 +1,31 @@
+#   $Id$
+#
+#   Makefile to make FileMaster.
+
+include $(TOP)/config/make.cfg
+
+FILES := addbfcrc addfname basename comment crcdefs getfile lzc lzd machine\
+makelist misc misc2 nextfile needed options parse portable prterror version\
+zoo zooadd zooadd2 zoodel zooext zoofilt zoolist zoopack io lzh maketbl\
+maketree huf encode decode
+
+EXEDIR := $(CONTRIBDIR)/aminet
+EXE := $(EXEDIR)/zoo
+
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+
+USER_CFLAGS := -DGENERIC -DNOSIGNAL
+
+#MM aminet-util-arc-zoo : includes linklibs
+
+%make_prog_setup mmake=aminet-util-arc-zoo
+
+aminet-util-arc-zoo : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
