@@ -4,7 +4,6 @@ SRCROOT    = '.'
 DSTROOT    = '../bin/documentation'
 
 TEMPLATE   = 'targets/www/template.html.en'
-STYLESHEET = 'targets/www/aros.css'
 
 # Languages not supported by docutils yet (but that we have files written in):
 # 'no', 'sv'
@@ -41,7 +40,6 @@ if (not os.path.exists( 'credits.en' ) ) \
     )
     file( 'credits.en', 'w' ).write( CREDITS_DATA )
 
-# Helper functions
 
 def extractAbstract( file ):
     result = '' 
@@ -104,6 +102,7 @@ def makePictures():
     for path in DIRECTORIES:
         recurse( processPicture, path ) 
     
+
 def makeStatus():
     dstdir = os.path.join( DSTROOT, 'introduction/status' )
     makedir( dstdir )
@@ -212,6 +211,7 @@ def processWWW( src, depth ):
     else:
         reportSkipping( dst )
 
+
 def processHTML( src, depth ):
     src    = os.path.normpath( src )
 
@@ -243,6 +243,7 @@ def processHTML( src, depth ):
         publisher.publish( argv = arguments )
     else:
         reportSkipping( dst )
+
 
 def buildClean():
     shutil.rmtree( DSTROOT )
@@ -277,21 +278,31 @@ def buildWWW():
     imagepath = os.path.join( DSTROOT, 'images' ) 
     makedir( imagepath )
 
-    copy( os.path.join( SRCROOT, 'images/trustec.png' ), imagepath )
-    copy( os.path.join( SRCROOT, 'images/sourceforge.png' ), imagepath )
-    copy( os.path.join( SRCROOT, 'images/amigados-online-reference-manual.png' ), imagepath )
-    copy( os.path.join( SRCROOT, 'targets/www/images/trustec-small.png' ), imagepath )
-    copy( os.path.join( SRCROOT, 'targets/www/images/bullet.png' ), imagepath )
-    copy( os.path.join( SRCROOT, 'targets/www/images/aros.png' ), imagepath )
-
-    copy( os.path.join( SRCROOT, STYLESHEET ), DSTROOT )
+    copy
+    ( [ \
+        'images/trustec.png',
+        'images/sourceforge.png',
+        'images/amigados-online-reference-manual.png', )
+        'targets/www/images/trustec-small.png',
+        'targets/www/images/bullet.png', 
+        'targets/www/images/aros.png'
+      ], 
+      imagepath 
+    )
+    
+    copy( 'targets/www/aros.css', DSTROOT )
     
     toolpath = os.path.join( DSTROOT, 'tools' )
     makedir( toolpath )
 
-    copy( os.path.join( SRCROOT, 'targets/www/tools/password.html' ), toolpath )
-    copy( os.path.join( SRCROOT, 'targets/www/tools/password.php' ), toolpath )
-    copy( os.path.join( SRCROOT, 'targets/www/tools/redirect.php' ), toolpath )
+    copy 
+    ( [ \
+        'targets/www/tools/password.html',
+        'targets/www/tools/password.php', 
+        'targets/www/tools/redirect.php' 
+      ], 
+      toolpath 
+    )
 
 
 def buildHTML():
@@ -299,7 +310,7 @@ def buildHTML():
 
     recurse( processHTML )
 
-    copy( os.path.join( SRCROOT, 'targets/html/aros.css' ), DSTROOT )
+    copy( 'targets/html/aros.css', DSTROOT )
 
 
 targets = \

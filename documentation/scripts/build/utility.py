@@ -36,8 +36,11 @@ def makedir( path ):
         os.makedirs( path )
 
 def copy( src, dst ):
-    if newer( src, dst ):
-        shutil.copy( src, dst )
+    if not isinstance( src, list ): src = [ src ]
+
+    for path in src:
+        if newer( path, dst ):
+            shutil.copy( path, dst )
 
 def reportSkipping( message ):
     print '\033[1m\033[32m*\033[30m', message, '\033[0m'
