@@ -26,4 +26,9 @@
 #include <clib/alib_protos.h>
 #endif
 
+#ifdef _AROS
+#define DEBUG 1
+#include <aros/debug.h>
+#endif
+
 #endif /* WB_COMMON_H */

@@ -7,6 +7,6 @@ extern ULONG AboutCount;
 
 /*** Global prototypes *******************************************************/
 
-extern SAVEDS VOID AboutTask( void );
+extern void AboutTask( void );
 
 #endif /* WB_ABOUT_H */
