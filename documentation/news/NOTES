@@ -23,63 +23,72 @@ relevant; those who are really relevant are marked by login between square
 brackets ("[]").
 
 - Let's roll (antichronological order, add things on top, not bottom) :
--------------------------------------------------------------------------------
 
-200304??: STATUS UPDATE [???] =================================================
+------------------------------------------------------------------------------
+
+200304??: STATUS UPDATE [???] ================================================
 
 200304??:
  <next day here>
 
 20030412:
- * PNG datatype in contrib [stegerg]
+
++ PNG datatype in contrib [stegerg]
 
 20030411:
- * LBreakout2 ported, a nice breakout-style game [falemagn]
- * French catalog translations for many programs [olivieradam]
- * Parts of an ARM port (not complete, no promises) [bergers]
- * def_Tool and def_Project icons [reez]
+
++ LBreakout2 ported, a nice breakout-style game [falemagn]
++ French catalog translations for many programs [olivieradam]
++ Parts of an ARM port (not complete, no promises) [bergers]
++ def_Tool and def_Project icons [reez]
  
 20030410:
- * Matthew Parsons contacted Genesi and asked if they would be interested in
-   sponsoring a Pegasos board to get AROS ported to it, and they accepted!
-   After some discussion on the ML and hard thinking on Johan Grip's part,
-   he decided to accept the offer and try his outmost to port AROS to the 
-   Pegasos. All agree that he's the best suited for this task...   
+
++ Matthew Parsons contacted Genesi and asked if they would be interested in
+  sponsoring a Pegasos board to get AROS ported to it, and they accepted!
+  After some discussion on the ML and hard thinking on Johan Grip's part,
+  he decided to accept the offer and try his outmost to port AROS to the 
+  Pegasos. All agree that he's the best suited for this task...   
  
 20030409:
- * Nice striped patterns [dlc]
- * Bitmap preview in Zune imageadjust [dlc]
- * Work progressing on moving several modules to the main tree from contrib
-   (libjpeg, jpeg.datatype, janoeditor, grub) [chodorowski]
- * Another contrib program ported: MUImine [bergers]
+ 
++ Nice striped patterns [dlc]
++ Bitmap preview in Zune imageadjust [dlc]
++ Work progressing on moving several modules to the main tree from contrib
+  (libjpeg, jpeg.datatype, janoeditor, grub) [chodorowski]
++ Another contrib program ported: MUImine [bergers]
 
 20030408:
- * Heated discussion on the ML about which UI style to adopt, regarding prefs
-   buttons: Test/Revert/Save/Use/Cancel ?
- * Some more work on m68k-pp-native [bergers]
- * Test button works in Zune prefs [dlc]
+
++ Heated discussion on the ML about which UI style to adopt, regarding prefs
+  buttons: Test/Revert/Save/Use/Cancel ?
++ Some more work on m68k-pp-native [bergers]
++ Test button works in Zune prefs [dlc]
 
 20030405:
- * Nice improvements on Zune flickering-on-resize issue [stegerg,sebauer]
- * XSHM was mistakenly always disabled in hosted [stegerg]
- * render.library was already ported, though endianess not worked out [stegerg]
- * Diskfont MorphOS sync [verhaegs]
- * Preliminary, unworking, usb/uhci driver [sheutlin]
+
++ Nice improvements on Zune flickering-on-resize issue [stegerg,sebauer]
++ XSHM was mistakenly always disabled in hosted [stegerg]
++ render.library was already ported, though endianess not worked out [stegerg]
++ Diskfont MorphOS sync [verhaegs]
++ Preliminary, unworking, usb/uhci driver [sheutlin]
 
 20030404:
- * Very positive response from render.library/guigfx author. [dlc]
- * Positive response from FlexCat author: license is GNU GPL. [chodorowski]
+
++ Very positive response from render.library/guigfx author. [dlc]
++ Positive response from FlexCat author: license is GNU GPL. [chodorowski]
  
 20030403:
- * thinking about moving at least Regina, Freetype, jpeg.datatype
-   and JanoEditor into the main tree [chodorowski]
- * thinking about porting render.library and guigfx.library to AROS and use it
-   in Zune, picture.datatype and other places. Author contacted. [dlc]
- * contacted FlexCat authors about licensing issue [chodorowski]
+
++ thinking about moving at least Regina, Freetype, jpeg.datatype
+  and JanoEditor into the main tree [chodorowski]
++ thinking about porting render.library and guigfx.library to AROS and use it
+  in Zune, picture.datatype and other places. Author contacted. [dlc]
++ contacted FlexCat authors about licensing issue [chodorowski]
  
 20030402:
- * jpeg.datatype in contrib (but nobody noticed :) [gierich]
++ jpeg.datatype in contrib (but nobody noticed :) [gierich]
 
-20030402: STATUS UPDATE [falemagn] ============================================
+20030402: STATUS UPDATE [falemagn] ===========================================
 
--- End of file ----------------------------------------------------------------
+-- End of file ---------------------------------------------------------------
