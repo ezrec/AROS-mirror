@@ -46,7 +46,7 @@ aminet -d contrib/aminet contrib/aminet
 bgui -d contrib/bgui contrib/bgui
 
 # README of contrib
-contrib_README -d contrib -a contrib/README
+contrib_README -d contrib contrib/README
 
 # Self-contained version of crypt(3)
 crypt -d contrib/tools/crypt contrib/tools/crypt
