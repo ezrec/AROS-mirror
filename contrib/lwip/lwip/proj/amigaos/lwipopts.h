@@ -184,5 +184,6 @@ a lot of data that needs to be copied, this should be set high. */
 #define ntohs(x) (x)
 
 #include <stdlib.h> /* for abort() */
+#include <string.h>
 
 #endif /* __LWIPOPTS_H__ */

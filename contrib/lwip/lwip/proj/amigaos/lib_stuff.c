@@ -1,5 +1,7 @@
 #include <string.h>
 
+#include <exec/types.h>
+#include <exec/libraries.h>
 #include <proto/exec.h>
 
 #include "globaldata.h"
@@ -14,7 +16,18 @@
 struct ThreadData *Thread_Alloc(void);
 void Thread_Free(struct ThreadData *data);
 
+#ifdef __AROS
+
+AROS_UFH4(struct SocketBase_intern *,LIB_init,
+        AROS_LHA(struct SocketBase_intern *, SocketBase, D0),
+        AROS_LHA(ULONG, seglist, A0),
+        AROS_LHA(long, len, D1),
+	AROS_LHA(struct ExecBase *, sysbase, A6))
+
+
+#else
 __asm struct SocketBase_intern *LIB_init(register __d0 struct SocketBase_intern *SocketBase, register __a0 ULONG seglist, register __a6 struct ExecBase *sysbase)
+#endif
 {
     SocketBase->sysbase = sysbase;
     SocketBase->library.lib_Node.ln_Type = NT_LIBRARY;
@@ -38,7 +51,12 @@ __asm struct SocketBase_intern *LIB_init(register __d0 struct SocketBase_intern 
     return SocketBase;
 }
 
+#ifndef _AROS
 __asm struct SocketBase_intern *LIB_open(register __a6 struct SocketBase_intern *SocketBase)
+#else
+AROS_UFH1(struct SocketBase_intern *, LIB_open,
+        AROS_LHA(struct SocketBase_intern *, SocketBase, A6))
+#endif
 {
     void *newlib;
     struct SocketBase_intern *orgbase = SocketBase->orgbase;
@@ -80,7 +98,12 @@ __asm struct SocketBase_intern *LIB_open(register __a6 struct SocketBase_intern 
     return SocketBase; /* return library base */
 }
 
+#ifndef __AROS
 __asm ULONG LIB_expunge(register __a6 struct SocketBase_intern *SocketBase)
+#else
+AROS_UFH1(ULONG,LIB_expunge,
+        AROS_LHA(struct SocketBase_intern *, SocketBase, A6))
+#endif
 {
     long size;
 
@@ -106,8 +129,12 @@ __asm ULONG LIB_expunge(register __a6 struct SocketBase_intern *SocketBase)
     return NULL;
 }
 
-
+#ifndef __AROS
 __asm ULONG LIB_close(register __a6 struct SocketBase_intern *SocketBase)
+#else
+AROS_UFH1(ULONG,LIB_close,
+        AROS_LHA(struct SocketBase_intern *, SocketBase, D0))
+#endif
 {
     ULONG ret = NULL;
 

@@ -6,26 +6,26 @@ IPVXINCLUDE = $(SRCDIR)/include/ipv4
 
 COREOBJS = $(SRCDIR)/core/inet $(SRCDIR)/core/mem $(SRCDIR)/core/memp\
 $(SRCDIR)/core/netif $(SRCDIR)/core/pbuf $(SRCDIR)/core/stats\
-$(SRCDIR)/core/sys $(SRCDIR)/core/tcp $(SRCDIR)/core/tcp_input\
-$(SRCDIR)/core/tcp_output $(SRCDIR)/core/udp $(SRCDIR)/core/raw\
+$(SRCDIR)/core/sys $(SRCDIR)/core/tcp $(SRCDIR)/core/tcp_in\
+$(SRCDIR)/core/tcp_out $(SRCDIR)/core/udp \
 $(SRCDIR)/core/ipv4/icmp $(SRCDIR)/core/ipv4/ip\
-$(SRCDIR)/core/ipv4/ip_addr 
+$(SRCDIR)/core/ipv4/ip_addr $(SRCDIR)/core/ipv4/ip_frag 
 
 
 ARCHOBJS = $(SRCDIR)/arch/amigaos/sys_arch $(SRCDIR)/arch/amigaos/lib_arch\
-$(SRCDIR)/arch/amigaos/netif/sioslipif
+$(SRCDIR)/arch/amigaos/netif/sio $(SRCDIR)/arch/amigaos/netif/tcpdump
 
-NETIFOBJS = $(SRCDIR)/netif/loopif $(SRCDIR)/netif/tcpdump\
-$(SRCDIR)/netif/arp
+NETIFOBJS = $(SRCDIR)/netif/loopif $(SRCDIR)/netif/slipif
 
 APIOBJS = $(SRCDIR)/api/api_lib $(SRCDIR)/api/api_msg\
 $(SRCDIR)/api/err $(SRCDIR)/api/sockets $(SRCDIR)/api/tcpip\
 
-LIBOBJS = calling lib_accept lib_bind lib_connect lib_getpeername\
+LIBOBJS = calling globaldata lib_accept lib_bind lib_connect lib_getpeername\
 lib_getsockname lib_getsockopt lib_ioctlsocket lib_listen\
 lib_recv lib_recvfrom lib_send lib_sendto lib_setsockopt\
 lib_shutdown lib_closesocket lib_socket lib_stuff\
-lib_waitselect lib_setsocketsignals lib_socketbasetaglist
+lib_waitselect lib_setsocketsignals lib_socketbasetaglist\
+localdata
 
 FLAGS = -specs=/home/cvs/AROS/bin/linux-i386/gen/config/specs
 FILES = $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) $(LIBOBJS) test
@@ -38,12 +38,13 @@ EXE    := $(EXEDIR)/lwip
 
 USE_CLIB := yes
 USE_MLIB := yes
+USE_AMIGALIB := yes
 
-USER_CFLAGS := -O2 -I$(SRCDIR)/include -I$(ARCHINCLUDE) -I$(IPVXINCLUDE) -I./
+USER_CFLAGS := -O2 -I$(SRCDIR)/include -I$(ARCHINCLUDE) -I$(IPVXINCLUDE) -I./ -I./include
 
-#MM- contrib-lwip-lwip-proj-amigaos : lwip
-#MM- contrib-lwip-lwip-proj-amigaos : testserver
-#MM- contrib-lwip-lwip-proj-amigaos : testclient
+#MM- contrib-lwip : lwip
+#MM- contrib-lwip : testserver
+#MM- contrib-lwip : testclient
 
 #MM
 lwip : setup $(EXE)

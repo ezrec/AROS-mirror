@@ -14,9 +14,9 @@
 #include "debug.h"
 
 /* temporary */
-#ifndef _AROS
+//#ifndef _AROS
 typedef int fd_set;
-#endif
+//#endif
 /*****************************************************************************
 
     NAME */
