@@ -30,9 +30,6 @@ localdata
 #FLAGS = -specs=/home/cvs/AROS/bin/linux-i386/gen/config/specs
 FILES = $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) $(LIBOBJS) test
 
-OBJS1 = ./testserver.c
-OBJS2 = ./testclient.c
-
 EXEDIR := $(CONTRIBDIR)/lwip
 EXE    := $(EXEDIR)/lwip
 
@@ -43,25 +40,23 @@ USE_AMIGALIB := yes
 USER_CFLAGS := -O2 -I$(SRCDIR)/include -I$(ARCHINCLUDE) -I$(IPVXINCLUDE) -I./ -I./include
 
 #MM- contrib-lwip : lwip
-#MM- contrib-lwip : testserver
-#MM- contrib-lwip : testclient
+#MM- contrib-lwip : contrib-lwip-tests
+#MM contrib-lwip-tests : includes linklibs
 
 #MM
 lwip : setup $(EXE)
 
-#MM 
-testserver : $(OBJS1)
-	%compile_q
-#MM
-testclient :$(OBJS2)
-	%compile_q
-
-$(OBJDIR)/%.o: %.S
-	%compile_q opt=$(USER_CFLAGS)
-
 %make_prog_setup mmake=lwip
-%make_prog_setup mmake=testserver
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+FILES := testserver testclient ping
+EXES := $(foreach f,$(FILES), $(AROS_C)/$(f))
+
+%make_prog_setup mmake=contrib-lwip-tests
+
+contrib-lwip-tests : setup $(EXES)
+
+%make_prog_single dir=$(AROS_C)
 
 %common
 %include_deps
