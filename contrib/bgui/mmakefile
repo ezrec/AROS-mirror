@@ -62,7 +62,7 @@ INCLUDE_FILES = \
 	$(INCLUDES_DIR)/libraries/bgui_layoutgroup.h \
 	$(INCLUDES_DIR)/bgui/bgui_prefs.h
 
-#MM contrib-bgui : contrib-bgui-setup linklib-bgui bgui-prefs
+#MM contrib-bgui : contrib-bgui-setup linklib-bgui bgui-prefs bgui-gadgets-common
 contrib-bgui : bgui-library bgui-gadgets bgui-test bgui-examples
 
 #MM contrib-bgui-setup : setup includes linklibs bgui-setup bgui-includes-copy
@@ -71,7 +71,7 @@ contrib-bgui-setup : bgui-setup bgui-includes-copy
 #MM bgui-test
 bgui-test : test
 
-#MM bgui-gadgets
+#MM bgui-gadgets : bgui-gadgets-common
 bgui-gadgets : gadgets
 
 #MM bgui-examples
@@ -104,7 +104,6 @@ compile_examples :
 	$(MAKE) -Cexamples -fMakefile.aros all
 
 gadget_directories = \
-gadgets/common \
 gadgets/PopButton \
 gadgets/Palette \
 gadgets/TreeView \
@@ -143,7 +142,6 @@ clean:
 	$(RM) -rf $(INCLUDE_FILES) o/*.o o/*.err
 	$(MAKE) -C test -f Makefile.aros clean
 	$(MAKE) -C examples -f Makefile.aros clean
-	$(MAKE) -C gadgets/common -f Makefile.aros clean
 	$(MAKE) -C gadgets/PopButton -f Makefile.aros clean
 	$(MAKE) -C gadgets/Palette -f Makefile.aros clean
 	$(MAKE) -C gadgets/TreeView -f Makefile.aros clean
