@@ -40,6 +40,11 @@ static char rcsid =
 #include "SDL_cgxwm_c.h"
 #include "SDL_cgxmodes_c.h"
 
+#ifdef AROS
+#include "SDL_cgximage_c.h"
+#include <stdlib.h>
+#endif
+
 #define CGX_DEBUG
 
 static void set_best_resolution(_THIS, int width, int height)
