@@ -19,9 +19,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 
 
 
-#ifdef _AMIGA
-#include <proto/utility.h>
-#include <dos.h>
+#ifdef AMIGA
+#   include <proto/utility.h>
+#   ifdef __AMIGAOS__
+#       include <dos.h>
+#   else
+#       include <dos/dos.h>
+#   endif
 #endif
 
 #include <stdio.h>
@@ -59,7 +63,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 
 int Mul32Div64_000(const int a,const int b,const int c){
 
-#ifdef _AMIGA
+#ifdef __AMIGAOS__
 	unsigned long l32=UMult64((unsigned long)abs(a),(unsigned long)abs(b));
 	unsigned long m32=getreg(REG_D1);
 #else
@@ -78,7 +82,7 @@ int Mul32Div64_000(const int a,const int b,const int c){
 
 	uc=(unsigned long)abs(c);
 
-#ifdef _AMIGA
+#ifdef __AMIGAOS__
 	result=UDivMod32(1<<31,uc);
 	modulo=getreg(REG_D1);
 #else
@@ -96,7 +100,7 @@ int Mul32Div64_000(const int a,const int b,const int c){
 		result*=m32;
 	}
 
-#ifdef _AMIGA
+#ifdef __AMIGAOS__
 	m32=UDivMod32(m32*modulo,uc);
 	modulo=getreg(REG_D1);
 

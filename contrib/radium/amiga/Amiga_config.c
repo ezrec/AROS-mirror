@@ -171,7 +171,7 @@ bool ReadAmigaConfig(bool conf){
 
 	time(&tid);
 
-#ifdef _AMIGA
+#ifdef __AMIGAOS__
 	Tm=gmtime(&tid);
 
 	screenname=malloc(strlen("RADIUM. Started: ")+strlen(asctime(Tm))+10);
@@ -184,7 +184,7 @@ bool ReadAmigaConfig(bool conf){
 #endif
 
 
-#ifdef _AMIGA
+#ifdef __AMIGAOS__
 	if(getasn("radium")==NULL){
 	  fprintf(stderr,"Device 'Radium:' not found. Please assign Radium first.\n");
 	  return false;

@@ -3,7 +3,7 @@
 
 int Mul32Div64_000(const int a,const int b,const int c);
 
-#ifdef _AMIGA
+#ifdef __AMIGAOS__
 extern int __asm Mul32Div64_020(
 	register __d0 int a,
 	register __d1 int b,

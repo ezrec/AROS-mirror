@@ -895,7 +895,7 @@ extern void GC_thr_init();	/* Needed for Solaris/X86	*/
     GC_API void GC_win32_free_heap ();
 #endif
 
-#if ( defined(_AMIGA) && !defined(GC_AMIGA_MAKINGLIB) )
+#if defined(__AMIGAOS__) && !defined(GC_AMIGA_MAKINGLIB)
   /* Allocation really goes through GC_amiga_allocwrapper_do */
 # include "gc_amiga_redirects.h"
 #endif

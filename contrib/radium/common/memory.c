@@ -77,7 +77,7 @@ size_t allocated=0;
 void *tracker_alloc_clean(size_t size,void *(*AllocFunction)(size_t size2)){
 
 #ifndef MEMORY_DEBUG
-#	ifdef _AMIGA
+#	ifdef __AMIGAOS__
 		return (*GC_amiga_allocwrapper_do)(size,AllocFunction);
 #	else
 		return (*AllocFunction)(size);
@@ -93,7 +93,7 @@ void *tracker_alloc(size_t size,void *(*AllocFunction)(size_t size2)){
 	allocated+=size;
 
 #ifndef MEMORY_DEBUG
-#	ifdef _AMIGA
+#	ifdef __AMIGAOS__
 		return (*GC_amiga_allocwrapper_do)(size,AllocFunction);
 #	else
 		return (*AllocFunction)(size);

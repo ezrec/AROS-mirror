@@ -104,7 +104,7 @@ void SetColor(struct RastPort *rp,int color){
 
 
 UWORD
-#ifdef _AMIGA
+#ifdef __AMIGAOS__
 __chip
 #endif
 ResizePointer[50]={
@@ -489,7 +489,7 @@ void GFX_C_DrawCursor(
 	SetDrMd(window->os_visual->CRPort,COMPLEMENT);
 	SetWrMsk(window->os_visual->CRPort,3);
 
-#ifdef _AMIGA
+#ifdef __AMIGAOS__
 	SetColor(window->os_visual->CRPort,2);
 	RectFill(window->os_visual->CRPort,(LONG)x1,0L,(LONG)x2,(LONG)height-1);
 	SetColor(window->os_visual->CRPort,2);

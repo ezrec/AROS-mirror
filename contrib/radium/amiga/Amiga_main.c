@@ -81,7 +81,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 struct ReqToolsBase *ReqToolsBase=NULL;
 
 #ifndef USEMINICAMD
-#  ifdef _AMIGA
+#  ifdef __AMIGAOS__
 #    include <midi/camdbase.h>
 #  endif
 	struct Library *CamdBase=NULL;
@@ -164,7 +164,7 @@ int main(int argc,char **argv){
 		return 0;
 	}
 
-#ifdef _AMIGA
+#ifdef __AMIGAOS__
 	if(stacksize()<32000){
 		fprintf(stderr,"Stack-size: %d\n",stacksize());
 		fprintf(stderr,"Sorry, you should have at least 32000 bytes of stackspace to run this program.\n");
