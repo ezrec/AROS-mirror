@@ -2,6 +2,10 @@
 #include <proto/graphics.h>
 #include <proto/exec.h>
 
+#ifdef _AROS
+#include <aros/asmcall.h>
+#endif
+
 #define MADMATRIX_TAILLE_MAX 6
 
 /* I know this is ugly ( random values...) */
@@ -38,7 +42,7 @@ struct Madmatrix_Data
 #ifndef _AROS
 __asm ULONG Madmatrix_Dispatcher(register __a0 struct IClass *cl, register __a2 Object *obj, register __a1 Msg msg);
 #else
-AROS_UFH3S(IPTR, Madmatrix_Dispatcher,
+AROS_UFH3(IPTR, Madmatrix_Dispatcher,
 	AROS_UFHA(Class  *, cl,  A0),
 	AROS_UFHA(Object *, obj, A2),
 	AROS_UFHA(Msg     , msg, A1));

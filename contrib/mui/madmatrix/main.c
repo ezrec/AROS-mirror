@@ -8,6 +8,7 @@
 
 #ifdef _AROS
 #include <proto/muimaster.h>
+extern struct Library *MUIMasterBase;
 #endif
 
 
