@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: sys.h,v 1.1 2001/12/12 10:01:00 adam Exp $
+ * $Id: sys.h,v 1.1.1.1 2002/05/27 00:41:15 henrik Exp $
  */
 #ifndef __LWIP_SYS_H__
 #define __LWIP_SYS_H__

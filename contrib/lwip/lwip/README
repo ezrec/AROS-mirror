@@ -1,4 +1,4 @@
-$Id: README,v 1.1 2001/12/12 10:00:52 adam Exp $
+$Id: README,v 1.1.1.1 2002/05/27 00:41:09 henrik Exp $
 
 lwIP is a small independent implementation of the TCP/IP protocol
 suite that has been developed by Adam Dunkels at the Computer and

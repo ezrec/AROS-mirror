@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: tcpdump.c,v 1.2 2001/12/14 20:13:50 adam Exp $
+ * $Id: tcpdump.c,v 1.1.1.1 2002/05/27 00:41:13 henrik Exp $
  */
 
 #include <stdio.h>

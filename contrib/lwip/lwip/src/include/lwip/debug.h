@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: debug.h,v 1.4 2001/12/14 20:13:49 adam Exp $
+ * $Id: debug.h,v 1.1.1.1 2002/05/27 00:41:14 henrik Exp $
  */
 #ifndef __LWIP_DEBUG_H__
 #define __LWIP_DEBUG_H__

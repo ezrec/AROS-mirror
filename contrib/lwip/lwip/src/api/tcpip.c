@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: tcpip.c,v 1.1 2001/12/12 10:00:55 adam Exp $
+ * $Id: tcpip.c,v 1.1.1.1 2002/05/27 00:41:12 henrik Exp $
  */
 
 #include "lwip/debug.h"

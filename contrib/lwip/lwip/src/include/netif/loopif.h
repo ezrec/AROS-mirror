@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: loopif.h,v 1.1 2001/12/12 10:01:01 adam Exp $
+ * $Id: loopif.h,v 1.1.1.1 2002/05/27 00:41:13 henrik Exp $
  */
 #ifndef __NETIF_LOOPIF_H__
 #define __NETIF_LOOPIF_H__

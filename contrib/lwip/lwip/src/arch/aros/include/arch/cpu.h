@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: cpu.h,v 1.1 2001/12/12 10:00:57 adam Exp $
+ * $Id: cpu.h,v 1.1.1.1 2002/05/27 00:41:10 henrik Exp $
  */
 #ifndef __ARCH_CPU_H__
 #define __ARCH_CPU_H__

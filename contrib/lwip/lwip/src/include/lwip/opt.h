@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: opt.h,v 1.1 2001/12/12 10:01:00 adam Exp $
+ * $Id: opt.h,v 1.1.1.1 2002/05/27 00:41:14 henrik Exp $
  */
 #ifndef __LWIP_OPT_H__
 #define __LWIP_OPT_H__

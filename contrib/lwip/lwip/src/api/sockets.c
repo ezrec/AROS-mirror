@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: sockets.c,v 1.2 2001/12/13 08:32:17 adam Exp $
+ * $Id: sockets.c,v 1.1.1.1 2002/05/27 00:41:12 henrik Exp $
  */
 
 #include "lwip/debug.h"

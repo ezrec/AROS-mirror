@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: api_msg.c,v 1.2 2002/01/02 17:35:41 adam Exp $
+ * $Id: api_msg.c,v 1.1.1.1 2002/05/27 00:41:12 henrik Exp $
  */
 
 #include "lwip/debug.h"

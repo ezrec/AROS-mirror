@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: ethernetif.c,v 1.3 2002/01/02 17:36:20 adam Exp $
+ * $Id: ethernetif.c,v 1.1.1.1 2002/05/27 00:41:13 henrik Exp $
  */
 
 /*

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: ip.c,v 1.3 2001/12/14 20:13:47 adam Exp $
+ * $Id: ip.c,v 1.1 2002/05/27 01:20:03 henrik Exp $
  */
 
 

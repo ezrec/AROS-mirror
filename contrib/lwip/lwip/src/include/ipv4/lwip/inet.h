@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: inet.h,v 1.2 2001/12/12 18:08:59 adam Exp $
+ * $Id: inet.h,v 1.1.1.1 2002/05/27 00:41:17 henrik Exp $
  */
 #ifndef __LWIP_INET_H__
 #define __LWIP_INET_H__

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: tcp.h,v 1.1 2001/12/12 10:01:01 adam Exp $
+ * $Id: tcp.h,v 1.1.1.1 2002/05/27 00:41:16 henrik Exp $
  */
 #ifndef __LWIP_TCP_H__
 #define __LWIP_TCP_H__

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: loopif.c,v 1.1 2001/12/12 10:01:01 adam Exp $
+ * $Id: loopif.c,v 1.1.1.1 2002/05/27 00:41:13 henrik Exp $
  */
 #include "lwip/debug.h"
 #include "lwip/mem.h"

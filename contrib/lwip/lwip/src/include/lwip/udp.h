@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: udp.h,v 1.2 2001/12/13 20:45:39 adam Exp $
+ * $Id: udp.h,v 1.1.1.1 2002/05/27 00:41:16 henrik Exp $
  */
 #ifndef __LWIP_UDP_H__
 #define __LWIP_UDP_H__

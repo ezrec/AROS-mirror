@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: api_lib.c,v 1.4 2001/12/14 20:13:42 adam Exp $
+ * $Id: api_lib.c,v 1.1.1.1 2002/05/27 00:41:11 henrik Exp $
  */
 
 /* This is the part of the API that is linked with

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: err.h,v 1.2 2001/12/14 20:13:49 adam Exp $
+ * $Id: err.h,v 1.1.1.1 2002/05/27 00:41:14 henrik Exp $
  */
 #ifndef __LWIP_ERR_H__
 #define __LWIP_ERR_H__

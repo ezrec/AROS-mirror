@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: ip.h,v 1.2 2001/12/14 20:13:48 adam Exp $
+ * $Id: ip.h,v 1.1.1.1 2002/05/27 00:41:17 henrik Exp $
  */
 #ifndef __LWIP_IP_H__
 #define __LWIP_IP_H__

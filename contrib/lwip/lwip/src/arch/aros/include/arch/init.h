@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: init.h,v 1.1 2001/12/12 10:00:57 adam Exp $
+ * $Id: init.h,v 1.1.1.1 2002/05/27 00:41:10 henrik Exp $
  */
 #ifndef __ARCH_INIT_H__
 #define __ARCH_INIT_H__
