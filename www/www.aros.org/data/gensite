@@ -201,7 +201,7 @@ def processLinks (links):
 		t = Text (link.text)
 	    text.append (t)
 	if link.logo:
-	    text.append (Image ((link.logo, 0,0)))
+	    text.append (Image ((link.logo)))
 
 	list.append (text)
 	
@@ -220,7 +220,11 @@ def genLinks ():
 
 	body.append (Name (title))
 	body.append (Heading (2, title))
-	list = processLinks (links)
+	try:
+	    list = processLinks (links)
+	except:
+	    print 'processSection',title
+	    raise
 	body.append (list)
 
 	return body
