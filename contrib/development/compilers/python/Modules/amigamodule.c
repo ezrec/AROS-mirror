@@ -85,6 +85,7 @@ static __inline int dup2(int oldsd, int newsd) { return s_dup2(oldsd, newsd); }
 #include <unistd.h>
 
 #define __aligned 
+extern int IoErr2errno( int );
 #define __io2errno(x) x // FIXME: This is probably very, very wrong...
 static int _OSERR;  // FIXME: What's this for, really?
 #endif
@@ -201,52 +202,57 @@ static PyObject * amiga_error_with_filename(char *name)
 /* AMIGA generic methods */
 
 static PyObject *
-amiga_1str(PyObject *args, int (*func)(const char *))
+amiga_1str( PyObject *args, int (*func)(const char *) )
 {
-	char *path1;
-	int res;
-	if (!PyArg_Parse(args, "s", &path1))
-		return NULL;
-	Py_BEGIN_ALLOW_THREADS
-	res = (*func)(path1);
-	Py_END_ALLOW_THREADS
-	if (res < 0)
-		return amiga_error_with_filename(path1);
-	Py_INCREF(Py_None);
-	return Py_None;
+    char *path1;
+    int res;
+    
+    if( !PyArg_ParseTuple( args, "s", &path1 ) ) return NULL;
+    
+    Py_BEGIN_ALLOW_THREADS
+    res = (*func)(path1);
+    Py_END_ALLOW_THREADS
+    if (res < 0)
+    	return amiga_error_with_filename(path1);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 static PyObject *
-amiga_2str(PyObject *args, int (*func)(const char *, const char *))
+amiga_2str( PyObject *args, int (*func)(const char *, const char *) )
 {
-	char *path1, *path2;
-	int res;
-	if (!PyArg_Parse(args, "(ss)", &path1, &path2))
-		return NULL;
-	Py_BEGIN_ALLOW_THREADS
-	res = (*func)(path1, path2);
-	Py_END_ALLOW_THREADS
-	if (res < 0)
-		return amiga_error();
-	Py_INCREF(Py_None);
-	return Py_None;
+    char *path1, *path2;
+    int res;
+    
+    if( !PyArg_ParseTuple( args, "(ss)", &path1, &path2 ) ) return NULL;
+
+    Py_BEGIN_ALLOW_THREADS
+    res = (*func)(path1, path2);
+    Py_END_ALLOW_THREADS
+    if (res < 0)
+    	return amiga_error();
+    
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 static PyObject *
 amiga_strint(PyObject *args, int (*func)(const char *, int))
 {
-	char *path;
-	int i;
-	int res;
-	if (!PyArg_Parse(args, "(si)", &path, &i))
-		return NULL;
-	Py_BEGIN_ALLOW_THREADS
-	res = (*func)(path, i);
-	Py_END_ALLOW_THREADS
-	if (res < 0)
-		return amiga_error_with_filename(path);
-	Py_INCREF(Py_None);
-	return Py_None;
+    char *path;
+    int i;
+    int res;
+    if( !PyArg_ParseTuple( args, "(si)", &path, &i ) ) return NULL;
+
+    Py_BEGIN_ALLOW_THREADS
+    res = (*func)(path, i);
+    Py_END_ALLOW_THREADS
+    if (res < 0)
+    	return amiga_error_with_filename(path);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 static PyObject *
@@ -1096,126 +1102,127 @@ amiga_crc32(PyObject *self, PyObject *args)
 
 static struct PyMethodDef amiga_methods[] = {
 #ifndef AROS
-	{"chdir",   amiga_chdir},
+    { "chdir",   amiga_chdir, METH_VARARGS },
 #endif
-	{"chmod",   amiga_chmod},
+    { "chmod",   amiga_chmod, METH_VARARGS },
 #ifdef HAVE_CHOWN
-	{"chown",   amiga_chown},
+    { "chown",   amiga_chown, METH_VARARGS },
 #endif
 #ifdef HAVE_GETCWD
-	{"getcwd",  amiga_getcwd},
+    { "getcwd",  amiga_getcwd},
 #endif
-	{"fullpath", amiga_fullpath,1},
+    { "fullpath", amiga_fullpath, METH_VARARGS },
 #ifdef HAVE_LINK
-	{"link",    amiga_link},
+    { "link",    amiga_link, METH_VARARGS },
 #endif
-	{"listdir", amiga_listdir},
-	{"lstat",   amiga_lstat},
-	{"mkdir",   amiga_mkdir , 1},
+    { "listdir", amiga_listdir},
+    { "lstat",   amiga_lstat},
+    { "mkdir",   amiga_mkdir , METH_VARARGS },
 #ifdef HAVE_READLINK
-	{"readlink",    amiga_readlink},
+    { "readlink",    amiga_readlink},
 #endif
-	{"rename",  amiga_rename},
-	{"rmdir",   amiga_rmdir},
-	{"stat",    amiga_stat},
+    { "rename",  amiga_rename, METH_VARARGS },
+    { "rmdir",   amiga_rmdir,  METH_VARARGS },
+    { "stat",    amiga_stat},
 #ifdef HAVE_SYMLINK
-	{"symlink", amiga_symlink},
+    { "symlink", amiga_symlink, METH_VARARGS },
 #endif
 #ifdef HAVE_SYSTEM
-	{"system",  amiga_system},
+    { "system",  amiga_system},
 #endif
 #if defined(AMITCP) || defined(INET225)
-	{"umask",   amiga_umask},
+    { "umask",   amiga_umask},
 #endif
 #ifdef HAVE_UNAME
-	{"uname",   amiga_uname},
+    { "uname",   amiga_uname},
 #endif
-	{"unlink",  amiga_unlink},
-	{"remove",  amiga_unlink},
+    { "unlink",  amiga_unlink, METH_VARARGS },
+    { "remove",  amiga_unlink, METH_VARARGS },
 #if defined(AMITCP) || defined(INET225)
-	{"utime",   amiga_utime},
+    { "utime",   amiga_utime},
 #endif
 #ifdef HAVE_TIMES
-	{"times",   amiga_times},
+    { "times",   amiga_times},
 #endif
 #ifdef HAVE_EXECV
-	{"execv",	amiga_execv},
-	{"execve",	amiga_execve},
+    { "execv",	amiga_execv},
+    { "execve",	amiga_execve},
 #endif /* HAVE_EXECV */
 #ifdef HAVE_GETEGID
-	{"getegid", amiga_getegid},
+    { "getegid", amiga_getegid},
 #endif
 #ifdef HAVE_GETEUID
-	{"geteuid", amiga_geteuid},
+    { "geteuid", amiga_geteuid},
 #endif
 #ifdef HAVE_GETGID
-	{"getgid",  amiga_getgid},
+    { "getgid",  amiga_getgid},
 #endif
-	{"getpid",  amiga_getpid},
+    { "getpid",  amiga_getpid},
 #ifdef HAVE_GETPGRP
-	{"getpgrp", amiga_getpgrp},
+    { "getpgrp", amiga_getpgrp},
 #endif
 #ifdef HAVE_GETPPID
-	{"getppid", amiga_getppid},
+    { "getppid", amiga_getppid},
 #endif
 #ifdef HAVE_GETUID
-	{"getuid",  amiga_getuid},
+    { "getuid",  amiga_getuid},
 #endif
 #ifdef HAVE_POPEN
-	{"popen",   amiga_popen,    1},
+    { "popen",   amiga_popen, METG_VARARGS},
 #endif
 #ifdef HAVE_SETUID
-	{"setuid",  amiga_setuid},
+    { "setuid",  amiga_setuid},
 #endif
 #ifdef HAVE_SETGID
-	{"setgid",  amiga_setgid},
+    { "setgid",  amiga_setgid},
 #endif
 #ifdef HAVE_SETPGRP
-	{"setpgrp", amiga_setpgrp},
+    { "setpgrp", amiga_setpgrp},
 #endif
 #ifdef HAVE_SETSID
-	{"setsid",  amiga_setsid},
+    { "setsid",  amiga_setsid},
 #endif
 #ifdef HAVE_SETPGID
-	{"setpgid", amiga_setpgid},
+    { "setpgid", amiga_setpgid},
 #endif
 #ifdef HAVE_TCGETPGRP
-	{"tcgetpgrp",   amiga_tcgetpgrp},
+    { "tcgetpgrp",   amiga_tcgetpgrp},
 #endif
 #ifdef HAVE_TCSETPGRP
-	{"tcsetpgrp",   amiga_tcsetpgrp},
+    { "tcsetpgrp",   amiga_tcsetpgrp},
 #endif
-	{"open",    amiga_open},
-	{"close",   amiga_close},
+    { "open",    amiga_open},
+    { "close",   amiga_close},
 #if defined(AMITCP) || defined(INET225)
-	{"dup",     amiga_dup},
-	{"dup2",    amiga_dup2},
+    { "dup",     amiga_dup},
+    { "dup2",    amiga_dup2},
 #endif
-	{"lseek",   amiga_lseek},
-	{"read",    amiga_read},
-	{"write",   amiga_write},
-	{"fstat",   amiga_fstat},
-	{"fdopen",  amiga_fdopen,   1},
+    { "lseek",   amiga_lseek},
+    { "read",    amiga_read},
+    { "write",   amiga_write},
+    { "fstat",   amiga_fstat},
+    { "fdopen",  amiga_fdopen,   1},
 #ifdef HAVE_MKFIFO
-	{"mkfifo",	amiga_mkfifo, 1},
+    { "mkfifo",	amiga_mkfifo, 1},
 #endif
 #ifdef HAVE_FTRUNCATE
-	{"ftruncate",	amiga_ftruncate, METH_VARARGS},
+    { "ftruncate",	amiga_ftruncate, METH_VARARGS },
 #endif
 #ifdef HAVE_PUTENV
-	{"putenv", amiga_putenv, 1},
+    { "putenv",         amiga_putenv,    METH_VARARGS },
 #endif
 #ifdef HAVE_STRERROR
-	{"strerror",	amiga_strerror, 1},
+    { "strerror",	amiga_strerror,  METH_VARARGS },
 #endif
 #if 0
-	/* XXX TODO: implement threads. Otherwise pipe() is useless. */
-	{"pipe",    amiga_pipe},
+    /* XXX TODO: implement threads. Otherwise pipe() is useless. */
+    {"pipe",    amiga_pipe },
 #endif
 #ifndef AROS
-	{"crc32",	amiga_crc32, 1},
+    {"crc32",	amiga_crc32, METH_VARARGS },
 #endif
-	{NULL,      NULL}        /* Sentinel */
+
+    {NULL,      NULL}
 };
 
 
