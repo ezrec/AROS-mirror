@@ -1,0 +1,1218 @@
+2000-11-17  Carlo Wood  <carlo@ansset>
+
+	* Makefile.am: Add new (and a few old, forgotten) files to the tar.
+
+	* acconfig.h, args.c, backup.c, backup.h, comments.c, globs.c, globs.h, indent.c, indent.h, io.c, lexi.c, parse.c, sys.h, texinfo2man.c, wildexp.c:
+	Ran indent through indent, using -gnu -nhnl -l120.
+	Updated copyright info.
+
+	* wildexp.c: Removed the carriage returns.
+
+	* configure.in, NEWS: Bumped version number to 2.2.6.
+
+	* regression/standard/bug-npsl.c, regression/standard/bug-psl.c, regression/bug-npsl.c, regression/TEST, indent.c, comments.c:
+	Date: Thu, 16 Nov 2000 10:28:34 +0100
+	From: Robert Laufer <rlaufer1@lucent.com>
+
+	I get a memory fault for the attached file foobar.c, if i execute the
+	command indent -st --dont-break-procedure-type foobar.c
+	If i write void bar (void) the error does not occur. Also the identing
+	does not work correct for comments between the procedure declaration
+	and the opening bracket, see procedure foo. This does only happen with
+	the option --dont-break-procedure-type.
+
+	* comments.c: Date: Wed, 15 Nov 2000 23:12:24 -0800 (PST)
+	From: Michael Deutschmann <michael@talamasca.ocis.net>
+
+	BTW, I have one other problem to report.  This one I've actually known
+	about for awhile, but hadn't thought to report it as the workaround is
+	easy:
+
+	int
+	main (int argc, char **argv)
+	{
+	  /* The mostly-blank line following:
+	   *
+	   * Can cause trouble with indent if -sc is not used.
+	   */
+	  return 0;
+	}
+
+
+	If "indent -sc" is used, this file is not changed.  But indent without
+	"-sc" removes the star on the blank line.  Worse, if indent -sc is used on
+	the damaged file, the star is restored but then extra stars are added to
+	the remaining lines. (So a cycle of "indent foo.c; indent -sc foo.c;
+	indent foo.c; indent -sc foo.c" and on does progressively worse damage to
+	the file.
+
+	---
+
+	Actually, it only removed a star on a blank line when it was the second
+	line of the comment (this line is used to determine if something is a
+	block comment or not). --Carlo
+
+	* NEWS: Add note that nested functions are a GNU extension.
+
+	* indent.c:
+	Give force_nl the meaning it really has.  Then actually force a newline
+	when it is set at the last place where we didn't.  This fixes the bug
+	that under certain cicumstances a line wasn't broken where it should.
+
+2000-11-16  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/bbreak.c, regression/standard/brackets33.c, regression/standard/brackets34.c, regression/standard/no-newline.c, io.c, indent.c:
+	This fixes an old bug, reported by <igorlord@alum.mit.edu> at the
+	beginning of 2000.  Possible break points were skipped under
+	circumstances that did dependant on where a line was broken, resulting
+	in an alternating output (after subsequent runs of indent).
+	This was a hard one to find :/
+
+	* args.c, indent.c, indent.h, indent.texinfo, NEWS:
+	Added new option --break-function-decl-args (-bfda).
+	Initial patch provided by Robert Lipe <robertl@sco.com>.
+
+	* indent.c, NEWS: Date: Wed, 22 Mar 2000 16:00:18 -0500 (EST)
+	From: Jim Rogers <jimrogers@writeme.com>
+
+	I don't expect the -di option to apply to function declartions when -npsl is
+	used. for example, if -npsl and -di16 is used:
+
+	void            main()
+	{
+	}
+
+	--
+
+	I think he is right and I changed this behaviour.  However, it does not
+	work for nested functions: those are still indented.
+
+2000-11-15  Carlo Wood  <carlo@ansset>
+
+	* args.c: Date: Wed, 12 Apr 2000 15:07:58 +0200
+	From: "Borkhuis, Johan" <Johan.Borkhuis@peektraffic.nl>
+
+	The defaults are read from the struct pro. For boolean types there are 2
+	entries in this table, the positive and the negative (with an n in front).
+	One of the items in the struct is p_special. This items is used to indicate
+	if a the value of a boolean should be inserted as a default or not. But this
+	does not work. The code as it is now (in the current 2.2.5 release) in the
+	function set_defaults:
+
+	  for (p = pro; p->p_name; p++)
+	    if (p->p_type == PRO_BOOL || p->p_type == PRO_INT)
+	      *p->p_obj = p->p_default;
+
+	To get this to work the code should be changed to:
+
+	  for (p = pro; p->p_name; p++)
+	    if ((p->p_type == PRO_BOOL) && (p->p_special == ON) || p->p_type == PRO_INT)
+	      *p->p_obj = p->p_default;
+
+	Here a check if p_special is set to ON is inserted to check if this value
+	may be used as a default.
+
+	* args.c, indent.c, indent.h, indent.texinfo, NEWS:
+	New options to suppress spaces after if, for and while respectively.
+
+	* regression/standard/nested.c, regression/nested.c, regression/TEST, indent.c, NEWS:
+	Fixed indentation of nested function.  Bug report by Michael Deutsch.
+
+	* regression/standard/unknown-type.c, regression/standard/unknown-type-npsl.c, regression/TEST, regression/unknown-type.c, indent.c, lexi.c:
+	Treat return types of functions correctly even when they are not
+	explicitely given with the -T option.
+
+	* regression/standard/bad-comment.c, regression/bad-comment.c, regression/TEST, comments.c, NEWS:
+	Don't add blank lines after declarations when we're in the middle of
+	a C-style comment that continues on the next line.  Reported by David Hui.
+
+2000-11-12  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/dont-line-up-parentheses.c, regression/dont-line-up-parentheses.c:
+	Fixed the -nlp bug (finally).
+
+	* regression/TEST, io.c, NEWS: Fixed the -nlp bug (finally)
+
+2000-11-10  Carlo Wood  <carlo@ansset>
+
+	* indent.c, indent.dsp, Makefile.mingw32, wildexp.c:
+	Wild card expansion for win32 by "John Bridges" <jbridges@netcom.com>
+
+	* indent.c:
+	Stop indent from core dumping on C++ code (it still won't indent correctly).
+
+2000-11-08  Carlo Wood  <carlo@ansset>
+
+	* backup.c, config.h.vc++.in, configure.in, indent.c, Makefile.mingw32, sys.h:
+	Support for mingw32 by Sudhi Herle <sherle@sta.samsung.com>
+
+2000-10-10  Carlo Wood  <carlo@ansset>
+
+	* lexi.c, NEWS:
+	Eat backslashes of backslash-newline when occuring outside a macro
+	definition or literal string.  Bug report by Alex Cherepanov:
+	Indent cannot handle trailing '\' outside of the macro
+	or string. Don't ask me why some programs use it there.
+
+2000-10-06  Carlo Wood  <carlo@ansset>
+
+	* args.c, args.h, indent.c, io.c:
+	Set the max. comment column to the max. code column if no -lc option
+	was given.  Fixes a compiler warning in io.c.
+	Patch by John Bridges" <jbridges@netcom.com>
+
+	* lexi.c:
+	Move a piece of example code outside a table, otherwise indent gets
+	confused (when running it on itself).
+
+2000-09-11  Carlo Wood  <carlo@ansset>
+
+	* NEWS: Update.
+
+	* indent.c:
+	Fix a type that caused types inside sizeof() as to be treated declarations.
+	Bug reported by Daniel Diaz.
+
+	* regression/standard/boxed.c-3, regression/standard/boxed.c-4, regression/standard/boxed.c-5, regression/standard/boxed.c-6, regression/standard/continue.c:
+	Spaces in comments are now collapsed when using -fca.
+
+	* comments.c:
+	Bug fix: do NOT collapse spaces in comments unless actually formatting them!
+
+	* comments.c:
+	Don't eat spaces that follow a '.'.  <-- Like those (allow two spaces).
+
+2000-09-09  Carlo Wood  <carlo@ansset>
+
+	* comments.c:
+	Ok... collapse all adjacent spaces in comments into one when formatting
+	comments.
+
+	* comments.c: Bug fix for previous change.
+
+2000-09-08  Carlo Wood  <carlo@ansset>
+
+	* comments.c: bug fix for previous change
+
+	* comments.c, NEWS:
+	Bug fixes for -fca, reported by John C. Oppenheimer.
+
+2000-07-17  Carlo Wood  <carlo@ansset>
+
+	* args.c, indent.texinfo, NEWS:
+	Renamed --blank-lines-after-block-comments to --blank-lines-before-block-comments.
+
+2000-07-06  Carlo Wood  <carlo@ansset>
+
+	* args.c, indent.c, indent.h, indent.texinfo, NEWS:
+	New option --cuddle-do-while.  Sorry, I forgot who wrote this patch...
+
+	* texinfo2man.c: A @* always means 'break line'.
+
+2000-05-30  Carlo Wood  <carlo@ansset>
+
+	* maintMakefile.in, Makefile.am:
+	Needed for upgrade to new version of texi2html 1.62.
+
+2000-05-05  Carlo Wood  <carlo@ansset>
+
+	* indent.lsm.in: Mangle email address a bit, anti spam bots.
+
+2000-04-19  Carlo Wood  <carlo@ansset>
+
+	* texinfo2man.c:
+	Added @email{} and fix for not recognizing @commands at the beginning
+	of a line if they are also allowed in the middle of a line.
+
+2000-04-02  Carlo Wood  <carlo@ansset>
+
+	* args.c, indent.h, indent.texinfo, io.c, NEWS:
+	New options -ut and -nut (--use-tabs, --no-tabs).
+
+	Fixed a few bugs and added documentation for these options, starting
+	of with a patch from Sean Cavanaugh.
+
+	From: "Sean Cavanaugh" <sean@dimensionalrift.com>
+	To: <indent@alinoe.com>
+	Subject: indent 2.2.5 patch
+	Date: Sat, 1 Apr 2000 15:31:21 -0800
+
+	I recently pulled down indent 2.2.5 and was surprised to find it didn't have
+	an option to convert tabs to spaces.  I've added a command line switch
+	'-no-tabs' or '-nt' which lets you alter the default behavior.
+	It is a pretty simple change, and handy for those of us who hate tabs :)
+
+	- Sean
+
+2000-03-23  Carlo Wood  <carlo@ansset>
+
+	* comments.c, NEWS: Fixed -dN again (bug report by Marc Herbert)
+
+2000-03-03  Carlo Wood  <carlo@ansset>
+
+	* aclocal/UTIMBUF.m4, configure.in, Makefile.am:
+	NeXT seems to need -posix for struct utimbuf
+
+	* indent.c, lexi.c: Compiler warning bug fix for 64-bit machines.
+
+2000-03-01  Carlo Wood  <carlo@ansset>
+
+	* lexi.c: Date: Sat, 19 Feb 2000 10:30:17 -0700 (MST)
+	From: "Nelson H. F. Beebe" <beebe@math.utah.edu>
+	Subject: indent-2.2.5: a bug, and some compiler warnings
+	To: indent@alinoe.com
+
+	indent-2.2.5 and earlier incorrectly converts
+
+	        int x = 2LU;
+
+	to
+	        int n = 2L U;
+
+	causing subsequent compilation failures.  Curiously, the equivalent
+	form 2UL is handled correctly.  However, Section 3.1.3.2 of ANSI
+	X3.159-1989 clearly permits either order of the modifier letters.
+
+	* regression/standard/bad-break.c, regression/standard/bap-break.c, regression/bad-break.c, regression/bap-break.c, regression/TEST:
+	Ack -- this was a test for -bad, not -bap.
+
+	* regression/standard/bap-break.c, regression/bap-break.c, regression/TEST, io.c, NEWS:
+	Fixed a bug reported by David Hull <hull@paracel.com>.
+
+2000-02-25  Carlo Wood  <carlo@ansset>
+
+	* io.c: From: "Sayre, Alan N" <Alan.N.Sayre@mcdermott.com>
+	Subject: indent mods
+	Date: Tue, 25 Jan 2000 07:36:00 -0600
+
+	...
+	I believe that the tests originated in MSDOS living in a 16-bit world.
+	Ints are now 32-bit. (The code ran fine with this conditional
+	removed). A more portable check would be to test the sizeof ints.
+	...
+
+	* backup.c, configure.in: Date: Fri, 17 Dec 1999 17:52:32 -0500 (EST)
+	From: Pavel Roskin <pavel_roskin@geocities.com>
+	Subject: Yet two patches
+	To: indent@runaway.xs4all.nl
+
+	Hello!
+
+	Since I'm hacking GNU Indent anyway...
+
+	1) Using low-level I/O for backup files is not justified, decreases
+	portability (especially create() and 0666) and may affect execution speed
+	(since it's not buffered).
+	backup.diff fixes it.
+
+	2) Since GNU Indent has good chances to be portable across all platforms
+	(especially after the above fix), it is a good idea to use AC_EXEEXT and
+	AC_OBJEXT. Those macros are not very robust now, but they still simplify
+	the life on DOS-derived OS'es.
+	configure.diff adds them.
+
+	Best wishes,
+	Pavel Roskin
+
+	* regression/standard/bbreak.c, regression/bbreak.c, regression/TEST, indent.c, io.c, NEWS:
+	Bug fix per suggestion by Igor Lyubashevskiy
+
+	* comments.c:
+	Bug reported by Wayne Green (-npls switch and c++ style comments)
+
+2000-02-14  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/cdb.c, regression/standard/cplus.c-9: Fix for cdb
+
+	* regression/cdb.c, regression/TEST:
+	Produce ERROR when standard/$i.c doesn't exist
+	Fix for cdb
+
+	* comments.c: Date: Wed, 9 Feb 2000 17:55:55 -0600
+	From: Robert Lipe <robertl@sco.com>
+	Subject: patch for --cdb
+	To: indent@alinoe.com
+
+	Here is a patch to "fix" -cdb.   According to comments.c
+
+	   `comment_delimiter_on_blankline' ("cdb"):  If set, place the comment
+	       delimiters on lines by themselves.  This only affects comments
+	       which are not to the right of code.
+
+	Unfortunately, the code doesn't seem to successfully take the presence
+	or absence of preceeding code into account.
+	$ cat /tmp/x.c
+	int foo; /* This is a single line comment */
+	/* this is a column zero real single line comment */
+	   /* this is elgible for cdb.  */
+	$  ./indent -st -cdb /tmp/x.c
+	int foo;                        /*
+	                                   This is a single line comment
+	                                 */
+	/* this is a column zero real single line comment */
+	   /*
+	      this is elgible for cdb.
+	    */
+
+
+	With this patch installed, it returns:
+
+	$  ./indent -st -cdb /tmp/x.c
+	int foo;                        /* This is a single line comment */
+	/* this is a column zero real single line comment */
+	   /*
+	      this is elgible for cdb.
+	    */
+
+	Though this specific example might look silly, it's very useful for
+	cases where you're closing up a chain of loops and have
+
+	                                        } /* loop of l */
+	                                } /* loop of k */
+	                        } /* loop of j */
+	                } /* loop of i */
+
+	* indent.c, io.c, lexi.h, parse.c:
+	Hm, the DEBUG code should probably be removed, but until then: I fixed it.
+
+2000-01-16  Carlo Wood  <carlo@ansset>
+
+	* NEWS: Updated release date of 2.2.5
+
+	* rpm/macros, README.in: Update of E-mail address
+
+	* regression/standard/method.c, regression/method.c:
+	Test case for bug reported by Pavel Roskin.
+
+	* regression/TEST, io.c: Date: Thu, 16 Dec 1999 10:43:45 -0500 (EST)
+	From: Pavel Roskin <pavel_roskin@geocities.com>
+	Subject: Strange declaration alignment in C++
+
+	...
+	I have noticed that indent formats variable declarations quite differently
+	in C functions and C++ methods. If the function name doesn't contain two
+	colons, the variable names are placed on the same line and their types.
+	...
+
+	int
+	qs ()
+	{
+	  int i;
+	}
+
+	int
+	q::s ()
+	{
+	  int
+	    i;
+	}
+
+	Date: Fri, 17 Dec 1999 12:33:34 -0500 (EST)
+	From: Pavel Roskin <pavel_roskin@geocities.com>
+	Subject: Strange declaration alignment in C++ - solved!
+
+	The attached patch fixes the problem with variables in C++ methods.
+	dumpline() used to compare "s_code_corresponds_to" with
+	"parser_state_tos->procname"
+
+1999-12-31  Carlo Wood  <carlo@ansset>
+
+	* NEWS: Updated NEWS for last two patches.
+
+	* regression/standard/comment-break.c, regression/comment-break.c, regression/TEST, indent.c:
+	Don't join procedure declaration lines that ends on a '('
+	when followed by a comment when --dont-break-procedure-type is used.
+	Ie: int func( //    became  int func( // char* c)
+	      char* c)              { }
+	    { }
+
+	* config.h.vms.in, io.c, make-decc.com, Makefile.am, README.VMS, sys.h:
+	Date: Mon, 29 Nov 1999 09:43:01 -0600
+	From: forrest.cahoon@merrillcorp.com
+	Support for VMS/DECC.
+
+	* Makefile.am, README.in:
+	Oops, had forgotten to add README.VMS to the tar ball.
+
+1999-12-18  Carlo Wood  <carlo@ansset>
+
+	* indent.lsm.in: Fixed format of .lsm and E-mail address.
+
+1999-11-17  Carlo Wood  <carlo@ansset>
+
+	* io.c: Date: Tue, 16 Nov 1999 22:59:44 -0000
+	From: "ALAN BORER" <alan_borer@lineone.net>
+
+	Because I am now using DJGPP to compile the code, I now get a 32 bit DPMI
+	protected executable which is capable of processing files exceeding 64kByte.
+	Would you please consider incorporating in file IO.C the following patch :-
+	    replace each of two instances of    "#ifdef __MSDOS__"    with
+	    "#if defined (__MSDOS__) && ! defined (__DJGPP__)".
+
+	Regards
+	    Alan Borer.
+
+1999-11-12  Carlo Wood  <carlo@ansset>
+
+	* io.c:
+	Prefer to break before __attribute__ over after a comma (which might
+	be one paren level deeper even).
+
+	* args.c, NEWS, parse.c: Accept negative values for indent options.
+
+	* regression/standard/case-br.c, regression/standard/case.c, regression/standard/scope-br.c, regression/standard/scope.c, regression/case.c, regression/scope.c, regression/TEST:
+	Added regression tests for the last two -br related bugs.
+
+	* parse.c, NEWS: Date: Thu, 11 Nov 1999 00:23:59 -0000
+	From: "ALAN BORER" <alan_borer@lineone.net>
+	Subject: Indent Bug
+
+	The code subject to a "case :" is indented relative to the case label UNLESS
+	the option "-br" is asserted, in which case the code is indented relative to
+	the "switch " instruction.
+	I show below a screen dump illustrating this :-
+
+	C:\t>indent t.c -st -npro -cli8
+	switch (x)
+	  {
+	          case 1:
+	            ++x;
+	            break;
+	  }
+
+	C:\t>indent t.c -st -npro -cli8 -br
+	switch (x) {
+	        case 1:
+	  ++x;
+	  break;
+	}
+
+	* indent.texinfo: Documentation correction for -br option.
+
+	* indent.c:
+	Allow non-ANSI `switch(i) { /*...*/ default: }' (no statement after last
+	case label).
+
+1999-11-09  Carlo Wood  <carlo@ansset>
+
+	* indent.h, indent.texinfo, args.c, indent.c, NEWS:
+	New option --space-after-parentheses (-prs) by Emil LAURENTIU
+	<emil@la.mine.nu>. Bug fixes in args.c and documentation update by me.
+
+	* configure.in, Makefile.am: Bumped version number to 2.2.5
+	Corrected or in which aclocal, autoheader, autoconf and automake need to
+	be called.
+
+1999-11-04  Carlo Wood  <carlo@ansset>
+
+	* NEWS: O well, lets release it.
+
+	* io.c:
+	Bug fix: When the s_code buffer needed to be realloc-ed, bufbreak `ptr'
+	were pointing into cyber space.  Now using an offset relative to the
+	start of the buffer for the break points.
+
+	* NEWS: Update of NEWS
+
+	* backup.c, indent.texinfo: Date: Sun, 24 Oct 1999 23:03:30 -0400
+	From: "Chris F.A. Johnson" <bq933@torfree.net>
+	Subject: "GNU indent"
+
+	I have made a modification (included as the output of "diff -c" which
+	allows zero padding of numbered backup suffixes, controled by an
+	environment variable, VERSION_WIDTH.
+
+	If the variable is set to a positive integer, that width will be used to
+	zero-pad the backup suffix, e.g. if VERSION_WIDTH=2 the suffix would be
+	~01~ instead of ~1~.
+
+	This improves alphabetical listing (with ls or a file requestor) when
+	there are more than 10 backup versions. It may sound like overkill, but
+	I have my text editor set to create a numbered backup with every save,
+	and often there are more than 10 (even 20 or 30).
+
+	--
+
+	two bug fixes and update of documentation by Carlo Wood
+
+1999-10-30  Carlo Wood  <carlo@ansset>
+
+	* configure.in: Bumped version number to 2.2.4
+
+	* regression/standard/no-newline2.c, indent.c:
+	Ignore requests for (extra) blank lines prior to #else, #elif and #endif.
+
+1999-10-29  Carlo Wood  <carlo@ansset>
+
+	* indent.texinfo, NEWS, texinfo2man.c:
+	Date: Wed, 27 Oct 1999 18:16:38 -0400 (EDT)
+	From: Kragen Sittler <sittler@day.erim-int.com>
+	To: carlo@runaway.xs4all.nl
+	Subject: update for 'info' texinfo file
+
+	This patch updates the info file in a number of ways:
+	- corrects incorrect indentation in one example (TeX doesn't like <tab>
+	  in @example);
+	- corrects incorrect spellings of words;
+	- corrects some usages of words and punctuation that I think might be
+	  incorrect; some of the punctuation corrections may actually be
+	  incorrect.
+	- changes (c) to @copyright{};
+	- uses more specific markup, including the new Texinfo 4.0 markup:
+	  @file, @option, @command, @env, etc., in preference to @samp and
+	  @code, where applicable;
+	- changes spacing and page breaks to be a little more readable in the
+	  printed version -- IMHO; you may disagree;
+	- modification of dashes -- one en dash became an em dash, and another
+	  became a hyphen;
+	- modification of quotes in a couple of places;
+	- corrected minor factual errors probably due to typos;
+	- added a couple of things to the index;
+	- added markup in a couple of places where it seemed to be missing;
+	- tried and failed to fix the "cross-key"'s formatting.
+
+1999-10-26  Carlo Wood  <carlo@ansset>
+
+	* comments.c, indent.c, parse.c:
+	Removed a few compiler warnings (mostly unused variables) reported to me
+	by Nelson H. F. Beebe.
+
+	* regression/standard/embedded-cuddle1.c, indent.c, NEWS:
+	Fixed bug causing --braces-on-if-line not to put a '{' brace on the same
+	line as a '}' automatically on the next line.  Bug reported by David Luyer.
+
+1999-10-19  Carlo Wood  <carlo@ansset>
+
+	* NEWS: Update
+
+1999-10-11  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/elif.c, regression/elif.c, regression/TEST, indent.c:
+	Treat #elif correctly. Thanks to Stuart Kemp for the bug report.
+
+1999-10-10  Carlo Wood  <carlo@ansset>
+
+	* indent.c:
+	indent didn't recognize "# else" and "# endif" for what they are due
+	to the space(s). Thanks to Stuart Kemp for the bug report.
+
+1999-10-01  Carlo Wood  <carlo@ansset>
+
+	* NEWS: Update for release of 2.2.3
+
+1999-09-30  Carlo Wood  <carlo@ansset>
+
+	* Makefile.am: Argh. Forgot to add indent.dsp to the tar.
+
+	* configure.in: Bumped version number to 2.2.3
+
+	* NEWS: Updated NEWS
+
+	* indent.c, indent-cc.gperf, indent.gperf, Makefile.am:
+	Fixed bit fields - the "support" for public:/private:/protected: broke
+	bits fields when another type then `int' was used.  Thanks to Simon Munton
+	for the bug report!
+	Also fixed public:/private:/protected: labels really now.
+
+1999-09-28  Carlo Wood  <carlo@ansset>
+
+	* NEWS: Updated
+
+	* io.c, parse.c:
+	Fixed a problem when indenting multiple files: the second and subsequent
+	files specified on the command line had a blank line inserted at the top
+	of the file when the previous file ended on a function definition.
+	Thanks to Simon Munton for reporting this.
+
+	* config.h.vc++.in, .cvsignore, indent.dsp, maintMakefile.in, Makefile.am, README.vc++.in:
+	Added support for win32 - by Ben Bourner.
+
+	* configure.in: Bumped version to 2.2.2
+
+	* README.VMS, VMS-README: Renamed VMS-README to README.VMS
+
+1999-09-25  Carlo Wood  <carlo@ansset>
+
+	* .cvsignore, maintMakefile.in: Got rid of .release_day
+
+	* NEWS: Update
+
+1999-09-09  Carlo Wood  <carlo@ansset>
+
+	* indent.texinfo:
+	Added comment in section Bugs about /*UPPERCASE*/ and joining lines.
+
+1999-09-06  Carlo Wood  <carlo@ansset>
+
+	* indent.texinfo: xref{} suddenly needs to be followed by a '.' or ','.
+
+1999-09-03  Carlo Wood  <carlo@ansset>
+
+	* indent.c, lexi.c:
+	The '(' in constructs like char a[(1)] = { ... }; caused block_init not
+	to be set.
+
+1999-08-27  Carlo Wood  <carlo@ansset>
+
+	* lexi.c, sys.h, NEWS:
+	EBCDIC charset support for BS2000/POSIX (Siemens mainframe OS).
+	Contributed by <Martin.Kraemer@MchP.Siemens.De>.
+
+	* .cvsignore: Forgot to add gperf-cc.c here.
+
+	* args.c, indent.c, indent-cc.gperf, io.c, lexi.c, Makefile.am, NEWS:
+	From: malekith@ikar.mps.com.pl
+	Date: Thu, 26 Aug 1999 15:06:10 +0200 (CEST)
+	To: indent@runaway.xs4all.nl
+	Subject: Additional C++ support in indent (diff)
+
+	What have I done?
+
+	1. I removed -c++ arg check from indent.c, since it didn't work anyway (try)
+	and put into args.c. I think you put it in indent.c because you wanted
+	different set of options for C++, an I right? But for now ...
+
+	2. In io.c I changed compute_label_target() func. Now if in_decl and
+	c_plus_plus it returns one indent level back for labels, e.g.
+	[...deleted...  this is still broken --Carlo ]
+
+	3. I've added second set of keywords and hash func. This is in lexi.c.
+	Lack of ``try'' keyword is intended. It caused errors (nested stmts or
+	something). I couldn't handle this.
+
+	4. Added recognizing GNU C++ >? and <? operators (and not documented >?= and
+	<?=). It won't harm anyone since in normal C++ there can't be such
+	combination of characters.
+
+	5. I don't know why, but if colon is in_decl it is treated strange way.
+	If c_plus_plus is set I changed this to handle ``public:'' and so on.
+
+	Note from Carlo Wood:
+
+	That is because in declarations you can have:
+
+	  int foo:4;
+
+	etc. In order to distinguish this from 'public:' etc, I am now
+	testing for the 'i' (of the 'int') before treating the colon special.
+
+1999-08-25  Carlo Wood  <carlo@ansset>
+
+	* io.c:
+	Bug report by Darius Powell: When the parser sees a left brace it clears
+	the procedure name out but not the classname ...
+
+1999-08-07  Carlo Wood  <carlo@ansset>
+
+	* args.c, backup.c, backup.h, configure.in, indent.c, indent.h, indent.texinfo, io.c, io.h, NEWS, sys.h:
+	New option --preserve-mtime: Preserve modification times on output files.
+	Preserve modification times on backup files.  Thanks to Ian P. Springer
+	for the idea.
+
+1999-08-05  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/enum.c, regression/enum.c, lexi.c, NEWS:
+	enum bug also occurs with enum as function parameter.  Again, thanks
+	to Simon Munton for the report.
+
+1999-08-04  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/enum.c, regression/enum.c, regression/TEST, lexi.c, NEWS:
+	Function returning enum bug fix.  Thanks to Simon Munton for the report.
+
+	* configure.in, globs.c: Don't include malloc.h if we don't have it.
+
+1999-07-29  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/embedded-cuddle1.c, regression/standard/embedded-cuddle2.c, regression/standard/no-newline2.c, regression/embedded-cuddle1.c, regression/embedded-cuddle2.c, indent.c:
+	Make -bap work again.  Reported by Andy Cowling.
+
+	* configure.in, maintMakefile.in: Bumped version number to 2.2.1
+
+	* regression/standard/macro.c, regression/macro.c, regression/TEST:
+	New test
+
+	* parse.c:
+	Fixes a bug reported by George Kiewicz: struct X x = { M(int) };
+
+	* args.c:
+	Static is already zero. These zeros aren't even initialisation values anyway.
+
+1999-07-24  Carlo Wood  <carlo@ansset>
+
+	* NEWS: Updated
+
+1999-07-22  Carlo Wood  <carlo@ansset>
+
+	* indent.c:
+	Don't put a space after the "gettext" macro's '_' and 'N_', thanks to
+	Akim Demaille for reporting this.
+
+	* io.c, io.h, indent.c:
+	Don't indent a broken line to the ind_dec column.
+
+	* io.c, io.h, Makefile.am: More bug fixes by Kaveh R. Ghazi
+
+	* comments.c, indent.c, indent.h, indent.texinfo:
+	Comments counting bug fix by Santiago Vila.
+	Removed unused variable out_coms.
+
+1999-07-17  Carlo Wood  <carlo@ansset>
+
+	* args.c, args.h, backup.c, backup.h, comments.c, comments.h, globs.c, globs.h, indent.c, indent.h, io.c, io.h, lexi.c, lexi.h, parse.c, parse.h, sys.h, texinfo2man.c:
+	Code formatting (run it through indent as well).
+
+	* args.c, args.h, backup.c, backup.h, comments.c, comments.h, globs.c, globs.h, indent.c, indent.h, io.c, io.h, lexi.c, lexi.h, parse.c, parse.h, sys.h:
+	Put a semicolon after the RCS macros: indent doesn't like when the semicolon
+	is missing in the source file :/.
+
+	* NEWS: Updated
+
+	* configure.in: Put the version back at 2.2.0
+
+	* Makefile.am: Add new headers here too :/
+
+	* args.c, args.h, backup.c, backup.h, comments.c, comments.h, configure.in, globs.c, globs.h, indent.c, indent.h, io.c, io.h, lexi.c, lexi.h, Makefile.am, memcpy.c, NEWS, parse.c, parse.h, sys.h:
+	Added prototypes.
+	De-ANSI-fied some inconsistent places.
+	Removed memcpy.c.
+	Should compile with a K&R compiler again now.
+
+	Thanks to Kaveh R. Ghazi for report:
+
+	        The following are some patches I needed to get indent-2.1.1
+	working on SunOS4 using cc.  A couple of notes:
+
+	1.  You may wish to use the AM_C_PROTOTYPES macro from automake-1.4.
+	It'll define PROTOTYPES in config.h if they are available.  I had the
+	test in sys.h check for it assuming you would use it when I defined
+	the PARAMS macro to handle prototypes.
+
+	2.  The way memcpy is handled seems like overkill.  You do
+	AC_CHECK_FUNCS and define it to bcopy if not there.  You also call
+	AC_REPLACE_FUNCS.  You also hard code including memcpy.c in the
+	sources.  It seems to me that doing just the first check and defining
+	it in sys.h is enough.  Get rid of the REPLACE check and the file
+	memcpy.c file.
+
+	3.  If you insist on prototyping free() for some reason, at least
+	check whether the system already defines it for you.  I ran into
+	conflicts with SunOS defining it to "extern int free()" and your
+	source did "extern void free()" which bombed.  You can find various
+	ways of doing this, egcs-1.1.2 has a NEED_DECLARATIONS check which
+	works well.
+
+	4.  If you insist on using ANSI style function definitions, you should
+	do it everywhere and use automake's ansi2knr option for older systems.
+	Until then, I un-ANSI-fied the inconsistent places where it appeared.
+
+	* regression/standard/const.c, regression/const.c, regression/TEST, indent.c, indent.h, parse.c:
+	Detect the `const' qualifier more reliable.
+	Thanks to bug report by Lars Hecking.
+
+1999-07-16  Carlo Wood  <carlo@ansset>
+
+	* configure.in, sys.h:
+	Don't combine memmove and memcpy detection: SunOS 4.1.4 doesn't have
+	memmove, according to Nico Kadel-Garcia.
+
+	* configure.in: Bumped version number to 2.1.2
+
+1999-07-15  Carlo Wood  <carlo@ansset>
+
+	* indent.texinfo:
+	Added comment to Bugs about comments getting too far to the right.
+
+	* indent.texinfo, texinfo2man.c:
+	Added `@dircategory' as per suggestion of Albert Chin-A-Young.
+
+1999-07-09  Carlo Wood  <carlo@ansset>
+
+	* globs.c: Need to include <errno.h>, some OS define errno as macro.
+
+	* io.c, sys.h:
+	Renamed SYS_READ to INDENT_SYS_READ because of a name collision on HPUX.
+
+	* configure.in: Bumped version number to 2.1.1
+
+1999-07-04  Carlo Wood  <carlo@ansset>
+
+	* indent.texinfo, README.in:
+	C++ doesn't work well enough.  Added that fact to the docs.
+
+	* regression/standard/brackets34.c, regression/standard/brackets35.c, regression/standard/continue-lp.c, regression/standard/brackets33.c, indent.h, io.c, lexi.c, parse.c, indent.c:
+	Added break points at non-spaces (after scope resolution operator,
+	the global operator, member selection operators, and before subscripting,
+	function calls and value constructions (all left brackets thus)).
+	Also assigned a rough priority to them to keep the members of higher
+	prioritized binary operators together.
+
+1999-07-02  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/else-comment-bl.c, regression/standard/else-comment-br.c, regression/standard/else-comment-br-ce.c, regression/else-comment.c, regression/TEST, indent.c:
+	There is something very wrong with `flushed_nl' and how new-lines are
+	handled.  Can't put my finger on it, so I wrote this kludge to fix one
+	particular bug related to `else' and comments.
+
+	* regression/standard/else-if.c, regression/else-if.c, regression/TEST, indent.c, indent.gperf, indent.h, indent.texinfo, lexi.c, parse.c, args.c:
+	Removed old option -ei.
+	Fixed indentation problem broken `else if' lines.
+
+1999-07-01  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/brackets33.c, regression/standard/io.c, io.c:
+	set_next_buf_break(): Corrected errornous calculation of bb->col, which
+	caused certain possible break points to be missed.
+
+	* regression/standard/continue-lp.c, regression/standard/lexi.c, regression/standard/pr_comment.c, io.c:
+	Break lines, that can not be broken before max_col, at the first possible
+	break point.
+
+	* regression/standard/initializers.c, regression/initializers.c, regression/TEST, indent.c, indent.h, io.c:
+	Bug fix of initializer indentation.
+
+1999-06-30  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/line-break-comment.c, regression/line-break-comment.c, regression/TEST, indent.c:
+	Bug fix.  Not sure why I added this in the first place :/.
+
+	* regression/standard/args.c, regression/standard/brackets33.c, regression/standard/brackets34.c, regression/standard/brackets35.c, regression/standard/brackets36.c, regression/standard/brackets37.c, regression/standard/brackets38.c, regression/standard/indent.c, regression/standard/io.c, regression/standard/pr_comment.c, indent.c, io.c:
+	Don't output a blank line after an else when a comment follows.
+	Don't break after a boolean operator if we just broke before it.
+
+1999-06-26  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/brackets34.c, regression/standard/brackets36.c, regression/standard/io.c, regression/standard/lexi.c, indent.c, io.c:
+	Break long lines that are still too long after breaking the first time
+	but caused dump_line to be called only after being read complete already:
+	Don't reset `break_line' in `dump_line()' when a line is still too long.
+
+1999-06-25  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/backup.h, regression/standard/comments1.c, regression/standard/comments1-fca.c, regression/standard/emacs-compatible.h, regression/standard/indent_globs.h, regression/standard/indent.h, regression/standard/io.c, regression/standard/lexi.c, regression/standard/struct-decl.c, regression/standard/sys.h, regression/standard/args.c, args.c, indent.h, indent.texinfo, NEWS, parse.c:
+	Do not indent braces of struct, union and enum.
+	New option --struct-brace-indentN to specify indentation.
+
+	* regression/standard/args.c, regression/standard/backup.c, regression/standard/brackets33.c, regression/standard/brackets34.c, regression/standard/brackets35.c, regression/standard/brackets36.c, regression/standard/brackets37.c, regression/standard/brackets38.c, regression/standard/brackets.c, regression/standard/comments.c, regression/standard/continue.c, regression/standard/continue-lp.c, regression/standard/func-def.c, regression/standard/indent.c, regression/standard/indent_globs.h, regression/standard/indent.h, regression/standard/io.c, regression/standard/lexi.c, regression/standard/newlined-parms.c, regression/standard/no-newline.c, regression/standard/parse.c, regression/standard/pr_comment.c, regression/brackets.c, regression/TEST, args.c, comments.c, indent.c, indent.h, indent.texinfo, io.c, lexi.c, NEWS, parse.c:
+	Fixed breaking long lines.
+	New options: --honour-newlines/--ignore-newlines and
+	             --break-before-boolean-operators/--break-after-boolean-operators
+
+1999-06-06  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/pr_comment.c, comments.c:
+	Let comments inside code always start in the column where code would start.
+
+	* args.c, indent.c, indent.h, indent.texinfo, io.c:
+	Removed every trace of '-troff' nonsense.
+
+	* regression/standard/comments3.c, regression/comments3.c, regression/TEST:
+	New regression test.
+
+1999-06-05  Carlo Wood  <carlo@ansset>
+
+	* indent.c:
+	Don't join a list list of comma seperated declarations that are on
+	different lines in the input file when there is a comment following
+	the comma.
+
+	* regression/standard/comments2.c, regression/comments2.c, regression/TEST:
+	New regression test case.
+
+	* regression/comments.c, comments.c, io.c:
+	Fix indentation of comments in declarations.
+
+	* backup.c: Bug fixes for VERSION_CONTROL=never|none.
+
+	* indent.c:
+	Always call dumpline() when we read a new-line and we already have a label
+	or a preprocessor directive.
+
+	* regression/standard/elipsis-attribute.c, indent.c:
+	Bug fix for __attribute__.
+
+	* lexi.c: Bug fix for elipsis.
+
+1999-06-04  Carlo Wood  <carlo@ansset>
+
+	* lexi.c: Bug fix: lexi() can be called with buf_ptr == buf_end!
+
+	* regression/standard/comments.c, regression/standard/cp-indent.c, regression/standard/elipsis-attribute.c, regression/standard/if-decl-else-decl.c, regression/standard/line-count.c, regression/comments.c, regression/cp-indent.c, regression/elipsis-attribute.c, regression/if-decl-else-decl.c, regression/line-count.c, regression/TEST:
+	New regression tests.
+
+	* comments.c:
+	Increment input file line count for new-lines in comments too (Thanks to
+	Simon Munton for reporting it).
+
+1999-06-03  Carlo Wood  <carlo@ansset>
+
+	* Makefile.am: Maintainer mode build environment fix.
+
+	* acconfig.h, backup.c, configure.in, sys.h: USG is not used anymore.
+	Handle AC_HEADER_DIRENT by the book (the autoconf manual).
+
+	* comments.c, .gdbinit.in.example, indent.c, maintMakefile.in:
+	Improved GDB_HOOK stuff.
+
+	* regression/standard/comments.c:
+	Improved standard: The indentation of these comments were not formatted
+	at ALL before.  Now they are lined up with the code.
+
+1999-06-02  Carlo Wood  <carlo@ansset>
+
+	* indent.c:
+	Regression/bug fix: Don't do a continuation indent after already indenting
+	to column `dec_ind'.
+
+	* regression/standard/indent_globs.h:
+	Change in output caused by removal of -fc1 from regression/TEST.
+
+	* args.c:
+	Reordered the pro[] table(s) reverse alphabetically (and fixed a few
+	bugs in it that didn't have any effect before this re-ordering).
+
+1999-06-01  Carlo Wood  <carlo@ansset>
+
+	* indent.c, indent.h, io.c: Patch of indent.c revision 1.5 redone.
+	Regression fix try two: Don't indent a procname when at start of a line.
+
+	* maintMakefile.in:
+	In the previous patch, I also changed the way to make sure ChangeLog
+	is up to date in maintainer-mode.  I forgot to change a comment though.
+
+	* .cvsignore, .gdbinit.in.example, indent.c, maintMakefile.in, parse.c:
+	Semi-automated generation of .gdbinit.
+	Added WATCH hooks for the local variables of indent()
+	and for parser_state_tos.
+
+	* regression/standard/pr_comment.c:
+	Result of removing -fc1 from regressions TEST.
+
+	* regression/standard/lexi.c:
+	Better placing of comments directly after code.
+
+	* regression/standard/parse.c:
+	Better placing of comments directly after code, and the result of
+	the removal of -fc1.
+
+	* args.c: Ok, that was ONLY -nlps versus -nlp, AND two options of 1.10
+	(-brs and -bls). And the way I fixed it broke the -T option.
+
+	* args.c, configure.in, Makefile.am:
+	Allow K&R compilers to compile indent, and allow to build in a different
+	directory than the source directory. (Thanks to Kaveh R. Ghazi).
+
+	* indent.c, indent.h, lexi.c, parse.c:
+	Regression fix: Treat enum block as initialization block, but still DO
+	the line breaks when braces_on_struct_decl_line not set.
+
+1999-05-31  Carlo Wood  <carlo@ansset>
+
+	* args.c:
+	Version 2.0 bug fix : Recognize options that start with the same sequence
+	as other, shorter options (ie, -nlps <--> -nlp).
+
+	* regression/standard/io.c:
+	New indent better: Changed `standard'.  Note that most of the change is
+	due to removal of -fc1 from regression/TEST.
+
+	* regression/standard/indent.c:
+	New indent works better: Changed `standard'.
+
+	* indent.c:
+	Regression fix: Don't indent a procname when at start of a line.
+
+1999-05-30  Carlo Wood  <carlo@ansset>
+
+	* regression/standard/on-off-2.c, regression/standard/on-off-1.c:
+	New indent works better: Changed `standard'.
+
+	* io.c:
+	Regression fix: Don't indent a procname when at start of a line.
+
+	* indent.c, lexi.c:
+	Regression fix related to indentation in enums and in struct initializers.
+
+	* regression/standard/newlines.c-5, regression/standard/newlines.c-6, regression/standard/newlines.c-7, regression/standard/newlines.c-8, regression/standard/no-newline2.c, regression/standard/no-newline.c, regression/standard/one-line-1.c, regression/standard/one-line-2.c, regression/standard/one-line-3.c, regression/standard/one-line-4.c, regression/standard/on-off-1.c, regression/standard/on-off-2.c, regression/standard/outer.c-0, regression/standard/outer.c-1, regression/standard/outer.c-2, regression/standard/outer.c-3, regression/standard/outer.c-4, regression/standard/outer.c-5, regression/standard/outer.c-6, regression/standard/outer.c-7, regression/standard/outer.c-8, regression/standard/outer.c-9, regression/standard/parse.c, regression/standard/pr_comment.c, regression/standard/preesc-comment.c, regression/standard/proto.c, regression/standard/right-margin-comment.c, regression/standard/sizeof-in-while.c, regression/standard/sob.c, regression/standard/struct-decl.c, regression/standard/struct-decl-kr.c, regression/standard/struct_param.c, regression/standard/sys.h, regression/standard/tabs.c-0, regression/standard/tabs.c-1, regression/standard/tabs.c-2, regression/standard/two-on-line.c, regression/standard/typedef-bug.c, regression/standard/typedef.h, regression/standard/unary.c, regression/standard/version.h, regression/standard/wide.c, regression/standard/already-starred.c, regression/standard/args.c, regression/standard/backup.c, regression/standard/backup.h, regression/standard/bbb-test.c, regression/standard/box-comm.c, regression/standard/boxed.c-0, regression/standard/boxed.c-1, regression/standard/boxed.c-2, regression/standard/boxed.c-3, regression/standard/boxed.c-4, regression/standard/boxed.c-5, regression/standard/boxed.c-6, regression/standard/boxed.c-7, regression/standard/boxed.c-8, regression/standard/boxed.c-9, regression/standard/bug-di.c, regression/standard/bug-hp.c, regression/standard/case-label.c, regression/standard/class-func.cc, regression/standard/comments1.c, regression/standard/comments1-fca.c, regression/standard/comments.c, regression/standard/continue.c, regression/standard/continue-lp.c, regression/standard/cplus.c-0, regression/standard/cplus.c-1, regression/standard/cplus.c-2, regression/standard/cplus.c-3, regression/standard/cplus.c-4, regression/standard/cplus.c-5, regression/standard/cplus.c-6, regression/standard/cplus.c-7, regression/standard/cplus.c-8, regression/standard/cplus.c-9, regression/standard/cplus-one.c, regression/standard/dirent_def.h, regression/standard/do.c, regression/standard/else.c, regression/standard/emacs-compatible.h, regression/standard/embedded-cuddle1.c, regression/standard/embedded-cuddle2.c, regression/standard/empty.c, regression/standard/first-in-block.c, regression/standard/for.c, regression/standard/fp.c, regression/standard/func-def.c, regression/standard/globs.c, regression/standard/indent.c, regression/standard/indent_globs.h, regression/standard/indent.h, regression/standard/indent.pro.c, regression/standard/ind-star.c, regression/standard/io.c, regression/standard/kr.c, regression/standard/kr-proc-decls.c, regression/standard/lexi.c, regression/standard/long-comm.c, regression/standard/lshift.c, regression/standard/memcpy.c, regression/standard/meta-indent.c, regression/standard/ncs.c, regression/standard/ncs-on-return.c, regression/standard/newlined-parms.c, regression/standard/newlines.c-0, regression/standard/newlines.c-1, regression/standard/newlines.c-2, regression/standard/newlines.c-3, regression/standard/newlines.c-4, regression/kr.c, regression/kr-proc-decls.c, regression/lexi.c, regression/long-comm.c, regression/lshift.c, regression/memcpy.c, regression/meta-indent.c, regression/ncs.c, regression/ncs-on-return.c, regression/newlined-parms.c, regression/newlines.c, regression/no-newline2.c, regression/no-newline.c, regression/one-line-1.c, regression/one-line-2.c, regression/one-line-3.c, regression/one-line-4.c, regression/on-off-1.c, regression/on-off-2.c, regression/outer.c, regression/parse.c, regression/pr_comment.c, regression/preesc-comment.c, regression/proto.c, regression/right-margin-comment.c, regression/sizeof-in-while.c, regression/sob.c, regression/struct-decl.c, regression/struct_param.c, regression/sys.h, regression/tabs.c, regression/two-on-line.c, regression/typedef-bug.c, regression/typedef.h, regression/unary.c, regression/version.h, regression/wide.c, regression/already-starred.c, regression/args.c, regression/backup.c, regression/backup.h, regression/bbb-test.c, regression/box-comm.c, regression/boxed.c, regression/bug-di.c, regression/bug-hp.c, regression/case-label.c, regression/class-func.cc, regression/comments1.c, regression/comments.c, regression/continue.c, regression/cplus.c, regression/cplus-one.c, regression/dirent_def.h, regression/do.c, regression/else.c, regression/emacs-compatible.h, regression/embedded-cuddle1.c, regression/embedded-cuddle2.c, regression/empty.c, regression/first-in-block.c, regression/for.c, regression/fp.c, regression/func-def.c, regression/globs.c, regression/indent.c, regression/indent_globs.h, regression/indent.h, regression/indent.pro.c, regression/ind-star.c, regression/io.c, regression/Makefile, regression/TEST, regression/TIME:
+	Checked in regression tests of version 2.0
+
+1999-05-29  Carlo Wood  <carlo@ansset>
+
+	* lexi.c, parse.c:
+	Indent braced block on enum too (equiv. to a struct).
+
+	* indent.h: Typo in comment.
+
+	* maintMakefile.in:
+	Added dependency on version.texi in order to generate it.
+
+	* .cvsignore: Renamed indent-1.spec to indent-2.spec.
+
+	* Makefile.am: Forgot to rename ChangeLog-1994 to ChangeLog-1998 here.
+
+	* indent-2.spec.in: Renamed indent-1.spec.in to indent-2.spec.in.
+
+	* io.c, lexi.c, memcpy.c, parse.c, args.c, backup.c, comments.c, globs.c, indent.c:
+	Merged in all source changes from version 2.0.
+
+	* sys.h: Added definitions of RCSTAG_CC and RCSTAG_H.
+
+	* Makefile.am:
+	Added option `-D' to `gpref' command conforming to indent-2.0.
+
+	* .cvsignore: Added maintMakefile
+
+	* configure.in: Right... Removed AC_XENIX_DIR again :/.
+
+	* backup.h, indent.h, sys.h: Merged in the changes from version 2.0.
+
+	* configure.in: Bumped version number to 2.1.0.
+	Added AC_XENIX_DIR because this was used in version 2.0 too.
+
+	* indent.mak:
+	Ack, don't tell me I am supporting microcrap here :/ (from the 2.0 version)
+
+	* README.in:
+	Using the README of version 2.0, with changed URLs and some other minor
+	changes (generation of indent.1 and removal of texinfo.tex).
+
+	* Makefile.am:
+	Made changes to include indent.html indent_foot.html and indent_toc.html
+	in the distribution (in conformance to the README of indent-2.0).
+
+	* ChangeLog-1994, ChangeLog-1998:
+	Added the ChangeLog of version 2.0 and renamed ChangeLog-1994 accordingly
+	to ChangeLog-1998.
+
+	* NEWS: Added the Release Notes of version 2.0
+
+	* maintMakefile, maintMakefile.in:
+	Oops, had checked in maintMakefile instead of maintMakefile.in.
+	Made changes to include indent.html indent_foot.html and indent_toc.html
+	in the distribution (in conformance to the README of indent-2.0).
+
+1999-05-28  Carlo Wood  <carlo@ansset>
+
+	* gnuc-make.com, vaxc-make.com, VMS-README:
+	Re-added "support" for VMS in - since indent-2.0 was doing that too.
+
+	* indent.texinfo: Merged changes from indent-2.0.
+
+	* maintMakefile: Put the html documentation into WWDIR too.
+
+1999-05-27  Carlo Wood  <carlo@ansset>
+
+	* configure.in, maintMakefile, Makefile.am:
+	Final fix of maintainer stuff
+
+	* maintMakefile, Makefile.am:
+	Moved the maintainer targets to their own file and added comments.
+	Fixed EXTRA_DIST, several files weren't put in the distribution.
+
+1999-05-26  Carlo Wood  <carlo@ansset>
+
+	* configure.in:
+	Unreleased the package, so decreased the version number again.
+
+	* Makefile.am:
+	Some maintainer targets needed to depend on configure.in for the VERSION.
+
+	* configure.in: Bumped version to 1.10.1
+
+	* lexi.c, parse.c, args.c, comments.c, indent.c, indent.gperf, indent.h, indent.texinfo, io.c, NEWS:
+	Applied my "old" patch (the 'beta1' patch):
+	New options: --braces-after-struct-decl-line, --braces-on-struct-decl-line,
+	             --case-brace-indentationN and --paren-indentationN.
+	LOTS of bug fixes - unfortunately I forgot what all not.  But I bet that
+	if you had indentation problems, chances are it WILL be fixed now.
+
+	* texinfo2man.c:
+	Added support for version.texi, and the @value{}'s it contains.
+
+	* configure.in, .cvsignore, indent.lsm.in, indent.texinfo, indent.texinfo.in, index.html.in, makefile, Makefile.am, mdate-sh, README.in:
+	Moved all maintainer targets from `makefile' to Makefile.am.
+
+	* indent-2.spec.in:
+	Moved all maintainer targets from makefile to Makefile.am
+
+	* configure:
+	Eh, what was `configure' doing in my repository all that time?
+
+1999-05-25  Carlo Wood  <carlo@ansset>
+
+	* index.html.in, makefile, README.in, texinfo.tex: Removed texinfo.tex.
+	Generating index.html (for release on webpage).
+
+	* texinfo.tex:
+	Replaced by very latest version (from http://texinfo.org/).
+
+	* indent.lsm.in: Added an LSM file for the web page.
+
+	* indent.1.in, indent.texinfo.in, makefile, texinfo2man.c, .cvsignore, indent.1:
+	Generating indent.1 from indent.texinfo.
+
+1999-05-22  Carlo Wood  <carlo@ansset>
+
+	* texinfo.tex:
+	Replaced texinfo.tex with a newer version (copied from make-3.77).
+
+	* .cvsignore, indent.texinfo, indent.texinfo.in, makefile:
+	Generate indent.texinfo from indent.texinfo.in, replacing @EDITION@,
+	@INFODATE@ and @VERSION@ automatically (the first two set manually in
+	`makefile'.
+
+	* makefile, .cvsignore, indent.gperf, lexi.c:
+	Removed source code generated by gperf from repository.
+
+1999-05-21  Carlo Wood  <carlo@ansset>
+
+	* configure, configure.in: Changed initial version to 1.10.0.
+
+	* makefile: Moved TAG to "Prototype" maintainer/PTmakefile.
+
+	* .cvsignore, Makefile.am:
+	Added support for indent.texinfo to Makefile.am.
+
+	* indent-2.spec.in:
+	Initial import of indent-1.spec.in in indent-1.10 package.
+
+	* rpm/SRPMS/.cvsignore, rpm/SOURCES/.cvsignore, rpm/RPMS/i386/.cvsignore, rpm/macros, rpm/rpmrc, acconfig.h, args.c, AUTHORS, configure, configure.in, .cvsignore, install-sh, makefile, Makefile.am, missing, mkinstalldirs, sys.h, version.h:
+	Added the rest of the automake/makeproto build environment.
+
+	* indent.info: Removed indent.info from repository: its generated.
+
+	* makefile.in: Removed makefile.in.
+
+	* configure.in: Renamed makefile.in to Makefile.in.
+
+	* Makefile: Sure...
+
+	* README.in:
+	Added a new README.in file - need to generate README from this one.
+
+	* CONF-README, gnuc-make.com, INSTALL, README, vaxc-make.com, VMS-README:
+	Dropped support for VMS, I intend to use the normal automake/autoconf
+	stuff and can not support VMS as I have no knowledge about- nor access to
+	that OS.
+	Added a standard INSTALL file (copied this one from the make-3.77 package).
+
+1999-05-20  Carlo Wood  <carlo@ansset>
+
+	* COPYING:
+	Replaced COPYING with a more recent one (fixed snail mail address
+	and y2000 fix).
+
+	* ChangeLog, ChangeLog-1990, ChangeLog-1994, OChangeLog:
+	Renamed the old ChangeLogs: ChangeLog  -> ChangeLog-1994 and
+	                            OChangeLog -> ChangeLog-1990
+
+	* args.c, backup.c, backup.h, ChangeLog, comments.c, configure, configure.in, CONF-README, COPYING, globs.c, gnuc-make.com, indent.1, indent.gperf, indent.h, indent.info, indent.texinfo, lexi.c, Makefile, makefile.in, memcpy.c, NEWS, OChangeLog, parse.c, Projects, README, sys.h, texinfo.tex, vaxc-make.com, version.h, VMS-README:
+	Initial import of version 1.9.1
+
+	* args.c, backup.c, backup.h, ChangeLog, comments.c, configure, configure.in, CONF-README, COPYING, globs.c, gnuc-make.com, indent.1, indent.gperf, indent.h, indent.info, indent.texinfo, lexi.c, Makefile, makefile.in, memcpy.c, NEWS, OChangeLog, parse.c, Projects, README, sys.h, texinfo.tex, vaxc-make.com, version.h, VMS-README:
+	New file.
+
+	* indent.c, io.c: Initial import of version 1.9.1
+
+	* indent.c, io.c: New file.
+

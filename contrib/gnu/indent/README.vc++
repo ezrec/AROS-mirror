@@ -1,0 +1,50 @@
+README.VC++ for GNU `indent' 2.2.6
+----------------------------------
+
+This file contains instructions for compiling GNU indent on the Win32 platform, and, in particular, Microsoft Visual C++ version 6.0 (though it may compile happily on earlier releases, this has not been tested)
+
+There are a couple of methods of compiling it - either from the command line or from within Visual C++ itself
+
+Preparation steps
+-----------------
+
+1. As Win32 has no equivalent of the 'configure' shell script, it is necessary to manually create the config.h file yourself. This can be done by renaming 'config.vc++' to 'config.h'. These options are sufficient for VC++ 6. If you are having problems compiling on an earlier releases, this file may be the place to look and modify the #defines.
+
+Compilation procedure
+---------------------
+
+Option 1 - From within Visual C++
+
+  1. Open the project file ('indent.dsp')
+  2. Select a Debug or Release build
+  3. Build.
+
+  The final destination of indent.exe may be dependant on your configuration.
+
+Option 2 - From the command line (Visual C++ 6.0 and later)
+
+  1. Ensure your PATH is setup to correctly find the Visual C++ directories. 
+     This can be achieved by running 
+
+	x:\Program Files\Microsoft Visual Studio\VC98\Bin\VCVARS32.BAT
+
+     (where x: is the drive VC++ is installed on)
+
+  2. At the command prompt, and from the indent distribution directory, 
+     run the following command:
+
+	msdev indent.dsp /MAKE  "indent - Win32 Release"
+
+Notes
+-----
+
+The 'indent.exe' compiled under Visual C++ 6.0 has been tested successfully on Windows 95, 98, NT 4 and 2000.
+
+Contact
+-------
+
+If you have any issues regarding compilation on Win32, please contact me at ben@parisoffice.com
+
+
+- Ben Bourner 28 September 1999
+

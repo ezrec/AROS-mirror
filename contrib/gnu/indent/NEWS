@@ -1,0 +1,576 @@
+Release notes for GNU indent version 2.2.6, November 2000
+
+* New option --break-function-decl-args (-bfda).
+  This causes each argument of a function declaration to be put on
+  a seperate line, aligned with the opening parathesis of the function.
+  For example,
+
+  void
+  udi_pio_trans(udi_pio_trans_call_t *callback,
+                udi_cb_t *gcb,
+		udi_pio_handle_t handle,
+		udi_buf_t *buf,
+		void *mem_ptr)
+
+* The option -diN does not any longer indent procedure names
+  (when also using -npsl).  Nested function are still indented however.
+
+* New options --no-space-after-for (-nsaf), --no-space-after-if (-nsai)
+  and --no-space-after-while (-nsaw) to remove the space directly following
+  `for', `if' and `while' respectively.
+
+* Nested functions (a gcc extension) were indented wrong.
+
+* --blank-lines-after-declarations (-bad) caused blank lines to be
+  inserted in the middle of C-style comments when a multiple line
+  comment was used after a declaration.
+
+* The option --dont-line-up-parentheses (-nlp) was broken, sometimes
+  causing long lines that were broken twice or more being indented
+  too little.
+
+* Renamed long option --blank-lines-after-block-comments to
+  --blank-lines-before-block-comments.  This was a very old bug.
+  The equivalent short option is still -bbb.
+  Idem for --no-blank-lines-after-block-comments.
+
+* New option --cuddle-do-while (-cdw).
+  This causes the `while' in a do-while loop to cuddle up to the
+  immediately preceding `}'.  For example,
+  
+  do {
+    x--;
+  } while (x);
+
+* New option --no-tabs (-nut) causes indent to replace all TABS with
+  the appropriate space in the output.  Unlike using --tab-size 1,
+  this has no influence on the column where comments start.
+
+* --line-comments-indentationN/-dN now works again.
+
+* Sometimes an extra blank line was inserted between two parts of a
+  long, broken line.  This should be fixed now.
+
+* The priority of breaking lines at a point that doesn't help, is now
+  set at minus infinity.  The means that instead of getting
+
+  if (
+      extremely_long.
+      struct_element)
+
+  because breaking after a '.' has a very low priority, you'll now get
+
+  if (extremely_long.
+      struct_element)
+
+* The option --format-comments (-fca) was broken, it did not remove leading
+  '*' in comments like: "/* this       , this now becomes: "/* this <- one */".
+                          * <- one */"   instead of "/* this * <- one */".
+  Adjacent spaces are now always eaten and not only when they are at the
+  start of a line: "/* a  b.    c  d */" becomes now "/* a b.  c d */".
+  Two spaces are left after a dot.
+
+* A typo in indent.c caused types inside a sizeof() to be marked as a
+  declaration.  This caused a blank line to be put after them in some
+  cases (when using the --blank-lines-after-declarations (-bad)).
+
+* A backslash-newline, outside a macro definition or string, was treated
+  as two seperate characters, breaking compilation when the newline was
+  repositioned.  Now the backslash is simply eaten.
+
+Release notes for GNU indent version 2.2.5, Januari 2000
+
+* When using --dont-break-procedure-type, indent wrongly joined
+  lines of a procedure declaration ending in a '(' and followed
+  by a comment.  In the case of a C++-style comment that even
+  broke compilation.
+
+  int func( /* hello */
+    char c)
+  {
+
+  became
+
+  int func( /* hello */ char c)
+  {
+
+* Added missing README.VMS to tar ball.  Added support for VMS'
+  DECC compiler. (Patch by forrest.cahoon@merrillcorp.com).
+
+* New option --space-after-parentheses (-prs) causes parentheses
+  to be printed with spaces: if ( foo( i + 1 ) == 1 ).
+
+* --braces-on-if-line (-br) caused indentation of statements
+  after case: label to be indented wrongly (not relative to the
+  start of the case: label).  This fix means that when you use -br
+  together with -cliN where N is not 0, then your code will change:
+  subtract the value for -cli from -cbi to get the same results
+  for { braced } case statements.
+
+  The correct meaning when using -br is now:
+
+  switch (i) {
+  <--cliN-->case x:
+            <--iN-->statement;
+  <--cliN-->case y:
+            <--cbiN-->{
+                      <--iN-->statement;
+
+  Without -br it still is:
+
+  switch (i)
+  <--bliN-->{
+            <--cliN-->case x:
+                      <--iN-->statement;
+            <--cliN-->case y:
+                      <--cbiN-->{
+                                <--iN-->statement;
+
+* Indentation options now accept negative values for greater flexibility.
+
+Release notes for GNU indent version 2.2.4, November 1999
+
+* When using numbered backup files, setting environment variable
+  VERSION_WIDTH now allows to use left zero padding (ie file.~001~).
+  (Patch by Chris F.A. Johnson <bq933@torfree.net>)
+
+* --braces-on-if-line (-br) caused a '{' brace on the same line as a '}'
+  not to be put automatically on the next line, as it should because
+  the following { block } is not related to the previous { block } in
+  any way.
+
+* Unpaired braces in `#if ..{.. #else/#elif ..{.. #endif }' constructs
+  was broken for #elif and when there were spaces after the #.
+
+* Spelling, typo and general little improvements of indent.texinfo.
+  Now using Texinfo 4.0 markup.
+  (Patch by Kragen Sittler <sittler@day.erim-int.com>)
+
+Release notes for GNU indent version 2.2.3, October 1999
+
+* Fixed bit-fields with types other then `int' (no type still won't work).
+  Fixed support for public:, private: and protected: labels.
+
+* Forgot to include the indent.dsp file in 2.2.2 (win32)
+
+Release notes for GNU indent version 2.2.2, September 1999
+
+* Added support for win32 (need VC++)
+
+* Indent was sometimes adding a blank line at the top of an indented
+  file when indenting multiple files at once.  This bug has been fixed.
+
+Release notes for GNU indent version 2.2.1, September 1999
+
+* Indent got confused when a function declaration contained an enum
+  and did not contain a colon before using a '{' inside the function.
+
+  enum foobar		<-- returns enum
+  func (enum foobar)	<-- or uses an enum as parameter
+  {
+    if (1)
+      {			<-- uses '{' before any ';' was used
+       func (1);}	<-- fails here
+       ... etc.
+
+* A new option to stop `make' from rebuilding your whole project
+  after running `indent':
+
+  -pmt, --preserve-mtime :
+     Preserve modification time on output files.
+
+* Backup files now keep the same modification time as the
+  original.
+
+* New -c++, --c-plus-plus option to allow better C++ formatting:
+  Recognizes C++ keywords, including the GNU extension operators <?= and >?=.
+  (Patch by Malekith <malekith@topnet.pl>)
+  Note: In general C++ still does NOT work!
+
+* EBCDIC charset support for BS2000/POSIX (Siemens mainframe OS).
+  Contributed by <Martin.Kraemer@MchP.Siemens.De>.
+
+Release notes for GNU indent version 2.2.0, July 1999
+
+* Indent was detecting `const' errornous as function qualifier
+  in some cases. Resulting in
+
+  void foo(fmt)
+   constchar *fmt;
+  {
+  }
+
+* Compiles again with old K&R compilers.
+
+* The `GetText' macros `N_' and `_' do not get a space appended anymore.
+
+Release notes for GNU indent version 2.1, June 1999
+
+* Merged in the changes made by Joseph Arceneaux from 1.9.1 -> 2.0.
+  Thus: 1.10.0 == 1.9.1 + Carlo's patches
+        2.0    == 1.9.1 + Joseph's patches
+	2.1.0  == 1.9.1 + Joseph's patches + Carlo's patches.
+  Below you can find the release notes of 2.0, which thus also apply to 2.1:
+  The maintenance is now officially transfered to Carlo Wood.
+
+* GNU indent is now a lot more precise in honouring the --line-lengthN
+  option: It now joins lines when they fit on one line, and it won't
+  produce lines that are longer then the specified line length anymore
+  (except when no reasonable break point was found).
+
+* Two new options to accommodate breaking long lines:
+  -hnl, --honour-newlines :
+     Prefer to break long lines at positions where the lines were broken
+     in the input file.
+  -nhnl, --ignore-newlines:
+     Don't prefer that.
+
+  -bbo, --break-before-boolean-operator :
+     Prefer to break long lines before the boolean operators && and ||.
+  -nbbo, --break-after-boolean-operator :
+     Prefer to break long lines after the boolean operators && and ||.
+
+* The default is now not to indent the braces of struct, union and enum.
+  A new option -sbiN or --struct-brace-indentationN allows to indent it
+  nevertheless.
+   
+Release notes for GNU indent version 2.0, November 1998 
+
+* indent withstands the U. Wisconsin fuzz test. (See
+  http://www.cs.wisc.edu/Dienst/UI/2.0/Describe/ncstrl.uwmadison/CS-TR-95-1268
+  for details.)
+
+* indent compiles with gcc -Wall and MSVC++ with no warnings.
+
+* C++ code is handled to a great extent.  There is no special switch
+  or option. However, there are still several cases which are not
+  handled as well as they should be, and there are no options
+  controlling C++ formatting specifically.
+
+  There is only one case I'm aware of in which the output of indent
+  breaks compilation;  this is nested templates such as:
+
+    Aaa<int, Bbb<int> > anotherAB;
+
+  are transformed into:
+
+    Aaa < int, Bbb < int >>anotherAB;
+
+  which is problematic for some compilers.  This is, in my opinion,
+  the fault of the incredibly brain-dead design of C++, and it's not
+  clear when or if indent will deal properly with this example.
+
+* Wide strings and characters are now handled.
+
+* The manual page, indent.1, has been removed from the distribution
+  because it is not supported and is seriously out of date (it
+  corresponds to indent 1.4).
+
+* The "-bbb" option, which forces blanklines before boxed comments,
+  has been re-instated.
+
+* Trailing spaces are removed from output.
+
+* Line-breaking behaviour has been improved.
+
+* The troff option has been removed.
+
+* You may now put either C ("/* ... */") or C++ ("// ...") comments in
+  the indent profile.  Options within comments are ignored.
+
+* The K&R style of leaving procedure names on the same line as their
+  type is now better supported (the option "-psl").
+
+* The "-l" option now works more consistently.  This may change some
+  behaviour by breaking lines where they were not broken before.
+  Specifying an argument of "0" will turn off this option.
+
+* The unused options "-ps" and "-nps" were removed.
+
+* When `indent' completes its work successfully, it exits with a value
+  of 0.  Otherwise, one of the following values is returned:
+
+  1 : This means `indent' was incorrectly invoked.
+  2 : Errors occurred during formatting, but processing continued.
+  3 : An unrecoverable error occured during the processing of an input
+      file.  If there are more input files, indent will proceed to
+      process them, but will return the error value 3.
+  4 : A serious internal error occured.  All processing is terminated.
+  5 : A system error during processing occurred.  In this case,
+     `indent' terminates.
+
+Release notes for GNU indent version 1.10, May 1999.
+
+* New maintainer.
+  New build environment, using automake now.
+  VMS support is removed (sorry).
+
+* Many bug fixes - if you had problems before, try this version!
+
+* New options have been added:
+    "-bls" ("--braces-after-struct-decl-line")
+    "-brs" ("--braces-on-struct-decl-line")
+    "-cbiN" ("--case-brace-indentationN")
+    "-piN" ("--paren-indentationN")
+
+* Generated and thus up to date man page (indent.1).
+
+Release notes for GNU indent version 1.9.
+
+* All reported bugs have been fixed.
+
+* A new option "-lc" ("--comment-line-length") was added.
+
+* Please read the section "BUG REPORTS" in the README file.
+
+* Unless "interesting" bugs appear, this will be the last release of
+  indent version 1.  The next release planned is version 2, which will
+  (hopefully) integrate support for C++, and possibly Objective C.
+  Additionally, a couple more OS's may be supported.
+
+* A volunteer is now working on the `review' program, which examines C
+  code and produces the options that GNU `indent' would use to produce
+  code in that style.
+
+Release Notes for GNU indent version 1.8.
+
+* VMS and MS-DOS are now supported.  Thanks to MEHRDAD@glum.dev.cf.ac.uk
+  and hnyman@lesti.hut.fi for their contributions.
+
+  Please note that I have no way of testing this code, and with slight
+  modifications, have installed it "as is".
+
+  Also, note that these systems do not use `configure'.  See the file
+  VMS-README for details of the VMS installation.  For the MS-DOS
+  version, it is expected that the compiler will recognize the define
+  __MSDOS__ as being set.
+
+* C++ comments are now recognized.  More C++ support will be
+  forthcoming, possibly along with support for Objective C.
+
+* Formatting can be disabled for sections of code by placing that code
+  between lines containing the comments /* *INDENT-OFF* */ and
+  /* *INDENT-ON* */ (this also works in C++ comments).  See the info
+  node "Disabling Formatting" for more info.
+
+* The processing of comments has been changed.  See the info node on
+  "Comments" for a description.
+
+* The default (i.e., GNU) behaviour of struct handling has been
+  slightly changed.
+
+* All reported bugs have been fixed.
+
+
+Release Notes for GNU indent version 1.7.
+
+* All reported bugs have been fixed, except some of those dealing with
+  comments.  I have completely rewritten the comment handling code in
+  indent, but since this produces rather different comment formats
+  (mostly, it makes several comment-related options actually work) I
+  am waiting for the next release of indent to install this.
+
+  To see what the differences in the comment handling will be, compare
+  the file `comments.texinfo' to the section on comments in the info
+  node for indent.
+
+  It is possible that I have lost some bug reports, as some of my mail
+  falls into a crack between two machines.  In the future, please be
+  sure to use the address "bug-gnu-utils@prep.ai.mit.edu".
+
+* All errors and warnings are output on the standard error stream,
+  and conform to the GNU error message format.
+
+* There is now more support for small (i.e., 16-bit) machines.
+
+* There have been slight changes to the default behaviour, namely:
+
+  - Column 1 comments are not formatted.
+
+  - Preprocessor spaces are removed.
+
+* When "-lps" is specified, whitespace preceding the '#' character is
+  left untouched, as well as following whitespace.
+
+* When the tabsize is specified as 1 or 0 (e.g., "-ts 0"), spaces are
+  used instead of tabs.  There may be bugs in this behaviour, but they
+  should vanish with the new comment code.
+
+
+Release Notes for GNU indent version 1.6.
+
+* All reported bugs have been fixed.
+
+* The makefiles have been, hopefully, improved (see the file `README'
+  for installation procedure).  Essentially, it is sufficent to type
+  "make" to build indent.  `indent' is distributed with `configure'
+  just as other GNU software.  Thus, in conformance with the GNU
+  standards, "configure; make" should function properly and `indent'
+  should fit properly in a GNU software tree.  However, it is my hope
+  that for most users, "make" is all they will have to type.
+
+
+Release Notes for GNU indent version 1.5.
+
+* All reported bugs (and some unreported ones) have been fixed.
+
+* The default behaviour of `indent' has changed slightly to be more
+  compatible with Emacs' C-mode.  In particular, where version 1.4
+  produced code looking like:
+
+  struct token_data
+  {
+    enum token_data_type type;
+    union
+    {
+      struct
+      {
+	char *text;
+      }
+	u_t;
+    }
+      u;
+  };
+
+  version 1.5 now generates the following:
+
+  struct token_data
+  {
+    enum token_data_type type;
+    union
+      {
+	struct
+	  {
+	    char *text;
+	  }
+	u_t;
+      }
+    u;
+  };
+
+* There is a new option, "-lps" ("--leave-preprocessor-space") which
+  causes `indent' to leave the space between the `#' and the command
+  on preprocessor lines.
+
+* `indent' now understands spaces between options and their arguments.
+  It is thus now possible to type: "indent -ip 4 latex.c"
+  Such spaces are also understood in a profile.
+
+* indent 1.5 uses a configuration script generated by autoconf.  It
+  examines the system to produce a host-dependent makefile. This has
+  changed little with regard to building indent;  typing "make" will
+  build `indent'.  See the file "README" for details of this process.
+
+* The file "indent.1" is a man document for indent 1.4 sent to me by
+  vogel@c-17igp.wpafb.af.mil.  The GNU project uses texinfo for its
+  documentation system, so this man page will remain officially
+  unsupported.  However, I will continue to distribute it as long as it
+  appears reasonably up to date.
+
+* Thanks to the folks that sent me patches.
+
+
+Release Notes for GNU indent version 1.4.
+
+Essentially, this version fixes bugs in version 1.3.
+
+
+
+
+
+Release Notes for GNU indent version 1.3.  For more details, read the
+manual.
+
+
+* All reported bugs have been fixed.
+
+
+* The manual has been upgraded somewhat.
+
+
+* Command line syntax has changed with regard to input and output files.
+  The command:
+
+		  indent *.c
+
+  for each file iguana.c, will indent iguana.c into iguana.c, after
+  first making a backup copy.
+
+		  indent liver_oil.c -o gullet.c
+
+		  cat liver_oil.c | indent -o gullet.c
+
+		  indent liver_iol.c -st > gullet.c
+
+  Each of the above will indent "liver_oil.c" into "gullet.c".  The
+  "-st" ("--standard-output") option can only be used when the
+  standard input, or only a single input file is specified.
+
+  It is also possible to use the standard input by specifying the single
+  filename "-" on the command line.  In this case, no other files may
+  be specified.
+
+
+* indent now makes GNU-style backup files.
+
+  This behaviour is controlled by two environment variables,
+  VERSION_CONTROL and SIMPLE_BACKUP_SUFFIX.
+
+  VERSION_CONTROL determines what kinds of backups are made.  If it's
+  value is "numbered", then the first modification of some file
+  "eraserhead.c" will yield a backup file "eraserhead.c.~1~", the
+  second modification will yield "eraserhead.c.~2~", and so on.  It
+  does not matter if the version numbers are not a sequence;  the next
+  version will be one greater than the highest in that directory.
+
+  If the value of VERSION_CONTROL is "numbered_existing", then such
+  numbered backups will be made if there are already numbered backup
+  versions of the file.  Otherwise, the backup name will be that of
+  the original file with "~" (tilde) appended.  E.g., "eraserhead.c~".
+
+  If the value of VERSION_CONTROL is "simple", then the backup name
+  will be that of the original file with "~" appended, regardless of
+  whether or not there exist numbered versions in the directory.
+
+  For simple backups, the value of SIMPLE_BACKUP_SUFFIX will be used
+  rather than "~" if it is set.
+
+  If VERSION_CONTROL is unset, "numbered_existing" is assumed.  For
+  lisp lovers, "nil" is equivalent to "numbered_existing" and "t" is
+  equivalent to "numbered".
+
+  Finally, if VERSION_CONTROL is "none" or "never", backups are not
+  made.  I suggest you avoid this behaviour.
+
+  Note also that backup files are made in the directory of the source
+  file, not the current directory (where indent was invoked).
+
+
+* Only one indent profile is read.  indent searches first for a
+  profile in the current directory and reads that if found.
+  Otherwise, indent looks for a profil in the home directory.
+
+
+* "-nip" is now handled.  This is equivalent to "-ip0".
+
+
+* The long name for "-bs" has been changed from "--Bill_Shannon" to
+"--blank_after_sizeof".
+
+
+Release notes for GNU indent version 1.7
+
+The default style of indent is now the GNU style.  The option "-gnu"
+is still recognized.  To obtain the original indent default, use
+"-orig".  It is possible to obtain the original defaults by compiling
+args.c with -DBERKELEY_DEFAULTS.
+
+Long options are now handled, prefaced by either "+" or "--".
+
+A new option, "-ts", allows specification of tab sizes.
+
+All reported bugs have been fixed.
+
+The man format of documentation is no longer included.  indent.texinfo
+is the official document, in accordance with GNU standards.
+Investigate the program "texi2roff" for generating a MAN page.

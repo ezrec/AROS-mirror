@@ -1,0 +1,205 @@
+#=============================================================================
+#
+# Maintainer stuff; don't even LOOK at this - and when you E-mail me
+# about it you'll get blacklisted }:-).
+#
+# I added it only here for other GNU maintainers to look at.
+# In order to use this as-is, you'll need the following utilities:
+#
+# GNU make
+# GNU which-2.x
+# GNU awk
+# GNU date
+# rpm-3.x (RedHat-6.x)
+# texinfo2man.c (I'll make this available via my home page)
+# texi2html
+# cvs2html
+# rcs2log
+# cut
+# grep
+# egrep
+# test
+# sed
+#
+# This maintainer Makefile provides the following functionality:
+#
+# Targets
+# -------
+#
+# - release
+#	Creates everything and puts it all in the release directory $(WWWDIR)
+#       This target calls all of the below targets.
+#	Note: You must `cvs commit' *before* calling this target!
+#
+# The remaining targets can be used to test a part of the distribution process,
+# but are not really useful on their own otherwise.
+#
+# - cvslog
+#	Generates html-ized ChangeLog from the CVS repository log.
+#
+# - index.html
+#	Generates the release front page index.html by replacing
+#	"!VERSION!" in index.html.in by @VERSION@ and the word
+#	"CHANGELOGLIST" by a list of links the cvslog change logs
+#	(also from previous releases).
+#
+# - @PACKAGE@.lsm
+#	Generates an LSM file for distribution via the web page.
+#	It does this by simply replacing "!VERSION!" by @VERSION@.
+#
+# - rpm
+#	Generates the $(TARGET).rpm and src.rpm files.
+#	This target calls all of the below targets.
+#
+# - $(SPECFILE)
+#	Generates the rpm spec file from the file `$(SPECFILE).in' by
+#	replacing "!VERSION!" by @VERSION@ and "!CHANGELOG!" by an
+#	rpm %changelog list generated from the CVS repository log.
+#
+# - tar
+#	Generates the tar.gz distribution file.
+#	This target calls all of the below targets (provided you added
+#	README, @PACKAGE@.1, @PACKAGE@.html and ChangeLog to BUILT_SOURCES).
+#
+# - @PACKAGE@.html
+#	Generates html-ized man page(s) (from @PACKAGE@.texinfo) and
+#
+# - README
+#	Generate README file by replacing "!VERSION!" in README.in by
+#	@VERSION@.
+#
+# - @PACKAGE@.1
+#	Generate man page from @PACKAGE@.texinfo.
+#
+# - ChangeLog
+#	Generates the `ChangeLog' file from the CVS repository logs.
+
+WWWDIR=/home/carlo/www/@PACKAGE@
+REDHAT:=$(shell grep '^%_topdir' rpm/macros | cut -d \  -f 2)
+SPECFILE=@PACKAGE@-${shell echo "@VERSION@" | cut -d. -f1}.spec
+TARGET=i386
+REL=1
+AUTHOR=Carlo Wood <carlo@gnu.org>
+TAG:=${shell echo "V@VERSION@" | sed -e 's/\./_/g'}
+PREVTAG:=${shell test -f .prevtag && cat .prevtag}
+
+test-values:
+	@echo "WWWDIR   = \"$(WWWDIR)\""
+	@echo "REDHAT   = \"$(REDHAT)\""
+	@echo "SPECFILE = \"$(SPECFILE)\""
+	@echo "TARGET   = \"$(TARGET)\""
+	@echo "REL      = \"$(REL)\""
+	@echo "AUTHOR   = \"$(AUTHOR)\""
+	@echo "TAG      = \"$(TAG)\""
+	@echo "PREVTAG  = \"$(PREVTAG)\""
+
+.PHONY: release tar rpm cvslog gdb
+
+@PACKAGE@.1: @PACKAGE@.1.in @PACKAGE@.texinfo texinfo2man configure.in
+	texinfo2man @PACKAGE@.1.in @PACKAGE@.texinfo > @PACKAGE@.1
+
+texinfo2man: texinfo2man.c
+	$(CC) -g -o texinfo2man texinfo2man.c
+
+@PACKAGE@.html: @PACKAGE@.texinfo version.texi
+	texi2html -expand info -menu @PACKAGE@.texinfo
+
+@PACKAGE@_%.html: @PACKAGE@.texinfo version.texi
+	texi2html -expand info -menu @PACKAGE@.texinfo
+
+index.html: index.html.in configure.in
+	grep -B2000 '^CHANGELOGLIST' index.html.in \
+	    | sed -e 's%!VERSION!%@VERSION@%g' \
+	    | grep -v '^CHANGELOGLIST' > index.html
+	( \
+	  VER=`echo "@VERSION@" | cut -d. -f1-2`; \
+	  PATCHLEVEL=`echo "@VERSION@" | cut -d. -f3`; \
+	  while test "$$PATCHLEVEL" != "-1" ; do \
+	    echo "<LI><A HREF="cvslog-$$VER.$$PATCHLEVEL.html">Version $$VER.$$PATCHLEVEL</A>" >> index.html; \
+	    PATCHLEVEL=`echo "$$PATCHLEVEL" | awk '{ printf("%d", $$1 - 1); }'`; \
+	  done \
+	)
+	grep -A2000 '^CHANGELOGLIST' index.html.in | grep -v '^CHANGELOGLIST' >> index.html
+
+README: maintMakefile README.in configure.in
+	sed -e 's%!VERSION!%'`grep 's%@VERSION' config.status | cut -d% -f3`'%g' README.in > README
+
+@PACKAGE@.lsm: @PACKAGE@.lsm.in configure.in
+	sed -e 's%!VERSION!%@VERSION@%g' @PACKAGE@.lsm.in > @PACKAGE@.lsm
+
+tar:
+	@# Make sure the ChangeLog is up to date in maintainer mode
+	@rm -f ChangeLog
+	$(MAKE) dist
+	mv @PACKAGE@-@VERSION@.tar.gz $(REDHAT)/SOURCES
+
+rpm: tar $(SPECFILE)
+	rpm --rcfile=/usr/lib/rpm/rpmrc:rpm/rpmrc --target=$(TARGET) --sign --clean -ba $(SPECFILE)
+
+cvslog:
+	cvs2html -e -r$(PREVTAG):HEAD -o cvslog-@VERSION@;
+
+$(SPECFILE): $(SPECFILE).in configure.in
+	cvs commit $(SPECFILE).in
+	sed -e 's/!VERSION!/@VERSION@/g' $(SPECFILE).in | grep -B2000 '!CHANGELOG!' | grep -v '!CHANGELOG!' > $(SPECFILE)
+	echo -n "%changelog" >> $(SPECFILE)
+	cvs log $(SPECFILE).in | \
+	  grep -A2000 '^-----' | \
+	  egrep -v '^-----|^=====|^revision' | \
+	  awk -F'[ ;]' --assign lastdate="" '{ if ($$0~/^date: /) { \
+	    if (lastdate != $$2) { \
+	      lastdate=$$2; \
+	      printf("\n* "); \
+	      system("echo -n `date --date \""$$2" "$$3"\" \"+%a %b %d %Y\"`"); \
+	      printf(" $(AUTHOR)\n"); \
+	    } \
+	  } else if ($$0~/^[A-Z]/) { printf("- %s\n", $$0); } else if ($$0~/./) { printf("  %s\n", $$0); } else {print} }' >> $(SPECFILE)
+	grep -A2000 '!CHANGELOG!' $(SPECFILE).in | grep -v '!CHANGELOG!' >> $(SPECFILE)
+
+ChangeLog:
+	@( echo "`which --skip-dot cvs` \`echo \"\$$*\" | sed -e 's%1970%1990%'\`" > cvs; \
+	chmod 755 cvs; )
+	PATH=.:$$PATH rcs2log > ChangeLog
+	@rm cvs
+
+release: cvslog tar index.html @PACKAGE@.lsm rpm
+	install -m 644 $(REDHAT)/SRPMS/@PACKAGE@-@VERSION@-$(REL).src.rpm $(WWWDIR)
+	install -m 644 $(REDHAT)/RPMS/$(TARGET)/@PACKAGE@-@VERSION@-$(REL).$(TARGET).rpm $(WWWDIR)
+	install -m 644 $(REDHAT)/SOURCES/@PACKAGE@-@VERSION@.tar.gz $(WWWDIR)
+	install -m 644 index.html $(WWWDIR)
+	install -m 644 @PACKAGE@.lsm $(WWWDIR)
+	install -m 644 cvslog-@VERSION@*.html $(WWWDIR)
+	install -m 644 @PACKAGE@*.html $(WWWDIR)
+	rm cvslog-@VERSION@*.html
+	cvs tag $(TAG)
+	echo "$(TAG)" > .prevtag
+
+##----------------------------------------------------------------------------
+## indent specific stuff:
+##
+
+gdb:
+	$(MAKE) CFLAGS=-g
+	@(egrep -v '^#|^WATCH' .gdbinit.in > .gdbinit; \
+	  what=`grep '^WATCH' .gdbinit.in | cut -d\  -f2`; \
+	  ptrs=`echo "$$what" | grep -- '->' | cut -d- -f1 | sort | uniq`; \
+	  nonptrs=`echo "$$what" | grep -v -- '->'`; \
+	  for p in $$ptrs; do \
+	    lines=`grep -n GDB_HOOK_$$p *.c | cut -d: -f1,2`; \
+	    for i in $$lines; do \
+	      echo -e "b "$$i"\ncommands" >> .gdbinit; \
+	      vars=`grep '^WATCH '$$p'->' .gdbinit.in | cut -d'>' -f2`; \
+	      for j in $$vars; do \
+		echo "watch $$p->$$j" >> .gdbinit; \
+	      done; \
+	      echo "end" >> .gdbinit; \
+	    done; \
+	  done; \
+	  for np in $$nonptrs; do \
+	    func=`echo "$$np" | cut -d: -f1`; \
+	    var=`echo "$$np" | cut -d: -f2`; \
+	    lines=`grep -n "GDB_HOOK_$$func()" *.c | cut -d: -f1,2`; \
+	    for i in $$lines; do \
+	      echo -e "b "$$i"\ncommands\nwatch $$var\nend" >> .gdbinit; \
+	    done; \
+	  done)

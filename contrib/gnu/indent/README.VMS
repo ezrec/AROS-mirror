@@ -1,0 +1,46 @@
+This file describes how to build indent under VMS.
+
+----
+Date: Mon, 29 Nov 1999 09:43:01 -0600
+From: forrest.cahoon@merrillcorp.com
+Subject: VMS/DECC
+
+[...]
+DECC is the default compiler for VMS these days, superceding VAXC.
+[...]
+VMSers should be able to just rename config.h.vms to config.h and
+run @make-decc.
+
+----
+Date: long long ago
+From: MEHRDAD@glum.dev.cf.ac.uk
+Subject: VMS/VAXC and gcc
+
+If you are using GCC, you should run GNUC-MAKE.COM.
+
+If you have VAXC on your machine, run VAXC-MAKE.COM, to create
+indent.exe.  When compiling INDENT sources, VAXC will issue warning
+messages about the length of some external identifiers. You can
+ignore these warnings.
+
+Set up symbol INDENT as a foreign command, for example:
+
+    INDENT :== "$DUA0:[INDENT-DIR]INDENT.EXE"
+
+POSSIBLE PROBLEMS
+
+The function for reading, `read', is defined by the macro SYS_READ.
+By default under VMS, this is defined to be the functions `vms_read'
+defined in io.c.
+
+People have sent me various versions of this function, with differring
+semantics.  I have no way of testing these, so I have done my best to
+1) ensure the correctness of the function, and 2) use the algorithm
+most folks seem to suggest.
+
+If you experience problems in the read function, you might try using
+the plain, system read.  You can also sent me a bug report, if you
+think you have a clue to the problem.  See the file README for reporting
+bugs.
+
+----

@@ -1,0 +1,1360 @@
+1998-12-02    <jla@void.arceneaux.com>
+
+	* indent.c (need_chars): Changed this #define to an inline
+	function.  Also, increase size of buffer by at least `needed'.
+
+1998-11-25    <jla@void.arceneaux.com>
+
+	* lexi.c (lexi): New case lable for 'L' in switch (*token) to
+	handle wide strings.
+	In the if statement for alphanums, fail the test if we are looking
+	at L" or L'.
+	* regression/TEST: added new test case wide.c to EXAMPLES.
+
+1998-11-24    <jla@void.arceneaux.com>
+
+	* indent.texinfo (Common styles): Corrected description of canned
+	styles to correspond with args.c
+
+	* makefile.in (TARFILES): Removed indent.1 from the list.
+
+1998-11-23    <jla@void.arceneaux.com>
+
+	* backup.c (make_backup): Removed #ifdef __MSDOS__, just declare
+	size unsigned int in all cases.
+
+1998-11-22    <jla@void.arceneaux.com>
+
+	* All code now passes through gcc -Wall.
+
+	* args.c: Removed unused variable `exp_troff'.
+
+	* comments.c (print_comment): Removed unused label comment_exit.
+
+	* io.c (dump_line): Removed unused label inhibit_newline.
+
+	* makefile.in (indent.html): New target.
+
+	* sys.h: Removed conditionals around `memcpy' function and define
+	of `bcopy' to `memcpy'.  I will assume that memcpy is available,
+	and see if it's problematic.
+	* memcpy.c: Changed #ifdef USG to #ifndef HAVE_MEMCPY.
+
+	* regression/TEST: added new test files bbb-test.c and
+	class-func.cc.
+	
+	* comments.c (print_comment): Use new variable
+	`comment_lines_count' to count lines in a boxed comment.  When
+	printing a boxed comment, set `parser_state_tos->com_col' to
+	`found_col' when returning from a single line boxed comment.
+
+1998-11-21    <jla@void.arceneaux.com>
+
+	* indent.h (struct buf): New `len' and `column' elements added to
+	struc buf.
+	* indent.c (indent): Update `save_com.len' where appropriate.  Set
+	`save_com.column' where appropriate.
+	* io.c (current_column): Use `len' element of save_com to detect
+	if `buf_ptr' is using the save_com buffer, rather than the `end'
+	element, because that could point to the `ptr' (beginning)
+	element.
+
+	* indent.c (indent): Null-terminate the `save_com' buffer.
+
+1998-11-20    <jla@void.arceneaux.com>
+
+	* indent.c (indent): Include parser_state_tos->classname != '\0'
+	in determining whether to set `is_procname_definition'.
+
+	* indent.h (struct parser_state): New elements `classname_' and
+	`classname_end'.
+	* lexi.c (lexi): If we detect "::" after an indent, set `classname_' and
+	`classname_end'.
+	* parse.c (reset_parser): Initialize `classname_' and `classname_end'.
+
+	* indent.c (indent): Don't break the line if we had an identifier
+	and `parser_state_tos->last_token' is doublecolon.
+
+	* indent.h (codes): Changed enum value `operator' to
+	`cpp_operator', since "operator" is a C++ keyword.
+	indent.c: Likewise.
+	lexi.c: Likewise.
+
+1998-10-20    <jla@void.arceneaux.com>
+
+	* indent.c (indent): In the while (parser_state_tos->search_brace)
+	loop, notice if we see a newline and make sure it's output by
+	using new local variable `just_saw_nl'.
+
+1998-10-01    <jla@void.arceneaux.com>
+
+	* io.c (dump_line): If we're resetting the indentation level
+	because a break is just before an lparen, check that
+	parser_state_tos->paren_level >= 2 before doing this.
+
+Thu Aug 27 10:19:24 1998    <jla@void.arceneaux.com>
+
+	* indent.c (main): Removed type of `main'.
+
+1998-08-25    <jla@void.arceneaux.com>
+
+	* args.c (pro): Changed the "-nps" member of the "gnu" options
+	settings to "-npsl" as the nps option does not exist.
+
+1998-08-23    <jla@void.arceneaux.com>
+
+	* comments.c (print_comment): If the comment begins in the very
+	first column and user specified -fc1, indent it to the code.
+	Don't touch the comment at all if -fc1 was not specified.
+
+1998-08-22    <jla@void.arceneaux.com>
+
+	* io.c (dump_line): If `break_line' is set, there is no comment on
+	the line, and `buf_break' is properly set, break the line at
+	`buf_break' and fill s_code with the un-output portion of the
+	line.  Use new variable `not_truncated' to indicate whether the
+	line was broken or not.
+	Only reset `e_code' to `s_code' if we didn't break the line.
+	If we broke the line, the the next line will begin with a lparen,
+	then reset `parser_state_tos->paren_indents' to the level for the
+	*previous* lparen - otherwise, the line will get indent to where
+	the paren was on the original line.
+
+	* indent.c (indent): If we plan to break the line, set
+	`break_line' and `force_nl'.
+	Whereever we append a blank to the output line, set `buf_break' to
+	that point.  Also, NULL-terminate the line.
+
+	* indent.c, args.c, io.c:  All troff-related code removed.
+
+1998-08-17    <jla@void.arceneaux.com>
+
+	* indent.c (indent): Initialize `buf_break' to 0.
+	If it seems like we need to break the line, set `buf_break' to
+	`buf_ptr'.
+
+	* indent.h: New variable `buf_break' for keeping track of the last
+	place we can break a line.
+
+1998-07-22  Joseph Arceneaux  <jla@emptiness.arceneaux.com>
+
+	* io.c (dump_line): Remove any trailing spaces before outputting
+	code.
+
+Fri Jun 27 12:29:11 1997  Joseph Arceneaux  <jla@emptiness.arceneaux.com>
+
+	* indent.h: Removed broken declaration of lexi ().
+
+Thu May 15 15:52:25 1997  Joseph Arceneaux  <jla@emptiness.arceneaux.com>
+
+	* indent.c (indent): Handle new codes elements `operator' and
+	`overloaded'.
+
+	* indent.h (rwcodes): New rwcodes element `operator'.
+	(codes): New elements `overloaded' and `operator'.
+
+	* lexi.c (lexi): When a keyword is found, check for new rwcodes
+	element rw_operator and if found return `operator'.
+	In default case, return `overloaded' if last token was `operator'.
+	
+Fri Apr 11 12:25:08 1997  Joseph Arceneaux  <jla@emptiness.arceneaux.com>
+
+	* indent.h (codes): New code `doublecolon'.
+	* lexi.c (lexi): Recognize "::" as new code doublecolon.
+	* indent.c (indent): Handle new code `doublecolon'.
+
+	* backup.c (make_backup): Use new variable `size' to handle MSDOS
+	16 bit values for amount written to file.
+
+	* io.c (dump_line): Cast (e_lab - s_lab) to an int for the "%.*s"
+	width specifier ('*' means use the first argumen to the string as
+	the width).
+	(read_file): Cast size arguments to `xrealloc' and `xmalloc' to
+	unsigned.
+	(read_file): Use unsigned int for `size' on MSDOS, so that we can
+	read slightly larger sizes.  Ugh!
+
+Thu Dec 12 10:13:22 1996  Joseph Arceneaux  <jla@emptiness.arceneaux.com>
+
+	* indent.c (main): Make certain that `in_name' is initialized
+	before reading file contents;  reading a zero-length file results
+	in a call to ERROR, which expects `in_name' to be set.
+
+Thu Jan  4 11:39:39 1996  Joseph Arceneaux  <jla@emptiness.samsara.com>
+
+	* parse.c (parse): Don't use variable `case_ind' any more;  do it
+	all on the `cstk' parser stack element.
+	(inc_pstack): Copy the case indentation value from the lower stack
+	frame to the new, top frame.
+	(parse): In main switch, case lbrace, if `swstmt' is on top of
+	stack and `case_indent' is non-zero, add it to
+	`parser_state_tos->i_l_follow'.
+	(parse): In main swtich, case `swstmt', just increment
+	`parser_state_tos->i_l_follow' by `ind_size', not `case_indent'.
+
+Sat Dec 30 09:51:52 1995  Joseph Arceneaux  <jla@emptiness.samsara.com>
+
+	* indent.texinfo (Invoking indent): Described format of
+	.indent.pro, including comments.
+
+	* args.c (scan_profile): Added handling of comments, both C++ and
+	C, in the indent profile.  Also added check for end of buffers.
+
+Fri Dec 29 13:42:30 1995  Joseph Arceneaux  <jla@emptiness.samsara.com>
+
+	* regression/TEST: New test file right-margin-comment.c.
+
+	* comments.c (print_comment): After the main switch statment, if
+	formatting and the line break is after any text, then skip any
+	white space.  For C++ comments, if that white space includes a
+	newline, then end the comment by jumping to new label
+	`cplus_exit'.
+	New label `comment_exit', for terminating C comment.  Not
+	currently used.
+
+Thu Dec 28 16:48:50 1995  Joseph Arceneaux  <jla@emptiness.samsara.com>
+
+	* makefile.in: Added new variable `NTFILES', set to "indent.mak".
+	Include ${NTFILES} in TARFILES.
+	* indent.mak: New file for building under NT.  Contributed by
+	beverly@datacube.com (Beverly Brown).
+
+	* indent.h (fstate): Changed member `allcaps' from 1-bit int to
+	unsigned char.
+
+Wed Dec 27 14:33:36 1995  Joseph Arceneaux  <jla@emptiness.samsara.com>
+
+	* regression/TEST: New test files first-in-block.c and two-on-line.c.
+
+	* comments.c (print_comment): For lower-level comments which begin
+	lines, don't set `start_column' dependent on if the comment began
+	in column 1 or not;  always set it to the indent level minus
+	whatever unindent was specified.  Do continue to set `format'
+	depending on that condition, however.
+	case EOL in main loop, if it's a c++ comment, just pop the stack
+	and return.  Let the main token handling loop deal with the
+	newline and calling `dump_line'.
+
+	(print_comment): New variable `two_contigous_comments', for
+	handling cases of lines consisting of two or more comments, but no
+	code, on a single line.  All updates of
+	`parser_state_tos->com_col' now consider this variable.
+	Also, set `parser_state_tos->box_com' to `boxed_comment' whereever
+	`parser_state_tos->com_col' is set.
+
+	(print_comment): Subsequent to the first handling of boxed
+	comments, removed all initialization of stuff conditional on
+	`boxed_comment', since that is 0.  Note that this is before the
+	main loop, where this could get set.
+
+Mon Oct 30 13:02:07 1995  Joseph Arceneaux  <jla@emptiness.samsara.com>
+
+	* regression/TEST: New test file "kr-proc-decls.c"
+
+	* indent.c (indent): `is_procname' renamed to
+ 	`is_procname_definition' and set only if
+ 	`parser_state_tos->in_parameter_declaration' is also set (besides
+ 	just `parser_state_tos->procname[0]' not being null).
+
+	* args.c: New variable `space_after_pointer_type'.
+	* indent.h: Declared here.
+
+	* indent.h (codes): New element `start_token'.
+	* parse.c (reset_parser): Used to initialize
+	`parser_state_tos->last_token'.
+	* lexi.c (lexi): When examining an alphanumeric, in the hack for
+	guessing if the token is a typedef'd declaration keyword,
+	add an if sub-clause "parser_state_tos->last_token == start_token".
+
+	* indent.c (indent): In case newline, try to detect the case of
+	breaking the line between a type and a procedure name, and if user
+	has specified that procnames don't start lines (e.g., K&R style),
+	don't break the line.
+	Also, if the type seems to have been a pointer type and the new
+	variable `space_after_pointer_type' is set, then request a space.
+
+Sun Oct 29 10:43:09 1995  Joseph Arceneaux  <jla@emptiness.samsara.com>
+
+	* parse.c (reset_parser): Initialize the first element of
+	`parser_state_tos->il', `parser_state_tos->cstk', and
+	`parser_state_tos->paren_indents'.
+
+Sat Oct 28 09:00:29 1995  Joseph Arceneaux  <jla@emptiness.samsara.com>
+
+	* indent.c (indent): When searching for brace, in the `default'
+	case, don't put the token into the save buffer.  Rather, back up
+	`buf_ptr' by setting it to token.  Since this is the place where
+	we much with the other input buffer, I'm hoping this action won't
+	conflict with anythin.
+
+	* lexi.c (lexi): Don't set `token_end' at the end of this loop.
+	Set it instead in the switch statement where `buf_ptr' is
+	advanced.  Otherwise, it may wind up pointing into a different
+	buffer than `token', because a call to `fill_buffer ()' switched
+	the buffers.  Who is the complete loser who designed this program?
+
+	* indent.c (indent): Under the `sw_buffer' label, don't add
+	useless extra space to the end of the `save_com' buffer.
+
+	* lexi.c (lexi): In case case '#', if `leave_preproc_space' is
+	set, append any blanks following '#' to the token.
+	* indent.c (indent): In case preesc, just stick the whole token
+	onto the output stream.
+
+	* regression/TEST: Added new test case, no-newline2.c
+
+	* indent.c (indent): In main switch statement, case preesc while
+	loop looking for end of line now also checks `had_eof'.
+
+	* indent.texinfo (Option Summary): Doc fix in summary for "-l".
+
+	* comments.c (print_comment): Initialized `save_length'.  Reset
+	`save_length' to 0 when we reset `save_ptr' (changes nothing, but
+	makes gcc -Wall -O happy).
+
+	* indent.h: Declare `inc_pstack ()'.
+
+	* version.h: Changed version to 2.0.
+
+	* makefile.in (indent.info): Don't depend on ${MAN}
+
+	* indent.texinfo (Comments): Removed discussion of "-l" option
+	here.
+	(Changed indent version number to 2.0, manual number to 1.4)
+
+	* args.c (set_defaults): Made INLINE.
+	(option_prefix): Ditto.
+	(eqin): Ditto.
+
+Thu Oct 26 11:05:38 1995  Joseph Arceneaux  <jla@emptiness.samsara.com>
+
+	* indent.c (output_line_length): New function to calculate the
+	apparent length of the current output line.
+	(indent): A the beginning and end of the main loop, check to see
+	if we have surpassed any line length restrictions (specified by
+	`max_col'), and if so, set `force_nl'.
+	(indent): In main switch statment cases `comma', and `newline',
+	remove ancient check for surpassed line length.
+
+	* indent.c (indent): No longer sets `comment_max_col' to `max_col'
+	if the former is 0.  These now both default to non-zero values.
+
+	* regression/TEST: Added "-lc 50" to a bunch of lines, to make the
+	comment margin be the same as the line margin, now that I've
+	changed the behaviour of this code in `indent'.
+
+	* indent.h (DEFAULT_RIGHT_COMMENT_MARGIN): New #define to 78,
+	which is what `comment_max_col' wound up defaulted to before.
+	(DEFAULT_RIGHT_MARGIN): New #define to 78.  This will break
+	some of the earlier behaviour.
+
+	* args.c (pro): Removed the "-nps" and "-ps" options.
+
+	* indent.h (codes): Changed `period' to `struct_delim', handling
+	both '.' and "->".
+	* lexi.c (lexi): For case of "->", simply return code
+	`struct_delim'.  For case of '.', also return code
+	`struct_delim'.
+	* indent.c (indent): Replaced all instances of `period' with
+	`struct_delim'.
+
+	* io.c (count_columns): New parameter `stop_char', which can stop
+	the count before a null char.
+	(dump_line, compute_code_target): Calls to `count_columns' changed
+	appropriately.
+	* comments.c (print_comment): Likewise.
+
+	* sys.h (NULL_CHAR): New #define.
+
+Mon Oct  2 17:25:35 1995  Joseph Arceneaux  <jla@emptiness.samsara.com>
+
+	* globs.c (fatal): Don't return `system_error', just `indent_fatal'.
+
+	* indent.h: Removed `system_error' exit value.  This is handled by
+	`indent_fatal'.
+
+Tue Aug  9 20:46:53 1994  Joseph Arceneaux  <jla@albert.gnu.ai.mit.edu>
+
+	* indent.c (PARSE): New macro for calling the parser.  Sets
+	`file_exit_value' to `indent_error' if an error happened.
+
+Fri May  6 18:58:04 1994  Joseph Arceneaux  (jla@albert.gnu.ai.mit.edu)
+
+	* vaxc-make.com: Changed PR_COMMENT.C to COMMENTS.C.
+
+Tue Apr  5 21:40:22 1994  Joseph Arceneaux  (jla@albert.gnu.ai.mit.edu)
+
+	* comments.c (print_comment): In `while' loop handling boxed
+	comments, make sure to check if we need to call `fill_buffer' at
+	every place `buf_ptr' gets advanced.
+
+Sun Feb 27 01:21:44 1994  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* globs.c (fatal): New function which replaces "sys_error".  All
+	affected files changed accordingly.
+
+	* indent.h (WARNING): New define using `message'.
+	(ERROR): Likewise.
+	Many global things now declared extern here.
+
+	* sys.h: Several system functions declared extern here.
+
+	* globs.c (sys_error): #ifdef DEBUG, call `abort'.
+	(message): New function to replace `diag'.
+
+Sat Feb 26 22:41:27 1994  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* io.c: Variable `found_err' removed.
+	indent.h: Ditto.
+
+	* indent.c (indent): Added a default case to the big switch
+	statement.
+
+Mon Feb 21 16:55:43 1994  Joseph Arceneaux  (jla@geech.gnu.ai.mit.edu)
+
+	* backup.c (make_backup): If error, exit with `system_error'.
+
+	* io.c (parsefont): Exit with `invocation_error'.
+
+	* backup.c:
+	* globs.c: #include "indent.h"
+	* makefile.in: Note these new dependencies.
+
+	* args.c (set_option): In case PRO_PRSTRING, exit with
+	`invocation_error' rather than 0.
+	Changed all calls to `exit' to use type 'enum exit_value`.
+
+	* indent.c (indent): Return value now of type `enum exit_value'.
+	New variable `file_exit_value' used to return this value.
+	Calls to `exit' changed to `return' statements.
+	(main): New variable `exit_status' used to return final exit
+	value.
+	New variable `status' in for loop for checking return value of
+	`indent'.	
+	All calls to `exit' changed to use new enum values.
+
+Sun Feb 20 18:16:56 1994  Joseph Arceneaux  (jla@albert.gnu.ai.mit.edu)
+
+	* globs.c (xmalloc): Changed value of `exit' to 2.
+	(sys_error): Moved here from io.c.
+
+	* backup.c (make_backup): Changed value of `exit' to 2.
+
+	* indent.h: New type `enum exit_value'.
+
+	* comments.c (print_comment): When processing a boxed comment and
+	we have reached the end, increment `buf_ptr' before checking
+	limits and calling `fill_buffer'.
+
+Sat Feb 19 18:29:20 1994  Joseph Arceneaux  (jla@albert.gnu.ai.mit.edu)
+
+	* lexi.c (lexi): Understand complex suffixes (GNU C extensions)
+	'i' and 'j'.
+
+Thu Feb 10 15:51:35 1994  Joseph Arceneaux  (jla@albert.gnu.ai.mit.edu)
+
+	* comments.c (print_comment): Call `CHECK_COM_SIZE' when
+	processing boxed comments.
+
+Wed Feb  9 09:39:14 1994  Joseph Arceneaux  (jla@albert.gnu.ai.mit.edu)
+
+	* backup.c (make_backup): Removed unused variables `p' and
+	`new_version'.
+
+Fri Feb  4 01:34:59 1994  Joseph Arceneaux  (jla@geech.gnu.ai.mit.edu)
+
+	* gnuc-make.com: Changed `pr_comments.c' to comments.c.
+
+	* comments.c: Initialize `parser_state_tos->box_com' to 1 in boxed
+	comment section.
+
+Tue Feb  1 01:03:50 1994  Joseph Arceneaux  (jla@geech.gnu.ai.mit.edu)
+
+	* args.c (set_option): Handle new enum `PRO_FUNCTION' by calling
+	p->p_obj as a function.
+
+	* indent.texinfo: Updated version info, copyright.  Whoops!
+	Ignore all references to "-nbbb" and "-bbb".
+
+Sat Jan 29 18:15:42 1994  Joseph Arceneaux  (jla@geech.gnu.ai.mit.edu)
+
+	* Version 1.9 released.
+
+	* indent.texinfo (Option Summary): Describe new option "-lc".
+
+	* args.c, indent.c:  `block_comment_max_col' renamed to
+	comment_max_col.
+	* comments.c: `right_margin' set to `block_comment_max_col'.
+	Documentation of `print_comment' changed.
+
+	* makefile.in (NOTES): Changed to include COPYING.
+	* COPYING: Upgraded to version 2 of the GNU license.
+
+	* NEWS, README, VMS.README: Updated for version 1.9.
+
+Wed Jan 19 17:54:32 1994  Joe Arceneaux  (jla at sparky)
+
+	* comments.c (print_comment): Handling of standard box comments
+	rewritten;  now it all happens in its own little loop as soon as
+	the thing is detected.
+
+Thu Jan 13 10:37:31 1994  Joe Arceneaux  (jla at sparky)
+
+	* comments.c (print_comment): Change of Fri Jun  4 18:10:54 1993
+	reinstalled.  How this ever got uninstalled is a mystery to me,
+	and makes me wonder about keeping the main source directory on a
+	GNU machine.
+
+Wed Jan 12 15:08:48 1994  Joe Arceneaux  (jla at sparky)
+
+	* comments.c (print_comment): Handle better the cases of formatted
+	comments with no contents.
+	Make main loops conditional on (! had_eof).  Pop stack and reset
+	parser_state_tos->com_col after main loop before returning.
+
+Sun Jan  9 23:35:28 1994  Joe Arceneaux  (jla at sparky)
+
+	* io.c (fill_buffer): Rewrite main loop.
+
+Fri Jan  7 15:10:23 1994  Joe Arceneaux  (jla at sparky)
+
+	* io.c (read_file): Complain if file is zero-length.
+
+Thu Jan  6 17:10:44 1994  Joe Arceneaux  (jla at sparky)
+
+	* indent.c (indent): Removed several calls to `fill_buffer' which
+	were superfluous because we know the char just read was not EOL or
+	NULL.
+
+	* io.c (sys_error): Cleanup realloc buisiness and moved former
+	static `errbuf' into this function.  It never returns, so no worry
+	about reallocing.
+
+	* io.c: Cleaned up several #if 0.
+
+Tue Jan  4 20:06:17 1994  Joe Arceneaux  (jla at sparky)
+
+	* comments.c (print_comment): In the conditional `if
+	(blankline_delims)' removed while clause `(p < buf_end)'.
+
+Wed Dec 29 17:21:29 1993  Joe Arceneaux  (jla at sparky)
+
+	* makefile.in:  Renamed file `pr_comment.c' to `comments.c'.
+
+	* io.c (read_file): Call `xrealloc' on fileptr.data and
+	fileptr.name if there is already stuff there.
+
+Wed Dec 22 14:11:24 1993  Joe Arceneaux  (jla at sparky)
+
+	* indent.c (indent): In case newline, once again modified
+	conditional for calling `dump_line':  Added sub-clause of not
+	being `parser_state_tos->in_decl'.
+
+Mon Jun 28 20:41:52 1993  Joseph Arceneaux  (jla@wookumz.gnu.ai.mit.edu)
+
+	* sys.h: For MSDOS, only define USG if not using GCC.  This breaks
+	`memcpy' and stuff from ctypes.h, apparently.
+
+	* makefile.in (distclean): Remove config.status.
+	* (.c.o): Put ${DEFS} first, and ${CFLAGS} last.
+	* RELEASE-NOTES renamed to NEWS globally.
+
+Mon Jun 21 17:43:26 1993  Joseph Arceneaux  (jla@wookumz.gnu.ai.mit.edu)
+
+	* indent.c (indent): Check that `code_lines' and `com_lines' are
+	both greater than zero before printing out their ratio.
+
+Fri Jun 18 17:46:09 1993  Joseph Arceneaux  (jla@wookumz.gnu.ai.mit.edu)
+
+	* version.h: `VERSION_STRING' inc'd to version 1.9.
+
+	* backup.c: Removed all instances of old define `SYS_BACKUP_SUFFIX'.
+
+	* io.c (vms_read): Fixed while loop to be more correct, and return
+	bufp - buffer rather than nread, which may be incorrect value.
+
+Thu Jun 17 21:08:14 1993  Joseph Arceneaux  (jla@wookumz.gnu.ai.mit.edu)
+
+	* makefile.in: Changed `CFLAGS' to just "-O".
+
+Wed Jun 16 15:32:36 1993  Joseph Arceneaux  (jla@wookumz.gnu.ai.mit.edu)
+
+	* Version 1.8 released.
+
+	* makefile.in: New variable VMSFILES describing the files needed
+	for indent under VMS.
+        Removed comments.texinfo from list of files to tar.
+	Use `gzip' utility for compression, rather than tar -z.
+	* configure-6-93:
+	* configure.in-693: Copies of the configure script and its input
+	file from the autoconf directory.  The reliability of the ones in
+	the autoconf directory is questionable.  `configure' and
+	`configure.in' are now links to these files.
+
+	* version.h: Comments rewritten.
+
+Tue Jun 15 10:14:47 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* Thanks to MEHRDAD@glum.dev.cf.ac.uk for the VMS patches.
+	* io.c (read_file): Use SYS_READ, conditional expansion, instead
+	of read.
+	(vms_read): Substitute for `read' under VMS.
+
+	* backup.c: Set `simple_backup_suffix' from new define
+	BACKUP_SUFFIX_STR.  Define this (to "~") if undefined.
+	Likewise, BACKUP_SUFFIX_CHAR and BACKUP_SUFFIX_FORMAT.
+	* sys.h: Conditional defines for VMS added.
+	* args.c (set_profile): Use new define PROFILE_FORMAT for
+	formatting homedir/profile path.
+
+Mon Jun 14 11:37:14 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* indent.texinfo (Comments): Section completely rewritten.  Old
+	 text in file old-comments.texinfo.
+
+	* indent.texinfo (Statements): Explained how -bl and -br affect
+	struct declarations.
+
+	* indent.c (indent): In case newline, modified conditional
+	determining whether or not to call `dump_line' to avoid doing so
+	after a right brace if user has specified `btype_2'.  This makes
+	enums and structs more consistent -- in default mode, the name of
+	the struct goes on a separate line from the rbrace and on the same
+	line in K&R mode, and does so consistently whether in or outside a
+	procedure block.
+
+	* sys.h: Added some defines for compilation under MS-DOS, under
+	#ifdef __MSDOS__.  Thanks to hnyman@lesti.hut.fi.
+
+	* io.c (read_file):  Adjust `fileptr.size' to be what `read'
+	returned, if different from the results of `stat'.  This is
+	because the DOS `read' converts the CR-LF on disc to '\n' in
+	memory.
+
+Fri Jun 11 12:39:38 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* lexi.c (lexi): Accept LL and ULL as suffixes to numbers as well.
+	Suggested by rdh@key.amdahl.com.
+
+	* indent.c (indent): In case `rbrace', when conditionally setting
+	`force_nl', extended the first clause of the if conditional to
+	make `rw_decl' equivalent to `rw_struct_like', and also depend on
+	`btype_2'.  This keeps the structure name on the same line when
+	running with -kr option.
+	* parse.c (parse): In case `lbrace', in conditional for adding
+	`brace_indent', also consider `btype_2'.
+
+Thu Jun 10 17:21:54 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* io.c (count_columns): Rewritten and renamed from `count_spaces'.
+
+Wed Jun  9 12:45:07 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* indent.texinfo (Disabling Formatting): New section describing
+	the new feature implemented below in io.c.
+
+	* io.c (compute_code_target): Rewritten to be clearer.  Note that
+	the use of `max_col' is inconsistent with it's use elsewhere,
+	where it is primarily for use with comment formatting.
+	* (fill_buffer): Rewritten completely.  Now handles command
+	comments /* *INDENT-OFF* */ and /* *INDENT-ON* */.
+	`inhibit_formatting' is now a local variable;  the reference to it
+	in `dump_line' has been removed.  Control of formatting is handled
+	entirely within `fill_buffer'.
+
+Tue Jun  8 19:03:22 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* indent.c (indent): In case `lbrace', when resetting
+	..->decl_on_line, also reset ->in_decl.  Not doing this had the
+	effect that the first statement after the opening '{' of a
+	procedure would not be properly continued if it was broken across
+	two lines.  There is probably a better place to do this.
+
+	* io.c (dump_line): In the loop which outputs `s_code', removed
+	the stupid tab calculations, as well as the undocumented feature
+	for printing out the character '0200'.
+
+	* parse.c (parse): In case `lbrace', if last reserved word was
+	`rw_struct_like', don't indent for struct if the last token was an
+	`rparen'.  This fixes a bug with a struct pointer parameter.
+
+	* regression/TEST: Added new test struct_param.c.
+
+Mon Jun  7 17:01:23 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* indent.c (indent): When handling an embedded comment, if there
+	is code on the line, set `embedded_comment_on_line' to 2,
+	otherwise to 1, to communicate to dump_line () if the line starts
+	with code or comment text.
+	* io.c (dump_line): In section for code (s_code != e_code), if
+	`embedded_comment_on_line' is 1, then use comment indentation,
+	otherwise, use code indentation.
+
+Fri Jun  4 18:10:54 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* pr_comment.c (print_comment): When looking at a leading '*' to
+	decide if it begins the second line of a starred boxed comment (by
+	looking at what column it was in), compare that column to
+	`found_column' rather than `start_column'.
+
+	* indent.c (indent): In case preesc, when handling stuff following
+	the '#', set `quote' when we encounter the quoting character the
+	first time.  Also merged cases '\'' and '"'.
+
+	* regression directory:  Merged all the new comment code tests
+	into the standard regression tests.
+
+Wed May 19 12:11:10 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* pr_comment.c (print_comment): At `end_line:', don't compress
+	into newlines if it's the first line (because it has the starting
+	delimiter).
+
+	* pr_comment.c (print_comment): Moved checks for `buf_ptr' past
+	end outside of while loops (only '\n' and '\0' end the buffer, and
+	changed "buf_ptr >= buf_end" to "buf_ptr == buf_end".
+
+	* parse.c: `parser_state_tos' elements `comment_delta' and
+	`n_comment_delta' eliminated.
+	* indent.h: Ditto.
+	* pr_comment.c: Ditto.
+
+	* io.c: Old comment code removed.
+
+	* pr_comment.c (print_comment): New variable `visible_preamble'
+	set if the preamble is not whitespace.  Used to make sure lines
+	which only have whitespace on them become single newlines.
+	Don't use `postfix_blankline_requested' to add newlines.  This
+	screwed up the algorithm for dealing with paragraph breaks.
+	In the `end_line:' section, only advance `buf_ptr' if it wasn't a
+	paragraph break, because in that case we have scanned ahead a
+	character to detect "\n\n".
+
+Tue May 11 17:26:18 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* pr_comment.c (print_comment): For comment formatting, changed
+	comparison of `column' to `right_margin' from >= to >.
+
+Tue Apr  6 17:51:41 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* pr_comment.c (print_comment): Also consider the characters '='
+	and '_' to make up the top line of a boxed comment.
+	* comments.texinfo: Changed to reflect this.
+
+Wed Feb 24 15:22:51 1993  Joseph Arceneaux  (jla@wookumz.gnu.ai.mit.edu)
+
+	* makefile.in: Added "-O" to CFLAGS.
+
+Thu Feb 11 15:54:10 1993  Joseph Arceneaux  (jla@wookumz.gnu.ai.mit.edu)
+
+	* Version 1.7 released.
+
+	* makefile.in: Renamed from zmakefile.in.
+	All "-f zmakefile" arguments to `MAKE' removed.  Dependencies on
+	"zmakefile.in" changed to "makefile.in".
+
+	* Makefile: Changed references to "zmakefile" to "makefile".
+
+Wed Feb 10 12:25:04 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* indent.c (indent): In case preesc, when going through the line,
+	consider EOL as terminating a C++ comment.
+
+Mon Feb  8 04:45:06 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* memcpy.c: Function `memcpy' surrounded by #ifdef USG.  USG is
+	only defined if `configure' did not find `bcopy'.  memcpy.o should
+	only be loaded if `configure' did not find it.
+	* sys.h: If USG not defined, define memcpy to be bcopy.
+
+	* makefile.in: Renamed from zmakefile.in.
+	* configure: Use "makefile" rather than zmakefile.  Explicitly
+	name `indent' in rule for same.
+
+	* indent.texinfo: Updated copyright and version information.
+	Added new section Bugs.  Added "nlps" option.
+
+	* io.c (pad_output): Rewritten.  If `tabsize' is less than one,
+	use spaces rather than tabs.
+
+	* sys.h: #define TAB and EOL.
+	Changed type of element `size' in struct file_buffer to unsigned
+	long.
+
+	* indent.h, io.c: Type of `in_prog_size' changed to unsigned long.
+
+	* indent.c, parse.c, pr_comment.c, lexi.c, io.c: Use new macros
+	TAB and EOL instead of '\t' and '\n'.
+
+	* args.c, indent.c, backup.c, io.c, parse.c: Cast integer
+	arguments to printf.
+
+	* indent.c:
+	* lexi.c:
+	* parse.c: Added missing parameters to calls to `diag'.
+
+	* args.c: Added new long option "remove-preprocessor-space".
+
+Fri Feb  5 17:40:08 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* indent.c (indent): In case semicolon, case lbrace, and case
+	rbrace, disabled code which checked paren levels (with
+	parser_state_tos->p_l_follow) to enable passing weird stuff to
+	macros.  See comments ending "-jla".
+	(indent): In case lparen, if in a declaration, don't indent out to
+	`dec_ind' if the paren was '['.
+	* Removed several global variables which were shadowed by locals
+	to function `indent'.
+
+	* args.c: Turned off, by default, "lps" option.  Added "nlps"
+	option.
+
+	* io.c (current_column): New function.
+
+	* lexi.c: In case ':', set parser_state_tos->want_blank under
+	certain conditions.
+
+Tue Feb  2 14:03:39 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* indent.c (indent): Handle C++ comments, with special attention
+	to the code for case preesc.
+
+Thu Jan 28 17:31:57 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* parse.c (reset_parser): Initialize parser_state_tos->com_col to
+	0.
+
+Wed Jan 27 13:45:16 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* indent.c (indent): Handle new code type `cplus_comment'.
+
+	* lexi.c (lexi): Handle C++ comments ("//").
+
+	* indent.h: Macros CHECK_CODE_SIZE and CHECK_LAB_SIZE moved to
+	indent.c.  Macro CHECK_COM_SIZE moved to pr_comment.c.
+	New code, `cplus_comment'.
+
+	* pr_comment.c (pr_comment): Removed variable `just_saw_decl' and
+	it's use.
+
+Sat Jan 23 19:36:31 1993  Joseph Arceneaux  (jla@betty-blue.gnu-age.com)
+
+	* indent.c (indent): Only reset `com_ind' if it's less than or
+	equal to 0.  Don't call parse (semicolon) initially.  Skip any
+	leading newlines, resetting col to 1. Don't set
+	`parser_state_tos->ind_level' and `parser_state_tos->i_l_follow'
+	if col > ind_size.
+
+	* parse.c (reset_parser): If tabsize is 0, set it to 1.
+
+Fri Oct  9 21:01:49 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* indent.c (indent): Restuctured the conditional for setting
+	`force_nl' in case rbrace to be clearer.  Also, only check whether
+	to set `postfix_blankline_requested' we're not setting `force_nl'.
+
+Wed Oct  7 16:15:25 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* io.c (diag): Only one format of error message now.  Output it on
+	the standard error in any case.
+
+	* indent.c (indent): In case decl, don't call "parse (decl)" if we
+	are in a "sizeof".
+
+	* args.c: Make default value for `format_col1_comments' be false,
+	to correspond with the "-gnu" spec.
+
+Fri Aug 28 19:15:50 1992  Joseph Arceneaux  (jla@wookumz.gnu.ai.mit.edu)
+
+	* args.c (set_option): Added missing argument to call to
+	`set_option'.
+
+Mon Aug 24 12:47:32 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* sys.h (INLINE): Define this to "__inline__" if __GNUC__ is
+	defined, not "inline".  Good thing we have standards...
+
+	* indent.c (indent): New variable `embedded_comment_on_line' set
+	if an embedded comment is found.
+	* io.c (dump_line): Increment `com_lines' in the case where the
+	comment buffer is empty, but `embedded_comment_on_line' is true.
+	Clear that variable in both cases.  This makes indent include
+	embedded comments in its count of total comment lines.
+
+	* io.c (read_stdin): If the input buffer is realloc'd, update the
+	character pointer `p'.
+
+Wed Aug 19 18:25:48 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* Version 1.6 released.
+
+	* indent.c (indent): In case comma, use `tabsize' rather than 8 to
+	determine if we're past max_col.
+	In case newline, also dump the line if we are past max_col.
+
+Fri Aug 14 19:08:04 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* io.c (dump_line): Test `swallow_optional_blanklines' separately
+	from (prefix_blankline_requested && not_first_line).  Makes "-sob"
+	work properly.
+
+	* indent.c (indent): Intialize several local variables to 0.
+
+Tue Aug 11 18:02:38 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* indent.c (indent): In case rbrace, add clause to conditional for
+	setting `force_nl'.  The clause forces a newline after '}' in most
+	cases.
+	In case swstmt, set `parser_state_tos->in_decl' to false, since we
+	know we're not in a declaration if have just seen "switch" (of
+	course, who knows what indent might think about things).  This
+	corrects the indentation of a case label following the lbrace of
+	the switch.
+
+Mon Aug 10 16:23:54 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* indent.gperf: "return" generates `rw_return', not `rw_break'.
+	How did this happen?  I didn't make this change, and it was not
+	present in indent 1.4.  Doubtless this insidious program modifies
+	itself destructively...
+	* lexi.c (hash, is_reserved): regenerated from indent.gperf.
+
+	* args.c: Make the -gnu setting specify "-bli2" rather than
+	"-bli4".
+
+	* lexi.c (lexi): Accept 'F' suffixes on numeric constants.
+
+	* sys.h Require "__GNUC__" to define INLINE, not "__STDC__".
+
+Mon Aug  4 21:22:54 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* Version 1.5 released.
+
+Mon Aug  3 21:14:40 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* indent.c (indent): In case rparen, removed the change of Jul 28.
+	This is now done if the case mask fails and
+	parser_state_tos->in_decl is true and ..->block_init is false.
+	The old change broke the "-ncs" feature.  Perhaps this could have
+	been done otherwise by using ..->last_u_d.
+	Also, decrement `parser_state_tos->paren_depth' immediatly.
+
+	* All source files formatted with ./indent.
+
+	* pr_comment.c (pr_comment): If `parser_state_tos->box_com' is set
+	(which means that the comment is presumed to be hand-formatted),
+	set `parser_state_tos->n_comment_delta' to
+	(1 - parser_state_tos->com_col), rather than using `count_spaces'
+	to calculate the space up to the comment column.  Not only is this
+	simpler, but the old code used `cur_line' to count those spaces,
+	which was pointing to the *NEXT* line in some cases (because some
+	code in indent () which ignored newlines (like in the case of
+	multi-line comments after #define statments) called fill_buffer ()).
+	Another example of just how brain damaged this code is.  For more
+	extreme self-abuse, look a the interaction between pr_comment ()
+	and dump_line ().
+
+Sun Aug  2 02:10:32 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* pr_comment.c (pr_comment): When computing
+	`parser_state_tos->com_col' for beyond the normal comment
+	position, use (tabsize - 1) instead of 7.
+
+Wed Jul 29 22:50:45 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* lexi.c (lexi): If `buf_ptr' == '(' after scanning an alphanum
+	which is not a keyword, add clause that paren_depth must be 0
+	before considering this as a possible function definition.
+
+Tue Jul 28 17:17:08 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* parse.c (parse): In case lbrace, handle state of being in a decl
+	specially: If this brace succedes a struct-like thing and it goes
+	on a line by itself (! btype_2), then add `brace_indent' to the
+	amount of indentation.  This make GNU-style indentation of
+	structures, etc. work properly.
+
+	* indent.c (indent): In case rparen, if not the beginning of the
+	code, and in_decl, set `parser_state_tos->want_blank'.  This is to
+	handle ensure a space before the last rparen of cases like
+	"int (*fp ()) ()".
+
+Fri Jul 24 18:53:15 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* indent.c: Changes to handle spaces between options and their
+	values.  It would be better to use `getopt', but this change is
+	much simpler.
+	Declaration of `set_option' changed to return int.
+	(main): Increment `i' by the value of `set_option ()'; also, pass
+	argv[i + 1] as second parameter to `set_option'.
+	* args.c (set_option): Take new parameter `param'.
+	New label `arg_missing', just before label `found', to handle
+	missing option value error.
+	If `param_start' is 0, set it to `param'.
+	(scan_profile): Rewritten to look at two entries at once, and pass
+	both to `set_option'.
+
+Wed Jul 22 15:55:56 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* indent.c (indent): In case lbrace, set
+	`parser_state_tos->want_blank' under certain conditions if not at
+	beginning of line and `btype_2' was specified.
+
+	* indent.c: Macro `need_chars' moved here from indent.h.
+
+	* io.c (read_file, read_stdin): No longer appends " \n" to the end
+	of the file, which is now simply delimited with '\0'.  xmalloc 2
+	less bytes for the buffer.
+	(fill_buffer): Stop and set `had_eof' when '\0' is
+	encountered in the file text, then return immediately.
+	* lexi.c (lexi): New case in main switch statement for '\0', which
+	indicates eof.  Removed code to set this in case '\n'.
+
+Fri Jul 10 14:45:25 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* lexi.c (): If keyword "struct" was found inside of parens
+	(case rw_struct_like:) set parser_state_tos->cast_mask before
+	breaking.
+
+Wed Jul  8 21:11:01 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* lexi.c (lexi): Accept 'U' and "UL" suffixes on integer
+	constants.
+
+Fri Jul  3 16:05:45 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* indent.c (indent): For cases unare_op and comma, don't space out
+	to decl_indent (dec_indent) if we are inside parens
+	(parser_state_tos->paren_depth > 0).
+
+Thu Jul  2 13:36:50 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* indent.c (indent): In case rparen, if paren starts the line,
+	check that paren_level is greater than zero before using it to
+	index `paren_indents'.
+
+	* args.c: New variable `leave_preproc_space'.  Set by new option
+	"-lps".
+	* indent.h: Declare `leave_preproc_space'.
+	* indent.c (indent): In case preesc, don't ignore blanks after '#'
+	if `leave_preproc_space' is set.
+	* indent.texinfo: Entries added for new option "-lps".
+
+	* indent.c: At the end of case preesc, call dump_line() if this
+	appears to be a case where it won't get called when processing the
+	newline character.
+
+Wed Jul  1 16:12:57 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* lexi.c (hash, is_reserved): Regenerated (from gperf) with new
+	words "volatile" and "const".
+
+	* args.c: Removed the trailing comma from the last element of enum
+	profile.  This breaks some compilers.
+
+	* Makefile: Changed to drive the configuration process.
+	* zmakefile.in: Renamed from Makefile.in
+	* CONF-README: Renamed from INSTALL
+
+Tue Jun 30 21:34:16 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* globs.c (mymemcpy): Function deleted.
+	* sys.h: Declarations and defines for mymemcpy, etc, removed.
+	* indent_globs.h: All references to memcpy removed.
+	* backup.c: `mymemcpy' changed to `memcpy'.
+	* indent.c: Ditto.
+	* io.c: Ditto.
+
+	* Makefile.in:
+	* INSTALL:
+	* configure:
+	* configure.in:
+	* memcpy.c:     New files.
+
+Sun Jun 14 13:38:12 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* Version 1.4 released.
+
+Fri Jun 12 15:02:37 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* globs.c (mymemcpy): Now a void function.  Don't return anything.
+
+	* io.c (dump_line): When printing label, use `tabsize' to
+	increment target if `com_st' contains tabs.  Also use
+	`tabsize' to calculate target when it's less than zero.
+
+Thu Jun 11 20:27:48 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* indent.c (indent): When token_type is a binary_op, if
+	parser_state_tos->want_blank is not true, but the preceding
+	character is not a space, put one on the line.
+
+	* Removed variable `sccsid' from all files.
+
+Wed Jun 10 13:00:26 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* args.c: Added long option name "dont-space-special-semicolon"
+	for -nss.
+
+Tue Jun  9 13:01:21 1992  Joseph Arceneaux  (jla@geech.gnu.ai.mit.edu)
+
+	* Makefile: Automatically make the files README and RELEASE-NOTES.
+
+	* sys.h: Provide defines for using memcpy or bcopy.
+
+	* globs.c: `mymemcpy ()' only defined #ifndef mymemcpy.
+
+	* indent.c (main): Set `in_name' to the current input file name.
+
+	* io.c (dumpline): Check parser_state_tos->paren_level before
+	using it to index parser_state_tos->paren_indents.
+
+Mon Jun  8 17:55:07 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* lexi.c (lexi): In conditional (paren_count == 0), add '=' to the
+	characters (along with ';', ',', and '(') which constitute a
+	function definition.  This was to cause an ugly declaration from
+	libc ("int (*foo) __P ((int bar)) = bax;") to remain on one line.
+	Note that this is not valid C.
+
+	* indent.c (main): When indenting multiple output files, make sure
+	to close each output file before continuing.
+
+Fri Jun  5 13:56:54 1992  Joseph Arceneaux  (jla@churchy.gnu.ai.mit.edu)
+
+	* io.c (read_file): Use mymemcpy() instead of bcopy();
+
+	* backup.c (max_version):  Don't free dirname unless it was malloc'd.
+
+Wed May  6 02:01:18 1992  Joseph Arceneaux  (jla@geech.gnu.ai.mit.edu)
+
+	* Version 1.3 released.
+
+	* indent.texinfo:  Reorganization of the "Invocation" part, and a
+	new menu entry "Backup files", as well as corrections throughout.
+	A new option "nip" added.
+
+	* indent.c (main): New variable `using_stdin', used to indicate
+	when `-' was specified on the command line.
+
+Tue May  5 21:28:06 1992  Joseph Arceneaux  (jla@geech.gnu.ai.mit.edu)
+
+	* args.c: Set default for `decl_com_ind' to 33.  If
+	BERKELEY_DEFAULTS is defined, default `continuation_indent' to 4.
+
+Sun May  3 00:43:10 1992  Joseph Arceneaux  (jla at hugo)
+
+	* parse.c (reduce):  when reducing <stmt><dolit>,
+	do set i_l_follow to il[parser_state_tos].  This was removed
+	earlier after a new reduction was added, but this obviously fixes
+	some bugs.  It will stay if indent passes all the old tests.
+
+	* args.c (set_option):  When calling `addkey' to add a user
+	identifier, make it type 'rw_decl' since these are supposed to be
+	typedef identifiers.
+	Removed "-d4" spec in "-orig" option settings.
+	Made default for "-fca" be false.
+
+	* args.c (set_profile): Only read one profile.  The one in the
+	current directory has priority.  Return the path of the profile read.
+	* indent.c (main): If `verbose' and we've read a profile, tell the
+	user on the stderr.
+
+Sat May  2 18:33:14 1992  Joseph Arceneaux  (jla at hugo)
+
+	* args.c: `Bill_Shannon' replaced with `blank_after_sizeof'.
+	indent.c: Likewise.
+	indent.h: Likewise.
+
+	* args.c: New variable, exp_nip, for new option "-nip", which is
+	equivalent to "-ip0".  Long option name is
+	"no-parameter-indentation".
+
+	* config.sh: New shell script which generates "dirent_def.h", and
+	include file with directory reading definitions.
+	* Makefile:  Take "config.sh" and "dirent_def.h" into account.
+
+	* backup.c: Make only simple backups if we can't read directories
+	(NODIR is defined).  Functions for numbered backups conditionally
+	defined.
+	Documented all functions.
+
+	* indent_globs.h:  Broken into two new files, indent.h and sys.h.
+	All files changed accordingly, including the Makefile.
+
+Thu Apr 30 14:53:33 1992  Joseph Arceneaux  (jla at hugo)
+
+	* backup.c, backup.h: New files with backup routines.
+	* io.c (make_backup): Moved into backup.c.
+	* io.c (sys_error): No longer static, called from make_backup.
+
+Wed Apr 29 14:56:10 1992  Joseph Arceneaux  (jla at hugo)
+
+	* args.c: Make default value for `else_endif_col' 1, as in "-gnu"
+	settings.
+
+Tue Apr 28 23:18:07 1992  Joseph Arceneaux  (jla at hugo)
+
+	* indent.c (main):  Only output to stdout if stdin is used and no
+	output file is specified, or one input stream is used and -st is
+	specified.
+	* args.c: New variable `use_stdout' set with option "-st".
+	* indent_globs.h: Declare `use_stdout'.
+
+Sun Mar 22 14:59:35 1992  Joseph Arceneaux  (jla at hugo)
+
+	* parse.c (init_parser, reset_parser):  Two new functions which
+	respectively allocate the neccessary parser data structures, and
+	initialize the parser state.
+	* indent.c (indent): New function which does the actual indenting
+	of it's input, which comes in the form of a file_buffer pointer.
+	(main): Command line scan changed to use new option "-o" and read
+	possibly multiple files into new variable `in_file_names'.
+	Main body changed to use new `indent' function on possibly
+	multiple files, and accomodate default standard io specification.
+
+	* io.c (make_backup, read_file, read_stdin):  All file io routines
+	rewritten (`make_backup' formerly `bakcopy').  read routines
+	return pointer to new structure 'file_buffer'.
+	`make_backup' only makes backup file, no longer sets up original
+	file for writing.
+	* indent_globs.h:  Declare struct file_buffer, and io routines.
+
+Fri Mar 20 18:33:18 1992  Joseph Arceneaux  (jla at hugo)
+
+	* args.c: Option "-st" and associated variable `use_stdinout'
+	removed.  Option "-o" and associated variable `expect_output_file'
+	added.
+
+Mon Feb  3 20:22:04 1992  Joseph Arceneaux  (jla at churchy.gnu.ai.mit.edu)
+
+	* args.c: If BERKELEY_DEFAULTS is defined, use the original
+	defaults rather than GNU style.
+
+	* Version 1.2 released.
+
+Thu Jan 23 14:02:06 1992  Joseph Arceneaux  (jla at wombat.gnu.ai.mit.edu)
+
+	* Makefile: info version of manual included in distribution.
+
+	* args.c: New long options "berkeley-style", "berkeley" added
+	which correspond to original style.
+
+	* lexi.c ():  Added explicit parens in checks for alphanums.
+	* indent.c (main):  On switch default when searching brace, added
+	explicit parens to 2nd if statment.
+	* indent_globs.h, io.c: Made variable `in_prog_size' unsigned.
+		 
+Wed Jan 15 11:59:35 1992  Joseph Arceneaux  (jla at hugo)
+
+	* args.c:  Accept "-gnu" option.
+
+	* indent.c (main): In case rbrace, don't use ind_level and il[tos]
+	as criteria for setting search_brace.  This allows "-ce" to work
+	more strictly.
+
+	* indent.c (main): In case lparen, let '(' after an ident which is
+	rw_return begin casts.
+	* lexi.c (lexi): If ident was a reserved word, save it in
+	parser_state_tos->last_rw.
+	Changed "return" from `rw_break' to new enum element `rw_return'.
+	* indent_globs.h: Moved type "enum codes" to this file from
+	lexi.c.  New element of parser state `last_rw'.
+
+Sun Jan 12 01:40:23 1992  Joseph Arceneaux  (jla at hugo)
+
+	* lexi.c (lexi): if in decl and looking at '(', additionally
+	accept, after closing ')',  '(' as constituting a function
+	declaration (along with ';' and ',').
+
+Thu Jan  9 18:31:44 1992  Joseph Arceneaux  (jla at hugo)
+
+	* io.c (dump_line):  When outputting nonblank lines, if
+	n_real_blanklines is > 1 and swallow_optional_blanklines is set,
+	make n_real_blanklines 1.
+
+Wed Jan  8 10:06:43 1992  Joseph Arceneaux  (jla at hugo)
+
+	* args.c (option_prefix):  New function to recognize option prefix
+	from table.  Now handles both "+" and "--" for long option prefixes.
+
+Mon Jan  6 01:15:29 1992  Joseph Arceneaux  (jla at hugo)
+
+	* Makefile:  Made more compatible with GNU standards.  Unix man
+	file removed from distribution.
+
+Fri Dec 27 14:58:13 1991  Joseph Arceneaux  (jla at hugo)
+
+	* parse.c:  Correctly handle "do ... while" statements, using new
+	stack symbol DOSTMT.
+	(parse):  For semicolon, if code DOSTMT is top of stack, replace it
+	with STMT.
+	(reduce):  New reduction <dohead><whilestmt> => <dostmt>.  Also,
+	when reducing <stmt><dolit>, don't change indentation.
+
+	* indent.c (main):  In case rbrace, after parse(rbrace), set
+	force_nl if top of stack is dohead and ! btype_2.
+	(main):  Initialize noncast_mask to 0.
+
+Mon Dec 23 18:34:11 1991  Joseph Arceneaux  (jla at hugo)
+
+	* args.c (set_option): Recognize long options, using new struct
+	option_conversions, if option begins with POSIX_OPTION_PREFIX.
+
+	* indent.c (main): Recognize "--no-profile" as well as "-npro".
+
+	* indent.texinfo: Describe GNU style as default.  Section reworded.
+
+Sat Dec 21 13:27:07 1991  Joseph Arceneaux  (jla at hugo)
+
+	* indent.c (main):  In case preesc (~ line 1282), add !had_eof to
+	second while clause to avoid hanging in weird text (like test file
+	djm-torture-test/t11).
+
+	* indent.c (main): In case rparen, (~ line 680) if cast mask was
+	set and is reset to zero, then set parser_state_tos->want_blank if
+	cast_space was set.  No longer do this (#if 0) in all cases where
+	(!parser_state_tos->cast_mask || cast_space).
+
+Wed Dec  4 16:41:13 1991  Joseph Arceneaux  (jla at hugo)
+
+	* version.h:  Version changed to be simply 1.1.4.  Comments added.
+
+Mon Nov 25 15:16:51 1991  Joseph Arceneaux  (jla at hugo)
+
+	* indent.c (main):  When handling decl case, don't reset
+	PREFIX_BLANKLINE_REQUESTED if we've just encountered the type of a
+	procedure delcaration.  This fixes the -bap bug for procedures
+	which begin with a line declaring their type, following the line with
+	`}' from the last procedure.
+
+Fri Nov 22 15:26:59 1991  Joseph Arceneaux  (jla at hugo)
+
+	* args.c: Default is now GNU style.  Original obtained by new
+	option "-orig".  New variable exp_orig.
+
+	* indent.texinfo: Describe the new -ts option.  Removed the -ss
+	option from GNU style.
+
+Thu Nov 21 17:50:48 1991  Joseph Arceneaux  (jla at hugo)
+
+	* args.c: New variables `tabsize' and `exp_ts'.
+	* indent_globs.h: Declare `tabsize'.
+	* io.c (pad_output, count_spaces): Use `tabsize' to calculate padding.
+	* pr_comment.c (pr_comment): Use `tabsize' to compute column.
+
+	* args.c: Removed the "-ss" option for GNU style.
+
+Fri Sep 13 01:30:18 1991  Joseph Arceneaux  (jla at hugo)
+
+	* indent_globs.c: New element to parser_state, `paren_depth',
+	which counts global paren nesting.
+	* indent.c: Use it in main loop to avoid setting `in_or_st' when
+	doing ansii prototyping.
+
+Thu Sep 12 15:53:54 1991  Joseph Arceneaux  (jla at hugo)
+
+	* io.c (dump_line): Initialize target_column to 0.
+
+	* parse.c: New variable debug to control debugging output.
+
