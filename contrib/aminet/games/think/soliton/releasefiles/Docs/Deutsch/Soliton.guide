@@ -1,0 +1,414 @@
+@database Soliton
+@master Soliton.guide
+
+
+@node "MAIN" "Soliton <Inhaltsverzeichnis>"
+
+                        @{b}S o l i t o n@{ub}
+
+                     Solitär - Kartenspiel
+
+
+@{b}Einleitung@{ub}         @{" Beschreibung          " link "DESCRIPTION" }
+                   @{" Autor                 " link "AUTHOR"      }
+
+@{b}Spiele@{ub}             @{" Klondike              " link "KLONDIKE"  }
+                   @{" Freecell              " link "FREECELL"    }
+
+@{b}Fenster@{ub}            @{" Hauptfenster          " link "MAINWINDOW"  }
+                   @{" Einstellungen         " link "SETTINGS"    }
+                   @{" Profile verwalten     " link "PROFILES"}
+                   @{" Statistiken           " link "STATS"       }
+
+@{b}Anhang@{ub}             @{" Spielkarten erstellen " link "CARDS"}
+                   @{" Geschichte            " link "History.guide/MAIN"     }
+                   @{" Copyright             " link "Copyright.guide/MAIN"   }
+@endnode
+
+
+
+@node "DESCRIPTION" "Soliton <Beschreibung>"
+
+                                    @{b}B e s c h r e i b u n g@{ub}
+
+
+@{b}Eigenschaften@{ub}      Soliton ist ein Solitär-Kartenspiel mit den folgenden Eigen-
+                   schaften:
+
+                   * Klondike und Freecell Spiel
+
+                   * Spielkarten werden per Datatypes eingeladen. Sie können in
+                     beliebigen Farbtiefen und Größen auch sehr leicht
+                     @{"selbst angefertigt" link "CARDS"} werden.
+
+                   * MUI-Oberfläche, läuft wahlweise auf der Workbench oder auf
+                     eigenen Bildschirmen. Insbesondere auch gut für
+                     Graphikkarten geeignet.
+
+                   * Hintergrundmuster frei wählbar.
+
+                   * Opaque Kartenverschiebung per drag'n'drop.
+
+                   * Viele Spieleinstellungen, Timer, Statistiken, Zugvorschlag.
+
+                   * Giftware
+
+@{b}Voraussetzungen@{ub}    Um Soliton zu spielen benötigt man einen Amiga mit Kickstart 3.0
+                   oder höher und MUI Version 3.6 oder höher.
+
+@{b}Installation@{ub}       Das Skript "Soliton-Install" erledigt alles Notwendige. Keine
+                   Angst: Es werden nur Dateien in das auszuwählende Soliton-
+                   Verzeichnis kopiert. Zur Deinstallation genügt es, einfach
+                   das Soliton-Verzeichnis zu löschen.
+@endnode
+
+
+
+@node "AUTHOR" "Soliton <Autor>"
+
+                                  @{b}A u t o r@{ub}
+
+
+                   Soliton wurde geschrieben von
+
+                     Kai Nickel
+                     Herzogstraße 29
+                     67435 Neustadt
+                     BRD
+
+                     Kai.Nickel@stud.uni-karlsruhe.de
+
+                     http://www.uni-karlsruhe.de/~Kai.Nickel/
+
+                   Soliton ist Giftware. Wer das Spiel mag, ist aufgefordert,
+                   dem Autor eine kleine Spende zukommen zu lassen. Meine
+                   Bankverbindung:
+
+                     Konto#: 613 045
+                     Bank  : Raiffeisenbank Mittelhaardt
+                     BLZ   : 546 621 60
+
+                   Updates und Spielkartensätze gibt es im Aminet (game/think
+                   und game/data) sowie auf meiner Homepage.
+
+                   Alle Übersetzungen wurden von der ATO ausgeführt (siehe
+                   auch Kapitel @{"Copyright" link "Copyright.guide/MAIN"}.
+@endnode
+
+
+
+@node "KLONDIKE" "Soliton <Klondike>"
+
+                                @{b}K l o n d i k e@{ub}
+
+
+@{b}Regeln@{ub}         Spielfeldanordnung:
+
+               +---+ +---+       +---+ +---+ +---+ +---+
+               |   | |   |       |   | |   | |   | |   |
+               | S | | O |       | Z | | Z | | Z | | Z |
+               |   | |   |       |   | |   | |   | |   |
+               +---+ +---+       +---+ +---+ +---+ +---+
+
+               +---+ +---+ +---+ +---+ +---+ +---+ +---+
+               |   | |   | |   | |   | |   | |   | |   |
+               | R | | R | | R | | R | | R | | R | | R |
+               |   | |   | |   | |   | |   | |   | |   |
+               +---+ +---+ +---+ +---+ +---+ +---+ +---+
+
+               S: Spielstapel
+               O: Offener Stapel
+               Z: Zielstapel
+               R: Reihenstapel
+
+               Das Ziel des Spiels ist es, alle Karten auf den Zielstapeln
+               abzulegen. Jeder Zielstapel beginnt mit einem Ass, auf das dann
+               die 2, 3, 4, 5, 6, 7, 8, 9, 10, B, D, K des selben Typs gelegt
+               werden können.
+
+               Um das zu erreichen, benötigt man die Reihenstapel. Eine Karte
+               kann an einen Stapel angesetzt werden, wenn sie eine andere Farbe
+               als die darunterliegende hat, und wenn ihr Wert um 1 kleiner ist,
+               als der Wert der darunterliegenden. Ebenso können ganze Reihen
+               von zusammenhängenden Karten verschoben werden.
+
+               Durch Anklicken des Spielstapels werden einige Karten auf den
+               offenen Stapel umgelegt. Ein Doppelklick auf eine Karte bewirkt,
+               dass sie von alleine zu einem möglichen Zielort fliegt.
+
+
+@{b}Hilfsmittel@{ub}    Es gibt zwei Extraknöpfe für Klondike:
+
+               Der 'Zug'-Anzeiger weist auf eine mögliche Kartenbewegung hin
+               und führt diese auf Wunsch auch aus.
+
+               Durch Klick auf 'Abräumen' fliegen so viele Karten wie möglich
+               an ihre Zielorte.
+
+@{b}Punkte@{ub}         Soliton berechnet für jedes Spiel Punkte und führt eine
+               permanente Highscoreliste. Die Punktezählung erfolgt nach
+               folgendem System:
+
+               Karte von Spiel- auf Reihenstapel umlegen           +   5
+
+               Karte in Reihenstapel umdrehen
+               (wird bei automat. Umdrehen berücksichtigt)         +   5
+
+               Karte auf Zielstapel umlegen                        +  10
+
+               Karte vom Ziel- auf Reihenstapel zurücklegen        -  15
+
+               Alle 10 Sekunden Spielzeit                          -   2
+
+               Benutzung der UnDo-Funktion                         -  15
+
+               Bei Einstellung 1 Karte umdrehen gilt: für jedes
+               Mal Spielstapel umdrehen                            - 100
+
+               Bei Einstellung 2 Karten umdrehen gilt: ab dem
+               zweiten Mal Spielstapel umdrehen jedes Mal          -  50
+
+               Bei Einstellung 3 Karten umdrehen gilt: Ab dem
+               dritten Mal Spielstapel umdrehen jedes Mal          -  20
+
+               Beim erfolgreichen Beenden des Spiels gibt es noch einen nur
+               von der Zeit abhängigen Bonus. Negative Punkte entstehen
+               nicht.
+@endnode
+
+
+
+@node "FREECELL" "Soliton <Freecell>"
+
+                                @{b}F r e e c e l l@{ub}
+
+
+@{b}Regeln@{ub}         Spielfeldanordnung:
+
+               +---+ +---+ +---+ +---+   +---+ +---+ +---+ +---+
+               |   | |   | |   | |   |   |   | |   | |   | |   |
+               | F | | F | | F | | F |   | Z | | Z | | Z | | Z |
+               |   | |   | |   | |   |   |   | |   | |   | |   |
+               +---+ +---+ +---+ +---+   +---+ +---+ +---+ +---+
+
+                +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
+                |   | |   | |   | |   | |   | |   | |   | |   |
+                | R | | R | | R | | R | | R | | R | | R | | R |
+                |   | |   | |   | |   | |   | |   | |   | |   |
+                +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
+
+               F: Freie Plätze
+               Z: Zielstapel
+               R: Reihenstapel
+
+               Das Ziel des Spiels ist es, alle Karten auf den Zielstapeln
+               abzulegen. Jeder Zielstapel beginnt mit einem Ass, auf das dann
+               die 2, 3, 4, 5, 6, 7, 8, 9, 10, B, D, K des selben Typs gelegt
+               werden können.
+
+               Man kann nur eine Karte am Stück bewegen. Sie kann an einen
+               Reihenstapel angelegt werden, wenn sie nicht die gleiche Farbe
+               und einen um 1 niedrigeren Wert als die darunterliegende Karte
+               hat.
+
+               Auf einen freien Platz passt nur jeweils eine Karte. Um eine
+               Reihe von Karten quasi am Stück zu bewegen, muss man die freien
+               Plätze als Puffer benutzen. Soliton hilft einem dabei: wenn man
+               eine Reihe Karten nimmt und verschiebt, fliegen die Karten auto-
+               matisch erst auf die freien Plätze und von dort zum Zielort. Je
+               mehr Plätze frei sind, desto mehr Karten kann man am Stück
+               verschieben!
+@endnode
+
+
+
+@node "MAINWINDOW" "Soliton <Hauptfenster>"
+
+                                  @{b}H a u p t f e n s t e r@{ub}
+
+
+                   Das Fenster besteht eigentlich nur auf dem Spielfeld. Karten
+                   werden per drag'n'drop verschoben, indem man sie anklickt,
+                   die Maustaste gedrückt hält und über ihrem Zielort wieder
+                   loslässt. Um eine Reihe von Karten zu verschieben zieht man
+                   einfach an der untersten, und die darüberliegenden folgen.
+
+
+@{b}Knöpfe@{ub}             Am linken Fensterrand befindet sich eine Knopfleiste,
+                   deren Funktion der der entsprechenden Menüpunkte entspricht.
+
+                   Einige Knöpfe und Menüeinträge sind vom Spiel abhängig. In
+                   den Kapiteln @{"Klondike" link "KLONDIKE"} und @{"Freecell" link "FREECELL"} erfährt man mehr
+                   über ihre Bedeutung.
+
+                   Dann tickt auf der Knopfleiste auch noch die Spielzeit, die
+                   zu Beginn eines neuen Spiels zurückgesetzt wird. Sie läuft
+                   übrigens nur, wenn das Soliton-Fenster aktiv ist.
+
+
+@{b}Menü@{ub}               Das Menü bietet die folgenden Funktionen:
+
+                   Projekt
+
+                   Neu          -  Neues Spiel beginnen.
+                   Undo         -  Letzten Zug rückgängig machen.
+                   Statistiken  -  Öffnet das Fenster mit den @{"Spielstatistiken" link "STATS"}.
+                   Hilfe        -  Zeigt die Online-Hilfe. Das gleiche passiert,
+                                   wenn man irgendwo die HELP-Taste drückt.
+                   Über         -  Öffnet Soliton Informationsfenster.
+                   Ende         -  Soliton beenden
+
+                   Profile
+
+                   Hier kann zwischen den verschiedenen Karten-Hintergrund-
+                   Kombinationen umgeschaltet werden, die man selbst definieren
+                   kann (siehe @{"Profile verwalten" link "PROFILES"}).
+
+                   Einstellungen
+
+                   Soliton      -  Soliton @{"Einstellungen" link "SETTINGS"} ändern
+                   MUI          -  MUI-Einstellungen für Soliton ändern
+
+
+@{b}Hilfe@{ub}              Bei Druck auf die HELP-Taste öffnet sich die Online-Hilfe,
+                   die diese Dokumentation hier enthält.
+                   Läßt man den Mauszeiger einen Moment über einem Oberflächen-
+                   element ruhen, erscheint eine Sprechblase mit einem kleinen
+                   Hilfstext.
+@endnode
+
+
+
+@node "SETTINGS" "Soliton <Einstellungen>"
+
+                                  @{b}E i n s t e l l u n g e n@{ub}
+
+
+@{b}Aussehen@{ub}           @{b}Knöpfe@{ub}
+
+                   Die Knopfleiste kann abgeschaltet werden. Dies kann
+                   beispielsweise dann notwendig sein, wenn ein großer Spiel-
+                   kartensatz sonst nicht mehr auf den Bildschirm passt.
+
+                   @{b}Fluggeschwindigkeit@{ub}
+
+                   Geschwindigkeit, mit der die Karten zu ihren Zielen fliegen,
+                   wenn man z. B. auf 'Aufräumen' klickt. 'Sofort' bewirkt, daß
+                   die Karten ohne Gimmicks springen.
+
+                   @{b}Sicherheitsabfragen@{ub}
+
+                   Beim Start eines neues Spiels oder beim Beenden nachfragen.
+
+
+@{b}Regeln@{ub}             Diese Einstellungen sind nur im @{"Klondike" link "KLONDIKE"} Spiel verfügbar.
+
+                   @{b}Umdrehen@{ub}
+
+                   Anzahl der Karten die umgedreht werden, wenn man auf den
+                   Spielstapel oben links klickt. Je mehr Karten desto
+                   schwieriger wird das Spiel.
+
+                   @{b}Als Block@{ub}
+
+                   Ist diese Option aktiv, können die Karten von den unteren
+                   Stapeln nur alle zusammen verschoben werden. Anderenfalls
+                   kann man auch einen Teil abheben und verschieben.
+                   Diese Option macht das Spiel schwieriger.
+
+                   @{b}Automat. Umdrehen@{ub}
+
+                   Die oberste Karte eines Stapels umdrehen, sobald sie frei
+                   wird. Diese Option dient nur der Bequemlichkeit.
+
+                   @{b}Zug-Anzeige@{ub}
+
+                   Legt fest, ob der "Zug"-Knopf im Hauptfenster erscheint, der
+                   über Zugmöglichkeiten Auskunft gibt.
+@endnode
+
+
+
+@node "PROFILES" "Soliton <Profile verwalten>"
+
+                              @{b}P r o f i l e   v e r w a l t e n@{ub}
+
+
+                   Hier können die Graphikkombinationen definiert werden,
+                   zwischen denen im Graphik-Menü umgeschaltet werden kann.
+                   Eine Kombination besteht aus einer Kartendatei und einem
+                   Hintergrundmuster. Alle Soliton-Spiele teilen sich diese
+                   Profilliste.
+
+                   @{b}Profil@{ub}
+
+                   Name der Kombination.
+
+                   @{b}Kartendatei@{ub}
+
+                   Die Bilddatei, in der sich die Spielkarten befinden. Eigene
+                   Spielkarten können leicht @{"selbst erstellt" link "CARDS"} werden.
+
+                   @{b}Hintergrund@{ub}
+
+                   Der Hintergrund des Spielfelds kann mit einem Muster versehen
+                   werden. Dazu kann man hier eine beliebige Bilddatei aus-
+                   wählen, die per Datatypes geladen wird.
+@endnode
+
+
+
+@node "STATS" "Soliton <Statistiken>"
+
+                                  @{b}S t a t i s t i k e n@{ub}
+
+                   In diesem Fenster werden ein paar Fakten über das derzeit
+                   laufende Spiel, die aktuelle Sitzung und über alle Sitzungen
+                   angezeigt.
+
+                   Mit dem "Löschen"-Knopf werden alle Statistiken zurück-
+                   gesetzt.
+
+                   Die Statistiken werden für beide Soliton-Spiele getrennt
+                   abgespeichert, @{"Klondike" link "KLONDIKE"} hat zudem noch eine Highscoreliste.
+@endnode
+
+
+
+@node "CARDS" "Soliton <Eigene Spielkarten>"
+
+                             @{b}E i g e n e   S p i e l k a r t e n@{ub}
+
+
+@{b}Format@{ub}             * Alle Karten eines Kartensatzes müssen rechteckig sein und
+                     genau die gleichen Ausmaße haben. Bei großen Karten wird
+                     zum Spielen ein entsprechend üppiger Bildschirmmodus
+                     erforderlich sein.
+
+                   * Alle Karten befinden sich in einem Bild. Sie müssen dort
+                     direkt nebeneinander liegen und wie im Beispiel "Standard
+                     Cards Medium.iff" angeordnet sein. Dieses Bild muß pixel-
+                     genau abgespeichert werden (z.B. als Brush), da Soliton
+                     die Größe der Karten als Bildbreite/14 und Bildhöhe/4
+                     annimmt.
+
+                   * Die Karten können in beliebiger Farbtiefe vorliegen. Sie
+                     beim Laden an die aktuelle Graphikumgebung angepaßt, indem
+                     die Farben gegebenenfalls reduziert und umgestellt werden.
+                     UNGEEIGNET sind allerdings HAM-Karten, da diese nicht auf
+                     "normalen" Bildschirmmodi dargestellt werden können.
+
+                   * Als Bildformat darf im Grunde alles verwendet werden, was
+                     mit Datatypes gelesen werden kann. Es ist aber zu beachten,
+                     daß nicht jeder alle exotischen Datatypes besitzt. Deshalb
+                     halte ich IFF, JPEG oder PNG für die beste Wahl.
+
+
+@{b}Veröffentlichung@{ub}   Es bleibt natürlich jedem selbst überlassen, ob und wie
+                   er seine Karten veröffentlicht. Bei Uploads ins Aminet
+                   empfehle ich das Verzeichnis "game/data". Bitte vergeßt
+                   nicht, ein .readme beizulegen.
+
+
+                                      VIEL SPASS !!!
+@endnode

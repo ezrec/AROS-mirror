@@ -1,0 +1,87 @@
+/* Convert Reko cardsets to Soliton */
+
+OPTIONS RESULTS
+
+GetMain
+IF rc ~= 0 THEN EXIT
+PARSE VAR result name width height depth .
+
+Redraw Off
+Undo Off
+
+If height > 520 then do
+	setpalette '-1' 0 0 0
+	swap
+	createbuffer 1232 520 force
+	REDRAW
+	setpalette '-1' 24 90 148
+	SWAP
+
+	do y = 0 to 3
+		do x = 0 to 12
+			Scissors 
+			Box 90*x+2 131*y+1 88 130
+			Swap
+			BrushHandle 0 0
+			Point x*88 y*130
+			redraw x*88 y*130 88 130
+			Swap
+		end
+	end
+
+	if width > 1300 then do
+		Scissors
+		Box 1352 132 88 130
+		Swap
+		BrushHandle 0 0
+		Point 1144 0
+		Redraw 1144 0 88 130
+		Swap
+
+		Scissors
+		Box 1262 132 88 130
+		Swap
+		BrushHandle 0 0
+		Point 1144 130
+		Redraw 1144 130 88 130
+	end
+	else do
+		Scissors
+		Box 1172 132 88 130
+		Swap
+		BrushHandle 0 0
+		Point 1144 0
+		Redraw 1144 0 88 130
+		Swap
+
+		Scissors
+		Box 1172 263 88 130
+		Swap
+		BrushHandle 0 0
+		Point 1144 130
+		Redraw 1144 130 88 130
+	end
+
+	killswap
+	killbrush
+end
+else do
+	Scissors 
+	Box 1144 390 88 130
+	BrushHandle 0 0
+	Point 1144 0
+	Redraw 1144 0 88 130
+
+	Scissors 
+	Box 1144 260 88 130
+	BrushHandle 0 0
+	Point 1144 130
+	Redraw 1144 130 88 130
+
+	killbrush
+
+	Crop 0 0 1232 520
+end
+
+Undo On
+Redraw On

@@ -1,0 +1,582 @@
+;-------------------------------------------------------------------------------
+;   Installation script for Soliton by Kai Nickel                 (1999-02-28)
+;-------------------------------------------------------------------------------
+;
+; TRANSLATIONS:
+; -------------
+;
+; 1. Append new language at "Ask Language"
+;
+; 2. Create a new section (like "Deutsch") and override
+;    as many of the english default strings as you like there.
+;
+; 3. Don't forget to change the if (= #LANG <nr>) in you new section
+;    to the number of your new language.
+;
+; HINT: all translation-relevant parts are marked with ******
+; -----
+;
+;*******************************************************************************
+;*                         Ask Language                                        *
+;*******************************************************************************
+
+(complete 0)
+
+(set #LANG
+  (askchoice
+    (prompt
+      "\nSelect your prefered language:\n"
+    )
+    (help
+      "Please select your prefered language.\n\n"
+      "Wählen Sie bitte Ihre bevorzugte Sprache.\n\n"
+      "Vous êtes prié de choisir votre langue préférée.\n\n"
+      "Var god välj det språk du föredrar.\n\n"
+      "Seleziona la tua lingua preferita.\n\n"
+      "Por favor selecciona tu lenguaje preferido.\n\n"
+      "Ole hyvä ja valitse haluamasi kieli.\n\n"
+      ;**********************************
+    )                                 ; *
+    (choices                          ; *
+      "english"                       ; ****************************
+      "deutsch"                       ; * append new language here *
+      "français"                      ; ****************************
+      "svenska"                       ; *
+      "norsk"                         ; *
+      "italiano"                      ; *
+      "español"                       ; *
+      "suomi"                         ; *
+      ;**********************************
+    )
+    (default 0)
+  )
+)
+
+
+;*******************************************************************************
+;*                    English (#0) default strings                             *
+;*******************************************************************************
+;*
+;* Installation strings. Override them in your language section, if you want.
+;* Override-example is given in the following section "Deutsch".
+;*
+(set #WELCOME        "\n\nWelcome to Soliton installation!\n\n\nThis script will install Soliton to your system or update an existing version of Soliton.\n\nAll files will be placed in the Soliton directory.\n")
+(set #MSG_MUI        "Warning: Soliton needs MUI 3.6 or higher!\n\nIt seems that you haven't installed the required MUI version. Anyway, you may continue if you think that this warning is wrong or if you are going to install MUI later\n")
+(set #MSG_OLDOS      "Soliton needs AmigaOS 3.0 or higher, because the cardsets are loaded via datatypes.")
+(set #MSG_PATH       "Choose path where new drawer 'Soliton' should be created.")
+(set #MSG_PATH_HELP  "In this path a new drawer named 'Soliton' will be created, in which Soliton and its files will be copied.\n\n")
+(set #MSG_MAIN       "Install the Soliton games")
+(set #MSG_MAIN_HELP  "The main programs of Soliton. The documentation has to be in the same drawer.\n")
+(set #MSG_GUIDE      "Install the documentation 'Soliton.guide'")
+(set #MSG_GUIDE_HELP "'Soliton.guide' is the documentation and online-help.\nIt must be placed into the same drawer as the main programs.\n")
+(set #MSG_CARDS      "Copy cardsets and patterns")
+(set #MSG_CARDS_HELP "Soliton is able to load different cardsets, here are some of them. You will need at least one to play with.")
+(set #MSG_ICONS      "What icons do you want?")
+(set #MSG_ICONS_HELP "You may choose the style of the Icons to be installed for the Soliton files.\n(MagicWB is a Workbench-enhancment by Martin Huttenloher.)")
+(set #MSG_DOICONS    "Install icons.")
+(set #MSG_CAT        "Install 'Soliton.catalog'.")
+(set #MSG_CATDIR     "Create directory for Soliton.catalog.")
+(set #MSG_CAT_HELP   "Soliton.catalog contains the program texts in your language. Without a catalog Soliton speaks english.\n")
+(set #EXTRAS         "Install Extras")
+(set #EXTRAS_HELP    "The 'Extras' directory contains scripts to convert cardsets from Cyberpatience and Reko to Soliton format.")
+(set #MCC            "Install MCC_Cardgame")
+(set #MCC_HELP       "MCC_Cardgame is required to run Soliton.")
+(set #MSG_DELOLD     "\n\nAn old version of Soliton has been found. It will be deleted. (recommended)\n\n")
+;*
+;* Path and name of the guide belonging to the language.
+;* Don't override this string, if there is no guide in your language.
+;*
+(set #GUIDE          "Docs/English/Soliton.guide")
+;*
+;* Path of the catalog belonging your language.
+;* Don't override this string, if there is no catalog in your language.
+;*
+(set #CATDIR         "")
+
+;*******************************************************************************
+;*                 Deutsch (#1) - overrides all strings                        *
+;*******************************************************************************
+
+(if (= #LANG 1) (
+  (set #WELCOME        "\n\nWillkommen zur Soliton-Installation!\n\n\nDieses Skript installiert Soliton auf diesem Computer bzw. aktualisiert eine bestehende Installation.\n\nEs werden nur Dateien in das Soliton-Verzeichnis geschrieben.\n")
+  (set #MSG_MUI        "Warnung: Soliton benötigt MUI3.6 oder höher.\n\nEs scheint, daß die benötigte MUI Version nicht vorhanden ist. Sie können Soliton trotzdem installieren, wenn Sie diese Warnung für falsch halten oder MUI später installieren werden.\n")
+  (set #MSG_OLDOS      "Soliton benötigt AmigaOS 3.0 oder höher, da die Spielkarten per Datatypes geladen werden.")
+  (set #MSG_PATH       "Wählen Sie das Verzeichnis, in dem die Schublade 'Soliton' erzeugt werden soll.")
+  (set #MSG_PATH_HELP  "Im gewählten Pfad wird ein neues Verzeichnis namens 'Soliton' erzeugt, in das Soliton und die zugehörigen Dateien kopiert werden.\n")
+  (set #MSG_MAIN       "Installieren der Soliton Spiele")
+  (set #MSG_MAIN_HELP  "Die Hauptprogramme von Soliton. Die Dokumentation muß sich später im selben Verzeichnis befinden.\n")
+  (set #MSG_GUIDE      "Installieren der Dokumentation 'Soliton.guide'")
+  (set #MSG_GUIDE_HELP "'Soliton.guide' ist Dokumentation und gleichzeitig Online-Hilfe.\nSie muß in das gleiche Verzeichnis wie das Hauptprogramm.")
+  (set #MSG_CARDS      "Spielkarten und Hintergrundmuster kopieren")
+  (set #MSG_CARDS_HELP "Soliton kann verschiedene Spielkartensätze laden, hier sind einige davon. Mindestens ein Kartensatz ist zum Spielen notwendig.")
+  (set #MSG_ICONS      "Was für Icons möchten sie?")
+  (set #MSG_ICONS_HELP "Sie haben die Wahl, welche für Piktogramme für Soliton verwendet werden sollen.\n(MagicWB ist eine Workbench-Erweiterung von Martin Huttenloher.)")
+  (set #MSG_DOICONS    "Kopieren der MagicWB-Icons.")
+  (set #MSG_CAT        "Den deutschen 'Soliton.catalog' installieren.")
+  (set #MSG_CATDIR     "Verzeichnis für deutschen Katalog erzeugen.")
+  (set #MSG_CAT_HELP   "Der Soliton.catalog enthält alle deutschen Programmtexte. Wer ihn nicht installiert, muß Soliton in Englisch ertragen.\n")
+  (set #EXTRAS         "'Extras' installieren")
+  (set #EXTRAS_HELP    "Das 'Extras'-Verzeichnis enthält Skripts, um Cyberpatience- und Reko-Karten ins Soliton-Format zu konvertieren.")
+  (set #MCC            "MCC_Cardgame installieren")
+  (set #MCC_HELP       "MCC_Cardgame wird von Soltion unbedingt benötigt.")
+  (set #MSG_DELOLD     "\n\nEine alte Version von Soliton wurde gefunden. Sie wird jetzt gelöscht. (empfohlen)\n\n")
+
+  (set #GUIDE          "Docs/Deutsch/Soliton.guide")
+  (set #CATDIR         "Catalogs/Deutsch")
+) )
+
+;*******************************************************************************
+;*               Francais (#2)                                                 *
+;*******************************************************************************
+
+(if (= #LANG 2) (
+(set #WELCOME "Bienvenue pour l'installation de Soliton\n\nCe script va copier tous les fichiers requis par Soliton dans un tiroir.\nVous pouvez également écraser une ancienne version. Vos jeux de cartes ne seront pas touchés.\n")
+  (set #MSG_MUI        "Vous n'avez pas MUI (ou seulement une vieille version).\nSoliton a besoin de MUI 3.6 ou supérieure.\n\nVous pouvez installer Soliton, mais il ne marchera pas tant qu'une nouvelle version de MUI ne sera pas aussi installée.\n")
+  (set #MSG_OLDOS      "Soliton a besoin de l'AmigaOS 3.0 ou supérieur, car les jeux de cartes sont chargés via les datatypes.")
+  (set #MSG_PATH       "Choisissez le chemin où le tiroir « Soliton » devrait être créé.")
+  (set #MSG_PATH_HELP  "Dans le chemin choisi un tiroir « Soliton » sera créé, où Soliton et ses fichiers seront copiés.\nEnviron 180 ko sont nécessaires pour l'installation.\n\nVous pouvez aussi créer un nouveau tiroir.\n")
+  (set #MSG_MAIN       "Installer le programme « Soliton »")
+  (set #MSG_MAIN_HELP  "Le programme « Soliton ». La documentation doit être dans le même tiroir.\n")
+  (set #MSG_GUIDE      "Installer la documentation « Soliton.guide »")
+  (set #MSG_GUIDE_HELP "« Soliton.guide » est la documentation et l'aide en ligne.\nIl doit être placé dans le même tiroir que le programme.\n")
+  (set #MSG_CARDS      "Copier jeux de cartes et motifs")
+  (set #MSG_ICONS      "Quelles icônes voulez-vous ?")
+  (set #MSG_ICONS_HELP "Il y a des icônes dans le style MagicWB.\n\nSi vous n'avez pas MagicWB, vous ne devriez pas installer ces icônes.\n(MagicWB est une amélioration du Workbench par Martin Huttenloher.)")
+  (set #MSG_DOICONS    "Installer les icônes MagicWB.")
+  (set #MSG_CAT        "Installer « Soliton.catalog ».")
+  (set #MSG_CATDIR     "Créer le répertoire pour Soliton.catalog.")
+  (set #MSG_CAT_HELP   "« Soliton.catalog » contient les textes correspondant à votre langue. Sans ce catalogue Soliton se lance en anglais.\n")
+
+  ;(set #CATDIR         "Catalogs/Français")
+  ;(set #GUIDE          "Docs/Français/Soliton.guide")
+) )
+
+;*******************************************************************************
+;*               Svenska (#3)                                               *
+;*******************************************************************************
+
+(if (= #LANG 3) (
+  (set #WELCOME
+    (cat
+      "Välkommen till Installeraren för Soliton!\n\n"
+      "Det här programmet kopierar alla filer du behöver för att spela "
+      "Soliton till en låda som du väljer.\n"
+      "Du kan också installera en ny version över en äldre version. "
+      "Förutom den förvalda kortleken kommer inte dina kortlekar att "
+      "påverkas.\n"
+    )
+  )
+  (set #MSG_MUI
+    (cat
+      "Du har inte MUI installerad (eller så har du en gammal version).\n"
+      "Soliton behöver MUI version 3.6 eller högre.\n\n"
+      "Du kan installera Soliton nu, men det kommer inte att fungera "
+      "förrän du har installerat en ny version av MUI.\n"
+    )
+  )
+  (set #MSG_OLDOS      "Soliton behöver AmigaOS version 3.0 eller högre, eftersom kortlekarna laddas med hjälp av datatyper.")
+  (set #MSG_PATH       "Välj den låda där du vill att lådan 'Soliton' ska skapas.")
+  (set #MSG_PATH_HELP
+    (cat
+      "I den valda lådan kommer en ny låda kallad 'Soliton' att skapas, "
+      "till vilken Soliton och de tillhörande filerna kommer att kopieras.\n"
+      "Ungeför 180 KB ledigt utrymme behövs för installationen.\n\n"
+      "Du kan också skapa en ny låda med hjälp av knappen 'Skapa ny "
+      "låda...'.\n"
+    )
+  )
+  (set #MSG_MAIN       "Installera huvudprogrammet 'Soliton'.")
+  (set #MSG_MAIN_HELP  "Huvudprogrammet, Soliton. Dokumentationen måste vara i samma låda.\n")
+  (set #MSG_GUIDE      "Installera dokumentationen 'Soliton.guide'.")
+  (set #MSG_GUIDE_HELP "'Soliton.guide' är dokumentationen och direkthjälpen.\nDen måste finnas i samma låda som huvudprogrammet.\n")
+  (set #MSG_CARDS      "Kopiera kortlekar och bakgrunder.")
+  (set #MSG_ICONS      "Vilka ikoner vill du ha?")
+  (set #MSG_ICONS_HELP
+    (cat
+      "För filerna finns det ikoner i MagicWB-stilen.\n\n"
+      "Om du inte har MagicWB, bör du inte heller installera de här "
+      "ikonerna.\n"
+      "(MagicWB är en Workbench-förbättring av Martin Huttenloher.)"
+    )
+  )
+  (set #MSG_DOICONS    "Installera MagicWB-ikonerna.")
+  (set #MSG_CAT        "Installera 'Soliton.catalog'.")
+  (set #MSG_CATDIR     "Skapar katalog för Soliton.catalog.")
+  (set #MSG_CAT_HELP
+    (cat
+      "Soliton.catalog innehåller programtexterna på ditt språk. Utan "
+      "katalogen kommer Soliton att använda engelska.\n"
+    )
+  )
+
+  ;(set #CATDIR         "Catalogs/Svenska")
+  ;(set #GUIDE          "Docs/Svenska/Soliton.guide")
+) )
+
+
+;*******************************************************************************
+;*               Norsk (#4)                                                    *
+;*******************************************************************************
+
+(if (= #LANG 4) (
+  (set #WELCOME        "Velkommen til installasjonsprogrammet\nfor Soliton!\n\nDette programmet vil kopiere alle filene du trenger for å kjøre Soliton til den skuffen du velger.\nDu kan også installere en ny versjon over en eldre. Bare standard-kortstokken vil endres. Dine egne kortstokker vil ikke bli rørt.\n")
+  (set #MSG_MUI        "Du har ikke MUI, eller du har en for gammel versjon av MUI. Soliton trenger MUI 3.6 eller høyere.\n\nDu kan installere Soliton nå, men det vil ikke virke før du installerer en ny versjon av MUI også.\n")
+  (set #MSG_OLDOS      "Soliton trenger AmigaOS 3.0 eller høyere fordi korstokkene hentes v.h.a. datatyper.")
+  (set #MSG_PATH       "Velg skuffen eller området der du vil opprette skuffen 'Soliton'.")
+  (set #MSG_PATH_HELP  "En skuff 'Soliton' vil bli opprettet i den valgte skuffen/området. Soliton og tilhørende filer vil bli lagt der.\n\nInstallasjonen vil trenge ca. 180 KB.\n\nDu kan også lage en ny skuff med 'Lag en skuff' på forhånd.\n")
+  (set #MSG_MAIN       "Installasjon av hovedprogrammet 'Soliton'")
+  (set #MSG_MAIN_HELP  "Hovedprogrammet Soliton. Dokumentasjonen må legges i samme skuff.\n")
+  (set #MSG_GUIDE      "Installasjon av dokumentasjonen 'Soliton.guide'")
+  (set #MSG_GUIDE_HELP "'Soliton.guide' inneholder dokumentasjon og online-hjelp.\nDen må plasseres i samme skuff som hovedprogrammet.\n")
+  (set #MSG_CARDS      "Kopiere kortstokker og mønstre")
+  (set #MSG_ICONS      "Hvilke ikoner vil du bruke?")
+  (set #MSG_ICONS_HELP "Det finnes ikoner for filene i MagicWB-stil.\n\nHvis du ikke har MagicWB er det liten vits i å installere disse ikonene.\n(MagicWB er et Workbench-tillegg lagd av Martin Huttenloher.)")
+  (set #MSG_DOICONS    "Installere MagicWB-ikonene.")
+  (set #MSG_CAT        "Installere 'Soliton.catalog'.")
+  (set #MSG_CATDIR     "Lage skuff for Soliton.catalog.")
+  (set #MSG_CAT_HELP   "Soliton.catalog inneholder program-tekstene på ditt språk. Uten katalog vil Soliton vise engelske tekster.\n")
+
+  ;(set #GUIDE          "Docs/Norsk/Soliton.guide")
+  ;(set #CATDIR         "Catalogs/Norsk")
+) )
+
+
+;*******************************************************************************
+;*              Italiano (#5)                                                  *
+;*******************************************************************************
+
+(if (= #LANG 5) (
+  (set #WELCOME        "Benvenuto nell'installazione di Soliton!\n\nQuesto script copierà tutti i file necessari per eseguire Soliton in un cassetto a tua scelta.\nPuoi inoltre installare una nuova versione sopra una già esistente. I tuoi mazzi di carte non saranno toccati, ad eccezione di quello predefinito .\n")
+  (set #MSG_MUI        "Non hai MUI (o hai solo una versione datata).\nSoliton richiede MUI 3.6 o successiva.\n\nPuoi installare Soliton ora, ma non funzionerà fino a quando non installerai una nuova versione di MUI.\n")
+  (set #MSG_OLDOS      "Soliton richiede AmigaOS 3.0 o successivo, dato che carica i mazzi di carte mediante i datatype.")
+  (set #MSG_PATH       "Scegli il percorso dove deve essere creato il nuovo cassetto 'Soliton'.")
+  (set #MSG_PATH_HELP  "Nel percorso scelto sarà creato un nuovo cassetto chiamato 'Soliton', nel quale saranno poi copiati Soliton e i suoi file.\nPer l'istallazione aranno necessari circa 180KB.\n\nPuoi anche creare prima un nuovo cassetto con 'Crea nuovo cassetto...'.\n")
+  (set #MSG_MAIN       "Installo il programma principale 'Soliton'")
+  (set #MSG_MAIN_HELP  "Il programma principale Soliton. La documentazione deve trovarsi nello stesso cassetto.\n")
+  (set #MSG_GUIDE      "Installo la documentazione 'Soliton.guide'")
+  (set #MSG_GUIDE_HELP "'Soliton.guide' è la documentazione e l'aiuto in linea.\nDeve essere posta nello stesso cassetto del programma principale.\n")
+  (set #MSG_CARDS      "Copio i mazzi di carte e i motivi")
+  (set #MSG_ICONS      "Come vuoi le icone?")
+  (set #MSG_ICONS_HELP "Per i file sono disponibili delle icone in stile MagicWB.\n\nSe non hai MagicWB, non dovresti installare queste icone.\n(MagicWB è una miglioria al Workbench di Martin Huttenloher.)")
+  (set #MSG_DOICONS    "Installo le icone MagicWB.")
+  (set #MSG_CAT        "Installo 'Soliton.catalog'.")
+  (set #MSG_CATDIR     "Creo la directory per Soliton.catalog.")
+  (set #MSG_CAT_HELP   "Soliton.catalog contiene i testi del programma nella tua lingua. Senza catalogo Soliton utilizza l'inglese.\n")
+
+  ;(set #GUIDE          "Docs/Italiano/Soliton.guide")
+  ;(set #CATDIR         "Catalogs/Italiano")
+) )
+
+
+;*******************************************************************************
+;*               Español (#6)                                               *
+;*******************************************************************************
+
+(if (= #LANG 6) (
+  (set #WELCOME        "¡Bienvenido a la instalación de Soliton!\n\nEste script copiará todos los ficheros necesarios para ejecutar Soliton en un cajón que elijas.\nTambién puedes instalar una nueva versión sobre otra existente. Excepto la baraja de cartas por defecto tus propias barajas de cartas no se tocarán.\n")
+  (set #MSG_MUI        "Aviso: ¡Soliton necesita MUI 3.6 o superior!\n\nParece que NO tienes instalada la versión de MUI necesaria. De todas formas, puedes continuar si piensas que este aviso es erroneo o si vas a instalar MUI más tarde\n")
+  (set #MSG_OLDOS      "Soliton necesita AmigaOS 3.0 o superior, porque las barajas de cartas son cargadas a través de datatypes.")
+  (set #MSG_PATH       "Elige el camino donde el nuevo cajón 'Soliton' debe ser creado.")
+  (set #MSG_PATH_HELP  "En el camino elegido un nuevo cajón llamado 'Soliton' se creará, en el cual Soliton y sus ficheros serán copiados.\nSobre 180KB se necesitarán para la instalación.\n\nTambién puedes crear un nuevo cajón a través de 'Cajón Nuevo' antes.\n")
+  (set #MSG_MAIN       "Instala el programa principal 'Soliton'")
+  (set #MSG_MAIN_HELP  "El programa principal Soliton. La documentación tiene que estar en el mismo cajón.\n")
+  (set #MSG_GUIDE      "Instalar la documentación 'Soliton.guide'")
+  (set #MSG_GUIDE_HELP "'Soliton.guide' es la documentación y la ayuda en-linea.\nDebe estar en el mismo cajón que el programa principal.\n")
+  (set #MSG_CARDS      "Copiar barajas de cartas y patrones")
+  (set #MSG_ICONS      "¿Que iconos quieres?")
+  (set #MSG_ICONS_HELP "Para los ficheros existen iconos en el estilo MagicWB.\n\nSi no tienes MagicWB, no deberias instalar estos iconos.\n(MagicWB es una mejora del Workbench por Martin Huttenloher.)")
+  (set #MSG_DOICONS    "Instalar los iconos MagicWB.")
+  (set #MSG_CAT        "Instalar 'Soliton.catalog'.")
+  (set #MSG_CATDIR     "Crear un directorio para Soliton.catalog.")
+  (set #MSG_CAT_HELP   "Soliton.catalog contiene los textos del programa en tu lengua. Sin catálogo, Soliton funciona en inglés.\n")
+  (set #EXTRAS         "Instalar Extras")
+  (set #EXTRAS_HELP    "El directorio 'Extras'contiene scripts para convertir barajas de cartas de Cyberpatience y Reko al formato de Soliton.")
+
+  ;(set #GUIDE          "Docs/Español/Soliton.guide")
+  ;(set #CATDIR         "Catalogs/Español")
+) )
+
+
+
+;*******************************************************************************
+;*               Suomi (#7)                                                    *
+;*******************************************************************************
+
+(if (= #LANG 8) (
+  (set #WELCOME        "Tervetuloa Solitonin asennukseen!\n\nTämä komentotiedosto kopioi kaikki Solitonin ajamiseen tarvittavat tiedostot valitsemaasi hakemistoon.\nVoit myös asentaa uuden version entisen päälle. Oletuskorttipakkaa lukuunottamatta korttipakkasi säilyvät koskemattomina.\n")
+  (set #MSG_MUI        "Varoitus: Soliton tarvitsee MUI 3.6:n tai uudemman!\n\nNäyttää siltä, ettet ole asentanut vaadittua MUI-versiota. Voit kuitenkin jatkaa jos uskot tämän varoituksen olevan virheellinen tai aiot asentaa MUI:n myöhemmin\n")
+  (set #MSG_OLDOS      "Soliton tarvitsee AmigaOS 3.0:n tai uudemman, koska korttipakat ladataan datatyyppien avulla.")
+  (set #MSG_PATH       "Valitse polku johon uusi hakemisto 'Soliton', tehdään.")
+  (set #MSG_PATH_HELP  "Valittuun hakemistoon tehdään uusi hakemisto 'Soliton', johon kopioidaan Soliton ja kaikki sen tarvitsemat tiedostot.\nNoin 180KB tarvitaan asennukseen.\n\nVoit myös tehdä uuden hakemiston 'Make New Drawer'-toiminnon avulla.\n")
+  (set #MSG_MAIN       "Asenna pääohjelma 'Soliton'")
+  (set #MSG_MAIN_HELP  "Pääohjelma Soliton. Dokumentoinnin täytyy olla samassa hakemistossa.\n")
+  (set #MSG_GUIDE      "Asenna dokumentointi 'Soliton.guide'")
+  (set #MSG_GUIDE_HELP "'Soliton.guide' on dokumentointi ja online-apu.\nSen täytyy olla samassa hakemistossa pääohjelman kanssa.\n")
+  (set #MSG_CARDS      "Kopioi korttipakat ja taustakuviot")
+  (set #MSG_ICONS      "Mitkä kuvakkeet haluat?")
+  (set #MSG_ICONS_HELP "Tiedostoille on olemassa MagicWB-tyyliset kuvakkeet.\n\nJos sinulla ei ole MagicWB:tä, sinun ei pitäisi asentaa näitä kuvakkeita.\n(MagicWB on Martin Huttenloherin tekemä Workbench-laajennus.)")
+  (set #MSG_DOICONS    "Asenna MagicWB-kuvakkeet.")
+  (set #MSG_CAT        "Asenna 'Soliton.catalog'.")
+  (set #MSG_CATDIR     "Luo hakemisto tiedostolle Soliton.catalog.")
+  (set #MSG_CAT_HELP   "Soliton.catalog sisältää ohjelmatekstit omalla kielelläsi. Ilman catalogia Soliton on englanninkielinen.\n")
+  (set #EXTRAS         "Asenna laajennukset")
+  (set #EXTRAS_HELP    "'Extras'-hakemisto sisältää komentotiedostot korttipakkojen muuntamiseksi Cyberpatience ja Reko -muodoista Soliton-muotoon.")
+
+  ;(set #GUIDE          "Docs/suomi/Soliton.guide")
+  ;(set #CATDIR         "Catalogs/suomi")
+) )
+
+;*******************************************************************************
+;*                                                                             *
+;*             ! NOTHING MORE TO TRANSLATE BEYOND THIS POINT !                 *
+;*                                                                             *
+;*******************************************************************************
+
+
+
+(message #WELCOME)
+
+;-------------------------------------------------------------------------------
+;                            Check OS and MUI versions
+;-------------------------------------------------------------------------------
+
+
+(complete 5)
+
+(set #OSVersion (/ (getversion) 65536))
+(if (< #OSVersion 39)
+  (message #MSG_OLDOS)
+)
+
+
+(if (exists ("LIBS:Muimaster.library"))
+  (
+    (set #MUIVER (/ (getversion "LIBS:Muimaster.library") 65536))
+    (if (< #MUIVER 17)
+      (message #MSG_MUI)
+    )
+  )
+  (message #MSG_MUI)
+)
+
+
+;-------------------------------------------------------------------------------
+;                            Get and creat path
+;-------------------------------------------------------------------------------
+
+(complete 10)
+
+(set #DESTINATION
+  (askdir (prompt  #MSG_PATH)
+          (help    #MSG_PATH_HELP)
+          (default @default-dest)
+  )
+)
+
+(set #DESTPARENT #DESTINATION)
+(set #DESTINATION (tackon #DESTINATION "Soliton"))
+
+(set @default-dest #DESTINATION)
+
+(makedir #DESTINATION
+  (help @makedir-help)
+  (infos)
+)
+
+
+
+
+;-------------------------------------------------------------------------------
+;                            Copy main
+;-------------------------------------------------------------------------------
+
+(complete 20)
+
+(copyfiles (prompt #MSG_MAIN)
+           (source "")
+           (pattern "Soliton #?")
+           (dest #DESTINATION)
+           (confirm)
+           (infos)
+           (noposition)
+           (help #MSG_MAIN_HELP)
+)
+
+(copyfiles (prompt #MCC)
+           (source "mui/Cardgame.mcc")
+           (dest (tackon #DESTINATION "mui") )
+           (infos)
+           (noposition)
+           (help #MCC_HELP)
+)
+
+
+(if (= (exists (tackon #DESTINATION "Soliton")) 1)
+  (
+    (message #MSG_DELOLD)
+    (delete (tackon #DESTINATION "Soliton")
+            (infos)
+    )
+    (delete (tackon #DESTINATION "Soliton.scores"))
+  )
+)
+
+;-------------------------------------------------------------------------------
+;                            Copy guide
+;-------------------------------------------------------------------------------
+
+(complete 30)
+
+(copyfiles (prompt #MSG_GUIDE)
+           (source #GUIDE)
+           (dest   #DESTINATION)
+           (confirm)
+           (infos)
+           (noposition)
+           (help #MSG_GUIDE_HELP)
+)
+
+(complete 40)
+
+(copyfiles (prompt #MSG_GUIDE)
+           (source "Docs/")
+           (dest   #DESTINATION)
+           (pattern "#?.guide")
+           (confirm)
+           (infos)
+           (noposition)
+           (help #MSG_GUIDE_HELP)
+)
+
+
+;-------------------------------------------------------------------------------
+;                            Copy catalog
+;-------------------------------------------------------------------------------
+
+(complete 60)
+
+(if (#CATDIR)
+  (
+    (makedir (tackon #DESTINATION "Catalogs")
+             (prompt #MSG_CATDIR)
+             (help   @makedir-help)
+             (confirm)
+             (infos)
+    )
+
+    (copyfiles (source (tackon #CATDIR "Soliton.catalog"))
+               (dest   (tackon #DESTINATION #CATDIR))
+               (prompt #MSG_CAT)
+               (help   #MSG_CAT_HELP)
+               (confirm)
+    )
+  )
+)
+
+
+;-------------------------------------------------------------------------------
+;                            Copy graphics
+;-------------------------------------------------------------------------------
+
+(complete 70)
+
+(copyfiles (prompt #MSG_CARDS)
+           (source "Graphics/")
+           (dest   (tackon #DESTINATION "Graphics"))
+           (help #MSG_CARDS_HELP)
+           (confirm)
+           (all)
+           (infos)
+)
+
+
+;-------------------------------------------------------------------------------
+;                            Copy Extras
+;-------------------------------------------------------------------------------
+
+(complete 80)
+
+(copyfiles (prompt #EXTRAS)
+           (source "Extras/")
+           (dest   (tackon #DESTINATION "Extras"))
+           (help #EXTRAS_HELP)
+           (confirm)
+           (all)
+           (infos)
+)
+
+;-------------------------------------------------------------------------------
+;                           Copy icons
+;-------------------------------------------------------------------------------
+
+(complete 90)
+
+(set #ICONS
+  (askchoice (prompt  #MSG_ICONS)
+             (help    #MSG_ICONS_HELP)
+             (choices "Standard" "MagicWB")
+             (default 0)
+  )
+)
+
+(if (= #ICONS 0)
+  (
+    (set #ICONDIR "Icons/Standard/")
+  )
+)
+
+(if (= #ICONS 1)
+  (
+    (set #ICONDIR "Icons/MWB/")
+  )
+)
+
+
+
+    (copyfiles (prompt  #MSG_DOICONS)
+               (source  #ICONDIR)
+               (dest    #DESTINATION)
+               (pattern "Soliton #?")
+    )
+
+    (copyfiles (prompt #MSG_DOICONS)
+               (source (tackon #ICONDIR "Graphics.info"))
+               (dest   #DESTINATION)
+    )
+
+    (copyfiles (prompt #MSG_DOICONS)
+               (source (tackon #ICONDIR "MUI.info"))
+               (dest   #DESTINATION)
+    )
+
+    (copyfiles (prompt #MSG_DOICONS)
+               (source #ICONDIR)
+               (pattern "#?.guide.info")
+               (dest   #DESTINATION)
+    )
+
+    (if (#CATDIR)
+      (copyfiles (prompt #MSG_DOICONS)
+                 (source (tackon #ICONDIR "Catalogs.info"))
+                 (dest   #DESTINATION)
+      )
+    )
+
+    (copyfiles (prompt #MSG_DOICONS)
+               (source (tackon #ICONDIR "Extras.info"))
+               (dest   #DESTINATION)
+    )
+
+    (copyfiles (prompt #MSG_DOICONS)
+               (source (tackon #ICONDIR "Soliton.info"))
+               (dest   #DESTPARENT)
+    )
+
+
+
+;-------------------------------------------------------------------------------
+;                            Goodbye
+;-------------------------------------------------------------------------------
+
+(complete 100)
+(exit)

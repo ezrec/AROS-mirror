@@ -1,0 +1,477 @@
+@database Soliton
+@master Soliton.guide
+
+
+@node "MAIN" "Taula de continguts"
+
+                   @{b}S o l i t o n@{ub}
+
+              Joc de cartes de solitari
+                   
+
+@{b}Introducció@{ub}    @{" Descripció           " link "DESCRIPTION" }
+               @{" Instal.lació         " link "INSTALLATION"}
+               @{" Autor                " link "AUTHOR"      }
+
+@{b}Ús@{ub}             @{" Finestra principal   " link "MAINWINDOW"  }
+               @{" Ajustaments          " link "SETTINGS"    }
+               @{" Estadístiques        " link "STATS"       }
+               @{" Crear jocs de cartes " link "CARDS"       }
+
+@{b}Apèndix@{ub}        @{" Historial            " link "History.guide/MAIN"}
+               @{" Copyright            " link "COPYRIGHT"   }
+               @{" MUI                  " link "MUI"         }
+@endnode
+
+
+
+
+
+@node "DESCRIPTION" "Descripció"
+                                   @{b}D e s c r i p c i ó@{ub}
+
+
+@{b}Característiques@{ub} Soliton és un joc de cartes de Solitari amb les següents característiques:
+
+               * Els Jocs de Cartes són carregats via datatypes. També pots @{"fer" link "CARDS"} les
+                 cartes per tu mateix usant el tamany o profunditat de colors que vulguis.
+               * Sistema-amigable @{"MUI" link "MUI"} d'interfície gràfica, funciona en el workbench
+                 o en qualsevol altre pantalla. També funciona molt bé a les targetes gràfiques.
+               * Possibilitat de seleccionar un patró de fons.
+               * Moviment de la carta d'arrossegar i deixar opac.
+               * Moltes opcions de joc, contador, estadístiques, indicador d'un moviment.
+               * Traduït a molts idiomes.
+               * @{"Giftware" link "COPYRIGHT"}.
+
+@{b}Requeriments@{ub}   Per jugar a Soliton necessites el Kickstart 3.0 (o superior) i
+               @{"MUI" link "MUI"} Versió 3.6 (o superior).
+@endnode
+
+
+
+
+
+@node "INSTALLATION" "Instal.lació"
+                               @{b}I n s t a l . l a c i ó@{ub}
+
+
+@{b}Automàtica@{ub}     La millor manera d'instal.lar Soliton és iniciar l'escriptura
+               "Soliton-Install". No t'espantis: Cap fitxer serà copiat dins
+               dels directoris del teu sistema!
+
+@{b}A mà@{ub}           Si no t'agraden les escriptures o el Instal.lador, arrossega
+               el calaix "Soliton" a qualsevol lloc del teu disc dur.
+               Llavors agafa el "Soliton.guide" del teu idioma preferit de
+               "Soliton/Docs/<idioma>/" i mou-lo al calaix "Soliton/" de
+               manera que pugui ser utilitzat per l'ajuda al joc.
+
+@{b}Desinstal.lar@{ub}  Per deslliurar-se de Soliton només has d'esborrar el calaix Soliton. Això és tot.
+@endnode
+
+
+
+
+
+@node "AUTHOR" "Autor"
+                                 @{b}A u t o r@{ub}
+
+
+               Soliton ha estat escrit per Kai Nickel
+
+@{b}Adreça@{ub}         Kai Nickel
+               Herzogstrasse 29
+               67435 Neustadt
+               Germany
+
+@{b}eMail@{ub}          Kai.Nickel@stud.uni-karlsruhe.de
+
+@{b}WWW@{ub}            http://www.uni-karlsruhe.de/~Kai.Nickel/
+
+               Les actualitzacions i la galeria de jocs de cartes poden ser trobades a la
+               meva pàgina web o a Aminet (game/think i game/data).
+
+               "Cards_MagicWB.iff" fet per Kai Hofmann.
+
+@{b}Traduccions@{ub}    Totes les traduccions han estat fetes per L'Organització Traductors Amiga
+               @{b}ATO@{ub}. Vull agrair a les següents persones el seu treball:
+
+               Francais:
+
+                 Franck Aniere     <aniere@univ-mlv.fr>          (Guide, Install)
+                 Francis Labrie    <fb691875@er.uqam.ca>         (Catalog)
+                 Franck Routier    <alci@club-internet.fr>       (Proofreader)
+
+               Svenska:
+
+                 Magnus Holmgren   <cmh@lls.se>                  (Translator)
+                 Linus Silvander   <linus.silvander@parnet.fi>   (Proofreader)
+
+               Norsk:
+
+                 Audun Vaaler      <audunv@powertech.no>
+
+               Italiano:
+
+                 Luca Nora         <ln546991@silab.dsi.unimi.it> (Translator)
+                 Roberto Patriarca <R.Patriarca@flashnet.it>     (Proofreader)
+
+               Nederlands:
+
+                 Guno Heitman      <fam.heitman.@tip.nl>         (Translator)
+                 Frank Mosch                                     (Proofreader)
+
+               Español:
+
+                 Arturo Roa        <aroa@redestb.es>
+
+               Suomi:
+
+                 Pekka Kolehmainen <pekkak@icenet.fi>            (Translator)
+                 Linus Silvander   <linus@icenet.fi>             (Proofreader)
+
+               Polski:
+
+                 Adam Zalepa       <expert@kki.net.pl>           (Translator)
+                 Marcin Orlowski   <carlos@amiga.com.pl>         (Proofreader)
+
+               Català:
+
+                 Daniel Avellà     <cybdani@arrakis.es>          (Translator/Proofreader)
+@endnode
+
+
+
+
+
+
+
+
+
+@node "MAINWINDOW" "Finestra principal"
+                             @{b}F i n e s t r a  p r i n c i p a l@{ub}
+
+
+               La finestra principalment consta del camp de joc. Les cartes es mouen
+               Arrossegant i deixant: Fes clic sobre la carta, deixa el botó del ratolí
+               presionat i deixa'l anar sobre el camp de destí.
+
+
+@{b}Botons@{ub}         A l'esquerre de la finestra hi ha una barra de botons.
+               Els botons pertanyen als ítems més importants del menú. Per saber
+               que fan, si us plau mira per al ítem del menú corresponent.
+
+               El botó 'Moure' indica un moviment possible i l'executa si fas
+               clic.
+
+               A la barra de botons també hi ha un contador del joc que comença desde
+               zero cada vegada que inicies un joc nou. Aquest només corre mentre la
+               finestra de Soliton està activa!
+
+
+@{b}Menú@{ub}           El menú ofereix les següents funcions:
+
+               Projecte
+
+               Nou          :  Començar un joc nou
+
+               Netejar      :  Intenta moure totes les cartes visibles
+                               automàticament a la seva destinació.
+
+               Desfer       :  Desfà el darrer moviment.
+
+               Sobre        :  Mostra la informació de Soliton
+
+               Ajuda        :  Obre la guia d'ajuda al igual que presionant
+                               la tecla HELP
+
+               Estadístiques:  Obre la finestra @{"d'estadístiques" link "STATS"} del joc.
+
+               Iconificar   :  Tanca Soliton i posa una icona en el workbench
+                               per a poder obrir Soliton un altre cop.
+
+               Treure       :  Finalitzar Soliton.
+
+               Perfils
+
+               Aquí pots escollir entre varis perfils diferents. Un perfil és
+               una combinació d'un joc de cartes y un patró. Pots definir
+               els perfils a la finestra @{"d'ajustaments" link "SETTINGS"}.
+
+               Ajustaments
+
+               Soliton     :  Obre la finestra @{"d'ajustaments" link "SETTINGS"} de Soliton.
+
+               MUI         :  Obre els ajustaments del MUI per Soliton.
+
+
+@{b}Ajuda@{ub}          Si prems la tecla HELP obtindràs una finestra d'ajuda
+               en-línia que contindrà aquesta documentació.
+               Si no mous el punter del ratolí per un moment, podràs
+               veure una bombolla amb la informació de l'objecte sota
+               el punter del ratolí.
+@endnode
+
+
+
+
+
+@node "SETTINGS" "Ajustaments"
+                                 @{b}A j u s t a m e n t s@{ub}
+
+
+               Els ajustaments del programa estan dividits en tres pàgines:
+
+
+@{b}Joc@{ub}           @{b}Obrir cartes@{ub}
+
+               Número de cartes que han de ser destapades quan fas clic
+               sobre la pila de dalt a l'esquerre. Com més gran més
+               difícil serà el joc.
+
+               @{b}Moviments bloc@{ub}
+
+               Si està actiu, has de moure les cartes de les piles totes
+               juntes com a un simple bloc. Si no, pots agafar algunes de
+               de les cartes i moure-les. Aquesta opció fa el joc més
+               difícil.
+
+               @{b}Auto obrir@{ub}
+
+               Destapa la primera carta d'una pila com més aviat aquesta és
+               descoberta. Aquesta opció no afecta la dificultat del joc.
+
+               @{b}Auto obrir a dalt a l'esquerre@{ub}
+
+               Fa que Soliton destapi la primera (1, 2 o 3) carta(es) després
+               de donar la volta a la pila d'origen. Aquesta opció no afecta
+               la dificultat del joc.
+
+               @{b}Indicar moviments@{ub}
+
+               Mostra el botó 'Moure' cada vegada que hi ha un moviment
+               possible.
+
+
+@{b}Aparença@{ub}       @{b}Botons@{ub}
+
+               Pots escollir entre els "Botons bonics" i els lletjos
+               "Botons estàndart". Els botons bonics es veuen millor,
+               és tot el que tinc que dir sobre això. Si no t'agrada
+               cap d'aquests, pots escollir "Botons no" i usar el menú.
+
+               @{b}Velocitat de vol@{ub}
+
+               Velocitat de les cartes quan estan 'volant' al seu destí,
+               p.e. quan has fet clic sobre 'Netejar'. També pots selec-
+               cionar 'anim no' per fer que les cartes saltin inmediata-
+               ment al seu destí.
+
+               @{b}Cartes opaques@{ub}
+
+               Mostra la carta 'sencera' quan és moguda, en lloc d'un
+               avorrit vorell.
+
+               @{b}Advertiment@{ub}
+
+               Usa un advertiment visual quan es dona un error.
+
+               @{b}Petició@{ub}
+
+               Pregunta abans de començar un joc nou o de treure el
+               programa.
+
+
+@{b}Perfils@{ub}        Aquí pots definir fins a 10 perfils diferents. Un perfil
+               és una combinació d'un joc de cartes i un patró de fons que
+               pot ser seleccionat en el menú de perfils. Tots els perfils
+               són llistats a l'esquerre.
+
+               @{b}Perfil@{ub}
+
+               Nom del perfil seleccionat.
+
+               @{b}Joc cartes@{ub}
+
+               La imatge que conté el joc de cartes. Fàcilment pots crear
+               @{"les teves propies cartes" link "CARDS"}.
+
+               @{b}Patró@{ub}
+
+               Patró de fons del camp de joc. Pots usar la imatge que
+               vulguis.
+
+@endnode
+
+
+
+
+
+@node "STATS" "Estadístiques"
+                             @{b}E s t a d í s t i q u e s@{ub}
+
+               En aquesta finestra veuràs alguns trets sobre el joc en curs
+               i sobre tots els jocs jugats desde el començament del programa.
+               Soliton calcula una puntuació per a cada joc i guarda una llista
+               de millors puntuacions. Així és com són calculats els punts (temp.
+               piles són les set piles d'abaix):
+
+               Moure una carta desde l'origen a temp. pila          +   5
+
+               Destapar una carta en la temp. pila                  +   5
+
+               Moure una carta a la pila de destí                   +  10
+
+               Retornar una carta desde el destí a la temp. pila    -  15
+
+               Cada 10 segons de joc                                -   2
+
+               L'ús del botó Desfer                                 -  15
+
+               Si estàs jugant en el mode "destapar 1 carta":
+               per cada volta sencera a la pila del joc             - 100
+
+               Si estàs jugant en el mode "destapar 2 cartes":
+               Per cada volta sencera a la pila del joc començant
+               desde la segona volta                                -  50
+
+               Si estàs jugant en el mode "destapar 3 cartes":
+               Per cada volta sencera a la pila del joc començant
+               desde la tercera volta                               -  20
+
+               Si guanyes el joc, obtindràs una bonificació que
+               dependrà del temps del joc. La puntuació mai serà
+               negativa.
+@endnode
+
+
+
+
+@node "CARDS" "Crear jocs de cartes"
+                      @{b}C r e a r   j o c s   d e   c a r t e s@{ub}
+
+
+@{b}Format@{ub}         * Totes les cartes d'un joc de cartes han de tindre
+                 un rectangle i tamany iguals. Si les cartes són molt grans,
+                 necessitaràs una pantalla molt gran per a jugar amb elles.
+                 les cartes d'un tamany de 80*120 caben en una pantalla de
+                 tamany 640*512.
+
+               * Totes les cartes estan en un fitxer gràfic. Han d'estar una
+                 seguida de l'altre de la mateixa manera que estan presenta-
+                 des en el fitxer "Cards_Default.iff".
+                 Desar el gràfic complert exactament sense vorell (p.e. com
+                 a brotxa) degut a que Soliton assumeix que el tamany de la
+                 carta és de 1/14 de l'amplada del gràfic * 1/4 de l'alçada
+                 del gràfic.
+
+               * Pots usar la profunditat de color que vulguis. Soliton
+                 adaptarà el joc de cartes a l'entorn de visualització
+                 actual mentre carrega. NO USIS MODES HAM, perquè aquests
+                 no poden ser adaptats per ser mostrats en uns modes de
+                 pantalla "normals".
+
+               * Pots usar cada format de gràfic que pugui ser carregat amb
+                 els datatypes. Degut a que no tothom té datatypes exòtics,
+                 jo crec que IFF, JPEG o PNG són la millor opció.
+
+
+@{b}Publicació@{ub}     Naturalment, pots publicar les teves cartes com tu
+               vulguis. Jo penso que Aminet/game/data és el millor lloc per
+               als jocs de cartes. Si us plau, no oblidis incluir un fitxer
+               .readme.
+
+
+
+                               D I V E R T E I X - T E ! ! !
+@endnode
+
+
+
+
+@node "COPYRIGHT" "Copyright"
+                                   @{b}C o p y r i g h t@{ub}
+
+
+               Soliton és copyright ©1997-98 de Kai Nickel.
+
+               Soliton és GIFTWARE. Estàs autoritzat a jugar i copiar-lo
+               el temps que vulguis, sempre que no tinguis interessos co-
+               mercials.
+               L'arxiu-original ha de romandre complert i sense modifica-
+               cions quan copiis Soliton.
+
+               !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+               Si t'agrada el programa se't demana d'enviar una petita donació
+               a @{"l'autor" link "author"}. No saps què? Bé, posa uns quants diners en un sobre... :-)
+
+               !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+               El permís explícit per publicar Soliton és per al Meeting-Pearls
+               i per les col.leccions dels Aminet CD.
+
+               L'autor no pot garantitzar el correcte funcionament de Soliton
+               i no es pot fer responsable de qualsevol conseqüència negativa
+               que pugui sorgir de l'ús de Soliton.
+
+               Soliton usa el @{"sistema-MUI" link "MUI"} de Stefan Stuntz.
+
+               @{"Traduccions" link "AUTHOR"} realitzades per la ATO.
+@endnode
+
+
+
+
+@node "MUI" "MUI"
+                                      @{b}M U I@{ub}
+
+
+                               Aquesta aplicació usa
+
+                              MUI - MagicUserInterface
+
+                        (c) Copyright 1993-97 de Stefan Stuntz
+
+
+               MUI és un sistema per generar i mantenir interfícies gràfiques
+               d'usuari. Amb l'ajuda d'un programa de preferències, l'usuari
+               d'una aplicació té la capacitat de personalitzar l'equip
+               d'acord al seu estil.
+
+               MUI és distribuït com shareware. Per obtenir un paquet complert
+               contenint molts exemples i més informació sobre el registre,
+               si us plau, busca un fitxer anomenat "muiXXusr.lha" (XX vol dir
+               el número de la darrera versió) en els teus bulletin boards o
+               en discs de domini públic.
+
+               Si et vols registrar directament, ets lliure d'enviar
+
+
+                                DM 30.-  o  US$ 20.-
+
+                                        a
+
+                                   Stefan Stuntz
+                             Eduard-Spranger-Straße 7
+                                   80935 München
+                                     GERMANY
+
+
+
+@{b}MUI a Soliton@{ub}  Soliton necessita MUI 3.6 o superior per ser instal.lat. Se't
+               permet usar MUI @{b}sense@{ub} registrar-te - pero quan et registres
+               pots disfrutar d'algunes funcions ampliades a les preferències del
+               MUI. És molt recomanable llegir la documentació del MUI cuidadosament
+               - especialment les preferéncies del MUI.
+               Vull mostrarte en la següent llista @{i}algunes@{ui} avantatges dels
+               programes-MUI que poden ser útils usant Soliton:
+
+               Si vols que Soliton funcioni a la seva propia @{b}pantalla@{ub}, pots
+               fer-ho amb les preferències del MUI per a Soliton.
+
+               Les finestres de les aplicacions MUI són @{b}escalables@{ub} i
+               completament @{b}sensibles a les fonts@{ub}.
+
+               Les aplicacions MUI poden ser @{b}iconificades@{ub} en qualsevol moment
+               amb un botó-extra a la barra de títol de les finestres.
+@endnode

@@ -1,0 +1,699 @@
+## version $VER: Soliton.catalog 1.70 (04.11.98)
+## language català
+## codeset 0
+;
+;
+;
+; Catalog Description for Soliton by Kai Nickel
+;
+;
+;
+;******************************************************************************
+;  About
+;******************************************************************************
+;
+MSG_APPDESCRIPTION
+Joc de cartes de solitari
+;Solitaire card game
+;
+MSG_ABOUT_VERSION
+Versió %s (%s)
+;Version %s (%s)
+;
+MSG_ABOUT_OK
+_D'acord
+;_Ok
+;
+MSG_ABOUT_MUI
+_Sobre MUI...
+;_About MUI...
+;
+;NOTE: The GPL disclaimer should not be translated. Add an warning
+;about this in translated catalogs and leave it untouched.
+;
+MSG_ABOUT
+
+;This is an MUI based Amiga card game originally developed by\n\
+;Kai Nickel in 1997. It is freely available under the GPL license\n\
+;since 2001 and continued by a development team. See the provided\n\
+;documentation for more information.\n\
+;\n\
+;A larger set of cardsets can be accessed from the site\n\
+;http://go.to/rekonet/\n\
+;which also has lots of links to other information sources.\n\
+;\n\
+;For your information the GPL license disclaimer:\n\
+;\n\
+;This program is free software; you can redistribute it and/or modify\n\
+;it under the terms of the GNU General Public License as published by\n\
+;the Free Software Foundation; either version 2 of the License, or\n\
+;(at your option) any later version.\n\
+;\n\
+;This program is distributed in the hope that it will be useful,\n\
+;but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+;GNU General Public License for more details.\n\
+;\n\
+;You should have received a copy of the GNU General Public License\n\
+;along with this program; if not, write to the Free Software\n\
+;Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+;
+;
+;******************************************************************************
+;  Main Window
+;******************************************************************************
+;
+MSG_WIN_NEW
+Soliton
+;_New
+;
+MSG_WIN_NEW_HELP
+_Ajustaments
+;Start new game
+;
+MSG_WIN_SWEEP
+Canviar els ajustaments del programa
+;_Clean up
+;
+MSG_WIN_SWEEP_HELP
+_Nou
+;Try to move all cards\n\
+;to their final position\n\
+;auomatically.
+;
+MSG_WIN_UNDO
+Comença un joc nou
+;_Undo
+;
+MSG_WIN_UNDO_HELP
+N_etejar
+;Make last move undone
+;
+MSG_WIN_STATISTICS
+Intenta moure totes les cartes\n\
+a la seva posició final\n\
+automàticament.
+;S_tatistics
+;
+MSG_WIN_STATISTICS_HELP
+Des_fer
+;Show game statistics
+;
+MSG_WIN_MOVE
+Mostra les estadístiques del joc
+;_Move
+;
+MSG_WIN_MOVE_HELP
+Carregant joc de cartes
+;This button indicates a\n\
+;possible move - and executes\n\
+;that move if you click.
+;
+MSG_TIMER_HELP
+Carregant patró
+;Time elapsed since start of\n\
+;this game. Only running while\n\
+;window active.
+;
+MSG_REQ_NEWGAME
+_Moure
+;Start a new game now?
+;
+MSG_REQ_QUIT
+Aquest botó indica un possible\n\
+moviment - i executa aquell\n\
+moviment si fas clic.
+;Quit Soliton now?
+;
+MSG_REQ_GADGETS
+Temps transcorregut desde el inici\n\
+de aquest joc. Només corrent mentre\n\
+la finestra està activa.
+;* Ok | Cancel
+;
+MSG_SCORE_HELP
+Començar un joc nou ara?
+;Game score
+;
+;
+;
+;******************************************************************************
+;  Menu
+;******************************************************************************
+;
+MSG_MENU_PROJECT
+Projecte
+;Game
+;
+MSG_MENU_PROJECT_NEW
+N\0Joc Nou
+;N\0New game
+;
+MSG_MENU_PROJECT_SWEEP
+C\0Netejar
+;C\0Clean up
+;
+MSG_MENU_PROJECT_UNDO
+U\0Desfer
+;U\0Undo
+;
+MSG_MENU_PROJECT_ABOUT
+?\0Sobre...
+;?\0About...
+;
+MSG_MENU_PROJECT_HELP
+H\0Ajuda...
+;H\0Help...
+;
+MSG_MENU_PROJECT_STATS
+T\0Estadístiques...
+;T\0Statistics...
+;
+MSG_MENU_PROJECT_QUIT
+I\0Iconificar
+;Q\0Quit
+;
+MSG_MENU_SETTINGS
+Q\0Treure
+;Settings
+;
+MSG_MENU_SETTINGS_SOLITON
+Ajustaments
+;S\0Soliton...
+;
+MSG_MENU_SETTINGS_MUI
+S\0Soliton...
+;M\0MUI...
+;
+MSG_MENU_PROFILES
+M\0MUI...
+;Profiles
+;
+MSG_MENU_MANPROFILES
+Perfils
+;P\0Manage Profiles...
+;
+MSG_MENU_GAME
+
+;Gametype
+;
+MSG_MENU_GAME_KLONDIKE
+
+;K\0Klondike
+;
+MSG_MENU_GAME_FREECELL
+
+;F\0Freecell
+;
+;
+;
+;
+;******************************************************************************
+;  Settings
+;******************************************************************************
+;
+MSG_SETTINGS_TITLE
+Ajustaments
+;Soliton <Settings>
+;
+MSG_SETTINGS_TOPIC
+Ajustaments de Soliton
+;Settings
+;
+MSG_SETTINGS_SAVE
+Desa_r
+;_Save
+;
+MSG_SETTINGS_SAVE_HELP
+Desar els ajustaments permanentment
+;Permanently save settings
+;
+MSG_SETTINGS_USE
+_Usar
+;_Use
+;
+MSG_SETTINGS_USE_HELP
+Utilitza els ajustaments fins que la\n\
+pròxima vegada inicies el programa
+;Use settings until the next time\nyou start the program
+;
+MSG_SETTINGS_CANCEL
+_Cancel.lar
+;_Cancel
+;
+MSG_SETTINGS_CANCEL_HELP
+Ignora tots els canvis
+;Ignore all changes
+;
+MSG_SETTINGS_PATTERN
+_Patró
+;_Pattern
+;
+MSG_SETTINGS_PATTERN_HELP
+Patró de fons per al camp de joc
+;Background pattern of the playfield
+;
+MSG_SETTINGS_CARDSET
+_Joc cartes
+;Ca_rdset
+;
+MSG_SETTINGS_CARDSET_HELP
+El fitxer què conté el joc de cartes
+;File that contains the cardset
+;
+MSG_SETTINGS_OPEN
+_Obrir cartes
+;_Open cards
+;
+MSG_SETTINGS_OPEN_HELP
+Quantes cartes han de ser obertes\n\
+quan fas clic sobre la pila?\n\
+Com més gran més difícil serà\n\
+el joc.
+;How many cards should be opened\n\
+;when you click the stack?\n\
+;The higher the harder the game\n\
+;will be.
+;
+MSG_SETTINGS_BLOCK
+Moviments b_loc
+;B_lock moves
+;
+MSG_SETTINGS_BLOCK_HELP
+Permet moure només el bloc sencer\n\
+de cartes en lloc del moviment senzill.\n\
+Això fa el joc més difícil.
+;Allow only to move the whole block\n\
+;of cards instead of single ones.\n\
+;This will make the game harder.
+;
+MSG_SETTINGS_BUTTONS
+_Botons
+;_Buttons
+;
+MSG_SETTINGS_BUTTONS_HELP
+Vols veure els botons?
+;Do you want to see the buttons?
+;
+MSG_SETTINGS_DESIGN
+Aparença
+;Appearance
+;
+MSG_SETTINGS_AUTOOPEN
+_Auto obrir
+;_Auto open
+;
+MSG_SETTINGS_AUTOOPEN_HELP
+Destapa automàticament la primera\n\
+carta tapada de la pila.\n\
+Això és més confortable\n\
+i no afecta la dificultat.
+;Automatically turn around the\n\
+;topmost face-down card of a stack.\n\
+;This is just more comfortable\n\
+;and does not affect difficulty.
+;
+MSG_SETTINGS_INDICATOR
+_Indicar moviments
+;_Indicate moves
+;
+MSG_SETTINGS_INDICATOR_HELP
+Mostra el botó 'Moure' cada vegada\n\
+que hi ha un moviment possible.
+;Show the 'Move' button every time\n\
+;there is a possible move.
+;
+MSG_SETTINGS_ANIM
+-
+;_Fly speed
+;
+MSG_SETTINGS_ANIM_HELP
+-
+;Speed of the cards flying\n\
+;to their destination
+;
+MSG_SETTINGS_NOANIM
+-
+;no anim
+;
+MSG_SETTINGS_PROFILE
+anim no
+;Pro_file
+;
+MSG_SETTINGS_PROFILE_HELP
+A_dvertir
+;Name of the profile
+;
+MSG_SETTINGS_PROFILES_HELP
+Utilitza un advertiment visual\n\
+per assenyalar els errors\n\
+;Use display beep\n\
+;to signal errors
+;List of all profiles.\n\
+;A profile is a combination\n\
+;of a cardset and a pattern\n\
+;that can be referred by a\n\
+;single name.
+;
+MSG_SETTINGS_NOPROFILE
+Per_fil
+;<unnamed>
+;
+MSG_SETTINGS_AUTOTURN
+Nom del perfil
+;A_uto open topleft
+;
+MSG_SETTINGS_AUTOTURN_HELP
+Llista de tots els perfils.\n\
+Un perfil és una combinació\n\
+d'un joc de cartes i un patró\n\
+el qual s'hi pot accedir per\n\
+un nom simple.
+;Automatically open the <n>\n\
+;cards of the top left stack\n\
+;after turning around that stack.\n\
+;This is just more comfortable\n\
+;and does not affect difficulty.
+;
+MSG_SETTINGS_REQS
+Perfils
+;Re_quester
+;
+MSG_SETTINGS_REQS_HELP
+<buit>
+;Ask before starting\n\
+;a new game or quitting\n\
+;the program.
+;
+MSG_SETTINGS_KLONDIKE
+
+;Klondike
+;
+MSG_SETTINGS_FREECELL
+
+;Freecell
+;
+MSG_SETTINGS_STACK
+
+;_Stack cards
+;
+MSG_SETTINGS_STACK_HELP
+
+;How many cards should be already\n\
+;on the stack when game starts?\n\
+;The higher the harder the game\n\
+;will be.
+;
+MSG_SETTINGS_EQUALCOLOR
+
+;_Equal Color
+;
+MSG_SETTINGS_EQUALCOLOR_HELP
+
+;Place cards on equal colored cards\n\
+;instead of red/black mixed.
+;
+;
+;
+;
+;
+;******************************************************************************
+;   Statistics
+;******************************************************************************
+;
+MSG_STATS_TITLE
+Estadístiques
+;Soliton <Statistics>
+;
+MSG_STATS_TOPIC
+Stadístiques joc
+;Statistics
+;
+MSG_STATS_CLOSE
+_D'acord
+;_Ok
+;
+MSG_STATS_SCORE
+Puntuació
+;Score
+;
+MSG_STATS_SCORE_HELP
+Puntuació joc
+;Game score
+;
+MSG_STATS_TURNS
+Tombs
+;Turns
+;
+MSG_STATS_TURNS_HELP
+Quantes vegades has destapat\n\
+la pila del joc?
+;How many times did you\n\
+;turn around the game stack?
+;
+MSG_STATS_WINS
+Guanyats
+;Won
+;
+MSG_STATS_WINS_HELP
+Número de jocs que has\n\
+finalitzat satisfactòriament
+;Number of games you\n\
+;finished successfully
+;
+MSG_STATS_LOSSES
+Perduts
+;Lost
+;
+MSG_STATS_LOSSES_HELP
+Múmero de jocs que has interromput
+;Number of games you aborted
+;
+MSG_WINNER_TITLE
+Felicitats!
+;Congratulations!
+;
+MSG_WINNER_TEXT
+\n\
+Has acabat el joc.
+;\n\
+;You finished the game.
+;
+MSG_STATS_ENTERNAME
+Si us plau, entra el teu nom:
+;Please enter your name:
+;
+MSG_STATS_CLEARSCORES
+_Netejar
+;_Clear
+;
+MSG_STATS_CLEARSCORES_HELP
+Neteja la llista de millors puntuacions
+;Clear all statistics
+;
+MSG_STATS_DATE
+Millors puntuacions desde %s
+;since %s
+;
+MSG_STATS_THISGAME
+Aquest joc
+;This game
+;
+MSG_STATS_HIGHSCORES
+Puntuació sumada de\n\
+tots els jocs
+;Highscores
+;
+MSG_STATS_LNAME
+Estadístiques
+;Name
+;
+MSG_STATS_LSCORE
+Millors puntuacions
+;Score
+;
+MSG_STATS_LDATE
+Nom
+;Date
+;
+MSG_STATS_TIME
+Puntuació
+;Time
+;
+MSG_STATS_TIME_HELP
+Data
+;Game time
+;
+MSG_STATS_SESSIONS
+Temps
+;Sessions
+;
+MSG_STATS_THISSESSION
+Temps del joc
+;This\n\
+;Session
+;
+MSG_STATS_ALLSESSION
+Temps sumat de\n\
+tots els jocs
+;All\n\
+;Sessions
+;
+MSG_STATS_QUOTA
+Quota
+;Quota
+;
+MSG_STATS_QUOTA_HELP
+Quota of won games
+;Quota of won games
+;
+MSG_STATS_CLEARREQ
+Clear all statistics?
+;Clear all statistics?
+;
+;
+;
+;
+;
+;
+;
+;
+;******************************************************************************
+;   Profile Manager
+;******************************************************************************
+;
+MSG_PROFILES_TITLE
+Soliton <Manage Profiles>
+;Soliton <Manage Profiles>
+;
+MSG_PROFILES_TOPIC
+Manage Profiles
+;Manage Profiles
+;
+MSG_PROFILES_ADD
+_Add
+;_Add
+;
+MSG_PROFILES_ADD_HELP
+Create new profile
+;Create new profile
+;
+MSG_PROFILES_REM
+_Remove
+;_Remove
+;
+MSG_PROFILES_REM_HELP
+Remove selected profile
+;Remove selected profile
+;
+MSG_PROFILES_CLOSE
+_Ok
+;_Ok
+;
+;
+;
+;
+;
+;
+;
+;******************************************************************************
+;   Miscellaneous new stuff of V2.1 and up
+;******************************************************************************
+;
+MSG_ERROR_REQUEST
+
+;Soliton Error
+;
+MSG_ERROR_OK
+
+;Ok
+;
+MSG_OPENLIB_MUIMASTER
+
+;Failed to open muimaster.library V17!
+;
+MSG_OPENLIB_UTILITY
+
+;Failed to open utility.library V38!
+;
+MSG_OPENLIB_INTUITION
+
+;Failed to open intuition.library V38!
+;
+MSG_OPENLIB_DATATYPES
+
+;Failed to open datatypes.library V38!
+;
+MSG_OPENLIB_LAYERS
+
+;Failed to open layers.library V38!
+;
+MSG_OPENLIB_GRAPHICS
+
+;Failed to open graphics.library V38!
+;
+MSG_CREATE_MAINWINDOW
+
+;Could not open main window!\n\
+;Terminating program.
+;
+MSG_CREATE_APPLICATION
+
+;Failed to create application object!
+;
+MSG_CREATE_ABOUTCLASS
+
+;Failed to create About class!
+;
+MSG_CREATE_PROFILEMANAGERCLASS
+
+;Failed to create ProfileManager class!
+;
+MSG_CREATE_CBUTTONCLASS
+
+;Failed to create CButton class!
+;
+MSG_CREATE_BOARDWINDOWCLASS
+
+;Failed to create BoardWindow class!
+;
+MSG_CREATE_CSOLITAIRECLASS
+
+;Could not create CSolitaire class!
+;
+MSG_CREATE_NONESLIDERCLASS
+
+;Failed to create NoneSlider class!
+;
+MSG_CREATE_SETTINGSCLASS
+
+;Failed to create Settings class!
+;
+MSG_CREATE_SOLITONCLASS
+
+;Failed to create Soliton class!
+;
+MSG_CREATE_STATISTICSCLASS
+
+;Failed to create Statistics class!
+;
+MSG_CREATE_CARDGAMECLASS
+
+;Failed to create Cardgame class!
+;
+MSG_CARDS_STANDARD_BIG
+
+;Standard Big
+;
+MSG_CARDS_STANDARD_MEDIUM
+
+;Standard Medium
+;
+MSG_CARDS_STANDARD_SMALL
+
+;Standard Small
+;
+MSG_LOADING_CARDSET
+
+;\033bLoading...
+;

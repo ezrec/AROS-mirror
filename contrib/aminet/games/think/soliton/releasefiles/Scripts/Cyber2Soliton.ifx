@@ -1,0 +1,64 @@
+/*
+** Convert CyberPatience cardsets to Soliton
+*/
+
+/*trace results*/
+
+OPTIONS RESULTS
+
+/* First we need to open rexxsupport library */
+
+    if ~show('l', 'rexxsupport.library') then do
+       if ~addlib('rexxsupport.library', 0, -30, 0) then do
+          say 'Could not find rexxsupport.library'
+          return 10
+       end
+    end
+
+Redraw Off ; Undo Off
+tlx=2;tly=1
+sizx=88;sizy=130
+sepx=90;sepy=131
+setpalette '-1' 0 0 0
+swap
+createbuffer sizx*14 sizy*4 force
+REDRAW
+setpalette '-1' 24 90 148
+SWAP
+
+do y = 0 to 3
+  do x = 0 to 12
+    x1 = tlx+x*sepx; y1 = tly+y*sepy
+    Scissors 
+    Box x1 y1 sizx sizy
+    Swap
+    BrushHandle 0 0
+    Point x*sizx y*sizy
+    redraw x*sizx y*sizy sizx sizy
+    Swap
+  end
+end
+y=1;x=15
+x1 = tlx+x*sepx; y1 = tly+y*sepy
+Scissors 
+Box x1 y1 sizx sizy
+Swap
+BrushHandle 0 0
+Point 13*sizx 0
+Redraw 13*sizx 0 sizx sizy
+Swap
+
+y=1;x=13
+x1 = tlx+x*sepx; y1 = tly+y*sepy
+Scissors 
+Box x1 y1 sizx sizy
+Swap
+BrushHandle 0 0
+Point 13*sizx sizy
+Redraw 13*sizx sizy sizx sizy
+
+
+killswap
+killbrush
+
+Undo On ; Redraw On ; Redraw

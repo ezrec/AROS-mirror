@@ -1,0 +1,711 @@
+## version $VER: Soliton.ct 2.1 (30.03.2002)
+## language deutsch
+## codeset 0
+;
+;
+;
+; Catalog Description for Soliton by Kai Nickel
+;
+;
+;
+;******************************************************************************
+;  About
+;******************************************************************************
+;
+MSG_APPDESCRIPTION
+Solitär Kartenspiel
+;Solitaire card game
+;
+MSG_ABOUT_VERSION
+Version %s (%s)
+;Version %s (%s)
+;
+MSG_ABOUT_OK
+_Ok
+;_Ok
+;
+MSG_ABOUT_MUI
+_Über MUI...
+;_About MUI...
+;
+;NOTE: The GPL disclaimer should not be translated. Add an warning
+;about this in translated catalogs and leave it untouched.
+;
+MSG_ABOUT
+Dies ist ein MUI-basiertes Amiga Kartenspiel, welches ursprünglich\n\
+von Kai Nickel im Jahr 1997 entwickelt wurde. Es ist seit 2001 unter\n\
+der GPL frei erhältlich und wird von einem Entwicklerteam weiter-\n\
+entwickelt. Die beigelegten Dokumentationen enthalten weitere\n\
+Informationen.\n\
+\n\
+Eine größere Anzahl an Kartensätzen für diese Spiel sind unter\n\
+http://go.to/rekonet/\n\
+erhältlich. Zusätzlich finden sich dort zahlreiche Links auf andere\n\
+Informationsquellen.\n\
+\n\
+Zu Ihrer Information hier noch der GPL-Disclaimer:\n\
+\n\
+This program is free software; you can redistribute it and/or modify\n\
+it under the terms of the GNU General Public License as published by\n\
+the Free Software Foundation; either version 2 of the License, or\n\
+(at your option) any later version.\n\
+\n\
+This program is distributed in the hope that it will be useful,\n\
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+GNU General Public License for more details.\n\
+\n\
+You should have received a copy of the GNU General Public License\n\
+along with this program; if not, write to the Free Software\n\
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+;This is an MUI based Amiga card game originally developed by\n\
+;Kai Nickel in 1997. It is freely available under the GPL license\n\
+;since 2001 and continued by a development team. See the provided\n\
+;documentation for more information.\n\
+;\n\
+;A larger set of cardsets can be accessed from the site\n\
+;http://go.to/rekonet/\n\
+;which also has lots of links to other information sources.\n\
+;\n\
+;For your information the GPL license disclaimer:\n\
+;\n\
+;This program is free software; you can redistribute it and/or modify\n\
+;it under the terms of the GNU General Public License as published by\n\
+;the Free Software Foundation; either version 2 of the License, or\n\
+;(at your option) any later version.\n\
+;\n\
+;This program is distributed in the hope that it will be useful,\n\
+;but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+;MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+;GNU General Public License for more details.\n\
+;\n\
+;You should have received a copy of the GNU General Public License\n\
+;along with this program; if not, write to the Free Software\n\
+;Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+;
+;
+;******************************************************************************
+;  Main Window
+;******************************************************************************
+;
+MSG_WIN_NEW
+_Neu
+;_New
+;
+MSG_WIN_NEW_HELP
+Neues Spiel beginnen
+;Start new game
+;
+MSG_WIN_SWEEP
+_Abräumen
+;_Clean up
+;
+MSG_WIN_SWEEP_HELP
+Sichtbare Karten auf die vier\n\
+oberen Stapel ablegen, soweit\n\
+dies möglich ist.
+;Try to move all cards\n\
+;to their final position\n\
+;auomatically.
+;
+MSG_WIN_UNDO
+_Undo
+;_Undo
+;
+MSG_WIN_UNDO_HELP
+Letzte Aktion rückgängig machen
+;Make last move undone
+;
+MSG_WIN_STATISTICS
+_Statistik
+;S_tatistics
+;
+MSG_WIN_STATISTICS_HELP
+Statistiken über das\n\
+Spiel anzeigen
+;Show game statistics
+;
+MSG_WIN_MOVE
+_Zug
+;_Move
+;
+MSG_WIN_MOVE_HELP
+Dieser Knopf zeigt einen möglichen\nZug an, und führt ihn auf Wunsch\nauch aus.
+;This button indicates a\n\
+;possible move - and executes\n\
+;that move if you click.
+;
+MSG_TIMER_HELP
+Seit Spielstart vergangene\nZeit. (Läuft nur, wenn Soliton\nFenster aktiv ist.)
+;Time elapsed since start of\n\
+;this game. Only running while\n\
+;window active.
+;
+MSG_REQ_NEWGAME
+Neues Spiel beginnen?
+;Start a new game now?
+;
+MSG_REQ_QUIT
+Soliton beenden?
+;Quit Soliton now?
+;
+MSG_REQ_GADGETS
+* Ok | Abbruch
+;* Ok | Cancel
+;
+MSG_SCORE_HELP
+Punktzahl
+;Game score
+;
+;
+;
+;******************************************************************************
+;  Menu
+;******************************************************************************
+;
+MSG_MENU_PROJECT
+Spiel
+;Game
+;
+MSG_MENU_PROJECT_NEW
+N\0Neu
+;N\0New game
+;
+MSG_MENU_PROJECT_SWEEP
+A\0Abräumen
+;C\0Clean up
+;
+MSG_MENU_PROJECT_UNDO
+U\0Undo
+;U\0Undo
+;
+MSG_MENU_PROJECT_ABOUT
+?\0Über...
+;?\0About...
+;
+MSG_MENU_PROJECT_HELP
+H\0Hilfe...
+;H\0Help...
+;
+MSG_MENU_PROJECT_STATS
+T\0Statistiken...
+;T\0Statistics...
+;
+MSG_MENU_PROJECT_QUIT
+E\0Ende...
+;Q\0Quit
+;
+MSG_MENU_SETTINGS
+Einstellungen
+;Settings
+;
+MSG_MENU_SETTINGS_SOLITON
+S\0Soliton...
+;S\0Soliton...
+;
+MSG_MENU_SETTINGS_MUI
+M\0MUI...
+;M\0MUI...
+;
+MSG_MENU_PROFILES
+Graphik
+;Profiles
+;
+MSG_MENU_MANPROFILES
+P\0Graphikprofile verwalten...
+;P\0Manage Profiles...
+;
+MSG_MENU_GAME
+Spieltyp
+;Gametype
+;
+MSG_MENU_GAME_KLONDIKE
+K\0Klondike
+;K\0Klondike
+;
+MSG_MENU_GAME_FREECELL
+F\0Freecell
+;F\0Freecell
+;
+;
+;
+;
+;******************************************************************************
+;  Settings
+;******************************************************************************
+;
+MSG_SETTINGS_TITLE
+Soliton <Einstellungen>
+;Soliton <Settings>
+;
+MSG_SETTINGS_TOPIC
+Einstellungen
+;Settings
+;
+MSG_SETTINGS_SAVE
+_Speichern
+;_Save
+;
+MSG_SETTINGS_SAVE_HELP
+Einstellungen dauerhaft sichern
+;Permanently save settings
+;
+MSG_SETTINGS_USE
+_Benutzen
+;_Use
+;
+MSG_SETTINGS_USE_HELP
+Einstellungen bis zum\nnächsten Programmstart benutzen
+;Use settings until the next time\nyou start the program
+;
+MSG_SETTINGS_CANCEL
+_Abbrechen
+;_Cancel
+;
+MSG_SETTINGS_CANCEL_HELP
+Änderungen verwerfen
+;Ignore all changes
+;
+MSG_SETTINGS_PATTERN
+_Muster
+;_Pattern
+;
+MSG_SETTINGS_PATTERN_HELP
+Hintergrundmuster des Spielfelds.
+;Background pattern of the playfield
+;
+MSG_SETTINGS_CARDSET
+_Karten
+;Ca_rdset
+;
+MSG_SETTINGS_CARDSET_HELP
+Graphikdatei, welche\ndie Spielkarten enthält
+;File that contains the cardset
+;
+MSG_SETTINGS_OPEN
+_Umdrehen
+;_Open cards
+;
+MSG_SETTINGS_OPEN_HELP
+Wieviele Karten sollen umgedreht werden,\n\
+wenn auf den verdeckten Stapel geklickt wird?\n\
+(Mehr Karten machen das Spiel schwieriger.)
+;How many cards should be opened\n\
+;when you click the stack?\n\
+;The higher the harder the game\n\
+;will be.
+;
+MSG_SETTINGS_BLOCK
+Nur B_löcke
+;B_lock moves
+;
+MSG_SETTINGS_BLOCK_HELP
+Offene Karten dürfen nicht mehr einzeln,\n\
+sondern nur noch gemeinsam bewegt werden.\n\
+(Macht das Spiel schwieriger.)
+;Allow only to move the whole block\n\
+;of cards instead of single ones.\n\
+;This will make the game harder.
+;
+MSG_SETTINGS_BUTTONS
+_Knöpfe
+;_Buttons
+;
+MSG_SETTINGS_BUTTONS_HELP
+Knopfleiste anzeigen?
+;Do you want to see the buttons?
+;
+MSG_SETTINGS_DESIGN
+Aussehen
+;Appearance
+;
+MSG_SETTINGS_AUTOOPEN
+Au_tomat. aufdecken
+;_Auto open
+;
+MSG_SETTINGS_AUTOOPEN_HELP
+Oberste Karte eines Stapels\naufdecken, sobald sie frei wird\n(Erhöht die Bequemlichkeit).
+;Automatically turn around the\n\
+;topmost face-down card of a stack.\n\
+;This is just more comfortable\n\
+;and does not affect difficulty.
+;
+MSG_SETTINGS_INDICATOR
+_Zuganzeige
+;_Indicate moves
+;
+MSG_SETTINGS_INDICATOR_HELP
+Den 'Zug'-Knopf zeigen, wenn\neine Zugmöglichkeit besteht.
+;Show the 'Move' button every time\n\
+;there is a possible move.
+;
+MSG_SETTINGS_ANIM
+_Fluggeschwindigkeit
+;_Fly speed
+;
+MSG_SETTINGS_ANIM_HELP
+Geschwindigkeit der Karten,\nwenn sie an ihre Zielorte "fliegen".
+;Speed of the cards flying\n\
+;to their destination
+;
+MSG_SETTINGS_NOANIM
+nicht
+;no anim
+;
+MSG_SETTINGS_PROFILE
+_Name
+;Pro_file
+;
+MSG_SETTINGS_PROFILE_HELP
+Name des Profils
+;Name of the profile
+;
+MSG_SETTINGS_PROFILES_HELP
+Liste der Graphikprofile.\nEin Profil dient dazu, eine Spielkarten-\ndatei und ein Hintergrundmuster unter einem\ngemeinsamen Namen zusammenzufassen.
+;List of all profiles.\n\
+;A profile is a combination\n\
+;of a cardset and a pattern\n\
+;that can be referred by a\n\
+;single name.
+;
+MSG_SETTINGS_NOPROFILE
+<unbenannt>
+;<unnamed>
+;
+MSG_SETTINGS_AUTOTURN
+Automat. _Quellstapel umdrehen
+;A_uto open topleft
+;
+MSG_SETTINGS_AUTOTURN_HELP
+Die ersten 1, 2, 3 Karten des\n\
+Quellstapels öffnen, nachdem\n\
+dieser umgedreht wurde.\n\
+(Erhöht die Bequemlichkeit).
+;Automatically open the <n>\n\
+;cards of the top left stack\n\
+;after turning around that stack.\n\
+;This is just more comfortable\n\
+;and does not affect difficulty.
+;
+MSG_SETTINGS_REQS
+S_icherheitsabfrage
+;Re_quester
+;
+MSG_SETTINGS_REQS_HELP
+Sicherheitsabfragen beim Beenden\nund beim Starten eines neuen Spiels.
+;Ask before starting\n\
+;a new game or quitting\n\
+;the program.
+;
+MSG_SETTINGS_KLONDIKE
+Klondike
+;Klondike
+;
+MSG_SETTINGS_FREECELL
+Freecell
+;Freecell
+;
+MSG_SETTINGS_STACK
+_Stackkarten
+;_Stack cards
+;
+MSG_SETTINGS_STACK_HELP
+Wieviel Karten sollen schon auf dem\n\
+Stapel sein, wenn das Spiel beginnt?\n\
+Eine höhere Anzahl erhöht die Schwierigkeit.
+;How many cards should be already\n\
+;on the stack when game starts?\n\
+;The higher the harder the game\n\
+;will be.
+;
+MSG_SETTINGS_EQUALCOLOR
+Gl_eiche Farben
+;_Equal Color
+;
+MSG_SETTINGS_EQUALCOLOR_HELP
+Karten können auf gleich gefärbten Karten\n\
+abgelegt werden, statt auf rot auf schwarz\n\
+und umgekehrt.
+;Place cards on equal colored cards\n\
+;instead of red/black mixed.
+;
+;
+;
+;
+;
+;******************************************************************************
+;   Statistics
+;******************************************************************************
+;
+MSG_STATS_TITLE
+Soliton <Statistiken>
+;Soliton <Statistics>
+;
+MSG_STATS_TOPIC
+Statistiken
+;Statistics
+;
+MSG_STATS_CLOSE
+_Ok
+;_Ok
+;
+MSG_STATS_SCORE
+Punktzahl
+;Score
+;
+MSG_STATS_SCORE_HELP
+Spielstand
+;Game score
+;
+MSG_STATS_TURNS
+Umschichtungen
+;Turns
+;
+MSG_STATS_TURNS_HELP
+Gibt an, wie oft der Spielstapel\numgedreht wurde.
+;How many times did you\n\
+;turn around the game stack?
+;
+MSG_STATS_WINS
+Gewonnen
+;Won
+;
+MSG_STATS_WINS_HELP
+Anzahl der erfolgreich\nbeendeten Spiele
+;Number of games you\n\
+;finished successfully
+;
+MSG_STATS_LOSSES
+Verloren
+;Lost
+;
+MSG_STATS_LOSSES_HELP
+Anzahl der abgebrochenen Spiele
+;Number of games you aborted
+;
+MSG_WINNER_TITLE
+Glückwunsch!
+;Congratulations!
+;
+MSG_WINNER_TEXT
+\nSie haben gewonnen.
+;\n\
+;You finished the game.
+;
+MSG_STATS_ENTERNAME
+Bitte Namen eingeben:
+;Please enter your name:
+;
+MSG_STATS_CLEARSCORES
+_Löschen
+;_Clear
+;
+MSG_STATS_CLEARSCORES_HELP
+Alle Statistiken löschen
+;Clear all statistics
+;
+MSG_STATS_DATE
+seit %s
+;since %s
+;
+MSG_STATS_THISGAME
+Dieses Spiel
+;This game
+;
+MSG_STATS_HIGHSCORES
+Highscores
+;Highscores
+;
+MSG_STATS_LNAME
+Name
+;Name
+;
+MSG_STATS_LSCORE
+Punkte
+;Score
+;
+MSG_STATS_LDATE
+Datum
+;Date
+;
+MSG_STATS_TIME
+Zeit
+;Time
+;
+MSG_STATS_TIME_HELP
+Spielzeit
+;Game time
+;
+MSG_STATS_SESSIONS
+Sitzungen
+;Sessions
+;
+MSG_STATS_THISSESSION
+Diese\nSitzung
+;This\n\
+;Session
+;
+MSG_STATS_ALLSESSION
+Alle\nSitzungen
+;All\n\
+;Sessions
+;
+MSG_STATS_QUOTA
+Quote
+;Quota
+;
+MSG_STATS_QUOTA_HELP
+Anteil gewonnener Spiele
+;Quota of won games
+;
+MSG_STATS_CLEARREQ
+Alle Statistiken löschen?
+;Clear all statistics?
+;
+;
+;
+;
+;
+;
+;
+;
+;******************************************************************************
+;   Profile Manager
+;******************************************************************************
+;
+MSG_PROFILES_TITLE
+Soliton <Graphikprofile verwalten>
+;Soliton <Manage Profiles>
+;
+MSG_PROFILES_TOPIC
+Graphikprofile verwalten
+;Manage Profiles
+;
+MSG_PROFILES_ADD
+_Neu
+;_Add
+;
+MSG_PROFILES_ADD_HELP
+Neues Profil erzeugen
+;Create new profile
+;
+MSG_PROFILES_REM
+_Löschen
+;_Remove
+;
+MSG_PROFILES_REM_HELP
+Ausgewähltes Profil entfernen
+;Remove selected profile
+;
+MSG_PROFILES_CLOSE
+_Ok
+;_Ok
+;
+;
+;
+;
+;
+;
+;
+;******************************************************************************
+;   Miscellaneous new stuff of V2.1 and up
+;******************************************************************************
+;
+MSG_ERROR_REQUEST
+Soliton Fehler
+;Soliton Error
+;
+MSG_ERROR_OK
+OK
+;Ok
+;
+MSG_OPENLIB_MUIMASTER
+Konnte muimaster.library V17 nicht öffnen!
+;Failed to open muimaster.library V17!
+;
+MSG_OPENLIB_UTILITY
+Konnte utility.library V38 nicht öffnen!
+;Failed to open utility.library V38!
+;
+MSG_OPENLIB_INTUITION
+Konnte intuition.library V38 nicht öffnen!
+;Failed to open intuition.library V38!
+;
+MSG_OPENLIB_DATATYPES
+Konnte datatypes.library V38 nicht öffnen!
+;Failed to open datatypes.library V38!
+;
+MSG_OPENLIB_LAYERS
+Konnte layers.library V38 nicht öffnen!
+;Failed to open layers.library V38!
+;
+MSG_OPENLIB_GRAPHICS
+Konnte graphics.library V38 nicht öffnen!
+;Failed to open graphics.library V38!
+;
+MSG_CREATE_MAINWINDOW
+Konnte Hauptfenster nicht öffnen!\n\
+Programm wird beendet.
+;Could not open main window!\n\
+;Terminating program.
+;
+MSG_CREATE_APPLICATION
+Konnte kein Applikationsobjekt erstellen!
+;Failed to create application object!
+;
+MSG_CREATE_ABOUTCLASS
+About-Klasse konnte nicht erzeugt werden!
+;Failed to create About class!
+;
+MSG_CREATE_PROFILEMANAGERCLASS
+ProfileManager-Klasse konnte nicht erzeugt werden!
+;Failed to create ProfileManager class!
+;
+MSG_CREATE_CBUTTONCLASS
+CButton-Klasse konnte nicht erzeugt werden!
+;Failed to create CButton class!
+;
+MSG_CREATE_BOARDWINDOWCLASS
+BoardWindow-Klasse konnte nicht erzeugt werden!
+;Failed to create BoardWindow class!
+;
+MSG_CREATE_CSOLITAIRECLASS
+CSolitaire-Klasse konnte nicht erzeugt werden!
+;Could not create CSolitaire class!
+;
+MSG_CREATE_NONESLIDERCLASS
+NoneSlider-Klasse konnte nicht erzeugt werden!
+;Failed to create NoneSlider class!
+;
+MSG_CREATE_SETTINGSCLASS
+Settings-Klasse konnte nicht erzeugt werden!
+;Failed to create Settings class!
+;
+MSG_CREATE_SOLITONCLASS
+Soliton-Klasse konnte nicht erzeugt werden!
+;Failed to create Soliton class!
+;
+MSG_CREATE_STATISTICSCLASS
+Statistics-Klasse konnte nicht erzeugt werden!
+;Failed to create Statistics class!
+;
+MSG_CREATE_CARDGAMECLASS
+Cardgame-Klasse konnte nicht erzeugt werden!
+;Failed to create Cardgame class!
+;
+MSG_CARDS_STANDARD_BIG
+Standard Groß
+;Standard Big
+;
+MSG_CARDS_STANDARD_MEDIUM
+Standard Mittel
+;Standard Medium
+;
+MSG_CARDS_STANDARD_SMALL
+Standard Klein
+;Standard Small
+;
+MSG_LOADING_CARDSET
+\033bLade...
+;\033bLoading...
+;

@@ -1,0 +1,400 @@
+@database Soliton
+@master Soliton.guide
+
+
+@node "MAIN" "Soliton <Spis treôci>"
+
+                  @{b}S o l i t o n@{ub}
+
+                     Pasjans.
+                   
+
+@{b}Wprowadzenie@{ub}   @{" Opis            " link "DESCRIPTION" }
+               @{" Autor           " link "AUTHOR"      }
+
+@{b}Gry@{ub}            @{" Klondike        " link "KLONDIKE"    }
+               @{" Freecell        " link "FREECELL"    }
+
+@{b}Okna@{ub}           @{" Okno gîówne     " link "MAINWINDOW"  }
+               @{" Ustawienia      " link "SETTINGS"    }
+               @{" Profile         " link "PROFILES"    }
+               @{" Statystyki      " link "STATS"       }
+
+@{b}Zaîâczniki@{ub}     @{" Tworzenie kart  " link "CARDS"       }
+               @{" Historia        " link "History.guide/MAIN"}
+               @{" Prawa autorskie " link "Copyright.guide/MAIN"}
+@endnode
+
+
+
+
+
+@node "DESCRIPTION" "Soliton <Opis>"
+
+                                        @{b}O p i s@{ub}
+
+
+@{b}Wîaôciwoôci@{ub}    Soliton jest grâ karcianâ o nastëpujâcych wîaôciwoôciach:
+
+               * Tryb gry: Klondike i Freecell
+               * Zestawy kart sâ îadowane przez datatypes. Moûesz takûe 
+                 @{"tworzyê" link "CARDS"} je îatwo samemu uûywajâc dowolnej 
+                 wielkoôci oraz iloôci kolorów.
+               * Przyjazny dla systemu interfejs @{"MUI" link "MUI"} uruchamia sië
+                 na ekranie systemowym lub dowolnym innym. Takûe bardzo 
+                 dobrze dziaîa z kartami graficznymi.
+               * Moûna wybraê podkîad.
+               * Przemieszczanie peînych kart.
+               * Duûo opcji, zegar, statystyki, wskaúnik moûliwoôci 
+                 przeniesienia.
+               * Przetîumaczony na wiele jëzyków.
+               * Giftware
+
+@{b}Wymagania@{ub}      Aby zagraê potrzebny jest Kickstart 3.0 (lub wyûszy) 
+               i MUI w wersji 3.6 (lub wyûszej).
+
+
+@{b}Instalacja@{ub}     Uruchom skrypt "Soliton-Install". Nie panikuj, ûadne pliki
+               nie zostanâ skopiowane do twoich katalogów systemowych.
+               Aby odinstalowaê tâ grë wystarczy skasowaê katalog "Soliton".
+@endnode
+
+
+
+
+
+@node "AUTHOR" "Soliton <Autor>"
+
+                                  @{b}A u t o r@{ub}
+
+
+               Soliton zostaî napisany przez: Kai Nickel
+
+                 Kai Nickel
+                 Herzogstrasse 29
+                 67435 Neustadt
+                 Germany
+
+                 Kai.Nickel@stud.uni-karlsruhe.de
+
+                 http://www.uni-karlsruhe.de/~Kai.Nickel/
+
+
+               Soliton jest programem typu Giftware: jeôli lubisz tâ grë, 
+               proszë przeôlij mi maîâ dotacjë.
+
+               Nowsze wersje i zestawy kart moûna znaleúê na mojej stronie
+               lub na Aminecie (game/think and game/data).
+
+               Wszystkie tîumaczenia zostaîy zrobione przez ATO. Zobacz 
+               rozdziaî @{"Prawa autorskie" link "Copyright.guide/MAIN"} aby zobaczyê imiona tîumaczy.
+@endnode
+
+
+
+@node "KLONDIKE" "Soliton <Klondike>"
+
+                               @{b}K l o n d i k e@{ub}
+
+
+@{b}Zasady@{ub}         Wyglâd pola gry:
+
+               +---+ +---+       +---+ +---+ +---+ +---+
+               |   | |   |       |   | |   | |   | |   |
+               | G | | E |       | D | | D | | D | | D |
+               |   | |   |       |   | |   | |   | |   |
+               +---+ +---+       +---+ +---+ +---+ +---+
+
+               +---+ +---+ +---+ +---+ +---+ +---+ +---+
+               |   | |   | |   | |   | |   | |   | |   |
+               | R | | R | | R | | R | | R | | R | | R |
+               |   | |   | |   | |   | |   | |   | |   |
+               +---+ +---+ +---+ +---+ +---+ +---+ +---+
+
+               G: Stos
+               E: Puste pole
+               D: Pola docelowe
+               R: Kolumny
+
+               Celem gry jest przeniesienie wszystkich kart na ich pola 
+               docelowe. Kaûde pole docelowe zaczyna sië od asa w danym 
+               kolorze, a nastëpnie naleûy umieszczaê tam karty w kolejnoôci:
+               2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K w tym samym kolorze co as.
+
+               Aby osiâgnâê cel, musisz skorzystaê z kolumn. Moûesz kîaôê
+               kartë na kolumnie jeûeli jest przeciwnego koloru w stosunku 
+               do karty na wierzchu i jest od niej o jedno oczko mîodsza. 
+               Dla przykîadu: 10 karo moûe zostaê poîoûona na  J trefl.
+               W ten sam sposób moûesz przenosiê kolumny kart.
+
+               Kliknij na stos aby przenieôê karty na puste pole.
+               Podwójne klikniëcie na karcie przenosi jâ na jej 
+               miejsce docelowe.
+
+
+@{b}Podpowiedzi@{ub}    Sâ dwa specjalne przyciski do grania w Klondike:
+
+               Przycisk 'Ruch' sygnalizuje moûliwoôê wykonania przeniesienia
+               i przenosi jeôli na nim klikniesz.
+
+               Naciôniëcie przycisku 'Wyczyôê' automatycznie przenosi 
+               tak duûo kart na ich pola przeznaczenia, jak to tylko 
+               jest moûliwe.
+
+
+@{b}Punktacja@{ub}      Soliton oblicza punkty za kaûdâ grë i zapamiëtuje listë 
+               najlepszych. A oto w jaki sposób punkty sâ naliczane:
+
+               Przeniesienie karty z pola gry do kolumny            +   5
+
+               Odwrócenie karty w kolumnie                          +   5
+
+               Przeniesienie karty na pole docelowe                 +  10
+
+               Przeniesienie karty z powrotem do kolumny            -  15
+
+               Za kaûde 10 sekund gry                               -   2
+
+               Uûycie przycisku Cofnij                              -  15
+
+               Jeôli grasz odwracajâc 1 kartë: Za kaûde przeîoûenie
+               caîego stosu                                         - 100
+
+               Jeôli grasz odwracajâc 2 karty: Za kaûde przeîoûenie
+               caîego stosu, zaczynajâc od drugiego przeîoûenia     -  50
+
+               Jeôli grasz odwracjâc 3 karty: Za kaûde przeîoûenie
+               caîego stosu, zaczynajâc od trzeciego przeîoûenia    -  20
+
+               Jeôli wygrasz grë, dostaniesz bonus, który zaleûy 
+               od czasu gry. Wynik nigdy nie bëdzie ujemny.
+@endnode
+
+
+
+@node "FREECELL" "Soliton <Freecell>"
+
+                                 @{b}F r e e c e l l@{ub}
+
+
+@{b}Zasady@{ub}            Wyglâd pola gry:
+
+               +---+ +---+ +---+ +---+   +---+ +---+ +---+ +---+
+               |   | |   | |   | |   |   |   | |   | |   | |   |
+               | F | | F | | F | | F |   | D | | D | | D | | D |
+               |   | |   | |   | |   |   |   | |   | |   | |   |
+               +---+ +---+ +---+ +---+   +---+ +---+ +---+ +---+
+
+                +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
+                |   | |   | |   | |   | |   | |   | |   | |   |
+                | R | | R | | R | | R | | R | | R | | R | | R |
+                |   | |   | |   | |   | |   | |   | |   | |   |
+                +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
+
+               F: Wolne pola
+               D: Pola docelowe
+               R: Kolumny
+
+               Celem gry jest przeniesienie wszystkich kart na ich pola 
+               docelowe. Kaûde pole docelowe zaczyna sië od asa w danym
+               kolorze, a nastëpnie naleûy umieszczaê tam karty w kolejnoôci:
+               2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K w tym samym kolorze co as.
+
+               Moûesz przenosiê tylko po jednej karcie na raz. Moûe byê 
+               poîoûona na kolumnie jeûeli jest przeciwnego koloru w stosunku 
+               do karty na wierzchu i jest od niej o jedno oczko mîodsza. 
+               Dla przykîadu: 10 karo moûe zostaê poîoûona na  J trefl.
+
+               "Wolne pola" mogâ trzymaê tylko jednâ kartë. Aby przenieôê 
+               kolumnë kart za jednym razem, musisz uûyê wolnych pól jako 
+               bufora. Soliton robi to automatycznie za Ciebie: jeôli 
+               próbujesz przenieôê kolumnë kart, karty automatycznie 
+               zostanâ przeniesione na wolne pola zanim trafiâ tam, gdzie 
+               chciaîeô. Im wiëcej wolnych pól, tym wiëcej kart 
+               w kolumnie moûesz przenieôê za jednym razem.
+@endnode
+
+
+
+@node "MAINWINDOW" "Soliton <Okno gîówne>"
+
+                               @{b}O k n o   g î ó w n e@{ub}
+
+
+               Okno zawiera pole gry. Karty sâ przenoszone przez drag'n'drop
+               (przeciâgnij i upuôê): Naciônij lewy klawisz myszy na karcie, 
+               a nastëpnie trzymajâc go, przeciâgnij kartë tam, gdzie chcesz
+               po czym zwolnij przycisk. Aby przenosiê kolumny kart, zaznacz
+               pierwszâ kartë kolumny, a nastëpne karty zostanâ przeniesione
+               razem z niâ.
+
+
+@{b}Przyciski@{ub}      Po lewej znajduje sië pasek z przyciskami. Przyciski 
+               odpowiadajâ najwaûniejszym elementom z menu. Aby zobaczyê
+               do czego sîuûâ, proszë poczekaê na podpowiedú.
+
+               Pewne przyciski i elementy menu zaleûâ od gry w którâ grasz.
+               Zobacz rozdziaî @{"Klondike" link "KLONDIKE"} lub @{"Freecell" link "FREECELL"}
+               aby poznaê ich funkcje.
+
+               Na pasku z przyciskami znajduje sië takûe zegar, który 
+               odlicza czas od poczâtku za kaûdym razem gdy zaczynasz grë.
+               Czas pîynie tylko wtedy gdy okno gry jest aktywne!
+
+
+@{b}Menu@{ub}           Menu oferuje nastëpujâce funkcje
+
+               Gra
+
+               Nowa gra    -  Rozpoczëcie nowej gry.
+               Cofnij      -  Cofa ostatnie posuniëcie.
+               Statystyki  -  Otwiera okno @{"statystyki" link "STATS"}.
+               Pomoc       -  Otwiera pomoc online, jak wciôniëcie 
+                              klawisza HELP.
+               O programie -  Wyôwietla informacjë o programie
+               Wyjôcie     -  Wyjôcie z gry.
+
+               Profile
+
+               Tutaj moûesz przeîâczaê profile. Profil jest to kombinacja
+               zestawu kart oraz podkîadu. Moûesz zdefiniowaê profile 
+               w okienku @{"zarzâdzania profilami" link "PROFILES"}.
+
+               Ustawienia
+
+               Soliton     -  Otwiera okno @{"ustawieï" link "SETTINGS"} gry Soliton.
+               MUI         -  Otwiera okno ustawieï MUI dla gry Soliton.
+
+
+@{b}Pomoc@{ub}          Jeôli naciôniesz klawisz HELP, otrzymasz okno pomocy online
+               zawierajâce tâ dokumentacjë.
+               Jeôli nie bëdziesz przez chwilë poruszaî wskaúnikiem myszy,
+               po chwili zobaczysz dymek z informacjâ o obiekcie pod 
+               wskaúnikiem myszy.
+@endnode
+
+
+
+
+
+@node "SETTINGS" "Soliton <Ustawienia>"
+
+                                 @{b}U s t a w i e n i a@{ub}
+
+
+@{b}Wyglâd@{ub}         @{b}Prëdkoôê animacji@{ub}
+
+               Szybkoôê z jakâ karty bëdâ sië przenosiê na ich pola docelowe
+               Moûesz takûe wybraê 'bez animacji' aby karty natychmiast 
+               przeskakiwaîy na miejsce swojego przeznaczenia.
+
+               @{b}Przyciski@{ub}
+
+               Pokazuje lub chowa pasek przycisków w @{"oknie gîównym" link "MAINWINDOW"}.
+               To moûe byê konieczne aby uûywaê duûych kart na maîym ekranie.
+
+               @{b}Zapytania@{ub}
+
+               Gra zapyta Cië przed rozpoczëciem nowej gry lub wyjôciem 
+               z gry.
+
+
+@{b}Ustawienia gry@{ub} Ta strona jest dostëpna tylko dla gry @{"Klondike" link "KLONDIKE"}.
+
+               @{b}Karty otwierajâce@{ub}
+
+               Iloôê kart jakie majâ odwrócone gdy klikniesz na stosie
+               w górnym lewym rogu. Im wiëksza jest ta wartoôê tym gra
+               staje sië trudniejsza.
+
+               @{b}Automatycznie odwróê@{ub}
+
+               Odwraca karty leûâce na koïcu kolumny tak szybko, jak tylko
+               zostanâ odkryte. Ta opcja nie wpîywa na poziom trudnoôci gry.
+
+               @{b}Zaznaczaj ruch@{ub}
+
+               Pokazuj przycisk 'Ruch' za kaûdym razem gdy przeniesienie 
+               jest moûliwe.
+
+               @{b}Przenoszenie bloków@{ub}
+
+               Jeôli aktywne, przenosisz karty w kolumnach jako bloki. 
+               Nie moûesz wtedy przenosiê pojedynczych kart. Jeôli ta opcja
+               jest wyîâczona, moûesz przenosiê karty dzielâc je bloki 
+               jak chcesz. Ta opcja utrudnia grë.
+@endnode
+
+
+
+@node "PROFILES" "Soliton <Zarzâdzanie profilami>"
+
+                       @{b}Z a r z â d z a n i e   p r o f i l a m i @{ub}
+
+
+               Moûesz tutaj zdefiniowaê profile graficzne. Profil to 
+               kombinacja zestawu kart i podkîadu które mogâ byê wybierane 
+               z menu profile. Gra Soliton zapamiëtuje listë profili.
+
+               @{b}Profil@{ub}
+
+               Nazwa wybranego profilu.
+
+               @{b}Zestaw kart@{ub}
+
+               Obrazek zawierajâcy zestaw kart. Moûesz îatwo stworzyê
+               @{"swój wîasny zestaw" link "CARDS"}.
+
+               @{b}Podkîad@{ub}
+
+               Podkîad w tle pola gry. Moûesz uûyê dowolnego obrazka.
+@endnode
+
+
+
+@node "STATS" "Soliton <Statystyki>"
+
+                               @{b}S t a t y s t y k i@{ub}
+
+
+               W tym oknie moûesz zobaczyê informacje o aktualnej grze,
+               sesji którâ grasz oraz o wszystkich sesjach. Naciônij przycisk
+               @{b}Wyczyôê@{ub} aby skasowaê informacje o wszystkich sesjach.
+
+               Statystyki sâ zapisywane oddzielnie dla kaûdej z gier.
+               @{"Klondike" link "KLONDIKE"} ma tabelë najlepszych wyników.
+@endnode
+
+
+
+
+@node "CARDS" "Soliton <Tworzenie zestawów kart>"
+
+                  @{b}T w o r z e n i e   z e s t a w ó w   k a r t@{ub}
+
+
+               Zestaw kart jest obrazkiem. Karty muszâ byê uîoûone jedna 
+               za drugâ w sposób jaki zostaî przedstawiony w zestawie kart 
+               "Standard Cards Medium.iff".
+
+               Rozmiar twojego zestawu kart jest dowolny. Ale pamiëtaj,
+               im karty wiëksze, tym wiëkszy ekran potrzebny do gry!
+
+               Nagraj swój rysunek bez ramek ("nagraj jako brush")
+               poniewaû Soliton oblicza rozmiar karty jako 1/14 szerokoôci
+               obrazka oraz 1/4 jego wysokoôci.
+
+               Moûesz uûywaê ilu kolorów chcesz. Soliton wyôwietli
+               zestaw kart uûywajâc ustawieï aktualnych w czasie îadowania.
+               NIE uûywaj trybów HAM, poniewaû nie mogâ byê one wyôwietlone
+               w  "normalnych" trybach wyôwietlania.
+
+               Moûesz uûywaê kaûdego formatu graficznego który moûe 
+               byê wczytany przez datatypes. Poniewaû nie wszyscy majâ 
+               wszystkie egzotyczne datatypes myôlë, ûe IFF, JPEG 
+               lub PNG bëdâ najlepszym wyborem.
+
+               Myôlë, ûe Aminet/game/data jest najlepszym miejscem 
+               do pokazania swoich zestawów. Proszë nie zapomnij doîâczyê 
+               pliku .readme.
+@endnode

@@ -1,0 +1,388 @@
+@database Soliton
+@master Soliton.guide
+
+
+@node "MAIN" "Soliton <Table of Contents>"
+
+                  @{b}S o l i t o n@{ub}
+
+               Solitaire card game
+                   
+
+@{b}Introduction@{ub}   @{" Description     " link "DESCRIPTION" }
+               @{" Author          " link "AUTHOR"      }
+
+@{b}Games@{ub}          @{" Klondike        " link "KLONDIKE"    }
+               @{" Freecell        " link "FREECELL"    }
+
+@{b}Windows@{ub}        @{" Main Window     " link "MAINWINDOW"  }
+               @{" Settings        " link "SETTINGS"    }
+               @{" Profile Manager " link "PROFILES"    }
+               @{" Statistics      " link "STATS"       }
+
+@{b}Appendix@{ub}       @{" Create Cardsets " link "CARDS"       }
+               @{" History         " link "History.guide/MAIN"}
+               @{" Copyright       " link "Copyright.guide/MAIN"}
+@endnode
+
+
+
+
+
+@node "DESCRIPTION" "Soliton <Description>"
+
+                                   @{b}D e s c r i p t i o n@{ub}
+
+
+@{b}Features@{ub}       Soliton is a Solitaire card game with the following features:
+
+               * Klondike and Freecell game mode
+               * Cardsets are loaded via datatypes. You can also @{"make" link "CARDS"} them
+                 easily by yourself using any size or color depth you like.
+               * System-friendly @{"MUI" link "MUI"} user interface, runs on workbench
+                 or any other screen. Works very fine on graphic cards, too.
+               * Selectable background pattern.
+               * Opaque drag'n'drop card movement.
+               * Many game options, timer, statistics, move indicator.
+               * Localized to many languages
+               * Giftware
+
+@{b}Requirements@{ub}   To play Soliton you need Kickstart 3.0 (or higher) and
+               MUI Version 3.6 (or higher).
+
+
+@{b}Installation@{ub}   Start the script "Soliton-Install". Don't panic: No files will be
+               copied into your system directories.
+               To deinstall Soliton just delete the Soliton drawer.
+@endnode
+
+
+
+
+
+@node "AUTHOR" "Soliton <Author>"
+
+                                 @{b}A u t h o r@{ub}
+
+
+               Soliton was written by Kai Nickel
+
+                 Kai Nickel
+                 Herzogstrasse 29
+                 67435 Neustadt
+                 Germany
+
+                 Kai.Nickel@stud.uni-karlsruhe.de
+
+                 http://www.uni-karlsruhe.de/~Kai.Nickel/
+
+
+               Soliton is Giftware: if you like this game, you are asked to
+               send me a little donation.
+
+               Updates and cardsets can be found on my homepage or in Aminet
+               (game/think and game/data).
+
+               All translations were done by ATO. See chapter @{"Copyright" link "Copyright.guide/MAIN"}
+               for translators names.
+@endnode
+
+
+
+@node "KLONDIKE" "Soliton <Klondike>"
+
+                               @{b}K l o n d i k e@{ub}
+
+
+@{b}Rules@{ub}          Playfield layout:
+
+               +---+ +---+       +---+ +---+ +---+ +---+
+               |   | |   |       |   | |   | |   | |   |
+               | G | | E |       | D | | D | | D | | D |
+               |   | |   |       |   | |   | |   | |   |
+               +---+ +---+       +---+ +---+ +---+ +---+
+
+               +---+ +---+ +---+ +---+ +---+ +---+ +---+
+               |   | |   | |   | |   | |   | |   | |   |
+               | R | | R | | R | | R | | R | | R | | R |
+               |   | |   | |   | |   | |   | |   | |   |
+               +---+ +---+ +---+ +---+ +---+ +---+ +---+
+
+               G: Game pile
+               E: Empty pile
+               D: Destination piles
+               R: Row piles
+
+               The goal of the game is to move all cards to the destination
+               piles. Each destination pile starts with an Ace of one suit
+               followed by 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K of the same suit.
+
+               To achieve this goal, you have to use the row piles. You can
+               place a card on a row pile if it has the opposite color of the
+               topmost card and if its value is one below the value of the
+               topmost card. Example: a 10 of Hearts fits to a J of Spades.
+               You can move rows of cards just the same way.
+
+               Click the game pile to move some cards to the empty pile.
+               Double-click a card to make it fly to its destination.
+
+
+@{b}Helpers@{ub}        There are two special buttons for playing Klondike:
+
+               The 'Move' button indicates a move possibility and executes
+               it if you click.
+
+               Pressing the 'Clean up' button automatically moves as many cards
+               to their destianations as possible.
+
+
+@{b}Score@{ub}          Soliton calculates a score for each game and keeps a permanent
+               highscore list. And this is how scores are calculated (temp. piles
+               are the seven piles on the bottom):
+
+               Move card from game to row pile                      +   5
+
+               Turn around card in row pile                         +   5
+
+               Move card to destination pile                        +  10
+
+               Move card back from destination to row pile          -  15
+
+               Every 10 seconds game time                           -   2
+
+               Use of UnDo button                                   -  15
+
+               If playing in "turn 1 card" mode: For each run
+               through the game pile                                - 100
+
+               If playing in "turn 2 cards" mode: For each run
+               through the game pile starting from the second run   -  50
+
+               If playing in "turn 3 cards" mode: For each run
+               through the game pile starting from the third run    -  20
+
+               If you win the game, you get a bonus that depends on the
+               game time. The score will never be negative.
+@endnode
+
+
+
+@node "FREECELL" "Soliton <Freecell>"
+
+                                 @{b}F r e e c e l l@{ub}
+
+
+@{b}Rules@{ub}          Playfield layout:
+
+               +---+ +---+ +---+ +---+   +---+ +---+ +---+ +---+
+               |   | |   | |   | |   |   |   | |   | |   | |   |
+               | F | | F | | F | | F |   | D | | D | | D | | D |
+               |   | |   | |   | |   |   |   | |   | |   | |   |
+               +---+ +---+ +---+ +---+   +---+ +---+ +---+ +---+
+
+                +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
+                |   | |   | |   | |   | |   | |   | |   | |   |
+                | R | | R | | R | | R | | R | | R | | R | | R |
+                |   | |   | |   | |   | |   | |   | |   | |   |
+                +---+ +---+ +---+ +---+ +---+ +---+ +---+ +---+
+
+               F: Free piles
+               D: Destination piles
+               R: Row piles
+
+               The goal of the game is to move all cards to the destination
+               piles. Each destination pile starts with an Ace of one suit
+               followed by 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K of the same
+               suit.
+
+               You may only move one card at a time. It may be placed on a
+               row pile, if it has the opposite color of the topmost card
+               of the pile and if its value is one below the value of the
+               topmost card. Example: a 10 of Hearts fits to a J of Spades.
+
+               A "free pile" can only carry one card. To move a row of cards
+               at once, use the free piles as buffer. Soliton does this
+               automatically for you: if you try to move a row of cards, the
+               cards will fly to the free piles before going to the
+               destination. The more free piles are empty, the more cards
+               you can move in a row!
+@endnode
+
+
+
+@node "MAINWINDOW" "Soliton <Main Window>"
+
+                               @{b}M a i n   w i n d o w@{ub}
+
+
+               The window mainly consists of the playfield. Cards are moved
+               by drag'n'drop: Click onto a card, hold mousebutton pressed and
+               release it over the destination field. To move a row of cards,
+               drag the first card of the row and the other cards will follow.
+
+
+@{b}Buttons@{ub}        On the left of the window is a button bar. The buttons represent
+               the most important menu items. To find out what they do, please
+               look at the according menu item.
+
+               Some buttons and menu entries depend on the game you are
+               playing. Please look at the chapters @{"Klondike" link "KLONDIKE"} or @{"Freecell" link "FREECELL"} to
+               learn about their function.
+
+               On the button bar is also a game timer that starts from zero
+               every time you start a new game. It is running only while the
+               Soliton window is active!
+
+
+@{b}Menu@{ub}           The menu offers the following functions:
+
+               Project
+
+               New         -  Start new game
+               Undo        -  Make last move undone.
+               Statistics  -  Open game @{"statistics" link "STATS"} window.
+               Help        -  Open online help like pressing HELP
+               About       -  Show program information
+               Quit        -  End Soliton.
+
+               Profiles
+
+               Here you can switch between different profiles. A profile is
+               a combination of a cardset and a pattern. You can define
+               profiles in the @{"profile manager" link "PROFILES"}.
+
+               Settings
+
+               Soliton     -  Open Soliton @{"settings" link "SETTINGS"} window.
+               MUI         -  Open MUI settings for Soliton.
+
+
+@{b}Help@{ub}           If you press the HELP-key you will get an online-help window
+               containing this documentation.
+               If you don't move the mouse pointer for a while, you will
+               see a bubble with information about the object under the
+               mouse pointer.
+@endnode
+
+
+
+
+
+@node "SETTINGS" "Soliton <Settings>"
+
+                                   @{b}S e t t i n g s@{ub}
+
+
+@{b}Appearance@{ub}     @{b}Fly speed@{ub}
+
+               Speed of the cards when they are 'flying' to ther desti-
+               nations. You may also select 'no amin' to make the cards
+               immediately jump to the destination.
+
+               @{b}Buttons@{ub}
+
+               Show or hide the button row in the @{"main window" link "MAINWINDOW"}. This may
+               be nescessary to use a big cardset on a small screen.
+
+               @{b}Requester@{ub}
+
+               Ask before starting a new game or quitting the program.
+
+
+@{b}Gameplay@{ub}       This page is only available in @{"Klondike" link "KLONDIKE"} game.
+
+               @{b}Open cards@{ub}
+
+               Number of cards that should be turned around whenever you
+               click the stack on the top left. The more the harder the
+               game will be.
+
+               @{b}Auto open@{ub}
+
+               Turn around the topmost card of a stack as soon as it becomes
+               uncovered. This option does not affect the difficulty of the
+               game.
+
+               @{b}Indicate moves@{ub}
+
+               Show the 'Move' button every time there is a move possibility.
+
+               @{b}Block moves@{ub}
+
+               If active, you have to move the cards from the stacks all
+               together as a single block. If not, you can take some of the
+               cards and move them. The option makes the game harder.
+@endnode
+
+
+
+@node "PROFILES" "Soliton <Profile Manager>"
+
+                               @{b}P r o f i l e   M a n a g e r@{ub}
+
+
+               You can define graphic profiles here. A profile is a combination
+               of a cardset and a background pattern that can be selected in the
+               profiles menu. The Soliton games share this profile list.
+
+               @{b}Profile@{ub}
+
+               Name of the selected profile.
+
+               @{b}Cardset@{ub}
+
+               The image containing the cardset. You can easily create
+               @{"your own cards" link "CARDS"}.
+
+               @{b}Pattern@{ub}
+
+               Background pattern of the playfield. You can use any image
+               file you want.
+@endnode
+
+
+
+@node "STATS" "Soliton <Statistics>"
+
+                               @{b}S t a t i s t i c s@{ub}
+
+
+               In this window you will see some facts about the running game,
+               the session you are playing and about all sessions. Press the
+               @{b}Clear@{ub}-Button to delete the all-sessions-history.
+
+               The statistics are saved seperately for each Soltion game.
+               @{"Klondike" link "KLONDIKE"} has a highscore table.
+@endnode
+
+
+
+
+@node "CARDS" "Soliton <Create Cardsets>"
+
+                            @{b}C r e a t e   C a r d s e t s@{ub}
+
+
+               A cardset is an image file. The cards must be placed next to
+               each other in the way that is presented in the file "Standard
+               Cards Medium.iff".
+
+               The size of your cardset is free. But keep in mind, that if
+               the cards are big, you will need a very big screen to play!
+
+               Save the whole picture exactly without border ("save as brush")
+               because Soliton assumes the card size to be 1/14 of the
+               picture width and 1/4 of the picture height.
+
+               You can use any color depth you like. Soliton will remap the
+               cardset to the present display enviroment while loading.
+               Do NOT use HAM modes, because they cannot be remapped to be
+               shown on "normal" screen modes.
+
+               You can use every picture format that can be loaded with
+               datatypes. Because not everybody has got all exotic datatypes
+               I believe IFF, JPEG or PNG to be the best choice.
+
+               I think Aminet/game/data is the best place to publish your
+               cardsets. Please don't forget to include a .readme file.
+@endnode

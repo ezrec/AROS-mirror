@@ -1,0 +1,175 @@
+
+WHAT'S CHANGED FROM 2.00 to 2.1
+
+ * Now it is GPL and thus freely distributable and usable.
+ * Development done using Soliton project at http://www.sourceforge.net/
+ * Implemented much more localisation stuff.
+ * Changed highscore and profile data formats.
+ * Migrated code from C++ to plain C code and shortened
+   the resulting files.
+ * Removed obsoleted code parts.
+ * Joined Freecell and Klondike code to use one unique code
+   base. This also results in better statistics and more functions
+   for Freecell variant.
+ * Joined both Soliton games completely.
+ * Now detects REKO-cardsets automatically (by size) and needs no
+   longer the SOLITON keyword for reko.datatype.
+ * Fixed crash when double clicking on klondike stack card before
+   clicking new button.
+ * When XAD system is installed, the cardsets maybe archived in
+   any supported archive type (if there are multiple files in the
+   archive, the largest one is taken).
+
+WHAT'S CHANGED FROM 1.71 to 2.00 (1999-03-06)
+ * Freecell game mode. Soliton now consists of 2 programs:
+   Soliton Klondike and Soliton Freecell.
+ * Unlimited number of profiles, Klondike and Freecell share
+   profile settings.
+ * Persistent statistics for all sessions.
+ * Modified standard cardset. Medium, small and big cardset
+   included to the distribution to fit to all screenmodes.
+ * Updated install script (Better icon positioning, ...)
+ * Improved pile positioning when changing window size.
+ * Updated documentation, seperated Copyright section.
+ * Removed all translations, they all need to be updated
+   more or less. Note: a new polish translation is already
+   been worked on by Mariusz Danilewicz.
+ * Reko2Soliton.ifx updated (Thanks to Cary Driscoll)
+
+WHAT'S CHANGED FROM 1.70 to 1.71 (1999-01-30)
+ * Fixed background pattern bug.
+ * Increased number of profiles to 20. (If you have so many
+   Soliton cardsets, why don't you upload some of them to
+   Aminet? ;-) The old configuration file cannot be read
+   anymore, sorry.
+ * Builtin pseudo-cardset for situations when no cardset
+   can be loaded. It is ugly, you should never see it.
+ * Fixed a score cheating bug.
+ * New translation: Dansk
+
+WHAT'S CHANGED FROM BETA 1.61 to 1.70 (1998-04-13)
+ * All <n> cards are displayed when playing "open <n> cards".
+ * Re-enabled 'block moves' option.
+ * No more flickering when starting to drag a card.
+ * I hope that beta-testing is finally over with this
+   version!? I think that everyhing is ok now, but...
+
+WHAT'S CHANGED FROM BETA 1.60 to BETA 1.61 (1998-03-28)
+ * External MCC_Cardgame class. It may become public in
+   future. Mail me if you think you could use it!
+ * Probably fixed problems with cards not getting cleared
+   in V1.60 beta. Maybe even fixed the strange old flying
+   cards bug???
+ * V1.60 beta allocated huge memory blocks. Not funny.
+ * Non-opaque card movement if buffers cannot be allocated.
+ * Seperated this history file from Soliton.guide.
+
+WHAT'S CHANGED FROM 1.51 to BETA 1.60 (1998-03-21)
+ * Rewrote playfield class completely:
+   - automatic clipping when screen to small for cardset
+   - different layout mechanism
+   - maybe some more bugs because everything is new?
+   - maybe some bugs fixed because everything is new?
+   - the options 'Opaque cards', 'Beep', 'Auto open topleft'
+     and 'Block moves' did not survive. Opaque cards is
+     now on by default, the other ones are off. Mail me
+     if you miss one of them.
+ * Polish catalog
+ * Cool-buttons hide their images of small screens,
+   so their is no need for standard buttons anymore.
+ * Lost games counter and timer start not before you
+   touch a card.
+ * Included "Cards_MagicWB" by Kai Hofmann. It should look
+   better on 8 color MWB screens than the default cardset.
+
+WHAT'S CHANGED FROM 1.50 to 1.51 (1997-12-22)
+ * New swedish documentation and catalog update.
+ * French catalog updated.
+ * New translation: Suomi
+ * Fixed scoring bug for some strange moves.
+ * Extended doubleclick feature: doubleclicking a card
+   now executes ANY possible move.
+ * The excotic "one file for each card" file format is
+   not documented anymore. As far as I know it has never
+   been used. (Please tell me if you still need it)
+
+WHAT'S CHANGED FROM 1.40 to 1.50 (1997-06-01)
+ * Rewrote drag'n'drop mechanism. Now there is smooth card
+   movement at the end of a drag'n'drop and smooth (flying)
+   drag abort.
+ * Multi level, flying undo.
+ * Reduced minimal window size again. This is nescessary to startup
+   on small screens.
+ * New scoring system (influenced by game time), score display in
+   main window, highscore list.
+ * Translation update: Nederlands
+ * Fixed Reko2Soliton.ifx (Thanks to Nathan Black).
+ * Cosmetics in About window. Did you ever look at it?
+
+WHAT'S CHANGED FROM 1.31b to 1.40 (1997-05-03)
+ * Soliton is now much more tolerant concerning the correct
+   drop position. That means: less "beeps" for you!
+ * Fixed double checkmarks in profiles menu.
+ * Reenabled friend bitmaps for Cybergfx -> faster.
+ * New translations: español, nederlands
+ * Redesigned default cardset
+ * PPaint7 script to convert cardsets to Soliton format.
+
+WHAT'S CHANGED FROM 1.30 to 1.31b (1997-04-10)
+ * Fixed possible crash/hit at startup.
+ * Fixed possible deadlock with drag'n'drop.
+ * Statistics window remembers position now.
+ * Updated translation: Svenska.
+ * Fixes standard design move button.
+ * Disabled 'flying card' by default. The feature seems to
+   be buggy and crashes on some machines. Please read
+   "readme.1st" for details!
+ * Added graphics hardware check in About window and
+   compiled without optimizations for debugging purposes.
+ * Move indicator disappears completely when disabled.
+
+WHAT'S CHANGED FROM 1.20 to 1.30 (1997-03-09)
+ * Move indicator button
+ * "Cool buttons" ;-) on the left side of the window.
+ * Cards 'fly' to their destinations.
+ * Cardset-pattern-profiles selectable via menu.
+ * Fixed bug with dragged cards trashing display.
+ * Opaque cards switch has been ignored sometimes.
+ * Display beep and 'Auto turn topleft' can be disabled.
+ * Fixed 'Help' menu item.
+ * ImageFX scripts to convert cardsets to Soltion format.
+ * Fixed cleanup bug when auto open was switched off.
+ * Rules bugfix : A on 2 now allowed (quite useless anyway),
+   but no more K on A. Ability to move cards back from the
+   four destination stacks.
+ * Optional are-you-sure-requesters before 'New game' and 'Quit'.
+ * New languages
+
+WHAT'S CHANGED FROM 1.10 to 1.20 (1997-02-18)
+ * Timer
+ * Statistics window
+ * Support of the V43-Datatypes for more than 256 colors.
+ * Increased rendering speed on screens with more than 256
+   colors (especially on CyberGraphics systems).
+ * New catalogs: Francais, Svenska
+ * Improved default cardset a bit.
+ * Drag point could jump away when dragging cards very fast.
+ * Reworked install script.
+
+WHAT'S CHANGED FROM 1.00 to 1.10 (1997-02-08)
+ * Implemented UnDo.
+ * Optional opaque card movement.
+ * Drag'n'drop begins when you move the mouse, not before.
+   Right mouse-button aborts drag'n'drop.
+ * Size of covered cards depending on windows height.
+ * Automatic turn-around of topmost cards can be switched
+   off now.
+ * Cosmetics in some requesters and settings window.
+   New icon.
+ * New games were immediately cleaned up sometimes. Oops.
+ * Internally: KaiLib ;-)
+
+
+VERSION 1.00 (1997-02-01)
+ * First version
+
