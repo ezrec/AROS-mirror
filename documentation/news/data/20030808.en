@@ -158,11 +158,11 @@ Miscellaneous
 -------------
 
 + After some benchmarking, BOOPSI method calls were optimized using macros,
-and are now about 20% faster.
+  and are now about 20% faster.
 
 + Roughly 2000 CVS commits since the last status update, with a record of
-1063 in July. Check it there__. So obviously this status update is
-not exhaustive.
+  1063 in July. Check it there__. So obviously this status update is
+  not exhaustive.
 
 __ http://sourceforge.net/mailarchive/forum.php?forum=aros-cvs
 
