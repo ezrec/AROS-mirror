@@ -1,26 +1,27 @@
 digulla:Aaron Digulla:digulla@aros.fh-konstanz.de:Coordinator
 matthias:Matthias Fleischer:fleischr@IZFM.Uni-Stuttgart.DE:Exec, DOS, drivers
 pgpeter:Peter Boeckmann:pgpeter@informatik.uni-siegen.de:Sparc, Alpha
-iaint:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:FreeBSD, utility
+iaint:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:HIDDs, Docs
 zino:Peter Bortas:zino@lysator.liu.se:WWW site
 mreckt:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, layers
 ldp:Lennard voor den Dag:ldp@worldonline.nl:Amiga port, layers
 quango:Chris Lawrence:quango@socomm.net:Linux/m68k
 geert:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
 turrican:Kars de Jong:jongk@prac.cs.utwente.nl:misc
-nlorentz:Nils Henrik Lorentzen:nlorentz@sn.no:diskfont,icons
+nlorentz:Nils Henrik Lorentzen:nlorentz@sn.no:GadTools, Asl
 ruppert:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 vmc:Harald Frank:support@isdntown.east.de:Amiga port
 helios:Martin Steigerwald:steigerw@stud.uni-frankfurt.de:Beta tester
-srittau:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Gadtools
+srittau:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Gadtools, Docs
 laguest:L. A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
 SDuvan:Johan Alfredsson:d95duvan@dtek.chalmers.se:Commodities
-bergers:Stefan Berger:bergers@cip.e-technik.uni-erlangen.de:Math libs
+bergers:Stefan Berger:bergers@cip.e-technik.uni-erlangen.de:Math, DOS, Arp
 jskov:Jesper Skov:jskov@cs.auc.dk:Linux/m68k
 Wez:Wez Furlong:wjf103@york.ac.uk:Shell
 usul:Stefan Czinczoll:scholle@unidui.uni-duisburg.de:WWW
 karcher:John J. Karcher:jkarcher@cynet.net:Slim Binaries
 adieb:Adrian Brown:adieb@carmen.murdoch.edu.au:Win95 port
+hkiel:Henning Kiel:kiel@student.physik.uni-dortmund.de:Games, Misc
 stepan:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:Christopher D. Judd:juddc@rpi.edu:
 frv95tjn:Tommy Johansson:frv95tjn@mds.mdh.se:
@@ -35,7 +36,6 @@ hansvi:Hans Van Ingelgom:hansvi@igwe1.vub.ac.be:
 rycohen:Ross Cohen:rycohen@ACSU.Buffalo.EDU:
 chexum:Janos Farkas:chexum@shadow.banki.hu:
 morten-h:Morten Holm:morten-h@post3.tele.dk:
-hkiel:Henning Kiel:kiel@student.physik.uni-dortmund.de:
 rlumley:Robert Lumley:rlumley@telmaron.com:
 indy:Sven Drieling:indy@welcome.north.de:
 jamesm:James McArthur:jamesm@it.ntu.edu.au:

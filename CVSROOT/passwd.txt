@@ -1,26 +1,27 @@
 digulla:cac4LV26eOfdI:Aaron Digulla:digulla@aros.fh-konstanz.de:Coordinator
 matthias:bbxf6C1JfqE7U:Matthias Fleischer:fleischr@IZFM.Uni-Stuttgart.DE:Exec, DOS, drivers
 pgpeter:ggX6o8c4l:Peter Boeckmann:pgpeter@informatik.uni-siegen.de:Sparc, Alpha
-iaint:adwVPoZf6iJ6U:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:FreeBSD, utility
+iaint:adwVPoZf6iJ6U:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:HIDDs, Docs
 zino:bdYh/q95S4cmU:Peter Bortas:zino@lysator.liu.se:WWW site
 mreckt:cbWLerEivCr6I:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, layers
 ldp:6u5hVWs926luc:Lennard voor den Dag:ldp@worldonline.nl:Amiga port, layers
 quango:cbSYvfdxV/owQ:Chris Lawrence:quango@socomm.net:Linux/m68k
 geert:cbGlFwvZi5iZY:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
 turrican:bcRFEzJmi8r7Y:Kars de Jong:jongk@prac.cs.utwente.nl:misc
-nlorentz:db6KtfPCmtZIQ:Nils Henrik Lorentzen:nlorentz@sn.no:diskfont,icons
+nlorentz:db6KtfPCmtZIQ:Nils Henrik Lorentzen:nlorentz@sn.no:GadTools, Asl
 ruppert:bbtwjwdJnQGas:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 vmc:abw2.qX7kAnnM:Harald Frank:support@isdntown.east.de:Amiga port
 helios:acwZVMiQtI78o:Martin Steigerwald:steigerw@stud.uni-frankfurt.de:Beta tester
-srittau:aaRBXVNGOCKiY:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Gadtools
+srittau:aaRBXVNGOCKiY:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Gadtools, Docs
 laguest:baLtYMMsFjGms:L. A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
 SDuvan:dbfBDWZL8B0q.:Johan Alfredsson:d95duvan@dtek.chalmers.se:Commodities
-bergers:bdKC5UL24VXQI:Stefan Berger:bergers@cip.e-technik.uni-erlangen.de:Math libs
+bergers:bdKC5UL24VXQI:Stefan Berger:bergers@cip.e-technik.uni-erlangen.de:Math, DOS, Arp
 jskov:bdclJpF6gyfHU:Jesper Skov:jskov@cs.auc.dk:Linux/m68k
 Wez:Wk.Op1sXVRJJo:Wez Furlong:wjf103@york.ac.uk:Shell
 usul:ad88oJEDSJ7hA:Stefan Czinczoll:scholle@unidui.uni-duisburg.de:WWW
 karcher:*:John J. Karcher:jkarcher@cynet.net:Slim Binaries
 adieb:*:Adrian Brown:adieb@carmen.murdoch.edu.au:Win95 port
+hkiel:ccL6.C5LgMNSM:Henning Kiel:kiel@student.physik.uni-dortmund.de:Games, Misc
 
 stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
@@ -37,7 +38,6 @@ hansvi:aaoWAgKjckBIc:Hans Van Ingelgom:hansvi@igwe1.vub.ac.be:
 rycohen:aaNueBFiMeKmI:Ross Cohen:rycohen@ACSU.Buffalo.EDU:
 chexum:mV/zpVIfJW9yY:Janos Farkas:chexum@shadow.banki.hu:
 morten-h:9KDC6O.tUkOCg:Morten Holm:morten-h@post3.tele.dk:
-hkiel:ccL6.C5LgMNSM:Henning Kiel:kiel@student.physik.uni-dortmund.de:
 rlumley:D0TvThpFULPfQ:Robert Lumley:rlumley@telmaron.com:
 indy:acJyggTBJDfL6:Sven Drieling:indy@welcome.north.de:
 jamesm:abeTm2pJKypwA:James McArthur:jamesm@it.ntu.edu.au:
