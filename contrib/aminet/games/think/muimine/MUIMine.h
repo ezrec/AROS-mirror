@@ -46,6 +46,13 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifdef __AROS__
+#include <aros/oldprograms.h>
+#include <datatypes/pictureclass.h>
+#include <workbench/startup.h>
+#include <libraries/asl.h>
+#define strcmpi strcmp
+#endif
 
 /* Compiler specific stuff */
 
@@ -93,10 +100,11 @@
 
 #endif /* ifndef __GNUC__ */
 
+#ifndef __AROS__
 extern struct ExecBase *SysBase;
 extern struct Library *IntuitionBase, *UtilityBase, *GfxBase, *DOSBase, *IconBase,
                       *DataTypesBase, *MUIMasterBase;
-
+#endif
 #endif /* ifdef _DCC */
 
 
@@ -125,6 +133,10 @@ extern struct Library *IntuitionBase, *UtilityBase, *GfxBase, *DOSBase, *IconBas
     support functions and structures
 
 ****************************************************************************/
+
+#ifdef __AROS__
+#define __stdargs
+#endif
 
 ULONG __stdargs DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...);
 

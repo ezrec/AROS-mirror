@@ -283,10 +283,17 @@ static ULONG mDraw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 }
 
 
+#ifndef __AROS__
 SAVEDS ASM ULONG DigitsDispatcher(
         REG(a0) struct IClass *cl,
         REG(a2) Object *obj,
         REG(a1) Msg msg)
+#else
+AROS_UFH3(ULONG, DigitsDispatcher,
+ AROS_UFHA(struct IClass *, cl , A0),
+ AROS_UFHA(Object *       , obj, A2),
+ AROS_UFHA(Msg            , msg, A1))
+#endif
 {
     switch (msg->MethodID)
     {

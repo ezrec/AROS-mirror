@@ -99,8 +99,14 @@ void SetEditLevel(struct LEWindowData * data, struct EditLevelData * edData);
 /*
     display function and hook for level list object
 */
+#ifndef __AROS__
 SAVEDS ASM LONG LevelListDisplayFunc(REG(a2) char **array,
                                      REG(a1) struct EditLevelData *data)
+#else
+AROS_UFH2(LONG, LevelListDisplayFunc,
+ AROS_UFHA(char **               , array , A2),
+ AROS_UFHA(struct EditLevelData *, data  , A1))
+#endif
 {
     if (data)
     {
@@ -944,10 +950,17 @@ static ULONG mEditUpdate(struct IClass * cl, Object * obj, struct EditUpdatePara
 /*
     function :    class dispatcher
 */
+#ifndef __AROS__
 SAVEDS ASM ULONG LEWindowDispatcher(
         REG(a0) struct IClass *cl,
         REG(a2) Object *obj,
         REG(a1) Msg msg)
+#else
+AROS_UFH3(ULONG, LEWindowDispatcher,
+ AROS_UFHA(struct IClass *, cl , A0),
+ AROS_UFHA(Object *       , obj, A2),
+ AROS_UFHA(Msg            , msg, A1))
+#endif
 {
     switch (msg->MethodID)
     {

@@ -1,0 +1,41 @@
+#   $Id$
+#
+#   Makefile to make Soliton.
+
+include $(TOP)/config/make.cfg
+
+FILES :=           \
+	MUIMine    \
+	MFStrings  \
+	MFWindow   \
+	BTWindow   \
+	LEWindow   \
+	ISWindow   \
+	LevelData  \
+	MineField  \
+	FaceButton \
+	Digits
+
+EXEDIR := $(CONTRIBDIR)/aminet
+EXE := $(EXEDIR)/MUIMine
+
+USER_INCLUDES := 
+
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_MUILIB := yes
+
+#MM aminet-games-think-muimine : 
+#includes setup linklibs
+# setup-muimine-catalogs
+
+%make_prog_setup mmake=aminet-games-think-muimine
+
+aminet-games-think-muimine : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps

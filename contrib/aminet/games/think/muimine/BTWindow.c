@@ -394,10 +394,17 @@ static ULONG mResetAll(struct IClass *cl, Object *obj, Msg msg)
 /*
     function :    class dispatcher
 */
+#ifndef __AROS__
 SAVEDS ASM ULONG BTWindowDispatcher(
         REG(a0) struct IClass *cl,
         REG(a2) Object *obj,
         REG(a1) Msg msg)
+#else
+AROS_UFH3(ULONG, BTWindowDispatcher,
+ AROS_UFHA(struct IClass *, cl , A0),
+ AROS_UFHA(Object *       , obj, A2),
+ AROS_UFHA(Msg            , msg, A1))
+#endif
 {
     switch (msg->MethodID)
     {

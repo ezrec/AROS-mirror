@@ -11,7 +11,11 @@
 /*
     locale variables
 */
+#ifdef __AROS__
+struct LocaleBase * LocaleBase = NULL;
+#else
 struct Library * LocaleBase = NULL;
+#endif
 struct Catalog * Catalog = NULL;
 
 LONG StringTableSize = 0;

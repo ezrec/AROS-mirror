@@ -189,7 +189,7 @@ static VOID init(VOID)
 ****************************************************************************/
 
 
-#ifndef __SASC
+#if !defined __SASC && !defined __AROS__
 static VOID stccpy(char *dest,char *source,int len)
 {
     strncpy(dest,source,len);
@@ -754,7 +754,7 @@ int main(int argc, char *argv[])
         safestarttt = NULL;
         if (GetAttr(MUIA_MFWindow_SafeStart, window, &ss))
         {
-            if (safestart && !ss  ||  !safestart && ss)
+            if ((safestart && !ss)  ||  (!safestart && ss))
             {
                 updatett = TRUE;
             }

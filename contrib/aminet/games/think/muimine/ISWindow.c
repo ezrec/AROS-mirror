@@ -320,7 +320,10 @@ static ULONG mExitCheck(struct IClass *cl, Object *obj, struct MUIP_ISWindow_Exi
     {
         MUI_Request(_app(obj), obj, 0, GetStr(MSG_ISWINDOW_TITLE),
                                        GetStr(MSG_CONTINUE_GADGET),
-                                       GetStr(MSG_CLOSE_IMAGE_ASL));
+                                       GetStr(MSG_CLOSE_IMAGE_ASL),
+#ifdef __AROS__ 
+                                       NULL);
+#endif
     }
     else
     {
@@ -334,9 +337,16 @@ static ULONG mExitCheck(struct IClass *cl, Object *obj, struct MUIP_ISWindow_Exi
 /*
     function :    class dispatcher
 */
+#ifndef __AROS__
 SAVEDS ASM ULONG ISWindowDispatcher(REG(a0) struct IClass *cl,
                                     REG(a2) Object *obj,
                                     REG(a1) Msg msg)
+#else
+AROS_UFH3(ULONG, ISWindowDispatcher,
+ AROS_UFHA(struct IClass *, cl , A0),
+ AROS_UFHA(Object *       , obj, A2),
+ AROS_UFHA(Msg            , msg, A1))
+#endif
 {
     switch (msg->MethodID)
     {
