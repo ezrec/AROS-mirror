@@ -12,6 +12,12 @@
 # All Rights Reserved.
 #
 # $Log$
+# Revision 42.1  2000/08/08 13:31:05  chodorowski
+# Fixes to make BGUI compile on AmigaOS. Disabled auto-generation of o/class-protos.h by MakeProto
+# since it couldn't handle functions using the REGFUNC and REGPARAM macros; now
+# include/aros/class-protos.h is used instead. Also disabled compilation of MakeProto. Disabled
+# compiling test/test10.e and test/test11.e since that requires EC and BGUI modules for E.
+#
 # Revision 42.0  2000/05/09 22:09:38  mlemos
 # Bumped to revision 42.0 before handing BGUI to AROS team
 #
@@ -305,11 +311,6 @@ libs:bgui.library:
 
 PROGRAM_OPTIONS = RESETOPTIONS NOVER NOICONS LINK DEBUG=FULLFLUSH ERRORREXX NOSTACKCHECK ObjectName=o/
 
-bin/MakeProto: MakeProto.c
-   @echo Making $@...
-   @sc $(PROGRAM_OPTIONS) $? ProgramName=$@
-   -@delete QUIET $@.lnk
-
 bin/KillBGUI: KillBGUI.c
    @echo Making $@...
    @sc $(PROGRAM_OPTIONS) DEFINE __USE_SYSBASE $? ProgramName=$@
@@ -390,8 +391,8 @@ bin/test6 \
 bin/test7 \
 bin/test8 \
 bin/test9 \
-bin/test10 \
-bin/test11 \
+#bin/test10 \
+#bin/test11 \
 bin/test13
 
 test: $(includes) $(test)
@@ -985,10 +986,6 @@ bin/ViewGroup: examples/ViewGroup.c
    @sc $(PROGRAM_OPTIONS) $? ProgramName=$@
    -@delete QUIET $@.lnk
 
-o/class-protos.h: $(proto_src) bin/MakeProto
-   @echo Making $@...
-   @bin/MakeProto \#?.c \#?.asm header=$@
-
 $(PRAGMA_DIRECTORY) $(INLINE_DIRECTORY) $(FD_DIRECTORY):
    makedir $@
 
@@ -1070,14 +1067,14 @@ clean:
 
 .h.h:
    @echo Installing $@...
-   @copy >NIL: $*.h to $@
+   @copy $*.h to $@
 
 
 o/bgui.library_rev.h: bgui.library_rev.h
    @echo Bumping the revision of $@...
    @copy $? TO $@
 
-bin/bgui.library.$(BUILD_TYPE): $(includes) o/class-protos.h o/libtag.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) o/bgui.library_rev.h
+bin/bgui.library.$(BUILD_TYPE): $(includes) include/aros/class-protos.h o/libtag.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) o/bgui.library_rev.h
 bin/bgui.library.$(BUILD_TYPE): o/plimageclasses$(o) o/plgadgetclasses$(o) o/plgroupclasses$(o) o/plaslclasses$(o)
    @execute >NIL: <<
    if $(BUILD_TYPE) eq D
