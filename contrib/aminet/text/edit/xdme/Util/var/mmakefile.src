@@ -23,6 +23,8 @@ $(OBJDIR) :
 PARSER_OBJS := $(foreach f,$(FILES),$(OBJDIR)/$(f).o)
 PARSER_DEPS := $(foreach f,$(FILES),$(OBJDIR)/$(f).o)
 
+OS_INCLUDES := -I$(GENINCDIR)
+
 $(EXE) : $(PARSER_OBJS)
 	$(HOST_CC) -o $@ $(PARSER_OBJS)
 
