@@ -408,7 +408,7 @@ int tit;
 	main_scr.ViewModes=HIRES;
 	config->screenmode=checkscreenmode(config->screenmode);
 
-	main_win.Flags=WFLG_NW_EXTENDED;
+	main_win.Flags=WFLG_NW_EXTENDED|WFLG_NOCAREREFRESH;
 	mainwindow_tags[0].ti_Tag=TAG_SKIP;
 	mainwindow_tags[0].ti_Data=0;
 	if (status_flags&STATUS_IANSCRAP2) {
