@@ -51,6 +51,18 @@ thumbnailBorderColor = darkestBlue
 
 from mainlinks import mainLinks
 
+def commonprefix (path1, path2):
+    list1 = string.split(path1, os.sep)
+    list2 = string.split(path2, os.sep)
+
+    prefix = []
+
+    while list1 and list1[0] == list2[0]:
+	prefix.append (list1.pop (0))
+	list2.pop (0)
+
+    return string.join (prefix, '/') + '/'
+
 def relpath(path1, path2):
     """Return the relative path from directory 'path1' to directory 'path2'
 
@@ -68,12 +80,12 @@ def relpath(path1, path2):
     common = os.path.commonprefix([path1, path2])
     sliceoff = len(common)
     # Cut only at os.sep
-    while sliceoff > 0 and path1[sliceoff-1] != os.sep:
-	sliceoff = sliceoff - 1
+    #while sliceoff > 0 and path1[sliceoff] != os.sep:
+    #	sliceoff = sliceoff - 1
     path1 = path1[sliceoff:]
     path2 = path2[sliceoff:]
 
-    dirs1 = string.split(path1, os.sep) # list of directory components below
+    dirs1 = string.split(path1, os.sep) # list of directory components after
                                         # the common path
     dirs1 = filter(lambda x: x, dirs1)  # filter out empty elements
     rel = (os.pardir+os.sep)*len(dirs1) # construct the relative path to the
