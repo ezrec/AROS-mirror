@@ -126,7 +126,7 @@
 
 // STRUCTS & VARS
     struct IB              *IB                  = NULL;
-    struct GTB             *GTB                 = NULL;
+    struct GTB             *GadToolsBase        = NULL;
     struct GFX             *GFX                 = NULL;
     struct Screen          *Scr                 = NULL;
     APTR                    VisualInfo          = NULL;
@@ -328,7 +328,7 @@
         }
 
         if (IB) CloseLibrary((struct Library *)IB);
-        if (GTB) CloseLibrary((struct Library *)GTB);
+        if (GadToolsBase) CloseLibrary((struct Library *)GadToolsBase);
         if (GFX) CloseLibrary((struct Library *)GFX);
     }
 
@@ -511,7 +511,7 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
 
         // now open all other libraries and check the success
 
-        if (!(GTB=(struct GTB *)OpenLibrary("gadtools.library",37L)))
+        if (!(GadToolsBase=(struct GTB *)OpenLibrary("gadtools.library",37L)))
         {
             CloseDownScreen();
             exit(20);
