@@ -83,9 +83,7 @@ LT_Build(LayoutHandle *Handle, unsigned long tag1, ...)
 VOID
 LT_SetAttributes(LayoutHandle *handle,LONG id, unsigned long tag1,...)
 {
-//	AROS_SLOWSTACKTAGS_PRE(tag1)
 	LT_SetAttributesA(handle,id,AROS_SLOWSTACKTAGS_ARG(tag1));
-//	AROS_SLOWSTACKTAGS_POST
 }
 #undef AROS_TAGRETURNTYPE
 
