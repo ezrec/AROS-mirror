@@ -1,6 +1,16 @@
 # $Id$
 
+#cpp
 #MM- contrib-development-compilers-lcc : contrib-development-compilers-lcc-cpp
 
-#dont work need fork and more
+#liblcc
+#MM- contrib-development-compilers-lcc : contrib-development-compilers-lcc-lib
+
+#-------------------------------------------------------------------------------
+#dont work need: assert execv fork getpid signal wait
+
+#lburg
+##MM- contrib-development-compilers-lcc : contrib-development-compilers-lcc-lburg
+
+#lcc
 ##MM- contrib-development-compilers-lcc : contrib-development-compilers-lcc-etc
