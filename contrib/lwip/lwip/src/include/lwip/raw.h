@@ -30,49 +30,50 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: memp.h,v 1.3 2002/07/07 18:57:58 sebauer Exp $
+ * This File: Sebastian Bauer <sebauer@t-online.de>
+ *
+ * $Id$
  */
+#ifndef __LWIP_RAW_H__
+#define __LWIP_RAW_H__
 
-#ifndef __LWIP_MEMP_H__
-#define __LWIP_MEMP_H__
+#include "lwip/arch.h"
 
-#include "lwip/debug.h"
-#include "arch/cc.h"
-#include "lwipopts.h"
+#include "lwip/pbuf.h"
+#include "lwip/inet.h"
+#include "lwip/ip.h"
 
-typedef enum {
-  MEMP_PBUF,
-  MEMP_RAW_PCB,
-  MEMP_UDP_PCB,
-  MEMP_TCP_PCB,
-  MEMP_TCP_PCB_LISTEN,
-  MEMP_TCP_SEG,
+#include "lwip/err.h"
 
-  MEMP_NETBUF,
-  MEMP_NETCONN,
-  MEMP_API_MSG,
-  MEMP_TCPIP_MSG,
+struct raw_pcb {
+  struct raw_pcb *next;
+  int protocol;
 
-  MEMP_SYS_TIMEOUT,
+  struct ip_addr /*local_ip, */remote_ip;
   
-  MEMP_MAX
-} memp_t;
+  void (* recv)(void *arg, struct raw_pcb *pcb, struct pbuf *p,
+		struct ip_addr *addr);
+  void *recv_arg;  
+};
 
-void memp_init(void);
+/* The following functions is the application layer interface to the
+   RAW code. */
+struct raw_pcb * raw_new        (int protcol);
+void             raw_remove     (struct raw_pcb *pcb);
+err_t            raw_connect    (struct raw_pcb *pcb, struct ip_addr *ipaddr,
+				 u16_t port);
+void             raw_recv       (struct raw_pcb *pcb,
+				 void (* recv)(void *arg, struct raw_pcb *upcb,
+					       struct pbuf *p,
+					       struct ip_addr *addr),
+				 void *recv_arg);
+err_t            raw_send       (struct raw_pcb *pcb, struct pbuf *p);
 
-void *memp_malloc(memp_t type);
-void *memp_mallocp(memp_t type);
-void *memp_malloc2(memp_t type);
-void *memp_realloc(memp_t fromtype, memp_t totype, void *mem);
-void memp_free(memp_t type, void *mem);
-void memp_freep(memp_t type, void *mem);
+/* The following functions is the lower layer interface to UDP. */
+void             raw_input      (struct pbuf *p, struct netif *inp);
+void             raw_init       (void);
 
-#if MEMP_RECLAIM
-typedef u8_t (*memp_reclaim_func)(void *arg, memp_t type);
-void memp_register_reclaim(memp_t type, memp_reclaim_func f, void *arg);
-#else 
-#define memp_register_reclaim(t, f, arg)
-#endif /* MEMP_RECLAIM */
 
-#endif /* __LWIP_MEMP_H__  */
-	  
+#endif /* __LWIP_UDP_H__ */
+
+

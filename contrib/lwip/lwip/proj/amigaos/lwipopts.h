@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: lwipopts.h,v 1.1 2002/07/06 21:22:57 sebauer Exp $
+ * $Id: lwipopts.h,v 1.2 2002/07/09 21:24:08 sebauer Exp $
  */
 #ifndef __LWIPOPTS_H__
 #define __LWIPOPTS_H__
@@ -49,6 +49,9 @@ a lot of data that needs to be copied, this should be set high. */
    sends a lot of data out of ROM (or other static memory), this
    should be set high. */
 #define MEMP_NUM_PBUF           8
+/* MEMP_NUM_RAW_PCB: the number of RAW control blocks. One per active
+   RAW "connection". */
+#define MEMP_NUM_RAW_PCB        4
 /* MEMP_NUM_UDP_PCB: the number of UDP protocol control blocks. One
    per active UDP "connection". */
 #define MEMP_NUM_UDP_PCB        4
@@ -155,6 +158,8 @@ a lot of data that needs to be copied, this should be set high. */
 #define LWIP_UDP                1
 #define UDP_TTL                 255
 
+/* ---------- RAW options ---------- */
+#define LWIP_RAW                1
 
 /* ---------- Statistics options ---------- */
 #define STATS

@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: ip.c,v 1.10 2002/02/08 13:30:00 adam Exp $
+ * $Id: ip.c,v 1.3 2002/07/07 18:57:57 sebauer Exp $
  */
 
 
@@ -50,6 +50,7 @@
 #include "lwip/inet.h"
 #include "lwip/netif.h"
 #include "lwip/icmp.h"
+#include "lwip/raw.h"
 #include "lwip/udp.h"
 #include "lwip/tcp.h"
 
@@ -524,6 +525,10 @@ ip_input(struct pbuf *p, struct netif *inp) {
   ip_debug_print(p);
   DEBUGF(IP_DEBUG, ("ip_input: p->len %d p->tot_len %d\n", p->len, p->tot_len));
 #endif /* IP_DEBUG */   
+
+#if LWIP_RAW > 0
+  raw_input(p,inp); /* This will not free p! */
+#endif
 
   switch(IPH_PROTO(iphdr)) {
 #if LWIP_UDP > 0    

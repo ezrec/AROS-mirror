@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: tcpip.c,v 1.3 2002/03/04 10:47:56 adam Exp $
+ * $Id: tcpip.c,v 1.3 2002/07/07 18:57:57 sebauer Exp $
  */
 
 #include "lwip/debug.h"
@@ -43,6 +43,7 @@
 #include "lwip/pbuf.h"
 
 #include "lwip/ip.h"
+#include "lwip/raw.h"
 #include "lwip/udp.h"
 #include "lwip/tcp.h"
 
@@ -67,6 +68,7 @@ tcpip_thread(void *arg)
   struct tcpip_msg *msg;
 
   ip_init();
+  raw_init();
   udp_init();
   tcp_init();
 

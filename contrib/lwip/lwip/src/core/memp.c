@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: memp.c,v 1.3 2001/12/13 20:44:09 adam Exp $
+ * $Id: memp.c,v 1.3 2002/07/07 18:57:57 sebauer Exp $
  */
 
 #include "lwipopts.h"
@@ -38,6 +38,7 @@
 #include "lwip/memp.h"
 
 #include "lwip/pbuf.h"
+#include "lwip/raw.h"
 #include "lwip/udp.h"
 #include "lwip/tcp.h"
 #include "lwip/api.h"
@@ -70,6 +71,7 @@ static const u16_t memp_sizes[MEMP_MAX] = {
 
 static const u16_t memp_num[MEMP_MAX] = {
   MEMP_NUM_PBUF,
+  MEMP_NUM_RAW_PCB,
   MEMP_NUM_UDP_PCB,
   MEMP_NUM_TCP_PCB,
   MEMP_NUM_TCP_PCB_LISTEN,
@@ -83,6 +85,9 @@ static const u16_t memp_num[MEMP_MAX] = {
 
 static u8_t memp_memory[(MEMP_NUM_PBUF *
 			 MEM_ALIGN_SIZE(sizeof(struct pbuf) +
+					sizeof(struct memp)) +
+			MEMP_NUM_RAW_PCB *
+			 MEM_ALIGN_SIZE(sizeof(struct raw_pcb) +
 					sizeof(struct memp)) +
 			MEMP_NUM_UDP_PCB *
 			 MEM_ALIGN_SIZE(sizeof(struct udp_pcb) +

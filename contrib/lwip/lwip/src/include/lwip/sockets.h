@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: sockets.h,v 1.1 2001/12/12 10:01:00 adam Exp $
+ * $Id: sockets.h,v 1.3 2002/07/07 18:57:58 sebauer Exp $
  */
 
 
@@ -58,6 +58,7 @@ struct sockaddr {
 
 #define SOCK_STREAM     1
 #define SOCK_DGRAM      2
+#define SOCK_RAW        3
 
 #define AF_INET         2
 #define PF_INET         AF_INET
