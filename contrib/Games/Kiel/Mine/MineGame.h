@@ -75,12 +75,8 @@ clearwin();
 
   while(!weiter)
   {
+    WaitPort(Window->UserPort);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
-    if(msg==NULL)
-    {
-      Wait(1L<<Window->UserPort->mp_SigBit);
-      msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
-    }
     class=msg->Class;
     code=msg->Code;
     mausx=msg->MouseX-3;
@@ -101,12 +97,8 @@ BYTE deltab=1;
   MaleMenue();
   while(!weiter)
   {
+    WaitPort(Window->UserPort);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
-    if(msg==NULL)
-    {
-      Wait(1L<<Window->UserPort->mp_SigBit);
-      msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
-    }
     class=msg->Class;
     code=msg->Code;
     mausx=msg->MouseX-3;
@@ -470,12 +462,8 @@ BOOL start=FALSE;
 
   while(!Fehler && Rest>Anzahl && !ende && !SpielAbbr)
   {
+    WaitPort(Window->UserPort);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
-    if(msg==NULL)
-    {
-      Wait(1L<<Window->UserPort->mp_SigBit);
-      msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
-    }
     class=msg->Class;
     code=msg->Code;
     mausx=msg->MouseX-3;
@@ -584,12 +572,8 @@ char Zeit[30];
 
         while(!weiter)
         {
+          WaitPort(Window->UserPort);
           msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
-          if(msg==NULL)
-          {
-            Wait(1L<<Window->UserPort->mp_SigBit);
-            msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
-          }
           class=msg->Class;
           code=msg->Code;
           ReplyMsg((struct Message *)msg);
@@ -608,12 +592,8 @@ char Zeit[30];
 
     while(!weiter)
     {
+      WaitPort(Window->UserPort);
       msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
-      if(msg==NULL)
-      {
-        Wait(1L<<Window->UserPort->mp_SigBit);
-        msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
-      }
       class=msg->Class;
       code=msg->Code;
       mausx=msg->MouseX-3;
