@@ -89,7 +89,7 @@ AROS_LH2(void, MV_GetAttrsA,
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MysticBase)
     
-    SetViewAttrs(mview, tags);
+    GetViewAttrs(mview, tags);
     
     AROS_LIBFUNC_EXIT
 }
