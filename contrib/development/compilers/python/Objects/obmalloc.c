@@ -48,6 +48,8 @@
  *    in Proc. 1995 Int'l. Workshop on Memory Management, September 1995.
  */
 
+#include "Python.h"
+
 /* #undef WITH_MEMORY_LIMITS */		/* disable mem limit checks  */
 #define WITH_MALLOC_HOOKS		/* for profiling & debugging */
 
