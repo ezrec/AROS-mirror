@@ -1,0 +1,2 @@
+A doubeclick on a HD/Unit shows all partitions a click on "Change Type" 
+pops up the PC-MBR partition type chooser for partition 0.

@@ -1,0 +1,2 @@
+Click on "Change Type" or "Create Table" shows the window where you can
+choose which type of partition table should be created.

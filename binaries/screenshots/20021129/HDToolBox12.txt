@@ -1,0 +1,1 @@
+The partition is too big - so resize it to 10G using the "Resize/Move" button.

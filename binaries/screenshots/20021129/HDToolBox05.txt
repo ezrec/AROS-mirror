@@ -1,0 +1,2 @@
+Click on "Resize/Move" lets one resize move partitions of the selected
+harddisk/unit.

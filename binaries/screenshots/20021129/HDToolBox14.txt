@@ -1,0 +1,2 @@
+Go back to the first window with the devices, select fdsk.device and click on 
+"Save Changes".

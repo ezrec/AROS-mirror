@@ -1,0 +1,1 @@
+A click on "Change Type" shows the available PartitionTypes.

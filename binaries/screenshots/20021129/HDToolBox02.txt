@@ -1,0 +1,2 @@
+Double click on fdsk.device shows all available units of the device
+here -> Unit 0 which contains a PC-MBR-Partition Table with 3 partitions.

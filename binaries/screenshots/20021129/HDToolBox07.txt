@@ -1,0 +1,1 @@
+A click on "Create Table" displays the partition table type chooser.
