@@ -5,6 +5,7 @@
 
 #include "amosaic_cat.h"
 #include <proto/locale.h>
+#include <proto/alib.h>
 
 static LONG amosaic_Version = 1;
 static const STRPTR amosaic_BuiltInLanguage = (STRPTR) "english";
