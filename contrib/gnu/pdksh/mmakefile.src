@@ -16,11 +16,11 @@ ARCHBASE := pdksh-5.2.14
 
 #MM
 development-pdksh-fetch :
-	%fetch archive=$(ARCHBASE).tar.gz destination=$(PORTDIR)/pdksh archive_origins="$(ORIGINS)" \
+	%fetch archive=$(ARCHBASE).tar.gz destination=$(PORTSDIR)/pdksh archive_origins="$(ORIGINS)" \
 	patches_specs=pdksh-5.2.14-aros.diff:pdksh-5.2.14:-p1
 	
 
-%build_with_configure mmake=development-pdksh srcdir=$(PORTDIR)/pdksh/$(ARCHBASE) \
+%build_with_configure mmake=development-pdksh srcdir=$(PORTSDIR)/pdksh/$(ARCHBASE) \
      nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
      extraoptions="--target=$(AROS_TARGET_CPU)-aros  --build=local --disable-nls"
 

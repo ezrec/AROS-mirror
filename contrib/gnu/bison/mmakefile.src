@@ -15,11 +15,11 @@ ARCHBASE := bison-1.875
 
 #MM
 development-bison-fetch :
-	%fetch archive=$(ARCHBASE).tar.bz2 destination=$(PORTDIR)/bison archive_origins="$(ORIGINS)" \
+	%fetch archive=$(ARCHBASE).tar.bz2 destination=$(PORTSDIR)/bison archive_origins="$(ORIGINS)" \
 	patches_specs=bison-1.875-aros.diff:bison-1.875:-p1
 	
 
-%build_with_configure mmake=development-bison srcdir=$(PORTDIR)/bison/$(ARCHBASE) \
+%build_with_configure mmake=development-bison srcdir=$(PORTSDIR)/bison/$(ARCHBASE) \
      nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
      extraoptions="--target=$(AROS_TARGET_CPU)-aros  --build=local --disable-nls"
 
