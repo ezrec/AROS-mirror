@@ -210,14 +210,14 @@ def genPage (db, lib, func):
 	    item = string.strip (item)
 	    if item[0] == '@':
 		dict = {}
-		for flib, f in db.seeAlso[item]:
+		for f in db.seeAlso[item]:
 		    if f != func:
-			dict[f.name] = (flib, f)
+			dict[f.name] = f
 		flist = dict.keys ()
 		flist.sort ()
 		for key in flist:
-		    flib, f = dict[key]
-		    href = Href (getFilename (flib, f),
+		    f = dict[key]
+		    href = Href (getFilename (f.lib, f),
 			f.name+'()'
 		    )
 		    page.linksToFix.append (href)
