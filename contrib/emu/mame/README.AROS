@@ -97,7 +97,10 @@ Linux-i386 target:
   cd ..
   cd ..
   mame raiden
-  
+
+During game press TAB for information about input keys, etc. You can also
+change the key mapping in the menu that appears.
+
 AROS Mame for now only works correctly with Games which (can) work in 8 Bit
 colormode, because AROS does not yet support the cybergraphics.library >8 Bit 
 rendering functions. You can see the resolution and color depth of the game
@@ -109,8 +112,7 @@ AROS Mame does not support frame skipping and auto-frameskipping yet, so the
 games are played at max. speed (= often a bit to slow on my P2/300) without
 synchronization.
 
-AROS Mame is partly based on the Amiga Mame Port by Colin Ward and Mats Eirik
-Hansen.
+AROS Mame is partly based on the Amiga Mame Port by Mats Eirik Hansen.
 
 For more info about Mame have a look at "http://www.mame.net" and the
 readmes in the original source archive you downloaded.
