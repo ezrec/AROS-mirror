@@ -1,4 +1,4 @@
-digulla:cayHrwuhcmiLg:Aaron Digulla:digulla@wi-pc44.fh-konstanz.de:Coordinator
+digulla::Aaron Digulla:digulla@wi-pc44.fh-konstanz.de:Coordinator
 matthias:bbxf6C1JfqE7U:Matthias Fleischer:fleischr@IZFM.Uni-Stuttgart.DE:Exec, DOS, drivers
 pgpeter:ggX6o8c4l:Peter Boeckmann:pgpeter@informatik.uni-siegen.de:Sparc, Alpha
 iaint:adwVPoZf6iJ6U:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:FreeBSD, utility
