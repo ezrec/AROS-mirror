@@ -139,6 +139,11 @@ def codeToHtml (p, xmlfile, item):
     xmlfile.processRecursive (p, item.content)
     p.fh.write ('</pre>')
     
+def preToHtml (p, xmlfile, item):
+    p.fh.write ('<pre>')
+    xmlfile.processRecursive (p, item.content)
+    p.fh.write ('</pre>')
+    
 def filenameToHtml (p, xmlfile, item):
     p.fh.write ('<tt>')
     xmlfile.processRecursive (p, item.content)
@@ -374,6 +379,7 @@ class Xml2HtmlProcessor (xmlsupport.Processor):
 	    description=descriptionToHtml,
 	    tree=treeToHtml,
 	    code=codeToHtml,
+	    pre=preToHtml,
 	    idea=ideaToHtml,
 	    comment=commentToHtml,
 	    autodoc=autodocToHtml,
