@@ -1,0 +1,5 @@
+(textpossition 'center 'middle)
+(clearscreen)
+(message "keys")
+(textsleep)
+(display)

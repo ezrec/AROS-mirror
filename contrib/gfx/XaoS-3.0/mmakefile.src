@@ -1,0 +1,58 @@
+include $(TOP)/config/make.cfg
+
+OBJDIR		:= $(GENDIR)/$(CURDIR)
+DESTDIR		:= $(CONTRIBDIR)/Gfx/XaoS
+DATADIR		:= $(DESTDIR)/data
+CATALOGDIR	:= $(DATADIR)/catalogs
+EXAMPLEDIR	:= $(DATADIR)/examples
+TUTORIALDIR	:= $(DATADIR)/tutorial
+
+INCLUDES	:= src/include/config.h src/include/aconfig.h
+CATALOGS	:= $(wildcard catalogs/*)
+EXAMPLES	:= $(wildcard examples/*)
+TUTORIALS	:= $(wildcard tutorial/*)
+
+CATALOGFILES	:= $(foreach f, $(CATALOGS), $(CATALOGDIR)/$(notdir $(f)))
+EXAMPLEFILES	:= $(foreach f, $(EXAMPLES), $(EXAMPLEDIR)/$(notdir $(f)))
+TUTORIALFILES	:= $(foreach f, $(TUTORIALS), $(TUTORIALDIR)/$(notdir $(f)))
+
+#MM gfx-xaos : setup-gfx-xaos linklibs-xaosengine \
+#MM			      linklibs-xaosfilter \
+#MM			      linklibs-xaosutil \
+#MM			      linklibs-xaosui \
+#MM			      linklibs-xaosuiaros \
+#MM 	       gfx-xaos-prog
+gfx-xaos : 
+	@$(NOP)
+    
+#MM gfx-xaos-quick : setup-gfx-xaos linklibs-xaosengine-quick \
+#MM				    linklibs-xaosfilter-quick \
+#MM				    linklibs-xaosutil-quick \
+#MM				    linklibs-xaosui-quick \
+#MM				    linklibs-xaosuiaros-quick \
+#MM 	       gfx-xaos-prog-quick
+gfx-xaos-quick : 
+	@$(NOP)
+
+#MM setup-gfx-xaos : setup-gfx-xaos-directories
+setup-gfx-xaos : $(INCLUDES) $(CATALOGFILES) $(EXAMPLEFILES) $(TUTORIALFILES)
+	@$(NOP)
+
+#MM
+setup-gfx-xaos-directories :
+	%mkdirs_q $(DESTDIR) $(DATADIR) $(CATALOGDIR) $(EXAMPLEDIR) $(TUTORIALDIR) $(OBJDIR)
+
+src/include/config.h : src/include/config/config.aros
+	@$(CP) $< $@
+
+src/include/aconfig.h : src/include/config/aconfig.aros
+	@$(CP) $< $@
+
+$(CATALOGDIR)/% : catalogs/%
+	@$(CP) $< $@
+
+$(EXAMPLEDIR)/% : examples/%
+	@$(CP) $< $@
+
+$(TUTORIALDIR)/% : tutorial/%
+	@$(CP) $< $@

@@ -1,0 +1,26 @@
+#   $Id$
+#
+#
+#
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS := -DAROS -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
+
+LIB :=	xaosutil
+
+FILES := \
+	png \
+	catalog \
+	timers \
+	arosstdio \
+	aros_thread
+
+#MM- linklibs : linklibs-xaosutil
+#MM linklibs-xaosutil : includes setup-gfx-xaos
+
+%make_linklib_setup mmake=linklibs-xaosutil
+%make_vpath
+%make_linklib
+
+%common
+%include_deps

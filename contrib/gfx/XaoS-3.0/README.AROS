@@ -1,0 +1,4 @@
+To build XaoS:
+
+    make gfx-xaos
+

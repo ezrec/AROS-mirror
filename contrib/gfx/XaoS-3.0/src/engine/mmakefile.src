@@ -1,0 +1,40 @@
+#   $Id$
+#
+#
+#
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS := -DAROS -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
+
+LIB :=	xaosengine
+
+FILES := \
+	formulas \
+	zoom \
+	palettef \
+	emboss \
+	edge \
+	dither \
+	star \
+	edge2 \
+	btrace \
+	rotate \
+	stereogram \
+	interlace \
+	blur \
+	fractal \
+	itersmall \
+	subwindow \
+	plane \
+	julia \
+	i386
+	
+#MM- linklibs : linklibs-xaosengine
+#MM linklibs-xaosengine : includes setup-gfx-xaos
+
+%make_linklib_setup mmake=linklibs-xaosengine
+%make_vpath
+%make_linklib
+
+%common
+%include_deps

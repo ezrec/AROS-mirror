@@ -1,0 +1,16 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+#define CONFIGFILE "xaos.cfg"
+#define FPOINT_TYPE  long double
+#define USE_STDIO
+#define USE_ATOLD
+#include <aconfig.h>
+#define CONST const
+#define INLINE inline
+#define CONSTF __attribute__ ((const))
+#define REGISTERS(n) __attribute__ ((regparm(n)))
+#define STRUECOLOR24
+#define SHICOLOR
+#define SREALCOLOR
+
+#endif				/*CONFIG_H */

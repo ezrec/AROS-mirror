@@ -1,0 +1,29 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+OBJDIR		:= $(GENDIR)/$(CURDIR)
+DESTDIR		:= $(CONTRIBDIR)/Gfx/XaoS
+PROG		:= $(DESTDIR)/XaoS
+
+XAOSLIBS	:= ui engine util filter uiaros
+XAOSLIBFILES	:= $(foreach f, $(XAOSLIBS), $(LIBDIR)/libxaos$(f).a)
+
+#MM gfx-xaos-prog : setup-gfx-xaos linklibs-xaosengine \
+#MM			      	   linklibs-xaosfilter \
+#MM			           linklibs-xaosutil \
+#MM			           linklibs-xaosui \
+#MM			           linklibs-xaosuiaros
+gfx-xaos-prog : $(PROG)
+	@$(NOP)
+
+#MM gfx-xaos-prog-quick : setup-gfx-xaos linklibs-xaosengine-quick \
+#MM			      	   	 linklibs-xaosfilter-quick \
+#MM			           	 linklibs-xaosutil-quick \
+#MM			           	 linklibs-xaosui-quick \
+#MM			           	 linklibs-xaosuiaros-quick
+gfx-xaos-prog-quick : $(PROG)
+	@$(NOP)
+
+$(PROG) : $(XAOSLIBFILES)
+	%link_q from= libs="$(XAOSLIBFILES) $(LIBS)"

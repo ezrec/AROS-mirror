@@ -1,0 +1,25 @@
+	o	Make this list shorter :)
+	o	X windows screen saver version idea:
+			calculate big mandelbrot.
+			then using autopilot select good point
+			display smaller rectangle(320x200) and make
+			zoom to this point inside.
+			Do this repeativly for more points.then you
+			will get main mandelbrot with more zoom
+			windows. Select most interesting one.
+			Make it big again.
+			and repeat :)
+			Easy! isn't it?
+	o	Add another interfaces than ugly interface?
+	o	more ports of course..
+	o	video seqencess saving. Make support for creating 
+		movie file with saved movements and possibly calculated
+		points. This should make very small movie files with
+		aporox 1113 points for one frame. 500kb=500 frames=25
+		minutes of animation with compression about 50%(runlength
+		or lzo library) about one hour of animation in 320x200
+	o	automatic recalculation of videos for other resolution 
+		or configuration. Because movie filles will require 
+		exactly same optimalisations and movements as they 
+		were created. 
+Please contact me if you want to do something from this long todo :)

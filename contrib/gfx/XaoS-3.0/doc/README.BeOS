@@ -1,0 +1,28 @@
+BeOS driver version 1.6 for XaoS 3.0
+Copyright (c) 1997  Jens Kilian <jjk@acm.org>
+
+This driver version will work with BeOS DR9 PR (and later, hopefully).
+Some features which are still missing:
+
+- No fullscreen mode.
+- No menus.  Just use the ugly interface, like everybody.
+- No window resizing.  BeOS needs a fast response, and would
+  overwhelm XaoS with resize requests.  At the moment, you have
+  to use the command-line option -size WxH.
+
+XaoS 3.0 is multithreaded.  By default, the BeOS version uses this feature.
+To run single-threaded, use "xaos -threads 1 ...".
+
+HOW TO COMPILE:
+
+You need the full version of CodeWarrior, because the program is
+too big for the limited linker.
+
+	make -f Makefile.be		to build
+	make -f Makefile.be install	to install (in /boot/apps/XaoS by default)
+
+KNOWN BUGS
+
+- Missing dependencies in Makefiles.
+- Wrong character encoding for the localized message catalogs.
+

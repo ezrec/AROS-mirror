@@ -1,0 +1,59 @@
+%{
+#ifdef _plan9_
+#include <u.h>
+#include <libc.h>
+#endif
+#include <filter.h>
+#include <fractal.h>
+#include <ui_helper.h>
+#include "play.h"
+%}
+struct keyword1 {char *name;int type;funcptr callback;void *userdata;};
+%%
+maxiter, PARAM_INTEGER, (funcptr) uih_setmaxiter, NULL
+plane, PARAM_INTEGER, (funcptr) uih_setplane, NULL
+incoloring, PARAM_INTEGER, (funcptr) uih_setincoloringmode, NULL
+outcoloring, PARAM_INTEGER, (funcptr) uih_setoutcoloringmode, NULL
+intcoloring, PARAM_INTEGER, (funcptr) uih_setintcolor, NULL
+outtcoloring, PARAM_INTEGER, (funcptr) uih_setouttcolor, NULL
+range, PARAM_INTEGER, (funcptr) uih_setguessing, NULL
+maxstep, PARAM_FLOAT, (funcptr) uih_setmaxstep, NULL
+speedup, PARAM_FLOAT, (funcptr) uih_setspeedup, NULL
+fastmode, PARAM_NSTRING, (funcptr) uih_setfastmode, save_fastmode
+view, GENERIC, (funcptr) uih_play_setview, NULL
+animateview, GENERIC, (funcptr) uih_play_setview2, NULL
+formula, GENERIC, (funcptr) uih_play_formula, NULL
+filter, GENERIC, (funcptr) uih_playfilter, NULL
+fastjulia, PARAM_BOOL, (funcptr) uih_setjuliamode, NULL
+juliaseed, PARAM_COORD, (funcptr) uih_setjuliaseed, NULL
+zoomcenter, PARAM_COORD, (funcptr) uih_zoomcenter, NULL
+cyclingspeed, PARAM_INTEGER, (funcptr) uih_setcycling, NULL
+cycling, PARAM_BOOL, (funcptr) uih_cycling, NULL
+julia, PARAM_BOOL, (funcptr) uih_playjulia, NULL
+defaultpalette, PARAM_INTEGER, (funcptr) uih_playdefpalette, NULL
+palette, GENERIC, (funcptr) uih_playpalette, NULL
+usleep, PARAM_INTEGER, (funcptr) uih_playusleep, NULL
+textsleep, GENERIC, (funcptr) uih_playtextsleep, NULL
+zoom, GENERIC, (funcptr) uih_playzoom, NULL
+unzoom, GENERIC, (funcptr) uih_playunzoom, NULL
+stop, GENERIC, (funcptr) uih_playstop, NULL
+morphview, GENERIC, (funcptr) uih_playmorph, NULL
+moveview, GENERIC, (funcptr) uih_playmove, NULL
+morphjulia, PARAM_COORD, (funcptr) uih_playmorphjulia, NULL
+calculate, GENERIC, (funcptr) uih_playcalculate, NULL
+clearscreen, GENERIC, (funcptr) uih_clearscreen, NULL
+text, PARAM_STRING, (funcptr) uih_text, NULL
+textpossition, GENERIC, (funcptr) uih_playtextpos, NULL
+display, GENERIC, (funcptr) uih_display, NULL
+periodicity, PARAM_BOOL, (funcptr) uih_setperiodicity, NULL
+wait, GENERIC, (funcptr) uih_playwait, NULL
+angle, PARAM_FLOAT, (funcptr) uih_angle, NULL
+morphangle, PARAM_FLOAT, (funcptr) uih_playmorphangle, NULL
+autorotate, PARAM_BOOL, (funcptr) uih_playautorotate, NULL
+rotationspeed, PARAM_FLOAT, (funcptr) uih_rotationspeed, NULL
+fastrotate, PARAM_BOOL, (funcptr) uih_fastrotate, NULL
+letterspersec, PARAM_INTEGER, (funcptr) uih_letterspersec, NULL
+message, PARAM_STRING, (funcptr) uih_playmessage, NULL
+load, PARAM_STRING, (funcptr) uih_playload, NULL
+perturbation, PARAM_COORD, (funcptr) uih_setperbutation, NULL
+initstate, GENERIC, (funcptr) uih_playinit, NULL

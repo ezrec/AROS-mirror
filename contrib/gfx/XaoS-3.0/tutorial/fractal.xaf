@@ -1,0 +1,24 @@
+; An introduction to fractals by Jan Hubicka
+; Version 1.0 done for XaoS 3.0 in July 1997
+; Use xaos -play to see it :)
+
+(load "intro.xaf")
+(load "power.xaf")
+(load "newton.xaf")
+(load "barnsley.xaf")
+(load "phoenix.xaf")
+(load "octo.xaf")
+(load "magnet.xaf")
+
+(clearscreen)
+(textpossition 'center 'middle)
+(message "end")
+(usleep 4000000)
+
+(clearscreen)
+(message "fcopyright")
+(textsleep)
+
+(clearscreen)
+(message "suggestions")
+(textsleep)
