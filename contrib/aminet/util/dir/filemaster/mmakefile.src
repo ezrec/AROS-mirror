@@ -19,6 +19,6 @@ USER_CFLAGS := -DAROS -DV39
 
 %build_prog mmake=aminet-util-dir-filemaster \
     progname=filemaster targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="bgui reqtoolsstubs arossupport amiga arosc_shared m"
+    files=$(FILES) uselibs="bgui reqtoolsstubs arossupport amiga arosc m"
 
 %common

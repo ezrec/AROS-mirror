@@ -45,6 +45,6 @@ EXEDIR := $(CONTRIBDIR)/aminet
 
 %build_prog mmake=aminet-disk-moni-filex \
     progname=filex targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="reqtoolsstubs arossupport amiga arosc_shared"
+    files=$(FILES) uselibs="reqtoolsstubs arossupport amiga arosc"
 
 %common

@@ -19,6 +19,6 @@ USER_CFLAGS := -DNO_INLINE_STDARG
 
 %build_prog mmake=contrib-zune-classes-nlist-demo \
     progname=NList-Demo targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui arossupport amiga arosc_shared"
+    files=$(FILES) uselibs="mui arossupport amiga arosc"
 
 %common

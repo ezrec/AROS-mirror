@@ -39,7 +39,7 @@ lwip : setup $(EXE)
 
 %build_prog mmake=lwip \
     progname=lwip targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="amiga arosc_shared m"
+    files=$(FILES) uselibs="amiga arosc m"
 
 FILES := testserver testclient ping simpleping
 EXES := $(foreach f,$(FILES), $(EXEDIR)/$(f))

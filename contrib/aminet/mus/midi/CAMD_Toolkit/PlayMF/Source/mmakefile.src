@@ -12,6 +12,6 @@ USER_CFLAGS := -O2 -Wunused -Wall -D_QUAD_HIGHWORD=1 -D_QUAD_LOWWORD=0
 
 %build_prog mmake=aminet-mus-midi-CAMD_Toolkit-PlayMF \
     progname=PlayMF targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
+    files=$(FILES) uselibs="arossupport amiga arosc m"
 
 %common

@@ -24,6 +24,6 @@ USER_INCLUDES := -I../images
 
 %build_prog mmake=aminet-games-think-soliton-program \
     progname=Soliton targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="mui arossupport amiga arosc_shared m"
+    files=$(FILES) uselibs="mui arossupport amiga arosc m"
 
 %common

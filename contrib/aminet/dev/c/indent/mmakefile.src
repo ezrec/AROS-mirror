@@ -12,7 +12,7 @@ USER_CFLAGS := -D_POSIX_VERSION -DDIRENT
 
 %build_prog mmake=aminet-dev-c-indent \
     progname=indent targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
+    files=$(FILES) uselibs="arossupport amiga arosc m"
 
 %common
 

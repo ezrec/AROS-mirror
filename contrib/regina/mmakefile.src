@@ -35,12 +35,12 @@ USER_CFLAGS := -DNO_EXTERNAL_QUEUES -DAREXXIO
 FILES := $(OFILES) rexx nosaa mt_notmt
 %build_prog mmake=contrib-regina-rexx \
     progname=rexx targetdir=$(EXEDIR) objdir=$(GENDIR)/$(CURDIR)/static \
-    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
+    files=$(FILES) uselibs="arossupport amiga arosc m"
 
 FILES := regina
 %build_prog mmake=contrib-regina-regina \
     progname=regina targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
+    files=$(FILES) uselibs="arossupport amiga arosc m"
 
 
 
@@ -58,7 +58,7 @@ FILES := $(OFILES) \
 
 %build_module mmake=contrib-regina-module \
     modname=regina modtype=library \
-    files=$(FILES) uselibs="amiga arosc_shared arosm" \
+    files=$(FILES) uselibs="amiga arosc arosm" \
     objdir=$(GENDIR)/$(CURDIR)/shared linklibname=regina_shared
 
 %copy_includes includes=rexxsaa.h dir=

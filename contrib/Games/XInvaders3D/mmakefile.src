@@ -12,6 +12,6 @@ USER_CFLAGS = -DGAME_AROS -O2 -ffast-math -funroll-loops \
 
 %build_prog mmake=XInvaders3D \
     progname=XInvaders3D targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
+    files=$(FILES) uselibs="arossupport amiga arosc m"
 
 %common

@@ -35,7 +35,7 @@ USE_REQTOOLSLIB := yes
 
 %build_prog mmake=aminet-text-edit-xdme \
     progname=XDME targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="reqtoolsstubs bgui arossupport amiga arosc_shared m"
+    files=$(FILES) uselibs="reqtoolsstubs bgui arossupport amiga arosc m"
 
 #MM setup-xdme : setup-xdme-parser
 setup-xdme : make-dirs protos docs sources copy-files

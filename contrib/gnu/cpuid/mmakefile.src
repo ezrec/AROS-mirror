@@ -12,7 +12,7 @@ $(OBJDIR)/%.o: %.S
 
 %build_prog mmake=cpuid \
     progname=cpuid targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arosc_shared m"
+    files=$(FILES) uselibs="arosc m"
 
 %common
 

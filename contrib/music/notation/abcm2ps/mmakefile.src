@@ -11,6 +11,6 @@ EXEDIR := $(CONTRIBDIR)/music
 
 %build_prog mmake=contrib-music-notation-abcm2ps \
     progname=abcm2ps targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arosc_shared m"
+    files=$(FILES) uselibs="arosc m"
 
 %common

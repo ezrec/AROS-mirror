@@ -11,7 +11,7 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Kitty
 
 %build_prog mmake=demo-kitty \
     progname=Kitty targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc_shared"
+    files=$(FILES) uselibs="arossupport amiga arosc"
 
 
 #MM demo-kitty-extra : demo-kitty-setup

@@ -36,6 +36,6 @@ USER_CFLAGS := -DAROS -I../inc -DALIGNED -Dwchar_t=int
 
 %build_prog mmake=contrib-rexx-program \
     progname=rx targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="rexxlstring arossupport amiga arosc_shared m"
+    files=$(FILES) uselibs="rexxlstring arossupport amiga arosc m"
 
 %common

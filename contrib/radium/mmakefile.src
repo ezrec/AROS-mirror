@@ -115,7 +115,7 @@ USER_CFLAGS := -I$(AD) -I$(AR) $(DEFINES)
 
 %build_prog mmake=contrib-radium \
     progname=Radium targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc_shared m"
+    files=$(FILES) uselibs="arossupport amiga arosc m"
 
 #MM
 setup-contrib-radium : setup $(CONTRIBDIR)/radium/Execute.Me

@@ -46,6 +46,6 @@ USER_INCLUDES := -I../libwww2
 
 %build_prog mmake=mui-amosaic \
     progname=AMosaic targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="www2 mui arossupport amiga arosc_shared"
+    files=$(FILES) uselibs="www2 mui arossupport amiga arosc"
 
 %common

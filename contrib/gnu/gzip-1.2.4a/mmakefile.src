@@ -47,6 +47,6 @@ USER_CFLAGS := $(DEFS)
 
 %build_prog mmake=gzip \
     progname=gzip targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arosc_shared m"
+    files=$(FILES) uselibs="arosc m"
 
 %common

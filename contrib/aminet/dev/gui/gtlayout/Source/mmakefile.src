@@ -10,7 +10,7 @@ LOCALINCLUDES = -I. -I../Include
 LIBS := -L$(LIBDIR) -lamiga -lgtlayout
 #Please leave the linklibs in that order. I could not get the app to work if I changed
 #the order of the linklibs. S.
-APP_LIBS := -L$(LIBDIR) -lautoinit -lgtlayout -lamiga -larosc_shared -lamiga -larosm -lautoinit
+APP_LIBS := -L$(LIBDIR) -lautoinit -lgtlayout -lamiga -larosc -lamiga -larosm -lautoinit
 
 
 $(INCDIR)/gtlayout.h : aros/gtlayout.h

@@ -5,6 +5,6 @@ EXEDIR := $(CONTRIBDIR)/aminet
 
 %build_prog mmake=contrib-aminet-util-cli-sploiner \
     progname=sploiner targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="amiga arosc_shared m"
+    files=$(FILES) uselibs="amiga arosc m"
 
 %common

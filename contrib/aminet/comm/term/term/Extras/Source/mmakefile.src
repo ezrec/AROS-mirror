@@ -147,7 +147,7 @@ SRCS := $(foreach f, $(FILES), $(f).c )
 OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
 DEPS := $(foreach f, $(FILES), $(OBJDIR)/$(f).d)
 
-LIBS := -L$(LIBDIR) -lgtlayout -larosc_shared -lamiga -larossupport -larosm -larosc_shared -lautoinit
+LIBS := -L$(LIBDIR) -lgtlayout -larosc -lamiga -larossupport -larosm -larosc -lautoinit
 
 EXE := $(DESTDIR)/Term
 

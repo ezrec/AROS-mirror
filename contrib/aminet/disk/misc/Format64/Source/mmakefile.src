@@ -15,6 +15,6 @@ FILES := \
 
 %build_prog mmake=aminet-disk-misc-format64 \
     progname=Format64 targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="amiga arosc_shared m"
+    files=$(FILES) uselibs="amiga arosc m"
 
 %common

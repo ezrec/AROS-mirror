@@ -15,6 +15,6 @@ USER_CFLAGS := -D_AROS -O2 -Wunused -Wall
 
 %build_prog mmake=bgui-prefs \
     progname=BGUI targetdir=$(BGUIPREFSDIR) \
-    files=$(FILES) uselibs="bgui arossupport amiga arosc_shared m"
+    files=$(FILES) uselibs="bgui arossupport amiga arosc m"
 
 %common

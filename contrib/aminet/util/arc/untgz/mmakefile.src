@@ -12,7 +12,7 @@ EXEDIR := $(CONTRIBDIR)/aminet
 
 %build_prog mmake=aminet-util-arc-untgz \
     progname=untgz targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga z arosc_shared m"
+    files=$(FILES) uselibs="arossupport amiga z arosc m"
 
 %common
 
