@@ -1,0 +1,96 @@
+
+***********************************************************
+
+                      Shuffle V1.0
+                    by CEKASOFT,1993
+                   Karlheinz Klingbeil
+                       Elzstr. 42
+                      7809 Gutach
+                        Germany
+                        
+***********************************************************
+
+Shuffle may be distributed freely as  long as  no profit
+is made by the distributor !
+
+***********************************************************
+The author cannot be held liable for the  suitability or  
+accuracy  of this manual  and/or  the  program(s)  it  describes.
+Any  damage  directly  or indirectly caused by the use or misuse 
+of  this manual  and/or the  programit describes is the sole
+responsibility of the user her/him self.
+***********************************************************
+
+Shuffle was programmed using SAS/C 6.0 on an A4000/40 under
+OS 3.0. However, Shuffle needs OS2.04 (Version 37+) or later.
+Special thanks to Jan van den Baard for his "GadToolsBox", which
+was used in this program.
+
+***********************************************************
+
+Shuffle is a small game that gives you something to think.
+The  program makes a copy of the Workbench Screen, splits it
+up in a number of pieces, cuts out one piece  and shuffles 
+the other pieces by moving them around.
+Your task is to get the pieces in order again by moving
+them  yourself.
+
+Once the program has started, a window with some controls
+is opened.
+
+   "Start"         starts the game
+   "Tiles"         choose the number of tiles
+                   4x4 (16 tiles)
+                   8x4
+                   8x8
+                   16x8
+                   16x16(256 tiles)
+   "Shuffle"       How many moves should be made to
+                   mix up the screen
+   "Numbers"       display a ordinal number on each tile
+   
+   "Move Tiles / Move Gap" 
+                   controls the movement of the
+                   tiles. If you choose  "Move Tiles" 
+                   (the default)the cursor keys will move
+                   a tile into the direction you pressed, e.g.
+                   if you press "cursor down", the tile above
+                   the gap will move down (and the gap moves
+                   up). If You choose "Move Gap" the cursor
+                   keys are moving the gap in the direction
+                   you pressed, e.g. if  you press "cursor down"
+                   the gap will move down (and the tile under the
+                   gap moves up).
+                   
+Once you press "Start" the screen is shuffled. During the
+game you can press the following keys :
+
+         Cursor keys       Move the tiles
+         HELP  (or H key)  Display a help message
+         S  key            Display the Score
+         A  key            About shuffle...
+         ESC or Q key      Quit game
+
+         Left Mousebutton  If you click on a tile
+                           left,right,down or up to the
+                           gap, the tile will move to the
+                           gap and vice versa.
+           
+                          
+***********************************************************
+
+If you like Shuffle you may send bug reports, money, disks,
+jewellery and other gifts to me. If you don't like it you
+are encouraged to send me such things too.
+
+Enjoy !!
+
+                 CEKASOFT
+                 Karlheinz Klingbeil
+                 Elzstr. 42
+                 
+                 7809 Gutach i.Br.
+                 Germany
+                 
+
+***********************************************************
