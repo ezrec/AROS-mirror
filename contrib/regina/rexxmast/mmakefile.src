@@ -1,0 +1,37 @@
+#   $Id$
+#
+#   Makefile to make LoadWB.
+
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS = -I..
+
+FILES := RexxMast \
+         sendrexxmsg \
+	 listen4msg
+
+EXEDIR := $(CONTRIBDIR)/Regina/C
+EXES := $(AROS_C)/RexxMast \
+        $(EXEDIR)/sendrexxmsg \
+	$(EXEDIR)/listen4msg
+
+#USE_DETACH := yes
+#USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+
+#MM- contrib-regina : contrib-regina-rexxmast
+#MM contrib-regina-rexxmast : includes linklibs
+#MM- contrib-regina-quick : contrib-regina-rexxmast-quick
+#MM
+contrib-regina-rexxmast-quick : contrib-regina-rexxmast
+
+%make_prog_setup mmake=contrib-regina-rexxmast
+
+contrib-regina-rexxmast : setup $(EXES)
+
+%make_prog_single dir=$(EXEDIR)
+%make_prog_single dir=$(AROS_C)
+
+%common
+%include_deps
