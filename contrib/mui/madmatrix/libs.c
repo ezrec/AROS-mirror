@@ -47,6 +47,12 @@ void closemuimaster(void)
 {
 }
 
+#undef SysBase
+#undef IntuitionBase
+#undef GfxBase
+#undef LayersBase
+#undef UtilityBase
+
 #else
 
 int openmuimaster(void)
