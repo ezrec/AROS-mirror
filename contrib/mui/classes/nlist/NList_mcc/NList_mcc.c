@@ -83,6 +83,13 @@ static APTR NL_ConstructHook_String_gate(void)
 {
     APTR pool = (void *)REG_A2;
     char *str = (void *)REG_A1;
+#elif defined(_AROS)
+AROS_UFH3S(APTR, NL_ConstructHook_String,
+    AROS_UFHA(struct Hook *, unusedhook, A0),
+    AROS_UFHA(APTR, pool, A2),
+    AROS_UFHA(UBYTE *, str, A1))
+{
+    AROS_USERFUNC_INIT
 #else
 static APTR ASM SAVEDS NL_ConstructHook_String( REG(a2) APTR pool GNUCREG(a2), REG(a1) char *str GNUCREG(a1) )
 {
@@ -96,10 +103,14 @@ static APTR ASM SAVEDS NL_ConstructHook_String( REG(a2) APTR pool GNUCREG(a2), R
         chr = *str1++;
 
     //$$$Sensei to do: real string clone function... */
-    if( new = (UBYTE *) NL_Malloc2( pool, str1 - str + 1, "DestructHook_String" ) )
+    if( ( new = (UBYTE *) NL_Malloc2( pool, str1 - str + 1, "DestructHook_String" ) ) )
         strncpy( new, str, str1 - str + 1 );
 
     return((APTR) new);
+
+#ifdef _AROS
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 /*
@@ -136,12 +147,23 @@ static void NL_DestructHook_String_gate(void)
 {
     APTR pool = (void *)REG_A2;
     char *entry = (void *)REG_A1;
+#elif defined(_AROS)
+AROS_UFH3S(void, NL_DestructHook_String,    
+    AROS_UFHA(struct Hook *, unusedhook, A0),
+    AROS_UFHA(APTR, pool, A2),
+    AROS_UFHA(char *, entry, A1))
+{
+    AROS_USERFUNC_INIT
 #else
 static void ASM SAVEDS NL_DestructHook_String( REG(a2) APTR pool GNUCREG(a2), REG(a1) char *entry GNUCREG(a1) )
 {
 #endif
 
   NL_Free2(pool,(void *) entry,"DestructHook_String");
+
+#ifdef _AROS
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 
@@ -151,6 +173,13 @@ static ULONG NL_LayoutFuncNList_gate(void)
     struct Hook *h = (void *)REG_A0;
     Object *obj = (void *)REG_A2;
     struct MUI_LayoutMsg *lm = (void *)REG_A1;
+#elif defined(_AROS)
+AROS_UFH3S(ULONG, NL_LayoutFuncNList,
+    AROS_UFHA(struct Hook *, h, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(struct MUI_LayoutMsg *, lm, A1))
+{
+    AROS_USERFUNC_INIT
 #else
 static ULONG ASM SAVEDS NL_LayoutFuncNList( REG(a0) struct Hook *h, REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUI_LayoutMsg *lm GNUCREG(a1) )
 {
@@ -190,6 +219,10 @@ static ULONG ASM SAVEDS NL_LayoutFuncNList( REG(a0) struct Hook *h, REG(a2) Obje
       }
   }
   return(MUILM_UNKNOWN);
+
+#ifdef _AROS
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 
@@ -199,6 +232,13 @@ static ULONG NL_LayoutFuncGroup_gate(void)
     struct Hook *h = (void *)REG_A0;
     Object *obj = (void *)REG_A2;
     struct MUI_LayoutMsg *lm = (void *)REG_A1;
+#elif defined(_AROS)
+AROS_UFH3S(ULONG, NL_LayoutFuncGroup,
+    AROS_UFHA(struct Hook *, h, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(struct MUI_LayoutMsg *, lm, A1))
+{
+    AROS_USERFUNC_INIT
 #else
 static ULONG ASM SAVEDS NL_LayoutFuncGroup( REG(a0) struct Hook *h, REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUI_LayoutMsg *lm GNUCREG(a1) )
 {
@@ -246,6 +286,10 @@ static ULONG ASM SAVEDS NL_LayoutFuncGroup( REG(a0) struct Hook *h, REG(a2) Obje
       }
   }
   return(MUILM_UNKNOWN);
+
+#ifdef _AROS
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 
@@ -289,7 +333,7 @@ static LONG Calc_Stack(Object *obj,struct NLData *data)
 {
   LONG total;
 
-#ifdef MORPHOS
+#if defined(MORPHOS) || defined(_AROS)
     return 100000;
 #endif
 
