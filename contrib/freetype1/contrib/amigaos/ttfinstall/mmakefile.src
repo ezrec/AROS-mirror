@@ -1,0 +1,24 @@
+include $(TOP)/config/make.cfg
+
+#MM contrib-freetype1-ttfinstall
+
+EXEDIR := $(CONTRIBDIR)/freetype1
+
+EXE := $(EXEDIR)/ttfinstall
+
+USE_AMIGALIB := yes
+USE_CLIB_SHARED := yes
+
+USER_INCLUDES := -I$(AROS_INCLUDES)/freetype1
+
+contrib-freetype1-ttfinstall : $(EXE)
+
+%make_prog_setup mmake=contrib-freetype1-ttfinstall
+
+LIBS := -lfreetype1_shared $(LIBS)
+
+FILES := ttfinscore ttfinstall
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
