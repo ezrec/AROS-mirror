@@ -37,10 +37,10 @@ char Puffer[2];
     }
     if(count!=1)
       defaultfield();
+    Close(filehandle);
   }
   else
     defaultfield();
-  Close(filehandle);
   set_buttons();
 }
 
@@ -50,7 +50,6 @@ int count,j;
 char Zahl[2];
   if((filehandle=Open("S:Jump.dat",MODE_OLDFILE))==0)
   {
-    Close(filehandle);
     filehandle=Open("S:Jump.dat",MODE_NEWFILE);
   }
   for(j=0;j<33;j++)

@@ -13,8 +13,8 @@ char Puffer[21],Zahl[4];
       count=Read(filehandle,Zahl,4);
       Zeiten[j]=atoi(Zahl);
     }
+    Close(filehandle);
   }
-  Close(filehandle);
 }
 
 void schliessedatei()
@@ -23,7 +23,6 @@ int count,j;
 char Zahl[4];
   if((filehandle=Open("S:Mine.High",MODE_OLDFILE))==0)
   {
-    Close(filehandle);
     filehandle=Open("S:Mine.High",MODE_NEWFILE);
   }
   for(j=1;j<4;j++)

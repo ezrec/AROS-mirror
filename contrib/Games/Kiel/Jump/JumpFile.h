@@ -41,10 +41,10 @@ char buffer[2];
     }
     if(count!=1)
       defaultfield();
+    Close(filehandle);
   }
   else
     defaultfield();
-  Close(filehandle);
   movecount=0;
   set_buttons();
 }
