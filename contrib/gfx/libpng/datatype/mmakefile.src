@@ -1,15 +1,15 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM- workbench-datatypes-complete: workbench-datatypes-png
-#MM workbench-datatypes-png : includes linklibs linklibs-png
+##MM- workbench-datatypes-complete: workbench-datatypes-png
+##MM workbench-datatypes-png : includes linklibs linklibs-png
 
 FILES := pngclass libfunc
 FUNCS := obtainengine
 
 USER_CFLAGS   := -DMYDEBUG
 
-%build_module_macro mmake=workbench-datatypes-png \
+%build_module_macro mmake=workbench-datatypes-png-disabled \
   modname=png modtype=datatype \
   funcs=$(FUNCS) files=$(FILES) \
   conffile=lib.conf \
