@@ -1,0 +1,26 @@
+Microterm 0.1
+
+Written By Stephen Vermeulen  (403) 282-7990
+
+    PO Box 3295, Station B
+    Calgary, Alberta,
+    CANADA, T2M 4L8
+
+This program and its source code are public domain, do with as you
+please.
+
+-------------------------------------------------------------------
+
+Microterm is a little terminal program that I wrote while learning
+to use the serial.device and the console.device.  It is a particularly
+"unfeatured" terminal program, it does not even have an ASCII capture
+mode...  I thought it would be useful as an example of how to talk
+to the serial and console devices and so I have placed this code in
+the public domain.
+
+To compile, if you are a Manx user type "make" (compiled under 3.6)
+if not you may have to edit a line or two of the makefile to build the
+precompiled include file...
+
+Stephen Vermeulen 1990
+

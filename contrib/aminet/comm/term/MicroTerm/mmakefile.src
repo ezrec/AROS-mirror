@@ -1,0 +1,36 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(CONTRIBDIR)/aminet
+
+FILES := console globals main serial
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+LIBS := -L$(LIBDIR) -larosc -lamiga -larossupport -larosm
+
+EXE := $(DESTDIR)/MicroTerm
+
+.PHONY : all clean
+
+#MM aminet-comm-term-microterm : setup-aminet-comm-term-microterm
+aminet-comm-term-microterm 	: $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-aminet-comm-term-microterm :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	%link_q from=$(OBJS)
+
+#MM
+clean-aminet :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
