@@ -1,5 +1,3 @@
-
-
 # Copyright © 2004, The AROS Development Team. All rights reserved.
 # $Id$
 
@@ -8,21 +6,4 @@
 ##MM- contrib-gnu : contrib-gnu-gawk
 ##MM- contrib-gnu-gawk : development-gawk
 
-##MM- development : development-gawk
-#MM development-gawk-quick : development-gawk-fetch
-
-ORIGINS := http://ftp.gnu.org/pub/gnu/gawk
-
-ARCHBASE := gawk-3.1.3
-
-#MM
-development-gawk-fetch :
-	%fetch archive=$(ARCHBASE).tar.gz destination=$(PORTSDIR)/gawk archive_origins="$(ORIGINS)" \
-	patches_specs=gawk-3.1.3-aros.diff:gawk-3.1.3:-p1
-	
-
-%build_with_configure mmake=development-gawk srcdir=$(PORTSDIR)/gawk/$(ARCHBASE) \
-     nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
-     extraoptions="--target=$(AROS_TARGET_CPU)-aros  --build=local --disable-nls"
-
-
+%fetch_and_build_gnu_development package=gawk version=3.1.3 patch=yes
