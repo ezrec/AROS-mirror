@@ -1,3 +1,3 @@
-Assign LIBS: SYS:Contrib/BGUI/Libs ADD
-Assign LIBS: SYS:Contrib/BGUI/Classes ADD
-Path SYS:Contrib/BGUI/Prefs ADD
+Assign LIBS: Libs ADD
+Assign LIBS: Classes ADD
+Path Prefs ADD
