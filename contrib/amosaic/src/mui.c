@@ -8,7 +8,7 @@
 #include "XtoI.h"
 #include "protos.h"
 #include "spinner.h"
-#include "BoingTransfer.h"
+#include "Boingtransfer.h"
 
 #include "image_back.h"
 #include "image_forward.h"
@@ -102,8 +102,8 @@ void LoadHotlist(void);
 void SaveHotlist(void);
 
 struct HotlistGroupEntry GroupRootList,*CurrentShownURLGroup;
- 
-__saveds __asm long URLStrObjFunc(register __a2 Object *pop,register __a1 Object *str)
+
+SAVEDS ASM long URLStrObjFunc(REG(a2) Object *pop,REG(a1) Object *str)
 {
   char *s;
   struct HotlistEntry *x;
@@ -129,7 +129,7 @@ __saveds __asm long URLStrObjFunc(register __a2 Object *pop,register __a1 Object
 
 struct Hook URLStrObjHook={{NULL,NULL},(VOID *)URLStrObjFunc,NULL,NULL};
 
-__saveds __asm void URLObjStrFunc(register __a2 Object *pop,register __a1 Object *str)
+SAVEDS ASM void URLObjStrFunc(REG(a2) Object *pop,REG(a1) Object *str)
 {
   struct HotlistEntry *x;
   DoMethod(pop,MUIM_List_GetEntry,MUIV_List_GetEntry_Active,&x);
@@ -167,7 +167,7 @@ void ShowHotlist(struct HotlistGroupEntry *hge)
   CurrentShownURLGroup=hge;    
 }
 
-__saveds __asm APTR SelectHotlistConstructFunc(register __a0 struct Hook *hook,register __a2 APTR pool,register __a1 struct HotlistGroupEntry *hge)
+SAVEDS ASM APTR SelectHotlistConstructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistGroupEntry *hge)
 {
   struct HotlistGroupEntry *new;
   if(new=AllocPooled(pool,sizeof(struct HotlistGroupEntry)))
@@ -179,19 +179,19 @@ __saveds __asm APTR SelectHotlistConstructFunc(register __a0 struct Hook *hook,r
 }
 struct Hook SelectHotlistConstructHook = {{NULL,NULL},(void *)SelectHotlistConstructFunc,NULL,NULL};
 
-__saveds __asm VOID SelectHotlistDestructFunc(register __a0 struct Hook *hook,register __a2 APTR pool,register __a1 struct HotlistGroupEntry *hge)
+SAVEDS ASM VOID SelectHotlistDestructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistGroupEntry *hge)
 {
   FreePooled(pool,hge,sizeof(struct HotlistGroupEntry));
 }
 struct Hook SelectHotlistDestructHook = {{NULL,NULL},(void *)SelectHotlistDestructFunc,NULL,NULL};
 
-__saveds __asm LONG SelectHotlistCompareFunc(register __a0 struct Hook *hook, register __a1 struct HotlistGroupEntry *hge1,register __a2 struct HotlistGroupEntry *hge2)
+SAVEDS ASM LONG SelectHotlistCompareFunc(REG(a0) struct Hook *hook, REG(a1) struct HotlistGroupEntry *hge1,REG(a2) struct HotlistGroupEntry *hge2)
 {
   return(stricmp(hge1->FullTitle,hge2->FullTitle));
 }
 struct Hook SelectHotlistCompareHook = {{NULL,NULL},(void *)SelectHotlistCompareFunc,NULL,NULL};
 
-__saveds __asm LONG SelectHotlistDisplayFunc(register __a0 struct Hook *hook,register __a2 char **array,register __a1 struct HotlistGroupEntry *hge)
+SAVEDS ASM LONG SelectHotlistDisplayFunc(REG(a0) struct Hook *hook,REG(a2) char **array,REG(a1) struct HotlistGroupEntry *hge)
 {
   *array  = hge->FullTitle[0]?hge->FullTitle:"Root";
   return(0);
@@ -283,7 +283,7 @@ struct HotlistGroupEntry *SelectHotlistGroup(char *Title,struct HotlistGroupEntr
 }
 ///
 ///HotlistLinkFunctions
-__saveds __asm APTR HotlistConstructFunc(register __a0 struct Hook *hook,register __a2 APTR pool,register __a1 struct HotlistEntry *he)
+SAVEDS ASM APTR HotlistConstructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistEntry *he)
 {
   struct HotlistEntry *new;
   if(new=AllocPooled(pool,sizeof(struct HotlistEntry)))
@@ -295,26 +295,26 @@ __saveds __asm APTR HotlistConstructFunc(register __a0 struct Hook *hook,registe
 }
 struct Hook HotlistConstructHook = {{NULL,NULL},(void *)HotlistConstructFunc,NULL,NULL};
 
-__saveds __asm VOID HotlistDestructFunc(register __a0 struct Hook *hook,register __a2 APTR pool,register __a1 struct HotlistEntry *he)
+SAVEDS ASM VOID HotlistDestructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistEntry *he)
 {
   FreePooled(pool,he,sizeof(struct HotlistEntry));
 }
 struct Hook HotlistDestructHook = {{NULL,NULL},(void *)HotlistDestructFunc,NULL,NULL};
 
-__saveds __asm LONG HotlistCompareFunc(register __a0 struct Hook *hook, register __a1 struct HotlistEntry *he1,register __a2 struct HotlistEntry *he2)
+SAVEDS ASM LONG HotlistCompareFunc(REG(a0) struct Hook *hook, REG(a1) struct HotlistEntry *he1,REG(a2) struct HotlistEntry *he2)
 {
   return(stricmp(he1->Title,he2->Title));
 }
 struct Hook HotlistCompareHook = {{NULL,NULL},(void *)HotlistCompareFunc,NULL,NULL};
 
-__saveds __asm LONG HotlistDisplayFunc(register __a0 struct Hook *hook,register __a2 char **array,register __a1 struct HotlistEntry *he)
+SAVEDS ASM LONG HotlistDisplayFunc(REG(a0) struct Hook *hook,REG(a2) char **array,REG(a1) struct HotlistEntry *he)
 {
   *array  = he->Title;
   return(0);
 }
 struct Hook HotlistDisplayHook = {{NULL,NULL},(void *)HotlistDisplayFunc,NULL,NULL};
 
-__saveds __asm void HotlistButtonsFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistButtonsFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Count,Selected;
   get(List,MUIA_List_Entries,&Count);
@@ -410,7 +410,7 @@ BOOL EditHotlistEntry(struct HotlistEntry *Entry)
   return(ret);
 }
 
-__saveds __asm void HotlistNewFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistNewFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   char *Title,*Location;
   struct HotlistEntry Entry;
@@ -435,7 +435,7 @@ __saveds __asm void HotlistNewFunc(register __a2 Object *List,register __a1 APTR
 }
 struct Hook HotlistNewHook={{NULL,NULL},(VOID *)HotlistNewFunc,NULL,NULL};
 
-__saveds __asm void HotlistDeleteFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistDeleteFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Active;
   get(List,MUIA_List_Active,&Active);
@@ -445,7 +445,7 @@ __saveds __asm void HotlistDeleteFunc(register __a2 Object *List,register __a1 A
 }     
 struct Hook HotlistDeleteHook={{NULL,NULL},(VOID *)HotlistDeleteFunc,NULL,NULL};
 
-__saveds __asm void HotlistEditFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistEditFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Active;
   struct HotlistEntry *Entry;
@@ -461,7 +461,7 @@ __saveds __asm void HotlistEditFunc(register __a2 Object *List,register __a1 APT
 }     
 struct Hook HotlistEditHook={{NULL,NULL},(VOID *)HotlistEditFunc,NULL,NULL};
 
-__saveds __asm void HotlistAddFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistAddFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   char *Title,*Location;
   struct HotlistEntry Entry;
@@ -483,7 +483,7 @@ __saveds __asm void HotlistAddFunc(register __a2 Object *List,register __a1 APTR
 }
 struct Hook HotlistAddHook={{NULL,NULL},(VOID *)HotlistAddFunc,NULL,NULL};
 
-__saveds __asm void HotlistSortFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistSortFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   DoMethod(List,MUIM_List_Sort);
   DoMethod(CurrentShownURLGroup->LinkList,MUIM_List_Sort);
@@ -492,7 +492,7 @@ __saveds __asm void HotlistSortFunc(register __a2 Object *List,register __a1 APT
 }     
 struct Hook HotlistSortHook={{NULL,NULL},(VOID *)HotlistSortFunc,NULL,NULL};
 
-__saveds __asm void HotlistMoveFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistMoveFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Active;
   struct HotlistEntry *he;
@@ -513,7 +513,7 @@ __saveds __asm void HotlistMoveFunc(register __a2 Object *List,register __a1 APT
 }
 struct Hook HotlistMoveHook={{NULL,NULL},(VOID *)HotlistMoveFunc,NULL,NULL};
 
-__saveds __asm void HotlistUpFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistUpFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Count,Selected;
   get(List,MUIA_List_Entries,&Count);
@@ -528,7 +528,7 @@ __saveds __asm void HotlistUpFunc(register __a2 Object *List,register __a1 APTR 
 }     
 struct Hook HotlistUpHook={{NULL,NULL},(VOID *)HotlistUpFunc,NULL,NULL};
 
-__saveds __asm void HotlistDownFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistDownFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Count,Selected;
   get(List,MUIA_List_Entries,&Count);
@@ -545,7 +545,7 @@ struct Hook HotlistDownHook={{NULL,NULL},(VOID *)HotlistDownFunc,NULL,NULL};
          
 ///
 ///HotlistGroupFunctions
-__saveds __asm VOID HotlistGroupDestructFunc(register __a0 struct Hook *hook,register __a2 APTR pool,register __a1 struct HotlistGroupEntry *hge)
+SAVEDS ASM VOID HotlistGroupDestructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistGroupEntry *hge)
 {
   if(hge->ChildList)
   {
@@ -561,13 +561,13 @@ __saveds __asm VOID HotlistGroupDestructFunc(register __a0 struct Hook *hook,reg
 }
 struct Hook HotlistGroupDestructHook = {{NULL,NULL},(void *)HotlistGroupDestructFunc,NULL,NULL};
  
-__saveds __asm LONG HotlistGroupCompareFunc(register __a0 struct Hook *hook, register __a1 struct HotlistGroupEntry *hge1,register __a2 struct HotlistGroupEntry *hge2)
+SAVEDS ASM LONG HotlistGroupCompareFunc(REG(a0) struct Hook *hook, REG(a1) struct HotlistGroupEntry *hge1,REG(a2) struct HotlistGroupEntry *hge2)
 {
   return(stricmp(hge1->Title,hge2->Title));
 }
 struct Hook HotlistGroupCompareHook = {{NULL,NULL},(void *)HotlistGroupCompareFunc,NULL,NULL};
  
-__saveds __asm APTR HotlistGroupConstructFunc(register __a0 struct Hook *hook,register __a2 APTR pool,register __a1 struct HotlistGroupEntry *hge)
+SAVEDS ASM APTR HotlistGroupConstructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistGroupEntry *hge)
 {
   struct HotlistGroupEntry *new;
   if(new=AllocPooled(pool,sizeof(struct HotlistGroupEntry)))
@@ -591,14 +591,14 @@ __saveds __asm APTR HotlistGroupConstructFunc(register __a0 struct Hook *hook,re
 
 struct Hook HotlistGroupConstructHook = {{NULL,NULL},(void *)HotlistGroupConstructFunc,NULL,NULL};
 
-__saveds __asm LONG HotlistGroupDisplayFunc(register __a0 struct Hook *hook,register __a2 char **array,register __a1 struct HotlistGroupEntry *hge)
+SAVEDS ASM LONG HotlistGroupDisplayFunc(REG(a0) struct Hook *hook,REG(a2) char **array,REG(a1) struct HotlistGroupEntry *hge)
 {
   *array  = hge->Title;
   return(0);
 }
 struct Hook HotlistGroupDisplayHook = {{NULL,NULL},(void *)HotlistGroupDisplayFunc,NULL,NULL};
  
-__saveds __asm void HotlistGroupButtonsFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistGroupButtonsFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Count,Selected;
   get(List,MUIA_List_Active,&Selected);
@@ -621,7 +621,7 @@ __saveds __asm void HotlistGroupButtonsFunc(register __a2 Object *List,register 
 
 struct Hook HotlistGroupButtonsHook={{NULL,NULL},(VOID *)HotlistGroupButtonsFunc,NULL,NULL};
 
-__saveds __asm void HotlistGroupSelectFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistGroupSelectFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Selected;
   get(List,MUIA_List_Active,&Selected);
@@ -635,7 +635,7 @@ __saveds __asm void HotlistGroupSelectFunc(register __a2 Object *List,register _
 
 struct Hook HotlistGroupSelectHook={{NULL,NULL},(VOID *)HotlistGroupSelectFunc,NULL,NULL};
  
-__saveds __asm void HotlistGroupParentFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistGroupParentFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   if(CurrentShownURLGroup->Parent)
     ShowHotlist(CurrentShownURLGroup->Parent);
@@ -712,7 +712,7 @@ BOOL EditHotlistGroupEntry(struct HotlistGroupEntry *Entry)
   return(ret);
 }
 
-__saveds __asm void HotlistGroupNewFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistGroupNewFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   struct HotlistGroupEntry Entry;
   strcpy(Entry.Title,GetamosaicString(MSG_HOTLIST_GROUP_DEFAULTNAME));
@@ -728,7 +728,7 @@ __saveds __asm void HotlistGroupNewFunc(register __a2 Object *List,register __a1
 }
 struct Hook HotlistGroupNewHook={{NULL,NULL},(VOID *)HotlistGroupNewFunc,NULL,NULL};
 
-__saveds __asm void HotlistGroupDeleteFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistGroupDeleteFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Active;
   get(List,MUIA_List_Active,&Active);
@@ -738,7 +738,7 @@ __saveds __asm void HotlistGroupDeleteFunc(register __a2 Object *List,register _
 }     
 struct Hook HotlistGroupDeleteHook={{NULL,NULL},(VOID *)HotlistGroupDeleteFunc,NULL,NULL};
 
-__saveds __asm void HotlistGroupEditFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistGroupEditFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Active;
   struct HotlistGroupEntry *Entry;
@@ -754,7 +754,7 @@ __saveds __asm void HotlistGroupEditFunc(register __a2 Object *List,register __a
 }     
 struct Hook HotlistGroupEditHook={{NULL,NULL},(VOID *)HotlistGroupEditFunc,NULL,NULL};
 
-__saveds __asm void HotlistGroupSortFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistGroupSortFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   DoMethod(List,MUIM_List_Sort);
   DoMethod(CurrentShownURLGroup->ChildList,MUIM_List_Sort);
@@ -784,7 +784,7 @@ void CopyHotlistGroup(struct HotlistGroupEntry *source,struct HotlistGroupEntry 
   }
 }
 
-__saveds __asm void HotlistGroupUpFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistGroupUpFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Count,Selected;
   get(List,MUIA_List_Entries,&Count);
@@ -799,7 +799,7 @@ __saveds __asm void HotlistGroupUpFunc(register __a2 Object *List,register __a1 
 }     
 struct Hook HotlistGroupUpHook={{NULL,NULL},(VOID *)HotlistGroupUpFunc,NULL,NULL};
 
-__saveds __asm void HotlistGroupDownFunc(register __a2 Object *List,register __a1 APTR *arg)
+SAVEDS ASM void HotlistGroupDownFunc(REG(a2) Object *List,REG(a1) APTR *arg)
 {
   long Count,Selected;
   get(List,MUIA_List_Entries,&Count);
@@ -1579,10 +1579,6 @@ void mui_init(void)
 /*------------------------------------------------------------------------
   MUI macros.
 ------------------------------------------------------------------------*/
-
-#define REG(x) register __ ## x
-#define ASM	   __asm
-#define SAVEDS __saveds
 
 /*************************/
 /* Init & Fail Functions */

@@ -70,7 +70,7 @@ void SendChildTaskAction(struct BoingTransferClData *data,Object *obj,ULONG Acti
 }       
 ///
 ///AutoMove
-static void __saveds AutoMove(void)
+static void SAVEDS AutoMove(void)
 {
   APTR App,Obj;
   char PortName[30];
@@ -259,7 +259,7 @@ void __regargs CalculateBoingBall(struct BoingTransferClData *data,Object *obj)
 }
 ///
 ///BoingTransferAskMinMax
-__saveds static ULONG BoingTransferAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
+SAVEDS static ULONG BoingTransferAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
   DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -275,7 +275,7 @@ __saveds static ULONG BoingTransferAskMinMax(struct IClass *cl,Object *obj,struc
 }
 ///
 ///BoingTransferSetup
-__saveds static ULONG BoingTransferSetup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+SAVEDS static ULONG BoingTransferSetup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   struct BoingTransferClData *data = INST_DATA(cl,obj);
   if(!(DoSuperMethodA(cl,obj,(Msg)msg)))
@@ -296,7 +296,7 @@ __saveds static ULONG BoingTransferSetup(struct IClass *cl,Object *obj,struct MU
 }
 ///
 ///BoingTransferCleanup
-__saveds static ULONG BoingTransferCleanup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+SAVEDS static ULONG BoingTransferCleanup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   struct BoingTransferClData *data = INST_DATA(cl,obj);
 
@@ -314,7 +314,7 @@ __saveds static ULONG BoingTransferCleanup(struct IClass *cl,Object *obj,struct 
 }
 ///
 ///BoingTransferShow
-__saveds static ULONG BoingTransferShow(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+SAVEDS static ULONG BoingTransferShow(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   struct BoingTransferClData *data = INST_DATA(cl,obj);
   if(!(DoSuperMethodA(cl,obj,(Msg)msg)))
@@ -336,7 +336,7 @@ __saveds static ULONG BoingTransferShow(struct IClass *cl,Object *obj,struct MUI
 }
 ///
 ///BoingTransferHide
-__saveds  ULONG BoingTransferHide(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+SAVEDS  ULONG BoingTransferHide(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   struct BoingTransferClData *data = INST_DATA(cl,obj);
 
@@ -352,7 +352,7 @@ __saveds  ULONG BoingTransferHide(struct IClass *cl,Object *obj,struct MUIP_Hand
 }
 ///  
 /// BoingTransferSet
-__saveds static ULONG BoingTransferSet(struct IClass *cl,Object *obj,Msg msg)
+SAVEDS static ULONG BoingTransferSet(struct IClass *cl,Object *obj,Msg msg)
 {
   struct BoingTransferClData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
@@ -380,7 +380,7 @@ __saveds static ULONG BoingTransferSet(struct IClass *cl,Object *obj,Msg msg)
 } 
 ///
 ///BoingTransferDraw
-__saveds static ULONG BoingTransferDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
+SAVEDS static ULONG BoingTransferDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
   long LeftEdge,TopEdge,Frame;
   struct BoingTransferClData *data = INST_DATA(cl,obj);
@@ -438,7 +438,7 @@ __saveds static ULONG BoingTransferDraw(struct IClass *cl,Object *obj,struct MUI
 }
 ///
 ///BoingTransferDispatcher
-__saveds __asm ULONG BoingTransferDispatcher(register __a0 struct IClass *cl,register __a2 Object *obj,register __a1 Msg msg)
+SAVEDS ASM ULONG BoingTransferDispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
   switch(msg->MethodID)
   {

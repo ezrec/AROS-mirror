@@ -87,4 +87,4 @@ void DisposeForms(FormInfo *Form);
 void ReformatWindow(HTMLGadClData *);
 
 /* misc */
-void kprintf(char *,...);
+//void kprintf(char *,...);

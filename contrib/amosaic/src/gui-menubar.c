@@ -56,7 +56,11 @@
 #include "globals.h"
 #include "HTML.h"
 #include "mosaic.h"
-#include "libhtmlw/HTML.h"
+#if defined(__AROS__)
+#   include "HTML.h"
+#else
+#   include "libhtmlw/HTML.h"
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -70,7 +74,7 @@ static char *urllist[MAX_DOCUMENTS_MENU_ITEMS];
   
 /* ------------------------------ menubar_cb ------------------------------ */
 
-/*
+#if 0
 do_menubar(mo_window *win, int i)
 {
   switch (i)
@@ -322,7 +326,7 @@ do_menubar(mo_window *win, int i)
 
   return;
 }
-*/
+#endif
 /* ---------------------------- file_menuspec ----------------------------- */
 
 #if 0
@@ -699,6 +703,7 @@ static mo_status mo_file_exists (char *filename)
     return mo_fail;
 }
 
+#ifndef __AROS__
 static void mo_grok_menubar (char *filename)
 {
   FILE *fp;
@@ -797,7 +802,7 @@ static void mo_grok_menubar (char *filename)
  screwed_no_file:
   return;
 }
-
+#endif
 
 static void mo_try_to_grok_menubar (void)
 {
@@ -829,6 +834,7 @@ static void mo_try_to_grok_menubar (void)
 
 static int grokked_menubar = 0;
 
+#ifndef __AROS
 XmxMenuRecord *mo_make_document_view_menubar (Widget form)
 {
   /* If we've never tried to set up the user's configurable menubar by
@@ -843,3 +849,4 @@ XmxMenuRecord *mo_make_document_view_menubar (Widget form)
   return XmxRMakeMenubar 
     (form, Rdata.simple_interface ? simple_menuspec : menuspec);
 }
+#endif

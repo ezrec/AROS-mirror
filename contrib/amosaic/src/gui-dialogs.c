@@ -60,7 +60,7 @@
 #include "mosaic.h"
 #include "globals.h"
 #include "protos.h"
-#include <dos.h>
+#include <dos/dos.h>
 
 #include "amosaic_cat.h"
 

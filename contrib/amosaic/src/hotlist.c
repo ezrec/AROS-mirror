@@ -56,7 +56,9 @@
 #include "HTML.h"
 #include "mosaic.h"
 #include <time.h>
+#if !defined(_AMIGA) && !defined(__AROS__)
 #include <Xm/List.h>
+#endif
 #include <pwd.h>
 #include <sys/types.h>
 
@@ -235,7 +237,6 @@ mo_status mo_delete_position_from_default_hotlist (int position)
 }
 
 /* ------------------- mo_edit_title_in_default_hotlist ------------------- */
-
 static XmxCallback (edithot_cb)
 {
   mo_window *win = mo_fetch_window_by_id 

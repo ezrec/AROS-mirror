@@ -62,7 +62,7 @@
 #ifndef HTMLP_H
 #define HTMLP_H
 
-#ifdef _AMIGA
+/* Where does this belong to? #ifdef _AMIGA */
 #include "XtoI.h"
 
 #include "HTML.h"
@@ -250,7 +250,7 @@ typedef struct HTMLTextNClDataS
 /* HTML gad stuff */
 
 // mjw char **HTMLGetImageSrcs(HTMLGadClData *, int *);
-struct ele_rec *LocateElement(void *, int, int, int *);
+struct ele_rec *LocateElement(HTMLGadClData *, int, int, int *);
 // struct mark_up *HTMLParse(struct mark_up *, char *) ;
 // char *ParseMarkTag(char *, char *, char *);
 

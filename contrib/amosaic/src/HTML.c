@@ -54,7 +54,7 @@
  * mosaic-x@ncsa.uiuc.edu.                                                  *
  ****************************************************************************/
 
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 #include "includes.h"
 #include <exec/types.h>
 #include <stdlib.h>
@@ -1569,7 +1569,7 @@ HTMLGotoId(HTMLGadClData *w, int element_id)
 //	setScrollBar(HTML_Data->vbar, newy, 
 //		     HTML_Data->doc_height,
 //		     HTML_Data->view_height);
-#endif
+// This one makes no sense? #endif
 }
 
 

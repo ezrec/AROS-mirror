@@ -2,6 +2,8 @@
 #define XTOI_H
 
 #include <exec/types.h>
+#include <proto/graphics.h>
+#include <proto/muimaster.h>
 
 typedef struct TextFont XFontStruct;
 typedef struct Hook XtCallbackList;

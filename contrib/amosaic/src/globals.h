@@ -1,3 +1,12 @@
+#undef IntuitionBase
+#undef GfxBase
+#undef DOSBase
+#undef IconBase
+#undef GadToolsBase
+#undef AslBase
+#undef LayersBase
+#undef DiskFontBase
+#undef UtilityBase
 extern struct IntuitionBase *IntuitionBase;
 extern struct GfxBase *GfxBase;
 extern struct DosLibrary *DOSBase;
@@ -54,7 +63,9 @@ extern Class *TextEditFieldClass;
 #define ID_DELETE  3
 #define ID_SAVE    4
 
+#ifndef LIBRARIES_IFFPARSE_H
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
+#endif
 
 extern struct Hook interrupt_hook, goback_hook, goforward_hook, debug_hook;
 

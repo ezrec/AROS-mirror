@@ -14,9 +14,11 @@ struct NewGroupData
 	ULONG	ChildWidth,ChildHeight;
 };
 
+#ifndef __AROS__
 long kprintf(char *,...);
+#endif
 
-__saveds ULONG NewGroupSet(struct IClass *cl,Object *obj,Msg msg)
+SAVEDS ULONG NewGroupSet(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct NewGroupData *inst=INST_DATA(cl,obj);
 	struct TagItem *tstate, *ti;
@@ -33,7 +35,7 @@ __saveds ULONG NewGroupSet(struct IClass *cl,Object *obj,Msg msg)
 	return DoSuperMethodA(cl, obj, msg);
 }
 
-__saveds ULONG NewGroupGet(struct IClass *cl,Object *obj,Msg msg)
+SAVEDS ULONG NewGroupGet(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct NewGroupData *inst=INST_DATA(cl,obj);
 	struct TagItem *tstate, *ti;
@@ -47,7 +49,7 @@ __saveds ULONG NewGroupGet(struct IClass *cl,Object *obj,Msg msg)
 	return DoSuperMethodA(cl, obj, msg);
 }
 
-__saveds ULONG NewGroupNew(struct IClass *cl,Object *obj,Msg msg)
+SAVEDS ULONG NewGroupNew(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct NewGroupData *inst;
 	if (!(obj= (Object *)DoSuperMethodA(cl,obj,msg)))
@@ -70,7 +72,7 @@ __saveds ULONG NewGroupNew(struct IClass *cl,Object *obj,Msg msg)
 	return (ULONG)obj;
 }
 
-__saveds ULONG NewGroupAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
+SAVEDS ULONG NewGroupAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
 	struct NewGroupData *inst = INST_DATA(cl, obj);
 
@@ -102,7 +104,7 @@ __saveds ULONG NewGroupAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMi
 	return(0);
 }
 
-__saveds ULONG NewGroupPlaceObject(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
+SAVEDS ULONG NewGroupPlaceObject(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
 {
 	struct NewGroupData *inst = INST_DATA(cl, obj);
 	ULONG res,old_x,old_y,virt_x,virt_y;
@@ -148,7 +150,7 @@ __saveds ULONG NewGroupPlaceObject(struct IClass *cl,Object *obj,struct MUIP_Pla
 		return DoSuperMethodA(cl,obj,(Msg)msg);
 }
 
-__saveds ULONG NewGroupLayout(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
+SAVEDS ULONG NewGroupLayout(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
 {
 	struct NewGroupData *inst = INST_DATA(cl, obj);
 
@@ -164,7 +166,7 @@ __saveds ULONG NewGroupLayout(struct IClass *cl,Object *obj,struct MUIP_PlaceObj
 	return TRUE;
 }
 
-__saveds __asm ULONG NewGroupDispatcher(register __a0 struct IClass *cl,register __a2 Object *obj,register __a1 Msg msg)
+SAVEDS ASM ULONG NewGroupDispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
 	ULONG res;
 	switch (msg->MethodID){

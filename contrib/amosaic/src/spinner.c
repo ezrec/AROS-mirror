@@ -25,10 +25,6 @@ struct SpinnerClData {
   int state;
 };
 
-#define REG(x) register __ ## x
-#define ASM    __asm
-#define SAVEDS __saveds
-
 /*
 ** AskMinMax method will be called before the window is opened
 ** and before layout takes place. We need to tell MUI the
@@ -136,6 +132,7 @@ static ULONG SpinnerClCleanup(Class *cl, Object *obj, Msg msg)
 
 
 #define _between(a,x,b) ((x)>=(a) && (x)<=(b))
+#undef _isinobject
 #define _isinobject(x,y) (_between(_mleft(obj),(x),_mright(obj)) && _between(_mtop(obj),(y),_mbottom(obj)))
 
 

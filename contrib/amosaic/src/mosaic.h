@@ -62,7 +62,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#if !defined(VMS) && !defined(NeXT) && !defined(_AMIGA)
+#if !defined(VMS) && !defined(NeXT) && !defined(_AMIGA) && !defined(__AROS__)
 #include <unistd.h>
 #endif
 #include <stdlib.h>
@@ -72,11 +72,11 @@
 #include <malloc.h>
 #endif
 
-#if !defined(_AMIGA)
+#if !defined(_AMIGA) && !defined(__AROS__)
 #include "Xmx.h"
 #endif
 
-#if defined(_AMIGA)
+#if defined(_AMIGA) || defined(__AROS__)
 #include "XtoI.h"
 typedef void *XmxMenuRecord;
 #endif
@@ -89,7 +89,7 @@ typedef void *XmxMenuRecord;
 /* ------------------------------------------------------------------------ */
 /* -------------------------------- MACROS -------------------------------- */
 /* ------------------------------------------------------------------------ */
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 #define MO_VERSION_STRING " FROM NCSA Mosaic V2.1 and 2.4 NOT FOR RELEASE"
 #else
 extern char *amosaic_version;
@@ -190,6 +190,9 @@ extern char *HTAppVersion;
 #endif
 #if defined(_AMIGA)
 #define MO_MACHINE_TYPE "Amiga"
+#endif
+#if defined(__AROS__)
+#define MO_MACHINE_TYPE "AROS"
 #endif
 #ifndef MO_MACHINE_TYPE
 #define MO_MACHINE_TYPE "Unknown Platform"
@@ -575,7 +578,7 @@ typedef struct
 /* ---------------------------- a few globals ----------------------------- */
 
 extern AppData Rdata;
-#if !defined(_AMIGA)
+#if !defined(_AMIGA) && !defined(__AROS__)
 extern Display *dsp;
 #endif
 /* ------------------------------- menubar -------------------------------- */

@@ -61,3 +61,16 @@
 #include "pragmas/muimaster_pragmas.h"
 #include <pragmas/asl_pragmas.h>
 #include <pragmas/datatypes_pragmas.h>
+
+#ifndef __AROS__
+#define REG(x) register __ ## x
+#define ASM    __asm
+#define SAVEDS __saveds
+#else
+#define REG(x) /* */
+#define ASM /* */
+#define SAVEDS /* */
+#define __far /* */
+#define __regargs /* */
+#endif
+

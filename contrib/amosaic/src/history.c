@@ -373,7 +373,7 @@ char *mo_grok_title (mo_window *win, char *url, char *ref)
 {
   char *title = NULL, *t;
 
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
   get(HTML_Gad, HTMLA_title, (ULONG *)(&title));
 #else
   XtVaGetValues (win->scrolled_win, WbNtitleText, &title, NULL);
@@ -440,7 +440,7 @@ mo_status mo_back_node (mo_window *win)
 //  ResetAmigaGadgets();
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
   {
     int doc, view, y;
     get(HTML_Gad, HTMLA_view_height, &view);
@@ -471,7 +471,7 @@ mo_status mo_forward_node (mo_window *win)
   mo_set_win_current_node (win, win->current_node->next);
 //  ResetAmigaGadgets();
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
   {
     int doc, view, y;
     get(HTML_Gad, HTMLA_view_height, &view);

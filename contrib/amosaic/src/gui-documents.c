@@ -883,7 +883,7 @@ mo_status mo_post_load_window_text (mo_window *win, char *url,
  ****************************************************************************/
 mo_status mo_duplicate_window_text (mo_window *oldw, mo_window *neww)
 {
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
   /* We can get away with just cloning text here and forgetting
      about texthead, obviously, since we're making a new copy. */
   char *newtext;

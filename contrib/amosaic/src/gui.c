@@ -71,7 +71,7 @@
 
 #include "XtoI.h"
 //#include "spinner.h"
-#include "BoingTransfer.h"
+#include "Boingtransfer.h"
 
 /*
  * Globals used by the pixmaps for the animated icon.
@@ -252,7 +252,7 @@ void icon_pressed_cb(void)
   connect_interrupt = 1;
 }
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /****************************************************************************
  * name:    anchor_cb
  * purpose: Callback for triggering anchor in HTML widget.
@@ -362,7 +362,7 @@ int anchor_visited_predicate (Widget w, char *href)
   return rv;
 }
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 static void pointer_motion_callback (Widget w, char *href)
 {
   mo_window *win = NULL;
@@ -421,7 +421,7 @@ static void pointer_motion_callback (Widget w, char *href)
 #endif
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 XmxCallback (submit_form_callback)
 {
   mo_window *win = NULL;
@@ -560,7 +560,7 @@ XmxCallback (submit_form_callback)
 #endif
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /* This only gets called by the widget in the middle of set_text. */
 static XmxCallback (link_callback)
 {
@@ -690,7 +690,7 @@ void mo_view_keypress_handler(void)
 }
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /****************************************************************************
  * name:    mo_fill_window (PRIVATE)
  * purpose: Take a new (empty) mo_window struct and fill in all the
@@ -944,7 +944,7 @@ static mo_status mo_fill_window (mo_window *win)
 }
 #endif
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /****************************************************************************
  * name:    mo_delete_window
  * purpose: Shut down a window.
@@ -1022,7 +1022,7 @@ mo_status mo_delete_window (mo_window *win)
 #endif
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /****************************************************************************
  * name:    mo_open_window_internal (PRIVATE)
  * purpose: Make a mo_window struct and fill up the GUI.
@@ -1141,7 +1141,7 @@ static mo_window *mo_open_window_internal (Widget base, mo_window *parent)
 #endif
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /****************************************************************************
  * name:    delete_cb (PRIVATE)
  * purpose: Callback for the WM_DELETE_WINDOW protocol.
@@ -1162,7 +1162,7 @@ static XmxCallback (delete_cb)
 #endif
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /****************************************************************************
  * name:    mo_make_window (PRIVATE)
  * purpose: Make a new window from scratch.
@@ -1389,7 +1389,7 @@ void fire_er_up(int gargc, char **gargv)
 }
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /****************************************************************************
  * name:    mo_open_initial_window
  * purpose: This routine is called when we know we want to open the
@@ -1463,7 +1463,7 @@ static int mo_error_handler (Display *dsp, XErrorEvent *event)
 void mo_do_gui (int argc, char **argv)
 {
   /* actually some important stuff in here! */
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
   int use_color = 1;
   int no_defaults = 0;
 

@@ -4,8 +4,8 @@
 #include "globals.h"
 #include "htmlgad.h"
 #include "gui.h"
-#include <dos.h>
-#include <stat.h>
+#include <dos/dos.h>
+#include <sys/stat.h>
 #include "XtoI.h"
 #include "HTMLP.h"
 #include "protos.h"
@@ -24,6 +24,10 @@ extern AppData Rdata;
 extern __far int WWW_TraceFlag;
 
 //char *statuspage="http://insti.physics.sunysb.edu/AMosaic/";
+
+#ifdef __AROS__
+#undef DEBUG
+#endif
 
 int DEBUG;
 extern char *cached_url;
@@ -77,11 +81,13 @@ void main(int argc, char **argv)
 	locate_mime_files();
 	mo_setup_global_history();
 
+#ifndef __AROS__
 	/* Use the new 6.50 WB argument support. */
 	if (argc == 0) {
 		argc = _WBArgc;
 		argv = _WBArgv;
 	}
+#endif
 
 	if ((argc > 1) && (!strcmp(argv[1], "-x"))) {
 	        argc -= 1 ;

@@ -65,7 +65,7 @@
 
 /* libwww includes */
 #include "HTUtils.h"
-#include "/libwww2/tcp.h"
+#include "libwww2/tcp.h"
 #include "HTString.h"
 #include "HTTCP.h"
 #include "HTParse.h"
@@ -849,7 +849,7 @@ char *prompt_for_password (char *questionstr)
 
 int prompt_for_yes_or_no (char *questionstr)
 {
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
   extern XtAppContext app_context;
   extern mo_window *current_win;
 

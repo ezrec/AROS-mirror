@@ -54,7 +54,7 @@
  * mosaic-x@ncsa.uiuc.edu.                                                  *
  ****************************************************************************/
 
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 #include <exec/types.h>
 #include <stdlib.h>
 #include <string.h>
@@ -66,9 +66,12 @@
 #include "mosaic.h"
 #include "protos.h"
 #include "XtoI.h"
+#if defined(__AROS__)
+#undef GfxBase
+#endif
 extern struct Library *GfxBase;
 extern AppData Rdata;
-#endif /* _AMIGA */
+#endif /* _AMIGA || __AROS__ */
 
 #ifdef TIMING
 #include <sys/time.h>
@@ -1346,7 +1349,7 @@ SetElement(HTMLGadClData * HTML_Data, int type, XFontStruct *fp, int x, int y, c
 void
 NewFont(XFontStruct *fp)
 {
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
   LineHeight = fp->tf_YSize;
 #else /* _AMIGA */
 	/*
@@ -1661,7 +1664,7 @@ BulletPlace(HTMLGadClData * HTML_Data, int *x, int *y)
 	 * Deal with bad Lucidia descents.
 	 */
 	l_height = LineHeight;
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 	LineHeight = HTML_Data->font->tf_YSize;
 #else
 	if (HTML_Data->font->descent > HTML_Data->font->max_bounds.descent)
@@ -1677,7 +1680,7 @@ BulletPlace(HTMLGadClData * HTML_Data, int *x, int *y)
 #endif /* _AMIGA */
 
 	NeedSpace = 0;
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 	SetFont(HTML_Data->rp, HTML_Data->font);
 //mjw	width = TextLength(HTML_Data->rp, "n", 1) + 1; /* average character? */
 #else /* _AMIGA */
@@ -4557,7 +4560,7 @@ fprintf(stderr, "FormatAll exit (%d.%d)\n", Tv.tv_sec, Tv.tv_usec);
 void
 LinefeedRefresh(HTMLGadClData * HTML_Data, struct ele_rec *eptr)
 {
-#ifndef _AMIGA			/* This is only needed during selection */
+#if !defined(_AMIGA) && !defined(__AROS__)	/* This is only needed during selection */
 
 	int x1, y1;
 	unsigned int width, height;
@@ -4732,7 +4735,7 @@ PartialRefresh(HTMLGadClData * HTML_Data, struct ele_rec *eptr, int start_pos, i
 
 		XSetForeground(XtDisplay(HTML_Data), HTML_Data->drawGC, bg);
 
-#ifndef _AMIGA			/* Our fonts don't have this problem. */
+#if !defined(_AMIGA) && !defined(__AROS__)	/* Our fonts don't have this problem. */
 		height = (eptr->font->tf_YSize - eptr->font->ascent);
 		if (height > 0)
 		{
@@ -4761,7 +4764,7 @@ PartialRefresh(HTMLGadClData * HTML_Data, struct ele_rec *eptr, int start_pos, i
 
 	/* MDF HACK!  This is my hack to make bold/italic work. */
 
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 	SetFont(HTML_Data->rp, eptr->font);
 	if (eptr->font->tf_Style) {
 	  style = eptr->font->tf_Style;
@@ -5149,7 +5152,7 @@ ImageRefresh(HTMLGadClData * HTML_Data, struct ele_rec *eptr)
 
 		if (eptr->pic_data->image != (Pixmap)NULL)
 		{
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 		if(!eptr->pic_data->mask_bitmap)
 			BltBitMapRastPort(eptr->pic_data->image, 0, 0,
 				HTML_Data->rp, x + extra + HTML_Data->view_left,
@@ -5248,7 +5251,7 @@ PlaceLine(HTMLGadClData * HTML_Data, int line)
 				break;
 			case E_WIDGET:
 //				kprintf("Tried to refresh a widget\n");
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 				WidgetRefresh(HTML_Data, eptr);
 #endif /* _AMIGA */
 				break;
@@ -5348,7 +5351,7 @@ LocateElement(HTMLGadClData * HTML_Data, int x, int y, int *pos)
 	/*
 	 * Deal with bad Lucidia descents.
 	 */
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 	if (eptr->font->descent > eptr->font->max_bounds.descent)
 	{
 		ty2 = eptr->y + eptr->font->tf_YSize +
@@ -5402,7 +5405,7 @@ LocateElement(HTMLGadClData * HTML_Data, int x, int y, int *pos)
 			/*
 			 * Deal with bad Lucidia descents.
 			 */
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 			if(eptr->font->descent > eptr->font->max_bounds.descent)
 			{
 				ty2 = eptr->y + eptr->font->tf_YSize +
@@ -5506,7 +5509,7 @@ LocateElement(HTMLGadClData * HTML_Data, int x, int y, int *pos)
 
 	return rptr;
 
-#ifndef _AMIGA			/* this was causing input.device hits! */
+#if !defined(_AMIGA) && !defined(__AROS__)	/* this was causing input.device hits! */
 	/*
 	 * If we found an element, locate the exact character position within
 	 * that element.

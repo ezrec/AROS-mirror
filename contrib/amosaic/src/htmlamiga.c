@@ -70,11 +70,11 @@ extern long IsIsMapForm(HTMLGadClData *,char *);
 #define DEBUG1 0 /* Debug the image decoding */
 #define DEBUG2 0 /* Debug the forms handling */
 
-ULONG __saveds __asm LayoutFunc(register __a0 struct Hook *h,register __a2 Object *obj,register __a1 struct MUI_LayoutMsg *lm);
+ULONG SAVEDS ASM LayoutFunc(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) struct MUI_LayoutMsg *lm);
 
-ULONG __saveds __asm ScrollHookFunc(register __a0 struct Hook *hook,
-			   register __a2 APTR	      object,
-			   register __a1 struct ScrollHookMsg *msg);
+ULONG SAVEDS ASM ScrollHookFunc(REG(a0) struct Hook *hook,
+			   REG(a2) APTR	      object,
+			   REG(a1) struct ScrollHookMsg *msg);
 extern ULONG HookEntry();
 extern mo_window window;
 
@@ -105,17 +105,17 @@ typedef struct TextFont * TextFontP;
 
 /********* CLASS HANDLING *************/
 
-__asm ULONG HTMLGadClDispatch(register __a0 Class *cl,
-			      register __a2 Object *obj,
-			     register __a1 Msg msg);
+ASM ULONG HTMLGadClDispatch(REG(a0) Class *cl,
+			      REG(a2) Object *obj,
+			     REG(a1) Msg msg);
 
-__asm ULONG HTMLTextClDispatch(register __a0 Class *cl,
-			      register __a2 Object *obj,
-			     register __a1 Msg msg);
+ASM ULONG HTMLTextClDispatch(REG(a0) Class *cl,
+			      REG(a2) Object *obj,
+			     REG(a1) Msg msg);
 
-__asm ULONG HTMLTextNClDispatch(register __a0 Class *cl,
-			      register __a2 Object *obj,
-			     register __a1 Msg msg);
+ASM ULONG HTMLTextNClDispatch(REG(a0) Class *cl,
+			      REG(a2) Object *obj,
+			     REG(a1) Msg msg);
 
 /************************************************************
   Initilize the new HTML MUI Gadget Class (was initHTMLGadClass)
@@ -822,7 +822,7 @@ static ULONG HTMLGadClDraw(Class *cl, Object *obj, struct MUIP_Draw *msg){
 	return 0;
 }
 
-__saveds ULONG HTMLGadClPlaceObject(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
+SAVEDS ULONG HTMLGadClPlaceObject(struct IClass *cl,Object *obj,struct MUIP_PlaceObject *msg)
 {
 	HTMLGadClData *inst = INST_DATA(cl, obj);
 
@@ -1008,9 +1008,9 @@ HERE
 /********************************************************
   The main gadget handler routine
 ********************************************************/
-__asm ULONG HTMLGadClDispatch(register __a0 Class *cl,
-			      register __a2 Object *obj,
-			      register __a1 Msg msg){
+ASM ULONG HTMLGadClDispatch(REG(a0) Class *cl,
+			      REG(a2) Object *obj,
+			      REG(a1) Msg msg){
 /*  kprintf("Method %08lx issued\n",msg->MethodID); */
 
   switch (msg->MethodID) { /* approx calling order */
@@ -1913,7 +1913,7 @@ static ULONG HTMLTextClSet(Class *cl, Object *obj, Msg msg){
 /*		kprintf("HTML Virt gad: Getting a new Y scroll: %ld\n",ti->ti_Data); */
 		inst->new_scroll_value=ti->ti_Data;
 		inst->new_scroll_dir=0;
-		MUI_Redraw(obj,MADF_DRAWUPDATE); */
+		MUI_Redraw(obj,MADF_DRAWUPDATE); /* */
 		break;
       
     case HTMLA_scroll_x:
@@ -1921,7 +1921,7 @@ static ULONG HTMLTextClSet(Class *cl, Object *obj, Msg msg){
 /*		kprintf("HTML Virt gad: Getting a new X scroll: %ld\n",ti->ti_Data); */
 		inst->new_scroll_value=ti->ti_Data;
 		inst->new_scroll_dir=1;
-		MUI_Redraw(obj,MADF_DRAWUPDATE); */
+		MUI_Redraw(obj,MADF_DRAWUPDATE); /* */
 		break;
 
     case HTMLA_Top:
@@ -2103,9 +2103,9 @@ static ULONG HTMLTextClHandleInput(Class *cl, Object *obj, struct MUIP_HandleInp
 /********************************************************
   The main HTMLText handler routine
 ********************************************************/
-__asm ULONG HTMLTextClDispatch(register __a0 Class *cl,
-			      register __a2 Object *obj,
-			      register __a1 Msg msg){
+ASM ULONG HTMLTextClDispatch(REG(a0) Class *cl,
+			      REG(a2) Object *obj,
+			      REG(a1) Msg msg){
 
 	switch (msg->MethodID) { /* approx calling order */
 		case MUIM_AskMinMax  : return(HTMLTextClAskMinMax(cl,obj,(APTR)msg));
@@ -2258,9 +2258,9 @@ static ULONG HTMLTextNClHandleInput(Class *cl, Object *obj, struct MUIP_HandleIn
 /********************************************************
   The main HTMLTextN handler routine
 ********************************************************/
-__asm ULONG HTMLTextNClDispatch(register __a0 Class *cl,
-			      register __a2 Object *obj,
-			      register __a1 Msg msg){
+ASM ULONG HTMLTextNClDispatch(REG(a0) Class *cl,
+			      REG(a2) Object *obj,
+			      REG(a1) Msg msg){
 
 	switch (msg->MethodID) {
 		case MUIM_AskMinMax  : return(HTMLTextNClAskMinMax(cl,obj,(APTR)msg));
@@ -3359,9 +3359,9 @@ void SubmitForm(struct FormButtonHookMsg *msg)
 		}
 }
 
-ULONG __saveds __asm FormButtonFunc(register __a0 struct Hook *hook,
-			   register __a2 APTR	      object,
-			   register __a1 struct FormButtonHookMsg *msg)
+ULONG SAVEDS ASM FormButtonFunc(REG(a0) struct Hook *hook,
+			   REG(a2) APTR	      object,
+			   REG(a1) struct FormButtonHookMsg *msg)
 {
 	FormPartInfo *fp;
 
@@ -3380,9 +3380,9 @@ ULONG __saveds __asm FormButtonFunc(register __a0 struct Hook *hook,
 	return 0;
 }
 
-ULONG __saveds __asm FormStringFunc(register __a0 struct Hook *hook,
-			   register __a2 APTR	      object,
-			   register __a1 struct FormButtonHookMsg *msg)
+ULONG SAVEDS ASM FormStringFunc(REG(a0) struct Hook *hook,
+			   REG(a2) APTR	      object,
+			   REG(a1) struct FormButtonHookMsg *msg)
 {
 	char *res;
 	SubmitForm(msg);
@@ -3485,9 +3485,9 @@ void ImageSubmitForm(FormInfo *fptr,char *name,int x,int y)
 
 
 
-ULONG __saveds __asm FormRadioFunc(register __a0 struct Hook *hook,
-			   register __a2 APTR	      object,
-			   register __a1 struct FormButtonHookMsg *msg)
+ULONG SAVEDS ASM FormRadioFunc(REG(a0) struct Hook *hook,
+			   REG(a2) APTR	      object,
+			   REG(a1) struct FormButtonHookMsg *msg)
 {
 	WidgetInfo *cw;
 
@@ -3532,9 +3532,9 @@ struct TextEditHookMsg
 	FormInfo *Form;
 };
 
-static ULONG __saveds __asm TextEditFunc(register __a0 struct Hook *hook,
-			   register __a2 APTR	      obj,
-			   register __a1 struct TextEditHookMsg *msg)
+static ULONG SAVEDS ASM TextEditFunc(REG(a0) struct Hook *hook,
+			   REG(a2) APTR	      obj,
+			   REG(a1) struct TextEditHookMsg *msg)
 {
 	LONG res;
 
@@ -3567,7 +3567,7 @@ void FreeCommaList(char **values, int nof)
 ** not implement a specific lm_Type.
 */
 
-ULONG __saveds __asm LayoutFunc(register __a0 struct Hook *h,register __a2 Object *obj,register __a1 struct MUI_LayoutMsg *lm)
+ULONG SAVEDS ASM LayoutFunc(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) struct MUI_LayoutMsg *lm)
 {
 	HTMLGadClData *inst=INST_DATA(HTMLGadClass,HTML_Gad);
 	switch (lm->lm_Type)
@@ -3727,6 +3727,6 @@ test case:
 
 All in all:
 
-Editing doesn't work.
+Editing does not work.
 
 #endif

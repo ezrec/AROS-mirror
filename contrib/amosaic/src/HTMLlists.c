@@ -54,7 +54,7 @@
  * mosaic-x@ncsa.uiuc.edu.                                                  *
  ****************************************************************************/
 
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>

@@ -1,3 +1,4 @@
+#include "includes.h"
 #include <proto/utility.h>
 #include <proto/intuition.h>
 #include <proto/graphics.h>
@@ -25,11 +26,21 @@ extern struct Library *MUIMasterBase;
 //struct MsgPort *FileNotifyPort;
 extern struct MsgPort *FileNotifyPort;
 
+struct EditFuncMsg
+{
+	struct IClass *cl;
+	Object *obj;
+};
+
 void fail(APTR,APTR);
+#ifndef __AROS__
 long kprintf(char *,...);
-ULONG __saveds __asm EditFunc(register __a0 struct Hook *hook,
-			   register __a2 APTR	      object,
-			   register __a1 struct EditFuncMsg *msg);
+ULONG SAVEDS ASM EditFunc(REG(a0) struct Hook *hook,
+			   REG(a2) APTR	      object,
+			   REG(a1) struct EditFuncMsg *msg);
+#else
+ULONG EditFunc(struct Hook *hook,APTR object, struct EditFuncMsg *msg);
+#endif
 
 #define IEQUALIFIER_SHIFT (IEQUALIFIER_LSHIFT | IEQUALIFIER_RSHIFT)
 #define IEQUALIFIER_ALT (IEQUALIFIER_LALT | IEQUALIFIER_RALT)
@@ -61,8 +72,10 @@ struct TextFieldClData
 
 	LONG x_offset;
 	LONG y_offset;
-/*	LONG c_width;		/* In chars */
-	LONG c_height;		/* In chars */ */
+#if 0
+	LONG c_width;		/* In chars */
+	LONG c_height;		/* In chars */
+#endif
 	LONG width;			/* In pixels */
 	LONG height;		/* In pixels */
 	LONG lines;			/* # of lines in the text */
@@ -501,7 +514,7 @@ BOOL InsertChar(Object *obj,struct TextFieldClData *inst,long ascii)
 
 BOOL HandleSpecialKeys(struct TextFieldClData *inst,long key)
 {
-/*
+#if 0
 					case 0x3E: /* Keypad 8 (up) */
 					case 0x1E: /* Keypad 2 (down) */
 					case 0x2D: /* Keypad 4 (left) */
@@ -528,7 +541,7 @@ BOOL HandleSpecialKeys(struct TextFieldClData *inst,long key)
 					case (CURSORLEFT | HIKEY_CTRL):
 					case (0x2F | HIKEY_CTRL): /* Ctrl Keypad 6 (right) */
 					case (CURSORRIGHT | HIKEY_CTRL):
-*/
+#endif
 
 	switch(key){
 		case CURSORLEFT:
@@ -745,9 +758,9 @@ static ULONG mTextEditFieldGet(struct IClass *cl,Object *obj,Msg msg)
 }
 
 
-static __saveds __asm ULONG TextEditFieldDispatcher(register __a0 struct IClass *cl,
-				   register __a2 Object *obj,
-				   register __a1 Msg msg)
+static SAVEDS ASM ULONG TextEditFieldDispatcher(REG(a0) struct IClass *cl,
+				   REG(a2) Object *obj,
+				   REG(a1) Msg msg)
 {
 	switch (msg->MethodID)
 	{
@@ -890,7 +903,7 @@ static ULONG mTextFieldGet(struct IClass *cl,Object *obj,Msg msg)
 	return(DoSuperMethodA(cl,obj,msg));
 }
 
-static __saveds ULONG TextFieldAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
+static SAVEDS ULONG TextFieldAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
 	struct TextFieldClData *inst = INST_DATA(cl,obj);
 	DoSuperMethodA(cl,obj,(Msg)msg);
@@ -910,7 +923,7 @@ static __saveds ULONG TextFieldAskMinMax(struct IClass *cl,Object *obj,struct MU
 	return(0);
 }
 
-static __saveds ULONG TextFieldDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
+static SAVEDS ULONG TextFieldDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
 	struct TextFieldClData *inst=INST_DATA(cl,obj);
 	LONG delta,tmp;
@@ -1024,7 +1037,7 @@ static ULONG TextFieldShow(struct IClass *cl,Object *obj,struct MUIP_Show *msg)
 	return TRUE;
 }
 
-static __saveds ULONG TextFieldSetup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg){
+static SAVEDS ULONG TextFieldSetup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg){
 	struct TextFieldClData *inst=INST_DATA(cl,obj);
 
 	if (!(DoSuperMethodA(cl,obj,(Msg)msg)))
@@ -1042,12 +1055,12 @@ static __saveds ULONG TextFieldSetup(struct IClass *cl,Object *obj,struct MUIP_S
 	return TRUE;
 }
 
-static __saveds ULONG TextFieldCleanup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg){
+static SAVEDS ULONG TextFieldCleanup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg){
 	MUI_RejectIDCMP(obj,IDCMP_MOUSEBUTTONS|IDCMP_RAWKEY|IDCMP_VANILLAKEY);
 	return(DoSuperMethodA(cl,obj,(Msg)msg));
 }
 
-__saveds ULONG TextFieldHandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+SAVEDS ULONG TextFieldHandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
 	#define _between(a,x,b) ((x)>=(a) && (x)<=(b))
 	#define _isinobject(x,y) (_between(_mleft(obj),(x),_mright(obj)) && _between(_mtop(obj),(y),_mbottom(obj)))
@@ -1126,7 +1139,7 @@ __saveds ULONG TextFieldHandleInput(struct IClass *cl,Object *obj,struct MUIP_Ha
 	return(0);
 }
 
-__saveds ULONG TextFieldFileChange(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+SAVEDS ULONG TextFieldFileChange(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
 	struct TextFieldClData *inst=INST_DATA(cl,obj);
 	APTR fh;
@@ -1155,9 +1168,9 @@ __saveds ULONG TextFieldFileChange(struct IClass *cl,Object *obj,struct MUIP_Han
 	return 0;
 }
 
-static __saveds __asm ULONG TextFieldDispatcher(register __a0 struct IClass *cl,
-				   register __a2 Object *obj,
-				   register __a1 Msg msg)
+static SAVEDS ASM ULONG TextFieldDispatcher(REG(a0) struct IClass *cl,
+				   REG(a2) Object *obj,
+				   REG(a1) Msg msg)
 {
 	switch (msg->MethodID)
 	{
@@ -1217,16 +1230,10 @@ BOOL TextEditFieldClFree(Class *cl)
  return 0L;
 }
 
-struct EditFuncMsg
-{
-	struct IClass *cl;
-	Object *obj;
-};
 
-
-ULONG __saveds __asm EditFunc(register __a0 struct Hook *hook,
-			   register __a2 APTR	      object,
-			   register __a1 struct EditFuncMsg *msg)
+ULONG SAVEDS ASM EditFunc(REG(a0) struct Hook *hook,
+			   REG(a2) APTR	      object,
+			   REG(a1) struct EditFuncMsg *msg)
 {
 	char buffer[256],buffer2[256]="run ";
 	APTR fh;

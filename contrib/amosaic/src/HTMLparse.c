@@ -67,9 +67,9 @@ struct timezone Tz;
 #include <stdlib.h>
 #endif
 #include "HTML.h"
-#include "HTMLamp.h"
+#include "htmlamp.h"
 
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 #include <string.h>
 #endif
 

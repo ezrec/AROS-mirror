@@ -1,0 +1,57 @@
+#   $Id$
+#
+#   Makefile to make AMosaic.
+
+include $(TOP)/config/make.cfg
+
+FILES := globals \
+	socketbase \
+	version \
+	spinner \
+	picread \
+	mo-www \
+	locale \
+	globalhist \
+	fonts \
+	TextEditField \
+	TO_HTML \
+	NewGroup \
+	HTMLparse \
+	HTMLlists \
+	HTML_img \
+	HTMLformat \
+	HTML \
+	gui-menubar \
+	main \
+	gui \
+	gui-dialogs \
+	gui-documents \
+	history \
+	htmlamiga \
+	HTMLimages \
+	mui \
+	rexx
+
+# These are Motif?
+#	hotlist \
+#
+
+EXEDIR := $(AROSDIR)/AMosaic
+EXE := $(EXEDIR)/AMosaic
+
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MUILIB := yes
+
+USER_INCLUDES := -I../../mui/libs/muimaster -I$(INCDIR)/libwww2
+#MM mui-amosaic : includes linklibs contrib-regina
+
+%make_prog_setup mmake=mui-amosaic
+
+mui-amosaic : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps

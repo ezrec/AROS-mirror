@@ -54,7 +54,7 @@
  * mosaic-x@ncsa.uiuc.edu.                                                  *
  ****************************************************************************/
 
-#ifdef _AMIGA
+#if defined(_AMIGA) || defined(__AROS__)
 #include <exec/types.h>
 #include <stdlib.h>
 #include <string.h>
@@ -144,7 +144,7 @@ Pixmap CreateBitMapFromXBMData(UBYTE *bits, int width, int height, int depth)
 void
 FreeColors(void *dsp, void *colormap)
 {
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 	int i, j;
 	unsigned long pix;
 
@@ -212,7 +212,7 @@ FreeImages(HTMLGadClData * hw)
 }
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /*
  * Find the closest color by allocating it, or picking an already allocated
  * color
@@ -319,7 +319,7 @@ static int have_colors = 0;
 #endif /* _AMIGA */
 
 
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 /*
  * Make am image of appropriate depth for display from image data.
  */
@@ -675,7 +675,7 @@ NoImageData(HTMLGadClData * hw)
 Pixmap
 InfoToImage(HTMLGadClData * hw, ImageInfo *img_info)
 {
-#ifndef _AMIGA
+#if !defined(_AMIGA) && !defined(__AROS__)
 	int i, size;
 	Pixmap Img;
 	XImage *tmpimage;

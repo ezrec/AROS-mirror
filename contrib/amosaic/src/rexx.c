@@ -20,7 +20,7 @@
 #include "htmlgad.h"
 #include "protos.h"
 
-#include <dos.h>
+#include <dos/dos.h>
 #include <rexx/storage.h>
 #include <proto/rexxsyslib.h>
 
@@ -46,44 +46,44 @@ extern mo_window window ;	/* Change this later */
 
 /* Fetch something from the WWW */
 #define FETCH_OPTS	"Item,Stem,URL/k,Index/k/f,Map/k/f,Form/k/f"
-static enum { fetch_item, fetch_stem, fetch_url,
+enum { fetch_item, fetch_stem, fetch_url,
 	fetch_index, fetch_map, fetch_form, fetch_count} ;
 static ULONG Fetch(struct Hook *h, void *o, ULONG *parms) ;
 static struct Hook fetch_hook = { {0}, HookEntry, &Fetch, &window} ;
 
 /* Get information from Mosaic */
 #define GET_OPTS	"Item/a,Stem"
-static enum { get_item, get_stem, get_count} ;
+enum { get_item, get_stem, get_count} ;
 static ULONG Get(struct Hook *h, void *o, ULONG *parms) ;
 static struct Hook get_hook = { {0}, HookEntry, &Get, &window} ;
 
 /* Jump to a document */
 #define JUMP_OPTS	"Item,URL/k,Index/k/f,Map/k/f,Form/k/f"
-static enum { jump_item, jump_url, jump_index, jump_map, jump_form, jump_count} ;
+enum { jump_item, jump_url, jump_index, jump_map, jump_form, jump_count} ;
 static ULONG Jump(struct Hook *h, void *o, ULONG *parms) ;
 static struct Hook jump_hook = { {0}, HookEntry, &Jump, &window} ;
 
 /* Open a dialog window  (Open is in dos_protos, so...) */
 #define OPEN_OPTS	"Item"
-static enum { open_item, open_count} ;
+enum { open_item, open_count} ;
 static ULONG www_open(struct Hook *h, void *o, ULONG *parms) ;
 static struct Hook open_hook = { {0}, HookEntry, &www_open, NULL} ;
 
 /* Twiddle misc. crap */
 #define OPTION_OPTS	"Item/a,To/n"
-static enum { option_item, option_to, option_count } ;
+enum { option_item, option_to, option_count } ;
 static ULONG Option(struct Hook *h, void *o, ULONG *parms) ;
 static struct Hook option_hook = { {0}, HookEntry, &Option, &window} ;
 
 /* Manipulate the screen */
 #define SCREEN_OPTS	"Item/a"
-static enum {screen_item, screen_count} ;
+enum {screen_item, screen_count} ;
 static ULONG Screen(struct Hook *h, void *o, ULONG *parms) ;
 static struct Hook screen_hook = { {0}, HookEntry, &Screen, &window} ;
 
 /* Manipulate the window */
 #define WINDOW_OPTS	"Item/a"
-static enum {window_item, window_count} ;
+enum {window_item, window_count} ;
 static ULONG Window(struct Hook *h, void *o, ULONG *parms) ;
 static struct Hook window_hook = { {0}, HookEntry, &Window, &window} ;
 
