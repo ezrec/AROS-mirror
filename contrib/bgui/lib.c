@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2001/01/28 04:53:21  bergers
+ * Fixed some compiler complaints (some casts were missing.).
+ *
  * Revision 42.7  2000/08/08 20:57:26  chodorowski
  * Minor fixes to build on Amiga.
  *
@@ -274,7 +277,7 @@ SAVEDS STATIC VOID CloseLibs(void)
    if( CxBase )          CloseLibrary( CxBase );
    if( AslBase )         CloseLibrary( AslBase );
    if( LayersBase )      CloseLibrary( LayersBase );
-   if( UtilityBase )     CloseLibrary( UtilityBase );
+   if( UtilityBase )     CloseLibrary( (struct Library *) UtilityBase );
    if( GadToolsBase )    CloseLibrary( GadToolsBase );
    if( DataTypesBase )   CloseLibrary( DataTypesBase );
    if( IFFParseBase )    CloseLibrary( IFFParseBase );
@@ -358,7 +361,7 @@ makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struc
    LocaleBase     = (struct LocaleBase *) OpenLibrary("locale.library",        38);
 
    GadToolsBase   = OpenLibrary("gadtools.library",      37);
-   UtilityBase    = OpenLibrary("utility.library",       37);
+   UtilityBase    = (struct UtilityBase *) OpenLibrary("utility.library",       37);
    LayersBase     = OpenLibrary("layers.library",        37);
    AslBase        = OpenLibrary("asl.library",           37);
    CxBase         = OpenLibrary("commodities.library",   37);

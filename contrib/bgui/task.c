@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.11  2001/01/28 04:53:21  bergers
+ * Fixed some compiler complaints (some casts were missing.).
+ *
  * Revision 42.10  2000/08/09 14:54:19  stegerg
  * fixed a bug which was introduced by one of us AROS guys and which caused
  * enforcer hits on Amiga.
@@ -1636,7 +1639,7 @@ static void LoadPrefs(UBYTE *name)
    {
       if (iff = AllocIFF())
       {
-	 if (iff->iff_Stream = Open(name, MODE_OLDFILE))
+	 if (iff->iff_Stream = Open((char *)name, MODE_OLDFILE))
 	 {
 	    InitIFFasDOS(iff);
 	    if (OpenIFF(iff, IFFF_READ) == 0)
@@ -1655,7 +1658,7 @@ static void LoadPrefs(UBYTE *name)
 		  ci = ci->ci_Next;
 	       };
 	    };
-	    Close(iff->iff_Stream);
+	    Close((BPTR)iff->iff_Stream);
 	 };
 	 FreeIFF(iff);
       };

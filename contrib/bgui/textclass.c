@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2001/01/28 04:53:21  bergers
+ * Fixed some compiler complaints (some casts were missing.).
+ *
  * Revision 42.3  2000/08/09 11:45:57  chodorowski
  * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
  *
@@ -530,19 +533,19 @@ STATIC UBYTE *ParseCommSeq(struct BaseInfo *bi, UBYTE *text, UWORD *old_style, U
       break;
 
    case 'd':                           /* DriPen.     */
-      BSetDPenA(bi, strtol(text, &text, 0));
+      BSetDPenA(bi, strtol(text, (char **)&text, 0));
       break;
    case 'D':
       BSetDrMd(bi, JAM2);
-      BSetDPenB(bi, strtol(text, &text, 0));
+      BSetDPenB(bi, strtol(text, (char **)&text, 0));
       break;
 
    case 'p':                           /* Pen.        */
-      BSetPenA(bi, strtol(text, &text, 0));
+      BSetPenA(bi, strtol(text, (char **)&text, 0));
       break;
    case 'P':
       BSetDrMd(bi, JAM2);
-      BSetPenB(bi, strtol(text, &text, 0));
+      BSetPenB(bi, strtol(text, (char **)&text, 0));
       break;
       
    case '1':
