@@ -403,6 +403,8 @@ class AROSCodeConverter (Converter):
 	
 	self.identifiers = {
 	    'FindName': 'autodocs/exec_findname.html',
+	    'AddHead': 'autodocs/exec_addhead.html',
+	    'Insert': 'autodocs/exec_insert.html',
 	}
 	
 	self.push ()
