@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES := -I../commonaros
 
-MODNAME 	:= NList
+MODNAME 	:= NListview
 MODTYPE		:= mcc
 
 INIT_FILE := library
