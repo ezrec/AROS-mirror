@@ -232,8 +232,10 @@ class ThumbnailTable (TableLite):
     def __init__ (self, *pics):
 	if len (pics) == 1:
 	    width = "40%"
+	    itemwidth = 'width="40%"'
 	else:
-	    width = "75%"
+	    width = "80%"
+	    itemwidth = 'width="40%"'
 
 	TableLite.__init__ (self,
 	    border="0",
@@ -262,13 +264,20 @@ class ThumbnailTable (TableLite):
 	    left, right = pics[i], pics[i+1]
 	    i = i + 2
 	    left = left.toHtml ()
+	    #print left[1]
+	    left[1].attr_dict['width'] = itemwidth
+	    print dir (left[1])
+	    print left[1].attr_dict
 	    if not right:
 		if n == 2:
 		    right = []
 		else:
-		    right = [TD ()]
+		    td = TD (colspan="2")
+		    td = td + [RawText ('&nbsp;')]
+		    right = [td]
 	    else:
 		right = right.toHtml ()
+		right[1].attr_dict['width'] = itemwidth
 	    row = row + left + right
 	    
 	    table2.append (row)
@@ -453,12 +462,12 @@ class Thumbnail (FileInfo):
 	    ),
 	    TD (
 		Paragraph (RawText (self.text)),
-		Text (Strong ('%s %dx%d (%s)' % (
+		Font (Text ('%s %dx%d (%s)' % (
 		    self.format,
 		    self.width, self.height,
 		    self.size,
-		))),
-		#width="50%",
+		)), size="-1"),
+		#width="35%",
 		valign="TOP",
 	    ),
 	]
