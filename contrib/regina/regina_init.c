@@ -62,8 +62,6 @@ ULONG SAVEDS STDARGS LC_BUILDNAME(L_OpenLib) (LC_LIBHEADERTYPEPTR ReginaBase)
 {
     D(bug("Inside Open func of regina.library\n"));
 
-    FindTask(NULL)->tc_UserData = ReginaInitializeThread();
-
     return TRUE;
 }
 
@@ -80,9 +78,9 @@ void  SAVEDS STDARGS LC_BUILDNAME(L_ExpungeLib) (LC_LIBHEADERTYPEPTR ReginaBase)
 {
     D(bug("Inside Expunge func of regina.library\n"));
 
-    CloseLibrary(DOSBase);
-    CloseLibrary(aroscbase);
     DeletePool(__regina_semaphorepool);
+    CloseLibrary(aroscbase);
+    CloseLibrary(DOSBase);
 }
 
 /****************************************************************************************/
