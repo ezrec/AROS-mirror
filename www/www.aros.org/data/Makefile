@@ -1,11 +1,9 @@
-HTMLDIR = ../www
-SCREENSHOTDIR = $(HTMLDIR)/pics/screenshots
-FTPDIR = /home/ftp/pub/aros
-BINDIR = $(HOME)/packages/AROS/binaries
+
+-include .Makefile.inc
 
 # Tools
 SED = sed
-RM = rm
+RM = rm -f
 CP = cp
 MKDIR = mkdir -p
 GNUPLOT = gnuplot # gnuplot
@@ -16,21 +14,39 @@ DEVPICS := $(subst $(BINDIR)/developers/,$(HTMLDIR)/pics/developers/,$(wildcard 
 SCREENSHOTS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/*.* $(BINDIR)/screenshots/[0-9]*/*.* $(BINDIR)/screenshots/[0-9]*/README))
 SCREENSHOTDIRS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/[0-9]*))
 
-all : apache.conf pics makedirs .stamp
+all : pics makedirs check-html .stamp apache.conf
 	@true
 
+# These two rules will make sure that gensite is run if one of the
+# files gensite creates is missing.
+check-html : $(HTMLDIR)/documentation.html $(HTMLDIR)/download.html \
+	    $(HTMLDIR)/index.html $(HTMLDIR)/links.html \
+	    $(HTMLDIR)/oldnews.html $(HTMLDIR)/screenshots.html \
+	    $(HTMLDIR)/snapshots.html $(HTMLDIR)/status.html
+
+$(HTMLDIR)/%.html :
+	$(RM) .stamp
+
+# Run gensite if .stamp is missing or if one of the source files
+# is newer.
 .stamp : HTMLcolors.py HTMLgen.py aros.rc gensite imgsize.py \
+	    config.py \
 	    $(wildcard news/*) links.py $(DEVPICS) $(SCREENSHOTS)
-	@HTMLDIR=$(HTMLDIR) FTPDIR=$(FTPDIR) \
-	    SCREENSHOTDIR=$(SCREENSHOTDIR) python gensite
+	@python gensite
 	@touch $@
 
 apache.conf : genconf apache.conf.in site.conf
-	./genconf apache.conf.in > $@
+	./genconf apache.conf.in $@
+	@echo "Please read the instructions at the beginning of apache.conf"
+	@echo "to change the config of Apache accordingly."
 
-site.conf :
-	@echo "Copy site.conf.in to site.conf and modify site.conf"
-	@echo "to suit your setup."
+site.conf : site.conf.in
+	@if [ ! -f "$@" ]; then \
+	    echo "Copy site.conf.in to site.conf and modify site.conf" ; \
+	    echo "to suit your setup." ; \
+	else \
+	    echo "site.conf.in has changed. Please update site.conf." ; \
+	fi
 	@exit 1
 
 pics : $(HTMLDIR)/aros_size.png $(HTMLDIR)/contrib_size.png
@@ -53,8 +69,17 @@ $(HTMLDIR)/%_size.png : %.size size2plot
 	$(GNUPLOT) size2plot.gp
 	$(CONVERT) $(HTMLDIR)/plot.pbm $@
 	$(CONVERT) $(HTMLDIR)/plot.pbm $(basename $@).jpg
-	@$(RM) -f size2plot.gp $(HTMLDIR)/plot.pbm
+	@$(RM) size2plot.gp $(HTMLDIR)/plot.pbm
 
 compileall:
 	@python -c "import compileall; compileall.compile_dir('.',0)"
 
+clean :
+	$(RM) size2plot.gp $(HTMLDIR)/plot.pbm apache.conf.in \
+	    *.pyc .Makefile.inc config.py
+
+.Makefile.inc : site.conf
+	$(SED) -e 's;\$$\([a-zA-Z_]*\);$$(\1);' site.conf > $@
+
+config.py : site.conf
+	$(SED) -e 's;\([a-zA-Z_]*=\)\(.*$$\);\1"\2";' site.conf > $@
