@@ -120,5 +120,6 @@ ezrim:baEk/f74.0bUk:Otto van Daalen:snoeren@cluster.com:
 skost:adqC6UjUwErMk:Stefan Kost:st_kost@gmx.net:
 raptor:ac6gIHP1lWKkU:Daniel Kasmeroglu:raptor@cs.tu-berlin.de:
 flavio:acMI47tCxJm16:Flavio Stanchina:flavio.stanchina@iol.it:
+frans:btoCi4Joly41Y:Francis Swift:frans@xfilesystem.freeserve.co.uk:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
