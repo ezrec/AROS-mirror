@@ -208,9 +208,8 @@ static ULONG ProfileManager_LoadProfiles(struct IClass* cl, Object* obj/*, Msg m
     {
       strncpy(p->name, GetStr(MSG_CARDS_STANDARD_MEDIUM), sizeof(p->name));
 #ifdef _AROS
-#warning temp stuff, until we have ilbm picture datatype in AROS
-      strcpy(p->cardset, "Graphics/Cards_Standard_Medium.ppm");
-      strcpy(p->pattern, "Graphics/Pattern_Standard.ppm");
+      strcpy(p->cardset, "Graphics/Cards_Standard_Medium.iff");
+      strcpy(p->pattern, "Graphics/Pattern_Standard.iff");
 #else
       strcpy(p->cardset, "Graphics/Cards_Standard Medium.iff");
       strcpy(p->pattern, "Graphics/Pattern_Standard.iff");
