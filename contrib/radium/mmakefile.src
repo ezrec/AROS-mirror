@@ -13,11 +13,6 @@ AD=amiga/
 CD=common/
 AR=aros/
 
-VERSION=0.51
-DISKVERSION=0.43
-
-PLAYERPRI=40
-
 MAKEFILE=mmakefile.src
 
 
