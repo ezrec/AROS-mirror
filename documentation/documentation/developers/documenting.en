@@ -8,6 +8,12 @@ AROS Documentation Manual
 :Date:      $Date$
 :Status:    Work in progress.
 
+.. Warning::
+
+   This document is not finished! It is highly likely that many parts are
+   out-of-date, contain incorrect information or are simply missing 
+   altogether. If you want to help rectify this, please contact us.
+
 This manual describes the AROS documentation system. It is intended to be read
 by documentation writers as well as developers wishing to extend or tinker with
 the system itself. To this end, the manual is split into three parts: a common
@@ -18,6 +24,7 @@ follow when writing documentation for AROS.
 
 
 .. Contents::
+
 
 ------------
 Introduction
