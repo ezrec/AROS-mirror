@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: socket_intern.h,v 1.2 2002/07/11 22:52:13 sebauer Exp $
+    $Id: socket_intern.h,v 1.3 2002/07/20 14:42:57 sebauer Exp $
 */
 
 #ifndef MUIMASTER_INTERN_H
@@ -66,12 +66,27 @@ typedef unsigned long STACKULONG;
 #endif
 #endif
 
+#ifndef _NETDB_H
+#include <netdb.h>
+#endif
+
+#ifndef _GLOBALDATA_H
+#include "globaldata.h"
+#endif
+
+#ifndef _LOCALDATA_H
+#include "localdata.h"
+#endif
+
 /****************************************************************************************/
 
 struct SocketBase_intern
 {
     struct Library		library;
     struct ExecBase		*sysbase;
+
+    struct GlobalData *gldata;
+    struct LocalData *locdata;
 
     struct SocketBase_intern *orgbase;
     struct ThreadData *data;
@@ -97,6 +112,9 @@ struct SocketBase_intern
 #endif
 
 #endif
+
+#define GLDATA(b) (((struct SocketBase_intern*)b)->gldata)
+#define LOCDATA(b) (((struct SocketBase_intern*)b)->locdata)
 
 /****************************************************************************************/
 

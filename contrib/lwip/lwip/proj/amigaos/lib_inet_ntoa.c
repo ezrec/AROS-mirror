@@ -2,11 +2,17 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id$
+    $Id: lib_inet_ntoa.c,v 1.1 2002/07/27 15:15:48 sebauer Exp $
 */
+
+#include <stdio.h>
 
 #include <exec/types.h>
 #include <proto/exec.h>
+
+#include "lwip/inet.h" /* ntohl() */
+
+#include "localdata.h"
 
 #include "socket_intern.h"
 
@@ -17,9 +23,9 @@
 
     NAME */
 #ifndef __AROS
-__asm int LIB_Inet_NtoA(register __d0 unsigned long ip)
+__asm char *LIB_Inet_NtoA(register __d0 unsigned long ip)
 #else
-	AROS_LH1(int, LIB_Inet_NtoA,
+	AROS_LH1(char *, LIB_Inet_NtoA,
 
 /*  SYNOPSIS */
   AROS_LHA(unsigned long, ip, D0),
@@ -29,6 +35,9 @@ __asm int LIB_Inet_NtoA(register __d0 unsigned long ip)
 #endif
 
 /*  FUNCTION
+
+	Convert network-format internet address
+	to base 256 d.d.d.d representation.
 
     INPUTS
 
@@ -54,8 +63,10 @@ __asm int LIB_Inet_NtoA(register __d0 unsigned long ip)
 
     D(bug("Inet_NtoA()\n"));
 
-    return 0;
+    ip = ntohl(ip);
+    sprintf(LOCDATA(SocketBase)->inet_ntoa,"%ld.%ld.%ld.%ld",(ip>>24) & 0xff, (ip >> 16) & 0xff, (ip >> 8) & 0xff, ip & 0xff);
+
+    return LOCDATA(SocketBase)->inet_ntoa;
 
     AROS_LIBFUNC_EXIT
-
 }

@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id$
+    $Id: lib_gethostbyname.c,v 1.1 2002/07/27 20:35:59 sebauer Exp $
 */
 
 #include <exec/types.h>
@@ -22,7 +22,7 @@ __asm struct hostent *LIB_gethostbyname(register __a0 char *name)
 	AROS_LH1(struct hostent *, LIB_gethostbyname,
 
 /*  SYNOPSIS */
-  AROS_LHA(char *, name, A0),
+  AROS_LHA(const char *, name, A0),
 
 /*  LOCATION */
 	struct Library *, SocketBase, 210, Socket)

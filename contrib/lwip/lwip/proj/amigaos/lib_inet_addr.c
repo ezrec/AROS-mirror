@@ -2,11 +2,16 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id$
+    $Id: lib_inet_addr.c,v 1.1 2002/07/27 15:15:48 sebauer Exp $
 */
 
 #include <exec/types.h>
 #include <proto/exec.h>
+
+#include "lwip/sys.h"
+#include "lwip/inet.h"
+#include "lwip/sockets.h"
+#include "inet_aton.h"
 
 #include "socket_intern.h"
 
@@ -17,9 +22,9 @@
 
     NAME */
 #ifndef __AROS
-__asm int LIB_inet_addr(register __a0 char *cp)
+__asm unsigned long LIB_inet_addr(register __a0 char *cp)
 #else
-	AROS_LH1(int, LIB_inet_addr,
+	AROS_LH1(unsigned long, LIB_inet_addr,
 
 /*  SYNOPSIS */
   AROS_LHA(char *, cp, A0),
@@ -29,6 +34,9 @@ __asm int LIB_inet_addr(register __a0 char *cp)
 #endif
 
 /*  FUNCTION
+
+	Ascii internet address interpretation routine.
+	The value returned is in network order.
 
     INPUTS
 
@@ -49,12 +57,16 @@ __asm int LIB_inet_addr(register __a0 char *cp)
 
 *****************************************************************************/
 {
+    struct in_addr val;
+
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
     D(bug("inet_addr()\n"));
 
-    return 0;
+    if (inet_aton(cp, &val))
+	return val.s_addr;
+    return ~0; /* IADDR_NONE */
 
     AROS_LIBFUNC_EXIT
 
