@@ -89,7 +89,7 @@ foreverloop:
 			ActivateWindow(Window);
 			while ((apmsg=(struct AppMessage *)GetMsg(appmsg_port))) {
 			
-				if (apmsg->am_Type==MTYPE_APPWINDOW && apmsg->am_ID==APPWINID) {
+				if (apmsg->am_Type==AMTYPE_APPWINDOW && apmsg->am_ID==APPWINID) {
 					for (a=0;a<apmsg->am_NumArgs;a++) {
 						if (apmsg->am_ArgList[a].wa_Lock) {
 							if ((b=isinwindow(apmsg->am_MouseX,apmsg->am_MouseY))!=-1) {

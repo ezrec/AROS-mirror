@@ -444,12 +444,12 @@ int louise,buttons,banknum;
 				wmes&1<<appmsg_port->mp_SigBit) {
 				if (dopus_appwindow) ActivateWindow(Window);
 				while ((amsg=(struct AppMessage *)GetMsg(appmsg_port))) {
-					if (amsg->am_Type==MTYPE_APPICON && amsg->am_NumArgs==0) {
+					if (amsg->am_Type==AMTYPE_APPICON && amsg->am_NumArgs==0) {
 						ReplyMsg((struct Message *)amsg);
 						goto endiconify;
 					}
-					else if ((amsg->am_Type==MTYPE_APPICON && Window) ||
-						(amsg->am_Type==MTYPE_APPWINDOW && amsg->am_ID==APPWINID)) {
+					else if ((amsg->am_Type==AMTYPE_APPICON && Window) ||
+						(amsg->am_Type==AMTYPE_APPWINDOW && amsg->am_ID==APPWINID)) {
 						for (a=0;a<amsg->am_NumArgs;a++) {
 							if (amsg->am_ArgList[a].wa_Lock) {
 								if (status_flags&STATUS_ISINBUTTONS &&
