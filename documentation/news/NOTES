@@ -34,7 +34,10 @@ brackets ("[]").
  * libjpeg and jpeg.datatype in contrib [gierich]
  * thinking about moving at least Regina, Freetype, jpeg.datatype
    and JanoEditor into the main tree [chodorowski]
-
+ * thinking about porting render.library and guigfx.library to AROS and use it
+   in Zune, picture.datatype and other places. Author contacted. [dlc]
+ * contacted FlexCat authors about licensing issue [chodorowski]
+ 
 20030402:
  * jpeg.datatype in contrib (but nobody noticed :) [gierich]
 
