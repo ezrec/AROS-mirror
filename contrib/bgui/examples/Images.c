@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/08/08 19:29:54  chodorowski
+ * Minor changes.
+ *
  * Revision 42.2  2000/07/13 19:13:23  stegerg
  * changed image data array from UWORD[] to UBYTE[] so that it is
  * in the correct format on both big and little endian machines.
@@ -40,12 +43,12 @@ quit
 
 
 /*
-**	Generated with IconEdit.
+**      Generated with IconEdit.
 **/
 #ifdef _AROS
 UBYTE HelpI1Data[] =
 #else
-CHIP( UBYTE ) HelpI1Data[] =
+CHIP UBYTE HelpI1Data[] =
 #endif
 {
 /* Plane 0 */
@@ -74,17 +77,17 @@ CHIP( UBYTE ) HelpI1Data[] =
 
 struct Image HelpI1 =
 {
-    0, 0,			/* Upper left corner */
-    37, 26, 2,			/* Width, Height, Depth */
-    HelpI1Data,                 /* Image data */
-    0x0003, 0x0000,		/* PlanePick, PlaneOnOff */
-    NULL			/* Next image */
+    0, 0,                       /* Upper left corner */
+    37, 26, 2,                  /* Width, Height, Depth */
+    (WORD *) HelpI1Data,        /* Image data */
+    0x0003, 0x0000,             /* PlanePick, PlaneOnOff */
+    NULL                        /* Next image */
 };
 
 #ifdef _AROS
 UBYTE HelpI2Data[] =
 #else
-CHIP( UBYTE ) HelpI2Data[] =
+CHIP UBYTE HelpI2Data[] =
 #endif
 {
 /* Plane 0 */
@@ -113,130 +116,130 @@ CHIP( UBYTE ) HelpI2Data[] =
 
 struct Image HelpI2 =
 {
-    0, 0,			/* Upper left corner */
-    37, 26, 2,			/* Width, Height, Depth */
-    HelpI2Data,                 /* Image data */
-    0x0003, 0x0000,		/* PlanePick, PlaneOnOff */
-    NULL			/* Next image */
+    0, 0,                       /* Upper left corner */
+    37, 26, 2,                  /* Width, Height, Depth */
+    (WORD *) HelpI2Data,        /* Image data */
+    0x0003, 0x0000,             /* PlanePick, PlaneOnOff */
+    NULL                        /* Next image */
 };
 
 /*
-**	Put up a simple requester.
+**      Put up a simple requester.
 **/
 ULONG Req( struct Window *win, UBYTE *gadgets, UBYTE *body, ... )
 {
-	struct bguiRequest	req = { NULL };
+        struct bguiRequest      req = { NULL };
 
-	req.br_GadgetFormat	= gadgets;
-	req.br_TextFormat	= body;
-	req.br_Flags		= BREQF_CENTERWINDOW | BREQF_LOCKWINDOW;
-	req.br_Underscore	= '_';
+        req.br_GadgetFormat     = gadgets;
+        req.br_TextFormat       = body;
+        req.br_Flags            = BREQF_CENTERWINDOW | BREQF_LOCKWINDOW;
+        req.br_Underscore       = '_';
 
-	return( BGUI_RequestA( win, &req, ( ULONG * )( &body + 1 )));
+        return( BGUI_RequestA( win, &req, ( ULONG * )( &body + 1 )));
 }
 
 /*
-**	Object ID's.
+**      Object ID's.
 **/
 #define ID_QUIT                 1
 #define ID_HELP                 2
 
 VOID StartDemo( void )
 {
-	struct Window		*window;
-	Object			*WO_Window, *GO_Quit, *GO_Help;
-	ULONG			 signal = 0, rc, tmp = 0;
-	BOOL			 running = TRUE;
+        struct Window           *window;
+        Object                  *WO_Window, *GO_Quit, *GO_Help;
+        ULONG                    signal = 0, rc, tmp = 0;
+        BOOL                     running = TRUE;
 
-	/*
-	**	Create the window object.
-	**/
-	WO_Window = WindowObject,
-		WINDOW_Title,		"Image Demo",
-		WINDOW_AutoAspect,	TRUE,
-		WINDOW_MasterGroup,
-			VGroupObject, HOffset( 4 ), VOffset( 4 ), Spacing( 4 ),
-				StartMember,
-					GO_Help = ButtonObject,
-						BUTTON_Image,		&HelpI1,
-						BUTTON_SelectedImage,	&HelpI2,
-						LAB_Label,		"_Help",
-						LAB_Underscore,         '_',
-						LAB_Place,		PLACE_LEFT,
-						FRM_Type,		FRTYPE_BUTTON,
-						FRM_EdgesOnly,		TRUE,
-						GA_ID,			ID_HELP,
-					EndObject,
-				EndMember,
-				StartMember,
-					HGroupObject,
-						VarSpace( 50 ),
-						StartMember, GO_Quit  = KeyButton( "_Quit",  ID_QUIT  ), EndMember,
-						VarSpace( 50 ),
-					EndObject, FixMinHeight,
-				EndMember,
-			EndObject,
-	EndObject;
+        /*
+        **      Create the window object.
+        **/
+        WO_Window = WindowObject,
+                WINDOW_Title,           "Image Demo",
+                WINDOW_AutoAspect,      TRUE,
+                WINDOW_MasterGroup,
+                        VGroupObject, HOffset( 4 ), VOffset( 4 ), Spacing( 4 ),
+                                StartMember,
+                                        GO_Help = ButtonObject,
+                                                BUTTON_Image,           &HelpI1,
+                                                BUTTON_SelectedImage,   &HelpI2,
+                                                LAB_Label,              "_Help",
+                                                LAB_Underscore,         '_',
+                                                LAB_Place,              PLACE_LEFT,
+                                                FRM_Type,               FRTYPE_BUTTON,
+                                                FRM_EdgesOnly,          TRUE,
+                                                GA_ID,                  ID_HELP,
+                                        EndObject,
+                                EndMember,
+                                StartMember,
+                                        HGroupObject,
+                                                VarSpace( 50 ),
+                                                StartMember, GO_Quit  = KeyButton( "_Quit",  ID_QUIT  ), EndMember,
+                                                VarSpace( 50 ),
+                                        EndObject, FixMinHeight,
+                                EndMember,
+                        EndObject,
+        EndObject;
 
-	/*
-	**	Object created OK?
-	**/
-	if ( WO_Window ) {
-		/*
-		**	Assign the keys to the buttons.
-		**/
-		tmp  = GadgetKey( WO_Window, GO_Quit,  "q" );
-		tmp += GadgetKey( WO_Window, GO_Help,  "h" );
-		/*
-		**	OK?
-		**/
-		if ( tmp == 2 ) {
-			/*
-			**	try to open the window.
-			**/
-			if ( window = WindowOpen( WO_Window )) {
-				/*
-				**	Obtain it's wait mask.
-				**/
-				GetAttr( WINDOW_SigMask, WO_Window, &signal );
-				/*
-				**	Event loop...
-				**/
-				do {
-					Wait( signal );
-					/*
-					**	Handle events.
-					**/
-					while (( rc = HandleEvent( WO_Window )) != WMHI_NOMORE ) {
-						/*
-						**	Evaluate return code.
-						**/
-						switch ( rc ) {
+        /*
+        **      Object created OK?
+        **/
+        if ( WO_Window ) {
+                /*
+                **      Assign the keys to the buttons.
+                **/
+                tmp  = GadgetKey( WO_Window, GO_Quit,  "q" );
+                tmp += GadgetKey( WO_Window, GO_Help,  "h" );
+                /*
+                **      OK?
+                **/
+                if ( tmp == 2 ) {
+                        /*
+                        **      try to open the window.
+                        **/
+                        if ( window = WindowOpen( WO_Window )) {
+                                /*
+                                **      Obtain it's wait mask.
+                                **/
+                                GetAttr( WINDOW_SigMask, WO_Window, &signal );
+                                /*
+                                **      Event loop...
+                                **/
+                                do {
+                                        Wait( signal );
+                                        /*
+                                        **      Handle events.
+                                        **/
+                                        while (( rc = HandleEvent( WO_Window )) != WMHI_NOMORE ) {
+                                                /*
+                                                **      Evaluate return code.
+                                                **/
+                                                switch ( rc ) {
 
-							case	WMHI_CLOSEWINDOW:
-							case	ID_QUIT:
-								running = FALSE;
-								break;
+                                                        case    WMHI_CLOSEWINDOW:
+                                                        case    ID_QUIT:
+                                                                running = FALSE;
+                                                                break;
 
-							case	ID_HELP:
-								Req( window, "_Continue", ISEQ_C "This small demo shows you how to use\n"
-											  "standard intuition images in button objects." );
-								break;
+                                                        case    ID_HELP:
+                                                                Req( window, "_Continue", ISEQ_C "This small demo shows you how to use\n"
+                                                                                          "standard intuition images in button objects." );
+                                                                break;
 
-						}
-					}
-				} while ( running );
-			} else
-				Tell( "Could not open the window\n" );
-		} else
-			Tell( "Could not assign gadget keys\n" );
-		/*
-		**	Disposing of the window object will
-		**	also close the window if it is
-		**	already opened and it will dispose of
-		**	all objects attached to it.
-		**/
-		DisposeObject( WO_Window );
-	} else
-		Tell( "Could not create the window object\n" );
+                                                }
+                                        }
+                                } while ( running );
+                        } else
+                                Tell( "Could not open the window\n" );
+                } else
+                        Tell( "Could not assign gadget keys\n" );
+                /*
+                **      Disposing of the window object will
+                **      also close the window if it is
+                **      already opened and it will dispose of
+                **      all objects attached to it.
+                **/
+                DisposeObject( WO_Window );
+        } else
+                Tell( "Could not create the window object\n" );
 }

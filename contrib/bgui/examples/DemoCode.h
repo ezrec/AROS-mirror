@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/08/08 19:29:54  chodorowski
+ * Minor changes.
+ *
  * Revision 42.4  2000/08/08 13:51:34  chodorowski
  * Removed all REGFUNC, REGPARAM and REG macros. Now includes
  * contrib/bgui/compilerspecific.h where they are defined.
@@ -79,14 +82,21 @@ extern VOID StartDemo( void );
  * Output file handle and BGUI
  * library base.
  */
-BPTR     StdOut;
-struct Library *BGUIBase;
-struct IntuitionBase * IntuitionBase;
-struct GfxBase * GfxBase;
-struct UtilityBase * UtilityBase;
+
+BPTR   StdOut;
+
+struct Library        *BGUIBase;
+
+#ifdef _AROS
+struct IntuitionBase  *IntuitionBase;
+struct GfxBase        *GfxBase;
+struct Library        *UtilityBase;
+#endif
+
 /*
  * Output text to the CLI or Workbench console.
  */
+
 VOID Tell( UBYTE *fstr, ... )
 {
    if ( StdOut ) VFPrintf( StdOut, fstr, ( ULONG * )&fstr + 1 );
@@ -94,9 +104,9 @@ VOID Tell( UBYTE *fstr, ... )
 
 BOOL openlibs(void)
 {
-  IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
-  GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0);
-  UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",0);  
+  IntuitionBase = (struct IntuitionBase *) OpenLibrary( "intuition.library", 0 );
+  GfxBase       = (struct GfxBase *) OpenLibrary( "graphics.library", 0 );
+  UtilityBase   = OpenLibrary( "utility.library", 0 );
   
   if (!IntuitionBase || !GfxBase || ! UtilityBase)
     return FALSE;
@@ -108,7 +118,7 @@ void closelibs(void)
 { 
   if (IntuitionBase) CloseLibrary((struct Library*)IntuitionBase);
   if (GfxBase) CloseLibrary((struct Library*)GfxBase);
-  if (UtilityBase) CloseLibrary((struct Library*)UtilityBase);
+  if (UtilityBase) CloseLibrary( UtilityBase );
 }
 
 /*
