@@ -30,12 +30,6 @@ $(OBJDIR)/aros_src/%_aros.c : %.c
 	@$(ECHO) Generating $@...
 	@$(ARCHTOOL) -R aros/gtlayout_pragmas_aros.h  $^ $@ aros/gtlayout_defines_aros.h >/dev/null
 
-$(OBJDIR)/%.o : $(OBJDIR)/aros_src/%_aros.c
-	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES) $(DEFINES) -include aros/arosspecific.h"
-
-
-$(OBJDIR)/%.ol : $(OBJDIR)/aros_src/%_aros.c
-	%compile_q opt="$(CFLAGS) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h"
 
 
 $(OBJDIR)/test/%.o : test/%.c
@@ -172,6 +166,12 @@ TESTOBJS = $(OBJDIR)/test/gui.o $(OBJDIR)/test/Tools.o
 
 MODULE_OBJ   = $(foreach f,$(API_SOURCE) $(API_SOURCE_EXTRA) $(UFC_SOURCE) $(FILES) $(OTHERS) gtlayout_data,$(OBJDIR)/$(f).o)
 STATIC_OBJ   = $(foreach f,$(LINKLIB_FILES) gtlayout_data,$(OBJDIR)/$f.ol)
+
+$(MODULE_OBJ) : $(OBJDIR)/%.o : $(OBJDIR)/aros_src/%_aros.c
+	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES) $(DEFINES) -include aros/arosspecific.h"
+
+$(STATIC_OBJ) : $(OBJDIR)/%.ol : $(OBJDIR)/aros_src/%_aros.c
+	%compile_q opt="$(CFLAGS) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h"
 
 #I need to create all $(INTERMEDIATES) first (!) for the compile to be successful!
 $(AROS_LIBS)/$(MODULE) : $(MODULE_OBJ)
