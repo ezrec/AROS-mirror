@@ -1,0 +1,114 @@
+=============
+Status update
+=============
+
+:Author:   Daniel Holmen
+:Date:     2005-01-05
+
+Let's start off this status update with some fireworks and a great big 
+HAPPY NEW YEAR to all you AROS fans out there! There is obviously a lot
+more of you than we had thought, with 241 members registered at 'AROS-exec.org'__.
+
+This update should have been written a long time ago - but as usual, the 
+developers are too busy writing code to do tedious status updates :).
+
+Anyway, let's get down to business. A LOT has happened since the last 
+update here, so I'm afraid this little update merely scratches the 
+surface.
+
+__ http://www.aros-exec.org/
+
+AROS-Max
+--------
+
+AROS has gotten its first distro - 'AROS-Max'__! This is a nicely configured 
+bootable CD image with a lot more snacks than the regular snapshots and 
+builds.
+
+__ http://www.aros-max.co.uk/
+
+FreeBSD Hosted AROS
+-------------------
+
+Jack Patton made AROS compile and run cleanly under FreeBSD. He also set 
+up a nighly build for the FreeBSD hosted version. We now have a build for 
+both Linux and FreeBSD, as well as numerous fixes to the build system.
+
+Self-hosted build status
+------------------------
+
+Jack Patton set up a page to keep track of the 'current status of the 
+self-hosted build'__.
+
+To sum up, most of the tools are now ported, but lack testing and bugfixing.
+
+__ http://www.downbeach.net/aros/aros-compile-status.html
+
+Sound support
+-------------
+
+AROS finally has sound support! Martin Blom ported his AHI system to AROS 
+together with a Sound Blaster Live! driver (GPL'ed). Michal Schulz then 
+wrote an AC97 driver for Intel chipsets (works on nForce).
+
+Jack Patton also ported SDL_mixer to AROS so lbreakout2 amongst others get 
+a bit of sound.
+
+Storage
+-------
+
+Michal has also been busy writing a much-needed new ATA.device with DMA 
+support while Johan Grip is still working on his trackdisk.device rewrite.
+Adam Chodorowski has been hacking away on an eagerly awaited FAT32 
+implementation.
+
+Networking
+----------
+
+Nic Andrews, Jack Patton, Olivier Adam and Adam Chodorowski has been working 
+on integrating 'lwIP'__ into AROS with some assistance from Staf Verhaegen.
+
+In parallel, Neil Cafferkey, has been working on porting AmiTCP aswell. So 
+there's not one - but two - stacks in the works.
+
+Nic Andrews is working on a mail application aswell as helping Daniel Holmen out 
+with an IRC client for AROS. Being the busy boy Nic is, he also ported a lightweight
+web server called 'Cheetah'__ together with Jack Patton.
+
+__ http://www.sics.se/~adam/lwip/
+__ http://cheetah.sourceforge.net/
+
+Preferences
+-----------
+
+Fabio Alemagna implemented Screenmode Prefs, so now you can finally change 
+screen resolution from within AROS itself! This also meant a lot of changes 
+and bugfixes to the graphics system.
+
+Ported applications and toolkits
+--------------------------------
+
+- 'ScummVM'__ (Jack Patton)
+- 'XRick'__ (Jack Patton)
+- 'libogg/libvorbis'__ (Adam Chodorowski)
+- 'SDL_mixer'__ and 'SDL_ttf'__ (Jack Patton)
+- 'D-BUS'__ (Martin Blom)
+- Plus a bunch of other applications aswell
+
+__ http://scummvm.sourceforge.net/
+__ http://www.bigorno.net/xrick/
+__ http://www.vorbis.com/
+__ http://www.libsdl.org/projects/SDL_mixer/
+__ http://www.libsdl.org/projects/SDL_ttf/
+__ http://www.freedesktop.org/Software/dbus
+
+Other
+-----
+
+Georg Steger, Fabio Alemagna and Staf Verhaegen have done a marvellous job 
+cleaning up and bugfixing an enormous amount of code (as usual).
+
+There has been so much happening to both the AROS code base and external 
+applications that I can't hope to cover it all in this update. Needless 
+to say, there have been a lot more updates, enhancements and bugfixes to AROS 
+than the ones described here. Download a build and try for yourself!
