@@ -1,0 +1,34 @@
+CHANGES
+
+27/05/2002 ported to AROS by henrik
+
+
+02/09/2003 updated to CVS (STABLE-0_6_3)(+ some fixes) by SBauer
+
+11/01/2004 NicJA Updated base LwIP source tree with that on LwIP CVS (STABLE-0_6_6) 
+			Fixes a few LwIP bugs and DHCP issues.
+
+
+TODO
+			Change getnamebyhost to incorporate Name Resolution from NS sources.
+			replace direct TAP interface with a generic "SANA II" device system - SANA II Rev 4
+			Implemenet TAP as a SANA II device
+
+NOTES
+
+currently you firstly need to build your required aros tree with the normal "make"
+
+then "make lwip-tapinterface"
+
+...to generate the tapinterface header file (it is required by the stack build process) - if u are not building the linux hosted
+stack it will fail - but generate the necessary header file still.
+
+finally type "make lwip"
+
+this will build the stack into a file called contrib/lwip/lwip
+
+execute the file from a command prompt inside aros to launch the stack.
+
+you may want to copy the includes from ... so that you can build network apps and test the stack.
+
+

@@ -35,13 +35,13 @@
  *
  */
 
-/*-----------------------------------------------------------------------------------*/
+
 /* raw.c
  *
  * The code for the Raw Access to the IP
  *
  */
-/*-----------------------------------------------------------------------------------*/
+
 #include "lwip/opt.h"
 
 #include "lwip/def.h"
@@ -61,7 +61,7 @@
 
 static struct raw_pcb *raw_pcbs = NULL;
 
-/*-----------------------------------------------------------------------------------*/
+
 void
 raw_init(void)
 {
@@ -209,7 +209,7 @@ raw_send_to(struct raw_pcb *pcb, struct pbuf *p, struct ip_addr *ipaddr)
   
   if ((netif = ip_route(ipaddr)) == NULL) {
     LWIP_DEBUGF(RAW_DEBUG | 1, ("raw_send_to: No route to 0x%lx\n", ipaddr->addr));
-#ifdef RAW_STATS
+#if RAW_STATS
     /*    ++lwip_stats.raw.rterr;*/
 #endif /* RAW_STATS */
     if (q != p) {

@@ -115,12 +115,12 @@ static u8_t memp_memory[(MEMP_NUM_PBUF *
        MEM_ALIGN_SIZE(sizeof(struct sys_timeout) +
           sizeof(struct memp)))];
 
-/*-----------------------------------------------------------------------------------*/
+
 #if !SYS_LIGHTWEIGHT_PROT
 static sys_sem_t mutex;
 #endif
-/*-----------------------------------------------------------------------------------*/
-#ifdef LWIP_DEBUG
+
+#ifndef LWIP_NOASSERT
 static int
 memp_sanity(void)
 {
@@ -141,7 +141,7 @@ memp_sanity(void)
   return 1;
 }
 #endif /* LWIP_DEBUG */
-/*-----------------------------------------------------------------------------------*/
+
 void
 memp_init(void)
 {
@@ -149,7 +149,7 @@ memp_init(void)
   u16_t i, j;
   u16_t size;
       
-#ifdef MEMP_STATS
+#if MEMP_STATS
   for(i = 0; i < MEMP_MAX; ++i) {
     lwip_stats.memp[i].used = lwip_stats.memp[i].max =
       lwip_stats.memp[i].err = 0;
@@ -182,19 +182,19 @@ memp_init(void)
 
   
 }
-/*-----------------------------------------------------------------------------------*/
+
 void *
 memp_malloc(memp_t type)
 {
   struct memp *memp;
   void *mem;
-#ifdef SYS_LIGHTWEIGHT_PROT
+#if SYS_LIGHTWEIGHT_PROT
   SYS_ARCH_DECL_PROTECT(old_level);
 #endif
  
   LWIP_ASSERT("memp_malloc: type < MEMP_MAX", type < MEMP_MAX);
 
-#ifdef SYS_LIGHTWEIGHT_PROT
+#if SYS_LIGHTWEIGHT_PROT
   SYS_ARCH_PROTECT(old_level);
 #else /* SYS_LIGHTWEIGHT_PROT */  
   sys_sem_wait(mutex);
@@ -205,13 +205,13 @@ memp_malloc(memp_t type)
   if (memp != NULL) {    
     memp_tab[type] = memp->next;    
     memp->next = NULL;
-#ifdef MEMP_STATS
+#if MEMP_STATS
     ++lwip_stats.memp[type].used;
     if (lwip_stats.memp[type].used > lwip_stats.memp[type].max) {
       lwip_stats.memp[type].max = lwip_stats.memp[type].used;
     }
 #endif /* MEMP_STATS */
-#ifdef SYS_LIGHTWEIGHT_PROT
+#if SYS_LIGHTWEIGHT_PROT
     SYS_ARCH_UNPROTECT(old_level);
 #else /* SYS_LIGHTWEIGHT_PROT */
     sys_sem_signal(mutex);
@@ -220,12 +220,10 @@ memp_malloc(memp_t type)
      ((u32_t)MEM_ALIGN((u8_t *)memp + sizeof(struct memp)) % MEM_ALIGNMENT) == 0);
 
     mem = MEM_ALIGN((u8_t *)memp + sizeof(struct memp));
-    /* initialize memp memory with zeroes */
-    memset(mem, 0, memp_sizes[type]);  
     return mem;
   } else {
     LWIP_DEBUGF(MEMP_DEBUG | 2, ("memp_malloc: out of memory in pool %d\n", type));
-#ifdef MEMP_STATS
+#if MEMP_STATS
     ++lwip_stats.memp[type].err;
 #endif /* MEMP_STATS */
 #if SYS_LIGHTWEIGHT_PROT
@@ -236,12 +234,12 @@ memp_malloc(memp_t type)
     return NULL;
   }
 }
-/*-----------------------------------------------------------------------------------*/
+
 void
 memp_free(memp_t type, void *mem)
 {
   struct memp *memp;
-#ifdef SYS_LIGHTWEIGHT_PROT
+#if SYS_LIGHTWEIGHT_PROT
   SYS_ARCH_DECL_PROTECT(old_level);
 #endif /* SYS_LIGHTWEIGHT_PROT */  
 
@@ -250,13 +248,13 @@ memp_free(memp_t type, void *mem)
   }
   memp = (struct memp *)((u8_t *)mem - sizeof(struct memp));
 
-#ifdef SYS_LIGHTWEIGHT_PROT
+#if SYS_LIGHTWEIGHT_PROT
     SYS_ARCH_PROTECT(old_level);
 #else /* SYS_LIGHTWEIGHT_PROT */  
   sys_sem_wait(mutex);
 #endif /* SYS_LIGHTWEIGHT_PROT */  
 
-#ifdef MEMP_STATS
+#if MEMP_STATS
   lwip_stats.memp[type].used--; 
 #endif /* MEMP_STATS */
   
@@ -271,4 +269,4 @@ memp_free(memp_t type, void *mem)
   sys_sem_signal(mutex);
 #endif /* SYS_LIGHTWEIGHT_PROT */  
 }
-/*-----------------------------------------------------------------------------------*/
+

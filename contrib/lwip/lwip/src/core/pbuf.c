@@ -102,7 +102,7 @@ pbuf_init(void)
   pbuf_pool = (struct pbuf *)&pbuf_pool_memory[0];
   LWIP_ASSERT("pbuf_init: pool aligned", (long)pbuf_pool % MEM_ALIGNMENT == 0);
 
-#ifdef PBUF_STATS
+#if PBUF_STATS
   lwip_stats.pbuf.avail = PBUF_POOL_SIZE;
 #endif /* PBUF_STATS */
 
@@ -113,6 +113,7 @@ pbuf_init(void)
     p->next = (struct pbuf *)((u8_t *)p + PBUF_POOL_BUFSIZE + sizeof(struct pbuf));
     p->len = p->tot_len = PBUF_POOL_BUFSIZE;
     p->payload = MEM_ALIGN((void *)((u8_t *)p + sizeof(struct pbuf)));
+    p->flags = PBUF_FLAG_POOL;
     q = p;
     p = p->next;
   }
@@ -143,7 +144,7 @@ pbuf_pool_alloc(void)
   /* Next, check the actual pbuf pool, but if the pool is locked, we
      pretend to be out of buffers and return NULL. */
   if (pbuf_pool_free_lock) {
-#ifdef PBUF_STATS
+#if PBUF_STATS
     ++lwip_stats.pbuf.alloc_locked;
 #endif /* PBUF_STATS */
     return NULL;
@@ -156,7 +157,7 @@ pbuf_pool_alloc(void)
       pbuf_pool = p->next;
     }
 #if !SYS_LIGHTWEIGHT_PROT
-#ifdef PBUF_STATS
+#if PBUF_STATS
   } else {
     ++lwip_stats.pbuf.alloc_locked;
 #endif /* PBUF_STATS */
@@ -164,7 +165,7 @@ pbuf_pool_alloc(void)
   pbuf_pool_alloc_lock = 0;
 #endif /* SYS_LIGHTWEIGHT_PROT */
 
-#ifdef PBUF_STATS
+#if PBUF_STATS
   if (p != NULL) {
     ++lwip_stats.pbuf.used;
     if (lwip_stats.pbuf.used > lwip_stats.pbuf.max) {
@@ -243,7 +244,7 @@ pbuf_alloc(pbuf_layer l, u16_t length, pbuf_flag flag)
     p = pbuf_pool_alloc();
     LWIP_DEBUGF(PBUF_DEBUG | DBG_TRACE | 3, ("pbuf_alloc: allocated pbuf %p\n", (void *)p));
     if (p == NULL) {
-#ifdef PBUF_STATS
+#if PBUF_STATS
       ++lwip_stats.pbuf.err;
 #endif /* PBUF_STATS */
       return NULL;
@@ -258,8 +259,6 @@ pbuf_alloc(pbuf_layer l, u16_t length, pbuf_flag flag)
     p->tot_len = length;
     /* set the length of the first pbuf in the chain */
     p->len = length > PBUF_POOL_BUFSIZE - offset? PBUF_POOL_BUFSIZE - offset: length;
-    /* set pbuf type */
-    p->flags = PBUF_FLAG_POOL;
     /* set reference count (needed here in case we fail) */
     p->ref = 1;
 
@@ -274,7 +273,7 @@ pbuf_alloc(pbuf_layer l, u16_t length, pbuf_flag flag)
       q = pbuf_pool_alloc();
       if (q == NULL) {
        LWIP_DEBUGF(PBUF_DEBUG | 2, ("pbuf_alloc: Out of pbufs in pool.\n"));
-#ifdef PBUF_STATS
+#if PBUF_STATS
         ++lwip_stats.pbuf.err;
 #endif /* PBUF_STATS */
         /* free chain so far allocated */
@@ -289,7 +288,6 @@ pbuf_alloc(pbuf_layer l, u16_t length, pbuf_flag flag)
       q->tot_len = rem_len;
       /* this pbuf length is pool size, unless smaller sized tail */
       q->len = rem_len > PBUF_POOL_BUFSIZE? PBUF_POOL_BUFSIZE: rem_len;
-      q->flags = PBUF_FLAG_POOL;
       q->payload = (void *)((u8_t *)q + sizeof(struct pbuf));
       LWIP_ASSERT("pbuf_alloc: pbuf q->payload properly aligned",
               ((u32_t)q->payload % MEM_ALIGNMENT) == 0);
@@ -345,7 +343,7 @@ pbuf_alloc(pbuf_layer l, u16_t length, pbuf_flag flag)
 }
 
 
-#ifdef PBUF_STATS
+#if PBUF_STATS
 #define DEC_PBUF_STATS do { --lwip_stats.pbuf.used; } while (0)
 #else /* PBUF_STATS */
 #define DEC_PBUF_STATS
@@ -412,7 +410,7 @@ pbuf_realloc(struct pbuf *p, u16_t new_len)
   /* first, step over any pbufs that should remain in the chain */
   rem_len = new_len;
   q = p;
-  /* this pbuf should be kept? */
+  /* should this pbuf be kept? */
   while (rem_len > q->len) {
     /* decrease remaining length by pbuf length */
     rem_len -= q->len;
@@ -506,29 +504,33 @@ pbuf_header(struct pbuf *p, s16_t header_size)
 }
 
 /**
- * Free a pbuf (chain) from usage, de-allocate non-used head of chain.
+ * Dereference a pbuf (chain) and deallocate any no-longer-used
+ * pbufs at the head of this chain.
  *
  * Decrements the pbuf reference count. If it reaches
  * zero, the pbuf is deallocated.
  *
- * For a pbuf chain, this is repeated for each pbuf in the chain, until
- * a non-zero reference count is encountered, or the end of the chain is
- * reached.
+ * For a pbuf chain, this is repeated for each pbuf in the chain,
+ * up to a pbuf which has a non-zero reference count after
+ * decrementing. (This might de-allocate the whole chain.)
  *
- * @param pbuf pbuf (chain) to be freed from one user.
+ * @param pbuf The pbuf (chain) to be dereferenced.
  *
- * @return the number of unreferenced pbufs that were de-allocated
+ * @return the number of pbufs that were de-allocated
  * from the head of the chain.
  *
- * @note May not be called on a packet queue.
+ * @note MUST NOT be called on a packet queue.
  * @note the reference counter of a pbuf equals the number of pointers
  * that refer to the pbuf (or into the pbuf).
  *
  * @internal examples:
  *
+ * Assuming existing chains a->b->c with the following reference
+ * counts, calling pbuf_free(a) results in:
+ * 
  * 1->2->3 becomes ...1->3
  * 3->3->3 becomes 2->3->3
- * 1->1->2 becomes ....->1
+ * 1->1->2 becomes ......1
  * 2->1->1 becomes 1->1->1
  * 1->1->1 becomes .......
  *
@@ -619,7 +621,6 @@ pbuf_clen(struct pbuf *p)
 }
 
 /**
- *
  * Increment the reference count of the pbuf.
  *
  * @param p pbuf to increase reference counter of
@@ -638,12 +639,47 @@ pbuf_ref(struct pbuf *p)
 }
 
 /**
- *
- * Chain two pbufs (or pbuf chains) together. They must belong to the same packet.
- *
+ * Concatenate two pbufs (each may be a pbuf chain) and take over
+ * the caller's reference of the tail pbuf.
+ * 
+ * @note The caller MAY NOT reference the tail pbuf afterwards.
+ * Use pbuf_chain() for that purpose.
+ * 
+ * @see pbuf_chain()
+ */
+
+void
+pbuf_cat(struct pbuf *h, struct pbuf *t)
+{
+  struct pbuf *p;
+
+  LWIP_ASSERT("h != NULL", h != NULL);
+  LWIP_ASSERT("t != NULL", t != NULL);
+  if ((h == NULL) || (t == NULL)) return;
+
+  /* proceed to last pbuf of chain */
+  for (p = h; p->next != NULL; p = p->next) {
+    /* add total length of second chain to all totals of first chain */
+    p->tot_len += t->tot_len;
+  }
+  /* { p is last pbuf of first h chain, p->next == NULL } */
+  LWIP_ASSERT("p->tot_len == p->len (of last pbuf in chain)", p->tot_len == p->len);
+  /* add total length of second chain to last pbuf total of first chain */
+  p->tot_len += t->tot_len;
+  /* chain last pbuf of head (p) with first of tail (t) */
+  p->next = t;
+}
+
+/**
+ * Chain two pbufs (or pbuf chains) together.
+ * 
+ * The caller MUST call pbuf_free(t) once it has stopped
+ * using it. Use pbuf_cat() instead if you no longer use t.
+ * 
  * @param h head pbuf (chain)
  * @param t tail pbuf (chain)
- * @note May not be called on a packet queue.
+ * @note The pbufs MUST belong to the same packet.
+ * @note MAY NOT be called on a packet queue.
  *
  * The ->tot_len fields of all pbufs of the head chain are adjusted.
  * The ->next field of the last pbuf of the head chain is adjusted.
@@ -653,28 +689,10 @@ pbuf_ref(struct pbuf *p)
 void
 pbuf_chain(struct pbuf *h, struct pbuf *t)
 {
-  struct pbuf *p;
-
-  LWIP_ASSERT("h != NULL", h != NULL);
-  LWIP_ASSERT("t != NULL", t != NULL);
-
-  if (t == NULL)
-    return;
-
-  /* proceed to last pbuf of chain */
-  for (p = h; p->next != NULL; p = p->next) {
-    /* add total length of second chain to all totals of first chain */
-    p->tot_len += t->tot_len;
-  }
-  /* p is last pbuf of first h chain */
-  LWIP_ASSERT("p->tot_len == p->len (of last pbuf in chain)", p->tot_len == p->len);
-  /* add total length of second chain to last pbuf total of first chain */
-  p->tot_len += t->tot_len;
-  /* chain last pbuf of h chain (p) with first of tail (t) */
-  p->next = t;
-  /* t is now referenced to one more time */
+  pbuf_cat(h, t);
+  /* t is now referenced by h */
   pbuf_ref(t);
-  LWIP_DEBUGF(PBUF_DEBUG | DBG_FRESH | 2, ("pbuf_chain: %p references %p\n", (void *)p, (void *)t));
+  LWIP_DEBUGF(PBUF_DEBUG | DBG_FRESH | 2, ("pbuf_chain: %p references %p\n", (void *)h, (void *)t));
 }
 
 /* For packet queueing. Note that queued packets must be dequeued first
@@ -711,9 +729,9 @@ pbuf_queue(struct pbuf *p, struct pbuf *n)
     /* proceed to next packet on queue */
     p = p->next;
   }
-  /* chain last pbuf of h chain (p) with first of tail (t) */
+  /* chain last pbuf of queue with n */
   p->next = n;
-  /* t is now referenced to one more time */
+  /* n is now referenced to one more time */
   pbuf_ref(n);
   LWIP_DEBUGF(PBUF_DEBUG | DBG_FRESH | 2, ("pbuf_queue: referencing queued packet %p\n", (void *)n));
 }
@@ -764,7 +782,7 @@ pbuf_dequeue(struct pbuf *p)
  * by pbuf_take()!
  *
  * @note Any replaced pbufs will be freed through pbuf_free().
- * This may allocate them if they become no longer referenced.
+ * This may deallocate them if they become no longer referenced.
  *
  * @param p Head of pbuf chain to process
  *
@@ -889,27 +907,3 @@ pbuf_dechain(struct pbuf *p)
   LWIP_ASSERT("p->tot_len == p->len", p->tot_len == p->len);
   return (tail_gone > 0? NULL: q);
 }
-
-/* TODO: This function is unused in the lwIP stack and will be deprecated. This is due
- * to the new way chains are built. */
-#if 0
-/**
- *
- * Increment the reference count of all pbufs in a chain.
- *
- * @param p first pbuf of chain
- *
- */
-void
-pbuf_ref_chain(struct pbuf *p)
-{
-  SYS_ARCH_DECL_PROTECT(old_level);
-  SYS_ARCH_PROTECT(old_level);
-
-  while (p != NULL) {
-    ++p->ref;
-    p = p->next;
-  }
-  SYS_ARCH_UNPROTECT(old_level);
-}
-#endif

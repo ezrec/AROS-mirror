@@ -153,7 +153,7 @@ typedef struct PPPControl_s {
     struct vjcompress vjComp;           /* Van Jabobsen compression header. */
 #endif
 
-    struct netif *netif;
+    struct netif netif;
 
     struct ppp_addrs addrs;
 
@@ -296,7 +296,6 @@ void pppInit(void)
 
     for (i = 0; i < NUM_PPP; i++) {
         pppControl[i].openFlag = 0;
-        pppControl[i].netif = NULL;
 
 		subnetMask = htonl(0xffffff00);
     
@@ -307,7 +306,7 @@ void pppInit(void)
             (*protp->init)(i);
     }
 
-#ifdef LINK_STATS
+#if LINK_STATS
     /* Clear the statistics. */
     memset(&lwip_stats.link, 0, sizeof(lwip_stats.link));
 #endif
@@ -482,7 +481,7 @@ static void nPut(PPPControl *pc, struct pbuf *nb)
 	    if((c = sio_write(pc->fd, b->payload, b->len)) != b->len) {
 		PPPDEBUG((LOG_WARNING,
 			    "PPP nPut: incomplete sio_write(%d,, %u) = %d\n", pc->fd, b->len, c));
-#ifdef LINK_STATS
+#if LINK_STATS
 		lwip_stats.link.err++;
 #endif /* LINK_STATS */
 		pc->lastXMit = 0; /* prepend PPP_FLAG to next packet */
@@ -491,7 +490,7 @@ static void nPut(PPPControl *pc, struct pbuf *nb)
 	}
 	pbuf_free(nb);
 
-#ifdef LINK_STATS
+#if LINK_STATS
 	lwip_stats.link.xmit++;
 #endif /* LINK_STATS */
 }
@@ -515,7 +514,7 @@ static struct pbuf *pppAppend(u_char c, struct pbuf *nb, ext_accm *outACCM)
 	if (tb) {
 	    nb->next = tb;
         }
-#ifdef LINK_STATS
+#if LINK_STATS
 	else {
 	    lwip_stats.link.memerr++;
 	}
@@ -537,14 +536,14 @@ static struct pbuf *pppAppend(u_char c, struct pbuf *nb, ext_accm *outACCM)
 /* Send a packet on the given connection. */
 static err_t pppifOutput(struct netif *netif, struct pbuf *pb, struct ip_addr *ipaddr)
 {
-	int pd = (int)netif->state;
-	u_short protocol = PPP_IP;
+    int pd = (int)netif->state;
+    u_short protocol = PPP_IP;
     PPPControl *pc = &pppControl[pd];
     u_int fcsOut = PPP_INITFCS;
     struct pbuf *headMB = NULL, *tailMB = NULL, *p;
     u_char c;
 
-	(void)ipaddr;
+    (void)ipaddr;
 
     /* Validate parameters. */
     /* We let any protocol value go through - it can't hurt us
@@ -552,7 +551,7 @@ static err_t pppifOutput(struct netif *netif, struct pbuf *pb, struct ip_addr *i
 	if (pd < 0 || pd >= NUM_PPP || !pc->openFlag || !pb) {
         PPPDEBUG((LOG_WARNING, "pppifOutput[%d]: bad parms prot=%d pb=%p\n",
                     pd, protocol, pb));
-#ifdef LINK_STATS
+#if LINK_STATS
 		lwip_stats.link.opterr++;
 		lwip_stats.link.drop++;
 #endif
@@ -562,7 +561,7 @@ static err_t pppifOutput(struct netif *netif, struct pbuf *pb, struct ip_addr *i
     /* Check that the link is up. */
 	if (lcp_phase[pd] == PHASE_DEAD) {
         PPPDEBUG((LOG_ERR, "pppifOutput[%d]: link not up\n", pd));
-#ifdef LINK_STATS
+#if LINK_STATS
 		lwip_stats.link.rterr++;
 		lwip_stats.link.drop++;
 #endif
@@ -573,7 +572,7 @@ static err_t pppifOutput(struct netif *netif, struct pbuf *pb, struct ip_addr *i
 	headMB = pbuf_alloc(PBUF_RAW, 0, PBUF_POOL);
     if (headMB == NULL) {
         PPPDEBUG((LOG_WARNING, "pppifOutput[%d]: first alloc fail\n", pd));
-#ifdef LINK_STATS
+#if LINK_STATS
 		lwip_stats.link.memerr++;
 		lwip_stats.link.drop++;
 #endif /* LINK_STATS */
@@ -600,7 +599,7 @@ static err_t pppifOutput(struct netif *netif, struct pbuf *pb, struct ip_addr *i
             break;
         default:
             PPPDEBUG((LOG_WARNING, "pppifOutput[%d]: bad IP packet\n", pd));
-#ifdef LINK_STATS
+#if LINK_STATS
 			lwip_stats.link.proterr++;
 			lwip_stats.link.drop++;
 #endif
@@ -662,7 +661,7 @@ static err_t pppifOutput(struct netif *netif, struct pbuf *pb, struct ip_addr *i
                     "pppifOutput[%d]: Alloc err - dropping proto=%d\n", 
                     pd, protocol));
         pbuf_free(headMB);
-#ifdef LINK_STATS
+#if LINK_STATS
 		lwip_stats.link.memerr++;
 		lwip_stats.link.drop++;
 #endif
@@ -751,7 +750,7 @@ int pppWrite(int pd, const u_char *s, int n)
     struct pbuf *headMB = NULL, *tailMB;
 	headMB = pbuf_alloc(PBUF_RAW, 0, PBUF_POOL);
     if (headMB == NULL) {
-#ifdef LINK_STATS
+#if LINK_STATS
 		lwip_stats.link.memerr++;
 		lwip_stats.link.proterr++;
 #endif /* LINK_STATS */
@@ -791,7 +790,7 @@ int pppWrite(int pd, const u_char *s, int n)
                 "pppWrite[%d]: Alloc err - dropping pbuf len=%d\n", pd, headMB->len));
 /*                "pppWrite[%d]: Alloc err - dropping %d:%.*H", pd, headMB->len, LWIP_MIN(headMB->len * 2, 40), headMB->payload)); */
 		pbuf_free(headMB);
-#ifdef LINK_STATS
+#if LINK_STATS
 		lwip_stats.link.memerr++;
 		lwip_stats.link.proterr++;
 #endif /* LINK_STATS */
@@ -1003,12 +1002,10 @@ int sifup(int pd)
         st = 0;
         PPPDEBUG((LOG_WARNING, "sifup[%d]: bad parms\n", pd));
     } else {
-		if(pc->netif)
-			netif_remove(pc->netif);
-		pc->netif = netif_add(&pc->addrs.our_ipaddr, &pc->addrs.netmask, &pc->addrs.his_ipaddr, (void *)pd, pppifNetifInit, ip_input);
-		if(pc->netif) {
-        	pc->if_up = 1;
-        	pc->errCode = PPPERR_NONE;
+		netif_remove(&pc->netif);
+		if (netif_add(&pc->netif, &pc->addrs.our_ipaddr, &pc->addrs.netmask, &pc->addrs.his_ipaddr, (void *)pd, pppifNetifInit, ip_input)) {
+        		pc->if_up = 1;
+        		pc->errCode = PPPERR_NONE;
 
 			PPPDEBUG((LOG_DEBUG, "sifup: unit %d: linkStatusCB=%lx errCode=%d\n", pd, pc->linkStatusCB, pc->errCode));
 			if(pc->linkStatusCB)
@@ -1046,12 +1043,10 @@ int sifdown(int pd)
         PPPDEBUG((LOG_WARNING, "sifdown[%d]: bad parms\n", pd));
     } else {
         pc->if_up = 0;
-		if(pc->netif)
-			netif_remove(pc->netif);
-		pc->netif = NULL;
-		PPPDEBUG((LOG_DEBUG, "sifdown: unit %d: linkStatusCB=%lx errCode=%d\n", pd, pc->linkStatusCB, pc->errCode));
-		if(pc->linkStatusCB)
-			pc->linkStatusCB(pc->linkStatusCtx, PPPERR_CONNECT, NULL);
+	netif_remove(&pc->netif);
+	PPPDEBUG((LOG_DEBUG, "sifdown: unit %d: linkStatusCB=%lx errCode=%d\n", pd, pc->linkStatusCB, pc->errCode));
+	if(pc->linkStatusCB)
+		pc->linkStatusCB(pc->linkStatusCtx, PPPERR_CONNECT, NULL);
 	}
     return st;
 }
@@ -1126,7 +1121,7 @@ int sifdefaultroute(int pd, u32_t l, u32_t g)
         st = 0;
         PPPDEBUG((LOG_WARNING, "sifup[%d]: bad parms\n", pd));
     } else {
-		netif_set_default(pc->netif);
+		netif_set_default(&pc->netif);
     }
 
     /* TODO: check how PPP handled the netMask, previously not set by ipSetDefault */
@@ -1298,7 +1293,7 @@ static void pppInput(void *arg)
 
     pbuf_header(nb, -(int)sizeof(struct pppInputHeader));
 
-#ifdef LINK_STATS
+#if LINK_STATS
     lwip_stats.link.recv++;
 #endif /* LINK_STATS */
 
@@ -1324,7 +1319,7 @@ static void pppInput(void *arg)
          * pass the result to IP.
          */
         if (vj_uncompress_tcp(&nb, &pppControl[pd].vjComp) >= 0) {
-            pppControl[pd].netif->input(nb, pppControl[pd].netif);
+            pppControl[pd].netif.input(nb, &pppControl[pd].netif);
 			return;
         }
 	/* Something's wrong so drop it. */
@@ -1342,7 +1337,7 @@ static void pppInput(void *arg)
          * the packet to IP.
          */
         if (vj_uncompress_uncomp(nb, &pppControl[pd].vjComp) >= 0) {
-            pppControl[pd].netif->input(nb, pppControl[pd].netif);
+            pppControl[pd].netif.input(nb, &pppControl[pd].netif);
 			return;
         }
 	/* Something's wrong so drop it. */
@@ -1356,7 +1351,7 @@ static void pppInput(void *arg)
 	break;
     case PPP_IP:            /* Internet Protocol */
         PPPDEBUG((LOG_INFO, "pppInput[%d]: ip in pbuf len=%d\n", pd, nb->len));
-        pppControl[pd].netif->input(nb, pppControl[pd].netif);
+        pppControl[pd].netif.input(nb, &pppControl[pd].netif);
 		return;
     default:
 	{
@@ -1388,7 +1383,7 @@ static void pppInput(void *arg)
     }
 
 drop:
-#ifdef LINK_STATS
+#if LINK_STATS
     lwip_stats.link.drop++;
 #endif
 
@@ -1418,7 +1413,7 @@ static void pppDrop(PPPControl *pc)
     vj_uncompress_err(&pc->vjComp);
 #endif
 
-#ifdef LINK_STATS
+#if LINK_STATS
     lwip_stats.link.drop++;
 #endif /* LINK_STATS */
 }
@@ -1456,7 +1451,7 @@ static void pppInProc(int pd, u_char *s, int l)
                     PPPDEBUG((LOG_WARNING,
                                 "pppInProc[%d]: Dropping incomplete packet %d\n", 
                                 pd, pc->inState));
-#ifdef LINK_STATS
+#if LINK_STATS
 					lwip_stats.link.lenerr++;
 #endif
                     pppDrop(pc);
@@ -1466,7 +1461,7 @@ static void pppInProc(int pd, u_char *s, int l)
                     PPPDEBUG((LOG_INFO,
                                 "pppInProc[%d]: Dropping bad fcs 0x%04X proto=0x%04X\n", 
                                 pd, pc->inFCS, pc->inProtocol));
-#ifdef LINK_STATS
+#if LINK_STATS
 					lwip_stats.link.chkerr++;
 #endif
                     pppDrop(pc);
@@ -1480,14 +1475,12 @@ static void pppInProc(int pd, u_char *s, int l)
 
 			pc->inTail->tot_len = pc->inTail->len;
 			if (pc->inTail != pc->inHead) {
-			    pbuf_chain(pc->inHead, pc->inTail);
-			    pbuf_free(pc->inTail);
+			    pbuf_cat(pc->inHead, pc->inTail);
 			}
 		    } else {
 			pc->inTail->tot_len = pc->inTail->len;
 			if (pc->inTail != pc->inHead) {
-			    pbuf_chain(pc->inHead, pc->inTail);
-			    pbuf_free(pc->inTail);
+			    pbuf_cat(pc->inHead, pc->inTail);
 			}
 
 			pbuf_realloc(pc->inHead, pc->inHead->tot_len - 2);
@@ -1498,7 +1491,7 @@ static void pppInProc(int pd, u_char *s, int l)
                     	PPPDEBUG((LOG_ERR,
 				    "pppInProc[%d]: tcpip_callback() failed, dropping packet\n", pd));
 			pbuf_free(pc->inHead);
-#ifdef LINK_STATS
+#if LINK_STATS
 			lwip_stats.link.drop++;
 #endif
 		    }
@@ -1583,8 +1576,7 @@ static void pppInProc(int pd, u_char *s, int l)
 		    if(pc->inTail) {
 			pc->inTail->tot_len = pc->inTail->len;
 			if (pc->inTail != pc->inHead) {
-			    pbuf_chain(pc->inHead, pc->inTail);
-			    pbuf_free(pc->inTail);
+			    pbuf_cat(pc->inHead, pc->inTail);
 			}
 		    }
                     /* If we haven't started a packet, we need a packet header. */
@@ -1594,7 +1586,7 @@ static void pppInProc(int pd, u_char *s, int l)
                          * higher layers deal with it.  Continue processing
                          * the received pbuf chain in case a new packet starts. */
                         PPPDEBUG((LOG_ERR, "pppInProc[%d]: NO FREE MBUFS!\n", pd));
-#ifdef LINK_STATS
+#if LINK_STATS
 						lwip_stats.link.memerr++;
 #endif /* LINK_STATS */
                         pppDrop(pc);

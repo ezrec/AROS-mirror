@@ -32,9 +32,9 @@
 #ifndef __LWIP_OPT_H__
 #define __LWIP_OPT_H__
 
-#include "lwip/debug.h"
 /* Include user defined options first */
 #include "lwipopts.h"
+#include "lwip/debug.h"
 
 /* Define default values for unconfigured parameters. */
 
@@ -72,6 +72,11 @@ a lot of data that needs to be copied, this should be set high. */
    should be set high. */
 #ifndef MEMP_NUM_PBUF
 #define MEMP_NUM_PBUF                   16
+#endif
+
+/* Number of raw connection PCBs */
+#ifndef MEMP_NUM_RAW_PCB
+#define MEMP_NUM_RAW_PCB                4
 #endif
 
 /* MEMP_NUM_UDP_PCB: the number of UDP protocol control blocks. One
@@ -211,6 +216,12 @@ a lot of data that needs to be copied, this should be set high. */
 #define ICMP_TTL                        255
 #endif
 
+/* ---------- RAW options ---------- */
+
+#ifndef RAW_TTL
+#define RAW_TTL                        255
+#endif
+
 /* ---------- DHCP options ---------- */
 
 #ifndef LWIP_DHCP
@@ -288,8 +299,10 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_SNDLOWAT                    TCP_SND_BUF/2
 #endif
 
-
-
+/* Support loop interface (127.0.0.1) */
+#ifndef LWIP_HAVE_LOOPIF
+#define LWIP_HAVE_LOOPIF		1
+#endif
 
 #ifndef LWIP_EVENT_API
 #define LWIP_EVENT_API                  0
@@ -320,6 +333,14 @@ a lot of data that needs to be copied, this should be set high. */
 #define DEFAULT_THREAD_PRIO             1
 #endif
 
+
+/* ---------- Socket Options ---------- */
+/* Enable SO_REUSEADDR and SO_REUSEPORT options */ 
+#ifndef SO_REUSE
+# define SO_REUSE 1
+#endif                                                                        
+
+
 /* ---------- Statistics options ---------- */
 #ifndef LWIP_STATS
 #define LWIP_STATS                      1
@@ -327,15 +348,63 @@ a lot of data that needs to be copied, this should be set high. */
 
 #if LWIP_STATS
 
-#define LINK_STATS
-#define IP_STATS
-#define ICMP_STATS
-#define UDP_STATS
-#define TCP_STATS
-#define MEM_STATS
-#define MEMP_STATS
-#define PBUF_STATS
-#define SYS_STATS
+#ifndef LINK_STATS
+#define LINK_STATS	1
+#endif
+
+#ifndef IP_STATS
+#define IP_STATS	1
+#endif
+
+#ifndef IPFRAG_STATS
+#define IPFRAG_STATS	1
+#endif
+
+#ifndef ICMP_STATS
+#define ICMP_STATS	1
+#endif
+
+#ifndef UDP_STATS
+#define UDP_STATS	1
+#endif
+
+#ifndef TCP_STATS
+#define TCP_STATS	1
+#endif
+
+#ifndef MEM_STATS
+#define MEM_STATS	1
+#endif
+
+#ifndef MEMP_STATS
+#define MEMP_STATS	1
+#endif
+
+#ifndef PBUF_STATS
+#define PBUF_STATS	1
+#endif
+
+#ifndef SYS_STATS
+#define SYS_STATS	1
+#endif
+
+#ifndef RAW_STATS
+#define RAW_STATS	0
+#endif
+
+#else
+
+#define LINK_STATS	0
+#define IP_STATS	0
+#define IPFRAG_STATS	0
+#define ICMP_STATS	0
+#define UDP_STATS	0
+#define TCP_STATS	0
+#define MEM_STATS	0
+#define MEMP_STATS	0
+#define PBUF_STATS	0
+#define SYS_STATS	0
+#define RAW_STATS	0
 
 #endif /* LWIP_STATS */
 

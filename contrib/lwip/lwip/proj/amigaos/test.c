@@ -131,20 +131,23 @@ void server_init(void)
 
 static void tcpip_init_done(void *arg)
 {
-  struct ip_addr ipaddr, netmask, gw;
 
   sys_sem_t *sem;
   sem = arg;
 
 #if 0
 #ifndef __AROS__
+  /* No point inistialising if we arent going to use them .. */
+  struct ip_addr ipaddr, netmask, gw;
+  struct netif slipNetif;                   /* NicJA - TEST CODE for the new source */
+
   /* We must add the interface here because this is the task where the output happens and we create a message port in
    * sioslipif_input. This needs of course improvements */
   IP4_ADDR(&gw, 192,168,6,100);
   IP4_ADDR(&ipaddr, 192,168,6,1);
   IP4_ADDR(&netmask, 255,255,255,0);
   
-  netif_set_default(netif_add(&ipaddr, &netmask, &gw, NULL /*state*/, slipif_init,
+  netif_set_default(netif_add(&slipNetif, &ipaddr, &netmask, &gw, NULL /*state*/, slipif_init,
 			      tcpip_input));
 #endif
 #endif
@@ -178,6 +181,7 @@ void raw_recv_func(void *arg, struct raw_pcb *upcb, struct pbuf *p, struct ip_ad
 void main(void)
 {
   struct ip_addr ipaddr, netmask, gw;
+  struct netif loopNetif, tapNetif;  /* NicJA - TEST CODE for the new source */
 
 #ifdef PERF
   perf_init("T:test.perf");
@@ -209,7 +213,7 @@ void main(void)
     IP4_ADDR(&ipaddr, 127,0,0,1);
     IP4_ADDR(&netmask, 255,0,0,0);
 
-    netif_add(&ipaddr, &netmask, &gw, NULL, loopif_init, tcpip_input);
+    netif_add(&loopNetif ,&ipaddr, &netmask, &gw, NULL, loopif_init, tcpip_input);
     printf("Added loopback interface 127.0.0.1\n");
 
 #ifdef __AROS__
@@ -217,7 +221,7 @@ void main(void)
     IP4_ADDR(&ipaddr, 192,168,10,2);
     IP4_ADDR(&netmask, 255,255,255,0);
 
-    netif_set_default(netif_add(&ipaddr, &netmask, &gw, NULL, tapif_init, tcpip_input));
+    netif_set_default(netif_add(&tapNetif ,&ipaddr, &netmask, &gw, NULL, tapif_init, tcpip_input));
 #endif
   }
 
