@@ -1,0 +1,130 @@
+Date: Mon, 29 Jan 90 01:32:06 EST
+From: jjw7384@ultb.isc.rit.edu (Jeff Wasilko)
+Subject: Batch Unbinhexing/Unstuffing (SUMMARY and SOURCE)
+
+
+Quite a while ago, I requested info on batch un-binhexing/
+un-stufing software available for the mac. I received a few
+replies about this, all of them but one suggesting a solution
+centered around a mainframe. One person suggested that Ray Lau's 
+commercial version of Stuffit might do batch work.
+
+What I found was a trio of programs from the archives at
+sumex-aim.stanford.edu in the /info-mac/unix directory. The
+combination of these three programs allow almost-batch operation
+(I'll get into why it's 'almost' later).
+
+The three programs are:
+-rw-r--r--  1 macmod   info-mac    54554 Jan 16 18:18 mcvert-15.shar
+
+    mcvert converts a .hqx (BinHex 4.0) file to a .bin (MacBinary
+    file) that can be read by unsit. This program allows wildcard
+    operations. Additionally, mcvert will unpack PackIt files.
+
+    Files in: *.hqx
+    Files out: *.bin (generally *.sit.bin)
+
+-rw-r--r--  1 macmod   info-mac    26067 Jan  1  1989 unsit.shar
+
+    unsit will decompress .sit.bin (MacBinary Stuffit files)
+
+    I am enclosing a new version of unsit that Allen sent me to
+    allow input from MacBinary files. Previously, it was only
+    possible to input from macput/macget formatted files. The new version
+    also adds compatiblity with Stuffit 1.5.1 and the new HMF
+    folder scheme.
+
+    At present, unsit can only output files in macput/macget format,
+    but the author Allan Weber (weber%brand.usc.edu@oberon.usc.edu)
+    said that he may add the option to output directly to MacBinary format.
+
+    Files in: *.sit.bin 
+    Files out: foo.rsrc, foo.data, foo.info 
+                       
+-rw-r--r--  1 macmod   info-mac     4184 Jan  1  1989 macbinary.shar
+
+    macbinary (macbin) converts macput/macget type files to
+    MacBinary files. This allows easy downloading with progams
+    such as Kermit or ZTerm.
+
+    macbin does NOT support wildcards, so this part of the
+    conversion must be done manually.
+
+    Files in: foo.rsrc, foo.data, foo.info
+    Files out: foo.bin (Unstuffed and in Binary format)
+
+
+The combination of programs works very well and is extremely fast
+on our vax, especially when comparied to Stuffit's performance on
+a Plus.
+
+Since this process requires the use of three different programs,
+I'm writing a shell script to tie everything together. When I get
+it running, I'll send it along too.
+
+I'm including a new version of unsit that reads macbinary files.
+
+Jeff
+
+
+| RIT VAX/VMS Systems: |     Jeff Wasilko     |     RIT Ultrix Systems:     |
+|BITNET: jjw7384@ritvax+----------------------+INET:jjw7384@ultb.isc.rit.edu|
+|UUCP: {psuvax1, mcvax}!ritvax.bitnet!JJW7384 +___UUCP:jjw7384@ultb.UUCP____+
+|INTERNET: jjw7384@isc.rit.edu                |'claimer: No one cares.      |
+
+
+------cut here for source for unsit 1.5------
+
+
+>From weber%brand.usc.edu%oberon.USC.EDU@usc.edu Wed Jan 10 17:35:07 1990
+Received: by ultb.isc.rit.edu (5.57/5.2 (Postmaster DPMSYS))
+	id AA28138; Wed, 10 Jan 90 17:34:45 EST
+Received: from brand.usc.edu by usc.edu (5.59/SMI-3.0DEV3) id AA26388; 
+                Wed, 10 Jan 90 14:34:03 PST
+Received: by brand (5.61/SMI-3.0DEV3) id AA08278; 
+                Wed, 10 Jan 90 14:33:20 -0800
+Date: Wed, 10 Jan 1990 14:33:17 PST
+>From: Allan G. Weber <weber%brand.usc.edu@usc.edu>
+>To: jjw7384@usc.edu (Jeff Wasilko)
+In-Reply-To: Your message of Wed, 10 Jan 90 16:32:38 EST 
+>Subject: unsit
+Message-Id: <CMM.0.88.632010797.weber@brand.usc.edu>
+Status: RO
+
+The problem is probably that unsit is expecting the file to be just the
+data fork of the Mac file, and Macbinary format has the data and resource
+forks together along with a header.  I've include the lastest version of
+unsit below in case you don't have it.  Some time ago I added a option to
+the program to make it skip the Macbinary header by using a "-m" switch
+on the command line.  Try the version below with the -m and hopefully it
+will work.
+
+Allan Weber
+
+                             - - - - - - - - - - -
+
+			  Unsit, version 1.5
+
+These are the souces for "unsit", a Unix program for breaking apart
+StuffIt archive files created on a Macintosh into separate files on
+the Unix system.  See the documentation at the beginning of "unsit.c"
+or the man page "unsit.1" for more information.
+
+To build the program, compile unsit.c and updcrc.c and link together.
+If your system doesn't have the getopt() routine in its standard
+library, also compile getopt.c and include it in the link.
+
+This program opens a pipe to the "compress" program for doing the
+uncompression of some of the files in the archive.  Most Unix sites
+probably already have "compress".  If not, it can be found in the
+comp.sources.unix archives.
+
+Comments and bug reports should be send to weber%brand.usc.edu@oberon.usc.edu
+
+
+				Allan G. Weber
+				Signal and Image Processing Institute
+				University of Southern California
+				Powell Hall 306, MC-0272
+				Los Angeles, CA 90089-0272
+				(213) 743-5519

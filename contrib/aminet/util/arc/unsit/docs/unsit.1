@@ -1,0 +1,132 @@
+
+
+
+UNSIT(L)            UNIX Programmer's Manual             UNSIT(L)
+
+
+
+NAME
+     unsit - extract/list files in a Macintosh Stuffit archive
+     file
+
+SYNOPSIS
+     unsit [ -dflmqruv ] file
+
+DESCRIPTION
+     For the Stuffit archive file listed, unsit extracts the
+     files in the archive into separate files.  This makes it
+     possible, for example, to separate a large StuffIt file into
+     component files for selective downloading, rather than down-
+     loading the larger archive file just to extract a single,
+     small file.  It also allows the use of StuffIt to compress a
+     group of files into a single, smaller archive that can be
+     uploaded to a Unix system for storage, printing, etc.
+
+     In the normal mode, both the data and the resource forks of
+     the component Macintosh files in the archive are extracted
+     and stored in Unix files with the extension .data and .rsrc
+     appended to the end of the Macintosh file name.  In addi-
+     tion, a .info file will be created with the Finder informa-
+     tion.  These three file are compatible with the macput pro-
+     gram for downloading to a Mac running Macterminal.  If only
+     the data or resource fork is extracted, no addition exten-
+     sion is appended to the Mac file name.  Characters in the
+     Mac file name that are illegal (or unwieldy, like spaces)
+     are changed to underscores in the Unix file name.  The true
+     Mac file name is retained in the .info file and is restored
+     when the file is downloaded.
+
+     StuffIt version 1.5 has the ability to archive a group of
+     files and folders in such a way that the hierarchical rela-
+     tionship of the files and folders is maintained.  Unsit ver-
+     sion 1.5 can unpack files archived in this manner and place
+     them in corresponding subdirectories so as to maintain the
+     hierarchy.  As an option, the hierarcy can be flattened out
+     and all the files stored in the current directory.
+
+     The options are similar to those for macput and unpit.
+
+     -f   For StuffIt files containing a "Hierarchy Maintained
+          Folder" entry, extract the files into a "flat" organi-
+          zation (all in the current directory) rather than main-
+          taining the hierarchy by creating new directories, etc.
+          Default is to maintain the hierarchical folder organi-
+          zation.
+
+     -l   List the files in the archive but do not extract them.
+          The name, size, type, and creator of each file is
+          listed.
+
+
+
+
+Printed 8/10/91        Septermber 28, 1988                      1
+
+
+
+
+
+
+UNSIT(L)            UNIX Programmer's Manual             UNSIT(L)
+
+
+
+     -m   Assumes the input file in MacBinary format rather than
+          macput/macget format and skips over the MacBinary
+          header.
+
+     -r   Extract resources forks only.
+
+     -d   Extract data forks only.
+
+     -u   Extract data fork and change into a Unix text file.
+          This only works if the file is really a text file.
+
+     -q   Query user before extracting files and folders.  If a
+          "n" answer is given for a folder, none of the files or
+          folders in that folder will be extracted.
+
+     -v   Verbose option.  Causes unsit to list name, size, type,
+          and creator of each file extracted.
+
+BUGS
+     Files that were compressed by StuffIt with the Lempel-Ziv
+     method and are extracted with the -u switch (text files) are
+     not checked for a correct CRC value when unsit uncompresses
+     them.  This is because unsit pipes the data through compress
+     and tr to extract the file and never has a chance to do the
+     CRC check.
+
+     The compress program has been observed to go into strange
+     states when uncompressing a damaged file.  Often it will get
+     stuck writing out bogus data until the disk fills up.  Since
+     unsit sends data through compress, the same problem could
+     occur when extracting files from a damaged Stuffit archive.
+
+FILES
+     For archives that have been compressed with the Lempel-Ziv
+     method, the compress program must be present on the system
+     and in the search path since unsit uses it for the
+     uncompressing.  Compress is available from the
+     comp.sources.unix archives.
+
+AUTHOR
+     Allan G. Weber (weber%brand.usc.edu@oberon.usc.edu)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Printed 8/10/91        Septermber 28, 1988                      2
+
+
+
