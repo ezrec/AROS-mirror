@@ -343,8 +343,8 @@ for MoveChildWindow, SizeChildWindow, ... which know about the child layers.
 It is not a good idea to patch the normal MoveWindow, SizeWindow, ... because
 child layers really need special functions like HideChildWindow, MakeChildWindowVisible.
 
-Ccomment by Bernardo Innocenti
-""""""""""""""""""""""""""""""
+Comment by Bernardo Innocenti
+"""""""""""""""""""""""""""""
 
 This would make child layers very different from normal layers. You woudn't be
 able to render inside them using exactly the same code, which is bad because
