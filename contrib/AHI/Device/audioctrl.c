@@ -541,7 +541,7 @@ AllocAudioA( struct TagItem* tags,
   {
     switch(audioctrl->ac.ahiac_Flags & (AHIACF_STEREO | AHIACF_HIFI))
     {
-      case NULL:
+      case 0:
         audioctrl->ac.ahiac_BuffType=AHIST_M16S;
         break;
       case AHIACF_STEREO:
