@@ -24,9 +24,6 @@ site goes public.
 + Write an explanation of the license and what it entails. Integrate the 
   license page better with the rest of the site.
 
-+ Write an announcement about the updated site, pointing out new features like 
-  the forums and such. Post everywhere. ;-)
-
 The following are some random bits that would be *nice* to have when the site
 goes public, but are IMHO not *necessary*:
 
@@ -34,5 +31,4 @@ goes public, but are IMHO not *necessary*:
 + Atleast a demonstration of the multilingual support. For exampla translated
   introduction/index to a couple of languages.
 + Better build system (not the ad-hoc thing it is now)
-+ Nicer looking graphical design.
 + Support for different languages.
