@@ -3,5 +3,5 @@
 
 include $(TOP)/config/make.cfg
 
-%build_catalogs mmake=contrib-diskspeed-catalogs name=DiskSpeed subdir=System/DiskSpeed\
+%build_catalogs mmake=contrib-diskspeed-catalogs name=DiskSpeed subdir=$(DESTDIR)\
                  source=../locale.c sourcedescription=$(TOOLDIR)/gcccatcomp

@@ -1,0 +1,217 @@
+## version $VER: diskspeed.catalog 1.0 (30.01.2004)
+## codeset 0
+## language français
+;
+MSG_CANT_OPEN_LIB
+Impossible d'ouvrir %s V%ld!\n
+;
+MSG_CANT_CREATE_APP
+Impossible de créer l'application
+;
+MSG_MAIN_WINTITLE 
+%s 4.9 Mesures de performances des disques
+;
+MSG_ABOUT_WINTITLE
+À propos de DiskSpeed..
+;
+MSG_DESCRIPTION
+Test de performance des disques
+;
+MSG_CONFIG_WINTITLE
+Configuration des tests..
+;
+MSG_Welcome
+Bienvenue aux mesures de vitesse de AROS.
+;
+MSG_W_DEVICE
+Périphérique
+;
+MSG_W_FILESYS
+Système de fichiers
+;
+WORD_MENU_Project
+Projet
+;
+WORD_MENU_About
+À propos
+;
+WORD_MENU_Quit
+Quitter
+;
+MSG_OK 
+Ok
+;
+MSG_GAD_SAVE 
+Sauver
+;
+MSG_GAD_USE
+Utiliser
+;
+MSG_GAD_CANCEL
+Annuler
+;
+MSG_FILE_CREATE
+Créer un fichier 
+;
+MSG_FILE_OPEN
+Ouvrir un fichier  
+;
+MSG_FILE_SCAN
+Parcourir un répertoire:
+;
+MSG_FILE_DELETE
+Effacer un fichier :   
+;
+MSG_SEEK_READ
+Seek/Read:     
+;
+MSG_BYTES_CREATE 
+Créer un fichier :   
+;
+MSG_BYTES_WRITE
+Écrire dans un fichier : 
+;
+MSG_BYTES_READ_N
+Lire depuis un fichier :
+;
+MSG_BYTES_READ_S
+Lire depuis le SCSI :
+;
+MSG_SEEK_UNITS
+seeks/sec
+;
+MSG_FILE_UNITS
+fichiers/sec
+;
+MSG_BYTE_UNITS
+octets/sec
+;
+MSG_START_TEST
+Commencer le test
+;
+MSG_SAVE_RESULTS
+Sauver les résultats
+;
+MSG_STOP_TEST
+Arrêter le test
+;
+MSG_BUF1TXT 
+Test tampon 1
+;
+MSG_BUF2TXT
+Test tampon 2
+;
+MSG_BUF3TXT
+Test tampon 3
+;
+MSG_BUF4TXT
+Test tampon 4
+;
+MSG_RWBUFT 
+Types de tampons en lecture/écriture
+;
+MSG_RWBUFS 
+Tailles de tampons en lecture/écriture
+;
+MSG_CMMNTS 
+Commentaires:
+;
+MSG_DEVICE 
+Périphérique:
+;
+MSG_BLDAMOS 
+  Version AmigaOS : 
+;
+MSG_BLDAROS 
+  Moutûre AROS : 
+;
+MSG_PROCESSOR 
+Processeur : 
+;
+MSG_DMAHIGH 
+  Haut
+;
+MSG_DMANORM
+  Normal
+;
+MSG_VIDDMA
+ Video DMA
+;
+MSG_TSTMANP 
+Test de vitesse de manipulation de répertoires.
+;
+MSG_TSTBUFF 
+Test avec un tampon de %ld octets, MEMF_%s, %s-aligné.
+;
+MSG_CPUSPD
+Vitesse du CPU : %ld
+;
+MSG_AVGCPU
+Moyenne de disponibilité du CPU : %ld%%  |  Index de disponibilité du CPU : %ld
+;
+MSG_NOCPU
+Pas de vitesse du CPU -- CPU % non disponible.
+;
+MSG_CPUAVAIL
+  |  CPU Disponible : %ld%%
+;
+MSG_SKIPMEM
+Saute le test %ld octets MEMF_%s à cause d'un manque de mémoire.
+;
+MSG_ERR_CALIB1 
+La calibration du CPU montre les tests de disponibilité
+;
+MSG_ERR_CALIB2
+Serait innaproprié en l'état actuel du système.
+;
+MSG_ERR_FAIL
+Erreur :  Le test %s a échoué.
+;
+MSG_ERR_NOLOCK
+Erreur :  Impossible d'obtenir un verrou sur le périphérique testé.
+;
+MSG_ERR_NODIR
+Erreur :  Impossible de créer un répertoire de test.
+;
+MSG_ERR_BADDIR 
+Erreur :  Impossible d'accéder au répertoire de test.
+;
+MSG_ERR_NOCONF
+Erreur :  Impossible d'ouvrir la requète de configuration.
+;
+MSG_ERR_BADSPEC
+Erreur :  Mauvais périphérique spécifié.
+;
+MSG_ERR_NODEV 
+Error:    Pas de périphérique
+;
+MSG_ERR_OFILE
+Ouverture de fichier
+;
+MSG_ERR_RFILE
+Lecture de fichier
+;
+MSG_ERR_WFILE
+Écriture de fichier
+;
+MSG_ERR_CFILE
+Création de fichier
+;
+MSG_ERR_DFILE
+Effacement de fichier
+;
+MSG_ERR_SEEK
+Seek/Read
+;
+MSG_ERR_DIRSCAN
+Parcours d'un répertoire
+;
+MSG_ERR_RDEV
+Le périphérique a détecté une erreur lors de la lecture
+;
+MSG_ERR_DATA
+*** Erreur de données ***  Le tampon n'a pu être lu correctement.
+;
+MSG_USERINT
+*** Interrompu par l'utilisateur ***
+;

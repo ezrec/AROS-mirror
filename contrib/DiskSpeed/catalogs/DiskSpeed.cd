@@ -11,6 +11,9 @@ MSG_MAIN_WINTITLE (//)
 MSG_ABOUT_WINTITLE (//)
 About AROS DiskSpeed..
 ;
+MSG_DESCRIPTION (//)
+Test Disk Performance
+;
 MSG_CONFIG_WINTITLE (//)
 Benchmark Configuration..
 ;
