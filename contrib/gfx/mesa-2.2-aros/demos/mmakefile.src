@@ -14,12 +14,19 @@ MESADEMOS :=  bounce \
             gamma \
             gears \
             isosurf \
+            morph3d \
             osdemo \
             spin \
+            stex3d \
             test0 \
             texobj \
             reflect \
             winpos
+
+MESAGLUTDEMOS :=  clearspd \
+                  spectex \
+                  tess_demo \
+                  trispd
 
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
 
