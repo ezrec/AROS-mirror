@@ -127,11 +127,9 @@ You will need the following to build the AROS documentation from scratch:
 To build the website you will additionally need:
 
 + The `Python Imaging Library`__ 1.1.3
-+ Ploticus__ 2.04
 
 __ http://www.python.org/
 __ http://www.pythonware.com/products/pil/
-__ http://ploticus.sourceforge.net/
 
 
 Setting up
