@@ -1335,7 +1335,10 @@ freeargs:
 	if ((funcdata->output_file || okayflag) && funcdata->scriptname[0] &&
 		(!par || !(flags&FLAG_ASYNC)))
 		DeleteFile(funcdata->scriptname);
-	funcdata->output_file=(BPTR)funcdata->scriptname[0]=0;
+	/* AROS FIX */	
+	funcdata->output_file=0;
+	funcdata->scriptname[0]=0;
+	
 	funcdata->rereaddest=funcdata->rereadsource=0;
 
 	LFreeRemember(&funcdata->arg_memkey);
