@@ -302,7 +302,7 @@ AROS_UFH3(struct LibraryHeader *, LibInit,
     AROS_UFHA(struct ExecBase *, sysbase, A6))
 
 {
-    AROS_LIBFUNC_INIT
+    AROS_USERFUNC_INIT
     
     struct LibraryHeader *base;
 
@@ -334,7 +334,7 @@ AROS_UFH3(struct LibraryHeader *, LibInit,
 
     return(base);
     
-    AROS_LIBFUNC_EXIT
+    AROS_USERFUNC_EXIT
 }
 
 /****************************************************************************************/
