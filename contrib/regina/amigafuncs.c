@@ -78,8 +78,10 @@ static void exit_amigaf( int dummy, void *ptr )
 int init_amigaf ( tsd_t *TSD )
 {
   amiga_tsd_t *atsd = (amiga_tsd_t *)malloc( sizeof(amiga_tsd_t) );
+#if defined(_AMIGA) || defined(__AROS__)
   BPTR old;
-  
+#endif 
+
   if (atsd==NULL) return 0;
 
   /* Allocate later because systeminfo is not initialized at the moment */
@@ -102,6 +104,7 @@ int init_amigaf ( tsd_t *TSD )
 }
 
 
+#if defined(_AMIGA) || defined(__AROS__)
 /*
  * Support function for exec lists
  */
@@ -137,6 +140,7 @@ static streng *getlistnames( tsd_t *TSD, struct List *list, const streng *sep )
 
   return retval;
 }
+#endif
 
 /*
  * Support functions for the ARexx IO functions
@@ -872,7 +876,7 @@ streng *arexx_freespace( tsd_t *TSD, cparamboxptr parm1 )
 #if defined(_AMIGA) || defined(__AROS__)
     return int_to_streng( TSD, AvailMem( MEMF_ANY ) );
 #else
-    return int_to_streng( -1 );
+    return int_to_streng( TSD, -1 );
 #endif
   
   if ( parm1->value->len != sizeof(void *) )
