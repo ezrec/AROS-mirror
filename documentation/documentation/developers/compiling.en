@@ -145,7 +145,7 @@ Native AROS/i386-pc
 
 If you are building the native i386-pc port, you will find a bootable floppy
 image at ``bin/pc-i386/gen/rom/boot/aros.bin`` after the compilation has 
-finished. Aditionally, you can create a bootable ISO image by running::
+finished. Additionally, you can create a bootable ISO image by running::
 
     > make bootiso-pc-i386
 
