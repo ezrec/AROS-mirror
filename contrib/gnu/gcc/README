@@ -35,11 +35,10 @@
      
   6) Type "make" and then "make install", 
   
-- IMPORTANT: to be able to build both a cross compiler and a native 
-             compiler you need to have build the linker and related
-	     utilities first. Such tools are part of the "binutils"
-	     package, which is compilable on and for AROS out of the 
-             box (no need for patches). Get the latest version from
+- IMPORTANT: to be able to build the compiler you need to have built the 
+             linker and related utilities first. Such tools are part of the 
+             "binutils" package, which is compilable on and for AROS out of 
+             the box (no need for patches). Get the latest version from
 	     http://www.gnu.org/software/binutils/
 	     
 - IMPORTANT2: to be able to produce working AROS executables, you also
@@ -47,4 +46,6 @@
 	      AROS build system, and thus can be found, once AROS is 
               compiled, under bin/<host>-<cpu>/tools/ OR in the 
               AROS-SDK package downloadable from 
-	      http://www.aros.org/download.php
+	      http://www.aros.org/download.php. Make sure that 
+              collect-aros is in the PATH, so that the compiler can 
+              access it.
