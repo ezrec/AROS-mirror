@@ -7,6 +7,7 @@
 #include <proto/regina.h>
 #include <proto/rexxsyslib.h>
 
+#include <aros/rexxcall.h>
 #include <exec/ports.h>
 #include <exec/memory.h>
 #include <intuition/intuition.h>
@@ -17,6 +18,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 struct Library *ReginaBase;
 struct RxsLib *RexxSysBase;
@@ -25,6 +27,7 @@ struct IntuitionBase *IntuitionBase;
 static void StartFile(struct RexxMsg *);
 static void AddLib(struct RexxMsg *);
 static void RemLib(struct RexxMsg *);
+static void QueryFunclist(struct RexxMsg *);
 
 int main(void)
 {
@@ -87,8 +90,14 @@ int main(void)
 		    
 		    switch (action)
 		    {
-		    case RXCOMM:
 		    case RXFUNC:
+		        if (msg->rm_Action & RXFF_FUNCLIST)
+			    QueryFunclist(msg);
+		        else
+			    StartFile(msg);
+		        break;
+
+		    case RXCOMM:
 			StartFile(msg);
 			break;
 
@@ -207,10 +216,15 @@ static void StartFile(struct RexxMsg *msg)
     }
     else /* is a function call */
     {
-	for (argcount = 0; msg->rm_Args[1+argcount] != NULL; argcount++)
+        int arguments = msg->rm_Action & RXARGMASK;
+      
+	for (argcount = 0; argcount < arguments; argcount++)
 	{
 	    UBYTE *argstr = (UBYTE *)msg->rm_Args[1+argcount];
-	    MAKERXSTRING(rxargs[argcount], argstr, LengthArgstring(argstr));
+	    if (argstr == NULL)
+	        MAKERXSTRING(rxargs[argcount], NULL, 0);
+	    else
+	        MAKERXSTRING(rxargs[argcount], argstr, LengthArgstring(argstr));
 	}
     }
     
@@ -296,6 +310,7 @@ static void AddLib(struct RexxMsg *msg)
   else
   {
     Enqueue(&RexxSysBase->rl_LibList, (struct Node *)rsrc);
+    RexxSysBase->rl_NumLib++;
     if (msg->rm_Action & RXFF_RESULT)
       msg->rm_Result2 = (IPTR)CreateArgstring("1", 1);
   }
@@ -323,10 +338,89 @@ static void RemLib(struct RexxMsg *msg)
   else
   {
     Remove((struct Node *)rsrc);
+    RexxSysBase->rl_NumLib--;
     FreeMem(rsrc, rsrc->rr_Size);
     msg->rm_Result1 = 0;
     if (msg->rm_Action & RXFF_RESULT)
       msg->rm_Result2 = (IPTR)CreateArgstring("1", 1);
   }
   UnlockRexxBase(0);
+}
+
+static void QueryFunclist(struct RexxMsg *msg)
+{
+    struct MsgPort *port, *replyport, *oldport;
+    struct RexxMsg *retmsg;
+    struct RexxRsrc *rsrc;
+    struct Library *lib;
+    ULONG result1;
+    UBYTE *result2;
+    
+    oldport = msg->rm_Node.mn_ReplyPort;
+    replyport = CreatePort(NULL, 0);
+    if (replyport == NULL)
+    {
+        msg->rm_Result1 = 20;
+        return;
+    }
+    msg->rm_Node.mn_ReplyPort = replyport;
+    msg->rm_Action &= !RXFF_FUNCLIST;
+    LockRexxBase(0);
+    ForeachNode(&RexxSysBase->rl_LibList, rsrc)
+    {
+        switch (rsrc->rr_Node.ln_Type)
+        {
+	case RRT_LIB:
+	    if ((lib = OpenLibrary(rsrc->rr_Node.ln_Name, rsrc->rr_Args2))==NULL)
+	    {
+	        msg->rm_Node.mn_ReplyPort = oldport;
+	        msg->rm_Action |= RXFF_FUNCLIST;
+	        msg->rm_Result1 = 10;
+	        msg->rm_Result2 = 14;
+	        UnlockRexxBase(0);
+	        return;
+	    }
+	  
+	    result1 = RexxCallQueryLibFunc(msg, lib, rsrc->rr_Args1, &result2);
+	    if (result1 == 0)
+	    {
+	        msg->rm_Node.mn_ReplyPort = oldport;
+	        msg->rm_Action |= RXFF_FUNCLIST;
+	        msg->rm_Result1 = 0;
+	        msg->rm_Result2 = (IPTR)result2;
+	        UnlockRexxBase(0);
+	        return;
+	    }
+	    break;
+	  
+	case RRT_HOST:
+	    port = FindPort(rsrc->rr_Node.ln_Name);
+	    if (port == NULL)
+	    {
+	        msg->rm_Node.mn_ReplyPort = oldport;
+	        msg->rm_Action |= RXFF_FUNCLIST;
+	        msg->rm_Result1 = 10;
+	        msg->rm_Result2 = 13;
+	        UnlockRexxBase(0);
+	        return;
+	    }
+	  
+	    PutMsg(port, (struct Message *)msg);
+	    do
+	    {
+	        retmsg = (struct RexxMsg *)WaitPort(replyport);
+	    } while(retmsg != msg);
+	  
+	    if (msg->rm_Result1 == 0)
+	    {
+	        msg->rm_Node.mn_ReplyPort = oldport;
+	        msg->rm_Action |= RXFF_FUNCLIST;
+	        UnlockRexxBase(0);
+	        return;
+	    }
+
+	default:
+	    assert(FALSE);
+	}
+    }
 }
