@@ -44,6 +44,7 @@ $(HTMLDIR)/%.html :
 	    $(AROSDIR)/docs/src/faq.py \
 	    $(AROSDIR)/docs/src/jobs.py \
 	    $(wildcard $(AROSDIR)/docs/src/*.xml) \
+	    $(wildcard $(AROSDIR)/docs/faq/[0-9]*) \
 	    $(wildcard news/*) links.py $(DEVPICS) $(SCREENSHOTS)
 	@python gensite
 	@touch $@
