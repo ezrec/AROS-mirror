@@ -39,7 +39,7 @@ def my_html_head(self):
             url=http://aros.sourceforge.net/" >\n\
             <TITLE>%s</TITLE> </HEAD>\n' % self.title
 
-old_html_head = BasicDocument.html_head
+old_html_head = SimpleDocument.html_head
 
 SimpleDocument.html_head = my_html_head
 
