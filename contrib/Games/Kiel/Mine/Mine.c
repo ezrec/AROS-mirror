@@ -233,12 +233,16 @@ ContMsg();
 
   while(!weiter)
   {
-    Wait(1L<<Window->UserPort->mp_SigBit);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    if(msg==NULL)
+    {
+      Wait(1L<<Window->UserPort->mp_SigBit);
+      msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    }
     class=msg->Class;
     code=msg->Code;
-    mausx=msg->MouseX;/* -3; AROS*/
-    mausy=msg->MouseY;/* -13; AROS*/
+    mausx=msg->MouseX-3;
+    mausy=msg->MouseY-13;
     ReplyMsg((struct Message *)msg);
     switch(class)
     {
@@ -279,8 +283,12 @@ BOOL weiter=FALSE,ret=FALSE;
   write_text(115,55,"Nein.",1);
   while(!weiter)
   {
-    Wait(1L<<Window->UserPort->mp_SigBit);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    if(msg==NULL)
+    {
+      Wait(1L<<Window->UserPort->mp_SigBit);
+      msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    }
     class=msg->Class;
     code=msg->Code;
     mausx=msg->MouseX;/* -3; */

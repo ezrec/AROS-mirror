@@ -66,8 +66,12 @@ ULONG class;
   ChangeWindowBox(Win, 10, 10, x, y);
   while(1)
   {
-    Wait(1L<<Win->UserPort->mp_SigBit);
     msg=(struct IntuiMessage *)GetMsg(Win->UserPort);
+    if(msg==NULL)
+    {
+      Wait(1L<<Win->UserPort->mp_SigBit);
+      msg=(struct IntuiMessage *)GetMsg(Win->UserPort);
+    }
     class=msg->Class;
     ReplyMsg((struct Message *)msg);
     if(msg->Class==IDCMP_CHANGEWINDOW)

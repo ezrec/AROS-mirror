@@ -77,12 +77,16 @@ clearwin();
 
   while(!weiter)
   {
-    Wait(1L<<Window->UserPort->mp_SigBit);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    if(msg==NULL)
+    {
+      Wait(1L<<Window->UserPort->mp_SigBit);
+      msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    }
     class=msg->Class;
     code=msg->Code;
-    mausx=msg->MouseX;/* -3;  AROS*/
-    mausy=msg->MouseY;/* -13; AROS*/
+    mausx=msg->MouseX-3;
+    mausy=msg->MouseY-13;
     ReplyMsg((struct Message *)msg);
     if((class==IDCMP_MOUSEBUTTONS)&&(code==SELECTUP)&&(mausx>100)&&(mausx<150)&&(mausy>125)&&(mausy<150))
       weiter=TRUE;
@@ -99,12 +103,16 @@ BYTE deltab=1;
   MaleMenue();
   while(!weiter)
   {
-    Wait(1L<<Window->UserPort->mp_SigBit);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    if(msg==NULL)
+    {
+      Wait(1L<<Window->UserPort->mp_SigBit);
+      msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    }
     class=msg->Class;
     code=msg->Code;
-    mausx=msg->MouseX;/* -3; AROS*/
-    mausy=msg->MouseY;/* -13; AROS*/
+    mausx=msg->MouseX-3;
+    mausy=msg->MouseY-13;
     ReplyMsg((struct Message *)msg);
     switch(class)
     {
@@ -471,12 +479,16 @@ BOOL start=FALSE;
 
   while(!Fehler && Rest>Anzahl && !ende && !SpielAbbr)
   {
-    Wait(1L<<Window->UserPort->mp_SigBit);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    if(msg==NULL)
+    {
+      Wait(1L<<Window->UserPort->mp_SigBit);
+      msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+    }
     class=msg->Class;
     code=msg->Code;
-    mausx=msg->MouseX;/* -3; AROS*/
-    mausy=msg->MouseY;/* -13; AROS*/
+    mausx=msg->MouseX-3;
+    mausy=msg->MouseY-13;
     ReplyMsg((struct Message *)msg);
     switch(class)
     {
@@ -587,8 +599,12 @@ ContMsg();
 
         while(!weiter)
         {
-          Wait(1L<<Window->UserPort->mp_SigBit);
           msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+          if(msg==NULL)
+          {
+            Wait(1L<<Window->UserPort->mp_SigBit);
+            msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+          }
           class=msg->Class;
           code=msg->Code;
           ReplyMsg((struct Message *)msg);
@@ -611,12 +627,16 @@ ContMsg();
 
     while(!weiter)
     {
-      Wait(1L<<Window->UserPort->mp_SigBit);
       msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+      if(msg==NULL)
+      {
+        Wait(1L<<Window->UserPort->mp_SigBit);
+        msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
+      }
       class=msg->Class;
       code=msg->Code;
-      mausx=msg->MouseX;/* -3; AROS*/
-      mausy=msg->MouseY;/* -13; AROS*/
+      mausx=msg->MouseX-3;
+      mausy=msg->MouseY-13;
       ReplyMsg((struct Message *)msg);
       if((class==IDCMP_MOUSEBUTTONS)&&(code==SELECTUP)&&(mausx>left+box_width*width/2-25)&&(mausy>5)&&(mausx<left+box_width*width/2+25)&&(mausy<35))
         weiter=TRUE;
