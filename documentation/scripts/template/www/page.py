@@ -271,7 +271,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                             ),
                             TD(
                                 colspan = 3, rowspan = 1, valign = 'top',
-                                width = '100%%', height = '100%%',
+                                height = '100%%',
                                 contents = [
                                     Img(
                                         width = '100%%', height = 1,
