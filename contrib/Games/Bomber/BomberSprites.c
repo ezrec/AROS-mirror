@@ -1,3 +1,5 @@
+#include <string.h> /* memset() */
+
 //Load the sprites
 void LoadSprites ()
 {
