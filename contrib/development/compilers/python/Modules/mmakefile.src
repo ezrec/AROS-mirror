@@ -97,9 +97,9 @@ FILES := \
 #	signalmodule
 #	svmodule
 
-USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR)
+USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR) -DAROS
 
-#MM linklibs-python-modules
+#MM linklibs-python-modules : includes
 
 %make_linklib_setup mmake=linklibs-python-modules
 %make_linklib 

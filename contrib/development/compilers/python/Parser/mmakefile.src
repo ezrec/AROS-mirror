@@ -24,9 +24,9 @@ FILES := \
 # Needs more work to compile.
 #	intrcheck
 
-USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR)
+USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR) -DAROS
 
-#MM linklibs-python-parser
+#MM linklibs-python-parser : includes
 
 %make_linklib_setup mmake=linklibs-python-parser
 %make_linklib 
