@@ -308,11 +308,11 @@ char *argv[];
      }  
 
    /* Sauber aufräumen */
-/*
+
    FreeRaster  (myplane,640,256);
    CloseWindow (Window);
    CloseScreen (Screen);
    CloseLibrary((struct Library *)IntuitionBase);
    CloseLibrary((struct Library *)GfxBase);
-*/
+
 }
