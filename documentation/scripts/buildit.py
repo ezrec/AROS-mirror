@@ -16,6 +16,8 @@ import os, sys, shutil
 
 import db.credits.parse
 import db.credits.format.rest
+import db.tasks.parse
+import db.tasks.format.html
 
 from docutils.core import publish
 from docutils.core import Publisher
@@ -84,15 +86,11 @@ def processPicture( src, depth ):
     tn_dst_dir = os.path.dirname( tn_dst_abs )
 
     # Make sure the destination directories exist.
-    if not os.path.exists( dst_dir ):
-        os.makedirs( dst_dir )
-    if not os.path.exists( tn_dst_dir ):
-        os.makedirs( tn_dst_dir )
+    makedir( dst_dir )
+    makedir( tn_dst_dir )
 
     # Copy the original image over.
-    if newer( [ src_abs ], dst_abs ):
-        print '» Copying', src
-        shutil.copy( src_abs, dst_abs )
+    copy( src_abs, dst_abs )
     
     # Create the thumbnail.
     if newer( [ src_abs ], tn_dst_abs ):
@@ -106,6 +104,22 @@ def makePictures():
     for path in DIRECTORIES:
         recurse( processPicture, path ) 
     
+def makeStatus():
+    dstdir = os.path.join( DSTROOT, 'introduction/status' )
+    makedir( dstdir )
+
+    tasks  = db.tasks.parse.parse( file( 'db/tasks', 'r' ) )
+    db.tasks.format.html.format( tasks, dstdir )
+
+    for path in os.listdir( dstdir ):
+        strings = {
+            'ROOT'    : '../../',
+            'CONTENT' : file( os.path.join( dstdir, path ), 'r' ).read()
+        }
+        
+        file( os.path.join( dstdir, '_' + path ), 'w' ).write( TEMPLATE_DATA % strings )
+       
+
 def makeNews():
     NEWS_SRC_DIR = os.path.join( SRCROOT, 'news/data' )
     NEWS_DST_DIR = os.path.join( SRCROOT, 'news/data' )
@@ -166,13 +180,11 @@ def processWWW( src, depth ):
     src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
     dst_dir = os.path.dirname( dst_abs )
     
-    if not os.path.exists( dst_dir ):
-        os.makedirs( dst_dir )
+    makedir( dst_dir )
     
     _tmp_src = os.path.join( SRCROOT, 'targets/www/htaccess' )
     _tmp_dst = os.path.join( dst_dir, '.htaccess' )
-    if newer( [ _tmp_src ], _tmp_dst ):
-        shutil.copy( _tmp_src, _tmp_dst )
+    copy( _tmp_src, _tmp_dst )
     
     if newer( [ TEMPLATE, src_abs ], dst_abs ):
         reportBuilding( src )
@@ -212,8 +224,7 @@ def processHTML( src, depth ):
     src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
     dst_dir = os.path.dirname( dst_abs )
     
-    if not os.path.exists( dst_dir ):
-        os.makedirs( dst_dir )
+    makedir( dst_dir )
     
     if newer( [ src_abs ], dst_abs ):
         reportBuilding( src )
@@ -242,9 +253,11 @@ def buildWWW():
     makePictures()
     makeNews()
     makeTemplates()
-
+    
     global TEMPLATE_DATA
     TEMPLATE_DATA = file( TEMPLATE, 'r' ).read()
+
+    makeStatus()
 
     _src_1 = os.path.join( SRCROOT, 'introduction/index.en' )
     _src_2 = os.path.join( SRCROOT, 'documentation/developers/contribute.en' )
@@ -262,18 +275,24 @@ def buildWWW():
     recurse( processWWW )
 
     imagepath = os.path.join( DSTROOT, 'images' ) 
-    if not os.path.exists( imagepath ):
-        os.mkdir( imagepath )
+    makedir( imagepath )
 
-    shutil.copy( os.path.join( SRCROOT, 'images/trustec.png' ), imagepath )
-    shutil.copy( os.path.join( SRCROOT, 'images/sourceforge.png' ), imagepath )
-    shutil.copy( os.path.join( SRCROOT, 'images/amigados-online-reference-manual.png' ), imagepath )
-    shutil.copy( os.path.join( SRCROOT, 'targets/www/images/trustec-small.png' ), imagepath )
-    shutil.copy( os.path.join( SRCROOT, 'targets/www/images/sourceforge-small.png' ), imagepath )
-    shutil.copy( os.path.join( SRCROOT, 'targets/www/images/bullet.png' ), imagepath )
-    shutil.copy( os.path.join( SRCROOT, 'targets/www/images/aros.png' ), imagepath )
+    copy( os.path.join( SRCROOT, 'images/trustec.png' ), imagepath )
+    copy( os.path.join( SRCROOT, 'images/sourceforge.png' ), imagepath )
+    copy( os.path.join( SRCROOT, 'images/amigados-online-reference-manual.png' ), imagepath )
+    copy( os.path.join( SRCROOT, 'targets/www/images/trustec-small.png' ), imagepath )
+    copy( os.path.join( SRCROOT, 'targets/www/images/sourceforge-small.png' ), imagepath )
+    copy( os.path.join( SRCROOT, 'targets/www/images/bullet.png' ), imagepath )
+    copy( os.path.join( SRCROOT, 'targets/www/images/aros.png' ), imagepath )
 
-    shutil.copy( os.path.join( SRCROOT, STYLESHEET ), DSTROOT )
+    copy( os.path.join( SRCROOT, STYLESHEET ), DSTROOT )
+    
+    toolpath = os.path.join( DSTROOT, 'tools' )
+    makedir( toolpath )
+
+    copy( os.path.join( SRCROOT, 'targets/www/tools/password.html' ), toolpath )
+    copy( os.path.join( SRCROOT, 'targets/www/tools/password.php' ), toolpath )
+    copy( os.path.join( SRCROOT, 'targets/www/tools/redirect.php' ), toolpath )
 
 
 def buildHTML():
@@ -281,7 +300,7 @@ def buildHTML():
 
     recurse( processHTML )
 
-    shutil.copy( os.path.join( SRCROOT, 'targets/html/aros.css' ), DSTROOT )
+    copy( os.path.join( SRCROOT, 'targets/html/aros.css' ), DSTROOT )
 
 
 targets = \
