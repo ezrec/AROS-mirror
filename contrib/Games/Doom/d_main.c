@@ -15,6 +15,10 @@
 // for more details.
 //
 // $Log$
+// Revision 1.3  2001/04/05 20:40:25  stegerg
+// No more need for a replacement getenv() function, as getenv
+// is now available in c lib.
+//
 // Revision 1.2  2001/03/28 23:13:35  bernie
 // use putchar() instead of printf() (this fixes a missing prototype warning).
 //
@@ -35,11 +39,11 @@ static const char rcsid[] = "$Id$";
 
 #ifdef AROS
  extern int  I_Exists(char *name);
- extern char *I_GetEnv(char *name);
+/* extern char *I_GetEnv(char *name); */
  extern void I_MakeDir(char *name);
 
  #define access(name,mode) (!(I_Exists(name)))
- #define getenv(name)      (I_GetEnv(name))
+/* #define getenv(name)      (I_GetEnv(name)) */
  #define mkdir(name,b)	  (I_MakeDir(name))
  
  #include <aros/debug.h>
