@@ -18,13 +18,26 @@ EMail ?)
 
 - Publish the changelogs on the web.
 
-- List of links:
-    - Homepages
-    - Less related
-
 o Merge old docs
+    - core.src
+    - devinfo_inside.src
+    - devinfo_outside.src
+    - differences.src
+    - faq.src
+    - filesys.src
+    - hidd-intro.src
+    - hidd-model.src
+    - hidd.src
+    - ideas.src
+    - included.src
+    - missing.src
+    - style.src
 
 DONE
+
+* List of links:
+    * Homepages
+    * Less related
 
 * the mailto-link for e.g. cvs-passwords could look like this :
 
