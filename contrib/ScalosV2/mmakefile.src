@@ -1,0 +1,73 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -O2 -Wunused -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(BINDIR)
+
+FILES := \
+        AmigaIconClass \
+	AreaClass \
+	BitmapClass \
+	Chunky8TestClass \
+	DOSDeviceIconClass \
+	DOSDirIconClass \
+	DOSFileIconClass \
+	DOSIconClass \
+	DOSListIconClass \
+	DebugPPC \
+	GFXTestClass \
+	GraphicClass \
+	GroupClass \
+	IconClass \
+	IconPanelClass \
+	MainTask \
+	MenuItemClass \
+	MethodSenderClass \
+	NodeListClass \
+	PPCRootClass \
+	PPCThreadRootClass \
+	PanelClass \
+	PanelViewClass \
+	PlanarTestClass \
+	PopupMenuClass \
+	RectFillClass \
+	RootClass \
+	ScreenClass \
+	SubRoutines \
+	TableClass \
+	TextClass \
+	ThreadRootClass \
+	WindowClass \
+	WindowTaskClass \
+	scalosmaster.library
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+EXE := $(DESTDIR)/Scalos
+
+.PHONY : all clean
+
+#MM scalos : setup-scalos
+scalos : $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM setup-scalos : includes-scalos
+setup-scalos :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+#MM
+clean-scalos :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+
