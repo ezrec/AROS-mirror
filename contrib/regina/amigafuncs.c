@@ -38,6 +38,8 @@
 #include <proto/exec.h>
 #include <proto/rexxsyslib.h>
 
+static const streng _fname = {1, 1, "F"}, _fstem = {4, 4, "FI.F"};
+
 struct amiga_envir {
   struct envir envir;
   struct MsgPort *port;
@@ -170,14 +172,15 @@ static FILE *getfile( tsd_t *TSD, const streng *name )
   char *txt;
   FILE *file=NULL;
 
-  if ( isvariable( TSD, name ) )
+  setvalue( TSD, &_fname, Str_dup_TSD( TSD, name ) );
+  if ( isvariable( TSD, &_fstem ) )
   {
-    s = getvalue( TSD, name, 0 );
+    s = getvalue( TSD, &_fstem, 0 );
     txt = str_of( TSD, s );
     sscanf( txt, "%p", &file );
     FreeTSD( txt );
   }
-
+  
   TSD->currlevel = oldlevel;
   
   return file;
@@ -243,8 +246,9 @@ static void addfile( tsd_t *TSD, const streng *name, FILE *file )
 
   sprintf( txt, "%p", (void *)file );
   s = Str_cre_TSD( TSD, txt );
-  setvalue( TSD, name, s );
-  
+  setvalue( TSD, &_fname, Str_dup_TSD( TSD, name ) );
+  setvalue( TSD, &_fstem, s );
+
   TSD->currlevel = oldlevel;
 }
 

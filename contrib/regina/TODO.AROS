@@ -10,8 +10,6 @@
   that they need to be avoided because the error handling is difficult
   to do with multiple line strings. Without them the interpreter knows
   when a close string character is forgotten at the end of a line.
-* At the moment in regina the name given to an open file is case insensitive.
-  In ARexx this is case sensitive e.g. 'Test' is a different name then 'test'.
 * STDOUT and STDIN file names are not handled at the moment.
 * In ARexx the pragma function can be used to increase the stack size of the
   running script. At the moment this is not implemented in regina. I think
