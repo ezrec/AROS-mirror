@@ -308,6 +308,8 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	if (!_mwidth(self) || !_mheight(self) || !data->memory)
 	    return TRUE;
 
+        DoSuperMethodA(CLASS, self, (Msg)message);
+	
 	if (message->flags & MADF_DRAWUPDATE)
 	{
 	    top    = data->update_top;
