@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-PROG := $(CONTRIBDIR)/Gfx/Xaos/Xaos
+PROG := $(CONTRIBDIR)/Gfx/XaoS/XaoS
 
 #MM gfx-xaos-prog : setup-gfx-xaos linklibs-xaosengine \
 #MM			      	   linklibs-xaosfilter \
