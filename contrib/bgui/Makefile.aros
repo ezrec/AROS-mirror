@@ -230,6 +230,7 @@ bin/TextField \
 examples: $(INCLUDE_FILES) $(examples)
 
 gadget_directories = \
+gadgets/common \
 gadgets/PopButton \
 gadgets/Palette \
 gadgets/TreeView \
@@ -237,6 +238,9 @@ gadgets/Bar \
 gadgets/LayoutGroup
 
 gadgets: $(INCLUDE_FILES) $(gadget_directories)
+
+gadgets/common :
+	$(MAKE) -f Makefile.aros -C $@
 
 gadgets/PopButton :
 	$(MAKE) -f Makefile.aros -C $@
@@ -275,7 +279,8 @@ all: makedirs \
 clean:
 	$(RM) $(INCLUDE_FILES) o/*.o
 	$(MAKE) -C test -f Makefile.aros clean
-	$(MAKE) -C examples -f Makefile.aros clean	
+	$(MAKE) -C examples -f Makefile.aros clean
+	$(MAKE) -C gadgets/common -f Makefile.aros clean
 	$(MAKE) -C gadgets/PopButton -f Makefile.aros clean
 	$(MAKE) -C gadgets/Palette -f Makefile.aros clean
 	$(MAKE) -C gadgets/TreeView -f Makefile.aros clean

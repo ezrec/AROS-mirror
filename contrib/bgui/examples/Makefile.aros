@@ -34,5 +34,12 @@ STARTUP = $(LIBDIR)/startup.o
 	@$(ECHO) Installing BGUI program $@ to root dir
 	@$(CP) $@ $(AROSDIR)/
 
+EXECUTABLES = AddButtons Area BGUIDemo Backdrop CXDemo \
+	FieldList FileRequester IDCMPHook Images List \
+	MultiColumn MultiFont MultiSelect StringHook \
+	Useless ViewGroup
+
+
 clean :
-	@$(RM) -rf *.o
+	@$(RM) -f *.o $(EXECUTABLES)
+
