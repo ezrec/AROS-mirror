@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.3  2000/08/17 15:09:18  chodorowski
  * Fixed compiler warnings.
  *
@@ -296,6 +299,7 @@ METHOD(PropClassNew, struct opSet *, ops)
    FreeTagItems(tags);
    return NULL;
 }
+METHOD_END
 ///
 /// OM_SET, OM_UPDATE
 /*
@@ -538,6 +542,7 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
    }
    return 1;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -607,6 +612,7 @@ METHOD(PropClassRender, struct bmRender *, bmr)
    }
    return 1;
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -646,6 +652,7 @@ METHOD(PropClassGet, struct opGet *, opg)
    }
    return rc;
 }
+METHOD_END
 ///
 /// GM_HITTEST
 /*
@@ -701,6 +708,7 @@ METHOD(PropClassHitTest, struct gpHitTest *, gph)
    };
    return rc;
 }
+METHOD_END
 ///
 
 //STATIC ASM VOID NotifyChange(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi, REG(d0) ULONG flags)
@@ -743,6 +751,7 @@ STATIC ASM REGFUNC4(VOID, NotifyChange,
 
    DoNotifyMethod(obj, gpi->gpi_GInfo, flags, GA_ID, GADGET(obj)->GadgetID, type, val, TAG_DONE);
 }
+REGFUNC_END
 
 /*
  * Adjust knob position in
@@ -774,6 +783,7 @@ STATIC ASM REGFUNC3(VOID, AdjustKnob,
       NotifyChange(cl, obj, gpi, 0L);
    };
 }
+REGFUNC_END
 
 /// GM_GOACTIVE
 
@@ -832,6 +842,7 @@ METHOD(PropClassGoActive, struct gpInput *, gpi)
    }
    return rc;
 }
+METHOD_END
 ///
 /// GM_HANDLEINPUT
 /*
@@ -963,6 +974,7 @@ METHOD(PropClassHandleInput, struct gpInput *, gpi)
    };
    return rc;
 }
+METHOD_END
 ///
 /// GM_GOINACTIVE
 /*
@@ -1004,6 +1016,7 @@ METHOD(PropClassGoInActive, struct gpGoInactive *, ggi)
    }
    return rc;
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -1042,6 +1055,7 @@ METHOD(PropClassDimensions, struct bmDimensions *, bmd)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -1061,6 +1075,7 @@ METHOD(PropClassDispose, Msg, msg)
 
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// WM_KEYACTIVE
 /*
@@ -1111,6 +1126,7 @@ METHOD(PropClassKeyActive, struct wmKeyInput *, wmki)
 
    return WMKF_VERIFY;
 }
+METHOD_END
 ///
 
 /// Class initialization,

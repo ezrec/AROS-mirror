@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.4  2003/01/18 19:10:00  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -143,6 +146,7 @@ METHOD(RootClassNew, struct opSet *, ops)
    }
    return rc;
 }
+METHOD_END
 ///
 /// OM_NOTIFY
 /*
@@ -298,6 +302,7 @@ METHOD(RootClassNotify, struct opUpdate *, opu)
    };
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 
@@ -339,6 +344,7 @@ METHOD(RootClassDispose, Msg, msg)
 #endif
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// OM_UPDATE
 /*
@@ -354,6 +360,7 @@ METHOD(RootClassUpdateX, struct opUpdate *, opu)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_SET
 /*
@@ -367,6 +374,7 @@ METHOD(RootClassSetX, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -376,6 +384,7 @@ METHOD(RootClassGetX, struct opGet *, opg)
 {
    return AsmDoMethod(obj, RM_GET, &opg->opg_AttrID, 0);
 }
+METHOD_END
 ///
 /// RM_SET
 /*
@@ -395,6 +404,7 @@ METHOD(RootClassSet, struct rmAttr *, ra)
 
    return (ULONG)0;//((rc > 0) ? (RAF_UNDERSTOOD|RAF_REDRAW) : 0);
 }
+METHOD_END
 ///
 /// RM_GET
 /*
@@ -406,6 +416,7 @@ METHOD(RootClassGet, struct rmAttr *, ra)
 
    return 0;
 }
+METHOD_END
 ///
 /// RM_SETM
 
@@ -423,6 +434,7 @@ METHOD(RootClassSetM, struct rmAttr *, ra1)
 
    return rc;
 }
+METHOD_END
 ///
 /// RM_GETM
 
@@ -440,6 +452,7 @@ METHOD(RootClassGetM, struct rmAttr *, ra1)
 
    return rc;
 }
+METHOD_END
 ///
 
 /// AddNotify
@@ -503,6 +516,7 @@ METHOD(RootClassAddMap, struct rmAddMap *, ram)
    }
    return (ULONG)am;
 }
+METHOD_END
 ///
 /// RM_ADDATTR
 /*
@@ -536,6 +550,7 @@ METHOD(RootClassAddAttr, struct rmAddAttr *, raa)
    }
    return (ULONG)aa;
 }
+METHOD_END
 ///
 /// RM_ADDMETHOD
 /*
@@ -569,6 +584,7 @@ METHOD(RootClassAddMethod, struct rmAddMethod *, ram)
    };
    return (ULONG)am;
 }
+METHOD_END
 ///
 /// RM_ADDHOOK
 /*
@@ -604,6 +620,7 @@ METHOD(RootClassAddHook, struct rmAddHook *, rah)
    };
    return (ULONG)ah;
 }
+METHOD_END
 ///
 
 /*
@@ -661,6 +678,7 @@ METHOD(NotifyClassRemove, struct bmRemove *, brt)
 #endif
    return 0;
 }
+METHOD_END
 
 /// RM_SETLOOP
 /*
@@ -677,6 +695,7 @@ METHOD(RootClassSetLoop, Msg, msg)
 
    return FALSE;
 }
+METHOD_END
 ///
 /// RM_CLEARLOOP
 /*
@@ -690,6 +709,7 @@ METHOD(RootClassClearLoop, Msg, msg)
 
    return FALSE;
 }
+METHOD_END
 ///
 
 /// RM_REMOVE
@@ -707,6 +727,7 @@ METHOD(RootClassRemove, Msg, msg)
    };
    return 0;
 }
+METHOD_END
 ///
 /// RM_ADDHEAD
 
@@ -718,6 +739,7 @@ METHOD(RootClassAddHead, struct rmAdd *, ra)
 
    return 1;
 }
+METHOD_END
 ///
 /// RM_ADDTAIL
 
@@ -729,6 +751,7 @@ METHOD(RootClassAddTail, struct rmAdd *, ra)
 
    return 1;
 }
+METHOD_END
 ///
 /// RM_INSERT
 
@@ -747,6 +770,7 @@ METHOD(RootClassInsert, struct rmInsert *, ri)
    };
    return 1;
 }
+METHOD_END
 ///
 /// RM_PREV
 
@@ -760,6 +784,7 @@ METHOD(RootClassPrev, Msg, msg)
 
    return NULL;
 }
+METHOD_END
 ///
 /// RM_NEXT
 
@@ -773,6 +798,7 @@ METHOD(RootClassNext, Msg, msg)
 
    return NULL;
 }
+METHOD_END
 ///
 
 makeproto Object *ListHeadObject(struct List *lh)
@@ -796,6 +822,7 @@ METHOD(BaseClassAddMap, struct bmAddMap *, bam)
 {
    return((ULONG)(AsmDoMethod(obj, RM_ADDMAP, 0, 0, 0, 0, bam->bam_Object, bam->bam_MapList)!=NULL));
 }
+METHOD_END
 ///
 /// BASE_ADDMETHOD
 
@@ -821,6 +848,7 @@ METHOD(BaseClassAddMethod, struct bmAddMethod *, bam)
    };
    return nh;
 }
+METHOD_END
 ///
 /// BASE_ADDCONDITIONAL
 
@@ -839,6 +867,7 @@ METHOD(BaseClassAddConditional, struct bmAddConditional *, bac)
    }
    return FALSE;
 }
+METHOD_END
 ///
 /// BASE_ADDHOOK
 
@@ -846,6 +875,7 @@ METHOD(BaseClassAddHook, struct bmAddHook *, bah)
 {
    return((ULONG)(AsmDoMethod(obj, RM_ADDHOOK, 0, 0, 0, 0, bah->bah_Hook)!=NULL));
 }
+METHOD_END
 ///
 
 /// IM_DRAW
@@ -875,6 +905,7 @@ METHOD(ImageClassDraw, struct impDraw *, imp)
    };
    return rc;
 }
+METHOD_END
 ///
 
 /// Class initialization.

@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:49  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:29:08  stegerg
  * replacements for REG macro
  *
@@ -60,13 +63,13 @@
 ************************************************************************/
 
 //ASM ULONG TV_Get(REG(a0) Class *cl, REG(a2) Object *obj,REG(a1) struct opGet *opg);
-ASM REGFUNC3(ULONG, TV_Get,
+ASM REGFUNCPROTO3(ULONG, TV_Get,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct opGet *, opg));
 
 //ASM ULONG TV_Set(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops);
-ASM REGFUNC3(ULONG, TV_Set,
+ASM REGFUNCPROTO3(ULONG, TV_Set,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct opSet *, ops));
@@ -138,6 +141,7 @@ switch (opg->opg_AttrID)
 
 return(rc);
 }
+REGFUNC_END
 
 /************************************************************************
 *****************************  TV_SET()  ********************************
@@ -208,4 +212,5 @@ if (tag = FindTagItem(TVA_Top,ops->ops_AttrList))
 
 return(rc);
 }
+REGFUNC_END
 

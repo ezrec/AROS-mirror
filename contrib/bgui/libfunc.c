@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.9  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.8  2003/01/18 19:09:58  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -784,6 +787,7 @@ STATIC ASM REGFUNC2(VOID, Busy, REGPARAM(a0, struct Window *, win), REGPARAM(d0,
 
    #endif
 }
+REGFUNC_END
 
 /*
  * Lock a window.
@@ -986,3 +990,4 @@ makeproto SAVEDS ASM REGFUNC3(ULONG, BGUI_CallHookPkt, REGPARAM(a0, struct Hook 
    call_hook_data.Message=message;
    return(CallHookWithStack(&call_hook_data));
 }
+REGFUNC_END

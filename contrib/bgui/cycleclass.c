@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.7  2002/09/17 17:11:16  stegerg
  * inversvid drawmode together with Text() works now, so no
  * workaround needed.
@@ -153,6 +156,7 @@ METHOD(CycleClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_SET
 /*
@@ -265,6 +269,7 @@ METHOD(CycleClassSetUpdate, struct opUpdate *, opu)
    }
    return 1;
 }
+METHOD_END
 ///
 
 /// RenderArrow
@@ -395,6 +400,7 @@ METHOD(CycleClassRenderX, struct gpRender *, gpr)
 
    return AsmDoSuperMethodA(cl, obj, (Msg)gpr);
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -435,6 +441,7 @@ METHOD(CycleClassRender, struct bmRender *, bmr)
 
    return 1;
 }
+METHOD_END
 ///
 
 /// OpenPopupWindow
@@ -568,6 +575,7 @@ METHOD(OpenPopupWindow, struct gpInput *, gpi)
    }
    return rc;
 }
+METHOD_END
 ///
 
 /// GM_GOACTIVE
@@ -616,6 +624,7 @@ METHOD(CycleClassGoActive, struct gpInput *, gpi)
    }
    return rc;
 }
+METHOD_END
 ///
 
 /*
@@ -642,6 +651,7 @@ STATIC ASM REGFUNC2(UWORD, Selected,
    }
    return(( UWORD )item );
 }
+REGFUNC_END
 /// GM_HANDLEINPUT
 /*
  * Handle the gadget input.
@@ -831,6 +841,7 @@ METHOD(CycleClassHandleInput, struct gpInput *, gpi)
    };
    return rc;
 }
+METHOD_END
 ///
 /// GM_GOINACTIVE
 
@@ -867,6 +878,7 @@ METHOD(CycleClassGoInactive, struct gpGoInactive *, gpgi)
 
    return( AsmDoSuperMethodA( cl, obj, ( Msg )gpgi ));
 }
+METHOD_END
 /// OM_GET
 /// OM_GET
 /*
@@ -897,6 +909,7 @@ METHOD(CycleClassGet, struct opGet *, opg)
    }
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -916,6 +929,7 @@ METHOD(CycleClassDispose, Msg, msg)
 
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -947,6 +961,7 @@ METHOD(CycleClassDimensions, struct bmDimensions *, bmd)
     */
    return CalcDimensions(cl, obj, bmd, mw + 30, mh + 2);
 }
+METHOD_END
 ///
 /// WM_KEYACTIVE
 /*
@@ -982,6 +997,7 @@ METHOD(CycleClassKeyActive, struct wmKeyInput *, wmki)
 
    return WMKF_VERIFY;
 }
+METHOD_END
 ///
 
 /// Class initialization.

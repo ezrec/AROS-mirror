@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.6  2003/01/18 19:10:03  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -510,6 +513,7 @@ STATIC ASM REGFUNC2(VOID, CleanUpArea,
       vd->vd_Flags &= ~VDATF_AREA;
    };
 }
+REGFUNC_END
 
 /*
  * Allocate the necessary stuff
@@ -607,6 +611,7 @@ METHOD(VectorClassNew, struct opSet *, ops)
    }
    return rc;
 }
+METHOD_END
 ///
 /// OM_SET
 /*
@@ -694,6 +699,7 @@ METHOD(VectorClassSet, struct opSet *, ops)
    };
    return rc;
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -724,6 +730,7 @@ METHOD(VectorClassGet, struct opGet *, opg)
 
    return rc;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -906,6 +913,7 @@ METHOD(VectorClassRender, struct bmRender *, bmr)
 
    return rc;
 }
+METHOD_END
 ///
 
 /// Class initialization.

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.6  2003/01/18 19:10:02  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -165,6 +168,7 @@ METHOD(TextClassNew, struct opSet *, ops)
    }
    return rc;
 }
+METHOD_END
 ///
 /// RM_GETATTRFLAGS
 /*
@@ -187,6 +191,7 @@ METHOD(TextClassGetAttrFlags, struct rmAttr *, ra)
 
    return rc;
 }
+METHOD_END
 ///
 /// RM_SET
 /*
@@ -196,6 +201,7 @@ METHOD(TextClassSet, struct rmAttr *, ra)
 {
    return BGUI_SetAttrChart(cl, obj, ra);
 }
+METHOD_END
 ///
 /// RM_SETCUSTOM
 /*
@@ -222,6 +228,7 @@ METHOD(TextClassSetCustom, struct rmAttr *, ra)
    };
    return 1;
 }
+METHOD_END
 ///
 /// RM_GET
 /*
@@ -231,6 +238,7 @@ METHOD(TextClassGet, struct rmAttr *, ra)
 {
    return BGUI_GetAttrChart(cl, obj, ra);
 }
+METHOD_END
 ///
 /// RM_GETCUSTOM
 /*
@@ -250,6 +258,7 @@ METHOD(TextClassGetCustom, struct rmAttr *, ra)
    };
    return 1;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -269,6 +278,7 @@ METHOD(TextClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// TEXTM_RENDER
 /*
@@ -286,6 +296,7 @@ METHOD(TextClassRender, struct tmRender *, tmr)
    };
    return 1;
 }
+METHOD_END
 ///
 /// TEXTM_DIMENSIONS
 /*
@@ -305,6 +316,7 @@ METHOD(TextClassDimensions, struct tmDimensions *, tmd)
    };
    return 1;
 }
+METHOD_END
 ///
 /// BASE_LOCALIZE
 
@@ -320,6 +332,7 @@ METHOD(TextClassLocalize, struct bmLocalize *, bml)
    }
    return rc;
 }
+METHOD_END
 ///
 
 /// Class initialization.
@@ -328,7 +341,7 @@ METHOD(TextClassLocalize, struct bmLocalize *, bml)
  * Class function table.
  */
 STATIC DPFUNC ClassFunc[] = {
-   TEXTM_RENDER,          (FUNCPTR)TextClassRender,
+   TEXTM_RENDER,          (APTR)TextClassRender,
    TEXTM_DIMENSIONS,      (FUNCPTR)TextClassDimensions,
 
    RM_GETATTRFLAGS,       (FUNCPTR)TextClassGetAttrFlags,
@@ -685,6 +698,7 @@ makeproto ASM REGFUNC2(UWORD, TotalHeight,
    }
    return (UWORD)(nl * rp->TxHeight);
 }
+REGFUNC_END
 ///
 /// TotalWidth
 /*
@@ -778,6 +792,7 @@ makeproto ASM REGFUNC2(UWORD, TotalWidth,
    }
    return (UWORD)len;
 }
+REGFUNC_END
 ///
 /// RenderInfoText
 /*

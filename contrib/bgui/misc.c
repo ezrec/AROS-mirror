@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.3  2003/01/18 19:09:59  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -75,12 +78,14 @@ makeproto ASM REGFUNC2(LONG, max,
 	REGPARAM(D0, LONG, a),
 	REGPARAM(D1, LONG, b))
 { return (a > b) ? a : b; }
+REGFUNC_END
 
 //makeproto ASM LONG min(REG(d0) LONG a, REG(d1) LONG b)
 makeproto ASM REGFUNC2(LONG, min,
 	REGPARAM(D0, LONG, a),
 	REGPARAM(D1, LONG, b))
 { return (a < b) ? a : b; }
+REGFUNC_END
 
 #ifdef __AROS__
 #warning No abs function here, since it is 'built in'.
@@ -89,6 +94,7 @@ makeproto ASM REGFUNC2(LONG, min,
 makeproto ASM REGFUNC1(LONG, abs,
 	REGPARAM(D0, LONG, a))
 { return (a > 0) ? a :-a; }
+REGFUNC_END
 #endif
 
 //makeproto ASM LONG range(REG(d0) LONG c, REG(d1) LONG a, REG(d2) LONG b)
@@ -101,6 +107,7 @@ makeproto ASM REGFUNC3(LONG, range,
    if (c > b) return b;
    return c;
 }
+REGFUNC_END
 
 /*
  * Count the number of labels in an array.
@@ -115,6 +122,7 @@ makeproto ASM REGFUNC1(ULONG, CountLabels,
 
    return (ULONG)(n - 1);
 }
+REGFUNC_END
 
 /*
  * See if a point is in a box.
@@ -130,6 +138,7 @@ makeproto ASM REGFUNC3(BOOL, PointInBox,
 
    return (BOOL)((x >= 0) && (y >= 0) && (x < box->Width) && (y < box->Height));
 }
+REGFUNC_END
 
 /*
  * Scale a width and height.
@@ -216,6 +225,7 @@ makeproto ASM REGFUNC2(VOID, ShowHelpReq,
 
    BGUI_RequestA( win, &req, NULL );
 }
+REGFUNC_END
 
 
 /*
@@ -268,6 +278,7 @@ makeproto ASM REGFUNC4(UBYTE *, DoBuffer,
    DoSPrintF( *buf_ptr, text, args );
    return( *buf_ptr );
 }
+REGFUNC_END
 
 /*
  * Set on multiple object.
@@ -294,6 +305,7 @@ makeproto ASM REGFUNC2(VOID, SetGadgetBounds,
    DoSetMethodNG(obj, GA_Left,   bounds->Left,    GA_Top,    bounds->Top,
                       GA_Width,  bounds->Width,   GA_Height, bounds->Height, TAG_DONE);
 }
+REGFUNC_END
 
 /*
  * Set an image's bounds.
@@ -306,6 +318,7 @@ makeproto ASM REGFUNC2(VOID, SetImageBounds,
    DoSetMethodNG(obj, IA_Left,   bounds->Left,    IA_Top,    bounds->Top,
                       IA_Width,  bounds->Width,   IA_Height, bounds->Height, TAG_DONE);
 }
+REGFUNC_END
 
 
 /*
@@ -333,6 +346,7 @@ makeproto ASM REGFUNC2(VOID, UnmapTags,
          tag1->ti_Tag = tag->ti_Tag;
    }
 }
+REGFUNC_END
 
 /*
  * Create a vector image.
@@ -350,6 +364,7 @@ makeproto ASM REGFUNC1(Object *, CreateVector,
    }
    return NULL;
 }
+REGFUNC_END
 
 /*
  * Fix the tag pointer.
@@ -377,3 +392,4 @@ makeproto ASM REGFUNC1(struct TagItem *, BGUI_NextTagItem,
    };
    return rt;
 }
+REGFUNC_END

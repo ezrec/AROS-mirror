@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.10  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.9  2003/01/18 19:10:03  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -443,6 +446,7 @@ STATIC SAVEDS ASM REGFUNC3(VOID, BackFill_func,
       rp->Layer = save_layer;
    }
 }
+REGFUNC_END
 
 STATIC struct Hook BackFill_hook = { NULL, NULL, (FUNCPTR)BackFill_func, NULL, NULL };
 
@@ -683,6 +687,7 @@ METHOD(WindowClassSetUpdate, struct opSet *, ops)
    };
    return 1;
 }
+METHOD_END
 
 /// OM_NEW
 /*
@@ -847,6 +852,7 @@ METHOD(WindowClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -921,6 +927,7 @@ METHOD(WindowClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /*
  * Setup the menu strip.
@@ -955,6 +962,7 @@ STATIC ASM REGFUNC2(BOOL, DoMenuStrip,
    }
    return( FALSE );
 }
+REGFUNC_END
 
 /*
  * Kill the AppWindow stuff.
@@ -993,6 +1001,7 @@ STATIC ASM REGFUNC1(VOID, KillAppWindow,
       wd->wd_AppPort = NULL;
    };
 }
+REGFUNC_END
 
 /*
  * Make it an AppWindow.
@@ -1020,6 +1029,7 @@ STATIC ASM REGFUNC1(BOOL, MakeAppWindow,
    };
    return FALSE;
 }
+REGFUNC_END
 
 /*
  * Compute width and height of the
@@ -1095,6 +1105,7 @@ STATIC ASM REGFUNC1(VOID, SystemSize,
    else
       wd->wd_ZoomW  = hires ? 24 : 18;
 }
+REGFUNC_END
 
 /*
  * Query border sizes.
@@ -1182,6 +1193,7 @@ STATIC ASM REGFUNC3(void, WBorderSize,
        */
       wd->wd_Left = wd->wd_Top = wd->wd_Right = wd->wd_Bottom = 0;
 }
+REGFUNC_END
 
 BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
 {
@@ -1863,6 +1875,7 @@ METHOD(WindowClassOpen, Msg, msg)
 
    return 0;
 }
+METHOD_END
 ///
 
 /*
@@ -1893,6 +1906,7 @@ STATIC ASM REGFUNC1(VOID, ClearMsgPort,
    }
    Permit();
 }
+REGFUNC_END
 /// WM_CLOSE
 /*
  * Close the window.
@@ -2014,6 +2028,7 @@ METHOD(WindowClassClose, Msg, msg)
 
    return rc;
 }
+METHOD_END
 ///
 /// WM_SLEEP
 /*
@@ -2042,6 +2057,7 @@ METHOD(WindowClassSleep, Msg, msg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// WM_WAKEUP
 /*
@@ -2071,6 +2087,7 @@ METHOD(WindowClassWakeUp, Msg, msg)
    };
    return rc;
 }
+METHOD_END
 ///
 
 /*
@@ -2098,6 +2115,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassChange,
    }
    return rc;
 }
+REGFUNC_END
 
 /*
  * Get an attribute.
@@ -2213,6 +2231,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassGet,
    }
    return rc;
 }
+REGFUNC_END
 
 /*
  * Put out a help-request.
@@ -2294,6 +2313,7 @@ METHOD(WindowClassHelp, Msg, msg)
    };
    return rc;
 }
+METHOD_END
 
 /*
  * Fill up an InputEvent structure
@@ -2311,6 +2331,7 @@ STATIC ASM REGFUNC2(VOID, FillIE,
    ie->ie_TimeStamp.tv_secs  = imsg->Seconds;
    ie->ie_TimeStamp.tv_micro = imsg->Micros;
 }
+REGFUNC_END
 
 /*
  * Get the first message from the
@@ -2339,6 +2360,7 @@ STATIC ASM REGFUNC1(struct IntuiMessage *, GetIMsg,
    Permit();
    return( NULL );
 }
+REGFUNC_END
 
 /*
  * Find out if an object must receive a key message.
@@ -2568,6 +2590,7 @@ STATIC ASM REGFUNC2(TABCYCLE *, GetCycleNode,
    }
    return( NULL );
 }
+REGFUNC_END
 
 /*
  * Perform update notification.
@@ -2617,6 +2640,7 @@ STATIC ASM REGFUNC3(VOID, UpdateNotification,
       FreeTagItems( clones );
    }
 }
+REGFUNC_END
 
 
 
@@ -2759,6 +2783,7 @@ STATIC ASM REGFUNC3(ULONG, ToolTip_func,
 
    return (ULONG)tw;
 }
+REGFUNC_END
 static struct Hook ToolTipHook = { NULL, NULL, (HOOKFUNC)ToolTip_func, NULL, NULL };
 
 /// WM_CLOSETOOLTIP
@@ -2781,6 +2806,7 @@ METHOD(WindowClassCloseTT, Msg, msg)
    };
    return 1;
 }
+METHOD_END
 ///
 /// WM_HANDLEIDCMP
 /*
@@ -3315,6 +3341,7 @@ WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
    };
    return WMHI_NOMORE;
 }
+METHOD_END
 ///
 /// WM_GADGETKEY
 /*
@@ -3334,6 +3361,7 @@ METHOD(WindowClassGadgetKey, struct wmGadgetKey *, wmg)
    };
    return 1;
 }
+METHOD_END
 ///
 /*
  * Find a menu by it's ID.
@@ -3354,6 +3382,7 @@ STATIC ASM REGFUNC2(struct Menu *, FindMenu,
 
    return( NULL );
 }
+REGFUNC_END
 
 /*
  * Find a (sub)item by it's ID.
@@ -3386,6 +3415,7 @@ STATIC ASM REGFUNC2(struct MenuItem *, FindItem,
 
    return( NULL );
 }
+REGFUNC_END
 
 /*
  * Find a NewMenu by it's ID.
@@ -3402,6 +3432,7 @@ STATIC ASM REGFUNC2(struct NewMenu *, FindNewMenu,
 
    return( NULL );
 }
+REGFUNC_END
 
 /*
  * Disable a menu.
@@ -3464,6 +3495,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassDisableMenu,
 
    return( rc );
 }
+REGFUNC_END
 
 /*
  * (Un)check an item.
@@ -3514,6 +3546,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassCheckItem,
 
    return( rc );
 }
+REGFUNC_END
 
 /*
  * Ask for the disabled status of a menu or (sub)item.
@@ -3538,6 +3571,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassMenuDisabled,
 
    return ~0;
 }
+REGFUNC_END
 
 /*
  * Ask for the CHECKED status of a (sub)item.
@@ -3558,6 +3592,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassItemChecked,
 
    return ~0;
 }
+REGFUNC_END
 
 /*
  * Add an objects to the tab-cycle list.
@@ -3597,6 +3632,7 @@ METHOD(WindowClassCycleOrder, struct wmTabCycleOrder *, tco)
    };
    return rc;
 }
+METHOD_END
 /// WM_GETAPPMSG
 /*
  * Obtain an AppMessage.
@@ -3614,6 +3650,7 @@ METHOD(WindowClassGetAppMsg, Msg, msg)
 
    return rc;
 }
+METHOD_END
 ///
 /// WM_ADDUPDATE
 /*
@@ -3650,6 +3687,7 @@ METHOD(WindowClassAddUpdate, struct wmAddUpdate *, wmau)
    };
    return rc;
 }
+METHOD_END
 ///
 /// WM_REPORT_ID
 /*
@@ -3691,6 +3729,7 @@ METHOD(WindowClassReportID, struct wmReportID *, wmri)
    }
    return rc;
 }
+METHOD_END
 ///
 /*
  * Get a pointer to the window that signalled us.
@@ -3725,6 +3764,7 @@ METHOD(WindowClassGetSigWin, Msg, msg )
 
    return(( ULONG )win );
 }
+METHOD_END
 
 /*
  * Remove an object from the tab-cycle list.
@@ -3745,6 +3785,7 @@ METHOD(WindowClassRemove, struct wmRemoveObject *, wmro )
    }
    return( FALSE );
 }
+METHOD_END
 
 /// WM_SECURE
 /*
@@ -3776,6 +3817,7 @@ METHOD(WindowClassSecure, Msg, msg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// WM_RELEASE
 /*
@@ -3821,6 +3863,7 @@ RefreshGList((struct Gadget *)wd->wd_Gadgets, w, 0, 1);
    };
    return rc;
 }
+METHOD_END
 ///
 /// WM_RELAYOUT
 /*
@@ -3915,6 +3958,7 @@ wd->wd_MaxH));
    };
    return 1;
 }
+METHOD_END
 ///
 /// WM_WHICHOBJECT
 /*
@@ -3954,6 +3998,7 @@ METHOD(WindowClassWhichObject, Msg, msg)
    }
    return rc;
 }
+METHOD_END
 ///
 /// WM_LOCK, WM_UNLOCK
 
@@ -3969,6 +4014,7 @@ METHOD(WindowClassLock, Msg, msg)
 
    return 1;
 }
+METHOD_END
 ///
 /// BASE_FINDKEY
 /*
@@ -4006,6 +4052,7 @@ METHOD(WindowClassFindKey, struct bmFindKey *, bmfk)
    };
    return NULL;
 }
+METHOD_END
 ///
 /// BASE_KEYLABEL
 /*
@@ -4024,6 +4071,7 @@ METHOD(WindowClassKeyLabel, struct bmKeyLabel *, bmkl)
 
    return NULL;
 }
+METHOD_END
 ///
 /// BASE_LOCALIZE
 /*
@@ -4051,6 +4099,7 @@ METHOD(WindowClassLocalize, struct bmLocalize *, bml)
    
    return NULL;
 }
+METHOD_END
 ///
 /// WM_CLIP
 /*
@@ -4104,6 +4153,7 @@ METHOD(WindowClassClip, struct wmClip *, wmc)
    };
    return rc;
 }
+METHOD_END
 
 METHOD(WindowClassSetupGadget, struct wmSetupGadget *, wmsg)
 {
@@ -4142,6 +4192,7 @@ METHOD(WindowClassSetupGadget, struct wmSetupGadget *, wmsg)
    }
    return(1);
 }
+METHOD_END
 
 ///
 /// Class initialization.

@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:49  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:29:08  stegerg
  * replacements for REG macro
  *
@@ -64,28 +67,28 @@
 
 //ASM SAVEDS ULONG TV_LVRsrcHandler(REG(a0) struct Hook *hook,
 //	REG(a2) Object *obj, REG(a1) struct lvResource *lvr);
-ASM SAVEDS REGFUNC3(ULONG, TV_LVRsrcHandler,
+ASM SAVEDS REGFUNCPROTO3(ULONG, TV_LVRsrcHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct lvResource *, lvr));
 
 //ASM SAVEDS ULONG TV_LVDispHandler(REG(a0) struct Hook *hook,
 //	REG(a2) Object *obj, REG(a1) struct lvRender *lvr);
-ASM SAVEDS REGFUNC3(ULONG, TV_LVDispHandler,
+ASM SAVEDS REGFUNCPROTO3(ULONG, TV_LVDispHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct lvRender *, lvr));
 
 //ASM SAVEDS ULONG TV_LVCompHandler(REG(a0) struct Hook *hook,
 //	REG(a2) Object *obj, REG(a1) struct lvCompare *lvc);
-ASM SAVEDS REGFUNC3(ULONG, TV_LVCompHandler,
+ASM SAVEDS REGFUNCPROTO3(ULONG, TV_LVCompHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct lvCompare *, lvc));
 
 //ASM SAVEDS ULONG TV_LVNotifyHandler(REG(a0) struct Hook *hook,
 //	REG(a2) Object *obj, REG(a1) struct opUpdate *opu);
-ASM SAVEDS REGFUNC3(ULONG, TV_LVNotifyHandler,
+ASM SAVEDS REGFUNCPROTO3(ULONG, TV_LVNotifyHandler,
 	REGPARAM(A0, struct Hook *, hook),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct opUpdate *, opu));
@@ -128,6 +131,7 @@ if (lvr->lvr_Command == LVRC_MAKE)
 else
 	return(0);
 }
+REGFUNC_END
 
 /************************************************************************
 *************************  TV_LVDISPHANDLER()  **************************
@@ -401,6 +405,7 @@ if (imgwid <= box.Width)
 
 return(0);
 }
+REGFUNC_END
 
 /************************************************************************
 *************************  TV_LVCOMPHANDLER()  **************************
@@ -439,6 +444,7 @@ tvc.tvc_EntryB = tnb->tn_Entry;
 
 return(CallHookPkt(tv->tv_CompareHook,tv->tv_TreeView,&tvc));
 }
+REGFUNC_END
 
 /************************************************************************
 ************************  TV_LVNOTIFYHANDLER()  *************************
@@ -563,4 +569,5 @@ if (tag = FindTagItem(LISTV_Entry,opu->opu_AttrList))
 
 return(rc);
 }
+REGFUNC_END
 

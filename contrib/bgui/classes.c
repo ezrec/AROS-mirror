@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.9  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.8  2003/01/18 19:09:55  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -217,6 +220,7 @@ static ASM REGFUNC4(ULONG, ClassCallDispatcher,
    }
    return(0);
 }
+REGFUNC_END
 
 struct CallData
 {
@@ -250,6 +254,7 @@ static ASM REGFUNC1(ULONG, CallMethod,
 #endif
    return(result);
 }
+REGFUNC_END
 
 static int CompareMethods(const void *method_1, const void *method_2)
 {
@@ -336,6 +341,7 @@ makeproto SAVEDS ASM REGFUNC3(ULONG, __GCD,
    call_data.msg=msg;
    return(CallMethod(&call_data));
 }
+REGFUNC_END
 
 /*
  * Setup a class.
@@ -652,6 +658,7 @@ makeproto ASM REGFUNC3(ULONG, BGUI_GetAttrChart,
    };
    return rc;
 }
+REGFUNC_END
 
 //makeproto ULONG ASM BGUI_SetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct rmAttr *ra)
 makeproto ASM REGFUNC3(ULONG, BGUI_SetAttrChart,
@@ -728,6 +735,7 @@ makeproto ASM REGFUNC3(ULONG, BGUI_SetAttrChart,
    };
    return rc;
 }
+REGFUNC_END
 
 makeproto ULONG BGUI_PackStructureTag(UBYTE *dataspace, ULONG *pt, ULONG tag, ULONG data)
 {
@@ -930,6 +938,7 @@ makeproto ASM REGFUNC3(ULONG, Get_Attr,
 {
    return AsmDoMethod(obj, OM_GET, attr, storage);
 }
+REGFUNC_END
 
 //makeproto ASM ULONG Get_SuperAttr(REG(a2) Class *cl, REG(a0) Object *obj, REG(d0) ULONG attr, REG(a1) void *storage)
 makeproto ASM REGFUNC4(ULONG, Get_SuperAttr,
@@ -940,6 +949,7 @@ makeproto ASM REGFUNC4(ULONG, Get_SuperAttr,
 {
    return AsmDoSuperMethod(cl, obj, OM_GET, attr, storage);
 }
+REGFUNC_END
 
 makeproto ULONG NewSuperObject(Class *cl, Object *obj, struct TagItem *tags)
 {
@@ -1020,6 +1030,7 @@ makeproto ASM REGFUNC3(ULONG, DoRenderMethod,
    }
    return rc;
 }
+REGFUNC_END
 
 /*
  * Forward certain types of messages with modifications.
@@ -1086,6 +1097,7 @@ makeproto ASM REGFUNC3(ULONG, ForwardMsg,
 
    return rc;
 }
+REGFUNC_END
 
 #define BI_FREE_RP  1
 #define BI_FREE_DRI 2
@@ -1167,6 +1179,7 @@ makeproto SAVEDS ASM REGFUNC1(struct BaseInfo *, BGUI_AllocBaseInfoA,
    }
    return bi;
 }
+REGFUNC_END
 
 #ifdef DEBUG_BGUI
 makeproto void FreeBaseInfoDebug(struct BaseInfo *bi, STRPTR file, ULONG line)

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.3  2000/08/10 17:52:47  stegerg
  * temp fix for relayout refresh bug which only happens in AROS. temp. solved
  * by doing a RefreshGList in windowclass.c/WindowClassRelease method.
@@ -232,6 +235,7 @@ METHOD(SetGroupNodeAttrs, struct opSet *, ops)
 
    return 1;
 }
+METHOD_END
 ///
 
 /// OM_NEW
@@ -273,6 +277,7 @@ METHOD(GroupNodeClassNew, struct opSet *, ops)
    }
    return NULL;
 }
+METHOD_END
 ///
 /// OM_SET
 /*
@@ -285,6 +290,7 @@ METHOD(GroupNodeClassSet, struct opSet *, ops)
 
    return SetGroupNodeAttrs(cl, obj, ops);
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -324,6 +330,7 @@ METHOD(GroupNodeClassGet, struct opGet *, opg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// RM_REMOVE
 /*
@@ -338,6 +345,7 @@ METHOD(GroupNodeClassRemove, Msg, msg)
    
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 
 /// Class initialization.
@@ -432,6 +440,7 @@ static ASM REGFUNC3(MD *, NextGroupNode,
 
    return md;
 }
+REGFUNC_END
 ///
 /// GroupNode
 
@@ -457,6 +466,7 @@ STATIC ASM REGFUNC3(Object *, GroupNode,
 
    return NULL;
 }
+REGFUNC_END
 ///
 /// VSpace, HSpace
 
@@ -512,6 +522,7 @@ STATIC ASM REGFUNC2(Object *, FindObNode,
    };
    return NULL;
 }
+REGFUNC_END
 ///
 
 /// GROUPM_NEWMEMBER
@@ -520,6 +531,7 @@ METHOD(GroupClassNewMember, struct opSet *, ops)
 {
    return (ULONG)BGUI_NewObjectA(BGUI_GROUP_NODE, ops->ops_AttrList);
 }
+METHOD_END
 ///
 /// NewGroupMember
 /*
@@ -578,6 +590,7 @@ STATIC ASM REGFUNC3(void, PassAttr,
    while (md = NextGroupNode(gd, &m, MDF_HIDDEN | MDF_SPACING))
       AsmDoMethodA(md->md_Object, (Msg)&ops);
 }
+REGFUNC_END
 
 /*
  * Set one or more attributes.
@@ -697,6 +710,7 @@ METHOD(GroupSetAttrs, struct opSet *, ops)
    };
    return 1;
 }
+METHOD_END
 ///
 
 /// OM_NEW
@@ -838,6 +852,7 @@ METHOD(GroupClassNew, struct opSet *, ops)
    };
    return rc;
 }
+METHOD_END
 ///
 /// OM_SET
 /*
@@ -852,6 +867,7 @@ METHOD(GroupClassSet, struct opSet *, ops)
 
    return GroupSetAttrs(cl, obj, ops);
 }
+METHOD_END
 ///
 /// OM_GET
 METHOD(GroupClassGet, struct opGet *, opg)
@@ -903,6 +919,7 @@ METHOD(GroupClassGet, struct opGet *, opg)
    };
    return rc;
 }
+METHOD_END
 
 static Object **ObtainMembers(Object *obj,GD *gd,BOOL *got_members_list)
 {
@@ -1174,6 +1191,7 @@ METHOD(GroupClassLayout, struct bmLayout *, bml)
 
    return 1;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 
@@ -1303,6 +1321,7 @@ WW(kprintf("***GroupClassRender*** obj = %x\n", obj));
    };
    return 1;
 }
+METHOD_END
 ///
 /// GM_HITTEST
 /*
@@ -1341,6 +1360,7 @@ METHOD(GroupClassHitTest, struct gpHitTest *, gph)
 
    return 0;
 }
+METHOD_END
 ///
 /// GM_GOACTIVE, GM_HANDLEINPUT
 /*
@@ -1371,6 +1391,7 @@ METHOD(GroupClassActiveInput, struct gpInput *, gpi)
    }
    return rc;
 }
+METHOD_END
 ///
 /// GM_GOINACTIVE
 /*
@@ -1395,6 +1416,7 @@ METHOD(GroupClassInActive, Msg, msg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -1434,6 +1456,7 @@ METHOD(GroupClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// GRM_ADDMEMBER
 /*
@@ -1480,6 +1503,7 @@ WW(kprintf("** GroupClassAddMember: everything done. returning TRUE\n"));
    };
    return FALSE;
 }
+METHOD_END
 ///
 /// GRM_INSERTMEMBER
 /*
@@ -1521,6 +1545,7 @@ METHOD(GroupClassInsert, struct grmInsertMember *, grmi)
    };
    return FALSE;
 }
+METHOD_END
 ///
 /// GRM_REPLACEMEMBER
 /*
@@ -1579,6 +1604,7 @@ METHOD(GroupClassReplace, struct grmReplaceMember *, grrm)
    };
    return 0;
 }
+METHOD_END
 ///
 /// GRM_REMMEMBER
 /*
@@ -1605,6 +1631,7 @@ METHOD(GroupClassRemMember, struct grmRemMember *, grmr)
    }
    return NULL;
 }
+METHOD_END
 ///
 /// GROUPM_OBTAINMEMBERS
 
@@ -1667,6 +1694,7 @@ METHOD(GroupClassObtainMembers, struct gmObtainMembers *, gmom)
    if (gmom->gmom_Number) *(gmom->gmom_Number) = n;
    return (ULONG)(o - n);
 }
+METHOD_END
 ///
 /// GROUPM_RELEASEMEMBERS
 
@@ -1692,6 +1720,7 @@ METHOD(GroupClassReleaseMembers, struct gmReleaseMembers *, gmrm)
 #endif
    return (ULONG)rc;     // rc < 0 = failure, rc = 0 is freed, rc > 0 still locked.
 }
+METHOD_END
 ///
 /// RelayoutGroup
 
@@ -1723,6 +1752,7 @@ WW(kprintf("** GroupClass_RelayoutGrop: has WINDOW_Window --> sending BASE_RELAY
    };
    return rc;
 }
+REGFUNC_END
 ///
 
 /// MemberDimensions
@@ -1905,6 +1935,7 @@ METHOD(MemberDimensions, struct bmDimensions *, bmd)
 
    return 1;
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -1996,6 +2027,7 @@ METHOD(GroupClassDimensions, struct bmDimensions *, bmd)
    };
    return rc;
 }
+METHOD_END
 ///
 /// GRM_DIMENSIONS
 METHOD(GroupClassDimensionsX, struct grmDimensions *, dim)
@@ -2010,6 +2042,7 @@ METHOD(GroupClassDimensionsX, struct grmDimensions *, dim)
    ReleaseMembers(obj,gd,got_members_list);
    return(rc);
 }
+METHOD_END
 
 ///
 /// BASE_SHOWHELP
@@ -2033,6 +2066,7 @@ METHOD(GroupClassHelp, struct bmShowHelp *, bsh)
    };
    return rc;
 }
+METHOD_END
 ///
 /// GRM_ADDSPACEMEMBER
 /*
@@ -2050,6 +2084,7 @@ METHOD(GroupClassAddSpaceMember, struct grmAddSpaceMember *, grms)
    };
    return FALSE;
 }
+METHOD_END
 ///
 /// BASE_LEFTEXT
 /*
@@ -2091,6 +2126,7 @@ METHOD(GroupClassLeftExt, struct bmLeftExt *, le)
 
    return 1;
 }
+METHOD_END
 ///
 /// GRM_WHICHOBJECT
 /*
@@ -2144,6 +2180,7 @@ METHOD(GroupClassWhichObject, struct grmWhichObject *, grwo)
    }
    return NULL;
 }
+METHOD_END
 ///
 /// BASE_FINDKEY
 /*
@@ -2167,6 +2204,7 @@ METHOD(GroupClassFindKey, struct bmFindKey *, bmfk)
    };
    return NULL;
 }
+METHOD_END
 ///
 /// #?
 /*
@@ -2188,12 +2226,14 @@ METHOD(GroupClassAll, Msg, msg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// BASE_IS_MULTI
 METHOD(GroupClassIsMulti, Msg, msg)
 {
    return TRUE;
 }
+METHOD_END
 ///
 /// Class initialization.
 /*

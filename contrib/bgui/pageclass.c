@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.2  2000/05/15 19:27:02  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -114,6 +117,7 @@ STATIC ASM REGFUNC2(PM *, GetMember,
    }
    return NULL;
 }
+REGFUNC_END
 
 /*
  * Add members.
@@ -168,6 +172,7 @@ STATIC ASM REGFUNC3(VOID, AddMembers,
       };
    };
 }
+REGFUNC_END
 
 /*
  * Set members active/deactive.
@@ -190,6 +195,7 @@ STATIC ASM REGFUNC1(VOID, DoMembers,
       AsmDoMethod(pm->pm_Object, BASE_INHIBIT, inhibit || (pm != active));
    };
 }
+REGFUNC_END
 
 /// OM_NEW
 /*
@@ -259,6 +265,7 @@ METHOD(PageClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_SET, OM_UPDATE
 /*
@@ -330,6 +337,7 @@ METHOD(PageClassSetUpdate, struct opUpdate *, opu)
    };
    return 1;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -364,6 +372,7 @@ METHOD(PageClassRender, struct bmRender *, bmr)
    };
    return 1;
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -387,6 +396,7 @@ METHOD(PageClassGet, struct opGet *, opg )
    }
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -422,6 +432,7 @@ METHOD(PageClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -445,6 +456,7 @@ METHOD(PageClassDimensions, struct bmDimensions *, bmd)
    }
    return CalcDimensions(cl, obj, bmd, mw, mh);
 }
+METHOD_END
 ///
 /// GRM_WHICHOBJECT
 /*
@@ -465,6 +477,7 @@ METHOD(PageClassWhichObject, struct grmWhichObject *, grwo)
 
    return (ULONG)ob;
 }
+METHOD_END
 ///
 /// #?_FORWARD
 /*
@@ -493,6 +506,7 @@ METHOD(PageClassForward, Msg, msg)
    }
    return rc;
 }
+METHOD_END
 ///
 /// #?_ALL
 /*
@@ -510,6 +524,7 @@ METHOD(PageClassAll, Msg, msg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// BASE_INHIBIT
 /*
@@ -533,12 +548,14 @@ METHOD(PageClassInhibit, struct bmInhibit *, bmi)
 
    return 1;
 }
+METHOD_END
 ///
 /// BASE_IS_MULTI
 METHOD(PageClassIsMulti, Msg, msg)
 {
    return TRUE;
 }
+METHOD_END
 ///
 
 ///
@@ -585,6 +602,7 @@ METHOD(PageClassAddMember, struct grmAddMember *, grma)
    };
    return TRUE;
 }
+METHOD_END
 
 ///
 /// GRM_REMMEMBER
@@ -616,6 +634,7 @@ METHOD(PageClassRemMember, struct grmRemMember *, grmr)
    Permit();
    return(NULL);
 }
+METHOD_END
 
 ///
 /// GRM_INSERTMEMBER
@@ -670,6 +689,7 @@ METHOD(PageClassInsert, struct grmInsertMember *, grmi)
    BGUI_FreePoolMem(new_pm);
    return(FALSE);
 }
+METHOD_END
 
 ///
 /// GRM_REPLACEMEMBER
@@ -724,6 +744,7 @@ METHOD(PageClassReplace, struct grmReplaceMember *, grrm)
    Permit();
    return 0;
 }
+METHOD_END
 
 /// Class initialization.
 /*

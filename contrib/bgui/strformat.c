@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.6  2003/01/18 19:10:01  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -96,6 +99,7 @@ makeproto ASM REGFUNC2(ULONG, CompStrlenF,
    };
    return StrLenfA(fstring, args);
 }
+REGFUNC_END
 
 //makeproto ASM VOID DoSPrintF(REG(a0) UBYTE *buffer, REG(a1) UBYTE *fstring, REG(a2) ULONG *args)
 makeproto ASM REGFUNC3(VOID, DoSPrintF,
@@ -129,6 +133,7 @@ makeproto ASM REGFUNC3(VOID, DoSPrintF,
    else
       SPrintfA(buffer, fstring, args);
 }
+REGFUNC_END
 
 #ifdef __AROS__
 #else

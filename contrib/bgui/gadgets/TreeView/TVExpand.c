@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2004/06/16 20:16:49  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.3  2003/01/18 19:10:20  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -65,7 +68,7 @@
 ************************************************************************/
 
 //ASM ULONG TV_Expand(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve);
-ASM REGFUNC3(ULONG, TV_Expand,
+ASM REGFUNCPROTO3(ULONG, TV_Expand,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvEntry *, tve));
@@ -135,10 +138,12 @@ AROS_UFH3(ULONG, TV_Expand,
 	AROS_LHA(Class *, cl, A0),
 	AROS_LHA(Object *, obj, A2),
 	AROS_LHA(struct tvEntry *, tve, A1))
+{
+    AROS_USERFUNC_INIT;
 #else
 ASM ULONG TV_Expand(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve)
-#endif
 {
+#endif
 struct tvExpand	tvexp;
 struct tvAnchor	tva;
 TVData			*tv;
@@ -300,5 +305,8 @@ if (rc)
 	}
 
 return(rc);
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT;
+#endif
 }
 

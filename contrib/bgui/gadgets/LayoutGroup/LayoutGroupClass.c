@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.7  2003/01/18 19:10:16  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -150,6 +153,7 @@ METHOD(GroupClassLayout,struct bmLayout *,bml)
 #endif
 	return(TRUE);
 }
+METHOD_END
 
 METHOD(GroupClassDimensions,struct bmDimensions *,bmd)
 {
@@ -331,6 +335,7 @@ METHOD(GroupClassDimensions,struct bmDimensions *,bmd)
 	gd->GotConstraints=TRUE;
 	return(TRUE);
 }
+METHOD_END
 
 #define SET_FAIL    0
 #define SET_SUCCESS 1
@@ -470,6 +475,7 @@ METHOD(GroupClassNew,struct opSet *,ops)
 	}
 	return((ULONG)obj);
 }
+METHOD_END
 
 METHOD(GroupClassDispose,Msg,msg)
 {
@@ -493,6 +499,7 @@ METHOD(GroupClassDispose,Msg,msg)
 	}
 	return(DoSuperMethodA(cl,obj,msg));
 }
+METHOD_END
 
 METHOD(GroupClassSet,struct opSet *,ops)
 {
@@ -510,16 +517,19 @@ METHOD(GroupClassSet,struct opSet *,ops)
 	}
 	return(success);
 }
+METHOD_END
 
 METHOD(GroupClassGet,struct opGet *,opg)
 {
 	return(DoSuperMethodA(cl,obj,(Msg)opg));
 }
+METHOD_END
 
 METHOD(GroupClassNewMember,struct opSet *,ops)
 {
 	return((ULONG)NewObjectA(((struct oBGUIGroupClassData *)cl->cl_UserData)->NodeClass,NULL,ops->ops_AttrList));
 }
+METHOD_END
 
 METHOD(GroupClassAll, Msg,msg)
 {
@@ -529,6 +539,7 @@ METHOD(GroupClassAll, Msg,msg)
    D(bug("BASE_INHIBIT %lx -> %lu\n",obj,rc));
    return rc;
 }
+METHOD_END
 
 static DPFUNC ClassFunctions[] = {
 	OM_NEW,          (FUNCPTR)GroupClassNew,
@@ -682,6 +693,7 @@ METHOD(GroupNodeClassNew,struct opSet *,ops)
 	}
 	return((ULONG)obj);
 }
+METHOD_END
 
 static GetAttribute(MD *md,ULONG attribute,ULONG *store)
 {
@@ -813,6 +825,7 @@ METHOD(GroupNodeClassGet,struct opGet *,opg)
 {
 	return(GetAttribute(INST_DATA(cl,obj),opg->opg_AttrID,opg->opg_Storage) ? 1 : DoSuperMethodA(cl,obj,(Msg)opg));
 }
+METHOD_END
 
 METHOD(GroupNodeClassMultipleGet,struct ogpMGet *,ogp)
 {
@@ -828,6 +841,7 @@ METHOD(GroupNodeClassMultipleGet,struct ogpMGet *,ogp)
 	}
 	return(got);
 }
+METHOD_END
 
 static DPFUNC NodeClassFunctions[] = {
 	OM_NEW, (FUNCPTR)GroupNodeClassNew,

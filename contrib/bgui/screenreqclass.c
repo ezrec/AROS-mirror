@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:27:02  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -84,6 +87,7 @@ METHOD(ScreenReqClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -96,6 +100,7 @@ METHOD(ScreenReqClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// OM_SET, OM_UPDATE
 /*
@@ -147,6 +152,7 @@ METHOD(ScreenReqClassSetUpdate, struct opSet *, ops)
    };
    return rc;
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -189,6 +195,7 @@ METHOD(ScreenReqClassGet, struct opGet *, opg)
    }
    return rc;
 }
+METHOD_END
 ///
 /// ASLM_DOREQUEST
 /*
@@ -259,6 +266,7 @@ METHOD(ScreenReqClassDoRequest, Msg, msg)
 
    return rc;
 }
+METHOD_END
 ///
 
 /// Class initialization.

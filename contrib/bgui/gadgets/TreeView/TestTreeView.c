@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2004/06/16 20:16:49  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.3  2000/08/09 10:17:25  chodorowski
  * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
  * macros. Some of these files didn't need them at all...
@@ -108,14 +111,14 @@ int main(int argc,char **argv);
 
 //ASM SAVEDS ULONG WindowHandler(REG(a0) struct Hook *hook,
 //      REG(a2) Object *obj, REG(a1) struct IntuiMessage *imsg);
-ASM SAVEDS REGFUNC3(ULONG, WindowHandler,
+ASM SAVEDS REGFUNCPROTO3(ULONG, WindowHandler,
         REGPARAM(A0, struct Hook *, hook),
         REGPARAM(A2, Object *, obj),
         REGPARAM(A1, struct IntuiMessage *, imsg));
 
 //ASM SAVEDS ULONG TVNotifyHandler(REG(a0) struct Hook *hook,
 //      REG(a2) Object *obj, REG(a1) struct opUpdate *opu);
-ASM SAVEDS REGFUNC3(ULONG, TVNotifyHandler,
+ASM SAVEDS REGFUNCPROTO3(ULONG, TVNotifyHandler,
         REGPARAM(A0, struct Hook *, hook),
         REGPARAM(A2, Object *, obj),
         REGPARAM(A1, struct opUpdate *, opu));
@@ -562,6 +565,7 @@ while(tag = NextTagItem(&tstate))
 
 return(0);
 }
+REGFUNC_END
 
 /************************************************************************
 ***************************  WINDOWHANDLER()  ***************************
@@ -654,6 +658,7 @@ if (imsg->Class == IDCMP_RAWKEY)
 
 return(0);
 }
+REGFUNC_END
 
 /*************************************************************************/
 

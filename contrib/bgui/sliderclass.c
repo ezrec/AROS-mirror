@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:27:02  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -53,6 +56,7 @@ METHOD(SliderClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 ///Class initialization.
 /*

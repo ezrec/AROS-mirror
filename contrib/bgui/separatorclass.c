@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.2  2000/08/17 15:09:18  chodorowski
  * Fixed compiler warnings.
  *
@@ -75,6 +78,7 @@ METHOD(SepClassNew, struct opSet *, ops)
    }
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -88,6 +92,7 @@ METHOD(SepClassDispose, Msg, msg)
 
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// OM_SET
 /*
@@ -158,6 +163,7 @@ METHOD(SepClassSet, struct opSet *, ops)
    };
    return rc;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -312,6 +318,7 @@ METHOD(SepClassRender, struct bmRender *, bmr)
    };
    return 1;
 }
+METHOD_END
 ///
 /// GM_HITTEST
 /*
@@ -321,6 +328,7 @@ METHOD(SepClassHitTest, Msg, msg)
 {
    return 0;
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -356,6 +364,7 @@ METHOD(SepClassDimensions, struct bmDimensions *, bmd)
    };
    return CalcDimensions(cl, obj, bmd, mx, my);
 }
+METHOD_END
 ///
 /// BASE_LOCALIZE
 
@@ -368,6 +377,7 @@ METHOD(SepClassLocalize, struct bmLocalize *, bml)
 
    return rc;
 }
+METHOD_END
 ///
 /// Class initialization.
 /*

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -109,6 +112,7 @@ METHOD(IClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -129,6 +133,7 @@ METHOD(IClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// OM_SET, OM_UPDATE
 /*
@@ -191,6 +196,7 @@ METHOD(IClassSetUpdate, struct opUpdate *, opu)
 
    return 1;
 }
+METHOD_END
 ///
 /// OM_GET
 METHOD(IClassGet, struct opGet *, opg)
@@ -216,6 +222,7 @@ METHOD(IClassGet, struct opGet *, opg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -259,6 +266,7 @@ METHOD(IClassRender, struct bmRender *, bmr)
    };
    return 1;
 }
+METHOD_END
 ///
 /// GM_HITTEST
 /*
@@ -268,6 +276,7 @@ METHOD(IClassHitTest, Msg, msg)
 {
    return 0;
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -312,6 +321,7 @@ METHOD(IClassDimensions, struct bmDimensions *, bmd)
     */
    return CalcDimensions(cl, obj, bmd, mw, mh);
 }
+METHOD_END
 ///
 /// Class initialization.
 /*

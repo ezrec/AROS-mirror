@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -79,6 +82,7 @@ METHOD(FileReqClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -91,6 +95,7 @@ METHOD(FileReqClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// OM_SET, OM_UPDATE
 /*
@@ -140,6 +145,7 @@ METHOD(FileReqClassSetUpdate, struct opSet *, ops)
    };
    return rc;
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -176,6 +182,7 @@ METHOD(FileReqClassGet, struct opGet *, opg)
    }
    return rc;
 }
+METHOD_END
 ///
 /// ASLM_DOREQUEST
 /*
@@ -237,6 +244,7 @@ METHOD(FileReqClassDoRequest, Msg, msg)
 
    return rc;
 }
+METHOD_END
 ///
 
 /// Class initialization.

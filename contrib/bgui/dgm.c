@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.5  2003/01/18 19:09:56  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -156,6 +159,7 @@ METHOD(DGMClassSet, struct opSet *, ops)
    }
    return 1;
 }
+METHOD_END
 ///
 /// BGUI_DoGadgetMethod(obj, win, req)
 /*
@@ -254,6 +258,7 @@ METHOD(DGMClassGoActive, struct gpInput *, gpi2)
    };
    return rc;
 }
+METHOD_END
 ///
 /// GM_GOINACTIVE
 METHOD(DGMClassGoInactive, Msg, msg)
@@ -288,6 +293,7 @@ METHOD(DGMClassGoInactive, Msg, msg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// Class initialization.
 /*

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.2  2000/08/08 20:57:26  chodorowski
  * Minor fixes to build on Amiga.
  *
@@ -553,6 +556,7 @@ METHOD(ARexxClassNew, struct opSet *,ops)
    }
    return 0;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 METHOD(ARexxClassDispose, Msg, msg)
@@ -641,6 +645,7 @@ METHOD(ARexxClassDispose, Msg, msg)
     */
    return DoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// OM_GET
 METHOD(ARexxClassGet, struct opGet *, opg)
@@ -667,6 +672,7 @@ METHOD(ARexxClassGet, struct opGet *, opg)
    }
    return rc;
 }
+METHOD_END
 ///
 /// AREXXM_EXECUTE
 METHOD(ARexxClassExecute, struct acmExecute *, acme)
@@ -812,6 +818,7 @@ METHOD(ARexxClassExecute, struct acmExecute *, acme)
 
         return( 1L );
 }
+METHOD_END
 ///
 /// AREXXM_HANDLE_EVENT
 METHOD(ARexxClassHandleEvent, Msg, msg)
@@ -859,6 +866,7 @@ METHOD(ARexxClassHandleEvent, Msg, msg)
    }
    return rc;
 }
+METHOD_END
 ///
 
 /*
@@ -877,6 +885,7 @@ METHOD(ARexxClassMethodNew, Msg, msg)
 {
    return((ULONG)((((CD *)cl->cl_UserData)->RexxSysLibraryBase=OpenLibrary("rexxsyslib.library",36L))!=NULL));
 }
+METHOD_END
 
 METHOD(ARexxClassMethodDispose, Msg, msg)
 {
@@ -889,6 +898,7 @@ METHOD(ARexxClassMethodDispose, Msg, msg)
    }
    return 1;
 }
+METHOD_END
 
 /*
  * Class methods function table.

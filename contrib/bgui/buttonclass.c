@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.2  2000/05/15 19:27:00  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -187,6 +190,7 @@ METHOD(ButtonSetAttrs, struct opSet *, ops)
    }
    return vis;
 }
+METHOD_END
 ///
 /// OM_NEW
 /*
@@ -225,6 +229,7 @@ METHOD(ButtonClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_SET, OM_UPDATE
 /*
@@ -279,6 +284,7 @@ METHOD(ButtonClassSetUpdate, struct opUpdate *, opu)
 
    return 1;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -373,6 +379,7 @@ METHOD(ButtonClassRender, struct bmRender *, bmr)
 
    return rc;
 }
+METHOD_END
 ///
 /// GM_GOACTIVE
 /*
@@ -446,6 +453,8 @@ STATIC ASM REGFUNC3(ULONG, ButtonClassGoActive,
 
    return rc;
 }
+REGFUNC_END
+
 ///
 /// GM_HANDLEINPUT
 /*
@@ -535,6 +544,7 @@ STATIC ASM REGFUNC3(ULONG, ButtonClassHandleInput,
 
    return rc;
 }
+REGFUNC_END
 ///
 /// OM_GET
 /*
@@ -559,6 +569,7 @@ METHOD(ButtonClassGet, struct opGet *, opg)
    }
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -583,6 +594,7 @@ METHOD(ButtonClassDispose, Msg, msg)
 
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// WM_KEYACTIVE
 /*
@@ -646,6 +658,7 @@ METHOD(ButtonClassKeyActive, struct wmKeyInput *, wmki)
    }
    return rc;
 }
+METHOD_END
 ///
 /// WM_KEYINPUT
 /*
@@ -708,6 +721,7 @@ METHOD(ButtonClassKeyInput, struct wmKeyInput *, wmki)
 
    return rc;
 }
+METHOD_END
 ///
 /// WM_KEYINACTIVE
 /*
@@ -730,6 +744,7 @@ METHOD(ButtonClassKeyInActive, struct wmKeyInActive *, wmkia)
 
    return 0;
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -847,6 +862,7 @@ METHOD(ButtonClassDimensions, struct bmDimensions *, bmd)
     */
    return CalcDimensions(cl, obj, bmd, mx, my);
 }
+METHOD_END
 ///
 /// BASE_FINDKEY
 METHOD(ButtonClassFindKey, struct bmFindKey *, bmfk)
@@ -856,6 +872,7 @@ METHOD(ButtonClassFindKey, struct bmFindKey *, bmfk)
    else
       return AsmDoSuperMethodA(cl, obj, (Msg)bmfk);
 }
+METHOD_END
 ///
 /// Class initialization.
 /*

@@ -44,6 +44,7 @@ ASM REGFUNC3(ULONG, ScaleWeight,
   ULONG r = UMult32(a,e);
   return UDivMod32((f >> 1) + r, f);
 }
+REGFUNC_END
 
 
 
@@ -54,6 +55,7 @@ REGFUNC2(void, MyPutChProc_StrLenfA,
 {
   (*putChData)++;
 }
+REGFUNC_END
 
 //ASM ULONG StrLenfA(REG(a0) UBYTE * FormatString, REG(a1) ULONG * DataStream)
 ASM REGFUNC2(ULONG, StrLenfA, 
@@ -64,6 +66,7 @@ ASM REGFUNC2(ULONG, StrLenfA,
   RawDoFmt(FormatString, DataStream, ((APTR)MyPutChProc_StrLenfA), &c);
   return c;
 }
+REGFUNC_END
 
 
 
@@ -75,6 +78,7 @@ REGFUNC2(void, MyPutChProc_SPrintfA,
   **PutChData = c;
   *PutChData++;
 }
+REGFUNC_END
 
 //ASM VOID SPrintfA(REG(a3) UBYTE * buffer, REG(a0) UBYTE * format, REG(a1) ULONG * args)
 ASM REGFUNC3(VOID, SPrintfA,
@@ -84,6 +88,7 @@ ASM REGFUNC3(VOID, SPrintfA,
 {
   RawDoFmt(format, args, ((APTR)MyPutChProc_SPrintfA), &buffer);
 }
+REGFUNC_END
 
 
 //ASM VOID LHook_Count(REG(a0) struct Hook * hook, REG(a1) ULONG chr, REG(a2) struct Locale * loc)
@@ -94,6 +99,7 @@ ASM REGFUNC3(VOID, LHook_Count,
 {
   hook->h_Data++;
 }
+REGFUNC_END
 
 
 //ASM VOID LHook_Format(REG(a0) struct Hook * hook, REG(a1) ULONG chr, REG(a2) struct Locale *loc)
@@ -106,6 +112,7 @@ ASM REGFUNC3(VOID, LHook_Format,
   *cptr++ = (char)chr;
   hook->h_Data = cptr;
 }
+REGFUNC_END
 
 
 //ASM struct RastPort *BGUI_ObtainGIRPort(REG(a0) struct GadgetInfo * gi)
@@ -133,6 +140,7 @@ ASM REGFUNC1(struct RastPort *, BGUI_ObtainGIRPort,
     
   return rp;
 }
+REGFUNC_END
 
 
 ULONG AsmDoMethod(Object * obj, ULONG MethodID, ...)
@@ -159,6 +167,7 @@ REGFUNC2(ULONG, AsmDoMethodA,
 {
   DoMethodA(obj, message);
 }
+REGFUNC_END
 
 ULONG AsmDoSuperMethod( Class * cl, Object * obj, ULONG MethodID, ...)
 {
@@ -181,6 +190,7 @@ REGFUNC3(ULONG, AsmDoSuperMethodA,
 {
   DoSuperMethodA(cl,obj,message);
 }
+REGFUNC_END
 
 ULONG AsmCoerceMethod( Class * cl, Object * obj, ULONG MethodID, ...)
 {
@@ -203,3 +213,4 @@ REGFUNC3(ULONG, AsmCoerceMethodA,
 {
   CoerceMethodA(cl, obj, message);
 }
+REGFUNC_END

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.9  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.8  2003/01/18 19:09:55  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -237,6 +240,7 @@ METHOD(BaseClassRefresh, struct rmRefresh *, rr)
    };
    return rc;
 }
+METHOD_END
 ///
 /// OM_NEW
 /*
@@ -272,6 +276,7 @@ METHOD(BaseClassNew, struct opSet *, ops)
    }
    return rc;
 }
+METHOD_END
 ///
 /// RM_GET
 /*
@@ -286,6 +291,7 @@ METHOD(BaseClassGet, struct rmAttr *, ra)
 
    return rc;
 }
+METHOD_END
 ///
 /// RM_GETCUSTOM
 /*
@@ -306,6 +312,7 @@ METHOD(BaseClassGetCustom, struct rmAttr *, ra)
    };
    return 1;
 }
+METHOD_END
 ///
 /// RM_GETATTRFLAGS
 /*
@@ -364,6 +371,7 @@ METHOD(BaseClassGetAttrFlags, struct rmAttr *, ra)
 
    return rc;
 }
+METHOD_END
 ///
 /// RM_SET
 /*
@@ -442,6 +450,7 @@ METHOD(BaseClassSet, struct rmAttr *, ra)
    }
    return rc;
 }
+METHOD_END
 ///
 /// RM_SETCUSTOM
 /*
@@ -528,6 +537,7 @@ METHOD(BaseClassSetCustom, struct rmAttr *, ra)
    };
    return 1;
 }
+METHOD_END
 ///
 /// OM_NOTIFY
 METHOD(BaseClassNotify, struct opUpdate *, opu)
@@ -543,6 +553,7 @@ METHOD(BaseClassNotify, struct opUpdate *, opu)
 
    return 1;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -570,6 +581,7 @@ METHOD(BaseClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// GM_HITTEST
 /*
@@ -588,6 +600,7 @@ METHOD(BaseClassHitTest, struct gpHitTest *, gpht)
 
    return (ULONG)(PointInBox(ibox, x, y) ? GMR_GADGETHIT : 0);
 }
+METHOD_END
 ///
 /// GM_HELPTEST
 /*
@@ -606,6 +619,7 @@ METHOD(BaseClassHelpTest, struct gpHitTest *, gpht)
 
    return (ULONG)(PointInBox(ibox, x, y) ? GMR_HELPHIT : GMR_NOHELPHIT);
 }
+METHOD_END
 ///
 /// GM_RENDER
 /*
@@ -751,6 +765,7 @@ METHOD(BaseClassRenderX, struct gpRender *, gpr)
    };
    return rc;
 }
+METHOD_END
 ///
 /// BASE_LAYOUT
 /*
@@ -842,6 +857,7 @@ METHOD(BaseClassLayout, struct bmLayout *, bml)
    };
    return 1;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -947,6 +963,7 @@ METHOD(BaseClassRender, struct bmRender *, bmr)
    };
    return 1;
 }
+METHOD_END
 ///
 /// BASE_HELP
 /*
@@ -1056,6 +1073,7 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
    };
    return rc;
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -1079,6 +1097,7 @@ METHOD(BaseClassDimensions, struct bmDimensions *, bmd)
 
    return 1;
 }
+METHOD_END
 ///
 /// GRM_DIMENSIONS
 /*
@@ -1126,6 +1145,7 @@ METHOD(BaseClassDimensionsX, struct grmDimensions *, dim)
    };
    return rc;
 }
+METHOD_END
 ///
 /// BASE_RELAYOUT
 
@@ -1180,6 +1200,7 @@ WW(kprintf("** BaseClassRelayout: does not have bd->bd_Group sending WM_RELAYOUT
    };
    return rc;
 }
+METHOD_END
 ///
 		  
 
@@ -1218,6 +1239,7 @@ METHOD(BaseClassLeftExt, struct bmLeftExt *, le)
 
    return 1;
 }
+METHOD_END
 ///
 /// WM_KEYACTIVE
 /*
@@ -1227,6 +1249,7 @@ METHOD(BaseClassKeyActive, struct wmKeyInput *, wmki)
 {
    return WMKF_CANCEL;
 }
+METHOD_END
 ///
 
 /*
@@ -1277,6 +1300,7 @@ METHOD(BaseClassGoActive, struct gpInput *, gpi)
    }
    return GMR_NOREUSE;
 }
+METHOD_END
 ///
 /// BASE_DRAGGING
 /*
@@ -1445,6 +1469,7 @@ METHOD(BaseClassDragging, struct gpInput *, gpi)
    }
    return rc;
 }
+METHOD_END
 ///
 /// GM_GOINACTIVE
 
@@ -1471,6 +1496,7 @@ METHOD(BaseClassGoInactive, struct gpGoInactive *, gpgi)
 
    return AsmDoSuperMethodA(cl, obj, (Msg)gpgi);
 }
+METHOD_END
 ///
 /// BASE_DRAGQUERY
 /*
@@ -1498,6 +1524,7 @@ METHOD(BaseClassDragQuery, struct bmDragPoint *, bmdp)
    }
    return rc;
 }
+METHOD_END
 ///
 /// BASE_DRAGACTIVE
 /*
@@ -1529,6 +1556,7 @@ METHOD(BaseClassDragActive, struct bmDragMsg *, bmdm)
    };
    return 1;
 }
+METHOD_END
 ///
 /// BASE_DRAGUPDATE
 /*
@@ -1561,6 +1589,7 @@ METHOD(BaseClassDragUpdate, struct bmDragPoint *, bmdp)
 
    return BUR_ABORT;
 }
+METHOD_END
 ///
 /// BASE_DRAGDROPPED
 /*
@@ -1577,6 +1606,7 @@ METHOD(BaseClassDragDropped, struct bmDropped *, bmd)
 
    return 1;
 }
+METHOD_END
 ///
 /// BASE_DRAG_INACTIVE
 /*
@@ -1607,6 +1637,7 @@ METHOD(BaseClassDragInactive, struct bmDragMsg *, bmdm)
    };
    return 0;
 }
+METHOD_END
 ///
 /// BASE_GETDRAGOBJECT
 /*
@@ -1655,6 +1686,7 @@ METHOD(BaseClassGetObject, struct bmGetDragObject *, bmgo)
    };
    return rc;
 }
+METHOD_END
 ///
 /// BASE_FREEDRAGOBJECT
 /*
@@ -1669,6 +1701,7 @@ METHOD(BaseClassFreeObject, struct bmFreeDragObject *, bmfo)
    BGUI_FreeBitMap(bmfo->bmfo_ObjBitMap);
    return 1;
 }
+METHOD_END
 ///
 /// BASE_MOVEBOUNDS
 
@@ -1691,6 +1724,7 @@ METHOD(BaseClassMoveBounds, struct bmMoveBounds *, bmmb)
 
    return 1;
 }
+METHOD_END
 ///
 /// BASE_FINDKEY
 /*
@@ -1739,6 +1773,7 @@ METHOD(BaseClassFindKey, struct bmFindKey *, bmfk)
    };
    return NULL;
 }
+METHOD_END
 ///
 /// BASE_KEYLABEL
 /*
@@ -1764,6 +1799,7 @@ METHOD(BaseClassKeyLabel, struct bmKeyLabel *, bmkl)
    };
    return rc;
 }
+METHOD_END
 ///
 /// BASE_LOCALIZE
 /*
@@ -1784,6 +1820,7 @@ METHOD(BaseClassLocalize, struct bmLocalize *, bml)
    
    return 1;
 }
+METHOD_END
 ///
 /// BASE_INHIBIT
 /*
@@ -1798,12 +1835,14 @@ METHOD(BaseClassInhibit, struct bmInhibit *, bmi)
 
    return 1;
 }
+METHOD_END
 ///
 /// BASE_IS_MULTI
 METHOD(BaseClassIsMulti, Msg, msg)
 {
    return FALSE;
 }
+METHOD_END
 ///
 /// Class initialization.
 /*

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.4  2003/01/18 19:10:00  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -80,7 +83,7 @@ STATIC ULONG id2act[] = {
 /*
  * Module prototypes.
  */
-METHOD(MXClassSetUpdate,   struct opUpdate *, );
+METHODPROTO(MXClassSetUpdate,   struct opUpdate *, );
 ///
 /// AddMXObjects()
 /*
@@ -194,6 +197,7 @@ STATIC ASM REGFUNC2(BOOL, AddMXObjects,
    
    return rc;
 }
+REGFUNC_END
 ///
 /// OM_NEW
 /*
@@ -333,6 +337,7 @@ METHOD(MXClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_SET, OM_UPDATE
 /*
@@ -427,6 +432,7 @@ METHOD(MXClassSetUpdate, struct opUpdate *, opu)
    };
    return 1;
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -449,6 +455,7 @@ METHOD(MXClassGet, struct opGet *, opg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -463,6 +470,7 @@ METHOD(MXClassDispose, Msg, msg)
 
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// WM_KEYACTIVE
 /*
@@ -507,6 +515,7 @@ METHOD(MXClassKeyActive, struct wmKeyInput *, wmki)
 
    return WMKF_VERIFY;
 }
+METHOD_END
 ///
 /// Class initialization.
 /*

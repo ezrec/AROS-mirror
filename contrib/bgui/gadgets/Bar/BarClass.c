@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.7  2003/01/18 19:10:13  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -629,6 +632,7 @@ METHOD(BarClassNew,struct opSet *,ops)
 	}
 	return((ULONG)obj);
 }
+METHOD_END
 
 METHOD(BarClassDispose,Msg,msg)
 {
@@ -646,6 +650,7 @@ METHOD(BarClassDispose,Msg,msg)
 	}
 	return(rc);
 }
+METHOD_END
 
 METHOD(BarClassSet,struct opUpdate *,opu)
 {
@@ -665,6 +670,7 @@ METHOD(BarClassSet,struct opUpdate *,opu)
 	D(bug("BarClassSet success %ld\n",success));
 	return(success);
 }
+METHOD_END
 
 static GetAttribute(Class *cl,GD *gd,ULONG attribute,ULONG *store)
 {
@@ -708,6 +714,7 @@ METHOD(BarClassGet,struct opGet *,opg)
 	D(bug("BarClassGet\n"));
 	return(GetAttribute(cl,INST_DATA(cl,obj),opg->opg_AttrID,opg->opg_Storage) ? 1 : DoSuperMethodA(cl,obj,(Msg)opg));
 }
+METHOD_END
 
 METHOD(BarClassRender, struct gpRender *,gpr)
 {
@@ -723,6 +730,7 @@ METHOD(BarClassRender, struct gpRender *,gpr)
 	D(bug("BarClassRender Done\n"));
 	return(result);
 }
+METHOD_END
 
 METHOD(BarClassGoActive, struct gpInput *,gpi)
 {
@@ -793,6 +801,7 @@ METHOD(BarClassGoActive, struct gpInput *,gpi)
 	}
 	return(result);
 }
+METHOD_END
 
 METHOD(BarClassHandleInput, struct gpInput *,gpi)
 {
@@ -909,6 +918,7 @@ METHOD(BarClassHandleInput, struct gpInput *,gpi)
 	}
 	return(result);
 }
+METHOD_END
 
 METHOD(BarClassGoInactive, struct gpGoInactive *,ggi)
 {
@@ -918,6 +928,7 @@ METHOD(BarClassGoInactive, struct gpGoInactive *,ggi)
 	DrawGadget(obj,gd,ggi->gpgi_GInfo,TRUE,FALSE,TRUE);
 	return(DoSuperMethodA(cl,obj,(Msg)ggi));
 }
+METHOD_END
 
 METHOD(BarClassDimensions, struct grmDimensions *,dim)
 {
@@ -931,6 +942,7 @@ METHOD(BarClassDimensions, struct grmDimensions *,dim)
 	D(bug("BarClassDimensions Done\n"));
 	return(result);
 }
+METHOD_END
 
 static DPFUNC ClassFunctions[] = {
 	OM_NEW,          (FUNCPTR)BarClassNew,

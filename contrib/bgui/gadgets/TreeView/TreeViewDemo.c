@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2004/06/16 20:16:49  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.6  2003/01/18 19:10:20  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -105,7 +108,7 @@ int main(int argc,char **argv);
 
 //ASM SAVEDS ULONG WindowHandler(REG(a0) struct Hook *hook,
 //      REG(a2) Object *obj, REG(a1) struct IntuiMessage *imsg);
-ASM SAVEDS REGFUNC3(ULONG, WindowHandler,
+ASM SAVEDS REGFUNCPROTO3(ULONG, WindowHandler,
         REGPARAM(A0, struct Hook *, hook),
         REGPARAM(A2, Object *, obj),
         REGPARAM(A1, struct IntuiMessage *, imsg));
@@ -412,3 +415,4 @@ if (imsg->Class == IDCMP_RAWKEY)
 
 return(0);
 }
+REGFUNC_END

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.4  2003/01/18 19:10:00  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -102,6 +105,7 @@ STATIC ASM REGFUNC3(UBYTE *, GetButtonName,
     */
    return NULL;
 }
+REGFUNC_END
 
 /*
  * Create the button group.
@@ -273,6 +277,7 @@ STATIC SAVEDS ASM REGFUNC3(VOID, ReqHookFunc,
    }
    if (id) AsmDoMethod(window, WM_REPORT_ID, id, 0);
 }
+REGFUNC_END
 static struct Hook ReqHook = { NULL, NULL, (HOOKFUNC)ReqHookFunc, NULL, NULL };
 
 /*

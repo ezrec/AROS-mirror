@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.7  2003/01/18 19:09:57  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -192,6 +195,7 @@ METHOD(LabelClassNew, struct opSet *, ops)
    }
    return rc;
 }
+METHOD_END
 ///
 /// RM_GETATTRFLAGS
 /*
@@ -230,6 +234,7 @@ METHOD(LabelClassGetAttrFlags, struct rmAttr *, ra)
 
    return rc;
 }
+METHOD_END
 ///
 /// RM_SET
 /*
@@ -239,6 +244,7 @@ METHOD(LabelClassSet, struct rmAttr *, ra)
 {
    return BGUI_SetAttrChart(cl, obj, ra);
 }
+METHOD_END
 ///
 /// RM_SETCUSTOM
 /*
@@ -326,6 +332,7 @@ METHOD(LabelClassSetCustom, struct rmAttr *, ra)
    };
    return 1;
 }
+METHOD_END
 ///
 
 /// OM_GET
@@ -376,6 +383,7 @@ METHOD(LabelClassGet, struct opGet *, opg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -396,6 +404,7 @@ METHOD(LabelClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// IM_DRAW, IM_ERASE, IM_EXTENT
 /*
@@ -843,6 +852,7 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
    }
    return rc;
 }
+METHOD_END
 ///
 /// BASE_LOCALIZE
 
@@ -858,6 +868,7 @@ METHOD(LabelClassLocalize, struct bmLocalize *, bml)
    }
    return rc;
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 
@@ -913,6 +924,7 @@ METHOD(LabelClassDimensions, struct bmDimensions *, bmd)
    be->be_Max.Height=max(be->be_Max.Height,be->be_Nom.Height);
    return 1;
 }
+METHOD_END
 ///
 
 /// Class initialization.

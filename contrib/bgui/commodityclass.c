@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.4  2003/01/18 19:09:56  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -104,16 +107,16 @@ STATIC ASM ULONG CommClassDisableBroker( REG(a0) Class *, REG(a2) Object *, REG(
 STATIC ASM ULONG CommClassMsgInfo(   REG(a0) Class *, REG(a2) Object *, REG(a1) struct cmMsgInfo *     );
 */
 
-STATIC ASM REGFUNC3(ULONG, CommClassNew, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct opSet *, ops));
-STATIC ASM REGFUNC3(ULONG, CommClassDispose, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
-STATIC ASM REGFUNC3(ULONG, CommClassGet, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct opGet *, opg));
-STATIC ASM REGFUNC3(ULONG, CommClassAddHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmAddHotkey *, cah));
-STATIC ASM REGFUNC3(ULONG, CommClassRemHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
-STATIC ASM REGFUNC3(ULONG, CommClassDisableHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
-STATIC ASM REGFUNC3(ULONG, CommClassEnableHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
-STATIC ASM REGFUNC3(ULONG, CommClassEnableBroker, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
-STATIC ASM REGFUNC3(ULONG, CommClassDisableBroker, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
-STATIC ASM REGFUNC3(ULONG, CommClassMsgInfo, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmMsgInfo*, cmi));
+STATIC ASM REGFUNCPROTO3(ULONG, CommClassNew, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct opSet *, ops));
+STATIC ASM REGFUNCPROTO3(ULONG, CommClassDispose, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
+STATIC ASM REGFUNCPROTO3(ULONG, CommClassGet, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct opGet *, opg));
+STATIC ASM REGFUNCPROTO3(ULONG, CommClassAddHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmAddHotkey *, cah));
+STATIC ASM REGFUNCPROTO3(ULONG, CommClassRemHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
+STATIC ASM REGFUNCPROTO3(ULONG, CommClassDisableHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
+STATIC ASM REGFUNCPROTO3(ULONG, CommClassEnableHotkey, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmDoKeyCommand *, com));
+STATIC ASM REGFUNCPROTO3(ULONG, CommClassEnableBroker, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
+STATIC ASM REGFUNCPROTO3(ULONG, CommClassDisableBroker, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, Msg, msg));
+STATIC ASM REGFUNCPROTO3(ULONG, CommClassMsgInfo, REGPARAM(A0, Class *, cl), REGPARAM(A2, Object *, obj), REGPARAM(A1, struct cmMsgInfo*, cmi));
 
 /*
  * Class function table.
@@ -223,6 +226,7 @@ METHOD(CommClassNew, struct opSet *, ops)
    }
    return NULL;
 }
+METHOD_END
 
 /*
  * Get rid of an object.
@@ -279,6 +283,7 @@ METHOD(CommClassDispose, Msg,  msg)
     */
    return( AsmDoSuperMethodA( cl, obj, msg ));
 }
+METHOD_END
 
 /*
  * They want something.
@@ -309,6 +314,7 @@ STATIC ASM REGFUNC3(ULONG, CommClassGet,
    }
    return( rc );
 }
+REGFUNC_END
 
 /*
  * Search for a key by it's ID.
@@ -326,6 +332,7 @@ STATIC ASM REGFUNC2(KEY *, FindKey,
    }
    return( NULL );
 }
+REGFUNC_END
 
 /*
  * Add a hotkey to the list.
@@ -421,6 +428,7 @@ STATIC ASM REGFUNC3(ULONG, CommClassAddHotkey,
 
    return 0;
 }
+REGFUNC_END
 
 /*
  * Remove a hotkey from the list.
@@ -476,6 +484,7 @@ STATIC ASM REGFUNC3(ULONG, CommClassRemHotkey,
 
    return( rc );
 }
+REGFUNC_END
 
 /*
  * Disable a hotkey.
@@ -525,6 +534,7 @@ STATIC ASM REGFUNC3(ULONG, CommClassDisableHotkey,
 
    return( rc );
 }
+REGFUNC_END
 
 /*
  * Enable a hotkey.
@@ -575,6 +585,7 @@ STATIC ASM REGFUNC3(ULONG, CommClassEnableHotkey,
 
    return( rc );
 }
+REGFUNC_END
 
 /*
  * Enable the broker.
@@ -605,6 +616,7 @@ STATIC ASM REGFUNC3(ULONG, CommClassEnableBroker,
    }
    return( rc );
 }
+REGFUNC_END
 
 /*
  * Disable the broker.
@@ -635,6 +647,7 @@ STATIC ASM REGFUNC3(ULONG, CommClassDisableBroker,
    }
    return( rc );
 }
+REGFUNC_END
 
 /*
  * Poll broker port.
@@ -720,3 +733,4 @@ STATIC ASM REGFUNC3(ULONG, CommClassMsgInfo,
 
    return( rc );
 }
+REGFUNC_END

@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:49  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:29:08  stegerg
  * replacements for REG macro
  *
@@ -59,20 +62,20 @@
 ************************************************************************/
 
 //ASM ULONG TV_GoActive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi);
-ASM REGFUNC3(ULONG, TV_GoActive,
+ASM REGFUNCPROTO3(ULONG, TV_GoActive,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct gpInput *, gpi));
 
 //ASM ULONG TV_HandleInput(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi);
-ASM REGFUNC3(ULONG, TV_HandleInput,
+ASM REGFUNCPROTO3(ULONG, TV_HandleInput,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct gpInput *, gpi));
 
 
 //ASM ULONG TV_GoInactive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpGoInactive *gpgi);
-ASM REGFUNC3(ULONG, TV_GoInactive,
+ASM REGFUNCPROTO3(ULONG, TV_GoInactive,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct gpGoInactive *, gpgi));
@@ -128,6 +131,7 @@ tv->tv_GoingActive = FALSE;
 
 return(rc);
 }
+REGFUNC_END
 
 /************************************************************************
 **************************  TV_HANDLEINPUT()  ***************************
@@ -148,6 +152,7 @@ tv = (TVData *) INST_DATA(cl,obj);
 
 return(DoMethodA(tv->tv_Listview,(Msg) gpi));
 }
+REGFUNC_END
 
 /************************************************************************
 ***************************  TV_GOINACTIVE()  ***************************
@@ -165,4 +170,5 @@ tv = (TVData *) INST_DATA(cl,obj);
 
 return(DoMethodA(tv->tv_Listview,(Msg) gpgi));
 }
+REGFUNC_END
 

@@ -18,6 +18,9 @@
  * enable/disable status of an item.
 
  * $Log$
+ * Revision 42.9  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.8  2003/01/18 19:10:20  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -213,6 +216,7 @@ STATIC ASM REGFUNC1(Object *, CreateVectorImage,
    }
    return( vector );
 }
+REGFUNC_END
 
 /*
 ** Notify about an attribute change.
@@ -275,6 +279,7 @@ STATIC ASM REGFUNC2(BOOL, CopyArray,
    }
    return( rc );
 }
+REGFUNC_END
 
 /*
 ** Scale the checkmark.
@@ -296,6 +301,7 @@ STATIC ASM REGFUNC2(VOID, ScaleCheckMark,
 
    SetAttrs( pmd->pmd_CheckMark, IA_Width, pmd->pmd_CheckWidth, IA_Height, pmd->pmd_CheckHeight, TAG_END );
 }
+REGFUNC_END
 
 /*
 ** Re-compute the size of the popup window.
@@ -348,6 +354,7 @@ STATIC ASM REGFUNC2(VOID, ComputePopWindowSize,
    pmd->pmd_PopWindowHeight = height + 4;
 
 }
+REGFUNC_END
 
 /*
 ** Render a bar-label.
@@ -374,6 +381,7 @@ STATIC ASM REGFUNC3(VOID, RenderBarLabel,
 
    SetDrPt( rp, ( UWORD )-1 );   /* %1111111111111111 */
 }
+REGFUNC_END
 
 /*
 ** Get the y-position of the item
@@ -400,6 +408,7 @@ STATIC ASM REGFUNC3(UWORD, GetYPos,
 
    return( ypos );
 }
+REGFUNC_END
 
 /*
 ** Render a popmenu entry.
@@ -668,6 +677,7 @@ STATIC ASM REGFUNC4(ULONG, OpenPopupWindow,
    }
    return( rc );
 }
+REGFUNC_END
 
 /*
 ** Return the menu number under the mouse
@@ -735,6 +745,7 @@ STATIC ASM REGFUNC2(LONG, Selected,
    }
    return( ~0 );
 }
+REGFUNC_END
 
 /*
 ** Determine if indicated item is selectable,
@@ -751,6 +762,7 @@ STATIC ASM REGFUNC2(BOOL, ItemSelectable,
       return( FALSE );
    return( TRUE );
 }
+REGFUNC_END
 
 /*
 ** Find the previous selectable item.
@@ -781,6 +793,7 @@ STATIC ASM REGFUNC1(ULONG, PrevItem,
 
    return( prev );
 }
+REGFUNC_END
 
 /*
 ** Find the next selectable item.
@@ -811,6 +824,7 @@ STATIC ASM REGFUNC1(ULONG, NextItem,
 
    return( next );
 }
+REGFUNC_END
 
 /*
 ** Mutually exclude other items.
@@ -858,6 +872,7 @@ STATIC ASM REGFUNC1(VOID, MutEx,
       }
    }
 }
+REGFUNC_END
 
 /*
 ** Compute minimum object dimensions.
@@ -939,6 +954,7 @@ STATIC ASM REGFUNC4(VOID, SetDimensions,
    *( dim->grmd_MinSize.Width  ) = mx;
    *( dim->grmd_MinSize.Height ) = my;
 }
+REGFUNC_END
 
 /*
 ** Create a shiny new object.
@@ -1028,6 +1044,7 @@ STATIC ASM REGFUNC3(ULONG, PMBClassNew,
    }
    return( NULL );
 }
+REGFUNC_END
 
 /*
 ** Set object attributes.
@@ -1104,6 +1121,7 @@ STATIC ASM REGFUNC3(ULONG, PMBClassSet,
    }
    return( rc );
 }
+REGFUNC_END
 
 /*
 ** Re-render the object.
@@ -1183,6 +1201,7 @@ STATIC ASM REGFUNC3(ULONG, PMBClassRender,
 
    return( rc );
 }
+REGFUNC_END
 
 /*
 ** Let's go active.
@@ -1264,6 +1283,7 @@ STATIC ASM REGFUNC3(ULONG, PMBClassGoActive,
    }
    return( rc );
 }
+REGFUNC_END
 
 /*
 ** Handle the user input.
@@ -1439,6 +1459,7 @@ STATIC ASM REGFUNC3(ULONG, PMBClassHandleInput,
    }
    return( rc );
 }
+REGFUNC_END
 
 /*
 ** Go inactive...
@@ -1471,6 +1492,7 @@ STATIC ASM REGFUNC3(ULONG, PMBClassGoInActive,
 
    return( DoSuperMethodA( cl, obj, ( Msg )gpgi ));
 }
+REGFUNC_END
 
 /*
 ** Get an attribute.
@@ -1498,6 +1520,7 @@ STATIC ASM REGFUNC3(ULONG, PMBClassGet,
    };
    return rc;
 }
+REGFUNC_END
 
 /*
 ** Dump the object.
@@ -1535,6 +1558,7 @@ STATIC ASM REGFUNC3(ULONG, PMBClassDispose,
    }
    return rc;
 }
+REGFUNC_END
 
 /*
  * They want our minimum dimensions.
@@ -1638,6 +1662,7 @@ STATIC ASM REGFUNC3(ULONG, PMBClassDimensions,
    **/
    return( DoSuperMethodA( cl, obj, ( Msg )dim ));
 }
+REGFUNC_END
 
 /*
 ** Do a command on the menu.
@@ -1706,11 +1731,13 @@ STATIC ASM REGFUNC3(ULONG, PMBClassCommand,
 
    return( rc );
 }
+REGFUNC_END
 
 METHOD(PMBClassKeyActive, Msg, msg)
 {
    return WMKF_ACTIVATE;
 }
+METHOD_END
 
 /*--------------------------------LIBARY CODE FOLLOWS-----------------------------------*/
 

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.3  2000/08/17 15:09:18  chodorowski
  * Fixed compiler warnings.
  *
@@ -334,6 +337,7 @@ ASM REGFUNC5(VOID, ColumnSeparators,
       };
    };
 }
+REGFUNC_END
 /*
  * Find a node by it's number (slow!).
  */
@@ -362,6 +366,7 @@ STATIC ASM REGFUNC2(LVE *, FindNode,
 
    return( lve );
 }
+REGFUNC_END
 
 /*
  * Find a node by it's number (quickly).
@@ -398,6 +403,7 @@ STATIC ASM REGFUNC2(LVE *, FindNodeQuick,
 
    return( lve );
 }
+REGFUNC_END
 
 /*
  * Add an entry in the list. Ugly code with
@@ -492,6 +498,7 @@ STATIC ASM REGFUNC4(VOID, AddEntryInList,
       break;
    }
 }
+REGFUNC_END
 
 /*
  * Add entries to the list.
@@ -578,6 +585,7 @@ STATIC ASM REGFUNC5(BOOL, AddEntries,
 
    return success;
 }
+REGFUNC_END
 
 /*
  * Make an entry visible.
@@ -606,6 +614,7 @@ STATIC ASM REGFUNC2(ULONG, MakeVisible,
 
    return new_top;
 }
+REGFUNC_END
 
 /*
  * De-select node list (slow!).
@@ -625,6 +634,7 @@ STATIC ASM REGFUNC1(VOID, DeSelect,
       };
    };
 }
+REGFUNC_END
 
 /*
  * Select node list (slow!).
@@ -640,6 +650,7 @@ STATIC ASM REGFUNC1(VOID, Select,
 	 lve->lve_Flags |= LVEF_SELECTED | LVEF_REFRESH;
    }
 }
+REGFUNC_END
 
 /*
  * Setup a new top-value.
@@ -763,6 +774,7 @@ STATIC ASM REGFUNC4(VOID, NewTop,
       ld->ld_Top = new_top;
    }
 }
+REGFUNC_END
 
 
 
@@ -894,6 +906,7 @@ STATIC ASM REGFUNC2(VOID, DrawDragLine,
       FreeBaseInfo(bi);
    };
 }
+REGFUNC_END
 
 /// OM_NEW
 /*
@@ -1041,6 +1054,7 @@ METHOD(ListClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_SET, OM_UPDATE
 /*
@@ -1365,6 +1379,7 @@ METHOD(ListClassSetUpdate, struct opUpdate *, opu)
 
    return 1;
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -1416,6 +1431,7 @@ METHOD(ListClassGet, struct opGet *, opg)
    }
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -1476,6 +1492,7 @@ METHOD(ListClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 
 /// ListAreaBounds
@@ -1555,6 +1572,7 @@ STATIC ASM REGFUNC2(VOID, ListAreaBounds,
    ld->ld_TopEntry = FindNode(ld, ld->ld_Top);
 
 }
+REGFUNC_END
 ///
 /// RenderColumn
 
@@ -1619,6 +1637,7 @@ STATIC ASM SAVEDS REGFUNC3(VOID, RenderColumn,
       FreeBaseInfo(bi);
    };
 }
+REGFUNC_END
 ///
 /// RenderEntry
 /*
@@ -1777,6 +1796,7 @@ METHOD(ListClassLayout, struct bmLayout *, bml)
   
    return rc;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -1980,6 +2000,7 @@ METHOD(ListClassRender, struct bmRender *, bmr)
    };
    return 1;
 }
+METHOD_END
 ///
 
 /*
@@ -1999,6 +2020,7 @@ STATIC ASM REGFUNC2(LONG, MouseOverEntry,
    
    return t;
 }
+REGFUNC_END
 
 /*
  * Perform multi-(de)selection.
@@ -2078,6 +2100,7 @@ STATIC ASM REGFUNC2(BOOL, MultiSelect,
    }
    return rc;
 }
+REGFUNC_END
 /// GM_HITTEST
 /*
  * Test if the gadget was hit.
@@ -2115,6 +2138,7 @@ METHOD(ListClassHitTest, struct gpHitTest *, gph)
    };
    return rc;
 }
+METHOD_END
 ///
 /// GM_GOACTIVE
 /*
@@ -2324,6 +2348,7 @@ METHOD(ListClassGoActive, struct gpInput *, gpi)
    };
    return rc;
 }
+METHOD_END
 ///
 /// GM_HANDLEINPUT
 /*
@@ -2712,6 +2737,7 @@ METHOD(ListClassHandleInput, struct gpInput *, gpi)
    }
    return rc;
 }
+METHOD_END
 ///
 /// GM_GOINACTIVE
 /*
@@ -2754,6 +2780,7 @@ METHOD(ListClassGoInActive, struct gpGoInactive *, ggi)
       return AsmDoSuperMethodA(cl, obj, (Msg)ggi);
    };
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -2809,6 +2836,7 @@ METHOD(ListClassDimensions, struct bmDimensions *, bmd)
     */
    return CalcDimensions(cl, obj, bmd, mpx, mpy);
 }
+METHOD_END
 ///
 /// WM_KEYACTIVE
 /*
@@ -2894,6 +2922,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassKeyActive,
 
    return( WMKF_VERIFY );
 }
+REGFUNC_END
 
 /*
  * Get entry predecessor, position and add method.
@@ -2927,6 +2956,7 @@ STATIC ASM REGFUNC4(VOID, EntryPosHow,
       *lve = FindNodeQuick( ld, pos - 1 );
    }
 }
+REGFUNC_END
 ///
 
 /*
@@ -2979,6 +3009,7 @@ SAVEDS ASM REGFUNC5(VOID, DoEntry,
       DoRenderMethod(obj, gi, GREDRAW_UPDATE);
    }
 }
+REGFUNC_END
 /// LVM_INSERTENTRIES
 /*
  * Insert entries.
@@ -3011,6 +3042,7 @@ METHOD(ListClassInsertEntries, struct lvmInsertEntries *, lvmi)
 
    return rc;
 }
+METHOD_END
 ///
 /// LVM_INSERTSINGLE
 /*
@@ -3052,6 +3084,7 @@ METHOD(ListClassInsertSingle, struct lvmInsertSingle *, lvis)
 
    return rc;
 }
+METHOD_END
 ///
 /// LVM_ADDENTRIES
 /*
@@ -3079,6 +3112,7 @@ METHOD(ListClassAddEntries, struct lvmAddEntries *, lva)
 
    return rc;
 }
+METHOD_END
 ///
 /// LVM_ADDSINGLE
 /*
@@ -3140,6 +3174,7 @@ METHOD(ListClassAddSingle, struct lvmAddSingle *, lva)
 
    return rc;
 }
+METHOD_END
 ///
 /// LVM_CLEAR
 /*
@@ -3220,6 +3255,7 @@ METHOD(ListClassClear, struct lvmCommand *, lvc)
 
    return 1;
 }
+METHOD_END
 ///
 /*
  * Find a node by it's entry data (slow!).
@@ -3243,6 +3279,7 @@ STATIC ASM REGFUNC3(LVE *, FindEntryData,
    }
    return NULL;
 }
+REGFUNC_END
 
 /*
  * Find a node by it's entry data (can be fast!).
@@ -3264,6 +3301,7 @@ STATIC ASM REGFUNC2(LVE *, FindEntryDataF,
    }
    return NULL;
 }
+REGFUNC_END
 
 /// LVM_GETENTRY
 /*
@@ -3456,6 +3494,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassGetEntry,
    ld->ld_Flags &= ~LDF_LIST_BUSY;
    return rc;
 }
+REGFUNC_END
 ///
 /// LVM_REMENTRY
 /*
@@ -3547,6 +3586,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassRemEntry,
    ld->ld_Flags &= ~LDF_LIST_BUSY;
    return rc;
 }
+REGFUNC_END
 ///
 /// LVM_REMSELECTED
 /*
@@ -3636,6 +3676,7 @@ METHOD(ListClassRemSelected, struct lvmCommand *, lvmc)
    };
    return rc;
 }
+METHOD_END
 ///
 /// LVM_REFRESH
 /*
@@ -3645,6 +3686,7 @@ METHOD(ListClassRefresh, struct lvmCommand *, lvmc)
 {
    return DoRenderMethod(obj, lvmc->lvmc_GInfo, GREDRAW_REDRAW);
 }
+METHOD_END
 ///
 /// LVM_REDRAW
 /*
@@ -3657,6 +3699,7 @@ METHOD(ListClassRedraw, struct lvmCommand *, lvmc)
    ld->ld_Flags |= LDF_REFRESH_ALL;
    return DoRenderMethod(obj, lvmc->lvmc_GInfo, GREDRAW_UPDATE);
 }
+METHOD_END
 ///
 /// LVM_REDRAWSINGLE
 METHOD(ListClassRedrawSingle, struct lvmRedrawSingle *, lvrs)
@@ -3686,6 +3729,7 @@ METHOD(ListClassRedrawSingle, struct lvmRedrawSingle *, lvrs)
 
    return rc;
 }
+METHOD_END
 ///
 /// LVM_SORT
 /*
@@ -3740,6 +3784,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassSort,
    }
    return 1;
 }
+REGFUNC_END
 ///
 /// LVM_LOCK, LVM_UNLOCK
 /*
@@ -3766,6 +3811,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassLock,
    }
    return 1;
 }
+REGFUNC_END
 ///
 /// LVM_MOVE
 /*
@@ -3986,6 +4032,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassMove,
    ld->ld_Flags &= ~LDF_LIST_BUSY;
    return rc;
 }
+REGFUNC_END
 ///
 /// LVM_REPLACE
 /*
@@ -4072,6 +4119,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassReplace,
    if ( rc ) DoRenderMethod( obj, lvmr->lvmr_GInfo, GREDRAW_UPDATE );
    return( rc );
 }
+REGFUNC_END
 ///
 /// LVM_SETCOLUMNATTRS
 
@@ -4086,6 +4134,7 @@ METHOD(ListClassSetColumnAttrs, struct lvmColumnAttrs *, lvca)
 
    return rc;
 }
+METHOD_END
 ///
 /// LVM_GETCOLUMNATTRS
 
@@ -4095,6 +4144,7 @@ METHOD(ListClassGetColumnAttrs, struct lvmColumnAttrs *, lvca)
 
    return BGUI_UnpackStructureTags(&ld->ld_CD[lvca->lvca_Column], ColumnPackTable, (struct TagItem *)&lvca->lvca_AttrList);
 }
+METHOD_END
 ///
 /// BASE_DRAGQUERY
 /*
@@ -4120,6 +4170,7 @@ METHOD(ListClassDragQuery, struct bmDragPoint *, bmdp)
    }
    return BQR_REJECT;
 }
+METHOD_END
 ///
 /// BASE_DRAGACTIVE
 /*
@@ -4156,6 +4207,7 @@ METHOD(ListClassDragActive, struct bmDragMsg *, bmdm)
    };
    return 1;
 }
+METHOD_END
 ///
 /// BASE_DRAGINACTIVE
 /*
@@ -4182,6 +4234,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassDragInactive,
 
    return AsmDoSuperMethodA(cl, obj, (Msg)bmdm);
 }
+REGFUNC_END
 ///
 /// BASE_DRAGUPDATE
 /*
@@ -4357,6 +4410,7 @@ METHOD(ListClassDragUpdate, struct bmDragPoint *, bmdp)
    };
    return BUR_CONTINUE;
 }
+METHOD_END
 ///
 /// BASE_DROPPED
 /*
@@ -4493,6 +4547,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassDropped,
 
    return 1;
 }
+REGFUNC_END
 ///
 /// BASE_GETOBJECT
 /*
@@ -4633,6 +4688,7 @@ METHOD(ListClassGetObject, struct bmGetDragObject *, bmgo)
    }
    return rc;
 }
+METHOD_END
 ///
 /// BASE_FREEOBJECT
 /*
@@ -4654,6 +4710,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassFreeObject,
 
    return 1;
 }
+REGFUNC_END
 ///
 
 /// Class initialization.

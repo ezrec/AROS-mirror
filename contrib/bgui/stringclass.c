@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.2  2000/05/15 19:27:02  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -91,6 +94,7 @@ STATIC ASM REGFUNC1(VOID, GetValues,
    Get_Attr(sd->sd_StrGad, STRINGA_TextVal, &sd->sd_TextContents);
    Get_Attr(sd->sd_StrGad, STRINGA_LongVal, &sd->sd_IntegerContents);
 }
+REGFUNC_END
 
 /*
  * Object cleanup.
@@ -120,6 +124,7 @@ STATIC ASM REGFUNC3(ULONG, StringClassDispose,
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+REGFUNC_END
 
 /*
  * Allocate buffers. (Only when maxchars > 128)
@@ -152,6 +157,7 @@ STATIC ASM REGFUNC3(BOOL, StringClassBuffers,
    }
    return( TRUE );
 }
+REGFUNC_END
 
 /*
  * Create a shiny new object.
@@ -265,6 +271,7 @@ STATIC ASM REGFUNC3(ULONG, StringClassNew,
 
    return rc;
 }
+REGFUNC_END
 
 
 /*
@@ -394,6 +401,7 @@ STATIC ASM REGFUNC3(ULONG, StringClassSetUpdate,
 
    return rc;
 }
+REGFUNC_END
 
 /// OM_GET
 /*
@@ -438,6 +446,7 @@ METHOD(StringClassGet, struct opGet *, opg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -482,6 +491,7 @@ METHOD(StringClassRender, struct bmRender *, bmr)
 
    return rc;
 }
+METHOD_END
 ///
 /// GM_HITTEST
 /*
@@ -510,6 +520,7 @@ METHOD(StringClassHitTest, struct gpHitTest *, gph)
    }
    return rc;
 }
+METHOD_END
 ///
 /// GM_GOACTIVE
 /*
@@ -621,6 +632,7 @@ METHOD(StringClassGoActive, struct gpInput *, gpi)
 
    return rc;
 }
+METHOD_END
 ///
 /// GM_HANDLEINPUT
 /*
@@ -711,6 +723,7 @@ METHOD(StringClassHandleInput, struct gpInput *, gpi)
    };
    return rc;
 }
+METHOD_END
 ///
 /// GM_GOINACTIVE
 /*
@@ -755,6 +768,7 @@ METHOD(StringClassGoInActive, struct gpGoInactive *, gpi)
 
    return AsmDoSuperMethodA(cl, obj, (Msg)gpi);
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -779,6 +793,7 @@ METHOD(StringClassDimensions, struct bmDimensions *, bmd)
     */
    return CalcDimensions(cl, obj, bmd, tlen * sd->sd_MinChars + (tlen >> 1), bi->bi_RPort->TxHeight);
 }
+METHOD_END
 ///
 /// WM_KEYACTIVE
 /*
@@ -791,6 +806,7 @@ METHOD(StringClassKeyActive, struct wmKeyInput *, wmki)
     */
    return WMKF_ACTIVATE;
 }
+METHOD_END
 ///
 /// SM_FORMAT_STRING
 /*
@@ -826,6 +842,7 @@ METHOD(StringClassFString, struct smFormatString *, smfs)
    }
    return rc;
 }
+METHOD_END
 ///
 
 /// Class initialization.

@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:49  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:29:08  stegerg
  * replacements for REG macro
  *
@@ -59,7 +62,7 @@
 ************************************************************************/
 
 //ASM ULONG TV_Visible(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve);
-ASM REGFUNC3(ULONG, TV_Visible,
+ASM REGFUNCPROTO3(ULONG, TV_Visible,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvEntry *, tve));
@@ -184,4 +187,5 @@ if (tn = TV_MatchNextEntry(tv,tve->tve_Entry,tve->tve_Which,flags,&tva))
 
 return(rc);
 }
+REGFUNC_END
 

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.3  2000/08/17 15:09:18  chodorowski
  * Fixed compiler warnings.
  *
@@ -307,6 +310,7 @@ STATIC SAVEDS ASM REGFUNC3(IPTR, BuiltInBack,
    };
    return FRC_UNKNOWN;
 }
+REGFUNC_END
 
 /// FRAMEM_BACKFILL
 /*
@@ -335,6 +339,7 @@ METHOD(FrameClassBackfill, struct fmBackfill *, fmb)
 
    return 1;
 }
+METHOD_END
 
 #define Line(x1,y1,x2,y2) { Move(rp, x1, y1); Draw(rp, x2, y2); }
 #define Point(x1,y1) WritePixel(rp, x1, y1)
@@ -618,6 +623,7 @@ STATIC ASM REGFUNC2(VOID, FrameThickness,
       fd->fd_Vertical   = v;
    };
 }
+REGFUNC_END
 
 /*
  * Setup frame attributes.
@@ -790,6 +796,7 @@ STATIC ASM REGFUNC3(VOID, SetFrameAttrs,
       break;
    }
 }
+REGFUNC_END
 
 /// OM_NEW
 /*
@@ -831,6 +838,7 @@ METHOD(FrameClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_SET
 /*
@@ -855,6 +863,7 @@ METHOD(FrameClassSet, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -915,6 +924,7 @@ METHOD(FrameClassGet, struct opGet *, opg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -940,6 +950,7 @@ METHOD(FrameClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// FRAMEM_SETUPBOUNDS
 
@@ -978,6 +989,7 @@ METHOD(FrameClassSetupBounds, struct fmSetupBounds *, fmsb)
 
    return 1;
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 
@@ -1002,6 +1014,7 @@ METHOD(FrameClassDimensions, struct bmDimensions *, bmd)
    
    return 1;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -1353,6 +1366,7 @@ METHOD(FrameClassRender, struct bmRender *, bmr)
 
    return rc;
 }
+METHOD_END
 ///
 /// BASE_LOCALIZE
 
@@ -1365,6 +1379,7 @@ METHOD(FrameClassLocalize, struct bmLocalize *, bml)
    
    return rc;
 }
+METHOD_END
 ///
 /// Class initialization.
 

@@ -93,6 +93,7 @@ METHOD(AslReqClassNew, struct opSet *, ops)
    }
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -117,6 +118,7 @@ METHOD(AslReqClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// OM_SET, OM_UPDATE
 /*
@@ -181,6 +183,7 @@ METHOD(AslReqClassSetUpdate, struct opSet *, ops)
 
    return ASLREQ_OK;
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -204,6 +207,7 @@ METHOD(AslReqClassGet, struct opGet *, opg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// ASLM_ALLOCREQUEST
 /*
@@ -220,6 +224,7 @@ METHOD(AslReqClassAllocRequest, Msg, msg)
       
    return (ULONG)ad->ad_Requester;
 }
+METHOD_END
 ///
 /// ASLM_REQUEST
 /*
@@ -236,6 +241,7 @@ METHOD(AslReqClassRequest, Msg, msg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// ASLM_FREEREQUEST
 /*
@@ -250,6 +256,7 @@ METHOD(AslReqClassFreeRequest, Msg, msg)
    
    return 1;
 }
+METHOD_END
 ///
 
 /// Class initialization.

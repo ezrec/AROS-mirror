@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:27:02  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -94,6 +97,7 @@ METHOD(ProgressClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_SET, OM_UPDATE
 /*
@@ -182,6 +186,7 @@ METHOD(ProgressClassSetUpdate, struct opUpdate *, opu)
 
    return 1;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 /*
@@ -202,6 +207,7 @@ METHOD(ProgressClassDispose, Msg, msg)
     */
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// BASE_RENDER
 /*
@@ -327,6 +333,7 @@ METHOD(ProgressClassRender, struct bmRender *, bmr)
    };
    return 1;
 }
+METHOD_END
 ///
 /// OM_GET
 /*
@@ -349,6 +356,7 @@ METHOD(ProgressClassGet, struct opGet *, opg)
    }
    return rc;
 }
+METHOD_END
 ///
 /// GM_HITTEST
 /*
@@ -359,6 +367,7 @@ METHOD(ProgressClassHitTest, struct gpHitTest *, gph)
 {
    return 0;
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -415,6 +424,7 @@ METHOD(ProgressClassDimensions, struct bmDimensions *, bmd)
     */
    return CalcDimensions(cl, obj, bmd, mw, mh);
 }
+METHOD_END
 ///
 /// Class initialization.
 /*

@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:49  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:29:08  stegerg
  * replacements for REG macro
  *
@@ -59,7 +62,7 @@
 ************************************************************************/
 
 //ASM ULONG TV_Move(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvInsert *tvi);
-ASM REGFUNC3(ULONG, TV_Move,
+ASM REGFUNCPROTO3(ULONG, TV_Move,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvInsert *, tvi));
@@ -81,4 +84,5 @@ ASM REGFUNC3(ULONG, TV_Move,
 {
 return(0);
 }
+REGFUNC_END
 

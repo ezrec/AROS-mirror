@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.13  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.12  2003/01/18 19:10:01  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -159,14 +162,14 @@ union TypesUnion
 #define TrashMemory(memory,size,character) memset(memory,character,size)
 
 //static ASM VOID FreeVecMemDebug(REG(a0) APTR pool, REG(a1) APTR memptr, REG(a2) STRPTR file, REG(d0) ULONG line);
-static ASM REGFUNC4(VOID, FreeVecMemDebug,
+static ASM REGFUNCPROTO4(VOID, FreeVecMemDebug,
 	REGPARAM(A0, APTR, pool),
 	REGPARAM(A1, APTR, memptr),
 	REGPARAM(A2, STRPTR, file),
 	REGPARAM(D0, ULONG, line));
 
 //static ASM APTR AllocVecMemDebug(REG(a0) APTR mempool, REG(d0) ULONG size,REG(a1) STRPTR file, REG(d1) ULONG line);
-static ASM REGFUNC4(APTR, AllocVecMemDebug,
+static ASM REGFUNCPROTO4(APTR, AllocVecMemDebug,
 	REGPARAM(A0, APTR, mempool),
 	REGPARAM(D0, ULONG, size),
 	REGPARAM(A1, STRPTR, file),
@@ -189,25 +192,25 @@ static BOOL VerifyMemoryWall(char *memory)
 
 #else
 //static ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size);
-static ASM REGFUNC2(APTR, AllocVecMem,
+static ASM REGFUNCPROTO2(APTR, AllocVecMem,
 	REGPARAM(A0, APTR, mempool),
 	REGPARAM(D0, ULONG, size));
 
 //static ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr);
-static ASM REGFUNC2(VOID, FreeVecMem,
+static ASM REGFUNCPROTO2(VOID, FreeVecMem,
 	REGPARAM(A0, APTR, pool),
 	REGPARAM(A1, APTR, memptr));
 #endif
 
 //static SAVEDS ASM APTR BGUI_CreatePool(REG(d0) ULONG memFlags, REG(d1) ULONG puddleSize, REG(d2) ULONG threshSize);
-static SAVEDS ASM REGFUNC3(APTR, BGUI_CreatePool,
+static SAVEDS ASM REGFUNCPROTO3(APTR, BGUI_CreatePool,
 	REGPARAM(D0, ULONG, memFlags),
 	REGPARAM(D1, ULONG, puddleSize),
 	REGPARAM(D2, ULONG, threshSize));
 
 
 //static SAVEDS ASM VOID BGUI_DeletePool(REG(a0) APTR poolHeader);
-static SAVEDS ASM REGFUNC1(VOID, BGUI_DeletePool,
+static SAVEDS ASM REGFUNCPROTO1(VOID, BGUI_DeletePool,
 	REGPARAM(A0, APTR, poolHeader));
 
 /*
@@ -654,7 +657,7 @@ makeproto VOID SetWindowBounds(ULONG windowID, struct IBox *set)
  * Asm stubs for the pool routines.
  */
 //extern ASM APTR AsmCreatePool  ( REG(d0) ULONG, REG(d1) ULONG, REG(d2) ULONG, REG(a6) struct ExecBase * );
-extern ASM REGFUNC4(APTR, AsmCreatePool,
+extern ASM REGFUNCPROTO4(APTR, AsmCreatePool,
 	REGPARAM(D0, ULONG, a),
 	REGPARAM(D1, ULONG, b),
 	REGPARAM(D2, ULONG, c),
@@ -662,14 +665,14 @@ extern ASM REGFUNC4(APTR, AsmCreatePool,
 
 
 //extern ASM APTR AsmAllocPooled ( REG(a0) APTR,  REG(d0) ULONG,                REG(a6) struct ExecBase * );
-extern ASM REGFUNC3(APTR, AsmAllocPooled,
+extern ASM REGFUNCPROTO3(APTR, AsmAllocPooled,
 	REGPARAM(A0, APTR, pool),
 	REGPARAM(D0, ULONG, size),
 	REGPARAM(A6, struct ExecBase *, sysbase));
 
 
 //extern ASM APTR AsmFreePooled  ( REG(a0) APTR,  REG(a1) APTR,  REG(d0) ULONG, REG(a6) struct ExecBase * );
-extern ASM REGFUNC4(APTR, AsmFreePooled,
+extern ASM REGFUNCPROTO4(APTR, AsmFreePooled,
 	REGPARAM(A0, APTR, pool),
 	REGPARAM(A1, APTR, mem),
 	REGPARAM(D0, ULONG, size),
@@ -677,7 +680,7 @@ extern ASM REGFUNC4(APTR, AsmFreePooled,
 
 
 //extern ASM APTR AsmDeletePool  ( REG(a0) APTR,                                REG(a6) struct ExecBase * );
-extern ASM REGFUNC2(APTR, AsmDeletePool,
+extern ASM REGFUNCPROTO2(APTR, AsmDeletePool,
 	REGPARAM(A0, APTR, pool),
 	REGPARAM(A6, struct ExecBase *, sysbase));
 
@@ -704,6 +707,7 @@ static SAVEDS ASM REGFUNC3(APTR, BGUI_CreatePool,
 
    #endif
 }
+REGFUNC_END
 
 /*
  * Delete a memory pool.
@@ -740,6 +744,7 @@ static SAVEDS ASM REGFUNC1(VOID, BGUI_DeletePool,
 
    #endif
 }
+REGFUNC_END
 
 /*
  * Allocate pooled memory.
@@ -799,6 +804,7 @@ static SAVEDS ASM REGFUNC2(APTR, BGUI_AllocPooled,
 #endif
    return(memory);
 }
+REGFUNC_END
 
 /*
  * Free pooled memory.
@@ -873,6 +879,7 @@ static SAVEDS ASM REGFUNC3(VOID, BGUI_FreePooled,
 
    #endif
 }
+REGFUNC_END
 
 /*
  * Allocate memory.
@@ -921,6 +928,7 @@ static ASM REGFUNC2(APTR, AllocVecMem,
 
    return (APTR)mem;
 }
+REGFUNC_END
 
 /*
  * Free memory.
@@ -961,6 +969,7 @@ static ASM REGFUNC2(VOID, FreeVecMem,
        */
       FreeVec(mem);
 }
+REGFUNC_END
 
 /*
  * Allocate memory from the pool.
@@ -1205,6 +1214,7 @@ makeproto ASM REGFUNC3(BOOL, AddIDReport,
 
    return rc;
 }
+REGFUNC_END
 
 /*
  * Get next ID for the window.
@@ -1256,6 +1266,7 @@ makeproto ASM REGFUNC1(ULONG, GetIDReport,
 
    return rc;
 }
+REGFUNC_END
 
 /*
  * Get the window of the first
@@ -1328,6 +1339,7 @@ makeproto ASM REGFUNC1(VOID, RemoveIDReport,
     */
    ReleaseSemaphore(&TaskLock);
 }
+REGFUNC_END
 
 /*
  * Add an open window to the list.
@@ -1366,6 +1378,7 @@ makeproto ASM REGFUNC2(VOID, AddWindow,
     */
    ReleaseSemaphore(&TaskLock);
 }
+REGFUNC_END
 
 /*
  * Remove a window from the list.
@@ -1409,6 +1422,7 @@ makeproto ASM REGFUNC1(VOID, RemWindow,
     */
    ReleaseSemaphore(&TaskLock);
 }
+REGFUNC_END
 
 /*
  * Find the window located under the mouse.
@@ -1453,6 +1467,7 @@ makeproto ASM REGFUNC1(Object *, WhichWindow,
 
    return win;
 }
+REGFUNC_END
 
 static PI *FindPrefInfo(TM *tm, ULONG id)
 {
@@ -1731,6 +1746,7 @@ makeproto SAVEDS ASM REGFUNC1(ULONG, BGUI_CountTagItems,
 
    return n;
 }
+REGFUNC_END
 
 //makeproto SAVEDS ASM struct TagItem *BGUI_MergeTagItems(REG(a0) struct TagItem *tags1, REG(a1) struct TagItem *tags2)
 makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_MergeTagItems,
@@ -1758,6 +1774,7 @@ makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_MergeTagItems,
    };
    return NULL;
 }
+REGFUNC_END
 
 //makeproto SAVEDS ASM struct TagItem *BGUI_CleanTagItems(REG(a0) struct TagItem *tags, REG(d0) LONG dir)
 makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_CleanTagItems,
@@ -1788,6 +1805,7 @@ makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_CleanTagItems,
    FreeTagItems(tags);
    return tag;
 }
+REGFUNC_END
 
 #ifdef __AROS__
 makearosproto

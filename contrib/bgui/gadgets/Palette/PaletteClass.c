@@ -10,6 +10,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.7  2003/01/18 19:10:18  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -179,6 +182,7 @@ STATIC ASM REGFUNC2(UWORD, ValidateColor,
 
    return( i );
 }
+REGFUNC_END
 
 /*
  * Create a new palette object.
@@ -294,6 +298,7 @@ METHOD(PaletteClassNew, struct opSet *,ops)
    }
    return 0;
 }
+METHOD_END
 
 /*
  * Dispose of the object.
@@ -320,6 +325,7 @@ METHOD(PaletteClassDispose, Msg,msg)
    }
    return rc;
 }
+METHOD_END
 
 /*
  * Get an attribute.
@@ -353,6 +359,7 @@ METHOD(PaletteClassGet, struct opGet *,opg)
    };
    return rc;
 }
+METHOD_END
 
 /*
  * Render the color rectangles
@@ -492,6 +499,7 @@ STATIC ASM REGFUNC4(VOID, RenderColorRects,
       top += rowsize;
    }
 }
+REGFUNC_END
 
 /*
  * Render the palette object.
@@ -568,6 +576,7 @@ METHOD(PaletteClassRender, struct gpRender *,gpr)
 
    return rc;
 }
+METHOD_END
 
 /*
  * Get the pen number of
@@ -589,6 +598,7 @@ STATIC ASM REGFUNC2(ULONG, GetPenNumber,
     */
    return( num + pd->pd_ColorOffset );
 }
+REGFUNC_END
 
 /*
  * Determine the ordinal number
@@ -622,6 +632,7 @@ STATIC ASM REGFUNC2(ULONG, GetOrdinalNumber,
     */
    return( pen - pd->pd_ColorOffset );
 }
+REGFUNC_END
 
 /*
  * Determine which color rectangle
@@ -649,6 +660,7 @@ STATIC ASM REGFUNC3(UWORD, GetColor,
     */
    return(( UWORD )GetPenNumber( pd, ( row * pd->pd_Columns ) + col ));
 }
+REGFUNC_END
 
 /*
  * Get the top-left position of
@@ -678,6 +690,7 @@ STATIC ASM REGFUNC4(VOID, GetTopLeft,
    *x = pd->pd_ColorBox.Left + ( col * pd->pd_RectWidth  );
    *y = pd->pd_ColorBox.Top  + ( row * pd->pd_RectHeight );
 }
+REGFUNC_END
 
 /*
  * Notify about an attribute change.
@@ -749,6 +762,7 @@ STATIC ASM REGFUNC3(VOID, ChangeSelectedColor,
     */
    pd->pd_CurrentColor = newcolor;
 }
+REGFUNC_END
 
 /*
  * Set attributes.
@@ -813,6 +827,7 @@ METHOD(PaletteClassSet, struct opUpdate *,opu)
 
    return rc;
 }
+METHOD_END
 
 /*
  * Let's go active :)
@@ -898,6 +913,7 @@ METHOD(PaletteClassGoActive, struct gpInput *,gpi)
    }
    return rc;
 }
+METHOD_END
 
 /*
  * Handle the user input.
@@ -1000,6 +1016,7 @@ METHOD(PaletteClassHandleInput, struct gpInput *,gpi)
    }
    return rc;
 }
+METHOD_END
 
 /*
  * Go inactive.
@@ -1039,6 +1056,7 @@ METHOD(PaletteClassGoInactive, struct gpGoInactive *,ggi)
 
    return rc;
 }
+METHOD_END
 
 /*
  * Tell'm our minimum dimensions.
@@ -1092,6 +1110,7 @@ METHOD(PaletteClassDimensions, struct grmDimensions *,dim)
 
    return rc;
 }
+METHOD_END
 
 /*
  * Key activation.
@@ -1136,6 +1155,7 @@ METHOD(PaletteClassKeyActive, struct wmKeyInput *,wmki)
 
    return( WMKF_VERIFY );
 }
+METHOD_END
 
 /*
  * The baseclass is asking us to create a bitmap containing
@@ -1194,6 +1214,7 @@ METHOD(PaletteClassGetObject, struct bmGetDragObject *,bmgo)
    }
    return( rc );
 }
+METHOD_END
 
 /*
  * Deallocate the bitmap we created above.
@@ -1206,6 +1227,7 @@ METHOD(PaletteClassFreeObject, struct bmFreeDragObject *,bmfo)
    BGUI_FreeBitMap(bmfo->bmfo_ObjBitMap);
    return 1;
 }
+METHOD_END
 
 /*--------------------------------LIBARY CODE FOLLOWS-----------------------------------*/
 

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.4  2003/01/18 19:09:56  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -131,6 +134,7 @@ STATIC ASM REGFUNC2(BOOL, SetupAttrList,
 
    return FALSE;
 }
+REGFUNC_END
 ///
 ///GetTrackChanges()
 /*
@@ -149,6 +153,7 @@ STATIC ASM REGFUNC1(VOID, GetTrackChanges,
       AsmDoMethod(ed->ed_Object, OM_GET, tag->ti_Tag, &tag->ti_Data);
 
 }
+REGFUNC_END
 ///
 ///SetupSize()
 /*
@@ -180,6 +185,7 @@ STATIC ASM REGFUNC2(VOID, SetupSize,
    }
 
 }
+REGFUNC_END
 ///
 
 /// OM_NEW
@@ -245,6 +251,7 @@ METHOD(ExtClassNew, struct opSet *, ops)
     }
     return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 METHOD(ExtClassDispose, Msg, msg)
@@ -278,6 +285,7 @@ METHOD(ExtClassDispose, Msg, msg)
 
     return rc;
 }
+METHOD_END
 ///
 /// OM_GET
 METHOD(ExtClassGet, struct opGet *, opg )
@@ -306,6 +314,7 @@ METHOD(ExtClassGet, struct opGet *, opg )
 
     return rc;
 }
+METHOD_END
 ///
 ///BASE_DIMENSIONS
 METHOD(ExtClassDimensions, struct bmDimensions *, msg)
@@ -320,6 +329,7 @@ METHOD(ExtClassDimensions, struct bmDimensions *, msg)
 
     return rc;
 }
+METHOD_END
 ///
 ///GM_HITTEST
 METHOD(ExtClassHitTest, Msg, msg)
@@ -340,6 +350,7 @@ METHOD(ExtClassHitTest, Msg, msg)
 
     return rc;
 }
+METHOD_END
 ///
 ///GM_HANDLEINPUT,GM_GOACTIVE
 METHOD(ExtClassHandleInput, Msg, msg)
@@ -354,6 +365,7 @@ METHOD(ExtClassHandleInput, Msg, msg)
 
     return rc;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 METHOD(ExtClassRender, struct bmRender *, bmr)
@@ -415,6 +427,7 @@ METHOD(ExtClassRender, struct bmRender *, bmr)
 
     return rc;
 }
+METHOD_END
 ///
 
 ///ExtClassDispatch()
@@ -502,6 +515,7 @@ SAVEDS ASM STATIC REGFUNC3(ULONG, ExtClassDispatch,
 #endif
    return rc;
 }
+REGFUNC_END
 
 ///
 

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:27:00  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -89,6 +92,7 @@ METHOD(AreaClassNew, struct opSet *,ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_GET
 METHOD(AreaClassGet, struct opGet *,opg)
@@ -119,6 +123,7 @@ METHOD(AreaClassGet, struct opGet *,opg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// BASE_RENDER
 
@@ -136,6 +141,7 @@ METHOD(AreaClassRender, struct bmRender *,bmr)
 
    return 1;
 }
+METHOD_END
 ///
 /// GM_HITTEST
 /*
@@ -145,6 +151,7 @@ METHOD(AreaClassHitTest, Msg, msg)
 {
    return 0;
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -160,6 +167,7 @@ METHOD(AreaClassDimensions, struct bmDimensions *,bmd)
     */
    return CalcDimensions(cl, obj, bmd, ad->ad_MinWidth, ad->ad_MinHeight);
 }
+METHOD_END
 ///
 /// Class initialization.
 /*

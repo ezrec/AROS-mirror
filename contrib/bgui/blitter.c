@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.5  2003/01/18 19:09:55  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -88,6 +91,7 @@ makeproto ASM REGFUNC1(VOID, EraseBMO,
 
    ReleaseSemaphore(&bmo->bmo_Lock);
 }
+REGFUNC_END
 
 //STATIC VOID ASM SAVEDS backfill_func(REG(a0) struct Hook *hook, REG(a2) struct RastPort *rp, REG(a1) BFINFO *bf)
 STATIC SAVEDS ASM REGFUNC3(VOID, backfill_func,
@@ -104,6 +108,7 @@ STATIC SAVEDS ASM REGFUNC3(VOID, backfill_func,
 
    BltBitMap(bmo->bmo_ObjectBuffer, bf->bf_X, bf->bf_Y, rp->BitMap, x, y, w, h, 0xC0, 0xFF, NULL);
 }
+REGFUNC_END
 
 static struct Hook bf_hook = { NULL, NULL, (FUNCPTR)backfill_func, NULL, NULL };
 
@@ -122,6 +127,7 @@ makeproto ASM REGFUNC1(VOID, LayerBMO,
       Signal((struct Task *)bmo->bmo_Process, SIGBREAKF_CTRL_F);
    };
 }
+REGFUNC_END
 
 //makeproto VOID ASM DrawBMO(REG(a0) BMO *bmo)
 makeproto ASM REGFUNC1(VOID, DrawBMO,
@@ -160,6 +166,7 @@ makeproto ASM REGFUNC1(VOID, DrawBMO,
 
    ReleaseSemaphore(&bmo->bmo_Lock);
 }  
+REGFUNC_END
 
 static void KillDragObject(BMO *bmo)
 {
@@ -425,7 +432,7 @@ makeproto ASM REGFUNC2(BMO *, CreateBMO,
    }
    return NULL;
 }
-
+REGFUNC_END
 
 /*
  * Cleanup the mess we made.
@@ -439,6 +446,7 @@ makeproto ASM REGFUNC1(VOID, DeleteBMO,
     */
    Signal((struct Task *)bmo->bmo_Process, SIGBREAKF_CTRL_C);
 }
+REGFUNC_END
 
 /*
  * Move the chunk to a new location.
@@ -462,3 +470,4 @@ makeproto ASM REGFUNC3(VOID, MoveBMO,
     */
    Signal((struct Task *)bmo->bmo_Process, SIGBREAKF_CTRL_D);
 }
+REGFUNC_END

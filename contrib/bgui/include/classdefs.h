@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.12  2004/06/16 20:16:49  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.11  2003/01/18 19:10:21  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -644,7 +647,7 @@ extern const UBYTE LibID[];
 #define RenderBackFillRaster(rp,ib,apen,bpen) RenderBackFillRasterDebug(rp,ib,apen,bpen,__FILE__,__LINE__)
 #else
 //ASM VOID SRectFill(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
-ASM REGFUNC5(VOID, SRectFill,
+ASM REGFUNCPROTO5(VOID, SRectFill,
 	REGPARAM(A0, struct RastPort *, rp),
 	REGPARAM(D0, LONG, l),
 	REGPARAM(D1, LONG, t),
@@ -653,7 +656,7 @@ ASM REGFUNC5(VOID, SRectFill,
 
 
 //ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
-ASM REGFUNC5(VOID, BRectFill,
+ASM REGFUNCPROTO5(VOID, BRectFill,
 	REGPARAM(A0, struct BaseInfo *, bi),
 	REGPARAM(D0, LONG, l),
 	REGPARAM(D1, LONG, t),
@@ -662,7 +665,7 @@ ASM REGFUNC5(VOID, BRectFill,
 
 
 //ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen);
-ASM REGFUNC4(VOID, RenderBackFillRaster,
+ASM REGFUNCPROTO4(VOID, RenderBackFillRaster,
 	REGPARAM(A0, struct RastPort *, rp),
 	REGPARAM(A1, struct IBox *, ib),
 	REGPARAM(D0, UWORD, apen),

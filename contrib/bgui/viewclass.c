@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2004/06/16 20:16:48  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.1  2000/05/15 19:27:03  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -233,6 +236,7 @@ METHOD(ViewClassNew, struct opSet *, ops)
 
    return rc;
 }
+METHOD_END
 ///
 /// OM_DISPOSE
 
@@ -250,6 +254,7 @@ METHOD(ViewClassDispose, Msg, msg)
       
    return AsmDoSuperMethodA(cl, obj, msg);
 }
+METHOD_END
 ///
 /// OM_SET
 METHOD(ViewClassSet, struct opSet *, ops)
@@ -368,6 +373,7 @@ METHOD(ViewClassSet, struct opSet *, ops)
    
    return rc;
 }
+METHOD_END
 ///
 /// OM_GET
 METHOD(ViewClassGet, struct opGet *, opg)
@@ -441,6 +447,7 @@ METHOD(ViewClassGet, struct opGet *, opg)
    };
    return rc;
 }
+METHOD_END
 ///
 /// ViewClassForward
 /*
@@ -468,6 +475,7 @@ METHOD(ViewClassForward, Msg, msg)
    }
    return rc;
 }
+METHOD_END
 ///
 /// GM_RENDER
 
@@ -600,6 +608,7 @@ METHOD(ViewClassRender, struct gpRender *, gpr)
 
    return rc;
 }
+METHOD_END
 ///
 
 /*
@@ -721,6 +730,7 @@ METHOD(ViewClassHitTest, struct gpHitTest *, gph)
    };
    return rc;
 }
+METHOD_END
 ///
 /// GM_HANDLEINPUT
 /*
@@ -792,6 +802,7 @@ METHOD(ViewClassHandleInput, struct gpInput *, gpi)
    };
    return 0;
 }
+METHOD_END
 ///
 /// GM_GOINACTIVE
 /*
@@ -846,6 +857,7 @@ METHOD(ViewClassGoInactive, struct gpGoInactive *, gpgi)
    };
    return rc;
 }
+METHOD_END
 ///
 /// GRM_WHICHOBJECT
 /*
@@ -890,6 +902,7 @@ METHOD(ViewClassWhichObject, struct grmWhichObject *, grwo)
    };
    return (ULONG)ob;
 }
+METHOD_END
 ///
 /// BASE_DIMENSIONS
 /*
@@ -934,6 +947,7 @@ METHOD(ViewClassDimensions, struct bmDimensions *, bmd)
     */
    return CalcDimensions(cl, obj, bmd, mw + vd->vd_ScrollerW, mh + vd->vd_ScrollerH);
 }
+METHOD_END
 ///
 /// VIEW_CLIP
 
@@ -959,12 +973,14 @@ METHOD(ViewClassClip, struct vmClip *, vmc)
 
    return 1;
 }
+METHOD_END
 ///
 /// BASE_IS_MULTI
 METHOD(ViewClassIsMulti, Msg, msg)
 {
    return TRUE;
 }
+METHOD_END
 ///
 /// Class initialization.
 /*

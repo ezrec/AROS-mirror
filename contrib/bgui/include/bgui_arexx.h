@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.11  2004/06/16 20:16:49  verhaegs
+ * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
+ *
  * Revision 42.10  2003/01/18 19:10:21  chodorowski
  * Instead of using the _AROS or __AROS preprocessor symbols, use __AROS__.
  *
@@ -167,7 +170,7 @@ typedef struct {
         UBYTE                   *rc_Name;         /* Command name. */
         UBYTE                   *rc_ArgTemplate;  /* DOS-style argument template. */
 //        ASM VOID                (*rc_Func)( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
-        ASM REGFUNC2(VOID, (*rc_Func),
+        ASM REGFUNCPROTO2(VOID, (*rc_Func),
                 REGPARAM(A0, REXXARGS *,),
                 REGPARAM(A1, struct RexxMsg *, ));
 }       REXXCOMMAND;
