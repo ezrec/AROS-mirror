@@ -661,6 +661,7 @@ streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 )
 {
   int error, seed;
   char text[30];
+  streng *s, *retval;
   
   checkparam( parm1, 0, 1, "RANDU" );
   
@@ -673,6 +674,10 @@ streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 )
     srand48( (long int)seed );
   }
   
-  sprintf( text, "%f", drand48() );
-  return Str_cre_TSD( TSD, text );
+  sprintf( text, "%.20f", drand48() );
+  s = Str_cre_TSD( TSD, text );
+  retval = str_format( TSD, s, -1, -1, -1, -1);
+  FreeTSD( s );
+  
+  return retval;
 }
