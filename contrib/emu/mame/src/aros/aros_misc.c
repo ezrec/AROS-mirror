@@ -1,5 +1,9 @@
 #include <exec/types.h>
+#include <devices/timer.h>
+#include <proto/exec.h>
+#include <proto/timer.h>
 
+#include "aros_main.h"
 #include "aros_misc.h"
 
 /************************************************************************************/
@@ -95,6 +99,22 @@ unsigned long crc32(unsigned long crc, unsigned char *buf, unsigned int len)
 }
 
 /************************************************************************************/
+
+TICKER AROS_Ticker(void)
+{
+    static ULONG basetime;
+    
+    struct timeval tv;
+    TICKER result;
+    
+    GetSysTime(&tv);    
+    if (!basetime) basetime = tv.tv_secs;
+    
+    result = (tv.tv_secs - basetime) * TICKS_PER_SEC + (tv.tv_micro) * TICKS_PER_SEC / 1000000;
+    
+    return result;
+}
+
 /************************************************************************************/
 /************************************************************************************/
 /************************************************************************************/
