@@ -99,11 +99,11 @@ UWORD		 pens[]={ ~0 };
 
 int16 InitLibs(void)
 {
-    IntuitionBase = OpenLibrary((uint8 *)"intuition.library",39);
+    IntuitionBase = (struct IntuitionBase *)OpenLibrary((uint8 *)"intuition.library",39);
     if (NULL != IntuitionBase)
     {
 	IntNode = EnterCleanNode (CleanUpLib,IntuitionBase,0);
-	GfxBase = OpenLibrary((uint8 *)"graphics.library",39);
+	GfxBase = (struct GfxBase *)OpenLibrary((uint8 *)"graphics.library",39);
 	if (NULL != GfxBase)
 	{
 	    GfxNode = EnterCleanNode (CleanUpLib,GfxBase,0);

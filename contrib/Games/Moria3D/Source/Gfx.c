@@ -1755,7 +1755,7 @@ void MainLoop(void)
 	    rend = 100.0*RenderTime/TotalTime;
 	    wpa = 100.0*WPA8Time/TotalTime;
 
-	    printf("FPS = %3d.%02d  Rendern %2d.%02d   WPA8 %2d.%02d\n"
+	    printf("FPS = %3ld.%02ld  Rendern %2ld.%02ld   WPA8 %2ld.%02ld\n"
 		,fps/100,fps%100
 		,rend/100,rend%100
 		,wpa/100,wpa%100
