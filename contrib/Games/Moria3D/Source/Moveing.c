@@ -349,7 +349,7 @@ void MoveBots(void)
     }
 }
 
-#define _AROS_BUG
+/* #define _AROS_BUG */
 
 void MovePlayer(pBot MyPlayer)
 {
