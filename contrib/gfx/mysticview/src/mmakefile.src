@@ -32,7 +32,7 @@ FILES := MysticView		\
 
 EXEDIR := $(CONTRIBDIR)/Gfx/MysticView
 
-##MM- contrib-gfx : contrib-gfx-mysticview
+#MM- contrib-gfx : contrib-gfx-mysticview
 #MM contrib-gfx-mysticview : includes linklibs contrib-gfx-libs-mysticview
 
 %build_prog mmake=contrib-gfx-mysticview \
