@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,11 +20,28 @@
      MA 02139, USA.
 */
 
-#ifndef _AUDIOCTRL_H_
-#define _AUDIOCTRL_H_
+#ifndef ahi_audioctrl_h
+#define ahi_audioctrl_h
 
 #include "ahi_def.h"
 
-struct AHIPrivAudioCtrl* CreateAudioCtrl(struct TagItem *tags);
+struct AHIAudioCtrl*
+AllocAudioA( struct TagItem* tags,
+             struct AHIBase* AHIBase );
 
-#endif /* _AUDIOCTRL_H_ */
+ULONG
+FreeAudio( struct AHIPrivAudioCtrl* audioctrl,
+           struct AHIBase*          AHIBase );
+
+ULONG
+KillAudio( struct AHIBase* AHIBase );
+
+ULONG
+ControlAudioA( struct AHIPrivAudioCtrl* audioctrl,
+               struct TagItem*          tags,
+               struct AHIBase*          AHIBase );
+
+struct AHIPrivAudioCtrl*
+CreateAudioCtrl( struct TagItem *tags );
+
+#endif /* ahi_audioctrl_h */

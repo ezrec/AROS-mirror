@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,8 +20,8 @@
      MA 02139, USA.
 */
 
-#ifndef _DSPECHO_H_
-#define _DSPECHO_H_
+#ifndef ahi_dspecho_h
+#define ahi_dspecho_h
 
 #include <config.h>
 #include <CompilerSpecific.h>
@@ -49,4 +49,4 @@ do_DSPEchoStereo32( struct Echo *es,
                     void *buf,
                     struct AHIPrivAudioCtrl *audioctrl );
 
-#endif /* _DSPECHO_H_ */
+#endif /* ahi_dspecho_h */

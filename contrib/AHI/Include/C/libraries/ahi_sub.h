@@ -2,12 +2,12 @@
 #define LIBRARIES_AHISUB_H
 
 /*
-**	$VER: ahi_sub.h 5.0 (17.1.98)
+**	$VER: ahi_sub.h 5.2 (4.3.01)
 **	:ts=8 (TAB SIZE: 8)
 **
 **	ahi/[driver].audio definitions
 **
-**	(C) Copyright 1994-1998 Martin Blom
+**	(C) Copyright 1994-2003 Martin Blom
 **	All Rights Reserved.
 **
 */
@@ -49,7 +49,7 @@ struct AHIAudioCtrlDrv
 	UWORD	     ahiac_Channels;		/* AHIA_Channels		*/
 	UWORD	     ahiac_Sounds;		/* AHIA_Sounds			*/
 
-	APTR	    ahiac_DriverData;		/* Unused. Store whatever you want here. */
+	APTR	     ahiac_DriverData;		/* Unused. Store whatever you want here. */
 
 	struct Hook *ahiac_MixerFunc;		/* Mixing routine Hook		*/
 	struct Hook *ahiac_SamplerFunc;		/* Sampler routine Hook		*/
@@ -59,8 +59,8 @@ struct AHIAudioCtrlDrv
 	ULONG	     ahiac_MaxBuffSamples;	/* Max. samples to mix each pass. */
 	ULONG	     ahiac_BuffSize;		/* Buffer size ahiac_MixerFunc needs. */
 	ULONG	     ahiac_BuffType;		/* Buffer format (V2)		*/
-	BOOL	   (*ahiac_PreTimer)();		/* Call before mixing (V4)	*/
-	void	   (*ahiac_PostTimer)();	/* Call after mixing (V4)	*/
+	BOOL	   (*ahiac_PreTimer)(void);	/* Call before mixing (V4)	*/
+	void	   (*ahiac_PostTimer)(void);	/* Call after mixing (V4)	*/
 	ULONG	     ahiac_AntiClickSamples;	/* AntiClick samples (V5)	*/
 
 /* The rest is PRIVATE! Hands off! They may change any time.

@@ -25,11 +25,13 @@ CATDIR		= ${DISTDIR}/User/Catalogs
 build_os	= @build_os@
 
 CC		= @CC@
+STRIP		= @STRIP@
+
 INSTALL		= @INSTALL@
 INSTALL_PROGRAM	= @INSTALL_PROGRAM@
 INSTALL_DATA	= @INSTALL_DATA@
 
-CPPFLAGS	= @CPPFLAGS@ -I.. -I${srcdir} -I${top_srcdir}
+CPPFLAGS	= @CPPFLAGS@ -I${top_srcdir} -I${srcdir}
 CFLAGS		= @CFLAGS@
 LDFLAGS		= @LDFLAGS@
 LIBS		= @LIBS@
@@ -71,9 +73,12 @@ maintainer-clean: distclean
 
 bindist:	all
 	$(INSTALL) --directory $(PREFSDIR)
-	for i in $(TARGETS); do \
-	  $(INSTALL_PROGRAM) --strip $$i $(PREFSDIR)/$$i; \
-	done
+	$(INSTALL_PROGRAM) AHI_MUI $(PREFSDIR)/AHI
+	$(STRIP) $(PREFSDIR)/AHI
+#	for i in $(TARGETS); do \
+#	  $(INSTALL_PROGRAM) $$i $(PREFSDIR)/$$i; \
+#	  $(STRIP) $(PREFSDIR)/$$i; \
+#	done
 	$(INSTALL_DATA) ${srcdir}/AHI.info $(PREFSDIR)
 	$(INSTALL_DATA) ${srcdir}/AHI.MWB.info $(PREFSDIR)
 	for i in $(LANGUAGES); do \
@@ -86,15 +91,15 @@ bindist:	all
 version.h:	version.rev version.date
 	@echo Creating $@
 	@ver=`cat $(top_srcdir)/version.ver` \
-	 rev=`cat version.rev` \
-	 date=`cat version.date` && \
+	 rev=`cat $(srcdir)/version.rev` \
+	 date=`cat $(srcdir)/version.date` && \
 	 echo "#define VERS \"$$ver.$$rev ($$date)\"" > $@
 
 revup:
-	@rev=`cat version.rev` && echo `expr $$rev + 1` > version.rev
-	@date +%d.%m.%y > version.date
+	@rev=`cat $(srcdir)/version.rev` && echo `expr $$rev + 1` > $(srcdir)/version.rev
+	@date +%d.%m.%y > $(srcdir)/version.date
 	@echo -n "New revision: "
-	@cat version.rev
+	@cat $(srcdir)/version.rev
 
 #
 # Auto-remake autoconf stuff
@@ -134,17 +139,20 @@ $(srcdir)/ahiprefs_Cat.h:	$(srcdir)/ahiprefs.cd $(srcdir)/C_h_noauto.sd
 # Dependencies
 ########################################
 
-SOURCES		= $(notdir $(wildcard $(srcdir)/*.c))
-HEADERS		= $(notdir $(wildcard $(srcdir)/*.h))
+SOURCES		= $(wildcard $(srcdir)/*.c)
+HEADERS		= $(wildcard $(srcdir)/*.h)
 
-Makefile.dep:	$(SOURCES) $(HEADERS) version.h
+#DEPENDENCIES	= $(SOURCES) $(HEADERS)
+
+.PHONY:	depend
+
+depend:
+	$(RM) Makefile.dep
+	$(MAKE) Makefile.dep
+
+Makefile.dep:	$(DEPENDENCIES) version.h
 	@echo Making $@
-ifneq ($(build_os),amigaos)
 	-@$(CC) $(CPPFLAGS) $(CFLAGS) -MM $(SOURCES) > $@
-else
-	-@touch $@
-	-@makedepend -f $@ -I $(srcdir) $(SOURCES)
-endif
 
 include Makefile.dep
 

@@ -1,303 +1,309 @@
-## version $VER: ahiprefs.catalog 4.5 (13.12.97)
+## version $VER: ahiprefs.ct 4.5 (30.12.01)
 ## language magyar
 ## codeset 0
 ;
-## chunk AUTH Translated by Vörös Viktor <v_viktor@hotmail.com>
+## chunk AUTH Dósa Márton (dm_@freemail.hu)
 ;
+; The .ct file was generated from
 ; $Id$
-; $Log$
-; Revision 1.1  2000/04/01 00:25:39  bernie
-; Also forgot these
 ;
-; Revision 1.4  1999/08/29 23:44:03  lcs
-; Added support for ahigp_AntiClickTime.
-;
-; Revision 4.5  1997/04/27 16:16:06  lcs
-; Added "Mastervolume with(out) clipping".
-;
-; Revision 4.4  1997/04/23 21:08:31  lcs
-; Removed (Disabled)
-;
-; Revision 4.2  1997/04/07 01:36:51  lcs
-; Localized it, bug fixes
-;
+;    AHI - Hardware independent audio subsystem
+;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+;     
+;    This library is free software; you can redistribute it and/or
+;    modify it under the terms of the GNU Library General Public
+;    License as published by the Free Software Foundation; either
+;    version 2 of the License, or (at your option) any later version.
+;     
+;    This library is distributed in the hope that it will be useful,
+;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;    Library General Public License for more details.
+;     
+;    You should have received a copy of the GNU Library General Public
+;    License along with this library; if not, write to the
+;    Free Software Foundation, Inc., 59 Temple Place - Suite 330, Cambridge,
+;    MA 02139, USA.
 ;
 ; *** Menus ***
 ;
 msgMenuProject
-\000Állomány
-;\000Project
+\000Projekt
+; \000Project
 ;
 msgItemOpen
 O\000Megnyitás...
-;O\000Open...
+; O\000Open...
 ;
 msgItemSaveAs
-A\000Más néven mentés...
-;A\000Save As...
+A\000Mentés mint...
+; A\000Save As...
 ;
 msgItemAbout
-?\000Rólam...
-;?\000About...
+?\000Névjegy...
+; ?\000About...
 ;
 msgItemQuit
 Q\000Kilépés
-;Q\000Quit
+; Q\000Quit
 ;
 msgMenuEdit
 \000Szerkesztés
-;\000Edit
+; \000Edit
 ;
 msgItemDefaults
-D\000Alapértelmezés
-;D\000Reset To Defaults
+D\000Alapértelmezettek visszaállítása
+; D\000Reset To Defaults
 ;
 msgItemLastSaved
-L\000Utoljára tárolt
-;L\000Last Saved
+L\000Utoljára mentett
+; L\000Last Saved
 ;
 msgItemRestore
-R\000Eddig használt
-;R\000Restore
+R\000Visszaállítás
+; R\000Restore
 ;
 msgMenuSettings
-\000Opciók
-;\000Settings
+\000Beállítások
+; \000Settings
 ;
 msgItemCreateIcons
-I\000Ikonokat készít?
-;I\000Create Icons?
+I\000Ikonok létrehozása?
+; I\000Create Icons?
 ;
 msgMenuHelp
 \000Segítség
-;\000Help
+; \000Help
 ;
 msgItemHelp
 Help\000Segítség...
-;Help\000Help...
+; Help\000Help...
 ;
 msgItemUsersGuide
-H\000AHI felhasználói leírás...
-;H\000AHI User's guide...
+H\000AHI felhasználói segédlet...
+; H\000AHI User's guide...
 ;
 msgItemConceptIndex
-\000Index...
-;\000Concept Index...
+\000Elgondolás index...
+; \000Concept Index...
 ;
 ; *** The pages ***
 ;
 msgPageMode
-Mód beállítások
-;Mode settings
+Módbeállítások
+; Mode settings
 ;
 msgPageAdvanced
-Részletes beállítások
-;Advanced settings
+Haladó beállítások
+; Advanced settings
 ;
 ; *** The units ***
 ;
 msgUnitDevice
 %ld. egység
-;Unit %ld
+; Unit %ld
 ;
 msgUnitMusic
 Zene egység
-;Music unit
+; Music unit
 ;
 ; *** Properties box ***
 ;
 msgProperties
-Mód azonosító\nRögzítés\nKészítô\nCopyright\nMeghajtó\nVerzió
-;Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+Mód ID\nFelvétel\nSzerzõ\nCopyright\nMeghajtóprogram\nVerzió
+; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
 ;
 msgPropRecordFull
-Teljes duplex
-;Full duplex
+Duplex
+; Full duplex
 ;
 msgPropRecordHalf
 Fél duplex
-;Half duplex
+; Half duplex
 ;
 msgPropRecordNone
-Nincs
-;Nope
+Nem
+; Nope
 ;
 ; *** Options ***
 ;
 msgOptions
 Opciók
-;Options
+; Options
 ;
 msgOptFrequency
 _Frekvencia
-;_Frequency
+; _Frequency
 ;
 msgOptChannels
-C_satornák
-;C_hannels
+Csatornák
+; C_hannels
 ;
 msgOptNoChannels
 
-;
+; 
 ;
 msgOptVolume
-_Hangerô
-;_Volume
+Hangerõ
+; _Volume
 ;
 msgOptMonitor
-M_onitor
-;_Monitor
+_Monitor
+; _Monitor
 ;
 msgOptGain
-_Erôsítés
-;_Gain
+_Gain
+; _Gain
 ;
 msgOptMuted
-Néma
-;Muted
+Némítva
+; Muted
 ;
 msgOptInput
-_Bemenet
-;_Input
+Bemenet
+; _Input
 ;
 msgOptNoInputs
-Nincs bemenet
-;No inputs
+Nincsenek bemenetek
+; No inputs
 ;
 msgOptOutput
-_Kimenet
-;_Output
+Kimenet
+; _Output
 ;
 msgOptNoOutputs
-Nincs kimenet
-;No outputs
+Nincsenek kimenetek
+; No outputs
 ;
 ;
 ; *** Global Options ***
 ;
 msgGlobalOptions
 Globális opciók
-;Global options
+; Global options
 ;
 msgGlobOptDebugLevel
-_Debug szint
-;_Debug level
+Hibakeresés szintje
+; _Debug level
 ;
 msgGlobOptEcho
-_Visszhang
-;_Echo
+Visszhang
+; _Echo
 ;
 msgGlobOptSurround
-_Térhatás "Fast" módban
-;Surround in "_Fast" modes
+Térhatás a "Gyors" módokban
+; Surround in "_Fast" modes
 ;
 msgGlobOptCPULimit
-CPU haszná_lati határ
-;CPU usage _limit
+CPU használati határ
+; CPU usage _limit
 ;
 ; *** Debug levels ***
 ;
 msgDebugNone
 Nincs
-;None
+; None
 ;
 msgDebugLow
 Alacsony
-;Low
+; Low
 ;
 msgDebugHigh
 Magas
-;High
+; High
 ;
 msgDebugFull
 Teljes
-;Full
+; Full
 ;
 ; *** Echo ***
 ;
 msgEchoEnabled
-Engedélyezve
-;Enabled
+Bekapcsolva
+; Enabled
 ;
 msgEchoFast
 Gyors
-;Fast
+; Fast
 ;
 msgEchoDisabled
-Nincs engedélyezve
-;Disabled
+Kikapcsolva
+; Disabled
 ;
 ; *** Surround ***
 ;
 msgSurroundEnabled
-Engedélyezve
-;Enabled
+Bekapcsolva
+; Enabled
 ;
 msgSurroundDisabled
-Nincs engedélyezve
-;Disabled
+Kikapcsolva
+; Disabled
 ;
 ; *** Buttons ***
 ;
 msgButtonSave
-_Mentés
-;_Save
+Ment_sd
+; _Save
 ;
 msgButtonUse
-_Használd
-;_Use
+Használd
+; _Use
 ;
 msgButtonCancel
-Mé_gsem
-;_Cancel
+Mégse
+; _Cancel
 ;
 msgButtonOK
-OK
-;OK
+Oké
+; OK
 ;
 ; *** Texts ***
 ;
 msgTextProgramName
 AHI beállítások
-;AHI preferences
+; AHI preferences
 ;
 ;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
 msgTextCopyright
-%s%s\nCopyright ©%s\nMagyar fordítás: Vörös Viktor
-;%s%s\nCopyright ©%s
+%s%s\nCopyright ©%s
+; %s%s\nCopyright ©%s
 ;
 msgTextNoWindow
-Nem tudom megnyitni az ablakot.
-;Unable to open window.
+Nem tudok ablakot nyitni.
+; Unable to open window.
 ;
 msgTextNoFileRequester
-Nemtudom a fájl kérdezôt allokálni
-;Unable to allocate file requester.
+Nem tudok fájlkérdezõt lefoglalni.
+; Unable to allocate file requester.
 ;
 msgTextNoFind
-Nem találom `%s'-t!
-;Unable to find `%s'!
+Nem találom: '%s'!
+; Unable to find `%s'!
 ;
 msgTextNoOpen
-Nem tudom a `%s´ %ld verzióját megnyitni.
-;Unable to open `%s´ version %ld.
+Nem tudom megnyitni: '%s' %ld verzió.
+; Unable to open `%s´ version %ld.
 ;
 ; *** Additions
 ;
 msgGlobOptMasterVol
-_Fô hangerô
-;_Master volume
+_Mester hangerõ
+; _Master volume
 ;
 msgMVNoClip
-Levágás nélkül
-;Without clipping
+Vágás nélkül
+; Without clipping
 ;
 msgMVClip
-Levágással
-;With clipping
+Vágással
+; With clipping
 ;
 msgGlobOptACTime
-
-;Anti-click time (ms)
-; ***NEW***
+Alap anti-klikk idõ
+; Default anti-click time
+;
+msgButtonPlay
+Teszthang lejátszása
+; _Play a test sound
 ;

@@ -1,5 +1,16 @@
 
      Changes since last release
      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-     This release includes a couple of bug fixes and
-     support for the PowerPC processor (PowerUp).
+     This version of AHI adds "anti-click" mixing routines, playback of
+     32 bit samples and and support for the PowerPC microprocessor
+     (currently MorphOS only).
+
+     The 68000 processor is no longer supported; a 68020 or better is
+     required.
+
+     The "fast" audio modes are no longer used. They will not be shown
+     in the audio mode requester.
+
+     The non-HiFi modes are not any faster than the HiFi modes. They are
+     just present because some music sound "better" when no interpolation
+     is used.

@@ -35,7 +35,8 @@ SUBDIRS		= AHI AddAudioModes Device Docs Include
 
 
 all:
-	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
+	@cd Include && make gcc-include
+	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@) || exit; done
 
 clean:
 	-@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
@@ -55,11 +56,14 @@ bindist:
 	rm -rf $(DISTDIR)/*
 	$(INSTALL_DATA) ${srcdir}/COPYING $(DISTDIR)
 	$(INSTALL_DATA) ${srcdir}/COPYING.LIB $(DISTDIR)
+	$(INSTALL_DATA) ${srcdir}/COPYING.DRIVERS $(DISTDIR)
+	$(INSTALL_DATA) ${srcdir}/ChangeLog $(DISTDIR)
 
 	$(INSTALL) --directory $(CATDIR)
 	$(INSTALL_DATA) ${srcdir}/README.ATO $(CATDIR)
 	$(INSTALL_DATA) ${srcdir}/README.TRANSLATIONS $(CATDIR)
 
+	@cd Include && make gcc-include
 	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
 
 revup:

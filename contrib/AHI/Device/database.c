@@ -1,8 +1,8 @@
-/* $Id$ */
+//* $Id$ */
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -28,19 +28,24 @@
 #include <dos/dostags.h>
 #include <dos/dos.h>
 #include <libraries/iffparse.h>
+
+#include <clib/alib_protos.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/iffparse.h>
 #include <proto/utility.h>
-#include <clib/ahi_protos.h>
-#include <inline/ahi.h>
+#define __NOLIBBASE__
+#include <proto/ahi.h>
+#undef  __NOLIBBASE__
 #include <proto/ahi_sub.h>
+
 #include <strings.h>
 
 #include "ahi_def.h"
 #include "database.h"
 #include "debug.h"
-
+#include "header.h"
+#include "misc.h"
 
 static ULONG AddModeFile ( UBYTE *filename );
 
@@ -192,9 +197,9 @@ GetDBTagList ( struct AHI_AudioDatabase *audiodb,
 *
 */
 
-ULONG ASMCALL
-NextAudioID( REG(d0, ULONG id),
-             REG(a6, struct AHIBase *AHIBase) )
+ULONG
+NextAudioID( ULONG           id,
+             struct AHIBase* AHIBase )
 {
   struct AHI_AudioDatabase *audiodb;
   struct AHI_AudioMode *node;
@@ -227,9 +232,18 @@ NextAudioID( REG(d0, ULONG id),
       }
     }
 
-    if(node && node->ahidbn_MinNode.mln_Succ)
+    while(node && node->ahidbn_MinNode.mln_Succ)
     {
-      nextid = GetTagData(AHIDB_AudioID, AHI_INVALID_ID, node->ahidbn_Tags);
+      if( GetTagData( AHIDB_MultTable, FALSE, node->ahidbn_Tags ) )
+      {
+	// Pretend the "Fast" modes are not here
+	node = (struct AHI_AudioMode*) node->ahidbn_MinNode.mln_Succ;
+      }
+      else
+      {
+	nextid = GetTagData(AHIDB_AudioID, AHI_INVALID_ID, node->ahidbn_Tags);
+	break;
+      }
     }
 
     UnlockDatabase(audiodb);
@@ -281,14 +295,14 @@ NextAudioID( REG(d0, ULONG id),
 *
 */
 
-ULONG ASMCALL
-AddAudioMode( REG(a0, struct TagItem *DBtags),
-              REG(a6, struct AHIBase *AHIBase) )
+ULONG
+AddAudioMode( struct TagItem* DBtags,
+              struct AHIBase* AHIBase )
 {
   struct AHI_AudioDatabase *audiodb;
   struct AHI_AudioMode *node;
   ULONG nodesize = sizeof(struct AHI_AudioMode), tagitems = 0;
-  ULONG datalength = 0, namelength = 0, driverlength = 0;
+  ULONG datalength = 0, namelength = 0, driverlength = 0, dvrbasenamelength = 0;
   struct TagItem *tstate = DBtags, *tp, *tag;
   ULONG rc = FALSE;
 
@@ -306,7 +320,6 @@ AddAudioMode( REG(a0, struct TagItem *DBtags),
 
   if(audiodb != NULL)
   {
-    BOOL fast = FALSE;
 
 // Find total size
 
@@ -330,23 +343,15 @@ AddAudioMode( REG(a0, struct TagItem *DBtags),
           nodesize     += driverlength;
           break;
 
-        case AHIDB_MultTable:
-          fast = tag->ti_Data;
+        case AHIDB_DriverBaseName:
+          dvrbasenamelength    = strlen((UBYTE *)tag->ti_Data)+1;
+          nodesize     += dvrbasenamelength;
           break;
       }
 
       nodesize += sizeof(struct TagItem);
       tagitems++;
     }
-
-#ifdef VERSIONGEN
-    if( fast )
-    {
-      // Silently filter away all fast modes!
-      rc = TRUE;
-      goto unlock;
-    }
-#endif
 
     nodesize += sizeof(struct TagItem);  // The last TAG_END
     tagitems++;
@@ -365,14 +370,22 @@ AddAudioMode( REG(a0, struct TagItem *DBtags),
             tp->ti_Data = ((ULONG) &node->ahidbn_Tags[tagitems]);
             CopyMem((APTR)tag->ti_Data, (APTR)tp->ti_Data, datalength);
             break;
+
           case AHIDB_Name:
             tp->ti_Data = ((ULONG) &node->ahidbn_Tags[tagitems]) + datalength;
             strcpy((UBYTE *)tp->ti_Data, (UBYTE *)tag->ti_Data);
             break;
+
           case AHIDB_Driver:
             tp->ti_Data= ((ULONG) &node->ahidbn_Tags[tagitems]) + datalength + namelength;
             strcpy((UBYTE *)tp->ti_Data, (UBYTE *)tag->ti_Data);
             break;
+
+          case AHIDB_DriverBaseName:
+            tp->ti_Data = ((ULONG) &node->ahidbn_Tags[tagitems]) + datalength + namelength + driverlength;
+            strcpy((UBYTE *)tp->ti_Data, (UBYTE *)tag->ti_Data);
+            break;
+
           default:
             tp->ti_Data = tag->ti_Data;
             break;
@@ -435,9 +448,9 @@ unlock:
 *
 */
 
-ULONG ASMCALL
-RemoveAudioMode( REG(d0, ULONG id),
-                 REG(a6, struct AHIBase *AHIBase) )
+ULONG
+RemoveAudioMode( ULONG           id,
+                 struct AHIBase* AHIBase )
 {
   struct AHI_AudioMode *node;
   struct AHI_AudioDatabase *audiodb;
@@ -552,9 +565,9 @@ RemoveAudioMode( REG(d0, ULONG id),
 *
 */
 
-ULONG ASMCALL
-LoadModeFile( REG(a0, UBYTE *name),
-              REG(a6, struct AHIBase *AHIBase) )
+ULONG
+LoadModeFile( UBYTE*          name,
+              struct AHIBase* AHIBase )
 {
   ULONG rc=FALSE;
   struct FileInfoBlock  *fib;
@@ -573,7 +586,7 @@ LoadModeFile( REG(a0, UBYTE *name),
   {
     lock = Lock(name, ACCESS_READ);
 
-    if(lock != NULL)
+    if(lock != 0)
     {
       if(Examine(lock,fib))
       {
@@ -589,12 +602,18 @@ LoadModeFile( REG(a0, UBYTE *name),
             }
             else
             {
+#if 0
               rc = AddModeFile(fib->fib_FileName);
 
               if(!rc)
               {
                 break;
               }
+#else
+              // Try to load. Just continue if failing.
+              AddModeFile(fib->fib_FileName);
+	      rc = TRUE;
+#endif
             }
           }
           if(IoErr() == ERROR_NO_MORE_ENTRIES)
@@ -635,9 +654,10 @@ AddModeFile ( UBYTE *filename )
   struct TagItem *tag,*tstate;
   struct TagItem extratags[]=
   {
-    { AHIDB_Driver, NULL },
-    { AHIDB_Data, NULL },
-    { TAG_MORE,   NULL }
+    { AHIDB_Driver,         0 },
+    { AHIDB_Data,           0 },
+    { AHIDB_DriverBaseName, (ULONG) "DEVS:AHI" },
+    { TAG_MORE,             0 }
   };
   ULONG rc=FALSE;
 
@@ -648,7 +668,7 @@ AddModeFile ( UBYTE *filename )
 
     iff->iff_Stream = Open(filename, MODE_OLDFILE);
 
-    if(iff->iff_Stream != NULL)
+    if(iff->iff_Stream != 0)
     {
       InitIFFasDOS(iff);
 
@@ -666,38 +686,177 @@ AddModeFile ( UBYTE *filename )
             data = FindProp(iff,       ID_AHIM, ID_AUDD);
             ci   = FindCollection(iff, ID_AHIM, ID_AUDM);
 
+            rc = TRUE;
+
             if(name != NULL)
             {
+              char            driver_name[ 128 ];
+              struct Library* driver_base;
+
+              rc = FALSE;
+
+              if( name->sp_Size <= 0 )
+              {
+                Req( "%s:\nAUDN chunk has illegal size: %ld.", 
+                     (ULONG) filename, name->sp_Size );
+              }
+              else
+              {
+                LONG   i;
+                STRPTR s;
+
+                // Make sure string is NUL-terminated
+                
+                for( s = (STRPTR) name->sp_Data;
+                     (APTR) s < name->sp_Data + name->sp_Size;
+                     ++s )
+                {
+                  if( *s == 0 )
+                  {
+                    rc = TRUE;
+                    break;
+                  }
+                }
+                
+                if( !rc )
+                {
+                  Req( "%s:\nAUDN chunk is not NUL-terminated.", 
+                       (ULONG) filename );
+                }
+              }
+              
               extratags[0].ti_Data = (ULONG) name->sp_Data;
+
+              // Now verify that the driver can really be opened
+              
+#ifdef __MORPHOS__
+
+              strcpy( driver_name, "MOSSYS:DEVS:AHI/" );
+              strncat( driver_name, name->sp_Data, 100 );
+              strcat( driver_name, ".audio" );
+              
+              driver_base = OpenLibrary( &driver_name[7], DriverVersion );
+              if( driver_base == NULL )
+              {
+                // Make it MOSSYS:DEVS/AHI/...
+                //                    ^
+                driver_name[7 + 4] = '/';
+
+                driver_base = OpenLibrary( driver_name, DriverVersion );
+
+                if( driver_base == NULL )
+                {
+                  rc = FALSE;
+                }
+                else
+                {
+                  // It is a MOSSYS:DEVS/AHI driver!
+                  extratags[2].ti_Data = (ULONG) "MOSSYS:DEVS/AHI";
+
+                  CloseLibrary( driver_base );
+                }
+              }
+#else
+              strcpy( driver_name, "DEVS:AHI/" );
+              strncat( driver_name, name->sp_Data, 100 );
+              strcat( driver_name, ".audio" );
+
+              driver_base = OpenLibrary( driver_name, DriverVersion );
+              if( driver_base == NULL )
+              {
+                rc = FALSE;
+              }
+#endif
+              else
+              {
+                CloseLibrary( driver_base );
+              }
             }
 
             if(data != NULL)
             {
+              if( name->sp_Size <= 0 )
+              {
+                Req( "%s:\nAUDD chunk has illegal size: %ld.", 
+                     (ULONG) filename, name->sp_Size );
+
+                rc = FALSE;
+              }
+
               extratags[1].ti_Data = (ULONG) data->sp_Data;
             }
 
-            rc = TRUE;
-
-            while(ci != NULL)
+            while(rc && ci != NULL)
             {
               // Relocate loaded taglist
 
               tstate = (struct TagItem *) ci->ci_Data;
-              while((tag = NextTagItem(&tstate)) != NULL )
+
+              while( rc && ( tag = NextTagItem( &tstate ) ) != NULL )
               {
                 if(tag->ti_Tag & (AHI_TagBaseR ^ AHI_TagBase))
                 {
                   tag->ti_Data += (ULONG) ci->ci_Data;
                 }
+               
+                rc = FALSE;
+ 
+                switch( tag->ti_Tag )
+                {
+                  case AHIDB_Name:
+                  {
+                    // Make sure the string is within the chuck and NUL-term.
+                    
+                    if( tag->ti_Data <  (ULONG) ci->ci_Data || 
+                        tag->ti_Data >= (ULONG) ci->ci_Data + ci->ci_Size )
+                    {
+                      Req( "%s:\nAUDM chunk contains an invalid string.", 
+                           (ULONG) filename );
+                    }
+                    else
+                    {
+                      LONG   i;
+                      STRPTR s;
+                      
+                      // Make sure string is NUL-terminated
+                
+                      for( s = (STRPTR) tag->ti_Data;
+                           (APTR) s < ci->ci_Data + ci->ci_Size;
+                           ++s )
+                      {
+                        if( *s == 0 )
+                        {
+                          rc = TRUE;
+                          break;
+                        }
+                      }
+                    }
+                    
+                    break;
+                  }
+
+                  default:
+                    rc = TRUE;
+                    break;
+                }
+
+                if( !rc )
+                {
+                  Req( "%s:\nAUDM chunk contains a string that is not "
+                       "NUL-terminated.", (ULONG) filename  );
+                }
               }
 
-              // Link taglists
+              if( rc )
+              {
+                // Link taglists
 
-              extratags[2].ti_Data = (ULONG) ci->ci_Data;
+                extratags[3].ti_Data = (ULONG) ci->ci_Data;
 
-              rc = AHI_AddAudioMode(extratags);
+                rc = AHI_AddAudioMode(extratags);
 
-              ci = ci->ci_Next;
+                ci = ci->ci_Next;
+              }
             }
           }
         }

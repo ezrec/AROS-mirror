@@ -7,7 +7,7 @@
 **
 **	C prototypes. For use with 32 bit integers only.
 **
-**	(C) Copyright 1994-1997 Martin Blom
+**	(C) Copyright 1994-2003 Martin Blom
 **	All Rights Reserved.
 **
 */

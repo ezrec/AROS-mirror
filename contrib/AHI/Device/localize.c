@@ -1,10 +1,16 @@
 /* $Id$
 * $Log$
-* Revision 1.1  2000/04/01 00:23:43  bernie
-* Oops, forgot all these...
+* Revision 1.2  2003/03/12 13:03:10  chodorowski
+* Updated to version 5.4=6.0rc0.
 *
-* Revision 4.3  1999/09/11 22:02:28  lcs
-* *** empty log message ***
+* Revision 5.2  2001/03/11 18:28:15  lcs
+* Bumped revision.
+*
+* Revision 5.0  2000/11/28 00:15:17  lcs
+* Bumped CVS revision to 5.0.
+*
+* Revision 4.3  1999/09/22 20:11:06  lcs
+* Removed some "uninitialized variable" warnings.
 *
 * Revision 4.2  1999/01/15 22:40:25  lcs
 * Fixed a couple of warnings.
@@ -18,7 +24,7 @@
 */
 /****************************************************************
    This file was created automatically by `FlexCat 1.9'
-   from "./ahi.cd".
+   from "ahi.cd".
 
    Do NOT edit by hand!
 ****************************************************************/
@@ -68,7 +74,7 @@ static struct Catalog *ahi_Catalog = NULL;
 
 void OpenahiCatalog(struct Locale *loc, STRPTR language)
 {
-  LONG tag, tagarg;
+  LONG tag = 0, tagarg = 0;
 
   if(LocaleBase != NULL  &&  ahi_Catalog == NULL)
   {
@@ -92,7 +98,7 @@ void OpenahiCatalog(struct Locale *loc, STRPTR language)
 
 struct Catalog *ExtOpenCatalog(struct Locale *loc, STRPTR language)
 {
-  LONG tag, tagarg;
+  LONG tag = 0, tagarg = 0;
 
   if(LocaleBase != NULL)
   {

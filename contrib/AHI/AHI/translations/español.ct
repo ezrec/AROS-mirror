@@ -4,300 +4,306 @@
 ;
 ## chunk AUTH Translated by Samuel Aguilera <slyguy92@arrakis.es>
 ;
+; The .ct file was generated from
 ; $Id$
-; $Log$
-; Revision 1.1  2000/04/01 00:25:39  bernie
-; Also forgot these
 ;
-; Revision 1.4  1999/08/29 23:43:58  lcs
-; Added support for ahigp_AntiClickTime.
-;
-; Revision 4.5  1997/04/27 16:16:06  lcs
-; Added "Mastervolume with(out) clipping".
-;
-; Revision 4.4  1997/04/23 21:08:31  lcs
-; Removed (Disabled)
-;
-; Revision 4.2  1997/04/07 01:36:51  lcs
-; Localized it, bug fixes
-;
+;    AHI - Hardware independent audio subsystem
+;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+;     
+;    This library is free software; you can redistribute it and/or
+;    modify it under the terms of the GNU Library General Public
+;    License as published by the Free Software Foundation; either
+;    version 2 of the License, or (at your option) any later version.
+;     
+;    This library is distributed in the hope that it will be useful,
+;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;    Library General Public License for more details.
+;     
+;    You should have received a copy of the GNU Library General Public
+;    License along with this library; if not, write to the
+;    Free Software Foundation, Inc., 59 Temple Place - Suite 330, Cambridge,
+;    MA 02139, USA.
 ;
 ; *** Menus ***
 ;
 msgMenuProject
 \000Proyecto
-;\000Project
+; \000Project
 ;
 msgItemOpen
 O\000Abrir...
-;O\000Open...
+; O\000Open...
 ;
 msgItemSaveAs
 A\000Grabar Como...
-;A\000Save As...
+; A\000Save As...
 ;
 msgItemAbout
 ?\000Acerca de...
-;?\000About...
+; ?\000About...
 ;
 msgItemQuit
 Q\000Salir
-;Q\000Quit
+; Q\000Quit
 ;
 msgMenuEdit
 \000Editar
-;\000Edit
+; \000Edit
 ;
 msgItemDefaults
 D\000Valores por Defecto
-;D\000Reset To Defaults
+; D\000Reset To Defaults
 ;
 msgItemLastSaved
 L\000Últimos Grabados
-;L\000Last Saved
+; L\000Last Saved
 ;
 msgItemRestore
 R\000Restaurar
-;R\000Restore
+; R\000Restore
 ;
 msgMenuSettings
 \000Ajustes
-;\000Settings
+; \000Settings
 ;
 msgItemCreateIcons
 I\000¿Crear Iconos?
-;I\000Create Icons?
+; I\000Create Icons?
 ;
 msgMenuHelp
 \000Ayuda
-;\000Help
+; \000Help
 ;
 msgItemHelp
 Help\000Ayuda...
-;Help\000Help...
+; Help\000Help...
 ;
 msgItemUsersGuide
 H\000Guía del Usuario AHI...
-;H\000AHI User's guide...
+; H\000AHI User's guide...
 ;
 msgItemConceptIndex
 \000Índice de Conceptos...
-;\000Concept Index...
+; \000Concept Index...
 ;
 ; *** The pages ***
 ;
 msgPageMode
 Ajustes de Modo
-;Mode settings
+; Mode settings
 ;
 msgPageAdvanced
 Ajustes avanzados
-;Advanced settings
+; Advanced settings
 ;
 ; *** The units ***
 ;
 msgUnitDevice
 Unidad %ld
-;Unit %ld
+; Unit %ld
 ;
 msgUnitMusic
 Unidad Musical
-;Music unit
+; Music unit
 ;
 ; *** Properties box ***
 ;
 msgProperties
 ID de Modo\nGrabación\nAutor\nCopyright\nControlador\nVersión
-;Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
 ;
 msgPropRecordFull
 Dúplex Completo
-;Full duplex
+; Full duplex
 ;
 msgPropRecordHalf
 Semi Dúplex
-;Half duplex
+; Half duplex
 ;
 msgPropRecordNone
 Nada
-;Nope
+; Nope
 ;
 ; *** Options ***
 ;
 msgOptions
 Opciones
-;Options
+; Options
 ;
 msgOptFrequency
 _Frecuencia
-;_Frequency
+; _Frequency
 ;
 msgOptChannels
 Ca_nales
-;C_hannels
+; C_hannels
 ;
 msgOptNoChannels
 (Desactivado)
-;
+; 
 ;
 msgOptVolume
 _Volumen
-;_Volume
+; _Volume
 ;
 msgOptMonitor
 _Monitor
-;_Monitor
+; _Monitor
 ;
 msgOptGain
 _Ganancia
-;_Gain
+; _Gain
 ;
 msgOptMuted
 Silencioso
-;Muted
+; Muted
 ;
 msgOptInput
 _Entrada
-;_Input
+; _Input
 ;
 msgOptNoInputs
 Sin entradas
-;No inputs
+; No inputs
 ;
 msgOptOutput
 _Salida
-;_Output
+; _Output
 ;
 msgOptNoOutputs
 Sin salidas
-;No outputs
+; No outputs
 ;
 ;
 ; *** Global Options ***
 ;
 msgGlobalOptions
 Opciones Globales
-;Global options
+; Global options
 ;
 msgGlobOptDebugLevel
 Nivel _de Depuración
-;_Debug level
+; _Debug level
 ;
 msgGlobOptEcho
 _Eco
-;_Echo
+; _Echo
 ;
 msgGlobOptSurround
 Surround en modos "_Rápidos"
-;Surround in "_Fast" modes
+; Surround in "_Fast" modes
 ;
 msgGlobOptCPULimit
 _Límite de uso de CPU
-;CPU usage _limit
+; CPU usage _limit
 ;
 ; *** Debug levels ***
 ;
 msgDebugNone
 Ninguno
-;None
+; None
 ;
 msgDebugLow
 Bajo
-;Low
+; Low
 ;
 msgDebugHigh
 Alto
-;High
+; High
 ;
 msgDebugFull
 Total
-;Full
+; Full
 ;
 ; *** Echo ***
 ;
 msgEchoEnabled
 Conectado
-;Enabled
+; Enabled
 ;
 msgEchoFast
 Rápido
-;Fast
+; Fast
 ;
 msgEchoDisabled
 Desconectado
-;Disabled
+; Disabled
 ;
 ; *** Surround ***
 ;
 msgSurroundEnabled
 Conectado
-;Enabled
+; Enabled
 ;
 msgSurroundDisabled
 Desconectado
-;Disabled
+; Disabled
 ;
 ; *** Buttons ***
 ;
 msgButtonSave
 _Grabar
-;_Save
+; _Save
 ;
 msgButtonUse
 _Usar
-;_Use
+; _Use
 ;
 msgButtonCancel
 _Cancelar
-;_Cancel
+; _Cancel
 ;
 msgButtonOK
 OK
-;OK
+; OK
 ;
 ; *** Texts ***
 ;
 msgTextProgramName
 Preferencias AHI
-;AHI preferences
+; AHI preferences
 ;
 ;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
 msgTextCopyright
 %s%s\nCopyright ©%s\nTraducción al Español por:\nSamuel Aguilera <slyguy92@arrakis.es>
-;%s%s\nCopyright ©%s
+; %s%s\nCopyright ©%s
 ;
 msgTextNoWindow
 Imposible abrir ventana.
-;Unable to open window.
+; Unable to open window.
 ;
 msgTextNoFileRequester
 Imposible reservar el\nrequester de ficheros.
-;Unable to allocate file requester.
+; Unable to allocate file requester.
 ;
 msgTextNoFind
 ¡Imposible encontrar `%s'!
-;Unable to find `%s'!
+; Unable to find `%s'!
 ;
 msgTextNoOpen
 Imposible abrir `%s' versión %ld.
-;Unable to open `%s´ version %ld.
+; Unable to open `%s´ version %ld.
 ;
 ; *** Additions
 ;
 msgGlobOptMasterVol
 Volumen _Master
-;_Master volume
+; _Master volume
 ;
 msgMVNoClip
 Sin recorte
-;Without clipping
+; Without clipping
 ;
 msgMVClip
 Con recorte
-;With clipping
+; With clipping
 ;
 msgGlobOptACTime
 
-;Anti-click time (ms)
-; ***NEW***
+; Default anti-click time
+;
+msgButtonPlay
+
+; _Play a test sound
 ;

@@ -2,8 +2,11 @@
 ##shortstrings
 /* $Id$
 * $Log$
-* Revision 1.1  2000/04/01 00:23:42  bernie
-* Oops, forgot all these...
+* Revision 1.2  2003/03/12 13:03:09  chodorowski
+* Updated to version 5.4=6.0rc0.
+*
+* Revision 5.0  2000/11/28 00:15:18  lcs
+* Bumped CVS revision to 5.0.
 *
 * Revision 4.1  1997/04/02 22:29:53  lcs
 * Bumped to version 4

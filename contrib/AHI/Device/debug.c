@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -24,11 +24,11 @@
 #include <CompilerSpecific.h>
 
 #include <utility/tagitem.h>
+#include <proto/exec.h>
 #include <proto/utility.h>
 
 #include "ahi_def.h"
 #include "debug.h"
-
 
 /******************************************************************************
 ** Support code ***************************************************************
@@ -174,6 +174,7 @@ GetTagName( Tag tag )
     case AHIR_PrivateIDCMP: return "AHIR_PrivateIDCMP";
     case AHIR_IntuiMsgFunc: return "AHIR_IntuiMsgFunc";
     case AHIR_SleepWindow: return "AHIR_SleepWindow";
+    case AHIR_ObsoleteUserData: return "AHIR_ObsoleteUserData";
     case AHIR_UserData: return "AHIR_UserData";
     case AHIR_TextAttr: return "AHIR_TextAttr";
     case AHIR_Locale: return "AHIR_Locale";
@@ -367,6 +368,7 @@ GetDatatype( Tag tag )
     case AHIR_PrivateIDCMP: return dt_Hex;
     case AHIR_IntuiMsgFunc: return dt_Hex;
     case AHIR_SleepWindow: return dt_Boolean;
+    case AHIR_ObsoleteUserData: return dt_Hex;
     case AHIR_UserData: return dt_Hex;
     case AHIR_TextAttr: return dt_Hex;
     case AHIR_Locale: return dt_Hex;
@@ -434,29 +436,29 @@ PrintTagList(struct TagItem *tags)
       {
         case dt_Hex:
           KPrintF( "\n  %30s, 0x%08lx,", 
-                   GetTagName( tag->ti_Tag ), tag->ti_Data );
+                   (ULONG) GetTagName( tag->ti_Tag ), tag->ti_Data );
           break;
 
         case dt_Dec:
           KPrintF( "\n  %30s, %ld,", 
-                   GetTagName( tag->ti_Tag ), tag->ti_Data );
+                   (ULONG) GetTagName( tag->ti_Tag ), tag->ti_Data );
           break;
 
         case dt_Boolean:
           KPrintF( "\n  %30s, %s,", 
-                   GetTagName( tag->ti_Tag ), 
-                   tag->ti_Data ? "TRUE" : "FALSE" );
+                   (ULONG) GetTagName( tag->ti_Tag ), 
+                   tag->ti_Data ? (ULONG) "TRUE" : (ULONG) "FALSE" );
           break;
 
         case dt_String:
           KPrintF( "\n  %30s, %s,", 
-                   GetTagName( tag->ti_Tag ), tag->ti_Data );
+                   (ULONG) GetTagName( tag->ti_Tag ), tag->ti_Data );
           break;
 
         case dt_Fixed:
         {
           KPrintF( "\n  %30s, %ld.%ld,", 
-                   GetTagName( tag->ti_Tag ), 
+                   (ULONG) GetTagName( tag->ti_Tag ), 
                    tag->ti_Data >> 16,
                    ( ( tag->ti_Data & 0xffff ) * 1000 ) >> 16 );
           break;
@@ -466,6 +468,26 @@ PrintTagList(struct TagItem *tags)
 
     KPrintF("\n  TAG_DONE)");
   }
+}
+
+
+/******************************************************************************
+** Send debug to serial port **************************************************
+******************************************************************************/
+
+static UWORD rawputchar_m68k[] = 
+{
+  0x2C4B,             // MOVEA.L A3,A6
+  0x4EAE, 0xFDFC,     // JSR     -$0204(A6)
+  0x4E75              // RTS
+};
+
+
+void
+KPrintFArgs( UBYTE* fmt, 
+             ULONG* args )
+{
+  RawDoFmt( fmt, args, (void(*)(void)) rawputchar_m68k, SysBase );
 }
 
 
@@ -484,7 +506,7 @@ Debug_AllocAudioA( struct TagItem *tags )
 void
 Debug_FreeAudio( struct AHIPrivAudioCtrl *audioctrl )
 {
-  KPrintF("AHI_FreeAudio(0x%08lx)\n",audioctrl);
+  KPrintF("AHI_FreeAudio(0x%08lx)\n",(ULONG)audioctrl);
 }
 
 void
@@ -496,7 +518,7 @@ Debug_KillAudio( void )
 void
 Debug_ControlAudioA( struct AHIPrivAudioCtrl *audioctrl, struct TagItem *tags )
 {
-  KPrintF("AHI_ControlAudioA(0x%08lx,",audioctrl);
+  KPrintF("AHI_ControlAudioA(0x%08lx,",(ULONG)audioctrl);
   PrintTagList(tags);
 }
 
@@ -505,47 +527,47 @@ void
 Debug_SetVol( UWORD chan, Fixed vol, sposition pan, struct AHIPrivAudioCtrl *audioctrl, ULONG flags)
 {
   KPrintF("AHI_SetVol(%ld, 0x%08lx, 0x%08lx, 0x%08lx, %ld)\n",
-      chan & 0xffff, vol, pan, audioctrl, flags);
+      chan & 0xffff, vol, pan, (ULONG) audioctrl, flags);
 }
 
 void
 Debug_SetFreq( UWORD chan, ULONG freq, struct AHIPrivAudioCtrl *audioctrl, ULONG flags)
 {
   KPrintF("AHI_SetFreq(%ld, %ld, 0x%08lx, %ld)\n",
-      chan & 0xffff, freq, audioctrl, flags);
+      chan & 0xffff, freq, (ULONG) audioctrl, flags);
 }
 
 void
 Debug_SetSound( UWORD chan, UWORD sound, ULONG offset, LONG length, struct AHIPrivAudioCtrl *audioctrl, ULONG flags)
 {
   KPrintF("AHI_SetSound(%ld, %ld, 0x%08lx, 0x%08lx, 0x%08lx, %ld)\n",
-      chan & 0xffff, sound & 0xffff, offset, length, audioctrl, flags);
+      chan & 0xffff, sound & 0xffff, offset, length, (ULONG) audioctrl, flags);
 }
 
 void
 Debug_SetEffect( ULONG *effect, struct AHIPrivAudioCtrl *audioctrl )
 {
   KPrintF("AHI_SetEffect(0x%08lx (Effect 0x%08lx), 0x%08lx)\n",
-      effect, *effect, audioctrl);
+      (ULONG) effect, *effect, (ULONG) audioctrl);
 }
 
 void
 Debug_LoadSound( UWORD sound, ULONG type, APTR info, struct AHIPrivAudioCtrl *audioctrl )
 {
-  KPrintF("AHI_LoadSound(%ld, %ld, 0x%08lx, 0x%08lx) ", sound, type, info, audioctrl);
+  KPrintF("AHI_LoadSound(%ld, %ld, 0x%08lx, 0x%08lx) ", sound, type, (ULONG) info, (ULONG) audioctrl);
 
   if(type == AHIST_SAMPLE || type == AHIST_DYNAMICSAMPLE)
   {
     struct AHISampleInfo *si = (struct AHISampleInfo *) info;
 
-    KPrintF("[T:0x%08lx A:0x%08lx L:%ld]", si->ahisi_Type, si->ahisi_Address, si->ahisi_Length);
+    KPrintF("[T:0x%08lx A:0x%08lx L:%ld]", si->ahisi_Type, (ULONG)si->ahisi_Address, si->ahisi_Length);
   }
 }
 
 void
 Debug_UnloadSound( UWORD sound, struct AHIPrivAudioCtrl *audioctrl )
 {
-  KPrintF("AHI_UnloadSound(%ld, 0x%08lx)\n", sound, audioctrl);
+  KPrintF("AHI_UnloadSound(%ld, 0x%08lx)\n", sound, (ULONG) audioctrl);
 }
 
 void
@@ -555,9 +577,9 @@ Debug_NextAudioID( ULONG id)
 }
 
 void
-Debug_GetAudioAttrsA( ULONG id, struct AHIAudioCtrlDrv *audioctrl, struct TagItem *tags )
+Debug_GetAudioAttrsA( ULONG id, struct AHIPrivAudioCtrl *audioctrl, struct TagItem *tags )
 {
-  KPrintF("AHI_GetAudioAttrsA(0x%08lx, 0x%08lx,",id,audioctrl);
+  KPrintF("AHI_GetAudioAttrsA(0x%08lx, 0x%08lx,",id,(ULONG) audioctrl);
   PrintTagList(tags);
 }
 
@@ -578,20 +600,20 @@ Debug_AllocAudioRequestA( struct TagItem *tags )
 void
 Debug_AudioRequestA( struct AHIAudioModeRequester *req, struct TagItem *tags )
 {
-  KPrintF("AHI_AudioRequestA(0x%08lx,",req);
+  KPrintF("AHI_AudioRequestA(0x%08lx,",(ULONG)req);
   PrintTagList(tags);
 }
 
 void
 Debug_FreeAudioRequest( struct AHIAudioModeRequester *req )
 {
-  KPrintF("AHI_FreeAudioRequest(0x%08lx)\n",req);
+  KPrintF("AHI_FreeAudioRequest(0x%08lx)\n",(ULONG)req);
 }
 
 void
-Debug_PlayA( struct AHIAudioCtrl *audioctrl, struct TagItem *tags )
+Debug_PlayA( struct AHIPrivAudioCtrl *audioctrl, struct TagItem *tags )
 {
-  KPrintF("AHI_PlayA(0x%08lx,",audioctrl);
+  KPrintF("AHI_PlayA(0x%08lx,",(ULONG) audioctrl);
   PrintTagList(tags);
   KPrintF("\n");
 }
@@ -618,7 +640,7 @@ Debug_RemoveAudioMode( ULONG id)
 void
 Debug_LoadModeFile( STRPTR name)
 {
-  KPrintF("AHI_LoadModeFile(%s)",name);
+  KPrintF("AHI_LoadModeFile(%s)",(ULONG)name);
 }
 
 

@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,8 +20,14 @@
      MA 02139, USA.
 */
 
-#ifndef _DEVICE_H_
-#define _DEVICE_H_
+#ifndef ahi_device_h
+#define ahi_device_h	
+
+#include <exec/types.h>
+#include <dos/dos.h>
+
+struct AHIRequest;
+struct AHIBase;
 
 /*** New Style Device definitions ***/
 
@@ -144,15 +150,20 @@ struct AHIDevUnit
         BOOL                     IsRecording;   // Currently recording
         BOOL                     ValidRecord;   // The record buffer contains valid data
         BOOL                     FullDuplex;    // Mode is full duplex
+        BOOL                     PseudoStereo;  // Mode is Paula-like stereo
         UWORD                    StopCnt;       // CMD_STOP count
 
-        struct SignalSemaphore   ListLock;
+	/* Lock is used to serialize access to StopCnt, ReadList, PlayingList,
+	   SilentList, WaitingList and RequestQueue */
+
+        struct SignalSemaphore   Lock;
+
         struct MinList           ReadList;
         struct MinList           PlayingList;
         struct MinList           SilentList;
         struct MinList           WaitingList;
 
-        struct MinList           RequestQueue;  // Not locked by ListLock!
+        struct MinList           RequestQueue;
 
         struct Voice            *Voices;
 
@@ -160,7 +171,7 @@ struct AHIDevUnit
         ULONG                    AudioMode;
         ULONG                    Frequency;
         UWORD                    Channels;
-        UWORD                    Pad2;
+        UWORD                    ChannelsInUse;
         Fixed                    MonitorVolume;
         Fixed                    InputGain;
         Fixed                    OutputVolume;
@@ -169,6 +180,16 @@ struct AHIDevUnit
 
         UBYTE                    Sounds[MAXSOUNDS];
 };
+
+ULONG
+DevOpen ( ULONG              unit,
+          ULONG              flags,
+          struct AHIRequest* ioreq,
+          struct AHIBase*    AHIBase );
+
+BPTR
+DevClose ( struct AHIRequest* ioreq,
+           struct AHIBase*    AHIBase );
 
 BOOL
 ReadConfig ( struct AHIDevUnit *iounit,
@@ -182,4 +203,7 @@ void
 FreeHardware ( struct AHIDevUnit *iounit,
                struct AHIBase *AHIBase );
 
-#endif /* _DEVICE_H_ */
+void
+DevProc( void );
+
+#endif /* ahi_device_h */

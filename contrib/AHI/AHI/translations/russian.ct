@@ -1,309 +1,309 @@
-## version $VER: ahiprefs.catalog 4.5 (3.8.98) © Computer Bug (Ami1251)
+## version $VER: ahiprefs.catalog 4.6 (29.11.2000)
 ## language russian
 ## codeset 0
 ;
-## chunk AUTH Translated by Michael Malyshev <cbug@cch.pmc.ru>
+## chunk AUTH Translated by Alex Plotnicov <wcat@mail.ru> and Michael Malyshev <cbug@cch.pmc.ru>
 ;
+; The .ct file was generated from
 ; $Id$
-; $Log$
-; Revision 1.1  2000/04/01 00:25:39  bernie
-; Also forgot these
 ;
-; Revision 1.4  1999/08/29 23:44:09  lcs
-; Added support for ahigp_AntiClickTime.
-;
-; Revision 4.5  1997/04/27 16:16:06  lcs
-; Added "Mastervolume with(out) clipping".
-;
-; Revision 4.4  1997/04/23 21:08:31  lcs
-; Removed (Disabled)
-;
-; Revision 4.2  1997/04/07 01:36:51  lcs
-; Localized it, bug fixes
-;
+;    AHI - Hardware independent audio subsystem
+;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+;     
+;    This library is free software; you can redistribute it and/or
+;    modify it under the terms of the GNU Library General Public
+;    License as published by the Free Software Foundation; either
+;    version 2 of the License, or (at your option) any later version.
+;     
+;    This library is distributed in the hope that it will be useful,
+;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;    Library General Public License for more details.
+;     
+;    You should have received a copy of the GNU Library General Public
+;    License along with this library; if not, write to the
+;    Free Software Foundation, Inc., 59 Temple Place - Suite 330, Cambridge,
+;    MA 02139, USA.
 ;
 ; *** Menus ***
 ;
 msgMenuProject
 \0Проект
-;\000Project
+; \000Project
 ;
 msgItemOpen
 O\0Открыть...
-;O\000Open...
+; O\000Open...
 ;
 msgItemSaveAs
 A\0Сохранить как...
-;A\000Save As...
+; A\000Save As...
 ;
 msgItemAbout
-?\0О...
-;?\000About...
+?\0О программе...
+; ?\000About...
 ;
 msgItemQuit
 Q\0Выход
-;Q\000Quit
+; Q\000Quit
 ;
 msgMenuEdit
-\0Изменять
-;\000Edit
+\0Редактор
+; \000Edit
 ;
 msgItemDefaults
 D\0По умолчанию
-;D\000Reset To Defaults
+; D\000Reset To Defaults
 ;
 msgItemLastSaved
 L\0Последняя запись
-;L\000Last Saved
+; L\000Last Saved
 ;
 msgItemRestore
 R\0Восстановить
-;R\000Restore
+; R\000Restore
 ;
 msgMenuSettings
 \0Настройки
-;\000Settings
+; \000Settings
 ;
 msgItemCreateIcons
 I\0Создавать иконки?
-;I\000Create Icons?
+; I\000Create Icons?
 ;
 msgMenuHelp
 \0Помощь
-;\000Help
+; \000Help
 ;
 msgItemHelp
-Помощь\0Помощь...
-;Help\000Help...
+Help\0Помощь...
+; Help\000Help...
 ;
 msgItemUsersGuide
-H\0AHI User's guide...
-;H\000AHI User's guide...
+H\0Справка по AHI...
+; H\000AHI User's guide...
 ;
 msgItemConceptIndex
 \0Индекс...
-;\000Concept Index...
+; \000Concept Index...
 ;
 ; *** The pages ***
 ;
 msgPageMode
 Настройки режима
-;Mode settings
+; Mode settings
 ;
 msgPageAdvanced
 Расширенныe настройки
-;Advanced settings
+; Advanced settings
 ;
 ; *** The units ***
 ;
 msgUnitDevice
 Устройство %ld
-;Unit %ld
+; Unit %ld
 ;
 msgUnitMusic
 Музыкальное устройство
-;Music unit
+; Music unit
 ;
 ; *** Properties box ***
 ;
 msgProperties
-Режим ID\n\
-Запись\n\
-Автор\n\
-Copyright\n\
-Драйвер\n\
-Версия
-;Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+Режим ID\nЗапись\nАвтор\nАвторство\nДрайвер\nВерсия
+; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
 ;
 msgPropRecordFull
 Полный дуплекс
-;Full duplex
+; Full duplex
 ;
 msgPropRecordHalf
-Половина дуплекса
-;Half duplex
+Полудуплекс
+; Half duplex
 ;
 msgPropRecordNone
 Нет
-;Nope
+; Nope
 ;
 ; *** Options ***
 ;
 msgOptions
 Настройки
-;Options
+; Options
 ;
 msgOptFrequency
-Частота
-;_Frequency
+_Частота
+; _Frequency
 ;
 msgOptChannels
-Каналы
-;C_hannels
+_Каналы
+; C_hannels
 ;
 msgOptNoChannels
-\0
-;
+
+; 
 ;
 msgOptVolume
-Громкость
-;_Volume
+_Громкость
+; _Volume
 ;
 msgOptMonitor
-Монитор
-;_Monitor
+_Монитор
+; _Monitor
 ;
 msgOptGain
-Доступ
-;_Gain
+_Усиление
+; _Gain
 ;
 msgOptMuted
 Немой
-;Muted
+; Muted
 ;
 msgOptInput
-Ввод
-;_Input
+_Ввод
+; _Input
 ;
 msgOptNoInputs
 Не вводить
-;No inputs
+; No inputs
 ;
 msgOptOutput
-Вывод
-;_Output
+В_ывод
+; _Output
 ;
 msgOptNoOutputs
 Не выводить
-;No outputs
+; No outputs
 ;
 ;
 ; *** Global Options ***
 ;
 msgGlobalOptions
-Основные опции
-;Global options
+Основные установки
+; Global options
 ;
 msgGlobOptDebugLevel
-Отладочный режим
-;_Debug level
+У_ровень отладки:
+; _Debug level
 ;
 msgGlobOptEcho
-Эхо
-;_Echo
+_Эхо
+; _Echo
 ;
 msgGlobOptSurround
-Эввект окружения в "Быстрых" режимах
-;Surround in "_Fast" modes
+Э_ффект присутствия режимов \"Fast\":
+; Surround in "_Fast" modes
 ;
 msgGlobOptCPULimit
-Лимит использование процессора
-;CPU usage _limit
+Ограничение _загрузки CPU:
+; CPU usage _limit
 ;
 ; *** Debug levels ***
 ;
 msgDebugNone
 Нет
-;None
+; None
 ;
 msgDebugLow
 Низкий
-;Low
+; Low
 ;
 msgDebugHigh
 Высокий
-;High
+; High
 ;
 msgDebugFull
 Полный
-;Full
+; Full
 ;
 ; *** Echo ***
 ;
 msgEchoEnabled
 Включено
-;Enabled
+; Enabled
 ;
 msgEchoFast
 Быстрое
-;Fast
+; Fast
 ;
 msgEchoDisabled
 Выключено
-;Disabled
+; Disabled
 ;
 ; *** Surround ***
 ;
 msgSurroundEnabled
 Включено
-;Enabled
+; Enabled
 ;
 msgSurroundDisabled
 Выключено
-;Disabled
+; Disabled
 ;
 ; *** Buttons ***
 ;
 msgButtonSave
 _Сохранить
-;_Save
+; _Save
 ;
 msgButtonUse
-_Принять
-;_Use
+Пр_инять
+; _Use
 ;
 msgButtonCancel
-_Отменить
-;_Cancel
+_Отмена
+; _Cancel
 ;
 msgButtonOK
-OK
-;OK
+О'кей
+; OK
 ;
 ; *** Texts ***
 ;
 msgTextProgramName
 Настройки AHI
-;AHI preferences
+; AHI preferences
 ;
 ;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
 msgTextCopyright
-%s%s\n\
-Copyright ©%s
-;%s%s\nCopyright ©%s
+%s%s\nАвторство (c) %s\nРусский перевод: А. Плотников, О. Сергеев
+; %s%s\nCopyright ©%s
 ;
 msgTextNoWindow
-Невозможно открыть окно.
-;Unable to open window.
+Не открыть окно.
+; Unable to open window.
 ;
 msgTextNoFileRequester
-Не доступен файловый риквестер.
-;Unable to allocate file requester.
+Недоступен запросник файлов.
+; Unable to allocate file requester.
 ;
 msgTextNoFind
-Невозможно найти `%s'!
-;Unable to find `%s'!
+Не найти \"%s\"!
+; Unable to find `%s'!
 ;
 msgTextNoOpen
-Невозможно открыть `%sґ версии %ld.
-;Unable to open `%sґ version %ld.
+Не открыть \"%s\" версии %ld.
+; Unable to open `%sґ version %ld.
 ;
 ; *** Additions
 ;
 msgGlobOptMasterVol
-Громкость
-;_Master volume
+_Громкость
+; _Master volume
 ;
 msgMVNoClip
-Без отсекания
-;Without clipping
+Без среза
+; Without clipping
 ;
 msgMVClip
-С отсеканием
-;With clipping
+Со срезом
+; With clipping
 ;
 msgGlobOptACTime
+Защитное время блокировки щелчков
+; Default anti-click time
+;
+msgButtonPlay
 
-;Anti-click time (ms)
-; ***NEW***
+; _Play a test sound
 ;

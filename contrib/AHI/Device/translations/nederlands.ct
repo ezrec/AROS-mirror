@@ -4,10 +4,11 @@
 ;
 ## chunk AUTH Translated by Michel Vissers <michel@hell.xs4all.nl>
 ;
+; The .ct file was generated from
 ; $Id$
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -24,110 +25,109 @@
 ;    Free Software Foundation, Inc., 59 Temple Place - Suite 330, Cambridge,
 ;    MA 02139, USA.
 ;
-;
 ; Input and Output connector name
 ;
 msgDefault
 Standaard
-;Default
+; Default
 ;
 ; The requesters menu
 msgMenuControl
 \000\000Kontrole
-;\000\000Control
+; \000\000Control
 ;
 msgMenuLastMode
 L\000Laatste Mode
-;L\000Last Mode
+; L\000Last Mode
 ;
 msgMenuNextMode
 N\000Volgende Mode
-;N\000Next Mode
+; N\000Next Mode
 ;
 msgMenuPropertyList
 ?\000Instellingen Lijst...
-;?\000Property List...
+; ?\000Property List...
 ;
 msgMenuRestore
 R\000Herstel
-;R\000Restore
+; R\000Restore
 ;
 msgMenuOK
 O\000OK
-;O\000OK
+; O\000OK
 ;
 msgMenuCancel
 C\000Afbreken
-;C\000Cancel
+; C\000Cancel
 ;
 ; Mode name in requester whose driver cannot be opened
 ;
 msgUnknown
 ONBEKEND:Audio ID 0x%08lx
-;UNKNOWN:Audio ID 0x%08lx
+; UNKNOWN:Audio ID 0x%08lx
 ;
 ; The requester gadgets
 ;
 msgReqOK
 OK
-;OK
+; OK
 ;
 msgReqCancel
 Annuleer
-;Cancel
+; Cancel
 ;
 msgReqFrequency
 Frequentie
-;Frequency
+; Frequency
 ;
 ; Name of default mode in requester
 ;
 msgDefaultMode
 Standaard audio mode
-;Default audio mode
+; Default audio mode
 ;
 ; The requester's info-winodow
 ;
 msgReqInfoTitle
 Mode Instellingen
-;Mode Properties
+; Mode Properties
 ;
 msgReqInfoAudioID
 Audio mode ID: 0x%08lx
-;Audio mode ID: 0x%08lx
+; Audio mode ID: 0x%08lx
 ;
 msgReqInfoResolution
 Resolutie: %ld bit %s
-;Resolution: %ld bit %s
+; Resolution: %ld bit %s
 ;
 msgReqInfoMono
 mono
-;mono
+; mono
 ;
 msgReqInfoStereo
 stereo
-;stereo
+; stereo
 ;
 msgReqInfoStereoPan
 stereo met balans
-;stereo with panning
+; stereo with panning
 ;
 msgReqInfoChannels
 Kanalen: %ld
-;Channels: %ld
+; Channels: %ld
 ;
 msgReqInfoMixrate
 Mix frequentie: %ld-%ld Hz
-;Mixing rates: %ld-%ld Hz
+; Mixing rates: %ld-%ld Hz
 ;
 msgReqInfoHiFi
 HiFi kwaliteit
-;HiFi mixing
+; HiFi mixing
 ;
 msgReqInfoRecordHalf
 Opname in half duplex
-;Record in half duplex
+; Record in half duplex
 ;
 msgReqInfoRecordFull
 Opname in full duplex
-;Record in full duplex
+; Record in full duplex

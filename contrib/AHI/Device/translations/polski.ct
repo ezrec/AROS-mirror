@@ -4,10 +4,11 @@
 ;
 ## chunk AUTH Translated by Marcin Orîowski <carlos@inet.com.pl>
 ;
+; The .ct file was generated from
 ; $Id$
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -24,110 +25,109 @@
 ;    Free Software Foundation, Inc., 59 Temple Place - Suite 330, Cambridge,
 ;    MA 02139, USA.
 ;
-;
 ; Input and Output connector name
 ;
 msgDefault
 Domyôlny
-;Default
+; Default
 ;
 ; The requesters menu
 msgMenuControl
 \000\000Projekt
-;\000\000Control
+; \000\000Control
 ;
 msgMenuLastMode
 L\0Poprzedni tryb
-;L\000Last Mode
+; L\000Last Mode
 ;
 msgMenuNextMode
 N\0Nastëpny tryb
-;N\000Next Mode
+; N\000Next Mode
 ;
 msgMenuPropertyList
 ?\0Wîaôciwoôci trybu...
-;?\000Property List...
+; ?\000Property List...
 ;
 msgMenuRestore
 R\0Anuluj zmiany ustawieï
-;R\000Restore
+; R\000Restore
 ;
 msgMenuOK
 O\0Ok
-;O\000OK
+; O\000OK
 ;
 msgMenuCancel
 C\0Poniechaj
-;C\000Cancel
+; C\000Cancel
 ;
 ; Mode name in requester whose driver cannot be opened
 ;
 msgUnknown
 NIEZNANY:Audio ID 0x%08lx
-;UNKNOWN:Audio ID 0x%08lx
+; UNKNOWN:Audio ID 0x%08lx
 ;
 ; The requester gadgets
 ;
 msgReqOK
 Ok
-;OK
+; OK
 ;
 msgReqCancel
 Poniechaj
-;Cancel
+; Cancel
 ;
 msgReqFrequency
 Czëstotliwoôê
-;Frequency
+; Frequency
 ;
 ; Name of default mode in requester
 ;
 msgDefaultMode
 Domyôlny tryb audio
-;Default audio mode
+; Default audio mode
 ;
 ; The requester's info-winodow
 ;
 msgReqInfoTitle
 Wîaôciwoôci trybu
-;Mode Properties
+; Mode Properties
 ;
 msgReqInfoAudioID
 ID trybu audio: 0x%08lx
-;Audio mode ID: 0x%08lx
+; Audio mode ID: 0x%08lx
 ;
 msgReqInfoResolution
 Rozdzielczoôê: %ld bitów %s
-;Resolution: %ld bit %s
+; Resolution: %ld bit %s
 ;
 msgReqInfoMono
 mono
-;mono
+; mono
 ;
 msgReqInfoStereo
 stereo
-;stereo
+; stereo
 ;
 msgReqInfoStereoPan
 stereo z panningiem
-;stereo with panning
+; stereo with panning
 ;
 msgReqInfoChannels
 Kanaîy: %ld
-;Channels: %ld
+; Channels: %ld
 ;
 msgReqInfoMixrate
 Mixing rates: %ld-%ld Hz
-;Mixing rates: %ld-%ld Hz
+; Mixing rates: %ld-%ld Hz
 ;
 msgReqInfoHiFi
 Miksowanie HiFi
-;HiFi mixing
+; HiFi mixing
 ;
 msgReqInfoRecordHalf
 Nagrywanie z póî dupleksem
-;Record in half duplex
+; Record in half duplex
 ;
 msgReqInfoRecordFull
 Nagrywanie z peînym dupleksem
-;Record in full duplex
+; Record in full duplex

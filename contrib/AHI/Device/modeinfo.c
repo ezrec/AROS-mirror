@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -29,8 +29,9 @@
 #include <utility/tagitem.h>
 #include <proto/exec.h>
 #include <proto/utility.h>
-#include <clib/ahi_protos.h>
-#include <inline/ahi.h>
+#define __NOLIBBASE__
+#include <proto/ahi.h>
+#undef  __NOLIBBASE__
 #include <proto/ahi_sub.h>
 
 #include "ahi_def.h"
@@ -405,11 +406,11 @@ BOOL TestAudioID(ULONG id, struct TagItem *tags )
 *
 */
 
-ULONG ASMCALL 
-GetAudioAttrsA( REG(d0, ULONG id),
-                REG(a2, struct AHIAudioCtrlDrv *actrl),
-                REG(a1, struct TagItem *tags),
-                REG(a6, struct AHIBase *AHIBase) )
+ULONG
+GetAudioAttrsA( ULONG                    id,
+                struct AHIPrivAudioCtrl* actrl,
+                struct TagItem*          tags,
+                struct AHIBase*          AHIBase )
 {
   struct AHI_AudioDatabase *audiodb;
   struct TagItem *dbtags,*tag1,*tag2,*tstate=tags;
@@ -429,7 +430,7 @@ GetAudioAttrsA( REG(d0, ULONG id),
   {
     if(id == AHI_INVALID_ID)
     {
-      if(!(audioctrl=actrl))
+      if(!(audioctrl= (struct AHIAudioCtrlDrv*) actrl))
         rc=FALSE;
       else
         idtag[0].ti_Data=((struct AHIPrivAudioCtrl *)actrl)->ahiac_AudioID;
@@ -562,7 +563,7 @@ GetAudioAttrsA( REG(d0, ULONG id),
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_HIGH)
   {
-    KPrintF("=>%s\n", rc ? "TRUE" : "FALSE" );
+    KPrintF("=>%s\n", rc ? (ULONG) "TRUE" : (ULONG) "FALSE" );
   }
 
   return (ULONG) rc;
@@ -667,9 +668,9 @@ GetAudioAttrsA( REG(d0, ULONG id),
 *
 */
 
-ULONG ASMCALL 
-BestAudioIDA( REG(a1, struct TagItem *tags),
-              REG(a6, struct AHIBase *AHIBase) )
+ULONG
+BestAudioIDA( struct TagItem* tags,
+              struct AHIBase* AHIBase )
 {
   ULONG id = AHI_INVALID_ID, bestid = 0;
   Fixed score, bestscore = 0;

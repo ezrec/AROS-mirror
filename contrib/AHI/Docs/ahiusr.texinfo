@@ -23,7 +23,7 @@ This file documents AHI release @value{ahiver}, a hardware independent
 audio subsystem for Amiga. The version number of this document is
 @value{docver}.
 
-Copyright @copyright{} 1994-1999 Martin Blom.
+Copyright @copyright{} 1994-2003 Martin Blom.
 
 Permission is granted to make and distribute verbatim copies of this manual
 provided the copyright notice and this permission notice are preserved on
@@ -63,8 +63,18 @@ publication, even if advised of the possibility of such damage.}
 
 $Id$
 $Log$
-Revision 1.1  2000/04/01 00:23:45  bernie
-Oops, forgot all these...
+Revision 1.2  2003/03/12 13:03:10  chodorowski
+Updated to version 5.4=6.0rc0.
+
+Revision 5.2  2003/01/19 16:16:39  martin
+Added not about dynamic volume adjusting in V6.
+
+Revision 5.1  2003/01/19 12:22:41  martin
+Another year, another copyright update.
+ ... which seems to have caused the translation files to change slightly.
+
+Revision 5.0  2000/11/28 00:16:20  lcs
+Bumped CVS revision to 5.0.
 
 Revision 4.23  1999/09/20 21:08:52  lcs
 Minor rearrengment of the Acknowledgements chapter.
@@ -155,7 +165,7 @@ Initial revision.
 
 @vskip 0pt plus 1filll
 
-Copyright @copyright{} 1994-1999 Martin Blom. 
+Copyright @copyright{} 1994-2003 Martin Blom. 
 
 Permission is granted to make and distribute verbatim copies of this manual
 provided the copyright notice and this permission notice are preserved on
@@ -198,7 +208,7 @@ publication, even if advised of the possibility of such damage.}
 
 For @sc{Ahi} release @value{ahiver}. Document version @value{docver}.
 
-Copyright @copyright{} 1994-1999 Martin Blom
+Copyright @copyright{} 1994-2003 Martin Blom
 
 The latest release of @sc{Ahi} can always be found at
 @url{http://www.lysator.liu.se/~lcs/ahi.html}. 
@@ -297,7 +307,7 @@ ever get.
 @cindex Software license
 @cindex Copyright
 
-Copyright @copyright{} 1994-1999 Martin Blom
+Copyright @copyright{} 1994-2003 Martin Blom
 
 @sc{Ahi} is available under a dual license. The device itself is under
 the ``GNU Library General Public License'' (@pxref{LGPL}), while the
@@ -555,17 +565,19 @@ The preferences program's GUI is divided in two pages:
 @cindex Preferences, audio mode
 
 On this page you select which audio mode to use.  You can select audio
-mode for both low-level programs (@samp{Music unit}) and other programs
-(@samp{Unit n}) that don't require low-level audio access such as the
-@code{AUDIO:} device (@pxref{AHI-Handler}), sample players etc.  You can
-also select the sample mixing (and recording) frequency to use and how
-many channels you wish use @footnote{The more channels you select, the
-more sounds can you play at the same time.  However, due to the nature
-of sound mixing, the volume will decrease as well.  If you try to play
-more sounds at the same time than there are channels, the least
-important sounds will be muted until the other sounds have finished
-playing.}.  Furthermore, you can set three hardware properties of your
-sound hardware, namely the @dfn{output volume}, @dfn{monitor volume} and
+mode for both low-level programs (@samp{Music unit}) and other
+programs (@samp{Unit n}) that don't require low-level audio access
+such as the @code{AUDIO:} device (@pxref{AHI-Handler}), sample players
+etc.  You can also select the sample mixing (and recording) frequency
+to use and how many channels you wish use @footnote{The more channels
+you select, the more sounds can you play at the same time.  However,
+due to the nature of sound mixing in version 4, the volume will
+decrease as well.  This limitation is not present in version 6, where
+the volume will be adjusted dynamically. If you try to play more
+sounds at the same time than there are channels, the least important
+sounds will be muted until the other sounds have finished playing.}.
+Furthermore, you can set three hardware properties of your sound
+hardware, namely the @dfn{output volume}, @dfn{monitor volume} and
 @dfn{input gain}.  Finally, you can select which input and output
 connectors you wish to use.
 

@@ -4,10 +4,11 @@
 ;
 ## chunk AUTH Translated by Bernardo Innocenti <bernie@shock.cosmos.it>
 ;
+; The .ct file was generated from
 ; $Id$
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -24,110 +25,109 @@
 ;    Free Software Foundation, Inc., 59 Temple Place - Suite 330, Cambridge,
 ;    MA 02139, USA.
 ;
-;
 ; Input and Output connector name
 ;
 msgDefault
 Predefinito
-;Default
+; Default
 ;
 ; The requesters menu
 msgMenuControl
 \000\000Controllo
-;\000\000Control
+; \000\000Control
 ;
 msgMenuLastMode
 P\000Precedente
-;L\000Last Mode
+; L\000Last Mode
 ;
 msgMenuNextMode
 S\000Successivo
-;N\000Next Mode
+; N\000Next Mode
 ;
 msgMenuPropertyList
 ?\000Lista Proprietà...
-;?\000Property List...
+; ?\000Property List...
 ;
 msgMenuRestore
 R\000Ripristina
-;R\000Restore
+; R\000Restore
 ;
 msgMenuOK
 O\000OK
-;O\000OK
+; O\000OK
 ;
 msgMenuCancel
 A\000Annulla
-;C\000Cancel
+; C\000Cancel
 ;
 ; Mode name in requester whose driver cannot be opened
 ;
 msgUnknown
 SCONOSCIUTO: ID Audio 0x%08lx
-;UNKNOWN:Audio ID 0x%08lx
+; UNKNOWN:Audio ID 0x%08lx
 ;
 ; The requester gadgets
 ;
 msgReqOK
 OK
-;OK
+; OK
 ;
 msgReqCancel
 Annulla
-;Cancel
+; Cancel
 ;
 msgReqFrequency
 Frequenza
-;Frequency
+; Frequency
 ;
 ; Name of default mode in requester
 ;
 msgDefaultMode
 Modo audio predefinito
-;Default audio mode
+; Default audio mode
 ;
 ; The requester's info-winodow
 ;
 msgReqInfoTitle
 Proprietà modo
-;Mode Properties
+; Mode Properties
 ;
 msgReqInfoAudioID
 ID modo audio: 0x%08lx
-;Audio mode ID: 0x%08lx
+; Audio mode ID: 0x%08lx
 ;
 msgReqInfoResolution
 Risoluzione: %ld bit %s
-;Resolution: %ld bit %s
+; Resolution: %ld bit %s
 ;
 msgReqInfoMono
 mono
-;mono
+; mono
 ;
 msgReqInfoStereo
 stereo
-;stereo
+; stereo
 ;
 msgReqInfoStereoPan
 stereo con bilanciamento
-;stereo with panning
+; stereo with panning
 ;
 msgReqInfoChannels
 Canali: %ld
-;Channels: %ld
+; Channels: %ld
 ;
 msgReqInfoMixrate
 Frequenza di mix: %ld-%ld Hz
-;Mixing rates: %ld-%ld Hz
+; Mixing rates: %ld-%ld Hz
 ;
 msgReqInfoHiFi
 Mix ad alta fedeltà
-;HiFi mixing
+; HiFi mixing
 ;
 msgReqInfoRecordHalf
 Campionamento half duplex
-;Record in half duplex
+; Record in half duplex
 ;
 msgReqInfoRecordFull
 Campionamento full duplex
-;Record in full duplex
+; Record in full duplex

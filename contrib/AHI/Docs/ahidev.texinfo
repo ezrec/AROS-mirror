@@ -23,7 +23,7 @@ This file documents AHI release @value{ahiver}, a hardware independent
 audio subsystem for Amiga. The version number of this document is
 @value{docver}.
 
-Copyright @copyright{} 1994-1999 Martin Blom.
+Copyright @copyright{} 1994-2003 Martin Blom.
 
 Permission is granted to make and distribute verbatim copies of this manual
 provided the copyright notice and this permission notice are preserved on
@@ -63,8 +63,21 @@ publication, even if advised of the possibility of such damage.}
 
 $Id$
 $Log$
-Revision 1.1  2000/04/01 00:23:45  bernie
-Oops, forgot all these...
+Revision 1.2  2003/03/12 13:03:10  chodorowski
+Updated to version 5.4=6.0rc0.
+
+Revision 5.3  2003/01/19 16:15:40  martin
+Added descriptions of AHIA_AntiClickSamples and AHISF_NODELAY.
+
+Revision 5.2  2003/01/19 14:24:45  martin
+Added support for playing 32 bit samples.
+
+Revision 5.1  2003/01/19 12:22:41  martin
+Another year, another copyright update.
+ ... which seems to have caused the translation files to change slightly.
+
+Revision 5.0  2000/11/28 00:16:18  lcs
+Bumped CVS revision to 5.0.
 
 Revision 4.15  1999/09/19 14:05:03  lcs
 Some polishing.
@@ -127,7 +140,7 @@ Initial revision.
 
 @vskip 0pt plus 1filll
 
-Copyright @copyright{} 1994-1999 Martin Blom. 
+Copyright @copyright{} 1994-2003 Martin Blom. 
 
 Permission is granted to make and distribute verbatim copies of this manual
 provided the copyright notice and this permission notice are preserved on
@@ -170,7 +183,7 @@ publication, even if advised of the possibility of such damage.}
 
 For @sc{Ahi} release @value{ahiver}. Document version @value{docver}.
 
-Copyright @copyright{} 1994-1999 Martin Blom
+Copyright @copyright{} 1994-2003 Martin Blom
 
 The latest release of @sc{Ahi} can always be found at
 @url{http://www.lysator.liu.se/~lcs/ahi.html}. 
@@ -268,7 +281,7 @@ Not everything about @sc{Ahi} is documented here; for more information, see
 @cindex Software license
 @cindex Copyright
 
-Copyright @copyright{} 1994-1999 Martin Blom
+Copyright @copyright{} 1994-2003 Martin Blom
 
 @sc{Ahi} is available under a dual license. The device itself is under
 the ``GNU Library General Public License'' (@pxref{LGPL}), while the
@@ -687,6 +700,16 @@ Can be used to initialize the @code{ahiac_UserData} field.  You do not have
 to use this tag to change @code{ahiac_UserData}, you may write to it
 directly.
 
+@item AHIA_AntiClickSamples
+New for version 6, this tag specifies how many sample frames a sound
+may be delayed when started in order to reduce clicking. In practice,
+the currently playing sound will continue until a zero-crossing is
+found or @code{AHIA_AntiClickSamples} samples have been
+processed. After that, the new sound will be started.
+
+The default for this tag can be set by the user in the preferences
+program. Set it to 0 to disable this feature.
+
 @end vtable
 
 @c ***********************************************************************
@@ -751,8 +774,9 @@ frequency the sound will be played at and Fm is the actual mixing frequency
 
 @end vtable
 
-The samples can be in one of four different formats, named @code{AHIST_M8S},
-@code{AHIST_S8S}, @code{AHIST_M16S}, and @code{AHIST_S16S}.
+The samples can be in one of six different formats, named @code{AHIST_M8S},
+@code{AHIST_S8S}, @code{AHIST_M16S}, @code{AHIST_S16S}, @code{AHIST_M32S}
+and @code{AHIST_S32S}.
 
 @vtable @code
 
@@ -773,8 +797,22 @@ word, in big endian/network order format (most significant byte first)
 representing the left channel, followed by another one for the right
 channel.
 
-@end vtable
+@item AHIST_M32S
+This is a 32 bit mono sound.  Each sample frame is just one signed 32
+bit word, in big endian/network order format (most significant byte
+first).  Note that only the 24 most significant bits are guaranteed to
+be processed correctly! Support for this sample format was added in
+V6.
 
+@item AHIST_S32S
+This is a 32 bit stereo sound.  Each sample frame is one signed 32 bit
+word, in big endian/network order format (most significant byte first)
+representing the left channel, followed by another one for the right
+channel. Note that only the 24 most significant bits are guaranteed to
+be processed correctly! Support for this sample format was added in
+V6.
+
+@end vtable
 
 @findex AHI_UnloadSound()
 
@@ -827,6 +865,14 @@ The sound will not start until both @code{AHI_SetSound()} and
 @code{AHI_SetVol()} was not called, but it will play completely silent.  If
 you wish to temporary stop a sound, set its frequency to 0.  When you
 change the frequency again, the sound will continue where it was.
+
+@vindex AHISF_NODELAY
+
+The actual beginning of sound might be delayed slightly, depending on
+the value of the @code{AHIA_AntiClickSamples} tag passed to
+@code{AHI_AllocAudioA()}. Should you wish to override this, set the
+@code{AHISF_NODELAY} in addition to @code{AHISF_IMM}.
+
 
 @findex AHI_PlayA()
 

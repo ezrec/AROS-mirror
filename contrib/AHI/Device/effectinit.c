@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -24,16 +24,17 @@
 #include <CompilerSpecific.h>
 
 #include <exec/memory.h>
-#include <powerup/ppclib/memory.h>
 #include <proto/exec.h>
-#include <clib/ahi_protos.h>
-#include <inline/ahi.h>
+#define __NOLIBBASE__
+#include <proto/ahi.h>
+#undef  __NOLIBBASE__
 #include <proto/ahi_sub.h>
 
 #include "ahi_def.h"
 #include "dsp.h"
 #include "dspecho.h"
 #include "effectinit.h"
+#include "header.h"
 #include "misc.h"
 #include "mixer.h"
 
@@ -56,14 +57,19 @@ update_MasterVolume ( struct AHIPrivAudioCtrl *audioctrl )
   Fixed                  volume;
   int                    i;
 
-  if(audioctrl->ac.ahiac_Flags & AHIACF_CLIPPING)
-  {
-    volume = 0x10000;
-  }
-  else
-  {
-    volume = audioctrl->ahiac_SetMasterVolume;
-  }
+  /* In V5, clipping is always used:
+   *
+   * if(audioctrl->ac.ahiac_Flags & AHIACF_CLIPPING)
+   * {
+   *   volume = 0x10000;
+   * }
+   * else
+   * {
+   *  volume = audioctrl->ahiac_SetMasterVolume;
+   * }
+   */
+
+  volume = 0x10000;
 
   /* Scale to what the echo effect think is best... */
   volume = (volume * (audioctrl->ahiac_EchoMasterVolume >> 8)) >> 8;
@@ -109,8 +115,21 @@ update_DSPEcho ( struct AHIEffDSPEcho *echo,
   ULONG size, samplesize;
   struct Echo *es;
 
-  free_DSPEcho( audioctrl );
-
+  ULONG data_flags = MEMF_ANY;
+  
+  switch( MixBackend )
+  {
+    case MB_NATIVE:
+      data_flags = MEMF_PUBLIC | MEMF_CLEAR;
+      break;
+      
+#if defined( ENABLE_WARPUP )
+    case MB_WARPUP:
+      // Non-cached from both the PPC and m68k side
+      data_flags = MEMF_PUBLIC | MEMF_CLEAR | MEMF_CHIP;
+      break;
+#endif
+  }
 
   /* Set up the delay buffer format */
 
@@ -133,8 +152,7 @@ update_DSPEcho ( struct AHIEffDSPEcho *echo,
   size = samplesize * (echo->ahiede_Delay + audioctrl->ac.ahiac_MaxBuffSamples);
 
   es = AHIAllocVec( sizeof(struct Echo) + size,
-                    MEMF_PUBLIC | MEMF_CLEAR |
-                    MEMF_NOCACHESYNCPPC | MEMF_NOCACHESYNCM68K );
+                    data_flags );
   
   if(es)
   {

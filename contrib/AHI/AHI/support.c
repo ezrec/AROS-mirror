@@ -1,6 +1,6 @@
 /*
      AHI - The AHI preferences program
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -17,33 +17,6 @@
      Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-/* $Id$
- * $Log$
- * Revision 1.1  2000/04/01 00:23:41  bernie
- * Oops, forgot all these...
- *
- * Revision 4.6  1999/04/22 19:41:25  lcs
- * Removed SAS/C smakefile.
- * I had the copyright date screwed up: Changed to 1996-1999 (which is only
- * partly correct, but still better than 1997-1999....)
- *
- * Revision 4.5  1999/03/28 22:30:51  lcs
- * AHI is now GPL/LGPL software.
- * Make target bindist work correctly when using a separate build directory.
- * Small first steps towards a WarpOS PPC version.
- *
- * Revision 4.4  1999/01/09 23:14:16  lcs
- * Switched from SAS/C to gcc
- *
- * Revision 4.3  1997/06/24 21:49:49  lcs
- * Increased version number to match the catalogs (4.5).
- *
- * Revision 4.2  1997/04/07 01:36:51  lcs
- * Localized it, bug fixes
- *
- */
-
-
 #include <config.h>
 #include <CompilerSpecific.h>
 
@@ -51,12 +24,15 @@
 #include <exec/memory.h>
 #include <prefs/prefhdr.h>
 #include <workbench/workbench.h>
+
+#include <clib/alib_protos.h>
 #include <proto/ahi.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/icon.h>
 #include <proto/iffparse.h>
 #include <proto/utility.h>
+
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -141,7 +117,7 @@ static struct DiskObject projIcon = {
   },  
   WBPROJECT,                      /* Icon Type */
   deftoolname,                    /* Default Tool */
-  toolTypes,                      /* Tool Type Array */
+  (STRPTR*) toolTypes,            /* Tool Type Array */
   NO_ICON_POSITION,               /* Current X */
   NO_ICON_POSITION,               /* Current Y */
   NULL,                           /* Drawer Structure */
@@ -276,7 +252,23 @@ struct List *GetUnits(char *name) {
 
               if(global != NULL) {
                 CopyMem(global->sp_Data, &globalprefs, 
-                    min( sizeof(struct AHIGlobalPrefs), global->sp_Size ));
+                    min( sizeof(struct AHIGlobalPrefs),
+			 (size_t) global->sp_Size ));
+
+		/* Set upsupported options to their defaults */
+
+		if( AHIBase->lib_Version <= 4 )
+		{
+		  globalprefs.ahigp_AntiClickTime = 0;
+		}
+		
+		if( AHIBase->lib_Version >= 5 )
+		{
+		  globalprefs.ahigp_DisableSurround  = FALSE;
+		  globalprefs.ahigp_DisableEcho      = FALSE;
+		  globalprefs.ahigp_FastEcho         = FALSE;
+		  globalprefs.ahigp_ClipMasterVolume = TRUE;
+		}
               }
 
               while(ci) {
@@ -287,7 +279,8 @@ struct List *GetUnits(char *name) {
                 if(u == NULL)
                   break;
                 CopyMem(p, &u->prefs, 
-                    min( sizeof(struct AHIUnitPrefs), ci->ci_Size ));
+                    min( sizeof(struct AHIUnitPrefs),
+			 (size_t) ci->ci_Size ));
 
                 FillUnitName(u);
                 
@@ -608,7 +601,7 @@ void FreeList(struct List *list) {
 struct Node *GetNode(int index, struct List *list) {
   struct Node *n;
 
-  if(list == NULL)
+  if(list == NULL || list->lh_Head->ln_Succ == NULL)
     return NULL;
     
   for(n = list->lh_Head; n->ln_Succ; n = n->ln_Succ) {
@@ -618,4 +611,84 @@ struct Node *GetNode(int index, struct List *list) {
     index--;
   }
   return n;
+}
+
+/******************************************************************************
+**** Plays a test sound using the current selected mode and settings **********
+******************************************************************************/
+
+BOOL PlaySound( struct AHIUnitPrefs* prefs )
+{
+  struct AHIAudioCtrl* actrl;
+  BOOL                 rc = FALSE;
+  
+  actrl = AHI_AllocAudio( AHIA_AudioID,  prefs->ahiup_AudioMode,
+                          AHIA_MixFreq,  prefs->ahiup_Frequency,
+                          AHIA_Channels, max( prefs->ahiup_Channels, 1 ),
+                          AHIA_Sounds,   1,
+                          TAG_DONE );
+
+  if( actrl != NULL )
+  {
+    BYTE*                sample;
+    int                  length = 48000/440;
+    struct AHISampleInfo sound;
+      
+    sample = AllocVec( length, MEMF_PUBLIC );
+      
+    if( sample != NULL )
+    {
+      int i;
+        
+      for( i = 0; i < length; ++i )
+      {
+        sample[ i ] = 127 * sin( i * 2 * M_PI / length );
+      }
+        
+      sound.ahisi_Type    = AHIST_M8S;
+      sound.ahisi_Address = sample;
+      sound.ahisi_Length  = length;
+        
+      if( AHI_LoadSound( 0, AHIST_SAMPLE, &sound, actrl ) == AHIE_OK )
+      {
+        if( AHI_ControlAudio( actrl, AHIC_Play,          TRUE,
+                                     AHIC_MonitorVolume, prefs->ahiup_MonitorVolume,
+                                     AHIC_InputGain,     prefs->ahiup_InputGain,
+                                     AHIC_OutputVolume,  prefs->ahiup_OutputVolume,
+                                     AHIC_Input,         prefs->ahiup_Input,
+                                     AHIC_Output,        prefs->ahiup_Output,
+                                     TAG_DONE ) == AHIE_OK )
+        {
+          AHI_Play( actrl, AHIP_BeginChannel, 0,
+                           AHIP_Freq,         48000,
+                           AHIP_Vol,          0x10000,
+                           AHIP_Pan,          0x8000,
+                           AHIP_Sound,        0,
+                           AHIP_EndChannel,   NULL,
+                           TAG_DONE );
+
+          Delay( 50 );
+          
+          AHI_Play( actrl, AHIP_BeginChannel, 0,
+                           AHIP_Sound,        AHI_NOSOUND,
+                           AHIP_EndChannel,   NULL,
+                           TAG_DONE );
+
+          // Give the anti-click code a break ...
+          Delay( 1 );
+
+          AHI_ControlAudio( actrl, AHIC_Play, FALSE,
+                                   TAG_DONE );
+        }
+
+        AHI_UnloadSound( 0, actrl );
+      }
+        
+      FreeVec( sample );
+    }
+    
+    AHI_FreeAudio( actrl );
+  }
+
+  return rc;
 }

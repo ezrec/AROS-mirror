@@ -4,301 +4,307 @@
 ;
 ## chunk AUTH Translated by Sini¹a Loliæ <vegi@usa.net>
 ;
+; The .ct file was generated from
 ; $Id$
-; $Log$
-; Revision 1.1  2000/04/01 00:25:39  bernie
-; Also forgot these
 ;
-; Revision 1.4  1999/08/29 23:44:00  lcs
-; Added support for ahigp_AntiClickTime.
-;
-; Revision 4.5  1997/04/27 16:16:06  lcs
-; Added "Mastervolume with(out) clipping".
-;
-; Revision 4.4  1997/04/23 21:08:31  lcs
-; Removed (Disabled)
-;
-; Revision 4.2  1997/04/07 01:36:51  lcs
-; Localized it, bug fixes
-;
+;    AHI - Hardware independent audio subsystem
+;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+;     
+;    This library is free software; you can redistribute it and/or
+;    modify it under the terms of the GNU Library General Public
+;    License as published by the Free Software Foundation; either
+;    version 2 of the License, or (at your option) any later version.
+;     
+;    This library is distributed in the hope that it will be useful,
+;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;    Library General Public License for more details.
+;     
+;    You should have received a copy of the GNU Library General Public
+;    License along with this library; if not, write to the
+;    Free Software Foundation, Inc., 59 Temple Place - Suite 330, Cambridge,
+;    MA 02139, USA.
 ;
 ; *** Menus ***
 ;
 msgMenuProject
 \000Projekt
-;\000Project
+; \000Project
 ;
 msgItemOpen
 U\000Uèitaj...
-;O\000Open...
+; O\000Open...
 ;
 msgItemSaveAs
 N\000Snimi kao...
-;A\000Save As...
+; A\000Save As...
 ;
 msgItemAbout
 ?\000Komentar...
-;?\000About...
+; ?\000About...
 ;
 msgItemQuit
 K\000Kraj
-;Q\000Quit
+; Q\000Quit
 ;
 msgMenuEdit
 \000Uredi
-;\000Edit
+; \000Edit
 ;
 msgItemDefaults
 O\000Vrati na osnovne
-;D\000Reset To Defaults
+; D\000Reset To Defaults
 ;
 msgItemLastSaved
 Z\000Zadnje snimljene
-;L\000Last Saved
+; L\000Last Saved
 ;
 msgItemRestore
 V\000Vrati
-;R\000Restore
+; R\000Restore
 ;
 msgMenuSettings
 \000Postavke
-;\000Settings
+; \000Settings
 ;
 msgItemCreateIcons
 D\000Dodaj ikone?
-;I\000Create Icons?
+; I\000Create Icons?
 ;
 msgMenuHelp
 \000Pomoæ
-;\000Help
+; \000Help
 ;
 msgItemHelp
 Help\000Pomoæ...
-;Help\000Help...
+; Help\000Help...
 ;
 msgItemUsersGuide
 H\000AHI priruènik...
-;H\000AHI User's guide...
+; H\000AHI User's guide...
 ;
 msgItemConceptIndex
 \000Indeks koncepta...
-;\000Concept Index...
+; \000Concept Index...
 ;
 ; *** The pages ***
 ;
 msgPageMode
 Postavke naèina
-;Mode settings
+; Mode settings
 ;
 msgPageAdvanced
 Napredne postavke
-;Advanced settings
+; Advanced settings
 ;
 ; *** The units ***
 ;
 msgUnitDevice
 Jedinica %ld
-;Unit %ld
+; Unit %ld
 ;
 msgUnitMusic
 Glazbena jedinica
-;Music unit
+; Music unit
 ;
 ; *** Properties box ***
 ;
 msgProperties
 ID naèina\nSnimanje\nAutor\nAutorko pravo\nDriver\nVerzija
-;Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
 ;
 msgPropRecordFull
 Full Duplex
-;Full duplex
+; Full duplex
 ;
 msgPropRecordHalf
 Half Duplex
-;Half duplex
+; Half duplex
 ;
 msgPropRecordNone
 Ne
-;Nope
+; Nope
 ;
 ; *** Options ***
 ;
 msgOptions
 Opcije
-;Options
+; Options
 ;
 msgOptFrequency
 _Frekvencija
-;_Frequency
+; _Frequency
 ;
 msgOptChannels
 K_anali
-;C_hannels
+; C_hannels
 ;
 msgOptNoChannels
 
-;
+; 
 ;
 msgOptVolume
 G_lasnoæa
-;_Volume
+; _Volume
 ;
 msgOptMonitor
 _Monitor
-;_Monitor
+; _Monitor
 ;
 msgOptGain
 _Gain
-;_Gain
+; _Gain
 ;
 msgOptMuted
 Nijem
-;Muted
+; Muted
 ;
 msgOptInput
 _Ulaz
-;_Input
+; _Input
 ;
 msgOptNoInputs
 Bez ulaza
-;No inputs
+; No inputs
 ;
 msgOptOutput
 _Izlaz
-;_Output
+; _Output
 ;
 msgOptNoOutputs
 Bez izlaza
-;No outputs
+; No outputs
 ;
 ;
 ; *** Global Options ***
 ;
 msgGlobalOptions
 Opæe opcije
-;Global options
+; Global options
 ;
 msgGlobOptDebugLevel
 S_tupanj debugiranja
-;_Debug level
+; _Debug level
 ;
 msgGlobOptEcho
 _Eho
-;_Echo
+; _Echo
 ;
 msgGlobOptSurround
 Surround u "_Brzim" naèinima
-;Surround in "_Fast" modes
+; Surround in "_Fast" modes
 ;
 msgGlobOptCPULimit
 G_ranica kori¹tenja CPUa
-;CPU usage _limit
+; CPU usage _limit
 ;
 ; *** Debug levels ***
 ;
 msgDebugNone
 Iskljuèen
-;None
+; None
 ;
 msgDebugLow
 Nizak
-;Low
+; Low
 ;
 msgDebugHigh
 Visok
-;High
+; High
 ;
 msgDebugFull
 Potpun
-;Full
+; Full
 ;
 ; *** Echo ***
 ;
 msgEchoEnabled
 Ukljuèen
-;Enabled
+; Enabled
 ;
 msgEchoFast
 Brz
-;Fast
+; Fast
 ;
 msgEchoDisabled
 Iskljuèen
-;Disabled
+; Disabled
 ;
 ; *** Surround ***
 ;
 msgSurroundEnabled
 Ukljuèen
-;Enabled
+; Enabled
 ;
 msgSurroundDisabled
 Iskljuèen
-;Disabled
+; Disabled
 ;
 ; *** Buttons ***
 ;
 msgButtonSave
 _Snimi
-;_Save
+; _Save
 ;
 msgButtonUse
 _Koristi
-;_Use
+; _Use
 ;
 msgButtonCancel
 _Zaboravi
-;_Cancel
+; _Cancel
 ;
 msgButtonOK
 U redu
-;OK
+; OK
 ;
 ; *** Texts ***
 ;
 msgTextProgramName
 AHI postavke
-;AHI preferences
+; AHI preferences
 ;
 ;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
 msgTextCopyright
 %s%s\n\
 Autorsko pravo ©%s\nPreveo na hrvatski Sini¹a Loliæ
-;%s%s\nCopyright ©%s
+; %s%s\nCopyright ©%s
 ;
 msgTextNoWindow
 Ne mogu otvoriti prozor
-;Unable to open window.
+; Unable to open window.
 ;
 msgTextNoFileRequester
 Ne mogu dodijeliti requester datoteka
-;Unable to allocate file requester.
+; Unable to allocate file requester.
 ;
 msgTextNoFind
 Ne mogu naæi `%s'!
-;Unable to find `%s'!
+; Unable to find `%s'!
 ;
 msgTextNoOpen
 Ne mogu otvoriti `%s´ verziju %ld.
-;Unable to open `%s´ version %ld.
+; Unable to open `%s´ version %ld.
 ;
 ; *** Additions
 ;
 msgGlobOptMasterVol
 _Glasnoæa svega
-;_Master volume
+; _Master volume
 ;
 msgMVNoClip
 Bez rezanja
-;Without clipping
+; Without clipping
 ;
 msgMVClip
 S rezanjem
-;With clipping
+; With clipping
 ;
 msgGlobOptACTime
 
-;Anti-click time (ms)
-; ***NEW***
+; Default anti-click time
+;
+msgButtonPlay
+
+; _Play a test sound
 ;

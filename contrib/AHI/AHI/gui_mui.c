@@ -1,6 +1,6 @@
 /*
      AHI - The AHI preferences program
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -17,50 +17,6 @@
      Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-/* $Id$
- * $Log$
- * Revision 1.1  2000/04/01 00:23:41  bernie
- * Oops, forgot all these...
- *
- * Revision 4.10  1999/08/29 23:43:54  lcs
- * Added support for ahigp_AntiClickTime.
- *
- * Revision 4.9  1999/04/22 19:41:22  lcs
- * Removed SAS/C smakefile.
- * I had the copyright date screwed up: Changed to 1996-1999 (which is only
- * partly correct, but still better than 1997-1999....)
- *
- * Revision 4.8  1999/03/28 22:30:49  lcs
- * AHI is now GPL/LGPL software.
- * Make target bindist work correctly when using a separate build directory.
- * Small first steps towards a WarpOS PPC version.
- *
- * Revision 4.7  1999/01/09 23:14:12  lcs
- * Switched from SAS/C to gcc
- *
- * Revision 4.6  1997/07/15 00:51:28  lcs
- * Fixed some bugs.
- *
- * Revision 4.5  1997/07/11 14:25:49  lcs
- * Small bug fix: Wrong order of set() calls in guinewmode()
- *
- * Revision 4.4  1997/06/24 21:49:31  lcs
- * Fixed an enforcer hit, and a few more potential ones (problem caused by
- * having a 0-level slider (min 0, max -1...).
- *
- * Revision 4.3  1997/05/06 15:15:46  lcs
- * Can now which pages with the keyboard.
- * Fixed a bug in the mode properties code.
- *
- * Revision 4.2  1997/05/04 22:13:29  lcs
- * Keyboard shortcuts and more.
- *
- * Revision 4.1  1997/05/04 05:30:28  lcs
- * First MUI version.
- *
- *
- */
-
 #include <config.h>
 #include <CompilerSpecific.h>
 
@@ -68,11 +24,18 @@
 #include <libraries/asl.h>
 #include <libraries/gadtools.h>
 #include <libraries/mui.h>
+
+#include <clib/alib_protos.h>
+#include <proto/ahi.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/intuition.h>
-#include <proto/muimaster.h>
 #include <proto/utility.h>
+
+#define NO_INLINE_STDARG
+#include <proto/muimaster.h>
+#undef NO_INLINE_STDARG
+
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -81,6 +44,42 @@
 #include "ahiprefs_Cat.h"
 #include "support.h"
 #include "gui.h"
+
+
+
+#if defined( __morphos__ ) || defined( __MORPHOS__ )
+
+#ifndef DoMethod
+#define DoMethod(obj, ... )         \
+({                                  \
+  ULONG _args[] = { __VA_ARGS__ };  \
+  DoMethodA(obj,(Msg) _args);       \
+})
+#endif
+
+/* Why the #$*@ is this not in libamiga.a?! */
+
+static ULONG
+gw_HookEntry( void )
+{
+  struct Hook* h   = (struct Hook*) REG_A0;
+  void*        o   = (void*)        REG_A2; 
+  void*        msg = (void*)        REG_A1;
+
+  return ( ( (ULONG(*)(struct Hook*, void*, void*)) *h->h_SubEntry)( h, o, msg ) );
+}
+
+struct EmulLibEntry _HookEntry =
+{
+  TRAP_LIB, 0, (void (*)(void)) &gw_HookEntry
+};
+
+__asm( ".globl HookEntry;HookEntry=_HookEntry" );
+
+
+#endif
+
+
 
 static void GUINewSettings(void);
 static void GUINewUnit(void);
@@ -108,6 +107,8 @@ enum actionIDs {
   ACTID_INPUT, ACTID_OUTPUT,
   SHOWID_FREQ, SHOWID_CHANNELS, SHOWID_OUTVOL, SHOWID_MONVOL, SHOWID_GAIN,
   SHOWID_INPUT, SHOWID_OUTPUT,
+  
+  ACTID_PLAY,
 
   ACTID_DEBUG, ACTID_SURROUND, ACTID_ECHO, ACTID_CLIPMV,
   ACTID_CPULIMIT, SHOWID_CPULIMIT,
@@ -273,13 +274,13 @@ static void GUINewUnit(void)
   set(MUIList, MUIA_List_Quiet, TRUE);
   DoMethod(MUIList, MUIM_List_Insert, Modes, -1, MUIV_List_Insert_Bottom);
   set(MUIList, MUIA_List_Quiet, FALSE);
-  set(MUIList, MUIA_List_Active, state.ModeSelected);
+  set(MUIList, MUIA_List_Active, state.ModeSelected != ~0 ? state.ModeSelected : MUIV_List_Active_Off);
   GUINewMode();
 }
 
 static void GUINewMode(void)
 {
-  int Max, Sel;
+  int Max, Sel, Dis;
   char* buffer;
   char* arg1 = getRecord();
   char* arg2 = getAuthor();
@@ -312,58 +313,86 @@ static void GUINewMode(void)
 
   Max = max(state.Frequencies -1, 0);
   Sel = min(Max, state.FreqSelected);
-  set(MUIFreq, MUIA_Disabled, Max==0);
-  set(MUIFreq, MUIA_Numeric_Max, Max);
-  set(MUIFreq, MUIA_Numeric_Value, Sel);
+  Dis = Max==0;
+  set(MUIFreq, MUIA_Disabled, Dis);
+  if( !Dis )
+  {
+    set(MUIFreq, MUIA_Numeric_Max, Max);
+    set(MUIFreq, MUIA_Numeric_Value, Sel);
+  }
   set(MUILFreq, MUIA_Text_Contents, (ULONG) getFreq());
 
   Max = max(state.Channels, 0);
   Sel = min(Max, state.ChannelsSelected);
-  set(MUIChannels, MUIA_Disabled, (Max == 1) || state.ChannelsDisabled);
-  set(MUIChannels, MUIA_Numeric_Max, Max);
-  set(MUIChannels, MUIA_Numeric_Value, Sel);
+  Dis = (Max == 0 || Max == 1) || state.ChannelsDisabled;
+  set(MUIChannels, MUIA_Disabled, Dis);
+  if( !Dis )
+  {
+    set(MUIChannels, MUIA_Numeric_Max, Max);
+    set(MUIChannels, MUIA_Numeric_Value, Sel);
+  }
   set(MUILChannels, MUIA_Text_Contents, (ULONG) getChannels());
 
   Max = max(state.OutVols -1, 0);
   Sel = min(Max, state.OutVolSelected);
-  set(MUIOutvol, MUIA_Disabled, Max==0);
-  set(MUIOutvol, MUIA_Numeric_Max, Max);
-  set(MUIOutvol, MUIA_Numeric_Value, Sel);
+  Dis = Max==0;
+  set(MUIOutvol, MUIA_Disabled, Dis);
+  if( !Dis )
+  {
+    set(MUIOutvol, MUIA_Numeric_Max, Max);
+    set(MUIOutvol, MUIA_Numeric_Value, Sel);
+  }
   set(MUILOutvol, MUIA_Text_Contents, (ULONG) getOutVol());
 
   Max = max(state.MonVols -1, 0);
   Sel = min(Max, state.MonVolSelected);
-  set(MUIMonvol, MUIA_Disabled, Max==0);
-  set(MUIMonvol, MUIA_Numeric_Max, Max);
-  set(MUIMonvol, MUIA_Numeric_Value, Sel);
+  Dis = Max==0;
+  set(MUIMonvol, MUIA_Disabled, Dis);
+  if( !Dis )
+  {
+    set(MUIMonvol, MUIA_Numeric_Max, Max);
+    set(MUIMonvol, MUIA_Numeric_Value, Sel);
+  }
   set(MUILMonvol, MUIA_Text_Contents, (ULONG) getMonVol());
 
   Max = max(state.Gains -1, 0);
   Sel = min(Max, state.GainSelected);
-  set(MUIGain, MUIA_Disabled, Max==0);
-  set(MUIGain, MUIA_Numeric_Max, Max);
-  set(MUIGain, MUIA_Numeric_Value, Sel);
+  Dis = Max==0;
+  set(MUIGain, MUIA_Disabled, Dis);
+  if( !Dis )
+  {
+    set(MUIGain, MUIA_Numeric_Max, Max);
+    set(MUIGain, MUIA_Numeric_Value, Sel);
+  }
   set(MUILGain, MUIA_Text_Contents, (ULONG) getGain());
 
   Max = max(state.Inputs -1, 0);
   Sel = min(Max, state.InputSelected);
-  set(MUIInput, MUIA_Disabled, Max==0);
-  set(MUIInput, MUIA_Numeric_Max, Max);
-  set(MUIInput, MUIA_Numeric_Value, Sel);
+  Dis = Max==0;
+  set(MUIInput, MUIA_Disabled, Dis);
+  if( !Dis )
+  {
+    set(MUIInput, MUIA_Numeric_Max, Max);
+    set(MUIInput, MUIA_Numeric_Value, Sel);
+  }
   set(MUILInput, MUIA_Text_Contents, (ULONG) getInput());
 
   Max = max(state.Outputs -1, 0);
   Sel = min(Max, state.OutputSelected);
-  set(MUIOutput, MUIA_Disabled, Max==0);
-  set(MUIOutput, MUIA_Numeric_Max, Max);
-  set(MUIOutput, MUIA_Numeric_Value, Sel);
+  Dis = Max==0;
+  set(MUIOutput, MUIA_Disabled, Dis);
+  if( !Dis )
+  {
+    set(MUIOutput, MUIA_Numeric_Max, Max);
+    set(MUIOutput, MUIA_Numeric_Value, Sel);
+  }
   set(MUILOutput, MUIA_Text_Contents, (ULONG) getOutput());
 }
 
-static VOID HOOKCALL
-SliderHookFunc( REG( a0, struct Hook *hook ),
-                REG( a2, Object *obj ),
-                REG( a1, ULONG** arg ) )
+static VOID
+SliderHookFunc( struct Hook *hook,
+                Object *obj,
+                ULONG** arg )
 {
   if(obj == MUIFreq)
   {
@@ -405,8 +434,8 @@ SliderHookFunc( REG( a0, struct Hook *hook ),
 static struct Hook hookSlider =
 {
   { NULL, NULL },
+  HookEntry,
   (HOOKFUNC) SliderHookFunc,
-  NULL,
   NULL
 };
 
@@ -465,18 +494,18 @@ static Object* SpecialButton(STRPTR label)
 static Object* SpecialSlider(LONG min, LONG max, LONG value)
 {
   return(SliderObject,
-      MUIA_CycleChain, 1,
-      MUIA_Slider_Quiet, TRUE,
-      MUIA_Numeric_Min, min,
-      MUIA_Numeric_Max,max,
-      MUIA_Numeric_Value,value,
-      MUIA_Numeric_Format, "",
+	 MUIA_CycleChain,     1,
+	 MUIA_Slider_Quiet,   TRUE,
+	 MUIA_Numeric_Min,    min,
+	 MUIA_Numeric_Max,    max >= min ? max : min,
+	 MUIA_Numeric_Value,  value >= min && value <=max ? value : min,
+	 MUIA_Numeric_Format, "",
     End);
 }
 
 BOOL BuildGUI(char *screenname)
 {
-  Object *MUISave, *MUIUse, *MUICancel;
+  Object *MUISave, *MUIUse, *MUICancel, *MUIPlay;
   Object *page1,*page2;
   Object *MUITFreq,*MUITChannels,*MUITOutvol,*MUITMonvol,*MUITGain,*MUITInput,*MUITOutput,*MUITDebug,*MUITEcho,*MUITSurround,*MUITClipvol,*MUITCpu,*MUITACTime;
 
@@ -545,6 +574,7 @@ BOOL BuildGUI(char *screenname)
         Child, MUIOutput = SpecialSlider(0,max(state.Outputs-1,0),state.OutputSelected),
         Child, MUILOutput = SpecialLabel(getOutput()),
       End,
+      Child, MUIPlay = SimpleButton(msgButtonPlay),
       Child, HVSpace,
     End,
   End;
@@ -566,18 +596,21 @@ BOOL BuildGUI(char *screenname)
           MUIA_CycleChain, 1,
           MUIA_Cycle_Entries, EchoLabels,
           MUIA_Cycle_Active, (globalprefs.ahigp_DisableEcho ? 2 : 0) | (globalprefs.ahigp_FastEcho ? 1 : 0),
+          MUIA_Disabled, AHIBase->lib_Version >= 5,
         End,
         Child, MUITSurround = SpecialButton((STRPTR)msgGlobOptSurround),
         Child, MUISurround = CycleObject,
           MUIA_CycleChain, 1,
           MUIA_Cycle_Entries, SurroundLabels,
           MUIA_Cycle_Active, globalprefs.ahigp_DisableSurround,
+          MUIA_Disabled, AHIBase->lib_Version >= 5,
         End,
         Child, MUITClipvol = SpecialButton((STRPTR)msgGlobOptMasterVol),
         Child, MUIClipvol = CycleObject,
           MUIA_CycleChain, 1,
           MUIA_Cycle_Entries, ClipMVLabels,
           MUIA_Cycle_Active, globalprefs.ahigp_ClipMasterVolume,
+          MUIA_Disabled, AHIBase->lib_Version >= 5,
         End,
         Child, MUITCpu = SpecialButton((STRPTR)msgGlobOptCPULimit),
         Child, MUICpu = SliderObject,
@@ -596,6 +629,7 @@ BOOL BuildGUI(char *screenname)
           MUIA_Numeric_Max, 100,
           MUIA_Numeric_Value,(globalprefs.ahigp_AntiClickTime * 1000 + 32768) >> 16,
           MUIA_Numeric_Format,"%ld% ms",
+          MUIA_Disabled, AHIBase->lib_Version <= 4,
         End,
       End,
       Child, HVSpace,
@@ -606,7 +640,7 @@ BOOL BuildGUI(char *screenname)
   MUIApp = ApplicationObject,
     MUIA_Application_Title, (char *) msgTextProgramName,
     MUIA_Application_Version, Version,
-    MUIA_Application_Copyright, "©1996-1999 Martin Blom",
+    MUIA_Application_Copyright, "©1996-2003 Martin Blom",
     MUIA_Application_Author, "Stéphane Barbaray/Martin Blom",
     MUIA_Application_Base, "AHI",
     MUIA_Application_HelpFile, HELPFILE,
@@ -648,6 +682,7 @@ BOOL BuildGUI(char *screenname)
     DoMethod(MUITGain, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUIGain);
     DoMethod(MUITInput, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUIInput);
     DoMethod(MUITOutput, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUIOutput);
+    DoMethod(MUIPlay, MUIM_Notify, MUIA_Pressed, FALSE, MUIApp, 2, MUIM_Application_ReturnID, ACTID_PLAY);
     DoMethod(MUITDebug, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUIDebug);
     DoMethod(MUITEcho, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUIEcho);
     DoMethod(MUITSurround, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUISurround);
@@ -795,10 +830,16 @@ void EventLoop(void)
       }
 
       case ACTID_ABOUT:
-        MUI_Request(MUIApp, MUIWindow, 0, (char *) msgTextProgramName,
-            (char*)msgButtonOK, (char*)msgTextCopyright, "\033c",
-            (char*)msgTextProgramName, "1996-1999 Stéphane Barbaray/Martin Blom");
+      {
+        char* args[] = { "\033c", 
+                         (char*)msgTextProgramName,
+                         "1996-2003 Stéphane Barbaray/Martin Blom"
+                       };
+
+        MUI_RequestA(MUIApp, MUIWindow, 0, (char *) msgTextProgramName,
+            (char*)msgButtonOK, (char*)msgTextCopyright, args );
         break;
+      }
 
       case ACTID_SAVE:
         FillUnit();
@@ -870,6 +911,19 @@ void EventLoop(void)
         NewMode(xget(MUIList, MUIA_List_Active));
         GUINewMode();
         break;
+        
+      case ACTID_PLAY:
+      {
+        int              unit_id;
+        struct UnitNode* unit;
+
+        FillUnit();
+        unit_id = xget( MUIUnit, MUIA_Cycle_Active );
+        unit    = (struct UnitNode *) GetNode( unit_id, UnitList );
+        
+        PlaySound( &unit->prefs );
+        break;
+      }
 
       case ACTID_DEBUG:
       case ACTID_SURROUND:
@@ -892,9 +946,9 @@ void EventLoop(void)
         globalprefs.ahigp_DisableSurround  = surround;
         globalprefs.ahigp_DisableEcho      = (echo == 2);
         globalprefs.ahigp_FastEcho         = (echo == 1);
-        globalprefs.ahigp_MaxCPU           = ((cpu << 16) + 100) / 100;
+        globalprefs.ahigp_MaxCPU           = ((cpu << 16) + 50) / 100;
         globalprefs.ahigp_ClipMasterVolume = clip;
-        globalprefs.ahigp_AntiClickTime    = ((actime << 16) + 1000) / 1000;
+        globalprefs.ahigp_AntiClickTime    = ((actime << 16) + 500) / 1000;
 
         break;
       }

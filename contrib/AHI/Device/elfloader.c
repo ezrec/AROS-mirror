@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -39,6 +39,7 @@
 
 #include <string.h>
 
+#include "ahi_def.h"
 #include "elfloader.h"
 #include "misc.h"
 
@@ -459,7 +460,7 @@ ELFLoadObject( const char* objname )
             struct Elf32_Shdr *shdrs;
             ULONG shdrsize = (ULONG) hdr->e_shnum * (ULONG) hdr->e_shentsize;
 
-//            kprintf("elf32ppcbe format recognized\n");
+//            KPrintF("elf32ppcbe format recognized\n");
 
             shdrs = alloc32( shdrsize );
 
@@ -472,9 +473,9 @@ ELFLoadObject( const char* objname )
                 if( loadelf32( elfobj, shdrs ) )
                 {
                   void* start;
-//                  kprintf("ELF object loaded (0x%08lx)\n", elfobj );
+//                  KPrintF("ELF object loaded (0x%08lx)\n", elfobj );
                   start = loadprogram( elfobj );
-//                  kprintf("Start of PPC code: 0x%08lx\n", start );
+//                  KPrintF("Start of PPC code: 0x%08lx\n", start );
                   free32( shdrs );
                   return (elfobj);
                 }
@@ -483,7 +484,7 @@ ELFLoadObject( const char* objname )
             }
           }
           else
-            kprintf( "Not an ELF32-PPC-BE\nrelocatable object.");
+            KPrintF( "Not an ELF32-PPC-BE\nrelocatable object.");
         }
       }
       freeelfobj(elfobj);
@@ -603,7 +604,7 @@ static BOOL scanElfSymbols(struct ElfObject *eo,struct PPCObjectInfo *info,
 {
   ULONG addr = info->Address;
   char *name = info->Name;
-//kprintf( "scanElfSymbols( 0x%08lx, 0x%08lx, %ld\n", eo, info, relmode );
+//KPrintF( "scanElfSymbols( 0x%08lx, 0x%08lx, %ld\n", eo, info, relmode );
   if (relmode) {
     unsigned int i;
     int j;
@@ -635,7 +636,7 @@ static BOOL scanElfSymbols(struct ElfObject *eo,struct PPCObjectInfo *info,
     struct Elf32_Sym *stab = eo->symtab;
     int i = eo->nsyms;
     while (--i) {
-//kprintf( "i=%ld\n", i );
+//KPrintF( "i=%ld\n", i );
       if (getsyminfo(eo,info,++stab)) {
         if (!name) {
           if (info->Size) {
@@ -648,7 +649,7 @@ static BOOL scanElfSymbols(struct ElfObject *eo,struct PPCObjectInfo *info,
           }
         }
         else {
-//kprintf( "comparing %s and %s\n", name,info->Name );
+//KPrintF( "comparing %s and %s\n", name,info->Name );
           if (!strcmp(name,info->Name))
             return (TRUE);
         }
@@ -716,19 +717,19 @@ static APTR loadprogram(struct ElfObject *eo)
         if (!(s->flags & ElfSecF_NOBITS)) {
           /* a PROGBITS section - load it from file */
 
-//          kprintf("%sreading section %s\n",FN,s->name);
+//          KPrintF("%sreading section %s\n",FN,s->name);
           if (prstream(eo,s->offset,p,s->size)) {
             if (text) {
               /* get start address of PPC program in .text */
               entry = p;
               if ((*entry & 0xfc) == 0) {
-//                kprintf("%sgcc traceback status word "
+//                KPrintF("%sgcc traceback status word "
 //                        "detected\n",FN);
                 entry += 4;  /* 1st long reserved for gcc traceback word */
               }
               /* copy kernel stubs */
 /*
-               kprintf("%sentry=0x%08lx, "
+               KPrintF("%sentry=0x%08lx, "
                        "invoking dynamic linker\n",FN,entry);
               if (!dynamic_linker(i,eo,p)) {
                 entry = NULL;
@@ -744,7 +745,7 @@ static APTR loadprogram(struct ElfObject *eo)
         }
       }
       else {
-        kprintf("Failed to allocate %ld bytes\n"
+        KPrintF("Failed to allocate %ld bytes\n"
                "for PPC %s section.",size,s->name);
         entry = NULL;
         break;
@@ -761,7 +762,7 @@ static APTR loadprogram(struct ElfObject *eo)
   else
     freeprogram(eo);
 
-//  kprintf("%sreturning with entry=0x%08lx\n",FN,entry);
+//  KPrintF("%sreturning with entry=0x%08lx\n",FN,entry);
   return (entry);
 }
 
@@ -793,7 +794,7 @@ static BOOL relocate(struct ElfObject *eo)
       struct Elf32_Rela *r;
       int i;
 
-//      kprintf("relocate(): relocating section %s "
+//      KPrintF("relocate(): relocating section %s "
 //              "at 0x%08lx\n",es->name,es->address);
       for (i=0,r=es->relocs; i<es->nrel; i++,r++) {
         struct Elf32_Sym *sym = &eo->symtab[ELF32_R_SYM(r->r_info)];
@@ -862,7 +863,7 @@ static BOOL relocate(struct ElfObject *eo)
             break;
 
           default:
-            kprintf("Relocation type %s\nat %s+%ld referencing\n"
+            KPrintF("Relocation type %s\nat %s+%ld referencing\n"
                    "symbol %s+%ld\nis not supported.",
                    reloc_name[ELF32_R_TYPE(r->r_info)],es->name,r->r_offset,
                    eo->symnames+sym->st_name,sym->st_value);
@@ -1016,7 +1017,7 @@ static BOOL common_symbols(struct ElfObject *eo)
       if (!strcmp(s->name,bssname) && (s->flags & ElfSecF_NOBITS)) {
         idx = i;
         offset = s->size;
-//        kprintf("%sfound %s at index %ld with size=%ld\n",
+//        KPrintF("%sfound %s at index %ld with size=%ld\n",
 //                FN,bssname,idx,offset);
         break;
       }
@@ -1035,7 +1036,7 @@ static BOOL common_symbols(struct ElfObject *eo)
       offset = 0;
       idx = eo->nsects-1;
       eo->sections[idx] = s;
-//      kprintf("%screated new %s at index %ld\n",FN,bssname,idx);
+//      KPrintF("%screated new %s at index %ld\n",FN,bssname,idx);
     }
     else
       return (FALSE);
@@ -1051,7 +1052,7 @@ static BOOL common_symbols(struct ElfObject *eo)
       cnt++;
     }
   }
-//  kprintf("%sassigned %ld common symbols (%ld bytes)\n",
+//  KPrintF("%sassigned %ld common symbols (%ld bytes)\n",
 //          FN,cnt,offset-s->size);
   s->size = offset;  /* set new .bss section size */
 

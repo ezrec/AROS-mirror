@@ -1,18 +1,7 @@
 #  $Id$
 #
-#  Makefile.in for the AHI preferences program
+#  Makefile.in for ahi.device.
 #
-
-
-# The CPU to generate code for:
-
-CPU	= 68060
-
-#Can be GEN, PPC:
-
-VER	= GEN
-
-include Makefile.opt
 
 
 #
@@ -33,62 +22,33 @@ CATDIR		= ${DISTDIR}/User/Catalogs
 build_os	= @build_os@
 host_cpu	= @host_cpu@
 
-
-
-CPPFLAGS	= @CPPFLAGS@ -I.. -I${srcdir} -I${top_srcdir} \
-		  -I${top_srcdir}/Include/C -DVERSION$(VER)
-
-ifeq ($(VER),PPC)
-
-CC		= ppc-amigaos-gcc
-AS		= ppc-amigaos-as
-AR		= ppc-amigaos-ar
-RANLIB		= ppc-amigaos-ranlib
-CFLAGS		= @CFLAGS@ -O3 -mcpu=$(CPU) -DCPU=\"$(CPU)\"
-CPPFLAGS	+= -I/gg/os-include -I/gg/include
-ASFLAGS		= @ASFLAGS@ -m$(CPU) -mregnames --defsym CPU=$(CPU)
-LDFLAGS		= -nostartfiles -nostdlib -r 
-LIBS		= -lgcc
-
-TARGET		= ahi.elf.$(CPU)
-
-else
-
 CC		= @CC@
 AS		= @AS@
 AR              = @AR@
 RANLIB          = @RANLIB@
-CFLAGS		= @CFLAGS@ -O3 -m$(CPU) -DCPU=\"$(CPU)\"
-ASFLAGS		= @ASFLAGS@ -m$(CPU) --register-prefix-optional --bitwise-or \
-		  --defsym CPU=$(CPU)
+STRIP		= @STRIP@
+
+CPPFLAGS	= @CPPFLAGS@ -I${top_srcdir} -I${srcdir}
+CFLAGS		= @CFLAGS@
+ASFLAGS		= @ASFLAGS@
 LDFLAGS		= @LDFLAGS@ -nostartfiles
 ARFLAGS         = @ARFLAGS@
+
 LIBS		= @LIBS@
 
-ASM		= @ASM@
-ASMFLAGS	= I INCLUDE:,@srcdir@ SYMDEBUG LINEDEBUG \
-		  QUIET NOEXE OPT NRQBPSMD \
-		  MACHINE $(CPU) SET "VERSION$(VER)"
-
-TARGET		= ahi.device.$(VER)-$(CPU)
-
-ifeq ($(strip $(ASM)),)
-ASM		= @echo 'No suitable assembler found; cannot make $@!'; false \#
-endif
-
-endif
+TARGET		= ahi.device
 
 INSTALL		= @INSTALL@
 INSTALL_PROGRAM	= @INSTALL_PROGRAM@
 INSTALL_DATA	= @INSTALL_DATA@
 
 FLEXCAT		= @FLEXCAT@
-MAKEDEPEND	= @MAKEDEPEND@
 
 ifeq ($(strip $(FLEXCAT)),)
 FLEXCAT		= @echo 'FlexCat not found; cannot make $@!'; false \#
 endif
 
+ENABLE_WARPUP	= @ENABLE_WARPUP@
 
 #
 # Files
@@ -97,26 +57,21 @@ endif
 LANGUAGES	= $(notdir $(basename $(wildcard $(srcdir)/translations/*.ct)))
 CATALOGS	= $(addsuffix .catalog, $(LANGUAGES))
 
-OBJECTS		= header.o device.o devcommands.o devsupp.o \
+OBJECTS		= header.o gateway.o device.o devcommands.o devsupp.o \
 		  localize.o modeinfo.o requester.o database.o debug.o\
-		  asmfuncs.o audioctrl.o effectinit.o sound.o misc.o\
-		  mixer.o ppchandler.o elfloader.o
+		  audioctrl.o effectinit.o sound.o misc.o\
+		  mixer.o 
 
-ifeq ($(VER),GEN)
+ifeq ($(ENABLE_WARPUP),yes)
+OBJECTS		+= elfloader.o warpup.o
+endif
 
 ifeq ($(host_cpu),m68k)
 OBJECTS		+= addroutines_68k.o
 endif
 
 ifeq ($(host_cpu),ppc)
-# Wishful thinking!
 OBJECTS		+= addroutines_ppc.o
-endif
-
-endif
-
-ifeq ($(VER),PPC)
-OBJECTS		= ppcheader.o dspecho.o mixer.o addroutines_ppc.o
 endif
 
 
@@ -131,19 +86,19 @@ endif
 all:		$(TARGET) $(srcdir)/ahi.ct $(CATALOGS)
 
 mostlyclean:
-	$(RM) $(TARGETS) *.o *.bak *~ \#*\# core Makefile.dep Makefile.opt
+	$(RM) $(TARGET) *.o *.a *.bak *~ \#*\# core Makefile.dep
 
 clean:		mostlyclean
-	$(RM) $(CATALOGS) localize.c localize.h version.h version.i \
-	      ahi.device.* ahi.elf.*
+	$(RM) $(CATALOGS) version.h
 
 distclean:	clean
 	$(RM) Makefile
 
 maintainer-clean: distclean
+	$(RM) localize.c localize.h 
 
-install:	$(TARGET)
-	$(INSTALL_PROGRAM) $(TARGET) $(PREFIX)/Devs/$(basename $(TARGET))
+install:	all
+	$(INSTALL_PROGRAM) $(TARGET) $(PREFIX)/Devs/$(TARGET)
 
 revup:
 	@rev=`cat $(srcdir)/version.rev` && echo `expr $$rev + 1` > $(srcdir)/version.rev
@@ -151,7 +106,7 @@ revup:
 	@echo -n "New revision: "
 	@cat $(srcdir)/version.rev
 
-bindist:	$(srcdir)/ahi.ct $(CATALOGS)
+bindist:	all
 	$(INSTALL) --directory $(CATDIR)
 	$(INSTALL_DATA) ${srcdir}/ahi.cd $(CATDIR)
 	$(INSTALL_DATA) ${srcdir}/ahi.ct $(CATDIR)
@@ -162,30 +117,8 @@ bindist:	$(srcdir)/ahi.ct $(CATALOGS)
 
 	$(INSTALL) --directory $(DEVSDIR)
 
-#	$(MAKE) clean
-#	$(MAKE) bindist-install VER=GEN CPU=68000
-
-#	$(MAKE) clean
-#	$(MAKE) bindist-install VER=GEN CPU=68020
-
-	$(MAKE) clean
-	$(MAKE) bindist-install VER=GEN CPU=68030
-
-	$(MAKE) clean
-	$(MAKE) bindist-install VER=GEN CPU=68040
-
-	$(MAKE) clean
-	$(MAKE) bindist-install VER=GEN CPU=68060
-
-	$(MAKE) clean
-	$(MAKE) bindist-install VER=PPC CPU=603
-
-	$(MAKE) clean
-	$(MAKE) bindist-install VER=PPC CPU=604
-
-
-bindist-install: $(TARGET)
-	$(INSTALL_PROGRAM) --strip $(TARGET) $(DEVSDIR)/$(TARGET)
+	$(INSTALL_PROGRAM) $(TARGET) $(DEVSDIR)/$(TARGET)
+	$(STRIP) $(DEVSDIR)/$(TARGET)
 
 
 #
@@ -204,22 +137,13 @@ Makefile: Makefile.in ../config.status
 	gasp $< | $(AS) $(ASFLAGS) -o $@
 	#$(AS) $(ASFLAGS) $< -o $@
 
-asmfuncs.o devsupp.o:
-	$(ASM) $(ASMFLAGS) $< TO $@
-
 $(TARGET):		$(OBJECTS) libaddroutines.a
 	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
 
-libaddroutines.a:	addroutines_hifi.o addroutines_lofi.o dspecho.o
+libaddroutines.a:	addroutines_hifi.o addroutines_lofi.o \
+			addroutines_32bit.o dspecho.o
 	$(AR) $(ARFLAGS) $@ $^
 	$(RANLIB) $@
-
-version.i:	version.rev
-	@echo Creating $@
-	@ver=`cat $(top_srcdir)/version.ver` \
-	 rev=`cat $(srcdir)/version.rev` && \
-	 echo "VERSION  EQU $$ver" >$@ && \
-	 echo "REVISION EQU $$rev" >>$@
 
 version.h:	version.rev version.date
 	@echo Creating $@
@@ -244,10 +168,7 @@ localize.h:		ahi.cd C_c_AHI.sd
 
 # Just some test code...
 
-elftest:		elftest.o elfloader.o asmfuncs.o
-	$(CC) $^ $(LIBS) -o $@
-
-warpup-test:		warpup-test.o elfloader.o asmfuncs.o
+elftest:		elftest.o elfloader.o
 	$(CC) $^ $(LIBS) -o $@
 
 
@@ -258,42 +179,21 @@ warpup-test:		warpup-test.o elfloader.o asmfuncs.o
 SOURCES		= $(wildcard $(srcdir)/*.c)
 HEADERS		= $(wildcard $(srcdir)/*.h)
 
-ifneq ($(build_os),amigaos)
-
-DEPENDENCIES	= $(SOURCES) $(HEADERS) localize.c localize.h version.h
-
-else
-	# The Amiga is way to slow to update the dependencies each time
+#DEPENDENCIES	= $(SOURCES) $(HEADERS)
 
 .PHONY:	depend
 
 depend:
 	$(RM) Makefile.dep
 	$(MAKE) Makefile.dep
-endif
 
-Makefile.dep:	$(DEPENDENCIES)
+Makefile.dep:	$(DEPENDENCIES) localize.c localize.h version.h
 	@echo Making $@
-ifeq ($(MAKEDEPEND),)
 	-@$(CC) $(CPPFLAGS) $(CFLAGS) -MM $(SOURCES) > $@
-else
-	-@touch $@
-	-@makedepend -f $@ -I $(srcdir) $(notdir $(SOURCES))
-endif
 
 include Makefile.dep
 
-asmfuncs.o:	asmfuncs.s ahi_def.i
-devsupp.o:	devsupp.s
 addroutines_ppc.o:	addroutines_ppc.s
 addroutines_68k.o:	addroutines_68k.s
 
 $(wildcard $(srcdir)/translations/*.ct) $(srcdir)/ahi.ct:	ahi.cd
-
-#
-# Options
-########################################
-
-Makefile.opt:
-	echo CPU = $(CPU) > $@
-	echo VER = $(VER) >> $@

@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,11 +20,12 @@
      MA 02139, USA.
 */
 
-#ifndef _EFFECTINIT_H_
-#define _EFFECTINIT_H_
+#ifndef ahi_effectinit_h
+#define ahi_effectinit_h
 
 #include <config.h>
 #include <CompilerSpecific.h>
+
 #include "ahi_def.h"
 
 BOOL 
@@ -44,4 +45,4 @@ update_DSPMask ( struct AHIEffDSPMask *mask,
 void
 clear_DSPMask ( struct AHIPrivAudioCtrl *audioctrl );
 
-#endif /* _EFFECTINIT_H_ */
+#endif /* ahi_effectinit_h */

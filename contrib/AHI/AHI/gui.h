@@ -1,6 +1,6 @@
 /*
      AHI - The AHI preferences program
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -26,4 +26,4 @@ BOOL BuildGUI(char * );
 void CloseGUI(void);
 void EventLoop(void);
 
-#endif _GUI_H_
+#endif /* _GUI_H_ */

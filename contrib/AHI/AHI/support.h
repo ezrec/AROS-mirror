@@ -1,6 +1,6 @@
 /*
      AHI - The AHI preferences program
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -39,4 +39,6 @@ BOOL WriteIcon(char * );
 void FreeList(struct List * );
 struct Node * GetNode(int , struct List * );
 
-#endif _SUPPORT_H_
+BOOL PlaySound(struct AHIUnitPrefs *);
+
+#endif /* _SUPPORT_H_ */

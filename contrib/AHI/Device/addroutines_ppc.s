@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -36,14 +36,14 @@ void	**Dst			r9     long		Dst
 LONG	  FirstOffsetI		r10    long		FirstOffsetI
 Fixed64	  Add			 8(r1) long long	Add
 Fixed64	 *Offset		16(r1) long		Offset
-BOOL	  StopAtZero		20(r1) word		StopAtZero
+BOOL	  StopAtZero		22(r1) word		StopAtZero
 
 */
 
 AddI		.equ	64 + 8
 AddF		.equ	64 + 12
 Offset		.equ	64 + 16
-StopAtZero	.equ	64 + 20
+StopAtZero	.equ	64 + 22
 
 	.text
 
@@ -80,6 +80,12 @@ StopAtZero	.equ	64 + 20
 	.type	AddWordStereoB,@function
 	.type	AddWordsMonoB,@function
 	.type	AddWordsStereoB,@function
+
+
+	.type	AddSilenceMono,@function
+	.type	AddSilenceStereo,@function
+	.type	AddSilenceMonoB,@function
+	.type	AddSilenceStereoB,@function
 
         .align  2
 
@@ -255,6 +261,7 @@ AddByteMono:
 	addc	r17,r19,r17		# Add fraction
 	adde	r16,r18,r16		# Add integer
 1:	# .first_sampleZ
+
 	cmp	cr0,1,r16,r10		# Offset == FirstOffset?
 	add	r13,r8,r16		# (Calculate &src[ offset ])
 	bne+	3f
@@ -300,6 +307,7 @@ AddByteMono:
 	addc	r17,r19,r17		# Add fraction
 	adde	r16,r18,r16		# Add integer
 2:	# .first_sample
+
 	cmp	cr0,1,r16,r10		# Offset == FirstOffset?
 	add	r13,r8,r16		# (Calculate &src[ offset ])
 	bne+	3f
@@ -363,6 +371,8 @@ AddBytesMono:
 	cmpwi	cr0,r13,0
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
+	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
 	bne+	2f
 	bl	AddSilenceMono
 	b	7f
@@ -527,6 +537,8 @@ AddByteStereo:
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
 	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
+	bne+	2f
 	bl	AddSilenceStereo
 	b	7f
 
@@ -650,6 +662,8 @@ AddBytesStereo:
 	cmpwi	cr0,r13,0
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
+	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
 	bne+	2f
 	bl	AddSilenceStereo
 	b	7f
@@ -932,6 +946,8 @@ AddWordsMono:
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
 	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
+	bne+	2f
 	bl	AddSilenceMono
 	b	7f
 
@@ -1085,6 +1101,8 @@ AddWordStereo:
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
 	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
+	bne+	2f
 	bl	AddSilenceStereo
 	b	7f
 
@@ -1206,6 +1224,8 @@ AddWordsStereo:
 	cmpwi	cr0,r13,0
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
+	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
 	bne+	2f
 	bl	AddSilenceStereo
 	b	7f
@@ -1481,6 +1501,8 @@ AddBytesMonoB:
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
 	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
+	bne+	2f
 	bl	AddSilenceMonoB
 	b	7f
 
@@ -1644,6 +1666,8 @@ AddByteStereoB:
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
 	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
+	bne+	2f
 	bl	AddSilenceStereoB
 	b	7f
 
@@ -1767,6 +1791,8 @@ AddBytesStereoB:
 	cmpwi	cr0,r13,0
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
+	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
 	bne+	2f
 	bl	AddSilenceStereoB
 	b	7f
@@ -2050,6 +2076,8 @@ AddWordsMonoB:
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
 	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
+	bne+	2f
 	bl	AddSilenceMonoB
 	b	7f
 
@@ -2203,6 +2231,8 @@ AddWordStereoB:
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
 	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
+	bne+	2f
 	bl	AddSilenceStereoB
 	b	7f
 
@@ -2324,6 +2354,8 @@ AddWordsStereoB:
 	cmpwi	cr0,r13,0
 	bne+	1f
 	cmpwi	cr0,r4,0		# Test if volume == 0
+	bne+	2f
+	cmpwi	cr0,r5,0		# Test if volume == 0
 	bne+	2f
 	bl	AddSilenceStereoB
 	b	7f

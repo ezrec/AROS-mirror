@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,23 +20,23 @@
      MA 02139, USA.
 */
 
-#ifndef _MIXER_H_
-#define _MIXER_H_
+#ifndef ahi_mixer_h
+#define ahi_mixer_h
 
 #include <config.h>
 #include <CompilerSpecific.h>
-#include "ahi_def.h"
 
+#include "ahi_def.h"
 #include "addroutines.h"
 
-ULONG
-InternalSampleFrameSize( ULONG sampletype );
 
 BOOL
 InitMixroutine ( struct AHIPrivAudioCtrl *audioctrl );
 
+
 void
 CleanUpMixroutine ( struct AHIPrivAudioCtrl *audioctrl );
+
 
 void
 SelectAddRoutine ( Fixed     VolumeLeft,
@@ -47,31 +47,31 @@ SelectAddRoutine ( Fixed     VolumeLeft,
                    LONG     *ScaleRight,
                    ADDFUNC **AddRoutine );
 
-#if !defined( VERSIONPPC )
 
-void ASMCALL
-MixM68K ( REG(a0, struct Hook *Hook),
-             REG(a1, void *dst),
-             REG(a2, struct AHIPrivAudioCtrl *audioctrl) );
+void
+MixerFunc( struct Hook*             hook,
+           struct AHIPrivAudioCtrl* audioctrl,
+           void*                    dst );
 
-void ASMCALL
-MixPowerPC( REG(a0, struct Hook *Hook), 
-            REG(a1, void *dst), 
-            REG(a2, struct AHIPrivAudioCtrl *audioctrl) );
+
+void
+Mix( struct Hook*             unused_Hook, 
+     struct AHIPrivAudioCtrl* audioctrl,
+     void*                    dst );
+
+void
+DoMasterVolume ( void *buffer,
+                 struct AHIPrivAudioCtrl *audioctrl );
+
 
 void
 DoOutputBuffer ( void *buffer,
                  struct AHIPrivAudioCtrl *audioctrl );
 
+
 void
 DoChannelInfo ( struct AHIPrivAudioCtrl *audioctrl );
 
-#endif /* !defined( VERSIONPPC ) */
-
-void
-Mix( struct Hook *Hook,
-     void *dst,
-     struct AHIPrivAudioCtrl *audioctrl );
 
 LONG
 CalcSamples ( Fixed64 Add,
@@ -79,8 +79,4 @@ CalcSamples ( Fixed64 Add,
               Fixed64 LastOffset,
               Fixed64 Offset );
 
-void
-DoMasterVolume ( void *buffer,
-                 struct AHIPrivAudioCtrl *audioctrl );
-
-#endif /* _MIXER_H_ */
+#endif /* ahi_mixer_h */

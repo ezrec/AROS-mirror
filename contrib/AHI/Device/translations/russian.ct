@@ -1,13 +1,14 @@
-## version $VER: ahi.catalog 4.2 (3.8.98) © Computer Bug (Ami1251)
+## version $VER: ahi.catalog 4.3 (29.11.2000)
 ## language russian
 ## codeset 0
 ;
-## chunk AUTH Translated by Michael Malyshev <cbug@cch.pmc.ru>
+## chunk AUTH Translated by Alex Plotnicov <wcat@mail.ru> and Michael Malyshev <cbug@cch.pmc.ru>
 ;
+; The .ct file was generated from
 ; $Id$
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -24,110 +25,109 @@
 ;    Free Software Foundation, Inc., 59 Temple Place - Suite 330, Cambridge,
 ;    MA 02139, USA.
 ;
-;
 ; Input and Output connector name
 ;
 msgDefault
-По умолчанию
-;Default
+Стaндaртные
+; Default
 ;
 ; The requesters menu
 msgMenuControl
-\0\0Управление
-;\000\000Control
+\0Упрaвление
+; \000\000Control
 ;
 msgMenuLastMode
-L\0Последний режим
-;L\000Last Mode
+L\0Последний Режим
+; L\000Last Mode
 ;
 msgMenuNextMode
-N\0Следующий режим
-;N\000Next Mode
+N\0Следующий Режим
+; N\000Next Mode
 ;
 msgMenuPropertyList
-?\0Список...
-;?\000Property List...
+?\0Список Хaрaктеристик...
+; ?\000Property List...
 ;
 msgMenuRestore
-R\0Восстановить
-;R\000Restore
+R\0Восстaновить
+; R\000Restore
 ;
 msgMenuOK
-O\0Ok
-;O\000OK
+O\0О'кей
+; O\000OK
 ;
 msgMenuCancel
-C\0Отменить
-;C\000Cancel
+C\0Отменa
+; C\000Cancel
 ;
 ; Mode name in requester whose driver cannot be opened
 ;
 msgUnknown
-Неизвестный звуковой ID: 0x%08lx
-;UNKNOWN:Audio ID 0x%08lx
+НЕИЗВЕСТНО:Звук ID 0x%08lx
+; UNKNOWN:Audio ID 0x%08lx
 ;
 ; The requester gadgets
 ;
 msgReqOK
-Ok
-;OK
+О'кей
+; OK
 ;
 msgReqCancel
-Отменить
-;Cancel
+Отменa
+; Cancel
 ;
 msgReqFrequency
-Частота
-;Frequency
+Чaстотa
+; Frequency
 ;
 ; Name of default mode in requester
 ;
 msgDefaultMode
-Звуковой рeжим по умолчанию
-;Default audio mode
+Обычный звуковой режим
+; Default audio mode
 ;
 ; The requester's info-winodow
 ;
 msgReqInfoTitle
-Режим
-;Mode Properties
+Свойствa Режимa
+; Mode Properties
 ;
 msgReqInfoAudioID
 Звуковой режим ID: 0x%08lx
-;Audio mode ID: 0x%08lx
+; Audio mode ID: 0x%08lx
 ;
 msgReqInfoResolution
-Разрешение: %ld bit %s
-;Resolution: %ld bit %s
+Резрешение: %ld бит %s
+; Resolution: %ld bit %s
 ;
 msgReqInfoMono
 моно
-;mono
+; mono
 ;
 msgReqInfoStereo
 стерео
-;stereo
+; stereo
 ;
 msgReqInfoStereoPan
-стерео с паннингом
-;stereo with panning
+объёмное звучaние
+; stereo with panning
 ;
 msgReqInfoChannels
-Каналов: %ld
-;Channels: %ld
+Кaнaлы: %ld
+; Channels: %ld
 ;
 msgReqInfoMixrate
-Частота звука: %ld-%ld Hz
-;Mixing rates: %ld-%ld Hz
+Микшировaние: %ld-%ld Гц
+; Mixing rates: %ld-%ld Hz
 ;
 msgReqInfoHiFi
-HiFi качество
-;HiFi mixing
+HiFi-микшировaние
+; HiFi mixing
 ;
 msgReqInfoRecordHalf
-Записывать в половину дуплекса
-;Record in half duplex
+Полудуплекснaя зaпись
+; Record in half duplex
 ;
 msgReqInfoRecordFull
-Записывать в полном дуплексе
-;Record in full duplex
+Дуплекcнaя зaпиcь
+; Record in full duplex

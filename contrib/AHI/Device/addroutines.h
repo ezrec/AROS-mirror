@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,11 +20,12 @@
      MA 02139, USA.
 */
 
-#ifndef _ADDROUTINES_H_
-#define _ADDROUTINES_H_
+#ifndef ahi_addroutines_h
+#define ahi_addroutines_h
 
 #include <config.h>
 #include <CompilerSpecific.h>
+
 #include "ahi_def.h"
 
 /*
@@ -64,6 +65,10 @@ LONG AddWordMono( ADDARGS );
 LONG AddWordStereo( ADDARGS );
 LONG AddWordsMono( ADDARGS );
 LONG AddWordsStereo( ADDARGS );
+LONG AddLongMono( ADDARGS );
+LONG AddLongStereo( ADDARGS );
+LONG AddLongsMono( ADDARGS );
+LONG AddLongsStereo( ADDARGS );
 
 LONG AddByteMonoB( ADDARGS );
 LONG AddByteStereoB( ADDARGS );
@@ -73,6 +78,10 @@ LONG AddWordMonoB( ADDARGS );
 LONG AddWordStereoB( ADDARGS );
 LONG AddWordsMonoB( ADDARGS );
 LONG AddWordsStereoB( ADDARGS );
+LONG AddLongMonoB( ADDARGS );
+LONG AddLongStereoB( ADDARGS );
+LONG AddLongsMonoB( ADDARGS );
+LONG AddLongsStereoB( ADDARGS );
 
 LONG AddLofiByteMono( ADDARGS );
 LONG AddLofiByteStereo( ADDARGS );
@@ -82,6 +91,10 @@ LONG AddLofiWordMono( ADDARGS );
 LONG AddLofiWordStereo( ADDARGS );
 LONG AddLofiWordsMono( ADDARGS );
 LONG AddLofiWordsStereo( ADDARGS );
+LONG AddLofiLongMono( ADDARGS );
+LONG AddLofiLongStereo( ADDARGS );
+LONG AddLofiLongsMono( ADDARGS );
+LONG AddLofiLongsStereo( ADDARGS );
 
 LONG AddLofiByteMonoB( ADDARGS );
 LONG AddLofiByteStereoB( ADDARGS );
@@ -91,5 +104,9 @@ LONG AddLofiWordMonoB( ADDARGS );
 LONG AddLofiWordStereoB( ADDARGS );
 LONG AddLofiWordsMonoB( ADDARGS );
 LONG AddLofiWordsStereoB( ADDARGS );
+LONG AddLofiLongMonoB( ADDARGS );
+LONG AddLofiLongStereoB( ADDARGS );
+LONG AddLofiLongsMonoB( ADDARGS );
+LONG AddLofiLongsStereoB( ADDARGS );
 
-#endif /* _ADDROUTINES_H_ */
+#endif /* ahi_addroutines_h */

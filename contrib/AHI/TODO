@@ -4,12 +4,12 @@ Added		Fixed		What?
 970314		970326		Fast Echo
 970314				AHIST_INPUT
 970314				Echo example
-970314				32 bit samples for CMD_WRITE
+970314		030119		32 bit samples for CMD_WRITE
 970314		970315		Dynamic loading/unloading of samples for CMD_WRITE
 970320		970321		Finish new prefs program
 970320		970321		Update user's guide for new prefs program
 970321		970407		Localize the prefs program
-970321				Dynamic (prioritized?) volume boost in device mode
+970321		030119		Dynamic (prioritized?) volume boost in device mode
 970322		970326		Rewrite the echo stuff, init code i C
 970323				Dev-API should be able to play from VMEM
 970328		970404		Convert "Programming guidelines" to texinfo
@@ -34,6 +34,10 @@ Added		Fixed		What?
 980805				AHIC_Monitor, "Monitor always" in prefs.
 990908				Global volume control for device modes.
 991111				Open the filesave requester on the user's screen.
+001213				If AHISF_TIMING is not used, ahiac_BuffSize is not set.
+010422				Zero-sized CMD_WRITE sometimes locks AHI.
+010815				toccata.library emulation uses hardcoded "fast" modes.
+
 
 V5 Proposal, improvements and new lowlevel soundcard access
 ===========================================================

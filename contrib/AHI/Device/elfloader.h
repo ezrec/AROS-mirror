@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,11 +20,12 @@
      MA 02139, USA.
 */
 
-#ifndef _ELFLOADER_H_
-#define _ELFLOADER_H_
+#ifndef ahi_elfloader_h
+#define ahi_elfloader_h
 
 #include <config.h>
 #include <CompilerSpecific.h>
+
 #include <powerup/ppclib/object.h>
 
 void*
@@ -33,8 +34,9 @@ ELFLoadObject( const char* objname );
 void
 ELFUnLoadObject( void* obj );
 
-BOOL ELFGetSymbol( void* obj,
-                   const char* name,
-                   void** ptr );
+BOOL
+ELFGetSymbol( void* obj,
+              const char* name,
+              void** ptr );
 
-#endif /* _ELFLOADER_H_ */
+#endif /* ahi_elfloader_h */

@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -23,32 +23,33 @@
 #include <config.h>
 #include <CompilerSpecific.h>
 
-#if defined( VERSIONPPC )
-# include <hardware/intbits.h>
-#else
-# include <string.h>
-# include <stddef.h>
+#include <string.h>
+#include <stddef.h>
 
-# include <dos/dos.h>
-# include <dos/dostags.h>
-# include <exec/memory.h>
-# include <powerup/ppclib/memory.h>
+#include <dos/dos.h>
+#include <dos/dostags.h>
+#include <exec/memory.h>
 
-# include <proto/dos.h>
-# include <proto/exec.h>
-# include <proto/utility.h>
-# include <clib/ahi_protos.h>
-# include <inline/ahi.h>
-#endif
+#include <proto/dos.h>
+#include <proto/exec.h>
+#include <proto/utility.h>
+#define __NOLIBBASE__
+#include <proto/ahi.h>
+#undef  __NOLIBBASE__
 
 #include "ahi_def.h"
-#include "dsp.h"
-#include "mixer.h"
+
 #include "addroutines.h"
-#include "misc.h"
+#include "debug.h"
+#include "dsp.h"
 #include "header.h"
-#include "ppcheader.h"
-#include "ppchandler.h"
+#include "misc.h"
+#include "mixer.h"
+#include "sound.h"
+
+#if defined( ENABLE_WARPUP )
+# include "warpup.h"
+#endif
 
 
 /******************************************************************************
@@ -56,155 +57,50 @@
 ******************************************************************************/
 
 void
-DoMasterVolume ( void *buffer,
-                 struct AHIPrivAudioCtrl *audioctrl );
-
-#if !defined( VERSIONPPC )
-
-void
-DoOutputBuffer ( void *buffer,
-                 struct AHIPrivAudioCtrl *audioctrl );
-
-void
-DoChannelInfo ( struct AHIPrivAudioCtrl *audioctrl );
-
-#endif /* !defined( VERSIONPPC ) */
-
-static const UBYTE type2bytes[]=
-{
-  1,    // AHIST_M8S  (0)
-  2,    // AHIST_M16S (1)
-  2,    // AHIST_S8S  (2)
-  4,    // AHIST_S16S (3)
-  1,    // AHIST_M8U  (4)
-  0,
-  0,
-  0,
-  4,    // AHIST_M32S (8)
-  0,
-  8     // AHIST_S32S (10)
-};
-
-inline ULONG
-InternalSampleFrameSize( ULONG sampletype )
-{
-  return type2bytes[sampletype];
-}
-
-/******************************************************************************
-** PowerPC Support code *******************************************************
-******************************************************************************/
-
-#if defined( VERSIONPPC )
-
-/* PPC code ******************************************************************/
-
-static inline void
 CallSoundHook( struct AHIPrivAudioCtrl *audioctrl,
                void* arg )
 {
-  audioctrl->ahiac_PowerPCContext->Command  = PPCC_COM_SOUNDFUNC;
-  audioctrl->ahiac_PowerPCContext->Argument = arg;
-  *((WORD*) 0xdff09C)  = INTF_SETCLR | INTF_PORTS;
-  while( audioctrl->ahiac_PowerPCContext->Command != PPCC_COM_ACK );
-}
-
-/*
-static inline void
-CallDebug( struct AHIPrivAudioCtrl *audioctrl, long value )
-{
-  audioctrl->ahiac_PowerPCContext->Command  = PPCC_COM_DEBUG;
-  audioctrl->ahiac_PowerPCContext->Argument = (void*) value;
-  *((WORD*) 0xdff09C)  = INTF_SETCLR | INTF_PORTS;
-  while( audioctrl->ahiac_PowerPCContext->Command != PPCC_COM_ACK );
-}
-*/
-
-static void*
-memset( void* s, int c, unsigned int n )
-{
-  char* dst = s;
-
-  while( n > 0 )
+  switch( MixBackend )
   {
-    *dst++ = c;
-    n--;
-  }
+    case MB_NATIVE:
+      CallHookPkt( audioctrl->ac.ahiac_SoundFunc,
+                   audioctrl,
+                   arg );
+      break;
 
-  return s;
+#if defined( ENABLE_WARPUP )
+    case MB_WARPUP:
+      WarpUpCallSoundHook( audioctrl, arg );
+      break;
+#endif
+  }
 }
 
-#else
-
-/* M68k code *****************************************************************/
 
 void
-CallSoundHook( struct AHIPrivAudioCtrl *audioctrl,
-               void* arg )
+MixerFunc( struct Hook*             hook,
+           struct AHIPrivAudioCtrl* audioctrl,
+           void*                    dst )
 {
-  CallHookPkt( audioctrl->ac.ahiac_SoundFunc,
-               audioctrl,
-               arg );
+  switch( MixBackend )
+  {
+    case MB_NATIVE:
+      Mix( hook, audioctrl, dst );
+      DoMasterVolume( dst, audioctrl );
+      DoOutputBuffer( dst, audioctrl );
+      DoChannelInfo( audioctrl );
+      break;
+      
+#if defined( ENABLE_WARPUP )
+    case MB_WARPUP:
+      WarpUpCallMixer( audioctrl, dst );
+      DoOutputBuffer( dst, audioctrl );
+      DoChannelInfo( audioctrl );
+      break;
+#endif
+  }
 }
 
-/*
-static void
-CallDebug( struct AHIPrivAudioCtrl *audioctrl, long value )
-{
-  kprintf( "%lx ", value );
-}
-*/
-
-
-void ASMCALL
-MixPowerPC( REG(a0, struct Hook *Hook), 
-            REG(a1, void *dst), 
-            REG(a2, struct AHIPrivAudioCtrl *audioctrl) )
-{
-  FillBuffer( dst, audioctrl );
-
-  /*** AHIET_MASTERVOLUME ***/
-
-  DoMasterVolume( dst, audioctrl );
-  // TODO: In PPC Code!! ^^^^
-
-  // This is handled in m68k code, in order to minimize cache flushes.
-
-  /*** AHIET_OUTPUTBUFFER ***/
-
-  DoOutputBuffer( dst, audioctrl );
-
-  /*** AHIET_CHANNELINFO ***/
-
-  DoChannelInfo( audioctrl );
-
-  return;
-}
-
-void ASMCALL
-MixM68K( REG(a0, struct Hook *Hook), 
-         REG(a1, void *dst), 
-         REG(a2, struct AHIPrivAudioCtrl *audioctrl) )
-{
-  Mix( Hook, dst, audioctrl );
-
-  /*** AHIET_MASTERVOLUME ***/
-
-  DoMasterVolume( dst, audioctrl );
-
-  /*** AHIET_OUTPUTBUFFER ***/
-
-  DoOutputBuffer( dst, audioctrl );
-
-  /*** AHIET_CHANNELINFO ***/
-
-  DoChannelInfo( audioctrl );
-}
-
-#endif /* defined( VERSIONPPC ) */
-
-
-#if !defined( VERSIONPPC )
 
 /******************************************************************************
 ** InitMixroutine *************************************************************
@@ -221,16 +117,32 @@ InitMixroutine( struct AHIPrivAudioCtrl *audioctrl )
   // Allocate and initialize the AHIChannelData structures
   // This structure could be accessed from from interrupts!
 
+  ULONG data_flags = MEMF_ANY;
+  
+  switch( MixBackend )
+  {
+    case MB_NATIVE:
+      data_flags = MEMF_PUBLIC | MEMF_CLEAR;
+      break;
+      
+#if defined( ENABLE_WARPUP )
+    case MB_WARPUP:
+      // Non-cached from both the PPC and m68k side
+      data_flags = MEMF_PUBLIC | MEMF_CLEAR | MEMF_CHIP;
+      break;
+#endif
+  }
+
   audioctrl->ahiac_ChannelDatas = AHIAllocVec(
       audioctrl->ac.ahiac_Channels * sizeof( struct AHIChannelData ),
-      MEMF_PUBLIC | MEMF_CLEAR | MEMF_NOCACHESYNCPPC | MEMF_NOCACHESYNCM68K );
+      data_flags );
 
   // Allocate and initialize the AHISoundData structures
   // This structure could be accessed from from interrupts!
 
   audioctrl->ahiac_SoundDatas = AHIAllocVec(
       audioctrl->ac.ahiac_Sounds * sizeof( struct AHISoundData ),
-      MEMF_PUBLIC | MEMF_CLEAR | MEMF_NOCACHESYNCPPC | MEMF_NOCACHESYNCM68K );
+      data_flags );
 
   // Now link the list and fill in the channel number for each structure.
 
@@ -272,63 +184,23 @@ InitMixroutine( struct AHIPrivAudioCtrl *audioctrl )
     }
   }
 
-  // Allocate structures specific to the PPC version
 
-  if( PPCObject != NULL )
+  switch( MixBackend )
   {
-    struct MsgPort* port;
-    struct Process* slave;
-
-    port = CreateMsgPort();
+    case MB_NATIVE:
+      rc = TRUE;
+      break;
       
-    if( port != NULL )
-    {
-      slave = CreateNewProcTags( NP_Entry,    (ULONG) PPCHandler,
-                                 NP_Name,     (ULONG) AHINAME " PPC Handler Process",
-                                 NP_Priority, 127,
-                                 TAG_DONE );
-
-      if( slave != NULL )
-      {
-        struct PPCHandlerMessage* msg = AllocVec( sizeof( struct PPCHandlerMessage ),
-                                                  MEMF_PUBLIC | MEMF_CLEAR );
-
-        if( msg != NULL )
-        {
-          msg->Message.mn_Length       = sizeof( struct PPCHandlerMessage );
-          msg->Message.mn_ReplyPort    = port;
-          msg->AudioCtrl               = audioctrl;
-
-          PutMsg( &slave->pr_MsgPort,
-                  (struct Message*) msg );
-
-          WaitPort( port );
-          GetMsg( port );
-          
-          if( audioctrl->ahiac_PowerPCContext != NULL )
-          {
-            // Not NULL means startup ok.
-
-            rc = TRUE;
-          }
-        }
-        
-        DeleteMsgPort( port );
-      }
-    }
-  }
-  else
-  {
-    rc = TRUE;
-  }
-
-  if( !rc )
-  {
-    Req( "Failed to create PPC handler slave process." );
+#if defined( ENABLE_WARPUP )
+    case MB_WARPUP:
+      rc = WarpUpInit( audioctrl );
+      break;
+#endif
   }
 
   return rc;
 }
+
 
 /******************************************************************************
 ** CleanUpMixroutine **********************************************************
@@ -340,14 +212,16 @@ InitMixroutine( struct AHIPrivAudioCtrl *audioctrl )
 void
 CleanUpMixroutine( struct AHIPrivAudioCtrl *audioctrl )
 {
-  if( audioctrl->ahiac_PowerPCContext != NULL )
+  switch( MixBackend )
   {
-    audioctrl->ahiac_PowerPCContext->MainProcess = (struct Process*) FindTask( NULL );
-
-    SetSignal( 0, SIGF_SINGLE );
-    Signal( (struct Task*) audioctrl->ahiac_PowerPCContext->SlaveProcess, 
-            SIGBREAKF_CTRL_C );
-    Wait( SIGF_SINGLE );
+    case MB_NATIVE:
+      break;
+      
+#if defined( ENABLE_WARPUP )
+    case MB_WARPUP:
+      WarpUpCleanUp( audioctrl );
+      break;
+#endif
   }
 
   AHIFreeVec( audioctrl->ahiac_SoundDatas );
@@ -356,6 +230,7 @@ CleanUpMixroutine( struct AHIPrivAudioCtrl *audioctrl )
   AHIFreeVec( audioctrl->ahiac_ChannelDatas );
   audioctrl->ahiac_ChannelDatas = NULL;
 }
+
 
 /******************************************************************************
 ** SelectAddRoutine ***********************************************************
@@ -445,6 +320,26 @@ SelectAddRoutine ( Fixed     VolumeLeft,
               *AddRoutine = AddWordsMonoPtr;
             break;
 
+          case AHIST_M32S:
+          case AHIST_BW|AHIST_M32S:
+            *ScaleLeft  = VolumeLeft + VolumeRight;
+            *ScaleRight = 0;
+            if(SampleType & AHIST_BW)
+              *AddRoutine = AddLongMonoBPtr;
+            else
+              *AddRoutine = AddLongMonoPtr;
+            break;
+
+          case AHIST_S32S:
+          case AHIST_BW|AHIST_S32S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+              *AddRoutine = AddLongsMonoBPtr;
+            else
+              *AddRoutine = AddLongsMonoPtr;
+            break;
+
           default:
             *ScaleLeft  = 0;
             *ScaleRight = 0;
@@ -497,6 +392,26 @@ SelectAddRoutine ( Fixed     VolumeLeft,
               *AddRoutine = AddWordsStereoBPtr;
             else
               *AddRoutine = AddWordsStereoPtr;
+            break;
+
+          case AHIST_M32S:
+          case AHIST_BW|AHIST_M32S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+              *AddRoutine = AddLongStereoBPtr;
+            else
+              *AddRoutine = AddLongStereoPtr;
+            break;
+
+          case AHIST_S32S:
+          case AHIST_BW|AHIST_S32S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+              *AddRoutine = AddLongsStereoBPtr;
+            else
+              *AddRoutine = AddLongsStereoPtr;
             break;
 
           default:
@@ -568,6 +483,26 @@ SelectAddRoutine ( Fixed     VolumeLeft,
               *AddRoutine = AddLofiWordsMonoPtr;
             break;
 
+          case AHIST_M32S:
+          case AHIST_BW|AHIST_M32S:
+            *ScaleLeft  = VolumeLeft + VolumeRight;
+            *ScaleRight = 0;
+            if(SampleType & AHIST_BW)
+              *AddRoutine = AddLofiLongMonoBPtr;
+            else
+              *AddRoutine = AddLofiLongMonoPtr;
+            break;
+
+          case AHIST_S32S:
+          case AHIST_BW|AHIST_S32S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+              *AddRoutine = AddLofiLongsMonoBPtr;
+            else
+              *AddRoutine = AddLofiLongsMonoPtr;
+            break;
+
           default:
             *ScaleLeft  = 0;
             *ScaleRight = 0;
@@ -622,6 +557,26 @@ SelectAddRoutine ( Fixed     VolumeLeft,
               *AddRoutine = AddLofiWordsStereoPtr;
             break;
 
+          case AHIST_M32S:
+          case AHIST_BW|AHIST_M32S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+              *AddRoutine = AddLofiLongStereoBPtr;
+            else
+              *AddRoutine = AddLofiLongStereoPtr;
+            break;
+
+          case AHIST_S32S:
+          case AHIST_BW|AHIST_S32S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+              *AddRoutine = AddLofiLongsStereoBPtr;
+            else
+              *AddRoutine = AddLofiLongsStereoPtr;
+            break;
+
           default:
             *ScaleLeft  = 0;
             *ScaleRight = 0;
@@ -639,8 +594,6 @@ SelectAddRoutine ( Fixed     VolumeLeft,
   }
 }
 
-#endif /* !defined( VERSIONPPC ) */
-
 
 /******************************************************************************
 ** Mix ************************************************************************
@@ -649,13 +602,10 @@ SelectAddRoutine ( Fixed     VolumeLeft,
 // This is the function that the driver calls each time it want more data
 // to play. 
 
-// There is a stub function in asmfuncs.s called Mix() that saves d0-d1/a0-a1
-// and calls MixGeneric. This stub is only assembled if VERSIONGEN is set.
-
 void
 Mix( struct Hook*             unused_Hook, 
-     void*                    dst, 
-     struct AHIPrivAudioCtrl* audioctrl )
+     struct AHIPrivAudioCtrl* audioctrl,
+     void*                    dst )
 {
   struct AHIChannelData	*cd;
   void                  *dstptr;
@@ -664,7 +614,6 @@ Mix( struct Hook*             unused_Hook,
   /* Clear the buffer */
 
   memset( dst, 0, audioctrl->ahiac_BuffSizeNow );
-
   /* Mix the samples */
 
   audioctrl->ahiac_WetOrDry = AHIEDM_WET;
@@ -721,6 +670,7 @@ Mix( struct Hook*             unused_Hook,
                                                          cd->cd_Add,
                                                         &cd->cd_Offset, 
                                                          TRUE );
+
             cd->cd_Samples -= processed;
             samplesleft    -= processed;
           }
@@ -729,16 +679,20 @@ Mix( struct Hook*             unused_Hook,
             processed = 0;
           }
 
-          if( try_samples == cd->cd_AntiClickCount ||
-              processed != samples )
+          if( processed != try_samples ||             // Found zero-crossing
+              try_samples <= cd->cd_AntiClickCount )  // End-of-sound or
+                                                      // max delay reached
           {
-            // We either found a zero-crossing or looked as far as
-            // we were allowed to.
+            // We either found a zero-crossing, looked as far as
+            // we were allowed to or reached the end of sound.
             
-            // Note that the sample end was NOT reached! If it was,
-            // cd_Samples will be zero and the second cd_AddRoutine
-            // call below will have no effect, and the cd_Next#?
-            // variables will be copied instead.
+            // To be perfect, the we should not run this code if the 
+            // end-of-sound was reached. Instead, since cd_Samples is zero
+            // and the second cd_AddRoutine call below will have no effect,
+            // we should just go onand the cd_Next#? variables will be copied
+            // instead. However, that requires two sets of delay variables:
+            // The one we have now and one delayed set of "next" variables.
+            // I might do that another time, but not today...
 
             // Now start the delayed sound.
 
@@ -770,6 +724,9 @@ Mix( struct Hook*             unused_Hook,
               cd->cd_SoundDelayed = FALSE;
 
               cd->cd_SoundOK       = cd->cd_DelayedSoundOK;
+
+              cd->cd_StartPointL   = 0;
+              cd->cd_StartPointR   = 0;
 
               cd->cd_Offset        = cd->cd_DelayedOffset;
               cd->cd_FirstOffsetI  = cd->cd_DelayedFirstOffsetI;
@@ -807,8 +764,8 @@ Mix( struct Hook*             unused_Hook,
           {
             cd->cd_TempStartPointL = cd->cd_StartPointL;
             cd->cd_TempStartPointR = cd->cd_StartPointR;
-
-            processed = ((ADDFUNC *) cd->cd_AddRoutine)( samples,
+	    
+	    processed = ((ADDFUNC *) cd->cd_AddRoutine)( samples,
                                                          cd->cd_ScaleLeft,
                                                          cd->cd_ScaleRight,
                                                         &cd->cd_TempStartPointL,
@@ -819,6 +776,7 @@ Mix( struct Hook*             unused_Hook,
                                                          cd->cd_Add,
                                                         &cd->cd_Offset,
                                                          FALSE );
+
             cd->cd_Samples -= processed;
             samplesleft    -= processed;
           }
@@ -841,7 +799,7 @@ Mix( struct Hook*             unused_Hook,
             /* What we do now is to calculate how much futher we have
                advanced. */
 
-              cd->cd_Offset -= cd->cd_LastOffset;
+              cd->cd_Offset -= cd->cd_LastOffset + 1;
 
             /*
             ** Offset should now be added to the NEXT Offset. Offset
@@ -966,7 +924,8 @@ Mix( struct Hook*             unused_Hook,
         */
 
         dst = (char *) dst + audioctrl->ac.ahiac_BuffSamples * 
-                             InternalSampleFrameSize(audioctrl->ac.ahiac_BuffType);
+                             SampleFrameSize( audioctrl->ac.ahiac_BuffType,
+                                              AHIBase );
       }
 
       continue; /* while(TRUE) */
@@ -980,6 +939,11 @@ Mix( struct Hook*             unused_Hook,
   return;
 }
 
+
+/******************************************************************************
+** DoMasterVolume *************************************************************
+******************************************************************************/
+
 /*
 ** This function would be better if it was written in assembler,
 ** since overflow could then be detected. Instead we reduce the
@@ -987,8 +951,8 @@ Mix( struct Hook*             unused_Hook,
 */
 
 void
-DoMasterVolume ( void *buffer,
-                 struct AHIPrivAudioCtrl *audioctrl )
+DoMasterVolume( void *buffer,
+                struct AHIPrivAudioCtrl *audioctrl )
 {
   int   cnt;
   LONG  vol;
@@ -1057,11 +1021,13 @@ DoMasterVolume ( void *buffer,
 }
 
 
-#if !defined( VERSIONPPC )
+/******************************************************************************
+** DoOutputBuffer *************************************************************
+******************************************************************************/
 
 void
-DoOutputBuffer ( void *buffer,
-                 struct AHIPrivAudioCtrl *audioctrl )
+DoOutputBuffer( void *buffer,
+                struct AHIPrivAudioCtrl *audioctrl )
 {
   struct AHIEffOutputBuffer *ob;
 
@@ -1079,8 +1045,13 @@ DoOutputBuffer ( void *buffer,
   }
 }
 
+
+/******************************************************************************
+** DoChannelInfo **************************************************************
+******************************************************************************/
+
 void
-DoChannelInfo ( struct AHIPrivAudioCtrl *audioctrl )
+DoChannelInfo( struct AHIPrivAudioCtrl *audioctrl )
 {
   struct AHIEffChannelInfo *ci;
   struct AHIChannelData    *cd;
@@ -1106,8 +1077,6 @@ DoChannelInfo ( struct AHIPrivAudioCtrl *audioctrl )
                  ci );
   }
 }
-
-#endif /* !defined( VERSIONPPC ) */
 
 
 /******************************************************************************

@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,61 +20,94 @@
      MA 02139, USA.
 */
 
-#ifndef _HEADER_H_
-#define _HEADER_H_
+#ifndef ahi_header_h
+#define ahi_header_h
+
+#include <config.h>
 
 #include <exec/types.h>
+#include <dos/dos.h>
 #include "addroutines.h"
+
+struct AHIBase;
 
 enum MixBackend_t
 {
-  MB_NATIVE,
-  MB_POWERUP,
-  MB_WARPUP
+  MB_NATIVE
+#if defined( ENABLE_WARPUP )
+  ,MB_WARPUP
+#endif
 };
 
 
-extern const ULONG		 DriverVersion;
-extern const ULONG		 Version;
-extern const ULONG		 Revision;
-extern const char		 DevName[];
-extern const char		 IDString[];
+extern const ULONG		DriverVersion;
+extern const ULONG		Version;
+extern const ULONG		Revision;
+extern const char		DevName[];
+extern const char		IDString[];
 
-extern enum MixBackend_t	 MixBackend;
-extern void			*PPCObject;
+extern enum MixBackend_t	MixBackend;
 
-extern ADDFUNC*                  AddByteMonoPtr;
-extern ADDFUNC*                  AddByteStereoPtr;
-extern ADDFUNC*                  AddBytesMonoPtr;
-extern ADDFUNC*                  AddBytesStereoPtr;
-extern ADDFUNC*                  AddWordMonoPtr;
-extern ADDFUNC*                  AddWordStereoPtr;
-extern ADDFUNC*                  AddWordsMonoPtr;
-extern ADDFUNC*                  AddWordsStereoPtr;
-extern ADDFUNC*                  AddByteMonoBPtr;
-extern ADDFUNC*                  AddByteStereoBPtr;
-extern ADDFUNC*                  AddBytesMonoBPtr;
-extern ADDFUNC*                  AddBytesStereoBPtr;
-extern ADDFUNC*                  AddWordMonoBPtr;
-extern ADDFUNC*                  AddWordStereoBPtr;
-extern ADDFUNC*                  AddWordsMonoBPtr;
-extern ADDFUNC*                  AddWordsStereoBPtr;
+#if defined( ENABLE_WARPUP )
+extern void*			PPCObject;
+#endif
 
-extern ADDFUNC*                  AddLofiByteMonoPtr;
-extern ADDFUNC*                  AddLofiByteStereoPtr;
-extern ADDFUNC*                  AddLofiBytesMonoPtr;
-extern ADDFUNC*                  AddLofiBytesStereoPtr;
-extern ADDFUNC*                  AddLofiWordMonoPtr;
-extern ADDFUNC*                  AddLofiWordStereoPtr;
-extern ADDFUNC*                  AddLofiWordsMonoPtr;
-extern ADDFUNC*                  AddLofiWordsStereoPtr;
-extern ADDFUNC*                  AddLofiByteMonoBPtr;
-extern ADDFUNC*                  AddLofiByteStereoBPtr;
-extern ADDFUNC*                  AddLofiBytesMonoBPtr;
-extern ADDFUNC*                  AddLofiBytesStereoBPtr;
-extern ADDFUNC*                  AddLofiWordMonoBPtr;
-extern ADDFUNC*                  AddLofiWordStereoBPtr;
-extern ADDFUNC*                  AddLofiWordsMonoBPtr;
-extern ADDFUNC*                  AddLofiWordsStereoBPtr;
+extern ADDFUNC*                 AddByteMonoPtr;
+extern ADDFUNC*                 AddByteStereoPtr;
+extern ADDFUNC*                 AddBytesMonoPtr;
+extern ADDFUNC*                 AddBytesStereoPtr;
+extern ADDFUNC*                 AddWordMonoPtr;
+extern ADDFUNC*                 AddWordStereoPtr;
+extern ADDFUNC*                 AddWordsMonoPtr;
+extern ADDFUNC*                 AddWordsStereoPtr;
+extern ADDFUNC*                 AddLongMonoPtr;
+extern ADDFUNC*                 AddLongStereoPtr;
+extern ADDFUNC*                 AddLongsMonoPtr;
+extern ADDFUNC*                 AddLongsStereoPtr;
+extern ADDFUNC*                 AddByteMonoBPtr;
+extern ADDFUNC*                 AddByteStereoBPtr;
+extern ADDFUNC*                 AddBytesMonoBPtr;
+extern ADDFUNC*                 AddBytesStereoBPtr;
+extern ADDFUNC*                 AddWordMonoBPtr;
+extern ADDFUNC*                 AddWordStereoBPtr;
+extern ADDFUNC*                 AddWordsMonoBPtr;
+extern ADDFUNC*                 AddWordsStereoBPtr;
+extern ADDFUNC*                 AddLongMonoBPtr;
+extern ADDFUNC*                 AddLongStereoBPtr;
+extern ADDFUNC*                 AddLongsMonoBPtr;
+extern ADDFUNC*                 AddLongsStereoBPtr;
 
-#endif /* _HEADER_H_ */
+extern ADDFUNC*                 AddLofiByteMonoPtr;
+extern ADDFUNC*                 AddLofiByteStereoPtr;
+extern ADDFUNC*                 AddLofiBytesMonoPtr;
+extern ADDFUNC*                 AddLofiBytesStereoPtr;
+extern ADDFUNC*                 AddLofiWordMonoPtr;
+extern ADDFUNC*                 AddLofiWordStereoPtr;
+extern ADDFUNC*                 AddLofiWordsMonoPtr;
+extern ADDFUNC*                 AddLofiWordsStereoPtr;
+extern ADDFUNC*                 AddLofiLongMonoPtr;
+extern ADDFUNC*                 AddLofiLongStereoPtr;
+extern ADDFUNC*                 AddLofiLongsMonoPtr;
+extern ADDFUNC*                 AddLofiLongsStereoPtr;
+extern ADDFUNC*                 AddLofiByteMonoBPtr;
+extern ADDFUNC*                 AddLofiByteStereoBPtr;
+extern ADDFUNC*                 AddLofiBytesMonoBPtr;
+extern ADDFUNC*                 AddLofiBytesStereoBPtr;
+extern ADDFUNC*                 AddLofiWordMonoBPtr;
+extern ADDFUNC*                 AddLofiWordStereoBPtr;
+extern ADDFUNC*                 AddLofiWordsMonoBPtr;
+extern ADDFUNC*                 AddLofiWordsStereoBPtr;
+extern ADDFUNC*                 AddLofiLongMonoBPtr;
+extern ADDFUNC*                 AddLofiLongStereoBPtr;
+extern ADDFUNC*                 AddLofiLongsMonoBPtr;
+extern ADDFUNC*                 AddLofiLongsStereoBPtr;
+
+struct AHIBase*
+initRoutine( struct AHIBase*  device,
+             APTR             seglist,
+             struct ExecBase* sysbase );
+
+BPTR
+DevExpunge( struct AHIBase* device );
+
+#endif /* ahi_header_h */

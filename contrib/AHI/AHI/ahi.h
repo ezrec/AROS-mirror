@@ -1,6 +1,6 @@
 /*
      AHI - The AHI preferences program
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -114,5 +114,5 @@ char *getCopyright(void);
 char *getDriver(void);
 char *getVersion(void);
 
-#endif _AHI_H_
+#endif /* _AHI_H_ */
 

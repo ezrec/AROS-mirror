@@ -2,12 +2,12 @@
 DEVICES_AHI_I		SET	1
 
 **
-**	$VER: ahi.i 5.0 (30.8.99)
+**	$VER: ahi.i 5.2 (19.1.2003)
 **	:ts=8 (TAB SIZE: 8)
 **
 **	ahi.device definitions
 **
-**	(C) Copyright 1994-1999 Martin Blom
+**	(C) Copyright 1994-2003 Martin Blom
 **	All Rights Reserved.
 **
 **
@@ -157,7 +157,11 @@ CLOSEAHI MACRO
 	WORD	ahiam_InfoWidth;
 	WORD	ahiam_InfoHeight;
 
-	APTR	ahiam_UserData;			; You can store your own data here
+	UWORD	ahiam_ObsoleteUserData0;
+	UWORD	ahiam_ObsoleteUserData1;
+	UWORD	ahiam_Pad;
+	APTR	ahiam_UserData;			; You can store your own data here (V5)
+
 	; Lots of private data follows!
 	LABEL	AHIAudioModeRequester_SIZEOF
 
@@ -305,6 +309,7 @@ AHIDB_OutputArg		EQU AHI_TagBase+140	* ti_Data is input index
 AHIDB_Output		EQU AHI_TagBase+141
 * --- New for V4, they will be ignored by V2 and earlier ---
 AHIDB_Data		EQU AHI_TagBaseR+142	; Private!
+AHIDB_DriverBaseName	EQU AHI_TagBaseR+143	; Private!
 
  ; AHI_BestAudioIDA tags
 * --- New for V4, they will be ignored by V2 and earlier ---
@@ -318,7 +323,8 @@ AHIR_PubScreenName	EQU AHI_TagBase+202	; Name of public screen
 AHIR_PrivateIDCMP	EQU AHI_TagBase+203	; Allocate private IDCMP?
 AHIR_IntuiMsgFunc	EQU AHI_TagBase+204	; Function to handle IntuiMessages
 AHIR_SleepWindow	EQU AHI_TagBase+205	; Block input in AHIR_Window?
-AHIR_UserData		EQU AHI_TagBase+206	; What to put in ahiam_UserData
+AHIR_ObsoleteUserData	EQU AHI_TagBase+206	; V4 UserData
+AHIR_UserData		EQU AHI_TagBase+207	; What to put in ahiam_UserData (V5)
    ; Text display
 AHIR_TextAttr		EQU AHI_TagBase+220	; Text font to use for gadget text
 AHIR_Locale		EQU AHI_TagBase+221	; Locale to use for text
@@ -355,9 +361,10 @@ AHI_MIXFREQ		EQU ~0			; Special frequency for AHI_SetFreq()
 AHI_NOSOUND		EQU ~0			; Turns a channel off
 
  ; Set#? Flags
-	BITDEF	AHIS,IMM,0
+	BITDEF	AHIS,IMM,0			; Trigger action immediately
+	BITDEF	AHIS,NODELAY,1			; Don't wait for zero-crossing 
 
-AHISF_NONE		EQU 0			; New for V5
+AHISF_NONE		EQU 0			; No flags (V5)
 
 
  ; Effect types
@@ -378,6 +385,7 @@ AHIST_BW		EQU 1<<30		; Private
 
  ; Sample types
 ; Note that only AHIST_M8S, AHIST_S8S, AHIST_M16S and AHIST_S16S
+; (plus AHIST_M32S and AHIST_S32S in V6)
 ; are supported by AHI_LoadSound().
 AHIST_M8S		EQU 0			; Mono, 8 bit signed (BYTE)
 AHIST_M16S		EQU 1			; Mono, 16 bit signed (WORD)
@@ -433,7 +441,8 @@ ID_AHIG 		EQU "AHIG"
 	BOOL	ahigp_FastEcho
 	Fixed	ahigp_MaxCPU
 	BOOL	ahigp_ClipMasterVolume
-	Fixed	ahigp_AntiClickTime;			; (V5)
+	UWORD	ahigp_Pad;
+	Fixed	ahigp_AntiClickTime;			; In seconds (V5)
 	LABEL	AHIGlobalPrefs_SIZEOF
 
  ; Debug levels

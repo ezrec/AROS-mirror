@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,14 +20,12 @@
      MA 02139, USA.
 */
 
-//#define DEBUG
-//#define DEBUG_R
-
 #include <config.h>
 #include <CompilerSpecific.h>
 
 #include <exec/alerts.h>
 #include <exec/errors.h>
+#include <exec/tasks.h>
 #include <exec/io.h>
 #include <exec/devices.h>
 #include <exec/memory.h>
@@ -35,17 +33,23 @@
 #include <dos/dostags.h>
 #include <libraries/iffparse.h>
 #include <prefs/prefhdr.h>
+
+#include <clib/alib_protos.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/iffparse.h>
-#include <clib/ahi_protos.h>
-#include <inline/ahi.h>
+#define __NOLIBBASE__
+#include <proto/ahi.h>
+#undef  __NOLIBBASE__
 #include <proto/ahi_sub.h>
+
 #include <stddef.h>
 
 #include "ahi_def.h"
+#include "debug.h"
 #include "device.h"
 #include "devcommands.h"
+#include "gateway.h"
 #include "header.h"
 #include "misc.h"
 
@@ -68,31 +72,27 @@ static void
 ExpungeUnit( struct AHIDevUnit *, struct AHIBase * );
 
 static void
-DevProc( void );
+PlayerFunc( struct Hook*         hook,
+            struct AHIAudioCtrl* actrl,
+            APTR                 null );
 
 
-static void ASMCALL INTERRUPT
-PlayerFunc ( REG(a0, struct Hook *hook),
-             REG(a2, struct AHIAudioCtrl *actrl),
-             REG(a1, APTR null) );
+static ULONG 
+RecordFunc( struct Hook*             hook,
+            struct AHIAudioCtrl*     actrl,
+            struct AHIRecordMessage* recmsg );
 
-static ULONG ASMCALL INTERRUPT
-RecordFunc ( REG(a0, struct Hook *hook),
-             REG(a2, struct AHIAudioCtrl *actrl),
-             REG(a1, struct AHIRecordMessage *recmsg) );
 
-static void ASMCALL INTERRUPT
-SoundFunc ( REG(a0, struct Hook *hook),
-            REG(a2, struct AHIAudioCtrl *actrl),
-            REG(a1, struct AHISoundMessage *sndmsg) );
+static void
+SoundFunc( struct Hook*            hook,
+           struct AHIAudioCtrl*    actrl,
+           struct AHISoundMessage* sndmsg );
 
-static void ASMCALL INTERRUPT
-ChannelInfoFunc ( REG(a0, struct Hook *hook),
-                  REG(a2, struct AHIAudioCtrl *actrl),
-                  REG(a1, struct AHIEffChannelInfo *cimsg) );
 
-BPTR ASMCALL
-DevExpunge( REG( a6, struct AHIBase* device ) );
+static void
+ChannelInfoFunc( struct Hook*              hook,
+                 struct AHIAudioCtrl*      actrl,
+                 struct AHIEffChannelInfo* cimsg );
 
 
 /***** ahi.device/--background-- *******************************************
@@ -229,11 +229,11 @@ DevExpunge( REG( a6, struct AHIBase* device ) );
 // This function is called by the system each time a unit is opened with
 // exec.library/OpenDevice().
 
-ULONG ASMCALL
-DevOpen ( REG(d0, ULONG unit),
-          REG(d1, ULONG flags),
-          REG(a1, struct AHIRequest *ioreq),
-          REG(a6, struct AHIBase *AHIBase) )
+ULONG
+DevOpen ( ULONG              unit,
+          ULONG              flags,
+          struct AHIRequest* ioreq,
+          struct AHIBase*    AHIBase )
 {
   ULONG rc = 0;
   BOOL  error = FALSE;
@@ -241,7 +241,7 @@ DevOpen ( REG(d0, ULONG unit),
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {
-    KPrintF("OpenDevice(%ld, 0x%08lx, %ld)", unit, ioreq, flags);
+    KPrintF("OpenDevice(%ld, 0x%08lx, %ld)", unit, (ULONG) ioreq, flags);
   }
 
 // Check if size includes the ahir_Version field
@@ -266,14 +266,29 @@ DevOpen ( REG(d0, ULONG unit),
   }
 
   AHIBase->ahib_Library.lib_OpenCnt++;
+
   ObtainSemaphore(&AHIBase->ahib_Lock);
 
   if( ! (flags & AHIDF_NOMODESCAN))
   {
     // Load database if not already loaded
 
-    if(AHI_NextAudioID(AHI_INVALID_ID) == AHI_INVALID_ID)
+    if(AHI_NextAudioID(AHI_INVALID_ID) == (ULONG) AHI_INVALID_ID)
     {
+
+#ifdef __MORPHOS__
+      // Be quiet here. - Piru
+      {
+        struct Process *Self = (struct Process *) FindTask(NULL);
+        APTR oldwindowptr = Self->pr_WindowPtr;
+        Self->pr_WindowPtr = (APTR) -1;
+
+        AHI_LoadModeFile("MOSSYS:DEVS/AudioModes");
+
+        Self->pr_WindowPtr = oldwindowptr;
+      }
+#endif
+
       AHI_LoadModeFile("DEVS:AudioModes");
     }
   }
@@ -307,7 +322,9 @@ DevOpen ( REG(d0, ULONG unit),
     ioreq->ahir_Std.io_Device=(struct Device *) -1;
     ioreq->ahir_Std.io_Unit=(struct Unit *) -1;
   }
+
   ReleaseSemaphore(&AHIBase->ahib_Lock);
+
   AHIBase->ahib_Library.lib_OpenCnt--;
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
@@ -363,16 +380,16 @@ DevOpen ( REG(d0, ULONG unit),
 // This function is called by the system each time a unit is closed with
 // exec.library/CloseDevice().
 
-BPTR ASMCALL
-DevClose ( REG(a1, struct AHIRequest *ioreq),
-           REG(a6, struct AHIBase *AHIBase) )
+BPTR
+DevClose ( struct AHIRequest* ioreq,
+           struct AHIBase*    AHIBase )
 {
   struct AHIDevUnit *iounit;
   BPTR  seglist=0;
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {
-    KPrintF("CloseDevice(0x%08lx)\n", ioreq);
+    KPrintF("CloseDevice(0x%08lx)\n", (ULONG) ioreq);
   }
 
   ObtainSemaphore(&AHIBase->ahib_Lock);
@@ -428,7 +445,7 @@ InitUnit ( ULONG unit,
       iounit->Unit.unit_MsgPort.mp_Flags = PA_IGNORE;
       iounit->Unit.unit_MsgPort.mp_Node.ln_Name = AHINAME " Unit";
       iounit->UnitNum = unit;
-      InitSemaphore(&iounit->ListLock);
+      AHIInitSemaphore(&iounit->Lock);
       NewList((struct List *)&iounit->ReadList);
       NewList((struct List *)&iounit->PlayingList);
       NewList((struct List *)&iounit->SilentList);
@@ -450,6 +467,8 @@ InitUnit ( ULONG unit,
             v->NextOffset = FREE;
             v++;
           }
+
+	  iounit->ChannelsInUse = 0;
           
           replyport = CreateMsgPort();
 
@@ -464,7 +483,7 @@ InitUnit ( ULONG unit,
               iounit
             };
 
-            iounit->Process = CreateNewProcTags( NP_Entry,    (ULONG) &DevProc,
+            iounit->Process = CreateNewProcTags( NP_Entry,    (ULONG) &m68k_DevProc,
                                                  NP_Name,     (ULONG) AHINAME " Unit Process",
                                                  NP_Priority, AHI_PRI,
                                                  TAG_DONE );
@@ -582,15 +601,19 @@ ReadConfig ( struct AHIDevUnit *iounit,
 
               AHIBase->ahib_Flags = 0;
 
-              if(globalprefs->ahigp_DisableSurround)
-                AHIBase->ahib_Flags |= AHIBF_NOSURROUND;
-
-              if(globalprefs->ahigp_DisableEcho)
-                AHIBase->ahib_Flags |= AHIBF_NOECHO;
-
-              if(globalprefs->ahigp_FastEcho)
-                AHIBase->ahib_Flags |= AHIBF_FASTECHO;
-                
+	      /* Not used in version 5:
+	       * 
+	       * if(globalprefs->ahigp_DisableSurround)
+	       *   AHIBase->ahib_Flags |= AHIBF_NOSURROUND;
+	       *
+	       * if(globalprefs->ahigp_DisableEcho)
+               *   AHIBase->ahib_Flags |= AHIBF_NOECHO;
+	       *
+	       * if(globalprefs->ahigp_FastEcho)
+               *   AHIBase->ahib_Flags |= AHIBF_FASTECHO;
+	       *
+	       */
+	      
               if( (ULONG) ahig->sp_Size > offsetof( struct AHIGlobalPrefs,
                                                     ahigp_MaxCPU) )
               {
@@ -601,12 +624,15 @@ ReadConfig ( struct AHIDevUnit *iounit,
                 AHIBase->ahib_MaxCPU = 0x10000 * 90 / 100;
               }
 
-              if( (ULONG) ahig->sp_Size > offsetof( struct AHIGlobalPrefs, 
-                                                    ahigp_ClipMasterVolume) )
-              {
-                if(globalprefs->ahigp_ClipMasterVolume)
-                  AHIBase->ahib_Flags |= AHIBF_CLIPPING;
-              }
+	      /* In version 5: Clipping is always used
+	       *
+               * if( (ULONG) ahig->sp_Size > offsetof( struct AHIGlobalPrefs, 
+               *                                       ahigp_ClipMasterVolume) )
+               * {
+               *   if(globalprefs->ahigp_ClipMasterVolume)
+               *     AHIBase->ahib_Flags |= AHIBF_CLIPPING;
+               * }
+	       */
 
               if( (ULONG) ahig->sp_Size > offsetof( struct AHIGlobalPrefs, 
                                                     ahigp_AntiClickTime ) )
@@ -670,14 +696,14 @@ ReadConfig ( struct AHIDevUnit *iounit,
 
   if(iounit)
   {
-    if(iounit->AudioMode == AHI_INVALID_ID)
+    if(iounit->AudioMode == (ULONG) AHI_INVALID_ID)
     {
       iounit->AudioMode = AHI_BestAudioID(AHIDB_Realtime, TRUE, TAG_DONE);
     }
   }
   else
   {
-    if(AHIBase->ahib_AudioMode == AHI_INVALID_ID)
+    if(AHIBase->ahib_AudioMode == (ULONG) AHI_INVALID_ID)
     {
       AHIBase->ahib_AudioMode = AHI_BestAudioID( AHIDB_Realtime, TRUE, TAG_DONE);
     }
@@ -698,7 +724,9 @@ AllocHardware ( struct AHIDevUnit *iounit,
                 struct AHIBase *AHIBase )
 {
   BOOL rc = FALSE;
-  ULONG fullduplex=FALSE;
+  ULONG fullduplex = FALSE;
+  ULONG stereo     = FALSE;
+  ULONG panning    = FALSE;
 
   /* Allocate the hardware */
   iounit->AudioCtrl = AHI_AllocAudio(
@@ -716,8 +744,11 @@ AllocHardware ( struct AHIDevUnit *iounit,
     /* Full duplex? */
     AHI_GetAudioAttrs(AHI_INVALID_ID,iounit->AudioCtrl,
       AHIDB_FullDuplex, (ULONG) &fullduplex,
+      AHIDB_Stereo,     (ULONG) &stereo,
+      AHIDB_Panning,    (ULONG) &panning,
       TAG_DONE);
-    iounit->FullDuplex = fullduplex;
+    iounit->FullDuplex   = fullduplex;
+    iounit->PseudoStereo = stereo && !panning;
 
     /* Set hardware properties */
     AHI_ControlAudio(iounit->AudioCtrl,
@@ -780,7 +811,7 @@ FreeHardware ( struct AHIDevUnit *iounit,
 ** DevProc ********************************************************************
 ******************************************************************************/
 
-static void
+void
 DevProc( void )
 {
   struct Process *proc;
@@ -795,17 +826,21 @@ DevProc( void )
 
   iounit->Process = NULL;
 
-  iounit->PlayerHook.h_Entry=(HOOKFUNC)PlayerFunc;
-  iounit->PlayerHook.h_Data=iounit;
+  iounit->PlayerHook.h_Entry    = (HOOKFUNC) HookEntry;
+  iounit->PlayerHook.h_SubEntry = (HOOKFUNC) PlayerFunc;
+  iounit->PlayerHook.h_Data     = iounit;
 
-  iounit->RecordHook.h_Entry=(HOOKFUNC)RecordFunc;
-  iounit->RecordHook.h_Data=iounit;
+  iounit->RecordHook.h_Entry    = (HOOKFUNC) HookEntry;
+  iounit->RecordHook.h_SubEntry = (HOOKFUNC) RecordFunc;
+  iounit->RecordHook.h_Data     = iounit;
 
-  iounit->SoundHook.h_Entry=(HOOKFUNC)SoundFunc;
-  iounit->SoundHook.h_Data=iounit;
+  iounit->SoundHook.h_Entry    = (HOOKFUNC) HookEntry;
+  iounit->SoundHook.h_SubEntry = (HOOKFUNC) SoundFunc;
+  iounit->SoundHook.h_Data     = iounit;
 
-  iounit->ChannelInfoHook.h_Entry=(HOOKFUNC)ChannelInfoFunc;
-  iounit->ChannelInfoHook.h_Data=iounit;
+  iounit->ChannelInfoHook.h_Entry    = (HOOKFUNC) HookEntry;
+  iounit->ChannelInfoHook.h_SubEntry = (HOOKFUNC) ChannelInfoFunc;
+  iounit->ChannelInfoHook.h_Data     = iounit;
 
   iounit->ChannelInfoStruct = AllocVec(
       sizeof(struct AHIEffChannelInfo) + (iounit->Channels * sizeof(ULONG)),
@@ -880,9 +915,11 @@ DevProc( void )
       
       if(signals & (1L << iounit->PlaySignal))
       {
-        ObtainSemaphore(&iounit->ListLock);
+        AHIObtainSemaphore(&iounit->Lock);
+
         UpdateSilentPlayers(iounit,AHIBase);
-        ReleaseSemaphore(&iounit->ListLock);
+
+        AHIReleaseSemaphore(&iounit->Lock);
       }
 
       if(signals & (1L << iounit->RecordSignal))
@@ -915,22 +952,23 @@ DevProc( void )
 ** PlayerFunc *****************************************************************
 ******************************************************************************/
 
-static void ASMCALL INTERRUPT
-PlayerFunc ( REG(a0, struct Hook *hook),
-             REG(a2, struct AHIAudioCtrl *actrl),
-             REG(a1, APTR null) )
+static void
+PlayerFunc( struct Hook*         hook,
+            struct AHIAudioCtrl* actrl,
+            APTR                 null )
 {
   struct AHIDevUnit *iounit = (struct AHIDevUnit *) hook->h_Data;
 
-  if(AttemptSemaphore(&iounit->ListLock))
+  if(AHIAttemptSemaphore(&iounit->Lock))
   {
     UpdateSilentPlayers(iounit,AHIBase);
-    ReleaseSemaphore(&iounit->ListLock);
+    AHIReleaseSemaphore(&iounit->Lock);
   }
   else
   { // Do it later instead
     Signal((struct Task *) iounit->Master, (1L << iounit->PlaySignal));
   }
+
   return;
 }
 
@@ -939,10 +977,10 @@ PlayerFunc ( REG(a0, struct Hook *hook),
 ** RecordFunc *****************************************************************
 ******************************************************************************/
 
-static ULONG ASMCALL INTERRUPT
-RecordFunc ( REG(a0, struct Hook *hook),
-             REG(a2, struct AHIAudioCtrl *actrl),
-             REG(a1, struct AHIRecordMessage *recmsg) )
+static ULONG 
+RecordFunc( struct Hook*             hook,
+            struct AHIAudioCtrl*     actrl,
+            struct AHIRecordMessage* recmsg )
 {
   struct AHIDevUnit *iounit;
   
@@ -951,9 +989,6 @@ RecordFunc ( REG(a0, struct Hook *hook),
     iounit = (struct AHIDevUnit *) hook->h_Data;
     iounit->RecordBuffer = recmsg->ahirm_Buffer;
     iounit->RecordSize = recmsg->ahirm_Length<<2;
-#ifdef DEBUG_R
-    KPrintF("Buffer Filled again...\n");
-#endif
     Signal((struct Task *) iounit->Master, (1L << iounit->RecordSignal));
   }
   return 0;
@@ -964,61 +999,50 @@ RecordFunc ( REG(a0, struct Hook *hook),
 ** SoundFunc ******************************************************************
 ******************************************************************************/
 
-static void ASMCALL INTERRUPT
-SoundFunc ( REG(a0, struct Hook *hook),
-            REG(a2, struct AHIAudioCtrl *actrl),
-            REG(a1, struct AHISoundMessage *sndmsg) )
+static void
+SoundFunc( struct Hook*            hook,
+           struct AHIAudioCtrl*    actrl,
+           struct AHISoundMessage* sndmsg )
 {
-  struct AHIDevUnit *iounit;
-  struct Voice *voice;  
+  struct AHIDevUnit* iounit;
+  struct Voice*      voice;  
+  struct AHIRequest* playreq;
 
   iounit = (struct AHIDevUnit *) hook->h_Data;
   voice = &iounit->Voices[(WORD)sndmsg->ahism_Channel];
 
-#ifdef DEBUG
-  KPrintF("Playing on channel %ld: 0x%08lx\n", sndmsg->ahism_Channel, voice->PlayingRequest);
-#endif
+  Disable();    // Not needed?
 
-  if(voice->PlayingRequest)
+  playreq = voice->PlayingRequest;
+
+  if( playreq != NULL )
   {
-    voice->PlayingRequest->ahir_Std.io_Command = AHICMD_WRITTEN;
-#ifdef DEBUG
-    KPrintF("Marked 0x%08lx as written\n", voice->PlayingRequest);
-#endif
+    playreq->ahir_Std.io_Command = AHICMD_WRITTEN;
   }
+
+  Enable();
+
   voice->PlayingRequest = voice->QueuedRequest;
   voice->Flags |= VF_STARTED;
-#ifdef DEBUG
-  KPrintF("New player: 0x%08lx\n", voice->PlayingRequest);
-#endif
   voice->QueuedRequest  = NULL;
 
   switch(voice->NextOffset)
   {
     case FREE:
-#ifdef DEBUG
-      KPrintF("Ch %ld FREE\n",sndmsg->ahism_Channel);
-#endif
       break;
+
     case MUTE:
-#ifdef DEBUG
-      KPrintF("Ch %ld MUTE->FREE\n",sndmsg->ahism_Channel);
-#endif
       /* A AHI_NOSOUND is done, channel is silent */
       voice->NextOffset = FREE;
       break;
+
     case PLAY:
-#ifdef DEBUG
-      KPrintF("Ch %ld PLAY->MUTE\n",sndmsg->ahism_Channel);
-#endif
       /* A normal sound is done and playing, no other sound is queued */
       AHI_SetSound(sndmsg->ahism_Channel,AHI_NOSOUND,0,0,actrl,AHISF_NONE);
       voice->NextOffset = MUTE;
       break;
+
     default:
-#ifdef DEBUG
-      KPrintF("Ch %ld 0x%08lx->PLAY\n",sndmsg->ahism_Channel,voice->NextOffset);
-#endif
       /* A normal sound is done, and another is waiting */
       AHI_SetSound(sndmsg->ahism_Channel,
           voice->NextSound,
@@ -1048,10 +1072,10 @@ SoundFunc ( REG(a0, struct Hook *hook),
 
 // This hook keeps updating the io_Actual field of each playing requests
 
-static void ASMCALL INTERRUPT
-ChannelInfoFunc ( REG(a0, struct Hook *hook),
-                  REG(a2, struct AHIAudioCtrl *actrl),
-                  REG(a1, struct AHIEffChannelInfo *cimsg) )
+static void
+ChannelInfoFunc( struct Hook*              hook,
+                 struct AHIAudioCtrl*      actrl,
+                 struct AHIEffChannelInfo* cimsg )
 {
   struct AHIDevUnit *iounit = (struct AHIDevUnit *) hook->h_Data;
   struct Voice      *voice;
@@ -1059,16 +1083,25 @@ ChannelInfoFunc ( REG(a0, struct Hook *hook),
   int i;
 
   Disable();    // Not needed?
+
   voice = iounit->Voices;
+
   for(i = 0; i < iounit->Channels; i++)
   {
-    if(voice->PlayingRequest)
+    struct AHIRequest* playreq;
+
+    playreq = voice->PlayingRequest;
+
+    if( playreq != NULL )
     {
-      voice->PlayingRequest->ahir_Std.io_Actual = *offsets;
+      playreq->ahir_Std.io_Actual = *offsets;
     }
+
     voice++;
     offsets++;
   }
+
   Enable();
+
   return;
 }

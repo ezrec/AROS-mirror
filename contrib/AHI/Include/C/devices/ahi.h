@@ -2,11 +2,11 @@
 #define DEVICES_AHI_H
 
 /*
-**	$VER: ahi.h 5.0 (30.8.99)
+**	$VER: ahi.h 5.3 (19.1.2003)
 **
 **	ahi.device definitions
 **
-**	(C) Copyright 1994-1999 Martin Blom
+**	(C) Copyright 1994-2003 Martin Blom
 **	All Rights Reserved.
 **
 ** (TAB SIZE: 8)
@@ -89,7 +89,9 @@ struct AHIAudioModeRequester
 	WORD	ahiam_InfoWidth;
 	WORD	ahiam_InfoHeight;
 
-	APTR	ahiam_UserData;			/* You can store your own data here */
+	UWORD	ahiam_ObsoleteUserData[2];
+	UWORD	ahiam_Pad;
+	APTR	ahiam_UserData;			/* You can store your own data here (V5) */
 	/* Lots of private data follows! */
 };
 
@@ -242,6 +244,7 @@ struct AHIEffChannelInfo
 #define AHIDB_Output		(AHI_TagBase+141)
 /* --- New for V4, they will be ignored by V2 and earlier --- */
 #define AHIDB_Data		(AHI_TagBaseR+142)	/* Private! */
+#define AHIDB_DriverBaseName	(AHI_TagBaseR+143)	/* Private! */
 
  /* AHI_BestAudioIDA tags */
 /* --- New for V4, they will be ignored by V2 and earlier --- */
@@ -255,7 +258,8 @@ struct AHIEffChannelInfo
 #define AHIR_PrivateIDCMP	(AHI_TagBase+203)	/* Allocate private IDCMP? */
 #define AHIR_IntuiMsgFunc	(AHI_TagBase+204)	/* Function to handle IntuiMessages */
 #define AHIR_SleepWindow	(AHI_TagBase+205)	/* Block input in AHIR_Window? */
-#define AHIR_UserData		(AHI_TagBase+206)	/* What to put in ahiam_UserData */
+#define AHIR_ObsoleteUserData	(AHI_TagBase+206)	/* V4 UserData */
+#define AHIR_UserData		(AHI_TagBase+207)	/* What to put in ahiam_UserData (V5) */
 	/* Text display */
 #define AHIR_TextAttr		(AHI_TagBase+220)	/* Text font to use for gadget text */
 #define AHIR_Locale		(AHI_TagBase+221)	/* Locale to use for text */
@@ -318,6 +322,7 @@ struct AHIEffChannelInfo
 
  /* Sample types */
 /* Note that only AHIST_M8S, AHIST_S8S, AHIST_M16S and AHIST_S16S
+   (plus AHIST_M32S and AHIST_S32S in V6)
    are supported by AHI_LoadSound(). */
 #define AHIST_M8S		(0UL)			/* Mono, 8 bit signed (BYTE) */
 #define AHIST_M16S		(1UL)			/* Mono, 16 bit signed (WORD) */
@@ -375,7 +380,8 @@ struct AHIGlobalPrefs
 	BOOL	ahigp_FastEcho;
 	Fixed	ahigp_MaxCPU;
 	BOOL	ahigp_ClipMasterVolume;
-	Fixed	ahigp_AntiClickTime;			/* (V5) */
+	UWORD	ahigp_Pad;
+	Fixed	ahigp_AntiClickTime;			/* In seconds (V5) */
 };
 
  /* Debug levels */

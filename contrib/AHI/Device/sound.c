@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -27,8 +27,9 @@
 #include <utility/tagitem.h>
 #include <proto/exec.h>
 #include <proto/utility.h>
-#include <clib/ahi_protos.h>
-#include <inline/ahi.h>
+#define __NOLIBBASE__
+#include <proto/ahi.h>
+#undef  __NOLIBBASE__
 #include <proto/ahi_sub.h>
 #include <stdlib.h>
 
@@ -110,13 +111,13 @@
 *
 */
 
-ULONG ASMCALL
-SetVol ( REG(d0, UWORD channel),
-         REG(d1, Fixed volume),
-         REG(d2, sposition pan),
-         REG(a2, struct AHIPrivAudioCtrl *audioctrl),
-         REG(d3, ULONG flags),
-         REG(a6, struct AHIBase *AHIBase) )
+ULONG
+SetVol ( UWORD                    channel,
+         Fixed                    volume,
+         sposition                pan,
+         struct AHIPrivAudioCtrl* audioctrl,
+         ULONG                    flags,
+         struct AHIBase*          AHIBase )
 {
   struct AHIChannelData *cd;
   struct Library        *AHIsubBase;
@@ -125,12 +126,6 @@ SetVol ( REG(d0, UWORD channel),
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_ALL)
   {
     Debug_SetVol(channel, volume, pan, audioctrl, flags);
-  }
-
-  if(AHIBase->ahib_Flags & AHIBF_NOSURROUND)
-  {
-    volume = abs(volume);
-    pan    = abs(pan);
   }
 
   AHIsubBase = audioctrl->ahiac_SubLib;
@@ -183,7 +178,8 @@ SetVol ( REG(d0, UWORD channel),
 
     /* Enable anti-click routine */
     cd->cd_AntiClickCount = audioctrl->ac.ahiac_AntiClickSamples;
-      if( ( flags & AHISF_NODELAY ) || 
+
+    if( ( flags & AHISF_NODELAY ) || 
           ( cd->cd_AntiClickCount == 0 ) ||
            !cd->cd_FreqOK || !cd->cd_SoundOK )
     {
@@ -202,7 +198,6 @@ SetVol ( REG(d0, UWORD channel),
   }
 
   AHIsub_Enable(&audioctrl->ac);
-
   return 0;
 }
 
@@ -256,12 +251,12 @@ SetVol ( REG(d0, UWORD channel),
 *
 */
 
-ULONG ASMCALL
-SetFreq ( REG( d0, UWORD channel ),
-          REG( d1, ULONG freq ),
-          REG( a2, struct AHIPrivAudioCtrl *audioctrl ),
-          REG( d2, ULONG flags ),
-          REG( a6, struct AHIBase *AHIBase ) )
+ULONG
+SetFreq ( UWORD                    channel,
+          ULONG                    freq,
+          struct AHIPrivAudioCtrl* audioctrl,
+          ULONG                    flags,
+          struct AHIBase*          AHIBase )
 {
   struct AHIChannelData *cd;
   struct Library        *AHIsubBase;
@@ -312,7 +307,7 @@ SetFreq ( REG( d0, UWORD channel ),
       add = ((freq << 16) / audioctrl->ac.ahiac_MixFreq) << shift;
     }
   }
-
+  
   AHIsub_Disable(&audioctrl->ac);
 
   cd->cd_NextAdd = (Fixed64) add << 16;
@@ -421,14 +416,14 @@ SetFreq ( REG( d0, UWORD channel ),
 *
 */
 
-ULONG ASMCALL
-SetSound ( REG(d0, UWORD channel),
-           REG(d1, UWORD sound),
-           REG(d2, ULONG offset),
-           REG(d3, LONG length),
-           REG(a2, struct AHIPrivAudioCtrl *audioctrl),
-           REG(d4, ULONG flags),
-           REG(a6, struct AHIBase *AHIBase) )
+ULONG
+SetSound ( UWORD                    channel,
+           UWORD                    sound,
+           ULONG                    offset,
+           LONG                     length,
+           struct AHIPrivAudioCtrl* audioctrl,
+           ULONG                    flags,
+           struct AHIBase*          AHIBase )
 {
   struct AHIChannelData *cd;
   struct AHISoundData   *sd;
@@ -455,10 +450,6 @@ SetSound ( REG(d0, UWORD channel),
 
   AHIsub_Disable(&audioctrl->ac);
 
-//kprintf( "A: 0x%08lx-0x%08lx (%ld) [0x%08lx-0x%08lx]\n",
-//         (ULONG) (cd->cd_Offset >> 32), (ULONG) (cd->cd_LastOffset >> 32), cd->cd_Samples,
-//         (ULONG) (cd->cd_NextOffset >> 32), (ULONG) (cd->cd_NextLastOffset >> 32) );
-
   if(sound == AHI_NOSOUND)
   {
     cd->cd_NextSoundOK    = FALSE;
@@ -483,12 +474,18 @@ SetSound ( REG(d0, UWORD channel),
     {
       cd->cd_NextType         |= AHIST_BW;
       cd->cd_NextLastOffset    = (Fixed64) ( offset + length + 1 ) << 32;
-      cd->cd_NextOffset       |= 0xffffffffLL;
+//      cd->cd_NextOffset       |= 0xffffffffLL;
+      *(ULONG*) ((char*) (&cd->cd_NextOffset)+4) = 0xffffffffUL;
     }
     else
     {
-      cd->cd_NextLastOffset    = ( (Fixed64) ( offset + length - 1 ) << 32 )
-                                 | 0xffffffffLL;
+//      cd->cd_NextLastOffset    = ( (Fixed64) ( offset + length - 1 ) << 32 )
+//                                 | (Fixed64) 0xffffffffLL;
+
+      // Fix for m68k compiler bug! :-(
+      *(ULONG*) &cd->cd_NextLastOffset = offset + length - 1;
+      *(ULONG*) ((char*) (&cd->cd_NextLastOffset)+4) = 0xffffffffUL;
+
       /* Low cd->cd_NextOffset already 0 */
     }
 
@@ -529,6 +526,9 @@ SetSound ( REG(d0, UWORD channel),
           ( cd->cd_AntiClickCount == 0 ) ||
            !cd->cd_FreqOK || !cd->cd_SoundOK )
       {
+        cd->cd_StartPointL   = 0;
+        cd->cd_StartPointR   = 0;
+
         cd->cd_Offset        = cd->cd_DelayedOffset;
         cd->cd_FirstOffsetI  = cd->cd_DelayedFirstOffsetI;
         cd->cd_LastOffset    = cd->cd_DelayedLastOffset;
@@ -539,20 +539,16 @@ SetSound ( REG(d0, UWORD channel),
         cd->cd_ScaleRight    = cd->cd_DelayedScaleRight;
         cd->cd_AddRoutine    = cd->cd_DelayedAddRoutine;
         cd->cd_Samples       = cd->cd_DelayedSamples;
-
         cd->cd_AntiClickCount = 0;
       }
       else
       {
         cd->cd_SoundDelayed = TRUE;
       }
+
       cd->cd_EOS = TRUE;  /* Signal End-Of-Sample */
     }
   }
-
-//kprintf( "B: 0x%08lx-0x%08lx (%ld) [0x%08lx-0x%08lx]\n",
-//         (ULONG) (cd->cd_Offset >> 32), (ULONG) (cd->cd_LastOffset >> 32), cd->cd_Samples,
-//         (ULONG) (cd->cd_NextOffset >> 32), (ULONG) (cd->cd_NextLastOffset >> 32) );
 
   AHIsub_Enable(&audioctrl->ac);
 
@@ -707,10 +703,10 @@ SetSound ( REG(d0, UWORD channel),
 */
 
 
-ULONG ASMCALL
-SetEffect ( REG(a0, ULONG *effect),
-            REG(a2, struct AHIPrivAudioCtrl *audioctrl),
-            REG(a6, struct AHIBase *AHIBase) )
+ULONG
+SetEffect( ULONG*                   effect,
+           struct AHIPrivAudioCtrl* audioctrl,
+           struct AHIBase*          AHIBase )
 {
   struct Library        *AHIsubBase;
   ULONG                  rc;
@@ -864,6 +860,8 @@ SetEffect ( REG(a0, ULONG *effect),
 *                   AHIST_S8S: Stereo, 8 bit signed (2×BYTEs) (V4). 
 *                   AHIST_M16S: Mono, 16 bit signed (WORDs).
 *                   AHIST_S16S: Stereo, 16 bit signed (2×WORDs) (V4).
+*                   AHIST_M32S: Mono, 32 bit signed (LONGs). (V6)
+*                   AHIST_S32S: Stereo, 32 bit signed (2×LONGs) (V6).
 *               ahisi_Address - Address to the sample array.
 *               ahisi_Length - The size of the array, in samples.
 *               Don't even think of setting ahisi_Address to 0 and
@@ -900,12 +898,12 @@ SetEffect ( REG(a0, ULONG *effect),
 *
 */
 
-ULONG ASMCALL
-LoadSound ( REG(d0, UWORD sound),
-            REG(d1, ULONG type),
-            REG(a0, APTR info),
-            REG(a2, struct AHIPrivAudioCtrl *audioctrl),
-            REG(a6, struct AHIBase *AHIBase) )
+ULONG
+LoadSound( UWORD                    sound,
+           ULONG                    type,
+           APTR                     info,
+           struct AHIPrivAudioCtrl* audioctrl,
+           struct AHIBase*          AHIBase )
 {
 
   struct Library *AHIsubBase;
@@ -940,6 +938,8 @@ LoadSound ( REG(d0, UWORD sound),
         case AHIST_M16S:
         case AHIST_S8S:
         case AHIST_S16S:
+        case AHIST_M32S:
+        case AHIST_S32S:
           /* AHI_FreeAudio() will deallocate...  */
 
           audioctrl->ahiac_SoundDatas[sound].sd_Type   = si->ahisi_Type;
@@ -950,6 +950,7 @@ LoadSound ( REG(d0, UWORD sound),
 
         default:
           rc = AHIE_BADSAMPLETYPE;
+	  break;
       }
       
       break;
@@ -1006,10 +1007,10 @@ LoadSound ( REG(d0, UWORD sound),
 *
 */
 
-ULONG ASMCALL
-UnloadSound ( REG(d0, UWORD sound),
-              REG(a2, struct AHIPrivAudioCtrl *audioctrl),
-              REG(a6, struct AHIBase *AHIBase) )
+ULONG
+UnloadSound( UWORD                    sound,
+             struct AHIPrivAudioCtrl* audioctrl,
+             struct AHIBase*          AHIBase )
 {
   struct Library *AHIsubBase;
   ULONG rc;
@@ -1097,7 +1098,7 @@ UnloadSound ( REG(d0, UWORD sound),
 *           sound. If this tag is present, AHIP_Length MUST be present too!
 *
 *       AHIP_Length (LONG) - Specifies how many samples that should be
-*           player.
+*           played.
 *
 *       AHIP_LoopFreq (ULONG)
 *       AHIP_LoopVol (Fixed)
@@ -1123,10 +1124,10 @@ UnloadSound ( REG(d0, UWORD sound),
 *
 */
 
-ULONG ASMCALL 
-PlayA( REG(a2, struct AHIAudioCtrl *audioctrl),
-       REG(a1, struct TagItem *tags),
-       REG(a6, struct AHIBase *AHIBase) )
+ULONG
+PlayA( struct AHIPrivAudioCtrl* audioctrl,
+       struct TagItem*          tags,
+       struct AHIBase*          AHIBase )
 {
   struct TagItem *tag,*tstate=tags;
   struct Library *AHIsubBase;
@@ -1210,23 +1211,23 @@ PlayA( REG(a2, struct AHIAudioCtrl *audioctrl),
       break;
     case AHIP_EndChannel:
       if(setfreq)
-        AHI_SetFreq(channel,freq,audioctrl,AHISF_IMM);
+        AHI_SetFreq( channel, freq, (struct AHIAudioCtrl*) audioctrl, AHISF_IMM );
       if(loopsetfreq)
-        AHI_SetFreq(channel,loopfreq,audioctrl,NULL);
+        AHI_SetFreq( channel, loopfreq, (struct AHIAudioCtrl*) audioctrl, AHISF_NONE );
       if(setvol)
-        AHI_SetVol(channel,vol,pan,audioctrl,AHISF_IMM);
+        AHI_SetVol( channel, vol, pan, (struct AHIAudioCtrl*) audioctrl, AHISF_IMM );
       if(loopsetvol)
-        AHI_SetVol(channel,loopvol,looppan,audioctrl,NULL);
+        AHI_SetVol( channel, loopvol, looppan, (struct AHIAudioCtrl*) audioctrl, AHISF_NONE );
       if(setsound)
-        AHI_SetSound(channel,sound,offset,length,audioctrl,AHISF_IMM);
+        AHI_SetSound( channel, sound, offset, length, (struct AHIAudioCtrl*) audioctrl, AHISF_IMM );
       if(loopsetsound)
-        AHI_SetSound(channel,loopsound,loopoffset,looplength,audioctrl,NULL);
+        AHI_SetSound( channel, loopsound, loopoffset, looplength, (struct AHIAudioCtrl*) audioctrl, NULL);
       break;
     }
   }
 
   AHIsub_Enable((struct AHIAudioCtrlDrv *)audioctrl);
-  return NULL;
+  return 0;
 }
 
 
@@ -1282,10 +1283,9 @@ static const UBYTE type2bytes[]=
   8     // AHIST_S32S (10)
 };
 
-ULONG ASMCALL
-SampleFrameSize( REG(d0, ULONG sampletype),
-                 REG(a6, struct AHIBase *AHIBase) )
-
+ULONG
+SampleFrameSize( ULONG           sampletype,
+                 struct AHIBase* AHIBase )
 {
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {

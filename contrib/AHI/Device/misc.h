@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,8 +20,8 @@
      MA 02139, USA.
 */
 
-#ifndef _MISC_H_
-#define _MISC_H_
+#ifndef ahi_misc_h
+#define ahi_misc_h
 
 #include <config.h>
 #include <CompilerSpecific.h>
@@ -40,10 +40,36 @@ int
 Fixed2Shift( Fixed f );
 
 void
-Req( const char* text, ... );
+ReqA( const char* text, APTR args );
+
+#define Req(a0, args...) \
+        ({ULONG _args[] = { args }; ReqA((a0), (APTR)_args);})
+
+char*
+SprintfA( char *dst, const char *fmt, ULONG* args );
+
+#define Sprintf(a0, a1, args...) \
+        ({ULONG _args[] = { args }; SprintfA((a0), (a1), (ULONG*)_args);})
+
+
+
+void
+AHIInitSemaphore( struct SignalSemaphore* ss );
+
+void
+AHIObtainSemaphore( struct SignalSemaphore* ss );
+
+void
+AHIReleaseSemaphore( struct SignalSemaphore* ss );
+
+LONG
+AHIAttemptSemaphore( struct SignalSemaphore* ss );
+
+
 
 APTR
-AHIAllocVec( ULONG byteSize, ULONG requirements );
+AHIAllocVec( ULONG byteSize,
+             ULONG requirements );
 
 void
 AHIFreeVec( APTR memoryBlock );
@@ -58,4 +84,10 @@ BOOL
 AHIGetELFSymbol( const char* name,
                  void** ptr );
 
-#endif /* _MISC_H_ */
+BOOL
+PreTimer( struct AHIPrivAudioCtrl* audioctrl );
+
+void
+PostTimer( struct AHIPrivAudioCtrl* audioctrl );
+
+#endif /* ahi_misc_h */

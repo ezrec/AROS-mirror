@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -25,22 +25,27 @@
 
 #include <stdarg.h>
 
+#include <exec/alerts.h>
+#include <exec/execbase.h>
 #include <exec/lists.h>
 #include <exec/nodes.h>
-#include <powerup/ppclib/memory.h>
-#include <powerup/ppclib/interface.h>
-#include <powerup/ppclib/object.h>
-#include <powerpc/powerpc.h>
-#include <powerpc/memoryPPC.h>
+#include <exec/semaphores.h>
 #include <intuition/intuition.h>
+
 #include <proto/exec.h>
 #include <proto/intuition.h>
-#include <proto/ppc.h>
-#include <proto/powerpc.h>
+#include <proto/timer.h>
+
+#if defined( ENABLE_WARPUP )
+# include <powerpc/powerpc.h>
+# include <powerpc/memoryPPC.h>
+# include <proto/powerpc.h>
+#include "elfloader.h"
+#endif
 
 #include "ahi_def.h"
 #include "header.h"
-#include "elfloader.h"
+#include "misc.h"
 
 
 /******************************************************************************
@@ -91,11 +96,11 @@ Fixed2Shift( Fixed f )
 }
 
 /******************************************************************************
-** Req ************************************************************************
+** ReqA ***********************************************************************
 ******************************************************************************/
 
 void
-Req( const char* text, ... )
+ReqA( const char* text, APTR args )
 {
   struct EasyStruct es = 
   {
@@ -106,14 +111,167 @@ Req( const char* text, ... )
     "OK"
   };
 
-  va_list ap;
-
-  va_start( ap, text );
-
-  EasyRequestArgs( NULL, &es, NULL, ap );
-  
-  va_end( ap );
+  EasyRequestArgs( NULL, &es, NULL, args );
 }
+
+/******************************************************************************
+** SprintfA *******************************************************************
+******************************************************************************/
+
+static UWORD struffChar[] =
+{
+  0x16c0,     // moveb %d0,%a3@+
+  0x4e75      // rts
+};
+
+char*
+SprintfA( char *dst, const char *fmt, ULONG* args )
+{
+  return RawDoFmt( (UBYTE*) fmt,
+                   args, 
+                   (void(*)(void)) &struffChar, 
+                   dst );
+}
+
+/******************************************************************************
+** AHIInitSemaphore ***********************************************************
+******************************************************************************/
+
+void
+AHIInitSemaphore( struct SignalSemaphore* sigSem )
+{
+  // TODO: Verify license compatibility (Code mostly stolen from AROS).
+
+  sigSem->ss_WaitQueue.mlh_Head     = (struct MinNode *)&sigSem->ss_WaitQueue.mlh_Tail;
+  sigSem->ss_WaitQueue.mlh_Tail     = NULL;
+  sigSem->ss_WaitQueue.mlh_TailPred = (struct MinNode *)&sigSem->ss_WaitQueue.mlh_Head;
+  sigSem->ss_Link.ln_Type = NT_SIGNALSEM;
+  sigSem->ss_NestCount = 0;
+  sigSem->ss_Owner = 0;
+  sigSem->ss_QueueCount = -1;
+}
+
+
+/******************************************************************************
+** AHIObtainSemaphore *********************************************************
+******************************************************************************/
+
+void
+AHIObtainSemaphore( struct SignalSemaphore* sigSem )
+{
+  // TODO: Verify license compatibility (Code mostly stolen from AROS).
+
+  struct Task *me;
+
+  Disable(); // Not Forbid()!
+  me=SysBase->ThisTask;
+  sigSem->ss_QueueCount++;
+  if( sigSem->ss_QueueCount == 0 )
+  {
+    sigSem->ss_Owner = me;
+    sigSem->ss_NestCount++;
+  }
+  else if( sigSem->ss_Owner == me )
+  {
+    sigSem->ss_NestCount++;
+  }
+  else
+  {
+    struct SemaphoreRequest sr;
+    sr.sr_Waiter = me;
+    me->tc_SigRecvd &= ~SIGF_SINGLE;
+    AddTail((struct List *)&sigSem->ss_WaitQueue, (struct Node *)&sr);
+    Wait(SIGF_SINGLE);
+  }
+  Enable();
+}
+
+
+/******************************************************************************
+** AHIReleaseSemaphore ********************************************************
+******************************************************************************/
+#include "debug.h"
+void
+AHIReleaseSemaphore( struct SignalSemaphore* sigSem )
+{
+  // TODO: Verify license compatibility (Code mostly stolen from AROS).
+  
+  Disable(); // Not Forbid()!
+
+  sigSem->ss_NestCount--;
+  sigSem->ss_QueueCount--;
+  if(sigSem->ss_NestCount == 0)
+  {
+    if( sigSem->ss_QueueCount >= 0
+	&& sigSem->ss_WaitQueue.mlh_Head->mln_Succ != NULL )
+    {
+      struct SemaphoreRequest *sr, *srn;
+      struct SemaphoreMessage *sm;
+      sr = (struct SemaphoreRequest *)sigSem->ss_WaitQueue.mlh_Head;
+
+      // Note that shared semaphores are not supported!
+
+      sm = (struct SemaphoreMessage *)sr;
+
+      Remove((struct Node *)sr);
+      sigSem->ss_NestCount++;
+      if(sr->sr_Waiter != NULL)
+      {
+	sigSem->ss_Owner = sr->sr_Waiter;
+	Signal(sr->sr_Waiter, SIGF_SINGLE);
+      }
+      else
+      {
+	sigSem->ss_Owner = (struct Task *)sm->ssm_Semaphore;
+	sm->ssm_Semaphore = sigSem;
+	ReplyMsg((struct Message *)sr);
+      }
+    }
+    else
+    {
+      sigSem->ss_Owner = NULL;
+      sigSem->ss_QueueCount = -1;
+    }
+  }
+  else if(sigSem->ss_NestCount < 0)
+  {
+    Alert( AN_SemCorrupt );
+  }
+
+  Enable();
+}
+
+
+/******************************************************************************
+** AHIAttemptSemaphore ********************************************************
+******************************************************************************/
+
+LONG
+AHIAttemptSemaphore( struct SignalSemaphore* sigSem )
+{
+  // TODO: Verify license compatibility (Code mostly stolen from AROS).
+
+  LONG rc = FALSE;
+
+  Disable(); // Not Forbid()!
+
+  sigSem->ss_QueueCount++;
+  if( sigSem->ss_QueueCount == 0 )
+  {
+    sigSem->ss_Owner = (APTR) ~0;
+    sigSem->ss_NestCount++;
+    rc = TRUE;
+  }
+  else
+  {
+    sigSem->ss_QueueCount--;
+  }
+
+  Enable();
+
+  return rc;
+}
+
 
 /******************************************************************************
 ** AHIAllocVec ****************************************************************
@@ -125,34 +283,18 @@ AHIAllocVec( ULONG byteSize, ULONG requirements )
   switch( MixBackend )
   {
     case MB_NATIVE:
-      return AllocVec( byteSize, requirements & ~MEMF_PPCMASK );
+      return AllocVec( byteSize, requirements );
 
-    case MB_POWERUP:
-      return PPCAllocVec( byteSize, requirements );
-
+#if defined( ENABLE_WARPUP )
     case MB_WARPUP:
     {
-      ULONG new_requirements;
-      void* v;
+      APTR v;
 
-      new_requirements = requirements & ~MEMF_PPCMASK;
-
-      if( requirements & ( MEMF_WRITETHROUGHPPC | MEMF_WRITETHROUGHM68K ) )
-      {
-        Req( "Internal error: Illegal memory attribute in AHIAllocVec()." );
-      }
-
-      if( requirements & 
-          ( MEMF_NOCACHEPPC | MEMF_NOCACHEM68K |
-            MEMF_NOCACHESYNCPPC | MEMF_NOCACHESYNCM68K ) )
-      {
-        new_requirements |= MEMF_CHIP;            // Sucks!
-      }
-
-      v = AllocVec32( byteSize, new_requirements );
+      v = AllocVec32( byteSize, requirements );
       CacheClearU();
       return v;
     }
+#endif
   }
 
   Req( "Internal error: Unknown MixBackend in AHIAllocVec()." );
@@ -172,13 +314,11 @@ AHIFreeVec( APTR memoryBlock )
       FreeVec( memoryBlock );
       return;
 
-    case MB_POWERUP:
-      PPCFreeVec( memoryBlock );
-      return;
-
+#if defined( ENABLE_WARPUP )
     case MB_WARPUP:
       FreeVec32( memoryBlock );
       return;
+#endif
   }
 
   Req( "Internal error: Unknown MixBackend in AHIFreeVec()." );
@@ -198,9 +338,7 @@ AHILoadObject( const char* objname )
       Req( "Internal error: Illegal MixBackend in AHILoadObject()" );
       return NULL;
 
-    case MB_POWERUP:
-      return PPCLoadObject( (char*) objname );
-
+#if defined( ENABLE_WARPUP )
     case MB_WARPUP:
     {
       void* o;
@@ -210,7 +348,8 @@ AHILoadObject( const char* objname )
 
       return o;
     }
-  }    
+#endif
+  }
 
   Req( "Internal error: Unknown MixBackend in AHILoadObject()." );
   return NULL;
@@ -229,13 +368,11 @@ AHIUnloadObject( void* obj )
       Req( "Internal error: Illegal MixBackend in AHIUnloadObject()" );
       return;
 
-    case MB_POWERUP:
-      PPCUnLoadObject( obj );
-      return;
-
+#if defined( ENABLE_WARPUP )
     case MB_WARPUP:
       ELFUnLoadObject( obj );
       return;
+#endif
   }
 
   Req( "Internal error: Unknown MixBackend in AHIUnloadObject()" );
@@ -255,36 +392,51 @@ AHIGetELFSymbol( const char* name,
       Req( "Internal error: Illegal MixBackend in AHIUnloadObject()" );
       return FALSE;
 
-    case MB_POWERUP:
-    {
-      struct PPCObjectInfo oi =
-      {
-        0,
-        NULL,
-        PPCELFINFOTYPE_SYMBOL,
-        STT_SECTION,
-        STB_GLOBAL,
-        0
-      };
-      
-      struct TagItem tag_done =
-      {
-        TAG_DONE, 0
-      };
-
-      BOOL rc;
-
-      oi.Name = (char*) name;
-      rc = PPCGetObjectAttrs( PPCObject, &oi, &tag_done );
-      *ptr = (void*) oi.Address;
-
-      return rc;
-    }
-
+#if defined( ENABLE_WARPUP )
     case MB_WARPUP:
       return ELFGetSymbol( PPCObject, name, ptr );
+#endif
   }
 
   Req( "Internal error: Unknown MixBackend in AHIUnloadObject()" );
   return FALSE;
+}
+
+/******************************************************************************
+** PreTimer  ******************************************************************
+******************************************************************************/
+
+BOOL
+PreTimer( struct AHIPrivAudioCtrl* audioctrl )
+{
+  ULONG pretimer_period;  // Clocks between PreTimer calls
+  ULONG mixer_time;       // Clocks spent in mixer
+
+  return FALSE;
+
+  pretimer_period = audioctrl->ahiac_Timer.EntryTime.ev_lo;
+
+  ReadEClock( &audioctrl->ahiac_Timer.EntryTime );
+
+  pretimer_period = audioctrl->ahiac_Timer.EntryTime.ev_lo - pretimer_period;
+
+  mixer_time = pretimer_period - ( audioctrl->ahiac_Timer.ExitTime.ev_lo
+                                   - audioctrl->ahiac_Timer.EntryTime.ev_lo );
+
+  if( pretimer_period != 0 )
+  {
+    audioctrl->ahiac_UsedCPU = ( mixer_time << 8 ) / pretimer_period;
+  }
+  
+  return ( audioctrl->ahiac_UsedCPU <= audioctrl->ahiac_MaxCPU );
+}
+
+/******************************************************************************
+** PostTimer  *****************************************************************
+******************************************************************************/
+
+void
+PostTimer( struct AHIPrivAudioCtrl* audioctrl )
+{
+  ReadEClock( &audioctrl->ahiac_Timer.ExitTime );
 }

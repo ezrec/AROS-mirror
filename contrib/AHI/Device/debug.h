@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,10 +20,22 @@
      MA 02139, USA.
 */
 
-#ifndef _DEBUG_H_
-#define _DEBUG_H_
+#ifndef ahi_debug_h
+#define ahi_debug_h
 
 #include <devices/ahi.h>
+#include <proto/exec.h>
+
+
+void
+KPrintFArgs( UBYTE* fmt, 
+             ULONG* args );
+
+#define KPrintF( fmt, ... )        \
+({                                 \
+  ULONG _args[] = { __VA_ARGS__ }; \
+  KPrintFArgs( (fmt), _args );     \
+})
 
 void
 Debug_AllocAudioA( struct TagItem *tags );
@@ -60,7 +72,7 @@ void
 Debug_NextAudioID( ULONG id);
 
 void
-Debug_GetAudioAttrsA( ULONG id, struct AHIAudioCtrlDrv *audioctrl, struct TagItem *tags );
+Debug_GetAudioAttrsA( ULONG id, struct AHIPrivAudioCtrl *audioctrl, struct TagItem *tags );
 
 void
 Debug_BestAudioIDA( struct TagItem *tags );
@@ -75,7 +87,7 @@ void
 Debug_FreeAudioRequest( struct AHIAudioModeRequester *req );
 
 void
-Debug_PlayA( struct AHIAudioCtrl *audioctrl, struct TagItem *tags );
+Debug_PlayA( struct AHIPrivAudioCtrl *audioctrl, struct TagItem *tags );
 
 void
 Debug_SampleFrameSize( ULONG sampletype);
@@ -89,4 +101,4 @@ Debug_RemoveAudioMode( ULONG id);
 void
 Debug_LoadModeFile( STRPTR name);
 
-#endif /* _DEBUG_H_ */
+#endif /* ahi_debug_h */

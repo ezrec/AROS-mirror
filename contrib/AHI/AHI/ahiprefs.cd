@@ -1,23 +1,26 @@
 #language english
 #version 4
 ;
+; The .ct file was generated from
 ; $Id$
-; $Log$
-; Revision 1.1  2000/04/01 00:23:41  bernie
-; Oops, forgot all these...
 ;
-; Revision 4.6  1999/08/29 23:43:49  lcs
-; Added support for ahigp_AntiClickTime.
-;
-; Revision 4.5  1997/04/27 16:16:06  lcs
-; Added "Mastervolume with(out) clipping".
-;
-; Revision 4.4  1997/04/23 21:08:31  lcs
-; Removed (Disabled)
-;
-; Revision 4.2  1997/04/07 01:36:51  lcs
-; Localized it, bug fixes
-;
+;    AHI - Hardware independent audio subsystem
+;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+;     
+;    This library is free software; you can redistribute it and/or
+;    modify it under the terms of the GNU Library General Public
+;    License as published by the Free Software Foundation; either
+;    version 2 of the License, or (at your option) any later version.
+;     
+;    This library is distributed in the hope that it will be useful,
+;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;    Library General Public License for more details.
+;     
+;    You should have received a copy of the GNU Library General Public
+;    License along with this library; if not, write to the
+;    Free Software Foundation, Inc., 59 Temple Place - Suite 330, Cambridge,
+;    MA 02139, USA.
 ;
 ; *** Menus ***
 ;
@@ -233,4 +236,7 @@ With clipping
 ;
 msgGlobOptACTime (//)
 Default anti-click time
+;
+msgButtonPlay (//)
+_Play a test sound
 ;

@@ -1,7 +1,7 @@
 # $Id$
 # $Log$
-# Revision 1.1  2003/03/12 12:53:09  chodorowski
-# Initial revision
+# Revision 1.2  2003/03/12 13:03:10  chodorowski
+# Updated to version 5.4=6.0rc0.
 #
 # Revision 4.3  2001/09/16 19:04:28  lcs
 # * paula.audio:  The fixed CMD_STOP/CMD_START in ahi.device

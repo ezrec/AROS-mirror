@@ -105,9 +105,15 @@
 	#define REG(reg,arg) arg __asm(#reg)
 	#define _COMPILED_WITH	"GCC"
 
+	#ifndef min
 	#define min(a,b)	(((a)<(b))?(a):(b))
+	#endif
+	#ifndef max
 	#define max(a,b)	(((a)>(b))?(a):(b))
+	#endif
+	#ifndef abs
 	#define abs(a)		(((a)>0)?(a):-(a))
+	#endif
 
 #if 0
 	/* GCC produces code which calls these two functions
@@ -182,9 +188,15 @@
 	#define REG(reg,arg)	__##reg arg
 	#define _COMPILED_WITH	"DICE"
 
+	#ifndef min
 	#define min(a,b)	(((a)<(b))?(a):(b))
+	#endif
+	#ifndef max
 	#define max(a,b)	(((a)>(b))?(a):(b))
+	#endif
+	#ifndef abs
 	#define abs(a)		(((a)>0)?(a):-(a))
+	#endif
 
 	#error DICE compiler support is untested. Please check all the above definitions
 #else
@@ -204,9 +216,15 @@
 	#define REG(reg,arg)	__##reg arg
 	#define _COMPILED_WITH	"Manx C"
 
+	#ifndef min
 	#define min(a,b)	(((a)<(b))?(a):(b))
+	#endif
+	#ifndef max
 	#define max(a,b)	(((a)>(b))?(a):(b))
+	#endif
+	#ifndef abs
 	#define abs(a)		(((a)>0)?(a):-(a))
+	#endif
 
 	#error Aztec/Manx C compiler support is untested. Please check all the above definitions
 #else
@@ -225,13 +243,13 @@
 #define HOOKCALL	ASMCALL SAVEDS
 
 
+#ifndef __MORPHOS__
 /* AROS Compatibility: IPTR is a type which can store a pointer
  * as well as a long integer.
  */
 #ifndef IPTR
 #define IPTR LONG
 #endif /* IPTR */
-
-
+#endif /* __MORPHOS__ */
 
 #endif /* !COMPILERSPECIFIC_H */

@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,33 +20,25 @@
      MA 02139, USA.
 */
 
-#ifndef _DEVSUPP_H_
-#define _DEVSUPP_H_
+#ifndef ahi_devsupp_h
+#define ahi_devsupp_h
 
 #include <config.h>
 #include <CompilerSpecific.h>
+
 #include <devices/ahi.h>
 
-#define RecArgs REG(d0, ULONG size),    \
-                REG(d1, ULONG add),     \
-                REG(a0, APTR src),      \
-                REG(a2, ULONG *offset), \
-                REG(a3, void **dest)
+#define RecArgs ULONG size,    \
+                ULONG add,     \
+                APTR src,      \
+                ULONG *offset, \
+                void **dest
 
-void ASMCALL  RecM8S( RecArgs );
-void ASMCALL  RecS8S( RecArgs );
-void ASMCALL RecM16S( RecArgs );
-void ASMCALL RecS16S( RecArgs );
-void ASMCALL RecM32S( RecArgs );
-void ASMCALL RecS32S( RecArgs );
+void RecM8S( RecArgs );
+void RecS8S( RecArgs );
+void RecM16S( RecArgs );
+void RecS16S( RecArgs );
+void RecM32S( RecArgs );
+void RecS32S( RecArgs );
 
-ULONG ASMCALL 
-MultFixed ( REG(d0, ULONG a),
-            REG(d1, Fixed b) );
-
-void ASMCALL
-asmRecordFunc ( REG(d0, ULONG samples),
-                REG(a0, void *data),
-                REG(a1, void *buffer) );
-
-#endif /*_DEVSUPP_H_ */
+#endif /* ahi_devsupp_h */

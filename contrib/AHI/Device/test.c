@@ -1,21 +1,27 @@
 
-#include "addroutines.h"
+//#include "addroutines.h"
 
 extern long long int c, d, e, f;
 extern int i, j;
 
-long long
-test( ADDARGS )
-{
-  return Samples + ScaleLeft + ScaleRight + (int) StartPointLeft + (int) StartPointRight
-         + (int) Src + (int) Dst + FirstOffsetI + Add + (int) Offset + (int) StopAtZero;
-}
+//long long
+//test( ADDARGS )
+//{
+//  return Samples + ScaleLeft + ScaleRight + (int) StartPointLeft + (int) StartPointRight
+//         + (int) Src + (int) Dst + FirstOffsetI + Add + (int) Offset + (int) StopAtZero;
+//}
 
 long long
  test2( long long* offset, long long add, unsigned long samples )
 {
   *offset += add * samples;
   return offset;
+}
+
+int
+compare( int a, int b )
+{
+  return( a < 0 && b >= 0 || a > 0 && b <= 0 );
 }
 
 int

@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -23,30 +23,37 @@
 #include <config.h>
 #include <CompilerSpecific.h>
 
-#include <math.h>
+// Fix broken includes
+struct VSPrite;
+
 #include <exec/memory.h>
 #include <graphics/rpattr.h>
 #include <intuition/gadgetclass.h>
 #include <intuition/intuition.h>
 #include <intuition/intuitionbase.h>
 #include <libraries/gadtools.h>
+
+#include <clib/alib_protos.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/gadtools.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <proto/utility.h>
-#include <clib/ahi_protos.h>
-#include <inline/ahi.h>
+#define __NOLIBBASE__
+#include <proto/ahi.h>
+#undef  __NOLIBBASE__
 #include <proto/ahi_sub.h>
+
+#include <math.h>
 #include <string.h>
 
 #include "ahi_def.h"
 #include "localize.h"
-#include "asmfuncs.h"
+#include "misc.h"
 #include "modeinfo.h"
 #include "debug.h"
-
+#include "gateway.h"
 
 struct AHIAudioModeRequesterExt;
 
@@ -152,7 +159,7 @@ static struct TextAttr Topaz80 = { "topaz.font", 8, 0, 0, };
 #define FREQTEXT2     "%lu Hz"
 #define FREQLEN2      (5+3) // 5 digits + space + "Hz"
 
-static LONG STDARGS SAVEDS IndexToFrequency( struct Gadget *gad, WORD level)
+LONG IndexToFrequency( struct Gadget *gad, WORD level )
 {
   LONG  freq = 0;
   ULONG id;
@@ -173,13 +180,21 @@ static LONG STDARGS SAVEDS IndexToFrequency( struct Gadget *gad, WORD level)
   return freq;
 }
 
+
 static void FillReqStruct(struct AHIAudioModeRequesterExt *req, struct TagItem *tags)
 {
+  ULONG obsolete_userdata;
+
 // Check all known tags
   req->SrcWindow=(struct Window *)GetTagData(AHIR_Window,(ULONG)req->SrcWindow,tags);
   req->PubScreenName=(STRPTR)GetTagData(AHIR_PubScreenName,(ULONG)req->PubScreenName,tags);
   req->Screen=(struct Screen *)GetTagData(AHIR_Screen,(ULONG)req->Screen,tags);
   req->IntuiMsgFunc=(struct Hook *)GetTagData(AHIR_IntuiMsgFunc,(ULONG)req->IntuiMsgFunc,tags);
+
+  obsolete_userdata = GetTagData( AHIR_ObsoleteUserData, 0, tags );
+  req->Req.ahiam_ObsoleteUserData[ 0 ] = obsolete_userdata >> 16;
+  req->Req.ahiam_ObsoleteUserData[ 1 ] = obsolete_userdata & 0xffff;
+
   req->Req.ahiam_UserData=(void *)GetTagData(AHIR_UserData,(ULONG)req->Req.ahiam_UserData,tags);
   req->TextAttr=(struct TextAttr *)GetTagData(AHIR_TextAttr,(ULONG)req->TextAttr,tags);
   req->Locale=(struct Locale *)GetTagData(AHIR_Locale,(ULONG)req->Locale,tags);
@@ -405,7 +420,7 @@ static BOOL LayOutReq (struct AHIAudioModeRequesterExt *req, struct TextAttr *Te
           GTSL_LevelFormat, (ULONG) FREQTEXT2,
           GTSL_MaxLevelLen,FREQLEN2,
           GTSL_LevelPlace,PLACETEXT_RIGHT,
-          GTSL_DispFunc, (ULONG) IndexToFrequency,
+          GTSL_DispFunc, (ULONG) m68k_IndexToFrequency,
           GA_RelVerify,TRUE,
           GA_Disabled,!sliderlevels || (req->tempAudioID == AHI_DEFAULT_ID),
           TAG_DONE);
@@ -423,7 +438,7 @@ static BOOL LayOutReq (struct AHIAudioModeRequesterExt *req, struct TextAttr *Te
     gad=CreateGadget(LISTVIEW_KIND,gad,&ng,
         GTLV_ScrollWidth,(fontwidth>8 ? fontwidth*2 : 18),
         GTLV_Labels, (ULONG) req->list,
-        GTLV_ShowSelected,NULL,
+        GTLV_ShowSelected,0,
         ((selected == ~0) || (GadToolsBase->lib_Version >= 39) ? TAG_IGNORE : GTLV_Top),selected,
         (selected == ~0 ? TAG_IGNORE : GTLV_MakeVisible),selected,
         GTLV_Selected,selected,
@@ -842,7 +857,7 @@ static void UpdateInfoWindow( struct AHIAudioModeRequesterExt *req )
         id);
     AddTail((struct List *) &req->InfoList,(struct Node *) &req->AttrNodes[i]);
     Sprintf(req->AttrNodes[i++].text, GetString(msgReqInfoResolution, req->Catalog),
-        bits, GetString((stereo ?
+        bits, (ULONG) GetString((stereo ?
           (pan ? msgReqInfoStereoPan : msgReqInfoStereo) :
           msgReqInfoMono), req->Catalog));
     AddTail((struct List *) &req->InfoList,(struct Node *) &req->AttrNodes[i]);
@@ -942,9 +957,9 @@ static void CloseInfoWindow( struct AHIAudioModeRequesterExt *req )
 *
 */
 
-struct AHIAudioModeRequester * ASMCALL
-AllocAudioRequestA( REG(a0, struct TagItem *tags),
-                    REG(a6, struct AHIBase *AHIBase) )
+struct AHIAudioModeRequester*
+AllocAudioRequestA( struct TagItem* tags,
+                    struct AHIBase* AHIBase )
 {
   struct AHIAudioModeRequesterExt *req;
 
@@ -972,7 +987,7 @@ AllocAudioRequestA( REG(a0, struct TagItem *tags),
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {
-    KPrintF("=>0x%08lx\n",req);
+    KPrintF("=>0x%08lx\n", (ULONG) req);
   }
 
   return (struct AHIAudioModeRequester *) req;
@@ -1160,15 +1175,15 @@ AllocAudioRequestA( REG(a0, struct TagItem *tags),
 *
 */
 
-ULONG ASMCALL 
-AudioRequestA( REG(a0, struct AHIAudioModeRequester *req_in),
-               REG(a1, struct TagItem *tags ),
-               REG(a6, struct AHIBase *AHIBase) )
+ULONG
+AudioRequestA( struct AHIAudioModeRequester* req_in,
+               struct TagItem*               tags,
+               struct AHIBase*               AHIBase )
 {
   struct AHIAudioModeRequesterExt *req=(struct AHIAudioModeRequesterExt *)req_in;
   struct MinList list;
   struct IDnode *node = NULL, *node2 = NULL;
-  ULONG screenTag=TAG_IGNORE,screenData = NULL ,id=AHI_INVALID_ID;
+  ULONG screenTag=TAG_IGNORE,screenData = 0 ,id=AHI_INVALID_ID;
   BOOL  rc=TRUE;
   struct Requester lockreq;
   BOOL  locksuxs = FALSE;
@@ -1247,7 +1262,7 @@ AudioRequestA( REG(a0, struct AHIAudioModeRequester *req_in),
       if(!TestAudioID(AHIBase->ahib_AudioMode,req->FilterTags))
         continue;
     if(req->FilterFunc)
-      if(!CallHookPkt(req->FilterFunc,req,(APTR)id))
+      if(!CallHookPkt(req->FilterFunc,req,(APTR)AHIBase->ahib_AudioMode))
         continue;
 
     if((node=AllocVec(sizeof(struct IDnode),MEMF_ANY)))
@@ -1317,7 +1332,7 @@ AudioRequestA( REG(a0, struct AHIAudioModeRequester *req_in),
     WA_Activate,TRUE,
     WA_SimpleRefresh,TRUE,
     WA_AutoAdjust,TRUE,
-    WA_IDCMP,(req->Flags & ownIDCMP ? NULL : MY_IDCMPS),
+    WA_IDCMP,(req->Flags & ownIDCMP ? 0 : MY_IDCMPS),
     WA_NewLookMenus, TRUE,
     TAG_DONE);
 
@@ -1472,7 +1487,7 @@ AudioRequestA( REG(a0, struct AHIAudioModeRequester *req_in),
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {
-    KPrintF("=>%s\n",rc ? "TRUE" : "FALSE" );
+    KPrintF("=>%s\n",rc ? (ULONG) "TRUE" : (ULONG) "FALSE" );
   }
   return (ULONG) rc;
 }
@@ -1517,9 +1532,9 @@ AudioRequestA( REG(a0, struct AHIAudioModeRequester *req_in),
 *
 */
 
-void ASMCALL 
-FreeAudioRequest( REG(a0, struct AHIAudioModeRequester *req),
-                  REG(a6, struct AHIBase *AHIBase) )
+void
+FreeAudioRequest( struct AHIAudioModeRequester* req,
+                  struct AHIBase*               AHIBase )
 {
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)

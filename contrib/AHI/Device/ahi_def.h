@@ -2,7 +2,7 @@
 
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,38 +20,10 @@
      MA 02139, USA.
 */
 
-#ifndef _AHI_DEF_H_
-#define _AHI_DEF_H_
+#ifndef ahi_ahi_def_h
+#define ahi_ahi_def_h
 
-/*** Debug stuff ***/
-
-extern void KPrintF(char *fmt,...);
-extern void kprintf(char *fmt,...);
-#define HIT {char *a=0; *a=0;}
-
-/*** Processor identification ****/
-
-#ifdef mc68020
-# define MC68020_PLUS
-#endif
-
-#ifdef mc68030
-# define MC68020_PLUS
-# define MC68030_PLUS
-#endif
-
-#ifdef mc68040
-# define MC68020_PLUS
-# define MC68030_PLUS
-# define MC68040_PLUS
-#endif
-
-#ifdef mc68060
-# define MC68020_PLUS
-# define MC68030_PLUS
-# define MC68040_PLUS
-# define MC68060_PLUS
-#endif
+#include <config.h>
 
 /*** AHI include files ***/
 
@@ -229,14 +201,14 @@ struct AHIPrivAudioCtrl
   struct AHIChannelData*     ahiac_WetList;
   struct AHIChannelData*     ahiac_DryList;
   UBYTE                      ahiac_WetOrDry;
-  UBYTE                      ahiac_MaxCPU;
+  UBYTE                      ahiac_Pad;
   UWORD                      ahiac_Channels2;       /* Max virtual channels/hw channel */
   struct Timer               ahiac_Timer;
   UWORD                      ahiac_UsedCPU;
-  UWORD                      ahiac_Pad;
+  UWORD                      ahiac_MaxCPU;
   struct PowerPCContext*     ahiac_PowerPCContext;
   char                       ahiac_DriverName[ 256 ];
 };
 
 
-#endif /* AHI_DEF_H_ */
+#endif /* ahi_ahi_def_h */

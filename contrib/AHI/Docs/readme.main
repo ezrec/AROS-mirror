@@ -7,7 +7,7 @@ TITLE
 
 VERSION
 
-     Release 4
+     Release AHIVERSION
 
 AUTHOR
 
@@ -22,24 +22,17 @@ DESCRIPTION
      'AHI audio system' or just 'AHI', never 'Audio Hardware
      Interface'! 'AHI' is pronounced 'atchii', as in 'God bless!'.)
 
-     Starting with version 3 of AHI, the MC68000 processor is also supported.
-     However, many features are lacking:
-
-     · Very limited volime control when using 16 bit samples
-     · No HiFi mixing routines are available.
-     · No stereo samples
-     · No DSP effects are available.
-     · Less precision on some calculations
-     · Slower
-
-     As you can see, this version is very primitive.  Get yourself an
-     accelerator!  I cannot guarantee that I will continue to support this
-     processor in the future.
-
      AHI now supports the PowerPC processor. Thanks to the users who
      donated money and Syscom & Mematex AB who sponsored the hardware,
      I was finally able you buy a Cyberstorm PPC card. The current
-     version is of PowerUp only, but a WarpUp version will follow later.
+     version is for MorphOS only, but a WarpUp version will hopefully
+     follow later.
+
+     Version AHIVERSION supports 68020, 68030, 68040 and 68060 from
+     the m68k family and 603 and 604 from the PowerPC family.
+
+     Staring with version 5, the 68000 processor is no longer supported.
+     68000 owners should use version 4 instead.
 
      Quick overview
      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -66,15 +59,16 @@ DESCRIPTION
      · Toccata
      · Wavetools
      · 8SVX (mono) and AIFF/AIFC (mono & stereo) sample render
+     · ...and more.
 
      * Fast, powerful mixing routines (yeah, right... haha)
 
      The device's mixing routines mix 8- or 16-bit signed samples, both
-     mono and stereo, located in Fast-RAM and outputs 16-bit mono or stereo
+     mono and stereo, located in Fast-RAM and outputs 32-bit mono or stereo
      (with stereo panning if desired) data, using any number of channels
-     (as long as 'any' means less than 128...).  Tables can be used speed
-     the mixing up (especially when using 8-bit samples).  The samples can
-     have any length (including odd) and can have any number of loops.
+     (as long as 'any' means less than 128...).  Tables are no longer
+     used, which might affect performace slightly. Instead, version 5
+     forcuses slightly more on the quality of the sound.
      
      * Support for non-realtime mixing
 
@@ -107,31 +101,30 @@ DESCRIPTION
      using 'ahi.device' to automatically use the new OS interface. At
      least I hope it wont.
 
+     Funny how things turned out, isn't it? Sigh.
+
 SPECIAL REQUIREMENTS
 
      AmigaOS release 2.
-     MC68020 processor or better strongly recommended.
+     MC68020 processor or better.
 
 AVAILABILITY
 
      Aminet, for example:
-     ftp://ftp.germany.aminet.org/pub/aminet/dev/misc/ahidev.lha
-     ftp://ftp.germany.aminet.org/pub/aminet/mus/misc/ahiusr.lha
+     ftp://ftp.germany.aminet.org/pub/aminet/dev/misc/ahi6dev.lha
+     ftp://ftp.germany.aminet.org/pub/aminet/dev/misc/ahi6src.lha
+     ftp://ftp.germany.aminet.org/pub/aminet/mus/misc/ahi6usr.lha
 
      WWW:
      http://www.lysator.liu.se/~lcs/ahi.html
 
 PRICE
 
-     Free. But if you use it in a shareware of commercial product,
-     I would like a registered copy for me and each of the audio driver
-     authors (this is merely a wish, you don't have to do it if you don't
-     think we deserve it). See the AHI User's Guide for more information.
-
-     Please note that the PowerPC-version is shareware.
+     Free.
 
 DISTRIBUTABILITY
 
-     Copyright ©1994-1999 Martin Blom.
-     Freely distributable in unmodified form.
-     See the AHI User's Guide for more information.
+     Copyright ©1994-2003 Martin Blom.
+
+     AHI version 5+ is (L)GPL:ed. See COPYING and COPYING.LIB inside the
+     archive for more information.
