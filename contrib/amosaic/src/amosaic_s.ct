@@ -1,0 +1,390 @@
+## version $VER: mosaic.catalog 1.0
+## language svenska
+## codeset 0
+MSG_MENU_PROJECT
+Projekt
+;Project
+MSG_MENU_OPEN_URL
+Öppna URL...
+;Open URL...
+MSG_MENU_OPEN_URL_SC
+Ö
+;O
+MSG_MENU_OPEN_LOCAL
+Öppna lokalt dokument...
+;Open Local...
+MSG_MENU_OPEN_LOCAL_SC
+L
+;L
+MSG_MENU_RELOAD_CURRENT
+Återladda nuv. dokument
+;Reload Current
+MSG_MENU_RELOAD_CURRENT_SC
+Å
+;R
+MSG_MENU_REFRESH_CURRENT
+Uppdatera nuv. dokument
+;Refresh Current
+MSG_MENU_URL_TO_CLIPBOARD
+Kopiera URL till klippbordet
+;Copy URL to clipboard
+MSG_MENU_URL_TO_CLIPBOARD_SC
+C
+;C
+MSG_MENU_CLIPBOARD_TO_URL
+Sätt in URL från klippbordet
+;Paste clipboard to URL
+MSG_MENU_CLIPBOARD_TO_URL_SC
+V
+;V
+MSG_MENU_FIND_IN_CURRENT
+Sök...
+;Find in Current...
+MSG_MENU_FIND_IN_CURRENT_SC
+F
+;/
+MSG_MENU_VIEW_SOURCE
+Visa dokumentkoden
+;View Source...
+MSG_MENU_VIEW_SOURCE_SC
+V
+;S
+MSG_MENU_SAVE_AS
+Spara Som...
+;Save As...
+MSG_MENU_SAVE_AS_SC
+A
+;A
+MSG_MENU_PRINT
+Skriv ut...
+;Print...
+MSG_MENU_PRINT_SC
+P
+;P
+MSG_MENU_ABOUT
+Om...
+;About...
+MSG_MENU_ABOUT_SC
+?
+;?
+MSG_MENU_QUIT
+Avsluta
+;Quit
+MSG_MENU_QUIT_SC
+Q
+;Q
+MSG_MENU_EDIT
+Editera
+;Edit
+MSG_MENU_COPY
+Kopiera
+;Copy
+MSG_MENU_COPY_SC
+ 
+; 
+MSG_MENU_OPTIONS
+Tillval
+;Options
+MSG_MENU_LOAD_TO_DISK
+Ladda till lokal disk
+;Load To Local Disk
+MSG_MENU_LOAD_TO_DISK_SC
+P
+;T
+MSG_MENU_DELAY_IMAGE_LOADING
+Fördröj bildladdning
+;Delay Image Loading
+MSG_MENU_DELAY_IMAGE_LOADING_SC
+D
+;D
+MSG_MENU_LOAD_IMAGES
+Ladda bilder i dokumentet
+;Load Images In Current
+MSG_MENU_LOAD_IMAGES_SC
+I
+;I
+MSG_MENU_ISINDEX_TO_FORM
+Isindex -> Form
+;Isindex -> Form
+MSG_MENU_BUTTONS
+Knappar
+;Buttons
+MSG_MENU_TEXT_ONLY
+Bara text
+;Text only
+MSG_MENU_TEXT_ONLY_SC
+-
+;-
+MSG_MENU_IMAGES_ONLY
+Bara bilder
+;Images only
+MSG_MENU_IMAGES_ONLY_SC
+=
+;=
+MSG_MENU_IMAGES_AND_TEXT
+Både bider och text
+;Images & Text
+MSG_MENU_IMAGES_AND_TEXT_SC
+\x5C
+;\x5C
+MSG_MENU_FLUSH_IMAGE_CACHE
+Töm bild-cache
+;Flush Image Cache
+MSG_MENU_FLUSH_IMAGE_CACHE_SC
+I
+;X
+MSG_MENU_CLEAR_GLOBAL_HISTORY
+Sudda historyn
+;Clear Global History
+MSG_MENU_CLEAR_GLOBAL_HISTORY_SC
+G
+;G
+MSG_MENU_NAVIGATE
+Navigera
+;Navigate
+MSG_MENU_BACK
+Tillbaka
+;Back
+MSG_MENU_BACK_SC
+B
+;B
+MSG_MENU_FORWARD
+Framåt
+;Forward
+MSG_MENU_FORWARD_SC
+F
+;F
+MSG_MENU_HOME_DOCUMENT
+Hemdokument
+;Home Document
+MSG_MENU_HOME_DOCUMENT_SC
+H
+;H
+MSG_MENU_WINDOW_HISTORY
+Fönster history
+;Window History
+MSG_MENU_WINDOW_HISTORY_SC
+H
+;W
+MSG_MENU_HOTLIST
+Hotlist...
+;Hotlist... (rexx)
+MSG_MENU_HOTLIST_SC
+J
+;J
+MSG_MENU_ADD_HOTLIST
+Addera nuv. dokument till Hotlist
+;Add Current To Hotlist (rexx)
+MSG_MENU_ADD_HOTLIST_SC
+E
+;E
+MSG_MENU_REXX
+Rexx
+;Rexx
+MSG_MENU_MACRO
+Makro
+;Macro
+MSG_MENU_MACRO_SC
+M
+;M
+MSG_GADGET_TITLE
+Titel:
+;Title:
+MSG_GADGET_URL
+URL:
+;URL:
+MSG_HOTLIST_ADD
+Addera
+;Add
+MSG_HOTLIST_NEW
+Ny...
+;New...
+MSG_HOTLIST_DELETE
+Radera
+;Delete
+MSG_HOTLIST_EDIT
+Editera...
+;Edit...
+MSG_HOTLIST_SORT
+Sortera
+;Sort
+MSG_HOTLIST_MOVE
+Flytta
+;Move
+MSG_HOTLIST_PARENT
+Moder
+;Parent
+MSG_HOTLIST_EDITGROUP_TITLE
+Editera hotlist grupp post
+;Edit hotlist group entry
+MSG_HOTLIST_GROUP_DEFAULTNAME
+(Namnlöst)
+;(Unnamed)
+MSG_HOTLIST_EDIT_WINDOW_TITLE
+Editera hotlist post
+;Edit hotlist entry
+MSG_HOTLIST_EDIT_TITLE
+Titel:
+;Title:
+MSG_HOTLIST_EDIT_URL
+URL:
+;URL:
+MSG_HOTLIST_EDIT_OK
+_Ok
+;_Ok
+MSG_HOTLIST_EDIT_CANCEL
+_Avbryt
+;_Cancel
+MSG_BUTTON_BACK
+Tillbaka
+;Back
+MSG_BUTTON_BACK_SC
+b
+;b
+MSG_BUTTON_FORWARD
+Framåt
+;Forward
+MSG_BUTTON_FORWARD_SC
+f
+;f
+MSG_BUTTON_RELOAD
+Återladda
+;Reload
+MSG_BUTTON_RELOAD_SC
+å
+;r
+MSG_BUTTON_HOME
+Hemsida
+;Home
+MSG_BUTTON_HOME_SC
+h
+;h
+MSG_BUTTON_OPEN
+Öppna
+;Open...
+MSG_REQ_URL_TITLE
+Öppna dokument
+;Open Document
+MSG_REQ_URL_URL
+URL:
+;URL To Open:
+MSG_REQ_URL_OPEN
+_Öppna
+;_Open
+MSG_REQ_URL_CLEAR
+_Sudda
+;C_lear
+MSG_REQ_URL_CANCEL
+_Avbryt
+;_Cancel
+MSG_WIN_SOURCE_TITLE
+Dokumentkod
+;Document_Source
+MSG_REQ_FINDRESULT_TITLE
+Amiga Mosaic: Sökreslutat
+;Amiga Mosaic: Find Result
+MSG_REQ_FINDRESULT_NO_MATCHES
+Inga poster funna i detta dokument.
+;Sorry, no matches in this document.
+MSG_REQ_FINDRESULT_NO_MORE_MATCHES
+Inga fler poster funna i detta dokument.
+;Sorry, no more matches in this document.
+MSG_REQ_FINDRESULT_OK
+_Ok
+;_Ok
+MSG_REQ_FIND_TITLE
+Sök i dokument
+;Find in Document
+MSG_REQ_FIND_STRING
+Sök sträng i dokument
+;Find string in document:
+MSG_REQ_FIND_CASELESS
+Ignorere VERSALER/gemena
+;Caseless search:
+MSG_REQ_FIND_BACKWARDS
+Sök baklänges
+;Backwards search:
+MSG_REQ_FIND_FIND
+_Sök
+;_Find
+MSG_REQ_FIND_CLEAR
+_Radera
+;C_lear
+MSG_REQ_FIND_CANCEL
+_Avbryt
+;_Cancel
+MSG_REQ_SAVE_FILEREQ_TITLE
+Spara som
+;Save as...
+MSG_REQ_SAVE_FILEREQ_POSTEXT
+Spara
+;Save
+MSG_REQ_SAVE_TITLE
+Spara dokument
+;Save Document
+MSG_REQ_SAVE_FILEFORMAT
+Filformat:
+;File format:
+MSG_REQ_SAVE_FILEFORMAT_PLAIN
+Vanlig text
+;Plain Text
+MSG_REQ_SAVE_FILEFORMAT_FORMATTED
+Formaterad text
+;Formatted Text
+MSG_REQ_SAVE_FILEFORMAT_HTML
+HTML
+;HTML
+MSG_REQ_SAVE_FILE
+Fil att spara:
+;File to save:
+MSG_REQ_SAVE_SAVE
+_Spara
+;_Save
+MSG_REQ_SAVE_CLEAR
+_Raddera
+;C_lear
+MSG_REQ_SAVE_CANCEL
+_Avbryt
+;_Cancel
+MSG_REQ_SAVEBINARY_TITLE
+Spara som...
+;Save as...
+MSG_REQ_SAVEBINARY_POSTEXT
+Spara
+;Save
+MSG_REQ_ABOUT_TITLE
+Om Amiga Mosaic
+;About Amiga Mosaic
+MSG_REQ_ABOUT_OK
+_Ok
+;_Ok
+MSG_REQ_OPEN_LOCAL_TITLE
+Välj Fil
+;Select File
+MSG_REQ_MACRO_TITLE
+Rexx Makro
+;Rexx Macro
+MSG_REQ_MACRO_MACRO
+_Makro:
+;Macro:
+MSG_REQ_MACRO_RUN
+_Exekvera
+;_Run
+MSG_REQ_MACRO_CLEAR
+_Raddera
+;C_lear
+MSG_REQ_MACRO_CANCEL
+_Avbryt
+;_Cancel
+MSG_REQ_MACRO_FILEREQ_TITLE
+Välj skriptfil
+;Select Script
+MSG_REQ_FORM_READY
+Bilderna i nuvarande formsidan har laddats
+;The images in the current form has been loaded
+MSG_REQ_SHOW_THEM
+Visa dem
+;Show them
+MSG_REQ_CONSTRUCTING
+Konstruerar form, var god vänta...
+;Constructing form, please wait...

@@ -1,0 +1,95 @@
+hacke-4{f94sbu}: q less Mail/inbox/1276A less Mail/inbox/1276  Mail/inbox/1276 
+ Mail/inbox/1276  Mail/inbox/1276 t Mail/inbox/1276y Mail/inbox/1276p Mail/inbo
+From owner-amosaic-dev@insti.physics.sunysb.edu Sun May 28 06:05:11 1995
+Return-Path: owner-amosaic-dev@insti.physics.sunysb.edu
+Received: from insti.physics.sunysb.edu (insti.physics.sunysb.edu [129.49.21.11
+0]) by kobra.efd.lth.se (8.6.11/8.6.11) with SMTP id GAA16767 for <f94sbu@efd.l
+th.se>; Sun, 28 May 1995 06:05:08 +0200
+Received: by insti.physics.sunysb.edu (Smail3.1.28.1 #4)
+        id m0sFZap-0007N6a; Sun, 28 May 95 04:04 GMT
+Sender: owner-amosaic-dev@insti.physics.sunysb.edu
+Received: from ALFONZ.BOLTZ.CS.CMU.EDU by insti.physics.sunysb.edu with smtp
+        (Smail3.1.28.1 #4) id m0sFZan-0006sAC; Sun, 28 May 95 00:04 EDT
+Message-Id: <m0sFZan-0006sAC@insti.physics.sunysb.edu>
+To: amosaic-dev@insti.physics.sunysb.edu
+Subject: AMDEV: Latest version
+Reply-to: witbrock@cmu.edu
+Date: Sun, 28 May 95 0:04:10 EDT
+From: mjw@ALFONZ.BOLTZ.CS.CMU.EDU
+Source-Info:  Sender is really mjw@ALFONZ.BOLTZ.CS.CMU.EDU
+Sender: owner-amosaic-dev@insti.physics.sunysb.edu
+Precedence: bulk
+
+
+I've just spent a couple of hours testing out the latest
+version, and I now have a much better list of what does and does not
+work with forms.
+
+First: Cool new things
+    Hotlist - really nice method for handling it. I approve - allowing
+              it to be hierarchical, and to move items up and down
+              would be nice.
+    View Source window being able to stay up and follow along with the
+    browser. Has this always worked.
+    Buttons - cool (would be nice if one had a choice of buttons or
+                   "old style" text.
+    More Boing - nice.
+    Form elt positions almost correct!
+
+  Good work guys!!!
+
+    Any chance of a "Copy URL to clipboard" menu item?
+    the "Reload" button seems to be ignored.
+    (and version numbers are not being reset before upload, which
+     would help (i.e. this version 14.1005 thinks it is 14.995))
+
+Re forms:
+ I went through the examples in:
+   http://www.ncsa.uiuc.edu/SDG/Software/Mosaic/Docs/fill-out-forms/overview.ht
+ml
+
+Here are my notes:
+  
+   1) Scrolling still doesn't have any effect (as noted by stefan)
+   2) It looks as if escaping of special chars "%$&" etc isn't
+     done. Needs checking.
+   4) Checkboxes do not have the right value sent. They get random
+      garbage.
+   5) When there is a single text entry field on a form, hitting
+      return is supposed to submit the form (this is really
+      stupid). This doesn't happen. If you do this (you have to for
+      ISINDEX, anyway) make sure that it only happens if there are
+      not, e.g. checkboxes on the form along with the text entry.
+   10) *IMPORTANT* forms using method=GET (the default, unless POST is
+       specified) don't work at all. Garbage is submitted.
+
+   11) Clicking on delayed images to load them messes up gadget
+       positions.  Some (all?) images seem to be delayed even when
+       delayed loading is switched off.
+   12) Looks like Stefan forgot to add in a text gadget at ISINDEX
+       after taking away the UI elt. See note 5) too.
+
+
+   3) Form elt positions are a few pixels higher than (I think) they
+      should be.  It looks as if they are based at the text base line. I
+      think the text in them should be aligned with the text baseline (i.e
+      the text gadgets should be based at textbase + border width or something.
+   6) When you "go back" to a filled out form, the contents should be
+      preserved. They aren't.
+   7) Reset buttons don't work (should set form to defaults)
+   8) Neither do "clear" buttons.
+   9) Multiple line text elements don't let you type in them. Also,
+     the [E] button tries to start the wrong program (or has the wrong
+     path, or something) on my machine. Needs to have some whay to
+     configure the action of the E button in mosaic prefs.
+
+
+
+
+That's it. If these are fixed, we'll be almost ready for release.
+(need to integrate the AS225 stuff, and get some beta test done).
+
+
+
+
+hacke-4{f94sbu}: 

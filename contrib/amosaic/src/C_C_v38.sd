@@ -1,0 +1,69 @@
+##stringtype C
+##shortstrings
+/****************************************************************
+   This file was created automatically by `FlexCat V1.0'
+   Do NOT edit by hand!
+****************************************************************/
+
+#include "%b_cat.h"
+#include <proto/locale.h>
+
+static LONG %b_Version = %v;
+static const STRPTR %b_BuiltInLanguage = (STRPTR) %l;
+
+struct FC_Type
+{   LONG   ID;
+    STRPTR Str;
+};
+
+
+static const struct FC_Type %b_Array [] =
+{
+    %i, (STRPTR) %s,
+};
+
+
+static struct Catalog *%b_Catalog = NULL;
+
+void Open%bCatalog(struct Locale *loc, STRPTR language)
+{ LONG tag, tagarg;
+  extern struct Library *LocaleBase;
+
+  if (language == NULL)
+  { tag = TAG_IGNORE;
+  }
+  else
+  { tag = OC_Language;
+    tagarg = (LONG) language;
+  }
+  if (LocaleBase != NULL  &&  %b_Catalog == NULL)
+  { %b_Catalog = OpenCatalog(loc, (STRPTR) "%b.catalog",
+			     OC_BuiltInLanguage, %b_BuiltInLanguage,
+			     tag, tagarg,
+			     OC_Version, %b_Version,
+			     TAG_DONE);
+  }
+}
+
+void Close%bCatalog(void)
+{ if (LocaleBase != NULL)
+  { CloseCatalog(%b_Catalog);
+  }
+  %b_Catalog = NULL;
+}
+
+STRPTR Get%bString(LONG strnum)
+{ STRPTR defaultstr = NULL;
+  LONG i;
+
+  for (i = 0;  i < sizeof(%b_Array)/sizeof(struct FC_Type);  i++)
+    { if (%b_Array[i].ID == strnum)
+      { defaultstr = %b_Array[i].Str;
+	break;
+      }
+    }
+  if (%b_Catalog == NULL)
+  { return(defaultstr);
+  }
+  return(GetCatalogStr(%b_Catalog, strnum, defaultstr));
+}

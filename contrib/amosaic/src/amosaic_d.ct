@@ -1,0 +1,390 @@
+## version $VER: amosaic.catalog 1.0
+## language deutsch
+## codeset 0
+MSG_MENU_PROJECT
+Projekt
+;Project
+MSG_MENU_OPEN_URL
+URL Öffnen...
+;Open URL...
+MSG_MENU_OPEN_URL_SC
+O
+;O
+MSG_MENU_OPEN_LOCAL
+Datei öffnen...
+;Open Local...
+MSG_MENU_OPEN_LOCAL_SC
+D
+;L
+MSG_MENU_RELOAD_CURRENT
+Seite nochmal laden
+;Reload Current
+MSG_MENU_RELOAD_CURRENT_SC
+N
+;R
+MSG_MENU_REFRESH_CURRENT
+Seite neu aufbauen
+;Refresh Current
+MSG_MENU_URL_TO_CLIPBOARD
+URL in Clipboard kopieren
+;Copy URL to clipboard
+MSG_MENU_URL_TO_CLIPBOARD_SC
+C
+;C
+MSG_MENU_CLIPBOARD_TO_URL
+
+;Paste clipboard to URL
+MSG_MENU_CLIPBOARD_TO_URL_SC
+
+;V
+MSG_MENU_FIND_IN_CURRENT
+Finden...
+;Find in Current...
+MSG_MENU_FIND_IN_CURRENT_SC
+F
+;/
+MSG_MENU_VIEW_SOURCE
+Quelltext ansehen...
+;View Source...
+MSG_MENU_VIEW_SOURCE_SC
+T
+;S
+MSG_MENU_SAVE_AS
+Speichern als...
+;Save As...
+MSG_MENU_SAVE_AS_SC
+A
+;A
+MSG_MENU_PRINT
+Drucken...
+;Print...
+MSG_MENU_PRINT_SC
+
+;P
+MSG_MENU_ABOUT
+Über...
+;About...
+MSG_MENU_ABOUT_SC
+?
+;?
+MSG_MENU_QUIT
+Beenden
+;Quit
+MSG_MENU_QUIT_SC
+Q
+;Q
+MSG_MENU_EDIT
+Bearbeiten
+;Edit
+MSG_MENU_COPY
+Kopieren
+;Copy
+MSG_MENU_COPY_SC
+C
+; 
+MSG_MENU_OPTIONS
+Optionen
+;Options
+MSG_MENU_LOAD_TO_DISK
+Auf Diskette speichern
+;Load To Local Disk
+MSG_MENU_LOAD_TO_DISK_SC
+P
+;T
+MSG_MENU_DELAY_IMAGE_LOADING
+Bilder nachträglich laden
+;Delay Image Loading
+MSG_MENU_DELAY_IMAGE_LOADING_SC
+I
+;D
+MSG_MENU_LOAD_IMAGES
+Bilder in Seite laden
+;Load Images In Current
+MSG_MENU_LOAD_IMAGES_SC
+
+;I
+MSG_MENU_ISINDEX_TO_FORM
+Isindex -> Form
+;Isindex -> Form
+MSG_MENU_BUTTONS
+Schalter
+;Buttons
+MSG_MENU_TEXT_ONLY
+Text
+;Text only
+MSG_MENU_TEXT_ONLY_SC
+
+;-
+MSG_MENU_IMAGES_ONLY
+Bilder
+;Images only
+MSG_MENU_IMAGES_ONLY_SC
+
+;=
+MSG_MENU_IMAGES_AND_TEXT
+Text & Bilder
+;Images & Text
+MSG_MENU_IMAGES_AND_TEXT_SC
+
+;\x5C
+MSG_MENU_FLUSH_IMAGE_CACHE
+Bildercache löschen
+;Flush Image Cache
+MSG_MENU_FLUSH_IMAGE_CACHE_SC
+B
+;X
+MSG_MENU_CLEAR_GLOBAL_HISTORY
+Seitencache löschen
+;Clear Global History
+MSG_MENU_CLEAR_GLOBAL_HISTORY_SC
+S
+;G
+MSG_MENU_NAVIGATE
+Navigation
+;Navigate
+MSG_MENU_BACK
+Zurück
+;Back
+MSG_MENU_BACK_SC
+Z
+;B
+MSG_MENU_FORWARD
+Vorwärts
+;Forward
+MSG_MENU_FORWARD_SC
+V
+;F
+MSG_MENU_HOME_DOCUMENT
+Heimatseite
+;Home Document
+MSG_MENU_HOME_DOCUMENT_SC
+H
+;H
+MSG_MENU_WINDOW_HISTORY
+aufgerufene Seiten
+;Window History
+MSG_MENU_WINDOW_HISTORY_SC
+U
+;W
+MSG_MENU_HOTLIST
+Hotlist...
+;Hotlist... (rexx)
+MSG_MENU_HOTLIST_SC
+L
+;J
+MSG_MENU_ADD_HOTLIST
+Seite in Hotlist hinzufügen
+;Add Current To Hotlist (rexx)
+MSG_MENU_ADD_HOTLIST_SC
+E
+;E
+MSG_MENU_REXX
+Rexx
+;Rexx
+MSG_MENU_MACRO
+Makro
+;Macro
+MSG_MENU_MACRO_SC
+M
+;M
+MSG_GADGET_TITLE
+Titel:
+;Title:
+MSG_GADGET_URL
+URL:
+;URL:
+MSG_HOTLIST_ADD
+Hinzuf.
+;Add
+MSG_HOTLIST_NEW
+Neu...
+;New...
+MSG_HOTLIST_DELETE
+Löschen
+;Delete
+MSG_HOTLIST_EDIT
+Editieren...
+;Edit...
+MSG_HOTLIST_SORT
+Sortieren
+;Sort
+MSG_HOTLIST_MOVE
+Bewegen...
+;Move
+MSG_HOTLIST_PARENT
+überg. Gr.
+;Parent
+MSG_HOTLIST_EDITGROUP_TITLE
+Hotlist Gruppeneintrag editieren
+;Edit hotlist group entry
+MSG_HOTLIST_GROUP_DEFAULTNAME
+(Ohne Name)
+;(Unnamed)
+MSG_HOTLIST_EDIT_WINDOW_TITLE
+Hotlist Eintrag editieren
+;Edit hotlist entry
+MSG_HOTLIST_EDIT_TITLE
+Titel:
+;Title:
+MSG_HOTLIST_EDIT_URL
+URL:
+;URL:
+MSG_HOTLIST_EDIT_OK
+_Ok
+;_Ok
+MSG_HOTLIST_EDIT_CANCEL
+_Abbrechen
+;_Cancel
+MSG_BUTTON_BACK
+Zurück
+;Back
+MSG_BUTTON_BACK_SC
+z
+;b
+MSG_BUTTON_FORWARD
+Vorwärts
+;Forward
+MSG_BUTTON_FORWARD_SC
+v
+;f
+MSG_BUTTON_RELOAD
+Nochmal laden
+;Reload
+MSG_BUTTON_RELOAD_SC
+n
+;r
+MSG_BUTTON_HOME
+Heimatseite
+;Home
+MSG_BUTTON_HOME_SC
+h
+;h
+MSG_BUTTON_OPEN
+Öffnen...
+;Open...
+MSG_REQ_URL_TITLE
+Dokument öffnen
+;Open Document
+MSG_REQ_URL_URL
+URL:
+;URL To Open:
+MSG_REQ_URL_OPEN
+_Öffnen
+;_Open
+MSG_REQ_URL_CLEAR
+_Löschen
+;C_lear
+MSG_REQ_URL_CANCEL
+_Abbrechen
+;_Cancel
+MSG_WIN_SOURCE_TITLE
+Dokument Quelltext
+;Document_Source
+MSG_REQ_FINDRESULT_TITLE
+Amiga Mosaic: Suchergebnis
+;Amiga Mosaic: Find Result
+MSG_REQ_FINDRESULT_NO_MATCHES
+Keinen passenden Eintrag in diesem Dokument gefunden.
+;Sorry, no matches in this document.
+MSG_REQ_FINDRESULT_NO_MORE_MATCHES
+Keine weiteren passenden Einträge in diesem Dokument gefunden.
+;Sorry, no more matches in this document.
+MSG_REQ_FINDRESULT_OK
+*_Ok
+;_Ok
+MSG_REQ_FIND_TITLE
+Im Dokument Finden
+;Find in Document
+MSG_REQ_FIND_STRING
+Zu suchender Text:
+;Find string in document:
+MSG_REQ_FIND_CASELESS
+Groß/-Kleinschr. vernachlässigen:
+;Caseless search:
+MSG_REQ_FIND_BACKWARDS
+Rückwärts suchen:
+;Backwards search:
+MSG_REQ_FIND_FIND
+_Finden
+;_Find
+MSG_REQ_FIND_CLEAR
+_Löschen
+;C_lear
+MSG_REQ_FIND_CANCEL
+_Abbrechen
+;_Cancel
+MSG_REQ_SAVE_FILEREQ_TITLE
+Speichern als...
+;Save as...
+MSG_REQ_SAVE_FILEREQ_POSTEXT
+Speichern
+;Save
+MSG_REQ_SAVE_TITLE
+Dokument speichern
+;Save Document
+MSG_REQ_SAVE_FILEFORMAT
+Dateiformat:
+;File format:
+MSG_REQ_SAVE_FILEFORMAT_PLAIN
+einfacher Text
+;Plain Text
+MSG_REQ_SAVE_FILEFORMAT_FORMATTED
+formatierter Text
+;Formatted Text
+MSG_REQ_SAVE_FILEFORMAT_HTML
+HTML
+;HTML
+MSG_REQ_SAVE_FILE
+Datei:
+;File to save:
+MSG_REQ_SAVE_SAVE
+_Speichern
+;_Save
+MSG_REQ_SAVE_CLEAR
+_Löschen
+;C_lear
+MSG_REQ_SAVE_CANCEL
+_Abbrechen
+;_Cancel
+MSG_REQ_SAVEBINARY_TITLE
+Speichern als...
+;Save as...
+MSG_REQ_SAVEBINARY_POSTEXT
+Speichern
+;Save
+MSG_REQ_ABOUT_TITLE
+Über Amiga Mosaic
+;About Amiga Mosaic
+MSG_REQ_ABOUT_OK
+_Ok
+;_Ok
+MSG_REQ_OPEN_LOCAL_TITLE
+Datei auswählen
+;Select File
+MSG_REQ_MACRO_TITLE
+Rexx Makro
+;Rexx Macro
+MSG_REQ_MACRO_MACRO
+Makro:
+;Macro:
+MSG_REQ_MACRO_RUN
+_Starten
+;_Run
+MSG_REQ_MACRO_CLEAR
+_Löschen
+;C_lear
+MSG_REQ_MACRO_CANCEL
+_Abbrechen
+;_Cancel
+MSG_REQ_MACRO_FILEREQ_TITLE
+Rexx-Script auswählen
+;Select Script
+MSG_REQ_FORM_READY
+Die Bilder im aktuellen Form wurden geladen
+;The images in the current form has been loaded
+MSG_REQ_SHOW_THEM
+Zeigen
+;Show them
+MSG_REQ_CONSTRUCTING
+Erstelle Form, bitte warten...
+;Constructing form, please wait...

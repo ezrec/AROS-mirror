@@ -1,0 +1,102 @@
+########################################################################
+#
+# SMakefile for Amiga Mosaic
+#
+#########################################################################
+# Don't forget to look in SCOptions too
+########################################################################
+.c.o:
+		SC $(OPTIONS) OBJNAME=$*.o $*.c
+
+OPTIMIZE	= OPTIMIZE
+#DEBUGOPT	= DEBUG=FULLFLUSH
+
+OPTIONS 	= ANSI $(OPTIMIZE) $(DEBUGOPT)
+
+DEB		= lib:debug.lib
+
+WWWAMITCP	= /libwww2/www.lib
+WWWAS225	= /libwww2/www-as225.lib
+WWWLOCAL	= /libwww2-local/www.lib
+WWWDNET 	= /www-dnet.lib
+
+#HTML		= /libhtmlg/htmlg.lib
+
+NETAMITCP	= //amitcp_30_net.lib
+NETAS225	= as225.o Def _AS225=1
+NETDNET 	= /dnet.lib
+
+INCLUDEFILES	= globals.h HTMLP.h HTMLImgMacro.h HTML.h HTMLamp.h HTMLP.h includes.h protos.h TO_HTML.h BoingTransfer.h NewGroup.h TextEditField.h
+
+OBJS		= locale.o globals.o mui.o fonts.o history.o gui-documents.o globalhist.o gui.o gui-dialogs.o main.o HTML_img.o picread.o rexx.o spinner.o Version.o HTMLamiga.o HTMLlists.o HTMLparse.o HTMLformat.o HTMLimages.o  HTML.o TO_HTML.o BoingTransfer.o NewGroup.o TextEditField.o
+
+amitcp: 	AMosaic_rev.h mosaic.gst Mosaic-amitcp amosaic_cat.h catalogs/deutsch/amosaic.catalog catalogs/svenska/amosaic.catalog
+
+as225:		AMosaic_rev.h mosaic.gst Mosaic-as225
+
+local:		Mosaic-local
+
+dnet:		Mosaic-dnet
+
+AMosaic_rev.h:	gui.h globals.h includes.h Mosaic.h htmlgad.h protos.h spinner.h globals.c mui.c fonts.c history.c gui-documents.c globalhist.c gui.c gui-dialogs.c main.c HTML_img.c picread.c rexx.c spinner.c HTMLamiga.c HTMLlists.c HTMLparse.c HTMLformat.c HTMLimages.c	HTML.c TO_HTML.c TO_HTML.h HTML.h  HTMLamp.h  htmlgad.h  HTMLP.h  TextEditField.c $(WWWAMITCP)
+		echo >> Bump.log "Bumpint $@ because of change in $?"
+		bumprev 14 AMosaic
+
+Version.c:	AMosaic_rev.h
+		sc $@
+
+
+Mosaic-dnet:	$(OBJS) smakefile  $(WWWDNET) mo-www.o socketbase.o
+		SC link pname $@ $(OBJS) mo-www.o socketbase.o lib  $(WWWDNET) $(NETDNET)
+		delete $@.lnk QUIET
+
+Mosaic-amitcp:	$(OBJS) smakefile $(HMTL) $(WWWAMITCP) mo-www.o
+		SC link pname $@ $(OBJS) mo-www.o lib  $(WWWAMITCP) $(NETAMITCP) $(DEB)
+		delete $@.lnk QUIET
+
+Mosaic-as225:	$(OBJS) smakefile  $(WWWAS225) mo-www.o as225.o
+#		SC link pname $@ $(OBJS) mo-www.o  $(NETAS225) $(WWWAS225)
+		SC nodebug stripdebug link pname $@ $(OBJS) mo-www.o  $(NETAS225) $(WWWAS225)
+		delete $@.lnk QUIET
+
+mosaic.gst:	includes.h
+		SC NOVER NOICONS NOOBJNAME IDLEN=68 MAKEGST=$@ includes.c
+
+clean:
+		delete *.o *! mosaic-local mosaic-dnet mosaic-as225 mosaic-amitcp *.lnk FORCE
+
+mo-www-local.o: mo-www-local.c
+		SC incdir=/libwww2-local objname=mo-www-local.o mo-www-local.c
+
+main.o: 	main.c gui.h
+mui.o:		mui.c gui.h
+
+as225.o:	as225.c
+		SC Define _AS225=1 ObjName as225.o as225.c
+
+install:	Mosaic-amitcp
+		-delete bin:local/c/Mosaic
+		slink Mosaic-amitcp to bin:local/c/Mosaic stripdebug
+
+locale.o:	locale.c amosaic_cat.h
+		sc locale.c
+
+amosaic_cat.h:	amosaic.cd
+		flexcat amosaic.cd amosaic_cat.h=c_h.sd
+
+locale.c:	amosaic.cd
+		flexcat amosaic.cd locale.c=c_c_v38.sd
+
+catalogs/deutsch/amosaic.catalog: amosaic_d.ct
+		flexcat amosaic.cd amosaic_d.ct catalog catalogs/deutsch/amosaic.catalog
+		avail flush >NIL:
+
+amosaic_d.ct:	amosaic.cd
+		flexcat amosaic.cd amosaic_d.ct NEWCTFILE amosaic_d.ct
+
+catalogs/svenska/amosaic.catalog: amosaic_s.ct
+		flexcat amosaic.cd amosaic_s.ct catalog catalogs/svenska/amosaic.catalog
+		avail flush >NIL:
+
+amosaic_s.ct:	amosaic.cd
+		flexcat amosaic.cd amosaic_s.ct NEWCTFILE amosaic_s.ct

@@ -1,0 +1,260 @@
+#version 1
+#language english
+MSG_MENU_PROJECT (//)
+Project
+MSG_MENU_OPEN_URL (//)
+Open URL...
+MSG_MENU_OPEN_URL_SC (//1)
+O
+MSG_MENU_OPEN_LOCAL (//)
+Open Local...
+MSG_MENU_OPEN_LOCAL_SC (//1)
+L
+MSG_MENU_RELOAD_CURRENT (//)
+Reload Current
+MSG_MENU_RELOAD_CURRENT_SC (//1)
+R
+MSG_MENU_REFRESH_CURRENT (//)
+Refresh Current
+MSG_MENU_URL_TO_CLIPBOARD (//)
+Copy URL to clipboard
+MSG_MENU_URL_TO_CLIPBOARD_SC (//1)
+C
+MSG_MENU_CLIPBOARD_TO_URL (//)
+Paste clipboard to URL
+MSG_MENU_CLIPBOARD_TO_URL_SC (//1)
+V
+MSG_MENU_FIND_IN_CURRENT (//)
+Find in Current...
+MSG_MENU_FIND_IN_CURRENT_SC (//1)
+/
+MSG_MENU_VIEW_SOURCE (//)
+View Source...
+MSG_MENU_VIEW_SOURCE_SC (//1)
+S
+MSG_MENU_SAVE_AS (//)
+Save As...
+MSG_MENU_SAVE_AS_SC (//1)
+A
+MSG_MENU_PRINT (//)
+Print...
+MSG_MENU_PRINT_SC (//1)
+P
+MSG_MENU_ABOUT (//)
+About...
+MSG_MENU_ABOUT_SC (//1)
+?
+MSG_MENU_QUIT (//)
+Quit
+MSG_MENU_QUIT_SC (//1)
+Q
+MSG_MENU_EDIT (//)
+Edit
+MSG_MENU_COPY (//)
+Copy
+MSG_MENU_COPY_SC (//1)
+ 
+MSG_MENU_OPTIONS (//)
+Options
+MSG_MENU_LOAD_TO_DISK (//)
+Load To Local Disk
+MSG_MENU_LOAD_TO_DISK_SC (//1)
+T
+MSG_MENU_DELAY_IMAGE_LOADING (//)
+Delay Image Loading
+MSG_MENU_DELAY_IMAGE_LOADING_SC (//1)
+D
+MSG_MENU_LOAD_IMAGES (//)
+Load Images In Current
+MSG_MENU_LOAD_IMAGES_SC (//1)
+I
+MSG_MENU_ISINDEX_TO_FORM (//)
+Isindex -> Form
+MSG_MENU_BUTTONS (//)
+Buttons
+MSG_MENU_TEXT_ONLY (//)
+Text only
+MSG_MENU_TEXT_ONLY_SC (//1)
+-
+MSG_MENU_IMAGES_ONLY (//)
+Images only
+MSG_MENU_IMAGES_ONLY_SC (//1)
+=
+MSG_MENU_IMAGES_AND_TEXT (//)
+Images & Text
+MSG_MENU_IMAGES_AND_TEXT_SC (//1)
+\x5C
+MSG_MENU_FLUSH_IMAGE_CACHE (//)
+Flush Image Cache
+MSG_MENU_FLUSH_IMAGE_CACHE_SC (//1)
+X
+MSG_MENU_CLEAR_GLOBAL_HISTORY (//)
+Clear Global History
+MSG_MENU_CLEAR_GLOBAL_HISTORY_SC (//1)
+G
+MSG_MENU_NAVIGATE (//)
+Navigate
+MSG_MENU_BACK (//)
+Back
+MSG_MENU_BACK_SC (//1)
+B
+MSG_MENU_FORWARD (//)
+Forward
+MSG_MENU_FORWARD_SC (//1)
+F
+MSG_MENU_HOME_DOCUMENT (//)
+Home Document
+MSG_MENU_HOME_DOCUMENT_SC (//1)
+H
+MSG_MENU_WINDOW_HISTORY (//)
+Window History
+MSG_MENU_WINDOW_HISTORY_SC (//1)
+W
+MSG_MENU_HOTLIST (//)
+Hotlist... (rexx)
+MSG_MENU_HOTLIST_SC (//1)
+J
+MSG_MENU_ADD_HOTLIST (//)
+Add Current To Hotlist (rexx)
+MSG_MENU_ADD_HOTLIST_SC (//1)
+E
+MSG_MENU_REXX (//)
+Rexx
+MSG_MENU_MACRO (//)
+Macro
+MSG_MENU_MACRO_SC (//1)
+M
+MSG_GADGET_TITLE (//)
+Title:
+MSG_GADGET_URL (//)
+URL:
+MSG_HOTLIST_ADD (//)
+Add
+MSG_HOTLIST_NEW (//)
+New...
+MSG_HOTLIST_DELETE (//)
+Delete
+MSG_HOTLIST_EDIT (//)
+Edit...
+MSG_HOTLIST_SORT (//)
+Sort
+MSG_HOTLIST_MOVE (//)
+Move
+MSG_HOTLIST_PARENT (//)
+Parent
+MSG_HOTLIST_EDITGROUP_TITLE (//)
+Edit hotlist group entry
+MSG_HOTLIST_GROUP_DEFAULTNAME (//)
+(Unnamed)
+MSG_HOTLIST_EDIT_WINDOW_TITLE (//)
+Edit hotlist entry
+MSG_HOTLIST_EDIT_TITLE (//)
+Title:
+MSG_HOTLIST_EDIT_URL (//)
+URL:
+MSG_HOTLIST_EDIT_OK (//)
+_Ok
+MSG_HOTLIST_EDIT_CANCEL (//)
+_Cancel
+MSG_BUTTON_BACK (//)
+Back
+MSG_BUTTON_BACK_SC (//1)
+b
+MSG_BUTTON_FORWARD (//)
+Forward
+MSG_BUTTON_FORWARD_SC (//1)
+f
+MSG_BUTTON_RELOAD (//)
+Reload
+MSG_BUTTON_RELOAD_SC (//1)
+r
+MSG_BUTTON_HOME (//)
+Home
+MSG_BUTTON_HOME_SC (//1)
+h
+MSG_BUTTON_OPEN (//)
+Open...
+MSG_REQ_URL_TITLE (//)
+Open Document
+MSG_REQ_URL_URL (//)
+URL To Open:
+MSG_REQ_URL_OPEN (//)
+_Open
+MSG_REQ_URL_CLEAR (//)
+C_lear
+MSG_REQ_URL_CANCEL (//)
+_Cancel
+MSG_WIN_SOURCE_TITLE (//)
+Document_Source
+MSG_REQ_FINDRESULT_TITLE (//)
+Amiga Mosaic: Find Result
+MSG_REQ_FINDRESULT_NO_MATCHES (//)
+Sorry, no matches in this document.
+MSG_REQ_FINDRESULT_NO_MORE_MATCHES (//)
+Sorry, no more matches in this document.
+MSG_REQ_FINDRESULT_OK (//)
+_Ok
+MSG_REQ_FIND_TITLE (//)
+Find in Document
+MSG_REQ_FIND_STRING (//)
+Find string in document:
+MSG_REQ_FIND_CASELESS (//)
+Caseless search:
+MSG_REQ_FIND_BACKWARDS (//)
+Backwards search:
+MSG_REQ_FIND_FIND (//)
+_Find
+MSG_REQ_FIND_CLEAR (//)
+C_lear
+MSG_REQ_FIND_CANCEL (//)
+_Cancel
+MSG_REQ_SAVE_FILEREQ_TITLE (//)
+Save as...
+MSG_REQ_SAVE_FILEREQ_POSTEXT (//)
+Save
+MSG_REQ_SAVE_TITLE (//)
+Save Document
+MSG_REQ_SAVE_FILEFORMAT (//)
+File format:
+MSG_REQ_SAVE_FILEFORMAT_PLAIN (//)
+Plain Text
+MSG_REQ_SAVE_FILEFORMAT_FORMATTED (//)
+Formatted Text
+MSG_REQ_SAVE_FILEFORMAT_HTML (//)
+HTML
+MSG_REQ_SAVE_FILE (//)
+File to save:
+MSG_REQ_SAVE_SAVE (//)
+_Save
+MSG_REQ_SAVE_CLEAR (//)
+C_lear
+MSG_REQ_SAVE_CANCEL (//)
+_Cancel
+MSG_REQ_SAVEBINARY_TITLE (//)
+Save as...
+MSG_REQ_SAVEBINARY_POSTEXT (//)
+Save
+MSG_REQ_ABOUT_TITLE (//)
+About Amiga Mosaic
+MSG_REQ_ABOUT_OK (//)
+_Ok
+MSG_REQ_OPEN_LOCAL_TITLE (//)
+Select File
+MSG_REQ_MACRO_TITLE (//)
+Rexx Macro
+MSG_REQ_MACRO_MACRO (//)
+Macro:
+MSG_REQ_MACRO_RUN (//)
+_Run
+MSG_REQ_MACRO_CLEAR (//)
+C_lear
+MSG_REQ_MACRO_CANCEL (//)
+_Cancel
+MSG_REQ_MACRO_FILEREQ_TITLE (//)
+Select Script
+MSG_REQ_FORM_READY (//)
+The images in the current form has been loaded
+MSG_REQ_SHOW_THEM (//)
+Show them
+MSG_REQ_CONSTRUCTING (//)
+Constructing form, please wait...
