@@ -200,8 +200,8 @@ int16 RequestScreen(void)
 	CleanExit("No Asl Screen Mode Request\n");
     }
 #else
-    MyScreenTags[0].ti_Data=(256>>5)<<5;
-    MyScreenTags[1].ti_Data=256+64;
+    MyScreenTags[0].ti_Data=320;//(256>>5)<<5;
+    MyScreenTags[1].ti_Data=240;//256+64;
     MyScreenTags[2].ti_Data=8;
     MyScreenTags[3].ti_Data=OSCAN_STANDARD;
     MyScreenTags[4].ti_Data=FALSE;
