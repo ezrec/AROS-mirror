@@ -146,15 +146,7 @@ def makeStatus():
     makedir( dstdir )
 
     tasks  = db.tasks.parse.parse( file( 'db/tasks', 'r' ) )
-    db.tasks.format.html.format( tasks, dstdir )
-
-    for path in os.listdir( dstdir ):
-        strings = {
-            'ROOT'    : '../../',
-            'CONTENT' : file( os.path.join( dstdir, path ), 'r' ).read()
-        }
-        
-        file( os.path.join( dstdir, '_' + path ), 'w' ).write( TEMPLATE_DATA % strings )
+    db.tasks.format.html.format( tasks, dstdir, TEMPLATE_DATA )
        
 
 def makeNews():
@@ -298,8 +290,7 @@ def buildWWW():
     TEMPLATE_DATA = file( TEMPLATE, 'r' ).read()
 
     makePictures()
-
-    #makeStatus()
+    makeStatus()
 
     _src_1 = os.path.join( SRCROOT, 'introduction/index.en' )
     _src_2 = os.path.join( SRCROOT, 'documentation/developers/contribute.en' )
@@ -315,6 +306,8 @@ def buildWWW():
         file( _dst, 'w' ).write( text )
 
     recurse( processWWW )
+
+    copy( '../license.html', DSTROOT )
 
     imagepath = os.path.join( DSTROOT, 'images' ) 
     makedir( imagepath )
