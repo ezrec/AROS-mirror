@@ -142,7 +142,7 @@ articles = (
 )
 
 homepages = (
-    Link ('http://www.lake.de/home/lake/home/', 'Aaron "Optimizer" Digulla'),
+    #Link ('http://www.lake.de/home/lake/home/', 'Aaron "Optimizer" Digulla'),
     Link ('http://www.vmc.de/', 'Harald Frank (VMC)'),
     Link ('http://www.dtek.chalmers.se/~d95duvan/', 'Johan Alfredsson'),
     Link ('http://www.xs4all.nl/~ldp/', 'Lennard voor den Dag'),
@@ -165,14 +165,13 @@ lessRelated = (
 	'"Object Oriented Programming for All". Every none oop language'
 	' which offers support for Amiga Shared Libraries, is now able to'
 	' use objects and can be used to produce new classes.'),
-    Link ('http://www.ninemoons.com/GG/'
-	'Geek Gadgets is an ongoing effort to port Unix tools to non-Unix'
-	' systems led by the famous Fred Fish at',
-	( Href ('http://www.ninemoons.com/', 'Cronus'), ),
+    Link ('http://www.ninemoons.com/GG/', 'Geek Gadgets',
+	( 'Geek Gadgets is an ongoing effort to port Unix tools to non-Unix'
+	  ' systems led by the famous Fred Fish at',
+	  Href ('http://www.ninemoons.com/', 'Cronus'),
+	),
     ),
-    Link ('http://www.openamiga.org/', 'Open Amiga Foundation OAF'),
-    Link ('http://www.satanicdreams.com/scalos/index.html', 'Official Scalos Site'),
-    Link ('http://www.crosswinds.net/~osap/', 'Open Source Amiga Projects'),
+    Link ('http://www.scalos.co.uk/', 'Official Scalos Site'),
     Link ('http://www.mentasm.com/~mramiga/dos1.shtml',
 	'AmigaDOS Online Reference Manual.',
 	(
