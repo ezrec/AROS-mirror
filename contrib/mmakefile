@@ -5,4 +5,5 @@
 
 #MM- contrib-complete : contrib-aminet contrib-fish contrib-games \
 #MM	contrib-misc contrib-demos contrib-dopus contrib-bgui \
-#MM	contrib-rexx contrib-gfx contrib-freetype
+#MM	contrib-rexx contrib-gfx
+#	contrib-freetype
