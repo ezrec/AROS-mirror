@@ -41,13 +41,9 @@ TDFXGL_DIR = /home/zoid/3dfxgl
 BUILD_DEBUG_DIR=debug$(ARCH)$(GLIBC)
 BUILD_RELEASE_DIR=release$(ARCH)$(GLIBC)
 
-EGCS=gcc
-CC=$(EGCS)
+CC=$(AROS_CC)
 
 BASE_CFLAGS=-Dstricmp=strcasecmp
-
-RELEASE_CFLAGS=$(BASE_CFLAGS) -O3 -ffast-math -funroll-loops \
-	-fomit-frame-pointer -fexpensive-optimizations
 
 DEBUG_CFLAGS=$(BASE_CFLAGS) -g
 
