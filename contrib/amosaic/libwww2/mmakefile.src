@@ -43,7 +43,7 @@ FILES := \
 #	HTTCP
 #	HTFile
 
-#MM linklibs : linklib-www2
+#MM- linklibs : linklib-www2
 
 %make_linklib_setup mmake=linklibs-www2
 %make_linklib
