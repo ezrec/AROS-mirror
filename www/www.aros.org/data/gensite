@@ -54,15 +54,16 @@ def genScreenshots ():
     page = PageMeat ('Screenshots', 'screenshots.html')
 
     # First, the pictures of AROS developers, etc.
-    tn1 = Thumbnail ('pics/developers/Digulla-2.jpg')
-    tn2 = Thumbnail ('pics/developers/Digulla-1.jpg')
-    tn3 = Thumbnail ('pics/developers/nlorentz.jpg')
-    tn4 = Thumbnail ('pics/developers/periksson.jpg')
-    tn5 = Thumbnail ('pics/developers/sheutling.jpg')
-    tn6 = Thumbnail ('pics/developers/falemagn.jpg')
-    tn7 = Thumbnail ('pics/developers/hkiel.jpg')
-    tn8 = Thumbnail ('pics/developers/mparsons.jpg')
-    tn9 = Thumbnail ('pics/developers/michael_schulz.jpg')
+    tn1  = Thumbnail ('pics/developers/Digulla-2.jpg')
+    tn2  = Thumbnail ('pics/developers/Digulla-1.jpg')
+    tn3  = Thumbnail ('pics/developers/nlorentz.jpg')
+    tn4  = Thumbnail ('pics/developers/periksson.jpg')
+    tn5  = Thumbnail ('pics/developers/sheutling.jpg')
+    tn6  = Thumbnail ('pics/developers/falemagn.jpg')
+    tn7  = Thumbnail ('pics/developers/hkiel.jpg')
+    tn8  = Thumbnail ('pics/developers/mparsons.jpg')
+    tn9  = Thumbnail ('pics/developers/michael_schulz.jpg')
+    tn10 = Thumbnail ('pics/developers/falemagn2.jpg')
     page.append (
 	Href ('#PicturesAroundAROS', '1. Pictures around AROS'),
 	BR (),
@@ -80,8 +81,8 @@ def genScreenshots ():
 	ThumbnailTable (tn4),
 	Paragraph ('Picture of Sebastian Heutling:'),
 	ThumbnailTable (tn5),
-	Paragraph ('Picture of Fabio Alemagna:'),
-	ThumbnailTable (tn6),
+	Paragraph ('Pictures of Fabio Alemagna:'),
+	ThumbnailTable (tn6, tn10),
 	Paragraph ('Picture of Henning Kiel:'),
 	ThumbnailTable (tn7),
 	Paragraph ('Picture of Matt Parsons:'),
