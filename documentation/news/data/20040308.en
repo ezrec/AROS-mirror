@@ -19,7 +19,7 @@ Michal Schulz has completed the new PCI driver, thus earning the TeamAROS__
 `bounty #10`__. It is hardware independent and currently has linux-i386 and
 pc-i386 (native) drivers. This is a good foundation for the future PCI
 device drivers. He also made a little tool that allows one to browse a list of all
-PCI peripherals attached to the computer. A screenshot can be seen here__.
+PCI peripherals attached to the computer. 
 
 Michal is now working on a nVidia graphics card driver
 (TeamAROS `bounty #9`__). Let's wish him good luck. :)
@@ -35,7 +35,6 @@ on i386, maybe the first step on a long road to SMP support. :)
 
 __ http://thenostromo.com/teamaros/
 __ http://thenostromo.com/teamaros/bounty_details_10.html
-__ http://www.aros.org/pictures/screenshots/20040308/pci.jpeg
 __ http://thenostromo.com/teamaros/bounty_details_9.html
 __ http://www.acpi.info/
 
@@ -57,8 +56,7 @@ fonts render faster. and are actually quite usable now.
 He also added PNG support to the icon.library, which now can use plain 
 PNG images as icons. The format used is the same as MorphOS' or AmigaOS'
 with `PowerIcon patch`__, with a little extension: it also allows to use a 
-PNG image to represent an icon's selected state. A screenshots of this new feature
-can be found here__.
+PNG image to represent an icon's selected state.
 
 David Le Corfect fixed many bugs and visual quirks in Zune. For example, now relayouting a group
 doesn't cause the whole window to relayout, which makes for a much better visual experience.
@@ -68,7 +66,6 @@ window borders if not strictly needed. This, coupled with opaque window moving, 
 
 __ http://www.morphos.net/
 __ http://www.elena-fractals.it/Downloads/PowerIcons.readme
-__ http://www.aros.org/pictures/screenshots/20040308/pngicons+wandererprefs.jpeg
 
 Miscellaneous
 -------------
@@ -120,6 +117,16 @@ Georg Steger, Iain Templeton, Staf Verhaegen and Markus Weiss.
 
 There was a total of 1080 commits, the top 3 committers being
 Adam (250), Fabio (229) and Georg (150).
+
+Screenshots
+-----------
+
+Finally, not even this time we could miss to provide you with a couple 
+of nice screenshots to show off some of the more visually appealing 
+features implemented during the latest months, so here__ they are, 
+enjoy them!
+
+__ http://www.aros.org/pictures/screenshots/#20040308
 
 Conclusion
 ----------
