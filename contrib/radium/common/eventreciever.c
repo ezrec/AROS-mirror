@@ -442,7 +442,7 @@ int EventTreater(struct TEvent *in_tevent,struct Tracker_Windows *window){
 							}else{
 								if(RightExtra(a)){
 									if(RightShift(a)){
-#ifdef _AMIGA
+#ifdef AMIAROS
 										Amiga_ConfigColors();
 #endif
 									}else{

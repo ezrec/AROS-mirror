@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 
 
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 #include <proto/dos.h>		// Temporary solution. This is not portable.
 #endif
 
@@ -63,7 +63,7 @@ void PlayStopReally(bool doit){
 	pc->isplaying=false;
 	pc->initplaying=false;
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 	while(pc->peq!=NULL) Delay(1);	//Amiga-spesific, etc.
 #endif
 

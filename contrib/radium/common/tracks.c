@@ -45,7 +45,7 @@ void NewTrack(struct Blocks *block,struct Tracks *track){
 	track->panonoff=false;
 	track->volumeonoff=true;
 	ListAddElement1(&block->tracks,&track->l);
-#ifdef _AMIGA
+#ifdef AMIAROS
 	(*track->instrument->SelectTrackInstrument)(track,track->instrument);
 #endif
 }
