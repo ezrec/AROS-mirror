@@ -215,7 +215,7 @@ log(unsigned long level, const char *fmt, ...)
   va_end(ap);
 }
 
-ULONG
+int
 vlog(unsigned long level, const char *fmt, va_list ap)
 {
   struct log_msg *msg;
@@ -277,7 +277,7 @@ vlog(unsigned long level, const char *fmt, va_list ap)
 ******************************************************************************
 *
 */
-ULONG 
+int 
 printf(const char *fmt, ...)
 {
 #if 1
@@ -364,7 +364,7 @@ printf(const char *fmt, ...)
 *
 */
 
-ULONG 
+int 
 vcsprintf(struct CSource *cs, const char *fmt, va_list ap)
 {
   ULONG start = cs->CS_CurChr;
@@ -540,7 +540,7 @@ end:
   }
 }
 
-ULONG csprintf(struct CSource *cs, const char *fmt, ...)
+int csprintf(struct CSource *cs, const char *fmt, ...)
 {
   va_list ap;
   ULONG len;
@@ -551,7 +551,7 @@ ULONG csprintf(struct CSource *cs, const char *fmt, ...)
   return len;
 }
 
-ULONG vsprintf(char *buf, const char *fmt, va_list ap)
+int vsprintf(char *buf, const char *fmt, va_list ap)
 {
   struct CSource cs;
 
@@ -562,7 +562,7 @@ ULONG vsprintf(char *buf, const char *fmt, va_list ap)
   return vcsprintf(&cs, fmt, ap);
 }
 
-ULONG sprintf(char *buf, const char *fmt, ...)
+int sprintf(char *buf, const char *fmt, ...)
 {
   va_list ap;
   ULONG len;

@@ -109,12 +109,12 @@ _remque(register struct queue_node *node)
 void cs_putchar(unsigned char, struct CSource *);
 void panic(const char *, ...);
 void log(unsigned long, const char *, ...);
-unsigned long vlog(unsigned long, const char *, va_list);
-unsigned long printf(const char *, ...);
-unsigned long sprintf(char * buf, const char * fmt, ...);
-unsigned long csprintf(struct CSource* buf, const char * fmt, ...);
-unsigned long vsprintf(char * buf, const char * fmt, va_list);
-unsigned long vcsprintf(struct CSource* buf, const char * fmt, va_list);
+int vlog(unsigned long, const char *, va_list);
+int printf(const char *, ...);
+int sprintf(char * buf, const char * fmt, ...);
+int csprintf(struct CSource* buf, const char * fmt, ...);
+int vsprintf(char * buf, const char * fmt, va_list);
+int vcsprintf(struct CSource* buf, const char * fmt, va_list);
 char * csprintn(u_long n, int base, char *buf, int buflen);
 int  ultoa(unsigned long ul, char *buffer);
 int  ltoa(long l, char *buffer);
