@@ -16,7 +16,7 @@
 #include <proto/locale.h>
 
 
-struct Library   *LocaleBase = NULL;
+struct LocaleBase   *LocaleBase = NULL;
 
 static struct LocaleInfo   li;
 
