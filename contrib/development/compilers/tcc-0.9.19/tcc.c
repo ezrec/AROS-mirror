@@ -9222,9 +9222,13 @@ TCCState *tcc_new(void)
     tcc_define_symbol(s, "__linux__", NULL);
     tcc_define_symbol(s, "linux", NULL);
 #endif
+#if defined(__AROS__)
+    tcc_define_symbol(s, "__AROS__", NULL);
+#endif
+
     /* tiny C specific defines */
     tcc_define_symbol(s, "__TINYC__", NULL);
-
+    
     /* tiny C & gcc defines */
     tcc_define_symbol(s, "__SIZE_TYPE__", "unsigned int");
     tcc_define_symbol(s, "__PTRDIFF_TYPE__", "int");
