@@ -107,7 +107,7 @@ struct Gadget target1 = {
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
   NULL,0L,NULL,target1_ID,NULL };
 
-char stoptext[5]="----";
+char stoptext[5]="Stop";
 struct IntuiText Stop_text = {
   1,0,JAM1,27,13,NULL,(UBYTE *)stoptext,NULL };
 

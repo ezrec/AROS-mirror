@@ -148,9 +148,8 @@ int i;
       ReplyMsg((struct Message *)msg);
       updatebuttons();
     }
-    sprintf(starttext,"-----");
-    sprintf(stoptext,"Stop");
-    RefreshGList(FIRSTGADGET,Window,NULL,20);
+    OffGadget(&Start,Window,NULL);
+    OnGadget(&Stop,Window,NULL);
     go_on=0;
 /* play until match or stop */
     while(go_on==0&&quit_game==0&&(test()==0))
@@ -247,9 +246,8 @@ int i;
       ReplyMsg((struct Message *)msg);
       updatebuttons();
     }
-    sprintf(starttext,"Start");
-    sprintf(stoptext,"----");
-    RefreshGList(FIRSTGADGET,Window,NULL,20);
+    OffGadget(&Stop,Window,NULL);
+    OnGadget(&Start,Window,NULL);
   }
 /* game terminated - clean up */
   close_window();
