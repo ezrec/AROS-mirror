@@ -1,7 +1,9 @@
 include $(TOP)/config/make.cfg
 
 FILES := Quad
-EXES := $(CONTRIBDIR)/Games/Kiel/Quad
+DESTDIR :=$(CONTRIBDIR)/Games/Kiel
+EXES := $(foreach f,$(FILES), $(DESTDIR)/$(f))
+INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)
 
 USE_CLIB_SHARED := yes
 USE_AMIGALIB := yes
@@ -13,9 +15,12 @@ USE_AROSLIB := yes
 %make_prog_setup mmake=games-kiel-quad
 
 #MM
-games-kiel-quad : setup $(EXES)
+games-kiel-quad : setup $(EXES) $(INFO)
 
-%make_prog_single dir=$(CONTRIBDIR)/Games/Kiel
+$(DESTDIR)/%.info : %.info
+	$(CP) $? $(DESTDIR)
+
+%make_prog_single dir=$(DESTDIR)
 
 %common
 %include_deps
