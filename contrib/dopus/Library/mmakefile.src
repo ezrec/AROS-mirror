@@ -28,7 +28,7 @@ FUNCTIONS	:= \
     modname=dopus modtype=library dir=$(CONTRIBDIR)/DOpus/Libs \
     funcs=$(FUNCTIONS) files=$(FILES) \
     conffile=lib.conf \
-    uselibs=arosc
+    uselibs=rom
 
 %common
 
