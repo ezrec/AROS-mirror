@@ -19,8 +19,13 @@ colorGhosted = Color( 0x99, 0x77, 0x77 )  # File download not available text
 descriptions = {
     'source' : 
         '''Core AROS sources.''',
+    'docs-source' :
+        '''Documentation sources.''',
     'contrib-source' : 
        '''Contributed programs\' sources.''',
+    'docs-html' :
+       '''Documentation in HTML format. Contains everything 
+       available on the website, but adapted for offline reading.''',
     'i386-linux-system' : 
         '''The hosted version for Linux/i386. This is the most 
         complete and mature port, which means that you can run
@@ -51,7 +56,7 @@ descriptions = {
 #
 groups = {
     'Sources'       : r'.*source',
-    'Documentation' : r'.*docs.*',
+    'Documentation' : r'.*docs-[^source].*',
     'Binaries'      : r'i386-.*'
 }
 
@@ -93,6 +98,8 @@ os.chdir( oldcwd )
 packages = {}
 for date in dates:
     for file in os.listdir( os.path.join( root, date ) ):
+        # Skip MD5 checksum files.
+        if file[-4:] == '.md5': continue
         # Remove the 'AROS-YYYYMMDD-' prefix and '.tar.bz2' suffix.
         package = file[14:][:-8]
         if package == '': continue
