@@ -29,6 +29,15 @@ moreRelated = (
 	'Here, you find daily snapshots of AROS sources and binaries'
 	' incl. build logs.',
     ),
+    Link ('ftp://ftp.aros.org/pub/aros/DiskImages/', 
+	'Disk Images',
+	'Here, you can find current disk images for AROS Native/x86.'
+    ),
+    Link ('http://wh2-315.st.uni-magdeburg.de/~sheutlin/aros/',
+	'Sebastians site with Disk Images',
+	'The images here are mirrored on the AROS main site above.'
+    ),
+    # FIXME Add Link to images by Matt 'Crazy' Parsons
     ( Link ('/mailman/listinfo/',
 	'Mailing lists',
 	'There are a couple of mailing lists for AROS. Follow the links'
@@ -57,7 +66,7 @@ moreRelated = (
 	    ' verified by the list admin.',
 	),
     ),
-    Link ('/autodocs/index.html',
+    Link ('autodocs/index.html',
 	'AutoDocs',
 	'Amiga AutoDocs in HTML format (automatically generated from'
 	' AROS sources.',
@@ -116,11 +125,36 @@ articles = (
 )
 
 homepages = (
-    Link ('http://www.bloodline.freeserve.co.uk/',
-	"Homepage of Matt 'Crazy' Parsons",
-    ),
+    Link ('http://www.lake.de/home/lake/home/', 'Aaron "Optimizer" Digulla'),
+    Link ('http://www.vmc.de/', 'Harald Frank (VMC)'),
+    Link ('http://www.dtek.chalmers.se/~d95duvan/', 'Johan Alfredsson'),
+    Link ('http://www.xs4all.nl/~ldp/', 'Lennard voor den Dag'),
+    Link ('http://home.pages.de/~helios/', 'Martin Steigerwald'),
+    Link ('http://www.bloodline.freeserve.co.uk/', "Matt 'Crazy' Parsons",),
+    Link ('http://www.in-berlin.de/User/jroger/index.html', 'Sebastian Rittau'),
+    Link ('http://www.twinklestar.demon.co.uk/', 'Wez Furlong'),
 )
 
 lessRelated = (
+    Link ('http://www.amiga.com/', 'Amiga, Inc.'),
+    Link ('http://www.ninemoons.com/GG/'
+	'Geek Gadgets is an ongoing effort to port Unix tools to non-Unix'
+	' systems led by the famous Fred Fish at',
+	( Href ('http://www.ninemoons.com/', 'Cronus'), ),
+    ),
+    Link ('http://www.openamiga.org/', 'Open Amiga Foundation OAF'),
+    Link ('http://www.satanicdreams.com/scalos/index.html', 'Official Scalos Site'),
+    Link ('http://www.crosswinds.net/~osap/', 'Open Source Amiga Projects'),
+    Link ('http://www.mentasm.com/~mramiga/dos1.shtml',
+	'AmigaDOS Online Reference Manual',
+	( Image ('pics/ados1.gif'), ),
+    ),
+    Link ('http://www.amiga.org/', 'Amiga.org', '"Your Gateway to the Amiga"'),
+    Link ('http://www.intercom.it/~fsoft/afc.html',
+	'AFC - Amiga Foundation Classes',
+	'A FreeWare and Public Domain library of Object Classes devoted to the'
+	' software development on the Amiga and on future Amiga compatible'
+	' machines.'
+    ),
 )
 
