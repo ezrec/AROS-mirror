@@ -1,0 +1,46 @@
+
+NOTE: This list is far from being complete.  Please mail, if you want
+      to be included.
+
+
+David TURNER (turner@enst.fr)
+
+  Main engine design and coding.  Pascal source maintainer.
+
+
+Robert WILHELM (robert@physiol.med.tu-muenchen.de)
+
+  Web, FTP and CVS wizard & administrator.  C source maintainer.
+  Incredible bug and spell fixer!
+
+
+Werner LEMBERG (wl@gnu.org)
+
+  Internationalization and CJK guru.  ttf2pk author.
+
+
+Mark LEISHER (mleisher@crl.nmsu.edu)
+
+  Internationalization.  X11 font server prototype author.
+  ttf2bdf author.
+
+
+Pavel KANKOVSKY (peak@kerberos.troja.mff.cuni.cz)
+
+  Logo, Internationalization, humor, and remarkable bug hunter!
+
+
+Erwin DIETERICH (erwin.dieterich.ed@bayer-ag.de)
+
+  *real* internationalization :-) Author of the ftxerr18 and gettext
+  support.
+
+
+Michal NECASEK (mike@mendelu.cz)
+
+  Author and maintainer of the OS/2 font driver based on FreeType.
+
+.....
+
+
+and the many that I'm forgetting there and deserve at least one line :-)
