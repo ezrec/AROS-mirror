@@ -51,7 +51,7 @@ LTP_BackfillRoutine(
 
 /*
 VOID SAVE_DS ASM
-LTP_BackfillRoutine(REG(a0) struct Hook *Hook,REG(a1) struct LayerMsg *Bounds,REG(a2) struct RastPort *RPort)
+_LTP_BackfillRoutine(REG(a0) struct Hook *Hook,REG(a1) struct LayerMsg *Bounds,REG(a2) struct RastPort *RPort)
 {
 	STATIC UWORD __chip EscherData[216] =
 	{
