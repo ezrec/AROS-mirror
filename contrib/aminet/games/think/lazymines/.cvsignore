@@ -2,4 +2,3 @@ mmakefile
 lazymines_strings.h
 lazymines_strings.c
 strings.h
-*.err
