@@ -1,0 +1,198 @@
+# Top-level makefile for BREXX V2
+
+# BREXX interpreter
+# Version:  2.0
+# Copyright (C) 1991-1998  Vassilis Vlachoudis (V.Vlachoudis@cern.ch)
+#
+# This interpreter is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+
+# The following variables are passed to each Makefile:
+#
+# REXX_EXE	interpreter executable name usually (rexx)
+# LSTR_LIB	the name of the lstring "lstr" library file (usually liblstr.a)
+# CC		the C compiler (usually cc or gcc)
+# CFLAGS	flags to C compiler (usually -O)
+# MAKELIB	the command and flags to make a library file (usually "ar rcv")
+# HAS_SETENV	if the compiler has the setenv() function.
+# ALIGN		Normally this option should be set for faster results.
+#
+# To add a new system configuration just follow the examples below and update
+# the top-level Makefile.
+
+#
+# The allowable defines can be found in the inc/os.h file
+#
+
+############## Some COMMON macros ##################
+BINDIR = ../bin
+INCDIR = ../inc
+LIBDIR = ../lib
+
+# Support of Greek character set
+#GREEK=-DGREEK
+# Remove the last new-line character of the output of a system command
+# like  say 'date'()
+RMLAST=-DRMLAST
+MAIN=main.c
+RM=rm -f		# For DOS32 it is overiden below
+EXTRA=
+
+aix:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = cc" \
+	"CFLAGS = -Aa -O3 -DALIGN" \
+	"MAKELIB = ar ruv"
+
+aix_debug:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = cc" \
+	"CFLAGS = -Aa -g -D__DEBUG__ -DALIGN" \
+	"MAKELIB = ar ruv"
+
+alpha:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = cc" \
+	"CFLAGS = -O3 -DALIGN -DHAS_SETENV" \
+	"MAKELIB = ar ruv"
+
+alpha_debug:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = cc" \
+	"CFLAGS = -g -D__DEBUG__ -DALIGN -DHAS_SETENV" \
+	"MAKELIB = ar ruv"
+
+amiga:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"CFLAGS = -O6 -DALIGN -DINLINE" \
+	"MAKELIB = ar ruv"
+
+bc:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx.exe" \
+	"LSTR_LIB = lstr.lib" \
+	"CC = bcc" \
+	"CFLAGS = -g -D__DEBUG__ -DALIGN" \
+	"MAKELIB = tlib lstr.lib -+"
+
+dos32:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx.exe" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"RM = del" \
+	"EXTRA = rxconio.c" \
+        "CFLAGS = -O6 -DALIGN -DINLINE -DRXCONIO" \
+	"MAKELIB = ar ruv"
+
+gcc:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"CFLAGS = -O -DALIGN -DINLINE" \
+	"MAKELIB = ar ruv"
+ 
+gcc_debug:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"CFLAGS = -g -pg -Wall -DALIGN -D__DEBUG__" \
+	"MAKELIB = ar ruv"
+
+linux:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"CFLAGS = -O6 -DALIGN -DINLINE -DHAS_SETENV" \
+	"MAKELIB = ar ruv"
+
+linux_debug:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"CFLAGS = -g -pg -Wall -DALIGN -D__DEBUG__ -DHAS_SETENV" \
+	"MAKELIB = ar ruv"
+
+linux_noalign:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"CFLAGS = -O6 -DINLINE -DHAS_SETENV" \
+	"MAKELIB = ar ruv"
+
+linux_noalign_debug:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"CFLAGS = -g -pg -Wall -D__DEBUG__ -DHAS_SETENV" \
+	"MAKELIB = ar ruv"
+
+hpux:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = cc" \
+	"CFLAGS = -Aa +O2 -D_HPUX_SOURCE -DALIGN" \
+	"MAKELIB = ar ruv"
+
+hpux_debug:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = cc" \
+	"CFLAGS = -Aa -g -D__DEBUG__ -D_HPUX_SOURCE -DALIGN" \
+	"MAKELIB = ar ruv"
+
+hpux-gcc:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"CFLAGS = -O6 -DALIGN" \
+	"MAKELIB = ar ruv"
+
+hpux-gcc_debug:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"CFLAGS = -g -pg -Wall -D__DEBUG__ -DALIGN" \
+	"MAKELIB = ar ruv" 
+
+test:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"MAIN = maintest.c" \
+	"CFLAGS = -O6 -DALIGN -DINLINE -DHAS_SETENV" \
+	"MAKELIB = ar ruv"
+
+test_debug:
+	$(MAKE) $(MFLAGS) targets \
+	"REXX_EXE = rexx" \
+	"LSTR_LIB = liblstr.a" \
+	"CC = gcc" \
+	"MAIN = maintest.c" \
+	"CFLAGS = -g -pg -Wall -DALIGN -D__DEBUG__ -DHAS_SETENV" \
+	"MAKELIB = ar ruv"
+
