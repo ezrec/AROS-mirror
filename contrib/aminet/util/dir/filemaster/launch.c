@@ -273,14 +273,14 @@ initproc (struct FMList *list, UBYTE * txt)
   if (txt && list)
     {
       list->flags |= LACTIVE;
-      list->oldcur = 1;
+      list->oldcur = (BPTR)1;
       if (fmconfig->flags & MSUBPROC)
 	list->flags |= LSUBPROC;
       plist = list->pair;
       if (plist)
 	{
 	  plist->flags |= LACTIVE;
-	  plist->oldcur = 1;
+	  plist->oldcur = (BPTR)1;
 	  strcpy (plist->workname, txt2);
 	  plist->fmmessage1[0] = 0;
 	  plist->fmmessage2[0] = 0;
@@ -332,7 +332,7 @@ endproc (struct FMList *list)
       list->pair->workname[0] = 0;
       list->pair->pair = 0;
     }
-  if (list->flags & LSUBPROC && list->oldcur != 1)
+  if (list->flags & LSUBPROC && list->oldcur != (BPTR)1)
     {
       prevlock = CurrentDir (list->oldcur);
       if (prevlock)
@@ -443,7 +443,7 @@ ongadget (struct Gadget *gadg, WORD cnt)
 		    gadg->TopEdge + gadg->Height);
 	  SetAPen (fmmain.rp, fmconfig->txtpen);
 	  SetSoftStyle (fmmain.rp, 1, 1);
-	  txt[0] = (UBYTE) gadg->UserData;
+	  txt[0] = (UBYTE)(ULONG) gadg->UserData;
 	  txt[1] = 0;
 	  textextent (fmmain.rp, txt, &apu1, &apu2);
 	  Move (fmmain.rp, (gadg->Width - apu1 + 1) / 2 + gadg->LeftEdge,

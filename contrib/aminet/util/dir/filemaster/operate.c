@@ -28,6 +28,7 @@
 #include <dos/dosextens.h>
 #include <dos/filehandler.h>
 #include <dos/rdargs.h>
+#include <libraries/iffparse.h>
 #include <proto/dos.h>
 #include <stdio.h>
 #include <string.h>
@@ -469,7 +470,7 @@ if(ret==1) {
 	}
 	apu1=formatlen;
 	while(apu1!=0) {
-		*(ULONG*)apuptr='FM30';
+		*(ULONG*)apuptr=MAKE_ID('F','M','3','0');
 		apuptr+=4;
 		apu1-=4;
 	}	
@@ -486,7 +487,7 @@ if(ret==1) {
 	ioreq->io_Data=formatdata;
 	ioreq->io_Length=formatlen;
 	if(!diskio(list,ioreq)) goto fend;
-	*((ULONG*)formatdata)='FM30';
+	*((ULONG*)formatdata)=MAKE_ID('F','M','3','0');
 	surfacecnt=de->de_Surfaces; trackcnt=de->de_HighCyl;
 	cylcnt=(surfacecnt*trackcnt+1)*formatlen;
 	surfacecnt--;

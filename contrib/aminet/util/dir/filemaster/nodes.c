@@ -236,7 +236,7 @@ Remove((struct Node*)node);
 freevecpooled(node);
 list->totlines--;
 if (list->totlines-list->firstline<list->li->visiblelines) list->firstline=list->totlines-list->li->visiblelines;
-if (list->firstline<0) list->firstline=0;
+if ((WORD)list->firstline<0) list->firstline=0;
 setsliders(list);
 }
 

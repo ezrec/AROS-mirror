@@ -174,7 +174,7 @@ if (mp=CreateMsgPort()) {
 	if (tr=(struct timerequest*)CreateIORequest(mp,sizeof(struct timerequest))) {
 		*amp=mp;
 		if (!OpenDevice("timer.device",UNIT_VBLANK,(struct IORequest*)tr,0)) return(tr);
-		DeleteIORequest(tr);
+		DeleteIORequest(&tr->tr_node);
 	}
 	DeleteMsgPort(mp);
 }

@@ -658,7 +658,7 @@ void buttonbari(struct GUIBase *gb,void **buttons)
 {
 startbuttonbar(gb);
 while(*buttons) {
-	reqbutton(gb,buttons[0],(WORD)buttons[1],guiUC);
+	reqbutton(gb,buttons[0],(LONG)buttons[1],guiUC);
 	buttons+=2;
 }
 }

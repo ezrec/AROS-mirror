@@ -654,7 +654,7 @@ rletemp=allocmem(len);
 if(!rletemp||!vara2) goto error;
 
 Read(handle,&apu2,2);
-if(apu2!='FM') goto error;
+if(apu2!=('F' << 8 | 'M')) goto error;
 Read(handle,&apu2,2);
 if(apu2!=OLDCONFIGVERSION&&apu2!=FMCONFIGVERSION) {
 	errorreq(MSG_MAIN_WARNING,getstring(MSG_CONFIG_OLDCONFIG),0,MSG_OK);
@@ -968,7 +968,7 @@ if(openinitreq(gb)) {
 			cnt1=0;
 			do {
 				CopyMem(dll,&fmc->dl[cnt1],sizeof(struct DirListLayout));
-				dll=(struct DirListLayout*)DoMethod(gs1->obj,LVM_NEXTENTRY,dll,0,TAG_DONE);
+				dll=(struct DirListLayout*)DoMethod(gs1->obj,LVM_NEXTENTRY,(IPTR)dll,0,TAG_DONE);
 				cnt1++;
 			} while(dll);
 			freeconfig(fmc,ofmc);
@@ -1000,9 +1000,9 @@ return(0);
 }
 
 
-//***************************
-//	SCREEN
-//***************************
+// ***************************
+// 	SCREEN
+// ***************************
 
 WORD screenconfig(struct FMConfig *ofmc)
 {
@@ -1161,7 +1161,7 @@ if((entry=(APTR)DoMethod(gs[2]->obj,LVM_FIRSTENTRY,NULL,0L))) {
 		cmc->position=2;
 		cmc++;
 		cnt1++;
-		entry=(APTR)DoMethod(gs[2]->obj,LVM_NEXTENTRY,entry,0L);
+		entry=(APTR)DoMethod(gs[2]->obj,LVM_NEXTENTRY,(IPTR)entry,0L);
 	} while(entry);
 }
 // BAR
@@ -1172,7 +1172,7 @@ if((entry=(APTR)DoMethod(gs[1]->obj,LVM_FIRSTENTRY,NULL,0L))) {
 		cmc->position=1;
 		cmc++;
 		cnt1++;
-		entry=(APTR)DoMethod(gs[1]->obj,LVM_NEXTENTRY,entry,0L);
+		entry=(APTR)DoMethod(gs[1]->obj,LVM_NEXTENTRY,(IPTR)entry,0L);
 	} while(entry);
 }
 // HIDDEN
@@ -1183,7 +1183,7 @@ if((entry=(APTR)DoMethod(gs[3]->obj,LVM_FIRSTENTRY,NULL,0L))) {
 		cmc->position=9;
 		cmc++;
 		cnt1++;
-		entry=(APTR)DoMethod(gs[3]->obj,LVM_NEXTENTRY,entry,0L);
+		entry=(APTR)DoMethod(gs[3]->obj,LVM_NEXTENTRY,(IPTR)entry,0L);
 	} while(entry);
 }
 while(cnt1<TOTALCOMMANDS) {

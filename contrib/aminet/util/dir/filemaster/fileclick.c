@@ -21,6 +21,7 @@
 #include <intuition/intuition.h>
 #include <datatypes/datatypes.h>
 #include <datatypes/datatypesclass.h>
+#include <datatypes/pictureclass.h>
 #include <proto/datatypes.h>
 #include <strings.h>
 #include <stdio.h>
@@ -141,11 +142,11 @@ WORD mod,cnt;
 apu=(ULONG*)m;
 apu1=(UWORD)((*apu)>>16);
 
-if ((fmconfig->usepicturedt|usedt)&&*apu=='FORM'&&*(apu+2)=='ILBM') {
+if ((fmconfig->usepicturedt|usedt)&&*apu==ID_FORM&&*(apu+2)==ID_ILBM) {
 	showpicture(h,getconfignumber(SHOWPICCONFIG));
 	return(1);
 }
-if ((fmconfig->usesampledt|usedt)&&*apu=='FORM'&&*(apu+2)=='8SVX') {
+if ((fmconfig->usesampledt|usedt)&&*apu==ID_FORM&&*(apu+2)==MAKE_ID('8','S','V','X')) {
 	playsample(h,getconfignumber(HEARCONFIG));
 	return(1);
 }
@@ -176,7 +177,7 @@ if (mod) {
 }
 ptr1=h->filename; mod=0;
 apu=(ULONG*)(m+1080);
-if (*apu=='M.K.'||*apu=='FLT4') mod=1;
+if (*apu==MAKE_ID('M','.','K','.')||*apu==MAKE_ID('F','L','T','4')) mod=1;
 if (!Strnicmp(ptr1+strlen(ptr1)-4,".mod",4)) mod=1;
 if (!Strnicmp(ptr1,"mod.",4)) mod=1;
 if (mod) {

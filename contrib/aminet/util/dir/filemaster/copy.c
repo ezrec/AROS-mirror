@@ -50,19 +50,21 @@ struct DeleteConfig {
 	unsigned update:2;
 };
 
-WORD deletefile(struct FMList*,UBYTE*,struct DeleteConfig*,WORD);
-//WORD deletedir(struct FMList*,UBYTE*,struct DelStr*,WORD);
-//WORD deletefirst(struct FMList*,struct FMNode*,struct DelStr*);
+struct DelStr;
 
-//WORD askcopyname(struct FMList*,UBYTE*,struct DelStr*);
+WORD deletefile(struct FMList*,UBYTE*,struct DeleteConfig*,WORD);
+WORD deletedir(struct FMList*,UBYTE*,struct DelStr*,WORD);
+WORD deletefirst(struct FMList*,struct FMNode*,struct DelStr*);
+
+WORD askcopyname(struct FMList*,UBYTE*,struct DelStr*);
 void copyroutine(struct CMenuConfig *cmc);
-//WORD copyfile(struct FMList*,struct FMList*,UBYTE*,struct DelStr*);
-//WORD copydir(struct FMList*,struct FMList*,UBYTE*,struct DelStr*,WORD  flag);
+WORD copyfile(struct FMList*,struct FMList*,UBYTE*,struct DelStr*);
+WORD copydir(struct FMList*,struct FMList*,UBYTE*,struct DelStr*,WORD  flag);
 void copyflags(struct CopyConfig*,struct FMList*,struct FMList*,UBYTE*,UBYTE*);
 
 WORD renamefile(struct FMList*,struct FMList*,UBYTE*);
 
-//WORD sizedir(struct FMList*,UBYTE*,struct DelStr*,LONG*);
+WORD sizedir(struct FMList*,UBYTE*,struct DelStr*,LONG*);
 
 WORD doubleabort(struct FMList*,struct FMList*);
 

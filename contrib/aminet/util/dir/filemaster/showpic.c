@@ -237,7 +237,7 @@ wide=320;high=256;sdeep=deep=1;
 if (readbufferfile(h,&ifflen,4)!=4) goto serr;
 if (readbufferfile(h,&longi2,4)!=4) goto serr;
 ifflen-=4;
-if (longi1!='FORM'||longi2!='ILBM') {
+if (longi1!=ID_FORM||longi2!=ID_ILBM) {
 	requestmsg(list->workname,0,MSG_OK,MSG_SHOWPIC_NOPICTURE,h->filename);
 	goto serr;
 }
@@ -246,10 +246,10 @@ for(;;) {
 	if (readbufferfile(h,&longi1,4)!=4) goto serr;
 	if (readbufferfile(h,&len1,4)!=4) goto serr;
 	ifflen-=8;
-	if (longi1=='BODY') break;
+	if (longi1==ID_BODY) break;
 	switch(longi1)
 	{
-		case 'BMHD':
+		case ID_BMHD:
 		if (len1!=sizeof(struct FMBitMapHeader)) goto scorrupt;
 		if (readbufferfile(h,&bmhd,len1)!=len1) goto serr;
 		ifflen-=len1;
@@ -260,13 +260,13 @@ for(;;) {
 		sdeep=deep<=8?deep:8;
 		if(bmhd.compression>1) goto scorrupt;
 		break;
-		case 'CAMG':
+		case ID_CAMG:
 		if (len1!=4) goto scorrupt;
 		if (readbufferfile(h,&modeid,len1)!=len1) goto serr;
 		ifflen-=len1;
 		fmodeid=1;
 		break;
-		case 'CMAP':
+		case ID_CMAP:
 		cmaplen=len1;
 		if (!(cmap=allocvec(list,cmaplen,0))) goto serr;
 		if (readbufferfile(h,cmap,cmaplen)!=cmaplen) goto serr;

@@ -22,7 +22,11 @@
 #include <libraries/locale.h>
 #include "fmlocale.h"
 
-//STRPTR __asm GetString(register __a0 struct LocaleInfo *li,register __d0 ULONG id);
+#ifdef _AROS
+STRPTR GetString(struct LocaleInfo *li, LONG stringNum);
+#else
+STRPTR __asm GetString(register __a0 struct LocaleInfo *li,register __d0 ULONG id);
+#endif
 
 UBYTE *getstring(WORD sn)
 {

@@ -628,7 +628,7 @@ while(!fmmain.quitti) {
 			 D(bug("event.c 587 if IDCMP_RAWKEY \n")); 
 			switch(asciicode)
 			{
-			break;
+			//break;
 			case 13:	//return
 			 D(bug("event.c 592 case 13 \n")); 
 			fakeintu.MouseX=fmmain.sourcedir->li->dirx+fmmain.ikkuna->BorderLeft;

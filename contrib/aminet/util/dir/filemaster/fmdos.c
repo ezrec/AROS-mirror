@@ -377,20 +377,20 @@ if (!(lock=Lock(list->path,SHARED_LOCK))) return(0);
 curri=CurrentDir(lock);
 if (list->pair) {
 	if (list->flags&LSUBPROC) {
-		if(list->oldcur==1) { list->oldcur=curri; curri=0; }
+		if(list->oldcur==(BPTR)1) { list->oldcur=curri; curri=0; }
 		goto curend;
 	}
 	if (list->pair->flags&LSUBPROC) { 
-		if(list->pair->oldcur==1) { list->pair->oldcur=curri; curri=0; }
+		if(list->pair->oldcur==(BPTR)1) { list->pair->oldcur=curri; curri=0; }
 		goto curend;
 	}
 }
 if (list->flags&LSUBPROC) {
-	if (list->oldcur==1) { list->oldcur=curri; curri=0; }
+	if (list->oldcur==(BPTR)1) { list->oldcur=curri; curri=0; }
 	goto curend;
 }
 if (!(list->flags&LSUBPROC)) {
-	if (fmmain.oldcur==1) { fmmain.oldcur=curri; curri=0; }
+	if (fmmain.oldcur==(BPTR)1) { fmmain.oldcur=curri; curri=0; }
 }
 curend:
 UnLock(curri);

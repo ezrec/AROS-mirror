@@ -47,16 +47,18 @@ extern struct FMMain fmmain;
 WORD __asm hexconvert(register __a0 UBYTE*,register __a1 UBYTE*,register __d0 WORD,register __d1 WORD);
 #endif
 
+struct STL;
+
 void showascfile(void);
 void showhexfile(void);
 WORD showtext(struct FMHandle*,struct CMenuConfig*);
-//void getjump(struct STL*);
-//void textsearch(struct STL*,WORD);
-//void setreqstate(struct STL*);
-//void resetreqstate(struct STL*);
-//void convertstring(struct STL*,UBYTE*,UBYTE**,WORD);
-//void escmode(struct STL*,UBYTE**,UBYTE**,WORD*);
-//void strtext(struct STL*,struct RastPort*,UBYTE*);
+void getjump(struct STL*);
+void textsearch(struct STL*,WORD);
+void setreqstate(struct STL*);
+void resetreqstate(struct STL*);
+void convertstring(struct STL*,UBYTE*,UBYTE**,WORD);
+void escmode(struct STL*,UBYTE**,UBYTE**,WORD*);
+void strtext(struct STL*,struct RastPort*,UBYTE*);
 void escstyle(UBYTE**,UBYTE*,UBYTE,UBYTE*,UBYTE,UBYTE*,UBYTE);
 
 void __saveds showtextfile(void)
@@ -830,7 +832,7 @@ extern UBYTE space[];
 
 hili=txt; txt++;
 while(*txt) {
-	if(*txt<32&&*txt>=0) {
+	if((BYTE)*txt<32&&(BYTE)*txt>=0) {
 		stl->style=*txt>>1;
 		if(stl->style&8) SetDrMd(rp,JAM2|INVERSVID); else SetDrMd(rp,JAM2);
 		SetSoftStyle(rp,stl->style,7);
@@ -1008,7 +1010,7 @@ if((qualifier&0x80)||(ret&&stl->searchstring[0])) {
 		point+=strlen(ptr1)+1;
 		ptr2=varabuf;
 		while(*ptr1) {
-			if(*ptr1<0||*ptr1>31) *ptr2++=*ptr1++; else ptr1+=2;
+			if((BYTE)*ptr1<0||(BYTE)*ptr1>31) *ptr2++=*ptr1++; else ptr1+=2;
 		}
 		*ptr2=0; ptr2-=len;
 		ptr1=varabuf;

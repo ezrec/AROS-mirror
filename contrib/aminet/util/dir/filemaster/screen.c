@@ -359,7 +359,7 @@ D(bug("screen.c: 362...\n"));
       fmmain.appwinport = CreateMsgPort ();
       if (fmmain.appwinport)
 	fmmain.appwin =
-	  AddAppWindow (0, 0, fmmain.ikkuna, fmmain.appwinport, 0);
+	  AddAppWindowA (0, 0, fmmain.ikkuna, fmmain.appwinport, 0);
 
     }
   D(bug("screen.c: 372...\n"));  
@@ -1106,11 +1106,11 @@ alloclistgads (WORD x, WORD y, WORD width, WORD height, WORD mirror,
   apu5 += widthi;
   li->taskgadget.LeftEdge = apu5;
   li->taskgadget.GadgetID = linum + 401;
-  li->taskgadget.UserData = (APTR) linum;
+  li->taskgadget.UserData = (APTR) (ULONG)linum;
   apu5 += widthi;
   li->rtaskgadget.LeftEdge = apu5;
   li->rtaskgadget.GadgetID = linum + 421;
-  li->rtaskgadget.UserData = (APTR) '>';
+  li->rtaskgadget.UserData = (APTR)'>';
   apu5 += widthi;
   doborder (xy1, bd1, bd2, xy2, bd3, bd4, apu4, widthi);
 

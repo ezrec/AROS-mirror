@@ -229,7 +229,7 @@ main (void)
   KeymapBase = OpenLibrary (keylib, 0);
   WorkbenchBase = OpenLibrary (wblib, 37);
 
-  if ((LocaleBase = OpenLibrary (loclib, 38)))
+  if ((LocaleBase = (struct LocaleBase *)OpenLibrary (loclib, 38)))
     {
       if (!(locale = OpenLocale (0)))
 	{
@@ -367,7 +367,7 @@ D(bug("fm.c 347 \n"));
   stopoldmod ();
 
 error4:
-  if (fmmain.oldcur != 1)
+  if (fmmain.oldcur != (BPTR)1)
     {
 D(bug("fm.c 352 \n")); 
       prevlock = CurrentDir (fmmain.oldcur);
@@ -413,7 +413,7 @@ error2:
     {
       CloseLocale (locale);
       CloseCatalog (catalog);
-      CloseLibrary (LocaleBase);
+      CloseLibrary ((struct Library *)LocaleBase);
     }
 
   if (TimerBase)
@@ -527,7 +527,7 @@ D(bug("InitSemaphore ...........\n"));
   fmmain.betarevision = fmname[7];
   fmmain.sourcedir = &fmlist[0];
   fmmain.destdir = &fmlist[1];
-  fmmain.oldcur = 1;
+  fmmain.oldcur = (BPTR)1;
 D(bug("fmmain init ...........\n"));  
   CopyMem (defcolors, fmconfig->colors, 8 * 3);
   fmconfig->mainscreen.depth = 2;

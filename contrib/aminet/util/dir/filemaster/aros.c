@@ -90,11 +90,6 @@ stopoldmod()
 D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void stpcpy()
-{
-D(bug("function not implemented:  hearconfigdefault "));   
-}
-
 void unpack()
 {
 D(bug("function not implemented:  hearconfigdefault "));   
