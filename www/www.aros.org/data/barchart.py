@@ -30,12 +30,12 @@ from HTMLgen import SimpleDocument, Image, Font, TD, TR, TableLite, Caption, Bol
 from HTMLcolors import *
 
 # set these paths to valid URLs corresponding to where you placed the gifs
-barfiles = {  'blue' : '/pics/bar-blue.gif',
-               'red' : '/pics/bar-red.gif',
-             'green' : '/pics/bar-green.gif',
-            'orange' : '/pics/bar-orange.gif',
-            'yellow' : '/pics/bar-yellow.gif',
-            'purple' : '/pics/bar-purple.gif'  }
+barfiles = {  'blue' : 'pics/bar-blue.gif',
+               'red' : 'pics/bar-red.gif',
+             'green' : 'pics/bar-green.gif',
+            'orange' : 'pics/bar-orange.gif',
+            'yellow' : 'pics/bar-yellow.gif',
+            'purple' : 'pics/bar-purple.gif'  }
 
 
 class BarChart:
@@ -103,19 +103,19 @@ class BarChart:
         for item in self.datalist:
             row = TR()
             # 1st cell is the text description
-            row.append(TD(item['label'], align='left', width=70,
+            row.append(TD(item['label'], align='left', width=200,
                           bgcolor = self.label_shade))
             # 2nd cell is the decimal sum value
             row.append(TD("%d"%item['total'], align='right',
-                          width=70, bgcolor=self.value_shade))
+                          width=40, bgcolor=self.value_shade))
             # 3rd cell contains the scaled bar graphic
             row.append(self.make_bar_cell(item))
             self.table.append(row) # add the row to the table
         # now tack on a legend at the bottom
-        self.table.append(TR( TD(' ', align='left', width=70,
+        self.table.append(TR( TD(' ', align='left', width=200,
                                  bgcolor = self.label_shade),
                               TD(" ", align='right',
-                                 width=70, bgcolor=self.value_shade), 
+                                 width=40, bgcolor=self.value_shade), 
                               TD(self.gen_legend(),
                                  bgcolor=self.label_shade,
                                  html_escape="OFF")))
