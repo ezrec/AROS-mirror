@@ -17,8 +17,8 @@ Zune Application Development Manual
 Introduction
 ------------
 
-What is Zune ?
-==============
+What is Zune?
+=============
 
 Zune is an object-oriented GUI toolkit. It is nearly a clone (at both API
 and Look&Feel level) of MUI, a well-known Amiga shareware product
@@ -48,9 +48,8 @@ Some knowledge of OO (object-oriented) programming is more than welcome.
 If not, Google may help you find good introductory papers on this classic
 subject.
 
-Knowing AROS (or AmigaOS) APIs and concepts like `taglists` and `BOOPSI`
-is essential. Having the `Amiga Reference Manuals` (aka ``RKM``)
-is very handy.
+Knowing AROS (or AmigaOS) APIs and concepts like taglists and BOOPSI
+is essential. Having the Amiga Reference Manuals (aka RKM) is very handy.
 
 As Zune is a MUI clone, all the documentation pertaining to MUI is applicable
 to Zune. In particular, the latest available MUI developer kit can be
@@ -91,7 +90,7 @@ A class is defined by its name, its parent class and a dispatcher.
   by this class, ensuring that each operation is handled by the proper
   code or passed to its superclass.
 
-BOOPSI type for a class is `Class *` also known as `IClass`.
+BOOPSI type for a class is ``Class *`` also known as ``IClass``.
 
 Object
 ------
@@ -101,7 +100,7 @@ objects of the same class share the same behaviour.
 An object has several classes if we count the parents of its true class
 (the most derived one) up to the rootclass.
 
-BOOPSI type for an object is `Object *`. It has no field you can directly
+BOOPSI type for an object is ``Object *``. It has no field you can directly
 access.
 
 Attribute
@@ -110,17 +109,17 @@ Attribute
 An attribute is related to the instance datas of each object: you can't
 access these datas directly, you can only set or get the attributes
 provided by an object to modify its internal state. An attribute is
-implemented as a Tag (`ULONG` value or'ed with `TAG_USER`).
+implemented as a Tag (``ULONG`` value or'ed with ``TAG_USER``).
 
-GetAttr() and SetAttrs() are used to modify an object's attributes.
+``GetAttr()`` and ``SetAttrs()`` are used to modify an object's attributes.
 
 Attributes can be one or more of the following:
 
-+ Initialization-settable (I) :
++ Initialization-settable (``I``) :
   the attribute can be given as parameter at the object creation.
-+ Settable (S) :
++ Settable (``S``) :
   You can set this attribute at any time (or at least, not only creation).
-+ Gettable (G) :
++ Gettable (``G``) :
   You can get the value of this attribute.
 
 Method
@@ -134,7 +133,7 @@ a class and a message:
 + message: contains a MethodID which determines the function to call
   within a dispatcher, and is followed by its parameters.
 
-To send a message to an object, use `DoMethod()`. It will use the true
+To send a message to an object, use ``DoMethod()``. It will use the true
 class first. If the class implements this method, it will handle it.
 Else it will try its parent class, until the message is handled or
 the rootclass is reached (in this case, the unknown message is silently
@@ -158,14 +157,14 @@ We'll query a MUI String object for its content::
         printf("String content is: %s\n", (STRPTR)result);
     }
 
-+ `Object *` is the type of BOOPSI objects.
-+ `IPTR` must be used for the type of the result, which can be an integer
++ ``Object *`` is the type of BOOPSI objects.
++ ``IPTR`` must be used for the type of the result, which can be an integer
   or a pointer. An IPTR is always written in memory, so using a smaller
   type would lead to memory corruption!
 + Here we query a MUI String object for its content: ``MUIA_String_Contents``,
-  as any other attribute, is a `ULONG` (it's a `Tag`)
+  as any other attribute, is a ``ULONG`` (it's a Tag)
 
-Zune applications use more often the `get()` and `XGET()` macros instead::
+Zune applications use more often the ``get()`` and ``XGET()`` macros instead::
 
     get(string, MUIA_String_Contents, &result);
     
@@ -183,7 +182,7 @@ Let's change the content of our string::
 + After the object parameter, a taglist is passed to `SetAttrs` and
   thus must end with `TAG_DONE`.
 
-You'll find the `set()` macro useful::
+You'll find the ``set()`` macro useful::
 
     set(string, MUIA_String_Contents, (IPTR)"hello");
 
@@ -203,8 +202,8 @@ method called in your main loop:
 
     result = DoMethod(obj, MUIM_Application_NewInput, (IPTR)&sigs);
 
-+ Parameters are not a taglist, and thus don't end with `TAG_DONE`.
-+ You have to cast pointers to `IPTR` to avoid warnings.
++ Parameters are not a taglist, and thus don't end with ``TAG_DONE``.
++ You have to cast pointers to ``IPTR`` to avoid warnings.
 
 -----------
 Hello world
