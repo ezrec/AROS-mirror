@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/08/09 11:45:57  chodorowski
+ * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
+ *
  * Revision 42.3  2000/05/29 00:40:23  bergers
  * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
@@ -125,7 +128,7 @@ makeproto VOID RenderTitle(Object *title, struct BaseInfo *bi, WORD l, WORD t, W
    if (w > 8)
    {
       DoMethod(title, TEXTM_DIMENSIONS, bi->bi_RPort, &box.Width, &box.Height);
-         
+	 
       /*
        * Figure out where to render.
        */
@@ -134,14 +137,14 @@ makeproto VOID RenderTitle(Object *title, struct BaseInfo *bi, WORD l, WORD t, W
       switch (place)
       {
       case 1:
-         box.Left = l;
-         break;
+	 box.Left = l;
+	 break;
       case 2:
-         box.Left = l + w - box.Width;
-         break;
+	 box.Left = l + w - box.Width;
+	 break;
       default:
-         box.Left = l + ((w - box.Width) >> 1);
-         break;
+	 box.Left = l + ((w - box.Width) >> 1);
+	 break;
       };
       if (box.Left < l) box.Left = l;
 
@@ -255,7 +258,7 @@ ASM REGFUNC5(VOID, SRectFill,
 #ifdef DEBUG_BGUI
   //makeproto ASM VOID BRectFillDebug(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b,REG(a1) STRPTR file,REG(d4) ULONG line)
   makeproto ASM REGFUNC7(VOID, BRectFillDebug,
-  	REGPARAM(A0, struct BaseInfo *, bi),
+	REGPARAM(A0, struct BaseInfo *, bi),
 	REGPARAM(D0, LONG, l),
 	REGPARAM(D1, LONG, t),
 	REGPARAM(D2, LONG, r),
@@ -268,7 +271,7 @@ ASM REGFUNC5(VOID, SRectFill,
 #else
   //ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b)
   ASM REGFUNC5(VOID, BRectFill,
-  	REGPARAM(A0, struct BaseInfo *, bi),
+	REGPARAM(A0, struct BaseInfo *, bi),
 	REGPARAM(D0, LONG, l),
 	REGPARAM(D1, LONG, t),
 	REGPARAM(D2, LONG, r),
@@ -478,7 +481,7 @@ makeproto ASM REGFUNC3(ULONG, GadgetState,
    BOOL normal = !(GADGET(obj)->Flags & GFLG_SELECTED) || norec;
    
    return active ? (ULONG)(normal ? IDS_NORMAL         : IDS_SELECTED)
-                 : (ULONG)(normal ? IDS_INACTIVENORMAL : IDS_INACTIVESELECTED);
+		 : (ULONG)(normal ? IDS_INACTIVENORMAL : IDS_INACTIVESELECTED);
 }
 
 #ifdef _AROS
@@ -496,10 +499,8 @@ makeproto SAVEDS ASM VOID BGUI_FillRectPattern(REG(a1) struct RastPort *r, REG(a
    REG(d0) ULONG x1, REG(d1) ULONG y1, REG(d2) ULONG x2, REG(d3) ULONG y2)
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    int i, j;
 
@@ -525,54 +526,52 @@ makeproto SAVEDS ASM VOID BGUI_FillRectPattern(REG(a1) struct RastPort *r, REG(a
    
       for (i = col_min; i <= col_max; i++)
       {
-         to_x1 = i * w;
-         to_x2 = to_x1 + w;
+	 to_x1 = i * w;
+	 to_x2 = to_x1 + w;
       
-         if (to_x1 < x1)
-         {
-            from_x = x0 + x1 - to_x1;
-            to_x1  = x1;
-         }
-         else
-         {
-            from_x = x0;
-         };
-         if (to_x2 > x2)
-         {
-            to_x2 = x2;
-         };
-         if ((to_w = to_x2 - to_x1) > 0)
-         {
-            for (j = row_min; j <= row_max; j++)
-            {
-               to_y1 = j * h;
-               to_y2 = to_y1 + h;      
+	 if (to_x1 < x1)
+	 {
+	    from_x = x0 + x1 - to_x1;
+	    to_x1  = x1;
+	 }
+	 else
+	 {
+	    from_x = x0;
+	 };
+	 if (to_x2 > x2)
+	 {
+	    to_x2 = x2;
+	 };
+	 if ((to_w = to_x2 - to_x1) > 0)
+	 {
+	    for (j = row_min; j <= row_max; j++)
+	    {
+	       to_y1 = j * h;
+	       to_y2 = to_y1 + h;      
    
-               if (to_y1 < y1)
-               {
-                  from_y = y0 + y1 - to_y1;
-                  to_y1  = y1;
-               }
-               else
-               {
-                  from_y = y0;
-               }
-               if (to_y2 > y2)
-               {
-                  to_y2 = y2;
-               };
-               if ((to_h = to_y2 - to_y1) > 0)
-               {
-                  BltBitMapRastPort(bm, from_x, from_y, r, to_x1, to_y1, to_w, to_h, 0xC0);
-               };
-            };
-         };
+	       if (to_y1 < y1)
+	       {
+		  from_y = y0 + y1 - to_y1;
+		  to_y1  = y1;
+	       }
+	       else
+	       {
+		  from_y = y0;
+	       }
+	       if (to_y2 > y2)
+	       {
+		  to_y2 = y2;
+	       };
+	       if ((to_h = to_y2 - to_y1) > 0)
+	       {
+		  BltBitMapRastPort(bm, from_x, from_y, r, to_x1, to_y1, to_w, to_h, 0xC0);
+	       };
+	    };
+	 };
       };
    };
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 //makeproto VOID ASM HLine(REG(a1) struct RastPort *rp, REG(d0) UWORD l, REG(d1) UWORD t, REG(d2) UWORD r)

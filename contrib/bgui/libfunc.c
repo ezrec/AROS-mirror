@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2000/08/09 11:45:57  chodorowski
+ * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
+ *
  * Revision 42.6  2000/08/08 14:08:00  chodorowski
  * Minor fixes to make BGUI compile on Amiga.
  *
@@ -280,52 +283,52 @@ makeproto BOOL FreeClasses(void)
       opened_classes=subclasses=0;
       for (cd = Classes; cd->cd_ClassID != (UWORD)~0; cd++)
       {
-         if(last_subclasses==0)
-            cd->cd_Leaking=FALSE;
-         if (cd->cd_Storage)
-         {
-            if (cd->cd_LibraryClass)
-            {
-               if(cd->cd_ClassBase)
-               {
-                  CloseLibrary((struct Library *)cd->cd_ClassBase);
-                  cd->cd_ClassBase = NULL;
-               }
-               opened_classes++;
-               rc=FALSE;
-            }
-            else
-            {
-               /*
-                * Return FALSE if one or more fail to free.
-                */
-               if (!BGUI_FreeClass(cd->cd_Storage))
-               {
-                  rc = FALSE;
-                  if(cd->cd_Storage->cl_SubclassCount)
-                  {
-                     subclasses+=cd->cd_Storage->cl_SubclassCount;
-                     if(cd->cd_Storage->cl_ObjectCount)
-                        opened_classes++;
-                  }
-                  else
-                  {
-                     if(!cd->cd_Leaking)
-                     {
-                        cd->cd_Leaking=TRUE;
-                        D(bug("*** Object leak of class %lu: Class %lX, Object count %lu\n",cd->cd_ClassID,cd->cd_Storage,cd->cd_Storage->cl_ObjectCount));
-                     }
-                  }
-               }
-               else
-                  cd->cd_Storage = NULL;
-            };
-         }
-         else
-            cd->cd_LibraryClass=FALSE;
+	 if(last_subclasses==0)
+	    cd->cd_Leaking=FALSE;
+	 if (cd->cd_Storage)
+	 {
+	    if (cd->cd_LibraryClass)
+	    {
+	       if(cd->cd_ClassBase)
+	       {
+		  CloseLibrary((struct Library *)cd->cd_ClassBase);
+		  cd->cd_ClassBase = NULL;
+	       }
+	       opened_classes++;
+	       rc=FALSE;
+	    }
+	    else
+	    {
+	       /*
+		* Return FALSE if one or more fail to free.
+		*/
+	       if (!BGUI_FreeClass(cd->cd_Storage))
+	       {
+		  rc = FALSE;
+		  if(cd->cd_Storage->cl_SubclassCount)
+		  {
+		     subclasses+=cd->cd_Storage->cl_SubclassCount;
+		     if(cd->cd_Storage->cl_ObjectCount)
+			opened_classes++;
+		  }
+		  else
+		  {
+		     if(!cd->cd_Leaking)
+		     {
+			cd->cd_Leaking=TRUE;
+			D(bug("*** Object leak of class %lu: Class %lX, Object count %lu\n",cd->cd_ClassID,cd->cd_Storage,cd->cd_Storage->cl_ObjectCount));
+		     }
+		  }
+	       }
+	       else
+		  cd->cd_Storage = NULL;
+	    };
+	 }
+	 else
+	    cd->cd_LibraryClass=FALSE;
       };
       if(last_subclasses==subclasses)
-         break;
+	 break;
       last_subclasses=subclasses;
    }
    while(subclasses);
@@ -333,16 +336,16 @@ makeproto BOOL FreeClasses(void)
    {
       if(opened_classes==0)
       {
-         for (cd = Classes; cd->cd_ClassID != (UWORD)~0; cd++)
-            cd->cd_Storage = NULL;
+	 for (cd = Classes; cd->cd_ClassID != (UWORD)~0; cd++)
+	    cd->cd_Storage = NULL;
 #ifdef DEBUG_BGUI
-         DumpTrackedObjects();
+	 DumpTrackedObjects();
 #endif
-         rc=TRUE;
+	 rc=TRUE;
       }
       else
       {
-         D(bug("Opened classes %lu\n",opened_classes));
+	 D(bug("Opened classes %lu\n",opened_classes));
       }
    }
    Permit();
@@ -358,8 +361,8 @@ makeproto void MarkFreedClass(Class *cl)
    {
       if(cl==cd->cd_Storage)
       {
-         cd->cd_Storage = NULL;
-         break;
+	 cd->cd_Storage = NULL;
+	 break;
       }
    }
    Permit();
@@ -379,10 +382,8 @@ AROS_LH1(Class *, BGUI_GetClassPtr,
 makeproto SAVEDS ASM Class *BGUI_GetClassPtr( REG(d0) ULONG classID )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    CLASSDEF     *cd;
    Class        *cl = NULL;
@@ -392,36 +393,34 @@ makeproto SAVEDS ASM Class *BGUI_GetClassPtr( REG(d0) ULONG classID )
    {
       if (classID == (UWORD)cd->cd_ClassID)
       {
-         if (!(cl = cd->cd_Storage))
-         {
-            if (cd->cd_ClassFile)
-            {
-               if (cd->cd_ClassBase = (struct BGUIClassBase *)OpenLibrary(cd->cd_ClassFile, 0))
-               {
-                  /*
-                   * Get the class pointer.
-                   */
-                  cl = cd->cd_ClassBase->bcb_Class;
-                  cd->cd_LibraryClass=TRUE;
-               };
-            };
-            if (!cl && cd->cd_InitFunc)
-            {
-               /*
-                * Call the initialization routine.
-                */
-               cl = (cd->cd_InitFunc)();
-            };
-            cd->cd_Storage = cl;
-         };
-         break;
+	 if (!(cl = cd->cd_Storage))
+	 {
+	    if (cd->cd_ClassFile)
+	    {
+	       if (cd->cd_ClassBase = (struct BGUIClassBase *)OpenLibrary(cd->cd_ClassFile, 0))
+	       {
+		  /*
+		   * Get the class pointer.
+		   */
+		  cl = cd->cd_ClassBase->bcb_Class;
+		  cd->cd_LibraryClass=TRUE;
+	       };
+	    };
+	    if (!cl && cd->cd_InitFunc)
+	    {
+	       /*
+		* Call the initialization routine.
+		*/
+	       cl = (cd->cd_InitFunc)();
+	    };
+	    cd->cd_Storage = cl;
+	 };
+	 break;
       };
    };
    return cl;
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 /*
@@ -445,10 +444,8 @@ AROS_LH2(Object *, BGUI_NewObjectA,
 makeproto SAVEDS ASM Object *BGUI_NewObjectA( REG(d0) ULONG classID, REG(a0) struct TagItem *attr )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    Class       *cl;
    Object      *obj = NULL;
@@ -458,9 +455,7 @@ makeproto SAVEDS ASM Object *BGUI_NewObjectA( REG(d0) ULONG classID, REG(a0) str
 
    return obj;
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 /*
@@ -480,10 +475,8 @@ makeproto SAVEDS ASM struct BitMap *BGUI_AllocBitMap( REG(d0) ULONG width, REG(d
    REG(d3) ULONG flags, REG(a0) struct BitMap *fr )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    #ifdef ENHANCED
    return AllocBitMap(width, height, depth, flags | BMF_MINPLANES, fr);
@@ -517,19 +510,17 @@ makeproto SAVEDS ASM struct BitMap *BGUI_AllocBitMap( REG(d0) ULONG width, REG(d
        */
       for (i = 0; i < depth; i++)
       {
-         if (!(bm->Planes[i] = AllocVec(rassize, flags)))
-         {
-            BGUI_FreeBitMap(bm);
-            return NULL;
-         };
+	 if (!(bm->Planes[i] = AllocVec(rassize, flags)))
+	 {
+	    BGUI_FreeBitMap(bm);
+	    return NULL;
+	 };
       };
    }
    return bm;
    #endif
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 /*
@@ -544,10 +535,8 @@ AROS_LH1(VOID, BGUI_FreeBitMap,
 makeproto SAVEDS ASM VOID BGUI_FreeBitMap( REG(a0) struct BitMap *bm )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
 #ifdef ENHANCED
    WaitBlit();
@@ -570,29 +559,26 @@ makeproto SAVEDS ASM VOID BGUI_FreeBitMap( REG(a0) struct BitMap *bm )
        */
       if (*b == ID_BGUI)
       {
-         for (i = bm->Depth - 1; i >= 0; --i)
-         {
-            /*
-             * Free planes.
-             */
-            if (p = bm->Planes[i]) FreeVec(p);
-         }
-         /*
-          * Free the structure.
-          */
-         BGUI_FreePoolMem(b);
+	 for (i = bm->Depth - 1; i >= 0; --i)
+	 {
+	    /*
+	     * Free planes.
+	     */
+	    if (p = bm->Planes[i]) FreeVec(p);
+	 }
+	 /*
+	  * Free the structure.
+	  */
+	 BGUI_FreePoolMem(b);
       }
       else
       {
-         FreeBitMap(bm);
+	 FreeBitMap(bm);
       }
    }
 #endif
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
-
 }
 
 /*
@@ -611,10 +597,8 @@ makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap( REG(a0) struct Ras
    REG(d0) ULONG width, REG(d1) ULONG height, REG(d2) ULONG depth )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    struct RastPort   *rp;
    struct Layer_Info *li;
@@ -639,31 +623,31 @@ makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap( REG(a0) struct Ras
        */
       if (rp->BitMap = BGUI_AllocBitMap(width, height, depth, BMF_CLEAR, source ? source->BitMap : NULL))
       {
-         /*
-          * NO LAYER!.
-          */
-         // rp->Layer = NULL;
+	 /*
+	  * NO LAYER!.
+	  */
+	 // rp->Layer = NULL;
 
-         if (li = NewLayerInfo())
-         {
-            if (rp->Layer = CreateUpfrontLayer(li, rp->BitMap, 0, 0, width - 1, height - 1, 0, NULL))
-            {
-               /*
-                * Mark it as a buffered rastport.
-                */
-               // rp->RP_User = ID_BFRP;
+	 if (li = NewLayerInfo())
+	 {
+	    if (rp->Layer = CreateUpfrontLayer(li, rp->BitMap, 0, 0, width - 1, height - 1, 0, NULL))
+	    {
+	       /*
+		* Mark it as a buffered rastport.
+		*/
+	       // rp->RP_User = ID_BFRP;
 
-               return rp;
-            };
-            /*
-             * No layer.
-             */
-            DisposeLayerInfo(li);
-         };
-         /*
-          * No layerinfo.
-          */
-         BGUI_FreeBitMap(rp->BitMap);
+	       return rp;
+	    };
+	    /*
+	     * No layer.
+	     */
+	    DisposeLayerInfo(li);
+	 };
+	 /*
+	  * No layerinfo.
+	  */
+	 BGUI_FreeBitMap(rp->BitMap);
       }
       /*
        * No bitmap.
@@ -672,9 +656,7 @@ makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap( REG(a0) struct Ras
    }
    return NULL;
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 /*
@@ -689,10 +671,8 @@ AROS_LH1(VOID, BGUI_FreeRPortBitMap,
 makeproto SAVEDS ASM VOID BGUI_FreeRPortBitMap( REG(a0) struct RastPort *rp )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    struct Layer      *l  = rp->Layer;
    struct Layer_Info *li = l->LayerInfo;
@@ -718,9 +698,7 @@ makeproto SAVEDS ASM VOID BGUI_FreeRPortBitMap( REG(a0) struct RastPort *rp )
     */
    BGUI_FreePoolMem(rp);
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 /*
@@ -739,10 +717,8 @@ AROS_LH4(BOOL, BGUI_Help,
 makeproto SAVEDS ASM BOOL BGUI_Help( REG(a0) struct Window *win, REG(a1) UBYTE *file, REG(a2) UBYTE *node, REG(d0) ULONG line )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
 #ifdef _AROS
 #warning Commented a bunch of lines!!!!!!
@@ -762,9 +738,8 @@ makeproto SAVEDS ASM BOOL BGUI_Help( REG(a0) struct Window *win, REG(a1) UBYTE *
     */
    return( DisplayAGuideInfo( &nag, TAG_END ));
 #endif
-#ifdef _AROS
+
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 
@@ -819,10 +794,8 @@ AROS_LH1(APTR, BGUI_LockWindow,
 makeproto SAVEDS ASM APTR BGUI_LockWindow( REG(a0) struct Window *win )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    WINDOWLOCK        *wl;
 
@@ -859,10 +832,7 @@ makeproto SAVEDS ASM APTR BGUI_LockWindow( REG(a0) struct Window *win )
 
    return( wl );
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
-
 }
 
 /*
@@ -877,10 +847,8 @@ AROS_LH1(VOID, BGUI_UnlockWindow,
 makeproto SAVEDS ASM VOID BGUI_UnlockWindow( REG(a0) APTR lock )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    WINDOWLOCK        *wl = ( WINDOWLOCK * )lock;
 
@@ -909,9 +877,7 @@ makeproto SAVEDS ASM VOID BGUI_UnlockWindow( REG(a0) APTR lock )
       BGUI_FreePoolMem( wl );
    }
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 #ifdef _AROS
@@ -924,10 +890,8 @@ AROS_LH2(STRPTR, BGUI_GetLocaleStr,
 makeproto SAVEDS ASM STRPTR BGUI_GetLocaleStr( REG(a0) struct bguiLocale *bl, REG(d0) ULONG id )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    STRPTR str = NULL;
    
@@ -937,19 +901,17 @@ makeproto SAVEDS ASM STRPTR BGUI_GetLocaleStr( REG(a0) struct bguiLocale *bl, RE
    {
       if (bl->bl_LocaleStrHook)
       {
-         bls.bls_ID = id;
-         str = (STRPTR)BGUI_CallHookPkt(bl->bl_LocaleStrHook, (void *)bl, (void *)&bls);
+	 bls.bls_ID = id;
+	 str = (STRPTR)BGUI_CallHookPkt(bl->bl_LocaleStrHook, (void *)bl, (void *)&bls);
       }
       else
       {
-         if (LocaleBase) str = GetLocaleStr(bl->bl_Locale, id);
+	 if (LocaleBase) str = GetLocaleStr(bl->bl_Locale, id);
       };
    };
    return str;
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 #ifdef _AROS
@@ -963,10 +925,8 @@ AROS_LH3(STRPTR, BGUI_GetCatalogStr,
 makeproto SAVEDS ASM STRPTR BGUI_GetCatalogStr( REG(a0) struct bguiLocale *bl, REG(d0) ULONG id, REG(a1) STRPTR str )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    struct bguiCatalogStr bcs;
 
@@ -974,20 +934,18 @@ makeproto SAVEDS ASM STRPTR BGUI_GetCatalogStr( REG(a0) struct bguiLocale *bl, R
    {
       if (bl->bl_CatalogStrHook)
       {
-         bcs.bcs_ID = id;
-         bcs.bcs_DefaultString = str;
-         str = (STRPTR)BGUI_CallHookPkt(bl->bl_CatalogStrHook, (void *)bl, (void *)&bcs);
+	 bcs.bcs_ID = id;
+	 bcs.bcs_DefaultString = str;
+	 str = (STRPTR)BGUI_CallHookPkt(bl->bl_CatalogStrHook, (void *)bl, (void *)&bcs);
       }
       else
       {
-         if (LocaleBase) str = GetCatalogStr(bl->bl_Catalog, id, str);
+	 if (LocaleBase) str = GetCatalogStr(bl->bl_Catalog, id, str);
       };
    };
    return str;
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 struct CallHookData

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/08/09 11:45:57  chodorowski
+ * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
+ *
  * Revision 42.3  2000/05/29 00:40:23  bergers
  * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
@@ -68,69 +71,69 @@ METHOD(DGMClassSet, struct opSet *, ops)
    {
       switch (tag->ti_Tag)
       {
-         case DGM_Result:
-            /*
-             * Pickup result storage. We return the result
-             * in a pointer passed to us to avoid the system
-             * glitch (or is it a real bug?).
-             */
-            res = ( ULONG * )tag->ti_Data;
-            break;
+	 case DGM_Result:
+	    /*
+	     * Pickup result storage. We return the result
+	     * in a pointer passed to us to avoid the system
+	     * glitch (or is it a real bug?).
+	     */
+	    res = ( ULONG * )tag->ti_Data;
+	    break;
 
-         case DGM_Object:
-            /*
-             * Pickup target object.
-             */
-            dd->dd_Target = (Object *)tag->ti_Data;
-            break;
-            
-         case DGM_IntuiMsg:
-            if (imsg = (struct IntuiMessage *)(tag->ti_Data))
-            {
-               dd->dd_Window           = imsg->IDCMPWindow;
-               
-               dd->ie.ie_NextEvent     = NULL;
-               dd->ie.ie_Class         = IECLASS_RAWMOUSE;
-               dd->ie.ie_Code          = imsg->Code;
-               dd->ie.ie_Qualifier     = imsg->Qualifier;
-               dd->ie.ie_X             = imsg->MouseX;
-               dd->ie.ie_Y             = imsg->MouseY;
-            }
-            break;
-         
-         case DGM_DoMethod:
-            domethod = TRUE;
+	 case DGM_Object:
+	    /*
+	     * Pickup target object.
+	     */
+	    dd->dd_Target = (Object *)tag->ti_Data;
+	    break;
+	    
+	 case DGM_IntuiMsg:
+	    if (imsg = (struct IntuiMessage *)(tag->ti_Data))
+	    {
+	       dd->dd_Window           = imsg->IDCMPWindow;
+	       
+	       dd->ie.ie_NextEvent     = NULL;
+	       dd->ie.ie_Class         = IECLASS_RAWMOUSE;
+	       dd->ie.ie_Code          = imsg->Code;
+	       dd->ie.ie_Qualifier     = imsg->Qualifier;
+	       dd->ie.ie_X             = imsg->MouseX;
+	       dd->ie.ie_Y             = imsg->MouseY;
+	    }
+	    break;
+	 
+	 case DGM_DoMethod:
+	    domethod = TRUE;
 
-            /*
-             * Get a pointer to the message.
-             */
-            ptr = (ULONG *)tag->ti_Data;
+	    /*
+	     * Get a pointer to the message.
+	     */
+	    ptr = (ULONG *)tag->ti_Data;
 
-            /*
-             * What kind of method?
-             */
-            switch (*ptr)
-            {
-               case OM_NEW:
-               case OM_SET:
-               case OM_UPDATE:
-               case OM_NOTIFY:
-                  /*
-                   * These get the GadgetInfo as the
-                   * third long-word.
-                   */
-                  ptr[2] = (ULONG)ops->ops_GInfo;
-                  break;
+	    /*
+	     * What kind of method?
+	     */
+	    switch (*ptr)
+	    {
+	       case OM_NEW:
+	       case OM_SET:
+	       case OM_UPDATE:
+	       case OM_NOTIFY:
+		  /*
+		   * These get the GadgetInfo as the
+		   * third long-word.
+		   */
+		  ptr[2] = (ULONG)ops->ops_GInfo;
+		  break;
 
-               default:
-                  /*
-                   * All the rest get it at the
-                   * second long-word.
-                   */
-                  ptr[1] = (ULONG)ops->ops_GInfo;
-                  break;
-            };
-            break;
+	       default:
+		  /*
+		   * All the rest get it at the
+		   * second long-word.
+		   */
+		  ptr[1] = (ULONG)ops->ops_GInfo;
+		  break;
+	    };
+	    break;
       };
    };
 
@@ -141,10 +144,10 @@ METHOD(DGMClassSet, struct opSet *, ops)
    {
       if (dd->dd_Target)
       {
-         *res = (ULONG)AsmDoMethodA(dd->dd_Target, (Msg)ptr);
-         /*
-          * Return result for compatibility reasons.
-          */
+	 *res = (ULONG)AsmDoMethodA(dd->dd_Target, (Msg)ptr);
+	 /*
+	  * Return result for compatibility reasons.
+	  */
       };
       return *res;
    }
@@ -175,10 +178,8 @@ AROS_LH4(ULONG, BGUI_DoGadgetMethodA,
 makeproto SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *obj, REG(a1) struct Window *win, REG(a2) struct Requester *req, REG(a3) Msg msg )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    Object      *dgm;
    ULONG        rc;
@@ -193,22 +194,22 @@ makeproto SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *obj, REG(a1) st
        */
       if (dgm = BGUI_NewObjectA(BGUI_DGM_OBJECT, NULL))
       {
-         /*
-          * Send of method to the target. We simple pass the DGMClass
-          * a pointer to the result storage, the target object and the
-          * method to send and the class takes care of the rest :)
-          */
-         SetGadgetAttrs((struct Gadget *)dgm, win, req, DGM_Result, &rc, DGM_Object, obj, DGM_DoMethod, msg, TAG_END);
+	 /*
+	  * Send of method to the target. We simple pass the DGMClass
+	  * a pointer to the result storage, the target object and the
+	  * method to send and the class takes care of the rest :)
+	  */
+	 SetGadgetAttrs((struct Gadget *)dgm, win, req, DGM_Result, &rc, DGM_Object, obj, DGM_DoMethod, msg, TAG_END);
 
-         /*
-          * Dispose of the object.
-          */
-         AsmDoMethod(dgm, OM_DISPOSE);
+	 /*
+	  * Dispose of the object.
+	  */
+	 AsmDoMethod(dgm, OM_DISPOSE);
 
-         /*
-          * Return result.
-          */
-         return rc;
+	 /*
+	  * Return result.
+	  */
+	 return rc;
       }
    }
 
@@ -218,9 +219,7 @@ makeproto SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *obj, REG(a1) st
     */
    return AsmDoMethodA(obj, msg);
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 ///
 /// GM_GOACTIVE, GM_HANDLEINPUT
@@ -235,20 +234,20 @@ METHOD(DGMClassGoActive, struct gpInput *, gpi2)
    if (target)
    {
       if (gpi.MethodID == GM_GOACTIVE)
-         gpi.gpi_IEvent = &dd->ie;
+	 gpi.gpi_IEvent = &dd->ie;
 
       Get_Attr(target, BT_HitBox, &bounds);
       if (bounds)
       {
-         gpi.gpi_Mouse.X = gpi.gpi_GInfo->gi_Window->MouseX - bounds->Left;
-         gpi.gpi_Mouse.Y = gpi.gpi_GInfo->gi_Window->MouseY - bounds->Top;
+	 gpi.gpi_Mouse.X = gpi.gpi_GInfo->gi_Window->MouseX - bounds->Left;
+	 gpi.gpi_Mouse.Y = gpi.gpi_GInfo->gi_Window->MouseY - bounds->Top;
       };
 
       /*
        * Forward the message to the target.
        */
       SetGadgetAttrs((struct Gadget *)obj, dd->dd_Window, NULL,
-         DGM_Result, &rc, DGM_Object, target, DGM_DoMethod, &gpi, TAG_END);
+	 DGM_Result, &rc, DGM_Object, target, DGM_DoMethod, &gpi, TAG_END);
    };
    return rc;
 }
@@ -269,19 +268,19 @@ METHOD(DGMClassGoInactive, Msg, msg)
        * Forward the message to the target.
        */
       SetGadgetAttrs((struct Gadget *)obj, dd->dd_Window, NULL,
-         DGM_Result, &rc, DGM_Object, target, DGM_DoMethod, msg, TAG_END);
+	 DGM_Result, &rc, DGM_Object, target, DGM_DoMethod, msg, TAG_END);
       
       if (win && report)
       {
-         id = GADGET(target)->GadgetID;
-         if (dd->ie.ie_Code == IECODE_RBUTTON)
-         {
-            AsmDoMethod(win, WM_REPORT_ID, id | WMHI_RMB, 0);
-         };
-         if (dd->ie.ie_Code == IECODE_MBUTTON)
-         {
-            AsmDoMethod(win, WM_REPORT_ID, id | WMHI_MMB, 0);
-         };
+	 id = GADGET(target)->GadgetID;
+	 if (dd->ie.ie_Code == IECODE_RBUTTON)
+	 {
+	    AsmDoMethod(win, WM_REPORT_ID, id | WMHI_RMB, 0);
+	 };
+	 if (dd->ie.ie_Code == IECODE_MBUTTON)
+	 {
+	    AsmDoMethod(win, WM_REPORT_ID, id | WMHI_MMB, 0);
+	 };
       };
    };
    return rc;
@@ -305,11 +304,12 @@ STATIC DPFUNC ClassFunc[] = {
 makeproto Class *InitDGMClass(void)
 {
    return BGUI_MakeClass(CLASS_SuperClassID, GadgetClass,
-                         CLASS_ObjectSize,   sizeof(DD),
-                         CLASS_DFTable,      ClassFunc,
-                         TAG_DONE);
+			 CLASS_ObjectSize,   sizeof(DD),
+			 CLASS_DFTable,      ClassFunc,
+			 TAG_DONE);
 }
 ///
+
 /*
  * I have created this class for two main reasons:
  *

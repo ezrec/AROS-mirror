@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/08/09 11:45:57  chodorowski
+ * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
+ *
  * Revision 42.2  2000/05/15 19:27:02  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -74,7 +77,7 @@ STATIC ASM REGFUNC3(UBYTE *, GetButtonName,
        */
       if (*source == uchar)
       {
-         uc[0] = tolower(source[1]);
+	 uc[0] = tolower(source[1]);
       };
       source++;
    };
@@ -124,8 +127,8 @@ STATIC Object *CreateButtonGroup( UBYTE *gstring, ULONG xen, UBYTE uchar, ULONG 
        */
       if (sing)
       {
-         if (!AsmDoMethod(master, GRM_ADDSPACEMEMBER, DEFAULT_WEIGHT))
-            goto fail;
+	 if (!AsmDoMethod(master, GRM_ADDSPACEMEMBER, DEFAULT_WEIGHT))
+	    goto fail;
       }
 
       /*
@@ -134,55 +137,55 @@ STATIC Object *CreateButtonGroup( UBYTE *gstring, ULONG xen, UBYTE uchar, ULONG 
        */
       while (ptr = gstring)
       {
-         /*
-          * Get a pointer to the next
-          * gadget name.
-          */
-         gstring = GetButtonName( gstring, &underscore[ 0 ], uchar );
+	 /*
+	  * Get a pointer to the next
+	  * gadget name.
+	  */
+	 gstring = GetButtonName( gstring, &underscore[ 0 ], uchar );
 
-         /*
-          * Default button?
-          */
-         if ((*ptr == '*') && (!got_def))
-         {
-            ptr++;
-            got_def = TRUE;
-            style = FSF_BOLD;
-         }
+	 /*
+	  * Default button?
+	  */
+	 if ((*ptr == '*') && (!got_def))
+	 {
+	    ptr++;
+	    got_def = TRUE;
+	    style = FSF_BOLD;
+	 }
 
-         /*
-          * Create the button.
-          */
-         if (button = BGUI_NewObject(BGUI_BUTTON_GADGET, LAB_Label, ptr, LAB_Style, style, LAB_Underscore, uchar,
-            GA_ID, id++, BT_Key, underscore, xen ? FRM_Type : TAG_IGNORE, FRTYPE_XEN_BUTTON, TAG_DONE))
-         {
-            /*
-             * Pick this button if it's the first
-             * created or the default button.
-             */
-            if ((id == 3) || (style == FSF_BOLD))
-               *retobj = button;
+	 /*
+	  * Create the button.
+	  */
+	 if (button = BGUI_NewObject(BGUI_BUTTON_GADGET, LAB_Label, ptr, LAB_Style, style, LAB_Underscore, uchar,
+	    GA_ID, id++, BT_Key, underscore, xen ? FRM_Type : TAG_IGNORE, FRTYPE_XEN_BUTTON, TAG_DONE))
+	 {
+	    /*
+	     * Pick this button if it's the first
+	     * created or the default button.
+	     */
+	    if ((id == 3) || (style == FSF_BOLD))
+	       *retobj = button;
 
-            /*
-             * Add it to the master group.
-             */
-            if ( ! AsmDoMethod( master, GRM_ADDMEMBER, button, LGO_FixMinHeight, TRUE, TAG_END ))
-               goto fail;
+	    /*
+	     * Add it to the master group.
+	     */
+	    if ( ! AsmDoMethod( master, GRM_ADDMEMBER, button, LGO_FixMinHeight, TRUE, TAG_END ))
+	       goto fail;
 
-         }
-         else
-         {
-            /*
-             * Button creation failed.
-             */
-            fail:
-            DisposeObject( master );
-            return NULL;
-         }
-         /*
-          * Reset style.
-          */
-         style = FS_NORMAL;
+	 }
+	 else
+	 {
+	    /*
+	     * Button creation failed.
+	     */
+	    fail:
+	    DisposeObject( master );
+	    return NULL;
+	 }
+	 /*
+	  * Reset style.
+	  */
+	 style = FS_NORMAL;
       }
 
       /*
@@ -196,8 +199,8 @@ STATIC Object *CreateButtonGroup( UBYTE *gstring, ULONG xen, UBYTE uchar, ULONG 
        */
       if (sing)
       {
-         if (!AsmDoMethod(master, GRM_ADDSPACEMEMBER, DEFAULT_WEIGHT))
-            goto fail;
+	 if (!AsmDoMethod(master, GRM_ADDSPACEMEMBER, DEFAULT_WEIGHT))
+	    goto fail;
       }
 
       /*
@@ -237,7 +240,7 @@ STATIC SAVEDS ASM REGFUNC3(VOID, ReqHookFunc,
     */
    case 0x34:
       if (msg->Qualifier & IEQUALIFIER_LCOMMAND)
-         id = (ihd->ihd_MaxID == 1) ? 1 : 2;
+	 id = (ihd->ihd_MaxID == 1) ? 1 : 2;
       break;
 
    /*
@@ -245,7 +248,7 @@ STATIC SAVEDS ASM REGFUNC3(VOID, ReqHookFunc,
     */
    case 0x35:
       if (msg->Qualifier & IEQUALIFIER_LCOMMAND)
-         id = 1;
+	 id = 1;
       break;
 
    /*
@@ -254,7 +257,7 @@ STATIC SAVEDS ASM REGFUNC3(VOID, ReqHookFunc,
    case 0x43:
    case 0x44:
       if (ihd->ihd_Request->br_Flags & BREQF_FAST_KEYS)
-         id = (ihd->ihd_MaxID == 1) ? 1 : GADGET(ihd->ihd_ReturnObj)->GadgetID;
+	 id = (ihd->ihd_MaxID == 1) ? 1 : GADGET(ihd->ihd_ReturnObj)->GadgetID;
       break;
 
    /*
@@ -262,7 +265,7 @@ STATIC SAVEDS ASM REGFUNC3(VOID, ReqHookFunc,
     */
    case 0x45:
       if (ihd->ihd_Request->br_Flags & BREQF_FAST_KEYS)
-         id = 1;
+	 id = 1;
       break;
    }
    if (id) AsmDoMethod(window, WM_REPORT_ID, id, 0);
@@ -283,10 +286,8 @@ AROS_LH3(ULONG, BGUI_RequestA,
 makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) struct bguiRequest *es, REG(a2) ULONG *args)
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    Object         *window;
    struct Screen  *screen;
@@ -318,120 +319,118 @@ makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) str
        */
       if (gstr = (UBYTE *)BGUI_AllocPoolMem(strlen(es->br_GadgetFormat) + 1))
       {
-         /*
-          * Copy the gadget string.
-          */
-         strcpy(gstr, es->br_GadgetFormat);
+	 /*
+	  * Copy the gadget string.
+	  */
+	 strcpy(gstr, es->br_GadgetFormat);
 
-         /*
-          * Figure out requester title.
-          */
-         if (es->br_Title) wdt = es->br_Title;
-         else
-         {
-            if (win && win->Title) wdt = win->Title;
-            else
-            {
-               InitLocale();
-               wdt = LOCSTR(MSG_BGUI_REQUESTA_TITLE);
-            }
-         }
+	 /*
+	  * Figure out requester title.
+	  */
+	 if (es->br_Title) wdt = es->br_Title;
+	 else
+	 {
+	    if (win && win->Title) wdt = win->Title;
+	    else
+	    {
+	       InitLocale();
+	       wdt = LOCSTR(MSG_BGUI_REQUESTA_TITLE);
+	    }
+	 }
 
-         /*
-          * Create a window object.
-          */
-         window = WindowObject,
-            WINDOW_Position,        es->br_ReqPos,
-            cw ? WINDOW_PosRelBox : TAG_IGNORE, IBOX( &win->LeftEdge ),
-            WINDOW_Title,           wdt,
-            WINDOW_CloseGadget,     FALSE,
-            WINDOW_SizeGadget,      FALSE,
-            WINDOW_RMBTrap,         TRUE,
-            WINDOW_SmartRefresh,    TRUE,
-            WINDOW_Font,            es->br_TextAttr,
-            WINDOW_IDCMP,           IDCMP_RAWKEY,
-            WINDOW_IDCMPHookBits,   IDCMP_RAWKEY,
-            WINDOW_IDCMPHook,       &ReqHook,
-            WINDOW_NoBufferRP,      TRUE,
-            WINDOW_AutoAspect,      es->br_Flags & BREQF_AUTO_ASPECT ? TRUE : FALSE,
-            WINDOW_AutoKeyLabel,    TRUE,
+	 /*
+	  * Create a window object.
+	  */
+	 window = WindowObject,
+	    WINDOW_Position,        es->br_ReqPos,
+	    cw ? WINDOW_PosRelBox : TAG_IGNORE, IBOX( &win->LeftEdge ),
+	    WINDOW_Title,           wdt,
+	    WINDOW_CloseGadget,     FALSE,
+	    WINDOW_SizeGadget,      FALSE,
+	    WINDOW_RMBTrap,         TRUE,
+	    WINDOW_SmartRefresh,    TRUE,
+	    WINDOW_Font,            es->br_TextAttr,
+	    WINDOW_IDCMP,           IDCMP_RAWKEY,
+	    WINDOW_IDCMPHookBits,   IDCMP_RAWKEY,
+	    WINDOW_IDCMPHook,       &ReqHook,
+	    WINDOW_NoBufferRP,      TRUE,
+	    WINDOW_AutoAspect,      es->br_Flags & BREQF_AUTO_ASPECT ? TRUE : FALSE,
+	    WINDOW_AutoKeyLabel,    TRUE,
 
-            screen ? WINDOW_Screen : TAG_IGNORE, screen,
+	    screen ? WINDOW_Screen : TAG_IGNORE, screen,
 
-            WINDOW_MasterGroup,
-               VGroupObject, NormalHOffset, NormalVOffset, NormalSpacing,
-                  es->br_Flags & BREQF_NO_PATTERN ? TAG_IGNORE : GROUP_BackFill, SHINE_RASTER,
-                  StartMember,
-                     InfoObject,
-                        FRM_Type,            FRTYPE_BUTTON,
-                        FRM_Recessed,        TRUE,
-                        INFO_TextFormat,     es->br_TextFormat,
-                        INFO_FixTextWidth,   TRUE,
-                        INFO_FixTextHeight,  TRUE,
-                        INFO_Args,           args,
-                        INFO_HorizOffset,    10,
-                        INFO_VertOffset,     6,
-                     EndObject,
-                  EndMember,
-                  StartMember,
-                     CreateButtonGroup(gstr, es->br_Flags & BREQF_XEN_BUTTONS, es->br_Underscore, &maxid, &ihd.ihd_ReturnObj),
-                     LGO_FixMinHeight, TRUE, 
-                  EndMember,
-               EndObject,
-            EndObject;
+	    WINDOW_MasterGroup,
+	       VGroupObject, NormalHOffset, NormalVOffset, NormalSpacing,
+		  es->br_Flags & BREQF_NO_PATTERN ? TAG_IGNORE : GROUP_BackFill, SHINE_RASTER,
+		  StartMember,
+		     InfoObject,
+			FRM_Type,            FRTYPE_BUTTON,
+			FRM_Recessed,        TRUE,
+			INFO_TextFormat,     es->br_TextFormat,
+			INFO_FixTextWidth,   TRUE,
+			INFO_FixTextHeight,  TRUE,
+			INFO_Args,           args,
+			INFO_HorizOffset,    10,
+			INFO_VertOffset,     6,
+		     EndObject,
+		  EndMember,
+		  StartMember,
+		     CreateButtonGroup(gstr, es->br_Flags & BREQF_XEN_BUTTONS, es->br_Underscore, &maxid, &ihd.ihd_ReturnObj),
+		     LGO_FixMinHeight, TRUE, 
+		  EndMember,
+	       EndObject,
+	    EndObject;
 
-         if (window)
-         {
-            /*
-             * Setup hook data.
-             */
-            ihd.ihd_Request = es;
-            ihd.ihd_MaxID  = maxid;
-            ReqHook.h_Data = ( APTR )&ihd;
+	 if (window)
+	 {
+	    /*
+	     * Setup hook data.
+	     */
+	    ihd.ihd_Request = es;
+	    ihd.ihd_MaxID  = maxid;
+	    ReqHook.h_Data = ( APTR )&ihd;
 
-            /*
-             * Open the window and wait
-             * for a gadget click.
-             */
-            if (wptr = (struct Window *)AsmDoMethod(window, WM_OPEN))
-            {
-               /*
-                * Lock parent window?
-                */
-               if ((es->br_Flags & BREQF_LOCKWINDOW) && win)
-                  rlock = BGUI_LockWindow(win);
+	    /*
+	     * Open the window and wait
+	     * for a gadget click.
+	     */
+	    if (wptr = (struct Window *)AsmDoMethod(window, WM_OPEN))
+	    {
+	       /*
+		* Lock parent window?
+		*/
+	       if ((es->br_Flags & BREQF_LOCKWINDOW) && win)
+		  rlock = BGUI_LockWindow(win);
 
-               /*
-                * Pick up signal bit.
-                */
-               Get_Attr(window, WINDOW_SigMask, &signal);
+	       /*
+		* Pick up signal bit.
+		*/
+	       Get_Attr(window, WINDOW_SigMask, &signal);
 
-               do
-               {
-                  Wait(signal);
-                  while((id = AsmDoMethod( window, WM_HANDLEIDCMP )) != WMHI_NOMORE)
-                  {
-                     /*
-                      * Gadget clicked?
-                      */
-                     if (id >= 1 && id <= maxid)
-                     {
-                        rc = id - 1;
-                        running = FALSE;
-                     }
-                  }
-               } while (running);
-               AsmDoMethod(window, WM_CLOSE);
-               BGUI_UnlockWindow(rlock);
-            }
-            DisposeObject(window);
-         }
-         BGUI_FreePoolMem(gstr);
+	       do
+	       {
+		  Wait(signal);
+		  while((id = AsmDoMethod( window, WM_HANDLEIDCMP )) != WMHI_NOMORE)
+		  {
+		     /*
+		      * Gadget clicked?
+		      */
+		     if (id >= 1 && id <= maxid)
+		     {
+			rc = id - 1;
+			running = FALSE;
+		     }
+		  }
+	       } while (running);
+	       AsmDoMethod(window, WM_CLOSE);
+	       BGUI_UnlockWindow(rlock);
+	    }
+	    DisposeObject(window);
+	 }
+	 BGUI_FreePoolMem(gstr);
       }
    }
    return rc;
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }

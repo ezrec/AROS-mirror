@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/08/09 11:45:57  chodorowski
+ * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
+ *
  * Revision 42.2  2000/05/15 19:27:02  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -91,8 +94,8 @@ STATIC UBYTE *Text_Get(TD *td)
    {
       if (text = BGUI_AllocPoolMem(CompStrlenF(td->td_Text, td->td_Args)))
       {
-         DoSPrintF(text, td->td_Text, td->td_Args);
-         return text;
+	 DoSPrintF(text, td->td_Text, td->td_Args);
+	 return text;
       };
       return NULL;
    };
@@ -121,8 +124,8 @@ static void Text_Set(TD *td, char *text)
    {
       if (td->td_Text = BGUI_AllocPoolMem(strlen(text)+1))
       {
-         strcpy(td->td_Text, text);
-         td->td_Flags |= TEXTF_COPIED;
+	 strcpy(td->td_Text, text);
+	 td->td_Flags |= TEXTF_COPIED;
       };
    }
    else
@@ -203,7 +206,7 @@ METHOD(TextClassSetCustom, struct rmAttr *, ra)
    case TEXTA_CopyText:
       if (data && !(td->td_Flags & TEXTF_COPIED))
       {
-         Text_Set(td, td->td_Text);
+	 Text_Set(td, td->td_Text);
       };
       break;
    };
@@ -335,9 +338,9 @@ STATIC DPFUNC ClassFunc[] = {
 makeproto Class *InitTextClass(void)
 {
    return BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_ROOT_OBJECT,
-                         CLASS_ObjectSize,     sizeof(TD),
-                         CLASS_DFTable,        ClassFunc,
-                         TAG_DONE);
+			 CLASS_ObjectSize,     sizeof(TD),
+			 CLASS_DFTable,        ClassFunc,
+			 TAG_DONE);
 }
 ///
 
@@ -362,17 +365,13 @@ AROS_LH4(VOID, BGUI_InfoTextSize,
 makeproto SAVEDS ASM VOID BGUI_InfoTextSize(REG(a0) struct RastPort *rp, REG(a1) UBYTE *text, REG(a2) UWORD *wi, REG(a3) UWORD *wh)
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    if (wi) *wi = TotalWidth( rp, text);
    if (wh) *wh = TotalHeight(rp, text);
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 /*
@@ -392,16 +391,12 @@ AROS_LH4(VOID, BGUI_InfoText,
 makeproto SAVEDS ASM VOID BGUI_InfoText( REG(a0) struct RastPort *rp, REG(a1) UBYTE *text, REG(a2) struct IBox *bounds, REG(a3) struct DrawInfo *dri )
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    RenderInfoText(rp, text, PENS(dri), bounds, (UWORD)~0);
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 /*
@@ -454,35 +449,35 @@ STATIC UBYTE *ParseCommSeq(struct BaseInfo *bi, UBYTE *text, UWORD *old_style, U
       switch (*text++)
       {
       case 'b':
-         new_style &= ~FSF_BOLD;
-         break;
+	 new_style &= ~FSF_BOLD;
+	 break;
       case 'i':
-         new_style &= ~FSF_ITALIC;
-         break;
+	 new_style &= ~FSF_ITALIC;
+	 break;
       case 'u':
-         new_style &= ~FSF_UNDERLINED;
-         break;
+	 new_style &= ~FSF_UNDERLINED;
+	 break;
       case 's':
-         *flags &= ~TF_SHADOW;
-         break;
+	 *flags &= ~TF_SHADOW;
+	 break;
       case 'k':
-         *flags &= ~TF_KEEP;
-         break;
+	 *flags &= ~TF_KEEP;
+	 break;
       case 'w':
-         *flags &= ~TF_WRAP;
-         break;
+	 *flags &= ~TF_WRAP;
+	 break;
       case 'z':
-         *flags &= ~TF_UNDERLINE;
-         break;
+	 *flags &= ~TF_UNDERLINE;
+	 break;
       case 'Z':
-         *flags &= ~TF_HIGHUNDERLINE;
-         break;
+	 *flags &= ~TF_HIGHUNDERLINE;
+	 break;
       default:
-         text -= 2;
-         break;
+	 text -= 2;
+	 break;
       };
       break;
-         
+	 
    case 'b':                           /* Bold.       */
       new_style |= FSF_BOLD;
       break;
@@ -610,32 +605,32 @@ STATIC WORD XPos(struct BaseInfo *bi, UBYTE *text, UWORD *old_style, struct IBox
       switch (*text)
       {
       case '\33':
-         /*
-          * Command sequence.
-          */
-         text = ParseCommSeq(&bi2, text + 1, &new_style, flags);
-         break;
+	 /*
+	  * Command sequence.
+	  */
+	 text = ParseCommSeq(&bi2, text + 1, &new_style, flags);
+	 break;
 
       default:
-         i = 0;
-         /*
-          * Count non-action characters.
-          */
-         while (text[i] && (text[i] != '\33') && (text[i] != '\n')) i++;
+	 i = 0;
+	 /*
+	  * Count non-action characters.
+	  */
+	 while (text[i] && (text[i] != '\33') && (text[i] != '\n')) i++;
 
-         if (i)
-         {
-            /*
-             * Determine their length.
-             */
-            line_len += TextWidthNum(&rp2, text, i);
+	 if (i)
+	 {
+	    /*
+	     * Determine their length.
+	     */
+	    line_len += TextWidthNum(&rp2, text, i);
 
-            /*
-             * Adjust pointer.
-             */
-            text += i;
-         }
-         break;
+	    /*
+	     * Adjust pointer.
+	     */
+	    text += i;
+	 }
+	 break;
       }
    }
 
@@ -721,54 +716,54 @@ makeproto ASM REGFUNC2(UWORD, TotalWidth,
       switch (*text)
       {
       case '\33':
-         /*
-          * Escape sequence.
-          */
-         text = ParseCommSeq(&bi, ++text, &new_style, &flags);
-         break;
+	 /*
+	  * Escape sequence.
+	  */
+	 text = ParseCommSeq(&bi, ++text, &new_style, &flags);
+	 break;
 
       default:
-         i = 0;
-         /*
-          * Count the non-action characters.
-          */
-         while (text[i] && (text[i] != '\33') && (text[i] != '\n')) i++;
+	 i = 0;
+	 /*
+	  * Count the non-action characters.
+	  */
+	 while (text[i] && (text[i] != '\33') && (text[i] != '\n')) i++;
 
-         /*
-          * Determine their length.
-          */
-         line_len += TextWidthNum(&rport, text, i);
+	 /*
+	  * Determine their length.
+	  */
+	 line_len += TextWidthNum(&rport, text, i);
 
-         /*
-          * New line or end-of-line?
-          */
-         if (text[i] == '\n' || text[i] == '\0')
-         {
-            if (!(flags & TF_WRAP))
-            {
-               /*
-                * Is it wider than the previous ones?
-                */
-               if (line_len > len)
-                  len = line_len;
-            };
+	 /*
+	  * New line or end-of-line?
+	  */
+	 if (text[i] == '\n' || text[i] == '\0')
+	 {
+	    if (!(flags & TF_WRAP))
+	    {
+	       /*
+		* Is it wider than the previous ones?
+		*/
+	       if (line_len > len)
+		  len = line_len;
+	    };
 
-            /*
-             * Go on when this was a new line.
-             */
-            if (text[i] == '\n')
-            {
-               text++;
-               BSetFontStyle(&bi, FS_NORMAL);
-            };
+	    /*
+	     * Go on when this was a new line.
+	     */
+	    if (text[i] == '\n')
+	    {
+	       text++;
+	       BSetFontStyle(&bi, FS_NORMAL);
+	    };
 
-            /*
-             * Set line_len to 0.
-             */
-            line_len = 0;
-         };
-         text += i;
-         break;
+	    /*
+	     * Set line_len to 0.
+	     */
+	    line_len = 0;
+	 };
+	 text += i;
+	 break;
       }
    }
    return (UWORD)len;
@@ -797,16 +792,16 @@ makeproto void RenderInfoText(struct RastPort *rp, UBYTE *text, UWORD *pens, str
        */
       if (backpen != (UWORD)~1)
       {
-         if (backpen != (UWORD)~0)
-         {
-            BSetPenA(bi, backpen);
-            BBoxFillA(bi, domain);
-         };
+	 if (backpen != (UWORD)~0)
+	 {
+	    BSetPenA(bi, backpen);
+	    BBoxFillA(bi, domain);
+	 };
 
-         /*
-          * Set initial pen.
-          */
-         BSetDPenA(bi, (backpen == bi->bi_Pens[FILLPEN]) ? FILLTEXTPEN : TEXTPEN);
+	 /*
+	  * Set initial pen.
+	  */
+	 BSetDPenA(bi, (backpen == bi->bi_Pens[FILLPEN]) ? FILLTEXTPEN : TEXTPEN);
       };
       RenderText(bi, text, domain);
 
@@ -867,105 +862,105 @@ makeproto void RenderText(struct BaseInfo *bi, UBYTE *text, struct IBox *domain)
       switch (*text)
       {
       case '\33':
-         /*
-          * Command sequence.
-          */
-         text = ParseCommSeq(bi, ++text, &style, &flags);
-         break;
+	 /*
+	  * Command sequence.
+	  */
+	 text = ParseCommSeq(bi, ++text, &style, &flags);
+	 break;
 
       case '\n':
-         /*
-          * Newline.
-          */
-         text++;
+	 /*
+	  * Newline.
+	  */
+	 text++;
 
-         /*
-          * New position.
-          */
-         xpos = XPos(bi, text, &dubstyle, domain, &flags);
+	 /*
+	  * New position.
+	  */
+	 xpos = XPos(bi, text, &dubstyle, domain, &flags);
 
-         /*
-          * Are we passing the bottom of the
-          * rendering area?
-          */
-         if ((ypos += rp->TxHeight ) > domain->Top + domain->Height - 1)
-            return;
+	 /*
+	  * Are we passing the bottom of the
+	  * rendering area?
+	  */
+	 if ((ypos += rp->TxHeight ) > domain->Top + domain->Height - 1)
+	    return;
 
-         Move(rp, xpos, ypos);
-         if (!(flags & TF_KEEP))
-         {
-            BSetFontStyle(bi, FS_NORMAL);
-            flags &= ~(TF_SHADOW|TF_UNDERLINE|TF_HIGHUNDERLINE);
-         };
-         break;
+	 Move(rp, xpos, ypos);
+	 if (!(flags & TF_KEEP))
+	 {
+	    BSetFontStyle(bi, FS_NORMAL);
+	    flags &= ~(TF_SHADOW|TF_UNDERLINE|TF_HIGHUNDERLINE);
+	 };
+	 break;
 
       default:
-         /*
-          * Count non-action characters.
-          */
-         i = 0;
-         while (text[i] && (text[i] != '\33') && (text[i] != '\n')) i++;
+	 /*
+	  * Count non-action characters.
+	  */
+	 i = 0;
+	 while (text[i] && (text[i] != '\33') && (text[i] != '\n')) i++;
 
-         if (i)
-         {
-            /*
-             * Render them.
-             */
-            if (numc = TextFit(rp, text, i, &extent, NULL, 0, max((LONG)(domain->Width - (xpos - domain->Left)), 0), rp->TxHeight))
-            {
-               if (flags & TF_SHADOW)
-               {
-                  old_a = FGetAPen(rp);
-                  old_m = FGetDrMd(rp);
-                  BSetDPenA(bi, SHADOWPEN);
-                  Move(rp, xpos + 1, ypos + 1);
-                  Text(rp, text, numc);
-                  BSetPenA(bi, old_a);
-                  BSetDrMd(bi, JAM1);
-                  Move(rp, xpos, ypos);
-                  Text(rp, text, numc);
-                  BSetDrMd(bi, old_m);
-               }
-               else
-               {
-                  if (flags & (TF_UNDERLINE|TF_HIGHUNDERLINE))
-                  {
-                     if (flags & TF_HIGHUNDERLINE)
-                     {
-                        old_a = FGetAPen(rp);
-                        BSetDPenA(bi, SHINEPEN);
-                     };
-                     Move(rp, xpos, ypos + 2);
-                     Draw(rp, xpos + TextLength(rp, text, numc) - 2, ypos + 2);
-                     if (flags & TF_HIGHUNDERLINE)
-                     {
-                        BSetPenA(bi, old_a);
-                     };
-                  };
-                  Move(rp, xpos, ypos);
-                  Text(rp, text, numc);
-               };
+	 if (i)
+	 {
+	    /*
+	     * Render them.
+	     */
+	    if (numc = TextFit(rp, text, i, &extent, NULL, 0, max((LONG)(domain->Width - (xpos - domain->Left)), 0), rp->TxHeight))
+	    {
+	       if (flags & TF_SHADOW)
+	       {
+		  old_a = FGetAPen(rp);
+		  old_m = FGetDrMd(rp);
+		  BSetDPenA(bi, SHADOWPEN);
+		  Move(rp, xpos + 1, ypos + 1);
+		  Text(rp, text, numc);
+		  BSetPenA(bi, old_a);
+		  BSetDrMd(bi, JAM1);
+		  Move(rp, xpos, ypos);
+		  Text(rp, text, numc);
+		  BSetDrMd(bi, old_m);
+	       }
+	       else
+	       {
+		  if (flags & (TF_UNDERLINE|TF_HIGHUNDERLINE))
+		  {
+		     if (flags & TF_HIGHUNDERLINE)
+		     {
+			old_a = FGetAPen(rp);
+			BSetDPenA(bi, SHINEPEN);
+		     };
+		     Move(rp, xpos, ypos + 2);
+		     Draw(rp, xpos + TextLength(rp, text, numc) - 2, ypos + 2);
+		     if (flags & TF_HIGHUNDERLINE)
+		     {
+			BSetPenA(bi, old_a);
+		     };
+		  };
+		  Move(rp, xpos, ypos);
+		  Text(rp, text, numc);
+	       };
 
-               /*
-                * Skip remainder of the line
-                * if possible.
-                */
-               if (numc < i)
-               {
-                  while (text[i] && text[i] != '\n')
-                     i++;
-               };
-               /*
-                * Adjust x position.
-                */
-               xpos += TextWidthNum(rp, text, numc);
-            };
-            /*
-             * Adjust pointer.
-             */
-            text += i;
-         }
-         break;
+	       /*
+		* Skip remainder of the line
+		* if possible.
+		*/
+	       if (numc < i)
+	       {
+		  while (text[i] && text[i] != '\n')
+		     i++;
+	       };
+	       /*
+		* Adjust x position.
+		*/
+	       xpos += TextWidthNum(rp, text, numc);
+	    };
+	    /*
+	     * Adjust pointer.
+	     */
+	    text += i;
+	 }
+	 break;
       }
    }
 }

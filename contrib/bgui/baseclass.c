@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/08/09 11:45:57  chodorowski
+ * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
+ *
  * Revision 42.4  2000/07/07 17:07:49  stegerg
  * fixed PACKW #define, which must be different on AROS, because
  * I changed all methods to use STACKULONG/STACKUWORD/??? types.
@@ -192,14 +195,10 @@ AROS_LH3(VOID, BGUI_PostRender,
 makeproto SAVEDS ASM VOID BGUI_PostRender(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpRender *gpr)
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 /// RM_REFRESH
@@ -365,8 +364,8 @@ METHOD(BaseClassSet, struct rmAttr *, ra)
 
       if (!bd->bd_Label && LAB_TAG(attr))
       {
-         bd->bd_Label = BGUI_NewObject(BGUI_LABEL_IMAGE, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_DONE);
-         rc = RAF_RESIZE;
+	 bd->bd_Label = BGUI_NewObject(BGUI_LABEL_IMAGE, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_DONE);
+	 rc = RAF_RESIZE;
       };
       if (bd->bd_Label) rc |= AsmDoMethodA(bd->bd_Label, (Msg)ra);
 
@@ -374,51 +373,51 @@ METHOD(BaseClassSet, struct rmAttr *, ra)
 
       if (LGO_TAG(attr))
       {
-         rc = RAF_UNDERSTOOD|RAF_RESIZE;
+	 rc = RAF_UNDERSTOOD|RAF_RESIZE;
 
-         if (bd->bd_Member) DoSetMethodNG(bd->bd_Member, attr, data, TAG_DONE);
+	 if (bd->bd_Member) DoSetMethodNG(bd->bd_Member, attr, data, TAG_DONE);
       }
       else if (FRM_TAG(attr))
       {
-         rc = RAF_UNDERSTOOD|RAF_REDRAW;
+	 rc = RAF_UNDERSTOOD|RAF_REDRAW;
 
-         if (attr == FRM_Type) rc |= RAF_RESIZE;
+	 if (attr == FRM_Type) rc |= RAF_RESIZE;
 
-         if (bd->bd_Frame)
-         {
-            DoSetMethodNG(bd->bd_Frame, attr, data, TAG_DONE);
-         }
-         else
-         {
-            if (attr != FRM_ThinFrame)
-            {
-               bd->bd_Frame = BGUI_NewObject(BGUI_FRAME_IMAGE, attr, data, IMAGE_InBorder,
-                                             GADGET(obj)->Activation & BORDERMASK, TAG_DONE);
-               rc |= RAF_RESIZE;
-            };
-         };
+	 if (bd->bd_Frame)
+	 {
+	    DoSetMethodNG(bd->bd_Frame, attr, data, TAG_DONE);
+	 }
+	 else
+	 {
+	    if (attr != FRM_ThinFrame)
+	    {
+	       bd->bd_Frame = BGUI_NewObject(BGUI_FRAME_IMAGE, attr, data, IMAGE_InBorder,
+					     GADGET(obj)->Activation & BORDERMASK, TAG_DONE);
+	       rc |= RAF_RESIZE;
+	    };
+	 };
       };
    }
    else
    {
       switch(ra->ra_Attr->ti_Tag)
       {
-         case GA_TopBorder:
-         case GA_BottomBorder:
-         case GA_LeftBorder:
-         case GA_RightBorder:
-            bd = (BD *)INST_DATA(cl, obj);
-            if (bd->bd_Frame)
-            {
-               DoSetMethodNG(bd->bd_Frame, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
-               rc |= RAF_REDRAW;
-            };
-            if (bd->bd_Label)
-            {
-               DoSetMethodNG(bd->bd_Label, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
-               rc |= RAF_REDRAW;
-            };
-            break;
+	 case GA_TopBorder:
+	 case GA_BottomBorder:
+	 case GA_LeftBorder:
+	 case GA_RightBorder:
+	    bd = (BD *)INST_DATA(cl, obj);
+	    if (bd->bd_Frame)
+	    {
+	       DoSetMethodNG(bd->bd_Frame, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
+	       rc |= RAF_REDRAW;
+	    };
+	    if (bd->bd_Label)
+	    {
+	       DoSetMethodNG(bd->bd_Label, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
+	       rc |= RAF_REDRAW;
+	    };
+	    break;
       }
    }
    return rc;
@@ -442,8 +441,8 @@ METHOD(BaseClassSetCustom, struct rmAttr *, ra)
       if (bd->bd_Label) DisposeObject(bd->bd_Label);
       if (bd->bd_Label = (Object *)data)
       {
-         bd->bd_Flags &= ~BDF_GOT_LABEL_EXT;
-         DoSetMethodNG(bd->bd_Label, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
+	 bd->bd_Flags &= ~BDF_GOT_LABEL_EXT;
+	 DoSetMethodNG(bd->bd_Label, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
       };
       break;
 
@@ -451,7 +450,7 @@ METHOD(BaseClassSetCustom, struct rmAttr *, ra)
       if (bd->bd_Frame) DisposeObject(bd->bd_Frame);
       if (bd->bd_Frame = (Object *)data)
       {
-         DoSetMethodNG(bd->bd_Frame, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
+	 DoSetMethodNG(bd->bd_Frame, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
       };
       break;
 
@@ -461,29 +460,29 @@ METHOD(BaseClassSetCustom, struct rmAttr *, ra)
        * not set at create time.
        */
       if (bd->bd_Flags & BDF_FIXED_FONT)
-         break;
+	 break;
 
       /*
        * We only change the font when it opens ok.
        */
       if (ta = (struct TextAttr *)data)
       {
-         if (tf = BGUI_OpenFont(ta))
-         {
-            bd->bd_TextAttr = ta;
-            if(bd->bd_TextFont)
-            	BGUI_CloseFont(bd->bd_TextFont);
-            bd->bd_TextFont = tf;
-            bd->bd_Flags   &= ~BDF_GOT_LABEL_EXT;
+	 if (tf = BGUI_OpenFont(ta))
+	 {
+	    bd->bd_TextAttr = ta;
+	    if(bd->bd_TextFont)
+		BGUI_CloseFont(bd->bd_TextFont);
+	    bd->bd_TextFont = tf;
+	    bd->bd_Flags   &= ~BDF_GOT_LABEL_EXT;
 
-            if (ra->ra_Flags & RAF_INITIAL) bd->bd_Flags |= BDF_FIXED_FONT;
+	    if (ra->ra_Flags & RAF_INITIAL) bd->bd_Flags |= BDF_FIXED_FONT;
 
-            /*
-             * Change the font settings on the images.
-             */
-            if (bd->bd_Label) DoSetMethodNG(bd->bd_Label, IMAGE_TextFont, tf, TAG_END);
-            if (bd->bd_Frame) DoSetMethodNG(bd->bd_Frame, IMAGE_TextFont, tf, TAG_END);
-         };
+	    /*
+	     * Change the font settings on the images.
+	     */
+	    if (bd->bd_Label) DoSetMethodNG(bd->bd_Label, IMAGE_TextFont, tf, TAG_END);
+	    if (bd->bd_Frame) DoSetMethodNG(bd->bd_Frame, IMAGE_TextFont, tf, TAG_END);
+	 };
       };
       break;
 
@@ -502,8 +501,8 @@ METHOD(BaseClassSetCustom, struct rmAttr *, ra)
    case BT_ParentWindow:
       if (bd->bd_Flags & BDF_CACHE_NOTIFY)
       {
-         //DoNotifyMethod(obj, ops->ops_GInfo, 0, GA_ID, GADGET(obj)->GadgetID, TAG_END);
-         bd->bd_Flags &= ~BDF_CACHE_NOTIFY;
+	 //DoNotifyMethod(obj, ops->ops_GInfo, 0, GA_ID, GADGET(obj)->GadgetID, TAG_END);
+	 bd->bd_Flags &= ~BDF_CACHE_NOTIFY;
       };
       break;
    };
@@ -617,7 +616,7 @@ METHOD(BaseClassRenderX, struct gpRender *, gpr)
        */
       if (bd->bd_Window)
       {
-         Get_Attr(bd->bd_Window, WINDOW_BufferRP, (ULONG *)&rp);
+	 Get_Attr(bd->bd_Window, WINDOW_BufferRP, (ULONG *)&rp);
       }
    };
 
@@ -639,21 +638,21 @@ METHOD(BaseClassRenderX, struct gpRender *, gpr)
       if (bi = AllocBaseInfo(BI_GadgetInfo, gpr->gpr_GInfo, BI_RastPort, rp, TAG_DONE))
 #endif
       {
-         bi->bi_Window = bd->bd_Parent;
+	 bi->bi_Window = bd->bd_Parent;
 
-         /*
-          * Layout the object.
-          */
-         if (rc = AsmDoMethod(obj, BASE_LAYOUT, bi, GADGETBOX(obj), 0))
-         {
-            /*
-             * Remove layer from buffer if not needed.
-             */
-            //if (bd->bd_Parent) AsmDoMethod(bd->bd_Parent, WM_CLIP, NULL, CLIPACTION_NONE);
+	 /*
+	  * Layout the object.
+	  */
+	 if (rc = AsmDoMethod(obj, BASE_LAYOUT, bi, GADGETBOX(obj), 0))
+	 {
+	    /*
+	     * Remove layer from buffer if not needed.
+	     */
+	    //if (bd->bd_Parent) AsmDoMethod(bd->bd_Parent, WM_CLIP, NULL, CLIPACTION_NONE);
 
-            rc = AsmDoMethod(obj, BASE_RENDER, bi, gpr->gpr_Redraw);
-         };
-         FreeBaseInfo(bi);
+	    rc = AsmDoMethod(obj, BASE_RENDER, bi, gpr->gpr_Redraw);
+	 };
+	 FreeBaseInfo(bi);
       };
    };
 
@@ -661,73 +660,73 @@ METHOD(BaseClassRenderX, struct gpRender *, gpr)
    {
       if (bd->bd_View)
       {
-         if (rp != gpr->gpr_RPort)
-         {
-            Get_Attr(bd->bd_View, VIEW_AbsoluteX, &x);
-            Get_Attr(bd->bd_View, VIEW_AbsoluteY, &y);
+	 if (rp != gpr->gpr_RPort)
+	 {
+	    Get_Attr(bd->bd_View, VIEW_AbsoluteX, &x);
+	    Get_Attr(bd->bd_View, VIEW_AbsoluteY, &y);
 
-            from_x = bd->bd_OuterBox.Left;
-            from_y = bd->bd_OuterBox.Top;
+	    from_x = bd->bd_OuterBox.Left;
+	    from_y = bd->bd_OuterBox.Top;
 
-            to.Left   = to_x = x + from_x;
-            to.Top    = to_y = y + from_y;
-            to.Width  = bd->bd_OuterBox.Width;
-            to.Height = bd->bd_OuterBox.Height;
+	    to.Left   = to_x = x + from_x;
+	    to.Top    = to_y = y + from_y;
+	    to.Width  = bd->bd_OuterBox.Width;
+	    to.Height = bd->bd_OuterBox.Height;
 
-            /*
-             * Convert from ibox to rectangle.
-             */
-            to.Width  += to.Left - 1;
-            to.Height += to.Top  - 1;
+	    /*
+	     * Convert from ibox to rectangle.
+	     */
+	    to.Width  += to.Left - 1;
+	    to.Height += to.Top  - 1;
 
-            AsmDoMethod(bd->bd_View, VIEW_CLIP, &to, TRUE);
+	    AsmDoMethod(bd->bd_View, VIEW_CLIP, &to, TRUE);
 
-            /*
-             * Convert from rectangle to ibox.
-             */
-            to.Width  -= to.Left - 1;
-            to.Height -= to.Top  - 1;
+	    /*
+	     * Convert from rectangle to ibox.
+	     */
+	    to.Width  -= to.Left - 1;
+	    to.Height -= to.Top  - 1;
 
-            /*
-             * Get clipping offsets.
-             */
-            from_x += to.Left - to_x;
-            from_y += to.Top  - to_y;
+	    /*
+	     * Get clipping offsets.
+	     */
+	    from_x += to.Left - to_x;
+	    from_y += to.Top  - to_y;
 
-            /*
-             * Copy the object to the window.
-             */
-            if(to.Width>0
-            && to.Height>0)
-               ClipBlit(rp, from_x, from_y, gpr->gpr_RPort, to.Left, to.Top, to.Width, to.Height, 0xC0);
+	    /*
+	     * Copy the object to the window.
+	     */
+	    if(to.Width>0
+	    && to.Height>0)
+	       ClipBlit(rp, from_x, from_y, gpr->gpr_RPort, to.Left, to.Top, to.Width, to.Height, 0xC0);
 
-            //if (BASE_DATA(bd->bd_View)->bc_View)
-            //{
-            //   DoSetMethodNG(BASE_DATA(bd->bd_View)->bc_View, VIEW_ObjectBuffer, NULL, TAG_DONE);
-            //};
-         };
+	    //if (BASE_DATA(bd->bd_View)->bc_View)
+	    //{
+	    //   DoSetMethodNG(BASE_DATA(bd->bd_View)->bc_View, VIEW_ObjectBuffer, NULL, TAG_DONE);
+	    //};
+	 };
       }
       else
       {
-         if (rp && (rp != gpr->gpr_RPort))
-         {
-            /*
-             * Remove layer from buffer.
-             */
-            if (bd->bd_Window)
-            {
-               AsmDoMethod(bd->bd_Window, WM_CLIP, NULL, CLIPACTION_NONE);
-            };
+	 if (rp && (rp != gpr->gpr_RPort))
+	 {
+	    /*
+	     * Remove layer from buffer.
+	     */
+	    if (bd->bd_Window)
+	    {
+	       AsmDoMethod(bd->bd_Window, WM_CLIP, NULL, CLIPACTION_NONE);
+	    };
 
-            box = (gpr->gpr_Redraw == GREDRAW_REDRAW) ? &bd->bd_OuterBox : &bd->bd_InnerBox;
+	    box = (gpr->gpr_Redraw == GREDRAW_REDRAW) ? &bd->bd_OuterBox : &bd->bd_InnerBox;
 
-            /*
-             * Blast the GUI to the window.
-             */
-            if(box->Width>0
-            && box->Height>0)
-               ClipBlit(rp, box->Left, box->Top, gpr->gpr_RPort, box->Left, box->Top, box->Width, box->Height, 0xC0);
-         };
+	    /*
+	     * Blast the GUI to the window.
+	     */
+	    if(box->Width>0
+	    && box->Height>0)
+	       ClipBlit(rp, box->Left, box->Top, gpr->gpr_RPort, box->Left, box->Top, box->Width, box->Height, 0xC0);
+	 };
       };
    };
    return rc;
@@ -782,15 +781,15 @@ METHOD(BaseClassLayout, struct bmLayout *, bml)
        */
       if (!(bd->bd_Flags & BDF_GOT_LABEL_EXT))
       {
-         /*
-          * Setup label extentions.
-          */
-         DoExtentMethod(bd->bd_Label, bi->bi_RPort, &bd->bd_Extentions, NULL, NULL, EXTF_MAXIMUM);
+	 /*
+	  * Setup label extentions.
+	  */
+	 DoExtentMethod(bd->bd_Label, bi->bi_RPort, &bd->bd_Extentions, NULL, NULL, EXTF_MAXIMUM);
 
-         /*
-          * We got the extentions.
-          */
-         bd->bd_Flags |= BDF_GOT_LABEL_EXT;
+	 /*
+	  * We got the extentions.
+	  */
+	 bd->bd_Flags |= BDF_GOT_LABEL_EXT;
       };
 
       /*
@@ -848,58 +847,58 @@ METHOD(BaseClassRender, struct bmRender *, bmr)
 
       if (bd->bd_Frame)
       {
-         BDrawImageState(bi, bd->bd_Frame, 0, 0, state);
+	 BDrawImageState(bi, bd->bd_Frame, 0, 0, state);
       }
       else
       {
-         bd2 = bd;
+	 bd2 = bd;
 
-         while (parent = bd2->bd_Group)
-         {
-            bd2 = INST_DATA(cl, parent);
-            if (frame = bd2->bd_Frame)
-            {
-               /*
-                * Use the frame for our backfill.
-                */
-               rect.MinX = bd->bd_InnerBox.Left;
-               rect.MinY = bd->bd_InnerBox.Top;
-               rect.MaxX = bd->bd_InnerBox.Width  + rect.MinX - 1;
-               rect.MaxY = bd->bd_InnerBox.Height + rect.MinY - 1;
+	 while (parent = bd2->bd_Group)
+	 {
+	    bd2 = INST_DATA(cl, parent);
+	    if (frame = bd2->bd_Frame)
+	    {
+	       /*
+		* Use the frame for our backfill.
+		*/
+	       rect.MinX = bd->bd_InnerBox.Left;
+	       rect.MinY = bd->bd_InnerBox.Top;
+	       rect.MaxX = bd->bd_InnerBox.Width  + rect.MinX - 1;
+	       rect.MaxY = bd->bd_InnerBox.Height + rect.MinY - 1;
 
-               AsmDoMethod(frame, FRAMEM_BACKFILL, bi, &rect, state);
-               break;
-            };
-         };
+	       AsmDoMethod(frame, FRAMEM_BACKFILL, bi, &rect, state);
+	       break;
+	    };
+	 };
 
-         if (!parent)
-         {
-            UWORD apen;
+	 if (!parent)
+	 {
+	    UWORD apen;
 
-            /*
-             * If we do not have a frame, we need to clear the area ourselves.
-             */
-            switch (state)
-            {
-               case IDS_SELECTED:
-                  apen = FILLPEN;
-                  break;
-               case IDS_INACTIVESELECTED:
-               case IDS_INACTIVENORMAL:
-                  apen = BACKGROUNDPEN;
-                  break;
-               default:
-                  /*
-                   * And BACKGROUNDPEN for normal frames.
-                   */
-                  apen = (GADGET(obj)->Activation & BORDERMASK) ? FILLPEN : BACKGROUNDPEN;
-                  break;
-            };
-            BSetDPenA(bi, apen);
-            BSetDrMd(bi, JAM1);
-            BClearAfPt(bi);
-            BBoxFillA(bi, &bd->bd_InnerBox);
-         };
+	    /*
+	     * If we do not have a frame, we need to clear the area ourselves.
+	     */
+	    switch (state)
+	    {
+	       case IDS_SELECTED:
+		  apen = FILLPEN;
+		  break;
+	       case IDS_INACTIVESELECTED:
+	       case IDS_INACTIVENORMAL:
+		  apen = BACKGROUNDPEN;
+		  break;
+	       default:
+		  /*
+		   * And BACKGROUNDPEN for normal frames.
+		   */
+		  apen = (GADGET(obj)->Activation & BORDERMASK) ? FILLPEN : BACKGROUNDPEN;
+		  break;
+	    };
+	    BSetDPenA(bi, apen);
+	    BSetDrMd(bi, JAM1);
+	    BClearAfPt(bi);
+	    BBoxFillA(bi, &bd->bd_InnerBox);
+	 };
       };
 
       /*
@@ -910,19 +909,19 @@ METHOD(BaseClassRender, struct bmRender *, bmr)
       /*
       if (bd->bd_Frame)
       {
-         rect.MinX = bd->bd_InnerBox.Left + 2;
-         rect.MinY = bd->bd_InnerBox.Top  + 2;
-         rect.MaxX = bd->bd_InnerBox.Width  + rect.MinX - 5;
-         rect.MaxY = bd->bd_InnerBox.Height + rect.MinY - 5;
+	 rect.MinX = bd->bd_InnerBox.Left + 2;
+	 rect.MinY = bd->bd_InnerBox.Top  + 2;
+	 rect.MaxX = bd->bd_InnerBox.Width  + rect.MinX - 5;
+	 rect.MaxY = bd->bd_InnerBox.Height + rect.MinY - 5;
 
-         BSetDrPt(bi, 0xAAAA);
-         BSetDrMd(bi, JAM1);
-         BSetDPenA(bi, SHADOWPEN);
-         Move(bi->bi_RPort, rect.MaxX, rect.MinY);
-         Draw(bi->bi_RPort, rect.MinX, rect.MinY);
-         Draw(bi->bi_RPort, rect.MinX, rect.MaxY);
-         Draw(bi->bi_RPort, rect.MaxX, rect.MaxY);
-         Draw(bi->bi_RPort, rect.MaxX, rect.MinY);
+	 BSetDrPt(bi, 0xAAAA);
+	 BSetDrMd(bi, JAM1);
+	 BSetDPenA(bi, SHADOWPEN);
+	 Move(bi->bi_RPort, rect.MaxX, rect.MinY);
+	 Draw(bi->bi_RPort, rect.MinX, rect.MinY);
+	 Draw(bi->bi_RPort, rect.MinX, rect.MaxY);
+	 Draw(bi->bi_RPort, rect.MaxX, rect.MaxY);
+	 Draw(bi->bi_RPort, rect.MaxX, rect.MinY);
       };
       */
    };
@@ -969,11 +968,11 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
        */
       if (!(GADGET(obj)->GadgetType & GTYP_REQGADGET))
       {
-         dw = bsh->bsh_Window->Width;
-         dh = bsh->bsh_Window->Height;
+	 dw = bsh->bsh_Window->Width;
+	 dh = bsh->bsh_Window->Height;
       } else {
-         dw = bsh->bsh_Requester->Width;
-         dh = bsh->bsh_Requester->Height;
+	 dw = bsh->bsh_Requester->Width;
+	 dh = bsh->bsh_Requester->Height;
       }
 
       /*
@@ -988,7 +987,7 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
        * Mouse pointer in the gadget?
        */
       if (bsh->bsh_Mouse.X >= l && bsh->bsh_Mouse.X < (l + w) &&
-          bsh->bsh_Mouse.Y >= t && bsh->bsh_Mouse.Y < (t + h))
+	  bsh->bsh_Mouse.Y >= t && bsh->bsh_Mouse.Y < (t + h))
       */
 #endif
 #endif
@@ -999,40 +998,40 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
 
       if (BGUI_DoGadgetMethodA(obj, bsh->bsh_Window, bsh->bsh_Requester, (Msg)&gph) == GMR_HELPHIT)
       {
-         if (bd->bd_HelpHook)
-         {  /*
-             * Help Hook ?
-             */
-            rc = BGUI_CallHookPkt(bd->bd_HelpHook, obj, NULL);
-         }
-         else if (bd->bd_HelpText)
-         {
-            /*
-             * Help-requester?
-             */
-            ShowHelpReq(bsh->bsh_Window, bd->bd_HelpText);
-            rc = BMHELP_OK;
-         }
-         else if (bd->bd_HelpFile)
-         {
-            /*
-             * Initialize the NewAmigaGuide structure.
-             */
+	 if (bd->bd_HelpHook)
+	 {  /*
+	     * Help Hook ?
+	     */
+	    rc = BGUI_CallHookPkt(bd->bd_HelpHook, obj, NULL);
+	 }
+	 else if (bd->bd_HelpText)
+	 {
+	    /*
+	     * Help-requester?
+	     */
+	    ShowHelpReq(bsh->bsh_Window, bd->bd_HelpText);
+	    rc = BMHELP_OK;
+	 }
+	 else if (bd->bd_HelpFile)
+	 {
+	    /*
+	     * Initialize the NewAmigaGuide structure.
+	     */
 #ifdef _AROS
 #warning Commented the following lines...
 #else
-            nag.nag_Name   = (STRPTR)bd->bd_HelpFile;
-            nag.nag_Node   = (STRPTR)bd->bd_HelpNode;
-            nag.nag_Line   = bd->bd_HelpLine;
-            nag.nag_Screen = bsh->bsh_Window->WScreen;
+	    nag.nag_Name   = (STRPTR)bd->bd_HelpFile;
+	    nag.nag_Node   = (STRPTR)bd->bd_HelpNode;
+	    nag.nag_Line   = bd->bd_HelpLine;
+	    nag.nag_Screen = bsh->bsh_Window->WScreen;
 
-            /*
-             * Try to open it.
-             */
-            if (!DisplayAGuideInfo(&nag, TAG_END)) rc = BMHELP_FAILURE;
-            else                                   rc = BMHELP_OK;
+	    /*
+	     * Try to open it.
+	     */
+	    if (!DisplayAGuideInfo(&nag, TAG_END)) rc = BMHELP_FAILURE;
+	    else                                   rc = BMHELP_OK;
 #endif
-         };
+	 };
       };
    };
    return rc;
@@ -1080,28 +1079,28 @@ METHOD(BaseClassDimensionsX, struct grmDimensions *, dim)
    {
       if (rc = AsmDoMethod(obj, BASE_DIMENSIONS, bi, &be, 0))
       {
-         /*
-          * Compute minimum width/height according to the label and its position.
-          */
-         if (bd->bd_Label) AsmDoMethod(bd->bd_Label, BASE_DIMENSIONS, bi, &be, 0);
+	 /*
+	  * Compute minimum width/height according to the label and its position.
+	  */
+	 if (bd->bd_Label) AsmDoMethod(bd->bd_Label, BASE_DIMENSIONS, bi, &be, 0);
 
-         /*
-          * Copy to grmDimensions.
-          */
-         *(dim->grmd_MinSize.Width ) = be.be_Min.Width;
-         *(dim->grmd_MinSize.Height) = be.be_Min.Height;
+	 /*
+	  * Copy to grmDimensions.
+	  */
+	 *(dim->grmd_MinSize.Width ) = be.be_Min.Width;
+	 *(dim->grmd_MinSize.Height) = be.be_Min.Height;
 
-         if (dim->grmd_Flags & GDIMF_MAXIMUM)
-         {
-            *(dim->grmd_MaxSize.Width ) = be.be_Max.Width;
-            *(dim->grmd_MaxSize.Height) = be.be_Max.Height;
-         };
+	 if (dim->grmd_Flags & GDIMF_MAXIMUM)
+	 {
+	    *(dim->grmd_MaxSize.Width ) = be.be_Max.Width;
+	    *(dim->grmd_MaxSize.Height) = be.be_Max.Height;
+	 };
 
-         if (dim->grmd_Flags & GDIMF_NOMINAL)
-         {
-            *(dim->grmd_NomSize.Width ) = be.be_Nom.Width;
-            *(dim->grmd_NomSize.Height) = be.be_Nom.Height;
-         };
+	 if (dim->grmd_Flags & GDIMF_NOMINAL)
+	 {
+	    *(dim->grmd_NomSize.Width ) = be.be_Nom.Width;
+	    *(dim->grmd_NomSize.Height) = be.be_Nom.Height;
+	 };
       };
       FreeBaseInfo(bi);
    };
@@ -1127,32 +1126,32 @@ METHOD(BaseClassRelayout, struct bmRelayout *, bmr)
    {
       if(!(bd->bd_Flags & BDF_INHIBITED))
       {
-         if((rp=BGUI_ObtainGIRPort(gi)))
-         {
-            rc=AsmDoMethod(obj,GM_RENDER,gi,rp,GREDRAW_REDRAW);
-            ReleaseGIRPort(rp);
-         }
-         else
-            rc=0;
+	 if((rp=BGUI_ObtainGIRPort(gi)))
+	 {
+	    rc=AsmDoMethod(obj,GM_RENDER,gi,rp,GREDRAW_REDRAW);
+	    ReleaseGIRPort(rp);
+	 }
+	 else
+	    rc=0;
       }
       else
-         rc=1;
+	 rc=1;
    }
    else
    {
       if (bd->bd_Group)
       {
-         rc = AsmDoMethodA(bd->bd_Group, (Msg)bmr);
+	 rc = AsmDoMethodA(bd->bd_Group, (Msg)bmr);
       }
       else
       {
-         rc = AsmDoMethod(wo, WM_RELAYOUT);
+	 rc = AsmDoMethod(wo, WM_RELAYOUT);
       };
    };
    return rc;
 }
 ///
-                  
+		  
 
 /// BASE_LEFTEXT
 /*
@@ -1175,12 +1174,12 @@ METHOD(BaseClassLeftExt, struct bmLeftExt *, le)
        */
       if (!(bd->bd_Flags & BDF_GOT_LABEL_EXT))
       {
-         DoExtentMethod(bd->bd_Label, le->bmle_RPort, &ibox, &dummy, &dummy, EXTF_MAXIMUM);
-         ext = -ibox.Left;
+	 DoExtentMethod(bd->bd_Label, le->bmle_RPort, &ibox, &dummy, &dummy, EXTF_MAXIMUM);
+	 ext = -ibox.Left;
       }
       else
       {
-         ext = -bd->bd_Extentions.Left;
+	 ext = -bd->bd_Extentions.Left;
       };
    }
    else ext = 0;
@@ -1233,9 +1232,9 @@ METHOD(BaseClassGoActive, struct gpInput *, gpi)
        */
       if (bd->bd_Parent)
       {
-         Forbid();
-         AsmDoMethod(bd->bd_Parent, WM_CLOSETOOLTIP);
-         Permit();
+	 Forbid();
+	 AsmDoMethod(bd->bd_Parent, WM_CLOSETOOLTIP);
+	 Permit();
       };
 
       /*
@@ -1243,7 +1242,7 @@ METHOD(BaseClassGoActive, struct gpInput *, gpi)
        */
       if (bd->bd_BMO = CreateBMO(obj, gpi->gpi_GInfo))
       {
-         return GMR_MEACTIVE;
+	 return GMR_MEACTIVE;
       }
    }
    return GMR_NOREUSE;
@@ -1273,145 +1272,145 @@ METHOD(BaseClassDragging, struct gpInput *, gpi)
        */
       if ((bd->bd_Flags & BDF_MOVING) && (gpi->gpi_IEvent->ie_Class == IECLASS_TIMER))
       {
-         if (!--bmo->bmo_BMDelay)
-         {
-            /*
-             * Open window.
-             */
-            LayerBMO(bmo);
-         };
+	 if (!--bmo->bmo_BMDelay)
+	 {
+	    /*
+	     * Open window.
+	     */
+	    LayerBMO(bmo);
+	 };
 
-         if (bd->bd_ActRec)
-         {
-            /*
-             * Send an update to the target.
-             */
+	 if (bd->bd_ActRec)
+	 {
+	    /*
+	     * Send an update to the target.
+	     */
 
-            /*
-             * Get mouse position.
-             */
-            nx = gi->gi_Screen->MouseX;
-            ny = gi->gi_Screen->MouseY;
+	    /*
+	     * Get mouse position.
+	     */
+	    nx = gi->gi_Screen->MouseX;
+	    ny = gi->gi_Screen->MouseY;
 
-            /*
-             * Get the hitbox bounds of the
-             * receiver.
-             */
-            Get_Attr(bd->bd_ActRec, BT_HitBox, &db);
+	    /*
+	     * Get the hitbox bounds of the
+	     * receiver.
+	     */
+	    Get_Attr(bd->bd_ActRec, BT_HitBox, &db);
 
-            /*
-             * Get mouse coords relative to the
-             * receiver hitbox.
-             */
-            dx = nx - (bd->bd_ActPtr->LeftEdge + db->Left);
-            dy = ny - (bd->bd_ActPtr->TopEdge  + db->Top );
+	    /*
+	     * Get mouse coords relative to the
+	     * receiver hitbox.
+	     */
+	    dx = nx - (bd->bd_ActPtr->LeftEdge + db->Left);
+	    dy = ny - (bd->bd_ActPtr->TopEdge  + db->Top );
 
-            /*
-             * Send off a drag update message
-             * to the receiver.
-             */
-            if (!bmo->bmo_BMWindow && bmo->bmo_BMDelay) EraseBMO(bmo);
+	    /*
+	     * Send off a drag update message
+	     * to the receiver.
+	     */
+	    if (!bmo->bmo_BMWindow && bmo->bmo_BMDelay) EraseBMO(bmo);
 
-            if (myDoGadgetMethod(bd->bd_ActRec, bd->bd_ActPtr, NULL, BASE_DRAGUPDATE, NULL, obj, PACKW(dx, dy)) != BUR_CONTINUE)
-            {
-               /*
-                * Deactivate target.
-                */
-               myDoGadgetMethod(bd->bd_ActRec, bd->bd_ActPtr, NULL, BASE_DRAGINACTIVE, NULL, obj);
-               bd->bd_ActRec = NULL;
-            };
+	    if (myDoGadgetMethod(bd->bd_ActRec, bd->bd_ActPtr, NULL, BASE_DRAGUPDATE, NULL, obj, PACKW(dx, dy)) != BUR_CONTINUE)
+	    {
+	       /*
+		* Deactivate target.
+		*/
+	       myDoGadgetMethod(bd->bd_ActRec, bd->bd_ActPtr, NULL, BASE_DRAGINACTIVE, NULL, obj);
+	       bd->bd_ActRec = NULL;
+	    };
 
-            if (!bmo->bmo_BMWindow && bmo->bmo_BMDelay) MoveBMO(bmo, nx, ny);
-         };
+	    if (!bmo->bmo_BMWindow && bmo->bmo_BMDelay) MoveBMO(bmo, nx, ny);
+	 };
       }
       else if (gpi->gpi_IEvent->ie_Class == IECLASS_RAWMOUSE)
       {
-         switch (gpi->gpi_IEvent->ie_Code)
-         {
-         case SELECTUP:
-         case MENUDOWN:
-            /*
-             * Were we moved?
-             */
-            if (bd->bd_Flags & BDF_MOVING)
-            {
-               /*
-                * Hide object.
-                */
-               EraseBMO(bmo);
+	 switch (gpi->gpi_IEvent->ie_Code)
+	 {
+	 case SELECTUP:
+	 case MENUDOWN:
+	    /*
+	     * Were we moved?
+	     */
+	    if (bd->bd_Flags & BDF_MOVING)
+	    {
+	       /*
+		* Hide object.
+		*/
+	       EraseBMO(bmo);
 
-               /*
-                * "Drop" us on the target.
-                */
-               if (bd->bd_ActRec && gpi->gpi_IEvent->ie_Code == SELECTUP)
-                  myDoGadgetMethod(bd->bd_ActRec, gi->gi_Window, gi->gi_Requester, BASE_DROPPED, NULL, obj, bd->bd_ActPtr, NULL);
+	       /*
+		* "Drop" us on the target.
+		*/
+	       if (bd->bd_ActRec && gpi->gpi_IEvent->ie_Code == SELECTUP)
+		  myDoGadgetMethod(bd->bd_ActRec, gi->gi_Window, gi->gi_Requester, BASE_DROPPED, NULL, obj, bd->bd_ActPtr, NULL);
 
-               /*
-                * Deactivate the target.
-                */
-               if (bd->bd_ActRec)
-                  myDoGadgetMethod(bd->bd_ActRec, bd->bd_ActPtr, NULL, BASE_DRAGINACTIVE, NULL, obj);
+	       /*
+		* Deactivate the target.
+		*/
+	       if (bd->bd_ActRec)
+		  myDoGadgetMethod(bd->bd_ActRec, bd->bd_ActPtr, NULL, BASE_DRAGINACTIVE, NULL, obj);
 
-               /*
-                * Selecting the menu button or when there is no active drop object means we return
-                * BDR_CANCEL. Otherwise we return BDR_DROP.
-                */
-               if ((gpi->gpi_IEvent->ie_Code == MENUDOWN) || ! bd->bd_ActRec)
-                  rc = BDR_CANCEL;
-               else
-                  rc = BDR_DROP;
-            } else
-               rc = BDR_NONE;
+	       /*
+		* Selecting the menu button or when there is no active drop object means we return
+		* BDR_CANCEL. Otherwise we return BDR_DROP.
+		*/
+	       if ((gpi->gpi_IEvent->ie_Code == MENUDOWN) || ! bd->bd_ActRec)
+		  rc = BDR_CANCEL;
+	       else
+		  rc = BDR_DROP;
+	    } else
+	       rc = BDR_NONE;
 
-            /*
-             * Unlock the window.
-             */
-            if (bd->bd_ActWin) AsmDoMethod(bd->bd_ActWin, WM_UNLOCK);
-            break;
+	    /*
+	     * Unlock the window.
+	     */
+	    if (bd->bd_ActWin) AsmDoMethod(bd->bd_ActWin, WM_UNLOCK);
+	    break;
 
-         default:
-            /*
-             * Pick up mouse coordinates.
-             */
-            nx = gi->gi_Screen->MouseX;
-            ny = gi->gi_Screen->MouseY;
+	 default:
+	    /*
+	     * Pick up mouse coordinates.
+	     */
+	    nx = gi->gi_Screen->MouseX;
+	    ny = gi->gi_Screen->MouseY;
 
-            bmo->bmo_BMDelay = 5;
+	    bmo->bmo_BMDelay = 5;
 
-            /*
-             * Are we moving yet?
-             */
-            if (bd->bd_Flags & BDF_MOVING)
-            {
-               /*
-                * Move the object to the new position.
-                */
-               MoveBMO(bmo, nx, ny);
+	    /*
+	     * Are we moving yet?
+	     */
+	    if (bd->bd_Flags & BDF_MOVING)
+	    {
+	       /*
+		* Move the object to the new position.
+		*/
+	       MoveBMO(bmo, nx, ny);
 
-               /*
-                * Were still dragging along...
-                */
-               rc = BDR_DRAGGING;
-            }
-            else
-            {
-               dx = nx - bmo->bmo_CX;
-               dy = ny - bmo->bmo_CY;
-               if (((dx * dx) + (dy * dy)) >= (bd->bd_Thresh * bd->bd_Thresh))
-               {
-                  /*
-                   * They have passed the Threshold.
-                   */
-                  bd->bd_Flags |= BDF_MOVING;
+	       /*
+		* Were still dragging along...
+		*/
+	       rc = BDR_DRAGGING;
+	    }
+	    else
+	    {
+	       dx = nx - bmo->bmo_CX;
+	       dy = ny - bmo->bmo_CY;
+	       if (((dx * dx) + (dy * dy)) >= (bd->bd_Thresh * bd->bd_Thresh))
+	       {
+		  /*
+		   * They have passed the Threshold.
+		   */
+		  bd->bd_Flags |= BDF_MOVING;
 
-                  /*
-                   * Tell'm to prepare for moving.
-                   */
-                  rc = BDR_DRAGPREPARE;
-               };
-            };
-            break;
-         }
+		  /*
+		   * Tell'm to prepare for moving.
+		   */
+		  rc = BDR_DRAGPREPARE;
+	       };
+	    };
+	    break;
+	 }
       }
    }
    return rc;
@@ -1462,10 +1461,10 @@ METHOD(BaseClassDragQuery, struct bmDragPoint *, bmdp)
    if (bd->bd_Flags & BDF_DROPPABLE)
    {
       if (bmdp->bmdp_Mouse.X >= 0 &&
-          bmdp->bmdp_Mouse.Y >= 0 &&
-          bmdp->bmdp_Mouse.X < bd->bd_HitBox.Width &&
-          bmdp->bmdp_Mouse.Y < bd->bd_HitBox.Height)
-         rc = BQR_ACCEPT;
+	  bmdp->bmdp_Mouse.Y >= 0 &&
+	  bmdp->bmdp_Mouse.X < bd->bd_HitBox.Width &&
+	  bmdp->bmdp_Mouse.Y < bd->bd_HitBox.Height)
+	 rc = BQR_ACCEPT;
    }
    return rc;
 }
@@ -1522,8 +1521,8 @@ METHOD(BaseClassDragUpdate, struct bmDragPoint *, bmdp)
       if (bi = AllocBaseInfo(BI_GadgetInfo, bmdp->bmdp_GInfo, BI_RastPort, NULL, TAG_DONE))
 #endif
       {
-         DottedBox(bi, &bd->bd_HitBox);
-         FreeBaseInfo(bi);
+	 DottedBox(bi, &bd->bd_HitBox);
+	 FreeBaseInfo(bi);
       };
    };
 
@@ -1692,20 +1691,20 @@ METHOD(BaseClassFindKey, struct bmFindKey *, bmfk)
    {
       if (key != (UBYTE)~0)
       {
-         if ((key == (Key & 0x007F)) && (qual == Qual))
-         {
-            return (ULONG)obj;
-         };
+	 if ((key == (Key & 0x007F)) && (qual == Qual))
+	 {
+	    return (ULONG)obj;
+	 };
       };
    }
    else                             /* VANILLAKEY press */
    {
       if (bd->bd_Key)               /* We have a vanilla key equivalent */
       {  
-         if ((ToLower(*bd->bd_Key) == ToLower(Key)) && (qual == Qual))
-         {
-            return (ULONG)obj;
-         };
+	 if ((ToLower(*bd->bd_Key) == ToLower(Key)) && (qual == Qual))
+	 {
+	    return (ULONG)obj;
+	 };
       };
    };
    return NULL;
@@ -1729,8 +1728,8 @@ METHOD(BaseClassKeyLabel, struct bmKeyLabel *, bmkl)
       Get_Attr(bd->bd_Label, LAB_KeyChar, &rc);
       if (rc)
       {
-         bd->bd_Key  = (UBYTE *)rc;
-         bd->bd_Qual = (UWORD)~0;
+	 bd->bd_Key  = (UBYTE *)rc;
+	 bd->bd_Qual = (UWORD)~0;
       };
    };
    return rc;
@@ -1833,9 +1832,9 @@ makeproto Class *BaseClass = NULL;
 makeproto Class *InitBaseClass(void)
 {
    return BaseClass = BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_GADGET_OBJECT,
-                                     CLASS_ObjectSize,     sizeof(BD),
-                                     CLASS_DFTable,        ClassFunc,
-                                     TAG_DONE);
+				     CLASS_ObjectSize,     sizeof(BD),
+				     CLASS_DFTable,        ClassFunc,
+				     TAG_DONE);
 }
 ///
 

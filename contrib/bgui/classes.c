@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2000/08/09 11:45:57  chodorowski
+ * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
+ *
  * Revision 42.6  2000/07/06 16:42:03  stegerg
  * the function ForwardMsg relied on gpInput->gpht_Mouse.X/Y and
  * gpHitTest.gpht_Mouse.X/Y being of type WORD. For example
@@ -192,22 +195,22 @@ static ASM REGFUNC4(ULONG, ClassCallDispatcher,
    && (class_methods=class_data[-1].ClassMethodFunctions))
    {
       for(;class_methods->df_MethodID!=DF_END;class_methods++)
-         if(class_methods->df_MethodID==msg->MethodID)
+	 if(class_methods->df_MethodID==msg->MethodID)
 #ifdef _AROS
-           return AROS_UFC4(ULONG, class_methods->df_Func,
-                     AROS_UFCA(Class *, cl, A0),
-                     AROS_UFCA(Object *, obj, A1),
-                     AROS_UFCA(Msg, msg, A2),
-                     AROS_UFCA(APTR, global_data, A4));
+	   return AROS_UFC4(ULONG, class_methods->df_Func,
+		     AROS_UFCA(Class *, cl, A0),
+		     AROS_UFCA(Object *, obj, A1),
+		     AROS_UFCA(Msg, msg, A2),
+		     AROS_UFCA(APTR, global_data, A4));
 #else
-           return(((ClassMethodDispatcher)class_methods->df_Func)(cl,obj,msg,global_data));
+	   return(((ClassMethodDispatcher)class_methods->df_Func)(cl,obj,msg,global_data));
 #endif
    }
    switch(msg->MethodID)
    {
       case OM_NEW:
       case OM_DISPOSE:
-         return(1);
+	 return(1);
    }
    return(0);
 }
@@ -266,11 +269,11 @@ static SortedMethod *LookupMethod(BGUIClassData *class_data,ULONG method)
       index=(lower+upper)/2;
       method_found=class_data->MethodFunctions+index;
       if(method==method_found->MethodID)
-         return(method_found);
+	 return(method_found);
       if(method>method_found->MethodID)
-         lower=index+1;
+	 lower=index+1;
       else
-         upper=index;
+	 upper=index;
    }
 #ifdef DEBUG_BGUI
    class_data->MethodComparisions++;
@@ -343,10 +346,8 @@ AROS_LH1(Class *, BGUI_MakeClassA,
 makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
 #ifdef _AROS
 #else
@@ -380,143 +381,143 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
    {
       if (cl = MakeClass((UBYTE *)Class_ID, (UBYTE *)SuperClass_ID, (Class *)SuperClass, ObjectSize, Flags))
       {
-         DPFUNC *method_functions;
+	 DPFUNC *method_functions;
 
-         cl->cl_UserData                 = (LONG)(ClassData+1);
-         cl->cl_Dispatcher.h_Entry       = (HOOKFUNC)GetTagData(CLASS_Dispatcher, (ULONG)__GCD, tags);
-         ClassData->ClassMethodFunctions = (DPFUNC *)GetTagData(CLASS_ClassDFTable, NULL, tags);
+	 cl->cl_UserData                 = (LONG)(ClassData+1);
+	 cl->cl_Dispatcher.h_Entry       = (HOOKFUNC)GetTagData(CLASS_Dispatcher, (ULONG)__GCD, tags);
+	 ClassData->ClassMethodFunctions = (DPFUNC *)GetTagData(CLASS_ClassDFTable, NULL, tags);
 #ifdef _AROS
-         ClassData->ClassDispatcher      = GetTagData(CLASS_ClassDispatcher, (ULONG)ClassCallDispatcher, tags);
+	 ClassData->ClassDispatcher      = GetTagData(CLASS_ClassDispatcher, (ULONG)ClassCallDispatcher, tags);
 #else
-         ClassData->ClassDispatcher      = (ClassMethodDispatcher)GetTagData(CLASS_ClassDispatcher, (ULONG)ClassCallDispatcher, tags);
+	 ClassData->ClassDispatcher      = (ClassMethodDispatcher)GetTagData(CLASS_ClassDispatcher, (ULONG)ClassCallDispatcher, tags);
 #endif
 
 #ifdef _AROS
 #warning Missing code here!
 #else
-         ClassData->BGUIGlobalData       = (APTR)getreg(REG_A4);
-         ClassData->ClassGlobalData      = (APTR)old_a4;
+	 ClassData->BGUIGlobalData       = (APTR)getreg(REG_A4);
+	 ClassData->ClassGlobalData      = (APTR)old_a4;
 #endif
 
-         if((method_functions=(DPFUNC *)GetTagData(CLASS_DFTable, NULL, tags)))
-         {
-            {
-               DPFUNC *methods;
+	 if((method_functions=(DPFUNC *)GetTagData(CLASS_DFTable, NULL, tags)))
+	 {
+	    {
+	       DPFUNC *methods;
 
-               for(ClassData->MethodCount=0,methods=method_functions;methods->df_MethodID!=DF_END;ClassData->MethodCount++,methods++);
-            }
-            if((ClassData->MethodFunctions=BGUI_AllocPoolMem(sizeof(*ClassData->MethodFunctions)*ClassData->MethodCount)))
-            {
-               ULONG method;
+	       for(ClassData->MethodCount=0,methods=method_functions;methods->df_MethodID!=DF_END;ClassData->MethodCount++,methods++);
+	    }
+	    if((ClassData->MethodFunctions=BGUI_AllocPoolMem(sizeof(*ClassData->MethodFunctions)*ClassData->MethodCount)))
+	    {
+	       ULONG method;
 
-               for(method=0;method<ClassData->MethodCount;method++)
-               {
-                  ClassData->MethodFunctions[method].MethodID=method_functions[method].df_MethodID;
+	       for(method=0;method<ClassData->MethodCount;method++)
+	       {
+		  ClassData->MethodFunctions[method].MethodID=method_functions[method].df_MethodID;
 #ifdef _AROS
-                  ClassData->MethodFunctions[method].DispatcherFunction=method_functions[method].df_Func;
+		  ClassData->MethodFunctions[method].DispatcherFunction=method_functions[method].df_Func;
 #else
-                  ClassData->MethodFunctions[method].DispatcherFunction=(ClassMethodDispatcher)method_functions[method].df_Func;
+		  ClassData->MethodFunctions[method].DispatcherFunction=(ClassMethodDispatcher)method_functions[method].df_Func;
 #endif
-                  ClassData->MethodFunctions[method].Class=cl;
-                  ClassData->MethodFunctions[method].GlobalData=ClassData->ClassGlobalData;
-               }
-               qsort(ClassData->MethodFunctions,ClassData->MethodCount,sizeof(*ClassData->MethodFunctions),CompareMethods);
-               if(cl->cl_Super->cl_Dispatcher.h_Entry==__GCD)
-               {
-                  BGUIClassData *super_class_data;
-                  ULONG new_methods;
+		  ClassData->MethodFunctions[method].Class=cl;
+		  ClassData->MethodFunctions[method].GlobalData=ClassData->ClassGlobalData;
+	       }
+	       qsort(ClassData->MethodFunctions,ClassData->MethodCount,sizeof(*ClassData->MethodFunctions),CompareMethods);
+	       if(cl->cl_Super->cl_Dispatcher.h_Entry==__GCD)
+	       {
+		  BGUIClassData *super_class_data;
+		  ULONG new_methods;
 
-                  super_class_data=(((BGUIClassData *)cl->cl_Super->cl_UserData)-1);
-                  for(new_methods=ClassData->MethodCount,method=0;method<super_class_data->MethodCount;method++)
-                  {
-                     if(LookupMethod(ClassData,super_class_data->MethodFunctions[method].MethodID)==NULL)
-                     {
-                        SortedMethod *new_sorted_methods;
+		  super_class_data=(((BGUIClassData *)cl->cl_Super->cl_UserData)-1);
+		  for(new_methods=ClassData->MethodCount,method=0;method<super_class_data->MethodCount;method++)
+		  {
+		     if(LookupMethod(ClassData,super_class_data->MethodFunctions[method].MethodID)==NULL)
+		     {
+			SortedMethod *new_sorted_methods;
 
-                        if((new_sorted_methods=BGUI_AllocPoolMem(sizeof(*new_sorted_methods)*(new_methods+1)))==NULL)
-                        {
-                           cl->cl_UserData=NULL;
-                           FreeClass(cl);
-                           cl=NULL;
-                           break;
-                        }
-                        memcpy(new_sorted_methods,ClassData->MethodFunctions,sizeof(*new_sorted_methods)*new_methods);
-                        BGUI_FreePoolMem(ClassData->MethodFunctions);
-                        ClassData->MethodFunctions=new_sorted_methods;
-                        ClassData->MethodFunctions[new_methods]=super_class_data->MethodFunctions[method];
-                        new_methods++;
-                     }
-                  }
-                  ClassData->MethodCount=new_methods;
-                  qsort(ClassData->MethodFunctions,ClassData->MethodCount,sizeof(*ClassData->MethodFunctions),CompareMethods);
-               }
-               if(cl)
-               {
-                  if((ClassData->MethodHashTable=BGUI_AllocPoolMem(sizeof(*ClassData->MethodHashTable)*METHOD_HASH_TABLE_SIZE)))
-                  {
-                     ULONG method;
+			if((new_sorted_methods=BGUI_AllocPoolMem(sizeof(*new_sorted_methods)*(new_methods+1)))==NULL)
+			{
+			   cl->cl_UserData=NULL;
+			   FreeClass(cl);
+			   cl=NULL;
+			   break;
+			}
+			memcpy(new_sorted_methods,ClassData->MethodFunctions,sizeof(*new_sorted_methods)*new_methods);
+			BGUI_FreePoolMem(ClassData->MethodFunctions);
+			ClassData->MethodFunctions=new_sorted_methods;
+			ClassData->MethodFunctions[new_methods]=super_class_data->MethodFunctions[method];
+			new_methods++;
+		     }
+		  }
+		  ClassData->MethodCount=new_methods;
+		  qsort(ClassData->MethodFunctions,ClassData->MethodCount,sizeof(*ClassData->MethodFunctions),CompareMethods);
+	       }
+	       if(cl)
+	       {
+		  if((ClassData->MethodHashTable=BGUI_AllocPoolMem(sizeof(*ClassData->MethodHashTable)*METHOD_HASH_TABLE_SIZE)))
+		  {
+		     ULONG method;
 
-                     memset(ClassData->MethodHashTable,'\0',sizeof(*ClassData->MethodHashTable)*METHOD_HASH_TABLE_SIZE);
+		     memset(ClassData->MethodHashTable,'\0',sizeof(*ClassData->MethodHashTable)*METHOD_HASH_TABLE_SIZE);
 #ifdef DEBUG_BGUI
-                     ClassData->MethodColisions=0;
+		     ClassData->MethodColisions=0;
 #endif
-                     for(method=0;method<ClassData->MethodCount;method++)
-                     {
-                        SortedMethod **method_hash;
+		     for(method=0;method<ClassData->MethodCount;method++)
+		     {
+			SortedMethod **method_hash;
 
-                        method_hash= ClassData->MethodHashTable+MethodHashValue(ClassData->MethodFunctions[method].MethodID);
+			method_hash= ClassData->MethodHashTable+MethodHashValue(ClassData->MethodFunctions[method].MethodID);
 #ifdef DEBUG_BGUI
-                        if(*method_hash)
-                           ClassData->MethodColisions++;
+			if(*method_hash)
+			   ClassData->MethodColisions++;
 #endif
-                        ClassData->MethodFunctions[method].NextHashedMethod= *method_hash;
-                        *method_hash= &ClassData->MethodFunctions[method];
-                     }
+			ClassData->MethodFunctions[method].NextHashedMethod= *method_hash;
+			*method_hash= &ClassData->MethodFunctions[method];
+		     }
 #ifdef DEBUG_BGUI
-                     ClassData->MethodLookups=ClassData->MethodComparisions=0;
+		     ClassData->MethodLookups=ClassData->MethodComparisions=0;
 #endif
-                  }
-                  else
-                  {
-                     cl->cl_UserData=NULL;
-                     FreeClass(cl);
-                     cl=NULL;
-                  }
-               }
-            }
-            else
-            {
-               cl->cl_UserData=NULL;
-               FreeClass(cl);
-               cl=NULL;
-            }
-         }
-         else
-         {
-            ClassData->MethodFunctions=NULL;
-            ClassData->MethodHashTable=NULL;
-         }
-         if(cl
-         && ClassData->ClassDispatcher)
-         {
-            struct opSet msg;
+		  }
+		  else
+		  {
+		     cl->cl_UserData=NULL;
+		     FreeClass(cl);
+		     cl=NULL;
+		  }
+	       }
+	    }
+	    else
+	    {
+	       cl->cl_UserData=NULL;
+	       FreeClass(cl);
+	       cl=NULL;
+	    }
+	 }
+	 else
+	 {
+	    ClassData->MethodFunctions=NULL;
+	    ClassData->MethodHashTable=NULL;
+	 }
+	 if(cl
+	 && ClassData->ClassDispatcher)
+	 {
+	    struct opSet msg;
 
-            msg.MethodID=OM_NEW;
-            msg.ops_AttrList=NULL;
-            msg.ops_GInfo=NULL;
-            if(!ClassData->ClassDispatcher(cl,NULL,(Msg)&msg,ClassData->ClassGlobalData))
-            {
-               cl->cl_UserData=NULL;
-               FreeClass(cl);
-               cl=NULL;
-            }
-         }
+	    msg.MethodID=OM_NEW;
+	    msg.ops_AttrList=NULL;
+	    msg.ops_GInfo=NULL;
+	    if(!ClassData->ClassDispatcher(cl,NULL,(Msg)&msg,ClassData->ClassGlobalData))
+	    {
+	       cl->cl_UserData=NULL;
+	       FreeClass(cl);
+	       cl=NULL;
+	    }
+	 }
       }
       if(cl==NULL)
       {
-         if(ClassData->MethodFunctions)
-            BGUI_FreePoolMem(ClassData->MethodFunctions);
-         BGUI_FreePoolMem(ClassData);
+	 if(ClassData->MethodFunctions)
+	    BGUI_FreePoolMem(ClassData->MethodFunctions);
+	 BGUI_FreePoolMem(ClassData);
       }
    };
 #ifdef _AROS
@@ -525,9 +526,7 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 #endif
    return cl;
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 #ifdef _AROS
@@ -539,45 +538,41 @@ AROS_LH1(BOOL, BGUI_FreeClass,
 makeproto SAVEDS ASM BOOL BGUI_FreeClass(REG(a0) Class *cl)
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    if (cl)
    {
       if(cl->cl_UserData)
       {
-         BGUIClassData *ClassData;
+	 BGUIClassData *ClassData;
 
-         ClassData=((BGUIClassData *)cl->cl_UserData) - 1;
-         if(ClassData->ClassDispatcher)
-         {
-            ULONG msg=OM_DISPOSE;
+	 ClassData=((BGUIClassData *)cl->cl_UserData) - 1;
+	 if(ClassData->ClassDispatcher)
+	 {
+	    ULONG msg=OM_DISPOSE;
 
-            if(!ClassData->ClassDispatcher(cl,NULL,(Msg)&msg,ClassData->ClassGlobalData))
-               return FALSE;
-         }
-         if(ClassData->MethodFunctions)
-         {
-            D(bug("Methods %lu, Lookups %lu, Comparisions %lu, Misses %lu (%lu%%), Colisions %lu (%lu%%)\n",ClassData->MethodCount,ClassData->MethodLookups,ClassData->MethodComparisions,ClassData->MethodComparisions-ClassData->MethodLookups,ClassData->MethodComparisions ? (ClassData->MethodComparisions-ClassData->MethodLookups)*100/ClassData->MethodComparisions : 0,ClassData->MethodColisions,ClassData->MethodCount ? ClassData->MethodColisions*100/ClassData->MethodCount : 0));
-            BGUI_FreePoolMem(ClassData->MethodFunctions);
-            BGUI_FreePoolMem(ClassData->MethodHashTable);
-         }
-         BGUI_FreePoolMem(ClassData);
-         cl->cl_UserData=NULL;
+	    if(!ClassData->ClassDispatcher(cl,NULL,(Msg)&msg,ClassData->ClassGlobalData))
+	       return FALSE;
+	 }
+	 if(ClassData->MethodFunctions)
+	 {
+	    D(bug("Methods %lu, Lookups %lu, Comparisions %lu, Misses %lu (%lu%%), Colisions %lu (%lu%%)\n",ClassData->MethodCount,ClassData->MethodLookups,ClassData->MethodComparisions,ClassData->MethodComparisions-ClassData->MethodLookups,ClassData->MethodComparisions ? (ClassData->MethodComparisions-ClassData->MethodLookups)*100/ClassData->MethodComparisions : 0,ClassData->MethodColisions,ClassData->MethodCount ? ClassData->MethodColisions*100/ClassData->MethodCount : 0));
+	    BGUI_FreePoolMem(ClassData->MethodFunctions);
+	    BGUI_FreePoolMem(ClassData->MethodHashTable);
+	 }
+	 BGUI_FreePoolMem(ClassData);
+	 cl->cl_UserData=NULL;
       }
       if(FreeClass(cl))
       {
-         MarkFreedClass(cl);
-         return(TRUE);
+	 MarkFreedClass(cl);
+	 return(TRUE);
       }
    };
    return FALSE;
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 //makeproto ULONG ASM BGUI_GetAttrChart(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct rmAttr *ra)
@@ -596,52 +591,52 @@ makeproto ASM REGFUNC3(ULONG, BGUI_GetAttrChart,
    {
       if (!(rc & RAF_NOGET))
       {
-         dataspace = (UBYTE *)INST_DATA(cl, obj) + ((rc >> 16) & 0x07FF);
+	 dataspace = (UBYTE *)INST_DATA(cl, obj) + ((rc >> 16) & 0x07FF);
 
-         if (rc & RAF_BOOL)
-         {
-            data = (*dataspace >> ((rc >> 27) & 0x07)) & 1;
-            if (rc & RAF_SIGNED) data = !data;
-         }
-         else
-         {
-            switch (rc & (RAF_SIGNED|RAF_BYTE|RAF_WORD|RAF_LONG|RAF_ADDR))
-            {
-            case RAF_BYTE:
-               data = (ULONG)(*(UBYTE *)dataspace);
-               break;
-            case RAF_BYTE|RAF_SIGNED:
-               data = (LONG)(*(BYTE *)dataspace);
-               break;
-            case RAF_WORD:
-               data = (ULONG)(*(UWORD *)dataspace);
-               break;
-            case RAF_WORD|RAF_SIGNED:
-               data = (LONG)(*(WORD *)dataspace);
-               break;
-            case RAF_LONG:
-               data = (ULONG)(*(ULONG *)dataspace);
-               break;
-            case RAF_LONG|RAF_SIGNED:
-               data = (LONG)(*(LONG *)dataspace);
-               break;
-            case RAF_ADDR:
-               data = (ULONG)dataspace;
-               break;
-            case RAF_NOP:
-               goto no_get;
-            };
-         };
-         *((ULONG *)(attr->ti_Data)) = data;
+	 if (rc & RAF_BOOL)
+	 {
+	    data = (*dataspace >> ((rc >> 27) & 0x07)) & 1;
+	    if (rc & RAF_SIGNED) data = !data;
+	 }
+	 else
+	 {
+	    switch (rc & (RAF_SIGNED|RAF_BYTE|RAF_WORD|RAF_LONG|RAF_ADDR))
+	    {
+	    case RAF_BYTE:
+	       data = (ULONG)(*(UBYTE *)dataspace);
+	       break;
+	    case RAF_BYTE|RAF_SIGNED:
+	       data = (LONG)(*(BYTE *)dataspace);
+	       break;
+	    case RAF_WORD:
+	       data = (ULONG)(*(UWORD *)dataspace);
+	       break;
+	    case RAF_WORD|RAF_SIGNED:
+	       data = (LONG)(*(WORD *)dataspace);
+	       break;
+	    case RAF_LONG:
+	       data = (ULONG)(*(ULONG *)dataspace);
+	       break;
+	    case RAF_LONG|RAF_SIGNED:
+	       data = (LONG)(*(LONG *)dataspace);
+	       break;
+	    case RAF_ADDR:
+	       data = (ULONG)dataspace;
+	       break;
+	    case RAF_NOP:
+	       goto no_get;
+	    };
+	 };
+	 *((ULONG *)(attr->ti_Data)) = data;
       }
       no_get:
       if (rc & RAF_CUSTOM)
       {
-         AsmCoerceMethod(cl, obj, RM_GETCUSTOM, attr, flags);
+	 AsmCoerceMethod(cl, obj, RM_GETCUSTOM, attr, flags);
       };
       if (rc & RAF_SUPER)
       {
-         rc |= AsmDoSuperMethod(cl, obj, RM_GET, attr, flags);
+	 rc |= AsmDoSuperMethod(cl, obj, RM_GET, attr, flags);
       };
       rc = (rc & 0xFFFF) | RAF_UNDERSTOOD;
    }
@@ -670,54 +665,54 @@ makeproto ASM REGFUNC3(ULONG, BGUI_SetAttrChart,
    if (rc = AsmCoerceMethod(cl, obj, RM_GETATTRFLAGS, attr, flags))
    {
       if ((rc & RAF_NOSET) || ((rc & RAF_NOUPDATE)  && (flags & RAF_UPDATE))
-                           || ((rc & RAF_NOINTERIM) && (flags & RAF_INTERIM))
-                           || ((rc & RAF_INITIAL)  && !(flags & RAF_INITIAL)))
+			   || ((rc & RAF_NOINTERIM) && (flags & RAF_INTERIM))
+			   || ((rc & RAF_INITIAL)  && !(flags & RAF_INITIAL)))
       {
-         rc &= ~RAF_SUPER;
+	 rc &= ~RAF_SUPER;
       }
       else
       {
-         if (flags & RAF_INITIAL) rc &= ~RAF_SUPER;
+	 if (flags & RAF_INITIAL) rc &= ~RAF_SUPER;
 
-         dataspace = (UBYTE *)INST_DATA(cl, obj) + ((rc >> 16) & 0x07FF);
-         data      = attr->ti_Data;
+	 dataspace = (UBYTE *)INST_DATA(cl, obj) + ((rc >> 16) & 0x07FF);
+	 data      = attr->ti_Data;
 
-         if (rc & RAF_BOOL)
-         {
-            flag = 1 << ((rc >> 27) & 0x07);
-            if (rc & RAF_SIGNED) data = !data;
+	 if (rc & RAF_BOOL)
+	 {
+	    flag = 1 << ((rc >> 27) & 0x07);
+	    if (rc & RAF_SIGNED) data = !data;
 
-            if (data) *dataspace |=  flag;
-            else      *dataspace &= ~flag;
-         }
-         else
-         {
-            switch (rc & (RAF_SIGNED|RAF_BYTE|RAF_WORD|RAF_LONG|RAF_ADDR))
-            {
-            case RAF_BYTE:
-            case RAF_BYTE|RAF_SIGNED:
-               *((UBYTE *)dataspace) = (UBYTE)data;
-               break;
-            case RAF_WORD:
-            case RAF_WORD|RAF_SIGNED:
-               *((UWORD *)dataspace) = (UWORD)data;
-               break;
-            case RAF_LONG:
-            case RAF_LONG|RAF_SIGNED:
-               *((ULONG *)dataspace) = (ULONG)data;
-               break;
-            case RAF_NOP:
-               break;
-            };
-         };
+	    if (data) *dataspace |=  flag;
+	    else      *dataspace &= ~flag;
+	 }
+	 else
+	 {
+	    switch (rc & (RAF_SIGNED|RAF_BYTE|RAF_WORD|RAF_LONG|RAF_ADDR))
+	    {
+	    case RAF_BYTE:
+	    case RAF_BYTE|RAF_SIGNED:
+	       *((UBYTE *)dataspace) = (UBYTE)data;
+	       break;
+	    case RAF_WORD:
+	    case RAF_WORD|RAF_SIGNED:
+	       *((UWORD *)dataspace) = (UWORD)data;
+	       break;
+	    case RAF_LONG:
+	    case RAF_LONG|RAF_SIGNED:
+	       *((ULONG *)dataspace) = (ULONG)data;
+	       break;
+	    case RAF_NOP:
+	       break;
+	    };
+	 };
       };
       if (rc & RAF_CUSTOM)
       {
-         AsmCoerceMethod(cl, obj, RM_SETCUSTOM, attr, flags);
+	 AsmCoerceMethod(cl, obj, RM_SETCUSTOM, attr, flags);
       };
       if (rc & RAF_SUPER)
       {
-         rc |= AsmDoSuperMethod(cl, obj, RM_SET, attr, flags);
+	 rc |= AsmDoSuperMethod(cl, obj, RM_SET, attr, flags);
       };
       rc = (rc & 0xFFFF) | RAF_UNDERSTOOD;
    }
@@ -753,34 +748,34 @@ makeproto ULONG BGUI_PackStructureTag(UBYTE *dataspace, ULONG *pt, ULONG tag, UL
    {
       if (type == 0xFFFFFFFF)
       {
-         base = *pt++;
-         continue;
+	 base = *pt++;
+	 continue;
       };
       if (tag == (base + ((type >> 16) & 0x03FF) ))
       {
-         if (type & PKCTRL_UNPACKONLY) return 0;
+	 if (type & PKCTRL_UNPACKONLY) return 0;
 
-         dataspace += (type & 0x1FFF);
+	 dataspace += (type & 0x1FFF);
 
-         switch (type & 0x18000000)
-         {
-         case PKCTRL_BIT:
-            flag = 1 << ((type >> 13) & 0x0007);
-            if (type & PSTF_SIGNED) data = !data;
-            if (data) *dataspace |= flag;
-            else      *dataspace &= ~flag;
-            break;
-         case PKCTRL_UBYTE:
-            *((UBYTE *)dataspace) = (UBYTE)data;
-            break;
-         case PKCTRL_UWORD:
-            *((UWORD *)dataspace) = (UWORD)data;
-            break;
-         case PKCTRL_ULONG:
-            *((ULONG *)dataspace) = (ULONG)data;
-            break;
-         };
-         return 1;
+	 switch (type & 0x18000000)
+	 {
+	 case PKCTRL_BIT:
+	    flag = 1 << ((type >> 13) & 0x0007);
+	    if (type & PSTF_SIGNED) data = !data;
+	    if (data) *dataspace |= flag;
+	    else      *dataspace &= ~flag;
+	    break;
+	 case PKCTRL_UBYTE:
+	    *((UBYTE *)dataspace) = (UBYTE)data;
+	    break;
+	 case PKCTRL_UWORD:
+	    *((UWORD *)dataspace) = (UWORD)data;
+	    break;
+	 case PKCTRL_ULONG:
+	    *((ULONG *)dataspace) = (ULONG)data;
+	    break;
+	 };
+	 return 1;
       };
    };
    return 0;
@@ -809,43 +804,43 @@ makeproto ULONG BGUI_UnpackStructureTag(UBYTE *dataspace, ULONG *pt, ULONG tag, 
    {
       if (type == 0xFFFFFFFF)
       {
-         base = *pt++;
-         continue;
+	 base = *pt++;
+	 continue;
       };
       if (tag == (base + ((type >> 16) & 0x03FF) ))
       {
-         if (type & PKCTRL_PACKONLY) return 0;
+	 if (type & PKCTRL_PACKONLY) return 0;
 
-         dataspace += (type & 0x1FFF);
+	 dataspace += (type & 0x1FFF);
 
-         switch (type & 0x98000000)
-         {
-         case PKCTRL_UBYTE:
-            data = (ULONG)(*((UBYTE *)dataspace));
-            break;
-         case PKCTRL_UWORD:
-            data = (ULONG)(*((UWORD *)dataspace));
-            break;
-         case PKCTRL_ULONG:
-            data = (ULONG)(*((ULONG *)dataspace));
-            break;
-         case PKCTRL_BYTE:
-            data = (LONG)(*((BYTE *)dataspace));
-            break;
-         case PKCTRL_WORD:
-            data = (LONG)(*((WORD *)dataspace));
-            break;
-         case PKCTRL_LONG:
-            data = (LONG)(*((LONG *)dataspace));
-            break;
-         case PKCTRL_BIT:
-         case PKCTRL_FLIPBIT:
-            data = (*dataspace & (1 << ((type >> 13) & 0x0007))) ? ~0 : 0;
-            if (type & PSTF_SIGNED) data = ~data;
-            break;
-         };
-         *storage = data;
-         return 1;
+	 switch (type & 0x98000000)
+	 {
+	 case PKCTRL_UBYTE:
+	    data = (ULONG)(*((UBYTE *)dataspace));
+	    break;
+	 case PKCTRL_UWORD:
+	    data = (ULONG)(*((UWORD *)dataspace));
+	    break;
+	 case PKCTRL_ULONG:
+	    data = (ULONG)(*((ULONG *)dataspace));
+	    break;
+	 case PKCTRL_BYTE:
+	    data = (LONG)(*((BYTE *)dataspace));
+	    break;
+	 case PKCTRL_WORD:
+	    data = (LONG)(*((WORD *)dataspace));
+	    break;
+	 case PKCTRL_LONG:
+	    data = (LONG)(*((LONG *)dataspace));
+	    break;
+	 case PKCTRL_BIT:
+	 case PKCTRL_FLIPBIT:
+	    data = (*dataspace & (1 << ((type >> 13) & 0x0007))) ? ~0 : 0;
+	    if (type & PSTF_SIGNED) data = ~data;
+	    break;
+	 };
+	 *storage = data;
+	 return 1;
       };
    };
    return 0;
@@ -864,10 +859,8 @@ AROS_LH3(ULONG, BGUI_PackStructureTags,
 makeproto SAVEDS ULONG ASM BGUI_PackStructureTags(REG(a0) APTR pack, REG(a1) ULONG *packTable, REG(a2) struct TagItem *tagList)
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    #ifdef ENHANCED
 
@@ -886,9 +879,7 @@ makeproto SAVEDS ULONG ASM BGUI_PackStructureTags(REG(a0) APTR pack, REG(a1) ULO
 
    #endif
    
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 #ifdef _AROS
@@ -902,10 +893,8 @@ AROS_LH3(ULONG, BGUI_UnpackStructureTags,
 makeproto SAVEDS ULONG ASM BGUI_UnpackStructureTags(REG(a0) APTR pack, REG(a1) ULONG *packTable, REG(a2) struct TagItem *tagList)
 #endif
 {
-#ifdef _AROS
    AROS_LIBFUNC_INIT
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
 
    #ifdef ENHANCED
 
@@ -924,9 +913,7 @@ makeproto SAVEDS ULONG ASM BGUI_UnpackStructureTags(REG(a0) APTR pack, REG(a1) U
 
    #endif
 
-#ifdef _AROS
    AROS_LIBFUNC_EXIT
-#endif
 }
 
 /*
@@ -1138,14 +1125,14 @@ makeproto SAVEDS ASM REGFUNC1(struct BaseInfo *, BGUI_AllocBaseInfoA,
 
       if (bi2 = (struct BaseInfo *)GetTagData(BI_BaseInfo, NULL, tags))
       {
-         *bi = *bi2;
+	 *bi = *bi2;
       }
       else
-      	memset(bi,'\0',sizeof(*bi));
+	memset(bi,'\0',sizeof(*bi));
 
       if (gi = (struct GadgetInfo *)GetTagData(BI_GadgetInfo, (ULONG)gi, tags))
       {
-         *((struct GadgetInfo *)bi) = *gi;
+	 *((struct GadgetInfo *)bi) = *gi;
       };
 
       bi->bi_DrInfo  = (struct DrawInfo *)GetTagData(BI_DrawInfo, (ULONG)bi->bi_DrInfo, tags);
@@ -1155,24 +1142,24 @@ makeproto SAVEDS ASM REGFUNC1(struct BaseInfo *, BGUI_AllocBaseInfoA,
 
       if (gi && !bi->bi_RPort)
       {
-         if (bi->bi_RPort = ObtainGIRPort(gi))
-         {
-            *flags |= BI_FREE_RP;
-         };
+	 if (bi->bi_RPort = ObtainGIRPort(gi))
+	 {
+	    *flags |= BI_FREE_RP;
+	 };
       };
 
       if (bi->bi_IScreen && !bi->bi_DrInfo)
       {
-         if (bi->bi_DrInfo = GetScreenDrawInfo(bi->bi_IScreen))
-         {
-            *flags |= BI_FREE_DRI;
-         };
+	 if (bi->bi_DrInfo = GetScreenDrawInfo(bi->bi_IScreen))
+	 {
+	    *flags |= BI_FREE_DRI;
+	 };
       };
 
       if (!bi->bi_Pens)
       {
-         if (bi->bi_DrInfo) bi->bi_Pens = bi->bi_DrInfo->dri_Pens;
-         else               bi->bi_Pens = DefDriPens;
+	 if (bi->bi_DrInfo) bi->bi_Pens = bi->bi_DrInfo->dri_Pens;
+	 else               bi->bi_Pens = DefDriPens;
       };
    }
    return bi;
