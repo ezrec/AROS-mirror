@@ -393,6 +393,10 @@ int gui_init (void)
     if (!application)
         return -2;
 
+    /* Just in case abort() is invoked, in which case we have to make
+       sure that the application is disposed.  */
+    atexit(gui_exit);
+
     set(window, MUIA_Window_Open, TRUE);
     DoMethod
     (
@@ -421,7 +425,11 @@ int gui_update (void)
 
 void gui_exit (void)
 {
-    MUI_DisposeObject(application);
+    if (application)
+    {
+        MUI_DisposeObject(application);
+	application = NULL;
+    }
 }
 
 void gui_fps (int x)
