@@ -13,6 +13,7 @@ apache.conf : genconf apache.conf.in site.conf
 site.conf :
 	@echo "Copy site.conf.in to site.conf and modify site.conf"
 	@echo "to suit your setup."
+	@exit 1
 
 compileall:
 	@python -c "import compileall; compileall.compile_dir('.',0)"
