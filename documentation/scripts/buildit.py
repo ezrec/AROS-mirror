@@ -185,21 +185,19 @@ def makeNews():
         output  = file( _dst, 'w' )
         output.write( 'News\n====\n\n' )
         for filename in current:
-            output.write( file( filename, 'r' ).read() )
-            output.write( '\n\n' )
+            output.write( '.. include:: %s\n\n\n' % filename )
         output.close()
 
     for year in archives.keys():
         archives[year].sort()
         archives[year].reverse()
         _dst = os.path.join( SRCROOT, 'news/archive/' + year + '.en' )
-        
+
         if newer( archives[year], _dst ):
             output = file( _dst, 'w' )
             output.write( 'News archive for ' + year + '\n=====================\n\n' )
             for filename in archives[year]:
-                output.write( file( filename, 'r' ).read() )
-                output.write( '\n\n' )
+                output.write( '.. include:: %s\n\n\n' % filename )
             output.close()
 
 def convertWWW( src, language, options=None ):
