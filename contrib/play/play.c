@@ -7,6 +7,7 @@ int verbose = 0, debugging = 0;
 int benchmark_mode = 0;
 double frame_rate = 0.0;
 
+LONG __stack = 600000;  /* Make it big!! */
 
 void show_formats(void)
 {

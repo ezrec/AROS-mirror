@@ -1,0 +1,7 @@
+To compile:
+export TOP= path to you AROS directory
+export AROS_TARGET_CPU=i386
+export AROS_TARGET_ARCH=linux
+mkdir obj
+make
+
