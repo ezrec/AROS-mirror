@@ -14,7 +14,7 @@
 
 	* pex-aros.c: new file.
 	* Makefile.in: handle pex-aros.c.
-	* configure.ac: handle *-*-arps*.
+	* configure.ac: handle *-*-aros*.
 	* configure: likewise
 
 -- in toplevel --
