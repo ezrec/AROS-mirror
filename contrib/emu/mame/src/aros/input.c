@@ -11,11 +11,18 @@
 
 #include "driver.h"
 
+#ifndef AROS
+
 #include <time.h>
 
-#ifdef AROS
-#define CLOCKS_PER_SEC 0
-#define clock() 0
+#else
+
+#include <exec/types.h>
+#include "aros_misc.h"
+
+#define CLOCKS_PER_SEC TICKS_PER_SEC
+#define clock() AROS_Ticker()
+#define clock_t TICKER
 #endif
 
 /***************************************************************************/

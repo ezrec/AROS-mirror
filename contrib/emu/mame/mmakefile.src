@@ -1,12 +1,22 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-%define_libs
+AROSMAME_USEZLIB			:= "yes"
 
-INSTDIR  := $(CONTRIBDIR)/Emu/Mame
-OBJDIR := $(GENDIR)/$(CURDIR)
+ifeq ($(AROSMAME_USEZLIB),"yes")
+    %define_libs prelibs=-larosz
 
-EXE := $(INSTDIR)/mame
+    AROSMAME_EXTRADEFS			:= -DAROSMAME_USEZLIB
+else
+    %define_libs
+
+    AROSMAME_EXTRADEFS			:=
+endif
+
+INSTDIR  				:= $(CONTRIBDIR)/Emu/Mame
+OBJDIR   				:= $(GENDIR)/$(CURDIR)
+
+EXE 					:= $(INSTDIR)/mame
 
 #MM- contrib-emu : Mame
 #MM
@@ -17,7 +27,7 @@ setup : make-dirs maketree
 	@$(NOP)
 	
 make-dirs :
-	%mkdirs_q $(INSTDIR) $(OBJDIR) $(INSTDIR)/roms
+	%mkdirs_q $(INSTDIR) $(OBJDIR) $(INSTDIR)/roms $(INSTDIR)/snap
 
 #MM MameSourceFix
 MameSourceFix: $(TOOLDIR)/stripcr
@@ -795,7 +805,7 @@ DEBUGDEF =
 DBGOBJS =
 endif
 
-DEFS = -DAROS -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__
+DEFS = -DAROS -DLSB_FIRST $(AROSMAME_EXTRADEFS) -DINLINE="static __inline__" -Dasm=__asm__ 
 CDEFS = $(DEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DEBUGDEF)
 
 ifdef SYMBOLS
@@ -832,7 +842,7 @@ endif
 
 ##########
 #
-#AROS: removed COREOBJS: $(OBJDIR)/unzip.o $(OBJDIR)/input.o 
+#AROS: removed COREOBJS: $(OBJDIR)/input.o 
 #
 ##########
 

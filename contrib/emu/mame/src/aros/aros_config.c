@@ -423,15 +423,15 @@ void parse_cmdline (int argc, char **argv, int game_index)
 	resolution  = get_string ("config", "resolution", NULL, "auto");
 
 	/* set default subdirectories */
-	nvdir      = get_string ("directory", "nvram",   NULL, "NVRAM");
-	hidir      = get_string ("directory", "hi",      NULL, "HI");
-	cfgdir     = get_string ("directory", "cfg",     NULL, "CFG");
-	screenshotdir = get_string ("directory", "snap",     NULL, "SNAP");
-	memcarddir = get_string ("directory", "memcard", NULL, "MEMCARD");
-	stadir     = get_string ("directory", "sta",     NULL, "STA");
-	artworkdir = get_string ("directory", "artwork", NULL, "ARTWORK");
+	nvdir      = get_string ("directory", "nvram",   NULL, "nvram");
+	hidir      = get_string ("directory", "hi",      NULL, "hi");
+	cfgdir     = get_string ("directory", "cfg",     NULL, "cfg");
+	screenshotdir = get_string ("directory", "snap",     NULL, "snap");
+	memcarddir = get_string ("directory", "memcard", NULL, "memcard");
+	stadir     = get_string ("directory", "sta",     NULL, "sta");
+	artworkdir = get_string ("directory", "artwork", NULL, "artwork");
  	#ifdef MESS
- 		crcdir = get_string ("directory", "crc", NULL, "CRC");
+ 		crcdir = get_string ("directory", "crc", NULL, "crc");
  	#endif
 
 	/* this is handled externally cause the audit stuff needs it, too */

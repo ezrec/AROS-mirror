@@ -14,6 +14,19 @@ void raise(void)
     Wait(0);
 }
 
+int clock(void)
+{
+    static int counter = 1;
+ 
+    printf("AROS: clock\n");   
+    counter += 100000;
+    
+    return counter;
+}
+
+
+#ifndef AROSMAME_USEZLIB
+
 int compress(void)
 {
     printf("AROS: compress: I cannot zip compress!\n");
@@ -69,13 +82,5 @@ int inflateInit2_(void)
     return 0;
 }
 
-int clock(void)
-{
-    static int counter = 1;
- 
-    printf("AROS: clock\n");   
-    counter += 100000;
-    
-    return counter;
-}
+#endif
 

@@ -1,4 +1,5 @@
 #include "driver.h"
+#include "unzip.h"
 
 #include <exec/exec.h>
 #include <dos/dos.h>
@@ -10,6 +11,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include <zlib.h>
 
 #include "aros_fileio.h"
 #include "aros_config.h"
@@ -47,7 +50,7 @@ static struct ArosFile *OpenFile(const char *dir_name, const char *file_name, in
 	if(i)
 	{
 	    strcpy(file->Name, dir_name);
-	    AddPart(file->Name, file_name, 255);
+	    AddPart(file->Name, (char *)file_name, 255);
 
 	    file->File  = Open(file->Name, mode);
 	    file->Type  = FILETYPE_NORMAL;
@@ -166,14 +169,14 @@ static struct ArosFile *OpenFileType(const char *dir_name, const char *file_name
         	if(path_len)
         	{
         	    strcpy(name, path);
-		    AddPart(name, dir_name, 255);
+		    AddPart(name, (char *)dir_name, 255);
 
-        	    file = OpenFile(name, file_name, mode);
+        	    file = OpenFile(name, (char *)file_name, mode);
 
         	    if(!file)
         	    {
         	        name[path_len] = 0;
-        	        file = OpenFile(name, file_name, mode);
+        	        file = OpenFile(name, (char *)file_name, mode);
         	    }
 		    
 		    if (file) break;
@@ -202,7 +205,7 @@ static struct ArosFile *OpenFileType(const char *dir_name, const char *file_name
         	if(path_len)
         	{
         	    strcpy(name, path);
-		    AddPart(name, dir_name, 255);
+		    AddPart(name, (char *)dir_name, 255);
 		    
         	    file = OpenFile(name, file_name, mode);
 
@@ -231,7 +234,7 @@ static struct ArosFile *OpenFileType(const char *dir_name, const char *file_name
         	if(path_len)
         	{
         	    strcpy(name, path);
-		    AddPart(name, dir_name, 255);
+		    AddPart(name, (char *)dir_name, 255);
 		    
        	    	    file = OpenFile(name, file_name, mode);
 
@@ -294,6 +297,11 @@ static struct ArosFile *OpenFileType(const char *dir_name, const char *file_name
 	    sprintf(name, "%s.inp", file_name);
 	    return(OpenFile("", name, mode));
 
+	case OSD_FILETYPE_SCREENSHOT:
+	    strcpy(name, screenshotdir);
+	    AddPart(name, (char *)file_name, 255);
+	    return(OpenFile("", name, mode));
+	    
 	default:
 	    return(NULL);
     }
@@ -407,9 +415,6 @@ void osd_fclose(void *file)
 	CloseFile(afile);
 }
 
-/************************************************************************************/
-/************************************************************************************/
-/************************************************************************************/
 /************************************************************************************/
 
 int osd_fread(void *file_handle, void *buffer, int length)
@@ -534,23 +539,23 @@ int osd_fread_scatter(void *void_file_p, void *buffer_p, int length, int increme
 
 int osd_fread_swap(void *file_handle, void *buffer, int length)
 {
-	int i;
-	unsigned char *buf;
-	unsigned char temp;
-	int res;
+    int i;
+    unsigned char *buf;
+    unsigned char temp;
+    int res;
 
 
-	res = osd_fread(file_handle,buffer,length);
+    res = osd_fread(file_handle,buffer,length);
 
-	buf = buffer;
-	for (i = 0;i < length;i+=2)
-	{
-		temp = buf[i];
-		buf[i] = buf[i+1];
-		buf[i+1] = temp;
-	}
+    buf = buffer;
+    for (i = 0;i < length;i+=2)
+    {
+	temp = buf[i];
+	buf[i] = buf[i+1];
+	buf[i+1] = temp;
+    }
 
-	return res;
+    return res;
 }
 
 /************************************************************************************/
@@ -689,9 +694,30 @@ unsigned int osd_fcrc(void *file)
 
 /************************************************************************************/
 
-int osd_faccess (const char *filename, int filetype)
+int osd_faccess (const char *newfilename, int filetype)
 {
-  return(1);
+    FILE *f;
+    char name[257];
+    
+    int result = 1;
+    
+    switch(filetype)
+    {
+        case OSD_FILETYPE_SCREENSHOT:
+	    strcpy(name, screenshotdir);
+	    AddPart(name, (char *)newfilename, 256);
+	    f = fopen(name, "rb");
+	    if (!f)
+	    {
+	        result = 0;
+	    } else {
+	        fclose(f);
+	    }
+	    break;
+	    
+    }
+    
+    return result;
 }
 
 /************************************************************************************/

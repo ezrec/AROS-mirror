@@ -45,6 +45,7 @@ void osd_pause(int paused)
 
 void osd_save_snapshot(void)
 {
+    save_screen_snapshot();
 }
 
 /************************************************************************************/
