@@ -1,8 +1,8 @@
 # Per-site stuff for the Apache config
 #
 # Where the files are installed. This is usually /home/user/www/www.aros.org/
-# The genconf tries to figure this out itself, so usually, you don't have to
-# specify it here.
+# The default is the parent of the current directory. If this variable is not
+# set, then the various scripts try to figure this out themselves.
 #BASEDIR=
 
 # The name of the virtual host on which AROS is hosted. To create a local
@@ -16,5 +16,31 @@
 HOSTNAME=www2.aros.org
 
 # Where mailman ist installed. Don't worry if it isn't installed, you
-# don't need it (but you also cannot test the mailing lists).
+# don't need it (you will just not be able to test the mailing lists).
 MAILMAN=/var/lib/mailman
+
+# In which directory should the files be installed ?
+HTMLDIR=../www
+
+# Destination for the screenshots (where the thumbnails should be
+# generated, etc.)
+SCREENSHOTDIR=$HTMLDIR/pics/screenshots
+
+# The directory which contains the files for the AROS FTP server.
+# If this doesn't exist, then an empty download page will be
+# generated.
+FTPDIR=/home/ftp/pub/aros
+
+# Where the AROS sources are installed
+AROSBASE=$HOME/packages/AROS
+
+# Where is the AROS repository ?
+AROSDIR=$AROSBASE/AROS
+
+# Where is the binaries repository (screenshots, etc) ?
+BINDIR=$AROSBASE/binaries
+
+# Where is the contrib repository ?
+CONTRIBDIR=$AROSBASE/contrib
+
+
