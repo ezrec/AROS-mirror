@@ -8,7 +8,8 @@ aros-dev-owner:          aros-dev-admin
 
 ## aros-user mailing list
 ## created: 03-Sep-1999 digulla
-aros-user:               "|/var/lib/mailman/mail/wrapper post aros-user"
+aros-user:               "|cat > /dev/null"
+aros-user2:               "|/var/lib/mailman/mail/wrapper post aros-user"
 aros-user-admin:         "|/var/lib/mailman/mail/wrapper mailowner aros-user"
 aros-user-request:       "|/var/lib/mailman/mail/wrapper mailcmd aros-user"
 owner-aros-user:         aros-user-admin
