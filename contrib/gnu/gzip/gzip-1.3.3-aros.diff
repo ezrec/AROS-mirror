@@ -1,0 +1,12 @@
+diff -urN gzip-1.3.3/Makefile.in gzip-1.3.3-aros/Makefile.in
+--- gzip-1.3.3/Makefile.in	2002-03-09 01:54:09.000000000 +0100
++++ gzip-1.3.3-aros/Makefile.in	2004-09-01 16:04:29.000000000 +0200
+@@ -132,7 +132,7 @@
+ 
+ am_gzip_OBJECTS = bits.$(OBJEXT) crypt.$(OBJEXT) deflate.$(OBJEXT) \
+ 	getopt.$(OBJEXT) getopt1.$(OBJEXT) gzip.$(OBJEXT) \
+-	inflate.$(OBJEXT) lzw.$(OBJEXT) trees.$(OBJEXT) unlzh.$(OBJEXT) \
++	inflate.$(OBJEXT) lzw.$(OBJEXT) match.$(OBJEXT) trees.$(OBJEXT) unlzh.$(OBJEXT) \
+ 	unlzw.$(OBJEXT) unpack.$(OBJEXT) unzip.$(OBJEXT) util.$(OBJEXT) \
+ 	yesno.$(OBJEXT) zip.$(OBJEXT)
+ gzip_OBJECTS = $(am_gzip_OBJECTS)
