@@ -301,6 +301,11 @@ All Rights Reserved<BR>''')
         return string.join(s, '')
 
     def write (self, filename):
+	mtime = self.__dict__.get ('mtime', time.time ())
+	if mtime < os.path.getmtime (filename):
+	    sys.stdout.write ('Skipping %s: page is older\n' % filename)
+	    return
+
 	# For self.nav_buttons
 	self.filename = filename
 
