@@ -73,7 +73,7 @@ ULONG class;
       msg=(struct IntuiMessage *)GetMsg(Win->UserPort);
       class=msg->Class;
       ReplyMsg((struct Message *)msg);
-      if(msg->Class==IDCMP_CHANGEWINDOW)
+      if(class==IDCMP_CHANGEWINDOW)
         break;
     }
   }
