@@ -189,3 +189,4 @@ darklite:cdiUSRq9Ml946:Brecht Machiels:darklite@gmx.net:
 ljl:dcU/holkBpX5o:Lorenzo J. Lucchini:ljlbox@inwind.it:
 kolla:abDBb2PjDjm.g:Kolbjørn Barmen:kolla@nvg.ntnu.no:
 hassel:bcGA71xRz1XUk:Anders Hasselqvist:hassel@acc.umu.se:
+jdiffend:dauQTNAbLF0Aw:James Diffendaffer:jdiffend@earthlink.net:
