@@ -26,7 +26,10 @@ Nightly builds
    been tested in any way and can be horribly broken and extremely buggy if your
    are unlucky. Most of the time though, they work fine.
 
-.. raw:: html
+.. .. raw:: html
    
    <!--#exec cmd="wget --quiet http://aros.sourceforge.net/cgi-bin/nightly -O -" -->
    
+.. raw:: html
+
+   <?php virtual( "/cgi-bin/nightly" ); ?>
