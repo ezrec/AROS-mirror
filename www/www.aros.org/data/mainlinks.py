@@ -26,6 +26,8 @@ mainLinks = (
 	Href ('background.html', 'Background'),
 	Href ('cvs.html', 'CVS'),
 	Href ('mmake.html', 'MetaMake'),
+	Href ('hidd-intro.html', 'HIDD Intro'),
+	Href ('hidd-model.html', 'HIDD Model'),
 	Href ('autodocs/index.html', 'AutoDocs'),
     ),
     ( Href ('screenshots.html', 'Screenshots'),
