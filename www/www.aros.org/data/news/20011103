@@ -2,14 +2,14 @@ The code which handles disk changes works now. You will find some
 more disk images on our server, soon !
 
 Adam Chodorowski ported makedepend from XFree86 which creates
-dependency lists for the build much faster then GCC does. His
+dependency lists for the build much faster than GCC does. His
 Python port becomes better and better. When he ran the regression
 tests, 78 were ok and 14 failed (this includes modules which are
 simply not available).
 
 Fabio Alemagna removed some side effects in the list macros.
 
-Stefan Berger begin to write a serial.hidd for the Palm port.
+Stefan Berger began to write a serial.hidd for the Palm port.
 
 Johan Alfredsson fixed a bug in RemSegment() and fixed a lot of warnings
 during the build (hundreds maybe thousands of them, actually)
