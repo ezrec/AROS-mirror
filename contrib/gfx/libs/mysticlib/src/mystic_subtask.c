@@ -269,7 +269,13 @@ APTR SubTask(LONG (* function)(struct subtask *, BYTE),
 				st->msg.mn_Length = sizeof(struct subtask);
 				st->selfdestruct = selfdestruct;
 
+    	    	    	#ifdef __AROS__
+			#warning "FIXME: sprintf causes crash here. evil clib. or something!"
+			    	strcpy(st->procname, "subtask_by_mv.library");
+			#else
 				sprintf(st->procname, name, GetUniqueID());
+			#endif
+			
 
 #ifdef __MORPHOS__
 				if (st->subproc = CreateNewProcTags(NP_Entry, (ULONG) &SubTaskEntry_GATE,
