@@ -33,6 +33,9 @@ BOOL CreatePictureMaskA_GATE(void);
 
 /*****************************************************************************/
 
+/* On AROS use autoopening of libraries */
+#ifndef __AROS__
+
 /* Reserved library-function and dummy entrypoint */
 LONG LibNull()
 {
@@ -295,6 +298,8 @@ BPTR LIBENT LibClose(
 		return(NULL);
 	}
 }
+
+#endif
 
 /*****************************************************************************/
 

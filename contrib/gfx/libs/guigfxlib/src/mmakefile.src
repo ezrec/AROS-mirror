@@ -3,7 +3,8 @@
 include $(TOP)/config/make.cfg
 
 #MM- contrib-gfx-libs : contrib-gfx-libs-guigfx
-#MM- contrib-gfx-libs-guigfx : includes linklibs contrib-gfx-libs-render 
+#MM- contrib-gfx-libs-guigfx : linklibs contrib-gfx-libs-render 
+#MM- contrib-gfx-libs-guigfx-includes : includes
 
 FILES := guigfx_bitmap 		\
 	 guigfx_colorhandle 	\
@@ -20,10 +21,9 @@ FILES := guigfx_bitmap 		\
     	    
 FUNCS := guigfx_funcs
 
-%build_module_macro mmake=contrib-gfx-libs-guigfx \
-  modname=guigfx modtype=library \
-  funcs=$(FUNCS) files=$(FILES) \
-  conffile=lib.conf \
-  uselibs="amiga mui rom m"
+%build_module mmake=contrib-gfx-libs-guigfx \
+    modname=guigfx modtype=library \
+    files="$(FUNCS) $(FILES)" \
+    conffile=lib.conf \
+    uselibs="render amiga mui rom m"
 
-%common

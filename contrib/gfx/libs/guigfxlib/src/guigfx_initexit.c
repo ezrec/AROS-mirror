@@ -74,6 +74,74 @@ char *GetEnv(char *name)
 	return value;
 }
 
+BOOL InitVars(void)
+{
+	char *env;
+
+	MemHandler = CreateRMHandler(RND_MemType, DEFAULT_RMHTYPE, TAG_DONE);
+	if (MemHandler)
+	{
+		gfx40 = (GfxBase->LibNode.lib_Version >= 40);
+
+	        if (CyberGfxBase)
+		{
+			cgfx41 = (CyberGfxBase->lib_Version >= 41);
+			#ifdef DEBUG
+			if (cgfx41)
+			{
+				DB(kprintf("Cybergraphics v41 detected.\n"));
+			}
+			#endif
+
+
+			//	get env variables
+				
+		//	if (env = getenv("guigfx/autoditherthreshold"))
+			if ((env = GetEnv("guigfx/autoditherthreshold")))
+			{
+				env_autoditherthreshold = atoi(env);
+			//	free(env);
+				FreeVec(env);
+			}
+				
+			if (cgfx41)
+			{
+			//	if (env = getenv("guigfx/usescalepixelarray"))
+				if ((env = GetEnv("guigfx/usescalepixelarray")))
+				{
+					env_usescalepixelarray = (atoi(env) == 1);
+				//	free(env);
+					FreeVec(env);
+				}
+			}
+
+		//	if (env = getenv("guigfx/usewpa8"))
+			if ((env = GetEnv("guigfx/usewpa8")))
+			{
+				env_usewpa8 = (atoi(env) == 1);
+			//	free(env);
+				FreeVec(env);
+			}
+		}
+
+		DB(kprintf("autoditherthreshold: %ld, usescalepixelarray: %ld, usewpa8: %ld\n", env_autoditherthreshold, env_usescalepixelarray, env_usewpa8));
+
+	        return TRUE;
+	}
+        else
+		return FALSE;
+}
+
+BOOL CleanUpVars(void)
+{
+	if (MemHandler)
+	{
+		DeleteRMHandler(MemHandler);		//!! eagleplayer
+		MemHandler = NULL;
+	}
+	return TRUE;
+}
+
 
 
 /*********************************************************************
@@ -83,10 +151,9 @@ char *GetEnv(char *name)
 
 *********************************************************************/
 
+#ifndef __AROS__
 BOOL LIBENT GGFX_Init(void)
 {
-	char *env;
-
 #ifdef __AROS__
 	UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library", 37);
 #else
@@ -98,6 +165,7 @@ BOOL LIBENT GGFX_Init(void)
 	DOSBase = (struct DosLibrary *) OpenLibrary("dos.library", 0);
 //	MathTransBase = OpenLibrary("mathtrans.library", 0);
 	IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library", 0);
+        aroscbase = OpenLibrary("arosc.library", 0);
 
 	RenderBase = OpenLibrary("render.library", RENDER_VERSION);
 	if (!RenderBase)
@@ -106,56 +174,8 @@ BOOL LIBENT GGFX_Init(void)
 	}
 
 	if (UtilityBase && GfxBase && RenderBase && 
-		DOSBase) // && MathTransBase)
+		DOSBase && aroscbase) // && MathTransBase)
 	{
-		MemHandler = CreateRMHandler(RND_MemType, DEFAULT_RMHTYPE, TAG_DONE);
-		if (MemHandler)
-		{
-			gfx40 = (GfxBase->LibNode.lib_Version >= 40);
-
-			if (CyberGfxBase)
-			{
-				cgfx41 = (CyberGfxBase->lib_Version >= 41);
-				#ifdef DEBUG
-				if (cgfx41)
-				{
-					DB(kprintf("Cybergraphics v41 detected.\n"));
-				}
-				#endif
-
-
-				//	get env variables
-				
-			//	if (env = getenv("guigfx/autoditherthreshold"))
-				if ((env = GetEnv("guigfx/autoditherthreshold")))
-				{
-					env_autoditherthreshold = atoi(env);
-				//	free(env);
-					FreeVec(env);
-				}
-				
-				if (cgfx41)
-				{
-				//	if (env = getenv("guigfx/usescalepixelarray"))
-					if ((env = GetEnv("guigfx/usescalepixelarray")))
-					{
-						env_usescalepixelarray = (atoi(env) == 1);
-					//	free(env);
-						FreeVec(env);
-					}
-				}
-
-			//	if (env = getenv("guigfx/usewpa8"))
-				if ((env = GetEnv("guigfx/usewpa8")))
-				{
-					env_usewpa8 = (atoi(env) == 1);
-				//	free(env);
-					FreeVec(env);
-				}
-			}
-
-			DB(kprintf("autoditherthreshold: %ld, usescalepixelarray: %ld, usewpa8: %ld\n", env_autoditherthreshold, env_usescalepixelarray, env_usewpa8));
-
 			return TRUE;
 		}
 	}
@@ -167,11 +187,10 @@ BOOL LIBENT GGFX_Init(void)
 
 void LIBENT GGFX_Exit(void)
 {
-	if (MemHandler)
-	{
-		DeleteRMHandler(MemHandler);		//!! eagleplayer
-		MemHandler = NULL;
-	}
+	CleanUpVars();
+
+        CloseLibrary(aroscbase);
+        aroscbase = NULL;
 
 	CloseLibrary(RenderBase);
 	RenderBase = NULL;
@@ -198,3 +217,29 @@ void LIBENT GGFX_Exit(void)
 	UtilityBase = NULL;
 	
 }
+#else /* On AROS */
+#include <aros/symbolsets.h>
+#include LC_LIBDEFS_FILE
+
+AROS_SET_LIBFUNC(GGFX_Init, LIBBASETYPE, LIBBASE)
+{
+    AROS_SET_LIBFUNC_INIT
+
+    return InitVars();
+    
+    AROS_SET_LIBFUNC_EXIT
+}
+
+AROS_SET_LIBFUNC(GGFX_Exit, LIBBASETYPE, LIBBASE)
+{
+    AROS_SET_LIBFUNC_INIT
+
+    return CleanUpVars();
+    
+    AROS_SET_LIBFUNC_EXIT
+}
+
+ADD2INITLIB(GGFX_Init, 0);
+ADD2EXPUNGELIB(GGFX_Exit, 0);
+#endif
+

@@ -30,8 +30,10 @@ LONG LibNull(void);
 
 /* guigfx_InitExit.c */
 
+#ifndef __AROS__
 BOOL LIBENT GGFX_Init(void);
 void LIBENT GGFX_Exit(void);
+#endif
 
 
 /* guigfx_picturemethod */

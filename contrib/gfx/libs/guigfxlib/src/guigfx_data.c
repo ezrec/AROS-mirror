@@ -3,6 +3,7 @@
 #include "guigfx_global.h"
 #endif
 
+#ifndef __AROS__ /* On AROS use autoopening of libraries */
 //struct ExecBase	*SysBase = NULL;
 #ifdef __AROS__
 struct UtilityBase *UtilityBase  = NULL;
@@ -17,6 +18,10 @@ struct DosLibrary *DOSBase = NULL;
 //struct Library *MathTransBase = NULL;
 //struct Library *TowerBase = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
+#ifdef __AROS__
+struct Library *aroscbase;
+#endif
+#endif
 
 BOOL env_usescalepixelarray = FALSE;
 int env_autoditherthreshold = DEFAULT_AUTODITHER_THRESHOLD;

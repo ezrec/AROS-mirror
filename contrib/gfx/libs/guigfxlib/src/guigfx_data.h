@@ -15,6 +15,7 @@ extern struct DosLibrary	*DOSBase;
 //extern struct Library		*MathTransBase;
 //extern struct Library 		*TowerBase;
 extern struct IntuitionBase	*IntuitionBase;
+extern struct Library           *aroscbase;
 
 extern APTR MemHandler;
 

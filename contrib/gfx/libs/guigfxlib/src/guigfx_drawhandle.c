@@ -505,8 +505,10 @@ DRAWHANDLE SAVE_DS ASM *ObtainDrawHandleA(
 											{
 												if ((!dh->rasthandle->truecolor) && (psm->hstype == HSTYPE_12BIT_TURBO))
 												{
+													/*dh->mapengine = CreateMapEngine(dh->realpalette,
+															RND_Histogram, psm->histogram,
+															RND_RMHandler, (IPTR)MemHandler, TAG_DONE)*/;
 													dh->mapengine = CreateMapEngine(dh->realpalette,
-													//		RND_Histogram, psm->histogram,
 															RND_RMHandler, (IPTR)MemHandler, TAG_DONE);
 												}
 											}
