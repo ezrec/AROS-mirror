@@ -49,6 +49,7 @@ Object *InitTest_1( void )
 	Object *win;
 	Object **ar = Test_1Objs;
 
+printf("Trying to create Window Object\n");
 	win = WindowObject,
 		WINDOW_SmartRefresh, TRUE,
 		WINDOW_AutoAspect, TRUE,
@@ -100,19 +101,21 @@ int main(argc,argv)
 {
 	Object *window;
 
+printf("Program started!\n");
 	if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
 	{
 	  printf("Could not open Intuition.library!\n");
 	  return -1;
 	}
-
+printf("Trying to open BGUI Lib!\n");
 	if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
 	{
+printf("Opened BGU lib!\n");
 		if((window=InitTest_1())!=NULL
 		&& WindowOpen(window)!=NULL)
 		{
 			ULONG signal;
-
+printf("survived INit_Test!\n");
 			if(GetAttr(WINDOW_SigMask,window,&signal)
 			&& signal!=0)
 			{
