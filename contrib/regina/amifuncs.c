@@ -20,7 +20,7 @@
 /* This files contains functions that are implemented in ARexx
  * but that are not standard REXX functions. This file contains
  * the functions that are only to be used on amiga or compatibles.
- * arexxfuncs.c contains the ARexx functions that are usable on all
+ * arxfuncs.c contains the ARexx functions that are usable on all
  * platforms.
  */
 #include "rexx.h"
