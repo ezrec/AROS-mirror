@@ -52,7 +52,7 @@ ULONG class,iflags;
 USHORT code;
 
 int Feld[33];
-int check[33][33]=
+USHORT check[33][33]=
 {
  {0,0,2,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
  {0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -245,6 +245,7 @@ while(ende!=TRUE)
                          break;
                  }
          }
+	 RefreshGadgets(&g[0],Window,NULL);
          break;
    default:
          break;

@@ -113,11 +113,11 @@ char Namen[4][21];
 
 #include "MineDatei.h"
 
-globalInit()
+void globalInit()
 {
 SHORT i;
-  oeffnelib();
-  oeffnewindow(NeuesWindow);
+  open_lib();
+  open_window(NeuesWindow);
   time( &tstart );
   srand(tstart);
   breite=22;
@@ -130,7 +130,7 @@ SHORT i;
     Zeiten[i]=999;
     strcpy(Namen[i],"Keiner");
   }
-  oeffnedatei();
+  open_datei();
 }
 
 #include "MineSpiel.h"
@@ -226,7 +226,7 @@ BOOL weiter=FALSE;
 }
 
 
-CleanUp()
+void CleanUp()
 {
   schliessedatei();
   schliessewindow();
@@ -235,12 +235,12 @@ CleanUp()
 
 /* ---------------------------    HauptProgramm    -------------------------- */
 
-wbmain()
+void wbmain()
 {
  main();
 }
 
-main()
+void main()
 {
   WEnde=FALSE;
   globalInit();

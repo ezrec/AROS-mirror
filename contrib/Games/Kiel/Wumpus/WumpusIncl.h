@@ -13,14 +13,16 @@ ULONG class;
 USHORT code;
 
 #define random(max) ((rand()%max)+1)
+#define StopMsg() ModifyIDCMP(Window,NULL)
+#define ContMsg() ModifyIDCMP(Window,iflags)
 
-oeffnelib()
+void open_lib()
 {
   IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library",0L);
   GfxBase = (struct GfxBase *) OpenLibrary("graphics.library",0L);
 }
 
-oeffnewindow(NeuesFenster)
+void open_window(NeuesFenster)
 struct NewWindow NeuesFenster;
 {
   Window = (struct Window *) OpenWindow(&NeuesFenster);
@@ -30,7 +32,7 @@ struct NewWindow NeuesFenster;
   SetBPen(rp,0);
 }
 
-schreibe(x, y, wort, farbe)
+void schreibe(x, y, wort, farbe)
 int x, y, farbe;
 char *wort;
 {
@@ -39,7 +41,7 @@ char *wort;
   Text(rp,wort,strlen(wort));
 }
 
-maleFeld(x1,y1,x2,y2)
+void draw_rect(x1,y1,x2,y2)
 SHORT x1,y1,x2,y2;
 {
   SetAPen(rp,2);
@@ -52,28 +54,18 @@ SHORT x1,y1,x2,y2;
   Draw(rp,x1,y2);
 }
 
-StopMsg()
-{
-  ModifyIDCMP(Window,NULL);
-}
-
-ContMsg()
-{
-  ModifyIDCMP(Window,iflags);
-}
-
-LoescheWin()
+void LoescheWin()
 {
   SetAPen(rp,0);
   RectFill(rp,0,0,Window->Width-5,Window->Height-11);
 }
 
-schliessewindow()
+void close_window()
 {
   CloseWindow(Window);
 }
 
-schliesselib()
+void close_lib()
 {
   CloseLibrary((struct Library *)IntuitionBase);
   CloseLibrary((struct Library *)GfxBase);

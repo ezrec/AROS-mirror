@@ -1,4 +1,4 @@
-MaleMenue()
+void MaleMenue()
 {
 char Zahl[4];
 
@@ -54,7 +54,7 @@ ContMsg();
 
 }
 
-zeigehighscores()
+void zeigehighscores()
 {
 char outtext[27];
 BOOL weiter=FALSE;
@@ -90,7 +90,7 @@ LoescheWin();
   MaleMenue();
 }
 
-Menue()
+void Menue()
 {
 BOOL weiter=FALSE;
 char Zahl[4];
@@ -231,7 +231,7 @@ SHORT deltab=1;
   }
 }
 
-MaleSpielfeld()
+void MaleSpielfeld()
 {
 SHORT x,y;
   LoescheWin();
@@ -239,18 +239,18 @@ SHORT x,y;
 for(y=0;y<hoehe;y++)
   for(x=0;x<breite;x++)
     maleFeld(x*feldbreite+links+1,oben+1+y*feldbreite,(x+1)*feldbreite+links-1,feldbreite+oben-1+y*feldbreite);
-/*    maleFeld(x*feldbreite+links+1,oben+1,(x+1)*feldbreite+links-1,feldbreite+oben-1);*/
-/*  for(y=1;y<hoehe;y++)*/
-/* AROS unimplemented
-    copypic(links,oben,breite*feldbreite,feldbreite,links,oben+y*feldbreite);
-*/
+
+/*    maleFeld(x*feldbreite+links+1,oben+1,(x+1)*feldbreite+links-1,feldbreite+oben-1);
+/*  for(y=1;y<hoehe;y++) */
+/* AROS unimplemented */
+/*    copypic(links,oben,breite*feldbreite,feldbreite,links,oben+y*feldbreite); */
 
   maleFeld(links-6,oben-6,breite*feldbreite+5+links,hoehe*feldbreite+5+oben);
   maleFeld(breite*feldbreite+6+links,hoehe*feldbreite+6+oben,links-7,oben-7);
   maleFeld(links+feldbreite*breite/2-25,5,links+feldbreite*breite/2+25,35);
 }
 
-GameInit()
+void GameInit()
 {
   SHORT x,y,a;
 
@@ -319,7 +319,7 @@ SHORT x,y;
   return(Anz);
 }
 
-FeldZahl(x,y,anz)
+void FeldZahl(x,y,anz)
 SHORT x,y,anz;
 {
   char outtext[2];
@@ -327,7 +327,7 @@ SHORT x,y,anz;
   schreibe((x-1)*feldbreite+6+links,(y-1)*feldbreite+14+oben,outtext,2);
 }
 
-aufdecken()
+void aufdecken()
 {
 SHORT naechster[maxhoehe*maxbreite][2],neuer[9][2],anzmin,a,b,x,y;
 int nr=0,neu;
@@ -390,7 +390,7 @@ ContMsg();
 
 }
 
-markeentfernen()
+void markeentfernen()
 {
 SetAPen(rp,0);
   RectFill(rp,(Feldx-1)*feldbreite+2+links,(Feldy-1)*feldbreite+2+oben,Feldx*feldbreite-2+links,Feldy*feldbreite-2+oben);
@@ -398,7 +398,7 @@ SetAPen(rp,0);
   AnzMarken--;
 }
 
-markesetzen()
+void markesetzen()
 {
 SetAPen(rp,3);
   RectFill(rp,(Feldx-1)*feldbreite+2+links,(Feldy-1)*feldbreite+2+oben,Feldx*feldbreite-2+links,Feldy*feldbreite-2+oben);
@@ -406,7 +406,7 @@ SetAPen(rp,3);
   AnzMarken++;
 }
 
-Anzeige()
+void Anzeige()
 {
 char outtext[4];
   time(&tende);
@@ -483,7 +483,7 @@ BOOL weiter=TRUE,Abbr=FALSE;
   return(Abbr);
 }
 
-Spiel()
+void Spiel()
 {
 BOOL start=FALSE;
   time(&tstart);
@@ -548,7 +548,7 @@ if(mausx<5&&mausy<5)Fehler=loesen();
   time(&tende);
 }
 
-Auswertung()
+void Auswertung()
 {
 BOOL weiter=FALSE;
 SHORT x,y;

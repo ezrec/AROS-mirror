@@ -17,95 +17,95 @@ struct Border SharedBorders[] = {
   0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs3[0],&SharedBorders[7],
   0,0,1,1,JAM1,6,(SHORT *)&SharedBordersPairs2[0],NULL };
 
-#define Ziel9_ID    19
+#define target9_ID    19
 
-struct Gadget Ziel9 = {
+struct Gadget target9 = {
   NULL,441,76,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Ziel9_ID,NULL };
+  NULL,NULL,NULL,target9_ID,NULL };
 
-#define Ziel8_ID    18
+#define target8_ID    18
 
-struct Gadget Ziel8 = {
-  &Ziel9,389,76,49,26,
+struct Gadget target8 = {
+  &target9,389,76,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Ziel8_ID,NULL };
+  NULL,NULL,NULL,target8_ID,NULL };
 
-#define Ziel7_ID    17
+#define target7_ID    17
 
-struct Gadget Ziel7 = {
-  &Ziel8,337,76,49,26,
+struct Gadget target7 = {
+  &target8,337,76,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Ziel7_ID,NULL };
+  NULL,NULL,NULL,target7_ID,NULL };
 
-#define Ziel6_ID    16
+#define target6_ID    16
 
-struct Gadget Ziel6 = {
-  &Ziel7,441,46,49,26,
+struct Gadget target6 = {
+  &target7,441,46,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Ziel6_ID,NULL };
+  NULL,NULL,NULL,target6_ID,NULL };
 
-#define Ziel5_ID    15
+#define target5_ID    15
 
-struct Gadget Ziel5 = {
-  &Ziel6,389,46,49,26,
+struct Gadget target5 = {
+  &target6,389,46,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Ziel5_ID,NULL };
+  NULL,NULL,NULL,target5_ID,NULL };
 
-#define Ziel4_ID    14
+#define target4_ID    14
 
-struct Gadget Ziel4 = {
-  &Ziel5,337,46,49,26,
+struct Gadget target4 = {
+  &target5,337,46,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Ziel4_ID,NULL };
+  NULL,NULL,NULL,target4_ID,NULL };
 
-#define Ziel3_ID    13
+#define target3_ID    13
 
-struct Gadget Ziel3 = {
-  &Ziel4,441,16,49,26,
+struct Gadget target3 = {
+  &target4,441,16,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Ziel3_ID,NULL };
+  NULL,NULL,NULL,target3_ID,NULL };
 
-#define Ziel2_ID    12
+#define target2_ID    12
 
-struct Gadget Ziel2 = {
-  &Ziel3,389,16,49,26,
+struct Gadget target2 = {
+  &target3,389,16,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Ziel2_ID,NULL };
+  NULL,NULL,NULL,target2_ID,NULL };
 
-#define Ziel1_ID    11
+#define target1_ID    11
 
-struct Gadget Ziel1 = {
-  &Ziel2,337,16,49,26,
+struct Gadget target1 = {
+  &target2,337,16,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Ziel1_ID,NULL };
+  NULL,NULL,NULL,target1_ID,NULL };
 
 char stoptext[5]="----";
 struct IntuiText Stop_text = {
@@ -114,102 +114,102 @@ struct IntuiText Stop_text = {
 #define Stop_ID    10
 
 struct Gadget Stop = {
-  &Ziel1,226,57,92,18,
+  &target1,226,57,92,18,
   GFLG_GADGHIMAGE+GFLG_DISABLED,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
   &Stop_text,NULL,NULL,Stop_ID,NULL };
 
-#define Anfang9_ID    9
+#define initial9_ID    9
 
-struct Gadget Anfang9 = {
+struct Gadget initial9 = {
   &Stop,151,76,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Anfang9_ID,NULL };
+  NULL,NULL,NULL,initial9_ID,NULL };
 
-#define Anfang8_ID    8
+#define initial8_ID    8
 
-struct Gadget Anfang8 = {
-  &Anfang9,99,76,49,26,
+struct Gadget initial8 = {
+  &initial9,99,76,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Anfang8_ID,NULL };
+  NULL,NULL,NULL,initial8_ID,NULL };
 
-#define Anfang7_ID    7
+#define initial7_ID    7
 
-struct Gadget Anfang7 = {
-  &Anfang8,47,76,49,26,
+struct Gadget initial7 = {
+  &initial8,47,76,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Anfang7_ID,NULL };
+  NULL,NULL,NULL,initial7_ID,NULL };
 
-#define Anfang6_ID    6
+#define initial6_ID    6
 
-struct Gadget Anfang6 = {
-  &Anfang7,151,46,49,26,
+struct Gadget initial6 = {
+  &initial7,151,46,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Anfang6_ID,NULL };
+  NULL,NULL,NULL,initial6_ID,NULL };
 
-#define Anfang5_ID    5
+#define initial5_ID    5
 
-struct Gadget Anfang5 = {
-  &Anfang6,99,46,49,26,
+struct Gadget initial5 = {
+  &initial6,99,46,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Anfang5_ID,NULL };
+  NULL,NULL,NULL,initial5_ID,NULL };
 
-#define Anfang4_ID    4
+#define initial4_ID    4
 
-struct Gadget Anfang4 = {
-  &Anfang5,47,46,49,26,
+struct Gadget initial4 = {
+  &initial5,47,46,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Anfang4_ID,NULL };
+  NULL,NULL,NULL,initial4_ID,NULL };
 
-#define Anfang3_ID    3
+#define initial3_ID    3
 
-struct Gadget Anfang3 = {
-  &Anfang4,151,16,49,26,
+struct Gadget initial3 = {
+  &initial4,151,16,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Anfang3_ID,NULL };
+  NULL,NULL,NULL,initial3_ID,NULL };
 
-#define Anfang2_ID    2
+#define initial2_ID    2
 
-struct Gadget Anfang2 = {
-  &Anfang3,99,16,49,26,
+struct Gadget initial2 = {
+  &initial3,99,16,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Anfang2_ID,NULL };
+  NULL,NULL,NULL,initial2_ID,NULL };
 
-#define Anfang1_ID    1
+#define initial1_ID    1
 
-struct Gadget Anfang1 = {
-  &Anfang2,47,16,49,26,
+struct Gadget initial1 = {
+  &initial2,47,16,49,26,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[4],(APTR)&SharedBorders[6],
-  NULL,NULL,NULL,Anfang1_ID,NULL };
+  NULL,NULL,NULL,initial1_ID,NULL };
 
 char starttext[6]="Start";
 struct IntuiText Start_text = {
@@ -218,7 +218,7 @@ struct IntuiText Start_text = {
 #define Start_ID    0
 
 struct Gadget Start = {
-  &Anfang1,225,35,92,18,
+  &initial1,225,35,92,18,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,

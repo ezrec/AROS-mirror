@@ -46,20 +46,20 @@ struct IntuiMessage *msg;
 ULONG class,iflags;
 USHORT code;
 
-int Feld[33];
+int field[33];
 
 #define DA  1
 #define WEG 0
 
 #include "JumpEdDatei.h"
 
- oeffnelib()
+void open_lib()
 {
   IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library",0L);
   GfxBase = (struct GfxBase *) OpenLibrary("graphics.library",0L);
 }
 
-oeffnewindow()
+void open_window()
 {
   if((Window=(struct Window *)OpenWindow(NEWWINDOW))==NULL)
     exit(FALSE);
@@ -67,28 +67,15 @@ oeffnewindow()
   iflags=Window->IDCMPFlags;
 }
 
-StopMsg()
+#define StopMsg() ModifyIDCMP(Window,NULL)
+#define ContMsg() ModifyIDCMP(Window,iflags)
+
+close_window()
 {
-  ModifyIDCMP(Window,NULL);
+  CloseWindow(Window);
 }
 
-ContMsg()
-{
-  ModifyIDCMP(Window,iflags);
-}
-
-LoescheWin()
-{
-  SetAPen(rp,0);
-  RectFill(rp,0,0,400,170);
-}
-
-schliessewindow()
-{
-	CloseWindow(Window);
-}
-
-schliesselib()
+close_lib()
 {
   CloseLibrary((struct Library *)IntuitionBase);
   CloseLibrary((struct Library *)GfxBase);
@@ -96,7 +83,7 @@ schliesselib()
 
 wbmain()
 {
-main();
+  main();
 }
 
 main()
@@ -104,9 +91,9 @@ main()
 int nr,i;
 BOOL ende=FALSE;
 
-oeffnelib();
-oeffnewindow();
-oeffnedatei();
+open_lib();
+open_window();
+open_datei();
 
 while(ende!=TRUE)
 {
@@ -126,7 +113,7 @@ while(ende!=TRUE)
                  ende=TRUE;
                  break;
            case  46:
-                 oeffnedatei();
+                 open_datei();
                  break;
            case  39:
                  schreibedatei();
@@ -139,31 +126,30 @@ while(ende!=TRUE)
          switch(nr=((struct Gadget *)(msg->IAddress))->GadgetID)
          {
            case  0:
-                 oeffnedatei();
+                 open_datei();
                  break;
            case 34:
                  schreibedatei();
                  break;
            case 35:
                  for(i=0;i<33;i++)
-                   Feld[i]=DA;
-                 Feld[16]=WEG;
-                 setzen();
+                   field[i]=DA;
+                 field[16]=WEG;
                  break;
            default:
-                 if(Feld[nr-1]==DA)
-                   Feld[nr-1]=WEG;
+                 if(field[nr-1]==DA)
+                   field[nr-1]=WEG;
                  else
-                   Feld[nr-1]=DA;
-                 setzen();
+                   field[nr-1]=DA;
                  break;
          }
          break;
    default:
          break;
  }
+ set_buttons();
  ReplyMsg((struct Message *)msg);
 }
-schliessewindow();
-schliesselib();
+close_window();
+close_lib();
 }

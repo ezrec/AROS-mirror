@@ -1,4 +1,4 @@
-oeffnedatei()
+void open_datei()
 {
 int count,j;
 char Puffer[21],Zahl[4];
@@ -15,7 +15,7 @@ char Puffer[21],Zahl[4];
   Close(filehandle);
 }
 
-schliessedatei()
+void schliessedatei()
 {
 int count,j;
 char Zahl[4];

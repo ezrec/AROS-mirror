@@ -3,7 +3,7 @@
     $Id$
 
     Desc: Quad Game
-    Lang: german
+    Lang: english
 */
 
 /*****************************************************************************
@@ -38,87 +38,107 @@ static const char version[] = "$VER: Quad 0.1 (29.08.1997)\n";
 #include "Quad.h"
 #include "QuadIncl.h"
 
-int ende=0,weiter,feld[2][9];
+int quit_game=0,go_on,field[2][9];
 int nummer;
 
-int mineins()
+/* Check if at least one button isn't pressed on left=initial side
+   and at least on is pressed on right=target side                 */
+int at_least_one()
 {
 int i;
 int z=0;
   for(i=0;i<9;i++)
-    z+=feld[0][i];
-if(z!=9)
-  return(1);
-else
-  return(0);
+    z+=field[0][i];
+  if(z!=9)
+  {
+    z=0;
+    for(i=0;i<9;i++)
+      z+=field[1][i];
+    if(z>0)
+      return(1);
+    else
+      return(0);
+  }
+  else
+    return(0);
 }
 
+/* Check if final position is reached */
 int test()
 {
 int i;
 int z=0;
   for(i=0;i<9;i++)
-    if(feld[0][i]==feld[1][i])z++;
-if(z==9)
-  return(1);
-else
-  return(0);
+    if(field[0][i]==field[1][i])z++;
+  if(z==9)
+    return(1);
+  else
+    return(0);
 }
 
-updatebuttons()
+/* Refresh the buttons, needed to have them selected */
+void updatebuttons()
 {
- Anfang1.Flags=(GFLG_GADGHIMAGE+feld[0][0]*GFLG_SELECTED);
- Anfang2.Flags=(GFLG_GADGHIMAGE+feld[0][1]*GFLG_SELECTED);
- Anfang3.Flags=(GFLG_GADGHIMAGE+feld[0][2]*GFLG_SELECTED);
- Anfang4.Flags=(GFLG_GADGHIMAGE+feld[0][3]*GFLG_SELECTED);
- Anfang5.Flags=(GFLG_GADGHIMAGE+feld[0][4]*GFLG_SELECTED);
- Anfang6.Flags=(GFLG_GADGHIMAGE+feld[0][5]*GFLG_SELECTED);
- Anfang7.Flags=(GFLG_GADGHIMAGE+feld[0][6]*GFLG_SELECTED);
- Anfang8.Flags=(GFLG_GADGHIMAGE+feld[0][7]*GFLG_SELECTED);
- Anfang9.Flags=(GFLG_GADGHIMAGE+feld[0][8]*GFLG_SELECTED);
- Ziel1.Flags=(GFLG_GADGHIMAGE+feld[1][0]*GFLG_SELECTED);
- Ziel2.Flags=(GFLG_GADGHIMAGE+feld[1][1]*GFLG_SELECTED);
- Ziel3.Flags=(GFLG_GADGHIMAGE+feld[1][2]*GFLG_SELECTED);
- Ziel4.Flags=(GFLG_GADGHIMAGE+feld[1][3]*GFLG_SELECTED);
- Ziel5.Flags=(GFLG_GADGHIMAGE+feld[1][4]*GFLG_SELECTED);
- Ziel6.Flags=(GFLG_GADGHIMAGE+feld[1][5]*GFLG_SELECTED);
- Ziel7.Flags=(GFLG_GADGHIMAGE+feld[1][6]*GFLG_SELECTED);
- Ziel8.Flags=(GFLG_GADGHIMAGE+feld[1][7]*GFLG_SELECTED);
- Ziel9.Flags=(GFLG_GADGHIMAGE+feld[1][8]*GFLG_SELECTED);
+ initial1.Flags=(GFLG_GADGHIMAGE+field[0][0]*GFLG_SELECTED);
+ initial2.Flags=(GFLG_GADGHIMAGE+field[0][1]*GFLG_SELECTED);
+ initial3.Flags=(GFLG_GADGHIMAGE+field[0][2]*GFLG_SELECTED);
+ initial4.Flags=(GFLG_GADGHIMAGE+field[0][3]*GFLG_SELECTED);
+ initial5.Flags=(GFLG_GADGHIMAGE+field[0][4]*GFLG_SELECTED);
+ initial6.Flags=(GFLG_GADGHIMAGE+field[0][5]*GFLG_SELECTED);
+ initial7.Flags=(GFLG_GADGHIMAGE+field[0][6]*GFLG_SELECTED);
+ initial8.Flags=(GFLG_GADGHIMAGE+field[0][7]*GFLG_SELECTED);
+ initial9.Flags=(GFLG_GADGHIMAGE+field[0][8]*GFLG_SELECTED);
+ target1.Flags=(GFLG_GADGHIMAGE+field[1][0]*GFLG_SELECTED);
+ target2.Flags=(GFLG_GADGHIMAGE+field[1][1]*GFLG_SELECTED);
+ target3.Flags=(GFLG_GADGHIMAGE+field[1][2]*GFLG_SELECTED);
+ target4.Flags=(GFLG_GADGHIMAGE+field[1][3]*GFLG_SELECTED);
+ target5.Flags=(GFLG_GADGHIMAGE+field[1][4]*GFLG_SELECTED);
+ target6.Flags=(GFLG_GADGHIMAGE+field[1][5]*GFLG_SELECTED);
+ target7.Flags=(GFLG_GADGHIMAGE+field[1][6]*GFLG_SELECTED);
+ target8.Flags=(GFLG_GADGHIMAGE+field[1][7]*GFLG_SELECTED);
+ target9.Flags=(GFLG_GADGHIMAGE+field[1][8]*GFLG_SELECTED);
  RefreshGList(FIRSTGADGET,Window,NULL,20);
 }
 
-main()
+void main()
 {
 int i;
-  oeffnelib();
-  oeffnewindow();
+  open_lib();
+  open_window();
+/* initialize the playfield */
   for(i=0;i<9;i++)
   {
-    feld[0][i]=0;
-    feld[1][i]=0;
+    field[0][i]=0;
+    field[1][i]=0;
   }
-  while(ende==0)
+/* Start of the game */
+  while(quit_game==0)
   {
-    weiter=0;
-    while(weiter==0&&ende==0)
+    go_on=0;
+/* wait for message and update buttons until quit or start game */
+    while(go_on==0&&quit_game==0)
     {
       Wait(1L<<Window->UserPort->mp_SigBit);
       msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
       class=msg->Class;
       switch(class)
       {
+/* message to quit game */
         case IDCMP_RAWKEY      :
-        case IDCMP_CLOSEWINDOW : ende=1;
-                           break;
+        case IDCMP_CLOSEWINDOW : quit_game=1;
+                    		 break;
+/* handle gadgets */
         case IDCMP_GADGETUP    : nummer=(((struct Gadget *)(msg->IAddress))->GadgetID);
-                           if(nummer>0&&nummer<10)
-                             feld[0][nummer-1]=1-(feld[0][nummer-1]);
-                           if(nummer>10)
-                             feld[1][nummer-11]=1-(feld[1][nummer-11]);
-                           if(nummer==0)
-                             weiter=mineins();
-                           break;
+/* left=play buttons */
+                                 if(nummer>0&&nummer<10)
+                                   field[0][nummer-1]=1-(field[0][nummer-1]);
+/* right=destination buttons */
+                                 if(nummer>10)
+                                   field[1][nummer-11]=1-(field[1][nummer-11]);
+/* start button */
+                                 if(nummer==0)
+                                   go_on=at_least_one();
+                                 break;
         default          : break;
       }
       ReplyMsg((struct Message *)msg);
@@ -127,8 +147,9 @@ int i;
     sprintf(starttext,"-----");
     sprintf(stoptext,"Stop");
     RefreshGList(FIRSTGADGET,Window,NULL,20);
-    weiter=0;
-    while(weiter==0&&ende==0&&(test()==0))
+    go_on=0;
+/* play until match or stop */
+    while(go_on==0&&quit_game==0&&(test()==0))
     {
       Wait(1L<<Window->UserPort->mp_SigBit);
       msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
@@ -136,86 +157,88 @@ int i;
       switch(class)
       {
         case IDCMP_RAWKEY      :
-        case IDCMP_CLOSEWINDOW : ende=1;
-                           break;
+        case IDCMP_CLOSEWINDOW : quit_game=1;
+                                 break;
         case IDCMP_GADGETUP    : nummer=(((struct Gadget *)(msg->IAddress))->GadgetID);
-                           switch(nummer)
-                           {
-                             case 1 : if(feld[0][0]==0)
-                                      {
-                                        feld[0][0]=1-(feld[0][0]);
-                                        feld[0][1]=1-(feld[0][1]);
-                                        feld[0][3]=1-(feld[0][3]);
-                                        feld[0][4]=1-(feld[0][4]);
-                                      }
-                                      break;
-                             case 2 : if(feld[0][1]==0)
-                                      {
-                                        feld[0][1]=1-(feld[0][1]);
-                                        feld[0][0]=1-(feld[0][0]);
-                                        feld[0][2]=1-(feld[0][2]);
-                                      }
-                                      break;
-                             case 3 : if(feld[0][2]==0)
-                                      {
-                                        feld[0][2]=1-(feld[0][2]);
-                                        feld[0][1]=1-(feld[0][1]);
-                                        feld[0][5]=1-(feld[0][5]);
-                                        feld[0][4]=1-(feld[0][4]);
-                                      }
-                                      break;
-                             case 4 : if(feld[0][3]==0)
-                                      {
-                                        feld[0][3]=1-(feld[0][3]);
-                                        feld[0][0]=1-(feld[0][0]);
-                                        feld[0][6]=1-(feld[0][6]);
-                                      }
-                                      break;
-                             case 5 : if(feld[0][4]==0)
-                                      {
-                                        feld[0][4]=1-(feld[0][4]);
-                                        feld[0][1]=1-(feld[0][1]);
-                                        feld[0][3]=1-(feld[0][3]);
-                                        feld[0][5]=!(feld[0][5]);
-                                        feld[0][7]=!(feld[0][7]);
-                                      }
-                                      break;
-                             case 6 : if(feld[0][5]==0)
-                                      {
-                                        feld[0][5]=1-(feld[0][5]);
-                                        feld[0][8]=1-(feld[0][8]);
-                                        feld[0][2]=1-(feld[0][2]);
-                                      }
-                                      break;
-                             case 7 : if(feld[0][6]==0)
-                                      {
-                                        feld[0][6]=1-(feld[0][6]);
-                                        feld[0][7]=1-(feld[0][7]);
-                                        feld[0][3]=1-(feld[0][3]);
-                                        feld[0][4]=1-(feld[0][4]);
-                                      }
-                                      break;
-                             case 8 : if(feld[0][7]==0)
-                                      {
-                                        feld[0][7]=1-(feld[0][7]);
-                                        feld[0][6]=1-(feld[0][6]);
-                                        feld[0][8]=1-(feld[0][8]);
-                                      }
-                                      break;
-                             case 9 : if(feld[0][8]==0)
-                                      {
-                                        feld[0][8]=1-(feld[0][8]);
-                                        feld[0][7]=1-(feld[0][7]);
-                                        feld[0][5]=1-(feld[0][5]);
-                                        feld[0][4]=1-(feld[0][4]);
-                                      }
-                                      break;
-                             case 10: weiter=1;
-                                      break;
-                             default: break;
-                           }
-                           break;
-        default          : break;
+/* invert buttons */
+                                 switch(nummer)
+                                 {
+                                   case 1 : if(field[0][0]==0)
+                                            {
+                                              field[0][0]=1-(field[0][0]);
+                                              field[0][1]=1-(field[0][1]);
+                                              field[0][3]=1-(field[0][3]);
+                                              field[0][4]=1-(field[0][4]);
+                                            }
+                                            break;
+                                   case 2 : if(field[0][1]==0)
+                                            {
+                                              field[0][1]=1-(field[0][1]);
+                                              field[0][0]=1-(field[0][0]);
+                                              field[0][2]=1-(field[0][2]);
+                                            }
+                                            break;
+                                   case 3 : if(field[0][2]==0)
+                                            {
+                                              field[0][2]=1-(field[0][2]);
+                                              field[0][1]=1-(field[0][1]);
+                                              field[0][5]=1-(field[0][5]);
+                                              field[0][4]=1-(field[0][4]);
+                                            }
+                                            break;
+                                   case 4 : if(field[0][3]==0)
+                                            {
+                                              field[0][3]=1-(field[0][3]);
+                                              field[0][0]=1-(field[0][0]);
+                                              field[0][6]=1-(field[0][6]);
+                                            }
+                                            break;
+                                   case 5 : if(field[0][4]==0)
+                                            {
+                                              field[0][4]=1-(field[0][4]);
+                                              field[0][1]=1-(field[0][1]);
+                                              field[0][3]=1-(field[0][3]);
+                                              field[0][5]=!(field[0][5]);
+                                              field[0][7]=!(field[0][7]);
+                                            }
+                                            break;
+                                   case 6 : if(field[0][5]==0)
+                                            {
+                                              field[0][5]=1-(field[0][5]);
+                                              field[0][8]=1-(field[0][8]);
+                                              field[0][2]=1-(field[0][2]);
+                                            }
+                                            break;
+                                   case 7 : if(field[0][6]==0)
+                                            {
+                                              field[0][6]=1-(field[0][6]);
+                                              field[0][7]=1-(field[0][7]);
+                                              field[0][3]=1-(field[0][3]);
+                                              field[0][4]=1-(field[0][4]);
+                                            }
+                                            break;
+                                   case 8 : if(field[0][7]==0)
+                                            {
+                                              field[0][7]=1-(field[0][7]);
+                                              field[0][6]=1-(field[0][6]);
+                                              field[0][8]=1-(field[0][8]);
+                                            }
+                                            break;
+                                   case 9 : if(field[0][8]==0)
+                                            {
+                                              field[0][8]=1-(field[0][8]);
+                                              field[0][7]=1-(field[0][7]);
+                                              field[0][5]=1-(field[0][5]);
+                                              field[0][4]=1-(field[0][4]);
+                                            }
+                                            break;
+/* stop game */
+                                   case 10: go_on=1;
+                                            break;
+                                   default: break;
+                                 }
+                                 break;
+        default                : break;
       }
       ReplyMsg((struct Message *)msg);
       updatebuttons();
@@ -224,7 +247,7 @@ int i;
     sprintf(stoptext,"----");
     RefreshGList(FIRSTGADGET,Window,NULL,20);
   }
-
-  schliessewindow();
-  schliesselib();
+/* game terminated - clean up */
+  close_window();
+  close_lib();
 }

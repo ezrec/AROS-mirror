@@ -347,7 +347,6 @@ struct Gadget Eingang1 = {
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
   &Eingang1_text,NULL,NULL,Eingang1_ID,NULL };
 
-#define WDBACKFILL  0
 #define FIRSTGADGETL &Eingang1
 
 
@@ -455,69 +454,46 @@ struct NewWindow new_window = {
 
 #define NEWWINDOW   &new_window
 
-verbindungen()
+void verbindungen()
 {
+int i,wege[30][4]={
+  313,130,352,162,
+  376,179,353,217,
+  313,217,254,217,
+  224,204,215,176,
+  212,157,275,134,
+  291,124,295,96,
+  312,88,402,86,
+  437,98,450,133,
+  457,153,455,200,
+  450,223,412,250,
+  384,261,311,273,
+  268,274,190,269,
+  151,259,128,237,
+  122,216,129,162,
+  129,141,172,112,
+  211,105,273,83,
+  173,99,141,60,
+  141,48,469,47,
+  475,59,443,79,
+  502,58,534,249,
+  516,268,324,324,
+  516,255,477,221,
+  303,315,295,284,
+  284,324,50,281,
+  50,264,98,236,
+  33,260,108,60,
+  439,151,393,172,
+  388,250,353,226,
+  189,260,218,226,
+  145,160,187,172
+};
   SetAPen(rp,1);
-  Move(rp,313,130);
-  Draw(rp,352,162);
-  Move(rp,376,179);
-  Draw(rp,353,217);
-  Move(rp,313,217);
-  Draw(rp,254,217);
-  Move(rp,224,204);
-  Draw(rp,215,176);
-  Move(rp,212,157);
-  Draw(rp,275,134);
-  Move(rp,291,124);
-  Draw(rp,295,96);
-  Move(rp,312,88);
-  Draw(rp,402,86);
-  Move(rp,437,98);
-  Draw(rp,450,133);
-  Move(rp,457,153);
-  Draw(rp,455,200);
-  Move(rp,450,223);
-  Draw(rp,412,250);
-  Move(rp,384,261);
-  Draw(rp,311,273);
-  Move(rp,268,274);
-  Draw(rp,190,269);
-  Move(rp,151,259);
-  Draw(rp,128,237);
-  Move(rp,122,216);
-  Draw(rp,129,162);
-  Move(rp,129,141);
-  Draw(rp,172,112);
-  Move(rp,211,105);
-  Draw(rp,273,83);
-  Move(rp,173,99);
-  Draw(rp,141,60);
-  Move(rp,141,48);
-  Draw(rp,469,47);
-  Move(rp,475,59);
-  Draw(rp,443,79);
-  Move(rp,502,58);
-  Draw(rp,534,249);
-  Move(rp,516,268);
-  Draw(rp,324,324);
-  Move(rp,516,255);
-  Draw(rp,477,221);
-  Move(rp,303,315);
-  Draw(rp,295,284);
-  Move(rp,284,324);
-  Draw(rp,50,281);
-  Move(rp,50,264);
-  Draw(rp,98,236);
-  Move(rp,33,260);
-  Draw(rp,108,60);
-  Move(rp,439,151);
-  Draw(rp,393,172);
-  Move(rp,388,250);
-  Draw(rp,353,226);
-  Move(rp,189,260);
-  Draw(rp,218,226);
-  Move(rp,145,160);
-  Draw(rp,187,172);
+  for(i=0;i<30;i++)
+  {
+    Move(rp,wege[i][0],wege[i][1]);
+    Draw(rp,wege[i][2],wege[i][3]);
+  }
 }
 
 SHORT Landkarte()
@@ -556,7 +532,7 @@ ContMsg();
   return(nummer);
 }
 
-Hoehlezeichnen(nr)
+void Hoehlezeichnen(nr)
 SHORT nr;
 {
 char outtext[9];
@@ -570,8 +546,8 @@ StopMsg();
   RefreshGadgets(FIRSTGADGETH,Window,NULL);
   sprintf(outtext,"Höhle %2d",nr);
   schreibe(100,50,outtext,1);
-  maleFeld(239,239,450,257);
-  maleFeld(447,255,241,241);
+  draw_rect(238,239,450,257);
+  draw_rect(447,255,241,241);
   stinken=NICHT;
   if(Wumpus!=nr-1)
   {
@@ -648,11 +624,10 @@ StopMsg();
 ContMsg();
   }
   OffGadget(&Speer,Window,NULL);
-  RefreshGadgets(FIRSTGADGETH,Window,NULL);
   return(ist);
 }
 
-rufen(nr)
+void rufen(nr)
 SHORT nr;
 {
 SHORT i,j;
@@ -668,7 +643,7 @@ BOOL ist=FALSE;
 
 }
 
-Spiel()
+void Spiel()
 {
 SHORT HoehleNr,i,count=0;
 BOOL abbruch,erlegt=FALSE,gefressen,verschleppen,fallen=FALSE,test=TRUE;
@@ -779,26 +754,26 @@ StopMsg();
     {
       schreibe(245,253,"Sie haben Wumpus erlegt !",1);
     }
-  Delay(MPAUSE);
-  RemoveGList(Window,FIRSTGADGETH,5);
+    Delay(MPAUSE);
+    RemoveGList(Window,FIRSTGADGETH,5);
 ContMsg();
   }
 }
 
-wbmain()
+void wbmain()
 {
  main();
 }
 
-main()
+void main()
 {
   srand((unsigned)time(NULL));
-  oeffnelib();
-  oeffnewindow(new_window);
+  open_lib();
+  open_window(new_window);
 
   while(!wende)
-   Spiel();
+    Spiel();
 
-  schliessewindow();
-  schliesselib();
+  close_window();
+  close_lib();
 }
