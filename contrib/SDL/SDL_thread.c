@@ -28,9 +28,7 @@ static char rcsid =
 /* System independent thread management routines for SDL */
 
 #include <stdio.h>
-#ifndef AROS
 #include <stdlib.h>
-#endif
 #include <string.h>
 
 #include "SDL_error.h"

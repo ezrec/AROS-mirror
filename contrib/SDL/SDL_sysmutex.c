@@ -28,9 +28,8 @@ static char rcsid =
 /* An implementation of mutexes using semaphores */
 
 #include <stdio.h>
-#ifndef AROS
 #include <stdlib.h>
-#endif
+
 #include "SDL_error.h"
 #include "SDL_thread.h"
 #include "SDL_systhread_c.h"

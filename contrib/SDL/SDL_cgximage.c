@@ -25,9 +25,7 @@ static char rcsid =
  "@(#) $Id$";
 #endif
 
-#ifndef AROS
 #include <stdlib.h>
-#endif
 
 #include "SDL_error.h"
 #include "SDL_endian.h"

@@ -45,9 +45,7 @@ static char rcsid =
 extern struct ExecBase *SysBase;
 extern struct GfxBase *GfxBase;
 
-#ifndef AROS
 #include <stdlib.h>
-#endif
 
 #include "SDL_error.h"
 #include "SDL_joystick.h"
