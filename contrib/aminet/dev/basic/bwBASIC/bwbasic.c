@@ -41,7 +41,11 @@
 #include <ctype.h>
 #include <string.h>
 #include <math.h>
+
+#ifndef __AROS
 #include <signal.h>
+#endif
+
 #include <setjmp.h>
 
 #include "bwbasic.h"
@@ -105,7 +109,7 @@ extern int is_ln( char *buffer );
 
 ***************************************************************/
 
-void
+int
 main( int argc, char **argv )
    {
    static FILE *input = NULL;
@@ -321,6 +325,7 @@ main( int argc, char **argv )
 
       }
 
+      return 0;
    }
 
 /***************************************************************
