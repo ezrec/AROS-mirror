@@ -75,3 +75,4 @@ Freetype -d contrib/freetype contrib/freetype
 
 # (Large) binaries
 screenshots binaries/screenshots
+developers binaries/developers
