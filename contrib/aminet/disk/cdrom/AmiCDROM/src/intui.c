@@ -33,8 +33,12 @@
 #include <proto/icon.h>
 #include <proto/wb.h>
 
+#include <aros/debug.h>
+
 #include "intui.h"
 #include "baseredef.h"
+
+#define AROS_KERNEL 1
 
 struct MsgPort *g_app_port;
 struct AppIcon *g_app_icon;
@@ -136,10 +140,13 @@ void Init_Intui(struct ACDRBase *acdrbase) {
 	if (!WorkbenchBase)
 		Display_Error(acdrbase, "cannot open workbench.library");
 
+#ifndef AROS_KERNEL
 	g_user_disk_object = GetDiskObject ("env:cdda");
 	if (!g_user_disk_object)
 	{
+#endif
 		g_user_disk_object = &g_disk_object;
+#ifndef AROS_KERNEL
 	}
 	else
 	{
@@ -148,6 +155,7 @@ void Init_Intui(struct ACDRBase *acdrbase) {
 		if (name)
 			g_iconname = name;
 	}
+#endif
 
 	g_app_port = NULL;
 	g_app_sigbit = 0;
@@ -166,7 +174,8 @@ void Close_Intui(struct ACDRBase *acdrbase) {
 void Display_Error (struct ACDRBase *acdrbase, char *p_message, ...) {
 va_list arg;
 
-	static struct EasyStruct req =
+#ifndef AROS_KERNEL
+        static struct EasyStruct req =
 	{
 		sizeof (struct EasyStruct),
 		0,
@@ -174,7 +183,7 @@ va_list arg;
 		NULL,
 		(UBYTE *) "Abort"
 	};
-  
+          
 	va_start (arg, p_message);
 	if (IntuitionBase)
 	{
@@ -182,6 +191,9 @@ va_list arg;
 		EasyRequestArgs (NULL, &req, NULL, arg);
 	}
 	va_end (p_message);
+#else        
+        kprintf( "cdrom.handler error: %s\n", p_message );
+#endif
 }
 
 void Show_CDDA_Icon (struct ACDRBase *acdrbase) {
