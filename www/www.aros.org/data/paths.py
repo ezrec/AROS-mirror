@@ -46,6 +46,7 @@ if not basedir:
 basedir = os.path.abspath (basedir)
 datadir = os.path.join (basedir, 'data')
 sys.path.append (datadir)
+lxrdir = os.path.join (basedir, 'lxr')
 
 # Allow to read in python modules from AROS
 arosdir = os.path.abspath (expandpath (config.AROSDIR))
