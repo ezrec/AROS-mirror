@@ -26,6 +26,7 @@
 #if defined(_AMIGA) || defined(__AROS__)
 #include "envir.h"
 #include <exec/ports.h>
+#include <exec/memory.h>
 #include <rexx/rxslib.h>
 
 #include <proto/alib.h>
@@ -345,8 +346,10 @@ streng *arexx_readch( tsd_t *TSD, cparamboxptr parm1 )
     
     count = streng_to_int( TSD, parm2->value, &error );
     
-    if ( error || count<=0 )
-      exiterror( ERR_INVALID_INTEGER, 14, "READCH", 2, tmpstr_of( TSD, parm2->value ) );
+    if ( error )
+      exiterror( ERR_INCORRECT_CALL, 11, "READCH", 2, tmpstr_of( TSD, parm2->value ) );
+    if ( count<=0 )
+      exiterror( ERR_INCORRECT_CALL, 14, "READCH", 2, tmpstr_of( TSD, parm2->value ) );
     
     buffer = malloc( count + 1 );
 
@@ -446,7 +449,9 @@ streng *arexx_bitchg( tsd_t *TSD, cparamboxptr parm1 )
   parm2 = parm1->next;
   
   bit = streng_to_int( TSD, parm2->value, &error );
-  if (error || bit<0 )
+  if ( error )
+    exiterror( ERR_INCORRECT_CALL, 11, "BITCHG", 2, tmpstr_of( TSD, parm2->value ) );
+  if ( bit<0 )
     exiterror( ERR_INCORRECT_CALL, 13, "BITCHG", 2, tmpstr_of( TSD, parm2->value ) );
   
   dt = div( bit, 8 );
@@ -472,7 +477,9 @@ streng *arexx_bitclr( tsd_t *TSD, cparamboxptr parm1 )
   parm2 = parm1->next;
   
   bit = streng_to_int( TSD, parm2->value, &error );
-  if (error)
+  if ( error )
+    exiterror( ERR_INCORRECT_CALL, 11, "BITCLR", 2, tmpstr_of( TSD, parm2->value ) );
+  if ( bit<0 )
     exiterror( ERR_INCORRECT_CALL, 13, "BITCLR", 2, tmpstr_of( TSD, parm2->value ) );
   
   dt = div( bit, 8 );
@@ -498,7 +505,9 @@ streng *arexx_bitset( tsd_t *TSD, cparamboxptr parm1 )
   parm2 = parm1->next;
   
   bit = streng_to_int( TSD, parm2->value, &error );
-  if (error)
+  if ( error )
+    exiterror( ERR_INCORRECT_CALL, 11, "BITSET", 2, tmpstr_of( TSD, parm2->value ) );
+  if ( bit<0 )
     exiterror( ERR_INCORRECT_CALL, 13, "BITSET", 2, tmpstr_of( TSD, parm2->value ) );
   
   dt = div( bit, 8 );
@@ -524,7 +533,9 @@ streng *arexx_bittst( tsd_t *TSD, cparamboxptr parm1 )
   parm2 = parm1->next;
   
   bit = streng_to_int( TSD, parm2->value, &error );
-  if (error)
+  if ( error )
+    exiterror( ERR_INCORRECT_CALL, 11, "BITTST", 2, tmpstr_of( TSD, parm2->value ) );
+  if ( bit<0 )
     exiterror( ERR_INCORRECT_CALL, 13, "BITTST", 2, tmpstr_of( TSD, parm2->value ) );
   
   dt = div( bit, 8 );
@@ -694,8 +705,8 @@ streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 )
   if ( parm1!=NULL && parm1->value!=NULL )
   {
     seed = streng_to_int( TSD, parm1->value, &error );
-    if (error)
-      exiterror( ERR_INVALID_INTEGER, 11, "RANDU", 1, tmpstr_of( TSD, parm1->value ) );
+    if ( error )
+      exiterror( ERR_INCORRECT_CALL, 11, "RANDU", 1, tmpstr_of( TSD, parm1->value ) );
     
     srand48( (long int)seed );
   }
@@ -706,6 +717,49 @@ streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 )
   FreeTSD( s );
   
   return retval;
+}
+
+
+/* Two memory allocation/deallocation functions: getspace and freespace */
+streng *arexx_getspace( tsd_t *TSD, cparamboxptr parm1 )
+{
+  int length, error;
+  void *ptr;
+  
+  checkparam( parm1, 1, 1, "GETSPACE" );
+  
+  length = streng_to_int( TSD, parm1->value, &error);
+  if ( error )
+    exiterror( ERR_INCORRECT_CALL, 11, "READCH", 1, tmpstr_of( TSD, parm1->value ) );
+  if ( length<=0 )
+    exiterror( ERR_INCORRECT_CALL, 14, "READCH", 1, tmpstr_of( TSD, parm1->value ) );
+
+  ptr = Malloc_TSD( TSD, length );
+  if ( ptr == NULL )
+    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  
+  return Str_ncre_TSD( TSD, (char *)&ptr, sizeof(void *) );
+}
+
+
+streng *arexx_freespace( tsd_t *TSD, cparamboxptr parm1 )
+{
+  /* For backwards compatibility there may be two arguments */
+  checkparam( parm1, 0, 2, "FREESPACE" );
+  
+  if ( parm1 == NULL || parm1->value == NULL || parm1->value->len == 0 )
+#if defined(_AMIGA) || defined(__AROS__)
+    return int_to_streng( TSD, AvailMem( MEMF_ANY ) );
+#else
+    return int_to_streng( -1 );
+#endif
+  
+  if ( parm1->value->len != sizeof(void *) )
+    exiterror( ERR_INCORRECT_CALL, 0 );
+  
+  Free_TSD( TSD, *((void **)parm1->value->value) );
+  
+  return nullstringptr();
 }
 
 
@@ -760,12 +814,13 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
 
 
 /*
- * Here follows now the support function for ARexx style function hosts and libraries
- * At the moment also here the validity of an entry in the list will be checked the
- * first time an unknown function is executed.
+ * Here follows now the support function for ARexx style function hosts and libraries:
+ * addlib and remlib.
+ * Also here the try_func_amiga is defined which is called when a function is called
+ * in an ARexx script.
  */
 
-/* When addlib is called with tqo arguments the first argument is considered as a function
+/* When addlib is called with two arguments the first argument is considered as a function
  * host name. When it is called with three or four arguments a function library is assumed
  */
 streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
@@ -802,7 +857,9 @@ streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
   else
   {
     version = streng_to_int( TSD, parm4->value, &error );
-    if ( error || version < 0 )
+    if ( error )
+      exiterror( ERR_INCORRECT_CALL, 11, "ADDLIB", 4, tmpstr_of( TSD, parm2->value ) );
+    if ( version < 0 )
       exiterror( ERR_INCORRECT_CALL, 13, "ADDLIB", 4, tmpstr_of( TSD, parm2->value ) );
   }
 
@@ -976,6 +1033,9 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
   return retval;
 };
 
+
+
+/* The clip handling functions for AROS/amiga: setclip, getclip */
 
 streng *arexx_setclip( tsd_t *TSD, cparamboxptr parm1 )
 {

@@ -8,8 +8,6 @@
   To implement:
   - EXISTS
   - EXPORT
-  - FREESPACE
-  - GETSPACE
   - IMPORT
   - PRAGMA
   - SHOW
@@ -39,6 +37,8 @@
   - REMLIB
   - SETCLIP
   - GETCLIP
+  - FREESPACE
+  - GETSPACE
 * Fix the ARexx vs. ANSI REXX incompatibilies.
   These are: ^ is XOR in ARexx but is not in ANSI REXX.
   Multiple line strings in ARexx are not there in ASNI REXX and are said

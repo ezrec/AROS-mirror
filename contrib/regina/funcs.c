@@ -152,6 +152,7 @@ static const struct function_type functions[] = {
 #if defined(REGINA_DEBUG_MEMORY)
   { 0,              dbg_freelists, "FREELISTS" },
 #endif
+  { 0,              arexx_freespace, "FREESPACE" },
   { 0,              std_fuzz, "FUZZ" },
 #if defined(_AMIGA) || defined(__AROS__)
   { 0,              arexx_getclip, "GETCLIP" },
@@ -159,6 +160,7 @@ static const struct function_type functions[] = {
   { 0,              unx_getenv, "GETENV" },
   { 0,              unx_getpath, "GETPATH" },
   { 0,              unx_getpid, "GETPID" },
+  { 0,              arexx_getspace, "GETSPACE" },
   { 0,              unx_gettid, "GETTID" },
   { 0,              arexx_hash, "HASH" },
   { 0,              cms_index, "INDEX" },
