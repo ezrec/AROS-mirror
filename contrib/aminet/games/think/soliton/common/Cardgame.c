@@ -19,6 +19,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _AROS
+#define DT_V44_SUPPORT
+#define HAVE_XAD 0
+#else
+#define HAVE_XAD 1
+#endif
+
 #include <clib/alib_protos.h>
 #include <datatypes/pictureclass.h>
 #include <exec/memory.h>
@@ -30,7 +37,9 @@
 #include <proto/graphics.h>
 #include <proto/timer.h>
 #include <proto/utility.h>
+#if HAVE_XAD
 #include <proto/xadmaster.h>
+#endif
 
 #include "Cardgame.h"
 #include "Locales.h"
@@ -38,6 +47,8 @@
 #include "IMG_Time.c"
 
 struct Device *TimerBase;
+
+struct Cardgame_Data;
 
 static void drawBackground(struct Cardgame_Data *data, struct RastPort *rp, int x, int y, int w,
   int h, int offx, int offy);
@@ -1646,6 +1657,8 @@ struct Screen *scr, BOOL unpack)
   PDTA_UseFriendBitMap  , TRUE,
   TAG_DONE)))
     return obj;
+    
+#if HAVE_XAD
   else if(unpack)
   {
     struct xadMasterBase *xadMasterBase;
@@ -1709,6 +1722,9 @@ struct Screen *scr, BOOL unpack)
     }
   }
   return obj;
+#else
+  return NULL;
+#endif
 }
 
 static ULONG _Setup(struct IClass* cl, Object* obj, Msg msg)

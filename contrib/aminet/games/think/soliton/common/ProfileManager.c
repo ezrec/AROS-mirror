@@ -20,6 +20,7 @@
 #include <string.h>
 
 #include <clib/alib_protos.h>
+#include <exec/memory.h>
 #include <libraries/iffparse.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
@@ -206,8 +207,14 @@ static ULONG ProfileManager_LoadProfiles(struct IClass* cl, Object* obj/*, Msg m
     if((p = (struct Profil *) AllocVec(sizeof(struct Profil), MEMF_PUBLIC)))
     {
       strncpy(p->name, GetStr(MSG_CARDS_STANDARD_MEDIUM), sizeof(p->name));
+#ifdef _AROS
+#warning temp stuff, until we have ilbm picture datatype in AROS
+      strcpy(p->cardset, "Graphics/Cards_Standard_Medium.ppm");
+      strcpy(p->pattern, "Graphics/Pattern_Standard.ppm");
+#else
       strcpy(p->cardset, "Graphics/Cards_Standard Medium.iff");
       strcpy(p->pattern, "Graphics/Pattern_Standard.iff");
+#endif
       DoMethod(data->LV_Profiles, MUIM_List_InsertSingle, p, MUIV_List_Insert_Bottom);
     }
 

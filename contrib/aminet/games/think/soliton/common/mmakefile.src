@@ -1,0 +1,40 @@
+#   $Id$
+#
+#   Makefile to make Soliton.
+
+include $(TOP)/config/make.cfg
+
+FILES := About \
+    	 CButton \
+	 Locales \
+	 MUITools \
+	 ProfileManager \
+	 BoardWindow \
+	 CSolitaire \
+	 Main \
+	 Settings \
+	 Soliton \
+	 Statistics \
+	 Cardgame
+
+EXEDIR := $(CONTRIBDIR)/aminet/Soliton
+EXE := $(EXEDIR)/Soliton
+
+USER_INCLUDES := -I../images
+
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_MUILIB := yes
+
+#MM aminet-games-think-soliton-program : includes setup linklibs setup-soliton-catalogs
+
+%make_prog_setup mmake=aminet-games-think-soliton-program
+
+aminet-games-think-soliton-program : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps

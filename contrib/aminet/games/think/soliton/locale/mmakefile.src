@@ -1,0 +1,43 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR := $(BINDIR)/Locale/Catalogs
+
+CATALOGS 	:= català dansk deutsch hrvatski maygar polski
+CATDESC 	:= Soliton
+CATSUBDIR	:= 
+CATNAME 	:= Soliton
+INCLUDE 	:= ../common/Catalog
+
+SRCS    := $(foreach f, $(CATALOGS), $(f)/$(CATNAME).ct)
+OBJS    := $(foreach f, $(CATALOGS), $(DESTDIR)/$(f)/$(CATSUBDIR)$(CATNAME).catalog)
+CATDIRS := $(foreach f, $(CATALOGS), $(DESTDIR)/$(f)/$(CATSUBDIR))
+
+.PHONY : all clean create_catalogs create_include create_dirs
+
+#MM
+setup-soliton-catalogs : create_dirs create_catalogs create_include
+
+create_catalogs: $(OBJS)
+	@$(NOP)
+	
+$(DESTDIR)/%/$(CATSUBDIR)$(CATNAME).catalog : %/$(CATNAME).ct $(CATDESC).cd
+	@$(ECHO) "Creating $(CATNAME) catalog for language $*."
+	@$(IF) $(FLEXCAT) $(CATDESC).cd $*/$(CATNAME).ct CATALOG=$(DESTDIR)/$*/$(CATSUBDIR)$(CATNAME).catalog ; then $(NOP) ; else $(NOP) ; fi ;
+	
+create_include : $(INCLUDE).h
+	@$(NOP)
+
+$(INCLUDE).h : $(CATDESC).cd
+	@$(ECHO) "Creating $(CATNAME) catalog include file $(INCLUDE).h"
+	@$(FLEXCAT) $(CATDESC).cd $(INCLUDE).h=fixed_C_h_orig.sd
+
+create_dirs:
+	@$(FOR) dir in $(CATDIRS) ; do \
+	    $(IF) $(TEST) ! -d $$dir ; then $(MKDIR) $$dir ; else $(NOP) ; fi ; \
+	done
+
+
+# Delete generated makefiles
+clean ::
+	$(RM) mmakefile mmakefile.bak $(OBJS) $(INCLUDE)
+

@@ -21,6 +21,7 @@
 #include <time.h>
 
 #include <clib/alib_protos.h>
+#include <exec/memory.h>
 #include <proto/exec.h>
 #include <proto/intuition.h>
 #include <proto/muimaster.h>
@@ -32,6 +33,8 @@
 #include "Locales.h"
 #include "Settings.h"
 #include "Soliton.h"
+
+struct CSolitaire_Data;
 
 /* local functions */
 static void Undo_RemHead(struct CSolitaire_Data *data);

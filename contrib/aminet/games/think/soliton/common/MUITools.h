@@ -29,11 +29,23 @@
   MUI
 ****************************************************************************************/
 
+#ifdef _AROS
+#warning hack! fix it!
+#define HOOKPROTO(name, ret, obj, param) \
+    static ret name(struct Hook *hook, obj, param)
+#define HOOKPROTONH(name, ret, obj, param) \
+    static ret name(struct Hook *hook, obj, param)
+#define HOOKPROTONHNO(name, ret, param) \
+    static ret name(struct Hook *hook, APTR __obj, param)
+#define DISPATCHERPROTO(name) \
+    static ULONG name(struct IClass *cl, Object *obj, Msg msg)
+#else
 #include "SDI_compiler.h"
 #define HOOKPROTO(name, ret, obj, param) static SAVEDS ASM(ret) name(REG(a0, struct Hook *hook), REG(a2, obj), REG(a1, param))
 #define HOOKPROTONH(name, ret, obj, param) static SAVEDS ASM(ret) name(REG(a2, obj), REG(a1, param))
 #define HOOKPROTONHNO(name, ret, param) static SAVEDS ASM(ret) name(REG(a1, param))
 #define DISPATCHERPROTO(name) static ASM(ULONG) SAVEDS name(REG(a0, struct IClass * cl), REG(a2, Object * obj), REG(a1, Msg msg))
+#endif
 
 #define TAGBASE_KAI (TAG_USER | (0617 << 16))
 
