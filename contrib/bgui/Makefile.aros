@@ -238,25 +238,7 @@ gadgets/Bar \
 gadgets/LayoutGroup
 
 gadgets: $(INCLUDE_FILES) $(gadget_directories)
-
-gadgets/common :
-	$(MAKE) -f Makefile.aros -C $@
-
-gadgets/PopButton :
-	$(MAKE) -f Makefile.aros -C $@
-
-gadgets/Palette :
-	$(MAKE) -f Makefile.aros -C $@
-
-gadgets/TreeView :
-	$(MAKE) -f Makefile.aros -C $@
-
-gadgets/Bar :
-	$(MAKE) -f Makefile.aros -C $@
-
-gadgets/LayoutGroup :
-	$(MAKE) -f Makefile.aros -C $@
-
+	$(foreach f,$(gadget_directories), $(MAKE) -f Makefile.aros -C $(f) all;)
 
 
 OBJECTS =  \
