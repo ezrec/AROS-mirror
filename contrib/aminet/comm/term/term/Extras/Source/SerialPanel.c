@@ -41,6 +41,9 @@ AROS_UFH3(STATIC LONG, RateHookFunc,
  AROS_UFHA(LONG            , Command, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	LONG Index;
 
 	if(Current < BaudRates[0])
@@ -143,6 +146,9 @@ AROS_UFH3(STATIC LONG, RateHookFunc,
 				return(BaudRates[Index]);
 		}
 	}
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 BOOL

@@ -564,6 +564,9 @@ AROS_UFH3(STATIC ULONG, Dispatch,
  AROS_UFHA(Msg            , msg, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	switch(msg->MethodID)
 	{
 		case OM_NEW:
@@ -604,6 +607,9 @@ AROS_UFH3(STATIC ULONG, Dispatch,
 	}
 
 	return(DoSuperMethodA(class,object,msg));
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 STATIC VOID

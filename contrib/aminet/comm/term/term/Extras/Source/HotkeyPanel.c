@@ -50,6 +50,9 @@ AROS_UFH3(STATIC ULONG, EditRoutine,
  AROS_UFHA(Msg                , msg       , A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 		/* ANSI key codes. */
 
 	STATIC struct CodeName KeyTable[] =
@@ -306,6 +309,9 @@ AROS_UFH3(STATIC ULONG, EditRoutine,
 	}
 
 	return(TRUE);
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 BOOL

@@ -2292,6 +2292,9 @@ AROS_UFH3(VOID, BackfillRoutine,
  AROS_UFHA(LayerMsg *           , Bounds, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	struct RastPort RastPort;
 
 	CopyMem(RPort,&RastPort,sizeof(struct RastPort));
@@ -2303,6 +2306,9 @@ AROS_UFH3(VOID, BackfillRoutine,
 	SetDrMd(RPort,JAM2);
 
 	RectFill(RPort,Bounds->Bounds.MinX,Bounds->Bounds.MinY,Bounds->Bounds.MaxX,Bounds->Bounds.MaxY);
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 struct NameSegment

@@ -689,6 +689,9 @@ AROS_UFH3(STATIC ULONG, PhoneListViewRender,
  AROS_UFHA(struct LVDrawMsg *   , Msg, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 		/* We only know how to redraw lines. */
 
 	if(Msg->lvdm_MethodID == LV_DRAW)
@@ -827,6 +830,9 @@ AROS_UFH3(STATIC ULONG, PhoneListViewRender,
 	}
 	else
 		return(LVCB_UNKNOWN);
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 LayoutHandle *

@@ -86,6 +86,9 @@ AROS_UFH2(VOID, CustomStuffText,
  AROS_UFHA(LONG *         , Data, A3))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	struct IntuiText *IText;
 	STRPTR Buffer;
 
@@ -141,6 +144,10 @@ AROS_UFH2(VOID, CustomStuffText,
 		*Buffer++ = Char;						/* Just store the character */
 
 	Data[0] = (LONG)Buffer;						/* Remember for next char */
+
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 #ifndef __AROS__
@@ -152,10 +159,16 @@ AROS_UFH2(VOID, CustomCountChar,
  AROS_UFHA(LONG *        , Count, A3))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	if(Char == Count[2] || Char == '\0')	/* Count the number of lines */
 		Count[1]++;
 
 	Count[0]++;								/* Count the number of characters in total */
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 STATIC struct IntuiText *

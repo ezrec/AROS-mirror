@@ -28,6 +28,9 @@ AROS_UFH3(ULONG, CommonEditRoutine,
  AROS_UFHA(Msg            , msg, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	BOOL GotIt;
 
 	switch(msg->MethodID)
@@ -118,4 +121,7 @@ AROS_UFH3(ULONG, CommonEditRoutine,
 	}
 
 	return(TRUE);
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }

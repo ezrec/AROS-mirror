@@ -59,6 +59,7 @@
 #ifdef USE_GLUE
 # undef USE_GLUE
 #endif
+#include <aros/asmcall.h>
 #endif
 
 	/* Should we use glue code, i.e. no direct assembly interface routines? */

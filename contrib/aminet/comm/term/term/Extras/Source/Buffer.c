@@ -1156,6 +1156,9 @@ AROS_UFH3(STATIC ULONG, HistoryFunc,
  AROS_UFHA(STRPTR         , NewString, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	struct List *List = (struct List *)Hook->h_Data;
 
 	if(NewString)
@@ -1175,6 +1178,9 @@ AROS_UFH3(STATIC ULONG, HistoryFunc,
 	}
 
 	return(TRUE);
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 BOOL

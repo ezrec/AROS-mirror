@@ -96,6 +96,9 @@ AROS_UFH3(STATIC ULONG, RateEditRoutine,
  AROS_UFHA(Msg            , msg, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	switch(msg->MethodID)
 	{
 		case SGH_KEY:
@@ -165,6 +168,9 @@ AROS_UFH3(STATIC ULONG, RateEditRoutine,
 
 			return(FALSE);
 	}
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 	/* RateListViewRender():
@@ -183,6 +189,9 @@ AROS_UFH3(STATIC ULONG, RateListViewRender,
  AROS_UFHA(struct LVDrawMsg *, Msg , A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 		/* We only know how to redraw lines. */
 
 	if(Msg->lvdm_MethodID == LV_DRAW)
@@ -297,6 +306,9 @@ AROS_UFH3(STATIC ULONG, RateListViewRender,
 	}
 	else
 		return(LVCB_UNKNOWN);
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 STATIC VOID

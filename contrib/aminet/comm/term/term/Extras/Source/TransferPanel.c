@@ -26,6 +26,9 @@ AROS_UFH3(STATIC ULONG, TransferListViewRender,
  AROS_UFHA(struct LVDrawMsg *  , Msg, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 		/* We only know how to redraw lines. */
 
 	if(Msg->lvdm_MethodID == LV_DRAW)
@@ -115,6 +118,9 @@ AROS_UFH3(STATIC ULONG, TransferListViewRender,
 	}
 	else
 		return(LVCB_UNKNOWN);
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 	/* AddTransferInfo(STRPTR Message,...):

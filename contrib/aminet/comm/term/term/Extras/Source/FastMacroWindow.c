@@ -904,16 +904,19 @@ HandleInputMethod(Class *class,struct Gadget *gadget,struct gpInput *msg)
 	return(GMR_MEACTIVE);
 }
 
-#ifdef __AROS__
+#ifndef __AROS__
 STATIC ULONG ASM SAVE_DS
 ClassDispatcher(REG(a0) Class *class,REG(a2) struct Gadget *gadget,REG(a1) Msg msg)
 #else
-AROS_UFH3(STATIC ULONG, ClassDispatch,
+AROS_UFH3(STATIC ULONG, ClassDispatcher,
  AROS_UFHA(Class *        , class , A0),
  AROS_UFHA(struct Gadget *, gadget, A2),
  AROS_UFHA(Msg            , msg, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	switch(msg->MethodID)
 	{
 		case OM_GET:
@@ -953,6 +956,9 @@ AROS_UFH3(STATIC ULONG, ClassDispatch,
 
 			return(DoSuperMethodA(class,(Object *)gadget,msg));
 	}
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 STATIC BOOL

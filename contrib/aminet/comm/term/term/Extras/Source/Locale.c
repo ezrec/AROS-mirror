@@ -622,7 +622,13 @@ AROS_UFH3(STRPTR, LocaleHookFunc,
  AROS_UFHA(LONG          , ID, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	return(LocaleString(ID));
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 #ifndef __AROS__
@@ -635,6 +641,9 @@ AROS_UFH3(STATIC ULONG, FormatDateHookFunc,
  AROS_UFHA(UBYTE          , Char, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	struct FormatContext *Context = Hook->h_Data;
 
 	if(Context->Size > 0)
@@ -649,6 +658,9 @@ AROS_UFH3(STATIC ULONG, FormatDateHookFunc,
 	}
 
 	return(TRUE);
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 	/* FormatStamp():

@@ -28,6 +28,9 @@ AROS_UFH2(VOID, StuffChar,
  AROS_UFHA(struct FormatContext *, Context, A3))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	if(Context->Size > 0)
 	{
 		*Context->Index++ = Char;
@@ -38,6 +41,9 @@ AROS_UFH2(VOID, StuffChar,
 			Context->Size = 0;
 		}
 	}
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 	/* LimitedVSPrintf(LONG Size,STRPTR Buffer,STRPTR FormatString,...):
@@ -138,7 +144,13 @@ AROS_UFH2(VOID, CountChar,
  AROS_UFHA(ULONG *        , Count, A3))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	*Count = *Count + 1;
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 	/* GetFormatLength(STRPTR FormatString,va_list VarArgs):

@@ -24,16 +24,19 @@ TaskDestructor(struct DataMsg *Item)
 	Signal((struct Task *)Item->Data,SIGBREAKF_CTRL_F);
 }
 
-#ifdef __AROS__
+#ifndef __AROS__
 struct RendezvousData * SAVE_DS ASM
 RendezvousLogin(REG(a0) struct MsgPort *ReadPort,REG(a1) struct MsgPort *WritePort,REG(a2) struct TagItem *UnusedTagList)
 #else
-AROS_UFH3(struct RendezvousData, RendezvousLogin,
+AROS_UFH3(struct RendezvousData *, RendezvousLogin,
  AROS_UFHA(struct MsgPort * , ReadPort , A0),
  AROS_UFHA(struct MsgPort * , WritePort, A2),
  AROS_UFHA(struct TagItem * , UnusedTagList, A1))
 #endif
 {
+#ifdef __AROS__
+    AROS_USERFUNC_INIT
+#endif
 	struct RendezvousData *Data;
 
 	if(Data = (struct RendezvousData *)AllocVecPooled(sizeof(struct RendezvousData),MEMF_ANY | MEMF_CLEAR))
@@ -91,6 +94,9 @@ AROS_UFH3(struct RendezvousData, RendezvousLogin,
 	}
 
 	return(Data);
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 VOID SAVE_DS ASM
