@@ -1,71 +1,18 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-INSTDIR  := $(CONTRIBDIR)/DOpus
-OBJDIR := $(GENDIR)/$(CURDIR)
-STARTUP := $(LIBDIR)/startup.o
-LIBS	:= -L$(LIBDIR) -larosc -larosm -lamiga -larossupport -lautoinit
-DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a \
-		$(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
+FILES := main main1 main2 main3 main4 main5 \
+         screen screen_arrows screen_colors screen_fonts screen_palette \
+         screen_sliders screen_screenmode \
+         main7 main8 main9 data gadgets strings paint_mode lsprintf 
 
-EXE := $(INSTDIR)/ConfigOpus
+EXEDIR := $(CONTRIBDIR)/DOpus
 
-FILES = main main1 main2 main3 main4 main5 \
-screen screen_arrows screen_colors screen_fonts screen_palette \
-screen_sliders screen_screenmode \
-main7 main8 main9 data gadgets strings paint_mode lsprintf 
+#MM- ConfigOpus : dopus-library
 
+%build_prog mmake=ConfigOpus \
+    progname=ConfigOpus targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="amiga arosc m"
 
-# OBJECTS = main.o main1.o main2.o main3.o main4.o main5.o\
-# screen.o screen_arrows.o screen_colors.o screen_fonts.o screen_palette.o \
-# screen_sliders.o screen_screenmode.o \
-# main7.o main8.o main9.o data.o gadgets.o lsprintf.o strings.o paint_mode.o
-
-OBJECTS = $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-#MM
-ConfigOpus : make-dirs $(EXE)
-
-#MM
-ConfOpus-clean :
-	rm -rf $(OBJDIR)
-	rm -f $(EXE)
-	
-
-make-dirs:
-	%mkdirs_q $(INSTDIR) $(OBJDIR)
-	
-$(EXE) : $(OBJECTS)
-	@$(ECHO) "Linking $@..."
-	$(CC) $(ILDFLAGS) -o $@ $(STARTUP) $(OBJECTS) $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-	
-
-$(OBJDIR)/%.o	: %.c
-	@$(ECHO) "Compiling $(CURDIR)/$<..."
-	@$(CC) $(CFLAGS) -c $< -o $@ 2>&1|tee $*.err
-	@$(IF) $(TEST) -s $*.err ; then $(TOUCH) $(TOP)/errors ; else $(RM) $*.err ; fi
-
-
-#	%compile_q
-	
-	
-
-#ConfigOpus : $(OBJECTS)
-#	slink with <<
-#define __ctype=___ctype
-#from lib:cres.o $(OBJECTS)
-#to ConfigOpus
-#lib lib:scm.lib lib:sc.lib lib:amiga.lib
-#noicons
-#maxhunk 51200
-#sd
-#nodebug
-#<
-
-#.c.o:
-#	sc $*.c
-#.asm.o:
-#	sc:c/asm -isc:include $*.asm
+%common
 

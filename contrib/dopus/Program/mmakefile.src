@@ -1,79 +1,21 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-INSTDIR  := $(CONTRIBDIR)/DOpus
-OBJDIR := $(GENDIR)/$(CURDIR)
-STARTUP := $(LIBDIR)/startup.o
-LIBS	:= -L$(LIBDIR) -larosc -larosm -lamiga -larossupport -lautoinit
-DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a	\
-		$(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
+FILES := about arbiter main main1 main2 main3 main4 main5 main6 main7\
+         main8 main9 main10 main11 main12 main13 main14 main15 main16\
+         main17 main18 main19 main20 main21 main22\
+         buffers chipimage custom cycling data doerror doidcmp \
+         icondata iffload rexx protectdata renamedata select selectdata\
+         strings tasks view screendata dopusfunctions\
+         launchexternal searchdata complete remember parentmulti\
+          dirtree getusage asmfuncs_in_c lsprintf dummy_asyncio # assembly
 
-EXE := $(INSTDIR)/DirectoryOpus
+EXEDIR := $(CONTRIBDIR)/DOpus
 
-FILES = about arbiter main main1 main2 main3 main4 main5 main6 main7\
-main8 main9 main10 main11 main12 main13 main14 main15 main16\
-main17 main18 main19 main20 main21 main22\
-buffers chipimage custom cycling data doerror doidcmp \
-icondata iffload rexx protectdata renamedata select selectdata\
-strings tasks view screendata dopusfunctions\
-launchexternal searchdata complete remember parentmulti\
-dirtree getusage asmfuncs_in_c lsprintf dummy_asyncio # assembly
+#MM- DirOpus : dopus-library
 
-# OBJS = about.o arbiter.o main.o main1.o main2.o main3.o main4.o main5.o main6.o main7.o\
-# main8.o main9.o main10.o main11.o main12.o main13.o main14.o main15.o main16.o\
-# main17.o main18.o main19.o main20.o main21.o main22.o\
-# buffers.o chipimage.o custom.o cycling.o data.o doerror.o doidcmp.o getusage.o\
-# icondata.o iffload.o rexx.o protectdata.o renamedata.o select.o selectdata.o\
-# strings.o tasks.o view.o assembly.o screendata.o dopusfunctions.o\
-# launchexternal.o searchdata.o complete.o remember.o parentmulti.o\
-# dirtree.o
+%build_prog mmake=DirOpus \
+    progname=DirectoryOpus targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="rexxsyslib amiga arosc m"
 
-
-OBJECTS = $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-#MM
-DirOpus : make-dirs $(EXE)
-
-#MM
-DOpus-clean :
-	rm -rf $(OBJDIR)
-	rm -f $(EXE)
-	
-
-make-dirs:
-	%mkdirs_q $(INSTDIR) $(OBJDIR)
-	
-$(EXE) : $(OBJECTS)
-	@$(ECHO) "Linking $@..."
-	$(CC) $(ILDFLAGS) -o $@ $(STARTUP) $(OBJECTS) $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-	
-
-$(OBJDIR)/%.o	: %.c
-	@$(ECHO) "Compiling $(CURDIR)/$<..."
-	@$(CC) $(CFLAGS) -c $< -o $@ 2>&1|tee $*.err
-	@$(IF) $(TEST) -s $*.err ; then $(TOUCH) $(TOP)/errors ; else $(RM) $*.err ; fi
-
-
-#	%compile_q
-	
-	
-
-#ConfigOpus : $(OBJECTS)
-#	slink with <<
-#define __ctype=___ctype
-#from lib:cres.o $(OBJECTS)
-#to ConfigOpus
-#lib lib:scm.lib lib:sc.lib lib:amiga.lib
-#noicons
-#maxhunk 51200
-#sd
-#nodebug
-#<
-
-#.c.o:
-#	sc $*.c
-#.asm.o:
-#	sc:c/asm -isc:include $*.asm
-
+%common

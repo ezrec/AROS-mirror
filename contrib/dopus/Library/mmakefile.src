@@ -24,6 +24,8 @@ FUNCTIONS	:= \
 	dates		\
 	requesters
 
+#MM- dopus-library : setup includes linklibs
+
 %build_module_macro mmake=dopus-library \
     modname=dopus modtype=library dir=$(CONTRIBDIR)/DOpus/Libs \
     funcs=$(FUNCTIONS) files=$(FILES) \

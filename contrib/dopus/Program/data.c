@@ -49,7 +49,6 @@ struct Library *LayersBase;               /* layers.library */
 struct Library *WorkbenchBase;            /* workbench.library */
 struct Library *MUSICBase;                /* music.library */
 struct Library *CxBase;                   /* commodities.library */
-struct Library *RexxSysBase;              /* rexxsyslib.library */
 struct Library *AccountsBase;             /* accounts.library */
 struct UtilityBase *UtilityBase;              /* utility.library */
 

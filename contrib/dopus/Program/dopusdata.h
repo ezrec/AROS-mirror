@@ -50,7 +50,6 @@ extern struct Library *LayersBase;               /* layers.library */
 extern struct Library *WorkbenchBase;            /* workbench.library */
 extern struct Library *MUSICBase;                /* music.library */
 extern struct Library *CxBase;                   /* commodities.library */
-extern struct Library *RexxSysBase;              /* rexxsyslib.library */
 extern struct Library *AccountsBase;             /* accounts.library */
 extern struct UtilityBase *UtilityBase;              /* utility.library */
 
