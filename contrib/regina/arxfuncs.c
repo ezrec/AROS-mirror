@@ -19,9 +19,9 @@
 
 /* This files contains functions that are implemented in ARexx
  * but that are not standard REXX functions. This file contains
- * the functions that can be used on all platforms. amigafuncs.c
+ * the functions that can be used on all platforms. amifuncs.c
  * contains the ARexx functions that are only usable on the
- * amiga platform or compatibles.
+ * amiga platform or compatibles. (not implemented yet)
  */
 #include "rexx.h"
 #include <stdio.h>
@@ -29,7 +29,11 @@
 #include <stdlib.h>
 #include <assert.h>
 
-static const streng _fname = {1, 1, "F"}, _fstem = {4, 4, "FI.F"};
+#if !defined(HAVE_DRAND48)
+#include "rand48.c"
+#endif
+
+static const streng _fname = {1, 1, "F"}, _fstem = {4, 4, {'F', 'I', '.', 'F'}};
 
 typedef struct _arexx_tsd_t {
   proclevel amilevel;
@@ -133,23 +137,23 @@ static streng *getfilenames( tsd_t *TSD, const streng *sep )
     {
       if ( first )
       {
-	retval = Str_dup_TSD( TSD, var->name );
-	first = 0;
+        retval = Str_dup_TSD( TSD, var->name );
+        first = 0;
       }
       else
       {
-	tmpstr = Str_cat_TSD( TSD, retval, sep );
-	if ( tmpstr != retval )
-	{
-	  Free_string_TSD( TSD, retval );
-	  retval = tmpstr;
-	}
-	tmpstr = Str_cat_TSD( TSD, retval, var->name );
-	if ( tmpstr != retval )
-	{
-	  Free_string_TSD( TSD, retval );
-	  retval = tmpstr;
-	}
+        tmpstr = Str_cat_TSD( TSD, retval, sep );
+        if ( tmpstr != retval )
+        {
+          Free_string_TSD( TSD, retval );
+          retval = tmpstr;
+        }
+        tmpstr = Str_cat_TSD( TSD, retval, var->name );
+        if ( tmpstr != retval )
+        {
+          Free_string_TSD( TSD, retval );
+          retval = tmpstr;
+        }
       }
     }
   }
@@ -229,22 +233,22 @@ streng *arexx_open( tsd_t *TSD, cparamboxptr parm1 )
     mode=0;
   else switch( getoptionchar( TSD, parm3->value, "OPEN", 3, "", "WRA" ) )
   {
-  case 'W':
-    mode=0;
-    break;
-    
-  case 'R':
-    mode=1;
-    break;
-      
-  case 'A':
-    mode=2;
-    break;
-      
-  default:
-    mode=0;
-    assert(0);
-    break;
+    case 'W':
+      mode=0;
+      break;
+
+    case 'R':
+      mode=1;
+      break;
+
+    case 'A':
+      mode=2;
+      break;
+
+    default:
+      mode=0;
+      assert(0);
+      break;
   }
 
   file = fopen( filename, modestrings[mode] );
@@ -346,22 +350,22 @@ streng *arexx_seek( tsd_t *TSD, cparamboxptr parm1 )
     wench = SEEK_CUR;
   else switch( getoptionchar( TSD, parm3->value, "SEEK", 3, "", "CBE" ) )
   {
-  case 'C':
-    wench = SEEK_CUR;
-    break;
-      
-  case 'B':
-    wench = SEEK_SET;
-    break;
-      
-  case 'E':
-    wench = SEEK_END;
-    break;
-      
-  default:
-    wench = SEEK_CUR;
-    assert(0);
-    break;
+    case 'C':
+      wench = SEEK_CUR;
+      break;
+
+    case 'B':
+      wench = SEEK_SET;
+      break;
+
+    case 'E':
+      wench = SEEK_END;
+      break;
+
+    default:
+      wench = SEEK_CUR;
+      assert(0);
+      break;
   }
   
   pos = fseek( file, offset, wench );
@@ -385,7 +389,7 @@ streng *arexx_readch( tsd_t *TSD, cparamboxptr parm1 )
   {
     char buffer[2] = { 0, 0 };
     
-    buffer[0] = getc( file );
+    buffer[0] = (char)getc( file );
     
     return Str_cre_TSD( TSD, buffer );
   }
@@ -656,8 +660,8 @@ streng *arexx_bitcomp( tsd_t *TSD, cparamboxptr parm1 )
     pad = parm3->value->value[0];
   
   for ( ;
-	cp1 >= s1->value;
-	cp1--, i++ )
+  cp1 >= s1->value;
+  cp1--, i++ )
   {
     if ( *cp1 != pad )
       return int_to_streng( TSD, i*8 + firstbit( *cp1 ^ pad ) );
@@ -747,27 +751,27 @@ streng *arexx_upper( tsd_t *TSD, cparamboxptr parm1 )
 
 streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 )
 {
-  int error, seed;
-  char text[30];
-  streng *s, *retval;
+   int error, seed;
+   char text[30];
+   streng *s, *retval;
   
-  checkparam( parm1, 0, 1, "RANDU" );
+   checkparam( parm1, 0, 1, "RANDU" );
   
-  if ( parm1!=NULL && parm1->value!=NULL )
-  {
-    seed = streng_to_int( TSD, parm1->value, &error );
-    if ( error )
-      exiterror( ERR_INCORRECT_CALL, 11, "RANDU", 1, tmpstr_of( TSD, parm1->value ) );
+   if ( parm1!=NULL && parm1->value!=NULL )
+   {
+      seed = streng_to_int( TSD, parm1->value, &error );
+      if ( error )
+         exiterror( ERR_INCORRECT_CALL, 11, "RANDU", 1, tmpstr_of( TSD, parm1->value ) );
     
-    srand48( (long int)seed );
-  }
+      srand48( (long int)seed );
+   }
   
-  sprintf( text, "%.20f", drand48() );
-  s = Str_cre_TSD( TSD, text );
-  retval = str_format( TSD, s, -1, -1, -1, -1);
-  FreeTSD( s );
+   sprintf( text, "%.20f", drand48() );
+   s = Str_cre_TSD( TSD, text );
+   retval = str_format( TSD, s, -1, -1, -1, -1);
+   FreeTSD( s );
   
-  return retval;
+   return retval;
 }
 
 
@@ -784,9 +788,9 @@ streng *arexx_getspace( tsd_t *TSD, cparamboxptr parm1 )
   
   length = streng_to_int( TSD, parm1->value, &error);
   if ( error )
-    exiterror( ERR_INCORRECT_CALL, 11, "READCH", 1, tmpstr_of( TSD, parm1->value ) );
+    exiterror( ERR_INCORRECT_CALL, 11, "GETSPACE", 1, tmpstr_of( TSD, parm1->value ) );
   if ( length<=0 )
-    exiterror( ERR_INCORRECT_CALL, 14, "READCH", 1, tmpstr_of( TSD, parm1->value ) );
+    exiterror( ERR_INCORRECT_CALL, 14, "GETSPACE", 1, tmpstr_of( TSD, parm1->value ) );
 
   ptr = Malloc_TSD( TSD, length );
   memset( ptr, 0, length );
@@ -902,7 +906,7 @@ streng *arexx_export( tsd_t *TSD, cparamboxptr parm1 )
   if (len > src->len)
   {
     memcpy( memptr, src->value, src->len );
-    memset( memptr+src->len, fill, len - src->len );
+    memset( ((char *)memptr)+src->len, fill, len - src->len );
   }
   else
     memcpy( memptr, src->value, len );
@@ -947,9 +951,9 @@ streng *arexx_storage( tsd_t *TSD, cparamboxptr parm1 )
   {
     len = streng_to_int( TSD, parm3->value, &error );
     if ( error )
-      exiterror( ERR_INCORRECT_CALL, 11, "EXPORT", 3, tmpstr_of( TSD, parm3->value ) );
+      exiterror( ERR_INCORRECT_CALL, 11, "STORAGE", 3, tmpstr_of( TSD, parm3->value ) );
     if ( len<0 )
-      exiterror( ERR_INCORRECT_CALL, 13, "EXPORT", 3, tmpstr_of( TSD, parm3->value ) );
+      exiterror( ERR_INCORRECT_CALL, 13, "STORAGE", 3, tmpstr_of( TSD, parm3->value ) );
   }
   
   if ( parm4 == NULL || parm4->value == NULL || parm4->value->len == 0 )
@@ -962,7 +966,7 @@ streng *arexx_storage( tsd_t *TSD, cparamboxptr parm1 )
   if (len > src->len)
   {
     memcpy( memptr, src->value, src->len );
-    memset( memptr+src->len, fill, len - src->len );
+    memset( ((char *)memptr)+src->len, fill, len - src->len );
   }
   else
     memcpy( memptr, src->value, len );
@@ -979,35 +983,35 @@ streng *arexx_storage( tsd_t *TSD, cparamboxptr parm1 )
  */
 streng *arexx_show( tsd_t *TSD, cparamboxptr parm1 )
 {
-  cparamboxptr parm2 = NULL, parm3 = NULL;
-  streng *name = NULL, *sep, *retval;
-  
-  checkparam( parm1, 1, 3, "SHOW" );
-  parm2 = parm1->next;
-  if ( parm2 != NULL )
-    parm3 = parm2->next;
-
-  if ( parm2 != NULL && parm2->value != NULL && parm2->value->len != 0 )
-    name = parm2->value;
-  
-  if ( parm3 == NULL || parm3->value == NULL || parm3->value->len == 0 )
-    sep = Str_cre_TSD( TSD, " " );
-  else
-    sep = Str_dup_TSD( TSD, parm3->value );
-  
-  switch( getoptionchar( TSD, parm1->value, "SHOW", 1, "", "F" ) )
-  {
-  case 'F':
-    if ( name == NULL )
-      retval = getfilenames( TSD, sep );
-    else
-    {
-      FILE *f = getfile( TSD, name );
-      retval = int_to_streng( TSD, f != NULL );
-    }
-    break;
-  }
-  Free_string_TSD( TSD, sep );
-  
-  return retval;
+   cparamboxptr parm2 = NULL, parm3 = NULL;
+   streng *name = NULL, *sep, *retval;
+   
+   checkparam( parm1, 1, 3, "SHOW" );
+   parm2 = parm1->next;
+   if ( parm2 != NULL )
+      parm3 = parm2->next;
+ 
+   if ( parm2 != NULL && parm2->value != NULL && parm2->value->len != 0 )
+      name = parm2->value;
+   
+   if ( parm3 == NULL || parm3->value == NULL || parm3->value->len == 0 )
+      sep = Str_cre_TSD( TSD, " " );
+   else
+      sep = Str_dup_TSD( TSD, parm3->value );
+   
+   switch( getoptionchar( TSD, parm1->value, "SHOW", 1, "", "F" ) )
+   {
+      case 'F':
+         if ( name == NULL )
+            retval = getfilenames( TSD, sep );
+         else
+         {
+            FILE *f = getfile( TSD, name );
+            retval = int_to_streng( TSD, f != NULL );
+         }
+         break;
+   }
+   Free_string_TSD( TSD, sep );
+   
+   return retval;
 }
