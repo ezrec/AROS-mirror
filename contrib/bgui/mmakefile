@@ -234,11 +234,16 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 #	@$(CC) $(ENHANCED_OPTIONS) $(DEFINES) -c ver.c -o o/ver.o
 #	endif
 	@$(ECHO) Linking $@...
-	@$(CC) -nostartfiles -nostdlib -Wl,-i \
+#	@$(CC) -nostartfiles -nostdlib -Wl,-i \
+#	      o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
+#	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
+#	      o/plgroupclasses$(o) o/endtag.o \
+#	      -static -i -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -o $@
+	@$(STATIC_LD) $(STATIC_LDFLAGS) $(LDFLAGS) \
 	      o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
 	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
 	      o/plgroupclasses$(o) o/endtag.o \
-	      -static -i -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -o $@
+	      -L$(LIBDIR) -lamiga -larossupport -lrom -larosm -o $@
 	@$(ECHO) Installing bgui.library...
 	@$(CP) $@ $(BGUIDIR)/Libs/bgui.library
 
