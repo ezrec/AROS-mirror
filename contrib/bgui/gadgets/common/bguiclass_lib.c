@@ -121,13 +121,14 @@ ULONG _LibInit[4] =
  */
 #ifdef _AROS
 AROS_UFH3(struct Library *, LibInit,
-        AROS_LHA(struct Library *, lib, D0),
-        AROS_LHA(BPTR, segment, A0),
-        AROS_LHA(struct ExecBase *, syslib, A6))
+        AROS_UFHA(struct Library *, lib, D0),
+        AROS_UFHA(BPTR, segment, A0),
+        AROS_UFHA(struct ExecBase *, syslib, A6))
 #else
 SAVEDS ASM struct Library *LibInit(REG(d0) struct Library *lib, REG(a0) BPTR segment, REG(a6) struct ExecBase *syslib)
 #endif
 {
+   AROS_USERFUNC_INIT
    /*
     * Globally assign SysBase and SegList.
     */
@@ -168,6 +169,8 @@ SAVEDS ASM struct Library *LibInit(REG(d0) struct Library *lib, REG(a0) BPTR seg
    };
    CloseLibs();
    return NULL;
+   
+   AROS_USERFUNC_EXIT
 }
 
 /*

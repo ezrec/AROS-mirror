@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.9  2002/03/07 21:33:00  stegerg
+ * These used still AROS_LHA for the arguments of libinit,
+ * instead of AROS_UFHA.
+ *
  * Revision 42.8  2001/01/28 04:53:21  bergers
  * Fixed some compiler complaints (some casts were missing.).
  *
@@ -328,13 +332,15 @@ makeproto VOID InitLocale(void)
 #ifdef _AROS
 makeproto
 AROS_UFH3(struct Library *, LibInit,
-       AROS_LHA(ULONG, dummy, D0),
-       AROS_LHA(BPTR, segment, A0),
-       AROS_LHA(struct ExecBase *, syslib, A6))
+       AROS_UFHA(ULONG, dummy, D0),
+       AROS_UFHA(BPTR, segment, A0),
+       AROS_UFHA(struct ExecBase *, syslib, A6))
 #else
 makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struct ExecBase *syslib)
 #endif
 {
+   AROS_USERFUNC_INIT
+   
    struct Library       *lib;
 
    /*
@@ -434,6 +440,8 @@ makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struc
    }
    CloseLibs();
    return NULL;
+   
+   AROS_USERFUNC_EXIT
 }
 
 /*
