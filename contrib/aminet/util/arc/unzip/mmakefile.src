@@ -16,7 +16,7 @@ USE_CLIB_SHARED := yes
 USE_AMIGALIB := yes
 USE_MLIB := yes
 
-USER_CFLAGS := -DUNIX -DNO_ZIPINFO -UBSD -UBSD4_4
+USER_CFLAGS := -DUNIX -DNO_ZIPINFO -DBSD -DBSD4_4
 
 #MM aminet-util-arc-unzip : includes linklibs
 

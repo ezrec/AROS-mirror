@@ -768,7 +768,7 @@ void close_outfile()
     /* adjust for local timezone */
 #ifdef BSD
 #ifdef BSD4_4
-    m_time -= localtime(&m_time)->tm_gmtoff;  /* seconds EAST of GMT:  subtr. */
+    //m_time -= localtime(&m_time)->tm_gmtoff;  /* seconds EAST of GMT:  subtr. */
 #else
     ftime(&tbp);                    /* get `timezone' */
     m_time += tbp.timezone * 60L;   /* seconds WEST of GMT:  add */

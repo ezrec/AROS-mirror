@@ -575,7 +575,7 @@ time_t dos_to_unix_time(ddate, dtime)
     TTrace((stderr, "  m_time after timezone =  %ld\n", m_time));
 
 #ifdef BSD4_4    /* see comments in unix.c */
-    m_time -= localtime((time_t *) &m_time)->tm_gmtoff;
+    //m_time -= localtime((time_t *) &m_time)->tm_gmtoff;
 #else /* !BSD4_4 */
 #ifndef WIN32
     if (localtime((time_t *)&m_time)->tm_isdst)
