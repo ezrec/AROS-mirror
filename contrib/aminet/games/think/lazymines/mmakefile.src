@@ -1,22 +1,25 @@
 include $(TOP)/config/make.cfg
 
 %define_libs
+ILDFLAGS    := -nostartfiles -Xlinker -i -g
 
 CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(BINDIR)/aminet
 
 FILES := lazymines button counter field highscores images layout localize \
-	requesters timer tooltypes
+	requesters timer tooltypes lazymines_strings
 
 SRCS := $(foreach f, $(FILES), $(f).c)
 OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+LIBS := -L$(LIBDIR) -lchunkyiclass -larosc -lamiga -larossupport -larosm
 
 EXE := $(DESTDIR)/lazymines
 
 .PHONY : all clean
 
-#MM aminet-lazymines : setup-aminet-lazymines setup-aminet-lazymines-catalogs
+#MM aminet-lazymines : aminet-chunkyiclass setup-aminet-lazymines setup-aminet-lazymines-catalogs
 aminet-lazymines 	: $(OBJS) $(EXE)
 	@$(NOP)
 
