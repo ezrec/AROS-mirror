@@ -296,6 +296,7 @@ clib00176;2;stegerg;Write stcd_l
 clib00177;2;stegerg;Write stcl_d
 clib00178;2;stegerg;Write stcl_h
 clib00179;2;stegerg;Write stcl_o
+clib00180;2;bergers;Write mkstemp
 c00000;2;srittau;Write C:AddBuffers
 c00001;2;laguest;Write C:Alias
 c00002;2;srittau;Write C:Ask
