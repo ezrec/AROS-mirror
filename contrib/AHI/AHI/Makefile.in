@@ -143,7 +143,7 @@ $(srcdir)/ahiprefs_Cat.h:	$(srcdir)/ahiprefs.cd $(srcdir)/C_h_noauto.sd
 	$(FLEXCAT) $(srcdir)/ahiprefs.cd $< CATALOG=$@
 
 %.ct:
-	$(FLEXCAT) $(srcdir)/ahiprefs.cd $@ NEWCTFILE $@
+	$(FLEXCAT) $(srcdir)/ahiprefs.cd $@ NEWCTFILE=$@
 
 #
 # Dependencies
