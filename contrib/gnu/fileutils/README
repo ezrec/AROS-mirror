@@ -1,0 +1,42 @@
+What is this?
+ Directory contains a set off diffs and this file of 
+instructions on how to obtain and build the gnu fileutils package 
+for AROS.
+ At this point I have only used a fully-built crosscompiler 
+(see: AROS/contrib/gnu/gcc/README) to build this package.
+
+Basic instructions:
+
+fetch ftp://ftp.gnu.org/pub/gnu/fileutils/fileutils-4.1.tar.gz
+tar -zxvf fileutils-4.1.tar.gz
+cd fileutils-4.1
+patch -p1 < ../fileutils-4.1-aros.diff
+./configure --host=i386-aros
+gmake
+
+Using:
+
+ All the executeables are in the src directory.
+
+Todo:
+
+- This is a very ugly set of diffs just to get the ball rolling. 
+- The build breaks after making the executeables while it's trying to 
+  generate the documentation.
+- Some commands were left out at this point while some function issues 
+  are worked out (i.e fork/exec).
+- I need to consolodate the functions I hacked into the end of the .c 
+  files that need them into at least  perhaps aros/function.c for 
+  preperation at getting them added to the AROS libc.
+- For some odd reason I get different executeable sizes sometimes. Most 
+  of the time now they have reverted to being rather large.
+- Trying to strip these commands renders them unuseable.
+- The -nix option needs to be included someplace but I forget where.
+
+People on the dev list were very helpful in the port of gnu which, which 
+was basically a warmup for this. Thanks! :)
+As usual, any feedback would be greatly appreciated.
+
+Jack Patton <jpatton@aros.org>
+4/26/04
+
