@@ -24,7 +24,7 @@ FILES := NList_mcc  	\
 USER_INCLUDES := -I../commonaros
 
 %build_module_macro mmake=contrib-zune-classes-nlist \
-  modname=NList modtype=mcc \
+  modname=NList modtype=mcc dir=$(CONTRIBDIR)/NList \
   initfile=library files=$(FILES) \
   uselibs="amiga mui rom m"
 

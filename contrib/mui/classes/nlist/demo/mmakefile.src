@@ -1,6 +1,4 @@
 # $Id$
-#
-# Makefile for Zune Demos
 
 include $(TOP)/config/make.cfg
 
@@ -8,7 +6,7 @@ FILES := NList-Demo \
     	 NList-Demo2 \
 	 NList-Demo3
 
-EXEDIR := $(AROSDIR)/Demos
+EXEDIR := $(CONTRIBDIR)/NList/Demos
 
 USER_CFLAGS := -DNO_INLINE_STDARG
 
