@@ -21,6 +21,9 @@
 
 /*
 $Log$
+Revision 1.2  2005/01/12 11:11:40  NicJA
+removed extremely broken "FAST" double bufering routines for the time being - will be placed into seperate files later..
+
 Revision 1.1  2005/01/11 14:58:29  NicJA
 AROSMesa 3.0
 
@@ -119,6 +122,8 @@ IDEAS:
  *
  */
 
+#include "AROSMesa_intern.h"
+
 #include <exec/memory.h>
 #include <exec/types.h>
 #ifdef __GNUC__
@@ -178,52 +183,9 @@ IDEAS:
 /**********************************************************************/
 /*****                Internal Data                                         *****/
 /**********************************************************************/
-/* struct arosmesa_context * amesa = NULL; */
-GLenum LastError;                /* The last error generated*/
-struct Library *CyberGfxBase = NULL; /* optional base address for cybergfx */
 
-/**********************************************************************/
-/*****                Some Usefull code                                     *****/
-/**********************************************************************/
-
-/*
-    The Drawing area is defined by:
-
-    CC.Viewport.X = x;
-    CC.Viewport.Width = width;
-    CC.Viewport.Y = y;
-    CC.Viewport.Height = height;
-*/
-
-/**********************************************************************/
-/**********************************************************************/
-
-/* extern void arosTC_Faster_DD_pointers( GLcontext *ctx); */
-/* extern void arosTC_standard_DD_pointers( GLcontext *ctx); */
-
-/*
-long _STI_200_InitMesaLibrary(void)
-{
-    if(!GfxBase)
-    {
-    **  printf("Opening graphics.library\n"); 
-        if (!(GfxBase = (struct GfxBase *) OpenLibrary("graphics.library",39)))
-        {
-            printf("MesaOpenGL Error\nCouldent open graphics.library v39\n");
-            return(FALSE);
-        }
-    }
-    ** printf("GfxBase=0x%x\n",GfxBase);
-    return(TRUE);
-}
-
-void _STD_200_DisposeMesaLibrary(void)
-{
-    if (GfxBase)    ** @@@ TODO Open and close gfxlibrary when open and flush lib.
-        CloseLibrary((struct Library *)GfxBase);
-    GfxBase=NULL;
-}
-*/
+GLenum          LastError;                /* The last error generated*/
+struct Library *CyberGfxBase = NULL;      /* optional base address for cybergfx */
 
 /**********************************************************************/
 /*****                  AROS/Mesa API Functions                  *****/
@@ -244,17 +206,11 @@ AROSMesaCreateVisualTags(long Tag1, ...)
     return AROSMesaCreateVisual(&Tag1);
 }
 
-#ifdef __GNUC__
 struct arosmesa_visual *
 AROSMesaCreateVisual(register struct TagItem *tagList)
-#else
-__asm __saveds struct arosmesa_visual *
-AROSMesaCreateVisual(register __a0 struct TagItem *tagList)
-#endif
 {
     struct arosmesa_visual *v=NULL;
     int  index_bits, redbits, greenbits, bluebits, alphabits;
-    GLfloat redscale, greenscale, bluescale, alphascale;
     
     if (!(v = (struct arosmesa_visual *)AllocVec(sizeof(struct arosmesa_visual),MEMF_PUBLIC|MEMF_CLEAR))) return NULL;
 
@@ -264,20 +220,17 @@ AROSMesaCreateVisual(register __a0 struct TagItem *tagList)
 
     if (v->rgb_flag) {
         /* RGB(A) mode */
-        redscale =   greenscale = bluescale = alphascale = 255;
         redbits = greenbits = bluebits = 8;
         alphabits = 0;
         index_bits = 0;
     }
     else {
         /* color index mode */
-        redscale = greenscale = bluescale = alphascale = 0.0;
         redbits = greenbits = bluebits = alphabits = 0;
         index_bits = 8;           /* @@@ TODO */
     }
     
     /* Create core visual */
-#warning TODO: changed to use 2.6 call with "bits"
     v->gl_visual = gl_create_visual( v->rgb_flag, 
           v->alpha_flag,
           v->db_flag,
@@ -286,8 +239,6 @@ AROSMesaCreateVisual(register __a0 struct TagItem *tagList)
           8,                                    /* stencil_size */
           16,                                   /* accum_size */
           index_bits,
-          //redscale, greenscale,
-          //bluescale, alphascale,
           redbits, greenbits,
           bluebits, alphabits
           );
@@ -325,13 +276,8 @@ struct arosmesa_context *AROSMesaCreateContextTags(long Tag1, ...)
     return AROSMesaCreateContext(&Tag1);
 }
 
-#ifdef __GNUC__
 struct arosmesa_context *
 AROSMesaCreateContext(register struct TagItem *tagList)
-#else
-__asm __saveds struct arosmesa_context *
-AROSMesaCreateContext(register __a0 struct TagItem *tagList)
-#endif
 {
     /* Create a new AROS/Mesa context */
     /* Be sure to initialize the following in the core Mesa context: */
@@ -382,10 +328,11 @@ AROSMesaCreateContext(register __a0 struct TagItem *tagList)
           (void *) c, GL_TRUE);
 
 /*  drawMode=GetTagData(AMA_DrawMode,AMESA_AGA,tagList);  */
+/* Disabled for now .. (nicja)
+#ifdef AMESA_DOUBLEBUFFFAST
     if(c->visual->db_flag==GL_TRUE)
     {
 DEBUGOUT("This is doublebuffered\n")
-#ifdef ADISP_CYBERGFX
         if (CyberGfxBase)
         {
             if (!(arosTC_Standard_init_db(c,tagList)))
@@ -394,29 +341,22 @@ DEBUGOUT("This is doublebuffered\n")
                 FreeVec( c );
                 return NULL;
             }
-#ifdef ADISP_AGA
         }
         else
         {
-#endif
-#endif
-#ifdef ADISP_AGA
-//          if (aros8bit_Standard_init_db(c,tagList))   Not realy finishid
+//          if (aros8bit_Standard_init_db(c,tagList))   Not realy finished/working
             if (!(aros8bit_Standard_init(c,tagList)))
             {
                 gl_destroy_context( c->gl_ctx );
                 FreeVec( c );
                 return NULL;
             }
-#endif
-#ifdef ADISP_CYBERGFX
         }
-#endif
     }
-    else  /* allways fallback on AGA when unknown drawmode */
+    else  // allways fallback on AGA when unknown drawmode
+#endif*/
     {
 DEBUGOUT("This is NOT doublebuffered\n")
-#ifdef ADISP_CYBERGFX
         if (CyberGfxBase)
         {
             if (!(arosTC_Standard_init(c,tagList)))
@@ -425,34 +365,23 @@ DEBUGOUT("This is NOT doublebuffered\n")
                 FreeVec( c );
                 return NULL;
             }
-#ifdef ADISP_AGA
         }
         else
         {
-#endif
-#endif
-#ifdef ADISP_AGA
             if (!(aros8bit_Standard_init(c,tagList)))   /* Add CyberGfx init here also (if ...)*/
             {
                 gl_destroy_context( c->gl_ctx );
                 FreeVec( c );
                 return NULL;
             }
-#endif
-#ifdef ADISP_CYBERGFX
         }
-#endif
     }
     if (c->gl_ctx) c->gl_ctx->Driver.UpdateState = c->InitDD;
     return c;
   
 }
 
-#ifdef __GNUC__
 void AROSMesaDestroyContext(register struct arosmesa_context *c )
-#else
-__asm __saveds void AROSMesaDestroyContext(register __a0 struct arosmesa_context *c )
-#endif
 {
     /* destroy a AROS/Mesa context */
 /*
@@ -467,30 +396,19 @@ __asm __saveds void AROSMesaDestroyContext(register __a0 struct arosmesa_context
     FreeVec( c );
 }
 
-#ifdef __GNUC__
 void AROSMesaMakeCurrent(register struct arosmesa_context *amesa,register struct arosmesa_buffer *b )
-#else
-__asm __saveds void AROSMesaMakeCurrent(register __a0 struct arosmesa_context *amesa,register __a1    struct arosmesa_buffer *b )
-#endif
 {
     /* Make the specified context the current one */
     /* the order of operations here is very important! */
 
-//   Current = amesa;
-
     if (amesa && b) {
-//printf("amesa->gl_ctx=0x%x\n",amesa->gl_ctx);
         gl_make_current( amesa->gl_ctx,b->gl_buffer );
-//printf("CC=0x%x\n",CC);
 
         (*amesa->InitDD)(amesa->gl_ctx);                            /* Call Driver_init_rutine */
 
         if (amesa->gl_ctx->Viewport.Width==0) {
-		 /* initialize viewport to window size */
-//         gl_viewport( amesa->gl_ctx, 0, 0, amesa->width, amesa->height );
 DEBUGOUT("glViewport");
             glViewport( 0, 0, amesa->width, amesa->height );
-DEBUGOUT("glViewport");
         }
 	else
         {
@@ -499,11 +417,7 @@ DEBUGOUT("glViewport");
     }
 }
 
-#ifdef __GNUC__
 void AROSMesaSwapBuffers(register struct arosmesa_context *amesa)
-#else
-__asm __saveds void AROSMesaSwapBuffers(register __a0 struct arosmesa_context *amesa)
-#endif
 {                /* copy/swap back buffer to front if applicable */
     (*amesa->SwapBuffer)( amesa );
 }
@@ -511,11 +425,7 @@ __asm __saveds void AROSMesaSwapBuffers(register __a0 struct arosmesa_context *a
 /* This is on the drawingboard */
 /* Mostly for when future changes the library is still intact*/
 
-#ifdef __GNUC__
 BOOL AROSMesaSetDefs(register struct TagItem *tagList)
-#else
-__asm __saveds BOOL AROSMesaSetDefs(register __a0 struct TagItem *tagList)
-#endif
 {
 /*
     struct TagItem *tag=NULL;
@@ -534,11 +444,7 @@ __asm __saveds BOOL AROSMesaSetDefs(register __a0 struct TagItem *tagList)
  Maybe a report error routine ??? like:
 */
 
-#ifdef __GNUC__
 GLenum AROSMesaReportError(register struct arosmesa_context *c )
-#else
-__asm __saveds GLenum AROSMesaReportError(register __a0 struct arosmesa_context *c )
-#endif
 {
     GLenum error;
     error=LastError;
