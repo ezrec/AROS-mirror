@@ -97,7 +97,11 @@ LT_Init(VOID)
 	}
 	#endif	// LINK_LIB
 
-	if(SysBase == NULL || SysBase->lib_Version < 37)
+	if(SysBase == NULL
+#ifndef _AROS
+	 || SysBase->lib_Version < 37
+#endif
+	 )
 	{
 		success = FALSE;
 	}
@@ -150,8 +154,13 @@ LT_Init(VOID)
 
 		LONG i;
 
+#ifndef _AROS
 		V39 = (BOOLEAN)(SysBase->lib_Version >= 39);
 		V40 = (BOOLEAN)(SysBase->lib_Version >= 40);
+#else
+		V39 = FALSE;
+		V40 = TRUE;
+#endif
 
 		InitSemaphore(&LTP_LockSemaphore);
 		NewList((struct List *)&LTP_LockList);
@@ -259,7 +268,11 @@ LT_Init(VOID)
 VOID LIBENT
 LT_Exit(VOID)
 {
-	if(SysBase != NULL && SysBase->lib_Version >= 37)
+	if(SysBase != NULL 
+#ifndef _AROS
+	   && SysBase->lib_Version >= 37
+#endif
+	   )
 	{
 		#ifdef DO_PICKSHORTCUTS
 		{
