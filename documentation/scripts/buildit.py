@@ -253,7 +253,7 @@ def buildWWW():
     global TEMPLATE_DATA
     TEMPLATE_DATA = file( TEMPLATE, 'r' ).read()
 
-    makeStatus()
+    #makeStatus()
 
     _src_1 = os.path.join( SRCROOT, 'introduction/index.en' )
     _src_2 = os.path.join( SRCROOT, 'documentation/developers/contribute.en' )
