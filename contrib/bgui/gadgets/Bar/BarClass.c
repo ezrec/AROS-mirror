@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/07/11 17:05:14  stegerg
+ * BGUIBase is struct Library *, not struct BGUIBase.
+ *
  * Revision 42.2  2000/07/09 03:05:08  bergers
  * Makes the gadgets compilable.
  *
@@ -31,7 +34,7 @@
 
 
 #ifdef _AROS
-extern struct BGUIBase * BGUIBase;
+extern struct Library * BGUIBase;
 #endif
 
 #ifdef _AROS
