@@ -1,0 +1,462 @@
+
+                   ------------------------------------
+                      Fireworks - see music explode!
+                   ------------------------------------
+
+This  is  a  colourful  and  thrilling  little  eyecandy.   It  will  do an
+extraordinary  realtime display of MIDI notes that are received on any CAMD
+cluster.   You  can  for  example  use  it together with "playmf" from this
+package.  The program even has the ability to control PlayMF.
+
+Every MIDI file looks different.  Some songs look like going to light speed
+in  "Star Wars".  Others look like the sky over Bagdad during the gulf war.
+Some look like a fantastic laser show.
+
+NEW:   Three  differend  rendering  modes should make everyone happy.  I am
+especially  proud  of  the  new Fountain Mode.  It simulates gravity and is
+still not much slower than the original "Laser mode".
+
+The  notes  will  be sent off into the sky in all directions.  The angle is
+varying with the pitch of the notes.  Soft notes will climb up slowly while
+loud  notes  will  be  shot  into the sky like flak bullets.  The different
+colours  represent  the different MIDI channels.
+
+Play  around  with  the window sizes.  Narrow windows (either vertically or
+horizontally) have a nice effect.
+
+With  my  Picasso  II+  running  Picasso  96  1.34a,  I get about 10-25 FPS
+depending  on how many notes are currently visible.  I have no problem with
+sizing  the window to about half the size of my workbench desktop.  See the
+General Tips section if the program doesn't run as smoothly as you wish.
+
+The  option  to  load images as a backdrop into the fireworks window proves
+how  fast  Gfx  board  blitters  can  be.  This is really amazing.  Use any
+picture you like (as long as your datatypes support it).  But better choose
+dark images to have a good contrast to the fireworks.
+
+
+Requirements
+------------
+
+* OS 3.0 or better.
+
+* installed camd.library (available on Aminet)
+
+* any MIDI software using CAMD (e.g. Deluxe Music II, playmf)
+  or an external MIDI interface for feeding MIDI notes.
+
+* some free pens on your Workbench screen.
+
+* perferrably a graphics board using Picasso96 or Cybergraphics
+  for fast window refresh.
+
+
+Psychedelic Comsumation of this Program
+---------------------------------------
+
+This  section  is  only for "hardcore users" who like going to the extreme.
+
+EPILEPSY  WARNING:  If you are a person who suffers from epilepsy or if you
+are  known  to  have  a  high risk of getting an epileptic attack caused by
+visual stimulation (flashing lights etc) - THEN DO NOT TRY THIS.
+
+For  best  fireworks  experience, you need a fast processor (030/50 is just
+enough) and a fast graphics board.  Ideally you have a 17'' or 21'' Monitor
+or for the ultimate kick:  a video or data beamer!
+
+You  own  a good General MIDI, Roland GS or Yamaha XG synthesizer.  Ideally
+you  have  built  my  waveblaster  hack  or  "Project  XG" from the British
+CU-Amiga magazine.  Without sound, this is only half the fun it should be.
+
+Check  the  "Hide  Title  Bar"  and  "Hide Mouseptr" menu options.  Put the
+program  in  Fullscreen  mode  and choose a low resolution (320x240 is just
+fine).  People with plenty of computing power may use a higher resolution.
+
+Remove  the backdrop image from Fireworks (it's too bright and disturbing).
+Turn  on  the  "Sparks"  option in Rendering Modes.  This will give you the
+kick.   Begin  with  "Pixel  Mode"  and "Double Strength".  Best choice for
+sensitivity  is probably "Med", but depends on the MIDI files you are going
+to listen to.
+
+Turn  off  the  light.   If  it is daytime, close the windows and curtains.
+Your room needs to be dark as hell.
+
+Make  your  monitor  bright  and  give  it a lot of contrast (but the black
+background must remain black - not grey!)
+
+Write a small shell script that will play your favourite (most psychedelic,
+most  thrilling  or  whatever)  MIDI  files in a sequence (using PlayMF for
+example).  I prefer Classical music (symphonies, orchestral pieces) because
+they vary in speed and intensity.
+
+Optionally: Get stoned (warning: illegal)
+
+Start the script (music).
+
+Take a distance of 1-2m to the screen in a comfortable chair.
+
+Now  un-focus your eyes so that you don't see the screen in full sharpness.
+Alternative:  take off your eye-glasses (may have the same effect).
+
+Relax and enjoy the experience. Get flashed.
+
+
+
+General Program Usage
+---------------------
+
+The  command  can  be started from shell or Workbench.  After starting, you
+will  get  an  Intuition  window showing a still image.  Now use PlayMF and
+play a MIDI file.  Enjoy the show.
+
+If  the  program  appears  too  slow  to  you, then read the "General Tips"
+section.   Especially important is to set the DRAGGING=NO tool type in your
+Cybergraphics V3 monitor driver.
+
+The  background  image  may  be  replaced  against  any other image that is
+supported by your datatypes and fits into your memory.  This can be done by
+using  the  intuition menu or by dragging and dropping the icon of an image
+file into the Fireworks window.
+
+MIDI  files  may  be played by dragging their icons onto the PlayMF window.
+The  PlayMF  program  will  then be launched automatically.  Make sure that
+Fireworks  can  find  PlayMF in the search path or as "/PlayMF/PlayMF" (the
+original location in this distribution archive).
+
+Furthermore,  the menu options in the MIDI menu allow to load any MIDI file
+using  a file requester (see Bugs section concerning problems with MuiASL).
+The currently played MIDI file can easily be stopped.
+
+The intuition menus are quite self explanatory.
+
+Fullscreen is probably the best experience.  For optimum performance choose
+a  screenmode  with  enough  colours  (16 colors for the fireworks plus the
+number  of  colours  your  backdrop  requires).   Try  to  use  low  screen
+resolutions.  This will speed up screen refresh.
+
+Double  strength  will  draw  all  the  lines twice as thick.  So they look
+brighter  and  give  a  better contrast to the backdrop image.  This option
+will slow down rendering a bit, though.
+
+Release  Notes will kill any "hanging notes" that may have occured during a
+buffer  overrun.   Buffer overruns can happen if the program is not able to
+handle  the  incoming  notes,  for  example when it is blocked by intuition
+menus or requesters.
+
+Any  errors will be reported either in intuition requesters or to the shell
+window you started the program from.
+
+You  can  easily  change the MIDI link.  By entering a non existing cluster
+(link)  name, you can create a new one.  So it is possible to have multiple
+Fireworks  tasks  show different MIDI files.  Or you can show the same MIDI
+fireworks with multiple tasks in different windows with different backdrops
+;-)
+
+
+CLI Usage
+---------
+
+The template for the shell command line is as follows
+
+L=LINK/K,M=MODE/K/N,WX=WINX/K/N,WY=WINY/K/N,WW=WINW/K/N,WH=WINH/K/N,
+I=IMAGE/K,T=TILE/S,FS=FULLSCREEN/S,D=DOUBLE/S,SP=SPARKS/S,GM/S,GS/S,XG/S,MT32/S,
+NH=NOHOOKS/S,NTS=NOTIMESTAMPING/S
+
+Description
+
+* L=LINK/K  (Keyword)
+
+The MIDI cluster to hook into.  Default is "out.0".  This will show you the
+notes  that  are  going  to any external MIDI hardware.  Ideal for use with
+playmf.
+
+"in.0"  would  show  you  all  notes  that are coming from an external MIDI
+interface at your serial port.
+
+* M=MODE/K/N   (Keyword, numeric argument)
+
+The rendering mode to use.  Currently there are three modes, numbered 1-3.
+- 1 is Laser Mode (straight lines, known from earlier Fireworks versions)
+- 2 is Pixel Mode (parabolic flight paths, but only pixels)
+- 3 is Fountain Mode (parabolic flight paths and true rays)
+Default is No. 3.
+
+* S=SENSITIVITY/K/N   (Keyword, numeric argument)
+
+The  sensitivity  setting  of  the  fireworks.  There are three modes which
+correspond  to  the  sensitivity  settings  in  the  Intuition  Menu.  High
+sensitivity means that notes will emit faster from the center.
+- 1 is Max Sensitivity
+- 2 is Med Sensitivity
+- 3 is Min Sensitivity
+Default is No. 1.
+
+* WX=WINX/K/N, WY=WINY/K/N   (Keywords, numeric arguments)
+
+The initial window position.
+
+* WW=WINW/K/N, WH=WINH/K/N   (Keywords, numeric arguments)
+
+The  initial  window  size.   The  width  and  height  refers  to the inner
+dimensions and may vary between 64x64 and 1024x1024.
+
+* I=IMAGE/K
+
+Filename  of  any  image format that datatypes is able to load.  It will be
+put as a backdrop image into the fireworks window.  Astronomy images or the
+city  skylines  in moonshine make a good view.  The pictures will be scaled
+to fit the window.
+
+* T=TILE/S
+
+Tile  the  backdrop  image  instead  of scaling it.  This is what Workbench
+usually does with its backdrops.
+
+* GS=FULLSCREEN/S
+
+Open  the fireworks on a separate screen as a backdrop window.  This option
+will bring up an ASL screenmode requester.
+
+* D=DOUBLE/S
+
+Draw all lines in double strength.
+
+* SP=SPARKS/S
+
+Adds glittering sparks to the fireworks.
+
+* GM/S, GS/S, XG/S, MT32/S   (switches)
+
+these  correspond  to  the  same  switches  of PlayMF.  Please refer to the
+PlayMF documentation for more details.
+
+* NH=NOHOOKS/S   (switch)
+
+disables  the filetype recognition hooks in ASL filerequesters.  Will speed
+things  up  and  fixes  compatibility  problems with some ASL replacements.
+Make  sure to set this switch when using Mui-Asl (at least until the author
+fixes the problem).
+
+* NTS=NOTIMESTAMPING/S   (switch)
+
+Disables  MIDI  timestamping.   Timestamping  makes Fireworks recognize the
+exact  timing  of  all  MIDI  messages.  So the fireworks rendering becomes
+exact,  even  if it runs on very low frame rates.  Even after fireworks has
+been  suspended  for several seconds (e.g.  by other task or user activity)
+the notes are still shown in their correct timing relations.
+
+This  new  feature slows down fireworks very slightly.  So it has been made
+optional an can be disabled with this switch.
+
+
+General Tips
+------------
+
+This  program is optimized for use with Picasso96 and Cybergraphics V3.  It
+will work on ECS/AGA systems as well, but maybe slower.
+
+If  you  use Cybergraphics V3, set the DRAGGING=NO tooltype in your monitor
+driver. Otherwise the program will be slow as hell.
+
+The  program  uses "intelligent" timing routines that adapt to the speed of
+your  screen  refresh.   The  program  runs  on a very low priority for not
+disturbing your multitasking too much.
+
+If  you have AGA only, try reducing the number of colours on your WB screen
+for faster screen refresh.
+
+The  fireworks  runs only smoothly if it can handle its graphics completely
+with  the  onboard blitter of the graphics board.  If you use Cybergraphics
+V3, please enable the option to keep BitMaps in the graphic card's RAM (set
+DRAGGING=NO tooltype in the monitor driver).
+
+Unload  any large workbench backdrops.  They are likely to eat a lot of the
+graphic board's RAM.  Close other screens on your Gfx Board to increase the
+amount  of  free graphics RAM.  This will allow the program to place larger
+bitmaps  inside  your  graphics board.  Then you can make the window larger
+without losing much refresh speed.
+
+Better don't use 24 bit modes.  They use a lot of RAM and require more data
+to be transferred over the bus and blitter.
+
+Do  not  load  dithered  images  into Fireworks (turn off dithering in your
+picture  or  JFIF  datatype when using CLUT modes).  Dithered pictures will
+look awful when being scaled, especially when scaled to smaller sizes.
+
+
+Bugs
+----
+
+well, seems to work fine, except...
+
+*  major instability problem on some Cybergraphics system.  Especially when
+resizing the window. Still looking for the problem.
+
+*  The  ASL  filerequester  of  Fireworks  uses callback hooks for filetype
+recognition.   The Mui-ASL replacement has not implemented this, so it will
+show _NO_ files at all!  Ask the author to fix this (or at least show _all_
+files).
+
+* the program may be very slow on AGA machines.  If the CPU is used to copy
+the  BitMaps  from  RAM to the graphics board, you have lost.  In this case
+your  computer  will  become  slow  as hell.  However if you own one of the
+latest  releases of Picasso96 or Cybergraphics, all the blitting is done in
+the RAM of your graphics board using the onboard blitter.  -> Faaaast!
+
+
+History
+-------
+
+Release 1-2: this program was not yet written.
+
+Release 3: initial release of this program
+
+Release 4: the program will stop its window refresh when no notes
+           have to be displayed (idle mode).
+
+           reduced the probability of "hanging" notes, especially
+           after an MIDI buffer overflow occurs.
+
+           coordinate calculation is a lot faster now. It uses
+           integer maths and precalculated scale factors now.
+
+           color palette is now a 360 degree rotation on the HSV
+           color wheel (saturation 75%, brightness 100%).
+
+           added WINW, WINH keywords
+
+           added "intelligent" scheduler that will force a display
+           refresh every 1/2 second if any other task runs at a
+           higher priority. Make sure to set Fireworks to NOSCHEDULE
+           ABOVE if you use Executive.
+
+           improved performance on Cybergraphics systems (probably).
+           forgot to use BMF_MINPLANES. Picasso96 tolerated this.
+
+           added IMAGE keyword. Load datatype images as backdrops
+           into the fireworks window! Also added menu options to
+           remove and load images.
+
+           active MIDI cluster is now shown in window title.
+
+           Window title now tells you when Fireworks is in idle mode.
+
+           added menu option to release notes (useful when notes are
+           hanging after a buffer overrun or similar).
+
+           when changing MIDI the link, all notes will be flushed.
+
+           added menu option to enable double strength line rendering.
+
+Release 5: major internal redesign
+
+           added TILE switch and menu option
+
+           added DOUBLE switch
+
+           added FULLSCREEN switch and menu option and an ASL
+           screenmode requester
+
+           added drag and drop support for backdrop images.
+
+           added drag and drop support for MIDI files.
+           (requires PlayMF)
+
+           added menu options to play and stop MIDI files.
+
+           Fireworks became massively multithreaded. Most requesters
+           are asynchronous. The main program continues to run if you
+           are selecting a file/screenmode or viewing a message.
+
+Release 6: improved screen palette (black blackground)
+
+           added modular (multi-mode) design to support multiple modes.
+           Added two new modes (Pixel and Fountain mode). This stuff
+           is true high tech. So it may (or may not) contain bugs.
+
+Release 7: added sensitivity switch and menu options.
+
+           fixed some minor display bugs of the fireworks
+
+           optimized and improved the fireworks code
+
+           added glittering sparks to the fireworks
+
+           modularized the source code a bit
+
+           added MIDI initialisation switches and menu options
+
+           added "psychedelic" section to this documentation. hehe.
+
+           added menu option and switch to disable ASL hooks.
+
+           fixed potential crash problem in Drag&Drop support
+
+           implemented MIDI timestamping. This makes the recognition
+           of note timing and length quite exact, even at low frame
+           rates.
+
+           implemented saving of preferences
+
+           added menu options to hide title bar and mouse pointer
+
+
+Future
+------
+
+* support MIDI volumes
+
+* tool type support.
+
+* palette preferences
+
+* allow setting the center point and angle view.
+
+
+See Also
+--------
+
+"playmf".   A Standard MIDI file player using the CAMD library.  Originally
+provided as an example by Commodore.  Now overhauled, bugfixed and improved
+by me.
+
+PianoMeter  -  an  experimental  graphical note visualisation utility using
+BOOPSI  classes.   Try  it!   It  is  a real eyecandy ;-) Based on the "vu"
+example in the CAMD developer package.
+
+GMPlay  1.3 - available on Aminet.  Uses your CPU to play MIDI music.  Does
+not require any MIDI synthesizer, but lots of CPU power and RAM.
+
+
+Contact
+-------
+
+for comments, bug reports and suggestions:
+
+The author: Christian Buchner
+
+            flowerp@eikon.e-technik.tu-muenchen.de
+
+
+Greetings
+---------
+
+Rafai Mantiuk - for the BCC precompiler that allows to programm
+                MUI/BOOPSI classes with C++ syntax.
+
+Tim Stack     - for his excellent Betty GUI system. This really
+                deserves more public attention. My future application
+                programs will be based on Betty. 
+                see http://www.cs.utah.edu/~stack/betty/
+
+CDTV (Tino    - for organizing the cool computer meetings in Erfurt
+Wildenhain)     and for testing PlayMF and PianoMeter and for his
+                suggestions
+
+Martin Gierich- for his midi.datatype which is based on the original
+                "playmf" as well. However it is not reentrant and
+                will crash when loading the second MIDI file.
+                Hey, have a look at my playmf source code! ;-)
+
+Timm Müller   - aka Captain Bifat. For MysticView, render.library
+                and for liking my Fireworks ;-)
