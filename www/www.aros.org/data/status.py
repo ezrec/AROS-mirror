@@ -3,6 +3,9 @@ import string, os
 from util import Page, Heading, Paragraph, MyDataList, MyStackedBarChart, \
     Paragraph, Href, Image, lightBlue, darkBlue, WHITE, BR
 
+def cmpNoCase (s1, s2):
+    return cmp (string.lower (s1), string.lower (s2))
+
 def gen ():
     '''Create the status page. This page contains two images (jpg&png)
     with graphs of the sizes of repositories.'''
@@ -30,7 +33,7 @@ def gen ():
     )
 
     keys = jobs.jobs.keys ()
-    keys.sort ()
+    keys.sort (cmpNoCase)
     for key in keys:
 	lib = jobs.jobs[key]
 	data.append ((lib.longName,
