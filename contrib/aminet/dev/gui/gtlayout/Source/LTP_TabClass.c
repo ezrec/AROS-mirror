@@ -725,8 +725,16 @@ LTP_ObtainTabSize(struct IBox *Box,...)
 	return(Success);
 }
 
+#ifndef __AROS__
 ULONG SAVE_DS ASM
 LTP_TabClassDispatcher(REG(a0) struct IClass *class,REG(a2) Object *object,REG(a1) Msg msg)
+#else
+AROS_UFH3(ULONG, LTP_TabClassDispatcher,
+	  AROS_UFHA(struct IClass *, class, A0),
+	  AROS_UFHA(Object *, object, A2),
+	  AROS_UFHA(Msg, msg, A1)
+)
+#endif
 {
 	switch(msg->MethodID)
 	{

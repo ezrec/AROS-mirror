@@ -21,8 +21,16 @@
 
 /*****************************************************************************/
 
+#ifndef __AROS__
 ULONG SAVE_DS ASM
 LTP_DefaultEditRoutine(REG(a0) struct Hook *Hook,REG(a2) struct SGWork *Work,REG(a1) Msg msg)
+#else
+AROS_UFH3(ULONG, LTP_DefaultEditRoutine,
+	  AROS_UFHA(struct Hook *, Hook, A0),
+	  AROS_UFHA(struct SGWork *, Work, A2),
+	  AROS_UFHA(Msg, msg, A1)
+)
+#endif
 {
 	struct Hook *Validate;
 	LayoutHandle *Handle;

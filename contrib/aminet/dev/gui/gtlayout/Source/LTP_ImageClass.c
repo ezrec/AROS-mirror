@@ -158,9 +158,16 @@ ImageClassDispose(struct IClass *class,Object *object,Msg msg)
 
 /*****************************************************************************/
 
-
+#ifndef __AROS__
 ULONG SAVE_DS ASM
 LTP_ImageDispatch(REG(a0) struct IClass *class,REG(a2) Object *object,REG(a1) Msg msg)
+#else
+AROS_UFH3(ULONG, LTP_ImageDispatch,
+	  AROS_UFHA(struct IClass *, class, A0),
+	  AROS_UFHA(Object *, object, A2),
+	  AROS_UFHA(Msg, msg, A1)
+)
+#endif
 {
 	switch(msg->MethodID)
 	{

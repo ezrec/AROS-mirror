@@ -439,6 +439,7 @@
 *
 */
 
+#ifndef __AROS__
 /*****************************************************************************/
 
 	// First executable location of this library, must return an
@@ -479,11 +480,9 @@ LibInit(
         
 	GTLayoutBase->ExecBase = (struct Library *)ExecBase;
 
-#ifndef __AROS__
 #if !defined(CPU_ANY) && !defined(CPU_any)
 	if(ExecBase->AttnFlags & AFF_68020)
 #endif	// CPU_ANY
-#endif
 
 
 	if(ExecBase->LibNode.lib_Version >= 37)
@@ -531,7 +530,7 @@ LibOpen(REG(d0) ULONG version,
 
 	if(openCnt == 0)
 	{
-		if(!LT_Init(SysBase))
+		if(!LT_Init())
 		{
 			LT_Exit();
 
@@ -592,11 +591,7 @@ LibClose(REG(a6) struct GTLayoutBase *GTLayoutBase)
 	ReleaseSemaphore(&GTLayoutBase->LockSemaphore);
 
 	if(GTLayoutBase->LibNode.lib_OpenCnt == 0 && (GTLayoutBase->LibNode.lib_Flags & LIBF_DELEXP))
-#ifdef __AROS__
-                result = GTLayout_LibExpunge(GTLayoutBase);
-#else
                 result = LibExpunge(GTLayoutBase);
-#endif
 	else
 		result = NULL;
 
@@ -614,56 +609,8 @@ LibNull(VOID)
 /*****************************************************************************/
 
 
-#ifdef __AROS__
-extern const void *  GTLayout_LT_LevelWidth();
-extern const void *  GTLayout_LT_DeleteHandle();
-extern const void *  GTLayout_LT_CreateHandle();
-extern const void *  GTLayout_LT_CreateHandleTagList();
-extern const void *  GTLayout_LT_Rebuild();
-extern const void *  GTLayout_LT_HandleInput();
-extern const void *  GTLayout_LT_BeginRefresh();
-extern const void *  GTLayout_LT_EndRefresh();
-extern const void *  GTLayout_LT_GetAttributesA();
-extern const void *  GTLayout_LT_SetAttributesA();
-extern const void *  GTLayout_LT_AddA();
-extern const void *  GTLayout_LT_NewA();
-extern const void *  GTLayout_LT_EndGroup();
-extern const void *  GTLayout_LT_LayoutA();
-extern const void *  GTLayout_LT_LayoutMenusA();
-extern const void *  GTLayout_LT_LabelWidth();
-extern const void *  GTLayout_LT_LabelChars();
-extern const void *  GTLayout_LT_LockWindow();
-extern const void *  GTLayout_LT_UnlockWindow();
-extern const void *  GTLayout_LT_DeleteWindowLock();
-extern const void *  GTLayout_LT_ShowWindow();
-extern const void *  GTLayout_LT_Activate();
-extern const void *  GTLayout_LT_PressButton();
-extern const void *  GTLayout_LT_GetCode();
-extern const void *  GTLayout_LT_GetIMsg();
-extern const void *  GTLayout_LT_ReplyIMsg();
-extern const void *  GTLayout_LT_BuildA();
-extern const void *  GTLayout_LT_RebuildTagList();
-extern const void *  GTLayout_LT_UpdateStrings();
-
-#ifdef DO_MENUS
-extern const void *  GTLayout_LT_DisposeMenu();
-extern const void *  GTLayout_LT_NewMenuTemplate();
-extern const void *  GTLayout_LT_NewMenuTagList();
-extern const void *  GTLayout_LT_MenuControlTagList();
-extern const void *  GTLayout_LT_GetMenuItem();
-extern const void *  GTLayout_LT_FindMenuCommand();
-#else
-#endif /* DO_MENUS */
-
-extern const void *  GTLayout_LT_NewLevelWidth();
-extern const void *  GTLayout_LT_Refresh();
-extern const void *  GTLayout_LT_CatchUpRefresh();
-extern const void *  GTLayout_LT_GetWindowUserData();
-#endif
-
 STATIC const APTR LibVectors[] =
 {
-#ifndef __AROS__
 	LibOpen,
 	LibClose,
 	LibExpunge,
@@ -722,67 +669,6 @@ STATIC const APTR LibVectors[] =
 	LT_CatchUpRefresh,
 	LT_GetWindowUserData,
 
-#else
-	/* AROS */
-	GTLayout_LibOpen,
-	GTLayout_LibClose,
-	GTLayout_LibExpunge,
-	GTLayout_LibNull,
-	GTLayout_LT_LevelWidth,
-	GTLayout_LT_DeleteHandle,
-	GTLayout_LT_CreateHandle,
-	GTLayout_LT_CreateHandleTagList,
-	GTLayout_LT_Rebuild,
-	GTLayout_LT_HandleInput,
-	GTLayout_LT_BeginRefresh,
-	GTLayout_LT_EndRefresh,
-	GTLayout_LT_GetAttributesA,
-	GTLayout_LT_SetAttributesA,
-	GTLayout_LT_AddA,
-	GTLayout_LT_NewA,
-	GTLayout_LT_EndGroup,
-	GTLayout_LT_LayoutA,
-	GTLayout_LT_LayoutMenusA,
-	GTLayout_LibNull,	/* There used to be a FRACTION_KIND support routine here. */
-	GTLayout_LibNull,	/* There used to be a FRACTION_KIND support routine here. */
-	GTLayout_LibNull,	/* There used to be a FRACTION_KIND support routine here. */
-	GTLayout_LT_LabelWidth,
-	GTLayout_LT_LabelChars,
-	GTLayout_LT_LockWindow,
-	GTLayout_LT_UnlockWindow,
-	GTLayout_LT_DeleteWindowLock,
-	GTLayout_LT_ShowWindow,
-	GTLayout_LT_Activate,
-	GTLayout_LT_PressButton,
-	GTLayout_LT_GetCode,
-	GTLayout_LT_GetIMsg,
-	GTLayout_LT_ReplyIMsg,
-	GTLayout_LT_BuildA,
-	GTLayout_LT_RebuildTagList,
-	GTLayout_LT_UpdateStrings,
-
-#ifdef DO_MENUS
-	GTLayout_LT_DisposeMenu,
-	GTLayout_LT_NewMenuTemplate,
-	GTLayout_LT_NewMenuTagList,
-	GTLayout_LT_MenuControlTagList,
-	GTLayout_LT_GetMenuItem,
-	GTLayout_LT_FindMenuCommand,
-#else
-	GTLayout_LibNull,
-	GTLayout_LibNull,
-	GTLayout_LibNull,
-	GTLayout_LibNull,
-	GTLayout_LibNull,
-	GTLayout_LibNull,
-#endif /* DO_MENUS */
-
-	GTLayout_LT_NewLevelWidth,
-	GTLayout_LT_Refresh,
-	GTLayout_LT_CatchUpRefresh,
-	GTLayout_LT_GetWindowUserData,
-#endif
-
 	(APTR)-1
 };
 
@@ -829,3 +715,4 @@ const struct Resident RomTag =
 	VSTRING,
 	&LibInitTab
 };
+#else /* AROS */

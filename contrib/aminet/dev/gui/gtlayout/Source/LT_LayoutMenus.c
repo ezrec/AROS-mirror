@@ -21,6 +21,7 @@
 
 /*****************************************************************************/
 
+#ifndef __AROS__
 struct Menu *
 LT_LayoutMenus(LayoutHandle *handle,struct NewMenu *menuTemplate,...)
 {
@@ -33,6 +34,7 @@ LT_LayoutMenus(LayoutHandle *handle,struct NewMenu *menuTemplate,...)
 
 	return(Result);
 }
+#endif
 
 
 /*****************************************************************************/

@@ -25,6 +25,11 @@
 #include <clib/locale_protos.h>
 #include <pragmas/locale_pragmas.h>
 
+#ifdef __AROS__
+#include <aros/symbolsets.h>
+#include LC_LIBDEFS_FILE
+#endif
+
 /*****************************************************************************/
 
 #include "Assert.h"
@@ -85,22 +90,18 @@ struct ClassInitEntry
 /*****************************************************************************/
 
 BOOL LIBENT
-#ifdef __AROS__
-LT_Init(struct ExecBase * AbsExecBase)
-#else
 LT_Init(VOID)
-#endif
 {
 	BOOL success = TRUE;
 
-	#ifndef LINK_LIB
+#ifndef LINK_LIB
+# ifndef __AROS__
 	{
-#ifndef __AROS__
 		extern struct Library __far * AbsExecBase;
-#endif
 		SysBase = AbsExecBase;
 	}
-	#endif	// LINK_LIB
+# endif
+#endif	// LINK_LIB
 
 	if(SysBase == NULL
 #ifndef __AROS__
@@ -346,3 +347,8 @@ LT_Exit(VOID)
 		IntuitionBase = NULL;
 	}
 }
+
+#ifdef __AROS__
+ADD2INIT(LT_Init, 0);
+ADD2EXIT(LT_Exit, 0);
+#endif

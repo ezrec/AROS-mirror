@@ -83,6 +83,7 @@ LTP_ReplaceLabelShortcut(LayoutHandle *Handle,ObjectNode * Node)
 /*****************************************************************************/
 
 
+#ifndef __AROS__
 VOID
 LT_AddL(LayoutHandle *handle,LONG type,ULONG labelID,LONG id,...)	/* link library only */
 {
@@ -109,6 +110,7 @@ LT_AddL(LayoutHandle *handle,LONG type,ULONG labelID,LONG id,...)	/* link librar
 		va_end(varArgs);
 	}
 }
+#endif
 
 
 /*****************************************************************************/

@@ -2,6 +2,7 @@
 #include <exec/types.h>
 #include <proto/exec.h>
 
+#ifndef __AROS__
 APTR ASM AsmCreatePool(REG(d0) ULONG MemFlags,REG(d1) ULONG PuddleSize,REG(d2) ULONG ThreshSize,REG(a6) struct ExecBase *SysBase)
 {
 	return CreatePool(MemFlags, PuddleSize, ThreshSize);
@@ -19,3 +20,4 @@ VOID ASM AsmFreePooled(REG(a0) APTR PoolHeader,REG(a1) APTR Memory,REG(d0) ULONG
 {
 	FreePooled(PoolHeader, Memory, MemSize);
 }
+#endif

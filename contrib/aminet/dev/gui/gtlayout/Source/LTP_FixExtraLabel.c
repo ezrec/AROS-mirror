@@ -10,6 +10,9 @@
 #ifndef _GTLAYOUT_GLOBAL_H
 #include "gtlayout_global.h"
 #endif
+#ifndef _GTLAYOUT_INTERNAL_H
+#include "gtlayout_internal.h"
+#endif
 
 /*****************************************************************************/
 

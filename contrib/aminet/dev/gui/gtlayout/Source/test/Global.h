@@ -8,9 +8,7 @@
 #include <gtlayout.h>
 #include <utility/hooks.h>
 #ifdef __AROS__
-#include <aros/system.h>
-#include "../aros/arosspecific.h"
-#include "../aros/gtlayout_defines_aros.h"
+#include <proto/gtlayout.h>
 #else
 #include <gtlayout_protos.h>
 #endif

@@ -10,6 +10,14 @@
 #ifndef _GTLAYOUT_LIBPROTOS_H
 #define _GTLAYOUT_LIBPROTOS_H 1
 
+struct LayerMsg;
+
+#ifndef __AROS__
+#define TAGSPEC ...
+#else
+#define TAGSPEC Tag tag1, ...
+#endif
+
 /* gtlayout_lib.c */
 LONG ReturnError(VOID);
 
@@ -32,7 +40,15 @@ VOID LTP_AdjustMenuPosition(RootMenu *Root);
 ULONG LTP_Atol(STRPTR String);
 
 /* LTP_BackFillRoutine.c */
+#ifndef __AROS__
 VOID SAVE_DS ASM LTP_BackfillRoutine(REG(a0) struct Hook *Hook, REG(a2) struct RastPort *RPort, REG(a1) struct LayerMsg *Bounds);
+#else
+AROS_UFH3(void, LTP_BackfillRoutine,
+	  AROS_UFHA(struct Hook *, hook, A0),
+	  AROS_UFHA(struct RastPort *, RPort, A2),
+	  AROS_UFHA(struct LayerMsg *, Bounds, A1)
+);
+#endif
 
 /* LTP_BitMap.c */
 LONG LTP_GetDepth(struct BitMap *BitMap);
@@ -73,10 +89,26 @@ BOOL LTP_CreateMenuTemplate(RootMenu *Root, LONG *ErrorPtr, struct NewMenu *Menu
 ObjectNode *LTP_CreateObjectNode(LayoutHandle *handle, LONG type, ULONG id, STRPTR label);
 
 /* LTP_DefaultEditRoutine.c */
+#ifndef __AROS__
 ULONG SAVE_DS ASM LTP_DefaultEditRoutine(REG(a0) struct Hook *Hook, REG(a2) struct SGWork *Work, REG(a1) Msg msg);
+#else
+AROS_UFH3(ULONG, LTP_DefaultEditRoutine,
+	  AROS_UFHA(struct Hook *, Hook, A0),
+	  AROS_UFHA(struct SGWork *, Work, A2),
+	  AROS_UFHA(Msg, msg, A1)
+);
+#endif
 
 /* LTP_DefaultHistoryHook.c */
+#ifndef __AROS__
 ULONG SAVE_DS ASM LTP_DefaultHistoryHook(REG(a0) struct Hook *Hook, REG(a2) struct Gadget *Gadget, REG(a1) STRPTR NewString);
+#else
+AROS_UFH3(ULONG, LTP_DefaultHistoryHook,
+	  AROS_UFHA(struct Hook *, hook, A0),
+	  AROS_UFHA(struct Gadget *, gadget, A2),
+	  AROS_UFHA(STRPTR, NewString, A1)
+);
+#endif
 
 /* LTP_Delay.c */
 VOID LTP_Delay(ULONG Seconds, ULONG Micros);
@@ -166,10 +198,26 @@ BOOL LTP_GlyphSetup(struct LayoutHandle *Handle, struct TextAttr *TextAttr);
 VOID LTP_HandleHistory(struct SGWork *Work);
 
 /* LTP_HexEditRoutine.c */
+#ifndef __AROS__
 ULONG SAVE_DS ASM LTP_HexEditRoutine(REG(a0) struct Hook *hook, REG(a2) struct SGWork *sgw, REG(a1) Msg msg);
+#else
+AROS_UFH3(ULONG, LTP_HexEditRoutine,
+	  AROS_UFHA(struct Hook *, hook, A0),
+	  AROS_UFHA(struct SGWork *, sgw, A2),
+	  AROS_UFHA(Msg, msg, A1)
+);
+#endif
 
 /* LTP_ImageClass.c */
+#ifndef __AROS__
 ULONG SAVE_DS ASM LTP_ImageDispatch(REG(a0) struct IClass *class, REG(a2) Object *object, REG(a1) Msg msg);
+#else
+AROS_UFH3(ULONG, LTP_ImageDispatch,
+	  AROS_UFHA(struct IClass *, class, A0),
+	  AROS_UFHA(Object *, object, A2),
+	  AROS_UFHA(Msg, msg, A1)
+);
+#endif
 
 /* LTP_InitIText.c */
 VOID LTP_InitIText(RootMenu *Root, struct IntuiText *IText);
@@ -187,7 +235,15 @@ BOOL LTP_LayoutMenu(RootMenu *Root, LONG ExtraFront, LONG ExtraSpace);
 LONG LTP_QuerySliderSize(struct DrawInfo *dri, WORD Reference, WORD freedom, WORD useTicks);
 VOID LTP_LevelGadgetDrawLabel(LayoutHandle *Handle, ObjectNode *Node, BOOL FullRefresh);
 LONG LTP_GetCurrentLevel(ObjectNode *Node);
+#ifndef __AROS__
 ULONG SAVE_DS ASM LTP_LevelClassDispatcher(REG(a0) Class *class, REG(a2) Object *object, REG(a1) Msg msg);
+#else
+AROS_UFH3(ULONG, LTP_LevelClassDispatcher,
+	  AROS_UFHA(Class *, class, A0),
+	  AROS_UFHA(Object *, object, A2),
+	  AROS_UFHA(Msg, msg, A1)
+);
+#endif
 
 /* LTP_MakeItem.c */
 ItemNode *LTP_MakeItem(RootMenu *Root, struct NewMenu *Template);
@@ -206,13 +262,29 @@ VOID LTP_MoveToWindow(LayoutHandle *handle);
 RootMenu *LTP_NewMenu(struct Screen *Screen, struct TextAttr *TextAttr, struct Image *AmigaGlyph, struct Image *CheckGlyph, LONG *ErrorPtr);
 
 /* LTP_PasswordEditRoutine.c */
+#ifndef __AROS__
 ULONG SAVE_DS ASM LTP_PasswordEditRoutine(REG(a0) struct Hook *Hook, REG(a2) struct SGWork *Work, REG(a1) Msg msg);
+#else
+AROS_UFH3(ULONG, LTP_PasswordEditRoutine,
+	  AROS_UFHA(struct Hook *, Hook, A0),
+	  AROS_UFHA(struct SGWork *, Work, A2),
+	  AROS_UFHA(Msg, msg, A1)
+);
+#endif
 
 /* LTP_PlaceGroups.c */
 VOID LTP_PlaceGroups(LayoutHandle *handle, ObjectNode *group, LONG left, LONG top);
 
 /* LTP_PopupClass.c */
+#ifndef __AROS__
 ULONG SAVE_DS ASM LTP_PopupClassDispatcher(REG(a0) struct IClass *class, REG(a2) Object *object, REG(a1) Msg msg);
+#else
+AROS_UFH3(ULONG, LTP_PopupClassDispatcher,
+	  AROS_UFHA(struct IClass *, class, A0),
+	  AROS_UFHA(Object *, object, A2),
+	  AROS_UFHA(Msg, msg, A1)
+);
+#endif
 
 /* LTP_PrintBoxLine.c */
 BOOL LTP_PrintLinePadded(LayoutHandle *Handle, LONG Left, LONG Top, LONG Space, STRPTR Line, LONG Len, LONG textPen, LONG backPen);
@@ -266,7 +338,15 @@ VOID LTP_CopyFraction(STRPTR To, STRPTR From);
 
 /* LTP_TabClass.c */
 BOOL LTP_ObtainTabSize(struct IBox *Box, ...);
+#ifndef __AROS__
 ULONG SAVE_DS ASM LTP_TabClassDispatcher(REG(a0) struct IClass *class, REG(a2) Object *object, REG(a1) Msg msg);
+#else
+AROS_UFH3(ULONG, LTP_TabClassDispatcher,
+	  AROS_UFHA(struct IClass *, class, A0),
+	  AROS_UFHA(Object *, object, A2),
+	  AROS_UFHA(Msg, msg, A1)
+);
+#endif
 
 /* LT_Activate.c */
 VOID LIBENT LT_Activate(REG(a0) LayoutHandle *handle, REG(d0) LONG id);
@@ -274,14 +354,14 @@ VOID LIBENT LT_Activate(REG(a0) LayoutHandle *handle, REG(d0) LONG id);
 /* LT_Build.c */
 struct Window *LIBENT LT_BuildA(REG(a0) LayoutHandle *handle, REG(a1) struct TagItem *TagParams);
 VOID LTP_SelectInitialActiveGadget(LayoutHandle *Handle);
-struct Window *LT_Layout(LayoutHandle *handle, STRPTR title, struct IBox *bounds, LONG extraWidth, LONG extraHeight, ULONG IDCMP, LONG align, ...);
+struct Window *LT_Layout(LayoutHandle *handle, STRPTR title, struct IBox *bounds, LONG extraWidth, LONG extraHeight, ULONG IDCMP, LONG align, TAGSPEC);
 struct Window *LIBENT LT_LayoutA(REG(a0) LayoutHandle *handle, REG(a1) STRPTR title, REG(a2) struct IBox *bounds, REG(d0) LONG extraWidth, REG(d1) LONG extraHeight, REG(d2) ULONG IDCMP, REG(d3) LONG align, REG(a3) struct TagItem *TagParams);
-struct Window *LT_Build(LayoutHandle *Handle, ...);
+struct Window *LT_Build(LayoutHandle *Handle, TAGSPEC);
 APTR LIBENT LT_GetWindowUserData(REG(a0) struct Window *Window, REG(a1) APTR DefaultValue);
 
 /* LT_CreateHandle.c */
 LayoutHandle *LIBENT LT_CreateHandle(REG(a0) struct Screen *Screen, REG(a1) struct TextAttr *Font);
-LayoutHandle *LT_CreateHandleTags(struct Screen *Screen, ...);
+LayoutHandle *LT_CreateHandleTags(struct Screen *Screen, TAGSPEC);
 LayoutHandle *LIBENT LT_CreateHandleTagList(REG(a0) struct Screen *Screen, REG(a1) struct TagItem *TagList);
 
 /* LT_DeleteHandle.c */
@@ -295,7 +375,7 @@ VOID LIBENT LT_DisposeMenu(REG(a0) struct Menu *Menu);
 struct MenuItem *LIBENT LT_FindMenuCommand(REG(a0) struct Menu *Menu, REG(d0) UWORD MsgCode, REG(d1) UWORD MsgQualifier, REG(a1) struct Gadget *MsgGadget);
 
 /* LT_GetAttributes.c */
-LONG LT_GetAttributes(LayoutHandle *Handle, LONG ID, ...);
+LONG LT_GetAttributes(LayoutHandle *Handle, LONG ID, TAGSPEC);
 LONG LIBENT LT_GetAttributesA(REG(a0) LayoutHandle *Handle, REG(d0) LONG ID, REG(a1) struct TagItem *TagList);
 
 /* LT_GetCode.c */
@@ -320,7 +400,8 @@ LONG LIBENT LT_LabelWidth(REG(a0) LayoutHandle *handle, REG(a1) STRPTR label);
 LONG LIBENT LT_LabelChars(REG(a0) LayoutHandle *handle, REG(a1) STRPTR label);
 
 /* LT_LayoutMenus.c */
-struct Menu *LT_LayoutMenus(LayoutHandle *handle, struct NewMenu *menuTemplate, ...);
+struct Menu *LT_LayoutMenus(LayoutHandle *handle, struct NewMenu *menuTemplate, TAGSPEC);
+
 struct Menu *LIBENT LT_LayoutMenusA(REG(a0) LayoutHandle *handle, REG(a1) struct NewMenu *menuTemplate, REG(a2) struct TagItem *TagParams);
 
 /* LT_LevelWidth.c */
@@ -336,13 +417,13 @@ VOID LIBENT LT_DeleteWindowLock(REG(a0) struct Window *window);
 
 /* LT_MenuControlTagList.c */
 VOID LIBENT LT_MenuControlTagList(REG(a0) struct Window *Window, REG(a1) struct Menu *IntuitionMenu, REG(a2) struct TagItem *Tags);
-VOID LT_MenuControlTags(struct Window *Window, struct Menu *Menu, ...);
+VOID LT_MenuControlTags(struct Window *Window, struct Menu *Menu, TAGSPEC);
 
 /* LT_New.c */
 VOID LTP_ReplaceLabelShortcut(LayoutHandle *Handle, ObjectNode *Node);
-VOID LT_AddL(LayoutHandle *handle, LONG type, ULONG labelID, LONG id, ...);
-VOID LT_New(LayoutHandle *handle, ...);
-VOID LT_Add(LayoutHandle *Handle, LONG Type, STRPTR Label, LONG ID, ...);
+VOID LT_AddL(LayoutHandle *handle, LONG type, ULONG labelID, LONG id, TAGSPEC);
+VOID LT_New(LayoutHandle *handle, TAGSPEC);
+VOID LT_Add(LayoutHandle *Handle, LONG Type, STRPTR Label, LONG ID, TAGSPEC);
 VOID LIBENT LT_AddA(REG(a0) LayoutHandle *Handle, REG(d0) LONG Type, REG(d1) STRPTR Label, REG(d2) LONG ID, REG(a1) struct TagItem *TagList);
 VOID LIBENT LT_NewA(REG(a0) LayoutHandle *handle, REG(a1) struct TagItem *tagList);
 VOID LIBENT LT_EndGroup(REG(a0) LayoutHandle *handle);
@@ -360,7 +441,7 @@ BOOL LIBENT LT_PressButton(REG(a0) LayoutHandle *handle, REG(d0) LONG id);
 /* LT_Rebuild.c */
 VOID LTP_Erase(LayoutHandle *Handle);
 BOOL LIBENT LT_RebuildTagList(REG(a0) LayoutHandle *handle, REG(d0) BOOL clear, REG(a1) struct TagItem *TagParams);
-BOOL LT_RebuildTags(LayoutHandle *Handle, BOOL Clear, ...);
+BOOL LT_RebuildTags(LayoutHandle *Handle, BOOL Clear, TAGSPEC);
 BOOL LIBENT LT_Rebuild(REG(a0) LayoutHandle *handle, REG(a1) struct IBox *bounds, REG(a2) LONG extraWidth, REG(d0) LONG extraHeight, REG(d1) BOOL clear);
 
 /* LT_Refresh.c */
@@ -370,7 +451,7 @@ VOID LIBENT LT_Refresh(REG(a0) LayoutHandle *handle);
 VOID LIBENT LT_CatchUpRefresh(REG(a0) LayoutHandle *handle);
 
 /* LT_SetAttributes.c */
-VOID LT_SetAttributes(LayoutHandle *handle, LONG id, ...);
+VOID LT_SetAttributes(LayoutHandle *handle, LONG id, TAGSPEC);
 VOID LTP_AddAllAndRefreshThisGadget(LayoutHandle *Handle, struct Gadget *Gadget);
 VOID LTP_FixState(LayoutHandle *Handle, BOOL State, struct Gadget *Gadget, UWORD Bit);
 BOOL LTP_NotifyPager(LayoutHandle *Handle, LONG ID, LONG Page);
@@ -381,5 +462,8 @@ VOID LIBENT LT_ShowWindow(REG(a0) LayoutHandle *handle, REG(a1) BOOL activate);
 
 /* LT_UpdateStrings.c */
 VOID LIBENT LT_UpdateStrings(REG(a0) LayoutHandle *Handle);
+
+LONG min(LONG a, LONG b);
+LONG max(LONG a, LONG b);
 
 #endif	/* _GTLAYOUT_LIBPROTOS_H */

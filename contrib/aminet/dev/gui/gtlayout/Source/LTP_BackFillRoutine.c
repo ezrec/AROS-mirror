@@ -22,12 +22,20 @@ struct LayerMsg
 };
 
 
+#ifndef __AROS__
 VOID SAVE_DS ASM
 LTP_BackfillRoutine(
 	REG(a0) struct Hook *		Hook,
 	REG(a2) struct RastPort *	RPort,
 	REG(a1) struct LayerMsg *	Bounds
 )
+#else
+AROS_UFH3(void, LTP_BackfillRoutine,
+	  AROS_UFHA(struct Hook *, Hook, A0),
+	  AROS_UFHA(struct RastPort *, RPort, A2),
+	  AROS_UFHA(struct LayerMsg *, Bounds, A1)
+)
+#endif
 {
 	LayoutHandle *Handle = (LayoutHandle *)Hook->h_Data;
 

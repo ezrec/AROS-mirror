@@ -3,8 +3,6 @@
 #endif
 
 #include <aros/system.h>
-#include "aros/arosspecific.h"
-#include "aros/gtlayout_defines_aros.h"
 
 /*****************************************************************************/
 
@@ -24,6 +22,26 @@ LT_CreateHandleTags(struct Screen *Screen, Tag tag1,...)
 	AROS_SLOWSTACKTAGS_PRE(tag1)
 	retval = LT_CreateHandleTagList(Screen,AROS_SLOWSTACKTAGS_ARG(tag1));
 	AROS_SLOWSTACKTAGS_POST
+}
+#undef AROS_TAGRETURNTYPE
+
+#define AROS_TAGRETURNTYPE VOID
+VOID
+LT_AddL(LayoutHandle *handle,LONG type,ULONG labelID,LONG id, Tag tag1, ...)
+{
+	if(handle)
+	{
+		if(handle->LocaleHook)
+		{
+			STRPTR label;
+
+			label = (STRPTR)CallHookPkt(handle->LocaleHook,handle,(APTR)labelID);
+
+			LT_AddA(handle,type,label,id,AROS_SLOWSTACKTAGS_ARG(tag1));
+		}
+		else
+			handle->Failed = TRUE;
+	}
 }
 #undef AROS_TAGRETURNTYPE
 
@@ -66,6 +84,16 @@ LT_Layout(LayoutHandle *handle,STRPTR title,struct IBox *bounds,LONG extraWidth,
 		TAG_MORE,AROS_SLOWSTACKTAGS_ARG(tag1));
 	AROS_SLOWSTACKTAGS_POST
 
+}
+#undef AROS_TAGRETURNTYPE
+
+#define AROS_TAGRETURNTYPE struct Menu *
+struct Menu *
+LT_LayoutMenus(LayoutHandle *handle,struct NewMenu *menuTemplate,Tag tag1,...)
+{
+        AROS_SLOWSTACKTAGS_PRE(tag1)
+        retval = LT_LayoutMenusA(handle,menuTemplate,AROS_SLOWSTACKTAGS_ARG(tag1));
+        AROS_SLOWSTACKTAGS_POST
 }
 #undef AROS_TAGRETURNTYPE
 

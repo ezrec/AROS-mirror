@@ -68,12 +68,17 @@ VOID kprintf(STRPTR,...);
 
 /*****************************************************************************/
 
-
+#ifndef __AROS__
 APTR ASM AsmCreatePool(REG(d0) ULONG MemFlags,REG(d1) ULONG PuddleSize,REG(d2) ULONG ThreshSize,REG(a6) struct Library *SysBase);
 VOID ASM AsmDeletePool(REG(a0) APTR PoolHeader,REG(a6) struct Library *SysBase);
 APTR ASM AsmAllocPooled(REG(a0) APTR PoolHeader,REG(d0) ULONG Size,REG(a6) struct Library *SysBase);
 VOID ASM AsmFreePooled(REG(a0) APTR PoolHeader,REG(a1) APTR Memory,REG(d0) ULONG MemSize,REG(a6) struct Library *SysBase);
-
+#else
+#define AsmCreatePool(MemFlags,PuddleSize,TreshSize,SysBase) CreatePool(MemFlags,PuddleSize,TreshSize)
+#define AsmDeletePool(PoolHeader,SysBase) DeletePool(PoolHeader)
+#define AsmAllocPooled(PoolHeader,Size,SysBase) AllocPooled(PoolHeader,Size)
+#define AsmFreePooled(PoolHeader,Memory,MemSize,SysBase) FreePooled(PoolHeader,Memory,MemSize)
+#endif
 
 /*****************************************************************************/
 

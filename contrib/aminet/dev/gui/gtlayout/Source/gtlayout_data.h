@@ -17,7 +17,8 @@ extern struct Library *		IntuitionBase;
 extern struct Library *		GfxBase;
 extern struct Library *		UtilityBase;
 #else
-extern struct ExecBase *	SysBase;
+#include <proto/exec.h>
+/* SysBase is inited and defined by libinit in AROS */
 extern struct IntuitionBase *	IntuitionBase;
 extern struct GfxBase *		GfxBase;
 extern struct UtilityBase *	UtilityBase;

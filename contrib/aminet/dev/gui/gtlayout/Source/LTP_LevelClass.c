@@ -1261,9 +1261,16 @@ LTP_GetCurrentLevel(ObjectNode *Node)
 
 /*****************************************************************************/
 
-
+#ifndef __AROS__
 ULONG SAVE_DS ASM
 LTP_LevelClassDispatcher(REG(a0) Class *class,REG(a2) Object *object,REG(a1) Msg msg)
+#else
+AROS_UFH3(ULONG, LTP_LevelClassDispatcher,
+	  AROS_UFHA(Class *, class, A0),
+	  AROS_UFHA(Object *, object, A2),
+	  AROS_UFHA(Msg, msg, A1)
+)
+#endif
 {
 	ULONG result;
 

@@ -14,8 +14,6 @@
 #ifndef LINK_LIB
 #ifndef __AROS__
 struct Library * SysBase;
-#else
-struct ExecBase * SysBase;
 #endif
 #endif /* !LINK_LIB */
 

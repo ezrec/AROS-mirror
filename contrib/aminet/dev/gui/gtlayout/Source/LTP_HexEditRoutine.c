@@ -23,8 +23,16 @@
 
 #ifdef DO_HEXHOOK	/* Support code */
 
+#ifndef __AROS__
 ULONG SAVE_DS ASM
 LTP_HexEditRoutine(REG(a0) struct Hook *hook,REG(a2) struct SGWork *sgw,REG(a1) Msg msg)
+#else
+AROS_UFH3(ULONG, LTP_HexEditRoutine,
+	  AROS_UFHA(struct Hook *, hook, A0),
+	  AROS_UFHA(struct SGWork *, sgw, A2),
+	  AROS_UFHA(Msg, msg, A1)
+)
+#endif
 {
 	LayoutHandle *handle;
 	ObjectNode *node;

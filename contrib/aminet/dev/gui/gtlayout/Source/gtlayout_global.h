@@ -15,6 +15,13 @@
 #define ASM	__asm
 #define REG(x)	register __ ## x
 #define LIBENT	SAVE_DS ASM
+#else
+#define SAVE_DS
+#define ASM
+#define REG(x)
+#define LIBENT
+#define __stdargs
+#define __chip
 #endif
 
 /****************************************************************************/
@@ -57,12 +64,7 @@
 #endif	// _GTLAYOUT_DATA_H
 
 #ifndef _GTLAYOUT_LIBPROTOS_H
-#ifndef __AROS__
 #include "gtlayout_libprotos.h"
-#else
-#include "aros/gtlayout_defines_aros.h"
-#include "aros/gtlayout_libprotos_aros.h"
-#endif
 #endif	// _GTLAYOUT_LIBPROTOS_H
 
 /****************************************************************************/

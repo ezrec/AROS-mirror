@@ -1,40 +1,5 @@
 include $(TOP)/config/make.cfg
 
-MODULE     := gtlayout.library
-STATIC_LIB := $(AROS_LIB)/libgtlayout.a
-
-LOCALINCLUDES = -I. -I../Include
-
-LIBS := -L$(LIBDIR) -lamiga -lgtlayout
-#Please leave the linklibs in that order. I could not get the app to work if I changed
-#the order of the linklibs. S.
-APP_LIBS := -L$(LIBDIR) -lgtlayout -lamiga -lrom -larosm -lautoinit
-
-
-$(INCDIR)/gtlayout.h : aros/gtlayout.h
-	@$(ECHO) Copying $^ ...
-	@$(CP) $^ $@
-
-$(INCDIR)/defines/gtlayout.h : aros/gtlayout_defines.h
-	@$(ECHO) Copying $^ ...
-	@$(CP) $^ $@
-
-$(INCDIR)/proto/gtlayout.h : aros/gtlayout_proto.h
-	@$(ECHO) Copying $^ ...
-	@$(CP) $^ $@
-
-
-$(OBJDIR)/aros_src/%_aros.c : %.c
-	@$(ECHO) Generating $@...
-	@$(ARCHTOOL) -R aros/gtlayout_pragmas_aros.h  $^ $@ aros/gtlayout_defines_aros.h >/dev/null
-
-
-
-$(OBJDIR)/test/%.o : test/%.c
-	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES)"
-
-
-
 API_SOURCE = \
 	LT_Activate \
 	LT_Build \
@@ -72,10 +37,6 @@ UFC_SOURCE = \
 	LTP_DefaultEditRoutine \
 	LTP_BackFillRoutine \
 	LTP_PasswordEditRoutine
-
-OTHERS = gtlayout_lib
-
-INTERMEDIATES = $(foreach f,$(API_SOURCE) $(UFC_SOURCE) $(OTHERS),$(OBJDIR)/aros_src/$(f)_aros.c)
 
 FILES = \
 	LTP_AddGadgets \
@@ -140,69 +101,42 @@ FILES = \
 	LTP_SPrintf \
 	LTP_Storage \
 	LTP_TabClass \
-	min_max \
-	asmpoolfunctions
+	min_max
+
+OTHERS := gtlayout_data
 
 LINKLIB_FILES = \
 	varargfuncs
 
-DEPS := $(DEPS) $(foreach f,$(FILES) $(LINKLIB_FILES) $(OTHERS) $(UFC_SOURCE) $(API_SOURCE),$(OBJDIR)/$(f).d)
+#MM- aminet-dev-gui-gtlayout : aminet-dev-gui-gtlayout-test
+#MM aminet-dev-gui-gtlayout-test : linklibs-aminet-dev-gui-gtlayout
 
-#MM- aminet-dev-gui-gtlayout : linklibs-aminet-dev-gui-gtlayout
+#MM- aminet-dev-gui-gtlayout-includes : \
+#MM      linklibs-aminet-dev-gui-gtlayout-includes
+#MM- aminet-dev-gui-gtlayout-clean : \
+#MM      aminet-dev-gui-gtlayout-test-clean \
+#MM      linklibs-aminet-dev-gui-gtlayout-clean
+
 #MM linklibs-aminet-dev-gui-gtlayout : linklibs
 
-#First all intermediate files MUST be created so there is a 'defines' file!
-linklibs-aminet-dev-gui-gtlayout: setup-aminet-dev-gui-gtlayout \
-    includes-copy $(INTERMEDIATES) $(STATIC_LIB) $(AROS_LIBS)/$(MODULE) \
-    $(TESTDIR)/gtlayout_test
+%build_module mmake=linklibs-aminet-dev-gui-gtlayout \
+    modname=gtlayout modtype=library \
+    files="$(FILES) $(OTHERS) $(UFC_SOURCE) $(API_SOURCE) $(LINKLIB_FILES)" \
+    linklibfiles=$(LINKLIB_FILES) uselibs=rom \
+    conffile=lib.conf
 
-includes-copy: $(INCDIR)/gtlayout.h $(INCDIR)/proto/gtlayout.h $(INCDIR)/defines/gtlayout.h
+#MM linklibs-aminet-dev-gui-gtlayout-includes : gtlayout-includes-copy
+#MM
+gtlayout-includes-copy: $(INCDIR)/gtlayout.h
+
+$(INCDIR)/gtlayout.h : gtlayout.h
+	@$(ECHO) Copying $^ ...
+	@$(CP) $^ $@
+
+aminet-dev-gui-gtlayout-test : $(AROS_TESTS)/gtlayout_test
 
 TESTFILES = test/gui test/Tools
 
-TESTOBJS = $(OBJDIR)/test/gui.o $(OBJDIR)/test/Tools.o
-
-MODULE_OBJ   = $(foreach f,$(API_SOURCE) $(API_SOURCE_EXTRA) $(UFC_SOURCE) $(FILES) $(OTHERS) gtlayout_data,$(OBJDIR)/$(f).o)
-STATIC_OBJ   = $(foreach f,$(LINKLIB_FILES) gtlayout_data,$(OBJDIR)/$f.ol)
-
-$(MODULE_OBJ) : $(OBJDIR)/%.o : $(OBJDIR)/aros_src/%_aros.c
-	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES) $(DEFINES) -include aros/arosspecific.h"
-
-$(STATIC_OBJ) : $(OBJDIR)/%.ol : $(OBJDIR)/aros_src/%_aros.c
-	%compile_q opt="$(CFLAGS) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h"
-
-#I need to create all $(INTERMEDIATES) first (!) for the compile to be successful!
-$(AROS_LIBS)/$(MODULE) : $(MODULE_OBJ)
-	@$(ECHO) "Building $(notdir $@) ..."
-	@$(AROS_LD) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) $(MODULE_OBJ) -lgtlayout -lrom -o $@
-
-$(STATIC_LIB) : $(STATIC_OBJ)
-	%mklib_q from=$^
-
-$(TESTDIR)/gtlayout_test: $(TESTOBJS)
-	@$(ECHO) "Building $(notdir $@) ..."
-	@$(AROS_LD) $(LDFLAGS) $^ -o $@ $(APP_LIBS) $(COMPILER_LIBS)
-
-$(OBJDIR)/test/%.d : %.c
-	%mkdepend_q flags=$(CFLAGS)
-
-$(OBJDIR)/aros_src/%.d : %.c
-	%mkdepend_q flags=$(CFLAGS)
-
-$(OBJDIR)/%.d : %.c
-	%mkdepend_q flags=$(CFLAGS)
-
-
-setup-aminet-dev-gui-gtlayout ::
-	%mkdirs_q $(AROS_INCLUDES) $(OBJDIR) $(OBJDIR)/test $(OBJDIR)/aros_src
-	%mkdirs_q $(AROSDIR)/test $(AROS_LIB) $(AROS_LIBS)
-
-#MM aminet-dev-gui-gtlayout-clean :
-aminet-dev-gui-gtlayout-clean : clean
-	@$(NOP)
-#MM 
-clean ::
-	-$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) $(AROS_LIBS)/gtlayout.library aros/gtlayout_defines_aros.h $(OBJDIR)/gtlayout_data.o $(OBJDIR)/gtlayout_data.ol $(STATIC_LIB)
-
-%common
-%include_deps
+%build_prog mmake=aminet-dev-gui-gtlayout-test \
+    progname=gtlayout_test files=$(TESTFILES) targetdir=$(AROS_TESTS) \
+    uselibs=gtlayout
