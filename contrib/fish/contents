@@ -1,0 +1,12 @@
+lotto/       From Fish Disk 430 (lotto/program)
+
+microemacs/  From Fish Disk 2 
+                There is also a version on Fish Disk 6, but it contains
+                assembly code.
+
+henon/   From Fish Disk 636
+         Try with     >henon 1.111 0.025 1.0 0.025 550    (demo1)
+                       henon 1.5732 0.025 1.5 0.025 1000  (demo2)
+                       henon 0.264 0.02 0.3 0.02 1000     (demo3)
+
+
