@@ -8,7 +8,6 @@
 #include "complex.h"
 //#include <libraries/mathieeedp.h>
 
-extern	int	errno;
 extern struct Library MathIeeeDoubTransBase;
 
 double Sqrt(x)
