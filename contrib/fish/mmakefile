@@ -8,7 +8,7 @@
 #MM	fish-371_fractal fish-asimplex fish-layers fish-snowfall \
 #MM	fish-aroach fish-touch fish-memeter fish-lyromat fish-gooddouble \
 #MM	fish-eval fish-memsnap fish-memomaster fish-cfn fish-shuffle \
-#MM	fish-egypt fish-mandel
+#MM	fish-egypt fish-mandel fish-windowtool
 
 #These do not compile properly, yet!
 # MM fish-cube
