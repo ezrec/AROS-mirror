@@ -211,7 +211,12 @@ mo_status mo_post_save_window (mo_window *win)
 
 	if (!*default_save_dir) {
 		if (Rdata.download_dir) strcpy(default_save_dir, Rdata.download_dir);
+#ifdef HAVE_GETCD
 		else getcd(0, default_save_dir);
+#else
+#warning This is definately buggy!
+		else getcwd(default_save_dir,1024);
+#endif
 	}
 	AddPart(default_save_dir, FilePart(win->cached_url), 200);
 	set(win->save_fname, MUIA_String_Contents, default_save_dir);
@@ -229,6 +234,7 @@ char *temp_binary_fnam;
 
 mo_status mo_post_savebinary_window (mo_window *win)
 {
+	extern char *url;
 	struct FileRequester *fr;
 	struct Window *w = NULL;
 	int result;
@@ -236,7 +242,12 @@ mo_status mo_post_savebinary_window (mo_window *win)
 	
 	if (!*default_save_dir) {
 		if (Rdata.download_dir) strcpy(default_save_dir, Rdata.download_dir);
+#ifdef HAVE_GETCD
 		else getcd(0, default_save_dir);
+#else
+#warning This is definately buggy!
+		else getcwd(default_save_dir,1024);
+#endif
 	}
 	urlname = FilePart(url) ;
 	fr = MUI_AllocAslRequestTags(ASL_FileRequest, ASLFR_TitleText, GetamosaicString(MSG_REQ_SAVEBINARY_TITLE),
@@ -460,15 +471,15 @@ static unsigned long search_win_cb(struct Hook *h, void *o, int *msg)
 							{
 								/* No match was found. */
 								if (((ElementRef *)win->search_start)->id)
-			MUI_Request(App, WI_Main, 0,
+			MUI_RequestA(App, WI_Main, 0,
 						 GetamosaicString(MSG_REQ_FINDRESULT_TITLE), GetamosaicString(MSG_REQ_FINDRESULT_OK),
 						 GetamosaicString(MSG_REQ_FINDRESULT_NO_MORE_MATCHES),
-						 TAG_END) ;
+						 NULL) ;
 								else
 			MUI_RequestA(App, WI_Main, 0,
 						 GetamosaicString(MSG_REQ_FINDRESULT_TITLE), GetamosaicString(MSG_REQ_FINDRESULT_OK),
 						 GetamosaicString(MSG_REQ_FINDRESULT_NO_MATCHES),
-						 TAG_END) ;
+						 NULL) ;
 							}
 						else
 							{

@@ -4,7 +4,10 @@
 ** displays a rotating boing ball
 ** $VER: BoingTransferClass 1.5 (19.03.95)
 */
- 
+#include "includes.h"
+#include "globals.h"
+#define min(x,y) (x<y?x:y)
+
 #define WINKELFAKTOR (0.4)
 
 #define VERTMOVE (16)
@@ -16,7 +19,7 @@
 
 #define RESET_ANIM data->Position=-1;data->LeftDirection=FALSE;data->HorizPos=-10;data->VertPos=VERTMIDPOS;
 
-#include "BoingTransfer.h"
+#include "Boingtransfer.h"
 
 extern struct ExecBase *SysBase;
 

@@ -170,7 +170,9 @@ void main(int argc, char **argv)
 	kprintf("Exiting MUI input loop\n");
 #endif
 
+#ifdef HAVE_REXX
 		signal |= RexxSignalBits;
+#endif
 /* | FileNotifySigBit); */
 		switch(a) {
 		
@@ -365,7 +367,9 @@ void main(int argc, char **argv)
 		case mo_macro_4: case mo_macro_5: case mo_macro_6: case mo_macro_7:
 		case mo_macro_8: case mo_macro_9: case mo_macro_10:
 		case mo_add_hot_list: case mo_jump_hot_list: case mo_print_document:
+#ifdef HAVE_REXX
 		RexxLaunch(a - mo_macro_1, &window);
+#endif
 		break;
 
 	case mo_back:
@@ -539,10 +543,14 @@ void main(int argc, char **argv)
 #ifdef TRACE_INPUT
 		kprintf("Exit waiting for signals\n");
 #endif
+#ifdef HAVE_REXX
 		if ((sig_rec /* & (~FileNotifySigBit) */ ) && RexxSignalBits)
 			RexxDispatch();
 
 		else if (sig_rec & FileNotifySigBit){
+#else
+		if (sig_rec & FileNotifySigBit){
+#endif
 			struct NotifyMessage *msg;
 #ifdef TRACE_INPUT
 			kprintf("Getting filenotify sig\n");
@@ -593,7 +601,9 @@ void main(int argc, char **argv)
 	if (Rdata.use_global_history)
 		mo_write_global_history();
 
+#ifdef HAVE_REXX
 	RexxQuit() ;
+#endif
 
 	CloseamosaicCatalog();
 	if(LocaleBase)
@@ -620,7 +630,11 @@ int get_filename(char **name)
 	result = MUI_AslRequestTags(fr, ASLFR_Window, w, TAG_DONE);
 	if (result) {
 		f = malloc(255);
+#ifdef HAVE_GETCD
 		getcd(0, f);
+#else
+		getcwd(f,254);
+#endif
 		AddPart(f, fr->rf_Dir, 200);
 		AddPart(f, fr->rf_File, 200);
 		*name = strdup(f);

@@ -703,9 +703,9 @@ static mo_status mo_file_exists (char *filename)
     return mo_fail;
 }
 
-#ifndef __AROS__
 static void mo_grok_menubar (char *filename)
 {
+#ifndef __AROS__
   FILE *fp;
   char line[MO_LINE_LENGTH];
   char *status;
@@ -801,8 +801,8 @@ static void mo_grok_menubar (char *filename)
 
  screwed_no_file:
   return;
-}
 #endif
+}
 
 static void mo_try_to_grok_menubar (void)
 {

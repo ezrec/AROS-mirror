@@ -691,7 +691,6 @@ BOOL EditHotlistGroupEntry(struct HotlistGroupEntry *Entry)
         case 2:
           {
             char *Title;
-            long DelayImages;
             get(ST_Title,MUIA_String_Contents,&Title);
             strcpy(Entry->Title,Title);
             *PathPart(Entry->FullTitle)=NULL;
@@ -958,7 +957,9 @@ void mui_init(void)
 {
   int (*visit_func) ();
   void (*image_func) ();
+#ifdef HAVE_REXX
   extern struct Mui_Command RexxCommands[] ;
+#endif
   ULONG win_open;
 
   Object *SB_Vert,*SB_Horiz;
@@ -979,7 +980,9 @@ void mui_init(void)
 		MUIA_Application_Author     , "The AMosaic DevTeam",
 		MUIA_Application_Description, "World Wide Web Browser.",
 		MUIA_Application_Base       , "AMOSAIC",
+#ifdef HAVE_REXX
 		MUIA_Application_Commands	, RexxCommands,
+#endif
 
 		SubWindow, WI_Main = WindowObject,
 			MUIA_Window_Title, amosaic_window_title,
@@ -1570,7 +1573,7 @@ void mui_init(void)
 	set(WI_Main, MUIA_Window_Open, TRUE);
 	get(WI_Main,MUIA_Window_Open,&win_open);
 	if(!win_open){
-		MUI_Request(App,0,0,0,"Ok","Failed to open window.");
+		MUI_RequestA(App,0,0,0,"Ok","Failed to open window.",NULL);
 		fail(App,"Unable to open window\n");
 		}
 }

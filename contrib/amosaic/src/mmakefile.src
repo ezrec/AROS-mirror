@@ -5,6 +5,7 @@
 include $(TOP)/config/make.cfg
 
 FILES := globals \
+	Boingtransfer \
 	socketbase \
 	version \
 	spinner \
@@ -24,16 +25,17 @@ FILES := globals \
 	HTML \
 	gui-menubar \
 	main \
-	gui \
 	gui-dialogs \
 	gui-documents \
 	history \
 	htmlamiga \
+	gui \
 	mui \
-	rexx
 
 # These are Motif?
 #	hotlist \
+# ReXX is not yet ported to AROS
+#	rexx
 #
 
 EXEDIR := $(AROSDIR)/AMosaic
@@ -45,6 +47,7 @@ USE_AMIGALIB := yes
 USE_MUILIB := yes
 
 USER_INCLUDES := -I../../mui/libs/muimaster -I$(INCDIR)/libwww2
+PRELIBS := $(PRELIBS) -lwww2
 #MM mui-amosaic : includes linklibs contrib-regina
 
 %make_prog_setup mmake=mui-amosaic

@@ -765,8 +765,7 @@ char *mo_tmpnam (void)
 /* Feedback from the library. */
 void application_user_feedback (char *str)
 {
-  MUI_Request(App, WI_Main, 0, "Amiga Mosaic: Application Feedback", "OK", str,
-	      TAG_END);
+  MUI_RequestA(App, WI_Main, 0, "Amiga Mosaic: Application Feedback", "OK", str, NULL);
 }
 
 static long paswd=0;

@@ -1809,12 +1809,14 @@ void amiga_load_prefs(void)
       Rdata.home_document = strdup(value);
     if (!stricmp(param, "DownloadDir"))
       Rdata.download_dir = strdup(value);
+#ifdef HAVE_REXX
     if (!stricmp(param, "AddToHotList"))
       RexxMenu(mo_add_hot_list, value) ;
     if (!stricmp(param, "JumpToHotList"))
       RexxMenu(mo_jump_hot_list, value) ;
     if (!stricmp(param, "PrintCommand"))
       RexxMenu(mo_print_document, value) ;
+#endif
 
     if (!stricmp(param, "Font"))
       Rdata.font = strdup(value);
@@ -1842,6 +1844,7 @@ void amiga_load_prefs(void)
       Rdata.listingfont = strdup(value);
     if (!stricmp(param, "plainFont"))
       Rdata.plainfont = strdup(value);
+#ifdef HAVE_REXX
     if (!stricmp(param, "rexxmacro1"))
       RexxMenu(mo_macro_1, value) ;
     if (!stricmp(param, "rexxmacro2"))
@@ -1862,6 +1865,7 @@ void amiga_load_prefs(void)
       RexxMenu(mo_macro_9, value) ;
     if (!stricmp(param, "rexxmacro10"))
       RexxMenu(mo_macro_10, value) ;
+#endif
   }
   fclose(fp);
 
@@ -1921,12 +1925,14 @@ check_env:
     Rdata.home_document = s;
   if ((s = getenv("Mosaic/DownloadDir")))
     Rdata.download_dir = s;
+#ifdef HAVE_REXX
   if ((s = getenv("Mosaic/AddToHotList")))
     RexxMenu(mo_add_hot_list, s) ;
   if ((s = getenv("Mosaic/JumpToHotList")))
     RexxMenu(mo_jump_hot_list, s) ;
   if ((s = getenv("Mosaic/PrintCommand")))
     RexxMenu(mo_print_document, s) ;
+#endif
 
   if ((s = getenv("Mosaic/Font")))
       Rdata.font = s;
@@ -1954,6 +1960,7 @@ check_env:
       Rdata.listingfont = s;
   if ((s = getenv("Mosaic/plainFont")))
       Rdata.plainfont = s;
+#ifdef HAVE_REXX
   if ((s = getenv("Mosaic/rexxmacro1")))
       RexxMenu(mo_macro_1, s) ;
   if ((s = getenv("Mosaic/rexxmacro2")))
@@ -1974,4 +1981,5 @@ check_env:
       RexxMenu(mo_macro_9, s) ;
   if ((s = getenv("Mosaic/rexxmacro10")))
       RexxMenu(mo_macro_10, s) ;
+#endif
 }
