@@ -30,6 +30,19 @@ brackets ("[]").
 200304??:
  <next day here>
 
+20030411:
+ * LBreakout2 ported, a nice breakout-style game [falemagn]
+ * French catalog translations for many programs [olivieradam]
+ * Parts of an ARM port (not complete, no promises) [bergers]
+ * def_Tool and def_Project icons [reez]
+ 
+20030410:
+ * Matthew Parsons contacted Genesi and asked if they would be interested in
+   sponsoring a Pegasos board to get AROS ported to it, and they accepted!
+   After some discussion on the ML and hard thinking on Johan Grip's part,
+   he decided to accept the offer and try his outmost to port AROS to the 
+   Pegasos. All agree that he's the best suited for this task...   
+ 
 20030409:
  * Nice striped patterns [dlc]
  * Bitmap preview in Zune imageadjust [dlc]
