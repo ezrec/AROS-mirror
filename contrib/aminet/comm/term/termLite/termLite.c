@@ -207,11 +207,11 @@ main(VOID)
 	{
 			/* Open dos.library. */
 
-		if(DOSBase = (struct DosLibrary *)OpenLibrary("dos.library",37))
+		if((DOSBase = (struct DosLibrary *)OpenLibrary("dos.library",37)))
 		{
 				/* Open intuition.library. */
 
-			if(IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",37))
+			if((IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",37)))
 			{
 				UBYTE	DeviceName[40];
 				LONG	UnitNumber;
@@ -238,24 +238,24 @@ main(VOID)
 
 						/* Open icon.library. */
 
-					if(IconBase = OpenLibrary("icon.library",0))
+					if((IconBase = OpenLibrary("icon.library",0)))
 					{
 						struct DiskObject *DiskObject;
 
 							/* Read the tool icon. */
 
-						if(DiskObject = GetDiskObject(WBenchMsg -> sm_ArgList -> wa_Name))
+						if((DiskObject = GetDiskObject(WBenchMsg -> sm_ArgList -> wa_Name)))
 						{
 							UBYTE *Entry;
 
 								/* Check for custom device name. */
 
-							if(Entry = FindToolType(DiskObject -> do_ToolTypes,"DEVICE"))
+							if((Entry = FindToolType(DiskObject -> do_ToolTypes,"DEVICE")))
 								strcpy(DeviceName,Entry);
 
 								/* Check for custom device number. */
 
-							if(Entry = FindToolType(DiskObject -> do_ToolTypes,"UNIT"))
+							if((Entry = FindToolType(DiskObject -> do_ToolTypes,"UNIT")))
 								StrToLong(Entry,&UnitNumber);
 
 								/* Release the icon. */
@@ -274,13 +274,13 @@ main(VOID)
 
 						/* Allocate argument array. */
 
-					if(ArgArray = (UBYTE **)AllocVec(sizeof(UBYTE *) * 2,MEMF_PUBLIC|MEMF_CLEAR))
+					if((ArgArray = (UBYTE **)AllocVec(sizeof(UBYTE *) * 2,MEMF_PUBLIC|MEMF_CLEAR)))
 					{
 						struct RDArgs *ArgsPtr;
 
 							/* Read the startup args if any. */
 
-						if(ArgsPtr = (struct RDArgs *)ReadArgs("D=Device/K,U=Unit/N/K",(LONG *)ArgArray,NULL))
+						if((ArgsPtr = (struct RDArgs *)ReadArgs("D=Device/K,U=Unit/N/K",(LONG *)ArgArray,NULL)))
 						{
 								/* Set custom device name. */
 
@@ -305,23 +305,23 @@ main(VOID)
 
 					/* Allocate the serial read buffer. */
 
-				if(SerReadBuffer = AllocVec(SER_READ_SIZE,MEMF_PUBLIC))
+				if((SerReadBuffer = AllocVec(SER_READ_SIZE,MEMF_PUBLIC)))
 				{
 						/* Create the serial read port. */
 
-					if(SerReadPort = CreateMsgPort())
+					if((SerReadPort = CreateMsgPort()))
 					{
 							/* Create the serial write port. */
 
-						if(SerWritePort = CreateMsgPort())
+						if((SerWritePort = CreateMsgPort()))
 						{
 								/* Create the serial read request. */
 
-							if(SerReadRequest = (struct IOExtSer *)CreateIORequest(SerReadPort,sizeof(struct IOExtSer)))
+							if((SerReadRequest = (struct IOExtSer *)CreateIORequest(SerReadPort,sizeof(struct IOExtSer))))
 							{
 									/* Create the serial write request. */
 
-								if(SerWriteRequest = (struct IOExtSer *)AllocVec(sizeof(struct IOExtSer),MEMF_PUBLIC))
+								if((SerWriteRequest = (struct IOExtSer *)AllocVec(sizeof(struct IOExtSer),MEMF_PUBLIC)))
 								{
 										/* Open the device in shared mode. */
 
@@ -340,13 +340,13 @@ main(VOID)
 
 											/* Allocate the console read buffer. */
 
-										if(ConReadBuffer = AllocVec(CON_READ_SIZE,MEMF_PUBLIC))
+										if((ConReadBuffer = AllocVec(CON_READ_SIZE,MEMF_PUBLIC)))
 										{
 											struct Screen *DefaultScreen;
 
 												/* Lock the default public screen. */
 
-											if(DefaultScreen = LockPubScreen(NULL))
+											if((DefaultScreen = LockPubScreen(NULL)))
 											{
 												ULONG StackTags[20 * 2 + 1];
 
@@ -368,25 +368,25 @@ main(VOID)
 
 													/* Open the window. */
 
-												if(Window = OpenWindowTagList(NULL,(struct TagItem *)&StackTags[0]))
+												if((Window = OpenWindowTagList(NULL,(struct TagItem *)&StackTags[0])))
 												{
 														/* Create the console read port. */
 
-													if(ConReadPort = CreateMsgPort())
+													if((ConReadPort = CreateMsgPort()))
 													{
 															/* Create the console write port. */
 
-														if(ConWritePort = CreateMsgPort())
+														if((ConWritePort = CreateMsgPort()))
 														{
 																/* Create the console read
 																 * request.
 																 */
 
-															if(ConReadRequest = (struct IOStdReq *)CreateIORequest(ConReadPort,sizeof(struct IOStdReq)))
+															if((ConReadRequest = (struct IOStdReq *)CreateIORequest(ConReadPort,sizeof(struct IOStdReq))))
 															{
 																	/* Create the console write request. */
 
-																if(ConWriteRequest = (struct IOStdReq *)AllocVec(sizeof(struct IOStdReq),MEMF_PUBLIC))
+																if((ConWriteRequest = (struct IOStdReq *)AllocVec(sizeof(struct IOStdReq),MEMF_PUBLIC)))
 																{
 																		/* Set up the console startup information and
 																		 * open the approriate device.
@@ -467,7 +467,7 @@ main(VOID)
 																					 * IDCMP_CLOSEWINDOW type.
 																					 */
 
-																				while(Massage = (struct IntuiMessage *)GetMsg(Window -> UserPort))
+																				while((Massage = (struct IntuiMessage *)GetMsg(Window -> UserPort)))
 																				{
 																					ReplyMsg(&Massage -> ExecMessage);
 
@@ -545,7 +545,7 @@ main(VOID)
 																					 * the serial line.
 																					 */
 
-																				if(Size = SerReadRequest -> IOSer . io_Actual)
+																				if((Size = SerReadRequest -> IOSer . io_Actual))
 																				{
 																					LONG Frag;
 
