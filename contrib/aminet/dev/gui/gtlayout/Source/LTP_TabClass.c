@@ -133,21 +133,21 @@ STATIC VOID
 SetMethod(struct IClass *class,struct Gadget *gadget,struct opSet *SetInfo)
 {
 	TabInfo			*Info = INST_DATA(class,gadget);
-	struct TagItem	*Tag;
+	struct TagItem	*_Tag;
 	BOOL			 NeedRefresh = FALSE;
 	BOOL			 Disabled;
 
 	Disabled = (BOOL)((gadget->Flags & GFLG_DISABLED) != 0);
 
-	if(Tag = FindTagItem(GA_Disabled,SetInfo->ops_AttrList))
+	if (_Tag = FindTagItem(GA_Disabled,SetInfo->ops_AttrList))
 	{
-		if(Tag->ti_Data && !Disabled || !Tag->ti_Data && Disabled)
+		if(_Tag->ti_Data && !Disabled || !_Tag->ti_Data && Disabled)
 			NeedRefresh = TRUE;
 	}
 
-	if(Tag = FindTagItem(TIA_Index,SetInfo->ops_AttrList))
+	if(_Tag = FindTagItem(TIA_Index,SetInfo->ops_AttrList))
 	{
-		LONG Index = Tag->ti_Data;
+		LONG Index = _Tag->ti_Data;
 
 		if(Index >= Info->Count)
 			Index = Info->Count - 1;
