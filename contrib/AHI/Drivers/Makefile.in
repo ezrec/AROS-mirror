@@ -52,10 +52,6 @@ ifeq ($(strip $(host)),powerpc-unknown-amigaos)
 SUBDIRS		+= EMU10kx
 endif
 
-ifeq ($(patsubst %-aros,yes,$(host)),yes)
-SUBDIRS		+= EMU10kx
-endif
-
 all:
 	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@) || exit; done
 
