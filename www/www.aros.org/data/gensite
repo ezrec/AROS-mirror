@@ -2,11 +2,12 @@
 
 '''Generate the AROS WWW site.'''
 
-import glob, os
+import glob, os, os.path, stat
 from HTMLcolors import *
 from HTMLgen import *
 
 htmldir = os.environ['HTMLDIR']
+ftpdir = os.environ['FTPDIR']
 
 mainLinks = (
     ( Href ('/index.html', 'NEWS'),
@@ -19,6 +20,8 @@ mainLinks = (
     ( Href ('/screenshots.html', 'Screenshots'),
     ),
     ( Href ('/download.html', 'Download'),
+	Href ('ftp://ftp.aros.org/pub/aros/', 'FTP Server'),
+	Href ('/snapshots.html', 'Snapshots'),
     ),
     ( Href ('/links.html', 'Links'),
 	Href ('/links.html#More Related', 'More Related'),
@@ -148,15 +151,129 @@ def genStatus ():
 
 def genDocumentation ():
     page = Page (linkBoxItem='Documentation')
+    page.meat = page.meat + [Text ('FIXME')]
     page.write ('documentation.html')
 
 def genScreenshots ():
     page = Page (linkBoxItem='Screenshots')
+    page.meat = page.meat + [Text ('FIXME')]
     page.write ('screenshots.html')
 
 def genDownload ():
     page = Page (linkBoxItem='Download')
+    page.meat = page.meat + [Text ('FIXME')]
     page.write ('download.html')
+
+class Snapshot:
+    def __init__ (self, path):
+	filename = os.path.basename (path)
+	self.filename = filename
+
+	self.ext = filename[-3:]
+	filename = filename[:-4]
+	self.date = filename[-8:]
+	filename = filename[:-8]
+	self.title = filename[5:-1]
+	
+	info = os.stat (path)
+	size = info[stat.ST_SIZE]
+
+	if size > 1024:
+	    size = ((size+1023) / 1024)
+	    self.size = '%dKB' % size
+	    if size > 1024:
+		size = ((size+1023) / 1024)
+		self.size = '%dMB' % size
+
+	#print self.__dict__
+
+def genSnapshots ():
+    page = Page (linkBoxItem='Download')
+
+    files = glob.glob (os.path.join (ftpdir, 'snapshots/*'))
+    if not files:
+        page.meat = page.meat + [Text ('No snapshots found')]
+    else:
+	dayFiles = {}
+	dayLogs = {}
+	columns = {}
+	days = {}
+
+	for file in files:
+	    ss = Snapshot (file)
+	    if ss.ext == 'log':
+		day = dayLogs.get (ss.date, None)
+		if not day:
+		    day = {}
+		    dayLogs[ss.date] = day
+	    elif ss.ext == 'tgz':
+		day = dayFiles.get (ss.date, None)
+		if not day:
+		    day = {}
+		    dayFiles[ss.date] = day
+	    else:
+		print 'Unknown Snapshot', file
+		continue
+
+	    day[ss.title] = ss
+	    columns[ss.title] = None
+	    days[ss.date] = None
+	
+	table = TableLite (cellpadding=15, border=2)
+	page.meat = page.meat + [table]
+	
+	colList = columns.keys ()
+	colList.sort ()
+	row = TR ()
+	table.append (row)
+	td = TH ('Date')
+	row = row + [td]
+	    
+	for col in colList:
+	    td = TH (col)
+	    row = row + [td]
+	
+	dateList = days.keys ()
+	dateList.sort ()
+	dateList.reverse ()
+	for date in dateList:
+	    row = TR ()
+	    table.append (row)
+
+	    str = '%d.%d.%d' % (
+		int (date[6:8]),
+		int (date[4:6]),
+		int (date[0:4]),
+	    )
+	    row = row + [TD (str)]
+
+	    logs = dayLogs.get (date, {})
+	    files = dayFiles.get (date, {})
+
+	    for col in colList:
+		t = Text ()
+		ss = files.get (col, None)
+		if ss:
+		    t.append (Href ('ftp://ftp.aros.org/pub/aros/snapshots/%s' % ss.filename,
+			ss.size
+		    ))
+		else:
+		    t.append ('-')
+		
+		log = logs.get (col, None)
+		if log:
+		    t.append ('(Log: ')
+		    t.append (Href ('ftp://ftp.aros.org/pub/aros/snapshots/%s' % log.filename,
+			log.size
+		    ))
+		    t.append (')')
+		else:
+		    if not ss.title in ('contrib', 'source'):
+			t.append ('(No log)')
+
+		row = row + [TD (t)]
+
+    page.write ('snapshots.html')
 
 def processLinks (links):
     list = List ()
@@ -217,4 +334,5 @@ genStatus ()
 genDocumentation ()
 genScreenshots ()
 genDownload ()
+genSnapshots ()
 genLinks ()

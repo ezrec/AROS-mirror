@@ -1,4 +1,5 @@
 HTMLDIR = ../www
+FTPDIR = /home/ftp/pub/aros
 
 # Tools
 SED = sed
@@ -11,7 +12,7 @@ all : apache.conf pics .stamp
 
 .stamp : HTMLcolors.py HTMLgen.py aros.rc gensite imgsize.py \
 	    $(wildcard news/*) links.py
-	@HTMLDIR=$(HTMLDIR) python gensite
+	@HTMLDIR=$(HTMLDIR) FTPDIR=$(FTPDIR) python gensite
 	@touch $@
 
 apache.conf : genconf apache.conf.in site.conf
