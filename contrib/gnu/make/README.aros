@@ -1,0 +1,11 @@
+09/04/2004
+GNU Make 3.8.1 for AROS - Jack Patton <jpatton@aros.org>
+
+Original SAS/C Amiga port for 68k AmigaOS by Aaron "Optimizer" Digulla
+Original AmigaOS 4.0 port by Hans-J<F6>rg Frieden 
+(Hans-JoergF@hyperion-entertainment.com)
+Further AmigaOS 4.0 changes by Steven Solie
+AROS port by Jack Patton <jpatton@aros.org>
+
+See README.Amiga for notes on functionality.
+
