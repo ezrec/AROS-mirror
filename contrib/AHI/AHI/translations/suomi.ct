@@ -1,0 +1,304 @@
+## version $VER: ahiprefs.catalog 4.5 (2.6.97)
+## language suomi
+## codeset 0
+;
+## chunk AUTH Translated by Pauli Porkka <pporkka@iki.fi>, \
+Proofread by Petteri Kallio <k140734@cs.tut.fi>
+;
+; $Id$
+; $Log$
+; Revision 1.1  2000/04/01 00:25:39  bernie
+; Also forgot these
+;
+; Revision 1.4  1999/08/29 23:44:11  lcs
+; Added support for ahigp_AntiClickTime.
+;
+; Revision 4.5  1997/04/27 16:16:06  lcs
+; Added "Mastervolume with(out) clipping".
+;
+; Revision 4.4  1997/04/23 21:08:31  lcs
+; Removed (Disabled)
+;
+; Revision 4.2  1997/04/07 01:36:51  lcs
+; Localized it, bug fixes
+;
+;
+; *** Menus ***
+;
+msgMenuProject
+\000Projekti
+;\000Project
+;
+msgItemOpen
+O\000Avaa...
+;O\000Open...
+;
+msgItemSaveAs
+T\000Tallenna nimellä...
+;A\000Save As...
+;
+msgItemAbout
+?\000Tietoja...
+;?\000About...
+;
+msgItemQuit
+Q\000Lopeta
+;Q\000Quit
+;
+msgMenuEdit
+\000Muokkaus
+;\000Edit
+;
+msgItemDefaults
+D\000Oletusasetukset
+;D\000Reset To Defaults
+;
+msgItemLastSaved
+L\000Viimeksi tallennettu
+;L\000Last Saved
+;
+msgItemRestore
+P\000Palauta
+;R\000Restore
+;
+msgMenuSettings
+\000Asetukset
+;\000Settings
+;
+msgItemCreateIcons
+I\000Luo ikonit?
+;I\000Create Icons?
+;
+msgMenuHelp
+\000Opastus
+;\000Help
+;
+msgItemHelp
+Help\000Opastus...
+;Help\000Help...
+;
+msgItemUsersGuide
+K\000AHI Käyttäjän opasteet...
+;H\000AHI User's guide...
+;
+msgItemConceptIndex
+\000Opasteen sisältö...
+;\000Concept Index...
+;
+; *** The pages ***
+;
+msgPageMode
+Tila-asetukset
+;Mode settings
+;
+msgPageAdvanced
+Edistyneet asetukset
+;Advanced settings
+;
+; *** The units ***
+;
+msgUnitDevice
+Yksikkö %ld
+;Unit %ld
+;
+msgUnitMusic
+Musiikkiyksikkö
+;Music unit
+;
+; *** Properties box ***
+;
+msgProperties
+Tilan ID\nÄänitys\nTekijä\nCopyright\nAjuri\nVersio
+;Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+;
+msgPropRecordFull
+Kaksisuuntainen
+;Full duplex
+;
+msgPropRecordHalf
+Vuorosuuntainen
+;Half duplex
+;
+msgPropRecordNone
+Ei ole
+;Nope
+;
+; *** Options ***
+;
+msgOptions
+Valinnat
+;Options
+;
+msgOptFrequency
+Taa_juus
+;_Frequency
+;
+msgOptChannels
+Kana_vat
+;C_hannels
+;
+msgOptNoChannels
+(ei kanavia)
+;
+;
+msgOptVolume
+_Äänenvoimakkuus
+;_Volume
+;
+msgOptMonitor
+S_euranta
+;_Monitor
+;
+msgOptGain
+V_ahvistus
+;_Gain
+;
+msgOptMuted
+Mykistetty
+;Muted
+;
+msgOptInput
+_Sisääntulo
+;_Input
+;
+msgOptNoInputs
+Ei sisääntuloja
+;No inputs
+;
+msgOptOutput
+_Ulostulo
+;_Output
+;
+msgOptNoOutputs
+Ei ulostuloja
+;No outputs
+;
+;
+; *** Global Options ***
+;
+msgGlobalOptions
+Yleiset valinnat
+;Global options
+;
+msgGlobOptDebugLevel
+_Debug-taso
+;_Debug level
+;
+msgGlobOptEcho
+Ka_iku
+;_Echo
+;
+msgGlobOptSurround
+Surround "_Nopea"-tilassa
+;Surround in "_Fast" modes
+;
+msgGlobOptCPULimit
+CPU:n käyttö_raja
+;CPU usage _limit
+;
+; *** Debug levels ***
+;
+msgDebugNone
+Ei mitään
+;None
+;
+msgDebugLow
+Matala
+;Low
+;
+msgDebugHigh
+Korkea
+;High
+;
+msgDebugFull
+Täysi
+;Full
+;
+; *** Echo ***
+;
+msgEchoEnabled
+Päällä
+;Enabled
+;
+msgEchoFast
+Nopea
+;Fast
+;
+msgEchoDisabled
+Pois päältä
+;Disabled
+;
+; *** Surround ***
+;
+msgSurroundEnabled
+Päällä
+;Enabled
+;
+msgSurroundDisabled
+Pois päältä
+;Disabled
+;
+; *** Buttons ***
+;
+msgButtonSave
+_Tallenna
+;_Save
+;
+msgButtonUse
+_Käytä
+;_Use
+;
+msgButtonCancel
+_Peru
+;_Cancel
+;
+msgButtonOK
+Hyväksy
+;OK
+;
+; *** Texts ***
+;
+msgTextProgramName
+AHI-asetukset
+;AHI preferences
+;
+;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
+msgTextCopyright
+%s%s\nCopyright ©%s.\nSuomennoksen tekijä Pauli Porkka.
+;%s%s\nCopyright ©%s
+;
+msgTextNoWindow
+Ikkunan avaaminen epäonnistui.
+;Unable to open window.
+;
+msgTextNoFileRequester
+Tiedostovalitsimen varaaminen epäonnistui.
+;Unable to allocate file requester.
+;
+msgTextNoFind
+'%s' ei löydy!
+;Unable to find `%s'!
+;
+msgTextNoOpen
+'%s' version %ld avaaminen epäonnistui.
+;Unable to open `%s´ version %ld.
+;
+; *** Additions
+;
+msgGlobOptMasterVol
+_Master-volume
+;_Master volume
+;
+msgMVNoClip
+Ilman tasonleikkausta
+;Without clipping
+;
+msgMVClip
+Tasonleikkauksen kanssa
+;With clipping
+;
+msgGlobOptACTime
+
+;Anti-click time (ms)
+; ***NEW***
+;

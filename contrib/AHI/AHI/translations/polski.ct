@@ -1,0 +1,311 @@
+## version $VER: ahiprefs.catalog 4.5 (17.6.97) © Marcin Orîowski <carlos@wfmh.man.szczecin.pl>
+## language polski
+## codeset 0
+;
+## chunk AUTH Translated by Marcin Orîowski <carlos@inet.com.pl>
+;
+; $Id$
+; $Log$
+; Revision 1.1  2000/04/01 00:25:39  bernie
+; Also forgot these
+;
+; Revision 1.4  1999/08/29 23:44:06  lcs
+; Added support for ahigp_AntiClickTime.
+;
+; Revision 4.5  1997/04/27 16:16:06  lcs
+; Added "Mastervolume with(out) clipping".
+;
+; Revision 4.4  1997/04/23 21:08:31  lcs
+; Removed (Disabled)
+;
+; Revision 4.2  1997/04/07 01:36:51  lcs
+; Localized it, bug fixes
+;
+;
+; *** Menus ***
+;
+msgMenuProject
+\000Projekt
+;\000Project
+;
+msgItemOpen
+O\000Otwórz...
+;O\000Open...
+;
+msgItemSaveAs
+A\000Zapisz jako...
+;A\000Save As...
+;
+msgItemAbout
+?\0O programie...
+;?\000About...
+;
+msgItemQuit
+Q\0Skoïcz
+;Q\000Quit
+;
+msgMenuEdit
+\0Edycja
+;\000Edit
+;
+msgItemDefaults
+D\0Ustawienia standardowe
+;D\000Reset To Defaults
+;
+msgItemLastSaved
+L\0Ustawienia ostatnio zapisane
+;L\000Last Saved
+;
+msgItemRestore
+R\0Anuluj zmiany ustawieï
+;R\000Restore
+;
+msgMenuSettings
+\0Ustawienia
+;\000Settings
+;
+msgItemCreateIcons
+I\0Zapisuj ikonki
+;I\000Create Icons?
+;
+msgMenuHelp
+\0Pomoc
+;\000Help
+;
+msgItemHelp
+Help\0Pomoc...
+;Help\000Help...
+;
+msgItemUsersGuide
+H\0Przewodnik uûytkownika...
+;H\000AHI User's guide...
+;
+msgItemConceptIndex
+\0Indeks...
+;\000Concept Index...
+;
+; *** The pages ***
+;
+msgPageMode
+Ustawienia trybów
+;Mode settings
+;
+msgPageAdvanced
+Ustawienia zaawansowane
+;Advanced settings
+;
+; *** The units ***
+;
+msgUnitDevice
+Jedn. %ld
+;Unit %ld
+;
+msgUnitMusic
+Jedn. muzyczna
+;Music unit
+;
+; *** Properties box ***
+;
+msgProperties
+Tryb\n\
+Zapisywanie\n\
+Autor\n\
+Prawa autorskie\n\
+Sterownik\n\
+Wersja
+;Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+;
+msgPropRecordFull
+Peîen duplex
+;Full duplex
+;
+msgPropRecordHalf
+Póî dupleks
+;Half duplex
+;
+msgPropRecordNone
+Brak
+;Nope
+;
+; *** Options ***
+;
+msgOptions
+Opcje
+;Options
+;
+msgOptFrequency
+Czës_totliwoôê
+;_Frequency
+;
+msgOptChannels
+_Kanaîy
+;C_hannels
+;
+msgOptNoChannels
+
+;
+;
+msgOptVolume
+_Gîoônoôê
+;_Volume
+;
+msgOptMonitor
+_Monitor
+;_Monitor
+;
+msgOptGain
+_Podbicie
+;_Gain
+;
+msgOptMuted
+Wyciszony
+;Muted
+;
+msgOptInput
+_Wejôcie
+;_Input
+;
+msgOptNoInputs
+Brak wejôê
+;No inputs
+;
+msgOptOutput
+W_yjôcie
+;_Output
+;
+msgOptNoOutputs
+Brak wyjôê
+;No outputs
+;
+;
+; *** Global Options ***
+;
+msgGlobalOptions
+Ustawienia globalne
+;Global options
+;
+msgGlobOptDebugLevel
+_Debug
+;_Debug level
+;
+msgGlobOptEcho
+_Echo
+;_Echo
+;
+msgGlobOptSurround
+Surround w trybach "_Fast"
+;Surround in "_Fast" modes
+;
+msgGlobOptCPULimit
+_Limit zajëtoôci procesora
+;CPU usage _limit
+;
+; *** Debug levels ***
+;
+msgDebugNone
+Wyîâczony
+;None
+;
+msgDebugLow
+Niski
+;Low
+;
+msgDebugHigh
+Wysoki
+;High
+;
+msgDebugFull
+Peîen
+;Full
+;
+; *** Echo ***
+;
+msgEchoEnabled
+Wîâczone
+;Enabled
+;
+msgEchoFast
+Szybkie
+;Fast
+;
+msgEchoDisabled
+Wyîâczone
+;Disabled
+;
+; *** Surround ***
+;
+msgSurroundEnabled
+Wîâczony
+;Enabled
+;
+msgSurroundDisabled
+Wyîâczony
+;Disabled
+;
+; *** Buttons ***
+;
+msgButtonSave
+Zapi_sz
+;_Save
+;
+msgButtonUse
+_Uûyj
+;_Use
+;
+msgButtonCancel
+Ponie_chaj
+;_Cancel
+;
+msgButtonOK
+Ok
+;OK
+;
+; *** Texts ***
+;
+msgTextProgramName
+Preferencje AHI
+;AHI preferences
+;
+;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
+msgTextCopyright
+%s%s\nCopyright © %s\n\
+Polska wersja jëzykowa\n\
+Marcin Orîowski\n\
+<carlos@inet.com.pl>
+;%s%s\nCopyright ©%s
+;
+msgTextNoWindow
+Nie mogë otworzyê okna.
+;Unable to open window.
+;
+msgTextNoFileRequester
+Nie mogë zaalokowaê requestera wybory plików.
+;Unable to allocate file requester.
+;
+msgTextNoFind
+Nie mogë znaleúê \"%s\"!
+;Unable to find `%s'!
+;
+msgTextNoOpen
+Nie mogë otworzyê \"%s\" w wersji %ld.
+;Unable to open `%s´ version %ld.
+;
+; *** Additions
+;
+msgGlobOptMasterVol
+Gîoônoôê gîó_wna
+;_Master volume
+;
+msgMVNoClip
+Bez obcinania
+;Without clipping
+;
+msgMVClip
+Z obcinaniem
+;With clipping
+;
+msgGlobOptACTime
+
+;Anti-click time (ms)
+; ***NEW***
+;

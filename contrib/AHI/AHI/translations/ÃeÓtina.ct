@@ -1,0 +1,304 @@
+## version $VER: ahiprefs.catalog 4.4 (25.04.97) © Ondrej Zima at ATO <cnzp@login.cz>
+## language „eÛtina
+## codeset 0
+;
+## chunk AUTH Translated by Ondrej Zima <cnzp@login.cz>
+;
+; $Id$
+; $Log$
+; Revision 1.1  2000/04/01 00:25:39  bernie
+; Also forgot these
+;
+; Revision 1.4  1999/08/29 23:44:14  lcs
+; Added support for ahigp_AntiClickTime.
+;
+; Revision 4.5  1997/04/27 16:16:06  lcs
+; Added "Mastervolume with(out) clipping".
+;
+; Revision 4.4  1997/04/23 21:08:31  lcs
+; Removed (Disabled)
+;
+; Revision 4.2  1997/04/07 01:36:51  lcs
+; Localized it, bug fixes
+;
+;
+; *** Menus ***
+;
+msgMenuProject
+\000Soubor
+;\000Project
+;
+msgItemOpen
+O\000Otev“…t...
+;O\000Open...
+;
+msgItemSaveAs
+A\000Ulo⁄it jako...
+;A\000Save As...
+;
+msgItemAbout
+?\000O programu...
+;?\000About...
+;
+msgItemQuit
+Q\000Konec
+;Q\000Quit
+;
+msgMenuEdit
+\000ıpravy
+;\000Edit
+;
+msgItemDefaults
+D\000Z¡kladn… stav
+;D\000Reset To Defaults
+;
+msgItemLastSaved
+L\000Naposledy ulo⁄en◊
+;L\000Last Saved
+;
+msgItemRestore
+R\000Obnovit p“edchoz…
+;R\000Restore
+;
+msgMenuSettings
+\000Nastaven…
+;\000Settings
+;
+msgItemCreateIcons
+I\000Vytv¡“et ikony?
+;I\000Create Icons?
+;
+msgMenuHelp
+\000N¡pov≈da
+;\000Help
+;
+msgItemHelp
+Help\000N¡pov≈da...
+;Help\000Help...
+;
+msgItemUsersGuide
+H\000U⁄iv. manu¡l k AHI...
+;H\000AHI User's guide...
+;
+msgItemConceptIndex
+\000Seznam...
+;\000Concept Index...
+;
+; *** The pages ***
+;
+msgPageMode
+Nastaven… mœd 
+;Mode settings
+;
+msgPageAdvanced
+Roz”…“en¡ nastaven…
+;Advanced settings
+;
+; *** The units ***
+;
+msgUnitDevice
+Jednotka %ld
+;Unit %ld
+;
+msgUnitMusic
+Hudebn… jednotka
+;Music unit
+;
+; *** Properties box ***
+;
+msgProperties
+ID mœdu\nZ¡pis\nAutor\nCopyright\nOvlada√\nVerze
+;Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+;
+msgPropRecordFull
+PlnŸ duplex
+;Full duplex
+;
+msgPropRecordHalf
+Polovi√n… duplex
+;Half duplex
+;
+msgPropRecordNone
+˙¡dnŸ
+;Nope
+;
+; *** Options ***
+;
+msgOptions
+Nastaven…
+;Options
+;
+msgOptFrequency
+_Frekvence
+;_Frequency
+;
+msgOptChannels
+_Kan¡ly
+;C_hannels
+;
+msgOptNoChannels
+
+;
+;
+msgOptVolume
+_Hlasitost
+;_Volume
+;
+msgOptMonitor
+P“…posl_ech
+;_Monitor
+;
+msgOptGain
+_Zes…len…
+;_Gain
+;
+msgOptMuted
+˙¡dnŸ
+;Muted
+;
+msgOptInput
+_Vstup
+;_Input
+;
+msgOptNoInputs
+Bez vstupu
+;No inputs
+;
+msgOptOutput
+_VŸstup
+;_Output
+;
+msgOptNoOutputs
+Bez vŸstupu
+;No outputs
+;
+;
+; *** Global Options ***
+;
+msgGlobalOptions
+Glob¡ln… nastaven…
+;Global options
+;
+msgGlobOptDebugLevel
+_ıroveŒ lad≈n…
+;_Debug level
+;
+msgGlobOptEcho
+_Ozv≈na
+;_Echo
+;
+msgGlobOptSurround
+Surround v "_RychlŸch" mœdech
+;Surround in "_Fast" modes
+;
+msgGlobOptCPULimit
+_Limit vyt…⁄en… CPU
+;CPU usage _limit
+;
+; *** Debug levels ***
+;
+msgDebugNone
+˙¡dn◊
+;None
+;
+msgDebugLow
+N…zk◊
+;Low
+;
+msgDebugHigh
+Vysok◊
+;High
+;
+msgDebugFull
+Pln◊
+;Full
+;
+; *** Echo ***
+;
+msgEchoEnabled
+Povoleno
+;Enabled
+;
+msgEchoFast
+Rychl◊
+;Fast
+;
+msgEchoDisabled
+Vypnuto
+;Disabled
+;
+; *** Surround ***
+;
+msgSurroundEnabled
+Povoleno
+;Enabled
+;
+msgSurroundDisabled
+Vypnuto
+;Disabled
+;
+; *** Buttons ***
+;
+msgButtonSave
+_Ulo⁄it
+;_Save
+;
+msgButtonUse
+_Pou⁄…t
+;_Use
+;
+msgButtonCancel
+_Zru”it
+;_Cancel
+;
+msgButtonOK
+OK
+;OK
+;
+; *** Texts ***
+;
+msgTextProgramName
+AHI - nastaven…
+;AHI preferences
+;
+;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
+msgTextCopyright
+%s%s\nCopyright ©%s\n\
+P“eklad do √e”tiny: Ond“ej Zima
+;%s%s\nCopyright ©%s
+;
+msgTextNoWindow
+Nelze otev“…t okno.
+;Unable to open window.
+;
+msgTextNoFileRequester
+Nelze alokovat souborovŸ requester.
+;Unable to allocate file requester.
+;
+msgTextNoFind
+Nelze nal◊zt `%s'!
+;Unable to find `%s'!
+;
+msgTextNoOpen
+Nelze otev“…t `%s¥ verze %ld.
+;Unable to open `%s¥ version %ld.
+;
+; *** Additions
+;
+msgGlobOptMasterVol
+
+;_Master volume
+;
+msgMVNoClip
+
+;Without clipping
+;
+msgMVClip
+
+;With clipping
+;
+msgGlobOptACTime
+
+;Anti-click time (ms)
+; ***NEW***
+;

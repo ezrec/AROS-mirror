@@ -1,0 +1,303 @@
+## version $VER: ahiprefs.catalog 4.5 (13.12.97)
+## language magyar
+## codeset 0
+;
+## chunk AUTH Translated by Vörös Viktor <v_viktor@hotmail.com>
+;
+; $Id$
+; $Log$
+; Revision 1.1  2000/04/01 00:25:39  bernie
+; Also forgot these
+;
+; Revision 1.4  1999/08/29 23:44:03  lcs
+; Added support for ahigp_AntiClickTime.
+;
+; Revision 4.5  1997/04/27 16:16:06  lcs
+; Added "Mastervolume with(out) clipping".
+;
+; Revision 4.4  1997/04/23 21:08:31  lcs
+; Removed (Disabled)
+;
+; Revision 4.2  1997/04/07 01:36:51  lcs
+; Localized it, bug fixes
+;
+;
+; *** Menus ***
+;
+msgMenuProject
+\000Állomány
+;\000Project
+;
+msgItemOpen
+O\000Megnyitás...
+;O\000Open...
+;
+msgItemSaveAs
+A\000Más néven mentés...
+;A\000Save As...
+;
+msgItemAbout
+?\000Rólam...
+;?\000About...
+;
+msgItemQuit
+Q\000Kilépés
+;Q\000Quit
+;
+msgMenuEdit
+\000Szerkesztés
+;\000Edit
+;
+msgItemDefaults
+D\000Alapértelmezés
+;D\000Reset To Defaults
+;
+msgItemLastSaved
+L\000Utoljára tárolt
+;L\000Last Saved
+;
+msgItemRestore
+R\000Eddig használt
+;R\000Restore
+;
+msgMenuSettings
+\000Opciók
+;\000Settings
+;
+msgItemCreateIcons
+I\000Ikonokat készít?
+;I\000Create Icons?
+;
+msgMenuHelp
+\000Segítség
+;\000Help
+;
+msgItemHelp
+Help\000Segítség...
+;Help\000Help...
+;
+msgItemUsersGuide
+H\000AHI felhasználói leírás...
+;H\000AHI User's guide...
+;
+msgItemConceptIndex
+\000Index...
+;\000Concept Index...
+;
+; *** The pages ***
+;
+msgPageMode
+Mód beállítások
+;Mode settings
+;
+msgPageAdvanced
+Részletes beállítások
+;Advanced settings
+;
+; *** The units ***
+;
+msgUnitDevice
+%ld. egység
+;Unit %ld
+;
+msgUnitMusic
+Zene egység
+;Music unit
+;
+; *** Properties box ***
+;
+msgProperties
+Mód azonosító\nRögzítés\nKészítô\nCopyright\nMeghajtó\nVerzió
+;Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+;
+msgPropRecordFull
+Teljes duplex
+;Full duplex
+;
+msgPropRecordHalf
+Fél duplex
+;Half duplex
+;
+msgPropRecordNone
+Nincs
+;Nope
+;
+; *** Options ***
+;
+msgOptions
+Opciók
+;Options
+;
+msgOptFrequency
+_Frekvencia
+;_Frequency
+;
+msgOptChannels
+C_satornák
+;C_hannels
+;
+msgOptNoChannels
+
+;
+;
+msgOptVolume
+_Hangerô
+;_Volume
+;
+msgOptMonitor
+M_onitor
+;_Monitor
+;
+msgOptGain
+_Erôsítés
+;_Gain
+;
+msgOptMuted
+Néma
+;Muted
+;
+msgOptInput
+_Bemenet
+;_Input
+;
+msgOptNoInputs
+Nincs bemenet
+;No inputs
+;
+msgOptOutput
+_Kimenet
+;_Output
+;
+msgOptNoOutputs
+Nincs kimenet
+;No outputs
+;
+;
+; *** Global Options ***
+;
+msgGlobalOptions
+Globális opciók
+;Global options
+;
+msgGlobOptDebugLevel
+_Debug szint
+;_Debug level
+;
+msgGlobOptEcho
+_Visszhang
+;_Echo
+;
+msgGlobOptSurround
+_Térhatás "Fast" módban
+;Surround in "_Fast" modes
+;
+msgGlobOptCPULimit
+CPU haszná_lati határ
+;CPU usage _limit
+;
+; *** Debug levels ***
+;
+msgDebugNone
+Nincs
+;None
+;
+msgDebugLow
+Alacsony
+;Low
+;
+msgDebugHigh
+Magas
+;High
+;
+msgDebugFull
+Teljes
+;Full
+;
+; *** Echo ***
+;
+msgEchoEnabled
+Engedélyezve
+;Enabled
+;
+msgEchoFast
+Gyors
+;Fast
+;
+msgEchoDisabled
+Nincs engedélyezve
+;Disabled
+;
+; *** Surround ***
+;
+msgSurroundEnabled
+Engedélyezve
+;Enabled
+;
+msgSurroundDisabled
+Nincs engedélyezve
+;Disabled
+;
+; *** Buttons ***
+;
+msgButtonSave
+_Mentés
+;_Save
+;
+msgButtonUse
+_Használd
+;_Use
+;
+msgButtonCancel
+Mé_gsem
+;_Cancel
+;
+msgButtonOK
+OK
+;OK
+;
+; *** Texts ***
+;
+msgTextProgramName
+AHI beállítások
+;AHI preferences
+;
+;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
+msgTextCopyright
+%s%s\nCopyright ©%s\nMagyar fordítás: Vörös Viktor
+;%s%s\nCopyright ©%s
+;
+msgTextNoWindow
+Nem tudom megnyitni az ablakot.
+;Unable to open window.
+;
+msgTextNoFileRequester
+Nemtudom a fájl kérdezôt allokálni
+;Unable to allocate file requester.
+;
+msgTextNoFind
+Nem találom `%s'-t!
+;Unable to find `%s'!
+;
+msgTextNoOpen
+Nem tudom a `%s´ %ld verzióját megnyitni.
+;Unable to open `%s´ version %ld.
+;
+; *** Additions
+;
+msgGlobOptMasterVol
+_Fô hangerô
+;_Master volume
+;
+msgMVNoClip
+Levágás nélkül
+;Without clipping
+;
+msgMVClip
+Levágással
+;With clipping
+;
+msgGlobOptACTime
+
+;Anti-click time (ms)
+; ***NEW***
+;

@@ -1,0 +1,303 @@
+## version $VER: ahiprefs.catalog 4.5 (8.6.97)
+## language português
+## codeset 0
+;
+## chunk AUTH Translated by Frederico Borges <famb@mail.telepac.pt> & Rúben Alvim <mindwalker@mail.telepac.pt>
+;
+; $Id$
+; $Log$
+; Revision 1.1  2000/04/01 00:25:39  bernie
+; Also forgot these
+;
+; Revision 1.4  1999/08/29 23:44:08  lcs
+; Added support for ahigp_AntiClickTime.
+;
+; Revision 4.5  1997/04/27 16:16:06  lcs
+; Added "Mastervolume with(out) clipping".
+;
+; Revision 4.4  1997/04/23 21:08:31  lcs
+; Removed (Disabled)
+;
+; Revision 4.2  1997/04/07 01:36:51  lcs
+; Localized it, bug fixes
+;
+;
+; *** Menus ***
+;
+msgMenuProject
+\000Projecto
+;\000Project
+;
+msgItemOpen
+A\000Abrir...
+;O\000Open...
+;
+msgItemSaveAs
+C\000Gravar Como...
+;A\000Save As...
+;
+msgItemAbout
+?\000Acerca...
+;?\000About...
+;
+msgItemQuit
+S\000Sair
+;Q\000Quit
+;
+msgMenuEdit
+\000Editar
+;\000Edit
+;
+msgItemDefaults
+H\000Voltar à Configuração Habitual
+;D\000Reset To Defaults
+;
+msgItemLastSaved
+U\000Última Configuração Gravada
+;L\000Last Saved
+;
+msgItemRestore
+R\000Restaurar o Estado Anterior
+;R\000Restore
+;
+msgMenuSettings
+\000Opções
+;\000Settings
+;
+msgItemCreateIcons
+I\000Criar Ícones?
+;I\000Create Icons?
+;
+msgMenuHelp
+\000Ajuda
+;\000Help
+;
+msgItemHelp
+Help\000Ajuda...
+;Help\000Help...
+;
+msgItemUsersGuide
+G\000Guia do Utilizador do AHI...
+;H\000AHI User's guide...
+;
+msgItemConceptIndex
+\000Índice de Conceitos...
+;\000Concept Index...
+;
+; *** The pages ***
+;
+msgPageMode
+Configuração do Modo
+;Mode settings
+;
+msgPageAdvanced
+Configurações Avançadas
+;Advanced settings
+;
+; *** The units ***
+;
+msgUnitDevice
+Unidade: %ld
+;Unit %ld
+;
+msgUnitMusic
+Unidade de Música
+;Music unit
+;
+; *** Properties box ***
+;
+msgProperties
+ID do Modo\nGravação\nAutor\n"Copyright"\n"Driver"\nVersão
+;Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+;
+msgPropRecordFull
+'Full duplex'
+;Full duplex
+;
+msgPropRecordHalf
+'Half duplex'
+;Half duplex
+;
+msgPropRecordNone
+Não
+;Nope
+;
+; *** Options ***
+;
+msgOptions
+Opções
+;Options
+;
+msgOptFrequency
+_Frequência
+;_Frequency
+;
+msgOptChannels
+_Canais
+;C_hannels
+;
+msgOptNoChannels
+
+;
+;
+msgOptVolume
+_Volume
+;_Volume
+;
+msgOptMonitor
+_Monitorização
+;_Monitor
+;
+msgOptGain
+_Ganho
+;_Gain
+;
+msgOptMuted
+Desligada
+;Muted
+;
+msgOptInput
+_Entrada
+;_Input
+;
+msgOptNoInputs
+Sem Entradas
+;No inputs
+;
+msgOptOutput
+_Saída
+;_Output
+;
+msgOptNoOutputs
+Sem Saídas
+;No outputs
+;
+;
+; *** Global Options ***
+;
+msgGlobalOptions
+Opções Globais
+;Global options
+;
+msgGlobOptDebugLevel
+Nivel de "_Debug"
+;_Debug level
+;
+msgGlobOptEcho
+_Eco
+;_Echo
+;
+msgGlobOptSurround
+"Surround" nos Modos "_Rápidos"
+;Surround in "_Fast" modes
+;
+msgGlobOptCPULimit
+_Limite de Uso do CPU
+;CPU usage _limit
+;
+; *** Debug levels ***
+;
+msgDebugNone
+Nenhum
+;None
+;
+msgDebugLow
+Baixo
+;Low
+;
+msgDebugHigh
+Alto
+;High
+;
+msgDebugFull
+Completo
+;Full
+;
+; *** Echo ***
+;
+msgEchoEnabled
+Ligado
+;Enabled
+;
+msgEchoFast
+Rápido
+;Fast
+;
+msgEchoDisabled
+Desligado
+;Disabled
+;
+; *** Surround ***
+;
+msgSurroundEnabled
+Ligado
+;Enabled
+;
+msgSurroundDisabled
+Desligado
+;Disabled
+;
+; *** Buttons ***
+;
+msgButtonSave
+_Gravar
+;_Save
+;
+msgButtonUse
+_Usar
+;_Use
+;
+msgButtonCancel
+_Cancelar
+;_Cancel
+;
+msgButtonOK
+OK
+;OK
+;
+; *** Texts ***
+;
+msgTextProgramName
+
+;AHI preferences
+;
+;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
+msgTextCopyright
+%s%s\nCopyright ©%s\nTradução para Português por Frederico Borges & Rúben Alvim / ATO
+;%s%s\nCopyright ©%s
+;
+msgTextNoWindow
+Não foi possível abrir a janela.
+;Unable to open window.
+;
+msgTextNoFileRequester
+Não foi possível localizar Seleccionador de Ficheiros
+;Unable to allocate file requester.
+;
+msgTextNoFind
+Não foi possível encontrar o `%s'!
+;Unable to find `%s'!
+;
+msgTextNoOpen
+Não foi possível abrir a `%s´ versão %ld.
+;Unable to open `%s´ version %ld.
+;
+; *** Additions
+;
+msgGlobOptMasterVol
+_Volume Principal
+;_Master volume
+;
+msgMVNoClip
+Sem Cortes
+;Without clipping
+;
+msgMVClip
+Com Cortes
+;With clipping
+;
+msgGlobOptACTime
+
+;Anti-click time (ms)
+; ***NEW***
+;

@@ -1,0 +1,309 @@
+## version $VER: ahiprefs.catalog 4.5 (3.8.98) © Computer Bug (Ami1251)
+## language russian
+## codeset 0
+;
+## chunk AUTH Translated by Michael Malyshev <cbug@cch.pmc.ru>
+;
+; $Id$
+; $Log$
+; Revision 1.1  2000/04/01 00:25:39  bernie
+; Also forgot these
+;
+; Revision 1.4  1999/08/29 23:44:09  lcs
+; Added support for ahigp_AntiClickTime.
+;
+; Revision 4.5  1997/04/27 16:16:06  lcs
+; Added "Mastervolume with(out) clipping".
+;
+; Revision 4.4  1997/04/23 21:08:31  lcs
+; Removed (Disabled)
+;
+; Revision 4.2  1997/04/07 01:36:51  lcs
+; Localized it, bug fixes
+;
+;
+; *** Menus ***
+;
+msgMenuProject
+\0Проект
+;\000Project
+;
+msgItemOpen
+O\0Открыть...
+;O\000Open...
+;
+msgItemSaveAs
+A\0Сохранить как...
+;A\000Save As...
+;
+msgItemAbout
+?\0О...
+;?\000About...
+;
+msgItemQuit
+Q\0Выход
+;Q\000Quit
+;
+msgMenuEdit
+\0Изменять
+;\000Edit
+;
+msgItemDefaults
+D\0По умолчанию
+;D\000Reset To Defaults
+;
+msgItemLastSaved
+L\0Последняя запись
+;L\000Last Saved
+;
+msgItemRestore
+R\0Восстановить
+;R\000Restore
+;
+msgMenuSettings
+\0Настройки
+;\000Settings
+;
+msgItemCreateIcons
+I\0Создавать иконки?
+;I\000Create Icons?
+;
+msgMenuHelp
+\0Помощь
+;\000Help
+;
+msgItemHelp
+Помощь\0Помощь...
+;Help\000Help...
+;
+msgItemUsersGuide
+H\0AHI User's guide...
+;H\000AHI User's guide...
+;
+msgItemConceptIndex
+\0Индекс...
+;\000Concept Index...
+;
+; *** The pages ***
+;
+msgPageMode
+Настройки режима
+;Mode settings
+;
+msgPageAdvanced
+Расширенныe настройки
+;Advanced settings
+;
+; *** The units ***
+;
+msgUnitDevice
+Устройство %ld
+;Unit %ld
+;
+msgUnitMusic
+Музыкальное устройство
+;Music unit
+;
+; *** Properties box ***
+;
+msgProperties
+Режим ID\n\
+Запись\n\
+Автор\n\
+Copyright\n\
+Драйвер\n\
+Версия
+;Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+;
+msgPropRecordFull
+Полный дуплекс
+;Full duplex
+;
+msgPropRecordHalf
+Половина дуплекса
+;Half duplex
+;
+msgPropRecordNone
+Нет
+;Nope
+;
+; *** Options ***
+;
+msgOptions
+Настройки
+;Options
+;
+msgOptFrequency
+Частота
+;_Frequency
+;
+msgOptChannels
+Каналы
+;C_hannels
+;
+msgOptNoChannels
+\0
+;
+;
+msgOptVolume
+Громкость
+;_Volume
+;
+msgOptMonitor
+Монитор
+;_Monitor
+;
+msgOptGain
+Доступ
+;_Gain
+;
+msgOptMuted
+Немой
+;Muted
+;
+msgOptInput
+Ввод
+;_Input
+;
+msgOptNoInputs
+Не вводить
+;No inputs
+;
+msgOptOutput
+Вывод
+;_Output
+;
+msgOptNoOutputs
+Не выводить
+;No outputs
+;
+;
+; *** Global Options ***
+;
+msgGlobalOptions
+Основные опции
+;Global options
+;
+msgGlobOptDebugLevel
+Отладочный режим
+;_Debug level
+;
+msgGlobOptEcho
+Эхо
+;_Echo
+;
+msgGlobOptSurround
+Эввект окружения в "Быстрых" режимах
+;Surround in "_Fast" modes
+;
+msgGlobOptCPULimit
+Лимит использование процессора
+;CPU usage _limit
+;
+; *** Debug levels ***
+;
+msgDebugNone
+Нет
+;None
+;
+msgDebugLow
+Низкий
+;Low
+;
+msgDebugHigh
+Высокий
+;High
+;
+msgDebugFull
+Полный
+;Full
+;
+; *** Echo ***
+;
+msgEchoEnabled
+Включено
+;Enabled
+;
+msgEchoFast
+Быстрое
+;Fast
+;
+msgEchoDisabled
+Выключено
+;Disabled
+;
+; *** Surround ***
+;
+msgSurroundEnabled
+Включено
+;Enabled
+;
+msgSurroundDisabled
+Выключено
+;Disabled
+;
+; *** Buttons ***
+;
+msgButtonSave
+_Сохранить
+;_Save
+;
+msgButtonUse
+_Принять
+;_Use
+;
+msgButtonCancel
+_Отменить
+;_Cancel
+;
+msgButtonOK
+OK
+;OK
+;
+; *** Texts ***
+;
+msgTextProgramName
+Настройки AHI
+;AHI preferences
+;
+;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
+msgTextCopyright
+%s%s\n\
+Copyright ©%s
+;%s%s\nCopyright ©%s
+;
+msgTextNoWindow
+Невозможно открыть окно.
+;Unable to open window.
+;
+msgTextNoFileRequester
+Не доступен файловый риквестер.
+;Unable to allocate file requester.
+;
+msgTextNoFind
+Невозможно найти `%s'!
+;Unable to find `%s'!
+;
+msgTextNoOpen
+Невозможно открыть `%sґ версии %ld.
+;Unable to open `%sґ version %ld.
+;
+; *** Additions
+;
+msgGlobOptMasterVol
+Громкость
+;_Master volume
+;
+msgMVNoClip
+Без отсекания
+;Without clipping
+;
+msgMVClip
+С отсеканием
+;With clipping
+;
+msgGlobOptACTime
+
+;Anti-click time (ms)
+; ***NEW***
+;

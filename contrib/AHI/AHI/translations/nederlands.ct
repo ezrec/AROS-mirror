@@ -1,0 +1,303 @@
+## version $VER: ahiprefs.catalog 4.4 (12.4.97)
+## language nederlands
+## codeset 0
+;
+## chunk AUTH Translated by Michel Vissers <michel@hell.xs4all.nl>
+;
+; $Id$
+; $Log$
+; Revision 1.1  2000/04/01 00:25:39  bernie
+; Also forgot these
+;
+; Revision 1.4  1999/08/29 23:44:04  lcs
+; Added support for ahigp_AntiClickTime.
+;
+; Revision 4.5  1997/04/27 16:16:06  lcs
+; Added "Mastervolume with(out) clipping".
+;
+; Revision 4.4  1997/04/23 21:08:31  lcs
+; Removed (Disabled)
+;
+; Revision 4.2  1997/04/07 01:36:51  lcs
+; Localized it, bug fixes
+;
+;
+; *** Menus ***
+;
+msgMenuProject
+\000Project
+;\000Project
+;
+msgItemOpen
+O\000Open...
+;O\000Open...
+;
+msgItemSaveAs
+A\000Bewaar als...
+;A\000Save As...
+;
+msgItemAbout
+?\000Over...
+;?\000About...
+;
+msgItemQuit
+Q\000Einde
+;Q\000Quit
+;
+msgMenuEdit
+\000Bewerk
+;\000Edit
+;
+msgItemDefaults
+D\000Herstel standaardinstelling
+;D\000Reset To Defaults
+;
+msgItemLastSaved
+L\000Laatst bewaarde versie
+;L\000Last Saved
+;
+msgItemRestore
+R\000Herstel
+;R\000Restore
+;
+msgMenuSettings
+\000Instellingen
+;\000Settings
+;
+msgItemCreateIcons
+I\000Ikonen aanmaken?
+;I\000Create Icons?
+;
+msgMenuHelp
+\000Help
+;\000Help
+;
+msgItemHelp
+Help\000Help...
+;Help\000Help...
+;
+msgItemUsersGuide
+H\000AHI gebruikers documentatie...
+;H\000AHI User's guide...
+;
+msgItemConceptIndex
+\000Concept index...
+;\000Concept Index...
+;
+; *** The pages ***
+;
+msgPageMode
+Mode instellingen
+;Mode settings
+;
+msgPageAdvanced
+Geavanceerde instellingen
+;Advanced settings
+;
+; *** The units ***
+;
+msgUnitDevice
+Unit %ld
+;Unit %ld
+;
+msgUnitMusic
+Muziek unit
+;Music unit
+;
+; *** Properties box ***
+;
+msgProperties
+Mode ID\nOpname\nMaker\nCopyright\nDriver\nVersie
+;Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion
+;
+msgPropRecordFull
+Full duplex
+;Full duplex
+;
+msgPropRecordHalf
+Half duplex
+;Half duplex
+;
+msgPropRecordNone
+Nee
+;Nope
+;
+; *** Options ***
+;
+msgOptions
+Opties
+;Options
+;
+msgOptFrequency
+_Frequentie
+;_Frequency
+;
+msgOptChannels
+_Kanalen
+;C_hannels
+;
+msgOptNoChannels
+
+;
+;
+msgOptVolume
+_Volume
+;_Volume
+;
+msgOptMonitor
+_Monitor
+;_Monitor
+;
+msgOptGain
+Versterki_ng
+;_Gain
+;
+msgOptMuted
+Uitgeschakeld
+;Muted
+;
+msgOptInput
+_Ingang
+;_Input
+;
+msgOptNoInputs
+Geen ingangen
+;No inputs
+;
+msgOptOutput
+_Uitgang
+;_Output
+;
+msgOptNoOutputs
+Geen uitgangen
+;No outputs
+;
+;
+; *** Global Options ***
+;
+msgGlobalOptions
+Globale opties
+;Global options
+;
+msgGlobOptDebugLevel
+_Debug niveau
+;_Debug level
+;
+msgGlobOptEcho
+_Echo
+;_Echo
+;
+msgGlobOptSurround
+Surround in "_snelle" modes
+;Surround in "_Fast" modes
+;
+msgGlobOptCPULimit
+CVE gebruik _limiet
+;CPU usage _limit
+;
+; *** Debug levels ***
+;
+msgDebugNone
+Geen
+;None
+;
+msgDebugLow
+Laag
+;Low
+;
+msgDebugHigh
+Hoog
+;High
+;
+msgDebugFull
+Volledig
+;Full
+;
+; *** Echo ***
+;
+msgEchoEnabled
+Ingeschakeld
+;Enabled
+;
+msgEchoFast
+Snel
+;Fast
+;
+msgEchoDisabled
+Uitgeschakeld
+;Disabled
+;
+; *** Surround ***
+;
+msgSurroundEnabled
+Ingeschakeld
+;Enabled
+;
+msgSurroundDisabled
+Uitgeschakeld
+;Disabled
+;
+; *** Buttons ***
+;
+msgButtonSave
+_Bewaar
+;_Save
+;
+msgButtonUse
+_Gebruik
+;_Use
+;
+msgButtonCancel
+_Annuleer
+;_Cancel
+;
+msgButtonOK
+OK
+;OK
+;
+; *** Texts ***
+;
+msgTextProgramName
+AHI Instellingen
+;AHI preferences
+;
+;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
+msgTextCopyright
+%s%s\nCopyright ©%s\nNederlandse vertaling door Michel Vissers.
+;%s%s\nCopyright ©%s
+;
+msgTextNoWindow
+Kan venster niet openen.
+;Unable to open window.
+;
+msgTextNoFileRequester
+Kan de file requester niet openen.
+;Unable to allocate file requester.
+;
+msgTextNoFind
+Kan `%s' niet vinden!
+;Unable to find `%s'!
+;
+msgTextNoOpen
+Kan `%s´ versie %ld niet openen.
+;Unable to open `%s´ version %ld.
+;
+; *** Additions
+;
+msgGlobOptMasterVol
+
+;_Master volume
+;
+msgMVNoClip
+
+;Without clipping
+;
+msgMVClip
+
+;With clipping
+;
+msgGlobOptACTime
+
+;Anti-click time (ms)
+; ***NEW***
+;
