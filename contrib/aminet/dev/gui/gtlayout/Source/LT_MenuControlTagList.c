@@ -388,6 +388,7 @@ LT_MenuControlTagList(REG(a0) struct Window *Window,REG(a1) struct Menu *Intuiti
 /*****************************************************************************/
 
 
+#ifndef __AROS__
 VOID
 LT_MenuControlTags(struct Window *Window,struct Menu *Menu,...)
 {
@@ -397,5 +398,6 @@ LT_MenuControlTags(struct Window *Window,struct Menu *Menu,...)
 	LT_MenuControlTagList(Window,Menu,(struct TagItem *)VarArgs);
 	va_end(VarArgs);
 }
+#endif
 
 #endif	/* DO_MENUS */

@@ -129,6 +129,7 @@ LT_New(LayoutHandle *handle,...)	/* link library only */
 /*****************************************************************************/
 
 
+#ifndef __AROS__
 VOID
 LT_Add(
 	LayoutHandle *	Handle,
@@ -143,6 +144,7 @@ LT_Add(
 	LT_AddA(Handle,Type,Label,ID,(struct TagItem *)VarArgs);
 	va_end(VarArgs);
 }
+#endif
 
 
 /*****************************************************************************/

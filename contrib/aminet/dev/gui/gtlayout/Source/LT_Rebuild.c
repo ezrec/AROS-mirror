@@ -327,6 +327,7 @@ LT_RebuildTagList(REG(a0) LayoutHandle *handle,REG(d0) BOOL clear,REG(a1) struct
 /*****************************************************************************/
 
 
+#ifndef __AROS__
 BOOL
 LT_RebuildTags(LayoutHandle *Handle,BOOL Clear,...)
 {
@@ -339,6 +340,7 @@ LT_RebuildTags(LayoutHandle *Handle,BOOL Clear,...)
 
 	return(Result);
 }
+#endif
 
 
 /*****************************************************************************/
