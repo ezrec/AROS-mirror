@@ -31,33 +31,6 @@ static char *RCSid = "$Id$";
 # include <assert.h>
 #endif
 
-/*
- * Use of HAVE_TIMEVAL altered; now use HAVE_GETTIMTOFDAY
- * MH 10-06-97
- */
-#if 0
-#if defined(HAVE_TIMEVAL)
-# ifdef _POSIX_SOURCE
-#  undef _POSIX_SOURCE
-#  ifdef HPUX
-#   define _INCLUDE_HPUX_SOURCE
-#  endif
-#  include <sys/time.h>
-#  ifdef HPUX
-#   undef _INCLUDE_HPUX_SOURCE
-#  endif
-#  define _POSIX_SOURCE
-# else
-#  include <sys/time.h>
-# endif
-# if defined(FIX_PROTOS) && defined(FIX_ALL_PROTOS) && defined( ultrix )
-     int gettimeofday( struct timeval *tp, struct timezone *tpz) ;
-# endif
-#else
-# include <time.h>
-#endif /* HAVE_TIMEVAL */
-#endif
-
 #if defined(TIME_WITH_SYS_TIME)
 # include <sys/time.h>
 # include <time.h>
@@ -177,12 +150,18 @@ const char *system_type( void )
    return "WIN32" ;
 #elif defined(_AMIGA) || defined(AMIGA)
    return "AMIGA" ;
+#elif defined(__AROS__)
+   return "AROS" ;
 #elif defined(__QNX__)
    return "QNX" ;
 #elif defined(__BEOS__)
    return "BEOS" ;
 #elif defined(__CYGWIN__)
    return "WIN32" ;
+#elif defined(__WINS__)
+   return "EPOC32-WINS" ;
+#elif defined(__EPOC32__)
+   return "EPOC32-MARM" ;
 #else
    return "UNIX" ;
 #endif
