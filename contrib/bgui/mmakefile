@@ -36,6 +36,7 @@ INCLUDE_FILES = \
 	o/bgui.library_rev.h \
 	$(INCLUDES_DIR)/libraries/bgui.h \
 	$(INCLUDES_DIR)/libraries/bgui_macros.h \
+	$(INCLUDES_DIR)/bgui/bgui_compilerspecific.h \
 	$(INCLUDES_DIR)/bgui/bgui.h \
 	$(INCLUDES_DIR)/bgui/bgui_image.h \
 	$(INCLUDES_DIR)/bgui/bgui_locale.h \
@@ -310,6 +311,9 @@ $(INCLUDES_DIR)/libraries/bgui.h : include/libraries_bgui.h
 
 $(INCLUDES_DIR)/libraries/bgui_macros.h : include/libraries_bgui_macros.h
 	$(CP) include/libraries_bgui_macros.h $@
+
+$(INCLUDES_DIR)/bgui/bgui_compilerspecific.h : include/bgui_compilerspecific.h
+	$(CP) include/bgui_compilerspecific.h $@
 
 $(INCLUDES_DIR)/bgui/bgui.h : include/bgui.h
 	$(CP) include/bgui.h $@
