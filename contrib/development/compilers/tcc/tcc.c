@@ -8555,10 +8555,12 @@ TCCState *tcc_new(void)
     s->output_type = TCC_OUTPUT_MEMORY;
 
     /* default include paths */
+    tcc_add_sysinclude_path(s, "/tcc");
     tcc_add_sysinclude_path(s, "Workbench:include");
+#ifndef _AROS
     tcc_add_sysinclude_path(s, "/usr/include");
     tcc_add_sysinclude_path(s, CONFIG_TCC_PREFIX "/lib/tcc/include");
-
+#endif
     /* add all tokens */
     table_ident = NULL;
     memset(hash_ident, 0, TOK_HASH_SIZE * sizeof(TokenSym *));
@@ -8596,9 +8598,13 @@ TCCState *tcc_new(void)
     tcc_define_symbol(s, "__WCHAR_TYPE__", "int");
     
     /* default library paths */
+#ifndef _AROS 
     tcc_add_library_path(s, "/usr/local/lib");
     tcc_add_library_path(s, "/usr/lib");
     tcc_add_library_path(s, "/lib");
+#else 
+    tcc_add_library_path(s, "Workbench:lib");
+#endif
 
     /* no section zero */
     dynarray_add((void ***)&s->sections, &s->nb_sections, NULL);
@@ -8878,6 +8884,7 @@ int tcc_set_output_type(TCCState *s, int output_type)
             tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/crt1.o");
  	    tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/crti.o");
 #else
+	tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/detach.o");
         tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/startup.o");
 #endif 
     }

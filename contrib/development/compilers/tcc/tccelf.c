@@ -782,7 +782,7 @@ static void tcc_add_runtime(TCCState *s1)
         tcc_add_file(s1, CONFIG_TCC_CRT_PREFIX "/crtn.o");
 #else
         tcc_add_library(s1, "arosc");
-        tcc_add_file(s1, CONFIG_TCC_CRT_PREFIX "/detach.o");
+        tcc_add_file(s1, CONFIG_TCC_CRT_PREFIX "/libautoinit.a");
 
 #endif
     }

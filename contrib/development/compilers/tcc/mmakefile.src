@@ -15,9 +15,9 @@ USER_LDFLAGS := -ltcc1
 #MM contrib-development-compilers-tcc : linklibs-tcc1
 
 contrib-development-compilers-tcc : setup $(EXE)
-
 %make_prog_setup mmake=contrib-development-compilers-tcc
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
-
+setup ::
+	cp ./stdarg.h $(EXEDIR)
 %common
 %include_deps
