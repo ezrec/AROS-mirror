@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 INCDIR := $(AROS_INCLUDES)/lcms
 
-#MM contrib-gfx-lcms-linklib : setup
+#MM contrib-gfx-lcms-linklib : contrib-gfx-lcms-setup
 contrib-gfx-lcms-linklib : liblcms.a
 	@$(ECHO) Copying liblcms.a...
 	@$(CP) liblcms.a $(AROS_LIB)
@@ -18,6 +18,6 @@ liblcms.a :
 contrib-gfx-lcms-linklib-clean :
 	@$(MAKE) CC=$(AROS_CC) clean
 
-#MM setup
-setup ::
+#MM
+contrib-gfx-lcms-setup ::
 	@$(MKDIR) $(AROS_INCLUDES)/lcms

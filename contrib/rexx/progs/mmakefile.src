@@ -47,8 +47,6 @@ contrib-rexx-demos : setup $(DESTFILES)
 $(DESTDIR)/%.r : %.r
 	@$(CP) $< $@
 
-
-#MM setup :
 setup :
 	%mkdirs_q $(REXXDIR) $(DESTDIR)
 

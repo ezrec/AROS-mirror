@@ -28,7 +28,7 @@ USE_AMIGALIB := yes
 USE_MLIB := yes
 USE_MUILIB := yes
 
-#MM aminet-games-think-soliton-program : includes setup linklibs setup-soliton-catalogs
+#MM aminet-games-think-soliton-program : includes linklibs setup-soliton-catalogs
 
 %make_prog_setup mmake=aminet-games-think-soliton-program
 

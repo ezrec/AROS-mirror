@@ -1,7 +1,7 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM contrib-zune-classes-nlistview : setup includes linklibs
+#MM contrib-zune-classes-nlistview : includes linklibs
 
 USER_INCLUDES = -I../commonaros
 

@@ -53,7 +53,7 @@ INCLUDE_FILES = \
 #MM contrib-bgui : contrib-bgui-setup linklib-bgui bgui-prefs bgui-gadgets-common bgui-test bgui-examples
 contrib-bgui : bgui-library bgui-gadgets
 
-#MM contrib-bgui-setup : setup includes linklibs bgui-setup bgui-includes-copy
+#MM contrib-bgui-setup : includes linklibs bgui-setup bgui-includes-copy
 contrib-bgui-setup : bgui-setup bgui-includes-copy
 
 #MM bgui-gadgets : bgui-gadgets-common

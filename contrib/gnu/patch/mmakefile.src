@@ -7,7 +7,7 @@ EXEDIR := $(CONTRIBDIR)/gnu/patch
 
 #MM- contrib-gnu : contrib-gnu-patch
 
-#MM contrib-gnu-patch : setup linklibs
+#MM contrib-gnu-patch : linklibs
 contrib-gnu-patch : contrib-gnu-patch-build
 
 #MM contrib-gnu-patch-quick

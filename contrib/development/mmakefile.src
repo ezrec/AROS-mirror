@@ -4,12 +4,12 @@
 
 include $(TOP)/config/make.cfg
 
-#MM contrib-development
+#MM contrib-development : contrib-development-setup
 
 contrib-development : setup
 
 #MM
-setup ::
+contrib-development-setup ::
 	%mkdirs_q $(CONTRIBDIR)/Development
 	
 %common

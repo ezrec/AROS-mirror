@@ -7,7 +7,7 @@ EXEDIR := $(CONTRIBDIR)/gnu/m4
 
 #MM- contrib-gnu : contrib-gnu-m4
 
-#MM contrib-gnu-m4 : setup linklibs
+#MM contrib-gnu-m4 : linklibs
 contrib-gnu-m4 : contrib-gnu-m4-build
 
 #MM contrib-gnu-m4-quick

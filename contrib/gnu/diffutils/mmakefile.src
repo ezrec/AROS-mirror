@@ -7,7 +7,7 @@ EXEDIR := $(CONTRIBDIR)/gnu/diffutils
 
 #MM- contrib-gnu : contrib-gnu-diffutils
 
-#MM contrib-gnu-diffutils : setup linklibs
+#MM contrib-gnu-diffutils : linklibs
 contrib-gnu-diffutils : contrib-gnu-diffutils-build
 
 #MM contrib-gnu-diffutils-quick

@@ -22,9 +22,7 @@ EXE 					:= $(INSTDIR)/mame
 #MM
 Mame : setup $(EXE)
 
-#MM
 setup : make-dirs maketree
-	@$(NOP)
 	
 make-dirs :
 	%mkdirs_q $(INSTDIR) $(OBJDIR) $(INSTDIR)/roms $(INSTDIR)/snap

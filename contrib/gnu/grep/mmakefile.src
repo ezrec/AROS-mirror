@@ -7,7 +7,7 @@ EXEDIR := $(CONTRIBDIR)/gnu/grep
 
 #MM- contrib-gnu : contrib-gnu-grep
 
-#MM contrib-gnu-grep : setup linklibs
+#MM contrib-gnu-grep : linklibs
 contrib-gnu-grep : contrib-gnu-grep-build
 
 #MM contrib-gnu-grep-quick

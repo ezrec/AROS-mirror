@@ -51,7 +51,7 @@ USE_AMIGALIB := yes
 USE_MLIB := yes
 USE_MUILIB := yes
 
-#MM aminet-games-think-amichess-program : includes setup linklibs contrib-zune-classes-nlist contrib-zune-classes-nlistview
+#MM aminet-games-think-amichess-program : includes linklibs contrib-zune-classes-nlist contrib-zune-classes-nlistview
 
 %make_prog_setup mmake=aminet-games-think-amichess-program
 

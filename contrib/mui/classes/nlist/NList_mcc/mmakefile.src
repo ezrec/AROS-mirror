@@ -1,7 +1,7 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM contrib-zune-classes-nlist : setup includes linklibs
+#MM contrib-zune-classes-nlist : includes linklibs
 
 FILES := NList_mcc  	\
          NList_mcc0 	\

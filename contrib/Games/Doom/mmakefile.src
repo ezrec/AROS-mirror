@@ -15,10 +15,10 @@ ICONS := Doom
 ICONFILES := $(foreach f, $(ICONS), $(EXEDIR)/$(f).info)
 
 #MM- contrib-games : Doom
-#MM Doom : setup 
+#MM
 Doom : setup $(EXE) $(SCRIPTFILES) $(ICONFILES)
 
-#MM Doom-quick :
+#MM
 Doom-quick : setup $(EXE) $(SCRIPTFILES) $(ICONFILES)
 
 USER_CFLAGS = -DAROS -DNORMALUNIX -DUNROLL -O3 -ffast-math -funroll-loops \

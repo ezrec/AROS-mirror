@@ -50,10 +50,6 @@ test-sdl : setup $(EXES) $(DATAS)
 
 %make_prog_single dir=$(EXEDIR)
 
-#MM setup
-setup :: 
-	%mkdirs_q $(EXEDIR)
-
 $(EXEDIR)/%.bmp : %.bmp
 	@$(CP) $< $@
 

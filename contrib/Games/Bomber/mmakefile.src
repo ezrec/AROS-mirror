@@ -12,10 +12,10 @@ DATAFILES := BombSnds.ssf Bomber.mid Bomber0.ssf Bomber1.ssf
 DESTDATAFILES  := $(foreach f, $(DATAFILES), $(EXEDIR)/$(f)) 
 
 #MM- contrib-games : Bomber
-#MM Bomber : setup 
+#MM
 Bomber : setup $(EXE) $(DESTDATAFILES)
 
-#MM Bomber-quick :
+#MM
 Bomber-quick : setup $(EXE) $(DESTDATAFILES)
 
 FILES := Main

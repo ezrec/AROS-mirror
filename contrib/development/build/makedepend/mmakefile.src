@@ -25,9 +25,5 @@ contrib-development-makedepend : setup $(EXE)
 
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
-#MM
-setup ::
-	%mkdirs_q $(EXEDIR)
-
 %common
 %include_deps

@@ -117,7 +117,7 @@ USE_MLIB := yes
 
 USER_CFLAGS := -O2 -Wunused -Wall -I$(AD) -I$(AR) $(DEFINES)
 
-#MM contrib-radium : setup-contrib-radium
+#MM contrib-radium : contrib-radium-setup
 
 %make_prog_setup mmake=contrib-radium
 
@@ -126,7 +126,7 @@ contrib-radium : setup $(EXE)
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
 #MM
-setup ::
+contrib-radium-setup ::
 	%mkdirs_q $(CONTRIBDIR)/radium
 
 #MM

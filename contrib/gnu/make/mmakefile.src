@@ -7,7 +7,7 @@ EXEDIR := $(CONTRIBDIR)/gnu/make
 
 #MM- contrib-gnu : contrib-gnu-make
 
-#MM contrib-gnu-make : setup linklibs
+#MM contrib-gnu-make : linklibs
 contrib-gnu-make : contrib-gnu-make-build
 
 #MM contrib-gnu-make-quick

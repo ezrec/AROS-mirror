@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-#MM- aminet-disk-cdrom-amicdrom: setup includes linklibs aminet-disk-cdrom-amicdrom-module
+#MM- aminet-disk-cdrom-amicdrom: includes linklibs aminet-disk-cdrom-amicdrom-module
 #MM- aminet-disk-cdrom-amicdrom-quick: aminet-disk-cdrom-amicdrom-module
 
 FILES := \

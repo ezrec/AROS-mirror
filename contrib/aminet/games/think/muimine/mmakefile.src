@@ -29,7 +29,7 @@ USE_AMIGALIB := yes
 USE_MLIB := yes
 USE_MUILIB := yes
 
-#MM aminet-games-think-muimine : includes setup linklibs setup-aminet-games-think-muimine-images
+#MM aminet-games-think-muimine : includes linklibs setup-aminet-games-think-muimine-images
 
 %make_prog_setup mmake=aminet-games-think-muimine
 

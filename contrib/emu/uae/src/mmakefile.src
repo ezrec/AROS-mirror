@@ -74,7 +74,7 @@ USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
 	       -I$(SRCDIR) -I$(SRCDIR)/include
 
 #MM- contrib-complete: uae
-#MM uae : setup uae-setup
+#MM uae : uae-setup
 uae : $(EXE)
 
 #MM
