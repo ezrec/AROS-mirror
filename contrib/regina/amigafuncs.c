@@ -20,6 +20,7 @@
 #include "rexx.h"
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 typedef struct _amiga_tsd_t {
   proclevel amilevel;
@@ -346,3 +347,102 @@ streng *arexx_c2b( tsd_t *TSD, cparamboxptr parm )
   return ret;
 }
 
+
+streng *arexx_bitchg( tsd_t *TSD, cparamboxptr parm1 )
+{
+  cparamboxptr parm2;
+  streng *ret;
+  int bit, error, byte;
+  div_t dt;
+  
+  checkparam( parm1, 2, 2, "BITCHG" );
+  parm2 = parm1->next;
+  
+  bit = streng_to_int( TSD, parm2->value, &error );
+  if (error)
+    exiterror( ERR_INCORRECT_CALL, 0 );
+  
+  dt = div( bit, 8 );
+
+  byte = parm1->value->len-dt.quot-1;
+  if ( byte<0 )
+    exiterror( ERR_INCORRECT_CALL, 0 );
+  
+  ret = Str_dup_TSD( TSD, parm1->value );
+  ret->value[byte]^=(char)(1<<dt.rem);
+  return ret;
+}
+
+streng *arexx_bitclr( tsd_t *TSD, cparamboxptr parm1 )
+{
+  cparamboxptr parm2;
+  streng *ret;
+  int bit, error, byte;
+  div_t dt;
+  
+  checkparam( parm1, 2, 2, "BITCLR" );
+  parm2 = parm1->next;
+  
+  bit = streng_to_int( TSD, parm2->value, &error );
+  if (error)
+    exiterror( ERR_INCORRECT_CALL, 0 );
+  
+  dt = div( bit, 8 );
+  
+  byte = parm1->value->len-dt.quot-1;
+  if ( byte<0 )
+    exiterror( ERR_INCORRECT_CALL, 0 );
+  
+  ret = Str_dup_TSD( TSD, parm1->value );
+  ret->value[byte]&=~(char)(1<<dt.rem);
+  return ret;
+}
+
+streng *arexx_bitset( tsd_t *TSD, cparamboxptr parm1 )
+{
+  cparamboxptr parm2;
+  streng *ret;
+  int bit, error, byte;
+  div_t dt;
+  
+  checkparam( parm1, 2, 2, "BITSET" );
+  parm2 = parm1->next;
+  
+  bit = streng_to_int( TSD, parm2->value, &error );
+  if (error)
+    exiterror( ERR_INCORRECT_CALL, 0 );
+  
+  dt = div( bit, 8 );
+  
+  byte = parm1->value->len-dt.quot-1;
+  if ( byte<0 )
+    exiterror( ERR_INCORRECT_CALL, 0 );
+  
+  ret = Str_dup_TSD( TSD, parm1->value );
+  ret->value[byte]|=(char)(1<<dt.rem);
+  return ret;
+}
+
+streng *arexx_bittst( tsd_t *TSD, cparamboxptr parm1 )
+{
+  cparamboxptr parm2;
+  streng *ret;
+  int bit, error, byte;
+  div_t dt;
+  
+  checkparam( parm1, 2, 2, "BITTST" );
+  parm2 = parm1->next;
+  
+  bit = streng_to_int( TSD, parm2->value, &error );
+  if (error)
+    exiterror( ERR_INCORRECT_CALL, 0 );
+  
+  dt = div( bit, 8 );
+  
+  byte = parm1->value->len-dt.quot-1;
+  if ( byte<0 )
+    exiterror( ERR_INCORRECT_CALL, 0 );
+  
+  ret = int_to_streng( TSD, (parm1->value->value[byte] & (char)(1<<dt.rem))!=0 );
+  return ret;
+}

@@ -795,6 +795,10 @@
    streng *arexx_eof( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_b2c( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_c2b( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_bitchg( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_bitclr( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_bitset( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_bittst( tsd_t *TSD, cparamboxptr parm1 );
 
 /*
  ******************************************************************************

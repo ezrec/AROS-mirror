@@ -86,6 +86,10 @@
 #define add_envir                    __regina_add_envir
 #define addfunc                      __regina_addfunc
 #define arexx_b2c                    __regina_arexx_b2c
+#define arexx_bitchg                 __regina_arexx_bitchg
+#define arexx_bitclr                 __regina_arexx_bitclr
+#define arexx_bitset                 __regina_arexx_bitset
+#define arexx_bittst                 __regina_arexx_bittst
 #define arexx_c2b                    __regina_arexx_c2b
 #define arexx_close                  __regina_arexx_close
 #define arexx_eof                    __regina_arexx_eof
