@@ -1,0 +1,26 @@
+<!doctype html public "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>AROS - $title</title>
+<base href="$baseurl">
+</head>
+
+<body bgcolor=white BACKGROUND="/pics/background.gif" TEXT="#000000">
+<div align=center>
+  $modes{ ~ <b>[</b>&nbsp;$modelink&nbsp;<b>]</b>} ~
+</div>
+
+<h1 align=center>
+  <a href="http://www.aros.org/"><IMG src="/pics/minilogo.gif" height="28" width="71" alt="minilogo.gif" align="bottom"></a>
+  <a href="http:blurb.html">
+    Cross Reference</a><br>
+  $banner
+</h1>
+
+<div align=center>
+  $variables{
+  <b>$varname:</b>
+  $varlinks{ ~ <b>[</b>&nbsp;$varvalue&nbsp;<b>]</b>} ~
+  <br>}
+</div>
+<hr>
