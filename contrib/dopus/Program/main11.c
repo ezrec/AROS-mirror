@@ -321,6 +321,7 @@ int louise,buttons,banknum;
 		SetDrMd(main_rp,JAM2);
 		if (icon_gotclock) {
 			if ((iconify_time_port=LCreatePort(0,0))) {
+				iconify_timereq.tr_node.io_Message.mn_Length=sizeof(iconify_timereq);
 				OpenDevice(TIMERNAME,UNIT_VBLANK,&iconify_timereq.tr_node,0);
 				iconify_timereq.tr_node.io_Message.mn_ReplyPort=iconify_time_port;
 				iconify_timereq.tr_node.io_Command=TR_ADDREQUEST;
