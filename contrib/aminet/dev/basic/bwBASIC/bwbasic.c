@@ -41,10 +41,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <math.h>
-
-#ifndef __AROS
 #include <signal.h>
-#endif
 
 #include <setjmp.h>
 
