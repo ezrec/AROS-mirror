@@ -101,6 +101,10 @@
  *  See Documentation for a detailed discussion.
  */
 
+#ifndef __AROS__
+#define USE_INLINE_STDARG
+#endif
+
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/utility.h>
@@ -108,7 +112,9 @@
 #include <string.h>
 
 #define DEBUG 1
+#ifdef __AROS__
 #include <aros/debug.h>
+#endif
 
 #include "device.h"
 #include "intui.h"
@@ -119,10 +125,7 @@
 #include "globals.h"
 #include "debug.h"
 #include "volumes.h"
-
-#if defined(__GNUC__) && !defined(__AROS__)
-struct Library *ixemulbase;
-#endif
+#include "aros_stuff.h"
 
 /*
  *  Since this code might be called several times in a row without being
@@ -131,8 +134,12 @@ struct Library *ixemulbase;
  *  code.
  */
 
+#ifdef __AROS__
 extern struct Globals *global;
-
+#else
+struct Globals glob;
+struct Globals *global=&glob;
+#endif
 
 void btos(BSTR, char *);
 LOCK *cdlock(CDROM_OBJ *, int);
@@ -153,22 +160,24 @@ int Open_Timer_Device (void);
 void Send_Event (int);
 #ifndef __AROS__
 void Remove_Seglist (void);
+#define SystemOwnTags SystemTags
+#else
+LONG SystemOwnTags(STRPTR, Tag, ...);
 #endif
 BPTR Make_FSSM (void);
 void Install_TD_Interrupt (void);
 void Uninstall_TD_Interrupt (void);
 void Remove_Volume_Node (struct DeviceList *);
 LONG handlemessage(ULONG);
-LONG SystemOwnTags(STRPTR, Tag, ...);
 
 /*
  *  Don't call the entry point main().  This way, if you make a mistake
  *  with the compile options you'll get a link error.
  */
 
-#if defined(__GNUC__) && !defined(__AROS__)
+/* #if defined(__GNUC__) && !defined(__AROS__)
 asm(".text; jmp pc@(_handler-.+2)");
-#endif
+#endif */
 
 #if defined(LATTICE)
 int __saveds handler (void)
@@ -195,13 +204,14 @@ ULONG signals;
 #else
     global->SysBase = *(struct ExecBase **) 4L;
 #endif
+#ifdef SysBase
+#	undef SysBase
+#endif
+#define SysBase global->SysBase
     global->DosProc = (PROC *) FindTask(NULL);
     if (global->DosProc->pr_CLI)
       return RETURN_FAIL;
     global->DOSBase = (struct DOSBase *)OpenLibrary("dos.library",37);
-#if defined(__GNUC__) && !defined(__AROS__)
-    ixemulbase = OpenLibrary ("ixemul.library", 0);
-#endif
     global->UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",37);
 
     BUG2(global->DBDisable = 0;)				/*  Init. globals	*/
@@ -232,16 +242,8 @@ ULONG signals;
 
 	Init_Intui ();
 
-#if defined(__GNUC__) && !defined(__AROS__)
-	if (!ixemulbase)
-	  Display_Error ("Cannot open ixemul.library");
-#endif
-
 	if (
 			global->UtilityBase && global->DOSBase &&
-#if defined(__GNUC__) && !defined(__AROS__)
-			ixemulbase &&
-#endif
 #ifdef __AROS__
 			Get_Startup ((struct FileSysStartupMsg *)(BADDR(packet->dp_Arg3)))
 #else
@@ -353,10 +355,6 @@ ULONG signals;
     return 0;
 }
 
-#ifdef SysBase
-#	undef SysBase
-#endif
-#define SysBase global->SysBase
 #ifdef DOSBase
 #	undef DOSBase
 #endif
@@ -1071,13 +1069,14 @@ openbreak:
 	return FALSE;
 }
 
-
+#ifdef __AROS__
 LONG SystemOwnTags(STRPTR command, Tag tag1, ...) {
 
 	AROS_SLOWSTACKTAGS_PRE(tag1)
 	retval = SystemTagList(command, AROS_SLOWSTACKTAGS_ARG(tag1));
 	AROS_SLOWSTACKTAGS_POST
 }
+#endif
 
 /*
  *  PACKET ROUTINES.	Dos Packets are in a rather strange format as you
@@ -1117,18 +1116,12 @@ int packetsqueued (void)
 
 void btos(BSTR bstr, char *buf)
 {
-#ifdef __AROS__
     LONG len = AROS_BSTR_strlen(bstr);
     buf[len] = 0;
     while (len--)
     {
         buf[len] = AROS_BSTR_getchar(bstr, len);
     }
-#else
-    STRPTR str = (STRPTR)BADDR(bstr);
-    bmov((char *) str+1, buf, *str);
-    buf[*str] = 0;
-#endif
 }
 
 /*
@@ -1437,7 +1430,7 @@ DOSINFO *di;
 void *dlp;
 DEVNODE *dn;
 
-	di = BADDR (((ROOTNODE *) global->DOSBase->dl_Root)->rn_Info);
+	di = BADDR (((struct RootNode *) DOSBase->dl_Root)->rn_Info);
 	dlp = &di->di_DevInfo;
 	dn = BADDR (di->di_DevInfo);
 

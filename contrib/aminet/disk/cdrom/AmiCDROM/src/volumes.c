@@ -30,6 +30,7 @@
 #include "path.h"
 #include "globals.h"
 
+#include "aros_stuff.h"
 #include "clib_stuff.h"
 
 extern struct Globals *global;
@@ -244,7 +245,7 @@ int len;
 		return;
 
 	new->volume = p_volume;
-	len = AROS_BSTR_StrLen(p_volume->dl_OldName);
+	len = AROS_BSTR_strlen(p_volume->dl_OldName);
 	new->name = (char*) AllocMem (len + 1, MEMF_PUBLIC);
 	if (!new)
 	{

@@ -40,6 +40,10 @@
  * Extract information from Mountlist "Startup" field.
  */
 
+#ifndef __AROS__
+#define USE_INLINE_STDARG
+#endif
+
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <stdlib.h>
@@ -72,12 +76,16 @@ extern const struct Resident ACDR_resident;
 #endif
 #define DOSBase global->DOSBase
 
+#ifdef __AROS__
 APTR AllocDosObjectOwnTags(ULONG type, Tag tag1, ...) {
 
 	AROS_SLOWSTACKTAGS_PRE(tag1)
 	retval = AllocDosObject(type, AROS_SLOWSTACKTAGS_ARG(tag1));
 	AROS_SLOWSTACKTAGS_POST
 }
+#else
+#define AllocDosObjectOwnTags AllocDosObjectTags
+#endif
 
 int OpenCDRom() {
 

@@ -16,7 +16,7 @@
 struct Globals {
 	/* Library bases */
 	struct ExecBase *SysBase;
-	struct DOSBase *DOSBase;
+	struct DosLibrary *DOSBase;
 	struct UtilityBase *UtilityBase;/* Utility library for miscellaneous tasks */
 	struct IntuitionBase *IntuitionBase;
 	struct IconBase *IconBase;
