@@ -2,8 +2,10 @@ BEGIN {
 	# Who did it ?
 	#system ("printenv > /tmp/cvs.env");
 	User=ENVIRON["CVSLOGINNAME"];
-	#User=ENVIRON["LOGNAME"];
-	#User=ENVIRON["USER"];
+	if (User == "")
+	    User=ENVIRON["LOGNAME"];
+	if (User == "")
+	    User=ENVIRON["USER"];
 	# Where is CVSROOT ?
 	CVSROOT=ENVIRON["CVSROOT"];
 	gsub(/:[a-z]+:.+@.+:/,"",CVSROOT);
