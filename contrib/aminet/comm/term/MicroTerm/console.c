@@ -170,7 +170,7 @@ struct MySer *ms;
         if (msg->Class == MENUPICK)
         {
           num = msg->Code;
-          while (num != MENUNULL)
+          while (num != (short)MENUNULL)
           {
             switch (MENUNUM(num))
             {
