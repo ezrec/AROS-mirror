@@ -292,6 +292,9 @@ VOID LTP_AddAllAndRefreshThisGadget(LayoutHandle *Handle, struct Gadget *Gadget)
 VOID LTP_FixState(LayoutHandle *Handle, BOOL State, struct Gadget *Gadget, UWORD Bit);
 BOOL LTP_NotifyPager(LayoutHandle *Handle, LONG ID, LONG Page);
 
+/* LT_InitExit.c */
+BOOL LIBENT LT_Init(VOID);
+VOID LIBENT LT_Exit(VOID);
 
 
 #endif	/* _GTLAYOUT_LIBPROTOS_H */

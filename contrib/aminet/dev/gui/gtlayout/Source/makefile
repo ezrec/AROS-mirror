@@ -9,7 +9,7 @@ include $(TOP)/config/make.cfg
 
 LOCALINCLUDES = -I. -I../Include
 
-CC := $(TOOLDIR)/$(TARGET_CPU)-$(TARGET_ARCH)-aros-gcc
+CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros-gcc
 
 DEFINES =
 OPTIMIZE = -O2 -g3
@@ -18,7 +18,7 @@ aros/%_aros.c : %.c
 	$(ARCHTOOL) -R aros/gtlayout_pragmas_aros.h  $^ $@ aros/gtlayout_defines_aros.h
 
 %.o : aros/%_aros.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(LOCALINCLUDES) -c $^ -o $@ -include aros/arosspecific.h
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(LOCALINCLUDES) -include aros/arosspecific.h -c $^ -o $@ 
 
 test/%.o : test/%.c
 	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) $(STARTUP) $(LOCALINCLUDES) -c $^ -o $@
@@ -35,6 +35,7 @@ API_SOURCE = \
 	LT_GetMenuItem \
 	LT_HandleInput \
 	LT_IMsg \
+	LT_InitExit \
 	LT_LabelWidth \
 	LT_LayoutMenus \
 	LT_LevelWidth \
@@ -126,8 +127,8 @@ FILES = \
 	LTP_SPrintf \
 	LTP_Storage \
 	LTP_TabClass \
-	LT_InitExit \
-	min_max
+	min_max \
+	asmpoolfunctions
 
 TESTFILES = test/gui test/Tools
 
