@@ -40,6 +40,7 @@
 #include "crypt.h"
 #include "tables.h"   /* definition/initialization of ebcdic[] */
 
+
 #ifdef USE_FWRITE
 #  define WriteError(buf,len,strm) \
      ((extent)fwrite((char *)(buf),1,(extent)(len),strm) != (extent)(len))
@@ -573,7 +574,7 @@ time_t dos_to_unix_time(ddate, dtime)
 #endif /* !MACOS */
     TTrace((stderr, "  m_time after timezone =  %ld\n", m_time));
 
-#ifndef __AROS       //#ifdef BSD4_4    /* see comments in unix.c */
+#ifdef BSD4_4    /* see comments in unix.c */
     m_time -= localtime((time_t *) &m_time)->tm_gmtoff;
 #else /* !BSD4_4 */
 #ifndef WIN32
