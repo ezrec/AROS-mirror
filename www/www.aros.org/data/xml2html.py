@@ -1,5 +1,10 @@
 '''Routines to convert XML to HTML.'''
 
+# Remember path because importing util will change it
+import os
+CWD = os.getcwd ()
+
+import util
 import xmlsupport, code2html, cStringIO, string, time
 
 from util import TableLite, TR, TD, Heading, RawText, Page, arosRC, \
@@ -120,6 +125,9 @@ def userToHtml (p, xmlfile, item):
     p.fh.write ('<strong><i>')
     xmlfile.processRecursive (p, item.content)
     p.fh.write ('</i></strong>')
+    
+def promptToHtml (p, xmlfile, item):
+    p.fh.write ('&gt;\xA0')
     
 def shellToHtml (p, xmlfile, item):
     p.fh.write ('<tt>')
@@ -369,6 +377,7 @@ class Xml2HtmlProcessor (xmlsupport.Processor):
 	    idea=ideaToHtml,
 	    comment=commentToHtml,
 	    autodoc=autodocToHtml,
+	    prompt=promptToHtml,
 	)
 	self.add ('class', classToHtml)
 	self.processors.update (kw)
@@ -431,5 +440,6 @@ def xmlStringToHtmlString (s):
 if __name__ == '__main__':
     import sys
 
-    xf = XmlPage (sys.argv[1])
+    xf = XmlPage (os.path.join (CWD, sys.argv[1]))
+    print 'Writing to ',os.path.join (os.getcwd(), sys.argv[2])
     xf.write (sys.argv[2])
