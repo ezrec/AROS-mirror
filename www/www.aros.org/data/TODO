@@ -4,7 +4,8 @@ TODO
 use a "config database" (probably a python object which is accessed
 via cPickle) to create the inter-links.
 
-- Convert the C source files into hyperlinked HTML docs
+o Convert the C source files into hyperlinked HTML docs.
+    - Generate lxr.conf from site.conf.
 
 - Add support for AutoDocs.
 
