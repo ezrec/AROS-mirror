@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <math.h>
+#include <string.h>
 
 #include "mat4x4.h"
 
