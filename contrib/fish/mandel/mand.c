@@ -69,7 +69,8 @@ Enjoy!
 
 #include "mand.h"
 
-int MathBase, MathTransBase;
+struct MathBase* MathBase;
+struct MathTransBase* MathTransBase;
 
 /*----------------------*/
 /* Graphics definitions */
@@ -130,12 +131,12 @@ main()
       abort("Can't allocate memory for set storage");
    cur_resource |= F_SETSTORE;
 
-   MathBase = (struct Library *)OpenLibrary("mathffp.library",0);
+   MathBase = (struct MathBase *)OpenLibrary("mathffp.library",0);
    if (MathBase == NULL)
       abort("Can't open mathffp.library");
    cur_resource |= F_MATH;
 
-   MathTransBase = OpenLibrary("mathtrans.library",0);
+   MathTransBase = (struct MathTransBase*)OpenLibrary("mathtrans.library",0);
    if (MathTransBase == NULL)
       abort("Can't open mathtrans.library");
    cur_resource |= F_MATHTRANS;
@@ -598,9 +599,9 @@ abort(s)
 char *s;
 {
    if (cur_resource & F_MATHTRANS)
-      CloseLibrary(MathTransBase);
+      CloseLibrary((struct Library*)MathTransBase);
    if (cur_resource & F_MATH)
-      CloseLibrary(MathBase);
+      CloseLibrary((struct Library*)MathBase);
    if (cur_resource & F_CONSOLE)
       fclose(console);
    if (v_fp)
@@ -608,9 +609,9 @@ char *s;
    if (redir_fp)
       fclose(redir_fp);
    if (cur_resource & F_GRAPHICS)
-      CloseLibrary(GfxBase);
+      CloseLibrary((struct Library*)GfxBase);
    if (cur_resource & F_INTUITION)
-      CloseLibrary(IntuitionBase);
+      CloseLibrary((struct Library*)IntuitionBase);
    if (cur_resource & F_SETSTORE)
       free(v_mand_store);
    if (cur_resource & F_COLORTAB)

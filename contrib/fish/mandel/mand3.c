@@ -21,7 +21,8 @@ notice is retained.
 #define INTUITICKS  0x00400000
 #endif
 
-extern int MathBase, MathTransBase;
+extern struct MathBase* MathBase;
+extern struct MathTransBase* MathTransBase;
 
 extern struct Menu MainMenu[MENU_COUNT];
 

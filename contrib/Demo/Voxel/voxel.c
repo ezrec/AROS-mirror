@@ -487,7 +487,7 @@ void getevents(void)
 }
 /********************MAIN PROC******************************/
 
-void main()
+int main()
 {
     int frame=0, u;
     unsigned char pal[768];

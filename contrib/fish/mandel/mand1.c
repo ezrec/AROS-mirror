@@ -21,7 +21,8 @@ notice is retained.
 #include "mand.h"
 
 
-extern int MathBase, MathTransBase;
+extern strcut MathBase* MathBase;
+extern struct MathTransBase* MathTransBase;
 
 
 /*----------------------*/
