@@ -51,6 +51,8 @@
 #include <intuition/intuitionbase.h>
 #include <stdio.h>
 
+void exit(int);
+
 /* Function Prototypes */
 void chk_done();
 void draw_ground();

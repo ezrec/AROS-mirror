@@ -83,7 +83,7 @@ void main(void)
   STRPTR  sptr;
   ULONG   iter1, iter2, sec1, sec2, micro1, micro2;
   LONG    h, min, sec, sec100, pri = 0L;
-  SHORT   atoi();
+  /*SHORT   atoi();*/
   VOID    PrintSolution(), Leave();
 
   /* Zuerst Intuition-Bibliothek öffnen */

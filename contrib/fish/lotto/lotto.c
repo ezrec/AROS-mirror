@@ -184,6 +184,7 @@ void open_all();         /* opens the libraries, screen, and window */
 long random();           /* random number function */
 long random_mult();      /* calculation used by random() function */
 void randomize();        /* plants pseudo-random variable seed using clock */
+void exit();
 
 /**************************
 *  M A I N  P R O G R A M

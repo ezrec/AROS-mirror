@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <intuition/intuition.h>
 #include <dos/dos.h>
 #include <time.h>
@@ -18,13 +19,17 @@
 #include "mm2.h"
 #include "main_win.c"
 
+#include <aros/debug.h>
+
 struct IntuitionBase *IntuitionBase;
 struct Window *mm_w;
 struct Remember *RK;
 
 void Action(),MemoBrs(),Display_Heads();
 void Colours(char c0, char c1, char c2, char c3);
-void Display_One(),Display_Blank(),Mode_Help();
+void Display_One(),Display_Blank(),Display_Block(),Mode_Help();
+void Toggle(),DisplayT(),Today();
+int Shrink(),SaveData(),date2days(),Month2Num(),CleanUp(),SetColours();
 BOOL MemoChk(BOOL loud);
 struct Window *MainWindow();
 extern struct MinNode *MoveBackOne(struct MinNode *);

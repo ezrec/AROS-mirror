@@ -20,6 +20,7 @@
  */
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 void file(char *);
 void cant(char *);

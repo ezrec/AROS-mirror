@@ -1,11 +1,5 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
-
-CFLAGS	:= $(USER_DEFINES) -O0 $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
-
 FILES := cmath \
 	command \
 	complex \
@@ -16,32 +10,6 @@ FILES := cmath \
 	symbol \
 	tree
 
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE := $(DESTDIR)/icalc
-
-.PHONY : all clean
-
-#MM fish-icalc : setup-fish-icalc
-fish-icalc 	: $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-fish-icalc :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
+%build_prog mmake=fish-icalc \
+    progname=icalc targetdir=$(CONTRIBDIR)/fish \
+    files=$(FILES) uselibs="arossupport amiga arosc m"

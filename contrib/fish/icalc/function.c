@@ -8,6 +8,8 @@
 #include "complex.h"
 #include "memory.h"
 
+#include <stdlib.h>
+
 void clear_ufunc(func)
 	UserFunc *func;
 {

@@ -5,11 +5,12 @@
 *	MWS, March 17, 1991.
 */
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "complex.h"
-#include <libraries/mathieeedp.h>
+/*#include <libraries/mathieeedp.h>*/
 
-extern struct Library * MathIeeeDoubTransBase;
+/*extern struct Library * MathIeeeDoubTransBase;*/
 
 extern const Complex zero, eye;
 

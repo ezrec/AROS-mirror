@@ -12,6 +12,7 @@
 
 #include <aros/oldprograms.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <exec/types.h>
 #include <intuition/intuition.h>

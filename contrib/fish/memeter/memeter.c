@@ -12,6 +12,9 @@
 #include <graphics/gfxbase.h>
 #include <graphics/text.h>
 
+#include <string.h>
+#include <stdio.h>
+
 /*
  *	MeMeter.c - Copyright © 1992 by Devil's child.
  *

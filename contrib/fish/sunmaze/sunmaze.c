@@ -6,7 +6,9 @@
  */
 
 #include <aros/oldprograms.h>
+#include <stdlib.h>
 #include <stdio.h> 
+#include <string.h>
 #include <libraries/dosextens.h>
 #include <intuition/intuition.h>
 #include <exec/memory.h>

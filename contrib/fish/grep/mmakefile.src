@@ -1,39 +1,5 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
-
-CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
-
-FILES := grep
-
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE := $(DESTDIR)/grep
-
-.PHONY : all clean
-
-#MM fish-grep : setup-fish-grep
-fish-grep 	: $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-fish-grep :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
+%build_prog mmake=fish-grep \
+    progname=grep targetdir=$(CONTRIBDIR)/fish \
+    files=grep uselibs="arossupport amiga arosc m"

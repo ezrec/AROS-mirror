@@ -19,6 +19,7 @@
 #include <proto/graphics.h>
 #include <proto/mathieeedoubtrans.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 
 #ifndef TOPAZ_EIGHTY 

@@ -1,6 +1,7 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/intuition.h>
+#include <proto/alib.h>
 
 /*  Functions for creating and manipulating the list of memos
  *
@@ -41,11 +42,14 @@
 
 #include "mm2.h"
 #include <stdio.h>
+#include <string.h>
 
 #ifdef __AROS__
 #define remove DeleteFile
 #define rename Rename
 #endif
+
+extern void Display_One(), Display_Blank();
 
 extern struct MinNode *DisplayFirst;
 extern struct Remember *RK;

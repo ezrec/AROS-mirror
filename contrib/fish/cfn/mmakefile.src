@@ -1,49 +1,11 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM fish-cfn : fish-cfn_newshell
 
-CFLAGS	:= $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
+%build_prog mmake=fish-cfn \
+    progname=cfn targetdir=$(CONTRIBDIR)/fish \
+    files=cfn uselibs="arossupport amiga arosc m"
 
-FILES := cfn
-FILES2 := cfn_newshell
-
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-SRCS2 := $(foreach f, $(FILES2), $(f).c)
-OBJS2 := $(foreach f, $(FILES2), $(OBJDIR)/$(f).o)
-
-EXE := $(DESTDIR)/cfn
-EXE2 := $(DESTDIR)/cfn_newshell
-
-.PHONY : all clean
-
-#MM fish-cfn : setup-fish-cfn
-fish-cfn 	: $(EXE) $(EXE2)
-	@$(NOP)
-
-#MM
-setup-fish-cfn :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-$(EXE2) : $(DESTDIR)/% : $(OBJS2) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS2) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
+%build_prog mmake=fish-cfn_newshell \
+    progname=cfn_newshell targetdir=$(CONTRIBDIR)/fish \
+    files=cfn_newshell uselibs="arossupport amiga arosc m"

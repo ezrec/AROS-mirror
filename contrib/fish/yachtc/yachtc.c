@@ -40,6 +40,7 @@ struct GfxBase { int dummy; };
 #include <exec/memory.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 /* Structures needed for libraries */
 

@@ -1,3 +1,5 @@
+#include <proto/alib.h>
+
 #define StackX (short) *(stack+(stackptr<<1))
 #define StackY (short) *(stack+(stackptr<<1)+1)
 

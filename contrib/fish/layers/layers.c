@@ -40,6 +40,8 @@
 
 /* This code may be freely utilized to develop programs for the Amiga. */
 
+#include <stdlib.h>
+
 #include "aros/oldprograms.h"
 #include "exec/types.h"
 #include "graphics/gfx.h"

@@ -2,6 +2,8 @@
 
 #include <aros/oldprograms.h>
 
+#include <string.h>
+
 extern struct Window *window,*wnd1,*wnd2;
 extern struct GfxBase * GfxBase;
 struct Window *w;

@@ -1,41 +1,5 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
-
-#Please do NOT turn optimization on! 
-#It causes problems on Linux-M68k!!!
-CFLAGS	:= $(USER_DEFINES) -O0 -Wunused -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
-
-FILES := henon
-
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE := $(DESTDIR)/henon
-
-.PHONY : all clean
-
-#MM fish-henon : setup-fish-henon
-fish-henon 	: $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-fish-henon :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
+%build_prog mmake=fish-henon \
+    progname=henon targetdir=$(CONTRIBDIR)/fish \
+    files=henon uselibs="arossupport amiga arosc m"

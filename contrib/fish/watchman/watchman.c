@@ -19,6 +19,9 @@
 
 #include <aros/oldprograms.h>
 #include <exec/memory.h>
+#include <proto/alib.h>
+
+#include <stdlib.h>
 
 #define Lx 29		/* The eyes offset from upper left corner */
 #define Ly 49

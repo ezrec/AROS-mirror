@@ -6,6 +6,7 @@
  */
  
 #include <stdlib.h>
+#include <stdio.h>
 #include <intuition/intuitionbase.h>
 #include <graphics/gfxbase.h>
 #include <exec/ports.h>

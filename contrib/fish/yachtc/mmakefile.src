@@ -1,39 +1,5 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
-
-CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
-
-FILES := yachtc
-
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE := $(DESTDIR)/yachtc
-
-.PHONY : all clean
-
-#MM fish-yachtc : setup-fish-yachtc
-fish-yachtc 	: $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-fish-yachtc :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
+%build_prog mmake=fish-yachtc \
+    progname=yachtc targetdir=$(CONTRIBDIR)/fish \
+    files=yachtc uselibs="arossupport amiga arosc m"

@@ -3,6 +3,7 @@
 #include <exec/types.h>
 #include <intuition/intuition.h>
 
+extern void DisplayT(char **);
 
 extern struct IntuitionBase *IntuitionBase;
 extern struct Window *mm_w;

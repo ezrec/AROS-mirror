@@ -17,6 +17,9 @@
 #include <exec/types.h>
 #include <intuition/intuition.h>
 
+#include <string.h>
+#include <stdlib.h>
+
 #define MAXLINES (100)
 
 #define XSIZE 670

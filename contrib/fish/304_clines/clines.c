@@ -9,6 +9,9 @@
  *
  */
 
+#include <string.h>
+#include <stdlib.h>
+
 #include "window.h"
 
 /*

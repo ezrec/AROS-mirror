@@ -13,6 +13,8 @@
 
 #include "good_double.h"            /* macros & functions' prototypes */
 
+#include <stdio.h>
+
 /*
  *  they usually put something like that it ROM Kernel manuals...
  */

@@ -12,6 +12,7 @@
 %{
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 #include "complex.h"
 #include "memory.h"
 
@@ -185,7 +186,7 @@ yylex()
 {
 	int	c;
 
-	chkabort();
+	/*chkabort();*/
 	while ((c = getc(fin)) == ' ' || c == '\t')	/* skip blanks */
 		;
 
@@ -281,6 +282,40 @@ void fpecatch()
 	execerror("floating point exception", NULL);
 }
 
+int moreinput()
+{
+#ifdef AMIGA
+	if (workbench)
+	{
+		infile = nextarg();
+		if (infile == NULL)
+			return 0;
+	}
+	else {
+#endif
+	if (gargc-- <= 0)
+		return 0;
+	if (fin && fin != stdin)
+		fclose(fin);
+	infile = *gargv++;
+#ifdef AMIGA
+	}
+#endif
+	lineno = 1;
+	if (!strcmp(infile, "-"))
+	{
+		fin = stdin;
+		infile = NULL;
+		fprintf(stderr, "ready\n");
+	}
+	else if (!(fin = fopen(infile, "r")))
+	{
+		fprintf(stderr, "icalc: can't open %s\n", infile);
+		return moreinput();
+	}
+	return 1;
+}
+
 void main(argc,argv)
 	char **argv;
 {
@@ -317,40 +352,6 @@ void main(argc,argv)
 		signal(SIGFPE, fpecatch);	/* catch math errors */
 		yyparse();			/* start parsing */
 	}
-}
-
-int moreinput()
-{
-#ifdef AMIGA
-	if (workbench)
-	{
-		infile = nextarg();
-		if (infile == NULL)
-			return 0;
-	}
-	else {
-#endif
-	if (gargc-- <= 0)
-		return 0;
-	if (fin && fin != stdin)
-		fclose(fin);
-	infile = *gargv++;
-#ifdef AMIGA
-	}
-#endif
-	lineno = 1;
-	if (!strcmp(infile, "-"))
-	{
-		fin = stdin;
-		infile = NULL;
-		fprintf(stderr, "ready\n");
-	}
-	else if (!(fin = fopen(infile, "r")))
-	{
-		fprintf(stderr, "icalc: can't open %s\n", infile);
-		return moreinput();
-	}
-	return 1;
 }
 
 #ifdef AMIGA

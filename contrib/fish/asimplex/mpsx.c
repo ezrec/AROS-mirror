@@ -42,7 +42,7 @@
 IMPORT VOID   SetM();
 IMPORT FILE   *fopen();
 IMPORT INT    fseek();
-IMPORT LONG   ftell(), time();
+IMPORT LONG   ftell()/*, time()*/;
 
 GLOBAL DOUBLE  INFINITE;
 GLOBAL BOOL    minimize;
@@ -850,7 +850,7 @@ STRPTR  str;
 
 {
   ITEMPTR ptr = lptr;
-  SHORT   count = 0, atoi(), choice, i;
+  SHORT   count = 0, /*atoi(),*/ choice, i;
   INT     GetInput(), error;
 
   printf("?? %s:\n",str);

@@ -8,6 +8,8 @@
 #include <exec/memory.h>
 #include "mm2.h"
 
+#include <stdio.h>
+
 #define MINWINWIDTH 170
 
 extern struct IntuitionBase *IntuitionBase;
@@ -144,28 +146,6 @@ static struct NewWindow my_new_window=
   WBENCHSCREEN	 /* Type */
   };
 
-
-/*====================================================================*/
-void DisplayE(char **txt)
-  {
-  Display(txt, 2, 0, 3);
-  }
-/*====================================================================*/
-void DisplayT(char **txt)
-  {
-  Display(txt, 1, 1, 0);
-  }
-/*====================================================================*/
-void DisplayH(char **txt)
-  {
-  Display(txt, 1, 2, 3);
-  }
-/*====================================================================*/
-DisplayC(char **txt)
-  {
-  return Display(txt, 0, 2, 3);
-  }
-/*====================================================================*/
 
 Display(char **txt, int Mode, int FColour, int BColour)
 {
@@ -306,3 +286,25 @@ Display(char **txt, int Mode, int FColour, int BColour)
   return choice;
 }
 
+
+/*====================================================================*/
+void DisplayE(char **txt)
+  {
+  Display(txt, 2, 0, 3);
+  }
+/*====================================================================*/
+void DisplayT(char **txt)
+  {
+  Display(txt, 1, 1, 0);
+  }
+/*====================================================================*/
+void DisplayH(char **txt)
+  {
+  Display(txt, 1, 2, 3);
+  }
+/*====================================================================*/
+DisplayC(char **txt)
+  {
+  return Display(txt, 0, 2, 3);
+  }
+/*====================================================================*/

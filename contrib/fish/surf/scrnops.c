@@ -10,6 +10,7 @@ extern double ran(); /* not in manx  math.h */
 #else
 extern int rand();
 #endif
+#include <string.h>
 
 #include "scrndef.h"
 #include "scrnio.h"

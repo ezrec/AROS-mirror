@@ -1,46 +1,11 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+#MM fish-worldtime : fish-worldtime-files
 
-CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
-
-FILES := main
-
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE := $(DESTDIR)/worldtime
-
-.PHONY : all clean
-
-#MM fish-worldtime : setup-fish-worldtime
-fish-worldtime 	: $(OBJS) $(EXE) config data
-	@$(NOP)
-
-#MM
-setup-fish-worldtime :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-config : worldtime.cfg
-	@$(ECHO) "Copying config file"
-	@$(CP) worldtime.cfg $(DESTDIR)
-
-data : worldtime.dat
-	@$(ECHO) "Copying data file"
-	@$(CP) worldtime.dat $(DESTDIR)
-
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
+%build_prog mmake=fish-worldtime \
+    progname=worldtime targetdir=$(CONTRIBDIR)/fish \
+    files=main uselibs="arossupport amiga arosc m"
+	
+#MM fish-worldtime-files : fish-worldtime-setup
+%copy_files_q files="worldtime.cfg worldtime.dat" \
+    dst=$(CONTRIBDIR)/fish maketarget=fish-worldtime-files

@@ -7,6 +7,7 @@
 #include <functions.h>
 #endif
 #include <stdio.h>
+#include <string.h>
 
 #include "scrndef.h"
 #include "gadgetdef.h"

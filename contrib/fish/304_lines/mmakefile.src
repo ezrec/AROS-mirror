@@ -1,39 +1,5 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
-
-CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
-
-FILES := lines
-
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE := $(DESTDIR)/304_lines
-
-.PHONY : all clean
-
-#MM fish-304_lines : setup-fish-304_lines
-fish-304_lines 	: $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-fish-304_lines :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
+%build_prog mmake=fish-304_lines \
+    progname=304_lines targetdir=$(CONTRIBDIR)/fish \
+    files=lines uselibs="arossupport amiga arosc m"

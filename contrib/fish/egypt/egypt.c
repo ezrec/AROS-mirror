@@ -10,6 +10,11 @@
 #include <intuition/intuition.h>
 #include <graphics/gfxbase.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+
 #include "gfx.h"
 
 

@@ -1,5 +1,6 @@
 #include <aros/oldprograms.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define setmem(ptr,size,fill) memset(ptr,fill,size)
 #define __far

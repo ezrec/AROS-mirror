@@ -33,6 +33,7 @@
 #include <clib/icon_protos.h>
 #else
 #include <proto/exec.h>
+#include <proto/alib.h>
 #include <proto/intuition.h>
 #include <proto/gadtools.h>
 #include <proto/graphics.h>
@@ -242,7 +243,7 @@ extern __far ULONG            RangeSeed;
 
       
 ULONG __stdargs FastRand( unsigned long seed );
-UWORD __stdargs RangeRand( unsigned long maxValue );      
+/*UWORD __stdargs RangeRand( unsigned long maxValue );*/
 void  __stdargs main(int argc,union wbstart argv);
 void newpattern(UBYTE *name);
 void newclass(UBYTE *name);

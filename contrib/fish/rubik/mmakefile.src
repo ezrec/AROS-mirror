@@ -1,39 +1,7 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+TARGET_CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(TARGET_CFLAGS))
 
-CFLAGS	:= $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
-
-FILES := rubik1 rubik2
-
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE := $(DESTDIR)/rubik
-
-.PHONY : all clean
-
-#MM fish-rubik : setup-fish-rubik
-fish-rubik 	: $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-fish-rubik :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
+%build_prog mmake=fish-rubik \
+    progname=rubik targetdir=$(CONTRIBDIR)/fish \
+    files="rubik1 rubik2" uselibs="arossupport amiga arosc m"

@@ -1,39 +1,7 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+TARGET_CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(TARGET_CFLAGS))
 
-CFLAGS	:= $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
-
-FILES := bezier
-
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE := $(DESTDIR)/bezier2
-
-.PHONY : all clean
-
-#MM fish-bezier2 : setup-fish-bezier2
-fish-bezier2 	: $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-fish-bezier2 :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
-
+%build_prog mmake=fish-bezier2 \
+    progname=bezier2 targetdir=$(CONTRIBDIR)/fish \
+    files=bezier uselibs="arossupport amiga arosc m"

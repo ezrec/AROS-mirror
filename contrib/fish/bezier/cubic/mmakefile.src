@@ -1,39 +1,8 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
+TARGET_CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(TARGET_CFLAGS))
 
-CFLAGS	:= $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
-
-FILES := bcubic
-
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE := $(DESTDIR)/bcubic
-
-.PHONY : all clean
-
-#MM fish-bcubic : setup-fish-bcubic
-fish-bcubic 	: $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-fish-bcubic :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
+%build_prog mmake=fish-bcubic \
+    progname=bcubic targetdir=$(CONTRIBDIR)/fish \
+    files=bcubic uselibs="arossupport amiga arosc m"
 

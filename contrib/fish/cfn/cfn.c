@@ -19,6 +19,8 @@
 
 
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include <exec/types.h>
 #include <exec/interrupts.h>
@@ -28,10 +30,12 @@
 #include <devices/input.h>
 #include <dos/dosextens.h>
 #include <dos/exall.h>
+#include <proto/alib.h>
 #include <proto/keymap.h>
 #include <proto/utility.h>
 
 #include <aros/oldprograms.h>
+#include <aros/debug.h>
 
 #define BUF_LEN   256   /* number of buffered characters from input stream */
 #define COMPL_LEN  64   /* maximum length of filename completion */

@@ -31,7 +31,7 @@
 #include <proto/intuition.h>
 
 //#include "functions.h"
-
+#include <stdio.h>
 
 char *ver="$VER: cfn 1.0 (21.6.93)  by Andreas Günther";
 

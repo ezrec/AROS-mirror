@@ -1,12 +1,21 @@
 #include <aros/oldprograms.h>
 
 #include <intuition/intuition.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 #include <exec/nodes.h>
 #include <exec/lists.h>
 #include <exec/memory.h>
 
 #include "mm2.h"
+
+extern int Month2Num(char *);
+extern int DisplayC(char **);
+extern void DisplayE(char **);
+extern void DisplayH(char **);
+extern BOOL CheckMemoDate(char *);
 
 extern struct MinList *MemListPtr;
 extern struct MinNode *DisplayFirst;

@@ -1,6 +1,7 @@
 #include <aros/oldprograms.h>
 #include "exec/types.h"
 #include "intuition/intuition.h"
+#include <stdlib.h>
 #include "stdio.h"
 #include "string.h"
 

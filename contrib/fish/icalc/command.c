@@ -3,6 +3,7 @@
 *	MWS, March 20, 1991.
 */
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "complex.h"
 #include "complex.tab.h"

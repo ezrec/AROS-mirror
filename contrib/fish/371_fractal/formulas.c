@@ -5,6 +5,7 @@
 #define Ult_Zimmax lim3
 #include <aros/oldprograms.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include <exec/types.h>
 #include <intuition/intuition.h>

@@ -1,40 +1,9 @@
 include $(TOP)/config/make.cfg
 
-%define_libs
-
-CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
-
 FILES := rubik getwindow makecube rotate trig gadgets draw extras solve \
 	blurb
 
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
-
-EXE := $(DESTDIR)/362_rubik
-
-.PHONY : all clean
-
-#MM fish-362_rubik : setup-fish-362_rubik
-fish-362_rubik 	: $(OBJS) $(EXE)
-	@$(NOP)
-
-#MM
-setup-fish-362_rubik :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
-
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
+%build_prog mmake=fish-362_rubik \
+    progname=362_rubik targetdir=$(CONTRIBDIR)/fish \
+    files=$(FILES) uselibs="arossupport amiga arosc m"
 
