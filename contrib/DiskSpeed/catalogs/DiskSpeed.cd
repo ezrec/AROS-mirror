@@ -1,0 +1,211 @@
+;
+MSG_CANT_OPEN_LIB (//)
+Can't open %s V%ld!\n
+;
+MSG_CANT_CREATE_APP (//)
+Can't create application object!
+;
+MSG_MAIN_WINTITLE (//)
+%s 4.9 Benchmark Window
+;
+MSG_ABOUT_WINTITLE (//)
+About AROS DiskSpeed..
+;
+MSG_CONFIG_WINTITLE (//)
+Benchmark Configuration..
+;
+MSG_Welcome (//)
+Welcome to the AROS %s Benchmarking Tool.
+;
+MSG_W_DEVICE (//)
+Device
+;
+MSG_W_FILESYS (//)
+Filesystem
+;
+WORD_MENU_Project (//)
+Project
+;
+WORD_MENU_About (//)
+About
+;
+WORD_MENU_Quit (//)
+Quit
+;
+MSG_OK (//)
+Ok
+;
+MSG_GAD_SAVE (//)
+Save
+;
+MSG_GAD_USE (//)
+Use
+;
+MSG_GAD_CANCEL (//)
+Cancel
+;
+MSG_FILE_CREATE (//)
+File Create:   
+;
+MSG_FILE_OPEN (//)
+File Open:     
+;
+MSG_FILE_SCAN (//)
+Directory Scan:
+;
+MSG_FILE_DELETE (//)
+File Delete:   
+;
+MSG_SEEK_READ (//)
+Seek/Read:     
+;
+MSG_BYTES_CREATE (//)
+Create file:   
+;
+MSG_BYTES_WRITE (//)
+Write to file: 
+;
+MSG_BYTES_READ_N (//)
+Read from file:
+;
+MSG_BYTES_READ_S (//)
+Read from SCSI:
+;
+MSG_SEEK_UNITS (//)
+seeks/sec
+;
+MSG_FILE_UNITS (//)
+files/sec
+;
+MSG_BYTE_UNITS (//)
+bytes/sec
+;
+MSG_START_TEST (//)
+Begin Test
+;
+MSG_SAVE_RESULTS (//)
+Save Results
+;
+MSG_STOP_TEST (//)
+End Test
+;
+MSG_BUF1TXT (//)
+Test Buffer 1
+;
+MSG_BUF2TXT (//)
+Test Buffer 2
+;
+MSG_BUF3TXT (//)
+Test Buffer 3
+;
+MSG_BUF4TXT (//)
+Test Buffer 4
+;
+MSG_RWBUFT (//)
+Read/Write Buffer Types
+;
+MSG_RWBUFS (//)
+Read/Write Buffer Sizes
+;
+MSG_CMMNTS (//)
+Comments:
+;
+MSG_DEVICE (//)
+Device:
+;
+MSG_BLDAMOS (//)
+  AmigaOS Build: 
+;
+MSG_BLDAROS (//)
+  AROS Build: 
+;
+MSG_PROCESSOR (//)
+Processor: 
+;
+MSG_DMAHIGH (//)
+  High
+;
+MSG_DMANORM (//)
+  Normal
+;
+MSG_VIDDMA (//)
+ Video DMA
+;
+MSG_TSTMANP (//)
+Testing directory manipulation speed.
+;
+MSG_TSTBUFF (//)
+Testing with a %ld byte, MEMF_%s, %s-aligned buffer.
+;
+MSG_CPUSPD (//)
+CPU Speed Rating: %ld
+;
+MSG_AVGCPU (//)
+Average CPU Available: %ld%%  |  CPU Availability index: %ld
+;
+MSG_NOCPU (//)
+No CPU Speed Rating -- CPU % not available.
+;
+MSG_CPUAVAIL (//)
+  |  CPU Available: %ld%%
+;
+MSG_SKIPMEM (//)
+Skipping %ld byte MEMF_%s test due to lack of memory.
+;
+MSG_ERR_CALIB1 (//)
+CPU Calibration shows that CPU availability tests
+;
+MSG_ERR_CALIB2 (//)
+would be inaccurate in the current system state.
+;
+MSG_ERR_FAIL (//)
+Error:  %s test failed.
+;
+MSG_ERR_NOLOCK (//)
+Error:  Could not get a lock on test device.
+;
+MSG_ERR_NODIR (//)
+Error:  Could not create test directory.
+;
+MSG_ERR_BADDIR (//)
+Error:  Could not access test directory.
+;
+MSG_ERR_NOCONF (//)
+Could not open configuration requester.
+;
+MSG_ERR_BADSPEC (//)
+Error:  Bad device specification.
+;
+MSG_ERR_NODEV (//)
+Error:  Could not open device specified
+;
+MSG_ERR_OFILE (//)
+File Open
+;
+MSG_ERR_RFILE (//)
+Read File
+;
+MSG_ERR_WFILE (//)
+Write File
+;
+MSG_ERR_CFILE (//)
+Create File
+;
+MSG_ERR_DFILE (//)
+File Delete
+;
+MSG_ERR_SEEK (//)
+Seek/Read
+;
+MSG_ERR_DIRSCAN (//)
+Directory Scan
+;
+MSG_ERR_RDEV (//)
+Device Reported Error on Read
+;
+MSG_ERR_DATA (//)
+*** Data Error ***  Buffer did not read correctly.
+;
+MSG_USERINT (//)
+*** Interrupted by user ***
+;

@@ -1,0 +1,89 @@
+
+					DiskSpeed/ScsiSpeed
+						v4.9 by
+				The AROS Development Team
+
+This is an  implementation of Michael Sinz's DiskSpped and 
+ScsiSpeed packages.  The code has been re written to work on the
+AROS Amiga-Like environment, with a few enhancements on the original
+version.  It was designed to give the most accurate results of the
+true disk performance in the system.  For this reason many of
+DiskSpeed's results may look either lower or higher than current disk
+performance tests.
+
+These key words are also available from the TOOLTYPES of the icon.
+
+* DRIVE/K	- select drive  (Default is current directory)
+	You can use either 'DRIVE <path>'  or  'DRIVE=<path>'
+
+* COMMENT/K	- set comment string
+	You can use either 'COMMENT <comment>'  or  'COMMENT=<comment>'
+
+* ALL/S		- select all tests
+	This turns on all of the tests below
+
+* DIR/S		- setect DIR tests
+* SEEK/S	- select SEEK tests
+
+* CHIP/S	- select CHIP memory buffer tests
+* FAST/S	- select FAST memory buffer tests
+	You can select both and DiskSpeed will then do a test pass
+	with each type of memory.
+
+* LONG/S	- select LONG aligned tests
+* WORD/S	- select WORD aligned tests
+* BYTE/S	- select BYTE aligned tests
+	You can select any combinations of the above.  DiskSpeed
+	will do a test pass with each one.  These combine with
+	the memory type above to create up to 6 test passes.
+
+* BUF1/K/N	- select buffer size 1	(Default = 512)
+* BUF2/K/N	- select buffer size 2	(Default = 4096)
+* BUF3/K/N	- select buffer size 3	(Default = 32768)
+* BUF4/K/N	- select buffer size 4	(Default = 262144)
+	Will let you select the buffer sizes for the tests.
+	To eliminate a buffer test, set the buffer to 0.
+	You can use either 'BUF1 <num>'  or  'BUF1=<num>'
+
+* WINDOW/S	- use the GUI even though started from the CLI
+
+* MINTIME/K/N	- Selects the number of seconds to run each test. (1 to 500)
+  New keyword that lets you select the minimum amount of time any test takes.
+  This applies to all tests except for the Directory entry create and delete
+  tests.  Also, note that after the file create speed test, a full 256K file
+  is created and this can, on slow systems take some time.
+
+* NOCPU/S	- Turns off the CPU available task.
+  New keyword that lets you turn off CPU percentage collection.  This is so
+  that the secondary task is not created.  Seems that just having this task
+  around can be enough to throw the performance of the system way off.  The
+  difference in time it takes to task-switch from STOP to the harddisk driver
+  and from a background task and the harddisk driver is sometimes just enough
+  to cause a rotation on the disk to be missed.  This feature may well be
+  removed, but the difference in the numbers is rather interesting.  (The
+  background task is at -127 priority...)
+
+******************************************************************************
+
+						ScsiSpeed 4.9
+
+ScsiSpeed was written due to the demand for more details on the raw
+performance of the drives connected to the system.  ScsiSpeed uses
+low-level device I/O to read the disk starting at block 0 and working up.
+ScsiSpeed, with a reasonable test time such as 20 seconds, will show the
+true sustained performance of the drive/interface combination without the
+overhead of the filesystem and AROS.
+
+Basically, the usage of ScsiSpeed is the same as DiskSpeed except for options
+which do not apply.  (Such as DIR and SEEK tests, etc)
+
+Also, the device/drive specification is different.  You must give the device
+name (such as scsi.device or trackdisk.device) and the unit number as follows:
+
+scsi.device:6		<- This would be unit 6 of scsi.device (default)
+trackdisk.device:0	<- This would be DF0:
+
+Note that due to some controller limitations, only long-aligned read tests
+are done.  Also, ScsiSpeed does not write to the disk and thus will not
+destroy any data on the disk.  This also means that it can test devices
+such as CD-ROM and WORM disks.
