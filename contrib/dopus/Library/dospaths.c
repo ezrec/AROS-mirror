@@ -277,7 +277,8 @@ struct PathList {
 		list=temp;
 		strcpy(list->path,finfo->fib_FileName);
 		templock=lock;
-		lock=ParentDir(lock);
+		lock=0; /* AROSSG ParentDir(lock); */
+		kprintf("** dopus-library: PathName %x\n", lock);
 		if (it) UnLock(templock);
 		++it;
 	} while (lock);
