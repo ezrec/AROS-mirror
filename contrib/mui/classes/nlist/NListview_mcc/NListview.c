@@ -130,8 +130,8 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
   { data->Vert_ScrollBar = vert & 0x0F;
 
     if (data->Vert_ScrollBar == MUIV_NListview_VSB_Default)
-    { LONG *scrollbar;
-      if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_VSB, (LONG) (&scrollbar)))
+    { LONG *scrollbar = 0;
+      if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_VSB, (LONG) (&scrollbar)) && scrollbar)
         data->VertSB = *scrollbar;
       else
         data->VertSB = MUIV_NListview_VSB_Always;
@@ -174,8 +174,8 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
   { data->Horiz_ScrollBar = horiz & 0x0F;
 
     if (data->Horiz_ScrollBar == MUIV_NListview_HSB_Default)
-    { LONG *scrollbar;
-      if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_HSB, (LONG) (&scrollbar)))
+    { LONG *scrollbar = 0;
+      if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_HSB, (LONG) (&scrollbar)) && scrollbar)
         data->HorizSB = *scrollbar;
       else
         data->HorizSB = DEFAULT_HSB;
