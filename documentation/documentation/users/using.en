@@ -23,7 +23,7 @@ Introduction
 This is the Amiga Research Operating System User's Guide. It is meant to get 
 people used to AROS. It is for *everybody* interested in AROS, as it tries to 
 provide information on AROS in different levels of advancedness. I try to cover
-everything in deep, but in such a way that you don't need to learn what you 
+everything in depth, but in such a way that you don't need to learn what you 
 don't *want* to learn.
 
 
@@ -44,7 +44,7 @@ are entirely in the wrong place.
 How you should read this guide
 ------------------------------
 
-I try to write this guide ordered from "simple" to "advanced". You can start 
+This guide is ordered from "simple" to "advanced". You can start 
 reading at any chapter that contains information that is new to you. But maybe 
 even more important, you should stop reading at any chapter that contains 
 information going beyond your interest. In this way you can learn yourself the 
