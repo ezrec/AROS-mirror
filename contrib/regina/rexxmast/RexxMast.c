@@ -183,7 +183,7 @@ int main(int argc, char **argv)
 
 static void StartFile(struct RexxMsg *msg)
 {
-    char text[20];
+    char text[40];
 
     sprintf(text, "PROGDIR:RexxMast SUBTASK %p", (void*)msg);
   
