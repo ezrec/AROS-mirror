@@ -10,10 +10,22 @@
 
 #include <exec/memory.h>
 #include <exec/semaphores.h>
+#include <exec/lists.h>
+#include <exec/nodes.h>
+
+APTR __regina_semaphorepool;
+struct MinList *__regina_tsdlist = NULL;
 
 typedef struct _mt_tsd_t {
   APTR mempool;
 } mt_tsd_t;
+
+typedef struct _tsd_node_t {
+  struct MinNode node;
+  struct Task *task;
+  tsd_t *TSD;
+} tsd_node_t;
+
 
 /* Lowest level memory allocation function for normal circumstances. */
 static void *MTMalloc(const tsd_t *TSD,size_t size)
@@ -45,12 +57,22 @@ static void MTExit(int code)
 
 static void cleanup(void)
 {
-  tsd_t *TSD = __regina_get_tsd();
-  mt_tsd_t *mt = (mt_tsd_t *)TSD->mt_tsd;
+  struct Task *thistask = FindTask(NULL);
+  tsd_node_t *node;
+  mt_tsd_t *mt;
 
+  node = (tsd_node_t *)GetHead(__regina_tsdlist);
+  while (node!=NULL && node->task!=thistask)
+    node = (tsd_node_t *)GetSucc(node);
+  if (node==NULL)
+  {
+    fputs("!!!NODE==NULL!!!", stderr);
+  }
+
+  mt = (mt_tsd_t *)node->TSD->mt_tsd;
   DeletePool( mt->mempool );
-  
-  FindTask(NULL)->tc_UserData=NULL;
+
+  node->TSD = NULL; /* Node is not removed to avoid the need of Forbid/Permit during searching of the list */
 }
 
 tsd_t *ReginaInitializeThread(void)
@@ -104,9 +126,6 @@ tsd_t *ReginaInitializeThread(void)
    return(__regina_tsd);
 }
 
-
-APTR __regina_semaphorepool;
-
 void AmigaLockSemaphore(struct SignalSemaphore **semaphoreptr)
 {
   if (*semaphoreptr == NULL)
@@ -115,7 +134,6 @@ void AmigaLockSemaphore(struct SignalSemaphore **semaphoreptr)
 
     if (*semaphoreptr == NULL)
     {
-      tsd_t *TSD = __regina_get_tsd(); 
       *semaphoreptr = AllocPooled (__regina_semaphorepool, sizeof(struct SignalSemaphore));
       InitSemaphore(*semaphoreptr);
     }
@@ -132,16 +150,44 @@ void AmigaUnlockSemaphore(struct SignalSemaphore *semaphore)
   ReleaseSemaphore(semaphore);
 }
 
+
 tsd_t *__regina_get_tsd(void)
 {
-  tsd_t *TSD = ((tsd_t *)(FindTask(NULL)->tc_UserData));
-    
-  if (TSD==NULL)
+  struct Task *thistask = FindTask(NULL);
+  tsd_node_t *node;
+
+  /* Allocate list of TSDs if it is not yet present */
+  if (__regina_tsdlist == NULL)
   {
-    TSD=ReginaInitializeThread();
-    FindTask(NULL)->tc_UserData=TSD;
+    Forbid();
+    
+    if (__regina_tsdlist == NULL)
+    {
+      __regina_tsdlist = (struct MinList *)AllocPooled (__regina_semaphorepool, sizeof(struct MinList));
+      NewList(__regina_tsdlist);
+    }
+    
+    Permit();
+  }
+
+  node = (tsd_node_t *)GetHead(__regina_tsdlist);
+  while (node!=NULL && node->task!=thistask)
+    node = (tsd_node_t *)GetSucc(node);
+  
+  if (node==NULL)
+  {
+    /* taskdata not found */
+    node = (tsd_node_t *)AllocPooled(__regina_semaphorepool, sizeof(tsd_node_t));
+    node->task = thistask;
+    node->TSD = ReginaInitializeThread();
+    AddTail(__regina_tsdlist, node);
     atexit(cleanup);
   }
-  
-  return TSD;
+  else if (node->TSD==NULL) /* Was MTExit called on this task ? */
+  {
+    node->TSD = ReginaInitializeThread();
+    atexit(cleanup);
+  }
+
+  return node->TSD;
 }

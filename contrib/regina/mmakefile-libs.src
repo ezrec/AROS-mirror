@@ -21,6 +21,7 @@ OBJDIR := $(GENDIR)/$(CURDIR)/shared
 
 #Libraries to use
 USE_CLIB_SHARED := YES
+USE_AMIGALIB := YES
 USE_MLIB := YES
 
 MODNAME := regina
