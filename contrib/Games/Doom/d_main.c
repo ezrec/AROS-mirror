@@ -1,4 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // $Id$
@@ -15,6 +15,9 @@
 // for more details.
 //
 // $Log$
+// Revision 1.4  2001/05/04 00:20:56  falemagn
+// removed the AROS specific defines that broke the yesterday's nightly building
+//
 // Revision 1.3  2001/04/05 20:40:25  stegerg
 // No more need for a replacement getenv() function, as getenv
 // is now available in c lib.
@@ -37,15 +40,16 @@
 
 static const char rcsid[] = "$Id$";
 
-#ifdef AROS
+/*#ifdef AROS --- disabled now */
+#if 0
  extern int  I_Exists(char *name);
 /* extern char *I_GetEnv(char *name); */
  extern void I_MakeDir(char *name);
 
- #define access(name,mode) (!(I_Exists(name)))
+ #define access(name,mode) (!(I_Exists(name))) */
 /* #define getenv(name)      (I_GetEnv(name)) */
- #define mkdir(name,b)	  (I_MakeDir(name))
- 
+ #define mkdir(name,b)	  (I_MakeDir(name))*/
+
  #include <aros/debug.h>
 #endif
 
@@ -650,7 +654,7 @@ void IdentifyVersion (void)
     // Retail.
     doomuwad = malloc(strlen(doomwaddir)+1+8+1);
     sprintf(doomuwad, "%sdoomu.wad", doomwaddir);
-    
+
     // Registered.
     doomwad = malloc(strlen(doomwaddir)+1+8+1);
     sprintf(doomwad, "%sdoom.wad", doomwaddir);
@@ -808,7 +812,7 @@ void FindResponseFile (void)
             char    *file;
             char    *moreargs[20];
             char    *firstargv;
-                        
+
             // READ THE RESPONSE FILE INTO MEMORY
             handle = fopen (&myargv[i][1],"rb");
             if (!handle)
@@ -958,7 +962,7 @@ void D_DoomMain (void)
         mkdir("c:\\doomdata",0);
 #endif
         strcpy (basedefault,"c:/doomdata/default.cfg");
-    }   
+    }
     
     // turbo option
     if ( (p=M_CheckParm ("-turbo")) )
