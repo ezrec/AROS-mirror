@@ -1,0 +1,12 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+#MM- contrib-sdl-sdl-image : development-SDL_image
+
+#MM- development-SDL_image : linklibs-SDL
+
+%fetch_and_build_gnu_development package=SDL_image version=1.2.3 patch=yes \
+    package_repo=http://www.libsdl.org/projects/SDL_image/release/
+
