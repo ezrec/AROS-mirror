@@ -181,6 +181,9 @@ lessRelated = (
 	' software development on the Amiga and on future Amiga compatible'
 	' machines.'
     ),
+    Link ('http://www.amigaemulation.de/', 'Amiga Emulation.de',
+	'A site with links and infos about Amiga emulators.'
+    ),
 )
 
 downloadLinks = (
