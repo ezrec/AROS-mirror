@@ -1,0 +1,16 @@
+SYS:C/Unpack SYS:AROS.pkg RAM:
+
+RAM:
+C/Copy >NIL: SYS:C/Shell RAM:C QUIET
+
+C/Assign SYS:  RAM:
+C/Assign C:    SYS:C
+
+Assign DEVS: SYS:Devs
+Assign LIBS: SYS:LIBS
+Assign S:    SYS:S
+
+Makedir RAM:T
+Assign T: RAM:T
+
+Execute S:Startup-Sequence

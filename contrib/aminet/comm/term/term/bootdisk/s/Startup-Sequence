@@ -1,0 +1,51 @@
+Makedir RAM:Clipboards RAM:ENV RAM:ENV/SYS
+If NOT EXISTS RAM:T
+    Makedir RAM:T
+EndIf
+
+Assign ENV:     RAM:ENV
+Assign T:       RAM:T
+Assign CLIPS:   RAM:Clipboards
+
+Assign KEYMAPS: DEVS:Keymaps
+Assign LOCALE:  SYS:Locale
+Assign LIBS:    SYS:Classes ADD
+Assign FONTS:   SYS:Fonts
+Assign HELP:    LOCALE:Help DEFER
+;Assign PRINTERS: DEVS:Printers
+
+If EXISTS SYS:DiskImages
+    Assign FDSK: SYS:DiskImages
+EndIf
+
+Path C: SYS:Utilities S: SYS:Prefs SYS:System SYS:contrib/aminet QUIET
+
+Copy >NIL: ENVARC: ENV: ALL CLONE NOREQ
+
+Touch >NIL: FONTS:__TEST__
+If WARN
+    Makedir RAM:Fonts
+    Assign FONTS: RAM:Fonts
+    Copy >NIL: SYS:Fonts FONTS: ALL CLONE NOREQ
+Endif
+
+IF EXISTS FONTS:__TEST__
+    Delete FONTS:__TEST__ QUIET
+Endif
+
+If NOT EXISTS FONTS:fixed.font
+    FixFonts
+EndIf
+
+AddDatatypes REFRESH QUIET
+IPrefs
+Run <NIL: >NIL: ConClip
+
+If EXISTS C:RexxMast
+    Assign REXX: S:
+    Run <NIL: >NIL: C:RexxMast
+EndIf
+
+If EXISTS S:User-Startup
+    Execute S:User-Startup
+EndIf

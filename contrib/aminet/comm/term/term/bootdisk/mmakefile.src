@@ -1,0 +1,87 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+-include $(OSGENDIR)/boot/mf.inc
+
+BOOT_FILES := \
+    C/Shell \
+    S/Startup-Sequence \
+    C/Unpack \
+    boot/grub/stage1 boot/grub/stage2 \
+    boot/grub/menu.lst
+
+BOOT_TAR_FILES := \
+    C/AddDatatypes C/Alias C/Ask C/Assign C/Avail C/Break C/CD \
+    C/ConClip C/Copy C/Date C/Delete C/Echo C/Else \
+    C/EndCli C/EndIf C/EndSkip C/Execute C/FailAt C/Fault C/Get \
+    C/Getenv C/IPrefs C/If C/Info C/Install C/Lab C/List \
+    C/LoadWB C/MakeDir C/MakeLink C/Mount C/NewShell C/Path C/Prompt \
+    C/Quit \
+    C/Run C/Set \
+    C/Setenv C/Stack C/Status C/Touch C/Type C/Unalias C/Unset \
+    C/Unsetenv C/Version C/Wait C/install-i386-pc \
+    Classes/DataTypes/ascii.datatype \
+    Classes/DataTypes/text.datatype \
+    Devs/DataTypes Devs/Keymaps Devs/ramdrive.device Devs/clipboard.device \
+    Devs/serial.device Devs/Mountlist\
+    Fonts/fixed/8 Fonts/arial/13 Fonts/ttcourier/14 \
+    Libs/arosc.library Libs/asl.library Libs/commodities.library Libs/datatypes.library \
+    Libs/diskfont.library Libs/gadtools.library Libs/icon.library Libs/iffparse.library \
+    Libs/locale.library \
+    Libs/coolimages.library \
+    Locale/Countries Locale/Languages \
+    Locale/Catalogs/deutsch/Sys Locale/Catalogs/italiano/Sys Locale/Catalogs/svenska/Sys \
+    Prefs/Font Prefs/Locale Prefs/Serial \
+    Prefs/Env-Archive Prefs/Presets \
+    S/Shell-Startup  \
+    Utilities/MultiView \
+    System/FixFonts \
+    Libs/gtlayout.library contrib/aminet/Term
+
+BOOT_SRC_DIR    := $(AROSDIR)
+BOOT_DEST_DIR   := $(OSGENDIR)/termbootdisk
+BOOT_DEST_FILES := $(foreach f, $(BOOT_FILES), $(BOOT_DEST_DIR)/$(f))
+
+#MM
+setup-termbootdisk-pc-i386 :
+	-$(RM) -r $(BOOT_DEST_DIR)
+	%mkdirs_q $(BOOT_DEST_DIR)
+	%mkdirs_q $(BOOT_DEST_DIR)/C
+	%mkdirs_q $(BOOT_DEST_DIR)/S
+	%mkdirs_q $(BOOT_DEST_DIR)/Prefs
+	%mkdirs_q $(BOOT_DEST_DIR)/Prefs/Env-Archive
+	%mkdirs_q $(BOOT_DEST_DIR)/Prefs/Env-Archive/SYS
+	%mkdirs_q $(BOOT_DEST_DIR)/boot/grub
+
+#MM termbootdisk-pc-i386 : setup-termbootdisk-pc-i386
+termbootdisk-pc-i386: $(BOOT_DEST_FILES) $(BOOT_DEST_DIR)/AROS.pkg
+	@$(CP) s/Startup-Sequence.TERM $(BOOT_DEST_DIR)/S/Startup-Sequence
+	@$(CP) $(TOP)/config/i386-native/boot/menu.lst $(AROSDIR)/boot/grub/
+	@$(CP) $(BINDIR)/boot/aros-pc-i386 $(BOOT_DEST_DIR)/boot
+	@gzip -9 -f $(BOOT_DEST_DIR)/boot/aros-pc-i386
+	@$(TOOLDIR)/createhdfile $(OSGENDIR)/boot/arosterm.bin floppy1440 $(BOOT_DEST_DIR)
+	@$(TOP)/config/i386-native/boot/install $(OSGENDIR)/boot/arosterm.bin
+
+$(BOOT_DEST_DIR)/AROS.pkg :
+	@$(RM) -rf $(GENDIR)/rom/termbootdisk.compressed
+	@$(MKDIR) -p $(GENDIR)/rom/termbootdisk.compressed
+	@( \
+            cd $(BOOT_SRC_DIR) && \
+            for path in $(BOOT_TAR_FILES); do \
+                $(SH) $(TOP)/config/i386-native/boot/copypath $$path $(GENDIR)/rom/termbootdisk.compressed ; \
+            done && \
+            $(CP) $(TOP)/$(CURDIR)/s/Startup-Sequence $(GENDIR)/rom/termbootdisk.compressed/S && \
+            cd $(GENDIR)/rom && \
+            $(RM) AROS.pkg && \
+            $(TOP)/tools/package/pkg c AROS.pkg termbootdisk.compressed && \
+            bzip2 -9 AROS.pkg && \
+            mv -f AROS.pkg.bz2 $(BOOT_DEST_DIR)/AROS.pkg \
+        )
+
+$(BOOT_DEST_DIR)/% : $(BOOT_SRC_DIR)/%
+	@$(CP) $< $@
+
+$(BOOT_DEST_DIR)/boot/grub/% : $(TOP)/config/i386-native/boot/%
+	@$(CP) $< $@
+
+%common
