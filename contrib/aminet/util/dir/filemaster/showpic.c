@@ -53,7 +53,11 @@ void clipit(WORD,WORD,struct Rectangle*,struct Rectangle*,struct Rectangle*,stru
 extern WORD __asm unpack(register __a0 UBYTE**,register __a1 struct BitMap*,register __a2 WORD*,register __d0 WORD,register __d1 LONG,register __d2 WORD,register __d3 UBYTE,register __a6 struct ShowScreen*);
 extern WORD __asm unpacknp(register __a0 UBYTE**,register __a1 struct BitMap*,register __a2 WORD*,register __d0 WORD,register __d1 LONG,register __d2 WORD,register __d3 UBYTE,register __a6 struct ShowScreen*);
 void __asm initbitmapi(register __d0 WORD);
-#endif
+#else /* AROS */
+extern WORD unpack(UBYTE**, struct BitMap*, WORD*, WORD, LONG, WORD, UBYTE, struct ShowScreen*);
+extern WORD unpacknp(UBYTE**, struct BitMap*, WORD*, WORD, LONG, WORD, UBYTE, struct ShowScreen*);
+void initbitmapi(WORD);
+#endif /* AROS */
 
 ULONG power2(WORD);
 ULONG modefallback(ULONG,WORD,WORD,WORD);
@@ -115,7 +119,7 @@ priority(pm->cmc);
 ret=0;
 if(sselected(slist,1)) {
 	while((node=findselnode(slist))) {
-		if (h=openfile(slist,NDFILE(node),OFNORMAL|OFDECRUNCH)) {
+		if ((h=openfile(slist,NDFILE(node),OFNORMAL|OFDECRUNCH))) {
 			ret=isdatatypes(h,GID_PICTURE);
 			if(ret==-99) {
 				if (!Strnicmp(h->filename+strlen(h->filename)-5,".info",5)) {

@@ -55,6 +55,7 @@
 #include <datatypes/datatypes.h>
 #include "fmnode.h"
 #include "fmlocale.h"
+#include "launch.h"
 
 #include "filemaster_strings.h"
 #define OK        (0)
@@ -428,10 +429,10 @@ error2:
   CloseLibrary (IconBase);
   CloseLibrary (DiskfontBase);
   CloseLibrary (BGUIBase);
-error3:
+
   if (errptr)
     {
-      if (handle = Open ("CON:20/100/600/50/Fatal error", 1005))
+      if ((handle = Open ("CON:20/100/600/50/Fatal error", 1005)))
 	{
 	  Write (handle, "\n ", 2);
 	  Write (handle, errptr, strlen (errptr));
@@ -445,7 +446,9 @@ error3:
 #ifdef DETACH
   CloseLibrary ((struct Library *) DOSBase);
 #endif
-D(bug("fm.c main end...... \n")); 
+
+  D(bug("fm.c main end...... \n"));
+  return 0;
 } /** main ends ****/
 
 
@@ -533,7 +536,7 @@ D(bug("fmmain init ...........\n"));
   fmconfig->mainscreen.depth = 2;
   fmconfig->mainscreen.overscan = 1;
 
-  if (wbscr = LockPubScreen (workbench))
+  if ((wbscr = LockPubScreen (workbench)))
     {
       screenmode = GetVPModeID (&wbscr->ViewPort);
       if (screenmode == INVALID_ID)

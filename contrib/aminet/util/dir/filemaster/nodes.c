@@ -46,7 +46,9 @@ void setsliders(struct FMList*);
 
 #ifndef AROS
 extern void __asm RealTimeScroll(register __a0 struct ReqScrollStruct*);
-#endif
+#else /* AROS */
+extern void RealTimeScroll(struct ReqScrollStruct*);
+#endif /* AROS */
 
 struct FMNode *iteratenode(struct FMNode**);
 UBYTE *scanchar(UBYTE*,UBYTE);
@@ -356,6 +358,7 @@ AROS_UFCA(char , c, A1))
      ((ULONG)putCharFunc->h_Data)++;
 }
 
+void rawdo(UBYTE*, void*, UBYTE*);
 #endif
 
 

@@ -67,6 +67,7 @@
 #include "fmgui.h"
 #include "audio.h"
 #include "commodity.h"
+#include "launch.h"
 
 extern struct UtilityBase *UtilityBase;
 extern struct ExecBase *SysBase;
@@ -84,7 +85,12 @@ struct SleepConfig {
 
 #define IDCMP IDCMP_MOUSEBUTTONS|IDCMP_GADGETDOWN|IDCMP_GADGETUP|IDCMP_RAWKEY|IDCMP_REFRESHWINDOW|IDCMP_NEWSIZE|IDCMP_CLOSEWINDOW|IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW
 
-//extern void __asm RealTimeScroll(register __a0 struct ReqScrollStruct*);
+#ifndef AROS
+extern void __asm RealTimeScroll(register __a0 struct ReqScrollStruct*);
+#else /* AROS */
+extern void RealTimeScroll(struct ReqScrollStruct*);
+#endif /* AROS */
+
 extern struct FMMain fmmain;
 extern struct FMList fmlist[];
 extern UBYTE workbench[];
@@ -829,7 +835,6 @@ if(fmmain.ikkuna) {
 }
 if (fmmain.ikkuna&&fmmain.quitti==2&&!requestmsg(getstring(MSG_MAIN_QUIT),MSG_YES,MSG_NO,MSG_MAIN_AREYOUSURE)) goto eventti;
 aboutti(1);
-qquit:
 while(tstsubproc(0)) Delay(10);
 endframeoutput();
 }
