@@ -4,12 +4,10 @@
 #include "mystic_global.h"
 #endif
 
+/* On AROS use autoopening of libraries */
+#ifndef __AROS__
 //struct ExecBase	*SysBase;
-#ifdef __AROS__
-struct UtilityBase *UtilityBase;
-#else
 struct Library *UtilityBase;
-#endif
 struct GfxBase *GfxBase;
 struct Library *GuiGFXBase;
 struct Library *CyberGfxBase;
@@ -19,6 +17,7 @@ struct DosLibrary *DOSBase;
 struct Library *GadToolsBase;
 struct IntuitionBase *IntuitionBase;
 struct Library *LayersBase;
+#endif
 
 
 
