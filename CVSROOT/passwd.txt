@@ -49,5 +49,6 @@ crayor:bacSnPvL4XTFY:Jörg Rebenstorf:crayor@zedat.fu-berlin.de:
 gdprete:dcZM1RIri4/PY:Gabriele Del Prete:gdprete@tin.it:
 mmaso:cbgEtQf6JtAq:Milos Masopust:mmaso@ipex.cz:
 bernie:acsjm9ytdb/3w:Bernardo Innocenti:bernie@shock.cosmos.it:
+jhinkle:ddo8tyJnYY2bI:Joseph M. Hinkle:jhinkle@rockisland.com:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
