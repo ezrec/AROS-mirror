@@ -1,0 +1,35 @@
+TOP = ../../..
+
+
+CC = gcc
+CP = cp
+ECHO = echo
+DEFINES = -D_AROS
+
+FLAGS = -nostartfiles -nostdlib -Wl,-i
+
+BINDIR = $(TOP)/bin/linux-i386/gen
+LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
+AROSDIR = $(TOP)/bin/linux-i386/AROS
+
+
+OS_INCLUDES_DIR = $(BINDIR)/include
+USER_INCLUDES_DIR = $(TOP)/bin/linux-i386/AROS/Include
+
+OS_INCLUDES = -I$(OS_INCLUDES_DIR)
+USER_INCLUDES = -I. -I$(USER_INCLUDES_DIR)
+
+LIBS = -L$(LIBDIR) -lbgui -larosc -larosm -lamiga
+
+STARTUP = $(LIBDIR)/startup.o
+ 
+%.o : %.c 
+	@$(ECHO) "Compiling $@..."
+	@$(CC) $(OS_INCLUDES) $(USER_INCLUDES) $(DEFINES) -c $^ -o $@
+
+
+% : %.o
+	@$(CC) $(FLAGS) $(STARTUP) $^ -o $@ $(LIBS) 
+	@$(ECHO) Installing BGUI program $@ to root dir
+	@$(CP) $@ $(AROSDIR)/
+
