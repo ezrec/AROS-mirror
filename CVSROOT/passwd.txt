@@ -50,5 +50,6 @@ crayor:bacSnPvL4XTFY:Jörg Rebenstorf:crayor@zedat.fu-berlin.de:
 gdprete:dcZM1RIri4/PY:Gabriele Del Prete:gdprete@tin.it:
 mmaso:cbgEtQf6JtAq:Milos Masopust:mmaso@ipex.cz:
 jhinkle:ddo8tyJnYY2bI:Joseph M. Hinkle:jhinkle@rockisland.com:
+armin:cbEVHg0j9uNRs:Armin Obersteiner:armin@danbala.ifoer.tuwien.ac.at:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
