@@ -5,7 +5,7 @@
 include $(TOP)/config/make.cfg
 
 FILES := \
-#    Ping
+    Ping
 
 # I'd like to move this into a rule, but it would be far too hard.
 EXES := $(foreach f,$(FILES),$(AROS_C)/$(f))
@@ -17,7 +17,7 @@ USE_MLIB := yes
 USE_AROSLIB := yes
 
 #MM- workbench : workbench-c
-#MM workbench-c : includes linklibs
+#MM workbench-c : includes linklibs network-includes
 
 %make_prog_setup mmake=workbench-c
 %make_vpath
