@@ -49,6 +49,7 @@
 
 /****************************************************************************/
 
+#define timeval aros_timeval
 #include <exec/execbase.h>
 #include <exec/memory.h>
 
@@ -71,6 +72,7 @@
 #include <proto/cybergraphics.h>
 
 #include <cybergraphx/cybergraphics.h>
+#undef  timeval
 
 /****************************************************************************/
 

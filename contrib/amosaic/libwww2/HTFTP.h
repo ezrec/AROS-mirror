@@ -38,7 +38,7 @@ extern int HTFTPLoad PARAMS
 Return Host Name
 
  */
-extern CONST char * HTHostName NOPARAMS;
+extern char * HTHostName NOPARAMS;
 
 #endif
 

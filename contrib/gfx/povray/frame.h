@@ -640,9 +640,7 @@ typedef DBL MATRIX [4][4];
 typedef DBL EXPRESS [5];
 typedef COLC COLOUR [5];
 typedef COLC RGB [3];
-#ifndef __AROS__
 typedef short WORD;
-#endif
 
 /* Stuff for bounding boxes. */
 

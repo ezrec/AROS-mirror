@@ -93,10 +93,6 @@ static RETSIGTYPE illhandler(int foo)
 
 #endif /* !__AROS__ */
 
-#ifdef __AROS__
-#include <proto/dos.h>
-#endif
-
 void machdep_init (void)
 {
     rpt_available = 1;
@@ -130,7 +126,7 @@ void machdep_init (void)
         {
                 frame_time_t bar;
 
-                Delay(50);
+                sleep(1);
                 bar = read_processor_time ();
         if (bar - last_time < best_time)
                 best_time = bar - last_time;

@@ -131,7 +131,7 @@ Append a string to a  chunk
  */
 
 
-extern void HTChunkPuts PARAMS((HTChunk * ch, char *str));
+extern void HTChunkPuts PARAMS((HTChunk * ch, CONST char *str));
 
 
 /*

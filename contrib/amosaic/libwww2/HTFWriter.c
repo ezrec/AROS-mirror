@@ -19,8 +19,10 @@
 #if defined(_AMIGA) || defined(__AROS__)
 #include <string.h>
 
+#define timeval aros_timeval
 #include <proto/dos.h>
 #include <dos/dostags.h>
+#undef timeval
 #endif
 
 /*		Stream Object

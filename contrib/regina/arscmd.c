@@ -1,5 +1,6 @@
 #include "rexx.h"
 
+#define timeval aros_timeval
 #include <proto/alib.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -13,6 +14,7 @@
 #include <exec/io.h>
 #include <exec/lists.h>
 #include <exec/nodes.h>
+#undef  timeval
 
 #include <assert.h>
 #include <errno.h>

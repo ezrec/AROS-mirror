@@ -127,11 +127,9 @@ typedef short SHORT;
 typedef unsigned short USHORT;
 typedef short FWord;
 typedef unsigned short uFWord;
-#ifndef __AROS__
 typedef unsigned char BYTE;
 typedef long LONG;
 typedef unsigned long ULONG;
-#endif
 
 #if !defined(MACOS)
 typedef long Fixed;

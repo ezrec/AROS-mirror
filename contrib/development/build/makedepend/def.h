@@ -29,11 +29,9 @@ in this Software without prior written authorization from The Open Group.
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
-#if 0
 #ifndef X_NOT_POSIX
 #ifndef _POSIX_SOURCE
 #define _POSIX_SOURCE
-#endif
 #endif
 #endif
 #include <sys/types.h>
@@ -49,10 +47,8 @@ in this Software without prior written authorization from The Open Group.
 #define MAXDIRS		64
 #define SYMTABINC	10	/* must be > 1 for define() to work right */
 
-#ifndef AROS
 #define	TRUE		1
 #define	FALSE		0
-#endif 
 
 /* the following must match the directives table in main.c */
 #define	IF		0

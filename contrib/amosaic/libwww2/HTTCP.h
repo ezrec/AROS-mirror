@@ -98,7 +98,7 @@ extern unsigned int HTCardinal PARAMS((int *pstatus,
 **
 */
 
-extern CONST char * HTHostName NOPARAMS;
+extern char * HTHostName NOPARAMS;
 
 extern int HTDoConnect (char *, char *, int, int *);
 

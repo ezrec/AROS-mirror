@@ -132,12 +132,12 @@
 *
 *************************************************************************/
 
-//typedef char           BYTE;
-//typedef unsigned char  UBYTE;
+typedef char           BYTE;
+typedef unsigned char  UBYTE;
 typedef short          SHORT;
 typedef unsigned short USHORT;
-//typedef long           LONG;
-//typedef unsigned long  ULONG;
+typedef long           LONG;
+typedef unsigned long  ULONG;
 
 typedef struct {			/* offset - sizeof(File_Head) = 50				*/
 	long u1;                /* 0 - ???			         					*/

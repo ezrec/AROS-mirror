@@ -9,6 +9,7 @@
 #include <errno.h>
 
 #define AROS_ALMOST_COMPATIBLE 1
+#define timeval aros_timeval
 #include <proto/dos.h>
 #include <proto/exec.h>
 
@@ -17,7 +18,7 @@
 
 #include <dos/dos.h>
 #include <utility/tagitem.h>
-
+#undef  timeval
 
 #include "quakedef.h"
 

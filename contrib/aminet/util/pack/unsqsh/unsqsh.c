@@ -19,6 +19,7 @@
 /*
 #define debug
 */
+#include <exec/types.h>
 
 #include <stdio.h>
 #include <stdlib.h>

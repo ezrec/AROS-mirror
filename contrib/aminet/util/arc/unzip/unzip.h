@@ -621,12 +621,6 @@ typedef struct _MacInfo {
 #  include <sys/types.h>       /* off_t, time_t, dev_t, ... */
 #  include <sys/stat.h>
 #  include <signal.h>
-# include <devices/timer.h>
-#include <libraries/locale.h>
-#include <proto/locale.h>
-#include <proto/exec.h>
-#include <proto/alib.h>
-#include <proto/exec.h>
 #  ifndef COHERENT
 #    include <fcntl.h>         /* O_BINARY for open() w/o CR/LF translation */
 #  else /* COHERENT */

@@ -57,7 +57,7 @@ extern char * HTLocalName PARAMS((CONST char * name));
 Make a WWW name from a full local path name
 
  */
-extern char * WWW_nameOfFile PARAMS((char * name));
+extern char * WWW_nameOfFile PARAMS((CONST char * name));
 
 
 /*

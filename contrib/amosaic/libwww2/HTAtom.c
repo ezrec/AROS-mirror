@@ -17,8 +17,9 @@
 
 #include <stdio.h>				/* joe@athena, TBL 921019 */
 #include "HTUtils.h"
-/* Where does this one end??? #ifdef _AMIGA
+#ifdef _AMIGA
    #include <string.h>                           /* MJW 931003 */
+#endif /* _AMIGA */
 #include "tcp.h"
 
 PRIVATE HTAtom * hash_table[HASH_SIZE];

@@ -32,9 +32,11 @@
 #include "HTAlert.h"
 
 #if defined(_AMIGA) || defined(__AROS__)
+#define timeval aros_timeval
 #include <dos/dos.h>
 #include <dos/dostags.h>
 #include <proto/dos.h>
+#undef timeval
 #endif
 extern void application_user_feedback (char *);
 

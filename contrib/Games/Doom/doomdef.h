@@ -24,15 +24,6 @@
 #define __DOOMDEF__
 
 #include <stdio.h>
-
-#ifdef AROS
-
-#ifndef AROS_MACHINE_H
-#include <aros/machine.h>
-#endif
-
-#endif
-
 #include <string.h>
 
 #ifdef __SASC
@@ -349,6 +340,19 @@ typedef enum
 //-----------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.2  2003/09/04 10:21:02  iaint
+// Reworking of a number of C library headers to improve compatibility with
+// some of the standards (particular with respect to namespaces and visibility).
+//
+// Means that a number of hacks to code to make programs compiled on AROS can
+// be removed (yay!).
+//
+// Almost completely separates the AROS include space from the C standard
+// include space (although it's not quite symmetrical there).
+//
+// Disables building Ping.c because I have proceeded as far as the network
+// includes.
+//
 // Revision 1.1  2000/02/29 18:21:06  stegerg
 // Doom port based on ADoomPPC. Read README.AROS!
 //

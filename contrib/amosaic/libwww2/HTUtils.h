@@ -20,6 +20,7 @@
 
 #if defined(_AMIGA) || defined(__AROS__)
  #include <exec/types.h>
+ #undef CONST
  #ifndef BOOLEAN_DEFINED
   typedef BOOL BOOLEAN;
   #define BOOLEAN_DEFINED
@@ -97,10 +98,7 @@ Macros for declarations
 #define PRIVATE static          /* Accessible only within this module */
 
 #ifdef __STDC__
-#if 0
 #define CONST const             /* "const" only exists in STDC */
-#endif
-#define CONST
 #define NOPARAMS (void)
 #define PARAMS(parameter_list) parameter_list
 #define NOARGS (void)

@@ -26,5 +26,5 @@ independence, Zoo does all I/O of archive headers and directory entries
 in units of BYTE.  The actual file data are not written in units of
 BYTE, however, so portability may not be absolute.
 */
-//typedef  unsigned char BYTE;  /* type corresponding to an 8-bit byte */
+typedef  unsigned char BYTE;  /* type corresponding to an 8-bit byte */
 
