@@ -62,10 +62,9 @@ Existing ports
 ==============
 
 Below is a list of all AROS ports that are in working order and/or actively
-developed. Not all of these are available for download, since they might either
-be not complete enough or have compilation requirements that we can't always
-meet due to limited resources (eg. to compile AROS/i386-freebsd we need someone
-running FreeBSD).
+developed. Not all of these are available for download, since they might 
+either be not complete enough or have compilation requirements that we can't 
+always meet due to limited resources.
 
 
 AROS/i386-pc
@@ -80,11 +79,11 @@ compatibles using the x86 family of processors. The name is actually a bit
 misleading since AROS/i386-pc actually requires atleast a 486 class CPU due to
 usage of some instructions not available on the 386.
 
-This port works quite well, but we only have the most basic driver support. One
-of the biggest limitations is that we currently only have a simple VGA graphics
-driver, which limits you to 640x480 in 16 colors. There are more drivers in the
-works, but development is quite slow since we only have about 1.5 hardware
-hackers. This port is available for download.
+This port works quite well, but we only have the most basic driver support. 
+One of the biggest limitations is that we currently only have support for 
+generic (non-accelerated) VGA and VBE graphics drivers. There are more drivers
+in the works, but development is quite slow since we only have about 2.5 
+hardware hackers. This port is available for download.
 
 
 AROS/m68k-pp
@@ -115,16 +114,16 @@ AROS/i386-linux
 AROS/i386-linux is the hosted port of AROS to the Linux operating system [#]_
 running on the x86 family of processors. 
 
-This is the most complete port of AROS feature-wise, since most of the developers
-currently use Linux when developing AROS and since there is much less drivers to
-write. This port is available for download.
+This is the most complete port of AROS feature-wise, since most of the 
+developers currently use Linux when developing AROS and since there is much 
+less drivers to write. This port is available for download.
        
 
 AROS/i386-freebsd
 -----------------
 
 :Flavour:    Hosted
-:Status:     Unknown
+:Status:     Working
 :Maintained: **No**
 
 AROS/i386-freebsd is the hosted port of AROS to the FreeBSD operating system
