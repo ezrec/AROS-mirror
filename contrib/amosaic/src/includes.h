@@ -30,27 +30,11 @@
 
 /* MUI */
 #define MUI_OBSOLETE
-#ifdef _AROS
-#define MUIMASTER_NAME "muimaster.library"
-#include <libraries/mui.h>
-#include <classes/application.h>
-#include <classes/area.h>
-#include <classes/bitmap.h>
-#include <classes/bodychunk.h>
-#include <classes/cycle.h>
-#include <classes/gauge.h>
-#include <classes/list.h>
-#include <classes/listview.h>
-#include <classes/popstring.h>
-#include <classes/virtgroup.h>
-#include <classes/window.h>
-#include <priv/Image.h>
-#else
+
 #ifdef USE_ZUNE
 #include <mui.h>
 #else
 #include <libraries/mui.h>
-#endif
 #endif
 
 /* System */

@@ -46,7 +46,6 @@ USE_CLIB_SHARED := yes
 USE_AMIGALIB := yes
 USE_MUILIB := yes
 
-USER_INCLUDES := -I../../mui/libs/muimaster -I$(INCDIR)/libwww2
 PRELIBS := $(PRELIBS) -lwww2
 #MM mui-amosaic : includes linklibs 
 
