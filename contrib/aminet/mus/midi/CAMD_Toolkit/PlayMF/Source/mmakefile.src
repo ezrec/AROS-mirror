@@ -1,6 +1,5 @@
 #   $Id$
 #
-#   Makefile to make MultiView.
 
 include $(TOP)/config/make.cfg
 

@@ -1,6 +1,5 @@
 #   $Id$
 #
-#   Makefile to make MultiView.
 
 include $(TOP)/config/make.cfg
 
@@ -16,7 +15,6 @@ USE_MLIB := yes
 
 USER_CFLAGS := -O2 -Wunused -Wall
 
-#MM workbench-utilities : includes linklibs setup-multiview-catalogs
 #MM aminet-mus-midi-CAMD_Toolkit-Fireworks : includes linklibs setup-aminet-mus-midi-CAMD_Toolkit-Fireworks
 
 %make_prog_setup mmake=aminet-mus-midi-CAMD_Toolkit-Fireworks
