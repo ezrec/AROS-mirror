@@ -13,7 +13,7 @@ NAME    := 4p
 VERSION := 0.09
 
 #HAS_NOWEB := 1
-CC := arosgcc 
+CC := ../../../bin/linux-i386/tools/i386-linux-aros-gcc
 ARCH := $(shell uname -s)
 
 ifdef HAS_NOWEB
