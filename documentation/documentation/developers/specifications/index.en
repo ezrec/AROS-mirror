@@ -8,8 +8,15 @@ Drafts
 + `The AROS filesystem interface`__
 + `Home directories`__
 + `Standard key bindings`__
++ `The Exec Microkernel`__
++ `Hardware Independant Device Drivers`__
++ `MIDI Driver Interface`__
++ `MMU HIDD`__
 
 __ drafts/filesystem-interface
 __ drafts/home-directories
 __ drafts/standard-key-bindings
-
+__ drafts/exec
+__ drafts/hidd
+__ drafts/midi
+__ drafts/mmuhidd
