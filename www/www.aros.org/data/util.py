@@ -78,6 +78,7 @@ def relpath(path1, path2):
     """
     #print 'relpath', path1, path2
     common = os.path.commonprefix([path1, path2])
+    #print 'common=', common
     sliceoff = len(common)
     # Cut only at os.sep
     #while sliceoff > 0 and path1[sliceoff] != os.sep:
@@ -93,9 +94,41 @@ def relpath(path1, path2):
     rel = os.curdir + os.sep + rel
     
     result = os.path.normpath (rel+path2)
-    #print result
+    #print 'result=',result
 
     return result
+
+def relurl (path1, path2):
+    #print self.relurl, path1, path2
+    if not path2:
+	return None
+    
+    if string.find (path2, '://') != -1:
+	return path2
+    
+    if path1[0] != '/':
+	path1 = os.path.abspath (path1)
+    if path2[0] != '/':
+	path2 = os.path.abspath (path2)
+
+    #print "relurl(%s,%s)" % (path1, path2)
+    result = relpath (path1, path2)
+    #print "relurl(%s,%s)->%s" % (path1, path2, result)
+    return result
+
+def img_rel_path(img, srcUrl):
+    # filename contains a valid path to the image
+    # srcUrl is the URL of the document which contains the image
+    if srcUrl[0] != '/':
+	srcUrl = os.path.abspath (os.path.dirname (srcUrl))
+
+    path2 = os.path.abspath (img.filename)
+    
+    #print srcUrl, path2
+    newUrl = relpath (srcUrl, path2)
+    #print newUrl
+
+    img.src = newUrl
 
 arosRC = os.path.join (datadir, 'aros.rc')
 
@@ -340,6 +373,22 @@ class PageMeat:
 	return TmpDir (self.url)
 
     def write (self):
+	path = os.path.dirname (self.url)
+	if not path:
+	    path = os.curdir
+	for link in self.linksToFix:
+	    #print 'relurl',path,link.url
+	    link.url = relurl (path, link.url)
+	    #print 'result=%s\n' % link.url
+
+	for img in self.imagesToFix:
+	    #print img
+	    img_rel_path (img, self.url)
+	    #print img
+
+	self.linksToFix = []
+	self.imagesToFix = []
+
 	path = self.getPartialFilename ()
 	pathNew = path + '.new'
 	dir = os.path.dirname (path)
@@ -380,6 +429,8 @@ class PageMeat:
 	    text = Strong (text)
 
 	if url:
+	    href = Href (url, text)
+	    self.linksToFix.append (href)
 	    return [prefix, Href (url, text), BR (), RawText ('\n')]
 	
 	#return [prefix, text, BR (), RawText ('\n')]
@@ -526,38 +577,6 @@ class Page (SeriesDocument):
 	    s = s + str (item) + '\n'
 	return s
 
-    def relurl (self, path1, path2):
-	#print self.relurl, path1, path2
-	if not path2:
-	    return None
-	
-	if string.find (path2, '://') != -1:
-	    return path2
-	
-	if path1[0] != '/':
-	    path1 = os.path.abspath (path1)
-	if path2[0] != '/':
-	    path2 = os.path.abspath (path2)
-
-	#print "relurl(%s,%s)" % (path1, path2)
-	result = relpath (path1, path2)
-	#print "relurl(%s,%s)->%s" % (path1, path2, result)
-	return result
-
-    def calc_rel_path(self, img, srcUrl):
-	# filename contains a valid path to the image
-	# srcUrl is the URL of the document which contains the image
-	if srcUrl[0] != '/':
-	    srcUrl = os.path.abspath (os.path.dirname (srcUrl))
-
-	path2 = os.path.abspath (img.filename)
-	
-	#print srcUrl, path2
-	newUrl = relpath (srcUrl, path2)
-	#print newUrl
-
-	img.src = newUrl
-
     def createNavBar (self):
         s = []
         if self.goprev: # place an image button for previous page
@@ -612,7 +631,7 @@ class Page (SeriesDocument):
         if self.place_nav_buttons:
             s.append(self.nav_buttons())
 	img = Image(self.logo, align='bottom')
-	self.calc_rel_path (img, self.filename)
+	img_rel_path (img, self.filename)
         s.append('<BR>' + str(img))
         s.append('''
 <FONT SIZE="-1"><P>Amiga® is a trademark of Amiga Inc. All other trademarks belong to their respective owners.<BR>
@@ -668,18 +687,18 @@ All Rights Reserved<BR>''')
 	self.gonext = next
 	self.gotop = top
 
-	self.background = self.relurl (path, self.background)
+	self.background = relurl (path, self.background)
 
 	self.createNavBar ()
 
 	for link in self.linksToFix:
 	    #print link
-	    link.url = self.relurl (path, link.url)
+	    link.url = relurl (path, link.url)
 	    #print link
 
 	for img in self.imagesToFix:
 	    #print img
-	    self.calc_rel_path (img, self.filename)
+	    img_rel_path (img, self.filename)
 	    #print img
 
 	# Convert myself into HTML
@@ -691,19 +710,19 @@ class HtmlPage (Page):
 	self.filename = filename
 
 	path = os.path.abspath (os.path.dirname (filename))
-	self.background = self.relurl (path, self.background)
+	self.background = relurl (path, self.background)
 	self.td2 = self.td2 + self.linkbox
 
 	self.createNavBar ()
 
 	for link in self.linksToFix:
 	    #print link
-	    link.url = self.relurl (path, link.url)
+	    link.url = relurl (path, link.url)
 	    #print link
 
 	for img in self.imagesToFix:
 	    #print img
-	    self.calc_rel_path (img, self.filename)
+	    img_rel_path (img, self.filename)
 	    #print img
 
 	# Convert myself into HTML

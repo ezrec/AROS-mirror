@@ -97,8 +97,7 @@ def gen (Page):
     path = os.getcwd ()
     for color in chart.colors:
 	colorFile = os.path.abspath (chart.barfiles[color])
-	#chart.barfiles[color] = page.relurl (path, colorFile)
-	chart.barfiles[color] = util.relpath (path, colorFile)
+	chart.barfiles[color] = util.relurl (path, colorFile)
 	
     page.write ()
 
