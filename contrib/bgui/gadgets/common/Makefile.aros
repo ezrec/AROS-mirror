@@ -1,0 +1,25 @@
+TOP = ../../../..
+
+#include $(TOP)/config/make.cfg
+
+CC = gcc
+DEFINES = -D_AROS
+MAKE = make
+ECHO = echo
+RM = rm
+
+BINDIR = $(TOP)/bin/linux-i386/AROS
+OS_INCLUDES_DIR = $(BINDIR)/Include
+
+OS_INCLUDES = -I$(OS_INCLUDES_DIR)
+
+INCLUDES = $(USER_INCLUDES) $(OS_INCLUDES) $(DEFINES)
+
+CFLAGS = $(INCLUDES)
+
+TARGETS =  bguiclass_lib.o bguiclass_libtag.o bguiclass_libendtag.o
+
+all: $(TARGETS)
+
+clean : 
+	@$(RM) -rf $(TARGETS)
