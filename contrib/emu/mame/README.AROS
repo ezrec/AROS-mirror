@@ -111,9 +111,11 @@ in the AROS Shell from where you started Mame. If it shows a color depth (
 output in Shell is "width x height x colordepth") of 16, then the window will
 be black all the time.
 
-AROS Mame does not support frame skipping and auto-frameskipping yet, so the 
-games are played at max. speed (= often a bit to slow on my P2/300) without
-synchronization.
+AROS Mame does not support auto-frameskipping yet, but normal frameskipping
+is possible --> see readme.txt. Use F11 to switch FPS displaying on/off.
+It is not very accurate as AROS timer.device actually only has a precision
+of 1/50 sec. You can increase and decrease frameskip during game by pressing
+the corresponding keys (by default N to increase and B to decrease).
 
 AROS Mame is partly based on the Amiga Mame Port by Mats Eirik Hansen.
 
