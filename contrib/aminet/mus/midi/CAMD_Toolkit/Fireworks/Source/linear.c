@@ -67,7 +67,7 @@ APTR Lin_InitFireworks(struct Globals *glob, struct Prefs *pref)
 		/* pre-calculate angles of all possible 128 notes */
 		for (i = 0 ; i < 128 ; i++)
 		{
-			float angle = PI - (float)i/127 * PI;
+			float angle = M_PI - (float)i/127 * M_PI;
 			
 			ld->fxtab[i] = SCALE * cos(angle);
 			ld->fytab[i] = SCALE * sin(angle);
