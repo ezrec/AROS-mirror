@@ -14,8 +14,8 @@ FILES  := testalpha \
 	  testtimer \
 	  testtypes \
 	  testwin \
-	  testwm
-
+	  testwm \
+	  loopwave 
 #	  testerror \
 #	  testhread \
 #	  testkeys \
@@ -33,7 +33,7 @@ USER_INCLUDES := -I$(AROS_INCLUDES)/SDL
 
 %build_progs mmake=test-sdl \
     files=$(FILES) targetdir=$(EXEDIR) \
-    uselibs="sdl arossupport amiga arosc m"
+    uselibs="SDL arossupport amiga arosc m"
 
 
 DATAFILES := icon.bmp picture.xbm sail.bmp sample.bmp sample.wav
