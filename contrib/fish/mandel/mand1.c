@@ -21,8 +21,8 @@ notice is retained.
 #include "mand.h"
 
 
-extern strcut MathBase* MathBase;
-extern struct MathTransBase* MathTransBase;
+extern struct MathBase		*MathBase;
+extern struct MathTransBase	*MathTransBase;
 
 
 /*----------------------*/
@@ -180,7 +180,7 @@ gen_mand()
             {
             class = message->Class;
             code  = message->Code;
-            ReplyMsg(message);
+            ReplyMsg((struct Message *)message);
             if (class == MENUPICK)
                {
                switch MENUNUM(code)
@@ -356,5 +356,6 @@ CloseDisplay()
 {
    if (w) CloseWindow(w);
    if (screen) CloseScreen(screen);
-   w = screen = NULL;
+   w = NULL;
+   screen = NULL;
 }

@@ -204,7 +204,7 @@ void wait_close()
          {
          class = message->Class;
          code  = message->Code;
-         ReplyMsg(message);
+         ReplyMsg((struct Message *)message);
  
          switch (class)
             {
@@ -400,7 +400,7 @@ anal_mand()
       if (message = (struct IntuiMessage *)GetMsg(w->UserPort)) {
          class = message->Class;
          code  = message->Code;
-         ReplyMsg(message);
+         ReplyMsg((struct Message *)message);
  
          if (class == CLOSEWINDOW) {
             CloseWindow(w2);
