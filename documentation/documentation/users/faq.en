@@ -51,11 +51,11 @@ compatible but as different as possible from the orignal.
 To avoid any trouble we applied for an official ok from Amiga Inc. They are
 quite positive about the effort but they are very uneasy about the  legal
 implications. We suggest that you take that fact that Amiga Inc did not send us
-any cease and desist letters as a positive sign. Unfortunately, no legaly sound
+any cease and desist letters as a positive sign. Unfortunately, no legally sound
 agreement has been made yet, besides good intentions on both sides.
 
 
-Why are you only aiming for compatability with 3.1?
+Why are you only aiming for compatibility with 3.1?
 ---------------------------------------------------
 
 There have been discussions about writing an advanced OS with the features of
@@ -111,7 +111,7 @@ We will offer a preprocessor which you can use on your code which will change
 any code that might break with AROS and/or warn you about such code.
 
 Porting programs from AmigaOS to AROS is currently mostly a matter of a simple
-recompilation, with the occasional tweak here and there. There are ofcourse
+recompilation, with the occasional tweak here and there. There are of-course
 programs for which this is not true, but it holds for most modern ones.
 
 
@@ -142,7 +142,7 @@ don't have to write hundreds of other functions in layers.library,
 graphics.library, a slew of device drivers and the rest that that function might
 need to use. 
 
-The goal for AROS is ofcourse to be independant of Linux and X11 (but it would
+The goal for AROS is of course to be independent of Linux and X11 (but it would
 still be able to run on them if people really wanted to), and that is slowly
 becoming a reality with the native versions of AROS. We still need to use Linux
 for development though, since good development tools haven't been ported to AROS
@@ -162,7 +162,7 @@ How do you intend to make AROS portable?
 ----------------------------------------
 
 One of the major new features in AROS compared to AmigaOS is the HIDD (Hardware
-Independant Device Drivers) system, which will allow us to port AROS to
+Independent Device Drivers) system, which will allow us to port AROS to
 different hardware quite easily. Basically, the core OS libraries do not hit the
 hardware directly but instead go through the HIDDs, which are coded using an
 object oriented system that makes it easy to replace HIDDs and reuse code.
@@ -199,13 +199,13 @@ Developer list and post it there, and someone will try to help you.
 Will AROS have memory protection, SVM, RT, ...?
 -----------------------------------------------
 
-Several hundred Amiga experts (that's what they thought of themselves atleast)
+Several hundred Amiga experts (that's what they thought of themselves at least)
 tried for three years to find a way to implement memory protection (MP) for
 AmigaOS. They failed. You should take it as a fact that the normal AmigaOS will
 never have MP like Unix or Windows NT.
 
 But all is not lost. There are plans to integrate a variant of MP into AROS
-which will allows protection of atleast new programs which know about it. Some
+which will allows protection of at least new programs which know about it. Some
 efforts in this area look really promising. Also, is it really a problem if your
 machine crashes? Let me explain, before you nail me to a tree. :-) The problem
 is not that the machine crashes, but rather: 
@@ -249,7 +249,7 @@ much faster if some or all OS functions could be replaced with native code. On
 the other hand, AROS could benefit from having an integrated Amiga emulation.
 
 Since most programs won't be available on AROS from the start, Fabio Alemagna
-has ported UAE to AROS so you can run old programs atleast in an emulation box.
+has ported UAE to AROS so you can run old programs at least in an emulation box.
 
 
 What is the relation between AROS and Haage & Partner?
@@ -287,7 +287,7 @@ The languages that are available natively are Python_, Regina_ and False_:
 
 + Python is a scripting language which has become quite popular, because of 
   it's nice design and features (object-oriented programming, module system,
-  many useful modules included, clean syntax, ...). A seperate project has 
+  many useful modules included, clean syntax, ...). A separate project has 
   been started for the AROS port and can found at 
   http://pyaros.sourceforge.net/.
 
@@ -311,7 +311,7 @@ version of UAE will probably be a bit faster than other versions UAE since AROS
 needs less resources than other operating systems (which means UAE will get more
 CPU time), and we'll try to patch the kickstart ROM in UAE to call AROS
 functions which will give another small improvement. Of course, this only
-applies to the native flavours of AROS and not the hosted flavours.
+applies to the native flavors of AROS and not the hosted flavors.
 
 But why don't we simply implement a virtual m68k CPU to run software directly on
 AROS? Well, the problem here is that m68k software expects the data to be in big
@@ -348,7 +348,7 @@ The geometry of the hardfile is as follows::
     Block Size = 90
 
 
-How do I access AROS' disk images from hosted flavours of AROS?
+How do I access AROS' disk images from hosted flavors of AROS?
 ---------------------------------------------------------------
 
 Copy the disk image to the DiskImages directory in AROS (SYS:DiskImages, eg.
