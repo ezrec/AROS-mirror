@@ -13,6 +13,7 @@
 #include "lwip/tcp.h"
 
 #include "lwip/tcpip.h"
+#include "lwip/netif.h"
 
 #include "netif/tcpdump.h"
 #include "netif/loopif.h"
@@ -30,8 +31,11 @@ void server_init(void)
     src.sin_addr.s_addr = htonl(INADDR_ANY);
     src.sin_port = htons(6000);
 
+    printf("bind\n");
+
     if(lwip_bind(sock, (struct sockaddr *)&src, sizeof(src)) != -1)
     {
+    	printf("listen\n");
       if(lwip_listen(sock, 10) != -1)
       {
       	printf("listen() success\n");
@@ -39,6 +43,13 @@ void server_init(void)
     }
   	lwip_close(sock);
   }
+}
+
+static void tcpip_init_done(void *arg)
+{
+  sys_sem_t *sem;
+  sem = arg;
+  sys_sem_signal(*sem);
 }
 
 void main(void)
@@ -58,13 +69,27 @@ void main(void)
 
   tcpdump_init();
 
-  IP4_ADDR(&gw, 127,0,0,1);
-  IP4_ADDR(&ipaddr, 127,0,0,1);
-  IP4_ADDR(&netmask, 255,0,0,0);
-  
-  netif_add(&ipaddr, &netmask, &gw, loopif_init, tcpip_input);
-
   printf("System initialized.\n");
 
+  {
+    sys_sem_t sem;
+
+    netif_init();
+
+    sem = sys_sem_new(0);
+    tcpip_init(tcpip_init_done, &sem);
+    sys_sem_wait(sem);
+    sys_sem_free(sem);
+    printf("TCP/IP initialized.\n");
+
+
+    IP4_ADDR(&gw, 127,0,0,1);
+    IP4_ADDR(&ipaddr, 127,0,0,1);
+    IP4_ADDR(&netmask, 255,0,0,0);
+  
+    netif_add(&ipaddr, &netmask, &gw, loopif_init, tcpip_input);
+  } 
+
   server_init();
+  Wait(4096);
 }

@@ -31,12 +31,15 @@
  * Author: Adam Dunkels <adam@sics.se>
  *         Sebastian Bauer <sebauer@t-online.de>
  *
- * $Id: sys_arch.c,v 1.1 2002/07/06 21:27:47 sebauer Exp $
+ * $Id: sys_arch.c,v 1.3 2002/07/07 18:41:59 sebauer Exp $
  */
 
 #include <time.h>
 
+#include <dos.h>
+
 #include <exec/memory.h>
+#include <dos/dostags.h>
 #include <clib/alib_protos.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -95,6 +98,16 @@ struct ThreadData
     /* For the semaphores */
     LONG sem_signal;
     struct TaskNode task_node; /* the elementes of the queuelist in a semaphore */
+};
+
+struct StartupMsg		    /* startup message sent to child */
+{
+    struct Message msg;
+    int (*fp)(void *);              /* function we're going to call */
+    void *global_data;              /* global data reg (A4)         */
+    long return_code;               /* return code from process     */
+    void *UserData;                 /* User-supplied data pointer   */
+    struct Process *child;	    /* The child process itselv     */
 };
 
 
@@ -195,6 +208,42 @@ static void Thread_Cleanup(struct ThreadData *data)
 {
     if (data->sem_signal != -1) FreeSignal(data->sem_signal);
     Timer_Cleanup(data);
+}
+
+
+/*-----------------------------------------------------------------------------------*/
+static int Thread_Entry(void)
+{
+    struct Process *proc;
+    struct StartupMsg *mess;
+    struct ExecBase *SysBase = *((struct ExecBase **)4);
+    __regargs int (*fp)(void *, void *, void *);
+    void *ud;
+    struct ThreadData data;
+         
+    proc = (struct Process *)FindTask((char *)NULL);
+
+    /* get the startup message */
+    WaitPort(&proc->pr_MsgPort);
+    mess = (struct StartupMsg *)GetMsg(&proc->pr_MsgPort);
+
+    /* gather necessary info from message */
+    fp = (__regargs int (*)(void *, void *, void *))mess->fp;
+    ud = mess->UserData;
+
+    /* replace this with the proper #asm for Aztec */
+    putreg(REG_A4, (long)mess->global_data);
+
+    ReplyMsg(mess);
+
+
+    if (Thread_Init(&data))
+    {
+    	FindTask(NULL)->tc_UserData = &data;
+	fp(ud,ud,ud);
+	Thread_Cleanup(&data);
+    }
+    return 0;
 }
 
 
@@ -333,7 +382,7 @@ u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
 
     ObtainSemaphore(&sem->sem);
 
-    while (sem->c <= 0)
+    if (sem->c <= 0)
     {
 	if (timeout > 0)
 	{
@@ -351,7 +400,9 @@ u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
 		AddTail((struct List*)&sem->queue,(struct Node*)&data->task_node);
 
 		ReleaseSemaphore(&sem->sem);
+		kprintf("0x%lx Released Sem:\n",sem);
 		sigs = Wait((1UL<<data->sem_signal)|(1UL<<data->TimerPort->mp_SigBit));
+		kprintf("0x%lx Obtain Sem:\n",sem);
 		ObtainSemaphore(&sem->sem);
 
                 /* Now we remove us again */
@@ -382,7 +433,19 @@ u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
 	    }
 	}   else
 	{
+	    /* We add us now in the wait queue, so sys_sem_signal() knows which signal has to be set */
+	    AddTail((struct List*)&sem->queue,(struct Node*)&data->task_node);
+
+	    ReleaseSemaphore(&sem->sem);
+	    kprintf("0x%lx 2 Released Sem:\n",sem);
+
 	    Wait(1UL<<data->sem_signal);
+
+	    kprintf("0x%lx Obtain Sem:\n",sem);
+	    ObtainSemaphore(&sem->sem);
+
+	    /* Now we remove us again */
+	    Remove((struct Node*)&data->task_node);
         }
     }
 
@@ -394,6 +457,8 @@ u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
 void sys_sem_signal(sys_sem_t sem)
 {
     kprintf("sys_sem_signal(0x%lx)\n",sem);
+
+    kprintf("obtainsem(0x%lx)\n",sem);
 
     ObtainSemaphore(&sem->sem);
 
@@ -436,6 +501,48 @@ struct sys_timeouts *sys_arch_timeouts(void)
 /*-----------------------------------------------------------------------------------*/
 void sys_thread_new(void (* function)(void *arg), void *arg)
 {
+    struct Process *pr;
+    struct StartupMsg *start_msg;
+    struct MsgPort *child_port;
+
     kprintf("sys_thread_new()\n");
+
+    if (!(start_msg = (struct StartupMsg *)AllocMem(sizeof(struct StartupMsg), MEMF_PUBLIC|MEMF_CLEAR)))
+    {
+	return;
+    }
+
+    if (!(start_msg->msg.mn_ReplyPort = CreateMsgPort()))
+    {
+	FreeMem((void *)start_msg, sizeof(*start_msg));
+	return;
+    }
+
+    CacheClearU();
+
+    pr = CreateNewProcTags(NP_Entry, Thread_Entry, TAG_DONE);
+
+    if (!pr)
+    {
+	DeleteMsgPort(start_msg->msg.mn_ReplyPort);
+	FreeMem((void *)start_msg, sizeof(*start_msg));
+	return;
+    }
+
+    child_port = &pr->pr_MsgPort;
+
+    /* Fill in the rest of the startup message */
+    start_msg->msg.mn_Length = sizeof(struct StartupMsg);
+    start_msg->msg.mn_Node.ln_Type = NT_MESSAGE;
+    start_msg->child = pr;
+   
+    start_msg->global_data = (void *)getreg(REG_A4);  /* Save global data reg (A4) */
+    start_msg->fp = function;                         /* Fill in function pointer */
+    start_msg->UserData = arg;   
+   
+    /* Send startup message to child */
+    PutMsg(child_port, (struct Message *)start_msg);
+    WaitPort(start_msg->msg.mn_ReplyPort);
+    FreeMem(start_msg,sizeof(struct StartupMsg));
 }
 /*-----------------------------------------------------------------------------------*/
