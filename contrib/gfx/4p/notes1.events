@@ -1,0 +1,51 @@
+"Midnight Run" has a instrumental version of "Try To Believe" as its 
+theme sign
+
+----------------------------------------
+message handler that will toggle the certain buttons down then up, to
+simulate clicking on them.
+
+be sure to not send this out if it is already set 'on' or something.
+(infinite looping)
+
+
+if x+y < w, then select1 else select2  (diagonal selections)
+----------------------------------------
+
+
+keyboard input catcher.
+
+reinsert the keyboard uppercase doojobby into the JSUI event sender
+(rather than in the text editbox, where it is now. (remove it from paint event)
+
+buttons and keyboard input both broadcast events (characters greater than 255)
+
+paint callback mechanism will be sensitive to these events, rather
+than the regular keys.  
+
+Toolbox listens for the events, and toggles its buttons accordingly.
+
+Menu, paint triggers, tool switches, etc all send events, and the paint
+engine does them.  (Rather than the direct connection that exists now.)
+
+The regular keys resend global messages ie: 
+#define PAINT_MSG_DOTTEDDRAW		(JSUI_MSG_USER + 1)
+#define PAINT_MSG_CONTINUOUSDRAW	(JSUI_MSG_USER + 2)
+Then the GUI items that need to respond to these can change their own state.
+(they will redraw themselves on click or event, and only send out the event on click)
+
+move this functionality into a seperate method, not in the paint event handler.
+
+------------------------------
+meh,
+As a dialog comes active, the key shortcuts for it are added to a global
+list.
+
+1)  if the focus object grabs keyboard, stop there.
+2)  if there is a modal/locked dialog, stop there
+3)  check through the rest of the list untol something absorbs the key
+
+a "keypress" either: (depending on the flags.)
+	- simulates a Down/Up left button press
+	- calls the handler with a keypress message
+

@@ -1,0 +1,74 @@
+chunks:
+
+chunk header:
+    4 byte identifyer field
+    4 byte size field (size of the rest of the data, rounded up to even number)
+
+Image data
+    identifyer = 'I' 'L' 'B' 'M'
+
+UBYTE	8 bits unsigned
+WORD	16 bits signed
+UWORD	16 bits unsigned
+LONG	32 bits signed
+
+file must start with 'FORM' 'LIST' or 'CAT '
+
+==FORM ID CHUNK		'form == struct'
+
+
+'BMHD' bitmap header
+
+uword 	width		size of the object
+uword	height		
+word	x		posiion of the object
+word	y
+ubyte	planes		number of bitplanes
+ubyte	masking		0=none  1=has mask  2=has transparent color 3=lasso
+ubyte	compression	0=none  1=byte run
+ubyte	reserved	write 0
+uword	xparent color	usually 0
+ubyte	xaspect		width:height
+ubyte	yaspect
+word	pagewidth
+word 	pageheight
+
+
+'CAMG' amiga viewmodes chunk
+standard:
+	0x8000	Hi-res
+	0x4	Lace
+	0x800	Ham
+	0x80	halfbrite
+
+
+'CMAP'
+1 byte per red, green, blue, etc..
+
+'CRNG'
+long ?
+word ?
+ubyte 	range point 1
+ubyte 	range point 2
+
+
+'BODY'
+interleaved pixel data
+plane 0 scan line 0
+plane 1 scan line 0
+plane n scan line 0
+plane 0 scan line 1
+etc.o
+
+	get a byte, call it N
+	if (N >= 0 && N <=127)
+		copy the next N+1 bytes literally
+	if (N >= -127 && N <= -1)
+		repeat the next byte N+1 times
+	if (N == -128)
+		skip it, assume it's padding
+
+PLANE  4 3 2 1 0
+PIXEL  0 1 0 0 1      ==> pixel uses color register 0x01001 = 9
+
+stored as an even number of bytes in width. actual width is stored in header

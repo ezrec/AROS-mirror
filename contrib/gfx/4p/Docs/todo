@@ -1,0 +1,87 @@
+JSUI notes:
+	try all of the windows.  if none catch focus, then pass it down to 
+	the screen, with the mouse adjusted for zoom/position.
+	
+
+JSUI (shwee)
+    - menus
+    - dialogs
+    - windows
+    - views
+    - based on allegro's gui code
+    - pull page,pen,gfx_base,gfx_prim out to shwee.
+    - scaling of views (perhaps in the 'view' widget)
+    - mouse event valve
+    - will need to add a "lost focus" and "gained focus" to existing tool code
+    - set/get palette function
+
+
+Next tasks:
+	User Interface code
+	Color range code
+	    - range select, cycle, etc.
+	IFF File Saver
+	Color tools (Use brush palette, Remap, palette editor)
+	brush load and save
+	grid 
+	    - snap to grid
+	    - tile mirror to grid
+	    - constrain inside grid
+	[ctrl] to draw to main buffer instead of rubberband
+
+	Multiple palettes per image.
+
+	Genericize file io routines
+	    jpg load/save/color reduction
+	    png load/save
+	    arcade load/save ***YES***
+
+Color Remap:
+    take the rgb values of the color to be remapped.
+	find the distance in 3-space between it and each of the other
+	colors.  The closest becomes the new color.
+	(perhaps weight it based on hue?)
+	(slider:  Accuracy:  Hue |-----[]--------| Intensity )
+
+TODO: 
+
+- look into using the Image Magick libraries for file io and effects
+
+(grouped by functionality, roughly prioritized)
+
+  ui:
+    -> shwee/allegro gui clone
+	- usefulness is better for me than accuracy to allegro
+
+  tools:
+    -> pen
+    -> palette selector
+    -> palette editor
+    -> palette remap
+    -> brush palette remap
+    -> text input 
+	- JAM1  fg=color  bg=transparent
+	- JAM2  fg=color  bg=bgcolor
+    -> curvy tool
+    -> ellipse tool
+    -> skew
+    -> arbitrary rotate
+
+  utility/file:
+    -> save pbm
+    -> save as
+    -> toolbar / buttons
+    -> load / save brush
+    -> load / save palette
+    -> IFF brush and image loading and saving
+    -> arcade graphics, PNG, JPG, GIF import and export
+
+Font:  
+    internal font "zarnox"
+    load bitmap fonts
+    load amiga fonts
+    load pc dpaint II/IIe fonts.  (amiga fonts?)
+
+Plugins:
+    file load and export filters
+    image manipulations filters

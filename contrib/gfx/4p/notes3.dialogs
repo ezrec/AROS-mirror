@@ -1,0 +1,51 @@
+	      Save Picture
+ ---------------------------------------
+    .. parent (dir)			^
+    Lo-Res (dir)			|
+    file.iff				|
+					|
+					v
+ ---------------------------------------
+Directory [ ~/Images                    ]
+File      [                             ]
+ [ CANCEL ]                    [ SAVE ]
+
+
+              Grid
+ ------------------------------
+	X-Spacing [  8 ]
+	Y-Spacing [  8 ]
+   [ ADJUST ]
+   [ CANCEL ]      [   OK   ]
+
+
+            Symmetry
+ ------------------------------
+   [ Point  ]      [ Tile   ]
+ ------------------------------
+   [ Cyclic ]      [ Mirror ]
+          Order [ 6  ]
+                   [ Place  ]
+   [ CANCEL ]      [   OK   ]
+
+
+              Color Palette
+ ---------------------------------------
+
+    R  G  B   H  S  V   [   ]
+    ^  ^  ^   ^  ^  ^   +--------+
+    |  |  |   |  |  |
+    *  *  *   |  *  |
+    |  |  |   *  |  |
+    |  |  |   |  |  *
+    |  |  |   |  |  |   
+    v  v  v   v  v  v   +--------+
+
+      [ SPREAD ]    [ EX ] [ COPY ]
+
+  [ RANGE ] : [ C1 ][ C2 ][ C3 ][ C4 ]
+    Speed  <------[]---------->  [ ^ ]
+
+  [ CANCEL ]   [  UNDO  ]   [   OK   ]
+
+

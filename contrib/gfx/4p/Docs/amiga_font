@@ -1,0 +1,69 @@
+Amiga font format:
+
+
+font header
+l	succ?
+l	pred?
+b	type
+b	pri?
+l	name
+l	reply port?
+w	1.4?
+w	y size
+b	style
+b	flags
+w	x size
+w	baseline
+w	bold smear
+w	accessors?
+b	low char
+b	high char
+l	font data
+w	modulo  add to char to get next row
+l	char loc     pointer to width data (size of char)
+l	char space   pointer to space data (size of char & space)
+l	char kern    pointer to kern data  (add this to size of char)
+
+font data
+bit compressed ie
+
+.@@@@. @@@@. @@@@@@@@
+@....@ @...@ @@....@@
+@@@@@@ @@@@. @@....@@
+@....@ @...@ @@....@@
+@....@ @...@ @@....@@
+@....@ @@@@. @@@@@@@@
+----__ __--- -____----
+
+7b df e0  etc
+
+
+==font loc
+explains how the fonts are bitpacked.
+4byte longs per each. 
+for the above it would be:
+
+0x00 0x00 0x00 0x06
+0x00 0x00 0x00 0x05
+0x00 0x00 0x00 0x08
+
+
+==font space
+use a space this wide to print the character
+2 byte words
+ie:
+
+0x00 0x08
+0x00 0x07
+0x00 0x08
+
+
+==font kern
+place a space this wide after the character bits to seperate it from the next
+character.
+2 byte words
+ie:
+0x00 0x02
+0x00 0x02
+0x00 0x00
+

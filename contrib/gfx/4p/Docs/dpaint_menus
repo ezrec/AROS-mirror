@@ -1,0 +1,120 @@
+Title bar (when nothing is pressed)
+[ Painting Mode ] [ color fill box ] [Stencil] [Background fix] [ coords ]
+
+When right mouse button is pressed, the following menus become visible:
+
+Picture
+    Load
+    Save
+    Delete
+    Print
+    Flip
+	Horiz
+	Vert
+    Change Color
+	Palette [p]
+	Use Brush Palette
+	Restore Palette
+	Default Palette
+	Cycle [TAB]
+	BG -> FG
+	BG <-> FG
+	Remap
+    Spare
+	Swap [j]
+	Copy To Spare
+	Merge In Front
+	Merge In Back
+	Delete This Page
+    Page Size
+    Show Page [S]
+    Screen Format
+    About
+    Quit
+
+Brush
+    Load
+    Save
+    Restore [B]
+    Size
+	Stretch [Z]
+	Halve [h]
+	Double [H]
+	Double Horiz
+	Double Vert
+    Flip
+	Horiz [x]
+	Vert [y]
+    Edge
+	Outline
+	Trim
+    Rotate
+	90 Degrees [z]
+	Any Angle
+	Shear
+    Change Color
+	BG -> FG
+	BG <-> FG
+	Remap
+	Change Transparency  ????
+    Bend
+	Horizontal
+	Vertical
+    Handle
+	Center
+	Corner
+	Place
+Mode
+    Matte [F1]
+    Color [F2]
+    Replace [F3]
+    Smear [F4]
+    Shade [F5]
+    Blend [F6]
+    Cycle [F7]
+    Smooth [F8]
+    Tint
+    HalfBrite
+
+Animation
+    Load
+    Save
+    Move
+    Frames
+    Control
+    Anim Brush
+    Method
+
+Effects
+    Stencil
+	Make
+	Remake
+	Lock FG
+	Reverse
+	On/Off [~]
+	Free
+	Load
+	Save
+	Delete
+    Background
+	Fix
+	Off
+
+Font
+    Style
+	Bold
+	Italic
+	Underline
+    Load Font Dir - after selected, the font list shows up here.
+
+Prefs
+    Coords
+    Fast FB
+    Multicycle
+    Be Square
+    Workbench
+    Excl Brush
+    Auto Transp ???
+    No Icons
+    Autogrid ???
+

@@ -1,0 +1,27 @@
+Stuff to lookup
+
+skew, rotate:
+    netpbm utilities
+	pnmrotate
+
+
+palette remaps:
+    weight based on hue and brightness
+    - or:
+    consider R G B as coordinates in 3-space.
+    then for each old palette color, find its distance to each new color
+    it becomes the color that it is "closest" to.
+    - this does not take into account hue... OR DOES IT?
+
+scaling (nearest neighbor):
+    make an x and y lookup table using
+	bresenham's algo  (messier, quicker)
+	or 
+	floating point math  (slower, possibly less consistant)
+
+
+scripting:
+    integrate lisp interpreter
+    convert all commands to be lisp commands
+
+

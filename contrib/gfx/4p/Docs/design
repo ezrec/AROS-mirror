@@ -1,0 +1,176 @@
+
+------------------------------------
+         CUSTOM AND INTERNAL BRUSHES
+
+arranged like the 'pages' below.
+
+have two main lists, one 
+	IPAGE * brush_custom;
+	IPAGE * brush_internal;
+
+along with a changable pointer
+	IPAGE * brush_active;
+
+if brush_active is NULL, draw with a single pixel.
+otherwise, draw with it.
+
+if (brush_active == brush_internal)
+{
+    mode = COLOR;
+    disable FKeys 1-3.  
+} else {
+    enable FKeys 1-3.
+}
+
+if make brush bigger
+{
+    if (!brush_internal)
+    {
+	make a new one, 
+    }
+    if (type == page_type_circle)
+
+if make brush smaller
+    if (w <= 2)
+    {
+	free it
+	set brush_active to 0
+    }
+
+
+
+------------------------------------
+                      TOOL CALLBACKS
+
+The basic sequence is this:
+
+user clicks the mouse.
+this position gets checked against the window underneath the cursor
+if the position is a toolbar, the appropriate callback is called for that tool
+if the position is a paint box:
+	dereference the position to find the pixel underneath the cursor
+	call
+
+3 events-
+	click started
+	dragging
+	release
+
+different things to account for:
+	state - for continuous draw, rubberbanding
+	dotted draw
+	    mouse is down, draw a pixel
+	    (using the current brush)
+	continuous draw
+	    mouse is down, draw a line from the last pixel to this one.
+	    (using the current brush)
+	rectangle
+	    mouse is down: 
+		rubberband a rectangle showing the rectange to be drawm
+	    mouse is released:
+		render that rectangle to the page.
+	floodfill
+            on initial click, render the floodfill
+
+on fills (or draws?)
+	fill to the page's scratch buffer's  alpha chanel
+	fill the scratch buffer with the rendering (solid color/pattern)
+	backup the page to its undo buffer
+	apply the scratch buffer to the page.
+
+
+------------------------------------
+                               VIEWS
+
+A view is a way to look at a page.
+mutliple views can be on a screen simultaneously
+
+Each view has its own palette.  The edit page's view contains the palette
+for the last loaded in image.  (not brush)
+
+ie:
+    the toolbar is a view.
+    the menu bar is a view.
+    the edit page is a view.
+    if the zoom is enabled, 
+	the seperator is a view,
+	the zoom window is a view into the edit page.
+
+
+------------------------------------
+                               PAGES
+
+Page is an image with an undo queue.
+    - primary image
+    - alpha channel for the image
+    - scratch image
+    - alpha channel for the scratch image
+    - undo image
+    - alpha channel for the undo image
+
+Main - stack for animations
+Spare - single image
+
+Each Page has an undo stack (or single image to start with)
+
+Main/Spare --onto--> blitbuffer   note changed regions
+ title bar --onto--> blitbuffer	  note changed regions, subtract overlap
+  tool bar --onto--> blitbuffer   note changed regions, subtract overlap
+    cursor --onto--> blitbuffer   note changed regions
+
+then:
+	blit regions to the screen buffer
+
+
+blit only the changed regions to the screen
+    - if there are overlapping regions to blit, blit a region encompassing both
+for animations, blit the full page to the screen
+
+how does dpaint 2 handle a spare with an animation stack? 
+'j' switches between the animation stack and the swap page
+
+'load image' takes in a page.  it loads the image to the upper left of 
+the image, clipping to the smaller of the two?  no
+
+Eventually;  if the image to be loaded is larger than the current size,
+prompt to change the display resolution.
+
+on startup, a main page, and a spare page get created.
+if the user 'adds frames', then the main page gets children.
+these pages are the startup size that the user opens the window for
+
+when something is done to a page, ie drawing:
+	- a transparent layer is created over it, with the new mods on it
+	- this layer is then sized to determine what is different.
+	- these regions are then blitted to the base image.
+	- the region data is added to the current update region of the page
+	- then those regions are blitted out to the screen
+
+When a new image is loaded in:
+	- the old page gets destroyed.
+	- the new page gets created the same size as the old page
+	- the image and palette get loaded in to IMAGE structure
+	- this IMAGE gets converted into the new page
+	- the page's blit update region gets set to the full size of the page
+
+Custom brushes ('B') 
+	- stored as pages (have their own palette)
+
+Internal brushes
+	- stored as custom brushes
+	- special handler for their creation and destruction
+
+ISSUES:
+
+what happens if the image being loaded is larger than the current page/
+window size?
+	- prompt for new screen size to encompass it
+	- load it in, but force the user to scroll around.. ie zoom scroll
+
+what happens if it's bigger than we can display on the screen?
+	- load it in, but force the user to scroll around.. ie zoom scroll
+
+what happens to the palette of the old page if the new one gets loaded over it?
+we need it to be around for doing a 'palette remap' ... do we?
+if we have a brush from the previous page, we'll also have the palette
+with it...
