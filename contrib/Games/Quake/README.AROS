@@ -1,3 +1,9 @@
+You need the game files for Quake first. You can download the
+shareware version of Quake from the ID Software web site:
+
+    http://www.idsoftware.com/quake/index.html
+
+
 This is a *very* quick and dirty port of quake,
 and is only tested with the shareware demo version
 of the data files.
