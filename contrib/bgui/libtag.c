@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 1.3  2001/04/26 19:52:25  stegerg
+ * commented out the printf.
+ *
  * Revision 1.2  2000/07/03 20:45:44  bergers
  * Update. Test1 now successfully opens the library. In LibOpen the AddTaskMember function seems to trash the stack somehow (return address is trashed) and therefore I had to take it out.
  *
@@ -35,7 +38,7 @@ extern int BGUI_end;
 
 int entry(void)
 {
-  printf("entry called. Doing nothing!\n");
+  /* printf("entry called. Doing nothing!\n"); */
   return -1;
 }
 
