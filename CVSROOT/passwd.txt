@@ -11,7 +11,7 @@ turrican:bcRFEzJmi8r7Y:Kars de Jong:jongk@prac.cs.utwente.nl:misc
 nlorentz:aaoEn/1St7MB7JtA8mAs:Nils Henrik Lorentzen:nlorentz@sn.no:diskfont,icons
 ruppert:bbtwjwdJnQGas:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 vmc:abVary.zhDODw:Harald Frank:support@isdntown.east.de:Amiga port
-helios:adbPRFDCl2q5e9XnWdz5:Martin Steigerwald:steigerw@stud.uni-frankfurt.de:Beta tester
+helios:acykXs3E/1zscg6SaXrL:Martin Steigerwald:steigerw@stud.uni-frankfurt.de:Beta tester
 
 stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
