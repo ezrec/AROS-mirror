@@ -160,7 +160,7 @@ int np;
 	}
 	show_global_icon=NULL;
 	if (fred!=-3) FadeRGB4(fontscreen,coltab,(1<<depth),-1,config->fadetime);
-cleanicon:
+/*cleanicon:*/
 	FreeDiskObject(dobj);
 	cleanup_fontdisplay();
 	return(ret);
