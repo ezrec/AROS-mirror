@@ -26,12 +26,14 @@ MESASAMPLES :=  accum \
             line \
             logo \
             nurb \
+            olympic \
             overlay \
             point \
             prim \
             quad \
             select \
             shape \
+            speed \
             sphere \
             star \
             stencil \
@@ -39,6 +41,8 @@ MESASAMPLES :=  accum \
             texture \
             tri \
             wave
+
+MESAOGLINFO = oglinfo
 
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
     

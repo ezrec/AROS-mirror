@@ -9,8 +9,7 @@ include $(TOP)/config/make.cfg
 
 MESABOOKSRCDIR = book
 
-MESABOOK :=  robot \
-            accanti \
+MESABOOK :=  accanti \
             accnot \
             accpersp \
             accum \
@@ -61,6 +60,7 @@ MESABOOK :=  robot \
             planet \
             planetup \
             polys \
+            robot \
             sccolorlight \
             scene \
             scenebamb \
@@ -76,7 +76,8 @@ MESABOOK :=  robot \
             teaambient \
             teapots \
             texgen \
-            texturesurf
+            texturesurf \
+            trim
 
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
 
