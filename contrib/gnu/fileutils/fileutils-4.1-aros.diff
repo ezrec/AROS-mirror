@@ -1,6 +1,6 @@
-diff -u -r fileutils-4.1/config.sub fileutils-4.1-aros/config.sub
---- fileutils-4.1/config.sub	Sat Apr 21 14:27:49 2001
-+++ fileutils-4.1-aros/config.sub	Tue Apr 27 19:24:25 2004
+diff -ruN fileutils-4.1-aros/config.sub fileutils-4.1/config.sub
+--- fileutils-4.1-aros/config.sub	2001-04-21 20:27:49.000000000 +0200
++++ fileutils-4.1/config.sub	2004-11-25 00:02:29.825228344 +0100
 @@ -326,7 +326,11 @@
  		basic_machine=m68k-unknown
  		os=-sysv4
@@ -23,9 +23,9 @@ diff -u -r fileutils-4.1/config.sub fileutils-4.1-aros/config.sub
  	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
  	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
  	      | -hiux* | -386bsd* | -netbsd* | -openbsd* | -freebsd* | -riscix* \
-diff -u -r fileutils-4.1/configure fileutils-4.1-aros/configure
---- fileutils-4.1/configure	Sun Apr 29 04:26:09 2001
-+++ fileutils-4.1-aros/configure	Tue Apr 27 19:24:25 2004
+diff -ruN fileutils-4.1-aros/configure fileutils-4.1/configure
+--- fileutils-4.1-aros/configure	2001-04-29 10:26:09.000000000 +0200
++++ fileutils-4.1/configure	2004-11-25 00:02:29.836226672 +0100
 @@ -17797,7 +17797,7 @@
  if test "${ac_cv_func_setvbuf_reversed+set}" = set; then
    echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -35,9 +35,9 @@ diff -u -r fileutils-4.1/configure fileutils-4.1-aros/configure
    { { echo "$as_me:17801: error: cannot run test program while cross compiling" >&5
  echo "$as_me: error: cannot run test program while cross compiling" >&2;}
     { (exit 1); exit 1; }; }
-diff -u -r fileutils-4.1/lib/getloadavg.c fileutils-4.1-aros/lib/getloadavg.c
---- fileutils-4.1/lib/getloadavg.c	Mon Jun 19 03:22:00 2000
-+++ fileutils-4.1-aros/lib/getloadavg.c	Tue Apr 27 19:24:25 2004
+diff -ruN fileutils-4.1-aros/lib/getloadavg.c fileutils-4.1/lib/getloadavg.c
+--- fileutils-4.1-aros/lib/getloadavg.c	2000-06-19 09:22:00.000000000 +0200
++++ fileutils-4.1/lib/getloadavg.c	2004-11-25 00:02:29.837226520 +0100
 @@ -70,7 +70,7 @@
  
     We also #define LDAV_PRIVILEGED if a program will require
@@ -52,9 +52,53 @@ diff -u -r fileutils-4.1/lib/getloadavg.c fileutils-4.1-aros/lib/getloadavg.c
  }
  #endif /* TEST */
 +#endif /* __AROS__ */
-diff -u -r fileutils-4.1/src/Makefile.in fileutils-4.1-aros/src/Makefile.in
---- fileutils-4.1/src/Makefile.in	Sun Apr 29 07:40:37 2001
-+++ fileutils-4.1-aros/src/Makefile.in	Tue Apr 27 19:24:25 2004
+diff -ruN fileutils-4.1-aros/lib/getpass.c fileutils-4.1/lib/getpass.c
+--- fileutils-4.1-aros/lib/getpass.c	2000-06-21 22:21:03.000000000 +0200
++++ fileutils-4.1/lib/getpass.c	2004-11-25 00:02:29.841225912 +0100
+@@ -16,6 +16,7 @@
+    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.  */
+ 
++#ifndef __AROS__
+ #if HAVE_CONFIG_H
+ # include <config.h>
+ #endif
+@@ -99,3 +100,4 @@
+ 
+   return buf;
+ }
++#endif
+diff -ruN fileutils-4.1-aros/lib/mbswidth.c fileutils-4.1/lib/mbswidth.c
+--- fileutils-4.1-aros/lib/mbswidth.c	2001-02-17 09:59:57.000000000 +0100
++++ fileutils-4.1/lib/mbswidth.c	2004-11-24 23:59:55.000000000 +0100
+@@ -78,6 +78,10 @@
+ 
+ #include "mbswidth.h"
+ 
++#ifdef __AROS__
++# undef HAVE_MBRTOWC
++#endif
++
+ /* Returns the number of columns needed to represent the multibyte
+    character string pointed to by STRING.  If a non-printable character
+    occurs, -1 is returned, unless MBSW_ACCEPT_UNPRINTABLE is specified.
+diff -ruN fileutils-4.1-aros/lib/quotearg.c fileutils-4.1/lib/quotearg.c
+--- fileutils-4.1-aros/lib/quotearg.c	2001-02-17 11:39:35.000000000 +0100
++++ fileutils-4.1/lib/quotearg.c	2004-11-24 23:58:21.000000000 +0100
+@@ -66,6 +66,10 @@
+ # include <wchar.h>
+ #endif
+ 
++#ifdef __AROS__
++# undef HAVE_MBRTOWC
++#endif
++
+ #if !HAVE_MBRTOWC
+ /* Disable multibyte processing entirely.  Since MB_CUR_MAX is 1, the
+    other macros are defined only for documentation and to satisfy C
+diff -ruN fileutils-4.1-aros/src/Makefile.in fileutils-4.1/src/Makefile.in
+--- fileutils-4.1-aros/src/Makefile.in	2001-04-29 13:40:37.000000000 +0200
++++ fileutils-4.1/src/Makefile.in	2004-11-25 00:02:29.838226368 +0100
 @@ -122,9 +122,16 @@
  EXTRA_PROGRAMS = df
  
@@ -94,9 +138,9 @@ diff -u -r fileutils-4.1/src/Makefile.in fileutils-4.1-aros/src/Makefile.in
  PROGRAMS = $(bin_PROGRAMS)
  
  CPPFLAGS = @CPPFLAGS@
-diff -u -r fileutils-4.1/src/dd.c fileutils-4.1-aros/src/dd.c
---- fileutils-4.1/src/dd.c	Sun Apr 22 09:21:58 2001
-+++ fileutils-4.1-aros/src/dd.c	Tue Apr 27 19:24:25 2004
+diff -ruN fileutils-4.1-aros/src/dd.c fileutils-4.1/src/dd.c
+--- fileutils-4.1-aros/src/dd.c	2001-04-22 15:21:58.000000000 +0200
++++ fileutils-4.1/src/dd.c	2004-11-25 00:02:29.839226216 +0100
 @@ -1200,3 +1200,9 @@
  
    quit (exit_status);
@@ -107,10 +151,21 @@ diff -u -r fileutils-4.1/src/dd.c fileutils-4.1-aros/src/dd.c
 +int getpagesize(void) {
 +return 8192;
 +}
-diff -u -r fileutils-4.1/src/ls.c fileutils-4.1-aros/src/ls.c
---- fileutils-4.1/src/ls.c	Sun Apr 29 05:42:47 2001
-+++ fileutils-4.1-aros/src/ls.c	Tue Apr 27 19:24:25 2004
-@@ -1047,7 +1047,7 @@
+diff -ruN fileutils-4.1-aros/src/ls.c fileutils-4.1/src/ls.c
+--- fileutils-4.1-aros/src/ls.c	2001-04-29 11:42:47.000000000 +0200
++++ fileutils-4.1/src/ls.c	2004-11-25 00:02:29.840226064 +0100
+@@ -200,6 +200,10 @@
+ # define TIMESPEC_NS(timespec) 0
+ #endif
+ 
++#ifdef __AROS__
++# undef HAVE_MBRTOWC
++#endif
++
+ enum filetype
+   {
+     unknown DT_INIT (DT_UNKNOWN),
+@@ -1047,7 +1051,7 @@
  		 quotearg (p));
  	}
      }
@@ -119,27 +174,11 @@ diff -u -r fileutils-4.1/src/ls.c fileutils-4.1-aros/src/ls.c
  #ifdef TIOCGWINSZ
    {
      struct winsize ws;
-@@ -1055,6 +1055,7 @@
-     if (ioctl (STDOUT_FILENO, TIOCGWINSZ, &ws) != -1 && ws.ws_col != 0)
+@@ -1056,6 +1060,7 @@
        line_length = ws.ws_col;
    }
-+#endif
  #endif
++#endif
  
    /* Using the TABSIZE environment variable is not POSIX-approved.
-diff -urN fileutils-4.1/lib/getpass.c fileutils-4.1-aros/lib/getpass.c
---- fileutils-4.1/lib/getpass.c	2000-06-21 22:21:03.000000000 +0200
-+++ fileutils-4.1-aros/lib/getpass.c	2004-08-26 13:03:17.000000000 +0200
-@@ -16,6 +16,7 @@
-    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.  */
- 
-+#ifndef __AROS__
- #if HAVE_CONFIG_H
- # include <config.h>
- #endif
-@@ -99,3 +100,4 @@
- 
-   return buf;
- }
-+#endif
+      Ignore it when POSIXLY_CORRECT is set.  */
