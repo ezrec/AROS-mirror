@@ -30,7 +30,7 @@ The following software is required for compiling AROS:
 + GCC 3.2.2+
 + GNU Binutils
 + GNU Make
-+ GNU AWK (GAWK)
++ GNU AWK (GAWK) - other awks may also be suitable
 + Python 2.2.1+
 + Bison
 + pngtopnm and ppmtoilbm (part of the netpbm package)
@@ -129,6 +129,12 @@ Compiling
 To start the compilation, simply run::
 
     > make
+
+If you use FreeBSD or some other system that does not use GNU Make as the
+system make, then you should substitute the GNU Make command for the above.
+For example, under FreeBSD you must install the GNU Make port, then run::
+
+    > gmake
 
 
 Hosted AROS/i386-linux or AROS/i386-freebsd
