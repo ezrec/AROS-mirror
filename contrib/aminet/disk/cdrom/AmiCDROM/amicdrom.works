@@ -1,0 +1,84 @@
+The following hardware setups have been reported to work:
+   * Amiga 500 + GVP A500-HD+ + NEC 3Xp (CDR-400) + AmiCDROM 1.11
+   * Amiga 500 + Trumpcard + NEC CDR-25 + AmiCDROM 1.7
+   * Amiga 500 + Blizzard w Supra 500XP contr + Apple CD300 +
+         AmiCDROM 1.6
+   * Amiga 500 + GVP Series II + Toshiba 4101 + AmiCDROM 1.8
+   * Amiga 500 + cdtv.device + A570 + AmiCDROM 1.7
+   * Amiga 2000 + GForce030 + Apple PowerCD + AmiCDROM 1.8 and 1.9
+   * Amiga 2000 + GVP Series II V4.13 + NEC CDR-55JD + AmiCDROM 1.4
+   * Amiga 2000 + GVP Series II + Apple CD-300 + AmiCDROM 1.4
+   * Amiga 2000 + GVP Series I + Toshiba 3401 + AmiCDROM 1.8
+   * Amiga 2000 + GVP 030 & internal SCSI II host adapter + Sony CDU-561 +
+         AmiCDROM 1.7
+   * Amiga 2000 + Masoboshi MasterCard + Toshiba 3401 + AmiCDROM 1.6
+   * Amiga 2000 + ICD Advantage 2000 + Apple CD150 + AmiCDROM 1.4
+   * Amiga 2000 + A2091 SCSI Controller + NEC CDR-37 + AmiCDROM 1.12
+   * Amiga 2000 + A2091 SCSI controller + NEC CDR-55JD-1 + AmiCDROM 1.4
+   * Amiga 2000 + GVP Series II (v4.13) + NEC CDR-55JD-1 + AmiCDROM 1.7
+   * Amiga 2000 + GVP Series II + Apple CD300 + AmiCDROM 1.9
+   * Amiga 2000 + A2091 SCSI controller + Toshiba 3301 + AmiCDROM 1.6
+   * Amiga 2000 + A2091 SCSI controller + Sony CDU-561 + AmiCDROM 1.7
+   * Amiga 2000 + Evolution-Controller (V3.x) + Toshiba 3401 +
+         AmiCDROM 1.4
+   * Amiga 2500 + A2091 SCSI controller + Apple CD300 + AmiCDROM 1.4
+   * Amiga 3000 + internal SCSI device + Toshiba 3301 + AmiCDROM 1.7
+   * Amiga 3000 + internal SCSI device + Toshiba 3401 + AmiCDROM 1.9
+   * Amiga 3000 + internal SCSI device + Chinon 435 + AmiCDROM 1.4
+   * Amiga 3000 + internal SCSI device + NEC CDR 84-1 + AmiCDROM 1.4
+   * Amiga 3000 (WD-08 Chip) + internal SCSI device + Apple CD150 +
+          AmiCDROM 1.7
+   * Amiga 3000 + internal SCSI device + Apple CD300 + AmiCDROM 1.7
+   * Amiga 3000 (Mercury '040, WD-08 Chip) + internal SCSI device +
+          Apple CD300 + AmiCDROM 1.7
+   * Amiga 3000 + internal SCSI device + Texel DM5028 + AmiCDROM 1.7
+   * Amiga 3000 + internal SCSI + NEC 3Xp + AmiCDROM 1.7
+   * Amiga 3000 + internal SCSI device + Pioneer DRM-604X QuadSpeed Changer +
+          AmiCDROM 1.9
+     [works partly]
+   * Amiga 3000 + Commodore 2091 + Toshiba 2100/3200 + AmiCDROM 1.7
+   * Amiga 3000 + Emplant w SCSI (using empscsi.device) + Apple CD 300 +
+         AmiCDROM 1.7
+   * Amiga 4000 + GVP Series I + Toshiba 3401 + AmiCDROM 1.8
+   * Amiga 4000 + Commodore 2091 SCSI controller + Toshiba 3401 +
+         AmiCDROM 1.7
+   * Amiga 4000 + Fastlane SCSI II + Toshiba 3401 + AmiCDROM 1.2
+   * Amiga 4000 + Fastlane Z3 SCSI Host Adapter + Apple CD-300 +
+         AmiCDROM 1.4-1.7
+   * Amiga 4000 + A4091 + Apple CD300 + AmiCDROM 1.7
+   * Amiga 4000 + Golem SCSI controller + Toshiba 3401 + AmiCDROM 1.7
+   * Amiga 4000/30 + DataFlyer + Apple SC + AmiCDROM 1.7
+   * Amiga 4000 + Commodore A2091 SCSI controller + NEC 3Xp + AmiCDROM 1.7
+   * Amiga 4000/040 + Oktagon 2008 + Toshiba 3401 + AmiCDROM 1.9
+   * Amiga 4000 + WarpEngine40/28 + Toshiba 3401 + AmiCDROM ?.?
+   * Amiga 4000 + A4091 SCSI controller + NEC 3Xi (CDR-500) + AmiCDROM ?.?
+     [ but: audio support does not work + READ TOC command has funny results ]
+   * Amiga ???? + Oktagon 2008 + Teac CD-50 / Pioneer DRM600 / DRM602 +
+        AmiCDROM 1.10
+ 
+The following hardware setups have been reported not to work:
+
+   * Amiga 2000 + GVP Series I + Toshiba 3401 + AmiCDROM 1.6
+   * Amiga 2000 + GVP Series II (v4.13) + NEC CDR-55JD-1 + AmiCDROM 1.8/1.9
+   * Amiga 2000 + GVP combo 68030/gvpscsi 3.12 + Toshiba 3401 + AmiCDROM 1.6
+   * Amiga 2000 + G-Force-030/gvpscsi 4.5 + Toshiba 3401 + AmiCDROM 1.6
+   * Amiga 2000 + ICD Advantage 2000 + Apple CD150 + AmiCDROM 1.6
+   * Amiga 2000 + Amiga 2000 Vector Acc w SCSI port + Nec MultiSpin 3Xp +
+         AmiCDROM 1.7
+   * AmiCDROM <= 1.7 + Digital RDD40  (will be fixed in AmiCDROM 1.8)
+   * Amiga 3000 + EMPLANT with SCSI (using empscsi.device) + 
+         Texel DM5024 drive + AmiCDROM 1.6
+   * Amiga 3000 (with 68040 acc) + internal SCSI device + Texel CDROM +
+         AmiCDROM 1.4
+   * Amiga 3000 + internal SCSI device + Apple CD300 + AmiCDROM 1.6
+     [works partially]
+   * Amiga 3000 + internal SCSI device (WD-08) + Apple CD150 + AmiCDROM 1.8
+
+The following hardware setups have been reported to work for some users
+and not to work for other users:
+
+   * Amiga 2000 + Evolution-Controller (V3.x) + Toshiba 3401 +
+         AmiCDROM 1.6/1.7 (probably works only in Trackdisk mode)
+
+
+

@@ -1,0 +1,28 @@
+Short: CDROM disk filesystem (ISO-9660+RR+HFS)
+Type: disk/cdrom
+Uploader: ln_fmu@pki-nbg.philips.de
+Author: ln_fmu@pki-nbg.philips.de
+
+* IMPORTANT NOTICE FOR USERS OF VERSIONS 1.0, 1.1 and 1.2:
+*
+* The format of the Mountlist 'Startup' field has been changed.
+* Please consult AmiCDROM.guide for further information.
+
+
+AmiCDROM
+========
+
+AmiCDROM is a CDROM disk filing system for the Commodore Amiga.
+It supports the ISO-9660 standard, the Rock Ridge Interchange
+Protocol and the Macintosh HFS format.
+
+The CDROM drive is mounted as a DOS device (e.g. CD0:). You can
+access files and directories on a CDROM disk by the usual syntax,
+e.g. "type cd0:foo/readme.txt".
+
+The file 'AmiCDROM.guide' contains information about installing and
+using the CDROM handler.
+
+Please send suggestions and bug reports to:
+
+    ln_fmu@pki-nbg.philips.de

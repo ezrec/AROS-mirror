@@ -1,0 +1,8 @@
+/* AmiCDROM filesystem */
+
+ Handler = L:cdrom-handler
+ Stacksize = 10000
+ Priority = 10
+ GlobVec  = -1
+ Mount = 1
+ Startup = "DEVICE=scsi.device UNIT=1 ML R"
