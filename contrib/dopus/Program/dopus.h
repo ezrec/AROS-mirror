@@ -297,9 +297,9 @@ ULONG IDToGroup( unsigned long groupID, struct GroupInfo *group );
 #pragma libcall AccountsBase IDToGroup 54 8002
 */
 #ifdef __SASC_60
-#define CHIP_DATA __chip USHORT
+#define CHIP_DATA __chip UBYTE
 #else
-#define CHIP_DATA USHORT /* __chip */
+#define CHIP_DATA UBYTE /* __chip */
 #endif
 
 #endif
