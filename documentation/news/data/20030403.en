@@ -1,0 +1,158 @@
+=============
+Status Update
+=============
+
+:Author: Fabio Alemagna
+:Date:   2003-04-03
+
+Long time has passed since the latest real status update, and we're sorry about it,
+but be sure that development hasn't stopped, and many things have happened in the AROS
+realm in the last few months.
+
+
+New Site
+--------
+
+Let's begin with what you can see right now: the new site__. As already announced a few
+days ago, AROS has gained a new and awesome web site, thanks to Adam Chodorowski and
+Daniel Holmen. The new site has a set of nice features which make it easier to navigate
+and get the informations one is looking for.
+
+In a not particular order, the new site features:
+
+    - new and updated documentation, which should greatly help people understand what AROS is
+      really about (believe me, there's a widespread general misconception about this issue)
+      and provide with useful references about development__ *for* AROS and *of* AROS itself,
+      together with information more geared towards users__.
+
+    - a much better `download section`__, from which nightly builds and CVS snapshots
+      of the AROS sources can be downloaded.
+
+    - our new mascot, Kitty__, whose father is the great `Eric W. Shwartz`__:
+      isn't she cute? ;-)
+
+    - a set of new screenshots_.
+
+
+GUI
+---
+
+On the Graphic User Interface front there have also been many improvements.
+
+    - Zune [1]_, for instance, has been greatly improved, and its skinning features are
+      just brilliant. Have a look at the `screenshots page`__ to get an idea of what
+      I'm talking about.
+
+    - freetype 2 has been ported to AROS, by Staf Verhaegen, on the basis of the work already
+      done by the MOS_ Team.
+
+    - Wanderer [2]_, while still being mostly experimental, has finally got smooth window scrolling,
+      which should improve its usability a lot. It must be said, though, that the current Wanderer
+      was meant to be more a proof of concept than anything, and apart from the initial development,
+      which lasted only a couple of days, not much has been done about it. A more powerful incarnation
+      of the Wanderer concept is in the work by Paul Smith.
+
+    - Many more `Mason Icons`__ have been included in the AROS builds, making the overall wanderer
+      experience more pleasant. Many thanks go to Martin "Mason" Mertz for providing us with his
+      excellent work!
+
+
+Drivers
+-------
+
+There are news also from the device drivers front, thanks to Johan Grip.
+
+    - The ide.device has finally seen solved the geometry recognition issue:
+      now it should be able to detect the geometry of your hardrive correctly in all cases.
+      Unfortunately, what seems to be an easy job at a glance, shows to be a dirty one when
+      looking at it more deeply, due to problems related to CHS/LBA representation.
+      Or so Johan says. :-)
+
+    - We've got a *VESA2* driver, which makes it possible to use high resolutions and high depth values
+      in the native flavour of AROS. Georg Steger has, moreover, optimized the drawing routines
+      a lot, making the whole experience of using AROS at full resolution and full depth a very
+      pleasant one. Try it by yourself, by running a few demos.
+
+
+Applications
+------------
+
+Worth mentioning, application-wise, is HDToolBox [3]_, which has seen many bugs fixed and its GUI improved.
+For the ones that don't know yet, thanks to the partition.library [4]_, HDToolBox handles both RDB and MBR
+partitioning models, and it allows for nested partitions, even of different models.
+
+
+Miscellaneous
+-------------
+
+A lot more things have been improved in AROS in the latest months and many bugs have been fixed, in
+many modules, so it would be rather hard listing all of them. However, there are a few things really worth
+mentioning which don't fit in any specific category and which I am going to list here.
+
+    - The ELF [5]_ loader has been completely refactored, all of its bugs are now gone and it's
+      significantly faster and cleaner. AROS has also obtained official recognition by the SCO
+      group, and thus got an official ELFOSABI [6]_ number: *15*.
+
+      The ELF loader is a work of Fabio Alemagna.
+
+    - Martin Gierich has continued his work on the picture.datatype, after a very long pause,
+      and made it finally handle true color pictures. He also updated the ilbm datatype
+      accordingly.
+
+    - Always on the datatypes front, Daniel Holmen has developed a bmp datatype. However,
+      when the bmp datatype was made Martin hadn't updated the picture datatype yet, so
+      the bmp datatype doesn't handle true color pictures.
+
+    - The FreeBSD port is now working, after a long period of time during which AROS would
+      not compile or would not work properly on FreeBSD. Thanks to Iain Templeton for fixing it
+      and Georg Steger for doing his usual bug hunting. :)
+
+    - Fabio Alemagna has begun working on an SDK for AROS, including a set of cross and native development
+      tools, with specific AROS optimizations. So far the cross-binutils are almost ready, and patches
+      have already been submitted to the binutils crew, expect an AROS SDK to be released to the public
+      soon.
+
+Conclusions
+-----------
+
+Although in the past months we've been really silent, development has continued without interruption.
+However, progress is not as fast as we all would like it to be, and this is mainly due to lack of
+developers: *"AROS - So much to do, so little time"* is the motto that has been invented in the
+#aros IRC channel on freenode_ to describe this situation. :-)
+
+So, as we always say, we need **more** developers! Come on guys, AROS is fun, let's have fun together!
+
+----------
+
+.. [1] Zune is our MUI_ clone, a project originated by David Le Corfec, and after some time
+       taken into AROS, and since then developed by David, Sebastian Bauer, Georg Steger
+       and Fabio Alemagna.
+
+.. [2] Wanderer is our Workbench(TM) clone.
+
+.. [3] HDToolBox is our partitioning tool. Its author is Sebastian Heutling.
+
+.. [4] Partition.library is a library which handles different partitioning models in an unified way.
+       So far it supports RDB and MBR partitioning models, but it is made to be easily extended.
+       Partition.library is a work of Sebastian Heutling.
+
+.. [5] ELF stands for "Executable and Linking Format", and it's the format of choice for AROS
+       executables.
+
+.. [6] The ELFOSABI is a number that uniquely identifies an operating system and connects it to
+       a particular ELF object. In other words, an ELF object which has in its header a particular
+       ELFOSABI number, is meant to be run only on the operating system which owns that number.
+
+__ http://aros.sourceforge.net/
+__ /documentation/developers/index
+__ /documentation/users/index
+__ /download
+__ http://aros.sourceforge.net/downloads/kitty/
+__ http://www.coax.net/people/erics/
+__ screenshots_
+__ http://aros.sourceforge.net/pictures/screenshots/20030403/masonicons.png
+
+.. _MUI: http://www.sasg.com/mui/index.html
+.. _MOS: http://www.morphos.de/
+.. _freenode: http://www.freenode.net/
+.. _screenshots: /pictures/screenshots/
