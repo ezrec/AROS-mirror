@@ -16,7 +16,7 @@ const char *acesign = "**ACE**";
 //-------- Version string for program
 const char *version="UNACE v1.2    public version\n";
 
-#ifdef AMIGA
+#if defined(AMIGA) && !defined(__AROS__)
 //-------- Version string for VERSION program
 const char *_version="$VER: Unace Amiga 1.2  "__AMIGADATE__"\n\n";
 #endif

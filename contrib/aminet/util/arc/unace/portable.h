@@ -14,7 +14,7 @@
 
 /* All kinds of inplace swap routines, to reverse from LOHI to HILO byte order */
 
-#ifdef AMIGA
+#ifdef __AMIGAOS__
 
 #if __SASC && __VERSION__>=6 && __REVISION__>=58
 

@@ -4,7 +4,7 @@ FILES := uac_crc globals uac_crt unace uac_sys uac_dcpr uac_comm
 
 EXEDIR := $(CONTRIBDIR)/aminet
 
-USER_CFLAGS :=-DUNIX
+USER_CFLAGS := -DUNIX -UAMIGA -U_AMIGA
 
 #MM aminet-util-arc-unace : includes linklibs
 

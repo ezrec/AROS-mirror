@@ -8,14 +8,12 @@
 #define __declare_h
 
 #ifdef AMIGA
-
 #include <exec/types.h>
 
-#elif defined __AROS__
-#include <exec/types.h>
-
+#if defined __AROS__
 typedef unsigned short USHORT;
 typedef short          SHORT;
+#endif
 
 #else /* AMIGA */
 
@@ -32,7 +30,6 @@ typedef unsigned char  UCHAR ;
 typedef char           CHAR  ;
 typedef unsigned       UINT  ;
 typedef int            INT   ;
-
 
 #endif /* __declare_h */
 
