@@ -1,6 +1,11 @@
 /*
  * $Header$
  * $Log$
+ * Revision 1.3  2001/04/30 17:10:38  stegerg
+ * define WSignal to nothing for AROS. This func is for
+ * OSes which do not have a Unix like signal() function.
+ * Rexx seems to just use this for CTRL-C breaking support.
+ *
  * Revision 1.2  2001/04/05 16:57:37  stegerg
  * added AROS specifc defines. Might not be 100% correct
  *
@@ -88,6 +93,8 @@
 #	define	HAS_STRING
 #	define	HAS_CTYPE
 #	define	HAS_XTOY
+
+#define WSignal(a,b) 
 
 #else
 
