@@ -28,7 +28,7 @@ def imgsize(path):
     try:
 	pict = Image.open(path)  #Too easy.  Thanks Fredrik!
     except:
-	print repr (path)
+	print 'Error with',repr (path)
 	raise
     width, height = pict.size
     return width, height
