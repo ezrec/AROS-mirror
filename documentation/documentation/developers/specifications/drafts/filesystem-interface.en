@@ -7,6 +7,13 @@ The AROS Filesystem Interface
 :Version:   $Revision$
 :Date:      $Date$
 
+.. Note:: 
+
+   This document is currently only a draft and will most likely change before 
+   it is accepted as an official specification. It might also be deprecated if
+   a better aproach has been found and might not correspond precisely with the 
+   current implementation.
+
 .. Contents:: 
    :depth: 2
 

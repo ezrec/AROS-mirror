@@ -7,6 +7,13 @@ The exec microkernel
 :Version:   $Revision$
 :Date:      $Date$
 
+.. Note:: 
+
+   This document is currently only a draft and will most likely change before 
+   it is accepted as an official specification. It might also be deprecated if
+   a better aproach has been found and might not correspond precisely with the 
+   current implementation.
+
 
 This document describes the inner workings of exec.library. It's not for normal
 application programmers but for people who are interested in such a thing. Most

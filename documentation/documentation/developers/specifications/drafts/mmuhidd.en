@@ -7,6 +7,14 @@ MMU HIDD
 :Version:   $Revision$
 :Date:      $Date$
 
+.. Note:: 
+
+   This document is currently only a draft and will most likely change before 
+   it is accepted as an official specification. It might also be deprecated if
+   a better aproach has been found and might not correspond precisely with the 
+   current implementation.
+
+
 mmu.hidd will be the hardware interface for the Memory Management devices,
 and should have the following characteristics:
 

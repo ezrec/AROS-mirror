@@ -8,6 +8,12 @@ RFC #0001: Home directories in AROS
 :Date:      $Date$
 :Status:    Draft; not yet an AROS standard.
 
+.. Note:: 
+
+   This document is currently only a draft and will most likely change before 
+   it is accepted as an official specification. It might also be deprecated if
+   a better aproach has been found and might not correspond precisely with the 
+   current implementation.
 
 We'd like the AROS system to support several users much like what other 
 operating platforms do (like MacOS and WindowsXP). Before we say anything more 
