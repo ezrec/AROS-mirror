@@ -40,8 +40,6 @@
 #include <rexx/errors.h>
 #include <rexx/rexxcall.h>
 
-#include <aros/debug.h>
-
 #include <proto/alib.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
@@ -663,6 +661,7 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
   
   msg->rm_Action = RXFUNC | RXFF_RESULT;
   msg->rm_Args[0] = (IPTR)CreateArgstring( (char *)name->value, name->len );
+
   for (parmit = parms, parmcount = 0; parmit != NULL; parmit = parmit->next, parmcount++)
   {
     if ( parmit->value != NULL && parmit->value->len > 0 )
