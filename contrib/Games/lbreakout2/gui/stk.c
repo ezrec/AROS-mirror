@@ -384,6 +384,7 @@ int stk_display_open( int flags, int width, int height, int depth )
 	SDL_Surface *icon;
 	icon = png_load(SRC_DIR "/gfx/win_icon.png");
         if (icon != NULL) {
+            kprintf("=== icon = %p\n", icon);
 	    SDL_SetColorKey(icon, SDL_SRCCOLORKEY, 0);
 	    SDL_WM_SetIcon(icon, NULL);
         }
@@ -400,10 +401,10 @@ int stk_display_open( int flags, int width, int height, int depth )
         if ( ( stk_display = SDL_SetVideoMode( width, height, depth, flags ) ) == 0 )
             STK_ABORT( SDL_GetError() );
 
-#ifdef STK_DEBUG				
+#ifdef STK_DEBUG
     printf( "set display %ix%i %s\n",
             width, height, (flags&SDL_FULLSCREEN)?"Fullscreen":"Window" );
-        
+
     format = stk_display->format;
     printf("video mode format:\n");
     printf("Masks: R=%i, G=%i, B=%i\n", 
