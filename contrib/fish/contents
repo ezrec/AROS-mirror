@@ -1,52 +1,81 @@
-304_lines/ -   From Fish Disk 304
+304_lines/      From Fish Disk 304
 
-304_clines/ -  From Fish Disk 304
+304_clines/     From Fish Disk 304
 
-362_rubik/ -   From Fish Disk 362 (doesn't work, yet)
+362_rubik/      From Fish Disk 362 (doesn't work, yet)
 
-371_fractals/ - From Fish Disk 371 (doesn't work, yet)
+aroach/         From Fish Disk 899
 
-asimplex/ -     From Fish Disk 199
+371_fractals/   From Fish Disk 371 (doesn't work, yet)
 
-bezier/ - From Fish Disk 75
+asimplex/       From Fish Disk 199
 
-cube/ - From Fish Disk 733
+bezier/         From Fish Disk 75
 
-fiveinline/ - From Fish Disk 163
+cfn/            From Fish Disk 888
 
-grep/ - From Fish Disk 4
+cube/           From Fish Disk 733
 
-henon/ - From Fish Disk 636. Try with
-	    henon 1.111 0.025 1.0 0.025 550 (demo1)
-	    henon 1.5732 0.025 1.5 0.025 1000  (demo2)
-            henon 0.264 0.02 0.3 0.02 1000     (demo3)
+eval/           From Fish Disk 857
 
-icon2c/ - From Fish Disk 377
+egypt/          From Fish Disk 816
 
-layers/ - From Fish Disk 5
+find/           From Fish Disk 879 (rexx is missing to get it compiled)
 
-lotto/ - From Fish Disk 430 (lotto/program)
+fiveinline/     From Fish Disk 163
 
-mand/ - From Fish Disk ??? (Unfortunately some functions are still missing.)
+grep/           From Fish Disk 4
 
-microemacs/ - From Fish Disk 2. There is also a version on Fish Disk 6, but 
-	it contains assembly code.
+gooddouble/     From Fish Disk 899
 
-mosaic/ - From Fish Disk 466  (game)
+henon/          From Fish Disk 636. Try with
+	           henon 1.111 0.025 1.0 0.025 550 (demo1)
+  	           henon 1.5732 0.025 1.5 0.025 1000  (demo2)
+                   henon 0.264 0.02 0.3 0.02 1000     (demo3)
 
-rubik/ - From Fish Disk 29 (Unfortunately some functions are still missing.)
 
-screenzap/ - From Fish Disk 303
+icon2c/         From Fish Disk 377
 
-sunmaze/ - From Fish Disk 255
 
-surf/ -  From Fish Disk 315
+layers/         From Fish Disk 5
 
-tree/ - From Fish Disk 31
+lotto/          From Fish Disk 430 (lotto/program)
 
-watchman/ - From Fish Disk 283
+lp/             From Fish Disk 855 (doesn't compile because DeviceList
+                                    structure looks different)
 
-worldtime/ - From Fish Disk 583
+lyr-o-mat/      From Fish Disk 881
 
-yachtc/ - From Fish Disk 10 (Unfortunately some functions are still missing.)
+mand/           From Fish Disk ??? (Unfortunately some functions are still missing.)
 
+memeter/        From Fish Disk 843
+
+memomaster/     From Fish Disk 819 (rename, remove, toupper are missing in
+                                    clib)
+
+memsnap/        From Fish Disk 826
+
+microemacs/     From Fish Disk 2. There is also a version on Fish Disk 6, but 
+	                          it contains assembly code.
+
+mosaic/         From Fish Disk 466  (game)
+
+rubik/          From Fish Disk 29 (Unfortunately some functions are still missing.)
+
+screenzap/      From Fish Disk 303
+
+shuffle/        From Fish Disk 881
+
+sunmaze/        From Fish Disk 255
+
+surf/           From Fish Disk 315
+
+tree/           From Fish Disk 31
+
+watchman/       From Fish Disk 283
+
+windowtool/     From Fish Disk 711
+
+worldtime/      From Fish Disk 583
+
+yachtc/         From Fish Disk 10 (Unfortunately some functions are still missing.)
