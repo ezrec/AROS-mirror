@@ -1,0 +1,39 @@
+#   $Id$
+#
+#   Makefile to make Soliton.
+
+include $(TOP)/config/make.cfg
+
+IMAGES =                        \
+	DigitsImage.7seg.BW     \
+	DigitsImage.7seg.MWB    \
+	DigitsImage.7seg.cyan   \
+	DigitsImage.7seg.green  \
+	DigitsImage.7seg.red    \
+	DigitsImage.7seg.yellow \
+	DigitsImage_DZ          \
+	DigitsImage_DZ_Quake    \
+	FaceButtonImage.BW      \
+	FaceButtonImage.MWB     \
+	FaceButtonImage.cyan    \
+	FaceButtonImage.green   \
+	FaceButtonImage.yellow  \
+	FaceButtonImage_DZ      \
+	FaceButtonImage_DZ_Quake\
+	MineFieldImage.BW       \
+	MineFieldImage.MWB      \
+	MineFieldImage.col      \
+	def_DigitsImage         \
+	def_FaceButtonImage     \
+	def_MineFieldImage
+
+EXEDIR := $(CONTRIBDIR)/aminet
+IMAGEDIR := $(EXEDIR)/Images
+DEST_IMAGES := $(foreach f,$(IMAGES),$(IMAGEDIR)/$(f))
+
+#MM setup-aminet-games-think-muimine-images
+setup-aminet-games-think-muimine-images : images
+
+images ::
+	@$(IF) $(TEST) ! -d $(IMAGEDIR) ; then $(MKDIR) $(IMAGEDIR) ; else $(NOP) ; fi
+	@$(CP) $(IMAGES) $(IMAGEDIR)

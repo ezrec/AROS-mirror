@@ -1,6 +1,6 @@
 #   $Id$
 #
-#   Makefile to make Soliton.
+#   Makefile to make MUIMine.
 
 include $(TOP)/config/make.cfg
 
@@ -16,8 +16,10 @@ FILES :=           \
 	FaceButton \
 	Digits
 
+
 EXEDIR := $(CONTRIBDIR)/aminet
 EXE := $(EXEDIR)/MUIMine
+
 
 USER_INCLUDES := 
 
@@ -27,7 +29,7 @@ USE_AMIGALIB := yes
 USE_MLIB := yes
 USE_MUILIB := yes
 
-#MM aminet-games-think-muimine : includes setup linklibs
+#MM aminet-games-think-muimine : includes setup linklibs setup-aminet-games-think-muimine-images
 
 %make_prog_setup mmake=aminet-games-think-muimine
 
@@ -37,3 +39,4 @@ aminet-games-think-muimine : setup $(EXE)
 
 %common
 %include_deps
+ 
