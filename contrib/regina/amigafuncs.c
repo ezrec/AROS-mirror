@@ -1324,9 +1324,21 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
   msg->rm_Stdout = Output();
   sendandwait( TSD, port, msg );
 
-  *rc = RXFLAG_OK;
+  *rc = msg->rm_Result1;
   DeleteRexxMsg( msg );
-  return Str_crestrTSD( "Message sent and replied" );
+  if (msg->rm_Result1 == 0)
+  {
+    if (msg->rm_Result2 == NULL)
+      return Str_crestrTSD( "" );
+    else
+    {
+      streng *retval = Str_ncre_TSD( TSD, (UBYTE *)msg->rm_Result2, LengthArgstring( (UBYTE *)msg->rm_Result2 ) );
+      DeleteArgstring( (UBYTE *)msg->rm_Result2 );
+      return retval;
+    }
+  }
+  else
+    return Str_cre_TSD( TSD, "" );
 }
 
 
