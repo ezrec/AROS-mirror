@@ -3,6 +3,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 
 char *optarg; /* Global argument pointer. */
 int optind = 0; /* Global argv index. */
