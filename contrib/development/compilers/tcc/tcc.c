@@ -352,7 +352,7 @@ static const char **rt_bound_error_msg;
 static struct TCCState *tcc_state;
 
 /* give the path of the tcc libraries */
-static const char *tcc_lib_path = CONFIG_TCC_PREFIX "/tcc";
+static const char *tcc_lib_path = CONFIG_TCC_PREFIX "Workbench:lib";
 
 struct TCCState {
     int output_type;
@@ -8555,7 +8555,7 @@ TCCState *tcc_new(void)
     s->output_type = TCC_OUTPUT_MEMORY;
 
     /* default include paths */
-    tcc_add_sysinclude_path(s, "/usr/local/include");
+    tcc_add_sysinclude_path(s, "Workbench:include");
     tcc_add_sysinclude_path(s, "/usr/include");
     tcc_add_sysinclude_path(s, CONFIG_TCC_PREFIX "/lib/tcc/include");
 
@@ -8800,11 +8800,19 @@ int tcc_add_library(TCCState *s, const char *libraryname)
     
     /* first we look for the dynamic library if not static linking */
     if (!s->static_link) {
+#ifndef AROSC
         snprintf(buf, sizeof(buf), "lib%s.so", libraryname);
+#else
+	snprintf(buf, sizeof(buf), "lib%s_shared.a", libraryname);
+#endif
         /* if we output to memory, then we simply we dlopen(). */
         if (s->output_type == TCC_OUTPUT_MEMORY) {
             /* Since the libc is already loaded, we don't need to load it again */
+#ifndef AROSC
             if (!strcmp(libraryname, "c"))
+#else
+	 if (!strcmp(libraryname, "arosc"))
+#endif
                 return 0;
             h = dlopen(buf, RTLD_GLOBAL | RTLD_LAZY);
             if (h)
@@ -8866,8 +8874,12 @@ int tcc_set_output_type(TCCState *s, int output_type)
     if (output_type == TCC_OUTPUT_EXE || 
         output_type == TCC_OUTPUT_DLL) {
         if (output_type != TCC_OUTPUT_DLL)
+#ifndef AROSC
             tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/crt1.o");
-        tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/crti.o");
+ 	    tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/crti.o");
+#else
+        tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/startup.o");
+#endif 
     }
     return 0;
 }

@@ -739,8 +739,11 @@ static void tcc_add_runtime(TCCState *s1)
     char buf[1024];
     int i;
     Section *s;
-
+#ifndef _AROS
     snprintf(buf, sizeof(buf), "%s/%s", tcc_lib_path, "libtcc1.o");
+#else
+    snprintf(buf, sizeof(buf), "%s/%s", tcc_lib_path, "libtcc1.a");
+#endif
     tcc_add_file(s1, buf);
 #ifdef CONFIG_TCC_BCHECK
     if (do_bounds_check) {
@@ -774,8 +777,14 @@ static void tcc_add_runtime(TCCState *s1)
 #endif
     /* add libc if not memory output */
     if (s1->output_type != TCC_OUTPUT_MEMORY) {
+#ifndef AROSC
         tcc_add_library(s1, "c");
         tcc_add_file(s1, CONFIG_TCC_CRT_PREFIX "/crtn.o");
+#else
+        tcc_add_library(s1, "arosc");
+        tcc_add_file(s1, CONFIG_TCC_CRT_PREFIX "/detach.o");
+
+#endif
     }
     /* add various standard linker symbols */
     add_elf_sym(symtab_section, 
