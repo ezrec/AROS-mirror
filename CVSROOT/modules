@@ -49,7 +49,7 @@ microemacs -d contrib/fish/microemacs contrib/fish/microemacs
 
 # Games
 Games -d contrib/Games contrib/Games
-Doom -d contrib/Games/Kiel contrib/Games/Doom
+Doom -d contrib/Games/Doom contrib/Games/Doom
 Kiel -d contrib/Games/Kiel contrib/Games/Kiel
 Moria3D -d contrib/Games/Moria3D contrib/Games/Moria3D
 Quake -d contrib/Games/Quake contrib/Games/Quake
