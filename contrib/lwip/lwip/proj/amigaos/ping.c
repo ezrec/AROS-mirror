@@ -707,7 +707,7 @@ int main( void ) {
       timeout.tv_micro = 10000;
       fdmask = 1 << s;
       if (WaitSelect(s + 1, (fd_set *)&fdmask, (fd_set *)NULL,
-		 (fd_set *)NULL, &timeout) < 1,NULL) /* sba: was select() */
+		 (fd_set *)NULL, &timeout,NULL) < 1) /* sba: was select() */
 	continue;
     }
     fromlen = sizeof(from);
