@@ -16,6 +16,7 @@ int countlines(struct ViewData *vd)
 	lws = NULL;
 	
 	max_line_length = vd->view_max_line_length;
+	buf = vd->view_text_buffer;
 	mll_p = max_line_length - 10;
 	
 	charcount = linecount = 0;
@@ -60,6 +61,7 @@ int countlines(struct ViewData *vd)
 			linecount ++;
 			
 			charcount = 0;
+			lws = NULL;
 		}
 		
 		/* skip3 */
