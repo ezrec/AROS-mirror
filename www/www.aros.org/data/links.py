@@ -42,26 +42,26 @@ moreRelated = (
 	'The images on this page are usually tested on several different PCs,'
 	' so chances that they work for you are much higher',
     ),
-    ( Link ('/mailman/listinfo/',
+    ( Link ('http://www.aros.org/mailman/listinfo/',
 	'Mailing lists',
 	'There are a couple of mailing lists for AROS. Follow the links'
 	' to subscribe. Note that you must be member of the lists to be'
-	' able to post.',
+	' able to post (to avoid spam and the like).',
 	),
-	Link ('/mailman/listinfo/aros-user/',
+	Link ('http://www.aros.org/mailman/listinfo/aros-user/',
 	    'AROS User',
 	    'This list is for users of AROS. Since there are not many'
 	    ' users of AROS at this time, the volume on this list is'
 	    ' very low. :-)',
 	),
-	Link ('/mailman/listinfo/aros-announce/',
+	Link ('http://www.aros.org/mailman/listinfo/aros-announce/',
 	    'AROS Announce',
 	    'Subscribe to this list to be notified about all important'
 	    ' news regarding AROS. The things posted here are the same'
 	    ' as in the NEWS section of this site. Posting on this list'
 	    ' is disabled.',
 	),
-	Link ('/mailman/listinfo/aros-dev/',
+	Link ('http://www.aros.org/mailman/listinfo/aros-dev/',
 	    'AROS Dev',
 	    'The developer mailing list. Subscribe here if you want to'
 	    ' join the development team. The volume is usually a couple'
