@@ -11,6 +11,11 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/07/10 16:35:49  stegerg
+ * bugfix: if a screen's size was smaller than it's OSCAN_TEXT overscan size
+ * then windows sometimes could not be created because of badly
+ * calculated coordinates.
+ *
  * Revision 42.5  2000/07/07 17:11:50  stegerg
  * had to change BASE_FINDKEY and GRM_WHICHOBJECT method calls
  * for AROS (#ifdef), because of changed types in method structs
@@ -1533,6 +1538,7 @@ METHOD(WindowClassOpen, Msg, msg)
    /*
     * Obtain the mode ID from the screen to use.
     */
+
    if ((modeID = GetVPModeID(&pubscreen->ViewPort)) != INVALID_ID)
    {
       /*
@@ -1547,6 +1553,7 @@ METHOD(WindowClassOpen, Msg, msg)
           */
          vw = rect.MaxX - rect.MinX + 1;
          vh = rect.MaxY - rect.MinY + 1;
+	 
       };
    };
 
@@ -1556,6 +1563,11 @@ METHOD(WindowClassOpen, Msg, msg)
    wd->wd_TextW = vw;
    wd->wd_TextH = vh;
 
+   /* AROS FIX <-> AMIGA FIX? */
+
+   if (vw > pubscreen->Width)  vw = pubscreen->Width;
+   if (vh > pubscreen->Height) vh = pubscreen->Height;
+   
    if (!WinSize(wd, (UWORD *)&width, (UWORD *)&height))
       goto failure;
 
@@ -3839,6 +3851,7 @@ METHOD(WindowClassRelayout, Msg, msg)
           * Re-size the window accoording to the master
           * minimum size change.
           */
+
          WindowLimits(w, 1, 1, -1, -1);
          ChangeWindowBox(w, newl, newt, neww, newh);
 
