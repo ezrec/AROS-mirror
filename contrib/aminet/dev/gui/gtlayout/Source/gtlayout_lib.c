@@ -478,9 +478,11 @@ LibInit(
         
 	GTLayoutBase->ExecBase = (struct Library *)ExecBase;
 
+#ifndef __AROS__
 #if !defined(CPU_ANY) && !defined(CPU_any)
 	if(ExecBase->AttnFlags & AFF_68020)
 #endif	// CPU_ANY
+#endif
 
 	if(ExecBase->LibNode.lib_Version >= 37)
 	{
@@ -512,15 +514,16 @@ LibInit(
 /*****************************************************************************/
 
 STATIC struct Library * LIBENT
-LibOpen(REG(a6) struct GTLayoutBase *GTLayoutBase)
+LibOpen(REG(d0) ULONG version,
+        REG(a6) struct GTLayoutBase *GTLayoutBase)
 {
 	struct Library *result = GTLayoutBase;
 	UWORD openCnt;
 
-	openCnt = GTLayoutBase->LibNode.lib_OpenCnt;
-
 	GTLayoutBase->LibNode.lib_OpenCnt++;
 	GTLayoutBase->LibNode.lib_Flags &= ~LIBF_DELEXP;
+
+	openCnt = GTLayoutBase->LibNode.lib_OpenCnt;
 
 	ObtainSemaphore(&GTLayoutBase->LockSemaphore);
 
