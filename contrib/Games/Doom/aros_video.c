@@ -126,12 +126,6 @@ static unsigned int lock_time = 0;
 static unsigned int c2p_time = 0;
 static unsigned int total_frames = 0;
 
-APTR LockBitMapTags(struct BitMap *bm, Tag tag, ...)
-{
-    kprintf("?????? lockBitmaptags ??????\n");
-    return NULL;
-}
-
 /****************************************************************************/
 
 static __inline void start_timer (void)
