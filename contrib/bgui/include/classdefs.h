@@ -13,6 +13,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/07/07 17:16:53  stegerg
+ * STACK??? stuff in method structs.
+ * DoExtentMethod #define changed for AROS because of this.
+ *
  * Revision 42.5  2000/07/03 21:21:01  bergers
  * Replaced stch_l & stcu_d and had to make a few changes in other places because of that.
  *
@@ -398,38 +402,48 @@ typedef struct {
 #define BGUI_SPACING_OBJECT   0xF001
 #define BGUI_DGM_OBJECT       0xF002
 
+#ifndef _AROS
+
+#undef STACKULONG
+#define STACKULONG ULONG
+
+#undef STACKLONG
+#define STACKLONG LONG
+
+#endif
+
 struct bmLeftExt {
-   ULONG              MethodID;
+   STACKULONG              MethodID;
    struct RastPort   *bmle_RPort;
    UWORD             *bmle_Extention;
 };
 
 struct bmRenderBuffer {
-   ULONG              MethodID;
+   STACKULONG              MethodID;
    struct Screen     *bmrb_Screen;
-   ULONG              bmrb_Width;
-   ULONG              bmrb_Height;
+   STACKULONG              bmrb_Width;
+   STACKULONG              bmrb_Height;
 };
 
 struct bmMoveBounds {
-   ULONG              MethodID;
-   LONG               bmmb_ChangeX;
-   LONG               bmmb_ChangeY;
-   LONG               bmmb_ChangeW;
-   LONG               bmmb_ChangeH;
+   STACKULONG              MethodID;
+   STACKLONG               bmmb_ChangeX;
+   STACKLONG               bmmb_ChangeY;
+   STACKLONG               bmmb_ChangeW;
+   STACKLONG               bmmb_ChangeH;
 };
 
 struct fmSetupBounds {
-   ULONG              MethodID;
+   STACKULONG              MethodID;
    struct IBox       *fmsb_HitBox;
    struct IBox       *fmsb_InnerBox;
 };
 
 /* Get the window rendering buffer. */
 struct wmClip {
-   ULONG              MethodID;      /* WM_CLIP                  */
+   STACKULONG              MethodID;      /* WM_CLIP                  */
    struct Rectangle  *wmc_Rectangle; /* Rectangle for operation. */
-   ULONG              wmc_Action;    /* See below.               */
+   STACKULONG              wmc_Action;    /* See below.               */
 };
 
 #define CLIPACTION_NONE  0
@@ -439,14 +453,14 @@ struct wmClip {
 
 /* Compute the cliprect for a view object. */
 struct vmClip {
-   ULONG              MethodID;      /* VIEW_CLIP               */
+   STACKULONG              MethodID;      /* VIEW_CLIP               */
    struct Rectangle  *vmc_Rectangle;
-   ULONG              vmc_WindowClip;
+   STACKULONG              vmc_WindowClip;
 };
 
 /* Setup a gadget with the window default values. */
 struct wmSetupGadget {
-   ULONG              MethodID;      /* WM_SETUPGADGET           */
+   STACKULONG              MethodID;      /* WM_SETUPGADGET           */
    Object            *wmsg_Object;   /* Gadget object.           */
    struct TagItem    *wmsg_Tags;     /* Tag options.             */
 };
@@ -538,8 +552,14 @@ typedef struct BaseClassData
 /*
  * Call the IM_EXTENT method.
  */
-#define DoExtentMethod(obj, rp, ibox, lw, lh, flags) \
-AsmDoMethod(obj, IM_EXTENT, rp, ibox, lw, lh, flags << 16)
+
+#ifdef _AROS
+    #define DoExtentMethod(obj, rp, ibox, lw, lh, flags) \
+    AsmDoMethod(obj, IM_EXTENT, rp, ibox, lw, lh, flags)
+#else
+    #define DoExtentMethod(obj, rp, ibox, lw, lh, flags) \
+    AsmDoMethod(obj, IM_EXTENT, rp, ibox, lw, lh, flags << 16)
+#endif
 
 #define BGUI_DoGadgetMethod myDoGadgetMethod
 
