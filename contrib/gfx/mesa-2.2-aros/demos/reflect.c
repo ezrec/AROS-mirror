@@ -42,8 +42,8 @@
 #define DEG2RAD (3.14159/180.0)
 
 
-#ifdef AROS
-#define TABLE_TEXTURE "/samples/1.rgb"
+#ifdef __AROS__
+#define TABLE_TEXTURE "1.rgb"
 #else
 #define TABLE_TEXTURE "../samples/1.rgb"
 #endif

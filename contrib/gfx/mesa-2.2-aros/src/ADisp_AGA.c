@@ -19,8 +19,6 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#define AROS
-
 #include <GL/AmigaMesa.h>
 #ifdef	ADISP_AGA
 
@@ -44,7 +42,7 @@
 #include <exec/memory.h>
 #include <exec/types.h>
 #ifdef __GNUC__
-#ifndef AROS
+#ifndef __AROS__
 #include <inline/exec.h>
 #include <inline/intuition.h>
 #include <inline/graphics.h>

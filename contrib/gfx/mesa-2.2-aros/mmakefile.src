@@ -5,28 +5,31 @@
 #
 include $(TOP)/config/make.cfg
 
-
 #MM contrib-mesa2 : includes
-#MM- contrib-mesa2 : contrib-mesa2-common contrib-mesa2-demos contrib-mesa2-samples contrib-mesa2-book
 #MM- contrib-mesa2-common : setup-contrib-mesa2-directories includes mesa-includes linklibs-mesagl linklibs-mesaglu linklibs-mesatk linklibs-mesaaux
 #MM linklibs-mesagl : includes
 #MM linklibs-mesaglu : includes
 #MM linklibs-mesatk : includes
 #MM linklibs-mesaaux : includes
 
-#MM contrib-mesa2-demos : contrib-mesa2-common
-#MM contrib-mesa2-samples : contrib-mesa2-common
-#MM contrib-mesa2-book : contrib-mesa2-common
+#MM- contrib-mesa2-demos : contrib-mesa2-common setup-mesa2-demosfiles
+#MM- contrib-mesa2-samples : contrib-mesa2-common setup-mesa2-samplesfiles
+#MM- contrib-mesa2-book : contrib-mesa2-common
+#MM- contrib-mesa2 : contrib-mesa2-common contrib-mesa2-demos contrib-mesa2-samples contrib-mesa2-book
 
-AMIGASRCDIR := amiga
-MESASRCDIR := src
-MESAGLUSRCDIR := src-glu
-MESATKSRCDIR := src-tk
-MESAAUXSRCDIR := src-aux
+AMIGASRCDIR = amiga
+MESASRCDIR = src
+MESAGLUSRCDIR = src-glu
+MESATKSRCDIR = src-tk
+MESAAUXSRCDIR = src-aux
 
-MESADEMOSRCDIR := demos
-MESASAMPSRCDIR := samples
-MESABOOKSRCDIR := book
+MESADEMOSRCDIR = demos
+MESASAMPSRCDIR = samples
+MESABOOKSRCDIR = book
+
+MESADEMOSFILES := isosurf.dat
+
+MESASAMPFILES := 1.rgb 2.rgb 3.rgb 4.rgb
 
 LIBMESAGL :=  $(MESASRCDIR)/accum \
             $(MESASRCDIR)/alpha \
@@ -213,7 +216,7 @@ MESABOOK :=  $(MESABOOKSRCDIR)/robot \
             $(MESABOOKSRCDIR)/texgen \
             $(MESABOOKSRCDIR)/texturesurf
 
-USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -I$(MESAGLUSRCDIR) -I$(MESATKSRCDIR) -I$(MESAAUXSRCDIR) -Iamiga/misc
 USER_CFLAGS	:= -DNO_ERRNO_H
 
 %build_linklib mmake=linklibs-mesagl libname=MesaGL files=$(LIBMESAGL)
@@ -226,20 +229,22 @@ USER_CFLAGS	:= -DNO_ERRNO_H
 
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
 
-%build_progs mmake=contrib-mesa2-demos \
-    files=$(MESADEMOS) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
-    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+%build_progs mmake=contrib-mesa2-demos files=$(MESADEMOS) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 uselibs="Mesatk Mesaaux MesaGLU MesaGL arossupport amiga arosc m"
     
-%build_progs mmake=contrib-mesa2-samples \
-    files=$(MESASAMPLES) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
-    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"    
+%build_progs mmake=contrib-mesa2-samples files=$(MESASAMPLES) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 uselibs="Mesatk Mesaaux MesaGLU MesaGL arossupport amiga arosc m"
 
-%build_progs mmake=contrib-mesa2-book \
-    files=$(MESABOOK) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
-    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+%build_progs mmake=contrib-mesa2-book files=$(MESABOOK) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 uselibs="Mesatk Mesaaux MesaGLU MesaGL arossupport amiga arosc m"
 
 #MM
 setup-contrib-mesa2-directories :
 	%mkdirs_q $(CONTRIBDIR)/Gfx $(CONTRIBDIR)/Gfx/Mesa2 $(CONTRIBDIR)/Gfx/Mesa2/demos $(CONTRIBDIR)/Gfx/Mesa2/samples $(CONTRIBDIR)/Gfx/Mesa2/book
+
+#MM
+setup-mesa2-demosfiles :
+	%copy_files_q files="$(MESADEMOSFILES)" src=$(MESADEMOSRCDIR) dst=$(CONTRIBDIR)/Gfx/Mesa2/$(MESADEMOSRCDIR)
+
+#MM
+setup-mesa2-samplesfiles :
+	%copy_files_q files="$(MESASAMPFILES)" src=$(MESASAMPSRCDIR)/ dst=$(CONTRIBDIR)/Gfx/Mesa2/$(MESASAMPSRCDIR)
 
 %common

@@ -29,9 +29,14 @@
 /* Mesa tkAmiga by Stefan Z (d94sz@efd.lth.se)*/
 
 /*$Log$
- *Revision 1.1  2003/08/09 00:23:01  chodorowski
- *Initial revision
+ *Revision 1.2  2004/06/29 00:32:39  NicJA
+ *A few build related fixes (remove windows line endings in make scripts - python doesnt like them).
  *
+ *Still doesnt link to the examples correctly - allthought the linklibs seem to compile as expected??
+ *
+/*Revision 1.1.1.1  2003/08/09 00:23:01  chodorowski
+/*Amiga Mesa 2.2 ported to AROS by Nic Andrews. Build with 'make aros'. Not built by default.
+/*
  * Revision 1.8  1997/06/25  19:17:47  StefanZ
  * bumped to mesa 2.2
  *
@@ -61,8 +66,6 @@ TODO:
 Exposefunc
 */
 
-#define AROS
-
 //#define USE_CLIP_LAYER
 #undef USE_CLIP_LAYER
 
@@ -74,7 +77,7 @@ Exposefunc
 #include <intuition/intuition.h>
 #include <devices/inputevent.h>
 #ifdef __GNUC__
-#ifndef AROS
+#ifndef __AROS__
 #include <inline/exec.h>
 #include <inline/intuition.h>
 #include <inline/graphics.h>

@@ -19,12 +19,15 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#define AROS
-
 /*
 $Log$
-Revision 1.1  2003/08/09 00:23:14  chodorowski
-Initial revision
+Revision 1.2  2004/06/29 00:32:39  NicJA
+A few build related fixes (remove windows line endings in make scripts - python doesnt like them).
+
+Still doesnt link to the examples correctly - allthought the linklibs seem to compile as expected??
+
+Revision 1.1.1.1  2003/08/09 00:23:14  chodorowski
+Amiga Mesa 2.2 ported to AROS by Nic Andrews. Build with 'make aros'. Not built by default.
 
  */
 
@@ -69,7 +72,7 @@ IDEAS:
 #include <exec/memory.h>
 #include <exec/types.h>
 #ifdef __GNUC__
-#ifndef AROS
+#ifndef __AROS__
 #include <inline/exec.h>
 #include <inline/intuition.h>
 #include <inline/graphics.h>

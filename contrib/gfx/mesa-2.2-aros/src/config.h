@@ -23,6 +23,11 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/06/29 00:32:39  NicJA
+ * A few build related fixes (remove windows line endings in make scripts - python doesnt like them).
+ *
+ * Still doesnt link to the examples correctly - allthought the linklibs seem to compile as expected??
+ *
  * Revision 1.2  2004/02/25 02:46:04  NicJA
  * updates updates updates... now builds with the standard aros mmakefile.src system - use make contrib-mesa2 to build
  *
@@ -101,11 +106,7 @@
 #ifdef AMIGA
 #   define MAX_EVAL_ORDER 12
 #else
-#ifdef __AROS__
-#   define MAX_EVAL_ORDER 12
-#else
-#   define MAX_EVAL_ORDER 30
-#endif
+#   define MAX_EVAL_ORDER 30 /* aros can handle this.. */
 #endif
 
 /* Maximum Name stack depth */
@@ -128,8 +129,8 @@
 #  define MAX_HEIGHT 400
 #else
 #ifdef __AROS__
-#  define MAX_WIDTH 640
-#  define MAX_HEIGHT 400
+#  define MAX_WIDTH 2048
+#  define MAX_HEIGHT 2048
 #else
 #  define MAX_WIDTH 1280
 #  define MAX_HEIGHT 1024
@@ -147,7 +148,7 @@
 /*
  * Bits per depth buffer value:  16 or 32
  */
-#define DEPTH_BITS 16
+#define DEPTH_BITS 32
 
 #if DEPTH_BITS==16
 #  define MAX_DEPTH 0xffff

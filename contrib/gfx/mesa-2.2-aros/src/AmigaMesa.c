@@ -19,10 +19,13 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#define AROS
-
 /*
 $Log$
+Revision 1.3  2004/06/29 00:32:39  NicJA
+A few build related fixes (remove windows line endings in make scripts - python doesnt like them).
+
+Still doesnt link to the examples correctly - allthought the linklibs seem to compile as expected??
+
 Revision 1.2  2004/02/25 02:46:04  NicJA
 updates updates updates... now builds with the standard aros mmakefile.src system - use make contrib-mesa2 to build
 
@@ -119,7 +122,7 @@ IDEAS:
 #include <exec/memory.h>
 #include <exec/types.h>
 #ifdef __GNUC__
-#ifndef AROS
+#ifndef __AROS__
 #include <inline/exec.h>
 #include <inline/intuition.h>
 #include <inline/graphics.h>
@@ -579,8 +582,7 @@ __asm __saveds GLenum AmigaMesaReportError(register __a0 struct amigamesa_contex
 	{
 	GLenum error;
 	error=LastError;
-#warning :TODO fix next line
-        //LastError=NULL;
+        LastError=0;
 	return(error);
 	}
 

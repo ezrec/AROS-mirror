@@ -23,6 +23,11 @@
 
 /*
 $Log$
+Revision 1.3  2004/06/29 00:32:39  NicJA
+A few build related fixes (remove windows line endings in make scripts - python doesnt like them).
+
+Still doesnt link to the examples correctly - allthought the linklibs seem to compile as expected??
+
 Revision 1.2  2004/02/25 02:51:02  NicJA
 updates updates updates... now builds with the standard aros mmakefile.src system - use make contrib-mesa2 to build
 
@@ -1279,12 +1284,10 @@ __asm __saveds extern void glDrawArraysEXT(register __d0 GLenum mode,register __
 #ifdef AMIGALIB
 
 #else
-#ifdef __AROS__
 
-#else
 extern struct Library *glBase;
 #include "gl_pragma.h"
-#endif
+
 #endif
 
 
