@@ -1,5 +1,5 @@
 Adam Chodorowski updated the list of known BUGS. He also added some
-new <a href="screenshots.html>screenshots</a> of devloping <strong>in</strong>
+new <a href="screenshots.html">screenshots</a> of devloping <strong>in</strong>
 AROS using XDME and <a href="http://www.python.org/">Python</a>.
 He also continued to port more of Python. The modules math, cmath
 and pcre compile and link, now.
