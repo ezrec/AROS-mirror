@@ -31,7 +31,7 @@
  * Author: Adam Dunkels <adam@sics.se>
  *         Sebastian Bauer <sebauer@t-online.de>
  *
- * $Id: sys_arch.c,v 1.4 2002/07/07 20:42:54 sebauer Exp $
+ * $Id: sys_arch.c,v 1.5 2002/07/08 17:13:16 sebauer Exp $
  */
 
 #include <time.h>
@@ -171,6 +171,8 @@ static struct timerequest *Timer_Send(struct ThreadData *data, ULONG millis)
 	time->tr_time.tv_secs = millis/1000;
 	time->tr_time.tv_micro = (millis%1000)*1000;
 	SendIO((struct IORequest*)time);
+
+	data->TimerOutstanding++;
     }
     return time;
 }
@@ -240,7 +242,9 @@ static int Thread_Entry(void)
     if (Thread_Init(&data))
     {
     	FindTask(NULL)->tc_UserData = &data;
+    	kprintf("Thread at 0x%lx initialized. Now jumping to user defined function\n",FindTask(NULL));
 	fp(ud,ud,ud);
+    	kprintf("Thread at 0x%lx finished. Cleanup now\n",FindTask(NULL));
 	Thread_Cleanup(&data);
     }
     return 0;

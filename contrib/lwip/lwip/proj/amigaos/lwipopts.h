@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: lwipopts.h,v 1.10 2002/02/15 23:12:28 adam Exp $
+ * $Id: lwipopts.h,v 1.1 2002/07/06 21:22:57 sebauer Exp $
  */
 #ifndef __LWIPOPTS_H__
 #define __LWIPOPTS_H__
@@ -43,7 +43,7 @@
 
 /* MEM_SIZE: the size of the heap memory. If the application will send
 a lot of data that needs to be copied, this should be set high. */
-#define MEM_SIZE                1000
+#define MEM_SIZE                8000
 
 /* MEMP_NUM_PBUF: the number of memp struct pbufs. If the application
    sends a lot of data out of ROM (or other static memory), this
