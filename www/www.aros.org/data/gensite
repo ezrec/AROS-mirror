@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 
-''' Generate the AROS WWW site.'''
+'''Generate the AROS WWW site.'''
 
 import glob, os
 from HTMLcolors import *
 from HTMLgen import *
 
-htmldir = '../www'
+htmldir = os.environ['HTMLDIR']
 
 mainLinks = (
     ( Href ('/index.html', 'NEWS'),
+	Href ('/status.html', 'Status'),
 	Href ('/oldnews.html', 'Old News'),
     ),
     ( Href ('/documentation.html', 'Documentation'),
@@ -133,6 +134,18 @@ def genNews ():
     genPage (list[:5], 'index.html')
     genPage (list[5:], 'oldnews.html')
 
+def genStatus ():
+    page = Page (linkBoxItem='NEWS')
+    body = []
+    body.append (Heading (2, 'Size of AROS sources'))
+    body.append (Paragraph (Image ('aros_size.png')))
+    body.append (Paragraph (Href ('aros_size.jpg', 'Also as JPEG')))
+    body.append (Heading (2, 'Size of contributed sources'))
+    body.append (Paragraph (Image ('contrib_size.png')))
+    body.append (Paragraph (Href ('contrib_size.jpg', 'Also as JPEG')))
+    page.meat = page.meat + body
+    page.write ('status.html')
+
 def genDocumentation ():
     page = Page (linkBoxItem='Documentation')
     page.write ('documentation.html')
@@ -200,6 +213,7 @@ def genLinks ():
     page.write ('links.html')
 
 genNews ()
+genStatus ()
 genDocumentation ()
 genScreenshots ()
 genDownload ()
