@@ -174,20 +174,50 @@ def genDownload ():
     page.append (processLinks (links.downloadLinks))
     page.write ()
 
+import time
+
 def genSnapshots ():
     '''Create the page with the snapshots with sizes and links for
     download.'''
+
     page = PageMeat ('Snapshots', 'snapshots.html')
     page.append (
 	Heading (2, "Snapshots"),
     )
 
-    page.append (
-	Text ('The AROS Snapshots are now '),
-	Href ('http://sourceforge.net/project/showfiles.php?group_id=43586',
-	    'on SourceForge'),
-	Text ('.'),
-    )
+    today         = time.localtime(time.time())[0:3]
+    yesterday     = today[0], today[1], today[2] - 1
+
+    all_packages =  ('source',    'Core sources')                                    \
+                   ,('contrib',   'Contributed programs sources')                    \
+                   ,('ibmpc-bin', 'Floppy disk image of the standalone x86 version') \
+                   ,('lx86-bin',  'Binaries to be run under x86 linux')
+
+    def snapLink(date, location):
+        location = 'http://aros.sourceforge.net/snapshots/AROS-' + location + '-' + '%d%d%d' % date + '.tgz'
+	return Href(location, location)
+
+    for package in all_packages:
+	page.append(
+            BR(),
+            Heading(3, package[1]),
+
+            TableLite(
+                TR(
+                    TH('Date'), TH('Location')
+                ),
+                TR(
+                    TD('%d.%d.%d' % yesterday),
+                    TD(snapLink(yesterday, package[0]))
+                ),
+                TR(
+                    TD('%d.%d.%d' % today),
+                    TD(snapLink(today, package[0]))
+                ),
+                cellpadding=5, border=0
+            )
+        )
+
     page.write ()
 
 def processLinks (links):
