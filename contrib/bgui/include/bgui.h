@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/07/07 17:14:52  stegerg
+ * STACK???? stuff in method structures.
+ *
  * Revision 42.0  2000/05/09 22:23:00  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -340,8 +343,24 @@ struct bguiPattern {
 
 /* Render a text graphic. */
 
+#ifndef _AROS
+
+#undef STACKULONG
+#define STACKULONG ULONG
+
+#undef STACKLONG
+#define STACKLONG LONG
+
+#undef STACKUWORD
+#define STACKUWORD UWORD
+
+#undef STACKWORD
+#define STACKWORD WORD
+ 
+#endif
+
 struct tmRender {
-        ULONG                   MethodID;       /* TEXTM_RENDER                 */
+        STACKULONG                   MethodID;       /* TEXTM_RENDER                 */
         struct BaseInfo        *tmr_BInfo;      /* RastPort to render into.     */
         struct IBox            *tmr_Bounds;     /* Bounds to fit in.            */
 };
@@ -351,7 +370,7 @@ struct tmRender {
 /* Render a text graphic. */
 
 struct tmDimensions {
-        ULONG                   MethodID;       /* TEXTM_DIMENSIONS             */
+        STACKULONG                   MethodID;       /* TEXTM_DIMENSIONS             */
         struct RastPort        *tmd_RPort;      /* RastPort for computations.   */
         struct {
                 UWORD          *Width;          /* Storage width in pixels      */
@@ -368,7 +387,7 @@ struct tmDimensions {
 typedef ULONG  (*FUNCPTR)();
 
 typedef struct DispatcherFunction {
-   ULONG       df_MethodID;
+   STACKULONG       df_MethodID;
    FUNCPTR     df_Func;
 }  DPFUNC;
 
@@ -423,16 +442,16 @@ struct BGUIClassBase
 
 /* Set or get attribute(s). */
 struct rmAttr {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         struct TagItem         *ra_Attr;
-        ULONG                   ra_Flags;
+        STACKULONG                   ra_Flags;
 };
 
 /* Set or get attribute(s). */
 struct rmRefresh {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         APTR                    rr_Context;
-        ULONG                   rr_Flags;
+        STACKULONG                   rr_Flags;
 };
 
 /*
@@ -485,7 +504,7 @@ struct rmRefresh {
 
 /* Add an object to a list. */
 struct rmAdd {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         struct List            *ra_List;
 };
 
@@ -493,7 +512,7 @@ struct rmAdd {
 
 /* Insert an object into a list. */
 struct rmInsert {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         struct List            *ri_List;
         Object                 *ri_Previous;
 };
@@ -512,7 +531,7 @@ struct rmInsert {
 
 /* Manage the collections this object is contained in. */  /* PRIVATE */
 struct rmCollection {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         Object                 *rc_Collection;
 };
 
@@ -526,9 +545,9 @@ struct rmCollection {
 
 /* Remove a notification from a notification list. */
 struct rmRemoveNotify {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         APTR                    rrn_Notify;
-        ULONG                   rrn_Flags;
+        STACKULONG                   rrn_Flags;
 };
 
 #define RRF_ALL_MAPS           (1<<0)  /* Remove all maps.              */
@@ -541,9 +560,9 @@ struct rmRemoveNotify {
 
 /* Add an object to the maplist notification list. */
 struct rmAddMap {
-        ULONG                   MethodID;
-        LONG                    ram_Priority;
-        ULONG                   ram_Flags;
+        STACKULONG                   MethodID;
+        STACKLONG                    ram_Priority;
+        STACKULONG                   ram_Flags;
         struct TagItem          ram_Condition;
         Object                 *ram_Object;
         struct TagItem         *ram_MapList;
@@ -553,9 +572,9 @@ struct rmAddMap {
 
 /* Add an object to the conditional attribute notification list. */
 struct rmAddAttr {
-        ULONG                   MethodID;
-        LONG                    raa_Priority;
-        ULONG                   raa_Flags;
+        STACKULONG                   MethodID;
+        STACKLONG                    raa_Priority;
+        STACKULONG                   raa_Flags;
         struct TagItem          raa_Condition;
         Object                 *raa_Object;
         struct TagItem          raa_Attr;
@@ -566,22 +585,22 @@ struct rmAddAttr {
 
 /* Add an object to the conditional method notification list. */
 struct rmAddMethod {
-        ULONG                   MethodID;
-        LONG                    ram_Priority;
-        ULONG                   ram_Flags;
+        STACKULONG                   MethodID;
+        STACKLONG                    ram_Priority;
+        STACKULONG                   ram_Flags;
         struct TagItem          ram_Condition;
         Object                 *ram_Object;
-        ULONG                   ram_Size;
-        ULONG                   ram_MethodID;
+        STACKULONG                   ram_Size;
+        STACKULONG                   ram_MethodID;
 };
 
 #define RM_ADDHOOK                      (BGUI_MB+30044)
 
 /* Add an object to the conditional method notification list. */
 struct rmAddHook {
-        ULONG                   MethodID;
-        LONG                    rah_Priority;
-        ULONG                   rah_Flags;
+        STACKULONG                   MethodID;
+        STACKLONG                    rah_Priority;
+        STACKULONG                   rah_Flags;
         struct TagItem          rah_Condition;
         struct Hook            *rah_Hook;
 };
@@ -674,12 +693,12 @@ struct rmAddHook {
 
 /* Show attached online-help. */
 struct bmShowHelp {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         struct Window          *bsh_Window;
         struct Requester       *bsh_Requester;
         struct {
-                WORD            X;
-                WORD            Y;
+                STACKWORD            X;
+                STACKWORD            Y;
         }                       bsh_Mouse;
 };
 
@@ -702,12 +721,12 @@ struct bmShowHelp {
 
 /* For both BASE_DRAGQUERY and BASE_DRAGUPDATE. */
 struct bmDragPoint {
-        ULONG                   MethodID;       /* BASE_DRAGQUERY   */
+        STACKULONG                   MethodID;       /* BASE_DRAGQUERY   */
         struct GadgetInfo      *bmdp_GInfo;     /* GadgetInfo       */
         Object                 *bmdp_Source;    /* Object querying. */
         struct {
-                WORD            X;
-                WORD            Y;
+                STACKWORD            X;
+                STACKWORD            Y;
         }                       bmdp_Mouse;     /* Mouse coords.    */
 };
 
@@ -725,7 +744,7 @@ struct bmDragPoint {
 
 /* Source object is dropped. */
 struct bmDropped {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         struct GadgetInfo      *bmd_GInfo;      /* GadgetInfo structure. */
         Object                 *bmd_Source;     /* Object dropped.       */
         struct Window          *bmd_SourceWin;  /* Source obj window.    */
@@ -737,7 +756,7 @@ struct bmDropped {
 
 /* Used by both methods defined above. */
 struct bmDragMsg {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         struct GadgetInfo      *bmdm_GInfo;     /* GadgetInfo structure. */
         Object                 *bmdm_Source;    /* Object being dragged. */
 };
@@ -746,7 +765,7 @@ struct bmDragMsg {
 
 /* Obtain BitMap image to drag. */
 struct bmGetDragObject {
-        ULONG                   MethodID;       /* BASE_GETDRAGOBJECT */
+        STACKULONG                   MethodID;       /* BASE_GETDRAGOBJECT */
         struct GadgetInfo      *bmgo_GInfo;     /* GadgetInfo         */
         struct IBox            *bmgo_Bounds;    /* Bounds to buffer.  */
 };
@@ -755,7 +774,7 @@ struct bmGetDragObject {
 
 /* Free BitMap image being dragged. */
 struct bmFreeDragObject {
-        ULONG                   MethodID;       /* BASE_FREEDRAGOBJECT */
+        STACKULONG                   MethodID;       /* BASE_FREEDRAGOBJECT */
         struct GadgetInfo      *bmfo_GInfo;     /* GadgetInfo          */
         struct BitMap          *bmfo_ObjBitMap; /* BitMap to free.     */
 };
@@ -764,17 +783,17 @@ struct bmFreeDragObject {
 
 /* Inhibit/uninhibit this object.               */
 struct bmInhibit {
-        ULONG                   MethodID;       /* BASE_INHIBIT         */
-        ULONG                   bmi_Inhibit;    /* Inhibit on/off.      */
+        STACKULONG                   MethodID;       /* BASE_INHIBIT         */
+        STACKULONG                   bmi_Inhibit;    /* Inhibit on/off.      */
 };
 
 #define BASE_FINDKEY                    (BGUI_MB+63)    /* V41.2 */
 
 /* Locate object with this rawkey.      */
 struct bmFindKey {
-        ULONG                   MethodID;       /* BASE_FINDKEY         */
+        STACKULONG                   MethodID;       /* BASE_FINDKEY         */
         struct {
-        UWORD                   Qual, Key;
+        STACKUWORD                   Qual, Key;
         }                       bmfk_Key;       /* Key to find.         */
 
 };
@@ -783,14 +802,14 @@ struct bmFindKey {
 
 /* Attach key in this label to the object.      */
 struct bmKeyLabel {
-        ULONG                   MethodID;       /* BASE_KEYLABEL        */
+        STACKULONG                   MethodID;       /* BASE_KEYLABEL        */
 };
 
 #define BASE_LOCALIZE                   (BGUI_MB+65)    /* V41.3 */
 
 /* Localize this object. */
 struct bmLocalize {
-        ULONG                   MethodID;       /* BASE_LOCALIZE        */
+        STACKULONG                   MethodID;       /* BASE_LOCALIZE        */
         struct bguiLocale      *bml_Locale;
 };
 
@@ -798,9 +817,9 @@ struct bmLocalize {
 
 /* Render this object. */
 struct bmRender {
-        ULONG                   MethodID;       /* BASE_RENDER          */
+        STACKULONG                   MethodID;       /* BASE_RENDER          */
         struct BaseInfo        *bmr_BInfo;      /* BaseInfo.            */
-        ULONG                   bmr_Flags;      /* See below.           */
+        STACKULONG                   bmr_Flags;      /* See below.           */
 };
 
 #define BASE_DIMENSIONS                 (BGUI_MB+67)    /* V41.10 */
@@ -808,10 +827,10 @@ struct bmRender {
 /* Ask an object its dimensions information. */
 
 struct bmDimensions {
-        ULONG                   MethodID;       /* BASE_DIMENSIONS          */
+        STACKULONG                   MethodID;       /* BASE_DIMENSIONS          */
         struct BaseInfo        *bmd_BInfo;      /* Ready for calculations.  */
         struct bguiExtent      *bmd_Extent;     /* Storage for dimensions.  */
-        ULONG                   bmd_Flags;      /* See below.               */
+        STACKULONG                   bmd_Flags;      /* See below.               */
 };
 
 /* Flags */
@@ -822,16 +841,16 @@ struct bmDimensions {
 
 /* Layout this object. */
 struct bmLayout {
-        ULONG                   MethodID;       /* BASE_LAYOUT              */
+        STACKULONG                   MethodID;       /* BASE_LAYOUT              */
         struct BaseInfo        *bml_BInfo;      /* BaseInfo.                */
         struct IBox            *bml_Bounds;     /* Bounds to layout into.   */
-        ULONG                   bml_Flags;      /* See below.               */
+        STACKULONG                   bml_Flags;      /* See below.               */
 };
 
 #define BASE_RELAYOUT                   (BGUI_MB+69)    /* V41.10 */
 
 struct bmRelayout {
-   ULONG              MethodID;      /* BASE_RELAYOUT */
+   STACKULONG              MethodID;      /* BASE_RELAYOUT */
    struct GadgetInfo *bmr_GInfo;
    struct RastPort   *bmr_RPort;
 };
@@ -946,16 +965,16 @@ struct bguiExtent {
 
 /* Add a member to the group. */
 struct grmAddMember {
-        ULONG                   MethodID;       /* GRM_ADDMEMBER            */
+        STACKULONG                   MethodID;       /* GRM_ADDMEMBER            */
         Object                 *grma_Member;    /* Object to add.           */
-        ULONG                   grma_Attr;      /* First of LGO attributes. */
+        STACKULONG                   grma_Attr;      /* First of LGO attributes. */
 };
 
 #define GRM_REMMEMBER                   (BGUI_MB+82)
 
 /* Remove a member from the group. */
 struct grmRemMember {
-        ULONG                   MethodID;       /* GRM_REMMEMBER            */
+        STACKULONG                   MethodID;       /* GRM_REMMEMBER            */
         Object                 *grmr_Member;    /* Object to remove.        */
 };
 
@@ -963,7 +982,7 @@ struct grmRemMember {
 
 /* Ask an object it's dimensions information. */
 struct grmDimensions {
-        ULONG                   MethodID;       /* GRM_DIMENSIONS           */
+        STACKULONG                   MethodID;       /* GRM_DIMENSIONS           */
         struct GadgetInfo      *grmd_GInfo;     /* Can be NULL!             */
         struct RastPort        *grmd_RPort;     /* Ready for calculations.  */
         struct {
@@ -990,38 +1009,38 @@ struct grmDimensions {
 
 /* Add a weight controlled spacing member. */
 struct grmAddSpaceMember {
-        ULONG                   MethodID;       /* GRM_ADDSPACEMEMBER       */
-        ULONG                   grms_Weight;    /* Object weight.           */
+        STACKULONG                   MethodID;       /* GRM_ADDSPACEMEMBER       */
+        STACKULONG                   grms_Weight;    /* Object weight.           */
 };
 
 #define GRM_INSERTMEMBER                (BGUI_MB+85)
 
 /* Insert a member in the group. */
 struct grmInsertMember {
-        ULONG                   MethodID;       /* GRM_INSERTMEMBER         */
+        STACKULONG                   MethodID;       /* GRM_INSERTMEMBER         */
         Object                 *grmi_Member;    /* Member to insert.        */
         Object                 *grmi_Pred;      /* Insert after this member */
-        ULONG                   grmi_Attr;      /* First of LGO attributes. */
+        STACKULONG                   grmi_Attr;      /* First of LGO attributes. */
 };
 
 #define GRM_REPLACEMEMBER               (BGUI_MB+86)    /* V40 */
 
 /* Replace a member in the group. */
 struct grmReplaceMember {
-        ULONG                   MethodID;       /* GRM_REPLACEMEMBER        */
+        STACKULONG                   MethodID;       /* GRM_REPLACEMEMBER        */
         Object                 *grrm_MemberA;   /* Object to replace.       */
         Object                 *grrm_MemberB;   /* Object which replaces.   */
-        ULONG                   grrm_Attr;      /* First of LGO attributes. */
+        STACKULONG                   grrm_Attr;      /* First of LGO attributes. */
 };
 
 #define GRM_WHICHOBJECT                 (BGUI_MB+87)    /* V40 */
 
 /* Locate object under these coords. */
 struct grmWhichObject {
-        ULONG                   MethodID;       /* GRM_WHICHOBJECT          */
+        STACKULONG                   MethodID;       /* GRM_WHICHOBJECT          */
         struct {
-                 WORD           X;
-                 WORD           Y;
+                 STACKWORD           X;
+                 STACKWORD           Y;
         }                       grwo_Coords;    /* The coords.              */
 };
 
@@ -1034,8 +1053,8 @@ struct grmWhichObject {
 
 /* Get the array of members, locking the list if necessary. */
 struct gmObtainMembers {
-        ULONG                   MethodID;       /* GROUPM_OBTAINMEMBERS     */
-        ULONG                   gmom_Flags;     /* See below.               */
+        STACKULONG                   MethodID;       /* GROUPM_OBTAINMEMBERS     */
+        STACKULONG                   gmom_Flags;     /* See below.               */
         UWORD                  *gmom_Number;    /* Get number of members.   */
 };
 
@@ -1051,7 +1070,7 @@ struct gmObtainMembers {
 
 /* Free the array of members. */
 struct gmReleaseMembers {
-        ULONG                   MethodID;       /* GROUPM_RELEASEMEMBERS    */
+        STACKULONG                   MethodID;       /* GROUPM_RELEASEMEMBERS    */
         Object                **gmrm_Array;     /* Array to release.        */
 };
 
@@ -1270,10 +1289,10 @@ struct lvCompare {
 
 /* Add listview entries. */
 struct lvmAddEntries {
-        ULONG                   MethodID;       /* LVM_ADDENTRIES  */
+        STACKULONG                   MethodID;       /* LVM_ADDENTRIES  */
         struct GadgetInfo      *lvma_GInfo;     /* GadgetInfo      */
         APTR                   *lvma_Entries;   /* Entries to add. */
-        ULONG                   lvma_How;       /* How to add it.  */
+        STACKULONG                   lvma_How;       /* How to add it.  */
 };
 
 /* Where to add the entries. */
@@ -1285,11 +1304,11 @@ struct lvmAddEntries {
 
 /* Add a single entry. */
 struct lvmAddSingle {
-        ULONG                   MethodID;       /* LVM_ADDSINGLE */
+        STACKULONG                   MethodID;       /* LVM_ADDSINGLE */
         struct GadgetInfo      *lvma_GInfo;     /* GadgetInfo    */
         APTR                    lvma_Entry;     /* Entry to add. */
-        ULONG                   lvma_How;       /* See above.    */
-        ULONG                   lvma_Flags;     /* See below.    */
+        STACKULONG                   lvma_How;       /* See above.    */
+        STACKULONG                   lvma_Flags;     /* See below.    */
 };
 
 /* Flags. */
@@ -1308,9 +1327,9 @@ struct lvmAddSingle {
 
 /* Get an entry. */
 struct lvmGetEntry {
-        ULONG                   MethodID;       /* Any of the above. */
+        STACKULONG                   MethodID;       /* Any of the above. */
         APTR                    lvmg_Previous;  /* Previous entry.   */
-        ULONG                   lvmg_Flags;     /* See below.        */
+        STACKULONG                   lvmg_Flags;     /* See below.        */
 };
 
 #define LVGEF_SELECTED          (1<<0)  /* Get selected entries. */
@@ -1319,7 +1338,7 @@ struct lvmGetEntry {
 
 /* Remove an entry. */
 struct lvmRemEntry {
-        ULONG                   MethodID;       /* LVM_REMENTRY      */
+        STACKULONG                   MethodID;       /* LVM_REMENTRY      */
         struct GadgetInfo      *lvmr_GInfo;     /* GadgetInfo        */
         APTR                    lvmr_Entry;     /* Entry to remove.  */
 };
@@ -1331,7 +1350,7 @@ struct lvmRemEntry {
 
 /* Refresh/Sort list. */
 struct lvmCommand {
-        ULONG                   MethodID;       /* LVM_REFRESH       */
+        STACKULONG                   MethodID;       /* LVM_REFRESH       */
         struct GadgetInfo      *lvmc_GInfo;     /* GadgetInfo        */
 };
 
@@ -1339,11 +1358,11 @@ struct lvmCommand {
 
 /* Move an entry in the list. */
 struct lvmMove {
-        ULONG                   MethodID;       /* LVM_MOVE          */
+        STACKULONG                   MethodID;       /* LVM_MOVE          */
         struct GadgetInfo      *lvmm_GInfo;     /* GadgetInfo        */
         APTR                    lvmm_Entry;     /* Entry to move     */
-        ULONG                   lvmm_Direction; /* See below         */
-        ULONG                   lvmm_NewPos;    /* New position. V40 */
+        STACKULONG                   lvmm_Direction; /* See below         */
+        STACKULONG                   lvmm_NewPos;    /* New position. V40 */
 };
 
 /* Move directions. */
@@ -1357,7 +1376,7 @@ struct lvmMove {
 
 /* Replace an entry by another. */
 struct lvmReplace {
-        ULONG                   MethodID;       /* LVM_REPLACE       */
+        STACKULONG                   MethodID;       /* LVM_REPLACE       */
         struct GadgetInfo      *lvmr_GInfo;     /* GadgetInfo        */
         APTR                    lvmr_OldEntry;  /* Entry to replace. */
         APTR                    lvmr_NewEntry;  /* New entry.        */
@@ -1369,9 +1388,9 @@ struct lvmReplace {
 
 /* Insert listview entries. */
 struct lvmInsertEntries {
-        ULONG                   MethodID;       /* LVM_INSERTENTRIES */
+        STACKULONG                   MethodID;       /* LVM_INSERTENTRIES */
         struct GadgetInfo      *lvmi_GInfo;     /* GadgetInfo        */
-        ULONG                   lvmi_Pos;       /* Position.         */
+        STACKULONG                   lvmi_Pos;       /* Position.         */
         APTR                   *lvmi_Entries;   /* Entries to insert.*/
 };
 
@@ -1379,11 +1398,11 @@ struct lvmInsertEntries {
 
 /* Insert a single entry. */
 struct lvmInsertSingle {
-        ULONG                   MethodID;       /* LVM_INSERTSINGLE  */
+        STACKULONG                   MethodID;       /* LVM_INSERTSINGLE  */
         struct GadgetInfo      *lvis_GInfo;     /* GadgetInfo        */
-        ULONG                   lvis_Pos;       /* Position.         */
+        STACKULONG                   lvis_Pos;       /* Position.         */
         APTR                    lvis_Entry;     /* Entry to insert.  */
-        ULONG                   lvis_Flags;     /* See LVM_ADDSINGLE */
+        STACKULONG                   lvis_Flags;     /* See LVM_ADDSINGLE */
 };
 
 #define LVM_REMSELECTED                 (BGUI_MB+298)   /* V40 */
@@ -1392,11 +1411,11 @@ struct lvmInsertSingle {
 
 /* Redraw a single entry or column. */
 struct lvmRedrawSingle {
-        ULONG                   MethodID;       /* LVM_REDRAWSINGLE  */
+        STACKULONG                   MethodID;       /* LVM_REDRAWSINGLE  */
         struct GadgetInfo      *lvrs_GInfo;     /* GadgetInfo.       */
         APTR                    lvrs_Entry;     /* Entry to redraw.  */
-        ULONG                   lvrs_Column;    /* Column to redraw. */
-        ULONG                   lvrs_Flags;     /* See below.        */
+        STACKULONG                   lvrs_Column;    /* Column to redraw. */
+        STACKULONG                   lvrs_Flags;     /* See below.        */
 };
 
 #define LVRF_ALL_COLUMNS 1
@@ -1409,10 +1428,10 @@ struct lvmRedrawSingle {
 #define LVM_GETCOLUMNATTRS              (BGUI_MB+301)   /* V41.9 */
 
 struct lvmColumnAttrs {
-        ULONG                   MethodID;       /* LVM_???COLUMNATTRS */
+        STACKULONG                   MethodID;       /* LVM_???COLUMNATTRS */
         struct GadgetInfo      *lvca_GInfo;     /* GadgetInfo.        */
-        ULONG                   lvca_Column;    /* Column number.     */
-        ULONG                   lvca_AttrList;  /* First LISTC attr.  */
+        STACKULONG                   lvca_Column;    /* Column number.     */
+        STACKULONG                   lvca_AttrList;  /* First LISTC attr.  */
 };
 
 
@@ -1468,11 +1487,11 @@ struct lvmColumnAttrs {
 
 /* Format the string contents. */
 struct smFormatString {
-        ULONG              MethodID;    /* SM_FORMAT_STRING    */
+        STACKULONG              MethodID;    /* SM_FORMAT_STRING    */
         struct GadgetInfo *smfs_GInfo;  /* GadgetInfo          */
         UBYTE             *smfs_FStr;   /* Format string       */
-        ULONG              smfs_Arg1;   /* Format arg          */
-        /* ULONG           smfs_Arg2; */
+        STACKULONG              smfs_Arg1;   /* Format arg          */
+        /* STACKULONG           smfs_Arg2; */
         /* ... */
 };
 
@@ -1723,7 +1742,7 @@ struct smFormatString {
 
 /* Add a hotkey to a gadget. */
 struct wmGadgetKey {
-        ULONG              MethodID;       /* WM_GADGETKEY                  */
+        STACKULONG              MethodID;       /* WM_GADGETKEY                  */
         struct Requester  *wmgk_Requester; /* When used in a requester      */
         Object            *wmgk_Object;    /* Object to activate            */
         STRPTR             wmgk_Key;       /* Key that triggers activ.      */
@@ -1734,7 +1753,7 @@ struct wmGadgetKey {
 
 /* Send with the WM_KEYACTIVE and WM_KEYINPUT methods. */
 struct wmKeyInput {
-        ULONG              MethodID;     /* WM_KEYACTIVE/WM_KEYINPUT        */
+        STACKULONG              MethodID;     /* WM_KEYACTIVE/WM_KEYINPUT        */
         struct GadgetInfo *wmki_GInfo;   /* GadgetInfo                      */
         struct InputEvent *wmki_IEvent;  /* Input event                     */
         ULONG             *wmki_ID;      /* Storage for the object ID       */
@@ -1751,7 +1770,7 @@ struct wmKeyInput {
 
 /* De-activate a key session. */
 struct wmKeyInActive {
-        ULONG              MethodID;    /* WM_KEYINACTIVE                   */
+        STACKULONG              MethodID;    /* WM_KEYINACTIVE                   */
         struct GadgetInfo *wmkia_GInfo; /* GadgetInfo                       */
 };
 
@@ -1760,24 +1779,24 @@ struct wmKeyInActive {
 
 /* Disable/Enable a menu or Set/Clear a checkit item. */
 struct wmMenuAction {
-        ULONG              MethodID;    /* WM_DISABLEMENU/WM_CHECKITEM      */
-        ULONG              wmma_MenuID; /* Menu it's ID                     */
-        ULONG              wmma_Set;    /* TRUE = set, FALSE = clear        */
+        STACKULONG              MethodID;    /* WM_DISABLEMENU/WM_CHECKITEM      */
+        STACKULONG              wmma_MenuID; /* Menu it's ID                     */
+        STACKULONG              wmma_Set;    /* TRUE = set, FALSE = clear        */
 };
 
 #define WM_MENUDISABLED                 (BGUI_MB+612)
 #define WM_ITEMCHECKED                  (BGUI_MB+613)
 
 struct wmMenuQuery {
-        ULONG              MethodID;    /* WM_MENUDISABLED/WM_ITEMCHECKED   */
-        ULONG              wmmq_MenuID; /* Menu it's ID                     */
+        STACKULONG              MethodID;    /* WM_MENUDISABLED/WM_ITEMCHECKED   */
+        STACKULONG              wmmq_MenuID; /* Menu it's ID                     */
 };
 
 #define WM_TABCYCLE_ORDER               (BGUI_MB+614)
 
 /* Set the tab-cycling order. */
 struct wmTabCycleOrder {
-        ULONG              MethodID;    /* WM_TABCYCLE_ORDER                */
+        STACKULONG              MethodID;    /* WM_TABCYCLE_ORDER                */
         Object            *wtco_Object1;
         /* Object         *wtco_Object2; */
         /* ...  */
@@ -1791,8 +1810,8 @@ struct wmTabCycleOrder {
 
 /* Add object to the update notification list. */
 struct wmAddUpdate {
-        ULONG              MethodID;            /* WM_ADDUPDATE             */
-        ULONG              wmau_SourceID;       /* ID of source object.     */
+        STACKULONG              MethodID;            /* WM_ADDUPDATE             */
+        STACKULONG              wmau_SourceID;       /* ID of source object.     */
         Object            *wmau_Target;         /* Target object.           */
         struct TagItem    *wmau_MapList;        /* Attribute map-list.      */
 };
@@ -1801,9 +1820,9 @@ struct wmAddUpdate {
 
 /* Report a return code from a IDCMP/Verify hook. */
 struct wmReportID {
-        ULONG              MethodID;            /* WM_REPORT_ID              */
-        ULONG              wmri_ID;             /* ID to report.             */
-        ULONG              wmri_Flags;          /* See below.                */
+        STACKULONG              MethodID;            /* WM_REPORT_ID              */
+        STACKULONG              wmri_ID;             /* ID to report.             */
+        STACKULONG              wmri_Flags;          /* See below.                */
         struct Task       *wmri_SigTask;        /* Task to signal.       V40 */
 };
 
@@ -1818,9 +1837,9 @@ struct wmReportID {
 
 /* Remove an object from the window key and/or tabcycle list. */
 struct wmRemoveObject {
-        ULONG              MethodID;            /* WM_REMOVE_OBJECT         */
+        STACKULONG              MethodID;            /* WM_REMOVE_OBJECT         */
         Object            *wmro_Object;         /* Object to remove.        */
-        ULONG              wmro_Flags;          /* See below.               */
+        STACKULONG              wmro_Flags;          /* See below.               */
 };
 
 /* Flags */
@@ -1920,8 +1939,8 @@ struct PopMenu {
 #define PMBM_ENABLE_STATUS              (BGUI_MB+826)
 
 struct pmbmCommand {
-   ULONG       MethodID;
-   ULONG       pmbm_MenuNumber;  /* Menu to perform action on. */
+   STACKULONG       MethodID;
+   STACKULONG       pmbm_MenuNumber;  /* Menu to perform action on. */
 };
 
 #endif /* BGUI_BGUI_H */
