@@ -1,0 +1,15 @@
+# $Id$
+
+#MM- contrib-fish : fish-microemacs fish-lotto fish-henon fish-bcubic \
+#MM	fish-input fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines \
+#MM	fish-304_clines fish-304_lines fish-screenzap fish-watchman \
+#MM	fish-sunmaze fish-fiveinline fish-362_rubik fish-yachtc \
+#MM	fish-rubik fish-icalc fish-worldtime fish-mosaic fish-surf \
+#MM	fish-371_fractal fish-asimplex fish-layers fish-snowfall \
+#MM	fish-aroach fish-touch fish-memeter fish-lyromat fish-gooddouble \
+#MM	fish-eval fish-memsnap fish-memomaster fish-cfn fish-shuffle \
+#MM	fish-egypt fish-mandel
+
+#These do not compile properly, yet!
+# MM fish-cube
+
