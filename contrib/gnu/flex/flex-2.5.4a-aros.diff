@@ -1,27 +1,20 @@
-diff -urN --exclude=CVS flex-2.5.4/main.c flex/main.c
+diff -urN flex-2.5.4/main.c flex-2.5.4-aros/main.c
 --- flex-2.5.4/main.c	1997-07-27 04:32:19.000000000 +0200
-+++ flex/main.c	2002-02-21 05:46:03.000000000 +0100
-@@ -32,9 +32,9 @@
-  All rights reserved.\n";
- #endif /* not lint */
++++ flex-2.5.4-aros/main.c	2004-09-08 22:07:34.000000000 +0200
+@@ -35,6 +35,7 @@
+ /* $Header: /home/daffy/u0/vern/flex/RCS/main.c,v 2.64 96/05/25 20:42:42 vern Exp $ */
  
--/* $Header: /home/daffy/u0/vern/flex/RCS/main.c,v 2.64 96/05/25 20:42:42 vern Exp $ */
--
-+/* $Header: /home/cvs/aros/contrib/gnu/flex/main.c,v 1.2 2004/05/09 22:57:37 bernie Exp $ */
  
 +#include <stdlib.h> /* for exit() */
  #include "flexdef.h"
  #include "version.h"
  
-diff -urN --exclude=CVS flex-2.5.4/misc.c flex/misc.c
+diff -urN flex-2.5.4/misc.c flex-2.5.4-aros/misc.c
 --- flex-2.5.4/misc.c	1997-07-27 04:32:19.000000000 +0200
-+++ flex/misc.c	2002-02-21 05:46:03.000000000 +0100
-@@ -26,8 +26,9 @@
-  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-  */
++++ flex-2.5.4-aros/misc.c	2004-09-08 22:08:25.000000000 +0200
+@@ -28,6 +28,7 @@
  
--/* $Header: /home/daffy/u0/vern/flex/RCS/misc.c,v 2.47 95/04/28 11:39:39 vern Exp $ */
-+/* $Header: /home/cvs/aros/contrib/gnu/flex/misc.c,v 1.2 2004/05/09 22:57:37 bernie Exp $ */
+ /* $Header: /home/daffy/u0/vern/flex/RCS/misc.c,v 2.47 95/04/28 11:39:39 vern Exp $ */
  
 +#include <stdlib.h> /* for exit() */
  #include "flexdef.h"
