@@ -7,7 +7,6 @@
 **        Tcn@techbase.in-berlin.de
 **
 */
-
 #include <exec/types.h>
 #include <exec/memory.h>
 
@@ -29,156 +28,131 @@ BPTR                    File;
 	// Freeing resources if CTRL-C
 
 #ifdef __SASC
+VOID __regargs
+_CXBRK (VOID)
+{
+   if (File)              // close file
+      Close (File);
 
-	VOID __regargs
-	_CXBRK (VOID)
-	{
+   if (ap)                // free anchorpath struct
+      FreeVec (ap);
 
-		if (File)              // close file
-			Close (File);
+   if (DOSBase)           // close dos.library
+      CloseLibrary ((struct Library *) DOSBase);
 
-		if (ap)                // free anchorpath struct
-			FreeVec (ap);
-
-		if (DOSBase)           // close dos.library
-			CloseLibrary ((struct Library *) DOSBase);
-
-		exit (0);
-
-	}
-
+   exit (0);
+}
 #endif
 
-	// Main
-
-VOID
+// Main
+int
 main (UWORD argc, STRPTR *argv)
 {
+   // No args or '?'
+   if (argc == 1 || *argv [1] == '?')
+   {
+      printf ("USAGE: %s <file1> <file2> <...>\n", argv[0]);
+   }
+   else
+   {
+      #define    BUFFSIZE    240
+      
+      // Open dos.library
+      if (DOSBase = (struct DosLibrary *) OpenLibrary ("dos.library", LIBRARY_MINIMUM))
+      {
+         LONG   err;
+         if ((ap = AllocVec (sizeof (struct AnchorPath) + BUFFSIZE, MEMF_CLEAR)) != 0)
+         {
 
-		// No args or '?'
+            UWORD   cnt;
+            LONG    number    =  1;
 
-	if (argc == 1 || *argv [1] == '?')
-	{
+            // Evaluate every file
 
-		printf ("USAGE: %s <file1> <file2> <...>\n", argv[0]);
+            for (cnt = 1; cnt < argc; cnt++)
+            {
 
-	}
-	else
-	{
+               ap -> ap_Strlen = BUFFSIZE;
 
-		#define    BUFFSIZE    240
+               // Evaluate pattern
+               for (err = MatchFirst (argv [cnt], ap); err == 0; err = MatchNext (ap), number++)
+               {
 
-			// Open dos.library
+                  // Open file
+                  if (File = Open (ap -> ap_Buf, MODE_OLDFILE))
+                  {
 
-		if (DOSBase = (struct DosLibrary *) OpenLibrary ("dos.library", LIBRARY_MINIMUM))
-		{
+                     UWORD    k;
+                     UBYTE    buff [16];
+                     UWORD    offset = 0;
 
-			LONG    err;
+                     // Read a block of bytes
+                     while ((k = Read (File, buff, 16)) > 0)
+                     {
 
-			if (ap = AllocVec (sizeof (struct AnchorPath) + BUFFSIZE, MEMF_CLEAR))
-			{
+                        UWORD    j;
 
-				UWORD    cnt;
-				LONG     number    =  1;
+                        // Print offset
+                        printf ("\033[1m%08lx:\033[22m  ", offset);
 
-					// Evaluate every file
+                        // Hex dumping ...
+                        for (j = 0; j < k; j++)
+                        {
+                           printf ("%02x", (UBYTE) buff [j]);
 
-				for (cnt = 1; cnt < argc; cnt++)
-				{
+                           if (!((j+1) % 4))
+                           {
+                              printf(" ");
+                           }
+                        }
 
-					ap -> ap_Strlen = BUFFSIZE;
+                        for (j = 0; j < (17 - k); j++)
+                        {
+                           printf ("  ");
 
-						// Evaluate pattern
+                           if (!((j+1) % 4))
+                           {
+                              printf (" ");
+                           }
 
-					for (err = MatchFirst (argv [cnt], ap); err == 0; err = MatchNext (ap), number++)
-					{
+                           for (j = 0; j < k; j++)
+                           {
+                              printf ("%c", ((buff [j] >= ' ') && (buff [j] <= 'z')) ? buff [j] : INVALID_CHAR);
+                           }
 
+                           // 16 bytes worked up
+                           if (k == 16)
+                           {
+                              printf ("\n");
+                           }
+                           else if (k > 0)
+                           {
+                              printf("\n");
+                           }
+                        }
 
-							// Open file
+                        offset += 4;
+                     }
 
-						if (File = Open (ap -> ap_Buf, MODE_OLDFILE))
-						{
+                     // Close file
+                     Close (File);
+                  }
+                  else
+                  {
+                     printf ("Couldn't access file \"%s\"\n", ap -> ap_Buf);
+                  }
+               }
+            }
 
-							UWORD    k;
-							UBYTE    buff [16];
-							UWORD    offset = 0;
+            // Finished, free resources
+            MatchEnd (ap);
+            FreeVec  (ap);
+         }
 
-								// Read a block of bytes
-
-							while ((k = Read (File, buff, 16)) > 0)
-							{
-
-								UWORD    j;
-
-									// Print offset
-
-								printf ("\033[1m%08lx:\033[22m  ", offset);
-
-									// Hex dumping ...
-
-								for (j = 0; j < k; j++)
-								{
-
-									printf ("%02x", (UBYTE) buff [j]);
-
-									if ( ! ((j + 1) % 4))
-										printf(" ");
-
-								}
-
-								for (j = 0; j < (17 - k); j++)
-								{
-
-									printf ("  ");
-
-									if ( ! ((j+1) % 4))
-										printf (" ");
-
-								}
-
-								for (j = 0; j < k; j++)
-									printf ("%c", ((buff [j] >= ' ') && (buff [j] <= 'z')) ? buff [j] : INVALID_CHAR);
-
-									// 16 bytes worked up
-
-								if (k == 16)
-									printf ("\n");
-								else if (k > 0)
-									printf("\n");
-
-								offset += 4;
-
-							}
-
-								// Close file
-
-							Close (File);
-
-						}
-						else
-						{
-
-							printf ("Couldn't access file \"%s\"\n", ap -> ap_Buf);
-
-						}
-
-							// Close dos.library
-
-						CloseLibrary ((struct Library *) DOSBase);
-
-					}
-
-				}
-
-					// Finished, free resources
-
-				MatchEnd (ap);
-				FreeVec  (ap);
-
-			}
-
-		}
-
-	}
-
+         // Close dos.library
+         CloseLibrary ((struct Library *) DOSBase);
+      }
+   }
+   
+   return 0;
 }
