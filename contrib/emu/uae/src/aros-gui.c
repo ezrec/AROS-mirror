@@ -1,4 +1,3 @@
-#define timeval aros_timeval
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/graphics.h>
@@ -13,7 +12,6 @@
 #include <utility/tagitem.h>
 
 #include <zune/customclasses.h>
-#undef timeval
 
 //#include </work/AROS/workbench/libs/muimaster/customclasses.h>
 

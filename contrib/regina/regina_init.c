@@ -5,7 +5,6 @@
     Desc: Regina code for initialization during opening and closing of the library
 */
 
-#define timeval timeval_aros
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <aros/libcall.h>
@@ -14,7 +13,6 @@
 #include <libcore/compiler.h>
 #include <proto/exec.h>
 #include <proto/alib.h>
-#undef timeval
 
 #include <stddef.h>
 #include "rexx.h"

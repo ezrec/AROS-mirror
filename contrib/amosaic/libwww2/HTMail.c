@@ -2,12 +2,10 @@
 **  HTMail.c
 */
 
-#define timeval aros_timeval
 #include <proto/dos.h>
 #include <proto/exec.h>
 
 #include <dos/dostags.h>
-#undef timeval
 
 #include <string.h>
 #include <stdio.h>

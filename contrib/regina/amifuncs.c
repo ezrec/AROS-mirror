@@ -29,7 +29,6 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#define timeval aros_timeval
 #include "envir.h"
 #include <dos/dos.h>
 #include <exec/lists.h>
@@ -45,7 +44,6 @@
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/rexxsyslib.h>
-#undef  timeval
 
 #include "rxiface.h"
 

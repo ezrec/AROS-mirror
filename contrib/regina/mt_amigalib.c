@@ -8,10 +8,8 @@
 
 #include "rexx.h"
 
-#define timeval aros_timeval
 #include <proto/alib.h>
 #include <exec/memory.h>
-#undef  timeval
 
 #include <assert.h>
 

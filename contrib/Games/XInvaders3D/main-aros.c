@@ -22,14 +22,12 @@
 
 #include "game.h"
 
-#define timeval aros_timeval
 #include <graphics/gfx.h>
 #include <intuition/intuition.h>
 #include <devices/inputevent.h>
 #include <proto/exec.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
-#undef  timeval
 
 #include <string.h>
 

@@ -1,5 +1,4 @@
 
-#define timeval timeval_aros
 #include <dos/dos.h>
 #include <intuition/intuition.h>
 #include <graphics/gfx.h>
@@ -9,7 +8,6 @@
 #include <proto/graphics.h>
 #include <proto/cybergraphics.h>
 #include <proto/intuition.h>
-#undef timeval
 
 #include <math.h>
 #include <stdio.h>
