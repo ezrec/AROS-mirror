@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/05/31 01:23:10  bergers
+ * Changes to make BGUI compilable and linkable.
+ *
  * Revision 42.3  2000/05/29 00:40:23  bergers
  * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
@@ -333,7 +336,10 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
    BGUIClassData *ClassData;
    Class *cl=NULL;
 
+#ifdef _AROS
+#else
    geta4();
+#endif
 
    if ((SuperClass = GetTagData(CLASS_SuperClassBGUI, (ULONG)~0, tags)) == (ULONG)~0)
       SuperClass = GetTagData(CLASS_SuperClass, NULL, tags);

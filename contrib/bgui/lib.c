@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/31 01:23:10  bergers
+ * Changes to make BGUI compilable and linkable.
+ *
  * Revision 42.1  2000/05/29 00:40:24  bergers
  * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
@@ -96,6 +99,9 @@ STATIC const LONG Vectors[] = {
    /*
     * Public routines.
     */
+#ifdef _AROS
+#warning Commented all the library functions!!!!!!!!!!!!!!!!!!
+#else
    (LONG)BGUI_GetClassPtr,
    (LONG)BGUI_NewObjectA,
    (LONG)BGUI_RequestA,
@@ -133,6 +139,7 @@ STATIC const LONG Vectors[] = {
    (LONG)BGUI_LoadPrefs,
    (LONG)BGUI_AllocPoolMemDebug,
    (LONG)BGUI_FreePoolMemDebug,
+#endif
    /*
     * Table end marker.
     */

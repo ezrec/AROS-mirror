@@ -9,6 +9,8 @@
 #endif
 
 #include <libraries/bgui.h>
+#include <intuition/intuition.h>
+
 
 /* Defines */
 #define BGUI_GetClassPtr(num) 			\
@@ -23,10 +25,10 @@
 	struct Library *, BGUIBase, 6, BGUI)
 
 #define BGUI_RequestA(win, estruct,args) 	\
-	AROS_LC2(ULONG, BGUI_RequestA, 		\
+	AROS_LC3(ULONG, BGUI_RequestA, 		\
 	AROS_LCA(struct Window *, win, A0), 	\
-	AROS_LCA(struct bguiRequest , estruct, A1), \
-	AROS_LCA(ULOING * , args, A2), 		\
+	AROS_LCA(struct bguiRequest *, estruct, A1), \
+	AROS_LCA(ULONG * , args, A2), 		\
 	struct Library *, BGUIBase, 7, BGUI)
 
 #define BGUI_Help(win,name,node,line) 		\
@@ -64,7 +66,7 @@
 	AROS_LC1(void, BGUI_FreePoolMem, 	\
 	AROS_LCA(APTR, mem, A0), 		\
 	struct Library *, BGUIBase, 13, BGUI)
-	
+
 #define BGUI_AllocBitMap(width,height,depth,flags,friend) \
 	AROS_LC5(struct BitMap *, BGUI_AllocBitMap, \
 	AROS_LCA(ULONG, width, D0), 		\
@@ -92,7 +94,7 @@
 	AROS_LHA(struct RastPort *, rport, A0), \
 	struct Library *, BGUIBase, 17, BGUI)
 
-#define BGUI_InfoTextSize(rp,text,bounds,drawinfo) \
+#define BGUI_InfoTextSize(rp,text,width,height) \
 	AROS_LC4(VOID, BGUI_InfoTextSize, 	\
 	AROS_LHA(struct RastPort *, rp, A0), 	\
 	AROS_LHA(UBYTE *, text, A1), 		\
@@ -103,7 +105,7 @@
 #define BGUI_InfoText(rp,text,bounds,drawinfo) 	\
 	AROS_LC4(void, BGUI_InfoText, 		\
 	AROS_LCA(struct RastPort *, rp, A0), 	\
-	AROS_LCA(UBYTE *, text, A1), 		\	
+	AROS_LCA(UBYTE *, text, A1), 		\
 	AROS_LCA(struct IBOX *, bounds, A2), 	\
 	AROS_LCA(struct DrawInfo *, drawinfo, A3), \
 	struct Library *, BGUIBase, 19, BGUI)
@@ -133,7 +135,7 @@
 	
 #define BGUI_PostRender(cl,obj,gpr) 		\
 	AROS_LC3(VOID, BGUI_PostRender, 	\
-	AROS_LHA(Calss *, cl, A0), 		\
+	AROS_LHA(Class *, cl, A0), 		\
 	AROS_LHA(Object *, obj, A2), 		\
 	AROS_LHA(struct gpRender *, gpr, A1), 	\
 	struct Library *, BGUIBase, 23, BGUI)
@@ -164,12 +166,12 @@
 
 /* private */
 #define BGUI_GetDefaultTags(id) 		\
-	AROS_LC1(, BGUI_GetDefaultTags, 	\
-	AROS_LCA(, id, D0), 			\
+	AROS_LC1(struct TagItem *, BGUI_GetDefaultTags, 	\
+	AROS_LCA(ULONG , id, D0), 		\
 	struct Library *, BGUIBase, 28, BGUI)
 	
 #define BGUI_GetDefaultPrefs() 			\
-	AROS_LC0(, GetDefaultPrefs, 		\
+	AROS_LC0(VOID, GetDefaultPrefs, 	\
 	struct Library *, BGUIBase, 29, BGUI)
 	
 #define BGUI_LoadPrefs(name) 			\
@@ -181,16 +183,16 @@
 #define BGUI_AllocPoolMemDebug(size,file,line) 	\
 	AROS_LC3(void, BGUI_AllocPoolMemDebug, 	\
 	AROS_LCA(ULONG, size, D0), 		\
-	AROS_LCA(, file, A0), 			\
-	AROS_LCA(, line, D1), 			\
+	AROS_LCA(STRPTR, file, A0), 		\
+	AROS_LCA(ULONG, line, D1), 		\
 	struct Library *, BGUIBase, 31, BGUI)
 	
 
 #define BGUI_FreePoolMemDebug(mem,file,line) 	\
 	AROS_LC3(void, FreePoolMemDebug,	\
 	AROS_LCA(APTR, mem, A0), 		\
-	AROS_LCA(, file, A1), 			\
-	AROS_LCA(, line, D0), 			\
+	AROS_LCA(STRPTR, file, A1), 		\
+	AROS_LCA(ULONG, line, D0), 		\
 	struct Library *, BGUIBase, 32, BGUI)
 
 

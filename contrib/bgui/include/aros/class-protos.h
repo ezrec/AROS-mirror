@@ -55,7 +55,7 @@ extern ASM struct TagItem *BGUI_NextTagItem(REG(a0) struct TagItem **);
 /* baseclass.c                                */
 
 extern ULONG CalcDimensions(Class *, Object *, struct bmDimensions *, UWORD, UWORD);
-extern SAVEDS ASM VOID BGUI_PostRender(REG(a0) Class *, REG(a2) Object *, REG(a1) struct gpRender *);
+//extern SAVEDS ASM VOID BGUI_PostRender(REG(a0) Class *, REG(a2) Object *, REG(a1) struct gpRender *);
 extern Class *BaseClass;
 extern Class *InitBaseClass(void);
 
@@ -65,7 +65,9 @@ extern Class *InitBaseClass(void);
 
 /* request.c                                  */
 
+#ifndef _AROS
 extern SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *, REG(a1) struct bguiRequest *, REG(a2) ULONG *);
+#endif
 
 /* cycleclass.c                               */
 
@@ -85,10 +87,10 @@ extern UWORD AddTaskMember(void);
 extern BOOL FreeTaskMember( void);
 extern BOOL GetWindowBounds(ULONG, struct IBox *);
 extern VOID SetWindowBounds(ULONG, struct IBox *);
-extern SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG, REG(a0) STRPTR, REG(d1) ULONG);
-extern SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG);
-extern SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR, REG(a1) STRPTR, REG(d0) ULONG);
-extern SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR);
+//extern SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG, REG(a0) STRPTR, REG(d1) ULONG);
+//extern SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG);
+//extern SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR, REG(a1) STRPTR, REG(d0) ULONG);
+//extern SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR);
 extern ASM BOOL AddIDReport(REG(a0) struct Window *, REG(d0) ULONG, REG(a1) struct Task *);
 extern ASM ULONG GetIDReport(REG(a0) struct Window *);
 extern struct Window *GetFirstIDReportWindow(void);
@@ -100,9 +102,9 @@ extern struct TagItem *DefTagList(ULONG, struct TagItem *);
 extern SAVEDS ASM ULONG BGUI_CountTagItems(REG(a0) struct TagItem *);
 extern SAVEDS ASM struct TagItem *BGUI_MergeTagItems(REG(a0) struct TagItem *, REG(a1) struct TagItem *);
 extern SAVEDS ASM struct TagItem *BGUI_CleanTagItems(REG(a0) struct TagItem *, REG(d0) LONG);
-extern SAVEDS ASM struct TagItem *BGUI_GetDefaultTags(REG(d0) ULONG);
-extern SAVEDS ASM VOID BGUI_DefaultPrefs(VOID);
-extern SAVEDS ASM VOID BGUI_LoadPrefs(REG(a0) UBYTE *);
+//extern SAVEDS ASM struct TagItem *BGUI_GetDefaultTags(REG(d0) ULONG);
+//extern SAVEDS ASM VOID BGUI_DefaultPrefs(VOID);
+//extern SAVEDS ASM VOID BGUI_LoadPrefs(REG(a0) UBYTE *);
 
 /* arexxclass.c                               */
 
@@ -125,14 +127,14 @@ extern UBYTE *PropGClass;
 extern UBYTE *StrGClass;
 extern Class *BGUI_MakeClass(ULONG, ...);
 extern SAVEDS ASM ULONG __GCD( REG(a0) Class *, REG(a2) Object *, REG(a1) Msg);
-extern ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *);
-extern SAVEDS ASM BOOL BGUI_FreeClass(REG(a0) Class *);
+//extern ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *);
+//extern SAVEDS ASM BOOL BGUI_FreeClass(REG(a0) Class *);
 extern ULONG ASM BGUI_GetAttrChart(REG(a0) Class *, REG(a2) Object *, REG(a1) struct rmAttr *);
 extern ULONG ASM BGUI_SetAttrChart(REG(a0) Class *, REG(a2) Object *, REG(a1) struct rmAttr *);
 extern ULONG BGUI_PackStructureTag(UBYTE *, ULONG *, ULONG, ULONG);
 extern ULONG BGUI_UnpackStructureTag(UBYTE *, ULONG *, ULONG, ULONG *);
-extern SAVEDS ULONG ASM BGUI_PackStructureTags(REG(a0) APTR, REG(a1) ULONG *, REG(a2) struct TagItem *);
-extern SAVEDS ULONG ASM BGUI_UnpackStructureTags(REG(a0) APTR, REG(a1) ULONG *, REG(a2) struct TagItem *);
+//extern SAVEDS ULONG ASM BGUI_PackStructureTags(REG(a0) APTR, REG(a1) ULONG *, REG(a2) struct TagItem *);
+//extern SAVEDS ULONG ASM BGUI_UnpackStructureTags(REG(a0) APTR, REG(a1) ULONG *, REG(a2) struct TagItem *);
 extern ASM ULONG Get_Attr(REG(a0) Object *, REG(d0) ULONG, REG(a1) void *);
 extern ASM ULONG Get_SuperAttr(REG(a2) Class *, REG(a0) Object *, REG(d0) ULONG, REG(a1) void *);
 extern ULONG NewSuperObject(Class *, Object *, struct TagItem *);
@@ -211,7 +213,7 @@ extern Class *InitWindowClass(void);
 /* dgm.c                                      */
 
 extern ULONG myDoGadgetMethod(Object *, struct Window *, struct Requester *, ULONG, ...);
-extern SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *, REG(a1) struct Window *, REG(a2) struct Requester *, REG(a3) Msg);
+//extern SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *, REG(a1) struct Window *, REG(a2) struct Requester *, REG(a3) Msg);
 extern Class *InitDGMClass(void);
 
 /* groupclass.c                               */
@@ -234,18 +236,18 @@ extern BOOL FreeClasses(void);
 extern ULONG TrackNewObject(Object *,struct TagItem *);
 extern BOOL TrackDisposedObject(Object *);
 extern void MarkFreedClass(Class *);
-extern SAVEDS ASM Class *BGUI_GetClassPtr(REG(d0) ULONG);
+//extern SAVEDS ASM Class *BGUI_GetClassPtr(REG(d0) ULONG);
 extern Object *BGUI_NewObject(ULONG, Tag, ...);
-extern SAVEDS ASM Object *BGUI_NewObjectA(REG(d0) ULONG, REG(a0) struct TagItem *);
-extern SAVEDS ASM struct BitMap *BGUI_AllocBitMap(REG(d0) ULONG, REG(d1) ULONG, REG(d2) ULONG, REG(d3) ULONG, REG(a0) struct BitMap *);
-extern SAVEDS ASM VOID BGUI_FreeBitMap(REG(a0) struct BitMap *);
-extern SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap(REG(a0) struct RastPort *, REG(d0) ULONG, REG(d1) ULONG, REG(d2) ULONG);
-extern SAVEDS ASM VOID BGUI_FreeRPortBitMap(REG(a0) struct RastPort *);
-extern SAVEDS ASM BOOL BGUI_Help(REG(a0) struct Window *, REG(a1) UBYTE *, REG(a2) UBYTE *, REG(d0) ULONG);
-extern SAVEDS ASM APTR BGUI_LockWindow( REG(a0) struct Window *);
-extern SAVEDS ASM VOID BGUI_UnlockWindow( REG(a0) APTR);
-extern SAVEDS ASM STRPTR BGUI_GetLocaleStr(REG(a0) struct bguiLocale *, REG(d0) ULONG);
-extern SAVEDS ASM STRPTR BGUI_GetCatalogStr(REG(a0) struct bguiLocale *, REG(d0) ULONG, REG(a1) STRPTR);
+//extern SAVEDS ASM Object *BGUI_NewObjectA(REG(d0) ULONG, REG(a0) struct TagItem *);
+//extern SAVEDS ASM struct BitMap *BGUI_AllocBitMap(REG(d0) ULONG, REG(d1) ULONG, REG(d2) ULONG, REG(d3) ULONG, REG(a0) struct BitMap *);
+//extern SAVEDS ASM VOID BGUI_FreeBitMap(REG(a0) struct BitMap *);
+//extern SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap(REG(a0) struct RastPort *, REG(d0) ULONG, REG(d1) ULONG, REG(d2) ULONG);
+//extern SAVEDS ASM VOID BGUI_FreeRPortBitMap(REG(a0) struct RastPort *);
+//extern SAVEDS ASM BOOL BGUI_Help(REG(a0) struct Window *, REG(a1) UBYTE *, REG(a2) UBYTE *, REG(d0) ULONG);
+//extern SAVEDS ASM APTR BGUI_LockWindow( REG(a0) struct Window *);
+//extern SAVEDS ASM VOID BGUI_UnlockWindow( REG(a0) APTR);
+//extern SAVEDS ASM STRPTR BGUI_GetLocaleStr(REG(a0) struct bguiLocale *, REG(d0) ULONG);
+//extern SAVEDS ASM STRPTR BGUI_GetCatalogStr(REG(a0) struct bguiLocale *, REG(d0) ULONG, REG(a1) STRPTR);
 extern SAVEDS ASM ULONG BGUI_CallHookPkt(REG(a0) struct Hook *,REG(a2) APTR,REG(a1) APTR);
 
 /* filereqclass.c                             */
@@ -287,8 +289,10 @@ extern Class *InitInfoClass( void);
 /* textclass.c                                */
 
 extern Class *InitTextClass(void);
-extern SAVEDS ASM VOID BGUI_InfoTextSize(REG(a0) struct RastPort *, REG(a1) UBYTE *, REG(a2) UWORD *, REG(a3) UWORD *);
+//extern SAVEDS ASM VOID BGUI_InfoTextSize(REG(a0) struct RastPort *, REG(a1) UBYTE *, REG(a2) UWORD *, REG(a3) UWORD *);
+#ifndef _AROS
 extern SAVEDS ASM VOID BGUI_InfoText( REG(a0) struct RastPort *, REG(a1) UBYTE *, REG(a2) struct IBox *, REG(a3) struct DrawInfo *);
+#endif
 extern UWORD ASM TotalHeight( REG(a0) struct RastPort *, REG(a1) UBYTE *);
 extern UWORD ASM TotalWidth(REG(a0) struct RastPort *, REG(a1) UBYTE *);
 extern void RenderInfoText(struct RastPort *, UBYTE *, UWORD *, struct IBox *, UWORD);
@@ -322,7 +326,7 @@ extern ASM VOID RenderBackFill(REG(a0) struct RastPort *, REG(a1) struct IBox *,
 extern ASM VOID RenderBackFillRasterDebug(REG(a0) struct RastPort *, REG(a1) struct IBox *, REG(d0) UWORD, REG(d1) UWORD,REG(a2) STRPTR, REG(d2) ULONG);
 extern ASM VOID DottedBox(REG(a0) struct BaseInfo *, REG(a1) struct IBox *);
 extern ASM ULONG GadgetState(REG(a0) struct BaseInfo *, REG(a1) Object *, REG(d0) BOOL);
-extern SAVEDS ASM VOID BGUI_FillRectPattern(REG(a1) struct RastPort *, REG(a0) struct bguiPattern *, REG(d0) ULONG, REG(d1) ULONG, REG(d2) ULONG, REG(d3) ULONG);
+//extern SAVEDS ASM VOID BGUI_FillRectPattern(REG(a1) struct RastPort *, REG(a0) struct bguiPattern *, REG(d0) ULONG, REG(d1) ULONG, REG(d2) ULONG, REG(d3) ULONG);
 extern VOID ASM HLine(REG(a1) struct RastPort *, REG(d0) UWORD, REG(d1) UWORD, REG(d2) UWORD);
 extern VOID ASM VLine(REG(a1) struct RastPort *, REG(d0) UWORD, REG(d1) UWORD, REG(d2) UWORD);
 extern ASM ULONG FGetAPen(REG(a1) struct RastPort *);
@@ -369,9 +373,9 @@ extern /*__stdargs*/ ASM ULONG StrLenfA(REG(a0) UBYTE *, REG(a1) ULONG *);
 extern /*__stdargs*/ ASM VOID SPrintfA(REG(a3) UBYTE *, REG(a0) UBYTE *, REG(a1) ULONG *);
 extern ASM VOID LHook_Count(REG(a0) struct Hook *hook, REG(a1) ULONG chr, REG(a2) struct Locale *loc);
 extern ASM VOID LHook_Format(REG(a0) struct Hook *hook, REG(a1) ULONG chr, REG(a2) struct Locale *loc);
-extern ULONG AsmDoMethod( Object *, ... );
-extern ULONG AsmDoSuperMethod( Class *, Object *, ... );
-extern ULONG AsmCoerceMethod( Class *, Object *, ... );
+extern ULONG AsmDoMethod( Object *, ULONG MethodID, ... );
+extern ULONG AsmDoSuperMethod( Class *, Object *, ULONG MethodID, ... );
+extern ULONG AsmCoerceMethod( Class *, Object *, ULONG MethodID, ... );
 extern ASM ULONG AsmDoMethodA( REG(a2) Object *, REG(a1) Msg );
 extern ASM ULONG AsmDoSuperMethodA( REG(a0) Class *, REG(a2) Object *, REG(a1) Msg );
 extern ASM ULONG AsmCoerceMethodA( REG(a0) Class *, REG(a2) Object *, REG(a1) Msg );

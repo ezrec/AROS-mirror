@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/05/31 01:23:10  bergers
+ * Changes to make BGUI compilable and linkable.
+ *
  * Revision 42.3  2000/05/29 00:40:24  bergers
  * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
@@ -846,7 +849,7 @@ static ASM REGFUNC4(APTR, AllocVecMemDebug,
 	REGPARAM(D1, ULONG, line))
 #else
 //static ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size)
-static ASM REGFUNC2(APTR, AllocVecMemDebug,
+static ASM REGFUNC2(APTR, AllocVecMem,
 	REGPARAM(A0, APTR, mempool),
 	REGPARAM(D0, ULONG, size))
 #endif
@@ -894,7 +897,7 @@ static ASM REGFUNC4(VOID, FreeVecMemDebug,
 	REGPARAM(D0, ULONG, line))
 #else
 //static ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr)
-static ASM REGFUNC2(VOID, FreeVecMemDebug,
+static ASM REGFUNC2(VOID, FreeVecMem,
 	REGPARAM(A0, APTR, pool),
 	REGPARAM(A1, APTR, memptr))
 #endif

@@ -135,7 +135,6 @@
 
 #ifdef _AROS
 
-#warning Defining makearosproto here as empty.
 	#define makearosproto
 
 	#define REG(x)

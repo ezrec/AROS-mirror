@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/05/31 01:23:10  bergers
+ * Changes to make BGUI compilable and linkable.
+ *
  * Revision 42.3  2000/05/29 00:40:25  bergers
  * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
@@ -87,8 +90,12 @@
  */
 
 #ifdef _AROS
+
 #include "compilerspecific.h"
 #include <aros/libcall.h>
+#include "include/aros/bgui_defines.h"
+extern struct Library * BGUIBase;
+
 #endif
 /*
  * Include a lot of system stuff.
@@ -568,6 +575,8 @@ extern const UBYTE LibID[];
 #include "include/aros/class-protos.h"
 #endif
 
+#ifndef _AROS
+
 #ifndef NO_MEMORY_ALLOCATION_DEBUG_ALIASING
 #define BGUI_AllocPoolMem(size) BGUI_AllocPoolMemDebug(size,__FILE__,__LINE__)
 #define BGUI_FreePoolMem(memPtr) BGUI_FreePoolMemDebug(memPtr,__FILE__,__LINE__)
@@ -577,6 +586,8 @@ extern const UBYTE LibID[];
 #endif
 #endif
 
+#endif /* _AROS */
+
 #ifdef DEBUG_BGUI
 #define BGUI_OpenFont(textAttr) BGUI_OpenFontDebug(textAttr,__FILE__,__LINE__)
 #define BGUI_CloseFont(font) BGUI_CloseFontDebug(font,__FILE__,__LINE__)
@@ -584,6 +595,8 @@ extern const UBYTE LibID[];
 #define BGUI_OpenFont(textAttr) OpenFont(textAttr)
 #define BGUI_CloseFont(font) CloseFont(font)
 #endif
+
+#ifndef _AROS
 
 #ifdef DEBUG_BGUI
 #define SRectFill(rp,l,t,r,b) SRectFillDebug(rp,l,t,r,b,__FILE__,__LINE__)
@@ -616,4 +629,5 @@ ASM REGFUNC4(VOID, RenderBackFillRaster,
 	REGPARAM(D1, UWORD, bpen));
 #endif
 
+#endif /* _AROS */
 #endif

@@ -49,7 +49,12 @@ INCLUDE_FILES = \
 
 standard_build :
 	@$(ECHO) "Making BGUI standard version..."
-	@$(MAKE) -f Makefile.aros build BUILD_TYPE=S
+	@$(MAKE) -f Makefile.aros BUILD_TYPE=S build
+
+enhanced_build:
+	@$(ECHO) "Making BGUI enhanced version..."
+	@$(MAKE) -f Makefile.aros BUILD_TYPE=E build
+
 
 OBJECTS =  \
 	o/plmain$(o) \
@@ -151,11 +156,11 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 	@$(ECHO) Linking $@...
 	@$(LD) o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
 	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
-	      o/plgroupclasses$(o) -L$(LIBDIR) -laros -o $@
+	      o/plgroupclasses$(o) -L$(LIBDIR) -laros -lamiga -o $@
 
 main_o=o/lib$(o) o/libfunc$(o) o/task$(o) o/request$(o) \
-	o/misc$(o) o/bgui_locale$(o) 
-#o/miscc$(o) o/stkext$(o)
+	o/misc$(o) o/bgui_locale$(o) o/miscc$(o) 
+#o/stkext$(o)
 
 boopsi_o=o/classes$(o) o/dgm$(o) o/rootclass$(o)
 #o/arexxclass$(o)
