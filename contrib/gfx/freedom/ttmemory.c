@@ -34,7 +34,7 @@
 #undef  TT_COMPONENT
 #define TT_COMPONENT  trace_memory
 
-#ifdef AMIGAOS
+#if defined(AMIGAOS) || defined(AROS)
 #include <proto/exec.h>
 #define malloc(x) AllocVec((x), 0)
 #define free(x) FreeVec(x)

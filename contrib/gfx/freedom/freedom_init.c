@@ -41,6 +41,9 @@
 struct ExecBase *SysBase;
 struct ExecBase **SysBasePtr = &SysBase;
 
+struct Library *FreedomBase;
+struct Library **FreedomBasePtr = &FreedomBase;
+
 #define SysBase			(LC_SYSBASE_FIELD(FreedomBase))
 
 /****************************************************************************************/
@@ -50,6 +53,7 @@ ULONG SAVEDS STDARGS LC_BUILDNAME(L_InitLib) (LC_LIBHEADERTYPEPTR FreedomBase)
     D(bug("Inside Init func of freedom.library\n"));
 
     *SysBasePtr = SysBase;
+    *FreedomBasePtr = FreedomBase;
     
     if (!UtilityBase)
         (struct Library *)UtilityBase = OpenLibrary("utility.library", 37);

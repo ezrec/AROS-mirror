@@ -66,6 +66,10 @@
 #include <proto/dos.h>
 #endif
 
+extern struct Library *FreedomBase;
+
+#include "freedom_intern.h"
+
 #endif
 
 /* required by the tracing mode */
@@ -730,7 +734,9 @@
       }
 #else
       if ( (stream->file = Open( (TT_Text*)stream->name,MODE_OLDFILE)) == 0 )
+      { 
         return TT_Err_Could_Not_ReOpen_File;
+      }
 
       stream->opened = TRUE;
 
@@ -756,6 +762,7 @@
 #endif
 
     }
+
     return TT_Err_Ok;
   }
 

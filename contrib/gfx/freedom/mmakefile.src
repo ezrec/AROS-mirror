@@ -42,7 +42,7 @@ TTFFILE  := $(FONTDIR)/_truetype/$(FONTNAME).ttf
 
 %genlib_cpak
 
-#MM workbench-libs-freedom : setup includes workbench-libs-freedom-demofont
+#MM workbench-libs-freedom : setup includes freedom-demofont
 workbench-libs-freedom : $(SLIB)
 	@$(NOP)
 
@@ -51,17 +51,17 @@ workbench-libs-freedom-quick : $(SLIB)
 	@$(NOP)
 
 #MM
-workbench-libs-freedom-demofont : setup $(FONTFILE) $(OTAGFILE) $(TTFFILE)
+freedom-demofont : setup $(FONTFILE) $(OTAGFILE) $(TTFFILE)
 	@$(NOP)
 
 $(FONTFILE) : demofont/$(FONTNAME).font
-	$(CP) $< $@
+	@$(CP) $< $@
 
 $(OTAGFILE) : demofont/$(FONTNAME).otag
-	$(CP) $< $@
+	@$(CP) $< $@
 
 $(TTFFILE) : demofont/$(FONTNAME).ttf
-	$(CP) $< $@
+	@$(CP) $< $@
 
 #MM
 setup :
