@@ -337,8 +337,7 @@ StopMsg();
   naechster[nr][0]=Feldx;
   naechster[nr][1]=Feldy;
 
-SetAPen(rp,0);
-  RectFill(rp,(Feldx-1)*feldbreite+1+links,(Feldy-1)*feldbreite+1+oben,Feldx*feldbreite-1+links,Feldy*feldbreite+oben-1);
+  EraseRect(rp,(Feldx-1)*feldbreite+1+links,(Feldy-1)*feldbreite+1+oben,Feldx*feldbreite-1+links,Feldy*feldbreite+oben-1);
   anzmin=AnzNachbMinen(Feldx,Feldy);
   Spielfeld[Feldx][Feldy]=anzmin;
   Rest--;
@@ -356,8 +355,7 @@ SetAPen(rp,0);
             Rest--;
             x=naechster[nr][0];
             y=naechster[nr][1];
-SetAPen(rp,0);
-            RectFill(rp,(x+a-1)*feldbreite+1+links,(y+b-1)*feldbreite+1+oben,(x+a)*feldbreite-1+links,(y+b)*feldbreite-1+oben);
+            EraseRect(rp,(x+a-1)*feldbreite+1+links,(y+b-1)*feldbreite+1+oben,(x+a)*feldbreite-1+links,(y+b)*feldbreite-1+oben);
             anzmin=AnzNachbMinen((x+a),(y+b));
             Spielfeld[x+a][y+b]=anzmin;
             if(anzmin==0)
@@ -392,8 +390,7 @@ ContMsg();
 
 void markeentfernen()
 {
-SetAPen(rp,0);
-  RectFill(rp,(Feldx-1)*feldbreite+2+links,(Feldy-1)*feldbreite+2+oben,Feldx*feldbreite-2+links,Feldy*feldbreite-2+oben);
+  EraseRect(rp,(Feldx-1)*feldbreite+2+links,(Feldy-1)*feldbreite+2+oben,Feldx*feldbreite-2+links,Feldy*feldbreite-2+oben);
   Spielfeld[Feldx][Feldy]=GESCHLOSSEN;
   AnzMarken--;
 }

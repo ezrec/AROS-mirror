@@ -144,8 +144,7 @@ BOOL weiter=FALSE,ret=FALSE;
   MaleSpielfeld();
   schreibe(links+feldbreite*breite/2-19,25,"Start",2);
 
-SetAPen(rp,0);
-  RectFill(rp,links+feldbreite*breite/2-30,oben+feldbreite*hoehe/2-30,links+feldbreite*breite/2+30,oben+feldbreite*hoehe/2+30);
+  EraseRect(rp,links+feldbreite*breite/2-30,oben+feldbreite*hoehe/2-30,links+feldbreite*breite/2+30,oben+feldbreite*hoehe/2+30);
   maleFeld(links+feldbreite*breite/2-30,oben+feldbreite*hoehe/2-30,links+feldbreite*breite/2+30,oben+feldbreite*hoehe/2+30);
   maleFeld(links+feldbreite*breite/2-29,oben+feldbreite*hoehe/2-29,links+feldbreite*breite/2+29,oben+feldbreite*hoehe/2+29);
   maleFeld(links+feldbreite*breite/2-28,oben+feldbreite*hoehe/2-28,links+feldbreite*breite/2+28,oben+feldbreite*hoehe/2+28);
