@@ -162,7 +162,7 @@ LT_Init(VOID)
 		V39 = (BOOLEAN)(SysBase->lib_Version >= 39);
 		V40 = (BOOLEAN)(SysBase->lib_Version >= 40);
 #else
-		V39 = FALSE;
+		V39 = TRUE;
 		V40 = TRUE;
 #endif
 
