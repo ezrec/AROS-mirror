@@ -180,7 +180,7 @@ def genSnapshots ():
     '''Create the page with the snapshots with sizes and links for
     download.'''
 
-    page = PageMeat ('Snapshots', 'snapshots.html')
+    page = PageMeat ('Snapshots', 'snapshots.shtml')
     page.append (
 	Heading (2, "Snapshots"),
     )
@@ -227,7 +227,12 @@ def genSnapshots ():
                 TD(log_func[package[2]](today, package[0], 'log'))
             )
         )
-
+        
+    # small test to see whethe the server supports SSI
+    page.append(
+        BR(),
+        '<--#echo var="DATE_LOCAL" -->'
+    )
     page.write ()
 
 def processLinks (links):
@@ -252,11 +257,11 @@ def processLinks (links):
 	    text.append (Image ((link.logo)))
 
 	list.append (text)
-	
+
 	if children:
 	    sublist = processLinks (children)
 	    list.append (sublist)
-    
+
     return list
 
 def genLinks ():
