@@ -33,12 +33,13 @@ contrib contrib
 # Stuff necessary to compile AROS
 necessary -a grub Format64 AmiCDROM aminet_util_arc
 
-zune -a zune-libs-muimaster zune-prefs  zune-tests zune-demos
+zune -a zune-libs-muimaster zune-prefs  zune-tests zune-demos zune-wanderer
 
 zune-libs-muimaster -d Zune/libs/muimaster AROS/workbench/libs/muimaster
 zune-prefs          -d Zune/prefs AROS/workbench/prefs/Zune
 zune-tests          -d Zune/tests AROS/test/Zune
 zune-demos          -d Zune/demos AROS/workbench/demos/Zune
+zune-wanderer       -d Zune/wanderer AROS/workbench/c/Wanderer
 
 ## This doesn't work :-/ How can I make sure when contrib/ is checked out,
 ## that the README gets created ?
