@@ -1,0 +1,85 @@
+.key ver
+.bra {
+.ket }
+; This Scriptfile modifies the Startup-sequence to
+; insert the MemoMaster check command etc.
+ECHO "The Amigaholics MemoMasterV2.0 utility."
+ECHO "(c) Jeff Flynn of Amigaholics 1992"
+ECHO ""
+ECHO "Installation Script by *e[33m*e[1mGnome*e[35m*e[0m of *e[1mDMI.*e[0m"
+ECHO ""
+ECHO "Working, please wait..."
+;
+If NOT exists RAM:T
+Makedir RAM:T
+Assign T: RAM:T
+Endif
+;
+Copy sys:c/copy ram:
+; Check for MemoMaster_V1.1
+COPY sys:S/Startup-sequence T:MC-Del
+SEARCH T:MC-Del MemoMaster quiet
+IF NOT WARN
+ECHO >T:MC-Kill "0(f/MemoMaster/;d;)"
+EDIT T:MC-Del to T:MC-Deleted with T:MC-Kill ver=nil:
+Copy T:MC-Deleted SYS:S/startup-sequence
+ENDIF
+;
+COPY sys:S/Startup-sequence T:START
+SEARCH T:START MM2 quiet
+IF NOT WARN
+ECHO "Your Startup-sequence has already been modified!"
+SKIP MAINROUTINE
+ENDIF
+
+echo  >t:gnome "sb//*n"
+echo >>t:gnome "p;b//; MemoMasterV2.0 INSTALLED."
+echo >>t:gnome "f/LoadWB*n"
+echo >>t:gnome "3sb//*n"
+echo >>t:gnome "4p"
+echo >>t:gnome "n;b//Path SYS: add"
+echo >>t:gnome "n;b//Assign Memos: SYS:Memos"
+echo >>t:gnome "n;b//MM2 check"
+
+EDIT T:START to T:STARTER WITH t:gnome
+COPY T:STARTER sys:S/Startup-sequence
+Lab MAINROUTINE
+If not exists sys:Memos
+MAKEDIR Sys:Memos
+Endif
+
+Echo "Now we copy the main program to your disk..."
+If NOT EXISTS SYS:C/Echo
+setenv ver :MEMOMASTER/Icons/MM24.info
+skip WB2
+ELSE
+.def ver=:MEMOMASTER/Icons/MM13.info
+skip WB1
+Endif
+Lab WB2
+copy from $ver to ram:MM2.info
+skip CONT
+Lab WB1
+copy from {ver} to ram:MM2.info
+Lab CONT
+copy from :MEMOMASTER/MM2 to ram:
+copy from ram:MM2 to SYS:
+copy from ram:MM2.info to SYS:
+delete ram:M#? quiet
+delete ram:copy
+if exists t:STARTER
+delete t:STARTER t:gnome quiet
+Endif
+;Clean-up
+If EXISTS SYS:C/MemoMaster
+Ask "Shall I delete the old *e[1m*e[33mMemoMaster *e[0m*e[35mprogram ?"
+If WARN
+delete sys:c/MemoMaster
+Endif
+Endif
+
+LAB END
+cd SYS:
+delete t:START
+Echo "*e[33m*e[1mOK. JOB FINISHED"
+delete T:MC#? quiet

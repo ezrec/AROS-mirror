@@ -1,0 +1,204 @@
+                        MemoMaster V2 Doc.
+                        ~~~~~~~~~~~~~~~~~~
+
+MM2 (MemoMaster V2) is one of those programs which can be used
+to avoid forgetting events such as your wedding anniversary.
+Instal it on the disk you generally boot with, record all those
+birthdays and any other events you feel you might need reminding
+of and you will be warned about them when they approach.
+
+Installation.
+
+Beginners:
+
+     Boot with the Workbench disk you wish to copy MM2 onto then
+     double-click on the 'Install_MM' Icon.
+     A MEMOS directory will be created if it doesn't already exist
+     and MM2 will be copied over to your disk along with an Icon
+     with suitable colours for your version of Workbench.
+
+     The startup-sequence will be modified for you to automatically
+     run MM2 every time you boot up.
+
+   ** MAKE SURE YOU ARE USING A BACKUP COPY OF YOUR WORKBENCH DISK **
+
+     Please note;  You will need to make some space on a standard
+     1.3 Workbench disk to make room for MM2.  I suggest you delete
+     the contents of the PREFS drawer or some unwanted UTILITIES.
+
+     Workbench2 users will have just enough room on their WB disks
+     but it is still recommended that you make some room for MEMOS.
+
+Experienced users:
+
+     Put the program (MM2) into a location included in your PATH
+     list. Insert the following two lines in your startup-
+     sequence (after the PATH has been set up)-
+          ASSIGN MEMOS: volume:dir/subdir
+          MM2 check
+     (NB - at present the word check must be in lower case
+     letters). You may want to set up a configuration file in
+     the directory in the above ASSIGN command but this is
+     unlikely to be necessary. See the Colour Configuration
+     section near the end of this document if the program seems
+     to use the wrong colours from your preferences palette. You
+     should now find that the program will run whenever you boot
+     using the volume with MM2 installed. If no memos are due
+     for a reminder, you will not be bothered by the program,
+     otherwise you will get a requester containing the
+     reminders. To run the program outside of startup-sequence
+     (to maintain your list of memos) type "mm2" at a CLI/SHELL
+     prompt or click on its icon from workbench.
+
+Memo fields.
+
+     Date.
+          Date in format dd-mmm-yy eg 23-feb-92. You can leave
+          the year part blank or put in other characters if you
+          like. You might do this if the memo refers to an event
+          which occurs annually and you do not want the year
+          recorded for some reason. For example, you might want
+          to record a birthday but not know (or want to
+          publicise) the year.
+
+     Notice.
+          The number of days notice you require for this
+          particular event. You might need 10 days to organise
+          a birthday present but only need a couple of days
+          notice of an agreed date to make a phone call. You can
+          put values up to 99 here. Please remember that you
+          will only get the reminder if you use your computer
+          and only then if MM2 gets run.
+
+     Type.
+          At present the program only recognises two types of
+          memo. Annual ones (type = 'a' or 'A') and others. The
+          only difference is that annual ones will pop up
+          irrespective of the year part of the date field whereas
+          you will only get reminded about others in the period
+          specified by the full date and the notice required.
+
+     Text.
+          60 characters of free text.
+
+MM2 specific gadgets.
+
+     There are 18 custom gadgets on the MM2 window. A group of
+     6 positions for displaying memos and 12 'action' gadgets in
+     two rows.
+
+     The memo display gadgets can be clicked on to highlight
+     memos to be acted on using some of the 'action' gadgets.
+
+     The upper row of action gadgets are concerned with movement
+     around your list of memos and (left to right) have the
+     following effects
+          Move to beginning of list.
+          Move back towards the beginning by 6 memos.
+          Move back 1 memo.
+          Move forward 1 memo.
+          Move forward 6 memos.
+          Move to end of list.
+
+     The lower row functions are as follows.
+          - ADD displays a requester allowing you to add a new
+          memo.
+          - EDIT displays a requester allowing you to edit an
+          existing memo. This will appear for each memo
+          highlighted when the gadget is clicked on.
+          - DELETE displays a requester asking you to confirm
+          that you really wish to remove a memo from the list.
+          This will appear once for each memo highlighted when
+          the gadgets is clicked on.
+          - CHECK looks through the list of memos and displays
+          a requester to show any which are due. These are the
+          ones which would be displayed if the program had been
+          run using the command line "mm2 check". You will need
+          to use this gadget particularly if you have started
+          mm2 from workbench.
+          - SHRINK removes the main mm2 window from the display
+          and replaces it with a small substitute. You can move
+          the small one out of the way in the normal manner by
+          dragging the title bar. Clicking on the central
+          portion of the window will restore the main mm2
+          window. If you then SHRINK again, the small window
+          will reappear where you left it last time.
+          - HELP puts mm2 into HELP mode. (The gadget stays
+          highlighted to indicate this). If you now click on any
+          of the custom gadgets or on the close gadget the
+          program will display some help on the use of that
+          gadget.
+
+Colour configuration.
+     Most people tend to leave their workbench colours untouched
+     after the novelty of changing them has worn off. If you
+     normally use a custom palette you can configure MM2 to work
+     properly even.
+
+     Set up a file named "MEMOS:MMASTER.CONFIG" containing just
+     4 characters. These characters should be some combination
+     of "0", "1", "2" and "3" eg "0123". If you run an eight
+     colour workbench you can probably use numbers from 4 to 7
+     as well. By amending this file you can alter the colour
+     numbers used for text and boxes etc. by the program. For
+     example, changing "0123" to "1023" reverses the use of
+     colours 0 and 1 as set up in preferences. Trial and error
+     should produce an acceptable combination of colours.
+
+Compilation.
+     If DICE (by Matt Dillon) is your C compiler, you can
+     compile the program for yourself by typing DMAKE in a
+     directory containing the source files, the header file and
+     the makefile. Obviously your compilation environment will
+     need to be set up correctly. Also, you will need to have
+     the registered version since the distributable version does
+     not include the C header files specifying Amiga specific
+     structures etc. If you use Lattice, have a look at
+     dmakefile to work out the dependencies (they are simple)
+     and your LC command should compile the source files quite
+     happily without any qualifiers - you will then need to work
+     out the link info for BLINK (I can't help I'm afraid as I
+     have took Lattice off my hard disk some time ago).
+
+To Do.
+     1. ????? (From Kev) If MemoChk() finds non-type-A memo with
+     date=today, give option to delete.
+
+     2. Menu options:-
+        - Select all 'out of date'.
+        - Select all of specified type.
+
+     3. Any ideas?????
+
+Distribution.
+     I am releasing this program into the public domain.
+     Initially distribution is via the Amigaholics disk
+     magazine, (contact Kev Bryan, Amigaholics, 49 Coutts House,
+     Charlton Church Lane, Charlton, London, SE7 7AS or telephone
+     071 580 2000 x240 weekdays between 9 and 3.30) but please feel
+     free to copy this program to anyone interested so long as you
+     keep all the files together. Files included should be :-
+
+          mm2            - the executable program
+          mm2.c          - the main source file
+          deledadd.c     \
+          listfunc.c      \
+          display.c        \
+          datefunc.c       /  - more source files
+          helpmode.c      /
+          main_win.c     /
+          mm2.h          - program specific C header file
+          dmakefile      - makefile for the DICE C compiler
+          mm2doc.txt     - this file
+
+     As with most releases of software, I don't take any
+     responsibility for the correct operation of this program -
+     USE AT YOUR OWN RISK. If you have any comments or
+     suggestions, and especially if you discover any faults,
+     please get in touch.
+
+          Jeff Flynn
+          17 Oak Close
+          Yate
+          BS17 5TN
+          England
