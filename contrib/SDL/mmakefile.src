@@ -96,7 +96,7 @@ USER_CFLAGS := -DENABLE_CYBERGRAPHICS -DNO_SIGNAL_H -DAROS -D_AROS
 %common
 
 #MM
-linklibs-SDL-config : $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-sdl-config
+linklibs-SDL-config : $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-sdl-config
 
 $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-sdl-config: sdl-config.in
 	@sed s,@AROS_INCLUDE@,$(AROS_INCLUDES),g sdl-config.in > $@
