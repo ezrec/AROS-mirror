@@ -18,3 +18,4 @@
 #
 # For example:
 DEFAULT		tee -a /tmp/AROS.log | gawk -f $CVSROOT/CVSROOT/commitlog.awk --assign File="%s" --assign Out="$CVSROOT/CVSROOT/commitlog"
+ALL             $CVSROOT/CVSROOT/syncmail %{sVv} aros-cvs@lists.sourceforge.net
