@@ -1,0 +1,31 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:530: checking for nasm
+configure:567: checking for gcc
+configure:644: checking whether the C compiler (gcc  ) works
+configure:658: gcc -o conftest    conftest.c  1>&5
+configure:678: checking whether the C compiler (gcc  ) is a cross-compiler
+configure:683: checking whether we are using GNU C
+configure:692: gcc -E conftest.c
+configure:707: checking whether gcc accepts -g
+configure:735: checking whether ln -s works
+configure:756: checking whether make sets ${MAKE}
+configure:856: checking for a BSD compatible install
+configure:918: checking for nroff
+configure:950: checking how to run the C preprocessor
+configure:971: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1011: checking for ANSI C header files
+configure:1024: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1091: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:1122: checking for limits.h
+configure:1132: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1163: checking for working const
+configure:1217: gcc -c -g -O2  conftest.c 1>&5
+configure:1242: checking for size_t
+configure:1279: checking for vprintf
+configure:1307: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:1390: checking for strcspn
+configure:1418: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:1449: checking for strspn
+configure:1477: gcc -o conftest -g -O2   conftest.c  1>&5
