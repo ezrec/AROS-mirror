@@ -72,5 +72,8 @@ kstaas:cbrTTNqQ8PT8o:Karl Staas:kstaas@harborcom.net:
 falemagn:baUrm93DGMGTk:Fabio Alemagna:falemagn@studenti.unina.it:
 #droidlev:29507016:Adam Levinstien:tjamr1@ce.mediaone.net:
 mchouinard:sy7IPD6eXxoU6:Mathieu Chouinard:mchouinard@sprint.ca:
+pablo:cdT1Zu9CY2ShM:Pawel Kolodziejski:pablo@rudykot.pl:
+eirikns:ba5EqokvhpnPc:Eirik Nicolai Synnes:eirikns@ifi.uio.no:
+phillwooller:ac4kAjAMFmiLc:Phill Wooller:phillwooller@noelite.freeserve.co.uk:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
