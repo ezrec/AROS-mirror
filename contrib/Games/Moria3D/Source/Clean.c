@@ -131,6 +131,12 @@ void * MemAlloc(int32 Size)
 
     Mem=(pCleanNode *)malloc(Size+sizeof(pCleanNode));
 
+    if (!Mem)
+    {
+	printf ("malloc(%ld) failed.\n", Size);
+	exit (10);
+    }
+
     *Mem=EnterCleanNode(CleanUpMem,Mem,Size+sizeof(pCleanNode));
 
     return (void *)(Mem++);
