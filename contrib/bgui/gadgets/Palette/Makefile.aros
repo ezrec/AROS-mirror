@@ -49,13 +49,13 @@ $(GADGET) : $(LIBTARGETS)
 		$(LIBS) \
 		-o $@
 	@$(ECHO) Installing $@...
-	@$(CP) $@ $(BINDIR)/Classes/Gadgets
+	@$(CP) $@ $(BGUIGADGETSDIR)
 
 $(DEMO) : $(DEMO).c
 	@$(CC) $(INCLUDES) $(DEFINES) -c $^ -o $@.o
 	@$(CC) $(FLAGS) $(STARTUP) $@.o -o $@ $(LIBS)
 	@$(ECHO) Installing $@
-	@$(CP) $@ $(BINDIR)/bgui
+	@$(CP) $@ $(BGUIEXAMPLESDIR)
 
 %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
