@@ -6,3 +6,4 @@ config.status
 Makefile
 buildno
 python
+mmakefile
