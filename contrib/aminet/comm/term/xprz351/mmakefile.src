@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 MODULE     := xprzmodem.library
 
-LOCALINCLUDES = -I. -I../Include
+LOCALINCLUDES = -I. -I../Include -I`pwd`/
 
 LIBS := -L$(LIBDIR) -lamiga
 
@@ -21,16 +21,16 @@ $(OBJDIR)/aros_src/%_aros.c : %.c
 	@$(ARCHTOOL) -R Xpr_Lib.h  $^ $@ aros/xpr_defines_aros.h >/dev/null
 
 $(OBJDIR)/%.o : $(OBJDIR)/aros_src/%_aros.c
-	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES) $(DEFINES) -include aros/arosspecific.h"
+	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES) $(DEFINES)"
 
 
 $(OBJDIR)/%.ol : $(OBJDIR)/aros_src/%_aros.c
-	%compile_q opt="$(CFLAGS) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h"
+	%compile_q opt="$(CFLAGS) -DLINK_LIB $(LOCALINCLUDES)"
 
 $(OBJDIR)/test/%.o : test/%.c
 	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES)"
 
-FILES = Send Receive Utils
+FILES = Send Receive Utils xprgetsystime xprtimeout xprzmodem_locale Zm xprsprintf xprz_init
 
 INTERMEDIATES := $(foreach f,$(FILES),$(OBJDIR)/aros_src/$(f)_aros.c)
 DEPS := $(foreach f,$(FILES),$(OBJDIR)/$(f).d)
@@ -39,9 +39,25 @@ DEPS := $(foreach f,$(FILES),$(OBJDIR)/$(f).d)
 #MM linklibs-aminet-comm-term-xprz : linklibs setup-xprz
 
 #First all intermediate files MUST be created so there is a 'defines' file!
-linklibs-aminet-comm-term-xprz: $(INTERMEDIATES) includes-copy
+linklibs-aminet-comm-term-xprz: $(INTERMEDIATES) libdefs.h includes-copy 
+#$(AROS_LIBS)/$(MODULE)
 
 includes-copy: $(INCDIR)/proto/xpr.h $(INCDIR)/defines/xpr.h
+
+MODULE_OBJ   = $(foreach f,$(FILES),$(OBJDIR)/$(f).o)
+
+$(AROS_LIBS)/$(MODULE) : $(MODULE_OBJ)
+	@$(ECHO) "Building $(notdir $@) ..."
+	@$(CC) $(MODULE_OBJ) -static -lamiga -o $@ -nostartfiles
+
+$(OBJDIR)/test/%.d : %.c
+	%mkdepend_q flags=$(CFLAGS)
+
+$(OBJDIR)/aros_src/%.d : %.c
+	%mkdepend_q flags=$(CFLAGS)
+
+$(OBJDIR)/%.d : %.c
+	%mkdepend_q flags=$(CFLAGS)
 
 #MM
 setup-xprz :
@@ -51,5 +67,6 @@ setup-xprz :
 clean ::
 	-$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) $(AROS_LIBS)/gtlayout.library aros/gtlayout_defines_aros.h $(OBJDIR)/gtlayout_data.o $(OBJDIR)/gtlayout_data.ol $(STATIC_LIB)
 
+%libdefs_rule
 %common
 %include_deps
