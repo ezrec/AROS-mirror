@@ -1,0 +1,42 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -Os -Wall -DDEBUG -DAROS -DV39 $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(CONTRIBDIR)/aminet
+#-DDEBUG
+FILES := about commodity config copy dir diskinfo drives event execute\
+fileclick fm fmdos fmgui locale operate request showicon showpic showtext\
+parse taskwindow launch gadgets fmoutput edit clock\
+nodes screen aros
+# does not work: audio
+
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+LIBS := -L$(LIBDIR) -lamiga -larosc_shared -larossupport -larosm -llocale -lreqtoolsstubs -lbgui -lautoinit 
+
+EXE := $(DESTDIR)/Filemaster
+
+.PHONY : all clean
+
+#MM aminet-util-dir-filemaster : setup-aminet-util-dir-filemaster setup-filemaster-catalogs 
+aminet-util-dir-filemaster 	: $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-aminet-util-dir-filemaster :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	%link_q from=$(OBJS)
+
+#MM
+clean-aminet :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+%common

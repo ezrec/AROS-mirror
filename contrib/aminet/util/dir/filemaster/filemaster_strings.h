@@ -1,0 +1,1348 @@
+/****************************************************************
+   This file was created automatically by `FlexCat 2.4'
+   from "filemaster.cd".
+
+   Do NOT edit by hand!
+****************************************************************/
+
+#ifndef filemaster_H
+#define filemaster_H
+#include <aros/debug.h>
+
+#ifndef EXEC_TYPES_H
+#include <exec/types.h>
+#endif
+
+
+#ifdef CATCOMP_ARRAY
+#undef CATCOMP_NUMBERS
+#undef CATCOMP_STRINGS
+#define CATCOMP_NUMBERS
+#define CATCOMP_STRINGS
+#endif
+
+#ifdef CATCOMP_BLOCK
+#undef CATCOMP_STRINGS
+#define CATCOMP_STRINGS
+#endif
+
+/***************************************************************/
+
+
+#ifdef CATCOMP_NUMBERS
+
+#define MSG_AUDIO_MODINFOTXT1 0
+#define MSG_AUDIO_MODINFOTXT2 1
+#define MSG_AUDIO_MODINFOTXT3 2
+#define MSG_AUDIO_NOCIA 3
+#define MSG_AUDIO_LOAD 4
+#define MSG_AUDIO_MODINFO1 5
+#define MSG_AUDIO_MODINFO2 6
+#define MSG_AUDIO_CORRUPT8SVX 7
+#define MSG_AUDIO_ASKFREQUENCY 8
+#define MSG_AUDIO_NOAUDIO 9
+#define MSG_AUDIO_INFO1 10
+#define MSG_AUDIO_INFO2 11
+#define MSG_AUDIO_ASKTYPE 12
+#define MSG_AUDIO_TYPEANSWER1 13
+#define MSG_AUDIO_TYPEANSWER2 14
+#define MSG_AUDIO_CONFIG_ASKHZ 15
+#define MSG_AUDIO_CONFIG_PLAYMETHOD 16
+#define MSG_AUDIO_CONFIG_PLAYMETHOD1 17
+#define MSG_AUDIO_CONFIG_PLAYMETHOD2 18
+#define MSG_AUDIO_CONFIG_PLAYMETHOD3 19
+#define MSG_AUDIO_CONFIG_FREQUENCY 20
+#define MSG_AUDIO_CONFIG_BUFFER 21
+#define MSG_CLOCK_FORMATSTRING 22
+#define MSG_COPYNAMESOURCE 23
+#define MSG_COPYNAMEDESTINATION 24
+#define MSG_COPYING 25
+#define MSG_COPYING2 26
+#define MSG_COPIED 27
+#define MSG_COPY_NEWNAME 28
+#define MSG_COPY_OVERWRITE 29
+#define MSG_COPY_NOFREESPACE 30
+#define MSG_COPYMOVE_CONFIG_REFRESH 31
+#define MSG_COPYMOVE_CONFIG_REFRESH1 32
+#define MSG_COPYMOVE_CONFIG_REFRESH2 33
+#define MSG_COPYMOVE_CONFIG_REFRESH3 34
+#define MSG_COPYMOVE_CONFIG_OVERWRITE 35
+#define MSG_COPYMOVE_CONFIG_OVERWRITE1 36
+#define MSG_COPYMOVE_CONFIG_OVERWRITE2 37
+#define MSG_COPYMOVE_CONFIG_COMMENT 38
+#define MSG_COPYMOVE_CONFIG_PROTECTION 39
+#define MSG_COPYMOVE_CONFIG_DATE 40
+#define MSG_COPYMOVE_CONFIG_CHECKFREESPACE 41
+#define MSG_COPYMOVE_CONFIG_COPYBUFFER 42
+#define MSG_DELETING 43
+#define MSG_DELETED 44
+#define MSG_DELETE_ASKDELETE 45
+#define MSG_DELETE_ASKDIRECTORY 46
+#define MSG_DELETE_DELPROTECTED 47
+#define MSG_DELETE_CONFIG_ASKDELETE 48
+#define MSG_DELETE_CONFIG_ASKDIR 49
+#define MSG_DELETE_CONFIG_DELPROT 50
+#define MSG_MOVING 51
+#define MSG_MOVED 52
+#define MSG_DISKSIZING 53
+#define MSG_DISKSIZED 54
+#define MSG_DIRNAME 55
+#define MSG_DIRRING 56
+#define MSG_DIRREDLINE1 57
+#define MSG_DIRREDLINE2 58
+#define MSG_DIRMETER 59
+#define MSG_DIRMETER_RW 60
+#define MSG_PARENT_CONFIG_BUFFERS 61
+#define MSG_DISKINFO 62
+#define MSG_DISKINFO_WPROT 63
+#define MSG_DISKINFO_VALIDATING 64
+#define MSG_DISKINFO_VALIDATED 65
+#define MSG_DISKINFO_UNKNOWN 66
+#define MSG_SLEEP_SLEEPWINDOW 67
+#define MSG_SLEEP_APPICON 68
+#define MSG_EXE_COMMAND 69
+#define MSG_EXE_SHELLWINDOW 70
+#define MSG_EXE_TIMEOUT 71
+#define MSG_EXE_NOSHELLWINDOW 72
+#define MSG_EXE_CONFIG_CD 73
+#define MSG_EXE_CONFIG_RESCAN 74
+#define MSG_EXE_CONFIG_SOURCE 75
+#define MSG_EXE_CONFIG_DESTINATION 76
+#define MSG_EXE_CONFIG_SOURCEDEST 77
+#define MSG_EXE_CONFIG_STARTSCREEN 78
+#define MSG_EXE_CONFIG_ENDSCREEN 79
+#define MSG_EXE_CONFIG_WBFRONT 80
+#define MSG_EXE_CONFIG_FMFRONT 81
+#define MSG_EXE_CONFIG_NOCHANGE 82
+#define MSG_EXE_SYNTAXERROR 83
+#define MSG_EXE_FAILED 84
+#define MSG_EXE_EXECUTING 85
+#define MSG_FILECLICKNAME 86
+#define MSG_FILECLICKING 87
+#define MSG_FILECLICK_PICTURE 88
+#define MSG_FILECLICK_SOUND 89
+#define MSG_FILECLICK_EXECUTABLE 90
+#define MSG_FILECLICK_WBICON 91
+#define MSG_FILECLICK_MODULE 92
+#define MSG_FILECLICK_ASC 93
+#define MSG_FILECLICK_HEX 94
+#define MSG_FILECLICK_FONT 95
+#define MSG_MAIN_WARNING 96
+#define MSG_MAIN_PROCESSES 97
+#define MSG_MAIN_WINDOWS 98
+#define MSG_MAIN_AREYOUSURE 99
+#define MSG_MAIN_QUIT 100
+#define MSG_MAIN_REQUEST 101
+#define MSG_MAIN_ABORT 102
+#define MSG_MAIN_ABORTED 103
+#define MSG_MAIN_COMPLETED 104
+#define MSG_MAIN_CONTINUE 105
+#define MSG_MAIN_ABORTMODPLAY 106
+#define MSG_MAIN_FMALREADY 107
+#define MSG_MAIN_WINERR1 108
+#define MSG_MAIN_SCRERR1 109
+#define MSG_MAIN_ERRNOBITMAP 110
+#define MSG_MAIN_NOSOURCE 111
+#define MSG_MAIN_NOSOURCEFILE 112
+#define MSG_MAIN_NODESTINATION 113
+#define MSG_MAIN_VISITORWINDOWS 114
+#define MSG_MAIN_REGISTERTITLE 115
+#define MSG_MAIN_REGISTERNAME 116
+#define MSG_MAIN_REGISTERED 117
+#define MSG_MAIN_UNREGISTERED 118
+#define MSG_MAIN_ABOUT 119
+#define MSG_MAIN_PROGRAMMEDBY 120
+#define MSG_MAIN_CMENUTXT 121
+#define MSG_MAIN_CMENULABEL 122
+#define MSG_MAIN_CMENUKEYS 123
+#define MSG_MAIN_SHAREWARE 124
+#define MSG_MAIN_DATATYPEERROR 125
+#define MSG_FMDOS_SEEKERR 126
+#define MSG_FMDOS_READERR 127
+#define MSG_FMDOS_UEOF 128
+#define MSG_FMDOS_WRITEERR 129
+#define MSG_FMDOS_OPENERR 130
+#define MSG_FMDOS_OPENRERR 131
+#define MSG_FMDOS_OPENWERR 132
+#define MSG_FMDOS_NOBUFMEM 133
+#define MSG_FMDOS_EXAMINEERR 134
+#define MSG_FMDOS_EXNEXTERR 135
+#define MSG_FMDOS_LOCKERR 136
+#define MSG_FMDOS_RENAMEERR 137
+#define MSG_FMDOS_COMMENTERR 138
+#define MSG_FMDOS_DATEERR 139
+#define MSG_FMDOS_PROTERR 140
+#define MSG_FMDOS_MAKEDIRERR 141
+#define MSG_FMDOS_CHIPMEM 142
+#define MSG_FMDOS_PUBLICMEM 143
+#define MSG_FMDOS_ALLOCATEERR 144
+#define MSG_FMDOS_RELABELERR 145
+#define MSG_FMDOS_DELETEERR 146
+#define MSG_FMDOS_REMDELPROT 147
+#define MSG_FMDOS_DECRUNCHING 148
+#define MSG_FMDOS_ZEROSIZE 149
+#define MSG_OPERATE_ASKNAME 150
+#define MSG_OPERATE_ASKFLAGS 151
+#define MSG_OPERATE_ASKCOMMENT 152
+#define MSG_OPERATE_ASKDATE 153
+#define MSG_OPERATE_CREATEICON 154
+#define MSG_OPERATE_DEFAULTDRAWER 155
+#define MSG_OPERATE_ADD 156
+#define MSG_OPERATE_SUB 157
+#define MSG_OPERATE_CHANGE 158
+#define MSG_OPERATE_FORMATINSTALL 159
+#define MSG_OPERATE_FORMATINSTALLNAME 160
+#define MSG_OPERATE_FFS 161
+#define MSG_OPERATE_INT 162
+#define MSG_OPERATE_DIRCACHE 163
+#define MSG_OPERATE_DOFORMAT 164
+#define MSG_OPERATE_DOQFORMAT 165
+#define MSG_OPERATE_DOINSTALL 166
+#define MSG_OPERATE_VERIFY 167
+#define MSG_OPERATE_INHIBITERR 168
+#define MSG_OPERATE_INSTALLING 169
+#define MSG_OPERATE_INSTALLERR 170
+#define MSG_OPERATE_FORMATTING 171
+#define MSG_OPERATE_VERIFYING 172
+#define MSG_OPERATE_INITIALIZING 173
+#define MSG_OPERATE_DEFAULTNAME 174
+#define MSG_OPERATE_INITIALIZEERR 175
+#define MSG_REQ_FATALERR 176
+#define MSG_REQ_ANSWER1 177
+#define MSG_REQ_ANSWER2 178
+#define MSG_REQ_DOSERR 179
+#define MSG_REQ_ERROR 180
+#define MSG_SCR_SCRERR2 181
+#define MSG_SCR_WINERR2 182
+#define MSG_SCR_MEMERR 183
+#define MSG_SCR_FONTERR1 184
+#define MSG_SHOWPIC_HIRES 185
+#define MSG_SHOWPIC_SHIRES 186
+#define MSG_SHOWPIC_LACE 187
+#define MSG_SHOWPIC_HAM6 188
+#define MSG_SHOWPIC_HAM8 189
+#define MSG_SHOWPIC_EHB 190
+#define MSG_SHOWPIC_NOPICTURE 191
+#define MSG_SHOWPIC_INFO1 192
+#define MSG_SHOWPIC_INFO2 193
+#define MSG_SHOWPIC_ERRNOSCREEN 194
+#define MSG_SHOWPIC_CORRUPT 195
+#define MSG_SHOWICON_TITLE 196
+#define MSG_SHOWFONT_TITLE 197
+#define MSG_SHOWFONT_ASKSIZE 198
+#define MSG_SHOWTEXTINFO1 199
+#define MSG_SHOWTEXTINFO2 200
+#define MSG_SHOWTEXT_LINENUMBER 201
+#define MSG_SHOWTEXT_SEARCHSTRING 202
+#define MSG_SHOWTEXT_CONFIG_INFOLINE 203
+#define MSG_TASKWINDOW_LISTS 204
+#define MSG_TASKWINDOW_DEVLIST 205
+#define MSG_TASKWINDOW_EMPTY 206
+#define MSG_PARSE_SORTBY 207
+#define MSG_PARSE_SORTUP 208
+#define MSG_PARSE_SORTDOWN 209
+#define MSG_PARSE_MIX 210
+#define MSG_PARSE_DRAWERS 211
+#define MSG_PARSE_NAMEMATCH 212
+#define MSG_PARSE_CASEINSENSITIVE 213
+#define MSG_PARSE_CASESENSITIVE 214
+#define MSG_PARSE_SIZEMATCH 215
+#define MSG_PARSE_SIZEEQUAL 216
+#define MSG_PARSE_SIZENOEQUAL 217
+#define MSG_PARSE_BETWEEN 218
+#define MSG_PARSE_NOTBETWEEN 219
+#define MSG_PARSE_SIZESMALLER 220
+#define MSG_PARSE_SIZELARGER 221
+#define MSG_PARSE_PROTMATCH 222
+#define MSG_PARSE_DATEMATCH 223
+#define MSG_PARSE_DATEOLDER 224
+#define MSG_PARSE_DATENEWER 225
+#define MSG_PARSE_COMMENTMATCH 226
+#define MSG_PARSE_FILES 227
+#define MSG_PARSE_DIRS 228
+#define MSG_PARSE_TYPE1 229
+#define MSG_PARSE_TYPE2 230
+#define MSG_PARSE_TYPE3 231
+#define MSG_FDEDIT_GADGETS 232
+#define MSG_FDEDIT_ASC 233
+#define MSG_FDEDIT_HEX 234
+#define MSG_FDEDIT_FILEINFO1 235
+#define MSG_FDEDIT_DISKINFO1 236
+#define MSG_FDEDIT_DISKROOT1 237
+#define MSG_FDEDIT_DISKROOT2 238
+#define MSG_FDEDIT_DISKROOT3 239
+#define MSG_FDEDIT_DISKFILE1 240
+#define MSG_FDEDIT_DISKFILE2 241
+#define MSG_FDEDIT_DISKFILE3 242
+#define MSG_FDEDIT_DISKDIR1 243
+#define MSG_FDEDIT_DISKDIR2 244
+#define MSG_FDEDIT_DISKDIR3 245
+#define MSG_FDEDIT_DISKLIST1 246
+#define MSG_FDEDIT_DISKLIST3 247
+#define MSG_FDEDIT_DISKDATA1 248
+#define MSG_FDEDIT_DISKDATA3 249
+#define MSG_FDEDIT_DISKUNKNOWN 250
+#define MSG_FDEDIT_DISKBTSH 251
+#define MSG_FDEDIT_CALCCHECKSUM 252
+#define MSG_FDEDIT_SEARCH 253
+#define MSG_FDEDIT_SEARCHING 254
+#define MSG_FDEDIT_ILLEGALSEARCH 255
+#define MSG_FDEDIT_BYTENUMBER 256
+#define MSG_FDEDIT_CONFIG_NOLOWCYL 257
+#define MSG_YES 258
+#define MSG_NO 259
+#define MSG_RETRY 260
+#define MSG_OK 261
+#define MSG_CANCEL 262
+#define MSG_SKIP 263
+#define MSG_IGNORE 264
+#define MSG_SAVE 265
+#define MSG_YESN 266
+#define MSG_NON 267
+#define MSG_OKN 268
+#define MSG_ALL 269
+#define MSG_DEVICE_ERROR 270
+#define MSG_DEVICE_ERRORS 271
+#define MSG_CONFIG_NAME 272
+#define MSG_CONFIG_OLDCONFIG 273
+#define MSG_CONFIG_SCREEN 274
+#define MSG_CONFIG_COMMANDS 275
+#define MSG_CONFIG_GENERAL 276
+#define MSG_CONFIG_DATATYPES 277
+#define MSG_CONFIG_MAINSCREEN 278
+#define MSG_CONFIG_TEXTSCREEN 279
+#define MSG_CONFIG_TEXTFONT 280
+#define MSG_CONFIG_LISTFONT 281
+#define MSG_CONFIG_SHOWFONT 282
+#define MSG_CONFIG_REQFONT 283
+#define MSG_CONFIG_LAYOUT 284
+#define MSG_CONFIG_DIRLAYOUT 285
+#define MSG_CONFIG_PALETTE 286
+#define MSG_CONFIG_SCREENTYPE 287
+#define MSG_CONFIG_SCREENTYPE1 288
+#define MSG_CONFIG_SCREENTYPE2 289
+#define MSG_CONFIG_SCREENTYPE3 290
+#define MSG_CONFIG_SCREENWINDOW 291
+#define MSG_CONFIG_LAYOUTHOR 292
+#define MSG_CONFIG_LAYOUTVER 293
+#define MSG_CONFIG_LAYOUT_DIRLIST 294
+#define MSG_CONFIG_LAYOUT_MENUBAR 295
+#define MSG_CONFIG_LAYOUT_RIGHTALIGNMENT 296
+#define MSG_CONFIG_LAYOUT_RIGHTLOCK 297
+#define MSG_CONFIG_LAYOUT_WIDTH 298
+#define MSG_CONFIG_LAYOUT_CMENUPOS 299
+#define MSG_CONFIG_LAYOUT_CMENUSIZE 300
+#define MSG_CONFIG_LAYOUT_CMENUALIGNMENT 301
+#define MSG_CONFIG_SCRFORMAT 302
+#define MSG_CONFIG_FONTFORMAT 303
+#define MSG_CONFIG_VSCROLL 304
+#define MSG_CONFIG_HSCROLL 305
+#define MSG_CONFIG_SCROLLSMOOTH 306
+#define MSG_CONFIG_SCROLLJUMP 307
+#define MSG_CONFIG_ON 308
+#define MSG_CONFIG_OFF 309
+#define MSG_CONFIG_UP 310
+#define MSG_CONFIG_DOWN 311
+#define MSG_CONFIG_DOSREQUESTER 312
+#define MSG_CONFIG_PRIORITYMAIN 313
+#define MSG_CONFIG_PRIORITYHIGH 314
+#define MSG_CONFIG_PRIORITYMED 315
+#define MSG_CONFIG_PRIORITYLOW 316
+#define MSG_CONFIG_DOSBUFSIZE 317
+#define MSG_CONFIG_DOUBLECLICK 318
+#define MSG_CONFIG_RIGHTMOUSE 319
+#define MSG_CONFIG_RIGHTMOUSE_DOUBLECLICK 320
+#define MSG_CONFIG_RIGHTMOUSE_PARENT 321
+#define MSG_CONFIG_USEDT_PICTURE 322
+#define MSG_CONFIG_USEDT_SAMPLE 323
+#define MSG_CONFIG_USEDT_ASC 324
+#define MSG_CONFIG_USEDT_HEX 325
+#define MSG_CONFIG_USEDT_MOD 326
+#define MSG_CONFIG_USEDT_ICON 327
+#define MSG_CONFIG_USEDT_FONT 328
+#define MSG_CONFIG_USEDT_EXECUTE 329
+#define MSG_CONFIG_EDITPALETTE 330
+#define MSG_CONFIG_PENS 331
+#define MSG_CONFIG_COMUSERCOMMAND 332
+#define MSG_CONFIG_COMBUILDINCOMMANDS 333
+#define MSG_CONFIG_COMBARCOMMANDS 334
+#define MSG_CONFIG_COMCORNERCOMMANDS 335
+#define MSG_CONFIG_COMHIDDENCOMMANDS 336
+#define MSG_CONFIG_COMBUILDUSERKEY 337
+#define MSG_CONFIG_COMSLOTSFULL 338
+#define MSG_CONFIG_COMEDITCONFIG 339
+#define MSG_CONFIG_COMMOVEGADGETBAR 340
+#define MSG_CONFIG_COMMOVECORNERMENU 341
+#define MSG_CONFIG_COMMOVEHIDDEN 342
+#define MSG_CONFIG_COMCOPYGADGETBAR 343
+#define MSG_CONFIG_COMCOPYCORNERMENU 344
+#define MSG_CONFIG_COMDUPLICATECOMMAND 345
+#define MSG_CONFIG_COMREMOVECOMMAND 346
+#define MSG_CONFIG_COMNEWUSERCOMMAND 347
+#define MSG_CONFIG_COMLABEL 348
+#define MSG_CONFIG_COMPATTERN 349
+#define MSG_CONFIG_COMOFFSET 350
+#define MSG_CONFIG_COMSIGNATURE 351
+#define MSG_CONFIG_COMCOMMAND 352
+#define MSG_CONFIG_COMSTACK 353
+#define MSG_CONFIG_COMKEY 354
+#define MSG_CONFIG_COMFRONTPEN 355
+#define MSG_CONFIG_COMBACKPEN 356
+#define MSG_CONFIG_COMPRI 357
+#define MSG_CONFIG_COMLOWPRI 358
+#define MSG_CONFIG_COMMEDPRI 359
+#define MSG_CONFIG_COMHIGHPRI 360
+#define MSG_CONFIG_COMSWAP 361
+#define MSG_CONFIG_COMCHANGE 362
+
+#endif /* CATCOMP_NUMBERS */
+
+
+/***************************************************************/
+
+#ifdef CATCOMP_STRINGS
+
+#define MSG_AUDIO_MODINFOTXT1_STR "Reading %lU patterns..."
+#define MSG_AUDIO_MODINFOTXT2_STR "Reading sample %lU length %lU (%ld%%)"
+#define MSG_AUDIO_MODINFOTXT3_STR "Patterns %lU Length %lU Samples %lU Total sample length %lU bytes"
+#define MSG_AUDIO_NOCIA_STR "CIA allocate failed or not enough memory"
+#define MSG_AUDIO_LOAD_STR "Load?"
+#define MSG_AUDIO_MODINFO1_STR "No Sample name                Length FineTune Volume Repeat   Replen"
+#define MSG_AUDIO_MODINFO2_STR "%2u '%-22s' %8lU    %2d     %2x  %8lU %8lU"
+#define MSG_AUDIO_CORRUPT8SVX_STR "Corrupted IFF-8SVX file\n'%s'"
+#define MSG_AUDIO_ASKFREQUENCY_STR "Frequency in Hertzs:"
+#define MSG_AUDIO_NOAUDIO_STR "Audio channels already in use"
+#define MSG_AUDIO_INFO1_STR "%s sound '%s', size %lU bytes, frequency %lU Hz"
+#define MSG_AUDIO_INFO2_STR "%lU/%lU bytes (%ld%%)"
+#define MSG_AUDIO_ASKTYPE_STR "Play from disk or memory"
+#define MSG_AUDIO_TYPEANSWER1_STR "_Disk"
+#define MSG_AUDIO_TYPEANSWER2_STR "_Memory"
+#define MSG_AUDIO_CONFIG_ASKHZ_STR "Ask f_requency"
+#define MSG_AUDIO_CONFIG_PLAYMETHOD_STR "P_lay from"
+#define MSG_AUDIO_CONFIG_PLAYMETHOD1_STR "Ask"
+#define MSG_AUDIO_CONFIG_PLAYMETHOD2_STR "Disk"
+#define MSG_AUDIO_CONFIG_PLAYMETHOD3_STR "Memory"
+#define MSG_AUDIO_CONFIG_FREQUENCY_STR "_Default frequency"
+#define MSG_AUDIO_CONFIG_BUFFER_STR "B_uffer size "
+#define MSG_CLOCK_FORMATSTRING_STR "F %s C %s T %s %s"
+#define MSG_COPYNAMESOURCE_STR "%s (source)"
+#define MSG_COPYNAMEDESTINATION_STR "%s (destination)"
+#define MSG_COPYING_STR "Copying... %lU files, %lU directories and %lU bytes"
+#define MSG_COPYING2_STR "'%s' %lU/%lU"
+#define MSG_COPIED_STR "%lU files, %lU directories and %lU bytes copied"
+#define MSG_COPY_NEWNAME_STR "Name"
+#define MSG_COPY_OVERWRITE_STR "Overwrite\n'%s'\nSource date %s size %lU\ndestination date %s size %lU"
+#define MSG_COPY_NOFREESPACE_STR "Not enough free space for\n'%s'"
+#define MSG_COPYMOVE_CONFIG_REFRESH_STR "_Refresh"
+#define MSG_COPYMOVE_CONFIG_REFRESH1_STR "Full"
+#define MSG_COPYMOVE_CONFIG_REFRESH2_STR "Partial"
+#define MSG_COPYMOVE_CONFIG_REFRESH3_STR "Until end"
+#define MSG_COPYMOVE_CONFIG_OVERWRITE_STR "_Overwrite"
+#define MSG_COPYMOVE_CONFIG_OVERWRITE1_STR "Always"
+#define MSG_COPYMOVE_CONFIG_OVERWRITE2_STR "Ask"
+#define MSG_COPYMOVE_CONFIG_COMMENT_STR "Clone _comment"
+#define MSG_COPYMOVE_CONFIG_PROTECTION_STR "Clone _protection flags"
+#define MSG_COPYMOVE_CONFIG_DATE_STR "Clone modification _date"
+#define MSG_COPYMOVE_CONFIG_CHECKFREESPACE_STR "Check free _space"
+#define MSG_COPYMOVE_CONFIG_COPYBUFFER_STR "_Maximum buffer size"
+#define MSG_DELETING_STR "Deleting... %lU files, %lU directories and %lU bytes"
+#define MSG_DELETED_STR "%lU files, %lU directories and %lU bytes deleted"
+#define MSG_DELETE_ASKDELETE_STR "Do you really want to delete?"
+#define MSG_DELETE_ASKDIRECTORY_STR "Delete non-empty subdirectory\n'%s'?"
+#define MSG_DELETE_DELPROTECTED_STR "Delete delete-protected\n'%s'?"
+#define MSG_DELETE_CONFIG_ASKDELETE_STR "Confirm _deletion"
+#define MSG_DELETE_CONFIG_ASKDIR_STR "Confirm deletion of non-empty _subdirs"
+#define MSG_DELETE_CONFIG_DELPROT_STR "_Confirm deletion of protected files/dirs"
+#define MSG_MOVING_STR "Moving... %lU%s files, %lU%s directories and %lU%s bytes"
+#define MSG_MOVED_STR "%lU%s files, %lU%s directories and %lU%s bytes moved"
+#define MSG_DISKSIZING_STR "Calculating... %lU files, %lU directories and %lU bytes"
+#define MSG_DISKSIZED_STR "Files %lU, directories %lU and bytes %lU"
+#define MSG_DIRNAME_STR "Directory"
+#define MSG_DIRRING_STR "Reading directory..."
+#define MSG_DIRREDLINE1_STR "%lU/%lU/%lU files %lU/%lU/%lU dirs %lU/%lU/%lU bytes"
+#define MSG_DIRREDLINE2_STR "'%s' %s %s '%s'"
+#define MSG_DIRMETER_STR "Used %lU%lc Total %lU%lc %ld%% %lc"
+#define MSG_DIRMETER_RW_STR "RW"
+#define MSG_PARENT_CONFIG_BUFFERS_STR "Directory buffers"
+#define MSG_DISKINFO_STR "Disk errors       %lU\n"\
+	"Unit number       %lU\n"\
+	"Disk state        %s\n"\
+	"Number of blocks  %lU\n"\
+	"Blocks used       %lU\n"\
+	"Bytes per block   %lU\n"\
+	"Disk type         0x%0lx (%s)\n"\
+	"Volume name       %s\n"\
+	"Device name       %s:\n"\
+	"Creation date     %s\n"\
+	"Device driver     %s\n"\
+	"Surfaces          %lU\n"\
+	"Sectors per side  %lU\n"\
+	"Reserved blocks   %lU\n"\
+	"Low cylinder      %lU\n"\
+	"High cylinder     %lU\n"\
+	"Buffers           %lU\n"\
+	"Buffer type       %lU\n"\
+	"Max transfer      0x%lx\n"\
+	"Address mask      0x%lx\n"
+#define MSG_DISKINFO_WPROT_STR "Write protected"
+#define MSG_DISKINFO_VALIDATING_STR "Validating"
+#define MSG_DISKINFO_VALIDATED_STR "Writeable"
+#define MSG_DISKINFO_UNKNOWN_STR "Unknown"
+#define MSG_SLEEP_SLEEPWINDOW_STR "Sleep window"
+#define MSG_SLEEP_APPICON_STR "Application Icon"
+#define MSG_EXE_COMMAND_STR "_Command"
+#define MSG_EXE_SHELLWINDOW_STR "_Window"
+#define MSG_EXE_TIMEOUT_STR "_Delay"
+#define MSG_EXE_NOSHELLWINDOW_STR "Couldn't open shell window"
+#define MSG_EXE_CONFIG_CD_STR "_CD"
+#define MSG_EXE_CONFIG_RESCAN_STR "_Rescan"
+#define MSG_EXE_CONFIG_SOURCE_STR "Source"
+#define MSG_EXE_CONFIG_DESTINATION_STR "Destination"
+#define MSG_EXE_CONFIG_SOURCEDEST_STR "Source & destination"
+#define MSG_EXE_CONFIG_STARTSCREEN_STR "_Start screen"
+#define MSG_EXE_CONFIG_ENDSCREEN_STR "_End screen"
+#define MSG_EXE_CONFIG_WBFRONT_STR "Workbench"
+#define MSG_EXE_CONFIG_FMFRONT_STR "FileMaster"
+#define MSG_EXE_CONFIG_NOCHANGE_STR "No change"
+#define MSG_EXE_SYNTAXERROR_STR "User command %ld syntax error"
+#define MSG_EXE_FAILED_STR "Execute failed"
+#define MSG_EXE_EXECUTING_STR "Executing user command '%s'"
+#define MSG_FILECLICKNAME_STR "File Check"
+#define MSG_FILECLICKING_STR "Checking file '%s'"
+#define MSG_FILECLICK_PICTURE_STR "%s picture '%s'"
+#define MSG_FILECLICK_SOUND_STR "%s sound '%s'"
+#define MSG_FILECLICK_EXECUTABLE_STR "Executable '%s'"
+#define MSG_FILECLICK_WBICON_STR "Workbench icon '%s'"
+#define MSG_FILECLICK_MODULE_STR "Tracker module '%s'"
+#define MSG_FILECLICK_ASC_STR "ASCII text file '%s'"
+#define MSG_FILECLICK_HEX_STR "Hex file '%s'"
+#define MSG_FILECLICK_FONT_STR "Font '%s'"
+#define MSG_MAIN_WARNING_STR "Warning"
+#define MSG_MAIN_PROCESSES_STR "Child processes active"
+#define MSG_MAIN_WINDOWS_STR "Windows still open"
+#define MSG_MAIN_AREYOUSURE_STR "Are you sure?"
+#define MSG_MAIN_QUIT_STR "Quit"
+#define MSG_MAIN_REQUEST_STR "Request"
+#define MSG_MAIN_ABORT_STR "Abort?"
+#define MSG_MAIN_ABORTED_STR "Operation aborted"
+#define MSG_MAIN_COMPLETED_STR "Operation completed"
+#define MSG_MAIN_CONTINUE_STR "Continue operation?"
+#define MSG_MAIN_ABORTMODPLAY_STR "Stop module play?"
+#define MSG_MAIN_FMALREADY_STR "There is already copy of FileMaster active\n"\
+	"Would you like to run the new copy anyway?"
+#define MSG_MAIN_WINERR1_STR "Couldn't open window"
+#define MSG_MAIN_SCRERR1_STR "Couldn't open screen"
+#define MSG_MAIN_ERRNOBITMAP_STR "No memory for bitmaps"
+#define MSG_MAIN_NOSOURCE_STR "No source directory selected"
+#define MSG_MAIN_NOSOURCEFILE_STR "No source selected"
+#define MSG_MAIN_NODESTINATION_STR "No destination directory selected"
+#define MSG_MAIN_VISITORWINDOWS_STR "Visitor windows still open"
+#define MSG_MAIN_REGISTERTITLE_STR "Registeration"
+#define MSG_MAIN_REGISTERNAME_STR "Filename"
+#define MSG_MAIN_REGISTERED_STR "Registered to"
+#define MSG_MAIN_UNREGISTERED_STR "Unregistered"
+#define MSG_MAIN_ABOUT_STR "About"
+#define MSG_MAIN_PROGRAMMEDBY_STR "Programmed by"
+#define MSG_MAIN_CMENUTXT_STR "Quit\000"\
+	"Sleep\000"\
+	"S->D\000"\
+	"C\000"\
+	"E\000"\
+	"I\000"\
+	"M\000"\
+	"Drives\000"\
+	"Parent\000"\
+	"Invert\000"\
+	"Clear\000"\
+	"Operate\000"\
+	"Copy\000"\
+	"Copy As\000"\
+	"Move\000"\
+	"Delete\000"\
+	"MakeDir\000"\
+	"Show Asc\000"\
+	"Show Hex\000"\
+	"Show Pic\000"\
+	"Play Mod\000"\
+	"DiskInfo\000"\
+	"Execute\000"\
+	"DiskSize\000"\
+	"ModInfo\000"\
+	"Hear\000"\
+	"FileEdit\000"\
+	"DiskEdit\000"\
+	"About\000"\
+	"Register\000"\
+	"----\000"
+#define MSG_MAIN_CMENULABEL_STR "Quit\000"\
+	"Sleep\000"\
+	"Source -> Destination\000"\
+	"Configuration\000"\
+	"Exclude\000"\
+	"Include\000"\
+	"Pattern Match\000"\
+	"Drives\000"\
+	"Parent\000"\
+	"Invert\000"\
+	"Clear\000"\
+	"Operate\000"\
+	"Copy\000"\
+	"Copy As\000"\
+	"Move\000"\
+	"Delete\000"\
+	"MakeDir\000"\
+	"Show Asc\000"\
+	"Show Hex\000"\
+	"Show Pic\000"\
+	"Play Mod\000"\
+	"DiskInfo\000"\
+	"Execute\000"\
+	"DiskSize\000"\
+	"ModInfo\000"\
+	"Hear\000"\
+	"FileEdit\000"\
+	"DiskEdit\000"\
+	"About\000"\
+	"Register\000"\
+	"Empty Space\000"
+#define MSG_MAIN_CMENUKEYS_STR "shift q\000"\
+	"s\000"\
+	"-\000"\
+	"ctrl c\000"\
+	"\000"\
+	"\000"\
+	"\000"\
+	"d\000"\
+	"p\000"\
+	"i\000"\
+	"l\000"\
+	"o\000"\
+	"c\000"\
+	"shift C\000"\
+	"m\000"\
+	"shift D\000"\
+	"\000"\
+	"\000"\
+	"\000"\
+	"\000"\
+	"\000"\
+	"\000"\
+	"x\000"\
+	"\000"\
+	"\000"\
+	"h\000"\
+	"\000"\
+	"\000"\
+	"a\000"\
+	"r\000"\
+	"\000"
+#define MSG_MAIN_SHAREWARE_STR "This program is shareware\n"\
+	"Remember to register"
+#define MSG_MAIN_DATATYPEERROR_STR "Datatype '%s' returned error"
+#define MSG_FMDOS_SEEKERR_STR "Seek error\n'%s'"
+#define MSG_FMDOS_READERR_STR "Read error\n'%s'"
+#define MSG_FMDOS_UEOF_STR "Unexpected end of file\n'%s'"
+#define MSG_FMDOS_WRITEERR_STR "Write error\n'%s'"
+#define MSG_FMDOS_OPENERR_STR "Couldn't open\n'%s'"
+#define MSG_FMDOS_OPENRERR_STR "Couldn't open for reading\n'%s'"
+#define MSG_FMDOS_OPENWERR_STR "Couldn't open for writing\n'%s'"
+#define MSG_FMDOS_NOBUFMEM_STR "No memory for file buffer"
+#define MSG_FMDOS_EXAMINEERR_STR "Examine() failed\n'%s'"
+#define MSG_FMDOS_EXNEXTERR_STR "ExNext() failed"
+#define MSG_FMDOS_LOCKERR_STR "Lock() failed\n'%s'"
+#define MSG_FMDOS_RENAMEERR_STR "Couldn't rename '%s'"
+#define MSG_FMDOS_COMMENTERR_STR "Couldn't set comment\n'%s'"
+#define MSG_FMDOS_DATEERR_STR "Couldn't set date\n'%s'"
+#define MSG_FMDOS_PROTERR_STR "Couldn't set protection flags\n'%s'"
+#define MSG_FMDOS_MAKEDIRERR_STR "Couldn't create directory\n'%s'"
+#define MSG_FMDOS_CHIPMEM_STR "chip"
+#define MSG_FMDOS_PUBLICMEM_STR "public"
+#define MSG_FMDOS_ALLOCATEERR_STR "Couldn't allocate %lU bytes of %s memory"
+#define MSG_FMDOS_RELABELERR_STR "Couldn't relabel\n'%s'"
+#define MSG_FMDOS_DELETEERR_STR "Couldn't delete\n'%s'"
+#define MSG_FMDOS_REMDELPROT_STR "Couldn't remove delete protection\n'%s'"
+#define MSG_FMDOS_DECRUNCHING_STR "Decrunching '%s' packed file\n'%s'"
+#define MSG_FMDOS_ZEROSIZE_STR "Empty file\n'%s'"
+#define MSG_OPERATE_ASKNAME_STR "_Name"
+#define MSG_OPERATE_ASKFLAGS_STR "Flags"
+#define MSG_OPERATE_ASKCOMMENT_STR "Co_mment"
+#define MSG_OPERATE_ASKDATE_STR "_Date"
+#define MSG_OPERATE_CREATEICON_STR "_Icon"
+#define MSG_OPERATE_DEFAULTDRAWER_STR "default Workbench drawer"
+#define MSG_OPERATE_ADD_STR "Add"
+#define MSG_OPERATE_SUB_STR "Sub"
+#define MSG_OPERATE_CHANGE_STR "Change"
+#define MSG_OPERATE_FORMATINSTALL_STR "_Format/Install"
+#define MSG_OPERATE_FORMATINSTALLNAME_STR "Format/Install"
+#define MSG_OPERATE_FFS_STR "F_ast File System"
+#define MSG_OPERATE_INT_STR "In_ternational mode"
+#define MSG_OPERATE_DIRCACHE_STR "_Directory cache"
+#define MSG_OPERATE_DOFORMAT_STR "_Format"
+#define MSG_OPERATE_DOQFORMAT_STR "_Quick Format"
+#define MSG_OPERATE_DOINSTALL_STR "_Install"
+#define MSG_OPERATE_VERIFY_STR "_Verify"
+#define MSG_OPERATE_INHIBITERR_STR "Inhibit() failed"
+#define MSG_OPERATE_INSTALLING_STR "Installing..."
+#define MSG_OPERATE_INSTALLERR_STR "Not an AmigaDOS formatted disk"
+#define MSG_OPERATE_FORMATTING_STR "Formatting track %lU side %lU"
+#define MSG_OPERATE_VERIFYING_STR "Verifying track %lU side %lU"
+#define MSG_OPERATE_INITIALIZING_STR "Initializing disk..."
+#define MSG_OPERATE_DEFAULTNAME_STR "Empty"
+#define MSG_OPERATE_INITIALIZEERR_STR "Format() failed"
+#define MSG_REQ_FATALERR_STR "Fatal FileMaster error"
+#define MSG_REQ_ANSWER1_STR "Retry|Cancel"
+#define MSG_REQ_ANSWER2_STR "Cancel"
+#define MSG_REQ_DOSERR_STR "DOS error"
+#define MSG_REQ_ERROR_STR "Error"
+#define MSG_SCR_SCRERR2_STR "Couldn't find public screen"
+#define MSG_SCR_WINERR2_STR "Too small window or too big font"
+#define MSG_SCR_MEMERR_STR "Out of memory"
+#define MSG_SCR_FONTERR1_STR "Couldn't open font '%s' size %lD"
+#define MSG_SHOWPIC_HIRES_STR "Hires"
+#define MSG_SHOWPIC_SHIRES_STR "SuperHires"
+#define MSG_SHOWPIC_LACE_STR "Lace"
+#define MSG_SHOWPIC_HAM6_STR "HAM6"
+#define MSG_SHOWPIC_HAM8_STR "HAM8"
+#define MSG_SHOWPIC_EHB_STR "EHB"
+#define MSG_SHOWPIC_NOPICTURE_STR "'%s' isn't IFF-ILBM picture"
+#define MSG_SHOWPIC_INFO1_STR "%s picture '%s' size %ld bytes"
+#define MSG_SHOWPIC_INFO2_STR "Width %lU Height %lU Depth %lU Colors %lU %s %s %s"
+#define MSG_SHOWPIC_ERRNOSCREEN_STR "Couldn't open screen (Error %lU)"
+#define MSG_SHOWPIC_CORRUPT_STR "'%s' corrupted %s image file"
+#define MSG_SHOWICON_TITLE_STR "Icon '%s' Screen depth %ld colors %ld"
+#define MSG_SHOWFONT_TITLE_STR "Font '%s' Size %lD Screen depth %ld colors %ld"
+#define MSG_SHOWFONT_ASKSIZE_STR "Font size"
+#define MSG_SHOWTEXTINFO1_STR " %-32s Line %lU/%lU %lU%% %lU%%..."
+#define MSG_SHOWTEXTINFO2_STR " %-32s Line %lU/%lU %lU%%             "
+#define MSG_SHOWTEXT_LINENUMBER_STR "Line number"
+#define MSG_SHOWTEXT_SEARCHSTRING_STR "Search string"
+#define MSG_SHOWTEXT_CONFIG_INFOLINE_STR "_Remove Infoline"
+#define MSG_TASKWINDOW_LISTS_STR "Directory lists (%lU)"
+#define MSG_TASKWINDOW_DEVLIST_STR "Device list"
+#define MSG_TASKWINDOW_EMPTY_STR "Empty"
+#define MSG_PARSE_SORTBY_STR "_Sort by"
+#define MSG_PARSE_SORTUP_STR "Ascending"
+#define MSG_PARSE_SORTDOWN_STR "Descending"
+#define MSG_PARSE_MIX_STR "_Mix files and drawers"
+#define MSG_PARSE_DRAWERS_STR "D_isplay drawers last"
+#define MSG_PARSE_NAMEMATCH_STR "Name"
+#define MSG_PARSE_CASEINSENSITIVE_STR "Case insensitive"
+#define MSG_PARSE_CASESENSITIVE_STR "Case sensitive"
+#define MSG_PARSE_SIZEMATCH_STR "Size"
+#define MSG_PARSE_SIZEEQUAL_STR "Equal"
+#define MSG_PARSE_SIZENOEQUAL_STR "Nonequal"
+#define MSG_PARSE_BETWEEN_STR "Between"
+#define MSG_PARSE_NOTBETWEEN_STR "Not between"
+#define MSG_PARSE_SIZESMALLER_STR "Smaller than"
+#define MSG_PARSE_SIZELARGER_STR "Larger than"
+#define MSG_PARSE_PROTMATCH_STR "Flags"
+#define MSG_PARSE_DATEMATCH_STR "Date"
+#define MSG_PARSE_DATEOLDER_STR "Older than"
+#define MSG_PARSE_DATENEWER_STR "Newer than"
+#define MSG_PARSE_COMMENTMATCH_STR "Comment"
+#define MSG_PARSE_FILES_STR "_Files"
+#define MSG_PARSE_DIRS_STR "_Directories"
+#define MSG_PARSE_TYPE1_STR "Match"
+#define MSG_PARSE_TYPE2_STR "Match always"
+#define MSG_PARSE_TYPE3_STR "Don't match"
+#define MSG_FDEDIT_GADGETS_STR "_Exit\000_Write\000_Undo\000_Find"
+#define MSG_FDEDIT_ASC_STR "Asc"
+#define MSG_FDEDIT_HEX_STR "Hex"
+#define MSG_FDEDIT_FILEINFO1_STR "%07.7ld/%07.7ld %s"
+#define MSG_FDEDIT_DISKINFO1_STR "Sum %lc %s %03.3ld %s"
+#define MSG_FDEDIT_DISKROOT1_STR "Volume '%s' Created %s Modified %s"
+#define MSG_FDEDIT_DISKROOT2_STR "Bitmap at %lU"
+#define MSG_FDEDIT_DISKROOT3_STR "Root"
+#define MSG_FDEDIT_DISKFILE1_STR "File '%s' File size %lU Modified %s"
+#define MSG_FDEDIT_DISKFILE2_STR "Blocks %lU First block %lU Hash %lU Parent %lU Extension %lU"
+#define MSG_FDEDIT_DISKFILE3_STR "File"
+#define MSG_FDEDIT_DISKDIR1_STR "Directory '%s' Modified %s"
+#define MSG_FDEDIT_DISKDIR2_STR "Hash %lU Parent %lU"
+#define MSG_FDEDIT_DISKDIR3_STR "Dir"
+#define MSG_FDEDIT_DISKLIST1_STR "Blocks in list %lU Header %lU Extension %lU"
+#define MSG_FDEDIT_DISKLIST3_STR "List"
+#define MSG_FDEDIT_DISKDATA1_STR "Header %lU Seq Num %lU Data Size %lU Next Data %lU"
+#define MSG_FDEDIT_DISKDATA3_STR "Data"
+#define MSG_FDEDIT_DISKUNKNOWN_STR "???"
+#define MSG_FDEDIT_DISKBTSH_STR "BTSH"
+#define MSG_FDEDIT_CALCCHECKSUM_STR "Fix checksum?"
+#define MSG_FDEDIT_SEARCH_STR "Search string"
+#define MSG_FDEDIT_SEARCHING_STR "Searching... %lU/%lU"
+#define MSG_FDEDIT_ILLEGALSEARCH_STR "Illegal search string"
+#define MSG_FDEDIT_BYTENUMBER_STR "Byte #"
+#define MSG_FDEDIT_CONFIG_NOLOWCYL_STR "_Ignore LowCyl"
+#define MSG_YES_STR "_Yes"
+#define MSG_NO_STR "_No"
+#define MSG_RETRY_STR "_Retry"
+#define MSG_OK_STR "_Ok"
+#define MSG_CANCEL_STR "_Cancel"
+#define MSG_SKIP_STR "_Skip"
+#define MSG_IGNORE_STR "_Ignore"
+#define MSG_SAVE_STR "_Save"
+#define MSG_YESN_STR "Yes"
+#define MSG_NON_STR "No"
+#define MSG_OKN_STR "Ok"
+#define MSG_ALL_STR "_All"
+#define MSG_DEVICE_ERROR_STR "Operation failed\n%s (%lD)"
+#define MSG_DEVICE_ERRORS_STR "Error not specified\000"\
+	"Couldn't find sector header\000"\
+	"Error in sector preamble\000"\
+	"Error in sector identifier\000"\
+	"Header filed has bad checksum\000"\
+	"Sector data filed has bad checksum\000"\
+	"Incorrect number of sectors on track\000"\
+	"Unable to read sector header\000"\
+	"Disk is write protected\000"\
+	"Disk has been changed or removed\000"\
+	"Seek error\000"\
+	"Not enough memory\000"\
+	"Bad unit number\000"\
+	"Bad drive type\000"\
+	"Drive already in use\000"\
+	"Reset\000"\
+	"Unknown error\000"\
+	"Read/Write error"
+#define MSG_CONFIG_NAME_STR "Configuration"
+#define MSG_CONFIG_OLDCONFIG_STR "Config is incompatible with\n"\
+	"this version of FileMaster\n"\
+	"config ignored"
+#define MSG_CONFIG_SCREEN_STR "Screen"
+#define MSG_CONFIG_COMMANDS_STR "Commands"
+#define MSG_CONFIG_GENERAL_STR "General"
+#define MSG_CONFIG_DATATYPES_STR "Datatypes"
+#define MSG_CONFIG_MAINSCREEN_STR "Main screen"
+#define MSG_CONFIG_TEXTSCREEN_STR "Text show screen"
+#define MSG_CONFIG_TEXTFONT_STR "Text font"
+#define MSG_CONFIG_LISTFONT_STR "List font"
+#define MSG_CONFIG_SHOWFONT_STR "Text show font"
+#define MSG_CONFIG_REQFONT_STR "Requester font"
+#define MSG_CONFIG_LAYOUT_STR "Screen layout"
+#define MSG_CONFIG_DIRLAYOUT_STR "Directory list layout"
+#define MSG_CONFIG_PALETTE_STR "Palette"
+#define MSG_CONFIG_SCREENTYPE_STR "_Screen"
+#define MSG_CONFIG_SCREENTYPE1_STR "Custom screen"
+#define MSG_CONFIG_SCREENTYPE2_STR "Public screen"
+#define MSG_CONFIG_SCREENTYPE3_STR "On public screen"
+#define MSG_CONFIG_SCREENWINDOW_STR "_Window"
+#define MSG_CONFIG_LAYOUTHOR_STR "Horizontal"
+#define MSG_CONFIG_LAYOUTVER_STR "Vertical"
+#define MSG_CONFIG_LAYOUT_DIRLIST_STR "Directory lists"
+#define MSG_CONFIG_LAYOUT_MENUBAR_STR "Menu bar"
+#define MSG_CONFIG_LAYOUT_RIGHTALIGNMENT_STR "Right aligment"
+#define MSG_CONFIG_LAYOUT_RIGHTLOCK_STR "Right lock"
+#define MSG_CONFIG_LAYOUT_WIDTH_STR "Width"
+#define MSG_CONFIG_LAYOUT_CMENUPOS_STR "_Menu bar position"
+#define MSG_CONFIG_LAYOUT_CMENUSIZE_STR "Menu bar size"
+#define MSG_CONFIG_LAYOUT_CMENUALIGNMENT_STR "Menu bar aligment"
+#define MSG_CONFIG_SCRFORMAT_STR "%s %ld*%ld*%ld (0x%08.8lx)"
+#define MSG_CONFIG_FONTFORMAT_STR "%s '%s' %ld"
+#define MSG_CONFIG_VSCROLL_STR "_Vertical scrolling"
+#define MSG_CONFIG_HSCROLL_STR "_Horizontal scrolling"
+#define MSG_CONFIG_SCROLLSMOOTH_STR "Smooth"
+#define MSG_CONFIG_SCROLLJUMP_STR "Jump"
+#define MSG_CONFIG_ON_STR "On"
+#define MSG_CONFIG_OFF_STR "Off"
+#define MSG_CONFIG_UP_STR "Up"
+#define MSG_CONFIG_DOWN_STR "Down"
+#define MSG_CONFIG_DOSREQUESTER_STR "Disable D_OS requesters"
+#define MSG_CONFIG_PRIORITYMAIN_STR "Main _priority"
+#define MSG_CONFIG_PRIORITYHIGH_STR "_High priority"
+#define MSG_CONFIG_PRIORITYMED_STR "_Med priority"
+#define MSG_CONFIG_PRIORITYLOW_STR "_Low priority"
+#define MSG_CONFIG_DOSBUFSIZE_STR "_File buffer size"
+#define MSG_CONFIG_DOUBLECLICK_STR "_Doubleclick time"
+#define MSG_CONFIG_RIGHTMOUSE_STR "_Right mouse button"
+#define MSG_CONFIG_RIGHTMOUSE_DOUBLECLICK_STR "Doubleclick"
+#define MSG_CONFIG_RIGHTMOUSE_PARENT_STR "Parent"
+#define MSG_CONFIG_USEDT_PICTURE_STR "Use internal picture viewer before datatypes"
+#define MSG_CONFIG_USEDT_SAMPLE_STR "Use internal audio sample player before datatypes"
+#define MSG_CONFIG_USEDT_ASC_STR "Use internal ascii viewer before datatypes"
+#define MSG_CONFIG_USEDT_HEX_STR "Use internal hex viewer before datatypes"
+#define MSG_CONFIG_USEDT_MOD_STR "Use internal module player before datatypes"
+#define MSG_CONFIG_USEDT_ICON_STR "Use internal icon viewer before datatypes"
+#define MSG_CONFIG_USEDT_FONT_STR "Use internal font viewer before datatypes"
+#define MSG_CONFIG_USEDT_EXECUTE_STR "Don't use datatypes for executables"
+#define MSG_CONFIG_EDITPALETTE_STR "_Edit palette"
+#define MSG_CONFIG_PENS_STR "De_vice\000"\
+	"_Directory\000"\
+	"_File\000"\
+	"_Text\000"\
+	"_Highlight\000"\
+	"_Back\000"\
+	"B_ackfill\000"\
+	"_Main backfill\000"\
+	"So_urce list\000"\
+	"D_estination list\000"\
+	"_Scroller\000"\
+	"_Path\000"
+#define MSG_CONFIG_COMUSERCOMMAND_STR "User Command"
+#define MSG_CONFIG_COMBUILDINCOMMANDS_STR "Build-In Commands"
+#define MSG_CONFIG_COMBARCOMMANDS_STR "Gadget Bar Commands"
+#define MSG_CONFIG_COMCORNERCOMMANDS_STR "Corner Gadget Commands"
+#define MSG_CONFIG_COMHIDDENCOMMANDS_STR "Hidden Commands"
+#define MSG_CONFIG_COMBUILDUSERKEY_STR "BU"
+#define MSG_CONFIG_COMSLOTSFULL_STR "All configuration slots allocated"
+#define MSG_CONFIG_COMEDITCONFIG_STR "Edit Configuration"
+#define MSG_CONFIG_COMMOVEGADGETBAR_STR "Move to Gadget Bar"
+#define MSG_CONFIG_COMMOVECORNERMENU_STR "Move to Corner Menu"
+#define MSG_CONFIG_COMMOVEHIDDEN_STR "Move to Hidden"
+#define MSG_CONFIG_COMCOPYGADGETBAR_STR "Copy to Gadget Bar"
+#define MSG_CONFIG_COMCOPYCORNERMENU_STR "COpy to Corner Menu"
+#define MSG_CONFIG_COMDUPLICATECOMMAND_STR "Duplicate Command"
+#define MSG_CONFIG_COMREMOVECOMMAND_STR "Remove Command"
+#define MSG_CONFIG_COMNEWUSERCOMMAND_STR "New User Command"
+#define MSG_CONFIG_COMLABEL_STR "_Label"
+#define MSG_CONFIG_COMPATTERN_STR "Pa_ttern"
+#define MSG_CONFIG_COMOFFSET_STR "_Offset"
+#define MSG_CONFIG_COMSIGNATURE_STR "S_ignature"
+#define MSG_CONFIG_COMCOMMAND_STR "Co_mmand"
+#define MSG_CONFIG_COMSTACK_STR "St_ack"
+#define MSG_CONFIG_COMKEY_STR "_Key shortcut"
+#define MSG_CONFIG_COMFRONTPEN_STR "_Front pen"
+#define MSG_CONFIG_COMBACKPEN_STR "_Back pen"
+#define MSG_CONFIG_COMPRI_STR "_Priority"
+#define MSG_CONFIG_COMLOWPRI_STR "Low"
+#define MSG_CONFIG_COMMEDPRI_STR "Med"
+#define MSG_CONFIG_COMHIGHPRI_STR "High"
+#define MSG_CONFIG_COMSWAP_STR "Swap"
+#define MSG_CONFIG_COMCHANGE_STR "Change"
+
+#endif /* CATCOMP_STRINGS */
+
+
+/***************************************************************/
+
+
+#ifdef CATCOMP_ARRAY
+
+struct CatCompArrayType
+{
+  LONG   cca_ID;
+  STRPTR cca_Str;
+};
+
+static const struct CatCompArrayType CatCompArray[] =
+{
+  {MSG_AUDIO_MODINFOTXT1,(STRPTR)MSG_AUDIO_MODINFOTXT1_STR},
+  {MSG_AUDIO_MODINFOTXT2,(STRPTR)MSG_AUDIO_MODINFOTXT2_STR},
+  {MSG_AUDIO_MODINFOTXT3,(STRPTR)MSG_AUDIO_MODINFOTXT3_STR},
+  {MSG_AUDIO_NOCIA,(STRPTR)MSG_AUDIO_NOCIA_STR},
+  {MSG_AUDIO_LOAD,(STRPTR)MSG_AUDIO_LOAD_STR},
+  {MSG_AUDIO_MODINFO1,(STRPTR)MSG_AUDIO_MODINFO1_STR},
+  {MSG_AUDIO_MODINFO2,(STRPTR)MSG_AUDIO_MODINFO2_STR},
+  {MSG_AUDIO_CORRUPT8SVX,(STRPTR)MSG_AUDIO_CORRUPT8SVX_STR},
+  {MSG_AUDIO_ASKFREQUENCY,(STRPTR)MSG_AUDIO_ASKFREQUENCY_STR},
+  {MSG_AUDIO_NOAUDIO,(STRPTR)MSG_AUDIO_NOAUDIO_STR},
+  {MSG_AUDIO_INFO1,(STRPTR)MSG_AUDIO_INFO1_STR},
+  {MSG_AUDIO_INFO2,(STRPTR)MSG_AUDIO_INFO2_STR},
+  {MSG_AUDIO_ASKTYPE,(STRPTR)MSG_AUDIO_ASKTYPE_STR},
+  {MSG_AUDIO_TYPEANSWER1,(STRPTR)MSG_AUDIO_TYPEANSWER1_STR},
+  {MSG_AUDIO_TYPEANSWER2,(STRPTR)MSG_AUDIO_TYPEANSWER2_STR},
+  {MSG_AUDIO_CONFIG_ASKHZ,(STRPTR)MSG_AUDIO_CONFIG_ASKHZ_STR},
+  {MSG_AUDIO_CONFIG_PLAYMETHOD,(STRPTR)MSG_AUDIO_CONFIG_PLAYMETHOD_STR},
+  {MSG_AUDIO_CONFIG_PLAYMETHOD1,(STRPTR)MSG_AUDIO_CONFIG_PLAYMETHOD1_STR},
+  {MSG_AUDIO_CONFIG_PLAYMETHOD2,(STRPTR)MSG_AUDIO_CONFIG_PLAYMETHOD2_STR},
+  {MSG_AUDIO_CONFIG_PLAYMETHOD3,(STRPTR)MSG_AUDIO_CONFIG_PLAYMETHOD3_STR},
+  {MSG_AUDIO_CONFIG_FREQUENCY,(STRPTR)MSG_AUDIO_CONFIG_FREQUENCY_STR},
+  {MSG_AUDIO_CONFIG_BUFFER,(STRPTR)MSG_AUDIO_CONFIG_BUFFER_STR},
+  {MSG_CLOCK_FORMATSTRING,(STRPTR)MSG_CLOCK_FORMATSTRING_STR},
+  {MSG_COPYNAMESOURCE,(STRPTR)MSG_COPYNAMESOURCE_STR},
+  {MSG_COPYNAMEDESTINATION,(STRPTR)MSG_COPYNAMEDESTINATION_STR},
+  {MSG_COPYING,(STRPTR)MSG_COPYING_STR},
+  {MSG_COPYING2,(STRPTR)MSG_COPYING2_STR},
+  {MSG_COPIED,(STRPTR)MSG_COPIED_STR},
+  {MSG_COPY_NEWNAME,(STRPTR)MSG_COPY_NEWNAME_STR},
+  {MSG_COPY_OVERWRITE,(STRPTR)MSG_COPY_OVERWRITE_STR},
+  {MSG_COPY_NOFREESPACE,(STRPTR)MSG_COPY_NOFREESPACE_STR},
+  {MSG_COPYMOVE_CONFIG_REFRESH,(STRPTR)MSG_COPYMOVE_CONFIG_REFRESH_STR},
+  {MSG_COPYMOVE_CONFIG_REFRESH1,(STRPTR)MSG_COPYMOVE_CONFIG_REFRESH1_STR},
+  {MSG_COPYMOVE_CONFIG_REFRESH2,(STRPTR)MSG_COPYMOVE_CONFIG_REFRESH2_STR},
+  {MSG_COPYMOVE_CONFIG_REFRESH3,(STRPTR)MSG_COPYMOVE_CONFIG_REFRESH3_STR},
+  {MSG_COPYMOVE_CONFIG_OVERWRITE,(STRPTR)MSG_COPYMOVE_CONFIG_OVERWRITE_STR},
+  {MSG_COPYMOVE_CONFIG_OVERWRITE1,(STRPTR)MSG_COPYMOVE_CONFIG_OVERWRITE1_STR},
+  {MSG_COPYMOVE_CONFIG_OVERWRITE2,(STRPTR)MSG_COPYMOVE_CONFIG_OVERWRITE2_STR},
+  {MSG_COPYMOVE_CONFIG_COMMENT,(STRPTR)MSG_COPYMOVE_CONFIG_COMMENT_STR},
+  {MSG_COPYMOVE_CONFIG_PROTECTION,(STRPTR)MSG_COPYMOVE_CONFIG_PROTECTION_STR},
+  {MSG_COPYMOVE_CONFIG_DATE,(STRPTR)MSG_COPYMOVE_CONFIG_DATE_STR},
+  {MSG_COPYMOVE_CONFIG_CHECKFREESPACE,(STRPTR)MSG_COPYMOVE_CONFIG_CHECKFREESPACE_STR},
+  {MSG_COPYMOVE_CONFIG_COPYBUFFER,(STRPTR)MSG_COPYMOVE_CONFIG_COPYBUFFER_STR},
+  {MSG_DELETING,(STRPTR)MSG_DELETING_STR},
+  {MSG_DELETED,(STRPTR)MSG_DELETED_STR},
+  {MSG_DELETE_ASKDELETE,(STRPTR)MSG_DELETE_ASKDELETE_STR},
+  {MSG_DELETE_ASKDIRECTORY,(STRPTR)MSG_DELETE_ASKDIRECTORY_STR},
+  {MSG_DELETE_DELPROTECTED,(STRPTR)MSG_DELETE_DELPROTECTED_STR},
+  {MSG_DELETE_CONFIG_ASKDELETE,(STRPTR)MSG_DELETE_CONFIG_ASKDELETE_STR},
+  {MSG_DELETE_CONFIG_ASKDIR,(STRPTR)MSG_DELETE_CONFIG_ASKDIR_STR},
+  {MSG_DELETE_CONFIG_DELPROT,(STRPTR)MSG_DELETE_CONFIG_DELPROT_STR},
+  {MSG_MOVING,(STRPTR)MSG_MOVING_STR},
+  {MSG_MOVED,(STRPTR)MSG_MOVED_STR},
+  {MSG_DISKSIZING,(STRPTR)MSG_DISKSIZING_STR},
+  {MSG_DISKSIZED,(STRPTR)MSG_DISKSIZED_STR},
+  {MSG_DIRNAME,(STRPTR)MSG_DIRNAME_STR},
+  {MSG_DIRRING,(STRPTR)MSG_DIRRING_STR},
+  {MSG_DIRREDLINE1,(STRPTR)MSG_DIRREDLINE1_STR},
+  {MSG_DIRREDLINE2,(STRPTR)MSG_DIRREDLINE2_STR},
+  {MSG_DIRMETER,(STRPTR)MSG_DIRMETER_STR},
+  {MSG_DIRMETER_RW,(STRPTR)MSG_DIRMETER_RW_STR},
+  {MSG_PARENT_CONFIG_BUFFERS,(STRPTR)MSG_PARENT_CONFIG_BUFFERS_STR},
+  {MSG_DISKINFO,(STRPTR)MSG_DISKINFO_STR},
+  {MSG_DISKINFO_WPROT,(STRPTR)MSG_DISKINFO_WPROT_STR},
+  {MSG_DISKINFO_VALIDATING,(STRPTR)MSG_DISKINFO_VALIDATING_STR},
+  {MSG_DISKINFO_VALIDATED,(STRPTR)MSG_DISKINFO_VALIDATED_STR},
+  {MSG_DISKINFO_UNKNOWN,(STRPTR)MSG_DISKINFO_UNKNOWN_STR},
+  {MSG_SLEEP_SLEEPWINDOW,(STRPTR)MSG_SLEEP_SLEEPWINDOW_STR},
+  {MSG_SLEEP_APPICON,(STRPTR)MSG_SLEEP_APPICON_STR},
+  {MSG_EXE_COMMAND,(STRPTR)MSG_EXE_COMMAND_STR},
+  {MSG_EXE_SHELLWINDOW,(STRPTR)MSG_EXE_SHELLWINDOW_STR},
+  {MSG_EXE_TIMEOUT,(STRPTR)MSG_EXE_TIMEOUT_STR},
+  {MSG_EXE_NOSHELLWINDOW,(STRPTR)MSG_EXE_NOSHELLWINDOW_STR},
+  {MSG_EXE_CONFIG_CD,(STRPTR)MSG_EXE_CONFIG_CD_STR},
+  {MSG_EXE_CONFIG_RESCAN,(STRPTR)MSG_EXE_CONFIG_RESCAN_STR},
+  {MSG_EXE_CONFIG_SOURCE,(STRPTR)MSG_EXE_CONFIG_SOURCE_STR},
+  {MSG_EXE_CONFIG_DESTINATION,(STRPTR)MSG_EXE_CONFIG_DESTINATION_STR},
+  {MSG_EXE_CONFIG_SOURCEDEST,(STRPTR)MSG_EXE_CONFIG_SOURCEDEST_STR},
+  {MSG_EXE_CONFIG_STARTSCREEN,(STRPTR)MSG_EXE_CONFIG_STARTSCREEN_STR},
+  {MSG_EXE_CONFIG_ENDSCREEN,(STRPTR)MSG_EXE_CONFIG_ENDSCREEN_STR},
+  {MSG_EXE_CONFIG_WBFRONT,(STRPTR)MSG_EXE_CONFIG_WBFRONT_STR},
+  {MSG_EXE_CONFIG_FMFRONT,(STRPTR)MSG_EXE_CONFIG_FMFRONT_STR},
+  {MSG_EXE_CONFIG_NOCHANGE,(STRPTR)MSG_EXE_CONFIG_NOCHANGE_STR},
+  {MSG_EXE_SYNTAXERROR,(STRPTR)MSG_EXE_SYNTAXERROR_STR},
+  {MSG_EXE_FAILED,(STRPTR)MSG_EXE_FAILED_STR},
+  {MSG_EXE_EXECUTING,(STRPTR)MSG_EXE_EXECUTING_STR},
+  {MSG_FILECLICKNAME,(STRPTR)MSG_FILECLICKNAME_STR},
+  {MSG_FILECLICKING,(STRPTR)MSG_FILECLICKING_STR},
+  {MSG_FILECLICK_PICTURE,(STRPTR)MSG_FILECLICK_PICTURE_STR},
+  {MSG_FILECLICK_SOUND,(STRPTR)MSG_FILECLICK_SOUND_STR},
+  {MSG_FILECLICK_EXECUTABLE,(STRPTR)MSG_FILECLICK_EXECUTABLE_STR},
+  {MSG_FILECLICK_WBICON,(STRPTR)MSG_FILECLICK_WBICON_STR},
+  {MSG_FILECLICK_MODULE,(STRPTR)MSG_FILECLICK_MODULE_STR},
+  {MSG_FILECLICK_ASC,(STRPTR)MSG_FILECLICK_ASC_STR},
+  {MSG_FILECLICK_HEX,(STRPTR)MSG_FILECLICK_HEX_STR},
+  {MSG_FILECLICK_FONT,(STRPTR)MSG_FILECLICK_FONT_STR},
+  {MSG_MAIN_WARNING,(STRPTR)MSG_MAIN_WARNING_STR},
+  {MSG_MAIN_PROCESSES,(STRPTR)MSG_MAIN_PROCESSES_STR},
+  {MSG_MAIN_WINDOWS,(STRPTR)MSG_MAIN_WINDOWS_STR},
+  {MSG_MAIN_AREYOUSURE,(STRPTR)MSG_MAIN_AREYOUSURE_STR},
+  {MSG_MAIN_QUIT,(STRPTR)MSG_MAIN_QUIT_STR},
+  {MSG_MAIN_REQUEST,(STRPTR)MSG_MAIN_REQUEST_STR},
+  {MSG_MAIN_ABORT,(STRPTR)MSG_MAIN_ABORT_STR},
+  {MSG_MAIN_ABORTED,(STRPTR)MSG_MAIN_ABORTED_STR},
+  {MSG_MAIN_COMPLETED,(STRPTR)MSG_MAIN_COMPLETED_STR},
+  {MSG_MAIN_CONTINUE,(STRPTR)MSG_MAIN_CONTINUE_STR},
+  {MSG_MAIN_ABORTMODPLAY,(STRPTR)MSG_MAIN_ABORTMODPLAY_STR},
+  {MSG_MAIN_FMALREADY,(STRPTR)MSG_MAIN_FMALREADY_STR},
+  {MSG_MAIN_WINERR1,(STRPTR)MSG_MAIN_WINERR1_STR},
+  {MSG_MAIN_SCRERR1,(STRPTR)MSG_MAIN_SCRERR1_STR},
+  {MSG_MAIN_ERRNOBITMAP,(STRPTR)MSG_MAIN_ERRNOBITMAP_STR},
+  {MSG_MAIN_NOSOURCE,(STRPTR)MSG_MAIN_NOSOURCE_STR},
+  {MSG_MAIN_NOSOURCEFILE,(STRPTR)MSG_MAIN_NOSOURCEFILE_STR},
+  {MSG_MAIN_NODESTINATION,(STRPTR)MSG_MAIN_NODESTINATION_STR},
+  {MSG_MAIN_VISITORWINDOWS,(STRPTR)MSG_MAIN_VISITORWINDOWS_STR},
+  {MSG_MAIN_REGISTERTITLE,(STRPTR)MSG_MAIN_REGISTERTITLE_STR},
+  {MSG_MAIN_REGISTERNAME,(STRPTR)MSG_MAIN_REGISTERNAME_STR},
+  {MSG_MAIN_REGISTERED,(STRPTR)MSG_MAIN_REGISTERED_STR},
+  {MSG_MAIN_UNREGISTERED,(STRPTR)MSG_MAIN_UNREGISTERED_STR},
+  {MSG_MAIN_ABOUT,(STRPTR)MSG_MAIN_ABOUT_STR},
+  {MSG_MAIN_PROGRAMMEDBY,(STRPTR)MSG_MAIN_PROGRAMMEDBY_STR},
+  {MSG_MAIN_CMENUTXT,(STRPTR)MSG_MAIN_CMENUTXT_STR},
+  {MSG_MAIN_CMENULABEL,(STRPTR)MSG_MAIN_CMENULABEL_STR},
+  {MSG_MAIN_CMENUKEYS,(STRPTR)MSG_MAIN_CMENUKEYS_STR},
+  {MSG_MAIN_SHAREWARE,(STRPTR)MSG_MAIN_SHAREWARE_STR},
+  {MSG_MAIN_DATATYPEERROR,(STRPTR)MSG_MAIN_DATATYPEERROR_STR},
+  {MSG_FMDOS_SEEKERR,(STRPTR)MSG_FMDOS_SEEKERR_STR},
+  {MSG_FMDOS_READERR,(STRPTR)MSG_FMDOS_READERR_STR},
+  {MSG_FMDOS_UEOF,(STRPTR)MSG_FMDOS_UEOF_STR},
+  {MSG_FMDOS_WRITEERR,(STRPTR)MSG_FMDOS_WRITEERR_STR},
+  {MSG_FMDOS_OPENERR,(STRPTR)MSG_FMDOS_OPENERR_STR},
+  {MSG_FMDOS_OPENRERR,(STRPTR)MSG_FMDOS_OPENRERR_STR},
+  {MSG_FMDOS_OPENWERR,(STRPTR)MSG_FMDOS_OPENWERR_STR},
+  {MSG_FMDOS_NOBUFMEM,(STRPTR)MSG_FMDOS_NOBUFMEM_STR},
+  {MSG_FMDOS_EXAMINEERR,(STRPTR)MSG_FMDOS_EXAMINEERR_STR},
+  {MSG_FMDOS_EXNEXTERR,(STRPTR)MSG_FMDOS_EXNEXTERR_STR},
+  {MSG_FMDOS_LOCKERR,(STRPTR)MSG_FMDOS_LOCKERR_STR},
+  {MSG_FMDOS_RENAMEERR,(STRPTR)MSG_FMDOS_RENAMEERR_STR},
+  {MSG_FMDOS_COMMENTERR,(STRPTR)MSG_FMDOS_COMMENTERR_STR},
+  {MSG_FMDOS_DATEERR,(STRPTR)MSG_FMDOS_DATEERR_STR},
+  {MSG_FMDOS_PROTERR,(STRPTR)MSG_FMDOS_PROTERR_STR},
+  {MSG_FMDOS_MAKEDIRERR,(STRPTR)MSG_FMDOS_MAKEDIRERR_STR},
+  {MSG_FMDOS_CHIPMEM,(STRPTR)MSG_FMDOS_CHIPMEM_STR},
+  {MSG_FMDOS_PUBLICMEM,(STRPTR)MSG_FMDOS_PUBLICMEM_STR},
+  {MSG_FMDOS_ALLOCATEERR,(STRPTR)MSG_FMDOS_ALLOCATEERR_STR},
+  {MSG_FMDOS_RELABELERR,(STRPTR)MSG_FMDOS_RELABELERR_STR},
+  {MSG_FMDOS_DELETEERR,(STRPTR)MSG_FMDOS_DELETEERR_STR},
+  {MSG_FMDOS_REMDELPROT,(STRPTR)MSG_FMDOS_REMDELPROT_STR},
+  {MSG_FMDOS_DECRUNCHING,(STRPTR)MSG_FMDOS_DECRUNCHING_STR},
+  {MSG_FMDOS_ZEROSIZE,(STRPTR)MSG_FMDOS_ZEROSIZE_STR},
+  {MSG_OPERATE_ASKNAME,(STRPTR)MSG_OPERATE_ASKNAME_STR},
+  {MSG_OPERATE_ASKFLAGS,(STRPTR)MSG_OPERATE_ASKFLAGS_STR},
+  {MSG_OPERATE_ASKCOMMENT,(STRPTR)MSG_OPERATE_ASKCOMMENT_STR},
+  {MSG_OPERATE_ASKDATE,(STRPTR)MSG_OPERATE_ASKDATE_STR},
+  {MSG_OPERATE_CREATEICON,(STRPTR)MSG_OPERATE_CREATEICON_STR},
+  {MSG_OPERATE_DEFAULTDRAWER,(STRPTR)MSG_OPERATE_DEFAULTDRAWER_STR},
+  {MSG_OPERATE_ADD,(STRPTR)MSG_OPERATE_ADD_STR},
+  {MSG_OPERATE_SUB,(STRPTR)MSG_OPERATE_SUB_STR},
+  {MSG_OPERATE_CHANGE,(STRPTR)MSG_OPERATE_CHANGE_STR},
+  {MSG_OPERATE_FORMATINSTALL,(STRPTR)MSG_OPERATE_FORMATINSTALL_STR},
+  {MSG_OPERATE_FORMATINSTALLNAME,(STRPTR)MSG_OPERATE_FORMATINSTALLNAME_STR},
+  {MSG_OPERATE_FFS,(STRPTR)MSG_OPERATE_FFS_STR},
+  {MSG_OPERATE_INT,(STRPTR)MSG_OPERATE_INT_STR},
+  {MSG_OPERATE_DIRCACHE,(STRPTR)MSG_OPERATE_DIRCACHE_STR},
+  {MSG_OPERATE_DOFORMAT,(STRPTR)MSG_OPERATE_DOFORMAT_STR},
+  {MSG_OPERATE_DOQFORMAT,(STRPTR)MSG_OPERATE_DOQFORMAT_STR},
+  {MSG_OPERATE_DOINSTALL,(STRPTR)MSG_OPERATE_DOINSTALL_STR},
+  {MSG_OPERATE_VERIFY,(STRPTR)MSG_OPERATE_VERIFY_STR},
+  {MSG_OPERATE_INHIBITERR,(STRPTR)MSG_OPERATE_INHIBITERR_STR},
+  {MSG_OPERATE_INSTALLING,(STRPTR)MSG_OPERATE_INSTALLING_STR},
+  {MSG_OPERATE_INSTALLERR,(STRPTR)MSG_OPERATE_INSTALLERR_STR},
+  {MSG_OPERATE_FORMATTING,(STRPTR)MSG_OPERATE_FORMATTING_STR},
+  {MSG_OPERATE_VERIFYING,(STRPTR)MSG_OPERATE_VERIFYING_STR},
+  {MSG_OPERATE_INITIALIZING,(STRPTR)MSG_OPERATE_INITIALIZING_STR},
+  {MSG_OPERATE_DEFAULTNAME,(STRPTR)MSG_OPERATE_DEFAULTNAME_STR},
+  {MSG_OPERATE_INITIALIZEERR,(STRPTR)MSG_OPERATE_INITIALIZEERR_STR},
+  {MSG_REQ_FATALERR,(STRPTR)MSG_REQ_FATALERR_STR},
+  {MSG_REQ_ANSWER1,(STRPTR)MSG_REQ_ANSWER1_STR},
+  {MSG_REQ_ANSWER2,(STRPTR)MSG_REQ_ANSWER2_STR},
+  {MSG_REQ_DOSERR,(STRPTR)MSG_REQ_DOSERR_STR},
+  {MSG_REQ_ERROR,(STRPTR)MSG_REQ_ERROR_STR},
+  {MSG_SCR_SCRERR2,(STRPTR)MSG_SCR_SCRERR2_STR},
+  {MSG_SCR_WINERR2,(STRPTR)MSG_SCR_WINERR2_STR},
+  {MSG_SCR_MEMERR,(STRPTR)MSG_SCR_MEMERR_STR},
+  {MSG_SCR_FONTERR1,(STRPTR)MSG_SCR_FONTERR1_STR},
+  {MSG_SHOWPIC_HIRES,(STRPTR)MSG_SHOWPIC_HIRES_STR},
+  {MSG_SHOWPIC_SHIRES,(STRPTR)MSG_SHOWPIC_SHIRES_STR},
+  {MSG_SHOWPIC_LACE,(STRPTR)MSG_SHOWPIC_LACE_STR},
+  {MSG_SHOWPIC_HAM6,(STRPTR)MSG_SHOWPIC_HAM6_STR},
+  {MSG_SHOWPIC_HAM8,(STRPTR)MSG_SHOWPIC_HAM8_STR},
+  {MSG_SHOWPIC_EHB,(STRPTR)MSG_SHOWPIC_EHB_STR},
+  {MSG_SHOWPIC_NOPICTURE,(STRPTR)MSG_SHOWPIC_NOPICTURE_STR},
+  {MSG_SHOWPIC_INFO1,(STRPTR)MSG_SHOWPIC_INFO1_STR},
+  {MSG_SHOWPIC_INFO2,(STRPTR)MSG_SHOWPIC_INFO2_STR},
+  {MSG_SHOWPIC_ERRNOSCREEN,(STRPTR)MSG_SHOWPIC_ERRNOSCREEN_STR},
+  {MSG_SHOWPIC_CORRUPT,(STRPTR)MSG_SHOWPIC_CORRUPT_STR},
+  {MSG_SHOWICON_TITLE,(STRPTR)MSG_SHOWICON_TITLE_STR},
+  {MSG_SHOWFONT_TITLE,(STRPTR)MSG_SHOWFONT_TITLE_STR},
+  {MSG_SHOWFONT_ASKSIZE,(STRPTR)MSG_SHOWFONT_ASKSIZE_STR},
+  {MSG_SHOWTEXTINFO1,(STRPTR)MSG_SHOWTEXTINFO1_STR},
+  {MSG_SHOWTEXTINFO2,(STRPTR)MSG_SHOWTEXTINFO2_STR},
+  {MSG_SHOWTEXT_LINENUMBER,(STRPTR)MSG_SHOWTEXT_LINENUMBER_STR},
+  {MSG_SHOWTEXT_SEARCHSTRING,(STRPTR)MSG_SHOWTEXT_SEARCHSTRING_STR},
+  {MSG_SHOWTEXT_CONFIG_INFOLINE,(STRPTR)MSG_SHOWTEXT_CONFIG_INFOLINE_STR},
+  {MSG_TASKWINDOW_LISTS,(STRPTR)MSG_TASKWINDOW_LISTS_STR},
+  {MSG_TASKWINDOW_DEVLIST,(STRPTR)MSG_TASKWINDOW_DEVLIST_STR},
+  {MSG_TASKWINDOW_EMPTY,(STRPTR)MSG_TASKWINDOW_EMPTY_STR},
+  {MSG_PARSE_SORTBY,(STRPTR)MSG_PARSE_SORTBY_STR},
+  {MSG_PARSE_SORTUP,(STRPTR)MSG_PARSE_SORTUP_STR},
+  {MSG_PARSE_SORTDOWN,(STRPTR)MSG_PARSE_SORTDOWN_STR},
+  {MSG_PARSE_MIX,(STRPTR)MSG_PARSE_MIX_STR},
+  {MSG_PARSE_DRAWERS,(STRPTR)MSG_PARSE_DRAWERS_STR},
+  {MSG_PARSE_NAMEMATCH,(STRPTR)MSG_PARSE_NAMEMATCH_STR},
+  {MSG_PARSE_CASEINSENSITIVE,(STRPTR)MSG_PARSE_CASEINSENSITIVE_STR},
+  {MSG_PARSE_CASESENSITIVE,(STRPTR)MSG_PARSE_CASESENSITIVE_STR},
+  {MSG_PARSE_SIZEMATCH,(STRPTR)MSG_PARSE_SIZEMATCH_STR},
+  {MSG_PARSE_SIZEEQUAL,(STRPTR)MSG_PARSE_SIZEEQUAL_STR},
+  {MSG_PARSE_SIZENOEQUAL,(STRPTR)MSG_PARSE_SIZENOEQUAL_STR},
+  {MSG_PARSE_BETWEEN,(STRPTR)MSG_PARSE_BETWEEN_STR},
+  {MSG_PARSE_NOTBETWEEN,(STRPTR)MSG_PARSE_NOTBETWEEN_STR},
+  {MSG_PARSE_SIZESMALLER,(STRPTR)MSG_PARSE_SIZESMALLER_STR},
+  {MSG_PARSE_SIZELARGER,(STRPTR)MSG_PARSE_SIZELARGER_STR},
+  {MSG_PARSE_PROTMATCH,(STRPTR)MSG_PARSE_PROTMATCH_STR},
+  {MSG_PARSE_DATEMATCH,(STRPTR)MSG_PARSE_DATEMATCH_STR},
+  {MSG_PARSE_DATEOLDER,(STRPTR)MSG_PARSE_DATEOLDER_STR},
+  {MSG_PARSE_DATENEWER,(STRPTR)MSG_PARSE_DATENEWER_STR},
+  {MSG_PARSE_COMMENTMATCH,(STRPTR)MSG_PARSE_COMMENTMATCH_STR},
+  {MSG_PARSE_FILES,(STRPTR)MSG_PARSE_FILES_STR},
+  {MSG_PARSE_DIRS,(STRPTR)MSG_PARSE_DIRS_STR},
+  {MSG_PARSE_TYPE1,(STRPTR)MSG_PARSE_TYPE1_STR},
+  {MSG_PARSE_TYPE2,(STRPTR)MSG_PARSE_TYPE2_STR},
+  {MSG_PARSE_TYPE3,(STRPTR)MSG_PARSE_TYPE3_STR},
+  {MSG_FDEDIT_GADGETS,(STRPTR)MSG_FDEDIT_GADGETS_STR},
+  {MSG_FDEDIT_ASC,(STRPTR)MSG_FDEDIT_ASC_STR},
+  {MSG_FDEDIT_HEX,(STRPTR)MSG_FDEDIT_HEX_STR},
+  {MSG_FDEDIT_FILEINFO1,(STRPTR)MSG_FDEDIT_FILEINFO1_STR},
+  {MSG_FDEDIT_DISKINFO1,(STRPTR)MSG_FDEDIT_DISKINFO1_STR},
+  {MSG_FDEDIT_DISKROOT1,(STRPTR)MSG_FDEDIT_DISKROOT1_STR},
+  {MSG_FDEDIT_DISKROOT2,(STRPTR)MSG_FDEDIT_DISKROOT2_STR},
+  {MSG_FDEDIT_DISKROOT3,(STRPTR)MSG_FDEDIT_DISKROOT3_STR},
+  {MSG_FDEDIT_DISKFILE1,(STRPTR)MSG_FDEDIT_DISKFILE1_STR},
+  {MSG_FDEDIT_DISKFILE2,(STRPTR)MSG_FDEDIT_DISKFILE2_STR},
+  {MSG_FDEDIT_DISKFILE3,(STRPTR)MSG_FDEDIT_DISKFILE3_STR},
+  {MSG_FDEDIT_DISKDIR1,(STRPTR)MSG_FDEDIT_DISKDIR1_STR},
+  {MSG_FDEDIT_DISKDIR2,(STRPTR)MSG_FDEDIT_DISKDIR2_STR},
+  {MSG_FDEDIT_DISKDIR3,(STRPTR)MSG_FDEDIT_DISKDIR3_STR},
+  {MSG_FDEDIT_DISKLIST1,(STRPTR)MSG_FDEDIT_DISKLIST1_STR},
+  {MSG_FDEDIT_DISKLIST3,(STRPTR)MSG_FDEDIT_DISKLIST3_STR},
+  {MSG_FDEDIT_DISKDATA1,(STRPTR)MSG_FDEDIT_DISKDATA1_STR},
+  {MSG_FDEDIT_DISKDATA3,(STRPTR)MSG_FDEDIT_DISKDATA3_STR},
+  {MSG_FDEDIT_DISKUNKNOWN,(STRPTR)MSG_FDEDIT_DISKUNKNOWN_STR},
+  {MSG_FDEDIT_DISKBTSH,(STRPTR)MSG_FDEDIT_DISKBTSH_STR},
+  {MSG_FDEDIT_CALCCHECKSUM,(STRPTR)MSG_FDEDIT_CALCCHECKSUM_STR},
+  {MSG_FDEDIT_SEARCH,(STRPTR)MSG_FDEDIT_SEARCH_STR},
+  {MSG_FDEDIT_SEARCHING,(STRPTR)MSG_FDEDIT_SEARCHING_STR},
+  {MSG_FDEDIT_ILLEGALSEARCH,(STRPTR)MSG_FDEDIT_ILLEGALSEARCH_STR},
+  {MSG_FDEDIT_BYTENUMBER,(STRPTR)MSG_FDEDIT_BYTENUMBER_STR},
+  {MSG_FDEDIT_CONFIG_NOLOWCYL,(STRPTR)MSG_FDEDIT_CONFIG_NOLOWCYL_STR},
+  {MSG_YES,(STRPTR)MSG_YES_STR},
+  {MSG_NO,(STRPTR)MSG_NO_STR},
+  {MSG_RETRY,(STRPTR)MSG_RETRY_STR},
+  {MSG_OK,(STRPTR)MSG_OK_STR},
+  {MSG_CANCEL,(STRPTR)MSG_CANCEL_STR},
+  {MSG_SKIP,(STRPTR)MSG_SKIP_STR},
+  {MSG_IGNORE,(STRPTR)MSG_IGNORE_STR},
+  {MSG_SAVE,(STRPTR)MSG_SAVE_STR},
+  {MSG_YESN,(STRPTR)MSG_YESN_STR},
+  {MSG_NON,(STRPTR)MSG_NON_STR},
+  {MSG_OKN,(STRPTR)MSG_OKN_STR},
+  {MSG_ALL,(STRPTR)MSG_ALL_STR},
+  {MSG_DEVICE_ERROR,(STRPTR)MSG_DEVICE_ERROR_STR},
+  {MSG_DEVICE_ERRORS,(STRPTR)MSG_DEVICE_ERRORS_STR},
+  {MSG_CONFIG_NAME,(STRPTR)MSG_CONFIG_NAME_STR},
+  {MSG_CONFIG_OLDCONFIG,(STRPTR)MSG_CONFIG_OLDCONFIG_STR},
+  {MSG_CONFIG_SCREEN,(STRPTR)MSG_CONFIG_SCREEN_STR},
+  {MSG_CONFIG_COMMANDS,(STRPTR)MSG_CONFIG_COMMANDS_STR},
+  {MSG_CONFIG_GENERAL,(STRPTR)MSG_CONFIG_GENERAL_STR},
+  {MSG_CONFIG_DATATYPES,(STRPTR)MSG_CONFIG_DATATYPES_STR},
+  {MSG_CONFIG_MAINSCREEN,(STRPTR)MSG_CONFIG_MAINSCREEN_STR},
+  {MSG_CONFIG_TEXTSCREEN,(STRPTR)MSG_CONFIG_TEXTSCREEN_STR},
+  {MSG_CONFIG_TEXTFONT,(STRPTR)MSG_CONFIG_TEXTFONT_STR},
+  {MSG_CONFIG_LISTFONT,(STRPTR)MSG_CONFIG_LISTFONT_STR},
+  {MSG_CONFIG_SHOWFONT,(STRPTR)MSG_CONFIG_SHOWFONT_STR},
+  {MSG_CONFIG_REQFONT,(STRPTR)MSG_CONFIG_REQFONT_STR},
+  {MSG_CONFIG_LAYOUT,(STRPTR)MSG_CONFIG_LAYOUT_STR},
+  {MSG_CONFIG_DIRLAYOUT,(STRPTR)MSG_CONFIG_DIRLAYOUT_STR},
+  {MSG_CONFIG_PALETTE,(STRPTR)MSG_CONFIG_PALETTE_STR},
+  {MSG_CONFIG_SCREENTYPE,(STRPTR)MSG_CONFIG_SCREENTYPE_STR},
+  {MSG_CONFIG_SCREENTYPE1,(STRPTR)MSG_CONFIG_SCREENTYPE1_STR},
+  {MSG_CONFIG_SCREENTYPE2,(STRPTR)MSG_CONFIG_SCREENTYPE2_STR},
+  {MSG_CONFIG_SCREENTYPE3,(STRPTR)MSG_CONFIG_SCREENTYPE3_STR},
+  {MSG_CONFIG_SCREENWINDOW,(STRPTR)MSG_CONFIG_SCREENWINDOW_STR},
+  {MSG_CONFIG_LAYOUTHOR,(STRPTR)MSG_CONFIG_LAYOUTHOR_STR},
+  {MSG_CONFIG_LAYOUTVER,(STRPTR)MSG_CONFIG_LAYOUTVER_STR},
+  {MSG_CONFIG_LAYOUT_DIRLIST,(STRPTR)MSG_CONFIG_LAYOUT_DIRLIST_STR},
+  {MSG_CONFIG_LAYOUT_MENUBAR,(STRPTR)MSG_CONFIG_LAYOUT_MENUBAR_STR},
+  {MSG_CONFIG_LAYOUT_RIGHTALIGNMENT,(STRPTR)MSG_CONFIG_LAYOUT_RIGHTALIGNMENT_STR},
+  {MSG_CONFIG_LAYOUT_RIGHTLOCK,(STRPTR)MSG_CONFIG_LAYOUT_RIGHTLOCK_STR},
+  {MSG_CONFIG_LAYOUT_WIDTH,(STRPTR)MSG_CONFIG_LAYOUT_WIDTH_STR},
+  {MSG_CONFIG_LAYOUT_CMENUPOS,(STRPTR)MSG_CONFIG_LAYOUT_CMENUPOS_STR},
+  {MSG_CONFIG_LAYOUT_CMENUSIZE,(STRPTR)MSG_CONFIG_LAYOUT_CMENUSIZE_STR},
+  {MSG_CONFIG_LAYOUT_CMENUALIGNMENT,(STRPTR)MSG_CONFIG_LAYOUT_CMENUALIGNMENT_STR},
+  {MSG_CONFIG_SCRFORMAT,(STRPTR)MSG_CONFIG_SCRFORMAT_STR},
+  {MSG_CONFIG_FONTFORMAT,(STRPTR)MSG_CONFIG_FONTFORMAT_STR},
+  {MSG_CONFIG_VSCROLL,(STRPTR)MSG_CONFIG_VSCROLL_STR},
+  {MSG_CONFIG_HSCROLL,(STRPTR)MSG_CONFIG_HSCROLL_STR},
+  {MSG_CONFIG_SCROLLSMOOTH,(STRPTR)MSG_CONFIG_SCROLLSMOOTH_STR},
+  {MSG_CONFIG_SCROLLJUMP,(STRPTR)MSG_CONFIG_SCROLLJUMP_STR},
+  {MSG_CONFIG_ON,(STRPTR)MSG_CONFIG_ON_STR},
+  {MSG_CONFIG_OFF,(STRPTR)MSG_CONFIG_OFF_STR},
+  {MSG_CONFIG_UP,(STRPTR)MSG_CONFIG_UP_STR},
+  {MSG_CONFIG_DOWN,(STRPTR)MSG_CONFIG_DOWN_STR},
+  {MSG_CONFIG_DOSREQUESTER,(STRPTR)MSG_CONFIG_DOSREQUESTER_STR},
+  {MSG_CONFIG_PRIORITYMAIN,(STRPTR)MSG_CONFIG_PRIORITYMAIN_STR},
+  {MSG_CONFIG_PRIORITYHIGH,(STRPTR)MSG_CONFIG_PRIORITYHIGH_STR},
+  {MSG_CONFIG_PRIORITYMED,(STRPTR)MSG_CONFIG_PRIORITYMED_STR},
+  {MSG_CONFIG_PRIORITYLOW,(STRPTR)MSG_CONFIG_PRIORITYLOW_STR},
+  {MSG_CONFIG_DOSBUFSIZE,(STRPTR)MSG_CONFIG_DOSBUFSIZE_STR},
+  {MSG_CONFIG_DOUBLECLICK,(STRPTR)MSG_CONFIG_DOUBLECLICK_STR},
+  {MSG_CONFIG_RIGHTMOUSE,(STRPTR)MSG_CONFIG_RIGHTMOUSE_STR},
+  {MSG_CONFIG_RIGHTMOUSE_DOUBLECLICK,(STRPTR)MSG_CONFIG_RIGHTMOUSE_DOUBLECLICK_STR},
+  {MSG_CONFIG_RIGHTMOUSE_PARENT,(STRPTR)MSG_CONFIG_RIGHTMOUSE_PARENT_STR},
+  {MSG_CONFIG_USEDT_PICTURE,(STRPTR)MSG_CONFIG_USEDT_PICTURE_STR},
+  {MSG_CONFIG_USEDT_SAMPLE,(STRPTR)MSG_CONFIG_USEDT_SAMPLE_STR},
+  {MSG_CONFIG_USEDT_ASC,(STRPTR)MSG_CONFIG_USEDT_ASC_STR},
+  {MSG_CONFIG_USEDT_HEX,(STRPTR)MSG_CONFIG_USEDT_HEX_STR},
+  {MSG_CONFIG_USEDT_MOD,(STRPTR)MSG_CONFIG_USEDT_MOD_STR},
+  {MSG_CONFIG_USEDT_ICON,(STRPTR)MSG_CONFIG_USEDT_ICON_STR},
+  {MSG_CONFIG_USEDT_FONT,(STRPTR)MSG_CONFIG_USEDT_FONT_STR},
+  {MSG_CONFIG_USEDT_EXECUTE,(STRPTR)MSG_CONFIG_USEDT_EXECUTE_STR},
+  {MSG_CONFIG_EDITPALETTE,(STRPTR)MSG_CONFIG_EDITPALETTE_STR},
+  {MSG_CONFIG_PENS,(STRPTR)MSG_CONFIG_PENS_STR},
+  {MSG_CONFIG_COMUSERCOMMAND,(STRPTR)MSG_CONFIG_COMUSERCOMMAND_STR},
+  {MSG_CONFIG_COMBUILDINCOMMANDS,(STRPTR)MSG_CONFIG_COMBUILDINCOMMANDS_STR},
+  {MSG_CONFIG_COMBARCOMMANDS,(STRPTR)MSG_CONFIG_COMBARCOMMANDS_STR},
+  {MSG_CONFIG_COMCORNERCOMMANDS,(STRPTR)MSG_CONFIG_COMCORNERCOMMANDS_STR},
+  {MSG_CONFIG_COMHIDDENCOMMANDS,(STRPTR)MSG_CONFIG_COMHIDDENCOMMANDS_STR},
+  {MSG_CONFIG_COMBUILDUSERKEY,(STRPTR)MSG_CONFIG_COMBUILDUSERKEY_STR},
+  {MSG_CONFIG_COMSLOTSFULL,(STRPTR)MSG_CONFIG_COMSLOTSFULL_STR},
+  {MSG_CONFIG_COMEDITCONFIG,(STRPTR)MSG_CONFIG_COMEDITCONFIG_STR},
+  {MSG_CONFIG_COMMOVEGADGETBAR,(STRPTR)MSG_CONFIG_COMMOVEGADGETBAR_STR},
+  {MSG_CONFIG_COMMOVECORNERMENU,(STRPTR)MSG_CONFIG_COMMOVECORNERMENU_STR},
+  {MSG_CONFIG_COMMOVEHIDDEN,(STRPTR)MSG_CONFIG_COMMOVEHIDDEN_STR},
+  {MSG_CONFIG_COMCOPYGADGETBAR,(STRPTR)MSG_CONFIG_COMCOPYGADGETBAR_STR},
+  {MSG_CONFIG_COMCOPYCORNERMENU,(STRPTR)MSG_CONFIG_COMCOPYCORNERMENU_STR},
+  {MSG_CONFIG_COMDUPLICATECOMMAND,(STRPTR)MSG_CONFIG_COMDUPLICATECOMMAND_STR},
+  {MSG_CONFIG_COMREMOVECOMMAND,(STRPTR)MSG_CONFIG_COMREMOVECOMMAND_STR},
+  {MSG_CONFIG_COMNEWUSERCOMMAND,(STRPTR)MSG_CONFIG_COMNEWUSERCOMMAND_STR},
+  {MSG_CONFIG_COMLABEL,(STRPTR)MSG_CONFIG_COMLABEL_STR},
+  {MSG_CONFIG_COMPATTERN,(STRPTR)MSG_CONFIG_COMPATTERN_STR},
+  {MSG_CONFIG_COMOFFSET,(STRPTR)MSG_CONFIG_COMOFFSET_STR},
+  {MSG_CONFIG_COMSIGNATURE,(STRPTR)MSG_CONFIG_COMSIGNATURE_STR},
+  {MSG_CONFIG_COMCOMMAND,(STRPTR)MSG_CONFIG_COMCOMMAND_STR},
+  {MSG_CONFIG_COMSTACK,(STRPTR)MSG_CONFIG_COMSTACK_STR},
+  {MSG_CONFIG_COMKEY,(STRPTR)MSG_CONFIG_COMKEY_STR},
+  {MSG_CONFIG_COMFRONTPEN,(STRPTR)MSG_CONFIG_COMFRONTPEN_STR},
+  {MSG_CONFIG_COMBACKPEN,(STRPTR)MSG_CONFIG_COMBACKPEN_STR},
+  {MSG_CONFIG_COMPRI,(STRPTR)MSG_CONFIG_COMPRI_STR},
+  {MSG_CONFIG_COMLOWPRI,(STRPTR)MSG_CONFIG_COMLOWPRI_STR},
+  {MSG_CONFIG_COMMEDPRI,(STRPTR)MSG_CONFIG_COMMEDPRI_STR},
+  {MSG_CONFIG_COMHIGHPRI,(STRPTR)MSG_CONFIG_COMHIGHPRI_STR},
+  {MSG_CONFIG_COMSWAP,(STRPTR)MSG_CONFIG_COMSWAP_STR},
+  {MSG_CONFIG_COMCHANGE,(STRPTR)MSG_CONFIG_COMCHANGE_STR},
+  {0,NULL}
+};
+
+#endif /* CATCOMP_ARRAY */
+
+/***************************************************************/
+
+
+#ifdef CATCOMP_BLOCK
+
+//static const chat CatCompBlock[] =
+//{
+//     
+//};
+
+#endif /* CATCOMP_BLOCK */
+
+/***************************************************************/
+
+struct LocaleInfo
+{
+  APTR li_LocaleBase;
+  APTR li_Catalog;
+};
+
+
+#ifdef CATCOMP_CODE
+
+STRPTR GetString(struct LocaleInfo *li, LONG stringNum)
+{
+  LONG *l;
+  UWORD *w;
+  STRPTR  builtIn;
+
+  l = (LONG *)CatCompBlock;
+
+  while (*l != stringNum)
+  {
+    w = (UWORD *)((ULONG)l + 4);
+    l = (LONG *)((ULONG)l + (LONG)*w + 6);
+  }
+  builtIn = (STRPTR)((ULONG)l + 6);
+
+#define XLocaleBase LocaleBase
+#define LocaleBase li->li_LocaleBase
+
+  if (LocaleBase)
+    return(GetCatalogStr(li->li_Catalog,stringNum,builtIn));
+#define LocaleBase XLocaleBase
+#undef XLocaleBase
+
+  return (builtIn);
+}  
+
+#endif /* CATCOMP_CODE */
+
+/***************************************************************/
+
+
+#endif
