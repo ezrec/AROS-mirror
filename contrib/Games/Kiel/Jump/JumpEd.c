@@ -95,7 +95,7 @@ BOOL end_editor=FALSE;
 /* The main loop of the editor */
   while(end_editor!=TRUE)
   {
-    Wait(1L<<Window->UserPort->mp_SigBit);
+    WaitPort(Window->UserPort);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
     class=msg->Class;
     code=msg->Code;

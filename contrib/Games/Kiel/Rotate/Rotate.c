@@ -77,7 +77,7 @@ int mx,my,ax=0,ay=0;
   while(!ende)
   {
     ContMsg();
-    Wait(1L<<Window->UserPort->mp_SigBit);
+    WaitPort(Window->UserPort);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
     class=msg->Class;
     code=msg->Code;

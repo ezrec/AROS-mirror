@@ -119,7 +119,7 @@ int i;
 /* wait for message and update buttons until quit or start game */
     while(go_on==0&&quit_game==0)
     {
-      Wait(1L<<Window->UserPort->mp_SigBit);
+      WaitPort(Window->UserPort);
       msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
       class=msg->Class;
       switch(class)
@@ -151,7 +151,7 @@ int i;
 /* play until match or stop */
     while(go_on==0&&quit_game==0&&(test()==0))
     {
-      Wait(1L<<Window->UserPort->mp_SigBit);
+      WaitPort(Window->UserPort);
       msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
       class=msg->Class;
       switch(class)

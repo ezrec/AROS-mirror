@@ -145,7 +145,7 @@ int first=0,number,middle;
 /* The main loop of the game */
   while(end_game!=TRUE)
   {
-    Wait(1L<<Window->UserPort->mp_SigBit);
+    WaitPort(Window->UserPort);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
     class=msg->Class;
     code=msg->Code;

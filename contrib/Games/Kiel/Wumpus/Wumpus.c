@@ -511,7 +511,7 @@ StopMsg();
 ContMsg();
   while(!finish)
   {
-    Wait(1L<<Window->UserPort->mp_SigBit);
+    WaitPort(Window->UserPort);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
     class=msg->Class;
     ReplyMsg((struct Message *)msg);
@@ -583,7 +583,7 @@ BOOL cancel=FALSE,ist=TRUE;
   write_text(245,253,"Throw in which cave?     ",1);
   while(!cancel)
   {
-    Wait(1L<<Window->UserPort->mp_SigBit);
+    WaitPort(Window->UserPort);
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
     class=msg->Class;
     ReplyMsg((struct Message *)msg);
@@ -706,7 +706,7 @@ ContMsg();
       }
       while(!cancel&&!eaten_up&&!fallen)
       {
-        Wait(1L<<Window->UserPort->mp_SigBit);
+        WaitPort(Window->UserPort);
         msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
         class=msg->Class;
         ReplyMsg((struct Message *)msg);

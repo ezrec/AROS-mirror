@@ -223,7 +223,7 @@ BOOL result;
     }
     PrintIText(irp,&result_text,15,17);
 
-    Wait(1L<<iWindow->UserPort->mp_SigBit);
+    WaitPort(iWindow->UserPort);
     msg=(struct IntuiMessage *)GetMsg(iWindow->UserPort);
     ReplyMsg((struct Message *)msg);
 
@@ -380,7 +380,7 @@ int xx=-1;
 
               while(!weiter)
               {
-                Wait(1L<<iWindow->UserPort->mp_SigBit);
+                WaitPort(iWindow->UserPort);
                 msg=(struct IntuiMessage *)GetMsg(iWindow->UserPort);
                 iclass=msg->Class;
                 ReplyMsg((struct Message *)msg);
