@@ -227,7 +227,7 @@ static char *OptimizeAndFix(struct IconRepresentation *ico);
 /*     The Amiga specific interface                                         */
 /****************************************************************************/
 
-#if defined(AMIGA) || defined(__AROS__)
+#ifdef AMIGA
 #include <exec/memory.h>
 #include <proto/dos.h>
 #include <proto/exec.h>

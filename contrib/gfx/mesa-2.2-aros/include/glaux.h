@@ -35,7 +35,7 @@ extern "C" {
 #endif
 
 
-#if !defined(AMIGA) && !defined(__AROS__) && !defined(__WIN32__) && !defined(NeXT) && !defined(__QUICKDRAW__) && !defined(DOSVGA) && !defined(__BEOS__)
+#if !defined(AMIGA) && !defined(__WIN32__) && !defined(NeXT) && !defined(__QUICKDRAW__) && !defined(DOSVGA) && !defined(__BEOS__)
 #  include <X11/Xlib.h>
 #  include <X11/Xutil.h>
 #endif
@@ -270,7 +270,7 @@ extern void auxCloseWindow(void);
 extern void auxQuit(void);
 extern void auxSwapBuffers(void);
 
-#if !defined(AMIGA) && !defined(__AROS__) && !defined(__WIN32__) && !defined(NeXT) && !defined(__QUICKDRAW__) && !defined(DOSVGA) && !defined(__BEOS__)
+#if !defined(AMIGA) && !defined(__WIN32__) && !defined(NeXT) && !defined(__QUICKDRAW__) && !defined(DOSVGA) && !defined(__BEOS__)
 extern Display *auxXDisplay(void);
 extern Window auxXWindow(void);
 #endif

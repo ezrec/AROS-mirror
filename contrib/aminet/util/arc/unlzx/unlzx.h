@@ -15,10 +15,10 @@
 #define UNLZX_TIME
 */
 
-#if !defined(AMIGA) && !defined(__AROS__)
+#ifndef AMIGA
 # include <windows.h>
 #endif
-#ifdef AMIGA
+#ifdef __AMIGAOS__
 #include <exec/types.h>
 LONG mkdir(STRPTR path, UWORD perm);
 #else
