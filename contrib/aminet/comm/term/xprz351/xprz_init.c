@@ -15,16 +15,24 @@ extern void __UserLibCleanup (LIBBASETYPE *);
 
 AROS_SET_LIBFUNC(Init, LIBBASETYPE, lh)
 {
+        AROS_SET_LIBFUNC_INIT;
+    
 	if (RETURN_OK == __UserLibInit(lh)) {
 		return TRUE;
 	} else {
 		return FALSE;
 	}
+    
+        AROS_SET_LIBFUNC_EXIT;
 }
 
 AROS_SET_LIBFUNC(Expunge, LIBBASETYPE, lh)
 {
+        AROS_SET_LIBFUNC_INIT;
+    
 	__UserLibCleanup(lh);
+    
+        AROS_SET_LIBFUNC_EXIT;
 }
 
 ADD2INITLIB(Init, 0);

@@ -28,6 +28,8 @@ struct MinList *__regina_tsdlist = NULL;
 
 AROS_SET_LIBFUNC(InitLib, LIBBASETYPE, LIBBASE)
 {
+    AROS_SET_LIBFUNC_INIT;
+    
     D(bug("Inside Init func of regina.library\n"));
 
     SysBase = LIBBASE->lh_SysBase;
@@ -43,12 +45,16 @@ AROS_SET_LIBFUNC(InitLib, LIBBASETYPE, LIBBASE)
   
     __regina_tsdlist = (struct MinList *)AllocPooled (__regina_semaphorepool, sizeof(struct MinList));
     NewList((struct List *)__regina_tsdlist);
-
+    
     return TRUE;
+
+    AROS_SET_LIBFUNC_EXIT;
 }
 
 AROS_SET_LIBFUNC(ExpungeLib, LIBBASETYPE, LIBBASE)
 {
+    AROS_SET_LIBFUNC_INIT;
+    
     D(bug("Inside Expunge func of regina.library\n"));
 
     DeletePool(__regina_semaphorepool);
@@ -56,6 +62,8 @@ AROS_SET_LIBFUNC(ExpungeLib, LIBBASETYPE, LIBBASE)
     CloseLibrary((struct Library *)DOSBase);
     
     return TRUE;
+    
+    AROS_SET_LIBFUNC_EXIT;
 }
 
 ADD2INITLIB(InitLib, 0);
