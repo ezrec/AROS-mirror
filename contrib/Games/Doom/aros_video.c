@@ -382,6 +382,9 @@ kprintf("--- Asl Requester done\n");
     }
   } else {
     struct Screen *scr = LockPubScreen(NULL);
+    STRPTR wintitle = "AROS Doom";
+    WORD winx = 0, winy = 0;
+    int p;
     
     if (scr == NULL) I_Error("Can't lock public screen!");
     
@@ -394,13 +397,23 @@ kprintf("--- Asl Requester done\n");
     wflags &= ~WFLG_BORDERLESS;
     idcmp |= IDCMP_CLOSEWINDOW;
     
+    p = M_CheckParm("-winleft");
+    if (p && p < myargc-1) winx = atoi(myargv[p+1]);
+    
+    p = M_CheckParm("-wintop");
+    if (p && p < myargc-1) winy = atoi(myargv[p+1]);
+    
+    p = M_CheckParm("-wintitle");
+    if (p && p < myargc-1) wintitle = myargv[p+1];
+    
     video_window = OpenWindowTags(NULL,
     	  WA_PubScreen,		(IPTR)scr,
-    	  WA_Title,		(IPTR)"AROS Doom",
-          WA_Left,        	0,
-          WA_Top,        	0,
+    	  WA_Title,		(IPTR)wintitle,
+          WA_Left,        	winx,
+          WA_Top,        	winy,
           WA_InnerWidth,        SCREENWIDTH,
           WA_InnerHeight,       SCREENHEIGHT,
+	  WA_AutoAdjust,    	TRUE,
           WA_IDCMP,       	idcmp,
           WA_Flags,       	wflags,
 	  WA_CloseGadget,	TRUE,

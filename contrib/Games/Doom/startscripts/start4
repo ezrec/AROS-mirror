@@ -1,0 +1,12 @@
+; Start 4 player game on one computer
+;
+
+echo "doom -winleft 350 -wintop 280 -wintitle *"AROS Doom: Player 4*" -netlocal 4 4 4 4" >T:start2_1
+echo "doom -winleft   0 -wintop 280 -wintitle *"AROS Doom: Player 3*" -netlocal 3 3 3 3" >T:start2_2
+echo "doom -winleft 350 -wintop  30 -wintitle *"AROS Doom: Player 2*" -netlocal 2 2 2 2" >T:start2_3
+echo "doom -winleft   0 -wintop  30 -wintitle *"AROS Doom: Player 1*" -netlocal 1 1 1 1" >T:start2_4
+
+newshell WINDOW "CON:0/20/640/150/Doom Player #4/CLOSE" FROM T:start2_1
+newshell WINDOW "CON:0/170/640/150/Doom Player #3/CLOSE" FROM T:start2_2
+newshell WINDOW "CON:0/320/640/150/Doom Player #2/CLOSE" FROM T:start2_3
+newshell WINDOW "CON:0/470/640/150/Doom Player #1/CLOSE" FROM T:start2_4
