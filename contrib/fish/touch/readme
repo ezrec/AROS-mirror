@@ -1,0 +1,17 @@
+
+The following is a Amiga version (Workbench 2.0 required) of the Unix
+utility with the same name. Touch changes the date and time stamp of all
+specified files to the current date and time.  Workbench 2.0 wildcards are
+supported. Usage:
+
+   touch FILE/M/A
+
+This file, along with all other files in this archive, are Copyright ©1993
+by Dave Schreiber.  All Rights Reserved.  This program may not be sold,
+except as part of the Fred Fish distribution and archives of anonymous FTP
+sites.
+
+Dedicated to all SAS/C users who were caught by surprise when the 6.0
+update deleted the touch command...
+
+
