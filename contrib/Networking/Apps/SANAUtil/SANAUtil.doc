@@ -1,0 +1,162 @@
+
+
+                              SANAUtil
+                              --------
+
+                      Version 0.39 (5.3.2005)
+
+                           by Timo Rossi
+
+
+
+SANAutil is a testing/debugging tool for SANA2 network device drivers.
+It can be used to send/receive packets and display/change device status.
+
+This document assumes that the reader is somewhat familiar with
+networking terminology and the SANA2 specification.
+
+(The SANA2 specification (version 2) is available from
+Aminet, dev/misc/sana2_v2.lha)
+
+Basic options:
+  -d <device_name> or DEVICE=<device_name>
+
+    Sets the SANA2 device name. If not specified,
+    Sanautil reads the name from ENV:SANA2.Device,
+    and if that doesn't exists, it uses the default
+    "a2065.device".
+
+  -u <unit_number> or UNIT=<unit_number>
+
+    Sets the SANA2 device unit number. If not specified,
+    Sanautil reads it from ENV:SANA2.Unit, and if that
+    doesn't exist, the default is zero.
+
+  -e or EXCLUSIVE
+
+    Puts the SANA2 device in exclusive mode.
+    (Sets the SANA2IOF_MINE-flag on OpenDevice)
+
+  -p or PROMISCUOUS
+
+    Puts the SANA2 device in promiscuous mode.
+    (Sets the SANA2IOF_PROM-flag on OpenDevice)
+    This allows receiving packets that were not
+    not addressed to this machine. All SANA2
+    devices don't support this option.
+
+Commands:
+
+ SEND <addresss> [TYPE=<packet_type>] [LENGTH=<packet_length>] [DATA=<string>]
+
+   This sends a packet to the specified address.
+   The format of the address is the normally used with Ethernet,
+   ie. hexadecimal numbers separated by colons
+   (for example 00:00:6E:10:86:33).
+
+   The optional TYPE-parameter specifies the packet type
+   (decimal number). Default is 5000.
+
+   The optional LENGTH-parameter specifies the length of the packet
+   to be send (not including headers). If not given, the default
+   is 100 bytes.
+
+   The DATA-argument ca be used to fill the packet data with the given
+   string. If the packet is shorter than the data, extra data is ignored,
+   and if the packet is longer than the data, the packet is filled with
+   the data (repeating the string).
+   (Default data is "SANAUtil test packet -- ").
+
+   Note that the device driver must be configured and online for
+   this to work (this command does not automatically try to
+   configure the device)
+
+ MULTICAST <addresss> [TYPE=<packet_type>] [LENGTH=<packet_length>]
+           [DATA=<string>]
+
+   Similar to SEND, but uses S2_MULTICAST command to send the packet.
+
+ BROADCAST [TYPE=<packet_type>] [LENGTH=<packet_length>] [DATA=<string>]
+
+   Similar to SEND, but uses BROADCAST (so no address argument is used).
+
+ DUMP
+
+   Displays received packets. Uses S2_READORPHAN, so it only
+   shows packets that are not requested by any other program/
+   protocol stack. This doesn't buffer the packets, so it
+   may only display a small amount of the actual network traffic.
+
+   Note that the device driver must be configured and online for
+   this to work (this command does not automatically try to
+   configure the device)
+
+  RECEIVE <packet_type>
+
+   Similar to DUMP, but receives a specified packet type.
+   Depending on the device driver it may work even if there
+   is another program requesting the same packet type.
+
+ STATUS
+
+   Display SANA2 device status/address information.
+   (uses S2_DEVICEQUERY, S2_GETSTATIONADDRESS, S2_GETGLOBALSTATS
+   and S2_GETSPECIALSTATS to read the info from the device)
+
+ CONFIG [ADDRESS=<address>]
+
+   Configures the SANA2 device. If ADDRESS-parameter is not given,
+   uses the default address, otherwise uses the specified address.
+
+ ONLINE, OFFLINE
+
+   These commands put the SANA2 device in the Online/Offline state.
+
+ ADDMULTICAST <address>
+ DELMULTICAST <address>
+
+   These commands add and remove multicast addresses.
+
+ TRACKTYPE <packettype>
+ UNTRACKTYPE <packetype>
+
+   These commands add/remove the specified packet type
+   to/from the type tracking list.
+
+ TYPESTAT <packettype>
+
+   Shows the statisticks for <packettype>. Requires that
+   the type is currently being tracked.
+
+
+
+SANAUtil is copyright (C) 1992-1995 by Timo Rossi.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+Contact info for bug reports, suggestions etc.
+(E-Mail is preferred)
+
+  Timo Rossi
+  Mattilankatu 40 A 4
+  40600 Jyväskylä
+  FINLAND
+
+E-Mail: trossi@jyu.fi
+

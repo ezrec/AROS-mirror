@@ -1,0 +1,15 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
+
+%build_prog mmake=contrib-Networking-Apps-SANAUtil \
+    progname="SANAUtil" \
+    files="SANAUtil" \
+    targetdir="$(CONTRIBDIR)/Networking/Apps/SANAUtil"
+
+contrib-Networking-Apps-SANAUtil : files-copy
+%copy_files_q files="SANAUtil.doc" \
+    dst="$(CONTRIBDIR)/Networking/Apps/SANAUtil"
+
+%common
