@@ -15,6 +15,6 @@ AHIsub_SetSound(Channel,Sound,Offset,Length,AudioCtrl,Flags)(d0/d1/d2/d3,a2,d4)
 AHIsub_SetEffect(Effect,AudioCtrl)(a0,a2)
 AHIsub_LoadSound(Sound,Type,Info,AudioCtrl)(d0/d1,a0,a2)
 AHIsub_UnloadSound(Sound,Audioctrl)(d0,a2)
-AHIsub_GetAttr(Attribute,Argument,Default,tagList,AudioCtrl)(d0/d1/d2,a1/a2)
+AHIsub_GetAttr(Attribute,Argument,DefValue,tagList,AudioCtrl)(d0/d1/d2,a1/a2)
 AHIsub_HardwareControl(Attribute,Argument,AudioCtrl)(d0/d1,a2)
 ##end

@@ -22,8 +22,8 @@
 
 /*
  * $Log$
- * Revision 1.2  2003/03/12 13:03:11  chodorowski
- * Updated to version 5.4=6.0rc0.
+ * Revision 1.3  2003/04/29 18:18:00  chodorowski
+ * Updated to 5.8.
  *
  * Revision 1.6  2003/01/19 12:22:59  martin
  * Another year, another copyright update.

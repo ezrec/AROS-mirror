@@ -63,8 +63,22 @@ publication, even if advised of the possibility of such damage.}
 
 $Id$
 $Log$
-Revision 1.2  2003/03/12 13:03:10  chodorowski
-Updated to version 5.4=6.0rc0.
+Revision 1.3  2003/04/29 18:17:59  chodorowski
+Updated to 5.8.
+
+Revision 5.6  2003/02/09 15:04:48  martin
+Added a link to CyberSound.lha for 14 bit Paula calibration.
+Clarified the relationshit between units and sound cards.
+
+Revision 5.5  2003/02/08 14:14:18  martin
+Wrote about the "Paula:DMA 8 bit stereo" mode.
+
+Revision 5.4  2003/01/23 23:23:23  martin
+Updated the list of supported sound cards.
+
+Revision 5.3  2003/01/23 23:15:45  martin
+Updated the Acknowledgments chapter. Added Donors and Honourable
+mention sections. Updated my address.
 
 Revision 5.2  2003/01/19 16:16:39  martin
 Added not about dynamic volume adjusting in V6.
@@ -581,6 +595,9 @@ hardware, namely the @dfn{output volume}, @dfn{monitor volume} and
 @dfn{input gain}.  Finally, you can select which input and output
 connectors you wish to use.
 
+Normally, you configure one unit per sound card. Since most people
+only have one sound card, all units but unit 0 are often unused.
+
 The @samp{Music unit} is the defaults for low-level programs.  Such
 programs often have an audio mode requester that lets you chose an audio
 mode.  If you chose @samp{Default audio mode} from this requester, these
@@ -780,17 +797,27 @@ uncompressed @dfn{IFF-AIFC}, 16 bit stereo at 44.1 kHz.
 
 @cindex Drivers
 @cindex Sound card drivers
+
+@cindex AmigaXL
 @cindex Aura
 @cindex Clarity
 @cindex Concierto
-@cindex Delfina DSP
-@cindex Delfina Lite
+@cindex Delfina
 @cindex DraCo Motion
+@cindex ESS Solo-1
+@cindex ForteMedia FM801
 @cindex Maestro Pro
-@cindex Melody MPEG
+@cindex Melody
 @cindex Paula
 @cindex Prelude
+@cindex Repulse
+@cindex SoundBlaster 128
+@cindex SoundBlaster Live!
+@cindex Sunrize
+@cindex Terratec 128i PCI
+@cindex Terratec 512i digital
 @cindex Toccata
+@cindex VIA AC97
 @cindex Wavetools
 
 @sc{Ahi} uses a set of hardware drivers for each sound card.  This means
@@ -799,25 +826,45 @@ time of writing, the following sound cards are supported:
 
 @itemize @bullet
 @item
+AmigaXL
+@item
 Aura (sampling only)
 @item
 Clarity (sampling only)
 @item
 Concierto
 @item
-Delfina DSP and Delfina Lite
+Delfina
 @item
 DraCo Motion
 @item
+ESS Solo-1
+@item
+ForteMedia FM801
+@item
 Maestro Pro
 @item
-Melody MPEG
+Melody
 @item
 Paula (the built-in audio)
 @item
 Prelude
 @item
+Repulse
+@item
+SoundBlaster 128
+@item
+SoundBlaster Live!
+@item
+Sunrize
+@item
+Terratec 128i PCI
+@item
+Terratec 512i digital
+@item
 Toccata
+@item
+VIA AC97
 @item
 Wavetools
 @end itemize
@@ -874,12 +921,26 @@ at the Kato Development Group's WWW page:
 @cindex Calibration, 14 bit
 
 @item paula.audio
-On startup, the file @file{ENV:CyberSound/SoundDrivers/14Bit_Calibration}
-is read and used for the 14 bit DAC calibration.
+On startup, the file
+@file{ENV:CyberSound/SoundDrivers/14Bit_Calibration} is read and used
+for the 14 bit DAC calibration. This file can be created by using
+Christian Buchner's CyberSound calibration tool, which is avalilable
+from
+@url{http://www.lysator.liu.se/~lcs/files/ahi/extras/CyberSound.lha},
+among other places.
 
-The 14 bit modes cannot be used for recording, but the 8 bit modes supports
-both generic parallel port samplers as well as both the Aura and Clarity
-samplers.
+The 14 bit modes cannot be used for recording, but the 8 bit modes
+supports both generic parallel port samplers as well as both the Aura
+and Clarity samplers.
+
+@cindex DMA
+
+The so-called @samp{Paula:DMA 8 bit stereo} mode uses Paula's built-in
+DMA engine to play the sounds; no software mixing at all is
+performed. Because of this, only four channels are available and no
+stereo panning is available (just like all other plain ``stereo''
+modes). In addition, the only mixing frequency available is Paula's
+master clock.
 
 @cindex AHIpaulaFilterFreq variable
 
@@ -1132,9 +1193,9 @@ The author can be reached at the following addresses:
 
 @item Standard mail
   Martin Blom
-@*Alsättersgatan 15A:24
-@*SE-584 35 Linköping
-@*SWEDEN
+@*Luftvärnsgatan 42
+@*SE-587 34 Linköping
+@*Sweden
 
 @item World-Wide Web
 @url{http://martin.blom.org}
@@ -1276,7 +1337,13 @@ acknowledgments chapter? You tell me.
 @menu
 * Thanks::                      
 * Contributors::                
+* Donors::                      
+* Honourable mention::          
 @end menu
+
+If you feel your name ought to be present here, please accept my
+apologies and don't hesitate to contact me as soon as possible.
+
 
 @c ***********************************************************************
 @c **** Special thanks ***************************************************
@@ -1307,6 +1374,12 @@ For the calibrated 14 bit routines for Paula.
 @item MacroSystem Computer GmbH
 For lending me a Toccata card.
 
+@item Przemyslaw Gruchala
+For finding all those bugs.
+
+@item Ben Hermans and Hyperion Entertainment
+For hiring me to write a SBLive! driver.
+
 @item Steve Krueger and SAS Institute, Inc.
 For the compiler and all the updates.
 
@@ -1320,33 +1393,39 @@ of course, for the sound card!
 @item Pauli Porkka
 For active support and promotion of @sc{Ahi} from the beginning.
 
+@item Nicolas Sallin
+For patience beyond belief.
+
 @item All the rest
 Many, many other have helped me, sent suggestions etc.  I owe you a lot.
 
 @end table
 
 And of course, the actual catalog translators:
-Samuel Aguilera,
-Andrija Antonijevic
-Rúben Alvim,
-Stéphane Barbaray,
-Frederico Borges,
-Piergiorgio Ghezzo,
-Roger Hågensen,
+Alex Plotnicov,
+Andrija Antonijevic,
 Bernardo Innocenti,
-Ljubomir Jankovic,
-Petteri Kallio,
-Sini¹a Loliæ,
+Dósa Márton,
 Eivind Olsen,
+Frederico Borges,
+Ljubomir Jankoviá,
 Marcin Orîowski,
-Thomas Petersen,
-Pauli Porkka,
-Vit Sindlar,
 Martin Sprenger,
-Sönke Tesch,
-Vörös Viktor,
+Michael Malyshev,
 Michel Vissers,
 Ondrej Zima,
+Pauli Porkka,
+Petteri Kallio,
+Piergiorgio Ghezzo,
+Roger Hågensen,
+Rúben Alvim,
+Samuel Aguilera,
+Sini¹a Loliæ,
+Stéphane Barbaray,
+Sönke Tesch,
+Thomas Petersen,
+Vit Sindlar,
+Vörös Viktor,
 me, myself and I@enddots{}
 
 
@@ -1354,13 +1433,14 @@ me, myself and I@enddots{}
 @c **** Contributors *****************************************************
 @c ***********************************************************************
 
-@node Contributors,  , Thanks, Acknowledgments
+@node Contributors, Donors, Thanks, Acknowledgments
 @comment  node-name,  next,  previous,  up
 @section Contributors
 
 @cindex Contributors
 
-The following people has contributed to the @sc{Ahi} project with code:
+The following people have contributed to the @sc{Ahi} project with
+code or drivers:
 
 @table @asis
 
@@ -1370,11 +1450,36 @@ The MUI version of the preferences program.
 @item Olaf Barthel @email{olsen@@sourcery.han.de}
 The Concierto driver.
 
+@item Chris Brenner @email{cbrenner@@inreach.com}
+A (never finished?) Sunrize driver.
+
+@item Valenta Ferenc @email{vf@@elte.hu}
+The VSS driver.
+
+@item Ben Fuller
+A never finished Sunrize driver. May he rest in peace.
+
+@item Simon N Goodwin @email{simon@@studio.woden.com}
+A good attempt on the Silicon Studio driver. :-)
+
+@item Przemyslaw Gruchala @email{sensei@@box43.gnet.pl}
+A C-Media and a Yet To Be Named driver. :-)
+
 @item Thorsten Hansen @email{hansen_t@@informatik.fh-hamburg.de}
-The Melody MPEG driver.
+The Melody MPEG and Amithlon drivers.
 
 @item Richard Körber @email{shred@@chessy.aworld.de}
 The Maestro Pro driver.
+
+@item Frank Mariak @email{F.Mariak@@t-online.de}
+The GREX and Pegasos drivers.
+
+@item Bernd `Bernie' Meyer @email{bmeyer@@csse.monash.edu.au}
+The---sniff!---never to be released Umilator driver.
+
+@item Kenneth Nilsen @email{kenny@@bgnett.no}
+A (never finished?) Sunrize driver. And here I was, thinking the
+``Amiga'' curse was the worst curse of them all @enddots{}
 
 @item Johan Nyblom @email{nyblom@@ludd.luth.se}
 The latest Wavetools driver.
@@ -1382,12 +1487,33 @@ The latest Wavetools driver.
 @item Pauli Porkka @email{pporkka@@iki.fi}
 The first version of the Toccata driver.
 
+@item Markus Pöllmann @email{m.poellmann@@haage-partner.com}
+The AmigaXL driver.
+
+@item Bernd Roesch @email{berndroesch1@@compuserve.de}
+The UAE driver.
+
+@item Harry Sintonen @email{sintonen@@iki.fi}
+The very first (and only, so far) source code patch!
+
+@item Sigbjørn Skjæret @email{cisc@@broadpark.no}
+A 'C' version of @code{paula.audio}.
+
+@item Stefan Sommerfeld @email{zerocom@@cs.tu-berlin.de}
+The RePulse driver.
+
 @item Rüdiger Sopp
 The first version of the preferences program.  Too bad things didn't work
 out as planned.
 
+@item Pawel Stypula @email{pawelS@@elbox.com}
+The Mediator drivers.
+
 @item Teemu Suikki @email{tsuikki@@lut.fi}
 The Delfina driver and the first PPC port.
+
+@item Benjamin Vernoux @email{bvernoux@@wanadoo.fr}
+An FM801 driver.
 
 @item Thomas Wenzel @email{wenzel@@unixserv.rz.fh-hannover.de}
 The Prelude driver.
@@ -1398,6 +1524,174 @@ The ELF loader.
 @end table
 
 Many thanks!
+
+@c ***********************************************************************
+@c **** Donors ***********************************************************
+@c ***********************************************************************
+
+@node Donors, Honourable mention, Contributors, Acknowledgments
+@comment  node-name,  next,  previous,  up
+@section Donors
+
+The following people has donated money to the project. It has ment a
+lot to me, and please forgive me for not being able to finish a
+working WarpUp or PowerUp PPC version of @sc{Ahi}. I hope the MorphOS
+and upcomming AmigaOS 4 versions made up for that.
+
+Agneta Nord,
+Alan Surrette,
+Anders Drejer,
+Andreas Johansson,
+Ben Hermans,
+Bernardo Innocenti,
+Björn Hagström,
+Christopher Lakatos,
+Davy Wentzler,
+Fabio Barzagli,
+Fredrik Westermarck,
+Fredrik Zetterlund,
+Gregory Donner,
+Göran Karlsson
+Ismo Houvinen,
+Johan Lind,
+John Haubrich,
+John Hertell,
+John Hindle,
+John Rörland,
+Jonas Hulten,
+Jonny C. Kitchens,
+Jorma Valli,
+Linus Silvander,
+Magnus Bouvin,
+Malcolm Harnden,
+Marijan Franovic,
+Matteo Consolati
+Matthew K. Massa,
+Mematex AB,
+Mike Masquith,
+Niko Tomatsidis,
+Ola Karlsson,
+Pasi Langerroos,
+Per Jonsson,
+Robert Korzeniewski,
+Robert Nilsson,
+Staffan Bengtsson,
+Stefan Nilsson,
+Steve Hodson,
+Steven Maes,
+The Magic Lantern
+Thomas & Stefan Lorenz,
+Ulf Tidstrand,
+Vincent Morenas,
+Winfried Krüger and
+Zafer KANTAR.
+
+
+
+@c ***********************************************************************
+@c **** Honourable mention ***********************************************
+@c ***********************************************************************
+
+@node     Honourable mention,  , Donors, Acknowledgments
+@comment  node-name,  next,  previous,  up
+@section Honourable mention
+
+@cindex Honourable mention
+
+The road from @sc{Ahi} version 4 to version 6 has been a long one.
+Maybe not when counted in actual work hours, but definitely when
+counted in calendar time.
+
+It began with a failed attempt to port the device to the PowerPC
+processor, at which time @sc{Ahi} became a ``shareware'' product in
+order to finance a Cyberstorm/PPC CPU card (@pxref{Donors}). When I
+realized I couldn't deliver, @sc{Ahi} instead became Free Software,
+which it still and will probably always be.
+
+The first release of the source code under the ``GPL'' was made on
+April 1st, 1999, as part of the ``Divine Records'' joke (see
+@url{http://martin.blom.org/ds/} and
+@url{http://martin.blom.org/dr/}@footnote{Believe it or not, but I
+still get mail from people who want me to publish their music now and
+then!}).
+
+Some people actually took their time to fill in the source code
+registration form:
+
+Agneta Nord,
+Andrea Favini,
+Andreas Johansson,
+Benoit Deschenes,
+Bernardo Innocenti,
+Bob Rutkowski,
+Chioccioli Guido,
+Christian Leon Christensen,
+DHR A.Roell,
+Daichi Shinozaki,
+Dan Anderson,
+Daniel Schubert,
+Darrell Swan,
+David Gerber,
+Ed Vishoot,
+Enrique Ortegón Moreno,
+Eric Keisler,
+Hyrum Summerhays,
+Iain Tyrrell,
+Ian Fletcher,
+Ilya Sharin,
+J. Stronks,
+Jack Sauce,
+James Diffendaffer,
+Jeff Brown,
+Johan Hofmeyer,
+John Klos,
+Jonathan Adamczewski,
+Jyrki Saarinen,
+Kai Weber,
+Kent Seaton,
+Kirk Strauser,
+Manos S. Pappas,
+Mark van Oudheusden,
+Murat Oezkilic,
+Niels Froehling,
+Pampuch Marek,
+Pete Wason,
+Rainer Haiduga,
+Richard Griffith,
+Risto Mäki-Petäys,
+Robert A. Salzer,
+Ron Ethridge,
+S van der Linden,
+Salvatore Bavastrelli,
+Serge,
+Sergio Corda,
+Simon Parry,
+Steven Solie,
+Stian Strøm,
+Stuart Smith,
+Ted Nilsen,
+Terme Vigliatore,
+Tero Peippola,
+Thomas Krafzik,
+Trevor Johnson,
+Vincent Gouret,
+Vincenzo Sanfilippo and
+William W. Toner II.
+
+Thank you! I'm sure I'll figure out what to do will all addresses real
+soon now.
+
+But here comes the best part: Benoit Deschenes (Quebec, Canada),
+Thomas Houlberg (Sdr. Bjert, Denmark) and Patrice Machin (Paris,
+France) actually ordered my CD. Unfortunately, I only made a limited
+amount of those CDs (17 plus one pre-production CD, if I remember
+correctly) and have been out of stock ever since. To compensate for
+this unusually long delivery delay, I've decided to produce three
+extra copies and send them to you for free. Benoit, Thomas and
+Patrice, if you read this and have moved since 1999, please let me
+know of your new address as soon as possible!
+
+Thanks guys! You really made my day @enddots{}
 
 
 @c ***********************************************************************

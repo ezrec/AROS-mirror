@@ -17,7 +17,7 @@ DEVDIR		= ${DISTDIR}/Developer
 
 DEVINCDIR	= ${DEVDIR}/Include
 
-host_alias	= @host_alias@
+host		= @host@
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -28,13 +28,15 @@ FD2PP		= @FD2PRAGMA_PRE@
 
 VPATH		= @srcdir@
 
-ifeq  ($(host_alias),i686be-amithlon)
-FD2INLINE_TARGET= --target=ix86be-amithlon
-else
-ifneq ($(host_alias),m68k-amigaos)
-FD2INLINE_TARGET= --target=$(host_alias)
-endif
-endif
+FD2INLINE_TARGET= --target=${host}
+
+#ifeq  ($(host_alias),i686be-amithlon)
+#FD2INLINE_TARGET= --target=ix86be-amithlon
+#else
+#ifneq ($(host_alias),m68k-amigaos)
+#FD2INLINE_TARGET= --target=$(host_alias)
+#endif
+#endif
 
 #
 # Files
@@ -69,6 +71,8 @@ distclean:	clean
 	$(RM) Makefile
 
 maintainer-clean: distclean
+
+install:
 
 bindist:	$(TARGETS)
 	$(INSTALL) --directory $(DEVINCDIR) $(DEVINCDIR)/gcc \

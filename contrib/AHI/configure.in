@@ -40,13 +40,17 @@ case $host in
   : ${CPU="i686"}
   linkerflags="-noixemul -r"
   optflags="-mcpu=${CPU} -O2"
-  asflags="-m${CPU} --defsym CPU=${CPU}"
+  asflags="--defsym CPU=${CPU}"
+  resident=""   dnl *** Not supported (yet?)
+  stripflag=""
  ;;
  m68k-unknown-amigaos)
   : ${CPU="68020"}
   linkerflags="-noixemul"
   optflags="-m${CPU} -O2 -fomit-frame-pointer -ffast-math"
   asflags="-m${CPU} --register-prefix-optional --bitwise-or --defsym CPU=${CPU}"
+  resident="-resident"
+  stripflag=""
  ;;
  powerpc-unknown-morphos)
   : ${CPU="603"}
@@ -54,6 +58,15 @@ case $host in
   linkerflags="-noixemul"
   optflags="-mcpu=${CPU} -O2"
   asflags="-m${CPU} -mregnames --defsym CPU=${CPU}"
+    resident="-mresident32"
+  stripflag=""
+ ;;
+ i?86-*-aros)
+ : ${CPU="i386"}
+  optflags="-mcpu=${CPU} -O2 -fomit-frame-pointer"
+  asflags="--defsym CPU=${CPU} --defsym LITTLE_ENDIAN=1"
+  resident=""   dnl *** Not supported (yet?)
+  stripflag="--strip-unneeded"
  ;;
  *)
   AC_MSG_WARN(Unknown architecture!)
@@ -67,13 +80,20 @@ top_builddir=$(pwd)
 : ${LDFLAGS="${linkerflags}"}
 : ${ASFLAGS="${asflags}"}
 : ${ARFLAGS="-ru"}
+: ${STRIPFLAGS="${stripflag}"}
 
-: ${DISTDIR="/tmp/ahi"}
+: ${CFLAG_RESIDENT="${resident}"}
+: ${LDFLAG_RESIDENT="${resident}"}
+
+: ${DISTDIR="/tmp/${host_alias}-ahi"}
 
 AC_PREFIX_DEFAULT( / )
 
 AC_SUBST(ASFLAGS)
 AC_SUBST(ARFLAGS)
+AC_SUBST(STRIPFLAGS)
+AC_SUBST(CFLAG_RESIDENT)
+AC_SUBST(LDFLAG_RESIDENT)
 AC_SUBST(DISTDIR)
 
 dnl Checks for programs.
@@ -89,9 +109,11 @@ AC_PROG_INSTALL
 #AC_PROG_CC
 AC_PROG_RANLIB
 AC_CHECK_PROG( RM, rm, rm )
+AC_CHECK_PROG( ROBODOC, robodoc, robodoc )
 AC_CHECK_PROG( FLEXCAT, flexcat, flexcat )
 AC_CHECK_PROG( FD2INLINE, fd2inline, fd2inline )
 AC_CHECK_PROG( FD2PRAGMA, fd2pragma, fd2pragma )
+AC_CHECK_PROG( LHA, lha, lha )
 
 if test -z "$FD2INLINE"; then
  AC_MSG_ERROR( fd2inline missing. )
@@ -105,11 +127,19 @@ else
  fi
 fi
 
+if test -z "$LHA"; then
+ AC_MSG_WARN( lha missing. )
+fi
+
+if test -z "$ROBODOC"; then
+ AC_MSG_WARN( robodoc missing. )
+fi
 
 dnl Checks for libraries.
 
-AC_CHECK_LIB( amiga, NewList,  , AC_MSG_ERROR( "libamiga is missing." ) )
-AC_CHECK_LIB( m,     floor,    , AC_MSG_ERROR( "libm is missing." ) )
+AC_CHECK_LIB( amiga, NewList,,      AC_MSG_ERROR( "libamiga is missing." ) )
+AC_CHECK_LIB( mui,   MUI_NewObject,,AC_MSG_WARN(  "Who cares?" ) )
+AC_SEARCH_LIBS( floor, m,,	    AC_MSG_ERROR( "libm is missing." ) )
 
 
 dnl Checks for header files.
@@ -121,17 +151,24 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 
 AC_C_CONST
 AC_C_INLINE
-
+AC_C_BIGENDIAN
 
 dnl Checks for library functions.
 
 
 AC_OUTPUT(Makefile
           AHI/Makefile
+          AHI-Handler/Makefile
           AddAudioModes/Makefile
           Device/Makefile
           Docs/Makefile
+          Drivers/Makefile
+          Drivers/Common/Makefile.common
           Drivers/EMU10kx/Makefile
+          Drivers/Filesave/Makefile
+          Drivers/Void/Makefile
+	  Examples/Makefile
 	  Examples/Extras/CloneAudioModes/Makefile
+	  Examples/Low-level/PlaySineEverywhere/Makefile
           Include/Makefile,
           echo timestamp > stamp-h)

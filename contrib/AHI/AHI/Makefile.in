@@ -25,7 +25,7 @@ CATDIR		= ${DISTDIR}/User/Catalogs
 build_os	= @build_os@
 
 CC		= @CC@
-STRIP		= @STRIP@
+STRIP		= @STRIP@ @STRIPFLAGS@
 
 INSTALL		= @INSTALL@
 INSTALL_PROGRAM	= @INSTALL_PROGRAM@
@@ -70,6 +70,9 @@ distclean:	clean
 	$(RM) Makefile
 
 maintainer-clean: distclean
+
+install:	all
+	$(INSTALL_PROGRAM) AHI_MUI $(PREFIX)/Prefs/AHI
 
 bindist:	all
 	$(INSTALL) --directory $(PREFSDIR)

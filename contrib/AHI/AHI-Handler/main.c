@@ -1,14 +1,32 @@
 /* $Id$ */
 
 /*
+     AHI-Handler - The AUDIO: DOS device for AHI
+     Copyright (C) 1997-2003 Martin Blom <martin@blom.org>
+     
+     This program is free software; you can redistribute it and/or
+     modify it under the terms of the GNU General Public License
+     as published by the Free Software Foundation; either version 2
+     of the License, or (at your option) any later version.
+     
+     This program is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+     
+     You should have received a copy of the GNU General Public License
+     along with this program; if not, write to the Free Software
+     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+*/
+
+/*
  * This code is written using DICE, and is based on the DosHan example
  * source code that came with the compiler. Not all comments are mine,
  * by the way... 
  *
- * Done by Martin Blom 1997. Public Domain.
- *
  */
 
+//#define DEBUG
 
 #include <exec/types.h>
 #include <exec/nodes.h>
@@ -22,10 +40,10 @@
 #include <devices/ahi.h>
 #include <proto/ahi.h>
 
-#include <clib/exec_protos.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/utility.h>
 #include <clib/alib_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/utility_protos.h>
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -33,6 +51,7 @@
 #include <string.h>
 
 #include "main.h"
+#include "version.h"
 
 
 /*
@@ -71,20 +90,37 @@ void UnInitialize (void);
  */
 
 #define HIT(x) {char *a=NULL; *a=x;}
-void kprintf(char *, ...);
+
+static UWORD rawputchar_m68k[] = 
+{
+  0x2C4B,             // MOVEA.L A3,A6
+  0x4EAE, 0xFDFC,     // JSR     -$0204(A6)
+  0x4E75              // RTS
+};
+
+void
+KPrintFArgs( UBYTE* fmt, 
+             ULONG* args )
+{
+  RawDoFmt( fmt, args, (void(*)(void)) rawputchar_m68k, SysBase );
+}
+
+#define kprintf( fmt, ... )        \
+({                                 \
+  ULONG _args[] = { __VA_ARGS__ }; \
+  KPrintFArgs( (fmt), _args );     \
+})
 
 
 /*
  *  Global variables
  */
 
-const static char ID[] = "$VER: AHI-Handler 4.2 (9.4.97)\r\n";
+static const char ID[] = "$VER: AHI-Handler " VERS "\r\n";
 
-struct List        HanList;
-struct DeviceNode *DevNode;
 struct MsgPort    *PktPort;
+struct DeviceNode *DevNode;
 int                AllocCnt;
-BOOL               Running;
 
 struct MsgPort    *AHImp     = NULL;
 struct AHIRequest *AHIio     = NULL;
@@ -100,10 +136,10 @@ struct AIFCHeader AIFCHeader = {
     0,
     0,
     0,
-    {0},
+    {0,{0,0}},
     NO_COMPRESSION,
-    sizeof("not compressed")-1,
-    'n','o','t',' ','c','o','m','p','r','e','s','s','e','d'
+    {sizeof("not compressed")-1,
+     'n','o','t',' ','c','o','m','p','r','e','s','s','e','d'}
   },
   ID_SSND, NULL, {0,0}
 };
@@ -114,7 +150,7 @@ struct AIFFHeader AIFFHeader = {
     0,
     0,
     0,
-    {0}
+    {0,{0,0}}
   },
   ID_SSND, NULL, {0,0}
 };
@@ -124,19 +160,26 @@ struct AIFFHeader AIFFHeader = {
 **** Entry ********************************************************************
 ******************************************************************************/
 
-/*
- *  Note that we use the _main entry point.  Also notice that we do not
- *  need to open any libraries.. they are openned for us via DICE's
- *  unique auto-library-open ability.
- */
+// Disable command line processing
+long __nocommandline=1;
 
-void _main ()
+// We (mis)use this one directly instead
+extern struct Message *_WBenchMsg;
+
+int main(void)
 {
   struct DosPacket *packet;
-  struct Process *proc = (struct Process *) FindTask (NULL);
+  struct Process *proc;
+
+  BOOL Running;
+
+#ifdef DEBUG
+  kprintf("The very first call...\n");
+#endif
+  
+  proc = (struct Process *) FindTask (NULL);
 
   PktPort = &proc->pr_MsgPort;
-  NewList (&HanList);
   Initialize ();
 
   Running = TRUE;
@@ -157,6 +200,9 @@ void _main ()
       Wait (1 << PktPort->mp_SigBit);
     packet = (struct DosPacket *) msg->mn_Node.ln_Name;
 
+#ifdef DEBUG
+	kprintf ("Got packet: %ld\n", packet->dp_Type);
+#endif
     /*
      *  default return value
      */
@@ -183,7 +229,7 @@ void _main ()
       {
         struct FileHandle *fh = BTOC (packet->dp_Arg1);
         unsigned char *base = BTOC (packet->dp_Arg3);
-        int len = *base;
+        unsigned int len = *base;
         char buf[128];
         struct HandlerData *data;
         int unit = AHI_DEFAULT_UNIT;
@@ -222,7 +268,7 @@ void _main ()
           break;
         }
 
-        if(packet->dp_Res2 = ParseArgs(data, (char *) buf)) {
+        if( (packet->dp_Res2 = ParseArgs(data, (char *) buf)) ) {
           FreeHData(data);
           packet->dp_Res1 = DOS_FALSE;
           break;
@@ -232,7 +278,7 @@ void _main ()
           unit = *data->args.unit;
         }
 
-        if(packet->dp_Res2 = AllocAudio(unit)) {
+        if( (packet->dp_Res2 = AllocAudio(unit)) ) {
           FreeAudio();
           FreeHData(data);
           packet->dp_Res1 = DOS_FALSE;
@@ -323,7 +369,7 @@ void _main ()
           // Check if we should write a header first
 
           if(data->format == AIFF) {
-            if(length < sizeof(struct AIFFHeader)) {
+            if(length < (LONG) sizeof(struct AIFFHeader)) {
               packet->dp_Res1 = -1;
               packet->dp_Res2 = ERROR_BAD_NUMBER;
               break;
@@ -337,7 +383,7 @@ void _main ()
           }
 
           else if(data->format == AIFC) {
-            if(length < sizeof(struct AIFCHeader)) {
+            if(length < (LONG) sizeof(struct AIFCHeader)) {
               packet->dp_Res1 = -1;
               packet->dp_Res2 = ERROR_BAD_NUMBER;
               break;
@@ -459,7 +505,7 @@ void _main ()
             length -= skiplen;
           }
 
-          if(packet->dp_Res2 = InitHData(data)) {
+          if( (packet->dp_Res2 = InitHData(data)) ) {
             packet->dp_Res1 = -1;
             break;
           }
@@ -556,6 +602,9 @@ void _main ()
       /***********************************************************************/
 
       default:
+#ifdef DEBUG
+	kprintf("Unknown packet!\n");
+#endif
         packet->dp_Res1 = DOS_FALSE;
         packet->dp_Res2 = ERROR_ACTION_NOT_KNOWN;
         break;
@@ -800,8 +849,9 @@ long AllocAudio(int unit) {
   long rc = 0;
 
   if(++AllocCnt == 1) {
-    if(AHImp=CreateMsgPort()) {
-      if(AHIio=(struct AHIRequest *)CreateIORequest(AHImp,sizeof(struct AHIRequest))) {
+    if( (AHImp=CreateMsgPort()) ) {
+      if( (AHIio=(struct AHIRequest *)CreateIORequest(
+	     AHImp,sizeof(struct AHIRequest))) ) {
         AHIio->ahir_Version = 4;
         AHIDevice=OpenDevice(AHINAME,unit,(struct IORequest *)AHIio,NULL);
       }
@@ -945,7 +995,7 @@ long InitHData(struct HandlerData *data) {
     data->type = S8bitmode;
   else if(*data->args.bits <= 16)
     data->type = S16bitmode;
-  else if(*data->args.bits <= 32)
+  else if(*data->args.bits > 24 && *data->args.bits <= 32)
     data->type = S32bitmode;
   else {
     rc = ERROR_OBJECT_WRONG_TYPE;
@@ -1020,8 +1070,8 @@ void FreeHData(struct HandlerData *data) {
   if(data) {
     if(data->rdargs2)
       FreeArgs(data->rdargs2);
-    if(data->rdargs);
-    FreeDosObject(DOS_RDARGS, data->rdargs);
+    if(data->rdargs)
+      FreeDosObject(DOS_RDARGS, data->rdargs);
 
     FreeVec(data->buffer1);
     FreeVec(data->buffer2);
@@ -1077,22 +1127,24 @@ void returnpacket (struct DosPacket *packet) {
 
 void Initialize () {
   struct DeviceNode *dn;
-  struct Process *proc = (struct Process *) FindTask (NULL);
   struct DosPacket *packet;
 
   /*
    *        Handle initial message.
    */
   
-  struct Message *msg;
-
-  WaitPort (PktPort);
-  msg = GetMsg (PktPort);
-  packet = (struct DosPacket *) msg->mn_Node.ln_Name;
+  packet = (struct DosPacket *) _WBenchMsg->mn_Node.ln_Name;
 
   DevNode = dn = BTOC (packet->dp_Arg3);
   dn->dn_Task = NULL;
 
+#ifdef DEBUG
+  kprintf("Replying it ...\n");
+#endif
+
+  // Make sure startup code does not reply the message on exit
+  _WBenchMsg = NULL;
+  
   packet->dp_Res1 = DOS_TRUE;
   packet->dp_Res2 = 0;
   returnpacket (packet);

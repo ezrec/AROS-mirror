@@ -578,7 +578,7 @@ LoadModeFile( UBYTE*          name,
     Debug_LoadModeFile(name);
   }
 
-  SetIoErr(NULL);
+  SetIoErr(0);
 
   fib = AllocDosObject(DOS_FIB, TAG_DONE);
 
@@ -618,7 +618,7 @@ LoadModeFile( UBYTE*          name,
           }
           if(IoErr() == ERROR_NO_MORE_ENTRIES)
           {
-            SetIoErr(NULL);
+            SetIoErr(0);
           }
 
           CurrentDir(thisdir);
@@ -656,7 +656,11 @@ AddModeFile ( UBYTE *filename )
   {
     { AHIDB_Driver,         0 },
     { AHIDB_Data,           0 },
+#ifdef __MORPHOS__
+    { AHIDB_DriverBaseName, (ULONG) "MOSSYS:DEVS/AHI" },
+#else
     { AHIDB_DriverBaseName, (ULONG) "DEVS:AHI" },
+#endif
     { TAG_MORE,             0 }
   };
   ULONG rc=FALSE;
@@ -666,7 +670,7 @@ AddModeFile ( UBYTE *filename )
   if(iff != NULL)
   {
 
-    iff->iff_Stream = Open(filename, MODE_OLDFILE);
+    iff->iff_Stream = (ULONG) Open(filename, MODE_OLDFILE);
 
     if(iff->iff_Stream != 0)
     {
@@ -724,25 +728,27 @@ AddModeFile ( UBYTE *filename )
                        (ULONG) filename );
                 }
               }
-              
+
               extratags[0].ti_Data = (ULONG) name->sp_Data;
 
               // Now verify that the driver can really be opened
-              
+
 #ifdef __MORPHOS__
 
-              strcpy( driver_name, "MOSSYS:DEVS:AHI/" );
+              strcpy( driver_name, "MOSSYS:DEVS/AHI/" );
               strncat( driver_name, name->sp_Data, 100 );
               strcat( driver_name, ".audio" );
-              
-              driver_base = OpenLibrary( &driver_name[7], DriverVersion );
+
+              driver_base = OpenLibrary( driver_name, DriverVersion );
               if( driver_base == NULL )
               {
-                // Make it MOSSYS:DEVS/AHI/...
+                // Make it MOSSYS:DEVS:AHI/...
                 //                    ^
-                driver_name[7 + 4] = '/';
+                driver_name[7 + 4] = ':';
 
-                driver_base = OpenLibrary( driver_name, DriverVersion );
+				// Try "DEVS:AHI/...."
+				//
+                driver_base = OpenLibrary( driver_name + 7, DriverVersion );
 
                 if( driver_base == NULL )
                 {
@@ -750,8 +756,8 @@ AddModeFile ( UBYTE *filename )
                 }
                 else
                 {
-                  // It is a MOSSYS:DEVS/AHI driver!
-                  extratags[2].ti_Data = (ULONG) "MOSSYS:DEVS/AHI";
+                  // It is a DEVS:AHI driver!
+                  extratags[2].ti_Data = (ULONG) "DEVS:AHI";
 
                   CloseLibrary( driver_base );
                 }
@@ -794,6 +800,9 @@ AddModeFile ( UBYTE *filename )
 
               while( rc && ( tag = NextTagItem( &tstate ) ) != NULL )
               {
+		EndianSwap( sizeof tag->ti_Tag, &tag->ti_Tag );
+		EndianSwap( sizeof tag->ti_Data, &tag->ti_Data );
+		
                 if(tag->ti_Tag & (AHI_TagBaseR ^ AHI_TagBase))
                 {
                   tag->ti_Data += (ULONG) ci->ci_Data;
@@ -862,7 +871,7 @@ AddModeFile ( UBYTE *filename )
         }
         CloseIFF(iff);
       }
-      Close(iff->iff_Stream);
+      Close((BPTR) iff->iff_Stream);
     }
     FreeIFF(iff);
   }

@@ -17,69 +17,12 @@
      Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-/* $Id$
- * $Log$
- * Revision 1.2  2003/03/12 13:03:09  chodorowski
- * Updated to version 5.4=6.0rc0.
- *
- * Revision 5.3  2003/01/19 12:22:29  martin
- * Another year, another copyright update.
- *  ... which seems to have caused the translation files to change slightly.
- *
- * Revision 5.2  2002/07/07 14:39:17  martin
- * No enforcer hits if no modes are available. [Don Cox]
- * Version 5.7.
- *
- * Revision 5.1  2002/02/24 15:40:36  martin
- * Increased driver info buffers from 32 to 64 characters.
- *
- * Revision 5.0  2000/11/28 00:13:23  lcs
- * Bumped CVS revision to 5.0.
- *
- * Revision 4.12  2000/06/05 20:28:36  lcs
- * Fixed configure problems with separate build directories.
- *
- * Revision 4.11  1999/08/29 23:43:48  lcs
- * Added support for ahigp_AntiClickTime.
- *
- * Revision 4.10  1999/04/22 19:41:08  lcs
- * Removed SAS/C smakefile.
- * I had the copyright date screwed up: Changed to 1996-1999 (which is only
- * partly correct, but still better than 1997-1999....)
- *
- * Revision 4.9  1999/03/28 22:30:38  lcs
- * AHI is now GPL/LGPL software.
- * Make target bindist work correctly when using a separate build directory.
- * Small first steps towards a WarpOS PPC version.
- *
- * Revision 4.8  1999/01/09 23:14:06  lcs
- * Switched from SAS/C to gcc
- *
- * Revision 4.7  1997/06/24 21:49:49  lcs
- * Increased version number to match the catalogs (4.5).
- *
- * Revision 4.6  1997/05/09 14:02:17  lcs
- * Program version 4.4
- *
- * Revision 4.5  1997/05/04 22:13:29  lcs
- * Version label now public
- *
- * Revision 4.4  1997/04/27 16:16:06  lcs
- * Added "Mastervolume with(out) clipping".
- *
- * Revision 4.3  1997/04/09 03:00:06  lcs
- * Fixed globaloptions and "Restore"
- *
- * Revision 4.2  1997/04/07 01:36:51  lcs
- * Localized it, bug fixes
- *
- */
-
 #include <config.h>
 #include <CompilerSpecific.h>
 
 #include <devices/ahi.h>
 #include <workbench/startup.h>
+#include <workbench/workbench.h>
 #include <proto/ahi.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -144,10 +87,10 @@ int main(int argc, char **argv) {
   else {
     struct WBStartup *WBenchMsg = (struct WBStartup *)argv;
     struct WBArg *wbarg;
-    LONG olddir;
+    BPTR olddir;
     struct DiskObject *dobj;
-    char **toolarray;
-    char *s;
+    STRPTR* toolarray;
+    UBYTE *s;
 
     SaveIcons  = TRUE;
 
@@ -155,15 +98,15 @@ int main(int argc, char **argv) {
       i < WBenchMsg->sm_NumArgs;
       i++, wbarg++) {
 
-      olddir = -1;
+      olddir = (BPTR) -1;
       if((wbarg->wa_Lock)&&(*wbarg->wa_Name))
           olddir = CurrentDir(wbarg->wa_Lock);
 
 
       if((*wbarg->wa_Name) && (dobj=GetDiskObject(wbarg->wa_Name))) {
-        toolarray = (char **)dobj->do_ToolTypes;
+        toolarray = dobj->do_ToolTypes;
 
-        s = (char *) FindToolType(toolarray,"CREATEICONS");
+        s = FindToolType(toolarray,"CREATEICONS");
 
         if( s != NULL ) {
           if( MatchToolValue(s,"NO") ||
@@ -200,7 +143,7 @@ int main(int argc, char **argv) {
         args.from = wbarg->wa_Name;
       }
 
-      if(olddir != -1) {
+      if(olddir != (BPTR) -1) {
         CurrentDir(olddir); /* CD back where we were */
       }
     }

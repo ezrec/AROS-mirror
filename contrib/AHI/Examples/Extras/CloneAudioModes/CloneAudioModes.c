@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 
 #include "version.h"
 
@@ -52,7 +53,7 @@ main( void )
     
     if( from != NULL && to != NULL )
     {
-      from->iff_Stream = Open( args.from, MODE_OLDFILE );
+      from->iff_Stream = (ULONG) Open( args.from, MODE_OLDFILE );
       
       if( from->iff_Stream != 0 )
       {
@@ -72,7 +73,7 @@ main( void )
 	
 	if( error == 0 )
 	{
-	  to->iff_Stream = Open( args.to, MODE_NEWFILE );
+	  to->iff_Stream = (ULONG) Open( args.to, MODE_NEWFILE );
 
 	  if( to->iff_Stream != 0 )
 	  {
@@ -205,7 +206,7 @@ main( void )
 	      Printf( "%s: IFF error code %ld\n", (ULONG) args.to, error );
 	    }
 	  
-	    Close( to->iff_Stream );
+	    Close( (BPTR) to->iff_Stream );
 
 	    if( rc != RETURN_OK )
 	    {
@@ -223,7 +224,7 @@ main( void )
 	  Printf( "%s: IFF error code %ld\n", (ULONG) (ULONG) args.from, error );
 	}
 	
-	Close( from->iff_Stream );
+	Close( (BPTR) from->iff_Stream );
       }
       else
       {

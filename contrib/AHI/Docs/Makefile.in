@@ -23,6 +23,7 @@ build_os	= @build_os@
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
+ROBODOC		= @ROBODOC@
 
 VPATH		= @srcdir@
 
@@ -31,12 +32,13 @@ VPATH		= @srcdir@
 # Files
 ########################################
 
-TARGETS		= ahidev.readme ahiusr.readme \
-		  ahidev.guide ahiusr.guide \
-		  ahidev.dvi ahiusr.dvi \
-		  ahidev.ps ahiusr.ps \
-		  ahidev.html ahiusr.html
+TARGET_DEVDOCS	= ahidev.guide ahidev.dvi ahidev.ps ahidev.html \
+		  ahi.doc ahi.guide ahi.html \
+		  ahi_sub.doc ahi_sub.guide ahi_sub.html
+TARGET_USRDOCS	= ahiusr.guide ahiusr.dvi ahiusr.ps ahiusr.html
 
+TARGETS		= ahidev.readme ahiusr.readme \
+		  $(TARGET_DEVDOCS) $(TARGET_USRDOCS)
 
 #
 # Targets
@@ -47,7 +49,7 @@ TARGETS		= ahidev.readme ahiusr.readme \
 all:		$(TARGETS)
 
 clean:
-	$(RM) $(TARGETS) ahidev.ver ahiusr.ver \
+	$(RM) $(TARGETS) ahidev.ver ahiusr.ver device.all-c \
 	      ahidev.texinfo-exp ahiusr.texinfo-exp tmp-iso.sty\
 	      *.cps *.fns *.tps *.vrs *.ky *.pg *.log *.aux *.cp *.fn *.vr *.tp *.toc \
 	      *.bak *~ \#*\# core
@@ -57,16 +59,19 @@ distclean:	clean
 
 maintainer-clean: distclean
 
+install:	all
+	$(INSTALL_DATA) ahiusr.guide $(PREFIX)/Help/ahi.guide
+
 bindist:	$(TARGETS)
 	$(INSTALL) --directory $(USRDOCDIR) $(DEVDOCDIR)
 	$(INSTALL_DATA) ahidev.readme $(DISTDIR)
 	$(INSTALL_DATA) $(srcdir)/ahidev.readme.info $(DISTDIR)
 	$(INSTALL_DATA) ahiusr.readme $(DISTDIR)
 	$(INSTALL_DATA) $(srcdir)/ahiusr.readme.info $(DISTDIR)
-	for i in ahidev.guide ahidev.dvi ahidev.ps ahidev.html; do \
+	for i in $(TARGET_DEVDOCS); do \
 	  $(INSTALL_DATA) $$i $(DEVDOCDIR); \
 	done
-	for i in ahiusr.guide ahiusr.dvi ahiusr.ps ahiusr.html; do \
+	for i in $(TARGET_USRDOCS); do \
 	  $(INSTALL_DATA) $$i $(USRDOCDIR); \
 	done
 
@@ -154,3 +159,28 @@ ahidev.ver:	ahidev.texinfo $(top_srcdir)/version.ver $(top_srcdir)/version.rev
 ahiusr.ver:	ahiusr.texinfo $(top_srcdir)/version.ver $(top_srcdir)/version.rev
 	echo "@set ahiver `cat $(top_srcdir)/version.ver`.`cat $(top_srcdir)/version.rev`" > $@
 	grep '$$Id' $< | sed -e 's/^.*Id: .* \(.*\)\.\(.*\) \(....\)\/\(..\)\/\(..\).*/@set docver \1.\2 (\3-\4-\5)/' >> $@
+
+
+# Autodocs
+
+device.all-c:	$(top_srcdir)/Device/*.c
+	@cat $^ > $@
+
+ahi.doc:	device.all-c
+	$(ROBODOC) $< $@ TOC SORT
+
+ahi.guide:	device.all-c
+	$(ROBODOC) $< $@ GUIDE SORT
+
+ahi.html:	device.all-c
+	$(ROBODOC) $< $@ HTML SORT
+
+
+ahi_sub.doc:	$(top_srcdir)/Drivers/Paula/paula_audio.a
+	$(ROBODOC) $< $@ TOC SORT
+
+ahi_sub.guide:	$(top_srcdir)/Drivers/Paula/paula_audio.a
+	$(ROBODOC) $< $@ GUIDE SORT
+
+ahi_sub.html:	$(top_srcdir)/Drivers/Paula/paula_audio.a
+	$(ROBODOC) $< $@ HTML SORT

@@ -26,6 +26,9 @@
 #include "ahi_def.h"
 #include "dsp.h"
 
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
+
 /**************
 * Inputs: ahiede_Delay, ahiede_Feedback, ahiede_Mix, ahiede_Cross
 *

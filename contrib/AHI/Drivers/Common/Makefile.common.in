@@ -1,0 +1,173 @@
+#  $Id$
+#
+#  Makefile.common.in: Can be included by drivers to simplify
+#  driver development.
+#
+
+#
+# Autoconfig stuff
+########################################
+
+@SET_MAKE@
+
+VPATH		+= @srcdir@
+
+top_srcdir	= @top_srcdir@
+common_srcdir	= @srcdir@
+prefix		= @prefix@
+DISTDIR		= @DISTDIR@
+DRIVERDIR	= ${DISTDIR}/User/Devs/AHI
+MODEFILEDIR	= ${DISTDIR}/User/Devs/AudioModes
+
+host		= @host@
+
+CC		= @CC@
+AS		= @AS@
+AR              = @AR@
+RANLIB          = @RANLIB@
+STRIP		= @STRIP@ @STRIPFLAGS@
+OBJCOPY		= @OBJCOPY@
+
+CPPFLAGS	= @CPPFLAGS@ -I${top_srcdir} -I${common_srcdir} -I${srcdir} \
+		  -DDRIVER="\"${DRIVER}\""
+CFLAGS		= @CFLAGS@
+ASFLAGS		= @ASFLAGS@
+LDFLAGS		= @LDFLAGS@ -nostartfiles
+ARFLAGS         = @ARFLAGS@
+
+FD2INLINE	= @FD2INLINE@
+FD2INLINE_TARGET= --target=${host}
+
+LIBS		= @LIBS@
+
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+INSTALL_DATA	= @INSTALL_DATA@
+
+#
+# Files
+########################################
+
+OBJECTS		+= library.o gatestubs1.o gatestubs2.o
+
+
+#
+# Targets
+########################################
+
+.PHONY:		all mostlyclean clean distclean maintainer-clean\
+		install revup bindist bindist-install
+
+
+all:		$(DRIVER) $(MODEFILE)
+
+mostlyclean:
+	$(RM) $(DRIVER) $(MODEFILE) *.o *.a *.bak *~ \#*\# core Makefile.dep
+
+clean:		mostlyclean
+	$(RM) version.h gatestubs1.c gatestubs1.h gatestubs2.c gatestubs2.h
+
+distclean:	clean
+	$(RM) Makefile
+
+maintainer-clean: distclean
+
+install:	all
+	$(INSTALL) --directory $(PREFIX)/Devs/AHI $(PREFIX)/Devs/AudioModes
+	$(INSTALL_PROGRAM) $(DRIVER) $(PREFIX)/Devs/AHI/
+	$(INSTALL_DATA) $(MODEFILE) $(PREFIX)/Devs/AudioModes/
+
+revup:
+	@rev=`cat $(srcdir)/version.rev` && echo `expr $$rev + 1` > $(srcdir)/version.rev
+	@date +%d.%m.%y > $(srcdir)/version.date
+	@echo -n "New revision: "
+	@cat $(srcdir)/version.rev
+
+bindist:	all
+	$(INSTALL) --directory $(DRIVERDIR) $(MODEFILEDIR)
+
+	$(INSTALL_PROGRAM) $(DRIVER) $(DRIVERDIR)/$(DRIVER)
+	$(STRIP) $(DRIVERDIR)/$(DRIVER)
+	$(INSTALL_DATA) $(MODEFILE) $(MODEFILEDIR)/
+
+
+#
+# Auto-remake autoconf stuff
+########################################
+
+Makefile: Makefile.in Makefile.common.in ../../config.status
+	(cd ../.. && ./config.status)
+
+
+#
+# Rules
+########################################
+
+%.o:	%.s
+	gasp  $< | $(AS) $(ASFLAGS) -o $@
+
+$(DRIVER):		$(OBJECTS)
+	$(CC) $(LDFLAGS) $^ -o $@
+
+$(MODEFILE):	$(MODEFILE).o
+	$(OBJCOPY) --output-target=binary $< $@
+
+$(MODEFILE).o:	MODEFILE.s $(MODEFILE).s
+	gasp  $^ | $(AS) $(ASFLAGS) -o $@
+
+gatestubs1.c:	$(top_srcdir)/Include/FD/ahi_sub_lib.fd \
+		$(top_srcdir)/Include/C/clib/ahi_sub_protos.h
+	$(FD2INLINE) --mode=gatestubs --gateprefix=gw --libprefix=_ \
+	             $(FD2INLINE_TARGET) \
+	             $^ -o $@
+
+gatestubs1.h:	$(top_srcdir)/Include/FD/ahi_sub_lib.fd \
+		$(top_srcdir)/Include/C/clib/ahi_sub_protos.h
+	$(FD2INLINE) --mode=gateproto --gateprefix=gw --libprefix=_ \
+	             $(FD2INLINE_TARGET) \
+	             $^ -o $@
+
+gatestubs1.o:	gatestubs1.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -D__CLIB_TYPES__ -c $^ $(OUTPUT_OPTION)
+
+gatestubs2.c:	lib.fd lib_protos.h
+	$(FD2INLINE) --mode=gatestubs --gateprefix=gw --libprefix=_ \
+	             $(FD2INLINE_TARGET) \
+	             $^ -o $@
+
+gatestubs2.h:	lib.fd lib_protos.h
+	$(FD2INLINE) --mode=gateproto --gateprefix=gw --libprefix=_ \
+	             $(FD2INLINE_TARGET) \
+	             $^ -o $@
+
+version.h:	version.rev version.date
+	@echo Creating $@
+	@ver=`cat $(srcdir)/version.ver` \
+	 rev=`cat $(srcdir)/version.rev` \
+	 date=`cat $(srcdir)/version.date` && \
+	 echo "#define VERSION $$ver" > $@ && \
+	 echo "#define REVISION $$rev" >> $@ && \
+	 echo "#define VERS \"$$ver.$$rev ($$date)\"" >> $@
+
+
+#
+# Dependencies
+########################################
+
+SOURCES		= $(wildcard $(common_srcdir)/*.c) $(wildcard $(srcdir)/*.c) 
+HEADERS		= $(wildcard $(common_srcdir)/*.h) $(wildcard $(srcdir)/*.h)
+
+#DEPENDENCIES	= $(SOURCES) $(HEADERS)
+
+.PHONY:	depend
+
+depend:
+	$(RM) Makefile.dep
+	$(MAKE) Makefile.dep
+
+Makefile.dep:	$(DEPENDENCIES) version.h \
+		gatestubs1.c gatestubs2.c gatestubs1.h gatestubs2.h
+	@echo Making $@
+	-@$(CC) $(CPPFLAGS) $(CFLAGS) -MM $(SOURCES) > $@
+
+include Makefile.dep

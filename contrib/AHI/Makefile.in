@@ -14,8 +14,12 @@ srcdir		= @srcdir@
 DISTDIR		= @DISTDIR@
 CATDIR		= ${DISTDIR}/User/Catalogs
 
+host_cpu	= @host_cpu@
+host_alias	= @host_alias@
+
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
+LHA		= @LHA@
 
 CPPFLAGS	= @CPPFLAGS@
 CFLAGS		= @CFLAGS@
@@ -25,35 +29,53 @@ LDFLAGS		= @LDFLAGS@
 VPATH		= @srcdir@
 
 
+VERSION		= $(shell cat ${top_srcdir}/version.ver)
+REVISION	= $(shell cat $(top_srcdir)/version.rev)
+
+USRARCHIVE	= $(host_alias)-ahiusr-$(VERSION).$(REVISION).lha
+USRREADME	= $(host_alias)-ahiusr-$(VERSION).$(REVISION).readme
+DEVARCHIVE	= $(host_alias)-ahidev-$(VERSION).$(REVISION).lha
+DEVREADME	= $(host_alias)-ahidev-$(VERSION).$(REVISION).readme
+
 #
 # Targets
 ########################################
 
 .PHONY:		all clean distclean maintainer-clean bindist revup
 
-SUBDIRS		= AHI AddAudioModes Device Docs Include
+SUBDIRS		= AHI AddAudioModes Device Docs Drivers Examples Include
 
+ifneq (@CFLAG_RESIDENT@,)
+SUBDIRS 	+= AHI-Handler
+endif
 
 all:
 	@cd Include && make gcc-include
 	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@) || exit; done
 
+install:
+	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@) || exit; done
+
 clean:
 	-@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
+	$(RM) $(USRARCHIVE) $(USRREADME) $(DEVARCHIVE) $(DEVREADME)
 
 distclean:
 	-@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
-	$(RM) config.log config.cache config.status config.h\
+	$(RM) $(USRARCHIVE) $(USRREADME) $(DEVARCHIVE) $(DEVREADME) \
+	      config.log config.cache config.status config.h\
 	      stamp-h stamp-h.in Makefile
 
 maintainer-clean:
 	-@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
-	$(RM) config.log config.cache config.status config.h\
-	      stamp-h stamp-h.in Makefile configure config.h.in
+	$(RM) $(USRARCHIVE) $(USRREADME) $(DEVARCHIVE) $(DEVREADME) \
+	      config.log config.cache config.status config.h\
+	      stamp-h stamp-h.in Makefile \
+	      configure config.h.in
 
 bindist:
+	$(RM) -r $(DISTDIR)
 	$(INSTALL) --directory $(DISTDIR)
-	rm -rf $(DISTDIR)/*
 	$(INSTALL_DATA) ${srcdir}/COPYING $(DISTDIR)
 	$(INSTALL_DATA) ${srcdir}/COPYING.LIB $(DISTDIR)
 	$(INSTALL_DATA) ${srcdir}/COPYING.DRIVERS $(DISTDIR)
@@ -63,8 +85,22 @@ bindist:
 	$(INSTALL_DATA) ${srcdir}/README.ATO $(CATDIR)
 	$(INSTALL_DATA) ${srcdir}/README.TRANSLATIONS $(CATDIR)
 
-	@cd Include && make gcc-include
-	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@); done
+	cd Include && make gcc-include
+	for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@) || exit; done
+
+	-$(RM) $(USRARCHIVE) $(DEVARCHIVE)
+
+	pwd=`pwd` bn=`basename $(DISTDIR)` && \
+	  ( cd $(DISTDIR)/.. && $(LHA) -ao6 $${pwd}/$(DEVARCHIVE) \
+	  $${bn}/ahidev* $${bn}/ChangeLog $${bn}/COPYING* $${bn}/Developer )
+	cp $(DISTDIR)/ahidev.readme $(DEVREADME)
+
+	pwd=`pwd` bn=`basename $(DISTDIR)` && \
+	  ( cd $(DISTDIR)/.. && $(LHA) -ao6 $${pwd}/$(USRARCHIVE) \
+	  $${bn}/ahiusr* $${bn}/ChangeLog $${bn}/COPYING* $${bn}/User )
+	cp $(DISTDIR)/ahiusr.readme $(USRREADME)
+
+	$(RM) -r $(DISTDIR)
 
 revup:
 	@rev=`cat $(srcdir)/version.rev` && echo `expr $$rev + 1` > $(srcdir)/version.rev

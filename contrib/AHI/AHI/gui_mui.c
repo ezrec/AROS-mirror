@@ -245,7 +245,7 @@ static void UpdateStrings(void) {
 
 static Object *MUIWindow,*MUIList,*MUIInfos,*MUIUnit;
 static Object *MUIFreq,*MUIChannels,*MUIOutvol,*MUIMonvol,*MUIGain,*MUIInput,*MUIOutput;
-static Object *MUILFreq,*MUILChannels,*MUILOutvol,*MUILMonvol,*MUILGain,*MUILInput,*MUILOutput;
+static Object *MUILFreq,*MUILChannels,*MUILOutvol,*MUILMonvol,*MUILGain,*MUILInput,*MUILOutput,*MUIPlay;
 static Object *MUIDebug,*MUIEcho,*MUISurround,*MUIClipvol,*MUICpu,*MUIACTime;
 
 LONG xget(Object * obj, ULONG attribute)
@@ -387,6 +387,9 @@ static void GUINewMode(void)
     set(MUIOutput, MUIA_Numeric_Value, Sel);
   }
   set(MUILOutput, MUIA_Text_Contents, (ULONG) getOutput());
+
+
+  set(MUIPlay, MUIA_Disabled, getAudioMode() == AHI_INVALID_ID);
 }
 
 static VOID
@@ -505,7 +508,7 @@ static Object* SpecialSlider(LONG min, LONG max, LONG value)
 
 BOOL BuildGUI(char *screenname)
 {
-  Object *MUISave, *MUIUse, *MUICancel, *MUIPlay;
+  Object *MUISave, *MUIUse, *MUICancel;
   Object *page1,*page2;
   Object *MUITFreq,*MUITChannels,*MUITOutvol,*MUITMonvol,*MUITGain,*MUITInput,*MUITOutput,*MUITDebug,*MUITEcho,*MUITSurround,*MUITClipvol,*MUITCpu,*MUITACTime;
 
@@ -628,7 +631,7 @@ BOOL BuildGUI(char *screenname)
           MUIA_Numeric_Min, 0,
           MUIA_Numeric_Max, 100,
           MUIA_Numeric_Value,(globalprefs.ahigp_AntiClickTime * 1000 + 32768) >> 16,
-          MUIA_Numeric_Format,"%ld% ms",
+          MUIA_Numeric_Format,"%ld ms",
           MUIA_Disabled, AHIBase->lib_Version <= 4,
         End,
       End,
@@ -651,12 +654,12 @@ BOOL BuildGUI(char *screenname)
       MUIA_Window_ID   , MAKE_ID('M','A','I','N'),
       MUIA_HelpNode, "AHI",
       WindowContents, VGroup,
-        Child, RegisterGroup(PageNames),
-          MUIA_CycleChain, 1,
-          Child, page1,
-          Child, page2,
-        End,
-        Child, HGroup,
+       Child, RegisterGroup(PageNames),
+         MUIA_CycleChain, 1,
+         Child, page1,
+         Child, page2,
+       End,
+       Child, HGroup,
           Child, MUISave = SimpleButton(msgButtonSave),
           Child, MUIUse = SimpleButton(msgButtonUse),
           Child, MUICancel = SimpleButton(msgButtonCancel),
@@ -735,13 +738,14 @@ void CloseGUI(void)
 
 void EventLoop(void)
 {
+  ULONG sigs = 0UL;
+
   while (1)
   {
-    ULONG sigs = 0UL;
+    ULONG rc = DoMethod(MUIApp, MUIM_Application_NewInput, &sigs);
 
-    switch(DoMethod(MUIApp, MUIM_Application_NewInput, &sigs))
+    switch(rc)
     {
-
       case MUIV_Application_ReturnID_Quit:
         return;
 
@@ -952,15 +956,13 @@ void EventLoop(void)
 
         break;
       }
+    }
 
-      default:
-        if (sigs)
-        {
-          sigs = Wait(sigs | SIGBREAKF_CTRL_C);
-          if (sigs & SIGBREAKF_CTRL_C)
-          return;
-        }
-        break;
+    if (sigs)
+    {
+      sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+      if (sigs & SIGBREAKF_CTRL_C)
+	return;
     }
   }
 }

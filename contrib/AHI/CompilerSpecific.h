@@ -85,8 +85,8 @@
 	#define _COMPILED_WITH	"SAS/C"
 
 	/* For min(), max() and abs() */
-	#define USE_BUILTIN_MATH
-	#include <string.h>
+/* 	#define USE_BUILTIN_MATH */
+/* 	#include <string.h> */
 #else
 #ifdef __GNUC__
 	/* GeekGadgets GCC 2.7.2.1 or better */
@@ -105,15 +105,15 @@
 	#define REG(reg,arg) arg __asm(#reg)
 	#define _COMPILED_WITH	"GCC"
 
-	#ifndef min
-	#define min(a,b)	(((a)<(b))?(a):(b))
-	#endif
-	#ifndef max
-	#define max(a,b)	(((a)>(b))?(a):(b))
-	#endif
-	#ifndef abs
-	#define abs(a)		(((a)>0)?(a):-(a))
-	#endif
+/* 	#ifndef min */
+/* 	#define min(a,b)	(((a)<(b))?(a):(b)) */
+/* 	#endif */
+/* 	#ifndef max */
+/* 	#define max(a,b)	(((a)>(b))?(a):(b)) */
+/* 	#endif */
+/* 	#ifndef abs */
+/* 	#define abs(a)		(((a)>0)?(a):-(a)) */
+/* 	#endif */
 
 #if 0
 	/* GCC produces code which calls these two functions
@@ -143,9 +143,9 @@
 	#define REG(reg,arg) register __##reg arg
 	#define _COMPILED_WITH	"StormC"
 
-	#define min(a,b)	(((a)<(b))?(a):(b))
-	#define max(a,b)	(((a)>(b))?(a):(b))
-	#define abs(a)		(((a)>0)?(a):-(a))
+/* 	#define min(a,b)	(((a)<(b))?(a):(b)) */
+/* 	#define max(a,b)	(((a)>(b))?(a):(b)) */
+/* 	#define abs(a)		(((a)>0)?(a):-(a)) */
 
 	#define _INLINE_INCLUDES
 	#include <string.h>
@@ -167,8 +167,8 @@
 	#define _COMPILED_WITH	"Maxon C"
 
 	/* For min(), max() and abs() */
-	#define USE_BUILTIN_MATH
-	#include <string.h>
+/* 	#define USE_BUILTIN_MATH */
+/* 	#include <string.h> */
 
 	#error Maxon C compiler support is untested. Please check all the above definitions
 #else
@@ -188,15 +188,15 @@
 	#define REG(reg,arg)	__##reg arg
 	#define _COMPILED_WITH	"DICE"
 
-	#ifndef min
-	#define min(a,b)	(((a)<(b))?(a):(b))
-	#endif
-	#ifndef max
-	#define max(a,b)	(((a)>(b))?(a):(b))
-	#endif
-	#ifndef abs
-	#define abs(a)		(((a)>0)?(a):-(a))
-	#endif
+/* 	#ifndef min */
+/* 	#define min(a,b)	(((a)<(b))?(a):(b)) */
+/* 	#endif */
+/* 	#ifndef max */
+/* 	#define max(a,b)	(((a)>(b))?(a):(b)) */
+/* 	#endif */
+/* 	#ifndef abs */
+/* 	#define abs(a)		(((a)>0)?(a):-(a)) */
+/* 	#endif */
 
 	#error DICE compiler support is untested. Please check all the above definitions
 #else
@@ -216,15 +216,15 @@
 	#define REG(reg,arg)	__##reg arg
 	#define _COMPILED_WITH	"Manx C"
 
-	#ifndef min
-	#define min(a,b)	(((a)<(b))?(a):(b))
-	#endif
-	#ifndef max
-	#define max(a,b)	(((a)>(b))?(a):(b))
-	#endif
-	#ifndef abs
-	#define abs(a)		(((a)>0)?(a):-(a))
-	#endif
+/* 	#ifndef min */
+/* 	#define min(a,b)	(((a)<(b))?(a):(b)) */
+/* 	#endif */
+/* 	#ifndef max */
+/* 	#define max(a,b)	(((a)>(b))?(a):(b)) */
+/* 	#endif */
+/* 	#ifndef abs */
+/* 	#define abs(a)		(((a)>0)?(a):-(a)) */
+/* 	#endif */
 
 	#error Aztec/Manx C compiler support is untested. Please check all the above definitions
 #else
@@ -242,7 +242,7 @@
 #define LIBCALL		ASMCALL SAVEDS
 #define HOOKCALL	ASMCALL SAVEDS
 
-
+#if 0
 #ifndef __MORPHOS__
 /* AROS Compatibility: IPTR is a type which can store a pointer
  * as well as a long integer.
@@ -251,5 +251,6 @@
 #define IPTR LONG
 #endif /* IPTR */
 #endif /* __MORPHOS__ */
+#endif
 
 #endif /* !COMPILERSPECIFIC_H */

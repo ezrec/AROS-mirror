@@ -479,12 +479,14 @@ SetSound ( UWORD                    channel,
     }
     else
     {
-//      cd->cd_NextLastOffset    = ( (Fixed64) ( offset + length - 1 ) << 32 )
-//                                 | (Fixed64) 0xffffffffLL;
-
+#if !defined( __mc68000__ )
+      cd->cd_NextLastOffset    = ( (Fixed64) ( offset + length - 1 ) << 32 )
+                                 | (Fixed64) 0xffffffffLL;
+#else
       // Fix for m68k compiler bug! :-(
       *(ULONG*) &cd->cd_NextLastOffset = offset + length - 1;
       *(ULONG*) ((char*) (&cd->cd_NextLastOffset)+4) = 0xffffffffUL;
+#endif
 
       /* Low cd->cd_NextOffset already 0 */
     }

@@ -34,6 +34,7 @@
 #include <exec/devices.h>
 #include <devices/ahi.h>
 #include <devices/timer.h>
+#include <dos/dos.h>
 #include <libraries/ahi_sub.h>
 #include <utility/hooks.h>
 
@@ -67,7 +68,7 @@ struct AHIBase
   UBYTE                    ahib_Flags;
   UBYTE                    ahib_DebugLevel;
   struct ExecBase         *ahib_SysLib;
-  ULONG                    ahib_SegList;
+  BPTR                     ahib_SegList;
   APTR                     ahib_AudioCtrl;
   struct AHIDevUnit       *ahib_DevUnits[AHI_UNITS];
   struct SignalSemaphore   ahib_Lock;

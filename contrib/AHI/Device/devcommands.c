@@ -125,7 +125,7 @@ ULONG
 DevAbortIO( struct AHIRequest* ioreq,
             struct AHIBase*    AHIBase )
 {
-  ULONG rc = NULL;
+  ULONG rc = 0;
   struct AHIDevUnit *iounit;
   
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
@@ -245,7 +245,7 @@ TermIO ( struct AHIRequest *ioreq,
     KPrintF("Terminating IO Request 0x%08lx", (ULONG) ioreq);
   }
 
-  if(ioreq->ahir_Extras != NULL)
+  if(ioreq->ahir_Extras != 0)
   {
     int  sound  = GetExtras(ioreq)->Sound;
     APTR extras = (APTR) ioreq->ahir_Extras;
@@ -256,7 +256,7 @@ TermIO ( struct AHIRequest *ioreq,
       iounit->Sounds[sound] = SOUND_FREE;
     }
 
-    ioreq->ahir_Extras = NULL;
+    ioreq->ahir_Extras = 0;
     FreeVec( extras );
   }
 
@@ -264,6 +264,9 @@ TermIO ( struct AHIRequest *ioreq,
   {
     // Update master volume if we're terminating a write request
     UpdateMasterVolume( iounit, AHIBase );
+
+    // Convert io_Actual to bytes
+    ioreq->ahir_Std.io_Actual *= AHI_SampleFrameSize(ioreq->ahir_Type);
   }
   
   if( ! (ioreq->ahir_Std.io_Flags & IOF_QUICK))
@@ -292,7 +295,7 @@ PerformIO ( struct AHIRequest *ioreq,
   ioreq->ahir_Std.io_Error = 0;
 
   // Just to make sure TermIO won't free a bad address
-  ioreq->ahir_Extras = NULL;
+  ioreq->ahir_Extras = 0;
 
   switch(ioreq->ahir_Std.io_Command)
   {
@@ -402,7 +405,7 @@ commandlist[] =
   CMD_STOP,
   CMD_START,
   CMD_FLUSH,
-  NULL
+  0
 };
 
 static void
@@ -452,8 +455,6 @@ Devicequery ( struct AHIRequest *ioreq,
 *   IO REQUEST RESULT
 *       io_Error        0 for success, or an error code as defined in
 *                       <ahi/devices.h> and <exec/errors.h>.
-*       io_Actual       If io_Error is 0, number of requests actually
-*                       flushed.
 *
 *       The other fields, except io_Device, io_Unit and io_Command, are
 *       trashed.
@@ -682,7 +683,9 @@ ResetCmd ( struct AHIRequest *ioreq,
 *       io_Error        0 for success, or an error code as defined in
 *                       <ahi/devices.h> and <exec/errors.h>.
 *       io_Actual       If io_Error is 0, number of bytes actually
-*                       transferred.
+*                       transferred. Starting with V6, io_Actual is also
+*                       valid if io_Error is not 0 (like if the request
+*                       was aborted).
 *       io_Offset       Updated to be used as input next time.
 *
 *       The other fields, except io_Device, io_Unit and io_Command, are
@@ -706,7 +709,7 @@ ReadCmd ( struct AHIRequest *ioreq,
           struct AHIBase *AHIBase )
 {
   struct AHIDevUnit *iounit;
-  ULONG error,mixfreq = 0;
+  ULONG error=AHIE_OK,mixfreq = 0;
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_HIGH)
   {
@@ -714,6 +717,8 @@ ReadCmd ( struct AHIRequest *ioreq,
   }
 
   iounit = (struct AHIDevUnit *) ioreq->ahir_Std.io_Unit;
+
+  ioreq->ahir_Std.io_Actual = 0;
 
   /* Start recording if neccessary */
   if( ! iounit->IsRecording)
@@ -740,8 +745,6 @@ ReadCmd ( struct AHIRequest *ioreq,
     AHI_ControlAudio(iounit->AudioCtrl,
         AHIC_MixFreq_Query, (ULONG) &mixfreq,
         TAG_DONE);
-
-    ioreq->ahir_Std.io_Actual = 0;
 
     /* Initialize ahir_Frequency for the assembler record routines */
     if(ioreq->ahir_Frequency && mixfreq)
@@ -803,7 +806,9 @@ ReadCmd ( struct AHIRequest *ioreq,
 *       io_Error        0 for success, or an error code as defined in
 *                       <ahi/devices.h> and <exec/errors.h>.
 *       io_Actual       If io_Error is 0, number of bytes actually
-*                       played.
+*                       played. Starting with V6, io_Actual is also valid
+*                       if io_Error is not 0 (like if the request was
+*                       aborted).
 *
 *       The other fields, except io_Device, io_Unit and io_Command, are
 *       trashed.
@@ -811,9 +816,9 @@ ReadCmd ( struct AHIRequest *ioreq,
 *   EXAMPLE
 *
 *   NOTES
+*       32 bit samples (ahir_Type) is only available in V6 and later.
 *
 *   BUGS
-*       32 bit samples are not allowed yet.
 *
 *   SEE ALSO
 *       <ahi/devices.h>, <exec/errors.h>
@@ -835,6 +840,8 @@ WriteCmd ( struct AHIRequest *ioreq,
   }
 
   iounit = (struct AHIDevUnit *) ioreq->ahir_Std.io_Unit;
+
+  ioreq->ahir_Std.io_Actual = 0;
 
   /* Start playback if neccessary */
   if( ! iounit->IsPlaying)
@@ -858,7 +865,7 @@ WriteCmd ( struct AHIRequest *ioreq,
 
   ioreq->ahir_Extras = (ULONG) AllocVec(sizeof(struct Extras), MEMF_PUBLIC|MEMF_CLEAR);
 
-  if(ioreq->ahir_Extras == NULL)
+  if(ioreq->ahir_Extras == 0)
   {
     error = AHIE_NOMEM;
   }
@@ -872,8 +879,6 @@ WriteCmd ( struct AHIRequest *ioreq,
 
   if(iounit->IsPlaying && !error)
   {
-    ioreq->ahir_Std.io_Actual = 0;
-
     // Convert length in bytes to length in samples
 
     ioreq->ahir_Std.io_Length /= AHI_SampleFrameSize(ioreq->ahir_Type);
@@ -910,8 +915,6 @@ WriteCmd ( struct AHIRequest *ioreq,
 *   IO REQUEST RESULT
 *       io_Error        0 for success, or an error code as defined in
 *                       <ahi/devices.h> and <exec/errors.h>.
-*       io_Actual       If io_Error is 0, number of requests actually
-*                       flushed.
 *
 *       The other fields, except io_Device, io_Unit and io_Command, are
 *       trashed.
@@ -1255,7 +1258,7 @@ NewWriter ( struct AHIRequest *ioreq,
                   AHIP_LoopOffset,    ioreq->ahir_Std.io_Actual,
                   AHIP_LoopLength,    ioreq->ahir_Std.io_Length - 
                                       ioreq->ahir_Std.io_Actual,
-                  AHIP_EndChannel,    NULL,
+                  AHIP_EndChannel,    0,
                   TAG_DONE);
             }
             else
@@ -1431,7 +1434,7 @@ PlayRequest ( int channel,
       AHIP_Sound,         GetExtras(ioreq)->Sound,
       AHIP_Offset,        ioreq->ahir_Std.io_Actual,
       AHIP_Length,        ioreq->ahir_Std.io_Length-ioreq->ahir_Std.io_Actual,
-      AHIP_EndChannel,    NULL,
+      AHIP_EndChannel,    0,
       TAG_DONE);
 
   AHIsub_Enable((struct AHIAudioCtrlDrv *) iounit->AudioCtrl);
@@ -1536,8 +1539,7 @@ RemPlayers ( struct List *list,
 
       ioreq->ahir_Std.io_Error = AHIE_OK;
       ioreq->ahir_Std.io_Command = CMD_WRITE;
-      ioreq->ahir_Std.io_Actual = ioreq->ahir_Std.io_Length
-                                * AHI_SampleFrameSize(ioreq->ahir_Type);
+      ioreq->ahir_Std.io_Actual = ioreq->ahir_Std.io_Length;
       TermIO(ioreq, AHIBase);
     }
   }

@@ -28,44 +28,64 @@
 
 /* Library entry points (native) */
 
-void gw_initRoutine( void );
-void gw_DevExpunge( void );
-void gw_DevOpen( void );
-void gw_DevClose( void );
-void gw_DevBeginIO( void );
-void gw_DevAbortIO( void );
-void gw_AllocAudioA( void );
-void gw_FreeAudio( void );
-void gw_KillAudio( void );
-void gw_ControlAudioA( void );
-void gw_SetVol( void );
-void gw_SetFreq( void );
-void gw_SetSound( void );
-void gw_SetEffect( void );
-void gw_LoadSound( void );
-void gw_UnloadSound( void );
-void gw_PlayA( void );
-void gw_SampleFrameSize( void );
-void gw_GetAudioAttrsA( void );
-void gw_BestAudioIDA( void );
-void gw_AllocAudioRequestA( void );
-void gw_AudioRequestA( void );
-void gw_FreeAudioRequest( void );
-void gw_NextAudioID( void );
-void gw_AddAudioMode( void );
-void gw_RemoveAudioMode( void );
-void gw_LoadModeFile( void );
+#if !defined( AROS_SLIB_ENTRY )
+#define AROS_SLIB_ENTRY( f, l ) f
+#endif
+
+void AROS_SLIB_ENTRY( gw_initRoutine, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_DevExpunge, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_DevOpen, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_DevClose, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_Null, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_DevBeginIO, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_DevAbortIO, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_AllocAudioA, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_FreeAudio, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_KillAudio, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_ControlAudioA, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_SetVol, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_SetFreq, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_SetSound, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_SetEffect, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_LoadSound, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_UnloadSound, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_PlayA, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_SampleFrameSize, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_GetAudioAttrsA, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_BestAudioIDA, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_AllocAudioRequestA, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_AudioRequestA, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_FreeAudioRequest, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_NextAudioID, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_AddAudioMode, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_RemoveAudioMode, Ahi )( void );
+void AROS_SLIB_ENTRY( gw_LoadModeFile, Ahi )( void );
 
 void m68k_IndexToFrequency( void );
 void m68k_DevProc( void );
 
-/* Special hook entry points */
 
+#if defined( __AROS__ ) && !defined( __mc68000__ )
+
+BOOL
+m68k_PreTimer( void );
+
+void
+m68k_PostTimer( void );
+
+#define HookEntryPreserveAllRegs HookEntry
+#define PreTimerPreserveAllRegs  m68k_PreTimer
+#define PostTimerPreserveAllRegs m68k_PostTimer
+
+#else
+
+/* Special hook entry points */
 void HookEntryPreserveAllRegs( void );
 
 /* (Pre|Post)Timer entry points */
-
 void PreTimerPreserveAllRegs( void );
 void PostTimerPreserveAllRegs( void );
+
+#endif /* defined( __AROS__ ) && !defined( __mc68000__ ) */
 
 #endif /* ahi_gateway_h */

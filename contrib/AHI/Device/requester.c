@@ -32,6 +32,7 @@ struct VSPrite;
 #include <intuition/intuition.h>
 #include <intuition/intuitionbase.h>
 #include <libraries/gadtools.h>
+#include <libraries/asl.h>
 
 #include <clib/alib_protos.h>
 #include <proto/exec.h>
@@ -47,6 +48,7 @@ struct VSPrite;
 
 #include <math.h>
 #include <string.h>
+#include <stddef.h>
 
 #include "ahi_def.h"
 #include "localize.h"
@@ -54,6 +56,9 @@ struct VSPrite;
 #include "modeinfo.h"
 #include "debug.h"
 #include "gateway.h"
+
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
 
 struct AHIAudioModeRequesterExt;
 
@@ -215,6 +220,158 @@ static void FillReqStruct(struct AHIAudioModeRequesterExt *req, struct TagItem *
   req->FilterTags=(struct TagItem *)GetTagData(AHIR_FilterTags,(ULONG)req->FilterTags,tags);
   req->FilterFunc=(struct Hook *)GetTagData(AHIR_FilterFunc,(ULONG)req->FilterFunc,tags);
   req->Flags=PackBoolTags(req->Flags,tags,reqboolmap);
+}
+
+
+static void
+CalculateWindowSizePos( struct AHIAudioModeRequesterExt* req,
+			struct Screen* screen )
+{
+  struct AslSemaphore* asl_semaphore = NULL;
+
+  // Default position and size
+  WORD left   = 30;
+  WORD top    = 20;
+  WORD width  = 318;
+  WORD height = 198;
+
+#ifdef ASL_SEMAPHORE_NAME /* Don't break if no v45 includes found */
+  Forbid();
+  asl_semaphore = (struct AslSemaphore*) FindSemaphore( ASL_SEMAPHORE_NAME );
+
+  if( asl_semaphore != NULL )
+  {
+    ObtainSemaphore( (struct SignalSemaphore*) asl_semaphore );
+  }
+  Permit();
+ 
+  if( asl_semaphore != NULL )
+  {
+    if( asl_semaphore->as_Version >= 45 &&
+	asl_semaphore->as_Size > offsetof( struct AslSemaphore,
+					   as_RelativeHeight ) )
+    {
+      if( asl_semaphore->as_SizePosition & ASLOPTION_ASLOverrides )
+      {
+	// Force default settings
+	req->Req.ahiam_LeftEdge = -1;
+	req->Req.ahiam_TopEdge  = -1;
+	req->Req.ahiam_Width    = -1;
+	req->Req.ahiam_Height   = -1;
+      }
+
+      if( ( asl_semaphore->as_SizePosition & ASLSIZE_MASK ) ==
+	  ASLSIZE_RelativeSize )
+      {
+	// FIXME: Is it correct to use screen size only? The include file
+	// says something about parent window??
+	  
+	width  = (WORD) ( (LONG) screen->Width *
+			  asl_semaphore->as_RelativeWidth / 100 );
+	height = (WORD) ( (LONG) screen->Height *
+			  asl_semaphore->as_RelativeHeight / 100 );
+      }
+    }
+    else
+    {
+      // Not valid
+      ReleaseSemaphore( (struct SignalSemaphore*) asl_semaphore );
+      asl_semaphore = NULL;
+    }
+  }
+#endif
+
+  // Set default main window size
+  if( req->Req.ahiam_Width == -1 )
+    req->Req.ahiam_Width = width;
+
+  if( req->Req.ahiam_Height == -1 )
+    req->Req.ahiam_Height = height;
+
+
+#ifdef ASL_SEMAPHORE_NAME /* Don't break if no v45 includes found */
+  if( asl_semaphore != NULL )
+  {
+    switch( asl_semaphore->as_SizePosition & ASLPOS_MASK )
+    {
+      case ASLPOS_CenterWindow:
+	if( req->SrcWindow != NULL )
+	{
+	  top  = ( req->SrcWindow->TopEdge +
+		   req->SrcWindow->Height / 2 -
+		   req->Req.ahiam_Height / 2 );
+	  left = ( req->SrcWindow->LeftEdge +
+		   req->SrcWindow->Width / 2 -
+		   req->Req.ahiam_Width / 2 );
+	  break;
+	}
+	else
+	{
+	  // Fall through and use ASLPOS_CenterScreen instead
+	}
+
+      case ASLPOS_CenterScreen:
+	top  = ( screen->Height / 2 -
+		 req->Req.ahiam_Height / 2 );
+	left = ( screen->Width / 2 -
+		 req->Req.ahiam_Width / 2 );
+	break;
+	
+      case ASLPOS_WindowPosition:
+	if( req->SrcWindow != NULL )
+	{
+	  top  = ( req->SrcWindow->TopEdge +
+		   asl_semaphore->as_RelativeTop );
+	  left = ( req->SrcWindow->LeftEdge +
+		   asl_semaphore->as_RelativeLeft );
+	  break;
+	}
+	else
+	{
+	  // Fall through and use ASLPOS_ScreenPosition instead
+	}
+
+      case ASLPOS_ScreenPosition:
+	top  = asl_semaphore->as_RelativeTop;
+	left = asl_semaphore->as_RelativeLeft;
+	break;
+
+      case ASLPOS_CenterMouse:
+	top  = ( screen->MouseY -
+		  req->Req.ahiam_Height / 2 );
+	left = ( screen->MouseX -
+		 req->Req.ahiam_Width / 2 );
+	break;
+	
+      case ASLPOS_DefaultPosition:
+      default:
+	// Do nothing (use hardcoded defaults)
+	break;
+    }
+  } 
+#endif
+
+  // Set default main window position
+  if( req->Req.ahiam_LeftEdge == -1 )
+    req->Req.ahiam_LeftEdge = left;
+
+  if( req->Req.ahiam_TopEdge == -1 )
+    req->Req.ahiam_TopEdge = top;
+
+  
+  // Set default info window position (size is fixed)
+  if( req->Req.ahiam_InfoLeftEdge == -1 )
+    req->Req.ahiam_InfoLeftEdge = req->Req.ahiam_LeftEdge + 16;
+  
+  if( req->Req.ahiam_InfoTopEdge == -1 )
+    req->Req.ahiam_InfoTopEdge = req->Req.ahiam_TopEdge + 25;
+
+
+  // Clean up
+  if( asl_semaphore != NULL )
+  {
+    ReleaseSemaphore( (struct SignalSemaphore*) asl_semaphore );
+  }
 }
 
 /*
@@ -971,14 +1128,18 @@ AllocAudioRequestA( struct TagItem* tags,
   if((req=AllocVec(sizeof(struct AHIAudioModeRequesterExt),MEMF_CLEAR)))
   {
 // Fill in defaults
-    req->Req.ahiam_LeftEdge   = 30;
-    req->Req.ahiam_TopEdge    = 20;
-    req->Req.ahiam_Width      = 318;
-    req->Req.ahiam_Height     = 198;
+    req->Req.ahiam_LeftEdge   = -1;
+    req->Req.ahiam_TopEdge    = -1;
+    req->Req.ahiam_Width      = -1;
+    req->Req.ahiam_Height     = -1;
+    
     req->Req.ahiam_AudioID    = AHI_INVALID_ID;
     req->Req.ahiam_MixFreq    = AHIBase->ahib_Frequency;
-    req->Req.ahiam_InfoWidth  = 280;
-    req->Req.ahiam_InfoHeight = 112;
+
+    req->Req.ahiam_InfoLeftEdge = -1;
+    req->Req.ahiam_InfoTopEdge  = -1;
+    req->Req.ahiam_InfoWidth    = 280;
+    req->Req.ahiam_InfoHeight   = 112;
 
     req->PubScreenName        = (STRPTR) -1;
 
@@ -1183,7 +1344,9 @@ AudioRequestA( struct AHIAudioModeRequester* req_in,
   struct AHIAudioModeRequesterExt *req=(struct AHIAudioModeRequesterExt *)req_in;
   struct MinList list;
   struct IDnode *node = NULL, *node2 = NULL;
-  ULONG screenTag=TAG_IGNORE,screenData = 0 ,id=AHI_INVALID_ID;
+  struct Screen *pub_screen = NULL;
+  struct Screen *screen     = NULL;
+  ULONG id=AHI_INVALID_ID;
   BOOL  rc=TRUE;
   struct Requester lockreq;
   BOOL  locksuxs = FALSE;
@@ -1204,10 +1367,6 @@ AudioRequestA( struct AHIAudioModeRequester* req_in,
 
 // Update requester structure
   FillReqStruct(req,tags);
-  if(req->Req.ahiam_InfoLeftEdge == 0)
-    req->Req.ahiam_InfoLeftEdge=req->Req.ahiam_LeftEdge+16;
-  if(req->Req.ahiam_InfoTopEdge == 0)
-    req->Req.ahiam_InfoTopEdge=req->Req.ahiam_TopEdge+25;
   req->tempAudioID=req->Req.ahiam_AudioID;
   req->tempFrequency=req->Req.ahiam_MixFreq;
 
@@ -1254,7 +1413,7 @@ AudioRequestA( struct AHIAudioModeRequester* req_in,
     }
   }
 
-// Add the users prefered mode
+// Add the users preferred mode
 
   if((req->Flags & defaultmode) && (AHIBase->ahib_AudioMode != AHI_INVALID_ID)) do
   {
@@ -1286,34 +1445,47 @@ AudioRequestA( struct AHIAudioModeRequester* req_in,
     return FALSE;
   }
 
-// Find our sceeen
-//  req->PubScreen=LockPubScreen(req->PubScreenName);
-
-// Clear ownIDCMP flag
-  req->Flags &= ~ownIDCMP;
+  // Find our screen
   if(req->Screen)
   {
-    screenTag=(ULONG)WA_CustomScreen;
-    screenData=(ULONG)req->Screen;
+    pub_screen = NULL;
+    screen     = req->Screen;
   }
   else if(req->PubScreenName != (STRPTR) -1)
   {
-    screenTag=(ULONG)WA_PubScreenName;
-    screenData=(ULONG)req->PubScreenName;
+    pub_screen = LockPubScreen( req->PubScreenName );
+    screen     = pub_screen;
   }
   else if(req->SrcWindow)
   {
-    screenTag=(ULONG)WA_CustomScreen;
-    screenData=(ULONG)req->SrcWindow->WScreen;
+    pub_screen = NULL;
+    screen     = req->SrcWindow->WScreen;
+  }
+
+  if( screen == NULL )
+  {
+    pub_screen = LockPubScreen( NULL );
+    screen     = pub_screen;
+  }
+
+  CalculateWindowSizePos( req, screen );
+
+  // Clear ownIDCMP flag
+  req->Flags &= ~ownIDCMP;
+
+  if( req->SrcWindow != NULL )
+  {
     if(req->Flags & haveIDCMP)
       req->Flags |= ownIDCMP;
   }
-
+  
   zipcoords[0]=req->Req.ahiam_LeftEdge;
   zipcoords[1]=req->Req.ahiam_TopEdge;
   zipcoords[2]=1;
   zipcoords[3]=1;
-  req->Window=OpenWindowTags(NULL,
+
+  req->Window=OpenWindowTags(
+    NULL,
     WA_Left,req->Req.ahiam_LeftEdge,
     WA_Top,req->Req.ahiam_TopEdge,
     WA_Width,req->Req.ahiam_Width,
@@ -1322,7 +1494,7 @@ AudioRequestA( struct AHIAudioModeRequester* req_in,
     WA_MaxWidth,~0,
     WA_MaxHeight,~0,
     WA_Title, (ULONG) req->TitleText,
-    screenTag,screenData,
+    ( pub_screen != NULL ? WA_PubScreen : WA_CustomScreen ), (ULONG) screen,
     WA_PubScreenFallBack,TRUE,
     WA_SizeGadget,TRUE,
     WA_SizeBBottom,TRUE,
@@ -1336,20 +1508,37 @@ AudioRequestA( struct AHIAudioModeRequester* req_in,
     WA_NewLookMenus, TRUE,
     TAG_DONE);
 
-//  UnlockPubScreen(NULL,req->PubScreen);
+  if( pub_screen != NULL )
+  {
+    UnlockPubScreen( NULL, pub_screen);
+  }
 
   if(req->Window)
   {
-    WindowLimits(req->Window,
-      // Topaz80: "Frequency"+INTERWIDTH+MINSLIDERWIDTH+INTERWIDTH+"99999 Hz" gives...
-      (req->Window->BorderLeft+4)+
+    // Topaz80: "Frequency"+INTERWIDTH+MINSLIDERWIDTH+INTERWIDTH+"99999 Hz" gives...
+    WORD min_width = (req->Window->BorderLeft+4)+
       strlen( GetString(msgReqFrequency, req->Catalog))*8+
       INTERWIDTH+MINSLIDERWIDTH+INTERWIDTH+
       FREQLEN2*8+
-      (req->Window->BorderRight+4),
-      // Topaz80: 5 lines, freq & buttons gives...
-      (req->Window->BorderTop+2)+(5*8+6)+2+(8+6)+2+(8+6)+(req->Window->BorderBottom+2),
-      0,0);
+      (req->Window->BorderRight+4);
+
+    // Topaz80: 5 lines, freq & buttons gives...
+    WORD min_height = (req->Window->BorderTop+2)+
+      (5*8+6)+2+(8+6)+2+(8+6)+
+      (req->Window->BorderBottom+2);
+
+    if( req->Window->Width < min_width ||
+	req->Window->Height < min_height )
+    {
+      ChangeWindowBox( req->Window,
+		       req->Window->LeftEdge,
+		       req->Window->TopEdge,
+		       max( req->Window->Width, min_width ),
+		       max( req->Window->Height, min_height ) );
+      Delay( 5 );
+    }
+
+    WindowLimits( req->Window, min_width, min_height, 0, 0 );
 
     if((req->vi=GetVisualInfoA(req->Window->WScreen, NULL)))
     {

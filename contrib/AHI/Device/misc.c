@@ -47,6 +47,14 @@
 #include "header.h"
 #include "misc.h"
 
+#if defined( __AROS__ )
+void
+ReadEClock( struct EClockVal* ecv )
+{
+  ecv->ev_hi = 0;
+  ecv->ev_lo = 0;
+}
+#endif
 
 /******************************************************************************
 ** Findnode *******************************************************************
@@ -403,6 +411,58 @@ AHIGetELFSymbol( const char* name,
 }
 
 /******************************************************************************
+**** Endian support code. *****************************************************
+******************************************************************************/
+
+/* See the header file for macros */
+
+#if !defined( WORDS_BIGENDIAN )
+
+static UWORD
+EndianSwapUWORD( UWORD x ) {
+  return ((((x) >> 8) & 0x00ffU) |
+	  (((x) << 8) & 0xff00U) );
+}
+
+static ULONG
+EndianSwapULONG( ULONG x ) {
+  return ((((x) >> 24) & 0x000000ffUL) |
+	  (((x) >> 8)  & 0x0000ff00UL) |
+	  (((x) << 8)  & 0x00ff0000UL) |
+	  (((x) << 24) & 0xff000000UL) );
+}
+
+void
+EndianSwap( size_t size, void* data) {
+  switch( size ) {
+    case 1:
+      break;
+
+    case 2:
+      *((UWORD*) data) = EndianSwapUWORD( *((UWORD*) data) );
+      break;
+
+    case 4:
+      *((ULONG*) data) = EndianSwapULONG( *((ULONG*) data) );
+      break;
+
+    case 8: {
+      ULONG tmp;
+
+      tmp = EndianSwapULONG( *((ULONG*) data) );
+      *((ULONG*) data) = EndianSwapULONG( *((ULONG*) (data + 4)) );
+      *((ULONG*) (data + 4)) = tmp;
+      break;
+    }
+      
+    default:
+      break;
+  }
+}
+
+#endif
+
+/******************************************************************************
 ** PreTimer  ******************************************************************
 ******************************************************************************/
 
@@ -412,7 +472,10 @@ PreTimer( struct AHIPrivAudioCtrl* audioctrl )
   ULONG pretimer_period;  // Clocks between PreTimer calls
   ULONG mixer_time;       // Clocks spent in mixer
 
-  return FALSE;
+  if( TimerBase == NULL )
+  {
+    return FALSE;
+  }
 
   pretimer_period = audioctrl->ahiac_Timer.EntryTime.ev_lo;
 
@@ -426,9 +489,13 @@ PreTimer( struct AHIPrivAudioCtrl* audioctrl )
   if( pretimer_period != 0 )
   {
     audioctrl->ahiac_UsedCPU = ( mixer_time << 8 ) / pretimer_period;
+
+    return ( audioctrl->ahiac_UsedCPU <= audioctrl->ahiac_MaxCPU );
   }
-  
-  return ( audioctrl->ahiac_UsedCPU <= audioctrl->ahiac_MaxCPU );
+  else
+  {
+    return FALSE;
+  }
 }
 
 /******************************************************************************
@@ -438,5 +505,10 @@ PreTimer( struct AHIPrivAudioCtrl* audioctrl )
 void
 PostTimer( struct AHIPrivAudioCtrl* audioctrl )
 {
+  if( TimerBase == NULL )
+  {
+    return;
+  }
+
   ReadEClock( &audioctrl->ahiac_Timer.ExitTime );
 }

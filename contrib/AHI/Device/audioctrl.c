@@ -170,7 +170,7 @@ CreateAudioCtrl(struct TagItem *tags)
   if( audioctrl != NULL )
   {
     audioctrl->ac.ahiac_AudioCtrl.ahiac_UserData =
-      (APTR)GetTagData(AHIA_UserData,NULL,tags);
+      (APTR)GetTagData(AHIA_UserData,0,tags);
     audioctrl->ahiac_AudioID =
       GetTagData(AHIA_AudioID,AHI_DEFAULT_ID,tags);
     audioctrl->ac.ahiac_MixFreq =
@@ -180,11 +180,11 @@ CreateAudioCtrl(struct TagItem *tags)
     audioctrl->ac.ahiac_Sounds =
       GetTagData(AHIA_Sounds,0,tags);
     audioctrl->ac.ahiac_SoundFunc =
-      (struct Hook *)GetTagData(AHIA_SoundFunc,NULL,tags);
+      (struct Hook *)GetTagData(AHIA_SoundFunc,0,tags);
     audioctrl->ahiac_RecordFunc =
-      (struct Hook *)GetTagData(AHIA_RecordFunc,NULL,tags);
+      (struct Hook *)GetTagData(AHIA_RecordFunc,0,tags);
     audioctrl->ac.ahiac_PlayerFunc =
-      (struct Hook *)GetTagData(AHIA_PlayerFunc,NULL,tags);
+      (struct Hook *)GetTagData(AHIA_PlayerFunc,0,tags);
     audioctrl->ac.ahiac_PlayerFreq =
       GetTagData(AHIA_PlayerFreq,0,tags);
     audioctrl->ac.ahiac_MinPlayerFreq =
@@ -231,7 +231,7 @@ CreateAudioCtrl(struct TagItem *tags)
       {
         char driver_name[128];
 
-        audioctrl->ac.ahiac_Flags=PackBoolTags(GetTagData(AHIDB_Flags,NULL,dbtags),dbtags,boolmap);
+        audioctrl->ac.ahiac_Flags=PackBoolTags(GetTagData(AHIDB_Flags,0,dbtags),dbtags,boolmap);
 
         if(AHIBase->ahib_Flags & AHIBF_CLIPPING)
         {
@@ -979,7 +979,7 @@ ControlAudioA( struct AHIPrivAudioCtrl* audioctrl,
     case AHIC_OutputVolume_Query:
     case AHIC_Input_Query:
     case AHIC_Output_Query:
-      *ptr=AHIsub_HardwareControl(tag->ti_Tag, NULL, (struct AHIAudioCtrlDrv *)audioctrl);
+      *ptr=AHIsub_HardwareControl(tag->ti_Tag, 0, (struct AHIAudioCtrlDrv *)audioctrl);
 //KPrintF("Called AHIsub_HardwareControl(%08lx:NULL)\n",tag->ti_Tag);
       break;
     }
@@ -988,7 +988,7 @@ ControlAudioA( struct AHIPrivAudioCtrl* audioctrl,
 // Let's act!
   if(update)
   {
-    AHIsub_Update(NULL,(struct AHIAudioCtrlDrv *)audioctrl);
+    AHIsub_Update(0,(struct AHIAudioCtrlDrv *)audioctrl);
 //KPrintF("Called AHIsub_Update()\n");
   }
   

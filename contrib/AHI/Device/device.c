@@ -275,6 +275,7 @@ DevOpen ( ULONG              unit,
 
     if(AHI_NextAudioID(AHI_INVALID_ID) == (ULONG) AHI_INVALID_ID)
     {
+      AHI_LoadModeFile("DEVS:AudioModes");
 
 #ifdef __MORPHOS__
       // Be quiet here. - Piru
@@ -288,8 +289,6 @@ DevOpen ( ULONG              unit,
         Self->pr_WindowPtr = oldwindowptr;
       }
 #endif
-
-      AHI_LoadModeFile("DEVS:AudioModes");
     }
   }
 
@@ -575,7 +574,7 @@ ReadConfig ( struct AHIDevUnit *iounit,
 
   if((iff=AllocIFF()))
   {
-    iff->iff_Stream=Open("ENV:Sys/ahi.prefs", MODE_OLDFILE);
+    iff->iff_Stream=(ULONG) Open("ENV:Sys/ahi.prefs", MODE_OLDFILE);
     if(iff->iff_Stream)
     {
       InitIFFasDOS(iff);
@@ -594,10 +593,13 @@ ReadConfig ( struct AHIDevUnit *iounit,
             if(ahig)
             {
               struct AHIGlobalPrefs *globalprefs;
+	      UWORD debug_level;
               
               globalprefs = (struct AHIGlobalPrefs *)ahig->sp_Data;
 
-              AHIBase->ahib_DebugLevel = globalprefs->ahigp_DebugLevel;
+              debug_level = globalprefs->ahigp_DebugLevel;
+	      EndianSwap( sizeof (UWORD), &debug_level );
+              AHIBase->ahib_DebugLevel = debug_level;
 
               AHIBase->ahib_Flags = 0;
 
@@ -618,6 +620,7 @@ ReadConfig ( struct AHIDevUnit *iounit,
                                                     ahigp_MaxCPU) )
               {
                 AHIBase->ahib_MaxCPU = globalprefs->ahigp_MaxCPU;
+		EndianSwap( sizeof (Fixed), &AHIBase->ahib_MaxCPU );
               }
               else
               {
@@ -638,6 +641,7 @@ ReadConfig ( struct AHIDevUnit *iounit,
                                                     ahigp_AntiClickTime ) )
               {
                 AHIBase->ahib_AntiClickTime = globalprefs->ahigp_AntiClickTime;
+		EndianSwap( sizeof (Fixed), &AHIBase->ahib_AntiClickTime );
               }
               else
               {
@@ -664,6 +668,15 @@ ReadConfig ( struct AHIDevUnit *iounit,
                   iounit->OutputVolume    = unitprefs->ahiup_OutputVolume;
                   iounit->Input           = unitprefs->ahiup_Input;
                   iounit->Output          = unitprefs->ahiup_Output;
+
+		  EndianSwap( sizeof (ULONG), &iounit->AudioMode );
+		  EndianSwap( sizeof (ULONG), &iounit->Frequency );
+		  EndianSwap( sizeof (UWORD), &iounit->Channels );
+		  EndianSwap( sizeof (Fixed), &iounit->MonitorVolume );
+		  EndianSwap( sizeof (Fixed), &iounit->InputGain );
+		  EndianSwap( sizeof (Fixed), &iounit->OutputVolume );
+		  EndianSwap( sizeof (ULONG), &iounit->Input );
+		  EndianSwap( sizeof (ULONG), &iounit->Output );
                 }
               }
               else
@@ -677,6 +690,14 @@ ReadConfig ( struct AHIDevUnit *iounit,
                   AHIBase->ahib_OutputVolume    = unitprefs->ahiup_OutputVolume;
                   AHIBase->ahib_Input           = unitprefs->ahiup_Input;
                   AHIBase->ahib_Output          = unitprefs->ahiup_Output;
+
+		  EndianSwap( sizeof (ULONG), &AHIBase->ahib_AudioMode);
+		  EndianSwap( sizeof (ULONG), &AHIBase->ahib_Frequency);
+		  EndianSwap( sizeof (Fixed), &AHIBase->ahib_MonitorVolume);
+		  EndianSwap( sizeof (Fixed), &AHIBase->ahib_InputGain);
+		  EndianSwap( sizeof (Fixed), &AHIBase->ahib_OutputVolume);
+		  EndianSwap( sizeof (ULONG), &AHIBase->ahib_Input);
+		  EndianSwap( sizeof (ULONG), &AHIBase->ahib_Output);
                 }
               }
 
@@ -686,7 +707,7 @@ ReadConfig ( struct AHIDevUnit *iounit,
         }
         CloseIFF(iff);
       }
-      Close(iff->iff_Stream);
+      Close((BPTR) iff->iff_Stream);
     }
     FreeIFF(iff);
   }

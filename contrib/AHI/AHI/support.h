@@ -24,6 +24,9 @@
 #include <exec/lists.h>
 #include <devices/ahi.h>
 
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
+
 extern struct AHIGlobalPrefs globalprefs;
 
 BOOL Initialize(void);

@@ -109,6 +109,14 @@ gw_DevClose( void )
   return DevClose( ioreq, AHIBase );
 }
 
+/* gw_Null *******************************************************************/
+
+ULONG
+gw_Null( void )
+{
+  return 0;
+}
+
 
 /* gw_DevBeginIO *************************************************************/
 
@@ -412,8 +420,8 @@ gw_LoadModeFile( void )
 static LONG
 gw_IndexToFrequency( void )
 {
-  struct Gadget* gad   = (struct Gadget*) ((ULONG*) REG_A7)[1];
-  WORD           level = (WORD)           ((ULONG*) REG_A7)[2];
+  struct Gadget* gad   = (struct Gadget*) REG_A1;
+  WORD           level = (WORD)           REG_D0;
 
   return IndexToFrequency( gad , level );
 }
@@ -548,6 +556,18 @@ gw_DevClose( struct _Regs* regs )
   struct AHIBase*    AHIBase = (struct AHIBase*)     GET_LONG( regs->a6 );
 
   return DevClose( ioreq, AHIBase );
+}
+
+
+/* gw_Null *******************************************************************/
+
+ULONG
+gw_NULL( struct _Regs* regs ) __attribute__((regparm(3)));
+
+ULONG
+gw_NULL( struct _Regs* regs )
+{
+  return 0;
 }
 
 
@@ -1009,7 +1029,456 @@ static struct
   0x4EF9, (ULONG) gw_PostTimer + 1
 };
 
-#else // Not MorphOS, not Amithlon
+#elif defined( __AROS__ )
+
+/******************************************************************************
+** AROS gateway functions *****************************************************
+******************************************************************************/
+
+#ifndef AROS_LIBCALL_H
+#   include <aros/libcall.h>
+#endif
+
+// Let the preprocessor re-arrange until I fix fd2inline and nuke
+// this file forever ...
+
+#undef REG
+#define REG( reg, proto, name ) AROS_LHA( proto, name, reg )
+
+#define d0 D0
+#define d1 D1
+#define a0 A0
+#define a1 A1
+#define a2 A2
+
+/* gw_initRoutine ************************************************************/
+
+AROS_LH2( struct AHIBase*,
+	  gw_initRoutine,
+	  AROS_LHA( struct AHIBase*,  device,  D0 ),
+	  AROS_LHA( APTR,             seglist, A0 ),
+	  struct ExecBase*, sysbase, 0, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return initRoutine( device, seglist, sysbase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_DevExpunge *************************************************************/
+
+AROS_LH0( BPTR,
+	  gw_DevExpunge,
+	  struct AHIBase*, device, 3, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return DevExpunge( device );
+  AROS_LIBFUNC_EXIT  
+}
+
+/* gw_DevOpen ****************************************************************/
+
+AROS_LH3( ULONG,
+	  gw_DevOpen,
+	  AROS_LHA( struct AHIRequest*, ioreq, A1 ),
+	  AROS_LHA( ULONG,              unit,  D0 ),
+	  AROS_LHA( ULONG,              flags, D1 ),
+	  struct AHIBase*, AHIBase, 1, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return DevOpen( unit, flags, ioreq, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_DevClose ***************************************************************/
+
+AROS_LH1( BPTR,
+	  gw_DevClose,
+	  AROS_LHA( struct AHIRequest*, ioreq, A1 ),
+	  struct AHIBase*, AHIBase, 2, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return DevClose( ioreq, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_Null *******************************************************************/
+
+AROS_LH0( ULONG,
+	  gw_Null,
+	  struct AHIBase*, AHIBase, 4, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return 0;
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_DevBeginIO *************************************************************/
+
+AROS_LH1( void,
+	  gw_DevBeginIO,
+	  AROS_LHA( struct AHIRequest*, ioreq, A1 ),
+	  struct AHIBase*, AHIBase, 5, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  DevBeginIO( ioreq, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_DevAbortIO *************************************************************/
+
+AROS_LH1( ULONG,
+	  gw_DevAbortIO,
+	  AROS_LHA( struct AHIRequest*, ioreq, A1 ),
+	  struct AHIBase*, AHIBase, 6, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return DevAbortIO( ioreq, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_AllocAudioA ************************************************************/
+
+AROS_LH1( struct AHIAudioCtrl*,
+	  gw_AllocAudioA,
+	  REG(a1, struct TagItem*, tags),
+	  struct AHIBase*, AHIBase, 7, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return AllocAudioA( tags, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_FreeAudio **************************************************************/
+
+AROS_LH1( ULONG,
+	  gw_FreeAudio,
+	  REG(a2, struct AHIPrivAudioCtrl*, audioctrl),
+	  struct AHIBase*, AHIBase, 8, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return FreeAudio( audioctrl, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_KillAudio **************************************************************/
+
+AROS_LH0( ULONG,
+	  gw_KillAudio,
+	  struct AHIBase*, AHIBase, 9, Ahi )
+  
+{
+  AROS_LIBFUNC_INIT
+  return KillAudio( AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_ControlAudioA **********************************************************/
+
+AROS_LH2( ULONG,
+	  gw_ControlAudioA,
+	  REG(a2, struct AHIPrivAudioCtrl*, audioctrl),
+	  REG(a1, struct TagItem*,          tags),
+	  struct AHIBase*, AHIBase, 10, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return ControlAudioA( audioctrl, tags, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_SetVol *****************************************************************/
+
+AROS_LH5( ULONG,
+	  gw_SetVol,
+	  REG(d0, UWORD,                    channel),
+	  REG(d1, Fixed,                    volume),
+	  REG(d2, sposition,                pan),
+	  REG(a2, struct AHIPrivAudioCtrl*, audioctrl),
+	  REG(d3, ULONG,                    flags),
+	  struct AHIBase*, AHIBase, 11, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return SetVol( channel, volume, pan, audioctrl, flags, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_SetFreq ****************************************************************/
+
+AROS_LH4( ULONG,
+	  gw_SetFreq,
+	  REG( d0, UWORD,                    channel ),
+	  REG( d1, ULONG,                    freq ),
+	  REG( a2, struct AHIPrivAudioCtrl*, audioctrl ),
+	  REG( d2, ULONG,                    flags ),
+	  struct AHIBase*, AHIBase, 12, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return SetFreq( channel, freq, audioctrl, flags, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_SetSound ***************************************************************/
+
+AROS_LH6( ULONG,
+	  gw_SetSound,
+	  REG(d0, UWORD,                    channel),
+	  REG(d1, UWORD,                    sound),
+	  REG(d2, ULONG,                    offset),
+	  REG(d3, LONG,                     length),
+	  REG(a2, struct AHIPrivAudioCtrl*, audioctrl),
+	  REG(d4, ULONG,                    flags),
+	  struct AHIBase*, AHIBase, 13, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return SetSound( channel, sound, offset, length, audioctrl, flags, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_SetEffect **************************************************************/
+
+AROS_LH2( ULONG,
+	  gw_SetEffect,
+	  REG(a0, ULONG*,                   effect),
+	  REG(a2, struct AHIPrivAudioCtrl*, audioctrl),
+	  struct AHIBase*, AHIBase, 14, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return SetEffect( effect, audioctrl, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_LoadSound **************************************************************/
+
+AROS_LH4( ULONG,
+	  gw_LoadSound,
+	  REG(d0, UWORD,                    sound),
+	  REG(d1, ULONG,                    type),
+	  REG(a0, APTR,                     info),
+	  REG(a2, struct AHIPrivAudioCtrl*, audioctrl),
+	  struct AHIBase*, AHIBase, 15, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return LoadSound( sound, type, info, audioctrl, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_UnloadSound ************************************************************/
+
+AROS_LH2( ULONG,
+	  gw_UnloadSound,
+	  REG(d0, UWORD,                    sound),
+	  REG(a2, struct AHIPrivAudioCtrl*, audioctrl),
+	  struct AHIBase*, AHIBase, 16, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return UnloadSound( sound, audioctrl, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_PlayA ******************************************************************/
+
+AROS_LH2( ULONG, 
+	  gw_PlayA,
+	  REG(a2, struct AHIPrivAudioCtrl*, audioctrl),
+          REG(a1, struct TagItem*,          tags),
+	  struct AHIBase*, AHIBase, 23, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return PlayA( audioctrl, tags, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_SampleFrameSize ********************************************************/
+
+AROS_LH1( ULONG,
+	  gw_SampleFrameSize,
+	  REG(d0, ULONG,           sampletype),
+	  struct AHIBase*, AHIBase, 24, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return SampleFrameSize( sampletype, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_GetAudioAttrsA *********************************************************/
+
+AROS_LH3( ULONG, 
+	  gw_GetAudioAttrsA,
+	  REG(d0, ULONG,                    id),
+	  REG(a2, struct AHIPrivAudioCtrl*, actrl),
+	  REG(a1, struct TagItem*,          tags),
+	  struct AHIBase*, AHIBase, 18, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return GetAudioAttrsA( id, actrl, tags, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_BestAudioIDA ***********************************************************/
+
+AROS_LH1( ULONG, 
+	  gw_BestAudioIDA,
+	  REG(a1, struct TagItem*, tags),
+	  struct AHIBase*, AHIBase, 19, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return BestAudioIDA( tags, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_AllocAudioRequestA *****************************************************/
+
+AROS_LH1( struct AHIAudioModeRequester*,
+	  gw_AllocAudioRequestA,
+	  REG(a0, struct TagItem*, tags),
+	  struct AHIBase*, AHIBase, 20, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return AllocAudioRequestA( tags, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_AudioRequestA **********************************************************/
+
+AROS_LH2( ULONG, 
+	  gw_AudioRequestA,
+	  REG(a0, struct AHIAudioModeRequester*, req_in),
+	  REG(a1, struct TagItem*,               tags ),
+	  struct AHIBase*, AHIBase, 21, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return AudioRequestA( req_in, tags, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_FreeAudioRequest *******************************************************/
+
+AROS_LH1( void, 
+	  gw_FreeAudioRequest,
+	  REG(a0, struct AHIAudioModeRequester*, req),
+	  struct AHIBase*, AHIBase, 22, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  FreeAudioRequest( req, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_NextAudioID ************************************************************/
+
+AROS_LH1( ULONG,
+	  gw_NextAudioID,
+	  REG(d0, ULONG,           id),
+	  struct AHIBase*, AHIBase, 17, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return NextAudioID( id, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_AddAudioMode ***********************************************************/
+
+AROS_LH1( ULONG,
+	  gw_AddAudioMode,
+	  REG(a0, struct TagItem*, DBtags),
+	  struct AHIBase*, AHIBase, 25, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return AddAudioMode( DBtags, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_RemoveAudioMode ********************************************************/
+
+AROS_LH1( ULONG,
+	  gw_RemoveAudioMode,
+	  REG(d0, ULONG,           id),
+	  struct AHIBase*, AHIBase, 26, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return RemoveAudioMode( id, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* gw_LoadModeFile ***********************************************************/
+
+AROS_LH1( ULONG,
+	  gw_LoadModeFile,
+	  REG(a0, UBYTE*,          name),
+	  struct AHIBase*, AHIBase, 27, Ahi )
+{
+  AROS_LIBFUNC_INIT
+  return LoadModeFile( name, AHIBase );
+  AROS_LIBFUNC_EXIT  
+}
+
+
+/* m68k_IndexToFrequency *****************************************************/
+
+LONG
+m68k_IndexToFrequency( struct Gadget *gad, WORD level )
+{
+  return IndexToFrequency( gad, level );
+}
+
+
+/* m68k_DevProc **************************************************************/
+
+AROS_UFH0( void,
+	   m68k_DevProc )
+{
+  DevProc();
+}
+
+
+/* m68k_PreTimer  ************************************************************/
+
+AROS_UFH1( BOOL,
+	   m68k_PreTimer,
+	   AROS_UFHA( struct AHIPrivAudioCtrl*, audioctrl, A2 ) )
+{
+  AROS_USERFUNC_INIT
+  return PreTimer( audioctrl );
+  AROS_USERFUNC_EXIT  
+}
+
+
+/* m68k_PostTimer  ***********************************************************/
+
+AROS_UFH1( void,
+	   m68k_PostTimer,
+	   AROS_UFHA( struct AHIPrivAudioCtrl*, audioctrl, A2 ) )
+{
+  AROS_USERFUNC_INIT
+  PostTimer( audioctrl );
+  AROS_USERFUNC_EXIT  
+}
+
+#else // Not MorphOS, not Amithlon, not AROS
 
 
 /******************************************************************************
@@ -1054,6 +1523,15 @@ gw_DevClose( REG( a1, struct AHIRequest* ioreq ),
              REG( a6, struct AHIBase*    AHIBase ) )
 {
   return DevClose( ioreq, AHIBase );
+}
+
+
+/* gw_Null *******************************************************************/
+
+ULONG ASMCALL
+gw_Null( REG( a6, struct AHIBase*    AHIBase ) )
+{
+  return 0;
 }
 
 
@@ -1348,6 +1826,12 @@ m68k_PostTimer( REG(a2, struct AHIPrivAudioCtrl* audioctrl ) )
 
 /*** Some special wrappers ***************************************************/
 
+#if defined( __AROS__ ) && !defined( __mc68000__ )
+
+// We're not binary compatible!
+
+#else
+
 struct
 {
     UWORD nop;                    // Just make sure the addr is 32-bit aligned
@@ -1403,3 +1887,4 @@ struct
   0x4E75
 };
 
+#endif /* !defined( __AROS__ ) */

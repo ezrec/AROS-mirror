@@ -37,4 +37,4 @@ ULONG AHIsub_LoadSound( UWORD, ULONG, APTR, struct AHIAudioCtrlDrv * );
 ULONG AHIsub_UnloadSound( UWORD, struct AHIAudioCtrlDrv * );
 LONG AHIsub_GetAttr( ULONG, LONG, LONG, struct TagItem *, struct AHIAudioCtrlDrv * );
 LONG AHIsub_HardwareControl( ULONG, LONG, struct AHIAudioCtrlDrv *);
-#endif /* CLIB_AHI_PROTOS_H */
+#endif /* CLIB_AHISUB_PROTOS_H */

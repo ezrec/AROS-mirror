@@ -209,8 +209,9 @@ initRoutine( struct AHIBase*  device,
   AHIBase->ahib_Library.lib_Revision     = REVISION;
   AHIBase->ahib_Library.lib_IdString     = (STRPTR) IDString;
   AHIBase->ahib_SysLib  = sysbase;
-  AHIBase->ahib_SegList = (ULONG) seglist;
+  AHIBase->ahib_SegList = (BPTR) seglist;
 
+#if defined( __mc68000__ )
   // Make sure we're running on a M68020 or better
   
   if( ( SysBase->AttnFlags & AFF_68020 ) == 0 )
@@ -221,6 +222,7 @@ initRoutine( struct AHIBase*  device,
              device->ahib_Library.lib_NegSize + device->ahib_Library.lib_PosSize );
     return NULL;
   }
+#endif
 
   InitSemaphore( &AHIBase->ahib_Lock );
 
@@ -260,13 +262,6 @@ DevExpunge( struct AHIBase* device )
   return seglist;
 }
 
-
-ULONG
-Null( void )
-{
-  return 0;
-}
-
 static const APTR funcTable[] =
 {
 
@@ -274,35 +269,35 @@ static const APTR funcTable[] =
   (APTR) FUNCARRAY_32BIT_NATIVE,
 #endif
 
-  &gw_DevOpen,
-  &gw_DevClose,
-  &gw_DevExpunge,
-  &Null,
+  &AROS_SLIB_ENTRY( gw_DevOpen, Ahi ),
+  &AROS_SLIB_ENTRY( gw_DevClose, Ahi ),
+  &AROS_SLIB_ENTRY( gw_DevExpunge, Ahi ),
+  &AROS_SLIB_ENTRY( gw_Null, Ahi ),
 
-  &gw_DevBeginIO,
-  &gw_DevAbortIO,
+  &AROS_SLIB_ENTRY( gw_DevBeginIO, Ahi ),
+  &AROS_SLIB_ENTRY( gw_DevAbortIO, Ahi ),
 
-  &gw_AllocAudioA,
-  &gw_FreeAudio,
-  &gw_KillAudio,
-  &gw_ControlAudioA,
-  &gw_SetVol,
-  &gw_SetFreq,
-  &gw_SetSound,
-  &gw_SetEffect,
-  &gw_LoadSound,
-  &gw_UnloadSound,
-  &gw_NextAudioID,
-  &gw_GetAudioAttrsA,
-  &gw_BestAudioIDA,
-  &gw_AllocAudioRequestA,
-  &gw_AudioRequestA,
-  &gw_FreeAudioRequest,
-  &gw_PlayA,
-  &gw_SampleFrameSize,
-  &gw_AddAudioMode,
-  &gw_RemoveAudioMode,
-  &gw_LoadModeFile,
+  &AROS_SLIB_ENTRY( gw_AllocAudioA, Ahi ),
+  &AROS_SLIB_ENTRY( gw_FreeAudio, Ahi ),
+  &AROS_SLIB_ENTRY( gw_KillAudio, Ahi ),
+  &AROS_SLIB_ENTRY( gw_ControlAudioA, Ahi ),
+  &AROS_SLIB_ENTRY( gw_SetVol, Ahi ),
+  &AROS_SLIB_ENTRY( gw_SetFreq, Ahi ),
+  &AROS_SLIB_ENTRY( gw_SetSound, Ahi ),
+  &AROS_SLIB_ENTRY( gw_SetEffect, Ahi ),
+  &AROS_SLIB_ENTRY( gw_LoadSound, Ahi ),
+  &AROS_SLIB_ENTRY( gw_UnloadSound, Ahi ),
+  &AROS_SLIB_ENTRY( gw_NextAudioID, Ahi ),
+  &AROS_SLIB_ENTRY( gw_GetAudioAttrsA, Ahi ),
+  &AROS_SLIB_ENTRY( gw_BestAudioIDA, Ahi ),
+  &AROS_SLIB_ENTRY( gw_AllocAudioRequestA, Ahi ),
+  &AROS_SLIB_ENTRY( gw_AudioRequestA, Ahi ),
+  &AROS_SLIB_ENTRY( gw_FreeAudioRequest, Ahi ),
+  &AROS_SLIB_ENTRY( gw_PlayA, Ahi ),
+  &AROS_SLIB_ENTRY( gw_SampleFrameSize, Ahi ),
+  &AROS_SLIB_ENTRY( gw_AddAudioMode, Ahi ),
+  &AROS_SLIB_ENTRY( gw_RemoveAudioMode, Ahi ),
+  &AROS_SLIB_ENTRY( gw_LoadModeFile, Ahi ),
   (APTR) -1
 };
 
@@ -312,12 +307,11 @@ static const APTR InitTable[4] =
   (APTR) sizeof( struct AHIBase ),
   (APTR) &funcTable,
   0,
-  (APTR) gw_initRoutine
+  (APTR) AROS_SLIB_ENTRY( gw_initRoutine, Ahi )
 };
 
 
 static struct timerequest *TimerIO        = NULL;
-static struct timeval     *timeval        = NULL;
 
 /******************************************************************************
 ** OpenLibs *******************************************************************
@@ -394,26 +388,19 @@ OpenLibs ( void )
     return FALSE;
   }
 
-  timeval = (struct timeval *) AllocVec( sizeof(struct timeval),
-                                         MEMF_PUBLIC | MEMF_CLEAR);
-
-  if( timeval == NULL)
-  {
-    Req( "Out of memory." );
-    return FALSE;
-  }
-
   if( OpenDevice( "timer.device",
-                  UNIT_MICROHZ,
+                  UNIT_VBLANK,
                   (struct IORequest *)
                   TimerIO,
                   0) != 0 )
   {
     Req( "Unable to open 'timer.device'." );
-    return FALSE;
+//    return FALSE; 
   }
-
-  TimerBase = (struct Device *) TimerIO->tr_node.io_Device;
+  else
+  {
+    TimerBase = (struct Device *) TimerIO->tr_node.io_Device;
+  }
 
   /* Utility Library */
 
@@ -696,7 +683,6 @@ CloseLibs ( void )
   {
     CloseDevice( (struct IORequest *) TimerIO );
   }
-  FreeVec( timeval );
   FreeVec( TimerIO );
   CloseLibrary( (struct Library *) LocaleBase );
   CloseLibrary( (struct Library *) IntuitionBase );

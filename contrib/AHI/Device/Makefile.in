@@ -26,7 +26,7 @@ CC		= @CC@
 AS		= @AS@
 AR              = @AR@
 RANLIB          = @RANLIB@
-STRIP		= @STRIP@
+STRIP		= @STRIP@ @STRIPFLAGS@
 
 CPPFLAGS	= @CPPFLAGS@ -I${top_srcdir} -I${srcdir}
 CFLAGS		= @CFLAGS@
@@ -95,7 +95,6 @@ distclean:	clean
 	$(RM) Makefile
 
 maintainer-clean: distclean
-	$(RM) localize.c localize.h 
 
 install:	all
 	$(INSTALL_PROGRAM) $(TARGET) $(PREFIX)/Devs/$(TARGET)
@@ -154,11 +153,11 @@ version.h:	version.rev version.date
 	 echo "#define REVISION $$rev" >> $@ && \
 	 echo "#define VERS \"$$ver.$$rev ($$date)\"" >> $@
 
-localize.c:		ahi.cd C_c_AHI.sd
-	$(FLEXCAT) $(srcdir)/ahi.cd localize.c=$(srcdir)/C_c_AHI.sd 
+$(srcdir)/localize.c:	ahi.cd C_c_AHI.sd
+	$(FLEXCAT) $(srcdir)/ahi.cd $(srcdir)/localize.c=$(srcdir)/C_c_AHI.sd 
 
-localize.h:		ahi.cd C_c_AHI.sd
-	$(FLEXCAT) $(srcdir)/ahi.cd localize.h=$(srcdir)/C_h_AHI.sd
+$(srcdir)/localize.h:	ahi.cd C_c_AHI.sd
+	$(FLEXCAT) $(srcdir)/ahi.cd $(srcdir)/localize.h=$(srcdir)/C_h_AHI.sd
 
 %.catalog:		translations/%.ct
 	$(FLEXCAT) $(srcdir)/ahi.cd $< CATALOG $@
@@ -187,7 +186,7 @@ depend:
 	$(RM) Makefile.dep
 	$(MAKE) Makefile.dep
 
-Makefile.dep:	$(DEPENDENCIES) localize.c localize.h version.h
+Makefile.dep:	$(DEPENDENCIES) version.h
 	@echo Making $@
 	-@$(CC) $(CPPFLAGS) $(CFLAGS) -MM $(SOURCES) > $@
 

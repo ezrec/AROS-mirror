@@ -29,6 +29,8 @@
 #include <exec/lists.h>
 #include <exec/nodes.h>
 
+#include <stddef.h>
+
 #include "ahi_def.h"
 
 
@@ -83,6 +85,13 @@ AHIUnloadObject( void* obj );
 BOOL
 AHIGetELFSymbol( const char* name,
                  void** ptr );
+
+
+#if !defined( WORDS_BIGENDIAN )
+void EndianSwap( size_t size, void* data );
+#else
+# define EndianSwap(s, x)
+#endif
 
 BOOL
 PreTimer( struct AHIPrivAudioCtrl* audioctrl );

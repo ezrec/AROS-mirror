@@ -17,3 +17,6 @@
 
 /* This one modifies the gcc include files */
 #undef USE_INLINE_STDARG
+
+/* Set to one if we're on a big endian CPU/compiler */
+#undef WORDS_BIGENDIAN

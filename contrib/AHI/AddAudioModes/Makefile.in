@@ -18,7 +18,7 @@ CDIR		= ${DISTDIR}/User/C
 build_os	= @build_os@
 
 CC		= @CC@
-STRIP		= @STRIP@
+STRIP		= @STRIP@ @STRIPFLAGS@
 
 INSTALL		= @INSTALL@
 INSTALL_PROGRAM	= @INSTALL_PROGRAM@

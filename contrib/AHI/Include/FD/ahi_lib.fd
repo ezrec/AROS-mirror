@@ -22,7 +22,7 @@ AHI_FreeAudioRequest(Requester)(a0)
 * --- New for V4 ---
 AHI_PlayA(Audioctrl,tagList)(a2,a1)
 AHI_SampleFrameSize(SampleType)(d0)
-AHI_AddAudioMode(Private)(a0)
-AHI_RemoveAudioMode(Private)(d0)
-AHI_LoadModeFile(Private)(a0)
+AHI_AddAudioMode(AHIPrivate)(a0)
+AHI_RemoveAudioMode(AHIPrivate)(d0)
+AHI_LoadModeFile(AHIPrivate)(a0)
 ##end

@@ -29,6 +29,7 @@
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include "version.h"
 
@@ -152,23 +153,45 @@ main( void )
       /* Now add all modes */
 
 #ifdef __MORPHOS__
-      // Be quiet here. - Piru
+      if( !AHI_LoadModeFile( "DEVS:AudioModes" ) )
+      {
+        rc++;
+      }
+
+      /* Be quiet here. - Piru */
       {
         struct Process *Self = (struct Process *) FindTask(NULL);
         APTR oldwindowptr = Self->pr_WindowPtr;
         Self->pr_WindowPtr = (APTR) -1;
 
-        AHI_LoadModeFile( "MOSSYS:DEVS/AudioModes" );
+        if( !AHI_LoadModeFile( "MOSSYS:DEVS/AudioModes" ) )
+        {
+          rc++;
+        }
 
         Self->pr_WindowPtr = oldwindowptr;
       }
-#endif
 
+      if( rc > 1)
+      {
+        if( !args.quiet )
+        {
+          PrintFault( IoErr(), "AudioModes" );
+        }
+
+        rc = RETURN_ERROR;
+      }
+      else
+      {
+        rc = RETURN_OK;
+      }
+#else
       if( !AHI_LoadModeFile( "DEVS:AudioModes" ) && !args.quiet )
       {
         PrintFault( IoErr(), "DEVS:AudioModes" );
         rc = RETURN_ERROR;
       }
+#endif
     }
 
     /* Load mode files */
@@ -220,7 +243,7 @@ main( void )
     {
       ULONG          id;
       ULONG          bestid = INVALID_ID;
-      int            minper = MAXINT;
+      int            minper = INT_MAX;
       struct Screen *screen = NULL;
 
       static const struct ColorSpec colorspecs[] =

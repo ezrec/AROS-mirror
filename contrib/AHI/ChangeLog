@@ -1,3 +1,140 @@
+2003-04-24  Martin Blom  <martin@blom.org>
+
+	* Released filesave.audio version 5.1.
+
+	* Released ahi.device 5.35.
+
+	* Released void.audio 5.4.
+
+	* Added a new example: PlaySineEverywhere.
+
+	* CloneAudioModes: Removed warnings when BPTR is a pointer.
+
+	* ahi.device: The workaround for the m68k compiler bug introduced
+	in ahi.device 5.25 assumed a big endian CPU. Now, the workaround
+	is only applied when compiling for the m68k.
+
+	* filesave.audio: Now endian aware. Avoided varargs in order to
+	make it compile for AROS.
+
+	* filesave.audio: Can now be compiled using gcc.
+
+2003-04-23  Martin Blom  <martin@blom.org>
+
+	* Released void.audio 5.3.
+
+	* void.audio: Moved generic code parts to Drivers/Common, which
+	can now be used by other drivers too.
+
+2003-04-22  Martin Blom  <martin@blom.org>
+
+	* Released void.audio 5.2.
+
+	* Released AHI-Handler 5.2.
+
+	* Released ahi.device 5.34.
+
+	* Released AddAudioModes 5.4.
+
+	* Released AHI preferences 5.9.
+
+	* The endian update from 2003-04-17 broke all big endian
+	targets. Fixed.
+
+	* void.audio: This example driver can now be compiled using gcc
+	and builds for all targets (m68k-amigaos, ppc-morphos,
+	i?86be-amithlon and i386-aros).
+
+2003-04-18  Martin Blom  <martin@blom.org>
+
+	* AHI: If no mode is available, the "Play a test sound" button is
+	disabled.
+
+2003-04-17  Martin Blom  <martin@blom.org>
+
+	* Ported AHI to AROS.
+
+	* The device and preference program are now endian aware when
+	reading IFF files.
+
+2003-04-13  Martin Blom  <martin@blom.org>
+
+	* ahi.device: For some weired reason I apparently disabled
+	PreTimer()/PostTimer() support (aka the CPU overload protection)
+	in version 5.29. Now it's enabled again.
+
+2003-04-12  Martin Blom  <martin@blom.org>
+
+	* Released ahi.device 5.33.
+
+	* ahi.device: The audio mode requester now resizes to its minimum
+	width if asked to open a smaller window. Before, it just failed
+	to open.
+
+	* ahi.device: The audio mode requester now uses the ASL
+	preferences if available (requires asl.library V45 or
+	later). [Todd A. Oberly]
+
+	* ahi.device (AudioRequestA): AHIR_PrivateIDCMP is now honored
+	even if AHIR_Screen or AHIR_PubScreenName is provided.
+
+	* PlayTest: I finally fixed the bug that could make the example
+	call DeleteIORequest() on a pointer obtained from AllocMem().
+
+	* Released ahi.device 5.32.
+
+	* ahi.deivce: io_Actual is now valid even if a CMD_READ or
+	CMD_WRITE request failed or was aborted. [Grzegorz Kraszewski]
+
+	* ahi.doc: Don't mention io_Actual for CMD_STOP/CMD_START.
+
+	* ahi.device: gw_IndexToFrequency in the MorphOS version now uses
+	d0/a1 for arguments instead of the stack. [Patch from Harry
+	Sintonen]
+
+	* Released paula.audio 4.29.
+
+	* paula.audio: Small cleanup here and there. [Patch from Harry
+	Sintonen]
+
+	* paula.audio: Library cleanup didn't free resources at
+	failure. Fixed. [Patch from Harry Sintonen]
+
+	* paula.audio: DMA playback did CloseDevice with a0 =
+	p_TimerReq. Fixed. [Patch from Harry Sintonen]
+
+	* ahi.device: Added new MOSSYS patches (MorphOS only) from Harry
+	Sintonen.
+
+2003-01-24  Martin Blom  <martin@blom.org>
+
+	* ahiusr.texinfo: Updated the Acknowledgments chapter. Added
+	Donors and Honourable mention sections. Updated my
+	address. Updated the list of supported sound cards.
+
+2003-01-23  Martin Blom  <martin@blom.org>
+
+	* Limit lha compression method to lh6.
+
+	* Now builds AHI-Handler for ppc-morphos too.
+
+2003-01-22  Martin Blom  <martin@blom.org>
+
+	* Docs: Now builds AutoDocs for ahi.device and drivers.
+
+	* Released AHI-Handler 5.1.
+
+	* Drivers: source code for a couple of drivers now included in
+	bindist (ahidev.lha).
+
+	* Examples: source code now included in bindist (ahidev.lha).
+
+2003-01-20  Martin Blom  <martin@blom.org>
+
+	* AHI-Handler: Now part of build tree, ported to gcc (m68k only!),
+	GPL:ed and will no longer accept 24 bit AIFF/AIFC files (which AHI
+	cannot play -- but 32 bit files are still accepted).
+
 2003-01-19  Martin Blom  <martin@blom.org>
 
 	* Released ahi.device 5.31. This is actually all I had in mind for

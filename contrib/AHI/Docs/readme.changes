@@ -14,3 +14,7 @@
      The non-HiFi modes are not any faster than the HiFi modes. They are
      just present because some music sound "better" when no interpolation
      is used.
+
+
+     For a full log of everything that has been updated, see the
+     ChangeLog file.

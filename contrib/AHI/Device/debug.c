@@ -452,7 +452,8 @@ PrintTagList(struct TagItem *tags)
 
         case dt_String:
           KPrintF( "\n  %30s, %s,", 
-                   (ULONG) GetTagName( tag->ti_Tag ), tag->ti_Data );
+                   (ULONG) GetTagName( tag->ti_Tag ),
+		   tag->ti_Data != 0 ? tag->ti_Data : (ULONG) "(null)" );
           break;
 
         case dt_Fixed:
@@ -475,6 +476,22 @@ PrintTagList(struct TagItem *tags)
 ** Send debug to serial port **************************************************
 ******************************************************************************/
 
+#if defined( __AROS__ ) && !defined( __mc68000__ )
+
+#include <aros/asmcall.h>
+
+AROS_UFH2( void,
+	   rawputchar_m68k,
+	   AROS_UFHA( UBYTE,            c,       D0 ),
+	   AROS_UFHA( struct ExecBase*, SysBase, A3 ) )
+{
+  AROS_USERFUNC_INIT
+  RawPutChar( c );
+  AROS_USERFUNC_EXIT  
+}
+
+#else
+
 static UWORD rawputchar_m68k[] = 
 {
   0x2C4B,             // MOVEA.L A3,A6
@@ -482,6 +499,7 @@ static UWORD rawputchar_m68k[] =
   0x4E75              // RTS
 };
 
+#endif
 
 void
 KPrintFArgs( UBYTE* fmt, 
@@ -642,17 +660,3 @@ Debug_LoadModeFile( STRPTR name)
 {
   KPrintF("AHI_LoadModeFile(%s)",(ULONG)name);
 }
-
-
-/******************************************************************************
-** The Prayer *****************************************************************
-******************************************************************************/
-
-static const char prayer[] =
-{
-  "Oh Lord, most wonderful God, I pray for every one that uses this software; "
-  "Let the Holy Ghost speak, call him or her to salvation, reveal your Love. "
-  "Lord, bring the revival to this country, let the Holy Ghost fall over all "
-  "flesh, as You have promised a long time ago. Thank you for everything, thank "
-  "you for what is about to happen. Amen."
-};
