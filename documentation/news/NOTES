@@ -1,0 +1,43 @@
+- What ?
+
+This is the ongoing list of "things" happening in the AROS project, mostly the
+notable system improvements. All AROS developers are encouraged to briefly
+state items, not necessarily "belonging" to them. First come, first write.
+IRC discussion topics are welcome here, as #aros is very active/useful. So IRC
+addicts may be more inclined to update this file :)
+
+Each item above the most recent status update can get considered, but won't be
+necessarily used. It's up to the Status Update Redactor of the Week/Month to
+choose and expand items.
+
+- Why ?
+
+The goal of this file is to get a complete, uptodate, view of what's going on,
+not to have extensive descriptions. In due time, this will serve as a reminder
+and as a basis for public status updates (marked by "=" lines below).
+
+- Who ?
+
+See cvs log for who commited what. The people "simply" reporting items are not
+relevant; those who are really relevant are marked by login between square
+brackets ("[]").
+
+- Let's roll (antichronological order, add things on top, not bottom) :
+-------------------------------------------------------------------------------
+
+200304??: STATUS UPDATE [???] =================================================
+
+200304??:
+ <next day here>
+
+20030403:
+ * libjpeg and jpeg.datatype in contrib [gierich]
+ * thinking about moving at least Regina, Freetype, jpeg.datatype
+   and JanoEditor into the main tree [chodorowski]
+
+20030402: STATUS UPDATE [falemagn] ============================================
+
+20030402:
+ * jpeg.datatype in contrib (but nobody noticed :) [gierich]
+
+-- End of file ----------------------------------------------------------------
