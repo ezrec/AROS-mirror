@@ -463,15 +463,18 @@ struct GTLayoutBase
 #define SysBase GTLayoutBase->ExecBase
 
 /*****************************************************************************/
+struct GTLayoutBase *GTLayoutBase;
 
 STATIC struct Library * LIBENT
 LibInit(
-	REG(d0) struct GTLayoutBase *	GTLayoutBase,
+	REG(d0) struct GTLayoutBase *	_GTLayoutBase,
 	REG(a0) BPTR					Segment,
 	REG(a6) struct ExecBase *		ExecBase)
 {
 	struct Library *result = NULL;
 
+        GTLayoutBase = _GTLayoutBase;
+        
 	GTLayoutBase->ExecBase = (struct Library *)ExecBase;
 
 #if !defined(CPU_ANY) && !defined(CPU_any)
@@ -583,7 +586,11 @@ LibClose(REG(a6) struct GTLayoutBase *GTLayoutBase)
 	ReleaseSemaphore(&GTLayoutBase->LockSemaphore);
 
 	if(GTLayoutBase->LibNode.lib_OpenCnt == 0 && (GTLayoutBase->LibNode.lib_Flags & LIBF_DELEXP))
-		result = LibExpunge(GTLayoutBase);
+#ifdef __AROS
+                result = GTLayout_LibExpunge(GTLayoutBase);
+#else
+                result = LibExpunge(GTLayoutBase);
+#endif
 	else
 		result = NULL;
 
