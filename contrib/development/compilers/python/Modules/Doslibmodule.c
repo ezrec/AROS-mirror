@@ -116,8 +116,7 @@ Doslib_ReadArgs(PyObject *self, PyObject *arg)
 	else
 	{
 		/* template is empty string; no arguments expected */
-		//if(strlen(stpblk(args))>0) // FIXME: What does stpblk() do??
-		if(strlen(args)>0)
+		if(strlen(stpblk(args))>0) 
 		{
 			SetIoErr(ERROR_TOO_MANY_ARGS);
 			return check_ok(FALSE);
