@@ -73,7 +73,7 @@ USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
 	       -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
 	       -I$(SRCDIR) -I$(SRCDIR)/include
 
-#MM- contrib: uae
+# #MM- contrib: uae
 #MM uae : setup uae-setup
 uae : $(EXE)
 
