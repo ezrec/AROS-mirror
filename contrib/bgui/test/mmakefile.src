@@ -20,7 +20,7 @@ FILES = test1 \
 EXES := $(foreach f,$(FILES), $(BGUITESTSDIR)/$(f))
 
 USE_BGUILIB := yes
-USE_CLIB_SHARED := yes
+USE_CLIB := yes
 USE_AMIGALIB := yes
 USE_MLIB := yes
 USE_AROSLIB := yes

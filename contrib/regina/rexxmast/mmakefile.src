@@ -15,7 +15,7 @@ EXES := $(AROS_C)/RexxMast \
         $(EXEDIR)/sendrexxmsg \
 	$(EXEDIR)/listen4msg
 
-USE_CLIB_SHARED := yes
+USE_CLIB := yes
 USE_AMIGALIB := yes
 
 #MM- contrib-regina : contrib-regina-rexxmast

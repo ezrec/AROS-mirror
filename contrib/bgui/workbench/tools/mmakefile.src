@@ -8,7 +8,7 @@ FILES	:= \
 EXEDIR := $(CONTRIBDIR)/BGUI/Examples
 EXES := $(foreach f,$(FILES),$(EXEDIR)/$(f))
 
-USE_CLIB_SHARED := yes
+USE_CLIB := yes
 USE_AMIGALIB    := yes
 USE_MLIB        := yes
 USE_BGUILIB     := yes

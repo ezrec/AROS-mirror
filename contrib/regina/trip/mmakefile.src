@@ -39,7 +39,7 @@ $(TARGETDIR)/testing : testing
 	@echo Copying $< ...
 	@$(CP) $< $@
 
-USE_CLIB_SHARED := YES
+USE_CLIB := YES
 
 %make_prog_setup mmake=contrib-regina-strip-rc
 %make_prog_single dir=$(EXEDIR)

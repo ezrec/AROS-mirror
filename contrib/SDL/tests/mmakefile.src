@@ -32,7 +32,7 @@ EXEDIR := $(CONTRIBDIR)/sdl/test
 EXES   := $(foreach f,$(FILES),$(EXEDIR)/$(f))
 DATAS  := $(foreach f,$(DATAFILES),$(EXEDIR)/$(f))
 
-USE_CLIB_SHARED	:= yes
+USE_CLIB	:= yes
 USE_AMIGALIB    := yes
 USE_AROSLIB     := yes
 USE_SDLLIB  	:= yes
