@@ -345,7 +345,7 @@ kprintf("dirbuffers alloced\n");
 
 	for (a=0;a<2;a++) horiz_propimage[a].Width=65;
 
-	hotkey_task=(struct Task *) CreateTask("dopus_hotkeez",config->priority+1,hotkeytaskcode,2048);
+	hotkey_task=(struct Task *) CreateTask("dopus_hotkeez",config->priority+1,hotkeytaskcode,AROS_STACKSIZE);
 
 kprintf("hotkey task created\n");
 
