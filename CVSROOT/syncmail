@@ -141,6 +141,8 @@ def blast_mail(mailcmd, filestodiff, contextlines):
         # give up the lock you cvs thang!
         time.sleep(2)
         fp = os.popen(mailcmd, 'w')
+        fp.write('User:\n')
+        fp.write(os.getenv('USER')+'\n')
         fp.write(sys.stdin.read())
         fp.write('\n')
         # append the diffs if available
