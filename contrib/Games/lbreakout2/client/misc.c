@@ -549,7 +549,7 @@ void  write_text_with_cursor( StkFont *fnt, SDL_Surface *dest,
     static int cursor_on = 0;
     static Uint32 last_tick = 0;
     // create temporary space for cursor and text
-    char *text_with_cursor = calloc(strlen(str) + 1, sizeof(char));
+    char *text_with_cursor = calloc(strlen(str) + 2, sizeof(char));
     if (text_with_cursor) {
        strcpy(text_with_cursor, str);
 
