@@ -282,14 +282,23 @@ under a different OS, eg. Linux, FreeBSD or NetBSD. There is currently no native
 C compiler that can be run under AROS, but there are plans to port one. This
 however will probably take some time, so don't hold your breath. ;-)
 
-The languages that are available natively are Python_ and False_. False can be
-classified as an exotic language, so it will most likely not be used for serious
-development, although it can be lots of fun. :-) Python is a scripting language
-which has become quite popular, because of it's nice design and features
-(object-oriented programming, module system, many useful modules included, clean
-syntax, ...). The current version of Python for AROS is 2.2.1.
+The languages that are available natively are Python_, Regina_ and False_:
+
++ Python is a scripting language which has become quite popular, because of 
+  it's nice design and features (object-oriented programming, module system,
+  many useful modules included, clean syntax, ...). A seperate project has 
+  been started for the AROS port and can found at 
+  http://pyaros.sourceforge.net/.
+
++ Regina is a portable ANSI compliant REXX interpreter. The goal for the AROS
+  port is to be compatible with the ARexx interpreter for the classic
+  AmigaOS.
+
++ False can be classified as an exotic language, so it will most likely not be 
+  used for serious development, although it can be lots of fun. :-) 
 
 .. _Python: http://www.python.org/
+.. _Regina: http://regina-rexx.sourceforge.net/
 .. _False:  http://wouter.fov120.com/false/
 
 
