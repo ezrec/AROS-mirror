@@ -10,8 +10,6 @@ LD = ld
 #DEFINES should really not define ENHANCED but for AROS it's fine.
 DEFINES := -DENHANCED
 
-LIBDIR          := $(AROSDIR)/lib
-
 OS_INCLUDES_DIR := $(AROSDIR)/Include
 INCLUDES_DIR    := $(AROSDIR)/Include
 
@@ -243,7 +241,7 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 	      o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
 	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
 	      o/plgroupclasses$(o) o/endtag.o \
-	      -L$(LIBDIR) -lamiga -larossupport -lrom -larosm -o $@
+	      -L$(AROS_LIB) -lamiga -larossupport -lrom -larosm -o $@
 	@$(ECHO) Installing bgui.library...
 	@$(CP) $@ $(BGUIDIR)/Libs/bgui.library
 
