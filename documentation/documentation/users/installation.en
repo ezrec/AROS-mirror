@@ -16,7 +16,7 @@ AROS Installation Guide
         AROS is alpha quality software. This means that it is currently mostly
         fun to play with and cool to develop for. If you came here because you
         thought AROS was a finished, complete and fully usable operating 
-        system, you will most likely be dissapointed. AROS isn't there yet, 
+        system, you will most likely be disappointed. AROS isn't there yet, 
         but we're slowly moving in the right direction.
 
 
@@ -31,7 +31,7 @@ between stability and features. Currently there are two types of binary packages
 available for download: snapshots and nightly builds. 
 
 Snapshots are done manually quite infrequently, mostly when there have been
-a larger amount of usefull changes done to AROS since the last snapshot and
+a larger amount of useful changes done to AROS since the last snapshot and
 someone feels motivated to create a new snapshot. In short, there is currently
 no regular release schedule. Even though they are made infrequently and that we
 try to pick times when AROS is particularly stable, there is no guarantee they
@@ -69,8 +69,8 @@ That's it.
 Extracting
 """"""""""
 
-Since AROS/i386-linux and AROS/i386-freebsd are hosted flavours of AROS,
-installation is simple. Simply get the apropriate archives for your platform
+Since AROS/i386-linux and AROS/i386-freebsd are hosted flavors of AROS,
+installation is simple. Simply get the appropriate archives for your platform
 from the `download page`_ and extract them where you want them::
 
     > tar -vxjf AROS-<version>-i386-<platform>-system.tar.bz2
@@ -92,7 +92,7 @@ After having extracted all files you can launch AROS like this::
 .. Note:: 
     
     If you are running XFree86 4.0 or later, you might notice that the windows
-    containting AROS screens do not refresh properly (for example when
+    containing AROS screens do not refresh properly (for example when
     a different window passes over them). This is due to the fact that AROS uses
     the "backingstore" functionality of X, which is turned off by default in
     XFree86 4.0 and later. If you are starting X with the ``startx`` command,
@@ -148,7 +148,7 @@ Writing
 '''''''
 
 Simply download the ISO image from the `download page`_ and burn it to a CD
-using your favourite CD burning program. 
+using your favorite CD burning program. 
 
 
 Booting
