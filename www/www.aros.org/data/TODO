@@ -1,5 +1,7 @@
 TODO
 
+- Add Link to edenmarket (those guys host our server for free :-)
+
 - Split the code which generates the pages into separate scripts and
 use a "config database" (probably a python object which is accessed
 via cPickle) to create the inter-links.
@@ -16,18 +18,18 @@ EMail ?)
 
 - Publish the changelogs on the web.
 
-- the mailto-link for e.g. cvs-passwords could look like this :
-
-    <a href="mailto:digulla@aros.org?subject=Access to AROS CVS
-    Server&body=Please add [my_login] [password]</a>
-
 - List of links:
     - Homepages
     - Less related
 
-- Merge old docs
+o Merge old docs
 
 DONE
+
+* the mailto-link for e.g. cvs-passwords could look like this :
+
+    <a href="mailto:digulla@aros.org?subject=Access to AROS CVS
+    Server&body=Please add [my_login] [password]</a>
 
 * Create a list of contributors and publish it
 
