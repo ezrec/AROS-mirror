@@ -393,6 +393,8 @@ class XmlPage (Page):
 	self.meat = self.meat + [RawText (XML2HTML.fh.getvalue ())]
 	XML2HTML.fh.close ()
 
+	self.mtime = xmlfile.mtime
+
 def elementToHtml (element, page):
     xmlfile = xmlsupport.AROSXmlFile ()
 
