@@ -212,7 +212,7 @@ char argv[];
  {
   if (!demomode) WaitPort(window->UserPort);
   else demo();
-  if(msg=(struct IntuiMessage*)GetMsg(window->UserPort))
+  if(NULL != (msg=(struct IntuiMessage*)GetMsg(window->UserPort)))
   {
    demomode=FALSE;
    class=msg->Class;
@@ -310,6 +310,7 @@ void newmaze()
  seed = FastRand(seed);
  y= ((seed & 0x7ffe) % (ysize-4)+2) & 0x7ffe;  /* random start point */
  x= 2;
+
  seed = FastRand(seed);
  wayout = ((seed & 0x7ffe) % (ysize-4)+2) & 0x7ffe;  /* random exit */
  MAZESET(xsize-3,wayout,xsize,mymaze);               /* open exit */

@@ -18,19 +18,16 @@
 long seed;                     /* FastRand() stuff */
 short testpoint[4][2]=
  {{-1,0},{1,0},{0,1},{0,-1}};  /* = left,right,down,up */
-short stackptr,direction,newpos(),maze();
+short stackptr,direction,newpos();
 long *vposr = (long*)0xdff004; /* Beam position */
 
-short maze(width,height,area)
-register short width;
-register char  *area;
-short height;
+short maze(short width,short height,char * area)
 {
  register short x,y;
  register short *stack;
  short i,j;
 
- seed=*vposr;           /* new Seed for FastRand() */
+ //seed=*vposr;           /* new Seed for FastRand() */
  x=2;                   /* starting position */
  y=(FastRand(seed) % (height-4) + 2) & 0xfffe;
 
