@@ -216,8 +216,13 @@
 
 	/* The user interface definitions. */
 
+#ifndef __AROS__
 #include "gtlayout.h"
 #include "gtlayout_protos.h"
+#else
+#include <gtlayout.h>
+#include <proto/gtlayout.h>
+#endif
 
 #ifndef NO_PRAGMAS
 #include "gtlayout_pragmas.h"
