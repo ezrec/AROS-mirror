@@ -1,6 +1,16 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM- contrib-zune-classes-nlist-demos : contrib-zune-classes-nlist-demo contrib-zune-classes-nlisttree-demo
-#MM- contrib-zune-classes-nlist :  contrib-zune-classes-nlist-class  contrib-zune-classes-nlistview-class contrib-zune-classes-nfloattext-class contrib-zune-classes-nlisttree-class  contrib-zune-classes-nlistviews-mcp contrib-zune-classes-nlist-demos
+#MM- contrib-zune-classes-nlist-demos : 	\
+#MM	contrib-zune-classes-nlist-demo 	\
+#MM	contrib-zune-classes-nlisttree-demo
+
+#MM- contrib-zune-classes-nlist : 		\
+#MM	contrib-zune-classes-nlist-class  	\
+#MM	contrib-zune-classes-nlistview-class 	\
+#MM	contrib-zune-classes-nfloattext-class 	\
+#MM	contrib-zune-classes-nlisttree-class 	\
+#MM	contrib-zune-classes-nlistviews-mcp 	\
+#MM	contrib-zune-classes-nlisttree-mcp 	\
+#MM	contrib-zune-classes-nlist-demos
 
