@@ -74,7 +74,13 @@ typedef u32_t mem_ptr_t;
 #include <stdlib.h>
 #endif
 /* Plaform specific diagnostic output */
+
+#ifndef __AROS__
 #define LWIP_PLATFORM_DIAG(x)	do {mykprintf x;} while(0)
+#else
+#include <aros/debug.h>
+#define LWIP_PLATFORM_DIAG(x)	do {kprintf x;} while(0)
+#endif
 
 #define LWIP_PLATFORM_ASSERT(x) do {kprintf("Assertion \"%s\" failed at line %ld in %s\n", \
                                      x, __LINE__, __FILE__); /*fflush(NULL); abort();*/} while(0)
