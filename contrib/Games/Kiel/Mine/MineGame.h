@@ -4,34 +4,34 @@ char number[4];
 
 clearwin();
   if(WinSize(Window,350,200)==FALSE)
-    fprintf(stderr,"Could not resize Window!\n");
+    fprintf(stderr,_(MSG_ERRORWINRESIZE));
 /*  clearwin();*/
   drawfield(40,60,130,75);
   drawfield(40,90,130,105);
   drawfield(40,120,130,135);
   sprintf(number,"%3d",width);
-  write_text(50,70,number,1);
+  write_text(50,71,number,1);
   sprintf(number,"%3d",height);
-  write_text(50,100,number,1);
+  write_text(50,101,number,1);
   sprintf(number,"%3d",Anzahl);
-  write_text(50,130,number,1);
-  write_text(80,70,"Breite",1);
-  write_text(80,100,"Hoehe",1);
-  write_text(80,130,"Bomben",1);
+  write_text(50,131,number,1);
+  write_text(80,71,_(MSG_WIDTH),1);
+  write_text(80,101,_(MSG_HEIGHT),1);
+  write_text(80,131,_(MSG_BOMBS),1);
   drawfield(250,80,325,115);
-  write_text(265,100,"Weiter",2);
+  write_text(265,100,_(MSG_WEITER),2);
 
   drawfield(175,135,140,120);
   drawfield(180,120,215,135);
-  write_text(145,130,"± 1",1);
-  write_text(185,130,"±10",1);
+  write_text(145,131,"± 1",1);
+  write_text(185,131,"±10",1);
 
   drawfield(40,20,115,40);
-  write_text(45,33,"Anfänger",3);
+  write_text(45,33,_(MSG_BEGINNER),3);
   drawfield(120,20,260,40);
-  write_text(125,33,"Fortgeschrittene",3);
+  write_text(125,33,_(MSG_ADVANCED),3);
   drawfield(265,20,325,40);
-  write_text(270,33,"Profis",3);
+  write_text(270,33,_(MSG_PROFESSIONAL),3);
 
   switch(Spielart)
   {
@@ -45,10 +45,10 @@ clearwin();
   }
 
   drawfield(130,150,230,165);
-  write_text(140,160,"HighScores",3);
+  write_text(140,161,_(MSG_HIGHSCORES),3);
 
   drawfield(250,150,265,165);
-  write_text(275,160,"Cheat",2);
+  write_text(275,161,_(MSG_CHEAT),2);
   if(Cheat)
   {
     SetAPen(rp,1);
@@ -72,20 +72,20 @@ BOOL weiter=FALSE;
 
 clearwin();
   if(WinSize(Window,250,200)==FALSE)
-    fprintf(stderr,"Could not resize Window!\n");
+    fprintf(stderr,_(MSG_ERRORWINRESIZE));
 /*  clearwin();*/
   write_text(75,25,"HighScores:",1);
-  sprintf(outtext,"%3d sek. Anfänger",Zeiten[ANFAENGER]);
+  sprintf(outtext,"%3d %s %s",Zeiten[ANFAENGER],_(MSG_SEC),_(MSG_BEGINNER));
   write_text(30,45,outtext,2);
   write_text(62,57,names[1],2);
-  sprintf(outtext,"%3d sek. Fortgeschrittene",Zeiten[FORTGESCHRITTENE]);
+  sprintf(outtext,"%3d %s %s",Zeiten[FORTGESCHRITTENE],_(MSG_SEC),_(MSG_ADVANCED));
   write_text(30,75,outtext,2);
   write_text(62,87,names[2],2);
-  sprintf(outtext,"%3d sek. Profis",Zeiten[PROFIS]);
+  sprintf(outtext,"%3d %s %s",Zeiten[PROFIS],_(MSG_SEC),_(MSG_PROFESSIONAL));
   write_text(30,105,outtext,2);
   write_text(62,117,names[3],2);
   drawfield(100,125,150,150);
-  write_text(102,140,"Weiter",2);
+  write_text(102,140,_(MSG_WEITER),2);
 
   while(!weiter)
   {
@@ -249,11 +249,11 @@ BYTE deltab=1;
     if(Anzahl>width*height-2)
       Anzahl=width*height-1;
     sprintf(number,"%3d",width);
-    write_text(50,70,number,1);
+    write_text(50,71,number,1);
     sprintf(number,"%3d",height);
-    write_text(50,100,number,1);
+    write_text(50,101,number,1);
     sprintf(number,"%3d",Anzahl);
-    write_text(50,130,number,1);
+    write_text(50,131,number,1);
   }
 }
 
@@ -282,8 +282,8 @@ void GameInit()
   {
 
 clearwin();
-    if(WinSize(Window,width*box_width+left+right,height*box_width+oben+unten)==FALSE)
-      fprintf(stderr,"Could not resize Window!\n");
+    if(WinSize(Window,width*box_width+left+right,height*box_width+oben+unten+5)==FALSE)
+      fprintf(stderr,_(MSG_ERRORWINRESIZE));
 /*    clearwin();*/
 
 
@@ -323,7 +323,7 @@ clearwin();
     AnzMarken=0;
 
     MaleSpielfeld();
-    write_text(left+box_width*width/2-16,23,"Stop",2);
+    write_text(left+box_width*width/2-16,23,_(MSG_STOP),2);
 
   }
 }
@@ -595,7 +595,6 @@ int oldx=-1, oldy=-1;
                           break;
     }
   }
-
   /* stop timer */
   if(start)
   {
@@ -638,8 +637,8 @@ char Zeit[30];
 	    SetAPen(rp,3),
             RectFill(rp,(x-1)*box_width+2+left,(y-1)*box_width+2+oben,x*box_width-2+left,y*box_width-2+oben);
 
-      sprintf(Zeit,"Fertig! %4d Sek.",(int)(tend-tstart));
-      write_text(left+width*box_width/2-65,oben+height*box_width+15,Zeit,1);
+      sprintf(Zeit,"%s %4d %s",_(MSG_FINISHED),(int)(tend-tstart),_(MSG_SEC));
+      write_text(left+width*box_width/2-65,oben+height*box_width+19,Zeit,1);
       if((tend-tstart)<Zeiten[Spielart]&&!Cheat)
       {
         clearwin();
@@ -667,7 +666,7 @@ char Zeit[30];
         drawfield(left+box_width*width/2-25,5,left+box_width*width/2+25,35);
       }
     }
-    write_text(left+box_width*width/2-23,23,"Weiter",2);
+    write_text(left+box_width*width/2-23,23,_(MSG_WEITER),2);
 
     while(!weiter)
     {

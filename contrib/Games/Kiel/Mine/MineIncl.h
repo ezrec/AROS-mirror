@@ -1,5 +1,14 @@
 #include "../prec.c"
 
+#define DEBUG 1
+#include <aros/debug.h>
+
+#define CATALOG_NAME "contrib/Games/Kiel/Mine.catalog"
+#define CATALOG_VERSION 0
+#define CATCOMP_ARRAY
+#include "strings.h"
+#include "../locale.c"
+
 extern struct ExecBase *SysBase;
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
@@ -43,7 +52,7 @@ void open_window(struct NewWindow *newwindow)
 
 void write_text(LONG x, LONG y, char *text, ULONG color)
 {
-SetAPen(rp,color);
+  SetAPen(rp,color);
   Move(rp, x, y);
   Text(rp, text, strlen(text));
 }

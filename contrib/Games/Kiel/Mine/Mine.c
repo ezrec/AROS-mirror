@@ -91,10 +91,10 @@ struct Gadget Name_Gad = {
   &Name_Gad_text,0L,(APTR)&Name_Gad_info,Name_Gad_ID,NULL };
 
 
-struct IntuiText p = {1,0,JAM1,10,30,NULL,(UBYTE *)"OK",NULL };
-struct IntuiText n = {1,0,JAM1,70,30,NULL,(UBYTE *)"Cancel",NULL };
-struct IntuiText q_body = {1,0,JAM1,0,0,NULL,(UBYTE *)"Wirklich beenden?",NULL };
-struct IntuiText q_gbody = {1,0,JAM1,0,0,NULL,(UBYTE *)"Spiel abbrechen?",NULL };
+struct IntuiText p = {1,0,JAM1,10,30,NULL,NULL,NULL };
+struct IntuiText n = {1,0,JAM1,70,30,NULL,NULL,NULL };
+struct IntuiText q_body = {1,0,JAM1,0,0,NULL,NULL,NULL };
+struct IntuiText q_gbody = {1,0,JAM1,0,0,NULL,NULL,NULL };
 
 
 struct NewWindow NeuesWindow =
@@ -122,12 +122,6 @@ char names[4][21];
 
 #include "MineFile.h"
 
-/* Timer-Task */
-#define NEWLIST(l)                          \
-((l)->lh_Head=(struct Node *)&(l)->lh_Tail, \
- (l)->lh_Tail=NULL,                         \
- (l)->lh_TailPred=(struct Node *)(l))
-
 struct Task *t=NULL;
 UBYTE *s=NULL;
 
@@ -140,7 +134,7 @@ struct Task *parent;
 
 static void entry(void)
 {
-char outtext[4];
+char outtext[6];
 int counter;
 
   sigbit2=AllocSignal(-1);
@@ -188,7 +182,12 @@ void globalInit()
 BYTE i;
   open_lib();
   open_window(&NeuesWindow);
+  Locale_Initialize();
 
+  p.IText = _(MSG_OK);
+  n.IText = _(MSG_CANCEL);
+  q_body.IText = _(MSG_REALLYQUIT);
+  q_gbody.IText = _(MSG_REALLYABORT);
   time( &tstart );
   srand(tstart);
   width=22;
@@ -200,7 +199,7 @@ BYTE i;
   for(i=1;i<4;i++)
   {
     Zeiten[i]=999;
-    strcpy(names[i],"Keiner");
+    strcpy(names[i],"Wumpus");
   }
   open_hsfile();
   killme = FALSE;
@@ -239,13 +238,13 @@ BOOL Frage()
 BOOL weiter=FALSE,ret=FALSE;
 
   MaleSpielfeld();
-  write_text(left+box_width*width/2-19,23,"Start",2);
+  write_text(left+box_width*width/2-19,23,_(MSG_START),2);
 
   EraseRect(rp,left+box_width*width/2-30,oben+box_width*height/2-30,left+box_width*width/2+30,oben+box_width*height/2+30);
   drawfield(left+box_width*width/2-30,oben+box_width*height/2-30,left+box_width*width/2+30,oben+box_width*height/2+30);
   drawfield(left+box_width*width/2-29,oben+box_width*height/2-29,left+box_width*width/2+29,oben+box_width*height/2+29);
   drawfield(left+box_width*width/2-28,oben+box_width*height/2-28,left+box_width*width/2+28,oben+box_width*height/2+28);
-  write_text(left+box_width*width/2-20,oben+box_width*height/2+3,"Menue",2);
+  write_text(left+box_width*width/2-20,oben+box_width*height/2+3,_(MSG_MENU),2);
 
   while(!weiter)
   {
@@ -303,6 +302,7 @@ void CleanUp()
     FreeSignal(sigbit1);
   }
 
+  Locale_Deinitialize();
   close_hsfile();
   close_window();
   close_lib();

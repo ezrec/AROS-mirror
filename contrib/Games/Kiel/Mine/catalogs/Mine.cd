@@ -1,0 +1,59 @@
+;
+;
+MSG_WEITER (//)
+Continue
+;
+MSG_START (//)
+Start
+;
+MSG_STOP (//)
+Stop
+;
+MSG_OK (//)
+OK
+;
+MSG_CANCEL (//)
+Cancel
+;
+MSG_REALLYQUIT (//)
+Really Quit?
+;
+MSG_REALLYABORT (//)
+Really abort Game?
+;
+MSG_MENU (//)
+Menu
+;
+MSG_BEGINNER (//)
+Beginner
+;
+MSG_ADVANCED (//)
+Advanced
+;
+MSG_PROFESSIONAL (//)
+Pro
+;
+MSG_SEC (//)
+sec.
+;
+MSG_ERRORWINRESIZE (//)
+Could not resize Window!\n
+;
+MSG_WIDTH (//)
+Width
+;
+MSG_HEIGHT (//)
+Height
+;
+MSG_BOMBS (//)
+Bombs
+;
+MSG_CHEAT (//)
+Cheat
+;
+MSG_HIGHSCORES (//)
+High Scores
+;
+MSG_FINISHED (//)
+Finished!
+;

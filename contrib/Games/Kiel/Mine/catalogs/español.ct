@@ -1,0 +1,61 @@
+## version $VER: Mine.catalog 1.0 (14.9.2003)
+## language español
+## codeset 0
+;
+MSG_WEITER
+Adelante
+;
+MSG_START
+Empieza
+;
+MSG_STOP
+Termina
+;
+MSG_OK
+OK
+;
+MSG_CANCEL
+Abandonar
+;
+MSG_REALLYQUIT
+Estas seguro de quitar el Programa?
+;
+MSG_REALLYABORT
+Abandonar Juego?
+;
+MSG_MENU
+Menu
+;
+MSG_BEGINNER
+Principantes
+;
+MSG_ADVANCED
+Adelantados
+;
+MSG_PROFESSIONAL
+Profesionales
+;
+MSG_SEC
+segundos
+;
+MSG_ERRORWINRESIZE
+No pude cambiar las dimensiones de la ventana!\n
+;
+MSG_WIDTH
+Anchura
+;
+MSG_HEIGHT
+Altura
+;
+MSG_BOMBS
+Bombas
+;
+MSG_CHEAT
+Cheat
+;
+MSG_HIGHSCORES
+HighScores
+;
+MSG_FINISHED
+Listo!
+;

@@ -1,0 +1,61 @@
+## version $VER: Mine.catalog 1.0 (14.9.2003)
+## language deutsch
+## codeset 0
+;
+MSG_WEITER
+Weiter
+;
+MSG_START
+Start
+;
+MSG_STOP
+Stop
+;
+MSG_OK
+OK
+;
+MSG_CANCEL
+Abbruch
+;
+MSG_REALLYQUIT
+Wirklich beenden?
+;
+MSG_REALLYABORT
+Spiel Abbrechen?
+;
+MSG_MENU
+Menü
+;
+MSG_BEGINNER
+Anfänger
+;
+MSG_ADVANCED
+Fortgeschrittene
+;
+MSG_PROFESSIONAL
+Profis
+;
+MSG_SEC
+sek.
+;
+MSG_ERRORWINRESIZE
+Konnte Fenstergröße nicht verändern!\n
+;
+MSG_WIDTH
+Breite
+;
+MSG_HEIGHT
+Höhe
+;
+MSG_BOMBS
+Bomben
+;
+MSG_CHEAT
+Cheat
+;
+MSG_HIGHSCORES
+HighScores
+;
+MSG_FINISHED
+Fertig!
+;
