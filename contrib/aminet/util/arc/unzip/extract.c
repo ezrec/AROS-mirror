@@ -260,11 +260,12 @@ int extract_or_test_files()    /* return PK-type error code */
                             break;
                         }
                 }
-                if (do_this_file)
+                if (do_this_file) {
                     if (store_info())
                         ++j;            /* file is OK */
                     else
                         ++num_skipped;  /* unsupp. compression or encryption */
+		}
             } /* end if (process_all_files) */
 
 

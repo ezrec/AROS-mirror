@@ -770,7 +770,7 @@ int MAIN(argc, argv)   /* return PK-type error code (except under VMS) */
                         RETURN(error);  /* out of memory, or file in way */
                 } else
                     FPRINTF(stderr, LoadFarString(NotExtracting));
-                if (firstarg)   /* ... zipfile -d exdir ... */
+                if (firstarg) {   /* ... zipfile -d exdir ... */
                     if (pp[1]) {
                         pfnames = pp + 1;  /* argv+2 */
                         filespecs = argc - (pfnames-argv);  /* for now... */
@@ -780,6 +780,7 @@ int MAIN(argc, argv)   /* return PK-type error code (except under VMS) */
                         filespecs = 0;     /* GRR: necessary? */
                         break;
                     }
+		}
             } else if (!in_xfiles) {
                 if (strcmp(*pp, "-x") == 0) {
                     in_xfiles = TRUE;
@@ -1544,7 +1545,7 @@ int do_seekable(lastchance)    /* return PK-type error code */
 
     if (SSTAT(zipfn, &statbuf) || (error = S_ISDIR(statbuf.st_mode)) != 0) {
 #ifndef SFX
-        if (lastchance)
+        if (lastchance) {
             if (no_ecrec)
                 FPRINTF(stderr, LoadFarString(CantFindZipfileDirMsg),
                   zipinfo_mode? "zipinfo" : "unzip",
@@ -1561,6 +1562,7 @@ int do_seekable(lastchance)    /* return PK-type error code */
                                                                wildzipfn,
 #endif
                                                                          zipfn);
+	}
 #endif /* !SFX */
         return error? IZ_DIR : PK_NOZIP;
     }

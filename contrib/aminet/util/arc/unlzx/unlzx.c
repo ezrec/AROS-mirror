@@ -117,7 +117,7 @@ static struct UnLZX *unlzx_init(void)
 {
   struct UnLZX *unlzx = NULL;
 
-  if (unlzx = (struct UnLZX *)malloc(sizeof(struct UnLZX)))
+  if ((unlzx = (struct UnLZX *)malloc(sizeof(struct UnLZX))))
   {
     memset(unlzx, 0, sizeof(struct UnLZX));
     unlzx->match_pattern[0] = '*';
@@ -404,7 +404,7 @@ static signed long read_literal_table(struct UnLZX *unlzx)
           control += *unlzx->source++ << shift;
         }
       }
-      if (abort = make_decode_table(20, 6, unlzx->huffman20_len, unlzx->huffman20_table)) break;
+      if ((abort = make_decode_table(20, 6, unlzx->huffman20_len, unlzx->huffman20_table))) break;
       do
       {
         if ((symbol = unlzx->huffman20_table[control & 63]) >= 20)
@@ -676,7 +676,7 @@ static signed long extract_normal(FILE *in_file, struct UnLZX *unlzx)
         if(unlzx->source >= unlzx->source_end)
         {
           temp = unlzx->read_buffer;
-          if (count = temp - unlzx->source + 16384)
+          if ((count = temp - unlzx->source + 16384))
           {
             do
             {
@@ -712,7 +712,7 @@ static signed long extract_normal(FILE *in_file, struct UnLZX *unlzx)
         }
         if (unlzx->destination >= unlzx->decrunch_buffer + 65794)
         {
-          if (count = unlzx->destination - unlzx->decrunch_buffer - 65536)
+          if ((count = unlzx->destination - unlzx->decrunch_buffer - 65536))
           {
             temp = (unlzx->destination = unlzx->decrunch_buffer) + 65536;
             do
@@ -894,14 +894,14 @@ static signed long extract_archive(FILE *in_file, struct UnLZX *unlzx)
                     unlzx->pack_size = (unlzx->archive_header[9] << 24) + (unlzx->archive_header[8] << 16) + (unlzx->archive_header[7] << 8) + unlzx->archive_header[6];
                     unlzx->pack_mode = unlzx->archive_header[11];
                     unlzx->crc = (unlzx->archive_header[25] << 24) + (unlzx->archive_header[24] << 16) + (unlzx->archive_header[23] << 8) + unlzx->archive_header[22];
-                    if (node = (struct filename_node *)malloc(sizeof(struct filename_node)))
+                    if ((node = (struct filename_node *)malloc(sizeof(struct filename_node))))
                     {
                       *filename_next = node;
                       filename_next = &(node->next);
                       node->next = 0;
                       node->length = unlzx->unpack_size;
                       node->crc = unlzx->crc;
-                      for (temp = 0; node->filename[temp] = unlzx->header_filename[temp]; temp++);
+                      for (temp = 0; (node->filename[temp] = unlzx->header_filename[temp]); temp++);
                       if (unlzx->pack_size)
                       {
                         switch(unlzx->pack_mode)
@@ -918,7 +918,7 @@ static signed long extract_archive(FILE *in_file, struct UnLZX *unlzx)
                         }
                         if (abort) break;
                         temp_node = unlzx->filename_list;
-                        while (node = temp_node)
+                        while ((node = temp_node))
                         {
                           temp_node = node->next;
                           free(node);
@@ -1000,7 +1000,7 @@ static signed long extract_archive(FILE *in_file, struct UnLZX *unlzx)
     #endif
   } while(!abort);
   temp_node = unlzx->filename_list;
-  while(node = temp_node)
+  while((node = temp_node))
   {
     temp_node = node->next;
     free(node);
@@ -1178,7 +1178,7 @@ static signed long process_archive(unsigned char * filename, struct UnLZX *unlzx
   signed long result = 1, actual;
   FILE *in_file;
 
-  if (in_file = fopen(filename,"rb"))
+  if ((in_file = fopen(filename,"rb")))
   {
     actual = fread(unlzx->info_header, 1, 10, in_file);
     if (!ferror(in_file))
@@ -1238,16 +1238,16 @@ int main(int argc, char **argv)
   unsigned char tmp;
   struct UnLZX *unlzx;
 
-  if (unlzx = unlzx_init())
+  if ((unlzx = unlzx_init()))
   {
-    if (option = argopt("-p", (unsigned long)argc, (unsigned char **)argv))
+    if ((option = argopt("-p", (unsigned long)argc, (unsigned char **)argv)))
     {
       if (++option < argc)
       {
         strcpy(unlzx->match_pattern, argv[option]);
       }
     }
-    if (option = argopt("-o", (unsigned long)argc, (unsigned char **)argv))
+    if ((option = argopt("-o", (unsigned long)argc, (unsigned char **)argv)))
     {
       if (++option < argc)
       {
@@ -1269,11 +1269,11 @@ int main(int argc, char **argv)
     }
     }
   
-    if (option = argopt("-v", (unsigned long)argc, (unsigned char **)argv))
+    if ((option = argopt("-v", (unsigned long)argc, (unsigned char **)argv)))
     {
       unlzx->mode = 2;
     }
-    else if (option = argopt("-x", (unsigned long)argc, (unsigned char **)argv))
+    else if ((option = argopt("-x", (unsigned long)argc, (unsigned char **)argv)))
     {
       unlzx->mode = 1;
     }

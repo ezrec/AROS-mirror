@@ -443,7 +443,7 @@ int crunch_deep(unsigned char *source, unsigned char *source_end,
             deep_hash[temp2] = symbol; if(temp2 < 627) deep_hash[temp2 + 1] = symbol;
             symbol = swap;
          }
-      } while(symbol = deep_hash[symbol]); /* repeat until we reach root */
+      } while((symbol = deep_hash[symbol])); /* repeat until we reach root */
 
       if((count -= 627) < 256)
       {
@@ -586,7 +586,7 @@ int crunch_heavy(unsigned char *source, unsigned char *source_end,
             control += *source++ << shift;
             shift -= 16;
          }
-         if(offset = (control >> 16) & 511)
+         if((offset = (control >> 16) & 511))
             for(count = 0; count < offset; count++)
             {
                control <<= 5; /* get the length of this literal */
@@ -627,7 +627,7 @@ int crunch_heavy(unsigned char *source, unsigned char *source_end,
             control += *source++ << shift;
             shift -= 16;
          }
-         if(offset = (control >> 16) & 31)
+         if((offset = (control >> 16) & 31))
             for(count = 0; count < offset; count++)
             {
                control <<= 4; /* get the length of this offset */
@@ -786,7 +786,7 @@ int main(int argc, char ** argv)
  if (argc >= 3)
  {
   DEBUG = (argc >= 4);
-  if(in_file = fopen(argv[1],"rb"))
+  if((in_file = fopen(argv[1],"rb")))
   {
    actual = fread(info_header, 1, 4, in_file);
    if(!ferror(in_file))
@@ -805,7 +805,7 @@ int main(int argc, char ** argv)
         {
          if(((archive_header[44] << 8) + archive_header[45]) <= 111) /* extract_ver */
          {
-          if(out_file = fopen(argv[2],"wb"))
+          if((out_file = fopen(argv[2],"wb")))
           {
            high_track = (archive_header[14] << 8) + archive_header[15]; /* hightrack */
            high_track = (high_track > 80) ? 80 : high_track;

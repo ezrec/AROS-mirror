@@ -1351,7 +1351,7 @@ int list_files()    /* return PK-type error code */
     date_format = DATE_FORMAT;
 
 #ifndef MSWIN
-    if (qflag < 2)
+    if (qflag < 2) {
         if (L_flag)
             PRINTF(LoadFarString(CaseConversion),
               LoadFarStringSmall(Headers[longhdr][0]),
@@ -1359,6 +1359,7 @@ int list_files()    /* return PK-type error code */
         else
             PRINTF("%s\n%s\n", LoadFarString(Headers[longhdr][0]),
                    LoadFarStringSmall(Headers[longhdr][1]));
+    }
 #endif /* !MSWIN */
 
     for (j = 0; j < ecrec.total_entries_central_dir; ++j) {
