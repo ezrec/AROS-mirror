@@ -3,6 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-#DISABLE MM- contrib-gnu : contrib-gnu-grep
+#MM- contrib-gnu : contrib-gnu-grep
+#MM contrib-gnu-grep : contrib-development-parsers-pcre
 	
 %build_with_configure mmake=contrib-gnu-grep nix=yes prefix=$(CONTRIBDIR)/gnu
