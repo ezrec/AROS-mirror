@@ -8,7 +8,7 @@ Sponsors
 :Status:    Done.
 
 
-The following companies and organizations have donated resources:
+The following companies, organizations and individuals have donated resources:
 
 + Trustec__
    
@@ -39,9 +39,13 @@ The following companies and organizations have donated resources:
   scripting extensions and SQL database, mailing lists, bug database and 
   distributed file release system.  
 
++ Yann Vernier
++ Randal Vice
 
-The following individuals and organizations have sponsored development work:
 
+The following organizations and individuals have sponsored development work:
+
++ `Team AROS`__
 + `Norsk Amigaforening`__
 + Timothy Rue
 + Jakob Eriksson
@@ -59,4 +63,5 @@ The following individuals and organizations have sponsored development work:
 __ http://www.trustsec.de/
 __ http://www.pegasosppc.com/
 __ http://www.sourceforge.net/
+__ http://www.thenostromo.com/teamaros/
 __ http://www.naf.as/
