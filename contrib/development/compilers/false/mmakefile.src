@@ -1,0 +1,31 @@
+#   $Id$
+#
+#   Makefile to make False.
+
+include $(TOP)/config/make.cfg
+
+FILES := false_int 
+
+EXEDIR := $(CONTRIBDIR)/False
+EXE := $(EXEDIR)/False
+
+USE_AROSLIB := yes
+USE_CLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_ZLIB := yes
+
+#MM contrib-false : setup-contrib-false 
+
+%make_prog_setup mmake=contrib-false
+
+contrib-false : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+#MM
+setup ::
+	%mkdirs_q $(CONTRIBDIR)/False
+
+%common
+%include_deps
