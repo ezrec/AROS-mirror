@@ -550,9 +550,9 @@ start_again:
             TSD->currlevel->next = NULL ;
 
             if (result)
-               setvalue( TSD, &RESULT_name, result ) ;
+               setvalue( TSD, RESULT_name, result ) ;
             else
-               drop_var( TSD, &RESULT_name ) ;
+               drop_var( TSD, RESULT_name ) ;
 
             break ;
         }
@@ -564,9 +564,9 @@ start_again:
             exiterror( ERR_ROUTINE_NOT_FOUND, 0 )  ;
 
         if (result)
-           setvalue( TSD, &RESULT_name, result ) ;
+           setvalue( TSD, RESULT_name, result ) ;
         else
-           drop_var( TSD, &RESULT_name ) ;
+           drop_var( TSD, RESULT_name ) ;
 
         break ;
       }
