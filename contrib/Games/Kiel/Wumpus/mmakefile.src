@@ -5,12 +5,13 @@ include $(TOP)/config/make.cfg
 
 CFLAGS	:= $(USER_DEFINES) -O2 -Wunused -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(BINDIR)/Games
+DESTDIR := $(CONTRIBDIR)/Games/Kiel
 
 EXES := $(DESTDIR)/Wumpus
 
 .PHONY : all clean
 
+#MM- contrib-games : games-kiel-jump
 #MM
 games-wumpus : setup-games games
 

@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 #It causes problems on Linux-M68k!!!
 CFLAGS	:= $(USER_DEFINES) -O0 -Wunused -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(BINDIR)/fish
+DESTDIR := $(CONTRIBDIR)/fish
 
 FILES := henon
 

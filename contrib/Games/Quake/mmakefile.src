@@ -1,8 +1,8 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-INSTDIR  := $(BINDIR)/Quake
-BUILDDIR := $(GENDIR)/Quake
+INSTDIR  := $(CONTRIBDIR)/Games/Quake
+BUILDDIR := $(GENDIR)/$(CURDIR)
 STARTUP := $(LIBDIR)/startup.o
 LIBS	:= -L$(LIBDIR) -larosc -larosm -lamiga -larossupport
 DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a	\
@@ -10,19 +10,15 @@ DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a	\
 
 EXE := $(INSTDIR)/quake
 
+#MM- contrib-games : Quake
 #MM
 Quake : make-dirs $(EXE)
-
-
 
 make-dirs :
 	%mkdirs_q $(INSTDIR) $(BUILDDIR)
 
-
-
 BASEVERSION=1.09
 VERSION=$(BASEVERSION)$(GLIBC)
-
 
 ifneq (,$(findstring libc6,$(shell if [ -e /lib/libc.so.6 ];then echo libc6;fi)))
 GLIBC=-glibc

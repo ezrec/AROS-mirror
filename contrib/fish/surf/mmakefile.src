@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(BINDIR)/fish
+DESTDIR := $(CONTRIBDIR)/fish
 
 FILES := bezpt control fasttrig gadgetdef gadgetuse getfilenames \
 	main mapcalc mapimgpix mapstuff menudef mouse packer poly \

@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 FILES := $(wildcard Levels/Level* Levels/Mission* Levels/Story*) \
 	 $(wildcard Textures/*.256) \
 	 Missions
-INSTDIR := $(BINDIR)/Games/Moria3D
+INSTDIR := $(CONTRIBDIR)/Games/Moria3D
 
 DEST := $(foreach f,$(FILES),$(INSTDIR)/$(f))
 

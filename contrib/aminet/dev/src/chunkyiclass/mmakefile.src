@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 CFLAGS	        := $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR		:= $(GENDIR)/$(CURDIR)
-EXEDIR		:= $(BINDIR)/test
+EXEDIR		:= $(CONTRIBDIR)/test
 LIB		:= $(LIBDIR)/libchunkyiclass.a
 
 %define_libs

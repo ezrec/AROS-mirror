@@ -6,7 +6,7 @@ LIBS	:= -L$(LIBDIR) -larosc -larosm -lamiga -larossupport
 DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a \
 	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
 
-INSTDIR := $(BINDIR)/Games/Moria3D
+INSTDIR := $(CONTRIBDIR)/Games/Moria3D
 EXE	:= $(INSTDIR)/Moria3D
 
 OBJS := Moveing.o Moria3D.o Clean.o \
@@ -15,6 +15,7 @@ OBJS := Moveing.o Moria3D.o Clean.o \
 
 .PHONY : Moria3D
 
+#MM- contrib-games : Moria3D
 #MM Moria3D : Moria3D-setup
 Moria3D : $(EXE)
 	@$(NOP)
