@@ -88,19 +88,16 @@ int countlines(struct ViewData *vd)
 
 int smartcountlines(struct ViewData *vd)
 {
-
-#warning Finish the unwritten asm funcs
-return -1;
-#if 0
 	int size, sizebak;
 	
-	char *buf, lws;
+	char *buf, *lws;
 	
 	int linecount;
 	int charcount;
+	int hexcount;
 	
 	int max_line_length, mll_p;
-	
+	BOOL last_was_escape;
 	
 	size = vd->view_file_size;
 	sizebak = size;
@@ -109,6 +106,8 @@ return -1;
 	
 	linecount = 0;
 	charcount = 0;
+	hexcount = 0;
+	last_was_escape = FALSE;
 	
 	max_line_length = vd->view_max_line_length;
 	
@@ -117,22 +116,52 @@ return -1;
 	do {
 		charcount ++;
 		if (max_line_length != charcount) {
+			BOOL is_ascii = FALSE;
 			/* askip1 */
 			
-			if (*buf < - 33) {
+			if (*buf < -33) {
+			    is_ascii = TRUE;
 			} else if (*buf <= -1) {
-			
+			    is_ascii = FALSE;
 			} else if (*buf < 9) {
-			
+			    is_ascii = FALSE;
 			} else if (*buf < 14) {
-			
+			    is_ascii = TRUE;
 			} else if (*buf < 32) {
-			
-			} else if (*buf < 128) {
-			
-			} else if (*buf > 160) {
-			
+			    is_ascii = FALSE;
+			} else if (((unsigned char)*buf) <= 127) {
+			    is_ascii = TRUE;
+			} else if (((unsigned char)*buf) > 160) {
+			    is_ascii = TRUE;
 			}
+
+			if (!is_ascii)
+			{
+			    /* aishex */
+
+			    if (sizebak < 6) return -1;
+			    hexcount++;
+			    if (hexcount >= 6) return -1;
+			    if (*buf == 27) last_was_escape = TRUE;			     
+			} else {
+			    /* aokay */
+			    hexcount = 0;
+			    
+			    if (last_was_escape)
+			    {
+			        if (*buf == '[') return -2; /* isansi */
+			        last_was_escape = FALSE;
+			    }
+			}
+			
+			/* aokay1 */
+			if (*buf == 10)
+			{
+			    lws = 0;
+			    linecount++;
+			    charcount = 0;
+			}
+			
 			
 		} else  {
 			
@@ -144,9 +173,7 @@ return -1;
 					buf = lws;
 				}
 			}
-			
-			
-			
+						
 			/* nolastspace1 */
 			*buf = 10;
 			
@@ -155,9 +182,22 @@ return -1;
 			charcount = 0;
 			
 		}
+
+		/* askip2 */
+		if (*buf == 32)
+		{
+		    lws = buf;
+		}
 		
-	} (while);
-#endif
+		/* notspace1 */
+		
+		buf++;
+		
+	} while (-- size);
+	
+	if (*buf != 10) linecount++;
+	
+	return linecount;
 }
 
 int ansicountlines(struct ViewData *vd)
