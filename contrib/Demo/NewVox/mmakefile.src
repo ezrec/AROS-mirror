@@ -1,0 +1,39 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
+	-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
+	
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(CONTRIBDIR)/Demos/NewVox
+
+FILES := newvox
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+EXE := $(DESTDIR)/newvox
+
+.PHONY : all clean
+
+#MM demo-newvox : setup-demo-newvox
+demo-newvox : $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-demo-voxel :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+#MM
+clean-contrib-demos :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+
