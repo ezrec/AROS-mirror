@@ -384,7 +384,6 @@ int stk_display_open( int flags, int width, int height, int depth )
 	SDL_Surface *icon;
 	icon = png_load(SRC_DIR "/gfx/win_icon.png");
         if (icon != NULL) {
-            kprintf("=== icon = %p\n", icon);
 	    SDL_SetColorKey(icon, SDL_SRCCOLORKEY, 0);
 	    SDL_WM_SetIcon(icon, NULL);
         }
