@@ -72,7 +72,7 @@ Base                      Name                       Class
 ========================  =========================  ========================
 (MUIB_AROS | 0x00000000)  MUIB_Clock                 Clock.mcc
 (MUIB_AROS | 0x00000100)  MUIB_Calendar              Calendar.mcc
-(MUIB_AROS | 0x00000200)  MUIB_PreferencesWindow     PreferencesWindow.mcc
+(MUIB_AROS | 0x00000200)  MUIB_PrefsWindow           PrefsWindow.mcc
 (MUIB_AROS | 0x00000300)  MUIB_IconImage             IconImage.mcc
 (MUIB_AROS | 0x00000400)  MUIB_AboutWindow           AboutWindow.mcc
 ========================  =========================  ========================
@@ -122,32 +122,32 @@ Identifier                    Name                             I  S  G  P  Type
 ============================  ===============================  =  =  =  =  ====================
 
 
-Class: PreferencesWindow.mcc
-----------------------------
+Class: PrefssWindow.mcc
+-----------------------
 
-=====================================  ====================================  =
+===============================  ====================================  =
 Methods
-------------------------------------------------------------------------------
-Identifier                             Name                                  P
-=====================================  ====================================  =
-(MUIB_PreferencesWindow | 0x00000000)  MUIM_PreferencesWindow_Test
-(MUIB_PreferencesWindow | 0x00000001)  MUIM_PreferencesWindow_Revert
-(MUIB_PreferencesWindow | 0x00000002)  MUIM_PreferencesWindow_Save
-(MUIB_PreferencesWindow | 0x00000003)  MUIM_PreferencesWindow_Use
-(MUIB_PreferencesWindow | 0x00000004)  MUIM_PreferencesWindow_Cancel
-=====================================  ====================================  =
+------------------------------------------------------------------------
+Identifier                       Name                                  P
+===============================  ====================================  =
+(MUIB_PrefsWindow | 0x00000000)  MUIM_PrefsWindow_Test
+(MUIB_PrefsWindow | 0x00000001)  MUIM_PrefsWindow_Revert
+(MUIB_PrefsWindow | 0x00000002)  MUIM_PrefsWindow_Save
+(MUIB_PrefsWindow | 0x00000003)  MUIM_PrefsWindow_Use
+(MUIB_PrefsWindow | 0x00000004)  MUIM_PrefsWindow_Cancel
+===============================  ====================================  =
 
-=====================================  ======================================  =  =  =  =  ====================
+===============================  ================================  =  =  =  =  ====================
 Attributes
----------------------------------------------------------------------------------------------------------------
-Identifier                             Name                                    I  S  G  P  Type                
-=====================================  ======================================  =  =  =  =  ====================
-(MUIB_PreferencesWindow | 0x00000000)  MUIM_PreferencesWindow_Test_Disabled    X  X  X     BOOL
-(MUIB_PreferencesWindow | 0x00000001)  MUIM_PreferencesWindow_Revert_Disabled  X  X  X     BOOL
-(MUIB_PreferencesWindow | 0x00000002)  MUIM_PreferencesWindow_Save_Disabled    X  X  X     BOOL
-(MUIB_PreferencesWindow | 0x00000003)  MUIM_PreferencesWindow_Use_Disabled     X  X  X     BOOL
-(MUIB_PreferencesWindow | 0x00000004)  MUIM_PreferencesWindow_Cancel_Disabled  X  X  X     BOOL
-=====================================  ======================================  =  =  =  =  ====================
+---------------------------------------------------------------------------------------------------
+Identifier                       Name                              I  S  G  P  Type                
+===============================  ================================  =  =  =  =  ====================
+(MUIB_PrefsWindow | 0x00000000)  MUIM_PrefsWindow_Test_Disabled    X  X  X     BOOL
+(MUIB_PrefsWindow | 0x00000001)  MUIM_PrefsWindow_Revert_Disabled  X  X  X     BOOL
+(MUIB_PrefsWindow | 0x00000002)  MUIM_PrefsWindow_Save_Disabled    X  X  X     BOOL
+(MUIB_PrefsWindow | 0x00000003)  MUIM_PrefsWindow_Use_Disabled     X  X  X     BOOL
+(MUIB_PrefsWindow | 0x00000004)  MUIM_PrefsWindow_Cancel_Disabled  X  X  X     BOOL
+===============================  ================================  =  =  =  =  ====================
 
 
 Class: IconImage.mcc
