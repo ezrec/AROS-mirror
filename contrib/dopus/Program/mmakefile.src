@@ -1,5 +1,5 @@
 # $Id$
-include $(TOP)/config/make.cfg
+include ../make.cfg
 
 FILES := about arbiter main main1 main2 main3 main4 main5 main6 main7\
          main8 main9 main10 main11 main12 main13 main14 main15 main16\
@@ -10,7 +10,7 @@ FILES := about arbiter main main1 main2 main3 main4 main5 main6 main7\
          launchexternal searchdata complete remember parentmulti\
           dirtree getusage asmfuncs_in_c lsprintf dummy_asyncio # assembly
 
-EXEDIR := $(CONTRIBDIR)/DOpus
+EXEDIR := $(DOPUSDIR)
 
 #MM- DirOpus : dopus-library workbench-libs-rexxsyslib
 

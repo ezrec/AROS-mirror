@@ -1,5 +1,5 @@
 # $Id$
-include $(TOP)/config/make.cfg
+include ../make.cfg
 
 FILES	:= data
 
@@ -27,7 +27,7 @@ FUNCTIONS	:= \
 #MM- dopus-library : setup includes linklibs
 
 %build_module_macro mmake=dopus-library \
-    modname=dopus modtype=library dir=$(CONTRIBDIR)/DOpus/Libs \
+    modname=dopus modtype=library dir=$(DOPUSDIR)/Libs \
     funcs=$(FUNCTIONS) files=$(FILES) \
     conffile=lib.conf \
     uselibs=rom

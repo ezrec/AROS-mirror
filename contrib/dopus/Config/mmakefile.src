@@ -1,17 +1,15 @@
 # $Id$
-include $(TOP)/config/make.cfg
+include ../make.cfg
 
 FILES := main main1 main2 main3 main4 main5 \
          screen screen_arrows screen_colors screen_fonts screen_palette \
          screen_sliders screen_screenmode \
          main7 main8 main9 data gadgets strings paint_mode lsprintf 
 
-EXEDIR := $(CONTRIBDIR)/DOpus
-
 #MM- ConfigOpus : dopus-library
 
 %build_prog mmake=ConfigOpus \
-    progname=ConfigOpus targetdir=$(EXEDIR) \
+    progname=ConfigOpus targetdir=$(DOPUSDIR) \
     files=$(FILES) uselibs="amiga arosc m"
 
 %common
