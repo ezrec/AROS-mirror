@@ -1,0 +1,7 @@
+*.err
+functable.c
+functions.*
+dopus_endtag.c
+mmakefile
+*.map
+libdefs.h
