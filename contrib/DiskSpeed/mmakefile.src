@@ -14,7 +14,7 @@ DISKSHARED := locale diskspeed/DiskSpeedCPU
     progname=ScsiSpeed targetdir=$(DESTDIR) \
     files="$(DISKSHARED) scsispeed/ScsiSpeed" uselibs="mui arossupport amiga arosc m"
     
-#MM contrib-diskspeed : contrib-diskspeed-comp contrib-scsispeed-comp
+#MM- contrib-diskspeed : contrib-diskspeed-comp contrib-scsispeed-comp
 #MM contrib-diskspeed-comp : contrib-diskspeed-docs contrib-diskspeed-icons contrib-diskspeed-catalogs
 #MM contrib-scsispeed-comp : contrib-diskspeed-docs contrib-scsispeed-icons contrib-diskspeed-catalogs
 
