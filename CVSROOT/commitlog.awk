@@ -54,6 +54,12 @@ BEGIN {
     # Remove CVSROOT from Dir
     gsub (CVSROOT"/", "", Dir);
 
+    # Find the first name in the path
+    if (!match (Dir, /\//))
+	RSTART=length(Dir);
+    Area = substr(Dir,1,RSTART);
+print RSTART,":",Dir,":",Area
+
     next;
 }
  { 
@@ -74,14 +80,8 @@ END {
 	dump();
 }
 
-function dump(t,flist,area)
+function dump(t,flist)
 {
-    # Find the first name in the path
-    if (!match (Dir, /\//))
-	RSTART=length(Dir);
-    area = substr(Dir,1,RSTART);
-print RSTART,":",Dir,":",area >> stderr;
-
     # First: Who did it when ?
     pout("* " User " " Date " " Dir "/\n\n");
 
@@ -115,7 +115,7 @@ function pout(str) {
     # Add a string to the file "Out" and "Out.new"
 printf ("%s", str);
     printf ("%s", str) >> Out;
-    printf ("%s", str) >> Out ".new." area;
+    printf ("%s", str) >> Out ".new." Area;
 }
 
 function wrap(str,width         ,line,rest,pos) {
