@@ -170,7 +170,7 @@ void ShowHotlist(struct HotlistGroupEntry *hge)
 SAVEDS ASM APTR SelectHotlistConstructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistGroupEntry *hge)
 {
   struct HotlistGroupEntry *new;
-  if(new=AllocPooled(pool,sizeof(struct HotlistGroupEntry)))
+  if((new=AllocPooled(pool,sizeof(struct HotlistGroupEntry))))
   {
     *new=*hge;
     return(new);
@@ -286,7 +286,7 @@ struct HotlistGroupEntry *SelectHotlistGroup(char *Title,struct HotlistGroupEntr
 SAVEDS ASM APTR HotlistConstructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistEntry *he)
 {
   struct HotlistEntry *new;
-  if(new=AllocPooled(pool,sizeof(struct HotlistEntry)))
+  if((new=AllocPooled(pool,sizeof(struct HotlistEntry))))
   {
     *new=*he;
     return(new);
@@ -502,7 +502,7 @@ SAVEDS ASM void HotlistMoveFunc(REG(a2) Object *List,REG(a1) APTR *arg)
   if(Active!=-1)
   {
     DoMethod(CurrentShownURLGroup->LinkList,MUIM_List_GetEntry,Active,&he);
-    if(hge=SelectHotlistGroup("Where do you want to move this link?",CurrentShownURLGroup))
+    if((hge=SelectHotlistGroup("Where do you want to move this link?",CurrentShownURLGroup)))
     {
       DoMethod(hge->LinkList,MUIM_List_InsertSingle,he,MUIV_List_Insert_Bottom);
       DoMethod(CurrentShownURLGroup->LinkList,MUIM_List_Remove,Active);
@@ -570,19 +570,19 @@ struct Hook HotlistGroupCompareHook = {{NULL,NULL},(void *)HotlistGroupCompareFu
 SAVEDS ASM APTR HotlistGroupConstructFunc(REG(a0) struct Hook *hook,REG(a2) APTR pool,REG(a1) struct HotlistGroupEntry *hge)
 {
   struct HotlistGroupEntry *new;
-  if(new=AllocPooled(pool,sizeof(struct HotlistGroupEntry)))
+  if((new=AllocPooled(pool,sizeof(struct HotlistGroupEntry))))
   {
     *new=*hge;
-    if(new->ChildList=ListObject,
+    if((new->ChildList=ListObject,
       MUIA_List_ConstructHook,hook,
       MUIA_List_DestructHook, &HotlistGroupDestructHook,
       MUIA_List_CompareHook,  &HotlistGroupCompareHook,
-      End)
-    if(new->LinkList=ListObject,
+      End))
+    if((new->LinkList=ListObject,
       MUIA_List_ConstructHook,&HotlistConstructHook,
       MUIA_List_DestructHook, &HotlistDestructHook,
       MUIA_List_CompareHook,  &HotlistCompareHook,
-      End)   
+      End))
     return(new);
     FreePooled(pool,hge,sizeof(struct HotlistGroupEntry));
   }
@@ -826,20 +826,20 @@ void LoadHotlist(void)
   CurrentShownURLGroup=&GroupRootList;
   GroupRootList.Parent=NULL;
   strcpy(GroupRootList.Title,"");
-  if(GroupRootList.ChildList=ListObject,
+  if((GroupRootList.ChildList=ListObject,
     MUIA_List_ConstructHook,&HotlistGroupConstructHook,
     MUIA_List_DestructHook, &HotlistGroupDestructHook,
     MUIA_List_CompareHook,  &HotlistGroupCompareHook,
-    End)
+    End))
   {  
-    if(GroupRootList.LinkList=ListObject,
+    if((GroupRootList.LinkList=ListObject,
       MUIA_List_ConstructHook,&HotlistConstructHook,
       MUIA_List_DestructHook, &HotlistDestructHook,
       MUIA_List_CompareHook,  &HotlistCompareHook,
-      End)
+      End))
     {           
       CurrentList=&GroupRootList;
-      if(file=fopen("env:mosaic/.mosaic-hotlist-default","r"))
+      if((file=fopen("env:mosaic/.mosaic-hotlist-default","r")))
       {
         if(fgets(buffer,530,file))
         {
@@ -932,7 +932,7 @@ void SaveHotlist(void)
   set(App,MUIA_Application_Sleep,TRUE);
   for(i=0;i<2;i++)
   {
-    if(file=fopen(Files[i],"w"))
+    if((file=fopen(Files[i],"w")))
     {
       fprintf(file,"ncsa-xmosaic-hotlist-format-1\nDefault\n");
       SaveGroup(file,&GroupRootList);
@@ -1415,7 +1415,7 @@ void mui_init(void)
 				char *Label;
 				if(!cnt)
 				{
-					if(Obj=MUI_MakeObject(MUIO_Menuitem,NM_BARLABEL,0,0,NULL))
+					if((Obj=MUI_MakeObject(MUIO_Menuitem,NM_BARLABEL,0,0,NULL)))
 						DoMethod(MN_RexxMenu,MUIM_Family_AddTail,Obj);
 				}
 				ShortCuts[i][1] = '\0' ;
@@ -1432,7 +1432,7 @@ void mui_init(void)
 						ShortCuts[i][0]='0'+(i+1)%10;
 						break;
 				}
-				if(Obj=MUI_MakeObject(MUIO_Menuitem,Label, UserData ? ShortCuts[i] : NULL,0,UserData))
+				if((Obj=MUI_MakeObject(MUIO_Menuitem,Label, UserData ? ShortCuts[i] : NULL,0,UserData)))
 				{
 					DoMethod(MN_RexxMenu,MUIM_Family_AddTail,Obj);
 					cnt++;

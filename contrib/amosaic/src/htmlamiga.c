@@ -5,12 +5,11 @@ Amiga specific code for controlling the gadget, etc.
 *********************************************************************/
 /* We really don't need _all_ these... try to narrow it down some time */
 
-
 #include "includes.h"
 #include "HTML.h"
 #include "mosaic.h"
-#include "globals.h"
 #include "gui.h"
+#include "globals.h"
 #include "XtoI.h"
 #include "HTMLP.h"
 #include "HTMLImgMacro.h"
@@ -19,8 +18,6 @@ Amiga specific code for controlling the gadget, etc.
 #include "TextEditField.h"
 #include "protos.h"
 
-extern struct IntuitionBase *IntuitionBase ;
-extern struct GfxBase *GfxBase;
 extern char *cached_url;
 extern int lib_version;
 
@@ -574,7 +571,7 @@ static ULONG HTMLGadClSet(Class *cl, Object *obj, Msg msg){
 	ti = ((opSetP)msg)->ops_AttrList;
 	tstate = ti;
   
-	while (ti = NextTagItem(&tstate)) {
+	while ((ti = NextTagItem(&tstate))) {
     switch (ti->ti_Tag) {
       
     case HTMLA_active:		inst->active = ti->ti_Data; break;
@@ -1190,7 +1187,7 @@ struct Region *installClipRegion (struct Window *w, struct Layer *l, struct Regi
     BOOL refresh = FALSE;
     struct Region *or;
 
-    if (w->Flags & WINDOWREFRESH)
+    if (w->Flags & WFLG_WINDOWREFRESH)
     {
         EndRefresh (w, FALSE);
         refresh = TRUE;
@@ -1738,7 +1735,7 @@ int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
 	img_data = malloc(sizeof(ImageInfo));
 	img_data->mask_bitmap=NULL;
  
-	if (dtobject = NewDTObject(fnam, DTA_GroupID,GID_PICTURE, PDTA_Remap, FALSE, TAG_DONE)){
+	if ((dtobject = NewDTObject(fnam, DTA_GroupID,GID_PICTURE, PDTA_Remap, FALSE, TAG_DONE))){
 		ULONG *pentable;
 		int numpens;
 		struct BitMap *OrgBitMap;
@@ -1899,7 +1896,7 @@ static ULONG HTMLTextClSet(Class *cl, Object *obj, Msg msg){
 	ti = ((opSetP)msg)->ops_AttrList;
 	tstate = ti;
   
-	while (ti = NextTagItem(&tstate)) {
+	while ((ti = NextTagItem(&tstate))) {
     switch (ti->ti_Tag) {
       
 //    case HTMLA_active:		inst->active = ti->ti_Data; break;
@@ -2189,7 +2186,7 @@ static ULONG HTMLTextNClSet(Class *cl, Object *obj, Msg msg){
 	ti = ((opSetP)msg)->ops_AttrList;
 	tstate = ti;
   
-	while (ti = NextTagItem(&tstate)) {
+	while ((ti = NextTagItem(&tstate))) {
     switch (ti->ti_Tag) {
       
 //    case HTMLA_active:		inst->active = ti->ti_Data; break;
@@ -2417,7 +2414,7 @@ MakeWidget(HTMLGadClData *HTML_Data, char *edata,
 //	kprintf("Cords x: %ld y: %ld\n",x,y);
 
 	if(HTML_Data->object_flags & Object_Reparsing){
-		if(widget=FindWidget(HTML_Data->widget_list,WidgetId)){
+		if((widget=FindWidget(HTML_Data->widget_list,WidgetId))){
 			widget->flags=0;
 			widget->ParentForm=Form; /* To have a link back */
 			SetAttrs(widget->MUI_Object,
@@ -2429,7 +2426,7 @@ MakeWidget(HTMLGadClData *HTML_Data, char *edata,
 		return widget;
 		}
 
-	if(widget=FindWidget(HTML_Data->widget_list,WidgetId)){
+	if((widget=FindWidget(HTML_Data->widget_list,WidgetId))){
 		/* If this is true the old widget has just got some new cordinates */
 		widget->flags=0;
 		widget->ParentForm=Form; /* To have a link back */
@@ -2577,7 +2574,7 @@ MakeWidget(HTMLGadClData *HTML_Data, char *edata,
 							MUIA_Background,MUII_BACKGROUND,
 							End,
 						TAG_DONE);
-			if(tptr=ParseMarkTag(edata,MT_INPUT,"CHECKED")){
+			if((tptr=ParseMarkTag(edata,MT_INPUT,"CHECKED"))){
 				set(widget->MUI_SubObject,MUIA_Selected,TRUE);
 				widget->checked=TRUE;
 				free(tptr);
@@ -2600,7 +2597,7 @@ MakeWidget(HTMLGadClData *HTML_Data, char *edata,
 							MUIA_Background,MUII_BACKGROUND,
 							End,
 						TAG_DONE);
-			if(tptr=ParseMarkTag(edata,MT_INPUT,"CHECKED")){
+			if((tptr=ParseMarkTag(edata,MT_INPUT,"CHECKED"))){
 				set(widget->MUI_SubObject,MUIA_Selected,TRUE);
 				free(tptr);
 				widget->checked=TRUE;
@@ -3391,14 +3388,14 @@ ULONG SAVEDS ASM FormStringFunc(REG(a0) struct Hook *hook,
 
 struct Hook FormButton_hook=
 {
-	0,0,
+	{0,0},
 	(APTR)FormButtonFunc,
 	0,0
 };
 
 struct Hook FormString_hook=
 {
-	0,0,
+	{0,0},
 	(APTR)FormStringFunc,
 	0,0
 };
@@ -3500,7 +3497,7 @@ ULONG SAVEDS ASM FormRadioFunc(REG(a0) struct Hook *hook,
 
 struct Hook FormRadio_hook=
 {
-	0,0,
+	{0,0},
 	(APTR)FormRadioFunc,
 	0,0
 };
@@ -3548,7 +3545,7 @@ static ULONG SAVEDS ASM TextEditFunc(REG(a0) struct Hook *hook,
 }
 struct Hook TextEdit_hook=
 {
-	0,0,
+	{0,0},
 	(APTR)TextEditFunc,
 	0,0
 };
@@ -3651,7 +3648,7 @@ ULONG SAVEDS ASM LayoutFunc(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) s
 
 			cstate = (Object *)lm->lm_Children->mlh_Head;
 
-			while (child = NextObject(&cstate))
+			while ((child = NextObject(&cstate)))
 			{
 				if(child==G_Forms){ /* Place the main object upper left */
 					if(!MUI_Layout(child,0,0,_defwidth(child),_defwidth(child),0))

@@ -5,6 +5,22 @@
 
 ------------------------------------------------------------------------*/
 
+
+/* Prototypes */
+#include <proto/gadtools.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/icon.h>
+#include <proto/graphics.h>
+#include <proto/intuition.h>
+#include "proto/muimaster.h"
+#include <proto/diskfont.h>
+#include <proto/asl.h>
+#include <proto/utility.h>
+#include <proto/layers.h>
+#include <proto/datatypes.h>
+
 #include <exec/types.h>
 #include <exec/memory.h>
 
@@ -30,37 +46,11 @@
 #include <datatypes/soundclass.h>
 #include <datatypes/textclass.h>
 
-/* Prototypes */
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/icon_protos.h>
-#include <clib/graphics_protos.h>
-#include <clib/intuition_protos.h>
-#include <clib/gadtools_protos.h>
-#include "clib/muimaster_protos.h"
-#include <clib/diskfont_protos.h>
-#include <clib/asl_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/layers_protos.h>
-#include <clib/datatypes_protos.h>
-
 /* ANSI C */
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
-
-/* Pragmas */
-#include <pragmas/exec_pragmas.h>
-#include <pragmas/dos_pragmas.h>
-#include <pragmas/icon_pragmas.h>
-#include <pragmas/graphics_pragmas.h>
-#include <pragmas/intuition_pragmas.h>
-#include <pragmas/gadtools_pragmas.h>
-#include "pragmas/muimaster_pragmas.h"
-#include <pragmas/asl_pragmas.h>
-#include <pragmas/datatypes_pragmas.h>
 
 #ifndef __AROS__
 #define REG(x) register __ ## x

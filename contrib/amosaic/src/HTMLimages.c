@@ -55,14 +55,15 @@
  ****************************************************************************/
 
 #if defined(_AMIGA) || defined(__AROS__)
+#include "includes.h"
 #include <exec/types.h>
+#include "globals.h" /* MUIMasterBase */
 #include <stdlib.h>
 #include <string.h>
 #include <intuition/intuitionbase.h>
 #include <clib/graphics_protos.h>
 #include <graphics/gfxmacros.h>
 #include "XtoI.h"
-extern struct Library *GfxBase;
 #endif
 
 #include <stdio.h>

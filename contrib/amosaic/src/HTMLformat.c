@@ -64,12 +64,9 @@
 #include "includes.h"
 #include "HTML.h"
 #include "mosaic.h"
+#include "globals.h"
 #include "protos.h"
 #include "XtoI.h"
-#if defined(__AROS__)
-#undef GfxBase
-#endif
-extern struct Library *GfxBase;
 extern AppData Rdata;
 #endif /* _AMIGA || __AROS__ */
 

@@ -1,3 +1,4 @@
+/*
 #undef IntuitionBase
 #undef GfxBase
 #undef DOSBase
@@ -7,11 +8,15 @@
 #undef LayersBase
 #undef DiskFontBase
 #undef UtilityBase
+
 extern struct IntuitionBase *IntuitionBase;
 extern struct GfxBase *GfxBase;
 extern struct DosLibrary *DOSBase;
 extern struct Library *IconBase, *GadToolsBase, *AslBase, *MUIMasterBase,
-                      *LayersBase, *DiskFontBase, *DataTypesBase, *UtilityBase;
+                      *LayersBase, *DiskFontBase, *DataTypesBase;
+extern struct UtilityBase *UtilityBase;
+*/
+extern struct Library *MUIMasterBase;
 
 extern struct TextAttr ta_norm, ta_h1, ta_h2, ta_h3, ta_h4, ta_h5,
                        ta_h6, ta_bold, ta_ital, ta_fixed, ta_address,

@@ -20,6 +20,7 @@ FILES := globals \
 	HTMLlists \
 	HTML_img \
 	HTMLformat \
+	HTMLimages \
 	HTML \
 	gui-menubar \
 	main \
@@ -28,7 +29,6 @@ FILES := globals \
 	gui-documents \
 	history \
 	htmlamiga \
-	HTMLimages \
 	mui \
 	rexx
 

@@ -534,7 +534,7 @@ run_command(char *command) {
 
 	/* Go do it to it */
 	Forbid() ;
-	if (rexx = FindPort("REXX")) PutMsg(rexx, (struct Message *) out) ;
+	if ((rexx = FindPort("REXX"))) PutMsg(rexx, (struct Message *) out) ;
 	Permit() ;
 
 	if (rexx) {
@@ -691,7 +691,7 @@ void
 RexxDispatch(void) {
 	struct RexxMsg *msg ;
 
-	while (msg = (struct RexxMsg *) GetMsg(port))
+	while ((msg = (struct RexxMsg *) GetMsg(port)))
 		if (msg->rm_Node.mn_Node.ln_Type != NT_REPLYMSG) {
 			msg->rm_Result1 = RETURN_FAIL ;
 			ReplyMsg((struct Message *) msg) ;
@@ -767,7 +767,7 @@ stem_hrefs(struct mark_up *objects,
 		if (objects->type == M_ANCHOR) {
 			if (!objects->is_end) {
 				if (url) free(url) ;
-				if (url = ParseMarkTag(objects->start, MT_ANCHOR, AT_HREF)) {
+				if ((url = ParseMarkTag(objects->start, MT_ANCHOR, AT_HREF))) {
 					if (*url) {
 						tmp = mo_url_canonicalize(url,
 									oldurl) ;
@@ -799,7 +799,7 @@ stem_hrefs(struct mark_up *objects,
 				ref = NULL ;
 				}
 			}
-		else if (url && objects->type == M_NONE)
+		else if (url && objects->type == M_NONE) {
 			if (!ref) ref = strdup(objects->text) ;
 			else {
 				tmp = malloc(strlen(ref) +
@@ -809,6 +809,7 @@ stem_hrefs(struct mark_up *objects,
 				free(ref) ;
 				ref = tmp ;
 				}
+			}
 		objects = objects->next ;
 		}
 
@@ -833,7 +834,7 @@ stem_images(struct mark_up *objects,
 			url = ParseMarkTag(objects->start, MT_IMAGE, "ISMAP") ;
 			ismap = (int) url ;
 			if (url) free(url) ;
-			if (url = ParseMarkTag(objects->start, MT_IMAGE, "SRC")) {
+			if ((url = ParseMarkTag(objects->start, MT_IMAGE, "SRC"))) {
 				if (*url) {
 					url2 = mo_url_canonicalize(url, oldurl) ;
 					sprintf(buffer, "%s.%d.URL", stem, count + 1) ;
