@@ -1172,7 +1172,7 @@ int curtype;
 {
 	struct dopusfiletype *ftype;
 	struct dopushotkey *hotkey;
-
+	
 	if (type==CFG_FILETYPE) ftype=(struct dopusfiletype *)data;
 	else if (type==CFG_HOTKEYS) hotkey=(struct dopushotkey *)data;
 
@@ -1185,9 +1185,25 @@ int curtype;
 	func->which=getselflags(flagsel);
 	func->stack=atoi(edit_stackbuf);
 	if (func->stack<4000) func->stack=4000;
+
+	/* AROS FIX: func->pri is of type char so the thing below does not
+	   really work */
+#if 0
 	func->pri=atoi(edit_prioritybuf);
 	if (func->pri<-127) func->pri=-127;
 	else if (func->pri>127) func->pri=127;
+#else
+	{
+	    int pri;
+	    
+	    pri = atoi(edit_prioritybuf);
+	    if (pri < -127) pri = -127;
+	    else if (pri > 127) pri = 127;
+
+	    func->pri = pri;	
+	}
+#endif
+	
 	func->delay=atoi(edit_delaybuf);
 	if (func->delay<-1) func->delay=-1;
 	else if (func->delay>60) func->delay=60;
