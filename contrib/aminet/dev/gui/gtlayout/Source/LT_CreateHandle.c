@@ -229,7 +229,7 @@ LT_CreateHandleTagList(REG(a0) struct Screen *Screen,REG(a1) struct TagItem *Tag
 	ULONG			WA_ScreenTag;
 	BOOL			UnlockThePubScreen;
 	LONG			TopGroupType = -1; 
-*(ULONG *)0x1 = 0x0badc0de;
+
 	#ifdef DO_PICKSHORTCUTS
 	{
 		ObtainSemaphore(&LTP_KeySemaphore);
