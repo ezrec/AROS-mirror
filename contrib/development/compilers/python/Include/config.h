@@ -250,7 +250,7 @@
 /* #undef WITH_SGI_DL */
 
 /* Define if you want to compile in rudimentary thread support */
-#define WITH_THREAD 1
+/* #define WITH_THREAD 1 */
 
 /* ##################################################### */
 /* ################# BEGIN KLUDGE ###################### */
