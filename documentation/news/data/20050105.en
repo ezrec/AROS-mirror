@@ -47,9 +47,10 @@ __ http://www.downbeach.net/aros/aros-compile-status.html
 Sound support
 -------------
 
-AROS finally has sound support! Martin Blom ported his AHI system to AROS 
-together with a Sound Blaster Live! driver (GPL'ed). Michal Schulz then 
-wrote an AC97 driver for Intel chipsets (works on nForce).
+AROS finally has sound support! Martin Blom ported his AHI system to AROS. 
+Together with a Sound Blaster Live! (emu10k) driver (GPL'ed) ported by Georg 
+Steger and an AC97 driver for Intel chipsets (works on nForce) by Michal 
+Schulz, AROS is no longer mute!
 
 Jack Patton also ported SDL_mixer to AROS so lbreakout2 amongst others get 
 a bit of sound.
