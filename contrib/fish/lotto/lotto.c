@@ -27,6 +27,8 @@
 *  this program to generate your winning numbers.
 **********************************************************/
 
+#define USE_SCREEN 1
+
 #include <exec/types.h>
 #include <graphics/gfxbase.h>
 #include <graphics/text.h>
@@ -150,7 +152,13 @@ struct Border box_border1 = {
 struct NewWindow new_window = {
   0, 0, 320, 200, PURPLE, PURPLE, GADGETUP,
   ACTIVATE | BORDERLESS | NOCAREREFRESH | SIMPLE_REFRESH, LATER,
-  NULL, NULL, LATER, NULL, 320, 200, 320, 200, CUSTOMSCREEN
+  NULL, NULL, LATER, NULL, 320, 200, 320, 200,
+
+#if USE_SCREEN  
+  CUSTOMSCREEN
+#else
+  0
+#endif
 };
 
 /********************
@@ -228,7 +236,9 @@ void end_program( return_code )
   int return_code;
 {
   if (window)        CloseWindow( window );
+#if USE_SCREEN
   if (screen)        CloseScreen( screen );
+#endif
   if (GfxBase)       CloseLibrary( (struct Library *)GfxBase );
   if (IntuitionBase) CloseLibrary( (struct Library *)IntuitionBase );
 
@@ -242,13 +252,15 @@ void end_program( return_code )
 #define FOREVER for(;;)
 #define GADGET_ID ((struct Gadget *)(imessage->IAddress))->GadgetID
 #define WAIT_FOR_INPUT Wait(1L<<window->UserPort->mp_SigBit)
-#define WINDOW_INPUT imessage=(struct IntuiMessage *)GetMsg(window->UserPort)
+#define WINDOW_INPUT (imessage=(struct IntuiMessage *)GetMsg(window->UserPort))
 
 void get_inputs()
 {
   struct IntuiMessage *imessage;
+  BOOL terminated = FALSE;
 
-  FOREVER {
+  while (!terminated)
+  {
     WAIT_FOR_INPUT;
 
     while (WINDOW_INPUT) {
@@ -258,13 +270,18 @@ void get_inputs()
         case GADGETUP:
           switch (GADGET_ID) {
             case LOTTO_GADGET: get_numbers(); break;
-            case QUIT_GADGET:  end_program( 0 ); break;
+            case QUIT_GADGET: terminated = TRUE; break;
           } /* switch gadget */
           break;
 
       } /* switch input class */
+      
+      ReplyMsg((struct Message *)imessage);
     }   /* while window input */
-  }     /* forever */
+    
+ } /* while (!terminated) */
+    
+    end_program( 0 );
 }
 
 /***************
@@ -318,11 +335,14 @@ void open_all()
   if (!(GfxBase = (struct GfxBase *)OpenLibrary( "graphics.library", 0L )))
     end_program( 2 );
 
+#if USE_SCREEN
   if (!(screen = OpenScreen( &new_screen )))
     end_program( 3 );
   LoadRGB4( &screen->ViewPort, color_table, COLORS );
 
   new_window.Screen = screen;
+#endif
+  
   if (!(window = OpenWindow( &new_window )))
     end_program( 4 );
 
