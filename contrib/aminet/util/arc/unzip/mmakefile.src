@@ -1,6 +1,6 @@
 #   $Id$
 #
-#   Makefile to make FileMaster.
+#   Makefile to make UnZip.
 
 include $(TOP)/config/make.cfg
 
