@@ -71,7 +71,7 @@
 # endif
 #endif
 
-#if !defined _AMIGA && !defined VMS && !defined WINDOWS32
+#if !defined __OPENAMIGA__ && !defined VMS && !defined WINDOWS32
 # include <pwd.h>
 #endif
 
@@ -532,7 +532,7 @@ glob (pattern, flags, errfunc, pglob)
       else
 	{
 	  filename = pattern;
-#ifdef _AMIGA
+#ifdef __OPENAMIGA__
 	  dirname = "";
 #else
 	  dirname = ".";
@@ -621,7 +621,7 @@ glob (pattern, flags, errfunc, pglob)
 #else
           const char *home_dir = getenv ("HOME");
 #endif
-# ifdef _AMIGA
+# ifdef __OPENAMIGA__
 	  if (home_dir == NULL || home_dir[0] == '\0')
 	    home_dir = "SYS:";
 # else
@@ -713,7 +713,7 @@ glob (pattern, flags, errfunc, pglob)
 	      dirname = newp;
 	    }
 	}
-# if !defined _AMIGA && !defined WINDOWS32 && !defined VMS
+# if !defined __OPENAMIGA__ && !defined WINDOWS32 && !defined VMS
       else
 	{
 	  char *end_name = strchr (dirname, '/');
@@ -1303,7 +1303,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	    {
 	      int fnm_flags = ((!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0)
 			       | ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)
-#if defined _AMIGA || defined VMS
+#if defined __OPENAMIGA__ || defined VMS
 				   | FNM_CASEFOLD
 #endif
 				   );
