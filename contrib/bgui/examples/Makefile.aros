@@ -18,7 +18,7 @@ OS_INCLUDES_DIR = $(BINDIR)/include
 USER_INCLUDES_DIR = $(TOP)/bin/linux-i386/AROS/Include
 
 OS_INCLUDES = -I$(OS_INCLUDES_DIR)
-USER_INCLUDES = -I. -I$(USER_INCLUDES_DIR)
+USER_INCLUDES = -I. -I$(USER_INCLUDES_DIR) -I..
 
 LIBS = -L$(LIBDIR) -lbgui -larosc -larosm -lamiga
 
