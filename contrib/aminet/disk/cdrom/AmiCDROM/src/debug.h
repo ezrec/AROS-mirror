@@ -1,15 +1,21 @@
 #ifndef ACDR_DEBUG_H
 #define ACDR_DEBUG_H
 
-#define NDEBUG
+//#define NDEBUG
 //#define DEBUG_SECTORS
 
-#ifdef __AROS__
+#if defined(__AROS__) || defined(__MORPHOS__)
 #	undef DEBUG
-#	define DEBUG 0
+#	define DEBUG 1
+#ifdef __AROS__
 #	include <aros/debug.h>
+#else
+#       include <proto/sysdebug.h>
+#endif
 #	if DEBUG>0
 #		define BUG(x) x
+#               define dbinit() kprintf("Debugger running:" HANDLER_VERSION "GNU C" __VERSION__ "," __TIME__ "\n")
+#               define dbuninit()
 #		define dbprintf kprintf
 #	else
 #		define BUG(x)

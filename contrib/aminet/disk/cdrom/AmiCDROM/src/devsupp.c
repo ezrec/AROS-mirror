@@ -499,6 +499,8 @@ char *typetostr (int ty)
     }
 }
 
+#if !(defined(__AROS__) || defined(__MORPHOS__))
+
 /*
  *  DEBUGGING CODE.	You cannot make DOS library calls that access other
  *  devices from within a DOS device driver because they use the same
@@ -531,7 +533,6 @@ void debugmain (void)
 #ifdef LOG_MESSAGES
     void *out;
 #endif
-
     global->Dbport = CreateMsgPort ();
     fh = (void *) Open ((UBYTE *) "con:0/0/640/200/debugwindow", 1006);
     PutMsg(global->Dback, &global->DummyMsg);
@@ -623,7 +624,6 @@ void dbprintf (char *format, ...)
     char buf[256];
     MSG *msg;
 
-
     va_start (arg, format);
     if (global->Dbport && !global->DBDisable) {
 	vsprintf (buf, format, arg);
@@ -642,11 +642,10 @@ void dbprintf (char *format, ...)
    functions. One of bad effects of this is that the handler can't be linked at
    all due to lack of exit() function (i think even if it would link it is
    unlikely to work properly) */
-#ifndef __AROS__
 int __fflush(void);
 int __fflush() {
     return 1;
 }
-#endif
 
+#endif /* !(__AROS__ || __MORPHOS__) */
 #endif /* !NDEBUG || DEBUG_SECTORS */

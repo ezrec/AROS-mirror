@@ -203,17 +203,18 @@ ULONG signals;
      *  we can make Exec calls. The DOS library is opened for the debug
      *  process only.
      */
-
 #ifndef __AROS__
     SysBase = *(struct ExecBase **) 4L;
 #endif
     global->SysBase = SysBase;
     global->DosProc = (PROC *) FindTask(NULL);
+/*    WaitPort(&global->DosProc->pr_MsgPort);
+    msg = GetMsg(&global->DosProc->pr_MsgPort);
     if (global->DosProc->pr_CLI)
-      return RETURN_FAIL;
+      return RETURN_FAIL;*/
     global->DOSBase = (struct DOSBase *)OpenLibrary("dos.library",37);
     global->UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",37);
-#if !defined(NDEBUG) || defined(DEBUG_SECTORS)
+#ifndef NDEBUG
     global->DBDisable = 0;				  /*  Init. globals	  */
     global->Dbport = global->Dback = NULL;
 
@@ -226,8 +227,8 @@ ULONG signals;
 #endif
     global->DevList = NULL;
     {
-	WaitPort(&global->DosProc->pr_MsgPort); 	/*  Get Startup Packet	*/
-	msg = GetMsg(&global->DosProc->pr_MsgPort);
+        WaitPort(&global->DosProc->pr_MsgPort);         /*  Get Startup Packet  */
+        msg = GetMsg(&global->DosProc->pr_MsgPort);
 	packet = (PACKET *)msg->mn_Node.ln_Name;
 
 	/*

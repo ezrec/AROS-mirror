@@ -8,21 +8,20 @@ RM		= /c/delete quiet
 
 NOEXEC		= /c/protect flags=-e
 
-# add the switch -DNDEBUG to CFLAGS in order to disable the debug window.
-
 CC		= gcc
+
 OPT		=-O
 
 # -fbaserel does not work, -msmall-code likewise, -fno-builtin requires ixemul
 
-CFLAGS		= -w $(DEFS) -fno-function-cse
+CFLAGS		= -w $(OPT) -fno-function-cse
 
 LDFLAGS1	= -noixemul -nostartfiles
 LDFLAGS2	= -noixemul
 
 OS=$(shell uname)
 ifeq "$(OS)" "MorphOS"
-LDLIBS1 =
+LDLIBS1 = -ldebug
 else
 LDLIBS1 = -lamiga
 endif
@@ -46,7 +45,7 @@ all:		cdrom-handler cdrom cdcontrol checkcd
 
 cdrom-handler:	$(OBJS1)
 		$(CC) $(LDFLAGS1) -o $@ $(OBJS1) $(LDLIBS1)
-		$(NOEXEC) $@
+#	         $(NOEXEC) $@
 
 cdrom:		$(OBJS2)
 		$(CC) $(LDFLAGS2) -o $@ $(OBJS2) $(LDLIBS2)

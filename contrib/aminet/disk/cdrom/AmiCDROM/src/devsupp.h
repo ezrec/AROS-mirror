@@ -20,9 +20,11 @@ extern PORT *Dback;
 extern short DBDisable;
 extern MSG DummyMsg;
 
+#if !(defined(__AROS__) || defined(__MORPHOS__))
 void dbinit (void);
 void dbuninit (void);
 void dbprintf (char *, ...);
+#endif
 #endif
 
 #ifdef __AROS__
@@ -30,6 +32,8 @@ int Get_Startup (struct FileSysStartupMsg *);
 #else
 int Get_Startup (LONG p_startup);
 #endif
+
+#define HANDLER_VERSION "cdrom.handler 1.15 (2002-07-07)\n"
 
 int Handle_Control_Packet (ULONG p_type, ULONG p_par1, ULONG p_par2);
 
