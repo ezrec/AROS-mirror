@@ -1,10 +1,11 @@
 /* Type of marking the first selected box */
-#define SEL_KIND GFLG_GADGHBOX
+#define SEL_KIND GFLG_GADGHCOMP
 struct FileHandle *filehandle;
 
 void set_buttons()
 {
 int i;
+  RefreshGadgets(FIRSTGADGET,Window,NULL);
   for(i=0;i<33;i++)
   {
     if(field[i]==THERE)
