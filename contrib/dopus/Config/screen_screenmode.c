@@ -85,6 +85,7 @@ int initscreenmodes()
 			oldcount=count;
 		}
 		if ((pubscreenlist=LockPubScreenList())) {
+			int a;
 			pubscreen=(struct PubScreenNode *)pubscreenlist->lh_Head;
 			while (pubscreen->psn_Node.ln_Succ) {
 				if (strcmp(pubscreen->psn_Node.ln_Name,"Workbench")!=0 &&
@@ -98,7 +99,7 @@ int initscreenmodes()
 						pubscreen->psn_Screen->Width,pubscreen->psn_Screen->Height,
 						pubscreen->psn_Screen->Width,pubscreen->psn_Screen->Height,
 						pubscreen->psn_Screen->RastPort.BitMap->Depth,MODE_PUBLICSCREENUSE);
-/*
+
 					modeid=GetVPModeID(&pubscreen->psn_Screen->ViewPort);
 					if ((handle=FindDisplayInfo(modeid))) {
 						GetDisplayInfoData(handle,buf,256,DTAG_DIMS,0);
@@ -112,7 +113,7 @@ int initscreenmodes()
 						0,0,
 						0,0,
 						a,MODE_PUBLICSCREENCLONE);
-*/
+
 				}
 				pubscreen=(struct PubScreenNode *)pubscreen->psn_Node.ln_Succ;
 			}

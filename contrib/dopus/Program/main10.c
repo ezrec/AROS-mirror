@@ -423,11 +423,7 @@ struct ExtNewScreen *clone;
 			if ((clone->Depth=original->RastPort.BitMap->Depth)>config->scrdepth)
 				clone->Depth=config->scrdepth;
 			clone->ViewModes=original->ViewPort.Modes;
-#warning GetVPModeID() not imlemented
-kprintf("clone_screen: GetVPModeID() not imlemented\n");
-#if 0
 			modes=GetVPModeID(&original->ViewPort);
-#endif			
 			if (screen) UnlockPubScreen(NULL,screen);
 			return(modes);
 		}
