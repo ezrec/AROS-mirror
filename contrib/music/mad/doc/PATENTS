@@ -1,0 +1,15 @@
+		    Patents Disclaimer
+
+There are several patents that target audio compression technologies.
+Especially there are several patents that cover parts of the MP3
+algorithms.
+
+See for example http://lame.sourceforge.net/links.html#patents
+
+For this reason, this source code is here for educational reasons only.
+Don't compile it and don't use it !
+
+If you live in a country, where there is no patent on MPEG audio technologies,
+you might compile it using
+
+     make sound-madoss
