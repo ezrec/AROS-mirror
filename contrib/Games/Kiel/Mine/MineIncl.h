@@ -23,7 +23,7 @@ void open_window(struct NewWindow *newwindow)
   Window = (struct Window *) OpenWindow(newwindow);
   if(Window==NULL)
   {
-    printf("Unable to open window.\n");
+    fprintf(stderr,"Unable to open window.\n");
     close_lib();
     exit(-1);
   }

@@ -93,7 +93,7 @@ struct NewWindow NeuesWindow =
 {
   10,10,350,200,
   -1,-1,
-  IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_GADGETUP|IDCMP_RAWKEY|IDCMP_CHANGEWINDOW,
+  IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_GADGETUP|IDCMP_CHANGEWINDOW,
   WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_ACTIVATE|WFLG_GIMMEZEROZERO,
   NULL,
   NULL,
@@ -133,6 +133,7 @@ struct Task *parent;
 static void entry(void)
 {
 char outtext[4];
+int counter;
 
   sigbit2=AllocSignal(-1);
   Signal(parent,1<<sigbit1); /* Tell creator that we are ready */
@@ -149,14 +150,19 @@ char outtext[4];
       }
       finish = FALSE;
       Signal(parent,1<<sigbit1); /* We are ready for counting */
+      counter=0;
       while(!finish)
       {
         time(&tend);
-        sprintf(outtext,"%3d",Anzahl-AnzMarken);
-        write_text(left+box_width*width/2-55,25,outtext,1);
-        sprintf(outtext,"%3d",(int)(tend-tstart));
-        write_text(left+box_width*width/2+35,25,outtext,1);
-        Delay(40);
+        if((tend-tstart)>counter)
+        {
+          counter=tend-tstart;
+          sprintf(outtext,"%3d",Anzahl-AnzMarken);
+          write_text(left+box_width*width/2-55,25,outtext,1);
+          sprintf(outtext,"%3d",(int)(tend-tstart));
+          write_text(left+box_width*width/2+35,25,outtext,1);
+        }
+        Delay(10);
       }
       Signal(parent,1<<sigbit1); /* We stopped counting */
     }
@@ -238,7 +244,6 @@ BOOL weiter=FALSE,ret=FALSE;
     ReplyMsg((struct Message *)msg);
     switch(class)
     {
-      case IDCMP_RAWKEY :
       case IDCMP_CLOSEWINDOW  : ret=TRUE;
                     		weiter=TRUE;
                     		break;
@@ -344,9 +349,6 @@ int main()
       if(!ende)
       {
         Spiel();
-      }
-      if(!ende)
-      {
 	Auswertung();
 	ende=Frage();
       }

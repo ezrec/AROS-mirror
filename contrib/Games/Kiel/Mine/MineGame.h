@@ -106,7 +106,6 @@ BYTE deltab=1;
     ReplyMsg((struct Message *)msg);
     switch(class)
     {
-      case IDCMP_RAWKEY :
       case IDCMP_CLOSEWINDOW  : weiter=TRUE;
                           ende=TRUE;
                           break;
@@ -577,7 +576,7 @@ char Zeit[30];
           class=msg->Class;
           code=msg->Code;
           ReplyMsg((struct Message *)msg);
-          if((class==IDCMP_MOUSEBUTTONS)&&(code==SELECTUP))
+          if(class==IDCMP_GADGETUP)
             weiter=TRUE;
         }
 
