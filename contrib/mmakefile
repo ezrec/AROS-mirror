@@ -1,23 +1,27 @@
 # $Id$
 
 # The apps target points back to config/$(ARCH)/mmakefile:
-#MM- apps : apps-$(ARCH)
+#MM- contrib : contrib-$(ARCH)
 
-#MM- fish : fish-microemacs fish-lotto fish-henon fish-bcubic fish-input
-#MM- fish : fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines
-#MM- fish : fish-304_clines fish-304_lines fish-screenzap fish-watchman
-#MM- fish : fish-sunmaze fish-fiveinline fish-362_rubik fish-yachtc
-#MM- fish : fish-rubik fish-icalc fish-worldtime fish-mosaic fish-surf
-#MM- fish : fish-371_fractal fish-asimplex fish-layers fish-snowfall
+#FIXME move target to individual mmakefiles
+#MM- contrib-aminet : aminet-gadgedtest aminet-lazymines aminet-newmastermind \
+#MM	aminet-yahzee
 
-#MM- contrib : contrib-ddemo7 contrib-switch contrib-linie12
-
-#MM- aminet : aminet-gadgedtest aminet-lazymines aminet-newmastermind
-#MM- aminet : aminet-yahzee
-
+#FIXME move target to individual mmakefiles
+#MM- contrib-fish : fish-microemacs fish-lotto fish-henon fish-bcubic \
+#MM	fish-input fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines \
+#MM	fish-304_clines fish-304_lines fish-screenzap fish-watchman \
+#MM	fish-sunmaze fish-fiveinline fish-362_rubik fish-yachtc \
+#MM	fish-rubik fish-icalc fish-worldtime fish-mosaic fish-surf \
+#MM	fish-371_fractal fish-asimplex fish-layers fish-snowfall
 #These do not compile properly, yet!
 # MM fish-mandelbrotsrc 
 # MM fish-mandel
-
 # MM fish-cube
 
+#FIXME move target to individual mmakefiles
+#MM- contrib-misc : misc-ddemo7 misc-switch misc-linie12
+
+#FIXME move target to individual mmakefiles
+#MM- contrib-complete : contrib-aminet contrib-fish contrib-games \
+#MM	contrib-misc
