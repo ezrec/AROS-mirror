@@ -9,6 +9,9 @@ Links
 :Status:    Done.
 
 
+.. Contents::
+
+
 Articles about AROS
 ===================
 
@@ -82,5 +85,18 @@ __ http://home.pages.de/~helios/
 __ http://www.ahsodit.com/
 __ http://www.in-berlin.de/User/jroger/index.html
 
+
+Miscellaneous
+=============
+
++ `Phoenix Developer Consortium`__
+
+  .. Image:: images/phoenix.jpeg
+  
+  The Phoenix Developer Consortium supports the development of alternative
+  computing platforms by working with core and third-party developers and
+  providing resources for that development.
+
+__ http://phinixi.com/
 
 .. _contact: contact
