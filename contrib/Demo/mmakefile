@@ -9,4 +9,6 @@
 #MM		demo-infplane \
 #MM		demo-kdp \
 #MM		demo-parallax \
-#MM		demo-firework
+#MM		demo-firework \
+#MM		demo-metaballs \
+#MM		demo-blackhole
