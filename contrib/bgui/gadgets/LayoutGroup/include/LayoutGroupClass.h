@@ -8,6 +8,12 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/07/07 17:13:31  stegerg
+ * in method structures use STACKULONG, STACKUWORD; etc. Should still
+ * work on Amiga, because if _AROS is NOT defined, then STACKULONG
+ * is defined back to ULONG, STACKUWORD to UWORD, etc. ==> like it
+ * was initially.
+ *
  * Revision 42.0  2000/05/09 22:21:05  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -25,9 +31,14 @@
 
 #include <intuition/classes.h>
 
+#ifndef _AROS
+#undef STACKULONG
+#define STACKULONG ULONG
+#endif
+
 struct ogpMGet
 {
-	ULONG MethodID;
+	STACKULONG MethodID;
 	struct TagItem *ogpg_AttrList;
 };
 
