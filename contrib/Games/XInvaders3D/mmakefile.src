@@ -11,7 +11,7 @@ USE_MLIB := yes
 USE_AMIGALIB := yes
 USE_AROSLIB := yes
 
-SPECIAL_CFLAGS = -DGAME_AROS -O2 -ffast-math -funroll-loops \
+USER_CFLAGS = -DGAME_AROS -O2 -ffast-math -funroll-loops \
                  -fomit-frame-pointer -fexpensive-optimizations
 
 #MM- contrib-games : XInvaders3D
