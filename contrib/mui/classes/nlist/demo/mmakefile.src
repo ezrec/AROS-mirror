@@ -16,7 +16,12 @@ USE_AMIGALIB := yes
 USE_MUILIB   := yes
 USE_AROSLIB  := yes
 
-#MM contrib-zune-classes-nlist-demo : includes linklibs contrib-zune-classes-nlist contrib-zune-classes-nlistview
+USER_CFLAGS := -DNO_INLINE_STDARG
+
+#MM contrib-zune-classes-nlist-demo : includes linklibs \
+#MM 	    	    	    	      contrib-zune-classes-nlist \
+#MM 	    	    	    	      contrib-zune-classes-nlistview \
+#MM 	    	    	    	      contrib-zune-classes-nfloattext
 
 %make_prog_setup mmake=contrib-zune-classes-nlist-demo
 

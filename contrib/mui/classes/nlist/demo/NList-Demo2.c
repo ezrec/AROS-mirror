@@ -60,10 +60,7 @@ extern struct Library *MUIMasterBase;
 #endif
 
 #include <MUI/NListview_mcc.h>
-
-#ifndef __AROS__
 #include <MUI/NFloattext_mcc.h>
-#endif
 
 #include "NList-Demo2.h"
 

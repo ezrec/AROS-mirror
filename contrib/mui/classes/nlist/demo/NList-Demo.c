@@ -66,9 +66,7 @@ struct Library *MUIMasterBase;
 
 #include <MUI/NListview_mcc.h>
 
-#ifndef __AROS__
 #include <MUI/NFloattext_mcc.h>
-#endif
 
 #include <proto/muimaster.h>
 
@@ -548,10 +546,8 @@ int main(int argc,char *argv[])
       MUIA_Window_ID   , MAKE_ID('W','I','N','2'),
       MUIA_Window_UseBottomBorderScroller, TRUE,
       WindowContents, VGroup,
-#ifndef __AROS__
         Child, NFloattext(MainTextString2),
         Child, BalanceObject, End,
-#endif
         Child, VGroup,
           MUIA_Group_VertSpacing, 1,
           Child, LV_Text2 = NListviewObject,

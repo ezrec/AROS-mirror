@@ -12,6 +12,7 @@
 #include "mui.h"
 #endif
 
+#include <MUI/NList_mcc.h>
 #include <MUI/NFloattext_mcc.h>
 
 #include <mcc_common.h>
