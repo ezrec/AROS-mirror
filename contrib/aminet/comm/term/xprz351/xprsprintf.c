@@ -20,10 +20,10 @@ AROS_UFH2S(void, cpy_func,
 
 void xprsprintf(STRPTR Buffer, STRPTR FormatString, ... )
 {
+	STRPTR Buffer_Ptr = Buffer;
 	va_list VarArgs;
 	va_start(VarArgs, FormatString);
 	
-	STRPTR Buffer_Ptr = Buffer;
 
 	RawDoFmt(FormatString,(APTR)VarArgs,cpy_func,&Buffer_Ptr);
 	
