@@ -1,0 +1,34 @@
+# Makefile for sample programs for MS-DOS with DJGPP
+
+##### MACROS #####
+
+INCDIR = ../include
+
+GL_LIBS =  ../lib/tkdos.a ../lib/dosglub.a ../lib/dosaux.a ../lib/dosmesa.a
+
+LIB_DEP = $(GL_LIBS)
+
+PROGS = accum bitmap1 bitmap2 blendeq blendxor copy depth \
+	eval fog font line logo nurb olympic \
+	point prim quad select shape \
+	sphere star stencil stretch texture \
+	tri wave
+
+##### RULES #####
+
+.c: $(LIB_DEP)
+	gcc -I$(INCDIR) $(CFLAGS) $< $(LIB_DEP) -o $@
+
+
+##### TARGETS #####
+
+default: $(PROGS)
+
+clean:
+	del *. 
+
+realclean: clean
+	del *.exe
+
+
+

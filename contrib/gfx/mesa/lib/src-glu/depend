@@ -1,0 +1,13 @@
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+glu.o: gluP.h ../include/GL/gl.h ../include/GL/glu.h
+mipmap.o: gluP.h ../include/GL/gl.h ../include/GL/glu.h
+nurbs.o: gluP.h ../include/GL/gl.h ../include/GL/glu.h nurbs.h
+nurbscrv.o: gluP.h ../include/GL/gl.h ../include/GL/glu.h nurbs.h
+nurbssrf.o: gluP.h ../include/GL/gl.h ../include/GL/glu.h nurbs.h
+nurbsutl.o: gluP.h ../include/GL/gl.h ../include/GL/glu.h nurbs.h
+project.o: gluP.h ../include/GL/gl.h ../include/GL/glu.h
+quadric.o: gluP.h ../include/GL/gl.h ../include/GL/glu.h
+tess.o: tess.h gluP.h ../include/GL/gl.h ../include/GL/glu.h
+tesselat.o: tess.h gluP.h ../include/GL/gl.h ../include/GL/glu.h
+polytest.o: gluP.h ../include/GL/gl.h ../include/GL/glu.h tess.h

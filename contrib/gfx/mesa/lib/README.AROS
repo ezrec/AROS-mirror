@@ -1,0 +1,265 @@
+Short:	 3D library, OpenGL based, Amiga v1.6 Aros v1.2
+Uploader: NicJA@Yahoo.com (Kalamatee)
+Author:	 brianp@ssec.wisc.edu (BrianP) Amiga Port: d94sz@efd.lth.se (Stefan Zivkovic) AROS Port: NicJA@Yahoo.com (Kalamatee)
+Type: 	 dev/c
+Requires: AROS System Files and Link Libs, GCC.
+Version:  Mesa v2.0 AROS version 1.7
+
+			    The Mesa 3-D graphics library
+
+			 Copyright (C) 1995-1996  Brian Paul
+			  Changes (C) 2003-2004 Nic Andrews
+
+
+
+Introduction
+============
+
+Mesa is a 3-D graphics library with an API which is very similar to that
+of OpenGL*.  To the extent that Mesa utilizes the OpenGL command syntax
+or state machine, it is being used with authorization from Silicon Graphics,
+Inc.	However, the author makes no claim that Mesa is in any way a
+compatible replacement for OpenGL or associated with Silicon Graphics, Inc.
+Those who want a licensed implementation of OpenGL should contact a licensed
+vendor.	This software is distributed under the terms of the GNU Library
+General Public License, see the LICENSE file for details.
+
+* OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
+
+Miscellaneous
+=============
+
+There is a Amiga Mesa WWW page:	http://www.efd.lth.se/~d94sz/amesa
+and the orginal  Mesa WWW page:	http://www.ssec.wisc.edu/~brianp/Mesa.html
+The AROS Homepage             : http://www.aros.org/
+
+
+Since the OpenGL API is used, OpenGL documentation can serve as the
+documentation for Mesa's core functions.  Here are a few sources:
+
+  Man pages:	 http://www.digital.com:80/pub/doc/opengl/
+  Spec doc: 	 http://www.sgi.com/Technology/openGL/glspec/glspec.html
+
+
+                Author
+                ======
+
+                Brian Paul
+                Space Science and Engineering Center
+                University of Wisconsin - Madison
+                1225 W. Dayton St.
+                Madison, WI  53706
+
+                brianp@ssec.wisc.edu
+
+
+AROS PORT of MESA: THE OPENGL SOFTWARE EMULATION by Kalamatee
+====================================================================
+After hearing of the lack of 3d software on AROS i decided to try and get
+one of the amiga ports up and running..
+
+For AROS or the Amiga there are only three important files + one directory.
+
+src/AmigaMesa.c         The Mesa GL Amiga/AROS implementation 
+			 (ddsample.c with some Amiga/AROS code)
+src-tk/AWindow.c        The TK (and AUX) machine specific code.
+include/GL/AmigaMesa.h	The prototypes for AmigaMesa.
+
+Amiga/#?
+
+Compiling
+=========
+For compiling with gcc you have to enter the command "make contrib-mesa2"
+in the AROS source root folder.
+
+there is currently something not being built correctly i think (one of the
+linklibs) so a lot of the demos wont compile just yet - though im looking into
+the problem .. feel free to fix it though if you notice it.
+
+ADISP_CYBERGFX is defined in include/gl/amigamesa.h since aros has native
+support for CyberGfx.  If u wish to use the normal Amiga Gfx Functions
+just remove the define.
+
+About the code.
+===============
+In /Amiga/library there are previews of files to the shared-library version
+(This doesn't work yet but should give you an idea of how to use it)
+
+In /Amiga/Examples there should be some amiga-demo code,
+but I've got no code yet so feel free to send me your own examples.
+
+All tk actions in tkExec are not finished. But most of them is. (low priority)
+
+Most of the examples work. (ALL?)
+
+etc. etc.
+
+Write your own OpenGL code
+==========================
+1. For a easy start, look at the examples in /book/ and modify them
+   The examples uses a portable layer toolkit Not amiga specific at all
+
+2. For a better amigaprogram just open a window (on your favourite screen) and
+	add a few lines in your source:
+
+-----------------------------------------------------------------------------
+/* ADD where you want it  */
+#include <GL/gl.h>
+
+Init()		 /* sets up viewport and projections */
+  {
+  glMatrixMode (GL_PROJECTION);	  /*	prepare for and then */ 
+  glLoadIdentity (); 		/*  define the projection */
+  glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0);/*  transformation */
+  glMatrixMode (GL_MODELVIEW);	/*  back to modelview matrix*/
+  glViewport (0, 0, 200, 200);	/*  define the viewport 	*/
+}	 /*		  ^  ^  ^^^  ^^^--- The size of the mesa/openGL window  */
+	
+
+
+/* ADD In after you opened your window */
+
+struct amigamesa_context *glcont;
+
+	glcont=AmigaMesaCreateContextTags( 
+						AMA_DrawMode,AMESA_AGA,
+						AMA_Window,(unsigned long)		test_window,    // My Windowptr
+						AMA_RastPort,(unsigned long)	test_window->RPort,
+						AMA_Screen,(unsigned long)		test_window->WScreen,
+						AMA_DoubleBuf,						GL_FALSE, // or GL_TRUE
+						AMA_RGBMode,						GL_TRUE, //   -"-
+						AMA_Left,							test_window->BorderLeft,  		// offset from left edgr
+						AMA_Bottom,							test_window->BorderBottom+1,	// offset from bottom edgr
+						TAG_DONE,0);
+
+// Neaded tags is   AMA_RastPort,AMA_Screen   if you supply AMA_Window
+// it looks for RastPort and Screen in it so a Window_ptr will do.
+
+if (glcont)
+ {
+ AmigaMesaMakeCurrent(glcont,glcont->buffer);
+ /* All your gl comands */
+ /*handle_window_events(test_window);	or whatever */
+ AmigaMesaDestroyContext(glcont);
+}
+
+/* Don't forget to call glViewport() when you resize the window */
+------------------------------------------------------------------------------
+if you set doublebuff to GL_TRUE then you just switch buffer with
+AmigaMesaSwapBuffers(glcont);
+
+For more info on the internal of the Amiga port you can check the files
+  src/Amigamesa.c and include/GL/Amigamesa.h for tk check src-tk/Awindow.c
+And info on how to write your own gfx-routines read include/GL/amigamesa.h for
+more instructions.
+
+THINGS THAT MAY GO WRONG
+========================
+Remember GL ALWAYS render with (0,0) in the BOTTOM left corner.
+
+WARNING The api has changed on AmigaMesaCreateContext() it is now called with
+	a taglist. Read /include/GL/amigamesa.h
+
+It compiles but all examples crash everytime: 
+	Set your stack high about 50kb or more.
+
+Linking complains about not finding _glBegin(): or @glBegin():
+	You have compiled some code using the stack and some using registers as
+	parameter passing, You have to chose one of them and us it on both places.
+
+The colors are really bad:
+	To emulate 24bit I alloc 255 colors in the beginning spread over the
+	palette and then use it. If you'd like better colors, buy a GFX-Card.
+	(And wait for gfx-card versions.)
+
+Resizing is sometimes very very unhealthy.
+
+
+LATEST VERSION:
+===============
+
+TODO:
+=====
+Debugg.
+Fix resizing bug.
+
+
+FUTURE:
+=======
+A shared library would be nice. (I have started)
+Faster and better. (You may have some nice idea?)
+
+HISTORY:
+========
+		
+Release:
+0.8 This code worked with Mesa 1.2.6 and all makefiles also.
+	 But when I released it, Mesa 1.2.7 was released and some changes were made.
+	 It didn't work.
+
+0.9 Makefiles is remapped to work with Mesa 1.2.7.
+	 Double buffering works.
+	 Implemented fast_poly_draw (big speed improvement).
+	 tkExec a few more tests were done. (right & middle mousebutton is not
+	 implemented)
+
+1.0 I've put a common scoption file in /Amiga (thanks to Kamil Iskra).
+	 Due to the common scoptions you can change CPU and math more easy ,and
+	 compiler options set to default math=ieee, cpu=020 so that it works on 
+	 1200's and up 
+	 Many bugfixes (thanks to Daniel Jönsson).
+	 Have fixed the smakefile name collision with AMIWIN version.
+	 Mesa 1.2.8 Fixed.
+	 Spellcorrection of the docs were made by Peter Sandén.
+	 (Blame him, not me!) 
+	 All tk's windows are opened on a pubscreen named "MESA" if it exists.
+
+1.1 Faster and more stable (Many thanks to Jorge Acereda (JAM))
+	 Faster pen usage now it allocates 255 pens and use them (thanks to
+	 Stefan Burström)
+	 A few enhancements here and there.
+	 Fixed a smake bug ignore=A only works in the latest SAS version. Now I
+	 have changed it to IGN=ALL (Thanx to everyone who reported this one)
+
+1.2 Removed math from smakefiles, SAS handles this better self. (Kamil Iskra)
+	 Fixed a serious drawing bug (appeared when using GL_SMOTH).
+    Fixed a very flexible programming API for future gfx-board implementations
+	 Added a BOOL AmigaMesaSetDefs(struct TagItem *tagList); usefull for future enhancements
+    ***'API change: AmigaMesaCreateContext uses taglist se include/GL/amigamesa.h
+    Faster on doublebuffer rendering. (Now I convert whole double buffer c2p)
+    Easier to integrate future gfx-cards routines. Look in include/GL/amigamesa.h
+    tk toolkit fixed to work better. Thanks to Georg 'Wulf' Krämer
+
+1.4 Uppdated to reflect Mesa 2.0
+	 Small Bugfixes. Relesed With Mesa 2.0
+
+1.5 A few bugs intruduced in 1.4 was fixed (a workaround SAS oml/slink bug)
+    Due to a bug in SAS (oml/slink) 1.4 didn't work, this version should work better.
+    
+1.6 I haved splitted amigamesa into amigamesa and ADisp_AGA.c
+    this ensures higer modularity, and becomes easier to se what is neaded to port
+    if you want to make your own gfx routines.
+    ADisp_Cyb.c contains CyberGFX drawer rutines (Joerg Nilson)
+    It's also posible to use gcc now. (Joerg Nilson)
+    Now works with mesa 2.2.
+
+1.7 now builds on AROS!!
+
+Due to my lack of time this will be my last relese of mesa, If you are interested to take over and mainten the source
+please feel free to do so, Just please let me know so I can put some info on my webpage.
+
+
+
+Please contact me with suggestions and additional info. 
+You can reach me at: 
+
+d94sz@efd.lth.se
+
+Or mail:
+
+Stefan Zivkovic
+Kämnärsv. 9L:225
+226 46 LUND
+
+Or Phone:
++46 46 150763

@@ -1,0 +1,33 @@
+# Makefile for Win32
+
+TOP = ..
+
+!include "$(TOP)/names.win"
+
+!include <win32.mak>
+
+SRCS= \
+bitmap1.c \
+bitmap2.c \
+depth.c    \
+eval.c     \
+fog.c      \
+font.c     \
+line.c     \
+logo.c     \
+nurb.c     \
+olympic.c  \
+point.c    \
+quad.c     \
+select.c   \
+shape.c    \
+sphere.c   \
+star.c     \
+stencil.c  \
+tri.c      \
+wave.c     
+           
+EXTRALIBS = $(MESAGL).lib $(MESAGLU).lib $(MESATK).lib $(MESAAUX).lib
+
+!include "$(TOP)/mesawin32.mak"
+

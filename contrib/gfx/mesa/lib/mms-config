@@ -1,0 +1,16 @@
+# Makefile for VMS
+# contributed by Jouk Jansen  joukj@crys.chem.uva.nl
+
+
+#vms
+GL_LIB = libMesaGL.olb
+GLU_LIB = libMesaGLU.olb
+GLUT_LIB = libglut.olb
+TK_LIB = libMesatk.olb
+AUX_LIB = libMesaaux.olb
+CC = cc
+CFLAGS1 =/define=(FBIND=1)
+MAKELIB = library/create
+RANLIB = true
+XLIBS = [-]xlib/opt
+

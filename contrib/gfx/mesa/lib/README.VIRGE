@@ -1,0 +1,76 @@
+
+                    S3 Virge Mesa Driver for Windows 95
+
+                              Version 1.00.01
+
+
+
+1. This driver is based on S3D toolkit, native API for the S3 virge family.
+   The latest S3D drivers are available at http://www.s3.com
+
+
+2. Files
+
+     S3 Mesa
+
+	- s3mesa.c
+	- s3wgl.c
+ 	- s3mesa.h
+	- s3mesa.def
+	- s3mesa.rc(resource file that contains version number)
+	- s3res.h
+	- s3mesa.mak(VC++ 5.0 make file)
+
+     S3D Toolkit
+
+	-  s3dtk.h 
+	-  s3dtkw.lib
+
+     DLL(Keep updating them from S3 website)
+
+	- S3DTKW.DLL(S3D Interface)
+	- S3HAL95.DLL(S3D Win95 driver)
+	- S3MESA.DLL(S3 Mesa driver - can be renamed to OPENGL32.DLL)
+
+      
+3. Known bugs and limitations
+
+	1. Tested only with 2 OpenGL 3d productivity applications that will
+	   be shipping soon.  Ran some standard OpenGL samples too.
+
+	2. Known to work on following Virge family accelerators
+		- Virge/GX2
+		- Virge/MX(Mobile)
+		- Virge/DX/GX
+	   Did not yet test on Virge and Virge/VX. Should work though.
+
+	3. No support 8-bpp mode. 
+
+	4. 24-bpp support is in there but hangs the system.
+	   16-bpp is the safest mode right now.
+
+	5. Does not work with glQuake due to following reasons:
+		- No hardware support for some alpha blending modes GLQuake
+		  requires.
+		- Texture swapping in the s3mesa driver is buggy. Working on it
+		- Not all GL calls are implemented in the driver layer.
+		  Working on it.
+
+
+4. Make information
+
+	1. Go to the Mesa src directory:  cd src
+	2. Use VC++ 5.0 nmake:   nmake /f s3mesa.mak
+
+
+5. Contact
+
+	rkoduri@s3.com or pcgamedev@s3.com for any questions and updates
+	to the drivers
+
+6. Misc
+
+	Use these at your own freedom and risk. S3 cannot guarantee future
+	support for these drivers.  The S3 Mesa source code is free for
+	public use and will only be governed by Mesa rules.
+

@@ -1,0 +1,82 @@
+#!/bin/sh
+
+# Make a shared library for GGI
+
+#--identification------------------------------------------------------
+
+# $Id$
+
+# $Log$
+# Revision 1.1  2005/01/11 14:58:29  NicJA
+# AROSMesa 3.0
+#
+# - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
+# - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
+# - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
+#
+# Revision 1.1  1998/07/08 01:27:06  brianp
+# Initial revision
+#
+
+#--common--------------------------------------------------------------
+
+# Usage:  mklib libname major minor file.o ...
+#
+# First argument is name of output library (LIBRARY)
+# Second arg is major version number (MAJOR)
+# Third arg is minor version number (MINOR)
+# Rest of arguments are object files (OBJECTS)
+
+LIBRARY=$1
+shift 1
+
+MAJOR=$1
+shift 1
+
+MINOR=$1
+shift 1
+
+OBJECTS=$*
+
+#--platform------------------------------------------------------------
+if [ $LIBRARY = "libglut.so" ] ; then
+	GGILIBS="-lggi -lX11 -lXext"
+fi
+
+if [ $LIBRARY = "libMesaGL.so" ] ; then
+	GGILIBS="-lggi -lX11 -lXext"
+fi
+
+# the following provided by Thomas Hiller (Hiller@tu-harburg.d400.de)
+
+VERSION="${MAJOR}.${MINOR}"
+
+LIBNAME=`basename $LIBRARY`
+ARNAME=`basename $LIBNAME .so`.a
+DIRNAME=`dirname $LIBRARY`
+
+gcc -shared -Wl,-soname,${LIBNAME}.${MAJOR} -o ${LIBRARY}.${VERSION} ${OBJECTS} ${GGILIBS}
+(cd $DIRNAME; ln -s ${LIBNAME}.${VERSION} ${LIBNAME}.${MAJOR})
+
+ln -s ${LIBNAME}.${MAJOR} ${LIBRARY}
+
+
+# also make regular .a files,
+# provided by Danek Duvall (duvall@dhduvall.student.princeton.edu)
+
+ar ruv ${DIRNAME}/${ARNAME} ${OBJECTS}
+ranlib ${DIRNAME}/${ARNAME}
+
+
+# Print a reminder about shared libs:
+DIR=`cd .. ; pwd`
+echo
+echo "******Be sure to add" ${DIR}"/lib to your LD_LIBRARY_PATH variable"
+echo
+sleep 2
+
+
+
+#### NOTES:
+# One Mesa user reports having to run the "ldconfig -v" command to make
+# Linux aware of the shared libs.

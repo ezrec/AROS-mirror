@@ -1,0 +1,33 @@
+# Makefile for Win32
+
+TOP = ..
+
+!include "$(TOP)/names.win"
+
+PROJECT = $(MESAAUX)
+
+!include <win32.mak>
+
+TOP = ..
+
+SRCS= \
+   font.c \
+   glaux.c \
+   image.c \
+   shapes.c \
+   teapot.c \
+   vect3d.c \
+   xxform.c
+
+all     : $(PROJECT).dll install
+
+EXTRALIBS = $(MESAGL).lib $(MESAGLU).lib $(MESATK).lib
+
+!include "$(TOP)/mesawin32.mak"
+
+install : $(PROJECT).dll
+        @echo copying $(PROJECT).dll to system directory...
+        copy $(PROJECT).dll $(DLLINSTALL)
+        @echo "copying $(PROJECT).lib import library to library directory..."
+        copy $(PROJECT).lib $(LIBINSTALL)
+

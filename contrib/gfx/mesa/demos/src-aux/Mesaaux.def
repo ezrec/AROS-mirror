@@ -1,0 +1,61 @@
+LIBRARY MESAAUX
+DESCRIPTION 'AUX for Windows Mesa'
+EXETYPE WINDOWS
+CODE MOVEABLE DISCARDABLE
+DATA MOVEABLE SINGLE
+HEAPSIZE 256000
+
+STACKSIZE 4096
+
+EXPORTS
+    auxInitDisplayMode
+    auxInitPosition
+    auxInitWindow
+    auxCloseWindow
+    auxQuit
+    auxSwapBuffers
+    auxMainLoop
+    auxExposeFunc
+    auxReshapeFunc
+    auxIdleFunc
+    auxKeyFunc
+    auxMouseFunc
+    auxDeleteMouseFunc
+    auxGetColorMapSize
+    auxGetMouseLoc
+    auxSetOneColor
+    auxSetFogRamp
+    auxSetGreyRamp
+    auxSetRGBMap
+    auxRGBImageLoad
+    auxCreateFont
+    auxDrawStr
+    auxWireSphere
+    auxSolidSphere
+    auxWireCube
+    auxSolidCube
+    auxWireBox
+    auxSolidBox
+    auxWireTorus
+    auxSolidTorus
+    auxWireCylinder
+    auxSolidCylinder
+    auxWireIcosahedron
+    auxSolidIcosahedron
+    auxWireOctahedron
+    auxSolidOctahedron
+    auxWireTetrahedron
+    auxSolidTetrahedron
+    auxWireDodecahedron
+    auxSolidDodecahedron
+    auxWireCone
+    auxSolidCone 
+    auxWireTeapot
+    auxSolidTeapot
+    auxInitDisplayModePolicy
+    auxGetDisplayModePolicy
+    auxInitDisplayModeID
+    auxGetDisplayModeID
+    auxGetDisplayMode
+    auxGetScreenSize
+    auxAnimation

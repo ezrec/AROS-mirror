@@ -1,0 +1,57 @@
+# Makefile for tk toolkit
+
+# Mesa 3-D graphics library
+# Version:  2.5
+# Copyright (C) 1995-1997  Brian Paul
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the Free
+# Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+
+##### MACROS #####
+
+VPATH = RCS
+
+INCDIR = ../include
+LIBDIR = ../lib
+
+OBJECTS = cursor.o event.o font.o getset.o image.o shapes.o window.o \
+		fxevent.o
+
+
+
+##### RULES #####
+
+.c.o:
+	$(CC) -c -I$(INCDIR) $(CFLAGS) $<
+
+
+
+##### TARGETS #####
+
+default:
+	@echo "Specify a target configuration"
+
+clean:
+	-rm *.o *~
+
+targets: $(LIBDIR)/$(TK_LIB)
+
+# Make the library
+$(LIBDIR)/$(TK_LIB): $(OBJECTS)
+	$(MAKELIB) $(TK_LIB) $(MAJOR) $(MINOR) $(OBJECTS)
+	mv $(TK_LIB)* $(LIBDIR)
+
+include ../Make-config
+

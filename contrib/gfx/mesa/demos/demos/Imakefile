@@ -1,0 +1,40 @@
+LOCAL_LIBRARIES = $(XLIB) $(TOP)\lib\Mesaaux.a $(TOP)\lib\Mesatk.a $(TOP)\lib\Mesaglu.a $(TOP)\lib\MesaGL.a
+
+INCLUDES = -I$(TOP)\include
+
+SRCS = bounce.c gamma.c \
+        gears.c \
+        glxdemo.c glxpixmap.c \
+        isosurf.c offset.c \
+        osdemo.c shadow.c \
+	spin.c test0.c wave.c \
+        xdemo.c reflect.c
+
+PROGRAMS = ProgramTargetName(bounce) ProgramTargetName(gamma) \
+        ProgramTargetName(gears) \
+        ProgramTargetName(glxdemo) ProgramTargetName(glxpixmap) \
+        ProgramTargetName(isosurf) ProgramTargetName(offset) \
+        ProgramTargetName(osdemo) ProgramTargetName(shadow) \
+	ProgramTargetName(spin) ProgramTargetName(test0) ProgramTargetName(wave) \
+        ProgramTargetName(xdemo) ProgramTargetName(reflect)
+
+AllTarget($(PROGRAMS))
+
+NormalProgramTarget(bounce,bounce.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(gamma,gamma.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(gears,gears.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(glxdemo,glxdemo.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(glxpixmap,glxpixmap.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(isosurf,isosurf.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(offset,offset.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(osdemo,osdemo.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(shadow,shadow.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(spin,spin.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(test0,test0.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(wave,wave.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(reflect,reflect.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+NormalProgramTarget(xdemo,xdemo.o,NullParameter,$(LOCAL_LIBRARIES),NullParameter)
+
+DependTarget()
+ 
+

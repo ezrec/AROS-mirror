@@ -1,0 +1,29 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+INCSUBDIRS := \
+    GL
+
+FILES := \
+    gltk.h \
+    glaux.h 
+
+INCLUDES      := $(foreach d,$(INCSUBDIRS),$(wildcard $(d)/*.h)) $(FILES)
+DEST_INCLUDES := $(foreach f,$(INCLUDES),$(AROS_INCLUDES)/$(f))
+
+#MM mesa-includes : includes setup-mesa-includes
+mesa-includes : $(DEST_INCLUDES)
+	@$(NOP)
+
+$(AROS_INCLUDES)/%.h : %.h
+	$(CP) $< $@
+
+#MM
+setup-mesa-includes :
+	@$(FOR) dir in $(AROS_INCLUDES) $(foreach f,$(INCSUBDIRS),$(AROS_INCLUDES)/$(f)) ; do \
+	   $(IF) $(TEST) ! -d "$$dir" ; then $(MKDIR) "$$dir" ; else true ; fi ;\
+	done
+
+#MM
+clean :
+	-$(RM) $(AROS_INCLUDES)

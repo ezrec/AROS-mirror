@@ -1,0 +1,77 @@
+# DO NOT DELETE
+
+glut_8x13.o: glutbitmap.h ../include/GL/gl.h
+glut_9x15.o: glutbitmap.h ../include/GL/gl.h
+glut_bitmap.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_bitmap.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_bitmap.o: glutbitmap.h
+glut_bwidth.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_bwidth.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_bwidth.o: glutbitmap.h
+glut_cindex.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_cindex.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_cmap.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_cmap.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h layerutil.h
+glut_cursor.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_cursor.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_dials.o: glutint.h ../include/GL/glx.h ../include/GL/gl.h
+glut_dials.o: ../include/GL/xmesa.h ../include/GL/glut.h ../include/GL/glu.h
+glut_dstr.o: glutint.h ../include/GL/glx.h ../include/GL/gl.h
+glut_dstr.o: ../include/GL/xmesa.h ../include/GL/glut.h ../include/GL/glu.h
+glut_event.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_event.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_ext.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_ext.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_fullscrn.o: glutint.h ../include/GL/glx.h ../include/GL/gl.h
+glut_fullscrn.o: ../include/GL/xmesa.h ../include/GL/glut.h
+glut_fullscrn.o: ../include/GL/glu.h
+glut_get.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_get.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_hel10.o: glutbitmap.h ../include/GL/gl.h
+glut_hel12.o: glutbitmap.h ../include/GL/gl.h
+glut_hel18.o: glutbitmap.h ../include/GL/gl.h
+glut_init.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_init.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_input.o: glutint.h ../include/GL/glx.h ../include/GL/gl.h
+glut_input.o: ../include/GL/xmesa.h ../include/GL/glut.h ../include/GL/glu.h
+glut_menu.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_menu.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h layerutil.h
+glut_mesa.o: glutint.h ../include/GL/glx.h ../include/GL/gl.h
+glut_mesa.o: ../include/GL/xmesa.h ../include/GL/glut.h ../include/GL/glu.h
+glut_modifier.o: glutint.h ../include/GL/glx.h ../include/GL/gl.h
+glut_modifier.o: ../include/GL/xmesa.h ../include/GL/glut.h
+glut_modifier.o: ../include/GL/glu.h
+glut_mroman.o: glutstroke.h
+glut_overlay.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_overlay.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_overlay.o: layerutil.h
+glut_roman.o: glutstroke.h
+glut_shapes.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_shapes.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_space.o: glutint.h ../include/GL/glx.h ../include/GL/gl.h
+glut_space.o: ../include/GL/xmesa.h ../include/GL/glut.h ../include/GL/glu.h
+glut_stroke.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_stroke.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_stroke.o: glutstroke.h
+glut_swap.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_swap.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_swidth.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_swidth.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_swidth.o: glutstroke.h
+glut_tablet.o: glutint.h ../include/GL/glx.h ../include/GL/gl.h
+glut_tablet.o: ../include/GL/xmesa.h ../include/GL/glut.h ../include/GL/glu.h
+glut_teapot.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_tr10.o: glutbitmap.h ../include/GL/gl.h
+glut_tr24.o: glutbitmap.h ../include/GL/gl.h
+glut_util.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_util.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_vidresize.o: ../include/GL/glx.h ../include/GL/gl.h
+glut_vidresize.o: ../include/GL/xmesa.h glutint.h ../include/GL/glut.h
+glut_vidresize.o: ../include/GL/glu.h
+glut_warp.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_warp.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_win.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_win.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+glut_winmisc.o: ../include/GL/glut.h ../include/GL/gl.h ../include/GL/glu.h
+glut_winmisc.o: glutint.h ../include/GL/glx.h ../include/GL/xmesa.h
+layerutil.o: layerutil.h

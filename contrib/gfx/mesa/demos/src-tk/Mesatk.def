@@ -1,0 +1,46 @@
+LIBRARY MESATK
+
+STACKSIZE 4096
+
+EXPORTS
+    tkCloseWindow
+    tkCreateBitmapFont
+    tkCreateFilledFont
+    tkCreateOutlineFont
+    tkCreateStrokeFont
+    tkDisplayFunc
+    tkDrawStr
+    tkExec
+    tkExposeFunc
+    tkGetColorMapSize
+    tkGetMouseLoc
+    tkIdleFunc
+    tkInitDisplayMode
+    tkInitPosition
+    tkInitWindow
+    tkKeyDownFunc
+    tkMouseDownFunc
+    tkMouseMoveFunc
+    tkMouseUpFunc
+    tkQuit
+    tkReshapeFunc
+    tkRGBImageLoad
+    tkRGBMap
+    tkSetFogRamp
+    tkSetGreyRamp
+    tkSetOneColor
+    tkSetRGBMap
+    tkSolidBox
+    tkSolidCone
+    tkSolidCube
+    tkSolidCylinder
+    tkSolidSphere
+    tkSolidTorus
+    tkSwapBuffers
+    tkWireBox
+    tkWireCone
+    tkWireCube
+    tkWireCylinder
+    tkWireSphere
+    tkWireTorus
+

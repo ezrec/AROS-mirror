@@ -1,0 +1,35 @@
+
+#   $Id$
+#
+#   Old (pre 2.6) Demos - these do _not_ require GLUT
+#
+include $(TOP)/config/make.cfg
+
+#MM contrib-mesa2-demos-oldlibdemos : contrib-mesa2 setup-mesa2-olddemos setup-mesa2-sampdemos
+#MM setup-mesa2-olddemos : setup
+
+MESADEMOSFILES := isosurf.dat
+
+MESADEMOS :=  bounce \
+            gamma \
+            gears \
+            isosurf \
+            morph3d \
+            osdemo \
+            reflect \
+            spin \
+            stex3d \
+            test0 \
+            texobj \
+            winpos
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
+
+%build_progs mmake=contrib-mesa2-demos-oldlibdemos files=$(MESADEMOS) \
+    targetdir=$(CONTRIBDIR)/Gfx/Mesa/Demos-old \
+    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+
+setup-mesa2-olddemos : files-copy
+%copy_files_q files="$(MESADEMOSFILES)" dst=$(CONTRIBDIR)/Gfx/Mesa/Demos-old
+
+%common

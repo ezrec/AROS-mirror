@@ -1,0 +1,88 @@
+
+#   $Id$
+#
+#   Generate liblibinit.a
+#
+include $(TOP)/config/make.cfg
+
+#MM- contrib-mesa : setup-contrib-mesa-directories includes mesa-includes linklibs-mesaglmain linklibs-mesaglu linklibs-mesaglut
+#MM- contrib-mesa-all : contrib-mesa contrib-mesa-libdemos
+
+#MM linklibs-mesaglmain : includes
+
+AMIGASRCDIR = aros
+MESASRCDIR = src
+
+LIBMESAGLM = $(MESASRCDIR)/accum \
+            $(MESASRCDIR)/alpha \
+            $(MESASRCDIR)/alphabuf \
+            $(MESASRCDIR)/api1 \
+            $(MESASRCDIR)/api2 \
+            $(MESASRCDIR)/apiext \
+            $(MESASRCDIR)/attrib \
+            $(MESASRCDIR)/bitmap \
+            $(MESASRCDIR)/blend \
+            $(MESASRCDIR)/clip \
+            $(MESASRCDIR)/colortab \
+            $(MESASRCDIR)/context \
+            $(MESASRCDIR)/copypix \
+            $(MESASRCDIR)/depth \
+            $(MESASRCDIR)/dlist \
+            $(MESASRCDIR)/drawpix \
+            $(MESASRCDIR)/enable \
+            $(MESASRCDIR)/eval \
+            $(MESASRCDIR)/feedback \
+            $(MESASRCDIR)/fog \
+            $(MESASRCDIR)/get \
+            $(MESASRCDIR)/hash \
+            $(AMIGASRCDIR)/misc/ht_colors \
+            $(MESASRCDIR)/image \
+            $(MESASRCDIR)/light \
+            $(MESASRCDIR)/lines \
+            $(MESASRCDIR)/logic \
+            $(MESASRCDIR)/masking \
+            $(MESASRCDIR)/matrix \
+            $(MESASRCDIR)/misc \
+            $(MESASRCDIR)/mmath \
+            $(MESASRCDIR)/OSmesa/osmesa \
+            $(MESASRCDIR)/pb \
+            $(MESASRCDIR)/pixel \
+            $(MESASRCDIR)/points \
+            $(MESASRCDIR)/pointers \
+            $(MESASRCDIR)/polygon \
+            $(MESASRCDIR)/quads \
+            $(MESASRCDIR)/rect \
+            $(MESASRCDIR)/rastpos \
+            $(MESASRCDIR)/readpix \
+            $(MESASRCDIR)/scissor \
+            $(MESASRCDIR)/shade \
+            $(MESASRCDIR)/span \
+            $(MESASRCDIR)/stencil \
+            $(MESASRCDIR)/teximage \
+            $(MESASRCDIR)/texobj \
+            $(MESASRCDIR)/texstate \
+            $(MESASRCDIR)/texture \
+            $(MESASRCDIR)/triangle \
+            $(MESASRCDIR)/varray \
+            $(MESASRCDIR)/vb \
+            $(MESASRCDIR)/vbfill \
+            $(MESASRCDIR)/vbrender \
+            $(MESASRCDIR)/vbxform \
+            $(MESASRCDIR)/winpos \
+            $(MESASRCDIR)/xform \
+            $(MESASRCDIR)/zoom \
+            $(MESASRCDIR)/AROS/AROSMesa \
+            $(MESASRCDIR)/AROS/AROSMesa_TC \
+            $(MESASRCDIR)/AROS/AROSMesa_8bit
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR)/AROS -I$(MESASRCDIR) -Iamiga/misc
+USER_CFLAGS	:= -DNO_ERRNO_H
+
+%build_linklib mmake=linklibs-mesaglmain libname=MesaGL \
+    files=$(LIBMESAGLM) objdir=$(GENDIR)/$(CURDIR)
+
+#MM
+setup-contrib-mesa-directories :
+	%mkdirs_q $(CONTRIBDIR)/Gfx $(CONTRIBDIR)/Gfx/Mesa $(CONTRIBDIR)/Gfx/Mesa/Samples $(CONTRIBDIR)/Gfx/Mesa/Book $(CONTRIBDIR)/Gfx/Mesa/Demos-old $(CONTRIBDIR)/Gfx/Mesa/Demos-GLUT
+
+%common

@@ -1,0 +1,58 @@
+# Top-level makefile for MS-DOS using DJGPP
+
+# Mesa 3-D graphics library
+# Version:  2.3
+# Copyright (C) 1995-1997  Brian Paul
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the Free
+# Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+.PHONY : all libs samples demos clean
+
+default: all
+
+all: libs samples demos
+
+libs:
+	-mkdir lib
+	cd src ; $(MAKE) -f Makefile.dj "CFLAGS = -O3 -m486"; cd ..
+	cd src-glu ; $(MAKE) -f Makefile.dj "CFLAGS = -O3 -m486"; cd ..
+	cd src-tk ; $(MAKE) -f Makefile.dj "CFLAGS = -O3 -m486"; cd ..
+	cd src-aux ; $(MAKE) -f Makefile.dj "CFLAGS = -O3 -m486"; cd ..
+
+samples:
+	cd samples ; $(MAKE) -f Makefile.dj "CFLAGS = -O3 -m486 -s"; cd ..
+
+demos:
+	cd demos ; $(MAKE) -f Makefile.dj "CFLAGS = -O3 -m486 -s"; cd ..
+
+clean:
+	del src\*.o
+	del src\*.a
+	del src-aux\*.o
+	del src-aux\*.a
+	del src-glu\*.o
+	del src-glu\*.a
+	del src-tk\*.o
+	del src-tk\*.a
+	del samples\*.
+	del demos\*.
+
+# Remove everthing that can be remade
+realclean: clean
+	del lib\*.a
+	del samples\*.exe
+	del demos\*.exe
+
+

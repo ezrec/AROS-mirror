@@ -1,0 +1,197 @@
+# DO NOT DELETE
+
+accum.o: accum.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+accum.o: context.h span.h
+alpha.o: alpha.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+alpha.o: context.h
+alphabuf.o: alphabuf.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+alphabuf.o: dd.h context.h
+api1.o: api.h bitmap.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+api1.o: dd.h context.h drawpix.h eval.h image.h matrix.h teximage.h vb.h
+api2.o: api.h context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+api2.o: dd.h image.h matrix.h teximage.h vb.h
+apiext.o: api.h context.h types.h ../include/GL/gl.h config.h macros.h
+apiext.o: fixed.h dd.h
+attrib.o: attrib.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+attrib.o: context.h misc.h
+bitmap.o: bitmap.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+bitmap.o: context.h feedback.h image.h pb.h pixel.h
+blend.o: alphabuf.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+blend.o: asm_mmx.h blend.h context.h pb.h span.h
+clip.o: clip.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+clip.o: context.h matrix.h vb.h xform.h
+colortab.o: colortab.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+colortab.o: dd.h context.h
+context.o: accum.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+context.o: alphabuf.h clip.h context.h depth.h eval.h hash.h light.h lines.h
+context.o: dlist.h mmath.h pb.h points.h pointers.h quads.h stencil.h
+context.o: triangle.h teximage.h texobj.h texstate.h vb.h vbfill.h
+copypix.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+copypix.o: dd.h copypix.h depth.h feedback.h pixel.h span.h stencil.h zoom.h
+depth.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+depth.o: depth.h
+dlist.o: accum.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+dlist.o: alpha.h attrib.h bitmap.h blend.h clip.h colortab.h context.h
+dlist.o: copypix.h depth.h drawpix.h enable.h eval.h feedback.h fog.h hash.h
+dlist.o: image.h light.h lines.h dlist.h logic.h masking.h matrix.h misc.h
+dlist.o: pixel.h points.h polygon.h rastpos.h rect.h scissor.h stencil.h
+dlist.o: texobj.h teximage.h texstate.h vb.h vbfill.h winpos.h
+drawpix.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+drawpix.o: dd.h drawpix.h feedback.h image.h pixel.h span.h stencil.h zoom.h
+enable.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+enable.o: enable.h light.h vbfill.h
+eval.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+eval.o: eval.h mmath.h vbfill.h
+feedback.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+feedback.o: dd.h feedback.h
+fog.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+fog.o: fog.h
+get.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+get.o: get.h vb.h
+hash.o: hash.h ../include/GL/gl.h
+image.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+image.o: image.h
+light.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+light.o: light.h matrix.h mmath.h vb.h xform.h
+lines.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+lines.o: depth.h feedback.h lines.h pb.h texstate.h vb.h linetemp.h
+logic.o: alphabuf.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+logic.o: context.h logic.h pb.h span.h
+masking.o: alphabuf.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+masking.o: dd.h context.h masking.h pb.h span.h
+matrix.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+matrix.o: matrix.h mmath.h
+misc.o: accum.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+misc.o: alphabuf.h context.h depth.h masking.h misc.h stencil.h
+mmath.o: ../include/GL/gl.h mmath.h
+pb.o: alpha.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+pb.o: alphabuf.h blend.h depth.h fog.h logic.h masking.h pb.h scissor.h
+pb.o: stencil.h texture.h
+pixel.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+pixel.o: pixel.h
+points.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+points.o: feedback.h pb.h span.h texstate.h vb.h mmath.h
+pointers.o: accum.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+pointers.o: alpha.h attrib.h bitmap.h blend.h clip.h context.h colortab.h
+pointers.o: copypix.h depth.h drawpix.h enable.h eval.h feedback.h fog.h
+pointers.o: get.h light.h lines.h dlist.h logic.h masking.h matrix.h misc.h
+pointers.o: pixel.h points.h polygon.h rastpos.h readpix.h rect.h scissor.h
+pointers.o: stencil.h teximage.h texobj.h texstate.h varray.h vbfill.h
+pointers.o: winpos.h
+polygon.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+polygon.o: dd.h polygon.h
+quads.o: types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h quads.h
+rastpos.o: clip.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+rastpos.o: feedback.h light.h matrix.h mmath.h shade.h xform.h
+readpix.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+readpix.o: dd.h depth.h feedback.h image.h pixel.h readpix.h span.h stencil.h
+rect.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+rect.o: rect.h vbfill.h
+scissor.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+scissor.o: dd.h scissor.h
+shade.o: macros.h mmath.h shade.h types.h ../include/GL/gl.h config.h fixed.h
+shade.o: dd.h
+span.o: alpha.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+span.o: alphabuf.h blend.h depth.h fog.h logic.h masking.h scissor.h span.h
+span.o: stencil.h texture.h
+stencil.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+stencil.o: dd.h pb.h stencil.h
+teximage.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+teximage.o: dd.h image.h span.h teximage.h
+texobj.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+texobj.o: hash.h teximage.h texobj.h
+texstate.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+texstate.o: dd.h matrix.h texobj.h texstate.h texture.h xform.h
+texture.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+texture.o: dd.h mmath.h pb.h texture.h
+triangle.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h
+triangle.o: dd.h depth.h feedback.h span.h texstate.h triangle.h vb.h
+triangle.o: tritemp.h
+varray.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+varray.o: enable.h dlist.h light.h varray.h vb.h vbfill.h vbrender.h
+varray.o: vbxform.h xform.h
+winpos.o: ../include/GL/gl.h rastpos.h types.h config.h macros.h fixed.h dd.h
+winpos.o: winpos.h
+vb.o: types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h vb.h
+vbfill.o: context.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+vbfill.o: light.h matrix.h mmath.h pb.h vb.h vbfill.h vbxform.h xform.h
+vbrender.o: clip.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+vbrender.o: context.h light.h lines.h matrix.h pb.h points.h vb.h vbrender.h
+vbrender.o: xform.h
+vbxform.o: asm_386.h ../include/GL/gl.h macros.h context.h types.h config.h
+vbxform.o: fixed.h dd.h fog.h light.h matrix.h mmath.h shade.h texture.h vb.h
+vbxform.o: vbrender.h vbxform.h xform.h
+xform.o: mmath.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+xform.o: xform.h
+zoom.o: macros.h span.h types.h ../include/GL/gl.h config.h fixed.h dd.h
+zoom.o: stencil.h zoom.h
+X/glxapi.o: ../include/GL/glx.h ../include/GL/gl.h ../include/GL/xmesa.h
+X/glxapi.o: X/fakeglx.h X/realglx.h
+X/fakeglx.o: ../include/GL/gl.h ../include/GL/xmesa.h context.h types.h
+X/fakeglx.o: config.h macros.h fixed.h dd.h X/fakeglx.h ../include/GL/glx.h
+X/fakeglx.o: X/xmesaP.h ../include/GL/fxmesa.h FX/fxdrv.h matrix.h texture.h
+X/fakeglx.o: vb.h xform.h clip.h vbrender.h
+X/realglx.o: X/realglx.h ../include/GL/glx.h ../include/GL/gl.h
+X/realglx.o: ../include/GL/xmesa.h
+X/xfonts.o: ../include/GL/gl.h ../include/GL/glx.h ../include/GL/xmesa.h
+X/xfonts.o: macros.h X/xmesaP.h types.h config.h fixed.h dd.h
+X/xfonts.o: ../include/GL/fxmesa.h FX/fxdrv.h context.h matrix.h texture.h
+X/xfonts.o: vb.h xform.h clip.h vbrender.h X/fakeglx.h
+X/xmesa1.o: ../include/GL/xmesa.h ../include/GL/gl.h X/xmesaP.h types.h
+X/xmesa1.o: config.h macros.h fixed.h dd.h ../include/GL/fxmesa.h FX/fxdrv.h
+X/xmesa1.o: context.h matrix.h texture.h vb.h xform.h clip.h vbrender.h
+X/xmesa2.o: ../include/GL/xmesa.h ../include/GL/gl.h context.h types.h
+X/xmesa2.o: config.h macros.h fixed.h dd.h X/xmesaP.h ../include/GL/fxmesa.h
+X/xmesa2.o: FX/fxdrv.h matrix.h texture.h vb.h xform.h clip.h vbrender.h
+X/xmesa3.o: depth.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+X/xmesa3.o: vb.h X/xmesaP.h ../include/GL/xmesa.h ../include/GL/fxmesa.h
+X/xmesa3.o: FX/fxdrv.h context.h matrix.h texture.h xform.h clip.h vbrender.h
+X/xmesa3.o: linetemp.h
+X/xmesa4.o: depth.h types.h ../include/GL/gl.h config.h macros.h fixed.h dd.h
+X/xmesa4.o: vb.h X/xmesaP.h ../include/GL/xmesa.h ../include/GL/fxmesa.h
+X/xmesa4.o: FX/fxdrv.h context.h matrix.h texture.h xform.h clip.h vbrender.h
+X/xmesa4.o: tritemp.h
+OSmesa/osmesa.o: ../include/GL/osmesa.h ../include/GL/gl.h context.h types.h
+OSmesa/osmesa.o: config.h macros.h fixed.h dd.h depth.h matrix.h vb.h
+OSmesa/osmesa.o: linetemp.h tritemp.h
+SVGA/svgamesa.o: ../include/GL/svgamesa.h ../include/GL/gl.h context.h
+SVGA/svgamesa.o: types.h config.h macros.h fixed.h dd.h matrix.h
+FX/fxapi.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h macros.h
+FX/fxapi.o: fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h vbrender.h
+FX/fxapi.o: ../include/GL/fxmesa.h
+FX/fxdd.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h macros.h
+FX/fxdd.o: fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h vbrender.h
+FX/fxdd.o: ../include/GL/fxmesa.h
+FX/fxddtex.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h
+FX/fxddtex.o: macros.h fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h
+FX/fxddtex.o: vbrender.h ../include/GL/fxmesa.h
+FX/fxvsetup.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h
+FX/fxvsetup.o: macros.h fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h
+FX/fxvsetup.o: vbrender.h ../include/GL/fxmesa.h
+FX/fxsetup.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h
+FX/fxsetup.o: macros.h fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h
+FX/fxsetup.o: vbrender.h ../include/GL/fxmesa.h
+FX/fxpoints.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h
+FX/fxpoints.o: macros.h fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h
+FX/fxpoints.o: vbrender.h ../include/GL/fxmesa.h
+FX/fxlines.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h
+FX/fxlines.o: macros.h fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h
+FX/fxlines.o: vbrender.h ../include/GL/fxmesa.h
+FX/fxtris.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h
+FX/fxtris.o: macros.h fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h
+FX/fxtris.o: vbrender.h ../include/GL/fxmesa.h
+FX/fxquads.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h
+FX/fxquads.o: macros.h fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h
+FX/fxquads.o: vbrender.h ../include/GL/fxmesa.h
+FX/fxrender.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h
+FX/fxrender.o: macros.h fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h
+FX/fxrender.o: vbrender.h ../include/GL/fxmesa.h FX/fxrender.h
+FX/fxtexman.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h
+FX/fxtexman.o: macros.h fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h
+FX/fxtexman.o: vbrender.h ../include/GL/fxmesa.h
+FX/fxddspan.o: FX/fxdrv.h context.h types.h ../include/GL/gl.h config.h
+FX/fxddspan.o: macros.h fixed.h dd.h matrix.h texture.h vb.h xform.h clip.h
+FX/fxddspan.o: vbrender.h ../include/GL/fxmesa.h
+GGI/ggimesa.o: GGI/ggimesa.h config.h context.h types.h ../include/GL/gl.h
+GGI/ggimesa.o: macros.h fixed.h dd.h matrix.h vb.h depth.h
+GGI/ggimesa.o: ../include/GL/ggimesa.h

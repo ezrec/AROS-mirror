@@ -1,0 +1,96 @@
+#!/bin/sh
+
+# Make a Linux ELF shared library, including 3Dfx Glide libs
+
+#--identification------------------------------------------------------
+
+# $Id$
+
+# $Log$
+# Revision 1.1  2005/01/11 14:58:29  NicJA
+# AROSMesa 3.0
+#
+# - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
+# - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
+# - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
+#
+# Revision 1.8  1998/07/08 01:04:21  brianp
+# removed -lpthread.  MITS config now uses mklib.mits
+#
+# Revision 1.7  1998/06/22 01:53:15  brianp
+# added -lm -lpthread to GLIDELIBS for MITS
+#
+# Revision 1.6  1998/06/21 01:16:43  brianp
+# added patch to use libc5 on RedHat 5.x systems
+#
+# Revision 1.5  1997/12/07 17:18:21  brianp
+# removed -ltexus (David B)
+#
+# Revision 1.4  1997/10/21 23:32:31  brianp
+# now takes major and minor version arguments
+#
+
+#--common--------------------------------------------------------------
+
+# Usage:  mklib libname major minor file.o ...
+#
+# First argument is name of output library (LIBRARY)
+# Second arg is major version number (MAJOR)
+# Third arg is minor version number (MINOR)
+# Rest of arguments are object files (OBJECTS)
+
+LIBRARY=$1
+shift 1
+
+MAJOR=$1
+shift 1
+
+MINOR=$1
+shift 1
+
+OBJECTS=$*
+
+#--platform------------------------------------------------------------
+
+# If we're making the libMesaGL.so file then also link in the Glide libs.
+# The -L/usr/i486-linux-libc5/lib option is specified so that licb5 is
+# used on RedHat 5.x systems.  This helps to fix Quake problems.  This
+# tip comes from Emil Briggs (briggs@tick.physics.ncsu.edu).  Thanks!
+if [ $LIBRARY = "libMesaGL.so" ] ; then
+    GLIDELIBS="-L/usr/local/glide/lib -lglide2x -L/usr/i486-linux-libc5/lib -lm"
+fi
+
+
+# the following provided by Thomas Hiller (Hiller@tu-harburg.d400.de)
+
+VERSION="${MAJOR}.${MINOR}"
+
+LIBNAME=`basename $LIBRARY`
+ARNAME=`basename $LIBNAME .so`.a
+DIRNAME=`dirname $LIBRARY`
+
+gcc -shared -Wl,-soname,${LIBNAME}.${MAJOR} -o ${LIBRARY}.${VERSION} ${OBJECTS} ${GLIDELIBS}
+(cd $DIRNAME; ln -s ${LIBNAME}.${VERSION} ${LIBNAME}.${MAJOR})
+
+ln -s ${LIBNAME}.${MAJOR} ${LIBRARY}
+
+
+# also make regular .a files,
+# provided by Danek Duvall (duvall@dhduvall.student.princeton.edu)
+
+ar ruv ${DIRNAME}/${ARNAME} ${OBJECTS}
+ranlib ${DIRNAME}/${ARNAME}
+
+
+# Print a reminder about shared libs:
+DIR=`cd .. ; pwd`
+echo
+echo "******Be sure to add" ${DIR}"/lib to your LD_LIBRARY_PATH variable"
+echo
+sleep 2
+
+
+
+#### NOTES:
+# One Mesa user reports having to run the "ldconfig -v" command to make
+# Linux aware of the shared libs.

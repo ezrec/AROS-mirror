@@ -1,0 +1,45 @@
+Notes on sample programs
+
+These samples were written by SGI and obtained by anonymous ftp from
+sgi.com (opengl/contrib/samples.tar.Z)  They have not been changed
+except for minor bug fixes.
+
+See the README file for copyright and command line arguments.
+
+Last updated on July 28, 1995.
+
+
+
+file		Mesa compatibility
+---------------------------------------------------------------
+accum.c		works
+bitmap1.c	works
+bitmap2.c	works
+blendeq.c	works, had to fix some warnings
+blendxor.c	works, had to fix some warnings
+copy.c		works but glPixelZoom has no effect
+cursor.c	works
+depth.c		works
+eval.c		works
+fog.c		works
+font.c		works
+line.c		works
+logo.c		works after adding missing line of data, fixing bugs
+nurb.c		works
+oglinfo.c	works, had to fix some warnings
+olympic.c	works
+overlay.c	overlays not available
+point.c		works
+prim.c		works
+quad.c		works, after fixing array initialization problems
+select.c	works
+shape.c		works
+speed.c		works, modified to disable scissoring, increased repeatCount
+sphere.c	works, mostly
+star.c		works
+stencil.c	works
+stretch.c	works, I guess
+texture.c	works, mostly
+tri.c		works
+wave.c		works, but occasionally a quad will be mis-rendered, I
+		   suspect this is because the quad is not planar...

@@ -1,0 +1,23 @@
+
+Future plans for Mesa
+
+  OpenGL conformance testing
+	As of June 22 I've signed the paperwork but haven't got the
+	test sources yet.
+
+  Optimization of API function dispatch as proposed by Kendall Bennet
+	Use a little asm code to optimize the glVertex, glNormal, glTexCoord,
+	etc functions.
+
+  Vertex array optimization
+	All the vertex transformation code in vbxform.c should be moved
+	into xform.c.  These functions should also be rewritten to support
+	a variable stride through the source data.  This will allow
+	optimizing many vertex array scenarios, including interleaved
+	arrays.
+
+	The x86 transformation code will have to be updated too.  Sorry Josh!
+
+	This could be a nice performance boost, especially when using
+	3Dfx hardware.
+

@@ -1,0 +1,83 @@
+# Makefile for demo programs
+# Stephane Rehel (rehel@worldnet.fr) April 13 1997
+
+# Mesa 3-D graphics library
+# Version:  2.4
+# Copyright (C) 1995-1997  Brian Paul
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the Free
+# Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+
+# $Id$
+
+# $Log$
+# Revision 1.1  2005/01/11 14:58:28  NicJA
+# AROSMesa 3.0
+#
+# - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
+# - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
+# - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
+#
+# Revision 1.3  1997/02/15 11:11:21  brianp
+# added stex3d demo
+#
+# Revision 1.2  1997/02/13 18:25:08  brianp
+# added morph3d demo
+#
+# Revision 1.1  1997/02/13 18:21:00  brianp
+# Initial revision
+#
+
+
+##### MACROS #####
+
+INCDIR = ../include
+
+GL_LIBS = -L../lib -lMesaaux -lMesatk -lMesaGLU -lMesaGL -lm $(WLIBS)
+
+LIB_DEP = ../lib/$(GL_LIB) ../lib/$(GLU_LIB) ../lib/$(TK_LIB) ../lib/$(AUX_LIB)
+
+PROGS = spin gears bounce gamma gears isosurf morph3d osdemo \
+	reflect spin stex3d test0 texobj winpos
+
+### TODO: finish new shadow demo
+
+
+##### RULES #####
+
+.SUFFIXES:
+.SUFFIXES: .c
+
+.c: $(LIB_DEP)
+	$(CC) -I$(INCDIR) $(CFLAGS) $< $(GL_LIBS) -o $@
+
+
+##### TARGETS #####
+
+default:
+	@echo "Specify a target configuration"
+
+clean:
+	-rm *.o *~
+
+realclean:
+	-rm $(PROGS:=.exe)
+	-rm *.o *~
+
+targets: $(PROGS)
+
+include ../Make-config
+
+

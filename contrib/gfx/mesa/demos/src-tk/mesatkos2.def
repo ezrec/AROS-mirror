@@ -1,0 +1,60 @@
+LIBRARY MESATK
+
+DESCRIPTION "X11R6 XFree86 libMesaTk.dll for OS/2 EMX09B VERSION=2.7.1"
+
+CODE
+   PRELOAD
+
+DATA
+   MULTIPLE NONSHARED
+
+STACKSIZE 4096
+
+EXPORTS
+    tkInitDisplayMode @1 NONAME
+    tkInitPosition @2 NONAME
+    tkInitWindow @3 NONAME
+    tkCloseWindow @4 NONAME
+    tkQuit @5 NONAME
+    tkSetWindowLevel @6 NONAME
+    tkSwapBuffers @7 NONAME
+    tkExec @8 NONAME
+    tkExposeFunc @9 NONAME
+    tkReshapeFunc @10 NONAME
+    tkDisplayFunc @11 NONAME
+    tkKeyDownFunc @12 NONAME
+    tkMouseDownFunc @13 NONAME
+    tkMouseUpFunc @14 NONAME
+    tkMouseMoveFunc @15 NONAME
+    tkIdleFunc @16 NONAME
+    tkGetColorMapSize @17 NONAME
+    tkGetMouseLoc @18 NONAME
+    tkGetSystem @19 NONAME
+    tkSetOneColor @20 NONAME
+    tkSetFogRamp @21 NONAME
+    tkSetGreyRamp @22 NONAME
+    tkSetRGBMap @23 NONAME
+    tkSetOverlayMap @24 NONAME
+    tkNewCursor @25 NONAME
+    tkSetCursor @26 NONAME
+    tkRGBImageLoad @27 NONAME
+    tkCreateStrokeFont @28 NONAME
+    tkCreateOutlineFont @29 NONAME
+    tkCreateFilledFont @30 NONAME
+    tkCreateBitmapFont @31 NONAME
+    tkDrawStr @32 NONAME
+    tkWireSphere @33 NONAME
+    tkSolidSphere @34 NONAME
+    tkWireCube @35 NONAME
+    tkSolidCube @36 NONAME
+    tkWireBox @37 NONAME
+    tkSolidBox @38 NONAME
+    tkWireTorus @39 NONAME
+    tkSolidTorus @40 NONAME
+    tkWireCylinder @41 NONAME
+    tkSolidCylinder @42 NONAME
+    tkWireCone @43 NONAME
+    tkSolidCone @44 NONAME
+    tkRGBMap   @46 NONAME
+
+

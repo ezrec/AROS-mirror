@@ -1,0 +1,59 @@
+
+#   $Id$
+#
+#   Generate liblibinit.a
+#
+include $(TOP)/config/make.cfg
+
+#MM linklibs-mesa2glut : includes includes-copy
+
+LIBMESAGLUT =  \
+              glut_8x13 \
+              glut_9x15 \
+              glut_bitmap \
+              glut_bwidth \
+              glut_cindex \
+              glut_cmap \
+              glut_cursor \
+              glut_dials \
+              glut_dstr \
+              glut_event \
+              glut_ext \
+              glut_fullscrn \
+              glut_get \
+              glut_hel10 \
+              glut_hel12 \
+              glut_hel18 \
+              glut_init \
+              glut_input \
+              glut_mesa \
+              glut_modifier \
+              glut_mroman \
+              glut_overlay \
+              glut_roman \
+              glut_shapes \
+              glut_space \
+              glut_stroke \
+              glut_swap \
+              glut_swidth \
+              glut_tablet \
+              glut_teapot \
+              glut_tr10 \
+              glut_tr24 \
+              glut_util \
+              glut_vidresize \
+              glut_warp \
+              glut_win \
+              glut_winmisc \
+              aros_glx \
+              aros_menu \
+              aros_util \
+              aros_x11
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -I$(MESAGLUSRCDIR) -I$(MESATKSRCDIR) -I$(MESAAUXSRCDIR) -Iamiga/misc
+USER_CFLAGS	:= -DNO_ERRNO_H
+
+%build_linklib mmake=linklibs-mesa2glut libname=MesaGLUT \
+    files=$(LIBMESAGLUT) objdir=$(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,129 @@
+
+                           Mesa 3.0 release notes
+
+
+OpenGL 1.2 features and notes
+-----------------------------
+
+New texture sampling edge clamping:  GL_CLAMP_TO_EDGE
+	- not tested
+
+glDrawRangeElements()
+	- is implemented but not optimized
+
+Packed pixel formats
+	- not tested
+
+3-D texture mapping as standard feature
+	- tested OK
+
+Separate specular color interpolation
+	- tested OK, updated spectex.c demo
+
+
+
+New extensions
+--------------
+
+GL_EXT_rescale_normal
+	- tested OK
+
+GL_SGIS_multitexture
+	- demos/multitex.c tested OK
+
+	*** WARNING *** this extension will soon be obsolete in favor
+	of GL_ARB_multitexture.  Use at your own risk!!!
+
+GL_EXT_multitexture
+	- demos/multiext.c tested OK
+
+	*** WARNING *** this extension will soon be obsolete in favor
+	of GL_ARB_multitexture.  Use at your own risk!!!
+
+GLX_SGI_video_sync extension
+	- a no-op
+
+
+
+Performance improvements
+------------------------
+
+glDrawPixels is generaly faster.  GL_UNSIGNED_BYTE GL_RGBA,
+GL_RGB and GL_COLOR_INDEX images should expecially be faster.*
+
+glReadPixels optimized for GL_UNSIGNED_BYTE, GL_RGBA format.*
+
+glCopyPixels should be a little faster.*
+
+Faster texture mapping when using 16bpp X window
+
+Faster textured triangles in many cases thanks to Marten Stromberg
+
+Faster dithered X TrueColor triangles.*
+
+*Performance improvements somewhat depend on the class/depth of framebuffer.
+
+
+
+Distribution changes
+--------------------
+
+glaux/gltk libraries no longer included or supported
+
+New distribution arrangement:
+	MesaLib-X.X.tar.gz	- Mesa GL and GLU libraries only
+	MesaDemos-X.X.tar.gz	- GLUT, demos, utility files, etc.
+
+Unix/X11 information removed from README and put into README.X11
+
+GLUT version 3.7 now included
+
+
+
+Source code directories
+-----------------------
+
+The source code for each Mesa driver is now found in a separate subdirectory.
+For example, src/FX/, src/Windows/, src/DOS/, etc
+
+
+
+
+Driver interface changes  (dd.h)
+--------------------------------
+
+Functions to read/write color/index spans/pixels all changed.
+Now pass colors as GLubyte[][4] arrays instead of separate red, green, blue
+and alpha arrays.  glDrawPixels is faster now.
+
+New buffer clear function:  the Driver.Clear() function can now clear
+color, depth, stencil, and accum buffers.  The Driver.ClearDepth() and
+Driver.ClearColorAndDepth() functions were removed.
+
+Added ExtensionString() function to device driver.  Now, each device
+driver can advertise its own set of extensions.  Only used by 3Dfx
+driver at this time.
+
+Add GetParameteri() function to device driver.  Used to query device
+driver for maximum texture size.  Will be used for other device queries
+in the future.
+
+Texture driver functions modified for multitexture extension
+
+
+
+
+Demos
+-----
+
+Old "book" demos updated with OpenGL 1.1 / GLUT-based versions from Mark
+Kilgard's GLUT distribution.
+
+New demos:  demos/multitex.c demos/multiext.c
+
+
+Conformance testing
+-------------------
+
+See CONFORM file for details.
+

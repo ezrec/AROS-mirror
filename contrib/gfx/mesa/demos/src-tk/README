@@ -1,0 +1,337 @@
+/*
+** Nano Window Toolkit.
+** Version 1.1
+*/
+
+
+/**********************************************************************/
+/*    These functions are new in libtk 1.1                            */
+/**********************************************************************/
+
+void tkInitDisplayModePolicy( GLenum type)
+ 
+    - Sets the policy to: TK_EXACT_MATCH, TK_MINIMUM_CRITERIA or TK_USE_ID. 
+
+       The default policy, TK_MINIMUM_CRITERIA, is the way libtk 1.0 works: 
+    it creates a window with capabilities greater than or equal to those 
+    specified by the current display mode (See tkInitDisplayMode()). If 
+    TK_EXACT_MATCH is chosen, then a window that exactly matches the specified 
+    display mode will be selected if possible. (If an exact match cannot be 
+    found then tkInitWindow() will return GL_FALSE.) If TK_USE_ID is chosen 
+    then the display mode i.d. is used to create the window.
+
+
+GLenum tkGetDisplayModePolicy( void)
+   
+    - Returns the current display mode policy.
+
+
+GLenum tkInitDisplayModeID( GLint id)
+
+    - Sets the display mode i.d.
+
+       The display mode i.d. is used when creating a window, when 
+    the policy is TK_USE_ID. (For X and OS2 this is a visual i.d.; 
+    for Windows NT this is a pixel format.) Note that display mode
+    i.d.'s are machine dependent.
+
+
+GLint tkGetDisplayModeID( void)
+
+    - Returns the display mode i.d. of the main window.
+
+
+GLenum tkGetDisplayMode( void)
+
+    - Returns the display mode of the window. 
+
+       Window attributes such as TK_RGB and TK_INDIRECT are or'ed 
+    together into a single mask and returned.
+
+
+Also, tkGetSystem() was extended (complete description is below) to also
+return the X screen and the rendering context.
+ 
+
+/**********************************************************************/
+/*        The following functions were also part of libtk 1.0         */
+/**********************************************************************/
+
+
+/*
+** Windowing functions.
+*/
+
+void tkInitDisplayMode(GLenum type);
+    - Preset window type.
+    - GLenum type:
+	TK_RGB or TK_INDEX
+	TK_SINGLE or TK_DOUBLE
+	TK_DIRECT or TK_INDIRECT
+	TK_ACCUM
+	TK_ALPHA
+	TK_DEPTH
+	TK_OVERLAY
+	TK_UNDERLAY
+	TK_STENCIL
+    
+void tkInitPosition(int x, int y, int w, int h);
+    - Preset window size and top-left corner location.
+
+GLenum tkInitWindow(char *titleStr);
+    - Create new window.
+
+	Use tkInitDisplay to set values determining whether the window 
+    requested will be RGB or COLOR_INDEX and what buffer structure you want 
+    the window to have.  
+        You may request buffers and modes for the window by or'ing the values 
+    listed below into the 'type'.  tkInitPosition will similarly set 
+    the position and size of the window.  
+        The properties set by these functions will be used by 
+    tkInitWindow when the window is created. If the window cannot be created 
+    with the requested buffers, tkInitWindow prints an diagnostic message and 
+    exits.
+
+void tkCloseWindow(void);
+    - Close window.
+
+void tkQuit(void);
+    - Quit application.
+
+	tkClose window frees the memory used by some of the tk routines,
+    calls glFinish, sets the event functions to null, and gets rid of the 
+    window.  tkQuit calls tkCloseWindow and exits the current program.
+
+GLenum tkSetWindowLevel(GLenum level);
+    - Set drawing plane of window.
+    - GLenum level:
+	TK_RGB or TK_INDEX
+	TK_OVERLAY
+	TK_UNDERLAY
+
+
+	If the window was created with an overlay plane this redirects the
+    rendering to the appropriate plane.  TK_UNDERLAY is currently
+    not used.  
+
+
+
+void tkSwapBuffers(void);
+    - Swap draw/view buffer in double buffered window.
+
+	If the window supports double-buffering this makes the contents
+    of the back buffer visible, performing an implicit glFlush().
+    The contents of the back buffer are undefined after this call.
+
+
+
+/*
+** Event functions.
+*/
+
+	The user may want to create an Expose, a Reshape, and a Display 
+    callback function for use by the tk event structure. Some of these 
+    events may correspond to window system events, and others are input
+    events. The event loop code can be better understood by looking
+    at the tkExec function in the file 'event.c'. The functions below
+    are used to set the various callback functions.
+
+void tkExposeFunc(void (*Func)(int w, int h));
+    - Set window expose callback routine.
+    - void (*Func)(int w, int h)
+	- Callback routine will receive window size at window expose time.
+
+void tkReshapeFunc(void (*Func)(int w, int h));
+    - Set window reshape callback routine.
+    - void (*Func)(int w, int h)
+	- Callback routine will receive window size after window reshape.
+
+void tkDisplayFunc(void (*Func)(void));
+    - Set display callback routine.
+    - In general this should do *most* of the drawing. It should draw the
+    entire screen.
+
+void tkKeyDownFunc(GLenum (*Func)(int key, GLenum states));
+    - Set key event callback routine.
+    - void (*Func)(int key, GLenum states)
+	- Callback routine will receive key pressed and state of the
+	  shift and control keys.
+	- Callback routine will return GL_TRUE if the display callback
+	  routine should be called or GL_FALSE if the display callback
+	  should not be called.
+	- int key:
+	    TK_ESCAPE
+	    TK_LEFT TK_UP TK_RIGHT TK_DOWN
+	    TK_RETURN
+	    TK_SPACE
+	    TK_A through TK_Z
+	    TK_a through TK_z
+	    TK_0 through TK_9
+	- GLenum states:
+	    TK_SHIFT
+	    TK_CONTROL
+
+void tkMouseDownFunc(GLenum (*Func)(int x, int y, GLenum states));
+    - Set mouse button down event callback routine.
+    - void (*Func)(int x, int y, GLenum states)
+	- Callback routine will receive mouse x, y location and button states
+	  when the mouse button down event occurred.
+	- Callback routine will return GL_TRUE if the display callback
+	  routine should be called or GL_FALSE if the display callback
+	  should not be called.
+	- GLenum states:
+	    TK_LEFTBUTTON
+	    TK_RIGHTBUTTON
+	    TK_MIDDLEBUTTON
+
+void tkMouseUpFunc(GLenum (*Func)(int x, int y, GLenum states));
+    - Set mouse button up event callback routine.
+    - void (*Func)(int x, int y, GLenum states)
+	- Callback routine will receive mouse x, y location and button states
+	  when the mouse button up event occurred.
+	- Callback routine will return GL_TRUE if the display callback
+	  routine should be called or GL_FALSE if the display callback
+	  should not be called.
+	- GLenum states:
+	    TK_LEFTBUTTON
+	    TK_RIGHTBUTTON
+	    TK_MIDDLEBUTTON
+
+void tkMouseMoveFunc(GLenum (*Func)(int x, int y, GLenum states));
+    - Set mouse move event callback routine.
+    - void (*Func)(int x, int y, GLenum states)
+	- Callback routine will receive mouse x, y location and button states
+	  when the mouse move event occurred.
+	- Callback routine will return GL_TRUE if the display callback
+	  routine should be called or GL_FALSE if the display callback
+	  should not be called.
+	- GLenum states:
+	    TK_LEFTBUTTON
+	    TK_RIGHTBUTTON
+	    TK_MIDDLEBUTTON
+
+void tkIdleFunc(void (*Func)(void));
+    - Set idle event callback routine.
+    - Idle is for when the there are no events.
+
+
+void tkExec(void)
+    - Pass control to tk's event handling code. See file event.c for
+      exact flow control algorithm.
+
+/*
+** Get functions.
+*/
+
+
+int tkGetColorMapSize(void);
+    - return size of color map.
+
+void tkGetMouseLoc(int *x, int *y);
+    - return current mouse x, y location.
+
+void tkGetSystem(GLenum type, void *ptr)
+    - returns either the X display, X window, X screen or rendering context depending 
+      on type (note: the X display, X window and X screen are only supported on versions
+      of the library that run under X windows)
+
+/*
+** Set functions.
+*/
+    These functions set color maps for use by the windowing system.
+
+void tkSetOneColor(int ci, float r, float g, float b);
+    - Set color index to the r, g, b values.
+
+void tkSetFogRamp(int density, int size);
+    - Set up a fog ramp in the color map starting at entry 0 and of length
+      2^size.
+
+void tkSetGreyRamp(void);
+    - Set the entire color map to a grey scale ramp.
+
+void tkSetRGBMap(int size, float *rgb);
+    - Set up the main window's color map. The rgb values are in the form
+      r[size] followed by g[size] followed by b[size].
+
+void tkSetOverlayMap(int, float *);
+    - Set up the overlay plane's color map. The rgb values are in the form
+      r[size] followed by g[size] followed by b[size].
+
+/*
+** Cursor functions.
+*/
+
+void tkNewCursor(GLint id, GLubyte *shape, GLubyte *mask, GLenum fgColor,
+		 GLenum bgColor, GLint hotX, GLint hotY)
+    - Define and initialize a cursor.
+    - GLenum fgColor, bgColor:
+	TK_BLACK
+	TK_RED
+	TK_GREEN
+	TK_YELLOW
+	TK_BLUE
+	TK_MAGENTA
+	TK_CYAN
+	TK_WHITE
+
+void tkSetCursor(GLint id);
+    - Make cursor active.
+
+/*
+** Simple object function.
+*/
+
+void tkWireSphere(GLuint base, float radius);
+void tkSolidSphere(GLuint base, float radius);
+void tkWireCube(GLuint base, float size);
+void tkSolidCube(GLuint base, float size);
+void tkWireBox(GLuint base, float width, float height, float depth);
+void tkSolidBox(GLuint base, float width, float height, float depth);
+void tkWireTorus(GLuint base, float innerRadius, float outerRadius);
+void tkSolidTorus(GLuint base, float innerRadius, float outerRadius);
+void tkWireCylinder(GLuint base, float radius, float height);
+void tkSolidCylinder(GLuint base, float radius, float height);
+void tkWireCone(GLuint base, float b, float h);
+void tkSolidCone(GLuint base, float b, float h);
+    - Creates various display list shapes starting at the given base.
+
+/* 
+** Helpful window mask tests.
+*/
+
+#define TK_IS_RGB(x)		(((x) & TK_INDEX) == 0)
+#define TK_IS_INDEX(x)		(((x) & TK_INDEX) != 0)
+#define TK_IS_SINGLE(x)		(((x) & TK_DOUBLE) == 0)
+#define TK_IS_DOUBLE(x)		(((x) & TK_DOUBLE) != 0)
+#define TK_IS_DIRECT(x)		(((x) & TK_INDIRECT) == 0)
+#define TK_IS_INDIRECT(x)	(((x) & TK_INDIRECT) != 0)
+#define TK_HAS_ACCUM(x)		(((x) & TK_ACCUM) != 0)
+#define TK_HAS_ALPHA(x)		(((x) & TK_ALPHA) != 0)
+#define TK_HAS_DEPTH(x)		(((x) & TK_DEPTH) != 0)
+#define TK_HAS_OVERLAY(x)	(((x) & TK_OVERLAY) != 0)
+#define TK_HAS_UNDERLAY(x)	(((x) & TK_UNDERLAY) != 0)
+#define TK_HAS_STENCIL(x)	(((x) & TK_STENCIL) != 0)
+
+/*
+** Helpful color macro.
+*/
+
+#define TK_SETCOLOR(windType, color) (TK_IS_RGB((windType)) ? \
+				     glColor3fv(tkRGBMap[(color)]) : \
+				     glIndexf((color)))
+    - GLenum windType:
+	TK_RGB or TK_INDEX
+    - GLenum color:
+	TK_BLACK
+	TK_RED
+	TK_GREEN
+	TK_YELLOW
+	TK_BLUE
+	TK_MAGENTA
+	TK_CYAN
+	TK_WHITE
+
+known bugs: The x implementations of this does not set some of the 
+x-properties.  There is a lot of potential for name-space collisions.  
+(This library uses the terms 'xDisplay', 'xScreen', and 'w' to name a few.
