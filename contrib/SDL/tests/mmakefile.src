@@ -25,30 +25,21 @@ FILES  := testalpha \
 #	  testver \
 #	  testvidinfo \
 
-	  
-DATAFILES := icon.bmp picture.xbm sail.bmp sample.bmp sample.wav
-
 EXEDIR := $(CONTRIBDIR)/sdl/test
-EXES   := $(foreach f,$(FILES),$(EXEDIR)/$(f))
-DATAS  := $(foreach f,$(DATAFILES),$(EXEDIR)/$(f))
-
-USE_CLIB	:= yes
-USE_AMIGALIB    := yes
-USE_AROSLIB     := yes
-USE_SDLLIB  	:= yes
-USE_MLIB    	:= yes
 
 USER_INCLUDES := -I$(AROS_INCLUDES)/SDL
 
 #MM test-sdl : includes linklibs linklibs-SDL
 
-%make_prog_setup mmake=test-sdl
+%build_progs mmake=test-sdl \
+    files=$(FILES) targetdir=$(EXEDIR) \
+    uselibs="sdl arossupport amiga arosc m"
 
-LIBS := $(LIBS) -lamiga -larossupport #urk :-(
 
-test-sdl : setup $(EXES) $(DATAS)
+DATAFILES := icon.bmp picture.xbm sail.bmp sample.bmp sample.wav
+DATAS  := $(foreach f,$(DATAFILES),$(EXEDIR)/$(f))
 
-%make_prog_single dir=$(EXEDIR)
+test-sdl : $(DATAS)
 
 $(EXEDIR)/%.bmp : %.bmp
 	@$(CP) $< $@
@@ -60,4 +51,3 @@ $(EXEDIR)/%.wav : %.wav
 	@$(CP) $< $@
 
 %common
-%include_deps

@@ -18,16 +18,12 @@ REXXFILES := \
     variable.rexx \
     testing
 
-FILES := rc true
-EXEDIR := $(TARGETDIR)
-EXES := $(foreach f,$(FILES),$(EXEDIR)/$(f))
-
 TARGETS = $(foreach f,$(REXXFILES),$(TARGETDIR)/$(f))
 
 #MM
 contrib-regina : contrib-regina-quick
 #MM
-contrib-regina-quick : $(TARGETS) $(EXES)
+contrib-regina-quick : $(TARGETS)
 
 $(TARGETDIR)/%.rexx : %.rexx
 	@if [ ! -d $(TARGETDIR) ]; then $(MKDIR) $(TARGETDIR) ; fi
@@ -39,10 +35,11 @@ $(TARGETDIR)/testing : testing
 	@echo Copying $< ...
 	@$(CP) $< $@
 
-USE_CLIB := YES
 
-%make_prog_setup mmake=contrib-regina-strip-rc
-%make_prog_single dir=$(EXEDIR)
+FILES := rc true
+
+%build_progs mmake=contrib-regina \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs=arosc
 
 %common
-%include_deps

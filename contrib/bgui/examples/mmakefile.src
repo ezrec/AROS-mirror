@@ -25,22 +25,10 @@ FILES = AddButtons \
 #	ColorWheel \
 #	TextField
 
-# I'd like to move this into a rule, but it would be far too hard.
-EXES := $(foreach f,$(FILES), $(BGUIEXAMPLESDIR)/$(f))
-
-USE_BGUILIB := yes
-USE_CLIB := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
-USE_AROSLIB := yes
-
 #MM bgui-examples : includes linklibs
 
-%make_prog_setup mmake=bgui-examples
-
-bgui-examples : setup $(EXES)
-
-%make_prog_single dir=$(BGUIEXAMPLESDIR)
+%build_progs mmake=bgui-examples \
+    files=$(FILES) targetdir=$(BGUIEXAMPLESDIR) \
+    uselibs="bgui arossupport amiga arosc m"
 
 %common
-%include_deps

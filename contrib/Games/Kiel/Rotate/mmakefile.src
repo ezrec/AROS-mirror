@@ -2,20 +2,18 @@ include $(TOP)/config/make.cfg
 
 FILES := Rotate
 DESTDIR := $(CONTRIBDIR)/Games/Kiel
-EXES := $(foreach f,$(FILES), $(DESTDIR)/$(f))
-INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)
-
-USE_CLIB := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
-USE_AROSLIB := yes
 
 #MM- contrib-games : games-kiel-rotate
 
-%make_prog_setup mmake=games-kiel-rotate
+%build_prog mmake=games-kiel-rotate \
+    progname=Rotate targetdir=$(DESTDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc m"
+
+
+INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)
 
 #MM
-games-kiel-rotate : setup $(EXES) $(INFO)
+games-kiel-rotate : $(INFO)
 
 $(DESTDIR)/%.info : %.info
 	$(CP) $? $(DESTDIR)
@@ -23,4 +21,3 @@ $(DESTDIR)/%.info : %.info
 %make_prog_single dir=$(DESTDIR)
 
 %common
-%include_deps

@@ -2,25 +2,20 @@ include $(TOP)/config/make.cfg
 
 FILES := Quad
 DESTDIR :=$(CONTRIBDIR)/Games/Kiel
-EXES := $(foreach f,$(FILES), $(DESTDIR)/$(f))
-INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)
-
-USE_CLIB := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
-USE_AROSLIB := yes
 
 #MM- contrib-games : games-kiel-quad
 
-%make_prog_setup mmake=games-kiel-quad
+%build_prog mmake=games-kiel-quad \
+    progname=Quad targetdir=$(DESTDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc m"
+
+
+INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)
 
 #MM
-games-kiel-quad : setup $(EXES) $(INFO)
+games-kiel-quad : $(INFO)
 
 $(DESTDIR)/%.info : %.info
 	$(CP) $? $(DESTDIR)
 
-%make_prog_single dir=$(DESTDIR)
-
 %common
-%include_deps

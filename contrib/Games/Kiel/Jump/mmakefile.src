@@ -2,25 +2,20 @@ include $(TOP)/config/make.cfg
 
 FILES	:= Jump JumpEd
 DESTDIR := $(CONTRIBDIR)/Games/Kiel
-EXES := $(foreach f,$(FILES), $(DESTDIR)/$(f))
+
+#MM games-kiel-jump : games-kiel-jump-info
+
+%build_progs mmake=games-kiel-jump \
+    files=$(FILES) targetdir=$(DESTDIR) \
+    uselibs="arossupport amiga arosc_shared m"
+
+
 INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)
 
-USE_CLIB := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
-USE_AROSLIB := yes
-
-#MM- contrib-games : games-kiel-jump
-
-%make_prog_setup mmake=games-kiel-jump
-
-#MM
-games-kiel-jump : setup $(EXES) $(INFO)
+#MM games-kiel-jump-info : games-kiel-jump-setup
+games-kiel-jump-info : $(INFO)
 
 $(DESTDIR)/%.info : %.info
 	$(CP) $? $(DESTDIR)
 
-%make_prog_single dir=$(DESTDIR)
-
 %common
-%include_deps
