@@ -1,9 +1,7 @@
 include $(TOP)/config/make.cfg
 
-STARTUP := $(LIBDIR)/startup.o
-LIBS	:= -L$(LIBDIR) -larossupport -lamiga -larosc
-DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a \
-	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
+%define_libs
+
 #Please do NOT turn optimization on! 
 #It causes problems on Linux-M68k!!!
 CFLAGS	:= $(USER_DEFINES) -O0 -Wunused -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
