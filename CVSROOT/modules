@@ -26,6 +26,19 @@
 # You can do cvs checkout contrib. These module definitions just allow
 # to checkout parts of it. The advantage is that you will not get the
 # others.
+
+# Aminet
+aminet -d contrib/aminet contrib/aminet
+
+# Fish
+fish -d contrib/fish contrib/fish
+microemacs -d contrib/fish/microemacs contrib/fish/microemacs
+
+# Games
+Games -d contrib/Games contrib/Games
+Kiel -d contrib/Games/Kiel contrib/Games/Kiel
 Quake -d contrib/Games/Quake contrib/Games/Quake
 Moria3D -d contrib/Games/Moria3D contrib/Games/Moria3D
-fish -d contrib/fish contrib/fish
+
+# Misc
+Misc -d contrib/Misc contrib/Misc
