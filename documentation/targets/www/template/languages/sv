@@ -24,6 +24,8 @@ using:            Användning
 faq:              Frågor och svar
 developers:       Utvecklare
 contribute:       Medverka
+bug-tracker:      Bug Tracker
+# FIXME: above
 working-with-cvs: Arbeta med CVS
 compiling:        Kompilering
 application-development-manual: Manual för applikationsutveckling

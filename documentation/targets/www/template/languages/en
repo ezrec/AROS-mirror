@@ -23,6 +23,7 @@ using:            Using
 faq:              FAQ
 developers:       Developers
 contribute:       Contribute
+bug-tracker:      Bug Tracker
 working-with-cvs: Working with CVS
 compiling:        Compiling
 application-development-manual: Application Development Manual

@@ -24,6 +24,8 @@ faq:              FAQ
 developers:       Entwickler
 contribute:       Mitwirken
 working-with-cvs: Arbeiten mit CVS
+bug-tracker:      Bug Tracker
+# FIXME: above
 compiling:        Übersetzen
 application-development-manual: Anwendungs-Entwicklungs Handbuch
 system-development-manual:      System-Entwicklungs Handbuch
