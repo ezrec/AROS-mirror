@@ -23,4 +23,4 @@ XAOSLIBFILES	:= $(foreach f, $(XAOSLIBS), $(LIBDIR)/libxaos$(f).a)
     uselibs="arossupport amiga arosc m"
 
 #MM setup-gfx-xaos
-%rule_makedirs dirs=$(CONTRIBDIR)/Gfx/Xaos setuptarget=setup-gfx-xaos
+%rule_makedirs dirs=$(CONTRIBDIR)/Gfx/XaoS setuptarget=setup-gfx-xaos
