@@ -4,8 +4,6 @@
 
 include $(TOP)/config/make.cfg
 
-USER_CFLAGS := -idirafter /usr/include
-
 FILES  := Ping
 
 EXEDIR := $(CONTRIBDIR)/Network
