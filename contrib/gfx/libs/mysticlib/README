@@ -1,0 +1,54 @@
+Short:    RTG image viewing library
+Author:   Timm S. Müller <tmueller@neoscientists.org>
+Type:     dev/misc
+Version:  5.0
+Requires: os3.x (v39), 68030/68881, guigfx.library, render.library
+
+
+  mysticview.library is the third abstraction layer in top of
+  guigfx.library and render.library.
+  
+  mysticview.library implements an RTG image display class. it
+  renders images of any kind to a RastPort on any screenmode.
+
+  there are no considerations on the programmer's side
+  required for issues such as screenmodes, aspect ratios,
+  scaling, OCS/ECS/AGA, HAM, chunky/planar, 8bit, 1bit, 24bit
+  or alike. all you have to do is to specify a Screen, a
+  RastPort, a guigfx.library 'picture' and some attributes.
+  images will be rendered, scaled and dithered automatically,
+  when needed.
+
+  rendering and layouting takes place in the background. you
+  create the object, and forget it. the background task
+  instantly reacts to changes of attributes and will redraw
+  the display when needed. opaque scaling and SIMPLE_REFRESH
+  is easily implemented, you only need to supply new
+  attributes. a protection mechanism is implemented for
+  sharing the RastPort between your application and the
+  background task of mysticview.library.
+
+  this library makes it REALLY EASY to display any kind of
+  pictures inside any kind of application. the basic
+  implementation looks like this:
+  
+  APTR picture, mview;
+  
+  picture = LoadPicture("filename", TAG_DONE);
+
+  mview = MV_Create(screen, rastport, MVIEW_Picture, picture,
+     TAG_DONE);
+
+  if (mview)
+  {
+    MV_DrawOn(mview);
+    while(...) { /* image visible */ }
+  }
+  
+  MV_Delete(mview);
+  DeletePicture(picture);  
+
+  mysticview.library is the fully encapsulated display engine
+  of the image viewer 'MysticView'. you are free to use this
+  library in freeware and shareware applications.
+

@@ -1,0 +1,24 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-gfx-libs : contrib-gfx-libs-mysticview
+#MM- contrib-gfx-libs-mysticview : includes linklibs contrib-gfx-libs-guigfx 
+
+USER_CFLAGS := -DNDEBUG
+
+FILES := mystic_data 	 \
+	 mystic_global 	 \
+	 mystic_initexit \
+	 mystic_subtask  \
+	 mystic_view
+    	    
+FUNCS := mysticview_funcs
+
+%build_module_macro mmake=contrib-gfx-libs-mysticview \
+  modname=mysticview modtype=library \
+  funcs=$(FUNCS) files=$(FILES) \
+  conffile=lib.conf \
+  uselibs="amiga mui arosc m"
+
+%common
