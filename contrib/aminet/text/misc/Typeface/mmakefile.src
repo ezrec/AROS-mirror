@@ -21,11 +21,11 @@ USE_BGUILIB := yes
 
 USER_CFLAGS := -O2 -Wunused -Wall
 
-#MM contrib-typeface : includes linklibs setup-typeface-catalogs
+#MM aminet-text-misc-typeface : includes linklibs setup-typeface-catalogs
 
-%make_prog_setup mmake=contrib-typeface
+%make_prog_setup mmake=aminet-text-misc-typeface
 
-contrib-typeface : setup $(EXE)
+aminet-text-misc-typeface : setup $(EXE)
 
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 

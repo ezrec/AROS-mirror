@@ -145,16 +145,16 @@ int i;
 
   if (IntuitionBase->LibNode.lib_Version < 37) Quit();
   if ((AslBase = OpenLibrary("asl.library",37)) == NULL)
-    Error(GetString(msgNoAslLib));
+    MyError(GetString(msgNoAslLib));
   if ((DiskfontBase = OpenLibrary("diskfont.library",36)) == NULL)
-    Error(GetString(msgNoDiskfontLib));
+    MyError(GetString(msgNoDiskfontLib));
   if ((IFFParseBase = OpenLibrary("iffparse.library",37)) == NULL)
-    Error(GetString(msgNoIFFParseLib));
+    MyError(GetString(msgNoIFFParseLib));
   if ((KeymapBase = OpenLibrary("keymap.library",37)) == NULL) Quit();
   if ((BGUIBase = OpenLibrary("bgui.library",41)) == NULL)
   {
     if ((BGUIBase = OpenLibrary("PROGDIR:libs/bgui.library",41)) == NULL)
-      Error(GetString(msgNoBguiLib));
+      MyError(GetString(msgNoBguiLib));
   }
 #ifdef _AROS
 #warning AROS does not yet have a textfield.gadget
@@ -162,7 +162,7 @@ int i;
   if ((TextFieldBase = OpenLibrary("gadgets/textfield.gadget",3)) == NULL)
   {
     if ((TextFieldBase = OpenLibrary("PROGDIR:gadgets/textfield.gadget",3))
-      == NULL) Error(GetString(msgNoTextFieldGadget));
+      == NULL) MyError(GetString(msgNoTextFieldGadget));
   }
 #endif
   if ((FontReq = AllocAslRequestTags(ASL_FontRequest,
@@ -1372,7 +1372,7 @@ void LoadChosenFont(void)
   RedrawAll();
 }
 
-void Error(char *message)
+void MyError(char *message)
 {
   ShowReq(message,GetString(msgCancel));
   Quit();

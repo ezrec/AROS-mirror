@@ -251,7 +251,7 @@ ULONG CheckObjMsg(struct Window *wnd, Object *obj);
 void CheckOpenCharWin(ULONG pressed, ULONG shift);
 void SharedMsgs(ULONG code,struct CharNode *node);
 void LoadChosenFont(void);
-void Error(char *message);
+void MyError(char *message);
 LONG ShowReq(char *text,char *gadgets,...);
 void ClrDisposeObject(Object **obj);
 void ClrWindowClose(Object **obj,struct Window **wnd);
