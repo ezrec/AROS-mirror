@@ -37,7 +37,7 @@
 #include <time.h>
 
 
-#ifndef _AROS
+#ifndef __AROS
 #include <dos.h>
 #else
 #include <dos/dos.h>
@@ -56,6 +56,9 @@
 #include "lwip/sys.h"
 #include "lwip/def.h"
 #include "lwip/stats.h"
+
+#define MYDEBUG 1
+#include "debug.h"
 
 struct PtrMessage
 {
@@ -250,12 +253,14 @@ static int Thread_Entry(void)
 {
     struct Process *proc;
     struct StartupMsg *mess;
+#ifndef __AROS
     struct ExecBase *SysBase = *((struct ExecBase **)4);
+#endif
     __regargs int (*fp)(void *, void *, void *);
 
     void *ud;
     struct ThreadData data;
-         
+
     proc = (struct Process *)FindTask((char *)NULL);
 
     /* get the startup message */
@@ -268,7 +273,7 @@ static int Thread_Entry(void)
 
     /* replace this with the proper #asm for Aztec */
 
-#ifndef _AROS
+#ifndef __AROS
     putreg(REG_A4, (long)mess->global_data);
 #endif
 
@@ -572,13 +577,13 @@ void sys_thread_new(void (* function)(void *arg), void *arg)
     start_msg->msg.mn_Node.ln_Type = NT_MESSAGE;
     start_msg->child = pr;
 
-    #ifndef _AROS  
+#ifndef __AROS  
     start_msg->global_data = (void *)getreg(REG_A4);  /* Save global data reg (A4) */
-    #endif
+#endif
 
     start_msg->fp = function;                         /* Fill in function pointer */
-    start_msg->UserData = arg;   
-   
+    start_msg->UserData = arg;
+
     /* Send startup message to child */
     PutMsg(child_port, (struct Message *)start_msg);
     WaitPort(start_msg->msg.mn_ReplyPort);
