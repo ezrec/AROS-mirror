@@ -1,0 +1,41 @@
+include $(TOP)/config/make.cfg
+
+STARTUP := $(LIBDIR)/startup.o
+LIBS	:= -L$(LIBDIR) -larossupport -lamiga -larosc
+DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a \
+	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(BINDIR)/fish
+
+FILES := icon2c
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+EXE := $(DESTDIR)/icon2c
+
+.PHONY : all clean
+
+#MM fish-icon2c : setup-fish-icon2c
+fish-icon2c 	: $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-fish-icon2c :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+
+#MM
+clean-fish :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+
