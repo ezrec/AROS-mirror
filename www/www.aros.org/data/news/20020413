@@ -12,7 +12,7 @@ Johan Grip enhanced the serial debug option in configure which now
 reads --with-serial-debug=(1|2|no), allowing you to select COM1 or COM2 or no
 debugging.
 
-Georg Steger improved the way the bitmap deths are handled at various
+Georg Steger improved the way the bitmap depths are handled at various
 places and fixed some debug code. The MUI-game "Soliton" was ported
 to AROS by him.
 
