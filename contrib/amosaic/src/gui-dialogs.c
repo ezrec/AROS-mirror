@@ -61,6 +61,7 @@
 #include "globals.h"
 #include "protos.h"
 #include <dos/dos.h>
+#include <unistd.h>
 
 #include "amosaic_cat.h"
 

@@ -10,6 +10,7 @@
 #include "HTMLP.h"
 #include "protos.h"
 #include "TextEditField.h"
+#include <unistd.h>
 
 #include "amosaic_cat.h"
 struct Library *LocaleBase;

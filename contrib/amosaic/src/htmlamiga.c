@@ -17,6 +17,7 @@ Amiga specific code for controlling the gadget, etc.
 #include "NewGroup.h"
 #include "TextEditField.h"
 #include "protos.h"
+#include <unistd.h>
 
 extern char *cached_url;
 extern int lib_version;

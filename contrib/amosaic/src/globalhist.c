@@ -63,6 +63,7 @@
 #include "XtoI.h"
 #include "protos.h"
 #include <time.h>
+#include <unistd.h>
 
 extern char *cached_url;
 
