@@ -21,7 +21,6 @@ development-pdksh-fetch :
 	
 
 %build_with_configure mmake=development-pdksh srcdir=$(PORTSDIR)/pdksh/$(ARCHBASE) \
-     nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
-     extraoptions="--target=$(AROS_TARGET_CPU)-aros  --build=local --disable-nls"
+     nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development"
 
 
