@@ -37,14 +37,15 @@ def makedir( path ):
 
 def copy( src, dst ):
     if not isinstance( src, list ): src = [ src ]
-
+     
     for path in src:
-        if newer \
-        ( 
-            path, 
-            os.path.join( os.path.dirname( dst ), os.path.basename( path ) )
-        ):
-            shutil.copy( path, dst )
+        if os.path.isdir( dst ):
+            rdst = os.path.join( dst, os.path.basename( path ) )
+        else:
+            rdst = dst
+
+        if newer( path, rdst ):
+            shutil.copy( path, rdst )
 
 
 def reportSkipping( message ):
