@@ -1,0 +1,7 @@
+Georg Steger fixed a very strange problem which corrupted the
+expansion.library on AROS Native/x86.
+
+Peter Eriksson enhanced the calculator and WiMP tool.
+
+Fabio Alemagna wrote a linker wrapper for AROS which makes
+building more simple.
