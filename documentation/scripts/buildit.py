@@ -1,16 +1,3 @@
-# Settings
-
-SRCROOT    = '.'
-DSTROOT    = '../bin/documentation'
-
-TEMPLATE   = 'targets/www/template.html.en'
-
-# Languages not supported by docutils yet (but that we have files written in):
-# 'no', 'sv'
-LANGUAGES  = [ 'en' ]
-
-# Setup global environment
-
 import os, sys, shutil
 
 import db.credits.parse
@@ -27,10 +14,18 @@ from build.thumbnail import *
 
 from template.www import makeTemplates
 
-SRCROOT = os.path.abspath( SRCROOT )
-DSTROOT = os.path.abspath( DSTROOT )
+# Setup
+
+SRCROOT    = os.path.abspath( '.' )
+DSTROOT    = os.path.abspath( '../bin/documentation' )
+
+TEMPLATE   = 'targets/www/template.html.en'
 
 TEMPLATE_DATA = None
+
+# Languages not supported by docutils yet (but that we have files written in):
+# 'no', 'sv'
+LANGUAGES  = [ 'en' ]
 
 # FIXME: Move this somewhere else...
 if (not os.path.exists( 'credits.en' ) ) \
@@ -282,7 +277,7 @@ def buildWWW():
     ( [ \
         'images/trustec.png',
         'images/sourceforge.png',
-        'images/amigados-online-reference-manual.png', )
+        'images/amigados-online-reference-manual.png',
         'targets/www/images/trustec-small.png',
         'targets/www/images/bullet.png', 
         'targets/www/images/aros.png'
