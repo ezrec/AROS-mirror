@@ -16,7 +16,7 @@ USE_AMIGALIB := yes
 USE_MLIB     := yes
 USE_BGUILIB  := yes
 
-USER_CFLAGS := -O2 -Wunused -Wall
+USER_CFLAGS := -O2 -Wunused -Wall -DINTUITION_NO_INLINE_STDARG
 
 #MM aminet-text-misc-typeface : includes linklibs setup-typeface-catalogs
 
