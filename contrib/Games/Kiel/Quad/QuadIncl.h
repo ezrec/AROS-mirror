@@ -1,8 +1,3 @@
-#include <exec/types.h>
-#include <intuition/intuition.h>
-#include <graphics/gfx.h>
-#include <time.h>
-
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
 struct Window *Window;

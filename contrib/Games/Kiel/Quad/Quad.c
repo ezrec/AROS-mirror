@@ -100,7 +100,7 @@ void updatebuttons()
  RefreshGList(FIRSTGADGET,Window,NULL,20);
 }
 
-void main()
+int main()
 {
 int i;
   open_lib();
@@ -250,4 +250,5 @@ int i;
 /* game terminated - clean up */
   close_window();
   close_lib();
+  return(0);
 }

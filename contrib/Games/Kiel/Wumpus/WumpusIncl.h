@@ -1,6 +1,4 @@
 #include "../prec.c"
-#include <graphics/gfx.h>
-#include <time.h>
 
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
@@ -13,7 +11,7 @@ ULONG class;
 USHORT code;
 
 #define random(max) ((rand()%max)+1)
-#define StopMsg() ModifyIDCMP(Window,NULL)
+#define StopMsg() ModifyIDCMP(Window,0L)
 #define ContMsg() ModifyIDCMP(Window,iflags)
 
 void open_lib()

@@ -7,7 +7,7 @@ STARTUP = $(LIBDIR)/startup.o
 LIBS = -L$(LIBDIR) -larosc -lamiga -larossupport -lamiga
 DEPLIBS = $(STARTUP) $(LIBDIR)/libarosc.a \
 	$(LIBDIR)/libamiga.a $(LIBDIR)/libaros.a
-CFLAGS = $(USER_DEFINES) -O2 -Wunused $(SPECIAL_CFLAGS) $(INCLUDES)
+CFLAGS = $(USER_DEFINES) -O2 -Wunused -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
 
 .PHONY : all
 .PHONY : clean

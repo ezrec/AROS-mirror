@@ -240,7 +240,7 @@ for(y=0;y<hoehe;y++)
   for(x=0;x<breite;x++)
     maleFeld(x*feldbreite+links+1,oben+1+y*feldbreite,(x+1)*feldbreite+links-1,feldbreite+oben-1+y*feldbreite);
 
-/*    maleFeld(x*feldbreite+links+1,oben+1,(x+1)*feldbreite+links-1,feldbreite+oben-1);
+/*    maleFeld(x*feldbreite+links+1,oben+1,(x+1)*feldbreite+links-1,feldbreite+oben-1); */
 /*  for(y=1;y<hoehe;y++) */
 /* AROS unimplemented */
 /*    copypic(links,oben,breite*feldbreite,feldbreite,links,oben+y*feldbreite); */
@@ -412,7 +412,7 @@ char outtext[4];
   time(&tende);
   sprintf(outtext,"%3d",Anzahl-AnzMarken);
   schreibe(links+feldbreite*breite/2-55,25,outtext,1);
-  sprintf(outtext,"%3d",tende-tstart);
+  sprintf(outtext,"%3d",(int)(tende-tstart));
   schreibe(links+feldbreite*breite/2+35,25,outtext,1);
 }
 
@@ -584,7 +584,7 @@ StopMsg();
 	    SetAPen(rp,3),
             RectFill(rp,(x-1)*feldbreite+2+links,(y-1)*feldbreite+2+oben,x*feldbreite-2+links,y*feldbreite-2+oben);
 
-      sprintf(Zeit,"Fertig! %4d Sek.",tende-tstart);
+      sprintf(Zeit,"Fertig! %4d Sek.",(int)(tende-tstart));
       schreibe(links+breite*feldbreite/2-65,oben+hoehe*feldbreite+20,Zeit,1);
       if((tende-tstart)<Zeiten[Spielart])
       {
@@ -595,7 +595,7 @@ ContMsg();
         Name_Gad.LeftEdge=(breite*feldbreite+links+rechts)/2-100;
         AddGadget(Window,&Name_Gad,0);
         RefreshGadgets(&Name_Gad,Window,NULL);
-        sprintf(Zeit,"Fertig! %4d Sek.",tende-tstart);
+        sprintf(Zeit,"Fertig! %4d Sek.",(int)(tende-tstart));
         schreibe(links+breite*feldbreite/2-65,oben+hoehe*feldbreite+20,Zeit,1);
         while(!weiter)
         {

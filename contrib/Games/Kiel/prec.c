@@ -2,8 +2,10 @@
 #define USHORT unsigned short
 
 #include <ctype.h>
+#include <time.h>
 #include <stdio.h>
-#include <aros/rt.h>
+#include <math.h>
+#include <stdlib.h>
 #include <devices/keymap.h>
 #include <dos/dos.h>
 #include <dos/exall.h>
@@ -11,6 +13,7 @@
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <graphics/gfxbase.h>
+#include <graphics/gfx.h>
 #include <graphics/rastport.h>
 #include <graphics/gfxmacros.h>
 #include <intuition/intuitionbase.h>

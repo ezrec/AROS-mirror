@@ -1,3 +1,5 @@
+struct FileHandle *filehandle;
+
 void open_datei()
 {
 int count,j;

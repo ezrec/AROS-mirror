@@ -8,14 +8,14 @@ SHORT SharedBordersPairs3[] = {
   1,14,27,14,27,1,28,0,28,14 };
 
 struct Border SharedBorders[] = {
-  0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[1],
-  0,0,2,2,JAM1,6,(SHORT *)&SharedBordersPairs0[0],NULL,
-  0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs3[0],&SharedBorders[3],
-  0,0,2,2,JAM1,6,(SHORT *)&SharedBordersPairs2[0],NULL,
-  0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs3[0],&SharedBorders[5],
-  0,0,1,1,JAM1,6,(SHORT *)&SharedBordersPairs2[0],NULL,
-  0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[7],
-  0,0,1,1,JAM1,6,(SHORT *)&SharedBordersPairs0[0],NULL};
+  {0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[1]},
+  {0,0,2,2,JAM1,6,(SHORT *)&SharedBordersPairs0[0],NULL},
+  {0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs3[0],&SharedBorders[3]},
+  {0,0,2,2,JAM1,6,(SHORT *)&SharedBordersPairs2[0],NULL},
+  {0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs3[0],&SharedBorders[5]},
+  {0,0,1,1,JAM1,6,(SHORT *)&SharedBordersPairs2[0],NULL},
+  {0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[7]},
+  {0,0,1,1,JAM1,6,(SHORT *)&SharedBordersPairs0[0],NULL} };
 
 struct IntuiText Gadget35_text = {
   1,0,JAM1,10,12,NULL,(UBYTE *)"Default",NULL };
@@ -28,7 +28,7 @@ struct Gadget Gadget35 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[6],
-  &Gadget35_text,NULL,NULL,Gadget35_ID,NULL };
+  &Gadget35_text,0L,NULL,Gadget35_ID,NULL };
 
 struct IntuiText Gadget34_text = {
   1,0,JAM1,22,12,NULL,(UBYTE *)"Save",NULL };
@@ -41,7 +41,7 @@ struct Gadget Gadget34 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[6],
-  &Gadget34_text,NULL,NULL,Gadget34_ID,NULL };
+  &Gadget34_text,0L,NULL,Gadget34_ID,NULL };
 
 struct Gadget g[] = {
   {&g[1],200,34,29,15,
@@ -49,231 +49,231 @@ struct Gadget g[] = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,1,NULL},
+  NULL,0L,NULL,1,NULL},
 
   {&g[2],234,34,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,2,NULL},
+  NULL,0L,NULL,2,NULL},
 
   {&g[3],268,34,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,3,NULL},
+  NULL,0L,NULL,3,NULL},
 
   {&g[4],200,52,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,4,NULL},
+  NULL,0L,NULL,4,NULL},
 
   {&g[5],234,52,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,5,NULL},
+  NULL,0L,NULL,5,NULL},
 
   {&g[6],268,52,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,6,NULL},
+  NULL,0L,NULL,6,NULL},
 
   {&g[7],131,70,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,7,NULL},
+  NULL,0L,NULL,7,NULL},
 
   {&g[8],166,70,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,8,NULL},
+  NULL,0L,NULL,8,NULL},
 
   {&g[9],200,70,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,9,NULL},
+  NULL,0L,NULL,9,NULL},
 
   {&g[10],234,70,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,10,NULL},
+  NULL,0L,NULL,10,NULL},
 
   {&g[11],268,70,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,11,NULL},
+  NULL,0L,NULL,11,NULL},
 
   {&g[12],302,70,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,12,NULL},
+  NULL,0L,NULL,12,NULL},
 
   {&g[13],337,70,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,13,NULL},
+  NULL,0L,NULL,13,NULL},
 
   {&g[14],131,89,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,14,NULL},
+  NULL,0L,NULL,14,NULL},
 
   {&g[15],166,89,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,15,NULL},
+  NULL,0L,NULL,15,NULL},
 
   {&g[16],200,89,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,16,NULL},
+  NULL,0L,NULL,16,NULL},
 
   {&g[17],234,89,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,17,NULL},
+  NULL,0L,NULL,17,NULL},
 
   {&g[18],268,89,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,18,NULL},
+  NULL,0L,NULL,18,NULL},
 
   {&g[19],302,89,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,19,NULL},
+  NULL,0L,NULL,19,NULL},
 
   {&g[20],337,89,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,20,NULL},
+  NULL,0L,NULL,20,NULL},
 
   {&g[21],131,108,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,21,NULL},
+  NULL,0L,NULL,21,NULL},
 
   {&g[22],166,108,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,22,NULL},
+  NULL,0L,NULL,22,NULL},
 
   {&g[23],200,108,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,23,NULL},
+  NULL,0L,NULL,23,NULL},
 
   {&g[24],234,108,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,24,NULL},
+  NULL,0L,NULL,24,NULL},
 
   {&g[25],268,108,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,25,NULL},
+  NULL,0L,NULL,25,NULL},
 
   {&g[26],302,108,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,26,NULL},
+  NULL,0L,NULL,26,NULL},
 
   {&g[27],337,108,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,27,NULL},
+  NULL,0L,NULL,27,NULL},
 
   {&g[28],200,126,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,28,NULL},
+  NULL,0L,NULL,28,NULL},
 
   {&g[29],234,126,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,29,NULL},
+  NULL,0L,NULL,29,NULL},
 
   {&g[30],268,126,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,30,NULL},
+  NULL,0L,NULL,30,NULL},
 
   {&g[31],200,144,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,31,NULL},
+  NULL,0L,NULL,31,NULL},
 
   {&g[32],234,144,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,32,NULL},
+  NULL,0L,NULL,32,NULL},
 
   {&Gadget34,268,144,29,15,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
-  NULL,NULL,NULL,33,NULL}};
+  NULL,0L,NULL,33,NULL}};
 
 struct IntuiText Start_text = {
   1,0,JAM1,22,12,NULL,(UBYTE *)"Load",NULL };
@@ -286,7 +286,7 @@ struct Gadget Start = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[6],
-  &Start_text,NULL,NULL,Start_ID,NULL };
+  &Start_text,0L,NULL,Start_ID,NULL };
 
 struct NewWindow new_window = {
   1,0,521,195,0,1,

@@ -70,23 +70,18 @@ void open_window()
 #define StopMsg() ModifyIDCMP(Window,NULL)
 #define ContMsg() ModifyIDCMP(Window,iflags)
 
-close_window()
+void close_window()
 {
   CloseWindow(Window);
 }
 
-close_lib()
+void close_lib()
 {
   CloseLibrary((struct Library *)IntuitionBase);
   CloseLibrary((struct Library *)GfxBase);
 }
 
-wbmain()
-{
-  main();
-}
-
-main()
+int main()
 {
 int nr,i;
 BOOL ende=FALSE;
@@ -152,4 +147,5 @@ while(ende!=TRUE)
 }
 close_window();
 close_lib();
+return(0);
 }

@@ -1,9 +1,4 @@
 #include "../prec.c"
-#include <dos/dos.h>
-#include <exec/types.h>
-#include <intuition/intuition.h>
-#include <graphics/gfx.h>
-#include <time.h>
 
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
@@ -76,7 +71,7 @@ SHORT altx,alty;
 void StopMsg()
 {
   iflags=Window->IDCMPFlags;
-  ModifyIDCMP(Window,NULL);
+  ModifyIDCMP(Window,(ULONG)NULL);
 }
 
 void ContMsg()

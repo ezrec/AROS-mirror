@@ -1,7 +1,7 @@
 #define SELART GFLG_GADGHBOX
-ULONG filehandle;
+struct FileHandle *filehandle;
 
-setzen()
+void setzen()
 {
 int i;
   for(i=0;i<33;i++)
@@ -17,7 +17,7 @@ LoescheWin();
 RefreshGList(FIRSTGADGET,Window,NULL,35);
 }
 
-defaultfeld()
+void defaultfeld()
 {
 int j;
   for(j=0;j<33;j++)
@@ -25,7 +25,7 @@ int j;
   Feld[16]=WEG;
 }
 
-oeffnedatei()
+void oeffnedatei()
 {
 int count=1,j;
 char Puffer[2];

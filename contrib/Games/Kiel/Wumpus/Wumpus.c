@@ -49,26 +49,26 @@ struct Hoehle
 
 struct Hoehle Hoehlensystem[20]=
 {
-   2, 5, 6,
-   1, 3, 8,
-   2, 4,10,
-   3, 5,12,
-   1, 4,14,
-   1, 7,15,
-   6, 8,17,
-   2, 7, 9,
-   8,10,18,
-   3, 9,11,
-  10,12,19,
-   4,11,13,
-  12,14,20,
-   5,13,15,
-   6,14,16,
-  15,17,20,
-   7,16,18,
-   9,17,19,
-  11,18,20,
-  13,16,19
+  {{ 2, 5, 6}},
+  {{ 1, 3, 8}},
+  {{ 2, 4,10}},
+  {{ 3, 5,12}},
+  {{ 1, 4,14}},
+  {{ 1, 7,15}},
+  {{ 6, 8,17}},
+  {{ 2, 7, 9}},
+  {{ 8,10,18}},
+  {{ 3, 9,11}},
+  {{10,12,19}},
+  {{ 4,11,13}},
+  {{12,14,20}},
+  {{ 5,13,15}},
+  {{ 6,14,16}},
+  {{15,17,20}},
+  {{ 7,16,18}},
+  {{ 9,17,19}},
+  {{11,18,20}},
+  {{13,16,19}}
 };
 SHORT Wumpus,Speere,Fledermaus[3],Abgrund[3];
 BOOL ende,wende=FALSE;
@@ -82,10 +82,10 @@ SHORT SharedBordersPairs1[] = {
   1,18,37,18,37,1,38,0,38,18 };
 
 struct Border SharedBorders[] = {
-  0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[1],
-  0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs0[0],NULL,
-  0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[3],
-  0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs0[0],NULL };
+  {0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[1]},
+  {0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs0[0],NULL},
+  {0,0,2,2,JAM1,5,(SHORT *)&SharedBordersPairs1[0],&SharedBorders[3]},
+  {0,0,1,1,JAM1,5,(SHORT *)&SharedBordersPairs0[0],NULL} };
 
 struct IntuiText Eingang20_text = {
   1,0,JAM1,11,14,NULL,(UBYTE *)"20",NULL };
@@ -98,7 +98,7 @@ struct Gadget Eingang20 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang20_text,NULL,NULL,Eingang20_ID,NULL };
+  &Eingang20_text,0L,NULL,Eingang20_ID,NULL };
 
 struct IntuiText Eingang19_text = {
   1,0,JAM1,11,14,NULL,(UBYTE *)"19",NULL };
@@ -111,7 +111,7 @@ struct Gadget Eingang19 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang19_text,NULL,NULL,Eingang19_ID,NULL };
+  &Eingang19_text,0L,NULL,Eingang19_ID,NULL };
 
 struct IntuiText Eingang18_text = {
   1,0,JAM1,9,14,NULL,(UBYTE *)"18",NULL };
@@ -124,7 +124,7 @@ struct Gadget Eingang18 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang18_text,NULL,NULL,Eingang18_ID,NULL };
+  &Eingang18_text,0L,NULL,Eingang18_ID,NULL };
 
 struct IntuiText Eingang17_text = {
   1,0,JAM1,11,14,NULL,(UBYTE *)"17",NULL };
@@ -137,7 +137,7 @@ struct Gadget Eingang17 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang17_text,NULL,NULL,Eingang17_ID,NULL };
+  &Eingang17_text,0L,NULL,Eingang17_ID,NULL };
 
 struct IntuiText Eingang16_text = {
   1,0,JAM1,11,14,NULL,(UBYTE *)"16",NULL };
@@ -150,7 +150,7 @@ struct Gadget Eingang16 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang16_text,NULL,NULL,Eingang16_ID,NULL };
+  &Eingang16_text,0L,NULL,Eingang16_ID,NULL };
 
 struct IntuiText Eingang15_text = {
   1,0,JAM1,11,14,NULL,(UBYTE *)"15",NULL };
@@ -163,7 +163,7 @@ struct Gadget Eingang15 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang15_text,NULL,NULL,Eingang15_ID,NULL };
+  &Eingang15_text,0L,NULL,Eingang15_ID,NULL };
 
 struct IntuiText Eingang14_text = {
   1,0,JAM1,11,14,NULL,(UBYTE *)"14",NULL };
@@ -176,7 +176,7 @@ struct Gadget Eingang14 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang14_text,NULL,NULL,Eingang14_ID,NULL };
+  &Eingang14_text,0L,NULL,Eingang14_ID,NULL };
 
 struct IntuiText Eingang13_text = {
   1,0,JAM1,11,14,NULL,(UBYTE *)"13",NULL };
@@ -189,7 +189,7 @@ struct Gadget Eingang13 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang13_text,NULL,NULL,Eingang13_ID,NULL };
+  &Eingang13_text,0L,NULL,Eingang13_ID,NULL };
 
 struct IntuiText Eingang12_text = {
   1,0,JAM1,10,14,NULL,(UBYTE *)"12",NULL };
@@ -202,7 +202,7 @@ struct Gadget Eingang12 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang12_text,NULL,NULL,Eingang12_ID,NULL };
+  &Eingang12_text,0L,NULL,Eingang12_ID,NULL };
 
 struct IntuiText Eingang11_text = {
   1,0,JAM1,12,14,NULL,(UBYTE *)"11",NULL };
@@ -215,7 +215,7 @@ struct Gadget Eingang11 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang11_text,NULL,NULL,Eingang11_ID,NULL };
+  &Eingang11_text,0L,NULL,Eingang11_ID,NULL };
 
 struct IntuiText Eingang10_text = {
   1,0,JAM1,9,14,NULL,(UBYTE *)"10",NULL };
@@ -228,7 +228,7 @@ struct Gadget Eingang10 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang10_text,NULL,NULL,Eingang10_ID,NULL };
+  &Eingang10_text,0L,NULL,Eingang10_ID,NULL };
 
 struct IntuiText Eingang9_text = {
   1,0,JAM1,14,14,NULL,(UBYTE *)"9",NULL };
@@ -241,7 +241,7 @@ struct Gadget Eingang9 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang9_text,NULL,NULL,Eingang9_ID,NULL };
+  &Eingang9_text,0L,NULL,Eingang9_ID,NULL };
 
 struct IntuiText Eingang8_text = {
   1,0,JAM1,16,14,NULL,(UBYTE *)"8",NULL };
@@ -254,7 +254,7 @@ struct Gadget Eingang8 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang8_text,NULL,NULL,Eingang8_ID,NULL };
+  &Eingang8_text,0L,NULL,Eingang8_ID,NULL };
 
 struct IntuiText Eingang7_text = {
   1,0,JAM1,15,14,NULL,(UBYTE *)"7",NULL };
@@ -267,7 +267,7 @@ struct Gadget Eingang7 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang7_text,NULL,NULL,Eingang7_ID,NULL };
+  &Eingang7_text,0L,NULL,Eingang7_ID,NULL };
 
 struct IntuiText Eingang6_text = {
   1,0,JAM1,14,14,NULL,(UBYTE *)"6",NULL };
@@ -280,7 +280,7 @@ struct Gadget Eingang6 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang6_text,NULL,NULL,Eingang6_ID,NULL };
+  &Eingang6_text,0L,NULL,Eingang6_ID,NULL };
 
 struct IntuiText Eingang5_text = {
   1,0,JAM1,15,14,NULL,(UBYTE *)"5",NULL };
@@ -293,7 +293,7 @@ struct Gadget Eingang5 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang5_text,NULL,NULL,Eingang5_ID,NULL };
+  &Eingang5_text,0L,NULL,Eingang5_ID,NULL };
 
 struct IntuiText Eingang4_text = {
   1,0,JAM1,15,14,NULL,(UBYTE *)"4",NULL };
@@ -306,7 +306,7 @@ struct Gadget Eingang4 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang4_text,NULL,NULL,Eingang4_ID,NULL };
+  &Eingang4_text,0L,NULL,Eingang4_ID,NULL };
 
 struct IntuiText Eingang3_text = {
   1,0,JAM1,15,14,NULL,(UBYTE *)"3",NULL };
@@ -319,7 +319,7 @@ struct Gadget Eingang3 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang3_text,NULL,NULL,Eingang3_ID,NULL };
+  &Eingang3_text,0L,NULL,Eingang3_ID,NULL };
 
 struct IntuiText Eingang2_text = {
   1,0,JAM1,15,14,NULL,(UBYTE *)"2",NULL };
@@ -332,7 +332,7 @@ struct Gadget Eingang2 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang2_text,NULL,NULL,Eingang2_ID,NULL };
+  &Eingang2_text,0L,NULL,Eingang2_ID,NULL };
 
 struct IntuiText Eingang1_text = {
   1,1,JAM1,16,14,NULL,(UBYTE *)"1",NULL };
@@ -345,7 +345,7 @@ struct Gadget Eingang1 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Eingang1_text,NULL,NULL,Eingang1_ID,NULL };
+  &Eingang1_text,0L,NULL,Eingang1_ID,NULL };
 
 #define FIRSTGADGETL &Eingang1
 
@@ -366,18 +366,18 @@ SHORT SharedBordersPairs15[] = {
   1,28,77,28,77,1,78,0,78,28 };
 
 struct Border SharedBorders1[] = {
-  0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs11[0],&SharedBorders1[1],
-  0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs10[0],NULL,
-  0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs11[0],&SharedBorders1[3],
-  0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs10[0],NULL,
-  0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs13[0],&SharedBorders1[5],
-  0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs12[0],NULL,
-  0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs13[0],&SharedBorders1[7],
-  0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs12[0],NULL,
-  0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs15[0],&SharedBorders1[9],
-  0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs14[0],NULL,
-  0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs15[0],&SharedBorders1[11],
-  0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs14[0],NULL };
+  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs11[0],&SharedBorders1[1]},
+  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs10[0],NULL},
+  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs11[0],&SharedBorders1[3]},
+  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs10[0],NULL},
+  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs13[0],&SharedBorders1[5]},
+  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs12[0],NULL},
+  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs13[0],&SharedBorders1[7]},
+  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs12[0],NULL},
+  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs15[0],&SharedBorders1[9]},
+  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs14[0],NULL},
+  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs15[0],&SharedBorders1[11]},
+  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs14[0],NULL} };
 
 struct IntuiText Rufen_text = {
   1,0,JAM1,18,18,NULL,(UBYTE *)"Rufen!",NULL };
@@ -390,7 +390,7 @@ struct Gadget Rufen = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders1[8],(APTR)&SharedBorders1[10],
-  &Rufen_text,NULL,NULL,Rufen_ID,NULL };
+  &Rufen_text,0L,NULL,Rufen_ID,NULL };
 
 struct IntuiText Speer_text = {
   1,0,JAM1,27,18,NULL,(UBYTE *)"Speer werfen",NULL };
@@ -403,12 +403,12 @@ struct Gadget Speer = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders1[4],(APTR)&SharedBorders1[6],
-  &Speer_text,NULL,NULL,Speer_ID,NULL };
+  &Speer_text,0L,NULL,Speer_ID,NULL };
 
 struct IntuiText Ausgang_text[3] = {
-  1,0,JAM1,18,18,NULL,(UBYTE *)"xx",NULL,
-  1,0,JAM1,18,18,NULL,(UBYTE *)"yy",NULL,
-  1,0,JAM1,18,18,NULL,(UBYTE *)"zz",NULL
+  {1,0,JAM1,18,18,NULL,(UBYTE *)"xx",NULL},
+  {1,0,JAM1,18,18,NULL,(UBYTE *)"yy",NULL},
+  {1,0,JAM1,18,18,NULL,(UBYTE *)"zz",NULL}
 };
 
 #define Ausgang3_ID    2
@@ -419,7 +419,7 @@ struct Gadget Ausgang3 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders1[0],(APTR)&SharedBorders1[2],
-  &(Ausgang_text[2]),NULL,NULL,Ausgang3_ID,NULL };
+  &(Ausgang_text[2]),0L,NULL,Ausgang3_ID,NULL };
 
 #define Ausgang2_ID    1
 
@@ -429,7 +429,7 @@ struct Gadget Ausgang2 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders1[0],(APTR)&SharedBorders1[2],
-  &(Ausgang_text[1]),NULL,NULL,Ausgang2_ID,NULL };
+  &(Ausgang_text[1]),0L,NULL,Ausgang2_ID,NULL };
 
 #define Ausgang1_ID    0
 
@@ -439,7 +439,7 @@ struct Gadget Ausgang1 = {
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders1[0],(APTR)&SharedBorders1[2],
-  &(Ausgang_text[0]),NULL,NULL,Ausgang1_ID,NULL };
+  &(Ausgang_text[0]),0L,NULL,Ausgang1_ID,NULL };
 
 
 #define FIRSTGADGETH &Ausgang1
@@ -457,36 +457,36 @@ struct NewWindow new_window = {
 void verbindungen()
 {
 int i,wege[30][4]={
-  313,130,352,162,
-  376,179,353,217,
-  313,217,254,217,
-  224,204,215,176,
-  212,157,275,134,
-  291,124,295,96,
-  312,88,402,86,
-  437,98,450,133,
-  457,153,455,200,
-  450,223,412,250,
-  384,261,311,273,
-  268,274,190,269,
-  151,259,128,237,
-  122,216,129,162,
-  129,141,172,112,
-  211,105,273,83,
-  173,99,141,60,
-  141,48,469,47,
-  475,59,443,79,
-  502,58,534,249,
-  516,268,324,324,
-  516,255,477,221,
-  303,315,295,284,
-  284,324,50,281,
-  50,264,98,236,
-  33,260,108,60,
-  439,151,393,172,
-  388,250,353,226,
-  189,260,218,226,
-  145,160,187,172
+  {313,130,352,162},
+  {376,179,353,217},
+  {313,217,254,217},
+  {224,204,215,176},
+  {212,157,275,134},
+  {291,124,295,96},
+  {312,88,402,86},
+  {437,98,450,133},
+  {457,153,455,200},
+  {450,223,412,250},
+  {384,261,311,273},
+  {268,274,190,269},
+  {151,259,128,237},
+  {122,216,129,162},
+  {129,141,172,112},
+  {211,105,273,83},
+  {173,99,141,60},
+  {141,48,469,47},
+  {475,59,443,79},
+  {502,58,534,249},
+  {516,268,324,324},
+  {516,255,477,221},
+  {303,315,295,284},
+  {284,324,50,281},
+  {50,264,98,236},
+  {33,260,108,60},
+  {439,151,393,172},
+  {388,250,353,226},
+  {189,260,218,226},
+  {145,160,187,172}
 };
   SetAPen(rp,1);
   for(i=0;i<30;i++)
@@ -498,7 +498,7 @@ int i,wege[30][4]={
 
 SHORT Landkarte()
 {
-SHORT nummer;
+SHORT nummer=0;
 BOOL weiter=FALSE;
 
 StopMsg();
@@ -519,7 +519,6 @@ ContMsg();
       case IDCMP_RAWKEY      :
       case IDCMP_CLOSEWINDOW : ende=TRUE;
                          wende=TRUE;
-                         nummer=0;
                          weiter=TRUE;
                          break;
       case IDCMP_GADGETUP    : nummer=(((struct Gadget *)(msg->IAddress))->GadgetID)+1;
@@ -577,7 +576,7 @@ ContMsg();
 BOOL Speerwurf(nr)
 SHORT nr;
 {
-BOOL abbruch=FALSE,ist;
+BOOL abbruch=FALSE,ist=TRUE;
 
   schreibe(245,253,"In welche Höhle werfen ? ",1);
   while(!abbruch)
@@ -760,12 +759,7 @@ ContMsg();
   }
 }
 
-void wbmain()
-{
- main();
-}
-
-void main()
+int main()
 {
   srand((unsigned)time(NULL));
   open_lib();
@@ -776,4 +770,5 @@ void main()
 
   close_window();
   close_lib();
+  return(0);
 }

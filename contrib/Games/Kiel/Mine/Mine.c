@@ -65,15 +65,15 @@ SHORT SharedBordersPairs1[] = {
   -1,17,195,17,195,0,196,-1,196,17 };
 
 struct Border SharedBorders[] = {
-  0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs0[0],&SharedBorders[1],
-  0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs1[0],NULL,
-  0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs0[0],&SharedBorders[3],
-  0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs1[0],NULL };
+  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs0[0],&SharedBorders[1]},
+  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs1[0],NULL},
+  {0,0,1,0,JAM1,5,(SHORT *)&SharedBordersPairs0[0],&SharedBorders[3]},
+  {0,0,2,0,JAM1,5,(SHORT *)&SharedBordersPairs1[0],NULL} };
 
 UBYTE Name_Gad_buf[21];
 
 struct StringInfo Name_Gad_info = {
-  (UBYTE *)&Name_Gad_buf[0],NULL,0,21,0,0,0,0,0,0,NULL,NULL,NULL };
+  (UBYTE *)&Name_Gad_buf[0],NULL,0,21,0,0,0,0,0,0,NULL,0L,NULL };
 
 struct IntuiText Name_Gad_text = {
   1,0,JAM1,80,-10,NULL,(UBYTE *)"Name:",NULL };
@@ -86,7 +86,7 @@ struct Gadget Name_Gad = {
   GACT_RELVERIFY+GACT_IMMEDIATE+GACT_STRINGCENTER,
   GTYP_STRGADGET,
   (APTR)&SharedBorders[0],(APTR)&SharedBorders[2],
-  &Name_Gad_text,NULL,(APTR)&Name_Gad_info,Name_Gad_ID,NULL };
+  &Name_Gad_text,0L,(APTR)&Name_Gad_info,Name_Gad_ID,NULL };
 
 
 
@@ -107,7 +107,7 @@ struct NewWindow NeuesWindow =
 
 SHORT Spielfeld[maxbreite+1][maxhoehe+1],Feldx,Feldy,breite,hoehe,Spielart;
 BOOL Karte[maxbreite+2][maxhoehe+2],ende,Fehler,menuean,SpielAbbr,WEnde;
-ULONG class,filehandle;
+ULONG class;
 USHORT code;
 int Rest,Anzahl,AnzMarken,maxx,maxy,mausx,mausy,Zeiten[4];
 time_t tstart,tende;
@@ -139,7 +139,7 @@ SHORT i;
 
 BOOL Frage()
 {
-BOOL weiter=FALSE;
+BOOL weiter=FALSE,ret=FALSE;
   MaleSpielfeld();
   schreibe(links+feldbreite*breite/2-19,25,"Start",2);
 
@@ -162,33 +162,32 @@ SetAPen(rp,0);
     switch(class)
     {
       case IDCMP_RAWKEY :
-      case IDCMP_CLOSEWINDOW  : return(TRUE);
-			  weiter=TRUE;
-			  break;
+      case IDCMP_CLOSEWINDOW  : ret=TRUE;
+                          weiter=TRUE;
+                          break;
       case IDCMP_MOUSEBUTTONS : if(code==SELECTUP)
-			  {
-			    if((mausx>links+feldbreite*breite/2-25)&&(mausy>5)&&(mausx<links+feldbreite*breite/2+25)&&(mausy<35))
-			    {
-			      menuean=FALSE;
-			      weiter=TRUE;
-			      return(FALSE);
-			    }
-			    if((mausx>links+feldbreite*breite/2-30)&&(mausy>oben+feldbreite*hoehe/2-30)&&(mausx<links+feldbreite*breite/2+30)&&(mausy<oben+feldbreite*hoehe/2+30))
-			    {
-			      menuean=TRUE;
-			      weiter=TRUE;
-			      return(FALSE);
-			    }
-			  }
-			  break;
-      default		: break;
+                          {
+                            if((mausx>links+feldbreite*breite/2-25)&&(mausy>5)&&(mausx<links+feldbreite*breite/2+25)&&(mausy<35))
+                            {
+                              menuean=FALSE;
+                              weiter=TRUE;
+  			    }
+                            if((mausx>links+feldbreite*breite/2-30)&&(mausy>oben+feldbreite*hoehe/2-30)&&(mausx<links+feldbreite*breite/2+30)&&(mausy<oben+feldbreite*hoehe/2+30))
+                            {
+                              menuean=TRUE;
+                              weiter=TRUE;
+                            }
+                          }
+                          break;
+      default           : break;
     }
   }
+  return(ret);
 }
 
 BOOL endreq()
 {
-BOOL weiter=FALSE;
+BOOL weiter=FALSE,ret=FALSE;
   WinSize(Window,200,100);
   LoescheWin();
  Delay(5);
@@ -209,22 +208,20 @@ BOOL weiter=FALSE;
     switch(class)
     {
       case IDCMP_MOUSEBUTTONS : if(code==SELECTUP)
-			  {
-			    if((mausx>50)&&(mausy>25)&&(mausx<100)&&(mausy<75))
-			    {
-			      weiter=TRUE;
-			      return(TRUE);
-			    }
-			    if((mausx>110)&&(mausy>25)&&(mausx<160)&&(mausy<75))
-			    {
-			      weiter=TRUE;
-			      return(FALSE);
-			    }
-			  }
-			  break;
-      default		: break;
+                          {
+                            if((mausx>50)&&(mausy>25)&&(mausx<100)&&(mausy<75))
+                            {
+                              weiter=TRUE;
+                              ret=TRUE;
+  			    }
+                            if((mausx>110)&&(mausy>25)&&(mausx<160)&&(mausy<75))
+                              weiter=TRUE;
+                          }
+                          break;
+      default           : break;
     }
   }
+  return(ret);
 }
 
 
@@ -237,12 +234,7 @@ void CleanUp()
 
 /* ---------------------------	  HauptProgramm    -------------------------- */
 
-void wbmain()
-{
- main();
-}
-
-void main()
+int main()
 {
   RT_Init ();
   WEnde=FALSE;
@@ -264,4 +256,5 @@ void main()
   }
   CleanUp();
   RT_Exit ();
+  return(0);
 }

@@ -98,15 +98,13 @@ int ist;
 
 int history[32][3],movecount;
 
-#include "JumpDatei.h"
-
- oeffnelib()
+void oeffnelib()
 {
   IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library",0L);
   GfxBase = (struct GfxBase *) OpenLibrary("graphics.library",0L);
 }
 
-oeffnewindow()
+void oeffnewindow()
 {
   if((Window=(struct Window *)OpenWindow(NEWWINDOW))==NULL)
     exit(FALSE);
@@ -114,38 +112,36 @@ oeffnewindow()
   iflags=Window->IDCMPFlags;
 }
 
-LoescheWin()
+void LoescheWin()
 {
   SetAPen(rp,0);
   RectFill(rp,0,0,400,170);
 }
 
-StopMsg()
+void StopMsg()
 {
-  ModifyIDCMP(Window,NULL);
+  ModifyIDCMP(Window,(ULONG)NULL);
 }
 
-ContMsg()
+void ContMsg()
 {
   ModifyIDCMP(Window,iflags);
 }
 
-schliessewindow()
+void schliessewindow()
 {
   CloseWindow(Window);
 }
 
-schliesselib()
+void schliesselib()
 {
   CloseLibrary((struct Library *)IntuitionBase);
   CloseLibrary((struct Library *)GfxBase);
 }
-wbmain()
-{
-main();
-}
 
-main()
+#include "JumpDatei.h"
+
+int main()
 {
 BOOL ende=FALSE;
 int erster=0,nr,mitte;
@@ -254,4 +250,5 @@ while(ende!=TRUE)
 }
 schliessewindow();
 schliesselib();
+return(0);
 }

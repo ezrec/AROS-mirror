@@ -1,6 +1,6 @@
-ULONG filehandle;
+struct FileHandle *filehandle;
 
-set_buttons()
+void set_buttons()
 {
 int i;
   for(i=0;i<33;i++)
@@ -13,7 +13,7 @@ int i;
   RefreshGadgets(FIRSTGADGET,Window,NULL);
 }
 
-defaultfield()
+void defaultfield()
 {
 int j;
   for(j=0;j<33;j++)
@@ -21,7 +21,7 @@ int j;
   field[16]=WEG;
 }
 
-open_datei()
+void open_datei()
 {
 int count=1,j;
 char Puffer[2];
@@ -44,7 +44,7 @@ char Puffer[2];
   set_buttons();
 }
 
-schreibedatei()
+void schreibedatei()
 {
 int count,j;
 char Zahl[2];
