@@ -16,6 +16,7 @@
 #include <sys/types.h>
 #include <signal.h>
 #include <time.h>
+#include <errno.h>
 #include "stat.h"
 
 /*----------------------------------------------------------------------*/
@@ -123,9 +124,6 @@ extern struct interfacing interface;
 /* non-integral functions */
 extern struct tm *localtime ();
 extern char *getenv ();
-
-/* external variables */
-extern int errno;
 
 
 #define	FALSE	0
