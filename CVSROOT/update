@@ -3,15 +3,8 @@
 gawk -f filter.awk passwd.txt
 cvs com passwd passwd.txt developers
 
-cp passwd passwd.txt developers ~cvs/aros/CVSROOT
+dir="`cat CVS/Repository`"
+if [ -d "$dir" ]; then
+    cp passwd passwd.txt developers $dir
+fi
 
-gawk -f cvspwtohtpw.gawk passwd.txt $HOME/.htpasswd ../AROS/docs/html/jobserver/.htaccess
-
-#MSQL=/usr/local/Hughes/bin/msql
-#
-#if [ -x $MSQL ]; then
-#    echo "Updating mSQL database..."
-#    gawk -f pw2msql.gawk passwd.txt | \
-#    $MSQL -h aros.fh-konstanz.de jobserv | \
-#    egrep -v '^($|mSQL >|Welcome|Query OK.|Bye!)'
-#fi
