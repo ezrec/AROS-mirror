@@ -61,6 +61,7 @@
 #include <exec/types.h>
 #include <exec/exec.h>
 #include <dos/dosextens.h>
+#include <dos/bptr.h>
 #include <exec/memory.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
@@ -185,7 +186,7 @@ static int GetMyFib(BPTR lock, struct FileInfoBlock *inf)
     dev = (struct MsgPort *) (((struct Process *) FindTask(0))->pr_FileSystemTask);
   }
 
-  result = DoPkt(dev, ACTION_EXAMINE_OBJECT, lock, dtob(inf), 0, 0, 0);
+  result = DoPkt(dev, ACTION_EXAMINE_OBJECT, lock, MKBADDR(inf), 0, 0, 0);
   if (!result)
   {
     //errno = __io2errno(IoErr());
@@ -194,7 +195,7 @@ static int GetMyFib(BPTR lock, struct FileInfoBlock *inf)
 
   memset(&id, 0, sizeof(struct InfoData));
 
-  result = DoPkt(dev, ACTION_INFO, lock, dtob(&id), NULL, NULL, NULL);
+  result = DoPkt(dev, ACTION_INFO, lock, MKBADDR(&id), NULL, NULL, NULL);
 
   if (result)
     blockSize = id.id_BytesPerBlock;
