@@ -83,10 +83,15 @@ void * _debug_AllocMem (long size, long reqs, const char * infotext)
      block.ml_ME[0].me_Reqs	   = reqs;   /* the requirements (MEMF_xxxx) */
      block.ml_ME[0].me_Length	   = size;   /* the size we want */
 
+#ifdef __AROS__
+    if (!NewAllocEntry(&block, &ml, NULL))
+    	return (NULL);
+#else
      ml = AllocEntry (&block);          /* get it */
 
      if ((ULONG)ml & ALLOCERROR)        /* Success ? */
 	  return (NULL);                     /* sad */
+#endif
 
 	  /* Add block to TaskMem-list */
      AddTail (tmem_list, &ml->ml_Node);
