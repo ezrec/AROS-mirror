@@ -1,0 +1,110 @@
+=============
+Status Update
+=============
+
+:Author: David Le Corfec
+:Date:   2003-05-27
+
+Another whole month has gone by, which means that it's definitely time for
+another status update. Doh, why do have all the status updates to begin
+like that? :) I'd like to thanks all the people who showed interest in AROS
+in the last months, and there have been a lot ! Anyway, let's not wait longer,
+here are the juicy bits, in this relatively uneventful month ...
+
+Hardware
+--------
+
+Johan Grip received the Pegasos board at the end of April, installed Debian
+GNU/Linux on it, and started working on the hosted AROS port. However he was
+no longer able to continue for personal reasons, so he sent the board to
+Michal Schulz, another talented hardware hacker.
+
+In the meantime, Michal, who already has a PPC PReP board, worked on the native
+PPC port, and merged his sources in the AROS CVS tree, creating the new
+'arch/ppc' directory. To this day, he went as far as implementing task handling
+and scheduling. Congratulations Michal! Sources as well as a PReP boot image
+can be found at http://home.tu-clausthal.de/~misc/AROS.ppc.tar.bz2
+
+Michal is also reworking exec.library to make it hardware/platform-independent,
+by moving dependent stuff in resources like kernel.resource, OpenFirmware.resource ...
+
+Build system
+------------
+
+No fundamental changes to this sometimes hated system, but lots and
+lots of little bug fixes and improvements by almost every active AROS Team
+member in tools, config files, makefiles ... So much activity caused quite
+a few broken nightly builds, but it seems now stabilized.
+
+Also the newer gcc 3.3 that got installed on the build machine led to some
+problems, but nothing that couldn't be handled.
+
+We now use bzip2 instead of gzip, and a custom, simpler package format than
+tar to create the AROS floppy and squeeze every possible byte. In the quest
+to more space, some less useful programs were removed from floppy. Thanks
+to Adam Chodorowski for the cleanup and optimizations!
+
+i386-pc Installation
+--------------------
+
+The installer for the i386 native port, install-i386-pc, is currently broken,
+but a graphical bootsector installer is in work, as well as a bootmenu editor,
+courtesy of Sebastian Heutling, who also still works on the HDToolBox partition
+editor.
+
+User Interface
+--------------
+
+Adam Chodorowski began to work on the Zune custom class PreferencesWindow.mcc
+which implements the AROS standard prefs window buttons and look.
+
+Paul Smith continued his huge work on the next iteration of Wanderer and the
+underlying desktop.library. It draws icons, and different views are
+possible (large icons, small icons, details).
+
+Fabio Alemagna added horizontal and vertical color gradients to Zune images.
+Take a look at the obligatory screenshot__!
+
+By default, the Boot Shell is now closed after Wanderer is started. To open
+a new shell, use the Wanderer/Shell menu item, or use Amiga-W shortcut
+(Amiga key is the right Win key on pc105 keyboards)
+
+__ http://www.aros.org/pictures/screenshots/20030527/gradients.png
+
+Localizations
+-------------
+
+Thanks to Olivier Adam for his French translation of dos.library catalog,
+and to Paulo Silva for the Portuguese keyboard description (which Georg
+Steger implemented).
+
+Miscellaneous
+-------------
+
+Some miscellaneous things that have happened:
+
++ Staf Verhaegen continued to work on diskfont.library.
++ Stefan Berger worked hard on ports of gtlayout.library and term 4.7,
+  which can be found in contrib.
++ Adam Chodorowski imported AHI 5.8 in AROS CVS, following Martin Blom's
+  release of the AROS port.
++ Georg Steger worked on the unix hosted kernel to allow nesting supervisor,
+  so that signals occuring during a signal handler execution are not ignored.
+  It should improve the stability of the serial device.
++ and of course, lots of fixes here and there by many developers : for a rough
+  idea, already more than 350 CVS commits this month (although we wont beat
+  the record of 890 last month, according to the AROS-CVS mailing list
+  archive).
+
+Documentation
+-------------
+
+AROS documentation, in source and HTML-rendered form, is now available on the
+download page.
+
+Web
+---
+
+Randy Vice set up an AROS support site, TeamAROS, at http://thenostromo.com/teamaros/
+Be sure to check their bounty program if you want to sponsor AROS development.
+
