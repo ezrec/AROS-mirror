@@ -48,6 +48,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 #include <exec/memory.h>
 #include <proto/exec.h>
 #include <proto/intuition.h>
+#include <proto/alib.h>
 
 #include "../common/eventreciever_proc.h"
 #include "../common/windows_proc.h"
