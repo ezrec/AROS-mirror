@@ -1,0 +1,41 @@
+include $(TOP)/config/make.cfg
+
+STARTUP := $(LIBDIR)/startup.o
+LIBS	:= -L$(LIBDIR) -larossupport -lamiga -larosc -lm
+DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a \
+	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(BINDIR)/Contrib
+
+FILES := DDemo7
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+EXE := $(DESTDIR)/DDemo7
+
+.PHONY : all clean
+
+#MM contrib-ddemo7 : setup-contrib-ddemo7
+contrib-ddemo7 	: $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-contrib-ddemo7 :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+
+#MM
+clean-contrib :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+
