@@ -201,21 +201,21 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                             TD(
                                 valign = 'top', align = 'right', width = '100%%',
                                 background = '%(ROOT)simages/dark_bg.png',
-                                contents = Table(
-                                    border = 0, cellpadding = 0, cellspacing = 2,
-                                    contents = [
-                                        TR( 
-                                            TD( Font( size = '-2', color = '#ffffff', contents = B( _T['mirrors'] ) ) )
-                                        ),
-                                        TR(
-                                            TD( MIRRORS_DATA )
-                                        )
-                                    ]
-                                )
-                                #contents = Img(
-                                #    width = '100%%', height = 1,
-                                #    src = '%(ROOT)simages/spacer.gif'
+                                #contents = Table(
+                                #    border = 0, cellpadding = 0, cellspacing = 2,
+                                #    contents = [
+                                #        TR( 
+                                #            TD( Font( size = '-2', color = '#ffffff', contents = B( _T['mirrors'] ) ) )
+                                #        ),
+                                #        TR(
+                                #            TD( MIRRORS_DATA )
+                                #        )
+                                #    ]
                                 #)
+                                contents = Img(
+                                    width = '100%%', height = 1,
+                                    src = '%(ROOT)simages/spacer.gif'
+                                )
                             )
                         ] ),
                         TR(
