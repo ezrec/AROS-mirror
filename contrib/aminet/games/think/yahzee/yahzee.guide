@@ -1,0 +1,354 @@
+@database Yahzee.guide
+@author "Håkan L. Younes"
+@(c) "Copyright © 1994-1998 Håkan L. Younes"
+@$VER: Yahzee.guide 2.4 (18.7.98)
+
+
+@node Main "Yahzee Documentation"
+
+@{b}Wellcome to Yahzee!@{ub}
+
+This is an implementation of the famous dice game Yahtzee. I hope you will
+enjoy it!
+
+   @{"Copyright Notice     " link Copyright}
+   @{"Acknowledgements     " link Acknowledgements}
+   @{b}----------------------@{ub}
+   @{"Installation         " link Installation}
+   @{"System Requirements  " link Requirements}
+   @{"Troubleshooting      " link Troubleshooting}
+   @{b}----------------------@{ub}
+   @{"Rules                " link Rules}
+   @{"The Menu             " link Menu}
+   @{"The Gadgets          " link Gadgets}
+   @{"Tooltypes            " link Tooltypes}
+   @{b}----------------------@{ub}
+   @{"Version History      " link History}
+   @{"Plans for the Future " link Future}
+   @{b}----------------------@{ub}
+   @{"Localization         " link Localization}
+   @{"Contacting the Author" link Address}
+
+If you like Yahzee you might want to take a look at my @{"Other Products" link Products}.
+
+@endnode
+
+
+@node Copyright "Copyright Noice"
+
+Install, Yahzee, Yahzee.info, Yahzee.guide and the Swedish catalog
+Copyright © 1994-1998 Håkan L. Younes.
+
+Danish catalog by Kenneth Fribert.
+Dutch catalog by Edmund Vermeulen.
+Finnish catalog by Timo Kinnunen.
+French catalog by Monteilhet Florent.
+German catalog by Andreas Osswald.
+Norwegian catalog by Rolf Grønland.
+
+Install.info and Yahzee.guide.info by Martin Huttenloher (from his wonderful
+MagicWB-package).
+
+This program may be freely distributed except for commercial purpose, so long
+as the files included are not separated or modified.
+
+If any of the following files are missing, please contact me:
+   install                            - Installation script
+   install.info                       - Icon for installation script
+   yahzee                             - Executable file
+   yahzee.info                        - Icon for Yahzee (MagicWB style)
+   yahzee.guide                       - Documentation
+   yahzee.guide.info                  - Icon for Yahzee.guide (MagicWB style)
+   catalogs/dansk/yahzee.catalog      - Danish catalog for use with
+                                        locale.library
+   catalogs/deutsch/yahzee.catalog    - German catalog
+   catalogs/nederlands/yahzee.catalog - Dutch catalog
+   catalogs/suomi/yahzee.catalog      - Finnish catalog
+   catalogs/svenska/yahzee.catalog    - Swedish catalog
+   catalogs/yahzee.cd                 - Catalog description file
+   catalogs/template.ct               - Catalog traslation file
+   misc/palette.ilbm                  - WB palette for 2.x
+   misc/palette3.0                    - WB palette for 3.x
+   misc/yahzee.info                   - Icon for Yahzee (standard WB style)
+   misc/yahzee.guide.info             - Icon for Yahzee.guide
+                                        (standrard WB style)
+
+@endnode
+
+
+@node Requirements "System Requirements"
+
+Yahzee will run on any Amiga computer with version 2.0 or higher of the OS (or
+at least I hope it will). If you have version 2.1 or higher Yahzee will try to
+use the language you have selected through Preferences.
+
+@endnode
+
+
+@node Installation "Installation"
+
+To install Yahzee from scratch or to update an old version just run the
+installation script.
+If you choose to install the MagicWB style icons without having MagicWB
+installed you can still get them look nice. For this purpose you need at least
+an 8 color WB and you will have to load the correct color palette into the
+Palette Preferences. The palette can be found in the misc directory (one for
+2.x and one for 3.x).
+
+@endnode
+
+
+@node Menu "The Menu"
+
+@{u}Game@{uu}
+New            - Start a new game.
+Undo           - Undo last choice.
+High Scores... - Show the highest scores achived.
+About...       - Show info about program (i.e. version number and author).
+Quit Yahzee    - Quit the program (same effect as pressing the closegadget).
+
+@{u}Settings@{uu}
+Number of Players - Select number of players (won't have any effect until a
+                    new game has been started).
+Scoring Method    - Select scoring method (won't have any effect until a new
+                    game has been started).
+Type of Game      - Select type of game (won't have any effect until a new
+                    game has been started).
+Save Settings     - Save the settings (uses @{"tooltypes" link Tooltypes}).
+
+@endnode
+
+
+@node gadgets "The Gadgets"
+
+@{u}Roll Gadget@{uu}
+Press this gadget to roll the selected dice.
+
+@{u}Dice@{uu}
+To select a die just click on it. When a die is selected it's image is a
+filled rectangle, otherwise you can see its eyes.
+
+@endnode
+
+
+@node Rules "Rules"
+
+   @{"Original" link Rules_1 }
+   @{"Maxi    " link Rules_2 }
+
+@endnode
+
+
+@node Rules_1 "Rules for Original Yahzee"
+
+Yahzee is played with 5 dice. The purpose with the game is to gather as many
+points as possible. Each time it becomes your turn (your number will be
+highlighted at the top) you may roll the dice three times (one basic roll +
+two re-rolls). In each of the re-rolls you choose which @{"dice" link Gadgets} to roll and which
+to save. You don't have to use all your re-rolls if you're satisfied with the
+dice you already have. When you are satisfied or when you have no rolls left
+you select an entry on the @{"scoreboard" link Scoreboard} where to use your dice.
+
+@endnode
+
+
+@node Rules_2 "Rules for Maxi"
+
+Maxi is played with 6 dice. The purpose with the game is to gather as many
+points as possible. Each time it becomes your turn (your number will be
+highlighted at the top) you may roll the dice three times (one basic roll +
+two re-rolls). In each of the re-rolls you choose which @{"dice" link Gadgets} to roll and which
+to save. You don't have to use all your re-rolls if you're satisfied with the
+dice you already have. When you are satisfied or when you have no rolls left
+you select an entry on the @{"scoreboard" link Scoreboard} where to use your dice. Every re-roll
+you save can be used later in the game. At the bottom of the scoreboard you
+can see how many rolls you have saved.
+
+@endnode
+
+
+@node Scoreboard "The Scoreboard"
+
+@{u}Entries common to all types of games and scoring methods@{uu}
+Aces        - Every die that is an ace gives one point.
+Twos        - Every die that is a two gives two points.
+Threes      - Every die that is a three gives three points.
+Fours       - Every die that is a four gives four points.
+Fives       - Every die that is a five gives five points.
+Sixes       - Every die that is a six gives six points.
+Upper Total - Sum of the six entries above.
+Chance      - Use this when no other entry seems usefull. The sum of all dice
+              will count here, no matter what the dice show.
+Total       - Sum of all entries.
+
+@{u}Entries with different scoring methods@{uu}
+Bonus           - O+T: bonus = 50 (Upper Total >= 63); O+A: 35 (63);
+                  M+T: 100 (84); M+A: 70 (84).
+Three of a kind - Throws with three dice of the same kind counts here.
+                  @{i}Traditional@{ui} scoring method counts only the three dice of the
+                  same kind, @{i}American@{ui} counts all dice.
+Four of a kind  - Same as aboce, but with four dice of the same kind.
+Five of a kind (Maxi only) - Here you need five dice of the same kind.
+Small Straight  - @{i}Traditional@{ui}: 1 through 5 gives 15 points.
+                  @{i}American@{ui}: Four consecutive dice gives 30 points.
+Large Straight  - @{i}Traditional@{ui}: 2 through 6 gives 20 points.
+                  @{i}American@{ui}: Five consecutive dice gives 40 points.
+Full Straight (Maxi only) - @{i}Traditional@{ui}: 1 through 6 gives 21 points.
+                            @{i}American@{ui}: Six consecutive dice gives 50 points.
+Full House      - One pair and three of a kind. @{i}Traditional@{ui} scoring method
+                  counts only the dice involved in the Full House while
+                  @{i}American@{ui} always gives 25 points.
+House (Maxi only) - Two three of a kind. @{i}Traditional@{ui} scoring method counts the
+                    eyes of the dice while @{i}American@{ui} always gives 30 points.
+Tower (Maxi only) - One pair and four of a kind. @{i}Traditional@{ui} scoring method
+                    counts the eyes of the dice while @{i}American@{ui} gives 35 points.
+Yahzee (Maxi-Yahzee) - All dice of the same kind gives 50 (100) points.
+
+@{u}Entries only available with Traditional scoring method@{uu}
+One Pair  - If you have a single pair the sum of the dice involved will show up
+            here.
+Two Pairs - Same as above but you need two different pairs.
+Three Pairs (Maxi only) - Same as above but you need three different pairs.
+
+@endnode
+
+
+@node Tooltypes "Tooltypes"
+
+The following tooltypes are recognized by Yahzee:
+
+PUBSCREEN=<name of public screen>
+Use this to open the window on other public screens than the default one (if
+there is no public screen with the given name, the program will try to open its
+window on the default public screen).
+
+PLAYERS=<number of players>
+Use this to set the initial value of the number of players.
+
+RULES=<Traditional | American>
+Use this to set the initial scoring method.
+
+GAMETYPE=<Original | Maxi>
+Use this to set the initial type of game.
+
+FILLPEN=<pen number>
+Use this to set the pen used to draw the possible score. If this tooltype isn't
+present the system fillpen will be used.
+
+@endnode
+
+
+@node History "Version History"
+
+v1.0 (30.4.1994)  Initial version.
+v1.1 (17.5.1994)  Yahzee will now try several different ways to layout the
+                  display. If you're using a very big default font, Yahzee
+		  will use topaz 8 for the text instead.
+                  Added Save Settings menuitem in the Settings menu.
+                  Cleaned up the menus and changed or removed some menu
+                  shortcuts.
+v1.2 (22.5.1994)  Localized Yahzee.
+v1.3 (23.6.1994)  Added American scoring method.
+                  Some minor bugs fixed.
+v2.0 (3.11.1994)  Added a new type of Yahzee game - Maxi.
+                  Improved the scoreboard layout a lot.
+                  Now with installation script for Commodore's Installer.
+v2.1 (19.11.1994) Minor bug fixed.
+v2.2 (3.12.1994)  More bugs fixed.
+                  Now with ten high scores for each type of game.
+v2.3 (8.2.1995)   Now the PUBSCREEN tooltype really works!
+v2.4 (18.7.1998)  No changes. Source code made public!
+
+@endnode
+
+
+@node Future "Plans for the Future"
+
+Write more catalogs (if you help me).
+Add "online-help".
+Make it possible to play "Triple-Yahzee".
+Let the user select colors for the scoreboard.
+Make it possible to print the scoreboard.
+
+@endnode
+
+
+@node Troubleshooting "Troubleshooting"
+
+If you get the message "Screen is too small!" when you run Yahzee, you're
+either using a too big screen font or you're trying to run Yahzee on a too
+small public screen. Yahzee is guaranteed to open on a 640 x 200 screen with a
+screen font of resonable size.
+If you get a message about opening libraries make sure you've got at least
+version 37 of the system libraries.
+Any other messages is probably due to lack of memory. They're not likely
+to show up.
+
+@endnode
+
+
+@node Acknowledgements "Acknowledgements"
+
+Many people have shared their feelings about Yahzee with me, but there are a
+few who's ideas, comments and work have helped me a lot in improving this
+game. These people include Andreas Osswald (who wrote the German catalog),
+Edmund Vermeulen (who wrote the Dutch catalog), Timo Kinnunen (who wrote the
+Finnish catalog), Kenneth Fribert (who wrote the Danish catalog), Anders @{i}"Harry
+Mandolini"@{ui} Harrisson (who gave me the rules to Maxi), Andreas @{i}"8914"@{ui} Johansson
+(who came up with the idea of splitting the scoreboard into two parts and also
+tested the game for me), Monteilhet Florent (who wrote the French catalog),
+Rolf Grønland (who wrote the Norwegian catalog), Greg Roberts and Rebecca
+Figuli (who gave me the idea of additional scoring methods and who also
+ß-tested v1.3 for me) and Kevin Huculak (who got frustrated at Yahzee because
+it wouldn't open on an NTSC 640 x 200 screen).
+
+I hope that you will always let me know your feelings about my products. It's
+through such communication that the progress of Amiga PD software continues to
+be accomplished.
+
+@endnode
+
+
+@node Address "Contacting the Author"
+
+Since the source code has been made public, you can fix bugs or make
+improvements yourself. Of course, if you do so I still would like to know
+about it.
+
+This is where you can reach me:
+snail-mail: Håkan L. Younes
+            Sandkullsv. 16
+            S-163 41 Spånga
+            Sweden
+Internet:   lorens@hem.passagen.se
+            http://hem.passagen.se/lorens/
+
+@endnode
+
+
+@node Localization "Localization"
+
+Yahzee is localized, so if you have v2.1 or higher of the OS Yahzee will try to
+use the language you have set in Preferences. If there is no catalog for your
+language, English will be used as default.
+
+Since I'm not very good at languages I've only written one additional catalog
+(the Swedish one). However I've included some files so that you easily can make
+Yahzee support your language too.
+
+Translate the strings in template.ct and save it as <language>.ct. Then send
+that file to me so that I can include it in my package.
+NOTE! The first two characters in menuitems are used for menu shortcuts.
+The first one is the shortcut (space means no shortcut) and the second is
+always a nullbyte. Make sure you don't use the same character as shortcut
+for different items in the same Menu!
+
+@endnode
+
+
+@node Products "Other Products"
+
+Take a look at http://hem.passagen.se/lorens/amiga/ for a list of other Amiga
+products made by me.
+
+@endnode

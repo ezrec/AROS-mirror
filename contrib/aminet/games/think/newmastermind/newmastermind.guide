@@ -1,0 +1,270 @@
+@database NewMasterMind.guide
+@author "Lorens Younes"
+@(c) "Copyright (C) 1994-1998 Håkan L. Younes"
+@$VER: NewMasterMind.guide 1.2 (9.12.98)
+
+
+@node Main "NewMasterMind Documentation"
+
+@{b}Wellcome to NewMasterMind!@{ub}
+   
+This is an implementation of the famous mind puzzling game MasterMind.
+
+   @{"Copyright Notice     " link Copyright}
+   @{"Acknowledgements     " link Acknowledgements}
+   @{"System Requirements  " link Requirements}
+   @{"Installation         " link Installation}
+   @{"The Menu             " link Menu}
+   @{"The Gadgets          " link Gadgets}
+   @{"Tooltypes            " link Tooltypes}
+   @{"The Game             " link Game}
+   @{"Version History      " link History}
+   @{"Plans for the Future " link Future}
+   @{"Troubleshooting      " link Troubleshooting}
+   @{"Contacting the Author" link Address}
+   @{"Localization         " link Localization}
+  
+If you like NewMasterMind you might want to take a look at my @{"Other Products" link Products}.
+
+@endnode
+
+
+@node Copyright "Copyright Notice"
+
+Install, NewMasterMind, NewMasterMind.info, NewMasterMind.guide and
+the Swedish catalog
+Copyright (C) 1994-1998 Håkan L. Younes.
+
+Danish catalog by Kenneth Fribert.
+
+Install.info and NewMasterMind.guide.info by Martin Huttenloher (from his
+wonderful MagicWB-package).
+
+This program may be freely distributed except for commercial purpose, so long
+as the files included are not separated or modified.
+
+If any of the following files are missing, please contact me:
+   install                                - Installation script
+   install.info                           - Icon for installation script
+   newmastermind                          - Executable file
+   newmastermind.info                     - Icon for NewMasterMind
+                                            (MagicWB style)
+   newmastermind.guide                    - Documentation
+   newmastermind.guide.info               - Icon for NewMasterMind.guide
+                                            (MagicWB style)
+   catalogs/dansk/newmastermind.catalog   - Danish catalog for use with
+                                            locale.library
+   catalogs/svenska/newmastermind.catalog - Swedish catalog
+   catalogs/newmastermind.cd              - Catalog description file
+   catalogs/template.ct                   - Catalog translation file
+   misc/palette.ilbm                      - WB palette for 2.x
+   misc/palette3.0                        - WB palette for 3.x
+   misc/newmastermind.info                - Icon for NewMasterMind
+                                            (standard WB style)
+   misc/newmastermind.guide.info          - Icon for NewMasterMind.guide
+                                            (standard WB style)
+
+@endnode
+
+
+@node Requirements "System Requirements"
+
+NewMasterMind will run on any Amiga computer with version 2.0 or higher of the
+OS (or at least I hope it will). If you have version 2.1 or higher
+NewMasterMind will try to use the language you have selected through
+Preferences. To get the most out of NewMasterMind (i.e. colored bricks) you
+need AmigaOS 3.0 or higher.
+
+@endnode
+
+
+@node Installation "Installation"
+
+To install NewMasterMind from scratch or to update an old version just run the
+installation script.
+If you choose to install the MagicWB style icons without having MagicWB
+installed you can still get them look nice. For this purpose you need at least
+an 8 color WB and you will have to load the correct color palette into the
+Palette Preferences. The palette can be found in the misc dir (one for 2.x and
+one for 3.x).
+
+@endnode
+
+
+@node Menu "The Menu"
+
+@{u}Game@{uu}
+New                - Start a new game.
+About...           - Show info about program (i.e. version number and author).
+Quit NewMasterMind - Quit the program (same effect as pressing the
+                     closegadget).
+
+@{u}Settings@{uu}
+No Colors         - If the program was able to find eight different colors to
+                    use for the bricks, but you don't like them select this
+                    item to use numbers instead.
+Opponent          - Select your opponent (human or computer).
+Correction Method - Children or adults.
+Number of Colors  - 4, 6 or 8.
+Save Settings     - Save the settings (uses @{"tooltypes" link Tooltypes}).
+
+@endnode
+
+
+@node Gadgets "The Gadgets"
+
+Select a brick to place on the board by pressing on it. Move the mouse to where
+you want the brick to be placed. Press the mousebutton again.
+
+Press the OK gadget when you are sattisfied with your guess.
+
+@endnode
+
+
+@node Tooltypes "Tooltypes"
+
+The following tooltypes are recognized by NewMasterMind:
+
+PUBSCREEN=<name of public screen>
+Use this to open the window on other public screens than the default one (if
+there is no public screen with the given name, the program will try to open its
+window on the default public screen).
+
+NOCOLORS
+Use this to turn of the use of colors for the bricks.
+
+NUMCOLORS=<4 | 6 | 8>
+Use this to set the initial value of the number of colors.
+
+CORRECTION=<Children | Adults>
+Use this to set the initial correction method.
+
+OPPONENT=<Human | Computer>
+Use this to set the initial opponent.
+
+@endnode
+
+
+@node History "Version History"
+
+v1.0 (24.12.94) First public release.
+v1.1 (8.2.95)   Now the PUBSCREEN tooltype really works!
+v1.2 (9.12.98)  No changes. Source code made public!
+
+@endnode
+
+
+@node Future "Plans for the Future"
+
+Write more catalogs (if you help me).
+Add "online-help".
+Let the user select colors for the graphics.
+
+@endnode
+
+
+@node Troubleshooting "Troubleshooting"
+
+If you get the message "Screen is too small!" when you run NewMasterMind, you
+are either using a too big screen font or you're trying to run NewMasterMind on
+a too small public screen. NewMasterMind is guaranteed to open on a 640 x 200
+screen with a screen font of resonable size.
+If you get a message about opening libraries make sure you've got at least
+version 37 of the system libraries.
+Any other messages are probably due to lack of memory. They're not likely to
+show up.
+
+@endnode
+
+
+@node Acknowledgements "Acknowledgements"
+
+I would like to thank Kennet Fribert for the danish translation and for some
+great suggestions on improving the game.
+
+I dedicate this program to my computer teacher in "college" Maria Flodkvist.
+During her lessons I developed a PC version of this game. Now three years later
+I've finaly made the Amiga version.
+
+Special thanks go to Jesper Graetsch (a friend from my early collage years who
+came with some suggestions on how to improve the game) and Torbjörn @{i}"saltis"@{ui}
+Magnusson (who was the first to introduce me to the game).
+
+@endnode
+
+
+@node Address "Contacting the Author"
+
+Since the source code has been made public, you can fix bugs or make
+improvements yourself. Of course, if you do so I still would like to know
+about it.
+
+This is where you can reach me:
+snail-mail: Håkan L. Younes
+            Sandkullsv. 16
+            S-163 41 Spånga
+            Sweden
+Internet:   lorens@hem.passagen.se
+            http://hem.passagen.se/lorens/
+
+@endnode
+
+
+@node Localization "Localization"
+
+NewMasterMind is localized, so if you have v2.1 or higher of the OS
+NewMasterMind will try to use the language you have set in Preferences. If
+there is no catalog for your language, English will be used as default.
+
+Since I'm not very good at languages I've only written one additional catalog
+(the Swedish one). However I've included some files so that you easily can make
+NewMasterMind support your language too.
+
+Translate the strings in template.ct and save it as <language>.ct. Then send
+that file to me so that I can include it in my package.
+NOTE! The first two characters in menuitems are used for menu shortcuts.
+The first one is the shortcut (space means no shortcut) and the second is
+always a nullbyte. Make sure you don't use the same character as shortcut
+for different items in the same Menu!
+
+@endnode
+
+
+@node Products "Other Products"
+
+Take a look at http://hem.passagen.se/lorens/amiga/ for a list of other Amiga
+products made by me.
+
+@endnode
+
+
+@node Game "The Game"
+
+The purpose is to guess the hidden combination (generated either by the
+computer or by a human opponent). When you have made a guess, your guess is
+compared to the hidden combination and black or white bricks appears in the
+small holes according to how good your guess was. Each black brick indicates
+that one of the bricks in your guess is in the correct position. Each white
+brick indicates that one of the bricks in your guess has the right color, but
+is in the wrong possition. If the correction method for children is active each
+small hole represents a big hole (se below).
+
+   1 3
+   2 4
+
+    1
+    
+    2
+    
+    3
+    
+    4
+
+If the correction method for adults is active there is no relationship between
+the small holes and the big holes.
+When you make the correct guess you get four black bricks and the hidden
+combination will be shown. If you don't find out what the hidden combination
+look like in ten turns you loose, and the hidden combination will be shown
+anyway.
+
+@endnode

@@ -1,0 +1,72 @@
+##
+## Smakefile
+## =========
+## Makefile for newmastermind.  Requires SAS/SMAKE.
+##
+## Copyright (C) 1994-1998 Håkan L. Younes (lorens@hem.passagen.se)
+##
+
+.ct.catalog:
+	-makedir $*
+   	CatComp catalogs/newmastermind.cd $< CATALOG $@
+
+CDEFINES = 
+CDEBUGFLAGS = #debug=sf
+COPTFLAGS = opt optsched utillib
+CFLAGS = $(CDEFINES) $(CDEBUGFLAGS) $(COPTFLAGS) \
+         nochkabort noicons nover nostkchk nostkext math=ffp
+
+OBJS = newmastermind.o game.o draw.o layout.o localize.o strings.o \
+       tooltypes.o requesters.o
+
+all: newmastermind \
+     catalogs/dansk/newmastermind.catalog \
+     catalogs/svenska/newmastermind.catalog
+
+newmastermind: $(OBJS)
+	$(LD) FROM LIB:c.o $(OBJS) TO $@ \
+	LIB LIB:scmffp.lib LIB:sc.lib LIB:amiga.lib
+
+catalogs/dansk/newmastermind.catalog: catalogs/dansk.ct
+catalogs/svenska/newmastermind.catalog: catalogs/svenska.ct
+
+newmastermind.o: newmastermind.c game.h draw.h layout.h localize.h \
+                 tooltypes.h requesters.h
+game.o:          game.c game.h draw.h layout.h layout_const.h requesters.h
+draw.o:          draw.c draw.h layout.h layout_const.h
+layout.o:        layout.c layout.h layout_const.h localize.h
+tooltypes.o:     tooltypes.c tooltypes.h
+
+requesters.o: requesters.c requesters.h
+localize.o:      localize.c localize.h
+
+localize.h: strings.o
+	setdate localize.h
+
+strings.o: catalogs/newmastermind.cd
+	CatComp $< CFILE strings.h OBJFILE $@
+
+
+clean:
+	-delete ALL \#?.o strings.h newmastermind catalogs/~(\#?.\#?) \#?.lha
+
+
+archive:
+	makedir t:newmastermind
+	copy install t:newmastermind/
+	copy install.info t:newmastermind/
+	copy newmastermind t:newmastermind/
+	copy newmastermind.info t:newmastermind/
+	copy newmastermind.guide t:newmastermind/
+	copy newmastermind.guide.info t:newmastermind/
+	makedir t:newmastermind/catalogs
+	copy ALL catalogs/~(\#?.\#?) t:newmastermind/catalogs/
+	copy catalogs/newmastermind.cd t:newmastermind/catalogs/
+	copy catalogs/template.ct t:newmastermind/catalogs/
+	makedir t:newmastermind/misc
+	copy misc/palette.ilbm t:newmastermind/misc/
+	copy misc/palette3.0 t:newmastermind/misc/
+	copy misc/newmastermind.info t:newmastermind/misc/
+	copy misc/newmastermind.guide.info t:newmastermind/misc/
+	lha -aemqrx r newmastermind.lha t:newmastermind
+	delete ALL t:newmastermind

@@ -1,0 +1,87 @@
+##
+## Smakefile
+## =========
+## Makefile for yahzee.  Requires SAS/SMAKE.
+##
+## Copyright (C) 1994-1998 Håkan L. Younes (lorens@hem.passagen.se)
+##
+
+.ct.catalog:
+   -makedir $*
+   CatComp catalogs/yahzee.cd $< CATALOG $@
+
+CDEFINES =
+CDEBUGFLAGS = #debug=sf
+COPTFLAGS = opt optsched utillib
+CFLAGS = $(CDEFINES) $(CDEBUGFLAGS) $(COPTFLAGS) \
+         nochkabort noicons nover nostkchk nostkext math=ffp
+
+OBJS = yahzee.o dice.o rules.o draw.o layout.o game.o localize.o strings.o \
+       highscores.o tooltypes.o requesters.o
+
+all: yahzee \
+     catalogs/dansk/yahzee.catalog \
+     catalogs/deutsch/yahzee.catalog \
+     catalogs/nederlands/yahzee.catalog \
+     catalogs/suomi/yahzee.catalog \
+     catalogs/svenska/yahzee.catalog
+
+yahzee: $(OBJS)
+	$(LD) FROM LIB:c.o $(OBJS) TO $@ \
+	LIB LIB:scmffp.lib LIB:sc.lib LIB:amiga.lib
+
+
+catalogs/dansk/yahzee.catalog: catalogs/dansk.ct
+catalogs/deutsch/yahzee.catalog: catalogs/deutsch.ct
+catalogs/nederlands/yahzee.catalog: catalogs/nederlands.ct
+catalogs/suomi/yahzee.catalog: catalogs/suomi.ct
+catalogs/svenska/yahzee.catalog: catalogs/svenska.ct
+
+yahzee.o:     yahzee.c game.h dice.h draw.h layout.h rules.h localize.h \
+              highscores.h requesters.h
+game.o:       game.c game.h draw.h layout.h rules.h highscores.h localize.h \
+              requesters.h
+rules.o:      rules.c rules.h game.h localize.h
+layout.o:     layout.c layout.h layout_const.h draw.h rules.h requesters.h
+draw.o:       draw.c draw.h layout_const.h rules.h localize.h
+dice.o:       dice.c dice.h
+tooltypes.o:  tooltypes.c tooltypes.h draw.h
+highscores.o: highscores.c highscores.h localize.h requesters.h
+
+requesters.o: requesters.c requesters.h
+localize.o:   localize.c localize.h
+
+localize.h: strings.o
+	copy localize.h temp >NIL:
+	delete localize.h >NIL:
+	copy temp localize.h >NIL:
+	delete temp >NIL:
+
+strings.o: catalogs/yahzee.cd
+	CatComp $< CFILE strings.h OBJFILE $@
+
+
+clean:
+	-delete ALL \#?.o strings.h yahzee catalogs/~(\#?.\#?) yahzee.hiscore #?.lha
+
+
+archive:
+	makedir t:yahzee
+	copy install t:yahzee/
+	copy install.info t:yahzee/
+	copy yahzee t:yahzee/
+	copy yahzee.info t:yahzee/
+	copy yahzee.guide t:yahzee/
+	copy yahzee.guide.info t:yahzee/
+	makedir t:yahzee/catalogs
+	copy ALL catalogs/~(\#?.\#?) t:yahzee/catalogs/
+	copy catalogs/yahzee.cd t:yahzee/catalogs/
+	copy catalogs/template.ct t:yahzee/catalogs/
+	makedir t:yahzee/misc
+	copy misc/palette.ilbm t:yahzee/misc/
+	copy misc/palette3.0 t:yahzee/misc/
+	copy misc/yahzee.info t:yahzee/misc/
+	copy misc/yahzee.guide.info t:yahzee/misc/
+	lha -aemqrx r t:yahzee.lha t:yahzee
+	copy t:yahzee.lha yahzee.lha
+	delete ALL t:yahzee.lha t:yahzee
