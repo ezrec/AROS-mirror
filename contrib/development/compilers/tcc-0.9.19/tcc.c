@@ -9217,6 +9217,8 @@ TCCState *tcc_new(void)
     tcc_define_symbol(s, "__STDC__", NULL);
 #if defined(TCC_TARGET_I386)
     tcc_define_symbol(s, "__i386__", NULL);
+    tcc_define_symbol(s, "__i386", NULL);
+    tcc_define_symbol(s, "i386", NULL);
 #endif
 #if defined(linux)
     tcc_define_symbol(s, "__linux__", NULL);
