@@ -1,0 +1,74 @@
+Class:            penshareiclass
+Superclass:       imageclass
+Include File:     "penshareiclass.h"
+
+This class can, if properly used, give colorfull images on any public screen.
+It also supports bitmap scaling. If used with V39 or higher of AmigaOS it can
+take advantage of pen sharing.
+
+New Methods:
+
+None.
+
+
+Changed Methods:
+
+IM_DRAW - Tells the object to draw itself. Supports IDS_NORMAL and
+IDS_SELECTED drawing states and doesn't use a DrawInfo structure.
+
+IM_DRAWFRAME - Tells the object to draw a scaled version of itself. Uses the
+graphics.library function BitMapScale () to scale the image.
+
+IM_HITFRAME - Asks the object if a point would be inside it if the object
+was confined (scaled) to the given rectangular bounds. Returns TRUE if the
+given point would be inside the object, otherwise FALSE.
+
+IM_ERASEFRAME - Tells the object to erase itself using the rectangular bounds
+given.
+
+
+Attributes:
+
+*IA_Left, IA_Top (ISG) - Same as for imageclass. Defaults to 0.
+
+*IA_Width, IA_Height (ISG) - Same as for imageclass. Defaults to the width and
+height of IA_Data.
+
+IA_BGPen (ISG) - Background pen of normal image. Defaults to BACKGROUNDPEN of
+CHUNKYIA_Screen.
+
+CHUNKYIA_SelectedBGPen (ISG) - Backgroundpen of selected image. Defaults to
+FILLPEN of CHUNKYIA_Screen.
+
+IA_Data (ISG) - Array of UBYTEs describing the image. The array must have the
+following form:
+
+   UBYTE   image_data[] = {
+      highbits_width, lowbits_width, highbits_height, lowbits_height,
+      color_of_pixel1, color_of_pixel2, ...
+   };
+
+CHUNKYIA_SelectedData (ISG) - Description of the selected image (optional).
+
+IA_Pens (ISG) - Use this to tell the object which pens the values in the
+data array represents (optional).
+
+CHUNKYIA_Palette (I) - (Ignored on systems prior to V39) An array of ULONGs
+describing the palette for the picture. If you take care of obtaining pens
+yourself, you should only pass the IA_Pens attribute on creation.
+The format of the array should be the following:
+
+   ULONG palette[] = {
+      num_triplets, red1, green1, blue1, red2, green2, blue2, ...
+   };
+
+CHUNKYIA_Screen (IG) - Screen to use image on. This attribute must be
+provided when creating an object of this class.
+
+
+Additional functions in library:
+
+Class *init_chunkyiclass (void) - Initializes the class and returns a pointer
+to it.
+
+BOOL free_chunkyiclass (Class *cl) - Frees the class.
