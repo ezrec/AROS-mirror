@@ -72,5 +72,7 @@
 #define SAVEDS /* */
 #define __far /* */
 #define __regargs /* */
+#define __stdargs /* */
+#define __chip /* */
 #endif
 
