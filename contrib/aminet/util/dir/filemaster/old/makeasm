@@ -1,0 +1,8 @@
+Echo Building asm stuff... NOLINE
+phxass quiet ptplay.s
+phxass quiet object.s
+phxass quiet rawdo.s
+phxass quiet version.s
+phxass quiet detach2.s
+Echo Done.
+

@@ -1,0 +1,4 @@
+execute makecatalog
+execute makeasm
+smake
+

@@ -1,0 +1,13 @@
+;failat 99999
+if exists fm
+ list >t:size nohead fm
+ delete >NIL: fm
+endif
+smake
+if exists fm
+ if exists t:size
+  ;type t:size
+ endif
+ ;hackfm
+ list fm nohead
+endif

@@ -1,0 +1,1 @@
+catcomp descriptor fm.cd cfile descriptor.h objfile descriptor.o ctfile fm.ct NOSTRINGS NOARRAY NOBLOCK

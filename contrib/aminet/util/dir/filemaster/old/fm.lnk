@@ -1,0 +1,11 @@
+FROM LIB:c.o "fm.o"+"event.o"+"parse.o"+"fmgui.o"+"fmdos.o"+"copy.o"+"dir.o"+"locale.o"+"about.o"+"edit.o"+"showicon.o"+"request.o"+"showtext.o"+"commodity.o"+"drives.o"+"diskinfo.o"+"screen.o"+"operate.o"+"fmoutput.o"+"showpic.o"+"nodes.o"+"execute.o"+"launch.o"+"audio.o"+"fileclick.o"+"clock.o"+"config.o"+"taskwindow.o"+"descriptor.o"
+TO "fm"
+LIB ptplay.o object.o version.o rawdo.o LIB:sc.lib LIB:amiga.lib
+QUIET
+NOICONS
+DEFINE @__chkabort=@__dummy
+DEFINE __CXM33=__UCXM33
+DEFINE __CXD33=__UCXD33
+DEFINE __CXM22=__UCXM22
+DEFINE __CXD22=__UCXD22
+
