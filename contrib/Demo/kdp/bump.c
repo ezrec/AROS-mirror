@@ -3,12 +3,49 @@
 //#include <stdio.h>
 #include <math.h>
 
+#include <proto/dos.h>
+
 unsigned char sprite[256*256];
 unsigned char light[256*256];
 unsigned char picture[64000];
 unsigned char palette[960];
 unsigned char *vmem;
 UBYTE pic[64000];
+
+#define ARG_TEMPLATE "WINPOSX=X/N/K,WINPOSY=Y/N/K"
+#define ARG_X 0
+#define ARG_Y 1
+#define NUM_ARGS 2
+
+static IPTR args[NUM_ARGS];
+
+static void getarguments(void)
+{
+    struct RDArgs *myargs;
+    
+    if ((myargs = ReadArgs(ARG_TEMPLATE, args, NULL)))
+    {
+	if (args[ARG_X])
+	{
+	    char s[10];
+	    WORD winx = *(IPTR *)args[ARG_X];
+	    
+	    snprintf(s, sizeof(s), "%d", winx);
+	    SetVar("WINPOSX", s, strlen(s), GVF_LOCAL_ONLY | LV_VAR);
+	}
+	    
+	if (args[ARG_Y])
+	{
+	    char s[10];
+	    WORD winy = *(IPTR *)args[ARG_Y];
+
+	    snprintf(s, sizeof(s), "%d", winy);
+	    SetVar("WINPOSY", s, strlen(s), GVF_LOCAL_ONLY | LV_VAR);
+    	}
+	
+    	FreeArgs(myargs);
+    }
+}
 
 void make_sprite(float m)
 {
@@ -79,9 +116,12 @@ main()
   float mx,my;
   int dz=1;
   float xx,yy;
+  
+  getarguments();
+  
   make_sprite(3);
   load_pictures();
-
+  
   KDPmakecoltab1(palette);
 
 if (KDPopen(&screen))

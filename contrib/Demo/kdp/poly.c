@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include <proto/dos.h>
 
 
 KDPvertex vert[5000];
@@ -25,6 +26,104 @@ LONG zsrt1[5000],zsrt2[5000];
 
 clock_t time1,time2;
 
+int flip, nomouserot;
+float a=0.0,b=0.0,c=0.0;
+float da=0.0,db=0.0,dc=0.0;
+
+#define ARG_TEMPLATE "OBJ/A,WINPOSX=X/N/K,WINPOSY=Y/N/K,DRAWMODE=M/N/K," \
+    	    	     "XANGLE=XA/N/K,YANGLE=YA/N/NK,ZANGLE=ZA/N/K,XROT=XR/N/K," \
+		     "YROT=YR/N/K,ZROT=ZR/N/K,NOMOUSEROT=NMR/S"
+
+#define ARG_OBJ      	0
+#define ARG_X 	     	1
+#define ARG_Y 	     	2
+#define ARG_DRAWMODE 	3
+#define ARG_XANGLE   	4
+#define ARG_YANGLE   	5
+#define ARG_ZANGLE   	6
+#define ARG_XROT     	7
+#define ARG_YROT     	8
+#define ARG_ZROT     	9
+#define ARG_NOMOUSEROT  10
+#define NUM_ARGS     	11
+
+static IPTR args[NUM_ARGS];
+
+static void getarguments(void)
+{
+    struct RDArgs *myargs;
+    
+    if ((myargs = ReadArgs(ARG_TEMPLATE, args, NULL)))
+    {
+	if (args[ARG_X])
+	{
+	    char s[10];
+	    WORD winx = *(IPTR *)args[ARG_X];
+	    
+	    snprintf(s, sizeof(s), "%d", winx);
+	    SetVar("WINPOSX", s, strlen(s), GVF_LOCAL_ONLY | LV_VAR);
+	}
+	    
+	if (args[ARG_Y])
+	{
+	    char s[10];
+	    WORD winy = *(IPTR *)args[ARG_Y];
+
+	    snprintf(s, sizeof(s), "%d", winy);
+	    SetVar("WINPOSY", s, strlen(s), GVF_LOCAL_ONLY | LV_VAR);
+    	}
+	
+	if (args[ARG_DRAWMODE])
+	{
+	    int i = (int)*(IPTR **)args[ARG_DRAWMODE];
+	    
+	    if ((i >= 0) && (i <= 8)) flip = i;
+	}
+	
+	if (args[ARG_XANGLE])
+	{
+	    a = (float)(*(IPTR *)args[ARG_XANGLE]);
+	    a = a * 3.14159265358979 / 180.0;
+	}
+
+	if (args[ARG_YANGLE])
+	{
+	    b = (float)(*(IPTR *)args[ARG_YANGLE]);
+	    b = b * 3.14159265358979 / 180.0;
+	}
+
+	if (args[ARG_ZANGLE])
+	{
+	    c = (float)(*(IPTR *)args[ARG_ZANGLE]);
+	    c = c * 3.14159265358979 / 1800.0;
+	}
+
+	if (args[ARG_XROT])
+	{
+	    da = (float)(*(IPTR *)args[ARG_XROT]);
+	    da = da * 3.14159265358979 / 1800.0;
+	}
+
+	if (args[ARG_YROT])
+	{
+	    db = (float)(*(IPTR *)args[ARG_YROT]);
+	    db = db * 3.14159265358979 / 1800.0;
+	}
+
+	if (args[ARG_ZROT])
+	{
+	    dc = (float)(*(IPTR *)args[ARG_ZROT]);
+	    dc = dc * 3.14159265358979 / 1800.0;
+	}
+	
+	if (args[ARG_NOMOUSEROT])
+	{
+	    nomouserot = 1;
+	}
+	
+    	FreeArgs(myargs);
+    }
+}
 
 void calcnorm(void)
 {
@@ -280,15 +379,13 @@ int main(int argc,char **argv)
 	KDPscreen screen;
 	KDPmouse mouse;
 	UBYTE *vmem;
-  float a=0,b=0,c=0;
-  float da,db,dc;
   float zx=20;
   int i,ii;
   int frame=0;
   float secs;
   int blr;
   int col;
-  int tel=0,flip=0;
+  int tel=0;
   //int ia,ib,ic;
   float dz;
   int rem=0;
@@ -300,6 +397,8 @@ int main(int argc,char **argv)
      return 0;
    }
 
+   getarguments();
+   
 	if(!(load3d(argv[1])))
     {
     printf("hmmm..!\n");
@@ -321,13 +420,15 @@ int main(int argc,char **argv)
 	  KDPgetMouse(&mouse);
 	  KDPgetMouse(&mouse);
 		time1=clock();
-		da=0;db=0;dc=0;
+		//da=0;db=0;dc=0;
 
 
     for(i=0;i<numf;i++)
 	{
       fac[i].type=0;
       fac[i].texture=tex;
+      fac[i].type=flip;
+
       }
 
 
@@ -335,13 +436,19 @@ int main(int argc,char **argv)
 			{
 			if(mouse.button==0)
 				{
-				dc+=(float)mouse.yspeed/500;
-				db+=(float)mouse.xspeed/500;
+				if (!nomouserot)
+				{
+				    dc+=(float)mouse.yspeed/500;
+				    db+=(float)mouse.xspeed/500;
+			    	}
 				tel=0;
 				}
 			if(mouse.button==1)
 				{
-				da+=(float)mouse.xspeed/500;
+				if (!nomouserot)
+				{
+				    da+=(float)mouse.xspeed/500;
+				}
 	blr=1;
 				zx+=(float)mouse.yspeed/50;
 				rt++;

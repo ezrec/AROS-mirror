@@ -151,6 +151,20 @@ int KDPopen(KDPscreen *screen)
 	loadrgb_coltab[0] = (256 << 16) + 0;
     }		  
     
+    {
+    	char s[10];
+	
+        if (GetVar("WINPOSX", s, sizeof(s), GVF_LOCAL_ONLY | LV_VAR) > 0)
+	{
+	    wx = strtol(s, 0, 0);
+	}
+        if (GetVar("WINPOSY", s, sizeof(s), GVF_LOCAL_ONLY | LV_VAR) > 0)
+	{
+	    wy = strtol(s, 0, 0);
+	}
+
+    }
+    
     win = OpenWindowTags(NULL,
     		WA_CustomScreen				, (IPTR)scr		,
     		WA_Left					, wx			,

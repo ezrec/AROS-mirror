@@ -2,11 +2,47 @@
 #include "kdpgfx.h"
 #include <math.h>
 
+#include <proto/dos.h>
+
 UBYTE *txt;
 int light[41*26];
 int blokx[41*26];
 int bloky[41*26];
 
+#define ARG_TEMPLATE "WINPOSX=X/N/K,WINPOSY=Y/N/K"
+#define ARG_X 0
+#define ARG_Y 1
+#define NUM_ARGS 2
+
+static IPTR args[NUM_ARGS];
+
+static void getarguments(void)
+{
+    struct RDArgs *myargs;
+    
+    if ((myargs = ReadArgs(ARG_TEMPLATE, args, NULL)))
+    {
+	if (args[ARG_X])
+	{
+	    char s[10];
+	    WORD winx = *(IPTR *)args[ARG_X];
+	    
+	    snprintf(s, sizeof(s), "%d", winx);
+	    SetVar("WINPOSX", s, strlen(s), GVF_LOCAL_ONLY | LV_VAR);
+	}
+	    
+	if (args[ARG_Y])
+	{
+	    char s[10];
+	    WORD winy = *(IPTR *)args[ARG_Y];
+
+	    snprintf(s, sizeof(s), "%d", winy);
+	    SetVar("WINPOSY", s, strlen(s), GVF_LOCAL_ONLY | LV_VAR);
+    	}
+	
+    	FreeArgs(myargs);
+    }
+}
 
 void make_tuntab(float persp,float po,float rot,float ox,float oy,float mulx,float muly,float tox,float toy)
 {
@@ -122,6 +158,9 @@ main()
   int l;
   int ii;
   UBYTE pal[256*3];
+  
+  getarguments();
+  
   txt=KDPloadFile("raw/tg.raw");
   if (KDPopen(&screen))
     {
