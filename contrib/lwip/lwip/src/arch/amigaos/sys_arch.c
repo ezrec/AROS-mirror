@@ -36,7 +36,15 @@
 
 #include <time.h>
 
+
+#ifndef _AROS
 #include <dos.h>
+#else
+#include <dos/dos.h>
+#define __regargs
+#include <aros/asmcall.h>
+#endif
+
 
 #include <exec/memory.h>
 #include <dos/dostags.h>
@@ -243,6 +251,7 @@ static int Thread_Entry(void)
     struct StartupMsg *mess;
     struct ExecBase *SysBase = *((struct ExecBase **)4);
     __regargs int (*fp)(void *, void *, void *);
+
     void *ud;
     struct ThreadData data;
          
@@ -257,7 +266,10 @@ static int Thread_Entry(void)
     ud = mess->UserData;
 
     /* replace this with the proper #asm for Aztec */
+
+#ifndef _AROS
     putreg(REG_A4, (long)mess->global_data);
+#endif
 
     ReplyMsg(mess);
 
@@ -558,8 +570,11 @@ void sys_thread_new(void (* function)(void *arg), void *arg)
     start_msg->msg.mn_Length = sizeof(struct StartupMsg);
     start_msg->msg.mn_Node.ln_Type = NT_MESSAGE;
     start_msg->child = pr;
-   
+
+    #ifndef _AROS  
     start_msg->global_data = (void *)getreg(REG_A4);  /* Save global data reg (A4) */
+    #endif
+
     start_msg->fp = function;                         /* Fill in function pointer */
     start_msg->UserData = arg;   
    
