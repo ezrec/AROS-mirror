@@ -8,11 +8,15 @@ BASEDIR=$(cd $(dirname "$0")/.. ; pwd)
 . site.conf
 
 sed \
-    -e "s/\@HOSTNAME\@/$HOSTNAME/" \
-    -e "s/\@BASEDIR\@/$BASEDIR/" \
-    -e "s/\@MAILMAN\@/$MAILMAN/" \
+    -e "s:\@HOSTNAME\@:$HOSTNAME:" \
+    -e "s:\@BASEDIR\@:$BASEDIR:" \
+    -e "s:\@MAILMAN\@:$MAILMAN:" \
     apache.conf.in > apache.conf
 
-echo "apache.conf generated. Please include it in your Apache config with"
-echo "Include $BASEDIR/data/apache.conf"
-echo "and restart Apache."
+cat 1>&2 <<EOF
+apache.conf generated. Please include it in your Apache config with
+
+    Include $BASEDIR/data/apache.conf
+
+and restart Apache.
+EOF
