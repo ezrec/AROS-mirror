@@ -17,6 +17,7 @@ laguest:baLtYMMsFjGms:L. A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
 SDuvan:dbfBDWZL8B0q.:Johan Alfredsson:d95duvan@dtek.chalmers.se:Commodities
 bergers:bdKC5UL24VXQI:Stefan Berger:bergers@cip.e-technik.uni-erlangen.de:Math libs
 jskov:bdclJpF6gyfHU:Jesper Skov:jskov@cs.auc.dk:Linux/m68k
+Wez:Wk.Op1sXVRJJo:Wez Furlong:wjf103@york.ac.uk:Shell
 
 stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
@@ -33,4 +34,3 @@ hansvi:aaoWAgKjckBIc:Hans Van Ingelgom:hansvi@igwe1.vub.ac.be:
 rycohen:aaNueBFiMeKmI:Ross Cohen:rycohen@ACSU.Buffalo.EDU:
 chexum:mV/zpVIfJW9yY:Janos Farkas:chexum@shadow.banki.hu:
 morten-h:9KDC6O.tUkOCg:Morten Holm:morten-h@post3.tele.dk:
-Wez:Wk.Op1sXVRJJo:Wez Furlong:wjf103@york.ac.uk:
