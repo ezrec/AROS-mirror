@@ -1,5 +1,5 @@
 BEGIN { FS=":"; names[""] = 1; }
-/^[ \t]*(#|$)/ { next }
+/^[ \t]*(#|$|anon:)/ { next; }
  {
     # name:passwd:user:name:email
     name = $1
