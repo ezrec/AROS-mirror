@@ -66,6 +66,12 @@
 #include <clib/alib_protos.h>
 #endif
 
+#ifdef __AROS__
+#if !AROS_BIG_ENDIAN
+#include <aros/macros.h>
+#define GUIGFX_LITTLE_ENDIAN
+#endif
+#endif
 
 /*****************************************************************************/
 

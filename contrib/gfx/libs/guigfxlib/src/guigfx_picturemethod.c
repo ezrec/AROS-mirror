@@ -1250,6 +1250,10 @@ ULONG PIC_TintAlpha(PIC *pic, ULONG rgb, TAGLIST tags)
 				ULONG *dest = ((ULONG *) pic->array) + destx + desty * pic->width;
 				ULONG *mixline;
 				
+			#ifdef GUIGFX_LITTLE_ENDIAN
+				rgb = AROS_LONG2BE(rgb);
+			#endif
+				
 				if ((mixline = AllocRenderVec(MemHandler, destwidth*4)))
 				{
 					int i;
@@ -1915,6 +1919,9 @@ ULONG PIC_Set(PIC *pic, ULONG rgb, TAGLIST tags)
 				ULONG *p = (ULONG *)pic->array + (destx + desty * pic->width);
 				int x,y;
 				
+			#ifdef GUIGFX_LITTLE_ENDIAN
+			    	rgb = AROS_LONG2BE(rgb);
+			#endif
 				for (y = 0; y < destheight; ++y)
 				{
 					for (x = 0; x < destwidth; ++x)
@@ -2249,7 +2256,11 @@ ULONG PIC_Negative(PIC *pic, TAGLIST tags)
 				for (x = 0; x < destwidth; ++x)
 				{
 					rgb = *pp;
+				#ifdef GUIGFX_LITTLE_ENDIAN
+					*pp++ = (rgb & 0x000000ff) | (~rgb & 0xffffff00);
+				#else
 					*pp++ = (rgb & 0xff000000) | (~rgb & 0x00ffffff);
+				#endif
 				}
 				
 				p += pic->width;

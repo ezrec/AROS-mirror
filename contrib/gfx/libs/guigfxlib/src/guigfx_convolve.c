@@ -136,15 +136,27 @@ ULONG PIC_Convolve(PIC *pic, KERNEL *kernel, TAGLIST tags)
 									k = *GETSPAT(kernel, c, d);
 									rgb = *GETRGB(sbufptr, x + c, y + d);
 									
+								#ifdef GUIGFX_LITTLE_ENDIAN
+									SUMR += ((rgb & 0x0000ff00) >> 8) * k;
+									SUMG += ((rgb & 0x00ff0000) >> 16) * k;
+									SUMB += ((rgb & 0xff000000) >> 24) * k;
+								#else
 									SUMR += ((rgb & 0xff0000) >> 16) * k;
 									SUMG += ((rgb & 0x00ff00) >> 8) * k;
 									SUMB += (rgb & 0x0000ff) * k;
+								#endif
 								}
 							}
 							
+						#ifdef GUIGFX_LITTLE_ENDIAN
+							*dbufptr++ =	((RNG(0, (SUMR / div), 255)) << 8) +
+									((RNG(0, (SUMG / div), 255)) << 16) +
+									((RNG(0, (SUMB / div), 255)) << 24);
+						#else
 							*dbufptr++ =	((RNG(0, (SUMR / div), 255)) << 16) +
 														((RNG(0, (SUMG / div), 255)) << 8) +
 														 RNG(0, (SUMB / div), 255);
+						#endif
 						}
 					}
 				
