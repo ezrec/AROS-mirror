@@ -3,7 +3,7 @@ Status Update
 =============
 
 :Author: David Le Corfec <dlc AT aros DOT org>
-:Date:   2003-11-23
+:Date:   2003-11-24
 
 As we just got a working native port of the GCC compiler, it's time
 to browse 3 months of posts and commitlogs, and to make an attempt at
@@ -28,7 +28,7 @@ Native C/C++ compiler
 
 Fabio Alemagna `did it`__! After a month of hard work to improve our C library
 (POSIX semantics handling) and to port the huge beast known as GCC, we
-now have a working port of GCC 3.3.1. Thanks to TeamAROS and to the
+now have a working port of GCC 3.3.1. Thanks to TeamAROS_ and to the
 donors, Fabio won a deserved bounty.
 No more excuses to not port your Amiga programs to AROS, be them coded
 in C or C++ :) Help with ports of various \*nix utilities is also welcome.
@@ -58,7 +58,8 @@ Miscellaneous
 -------------
 
 + Sebastian Heutling fixed the AFS filesystem, which solved many problems under
-  i386-native, eg. during the AROS installation.
+  i386-native, eg. during the AROS installation. Also his work has been supported
+  by TeamAROS_.
 
 + Staf Verhaegen continued his streamlining of the build system, and also fixed
   some issues with the diskfont library.
@@ -79,8 +80,20 @@ Miscellaneous
 Screenshots
 -----------
 
-Last but not least, as usual, along with this status update there are new screenshots
+As usual, along with this status update there are new screenshots
 showing some of the new stuff that has been done in the latest few months. You can find
 them here__.
 
 __ ../pictures/screenshots/#20031124
+
+
+TeamAROS
+--------
+
+TeamAROS_ showed to be a great success, many bounties_ have been successfully completed
+and more are waiting to be picked up. Be sure to check their page_ out and see if there's
+any bounties you'd like to donate to, or even start a bounty of your own!
+
+.. _TeamAROS: http://www.thenostromo.com/teamaros/
+.. _bounties: http://www.thenostromo.com/teamaros/bounty.html
+.. _page:     TeamAROS_
