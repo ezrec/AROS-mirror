@@ -293,48 +293,84 @@ Uint32 MakeBitMask(_THIS,int type,int format,int *bpp)
                 D(if(type==0)bug("LUT8\n"));
                 return 0;
             case PIXFMT_BGR15:
+                switch(type) {
+                    case 0:
+                        D(bug("BGR15\n"));
+                        return AROS_BE2WORD(0x001f);
+                    case 1:
+                        return AROS_BE2WORD(0x03e0);
+                    case 2:
+                        return AROS_BE2WORD(0x7c00);
+                }
+            case PIXFMT_RGB15:
+                switch(type) {
+                    case 0:
+                        D(bug("RGB15\n"));
+                        return AROS_BE2WORD(0x7c00);
+                    case 1:
+                        return AROS_BE2WORD(0x03e0);
+                    case 2:
+                        return AROS_BE2WORD(0x001f);
+                }
             case PIXFMT_RGB15PC:
                 switch(type) {
                     case 0:
-                        D(bug("RGB15PC/BGR15\n"));
-                        return AROS_BE2WORD(31);
+                        D(bug("RGB15PC\n"));
+                        return AROS_BE2WORD(0x007c);
                     case 1:
-                        return AROS_BE2WORD(992);
+                        return AROS_BE2WORD(0xe003);
                     case 2:
-                        return AROS_BE2WORD(31744);
+                        return AROS_BE2WORD(0x1f00);
                 }
-            case PIXFMT_RGB15:
             case PIXFMT_BGR15PC:
                 switch(type) {
                     case 0:
-                        D(bug("RGB15/BGR15PC\n"));
-                        return AROS_BE2WORD(31744);
+                        D(bug("BGR15PC\n"));
+                        return AROS_BE2WORD(0x1f00);
                     case 1:
-                        return AROS_BE2WORD(992);
+                        return AROS_BE2WORD(0xe003);
                     case 2:
-                        return AROS_BE2WORD(31);
+                        return AROS_BE2WORD(0x007c);
                 }
-            case PIXFMT_BGR16PC:
             case PIXFMT_RGB16:
                 switch(type) {
                     case 0:
-                        D(bug("RGB16PC\n"));
-                        return AROS_BE2WORD(63488);
+                        D(bug("RGB16\n"));
+                        return AROS_BE2WORD(0xf800);
                     case 1:
-                        return AROS_BE2WORD(2016);
+                        return AROS_BE2WORD(0x07e0);
                     case 2:
-                        return AROS_BE2WORD(31);
+                        return AROS_BE2WORD(0x001f);
                 }
             case PIXFMT_BGR16:
+                switch(type) {
+                    case 0:
+                        D(bug("BGR16\n"));
+                        return AROS_BE2WORD(0x001f);
+                    case 1:
+                        return AROS_BE2WORD(0x07e0);
+                    case 2:
+                        return AROS_BE2WORD(0xf800);
+                }
             case PIXFMT_RGB16PC:
                 switch(type) {
                     case 0:
-                        D(bug("RGB16PC/BGR16\n"));
-                        return AROS_BE2WORD(248);
+                        D(bug("RGB16PC\n"));
+                        return AROS_BE2WORD(0x00f8);
                     case 1:
-                        return AROS_BE2WORD(57351);
+                        return AROS_BE2WORD(0xe007);
                     case 2:
-                        return AROS_BE2WORD(7936);
+                        return AROS_BE2WORD(0x1f00);
+                }
+            case PIXFMT_BGR16PC:
+                switch(type) {
+                    case 0:
+                        D(bug("BGR16PC\n"));
+                        return AROS_BE2WORD(0x1f00);
+                    case 1:
+                        return AROS_BE2WORD(0xe007);
+                    case 2:
+                        return AROS_BE2WORD(0x00f8);
                 }
 
             case PIXFMT_RGB24:
