@@ -11,7 +11,7 @@
 
 ORIGINS := http://ftp.gnu.org/pub/gnu/binutils
 
-ARCHBASE := binutils-2.15 
+ARCHBASE := binutils-2.15
 
 #MM
 development-binutils-fetch :
