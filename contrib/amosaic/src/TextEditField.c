@@ -39,7 +39,12 @@ ULONG SAVEDS ASM EditFunc(REG(a0) struct Hook *hook,
 			   REG(a2) APTR	      object,
 			   REG(a1) struct EditFuncMsg *msg);
 #else
-ULONG EditFunc(struct Hook *hook,APTR object, struct EditFuncMsg *msg);
+
+AROS_UFP3(ULONG, EditFunc,
+    AROS_UFPA(struct Hook *, hook, A0),
+    AROS_UFPA(APTR, object, A2),
+    AROS_UFPA(struct EditFuncMsg *, msg, A1));
+    
 #endif
 
 #define IEQUALIFIER_SHIFT (IEQUALIFIER_LSHIFT | IEQUALIFIER_RSHIFT)
@@ -758,10 +763,19 @@ static ULONG mTextEditFieldGet(struct IClass *cl,Object *obj,Msg msg)
 }
 
 
+#ifndef __AROS__
 static SAVEDS ASM ULONG TextEditFieldDispatcher(REG(a0) struct IClass *cl,
 				   REG(a2) Object *obj,
 				   REG(a1) Msg msg)
 {
+#else
+AROS_UFH3S(ULONG, TextEditFieldDispatcher,
+    AROS_UFHA(struct IClass *, cl, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(Msg, msg, A1))
+{
+    	AROS_USERFUNC_INIT
+#endif
 	switch (msg->MethodID)
 	{
 		case OM_NEW			: return(mTextEditFieldNew     (cl,obj,(APTR)msg));
@@ -774,6 +788,10 @@ static SAVEDS ASM ULONG TextEditFieldDispatcher(REG(a0) struct IClass *cl,
 	}
 
 	return(DoSuperMethodA(cl,obj,msg));
+
+#ifdef __AROS__
+    	AROS_USERFUNC_EXIT
+#endif
 }
 
 /*
@@ -1168,10 +1186,19 @@ SAVEDS ULONG TextFieldFileChange(struct IClass *cl,Object *obj,struct MUIP_Handl
 	return 0;
 }
 
+#ifndef __AROS__
 static SAVEDS ASM ULONG TextFieldDispatcher(REG(a0) struct IClass *cl,
 				   REG(a2) Object *obj,
 				   REG(a1) Msg msg)
 {
+#else
+AROS_UFH3S(ULONG, TextFieldDispatcher,
+    AROS_UFHA(struct IClass *, cl, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(Msg, msg, A1))
+{
+    	AROS_USERFUNC_INIT
+#endif
 	switch (msg->MethodID)
 	{
 		case MUIM_HandleInput: return(TextFieldHandleInput(cl,obj,(APTR)msg));
@@ -1188,6 +1215,10 @@ static SAVEDS ASM ULONG TextFieldDispatcher(REG(a0) struct IClass *cl,
 	}
 
 	return(DoSuperMethodA(cl,obj,msg));
+
+#ifdef __AROS__
+    	AROS_USERFUNC_EXIT
+#endif
 }
 
 Class *TextEditFieldClInit(void)
@@ -1231,10 +1262,19 @@ BOOL TextEditFieldClFree(Class *cl)
 }
 
 
+#ifndef __AROS__
 ULONG SAVEDS ASM EditFunc(REG(a0) struct Hook *hook,
 			   REG(a2) APTR	      object,
 			   REG(a1) struct EditFuncMsg *msg)
 {
+#else
+AROS_UFH3(ULONG, EditFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(APTR, object, A2),
+    AROS_UFHA(struct EditFuncMsg *, msg, A1))
+{
+    	AROS_USERFUNC_INIT
+#endif
 	char buffer[256],buffer2[256]="run ";
 	APTR fh;
 	long res;
@@ -1280,4 +1320,8 @@ ULONG SAVEDS ASM EditFunc(REG(a0) struct Hook *hook,
 		Execute(buffer2,NULL,NULL);
 	}
 	return TRUE;
+
+#ifdef __AROS__
+    	AROS_USERFUNC_EXIT
+#endif
 }

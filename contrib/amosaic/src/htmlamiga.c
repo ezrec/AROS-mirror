@@ -67,11 +67,25 @@ extern long IsIsMapForm(HTMLGadClData *,char *);
 #define DEBUG1 0 /* Debug the image decoding */
 #define DEBUG2 0 /* Debug the forms handling */
 
+#ifndef __AROS__
 ULONG SAVEDS ASM LayoutFunc(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) struct MUI_LayoutMsg *lm);
 
 ULONG SAVEDS ASM ScrollHookFunc(REG(a0) struct Hook *hook,
 			   REG(a2) APTR	      object,
 			   REG(a1) struct ScrollHookMsg *msg);
+#else
+AROS_UFP3(ULONG, LayoutFunc,
+    AROS_UFPA(struct Hook *, h, A0),
+    AROS_UFPA(Object *, obj, A2),
+    AROS_UFPA(struct MUI_LayoutMsg *, lm, A1));
+
+AROS_UFP3(ULONG, ScrollHookFunc,
+    AROS_UFPA(struct Hook *, hokk, A0),
+    AROS_UFPA(APTR, object, A2),
+    AROS_UFPA(struct ScrollHookMsg *, msg, A1));
+    
+#endif
+
 extern ULONG HookEntry();
 extern mo_window window;
 
@@ -102,6 +116,7 @@ typedef struct TextFont * TextFontP;
 
 /********* CLASS HANDLING *************/
 
+#ifndef __AROS__
 ASM ULONG HTMLGadClDispatch(REG(a0) Class *cl,
 			      REG(a2) Object *obj,
 			     REG(a1) Msg msg);
@@ -113,6 +128,23 @@ ASM ULONG HTMLTextClDispatch(REG(a0) Class *cl,
 ASM ULONG HTMLTextNClDispatch(REG(a0) Class *cl,
 			      REG(a2) Object *obj,
 			     REG(a1) Msg msg);
+#else
+AROS_UFP3(ULONG, HTMLGadClDispatch,
+    AROS_UFPA(Class *, cl, A0),
+    AROS_UFPA(Object *, obj, A2),
+    AROS_UFPA(Msg, msg, A1));
+
+AROS_UFP3(ULONG, HTMLTextClDispatch,
+    AROS_UFPA(Class *, cl, A0),
+    AROS_UFPA(Object *, obj, A2),
+    AROS_UFPA(Msg, msg, A1));
+
+AROS_UFP3(ULONG, HTMLTextNClDispatch,
+    AROS_UFPA(Class *, cl, A0),
+    AROS_UFPA(Object *, obj, A2),
+    AROS_UFPA(Msg, msg, A1));
+
+#endif
 
 /************************************************************
   Initilize the new HTML MUI Gadget Class (was initHTMLGadClass)
@@ -1005,9 +1037,20 @@ HERE
 /********************************************************
   The main gadget handler routine
 ********************************************************/
+#ifndef __AROS__
 ASM ULONG HTMLGadClDispatch(REG(a0) Class *cl,
 			      REG(a2) Object *obj,
-			      REG(a1) Msg msg){
+			      REG(a1) Msg msg)
+{
+#else
+AROS_UFH3(ULONG, HTMLGadClDispatch,
+    AROS_UFHA(Class *, cl, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(Msg, msg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
+
 /*  kprintf("Method %08lx issued\n",msg->MethodID); */
 
   switch (msg->MethodID) { /* approx calling order */
@@ -1051,6 +1094,10 @@ ASM ULONG HTMLGadClDispatch(REG(a0) Class *cl,
 
 
   return(DoSuperMethodA(cl,obj,msg));
+
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 
@@ -2100,10 +2147,19 @@ static ULONG HTMLTextClHandleInput(Class *cl, Object *obj, struct MUIP_HandleInp
 /********************************************************
   The main HTMLText handler routine
 ********************************************************/
+#ifndef __AROS__
 ASM ULONG HTMLTextClDispatch(REG(a0) Class *cl,
 			      REG(a2) Object *obj,
-			      REG(a1) Msg msg){
-
+			      REG(a1) Msg msg)
+{
+#else
+AROS_UFH3(ULONG, HTMLTextClDispatch,
+    AROS_UFHA(Class *, cl, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(Msg, msg, A1))
+{
+    AROS_USERFUNC_INIT
+#endif
 	switch (msg->MethodID) { /* approx calling order */
 		case MUIM_AskMinMax  : return(HTMLTextClAskMinMax(cl,obj,(APTR)msg));
 		case MUIM_Draw       : return(HTMLTextClDraw(cl,obj,(APTR)msg));
@@ -2134,6 +2190,10 @@ ASM ULONG HTMLTextClDispatch(REG(a0) Class *cl,
 
   }
   return(DoSuperMethodA(cl,obj,msg));
+
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 /*********************  HTMLTextN  *********************/
@@ -2255,10 +2315,19 @@ static ULONG HTMLTextNClHandleInput(Class *cl, Object *obj, struct MUIP_HandleIn
 /********************************************************
   The main HTMLTextN handler routine
 ********************************************************/
+#ifndef __AROS__
 ASM ULONG HTMLTextNClDispatch(REG(a0) Class *cl,
 			      REG(a2) Object *obj,
-			      REG(a1) Msg msg){
-
+			      REG(a1) Msg msg)
+{
+#else
+AROS_UFH3(ULONG, HTMLTextNClDispatch,
+    AROS_UFHA(Class *, cl, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(Msg, msg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
 	switch (msg->MethodID) {
 		case MUIM_AskMinMax  : return(HTMLTextNClAskMinMax(cl,obj,(APTR)msg));
 		case MUIM_Draw       : return(HTMLTextNClDraw(cl,obj,(APTR)msg));
@@ -2270,6 +2339,9 @@ ASM ULONG HTMLTextNClDispatch(REG(a0) Class *cl,
 //		case MUIM_Show       : return(HTMLTextNClShow(cl,obj,(APTR)msg));
   }
   return(DoSuperMethodA(cl,obj,msg));
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 /*****************************************************
@@ -3356,10 +3428,20 @@ void SubmitForm(struct FormButtonHookMsg *msg)
 		}
 }
 
+#ifndef __AROS__
 ULONG SAVEDS ASM FormButtonFunc(REG(a0) struct Hook *hook,
 			   REG(a2) APTR	      object,
 			   REG(a1) struct FormButtonHookMsg *msg)
 {
+#else
+AROS_UFH3(ULONG, FormButtonFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(APTR, object, A2),
+    AROS_UFHA(struct FormButtonHookMsg *, msg, A1))
+{
+    AROS_USERFUNC_INIT
+
+#endif
 	FormPartInfo *fp;
 
 	if(msg->widget->type==FTYPE_BUTTON_S){
@@ -3375,15 +3457,30 @@ ULONG SAVEDS ASM FormButtonFunc(REG(a0) struct Hook *hook,
 			ClearWidget(fp);
 		}
 	return 0;
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
+#ifndef __AROS__
 ULONG SAVEDS ASM FormStringFunc(REG(a0) struct Hook *hook,
 			   REG(a2) APTR	      object,
 			   REG(a1) struct FormButtonHookMsg *msg)
 {
+#else
+AROS_UFH3(ULONG, FormStringFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(APTR, object, A2),
+    AROS_UFHA(struct FormButtonHookMsg *, msg, A1))
+{
+    AROS_USERFUNC_INIT
+#endif
 	char *res;
 	SubmitForm(msg);
 	return 0;
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 struct Hook FormButton_hook=
@@ -3481,11 +3578,20 @@ void ImageSubmitForm(FormInfo *fptr,char *name,int x,int y)
 }
 
 
-
+#ifndef __AROS__
 ULONG SAVEDS ASM FormRadioFunc(REG(a0) struct Hook *hook,
 			   REG(a2) APTR	      object,
 			   REG(a1) struct FormButtonHookMsg *msg)
 {
+#else
+AROS_UFH3(ULONG, FormRadioFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(APTR, object, A2),
+    AROS_UFHA(struct FormButtonHookMsg *, msg, A1))
+{
+    AROS_USERFUNC_INIT
+
+#endif
 	WidgetInfo *cw;
 
 	for(cw=msg->widget->PrevRadio;cw;cw=cw->PrevRadio)
@@ -3493,6 +3599,9 @@ ULONG SAVEDS ASM FormRadioFunc(REG(a0) struct Hook *hook,
 	for(cw=msg->widget->NextRadio;cw;cw=cw->NextRadio)
 		set(cw->MUI_SubObject,MUIA_Selected,FALSE);
 	return 0;
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 
 struct Hook FormRadio_hook=
@@ -3529,10 +3638,20 @@ struct TextEditHookMsg
 	FormInfo *Form;
 };
 
+#ifndef __AROS__
 static ULONG SAVEDS ASM TextEditFunc(REG(a0) struct Hook *hook,
 			   REG(a2) APTR	      obj,
 			   REG(a1) struct TextEditHookMsg *msg)
 {
+#else
+AROS_UFH3(ULONG, TextEditFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(APTR, obj, A2),
+    AROS_UFHA(struct TextEditHookMsg *, msg, A1))
+{
+    AROS_USERFUNC_INIT
+
+#endif
 	LONG res;
 
 	get(obj,MUIA_TEF_Active,&res);
@@ -3542,6 +3661,9 @@ static ULONG SAVEDS ASM TextEditFunc(REG(a0) struct Hook *hook,
 	else
 		set(HTML_Gad,HTMLA_ScrollKeys,TRUE);
 	return 0;
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 struct Hook TextEdit_hook=
 {
@@ -3564,8 +3686,17 @@ void FreeCommaList(char **values, int nof)
 ** not implement a specific lm_Type.
 */
 
+#ifndef __AROS__
 ULONG SAVEDS ASM LayoutFunc(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) struct MUI_LayoutMsg *lm)
 {
+#else
+AROS_UFH3(ULONG, LayoutFunc,
+    AROS_UFHA(struct Hook *, h, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(struct MUI_LayoutMsg, *lm, A1))
+{
+    AROS_USERFUNC_INIT
+#endif
 	HTMLGadClData *inst=INST_DATA(HTMLGadClass,HTML_Gad);
 	switch (lm->lm_Type)
 	{
@@ -3665,6 +3796,10 @@ ULONG SAVEDS ASM LayoutFunc(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) s
 		}
 	}
 	return(MUILM_UNKNOWN);
+
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 #if 0
 Calling sequence when loading new page:

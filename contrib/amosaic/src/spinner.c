@@ -161,9 +161,18 @@ static ULONG SpinnerClSet(Class *cl, Object *obj, Msg msg)
 /********************************************************
   The main gadget handler routine
 ********************************************************/
+#ifndef __AROS__
 ASM ULONG SpinnerClDispatch(REG(a0) Class *cl, REG(a2) Object *obj,
 			    REG(a1) Msg msg)
 {
+#else
+AROS_UFH3(ULONG,SpinnerClDispatch,
+    AROS_UFHA(Class *, cl, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(Msg, msg, A1))
+{
+  AROS_USERFUNC_INIT
+#endif
   switch (msg->MethodID)
     {
     case MUIM_AskMinMax: return(SpinnerClAskMinMax(cl,obj,(APTR)msg));
@@ -175,6 +184,9 @@ ASM ULONG SpinnerClDispatch(REG(a0) Class *cl, REG(a2) Object *obj,
     }
   
   return(DoSuperMethodA(cl,obj,msg));
+#ifdef __AROS__
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 
