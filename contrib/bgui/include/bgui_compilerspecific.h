@@ -147,7 +147,7 @@
 	//#define USE_BUILTIN_MATH
 	//#include <string.h>
 #else
-#ifdef __GNUC__
+#if defined(__GNUC__) || defined(__INTEL_COMPILER)
 	/* GeekGadgets GCC 2.7.2.1 or better */
 
 //      #define INLINE          static inline
