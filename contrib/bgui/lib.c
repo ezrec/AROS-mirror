@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/07/06 16:44:03  stegerg
+ * AddTaskMember can now be called. Problem was Cli()->cli_CommandName
+ * which BGUI expected to be a BSTR with size in first byte.
+ *
  * Revision 42.4  2000/07/03 20:45:44  bergers
  * Update. Test1 now successfully opens the library. In LibOpen the AddTaskMember function seems to trash the stack somehow (return address is trashed) and therefore I had to take it out.
  *
@@ -442,8 +446,8 @@ makeproto SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0
    /*
     * Add this task to the list.
     */
-printf("%s: Had to take out AddTaskMember since it trashes stack somehow\n",__FUNCTION__);
-//   if ((tc = AddTaskMember()) != TASK_FAILED)
+
+   if ((tc = AddTaskMember()) != TASK_FAILED)
    {
       /*
        * Increase open counter when necessary.

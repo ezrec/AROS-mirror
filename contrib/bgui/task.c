@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/07/06 16:44:03  stegerg
+ * AddTaskMember can now be called. Problem was Cli()->cli_CommandName
+ * which BGUI expected to be a BSTR with size in first byte.
+ *
  * Revision 42.5  2000/06/01 01:41:37  bergers
  * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
  *
@@ -399,19 +403,26 @@ makeproto UWORD AddTaskMember(void)
       DefPrefs();
       sprintf(buffer, "ENV:BGUI/%s.prefs", "Default");
       LoadPrefs(buffer);
-      if(Cli())
+      if(!Cli())
       {
          STRPTR command_name,insert;
          size_t offset;
-
+	 UWORD command_len;
+	 
          command_name=BADDR(Cli()->cli_CommandName);
          strcpy(buffer,"ENV:BGUI/");
          insert=buffer+sizeof("ENV:BGUI/")-1;
+	 #ifdef _AROS
+         strcpy(insert,command_name);
+	 command_len = strlen(command_name);
+	 #else
          memcpy(insert,command_name+1,*command_name);
-         *(insert+ *command_name)='\0';
+	 command_len = *command_name;
+         *(insert+ command_len)='\0';
+	 #endif
          if((offset=FilePart(insert)-insert)!=0)
-           memcpy(insert,command_name+1+offset,*command_name-offset);
-         insert+= *command_name-offset;
+           memcpy(insert,command_name+1+offset,command_len-offset);
+         insert+= command_len-offset;
          strcpy(insert,".prefs");
       }
       else
