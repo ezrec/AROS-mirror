@@ -1,8 +1,9 @@
-#   $Id$
+# $Id$
 #
-#   Makefile for the C: Programs
+# Makefile for the BGUI Example programs
 
 include $(TOP)/config/make.cfg
+include ../make.cfg
 
 FILES = AddButtons \
 	Area \
@@ -24,10 +25,8 @@ FILES = AddButtons \
 #	ColorWheel \
 #	TextField
 
-BGUIPROGDIR := $(AROSDIR)/bgui
-
 # I'd like to move this into a rule, but it would be far too hard.
-EXES := $(foreach f,$(FILES), $(BGUIPROGDIR)/$(f))
+EXES := $(foreach f,$(FILES), $(BGUIEXAMPLESDIR)/$(f))
 
 USE_BGUILIB := yes
 USE_CLIB_SHARED := yes
@@ -41,7 +40,7 @@ USE_AROSLIB := yes
 
 bgui-examples : setup $(EXES)
 
-%make_prog_single dir=$(BGUIPROGDIR)
+%make_prog_single dir=$(BGUIEXAMPLESDIR)
 
 %common
 %include_deps

@@ -1,8 +1,6 @@
-TOP = ../..
-
 include $(TOP)/config/make.cfg
+include make.cfg
 
-ver=41
 o=+$(BUILD_TYPE).o
 DEBUG_OPTIONS=
 STANDARD_OPTIONS=
@@ -10,29 +8,20 @@ ENHANCED_OPTIONS=-DENHANCED
 
 CC = gcc
 LD = ld
-CP = cp
-RM = rm
 #DEFINES should really not define ENHANCED but for AROS it's fine.
-DEFINES = -D_AROS -DENHANCED
-#MAKE = make
-ECHO = echo
+DEFINES := -D_AROS -DENHANCED
 
-BINDIR = $(AROSDIR)
-LIBDIR = $(AROSDIR)/lib
-AROSLIBDIR = $(AROSDIR)/Libs
+LIBDIR          := $(AROSDIR)/lib
 
-BGUIPROGDIR = $(BINDIR)/bgui
+OS_INCLUDES_DIR := $(AROSDIR)/Include
+INCLUDES_DIR    := $(AROSDIR)/Include
 
-OS_INCLUDES_DIR = $(BINDIR)/Include
-INCLUDES_DIR = $(BINDIR)/Include
+OS_INCLUDES     := -I$(AROSDIR)/Include
 
-OS_INCLUDES = -I$(OS_INCLUDES_DIR)
-USER_INCLUDES = -I. -I$(INCLUDES_DIR)
+USER_INCLUDES   := -I. -I$(INCLUDES_DIR)
 
-
-INCLUDES = $(USER_INCLUDES) $(OS_INCLUDES)
-
-CFLAGS = $(INCLUDES)
+INCLUDES        := $(USER_INCLUDES) $(OS_INCLUDES)
+CFLAGS          := $(INCLUDES)
 
 INCLUDE_FILES = \
 	o/bgui.library_rev.h \
@@ -95,7 +84,7 @@ gadgets/Bar \
 gadgets/LayoutGroup
 
 gadgets: $(INCLUDE_FILES) $(gadget_directories)
-	$(foreach f,$(gadget_directories), $(MAKE) -f Makefile.aros -C $(f) all;)
+	$(foreach f,$(gadget_directories), $(MAKE) TOP=$(TOP) -f Makefile.aros -C $(f) all;)
 
 
 OBJECTS =  \
@@ -110,6 +99,7 @@ OBJECTS =  \
 
 #MM bgui-setup
 bgui-setup : makedirs
+	@$(CP) s/Package-Startup $(BGUISDIR)
 
 #MM bgui-includes-copy
 bgui-includes-copy : $(INCLUDE_FILES)
@@ -124,19 +114,27 @@ all: makedirs \
 
 clean:
 	$(RM) -rf $(INCLUDE_FILES) o/*.o o/*.err
-	$(MAKE) -C gadgets/PopButton -f Makefile.aros clean
-	$(MAKE) -C gadgets/Palette -f Makefile.aros clean
-	$(MAKE) -C gadgets/TreeView -f Makefile.aros clean
-	$(MAKE) -C gadgets/Bar -f Makefile.aros clean
-	$(MAKE) -C gadgets/LayoutGroup -f Makefile.aros clean
+	$(MAKE) TOP=$(TOP) -C gadgets/PopButton -f Makefile.aros clean
+	$(MAKE) TOP=$(TOP) -C gadgets/Palette -f Makefile.aros clean
+	$(MAKE) TOP=$(TOP) -C gadgets/TreeView -f Makefile.aros clean
+	$(MAKE) TOP=$(TOP) -C gadgets/Bar -f Makefile.aros clean
+	$(MAKE) TOP=$(TOP) -C gadgets/LayoutGroup -f Makefile.aros clean
 
 makedirs : 
 	@$(MKDIR) $(INCLUDES_DIR)
 	@$(MKDIR) $(INCLUDES_DIR)/libraries
 	@$(MKDIR) $(INCLUDES_DIR)/bgui
 	@$(MKDIR) $(INCLUDES_DIR)/pragma
-	@$(MKDIR) $(BGUIPROGDIR)
+	@$(MKDIR) $(BGUIDIR)
+	@$(MKDIR) $(BGUILIBSDIR)
+	@$(MKDIR) $(BGUIEXAMPLESDIR)
+	@$(MKDIR) $(BGUITESTSDIR)
+	@$(MKDIR) $(BGUISDIR)
+	@$(MKDIR) $(BGUIPREFSDIR)
+	@$(MKDIR) $(BGUICLASSESDIR)
+	@$(MKDIR) $(BGUIGADGETSDIR)
 
+        
 o/bgui.library_rev.h: bgui.library_rev.rev
 	@$(CP) bgui.library_rev.rev o/bgui.library_rev.h
 
@@ -242,7 +240,7 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 	      o/plgroupclasses$(o) o/endtag.o \
 	      -static -i -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -o $@
 	@$(ECHO) Installing bgui.library...
-	@$(CP) $@ $(AROSLIBDIR)/bgui.library
+	@$(CP) $@ $(BGUIDIR)/Libs/bgui.library
 
 main_o=o/lib$(o) o/libfunc$(o) o/task$(o) o/request$(o) \
 	o/misc$(o) o/bgui_locale$(o) o/miscc$(o)

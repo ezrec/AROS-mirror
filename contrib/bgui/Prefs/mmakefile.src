@@ -1,13 +1,14 @@
-#   $Id$
+# $Id$
 #
-#   Makefile to make BGUI Prefs program.
+# Makefile to make BGUI Prefs program.
 
 include $(TOP)/config/make.cfg
+include ../make.cfg
 
 FILES := BGUIPrefs
 
-EXEDIR := $(AROSDIR)/Prefs
-EXE := $(EXEDIR)/BGUI
+EXEDIR := $(BGUIPREFSDIR)
+EXE    := $(EXEDIR)/BGUI
 
 USE_AROSLIB := yes
 USE_CLIB_SHARED := yes

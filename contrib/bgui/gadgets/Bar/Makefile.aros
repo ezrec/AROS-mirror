@@ -1,16 +1,11 @@
-TOP = ../../../..
-
-include $(TOP)/config/host.cfg
+include $(TOP)/config/make.cfg
+include ../../make.cfg
 
 # Must reset TARGET_ARCH here since it is implicitly used by make
 TARGET_ARCH := 
 
 CC = gcc
 DEFINES = -D_AROS
-MAKE = make
-ECHO = echo
-RM = rm
-CP = cp
 
 AROSDIR = $(ARCHDIR)/AROS
 BINDIR = $(AROSDIR)
@@ -52,13 +47,16 @@ $(GADGET) : $(LIBTARGETS)
 		$(LIBS) \
 		-o $@
 	@$(ECHO) Installing $@...
-	@$(CP) $@ $(BINDIR)/Classes/Gadgets
+	@$(CP) $@ $(BGUIGADGETSDIR)
 
 $(DEMO) : $(DEMO).c
 	@$(CC) $(OS_INCLUDES) $(DEFINES) -c $^ -o $@.o
 	@$(CC) $(FLAGS) $(STARTUP) $@.o -o $@ $(LIBS)
 	@$(ECHO) Installing $@
-	@$(CP) $@ $(BINDIR)/bgui
+	@$(CP) $@ $(BGUIEXAMPLESDIR)
+
+%.o : %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 all : $(LIBTARGETS) $(GADGET) $(DEMO)
 

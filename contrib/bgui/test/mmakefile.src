@@ -1,8 +1,9 @@
-#   $Id$
+# $Id$
 #
-#   Makefile for the C: Programs
+# Makefile for the BGUI Test programs
 
 include $(TOP)/config/make.cfg
+include ../make.cfg
 
 FILES = test1 \
 	test2 \
@@ -15,10 +16,8 @@ FILES = test1 \
 	test9 \
 	test13
 
-BGUIPROGDIR := $(AROSDIR)/bgui
-
 # I'd like to move this into a rule, but it would be far too hard.
-EXES := $(foreach f,$(FILES), $(BGUIPROGDIR)/$(f))
+EXES := $(foreach f,$(FILES), $(BGUITESTSDIR)/$(f))
 
 USE_BGUILIB := yes
 USE_CLIB_SHARED := yes
@@ -32,7 +31,7 @@ USE_AROSLIB := yes
 
 bgui-test : setup $(EXES)
 
-%make_prog_single dir=$(BGUIPROGDIR)
+%make_prog_single dir=$(BGUITESTSDIR)
 
 %common
 %include_deps
