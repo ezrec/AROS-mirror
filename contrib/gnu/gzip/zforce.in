@@ -1,0 +1,59 @@
+:
+#!/bin/sh
+# zforce: force a gz extension on all gzip files so that gzip will not
+# compress them twice.
+#
+# This can be useful for files with names truncated after a file transfer.
+# 12345678901234 is renamed to 12345678901.gz
+
+
+# Copyright (C) 2002 Free Software Foundation
+# Copyright (C) 1993 Jean-loup Gailly
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+
+
+PATH="BINDIR:$PATH"; export PATH
+x=`basename $0`
+if test $# = 0; then
+  echo "force a '.gz' extension on all gzip files"
+  echo usage: $x files...
+  exit 1
+fi
+
+res=0
+for i do
+  if test ! -f "$i" ; then
+    echo ${x}: $i not a file
+    res=1
+    continue
+  fi
+
+  case "$i" in
+  *[-.]z | *[-.]gz | *.t[ag]z) continue;;
+  esac
+
+  if gzip -lv < "$i" 2>/dev/null | grep '^defl' > /dev/null; then
+
+    new="$i.gz"
+    if mv "$i" "$new"; then
+      echo $i -- replaced with $new
+    else
+      res=$?
+    fi
+  fi
+done
+exit $res
