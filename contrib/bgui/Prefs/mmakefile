@@ -1,6 +1,6 @@
 TOP = ../../..
 
-#include $(TOP)/config/make.cfg
+include $(TOP)/config/make.cfg
 
 CC = gcc
 DEFINES = -D_AROS
@@ -9,8 +9,8 @@ ECHO = echo
 RM = rm
 CP = cp
 
-BINDIR = $(TOP)/bin/linux-i386/AROS
-LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
+BINDIR = $(AROSDIR)
+LIBDIR = $(AROSDIR)/lib
 
 BGUIPROGDIR = $(BINDIR)/Prefs
 

@@ -1,5 +1,5 @@
 TOP = ../../..
-
+include $(TOP)/config/make.cfg
 
 CC = gcc
 CP = cp
@@ -9,14 +9,13 @@ RM = rm
 
 FLAGS = -nostartfiles -nostdlib -Wl,-i
 
-BINDIR = $(TOP)/bin/linux-i386/gen
-LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
-AROSDIR = $(TOP)/bin/linux-i386/AROS
+BINDIR = $(GENDIR)
+LIBDIR = $(AROSDIR)/lib
 
 BGUIPROGDIR = $(AROSDIR)/bgui
 
 OS_INCLUDES_DIR = $(BINDIR)/include
-USER_INCLUDES_DIR = $(TOP)/bin/linux-i386/AROS/Include
+USER_INCLUDES_DIR = $(AROS_INCLUDES)
 
 OS_INCLUDES = -I$(OS_INCLUDES_DIR)
 USER_INCLUDES = -I. -I .. -I$(USER_INCLUDES_DIR)

@@ -1,6 +1,9 @@
 TOP = ../../../..
 
-#include $(TOP)/config/make.cfg
+include $(TOP)/config/host.cfg
+
+# Must reset TARGET_ARCH here since it is implicitly used by make
+TARGET_ARCH := 
 
 CC = gcc
 DEFINES = -D_AROS

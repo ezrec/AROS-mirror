@@ -1,6 +1,6 @@
 TOP = ../..
 
-#include $(TOP)/config/make.cfg
+include $(TOP)/config/make.cfg
 
 ver=41
 o=+$(BUILD_TYPE).o
@@ -17,9 +17,9 @@ DEFINES = -D_AROS -DENHANCED
 MAKE = make
 ECHO = echo
 
-BINDIR = $(TOP)/bin/linux-i386/AROS
-LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
-AROSLIBDIR = $(TOP)/bin/linux-i386/AROS/Libs
+BINDIR = $(AROSDIR)
+LIBDIR = $(AROSDIR)/lib
+AROSLIBDIR = $(AROSDIR)/Libs
 
 BGUIPROGDIR = $(BINDIR)/bgui
 

@@ -1,6 +1,9 @@
 TOP = ../../../..
 
-#include $(TOP)/config/make.cfg
+include $(TOP)/config/host.cfg
+
+# Must kill TARGET_ARCH here since this is implicitly used by make
+TARGET_ARCH :=
 
 CC = gcc
 DEFINES = -D_AROS
@@ -8,8 +11,11 @@ MAKE = make
 ECHO = echo
 RM = rm
 
-BINDIR = $(TOP)/bin/linux-i386/AROS
-OS_INCLUDES_DIR = $(BINDIR)/Include
+#AROSDIR = $(ARCHDIR)/AROS
+#AROS_INCLUDES = $(AROSDIR)/Include
+#BINDIR = $(TOP)/bin/linux-i386/AROS
+#OS_INCLUDES_DIR = $(BINDIR)/Include
+OS_INCLUDES_DIR = $(AROS_INCLUDES)
 
 OS_INCLUDES = -I$(OS_INCLUDES_DIR) -I../..
 
@@ -17,9 +23,9 @@ INCLUDES = $(USER_INCLUDES) $(OS_INCLUDES) $(DEFINES)
 
 CFLAGS = $(INCLUDES)
 
-TARGETS =  bguiclass_lib.o bguiclass_libtag.o bguiclass_libendtag.o
+TARGET =  bguiclass_lib.o bguiclass_libtag.o bguiclass_libendtag.o
 
-all: $(TARGETS)
+all: $(TARGET)
 
 clean : 
-	@$(RM) -rf $(TARGETS)
+	@$(RM) -rf $(TARGET)
