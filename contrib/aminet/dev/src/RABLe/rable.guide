@@ -1,0 +1,268 @@
+@database "rablepaint.guide"
+
+@smartwrap
+
+@Index "Main"
+
+@node "Main" "rablepaint.guide"
+
+
+
+
+@{B}@{U}@{JCENTER}Welcome to the documentation for RABLe-Paint!@{UU}@{UB}
+
+
+
+1 @{"  Background    " link "Background"}
+
+
+2 @{"  Requirements  " link "Requirements"}
+
+
+3 @{"  Installation  " link "Installation"}
+
+
+4 @{"  Usage         " link "Usage"}
+
+
+5 @{"  Thank Yous    " link "Thanks"}
+
+
+6 @{"  Contact Info  " link "Contact"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Note: This guide assumes you are using amigaguide V40 or higher.
+@{JLEFT}
+@endnode
+
+@node "Background" "Background Information"
+
+I am Aaron and you are the reader.  The other person involved is Bob.  Bob and I set out
+to make a good starter program for the Amiga.  Both of us were familiar with C, but not
+so good at programming on an Amiga.  We paired up after I posted a question on a newsgroup
+and Bob replied.
+
+
+
+We wanted to make a program that would be somewhat useful to others, but more importantly
+teach us the essentials to programming the Amiga using only standard system calls.  We
+decided upon a simple paint program.  Our initial goals were along these lines -
+
+
+	- Use only standard Amiga libraries and system calls
+
+	- Allow NTSC, PAL, and Graphics Card video modes
+
+	- Use gadgets and menus
+
+	- Allow for objects that were filled and unfilled
+
+	- Provide for saving and loading of images
+
+	- Ensure code was portable among compilers
+
+
+ 
+After several months of working at it, we have finally completed what we feel we set out
+to do.  This program is by no means a replacement for a good paint program, but it does
+allow one to load in a picture supported by datatypes and save it as an iff.  You can
+also draw and save your own simple graphics.
+
+
+ 
+Bob and I are both quite involved in different things, so its time to switch projects.  Bob
+works at a professional video production studio, Jax Productions in Florida.  I am in the
+military and am also a full time student completing my Computer Science degree.  We have
+both enjoyed making this program and are happy to pass it on to others!
+
+@Endnode
+
+@node "Installation" "How to install RABLe-Paint"
+
+An installer script has not been included with the program.  One is not needed since the
+file can be ran by itself without any extra libraries.
+
+
+
+For those who want to view the source code, it is all available.  All of the C modules and
+headers are  placed in a directory called COMPILE.  All the files
+we used to compile the program can be found here.  You should have no problem compiling the
+program using either SAS or HiSoft.  Other compilers may work as well, but have not been
+tested.  The settings can all be found in the history file, rable_history.h.
+
+@endnode
+
+@node "Usage" "How does this thing work?"
+
+Once you start the program it will present you with a requestor asking for the screen mode
+you would like to use.  Choose a mode and then click ok.
+
+
+
+The drawing screen has three windows.
+
+
+@{JCENTER}
+
+- Drawing area   - Pallette menu   - Tool selection
+
+@{JLEFT}
+
+
+To choose either a color to draw in or a drawing tool, simply click the button you desire.
+The drawing tools are straight forward with the exception of how to use the fills.  If you
+would like to do a patterned fill, choose the right half of a drawing tool - square, circle,
+oval, triangle, or rectangle.  You may have a solid fill or you can choose from a few patterns
+at the bottom of the toolbox.  To turn a fill pattern off, simply click the currently selected
+pattern again.
+
+
+ 
+The pallette may be adjusted by clicking on a color and then moving one of the three sliders
+at the bottom of the pallette menu.
+
+
+ 
+To draw, simply move the mouse into the drawing area and press the left button down to start
+drawing.
+
+
+ 
+The menu is accessed by pressing the right mouse button.  The options should be self
+explanatory.  The drawing area can be resized.  A load command selection will allow you to 
+load any picture that you have the datatypes to support and that does not contain more than
+32 colors.
+
+
+
+Programmers Note: All of the source code is available for perusal.  None of it maybe sold
+or copied without express written consent of both authors of the program.  Modification of
+the code and recompilation may be done and distributed, so long as full credit is given to
+both the original authors.  Any modifications, corrections, or alterations and or recompilations
+of the code, are permitted, so long as all distributions of the new code are not sold.
+
+
+
+There are two compiled versions provided to the user.  The one with the icon attached is the
+SAS compile.  The HiSoft version is located in the compile directory and is called rable.hisoft.
+  Neither compiler is being promoted as better, but rather both versions are given to assure the user that the
+source code works with both compilers.
+
+
+
+
+This program and all source code maybe distributed via Aminet, so long as the original archive
+is left intact and not altered.
+
+
+@endnode
+
+@node "Requirements" "What do I need for this program?"
+
+To use RABLe-Paint you must have the following -
+
+
+- Amiga with 68000 or greater (hmmmm...)
+
+
+- About 1 meg of free ram or more
+
+
+- OS3.0 or greater
+
+
+- Your datatypes in good working order
+
+@endnode
+
+@node "Contact" "How do I get ahold of you all?"
+
+Both Bob and I would love to hear any positive feedback fellow Amiga users might have.  In
+order to contact us use the following addresses -
+
+
+@{JCENTER}
+Aaron: antroberts@iname.com
+
+
+Bob: bobl@jaxproductions.com
+
+@{JLEFT}
+
+
+You could also mail me at -
+
+
+
+			Aaron Roberts
+
+			4847 Aspenwood
+
+			Kirby, Tx  78219
+
+
+
+Remember that this program was written to be a programming exercise and not a serious paint
+program.  If you would like any features implemented it is doubtful that any revisions will
+take place.  If anyone finds programming errors, please let us know so we can correct them.
+
+
+
+@{JCENTER}
+@{U}Thanks for your support!@{UU}
+
+
+@{JLEFT}
+@endnode
+
+@node "Thanks" "Who we needed."
+
+First off a big thanks to both of our wives!  (Bob says here here.)  They have put up with
+all our "Ohhh!  Look look honey.  See, it draws a line now!"  etc.  Without them, we would
+have had no beta testers and no one to tell us we were doing a good job.
+
+
+
+@{B}@{JCENTER}Thanks Terri!	Thanks Fran!@{UB}
+
+@{JLEFT}
+
+
+Thanks also to the following people -
+
+
+Roland Bengtsson:
+
+Helped fix the continuous line routine.  He has great knowledge and was a wonderful help.  Thanks!
+
+
+Charles Patterson:
+
+For posting his excellent source code, with lots of comments, on his web page.  It was VERY helpful.
+The page is www.azstarnet.com/~midian/amiga/index.html
+
+
+
+Both Bob and I would like to thank our Creator for giving us the friends and family we have
+as well as the ability to do the work we do.  We are both thankful for all that we have and
+grateful for the chance to use our talents to benefit others.
+
+@endnode
+
