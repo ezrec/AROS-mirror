@@ -3,6 +3,8 @@ include $(TOP)/config/make.cfg
 FILES = Send Receive Utils xprgetsystime xprtimeout xprzmodem_locale Zm xprsprintf xprz_init
 
 #MM- aminet-comm-term-xprz : linklibs-aminet-comm-term-xprz
+#MM- aminet-comm-term-xprz-clean : linklibs-aminet-comm-term-xprz-clean
+#MM- aminet-comm-term-xprz-includes : linklibs-aminet-comm-term-xprz-includes
 
 %build_module mmake=linklibs-aminet-comm-term-xprz \
     modname=xprzmodem modtype=library \
