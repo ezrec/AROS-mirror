@@ -89,8 +89,8 @@ ASM REGFUNC3(VOID, SPrintfA,
 //ASM VOID LHook_Count(REG(a0) struct Hook * hook, REG(a1) ULONG chr, REG(a2) struct Locale * loc)
 ASM REGFUNC3(VOID, LHook_Count,
         REGPARAM(A0, struct Hook *, hook),
-        REGPARAM(A1, ULONG, chr),
-        REGPARAM(A2, struct Locale *, loc))
+        REGPARAM(A2, struct Locale *, loc),
+        REGPARAM(A1, ULONG, chr))
 {
   hook->h_Data++;
 }
@@ -99,8 +99,8 @@ ASM REGFUNC3(VOID, LHook_Count,
 //ASM VOID LHook_Format(REG(a0) struct Hook * hook, REG(a1) ULONG chr, REG(a2) struct Locale *loc)
 ASM REGFUNC3(VOID, LHook_Format,
         REGPARAM(A0, struct Hook *, hook),
-        REGPARAM(A1, ULONG, chr),
-        REGPARAM(A2, struct Locale *, loc))
+        REGPARAM(A2, struct Locale *, loc),
+        REGPARAM(A1, ULONG, chr))
 {
   char * cptr = (char *)hook->h_Data;
   *cptr++ = (char)chr;
