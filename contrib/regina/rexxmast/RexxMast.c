@@ -27,6 +27,8 @@ struct IntuitionBase *IntuitionBase;
 static void StartFile(struct RexxMsg *);
 static void AddLib(struct RexxMsg *);
 static void RemLib(struct RexxMsg *);
+static void AddCon(struct RexxMsg *);
+static void RemCon(struct RexxMsg *);
 static void QueryFunclist(struct RexxMsg *);
 
 int main(void)
@@ -87,7 +89,6 @@ int main(void)
 			    "TOO HIGH"
 		    };
 		    LONG action = msg->rm_Action & RXCODEMASK;
-		    
 		    switch (action)
 		    {
 		    case RXFUNC:
@@ -101,6 +102,14 @@ int main(void)
 			StartFile(msg);
 			break;
 
+		    case RXADDCON:
+		        AddCon(msg);
+		        break;
+		    
+		    case RXREMCON:
+		        RemCon(msg);
+		        break;
+		    
 		    case RXADDFH:
 		    case RXADDLIB:
 		        AddLib(msg);
@@ -262,6 +271,8 @@ static void StartFile(struct RexxMsg *msg)
     msg->rm_Result1 = rc;
     if (rc==0 && (msg->rm_Action & RXFF_RESULT) && RXVALIDSTRING(rxresult))
 	msg->rm_Result2 = (IPTR)CreateArgstring(RXSTRPTR(rxresult), RXSTRLEN(rxresult));
+    else
+        msg->rm_Result2 = NULL;
 
     if (RXSTRPTR(rxresult)!=NULL)
 	free(RXSTRPTR(rxresult));
@@ -276,13 +287,14 @@ static void AddLib(struct RexxMsg *msg)
   if (msg->rm_Args[0] == NULL || msg->rm_Args[1] == NULL)
   {
     msg->rm_Result1 = 20;
+    msg->rm_Result2 = 0;
     return;
   }
   
   rsrc = (struct RexxRsrc *)AllocMem(sizeof(struct RexxRsrc), MEMF_ANY | MEMF_CLEAR);
   rsrc->rr_Size = sizeof(struct RexxRsrc);
   rsrc->rr_Node.ln_Pri = atoi((char *)msg->rm_Args[1]);
-  rsrc->rr_Node.ln_Name = strdup((char *)msg->rm_Args[0]);
+  rsrc->rr_Node.ln_Name = CreateArgstring(msg->rm_Args[0], strlen(msg->rm_Args[0]));
   
   if ((msg->rm_Action & RXCODEMASK) == RXADDLIB)
   {
@@ -290,11 +302,12 @@ static void AddLib(struct RexxMsg *msg)
     if (msg->rm_Args[2] == NULL)
     {
       msg->rm_Result1 = 20;
+      msg->rm_Result2 = 0;
       FreeMem(rsrc, rsrc->rr_Size);
       return;
     }
-    rsrc->rr_Args1 = (LONG)atoi((char *)msg->rm_Args[2]);
-    rsrc->rr_Args2 = (msg->rm_Args[3] == NULL) ? (LONG)0 : (LONG)atoi((char *)msg->rm_Args[2]);
+    rsrc->rr_Arg1 = (LONG)atoi((char *)msg->rm_Args[2]);
+    rsrc->rr_Arg2 = (msg->rm_Args[3] == NULL) ? (LONG)0 : (LONG)atoi((char *)msg->rm_Args[2]);
   }
   else
     rsrc->rr_Node.ln_Type = RRT_HOST;
@@ -302,17 +315,16 @@ static void AddLib(struct RexxMsg *msg)
   LockRexxBase(0);
   if (FindName(&RexxSysBase->rl_LibList, rsrc->rr_Node.ln_Name))
   {
+    msg->rm_Result1 = 5;
+    msg->rm_Result2 = 0;
     FreeMem(rsrc, rsrc->rr_Size);
-    msg->rm_Result1 = 0;
-    if (msg->rm_Action & RXFF_RESULT)
-      msg->rm_Result2 = (IPTR)CreateArgstring("0", 1);
   }
   else
   {
     Enqueue(&RexxSysBase->rl_LibList, (struct Node *)rsrc);
+    msg->rm_Result1 = 0;
+    msg->rm_Result2 = 0;
     RexxSysBase->rl_NumLib++;
-    if (msg->rm_Action & RXFF_RESULT)
-      msg->rm_Result2 = (IPTR)CreateArgstring("1", 1);
   }
   UnlockRexxBase(0);
 }
@@ -324,6 +336,7 @@ static void RemLib(struct RexxMsg *msg)
   if (msg->rm_Args[0] == NULL)
   {
     msg->rm_Result1 = 20;
+    msg->rm_Result2 = 0;
     return;
   }
   
@@ -331,18 +344,17 @@ static void RemLib(struct RexxMsg *msg)
   rsrc = (struct RexxRsrc *)FindName(&RexxSysBase->rl_LibList, (STRPTR)msg->rm_Args[0]);
   if (rsrc == NULL)
   {
-    msg->rm_Result1 = 0;
-    if (msg->rm_Action & RXFF_RESULT)
-      msg->rm_Result2 = (IPTR)CreateArgstring("0", 1);
+    msg->rm_Result1 = 5;
+    msg->rm_Result2 = 0;
   }
   else
   {
     Remove((struct Node *)rsrc);
     RexxSysBase->rl_NumLib--;
+    DeleteArgstring(rsrc->rr_Node.ln_Name);
     FreeMem(rsrc, rsrc->rr_Size);
     msg->rm_Result1 = 0;
-    if (msg->rm_Action & RXFF_RESULT)
-      msg->rm_Result2 = (IPTR)CreateArgstring("1", 1);
+    msg->rm_Result2 = 0;
   }
   UnlockRexxBase(0);
 }
@@ -361,6 +373,7 @@ static void QueryFunclist(struct RexxMsg *msg)
     if (replyport == NULL)
     {
         msg->rm_Result1 = 20;
+        msg->rm_Result2 = 0;
         return;
     }
     msg->rm_Node.mn_ReplyPort = replyport;
@@ -371,17 +384,18 @@ static void QueryFunclist(struct RexxMsg *msg)
         switch (rsrc->rr_Node.ln_Type)
         {
 	case RRT_LIB:
-	    if ((lib = OpenLibrary(rsrc->rr_Node.ln_Name, rsrc->rr_Args2))==NULL)
+	    if ((lib = OpenLibrary(rsrc->rr_Node.ln_Name, rsrc->rr_Arg2))==NULL)
 	    {
 	        msg->rm_Node.mn_ReplyPort = oldport;
 	        msg->rm_Action |= RXFF_FUNCLIST;
 	        msg->rm_Result1 = 10;
 	        msg->rm_Result2 = 14;
 	        UnlockRexxBase(0);
+	        DeletePort(replyport);
 	        return;
 	    }
 	  
-	    result1 = RexxCallQueryLibFunc(msg, lib, rsrc->rr_Args1, &result2);
+	    result1 = RexxCallQueryLibFunc(msg, lib, rsrc->rr_Arg1, &result2);
 	    if (result1 == 0)
 	    {
 	        msg->rm_Node.mn_ReplyPort = oldport;
@@ -389,6 +403,7 @@ static void QueryFunclist(struct RexxMsg *msg)
 	        msg->rm_Result1 = 0;
 	        msg->rm_Result2 = (IPTR)result2;
 	        UnlockRexxBase(0);
+	        DeletePort(replyport);
 	        return;
 	    }
 	    break;
@@ -402,6 +417,7 @@ static void QueryFunclist(struct RexxMsg *msg)
 	        msg->rm_Result1 = 10;
 	        msg->rm_Result2 = 13;
 	        UnlockRexxBase(0);
+	        DeletePort(replyport);
 	        return;
 	    }
 	  
@@ -416,6 +432,7 @@ static void QueryFunclist(struct RexxMsg *msg)
 	        msg->rm_Node.mn_ReplyPort = oldport;
 	        msg->rm_Action |= RXFF_FUNCLIST;
 	        UnlockRexxBase(0);
+	        DeletePort(replyport);
 	        return;
 	    }
 
@@ -423,4 +440,65 @@ static void QueryFunclist(struct RexxMsg *msg)
 	    assert(FALSE);
 	}
     }
+  
+    /* Function not found */
+    msg->rm_Result1 = 5;
+    msg->rm_Result2 = 0;
+    msg->rm_Node.mn_ReplyPort = oldport;
+    msg->rm_Action |= RXFF_FUNCLIST;
+    UnlockRexxBase(0);
+    DeletePort(replyport);
+}
+
+static void AddCon(struct RexxMsg *msg)
+{
+    struct RexxRsrc *rsrc;
+  
+    LockRexxBase(0);
+    rsrc = (struct RexxRsrc *)FindName(&RexxSysBase->rl_ClipList, msg->rm_Args[0]);
+    if (rsrc == NULL)
+    {
+        rsrc = (struct RexxRsrc *)AllocMem(sizeof(struct RexxRsrc), MEMF_ANY | MEMF_CLEAR);
+        rsrc->rr_Node.ln_Type = RRT_CLIP;
+        rsrc->rr_Node.ln_Name = CreateArgstring(msg->rm_Args[0], strlen(msg->rm_Args[0]));
+        rsrc->rr_Size = sizeof(struct RexxRsrc);
+        rsrc->rr_Arg1 = CreateArgstring(msg->rm_Args[1], (ULONG)msg->rm_Args[2]);
+        
+        AddTail(&RexxSysBase->rl_ClipList, (struct Node *)rsrc);
+    }
+    else
+    {
+        DeleteArgstring(rsrc->rr_Arg1);
+        rsrc->rr_Arg1 = CreateArgstring(msg->rm_Args[1], (ULONG)msg->rm_Args[2]);
+    }
+    UnlockRexxBase(0);
+  
+    msg->rm_Result1 = 0;
+    msg->rm_Result2 = 0;
+    return;
+}
+
+static void RemCon(struct RexxMsg *msg)
+{
+    struct RexxRsrc *rsrc;
+
+    LockRexxBase(0);
+    rsrc = (struct RexxRsrc *)FindName(&RexxSysBase->rl_ClipList, msg->rm_Args[0]);
+    if (rsrc == NULL)
+    {
+        msg->rm_Result1 = 0;
+    }
+    else
+    {
+	Remove(&rsrc->rr_Node);
+        DeleteArgstring(rsrc->rr_Node.ln_Name);
+        DeleteArgstring(rsrc->rr_Arg1);
+        FreeMem(rsrc, rsrc->rr_Size);
+      
+        msg->rm_Result1 = 0;
+    }
+    UnlockRexxBase(0);
+  
+    msg->rm_Result2 = 0;
+    return;
 }
