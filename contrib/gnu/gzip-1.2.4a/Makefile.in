@@ -259,10 +259,10 @@ install_compress: install
 # making them if necessary. At most one level is created (except for man).
 installdirs:
 	-if test ! -d $(prefix)/man; then \
-	   mkdir $(prefix)/man; fi
+	   mkdir -p $(prefix)/man; fi
 	-for dir in $(alldirs) ; do \
 	   if test ! -d $${dir}; then \
-	     mkdir $${dir}; fi; \
+	     mkdir -p $${dir}; fi; \
 	done
 
 test: check
