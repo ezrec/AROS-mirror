@@ -47,7 +47,8 @@ FILES := \
 # Don't use these:
 #	HTFTP \
 
-#MM- linklibs : linklib-www2
+#MM- linklibs : linklibs-www2
+#MM linklibs-www2 : includes
 
 %make_linklib_setup mmake=linklibs-www2
 %make_linklib
