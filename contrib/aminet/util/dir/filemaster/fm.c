@@ -336,8 +336,12 @@ D(bug("back from launch? \n"));
   fmconfig->flags |= MSUBPROC | MHSCROLL | MVSCROLL;
   fmmain.clock = 1;
 D(bug("launch fmclock? \n"));  
+
+#ifndef AROS
   if (!launch ((APTR) & fmclock, 0, 1, MSUBPROC))
   goto error5;
+#endif
+
 D(bug("back from launch? \n"));  
   fmmain.clock = -1;
 

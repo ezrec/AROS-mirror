@@ -164,7 +164,6 @@ D(bug("about 161...........\n"));
 UBYTE aboutstring[] = {
   ISEQ_C "%s %s\n\nAuthor:\n\nToni Wilen\nSudentie 4\n13600 HML\n"
     "Finland\n\nemail: twilen@sci.fi\nwww: www.sci.fi/~twilen\n\n"
-    "AROS version by Henrik Berglund" 
 };
 
 void

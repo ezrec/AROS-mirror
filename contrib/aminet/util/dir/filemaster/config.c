@@ -1076,7 +1076,9 @@ for(;;) {
 	ptr1+=strlen(ptr1)+1;
 
 	ptr2=ptr1;
+	#ifndef AROS
 	ptr1=stpcpy(ptr1,getstring(MSG_CONFIG_LAYOUT));
+	#endif
 	*ptr1++=32;
 	apu1=0;
 	while(fmc->listinfo[apu1][0]) {
