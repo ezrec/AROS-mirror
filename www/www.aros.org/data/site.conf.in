@@ -1,0 +1,20 @@
+# Per-site stuff for the Apache config
+#
+# Where the files are installed. This is usually /home/user/www/www.aros.org/
+# The genconf tries to figure this out itself, so usually, you don't have to
+# specify it here.
+#BASEDIR=
+
+# The name of the virtual host on which AROS is hosted. To create a local
+# copy for testing purposes, add this line to /etc/hosts:
+#
+#   127.0.0.1       localhost www2.aros.org
+#
+# (append www2.aros.org to the line which begins with 127.0.0.1).
+# If you're using a proxy, you must add www2.aros.org to the sites
+# for which your browser should not use a proxy.
+HOSTNAME=www2.aros.org
+
+# Where mailman ist installed. Don't worry if it isn't installed, you
+# don't need it (but you also cannot test the mailing lists).
+MAILMAN=/var/lib/mailman

@@ -1,0 +1,24 @@
+<VirtualHost @HOSTNAME@>
+ServerName @HOSTNAME@
+DocumentRoot @BASEDIR@/www
+ErrorLog @BASEDIR@/log/error.log
+TransferLog @BASEDIR@/log/access.log
+ScriptAlias @BASEDIR@www.aros.org/cgi-bin/
+ScriptAlias /mailman/ @MAILMAN@/cgi-bin/
+AddType text/plain c h src
+</VirtualHost>
+
+<Directory @BASEDIR@/www>
+Options FollowSymLinks
+AllowOverride None
+order allow,deny
+allow from all
+</Directory>
+
+<Directory @BASEDIR@/cgi-bin>
+Options FollowSymLinks ExecCGI
+AllowOverride None
+order allow,deny
+allow from all
+</Directory>
+
