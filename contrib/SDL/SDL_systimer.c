@@ -132,6 +132,8 @@ void SDL_StartTicks(void)
   D(bug("Timer resource allocated.\n"));
 
   GetSysTime(&basetime);
+  D(bug("Basetime: %lusecs %lumicro\n", basetime.tv_secs, basetime.tv_micro));
+
 #ifndef SHARED_LIB
   atexit(close_timer);
 #endif
@@ -162,8 +164,13 @@ Uint32 SDL_GetTicks (void)
         
         GetSysTime(&tv);
 
-        tics = (tv.tv_secs - basetime.tv_secs) * 1000 + 
-            (tv.tv_micro - basetime.tv_micro)/1000;
+        if(basetime.tv_micro > tv.tv_micro) {           
+           tv.tv_secs --;
+          
+           tv.tv_micro += 1000000;
+        }
+        tics = ((tv.tv_secs - basetime.tv_secs) * 1000) + 
+            ((tv.tv_micro - basetime.tv_micro)/1000);
 
         return tics;
     }
