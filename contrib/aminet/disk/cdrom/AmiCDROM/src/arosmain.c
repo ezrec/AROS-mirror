@@ -47,6 +47,10 @@ AROS_UFH3(void, ACDROldEntry,
 )
 {
 	AROS_USERFUNC_INIT
+	
+	/* Wait until global for this process is setup */
+	Wait(SIGBREAKF_CTRL_F);
+	
 	handler(SysBase);
 	AROS_USERFUNC_EXIT
 }
@@ -98,6 +102,7 @@ struct Process *proc;
 struct Message msg;
 struct DosPacket packet;
 struct ProcNode *node;
+struct Globals *newglobal;
 struct TagItem tags[]=
 {
 	{NP_Entry, (IPTR)ACDROldEntry},
@@ -108,19 +113,24 @@ struct TagItem tags[]=
 	device = AllocMem(sizeof(struct ACDRDeviceInfo),MEMF_PUBLIC | MEMF_CLEAR);
 	if (device)
 	{
-		global = AllocMem(sizeof(struct Globals), MEMF_PUBLIC | MEMF_CLEAR);
-		if (global)
+		newglobal = AllocMem(sizeof(struct Globals), MEMF_PUBLIC | MEMF_CLEAR);
+		if (newglobal)
 		{
 			node = AllocMem(sizeof(struct ProcNode), MEMF_PUBLIC | MEMF_CLEAR);
 			if (node)
 			{
+			    	Forbid();
 				AddTail(&acdrbase->process_list, &node->ln);
-				node->data = global;
+				Permit();
+				node->data = newglobal;
 				proc = CreateNewProc(tags);
 				if (proc)
 				{
-					proc->pr_Task.tc_Flags |= TF_LAUNCH;
+				    	Forbid();
 					proc->pr_Task.tc_Launch = ACDR_Launch;
+					proc->pr_Task.tc_Flags |= TF_LAUNCH;
+					Permit();
+					
 					node->proc = proc;
 					device->taskmp = &proc->pr_MsgPort;
 					packet.dp_Link = &msg;
@@ -131,13 +141,20 @@ struct TagItem tags[]=
 					device->fssm.fssm_Environ = MKBADDR((struct DosEnvec *)iofs->io_Union.io_OpenDevice.io_Environ);
 					device->fssm.fssm_Flags = 0;
 					packet.dp_Arg3 = (IPTR)&device->fssm;
-					global->acdrbase = acdrbase;
-					global->device = device;
+					newglobal->acdrbase = acdrbase;
+					newglobal->device = device;
+					
+				    	if (!global) global = newglobal;
+					
+					/* Indicate to proc that global is setup for it and
+					   it can continue running */
+					Signal(&proc->pr_Task, SIGBREAKF_CTRL_F);
+
 					sendPacket(acdrbase, &packet, device->taskmp);
 					iofs->io_DosError = packet.dp_Res2;
 					if (packet.dp_Res1 == DOSTRUE)
 					{
-						device->global = global;
+						device->global = newglobal;
 						device->rootfh.device = device;
 						iofs->IOFS.io_Unit=(struct Unit *)&device->rootfh;
 						return;
@@ -153,7 +170,7 @@ struct TagItem tags[]=
 			{
 				iofs->io_DosError = ERROR_NO_FREE_STORE;
 			}
-			FreeMem(global, sizeof(struct Globals));
+			FreeMem(newglobal, sizeof(struct Globals));
 		}
 		else
 		{
