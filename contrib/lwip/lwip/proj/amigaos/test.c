@@ -20,8 +20,16 @@
 
 #include "lwip/sockets.h"
 
+/* ----------------------------------------------- */
+
+#include "lib_stuff.h"
+
+/* ----------------------------------------------- */
+
 #include <proto/exec.h>
 #include <proto/dos.h>
+
+/* ----------------------------------------------- */
 
 void client_test(void *arg)
 {
@@ -99,6 +107,10 @@ static void tcpip_init_done(void *arg)
   sys_sem_signal(*sem);
 }
 
+void test(void)
+{
+}
+
 void main(void)
 {
   struct ip_addr ipaddr, netmask, gw;
@@ -137,6 +149,10 @@ void main(void)
     netif_add(&ipaddr, &netmask, &gw, loopif_init, tcpip_input);
   } 
 
-  server_init();
+  LIB_add();
+  
+  test();
+
+//  server_init();
   Wait(4096);
 }
