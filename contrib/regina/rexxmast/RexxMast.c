@@ -171,8 +171,8 @@ static void StartFile(struct RexxMsg *msg)
     sprintf(text, "PROGDIR:RexxMast SUBTASK %p", (void*)msg);
   
 #warning FIXME: thread should be used to handle more then one message at a time, not SystemTags
-    SystemTags(text, SYS_Asynch, TRUE, SYS_Input, Open("NIL:", MODE_OLDFILE),
-	       SYS_Output, Open("NIL:", MODE_NEWFILE), TAG_DONE);
+    SystemTags(text, SYS_Asynch, TRUE, SYS_Input, NULL,
+	       SYS_Output, NULL, TAG_DONE);
 }
 
 static void StartFileSlave(struct RexxMsg *msg)
@@ -289,11 +289,11 @@ static void StartFileSlave(struct RexxMsg *msg)
 	    }
         }
         else /* is a function call */
-        { 
+        {
 	    int arguments = msg->rm_Action & RXARGMASK;
-      
+
 	    for (argcount = 0; argcount < arguments; argcount++)
-	    { 
+	    {
 	        UBYTE *argstr = (UBYTE *)msg->rm_Args[1+argcount];
 	        if (argstr == NULL)
 		    MAKERXSTRING(rxargs[argcount], NULL, 0);
@@ -302,7 +302,7 @@ static void StartFileSlave(struct RexxMsg *msg)
 	    }
 	}
     }
-  
+
     /* Set input/output to the task that sent the message */
     if (!(msg->rm_Action & RXFF_NOIO))
     {
@@ -325,7 +325,7 @@ static void StartFileSlave(struct RexxMsg *msg)
 	    input = msg->rm_Stdin;
 	if (msg->rm_Stdout != NULL)
 	    output = msg->rm_Stdout;
-	
+
 	input = SelectInput(input);
 	output = SelectOutput(output);
         error = SelectError(error);
