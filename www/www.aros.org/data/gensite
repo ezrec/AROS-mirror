@@ -333,11 +333,22 @@ class Thumbnail (FileInfo):
 	self.thumbnailURL = url[:pos] + '_mini.jpg'
 	pos = string.rfind (path, '.')
 	thumbnailPath = path[:pos] + '_mini.jpg'
-	tn = pic.convert ('RGB')
-	# Unfortunately, thumbnail() doesn't filter :-(
-	#tn.thumbnail = thumbnail
-	thumbnail (tn, (64, 128))
-	tn.save (thumbnailPath, 'JPEG')
+	picMTime = os.path.getmtime (path)
+	if os.path.exists (thumbnailPath):
+	    tnMTime = os.path.getmtime (thumbnailPath)
+	else:
+	    tnMTime = 0
+	if tnMTime < picMTime:
+	    #tn = pic.convert ('RGB')
+	    # Unfortunately, thumbnail() doesn't filter :-(
+	    #tn.thumbnail = thumbnail
+	    # FIXME event bicubic filtering looks pretty ugly.
+	    # Replace this code with code that calls convert.
+	    #thumbnail (tn, (64, 128))
+	    #tn.save (thumbnailPath, 'JPEG')
+	    os.system ('convert -geometry "64x128>" -quality 100 "%s" "%s"' % (
+		path, thumbnailPath
+	    ))
 
 	infoFile = path[:pos] + '.txt'
 	fh = open (infoFile)
