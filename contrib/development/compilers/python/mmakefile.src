@@ -17,9 +17,11 @@ USE_CLIB := yes
 USE_AMIGALIB := yes
 USE_MLIB := yes
 USE_ZLIB := yes
+USE_EXPATLIB := yes
 
 USER_CFLAGS  := -I$(TOP)/$(CURDIR)/Include -DAROS
 
+#MM- contrib-development : contrib-development-python
 #MM contrib-development-python : setup-contrib-development-python 
 #MM contrib-development-python : linklibs-python-modules linklibs-python-objects
 #MM contrib-development-python : linklibs-python-python linklibs-python-parser
@@ -32,8 +34,13 @@ LIBS := \
 	-lpython-modules \
 	-lpython-parser \
 	-lpython-python \
-	-lexpat \
 	$(LIBS)
+
+DEPLIBS := $(DEPLIBS) \
+	$(LIBDIR)/libpython-python.a \
+	$(LIBDIR)/libpython-objects.a \
+	$(LIBDIR)/libpython-modules.a \
+	$(LIBDIR)/libpython-parser.a
 
 contrib-development-python : setup $(EXE)
 
