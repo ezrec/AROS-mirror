@@ -96,12 +96,12 @@ build : bin/bgui.library.$(BUILD_TYPE) test examples
 test: $(INCLUDE_FILES) $(test) compile_test
 
 compile_test :
-	$(MAKE) -Ctest -fMakefile.aros all -R
+	$(MAKE) -Ctest -fMakefile.aros all
 
 examples: $(INCLUDE_FILES) compile_examples
 
 compile_examples :
-	$(MAKE) -Cexamples -fMakefile.aros all -R
+	$(MAKE) -Cexamples -fMakefile.aros all
 
 gadget_directories = \
 gadgets/common \
