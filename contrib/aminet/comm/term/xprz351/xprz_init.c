@@ -6,26 +6,15 @@
     Lang: english
 */
 #include <utility/utility.h>
+#include <aros/symbolsets.h>
 
-#include "libdefs.h"
+#include LC_LIBDEFS_FILE
 
-extern struct ExecBase * SysBase;
+extern int  __UserLibInit (LIBBASETYPE *);
+extern void __UserLibCleanup (LIBBASETYPE *);
 
-#define LC_NO_OPENLIB
-#define LC_NO_CLOSELIB
-#define LC_RESIDENTPRI	    -120
-
-#define AROS_LC_SETFUNCS
-
-#include <libcore/libheader.c>
-
-
-extern int  __UserLibInit (LC_LIBHEADERTYPEPTR *);
-extern void __UserLibCleanup (LC_LIBHEADERTYPEPTR *);
-
-ULONG SAVEDS L_InitLib (LC_LIBHEADERTYPEPTR lh)
+AROS_SET_LIBFUNC(Init, LIBBASETYPE, lh)
 {
-	SysBase = lh->lh_SysBase;
 	if (RETURN_OK == __UserLibInit(lh)) {
 		return TRUE;
 	} else {
@@ -33,7 +22,10 @@ ULONG SAVEDS L_InitLib (LC_LIBHEADERTYPEPTR lh)
 	}
 }
 
-void SAVEDS L_ExpungeLib (LC_LIBHEADERTYPEPTR lh)
+AROS_SET_LIBFUNC(Expunge, LIBBASETYPE, lh)
 {
 	__UserLibCleanup(lh);
 }
+
+ADD2INITLIB(Init, 0);
+ADD2EXPUNGELIB(Expunge, 0);

@@ -1,71 +1,22 @@
 include $(TOP)/config/make.cfg
 
-MODULE     := xprzmodem.library
+FILES = Send Receive Utils xprgetsystime xprtimeout xprzmodem_locale Zm xprsprintf xprz_init
 
-LOCALINCLUDES = -I. -I../Include -I`pwd`/
+#MM- aminet-comm-term-xprz : linklibs-aminet-comm-term-xprz
 
-LIBS := -L$(LIBDIR) -lamiga
+%build_module mmake=linklibs-aminet-comm-term-xprz \
+    modname=xprzmodem modtype=library \
+    conffile=lib.conf files=$(FILES)
 
+#MM linklibs-aminet-comm-term-xprz-includes: xprz-includes-copy
 
-$(INCDIR)/defines/xpr.h : aros/xpr_defines.h
-	@$(ECHO) Copying $^ ...
-	@$(CP) $^ $@
+#MM
+xprz-includes-copy: $(INCDIR)/proto/xpr.h
 
 $(INCDIR)/proto/xpr.h : aros/xpr_proto.h
 	@$(ECHO) Copying $^ ...
 	@$(CP) $^ $@
 
-
-$(OBJDIR)/aros_src/%_aros.c : %.c
-	@$(ECHO) Generating $@...
-	@$(ARCHTOOL) -R Xpr_Lib.h  $^ $@ aros/xpr_defines_aros.h >/dev/null
-
-$(OBJDIR)/%.o : $(OBJDIR)/aros_src/%_aros.c
-	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES) $(DEFINES)"
-
-
-$(OBJDIR)/%.ol : $(OBJDIR)/aros_src/%_aros.c
-	%compile_q opt="$(CFLAGS) -DLINK_LIB $(LOCALINCLUDES)"
-
-$(OBJDIR)/test/%.o : test/%.c
-	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES)"
-
-FILES = Send Receive Utils xprgetsystime xprtimeout xprzmodem_locale Zm xprsprintf xprz_init functable endtag
-
-INTERMEDIATES := $(foreach f,$(FILES),$(OBJDIR)/aros_src/$(f)_aros.c)
-DEPS := $(foreach f,$(FILES),$(OBJDIR)/$(f).d)
-
-#MM- aminet-comm-term-xprz : linklibs-aminet-comm-term-xprz
-#MM linklibs-aminet-comm-term-xprz : linklibs setup-xprz
-
-#First all intermediate files MUST be created so there is a 'defines' file!
-linklibs-aminet-comm-term-xprz: includes-copy $(INTERMEDIATES) libdefs.h $(AROS_LIBS)/$(MODULE)
-
-includes-copy: $(INCDIR)/proto/xpr.h $(INCDIR)/defines/xpr.h
-
-MODULE_OBJ   = $(foreach f,$(FILES),$(OBJDIR)/$(f).o)
-
-$(AROS_LIBS)/$(MODULE) : $(MODULE_OBJ)
-	@$(ECHO) "Building $(notdir $@) ..."
-	@$(AROS_LD) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) $(MODULE_OBJ) -o $@
-
-$(OBJDIR)/test/%.d : %.c
-	%mkdepend_q flags=$(CFLAGS)
-
-$(OBJDIR)/aros_src/%.d : %.c
-	%mkdepend_q flags=$(CFLAGS)
-
-$(OBJDIR)/%.d : %.c
-	%mkdepend_q flags=$(CFLAGS)
-
-#MM
-setup-xprz :
-	%mkdirs_q $(AROS_INCLUDES) $(OBJDIR) $(OBJDIR)/aros_src
-	%mkdirs_q $(AROS_LIB) $(AROS_LIBS)
-
 clean ::
-	-$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) $(AROS_LIBS)/gtlayout.library aros/gtlayout_defines_aros.h $(OBJDIR)/gtlayout_data.o $(OBJDIR)/gtlayout_data.ol
+	-$(RM) $(INCDIR)/proto/xpr.h
 
-%libdefs_rule
-%common
-%include_deps

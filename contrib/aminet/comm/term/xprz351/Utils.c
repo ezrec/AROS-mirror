@@ -100,8 +100,10 @@ UBYTE DebugName[] = "T:XDebug.Log";
 void *DebugLog = NULL;
 #endif
 
+#ifndef __AROS__
 struct DosLibrary *DOSBase;
 struct ExecBase *SysBase;
+#endif
 
 #ifdef UP_TO_2X
 struct Library *UtilityBase;
