@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 
 EXEDIR := $(CONTRIBDIR)/gnu/make
 
-#MM- contrib-gnu : contrib-gnu-make
+#DISABLE MM- contrib-gnu : contrib-gnu-make
 
 #MM contrib-gnu-make : linklibs
 contrib-gnu-make : contrib-gnu-make-build
