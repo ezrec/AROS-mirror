@@ -7,7 +7,7 @@
 ##MM- contrib-gnu : contrib-gnu-pdksh
 ##MM- contrib-gnu-pdksh : development-pdksh
 
-#MM- development : development-pdksh
+##MM- development : development-pdksh
 #MM development-pdksh-quick : development-pdksh-fetch
 
 ORIGINS := http://gd.tuwien.ac.at/utils/shells/pdksh/ ftp://ftp.cs.mun.ca/pub/pdksh
