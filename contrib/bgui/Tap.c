@@ -10,6 +10,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2001/06/18 18:23:44  hkiel
+ * Added missing newline at end of file.
+ *
  * Revision 42.0  2000/05/09 22:08:09  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
