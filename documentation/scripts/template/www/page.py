@@ -161,13 +161,13 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
     )
 
     statsPHP = '''
-        <?php
-            //define("_BBC_PAGE_NAME", "AROS");
-            define("_BBCLONE_CORE", "bbclone/core/");
-            define("COUNTER", _BBCLONE_CORE."mark_page.php");
-            if (file_exists(COUNTER)) include(COUNTER);
-        ?>'''
-
+	    <?php
+		    //define("_BBC_PAGE_NAME", "my page title");
+		    define("_BBCLONE_DIR", "mybbclone/");
+		    define("COUNTER", _BBCLONE_DIR."index.php");
+		    if (file_exists(COUNTER)) include_once(COUNTER);
+		?>
+	'''
     page = HTML( [
         Head( [
             Title( 'AROS: Amiga® Research Operating System' ),
