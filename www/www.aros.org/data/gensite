@@ -64,6 +64,8 @@ def genScreenshots ():
     tn8  = Thumbnail ('pics/developers/mparsons.jpg')
     tn9  = Thumbnail ('pics/developers/michael_schulz.jpg')
     tn10 = Thumbnail ('pics/developers/falemagn2.jpg')
+    tn11 = Thumbnail ('pics/developers/chodorowski-1.jpeg')
+    tn12 = Thumbnail ('pics/developers/chodorowski-2.jpeg' )
     page.append (
 	Href ('#PicturesAroundAROS', '1. Pictures around AROS'),
 	BR (),
@@ -89,6 +91,8 @@ def genScreenshots ():
 	ThumbnailTable (tn8),
 	Paragraph ('Picture of Michael Schulz:'),
 	ThumbnailTable (tn9),
+        Paragraph ('Pictures of Adam Chodorowski:'),
+        ThumbnailTable (tn11, tn12),
 	Paragraph ('Hopefully, more pictures of AROS developers will'
 	    ' show up here :-)'),
 	Name ('Screenshots'),
