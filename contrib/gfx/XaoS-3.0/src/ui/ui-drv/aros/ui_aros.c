@@ -13,7 +13,7 @@
 #include <proto/keymap.h>
 #include <string.h>
 
-#define USE_GZZ     	1
+#define USE_GZZ     	TRUE
 
 #if USE_GZZ
 #define BORDERLEFT  	0
@@ -331,9 +331,7 @@ aros_init ()
 			    WA_Activate     , TRUE  	    	,
 			    WA_ReportMouse  , TRUE  	    	,
 			    WA_NoCareRefresh, TRUE  	    	,
-#if USE_GZZ
-			    WA_GimmeZeroZero, TRUE  	    	,
-#endif
+			    WA_GimmeZeroZero, USE_GZZ  	    	,
 			    WA_IDCMP	    , IDCMP_MOUSEMOVE 	 |
 			    	      	      IDCMP_MOUSEBUTTONS |
 				      	      IDCMP_RAWKEY  	 |
