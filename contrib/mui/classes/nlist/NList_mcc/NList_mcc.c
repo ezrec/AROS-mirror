@@ -1,19 +1,35 @@
-#include <limits.h>
+/***************************************************************************
 
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
+
+#ifdef __AROS__
 #include <proto/intuition.h>
+#endif
 
 #include "private.h"
-
-
-/*extern struct TagItem *FindTagItem2(Tag,struct TagItem *);*/
-
-/****************************************************************************************/
-/****************************************************************************************/
-/******************************                    **************************************/
-/******************************     NList Class    **************************************/
-/******************************                    **************************************/
-/****************************************************************************************/
-/****************************************************************************************/
 
 /* IO macros */
 /*
@@ -24,11 +40,10 @@
 
 DEFAULT_KEYS_ARRAY
 
-
 #define INIT_PEN(attr,var_dest,test_init) \
   { \
     var_dest = -1; \
-    if (tag = FindTagItem(attr, msg->ops_AttrList)) \
+    if((tag = FindTagItem(attr, msg->ops_AttrList))) \
     { \
       test_init = tag->ti_Data; \
     } \
@@ -39,7 +54,7 @@ DEFAULT_KEYS_ARRAY
 #define INIT_BG(attr,var_dest,test_init) \
   { \
     var_dest = -1; \
-    if (tag = FindTagItem(attr, msg->ops_AttrList)) \
+    if((tag = FindTagItem(attr, msg->ops_AttrList))) \
     { \
       var_dest = tag->ti_Data; \
       test_init = TRUE; \
@@ -53,7 +68,7 @@ DEFAULT_KEYS_ARRAY
   { \
     if (!test) \
     { \
-      LONG ptrd = defaultval; \
+      LONG ptrd; \
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
         obtain_pen(data->mri, &var_dest, (struct MUI_PenSpec *) ptrd); \
       else \
@@ -67,7 +82,7 @@ DEFAULT_KEYS_ARRAY
   { \
     if (!test) \
     { \
-      LONG ptrd = defaultval; \
+      LONG ptrd; \
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
         var_dest = ptrd; \
       else \
@@ -76,240 +91,157 @@ DEFAULT_KEYS_ARRAY
   }
 
 
-
-//$$$Sensei: replaced by faster one (I hope ;).
-#ifdef MORPHOS
-static APTR NL_ConstructHook_String_gate(void)
-{
-    APTR pool = (void *)REG_A2;
-    char *str = (void *)REG_A1;
-#elif defined(__AROS__)
-AROS_UFH3S(APTR, NL_ConstructHook_String,
-    AROS_UFHA(struct Hook *, unusedhook, A0),
-    AROS_UFHA(APTR, pool, A2),
-    AROS_UFHA(UBYTE *, str, A1))
-{
-    AROS_USERFUNC_INIT
-#else
-static APTR ASM SAVEDS NL_ConstructHook_String( REG(a2) APTR pool GNUCREG(a2), REG(a1) char *str GNUCREG(a1) )
-{
-#endif
-
-    UBYTE *str1 = str;
-    UBYTE *new;
-
-    UBYTE chr = *str1;
-    while( ( chr != '\0' ) && ( chr != '\n' ) && ( chr != '\r' ) )
-        chr = *str1++;
-
-    //$$$Sensei to do: real string clone function... */
-    if( ( new = (UBYTE *) NL_Malloc2( pool, str1 - str + 1, "DestructHook_String" ) ) )
-        strncpy( new, str, str1 - str + 1 );
-
-    return((APTR) new);
-
 #ifdef __AROS__
-    AROS_USERFUNC_EXIT
-#endif
-}
-
-/*
-#ifdef MORPHOS
-static APTR NL_ConstructHook_String_gate(void)
-{
-    APTR pool = (void *)REG_A2;
-    char *str = (void *)REG_A1;
+AROS_HOOKPROTONH(NL_ConstructFunc_String, APTR, APTR, pool, char *, str)
 #else
-static APTR ASM SAVEDS NL_ConstructHook_String( REG(a2) APTR pool GNUCREG(a2), REG(a1) char *str GNUCREG(a1) )
-{
+HOOKPROTONH(NL_ConstructFunc_String, APTR, APTR pool, char *str)
 #endif
-
+{
+  HOOK_INIT
+  
   char *new;
   LONG len = 0;
-  while ((str[len] != '\0') && (str[len] != '\n') && (str[len] != '\r'))
+
+  while(str[len] != '\0' && str[len] != '\n' && str[len] != '\r' )
+  {
     len++;
-  if (new = (char *) NL_Malloc2(pool,len+1,"DestructHook_String"))
-  {
-    len = 0;
-    while ((str[len] != '\0') && (str[len] != '\n') && (str[len] != '\r'))
-    {
-      new[len] = str[len];
-      len++;
-    }
-    new[len] = '\0';
   }
-  return((APTR) new);
+
+  if((new = (char *)NL_Malloc2(pool, len+1, "DestructHook_String")))
+  {
+    memcpy(new, str, len*sizeof(char));
+    new[len] = '\0'; // we have to terminate with a \0
+  }
+
+  return((APTR)new);
+  
+  HOOK_EXIT
 }
-*/
+MakeHook(NL_ConstructHook_String, NL_ConstructFunc_String);
 
-#ifdef MORPHOS
-static void NL_DestructHook_String_gate(void)
-{
-    APTR pool = (void *)REG_A2;
-    char *entry = (void *)REG_A1;
-#elif defined(__AROS__)
-AROS_UFH3S(void, NL_DestructHook_String,    
-    AROS_UFHA(struct Hook *, unusedhook, A0),
-    AROS_UFHA(APTR, pool, A2),
-    AROS_UFHA(char *, entry, A1))
-{
-    AROS_USERFUNC_INIT
+#ifdef __AROS__
+AROS_HOOKPROTONH(NL_DestructFunc_String, void, APTR, pool, char *, entry)
 #else
-static void ASM SAVEDS NL_DestructHook_String( REG(a2) APTR pool GNUCREG(a2), REG(a1) char *entry GNUCREG(a1) )
-{
+HOOKPROTONH(NL_DestructFunc_String, void, APTR pool, char *entry)
 #endif
-
+{
+  HOOK_INIT
+  
   NL_Free2(pool,(void *) entry,"DestructHook_String");
+  
+  HOOK_EXIT
+}
+MakeHook(NL_DestructHook_String, NL_DestructFunc_String);
 
 #ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
-}
-
-
-#ifdef MORPHOS
-static ULONG NL_LayoutFuncNList_gate(void)
-{
-    struct Hook *h = (void *)REG_A0;
-    Object *obj = (void *)REG_A2;
-    struct MUI_LayoutMsg *lm = (void *)REG_A1;
-#elif defined(__AROS__)
-AROS_UFH3S(ULONG, NL_LayoutFuncNList,
-    AROS_UFHA(struct Hook *, h, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(struct MUI_LayoutMsg *, lm, A1))
-{
-    AROS_USERFUNC_INIT
+AROS_HOOKPROTONHNO(NL_LayoutFuncNList, ULONG, struct MUI_LayoutMsg *, lm)
 #else
-static ULONG ASM SAVEDS NL_LayoutFuncNList( REG(a0) struct Hook *h, REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUI_LayoutMsg *lm GNUCREG(a1) )
-{
+HOOKPROTONHNO(NL_LayoutFuncNList, ULONG, struct MUI_LayoutMsg *lm)
 #endif
-
+{
+  HOOK_INIT
+  
   switch (lm->lm_Type)
   {
     case MUILM_MINMAX:
-      {
-/*D(bug("%lx|MUILM_MINMAX %ld %ld %ld\n",obj,(LONG)lm->lm_MinMax.MinHeight,(LONG)lm->lm_MinMax.DefHeight,(LONG)lm->lm_MinMax.MaxHeight));*/
+    {
+      lm->lm_MinMax.MinWidth  = 1;
+      lm->lm_MinMax.DefWidth  = 1;
+      lm->lm_MinMax.MaxWidth  = 1;
+      lm->lm_MinMax.MinHeight = 1;
+      lm->lm_MinMax.DefHeight = 1;
+      lm->lm_MinMax.MaxHeight = 1;
 
-        lm->lm_MinMax.MinWidth  = 1;
-        lm->lm_MinMax.DefWidth  = 1;
-        lm->lm_MinMax.MaxWidth  = 1;
-        lm->lm_MinMax.MinHeight = 1;
-        lm->lm_MinMax.DefHeight = 1;
-        lm->lm_MinMax.MaxHeight = 1;
+      return(0);
+      //return (MUILM_UNKNOWN);
+    }
+    break;
 
-        return(0);
-/*        return (MUILM_UNKNOWN);*/
-      }
     case MUILM_LAYOUT:
-      { Object *cstate = (Object *)lm->lm_Children->mlh_Head;
-        Object *child;
-        LONG mw,mh;
-/*D(bug("%lx|MUILM_LAYOUT\n",obj));*/
-        while (child = NextObject(&cstate))
-        { mw = (LONG) _defwidth(child);
-          mh = (LONG) _defheight(child);
-          if (!MUI_Layout(child,lm->lm_Layout.Width+MUI_MAXMAX,lm->lm_Layout.Height+MUI_MAXMAX,mw,mh,0))
-          {
-/*D(bug("%lx|layout of object %lx %ld,%ld is bad ! (%ld,%ld %ld,%ld)\n",obj,child,mw,mh,(LONG) _left(child),(LONG) _top(child),(LONG) _width(child),(LONG) _height(child)));*/
-            /*return(FALSE);*/
-          }
+    {
+      Object *cstate = (Object *)lm->lm_Children->mlh_Head;
+      Object *child;
+      LONG mw,mh;
+
+      while((child = NextObject(&cstate)))
+      {
+        mw = (LONG) _defwidth(child);
+        mh = (LONG) _defheight(child);
+
+        if(!MUI_Layout(child,lm->lm_Layout.Width+MUI_MAXMAX,lm->lm_Layout.Height+MUI_MAXMAX,mw,mh,0))
+        {
+          /*return(FALSE);*/
         }
-        return(TRUE);
       }
+
+      return(TRUE);
+    }
+    break;
   }
+
   return(MUILM_UNKNOWN);
+  
+  HOOK_EXIT
+}
+MakeStaticHook(NL_LayoutHookNList, NL_LayoutFuncNList);
 
 #ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
-}
-
-
-#ifdef MORPHOS
-static ULONG NL_LayoutFuncGroup_gate(void)
-{
-    struct Hook *h = (void *)REG_A0;
-    Object *obj = (void *)REG_A2;
-    struct MUI_LayoutMsg *lm = (void *)REG_A1;
-#elif defined(__AROS__)
-AROS_UFH3S(ULONG, NL_LayoutFuncGroup,
-    AROS_UFHA(struct Hook *, h, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(struct MUI_LayoutMsg *, lm, A1))
-{
-    AROS_USERFUNC_INIT
+AROS_HOOKPROTONHNO(NL_LayoutFuncGroup, ULONG, struct MUI_LayoutMsg *, lm)
 #else
-static ULONG ASM SAVEDS NL_LayoutFuncGroup( REG(a0) struct Hook *h, REG(a2) Object *obj GNUCREG(a2), REG(a1) struct MUI_LayoutMsg *lm GNUCREG(a1) )
-{
+HOOKPROTONHNO(NL_LayoutFuncGroup, ULONG, struct MUI_LayoutMsg *lm)
 #endif
-
+{
+  HOOK_INIT
+  
   switch (lm->lm_Type)
   {
     case MUILM_MINMAX:
-      {
-/*D(bug("%lx|grp_MUILM_MINMAX %ld %ld %ld\n",obj,(LONG)lm->lm_MinMax.MinHeight,(LONG)lm->lm_MinMax.DefHeight,(LONG)lm->lm_MinMax.MaxHeight));*/
+    {
+      lm->lm_MinMax.MinWidth  = MUI_MAXMAX+100;
+      lm->lm_MinMax.DefWidth  = MUI_MAXMAX+100;
+      lm->lm_MinMax.MaxWidth  = MUI_MAXMAX+100;
+      lm->lm_MinMax.MinHeight = MUI_MAXMAX+100;
+      lm->lm_MinMax.DefHeight = MUI_MAXMAX+100;
+      lm->lm_MinMax.MaxHeight = MUI_MAXMAX+100;
 
-        lm->lm_MinMax.MinWidth  = MUI_MAXMAX+100;
-        lm->lm_MinMax.DefWidth  = MUI_MAXMAX+100;
-        lm->lm_MinMax.MaxWidth  = MUI_MAXMAX+100;
-        lm->lm_MinMax.MinHeight = MUI_MAXMAX+100;
-        lm->lm_MinMax.DefHeight = MUI_MAXMAX+100;
-        lm->lm_MinMax.MaxHeight = MUI_MAXMAX+100;
+      lm->lm_MinMax.MinWidth  = 2;
+      lm->lm_MinMax.DefWidth  = 20;
+      lm->lm_MinMax.MaxWidth  = MUI_MAXMAX+100;
+      lm->lm_MinMax.MinHeight = 2;
+      lm->lm_MinMax.DefHeight = 20+100;
+      lm->lm_MinMax.MaxHeight = MUI_MAXMAX+100;
 
-        lm->lm_MinMax.MinWidth  = 2;
-        lm->lm_MinMax.DefWidth  = 20;
-        lm->lm_MinMax.MaxWidth  = MUI_MAXMAX+100;
-        lm->lm_MinMax.MinHeight = 2;
-        lm->lm_MinMax.DefHeight = 20+100;
-        lm->lm_MinMax.MaxHeight = MUI_MAXMAX+100;
+      return(0);
+      //return (MUILM_UNKNOWN);
+    }
+    break;
 
-        return(0);
-/*        return (MUILM_UNKNOWN);*/
-      }
     case MUILM_LAYOUT:
-      { Object *cstate = (Object *)lm->lm_Children->mlh_Head;
-        Object *child;
-        LONG mw,mh;
-/*D(bug("%lx|grp_MUILM_LAYOUT\n",obj));*/
-        while (child = NextObject(&cstate))
-        { mw = (LONG) _defwidth(child);
-          mh = (LONG) _defheight(child);
-          if (!MUI_Layout(child,0,0,mw,mh,0))
-          {
-/*D(bug("%lx|grp_layout of child %lx %ld,%ld is bad ! (%ld,%ld %ld,%ld)\n",obj,child,mw,mh,(LONG) _left(child),(LONG) _top(child),(LONG) _width(child),(LONG) _height(child)));*/
-            /*return(FALSE);*/
-          }
+    {
+      Object *cstate = (Object *)lm->lm_Children->mlh_Head;
+      Object *child;
+      LONG mw,mh;
 
+      while((child = NextObject(&cstate)))
+      {
+        mw = (LONG) _defwidth(child);
+        mh = (LONG) _defheight(child);
+
+        if (!MUI_Layout(child,0,0,mw,mh,0))
+        {
+          /*return(FALSE);*/
         }
-        return(TRUE);
       }
+      return(TRUE);
+    }
+    break;
   }
+
   return(MUILM_UNKNOWN);
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
+  
+  HOOK_EXIT
 }
-
-
-//$$$Sensei: cleanup: hook functions has correct types now.
-#ifdef MORPHOS
-MADTRAP(NL_ConstructHook_String);
-MADTRAP(NL_DestructHook_String);
-MADTRAP(NL_LayoutFuncNList);
-MADTRAP(NL_LayoutFuncGroup);
-const struct Hook NL_Construct_StringHook    = { {NULL, NULL}, (HOOKFUNC) &NL_ConstructHook_String,    NULL, NULL };
-const struct Hook NL_Destruct_StringHook    = { {NULL, NULL}, (HOOKFUNC) &NL_DestructHook_String,        NULL, NULL };
-const struct Hook LayoutHookNList            = { {NULL, NULL}, (HOOKFUNC) &NL_LayoutFuncNList,            NULL, NULL };
-const struct Hook LayoutHookGroup            = { {NULL, NULL}, (HOOKFUNC) &NL_LayoutFuncGroup,            NULL, NULL };
-#else
-const struct Hook NL_Construct_StringHook    = { {NULL, NULL}, (HOOKFUNC) NL_ConstructHook_String,        NULL, NULL };
-const struct Hook NL_Destruct_StringHook    = { {NULL, NULL}, (HOOKFUNC) NL_DestructHook_String,        NULL, NULL };
-const struct Hook LayoutHookNList            = { {NULL, NULL}, (HOOKFUNC) NL_LayoutFuncNList,            NULL, NULL };
-const struct Hook LayoutHookGroup            = { {NULL, NULL}, (HOOKFUNC) NL_LayoutFuncGroup,            NULL, NULL };
-#endif
-
+MakeStaticHook(NL_LayoutHookGroup, NL_LayoutFuncGroup);
 
 
 void release_pen(struct MUI_RenderInfo *mri, ULONG *pen)
@@ -333,7 +265,7 @@ static LONG Calc_Stack(Object *obj,struct NLData *data)
 {
   LONG total;
 
-#if defined(MORPHOS) || defined(__AROS__)
+#ifdef MORPHOS
     return 100000;
 #endif
 
@@ -369,41 +301,34 @@ static LONG Calc_Stack(Object *obj,struct NLData *data)
   return (100000);
 }
 
-
-#ifdef MORPHOS
-ULONG DoSuperNew(struct IClass *cl, Object *obj, ...)
+#ifdef __AROS__
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
-    ULONG mav[50];
-    ULONG ret;
-    va_list tags;
-    struct opSet myopSet;
-    int i=0;
+  AROS_SLOWSTACKMETHODS_PRE(tag1)
+  
+  retval = DoSuperNewTagList(cl, obj, NULL,  (struct TagItem *) AROS_SLOWSTACKMETHODS_ARG(tag1));
 
-    va_start(tags, obj);
-    while(i<50)
-    {
-        mav[i] = va_arg(tags, ULONG);
-        if(mav[i] == TAG_DONE) break;
-        mav[i+1] = va_arg(tags, ULONG);
-        if(mav[i] == TAG_MORE) break;
-        i += 2;
-    }
-    va_end(tags);
-
-    myopSet.MethodID = OM_NEW;
-    myopSet.ops_AttrList = (struct TagItem *) &mav;
-    myopSet.ops_GInfo = NULL;
-    ret = DoSuperMethodA(cl, obj, (APTR)&myopSet);
-
-    return ret;
+  AROS_SLOWSTACKMETHODS_POST
 }
-#else
-static ULONG __stdargs DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
+#elif !defined(__MORPHOS__)
+Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
-  return(DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL));
+  Object *rc;
+  va_list args;
+
+  #if defined(__amigaos4__)
+  va_startlinear(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, va_getlinearva(args, ULONG), NULL);
+  #else
+  va_start(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, args, NULL);
+  #endif
+
+  va_end(args);
+
+  return rc;
 }
 #endif
-
 
 ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
@@ -417,55 +342,67 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   LONG Draggable = FALSE;    /*FALSE*/
   LONG Dropable = TRUE;      /*TRUE*/
   LONG dropable = TRUE;      /*TRUE*/
+  STRPTR ShortHelp = NULL;   // RHP: Added for Special ShortHelp
   APTR img_tr,grp;
   char *img_name = "noimage";
 
-#ifdef USE_ZUNE
-  if (!NGR_Class) NGR_Create();
-  if (!NGR_Class) return NULL;
-#endif
+  if((tag = FindTagItem(MUIA_ShortHelp, taglist)))
+    ShortHelp = (STRPTR)tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_FixHeightTxt, taglist))
+  if((tag = FindTagItem(MUIA_FixHeightTxt, taglist)))
     tag->ti_Tag = TAG_IGNORE;
-  if (tag = FindTagItem(MUIA_FixWidthTxt, taglist))
+
+  if((tag = FindTagItem(MUIA_FixWidthTxt, taglist)))
     tag->ti_Tag = TAG_IGNORE;
-  if (tag = FindTagItem(MUIA_Draggable, taglist))
-  { Draggable = tag->ti_Data;
-    tag->ti_Tag = TAG_IGNORE;
-  }
-  if (tag = FindTagItem(MUIA_Dropable, taglist))
-  { Dropable = dropable = tag->ti_Data;
-    tag->ti_Tag = TAG_IGNORE;
-  }
-  if ((tag = FindTagItem(MUIA_NList_DragSortable, taglist)) ||
-      (tag = FindTagItem(MUIA_List_DragSortable, taglist)))
-  { DragSortable = tag->ti_Data;
-    tag->ti_Tag = TAG_IGNORE;
-  }
-  if ((tag = FindTagItem(MUIA_NList_DragType, taglist)) ||
-      (tag = FindTagItem(MUIA_Listview_DragType, taglist)))
-  { DragType = tag->ti_Data;
+
+  if((tag = FindTagItem(MUIA_Draggable, taglist)))
+  {
+    Draggable = tag->ti_Data;
     tag->ti_Tag = TAG_IGNORE;
   }
 
-  if ((DragType != MUIV_NList_DragType_None) || DragSortable)
+  if((tag = FindTagItem(MUIA_Dropable, taglist)))
+  {
+    Dropable = dropable = tag->ti_Data;
+    tag->ti_Tag = TAG_IGNORE;
+  }
+
+  if((tag = FindTagItem(MUIA_NList_DragSortable, taglist)) ||
+     (tag = FindTagItem(MUIA_List_DragSortable, taglist)))
+  {
+    DragSortable = tag->ti_Data;
+    tag->ti_Tag = TAG_IGNORE;
+  }
+
+  if((tag = FindTagItem(MUIA_NList_DragType, taglist)) ||
+     (tag = FindTagItem(MUIA_Listview_DragType, taglist)))
+  {
+    DragType = tag->ti_Data;
+    tag->ti_Tag = TAG_IGNORE;
+  }
+
+  if((DragType != MUIV_NList_DragType_None) || DragSortable)
     Draggable = TRUE;
   else if (Draggable)
     DragType = MUIV_NList_DragType_Default;
   else
-  { DragType = MUIV_NList_DragType_None;
+  {
+    DragType = MUIV_NList_DragType_None;
     DragSortable = FALSE;
   }
-  if (DragSortable)
+
+  if(DragSortable)
     dropable = TRUE;
 
+kprintf("NGR_Class = %x\n", NGR_Class);
+
   obj = (Object *) DoSuperNew(cl,obj,
-    MUIA_Group_LayoutHook, &LayoutHookNList,
+    MUIA_Group_LayoutHook, &NL_LayoutHookNList,
     MUIA_FillArea, FALSE,
     MUIA_Dropable, dropable,
     NoFrame,
       Child, grp = NewObject(NGR_Class->mcc_Class,NULL,
-        MUIA_Group_LayoutHook, &LayoutHookGroup,
+        MUIA_Group_LayoutHook, &NL_LayoutHookGroup,
         MUIA_FillArea, FALSE,
         NoFrame,
         Child, img_tr = MUI_NewObject(MUIC_Image,
@@ -479,6 +416,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
         TAG_DONE),
         /*Child, HVSpace,*/
       TAG_DONE),
+
     TAG_MORE, taglist
   );
 
@@ -535,10 +473,10 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_MultiSelect = MUIV_NList_MultiSelect_None;
   data->NList_Input = TRUE;
   data->NList_DefaultObjectOnClick = TRUE;
-  data->NList_KeepActive = NULL;
-  data->NList_MakeActive = NULL;
+  data->NList_KeepActive = 0;
+  data->NList_MakeActive = 0;
   data->NList_AutoVisible = FALSE;
-  data->NList_Font = NULL;
+  data->NList_Font = 0;
   data->NList_DragType = DragType;
   data->NList_Dropable = Dropable;
   data->NList_DragColOnly = -1;
@@ -549,6 +487,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_ButtonClick = -1;
   data->NList_SerMouseFix = 0;
   data->NList_Keys = default_keys;
+  data->NList_ShortHelp = ShortHelp; // RHP: Added for Special ShortHelp
   data->Wheel_Keys = NULL;
   data->pushtrigger = 0;
   data->marktype = 0;
@@ -694,6 +633,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->NList_Exports = MUIV_NList_Exports_Active | MUIV_NList_Exports_First | MUIV_NList_Exports_Cols;
   data->listobj = NULL;
   data->scrollersobj = NULL;
+  data->affover = -1; // RHP: Added for Shorthelp
   data->affbutton = -1;
   data->affbuttonline = -1;
   data->affbuttoncol = -1;
@@ -713,10 +653,7 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
     if(    ( tag = FindTagItem( MUIA_NList_Pool, taglist ) ) ||
             ( tag = FindTagItem( MUIA_List_Pool, taglist ) ) )
     {
-
-        data->Pool                = (APTR) tag->ti_Data;
-        data->PoolInternal    = NULL;
-
+        data->Pool = (APTR) tag->ti_Data;
     }
     else
     {
@@ -729,103 +666,124 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
     }
 
     /* Is pool available? */
-    if( !data->Pool )
+    if(!data->Pool)
     {
-
-        /* It's not available, so we've to dispose object and return error. */
-        CoerceMethod( cl, obj, OM_DISPOSE );
-        return( NULL );
-
+      /* It's not available, so we've to dispose object and return error. */
+      CoerceMethod( cl, obj, OM_DISPOSE );
+      return(0);
     }
 
   if ((tag = FindTagItem(MUIA_NList_ConstructHook, taglist)) ||
       (tag = FindTagItem(MUIA_List_ConstructHook, taglist)))
   { if (tag->ti_Data == MUIV_NList_ConstructHook_String)
-      data->NList_ConstructHook = (struct Hook *) &NL_Construct_StringHook;
+      data->NList_ConstructHook = (struct Hook *) &NL_ConstructHook_String;
     else
       data->NList_ConstructHook = (struct Hook *) tag->ti_Data;
   }
   if ((tag = FindTagItem(MUIA_NList_DestructHook, taglist)) ||
       (tag = FindTagItem(MUIA_List_DestructHook, taglist)))
   { if (tag->ti_Data == MUIV_NList_DestructHook_String)
-      data->NList_DestructHook = (struct Hook *) &NL_Destruct_StringHook;
+      data->NList_DestructHook = (struct Hook *) &NL_DestructHook_String;
     else
       data->NList_DestructHook = (struct Hook *) tag->ti_Data;
   }
 
-  if (tag = FindTagItem(MUIA_NList_ListCompatibility, taglist))
+  if((tag = FindTagItem(MUIA_NList_ListCompatibility, taglist)))
     data->ListCompatibility = TRUE;
   else
     data->ListCompatibility = FALSE;
 
-  if (tag = FindTagItem(MUIA_Disabled, taglist))
+  if((tag = FindTagItem(MUIA_Disabled, taglist)))
     data->NList_Disabled = 1;
   else
     data->NList_Disabled = FALSE;
 
-  if ((tag = FindTagItem(MUIA_NList_CompareHook, taglist)) ||
-      (tag = FindTagItem(MUIA_List_CompareHook, taglist)))
+  if((tag = FindTagItem(MUIA_NList_CompareHook, taglist)) ||
+     (tag = FindTagItem(MUIA_List_CompareHook, taglist)))
+  {
     data->NList_CompareHook = (struct Hook *) tag->ti_Data;
+  }
 
-  if ((tag = FindTagItem(MUIA_NList_DisplayHook, taglist)) ||
-      (tag = FindTagItem(MUIA_List_DisplayHook, taglist)))
+  if((tag = FindTagItem(MUIA_NList_DisplayHook, taglist)) ||
+     (tag = FindTagItem(MUIA_List_DisplayHook, taglist)))
+  {
     data->NList_DisplayHook = (struct Hook *) tag->ti_Data;
+  }
 
-  if ((tag = FindTagItem(MUIA_NList_MultiTestHook, taglist)) ||
-      (tag = FindTagItem(MUIA_List_MultiTestHook, taglist)))
+  if((tag = FindTagItem(MUIA_NList_MultiTestHook, taglist)) ||
+     (tag = FindTagItem(MUIA_List_MultiTestHook, taglist)))
+  {
     data->NList_MultiTestHook = (struct Hook *) tag->ti_Data;
+  }
 
-  if (tag = FindTagItem(MUIA_NList_CopyEntryToClipHook, taglist))
+  if((tag = FindTagItem(MUIA_NList_CopyEntryToClipHook, taglist)))
     data->NList_CopyEntryToClipHook = (struct Hook *) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_CopyColumnToClipHook, taglist))
+  if((tag = FindTagItem(MUIA_NList_CopyColumnToClipHook, taglist)))
     data->NList_CopyColumnToClipHook = (struct Hook *) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_ConstructHook2, taglist))
-  { data->NList_ConstructHook = (struct Hook *) tag->ti_Data;
+  if((tag = FindTagItem(MUIA_NList_ConstructHook2, taglist)))
+  {
+    data->NList_ConstructHook = (struct Hook *) tag->ti_Data;
     data->NList_ConstructHook2 = TRUE;
   }
-  if (tag = FindTagItem(MUIA_NList_DestructHook2, taglist))
-  { data->NList_DestructHook = (struct Hook *) tag->ti_Data;
+
+  if((tag = FindTagItem(MUIA_NList_DestructHook2, taglist)))
+  {
+    data->NList_DestructHook = (struct Hook *) tag->ti_Data;
     data->NList_DestructHook2 = TRUE;
   }
-  if (tag = FindTagItem(MUIA_NList_CompareHook2, taglist))
-  { data->NList_CompareHook = (struct Hook *) tag->ti_Data;
+
+  if((tag = FindTagItem(MUIA_NList_CompareHook2, taglist)))
+  {
+    data->NList_CompareHook = (struct Hook *) tag->ti_Data;
     data->NList_CompareHook2 = TRUE;
   }
-  if (tag = FindTagItem(MUIA_NList_DisplayHook2, taglist))
-  { data->NList_DisplayHook = (struct Hook *) tag->ti_Data;
+
+  if((tag = FindTagItem(MUIA_NList_DisplayHook2, taglist)))
+  {
+    data->NList_DisplayHook = (struct Hook *) tag->ti_Data;
     data->NList_DisplayHook2 = TRUE;
   }
-  if (tag = FindTagItem(MUIA_NList_CopyEntryToClipHook2, taglist))
-  { data->NList_CopyEntryToClipHook = (struct Hook *) tag->ti_Data;
+
+  if((tag = FindTagItem(MUIA_NList_CopyEntryToClipHook2, taglist)))
+  {
+    data->NList_CopyEntryToClipHook = (struct Hook *) tag->ti_Data;
     data->NList_CopyEntryToClipHook2 = TRUE;
   }
-  if (tag = FindTagItem(MUIA_NList_CopyColumnToClipHook2, taglist))
-  { data->NList_CopyColumnToClipHook = (struct Hook *) tag->ti_Data;
+
+  if((tag = FindTagItem(MUIA_NList_CopyColumnToClipHook2, taglist)))
+  {
+    data->NList_CopyColumnToClipHook = (struct Hook *) tag->ti_Data;
     data->NList_CopyColumnToClipHook2 = TRUE;
   }
 
-  if (tag = FindTagItem(MUICFG_NList_ForcePen, taglist))
+  if((tag = FindTagItem(MUICFG_NList_ForcePen, taglist)))
     data->NList_ForcePen = (LONG) tag->ti_Data;
 
-  if ((tag = FindTagItem(MUIA_NList_Format, taglist)) ||
-      (tag = FindTagItem(MUIA_List_Format, taglist)))
-  { data->NList_Format = (char *) tag->ti_Data;
+  if((tag = FindTagItem(MUIA_NList_Format, taglist)) ||
+     (tag = FindTagItem(MUIA_List_Format, taglist)))
+  {
+    data->NList_Format = (char *) tag->ti_Data;
     if (!NL_Read_Format(obj,data,(char *) tag->ti_Data,(tag->ti_Tag == MUIA_List_Format)))
-    { CoerceMethod(cl, obj, OM_DISPOSE);
+    {
+      CoerceMethod(cl, obj, OM_DISPOSE);
       return(0);
     }
   }
   else
-  { data->NList_Format = NULL;
+  {
+    data->NList_Format = NULL;
     if (!NL_Read_Format(obj,data,"",FALSE))
-    { CoerceMethod(cl, obj, OM_DISPOSE);
+    {
+      CoerceMethod(cl, obj, OM_DISPOSE);
       return(0);
     }
   }
+
   if (!NeedAffInfo(obj,data,AFFINFOS_START_MAX))
-  { CoerceMethod(cl, obj, OM_DISPOSE);
+  {
+    CoerceMethod(cl, obj, OM_DISPOSE);
     return(0);
   }
 /*D(bug("%lx|NEW 5 \n",obj));*/
@@ -833,111 +791,129 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   if ((tag = FindTagItem(MUIA_NList_Input, taglist)) ||
       (tag = FindTagItem(MUIA_Listview_Input, taglist)))
     data->NList_Input = tag->ti_Data;
-  if (!FindTagItem(MUIA_Frame, taglist))
-  { if (data->NList_Input)
-    { nnset(obj,MUIA_Frame, MUIV_Frame_InputList); }
+
+  if(!FindTagItem(MUIA_Frame, taglist))
+  {
+    if (data->NList_Input)
+    {
+      nnset(obj,MUIA_Frame, MUIV_Frame_InputList);
+    }
     else
-    { nnset(obj,MUIA_Frame, MUIV_Frame_ReadList); }
+    {
+      nnset(obj,MUIA_Frame, MUIV_Frame_ReadList);
+    }
   }
 
-  if (tag = FindTagItem(MUIA_ContextMenu, taglist))
-  { data->NList_ContextMenu = data->ContextMenu = data->ContextMenuOn = tag->ti_Data;
+  if((tag = FindTagItem(MUIA_ContextMenu, taglist)))
+  {
+    data->NList_ContextMenu = data->ContextMenu = data->ContextMenuOn = tag->ti_Data;
   }
   else
     notdoset(obj,MUIA_ContextMenu,data->ContextMenu);
 
-  if (tag = FindTagItem(MUIA_Font, taglist))
+  if((tag = FindTagItem(MUIA_Font, taglist)))
     data->NList_Font = tag->ti_Data;
   else if (!data->ListCompatibility)
     data->NList_Font = MUIV_NList_Font;
   else
     data->NList_Font = MUIV_Font_List;
 
-  if (tag = FindTagItem(MUIA_NList_AutoCopyToClip, taglist))
+  if((tag = FindTagItem(MUIA_NList_AutoCopyToClip, taglist)))
     data->NList_AutoCopyToClip = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_TabSize, taglist))
+  if((tag = FindTagItem(MUIA_NList_TabSize, taglist)))
     data->NList_TabSize = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_SkipChars, taglist))
+  if((tag = FindTagItem(MUIA_NList_SkipChars, taglist)))
     data->NList_SkipChars = (char *) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_WordSelectChars, taglist))
+  if((tag = FindTagItem(MUIA_NList_WordSelectChars, taglist)))
     data->NList_WordSelectChars = (char *) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_EntryValueDependent, taglist))
+  if((tag = FindTagItem(MUIA_NList_EntryValueDependent, taglist)))
     data->NList_EntryValueDependent = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_PrivateData, taglist))
+  if((tag = FindTagItem(MUIA_NList_PrivateData, taglist)))
     data->NList_PrivateData = (APTR) tag->ti_Data;
 
-  if ((tag = FindTagItem(MUIA_NList_Title, taglist)) ||
-      (tag = FindTagItem(MUIA_List_Title, taglist)))
+  if((tag = FindTagItem(MUIA_NList_Title, taglist)) ||
+     (tag = FindTagItem(MUIA_List_Title, taglist)))
+  {
     data->NList_Title = (char *) tag->ti_Data;
+  }
 
-  if (tag = FindTagItem(MUIA_NList_TitleSeparator, taglist))
+  if((tag = FindTagItem(MUIA_NList_TitleSeparator, taglist)))
     data->NList_TitleSeparator = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_TitleClick, taglist))
+  if((tag = FindTagItem(MUIA_NList_TitleClick, taglist)))
     WANT_NOTIFY(NTF_TitleClick);
 
-  if (tag = FindTagItem(MUIA_NList_TitleClick2, taglist))
+  if((tag = FindTagItem(MUIA_NList_TitleClick2, taglist)))
     WANT_NOTIFY(NTF_TitleClick2);
 
-  if ((tag = FindTagItem(MUIA_NList_MultiSelect, taglist)) ||
-      (tag = FindTagItem(MUIA_Listview_MultiSelect, taglist)))
+  if((tag = FindTagItem(MUIA_NList_MultiSelect, taglist)) ||
+     (tag = FindTagItem(MUIA_Listview_MultiSelect, taglist)))
+  {
     data->multiselect = data->NList_MultiSelect = (LONG) tag->ti_Data;
+  }
 
-  if (tag = FindTagItem(MUIA_NList_DefaultObjectOnClick, taglist))
+  if((tag = FindTagItem(MUIA_NList_DefaultObjectOnClick, taglist)))
     data->NList_DefaultObjectOnClick = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_MinLineHeight, taglist))
+  if((tag = FindTagItem(MUIA_NList_MinLineHeight, taglist)))
     data->NList_MinLineHeight = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_List_MinLineHeight, taglist))
+  if((tag = FindTagItem(MUIA_List_MinLineHeight, taglist)))
     data->NList_MinLineHeight = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_TypeSelect, taglist))
+  if((tag = FindTagItem(MUIA_NList_TypeSelect, taglist)))
     data->NList_TypeSelect = (LONG) tag->ti_Data;
 
-  if ((tag = FindTagItem(MUIA_NList_AutoVisible, taglist)) ||
-      (tag = FindTagItem(MUIA_List_AutoVisible, taglist)))
+  if((tag = FindTagItem(MUIA_NList_AutoVisible, taglist)) ||
+     (tag = FindTagItem(MUIA_List_AutoVisible, taglist)))
+  {
     data->NList_AutoVisible = (LONG) tag->ti_Data;
+  }
 
-  if ((tag = FindTagItem(MUIA_NList_DefClickColumn, taglist)) ||
-      (tag = FindTagItem(MUIA_Listview_DefClickColumn, taglist)))
+  if((tag = FindTagItem(MUIA_NList_DefClickColumn, taglist)) ||
+     (tag = FindTagItem(MUIA_Listview_DefClickColumn, taglist)))
+  {
     data->NList_DefClickColumn = (LONG) tag->ti_Data;
+  }
 
-  if ((tag = FindTagItem(MUIA_NList_ShowDropMarks, taglist)) ||
-      (tag = FindTagItem(MUIA_List_ShowDropMarks, taglist)))
+  if((tag = FindTagItem(MUIA_NList_ShowDropMarks, taglist)) ||
+     (tag = FindTagItem(MUIA_List_ShowDropMarks, taglist)))
+  {
     data->NList_ShowDropMarks = (LONG) tag->ti_Data;
+  }
 
-  if (tag = FindTagItem(MUIA_NList_DragColOnly, taglist))
+  if((tag = FindTagItem(MUIA_NList_DragColOnly, taglist)))
     data->NList_DragColOnly = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_SortType, taglist))
+  if((tag = FindTagItem(MUIA_NList_SortType, taglist)))
     data->NList_SortType = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_SortType2, taglist))
+  if((tag = FindTagItem(MUIA_NList_SortType2, taglist)))
     data->NList_SortType2 = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_MinColSortable, taglist))
+  if((tag = FindTagItem(MUIA_NList_MinColSortable, taglist)))
     data->NList_MinColSortable = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_Imports, taglist))
+  if((tag = FindTagItem(MUIA_NList_Imports, taglist)))
     data->NList_Imports = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_Exports, taglist))
+  if((tag = FindTagItem(MUIA_NList_Exports, taglist)))
     data->NList_Exports = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_TitleMark, taglist))
+  if((tag = FindTagItem(MUIA_NList_TitleMark, taglist)))
     data->NList_TitleMark = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_TitleMark2, taglist))
+  if((tag = FindTagItem(MUIA_NList_TitleMark2, taglist)))
     data->NList_TitleMark2 = (LONG) tag->ti_Data;
 
-  if (tag = FindTagItem(MUIA_NList_Columns, taglist))
-  { NL_Columns(obj,data,(BYTE *) tag->ti_Data);
+  if((tag = FindTagItem(MUIA_NList_Columns, taglist)))
+  {
+    NL_Columns(obj,data,(BYTE *) tag->ti_Data);
   }
 
   if (data->NList_DragSortable)
@@ -971,42 +947,58 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
  */
 
 /*D(bug("%lx|NEW 7 \n",obj));*/
-  if (tag = FindTagItem(MUIA_NList_AdjustHeight, taglist))
-  { if (tag->ti_Data)
+  if((tag = FindTagItem(MUIA_NList_AdjustHeight, taglist)))
+  {
+    if (tag->ti_Data)
       data->NList_AdjustHeight = -1;
   }
-  if (tag = FindTagItem(MUIA_NList_AdjustWidth, taglist))
-  { if (tag->ti_Data)
+
+  if((tag = FindTagItem(MUIA_NList_AdjustWidth, taglist)))
+  {
+    if (tag->ti_Data)
       data->NList_AdjustWidth = -1;
   }
 
-  if ((tag = FindTagItem(MUIA_NList_SourceInsert, taglist)) && tag->ti_Data)
-  { struct MUIP_NList_InsertWrap *ins = (struct MUIP_NList_InsertWrap *) tag->ti_Data;
-    NL_List_Insert(data,obj,ins->entries,ins->count,ins->pos,ins->wrapcol,ins->align & ALIGN_MASK);
-    if (data->NList_Entries > 0)
+  if((tag = FindTagItem(MUIA_NList_SourceInsert, taglist)) && tag->ti_Data)
+  {
+    struct MUIP_NList_InsertWrap *ins = (struct MUIP_NList_InsertWrap *) tag->ti_Data;
+
+    NL_List_Insert(data,obj,ins->entries,ins->count,ins->pos,ins->wrapcol,ins->align & ALIGN_MASK,0);
+
+    if(data->NList_Entries > 0)
       data->NList_SourceArray = 1;
-    if (tag = FindTagItem(MUIA_NList_First, taglist))
+
+    if((tag = FindTagItem(MUIA_NList_First, taglist)))
       NL_List_First(obj,data,(long) tag->ti_Data,tag);
-    if (tag = FindTagItem(MUIA_NList_Active, taglist))
+
+    if((tag = FindTagItem(MUIA_NList_Active, taglist)))
       NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE);
   }
-  else if ((tag = FindTagItem(MUIA_NList_SourceString, taglist)) && tag->ti_Data)
-  { NL_List_Insert(data,obj,(APTR *) tag->ti_Data,-2,MUIV_NList_Insert_Bottom,0,0);
-    if (data->NList_Entries > 0)
+  else if((tag = FindTagItem(MUIA_NList_SourceString, taglist)) && tag->ti_Data)
+  {
+    NL_List_Insert(data,obj,(APTR *) tag->ti_Data,-2,MUIV_NList_Insert_Bottom,0,0,0);
+
+    if(data->NList_Entries > 0)
       data->NList_SourceArray = 1;
-    if (tag = FindTagItem(MUIA_NList_First, taglist))
+
+    if((tag = FindTagItem(MUIA_NList_First, taglist)))
       NL_List_First(obj,data,(long) tag->ti_Data,tag);
-    if (tag = FindTagItem(MUIA_NList_Active, taglist))
+
+    if((tag = FindTagItem(MUIA_NList_Active, taglist)))
       NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE);
   }
-  else if ((tag = FindTagItem(MUIA_NList_SourceArray, taglist)) ||
-           (tag = FindTagItem(MUIA_List_SourceArray, taglist)))
-  { NL_List_Insert(data,obj,(APTR *) tag->ti_Data,-1,MUIV_NList_Insert_Bottom,0,0);
-    if (data->NList_Entries > 0)
+  else if((tag = FindTagItem(MUIA_NList_SourceArray, taglist)) ||
+          (tag = FindTagItem(MUIA_List_SourceArray, taglist)))
+  {
+    NL_List_Insert(data,obj,(APTR *) tag->ti_Data,-1,MUIV_NList_Insert_Bottom,0,0,0);
+
+    if(data->NList_Entries > 0)
       data->NList_SourceArray = 1;
-    if (tag = FindTagItem(MUIA_NList_First, taglist))
+
+    if((tag = FindTagItem(MUIA_NList_First, taglist)))
       NL_List_First(obj,data,(long) tag->ti_Data,tag);
-    if (tag = FindTagItem(MUIA_NList_Active, taglist))
+
+    if((tag = FindTagItem(MUIA_NList_Active, taglist)))
       NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE);
   }
 
@@ -1015,12 +1007,15 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->ihnode.ihn_Method  = MUIM_NList_Trigger;
   data->ihnode.ihn_Flags   = MUIIHNF_TIMER;
 
-  if (tag = FindTagItem(MUIA_NList_StackCheck, taglist))
-  { if (!tag->ti_Data)
+  if((tag = FindTagItem(MUIA_NList_StackCheck, taglist)))
+  {
+    if (!tag->ti_Data)
       data->NList_SPLower = NULL;
   }
+
   if (data->NList_SPLower && Calc_Stack(obj,data) < 8000)
-  { NL_Stack_Alert(obj,data,1);
+  {
+    NL_Stack_Alert(obj,data,1);
     CoerceMethod(cl, obj, OM_DISPOSE);
     return(0);
   }
@@ -1169,83 +1164,81 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   if (data->NList_MinLineHeight <= 0)
     data->addvinc = -data->NList_MinLineHeight;
   else
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VertInc, &ptrd) && ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_VertInc, &ptrd))
       data->addvinc = *ptrd;
     else
       data->addvinc = DEFAULT_VERT_INC;
   }
 
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_StackCheck, &ptrd) && ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_StackCheck, &ptrd))
       data->NList_StackCheck = *ptrd + 1;
     else
       data->NList_StackCheck = 2;
     Calc_Stack(obj,data);
   }
 
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_ColWidthDrag, &ptrd) && ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_ColWidthDrag, &ptrd))
       data->NList_ColWidthDrag = *ptrd;
     else
       data->NList_ColWidthDrag = DEFAULT_CWD;
   }
 
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialCol, &ptrd) && ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialCol, &ptrd))
       data->NList_PartialCol = *ptrd;
     else
       data->NList_PartialCol = TRUE;
   }
 
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialChar, &ptrd) && ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PartialChar, &ptrd))
       data->NList_PartialChar = *ptrd;
     else
       data->NList_PartialChar = 0;
   }
 
-  { LONG *ptrd = 0;
+  { LONG *ptrd;
     data->NList_List_Select = MUIV_NList_Select_List;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_List_Select, &ptrd) && ptrd)
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_List_Select, &ptrd))
     { if (!*ptrd)
         data->NList_List_Select = MUIV_NList_Select_None;
     }
   }
 
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_SerMouseFix, &ptrd) && ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_SerMouseFix, &ptrd))
       data->NList_SerMouseFix = *ptrd;
     else
       data->NList_SerMouseFix = 0;
   }
 
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragLines, &ptrd) && ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragLines, &ptrd))
       data->NList_DragLines = *ptrd + 1;
     else
       data->NList_DragLines = DEFAULT_DRAGLINES;
   }
 
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelStep, &ptrd) && ptrd)
-    {
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelStep, &ptrd))
       data->NList_WheelStep = *ptrd;
-    }
     else
       data->NList_WheelStep = 1;
   }
 
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelFast, &ptrd) && ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelFast, &ptrd))
       data->NList_WheelFast = *ptrd;
     else
       data->NList_WheelFast = 5;
   }
 
-  { LONG *ptrd = 0;
+  { LONG *ptrd;
     data->NList_WheelMMB = FALSE;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelMMB, &ptrd) && ptrd)
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelMMB, &ptrd))
     { if (*ptrd)
         data->NList_WheelMMB = TRUE;
     }
@@ -1295,8 +1288,8 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   }
 
   if (data->NList_DragType == MUIV_NList_DragType_Default)
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragType, &ptrd) && ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragType, &ptrd))
       data->drag_type = *ptrd;
     else
       data->drag_type = MUIV_NList_DragType_Immediate;
@@ -1305,8 +1298,8 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     data->drag_type = data->NList_DragType;
 
   if ((data->NList_DragSortable) && (data->drag_type == MUIV_NList_DragType_None))
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragType, &ptrd) && ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_DragType, &ptrd))
       data->drag_type = *ptrd;
     else
       data->drag_type = MUIV_NList_DragType_Immediate;
@@ -1321,8 +1314,8 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   }
 */
 
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Smooth, &ptrd) && ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Smooth, &ptrd))
       data->NList_Smooth = *ptrd;
     else
       data->NList_Smooth = 0;
@@ -1334,19 +1327,28 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     }
   }
 
-  { LONG *ptrd = 0;
+  {
+    LONG *ptrd;
+
     if (data->NList_Keys && (data->NList_Keys != default_keys))
-    { NL_Free(data,data->NList_Keys,"NList_Keys");
+    {
+      NL_Free(data,data->NList_Keys,"NList_Keys");
       data->NList_Keys = default_keys;
     }
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Keys, &ptrd) && ptrd)
-    { struct KeyBinding *keys = (struct KeyBinding *) ptrd;
-      LONG nk = 0, sk;
+
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Keys, &ptrd))
+    {
+      struct KeyBinding *keys = (struct KeyBinding *) ptrd;
+      LONG nk = 0;
+
       while (keys[nk].kb_KeyTag)
         nk++;
-      if (data->NList_Keys = NL_Malloc(data,sizeof(struct KeyBinding) * (nk + 1),"NList_Keys"))
-      { while (nk >= 0)
-        { data->NList_Keys[nk] = keys[nk];
+
+      if((data->NList_Keys = NL_Malloc(data,sizeof(struct KeyBinding) * (nk + 1),"NList_Keys")))
+      {
+        while (nk >= 0)
+        {
+          data->NList_Keys[nk] = keys[nk];
           nk--;
         }
       }
@@ -1369,14 +1371,14 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   LOAD_BG(data->BG_Cursor_init,  data->NList_CursorBackground,  MUICFG_NList_BG_Cursor,  DEFAULT_BG_CURSOR);
   LOAD_BG(data->BG_UnselCur_init,data->NList_UnselCurBackground,MUICFG_NList_BG_UnselCur,DEFAULT_BG_UNSELCUR);
 
-  { LONG *ptrd = 0;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PointerColor, &ptrd) && ptrd && *ptrd)
+  { LONG *ptrd;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_PointerColor, &ptrd) && *ptrd)
       NL_SpecPointerColors(*ptrd);
   }
 
   if (data->NList_ForcePen == MUIV_NList_ForcePen_Default)
-  { LONG *ptrd = 0, fpen = MUIV_NList_ForcePen_Off;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_ForcePen, &ptrd) && ptrd)
+  { LONG *ptrd, fpen = MUIV_NList_ForcePen_Off;
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_ForcePen, &ptrd))
       fpen = *ptrd;
     data->ForcePen = (LONG) fpen;
   }
@@ -1392,9 +1394,9 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   data->multiselect = data->NList_MultiSelect;
   data->multisel_qualifier = 0;
-  { LONG *multisel = 0;
+  { LONG *multisel;
     LONG mult = MUIV_NList_MultiSelect_Shifted;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_MultiSelect, (LONG) (&multisel)) && multisel)
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_MultiSelect, (LONG) (&multisel)))
       mult = *multisel;
     if (data->NList_MultiSelect == MUIV_NList_MultiSelect_Default)
       data->multiselect = mult & 0x0007;
@@ -1403,9 +1405,9 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   }
 
   if (data->NList_ContextMenu == MUIV_NList_ContextMenu_Default)
-  { LONG *ptrd = 0;
+  { LONG *ptrd;
     data->ContextMenu = MUIV_NList_ContextMenu_Always;
-    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Menu, &ptrd) && ptrd)
+    if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_Menu, &ptrd))
     { switch (*ptrd)
       { case MUIV_NList_ContextMenu_TopOnly :
         case MUIV_NList_ContextMenu_Always :
@@ -1416,7 +1418,7 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     }
   }
   if (data->ContextMenu != data->ContextMenuOn)
-  { if ((((data->ContextMenu & 0x9d510030) == 0x9d510030) && (data->numcols <= 1)) ||
+  { if (/*(((data->ContextMenu & 0x9d510030) == 0x9d510030) && (data->numcols <= 1)) ||*/ /* sba: Contextmenu problem: Disabled */
         (data->ContextMenu == MUIV_NList_ContextMenu_Never))
       notdoset(obj,MUIA_ContextMenu,NULL);
     else

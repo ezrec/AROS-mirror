@@ -1,12 +1,37 @@
+/***************************************************************************
 
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
+
+#include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <intuition/pointerclass.h>
 #include <datatypes/pictureclass.h>
 #include "private.h"
 
 extern struct IClass *ThisClass;
-
-
 
 static UWORD size_pointer[] = {
   0x0000,   0x0000,
@@ -86,9 +111,11 @@ static UWORD size_pointer_bp2[] = {
   0x0000,
   0x0000
 };
-static struct BitMap size_pointer_bitmap = {
-  2,12,0,2,0,
-  (PLANEPTR) size_pointer_bp0,(PLANEPTR) size_pointer_bp1,NULL,NULL,NULL,NULL,NULL,NULL
+
+static struct BitMap size_pointer_bitmap =
+{
+  2, 12, 0, 2, 0,
+  { (PLANEPTR) size_pointer_bp0, (PLANEPTR) size_pointer_bp1, NULL, NULL, NULL, NULL, NULL, NULL }
 };
 
 /*
@@ -151,9 +178,11 @@ static UWORD move_pointer_bp2[] = {
   0x0000,
   0x0000
 };
-static struct BitMap move_pointer_bitmap = {
+
+static struct BitMap move_pointer_bitmap =
+{
   2,6,0,2,0,
-  (PLANEPTR) move_pointer_bp0,(PLANEPTR) move_pointer_bp1,NULL,NULL,NULL,NULL,NULL,NULL
+  { (PLANEPTR) move_pointer_bp0,(PLANEPTR) move_pointer_bp1,NULL,NULL,NULL,NULL,NULL,NULL }
 };
 
 
@@ -613,8 +642,9 @@ ULONG NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags
   struct BitMapImage *bmimg = NULL;
   if (imgobj)
   {
-    if (bmimg = NL_Malloc(data,sizeof(struct BitMapImage),"creImage2_bmimg"))
-    { if (GetNImage2(obj,data,imgobj))
+    if((bmimg = NL_Malloc(data,sizeof(struct BitMapImage),"creImage2_bmimg")))
+    {
+      if (GetNImage2(obj,data,imgobj))
       { bmimg->control = MUIA_Image_Spec;
         bmimg->width = 0;
         bmimg->height = 0;
@@ -646,10 +676,13 @@ ULONG NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags
 ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
 {
   LONG CI_BM_Width = 0;
+
   if (!imgobj)
-    return (NULL);
+    return(0);
+
   if ((flags == ~0L) || !get(imgobj,MUIA_Bitmap_Width,&CI_BM_Width))
     return (NL_CreateImage2(obj,data,imgobj,flags));
+
   if (imgobj && data->SETUP)
   { LONG last_numpen,last_newnumpen;
     struct BitMap *CI_BM_Bitmap = NULL;
@@ -679,8 +712,10 @@ ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
       get(imgobj,MUIA_Bodychunk_Compression,&CI_BC_Compression);
       get(imgobj,MUIA_Bodychunk_Masking,&CI_BC_Masking);
       if (CI_BC_Body)
-      { if (bm_src = NL_Malloc(data,sizeof(struct BitMap),"CreateImage_bm_src"))
-        { WORD ktr;
+      {
+        if((bm_src = NL_Malloc(data,sizeof(struct BitMap),"CreateImage_bm_src")))
+        {
+          WORD ktr;
           BOOL bit_map_failed = FALSE;
           InitBitMap(bm_src,CI_BC_Depth,CI_BM_Width,CI_BM_Height);
 
@@ -758,11 +793,14 @@ ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
       bm_src = CI_BM_Bitmap;
 
     if (bm_src)
-    { UBYTE mypen,bit1,bit2;
-		WORD cptb,cptr,cptd,cpt,offr,offr1,cptpen;
+    {
+      UBYTE mypen,bit1,bit2;
+		  WORD cptb,cptr,cptd,offr,offr1,cptpen;
+
       last_numpen = (1 << bm_src->Depth);
       last_newnumpen = 0;
       newdepth = bm_src->Depth;
+
       if (CI_BM_MappingTable)
       { LONG num;
         for (num = 0;num < last_numpen;num++)
@@ -944,7 +982,8 @@ ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
       data->MinImageHeight = bmimg->height;
     return ((ULONG) bmimg);
   }
-  return (NULL);
+
+  return (0);
 }
 
 
@@ -1037,10 +1076,12 @@ ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULO
             useimages[pos].flags = data->NList_UseImages[pos].flags;
             pos++;
           }
+
           while (pos < last)
-          { useimages[pos].bmimg = NULL;
+          {
+            useimages[pos].bmimg = 0;
             useimages[pos].imgobj = NULL;
-            useimages[pos].flags = NULL;
+            useimages[pos].flags = 0;
             pos++;
           }
           if (data->NList_UseImages)
@@ -1052,11 +1093,13 @@ ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULO
           data->LastImage = 0;
       }
       if (imgnum < data->LastImage)
-      { LONG CI_BM_Width;
+      {
         if (data->NList_UseImages[imgnum].bmimg)
-        { NL_DeleteImage(obj,data,(APTR) data->NList_UseImages[imgnum].bmimg);
+        {
+          NL_DeleteImage(obj,data,(APTR) data->NList_UseImages[imgnum].bmimg);
           redraw = TRUE;
         }
+
         data->NList_UseImages[imgnum].bmimg = NULL;
         data->NList_UseImages[imgnum].imgobj = imgobj;
         data->NList_UseImages[imgnum].flags = flags;
@@ -1075,7 +1118,7 @@ ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULO
       }
       data->NList_UseImages[imgnum].bmimg = NULL;
       data->NList_UseImages[imgnum].imgobj = NULL;
-      data->NList_UseImages[imgnum].flags = NULL;
+      data->NList_UseImages[imgnum].flags = 0;
       retval = TRUE;
     }
   }
@@ -1088,7 +1131,7 @@ ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULO
       }
       data->NList_UseImages[pos].bmimg = NULL;
       data->NList_UseImages[pos].imgobj = NULL;
-      data->NList_UseImages[pos].flags = NULL;
+      data->NList_UseImages[pos].flags = 0;
       pos++;
     }
     retval = TRUE;

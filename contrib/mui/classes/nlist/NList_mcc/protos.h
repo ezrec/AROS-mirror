@@ -1,3 +1,30 @@
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number: 1d51 0x9d510030 to 0x9d5100A0
+                                           0x9d5100C0 to 0x9d5100FF
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 /* NList_mcc.c */
 
@@ -121,7 +148,7 @@ extern LONG  NL_GetSelects(struct NLData *data,Object *obj,LONG ent);
 extern BOOL  NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos);
 extern void  NL_DeleteTmpLine(struct NLData *data,Object *obj,LONG pos);
 extern ULONG NL_List_Sort(Object *obj,struct NLData *data);
-extern ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LONG pos,LONG wrapcol,LONG align);
+extern ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LONG pos,LONG wrapcol,LONG align,ULONG flags);
 extern ULONG NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG wrapcol,LONG align);
 extern ULONG NL_List_Clear(struct NLData *data,Object *obj);
 extern ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos);
@@ -152,33 +179,21 @@ extern ULONG mNL_DropEntryDrawErase(struct IClass *cl,Object *obj,struct MUIP_NL
 /* NList_func3.c */
 
 extern ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message);
-extern ULONG MyCallHookPktA(Object *obj,struct Hook *hook,APTR message,...);
+extern ULONG STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...);
 extern LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,UBYTE *buf,LONG bufsize,struct KeyMap *kmap);
 extern char *ltoa(ULONG val, char *buffer, int len);
-#if !defined(__SASC) && !defined(__AROS__)
-extern char *stpcpy(char *to,char *from);
-#endif
+
 //$$$Sensei: new memory handling functions.
-extern APTR	NL_Pool_Create		( ULONG, ULONG );
-extern VOID	NL_Pool_Delete		( APTR );
-extern APTR	NL_Pool_Alloc		( APTR, ULONG );
-extern VOID	NL_Pool_Free		( APTR, APTR, ULONG );
-extern APTR	NL_Pool_AllocVec	( APTR, ULONG );
-extern VOID	NL_Pool_FreeVec	( APTR, APTR );
-extern APTR	NL_Pool_Internal_Alloc	( APTR, ULONG );
-extern VOID	NL_Pool_Internal_Free	( APTR, APTR, ULONG );
-extern APTR	NL_Pool_AllocVec			( APTR, ULONG );
-extern VOID	NL_Pool_FreeVec			( APTR, APTR );
+//sba: Removed some unused functions
+extern APTR  NL_Pool_Create(ULONG, ULONG);
+extern VOID  NL_Pool_Delete(APTR);
+extern APTR  NL_Pool_Internal_Alloc(struct NLData *data, ULONG size);
+extern VOID  NL_Pool_Internal_Free(struct NLData *data, APTR memory, ULONG size);
 
-/*
-extern void *NL_CreatePool(struct NLData *data);
-extern void NL_DeletePool(struct NLData *data);
-*/
-
-extern void *NL2_Malloc2(APTR pool,ULONG len,char *str);
-extern void NL2_Free2(APTR pool,void *ptr,char *str);
-extern void *NL2_Malloc(struct NLData *data,ULONG len,char *str);
-extern void NL2_Free(struct NLData *data,void *ptr,char *str);
+extern APTR	NL2_Malloc2( APTR pool, ULONG size, STRPTR string );
+extern VOID	NL2_Free2( APTR pool, APTR memory, STRPTR string );
+extern APTR	NL2_Malloc( struct NLData *data, ULONG size, STRPTR string );
+extern VOID	NL2_Free( struct NLData *data, APTR memory, STRPTR string );
 
 extern void NL_Free_Format(Object *obj,struct NLData *data);
 extern BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist);
@@ -210,7 +225,7 @@ extern ULONG mNL_CreateImage(struct IClass *cl,Object *obj,struct MUIP_NList_Cre
 extern ULONG mNL_DeleteImage(struct IClass *cl,Object *obj,struct MUIP_NList_DeleteImage *msg);
 extern ULONG mNL_UseImage(struct IClass *cl,Object *obj,struct MUIP_NList_UseImage *msg);
 
-/* Move.s */
+/* Move.c */
 
 extern void  NL_Move(void *dest,void *src,LONG len,long newpos);
 extern void  NL_MoveD(void *dest,void *src,LONG len,long newpos);

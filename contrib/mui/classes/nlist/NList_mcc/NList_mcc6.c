@@ -1,19 +1,31 @@
-#include <proto/intuition.h>
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include "private.h"
-
-
-#define MADF_VISIBLE            0x00004000 /* redraw frame */
-
-/****************************************************************************************/
-/****************************************************************************************/
-/******************************                    **************************************/
-/******************************     NList Class    **************************************/
-/******************************                    **************************************/
-/****************************************************************************************/
-/****************************************************************************************/
-
-
 
 WORD DrawTitle(Object *obj,struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
 {
@@ -59,7 +71,6 @@ WORD DrawTitle(Object *obj,struct NLData *data,LONG minx,LONG maxx,WORD hfirst)
 
 void DrawOldLine(Object *obj,struct NLData *data,LONG ent,LONG minx,LONG maxx,WORD hfirst)
 {
-  WORD cursel,linelen;
   ULONG mypen;
   BOOL forcepen = FALSE;
   BOOL drawtxt;
@@ -125,7 +136,7 @@ void DrawOldLine(Object *obj,struct NLData *data,LONG ent,LONG minx,LONG maxx,WO
 WORD DrawLines(Object *obj,struct NLData *data,LONG e1,LONG e2,LONG minx,LONG maxx,WORD hfirst,WORD hmax,WORD small,BOOL do_extrems,WORD not_all)
 {
   LONG ent,ent2,ent3,ent4,dent,lim1,lim2,lim3;
-  WORD cursel,linelen;
+  WORD cursel,linelen=0;
   ULONG mypen;
   BOOL forcepen = FALSE;
   LONG vert1,vert2,vertd,vert3;
@@ -631,12 +642,12 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
 {
   /*register*/ struct colinfo *cinfo;
   /*register*/ struct affinfo *afinfo;
-  LONG linelen, next_x, x2, x2s, x2e, minx2, maxx2, minx3, maxx3, width2, cmaxx;
+  LONG linelen, next_x=0, x2, x2s, x2e, minx2, maxx2, minx3, maxx3, cmaxx;
   WORD xbar,xbar2,ybar,ybar2;
   ULONG pen;
   UBYTE *ptr1;
   struct TextExtent te;
-  WORD column, llen, curclen, dcurclen, ni;
+  WORD column, curclen, dcurclen, ni;
   STACK_CHECK;
 
   if ((ent < -1) || (ent >= data->NList_Entries))
@@ -743,7 +754,9 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
     WidthColumn(obj,data,column,0);
 
     if (IS_HLINE(cinfo->style))
-    { WORD xb1,xb2,yb1,yb2,thick,nothick,xbe1,xbe2;
+    {
+      WORD xb1,xb2,yb1,yb2,thick,nothick,xbe1=0,xbe2=0;
+
       yb1 = ybar;
       nothick = thick = 0;
       if (IS_HLINE_thick(cinfo->style) && (IS_HLINE_C(cinfo->style) || IS_HLINE_E(cinfo->style)))
@@ -900,7 +913,7 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
         next_x = x2 + afinfo->len + afinfo->addinfo + afinfo->addchar;
       else if (afinfo->style == STYLE_IMAGE)
       {
-        LONG dx,dx3,x3,imgnp,imgnp2,dy,dy2;
+        LONG dx,dx3,x3,dy,dy2;
         struct NImgList *nimg = (struct NImgList *) afinfo->strptr;
         x2 += 1;
         dx = afinfo->pen & 0x0000FFFF;
@@ -917,13 +930,13 @@ LONG DrawText(Object *obj,struct NLData *data,LONG ent,LONG x,LONG y,LONG minx,L
         }
 
         if (nimg && nimg->NImgObj && (dx3 > 0) && (x2 <= maxx) && (next_x > minx))
-        { struct IClass *realclass = OCLASS(obj);
+        {
+          struct IClass *realclass = OCLASS(obj);
           ULONG mad_Flags;
-          APTR clippinghandle;
+          APTR clippinghandle = NULL;
           WORD left,top,width,height,ol,ot;
           BOOL doclip = FALSE;
           LONG disabled = FALSE;
-          LONG tagval;
 /*
  * if (muiRenderInfo(obj) != muiRenderInfo(nimg->NImgObj))
  * {
@@ -1492,8 +1505,9 @@ struct RastPort *CreateDragRPort(Object *obj,struct NLData *data,LONG numlines,L
       if (newdepth > 8)
         newdepth = 8;
       data->DragRPort->BitMap = NULL;
-      if (bmimg = NL_Malloc(data,sizeof(struct BitMapImage),"CreateDragRPort"))
-      { WORD ktr;
+      if((bmimg = NL_Malloc(data,sizeof(struct BitMapImage),"CreateDragRPort")))
+      {
+        WORD ktr;
         BOOL bmimg_failed = FALSE;
         InitBitMap(&(bmimg->imgbmp),newdepth,data->DragWidth,data->DragHeight);
         bmimg->control = MUIM_NList_CreateImage;

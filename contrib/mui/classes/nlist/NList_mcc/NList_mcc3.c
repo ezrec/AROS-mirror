@@ -1,27 +1,41 @@
-#include <limits.h>
-#include <proto/intuition.h>
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include "private.h"
 
-
-/****************************************************************************************/
-/****************************************************************************************/
-/******************************                    **************************************/
-/******************************     NList Class    **************************************/
-/******************************                    **************************************/
-/****************************************************************************************/
-/****************************************************************************************/
-
 /*#define DO_CLIPPING*/
 
-#ifndef USE_ZUNE
 LONG xget(Object *obj,ULONG attribute)
 {
   LONG x;
   get(obj,attribute,&x);
   return(x);
 }
-#endif
+
 
 
 #define MUIA_Group_Forward  0x80421422
@@ -500,7 +514,9 @@ static ULONG DrawRefresh(Object *obj,struct NLData *data)
       if ((mleft <= mright) && (mtop <= mbottom))
       {
         BOOL clipped = FALSE;
-        WORD ly1,ly2,lyl1,lyl2;
+        WORD ly1, ly2;
+        WORD lyl1=0;
+        WORD lyl2=0;
 
         mright++;
         mbottom++;
@@ -573,7 +589,7 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     mymsg.MethodID = MUIM_Draw;
     mymsg.flags = 0;
 /*D(bug("%lx|drawsuper1 %lx %lx %lx\n",obj,msg->flags,muiAreaData(obj)->mad_Flags,muiAreaData(data->drawsuper)->mad_Flags));*/
-    DoMethodA((Object *) data->drawsuper,(Msg) &mymsg);
+    DoMethodA((Object *)data->drawsuper, (Msg)(void*)&mymsg);
 /*D(bug("%lx|drawsuper2 %lx %lx %lx\n",obj,msg->flags,muiAreaData(obj)->mad_Flags,muiAreaData(data->drawsuper)->mad_Flags));*/
     msg->flags = 0;
     return(0);
@@ -615,7 +631,8 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
       data->NList_Disabled = 2;
       DoSuperMethodA(cl,obj,(Msg)msg);
     }
-    return (NULL);
+
+    return (0);
   }
 
   if (data->DragRPort && (data->DragText || (data->DragEntry >= 0)))
@@ -626,11 +643,11 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
   data->DRAW++;
 
-  if ((data->refreshing != 2) && /*(data->DRAW > 1) &&*/
+  if(/*(data->refreshing != 2) && (data->DRAW > 1) &&*/
       ((data->refreshing) ||
-       (muiRenderInfo(obj)->mri_Flags & MUIMRI_REFRESHMODE) ||
-       (data->rp->Layer->Flags & LAYERREFRESH)))
-/*       ((data->rp->Layer->Flags & LAYERREFRESH) && !(data->do_draw_all && data->do_draw))*/
+       (muiRenderInfo(obj)->mri_Flags & MUIMRI_REFRESHMODE)))
+//     || (data->rp->Layer->Flags & LAYERREFRESH)))
+//       ((data->rp->Layer->Flags & LAYERREFRESH) && !(data->do_draw_all && data->do_draw))))
   {
 /*D(bug("%lx|Refresh %ld %ld %ld %ld %lx %lx\n",obj,data->DRAW,data->do_draw_all,data->do_draw,(LONG)data->refreshing,(LONG)(muiRenderInfo(obj)->mri_Flags & MUIMRI_REFRESHMODE),(LONG)(data->rp->Layer->Flags & LAYERREFRESH)));*/
     /* Avoid Superclass to draw anything *in* the object */
@@ -1219,6 +1236,7 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
     /*if (msg->flags & MADF_DRAWOBJECT) D(bug("NL: mNL_Draw(MADF_DRAWOBJECT) /after \n"));*/
   }
+
   return(0);
 }
 

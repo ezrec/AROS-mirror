@@ -1,24 +1,39 @@
-#include <proto/intuition.h>
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include "private.h"
 
-/****************************************************************************************/
-/****************************************************************************************/
-/******************************                    **************************************/
-/******************************     NList Class    **************************************/
-/******************************                    **************************************/
-/****************************************************************************************/
-/****************************************************************************************/
-
-
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
-
 
 static ULONG mNL_Show(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   ULONG retval;
   register struct NLData *data = INST_DATA(cl,obj);
-  int num;
+
   STACK_CHECK;
   D(bug("NL: mNL_Show() \n"));
 
@@ -104,10 +119,9 @@ static ULONG mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
   register struct NLData *data = INST_DATA(cl,obj);
   ULONG id;
   LONG *nlie;
-  if (id=(muiNotifyData(obj)->mnd_ObjectID))
-  {
-/*D(bug("%lx|Imports=%lx Dataspace=%lx ...\n",obj,data->NList_Imports,msg->dataspace));*/
 
+  if((id = (muiNotifyData(obj)->mnd_ObjectID)))
+  {
     if ((nlie = (LONG *) DoMethod(msg->dataspace,MUIM_Dataspace_Find,id)) &&
         (nlie[0] == MAKE_ID('E','X','P','T')))
     {
@@ -212,7 +226,8 @@ static ULONG mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   ULONG id;
-  if (id=(muiNotifyData(obj)->mnd_ObjectID))
+
+  if((id = (muiNotifyData(obj)->mnd_ObjectID)))
   {
     ULONG nliesize = 0;
     ULONG nliepos = 0;
@@ -263,8 +278,10 @@ static ULONG mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
     { NL_Free(data,(void *)data->nlie,"NL_Export");
       data->nlie = NULL;
     }
-    if (data->nlie = (LONG *) NL_Malloc(data,nliesize,"NL_Export"))
-    { nliepos = 0;
+
+    if((data->nlie = (LONG *) NL_Malloc(data,nliesize,"NL_Export")))
+    {
+      nliepos = 0;
       data->nlie[nliepos++] = MAKE_ID('E','X','P','T');
 
       if (data->NList_Exports & MUIV_NList_Exports_Active)
@@ -414,18 +431,19 @@ static ULONG mNL_List_Compare( struct IClass *cl, Object *obj, struct MUIP_NList
 static ULONG mNL_List_Display( struct IClass *cl, Object *obj, struct MUIP_NList_Display *msg )
 {
 	struct NLData *data = INST_DATA( cl, obj );
+
 	if( data->NList_DisplayHook )
 	{
 		if( data->NList_DisplayHook2 )
 		{
 			// data->DisplayArray[0] = (char *) useptr;
-			MyCallHookPkt(obj,FALSE,data->NList_DisplayHook,obj,data->DisplayArray);
+			return MyCallHookPkt(obj,FALSE,data->NList_DisplayHook,obj,data->DisplayArray);
 		}
 		else
 		{
 			APTR useptr = data->DisplayArray[ 0 ];
 			data->DisplayArray[0] = (char *) data->NList_PrivateData;
-			MyCallHookPkt(obj,TRUE,data->NList_DisplayHook,&data->DisplayArray[2],useptr);
+			return MyCallHookPkt(obj,TRUE,data->NList_DisplayHook,&data->DisplayArray[2],useptr);
 		}
 	}
 	return( 0 );
@@ -433,25 +451,10 @@ static ULONG mNL_List_Display( struct IClass *cl, Object *obj, struct MUIP_NList
  
 #define FS       (data = INST_DATA(cl,obj)); (NotNotify = data->DoNotify)
 
-
-#ifdef MORPHOS
-ULONG _Dispatcher_gate(void)
+DISPATCHERPROTO(_Dispatcher)
 {
-  struct IClass *cl = REG_A0;
-  Msg msg = REG_A1;
-  Object *obj = REG_A2;
-#elif defined(__AROS__)
-AROS_UFH3(ULONG, _Dispatcher,
-    AROS_UFHA(struct IClass *, cl, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(Msg, msg, A1))
-{
-  AROS_USERFUNC_INIT
-#else
-ULONG ASM SAVEDS NList_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) Msg msg GNUCREG(a1) )
-{
-#endif
-
+  DISPATCHER_INIT
+  
   register struct NLData *data = NULL;
   ULONG retval = 0;
   ULONG NotNotify = ~0;
@@ -572,18 +575,6 @@ ULONG ASM SAVEDS NList_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2
   }
   return (retval);
   
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
+  DISPATCHER_EXIT
 }
 
-#ifdef USE_ZUNE
-
-const struct __MUIBuiltinClass _MUI_List_desc = { 
-    MUIC_List, 
-    MUIC_Group, 
-    sizeof(struct NLData), 
-    (void*)NList_Dispatcher 
-};
-
-#endif

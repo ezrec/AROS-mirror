@@ -1,8 +1,37 @@
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
+
 #define NO_PROTOS
 #include "private.h"
 
-/* attention :  le nombre d'octets doit etre multiple de 4 !
- * et que ca soit efficace src et dest doivent etre multiples de 4 aussi.
+/*
+ *
+ * Warning: the number of octets have to be a multiple of 4
+ * and to be efficient, src and dest also have to be a multiple of 4
  *
  * extern void  NL_Move(void *dest,void *src,LONG len);
  *
@@ -68,72 +97,4 @@ void  NL_MoveD(long *dest,long *src,long len)
     } while (--len >= 0);
   }
 }
-*/
-
-/*
-gcc -S -O4 Move.c -o Move.s
-gcc -s -c Move.s -o Move.o
-
-
-
-#NO_APP
-gcc2_compiled.:
-___gnu_compiled_c:
-.text
-	.even
-.globl _NL_Move
-_NL_Move:
-	link a5,#0
-	movel a5@(8),a1
-	movel a5@(12),a0
-	movel a5@(16),d0
-	jle L9
-	asrl #2,d0
-	subql #1,d0
-	movel d0,d1
-	swapw d1
-L11:
-	movel a0@+,a1@+
-	dbraw d0,L11
-	dbraw d1,L11
-L9:
-	unlk a5
-	rts
-	.even
-.globl _NL_MoveD
-_NL_MoveD:
-	link a5,#0
-	movel a5@(8),a1
-	movel a5@(12),a0
-	movel a5@(16),d0
-	jle L23
-	asrl #2,d0
-	subql #1,d0
-	movel d0,d1
-	swapw d1
-L25:
-	movel a0@-,a1@-
-	dbraw d0,L25
-	dbraw d1,L25
-L23:
-	unlk a5
-	rts
-
-
-
-
-
-
-	subql #1,d0
-	jpl Lxx
-
-est remplacable par (attention a dbra qui n'utilise que 16 bits de d0 !) :
-
-	movel d0,d1
-	swapw d1
-...
-	dbraw d0,Lxx
-	dbraw d1,Lxx
-
-
 */

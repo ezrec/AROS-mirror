@@ -1,44 +1,29 @@
-/*
- * Copyright (c) 1992 Commodore-Amiga, Inc.
- *
- * This example is provided in electronic form by Commodore-Amiga, Inc. for
- * use with the "Amiga ROM Kernel Reference Manual: Devices", 3rd Edition,
- * published by Addison-Wesley (ISBN 0-201-56775-X).
- *
- * The "Amiga ROM Kernel Reference Manual: Devices" contains additional
- * information on the correct usage of the techniques and operating system
- * functions presented in these examples.  The source and executable code
- * of these examples may only be distributed in free electronic form, via
- * bulletin board or as part of a fully non-commercial and freely
- * redistributable diskette.  Both the source and executable code (including
- * comments) must be included, without modification, in any copy.  This
- * example may not be published in printed form or distributed with any
- * commercial product.  However, the programming techniques and support
- * routines set forth in these examples may be used in the development
- * of original executable software products for Commodore Amiga computers.
- *
- * All other rights reserved.
- *
- * This example is provided "as-is" and is subject to change; no
- * warranties are made.  All use is at your own risk. No liability or
- * responsibility is assumed.
- *
- **************************************************************************
- *
- * Cbio.c
- *
- * Provide standard clipboard device interface routines
- *            such as Open, Close, Post, Read, Write, etc.
- *
- *  NOTES: These functions are useful for writing and reading simple
- *         FTXT.  Writing and reading complex FTXT, ILBM, etc.,
- *         requires more work.  You should use the iffparse.library
- *         to write and read FTXT, ILBM and other IFF file types.
- *
- *         When this code is used with older versions of the Amiga OS
- *         (i.e., before V36) a memory loss of 536 bytes will occur due
- *         to bugs in the clipboard device.
- */
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include "exec/types.h"
 #include "exec/ports.h"
@@ -50,10 +35,6 @@
 
 #include "cbio.h"
 
-/*
-#include <clib/exec_protos.h>
-#include <clib/alib_protos.h>
-*/
 #include <proto/exec.h>
 
 #include <stdlib.h>
@@ -89,18 +70,21 @@ struct IOClipReq *CBOpen(ULONG unit)
   struct MsgPort *mp;
   struct IOClipReq *ior;
 
-  if (mp = CreateMsgPort())
+  if((mp = CreateMsgPort()))
   {
-    if (ior=(struct IOClipReq *)CreateIORequest(mp,sizeof(struct IOClipReq)))
+    if((ior = (struct IOClipReq *)CreateIORequest(mp,sizeof(struct IOClipReq))))
     {
-      if (!(OpenDevice("clipboard.device",unit,(struct IORequest *)ior,0L)))
+      if(!(OpenDevice("clipboard.device",unit,(struct IORequest *)ior,0L)))
       {
         return (ior);
       }
+
       DeleteIORequest((struct IORequest *)ior);
     }
+
     DeleteMsgPort(mp);
   }
+
   return(NULL);
 }
 
@@ -204,7 +188,7 @@ int CBWriteFTXT(struct IOClipReq *ior,char *string)
   return(success);
 }
 
-WriteLong(struct IOClipReq *ior, long *ldata)
+int WriteLong(struct IOClipReq *ior, long *ldata)
 {
   ior->io_Data    = (STRPTR)ldata;
   ior->io_Length  = 4L;
@@ -351,7 +335,7 @@ struct cbbuf *CBReadCHRS(struct IOClipReq *ior)
 }
 
 
-ReadLong(struct IOClipReq *ior, ULONG *ldata)
+int ReadLong(struct IOClipReq *ior, ULONG *ldata)
 {
   ior->io_Command = CMD_READ;
   ior->io_Data    = (STRPTR)ldata;
@@ -371,13 +355,15 @@ struct cbbuf *FillCBData(struct IOClipReq *ior,ULONG size)
   register ULONG x,count;
   ULONG length;
   struct cbbuf *buf,*success;
+
   success = NULL;
-  if (buf = AllocMem(sizeof(struct cbbuf),MEMF_PUBLIC))
+
+  if((buf = AllocMem(sizeof(struct cbbuf),MEMF_PUBLIC)))
   {
     length = size;
     if (size & 1)
       length++;            /* if odd size, read 1 more */
-    if (buf->mem = AllocMem(length+1L,MEMF_PUBLIC))
+    if((buf->mem = AllocMem(length+1L,MEMF_PUBLIC)))
     {
       buf->size = length+1L;
       ior->io_Command = CMD_READ;

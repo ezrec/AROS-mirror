@@ -1,36 +1,32 @@
-/*
- * Copyright (c) 1992 Commodore-Amiga, Inc.
- *
- * This example is provided in electronic form by Commodore-Amiga, Inc. for
- * use with the "Amiga ROM Kernel Reference Manual: Devices", 3rd Edition,
- * published by Addison-Wesley (ISBN 0-201-56775-X).
- *
- * The "Amiga ROM Kernel Reference Manual: Devices" contains additional
- * information on the correct usage of the techniques and operating system
- * functions presented in these examples.  The source and executable code
- * of these examples may only be distributed in free electronic form, via
- * bulletin board or as part of a fully non-commercial and freely
- * redistributable diskette.  Both the source and executable code (including
- * comments) must be included, without modification, in any copy.  This
- * example may not be published in printed form or distributed with any
- * commercial product.  However, the programming techniques and support
- * routines set forth in these examples may be used in the development
- * of original executable software products for Commodore Amiga computers.
- *
- * All other rights reserved.
- *
- * This example is provided "as-is" and is subject to change; no
- * warranties are made.  All use is at your own risk. No liability or
- * responsibility is assumed.
- *
- ***********************************************************************
- *
- * cbio.h -- Include file used by clipdemo.c, changehook_test.c and cbio.c
- *
- ***********************************************************************
- */
+/***************************************************************************
 
-struct cbbuf {
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
+
+struct cbbuf
+{
   ULONG size;     /* size of memory allocation            */
   ULONG count;    /* number of characters after stripping */
   UBYTE *mem;     /* pointer to memory containing data    */

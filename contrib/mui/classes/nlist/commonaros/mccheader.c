@@ -1,3 +1,8 @@
+/* hack: FIXME/KILLME */
+#ifndef INSTDATA
+#define INSTDATA Data
+#endif
+
 /*****************************************************************************
 
 This code serves as a basis for writing a library-based MUI custom class
@@ -479,7 +484,7 @@ BOOL UserLibOpen(struct Library *base)
 
         #ifdef SUPERCLASS
 
-        ThisClass = MUI_CreateCustomClass(base,SUPERCLASS,NULL,sizeof(struct Data),AROS_ASMSYMNAME(_Dispatcher));
+        ThisClass = MUI_CreateCustomClass(base,SUPERCLASS,NULL,sizeof(struct INSTDATA),AROS_ASMSYMNAME(_Dispatcher));
 
         if ( ThisClass )
         #endif

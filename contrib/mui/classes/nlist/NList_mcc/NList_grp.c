@@ -1,9 +1,31 @@
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include "private.h"
-
-#ifdef __AROS__
-#include <proto/intuition.h>
-#endif
 
 #define MUIA_NList_Visible                  0x9d510063 /* GM  ..g  LONG              */
 
@@ -13,7 +35,6 @@ struct MUI_CustomClass *NGR_Class = NULL;
 static ULONG mNGR_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   register struct NGRData *data;
-  struct TagItem *tag;
 
   if (!(obj = (Object *)DoSuperMethodA(cl,obj,(Msg) msg)))
     return(0);
@@ -40,13 +61,13 @@ static ULONG mNGR_New(struct IClass *cl,Object *obj,struct opSet *msg)
  * }
  */
 
-
+/*
 static ULONG mNGR_Set(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NGRData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
 
-  for (tags=((struct opSet *)msg)->ops_AttrList;tag=(struct TagItem *) NextTagItem(&tags);)
+  for(tags = ((struct opSet *)msg)->ops_AttrList;(tag = (struct TagItem *) NextTagItem(&tags));)
   {
     switch (tag->ti_Tag)
     { case MUIA_NList_Visible :
@@ -55,11 +76,11 @@ static ULONG mNGR_Set(struct IClass *cl,Object *obj,Msg msg)
   }
   return (0);
 }
-
+*/
 
 static ULONG mNGR_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+//  register struct NLData *data = INST_DATA(cl,obj);
 /*D(bug("%lx|grp_AskMinMax() 1 \n",obj));*/
   DoSuperMethodA(cl,obj,(Msg) msg);
 /*D(bug("%lx|grp_AskMinMax() 2 \n",obj));*/
@@ -87,25 +108,10 @@ static ULONG mNGR_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax 
   return(0);
 }
 
-
-#ifdef MORPHOS
-ULONG NGR_Dispatcher_gate(void)
+DISPATCHERPROTO(NGR_Dispatcher)
 {
-  struct IClass *cl = REG_A0;
-  Msg msg = REG_A1;
-  Object *obj = REG_A2;
-#elif defined(__AROS__)
-AROS_UFH3(ULONG, NGR_Dispatcher,
-    AROS_UFHA(struct IClass *, cl, A0),
-    AROS_UFHA(Object *, obj, A2),
-    AROS_UFHA(Msg, msg, A1))
-{
-  AROS_USERFUNC_INIT
-#else
-ULONG ASM SAVEDS NGR_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) Msg msg GNUCREG(a1) )
-{
-#endif
-
+  DISPATCHER_INIT
+  
   switch (msg->MethodID)
   {
     case OM_NEW           : return (mNGR_New(cl,obj,(APTR)msg));
@@ -116,19 +122,14 @@ ULONG ASM SAVEDS NGR_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) 
     case MUIM_NoNotifySet : return (0);
   }
   return(DoSuperMethodA(cl,obj,msg));
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
+  
+  DISPATCHER_EXIT
 }
-
-#ifdef MORPHOS
-MADTRAP(NGR_Dispatcher);
-#endif
-
 
 struct MUI_CustomClass *NGR_Create(void)
 {
-  NGR_Class = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct NGRData),&NGR_Dispatcher);
+  NGR_Class = MUI_CreateCustomClass(NULL, MUIC_Group, NULL, sizeof(struct NGRData), ENTRY(NGR_Dispatcher));
+
   return (NGR_Class);
 }
 

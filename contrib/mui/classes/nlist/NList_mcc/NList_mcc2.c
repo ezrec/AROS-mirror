@@ -1,16 +1,31 @@
-#include <proto/intuition.h>
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include "private.h"
-
-/*extern struct TagItem *FindTagItem(Tag,struct TagItem *);*/
-
-/****************************************************************************************/
-/****************************************************************************************/
-/******************************                    **************************************/
-/******************************     NList Class    **************************************/
-/******************************                    **************************************/
-/****************************************************************************************/
-/****************************************************************************************/
 
 #define MAX_INTUITICKS_WAIT 3
 
@@ -94,7 +109,6 @@ static void NL_RejectIDCMP(Object *obj,struct NLData *data,LONG IDCMP_val,BOOL r
 ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
-  ULONG retval = 0;
   ULONG NotNotify = data->DoNotify;
 /*
  *if (msg->imsg)
@@ -181,9 +195,13 @@ ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
             data->click_x = data->hpos + data->NList_Horiz_Visible - 1;
           data->click_y = data->vpos + ((data->NList_Active-data->NList_First) * data->vinc) + (data->vinc/2);
           data->click_line = data->NList_Active;
+
           DO_NOTIFY(NTF_Doubleclick | NTF_LV_Doubleclick);
+
           if (WANTED_NOTIFY(NTF_EntryClick) && !WANTED_NOTIFY(NTF_Doubleclick) && !WANTED_NOTIFY(NTF_LV_Doubleclick))
+          {
             DO_NOTIFY(NTF_EntryClick);
+          }
         }
         break;
       case MUIKEY_TOGGLE   :
@@ -203,12 +221,16 @@ ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
     }
   }
 
-  { ULONG DoNotify = ~NotNotify & data->DoNotify & data->Notify;
+  {
+    ULONG DoNotify = ~NotNotify & data->DoNotify & data->Notify;
     if (data->SETUP && DoNotify && !data->pushtrigger)
-    { data->pushtrigger = 1;
+    {
+      data->pushtrigger = 1;
       DoMethod(_app(obj),MUIM_Application_PushMethod,obj,1,MUIM_NList_Trigger);
     }
   }
+
+  return(0);
 }
 
 
@@ -218,6 +240,11 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
   register struct NLData *data = INST_DATA(cl,obj);
   ULONG retval = 0;
   ULONG NotNotify = data->DoNotify;
+  LONG tempbutton;
+  LONG tempbuttonline;
+  LONG tempbuttoncol;
+  LONG tempbuttonstate;
+  LONG tempstorebutton;
 /*
  *if (msg->imsg && (data->markdrawnum == MUIM_NList_Trigger))
  *{
@@ -241,6 +268,7 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
  *D(bug("  Class=%lx Code=%lx Qualifier=%lx mx=%ld my=%ld\n",msg->imsg->Class,co,qu,mx,my));
  *}
 */
+
   if (!data->SHOW || !data->DRAW)
     return (0);
   if (data->NList_First_Incr || data->NList_AffFirst_Incr)
@@ -312,6 +340,14 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
             do_draw = TRUE;
             data->click_line = -2;
           }
+/*
+** Reset the ShortHelp to the Default for Not Being Over Button
+*/
+          if (data->affover>=0) 
+          {
+             data->affover = -1;
+             nnset(obj,MUIA_ShortHelp,data->NList_ShortHelp);
+          }          
           if (data->affbutton >= 0)
           {
             NL_Changed(data,data->affbuttonline);
@@ -586,9 +622,13 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
               data->multiclick = 0;
               data->multiclickalone = 1;
               if (data->click_line >= 0)
+              {
                 DO_NOTIFY(NTF_EntryClick);
+              }
+
               if (data->NList_Title && (lx >= 0) && (lx < data->NList_Horiz_Visible) && (ly2 >= 0) && (ly < 0))
-              { struct MUI_NList_TestPos_Result res;
+              {
+                struct MUI_NList_TestPos_Result res;
                 res.char_number = -2;
                 NL_List_TestPos(obj,data,MUI_MAXMAX,MUI_MAXMAX,&res);
                 if ((res.flags & MUI_NLPR_BAR) && (res.flags & MUI_NLPR_TITLE) && (res.flags & MUI_NLPR_ABOVE) &&
@@ -769,17 +809,25 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
               data->micros = msg->imsg->Micros;
               data->multiclick++;
               data->multiclickalone++;
+
               if (data->multiclick == 1)
+              {
                 DO_NOTIFY(NTF_Doubleclick | NTF_LV_Doubleclick);
+              }
               else if (data->multiclick > 1)
+              {
                 DO_NOTIFY(NTF_Multiclick);
+              }
+
               if (data->NList_TypeSelect && (data->adjustbar == -1))
-              { if (MultQual)
+              {
+                if (MultQual)
                 { SelectSecondPoint(obj,data,data->click_x,data->click_y);
                   do_else = FALSE;
                 }
                 else
-                { if ((data->multiclick % 3) == 0)
+                {
+                  if ((data->multiclick % 3) == 0)
                     data->NList_TypeSelect = MUIV_NList_TypeSelect_Char;
                   else if ((data->multiclick % 3) == 1)
                     data->NList_TypeSelect = MUIV_NList_TypeSelect_CWord;
@@ -971,9 +1019,60 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
         /*retval = MUI_EventHandlerRC_Eat;*/
         break;
       case IDCMP_INTUITICKS:
+        {
+        struct MUI_NList_TestPos_Result res;
+/*
+** Store Current Values to Temp Variables
+*/
+        tempbutton      = data->affbutton;
+        tempbuttonline  = data->affbuttonline;
+        tempbuttoncol   = data->affbuttoncol;
+        tempbuttonstate = data->affbuttonstate;
+        tempstorebutton = data->storebutton;
+        data->affimage = -1;
+        data->affbutton = -1;
+        data->affbuttonline = -1;
+        data->affbuttoncol = -1;
+        data->affbuttonstate = 0;
+        data->storebutton = TRUE;
+        res.char_number = 0;
+        NL_List_TestPos(obj,data,msg->imsg->MouseX,msg->imsg->MouseY,&res);
+        if (data->affbutton>=0) {
+           if (data->affover!=data->affbutton) {
+/*
+** Set the ShortHelp to the Button's for Being Over Button (If ShortHelp Exists)
+*/
+              data->affover = data->affbutton;
+              if ((data->affimage >= 0) && (data->affimage < data->LastImage) && data->NList_UseImages) {
+                 STRPTR shorthelp;
+                 get(data->NList_UseImages[data->affimage].imgobj,MUIA_ShortHelp,&shorthelp);
+                 if (shorthelp) {
+                    nnset(obj,MUIA_ShortHelp,shorthelp);
+                    }
+                 }
+              }
+           }
+        else {
+           if (data->affover!=-1) {
+/*
+** Reset the ShortHelp to the Default for Not Being Over Button
+*/
+              data->affover = -1;
+              nnset(obj,MUIA_ShortHelp,data->NList_ShortHelp);
+              }
+           }
+/*
+** Restore Values from Temp Variables
+*/
+        data->affbutton = tempbutton;
+        data->affbuttonline = tempbuttonline;
+        data->affbuttoncol = tempbuttoncol;
+        data->affbuttonstate = tempbuttonstate;
+        data->storebutton = tempstorebutton;
         if (data->NumIntuiTick > 0)
-        { data->NumIntuiTick--;
-          break;
+           { data->NumIntuiTick--;
+             break;
+           }
         }
       case IDCMP_MOUSEMOVE:
         if ((msg->imsg->Class == IDCMP_MOUSEMOVE) && data->MOUSE_MOVE)
@@ -1024,7 +1123,7 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
         data->mouse_x = msg->imsg->MouseX;
         data->mouse_y = msg->imsg->MouseY;
 
-        if ((data->ContextMenu == MUIV_NList_ContextMenu_TopOnly) && (data->numcols > 1))
+        if ((data->ContextMenu == MUIV_NList_ContextMenu_TopOnly) /*&& (data->numcols > 1)*/) /* sba: Contextmenu problem: Disabled */
         { if ((data->NList_Title && (msg->imsg->MouseY >= data->vpos)) || (!data->NList_Title && (msg->imsg->MouseY > data->vpos + data->vinc/3)))
           { if (data->ContextMenuOn)
               notdoset(obj,MUIA_ContextMenu,NULL);
@@ -1034,9 +1133,9 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
               notdoset(obj,MUIA_ContextMenu,MUIV_NList_ContextMenu_TopOnly);
           }
         }
-        else if (((data->ContextMenu & 0x9d510030) == 0x9d510030) && (data->numcols <= 1) && data->ContextMenuOn)
+/*        else if (((data->ContextMenu & 0x9d510030) == 0x9d510030) && (data->numcols <= 1) && data->ContextMenuOn)
           notdoset(obj,MUIA_ContextMenu,NULL);
-
+*/ /* sba: Contextmenu problem: Disabled */
         if ((data->affbutton >= 0) && (msg->imsg->Class == IDCMP_MOUSEMOVE))
         {
           if ((msg->imsg->MouseX >= data->affbuttonpos.Left) &&
@@ -1541,8 +1640,9 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
       {
         LONG dragx;
         LONG dragy;
-        LONG last2 = last;
+
         data->DragRPort = NULL;
+
         if ((first < data->NList_First) || (last >= data->NList_First + data->NList_Visible) ||
             (numlines != (last - first + 1)) || (data->NList_DragColOnly >= 0) ||
             (numlines >= data->NList_DragLines))
@@ -1556,8 +1656,10 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
         }
         dragx = msg->imsg->MouseX - data->mleft;
         dragy = msg->imsg->MouseY - (data->vpos+(data->vinc * (first - data->NList_First)));
-        if (data->DragRPort = CreateDragRPort(obj,data,numlines,first,last))
-        { if (dragx < 0)
+
+        if((data->DragRPort = CreateDragRPort(obj,data,numlines,first,last)))
+        {
+          if (dragx < 0)
             dragx = 0;
           else if (dragx >= data->DragWidth)
             dragx = data->DragWidth-1;
@@ -1611,6 +1713,7 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
       DoMethod(_app(obj),MUIM_Application_PushMethod,obj,1,MUIM_NList_Trigger);
     }
   }
+
   return (retval);
 }
 
@@ -1684,15 +1787,22 @@ BOOL NL_Prop_First_Adjust(Object *obj,struct NLData *data)
         data->NList_Prop_Add = 0;
       }
     }
+
     data->ScrollBarsTime = SCROLLBARSTIME;
+
     if ((data->NList_First != lfirst) || (data->NList_First_Incr != lincr))
-    { if (data->NList_First != lfirst)
+    {
+      if (data->NList_First != lfirst)
+      {
         DO_NOTIFY(NTF_First);
+      }
+
       data->NList_First = lfirst;
       data->NList_First_Incr = lincr;
       REDRAW;
 /*      do_notifies(NTF_AllChanges|NTF_MinMax);*/
     }
+
     if (Notify_VSB)
       WANT_NOTIFY(NTF_VSB);
   }
@@ -1730,11 +1840,13 @@ ULONG mNL_Trigger(struct IClass *cl,Object *obj,Msg msg)
   { data->pushtrigger = 2;
     if (data->DRAW > 1)
       data->DRAW = 1;
-    if (data->do_draw_all)
-    { REDRAW_ALL;
-    }
-    else if (data->do_draw)
-    { REDRAW;
+
+    if(data->do_draw_all || data->do_draw)
+    {
+      // JL: here it is important that we force do_draw_all = FALSE or otherwise the following
+      // REDRAW will result in a flickering if we have more than one NList object in a window.
+      data->do_draw_all = FALSE;
+      REDRAW;
     }
   }
   data->pushtrigger = 0;

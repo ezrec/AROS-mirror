@@ -1,4 +1,29 @@
-#include <proto/intuition.h>
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include "private.h"
 
@@ -522,8 +547,12 @@ void NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem *tag)
         break;
     }
     if ((lf >= 0) && (lf < data->NList_Entries))
-    { if (data->NList_First != lf)
+    {
+      if (data->NList_First != lf)
+      {
         DO_NOTIFY(NTF_First);
+      }
+
       data->NList_First = lf;
       REDRAW;
 /*      do_notifies(NTF_AllChanges|NTF_MinMax);*/
@@ -935,8 +964,10 @@ LONG NList_Compare(Object *obj,struct NLData *data,APTR s1,APTR s2)
 ULONG NL_List_SelectChar(Object *obj,struct NLData *data,LONG pos,LONG seltype,LONG *state)
 {
   LONG ent,ent2;
+
   if (seltype == MUIV_NList_Select_None)
     return (TRUE);
+
   if (data->NList_TypeSelect)
   {
     if (seltype == MUIV_NList_Select_Ask)
@@ -986,6 +1017,8 @@ ULONG NL_List_SelectChar(Object *obj,struct NLData *data,LONG pos,LONG seltype,L
     }
     return (TRUE);
   }
+
+  return(FALSE);
 }
 
 
@@ -1448,13 +1481,12 @@ ULONG mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
 ULONG mNL_List_Select(struct IClass *cl,Object *obj,struct MUIP_NList_Select *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  LONG ent;
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
   if (data->NList_TypeSelect)
     return (NL_List_SelectChar(obj,data,msg->pos,msg->seltype,msg->state));
   else
     return (NL_List_Select(obj,data,msg->pos,msg->pos,msg->seltype,msg->state));
-  return (NULL);
+  return (0);
 }
 
 
@@ -1574,8 +1606,13 @@ ULONG mNL_List_RedrawEntry(struct IClass *cl,Object *obj,struct MUIP_NList_Redra
     ent++;
   }
   if (dodraw)
-  { data->do_draw = TRUE;
+  {
+  	/* sba: This enforces redrawing the entry completly */
+  	data->display_ptr = NULL;
+
+	  data->do_draw = TRUE;
     REDRAW;
+
     return (TRUE);
   }
   return (FALSE);
@@ -1661,11 +1698,16 @@ ULONG mNL_List_GetSelectInfo(struct IClass *cl,Object *obj,struct MUIP_NList_Get
   msg->res->end_pos = -1;
 
   if (!data->NList_TypeSelect)
-  { ent = 0;
+  {
+    ent = 0;
+
     while (ent < data->NList_Entries)
-    { if (data->EntriesArray[ent]->Select != TE_Select_None)
-      { if (msg->res->start == -1)
+    {
+      if (data->EntriesArray[ent]->Select != TE_Select_None)
+      {
+        if (msg->res->start == -1)
           msg->res->start = ent;
+
         msg->res->end = ent;
         msg->res->vnum++;
       }
@@ -1675,7 +1717,7 @@ ULONG mNL_List_GetSelectInfo(struct IClass *cl,Object *obj,struct MUIP_NList_Get
     msg->res->vend = msg->res->end;
   }
   else
-  { LONG c1,p1,c2,p2;
+  {
     msg->res->start_column = data->sel_pt[data->min_sel].column;
     msg->res->start_pos = data->sel_pt[data->min_sel].colpos;
     msg->res->end_column = data->sel_pt[data->max_sel].column;
@@ -1684,17 +1726,23 @@ ULONG mNL_List_GetSelectInfo(struct IClass *cl,Object *obj,struct MUIP_NList_Get
     msg->res->end = data->sel_pt[data->max_sel].ent;
     msg->res->vstart = msg->res->start;
     msg->res->vend = msg->res->end;
+
     if ((msg->res->vstart >= 0) && (msg->res->vend >= msg->res->vstart))
       msg->res->vnum = msg->res->vend - msg->res->vstart + 1;
   }
+
   if ((msg->res->start >= 0) && data->EntriesArray[msg->res->start]->Wrap)
-  { if (data->EntriesArray[msg->res->start]->Wrap & TE_Wrap_TmpLine)
+  {
+    if (data->EntriesArray[msg->res->start]->Wrap & TE_Wrap_TmpLine)
       msg->res->start -= data->EntriesArray[msg->res->start]->dnum;
   }
+
   if ((msg->res->end >= 0) && data->EntriesArray[msg->res->end]->Wrap)
-  { if (data->EntriesArray[msg->res->end]->Wrap & TE_Wrap_TmpLine)
+  {
+    if (data->EntriesArray[msg->res->end]->Wrap & TE_Wrap_TmpLine)
       msg->res->end -= data->EntriesArray[msg->res->end]->dnum;
   }
+
   return (TRUE);
 }
 
@@ -1760,7 +1808,7 @@ ULONG mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod
               if (data->SETUP)
                 table2[num] = (LONG) _app(obj);
               else
-                table2[num] = NULL;
+                table2[num] = 0;
               break;
             default :
               table2[num] = table1[num+1];

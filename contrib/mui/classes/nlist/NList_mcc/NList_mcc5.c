@@ -1,18 +1,35 @@
-#include <proto/intuition.h>
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include "private.h"
 
 #ifdef __SASC
 #include <dos.h>
 #endif
-
-/****************************************************************************************/
-/****************************************************************************************/
-/******************************                    **************************************/
-/******************************     NList Class    **************************************/
-/******************************                    **************************************/
-/****************************************************************************************/
-/****************************************************************************************/
 
 extern LONG xget(Object *obj,ULONG attribute);
 
@@ -31,6 +48,7 @@ static struct NewMenu MenuData[] =
 };
 
 
+/* damato: do we really need that ? mhhh
 #ifdef MORPHOS
 LONG EasyRequest( struct Window *win, struct EasyStruct *es, ULONG *idcmpptr, ... )
 {
@@ -57,7 +75,7 @@ LONG EasyRequest( struct Window *win, struct EasyStruct *es, ULONG *idcmpptr, ..
 	return ret;
 }
 #endif
-
+*/
 
 
 void NL_SetCols(Object *obj,struct NLData *data)
@@ -1198,12 +1216,13 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
   register struct NLData *data = INST_DATA(cl,obj);
   Object *MenuObj = NULL;
   LONG column;
-  LONG mo = NULL;
+  LONG mo = 0;
   BOOL do_it = FALSE;
   BOOL order_it = FALSE;
-/*D(bug("%lx|ContextMenuBuild\n",obj));*/
+
   if (data->NList_Disabled)
-    return (NULL);
+    return (0);
+
   if (get(obj,MUIA_ContextMenu,&mo) && mo)
   { if ((mo & 0x9d510030) != 0x9d510030)
     { if (data->MenuObj)
@@ -1223,7 +1242,10 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
       if (data->cols[column].c != &data->cols[column])
         order_it = TRUE;
     }
-    if (data->numcols > 1)
+
+    /* sba: Contextmenu problem: Disabled */
+/*    if (data->numcols > 1) */
+    if (data->numcols > 0)
     { Object *mithis = NULL;
       struct MUI_NList_TestPos_Result res;
       LONG flags,ontop;
@@ -1241,7 +1263,7 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
       MenuObj = (Object *) DoMethod(obj,MUIM_NList_ContextMenuBuild,msg->mx,msg->my,res.entry,column,flags,ontop);
 
       if ((LONG) (MenuObj) == -1)
-        return (NULL);
+        return (0);
 
       if (!MenuObj)
       { if (!data->MenuObj)
@@ -1288,7 +1310,8 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
       return ((ULONG) MenuObj);
     }
   }
-  return (NULL);
+
+  return (0);
 }
 
 
@@ -1296,8 +1319,10 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
 ULONG mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
+
   if (data->NList_Disabled)
-    return (NULL);
+    return (0);
+
   if (msg->item)
   {
     if (muiUserData(msg->item) == MUIV_NList_Menu_DefWidth_This)
@@ -1321,7 +1346,8 @@ ULONG mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMen
     else
       return(DoSuperMethodA(cl,obj,(Msg) msg));
   }
-  return (NULL);
+
+  return (0);
 }
 
 

@@ -1,19 +1,34 @@
-#include <proto/intuition.h>
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include "private.h"
 
-
-/****************************************************************************************/
-/****************************************************************************************/
-/******************************                    **************************************/
-/******************************     NList Class    **************************************/
-/******************************                    **************************************/
-/****************************************************************************************/
-/****************************************************************************************/
-
-
-extern const struct Hook NL_Construct_StringHook;
-extern const struct Hook NL_Destruct_StringHook;
+extern const struct Hook NL_ConstructHook_String;
+extern const struct Hook NL_DestructHook_String;
 extern const struct Hook LayoutHookNList;
 
 #define SET_PEN(var_dest,test_init) \
@@ -74,7 +89,9 @@ ULONG mNL_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
     data->vinc = 2;
 
   if ((vinc > 1) && (vinc != data->vinc))
+  {
     DO_NOTIFY(NTF_LineHeight);
+  }
 
   if (((data->NList_SourceArray == 2) || data->VirtGroup) && (data->NList_Entries > 0))
   { struct RastPort *tmprp2 = NULL;
@@ -263,11 +280,16 @@ ULONG mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg)
         if (get(msg->DestObj,MUIA_Prop_First,&first))
           data->VertPropObject = msg->DestObj;
         if (data->VertPropObject)
-        { if (get(data->VertPropObject,MUIA_Group_ChildList,&childlist))
-          { object_state = childlist->lh_Head;
-            while (child = NextObject(&object_state))
-            { if (get(child,MUIA_Prop_First, &first))
-              { data->VertPropObject = msg->DestObj;
+        {
+          if (get(data->VertPropObject,MUIA_Group_ChildList,&childlist))
+          {
+            object_state = childlist->lh_Head;
+
+            while((child = NextObject(&object_state)))
+            {
+              if (get(child,MUIA_Prop_First, &first))
+              {
+                data->VertPropObject = msg->DestObj;
                 break;
               }
             }
@@ -364,16 +386,26 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
 
   STACK_CHECK;
 
-  for (tags=((struct opSet *)msg)->ops_AttrList;tag=(struct TagItem *) NextTagItem(&tags);)
+  for(tags = ((struct opSet *)msg)->ops_AttrList; (tag = (struct TagItem *)NextTagItem(&tags));)
   {
     switch (tag->ti_Tag)
-    { case MUIA_Background :
+    {
+      case MUIA_Background :
       case MUIA_Group_Forward :
         break;
+
       case MUIA_NList_Visible :
         tag->ti_Tag = TAG_IGNORE;
         do_things = FALSE;
         break;
+
+      case MUIA_ShortHelp : // RHP: Added for Special Shorthelp
+         if (data->affover<0)
+         {
+            data->NList_ShortHelp = (STRPTR)tag->ti_Data;
+         }
+         break;
+
       case MUIA_ContextMenu :
         if (do_things)
         { data->NList_ContextMenu = data->ContextMenu = (LONG) tag->ti_Data;
@@ -391,11 +423,11 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
             }
           }
           if ((data->ContextMenu == MUIV_NList_ContextMenu_TopOnly) || (data->ContextMenu == MUIV_NList_ContextMenu_Never))
-            tag->ti_Data = NULL;
+            tag->ti_Data = 0;
           else if (data->ContextMenu == MUIV_NList_ContextMenu_Always)
             tag->ti_Data = MUIV_NList_ContextMenu_Always;
           else if (((data->ContextMenu & 0x9d510030) == 0x9d510030) && (data->numcols <= 1))
-            tag->ti_Data = NULL;
+            tag->ti_Data = 0;
         }
         data->ContextMenuOn = (LONG) tag->ti_Data;
         break;
@@ -484,8 +516,12 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
             data->NList_Prop_First_Real = data->NList_Prop_First;
             data->NList_Prop_Add = 0;
             lpfirst = data->NList_Prop_First / data->vinc;
+
             if (data->NList_First != lpfirst)
+            {
               DO_NOTIFY(NTF_First);
+            }
+
             data->NList_First = lpfirst;
             data->NList_First_Incr = 0;
             data->NList_Prop_Wait = 2;
@@ -520,8 +556,12 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
                   ((data->NList_First != lfirst) || (data->NList_First_Incr != lincr)))
               { data->NList_Prop_Add = add;
                 data->NList_Prop_Wait = 1;
+
                 if (data->NList_First != lfirst)
+                {
                   DO_NOTIFY(NTF_First);
+                }
+
                 data->NList_First = lfirst;
                 data->NList_First_Incr = lincr;
                 REDRAW;
@@ -529,8 +569,12 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
               else if ((lfirst * data->vinc) == data->NList_Prop_First)
               { data->NList_Prop_Add = 0;
                 data->NList_Prop_Wait = 1;
+
                 if (data->NList_First != lfirst)
+                {
                   DO_NOTIFY(NTF_First);
+                }
+
                 data->NList_First = lfirst;
                 data->NList_First_Incr = lincr;
                 REDRAW;
@@ -712,7 +756,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_ConstructHook :
 /*D(bug("%lx|set_ConstructHook=0x%lx \n",obj,tag->ti_Data));*/
         if (tag->ti_Data == MUIV_NList_ConstructHook_String)
-          data->NList_ConstructHook = (struct Hook *) &NL_Construct_StringHook;
+          data->NList_ConstructHook = (struct Hook *) &NL_ConstructHook_String;
         else
           data->NList_ConstructHook = (struct Hook *) tag->ti_Data;
         data->NList_ConstructHook2 = FALSE;
@@ -729,7 +773,7 @@ ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg)
       case MUIA_NList_DestructHook :
 /*D(bug("%lx|set_DestructHook=0x%lx \n",obj,tag->ti_Data));*/
         if (tag->ti_Data == MUIV_NList_DestructHook_String)
-          data->NList_DestructHook = (struct Hook *) &NL_Destruct_StringHook;
+          data->NList_DestructHook = (struct Hook *) &NL_DestructHook_String;
         else
           data->NList_DestructHook = (struct Hook *) tag->ti_Data;
         data->NList_DestructHook2 = FALSE;
@@ -1167,7 +1211,9 @@ ULONG	mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_NList_PrivateData:				*msg->opg_Storage = (ULONG) data->NList_PrivateData;		return( TRUE );
     case MUIA_Version:							*msg->opg_Storage = (ULONG) LIB_VERSION;						return(TRUE);
     case MUIA_Revision:							*msg->opg_Storage = (ULONG) LIB_REVISION;						return(TRUE);
-    default:										return( DoSuperMethodA( cl, obj, msg ) );
+
+    default:
+      return(DoSuperMethodA(cl, obj, (Msg)msg));
 
   }
 

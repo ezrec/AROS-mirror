@@ -1,8 +1,31 @@
-#ifndef __AROS__
-#include "/common/mcc_common.h"
-#else
-#include "mcc_common.h"
-#endif
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
+
+#include <mcc_common.h>
 
 extern struct MUI_CustomClass *NLI_Class;
 
@@ -12,18 +35,6 @@ struct NLIData
 {
   LONG DoDraw;
 };
-
-
-#ifdef MORPHOS
-struct EmulLibEntry NLI_Dispatcher;
-#elif defined(__AROS__)
-AROS_UFP3(ULONG, NLI_Dispatcher,
-    AROS_UFPA(struct IClass *, cl, A0),
-    AROS_UFPA(Object *, obj, A2),
-    AROS_UFPA(Msg, msg, A1));
-#else
-extern ULONG ASM SAVEDS NLI_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) Msg msg GNUCREG(a1) );
-#endif
 
 extern struct MUI_CustomClass *NLI_Create(void);
 extern void NLI_Delete(void);

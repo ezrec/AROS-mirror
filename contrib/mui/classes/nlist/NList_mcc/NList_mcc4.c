@@ -1,16 +1,33 @@
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include "private.h"
 
 #include <proto/intuition.h>
-
-/****************************************************************************************/
-/****************************************************************************************/
-/******************************                    **************************************/
-/******************************     NList Class    **************************************/
-/******************************                    **************************************/
-/****************************************************************************************/
-/****************************************************************************************/
-
 
 /* DRI's draw pens */
 /* #define DETAILPEN         (0x0000)    // compatible Intuition rendering pens    */
@@ -149,8 +166,9 @@ BOOL NeedAffInfo(Object *obj,struct NLData *data,WORD niask)
 
 	//D(bug( "Adding %ld aff infos.\n", num ));
 
-    if (affinfotmp = (struct affinfo *) NL_Malloc(data,sizeof(struct affinfo)*num,"NeedAffInfo"))
-    { ni = 0;
+    if((affinfotmp = (struct affinfo *) NL_Malloc(data,sizeof(struct affinfo)*num,"NeedAffInfo")))
+    {
+      ni = 0;
       while (ni < data->numaff_infos)
       { affinfotmp[ni].strptr = data->aff_infos[ni].strptr;
         affinfotmp[ni].pos = data->aff_infos->pos;
@@ -207,6 +225,7 @@ void NL_GetDisplayArray(Object *obj,struct NLData *data,LONG ent)
     data->parse_ent = -1;
     ent = -1;
   }
+
   if (!data->display_ptr || (useptr != data->display_ptr) || (ent != ((LONG) data->DisplayArray[1])))
   { char **display_array = &data->DisplayArray[2];
     WORD column;
@@ -257,7 +276,9 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
   char **display_array = &data->DisplayArray[2];
   ULONG pen;
   LONG col,ent = data->parse_ent,maxlen = 300;
-  WORD ni,style,do_format,prep,startprep,dx,tmppos,there_is_char;
+  WORD ni,style,do_format,prep,dx,there_is_char;
+  WORD tmppos = 0;
+  LONG numimg = 0; // RHP: Added for Special ShortHelp
   int good = 1;
 
 /*  if (data->parse_column == column)  return;*/
@@ -340,6 +361,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
     afinfo->addchar = 0;
     afinfo->addinfo = 0;
     afinfo->button = -1;
+    afinfo->imgnum = -1; // RHP: Added for Special ShortHelp
     afinfo->style = style;
     afinfo->strptr = ptr1;
     afinfo->pos = (WORD) (ptr1 - ptrs);
@@ -364,6 +386,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
           afinfo->addchar = 0;
           afinfo->addinfo = 0;
           afinfo->button = -1;
+          afinfo->imgnum = -1; // RHP: Added for Special ShortHelp
           afinfo->style = style;
           afinfo->strptr = ptr1;
           afinfo->pos = (WORD) (ptr1 - ptrs);
@@ -564,6 +587,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
               afinfo->tag = tag;
               afinfo->tagval = tagval;
               afinfo->button = button;
+              afinfo->imgnum = -1; // RHP: Added for Special ShortHelp
               afinfo->addchar = 0;
               afinfo->addinfo = 0;
               afinfo->style = STYLE_IMAGE;
@@ -615,9 +639,9 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
           ptr1++;
           if (ptr1[0] == '[')
           {
-            LONG dx,dy,dx2 = -2,dy2 = -2;
+            LONG dy,dy2 = -2;
             LONG minx = 2,minx2 = -1,button = -1;
-            ULONG tag=0L,tagval;
+            ULONG tag=0L,tagval=0L;
             long np = 1;
 
             dx = -1;
@@ -671,7 +695,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
               if (imgtype == 'O')
                 bitmapimage = (struct BitMapImage *) strtoul(&ptr1[1],NULL,16);
               else
-              { LONG numimg = atol(&ptr1[1]);
+              { numimg = atol(&ptr1[1]); // RHP: Changed for Special ShortHelp
                 if ((numimg >= 0) && (numimg < data->LastImage) && data->NList_UseImages)
                   bitmapimage = data->NList_UseImages[numimg].bmimg;
               }
@@ -684,6 +708,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
                 afinfo->tag = tag;
                 afinfo->tagval = tagval;
                 afinfo->button = button;
+                afinfo->imgnum = numimg; // RHP: Added for Special ShortHelp
                 afinfo->addchar = 0;
                 afinfo->addinfo = 0;
                 afinfo->style = STYLE_IMAGE;
@@ -745,6 +770,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
                   afinfo->addchar = 0;
                   afinfo->addinfo = 0;
                   afinfo->button = -1;
+                  afinfo->imgnum = -1; // RHP: Added for Special ShortHelp
                   afinfo->pen = ((dy & 0x0000FFFF) << 16) + (dx & 0x0000FFFF);
                   afinfo->style = STYLE_IMAGE2;
                   afinfo->strptr = (APTR) bitmapimage;
@@ -772,6 +798,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
         afinfo->addchar = 0;
         afinfo->addinfo = 0;
         afinfo->button = -1;
+        afinfo->imgnum = -1; // RHP: Added for Special ShortHelp
         afinfo->style = style;
         afinfo->strptr = ptr1;
         afinfo->pos = (WORD) (ptr1 - ptrs);
@@ -789,6 +816,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
         afinfo->addchar = 0;
         afinfo->addinfo = 0;
         afinfo->button = -1;
+        afinfo->imgnum = -1; // RHP: Added for Special ShortHelp
         afinfo->strptr = ptr1;
         afinfo->pos = (WORD) (ptr1 - ptrs);
         if (ptr1[0] == '\t')
@@ -815,6 +843,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
         afinfo->addchar = 0;
         afinfo->addinfo = 0;
         afinfo->button = -1;
+        afinfo->imgnum = -1; // RHP: Added for Special ShortHelp
         afinfo->style = style;
         afinfo->strptr = ptr1;
         afinfo->pos = (WORD) (ptr1 - ptrs);
@@ -839,6 +868,7 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
     afinfo->pen = pen;
     afinfo->style = style;
     afinfo->button = -1;
+    afinfo->imgnum = -1; // RHP: Added for Special ShortHelp
     afinfo->len = 0;
     afinfo->pos = (WORD) (ptr1 - ptrs);
 
@@ -1187,6 +1217,7 @@ void FindCharInColumn(Object *obj,struct NLData *data,LONG ent,WORD column,WORD 
           *charxoffset = xoffset - curx;
         if (data->storebutton && (afinfo->button >= 0))
         {
+          data->affimage = afinfo->imgnum; // RHP: Added for Special Shorthelp
           data->affbutton = afinfo->button;
           data->affbuttonline = ent;
           data->affbuttoncol = column;
@@ -1205,6 +1236,7 @@ void FindCharInColumn(Object *obj,struct NLData *data,LONG ent,WORD column,WORD 
           *charxoffset = xoffset - curx;
         if (data->storebutton && (afinfo->button >= 0))
         {
+          data->affimage = afinfo->imgnum; // RHP: Added for Special Shorthelp
           data->affbutton = afinfo->button;
           data->affbuttonline = ent;
           data->affbuttoncol = column;
@@ -1284,7 +1316,7 @@ static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
   register struct affinfo *afinfo;
   struct TextExtent te;
   LONG ent1 = ent,selects,column,col = 0;
-  WORD curlen,endpos,ni,pos1,colwidth,style;
+  WORD curlen,endpos,ni,colwidth,style;
   UWORD dnum = 0;
   ULONG pen;
   UBYTE colmask;
@@ -1302,7 +1334,7 @@ static LONG NL_DoWrapLine(Object *obj,struct NLData *data,LONG ent,BOOL force)
   }
 
   colmask = data->EntriesArray[ent]->Wrap & TE_Wrap_TmpMask;
-  while (colmask = colmask >> 1)
+  while((colmask = colmask >> 1))
     col++;
   column = NL_ColToColumn(obj,data,col);
 
@@ -1567,11 +1599,12 @@ static void WidthColumns(Object *obj,struct NLData *data,LONG ent,WORD updinfo)
 
 //D(bug( "%ld - Calling NL_GDA() width %ld entries!\n", __LINE__, ent ));
 
-  if ( data->numcols > 1 )
+  /* sba: was > 1 but in this case the images weren't parsed */
+  if ( data->numcols > 0 )
   {
     NL_GetDisplayArray(obj,data,ent);
 
-    for (column = 0;column < (data->numcols - 1);column++)
+    for (column = 0;column < data->numcols;column++) /* sba: was (data->numcols-1) */
     { if (DontDoColumn(data,ent,column))
         continue;
       if (updinfo != 2) ParseColumn(obj,data,column,0);
@@ -1623,6 +1656,7 @@ void NL_SetColsAdd(Object *obj,struct NLData *data,LONG ent,WORD addimages)
     }
     else
       data->adding_member = 3;
+
     data->display_ptr = NULL;
     data->parse_column = -1;
     if ((ent == -2) || (ent == -3))
@@ -1637,8 +1671,10 @@ void NL_SetColsAdd(Object *obj,struct NLData *data,LONG ent,WORD addimages)
         if (((data->cols[column].c->width == -1) || (data->cols[column].c->minwidth == -1)) && (data->cols[column].c->userwidth == -1))
           data->do_setcols = TRUE;
       }
+
       if (data->NList_Title)
         WidthColumns(obj,data,-1,1);
+
       if (data->EntriesArray)
       {
         if (ent == -2 )

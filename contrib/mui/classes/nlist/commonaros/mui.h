@@ -52,12 +52,18 @@ struct  MUIP_DeleteDragImage { ULONG MethodID; struct MUI_DragImage *di; };
 
 #endif
 
+#ifndef MUIA_Numeric_CheckAllSizes
 #define MUIA_Numeric_CheckAllSizes 0x80421594  /* i.. BOOL */
+#endif
 
-
+#ifndef MUIA_Imagedisplay_Spec
 #define MUIA_Imagedisplay_Spec     0x8042a547 /* V11 isg struct MUI_ImageSpec * */
+#endif
 
+#ifndef MUIA_Imageadjust_Type
 #define MUIA_Imageadjust_Type      0x80422f2b /* V11 i.. LONG */
+#endif
+
 /*
 #define MUIV_Imageadjust_Type_All 0
 #define MUIV_Imageadjust_Type_Image 1
@@ -90,11 +96,20 @@ struct MUI_ImageSpec
 #define MUIA_Group_Forward      0x80421422
 #endif
 
+#ifndef nfset
 #define nfset(obj,attr,value) SetAttrs(obj,MUIA_Group_Forward,FALSE,attr,value,TAG_DONE)
+#endif
+
+#ifndef nnfset
 #define nnfset(obj,attr,value) SetAttrs(obj,MUIA_Group_Forward,FALSE,MUIA_NoNotify,TRUE,attr,value,TAG_DONE)
+#endif
 
 #define MADF_DRAWFRAME          0x00000800 /* redraw frame */
+
+#ifndef MADF_DRAWALL
 #define MADF_DRAWALL            0x00000805 /* redraw all */
+#endif
+
 #define MADF_VISIBLE            0x00004000 /* redraw frame */
 
 

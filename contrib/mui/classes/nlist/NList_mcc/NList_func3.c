@@ -1,37 +1,35 @@
-#include <proto/intuition.h>
+/***************************************************************************
 
-#ifndef USE_ZUNE
-#include <proto/console.h>
-#else
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number:
 
-#include "support.h"
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
 
-#endif
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include "private.h"
 
 #ifdef __AROS__
 extern struct Device *ConsoleDevice;
 #endif
-
-/****************************************************************************************/
-/****************************************************************************************/
-/******************************                    **************************************/
-/******************************     NList Class    **************************************/
-/******************************                    **************************************/
-/****************************************************************************************/
-/****************************************************************************************/
-
-
-/* init: struct InputEvent ievent = {NULL,IECLASS_RAWKEY,0,0,0} */
-
-
-/*static const ULONG tricky=0x16c04e75; // move.b d0,(a3)+ ; rts */
-/*
- * static void mysprintf(STRPTR buffer,STRPTR fmt,...)
- * { RawDoFmt(fmt,(ULONG *)&fmt+1,(void (*)())&tricky,buffer); }
- */
-
 
 ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message)
 {
@@ -50,27 +48,25 @@ ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR me
 }
 
 
-ULONG MyCallHookPktA(Object *obj,struct Hook *hook,APTR message,...)
+ULONG STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
 {
-/* see how lame this hack is :) probably it can be changed
-   with an inline call. it can wait for emm's gcc patch too */
-#ifdef MORPHOS
-	va_list tags;
-	ULONG mav[10];
-	int i=1;
+	va_list va;
+  ULONG ret;
 
-	va_start(tags, message);
-	mav[0] = message;
-	while(i<7)
-	{
-		mav[i] = va_arg(tags,ULONG);
-		i++;
-	}
-	va_end(tags);
-  return (MyCallHookPkt(obj,FALSE,hook,obj,&mav[0]));
-#else
-  return (MyCallHookPkt(obj,FALSE,hook,obj,&message));
-#endif
+  #if defined(__amigaos4__)
+  va_startlinear(va, hook);
+  ret = MyCallHookPkt(obj, FALSE, hook, obj, va_getlinearva(va, APTR));
+  #elif defined(__MORPHOS__)
+	va_start(va, hook);
+  ret = MyCallHookPkt(obj, FALSE, hook, obj, va->overflow_arg_area);
+  #else
+  va_start(va, hook);
+  ret = MyCallHookPkt(obj, FALSE, hook, obj, va);
+  #endif
+
+  va_end(va);
+
+  return ret;
 }
 
 
@@ -126,16 +122,6 @@ LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,UBYTE *buf,LONG
     case 0x59 : strcpy(text,"f10"); break;
     case 0x5F : strcpy(text,"help"); break;
     default:
-#ifdef USE_ZUNE
-      {
-				LONG code = ConvertKey(msg);
-				if (code)
-				{
-					posraw = 1;
-					*text = code;
-				} else posraw = 0;
-      }
-#else
       data->ievent.ie_NextEvent = NULL;
       data->ievent.ie_Class = IECLASS_RAWKEY;
       data->ievent.ie_SubClass = 0;
@@ -143,7 +129,6 @@ LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,UBYTE *buf,LONG
       data->ievent.ie_Qualifier = 0;
       data->ievent.ie_position.ie_addr = *((APTR *) msg->IAddress);
       posraw = RawKeyConvert(&data->ievent,text,bufsize-postext-1,kmap);
-#endif
       if (posraw >= 0)
         text[posraw+postext] = '\0';
       if (posraw > 0)
@@ -183,11 +168,11 @@ char *ltoa(ULONG val, char *buf, int len)
 
 
 /*char *stpcpy(char *to,const char *from)*/
-#if !defined(__SASC) && !defined(__AROS__)
+#ifndef __AROS__
+#if !defined(__SASC) || !defined(__MORPHOS__)
 char *stpcpy(char *to,char *from)
 {
   register char *to2 = to;
-  register char *from2 = from;
 
   while (*from)
     *to2++ = *from++;
@@ -195,13 +180,12 @@ char *stpcpy(char *to,char *from)
   return (to2);
 }
 #endif
-
+#endif
 
 /*static char *stpncpy(char *to,const char *from,int len)*/
 static char *stpncpy(char *to,char *from,int len)
 {
   register char *to2 = to;
-  register char *from2 = from;
 
   while (*from && (len > 0))
   { *to2++ = *from++;
@@ -216,7 +200,6 @@ static char *stpncpy(char *to,char *from,int len)
 static char *stpncpy_noesc(char *to,char *from,int len)
 {
   register char *to2 = to;
-  register char *from2 = from;
 
   while (*from && (len > 0))
   { if (*from == '\033')
@@ -259,90 +242,76 @@ static char *stpncpy_noesc(char *to,char *from,int len)
 
 /* Create new pool, don't care about KickStart version and MorphOS. */
 /* Called by OM_NEW. */
-APTR	NL_Pool_Create( ULONG puddlesize, ULONG threshsize )
+APTR	NL_Pool_Create( ULONG puddlesize, ULONG threshsize)
 {
-
-	APTR	pool;
-
+   #if defined(__amigaos4__) || defined(__MORPHOS__)
+   return(CreatePool(MEMF_ANY, puddlesize, threshsize));
+   #else
 	/* Is KickStart at least V39+? */
 	if( LIBVER( SysBase ) >= 39 )
-		pool	= CreatePool( MEMF_ANY, puddlesize, threshsize );
+	  return(CreatePool(MEMF_ANY, puddlesize, threshsize));
 	else
-	{
-
-#ifndef	MORPHOS
-		pool	= LibCreatePool( MEMF_ANY, puddlesize, threshsize );
-#else
-		/* This code probably will never be executed. */
-		/* MorphOS requires PPC which mostly is in A1200/A4000 with KS V39+. */
-		pool	= NULL;
-#endif	/* MORPHOS */
-
-	}
-
-	return( pool );
-
+	  return(LibCreatePool(MEMF_ANY, puddlesize, threshsize));
+   #endif
 }
 
 /* Delete pool created by NL_Pool_Create(). */
 /* Called by OM_DISPOSE. */
 VOID	NL_Pool_Delete( APTR pool )
 {
-
-	if( pool )
+	if(pool)
 	{
-
+      #if defined(__amigaos4__) || defined(__MORPHOS__)
+      DeletePool(pool);
+      #else
 		/* KickStart is at least V39+? */
-		if( LIBVER( SysBase ) >= 39 )
-			DeletePool( pool );
+		if(LIBVER(SysBase) >= 39)
+			DeletePool(pool);
 		else
-#ifndef	MORPHOS
-			LibDeletePool( pool );
-#endif	/* MORPHOS */
-
+			LibDeletePool(pool);
+      #endif
 	}
-
 }
 
 /* Low level alloc memory of pool created by NL_Pool_Create(). */
-APTR	NL_Pool_Alloc( APTR pool, ULONG size )
+STATIC APTR NL_Pool_Alloc(APTR pool, ULONG size)
 {
-
-	if( LIBVER( SysBase ) >= MINVER )
-		return( AllocPooled( pool, size ) );
+   #if defined(__amigaos4__) || defined(__MORPHOS__)
+   // AmigaOS4 and MorphOS should have a AllocPooled() function
+   return AllocPooled( pool, size );
+   #else
+	if(LIBVER( SysBase ) >= MINVER)
+		return(AllocPooled(pool, size));
 	else
-#ifndef	MORPHOS
-		return( LibAllocPooled( pool, size ) );
-#else
-		return( 0 );
-#endif
-
+		return(LibAllocPooled(pool, size));
+   #endif
 }
 
 /* Low level free memory allocated by NL_Pool_Alloc(). */
-VOID	NL_Pool_Free( APTR pool, APTR memory, ULONG size )
+STATIC VOID NL_Pool_Free( APTR pool, APTR memory, ULONG size )
 {
-
+   #if defined(__amigaos4__) || defined(__MORPHOS__)
+   // on AmigaOS4 and MorphOS we can savely take FreePooled()
+   FreePooled( pool, memory, size );
+   #else
 	if( LIBVER( SysBase ) >= MINVER )
 		FreePooled( pool, memory, size );
 	else
-#ifndef	MORPHOS
 		LibFreePooled( pool, memory, size );
-#endif	/* MORPHOS */
-
+   #endif
 }
 
-/* Low level alloc memory and remember size. */
-APTR	NL_Pool_AllocVec( APTR pool, ULONG size )
+/* Low level alloc memory and remember . */
+STATIC APTR NL_Pool_AllocVec( APTR pool, ULONG size )
 {
 	ULONG	*memory;
-	if( memory = NL_Pool_Alloc( pool, size + sizeof( *memory ) ) )
+	if((memory = NL_Pool_Alloc( pool, size + sizeof(*memory))))
 		*memory++	= size;
 	return( memory );
 }
 
 /* Low level free memory of unknown size. */
-VOID	NL_Pool_FreeVec( APTR pool, APTR memory )
+STATIC VOID NL_Pool_FreeVec( APTR pool, APTR memory )
 {
 	ULONG	*memory1	= (ULONG *) memory - 1;
 	if( memory )	NL_Pool_Free( pool, memory1, *memory1 + sizeof( *memory1 ) );
@@ -353,29 +322,29 @@ VOID	NL_Pool_FreeVec( APTR pool, APTR memory )
  * Memory allocated by this routine will be freed when object is disposing
  * but it should never happened!
  */
-APTR	NL_Pool_Internal_Alloc( APTR data, ULONG size )
+APTR	NL_Pool_Internal_Alloc( struct NLData *data, ULONG size )
 {
-	return( NL_Pool_Alloc( ((struct NLData *)data)->Pool, size ) );
+	return( NL_Pool_Alloc( data->Pool, size ) );
 }
 
-APTR	NL_Pool_Internal_AllocVec( APTR data, ULONG size )
+APTR	NL_Pool_Internal_AllocVec( struct NLData *data, ULONG size )
 {
-	return( NL_Pool_AllocVec( ((struct NLData *)data)->Pool, size ) );
+	return( NL_Pool_AllocVec( data->Pool, size ) );
 }
 
 /* High level free memory. */
-VOID	NL_Pool_Internal_Free( APTR data, APTR memory, ULONG size )
+VOID	NL_Pool_Internal_Free( struct NLData *data, APTR memory, ULONG size )
 {
-	NL_Pool_Free( ((struct NLData *)data)->PoolInternal, memory, size );
+	NL_Pool_Free( data->Pool, memory, size );
 }
 
-VOID	NL_Pool_Internal_FreeVec( APTR data, APTR memory )
+VOID	NL_Pool_Internal_FreeVec( struct NLData *data, APTR memory )
 {
-	NL_Pool_FreeVec( ((struct NLData *)data)->PoolInternal, memory );
+	NL_Pool_FreeVec( data->Pool, memory );
 }
 
 /* These wrappers slow down, we should use macros or correct functions directly instead... */
-APTR	NL2_Malloc2( APTR pool, ULONG size, char *string )
+APTR	NL2_Malloc2( APTR pool, ULONG size, STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
@@ -383,7 +352,7 @@ APTR	NL2_Malloc2( APTR pool, ULONG size, char *string )
 
 }
 
-VOID	NL2_Free2( APTR pool, APTR memory, char * string )
+VOID	NL2_Free2( APTR pool, APTR memory, STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
@@ -391,7 +360,7 @@ VOID	NL2_Free2( APTR pool, APTR memory, char * string )
 
 }
 
-APTR	NL2_Malloc( struct NLData *data, ULONG size, char *string )
+APTR	NL2_Malloc( struct NLData *data, ULONG size, STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
@@ -399,7 +368,7 @@ APTR	NL2_Malloc( struct NLData *data, ULONG size, char *string )
 
 }
 
-VOID	NL2_Free( struct NLData *data, APTR memory, char *string )
+VOID	NL2_Free( struct NLData *data, APTR memory, STRPTR string )
 {
 
 	//$$$Sensei: use generic memory handling functions. Don't do the same job multiple times!
@@ -475,8 +444,10 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
   struct parse_format Line;
   struct colinfo *tmpcols;
   if (strformat && (sf = NL_Malloc(data,strlen(strformat)+4,"ReadFormat_sf")))
-  { if (ptr = AllocDosObject(DOS_RDARGS, NULL))
-    { colmax = 1;
+  {
+    if((ptr = AllocDosObject(DOS_RDARGS, NULL)))
+    {
+      colmax = 1;
       pos2 = 0;
       while (strformat[pos2] != '\0')
       { if (strformat[pos2] == ',')
@@ -527,7 +498,7 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
           ptr->RDA_Source.CS_Buffer = sf;
           ptr->RDA_Source.CS_Length = strlen(sf);
           ptr->RDA_Source.CS_CurChr = 0;
-          ptr->RDA_DAList = NULL;
+          ptr->RDA_DAList = 0;
           ptr->RDA_Buffer = NULL;
           ptr->RDA_BufSiz = 0L;
           ptr->RDA_ExtHelp = NULL;
@@ -536,11 +507,11 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
           Line.delta = NULL;
           Line.preparse = NULL;
           Line.col = NULL;
-          Line.bar = NULL;
-          Line.tbar = NULL;
-          Line.nobar = NULL;
-          Line.sbar = NULL;
-          Line.notb = NULL;
+          Line.bar = 0;
+          Line.tbar = 0;
+          Line.nobar = 0;
+          Line.sbar = 0;
+          Line.notb = 0;
           Line.weight = NULL;
           Line.minwidth = NULL;
           Line.maxwidth = NULL;
@@ -551,11 +522,12 @@ BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist
           Line.minpixwidth = NULL;
           Line.maxpixwidth = NULL;
 
-          if (rdargs = ReadArgs(FORMAT_TEMPLATE, (LONG *)&Line, ptr))
+          if((rdargs = ReadArgs(FORMAT_TEMPLATE, (LONG *)&Line, ptr)))
           {
             if (Line.delta)    data->cols[column].delta = (WORD) *Line.delta;
             if (Line.preparse)
-            { if (data->cols[column].preparse = NL_Malloc(data,strlen((char *)Line.preparse)+2,"ReadFormat_preparse"))
+            {
+              if((data->cols[column].preparse = NL_Malloc(data,strlen((char *)Line.preparse)+2,"ReadFormat_preparse")))
                 strcpy(data->cols[column].preparse,(char *)Line.preparse);
             }
             if (Line.col)      data->cols[column].col = (WORD) *Line.col;
@@ -704,14 +676,15 @@ static BOOL CCB_string(struct NLData *data,char **cbstr,char *str,LONG len,char 
 {
   char *tmpcb;
   char *tmp;
-  LONG tmpcblen,newlen;
+  LONG tmpcblen;
 
   if (str)
   {
     tmpcblen = len + 2;
     if (*cbstr)
       tmpcblen += strlen(*cbstr);
-    if (tmpcb = NL_Malloc(data,tmpcblen,"CCB_string"))
+
+    if((tmpcb = NL_Malloc(data,tmpcblen,"CCB_string")))
     {
       tmp = tmpcb;
       if (*cbstr)
@@ -738,7 +711,7 @@ static BOOL CCB_entry(Object *obj,struct NLData *data,char **cbstr,APTR entptr,L
 {
   char **display_array = &data->DisplayArray[2];
   char *str;
-  LONG ent1 = ent,pos1,pos2,len,prep1,prep2;
+  LONG pos1,pos2,len,prep1,prep2;
   char lc;
   BOOL ln = FALSE;
   WORD colwrap,wrap = 0;
@@ -803,16 +776,20 @@ static BOOL CCB_entry(Object *obj,struct NLData *data,char **cbstr,APTR entptr,L
     }
     else
     {
-      WORD column,col,col1,col2;
+      WORD column,col1,col2;
+
       NL_GetDisplayArray(obj,data,ent);
+
       if ((c1 == -2) || (c1 >= data->numcols-1))
         col1 = data->numcols-1;
       else if (c1 < 0)
         col1 = 0;
       else
         col1 = c1;
+
       if ((c2 == -2) || (c2 >= data->numcols-1))
-      { col2 = data->numcols-1;
+      {
+        col2 = data->numcols-1;
         if (p2==-2)
           ln = TRUE;
       }
@@ -918,10 +895,8 @@ static BOOL CCB_entry(Object *obj,struct NLData *data,char **cbstr,APTR entptr,L
 LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook)
 {
   struct IOClipReq *ior = NULL;
-  BPTR file = NULL;
+  BPTR file = (BPTR)NULL;
   char *retstr = NULL;
-  char emptyline[] = "";
-  char retline[] = "\n";
   char *clipstr = NULL;
   LONG ok = TRUE;
   LONG ent;
