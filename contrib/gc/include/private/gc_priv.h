@@ -395,7 +395,7 @@ struct hblk;	/* See below.	*/
 				    + GC_page_size) \
                                     + GC_page_size-1)
 #   else
-#     if defined(NEXT) || defined(MACOSX) || defined(DOS4GW) || defined(AROS) || \
+#     if defined(NEXT) || defined(MACOSX) || defined(DOS4GW) || \
 	 (defined(AMIGA) && !defined(GC_AMIGA_FASTALLOC))
 #       define GET_MEM(bytes) HBLKPTR((size_t) \
 				      calloc(1, (size_t)bytes + GC_page_size) \
@@ -453,7 +453,7 @@ struct hblk;	/* See below.	*/
 #   define ENABLE_SIGNALS() \
 		PCR_Th_SetSigMask(&GC_old_sig_mask, NIL)
 # else
-#   if defined(THREADS) || defined(AMIGA) || defined(AROS) \
+#   if defined(THREADS) || defined(AMIGA) \
 	|| defined(MSWIN32) || defined(MSWINCE) || defined(MACOS) \
 	|| defined(DJGPP) || defined(NO_SIGNALS) 
 			/* Also useful for debugging.		*/

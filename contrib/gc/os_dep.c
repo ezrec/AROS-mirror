@@ -45,7 +45,7 @@
 #     endif /* 2 <= __GLIBC__ */
 #   endif
 # endif
-# if !defined(OS2) && !defined(PCR) && !defined(AROS) && !defined(AMIGA) && !defined(MACOS) \
+# if !defined(OS2) && !defined(PCR) && !defined(AMIGA) && !defined(MACOS) \
     && !defined(MSWINCE)
 #   include <sys/types.h>
 #   if !defined(MSWIN32) && !defined(SUNOS4)
@@ -88,11 +88,18 @@
 #  include <machine/trap.h>
 #endif
 
-#if defined(AMIGA) || defined(AROS)
+#ifdef __AMIGAOS__
 # define GC_AMIGA_DEF
 # include "exec/execbase.h"
 # include "AmigaOS.c"
 # undef GC_AMIGA_DEF
+#endif
+
+#ifdef __AROS__
+# include <proto/exec.h>
+# include <exec/execbase.h>
+# include <dos/dos.h>
+# include <dos/dosextens.h>
 #endif
 
 #if defined(MSWIN32) || defined(MSWINCE)
@@ -332,7 +339,7 @@ void GC_enable_signals(void)
 
 # else
 
-#  if !defined(PCR) && !defined(AROS) && !defined(AMIGA) && !defined(MSWIN32) \
+#  if !defined(PCR) && !defined(AMIGA) && !defined(MSWIN32) \
       && !defined(MSWINCE) \
       && !defined(MACOS) && !defined(DJGPP) && !defined(DOS4GW)
 
@@ -511,16 +518,16 @@ ptr_t GC_get_stack_base()
 
 # endif /* OS2 */
 
-# ifdef AROS
+# ifdef __AROS__
 ptr_t GC_get_stack_base(){
   return (char *)SysBase->ThisTask->tc_SPUpper;
 }
 # endif
-# ifdef AMIGA
+# ifdef __AMIGAOS__
 #   define GC_AMIGA_SB
 #   include "AmigaOS.c"
 #   undef GC_AMIGA_SB
-# endif /* AMIGA */
+# endif /* __AMIGAOS__ */
 
 # if defined(NEED_FIND_LIMIT) || (defined(UNIX_LIKE) && !defined(ECOS))
 
@@ -756,7 +763,7 @@ ptr_t GC_get_stack_base(){
 
 #endif /* FREEBSD_STACKBOTTOM */
 
-#if !defined(BEOS) && !defined(AROS) && !defined(AMIGA) && !defined(MSWIN32) \
+#if !defined(BEOS) && !defined(AMIGA) && !defined(MSWIN32) \
     && !defined(MSWINCE) && !defined(OS2) && !defined(ECOS)
 
 ptr_t GC_get_stack_base()
@@ -1074,7 +1081,7 @@ int * etext_addr;
 # endif
 
 
-#ifdef AROS
+#ifdef __AROS__
   void GC_register_data_segments()
   {
     struct Process	*proc;
@@ -1105,11 +1112,11 @@ int * etext_addr;
     }
   }
 #else
-#ifdef AMIGA
+#ifdef __AMIGAOS__
 #  define GC_AMIGA_DS
 #  include "AmigaOS.c"
 #  undef GC_AMIGA_DS
-#else /* !OS2 && !Windows && !AMIGA */
+#else /* !OS2 && !Windows && !__AMIGAOS__ */
 
 void GC_register_data_segments()
 {
@@ -1169,8 +1176,8 @@ void GC_register_data_segments()
     /* change.								*/
 }
 
-# endif  /* ! AMIGA */
-# endif  /* ! AROS */
+# endif  /* ! __AMIGAOS__ */
+# endif  /* ! __AROS__ */
 # endif  /* ! MSWIN32 && ! MSWINCE*/
 # endif  /* ! OS2 */
 
@@ -1178,7 +1185,7 @@ void GC_register_data_segments()
  * Auxiliary routines for obtaining memory from OS.
  */
 
-# if !defined(OS2) && !defined(PCR) && !defined(AROS) && !defined(AMIGA) \
+# if !defined(OS2) && !defined(PCR) && !defined(AMIGA) \
 	&& !defined(MSWIN32) && !defined(MSWINCE) \
 	&& !defined(MACOS) && !defined(DOS4GW)
 
@@ -1364,7 +1371,7 @@ void GC_win32_free_heap ()
 }
 # endif
 
-#ifdef AMIGA
+#ifdef __AMIGAOS__
 # define GC_AMIGA_AM
 # include "AmigaOS.c"
 # undef GC_AMIGA_AM

@@ -210,14 +210,13 @@
 #   define mach_type_known
 # endif
 # if defined(__AROS__) && (defined(i386) || defined(__i386__))
-#   define AROS
 #   define I386
 #   define mach_type_known
 # endif
 # if defined(_AMIGA) && !defined(AMIGA)
 #   define AMIGA
 # endif
-# ifdef AMIGA 
+# ifdef __AMIGAOS__
 #   define M68K
 #   define mach_type_known
 # endif
@@ -611,7 +610,7 @@
 #   	include <sys/mmu.h>
 #	define GETPAGESIZE() PAGESIZE	/* Is this still right? */
 #   endif
-#   ifdef AMIGA
+#   ifdef __AMIGAOS__
 #	define OS_TYPE "AMIGA"
  	    	/* STACKBOTTOM and DATASTART handled specially	*/
  	    	/* in os_dep.c					*/
@@ -852,7 +851,7 @@
       extern int etext;
 #     define DATASTART ((ptr_t)((((word) (&etext)) + 0xfff) & ~0xfff))
 #   endif
-#   ifdef AROS
+#   ifdef __AROS__
 #	define OS_TYPE "AMIGA"
  	    	/* STACKBOTTOM and DATASTART handled specially	*/
  	    	/* in os_dep.c					*/

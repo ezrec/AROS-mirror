@@ -734,7 +734,7 @@ int GC_tmp;  /* Should really be local ... */
 #if !defined(OS2) && !defined(MACOS) && !defined(MSWIN32) && !defined(MSWINCE)
   int GC_stdout = 1;
   int GC_stderr = 2;
-# if !defined(AMIGA)
+# if !defined(__AMIGAOS__)
 #   include <unistd.h>
 # endif
 #endif
