@@ -4,7 +4,7 @@
 
 include $(TOP)/config/make.cfg
 
-LIB   := python
+LIB   := python-modules
 
 FILES := \
 	_codecsmodule \
@@ -25,7 +25,6 @@ FILES := \
 	getpath \
 	grpmodule \
 	imageop \
-	main \
 	md5c \
 	md5module \
 	newmodule \
@@ -33,7 +32,6 @@ FILES := \
 	parsermodule \
 	puremodule \
 	pwdmodule \
-	python \
 	regexmodule \
 	regexpr \
 	rgbimgmodule \
@@ -99,11 +97,11 @@ FILES := \
 #	signalmodule
 #	svmodule
 
-USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include
+USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR)
 
-#MM linklibs-python
+#MM linklibs-python-modules
 
-%make_linklib_setup mmake=linklibs-python
+%make_linklib_setup mmake=linklibs-python-modules
 %make_linklib 
 
 %common

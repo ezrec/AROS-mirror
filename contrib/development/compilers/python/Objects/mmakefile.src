@@ -35,7 +35,7 @@ FILES := \
 #	floatobject
 #	obmalloc
 
-USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include
+USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR)
 
 #MM linklibs-python-objects
 
