@@ -1,0 +1,42 @@
+                 ___________________
+ _______________/  the CTX files    \
+|                                    |
+| Free infinite plane                |
+| depth 16                           |
+|                                    |
+| corTeX / Optimum  11 aug. 1998     |
+|                                    |
+|____________________________________|
+
+
+Display a (2) free-directionnal infinite textured plane.
+
+This is exactly the same method that was used in the free-directionnal
+tunnel; only the formula in the precalculation routine is changed.
+
+In fact I worked a bit more than that :) and optimised the routines:
+precalc array are directly in ints, and no more in floats; and it is
+in 8:8 fixed point instead of 16:16;
+ Such big precision was useless to interpolate for 8 pixels; and reducing
+ to 8:8 avoid one shifting when computing the texture address (the integer
+ part of Y is already on the good place) (when texture is 256x256)
+
+Some notes :
+	it would be cooler if the texture was shaded (darker when far);
+	this could be done by switching to a palette-based txeture,
+	having some ( like 16) pre-darkened palettes, and choosing
+	the good one for each interpolating square.
+	... I leave this as an exercise for you :) ...
+
+	You will notice the ripples at some orientations of the plane;
+	they are typical of this technique.
+	Perhaps it would be interesting to use other interpolation
+	method, on larger ranges, but with Quad-interpolation
+	(you dont know what it is ? => it will be a good exercise to
+	find and to implement it :)  )
+
+The texture is once again ripped from the gimp patterns...
+(www.gimp.org)
+
+
+corTeX / Optimum, time to sleep...

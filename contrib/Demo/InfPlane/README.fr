@@ -1,0 +1,45 @@
+                 ___________________
+ _______________/  the CTX files    \
+|                                    |
+| Free infinite plane                |
+| depth 16                           |
+|                                    |
+| corTeX / Optimum  11 aug. 1998     |
+|                                    |
+|____________________________________|
+
+
+Affichage d'un (2) plan infini texturé en orientation libre.
+
+
+C'est exactement la meme methode utilisée dans le tunnel libre; seule la
+formule de la routine de precalcul est changée.
+
+En fait j'ai bossé un peu plus que juste ca :) et j'ai optimisé les
+routines: les tableaux de precalcs sont directement en int et non plus 
+en floats; et ils sont en 8:8 fixed-point au lieu de 16:16;
+ Une telle precision etait superflue pour interpoler sur 8 pixels; de plus
+ passer a 8:8 supprime un decalage lors du calcul de l'adresse de la texture
+ (la partie entiere de Y est deja au bon endroit) (quand la texture est
+ en 256*256)
+
+Quelques remarques :
+	Ce serait +kewl si la texture etait degradée (sombre a l'horizon);
+	Ceci pourrait se faire en passant a une texture en mode palette,
+	calculer quelques ( ~ 16) palettes progressivement assombries,
+	et choisir la bonne palette pour chaque carré d'interpolation.
+	...Je vous laisse ca en exercice :)
+
+	Vous remarquerez les vaguelettes a certaines orientations:
+	elle sont caracteristiques de cette technique.
+	Il serait peut-etre interessant d'utiliser une autre methode
+	d'interpolation, sur des plus grands intervalles, par ex
+	avec la Quad-interpolation
+	(Vous ne savez pas ce que c'est ? C'est un bon exercice de 
+	trouver ce que c'est et de l'implementer :) )
+
+La texture est encore directement piqué des patterns de Gimp...
+(www.gimp.org)
+
+
+corTeX / Optimum, bientot l'heure du dodo...

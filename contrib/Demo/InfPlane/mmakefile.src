@@ -1,0 +1,47 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
+		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
+	
+OBJDIR		:= $(GENDIR)/$(CURDIR)
+DESTDIR 	:= $(CONTRIBDIR)/Demos/InfPlane
+
+FILES 		:= infplane
+ASMFILES	:= refresh
+DATAFILES	:= pattern.data pattern.pal
+
+SRCS 		:= $(foreach f, $(FILES), $(f).c)
+OBJS 		:= $(foreach f, $(FILES) $(ASMFILES), $(OBJDIR)/$(f).o)
+
+EXE 		:= $(DESTDIR)/infplane
+
+.PHONY : all clean
+
+#MM demo-infplane : setup-demo-infplane
+demo-infplane : $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-demo-infplane :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+	@$(CP) $(DATAFILES) $(DESTDIR)
+	
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+#MM
+clean-contrib-demos :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+
+$(OBJDIR)/%.o : %.S
+	%compile_q
+
+
