@@ -279,6 +279,23 @@ def copyImages():
         ],
         dstpath
     )
+    
+    imagepath = 'images'
+    dstpath   = os.path.join( DSTROOT, imagepath )
+    srcpath   = imagepath
+    
+    makedir( dstpath )
+
+    copy(
+        [
+            os.path.join( srcpath, 'aros-banner.gif' ),
+            os.path.join( srcpath, 'trustec.png' ),
+            os.path.join( srcpath, 'sourceforge.png' ),
+            os.path.join( srcpath, 'phoenix.jpeg' ),
+            os.path.join( srcpath, 'amigados-online-reference-manual.png' )
+        ],
+        dstpath
+    )
             
 
 def buildClean():
@@ -305,11 +322,6 @@ def buildWWW():
 
     copy(
         [
-            'images/aros-banner.gif',
-            'images/trustec.png',
-            'images/sourceforge.png',
-            'images/phoenix.jpeg',
-            'images/amigados-online-reference-manual.png',
             'targets/www/images/trustec-small.png',
             'targets/www/images/genesi-small.gif',
             'targets/www/images/bullet.gif',
