@@ -316,7 +316,7 @@ def buildWWW():
 
     recurse( processWWW )
 
-    copy( '../license.html', DSTROOT )
+    copy( 'license.html', DSTROOT )
 
     imagepath = os.path.join( DSTROOT, 'images' )
     makedir( imagepath )
@@ -378,6 +378,8 @@ def buildHTML():
     copy( 'targets/www/docutils.css', DSTROOT )
     copy( 'targets/html/aros.css', DSTROOT )
     
+    copy( 'license.html', DSTROOT )
+
     os.system( 'chmod -R go+r %s' % DSTROOT )
 
 
