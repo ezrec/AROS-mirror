@@ -44,26 +44,26 @@ static const struct function_type functions[] = {
   { 0,              std_abbrev,            "ABBREV" },
   { 0,              std_abs,               "ABS" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              amiga_addlib,          "ADDLIB" },
+  { EXT_REGINA_BIFS,amiga_addlib,          "ADDLIB" },
 #endif
   { 0,              std_address,           "ADDRESS" },
 #ifdef TRACEMEM
   { EXT_REGINA_BIFS,dbg_allocated,         "ALLOCATED" },
 #endif
   { 0,              std_arg,               "ARG" },
-  { 0,              arexx_b2c,             "B2C" },
+  { EXT_REGINA_BIFS,arexx_b2c,             "B2C" },
   { 0,              std_b2x,               "B2X" },
   { EXT_REGINA_BIFS,os2_beep,              "BEEP" },
   { 0,              std_bitand,            "BITAND" },
   { 0,              arexx_bitchg,          "BITCHG" },
-  { 0,              arexx_bitclr,          "BITCLR" },
-  { 0,              arexx_bitcomp,         "BITCOMP" },
+  { EXT_REGINA_BIFS,arexx_bitclr,          "BITCLR" },
+  { EXT_REGINA_BIFS,arexx_bitcomp,         "BITCOMP" },
   { 0,              std_bitor,             "BITOR" },
-  { 0,              arexx_bitset,          "BITSET" },
-  { 0,              arexx_bittst,          "BITTST" },
+  { EXT_REGINA_BIFS,arexx_bitset,          "BITSET" },
+  { EXT_REGINA_BIFS,arexx_bittst,          "BITTST" },
   { 0,              std_bitxor,            "BITXOR" },
   { EXT_BUFTYPE_BIF,cms_buftype,           "BUFTYPE" },
-  { 0,              arexx_c2b,             "C2B" },
+  { EXT_REGINA_BIFS,arexx_c2b,             "C2B" },
   { 0,              std_c2d,               "C2D" },
   { 0,              std_c2x,               "C2X" },
   { EXT_REGINA_BIFS,unx_chdir,             "CD" },
@@ -78,10 +78,10 @@ static const struct function_type functions[] = {
   { EXT_REGINA_BIFS,unx_close,             "CLOSE" },
 #endif
 #ifdef AREXXIO
-  { 0,              arexx_close,           "CLOSE" },
+  { EXT_REGINA_BIFS,arexx_close,           "CLOSE" },
 #endif
   { 0,              std_compare,           "COMPARE" },
-  { 0,              arexx_compress,        "COMPRESS" },
+  { EXT_REGINA_BIFS,arexx_compress,        "COMPRESS" },
   { 0,              std_condition,         "CONDITION" },
   { 0,              std_copies,            "COPIES" },
   { 0,              std_countstr,          "COUNTSTR" },   /* ANSI Std 1996 - MH 10-06-96 */
@@ -105,11 +105,11 @@ static const struct function_type functions[] = {
   { EXT_REGINA_BIFS,unx_eof,               "EOF" },
 #endif
 #ifdef AREXXIO
-  { 0,              arexx_eof,             "EOF" },
+  { EXT_REGINA_BIFS,arexx_eof,             "EOF" },
 #endif
   { 0,              std_errortext,         "ERRORTEXT" },
-  { 0,              arexx_exists,          "EXISTS" },
-  { 0,              arexx_export,          "EXPORT" },
+  { EXT_REGINA_BIFS,arexx_exists,          "EXISTS" },
+  { EXT_REGINA_BIFS,arexx_export,          "EXPORT" },
 #ifdef VMS
   { EXT_REGINA_BIFS,vms_f_cvsi,            "F$CVSI" },
   { EXT_REGINA_BIFS,vms_f_cvtime,          "F$CVTIME" },
@@ -154,18 +154,18 @@ static const struct function_type functions[] = {
 #if defined(REGINA_DEBUG_MEMORY)
   { EXT_REGINA_BIFS,dbg_freelists,         "FREELISTS" },
 #endif
-  { 0,              arexx_freespace,       "FREESPACE" },
+  { EXT_REGINA_BIFS,arexx_freespace,       "FREESPACE" },
   { 0,              std_fuzz,              "FUZZ" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              amiga_getclip,         "GETCLIP" },
+  { EXT_REGINA_BIFS,amiga_getclip,         "GETCLIP" },
 #endif
   { EXT_REGINA_BIFS,unx_getenv,            "GETENV" },
   { EXT_REGINA_BIFS,unx_getpath,           "GETPATH" },
   { EXT_REGINA_BIFS,unx_getpid,            "GETPID" },
-  { 0,              arexx_getspace,        "GETSPACE" },
+  { EXT_REGINA_BIFS,arexx_getspace,        "GETSPACE" },
   { EXT_REGINA_BIFS,unx_gettid,            "GETTID" },
-  { 0,              arexx_hash,            "HASH" },
-  { 0,              arexx_import,          "IMPORT" },
+  { EXT_REGINA_BIFS,arexx_hash,            "HASH" },
+  { EXT_REGINA_BIFS,arexx_import,          "IMPORT" },
   { EXT_REGINA_BIFS,cms_index,             "INDEX" },
   { 0,              std_insert,            "INSERT" },
   { EXT_REGINA_BIFS,cms_justify,           "JUSTIFY" },
@@ -188,24 +188,24 @@ static const struct function_type functions[] = {
   { EXT_OPEN_BIF,   unx_open,              "OPEN" },
 #endif /* OLD_REGINA_FEATURES */
 #ifdef AREXXIO
-  { 0,              arexx_open,            "OPEN" },
+  { EXT_REGINA_BIFS,arexx_open,            "OPEN" },
 #endif
   { 0,              std_overlay,           "OVERLAY" },
   { EXT_REGINA_BIFS,unx_popen,             "POPEN" },
   { 0,              std_pos,               "POS" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              amiga_pragma,          "PRAGMA" },
+  { EXT_REGINA_BIFS,amiga_pragma,          "PRAGMA" },
 #endif
   { 0,              std_qualify,           "QUALIFY" },
   { 0,              std_queued,            "QUEUED" },
   { 0,              std_random,            "RANDOM" },
-  { 0,              arexx_randu,           "RANDU" },
+  { EXT_REGINA_BIFS,arexx_randu,           "RANDU" },
 #ifdef AREXXIO
-  { 0,              arexx_readch,          "READCH" },
-  { 0,              arexx_readln,          "READLN" },
+  { EXT_REGINA_BIFS,arexx_readch,          "READCH" },
+  { EXT_REGINA_BIFS,arexx_readln,          "READLN" },
 #endif
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              amiga_remlib,          "REMLIB" },
+  { EXT_REGINA_BIFS,amiga_remlib,          "REMLIB" },
 #endif
   { 0,              std_reverse,           "REVERSE" },
   { 0,              std_right,             "RIGHT" },
@@ -217,15 +217,15 @@ static const struct function_type functions[] = {
   { 0,              rex_rxqueue,           "RXQUEUE" },
 
 #ifdef AREXXIO
-  { 0,              arexx_seek,            "SEEK" },
+  { EXT_REGINA_BIFS,arexx_seek,            "SEEK" },
 #endif
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              amiga_setclip,         "SETCLIP" },
+  { EXT_REGINA_BIFS,amiga_setclip,         "SETCLIP" },
 #endif
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              amiga_show,            "SHOW" },
+  { EXT_REGINA_BIFS,amiga_show,            "SHOW" },
 #else
-  { 0,              arexx_show,            "SHOW" },
+  { EXT_REGINA_BIFS,arexx_show,            "SHOW" },
 #endif
   { 0,              std_sign,              "SIGN" },
   { EXT_REGINA_BIFS,cms_sleep,             "SLEEP" },
@@ -234,13 +234,13 @@ static const struct function_type functions[] = {
   { EXT_REGINA_BIFS,cms_state,             "STATE" },
   { 0,              std_stream,            "STREAM" },
   { 0,              std_strip,             "STRIP" },
-  { 0,              arexx_storage,         "STORAGE" },
+  { EXT_REGINA_BIFS,arexx_storage,         "STORAGE" },
   { 0,              std_substr,            "SUBSTR" },
   { 0,              std_subword,           "SUBWORD" },
   { 0,              std_symbol,            "SYMBOL" },
   { 0,              std_time,              "TIME" },
   { 0,              std_trace,             "TRACE" },
-  { 0,              arexx_trim,            "TRIM" },
+  { EXT_REGINA_BIFS,arexx_trim,            "TRIM" },
   
   { EXT_REGINA_BIFS,dbg_traceback,         "TRACEBACK" },
 
@@ -248,7 +248,7 @@ static const struct function_type functions[] = {
   { 0,              std_trunc,             "TRUNC" },
   { EXT_REGINA_BIFS,unx_uname,             "UNAME" },
   { EXT_REGINA_BIFS,unx_unixerror,         "UNIXERROR" },
-  { 0,              arexx_upper,           "UPPER" },
+  { EXT_REGINA_BIFS,arexx_upper,           "UPPER" },
   { EXT_REGINA_BIFS,rex_userid,            "USERID" },
   { 0,              std_value,             "VALUE" },
   { 0,              std_verify,            "VERIFY" },
@@ -258,8 +258,8 @@ static const struct function_type functions[] = {
   { 0,              std_wordpos,           "WORDPOS" },
   { 0,              std_words,             "WORDS" },
 #ifdef AREXXIO
-  { 0,              arexx_writech,         "WRITECH" },
-  { 0,              arexx_writeln,         "WRITELN" },
+  { EXT_REGINA_BIFS,arexx_writech,         "WRITECH" },
+  { EXT_REGINA_BIFS,arexx_writeln,         "WRITELN" },
 #endif
   { 0,              std_x2b,               "X2B" },
   { 0,              std_x2c,               "X2C" },
