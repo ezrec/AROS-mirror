@@ -21,17 +21,12 @@ extern struct ExecBase *SysBase;
 struct inifileBase_intern
 {
     struct Library    library;
-    struct ExecBase   *sysbase;
 };
 
 /****************************************************************************************/
 
 #undef INB
 #define INB(b)	((struct inifileBase_intern *)(b))
-
-#undef SysBase
-#define SysBase     	(INB(inifileBase)->sysbase)
-
 
 /****************************************************************************************/
 
