@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -270,6 +273,7 @@ static struct Hook ReqHook = { NULL, NULL, (HOOKFUNC)ReqHookFunc, NULL, NULL };
  * Put up a BGUI requester.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH3(ULONG, BGUI_RequestA,
     AROS_LHA(struct Window *, win, A0),
     AROS_LHA(struct bguiRequest *, es, A1),

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:47  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -345,6 +348,7 @@ makeproto void MarkFreedClass(Class *cl)
  * a non-existing class ID, or the class fails to initialize.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH1(Class *, BGUI_GetClassPtr,
     AROS_LHA(ULONG, classID, D0),
     struct Library *, BGUIBase, 5, BGUI)
@@ -409,6 +413,7 @@ makeproto Object *BGUI_NewObject(ULONG classID, Tag tag1, ...)
  * Create an object from a class.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH2(Object *, BGUI_NewObjectA,
     AROS_LHA(ULONG, classID, D0),
     AROS_LHA(struct TagItem *, attr, A0),
@@ -439,6 +444,7 @@ makeproto SAVEDS ASM Object *BGUI_NewObjectA(REG(d0) ULONG classID, REG(a0) stru
  * Allocate a bitmap.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH5(struct BitMap *, BGUI_AllocBitMap,
     AROS_LHA(ULONG, width, D0),
     AROS_LHA(ULONG, height, D1),
@@ -507,6 +513,7 @@ makeproto SAVEDS ASM struct BitMap *BGUI_AllocBitMap(REG(d0) ULONG width, REG(d1
  * Free a bitmap.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH1(VOID, BGUI_FreeBitMap,
     AROS_LHA(struct BitMap *, bm, A0),
     struct Library *, BGUIBase, 15, BGUI)
@@ -564,6 +571,7 @@ makeproto SAVEDS ASM VOID BGUI_FreeBitMap(REG(a0) struct BitMap *bm)
  * Allocate a rastport with bitmap.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH4(struct RastPort *, BGUI_CreateRPortBitMap,
     AROS_LHA(struct RastPort *, source, A0),
     AROS_LHA(ULONG, width, D0),
@@ -645,6 +653,7 @@ makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap(REG(a0) struct Rast
  * Free a buffer rastport and bitmap.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH1(VOID, BGUI_FreeRPortBitMap,
     AROS_LHA(struct RastPort *, rp, A0),
     struct Library *, BGUIBase, 17, BGUI)
@@ -691,6 +700,7 @@ makeproto SAVEDS ASM VOID BGUI_FreeRPortBitMap(REG(a0) struct RastPort *rp)
  */
 #
 #ifdef _AROS
+makearosproto
 AROS_LH4(BOOL, BGUI_Help,
     AROS_LHA(struct Window *, win, A0),
     AROS_LHA(UBYTE *, file, A1),
@@ -772,6 +782,7 @@ STATIC ASM REGFUNC2(VOID, Busy,
  * Lock a window.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH1(APTR, BGUI_LockWindow,
     AROS_LHA(struct Window *, win, A0),
     struct Library *, BGUIBase, 9, BGUI)
@@ -829,6 +840,7 @@ makeproto SAVEDS ASM APTR BGUI_LockWindow( REG(a0) struct Window *win )
  * Unlock a window.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH1(VOID, BGUI_UnlockWindow,
     AROS_LHA(APTR, lock, A0),
     struct Library *, BGUIBase, 10, BGUI)
@@ -874,6 +886,7 @@ makeproto SAVEDS ASM VOID BGUI_UnlockWindow( REG(a0) APTR lock )
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH2(STRPTR, BGUI_GetLocaleStr,
     AROS_LHA(struct bguiLocale *, bl, A0),
     AROS_LHA(ULONG, id, D0),
@@ -911,6 +924,7 @@ makeproto SAVEDS ASM STRPTR BGUI_GetLocaleStr(REG(a0) struct bguiLocale *bl, REG
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH3(STRPTR, BGUI_GetCatalogStr,
     AROS_LHA(struct bguiLocale *, bl, A0),
     AROS_LHA(ULONG, id, D0),

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:47  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -306,7 +309,7 @@ STATIC SAVEDS ASM REGFUNC3(IPTR, BuiltInBack,
 /*
  * Frame background routine.
  */
-METHOD(FrameClassBackfill, struct fmBackfill *fmb)
+METHOD(FrameClassBackfill, struct fmBackfill *, fmb)
 {
    FD                   *fd = INST_DATA(cl, obj);
    struct FrameDrawMsg   fdraw;
@@ -789,7 +792,7 @@ STATIC ASM REGFUNC3(VOID, SetFrameAttrs,
 /*
  * Create a shiny new object.
  */
-METHOD(FrameClassNew, struct opSet *ops)
+METHOD(FrameClassNew, struct opSet *, ops)
 {
    FD             *fd;
    ULONG           rc;
@@ -830,7 +833,7 @@ METHOD(FrameClassNew, struct opSet *ops)
 /*
  * Change one or more attrubutes.
  */
-METHOD(FrameClassSet, struct opSet *ops)
+METHOD(FrameClassSet, struct opSet *, ops)
 {
    FD              *fd = INST_DATA(cl, obj);
    ULONG            rc;
@@ -854,7 +857,7 @@ METHOD(FrameClassSet, struct opSet *ops)
 /*
  * Give an attribute value.
  */
-METHOD(FrameClassGet, struct opGet *opg)
+METHOD(FrameClassGet, struct opGet *, opg)
 {
    FD       *fd = INST_DATA(cl, obj);
    ULONG     rc = 1, tag = opg->opg_AttrID, *store = opg->opg_Storage;
@@ -914,7 +917,7 @@ METHOD(FrameClassGet, struct opGet *opg)
 /*
  * Dispose of the object.
  */
-METHOD(FrameClassDispose, Msg msg)
+METHOD(FrameClassDispose, Msg, msg)
 {
    FD       *fd = INST_DATA(cl, obj);
 
@@ -937,7 +940,7 @@ METHOD(FrameClassDispose, Msg msg)
 ///
 /// FRAMEM_SETUPBOUNDS
 
-METHOD(FrameClassSetupBounds, struct fmSetupBounds *fmsb)
+METHOD(FrameClassSetupBounds, struct fmSetupBounds *, fmsb)
 {
    FD            *fd = INST_DATA(cl, obj);
    struct IBox   *hb = fmsb->fmsb_HitBox;
@@ -975,7 +978,7 @@ METHOD(FrameClassSetupBounds, struct fmSetupBounds *fmsb)
 ///
 /// BASE_DIMENSIONS
 
-METHOD(FrameClassDimensions, struct bmDimensions *bmd)
+METHOD(FrameClassDimensions, struct bmDimensions *, bmd)
 {
    FD                *fd = INST_DATA(cl, obj);
    struct BaseInfo   *bi = bmd->bmd_BInfo;
@@ -1002,7 +1005,7 @@ METHOD(FrameClassDimensions, struct bmDimensions *bmd)
 /*
  * Render the frame.
  */
-METHOD(FrameClassRender, struct bmRender *bmr)
+METHOD(FrameClassRender, struct bmRender *, bmr)
 {
    FD                  *fd = INST_DATA(cl, obj);
    struct BaseInfo     *bi = bmr->bmr_BInfo;
@@ -1352,7 +1355,7 @@ METHOD(FrameClassRender, struct bmRender *bmr)
 ///
 /// BASE_LOCALIZE
 
-METHOD(FrameClassLocalize, struct bmLocalize *bml)
+METHOD(FrameClassLocalize, struct bmLocalize *, bml)
 {
    FD    *fd = INST_DATA(cl, obj);
    ULONG  rc = 0;

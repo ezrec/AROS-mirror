@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:47  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -174,7 +177,7 @@ STATIC ASM REGFUNC2(VOID, SetupSize,
 ///
 
 /// OM_NEW
-METHOD(ExtClassNew, struct opSet *ops)
+METHOD(ExtClassNew, struct opSet *, ops)
 {
     ED              *ed;
     ULONG           rc;
@@ -238,7 +241,7 @@ METHOD(ExtClassNew, struct opSet *ops)
 }
 ///
 /// OM_DISPOSE
-METHOD(ExtClassDispose, Msg msg)
+METHOD(ExtClassDispose, Msg, msg)
 {
     ED              *ed = INST_DATA(cl,obj);
     ULONG           rc;
@@ -271,7 +274,7 @@ METHOD(ExtClassDispose, Msg msg)
 }
 ///
 /// OM_GET
-METHOD(ExtClassGet, struct opGet *opg )
+METHOD(ExtClassGet, struct opGet *, opg )
 {
     ED              *ed = INST_DATA(cl,obj);
     ULONG           rc;
@@ -299,7 +302,7 @@ METHOD(ExtClassGet, struct opGet *opg )
 }
 ///
 ///BASE_DIMENSIONS
-METHOD(ExtClassDimensions, struct bmDimensions *msg)
+METHOD(ExtClassDimensions, struct bmDimensions *, msg)
 {
     ED              *ed = INST_DATA(cl,obj);
     ULONG           rc;
@@ -313,7 +316,7 @@ METHOD(ExtClassDimensions, struct bmDimensions *msg)
 }
 ///
 ///GM_HITTEST
-METHOD(ExtClassHitTest, Msg msg)
+METHOD(ExtClassHitTest, Msg, msg)
 {
     ED              *ed = INST_DATA(cl,obj);
     ULONG           rc;
@@ -333,7 +336,7 @@ METHOD(ExtClassHitTest, Msg msg)
 }
 ///
 ///GM_HANDLEINPUT,GM_GOACTIVE
-METHOD(ExtClassHandleInput, Msg msg)
+METHOD(ExtClassHandleInput, Msg, msg)
 {
     ED              *ed = INST_DATA(cl,obj);
     ULONG           rc = GMR_NOREUSE;
@@ -347,7 +350,7 @@ METHOD(ExtClassHandleInput, Msg msg)
 }
 ///
 /// BASE_RENDER
-METHOD(ExtClassRender, struct bmRender *bmr)
+METHOD(ExtClassRender, struct bmRender *, bmr)
 {
     ED              *ed = INST_DATA(cl,obj);
     BC              *bc;

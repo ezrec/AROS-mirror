@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:10:15  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -31,7 +34,7 @@
 /*
  * This object cannot be hit.
  */
-METHOD(SpacingClassHitTest, Msg msg)
+METHOD(SpacingClassHitTest, Msg, msg)
 {
    return 0;
 }
@@ -39,7 +42,7 @@ METHOD(SpacingClassHitTest, Msg msg)
 /*
  * This object cannot be helped.
  */
-METHOD(SpacingClassHelp, Msg msg)
+METHOD(SpacingClassHelp, Msg, msg)
 {
    return BMHELP_NOT_ME;
 }
@@ -47,7 +50,7 @@ METHOD(SpacingClassHelp, Msg msg)
 /*
  * Simple dimensions request.
  */
-METHOD(SpacingClassDimensions, struct grmDimensions *dim)
+METHOD(SpacingClassDimensions, struct grmDimensions *, dim)
 {
    *(dim->grmd_MinSize.Width)  = 0;
    *(dim->grmd_MinSize.Height) = 0;
@@ -57,7 +60,7 @@ METHOD(SpacingClassDimensions, struct grmDimensions *dim)
 /*
  * Left extention request.
  */
-METHOD(SpacingClassLeftExt, struct bmLeftExt *le)
+METHOD(SpacingClassLeftExt, struct bmLeftExt *, le)
 {
    *(le->bmle_Extention) = 0;
    return 1;

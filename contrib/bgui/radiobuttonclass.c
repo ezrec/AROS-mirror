@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:10:01  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -32,7 +35,7 @@
 /*
  * Create a shiny new object.
  */
-METHOD(RBClassNew, struct opSet *ops)
+METHOD(RBClassNew, struct opSet *, ops)
 {
    ULONG           rc;
    Object         *rb;

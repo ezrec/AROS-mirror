@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:03  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -418,7 +421,7 @@ STATIC struct Hook BackFill_hook = { NULL, NULL, (FUNCPTR)BackFill_func, NULL, N
 /*
  * Set attributes.
  */
-METHOD(WindowClassSetUpdate, struct opSet *ops)
+METHOD(WindowClassSetUpdate, struct opSet *, ops)
 {
    WD              *wd = INST_DATA(cl, obj);
    struct TagItem  *tstate = ops->ops_AttrList, *tag;
@@ -657,7 +660,7 @@ METHOD(WindowClassSetUpdate, struct opSet *ops)
 /*
  * Create a shiny new object.
  */
-METHOD(WindowClassNew, struct opSet *ops)
+METHOD(WindowClassNew, struct opSet *, ops)
 {
    WD             *wd;
    struct TagItem *tstate, *tag, *tags;
@@ -821,7 +824,7 @@ METHOD(WindowClassNew, struct opSet *ops)
 /*
  * Get rid of an object.
  */
-METHOD(WindowClassDispose, Msg msg)
+METHOD(WindowClassDispose, Msg, msg)
 {
    WD          *wd = INST_DATA(cl, obj);
    TABCYCLE    *tc;
@@ -1400,7 +1403,7 @@ BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
 /*
  * Open up the window.
  */
-METHOD(WindowClassOpen, Msg msg)
+METHOD(WindowClassOpen, Msg, msg)
 {
    WD                *wd = INST_DATA(cl, obj);
    WORD               wleft = 0, wtop = 0, width = 0, height = 0, mw, mh;
@@ -1851,7 +1854,7 @@ STATIC ASM REGFUNC1(VOID, ClearMsgPort,
 /*
  * Close the window.
  */
-METHOD(WindowClassClose, Msg msg)
+METHOD(WindowClassClose, Msg, msg)
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
@@ -1973,7 +1976,7 @@ METHOD(WindowClassClose, Msg msg)
 /*
  * Put the window to sleep.
  */
-METHOD(WindowClassSleep, Msg msg)
+METHOD(WindowClassSleep, Msg, msg)
 {
    WD         *wd = INST_DATA(cl, obj);
    ULONG       rc = 0;
@@ -2001,7 +2004,7 @@ METHOD(WindowClassSleep, Msg msg)
 /*
  * Wake the window back up.
  */
-METHOD(WindowClassWakeUp, Msg msg)
+METHOD(WindowClassWakeUp, Msg, msg)
 {
    WD         *wd = INST_DATA(cl, obj);
    ULONG       rc = 0;
@@ -2171,7 +2174,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassGet,
 /*
  * Put out a help-request.
  */
-METHOD(WindowClassHelp, Msg msg)
+METHOD(WindowClassHelp, Msg, msg)
 {
    WD                   *wd = INST_DATA( cl, obj );
    struct bmShowHelp     bsh;
@@ -2704,7 +2707,7 @@ static struct Hook ToolTipHook = { NULL, NULL, (HOOKFUNC)ToolTip_func, NULL, NUL
 
 /// WM_CLOSETOOLTIP
 
-METHOD(WindowClassCloseTT, Msg msg)
+METHOD(WindowClassCloseTT, Msg, msg)
 {
    WD               *wd = INST_DATA(cl, obj);
    struct ttCommand  ttc;
@@ -2727,7 +2730,7 @@ METHOD(WindowClassCloseTT, Msg msg)
 /*
  * Handle a window's IDCMP messages.
  */
-METHOD(WindowClassIDCMP, Msg msg)
+METHOD(WindowClassIDCMP, Msg, msg)
 {
    struct IntuiMessage   *imsg;
    struct TagItem        *attr, *tag;
@@ -3252,7 +3255,7 @@ METHOD(WindowClassIDCMP, Msg msg)
 /*
  * Add a gadget key.
  */
-METHOD(WindowClassGadgetKey, struct wmGadgetKey *wmg)
+METHOD(WindowClassGadgetKey, struct wmGadgetKey *, wmg)
 {
 // WD       *wd = INST_DATA(cl, obj);
    Object   *ob;
@@ -3494,7 +3497,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassItemChecked,
 /*
  * Add an objects to the tab-cycle list.
  */
-METHOD(WindowClassCycleOrder, struct wmTabCycleOrder *tco)
+METHOD(WindowClassCycleOrder, struct wmTabCycleOrder *, tco)
 {
    WD             *wd = INST_DATA( cl, obj );
    TABCYCLE       *tc;
@@ -3533,7 +3536,7 @@ METHOD(WindowClassCycleOrder, struct wmTabCycleOrder *tco)
 /*
  * Obtain an AppMessage.
  */
-METHOD(WindowClassGetAppMsg, Msg msg)
+METHOD(WindowClassGetAppMsg, Msg, msg)
 {
    WD       *wd = INST_DATA(cl, obj);
    ULONG     rc = 0;
@@ -3551,7 +3554,7 @@ METHOD(WindowClassGetAppMsg, Msg msg)
 /*
  * Add a target to the update notification list.
  */
-METHOD(WindowClassAddUpdate, struct wmAddUpdate *wmau)
+METHOD(WindowClassAddUpdate, struct wmAddUpdate *, wmau)
 {
    WD          *wd = INST_DATA(cl, obj);
    UPN         *up;
@@ -3589,7 +3592,7 @@ METHOD(WindowClassAddUpdate, struct wmAddUpdate *wmau)
  *
  *  Changes made by T.Herold: Passes task to AddIDReport
  */
-METHOD(WindowClassReportID, struct wmReportID *wmri)
+METHOD(WindowClassReportID, struct wmReportID *, wmri)
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
@@ -3628,7 +3631,7 @@ METHOD(WindowClassReportID, struct wmReportID *wmri)
 /*
  * Get a pointer to the window that signalled us.
  */
-METHOD(WindowClassGetSigWin, Msg msg )
+METHOD(WindowClassGetSigWin, Msg, msg )
 {
    WD       *wd = ( WD * )INST_DATA( cl, obj );
    struct Window     *win;
@@ -3662,7 +3665,7 @@ METHOD(WindowClassGetSigWin, Msg msg )
 /*
  * Remove an object from the tab-cycle list.
  */
-METHOD(WindowClassRemove, struct wmRemoveObject *wmro )
+METHOD(WindowClassRemove, struct wmRemoveObject *, wmro )
 {
    WD          *wd = ( WD * )INST_DATA( cl, obj );
    TABCYCLE       *cyc;
@@ -3683,7 +3686,7 @@ METHOD(WindowClassRemove, struct wmRemoveObject *wmro )
 /*
  * Secure the master gadget by removing it.
  */
-METHOD(WindowClassSecure, Msg msg)
+METHOD(WindowClassSecure, Msg, msg)
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
@@ -3714,7 +3717,7 @@ METHOD(WindowClassSecure, Msg msg)
 /*
  * Release the master gadget by adding it.
  */
-METHOD(WindowClassRelease, Msg msg)
+METHOD(WindowClassRelease, Msg, msg)
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
@@ -3745,7 +3748,7 @@ METHOD(WindowClassRelease, Msg msg)
 /*
  * Relayout the GUI.
  */
-METHOD(WindowClassRelayout, Msg msg)
+METHOD(WindowClassRelayout, Msg, msg)
 {
    WD             *wd = INST_DATA(cl, obj);
    WORD            newl, newt, neww, newh;
@@ -3826,7 +3829,7 @@ METHOD(WindowClassRelayout, Msg msg)
 /*
  * Find the object under the mouse.
  */
-METHOD(WindowClassWhichObject, Msg msg)
+METHOD(WindowClassWhichObject, Msg, msg)
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
@@ -3858,7 +3861,7 @@ METHOD(WindowClassWhichObject, Msg msg)
 ///
 /// WM_LOCK, WM_UNLOCK
 
-METHOD(WindowClassLock, Msg msg)
+METHOD(WindowClassLock, Msg, msg)
 {
    WD       *wd = INST_DATA(cl, obj);
 
@@ -3875,7 +3878,7 @@ METHOD(WindowClassLock, Msg msg)
 /*
  * Which object has the proper key?
  */
-METHOD(WindowClassFindKey, struct bmFindKey *bmfk)
+METHOD(WindowClassFindKey, struct bmFindKey *, bmfk)
 {
    WD          *wd = INST_DATA(cl, obj);
    Object      *ob, *gr;
@@ -3912,7 +3915,7 @@ METHOD(WindowClassFindKey, struct bmFindKey *bmfk)
 /*
  * Attach label keys to object.
  */
-METHOD(WindowClassKeyLabel, struct bmKeyLabel *bmkl)
+METHOD(WindowClassKeyLabel, struct bmKeyLabel *, bmkl)
 {
    WD          *wd = INST_DATA(cl, obj);
    Object      *gr;
@@ -3930,7 +3933,7 @@ METHOD(WindowClassKeyLabel, struct bmKeyLabel *bmkl)
 /*
  * Localize window.
  */
-METHOD(WindowClassLocalize, struct bmLocalize *bml)
+METHOD(WindowClassLocalize, struct bmLocalize *, bml)
 {
    WD          *wd = INST_DATA(cl, obj);
    Object      *gr;
@@ -3957,7 +3960,7 @@ METHOD(WindowClassLocalize, struct bmLocalize *bml)
 /*
  * Turn on or off buffer layering.
  */
-METHOD(WindowClassClip, struct wmClip *wmc)
+METHOD(WindowClassClip, struct wmClip *, wmc)
 {
    WD                *wd = INST_DATA(cl, obj);
    struct RastPort   *br = wd->wd_BufferRP;
@@ -4006,7 +4009,7 @@ METHOD(WindowClassClip, struct wmClip *wmc)
    return rc;
 }
 
-METHOD(WindowClassSetupGadget, struct wmSetupGadget *wmsg)
+METHOD(WindowClassSetupGadget, struct wmSetupGadget *, wmsg)
 {
    WD *wd = INST_DATA(cl, obj);
    struct TagItem  *tstate = wmsg->wmsg_Tags, *tag;

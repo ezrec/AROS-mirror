@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:08:56  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -49,7 +52,7 @@ typedef struct {
 /*
  * Create a shiny new object.
  */
-METHOD(FontReqClassNew, struct opSet *ops)
+METHOD(FontReqClassNew, struct opSet *, ops)
 {
    ULONG           rc;
    struct TagItem *tags;
@@ -92,7 +95,7 @@ METHOD(FontReqClassNew, struct opSet *ops)
 /*
  * They want us gone.
  */
-METHOD(FontReqClassDispose, Msg msg)
+METHOD(FontReqClassDispose, Msg, msg)
 {
    /*
     * The superclass does the rest.
@@ -105,7 +108,7 @@ METHOD(FontReqClassDispose, Msg msg)
  * Change one or more of the object
  * it's attributes.
  */
-METHOD(FontReqClassSetUpdate, struct opSet *ops)
+METHOD(FontReqClassSetUpdate, struct opSet *, ops)
 {
    FD             *fd = INST_DATA(cl, obj);
    struct TagItem *tag, *tstate = ops->ops_AttrList;
@@ -170,7 +173,7 @@ METHOD(FontReqClassSetUpdate, struct opSet *ops)
 /*
  * Give one of the attributes.
  */
-METHOD(FontReqClassGet, struct opGet *opg)
+METHOD(FontReqClassGet, struct opGet *, opg)
 {
    FD          *fd = INST_DATA(cl, obj);
    ULONG        rc = 1, *store = opg->opg_Storage, attr = opg->opg_AttrID;
@@ -219,7 +222,7 @@ METHOD(FontReqClassGet, struct opGet *opg)
 /*
  * Pop up the FontRequester.
  */
-METHOD(FontReqClassDoRequest, Msg msg)
+METHOD(FontReqClassDoRequest, Msg, msg)
 {
    FD                   *fd = INST_DATA(cl, obj);
    struct FontRequester *fo;

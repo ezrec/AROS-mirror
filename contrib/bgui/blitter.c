@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:00  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:46  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -50,7 +53,6 @@
 
 #include "include/classdefs.h"
 
-/* AROSFIXME: EraseBMO proto!?!? */
 //makeproto VOID ASM EraseBMO(REG(a0) BMO *bmo)
 makeproto ASM REGFUNC1(VOID, EraseBMO,
 	REGPARAM(A0, BMO *, bmo))
@@ -351,6 +353,7 @@ __saveds void Mover(void)
  * around on the screen.
  */
 
+//makeproto ASM BMO *CreateBMO(REG(a0) Object *obj, REG(a1) struct GadgetInfo * gi)
 makeproto ASM REGFUNC2(BMO *, CreateBMO,
 	REGPARAM(A0, Object *, obj),
 	REGPARAM(A1, struct GadgetInfo *, gi))
@@ -428,6 +431,7 @@ makeproto ASM REGFUNC1(VOID, DeleteBMO,
  * Move the chunk to a new location.
  */
 
+//makeproto ASM VOID MoveBMO(REG(a0) BMO *bmo, REG(D0) WORD x, REG(D1) WORD y)
 makeproto ASM REGFUNC3(VOID, MoveBMO,
 	REGPARAM(A0, BMO *, bmo),
 	REGPARAM(D0, WORD, x),

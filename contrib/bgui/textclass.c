@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -132,7 +135,7 @@ static void Text_Set(TD *td, char *text)
 /*
  * Create a shiny new object.
  */
-METHOD(TextClassNew, struct opSet *ops)
+METHOD(TextClassNew, struct opSet *, ops)
 {
    ULONG     rc;
 
@@ -154,7 +157,7 @@ METHOD(TextClassNew, struct opSet *ops)
 /*
  * Get the flags of an attribute.
  */
-METHOD(TextClassGetAttrFlags, struct rmAttr *ra)
+METHOD(TextClassGetAttrFlags, struct rmAttr *, ra)
 {
    static struct TagItem chart[] =
    {
@@ -176,7 +179,7 @@ METHOD(TextClassGetAttrFlags, struct rmAttr *ra)
 /*
  * Set standard attributes.
  */
-METHOD(TextClassSet, struct rmAttr *ra)
+METHOD(TextClassSet, struct rmAttr *, ra)
 {
    return BGUI_SetAttrChart(cl, obj, ra);
 }
@@ -185,7 +188,7 @@ METHOD(TextClassSet, struct rmAttr *ra)
 /*
  * Set custom attributes.
  */
-METHOD(TextClassSetCustom, struct rmAttr *ra)
+METHOD(TextClassSetCustom, struct rmAttr *, ra)
 {
    TD               *td = INST_DATA(cl, obj);
    ULONG             attr = ra->ra_Attr->ti_Tag;
@@ -211,7 +214,7 @@ METHOD(TextClassSetCustom, struct rmAttr *ra)
 /*
  * Get an attribute.
  */
-METHOD(TextClassGet, struct rmAttr *ra)
+METHOD(TextClassGet, struct rmAttr *, ra)
 {
    return BGUI_GetAttrChart(cl, obj, ra);
 }
@@ -220,7 +223,7 @@ METHOD(TextClassGet, struct rmAttr *ra)
 /*
  * Get custom attributes.
  */
-METHOD(TextClassGetCustom, struct rmAttr *ra)
+METHOD(TextClassGetCustom, struct rmAttr *, ra)
 {
    TD               *td = INST_DATA(cl, obj);
    ULONG             attr = ra->ra_Attr->ti_Tag;
@@ -239,7 +242,7 @@ METHOD(TextClassGetCustom, struct rmAttr *ra)
 /*
  * Dispose of the object.
  */
-METHOD(TextClassDispose, Msg msg)
+METHOD(TextClassDispose, Msg, msg)
 {
    TD       *td = INST_DATA(cl, obj);
 
@@ -258,7 +261,7 @@ METHOD(TextClassDispose, Msg msg)
 /*
  * Render a text graphic.
  */
-METHOD(TextClassRender, struct tmRender *tmr)
+METHOD(TextClassRender, struct tmRender *, tmr)
 {
    TD                *td = INST_DATA(cl, obj);
    UBYTE             *text;
@@ -275,7 +278,7 @@ METHOD(TextClassRender, struct tmRender *tmr)
 /*
  * Render a text graphic.
  */
-METHOD(TextClassDimensions, struct tmDimensions *tmd)
+METHOD(TextClassDimensions, struct tmDimensions *, tmd)
 {
    TD                *td = INST_DATA(cl, obj);
    UBYTE             *text;
@@ -292,7 +295,7 @@ METHOD(TextClassDimensions, struct tmDimensions *tmd)
 ///
 /// BASE_LOCALIZE
 
-METHOD(TextClassLocalize, struct bmLocalize *bml)
+METHOD(TextClassLocalize, struct bmLocalize *, bml)
 {
    TD        *td = INST_DATA(cl, obj);
    ULONG      rc = 0;
@@ -348,6 +351,7 @@ makeproto Class *InitTextClass(void)
  * of an text with info-style command sequences.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH4(VOID, BGUI_InfoTextSize,
     AROS_LHA(struct RastPort *, rp, A0),
     AROS_LHA(UBYTE *, text, A1),
@@ -377,6 +381,7 @@ makeproto SAVEDS ASM VOID BGUI_InfoTextSize(REG(a0) struct RastPort *rp, REG(a1)
  * trucated when out of bounds.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH4(VOID, BGUI_InfoText,
     AROS_LHA(struct RastPort *, rp, A0),
     AROS_LHA(UBYTE *, text, A1),

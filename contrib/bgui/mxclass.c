@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -71,7 +74,7 @@ STATIC ULONG id2act[] = {
 /*
  * Module prototypes.
  */
-METHOD(MXClassSetUpdate,   struct opUpdate *);
+METHOD(MXClassSetUpdate,   struct opUpdate *, );
 ///
 /// AddMXObjects()
 /*
@@ -190,7 +193,7 @@ STATIC ASM REGFUNCS2(BOOL, AddMXObjects,
 /*
  * Create a shiny new object.
  */
-METHOD(MXClassNew, struct opSet *ops)
+METHOD(MXClassNew, struct opSet *, ops)
 {
    MD             *md;
    struct TagItem *tstate, *tags = ops->ops_AttrList, *tag;
@@ -329,7 +332,7 @@ METHOD(MXClassNew, struct opSet *ops)
 /*
  * Change the object attributes.
  */
-METHOD(MXClassSetUpdate, struct opUpdate *opu)
+METHOD(MXClassSetUpdate, struct opUpdate *, opu)
 {
    MD                *md = INST_DATA(cl, obj);
    struct GadgetInfo *gi = opu->opu_GInfo;
@@ -423,7 +426,7 @@ METHOD(MXClassSetUpdate, struct opUpdate *opu)
 /*
  * Get an attribute.
  */
-METHOD(MXClassGet, struct opGet *opg)
+METHOD(MXClassGet, struct opGet *, opg)
 {
    MD       *md = INST_DATA(cl, obj);
    ULONG     rc = 1;
@@ -445,7 +448,7 @@ METHOD(MXClassGet, struct opGet *opg)
 /*
  * Dispose of the object.
  */
-METHOD(MXClassDispose, Msg msg)
+METHOD(MXClassDispose, Msg, msg)
 {
    MD       *md = INST_DATA(cl, obj);
 
@@ -459,7 +462,7 @@ METHOD(MXClassDispose, Msg msg)
 /*
  * Key activation.
  */
-METHOD(MXClassKeyActive, struct wmKeyInput *wmki)
+METHOD(MXClassKeyActive, struct wmKeyInput *, wmki)
 {
    MD       *md   = INST_DATA(cl, obj);
    UWORD     qual = wmki->wmki_IEvent->ie_Qualifier;

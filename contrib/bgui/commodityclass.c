@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:47  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -136,7 +139,7 @@ makeproto Class *InitCxClass(void)
 /*
  * Create a shiny new object.
  */
-METHOD(CommClassNew, struct opSet *ops)
+METHOD(CommClassNew, struct opSet *, ops)
 {
    CD                *cd;
    struct TagItem    *tstate = ops->ops_AttrList, *tag;
@@ -218,7 +221,7 @@ METHOD(CommClassNew, struct opSet *ops)
 /*
  * Get rid of an object.
  */
-METHOD(CommClassDispose, Msg msg)
+METHOD(CommClassDispose, Msg,  msg)
 {
    CD                *cd = INST_DATA( cl, obj );
    struct MsgPort    *mp;

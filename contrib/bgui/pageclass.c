@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -192,7 +195,7 @@ STATIC ASM REGFUNC1(VOID, DoMembers,
 /*
  * Create a shiny new object.
  */
-METHOD(PageClassNew, struct opSet *ops)
+METHOD(PageClassNew, struct opSet *, ops)
 {
    PD                *pd;
    struct TagItem    *tags, *tag;
@@ -261,7 +264,7 @@ METHOD(PageClassNew, struct opSet *ops)
 /*
  * Set/update page attributes.
  */
-METHOD(PageClassSetUpdate, struct opUpdate *opu)
+METHOD(PageClassSetUpdate, struct opUpdate *, opu)
 {
    PD                *pd = INST_DATA( cl, obj );
    struct TagItem    *attr = opu->opu_AttrList, *tstate = attr, *tag;
@@ -332,7 +335,7 @@ METHOD(PageClassSetUpdate, struct opUpdate *opu)
 /*
  * Render the page.
  */
-METHOD(PageClassRender, struct bmRender *bmr)
+METHOD(PageClassRender, struct bmRender *, bmr)
 {
    PD                *pd = INST_DATA(cl, obj);
    BC                *bc = BASE_DATA(obj);
@@ -366,7 +369,7 @@ METHOD(PageClassRender, struct bmRender *bmr)
 /*
  * They want to know something.
  */
-METHOD(PageClassGet, struct opGet *opg )
+METHOD(PageClassGet, struct opGet *, opg )
 {
    PD       *pd = INST_DATA(cl, obj);
    ULONG     rc = 1, *store = opg->opg_Storage;
@@ -390,7 +393,7 @@ METHOD(PageClassGet, struct opGet *opg )
  * Dispose of all objects added to the page-list
  * and then dispose of the page itself.
  */
-METHOD(PageClassDispose, Msg msg)
+METHOD(PageClassDispose, Msg, msg)
 {
    PD       *pd = INST_DATA(cl, obj);
    PM       *pm;
@@ -425,7 +428,7 @@ METHOD(PageClassDispose, Msg msg)
  * They want to know something about
  * our dimensions.
  */
-METHOD(PageClassDimensions, struct bmDimensions *bmd)
+METHOD(PageClassDimensions, struct bmDimensions *, bmd)
 {
    PD              *pd = INST_DATA(cl, obj);
    struct BaseInfo *bi = bmd->bmd_BInfo;
@@ -447,7 +450,7 @@ METHOD(PageClassDimensions, struct bmDimensions *bmd)
 /*
  * Get the object under the mouse.
  */
-METHOD(PageClassWhichObject, struct grmWhichObject *grwo)
+METHOD(PageClassWhichObject, struct grmWhichObject *, grwo)
 {
    PD       *pd = INST_DATA(cl, obj);
    Object   *ob = pd->pd_Active->pm_Object;
@@ -467,7 +470,7 @@ METHOD(PageClassWhichObject, struct grmWhichObject *grwo)
 /*
  * Forward a message to the active page.
  */
-METHOD(PageClassForward, Msg msg)
+METHOD(PageClassForward, Msg, msg)
 {
    PD       *pd = INST_DATA(cl, obj);
    ULONG     rc = GMR_NOREUSE;
@@ -495,7 +498,7 @@ METHOD(PageClassForward, Msg msg)
 /*
  * Pass the message to all submembers.
  */
-METHOD(PageClassAll, Msg msg)
+METHOD(PageClassAll, Msg, msg)
 {
    PD       *pd = INST_DATA(cl, obj);
    PM       *pm;
@@ -512,7 +515,7 @@ METHOD(PageClassAll, Msg msg)
 /*
  * Inhibit an entire page object.
  */
-METHOD(PageClassInhibit, struct bmInhibit *bmi)
+METHOD(PageClassInhibit, struct bmInhibit *, bmi)
 {
    PD       *pd = INST_DATA(cl, obj);
    PM       *pm, *active = pd->pd_Active;
@@ -532,7 +535,7 @@ METHOD(PageClassInhibit, struct bmInhibit *bmi)
 }
 ///
 /// BASE_IS_MULTI
-METHOD(PageClassIsMulti, Msg msg)
+METHOD(PageClassIsMulti, Msg, msg)
 {
    return TRUE;
 }
@@ -543,7 +546,7 @@ METHOD(PageClassIsMulti, Msg msg)
 /*
  * Add a member to the group.
  */
-METHOD(PageClassAddMember, struct grmAddMember *grma)
+METHOD(PageClassAddMember, struct grmAddMember *, grma)
 {
    PD *pd = INST_DATA(cl, obj);
    PM *pm;
@@ -588,7 +591,7 @@ METHOD(PageClassAddMember, struct grmAddMember *grma)
 /*
  * Remove an object from the list.
  */
-METHOD(PageClassRemMember, struct grmRemMember *grmr)
+METHOD(PageClassRemMember, struct grmRemMember *, grmr)
 {
    PD *pd = INST_DATA(cl, obj);
    PM *pm;
@@ -619,7 +622,7 @@ METHOD(PageClassRemMember, struct grmRemMember *grmr)
 /*
  * Insert a member in the group.
  */
-METHOD(PageClassInsert, struct grmInsertMember *grmi)
+METHOD(PageClassInsert, struct grmInsertMember *, grmi)
 {
    PD *pd = INST_DATA(cl, obj);
    PM *pm,*new_pm;
@@ -673,7 +676,7 @@ METHOD(PageClassInsert, struct grmInsertMember *grmi)
 /*
  * Replace a member in the group.
  */
-METHOD(PageClassReplace, struct grmReplaceMember *grrm)
+METHOD(PageClassReplace, struct grmReplaceMember *, grrm)
 {
    PD *pd = INST_DATA(cl, obj);
    PM *pm;

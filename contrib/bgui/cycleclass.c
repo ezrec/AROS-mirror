@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:47  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -78,7 +81,7 @@ typedef struct {
 /*
  * Create a new object.
  */
-METHOD(CycleClassNew, struct opSet *ops)
+METHOD(CycleClassNew, struct opSet *, ops)
 {
    CD             *cd;
    struct TagItem *tags, *tag;
@@ -135,7 +138,7 @@ METHOD(CycleClassNew, struct opSet *ops)
 /*
  * Change the object attributes.
  */
-METHOD(CycleClassSetUpdate, struct opUpdate *opu)
+METHOD(CycleClassSetUpdate, struct opUpdate *, opu)
 {
    CD                 *cd = INST_DATA(cl, obj);
    struct TagItem     *tstate = opu->opu_AttrList, *tag;
@@ -364,7 +367,7 @@ STATIC VOID RenderPopupEntry(struct BaseInfo *bi, CD *cd, ULONG num, BOOL sel)
 /*
  * Render the object.
  */
-METHOD(CycleClassRenderX, struct gpRender *gpr)
+METHOD(CycleClassRenderX, struct gpRender *, gpr)
 {
    CD              *cd = INST_DATA(cl, obj);
 
@@ -377,7 +380,7 @@ METHOD(CycleClassRenderX, struct gpRender *gpr)
 /*
  * Render the object.
  */
-METHOD(CycleClassRender, struct bmRender *bmr)
+METHOD(CycleClassRender, struct bmRender *, bmr)
 {
    CD              *cd = INST_DATA(cl, obj);
    BC              *bc = BASE_DATA(obj);
@@ -418,7 +421,7 @@ METHOD(CycleClassRender, struct bmRender *bmr)
 /*
  * Open the popup-window.
  */
-METHOD(OpenPopupWindow, struct gpInput *gpi)
+METHOD(OpenPopupWindow, struct gpInput *, gpi)
 {
    CD                   *cd = INST_DATA(cl, obj);
    BC                   *bc = BASE_DATA(obj);
@@ -550,7 +553,7 @@ METHOD(OpenPopupWindow, struct gpInput *gpi)
 /*
  * Go in active mode.
  */
-METHOD(CycleClassGoActive, struct gpInput *gpi)
+METHOD(CycleClassGoActive, struct gpInput *, gpi)
 {
    CD          *cd = INST_DATA(cl, obj);
    BC          *bc = BASE_DATA(obj);
@@ -622,7 +625,7 @@ STATIC ASM REGFUNC2(UWORD, Selected,
 /*
  * Handle the gadget input.
  */
-METHOD(CycleClassHandleInput, struct gpInput *gpi)
+METHOD(CycleClassHandleInput, struct gpInput *, gpi)
 {
    CD                   *cd = INST_DATA(cl, obj);
    struct gpHitTest      gph;
@@ -810,7 +813,7 @@ METHOD(CycleClassHandleInput, struct gpInput *gpi)
 ///
 /// GM_GOINACTIVE
 
-METHOD(CycleClassGoInactive, struct gpGoInactive *gpgi)
+METHOD(CycleClassGoInactive, struct gpGoInactive *, gpgi)
 {
    CD          *cd = INST_DATA( cl, obj );
 
@@ -848,7 +851,7 @@ METHOD(CycleClassGoInactive, struct gpGoInactive *gpgi)
 /*
  * Get an attribute.
  */
-METHOD(CycleClassGet, struct opGet *opg)
+METHOD(CycleClassGet, struct opGet *, opg)
 {
    CD        *cd = INST_DATA(cl, obj);
    ULONG      rc = 1, *store = opg->opg_Storage;
@@ -878,7 +881,7 @@ METHOD(CycleClassGet, struct opGet *opg)
 /*
  * Dispose of the object.
  */
-METHOD(CycleClassDispose, Msg msg)
+METHOD(CycleClassDispose, Msg, msg)
 {
    CD       *cd = INST_DATA(cl, obj);
 
@@ -897,7 +900,7 @@ METHOD(CycleClassDispose, Msg msg)
 /*
  * The object size is requested.
  */
-METHOD(CycleClassDimensions, struct bmDimensions *bmd)
+METHOD(CycleClassDimensions, struct bmDimensions *, bmd)
 {
    CD                *cd = INST_DATA(cl, obj);
    struct BaseInfo   *bi = bmd->bmd_BInfo;
@@ -928,7 +931,7 @@ METHOD(CycleClassDimensions, struct bmDimensions *bmd)
 /*
  * Key activation.
  */
-METHOD(CycleClassKeyActive, struct wmKeyInput *wmki)
+METHOD(CycleClassKeyActive, struct wmKeyInput *, wmki)
 {
    CD       *cd = INST_DATA(cl, obj);
    UWORD     qual = wmki->wmki_IEvent->ie_Qualifier;

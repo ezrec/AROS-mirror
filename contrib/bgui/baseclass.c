@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:00  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:46  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -172,6 +175,7 @@ makeproto ULONG CalcDimensions(Class *cl, Object *obj, struct bmDimensions *bmd,
 ///
 
 #ifdef _AROS
+makearosproto
 AROS_LH3(VOID, BGUI_PostRender,
     AROS_LHA(Class *, cl, A0),
     AROS_LHA(Object *, obj, A2),
@@ -195,7 +199,7 @@ makeproto SAVEDS ASM VOID BGUI_PostRender(REG(a0) Class *cl, REG(a2) Object *obj
 /*
  * Refresh after a set.
  */
-METHOD(BaseClassRefresh, struct rmRefresh *rr)
+METHOD(BaseClassRefresh, struct rmRefresh *, rr)
 {
    ULONG rc = rr->rr_Flags;
 
@@ -212,7 +216,7 @@ METHOD(BaseClassRefresh, struct rmRefresh *rr)
 /*
  * Create a shiny new object.
  */
-METHOD(BaseClassNew, struct opSet *ops)
+METHOD(BaseClassNew, struct opSet *, ops)
 {
    BD                *bd;
    ULONG              rc;
@@ -247,7 +251,7 @@ METHOD(BaseClassNew, struct opSet *ops)
 /*
  * Get an attribute.
  */
-METHOD(BaseClassGet, struct rmAttr *ra)
+METHOD(BaseClassGet, struct rmAttr *, ra)
 {
    BD       *bd = (BD *)INST_DATA(cl, obj);
    ULONG     rc, *store;
@@ -261,7 +265,7 @@ METHOD(BaseClassGet, struct rmAttr *ra)
 /*
  * Get custom attributes.
  */
-METHOD(BaseClassGetCustom, struct rmAttr *ra)
+METHOD(BaseClassGetCustom, struct rmAttr *, ra)
 {
    BD               *bd = (BD *)INST_DATA(cl, obj);
    ULONG             attr  = ra->ra_Attr->ti_Tag;
@@ -281,7 +285,7 @@ METHOD(BaseClassGetCustom, struct rmAttr *ra)
 /*
  * Get the flags of an attribute.
  */
-METHOD(BaseClassGetAttrFlags, struct rmAttr *ra)
+METHOD(BaseClassGetAttrFlags, struct rmAttr *, ra)
 {
    static struct TagItem chart[] =
    {
@@ -339,7 +343,7 @@ METHOD(BaseClassGetAttrFlags, struct rmAttr *ra)
 /*
  * Set standard attributes.
  */
-METHOD(BaseClassSet, struct rmAttr *ra)
+METHOD(BaseClassSet, struct rmAttr *, ra)
 {
    BD               *bd;
    ULONG             attr, data, rc;
@@ -417,7 +421,7 @@ METHOD(BaseClassSet, struct rmAttr *ra)
 /*
  * Set custom attributes.
  */
-METHOD(BaseClassSetCustom, struct rmAttr *ra)
+METHOD(BaseClassSetCustom, struct rmAttr *, ra)
 {
    BD               *bd = (BD *)INST_DATA(cl, obj);
    struct TextAttr  *ta;
@@ -500,7 +504,7 @@ METHOD(BaseClassSetCustom, struct rmAttr *ra)
 }
 ///
 /// OM_NOTIFY
-METHOD(BaseClassNotify, struct opUpdate *opu)
+METHOD(BaseClassNotify, struct opUpdate *, opu)
 {
    BD       *bd = INST_DATA(cl, obj);
 
@@ -518,7 +522,7 @@ METHOD(BaseClassNotify, struct opUpdate *opu)
 /*
  * They do not need us anymore.
  */
-METHOD(BaseClassDispose, Msg msg)
+METHOD(BaseClassDispose, Msg, msg)
 {
    BD       *bd = (BD *)INST_DATA(cl, obj);
 
@@ -545,7 +549,7 @@ METHOD(BaseClassDispose, Msg msg)
 /*
  * Are we hit?
  */
-METHOD(BaseClassHitTest, struct gpHitTest *gpht)
+METHOD(BaseClassHitTest, struct gpHitTest *, gpht)
 {
    BD          *bd   = INST_DATA(cl, obj);
    struct IBox *ibox = (bd->bd_Flags & BDF_LABEL_CLICK) ? &bd->bd_OuterBox : &bd->bd_HitBox;
@@ -563,7 +567,7 @@ METHOD(BaseClassHitTest, struct gpHitTest *gpht)
 /*
  * Are we hit?
  */
-METHOD(BaseClassHelpTest, struct gpHitTest *gpht)
+METHOD(BaseClassHelpTest, struct gpHitTest *, gpht)
 {
    BD          *bd   = INST_DATA(cl, obj);
    struct IBox *ibox = &bd->bd_OuterBox;
@@ -581,7 +585,7 @@ METHOD(BaseClassHelpTest, struct gpHitTest *gpht)
 /*
  * Render the object.
  */
-METHOD(BaseClassRenderX, struct gpRender *gpr)
+METHOD(BaseClassRenderX, struct gpRender *, gpr)
 {
    BD                *bd = INST_DATA(cl, obj);
    struct RastPort   *rp = NULL;
@@ -726,7 +730,7 @@ METHOD(BaseClassRenderX, struct gpRender *gpr)
 /*
  * Render the baseclass imagery.
  */
-METHOD(BaseClassLayout, struct bmLayout *bml)
+METHOD(BaseClassLayout, struct bmLayout *, bml)
 {
    BD              *bd = INST_DATA(cl, obj);
    int              dw, dh;
@@ -817,7 +821,7 @@ METHOD(BaseClassLayout, struct bmLayout *bml)
 /*
  * Render the baseclass imagery.
  */
-METHOD(BaseClassRender, struct bmRender *bmr)
+METHOD(BaseClassRender, struct bmRender *, bmr)
 {
    BD                *bd = INST_DATA(cl, obj), *bd2;
    struct BaseInfo   *bi = bmr->bmr_BInfo;
@@ -922,7 +926,7 @@ METHOD(BaseClassRender, struct bmRender *bmr)
 /*
  * Show help.
  */
-METHOD(BaseClassHelp, struct bmShowHelp *bsh)
+METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
 {
    BD                   *bd = INST_DATA(cl, obj);
    struct NewAmigaGuide  nag = { NULL };
@@ -1018,7 +1022,7 @@ METHOD(BaseClassHelp, struct bmShowHelp *bsh)
 /*
  * They want to know our minimum dimensions.
  */                      
-METHOD(BaseClassDimensions, struct bmDimensions *bmd)
+METHOD(BaseClassDimensions, struct bmDimensions *, bmd)
 {
    BD           *bd = INST_DATA(cl, obj);
 
@@ -1041,7 +1045,7 @@ METHOD(BaseClassDimensions, struct bmDimensions *bmd)
 /*
  * They want to know our minimum dimensions.
  */
-METHOD(BaseClassDimensionsX, struct grmDimensions *dim)
+METHOD(BaseClassDimensionsX, struct grmDimensions *, dim)
 {
    BD                *bd = INST_DATA(cl, obj);
    struct BaseInfo   *bi;
@@ -1086,7 +1090,7 @@ METHOD(BaseClassDimensionsX, struct grmDimensions *dim)
 ///
 /// BASE_RELAYOUT
 
-METHOD(BaseClassRelayout, struct bmRelayout *bmr)
+METHOD(BaseClassRelayout, struct bmRelayout *, bmr)
 {
    BD                *bd = INST_DATA(cl, obj);
    UWORD              minw, minh, maxw = 0xFFFF, maxh = 0xFFFF;
@@ -1134,7 +1138,7 @@ METHOD(BaseClassRelayout, struct bmRelayout *bmr)
 /*
  * Left extention request.
  */
-METHOD(BaseClassLeftExt, struct bmLeftExt *le)
+METHOD(BaseClassLeftExt, struct bmLeftExt *, le)
 {
    BD            *bd = INST_DATA(cl, obj);
    UWORD          dummy;
@@ -1170,7 +1174,7 @@ METHOD(BaseClassLeftExt, struct bmLeftExt *le)
 /*
  * No key input.
  */
-METHOD(BaseClassKeyActive, struct wmKeyInput *wmki)
+METHOD(BaseClassKeyActive, struct wmKeyInput *, wmki)
 {
    return WMKF_CANCEL;
 }
@@ -1190,7 +1194,7 @@ METHOD(BaseClassKeyActive, struct wmKeyInput *wmki)
 /*
  * Go active.
  */
-METHOD(BaseClassGoActive, struct gpInput *gpi)
+METHOD(BaseClassGoActive, struct gpInput *, gpi)
 {
    BD           *bd = INST_DATA(cl, obj);
 
@@ -1224,7 +1228,7 @@ METHOD(BaseClassGoActive, struct gpInput *gpi)
 /*
  * Handle input.
  */
-METHOD(BaseClassDragging, struct gpInput *gpi)
+METHOD(BaseClassDragging, struct gpInput *, gpi)
 {
    BD                *bd = INST_DATA(cl, obj);
    BMO               *bmo = bd->bd_BMO;
@@ -1390,7 +1394,7 @@ METHOD(BaseClassDragging, struct gpInput *gpi)
 ///
 /// GM_GOINACTIVE
 
-METHOD(BaseClassGoInactive, struct gpGoInactive *gpgi)
+METHOD(BaseClassGoInactive, struct gpGoInactive *, gpgi)
 {
    BD       *bd = INST_DATA(cl, obj);
 
@@ -1419,7 +1423,7 @@ METHOD(BaseClassGoInactive, struct gpGoInactive *gpgi)
  * Query request if this object is willing or able
  * to receive the drag-object data.
  */
-METHOD(BaseClassDragQuery, struct bmDragPoint *bmdp)
+METHOD(BaseClassDragQuery, struct bmDragPoint *, bmdp)
 {
    BD          *bd = INST_DATA(cl, obj);
    ULONG        rc = BQR_REJECT;
@@ -1446,7 +1450,7 @@ METHOD(BaseClassDragQuery, struct bmDragPoint *bmdp)
  * Show us as being the active receiver of the
  * drag object.
  */
-METHOD(BaseClassDragActive, struct bmDragMsg *bmdm)
+METHOD(BaseClassDragActive, struct bmDragMsg *, bmdm)
 {
    BD                   *bd = INST_DATA(cl, obj);
    struct BaseInfo      *bi;
@@ -1477,7 +1481,7 @@ METHOD(BaseClassDragActive, struct bmDragMsg *bmdm)
  * We return BUR_CONTINUE while the coordinates are
  * still in the hitbox bounds.
  */
-METHOD(BaseClassDragUpdate, struct bmDragPoint *bmdp)
+METHOD(BaseClassDragUpdate, struct bmDragPoint *, bmdp)
 {
    BD                *bd = INST_DATA(cl, obj);
    struct BaseInfo   *bi;
@@ -1509,7 +1513,7 @@ METHOD(BaseClassDragUpdate, struct bmDragPoint *bmdp)
  * We beep the display when we are dropped and
  * the message get's here.
  */
-METHOD(BaseClassDragDropped, struct bmDropped *bmd)
+METHOD(BaseClassDragDropped, struct bmDropped *, bmd)
 {
    /*
     * Only beep our screen.
@@ -1525,7 +1529,7 @@ METHOD(BaseClassDragDropped, struct bmDropped *bmd)
  * Deactivate us as being the active receiver of the
  * drag object.
  */
-METHOD(BaseClassDragInactive, struct bmDragMsg *bmdm)
+METHOD(BaseClassDragInactive, struct bmDragMsg *, bmdm)
 {
    BD                *bd = INST_DATA(cl, obj);
    struct GadgetInfo *gi = bmdm->bmdm_GInfo;
@@ -1556,7 +1560,7 @@ METHOD(BaseClassDragInactive, struct bmDragMsg *bmdm)
  * around. The baseclass defaults to a bitmap containing
  * the hitbox imagery of the object.
  */
-METHOD(BaseClassGetObject, struct bmGetDragObject *bmgo)
+METHOD(BaseClassGetObject, struct bmGetDragObject *, bmgo)
 {
    BD                *bd = INST_DATA(cl, obj);
    struct GadgetInfo *gi = bmgo->bmgo_GInfo, tgi = *gi;
@@ -1602,7 +1606,7 @@ METHOD(BaseClassGetObject, struct bmGetDragObject *bmgo)
 /*
  * Free the bitmap allocate with BASE_GETDRAGOBJECT.
  */
-METHOD(BaseClassFreeObject, struct bmFreeDragObject *bmfo)
+METHOD(BaseClassFreeObject, struct bmFreeDragObject *, bmfo)
 {
    /*
     * Simply free the bitmap created
@@ -1622,7 +1626,7 @@ static void MoveBox(struct IBox *box, struct bmMoveBounds *bmmb)
    box->Height += bmmb->bmmb_ChangeH;
 }
 
-METHOD(BaseClassMoveBounds, struct bmMoveBounds *bmmb)
+METHOD(BaseClassMoveBounds, struct bmMoveBounds *, bmmb)
 {
    BD       *bd = INST_DATA(cl, obj);
 
@@ -1638,7 +1642,7 @@ METHOD(BaseClassMoveBounds, struct bmMoveBounds *bmmb)
 /*
  * Does object has the proper key?
  */
-METHOD(BaseClassFindKey, struct bmFindKey *bmfk)
+METHOD(BaseClassFindKey, struct bmFindKey *, bmfk)
 {
 #define QUAL_SHIFT (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT)
 #define QUAL_ALT (IEQUALIFIER_LALT|IEQUALIFIER_RALT)
@@ -1686,7 +1690,7 @@ METHOD(BaseClassFindKey, struct bmFindKey *bmfk)
 /*
  * Attach key from label to object.
  */
-METHOD(BaseClassKeyLabel, struct bmKeyLabel *bmkl)
+METHOD(BaseClassKeyLabel, struct bmKeyLabel *, bmkl)
 {
    BD         *bd = INST_DATA(cl, obj);
    ULONG       rc = 0;
@@ -1711,7 +1715,7 @@ METHOD(BaseClassKeyLabel, struct bmKeyLabel *bmkl)
 /*
  * Attach key from label to object.
  */
-METHOD(BaseClassLocalize, struct bmLocalize *bml)
+METHOD(BaseClassLocalize, struct bmLocalize *, bml)
 {
    BD       *bd = INST_DATA(cl, obj);
 
@@ -1731,7 +1735,7 @@ METHOD(BaseClassLocalize, struct bmLocalize *bml)
 /*
  * Inhibit/uninhibit object.
  */
-METHOD(BaseClassInhibit, struct bmInhibit *bmi)
+METHOD(BaseClassInhibit, struct bmInhibit *, bmi)
 {
    BD       *bd = INST_DATA(cl, obj);
 
@@ -1742,7 +1746,7 @@ METHOD(BaseClassInhibit, struct bmInhibit *bmi)
 }
 ///
 /// BASE_IS_MULTI
-METHOD(BaseClassIsMulti, Msg msg)
+METHOD(BaseClassIsMulti, Msg, msg)
 {
    return FALSE;
 }

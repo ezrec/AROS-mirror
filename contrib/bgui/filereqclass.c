@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:08:53  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -48,7 +51,7 @@ typedef struct {
 /*
  * Create a shiny new object.
  */
-METHOD(FileReqClassNew, struct opSet *ops)
+METHOD(FileReqClassNew, struct opSet *, ops)
 {
    ULONG           rc;
    struct TagItem *tags;
@@ -81,7 +84,7 @@ METHOD(FileReqClassNew, struct opSet *ops)
 /*
  * They want us gone.
  */
-METHOD(FileReqClassDispose, Msg msg)
+METHOD(FileReqClassDispose, Msg, msg)
 {
    /*
     * The superclass does the rest.
@@ -94,7 +97,7 @@ METHOD(FileReqClassDispose, Msg msg)
  * Change one or more of the object
  * it's attributes.
  */
-METHOD(FileReqClassSetUpdate, struct opSet *ops)
+METHOD(FileReqClassSetUpdate, struct opSet *, ops)
 {
    FD             *fd = INST_DATA(cl, obj);
    struct TagItem *tag, *tstate = ops->ops_AttrList;
@@ -142,7 +145,7 @@ METHOD(FileReqClassSetUpdate, struct opSet *ops)
 /*
  * Give one of the attributes.
  */
-METHOD(FileReqClassGet, struct opGet *opg)
+METHOD(FileReqClassGet, struct opGet *, opg)
 {
    FD          *fd = INST_DATA(cl, obj);
    ULONG        rc = 1, *store = opg->opg_Storage, attr = opg->opg_AttrID;
@@ -178,7 +181,7 @@ METHOD(FileReqClassGet, struct opGet *opg)
 /*
  * Pop up the filerequester.
  */
-METHOD(FileReqClassDoRequest, Msg msg)
+METHOD(FileReqClassDoRequest, Msg, msg)
 {
    FD                   *fd = INST_DATA(cl, obj);
    struct FileRequester *fr;

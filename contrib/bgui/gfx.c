@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:47  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -476,6 +479,7 @@ makeproto ASM REGFUNC3(ULONG, GadgetState,
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH6(VOID, BGUI_FillRectPattern,
     AROS_LHA(struct RastPort *, r, A1),
     AROS_LHA(struct bguiPattern *, bp, A0),

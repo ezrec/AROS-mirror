@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:10:08  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -53,7 +56,7 @@ typedef struct {
 /*
  * Create a shiny new object.
  */
-METHOD(ScreenReqClassNew, struct opSet *ops)
+METHOD(ScreenReqClassNew, struct opSet *, ops)
 {
    ULONG           rc;
    struct TagItem *tags;
@@ -86,7 +89,7 @@ METHOD(ScreenReqClassNew, struct opSet *ops)
 /*
  * They want us gone.
  */
-METHOD(ScreenReqClassDispose, Msg msg)
+METHOD(ScreenReqClassDispose, Msg, msg)
 {
    /*
     * The superclass does the rest.
@@ -99,7 +102,7 @@ METHOD(ScreenReqClassDispose, Msg msg)
  * Change one or more of the object
  * it's attributes.
  */
-METHOD(ScreenReqClassSetUpdate, struct opSet *ops)
+METHOD(ScreenReqClassSetUpdate, struct opSet *, ops)
 {
    SD             *sd = INST_DATA(cl, obj);
    struct TagItem *tstate = ops->ops_AttrList, *tag;
@@ -149,7 +152,7 @@ METHOD(ScreenReqClassSetUpdate, struct opSet *ops)
 /*
  * Give one of the attributes.
  */
-METHOD(ScreenReqClassGet, struct opGet *opg)
+METHOD(ScreenReqClassGet, struct opGet *, opg)
 {
    SD          *sd = INST_DATA(cl, obj);
    ULONG        rc = 1, *store = opg->opg_Storage, attr = opg->opg_AttrID;
@@ -191,7 +194,7 @@ METHOD(ScreenReqClassGet, struct opGet *opg)
 /*
  * Pop up the ScreenRequester.
  */
-METHOD(ScreenReqClassDoRequest, Msg msg)
+METHOD(ScreenReqClassDoRequest, Msg, msg)
 {
    SD                         *sd = INST_DATA(cl, obj);
    struct ScreenModeRequester *sm;

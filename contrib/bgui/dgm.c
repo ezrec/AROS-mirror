@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:47  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -47,7 +50,7 @@ typedef struct {
 }  DD;
 ///
 /// OM_SET
-METHOD(DGMClassSet, struct opSet *ops)
+METHOD(DGMClassSet, struct opSet *, ops)
 {
    DD                  *dd = INST_DATA(cl, obj);
    struct TagItem      *tag, *tstate = ops->ops_AttrList;
@@ -158,6 +161,7 @@ makeproto ULONG myDoGadgetMethod(Object *obj, struct Window *win, struct Request
  * Emulate the intuition DoGadgetMethod() call.
  */
 #ifdef _AROS
+makearosproto
 AROS_LHA4(ULONG, BGUI_DoGadgetMethodA,
     AROS_LHA(Object *, obj, A0),
     AROS_LHA(struct Window *, win, A1),
@@ -217,7 +221,7 @@ makeproto SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *obj, REG(a1) st
 }
 ///
 /// GM_GOACTIVE, GM_HANDLEINPUT
-METHOD(DGMClassGoActive, struct gpInput *gpi2)
+METHOD(DGMClassGoActive, struct gpInput *, gpi2)
 {
    DD             *dd = INST_DATA(cl, obj);
    struct gpInput  gpi = *gpi2;
@@ -247,7 +251,7 @@ METHOD(DGMClassGoActive, struct gpInput *gpi2)
 }
 ///
 /// GM_GOINACTIVE
-METHOD(DGMClassGoInactive, Msg msg)
+METHOD(DGMClassGoInactive, Msg, msg)
 {
    DD          *dd   = INST_DATA(cl, obj);
    ULONG        rc   = 0, id, mouseact = 0, report = FALSE;

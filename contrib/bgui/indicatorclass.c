@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:09:12  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -67,7 +70,7 @@ static ULONG IndicatorPackTable[] =
 /*
  * Create a shiny new object.
  */
-METHOD(IClassNew, struct opSet *ops)
+METHOD(IClassNew, struct opSet *, ops)
 {
    ID             *id;
    struct TagItem *tags;
@@ -111,7 +114,7 @@ METHOD(IClassNew, struct opSet *ops)
 /*
  * Hmm, they want us out of here.
  */
-METHOD(IClassDispose, Msg msg)
+METHOD(IClassDispose, Msg, msg)
 {
    ID    *id = INST_DATA(cl, obj);
 
@@ -131,7 +134,7 @@ METHOD(IClassDispose, Msg msg)
 /*
  * Set/Update object attributes.
  */
-METHOD(IClassSetUpdate, struct opUpdate *opu)
+METHOD(IClassSetUpdate, struct opUpdate *, opu)
 {
    ID             *id = INST_DATA(cl, obj);
    struct TagItem *tstate = opu->opu_AttrList, *tag;
@@ -190,7 +193,7 @@ METHOD(IClassSetUpdate, struct opUpdate *opu)
 }
 ///
 /// OM_GET
-METHOD(IClassGet, struct opGet *opg)
+METHOD(IClassGet, struct opGet *, opg)
 {
    ID          *id = INST_DATA(cl, obj);
    ULONG        rc = 1, attr = opg->opg_AttrID, *store = opg->opg_Storage;
@@ -218,7 +221,7 @@ METHOD(IClassGet, struct opGet *opg)
 /*
  * Render the object.
  */
-METHOD(IClassRender, struct bmRender *bmr)
+METHOD(IClassRender, struct bmRender *, bmr)
 {
    ID                *id = INST_DATA(cl, obj);
    BC                *bc = BASE_DATA(obj);
@@ -261,7 +264,7 @@ METHOD(IClassRender, struct bmRender *bmr)
 /*
  * This object cannot be hit.
  */
-METHOD(IClassHitTest, Msg msg)
+METHOD(IClassHitTest, Msg, msg)
 {
    return 0;
 }
@@ -271,7 +274,7 @@ METHOD(IClassHitTest, Msg msg)
  * Our parent group needs to know
  * something about our dimensions.
  */
-METHOD(IClassDimensions, struct bmDimensions *bmd)
+METHOD(IClassDimensions, struct bmDimensions *, bmd)
 {
    ID                *id = INST_DATA(cl, obj);
    struct RastPort   *rp = bmd->bmd_BInfo->bi_RPort;

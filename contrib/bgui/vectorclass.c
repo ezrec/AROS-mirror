@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -558,7 +561,7 @@ STATIC ULONG SetupArea( struct RastPort *rp, VD *vd, struct VectorItem *vi, UWOR
 /*
  * Create a shiny new object.
  */
-METHOD(VectorClassNew, struct opSet *ops)
+METHOD(VectorClassNew, struct opSet *, ops)
 {
    VD       *vd;
    ULONG     rc;
@@ -591,7 +594,7 @@ METHOD(VectorClassNew, struct opSet *ops)
 /*
  * Change one or more attrubutes.
  */
-METHOD(VectorClassSet, struct opSet *ops)
+METHOD(VectorClassSet, struct opSet *, ops)
 {
    VD                *vd = INST_DATA(cl, obj);
    struct TagItem    *tag, *tstate = ops->ops_AttrList;
@@ -678,7 +681,7 @@ METHOD(VectorClassSet, struct opSet *ops)
 /*
  * Give an attribute value.
  */
-METHOD(VectorClassGet, struct opGet *opg)
+METHOD(VectorClassGet, struct opGet *, opg)
 {
    VD          *vd = INST_DATA( cl, obj );
    ULONG        rc = 1, *store = opg->opg_Storage;
@@ -708,7 +711,7 @@ METHOD(VectorClassGet, struct opGet *opg)
 /*
  * Render the vector image.
  */
-METHOD(VectorClassRender, struct bmRender *bmr)
+METHOD(VectorClassRender, struct bmRender *, bmr)
 {
    VD                *vd = INST_DATA(cl, obj);
    struct VectorItem *vi = vd->vd_VectorArray;

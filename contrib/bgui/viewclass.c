@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:03  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:10:39  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -106,7 +109,7 @@ static struct TagItem HProp2View[] = {
 ///
 /// OM_NEW
 
-METHOD(ViewClassNew, struct opSet *ops)
+METHOD(ViewClassNew, struct opSet *, ops)
 {
    VD             *vd;
    ULONG           rc;
@@ -233,7 +236,7 @@ METHOD(ViewClassNew, struct opSet *ops)
 ///
 /// OM_DISPOSE
 
-METHOD(ViewClassDispose, Msg msg)
+METHOD(ViewClassDispose, Msg, msg)
 {
    VD             *vd = INST_DATA(cl, obj);
 
@@ -249,7 +252,7 @@ METHOD(ViewClassDispose, Msg msg)
 }
 ///
 /// OM_SET
-METHOD(ViewClassSet, struct opSet *ops)
+METHOD(ViewClassSet, struct opSet *, ops)
 {
    VD             *vd = INST_DATA(cl, obj);
    struct TagItem *tstate = ops->ops_AttrList, *tag;
@@ -367,7 +370,7 @@ METHOD(ViewClassSet, struct opSet *ops)
 }
 ///
 /// OM_GET
-METHOD(ViewClassGet, struct opGet *opg)
+METHOD(ViewClassGet, struct opGet *, opg)
 {
    VD       *vd = INST_DATA(cl, obj);
    BC       *bc = BASE_DATA(obj);
@@ -443,7 +446,7 @@ METHOD(ViewClassGet, struct opGet *opg)
 /*
  * Forward a message to the object.
  */
-METHOD(ViewClassForward, Msg msg)
+METHOD(ViewClassForward, Msg, msg)
 {
    VD              *vd = INST_DATA(cl, obj);
    ULONG            rc = GMR_NOREUSE;
@@ -468,7 +471,7 @@ METHOD(ViewClassForward, Msg msg)
 ///
 /// GM_RENDER
 
-METHOD(ViewClassRender, struct gpRender *gpr)
+METHOD(ViewClassRender, struct gpRender *, gpr)
 {
    VD                *vd = INST_DATA(cl, obj);
    BC                *bc = BASE_DATA(obj);
@@ -652,7 +655,7 @@ ULONG ForwardViewMsg(Class *cl, Object *s, Object *d, Msg msg)
 /*
  * Forward a message to the object.
  */
-METHOD(ViewClassHitTest, struct gpHitTest *gph)
+METHOD(ViewClassHitTest, struct gpHitTest *, gph)
 {
    VD              *vd = INST_DATA(cl, obj);
    BC              *bc = BASE_DATA(obj);
@@ -723,7 +726,7 @@ METHOD(ViewClassHitTest, struct gpHitTest *gph)
 /*
  * Handle input.
  */
-METHOD(ViewClassHandleInput, struct gpInput *gpi)
+METHOD(ViewClassHandleInput, struct gpInput *, gpi)
 {
    VD                *vd = INST_DATA(cl, obj);
    struct InputEvent *ie;
@@ -794,7 +797,7 @@ METHOD(ViewClassHandleInput, struct gpInput *gpi)
 /*
  * Go inactive.
  */
-METHOD(ViewClassGoInactive, struct gpGoInactive *gpgi)
+METHOD(ViewClassGoInactive, struct gpGoInactive *, gpgi)
 {
    VD       *vd = INST_DATA(cl, obj);
    ULONG     rc = 0;
@@ -848,7 +851,7 @@ METHOD(ViewClassGoInactive, struct gpGoInactive *gpgi)
 /*
  * Get the object under the mouse.
  */
-METHOD(ViewClassWhichObject, struct grmWhichObject *grwo)
+METHOD(ViewClassWhichObject, struct grmWhichObject *, grwo)
 {
    VD                    *vd = INST_DATA(cl, obj);
    BC                    *bc = BASE_DATA(obj);
@@ -892,7 +895,7 @@ METHOD(ViewClassWhichObject, struct grmWhichObject *grwo)
 /*
  * Simple dimensions request.
  */
-METHOD(ViewClassDimensions, struct bmDimensions *bmd)
+METHOD(ViewClassDimensions, struct bmDimensions *, bmd)
 {
    VD              *vd = INST_DATA(cl, obj);
    struct BaseInfo *bi = bmd->bmd_BInfo;
@@ -934,7 +937,7 @@ METHOD(ViewClassDimensions, struct bmDimensions *bmd)
 ///
 /// VIEW_CLIP
 
-METHOD(ViewClassClip, struct vmClip *vmc)
+METHOD(ViewClassClip, struct vmClip *, vmc)
 {
    VD          *vd = INST_DATA(cl, obj);
    BC          *bc = BASE_DATA(obj);
@@ -958,7 +961,7 @@ METHOD(ViewClassClip, struct vmClip *vmc)
 }
 ///
 /// BASE_IS_MULTI
-METHOD(ViewClassIsMulti, Msg msg)
+METHOD(ViewClassIsMulti, Msg, msg)
 {
    return TRUE;
 }

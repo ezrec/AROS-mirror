@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:09:53  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -64,7 +67,7 @@ typedef struct ProgressData {
 /*
  * Create a shiny new object.
  */
-METHOD(ProgressClassNew, struct opSet *ops)
+METHOD(ProgressClassNew, struct opSet *, ops)
 {
    PD             *pd;
    struct TagItem *tags;
@@ -96,7 +99,7 @@ METHOD(ProgressClassNew, struct opSet *ops)
 /*
  * Change the object attributes.
  */
-METHOD(ProgressClassSetUpdate, struct opUpdate *opu)
+METHOD(ProgressClassSetUpdate, struct opUpdate *, opu)
 {
    PD              *pd = INST_DATA(cl, obj);
    struct TagItem  *attr = opu->opu_AttrList, *tstate = attr, *tag;
@@ -184,7 +187,7 @@ METHOD(ProgressClassSetUpdate, struct opUpdate *opu)
 /*
  * Hmm, they want us out of here.
  */
-METHOD(ProgressClassDispose, Msg msg)
+METHOD(ProgressClassDispose, Msg, msg)
 {
    PD            *pd = INST_DATA(cl, obj);
 
@@ -210,7 +213,7 @@ METHOD(ProgressClassDispose, Msg msg)
 /*
  * Render the gadget imagery
  */
-METHOD(ProgressClassRender, struct bmRender *bmr)
+METHOD(ProgressClassRender, struct bmRender *, bmr)
 {
    PD                *pd = INST_DATA(cl, obj);
    BC                *bc = BASE_DATA(obj);
@@ -329,7 +332,7 @@ METHOD(ProgressClassRender, struct bmRender *bmr)
 /*
  * They want to know an attribute value.
  */
-METHOD(ProgressClassGet, struct opGet *opg)
+METHOD(ProgressClassGet, struct opGet *, opg)
 {
    PD          *pd = INST_DATA(cl, obj);
    ULONG        rc = 1, *store = opg->opg_Storage;
@@ -352,7 +355,7 @@ METHOD(ProgressClassGet, struct opGet *opg)
  * We do not respond to
  * clicking in the gadget.
  */
-METHOD(ProgressClassHitTest, struct gpHitTest *gph)
+METHOD(ProgressClassHitTest, struct gpHitTest *, gph)
 {
    return 0;
 }
@@ -362,7 +365,7 @@ METHOD(ProgressClassHitTest, struct gpHitTest *gph)
  * Our parent group needs to know
  * something about our dimensions.
  */
-METHOD(ProgressClassDimensions, struct bmDimensions *bmd)
+METHOD(ProgressClassDimensions, struct bmDimensions *, bmd)
 {
    PD               *pd = INST_DATA(cl, obj);
    struct RastPort  *rp = bmd->bmd_BInfo->bi_RPort;

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:00  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:08:16  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -64,7 +67,7 @@ static ULONG AslPackTable[] =
 /*
  * Create a shiny new object.
  */
-METHOD(AslReqClassNew, struct opSet *ops)
+METHOD(AslReqClassNew, struct opSet *, ops)
 {
    AD          *ad;
    ULONG        rc;
@@ -108,7 +111,7 @@ METHOD(AslReqClassNew, struct opSet *ops)
 /*
  * They want us gone.
  */
-METHOD(AslReqClassDispose, Msg msg)
+METHOD(AslReqClassDispose, Msg, msg)
 {
    AD       *ad = INST_DATA(cl, obj);
 
@@ -133,7 +136,7 @@ METHOD(AslReqClassDispose, Msg msg)
  * Change one or more of the object
  * it's attributes.
  */
-METHOD(AslReqClassSetUpdate, struct opSet *ops)
+METHOD(AslReqClassSetUpdate, struct opSet *, ops)
 {
    AD             *ad = INST_DATA(cl, obj);
    struct TagItem *tstate, *tags, *tag;
@@ -196,7 +199,7 @@ METHOD(AslReqClassSetUpdate, struct opSet *ops)
 /*
  * Give one of the attributes.
  */
-METHOD(AslReqClassGet, struct opGet *opg)
+METHOD(AslReqClassGet, struct opGet *, opg)
 {
    AD                *ad = INST_DATA(cl, obj);
    struct TagItem    *tag;
@@ -219,7 +222,7 @@ METHOD(AslReqClassGet, struct opGet *opg)
 /*
  * Allocate requester.
  */
-METHOD(AslReqClassAllocRequest, Msg msg)
+METHOD(AslReqClassAllocRequest, Msg, msg)
 {
    AD          *ad = INST_DATA(cl, obj);
    
@@ -235,7 +238,7 @@ METHOD(AslReqClassAllocRequest, Msg msg)
 /*
  * Show requester.
  */
-METHOD(AslReqClassRequest, Msg msg)
+METHOD(AslReqClassRequest, Msg, msg)
 {
    AD          *ad = INST_DATA(cl, obj);
    ULONG        rc = 0;
@@ -251,7 +254,7 @@ METHOD(AslReqClassRequest, Msg msg)
 /*
  * Free requester.
  */
-METHOD(AslReqClassFreeRequest, Msg msg)
+METHOD(AslReqClassFreeRequest, Msg, msg)
 {
    AD          *ad = INST_DATA(cl, obj);
    

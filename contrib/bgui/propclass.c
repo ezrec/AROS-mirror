@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -179,7 +182,7 @@ STATIC VOID CalcPropMuck(Class *cl, Object *obj, struct BaseInfo *bi)
 /*
  * Create a shiny new object.
  */
-METHOD(PropClassNew, struct opSet *ops)
+METHOD(PropClassNew, struct opSet *, ops)
 {
    PD             *pd;
    BC             *bc;
@@ -295,7 +298,7 @@ METHOD(PropClassNew, struct opSet *ops)
 /*
  * Change some attributes.
  */
-METHOD(PropClassSetUpdate, struct opUpdate *opu)
+METHOD(PropClassSetUpdate, struct opUpdate *, opu)
 {
    PD             *pd = INST_DATA(cl, obj);
    BC             *bc = BASE_DATA(obj);
@@ -537,7 +540,7 @@ METHOD(PropClassSetUpdate, struct opUpdate *opu)
 /*
  * Render the gadget.
  */
-METHOD(PropClassRender, struct bmRender *bmr)
+METHOD(PropClassRender, struct bmRender *, bmr)
 {
    PD                   *pd = INST_DATA(cl, obj);
    BC                   *bc = BASE_DATA(obj);
@@ -607,7 +610,7 @@ METHOD(PropClassRender, struct bmRender *bmr)
 /*
  * They want to know something.
  */
-METHOD(PropClassGet, struct opGet *opg)
+METHOD(PropClassGet, struct opGet *, opg)
 {
    PD           *pd = INST_DATA(cl, obj);
    ULONG         rc = 1;
@@ -646,7 +649,7 @@ METHOD(PropClassGet, struct opGet *opg)
 /*
  * Where we hit and if so, what was hit.
  */
-METHOD(PropClassHitTest, struct gpHitTest *gph)
+METHOD(PropClassHitTest, struct gpHitTest *, gph)
 {
    PD               *pd = INST_DATA(cl, obj);
    BC               *bc = BASE_DATA(obj);
@@ -772,7 +775,7 @@ STATIC ASM REGFUNC3(VOID, AdjustKnob,
 
 /// GM_GOACTIVE
 
-METHOD(PropClassGoActive, struct gpInput *gpi)
+METHOD(PropClassGoActive, struct gpInput *, gpi)
 {
    PD             *pd = INST_DATA(cl, obj);
    Object         *arrow;
@@ -832,7 +835,7 @@ METHOD(PropClassGoActive, struct gpInput *gpi)
 /*
  * Handle user input.
  */
-METHOD(PropClassHandleInput, struct gpInput *gpi)
+METHOD(PropClassHandleInput, struct gpInput *, gpi)
 {
    PD            *pd = INST_DATA(cl, obj);
    Object        *arrow;
@@ -963,7 +966,7 @@ METHOD(PropClassHandleInput, struct gpInput *gpi)
 /*
  * Abort activity.
  */
-METHOD(PropClassGoInActive, struct gpGoInactive *ggi)
+METHOD(PropClassGoInActive, struct gpGoInactive *, ggi)
 {
    PD          *pd = INST_DATA(cl, obj);
    ULONG        rc;
@@ -1004,7 +1007,7 @@ METHOD(PropClassGoInActive, struct gpGoInactive *ggi)
 /*
  * Find out our minumum size.
  */
-METHOD(PropClassDimensions, struct bmDimensions *bmd)
+METHOD(PropClassDimensions, struct bmDimensions *, bmd)
 {
    PD       *pd = INST_DATA(cl, obj);
    BC       *bc = BASE_DATA(obj);
@@ -1042,7 +1045,7 @@ METHOD(PropClassDimensions, struct bmDimensions *bmd)
 /*
  * Dispose of ourselves.
  */
-METHOD(PropClassDispose, Msg msg)
+METHOD(PropClassDispose, Msg, msg)
 {
    PD       *pd = INST_DATA(cl, obj);
 
@@ -1061,7 +1064,7 @@ METHOD(PropClassDispose, Msg msg)
 /*
  * We are activated by the keyboard.
  */
-METHOD(PropClassKeyActive, struct wmKeyInput *wmki)
+METHOD(PropClassKeyActive, struct wmKeyInput *, wmki)
 {
    PD       *pd = ( PD * )INST_DATA( cl, obj );
    UWORD        qual = wmki->wmki_IEvent->ie_Qualifier, code = wmki->wmki_IEvent->ie_Code;

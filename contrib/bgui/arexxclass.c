@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:00  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:08:13  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -425,7 +428,7 @@ STATIC VOID DoRXCommand(Class *cl, AD *ad, struct RexxMsg *rxm )
 }
 
 /// OM_NEW
-METHOD(ARexxClassNew, struct opSet *ops)
+METHOD(ARexxClassNew, struct opSet *,ops)
 {
    struct TagItem     *attr = ops->ops_AttrList;
    struct MsgPort     *mp;
@@ -549,7 +552,7 @@ METHOD(ARexxClassNew, struct opSet *ops)
 }
 ///
 /// OM_DISPOSE
-METHOD(ARexxClassDispose, Msg msg)
+METHOD(ARexxClassDispose, Msg, msg)
 {
    AD                      *ad = ( AD * )INST_DATA( cl, obj );
    struct RexxMsg          *rxm;
@@ -637,7 +640,7 @@ METHOD(ARexxClassDispose, Msg msg)
 }
 ///
 /// OM_GET
-METHOD(ARexxClassGet, struct opGet *opg)
+METHOD(ARexxClassGet, struct opGet *, opg)
 {
    AD         *ad = INST_DATA(cl, obj);
    ULONG       rc = 1;
@@ -663,7 +666,7 @@ METHOD(ARexxClassGet, struct opGet *opg)
 }
 ///
 /// AREXXM_EXECUTE
-METHOD(ARexxClassExecute, struct acmExecute *acme)
+METHOD(ARexxClassExecute, struct acmExecute *, acme)
 {
         AD                  *ad = INST_DATA( cl, obj );
         REXXCOMMAND         *rco;
@@ -808,7 +811,7 @@ METHOD(ARexxClassExecute, struct acmExecute *acme)
 }
 ///
 /// AREXXM_HANDLE_EVENT
-METHOD(ARexxClassHandleEvent, Msg msg)
+METHOD(ARexxClassHandleEvent, Msg, msg)
 {
    struct RexxMsg          *rxm, *org;
    AD                      *ad = INST_DATA(cl, obj);
@@ -867,12 +870,12 @@ STATIC DPFUNC ClassFunc[] = {
    DF_END
 };
 
-METHOD(ARexxClassMethodNew, Msg msg)
+METHOD(ARexxClassMethodNew, Msg, msg)
 {
    return((ULONG)((((CD *)cl->cl_UserData)->RexxSysLibraryBase=OpenLibrary("rexxsyslib.library",36L))!=NULL));
 }
 
-METHOD(ARexxClassMethodDispose, Msg msg)
+METHOD(ARexxClassMethodDispose, Msg, msg)
 {
    CD *class_data=(CD *)cl->cl_UserData;
 

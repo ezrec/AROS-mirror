@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:10:11  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -56,7 +59,7 @@ typedef struct {
 /*
  * Create a shiny new object.
  */
-METHOD(SepClassNew, struct opSet *ops)
+METHOD(SepClassNew, struct opSet *, ops)
 {
    ULONG           rc;
 
@@ -74,7 +77,7 @@ METHOD(SepClassNew, struct opSet *ops)
 /*
  * Dispose of this.
  */
-METHOD(SepClassDispose, Msg msg)
+METHOD(SepClassDispose, Msg, msg)
 {
    SD               *sd = INST_DATA(cl, obj);
 
@@ -87,7 +90,7 @@ METHOD(SepClassDispose, Msg msg)
 /*
  * Set.
  */
-METHOD(SepClassSet, struct opSet *ops)
+METHOD(SepClassSet, struct opSet *, ops)
 {
    SD              *sd = INST_DATA(cl, obj);
    struct TagItem  *tag, *tstate = ops->ops_AttrList;
@@ -157,7 +160,7 @@ METHOD(SepClassSet, struct opSet *ops)
 /*
  * Render.
  */
-METHOD(SepClassRender, struct bmRender *bmr)
+METHOD(SepClassRender, struct bmRender *, bmr)
 {
    SD               *sd = INST_DATA(cl, obj);
    BC               *bc = BASE_DATA(obj);
@@ -312,7 +315,7 @@ METHOD(SepClassRender, struct bmRender *bmr)
 /*
  * Hit test.
  */
-METHOD(SepClassHitTest, Msg msg)
+METHOD(SepClassHitTest, Msg, msg)
 {
    return 0;
 }
@@ -321,7 +324,7 @@ METHOD(SepClassHitTest, Msg msg)
 /*
  * Dimensions.
  */
-METHOD(SepClassDimensions, struct bmDimensions *bmd)
+METHOD(SepClassDimensions, struct bmDimensions *, bmd)
 {
    SD               *sd = INST_DATA(cl, obj);
    struct BaseInfo  *bi = bmd->bmd_BInfo;
@@ -354,7 +357,7 @@ METHOD(SepClassDimensions, struct bmDimensions *bmd)
 ///
 /// BASE_LOCALIZE
 
-METHOD(SepClassLocalize, struct bmLocalize *bml)
+METHOD(SepClassLocalize, struct bmLocalize *, bml)
 {
    SD       *sd = INST_DATA(cl, obj);
    ULONG     rc = 0;

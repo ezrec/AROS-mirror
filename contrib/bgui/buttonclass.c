@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:00  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:46  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -73,7 +76,7 @@ typedef struct {
 /*
  * Change the object's attributes.
  */
-METHOD(ButtonSetAttrs, struct opSet *ops)
+METHOD(ButtonSetAttrs, struct opSet *, ops)
 {
    BD              *bd = INST_DATA(cl, obj);
    BC              *bc = BASE_DATA(obj);
@@ -189,7 +192,7 @@ METHOD(ButtonSetAttrs, struct opSet *ops)
 /*
  * Create a new object.
  */
-METHOD(ButtonClassNew, struct opSet *ops)
+METHOD(ButtonClassNew, struct opSet *, ops)
 {
    BD               *bd;
    struct TagItem   *tags;
@@ -227,7 +230,7 @@ METHOD(ButtonClassNew, struct opSet *ops)
 /*
  * Change the object's attributes.
  */
-METHOD(ButtonClassSetUpdate, struct opUpdate *opu)
+METHOD(ButtonClassSetUpdate, struct opUpdate *, opu)
 {
    BD              *bd = INST_DATA(cl, obj);
    WORD             dis = GADGET(obj)->Flags & GFLG_DISABLED;
@@ -281,7 +284,7 @@ METHOD(ButtonClassSetUpdate, struct opUpdate *opu)
 /*
  * Render the object.
  */
-METHOD(ButtonClassRender, struct bmRender *bmr)
+METHOD(ButtonClassRender, struct bmRender *, bmr)
 {
    BD                *bd = INST_DATA(cl, obj);
    BC                *bc = BASE_DATA(obj);
@@ -537,7 +540,7 @@ STATIC ASM REGFUNC3(ULONG, ButtonClassHandleInput,
 /*
  * They want to know something.
  */
-METHOD(ButtonClassGet, struct opGet *opg)
+METHOD(ButtonClassGet, struct opGet *, opg)
 {
    ULONG       rc = 1, *store = opg->opg_Storage;
 
@@ -561,7 +564,7 @@ METHOD(ButtonClassGet, struct opGet *opg)
 /*
  * Dispose of ourselves.
  */
-METHOD(ButtonClassDispose, Msg msg)
+METHOD(ButtonClassDispose, Msg, msg)
 {
    BD    *bd = INST_DATA(cl, obj);
    BC    *bc = BASE_DATA(obj);
@@ -585,7 +588,7 @@ METHOD(ButtonClassDispose, Msg msg)
 /*
  * We are activated by a key.
  */
-METHOD(ButtonClassKeyActive, struct wmKeyInput *wmki)
+METHOD(ButtonClassKeyActive, struct wmKeyInput *, wmki)
 {
    ULONG              rc = WMKF_MEACTIVE;
    struct GadgetInfo *gi = wmki->wmki_GInfo;
@@ -648,7 +651,7 @@ METHOD(ButtonClassKeyActive, struct wmKeyInput *wmki)
 /*
  * Handle key input messages.
  */
-METHOD(ButtonClassKeyInput, struct wmKeyInput *wmki)
+METHOD(ButtonClassKeyInput, struct wmKeyInput *, wmki)
 {
    ULONG              rc   = WMKF_MEACTIVE;
    UWORD              qual = wmki->wmki_IEvent->ie_Qualifier;
@@ -710,7 +713,7 @@ METHOD(ButtonClassKeyInput, struct wmKeyInput *wmki)
 /*
  * We are forced to de-activate.
  */
-METHOD(ButtonClassKeyInActive, struct wmKeyInActive *wmkia)
+METHOD(ButtonClassKeyInActive, struct wmKeyInActive *, wmkia)
 {
    /*
     * Change visuals to un-selected when
@@ -732,7 +735,7 @@ METHOD(ButtonClassKeyInActive, struct wmKeyInActive *wmkia)
 /*
  * They want our minimum dimensions.
  */
-METHOD(ButtonClassDimensions, struct bmDimensions *bmd)
+METHOD(ButtonClassDimensions, struct bmDimensions *, bmd)
 {
    BD                   *bd = INST_DATA(cl, obj);
    struct BaseInfo      *bi = bmd->bmd_BInfo;
@@ -846,7 +849,7 @@ METHOD(ButtonClassDimensions, struct bmDimensions *bmd)
 }
 ///
 /// BASE_FINDKEY
-METHOD(ButtonClassFindKey, struct bmFindKey *bmfk)
+METHOD(ButtonClassFindKey, struct bmFindKey *, bmfk)
 {
    if (bmfk->bmfk_Key.Qual & IEQUALIFIER_REPEAT)
       return 0;

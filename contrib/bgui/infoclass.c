@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:09:14  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -49,7 +52,7 @@ typedef struct {
 /*
  * Create a shiny new object.
  */
-METHOD(InfoClassNew, struct opSet *ops)
+METHOD(InfoClassNew, struct opSet *, ops)
 {
    ID                *id;
    struct TagItem    *tags;
@@ -97,7 +100,7 @@ METHOD(InfoClassNew, struct opSet *ops)
 /*
  * Change the object attributes.
  */
-METHOD(InfoClassSetUpdate, struct opSet *ops)
+METHOD(InfoClassSetUpdate, struct opSet *, ops)
 {
    ID              *id = INST_DATA(cl, obj);
    struct TagItem  *tstate = ops->ops_AttrList, *tag;
@@ -160,7 +163,7 @@ METHOD(InfoClassSetUpdate, struct opSet *ops)
 /*
  * Render the object.
  */
-METHOD(InfoClassRender, struct bmRender *bmr)
+METHOD(InfoClassRender, struct bmRender *, bmr)
 {
    ID              *id = INST_DATA(cl, obj);
    BC              *bc = BASE_DATA(obj);
@@ -189,7 +192,7 @@ METHOD(InfoClassRender, struct bmRender *bmr)
 /*
  * We do not respond to clicking.
  */
-METHOD(InfoClassHitTest, struct gpHitTest *gph)
+METHOD(InfoClassHitTest, struct gpHitTest *, gph)
 {
     return 0;
 }
@@ -198,7 +201,7 @@ METHOD(InfoClassHitTest, struct gpHitTest *gph)
 /*
  * Dispose of ourselves.
  */
-METHOD(InfoClassDispose, Msg msg)
+METHOD(InfoClassDispose, Msg, msg)
 {
    ID         *id = INST_DATA(cl, obj);
 
@@ -214,7 +217,7 @@ METHOD(InfoClassDispose, Msg msg)
 /*
  * They want our dimensions.
  */
-METHOD(InfoClassDimensions, struct bmDimensions *bmd)
+METHOD(InfoClassDimensions, struct bmDimensions *, bmd)
 {
    ID              *id = INST_DATA(cl, obj);
    BC              *bc = BASE_DATA(obj);

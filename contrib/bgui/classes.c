@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:00  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:46  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -267,6 +270,7 @@ makeproto SAVEDS ASM REGFUNC3(ULONG, __GCD,
  * Setup a class.
  */
 #ifdef _AROS
+makearosproto
 AROS_LH1(Class *, BGUI_MakeClassA,
     AROS_LHA(struct TagItem *, tags, A0),
     struct Library *, BGUIBase, 24, BGUI)
@@ -440,6 +444,7 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH1(BOOL, BGUI_FreeClass,
     AROS_LHA(Class *, cl, A0),
     struct Library *, BGUIBase, 25, BGUI)
@@ -762,6 +767,7 @@ makeproto ULONG BGUI_UnpackStructureTag(UBYTE *dataspace, ULONG *pt, ULONG tag, 
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH3(ULONG, BGUI_PackStructureTags,
     AROS_LHA(APTR, pack, A0),
     AROS_LHA(ULONG *, packTable, A1),
@@ -799,6 +805,7 @@ makeproto SAVEDS ULONG ASM BGUI_PackStructureTags(REG(a0) APTR pack, REG(a1) ULO
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH3(ULONG, BGUI_UnpackStructureTags,
     AROS_LHA(APTR, pack, A0),
     AROS_LHA(ULONG *, packTable, A1),

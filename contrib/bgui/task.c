@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -942,6 +945,7 @@ SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH3(APTR, BGUI_AllocPoolMemDebug,
     AROS_LHA(ULONG, size, D0),
     AROS_LHA(STRPTR, file, A0),
@@ -978,6 +982,7 @@ SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG size, REG(a0) STRPTR file, 
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH1(APTR, BGUI_AllocPoolMem,
     AROS_LHA(ULONG, size, D0),
     struct Library *, BGUIBase, 12, BGUI)
@@ -1045,6 +1050,7 @@ SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH3(VOID, BGUI_FreePoolMemDebug,
     AROS_LHA(APTR, memPtr, A0),
     AROS_LHA(STRPTR, file, A1),
@@ -1076,6 +1082,7 @@ AROS_LH3(VOID, BGUI_FreePoolMemDebug,
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH1(VOID, BGUI_FreePoolMem,
     AROS_LHA(APTR, memPtr, A0),
     struct Library *, BGUIBase, 13, BGUI)
@@ -1757,6 +1764,7 @@ makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_CleanTagItems,
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH1(struct TagItem *, BGUI_GetDefaultTags,
     AROS_LHA(ULONG, id, D0),
     struct Library *, BGUIBase, 28, BGUI)
@@ -1797,6 +1805,7 @@ makeproto SAVEDS ASM struct TagItem *BGUI_GetDefaultTags(REG(d0) ULONG id)
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH0(VOID, BGUI_DefaultPrefs,
     struct Library *, BGUIBase, 29, BGUI)
 #else
@@ -1827,6 +1836,7 @@ makeproto SAVEDS ASM VOID BGUI_DefaultPrefs(VOID)
 }
 
 #ifdef _AROS
+makearosproto
 AROS_LH1(VOID, BGUI_LoadPrefs,
     AROS_LHA(UBYTE *, name, A0),
     struct Library *, BGUIBase, 30, BGUI)

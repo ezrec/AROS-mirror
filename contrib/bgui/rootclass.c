@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:10:06  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -103,7 +106,7 @@ typedef struct {
 /*
  * Create a shiny new object.
  */
-METHOD(RootClassNew, struct opSet *ops)
+METHOD(RootClassNew, struct opSet *, ops)
 {
    RD             *rd;
    ULONG           rc;
@@ -136,7 +139,7 @@ METHOD(RootClassNew, struct opSet *ops)
 /*
  * We need to update our targets.
  */
-METHOD(RootClassNotify, struct opUpdate *opu)
+METHOD(RootClassNotify, struct opUpdate *, opu)
 {
    RD               *rd = INST_DATA(cl, obj);
    NOTIF            *n = (NOTIF *)rd->rd_NotifyList.mlh_Head;
@@ -303,7 +306,7 @@ STATIC VOID FreeNotif(NOTIF *n)
 /*
  * They do not need us anymore.
  */
-METHOD(RootClassDispose, Msg msg)
+METHOD(RootClassDispose, Msg, msg)
 {
    RD          *rd = INST_DATA(cl, obj);
    NOTIF       *n;
@@ -332,7 +335,7 @@ METHOD(RootClassDispose, Msg msg)
 /*
  * Emulate OM_UPDATE with new methods.
  */
-METHOD(RootClassUpdateX, struct opUpdate *opu)
+METHOD(RootClassUpdateX, struct opUpdate *, opu)
 {
    ULONG rc = AsmCoerceMethod(cl,obj, RM_SETM, opu->opu_AttrList, (opu->opu_Flags & OPUF_INTERIM) ? RAF_INTERIM|RAF_UPDATE : RAF_UPDATE);
 
@@ -347,7 +350,7 @@ METHOD(RootClassUpdateX, struct opUpdate *opu)
 /*
  * Emulate OM_SET with new methods.
  */
-METHOD(RootClassSetX, struct opSet *ops)
+METHOD(RootClassSetX, struct opSet *, ops)
 {
    ULONG rc = AsmDoMethod(obj, RM_SETM, ops->ops_AttrList, 0);
 
@@ -360,7 +363,7 @@ METHOD(RootClassSetX, struct opSet *ops)
 /*
  * Emulate OM_GET with new methods.
  */
-METHOD(RootClassGetX, struct opGet *opg)
+METHOD(RootClassGetX, struct opGet *, opg)
 {
    return AsmDoMethod(obj, RM_GET, &opg->opg_AttrID, 0);
 }
@@ -369,7 +372,7 @@ METHOD(RootClassGetX, struct opGet *opg)
 /*
  * Emulate RM_SET for any superclass.
  */
-METHOD(RootClassSet, struct rmAttr *ra)
+METHOD(RootClassSet, struct rmAttr *, ra)
 {
    struct TagItem tags[2];
    ULONG          rc;
@@ -388,7 +391,7 @@ METHOD(RootClassSet, struct rmAttr *ra)
 /*
  * Emulate RM_GET for any superclass.
  */
-METHOD(RootClassGet, struct rmAttr *ra)
+METHOD(RootClassGet, struct rmAttr *, ra)
 {
    AsmDoSuperMethod(cl, obj, OM_GET, ra->ra_Attr->ti_Tag, ra->ra_Attr->ti_Data);
 
@@ -397,7 +400,7 @@ METHOD(RootClassGet, struct rmAttr *ra)
 ///
 /// RM_SETM
 
-METHOD(RootClassSetM, struct rmAttr *ra1)
+METHOD(RootClassSetM, struct rmAttr *, ra1)
 {
    struct rmAttr   ra;
    struct TagItem *tstate = ra1->ra_Attr;
@@ -414,7 +417,7 @@ METHOD(RootClassSetM, struct rmAttr *ra1)
 ///
 /// RM_GETM
 
-METHOD(RootClassGetM, struct rmAttr *ra1)
+METHOD(RootClassGetM, struct rmAttr *, ra1)
 {
    struct rmAttr   ra;
    struct TagItem *tstate = ra1->ra_Attr;
@@ -453,7 +456,7 @@ void AddNotify(RD *rd, NOTIF *n, Msg msg, int type)
 /*
  * Add a map object to the list.
  */
-METHOD(RootClassAddMap, struct rmAddMap *ram)
+METHOD(RootClassAddMap, struct rmAddMap *, ram)
 {
    RD             *rd = INST_DATA(cl, obj);
    MAP            *am = NULL;
@@ -496,7 +499,7 @@ METHOD(RootClassAddMap, struct rmAddMap *ram)
 /*
  * Add an attribute conditional object to the list.
  */
-METHOD(RootClassAddAttr, struct rmAddAttr *raa)
+METHOD(RootClassAddAttr, struct rmAddAttr *, raa)
 {
    RD          *rd = INST_DATA(cl, obj);
    ATTR        *aa = NULL;
@@ -529,7 +532,7 @@ METHOD(RootClassAddAttr, struct rmAddAttr *raa)
 /*
  * Add a method object to the list.
  */
-METHOD(RootClassAddMethod, struct rmAddMethod *ram)
+METHOD(RootClassAddMethod, struct rmAddMethod *, ram)
 {
    RD         *rd = INST_DATA(cl, obj);
    METHOD     *am = NULL;
@@ -562,7 +565,7 @@ METHOD(RootClassAddMethod, struct rmAddMethod *ram)
 /*
  * Add a hook to the list.
  */
-METHOD(RootClassAddHook, struct rmAddHook *rah)
+METHOD(RootClassAddHook, struct rmAddHook *, rah)
 {
    RD          *rd = INST_DATA(cl, obj);
    HOOK        *ah = NULL;
@@ -597,7 +600,7 @@ METHOD(RootClassAddHook, struct rmAddHook *rah)
 /*
  * Remove an object from a list.
  */
-METHOD(NotifyClassRemove, struct bmRemove *brt)
+METHOD(NotifyClassRemove, struct bmRemove *, brt)
 {
    RD           *rd = INST_DATA(cl, obj);
    NOTIF        *n = (NOTIF *)rd->rd_NotifyList.mlh_Head;
@@ -649,7 +652,7 @@ METHOD(NotifyClassRemove, struct bmRemove *brt)
 /*
  * Set infinite loop counter.
  */
-METHOD(RootClassSetLoop, Msg msg)
+METHOD(RootClassSetLoop, Msg, msg)
 {
    RD          *rd = INST_DATA(cl, obj);
 
@@ -665,7 +668,7 @@ METHOD(RootClassSetLoop, Msg msg)
 /*
  * Clear infinite loop counter.
  */
-METHOD(RootClassClearLoop, Msg msg)
+METHOD(RootClassClearLoop, Msg, msg)
 {
    RD          *rd = INST_DATA(cl, obj);
 
@@ -677,7 +680,7 @@ METHOD(RootClassClearLoop, Msg msg)
 
 /// RM_REMOVE
 
-METHOD(RootClassRemove, Msg msg)
+METHOD(RootClassRemove, Msg, msg)
 {
    RD             *rd = INST_DATA(cl, obj);
    struct MinNode *mln = &rd->rd_Node;
@@ -693,7 +696,7 @@ METHOD(RootClassRemove, Msg msg)
 ///
 /// RM_ADDHEAD
 
-METHOD(RootClassAddHead, struct rmAdd *ra)
+METHOD(RootClassAddHead, struct rmAdd *, ra)
 {
    RD           *rd = INST_DATA(cl, obj);
 
@@ -704,7 +707,7 @@ METHOD(RootClassAddHead, struct rmAdd *ra)
 ///
 /// RM_ADDTAIL
 
-METHOD(RootClassAddTail, struct rmAdd *ra)
+METHOD(RootClassAddTail, struct rmAdd *, ra)
 {
    RD           *rd = INST_DATA(cl, obj);
 
@@ -715,7 +718,7 @@ METHOD(RootClassAddTail, struct rmAdd *ra)
 ///
 /// RM_INSERT
 
-METHOD(RootClassInsert, struct rmInsert *ri)
+METHOD(RootClassInsert, struct rmInsert *, ri)
 {
    RD           *rd = INST_DATA(cl, obj), *rd2;
 
@@ -733,7 +736,7 @@ METHOD(RootClassInsert, struct rmInsert *ri)
 ///
 /// RM_PREV
 
-METHOD(RootClassPrev, Msg msg)
+METHOD(RootClassPrev, Msg, msg)
 {
    RD             *rd = INST_DATA(cl, obj);
    struct MinNode *mn = rd->rd_Node.mln_Pred;
@@ -746,7 +749,7 @@ METHOD(RootClassPrev, Msg msg)
 ///
 /// RM_NEXT
 
-METHOD(RootClassNext, Msg msg)
+METHOD(RootClassNext, Msg, msg)
 {
    RD             *rd = INST_DATA(cl, obj);
    struct MinNode *mn = rd->rd_Node.mln_Succ;
@@ -775,14 +778,14 @@ makeproto Object *ListTailObject(struct List *lh)
 
 /// BASE_ADDMAP
 
-METHOD(BaseClassAddMap, struct bmAddMap *bam)
+METHOD(BaseClassAddMap, struct bmAddMap *, bam)
 {
    return((ULONG)(AsmDoMethod(obj, RM_ADDMAP, 0, 0, 0, 0, bam->bam_Object, bam->bam_MapList)!=NULL));
 }
 ///
 /// BASE_ADDMETHOD
 
-METHOD(BaseClassAddMethod, struct bmAddMethod *bam)
+METHOD(BaseClassAddMethod, struct bmAddMethod *, bam)
 {
    struct rmAddMethod *ram;
 
@@ -807,7 +810,7 @@ METHOD(BaseClassAddMethod, struct bmAddMethod *bam)
 ///
 /// BASE_ADDCONDITIONAL
 
-METHOD(BaseClassAddConditional, struct bmAddConditional *bac)
+METHOD(BaseClassAddConditional, struct bmAddConditional *, bac)
 {
    ULONG nh;
 
@@ -825,7 +828,7 @@ METHOD(BaseClassAddConditional, struct bmAddConditional *bac)
 ///
 /// BASE_ADDHOOK
 
-METHOD(BaseClassAddHook, struct bmAddHook *bah)
+METHOD(BaseClassAddHook, struct bmAddHook *, bah)
 {
    return((ULONG)(AsmDoMethod(obj, RM_ADDHOOK, 0, 0, 0, 0, bah->bah_Hook)!=NULL));
 }
@@ -833,7 +836,7 @@ METHOD(BaseClassAddHook, struct bmAddHook *bah)
 
 /// IM_DRAW
 
-METHOD(ImageClassDraw, struct impDraw *imp)
+METHOD(ImageClassDraw, struct impDraw *, imp)
 {
    int              x = imp->imp_Offset.X;
    int              y = imp->imp_Offset.Y;

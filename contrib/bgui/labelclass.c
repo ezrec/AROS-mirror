@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:09:16  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -118,7 +121,7 @@ static ULONG LabelPackTable[] =
 /*
  * Create a shiny new object.
  */
-METHOD(LabelClassNew, struct opSet *ops)
+METHOD(LabelClassNew, struct opSet *, ops)
 {
    LD       *ld;
    ULONG     rc;
@@ -169,7 +172,7 @@ METHOD(LabelClassNew, struct opSet *ops)
 /*
  * Get the flags of an attribute.
  */
-METHOD(LabelClassGetAttrFlags, struct rmAttr *ra)
+METHOD(LabelClassGetAttrFlags, struct rmAttr *, ra)
 {
    static struct TagItem chart[] =
    {
@@ -207,7 +210,7 @@ METHOD(LabelClassGetAttrFlags, struct rmAttr *ra)
 /*
  * Set standard attributes.
  */
-METHOD(LabelClassSet, struct rmAttr *ra)
+METHOD(LabelClassSet, struct rmAttr *, ra)
 {
    return BGUI_SetAttrChart(cl, obj, ra);
 }
@@ -216,7 +219,7 @@ METHOD(LabelClassSet, struct rmAttr *ra)
 /*
  * Set custom attributes.
  */
-METHOD(LabelClassSetCustom, struct rmAttr *ra)
+METHOD(LabelClassSetCustom, struct rmAttr *, ra)
 {
    LD               *ld = (LD *)INST_DATA(cl, obj);
    struct TextFont  *tf;
@@ -304,7 +307,7 @@ METHOD(LabelClassSetCustom, struct rmAttr *ra)
 /*
  * Give an attribute.
  */
-METHOD(LabelClassGet, struct opGet *opg)
+METHOD(LabelClassGet, struct opGet *, opg)
 {
    LD       *ld = INST_DATA(cl, obj);
    ULONG     rc = 1, tag = opg->opg_AttrID, *store = opg->opg_Storage;
@@ -353,7 +356,7 @@ METHOD(LabelClassGet, struct opGet *opg)
 /*
  * Dispose of the object.
  */
-METHOD(LabelClassDispose, Msg msg)
+METHOD(LabelClassDispose, Msg, msg)
 {
    LD       *ld = INST_DATA(cl, obj);
 
@@ -373,7 +376,7 @@ METHOD(LabelClassDispose, Msg msg)
 /*
  * Render, erase or find out it's extensions.
  */
-METHOD(LabelClassDrawErase, struct impDraw *dr)
+METHOD(LabelClassDrawErase, struct impDraw *, dr)
 {
    LD                *ld = INST_DATA(cl, obj);
    struct RastPort    rrp = *(dr->imp_RPort), trp;
@@ -814,7 +817,7 @@ METHOD(LabelClassDrawErase, struct impDraw *dr)
 ///
 /// BASE_LOCALIZE
 
-METHOD(LabelClassLocalize, struct bmLocalize *bml)
+METHOD(LabelClassLocalize, struct bmLocalize *, bml)
 {
    LD    *ld = INST_DATA(cl, obj);
    ULONG  rc = 0;
@@ -829,7 +832,7 @@ METHOD(LabelClassLocalize, struct bmLocalize *bml)
 ///
 /// BASE_DIMENSIONS
 
-METHOD(LabelClassDimensions, struct bmDimensions *bmd)
+METHOD(LabelClassDimensions, struct bmDimensions *, bmd)
 {
    LD                *ld = INST_DATA(cl, obj);
    struct BaseInfo   *bi = bmd->bmd_BInfo;

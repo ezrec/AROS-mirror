@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:47  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -893,7 +896,7 @@ STATIC ASM REGFUNC2(VOID, DrawDragLine,
 /*
  * Create a new object.
  */
-METHOD(ListClassNew, struct opSet *ops)
+METHOD(ListClassNew, struct opSet *, ops)
 {
    LD       *ld;
    struct TagItem *tags, *tstate, *tag;
@@ -1040,7 +1043,7 @@ METHOD(ListClassNew, struct opSet *ops)
 /*
  * Set or update some attributes.
  */
-METHOD(ListClassSetUpdate, struct opUpdate *opu)
+METHOD(ListClassSetUpdate, struct opUpdate *, opu)
 {
    LD             *ld = INST_DATA( cl, obj );
    struct TagItem *tstate = opu->opu_AttrList, *tag;
@@ -1364,7 +1367,7 @@ METHOD(ListClassSetUpdate, struct opUpdate *opu)
 /*
  * They want to know something.
  */
-METHOD(ListClassGet, struct opGet *opg)
+METHOD(ListClassGet, struct opGet *, opg)
 {
    LD          *ld = INST_DATA( cl, obj );
    ULONG        rc = TRUE, num = ~0;
@@ -1415,7 +1418,7 @@ METHOD(ListClassGet, struct opGet *opg)
 /*
  * Dispose of the object.
  */
-METHOD(ListClassDispose, Msg msg)
+METHOD(ListClassDispose, Msg, msg)
 {
    LD                *ld = INST_DATA(cl, obj);
    LVE               *lve;
@@ -1739,7 +1742,7 @@ STATIC VOID RenderEntry(Object *obj, LD *ld, struct BaseInfo *bi, LVE *lve, ULON
 /*
  * Render the list.
  */
-METHOD(ListClassLayout, struct bmLayout *bml)
+METHOD(ListClassLayout, struct bmLayout *, bml)
 {
    LD                *ld = INST_DATA(cl, obj);
    BC                *bc = BASE_DATA(obj);
@@ -1778,7 +1781,7 @@ METHOD(ListClassLayout, struct bmLayout *bml)
 /*
  * Render the list.
  */
-METHOD(ListClassRender, struct bmRender *bmr)
+METHOD(ListClassRender, struct bmRender *, bmr)
 {
    LD                *ld = INST_DATA(cl, obj);
    BC                *bc = BASE_DATA(obj);
@@ -2078,7 +2081,7 @@ STATIC ASM REGFUNC2(BOOL, MultiSelect,
 /*
  * Test if the gadget was hit.
  */
-METHOD(ListClassHitTest, struct gpHitTest *gph)
+METHOD(ListClassHitTest, struct gpHitTest *, gph)
 {
    LD               *ld = INST_DATA(cl, obj);
    BC               *bc = BASE_DATA(obj);
@@ -2116,7 +2119,7 @@ METHOD(ListClassHitTest, struct gpHitTest *gph)
 /*
  * They want us to go active.
  */
-METHOD(ListClassGoActive, struct gpInput *gpi)
+METHOD(ListClassGoActive, struct gpInput *, gpi)
 {
    LD                *ld = INST_DATA(cl, obj);
    LVE               *lve;
@@ -2325,7 +2328,7 @@ METHOD(ListClassGoActive, struct gpInput *gpi)
 /*
  * Handle user input.
  */
-METHOD(ListClassHandleInput, struct gpInput *gpi)
+METHOD(ListClassHandleInput, struct gpInput *, gpi)
 {
    LD                *ld = INST_DATA(cl, obj);
    LVE               *lve;
@@ -2713,7 +2716,7 @@ METHOD(ListClassHandleInput, struct gpInput *gpi)
 /*
  * Go inactive.
  */
-METHOD(ListClassGoInActive, struct gpGoInactive *ggi)
+METHOD(ListClassGoInActive, struct gpGoInactive *, ggi)
 {
    LD       *ld = INST_DATA(cl, obj);
 
@@ -2755,7 +2758,7 @@ METHOD(ListClassGoInActive, struct gpGoInactive *ggi)
 /*
  * They want our minimum dimensions.
  */
-METHOD(ListClassDimensions, struct bmDimensions *bmd)
+METHOD(ListClassDimensions, struct bmDimensions *, bmd)
 {
    LD                *ld = INST_DATA(cl, obj);
    struct BaseInfo   *bi = bmd->bmd_BInfo;
@@ -2979,7 +2982,7 @@ SAVEDS ASM REGFUNC5(VOID, DoEntry,
 /*
  * Insert entries.
  */
-METHOD(ListClassInsertEntries, struct lvmInsertEntries *lvmi)
+METHOD(ListClassInsertEntries, struct lvmInsertEntries *, lvmi)
 {
    LD          *ld = INST_DATA( cl, obj );
    LVE         *lve;
@@ -3012,7 +3015,7 @@ METHOD(ListClassInsertEntries, struct lvmInsertEntries *lvmi)
 /*
  * Insert a single entry.
  */
-METHOD(ListClassInsertSingle, struct lvmInsertSingle *lvis)
+METHOD(ListClassInsertSingle, struct lvmInsertSingle *, lvis)
 {
    LD                      *ld = INST_DATA(cl, obj);
    struct lvmInsertEntries  lvmi;
@@ -3053,7 +3056,7 @@ METHOD(ListClassInsertSingle, struct lvmInsertSingle *lvis)
 /*
  * Add entries.
  */
-METHOD(ListClassAddEntries, struct lvmAddEntries *lva)
+METHOD(ListClassAddEntries, struct lvmAddEntries *, lva)
 {
    LD          *ld = INST_DATA( cl, obj );
    ULONG        rc;
@@ -3080,7 +3083,7 @@ METHOD(ListClassAddEntries, struct lvmAddEntries *lva)
 /*
  * Add a single entry.
  */
-METHOD(ListClassAddSingle, struct lvmAddSingle *lva)
+METHOD(ListClassAddSingle, struct lvmAddSingle *, lva)
 {
    LD          *ld = INST_DATA(cl, obj);
    APTR         entries[2];
@@ -3141,7 +3144,7 @@ METHOD(ListClassAddSingle, struct lvmAddSingle *lva)
 /*
  * Clear the entire list.
  */
-METHOD(ListClassClear, struct lvmCommand *lvc)
+METHOD(ListClassClear, struct lvmCommand *, lvc)
 {
    LD                *ld = INST_DATA(cl, obj);
    LVE               *lve;
@@ -3549,7 +3552,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassRemEntry,
  * Remove the selected entry from the list and
  * select the next/previous one.
  */
-METHOD(ListClassRemSelected, struct lvmCommand *lvmc)
+METHOD(ListClassRemSelected, struct lvmCommand *, lvmc)
 {
    LD                 *ld = INST_DATA(cl, obj);
    LVE                *lve, *sel = NULL;
@@ -3637,7 +3640,7 @@ METHOD(ListClassRemSelected, struct lvmCommand *lvmc)
 /*
  * Refresh the listview.
  */
-METHOD(ListClassRefresh, struct lvmCommand *lvmc)
+METHOD(ListClassRefresh, struct lvmCommand *, lvmc)
 {
    return DoRenderMethod(obj, lvmc->lvmc_GInfo, GREDRAW_REDRAW);
 }
@@ -3646,7 +3649,7 @@ METHOD(ListClassRefresh, struct lvmCommand *lvmc)
 /*
  * Redraw the listview entries.
  */
-METHOD(ListClassRedraw, struct lvmCommand *lvmc)
+METHOD(ListClassRedraw, struct lvmCommand *, lvmc)
 {
    LD       *ld = INST_DATA(cl, obj);
 
@@ -3655,7 +3658,7 @@ METHOD(ListClassRedraw, struct lvmCommand *lvmc)
 }
 ///
 /// LVM_REDRAWSINGLE
-METHOD(ListClassRedrawSingle, struct lvmRedrawSingle *lvrs)
+METHOD(ListClassRedrawSingle, struct lvmRedrawSingle *, lvrs)
 {
    LD                *ld = INST_DATA(cl, obj);
    LVE               *lve;
@@ -4071,7 +4074,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassReplace,
 ///
 /// LVM_SETCOLUMNATTRS
 
-METHOD(ListClassSetColumnAttrs, struct lvmColumnAttrs *lvca)
+METHOD(ListClassSetColumnAttrs, struct lvmColumnAttrs *, lvca)
 {
    LD     *ld = INST_DATA(cl, obj);
    ULONG   rc;
@@ -4085,7 +4088,7 @@ METHOD(ListClassSetColumnAttrs, struct lvmColumnAttrs *lvca)
 ///
 /// LVM_GETCOLUMNATTRS
 
-METHOD(ListClassGetColumnAttrs, struct lvmColumnAttrs *lvca)
+METHOD(ListClassGetColumnAttrs, struct lvmColumnAttrs *, lvca)
 {
    LD     *ld = INST_DATA(cl, obj);
 
@@ -4102,7 +4105,7 @@ METHOD(ListClassGetColumnAttrs, struct lvmColumnAttrs *lvca)
  *
  * All other instances are refused.
  */
-METHOD(ListClassDragQuery, struct bmDragPoint *bmdp)
+METHOD(ListClassDragQuery, struct bmDragPoint *, bmdp)
 {
    LD       *ld = INST_DATA( cl, obj );
 
@@ -4121,7 +4124,7 @@ METHOD(ListClassDragQuery, struct bmDragPoint *bmdp)
 /*
  * Show us being the active drop object.
  */
-METHOD(ListClassDragActive, struct bmDragMsg *bmdm)
+METHOD(ListClassDragActive, struct bmDragMsg *, bmdm)
 {
    LD                *ld = INST_DATA(cl, obj);
    struct BaseInfo   *bi;
@@ -4183,7 +4186,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassDragInactive,
 /*
  * Update drop position.
  */
-METHOD(ListClassDragUpdate, struct bmDragPoint *bmdp)
+METHOD(ListClassDragUpdate, struct bmDragPoint *, bmdp)
 {
    LD                   *ld = INST_DATA(cl, obj);
    struct IBox          *ib;
@@ -4495,7 +4498,7 @@ STATIC ASM REGFUNC3(ULONG, ListClassDropped,
 /*
  * Create a rastport in which the selected entries(s) are rendered.
  */
-METHOD(ListClassGetObject, struct bmGetDragObject *bmgo)
+METHOD(ListClassGetObject, struct bmGetDragObject *, bmgo)
 {
    LD                *ld = INST_DATA(cl, obj);
    struct GadgetInfo *gi = bmgo->bmgo_GInfo;

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:27:00  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.0  2000/05/09 22:08:11  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -42,7 +45,7 @@ typedef struct {
 }  AD;
 ///
 /// OM_NEW
-METHOD(AreaClassNew, struct opSet *ops)
+METHOD(AreaClassNew, struct opSet *,ops)
 {
    AD             *ad;
    struct TagItem *tags, *tstate, *tag;
@@ -88,7 +91,7 @@ METHOD(AreaClassNew, struct opSet *ops)
 }
 ///
 /// OM_GET
-METHOD(AreaClassGet, struct opGet *opg)
+METHOD(AreaClassGet, struct opGet *,opg)
 {
    AD       *ad = INST_DATA(cl, obj);
    BC       *bc = BASE_DATA(obj);
@@ -119,7 +122,7 @@ METHOD(AreaClassGet, struct opGet *opg)
 ///
 /// BASE_RENDER
 
-METHOD(AreaClassRender, struct bmRender *bmr)
+METHOD(AreaClassRender, struct bmRender *,bmr)
 {
    /*
     * Render the baseclass.
@@ -138,7 +141,7 @@ METHOD(AreaClassRender, struct bmRender *bmr)
 /*
  * This object cannot be hit.
  */
-METHOD(AreaClassHitTest, Msg msg)
+METHOD(AreaClassHitTest, Msg, msg)
 {
    return 0;
 }
@@ -147,7 +150,7 @@ METHOD(AreaClassHitTest, Msg msg)
 /*
  * Simple dimensions request.
  */
-METHOD(AreaClassDimensions, struct bmDimensions *bmd)
+METHOD(AreaClassDimensions, struct bmDimensions *,bmd)
 {
    AD *ad = INST_DATA(cl, obj);
 

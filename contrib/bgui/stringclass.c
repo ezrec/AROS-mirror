@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:02  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -396,7 +399,7 @@ STATIC ASM REGFUNC3(ULONG, StringClassSetUpdate,
 /*
  * Get an attribute.
  */
-METHOD(StringClassGet, struct opGet *opg)
+METHOD(StringClassGet, struct opGet *, opg)
 {
    SD          *sd = INST_DATA(cl, obj);
    ULONG        rc = 1, *store = opg->opg_Storage;
@@ -440,7 +443,7 @@ METHOD(StringClassGet, struct opGet *opg)
 /*
  * Render the gadget.
  */
-METHOD(StringClassRender, struct bmRender *bmr)
+METHOD(StringClassRender, struct bmRender *, bmr)
 {
    SD              *sd = INST_DATA(cl, obj);
    BC              *bc = BASE_DATA(obj);
@@ -484,7 +487,7 @@ METHOD(StringClassRender, struct bmRender *bmr)
 /*
  * Did they click in the strgclass object?
  */
-METHOD(StringClassHitTest, struct gpHitTest *gph)
+METHOD(StringClassHitTest, struct gpHitTest *, gph)
 {
    SD          *sd = INST_DATA(cl, obj);
    ULONG        rc = 0;
@@ -512,7 +515,7 @@ METHOD(StringClassHitTest, struct gpHitTest *gph)
 /*
  * Go to the active state and/or handle the user input.
  */
-METHOD(StringClassGoActive, struct gpInput *gpi)
+METHOD(StringClassGoActive, struct gpInput *, gpi)
 {
    SD                *sd = INST_DATA(cl, obj);
    BC                *bc = BASE_DATA(obj);
@@ -623,7 +626,7 @@ METHOD(StringClassGoActive, struct gpInput *gpi)
 /*
  * Handle the user input.
  */
-METHOD(StringClassHandleInput, struct gpInput *gpi)
+METHOD(StringClassHandleInput, struct gpInput *, gpi)
 {
    SD                *sd = INST_DATA(cl, obj);
    ULONG              rc;
@@ -713,7 +716,7 @@ METHOD(StringClassHandleInput, struct gpInput *gpi)
 /*
  * Go inactive.
  */
-METHOD(StringClassGoInActive, struct gpGoInactive *gpi)
+METHOD(StringClassGoInActive, struct gpGoInactive *, gpi)
 {
    SD       *sd = INST_DATA(cl, obj);
    BC       *bc = BASE_DATA(obj);
@@ -757,7 +760,7 @@ METHOD(StringClassGoInActive, struct gpGoInactive *gpi)
 /*
  * The object size is requested.
  */
-METHOD(StringClassDimensions, struct bmDimensions *bmd)
+METHOD(StringClassDimensions, struct bmDimensions *, bmd)
 {
    SD              *sd = INST_DATA(cl, obj);
    struct BaseInfo *bi = bmd->bmd_BInfo;
@@ -781,7 +784,7 @@ METHOD(StringClassDimensions, struct bmDimensions *bmd)
 /*
  * Keyboard activation.
  */
-METHOD(StringClassKeyActive, struct wmKeyInput *wmki)
+METHOD(StringClassKeyActive, struct wmKeyInput *, wmki)
 {
    /*
     * Let intuition do it.
@@ -793,7 +796,7 @@ METHOD(StringClassKeyActive, struct wmKeyInput *wmki)
 /*
  * Format string to the string object.
  */
-METHOD(StringClassFString, struct smFormatString *smfs)
+METHOD(StringClassFString, struct smFormatString *, smfs)
 {
    SD       *sd = INST_DATA(cl, obj);
    UBYTE    *sb;

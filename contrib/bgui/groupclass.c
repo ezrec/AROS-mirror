@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/15 19:27:01  stegerg
+ * another hundreds of REG() macro replacements in func headers/protos.
+ *
  * Revision 42.1  2000/05/14 23:32:47  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -111,7 +114,7 @@ typedef struct {
 
 /// SetGroupNodeAttrs
 
-METHOD(SetGroupNodeAttrs, struct opSet *ops)
+METHOD(SetGroupNodeAttrs, struct opSet *, ops)
 {
    MD              *md = INST_DATA(cl, obj);
    struct TagItem  *tstate = ops->ops_AttrList, *tag;
@@ -229,7 +232,7 @@ METHOD(SetGroupNodeAttrs, struct opSet *ops)
 /*
  * Create a shiny new object.
  */
-METHOD(GroupNodeClassNew, struct opSet *ops)
+METHOD(GroupNodeClassNew, struct opSet *, ops)
 {
    MD          *md;
    ULONG        rc;
@@ -270,7 +273,7 @@ METHOD(GroupNodeClassNew, struct opSet *ops)
  * Change one or more of the object
  * it's attributes.
  */
-METHOD(GroupNodeClassSet, struct opSet *ops)
+METHOD(GroupNodeClassSet, struct opSet *, ops)
 {
    AsmDoSuperMethodA(cl, obj, (Msg)ops);
 
@@ -281,7 +284,7 @@ METHOD(GroupNodeClassSet, struct opSet *ops)
 /*
  * Give one of the attributes.
  */
-METHOD(GroupNodeClassGet, struct opGet *opg)
+METHOD(GroupNodeClassGet, struct opGet *, opg)
 {
    MD             *md = INST_DATA(cl, obj);
    ULONG           rc = 1, *store = opg->opg_Storage;
@@ -320,7 +323,7 @@ METHOD(GroupNodeClassGet, struct opGet *opg)
 /*
  * Remove node.
  */
-METHOD(GroupNodeClassRemove, Msg msg)
+METHOD(GroupNodeClassRemove, Msg, msg)
 {
    MD          *md = INST_DATA(cl, obj);
 
@@ -507,7 +510,7 @@ STATIC ASM REGFUNC2(Object *, FindObNode,
 
 /// GROUPM_NEWMEMBER
 
-METHOD(GroupClassNewMember, struct opSet *ops)
+METHOD(GroupClassNewMember, struct opSet *, ops)
 {
    return (ULONG)BGUI_NewObjectA(BGUI_GROUP_NODE, ops->ops_AttrList);
 }
@@ -573,7 +576,7 @@ STATIC ASM REGFUNC3(void, PassAttr,
 /*
  * Set one or more attributes.
  */
-METHOD(GroupSetAttrs, struct opSet *ops)
+METHOD(GroupSetAttrs, struct opSet *, ops)
 {
    GD                *gd = INST_DATA(cl, obj);
    BC                *bc = BASE_DATA(obj);
@@ -694,7 +697,7 @@ METHOD(GroupSetAttrs, struct opSet *ops)
 /*
  * Create a new object.
  */
-METHOD(GroupClassNew, struct opSet *ops)
+METHOD(GroupClassNew, struct opSet *, ops)
 {
    GD               *gd;
    struct TagItem   *tags = ops->ops_AttrList, *tstate, *tag;
@@ -834,7 +837,7 @@ METHOD(GroupClassNew, struct opSet *ops)
 /*
  * Set one or more attributes.
  */
-METHOD(GroupClassSet, struct opSet *ops)
+METHOD(GroupClassSet, struct opSet *, ops)
 {
    /*
     * First we let the superclass have a go at it.
@@ -845,7 +848,7 @@ METHOD(GroupClassSet, struct opSet *ops)
 }
 ///
 /// OM_GET
-METHOD(GroupClassGet, struct opGet *opg)
+METHOD(GroupClassGet, struct opGet *, opg)
 {
    GD       *gd = INST_DATA(cl, obj);
    ULONG     rc = 1, *store = opg->opg_Storage;
@@ -923,7 +926,7 @@ static VOID ReleaseMembers(Object *obj,GD *gd,BOOL got_members_list)
 /*
  * Layout the group.
  */
-METHOD(GroupClassLayout, struct bmLayout *bml)
+METHOD(GroupClassLayout, struct bmLayout *, bml)
 {
    GD           *gd = INST_DATA(cl, obj);
    BC           *bc = BASE_DATA(obj);
@@ -1192,7 +1195,7 @@ VOID SAVEDS subrender_task(void)
 /*
  * Render the group.
  */
-METHOD(GroupClassRender, struct bmRender *bmr)
+METHOD(GroupClassRender, struct bmRender *, bmr)
 {
    GD                *gd = INST_DATA(cl, obj);
    BC                *bc = BASE_DATA(obj);
@@ -1297,7 +1300,7 @@ METHOD(GroupClassRender, struct bmRender *bmr)
 /*
  * Pass on the hittest message.
  */
-METHOD(GroupClassHitTest, struct gpHitTest *gph)
+METHOD(GroupClassHitTest, struct gpHitTest *, gph)
 {
    GD                *gd = INST_DATA(cl, obj);
    Object            *m;
@@ -1335,7 +1338,7 @@ METHOD(GroupClassHitTest, struct gpHitTest *gph)
 /*
  * Forward a GM_GOACTIVE or GM_HANDLEINPUT message.
  */
-METHOD(GroupClassActiveInput, struct gpInput *gpi)
+METHOD(GroupClassActiveInput, struct gpInput *, gpi)
 {
    GD                *gd = INST_DATA(cl, obj);
    ULONG              rc = GMR_NOREUSE;
@@ -1365,7 +1368,7 @@ METHOD(GroupClassActiveInput, struct gpInput *gpi)
 /*
  * Forward the GM_GOINACTIVE message.
  */
-METHOD(GroupClassInActive, Msg msg)
+METHOD(GroupClassInActive, Msg, msg)
 {
    GD          *gd = INST_DATA(cl, obj);
    ULONG        rc = 0;
@@ -1390,7 +1393,7 @@ METHOD(GroupClassInActive, Msg msg)
  * Dispose of the group and all
  * it's members.
  */
-METHOD(GroupClassDispose, Msg msg)
+METHOD(GroupClassDispose, Msg, msg)
 {
    GD           *gd = INST_DATA(cl, obj);
    Object       *m, *o;
@@ -1428,7 +1431,7 @@ METHOD(GroupClassDispose, Msg msg)
 /*
  * Add a member to the group.
  */
-METHOD(GroupClassAddMember, struct grmAddMember *grma)
+METHOD(GroupClassAddMember, struct grmAddMember *, grma)
 {
    GD             *gd = INST_DATA(cl, obj);
    Object         *m;
@@ -1466,7 +1469,7 @@ METHOD(GroupClassAddMember, struct grmAddMember *grma)
 /*
  * Insert a member in the group.
  */
-METHOD(GroupClassInsert, struct grmInsertMember *grmi)
+METHOD(GroupClassInsert, struct grmInsertMember *, grmi)
 {
    GD             *gd = INST_DATA(cl, obj);
    Object         *m;
@@ -1507,7 +1510,7 @@ METHOD(GroupClassInsert, struct grmInsertMember *grmi)
 /*
  * Replace a member in the group.
  */
-METHOD(GroupClassReplace, struct grmReplaceMember *grrm)
+METHOD(GroupClassReplace, struct grmReplaceMember *, grrm)
 {
    GD             *gd = INST_DATA(cl, obj);
    Object         *m, *old;
@@ -1565,7 +1568,7 @@ METHOD(GroupClassReplace, struct grmReplaceMember *grrm)
 /*
  * Remove an object from the list.
  */
-METHOD(GroupClassRemMember, struct grmRemMember *grmr)
+METHOD(GroupClassRemMember, struct grmRemMember *, grmr)
 {
    GD             *gd = INST_DATA(cl, obj);
    Object         *m;
@@ -1589,7 +1592,7 @@ METHOD(GroupClassRemMember, struct grmRemMember *grmr)
 ///
 /// GROUPM_OBTAINMEMBERS
 
-METHOD(GroupClassObtainMembers, struct gmObtainMembers *gmom)
+METHOD(GroupClassObtainMembers, struct gmObtainMembers *, gmom)
 {
    GD      *gd = INST_DATA(cl, obj);
    MD      *md;
@@ -1651,7 +1654,7 @@ METHOD(GroupClassObtainMembers, struct gmObtainMembers *gmom)
 ///
 /// GROUPM_RELEASEMEMBERS
 
-METHOD(GroupClassReleaseMembers, struct gmReleaseMembers *gmrm)
+METHOD(GroupClassReleaseMembers, struct gmReleaseMembers *, gmrm)
 {
    GD       *gd = INST_DATA(cl, obj);
    Object  **o = gmrm->gmrm_Array - 1;
@@ -1706,7 +1709,7 @@ makeproto ASM REGFUNC1(ULONG, RelayoutGroup,
 /*
  * Calculate the minimum size of a group.
  */
-METHOD(MemberDimensions, struct bmDimensions *bmd)
+METHOD(MemberDimensions, struct bmDimensions *, bmd)
 {
    GD                *gd = INST_DATA(cl, obj);
    Object            *m;
@@ -1887,7 +1890,7 @@ METHOD(MemberDimensions, struct bmDimensions *bmd)
 /*
  * They want our dimensions info.
  */
-METHOD(GroupClassDimensions, struct bmDimensions *bmd)
+METHOD(GroupClassDimensions, struct bmDimensions *, bmd)
 {
    GD                   *gd = INST_DATA(cl, obj);
 /*   BC                   *bc = BASE_DATA(obj); */
@@ -1975,7 +1978,7 @@ METHOD(GroupClassDimensions, struct bmDimensions *bmd)
 }
 ///
 /// GRM_DIMENSIONS
-METHOD(GroupClassDimensionsX, struct grmDimensions *dim)
+METHOD(GroupClassDimensionsX, struct grmDimensions *, dim)
 {
    GD    *gd = INST_DATA(cl, obj);
    ULONG rc=0;
@@ -1993,7 +1996,7 @@ METHOD(GroupClassDimensionsX, struct grmDimensions *dim)
 /*
  * Pass on the help message.
  */
-METHOD(GroupClassHelp, struct bmShowHelp *bsh)
+METHOD(GroupClassHelp, struct bmShowHelp *, bsh)
 {
    GD           *gd = INST_DATA(cl, obj);
    Object       *m;
@@ -2015,7 +2018,7 @@ METHOD(GroupClassHelp, struct bmShowHelp *bsh)
 /*
  * Add a spacing object.
  */
-METHOD(GroupClassAddSpaceMember, struct grmAddSpaceMember *grms)
+METHOD(GroupClassAddSpaceMember, struct grmAddSpaceMember *, grms)
 {
    GD           *gd = INST_DATA(cl, obj);
    Object       *m;
@@ -2032,7 +2035,7 @@ METHOD(GroupClassAddSpaceMember, struct grmAddSpaceMember *grms)
 /*
  * Route a BASE_LEFTEXT method.
  */
-METHOD(GroupClassLeftExt, struct bmLeftExt *le)
+METHOD(GroupClassLeftExt, struct bmLeftExt *, le)
 {
    GD          *gd = INST_DATA(cl, obj);
    BC          *bc = BASE_DATA(obj);
@@ -2073,7 +2076,7 @@ METHOD(GroupClassLeftExt, struct bmLeftExt *le)
 /*
  * Which object is under the mouse?
  */
-METHOD(GroupClassWhichObject, struct grmWhichObject *grwo)
+METHOD(GroupClassWhichObject, struct grmWhichObject *, grwo)
 {
    GD              *gd = INST_DATA(cl, obj);
    struct IBox     *ibox;
@@ -2126,7 +2129,7 @@ METHOD(GroupClassWhichObject, struct grmWhichObject *grwo)
 /*
  * Which object has the proper key?
  */
-METHOD(GroupClassFindKey, struct bmFindKey *bmfk)
+METHOD(GroupClassFindKey, struct bmFindKey *, bmfk)
 {
    GD           *gd = INST_DATA(cl, obj);
    Object       *m;
@@ -2149,7 +2152,7 @@ METHOD(GroupClassFindKey, struct bmFindKey *bmfk)
 /*
  * Attach keys from labels.
  */
-METHOD(GroupClassAll, Msg msg)
+METHOD(GroupClassAll, Msg, msg)
 {
    GD           *gd = INST_DATA(cl, obj);
    Object       *m;
@@ -2167,7 +2170,7 @@ METHOD(GroupClassAll, Msg msg)
 }
 ///
 /// BASE_IS_MULTI
-METHOD(GroupClassIsMulti, Msg msg)
+METHOD(GroupClassIsMulti, Msg, msg)
 {
    return TRUE;
 }
