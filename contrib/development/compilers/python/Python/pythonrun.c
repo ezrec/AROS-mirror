@@ -1395,10 +1395,14 @@ PyOS_getsig(int sig)
 	sigaction(sig, NULL, &context);
 	return context.sa_handler;
 #else
+#ifndef AROS
 	PyOS_sighandler_t handler;
 	handler = signal(sig, SIG_IGN);
 	signal(sig, handler);
 	return handler;
+#else
+	return 0;
+#endif
 #endif
 }
 
@@ -1414,6 +1418,10 @@ PyOS_setsig(int sig, PyOS_sighandler_t handler)
 	sigaction(sig, &context, NULL);
 	return oldhandler;
 #else
+#ifndef AROS
 	return signal(sig, handler);
+#else
+	return 0;
+#endif
 #endif
 }
