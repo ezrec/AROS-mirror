@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-#MM demo-voxel : demo-voxel-icons
+#MM demo-voxel : demo-voxel-icons demo-voxel-images
 
 DESTDIR := $(CONTRIBDIR)/Demos/Voxel
 
@@ -17,3 +17,13 @@ demo-voxel-icons : $(ICONFILES)
 	
 $(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
 	%makeicon2
+
+IMAGES := clouds.pcx democ.pcx demoh.pcx
+IMAGEFILES := $(foreach f, $(IMAGES), $(DESTDIR)/$(f))
+
+#MM demo-voxel-images :
+demo-voxel-images : $(IMAGEFILES)
+
+$(DESTDIR)/%.pcx : %.pcx
+	@$(CP) $< $@
+
