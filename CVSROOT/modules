@@ -30,6 +30,9 @@
 # Amiga C Manual
 ACM -d contrib/ACM contrib/ACM
 
+# Audio Hardware Interface
+AHI -d contrib/AHI contrib/AHI
+
 # Aminet
 aminet -d contrib/aminet contrib/aminet
 
