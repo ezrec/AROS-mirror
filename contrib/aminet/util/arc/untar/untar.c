@@ -4,6 +4,7 @@
 
 #include "stdio.h"
 #include "stdlib.h"
+#include "string.h"
 
 struct FileHeader {
   int  type;
@@ -73,6 +74,26 @@ struct FileHeader *hdr;
   pos+=512;
 }
 
+void MakeDirs (char * s)
+{
+  char *temp;
+  int i = 0;
+
+  do
+  {
+     while (s[i] && s[i] != '/') i++;
+     if (s[i] == '/')
+     {
+       temp = strdup (s);
+       temp[i] = 0;
+       mkdir (temp, 0);
+       free (temp);
+       i++;
+     }
+  }
+  while (s[i]);
+}
+
 int main(argc,argv)
 int argc;
 char **argv;
@@ -91,6 +112,7 @@ char **argv;
         printf("Creating directory %s\n",hdr.name);
         mkdir(hdr.name,0);
       } else {
+        MakeDirs (hdr.name);
         if(f=fopen(hdr.name,"w")) {
           printf("Extracting (%8d bytes) %s\n",hdr.size,hdr.name);
           CopyData(tar,f,hdr.size);
