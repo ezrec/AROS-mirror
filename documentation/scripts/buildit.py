@@ -188,6 +188,7 @@ def convertWWW( src, language, options=None ):
         '--no-generator',   '--language=' + language,
         '--no-source-link', '--no-datestamp',
         '--output-encoding=iso-8859-1',
+        '--target-suffix=php',
         src, '' ]
 
     if options:
@@ -239,7 +240,7 @@ def processHTML( src, depth ):
     suffix = os.path.splitext( src )[1][1:]
     if suffix not in LANGUAGES: return
 
-    dst     = prefix + '.html.' + suffix
+    dst     = prefix + '.html' #.' + suffix
     dst_abs = os.path.normpath( os.path.join( DSTROOT, dst ) )
     src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
     dst_dir = os.path.dirname( dst_abs )
@@ -252,6 +253,7 @@ def processHTML( src, depth ):
             '--no-generator',   '--language=' + suffix,
             '--no-source-link', '--no-datestamp',
             '--output-encoding=iso-8859-1',
+            '--target-suffix=html',
             '--stylesheet=' + '../' * depth + 'aros.css',
             src_abs, dst_abs
         ]
