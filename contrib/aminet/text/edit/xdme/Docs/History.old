@@ -1,0 +1,1090 @@
+
+    Recent History of XDME (by Aaron Digulla)
+    ----------------------------------------
+
+This file was done by hand and is a bit disturbed. I changed the
+format of history between V1.46 and V1.50. Sorry.
+
+There are the following differences between the original DME V1.45 and
+this Version 1.46 :
+
+File main.c:
+
+     Added Support for req.library in main (). The additions do open and
+     close the lib and take care for PurgeFiles() before exit.
+
+     Done some work on RAWKEY-Messages. Now XDME will not hang behind
+     RAWKEY-Messages which sometimes cause XDME to go (almost) infinitely.
+     Now all RAWKEY-Messages with IEQUALIFIER_REPEAT are removed, before
+     XDME starts over with MSG-processing.
+
+File afilereq.a:
+
+     This file is now obsolete and has been removed.
+
+File filereq.c:
+
+     Now XDME remebers its last PATH and starts with a complete PATH !
+
+     This file was copied from another XDME-Update by someone called TJM.
+     Unfortunately the LHA-File was corrupt but I could extract this one and
+     I immediately included it. It supports ASL- (OS2.0), ReqTools- (FISH) or
+     Arp-Library (also FISH) for File-Requesters. This file is mostly from
+     TJM.
+
+     The commands are still
+
+	arpload
+	arpsave
+	arpinsfile
+	barpsave
+	arpfont
+
+     but will open an ASL-, ReqTools or Arp-Filerequester (in that order), i.e.
+     if you don't have ASL (e.g. OS1.3), you will get a ReqTools-Requester.
+     If that ain't working you'll get a standard Arp-Requester.
+
+File cmd1.c:
+
+     Made XDME check if it can go one page up. Avoids anoying flicker at the
+     top of the text.
+
+     Also, I modified (enhaced) text_sync() and text_displayseg(). Both now
+     go faster.
+
+     Goto will fail, if block is undefined.
+
+File cmd2.c:
+
+     The scanf-routine has been GREATLY enhaved !!! The following is now
+     available:
+
+	  scanf type
+
+     type is one of :
+
+	  %s - like c-scanf
+	  %[] - dito, but '~' equals '^' ('^' is XDMEs ESCAPE-char !)
+
+     the follwing types have been added. Any of these takes an additional
+     '+' as precedence. This means, that the whole thing is grabbed. (e.g.:
+     l will get the line from the cursor to its end, +l will get the WHOLE
+     line !)
+
+	  l    - line
+	  w    - word (everything between two whitespaces)
+	  n    - number (all digits)
+	  b    - anything that fits into isalnum()
+	  r    - remark. Begins at "/*" or cursor until "*/" or line-end
+	  c    - one char ('+' is useless)
+	  t    - like l, but will get only text, i.e. without preceding and
+		 trailing spaces.
+	  a    - anything that fits into isalpha()
+
+
+     Also, I did some work on IF(ELSE) and WHILE. There is a new condition:
+
+     IF
+     IFELSE
+     WHILE
+
+	  c[<=>]"x
+	  block
+
+     Which means, that c is compared with the char 'x'. I had to use '"'
+     instead of '\'', because '\'' is already a special char for XDME and
+     I didn't want the user to do that much escaping.
+	  The 'block' will return TRUE, if the cmd block will fail (i.e.
+     `if bl unblock block' will ALWAYS work !).
+
+File command.c:
+
+     We have some new command:
+
+     barpsave  - save a block via a FileRequester.
+     n <cmd>   - repeat <cmd> n times
+
+     Furthermore I removed the STRTOLOWER-loop since XDME expects all its
+     commands in lowercase. This will speed up things.
+
+File cmd4.c:
+
+     This file will contain all NEW commands.
+
+     INDENT range how	 - Do indent lines
+	  range :   .	   - actual line
+		    [0-9]* - Line-Number
+		    $[0-9] - Ping-Marker #
+		    bs	   - block start
+		    be	   - block end
+		    b	   - whole block
+		    _	   - last line
+		    t	   - whole text
+
+	       Examples :
+
+		    1,bs      - from line 1 to the block start (both included)
+		    1,_       - all lines
+		    15,be     - from line 15 to the end of the block
+		    .,_       - from current to EOF
+
+
+	  how :     '-'       - move line left (instead of right)
+		    '.'       - Align to a multiple instead of just inserting
+				(deleting) `indent' spaces.
+		    't'       - `indent' = size of the tabs
+		    [0-9]     - `indent' = n chars
+		    'c'       - start at current column (insead of column 1)
+
+	  INDENT takes care, that no chars are pushed over the borders to the
+	  left (1. column) or right (column 255) ! If chars would be lost, the lines
+	  are only moved as far as possible in the desired direction.
+
+	  Example: INDENT 1,_ -255	will make the whole text left-aligned
+		   INDENT 1,_ 255		    -""-         right-aligned
+
+
+     rudimentary CharBlocks. Not worth to mention it.
+
+     left/right scrolling to complete the scrolling abilities.
+     SCROLLLEFT     - scroll 1 char to the left
+     SCROLLRIGHT    - scroll 1 char to the right
+     INSLINES n     - inserts n lines
+
+
+File *.c:
+
+     I did some work on allocb (). Now, if the length of the requested line
+     is 1 or less, a static pointer will be returned. So we will not have
+     any empty memory blocks any more. (Can you imagine what EXEC will do
+     with MANY 8-Byte blocks allocated and freed in random order ??).
+     Furthermore, I did change all the FreeMem (line, strlen(line)+1)-calls
+     to a routine freeline (line), which takes care for a correct freeing
+     of the specified line.
+
+     Another good idea might be to check the true line length (8-Byte aligned)
+     and to try to push the new one into the old one.
+
+     Furthermore I did optimize many routines. Always remember : One
+     Gfx-Operation takes more time than 8 if()s ! Also loops were optimized
+     and more ...
+
+     Also line-handling has been changed. Now XDME uses much more
+     object-oriented line-handling (i.e. allocline, alloclptr, freeline).
+     In future, there is a chance that XDME will support folding and more
+     ...
+
+
+Differences between V1.46 and V1.50:
+
+     - Scrolls FASTER again ...
+     - added the following :
+
+	  n <cmd>     - works like "repeat n <cmd>"
+	  delines n   - deletes n lines
+	  projectsave - Saves all current windows of XDME with filename and
+			position
+	  projectload - loads them again
+	  projectinfo - AREXX-ONLY ! Returns the info for the current
+			window (filename, position, iconpos)
+	  select what - Makes another window the actual window. All following
+			commands work now on this window !
+
+			what is one of :
+
+			    first
+			    last
+			    next
+			    previous
+			    window=<window_name>    Select window with that
+						    name
+			    save		    Remember actual window.
+						    There is no stacking !
+			    load		    Return to the last saved
+						    window
+	  delete      - Delete to next space
+
+     - deleting now works again (display was NOT correctly updated in
+       V1.46). Gulp.
+     - XDME has now a working AREXX-PORT !!!!!!!!!!!!!!!!!!
+       You can now send all XDME-Commands to XDMEs port "XDME.#" where #
+       is the number of the XDME (usually 1)
+     - Correct loading of lines > 255 chars.
+
+Differences between V1.50 and V1.51:
+
+     - added:
+
+	  match     - Looks for the matching paren. Recognises (), {}, []
+		      Ideal for checking paren-errors
+	  taskpri n - Sets the taskpri of XDME to n, -5 < n < 5
+
+     - removed some errors in scanf. This should work now !
+
+Differences between V1.51 and V1.53g:
+
+    - Search&Replay if FAAAAAAAST now. Needs only ~1s (vanilla Amiga) for
+      "Pattern not found" in cmd2.c
+    - Many memory-bugs (introduced by me) removed. Ooops.
+    - Better memory-handling. XDME now handles memory better (less
+      fragmentation).
+    - Several Speed-Ups.
+    - General reformating of source and more logical construction of source,
+      i.e. all routines are now found in the file where they're prototyped.
+      Furthermore many bugs and wrong declarations removed. Better local
+      variables and many other things.
+    - Supports CLIPBOARD !!! WHOW ! (Only rudimentary yet, sigh.)
+
+Differencies between V1.53g and V1.54:
+
+    - Blocks are now VISIBLE (background).
+    - added:
+	clipins     - Insert actual contents of clipboard. Works with ConClip,
+		      Snap and the like.
+	arpfont     - FontRequester
+	quitall     - Close ALL XDME windows and leave XDME.
+    - Replaced most SetXPen's by DEFINES
+    - Changed tomouse(). XDME will now scroll to mouse-pointer if left button
+      is held down near a border.
+    - Some changes in TOGGLEs including bug-remove from IF toggle ... (Ooops)
+    - Received a copy of TJM_DME, a DME-Update by Thomas J. Moore. I used
+      the following things from him:
+
+	filereq.c: Most things got changed. XDME now supports ASL-, REQTOOLS-
+		   and ARP-FileRequesters. You may also request a font via
+		   requester (uuaah, what a sentence).
+	PropGadget: Support for a proportional gadget.
+	*appendsave: Append a block/the file to a diskfile
+	sizewindow: resize and move window
+    - SELECT now activates the selected window via ActivateWindow().
+    - Removed a bug in menu_strip(). This routine cleared the WFLG_RMBTRAP
+      for iconified windows which made it a bit difficult to de-iconify them.
+
+Differencies between V1.54 and V1.55 (Pre-Release):
+
+    - introduced IMakefile
+    - New windows are now AddTail'ed instead of AddHead'ed.
+    - New commands:
+
+	DEBUG what  - Sets an internal flag for debugging on/off. Usefull for
+		      Debugging small routines.
+	PATTERN pat - Set pattern for filerequester
+
+    - If you don't start XDME with -n, XDME will look for an ARexx-Port XDME.1
+      and make this XDME load'n'display the new files.
+    - XDME now accepts the following CMD-Line options:
+
+	-n	- Don't care for any oth XDME hanging around. Start a NEW one.
+	-i	- Iconify all new windows.
+	-f file - Read local "file" instead of ".edrc". S:.edrc is unaffected
+		  by this.
+
+    - Began to split source into logical parts (i.e. all blockops into block.c)
+    - You can scroll via MOUSE now. Just click near a border. Clicking near an
+      edge will also work, but looks a bit strange.
+    - New s:.edrc which follows more the styleguide
+    - XDME will no longer save files named "unnamed".
+    - Inceased the size for file- and dirnames to 108/256 bytes.
+    - Changed TLATE. it will now accept DEC-, OCT- and HEX-numbers.
+    - New modes for IF:
+
+	if c="hello" ..     - TRUE, if the cursor is on the 'h' of "hello"
+			      You can write any string between the '"', but
+			      beware of spaces ! If the string contains
+			      spaces, you must put it in XDME's parentheses.
+	if `c=[. A-Z]'      - TRUE, if cursor is on '.', space or an uppercase
+			      letter.
+
+
+Differencies between V1.55 and V1.55b (Release):
+
+    Comment: I incorporate all bug-fixes from V1.55 in this release.
+
+    - Fixed a bug that caused DME to crash if you did
+      "run xdme xdme_project_file" if there was no project-file. Ooops.
+      Fixed a bug with char-codes > 127 and the ASCII-Value-display.
+      This used to result in a 32bit value (i.e. ffffffe4). Thanks to
+      Tero Turtiainen for this bug-report.
+    - REMOVED THAT DAMN BUG IN SEARCH ! YEAH !!
+    - New .edrc & keymappings that follow the StyleGuide !
+    - New commands:
+
+	pageleft	    - "page" left: If not at the far left, go to
+			      the beginning of the line or the left border of
+			      the window, whichever comes first. If already at
+			      the left border, scroll one windowfull to the
+			      left.
+	pageright	    - Dito, only to the right.
+
+V1.55.03:
+    - Bug: XDME didn't release its Port (DeletePort()). This caused a loss
+      of 40 bytes each time XDME was invoked :-( FIXED !
+    - XDME has now a sub-release-number !
+
+V1.55.04:
+    - BUG: a bug in text_sync() made XDME ignore a NULL-byte at the end
+      of the line. All appended text would be IGNORED! =8*O FIXED !! (phew ..)
+    - BUG: XDME used to ignore the settings from S:.edrc for all but the last
+      window. This should have been gone. :-/
+    - You can get the settings of ANY key via $keyspec ! Example:
+
+	$A-o -> arpload
+
+      This works like all other variables.
+    - Due to public request I added the support for PublicScreens. Invoke
+      XDME with "-ps <name>". NOTE: you can open XDME-windows on more than
+      one Screen, if you call it a second time with "-n -ps <other_name>"
+      but you have to take care that you don't loose overview. If you
+      call it without "-n", the "-ps" will be ignored. Tell me, if you
+      take this for a bug !
+    - New function:
+
+	error(char * fmt, ...)      Display an Error-Requester with
+				    printf()-style formatstring.
+    - Changed getyn() use EasyRequest() if possible.
+    - QUIT and QUITALL will inquire if the file has not yet been saved !
+      Now you can quit WITHOUT saving, quit WITH saving and CANCEL the quit.
+    - SAVEOLD will query for a file-name if the file is still "unnamed".
+    - it is no longer possible to save a file named "unnamed".
+    - XDME produces some enforcer hits. I fixed a bug, but I'm not sure
+      whether they have gone. Some who can run enforcer should test XDME
+      extensively. Thank you !
+    - XDME no longer scrolls when u click near a border. This has gone due
+      to public request. Now you can scroll via the scroll-bar on the left.
+      XDME will follow when you pick&drag.
+
+V1.55.05
+
+    - removed forgotten printf() in toggle-support
+    - Removed bug in uniconify(). This used to draw an anoying 2nd cursor
+      when you uniconified XDME e.g. via a cursor-key.
+    - error() will set Abortcommand now.
+    - XDME is now compiled with -mRR
+    - bug in block_ok() removed. This had impact on BSAVE, IF bl and some more
+
+V1.55.06
+
+    - XDME uses now SetWrMsk while scroll. This saves quite some time when
+      on a deep screen (more that 1 bitplane :-). Make sure you use a FGPEN
+      that is a power of 2 ! On a VERY deep screen, XDME is still AWFULLY slow
+      :-( I'm working on this.
+    - The cursor was sometimes lost when a long command-line was displayed.
+      This command-line was also drawn over the window-border. This has been
+      fixed long ago, but I forgot to mention it :-)
+    - Sometimes XDME didn't follow the PropGadget. This was especially true,
+      when one did click outside the knob. This has been fixed.
+    - When one inserted text via CLIPINS or middle-mousebutton, and XDME had
+      to scroll (i.e. the text get beyond the right window-border) the cursor
+      disapeared.
+    - XDME used to crash when QUITALL was selected and there was more than
+      one window open. FIXED !
+    - XDME asked for a file <pubscreenname> when invoked via "-ps <psname>".
+      FIXED !
+
+V1.55.07
+
+    - Checked XDME with SAS/C 6.0 for errors. Found and fixed some. XDME
+      should now compile with SAS/C and DICE.
+    - Did some work on blocks. New commands:
+
+	BSTART	    - Specify start of block
+	BEND	    - Specify end of block
+		In both cases the other end of the block must already have been
+		specified.
+
+    - Again did some work on SetWrMsk(). XDME .06 used wrong colors for blocks
+      and cursor on screens with other than 2 bitplanes.
+    - Fixed a bug in QUITALL. again :-)
+    - When clicking near the left border, XDME jumped left. FIXED
+    - Variables have changed. XDME now uses the following vars to identify
+      the file, path and currentdir:
+
+      $filename 	- full path with filename (i.e. "s:.edrc")
+      $path		- path only ("s:"). Path is delimited with ':' or '/'
+      $file		- filename only (".edrc")
+      $currentdir	- the current dir of XDME ("dice:source/XDME/")
+
+      This allows easy AREXX-access of the file :-) To get a result via AREXX
+      use
+
+	RXRESULT <any>	- this will copy <any> to RESULT in an AREXX-script:
+
+			    OPTIONS RESULTS
+
+			    address 'XDME.1'
+
+			    'rxresult $filename'
+
+			    say 'The actual filename is' RESULT
+
+    - a bug in drexx.c has been fixed that prevented obtaining of a RESULT-
+      string in AREXX.
+    - Some bugs concerning the placement of windows have been fixed. XDME used
+      to ignore the position of windows when using SAVECONFIG, PROJECTSAVE or
+      PROJECTINFO. Now XDME checks for the actual position and size BEFORE
+      saveing the stuff. You can also set the position of a filerequester
+      (at least the ASL-requester) by dragging and sizing it and clicking on
+      "Cancel". To save this position use SAVECONFIG.
+    - Added my EMail-address to the version-info ... just in case you forget
+      it :-)
+    - Reorgranised the structure of the XDME-directory.
+
+V1.55.08
+
+    - Removed Debugging-output in PropGradget-Handling. (Left over from
+      V1.55.06)
+    - Fixed a hidden bug in mods.c:do_pong. The if was always TRUE due to
+      the type of pong.
+    - Bug in main() fixed which caused XDME to block if there was more than
+      one file in XDME_Project_File AND XDME was invoced with XDME_Project_File
+    - Did some work in command.c. All commands have been checked whether they
+      should uniconify XDME. Now all SAVEcmds and settings don't deiconify,
+      all commands that CHANGE something VISIBLE deiconify ! If you find
+      something that is wrong in your eyes, tell me !
+    - Removed a buffer of 256 bytes in drexx.c
+
+V1.55.09
+
+    - Format of drexx.c adjusted
+    - Iconified XDME is no long active because I think that's not usefull.
+      You iconify a window to work on another, no ?
+    - Another place where the placement of windows is used has been fixed.
+      if you rearrange the last XDME-icon and open another XDME, the window
+      was opened where it would have been, if you DIDN'T move the other icon.
+      Now it's adjusted to the ACTUAL position of the last window.
+    - XDME now sets the cursor BELOW the block after BCOPY and BMOVE
+    - XDME unneccessarily redrawed the screen afetr BCOPY. Now copying blocks
+      is great :-) no more flicker !
+    - var.c created. contains all stuff for variables.
+    - edit.c created. contains all stuff for editing like DEL, BS, DELINE,
+      INDENT, etc.
+    - cmd.c created. contains all stuff for programming and logic, i.e.
+      IF, IFELSE, REPEAT, WHILE.
+    - win.c created. All window-related stuff
+    - prefs.c created. All settings-stuff.
+    - contents of mods.c moved into subs.c, cursor.c, block.c
+    - cleaned up some unneeded Prototypes and moved some functions to more
+      suitable places.
+    - Fixed SWAPMARK. I suppose nobody used this one ever. It was TOTALLY
+      broken !
+    - moved all stuff from cmd3.c and cmd4.c to cmd1.c. cmd3.c and cmd4.c
+      have been deleted.
+    - moved some last functions from cmd2.c to cmd1.c and renamed cmd2.c as
+      io.c. Now the sources are mostly cleaned up.
+    - BMOVE now sets the cursor in the first line AFTER the block when it was
+      inside.
+    - all functions inside cmd1.c were moved in the appropriate files. cmd1.c
+      was deleted. Now the source should be cleaned up ! Whow ! :-)
+    - Removed a BIG bug in unset(). There were two accesses in a freed var-
+      struct ! Now all constructs of the type IF x=$var work :-) Phew !
+    - All variables in XDME are now caseINsensitive like the ENV-vars.
+    - moved names of internal variables into the structure. This saves
+      some memory.
+    - The format of the XDME_Project_file has changed. You need not to delete
+      the old ones :-) XDME now also remembers the last line the cursor was
+      in !
+    - XDME -i now iconifies all new windows :-)
+    - the path and file in XDME_Project_File are now enclosed in '"'. Also
+      PROJECTLOAD now checks for '"' before the path and file. This allows
+      blanks in the path or file (ie. "Ram Disk:")
+    - new function warn(char * fmt, ...). like error(), but just displays
+      text in the title.
+    - do_edit (NEWFILE) and search now use warn() instead of error().
+    - Visited all error()-calls. All errors are now displayed in a equal form
+      with the command that failed in the first line and the error-text below.
+    - New commands:
+
+	PUBSCREEN name	    - open next window on screen "name". Use an
+			      empty string to turn off (ie. "pubscreen `'")
+	PUSH item	    - Push an item on the stack
+	POP item	    - Pop something from the stack and store it in
+			      item. The special item AUTO stores the thing
+			      back where it was taken from.
+	GLOBAL what	    - turn GLOBAL SEARCH on/off. if on, XDME searches
+			      from the actual window through all following.
+			      This depends on the sequence the windows were
+			      opened !
+
+    - You can temporarily store items on stack. These item are
+
+	- settings of XDME
+	    POS 	- actual cursor position (like PING)
+	    MODIFIED	- modified flag
+	    ICONMODE	- iconify-state (!! DO NOT USE !!)
+	    TABSTOP	- tab-size
+	    SAVETABS	- Should I convert spaces to tabs ?
+	    MARGIN	- right margin
+	    INSERTMODE	- obvious :-)
+	    IGNORECASE	- for search
+	    WORDWRAP	- word-wrapping on/off
+	    WWCOL	- col. of wordwrap
+	    WINDOW	- position and size of window
+	    ICON	- position of icon
+	    PENS	- all four pens
+	    BLOCK	- like PUSH-/POPMARK
+	    ED		- actual window. Like SELECT SAVE, but can be nested
+	    AUTO	- POP only ! This automatically put the topmost
+			  thing from stack to its original place.
+	    DISCARD	- POP only ! Discards the topmost item from the stack.
+
+      This can be used for printing:
+
+	    push savetabs	; Remember SAVETABS and MODIFIED
+	    push modified
+	    savetabs off	; Don't replace spaces by tabs
+	    saveas prt: 	; write to printer
+	    pull auto		; restore old state of MODIFIED and
+	    pull auto		; SAVETABS
+
+      If you see or want something not in here, tell me !
+
+Differencies between V1.55.09 and V1.60 (Release):
+
+    - Bug in INDENT removed. INDENT used 256 bytes for indent, but the last
+      byte is used by the '\0'. Ooops :-)
+    - MAX_FONT_SIZE defined in all.h. This defines the max. pixelsize of a
+      font a user may use. 64 might be enough, no ?
+    - MAX_STACK_SIZE defines how many items can there be on the stack. Set to
+      64. Should suffice. Maybe I implement dynamic stacking. Should be easy
+      enough ...
+    - SETFONT now accepts the fontname without the ".font" extension, ie.
+      `setfont topaz 11' will load "topaz.font" with a size of 11 pixels.
+      `setfont topaz.font 11' too :-)
+    - Fixed a bug in uninit_init() which caused XDME to copy the last used
+      font, but not USE it. Now XDME uses the last specified font in all
+      new windows.
+    - Added check_stack(). This routine clears the internal stack in case
+      an editor is closed and/or XDME exits.
+    - New commands:
+
+	PICK item   - like POP, but doesn't remove the topmost element from
+		      stack !
+	SWAP item   - exchange the topmost item on stack with the actual
+		      item
+
+    - Removed a bug in main() which caused XDME to hang, if it wasn't called
+      with at least one file. This was a good example for deadlocking with
+      only ONE task :-) WHOW !
+    - New nice WB-Icon for XDME and it's drawer
+    - Fixed a bug in the startup-code from WB. XDME used to crash if invoked
+      via WB with some files selected. FIXED
+    - Forgot to update version :-)
+    - removed SWAPMARK, PUSHMARK, POPMARK because they are obsolete !
+    - Added the Macros-directory. I'll put some tools/scripts in there.
+
+V1.60.01
+
+    - removed a bug in main() which caused a FreeMem() with a size of NULL.
+      It seems as if DICE doesn't complain about unknown structs in SIZEOF.
+    - removed an OLD bug in keyboard.c. The mapping for the brackets on the
+      numeric-pad is now nk[ and nk] instead of the wrong nk( and nk).
+    - moved do_return() from do_cursor() to do_edit()
+    - removed a bug in MATCH. Upto now, match would produce NEGATIVE line-
+      numbers if it couldn't find and matching parens before your current
+      position. Also it won't move the cursor anymore, if was unable to
+      find a matching paren and shows a warning in the headline.
+    - Size of stack is no longer FIXED, ie. the stack grows if you push
+      many items and doesn't exist at all, you don't do so !
+    - Removed support for ARP.LIBRARY.
+    - XDME now asks for ASL- or ReqTools-library.
+    - Fixed an enforcer-hit in do_command() which only occurred if you
+      started XDME with a project-file for the first time. (do_command()
+      was called while there was no ED yet)
+    - XDME now displays an error-dialog, if it was started via WB and there
+      were some error(s).
+    - fixed a bug that still was in setfont(). Setfont now accepts names
+      with and without the prefix ".font"
+    - geoskip() can now read parameters that contain spaces
+    - did some work on BSTART and BEND. Now only the portion that changed
+      is redrawn. Also, if you make the block smaller, this is updated
+      correctly.
+    - The iconified XDME-window has now a depth-gadget.
+
+V1.60.02
+
+    - Fixed a bug in PUSH. The first push ever was beeing ignored.
+    - Fixed the handling of '\' in command-strings. The \ is now
+      removed, if it is in the FIRST level or if it is in the SECOND
+      level and the string is quoted:
+
+	This
+
+	    map f1 `if c=[ht] `scanf w last right `\\\$scanf'''
+
+	becomes
+
+	    map f1 `if c=[ht] `scanf w last right `\$scanf'''
+
+	This
+
+	    map c-\` (`' left)
+
+	is unchanged.
+
+    - Fixed a bug in command.c. UNSET used do_unmap() instead of do_unset().
+    - MinNodes were converted to full Nodes. Especially the ln_Name field is
+      valid. This is for future OS2.0+-calls
+    - replaced all direct accesses to Nodes to calls to GetHead()/GetSucc().
+    - REFS is no longer case-sensitive
+    - did some work on do_tomouse(). If the mouse-pointer is outside the
+      window, XDME scrolls in that direction, else it moves the cursor
+      to the mouse. Note, that this is NOT hard-coded but done via
+      MAP. I'll redo the mapping of the middle mouse-button, so you
+      can map it via MAP. Now it calls CLIPINS.
+    - Added AbortCommand to search_operation(). If you chose "Replace all"
+      from the Edit-menu, XDME "hang". This no longer happens.
+    - THE FILE s:.edrc IS NOW xdme.prefs !!!!
+
+V1.60.03
+
+    - Removed the bug in SETFONT... finally :-)
+    - If XDME was started, it opened ASL.lib or (if that wasn't possible)
+      ReqTools. Therefore, if you had ASL.lib and wanted to use REQLOAD,
+      it did complain about "need asl or reqtools". Now XDME asks for
+      the requester when you call any of the requester-commands.
+    - a wrong mapping in keyboard.c has been fixed.
+    - !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      !!!!!!!! THE CONFIG-FILE HAS BEEN CHANGED !!!!! BEWARE !!!!!!!!!!!
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      You MUST delete the old S:XDME.prefs-file !
+    - New commands:
+
+	BBPEN n     - selects pen n as the block-background-pen
+
+    - You cannot specify the same color for fore- and background of
+      text and block anymore.
+
+V1.60.04/05
+
+    - Versions by B. Noll. He did many new commands and other things.
+      Read PATCHES.README and docs.addes for more info.
+
+-------------------------------------------------------------------------------
+
+			       !!! IMPORTANT !!!
+
+-------------------------------------------------------------------------------
+
+		!! This is the last release under OS1.3 !!
+
+	   (Though this one has already been compiled with -2.0)
+
+-------------------------------------------------------------------------------
+
+V1.70
+
+    - Removed most OS1.3 support. Some important commands don't work anymore
+      and any error will make XDME crash under 1.3 ! So don't use it with
+      OS1.3 anymore. Try V1.60.03 instead.
+    - Began the work of "XDME.tex".
+    - It's now possible again, to check for the PRESSING of a mousebutton
+      and the MOVEMENT of the mouse while pressing a button. Thus L-LMB
+      and L-MMO are really different events !
+    - Removed an enforcer hit in hrexx.c
+    - switched REFS to case-sensitive again because in OS20 some library-
+      calls (like FGetC, Write and more) are spelled like the std. C calls.
+    - you can now also map the key-up event, that is "map u-a" is the
+      key-up event of "a", "uL-lmb" = "release of left mb", aso.
+
+V1.80
+
+    - All elements in ED are now lowercase.
+    - The XDME.config has now a VERSION, preventing XDME to load an old
+      config. I had to do this, since I changed the configuration once
+      more. *sigh* I'll create a command that allows to write the
+      config-file in from of a XDME-script which can be loaded into the new
+      one, so you don't have to remember all settings you had.
+    - began documentation of source. block.c is now full-documented.
+    - removed bugs in REFS introduced in V1.60 and 1.70
+    - written some new low-level routines for display:
+
+	redraw_block (force, start_line, start_column, end_line, end_column);
+
+	    Redraws a block paying attention to type and old positions.
+	    If force is TRUE, the block is newly drawn and the positions
+	    are clip-borders. Else the positions are the new points where
+	    the block starts and ends. In this case, redraw_block() only
+	    draws that areas that changed and also rewrites the text into
+	    those areas.
+
+	redraw_text (start_line, end_line)
+
+	    just draws the text between those two lines, not including the
+	    latter. This call does not affect any old pixels so be sure
+	    the area is cleared (the text is just added to any old gfx).
+
+	redraw_textline (line)
+
+	    redraws one line of text. Any old gfx is unchanged, ie. this
+	    routine does NOT clear the area before or while writing the text.
+
+	redraw_textlineseg (line, start_column, end_column)
+
+	    redraws part of a line. Here too, no clearing of the background.
+
+    - XDME has now a line-spacing ie. an offset between all lines in the
+      display. SPACING n sets the distance between two lines in the display.
+      The line is centered in that area, ie. the offset to the line above is
+      n/2 (rounded up) and the height of a line is (font-height + n).
+    - removed an old bug that made XDME recognise the first button-press
+      which is used by many people, who don't use autoactivaters, to activate
+      the XDME-window. Now, if there's no autoactivater, XDME will ignore
+      the first button-press.
+    - began work with double-clicks.
+    - Cleaned up types:
+	LINE	    - line in memory
+	Line	    - a line-number
+	Column	    - a column-number
+	Bool	    - a flag (TRUE or FALSE)
+	Block	    - a block
+    - Removed a pending MAJOR bug ! If you had marked a block, saved it and
+      then saved you file, XDME would just write that part that was inside
+      the limits of the block and NOT THE WHOLE FILE ! FIXED !!!
+
+V1.80.01
+
+    - XDME can now handle windows that are larger than the actual display.
+      If the cursor approaches the border of the display, the screen gets
+      scrolled thus keeping the cursor from disappearing.
+    - XDME now uses the directory it was started from as base-dir if it was
+      invoked via WB.
+    - XDME has now a much nicer icon for texts. Thanks go to
+      schwingel@vax1.informatik.fh-regensburg.dbp.de.
+    - Use the routine switch_ed() instead of text_switch() throughout the
+      editor.
+    - XDME now uses a SimpleRefresh- instead of a SmartRefresh-window. The
+      loss in speed is neglectable.
+    - Fixed a bug from V1.80: ASLSAVE did check for the existance of the
+      file in the local directory instead the directory you choose.
+    - Fixed a bug in INSFILE: INSFILE used to change the filename.
+    - XDME now only displays the pure filename in the headline (no path
+      anymore).
+    - Switched from ops() to ReadArgs(). Cleaned up startup-stuff.
+      XDME now has those options:
+
+      FILE/M		    Filenames
+      SFILE=-S/K	    Startup-file (default ".edrc")
+      NEW=-N/S		    new XDME instead of sending AREXX-command
+			    "newwindow" to old XDME.
+      ICONIFY=-I/S	    iconify window after start
+      AUTOLOAD=-A/S	    look for a PROJECTFILE and load it if it exists
+			    (not yet)
+      PUBLICSCREEN=-PS/K    name of a public-screen XDME should open on
+      PROJECTFILE=-PF/K     name of the projectfile (default
+			    "XDME_Project_File")
+
+      You can have as many files in one commandline as you wish. If you
+      have a WB-Icon, you can mix files and options in the tooltypes.
+      All options are processed BEFORE the files are loaded !
+
+V1.81
+
+    - Fixed a problem in text_write(). XDME didn't update the display
+      correctly if you used space in Overwrite-mode.
+    - NEWFILE wouldn't display the path anymore if the file doesn't exist.
+    - NEWFILE doesn't bring up an error anymore if the file doesn't exist yet.
+    - new commands:
+
+	SETGEOMETRY x y width height - Set x/y position and width/height of
+			XDME's window. The width and height are ignored in
+			iconified state. If you use negative values, the
+			positions/sizes are relative the current
+			screen-size (0 0 -1 -1 will open a full-sized
+			window !). If a size is null, it's left unchanged
+			(move window only).
+	REPLACE - replaces the next strlen(findstr) chars with repstr
+			(ie. if deletes as many chars as are in findstr
+			and replaces them by the replace-string).
+			Useful in a mapping to find the text and another
+			to actually replace the text:
+
+			    map f1 `next'
+			    map f2 `replace next'
+
+			f1 searches for the text, f2 replaces it and looks for
+			the next occurence.
+	PATTERN pat - sets the pattern for the filerequesters.
+
+    - The old docs for REFS are wrong. The parameter is *NOT* ##<offset>
+      but @@<offset> !
+    - fixed a bug in saving the file/block. (from V1.80). Now BSAVE
+      doesn't write the whole file to disk :-) ooops
+    - AREXX-Startup. If you had already a XDME and clicked on another icon,
+      XDME looked for the wrong path.
+    - fixed icon-code
+    - If you use QUIT(ALL) and didn't save the file, XDME asks now:
+      "Quit anyway ?" instead of "Should I save first ?". The bottons
+      are now "Quit", "Save & Quit" and "Cancel" which is more like
+      StyleGuide and Intuition.
+
+V1.81.01
+
+    - redraw_block() ignored the topcolumn.
+    - SCROLLLEFT and SCROLLRIGHT move now 4 characters instead of one. This
+      makes horizontal scrolling much nicer.
+    - XDME will no longer scroll to the left when it has reached the left
+      border. Same applies for the right border.
+
+V1.82
+
+    - Tried another way to process the CLI/WB-Args after several misterious
+      bug-reports.
+    - XDME.dvi is now uptodate. Also some formatting errors have been removed.
+    - Fixed a problem where XDME couldn't read the config-info. Now the
+      config. parameters are always set to default values. This should fix
+      all problems with invisible text.
+    - Menu- and Keyboard-functions were completely rewitten by Bernd Noll.
+    - Fixed bug in CHFILENAME. It used to clear the filename instead of
+      changing it :-)
+    - fixed the $filename, $file and $path-vars (again). They now work as
+      expected.
+    - The cursor is now blue with white text (as in the shell) if you use the
+      default config.
+    - Fixed bug in do_bs(). If the text was somewhere to the left and you
+      deleted some text with backspace until the cursor hits the left border,
+      XDME wouldn't scroll the text to the left.
+
+V1.82.01 (not released)
+
+    - All config. variables (options inside the ED-struct that can be saved)
+      have been moved to a config-struct.
+    - Bug in REPLACE has been removed. REPLACE did replace the text even if
+      the line was shorter than the actual position. This could result in a
+      crash of XDME.
+    - The window-title works now with proportional fonts.
+    - CHFILENAME now works =8*)
+
+V1.82.02
+
+    - (internal) New definition for keys and menus. Every window can now have
+      it's own keys and menus.
+    - Hunted down several bugs and E- and MHits.
+    - every time the editor is changed, switch_ed() is now used.
+    - Set the stack in the XDME-WB-icon to 15000. 4096 was bit low :-)
+    - XDME will now call text_cursor() even less thus resulting in less
+      moving the screen around.
+    - The routines for displaying/updating the scroller have been fixed.
+      The scroller now works ! The solution is quite horrible but works =8*)
+    - The arrow-gadgets now also change the color from blue to pale if the
+      window gets deactivated.
+    - The title can now contain a proportional font. The text-clipping for
+      the status-line has been fixed.
+    - Fixed the CLI-Startup. The CLI-startup should now work.
+    - Fixed WB-Startup. This should also work now.
+    - Changed Startup-Parameters:
+	CLI:
+
+	Files/M,		Any number of files
+	Startup=-S/K,		File to read at startup (.edrc)
+	New=-N/S,		Open new XDME instead of issuing an AREXX-cmd.
+	Iconify=-I/S,		Iconify-window after reading the file.
+	Autoload=-A/S,		not yet :-)
+	PubScreen=-PS/K,	Open on a public screen with that name
+	ProjectFile=-PF/K	Project-file-name (default: XDME_Project_File)
+
+	WB:
+
+	ICONIFY=YES|NO		as above
+	NEW=YES|NO		as above
+	AUTOLOAD=YES|NO 	not yet
+	STARTUP=file		Set startup-file-name
+	PUBSCREEN=name		Open on public-screen name
+	PROJECTFILE=file	Use that name for projectfiles.
+
+V1.82.07
+
+    - New commands:
+
+	BLOCKTYPE type		- type is LINE, CHARACTER or VERTICAL
+	COPY			- just copies the block to the clipboard
+
+    - 3 new block-types:
+
+	LINE: what you are used to use
+	CHARACTER: what you normally use in other programs
+	VERTICAL: a rectangular block which allows copying from and to tables
+
+    - removed a(nother) bug from CLI-Startup. There was an E-Hit if you
+      invoked XDME without any filenames. This could also cause XDME open
+      an infinite number of windows.
+    - Fixed a bug in BSTART/BEND that might cause XDME to have parts of old
+      blocks left thus resulting in weird blocks if you tried to mark a new
+      block.
+    - XDME won't change the windowtitle anymore if the window is iconified
+      (ie. no more "saving ...")
+    - XDME now sets the ep->wtitle as title-string for new windows.
+    - removed several visual bugs (using wrong colors, wrong positions, ...)
+    - LINELEN is now a function that calculates the length of the current line
+      without a previous text_sync().
+    - Removed two bugs from ctags(): 1. CTAGS can load tags from different
+      directories (again). 2. current_word() does now accept all chars that
+      are valid for C-identifiers (ie. alphas, numbers and '_').
+
+V1.82.08
+
+    - Removed a really anoying bug in BSTART/BEND/BLOCK. redraw_block()'s task
+      is to update the display and to take care that the positions of a block
+      (start and end) are correctly sorted so eg. COPY need not care about
+      blocks that start below the line in which they end. It did this even
+      if there was no block. tsktsk =8-)
+    - Added a TAGS file for faster browsing through the source. Use "mktags"
+      to update the file.
+    - New commands:
+
+	REFCTAGS	    The utimate command for hopping through source.
+			    First, we try CTAGS and if we don't find anything,
+			    we check REF.
+	VREFCTAGS <name>    Looks for like REFTAGS for <name>
+	FOLLOWCURSOR what   XDME will make sure the cursor is visible if
+			    you switch it on with this command. Usefull on
+			    screens that extend over the visual area.
+	MAKECURSORVISIBLE   Scrolls an oversized screen so the cursor will
+			    become visible.
+
+    - Fixed old bug in UP/DOWN in the commandline. Now the cursor is moved
+      to the last char in the line instead of staying in the column.
+    - Cleaned up docs-dir
+    - Now XDME removes the gadgets BEFORE it closes the window. Bug found
+      by Stefan Becker.
+
+V1.82.09 internal
+
+V1.82.10
+
+    - New command:
+
+	SHOWLOG 	- XDME now collect all warnings internally. These
+			  can now be showed again with this command. This is
+			  especially useful is you have something wrong
+			  in the .edrc-file and the warning gets obscured
+			  before you can read them.
+    - XDME now uses the std. exec typedefs instead of it's own.
+    - Fixed a couple of bugs due to a bug-report of F. Duniho (DMD):
+      GOTO START and GOTO END ignored the columns. BAPPENDSAVE ignored
+      it's argument. SELECT SAVE didn't work. CHFILENAME had some problems
+      with "ram:xyz" and the like.
+    - Written "CnvConfig"-Tool. The tool reads the config-file and converts
+      it to the actual version. It asks then whether it should write the
+      new struct back to the config-file or write the result to stdout.
+    - ICONIFY in a menu made XDME crash. Fixed.
+    - Began work on obj.lib, a .lib that allows handling of arbitrary
+      objects. Implemented first object: ARRAY.
+
+V1.83
+
+    WHOW !! Only one year delay after the last version ... =8*P
+    Ok, here is the story. The problem is the last point of the
+    history of V1.82.10 - the objects. I started to use objects
+    throughout the XDME when I in fact hadn't implemented any
+    yet. So the result was a nice OO XDME, but not compilable
+    anymore. Now some good soul from the net (whose name I forgot
+    and the original mail got lost, too *sigh*), sent me
+    V1.82.08 in which I made all the bug-fixes again, that I made
+    after .08. Quite simple, no ?
+
+    - Hopefully all bugs that have been fixed for V.10 are gone
+      again. You know my email if some are not ...
+    - The TLATE-bug is FIXED !! Now TLATE works. One year
+      I wanted to fix that bug. At last :-)
+    - New Config-File. The CnvConfig-Tool has been updated to
+      convert both old formats into the new one.
+    - Compiled XDME with SAS/C 6.51. Found many bugs in DICE ...
+    - all __autoinit/__autoexit routines have been removed,
+      since SAS/C uses a different concept here.
+    - SAS/C opens now all libraries except ASL and Console.device
+    - XDME is not resident anymore. This is due to the fact, that
+      SAS/C cannot create new data-sections for each new invokation.
+      Maybe I can put all global data into some data structure
+      and make it resident again.
+
+V1.83.01
+
+    :-( First bug found by myself right after the V1.83 has been
+    released ... *sigh*
+
+    - XDME now uses SIMPLE_REFRESH windows. This uses much less
+      of the valuable chip-mem.
+    - the machine hangs sometimes, if a window is closed (iconify
+      or quit). Can someone find a way to force this bug to
+      appear, so I can check what it is ?
+
+V1.83.02
+
+    This release is due to bug reports by Christian Hunyar.
+
+    - New commands:
+
+	TOBACK	    Move active window to back
+	TOFRONT     Move active window to front
+
+    - XDME no longer complains "this cannot be done with this type of
+      block", if there is no block marked yet.
+    - grrr... fixed ANOTHER bug in TLATE. It should work now...
+    - Fixed a bug in ICONIFY (XDME removed the gadgets from the wrong
+      window) and the refresh-code. XDME does not hang any longer, if
+      the window needs refreshing.
+    - Fixed old bug in MATCH. Match can now find parens that are in the
+      first column with some text following.
+    - NEW: MATCH works with C-comments /*  */ now.
+    - BUG: INSFILE would not always set the modified flag
+    - BUG: Fixed bug in IF/WHILE R. This did not work correctly,
+      if you did "down first while !r..." and the cursor was in
+      a column to the right if the last char of the new line.
+    - BUG: Fixed bug in REPLACE. XDME will no longer behave strange
+      if you replace a string in the 1. column with an empty string.
+    - NEW: added TOFRONT and TOBACK. These raise and lower the active
+      window.
+    - the two previous versions had the wrong version string... oops.
+    - XDME is RESIDENT again... tell me, if you encounter any problems
+      using this.
+    - some other small things, that I were too lazy to write down.
+
+V1.83.03
+
+    BUG: SELECT NEXT and SELECT PREV were swapped, ie. SELECT NEXT
+	found the previous window and SELECT PREV the next one.
+	Found by Matthias Gerloff
+    NEW: The zoom-gadget works now as ICONIFY.
+    BUG: POP ICONMODE seems to work now.
+    BUG: Fixed some bugs and glitches in CnvConfig.
+    NICE: updated TODO-list
+    BUG: If XDME runs out of memory, Abortcommand is set now. This
+	does not really fix the "repeat -1 bcopy" problem, but the
+	machine will not crash, XDME will just hang. Not very nice,
+	but better.
+    BUG: did some work to make refresh work in commandline-mode.
+    BUG: XDME will now position the cursor in the command-line
+	history properly.
+    BUG: Fixed bug in REFORMAT/word-wrap. The display shows now
+	what you expect.
+    BUG: XDME didn't recognise the TOGGLE command. fixed
+    BUG: bug in varsbases.c fixed
+
+V1.83.04
+
+    BUG: When using char blocks and backspace, the last character in the
+	line was sometimes highlighted even if it was not in the block
+	anymore.
+    BUG: CLIPINS can now handle multiple lines
+    BUG: The title does not contain garbage anymore when loading a text
+    BUG: updated XDME.tex (it does now contain the newest version of
+	the menu-stuff... but nothign else :-( )
+    NEW: added several new modules and patches by B. Noll. Deadkeys should
+	work now.
+    BUG: XDME does not change the current dir anymore if you try to load
+	a file and cancel the "Delete modified Image".
+    NICE: "Delete modified Image" renamed into "Delete modified text ?"
+    BUG: SAVEAS does now change the current filename. Use WRITETO to get
+	the old behavior
+
+V1.83.05
+
+    FEATURE: XDME can now be compiled with DEBUG=FULLFLUSH and with
+	the resource tracking library. This results in a 1.4MB exe...
+	To use the feature, use "smake debug" and then "smake".
+	To switch back, type "smake dist" and "smake".
+    BUG: Loading a non-existing file did not work anymore. fixed.
+    BUG: CLIPINS could insert a multi-line text now... but not a simple
+	word. fixed.
+    BUG: XDME's display gets no longer confused if you scroll it and
+	part of it is obscured by another window.

@@ -1,0 +1,70 @@
+
+;
+;   swap.a
+;
+;   swap (s1, s2, len)
+;	  A0  A1  D0
+;	  4   8   12
+;
+;   swap two regions of memory
+;
+;   this routine looks a bit like CMPMEM.A from DICE, because I took it
+;   from there :-)
+;
+
+		section text,code
+
+		xdef	_swapmem
+		xdef	@swapmem
+
+_swapmem:	move.l	4(sp),A0
+		move.l	8(sp),A1
+		move.l	12(sp),D0
+
+@swapmem:	cmp.l	A0,A1
+		bne	w2
+
+		rts
+
+w2:		movem.l D2/D3,-(sp)
+
+		move.l	D0,D1
+		move.w	A0,D0
+		lsr.l	#1,D0
+		bcs	swapbyte
+		move.w	A1,D0
+		lsr.l	#1,D0
+		bcs	swapbyte
+
+		move.l	D1,D0
+		lsr.l	#2,D0
+
+		subq.l	#1,D1
+		bcs	w1
+
+loop:		move.l	(A0),D2
+		move.l	(A1),D3
+		move.l	D2,(A0)+
+		move.l	D3,(A1)+
+		dbf	D1,loop
+		sub.l	#$10000,D1
+		bcc	loop
+
+w1:		move.l	D0,D1
+		and.l	#3,D1
+
+swapbyte:	subq.l	#1,D1
+		bcs	end
+
+loop2:		move.b	(A0),D2
+		move.b	(A1),D3
+		move.b	D2,(A0)+
+		move.b	D3,(A1)+
+		dbf	D1,loop2
+		sub.l	#$10000,D1
+		bcc	loop2
+
+end:		movem.l (sp)+,D2/D3
+		rts
+
+		END
