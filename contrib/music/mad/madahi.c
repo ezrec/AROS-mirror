@@ -36,8 +36,10 @@
 #include <devices/ahi.h>
 #include <proto/ahi.h>
 
+#define AHI_WRITE_INTERVAL 4
+
 #define SRCBUFSIZE 60000
-#define DESTBUFSIZE 8900
+#define DESTBUFSIZE (8900*AHI_WRITE_INTERVAL)
 
 #include "mad.h"
 
@@ -199,7 +201,7 @@ static enum mad_flow input(void *data, struct mad_stream *stream)
 
     srcstart = buffer->srcbuffer + remainingbytes;
     readlength = Read(buffer->infh, srcstart, SRCBUFSIZE - remainingbytes);
-    printf("read %d remainingbytes %d srcstart %x\n", readlength, remainingbytes, (int)srcstart);
+    //printf("read %d remainingbytes %d srcstart %x\n", readlength, remainingbytes, (int)srcstart);
     if( readlength<0 )
     {
 	printf("error reading file\n");
@@ -238,6 +240,10 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
     signed short *ptr;
     signed int sample;
     int length;
+    struct DateStamp date;
+    static struct DateStamp startdate;
+    static int step;
+    static int offset;
     
     /* pcm->samplerate contains the sampling frequency */
     nchannels = pcm->channels;
@@ -246,6 +252,11 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
     right_ch  = pcm->samples[1];
     //printf ("nchannels %d nsamples %d left_ch %x right_ch %x\n",nchannels,nsamples,left_ch,right_ch);
 
+    if (!startdate.ds_Minute && !startdate.ds_Tick && !startdate.ds_Days)
+    {
+    	DateStamp(&startdate);
+    }
+    
     if(buffer->framecount==0)
     {
 	PrintFrameInfo((struct mad_header *)header);
@@ -261,7 +272,7 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
 	return MAD_FLOW_STOP;
     }
     
-    ptr = buffer->destbuffer1;
+    ptr = buffer->destbuffer1 + offset;
     while (nsamples--)
     {
 	/* output sample(s) in 16-bit signed little-endian PCM */
@@ -273,12 +284,25 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
 	    *ptr++ = sample;
 	}
     }
+    
+    step++;
+    offset += length / 2;
+    if ((step % AHI_WRITE_INTERVAL) == 0)
+    {
+    	offset = 0;
+    }
+    else
+    {
+    	return MAD_FLOW_CONTINUE;
+    }
 
+    //kprintf("== step %d\n", step);
+    
     ptr = buffer->destbuffer1;
     AHIios[0]->ahir_Std.io_Message.mn_Node.ln_Pri = 0;
     AHIios[0]->ahir_Std.io_Command  = CMD_WRITE;
     AHIios[0]->ahir_Std.io_Data     = ptr;
-    AHIios[0]->ahir_Std.io_Length   = length;
+    AHIios[0]->ahir_Std.io_Length   = length * AHI_WRITE_INTERVAL;
     AHIios[0]->ahir_Std.io_Offset   = 0;
     AHIios[0]->ahir_Frequency       = pcm->samplerate;
     AHIios[0]->ahir_Type            = AHIST_S16S;
@@ -286,20 +310,50 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
     AHIios[0]->ahir_Position        = 0x8000;           // Centered
     AHIios[0]->ahir_Link            = link;
     SendIO((struct IORequest *)AHIios[0]);
+
+    DateStamp(&date);
+    
+    {
+    	ULONG sec;
+	static ULONG totbytes;
+	
+	totbytes += length;
+	
+	sec = (date.ds_Minute * 60 + date.ds_Tick / 50) -
+	      (startdate.ds_Minute * 60 + startdate.ds_Tick / 50);
+	
+    	//kprintf("\nmadahi: writing %d bytes. time %d.%02d  sec %d  b/sec %d\n",
+    	//length, date.ds_Tick / 50, date.ds_Tick % 50,
+    	// sec, sec ? totbytes / sec : 0);
+    }
     if (link)
     {
+    #if 0
     	ULONG signals = Wait(SIGBREAKF_CTRL_C | (1L << AHImp->mp_SigBit));
-	
+    #else
+        ULONG signals = SetSignal(0L,0L);
+    #endif	
 	if (signals & SIGBREAKF_CTRL_C)
 	{
 	    return MAD_FLOW_STOP;
 	}
-	
+
+    #if 0
+    #else
+        if (CheckIO((struct IORequest *)link))
+	{
+            kprintf("Buffer underflow!\n");
+        }
+    #endif
+    
 	if (WaitIO((struct IORequest *)link))
 	{
-	    printf("WaitIO!?\n");
+	    kprintf("WaitIO!?\n");
 	}
-	
+
+        DateStamp(&date);
+
+    	//kprintf("madahi: WAITIO returned. time %d.%02d\n", date.ds_Tick / 50, date.ds_Tick % 50);	
     }
     link = AHIios[0];
     
