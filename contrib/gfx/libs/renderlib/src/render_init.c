@@ -12,7 +12,7 @@
 #include <proto/exec.h>
 
 #include "lib_init.h"
-#include "libdefs.h"
+#include LC_LIBDEFS_FILE
 
 /****************************************************************************************/
 
