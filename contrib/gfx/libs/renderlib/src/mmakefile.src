@@ -3,7 +3,8 @@
 include $(TOP)/config/make.cfg
 
 #MM- contrib-gfx-libs : contrib-gfx-libs-render
-#MM- contrib-gfx-libs-render : includes linklibs
+#MM- contrib-gfx-libs-render : linklibs
+#MM- contrib-gfx-libs-render-includes : includes
 
 FILES := rnd_memory 	\
 	 rnd_histogram  \
