@@ -1,0 +1,23 @@
+#0001 chodorowski 10/10/2001 CRITICAL FIXED
+
+The 'print' command doesn't work, you always get an exception right away.
+However, using sys.stdout.write() works fine. This might be connected 
+with the disapearing-exception-problem, described below.
+
+#0002 chodorowski 10/10/2001 CRITICAL FIXED
+
+Exceptions aren't printed properly, only the beginning headers are 
+displayed. The actual message (eg. type of exception, like "ImportError") 
+isn't displayed, ie:
+
+>>> raise NameError, 'Test'
+TraceBack (most recent call last):
+   File "<stdin>", line 1, in ?
+>>>
+
+#0003 chodorowski 10/10/2001 CRITICAL OPEN
+
+Importing modules written in Python doesn't work (you get an exception 
+right away), even after having hacked getpath.c and friends to be 
+AROS-compatible. Hmmm...
+  
