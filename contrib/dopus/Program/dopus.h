@@ -31,6 +31,7 @@ the existing commercial status of Directory Opus 5.
 #ifndef DOPUS_INCLUDE
 #define DOPUS_INCLUDE
 
+#include <assert.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>

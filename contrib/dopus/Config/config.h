@@ -43,6 +43,7 @@ the existing commercial status of Directory Opus 5.
 
 #include <proto/dopus.h>
 
+#include <assert.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
