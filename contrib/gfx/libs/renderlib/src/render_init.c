@@ -44,10 +44,10 @@ struct ExecBase      *SysBase;
 
 ULONG SAVEDS STDARGS LC_BUILDNAME(L_InitLib) (LC_LIBHEADERTYPEPTR RenderBase)
 {
-    D(bug("Inside Init func of render.library\n"));
-
     SysBase = LC_SYSBASE_FIELD(RenderBase);
 
+    D(bug("Inside Init func of render.library\n"));
+    
     InitSemaphore(&RenderBase->LockSemaphore);
 
     return TRUE;
