@@ -1,5 +1,6 @@
 #include "externs.h"
 #include "freq.h"
+#include <exec/types.h>
 
 int audio_sample_rate, audio_channels = -1;
 int frame_width, frame_height, use_audio = 0;
@@ -30,6 +31,19 @@ void show_formats(void)
 }
 
 #include "getopt.h"
+
+#if defined(AMIGA) || defined(AROS)
+#include <proto/dos.h>
+BPTR lock = NULL, oldlock;
+
+void amigaquit()
+{
+    if (lock) {
+        CurrentDir(oldlock);
+        UnLock(lock);
+    }
+}
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -79,7 +93,11 @@ int main(int argc, char *argv[])
                 return 0;
         }
     }
-         
+
+#ifdef AROS
+    use_audio = -1; // XXX to fix once we have a working AHI
+#endif
+    
     if((argc-optind) != 1) {
         FRequest f;
     
@@ -92,8 +110,22 @@ int main(int argc, char *argv[])
        	f.Filter = "All supported files|*.mpg;*.avi;*.mov;*.qt;*.asf;*.mpeg|MPEG Files|*.mpg;*.mpeg|AVI Files|*.avi|Quicktime Files|*.qt;*.mov|All files|*.*\0\0";
         f.Save = 0;
         
-        if(Request(&f))
+        if(Request(&f)) {
+// the following code is due to the fact avformat has a few problems with Amigalike paths...
+#if defined(AMIGA) || defined(AROS)
+            filename = FilePart(f.File);
+            if (strcmp(filename, f.File)) {
+                lock = Lock(PathPart(f.File), ACCESS_READ);
+
+                if (lock) {
+                    oldlock = CurrentDir(lock);
+                    atexit(amigaquit);
+                }
+            }
+#else
             filename = f.File;
+#endif
+        }
         else
             return 0;
     }
@@ -101,12 +133,6 @@ int main(int argc, char *argv[])
         filename = argv[optind];
         
     if((c = strrchr(filename, '.'))) {
-#if 0
-        if(!strcasecmp("cmp", c+1)) {
-            mp4_decode(filename);
-            return;
-        }
-#endif
         file_iformat = av_find_input_format(c + 1);
 
         printf("First guess of fileformat: %s\n", 

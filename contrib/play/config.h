@@ -14,4 +14,7 @@
 #define SIMPLE_IDCT 1
 #define CONFIG_FFSERVER 0
 #define CONFIG_RISKY 1
+
+#if !defined(AROS)
 #define restrict __restrict__
+#endif

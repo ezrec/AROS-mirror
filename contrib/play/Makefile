@@ -6,12 +6,15 @@ SRCS = play.c sdlfunc.c decoder.c freq.c getopt.c
 
 OBJS = $(patsubst %.c, $(OBJ)%.o, $(SRCS))
 
-CFLAGS = -g -O2 -I../SDL/ -Ilibavcodec -Ilibavformat
+CFLAGS = -g -O2 -I../SDL/ -Ilibavcodec -Ilibavformat -DAROS
 LIBS =  -Llibavcodec -Llibavformat -L../SDL \
-       -lavcodec -lavformat -lavcodec -lSDL -larossupport
+       -lavcodec -lavformat -lavcodec -lSDL -lasl -larossupport
 
 all:  $(PROJECTNAME)
 
+install:
+	cp $(PROJECTNAME) $(BASEDIR)/AROS/Tests/
+    
 libavformat/libavformat.a:
 	cd libavformat && make && cd ..
 
@@ -25,5 +28,7 @@ $(PROJECTNAME): libavcodec/libavcodec.a libavformat/libavformat.a $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LIBS)
 
 clean:
+	cd libavcodec && make clean && cd ..
+	cd libavformat && make clean && cd ..
 	rm -f $(OBJ)*.o $(PROJECTNAME)
 

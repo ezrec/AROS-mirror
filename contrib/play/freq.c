@@ -186,6 +186,58 @@ int Request(struct MyFileRequest *fr)
 	return MacRequester(fr);
 }
 
+#elif defined(AMIGA) || defined(AROS)
+
+#include "freq.h"
+#include <libraries/asl.h>
+#include <proto/asl.h>
+#include <proto/dos.h>
+
+int Request(struct MyFileRequest *fr)
+{
+    struct FileRequester *f;
+    
+    if ((f = (struct FileRequester *)AllocAslRequestTags(ASL_FileRequest, TAG_DONE))) {
+        char  *use_filter = NULL;
+        
+        if (fr->Filter) {
+    		use_filter = strrchr(fr->Filter, '|');
+    
+            if (use_filter) {
+                use_filter[0] = '#';
+                use_filter[1] = '?';   
+            }
+        }
+        
+        if (AslRequestTags(f, 
+                    fr->File ? ASLFR_InitialFile : TAG_IGNORE, (ULONG) fr->File,
+                    fr->Dir ? ASLFR_InitialDrawer : TAG_IGNORE, (ULONG) fr->Dir,
+                    ASLFR_DoSaveMode, (BOOL) fr->Save,
+                    ASLFR_TitleText, (ULONG) fr->Title,
+                    ASLFR_RejectIcons, TRUE,
+                    use_filter ? ASLFR_InitialPattern : TAG_IGNORE, (ULONG) use_filter,
+                    TAG_DONE
+                    )) {
+
+        	fr->File = szFileName;
+
+            if (f->fr_Drawer)
+                strcpy(szFileName, f->fr_Drawer);
+            else
+                *szFileName = 0;
+            
+            AddPart(szFileName, f->fr_File, sizeof(szFileName));
+
+            FreeAslRequest(f);
+
+            return 1;
+        }
+
+        FreeAslRequest(f);
+    }
+	return 0;
+}
+
 #else
 
 #include "freq.h"
