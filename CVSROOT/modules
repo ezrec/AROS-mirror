@@ -70,7 +70,7 @@ fish -d contrib/fish contrib/fish
 microemacs -d contrib/fish/microemacs contrib/fish/microemacs
 
 # Format64
-emu -d contrib/aminet/disk/misc/Format64 contrib/aminet/disk/misc/Format64
+Format64 -d contrib/aminet/disk/misc/Format64 contrib/aminet/disk/misc/Format64
 
 # Games
 Games -d contrib/Games contrib/Games
