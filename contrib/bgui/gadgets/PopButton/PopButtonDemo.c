@@ -12,6 +12,9 @@
  *			and disabling.
  *
  * $Log$
+ * Revision 42.1  2000/07/11 17:07:40  stegerg
+ * Did not open intuition.library (SAS auto lib opening?)
+ *
  * Revision 42.0  2000/05/09 22:21:29  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -106,6 +109,9 @@ struct PopMenu	Able[] = {
  *	Library base and class base.
  */
 struct Library *BGUIBase;
+#ifdef _AROS
+struct IntuitionBase *IntuitionBase;
+#endif
 
 /*
  *	Put up a simple requester.
@@ -132,6 +138,10 @@ int main( int argc, char **argv )
 	/*
 	 *	Open BGUI.
 	 */
+#ifdef _AROS
+	IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",39);
+	if (IntuitionBase)
+#endif
 	if ( BGUIBase = OpenLibrary( BGUINAME, BGUIVERSION )) {
 			/*
 			 *	Create the popmenu buttons.
