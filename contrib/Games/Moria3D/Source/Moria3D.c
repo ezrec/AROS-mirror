@@ -6,6 +6,10 @@
 *                                                                           *
 ****************************************************************************/
 
+#include <dos/dos.h>
+#include <exec/tasks.h>
+#include <proto/exec.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -20,11 +24,22 @@ void WaitKey(void);
 
 int main(int arcc,char ** argv)
 {
-    int16     Pad;
-    int16     x=-1;
-    Mission * MyMission;
-    char      LevelName[512];
-
+    int16     	Pad;
+    int16     	x=-1;
+    Mission 	* MyMission;
+    char      	LevelName[512];
+    LONG      	stacksize;
+    struct Task * task;
+    
+    task = FindTask(NULL);
+    stacksize = task->tc_SPUpper - task->tc_SPLower + 1;
+    
+    if (stacksize < 150000)
+    {
+        printf("Increase stack size! Minimum is 150000\n");
+	exit(RETURN_FAIL);
+    }
+    
     /* Init Clean Up Nodes */
 
     InitCleanUp();
