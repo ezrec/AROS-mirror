@@ -63,9 +63,7 @@ ShutdownSetup.o:	ShutdownSetup.c ShutdownSetup.h LocaleSupport.h shutdownbase.h 
 	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -c ShutdownSetup.c -o $@  -include PreInclude.c -include arosspecific.h
 
 shutdown.library:	$(OBJS1)
-			$(CC) -nostartfiles -nostdlib -Wl,-i \
-			$(OBJS1) \
-			-static -i -L$(LIBDIR) -lamiga -o $@
+			$(AROS_LD) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) $(OBJS1) -o $@
 
 ShutdownSetup:		$(OBJS2)
 
