@@ -15,6 +15,9 @@
 // for more details.
 //
 // $Log$
+// Revision 1.3  2004/04/28 10:17:39  hkiel
+// For consistency use __AMIGAOS__ instead of AMIGAOS and enable Xaos again
+//
 // Revision 1.2  2004/04/27 16:42:56  hkiel
 // Fixed #ifdef AMIGA to #ifdef AMIGAOS
 //
@@ -37,7 +40,7 @@ rcsid[] = "$Id$";
 #endif
 
 #include <stdlib.h>
-#ifdef AMIGAOS
+#ifdef __AMIGAOS__
 #include <dos.h>
 #endif
 
@@ -528,7 +531,7 @@ P_LookForPlayers
     for ( ; ; actor->lastlook = (actor->lastlook+1)&3 )
     {
 	if (!playeringame[actor->lastlook]) {
-#ifdef AMIGAOS
+#ifdef __AMIGAOS__
             chkabort ();
 #endif
 	    continue;

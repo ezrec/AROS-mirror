@@ -76,7 +76,7 @@ static int currenttime;
 #else
 #ifdef HAVE_GETTIMEOFDAY
 static struct timeval currenttime;
-#ifdef AMIGAOS
+#ifdef __AMIGAOS__
 extern long __timezone;
 #define tzp __timezone
 #else
