@@ -1,8 +1,29 @@
-/*
-  NList.mcp (c) Copyright 1996-1998 by Gilles Masson
-  Registered MUI class, Serial Number: 1d51
-  NListviews_mcp.c
-*/
+/***************************************************************************
+
+ NListviews.mcp - New Listview MUI Custom Class Preferences
+ Registered MUI class, Serial Number: 1d51
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include <stdarg.h>
 #include <string.h>
@@ -12,46 +33,37 @@
 #include <exec/libraries.h>
 #include <dos/dosextens.h>
 #include <proto/exec.h>
-#include <proto/intuition.h>
 #include <libraries/commodities.h>
 #include <libraries/locale.h>
-#include <libraries/mui.h>
 #include <devices/inputevent.h>
 #include <libraries/asl.h>
+#include <libraries/mui.h>
 
-#if !defined(__AROS__)
-#include <MUI/HotkeyString_mcc.h>
+#ifndef __AROS__
+#include <mui/HotkeyString_mcc.h>
+#else
+#warning "No MUIC_HotkeyString class yet in AROS!"
+#define MUIC_HotkeyString   	MUIC_String
+#define MUIA_HotkeyString_Snoop TAG_IGNORE
 #endif
 
 #include <proto/locale.h>
 #include <proto/console.h>
 #include <proto/commodities.h>
+#include <proto/intuition.h>
 #include <clib/alib_protos.h>
 
 #include <proto/muimaster.h>
-
-extern struct Library *myLibPtr;
-extern struct ExecBase *SysBase;
-extern struct DosLibrary *DOSBase;
-extern struct Library *UtilityBase;
-extern struct Library *GfxBase;
-#if !defined(__AROS__)
-extern struct Library *IntuitionBase;
-#endif
-extern struct Library *LayersBase;
-extern struct Library *MUIMasterBase;
-extern struct MUI_CustomClass *ThisClass;
-extern struct Library *CxBase;
-extern struct LocaleBase *LocaleBase;
-extern struct Catalog *catalog;
-
-extern struct Device *ConsoleDevice;
 
 #include "private.h"
 #include "rev.h"
 #include "mcc_common.h"
 
-#include <MUI/NListview_mcc.h>
+#include "MUI/NListview_mcc.h"
+
+#ifdef __AROS__
+extern struct Device *ConsoleDevice;
+#endif
 
 #define INTUIBASEMIN 39
 
@@ -91,6 +103,7 @@ struct QualifierDef {
   LONG qualval;
 };
 
+/*
 static struct QualifierDef QualTab[] =
 {
   { "SHIFT",     (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT) },
@@ -108,7 +121,7 @@ static struct QualifierDef QualTab[] =
   { "LEFTBUTTON", IEQUALIFIER_LEFTBUTTON },
   {  NULL,        0 }
 };
-
+*/
 
 #define String2(contents,maxlen)\
   (void *)MUI_NewObject(MUIC_String,\
@@ -121,7 +134,7 @@ static struct QualifierDef QualTab[] =
 #define LOAD_DATALONG(obj,attr,cfg_attr,defaultval) \
   { \
     LONG *ptrd; \
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, cfg_attr)) \
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, cfg_attr))) \
       set(obj, attr, *ptrd); \
     else \
       set(obj, attr, defaultval); \
@@ -137,7 +150,7 @@ static struct QualifierDef QualTab[] =
 #define LOAD_DATASPEC(obj,attr,cfg_attr,defaultval) \
   { \
     LONG ptrd; \
-    if (ptrd = DoMethod(msg->configdata, MUIM_Dataspace_Find, cfg_attr)) \
+    if((ptrd = DoMethod(msg->configdata, MUIM_Dataspace_Find, cfg_attr))) \
       set(obj, attr, ptrd); \
     else \
       set(obj, attr, defaultval); \
@@ -162,7 +175,7 @@ static struct QualifierDef QualTab[] =
 #define LOAD_DATAFONT(obj,cfg_attr) \
   { \
     LONG ptrd; \
-    if (ptrd = DoMethod(msg->configdata, MUIM_Dataspace_Find, cfg_attr)) \
+    if((ptrd = DoMethod(msg->configdata, MUIM_Dataspace_Find, cfg_attr))) \
       set(obj, MUIA_String_Contents, ptrd); \
     else \
       set(obj, MUIA_String_Contents, ""); \
@@ -229,7 +242,7 @@ static ULONG keytags[] =
   KEYTAG_QUALIFIER_WHEEL_FAST     ,
   KEYTAG_QUALIFIER_WHEEL_HORIZ    ,
   KEYTAG_QUALIFIER_TITLECLICK2    ,
-  NULL
+  (ULONG)NULL
 };
 
 
@@ -240,17 +253,6 @@ static struct KeyBinding empty_key = { 0, (UWORD)-1, 0 };
 
 static char *MainTextArray[] =
 {
-#if defined(MORPHOS)
-	"Der Vogelfänger bin ich ja,",
-	"Stets lustig heissa hoppsassa!",
-	"Ich Vogelfänger bin bekannt",
-	"Bei Alt und Jung im ganzen Land.",
-	"Weiß mit dem Locken umzugehn",
-	"Und mich auf's Pfeifen zu verstehn.",
-	"Drum kann ich froh und lustig sein,",
-	"Denn alle Vögel sind ja mein!",
-	" ",
-#endif
   "If you have problems, try to increase the stack value,",
   "in the icon infos if you launch the program from icon,",
   "stack of CLI if you start it from CLI/Shell,",
@@ -473,55 +475,6 @@ enum StringsID
 };
 
 
-#if !defined(__AROS__)
-//#if defined(MORPHOS)
-#undef MUI_NewObject
-#undef MUI_MakeObject
-
-Object *MUI_NewObject(char *classname, Tag tag1,...)
-{
-	ULONG mav[50];
-	va_list tags;
-	int i=0;
-
-	mav[i] = tag1;
-	if(mav[i] != TAG_DONE)
-	{
-		va_start(tags, tag1);
-		mav[++i] = va_arg(tags, ULONG);
-		i++;
-		while(i<50)
-		{
-			mav[i] = va_arg(tags, ULONG);
-			if(mav[i] == TAG_DONE) break;
-			mav[++i] = va_arg(tags, ULONG);
-			i++;
-		}
-		va_end(tags);
-	}
-	return(MUI_NewObjectA(classname, (struct TagItem *)&mav));
-}
-
-Object *MUI_MakeObject(long type, ...)
-{
-	ULONG mav[15];
-	va_list tags;
-	int i=0;
-
-	va_start(tags, type);
-	while(i<10)
-	{
-		mav[i] = va_arg(tags, ULONG);
-		i++;
-	}
-	va_end(tags);
-
-	return(MUI_MakeObjectA(type, (ULONG *)&mav));
-}
-//#endif
-
-#endif /* !defined(__AROS__) */
-
 /*
 static STRPTR STRING(enum StringsID id,STRPTR defstr)
 {
@@ -535,11 +488,9 @@ static STRPTR STRING(enum StringsID id,STRPTR defstr)
 
 
 #if !defined(__SASC) && !defined(__AROS__)
-/*char *stpcpy(char *to,const char *from)*/
 static char *stpcpy(char *to,char *from)
 {
   register char *to2 = to;
-  register char *from2 = from;
 
   while (*from)
     *to2++ = *from++;
@@ -547,7 +498,6 @@ static char *stpcpy(char *to,char *from)
   return (to2);
 }
 #endif
-
 
 static LONG DeadKeyConvert(struct NListviews_MCP_Data *data,struct KeyBinding *key)
 {
@@ -631,13 +581,17 @@ static LONG NL_SaveKeys(struct NListviews_MCP_Data *data)
   get(data->mcp_listkeys, MUIA_NList_Entries, &ne);
   ne++;
   data->nlkeys_size = ne*sizeof(struct KeyBinding);
-  if (data->nlkeys = (struct KeyBinding *) AllocMem(data->nlkeys_size+4,0L))
-  { pos = 0;
+
+  if((data->nlkeys = (struct KeyBinding *) AllocMem(data->nlkeys_size+4,0L)))
+  {
+    pos = 0;
+
     while (pos < ne)
     {
       DoMethod(data->mcp_listkeys,MUIM_NList_GetEntry,pos, &key);
       if (key)
-      { data->nlkeys[pos] = *key;
+      {
+        data->nlkeys[pos] = *key;
         if (data->nlkeys[pos].kb_KeyTag & 0x00004000)
           data->nlkeys[pos].kb_Code = (UWORD)~0;
       }
@@ -645,13 +599,16 @@ static LONG NL_SaveKeys(struct NListviews_MCP_Data *data)
         break;
       pos++;
     }
+
     data->nlkeys[pos].kb_KeyTag = 0L;
     data->nlkeys[pos].kb_Code = (UWORD)~0;
     data->nlkeys[pos].kb_Qualifier = 0;
     pos++;
     ne = ((pos * sizeof(struct KeyBinding)) + 3) & 0xFFFFFFFC;
+
     return (ne);
   }
+
   return (0);
 }
 
@@ -703,25 +660,14 @@ kprintf("%lx|pos=%ld  key=%lx  kt=%lx (!= %lx)\n",list,pos,key,k1,k2);
   set(list, MUIA_NList_Quiet, FALSE);
 }
 
-
-#if defined(MORPHOS)
-static LONG StrObjFunc_gate(void)
-{
-  Object *pop = REG_A2;
-  Object *str = REG_A1;
-#elseif !defined(__AROS__)
-static LONG ASM SAVEDS StrObjFunc( REG(a2) Object *pop GNUCREG(a2), REG(a1) Object *str GNUCREG(a1) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONH(StrObjFunc, LONG, Object *, pop, Object *, str)
 #else
-AROS_UFH3(LONG, StrObjFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, pop, A2),
-	AROS_UFHA(Object *, str, A1))
-{
-		AROS_USERFUNC_INIT
+HOOKPROTONH(StrObjFunc, LONG, Object *pop, Object *str)
 #endif
-
-  char *x;
+{
+  HOOK_INIT
+  
   LONG i;
 
   get(str,MUIA_UserData,&i);
@@ -731,35 +677,23 @@ AROS_UFH3(LONG, StrObjFunc,
     set(pop,MUIA_List_Active,MUIV_List_Active_Off);
   return(TRUE);
   
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  HOOK_EXIT
 }
+MakeStaticHook(StrObjHook, StrObjFunc);
 
-
-#if defined(MORPHOS)
-static VOID ObjStrFunc_gate(void)
-{
-  Object *pop = REG_A2;
-  Object *str = REG_A1;
-#elseif !defined(__AROS__)
-static VOID ASM SAVEDS ObjStrFunc( REG(a2) Object *pop GNUCREG(a2), REG(a1) Object *str GNUCREG(a1) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONH(ObjStrFunc, VOID, Object *, pop, Object *, str)
 #else
-AROS_UFH3(void, ObjStrFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, pop, A2),
-	AROS_UFHA(Object *, str, A1))
-{
-		AROS_USERFUNC_INIT
+HOOKPROTONH(ObjStrFunc, VOID, Object *pop, Object *str)
 #endif
-
+{
+  HOOK_INIT
+  
   LONG i = -1;
   get(pop,MUIA_List_Active,&i);
   if (i >= 0)
   {
     set(str,MUIA_UserData,i);
-/*kprintf("UserData=%ld\n",i);*/
     set(str,MUIA_Text_Contents,functions_names[i]);
   }
   else
@@ -767,61 +701,40 @@ AROS_UFH3(void, ObjStrFunc,
     set(str,MUIA_UserData,i);
     set(str,MUIA_Text_Contents,"");
   }
-
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  
+  HOOK_EXIT
 }
+MakeStaticHook(ObjStrHook, ObjStrFunc);
 
 
-#if defined(MORPHOS)
-static VOID WindowFunc_gate(void)
-{
-  Object *pop = REG_A2;
-  Object *win = REG_A1;
-#elseif !defined(__AROS__)
-static VOID ASM SAVEDS WindowFunc( REG(a2) Object *pop GNUCREG(a2), REG(a1) Object *win GNUCREG(a1) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONH(WindowFunc, VOID, Object *, pop, Object *, win)
 #else
-AROS_UFH3(void, WindowFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, pop, A2),
-	AROS_UFHA(Object *, win, A1))
-{
-		AROS_USERFUNC_INIT
+HOOKPROTONH(WindowFunc, VOID, Object *pop, Object *win)
 #endif
-
+{
+  HOOK_INIT
+  
   set(win,MUIA_Window_DefaultObject,pop);
-
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  
+  HOOK_EXIT
 }
+MakeStaticHook(WindowHook, WindowFunc);
 
 
-#if defined(MORPHOS)
-static VOID TxtFctFunc_gate(void)
-{
-  Object *list = REG_A2;
-  long *val = REG_A1;
-#elseif !defined(__AROS__)
-static VOID ASM SAVEDS TxtFctFunc( REG(a2) Object *list GNUCREG(a2), REG(a1) long *val GNUCREG(a1) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONH(TxtFctFunc, VOID, Object *, list, long *, val)
 #else
-AROS_UFH3(void, TxtFctFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, list, A2),
-	AROS_UFHA(long *, val, A1))
-{
-		AROS_USERFUNC_INIT
+HOOKPROTONH(TxtFctFunc, VOID, Object *list, long *val)
 #endif
-
+{
+  HOOK_INIT
+  
   Object *txtfct = (Object *) val[0];
   struct KeyBinding *key = NULL;
   LONG i = -1;
   get(txtfct,MUIA_UserData,&i);
   DoMethod(list,MUIM_NList_GetEntry,MUIV_NList_GetEntry_Active, &key);
-/*kprintf("change fct %lx   %lx %ld\n",key,txtfct,i);*/
   if (key && (i >= 0))
   { key->kb_KeyTag = keytags[i];
     DoMethod(list,MUIM_NList_Redraw,MUIV_NList_Redraw_Active);
@@ -829,29 +742,18 @@ AROS_UFH3(void, TxtFctFunc,
     set(list,MUIA_NList_Active,i);
   }
   
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  HOOK_EXIT
 }
+MakeStaticHook(TxtFctHook, TxtFctFunc);
 
-
-#if defined(MORPHOS)
-static VOID AckFunc_gate(void)
-{
-  Object *list = REG_A2;
-  long *val = REG_A1;
-#elseif !defined(__AROS__)
-static VOID ASM SAVEDS AckFunc( REG(a2) Object *list GNUCREG(a2), REG(a1) long *val GNUCREG(a1) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONH(AckFunc, VOID, Object *, list, long *, val)
 #else
-AROS_UFH3(void, AckFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, list, A2),
-	AROS_UFHA(long *, val, A1))
-{
-		AROS_USERFUNC_INIT
+HOOKPROTONH(AckFunc, VOID, Object *list, long *val)
 #endif
-
+{
+  HOOK_INIT
+  
   Object *stringkey = (Object *) val[0];
   struct KeyBinding *key = NULL;
   char *ackstr = NULL;
@@ -867,29 +769,18 @@ AROS_UFH3(void, AckFunc,
     DoMethod(list,MUIM_NList_Redraw,MUIV_NList_Redraw_Active);
   }
   
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  HOOK_EXIT
 }
+MakeStaticHook(AckHook, AckFunc);
 
-
-#if defined(MORPHOS)
-static VOID ActiveFunc_gate(void)
-{
-  Object *list = REG_A2;
-  long *val = REG_A1;
-#elseif !defined(__AROS__)
-static VOID ASM SAVEDS ActiveFunc( REG(a2) Object *list GNUCREG(a2), REG(a1) long *val GNUCREG(a1) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONH(ActiveFunc, VOID, Object *, list, long *, val)
 #else
-AROS_UFH3(void, ActiveFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, list, A2),
-	AROS_UFHA(long *, val, A1))
-{
-		AROS_USERFUNC_INIT
+HOOKPROTONH(ActiveFunc, VOID, Object *list, long *val)
 #endif
-
+{
+  HOOK_INIT
+  
   struct NListviews_MCP_Data *data = (struct NListviews_MCP_Data *) (val[0]);
 /*  Object *win = NULL;*/
   ULONG active = (ULONG) (val[1]);
@@ -902,11 +793,7 @@ AROS_UFH3(void, ActiveFunc,
       while ((keytags[i] > 0) && (keytags[i] != key->kb_KeyTag))
         i++;
       if (keytags[i] == key->kb_KeyTag)
-      {
-
-#if !defined(__AROS__)
-	      nnset(data->mcp_stringkey,MUIA_HotkeyString_Snoop, FALSE);
-#endif
+      { nnset(data->mcp_stringkey,MUIA_HotkeyString_Snoop, FALSE);
         nnset(data->mcp_stringkey,MUIA_Disabled, FALSE);
         nnset(data->mcp_snoopkey,MUIA_Disabled, FALSE);
         nnset(data->mcp_txtfct,MUIA_UserData,i);
@@ -932,76 +819,49 @@ AROS_UFH3(void, ActiveFunc,
     nnset(data->mcp_snoopkey,MUIA_Disabled, TRUE);
   }
   
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  HOOK_EXIT
 }
+MakeStaticHook(ActiveHook, ActiveFunc);
 
 
-#if defined(MORPHOS)
-static VOID DefaultFunc_gate(void)
-{
-  Object *list = REG_A2;
-#elseif !defined(__AROS__)
-static VOID ASM SAVEDS DefaultFunc( REG(a2) Object *list GNUCREG(a2) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONHNP(DefaultFunc, VOID, Object *, list)
 #else
-AROS_UFH3(void, DefaultFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, list, A2),
-	AROS_UFHA(void *, unused, A1))
+HOOKPROTONHNP(DefaultFunc, VOID, Object *list)
+#endif
 {
-		AROS_USERFUNC_INIT
-#endif
-
-	if (list) NL_LoadKeys(list,default_keys);
-	  
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  HOOK_INIT
+  
+  if (list)
+    NL_LoadKeys(list,default_keys);
+  
+  HOOK_EXIT
 }
+MakeStaticHook(DefaultHook, DefaultFunc);
 
-
-#if defined(MORPHOS)
-static VOID UpdateFunc_gate(void)
-{
-  Object *list = REG_A2;
-#elseif !defined(__AROS__)
-static VOID ASM SAVEDS UpdateFunc( REG(a2) Object *list GNUCREG(a2) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONHNP(UpdateFunc, VOID, Object *, list)
 #else
-AROS_UFH3(void, UpdateFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, list, A2),
-	AROS_UFHA(void *, unused, A1))
+HOOKPROTONHNP(UpdateFunc, VOID, Object *list)
+#endif
 {
-		AROS_USERFUNC_INIT
-#endif
-
-	if (list) NL_UpdateKeys(list,default_keys);
-	  
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  HOOK_INIT
+  
+  if (list)
+    NL_UpdateKeys(list,default_keys);
+    
+  HOOK_EXIT
 }
+MakeStaticHook(UpdateHook, UpdateFunc);
 
-
-#if defined(MORPHOS)
-static VOID InsertFunc_gate(void)
-{
-  Object *list = REG_A2;
-#elseif !defined(__AROS__)
-static VOID ASM SAVEDS InsertFunc( REG(a2) Object *list GNUCREG(a2) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONHNP(InsertFunc, VOID, Object *, list)
 #else
-AROS_UFH3(void, InsertFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, list, A2),
-	AROS_UFHA(void *, unused, A1))
-{
-		AROS_USERFUNC_INIT
+HOOKPROTONHNP(InsertFunc, VOID, Object *list)
 #endif
-
+{
+  HOOK_INIT
+  
   if (list)
   { struct KeyBinding *key;
     LONG pos;
@@ -1017,35 +877,25 @@ AROS_UFH3(void, InsertFunc,
     set(list,MUIA_NList_Quiet,FALSE);
   }
   
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  HOOK_EXIT
 }
+MakeStaticHook(InsertHook, InsertFunc);
 
-
-#if defined(MORPHOS)
-static VOID DisplayFunc_gate(void)
-{
-  Object *obj = REG_A2;
-  struct NList_DisplayMessage *ndm = REG_A1;
-#elseif !defined(__AROS__)
-static VOID ASM SAVEDS DisplayFunc( REG(a2) Object *obj GNUCREG(a2), REG(a1) struct NList_DisplayMessage *ndm GNUCREG(a1) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONH(DisplayFunc, VOID, Object *, obj, struct NList_DisplayMessage *, ndm)
 #else
-AROS_UFH3(void, DisplayFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, obj, A2),
-	AROS_UFHA(struct NList_DisplayMessage *, ndm, A1))
-{
-		AROS_USERFUNC_INIT
+HOOKPROTONH(DisplayFunc, VOID, Object *obj, struct NList_DisplayMessage *ndm)
 #endif
-
+{
+  HOOK_INIT
+  
   struct KeyBinding *key = (struct KeyBinding *) ndm->entry;
   struct NListviews_MCP_Data *data;
   get(obj,MUIA_UserData,&data);
 
   if (key && data)
-  { LONG i,posraw,pos,postext = 0;
+  {
+    LONG i;
 
     ndm->preparses[0]  = "\033r";
 
@@ -1066,127 +916,50 @@ AROS_UFH3(void, DisplayFunc,
     ndm->strings[2]  = "\033cAction";
   }
   
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  HOOK_EXIT
 }
+MakeStaticHook(DisplayHook, DisplayFunc);
 
-#if defined(MORPHOS)
-static APTR ConstructFunc_gate(void)
-{
-  Object *obj = REG_A2;
-  struct NList_ConstructMessage *ncm = REG_A1;
-#elseif !defined(__AROS__)
-static APTR ASM SAVEDS ConstructFunc( REG(a2) Object *obj GNUCREG(a2), REG(a1) struct NList_ConstructMessage *ncm GNUCREG(a1) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONHNO(ConstructFunc, APTR, struct NList_ConstructMessage *, ncm)
 #else
-AROS_UFH3(APTR, ConstructFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, obj, A2),
-	AROS_UFHA(struct NList_ConstructMessage *, ncm, A1))
-{
-		AROS_USERFUNC_INIT
+HOOKPROTONHNO(ConstructFunc, APTR, struct NList_ConstructMessage *ncm)
 #endif
-
+{
+  HOOK_INIT
+  
   struct KeyBinding *key = (struct KeyBinding *) ncm->entry;
 
   struct KeyBinding *key2 = (struct KeyBinding *) AllocMem(sizeof(struct KeyBinding),0L);
   if (key2)
     *key2 = *key;
-/*kprintf("%lx|Construct=%lx -> %lx\n",obj,key,key2);*/
+
   return ((APTR) key2);
   
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  HOOK_EXIT
 }
+MakeStaticHook(ConstructHook, ConstructFunc);
 
-
-#if defined(MORPHOS)
-static VOID DestructFunc_gate(void)
-{
-  Object *obj = REG_A2;
-  struct NList_DestructMessage *ndm = REG_A1;
-#elseif !defined(__AROS__)
-static VOID ASM SAVEDS DestructFunc( REG(a2) Object *obj GNUCREG(a2), REG(a1) struct NList_DestructMessage *ndm GNUCREG(a1) )
-{
+#ifdef __AROS__
+AROS_HOOKPROTONHNO(DestructFunc, VOID, struct NList_DestructMessage *, ndm)
 #else
-AROS_UFH3(void, DestructFunc,
-    	AROS_UFHA(struct Hook *, hook, A0),
-	AROS_UFHA(Object *, obj, A2),
-	AROS_UFHA(struct NList_DestructMessage *, ndm, A1))
-{
-		AROS_USERFUNC_INIT
+HOOKPROTONHNO(DestructFunc, VOID, struct NList_DestructMessage *ndm)
 #endif
-
+{
+  HOOK_INIT
+  
   struct KeyBinding *key = (struct KeyBinding *) ndm->entry;
 
-/*kprintf("%lx|Destruct=%lx\n",obj,key);*/
   FreeMem((void *) key,sizeof(struct KeyBinding));
-	  
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif
+  
+  HOOK_EXIT
 }
-
-#if defined(MORPHOS)
-MADTRAP(StrObjFunc);
-MADTRAP(ObjStrFunc);
-MADTRAP(WindowFunc);
-MADTRAP(InsertFunc);
-MADTRAP(DefaultFunc);
-MADTRAP(UpdateFunc);
-MADTRAP(TxtFctFunc);
-MADTRAP(AckFunc);
-MADTRAP(ActiveFunc);
-MADTRAP(DisplayFunc);
-MADTRAP(ConstructFunc);
-MADTRAP(DestructFunc);
-static const struct Hook StrObjHook =    { { NULL,NULL },(VOID *)&StrObjFunc,NULL,NULL };
-static const struct Hook ObjStrHook =    { { NULL,NULL },(VOID *)&ObjStrFunc,NULL,NULL };
-static const struct Hook WindowHook =    { { NULL,NULL },(VOID *)&WindowFunc,NULL,NULL };
-static const struct Hook InsertHook =    { { NULL,NULL },(VOID *)&InsertFunc,NULL,NULL };
-static const struct Hook DefaultHook =   { { NULL,NULL },(VOID *)&DefaultFunc,NULL,NULL };
-static const struct Hook UpdateHook =    { { NULL,NULL },(VOID *)&UpdateFunc,NULL,NULL };
-static const struct Hook TxtFctHook =    { { NULL,NULL },(VOID *)&TxtFctFunc,NULL,NULL };
-static const struct Hook AckHook =       { { NULL,NULL },(VOID *)&AckFunc,NULL,NULL };
-static const struct Hook ActiveHook =    { { NULL,NULL },(VOID *)&ActiveFunc,NULL,NULL };
-static const struct Hook DisplayHook =   { { NULL,NULL },(VOID *)&DisplayFunc, NULL,NULL };
-static const struct Hook ConstructHook = { { NULL,NULL },(VOID *)&ConstructFunc, NULL,NULL };
-static const struct Hook DestructHook =  { { NULL,NULL },(VOID *)&DestructFunc, NULL,NULL };
-#elseif defined(__AROS__)
-static const struct Hook StrObjHook =    { { NULL,NULL },(VOID *)&StrObjFunc,NULL,NULL };
-static const struct Hook ObjStrHook =    { { NULL,NULL },(VOID *)&ObjStrFunc,NULL,NULL };
-static const struct Hook WindowHook =    { { NULL,NULL },(VOID *)&WindowFunc,NULL,NULL };
-static const struct Hook InsertHook =    { { NULL,NULL },(VOID *)&InsertFunc,NULL,NULL };
-static const struct Hook DefaultHook =   { { NULL,NULL },(VOID *)&DefaultFunc,NULL,NULL };
-static const struct Hook UpdateHook =    { { NULL,NULL },(VOID *)&UpdateFunc,NULL,NULL };
-static const struct Hook TxtFctHook =    { { NULL,NULL },(VOID *)&TxtFctFunc,NULL,NULL };
-static const struct Hook AckHook =       { { NULL,NULL },(VOID *)&AckFunc,NULL,NULL };
-static const struct Hook ActiveHook =    { { NULL,NULL },(VOID *)&ActiveFunc,NULL,NULL };
-static const struct Hook DisplayHook =   { { NULL,NULL },(VOID *)&DisplayFunc, NULL,NULL };
-static const struct Hook ConstructHook = { { NULL,NULL },(VOID *)&ConstructFunc, NULL,NULL };
-static const struct Hook DestructHook =  { { NULL,NULL },(VOID *)&DestructFunc, NULL,NULL };
-#else
-static const struct Hook StrObjHook =    { { NULL,NULL },(VOID *)StrObjFunc,NULL,NULL };
-static const struct Hook ObjStrHook =    { { NULL,NULL },(VOID *)ObjStrFunc,NULL,NULL };
-static const struct Hook WindowHook =    { { NULL,NULL },(VOID *)WindowFunc,NULL,NULL };
-static const struct Hook InsertHook =    { { NULL,NULL },(VOID *)InsertFunc,NULL,NULL };
-static const struct Hook DefaultHook =   { { NULL,NULL },(VOID *)DefaultFunc,NULL,NULL };
-static const struct Hook UpdateHook =    { { NULL,NULL },(VOID *)UpdateFunc,NULL,NULL };
-static const struct Hook TxtFctHook =    { { NULL,NULL },(VOID *)TxtFctFunc,NULL,NULL };
-static const struct Hook AckHook =       { { NULL,NULL },(VOID *)AckFunc,NULL,NULL };
-static const struct Hook ActiveHook =    { { NULL,NULL },(VOID *)ActiveFunc,NULL,NULL };
-static const struct Hook DisplayHook =   { { NULL,NULL },(VOID *)DisplayFunc, NULL,NULL };
-static const struct Hook ConstructHook = { { NULL,NULL },(VOID *)ConstructFunc, NULL,NULL };
-static const struct Hook DestructHook =  { { NULL,NULL },(VOID *)DestructFunc, NULL,NULL };
-#endif
-
+MakeStaticHook(DestructHook, DestructFunc);
 
 static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   struct NListviews_MCP_Data *data;
-  APTR LI_Text, group1, group2, group31, group32, group33, group34, group35, group36, group4, group5;
+  APTR group1, group2, group31, group32, group33, group34, group35, group36, group4, group5;
 
   if(!(obj = (Object *)DoSuperMethodA(cl, obj,(Msg) msg)))
     return(0);
@@ -1214,19 +987,11 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
   data->nlkeys = NULL;
 
-#if defined (__AROS__)
-  data->mcp_stringkey =   StringObject,
-                            StringFrame, MUIA_CycleChain, 1,
-                            MUIA_Disabled,TRUE,
-                          End;
-
-#else
   data->mcp_stringkey =   MUI_NewObject( MUIC_HotkeyString,
                             StringFrame, MUIA_CycleChain, 1,
                             MUIA_HotkeyString_Snoop, FALSE,
                             MUIA_Disabled,TRUE,
                           TAG_DONE );
-#endif
 
   if (!data->mcp_stringkey)
   { data->mcp_stringkey = MUI_NewObject(MUIC_String,
@@ -1884,10 +1649,8 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   DoMethod(data->mcp_snoopkey, MUIM_Notify, MUIA_Selected, TRUE,
            MUIV_Notify_Window, 3, MUIM_Set, MUIA_Window_ActiveObject, data->mcp_stringkey);
 
-#if !defined(__AROS__)
-	DoMethod(data->mcp_snoopkey, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+  DoMethod(data->mcp_snoopkey, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
            data->mcp_stringkey, 3, MUIM_Set, MUIA_HotkeyString_Snoop, MUIV_TriggerValue);
-#endif
 
   DoMethod(data->mcp_stringkey, MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
            data->mcp_snoopkey, 3, MUIM_Set, MUIA_Selected, FALSE);
@@ -1914,7 +1677,6 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigToGadgets *msg)
 {
   struct NListviews_MCP_Data *data = INST_DATA(cl, obj);
-  ULONG d;
 
   /*D(bug("GadgetsToConfig\n"));*/
 
@@ -1941,8 +1703,9 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     LONG num = 0;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_DragType))
-    { if      (*ptrd == MUIV_NList_DragType_Qualifier)
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_DragType)))
+    {
+      if      (*ptrd == MUIV_NList_DragType_Qualifier)
         num = 2;
       else if (*ptrd == MUIV_NList_DragType_Borders)
         num = 1;
@@ -1956,8 +1719,9 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     LONG num = 1;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_StackCheck))
-    { if      (*ptrd == 0)
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_StackCheck)))
+    {
+      if      (*ptrd == 0)
         num = 0;
       else if (*ptrd == 2)
         num = 2;
@@ -1970,8 +1734,9 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     LONG num = DEFAULT_CWD;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_ColWidthDrag))
-    { if      (*ptrd <= 0)
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_ColWidthDrag)))
+    {
+      if      (*ptrd <= 0)
         num = 0;
       else if (*ptrd == 2)
         num = 2;
@@ -1984,13 +1749,17 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     LONG num = 0;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_MultiSelect))
+
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_MultiSelect)))
       num = *ptrd;
+
     if ((num & MUIV_NList_MultiSelect_MMB_On) == MUIV_NList_MultiSelect_MMB_On)
-    { set(data->mcp_B_MultiMMB, MUIA_Selected, TRUE);
+    {
+      set(data->mcp_B_MultiMMB, MUIA_Selected, TRUE);
     }
     else
-    { set(data->mcp_B_MultiMMB, MUIA_Selected, FALSE);
+    {
+      set(data->mcp_B_MultiMMB, MUIA_Selected, FALSE);
     }
     num &= 0x0007;
     if (num == MUIV_NList_MultiSelect_Always)
@@ -2003,18 +1772,24 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     LONG num = DEFAULT_HSB;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListview_HSB))
+
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListview_HSB)))
       num = *ptrd;
+
     if ((num < 1) || (num > 4))
       num = DEFAULT_HSB;
     num--;
+
     set(data->mcp_R_HSB,MUIA_Radio_Active, num);
   }
+
   {
     LONG *ptrd;
     LONG num = 1;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListview_VSB))
+
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NListview_VSB)))
       num = *ptrd;
+
     if ((num < 1) || (num > 3))
       num = 1;
     num--;
@@ -2024,8 +1799,9 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     LONG num = FALSE;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_ForcePen))
-    { if (*ptrd)
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_ForcePen)))
+    {
+      if (*ptrd)
         num = TRUE;
       else
         num = FALSE;
@@ -2034,20 +1810,17 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   }
 
   LOAD_DATALONG(data->mcp_DragLines,    MUIA_Numeric_Value,    MUICFG_NList_DragLines, DEFAULT_DRAGLINES);
-
   LOAD_DATALONG(data->mcp_PointerColor, MUIA_Numeric_Value,    MUICFG_NList_PointerColor, 2);
-
   LOAD_DATALONG(data->mcp_WheelStep,    MUIA_Numeric_Value,    MUICFG_NList_WheelStep, 1);
-
   LOAD_DATALONG(data->mcp_WheelFast,    MUIA_Numeric_Value,    MUICFG_NList_WheelFast, 5);
-
   LOAD_DATALONG(data->mcp_WheelMMB,     MUIA_Selected,         MUICFG_NList_WheelMMB,  FALSE);
 
   {
     LONG *ptrd;
     LONG num = FALSE;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_SerMouseFix))
-    { if (*ptrd)
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_SerMouseFix)))
+    {
+      if (*ptrd)
         num = TRUE;
       else
         num = FALSE;
@@ -2058,8 +1831,9 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     LONG num = TRUE;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_List_Select))
-    { if (*ptrd)
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_List_Select)))
+    {
+      if (*ptrd)
         num = TRUE;
       else
         num = FALSE;
@@ -2070,8 +1844,9 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     LONG num = TRUE;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_PartialCol))
-    { if (*ptrd)
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_PartialCol)))
+    {
+      if (*ptrd)
         num = TRUE;
       else
         num = FALSE;
@@ -2082,8 +1857,9 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     LONG num = FALSE;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_PartialChar))
-    { if (*ptrd)
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_PartialChar)))
+    {
+      if (*ptrd)
         num = TRUE;
       else
         num = FALSE;
@@ -2094,8 +1870,9 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     LONG num = 0;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_Menu))
-    { if      (*ptrd == MUIV_NList_ContextMenu_TopOnly)
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_Menu)))
+    {
+      if      (*ptrd == MUIV_NList_ContextMenu_TopOnly)
         num = 1;
       else if (*ptrd == MUIV_NList_ContextMenu_Never)
         num = 2;
@@ -2106,8 +1883,10 @@ ULONG mNL_MCP_ConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settings
   {
     LONG *ptrd;
     struct KeyBinding *keys = default_keys;
-    if (ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_Keys))
+
+    if((ptrd = (LONG *) DoMethod(msg->configdata, MUIM_Dataspace_Find, MUICFG_NList_Keys)))
       keys = (struct KeyBinding *) ptrd;
+
     NL_LoadKeys(data->mcp_listkeys,keys);
   }
 
@@ -2280,7 +2059,6 @@ ULONG mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settings
 
 static ULONG mNL_MCP_Get(struct IClass *cl,Object *obj,Msg msg)
 {
-  struct NLVData *data = INST_DATA(cl,obj);
   ULONG *store = ((struct opGet *)msg)->opg_Storage;
 
   switch (((struct opGet *)msg)->opg_AttrID)
@@ -2297,35 +2075,20 @@ static ULONG mNL_MCP_Get(struct IClass *cl,Object *obj,Msg msg)
   return (DoSuperMethodA(cl,obj,msg));
 }
 
-
-#if defined(MORPHOS)
-ULONG _DispatcherP_gate(void)
+DISPATCHERPROTO(_DispatcherP)
 {
-  struct IClass *cl = REG_A0;
-  Msg msg = REG_A1;
-  Object *obj = REG_A2;
-#elseif !defined(__AROS__)
-ULONG ASM SAVEDS _DispatcherP( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) Msg msg GNUCREG(a1) )
-{
-#else
-AROS_UFH3(ULONG, _DispatcherP,
-    	AROS_UFHA(struct IClass *, cl, A0),
-	AROS_UFHA(Object *, obj, A2),
-	AROS_UFHA(Msg, msg, A1))
-{
-		AROS_USERFUNC_INIT
-#endif
-
+  DISPATCHER_INIT
+  
   switch (msg->MethodID)
   {
-    case OM_NEW                  : return (     mNL_MCP_New(cl,obj,(APTR)msg));
+    case OM_NEW:                             return(mNL_MCP_New(cl,obj,(APTR)msg));
     case MUIM_Settingsgroup_ConfigToGadgets: return(mNL_MCP_ConfigToGadgets(cl,obj,(APTR)msg));
     case MUIM_Settingsgroup_GadgetsToConfig: return(mNL_MCP_GadgetsToConfig(cl,obj,(APTR)msg));
-    case OM_GET                  : return (     mNL_MCP_Get(cl,obj,(APTR)msg));
+    case OM_GET:                             return(mNL_MCP_Get(cl,obj,(APTR)msg));
   }
-  return(DoSuperMethodA(cl,obj,msg));
 
-#if defined(__AROS__)
-	AROS_USERFUNC_EXIT
-#endif  
+  return(DoSuperMethodA(cl,obj,msg));
+  
+  DISPATCHER_EXIT
 }
+

@@ -1,3 +1,30 @@
+/***************************************************************************
+
+ NListviews.mcp - New Listview MUI Custom Class Preferences
+ Registered MUI class, Serial Number: 1d51
+
+ Copyright (C) 1996-2004 by Gilles Masson,
+                            Carsten Scholling <aphaso@aphaso.de>,
+                            Przemyslaw Grunchala,
+                            Sebastian Bauer <sebauer@t-online.de>,
+                            Jens Langner <Jens.Langner@light-speed.de>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
+
 /******************************************************************************/
 /*                                                                            */
 /* includes                                                                   */
@@ -13,14 +40,6 @@
 #include <proto/exec.h>
 #include <proto/muimaster.h>
 
-//$$$Sensei: return 0 if someone is tring to run us.
-int	main( void )
-{
-	return( 0 );
-}
-
-#include <mcc_debug.c>
-
 /******************************************************************************/
 /*                                                                            */
 /* MCC/MCP name and version                                                   */
@@ -35,12 +54,12 @@ int	main( void )
 #define	VERSION				LIB_VERSION
 #define	REVISION			LIB_REVISION
 
-#define CLASS				MUIC_NListviews_mcp
-#define SUPERCLASSP			MUIC_Mccprefs
+#define CLASS				  MUIC_NListviews_mcp
+#define SUPERCLASSP		MUIC_Mccprefs
 
-#define	DataP				NListviews_MCP_Data
+#define	INSTDATAP     NListviews_MCP_Data
 
-#define UserLibID			"$VER: NListviews.mcp " LIB_REV_STRING " (" LIB_DATE ") " LIB_COPYRIGHT
+#define UserLibID			"$VER: NListviews.mcp " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	19
 
 #define	ClassInit
@@ -49,62 +68,79 @@ int	main( void )
 
 struct Library *CxBase = NULL;
 struct Library *LocaleBase = NULL;
-struct Catalog *catalog = NULL;
+struct Device *ConsoleDevice = NULL;
+//struct Catalog *catalog = NULL;
 
-struct ConsoleDevice *ConsoleDevice = NULL;
+#if defined(__amigaos4__)
+struct CommoditiesIFace *ICommodities = NULL;
+struct LocaleIFace *ILocale = NULL;
+struct ConsoleIFace *IConsole = NULL;
+#endif
+
 struct IOStdReq ioreq;
 
-
-
-BOOL ClassInitFunc( struct Library *base )
+BOOL ClassInitFunc(struct Library *base)
 {
-	if ( CxBase = OpenLibrary( "commodities.library", 37L ) )
+	if((CxBase = OpenLibrary("commodities.library", 37L)) &&
+     GETINTERFACE(ICommodities, CxBase))
 	{
-		if ( !OpenDevice( "console.device", -1L, (struct IORequest *)&ioreq, 0L ) )
+	    	ioreq.io_Message.mn_Length = sizeof(ioreq);
+		
+		if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
 		{
-			ConsoleDevice = (struct ConsoleDevice *)ioreq.io_Device;
+			ConsoleDevice = (struct Device *)ioreq.io_Device;
+      if(GETINTERFACE(IConsole, ConsoleDevice))
+      {
+  			if((LocaleBase = OpenLibrary( "locale.library", 38)) &&
+           GETINTERFACE(ILocale, LocaleBase))
+        {
+			    //if ( LocaleBase )
+				  //  catalog = OpenCatalogA( NULL, "NListviews.catalog", NULL );
 
-			LocaleBase = OpenLibrary( "locale.library", 38 );
-/*
-			if ( LocaleBase )
-				catalog = OpenCatalogA( NULL, "NListviews.catalog", NULL );
-*/
-			return( TRUE );
+  			  return(TRUE);
+        }
+
+        DROPINTERFACE(IConsole);
+      }
+
+  		CloseDevice((struct IORequest *)&ioreq);
 		}
 
-		CloseLibrary( CxBase );
+    DROPINTERFACE(ICommodities);
+		CloseLibrary(CxBase);
 		CxBase = NULL;
 	}
 
-	return ( FALSE );
+	return(FALSE);
 }
 
 
 VOID ClassExitFunc( struct Library *base )
 {
-	if ( LocaleBase )
+	if(LocaleBase)
 	{
-/*
-		if ( catalog )
-			CloseCatalog( catalog );
+		//if ( catalog )
+		//	CloseCatalog( catalog );
+		//catalog = NULL;
 
-		catalog = NULL;
-*/
-
-		CloseLibrary( LocaleBase );
-
+    DROPINTERFACE(ILocale);
+		CloseLibrary(LocaleBase);
 		LocaleBase	= NULL;
 	}
 
-	if ( ConsoleDevice )
-		CloseDevice( (struct IORequest *)&ioreq );
+	if(ConsoleDevice)
+	{
+    DROPINTERFACE(IConsole);
+    CloseDevice((struct IORequest *)&ioreq);
+  	ConsoleDevice = NULL;
+  }
 
-	ConsoleDevice = NULL;
-
-	if ( CxBase )
-		CloseLibrary( CxBase );
-
-	CxBase = NULL;
+	if(CxBase)
+  {
+    DROPINTERFACE(ICommodities);
+		CloseLibrary(CxBase);
+  	CxBase = NULL;
+  }
 }
 
 
@@ -114,11 +150,9 @@ VOID ClassExitFunc( struct Library *base )
 /*                                                                            */
 /******************************************************************************/
 
-/* define that if you want the mcc class to be expunge at last close */
-/* which can be very nice for tests (can avoid lot of avail flush) ! */
-/*#define EXPUNGE_AT_LAST_CLOSE*/
+#define USE_LIST_BODY   1
+#define USE_LIST_COLORS 1
+#include "icon.bh"
 
 #include "mccheader.c"
-
-#include <proto/muimaster.h>
 
