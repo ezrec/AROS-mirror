@@ -31,7 +31,7 @@
 contrib contrib
 
 # Stuff necessary to compile AROS
-necessary -a contrib_README grub bgui
+necessary -a contrib/README grub bgui
 
 # Amiga C Manual
 ACM -d contrib/ACM contrib/ACM
@@ -44,9 +44,6 @@ aminet -d contrib/aminet contrib/aminet
 
 # BGUI
 bgui -d contrib/bgui contrib/bgui
-
-# README of contrib
-contrib_README -a contrib/README
 
 # Self-contained version of crypt(3)
 crypt -d contrib/tools/crypt contrib/tools/crypt
