@@ -3,6 +3,13 @@
 
 import os, sys, shutil
 
+# Pre 2.2.1 compatability kludge 
+try:
+    test = bool()
+except:
+    True  = 1
+    False = 0
+
 import db.credits.parse
 import db.credits.format.rest
 import db.tasks.parse
