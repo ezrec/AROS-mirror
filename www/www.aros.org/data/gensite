@@ -195,7 +195,7 @@ def genSnapshots ():
 
     def snapLink(date, package, ext):
         file     = 'AROS-' + package + '-' + '%d%d%d' % date + '.' + ext
-        location = 'http://aros.sourceforge.net/snapshots/' + file
+        location = 'http://aros.sourceforge.net/cgi-bin/snapdownload.cgi?' + file
 	return Href(location, file)
 
     def snapLinkNA(date, package, ext):
@@ -214,7 +214,7 @@ def genSnapshots ():
 	table.append(
   	    TR(TD(Heading(3, package[1]), colspan=3)),
             TR(
-                TH('Date'), TH('Archive', TH('Log'))
+                TH('Date'), TH('Archive'), TH('Log')
             ),
             TR(
                 TD('%d.%d.%d' % yesterday),
