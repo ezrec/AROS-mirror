@@ -1,0 +1,42 @@
+# Copyright © 1995-2003, The AROS Development Team. All rights reserved.
+# $Id$
+#
+# Makefile to make MysticView.
+
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS := -DNDEBUG -DREGISTERED -DNO_NEWICONS -DNO_SCREENNOTIFY \
+	       -DNO_POPUPMENU -DNO_NEURALNET
+
+FILES := MysticView		\
+	 Mystic_Anim		\
+	 Mystic_Buttons		\
+	 Mystic_FileHandling	\
+	 Mystic_Functions	\
+	 Mystic_Gadgets		\
+	 Mystic_Global		\
+	 Mystic_Handler		\
+	 Mystic_HandlerWrapper	\
+	 Mystic_Icons		\
+	 Mystic_InitExit	\
+	 Mystic_Keyfile		\
+	 Mystic_Logo		\
+	 Mystic_Neuromancer	\
+	 Mystic_Scanner		\
+	 Mystic_Screen		\
+	 Mystic_Settings	\
+	 Mystic_Subtask		\
+	 Mystic_Timing		\
+	 Mystic_Tools		\
+	 Mystic_Window
+
+EXEDIR := $(CONTRIBDIR)/Gfx/MysticView
+
+##MM- contrib-gfx : contrib-gfx-mysticview
+#MM contrib-gfx-mysticview : includes linklibs contrib-gfx-libs-mysticview
+
+%build_prog mmake=contrib-gfx-mysticview \
+    progname=MysticView targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc m"
+
+%common

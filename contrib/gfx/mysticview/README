@@ -1,0 +1,84 @@
+Short:    RTG datatype picture viewer
+Author:   Timm S. Müller <tmueller@neoscientists.org>
+Type:     gfx/show
+Version:  v1.07
+Requires: os3.0 (v39), 68020/68881, guigfx.library, render.library, 
+          mysticview.library
+
+
+    MysticView
+    RTG datatype picture viewer
+
+
+features
+--------------------------------------
+
+  - independent from display hardware:
+    displays every picture on any screen mode, resolution and
+    color depth, including hicolor, truecolor and HAM.
+
+  - scaling and aspects:
+    automatically scales images to the window's dimensions, with
+    respect to the aspect ratios of both the screen and the
+    picture.
+  
+  - display quality:
+    features highly elaborated color quantization and rendering.
+    automatically uses dithering when needed.
+    
+  - user friendly:   
+    has a nice button bar, features intelligent selection of
+    screenmodes, displaymodes, windowsizes and -positions, won't
+    annoy you with changing screens and windows.
+
+  - integrated:
+    MysticView is a commodity, and it's fully integrated to your
+    workbench. simply drag'n'drop pictures, directories,
+    configurations and lists to its window or appicon, or launch
+    configurations and lists with a double-click.
+
+  - list management:
+    MysticView has got a few, but yet powerful functions to
+    manage picture lists.
+
+  - asynchronous and modular:
+    uses massive internal multitasking for loading, rendering,
+    scanning, interaction, etc. get the full benefit from the
+    best 68k and PPC datatypes around.
+
+  - picture caching:
+    uses intelligent picture preloading and caching. watch entire
+    slideshows from memory.
+
+  - highly configurable:
+    has got innumerous configuration details to suit your personal
+    taste.
+
+
+requirements
+--------------------------------------
+
+  minimum:
+  
+  - os3.0 (v39)
+  - 68020, 68881
+  - mysticview.library v5
+  - guigfx.library v16
+  - render.library v30
+  - datatypes.library v39
+
+  minimum recommended:
+  
+  - 68040/25
+  - 16mb fast memory
+  - datatypes.library v43
+  
+  supported:
+
+  - os3.1 (v40)
+  - higher processors
+  - cybergraphics, picasso96
+  - newicon.library v40
+  - neuralnet.library v5
+    (for the AUTODISPLAYMODE feature)
+

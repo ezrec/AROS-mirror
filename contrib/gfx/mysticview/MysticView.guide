@@ -1,0 +1,3923 @@
+@database 085c5030-0
+@master MysticView.guide
+@$VER: 1.0
+@author "bifat / TEK neoscientists"
+@(c) ""
+@width 82
+@remark Created with Heddley v1.20ß © Edd Dumbill 1994-5
+
+@node "Main" "MysticView"
+
+  @{u}MysticView                                                      @{uu}
+  RTG datatype picture viewer - dark green release
+  
+  @{"  introduction           " link "introduction" 0}         @{"  copyright/license    " link "copyright" 0}
+  @{"  features               " link "features" 0}         @{"  disclaimer           " link "disclaimer" 0}
+  @{"  insufficiencies        " link "insufficiencies" 0}         @{"  donations            " link "shareware" 0}
+  @{"  requirements           " link "requirements" 0}
+    
+  @{"  general usage          " link "usage_main" 0}         @{"  submissions          " link "submissions" 0}
+  @{"  configuration          " link "configuration" 0}         @{"  author               " link "author" 0}
+  @{"  commandline examples   " link "examples" 0}         @{"  developers           " link "developers" 0}
+  @{"  DirOpus configuration  " link "opusconfig" 0}         @{"  acknowledgements     " link "acknowledgements" 0}
+  @{"  list management        " link "picmanager" 0}         @{"  getting datatypes    " link "datatypes" 0}
+
+  @{"  known problems         " link "knownproblems" 0}         @{"  history              " link "history" 0}
+@endnode
+
+@node "introduction" "introduction"
+
+  @{u}introduction                                                    @{uu}
+
+  MysticView is a RTG datatype picture viewer.
+  it was mainly designed for
+
+  - usability
+  - display quality
+  - configurability
+  - flexibility and system integration
+  
+  MysticView is a real Amiga viewer. it is not limited to
+  graphics card displays, but also runs very well on HAM and
+  any other native Amiga screens.
+  
+  MysticView makes an end to all these annoying options
+  like PATCHTHIS and DISABLETHAT. MysticView is an RTG viewer.
+  simply watch pictures without a fuss.
+
+  see also
+  @{"  features         " link "features" 0}
+  @{"  insufficiencies  " link "insufficiencies" 0}
+@endnode
+
+@node "features" "features"
+
+  @{u}features                                                        @{uu}
+
+  - independent from display hardware:
+    displays every picture on any screen mode, resolution and
+    color depth, including hicolor, truecolor and HAM.
+
+  - scaling and aspects:
+    automatically scales images to the window's dimensions, with
+    respect to the aspect ratios of both the screen and the
+    picture.
+  
+  - display quality:
+    features highly elaborated color quantization and rendering.
+    automatically uses dithering when needed. note: dithered HAM8
+    easily outperforms the display quality of hicolor.
+    
+  - user friendly:   
+    has a nice button bar, features intelligent selection of
+    screenmodes, displaymodes, windowsizes and -positions, won't
+    annoy you with changing screens and windows.
+
+  - integrated:
+    MysticView is a commodity, and it's fully integrated to your
+    workbench. simply drag'n'drop pictures, directories,
+    configurations and lists to its window or appicon, or launch
+    configurations and lists with a double-click.
+
+  - list management:
+    MysticView has got a few, but yet powerful functions to
+    manage picture lists.
+
+  - asynchronous and modular:
+    uses massive internal multitasking for loading, rendering,
+    scanning, interaction, etc. get the full benefit from the
+    best 68k and PPC datatypes around.
+
+  - picture caching:
+    uses intelligent picture preloading and caching. watch entire
+    slideshows from memory.
+
+  - highly configurable:
+    has got innumerous configuration details to suit your personal
+    taste.
+
+  see also
+  @{"  insufficiencies  " link "insufficiencies" 0}
+@endnode
+
+@node "insufficiencies" "insufficiencies"
+
+  @{u}insufficiencies                                                 @{uu}
+
+  - MysticView is fully dependent from datatypes.
+    there are no custom loaders implemented.
+
+  - MysticView demands a lot of memory and cpu power.
+    it is best suited for well-equipped systems.
+
+  - MysticView does not feature progressive loading.
+
+  - MysticView is not intended to act as an image converter,
+    effect processor, and alike. it just displays pictures.
+  
+  - MysticView is not localized.
+  
+  - MysticView has got no ARexx port.
+
+  see also
+  @{"  requirements       " link "requirements" 0}
+  @{"  known problems     " link "knownproblems" 0}
+  @{"  getting datatypes  " link "datatypes" 0}
+@endnode
+
+@node "requirements" "requirements"
+
+  @{u}requirements                                                    @{uu}
+
+  minimum:
+  
+  - 68020
+  - os3.0 (v39)
+  - datatypes.library v39
+
+  minimum recommended:
+  
+  - 68040/25
+  - 16mb fast memory
+  - datatypes.library v43
+  
+  supported:
+
+  - os3.1 (v40)
+  - higher processors
+  - cybergraphics, picasso96
+  - newicon.library v40
+  
+  see also
+  @{"  getting datatypes  " link "datatypes" 0}
+@endnode
+
+@node "keyboardusage" "keyboard usage"
+
+  @{u}keyboard usage                                                  @{uu}
+
+  most keyboard shortcuts are documented in MysticView's
+  menus.
+  
+  additional keyboard controls:
+  
+  - ESCAPE
+    close window and leave. by default, MysticView is quit.
+    alternatively use the tooltype @{"HIDEONESCAPE" link "hideonescape" 0} for
+    MysticView to go to hidden state.
+
+  - TAB
+    zip/unzip MysticView's window. the 'normal' state
+    is defined throughout the @{"WINSIZEMODE" link "winsizemode" 0} setting
+    ('Small Window', 'Large Window', etc.) in the
+    Settings/Window menu. the 'zipped' state is always
+    equivalent to 'Visibe Screensize'
+    (WINSIZEMODE=VISIBLE).
+
+  - SPACE
+    additional keyboard function for advancing in a list.
+    if a @{"SLIDESHOW" link "slideshow" 0} was running, it will be turned off.
+    if a slideshow was not running, it will be enabled,
+    plus MysticView immediateley advances to the next
+    picture (without waiting for the @{"SLIDEDELAY" link "slidedelay" 0} timeout).
+  
+  - 7
+    additional keyboard equivalent for "Open Pictures...",
+    available on the numeric keypad.
+  
+  - 9
+    additional keyboard shortcut for toggling the @{"SLIDESHOW" link "slideshow" 0}
+    mode, available on the numeric keypad.
+
+  - 0
+    additional keyboard shortcut for toggling the infotext
+    (see @{"PICINFO" link "picinfo" 0}), available on the numeric keypad.
+
+  - cursor keys (equivalent to 4, 2, 6, 8)
+    move the picture cursor (see @{"SHOWCURSOR" link "showcursor" 0} setting).
+    
+    qualifiers for moving the picture cursor:
+    
+    no qualifier:  step rate is 1%
+    SHIFT:         step rate is 10%
+    CONTROL:       step rate is 100%
+
+  
+  see also
+  @{"  menu reference  " link "menureference" 0}
+  @{"  configuration   " link "configuration" 0}
+@endnode
+
+@node "configuration" "configuration"
+
+  @{u}configuration                                                   @{uu}
+
+
+  most of the following keywords are available throughout tooltypes,
+  shell arguments, and in @{"preset files" link "presetfiles" 0}. there are a few exceptions,
+  which will be listed first:
+  
+  commandline-only arguments:
+
+  @{"  FILENAME             " link "filename" 0}   files, paths, patterns, volumes...
+  @{"  DEFAULT              " link "default" 0}   use hardcoded defaults
+  @{"  LISTFILE             " link "listfile" 0}   initial picturelist file
+  @{"  PRESETFILE           " link "presetfile" 0}   initial startup configuration
+  @{"  APPEND               " link "append" 0}   append pictures to a running instance
+
+ 
+  general arguments:
+
+  @{"  ANIMPIC              " link "animpic" 0}   custom animation picture
+  @{"  APPENDICONS          " link "appendicons" 0}   append pictures via drag'n'drop
+  @{"  ASYNCSCANNING        " link "asyncscanning" 0}   show pictures while scanning
+  @{"  AUTOCLEAR            " link "autoclear" 0}   clear picturelist after last picture
+  @{"  AUTOCROP             " link "autocrop" 0}   automatically remove blank borders
+  @{"  AUTODISPLAYMODE      " link "autodisplaymode" 0}   let MysticView guess the displaymode
+  @{"  AUTOHIDE             " link "autohide" 0}   hide after last picture
+  @{"  AUTOQUIT             " link "autoquit" 0}   quit after last picture
+  @{"  AUTOSTOP             " link "autostop" 0}   stop slideshow after last picture
+  @{"  BACKDROP             " link "backdrop" 0}   borderless backdrop window
+  @{"  BGCOLOR              " link "bgcolor" 0}   window's background color
+  @{"  BUFFERPERCENT        " link "bufferpercent" 0}   amount of memory for picture caching
+  @{"  BUTTONPIC            " link "buttonpic" 0}   custom button picture
+  @{"  CREATETHUMBNAILS     " link "createthumbnails" 0}   auto newicon creation feature
+  @{"  CONFIRM              " link "confirm" 0}   suppress "are you sure" requesters
+  @{"  CX_POPKEY            " link "cx_popkey" 0}   hotkey command sequence
+  @{"  CX_PRIORITY          " link "cx_priority" 0}   hotkey command priority
+  @{"  CX_POPUP             " link "cx_popup" 0}   open in iconified state?
+  @{"  DEFAULTTOOL          " link "defaulttool" 0}   default tool for thumbnail icons
+  @{"  DEPTH                " link "depth" 0}   custom screen depth
+  @{"  DISPLAYMODE          " link "displaymode" 0}   pixel aspects, scaling and more
+  @{"  DITHERING            " link "dither" 0}   enable dithering
+  @{"  DITHERMODE           " link "dithermode" 0}   Floyd-Steinberg or EDD
+  @{"  FILTERPICTURES       " link "filterpictures" 0}   only pictures in filerequesters
+  @{"  FONTSPEC             " link "fontspec" 0}   custom font specifier
+  @{"  HAM                  " link "ham" 0}   open HAM screen
+  @{"  HIDEONCLOSE          " link "hideonclose" 0}   closebutton hides MysticView
+  @{"  HIDEONESCAPE         " link "hideonescape" 0}   escape key hides MysticView
+  @{"  ICONIFY              " link "iconify" 0}   iconify mode
+  @{"  LMBACTION            " link "lbmaction" 0}   left mouse button behavior
+  @{"  LOOP                 " link "noloop" 0}   loop the picturelist
+  @{"  MARKCOLOR            " link "markcolor" 0}   configurable highlighting color
+  @{"  MODEID               " link "modeid" 0}   screen mode id
+  @{"  PICFORMAT            " link "picformat" 0}   format string for PICINFO
+  @{"  PICINFO              " link "picinfo" 0}   display info textline
+  @{"  PRECISION            " link "precision" 0}   for screen-pen allocation
+  @{"  PREVIEWMODE          " link "previewmode" 0}   realtime update when scaling/scrolling
+  @{"  PUBSCREEN            " link "pubscreen" 0}   public screen to open upon
+  @{"  RECURSE              " link "norecurse" 0}   scan subdirectories
+  @{"  REFRESHMODE          " link "refreshmode" 0}   preferrably smart
+  @{"  REJECTPATTERN        " link "rejectpattern" 0}   automatically exclude files
+  @{"  RENDERQUALITY        " link "rendermem" 0}   faster rendering or higher accuracy?
+  @{"  REQUESTFILE          " link "requestfile" 0}   open filerequester at startup
+  @{"  RESETDISPLAY         " link "resetdisplay" 0}   reset display settings between pictures
+  @{"  REVERSE              " link "reverse" 0}   reverse a list's sort direction
+  @{"  ROTATESTEP           " link "rotatestep" 0}   in degrees
+  @{"  SCREENASPECTX/Y      " link "screenaspect" 0}   correct biased screen aspects
+  @{"  SCROPENMODE          " link "scropenmode" 0}   public, custom, or default screen
+  @{"  SCRWIDTH, SCRHEIGHT  " link "screenwidthheight" 0}   let MysticView choose your screenmode
+  @{"  SHOWARROWS           " link "showarrows" 0}   tiny arrows on not fully visible pictures
+  @{"  SHOWBUTTONS          " link "showbuttons" 0}   show GUI buttons
+  @{"  SHOWCURSOR           " link "showcursor" 0}   imaginary image cursor
+  @{"  SHOWPIP              " link "showpip" 0}   PiP dispay feature
+  @{"  SIMPLESCANNING       " link "simplescanning" 0}   quick scanning, no filetype detection
+  @{"  SLIDEDELAY           " link "slidedelay" 0}   delay between pictures
+  @{"  SLIDESHOW            " link "slideshow" 0}   advance to the next picture automatically
+  @{"  SMOOTHDISPLAY        " link "smoothdisplay" 0}   interpolate zoom and movements
+  @{"  SORTMODE             " link "sortmode" 0}   none, alpha, date
+  @{"  STARTPIC             " link "startpic" 0}   for those who HATE MysticView's logo
+  @{"  STATICPALETTE        " link "quickpalette" 0}   static palette, quicker and dirtier
+  @{"  TEXTCOLOR            " link "textcolor" 0}   configurable text color
+  @{"  THUMBCOLORS          " link "thumbcolors" 0}   number of colors for thumbnails
+  @{"  THUMBSIZE            " link "thumbsize" 0}   size of newicon thumbnails
+  @{"  WINLEFT, WINTOP      " link "winlefttop" 0}   determine fixed window position
+  @{"  WINOPENMODE          " link "winopenmode" 0}   window location mode
+  @{"  WINSIZEMODE          " link "winsizemode" 0}   window size mode
+  @{"  WINWIDTH, WINHEIGHT  " link "winwidthheight" 0}   determine fixed window size
+  @{"  ZOOMSTEP             " link "zoomstep" 0}   relative step rate to zoom in/out
+
+
+  in addition to these, there are some 'global' settings,
+  which are automatically saved in ENV/ENVARC:MysticView/Paths.
+  these settings are more easily altered throughout MysticView's
+  menus, but you may also modify these ENV settings directly.
+  
+  @{"  AUTOSAVESETTINGS     " link "autosavesettings" 0}   automatically save ALL settings at exit
+  @{"  STARTPATH            " link "startpath" 0}   current directory for pictures  
+  @{"  PRESETPATH           " link "presetpath" 0}   path to preset files
+  @{"  LISTPATH             " link "listpath" 0}   path to list files
+  @{"  COPYPATH             " link "copypath" 0}   'standard' path for copy/move
+  @{"  PRESET0...9          " link "preset" 0}   predefined f-key configurations
+  @{"  DESTPATH0...9        " link "destpath" 0}   predefined paths for copy/move
+
+
+  note: all keywords are case-insensitive.
+
+  see also
+  @{"  menu reference  " link "menureference" 0}
+  @{"  examples        " link "examples" 0}
+  @{"  DirOpus config  " link "opusconfig" 0}
+@endnode
+
+@node "history" "history"
+
+  @{u}history                                                         @{uu}
+
+* 1.05
+    - mysticview is freeware; updated texts and requesters
+      accordingly.
+    
+  1.04
+  
+        - slightly improved efficiency of the scanner
+        - added %n placeholder in the PICFORMAT string
+          for the picture's file format, as returned by
+          the datatype.
+        - updated and fixed documentation
+
+  1.03
+    - new setting: SIMPLESCANNING. when activated, MysticView will
+      add any scanned files to the filelist. no filetype detection
+      takes place. later, when a file turns out to be not loadable
+      as a picture, it will be silently removed from the list. this
+      scanning mode is significantly faster than the default. note:
+      this feature is still considered "beta" and only available
+      via tooltypes.
+    - supplied os3.5-icons in the "goodies" drawer.
+    
+  1.02
+    - CTRL-F-key now immediately switches to a preset, without opening
+      a filerequester first.
+
+  1.01
+    - when in fullscreen mode and with HIDEONCLOSE enabled, MysticView
+      quitted when the invisible button in the screen's upper left
+      was clicked. fixed.
+    - added "Append Drag'n'Drop" option. when enabled, icons/drawers
+      dragged onto MysticView's window will be added to the current
+      list. tooltype is APPENDICONS.
+    - slightly improved the example preset files.
+
+
+* 1.00
+    - version number bumped
+
+  0.99h
+    - v1.00 feature freeze.
+    - menus are being restructured.
+    - fixed a bug in the buffer size calculations which caused
+      the background loader to run amok sometimes.
+    - mysticview and all its libraries are now using v39 exec
+      memory pools again.
+    - improved the install script and supplied some configs.
+    - neuralnet.library wasn't installed with earlier versions.
+      fixed.
+    - documentation updated and improved
+    - an auto filerequester was opened even with filenames
+      passed in the commandline. fixed.
+    - added PICFORMAT setting. it allows to specify a format
+      string for the picture info display. currently defined
+      are %p - pathname, %f - filename, %w - width, %h - height,
+      %d - depth. default "%f - %w×%h×%d".
+    - fixed APPEND option.
+    - MysticView and all libraries have been recompiled with
+      higher optimization levels
+    - added a lot of DirectoryOpus configuration hints and
+      examples
+    - when a loaded presetfile contained a new SORTMODE,
+      MysticView did not immediately resort the list. fixed.
+    - added a slightly updated version of MystiCube to the
+      distribution
+    - increased neural network training threshold
+    
+  0.99g
+    - fixed a bug in guigfx.library which caused MysticView
+      to crash at exit, when the standard C= picture and ILBM
+      datatypes were used for loading HAM pictures. thanks to
+      Hexaae for the bug reports and debugging assistance.
+    - the background loader has been rewritten from the
+      scratch. the new loader is faster, and memory management
+      is more efficient.
+    - preloading (and caching) of multiple pictures is now
+      supported. provided you have enough memory, MysticView
+      can keep entire slideshows buffered in memory. Mysticview
+      now reacts much better to skipping back and forwards in a
+      picture list.
+      this redesign also fixes a major bug (enforcer hits
+      and crashes, when pictures were deleted from the
+      list) and some minor problems.
+    - added menu item "Scan Asynchronously" (corresponding
+      tooltype is ASYNCSCANNING). the behavior of the background
+      scanner is no longer dependent from the sortmode.
+    - MysticView's multitasking is much nicer towards other
+      applications now. all time-consuming jobs are running
+      at the same priority. the default is 0 (if started from
+      the workbench), or the same as of the shell process
+      that launched MysticView. the PRIORITY setting has been
+      removed. MysticView now works very comortable at high
+      system load.
+    - added GUI buttons for open, previous, next, slideshow,
+      looping, etc. tooltype: SHOWBUTTONS. enabled by default. 
+      you may also use a set of your own buttons via the
+      BUTTONPIC tooltype. a tiny animation of MysticView's
+      logo has been included, too. the respective tooltype
+      is ANIMPIC.
+    - MysticView now offers to change the filename for already
+      existing pictures that are to be copied or moved.
+    - copying, moving and deleting do no longer work
+      asynchronously. MysticView now waits for these operations
+      to complete.
+    - added sort criteria filesize, filedate, combined
+      path+filename, and a reverse-sort option.
+    - the picture-info textline contains more useful
+      information, and it updates while scanning and loading.
+    - added self-starting feature, as known from many text
+      editors. if another MysticView is running, the commandline
+      option APPEND passes specified pictures/paths/patterns 
+      to that instance. if no other MysticView is found, a new
+      instance will be started.
+    - shareware-nagging has been removed.
+    - added menu item "Add Pictures..." to the current
+      filelist.
+    - added menu item "Add from List..." to the current
+      filelist.
+    - static-palette rendering gives better results
+      (guigfx.library v15.2)
+    - filerequester simplified: the default filename is now
+      set to "#?", so committing "Okay" without selecting
+      any files will include the entire directory's contents.
+    - Added "First" function for skipping back to the
+      first picture in a list. Skipping back stops a slideshow.
+    - fixed a long-standing bug in mysticview.library that
+      caused pictures to be rendered incompletely in slideshows.
+    - the SLIDEDELAY tooltype setting is now measured in
+      1:10th of seconds, no longer in seconds.
+    - added PIP feature. (in this context it has nothing to
+      do with graphics card hardware). it's experimental - 
+      do not use it, it doesn't work very well together with
+      opaque window sizing, thanks to these #?%&@! layer
+      cliprects.
+    - the neural network which tries to predict the user's
+      desired displaymode has changed. it has got more brains
+      now, and it differentiates more picture parameters,
+      but it also requires more training. the network is now
+      also recalled during window-resizing, thus MysticView
+      may immediately switch the displaymode. this makes the AI
+      feature a bit more transparent to the user, but also a
+      bit more nasty. simply let the menu item 'Options/Learn'
+      disabled if you think it's too confusing. recommended
+      reading: configuration/AUTODISPLAYMODE
+    - MysticView's commandline arguments are now sorted
+      alphabetically. this might interfere with any particularly
+      useful order, but at least you've got the chance to find
+      something.
+    - MysticView will never trash its window borders again, and
+      this ugly window-border-refresh-maintenance-signalling-task
+      is no longer needed and has been removed.
+    - added SHOWARROW option. when enabled, MysticView draws
+      small arrows at a picture's borders when it is not
+      fully visible. enabled by default.
+    - usability via keyboard has been improved. the space bar
+      is now used for 'one-hand' control of slideshows, which
+      is 'handy' for wanking over porn slides, for example. most
+      important functions are now available on the numeric
+      keypad.
+    - changed qualifiers for scrolling via keyboard. CTRL scrolls
+      by 100%, SHIFT by 10%, no qualifier scrolls by 1% per stroke.
+    - "Reset Display Settings" now reacts instantly, not only
+      when a new picture is getting displayed
+    - MysticView now instantly reacts to changes of the sort mode
+      and sorts the picture list while scanning/loading/viewing.
+    - the option KEEPIMAGE (i.e. keep the current image while
+      another one is being loaded) is obsolete and has been
+      removed.
+    - MysticView now correctly displays loading errors, and
+      automatically retries loading after flushing the cache
+      when the reason for failure was a lack of memory.
+    - new default background color.
+    - HAM artifacts have been reduced to an absolute minimum
+      (mysticview.library v4).
+    - added menu item "Remove". as the name suggests,
+      this function simply removes a picture from a list
+      (without deleting or moving)
+    - added menu item "Save List as..." for saving the current
+      list of pictures as a listfile.
+    - lists are identified by a tooltype in their respective
+      icon: "MYSTICVIEW_LISTFILE=YES". you can drag'n'drop
+      listfiles to MysticView's window or appicon now.
+    - workbench-integration has been improved even further:
+      you can start MysticView by double-clicking
+      preset and listfile icons, and even both at the same 
+      time. (e.g. select a listfile, hold the shift key, and
+      doublelick a presetfile - or the other way round.) you
+      may also drag'n'drop listfile and preset icons on
+      MysticView's window (or appicon) at the same time, or
+      mix preset icons with pictures/directories/volumes.
+    - the displaymodes "keep aspect max", "onepixel" and
+      "fit to window" are no longer available in the menus.
+      the remaining items have been renamed to
+      "scale with aspect" and "display 1:1 pixel" (the last
+      one corresponds to the IGNOREASPECT mode).
+    - the option HIDEWITHPICTURE has been removed. MysticView
+      no longer flushes the current (and buffered) pictures
+      from memory when it gets iconified. scanning and
+      preloading now silently continue in the background.
+    - added an optional picture filter in filerequesters
+      (tooltype: FILTERPICTURES). requested by hexaae.
+    - requesting the previous picture stops a slideshow.
+    - added DEFAULTTOOL setting
+    - the REJECTPATTERN argument is now also used in
+      filerequesters, not only applied to the picture scanner.
+    - added tooltyoe items for a view's text and highlighting
+      colors (TEXTCOLOR, MARKCOLOR)
+    - added display refresh smoothing (SMOOTHDISPLAY). it will
+      interpolate modifications on the display (only zooming
+      and scrolling. rotating is not supported).
+    - added tooltypes HIDEONCLOSE and HIDEONESCAPE.
+    - the memory consumption for opaque-refreshing of
+      truecolor pictures on non-truecolor screens has been
+      reduced to only 25%, but its short-time peak memory
+      consumption is even worse than before.
+    - the picture cursor no longer trashes the window borders
+      when a picture is rotated, nor does it overwrite
+      the infotext. the picture cursor is no longer overwritten
+      by the rendered picture - it's visible all the time now.
+    - the cursor was placed incorrectly when the picture was
+      rotated and zoomed. fixed.
+    - some rare visual artifacts have been removed,
+      such as background areas using a deallocated pen
+    - with STARTPIC=none, MysticView did not always update its
+      display correctly. fixed.
+    - the former option PRELOAD is obsolete and has been removed.
+      the loader is configured with the new setting BUFFERPERCENT.
+
+* 0.99f
+    - newicon thumbnail creation did not work properly. fixed.
+    - Thumbnail AutoUpdate now recognizes changes of the pictures
+      themselves, as well as changes of the thumbnail parameters.
+    - removed redundant modes from the screenmode requester.
+    - some minor bugfixes.
+
+  0.99e
+    - the neural network for AUTODISPLAYMODE has been overworked.
+    - the AUTOSAVESETTINGS setting is no longer saved in the icon,
+      it is now part of the global configuration
+    - MysticView did not read its settings from an icon when it
+      was started as an icon's default tool. fixed.
+    - added AUTOCROP setting
+
+  0.99d
+    - added @{"AUTODISPLAYMODE" link "autodisplaymode" 0} and a new menu entry "learn and predict".
+      if activated, MysticView uses a small neural network to learn the
+      user's desired displaymode for different kinds of pictures. "learn
+      and predict" does not care about the rarely used displaymodes
+      IGNOREASPECT and FIT. it will only learn from and try to predict
+      KEEPASPECT, KEEPASPECT2, and ONEPIXEL.
+    - added a new icon by M. Grothmann.
+
+  0.99c
+    - fixed display mode settings in the menus. mutual exclude
+      was broken since 0.99b.
+    - added menu item "rename picture". Renaming in this
+      context means moving a picture to any place in the
+      filing system. the difference towards "move picture"
+      is that the picture is kept in the current picture
+      list. requested by G. Hones.
+
+  0.99b
+    - the commandline arguments were broken as of v0.99. fixed.
+    - "reset display settings" is now considered when the display
+      mode is changed. requested by infinity.
+    - re-enabled the escape key for quitting. requested by
+      P. Habermehl and J. Urbanek
+    - added PRIORITY setting (normal, nice, low). the priority
+      is only considered when mysticview starts.
+    - the options menu has been completely restructured.
+      some settings have been removed from the menu, they are
+      only accessible throughout tooltypes now: Hide mode,
+      simple/smart refresh, keep image when hidden
+    - removed every second frame of the supplied animation from
+      the archive. it appeared somehow obscene to me to include
+      half a megabyte of animation data for silly demonstration
+      purposes only.
+    - by default the system's screen font is used for the
+      picture info text.
+    - added FONTSPEC tooltype for the picture info text.
+      syntax: size[,name]. example: FONTSPEC=8,topaz
+    - revised the documentation. many details did not reflect
+      recent changes.
+    - with LMBACTION=NEXT, only mouseclicks that exactly hit the
+      picture will actually advance the picture list.
+    - slightly modified the supplied example presets.
+
+* 0.99a
+    - pictures moved to another directory are now removed from
+      the list.
+    - the package contained outdated versions of some libraries,
+      and the installer did not update them correctly. fixed.
+    - the icons in the v0.99 archive still contained the old
+      tooltype settings. fixed.
+
+  0.99
+    - added configurable left mousebutton action ('drag' or 'next')
+    - a default preset path is no longer defined.
+    - fixed a bug in the presetfile generation. 
+    - fixed the startup. MysticView's icon settings were
+      read and interpreted twice.
+
+  0.98j
+    - renamed NOLOOP to LOOP, NORECURSE to RECURSE, RENDERMEM to
+      RENDERQUALITY.
+    - all former boolean-type settings are now keyword settings.
+      the keywords are "YES" and "NO".
+    - removed the DEFICON tooltype.
+    - SCROPENMODE "NONE" has been renamed to "DEFAULT".
+    - restuctured the menus.
+    - configurable paths and presets are now stored in env:/envarc:
+      and saved automatically. this greatly enhances comfort and
+      usability.
+    - file management requesters are no longer opened on the default
+      pubscreen, but rather on MysticView's screen.
+    - Mysticview now uses the Workbench's SA_Pens when opening a
+      new screen
+    - added slideshow/no delay option.
+    - added RESETDISPLAY setting. if enabled, the zoom/position/rotation
+      settings are reset between pictures.
+    - the installer no longer overwrites an already existing icon.
+    - MysticView is no longer iconified when the close button is clicked
+      or Escape is pressed. Iconify has to be invoked seperately.
+    - changed some default settings.
+    - added auto thumbnailing.
+    - removed shareware limitation for thumbnail functions.
+    - MysticView now creates icons for its preset files.
+    - MysticView can now be started by doubleclicking a preset icon.
+    - preset files can be dragged to MysticView's window.
+
+  0.98i
+    - fixed mouse movement problem that somtimes occured when MysticView's
+      screen was left or re-activated. thanks to persistant nagging
+      from Joker. this was a MysticView bug and NOT caused by MCP.
+    - fixed asl file requester enforcer hit
+    - the same picture is no longer preloaded in the background when
+      only one picture is in the queue.
+    - included some more semaphore protections to the background
+      picture handler
+    - fixed a rejectpattern bug/enforcer hit when no rejectpattern
+      was specified
+    - added menu item "Negative"
+    - added some busy pointers
+    - changed some hardcoded defaults and default settings in the
+      distribution.
+    - iconify mode default is now hardcoded to NO.
+    - a picture is no longer reloaded when "keep image when hidden"
+      is selected, slideshow mode is active, only one picture is
+      in the queue, and MysticView gets uniconified. the same applies
+      if the screen/windowmode is changed ("keep image when hidden"
+      is not considered in this case)
+
+  0.98h
+    - you can now completely disable mysticview's logo by setting
+      STARTPIC=none. mysticview now starts when a startpic wasn't
+      found.
+    - fixed a tiny memory leak in the settings that could occur with
+      some options.
+    - added THUMBSIZE and THUMBCOLORS.
+    - improved subtask stability
+    - added REJECTPATTERN
+    - the startpic file requester could produce an enforcer hit. fixed.
+
+* 0.98g
+    - fixed slideshow bug: when only one picture was selected
+      and slideshow plus loop mode was activated, the picture
+      was reloaded over and over again. reported by Joker.
+    - minor aspect problems fixed.
+    - the image aspect is now displayed in the information
+      textline.
+
+  0.98f
+    - added JPEG saving. (no options yet. default saving
+      quality used).
+    - fixed commandline options. reported by Kilyman.
+
+  0.98e
+    - added autodither.
+    - fixed timing problems in slideshow mode.
+
+  0.98d
+    - MysticView now requires mysticview.library.
+
+  0.98c
+    - MysticView has been slightly sped-up on truecolor displays.
+    - added ZOOMSTEP.
+    - limited newicon thumbnails to a size of 80x80 pixels and
+      64 colors. this will speed up the icon display on your
+      Workbench. (this is still no final solution, though.)
+    - added configurable slots for preset files. they can be
+      accessed throughout CTRL F1 ... F10 and configured
+      by selecting them from the menu. requested by H. Richter.
+    - the same scheme now applies to the configurable destination
+      paths for copying/moving. keyboard executes, menu selection
+      configures.
+    - slideshows didn't always stop immediately. fixed.
+    - implemented SHOWCURSOR.
+    - the REQUESTFILE option is now considered after a slideshow
+      stopped. requested by P. Habermehl.
+    - implemented SHOWCURSOR.
+    - finally fixed the publicscreen/customscreen problem. the
+      setting SCROPENMODE=CUSTOM/PUBLIC/NONE replaces the former
+      tooltype CUSTOMSCREEN.
+    - added CX_PRIORITY, CX_POPKEY and CX_POPUP.
+      MysticView is now a commodity. ESC to hide, Amiga-Q to quit.
+      note: 'hide' keeps the current image - and you keep that in
+      mind when you iconify MysticView with a 2880x1440x24 image :)
+    - the screen is no longer closed and reopened for the change of
+      window settings.
+    - fixed a memory allocation bug with the PUBSCREEN setting.
+    - many minor changes
+    - added AUTOHIDE.
+    - the picture aspect is now handled for thumbnails.
+    - added pubscreen select and default/public/custom menu items.
+    - added appicon
+    - added rotation. (preliminary. SHOWCURSOR and grid refresh doesn't
+      work corretly with the image being rotated) 
+    - fixed install script for 030/FPU version. Reported by B. Murray.
+    - deleted pictures are now removed from the list and MysticView
+      advances to the next picture. requested by P. Dahlberg.
+    - added ROTATESTEP
+    - added DEFAULTICON
+    - added CONFIRM. requested by P. Dahlberg.
+    - added HIDEWITHPICTURE.
+    - added ICONIFYMODE.
+
+  0.98b
+    - fixed PUBSCREEN setting. pubscreens have got precedence
+      over CUSTOMSCREEN now. reported by P. Habermehl and M.
+      Kilimann.
+    - fixed MysticView's new icon to use only required colors.
+      reported by M. Kilimann.
+    - looping and AUTOQUIT are now applied in general,
+      not only in slideshow mode. requested by P. Habermehl.
+
+* 0.98a
+    - forgot to implement NORECURSE tooltype setting. fixed.
+    - added NOLOOP and AUTOQUIT settings. requested by P. Habermehl.
+    - new default background color
+    - implemented SORTMODE none/random/alpha
+    - added limitations for unregistered users. :)
+
+  0.97h
+    - added setting DITHERMODE. implemented EDD dithering.
+    - renamed DITHER to DITHERING.
+    - pictures that could not be loaded no longer interrupt
+      slideshows, and a proper error message will be displayed.
+    - added Delete Picture.
+    - copy/move/delete now applies to the pictures' icons, too.
+    - added STARTPIC setting.
+    - restructured menus.
+    - added Flip Horizontally and Flip Vertically.
+    - MysticView now creates a new icon for its settings,
+      if necessary.
+    - implemented loading and saving of presets, added PRESETPATH
+      and PRESETFILE settings
+    - fixed DEFAULT option. now the defaults are overridden by
+      arguments specified in the command line.
+
+  0.97g
+    - the preload task's priority has been reset to -1.
+    - added newicon thumbnail feature. (preliminary,
+      for experimental purposes only)
+
+* 0.97f
+    - added preloading.
+    - added invisible close and screenback gadgets. this works
+      only when both the settings WINSIZEMODE=FULL and
+      BACKDROP are specified. requested by Joker.
+    - MysticView no longer forgets the current filename when
+      the configuration is changed, and slideshows will be
+      continued.
+    - added some more keyboard shortcuts
+    - dropped german documentation, created a guide file and
+      an install script
+
+  0.97e
+    - added picture information and PICINFO setting
+    - implemented a new picture-management class consisting
+      of several subtasks.
+    - slideshow now works as expected. (preload is not
+      yet re-implemented, though)
+    - fixed many menu-related problems and improved menu layout
+    - added copy to..., move to... for 10 configurable slots each.
+    - all path/filenames are now handled dynamically
+    - with the REQUESTFILE option enabled, a requester no
+      longer pops up when images were specified at startup.
+    - improved memory management
+    - when initialization fails, a requester is shown for
+      retry, cancel, or retry using defaults.
+    - added LISTFILE commandline option. it allows to specify a
+      list file from where to fetch pictures.
+    - added Open List File... menu and LISTPATH config.
+    - the window border is now refreshed correctly (after approx.
+      1/5 second. guess what, a subtask is used here. opaque window
+      sizing would suffer too much from refreshing the window border
+      all the time :)
+    - finally! MysticView should close down gently now if the required
+      versions of guigfx or render.library could not be opened (#&§@%!?)
+    - new icon tooltypes are created dynamically. no need to upgrade
+      MysticView's icon anymore.
+
+  0.97d
+    - the configuration is now saved to MysticView's icon.
+    - menu items didn't toggle correctly (forgot MENUTOGGLE.
+      what the heck, why does this work with MagicMenu ;)
+    - added more CTRL_C exit breakpoints
+    - the main task priority is now reset correctly.
+    - improved handling
+    - major menu layout rework
+    - added AUTOSAVESETTINGS
+    - added PREVIEWMODE 
+    - added grid refresh
+    - fixed lots of minor quirks and problems
+
+  0.97c
+    - slightly improved screenmode selection logic:
+      default screen size is now the workbench's visual
+      dimensions, no longer its absolute size.
+    - re-implemented screenaspect tooltypes (thanks to ZZA :)
+    - added slideshow mode
+    - MysticViw now reads its configuration from the icon,
+      even when started from shell. commandline arguments
+      simply override the settings from the icon's tooltypes.
+    - added mouse scrolling - it's now possible to drag the
+      picture around in MysticView's window.
+    - added a lot of menu items
+    - improved HAM refresh logic
+    - the screen's title bar is no longer obscured in
+      WINOPENMODE=VISIBLE and without BACKDROP mode.
+    - added MODEID, SCRWIDTH, SCRHEIGHT
+    - added screenmode requester
+
+  0.97b
+    - MysticView crashed without cybergraphics. Fixed.
+
+  0.97a
+    - The display part has been rewritten. Now a daemon-like
+      view-class handles the display as a background task.
+      the new display logic is faster.
+    - implemented zooming and scrolling in all displaymodes
+      (except for DISPLAYMODE=FIT).
+    - implemented DISPLAYMODE KEEPASPECT2 and IGNOREASPECT.
+      DISPLAYMODE=ONEPIXEL has got a slightly different meaning now.
+    - implemented asychronous, recursive directory scanning.
+    - multiselect und patternmatching is now supported via
+      drag&drop, filerequester, commandline and wbstart.
+    - added some keyboard shortcuts.
+    - Next and Previous Picture is now implemented.
+    - BORDERLESS has been renamed to BACKDROP.
+    - WINSIZEMODE=NORMAL renamed to WINSIZEMODE=DEFAULT,
+      WINOPENMODE=NORMAL renamed to WINOPENMODE=DEFAULT
+    - PREVIEW und OPAQUESIZING are combined to a new single option: OPAQUE.
+    - added new options QUICKPALETTE and DITHER.
+    - TRANSPARENCY, REFRESHDELAY and AUTODITHER have been removed.
+    - added some menu configurations.
+
+  0.96n
+    - MysticView now uses DoPictureMethod()/PICMTHD_MAPDRAWHANDLE for
+      quick drawing in preview mode and for opaque sizing.
+    - added tooltype WINSIZEMODE=SMALL, renamed WINSIZEMODE=66PERCENT
+      to WINSIZEMODE=LARGE.
+
+  0.96m
+    - fixed a minor pubscreen problem.
+
+  0.96l
+    - a logo task is no longer launched when a startup
+      picture is specified.
+    - minor internal changes
+
+  0.96k
+    - since v0.96j, MysticView uses guigfx.library v3
+      features, but it still opened guigfx.library v1.
+      fixed.
+    - minor problems corrected.
+    - when a startup picture is specified, the logo task is
+      launched with a lower priority than the load task.
+    - added STARTPATH tooltype.
+
+  0.96j
+    - added RENDERMEM option
+    - fixed ASL filerequester problems.
+
+  0.96i
+    - added cursor and mouse scrolling in DISPLAYMODE=ONEPIXEL.
+    - window is now WFLG_ACTIVATE.
+    - improved refresh mechanism.
+    - added KEEPIMAGE.
+
+  0.96h
+    - added a nicer rendered logo and dropped alpha-channel processing
+      for the logo in TRANSPARENCY mode.
+    - KEEPASPECT now works in TRANSPARENCY mode on screens with
+      aspects different from 1:1.
+    - TRANSPARENCY is slightly faster.
+    - removed NOBACKFILL hook in TRANSPARENCY mode.
+    - added BGCOLOR option.
+
+  0.96f
+    - drastically reduced memory consumption.
+
+  0.96e
+    - implemented tooltypes SCREENASPECTX and SCREENASPECTY for
+      correction of distorted screen aspects (e.g. Cybergraphics
+      640x256, or custom screen modes boosted with MonEd etc)
+    - since the autodither value cannot be computed for rendering
+      to HAM screen modes, HAM dithering is always enabled with
+      AUTODITHER != 0 and disabled with AUTODITHER=0.
+    - (finally?) solved all subtask administritation problems.
+    - fixed commandline and wbarg parsing and supplied a proper
+      template.
+    - MysticView now quits with the ESC key.
+    - added REQUESTFILE for MysticView to open a filerequester on
+      startup.
+    - The filerequester now opens asynchronously.
+    - included Mac's newicon.
+
+  0.96d
+    - Fixed a minor problem with MysticView running multiple
+      times on HAM public screens.
+    - Fixed Division-by-zero problem in MysticView's drawtask
+      (hopefully)
+    - improved subtask data-share mechanism
+    - tooltype options are no longer case sensitive.
+
+  0.96c
+    - Added tooltype option HAM for MysticView to open
+      a HAM screen in combination with CUSTOMSCREEN.
+
+  0.96b
+    - re-implemented transparency mode
+    - implemented About requester
+    - improved TRANSPARENCY mode: the background is no longer 
+      snapped when a REFRESHWINDOW message arrives
+
+  0.96a
+    - MysticView has been completely restructured in preparation
+      for further enhancements
+
+  0.95g
+    - added DirOpus configuration example.
+    - MysticView has got a menu and a filerequester for loading.
+    - if CUSTOMSCREEN is specified, the new screen is actually
+      a pubscreen.
+    - implemented PRECISION tooltype.
+    - 0.95f was eating its own signals - after 16 refresh signal
+      arrivals, no more subtasks could be created. Fixed.
+
+  0.95f
+    - added filename argument and FILENAME tooltype.
+    - fixed WINOPENMODE
+
+  0.95e
+    - MysticView did not work without Cybergraphics. Fixed.
+      Thanks to Plex and New Mode who reported this bug.
+
+  0.95d
+    - minor problems fixed.
+
+  0.95c
+    - improved speed.
+    - implemented CUSTOMSCREEN and DEPTH for MysticView to
+      open on a custom sreen. These features are preliminary,
+      though.
+
+  0.95
+    - implemented more reliable shared-data access for
+      MysticView's subtasks.
+    - drawtask priority reset to 0.
+    - removed a lot of bugs from the subtask admin code.
+    - MysticView does no longer lose memory.
+
+  0.94
+    - implemented DISPLAYMODE KEEPASPECT
+    - supplied a NOBACKFILL hook for the window.
+    - unallocated pens and undefined areas are no longer visible.
+    - the redraw task now runs with a priority of -1.
+    - slightly improved opaque-sizing. the rastered bitmap is
+      precalculated right after loading, when OPAQUESIZING=TRUE
+      and TRANSPARENCY=0
+    - fixed WINTOP and WINLEFT.
+
+  0.93
+    - added asynchronous drawing - leading to much better
+      window handling
+    - MysticView runs with a priority of 1, its subtasks
+      with a priority of 0
+    - added tooltype options
+
+  0.92
+    - implemented DISPMODE_ONEPIXEL.
+    - heavily trained for stableness.
+
+  0.91
+    - memory management improved
+
+  0.9
+    - completely rewritten from the scratch, now using
+      guigfx.library. features asynchronous loading,
+      a transparent window, dithering, more elaborated
+      window sizing and opening techniques, 
+      different display modes, and much more.
+
+
+  -------------------------- cut ---------------------------
+
+  0.76
+    - layout improved.
+    - implemented ADAPTIVEBORDER
+
+  0.75
+    - added lots of tooltype options
+    - fixed many minor problems
+    - greatly improved some image refresh problems.
+
+* 0.68
+    - first public release
+    - minor changes
+    - there was a heavy bug in v16.1 and v16.2 of render.library.
+      I guess that MysticView crashed right at startup if you did
+      NOT use the 68060 version. Sorry. I bumped the required
+      library version to v17 where this bug has been fixed.
+
+  0.67
+    - major rework and clean-up
+
+  0.66
+    - The color allocation strategy has been improved.
+
+  0.65
+    - I couldn't quickly get rid of some heavy bugs I've
+      introduced with v0.64. So I decided to continue work
+      with v0.62 and render.library v12.0.
+      Asynchronous loading is no longer implemented. 
+      This version seems to work pretty stable.
+
+  0.64
+    - asynchronous loading implemented.
+
+  0.63
+    - About is asynchronous now.
+    - improved color allocation strategy.
+    - MysticView crashed on 2-color-displays. Fixed.
+
+  0.62
+    - better allocation strategy for critical colors on
+      displays with few sharable pens.
+    - Filerequester implemented.
+        - A percentual render progress display and several messages
+      are displayed in the window's title bar.
+        - The picture's width is now layouted pixelwise, no longer in
+      multiples of 16 pixels.
+    - Various enhancements and bugfixes
+
+  0.60
+    - Faster display.
+    - Several bugs fixed.
+    - Fixed display problems (window borders and flicker...).
+    - Pooled memory management implemented.
+    - Window is SIMPLE_REFRESH now.
+    - Requires less memory.
+    - Nicer logo.
+    - Menu implemented for "About" requester and "Quit". Other
+      menu functions are not yet implemented.
+
+  0.53
+    - faster window refresh.
+    - Requires less memory
+
+  0.52    
+    - now takes care of aspect ratios.
+      This applies to both the image and the screen mode.
+    - nicer logo
+
+  0.51
+    - MysticView lost memory. Fixed.
+    - Sped-up window refresh after resizing.
+    - uses PRECISION_IMAGE instead of PRECISION_EXACT.
+
+  0.50
+    - initial version
+@endnode
+
+@node "autosavesettings" "AUTOSAVESETTINGS"
+
+  @{u}AUTOSAVESETTINGS@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Settings/Auto Save Settings
+
+  automatically save settings at exit. this setting
+  is only considered for the 'general' settings.
+  the 'global' settings are saved anyway.
+  
+  default: NO
+
+  see also
+  @{"  configuration  " link "configuration" 0}
+@endnode
+
+@node "backdrop" "BACKDROP"
+
+  @{u}BACKDROP@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Settings/Window/Backdrop
+  
+  open MysticView on a backdrop borderless window.
+  
+  default: NO
+@endnode
+
+@node "bgcolor" "BGCOLOR"
+
+  @{u}BGCOLOR@{uu}
+
+  type: string representing a hexadecimal number
+  menu equivalent: none
+
+  the background's RGB value.
+
+  default: a pale, dark green
+  
+  see also
+  @{"  TEXTCOLOR  " link "textcolor" 0}
+  @{"  MARKCOLOR  " link "markcolor" 0}
+@endnode
+
+@node "default" "DEFAULT"
+
+  @{u}DEFAULT@{uu}
+
+  type: switch
+  menu equivalent: Settings/Reset to Defaults
+
+  specify this option for MysticView to use its internal
+  default settings. no settings will be read from the icon.
+
+  this switch is only available when MysticView is started
+  from the command-line.
+@endnode
+
+@node "depth" "DEPTH"
+
+  @{u}DEPTH@{uu}
+
+  type: numeric
+  menu equivalent: none
+
+  preferred depth for custom screens.
+  valid: 1-8, 15, 16, 24, maybe 32.
+
+  default: the Workbench's depth.
+  
+  see also
+  @{"  SCROPENMODE  " link "scropenmode" 0}
+@endnode
+
+@node "destpath" "DESTPATH"
+
+  @{u}DESTPATH0 ... DESTPATH9@{uu}
+  
+  type: string
+  menu equivalent: Project/Copy Picture to/...
+  menu equivalent: Project/Move Picture to/...
+  
+  10 configurable destination paths for quick
+  copying/moving.
+  
+  these items are only available in the global
+  configuration.
+
+  defaults: undefined
+
+  see also
+  @{"  configuration  " link "configuration" 0}
+@endnode
+
+@node "displaymode" "DISPLAYMODE"
+
+  @{u}DISPLAYMODE@{uu}
+
+  type: keyword
+  menu equivalent: Options/Scale with Aspect
+  menu equivalent: Options/Display 1:1 Pixel
+
+  image size and aspect handling mode
+  
+    KEEPASPECT
+    keep the aspect ratios of both the screen and the image.
+    this mode guarantees that the image is always fully
+    visible.
+    this mode corresponds to Options/Scale with Aspect.
+  
+    KEEPASPECT2
+    keep the aspect ratios of both the screen and the image.
+    this mode guarantees that either the full width or full
+    height of the image is completely visible.
+    there is no menu equivalent for this mode.
+
+    ONEPIXEL
+    do not care about the image aspect, and display all pixels
+    that appear in the image. the screen's aspect ratio will
+    be considered.
+    there is no menu equivalent for this mode.
+
+    IGNOREASPECT
+    ignore all aspect ratios. represent each pixel in the
+    image by one pixel on the screen.
+    this mode corresponds to Options/Display 1:1 Pixel.
+
+    FIT
+    do not care about aspects and zoom at all. the image will
+    always fit exactly to the window's dimensions.
+    there is no menu equivalent for this mode.
+
+  default: KEEPASPECT
+  
+  see also
+  @{"  AUTODISPLAYMODE  " link "autodisplaymode" 0}
+@endnode
+
+@node "dither" "DITHER"
+
+  @{u}DITHERING@{uu}
+  
+  type: keyword
+  menu equivalent: Settings/Rendering/Auto Dither
+  menu equivalent: Settings/Rendering/Always Dither
+
+  dither activation mode.
+  
+    OFF
+    never use dithering
+    
+    ON
+    dither images on screens with 256 colors (or less),
+    and on HAM screens.
+    
+    AUTO
+    automatically activate dithering when the image would
+    lose too much quality.
+    
+  default: AUTO
+  
+  see also
+  @{"  DITHERMODE  " link "dithermode" 0}
+    guigfx.library ENV variables
+@endnode
+
+@node "ham" "HAM"
+
+  @{u}HAM@{uu}
+
+  type: boolean keyword (YES or NO)
+  menu equivalent: none
+
+  use this tooltype in combination with @{"SCROPENMODE=CUSTOM" link "scropenmode" 0} for
+  MysticView to open a HAM screen. don't forget to specify an
+  appropriate @{"DEPTH" link "depth" 0} setting as well.
+
+  default: NO
+
+  see also
+  @{"  SCROPENMODE  " link "scropenmode" 0}
+  @{"  DEPTH        " link "depth" 0}
+@endnode
+
+@node "listfile" "LISTFILE"
+
+  @{u}LISTFILE@{uu}
+  
+  type: string
+  menu equivalent: Project/Open List File...
+
+  specify the filename for a listfile. this listfile may
+  contain any number of pictures, paths and patterns.
+
+  this argument is only available when MysticView is started
+  from the commandline.
+  
+  see also
+  @{"  LISTPATH  " link "listpath" 0}
+@endnode
+
+@node "listpath" "LISTPATH"
+
+  @{u}LISTPATH@{uu}
+  
+  type: string
+  menu equivalent: none
+  
+  current default path for @{"LISTFILE" link "listfile" 0}. it is considered
+  when no path is specified for the @{"LISTFILE" link "listfile" 0} argument,
+  and in the list filerequesters.
+  
+  this argument is part of the 'global' configuration,
+  and will be saved automatically.
+  
+  see also
+  @{"  LISTFILE       " link "listfile" 0}
+  @{"  configuration  " link "configuration" 0}
+@endnode
+
+@node "modeid" "MODEID"
+
+  @{u}MODEID@{uu}
+  
+  type: string representing a hexdecimal number
+  menu equivalent: none
+  
+  desired screenmode ID for custom screens.
+  
+  note: there should be rarely any need for you to set
+  this cryptic argument manually. MysticView's automatic
+  screenmode selector is usually smart enough to find
+  the best matching screenmode with the arguments
+  SCROPENMODE, DEPTH, HAM, SCREENWIDTH, SCREENHEIGHT.
+  
+  default: undefined
+  
+  see also
+  @{"  SCROPENMODE                " link "scropenmode" 0}
+  @{"  DEPTH                      " link "depth" 0}
+  @{"  HAM                        " link "ham" 0}
+  @{"  SCREENWIDTH, SCREENHEIGHT  " link "screenwidthheight" 0}
+@endnode
+
+@node "norecurse" "RECURSE"
+
+  @{u}RECURSE@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: none
+  
+  when enabled, MysticView scans directories recursively.
+  
+  default: YES
+@endnode
+
+@node "precision" "PRECISION"
+
+  @{u}PRECISION@{uu}
+  
+  type: keyword
+  menu equivalent: none
+
+  color allocation precision for non-truecolor screens.
+  note: low precisions suffice in most cases.
+
+    GUI
+    lowest precision - extremely nice towards other
+    applications.
+
+    ICON
+    low precision - very nice towards other applications.
+
+    IMAGE
+    standard precision for images.
+
+    EXACT
+    highest precision. this mode is very unfriendly towards
+    other applications! only use it on a separate screen.
+
+  default: IMAGE
+@endnode
+
+@node "previewmode" "PREVIEWMODE"
+
+  @{u}PREVIEWMODE@{uu}
+
+  type: keyword
+  menu equivalent: Settings/Rendering/Grid Preview
+  menu equivalent: Settings/Rendering/Opaque Refresh
+
+  type of realtime window refresh. this applies to
+  changes and updates of the display while zooming,
+  moving the cursor, rotating, resizing the window,
+  and with @{"REFRESHMODE=SIMPLE" link "refreshmode" 0}.
+
+    NONE
+    no realtime update takes place. the image will be
+    rendered in highest quality.
+
+    GRID
+    a 10x10 grid is drawn instead of the picture, then
+    the picture is rendered into this grid with highest
+    quality.
+
+    OPAQUE
+    this option enables MysticView's opaque window update
+    with the full window contents. after a quick and dirty
+    preview has been displayed, the image is rendered
+    into the display in highest quality (if necessary).
+    
+    the last option increases memory consumption dramatically
+    and should be enabled only on systems with a fast CPU.
+
+  default: NONE
+  
+  see also:
+  @{"  SMOOTHDISPLAY  " link "smoothdisplay" 0}
+  @{"  REFRESHMODE    " link "refreshmode" 0}
+@endnode
+
+@node "pubscreen" "PUBSCREEN"
+
+  @{u}PUBSCREEN@{uu}
+  
+  type: string
+  menu equivalent: Settings/Screen/...
+
+  with this keyword you can open MysticView on
+  a public screen in your system.
+
+  default: default public screen
+  
+  see also
+  @{"  SCROPENMODE  " link "scropenmode" 0}
+@endnode
+
+@node "quickpalette" "STATICPALETTE"
+
+  @{u}STATICPALETTE@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Settings/Rendering/Static Palette
+  
+  this option will cause MysticView to use a static
+  palette instead of a dynamic one (being calculated
+  for each picture).
+  
+  this option is meaningless on hicolor- and truecolor
+  displays.
+ 
+  static palette versus dynamic palettes: 
+
+  a static palette
+  - gives bad results without dithering.
+  - produces more stable quality with dithering.
+  - will trigger MysticView's automatic dithering
+    in most cases.
+  - causes less flickering when you advance from
+    one picture to another, because there is no
+    need to clear the display.
+  - is not necessarily faster than a dynamic one.
+    this depends on the picture.
+  
+  default: YES
+  
+  see also:
+  @{"  DITHERING  " link "dither" 0}
+@endnode
+
+@node "refreshmode" "REFRESHMODE"
+
+  @{u}REFRESHMODE@{uu}
+
+  type: keyword
+  menu equivalent: none
+
+  window refresh mode.
+
+    SIMPLE
+    the window contents will have to be redrawn by MysticView
+    when parts of it are getting exposed. this mode saves some
+    memory.
+
+    SMART
+    the window contents are maintained by the operating system,
+    resulting in a quicker window refresh - at the cost of a
+    higher memory usage.
+    
+  this feature is rarely used. I recommend to use SMART
+  all the time.
+
+  default: SMART
+
+  see also
+  @{"  PREVIEWMODE  " link "previewmode" 0}
+@endnode
+
+@node "rendermem" "RENDERQUALITY"
+
+  @{u}RENDERQUALITY@{uu}
+  
+  type: keyword
+  menu equivalent: none
+
+  this flag indicates low or high quality (and memory
+  consumption) when truecolor data is rendered to 8 bit
+  (or less), or to HAM modes.
+
+    LOW
+    lower memory consumption and faster.
+    
+    HIGH
+    higher memory consumption and better quality,
+    at the cost of speed.
+      
+  default: LOW
+  
+  I recommend to leave this setting at its default.
+  MysticView does an excellent job in compensating the
+  loss of quality with dithering.
+  
+  see also
+  @{"  DITHERING  " link "dither" 0}
+@endnode
+
+@node "requestfile" "REQUESTFILE"
+
+  @{u}REQUESTFILE@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Auto File Requester
+
+  open a file requester at startup, and after the
+  last picture in a list. the latter case is
+  ignored when MysticView is in LOOP mode.
+
+  see also
+  @{"  LOOP  " link "noloop" 0}
+@endnode
+
+@node "screenaspect" "SCREENASPECTX SCREENASPECTY"
+
+  @{u}SCREENASPECTX, SCREENASPECTY@{uu}
+  
+  type: numeric
+  menu equivalent: none
+
+  override the screen's aspect ratio. use this feature if your
+  screenmode does not provide proper aspect ratios, e.g.
+  CybergraphX 640×256 or screen modes boosted with MonEd etc.
+
+  default: the screen's aspects
+  
+  see also
+  @{"  SCROPENMODE  " link "scropenmode" 0}
+@endnode
+
+@node "screenwidthheight" "SCREENWIDTH SCREENHEIGHT"
+
+  @{u}SCRWIDTH, SCRHEIGHT@{uu}
+  
+  type: numeric
+  menu equivalent: none
+  
+  desired width and height for a custom screen (in pixels).
+  only considered with SCROPENMODE=CUSTOM.
+  
+  default: none
+  
+  see also
+  @{"  SCROPENMODE  " link "scropenmode" 0}
+@endnode
+
+@node "slidedelay" "SLIDEDELAY"
+
+  @{u}SLIDEDELAY@{uu}
+  
+  type: numeric
+  menu equivalent: Settings/Slideshow Delay/...
+  
+  number of 1/10 seconds until the next picture is
+  displayed in slideshow mode.
+  
+  note: the interpretation of this setting has changed
+  since 0.xx versions, from seconds to tenth of seconds.
+  
+  default: 50
+  
+  see also
+  @{"  SLIDESHOW  " link "slideshow" 0}
+@endnode
+
+@node "slideshow" "SLIDESHOW"
+
+  @{u}SLIDESHOW@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Slideshow
+  button equivalent: 5th button from the left
+  
+  activate slideshow mode.
+  
+  default: NO
+  
+  see also
+  @{"  SLIDEDELAY  " link "slidedelay" 0}
+  @{"  AUTOSTOP    " link "autostop" 0}
+@endnode
+
+@node "startpath" "STARTPATH"
+
+  @{u}STARTPATH@{uu}
+  
+  type: string
+  menu equivalent: none
+
+  specifies the start path for MysticView's file requester.
+  
+  this setting is only available in the 'global' configuration.
+  
+  default: not defined
+  
+  see also
+  @{"  configuration  " link "configuration" 0}
+@endnode
+
+@node "winlefttop" "WINLEFT WINTOP"
+
+  @{u}WINLEFT, WINTOP@{uu}
+  
+  type: numeric
+  menu equivalent: indirect (Settings/Window/Snap Window)
+  
+  upper left position for the window on the screen. these
+  coordinates are only considered when @{"WINOPENMODE=DEFAULT" link "winopenmode" 0}.
+  
+  default: system's default window position
+  
+  see also
+  @{"  WINOPENMODE  " link "winopenmode" 0}
+@endnode
+
+@node "winopenmode" "WINOPENMODE"
+
+  @{u}WINOPENMODE@{uu}
+  
+  type: keyword
+  menu equivalent: Settings/Window/Centered...
+
+  specify window positioning mode.
+
+    DEFAULT
+    open the window at its default location, or as defined
+    throughout @{"WINLEFT" link "winlefttop" 0} and @{"WINTOP" link "winlefttop" 0}.
+    
+    CENTER
+    open the window in the middle of the visible part of the
+    screen. oversized (autoscrolling) screens are handled.
+    
+    MOUSE
+    open the window centered under the mouse pointer.
+
+  default: CENTER
+  
+  see also
+  @{"  WINLEFT, WINTOP  " link "winlefttop" 0}
+  @{"  WINSIZEMODE      " link "winsizemode" 0}
+@endnode
+
+@node "winsizemode" "WINSIZEMODE"
+
+  @{u}WINSIZEMODE@{uu}
+
+  type: keyword
+  menu equivalent: Settings/Window/Small...
+
+  specify window size mode.
+
+    DEFAULT
+    open the window with default dimensions, or as defined
+    throughout @{"WINWIDTH" link "winwidthheight" 0} and @{"WINHEIGHT" link "winwidthheight" 0}.
+  
+    FULL
+    open the window with the screen's full size.
+  
+    VISIBLE
+    open the window with the screen's visible size.
+    this mode handles oversized screens, and in addition
+    to that, it does not cover the screen's title bar.
+
+    LARGE
+    open a 'large' window - i.e. with 2/3 of the screen's
+    visible dimensions
+
+    HALF
+    open the window with half the screen's visible dimensions
+  
+    SMALL
+    open a 'small' window - i.e. with 1/3 of the screen's
+    visible dimensions
+
+  default: LARGE
+  
+  see also
+  @{"  WINWIDTH, WINHEIGHT  " link "winwidthheight" 0}
+  @{"  WINOPENMODE          " link "winopenmode" 0}
+@endnode
+
+@node "winwidthheight" "WINWIDTH WINHEIGHT"
+
+  @{u}WINWIDTH, WINHEIGHT@{uu}
+  
+  type: numeric
+  menu equivalent: none
+  
+  window's width and height. this size is only considered
+  when @{"WINSIZEMODE" link "winsizemode" 0} is set to DEFAULT.
+  
+  default: the system's default window size
+  
+  see also
+  @{"  WINSIZEMODE  " link "winsizemode" 0}
+@endnode
+
+@node "commandlinestart" "specify pictures via command line"
+
+  @{u}specifying pictures via commandline                  @{uu}
+  
+  specify any number of pictures, drawers and filename
+  patterns. examples:
+    
+    MysticView pix:
+    MysticView pix:JPEG/Colors.jpg
+    MysticView pix:JPEG/Colors.jpg pix:#?.ham?
+    MysticView sys:prefs/patt#?
+    MysticView sys:prefs/patt#?/#?.gif
+    MysticView pix:~(#?.gif)
+
+  see also
+  @{"  configuration  " link "configuration" 0}
+  @{"  examples       " link "examples" 0}
+@endnode
+
+@node "listfilestart" "specify pictures via listfile"
+
+  @{u}specifying pictures via listfile                     @{uu}
+
+  specify a listfile with the LISTFILE argument. a picture
+  list file may contain any number of filenames, paths, and
+  patterns.
+      
+  for instance
+      
+    MysticView LISTFILE work:pets
+      
+  with work:pets a text file looking like this:
+
+    pix:animals/pets/
+    pix:cat#?
+    sys:prefs/patterns/katzen.bmp
+    pix:misc/doggy1.ham8
+    pix:misc/doggy2.ham8
+    work:clipart/kitten(?|%)?.#?
+    pix:jpeg/#?(cat|dog|bird)#?
+    archive:
+  
+  you may also start MysticView with a listfile icon,
+  or specify one using drag'n'drop.
+  
+  see also
+  @{"  LISTFILE                          " link "listfile" 0} 
+  @{"  specify pictures via iconstart    " link "iconstart" 0}
+  @{"  specify pictures via drag'n'drop  " link "dragndropstart" 0}
+@endnode
+
+@node "dragndropstart" "specify pictures via drag'n'drop"
+
+  @{u}specifying pictures via drag'n'drop                  @{uu}
+
+  - drag single or groups of pictures, drawers or devices
+    on MysticView's window or appicon.
+
+  - drag listfiles on MysticView's window or appicon.
+
+  - with the option @{"APPENDICONS" link "appendicons" 0} enabled, icons are appended
+    to the filelist. otherwise, the filelist will be replaced.
+  
+  see also
+  @{"  APPENDICONS                     " link "appendicons" 0}
+  @{"  ICONIFY                         " link "iconify" 0}
+  @{"  specify pictures via iconstart  " link "iconstart" 0}
+@endnode
+
+@node "iconstart" "specify pictures via iconstart"
+
+  @{u}specifying pictures via icon start                   @{uu}
+
+  single picture:
+  
+  start MysticView by double-clicking a picture. 'MysticView'
+  must be the default tool for the respective icon¹. 
+  
+  multiple pictures:
+
+  - activate any number of pictures, drawers and devices on your
+    Workbench, hold down the shift key and double-click on
+    MysticView.
+
+  - or activate the icon of MysticView, then activate pictures,
+    drawers and devices while holding the shift key. double click
+    on the last icon.
+
+  listfiles:
+  
+  - start MysticView by double-clicking a listfile.
+
+  presets:
+
+  - start a MysticView configuration by double-clicking
+    a preset file's icon.
+  
+  - you can combine multiple icons for pictures, drawers and volumes
+    or listfiles (see listfiles) with preset icons (see multiple
+    pictures). the first preset file found in your selection determines
+    a new configuration for MysticView to start up and display the
+    selected pictures with.
+
+  ¹note: MysticView can automatically create newicon thumbnails with
+  MysticView being the default tool.
+
+  see also
+  @{"  preset files      " link "presetfiles" 0}
+  @{"  DEFAULTTOOL       " link "defaulttool" 0}
+  @{"  CREATETHUMBNAILS  " link "createthumbnails" 0}
+@endnode
+
+@node "filerequester" "specify pictures via file requester"
+
+   @{u}specifying pictures via filerequester               @{uu}
+
+   select "Open Pictures..." from the project menu and select
+   one or multiple files or drawers. use "Add Pictures..." to
+   append one or multiple pictures to the current list.
+   
+   select "Open List File..." from the project menu and select
+   a list file, or use "Add List File..." for appending a list
+   to the current list.
+   
+   see also
+   @{"  listfile start     " link "listfilestart" 0}
+   @{"  commandline start  " link "commandlinestart" 0}
+   @{"  FILENAME           " link "filename" 0}
+@endnode
+
+@node "disclaimer" "disclaimer"
+
+  @{u}disclaimer                                                      @{uu}
+
+  THIS SOFTWARE IS PROVIDED BY ITS CONTRIBUTORS ``AS IS'' AND ANY
+  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE CONTRIBUTORS BE LIABLE
+  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@endnode
+
+@node "submissions" "submissions"
+
+  @{u}submissions                                                     @{uu}
+
+  submit bug reports, ideas, concepts, suggestions, and feedback
+  of any kind. don't hesitate to drop me some lines, especially
+  when you've got some ideas for improvements, or you encounter
+  bugs or you think that MysticView lacks a feature.
+  
+  see also
+  @{"  author          " link "author" 0}
+  @{"  donations       " link "shareware" 0}
+  @{"  known problems  " link "knownproblems" 0}
+  @{"  history         " link "history" 0}
+@endnode
+
+@node "shareware" "shareware"
+
+  @{u}donations                                                       @{uu}
+
+  MysticView is now freeware. if you like it and use it
+  frequently, please send a donation to the @{"author" link "author" 0}.
+  
+  a donation could be one of your favourite music CDs,
+  or a bank-note in your funny local currency.
+  
+  whatever it may be, send something that you think may
+  be worth it, and only if you like.
+  
+  see also
+  @{"  author  " link "author" 0}
+@endnode
+
+@node "author" "author"
+
+  @{u}author                                                          @{uu}
+
+  Timm S. Müller <tmueller@neoscientists.org>
+
+  if you want to send a donation, send me an email
+  first for getting my current mail address.
+  
+  TEK neoscientists homepage and support site for
+  MysticView, mysticview.library, guigfx.library,
+  render.library, and other tools and libraries:
+  
+  www.neoscientists.org
+@endnode
+
+@node "copyright" "copyright"
+
+  @{u}copyright and license                                           @{uu}
+
+  copyright (c) 1997-2001 TEK neoscientists. all rights reserved.
+
+  redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+  1. redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+  2. redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+  3. all advertising materials mentioning features or use of this software
+     must display the following acknowledgement:
+       this product includes software developed by TEK neoscientists.
+  4. neither the name TEK neoscientists nor the names of its individual
+     contributors may be used to endorse or promote products derived from
+     this software without specific prior written permission.
+
+  see also
+  @{"  disclaimer  " link "disclaimer" 0}
+@endnode
+
+@node "acknowledgements" "acknowledgements"
+
+  @{u}acknowledgements                                                @{uu}
+  
+  Frank 'Copper' Pagels - personal friend, author of ArtPRO,
+  initiatior and main betatester of render.library.
+  
+  Markus Hillenbrand - author of Gallery, main betatester
+  of guigfx.library in its early stages.
+  
+  Steve Quartly and Paul Huxham - authors of PhotoFolio.
+  combining the powers of PhotoFolio and MysticView was
+  an amazing experience, with a heap of e-mails going around
+  the globe every day. now my feet are up! :-)
+  
+  Stefan Sommerfeld - author of Scalos. thanks for intensive
+  testing and implementation of guigfx.library and
+  render.library, and for a lot of suggestions!
+  
+  Gunther Nikl for a large number of great v43 datatypes.
+  
+  
+  greetings (not necessarily related to this project)...
+ 
+  Hexaae, Buggs, DaMicha (thanks for the newicon), Eagleeye, Mudu,
+  all members of Oxyron, Azure, ZZA, Joker, Mac (thanks for the
+  first newicon), and the TEK posse!
+@endnode
+
+@node "knownproblems" "known problems"
+
+  @{u}known problems                                                  @{uu}
+  
+  datatype related:
+  
+  - if you are using the Picasso96 picture.datatype, you must
+    upgrade to at least v43.26. otherwise, MysticView will crash
+    very badly when loading truecolor pictures.
+    
+  - the AK... datatypes (author: Andreas Kleinert) appear to
+    work fine, but they MUST be configured to deliver proper
+    results. in addition to that, they return false aspect
+    ratios in the default configuration. you need to add a
+    configuration item in env/envarc:datatypes/ak...prefs
+    using a text editor. add the following line:
+
+        NOASPECT
+
+  - if you encounter crashes of MysticView's loading task (or
+    other problems that might be related to datatypes), then
+    please try another datatype for the respective file format
+    first. thank you very much.
+    
+
+  miscellaneous:
+  
+  - if you are running out of memory too often and MysticView
+    needs to reload pictures after flushing the cache, please
+    reduce the size of the picture cache. recommended reading:
+    @{"BUFFERPERCENT" link "bufferpercent" 0} option.
+  
+  - the PiP option is considered experimental. do not use it
+    in a scalable window. this feature requires a 'cliprect'
+    to be installed in a window, and this may lead to
+    refreshing problems.
+
+  - MysticView isn't very well designed for access to slow
+    media. devices can be accessed by a large number of
+    tasks - mainly for scanning, loading, and background
+    loading (besides copying, moving and deleting).
+    disable the 'Scan Asynchronously' option (@{"ASYNCSCANNING" link "asyncscanning" 0})
+    when you access slow media. when enabled, different tasks
+    of MysticView are scanning and loading in parallel.
+  
+  - the way MysticView scrolls a picture (using the arrow keys)
+    might appear strange at first sight. the scroll position does
+    not depend on a pixel step rate, but rather on an imaginary
+    cursor. thus, scrolling does not move the picture, instead
+    it moves the cursor on the picture, and the visible area follows
+    the cursor. use the 'Show Cursor' option (@{"SHOWCURSOR" link "showcursor" 0}) to
+    make it visible.
+
+  - if you encounter unpleasant behavior concerning the display,
+    consult the textfile prefs/env-variables in the MysticView
+    distribution.
+    
+  - on my system, MysticView works fine with VMM - a virtual memory
+    manager by Martin Apel :-)
+
+  see also
+  @{"  insufficiencies    " link "insufficiencies" 0}
+  @{"  getting datatypes  " link "datatypes" 0}
+  @{"  ASYNCSCANNING      " link "asyncscanning" 0}      
+  @{"  BUFFERPERCENT      " link "bufferpercent" 0}      
+  @{"  SHOWPIP            " link "showpip" 0}
+  @{"  SHOWCURSOR         " link "showcursor" 0}
+@endnode
+
+@node "dithermode" "DITHERMODE"
+
+  @{u}DITHERMODE@{uu}
+  
+  type: keyword
+  menu equivalent: none
+
+  set dithermode. available are
+  
+    EDD 
+    use EDD dithering (slightly faster)
+
+    FS
+    use Floyd-Steinberg dithering (slightly better)
+  
+  default: EDD
+  
+  note: I recommend to use the default. EDD is not a simple
+  'ordered' derivate, but comes very close to Floyd-Steinberg
+  dithering, at higher performance.
+  
+  see also:
+  @{"  DITHERING  " link "dither" 0}
+@endnode
+
+@node "startpic" "STARTPIC"
+
+  @{u}STARTPIC@{uu}
+  
+  type: string
+  menu equivalent: none
+
+  this setting is for those who do not like to be stared at by
+  MysticView's ugly logo. specify a path/filename to a valid
+  picture to be used as MysticView's startup picture.
+  
+  you may also specify the reserved keyword 'none' if you can
+  live without a logo at all.
+  
+  default: internal startup picture will be used
+@endnode
+
+@node "presetpath" "PRESETPATH"
+
+  @{u}PRESETPATH@{uu}
+  
+  type: string
+  menu equivalent: none
+
+  current path to MysticView's presets. this path is
+  automatically saved to MysticView's global settings.
+  
+  it's used as the path for preset filerequesters,
+  and for the PRESETFILE argument, when no path
+  is specified.
+  
+  default: undefined
+  
+  see also
+  @{"  PRESETFILE     " link "presetfile" 0}
+  @{"  preset files   " link "presetfiles" 0}       
+  @{"  configuration  " link "configuration" 0}
+@endnode
+
+@node "presetfile" "PRESETFILE"
+
+  @{u}PRESETFILE@{uu}
+  
+  type: string
+  menu equivalent: Settings/Load Preset...
+
+  settings file. this keyword is only available in the
+  command line.
+
+  default: settings are read from MysticView's icon
+  
+  see also
+  @{"  PRESETPATH    " link "presetpath" 0}
+  @{"  preset files  " link "presetfiles" 0}
+@endnode
+
+@node "noloop" "LOOP"
+
+  @{u}LOOP@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Loop
+  button equivalent: 6th button from the left
+
+  this option turns on looping for a series of pictures.
+  
+  when enabled, this setting overrides several options,
+  such as AUTOQUIT, AUTOHIDE, AUTOSTOP, AUTOCLEAR.
+  
+  default: NO
+  
+  see also
+  @{"  SLIDESHOW  " link "slideshow" 0}
+  @{"  AUTOQUIT   " link "autoquit" 0}
+  @{"  AUTOHIDE   " link "autohide" 0}
+  @{"  AUTOSTOP   " link "autostop" 0}
+  @{"  AUTOCLEAR  " link "autoclear" 0}
+@endnode
+
+@node "autoquit" "AUTOQUIT"
+
+  @{u}AUTOQUIT@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Settings/After Last Picture/Quit
+
+  with this option specified, MysticView quits when
+  the last picture of a list has been displayed.
+  
+  this options has precedence over (i.e. overrides)
+  AUTOSTOP, AUTOCLEAR, and AUTOHIDE.
+  
+  default: NO
+  
+  see also
+  @{"  AUTOHIDE   " link "autohide" 0}
+  @{"  AUTOSTOP   " link "autostop" 0}
+  @{"  AUTOCLEAR  " link "autoclear" 0}
+@endnode
+
+@node "sortmode" "SORTMODE"
+
+  @{u}SORTMODE@{uu}
+  
+  type: keyword
+  menu equivalent: Settings/Sort Pictures by/...
+  
+  this setting specifies the sort order for a series of pictures.
+  
+    NONE
+    no sorting takes place. the images appear in the sequence
+    they were found on the disk, or in the sequence they were
+    specified as arguments.
+  
+    RANDOM
+    random order.
+    
+    FILENAME
+    alphanumerical order (0-9,a-z), applying to the filename
+    only.
+    
+    FULLNAME
+    alphanumerical order (0-9,a-z), applying to the combined
+    path and filename.
+    
+    DATE
+    file date order, old-to-new.
+    
+    SIZE
+    filesize order, small-to-large.
+    
+  default: NONE
+  
+  see also
+  @{"  RECURSE        " link "norecurse" 0}
+  @{"  REVERSE        " link "reverse" 0}
+  @{"  ASYNCSCANNING  " link "asyncscanning" 0}
+@endnode
+
+@node "zoomstep" "ZOOMSTEP"
+
+  @{u}ZOOMSTEP@{uu}
+  
+  type: string representing a number
+  menu equivalent: none
+
+  this number defines the desired zoomfactor step.
+  valid range: 0.01 ... 2.
+  
+  default: 0.1
+  
+  see also
+  @{"  SMOOTHDISPLAY  " link "smoothdisplay" 0}
+  @{"  ROTATESTEP     " link "rotatestep" 0}
+@endnode
+
+@node "preset" "PRESET0...9"
+
+  @{u}PRESET0 ... PRESET9@{uu}
+  
+  type: string
+  menu equivalent: Settings/Use Preset/...
+  
+  10 configurable preset files to be quickly accessed with
+  CTRL F1 ... CTRL F10. these items are automatically saved
+  in MysticView's global configuration.
+
+  defaults: none
+  
+  see also
+  @{"  configuration  " link "configuration" 0}
+@endnode
+
+@node "showcursor" "SHOWCURSOR"
+
+  @{u}SHOWCURSOR@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Show Cursor
+
+  this setting will activate a tiny crosshair on the picture,
+  indicating the current cursor position. scrolling will move
+  the cursor, and zooming will go to that destination.
+  
+  default: NO
+  
+  see also
+  @{"  known problems  " link "knownproblems" 0}
+@endnode
+
+@node "examples" "Examples"
+
+  @{u}examples@{uu}
+
+  1. open a fullscreen borderless display on a 640x480x24 screen
+     and present a random slideshow of the directory pix:gif.
+  
+     MysticView pix:gif @{"scropenmode" link "scropenmode" 0}=custom @{"scrwidth" link "screenwidthheight" 0}=640
+                @{"scrheight" link "screenwidthheight" 0}=480 @{"depth" link "depth" 0}=24 @{"winsizemode" link "winsizemode" 0}=full
+                @{"backdrop" link "backdrop" 0}=yes @{"sortmode" link "sortmode" 0}=random @{"slideshow" link "slideshow" 0}=yes
+                @{"slidedelay" link "slidedelay" 0}=50
+
+
+  2. open a small window over the mouse pointer, with
+     opaque scaling, open a filerequester, and quit
+     after all files have been viewed.
+  
+     MysticView @{"winsizemode" link "winsizemode" 0}=small @{"winopenmode" link "winopenmode" 0}=mouse
+                @{"staticpalette" link "quickpalette" 0}=yes @{"previewmode" link "previewmode" 0}=opaque
+                @{"requestfile" link "requestfile" 0}=yes @{"loop" link "loop" 0}=no @{"autoquit" link "autoquit" 0}=yes
+@endnode
+
+@node "scropenmode" "SCROPENMODE"
+
+  @{u}SCROPENMODE@{uu}
+  
+  type: keyword
+  menu equivalent: indirect (Settings/Screen/...)
+  
+  determines the way MysticView tries to use or open a screen.
+  
+    DEFAULT
+    use the default public screen. typically this will be
+    the Workbench. note: use a 'default pubscreen' commodity
+    if you want to make the frontmost pubscreen the default one.
+
+    PUBLIC
+    use a public screen specified throughout the @{"PUBSCREEN" link "pubscreen" 0}
+    setting. if the specified public screen cannot be found,
+    MysticView falls back to the default pubscreen.
+    
+    CUSTOM
+    try to open a custom screen specified throughout the
+    settings @{"MODEID" link "modeid" 0}, @{"SCRWIDTH" link "screenwidthheight" 0}, @{"SCRHEIGHT" link "screenwidthheight" 0}, @{"DEPTH" link "depth" 0}, and @{"HAM" link "ham" 0}.
+
+  default: DEFAULT
+  
+  see also:
+  @{"  PUBSCREEN  " link "pubscreen" 0}
+  @{"  MODEID     " link "modeid" 0}
+  @{"  SCRWIDTH   " link "screenwidthheight" 0}
+  @{"  SCRHEIGHT  " link "screenwidthheight" 0}
+  @{"  DEPTH      " link "depth" 0}
+  @{"  HAM        " link "depth" 0}
+@endnode
+
+@node "cx_priority" "CX_PRIORITY"
+
+  @{u}CX_PRIORITY@{uu}
+  
+  type: numeric
+  menu equivalent: none
+  
+  MysticView's commodity priority, i.e. the hotkey-handler's
+  priority over other commodities that may have installed the
+  same hotkey by accident.
+  
+  default: 0
+  
+  see also
+  @{"  CX_POPKEY  " link "cx_popkey" 0}
+  @{"  CX_POPUP   " link "cx_popup" 0}
+@endnode
+
+@node "cx_popkey" "CX_POPKEY"
+
+  @{u}CX_POPKEY@{uu}
+  
+  type: string
+  menu equivalent: none
+  
+  MysticView's commodity hotkey sequence. when MysticView is
+  in hidden state, this key sequence will pop up its window.
+
+  consult your manuals on how to express these key sequences.
+  
+  default: control m
+  
+  see also
+  @{"  CX_PRIORITY  " link "cx_priority" 0}
+  @{"  CX_POPUP     " link "cx_popup" 0}
+    Amiga OS manuals
+@endnode
+
+@node "cx_popup" "CX_POPUP"
+
+  @{u}CX_POPUP@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: none
+  
+    YES
+    open MysticView's window at startup.
+  
+    NO
+    start MysticView in hidden state.
+
+  default: YES
+  
+  see also
+  @{"  ICONIFY      " link "iconify" 0}
+  @{"  CX_PRIORITY  " link "cx_priority" 0}
+  @{"  CX_POPKEY    " link "cx_popkey" 0}
+@endnode
+
+@node "autohide" "AUTOHIDE"
+
+  @{u}AUTOHIDE@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Settings/After Last Picture/Hide
+
+  with this keyword specified, MysticView iconifies
+  when the last picture of a list has been displayed.
+
+  default: NO
+  
+  see also
+  @{"  AUTOQUIT   " link "autoquit" 0}
+  @{"  AUTOSTOP   " link "autostop" 0}
+  @{"  AUTOCLEAR  " link "autoclear" 0}
+@endnode
+
+@node "rotatestep" "ROTATESTEP"
+
+  @{u}ROTATESTEP@{uu}
+  
+  type: numeric
+  menu equivalent: none
+
+  this number defines the desired rotation step
+  in degrees.
+  valid range: 1 ... 180.
+  
+  default: 30
+  
+  see also:
+  @{"  ZOOMSTEP  " link "zoomstep" 0}
+@endnode
+
+@node "confirm" "CONFIRM"
+
+  @{u}CONFIRM@{uu}
+  
+  type: keyword
+  menu equivalent: none
+
+  specify confirmation level for dangerous operations.
+  currently defined:
+
+    ALWAYS
+    always open an 'are you sure' requester for dangerous
+    operations.
+
+    NEVER
+    never open an 'are you sure' requester for dangerous
+    operations.
+
+  default: ALWAYS
+@endnode
+
+@node "iconify" "ICONIFY"
+
+  @{u}ICONIFY@{uu}
+  
+  type: keyword
+  menu equivalent: none
+
+  set iconify mode.
+  
+    APPICON
+    leave out an appicon on the workbench. double-click on that
+    appicon (or drop pictures on it) to make MysticView visible.
+
+    APPITEM
+    append an entry to the workbench's tool menu. select this
+    item in order to make MysticView visible.
+
+    INVISIBLE
+    hide MysticView invisibly. the only ways to
+    make it visible is with Exchange or by pressing
+    the hotkey sequence.
+      
+  default: APPICON
+  
+  see also
+  @{"  CX_POPUP   " link "cx_popup" 0}
+  @{"  CX_POPKEY  " link "cx_popkey" 0}
+@endnode
+
+@node "datatypes" "getting datatypes"
+
+  @{u}getting datatypes@{uu}
+  
+  MysticView depends on picture datatypes being installed to your
+  system. for proper results, your system should be supplied with
+  either of the available v43 picture datatypes. only v43 datatypes
+  allow truecolor pictures to be loaded and displayed in full color
+  resolution.
+  
+  - if you are using the CybergraphX graphics card emulation,
+    install the PictDT43.lha distribution. it is available
+    on aminet.
+
+  - if you are using the Picasso96 graphics card emulation,
+    you've probably installed the supplied v43 picture datatype
+    already. availability: Picasso96.lha (aminet)
+  
+  - if you are neither using CybergraphX nor Picasso96, use
+    the Picasso96 v43 picture datatype. availability:
+    Picasso96.lha (aminet)
+
+  picture datatype subclasses have to support the v43 features as
+  well. for datatype tests, upgrading, and installation notes
+  visit my datatype section at the @{"MysticView homepage" link "author" 0}.
+@endnode
+
+@node "thumbsize" "THUMBSIZE"
+
+  @{u}THUMBSIZE@{uu}
+  
+  type: numeric
+  menu equivalent: none
+
+  specify newicon thumbnail size. valid range: 10 ... 93.
+  this size is used for the maximum width or height, with
+  respect to the image's aspect ratios.
+
+  default: 50
+  
+  note: I agree, 93 is a weird number. don't blame me,
+  this is documented in the newicon specifications.
+  
+  see also
+  @{"  CREATETHUMBNAILS  " link "createthumbnails" 0}
+  @{"  THUMBCOLORS       " link "thumbcolors" 0}
+@endnode
+
+@node "thumbcolors" "THUMBCOLORS"
+
+  @{u}THUMBCOLORS@{uu}
+  
+  type: numeric
+  menu equivalent: none
+
+  specify number of colors for newicon thumbnails. valid range: 4 ... 256.
+  do not specify too many colors if your workbench is not running in high
+  or truecolor. don't worry, MysticView does a very good job in reducing
+  the number of colors.
+
+  default: 50
+  
+  see also
+  @{"  CREATETHUMBNAILS  " link "createthumbnails" 0}
+  @{"  THUMBSIZE         " link "thumbsize" 0}
+@endnode
+
+@node "rejectpattern" "REJECTPATTERN"
+
+  @{u}REJECTPATTERN@{uu}
+  
+  type: string
+  menu equivalent: none
+
+  a pattern for filenames to be rejected by MysticView.
+  
+  useful e.g. with #?.info, when you've got an icon datatype
+  installed, but don't want any icons to be viewed.
+  
+  this argument is also used for the reject pattern
+  in picture filerequesters.
+
+  default: #?.info
+  
+  see also
+  @{"  FILTERPICTURES  " link "filterpictures" 0}
+@endnode
+
+@node "createthumbnails" "CREATETHUMBNAILS"
+
+  @{u}CREATETHUMBNAILS@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Settings/Create Thumbnails
+
+  enable automatic newicon thumbnail generation.
+  
+  whenever MysticView encounters a picture that lacks
+  a newicon thumbnail generated by MysticView, it will
+  create one or update it.
+  
+  MysticView will not overwrite already existing icons
+  that haven't been created with MysticView before.
+  
+  MysticView thumbnails are identified throughout
+  tooltype settings which will be created automatically:
+  
+  MYSTICVIEW_THUMBDATE=<human-readable datestamp>
+  MYSTICVIEW_THUMBNAIL=<size>,<numcolors>
+  
+  when the picture has been modified (according to
+  the datestamp), or when the thumbnail settings have
+  been changed (according to <size> and <numcolors>),
+  MysticView will update the icon.
+  
+  in addition to that, MysticView will insert a
+  default tool to the resulting project icon.
+  this is defined throughout the @{"DEFAULTTOOL" link "defaulttool" 0} setting.
+    
+  note: automatic thumbnail creation requires newicon.library.
+
+  see also
+  @{"  THUMBSIZE    " link "thumbsize" 0}
+  @{"  THUMBCOLORS  " link "thumbcolors" 0}
+  @{"  DEFAULTTOOL  " link "defaulttool" 0}
+@endnode
+
+@node "opusconfig" "DirectoryOpus configuration"
+
+  @{u}DirectoryOpus configuration                                     @{uu}
+
+  MysticView can be very easily integrated into DirectoryOpus.
+  this section shows up different ways and gives some useful
+  hints. note that MysticView was not designed to be
+  integrated into DirectoryOpus exclusively. the same
+  techniques can be applied to other file managers and
+  Workbench replacements as well. if you think that other
+  software should be mentioned here, don't hesitate to
+  supply @{"the author" link "author" 0} with configurations and manuals.
+  
+  see
+  @{"  general filetype configuration        " link "opusgeneral" 0}
+  @{"  using listfiles with DOpus            " link "opusclassic" 0}
+  @{"  using the APPEND option with DOpus    " link "opusappend" 0}
+  @{"  browse directories with MysticView    " link "opusbrowse" 0}
+  @{"  using a special PRESETFILE for DOpus  " link "opuspreset" 0}
+@endnode
+
+@node "fontspec" "FONTSPEC"
+
+  @{u}FONTSPEC@{uu}
+  
+  type: string
+  menu equivalent: none
+
+  this setting allows you to specify a font for the
+  picture info textline.
+  
+  syntax:  size[,name]
+  
+  example: FONTSPEC=8,topaz
+  
+  default: system's screen font
+  
+  I recommend to use a good-looking small fixed-width
+  font here. not for technical reasons, but for an
+  eye-friendly update of the text while scanning and
+  loading.
+  
+  see also:
+  @{"  PICINFO  " link "picinfo" 0}
+@endnode
+
+@node "picinfo" "PICINFO"
+
+  @{u}PICINFO@{uu}
+  
+  type: boolean (YES or NO)
+  menu equivalent: Options/Show Picture Info
+
+  show a textline with some informations about the
+  picture currently being displayed.
+  
+  default: NO
+  
+  see also:
+  @{"  FONTSPEC   " link "fontspec" 0}
+  @{"  PICFORMAT  " link "picformat" 0}
+@endnode
+
+@node "lbmaction" "LMBACTION"
+
+  @{u}LMBACTION@{uu}
+  
+  type: keyword
+  menu equivalent: Options/Mouse Drag Picture
+
+  this option determines how the left mouse button is used
+  when activated over a picture.
+
+  DRAG
+    when the picture is not fully visible, it can
+    be dragged around with the mouse.
+
+  NEXT
+    MysticView advances to the next picture in the list
+    when the left mouse button is pressed.
+    
+  note: the mouse pointer has to placed over a visual
+  part of the picture.
+
+  default: DRAG
+  
+  see also
+  @{"  SHOWARROWS   " link "showarrows" 0}
+  @{"  SHOWPIP      " link "showpip" 0}
+  @{"  mouse usage  " link "mouseusage" 0}
+@endnode
+
+@node "autodisplaymode" "AUTODISPLAYMODE"
+
+  @{u}AUTODISPLAYMODE@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Learn
+
+  this option tells MysticView to predict the display mode
+  that you would likely prefer for the current picture.
+  
+  most pictures look better with either of the two
+  displaymodes "Scale with Aspect" or "Display 1:1 Pixel",
+  e.g. workbench patterns are more likely to look good
+  in "Display 1:1 Pixel" mode, while photos are usually
+  being watched in "Scale with Aspect" mode.
+  
+  this problem could be approached algorithmically, but
+  this is boring, and the user's preferences vary.
+
+  MysticView uses a neural network to learn from your
+  changes of the displaymode. whenever a new picture is
+  loaded or when the window is resized, the neural
+  network is recalled, and the displaymode may be
+  changed accordingly.
+  
+  you train the neural network by simply toggling the
+  displaymode. MysticView interpretes it like:
+  "that's the display mode the user likes pictures like
+  this one to be displayed with."
+
+  MysticView behaves completely silly the first times,
+  because it is initialized with an 'empty' or
+  unconditioned network the first time. its predictions
+  become more precise by the time. you must teach it by
+  changing the displaymode for different pictures and
+  window layouts.
+
+  don't expect too much. the artificial intelligence is
+  limited, of course. MysticView does not react to the
+  picture's contents, but only to formal parameters like
+  the current aspect ratios of the window and the picture,
+  their absolute sizes, and the picture's depth.
+  
+  the network is perfectly conditioned when you don't
+  need to adjust the displaymode anymore, or when you
+  don't even recognize that it has been changed.
+  
+  leave this option disabled if you think it's too much
+  confusing.
+
+  default: NO
+
+  see also
+  @{"  DISPLAYMODE  " link "displaymode" 0}
+@endnode
+
+@node "autocrop" "AUTOCROP"
+
+  @{u}AUTOCROP@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Autocrop Pictures
+
+  this option tells MysticView to automatically crop
+  blank areas from a picture's borders. only newly
+  loaded pictures will be cropped.
+
+  default: NO
+@endnode
+
+@node "usage_main" "general usage"
+
+  @{u}general usage                                                   @{uu}
+  
+  @{"  commandline     " link "commandlinestart" 0}      see also: @{"examples" link "examples" 0}
+
+  @{"  mouse           " link "mouseusage" 0}
+  @{"  buttons         " link "buttonusage" 0}
+  @{"  menus           " link "menureference" 0}
+  @{"  keyboard        " link "keyboardusage" 0}
+
+  @{"  file requester  " link "filerequester" 0}      
+  @{"  iconstart       " link "iconstart" 0}
+  @{"  listfiles       " link "listfilestart" 0}
+  @{"  drag'n'drop     " link "dragndropstart" 0}
+
+  @{"  configuration   " link "configuration" 0}      full control via tooltypes
+  @{"  preset files    " link "presetfiles" 0}      alternate configurations
+  
+  @{"  Directory Opus  " link "opusconfig" 0}      configure it right
+@endnode
+
+@node "menureference" "menu reference"
+
+  @{u}menu reference                                                  @{uu}
+
+  @{"  project menu   " link "projectmenu" 0}    files, lists, and program related
+  @{"  picture menu   " link "picturemenu" 0}    related to the current picture
+  @{"  options menu   " link "opionsmenu" 0}    quick access to innumerous options
+  @{"  settings menu  " link "settingsmenu" 0}    general settings (the nasty menu)
+@endnode
+
+@node "filename" "filename"
+
+  @{u}FILENAME@{uu}
+  
+  type: one or more strings
+  menu equivalent: Project/Open Pictures...
+
+  specifies names of picture filenames or volume names
+  or directories for scanning.
+
+  includes Amiga DOS pattern matching.
+
+  this argument is only available in the commandline.
+
+  see also
+  @{"  APPEND   " link "append" 0}    
+  @{"  RECURSE  " link "norecurse" 0}
+    AmigaOS DOS manuals
+@endnode
+
+@node "append" "append"
+
+  @{u}APPEND@{uu}
+  
+  type: switch
+  menu equivalent: none
+
+  with this option specified, MysticView will first look for
+  another running instance, and if one is found, pass the
+  FILENAME arguments to that MysticView. that instance will
+  immediately try to catch up with the new arguments and
+  start scanning, loading, etc.
+  
+  the FILENAME arguments won't replace an already existing
+  picture list. they will be appended.
+  
+  if no other MysticView is running, it will be started
+  with the given FILENAME arguments.
+
+  this argument is only available in the commandline.
+
+  see also
+  @{"  FILENAME   " link "filename" 0}
+@endnode
+
+@node "animpic" "animpic"
+
+  @{u}ANIMPIC@{uu}
+  
+  type: string
+  menu equivalent: none
+
+  specify a filename for an external animation picture for
+  MysticView's tiny progress indicator.
+
+  the size and depth and format of the animation are free.
+  if you want to replace the picture, please note:
+  
+  - your picture will be interpreted as 20 animation frames
+  of the same size each, placed vertically under each other.
+  when the picture's height is not a multiple of 20 pixels,
+  then there's something wrong with the specified file. 
+
+  - the frames will be rendered to the center of the leftmost
+  button (see BUTTONPIC argument). make sure that the frames
+  fit to that place.
+
+  the consequences of a misaligned animation picture haven't
+  been tested. (probably harmless, though)
+  
+  see also:
+  @{"  BUTTONPIC  " link "buttonpic" 0}
+@endnode
+
+@node "developers" "Developers"
+
+  @{u}developers                                                      @{uu}
+
+  if you think that MysticView sucks, why don't you simply
+  grab yourself a compiler and start your own RTG viewer?
+  
+  MysticView is not more than a configuration and lists
+  manager. more interesting are its viewing capabilities.
+  they're completely modular, highly abstracted, and
+  encapsulated in black boxes. they are grouped in three
+  layers:
+  
+  1. mysticview.library
+     highly abstracted view class layer. it does not deal
+     with pixel formats and screenmodes. you supply pointers
+     to a rastport, a screen, and some attributes.
+
+  2. guigfx.library
+     this layer fulfills the RTG promise. it's an interface
+     between render.library, datatypes.library, graphics.library
+     and cybergraphics.library. you may deal with pixel formats
+     inside this layer, but you don't need to.
+
+  3. render.library
+     low-level image processing layer, mainly rendering,
+     scaling, colorspace conversions and alike. rather
+     complicated stuff, but much more than a silly collection
+     of conversion functions.
+  
+  you can choose what layer you want to plug your own
+  applications to. have a look at the developer archives.
+  all these libraries are fully documented and free for you
+  to use.
+  
+  see also
+    aminet: dev/misc/RenderLib.lha
+    aminet: dev/misc/GuiGFXLib.lha
+    aminet: dev/misc/MysticLib.lha
+@endnode
+
+@node "buttonpic" "BUTTONPIC"
+
+  @{u}BUTTONPIC@{uu}
+  
+  type: string
+  menu equivalent: none
+
+  specify a filename for an external button picture for
+  MysticView's gadgets.
+
+  the size and depth and format of the picture are free,
+  as long as you've got a datatype for it. if you want to
+  replace the picture, please note:
+  
+  - keep the layout (refer to the supplied example picture)
+  - all buttons must be of the same size.
+  
+  note: the gadgets are completely faked, and they've got
+  nothing to do with intuition, gadtools, or BOOPSI. simply
+  disable the buttons if you think that this is obscene.
+
+  default: internal hardcoded buttons will be used
+  
+  see also:
+  @{"  SHOWBUTTONS  " link "showbuttons" 0}
+  @{"  ANIMPIC      " link "animpic" 0}
+@endnode
+
+@node "bufferpercent" "BUFFERPERCENT"
+
+  @{u}BUFFERPERCENT@{uu}
+  
+  type: number
+  menu equivalent: Settings/Picture Cache...
+
+  specify the size of the picture cache. this is a numeric
+  value, expressed in percent of the currently available
+  memory in your system. 
+  
+  reasonable values range from 1 to 50, maybe even more, if
+  you've got more than 64mb of memory. valid numbers range
+  from 1 to 100. a value of 0 is ignored, since the cache
+  logic cannot be disabled completely.
+  
+  do not specify too large values! the memory consumption for
+  the picture currently being loaded is not predictable, and
+  if loading fails due to a lack of memory, the cache needs
+  to be flushed completely.
+  
+  the actual amount of memory is not interpreted as an
+  absolute number. it will be repeatedly recalculated
+  during runtime.
+  
+  if you start another application that requires a lot of
+  memory (e.g. a second MysticView), MysticView will adapt
+  its buffers to the new environment as soon as a new picture
+  is loaded. this makes the overall behavior of MysticView
+  very defensive, and it still may consume huge amounts of
+  memory for caching. on the other hand, if you suddenly
+  free large amounts of memory, MysticView will silently
+  fill up its buffers with more pictures.
+  
+  the background loader will always try to preload pictures
+  as long as they fit into the cache. the upper limit for
+  preloading is currently set to 4 pictures. there is no
+  upper limit for the total number of pictures in the cache.
+  you can watch entire slideshows from memory, when the
+  background loader had the opportunity to run over a list
+  once.
+    
+  a rather complicated algorithm determines what pictures
+  are to be flushed from the cache at a given time. there
+  are many parameters involved, especially the loading-time
+  is to be mentioned here, because loading-time is considered
+  to be something valuable, and the logic is designed to
+  save time. 
+  
+  however the cache can of course not reduce the absolute
+  loading-time. its main intention is to flatten loading-time
+  peaks during slideshows, and to improve responsiveness.
+  you can very often go back in the list without the need
+  to reload. if you've got large amounts of memory, MysticView
+  behaves very comfortable in this respect. and if you are using
+  fast PPC datatypes in combination with the cache, it's like
+  'surfing' over picture lists :-)
+@endnode
+
+@node "asyncscanning" "ASYNCSCANNING"
+
+  @{u}ASYNCSCANNING@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Scan Asynchronously
+
+  this option tells MysticView to scan asynchronously, and to
+  immediately start loading the first file that has been
+  identified as a picture.
+  
+  picture recognition via datatypes is slow, and with this
+  option you can start watching a slideshow while scanning is
+  still running.
+  
+  the consequences may be confusing, when pictures are inserted
+  to the list in a different order than they finally appear in
+  the list.
+  
+  for example, if you start watching a slideshow in random order,
+  and when the picture list is still growing, the current picture
+  may wander inside the list while scanning, because pictures may
+  need to be inserted BEFORE the current picture. 
+  
+  you can compare this to the behavior of asynchronously updating
+  filerequesters. the currently selected entry may wander
+  downwards in the list. but picture lists behave a bit more
+  nasty.
+  
+  default: NO
+
+  see also
+  @{"  SORTMODE        " link "sortmode" 0}
+  @{"  SIMPLESCANNING  " link "simplescanning" 0}
+@endnode
+
+@node "autoclear" "AUTOCLEAR"
+
+  @{u}AUTOCLEAR@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Settings/After Last Picture/Clear List
+
+  this option tells MysticView to automatically clear
+  the current picture list after the last picture.
+  
+  this option is ignored when MysticView is in @{"LOOP" link "noloop" 0} mode.
+  
+  the AUTOCLEAR feature might be useful when you are
+  remote-controlling MysticView with the @{"APPEND" link "append" 0} option.
+
+  see also
+  @{"  LOOP      " link "noloop" 0}
+  @{"  APPEND    " link "append" 0}
+  @{"  AUTOSTOP  " link "autostop" 0}
+@endnode
+
+@node "autostop" "AUTOSTOP"
+
+  @{u}AUTOSTOP@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Settings/After Last Picture/Stop Slideshow
+
+  this option tells MysticView to automatically disable
+  slideshow mode after the last picture in a list.
+  
+  this option is ignored when MysticView is in @{"LOOP" link "noloop" 0} mode.
+  
+  see also
+  @{"  LOOP       " link "noloop" 0}
+  @{"  AUTOCLEAR  " link "autoclear" 0}
+@endnode
+
+@node "defaulttool" "DEFAULTTOOL"
+
+  @{u}DEFAULTTOOL@{uu}
+  
+  type: string
+  menu equivalent: none
+
+  specify a default tool for project icons created with
+  MysticView's thumbnail feature.
+  
+  default: 'mysticview'
+  
+  see also
+  @{"  CREATETHUMBNAILS  " link "createthumbnails" 0}
+@endnode
+
+@node "filterpictures" "FILTERPICTURES"
+
+  @{u}FILTERPICTURES@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Show Pictures Only
+
+  this option tells MysticView to filter entries in
+  filerequesters, i.e. to remove all entries that are
+  not identified as pictures. recognition is done
+  via datatypes and might be slow.
+  
+  default: NO
+
+  see also
+  @{"  REJECTPATTERN  " link "rejectpattern" 0}
+@endnode
+
+@node "hideonclose" "HIDEONCLOSE"
+
+  @{u}HIDEONCLOSE@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: none
+
+  when enabled, MysticView hides when the close button
+  is clicked.
+
+  default: NO (MysticView quits)
+
+  see also
+  @{"  HIDEONESCAPE  " link "hideonescape" 0}
+@endnode
+
+@node "hideonescape" "HIDEONESCAPE"
+
+  @{u}HIDEONESCAPE@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: none
+
+  when enabled, MysticView hides when the escape key
+  is pressed.
+
+  default: NO (MysticView quits)
+
+  see also
+  @{"  HIDEONCLOSE  " link "hideonclose" 0}
+@endnode
+
+@node "markcolor" "MARKCOLOR"
+
+  @{u}MARKCOLOR@{uu}
+  
+  type: string, representing a hexadecimal number
+  menu equivalent: none
+
+  specify a hexadecimal RGB value (0xRRGGBB) for
+  highlighting display elements, such as grid lines,
+  arrows, cursor.
+
+  default: bright green
+
+  see also
+  @{"  TEXTCOLOR  " link "textcolor" 0}
+  @{"  BGCOLOR    " link "bgcolor" 0}
+@endnode
+
+@node "textcolor" "TEXTCOLOR"
+
+  @{u}TEXTCOLOR@{uu}
+  
+  type: string, representing a hexadecimal number
+  menu equivalent: none
+
+  specify a hexadecimal RGB value (0xRRGGBB) for
+  the picture-info textline.
+
+  default: white
+
+  see also
+  @{"  MARKCOLOR  " link "markcolor" 0}
+  @{"  BGCOLOR    " link "bgcolor" 0}
+@endnode
+
+@node "resetdisplay" "RESETDISPLAY"
+
+  @{u}RESETDISPLAY@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Reset Display
+
+  when enabled, automatically reset the attributes
+  zoom, cursor position, and rotation between pictures.
+
+  default: YES
+@endnode
+
+@node "reverse" "REVERSE"
+
+  @{u}REVERSE@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Settings/Sort Pictures by/Reverse Order
+
+  when enabled, reverse the picture list's sort
+  direction. the combination 'reversed random' makes
+  few sense, admittedly.
+
+  default: NO
+  
+  see also
+  @{"  SORTMODE  " link "sortmode" 0}
+@endnode
+
+@node "showarrows" "SHOWARROWS"
+
+  @{u}SHOWARROWS@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Show Arrows
+
+  when enabled, draw arrows at the picture's
+  borders, when it is not fully visible in the
+  respective direction.
+
+  default: YES
+  
+  see also
+  @{"  MARKCOLOR  " link "markcolor" 0}
+@endnode
+
+@node "showbuttons" "SHOWBUTTONS"
+
+  @{u}SHOWBUTTONS@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Show Buttons
+
+  when enabled, display a bar of control buttons at
+  the window's upper border.
+
+  default: YES
+  
+  see also
+  @{"  button usage  " link "buttonusage" 0}
+  @{"  BUTTONPIC     " link "buttonpic" 0}
+@endnode
+
+@node "showpip" "SHOWPIP"
+
+  @{u}SHOWPIP@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Show PIP
+  
+  when enabled, show a small PiP (picture-in-picture)
+  frame in the window's upper left, and draw a border
+  around the currently visible area.
+  
+  very nice, but not fully working. this feature is
+  experimental, do not enable it on scalable windows.
+
+  default: NO
+  
+  see also
+  @{"  MARKCOLOR  " link "markcolor" 0}
+@endnode
+
+@node "smoothdisplay" "SMOOTHDISPLAY"
+
+  @{u}SMOOTHDISPLAY@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: none
+  
+  when enabled, interpolate the display parameters
+  (position and zoom factor. rotation is not considered).
+  
+  this feature smoothens modifications on the display,
+  such as resetting the position or the zoom factor.
+  
+  this feature is GREAT FUN in combination with 
+  @{"PREVIEWMODE=OPAQUE" link "previewmode" 0} on fast displays, such as ZorroIII
+  graphics cards, 8bit displays, and with a fast processor.
+  
+  when you've got no 68060, you may also use it in
+  combination with @{"PREVIEWMODE=GRID" link "previewmode" 0}, but a fast display
+  hardware is still recommended.
+
+  default: NO
+  
+  see also
+  @{"  PREVIEWMODE  " link "previewmode" 0}
+@endnode
+
+@node "copypath" "COPYPATH"
+
+  @{u}COPYPATH@{uu}
+  
+  type: string
+  menu equivalent: Project/Copy Picture to/...
+
+  'standard' destination path for copying and
+  moving. this setting is automatically saved
+  in MysticView's global configuration.
+
+  default: undefined
+
+  see also
+  @{"  configuration  " link "configuration" 0}
+@endnode
+
+@node "mouseusage" "mouse usage"
+
+  @{u}mouse usage                                                     @{uu}
+
+  - a picture that is not fully visible can be dragged around
+    with the mouse, when the menu item 'Options/Mouse Drag Picture'
+    is enabled.
+  
+  - clicking the left mouse button advances to the next
+    picture when 'Options/Mouse Drag Picture' is disabled.
+
+  there are two hidden gadgets, when MysticView runs
+  in fullscreen borderless mode (@{"WINSIZEMODE=FULL" link "winsizemode" 0} and
+  @{"BACKDROP=YES" link "backdrop" 0}): the window's upper-left is a close gadget,
+  the upper-right acts as a depth-gadget.
+
+  see also
+  @{"  LMBACTION       " link "lbmaction" 0}
+  @{"  menu reference  " link "menureference" 0}
+@endnode
+
+@node "buttonusage" "button usage"
+
+  @{u}button usage                                                    @{uu}
+
+  the buttons are (from left to right)
+  
+  1 open pictures
+    this button also acts as a progress indicator for
+    scanning and loading.
+  
+  2 first picture
+    go to the first picture in the list, and disable
+    @{"SLIDESHOW" link "slideshow" 0} mode.
+  
+  3 previous picture
+    go back one picture in the list, and disable
+    @{"SLIDESHOW" link "slideshow" 0} mode.
+  
+  4 next picture
+    advance to the next picture in the list.
+  
+  5 @{"SLIDESHOW" link "slideshow" 0}
+  
+  6 @{"LOOP" link "noloop" 0}
+  
+  7 displaymode
+    toggle displaymode between "Scale with Aspect"
+    (indicated by a double-arrow) and "Display 1:1 Pixel".
+    refer to @{"DISPLAYMODE" link "displaymode" 0} for further details.
+  
+  8 reset
+    reset display settings zoom, cursor position and
+    rotation.
+
+  buttons can be toggled with the 'B' key and 
+  with the menu item 'Options/Show Buttons'.
+
+  see also
+  @{"  menu reference  " link "menureference" 0}
+  @{"  keyboard usage  " link "keyboardusage" 0}
+  @{"  configuration   " link "configuration" 0}
+  @{"  BUTTONPIC       " link "buttonpic" 0}
+  @{"  ANIMPIC         " link "animpic" 0}
+@endnode
+
+@node "projectmenu" "project menu"
+
+  @{u}project menu                                                    @{uu}
+
+  Project
+  -------------------
+  Clear List             clear the current picture list, and
+                         flush the current picture.
+  -------------------
+  Open Pictures...       @{"open pictures" link "filerequester" 0} (and create a new list).
+  Open List File...      open a list with a @{"listfile" link "listfilestart" 0}'s entries.
+  -------------------
+  Add Pictures...        add pictures to the current list.
+  Add List File...       add a listfile to the current list.
+  -------------------
+  Save List as...        save the current list to a listfile.
+  -------------------
+  Copy Picture to...     copy the current picture to a path.
+                         see also: @{"DESTPATH" link "destpath" 0}.
+  Move Picture to...     move current picture to a path. the
+                         picture is not removed from the list.
+  -------------------
+  Delete Picture         delete the current file, and remove the
+                         picture from the list.
+  -------------------
+  About...               program and key licensee information
+  -------------------
+  Hide                   iconify. see also: @{"ICONIFY" link "iconify" 0}, @{"AUTOHIDE" link "autohide" 0},
+                         @{"HIDEONESCAPE" link "hideonescape" 0}, @{"HIDEONCLOSE" link "hideonclose" 0}.
+  Quit                   quit.
+
+  
+  see also
+  @{"  menu reference  " link "menureference" 0}
+@endnode
+
+@node "picturemenu" "picture menu"
+
+  @{u}picture menu                                                    @{uu}
+
+  Picture
+  -------------------
+  Next                   next picture in the list.
+  Previous               previous picture in the list.
+  First                  first picture in the list.
+  -------------------
+  Remove                 remove current picture from the list.
+  -------------------
+  Move                   move picture cursor. see also: @{"SHOWCURSOR" link "showcursor" 0}.
+  Zoom                   zoom in/out. see also: @{"ZOOMSTEP" link "zoomstep" 0}.
+  Rotate                 rotate picture. see also: @{"ROTATESTEP" link "rotatestep" 0}.
+  Reset All              reset position, zoom, and rotation.
+  -------------------
+  Flip Horizontally      flip picture along the x-axis¹.
+  Flip Vertically        flip picture along the y-axis¹.
+  Negative               invert colors¹.
+
+  ¹ these functions affect pictures in the cache. when
+  they are redisplayed, they will be still modified. when
+  they have to be reloaded, they appear in the original form.
+
+  see also
+  @{"  menu reference  " link "menureference" 0}
+@endnode
+
+@node "opionsmenu" "options menu"
+
+  @{u}options menu                                                    @{uu}
+
+  Options
+  -------------------
+  Slideshow              see: @{"SLIDESHOW" link "slideshow" 0}
+  Loop                   see: @{"LOOP" link "noloop" 0}
+  -------------------
+  Scale with Aspect      see: @{"DISPLAYMODE" link "displaymode" 0}
+  Display 1:1 Pixel      see: DISPLAYMODE
+  Learn                  see: @{"AUTODISPLAYMODE" link "autodisplaymode" 0}
+  -------------------
+  Show Buttons           see: @{"SHOWBUTTONS" link "showbuttons" 0}
+  Show Picture Info      see: @{"PICINFO" link "picinfo" 0}
+  Show Arrows            see: @{"SHOWARROWS" link "showarrows" 0}
+  Show PIP               see: @{"SHOWPIP" link "showpip" 0}
+  Show Cursor            see: @{"SHOWCURSOR" link "showcursor" 0}
+  -------------------
+  Mouse Drag Picture     see: @{"LMBACTION" link "lbmaction" 0}
+  Reset Display          see: @{"RESETDISPLAY" link "resetdisplay" 0}
+  Auto File Requester    see: @{"REQUESTFILE" link "requestfile" 0}
+  Show Pictures Only     see: @{"FILTERPICTURES" link "filterpictures" 0}
+  Autocrop Pictures      see: @{"AUTOCROP" link "autocrop" 0}
+  Scan Asynchronously    see: @{"ASYNCSCANNING" link "asyncscanning" 0}
+  Create Thumbnails      see: @{"CREATETHUMBNAILS" link "createthumbnails" 0}
+  Append Drag'n'Drop     see: @{"APPENDICONS" link "appendicons" 0}
+
+  see also
+  @{"  menu reference  " link "menureference" 0}
+@endnode
+
+@node "settingsmenu" "settings menu"
+
+  @{u}settings menu                                                   @{uu}
+
+  Settings
+  -------------------
+  Screen...              see: @{"SCROPENMODE" link "scropenmode" 0}, @{"PUBSCREEN" link "pubscreen" 0}, @{"MODEID" link "modeid" 0}
+  Window...              see: @{"WINSIZEMODE" link "winsizemode" 0}, @{"WINOPENMODE" link "winopenmode" 0}, @{"BACKDROP" link "backdrop" 0}.
+                         'Snap' will set @{"WINSIZEMODE" link "winsizemode" 0} and @{"WINOPENMODE" link "winopenmode" 0}
+                         to DEFAULT, and insert the current window
+                         parameters into the settings @{"WINWIDTH" link "winwidthheight" 0},
+                         @{"WINHEIGHT" link "winwidthheight" 0}, @{"WINLEFT" link "winlefttop" 0}, and @{"WINTOP" link "winlefttop" 0}.
+  -------------------  
+  Slideshow Delay...     see: @{"SLIDEDELAY" link "slidedelay" 0}
+  Sort Pictures by...    see: @{"SORTMODE" link "sortmode" 0}
+  After Last Picture...  see: @{"AUTOQUIT" link "autoquit" 0}, @{"AUTOHIDE" link "autohide" 0}, @{"AUTOSTOP" link "autostop" 0}, @{"AUTOCLEAR" link "autoclear" 0}
+  Picture Cache...       see: @{"BUFFERPERCENT" link "bufferpercent" 0}
+  Rendering...           see: @{"STATICPALETTE" link "quickpalette" 0}, @{"PREVIEWMODE" link "previewmode" 0}, @{"DITHERING" link "dither" 0}.
+  -------------------
+  Load Preset...         load alternate configuration file.
+  Save as Preset...      save current configuration in a @{"preset file" link "presetfiles" 0}.
+  Use Preset...          10 slots for quick access to different
+                         @{"preset files" link "presetfiles" 0}. see also: @{"PRESET" link "preset" 0}
+  -------------------
+  Reset to Defaults      use MysticView's hardcoded defaults.
+  Last Saved             reload settings from the icon.
+  Restore                reset to the initial configuration. this means
+                         the icon settings, being overridden by
+                         preset files and commandline arguments.
+  -------------------
+  Auto Save Settings     see: @{"AUTOSAVESETTINGS" link "autosavesettings" 0}
+  Save Settings          save the current configuration in the
+                         icon's tooltypes.
+
+  see also
+  @{"  configuration   " link "configuration" 0}
+  @{"  preset files    " link "presetfiles" 0}       
+  @{"  menu reference  " link "menureference" 0}
+@endnode
+
+@node "picformat" "picformat"
+
+  @{u}PICFORMAT@{uu}
+  
+  type: string
+  menu equivalent: none
+
+  format string for the picture information text.
+  
+  placeholders,
+  currently defined:
+  
+  %p - pathname
+  %f - filename
+  %w - width
+  %h - height
+  %d - depth (always 8 or 24)
+  %n - picture format as returned by the datatype.
+       note: there is no format string available
+       in @{"SIMPLESCANNING" link "simplescanning" 0} mode.
+
+  default: %f - %w×%h×%d
+  
+  see also
+  @{"  PICINFO         " link "picinfo" 0}
+  @{"  SIMPLESCANNING  " link "simplescanning" 0}
+@endnode
+
+@node "opusclassic" "classic opus configuration"
+
+  @{u}DirectoryOpus configuration using LISTFILE                      @{uu}
+
+  the configuration of picture series turns out to be a
+  little bit more tricky, because DirOpus cannot pass an
+  unlimited number of files to a single command line, and
+  we do not want to start MysticView multiple times for a
+  large number of pictures.
+  
+  in my personal Opus configuration, I use the 'User1' filetype
+  action to 'show' something. if you use a similar concept, enter
+  the appropriate 'User' section in the 'Picture' filetype
+  configuration, and enter the following lines:
+  
+  AmigaDOS     list >>t:piclist{Ql} {F} LFORMAT "%P%N"
+  AmigaDOS     mysticview listfile=t:piclist{Ql}
+  AmigaDOS     delete t:piclist{Ql}
+  
+  Flags: run asynchronously
+
+  this will concatenate the selected entries to a MysticView
+  @{"LISTFILE" link "listfile" 0}, and finally call MysticView with the listfile
+  instead of the pictures themselves.
+
+  see also
+  @{"  general DOpus configuration                  " link "opusconfig" 0}
+  @{"  general filetype configuration               " link "opusgeneral" 0}
+  @{"  DOpus configuration using the APPEND option  " link "opusappend" 0}
+  @{"  Browse directories with MysticView           " link "opusbrowse" 0}
+  @{"  using a special PRESETFILE with DOpus        " link "opuspreset" 0}
+@endnode
+
+@node "opusappend" "opus configuration with the APPEND option"
+
+  @{u}DirectoryOpus configuration using the APPEND option             @{uu}
+
+  the new @{"APPEND" link "append" 0} option of MysticView allows you to pass
+  arguments without a fuss and with very few consideration.
+  
+  AmigaDOS MysticView APPEND {F}
+  
+  flags:
+  - run asynchronously
+  
+  this will append selected entries to an already running
+  instance of MysticView, and if MysticView was not running,
+  start it first.
+  
+  thanks to DirectoryOpus' ability to split the selected
+  entries into multiple commandlines, this simple configuration
+  will pass all selected pictures to MysticView, without
+  starting it multiple times.
+
+  see also
+  @{"  general DOpus configuration                  " link "opusconfig" 0}
+  @{"  general filetype configuration               " link "opusgeneral" 0}
+  @{"  classic DOpus configuration using listfiles  " link "opusappend" 0}
+  @{"  browse directories with MysticView           " link "opusbrowse" 0}
+  @{"  using a special PRESETFILE with DOpus        " link "opuspreset" 0}
+@endnode
+
+@node "opusbrowse" "DOpus config to browse directories with MysticView"
+
+  @{u}configure DOpus to browse directories with MysticView           @{uu}
+
+  this is really a hot one, especially when you're using
+  DirectoryOpus as a Workbench replacement.
+  
+  you can tell DirOpus to invoke MysticView with the
+  RMB popup-menu, and pass it the selected directory.
+  
+  1. create a new filetype.
+  
+  2. enter the filetype definition section.
+  
+  3. name the filetype "directory" and add the
+     matching argument "Directory".
+  
+  4. go back to the filetype editor.
+  
+  5. add an entry to this filetype's icon menu.
+     name it "Browse with MysticView".
+
+  6. enter the command
+
+     AmigaDOS MysticView APPEND {F} 
+
+     flags: run asynchronously
+
+  ready to go. now you can select a directory, hold the right
+  mouse button, and then select "Browse with MysticView" in
+  the popup menu. MysticView will then start up and show the
+  directory's contents (provided that there are pictures in it).
+
+  see also  
+  @{"  general DOpus configuration                  " link "opusconfig" 0}
+  @{"  general filetype configuration               " link "opusgeneral" 0}
+  @{"  classic DOpus configuration using LISTFILE   " link "opusclassic" 0}
+  @{"  DOpus configuration using the APPEND option  " link "opusappend" 0}
+  @{"  using a special PRESETFILE for DOpus         " link "opuspreset" 0}
+@endnode
+
+@node "opuspreset" "special MysticView PRESETFILE for DirOpus"
+
+  @{u}using a special PRESETFILE with Directory Opus                  @{uu}
+
+  we're not finished yet. MysticView's integration into
+  Directory Opus can be improved even further.
+  
+  create a special 'DirOpus' presetfile for MysticView, and
+  include it with the @{"PRESETFILE" link "presetfile" 0} argument in the Opus
+  commandline.
+
+  specify these settings in the MysticView presetfile:
+  
+  WINOPENMODE=CENTER
+  WINSIZEMODE=HALF
+  AUTOQUIT=YES
+  
+  this will cause MysticView to pop up over the mouse pointer
+  with a small window, show all the directories' contents,
+  and then automatically quit.
+  
+  @{"  general DOpus configuration                  " link "opusconfig" 0}
+  @{"  general filetype configuration               " link "opusgeneral" 0}
+  @{"  classic DOpus configuration using LISTFILE   " link "opusclassic" 0}
+  @{"  DOpus configuration using the APPEND option  " link "opusappend" 0}
+  @{"  Browse directories with MysticView           " link "opusbrowse" 0}
+@endnode
+
+@node "opusgeneral" "general DirOpus filetype configuration"
+
+  @{u}general DirOpus filetype configuration                          @{uu}
+
+  there are different approaches to integrate MysticView to
+  DirectoryOpus. but first of all, create a general filetype
+  for pictures. a common mistake is to create a seperate
+  filetype entry for each file format. this is very redundant,
+  since DirOpus supports filetype recognition via datatypes.
+  
+  1. 'add' a filetype.
+
+  2. enter the 'edit class' window.
+
+  3. name the class 'Picture', and give it a higher priority
+     than your other picture format filetypes.
+
+  4. Add the match criteria 'Match DT Group' ... 'Picture'.
+
+  go back to the 'Picture' filetype configuration. for the
+  'doubleclick' action, I simply use
+  
+  AmigaDOS     mysticview {f}
+  
+  Flags: run asynchronously
+  
+  this is all you need, provided that MysticView is located in
+  the default search path (sys:utilities/ normally is).
+
+  for the advanced configuration, refer to the following
+  sections. they will cover different ways of calling
+  MysticView with an unlimited number of pictures, and how
+  to create an advanced MysticView configuration for DOpus.
+
+  see also  
+  @{"  general DOpus configuration           " link "opusconfig" 0}
+  @{"  using listfiles with DOpus            " link "opusclassic" 0}
+  @{"  using the APPEND option with DOpus    " link "opusappend" 0}
+  @{"  browse directories with MysticView    " link "opusbrowse" 0}
+  @{"  using a special PRESETFILE for DOpus  " link "opuspreset" 0}
+@endnode
+
+@node "advanced" "advanced usage"
+
+  @{u}advanced topics                                                 @{uu}
+
+  many details of MysticView are not so obvious, when
+  you just have a look at its window and menus.
+  
+  some advanced topics are discussed in this section.
+  
+  @{"  philosophy         " link "philosophy" 0}    I never planned to write a viewer
+  @{"  list management    " link "picmanager" 0}    it's a fully-featured picture manager
+    realtime behavior
+    
+  see also  
+  @{"  configuration  " link "configuration" 0}
+  @{"  general usage  " link "usage_main" 0}
+@endnode
+
+@node "philosophy" "MysticView philosophy"
+
+  @{u}philosophy                                                      @{uu}
+
+
+  1 MysticView was programmed 'bottom-up', not 'top-down'.
+  
+    most GUI applications are designed 'top-down', i.e. there
+    are first the windows, and the GUI elements are then filled
+    with functionality one after the other.
+  
+    MysticView was half-finished long before there was a main
+    window, and long before I decided to write a viewer.
+    the RTG and realtime capabilities come from its libraries,
+    and MysticView was in first place a test-environment for
+    render.library and guigfx.library - it's still that.
+    
+    I was always upset about the fact that most Amiga viewers
+    are too much bound to the Amiga hardware. that was the
+    initial idea for MysticView, once there have been the
+    libraries anyway. I was an early owner of a graphics card of
+    the 'cybergraphics generation', and I always wanted to
+    abstract viewing from hardware. now there are some viewers
+    available for the Amiga that are ONLY running on truecolor
+    cybergraphics, which isn't any better than opening a PAL
+    LORES screen when the ILBM header contains that mode ID.
+    
+    MysticView was never designed for a special group of
+    users, I've always tried to solve problems as common as
+    possible, but I did not care of hardware limitations that
+    I had not to suffer from... that's one of the reasons why
+    MysticView is such a memory-hog, besides from abstraction
+    from screenmodes and pixel formats.
+
+
+  2 there are better viewers than MysticView.
+  
+    when you are willing to accept specialized solutions
+    for particular hardware. I think that Visage is still
+    the best viewer for slower hardware and less memory, and
+    especially for directly viewing images on designated
+    screen modes. PIP viewers do better on the PicassoIV
+    graphics card, and there are many other combinations 
+    of software and hardware that can easily outperform
+    MysticView.
+    
+  
+  3 datatypes do not suck.
+
+    datatypes are great. let authors solve problems for
+    the whole community by writing good datatypes!
+  
+    and finally, PPC was a great benefit for MysticView,
+    although I don't even have a PPC card. if there is some
+    thankful job that can be done with PPC hardware, then
+    it's decoding - especially images and animations.
+
+    I never would have created a viewer if I had to
+    implement loaders.
+
+
+see also
+  @{"  known problems     " link "knownproblems" 0}
+  @{"  insufficiencies    " link "insufficiencies" 0}
+  @{"  getting datatypes  " link "datatypes" 0}
+@endnode
+
+@node "picmanager" "picture management"
+
+  @{u}picture management                                              @{uu}
+
+  MysticView is a fully-featured picture-manager, including
+  thumbnails and list-management.
+    
+  the thumbnails have been outsourced and delegated to the
+  Workbench throughout newicon.library. the current Workbench
+  is admittedly not very efficient in displaying these
+  thumbnails, but it works. it's limited, but reliable. you
+  can sort the pictures by different criteria, browse lists,
+  double-click an icon and MysticView pops up with that image.
+  
+  when you're using a Workbench replacement such as Scalos or
+  Directory Opus, then managing picture lists with
+  MysticView's icons is by far not the least efficient way.
+  last not least, the icon approach does not introduce a new
+  concept that is not widely accepted. it's quite sufficient if
+  you can live with the limitations.
+  
+  the other point is that MysticView finally supports all the
+  functionality that is required for list management.
+  
+  - lists can be sorted by 6 different sort criteria:
+    scan order, filename, combined path+filename, random,
+    date, size, plus reverse order.
+  
+  - pictures and lists can be concatenated to a list by
+    various ways: Add Pictures..., Add List File..., APPEND
+    option.
+    
+  - lists can be saved.
+  
+  - entries can be removed from a list (Picture Menu/Remove).
+  
+  - pictures can be copied, moved, and deleted.
+
+  the list-format of MysticView couldn't be more simple
+  and straight-forward: it's a plain ASCII textfile of
+  filenames.
+
+  I consider this implementation of a 'picture manager'
+  rudimentary, not very comfortable, but yet complete.
+
+
+see also
+  @{"  CREATETHUMBNAILS  " link "createthumbnails" 0}
+  @{"  APPEND            " link "append" 0}
+  @{"  LISTFILE          " link "listfile" 0}
+  @{"  SORTMODE          " link "sortmode" 0}
+  @{"  menu reference    " link "menureference" 0}
+@endnode
+
+@node "presetfiles" "preset files"
+
+  @{u}preset files                                         @{uu}
+
+  preset files are another way for MysticView to save its
+  configuration. they are called 'preset files' because they
+  are handled the same way as alternate configurations of
+  the Workbench preference programs.
+  
+  when you save the configuration by selecting
+  'Settings/Save Settings', then the @{"configuration items" link "configuration" 0}
+  will be saved into MysticView's icon tooltypes.
+  
+  when you snapshot the current configuration as a preset file
+  via 'Settings/Save as Preset...', then the current configuration
+  items will be saved as a plain ASCII text file, and a project
+  icon will be added, with MysticView being the default tool.
+  thus MysticView can be started with a preset configuration by
+  simply double-clicking such an icon.
+  
+  the configuration items used in preset files are identical
+  to the respective tooltype items. 
+  
+  a special mechanism is included to partially override the
+  default configuration with a preset file: the main configuration
+  is first read from the icon, and then all items that appear in a
+  preset file are used to override their respective defaults.
+  
+  this makes it very easy to create 'brands' of your default
+  configuration: simply remove all configuration items from
+  preset files that are of no particular interest. only these
+  will be used to override the defaults, the other items
+  remain unaffected.
+
+  see also
+  @{"  PRESETFILE      " link "presetfile" 0}
+  @{"  PRESETPATH      " link "presetpath" 0}
+  @{"  menu reference  " link "menureference" 0}
+    examples supplied with the distribution
+@endnode
+
+@node "simplescanning" "SIMPLESCANNING"
+
+  @{u}SIMPLESCANNING@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: none
+
+  when enabled, MysticView's scanner will scan directories more
+  quickly, and add all files found without checking them for
+  loadability.
+  
+  later, when files turn out to be not loadable as pictures,
+  they will be silently removed from the picture list, without
+  further notice.
+
+  whether this mode is useful depends on the disk speed, and on
+  your typical way of accessing directories. i found it extremely
+  useful for samba network devices, because loading is quite fast,
+  but accessing directories and checking for datatype loadability
+  is slow.
+
+  default: NO
+  
+  see also
+  @{"  ASYNCSCANNING  " link "asyncscanning" 0}
+@endnode
+
+@node "appendicons" "APPENDICONS"
+
+  @{u}APPENDICONS@{uu}
+  
+  type: boolean keyword (YES or NO)
+  menu equivalent: Options/Append Drag'n'Drop
+
+  when enabled, MysticView appends pictures to the filelist,
+  when they are drag'n'dropped on the main window.
+  
+  when disabled, drag'n'drop will replace the current
+  filelist with newly encountered pictures.
+
+  default: NO
+@endnode
+

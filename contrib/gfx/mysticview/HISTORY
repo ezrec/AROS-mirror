@@ -1,0 +1,791 @@
+
+  MysticView history
+
+  1.07
+    - some minor changes I forgot over the past years, sorry.
+      nothing important though.
+
+* 1.05
+    - mysticview is freeware; updated texts and requesters
+      accordingly.
+    
+  1.04
+  
+	- slightly improved efficiency of the scanner
+	- added %n placeholder in the PICFORMAT string
+	  for the picture's file format, as returned by
+	  the datatype.
+	- updated and fixed documentation
+
+  1.03
+    - new setting: SIMPLESCANNING. when activated, MysticView will
+      add any scanned files to the filelist. no filetype detection
+      takes place. later, when a file turns out to be not loadable
+      as a picture, it will be silently removed from the list. this
+      scanning mode is significantly faster than the default. note:
+      this feature is still considered "beta" and only available
+      via tooltypes.
+    - supplied os3.5-icons in the "goodies" drawer.
+    
+  1.02
+    - CTRL-F-key now immediately switches to a preset, without opening
+      a filerequester first.
+
+  1.01
+  	- when in fullscreen mode and with HIDEONCLOSE enabled, MysticView
+  	  quitted when the invisible button in the screen's upper left
+  	  was clicked. fixed.
+  	- added "Append Drag'n'Drop" option. when enabled, icons/drawers
+  	  dragged onto MysticView's window will be added to the current
+  	  list. tooltype is APPENDICONS.
+  	- slightly improved the example preset files.
+
+
+* 1.00
+    - version number bumped
+
+
+  0.99h
+    - v1.00 feature freeze.
+    - menus are being restructured.
+    - fixed a bug in the buffer size calculations which caused
+      the background loader to run amok sometimes.
+    - mysticview and all its libraries are now using v39 exec
+      memory pools again.
+    - improved the install script and supplied some configs.
+    - neuralnet.library wasn't installed with earlier versions.
+      fixed.
+    - documentation updated and improved
+    - an auto filerequester was opened even with filenames
+      passed in the commandline. fixed.
+    - added PICFORMAT setting. it allows to specify a format
+      string for the picture info display. currently defined
+      are %p - pathname, %f - filename, %w - width, %h - height,
+      %d - depth. default "%f - %w×%h×%d".
+    - fixed APPEND option.
+    - MysticView and all libraries have been recompiled with
+      higher optimization levels
+    - added a lot of DirectoryOpus configuration hints and
+      examples
+    - when a loaded presetfile contained a new SORTMODE,
+      MysticView did not immediately resort the list. fixed.
+    - added a slightly updated version of MystiCube to the
+      distribution
+    - increased neural network training threshold
+
+    
+  0.99g
+    - fixed a bug in guigfx.library which caused MysticView
+      to crash at exit, when the standard C= picture and ILBM
+      datatypes were used for loading HAM pictures. thanks to
+      Hexaae for the bug reports and debugging assistance.
+    - the background loader has been rewritten from the
+      scratch. the new loader is faster, and memory management
+      is more efficient.
+    - preloading (and caching) of multiple pictures is now
+      supported. provided you have enough memory, MysticView
+      can keep entire slideshows buffered in memory. Mysticview
+      now reacts much better to skipping back and forwards in a
+      picture list.
+      this redesign also fixes a major bug (enforcer hits
+      and crashes, when pictures were deleted from the
+      list) and some minor problems.
+    - added menu item "Scan Asynchronously" (corresponding
+      tooltype is ASYNCSCANNING). the behavior of the background
+      scanner is no longer dependent from the sortmode.
+    - MysticView's multitasking is much nicer towards other
+      applications now. all time-consuming jobs are running
+      at the same priority. the default is 0 (if started from
+      the workbench), or the same as of the shell process
+      that launched MysticView. the PRIORITY setting has been
+      removed. MysticView now works very comortable at high
+      system load.
+    - added GUI buttons for open, previous, next, slideshow,
+      looping, etc. tooltype: SHOWBUTTONS. enabled by default. 
+      you may also use a set of your own buttons via the
+      BUTTONPIC tooltype. a tiny animation of MysticView's
+      logo has been included, too. the respective tooltype
+      is ANIMPIC.
+    - MysticView now offers to change the filename for already
+      existing pictures that are to be copied or moved.
+    - copying, moving and deleting do no longer work
+      asynchronously. MysticView now waits for these operations
+      to complete.
+    - added sort criteria filesize, filedate, combined
+      path+filename, and a reverse-sort option.
+    - the picture-info textline contains more useful
+      information, and it updates while scanning and loading.
+    - added self-starting feature, as known from many text
+      editors. if another MysticView is running, the commandline
+      option APPEND passes specified pictures/paths/patterns 
+      to that instance. if no other MysticView is found, a new
+      instance will be started.
+    - shareware-nagging has been removed.
+    - added menu item "Add Pictures..." to the current
+      filelist.
+    - added menu item "Add from List..." to the current
+      filelist.
+    - static-palette rendering gives better results
+      (guigfx.library v15.2)
+    - filerequester simplified: the default filename is now
+      set to "#?", so committing "Okay" without selecting
+      any files will include the entire directory's contents.
+    - Added "First" function for skipping back to the
+      first picture in a list. Skipping back stops a slideshow.
+    - fixed a long-standing bug in mysticview.library that
+      caused pictures to be rendered incompletely in slideshows.
+    - the SLIDEDELAY tooltype setting is now measured in
+      1:10th of seconds, no longer in seconds.
+    - added PIP feature. (in this context it has nothing to
+      do with graphics card hardware). it's experimental - 
+      do not use it, it doesn't work very well together with
+      opaque window sizing, thanks to these #?%&@! layer
+      cliprects.
+    - the neural network which tries to predict the user's
+      desired displaymode has changed. it has got more brains
+      now, and it differentiates more picture parameters,
+      but it also requires more training. the network is now
+      also recalled during window-resizing, thus MysticView
+      may immediately switch the displaymode. this makes the AI
+      feature a bit more transparent to the user, but also a
+      bit more nasty. simply let the menu item 'Options/Learn'
+      disabled if you think it's too confusing. recommended
+      reading: configuration/AUTODISPLAYMODE
+    - MysticView's commandline arguments are now sorted
+      alphabetically. this might interfere with any particularly
+      useful order, but at least you've got the chance to find
+      something.
+    - MysticView will never trash its window borders again, and
+      this ugly window-border-refresh-maintenance-signalling-task
+      is no longer needed and has been removed.
+    - added SHOWARROW option. when enabled, MysticView draws
+      small arrows at a picture's borders when it is not
+      fully visible. enabled by default.
+    - usability via keyboard has been improved. the space bar
+      is now used for 'one-hand' control of slideshows, which
+      is 'handy' for wanking over porn slides, for example. most
+      important functions are now available on the numeric
+      keypad.
+    - changed qualifiers for scrolling via keyboard. CTRL scrolls
+      by 100%, SHIFT by 10%, no qualifier scrolls by 1% per stroke.
+    - "Reset Display Settings" now reacts instantly, not only
+      when a new picture is getting displayed
+    - MysticView now instantly reacts to changes of the sort mode
+      and sorts the picture list while scanning/loading/viewing.
+    - the option KEEPIMAGE (i.e. keep the current image while
+      another one is being loaded) is obsolete and has been
+      removed.
+    - MysticView now correctly displays loading errors, and
+      automatically retries loading after flushing the cache
+      when the reason for failure was a lack of memory.
+    - new default background color.
+    - HAM artifacts have been reduced to an absolute minimum
+      (mysticview.library v4).
+    - added menu item "Remove". as the name suggests,
+      this function simply removes a picture from a list
+      (without deleting or moving)
+    - added menu item "Save List as..." for saving the current
+      list of pictures as a listfile.
+    - lists are identified by a tooltype in their respective
+      icon: "MYSTICVIEW_LISTFILE=YES". you can drag'n'drop
+      listfiles to MysticView's window or appicon now.
+    - workbench-integration has been improved even further:
+      you can start MysticView by double-clicking
+      preset and listfile icons, and even both at the same 
+      time. (e.g. select a listfile, hold the shift key, and
+      doublelick a presetfile - or the other way round.) you
+      may also drag'n'drop listfile and preset icons on
+      MysticView's window (or appicon) at the same time, or
+      mix preset icons with pictures/directories/volumes.
+    - the displaymodes "keep aspect max", "onepixel" and
+      "fit to window" are no longer available in the menus.
+      the remaining items have been renamed to
+      "scale with aspect" and "display 1:1 pixel" (the last
+      one corresponds to the IGNOREASPECT mode).
+    - the option HIDEWITHPICTURE has been removed. MysticView
+      no longer flushes the current (and buffered) pictures
+      from memory when it gets iconified. scanning and
+      preloading now silently continue in the background.
+    - added an optional picture filter in filerequesters
+      (tooltype: FILTERPICTURES). requested by hexaae.
+    - requesting the previous picture stops a slideshow.
+    - added DEFAULTTOOL setting
+    - the REJECTPATTERN argument is now also used in
+      filerequesters, not only applied to the picture scanner.
+    - added tooltyoe items for a view's text and highlighting
+      colors (TEXTCOLOR, MARKCOLOR)
+    - added display refresh smoothing (SMOOTHDISPLAY). it will
+      interpolate modifications on the display (only zooming
+      and scrolling. rotating is not supported).
+    - added tooltypes HIDEONCLOSE and HIDEONESCAPE.
+    - the memory consumption for opaque-refreshing of
+      truecolor pictures on non-truecolor screens has been
+      reduced to only 25%, but its short-time peak memory
+      consumption is even worse than before.
+    - the picture cursor no longer trashes the window borders
+      when a picture is rotated, nor does it overwrite
+      the infotext. the picture cursor is no longer overwritten
+      by the rendered picture - it's visible all the time now.
+    - the cursor was placed incorrectly when the picture was
+      rotated and zoomed. fixed.
+    - some rare visual artifacts have been removed,
+      such as background areas using a deallocated pen
+    - with STARTPIC=none, MysticView did not always update its
+      display correctly. fixed.
+    - the former option PRELOAD is obsolete and has been removed.
+      the loader is configured with the new setting BUFFERPERCENT.
+
+                      
+* 0.99f
+    - newicon thumbnail creation did not work properly. fixed.
+    - Thumbnail AutoUpdate now recognizes changes of the pictures
+      themselves, as well as changes of the thumbnail parameters.
+    - removed redundant modes from the screenmode requester.
+    - some minor bugfixes.
+
+  0.99e
+    - the neural network has been overworked.
+    - the AUTOSAVESETTINGS setting is no longer saved in the icon,
+      it is now part of the global configuration
+    - MysticView did not read its settings from an icon when it
+      was started as an icon's default tool. fixed.
+    - added AUTOCROP setting
+
+  0.99d
+    - added AUTODISPLAYMODE and a new menu entry "learn and predict".
+      if activated, MysticView uses a small neural network to learn the
+      user's desired displaymode for different kinds of pictures. "learn
+      and predict" does not care about the rarely used displaymodes
+      IGNOREASPECT and FIT. it will only learn from and try to predict
+      KEEPASPECT, KEEPASPECT2, and ONEPIXEL.
+    - added a new icon by M. Grothmann.
+
+  0.99c
+    - fixed display mode settings in the menus. mutual exclude
+      was broken since 0.99b.
+    - added menu item "rename to...". Renaming in this
+      context means moving a picture to any place in the
+      filing system. the difference towards "move picture"
+      is that the picture is kept in the current picture
+      list. requested by G. Hones.
+    - MysticView's screen comes to front when a picture
+      is dragged on the appicon. Requested by M. Grothmann.
+
+  0.99b
+    - the commandline arguments were broken as of v0.99. fixed.
+    - "reset display settings" is now considered when the display
+      mode is changed. requested by infinity.
+    - re-enabled the escape key for quitting. requested by
+      P. Habermehl and J. Urbanek
+    - added PRIORITY setting (normal, nice, low). the priority
+      is only considered when mysticview starts.
+    - the options menu has been completely restructured.
+      some settings have been removed from the menu, they are
+      only accessible throughout tooltypes now: Hide mode,
+      simple/smart refresh, keep image when hidden
+    - removed every second frame of the supplied animation from
+      the archive. it appeared somehow obscene to me to include
+      half a megabyte of animation data for silly demonstration
+      purposes
+    - by default the system's screen font is used for the
+      picture info text.
+    - added FONTSPEC tooltype for the picture info text.
+      syntax: size[,name]. example: FONTSPEC=8,topaz
+    - revised the documentation. many details did not reflect
+      recent changes.
+    - with LMBACTION=NEXT, only mouseclicks that exactly hit the
+      picture will actually advance the picture list.
+    - slightly modified the supplied example presets.
+      
+* 0.99a
+    - pictures moved to another directory are now removed from
+      a list.
+    - the package contained outdated versions of some libraries,
+      and the installer did not update correclty. fixed.
+    - the icons in the v0.99 archive still contained the old
+      tooltype settings. fixed.
+
+  0.99
+    - added configurable left mousebutton action ('drag' or 'next')
+    - a default preset path is no longer defined.
+    - fixed a bug in the presetfile generation. 
+    - fixed the startup. MysticView's icon settings were
+      read and interpreted twice.
+
+  0.98j
+    - renamed NOLOOP to LOOP, NORECURSE to RECURSE, RENDERMEM to
+      RENDERQUALITY.
+    - all former boolean-type settings are now keyword settings.
+      the keywords are "YES" and "NO".
+    - removed the DEFICON tooltype.
+    - SCROPENMODE "NONE" has been renamed to "DEFAULT".
+    - restuctured the menus.
+    - configurable paths and presets are now stored in env:/envarc:
+      and saved automatically. this greatly enhances comfort and
+      usability.
+    - file management requesters are no longer opened on the default
+      pubscreen, but rather on MysticView's screen.
+    - Mysticview now uses the Workbench's SA_Pens when opening a
+      new screen
+    - added slideshow/no delay option.
+    - added RESETDISPLAY setting. if enabled, the zoom/position/rotation
+      settings are reset between pictures.
+    - the installer no longer overwrites an already existing icon.
+    - MysticView is no longer iconified when the close button is clicked
+      or Escape is pressed. Iconify has to be invoked seperately.
+    - changed some default settings.
+    - added auto thumbnailing.
+    - removed shareware limitation for thumbnail functions.
+    - MysticView now creates icons for its preset files.
+    - MysticView can now be started by doubleclicking a preset icon.
+    - preset files can be dragged to MysticView's window.
+
+  0.98i
+    - fixed mouse movement problem that somtimes occured when MysticView's
+      screen was left or re-activated. thanks to persistant nagging
+      from Joker. this was a MysticView bug and NOT caused by MCP.
+    - fixed asl file requester enforcer hit
+    - the same picture is no longer preloaded in the background when
+      only one picture is in the queue.
+    - included some more semaphore protections to the background
+      picture handler
+    - fixed a rejectpattern bug/enforcer hit when no rejectpattern
+      was specified
+    - added menu item "Negative"
+    - added some busy pointers
+    - changed some hardcoded defaults and default settings in the
+      distribution.
+    - iconify mode default is now hardcoded to NO.
+    - a picture is no longer reloaded when "keep image when hidden"
+      is selected, slideshow mode is active, only one picture is
+      in the queue, and MysticView gets uniconified. the same applies
+      if the screen/windowmode is changed ("keep image when hidden"
+      is not considered in this case)
+
+  0.98h
+    - you can now completely disable mysticview's logo by setting
+      STARTPIC=none. mysticview now starts when a startpic wasn't
+      found.
+    - fixed a tiny memory leak in the settings that could occur with
+      some options.
+    - added THUMBSIZE and THUMBCOLORS.
+    - improved subtask stability
+    - added REJECTPATTERN
+    - the startpic file requester could produce an enforcer hit. fixed.
+
+* 0.98g
+    - fixed slideshow bug: when only one picture was selected
+      and slideshow plus loop mode was activated, the picture
+      was reloaded over and over again. reported by Joker.
+    - minor aspect problems fixed.
+    - the image aspect is now displayed in the information
+      textline.
+
+  0.98f
+    - added JPEG saving. (no options yet. default saving
+      quality used).
+    - fixed commandline options. reported by Kilyman.
+
+  0.98e
+    - added autodither.
+    - fixed timing problems in slideshow mode.
+
+  0.98d
+    - MysticView now requires mysticview.library.
+
+  0.98c
+    - MysticView has been slightly sped-up on truecolor displays.
+    - added ZOOMSTEP.
+    - limited newicon thumbnails to a size of 80x80 pixels and
+      64 colors. this will speed up the icon display on your
+      Workbench. (this is still no final solution, though.)
+    - added configurable slots for preset files. they can be
+      accessed throughout CTRL F1 ... F10 and configured
+      by selecting them from the menu. requested by H. Richter.
+    - the same scheme now applies to the configurable destination
+      paths for copying/moving. keyboard executes, menu selection
+      configures.
+    - slideshows didn't always stop immediately. fixed.
+    - the REQUESTFILE option is now considered after a slideshow
+      stopped. requested by P. Habermehl.
+    - implemented SHOWCURSOR.
+    - finally fixed the publicscreen/customscreen problem. the
+      setting SCROPENMODE=CUSTOM/PUBLIC/NONE replaces the former
+      tooltype CUSTOMSCREEN.
+    - added CX_PRIORITY, CX_POPKEY and CX_POPUP.
+      MysticView is now a commodity. ESC to hide, Amiga-Q to quit.
+      note: 'hide' keeps the current image - and you keep that in
+      mind when you iconify MysticView with a 2880x1440x24 image :)
+    - the screen is no longer closed and reopened for the change of
+      window settings.
+    - fixed a memory allocation bug with the PUBSCREEN setting.
+    - many minor changes
+    - added AUTOHIDE.
+    - the picture aspect is now handled for thumbnails.
+    - added pubscreen select and default/public/custom menu items.
+    - added appicon
+    - added rotation. (preliminary. SHOWCURSOR and grid refresh doesn't
+      work corretly with the image being rotated) 
+    - fixed install script for 030/FPU version. Reported by B. Murray.
+    - deleted pictures are now removed from the list and MysticView
+      advances to the next picture. requested by P. Dahlberg.
+    - added ROTATESTEP
+    - added DEFICON
+    - added CONFIRM. requested by P. Dahlberg.
+    - added HIDEWITHPICTURE.
+    - added ICONIFY.
+
+  0.98b
+    - fixed PUBSCREEN setting. pubscreens have got precedence
+      over CUSTOMSCREEN now. reported by P. Habermehl and M.
+      Kilimann.
+    - fixed MysticView's new icon to use only required colors.
+      reported by M. Kilimann.
+    - looping and AUTOQUIT are now applied in general,
+      not only in slideshow mode. requested by P. Habermehl.
+
+* 0.98a
+    - forgot to implement NORECURSE tooltype setting. fixed.
+    - added NOLOOP and AUTOQUIT settings. requested by P. Habermehl.
+    - most important recent change: new default background color :)
+    - implemented SORTMODE none/random/alpha
+    - added limitations for unregistered users. :)
+
+  0.97h
+    - added DITHERMODE setting. implemented EDD dithering.
+    - renamed DITHER to DITHERING.
+    - pictures that could not be loaded no longer interrupt
+      slideshows, and a proper error message will be displayed.
+    - added Delete Picture.
+    - copy/move/delete now applies to the pictures' icons, too.
+    - added STARTPIC setting.
+    - restructured menus.
+    - added Flip Horizontally and Flip Vertically.
+    - MysticView now creates an icon for its settings, if necessary.
+    - implemented loading and saving of presets, added PRESETPATH
+      and PRESETFILE settings
+    - fixed DEFAULT option. now the defaults are overridden by
+      arguments specified in the command line.
+
+  0.97g
+    - the preload task's priority has been reset to -1.
+    - added newicon thumbnail feature. (preliminary,
+      for experimental purposes only)
+
+* 0.97f
+    - added preloading.
+    - added invisible close and screenback gadgets. this works
+      only when both the settings WINSIZEMODE=FULL and
+      BACKDROP are specified.
+    - MysticView no longer forgets the current filename when
+      the configuration is changed, and slideshows will be
+      continued.
+    - added some more keyboard shortcuts
+    - dropped the german documentation, created a guide file and
+      an install script
+
+  0.97e
+    - added picture information and PICINFO setting
+    - implemented a new picture-management class consisting
+      of several subtasks.
+    - slideshow now works as expected. (preload is not
+      yet re-implemented, though)
+    - fixed many menu-related problems and improved menu layout
+    - added copy to..., move to... for 10 configurable slots each.
+    - all path/filenames are now handled dynamically
+    - with the REQUESTFILE option enabled, a requester no
+      longer pops up when images were specified at startup.
+    - improved memory management
+    - when initialization fails, a requester is shown for
+      retry, cancel, or retry using defaults.
+    - added LISTFILE commandline option. it allows to specify a
+      list file from where to fetch pictures.
+    - added Open List File... menu and LISTPATH config.
+    - the window border is now refreshed correctly (after approx.
+      1/5 second. guess what, a subtask is used here. opaque window
+      sizing would suffer too much from refreshing the window border
+      all the time :)
+    - finally! MysticView should close down gently now if the required
+      versions of guigfx or render.library could not be opened (#&§@%!?)
+    - new icon tooltypes are created dynamically. no need to upgrade
+      MysticView's icon anymore.
+
+  0.97d
+    - the configuration is now saved to MysticView's icon.
+    - menu items didn't toggle correctly (forgot MENUTOGGLE.
+      what the heck, why does this work with MagicMenu ;)
+    - added more CTRL_C exit breakpoints
+    - the main task priority is now reset correctly.
+    - improved handling
+    - major menu layout rework
+    - added AUTOSAVESETTINGS
+    - added PREVIEWMODE 
+    - added grid refresh
+    - fixed lots of minor quirks and problems
+
+  0.97c
+    - slightly improved screenmode selection logic:
+      default screen size is now the workbench's visual
+      dimensions, no longer its absolute size.
+    - re-implemented screenaspect tooltypes (thanks to ZZA :)
+    - added slideshow mode
+    - MysticViw now reads its configuration from the icon,
+      even when started from shell. commandline arguments
+      simply override the settings from the icon's tooltypes.
+    - added mouse scrolling - it's now possible to drag the
+      picture around in MysticView's window.
+    - added a lot of menu items
+    - improved HAM refresh logic
+    - the screen's title bar is no longer obscured in
+      WINOPENMODE=VISIBLE and without BACKDROP mode.
+    - added MODEID, SCRWIDTH, SCRHEIGHT
+    - added screenmode requester
+
+  0.97b
+    - MysticView crashed without cybergraphics. Fixed.
+
+  0.97a
+    - The display part has been rewritten. Now a daemon-like
+      view-class handles the display as a background task.
+      the new display logic is faster.
+    - implemented zooming and scrolling in all displaymodes
+      (except for DISPLAYMODE=FIT).
+    - implemented DISPLAYMODE KEEPASPECT2 and IGNOREASPECT.
+      DISPLAYMODE=ONEPIXEL has got a slightly different meaning now.
+    - implemented asychronous, recursive directory scanning.
+    - multiselect und patternmatching is now supported via
+      drag&drop, filerequester, commandline and wbstart.
+    - added some keyboard shortcuts.
+    - Next and Previous Picture is now implemented.
+    - BORDERLESS has been renamed to BACKDROP.
+    - WINSIZEMODE=NORMAL renamed to WINSIZEMODE=DEFAULT,
+      WINOPENMODE=NORMAL renamed to WINOPENMODE=DEFAULT
+    - PREVIEW und OPAQUESIZING are combined to a new single option: OPAQUE.
+    - added new options QUICKPALETTE and DITHER.
+    - TRANSPARENCY, REFRESHDELAY and AUTODITHER have been removed.
+    - added some menu configurations.
+
+  0.96n
+    - MysticView now uses DoPictureMethod()/PICMTHD_MAPDRAWHANDLE for
+      quick drawing in preview mode and for opaque sizing.
+    - added tooltype WINSIZEMODE=SMALL, renamed WINSIZEMODE=66PERCENT
+      to WINSIZEMODE=LARGE.
+
+  0.96m
+    - fixed a minor pubscreen problem.
+
+  0.96l
+    - a logo task is no longer launched when a startup
+      picture is specified.
+    - minor internal changes
+
+  0.96k
+    - since v0.96j, MysticView uses guigfx.library v3
+      features, but it still opened guigfx.library v1.
+      fixed.
+    - minor problems corrected.
+    - when a startup picture is specified, the logo task is
+      launched with a lower priority than the load task.
+    - added STARTPATH tooltype.
+
+  0.96j
+    - added RENDERMEM option
+    - fixed ASL filerequester problems.
+
+  0.96i
+    - added cursor and mouse scrolling in DISPLAYMODE=ONEPIXEL.
+    - window is now WFLG_ACTIVATE.
+    - improved refresh mechanism.
+    - added KEEPIMAGE.
+
+  0.96h
+    - added a nicer rendered logo and dropped alpha-channel processing
+      for the logo in TRANSPARENCY mode.
+    - KEEPASPECT now works in TRANSPARENCY mode on screens with
+      aspects different from 1:1.
+    - TRANSPARENCY is slightly faster.
+    - removed NOBACKFILL hook in TRANSPARENCY mode.
+    - added BGCOLOR option.
+
+  0.96f
+    - drastically reduced memory consumption.
+
+  0.96e
+    - implemented tooltypes SCREENASPECTX and SCREENASPECTY for
+      correction of distorted screen aspects (e.g. Cybergraphics
+      640x256, or custom screen modes boosted with MonEd etc)
+    - since the autodither value cannot be computed for rendering
+      to HAM screen modes, HAM dithering is always enabled with
+      AUTODITHER != 0 and disabled with AUTODITHER=0.
+    - (finally?) solved all subtask administritation problems.
+    - fixed commandline and wbarg parsing and supplied a proper
+      template.
+    - MysticView now quits with the ESC key.
+    - added REQUESTFILE for MysticView to open a filerequester on
+      startup.
+    - The filerequester now opens asynchronously.
+    - included Mac's newicon.
+
+  0.96d
+    - Fixed a minor problem with MysticView running multiple
+      times on HAM public screens.
+    - Fixed Division-by-zero problem in MysticView's drawtask
+      (hopefully)
+    - improved subtask data-share mechanism
+    - tooltype options are no longer case sensitive.
+
+  0.96c
+    - Added tooltype option HAM for MysticView to open
+      a HAM screen in combination with CUSTOMSCREEN.
+
+  0.96b
+    - re-implemented transparency mode
+    - implemented About requester
+    - improved TRANSPARENCY mode: the background is no longer 
+      snapped when a REFRESHWINDOW message arrives
+
+  0.96a
+    - MysticView has been completely restructured in preparation
+      for further enhancements
+
+  0.95g
+    - added DirOpus configuration example.
+    - MysticView has got a menu and a filerequester for loading.
+    - if CUSTOMSCREEN is specified, the new screen is actually
+      a pubscreen.
+    - implemented PRECISION tooltype.
+    - 0.95f was eating its own signals - after 16 refresh signal
+      arrivals, no more subtasks could be created. Fixed.
+
+  0.95f
+    - added filename argument and FILENAME tooltype.
+    - fixed WINOPENMODE
+
+  0.95e
+    - MysticView did not work without Cybergraphics. Fixed.
+      Thanks to Plex and New Mode who reported this bug.
+
+  0.95d
+    - minor problems fixed.
+
+  0.95c
+    - improved speed.
+    - implemented CUSTOMSCREEN and DEPTH for MysticView to
+      open on a custom sreen. These features are preliminary,
+      though.
+
+  0.95
+    - implemented more reliable shared-data access for
+      MysticView's subtasks.
+    - drawtask priority reset to 0.
+    - removed a lot of bugs from the subtask admin code.
+    - MysticView does no longer lose memory.
+
+  0.94
+    - implemented DISPLAYMODE KEEPASPECT
+    - supplied a NOBACKFILL hook for the window.
+    - unallocated pens and undefined areas are no longer visible.
+    - the redraw task now runs with a priority of -1.
+    - slightly improved opaque-sizing. the rastered bitmap is
+      precalculated right after loading, when OPAQUESIZING=TRUE
+      and TRANSPARENCY=0
+    - fixed WINTOP and WINLEFT.
+
+  0.93
+    - added asynchronous drawing - leading to much better
+      window handling
+    - MysticView runs with a priority of 1, its subtasks
+      with a priority of 0
+    - added tooltype options
+
+  0.92
+    - implemented DISPMODE_ONEPIXEL.
+    - heavily trained for stableness.
+
+  0.91
+    - memory management improved
+
+  0.9
+    - completely rewritten from the scratch, now using
+      guigfx.library. features asynchronous loading,
+      a transparent window, dithering, more elaborated
+      window sizing and opening techniques, 
+      different display modes, and much more.
+
+
+  -------------------------- cut ---------------------------
+
+  0.76
+    - layout improved.
+    - implemented ADAPTIVEBORDER
+
+  0.75
+    - added lots of tooltype options
+    - fixed many minor problems
+    - greatly improved some image refresh problems.
+
+* 0.68
+    - minor changes
+    - there was a heavy bug in v16.1 and v16.2 of render.library.
+      I guess that MysticView crashed right at startup if you did
+      NOT use the 68060 version. Sorry. I bumped the required
+      library version to v17 where this bug has been fixed.
+
+  0.67
+    - major rework and clean-up
+
+  0.66
+    - The color allocation strategy has been improved.
+
+  0.65
+    - I couldn't quickly get rid of some heavy bugs I've
+      introduced with v0.64. So I decided to continue work
+      with v0.62 and render.library v12.0.
+      Asynchronous loading is no longer implemented. 
+      This version seems to work pretty stable.
+
+  0.64
+    - asynchronous loading implemented.
+
+  0.63
+    - About is asynchronous now.
+    - improved color allocation strategy.
+    - MysticView crashed on 2-color-displays. Fixed.
+
+  0.62
+    - better allocation strategy for critical colors on
+      displays with few sharable pens.
+    - Filerequester implemented.
+        - A percentual render progress display and several messages
+      are displayed in the window's title bar.
+        - The picture's width is now layouted pixelwise, no longer in
+      multiples of 16 pixels.
+    - Various enhancements and bugfixes
+
+  0.60
+    - Faster display.
+    - Several bugs fixed.
+    - Fixed display problems (window borders and flicker...).
+    - Pooled memory management implemented.
+    - Window is SIMPLE_REFRESH now.
+    - Requires less memory.
+    - Nicer logo.
+    - Menu implemented for "About" requester and "Quit". Other
+      menu functions are not yet implemented.
+
+  0.53
+    - faster window refresh.
+    - Requires less memory
+
+  0.52    
+    - now takes care of aspect ratios.
+      This applies to both the image and the screen mode.
+    - nicer logo
+
+  0.51
+    - MysticView lost memory. Fixed.
+    - Sped-up window refresh after resizing.
+    - uses PRECISION_IMAGE instead of PRECISION_EXACT.
+
+  0.50
+    - initial version
