@@ -87,5 +87,6 @@ phf:dabL/K9gGAAnU:Peter H. Froehlich:phf@acm.org:
 AMON:DwbSO8Dztm9Jfr2bKLLK:Robert Falk:exec@hem1.passagen.se:
 rcdrummond:aaxg5./rI45Xk:Richard Drummond:richard.drummond@futurenet.co.uk:
 rorytoma:dcoooSZdKV3MM:Rory Toma:rorytoma@ix.netcom.com:
+cirdan:dbrVEaJw5mEgw:Troein Carl:carlt@netch.se:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
