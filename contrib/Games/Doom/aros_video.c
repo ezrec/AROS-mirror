@@ -132,25 +132,6 @@ APTR LockBitMapTags(struct BitMap *bm, Tag tag, ...)
     return NULL;
 }
 
-void UnLockBitMap(APTR handle)
-{
-    kprintf("?????? unlockBitmaptags ??????\n");
-}
-
-APTR AllocAslRequestTags(ULONG type, Tag tag1, ...)
-{
-    APTR result;
- 
-    kprintf("?????? allocaslrequest ??????\n");
-
-    result = AllocAslRequest(type, (struct TagItem *)&tag1);
- 
-    kprintf("?????? allocaslrequest done ??????\n");
-
-    return result;
-
-}
-
 /****************************************************************************/
 
 static __inline void start_timer (void)
