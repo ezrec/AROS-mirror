@@ -293,7 +293,11 @@ VOID LTP_FixState(LayoutHandle *Handle, BOOL State, struct Gadget *Gadget, UWORD
 BOOL LTP_NotifyPager(LayoutHandle *Handle, LONG ID, LONG Page);
 
 /* LT_InitExit.c */
+#ifdef __AROS__
+BOOL LIBENT LT_Init(struct ExecBase * AbsExecBase);
+#else
 BOOL LIBENT LT_Init(VOID);
+#endif
 VOID LIBENT LT_Exit(VOID);
 
 

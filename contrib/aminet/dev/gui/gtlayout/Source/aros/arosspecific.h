@@ -71,7 +71,7 @@ struct LayerMsg;
 #if 0
  VOID GTLayout_LT_AddA( struct LayoutHandle *handle, LONG type, STRPTR label, LONG id, struct TagItem *tagList );
 #endif
- VOID GTLayout_LT_Add( struct LayoutHandle *handle, LONG type, STRPTR label, LONG id, ... );
+ VOID GTLayout_LT_Add( struct LayoutHandle *handle, LONG type, STRPTR label, LONG id, unsigned long tag1, ... );
 #if 0
  VOID GTLayout_LT_NewA( struct LayoutHandle *handle, struct TagItem *tagList );
 #endif
@@ -105,7 +105,7 @@ struct LayerMsg;
 #if 0
  BOOL GTLayout_LT_RebuildTagList( struct LayoutHandle *handle, LONG clear, struct TagItem *tags );
 #endif
- BOOL LT_RebuildTags( struct LayoutHandle *handle, BOOL clear, ... );
+ BOOL LT_RebuildTags( struct LayoutHandle *handle, BOOL clear, unsigned long tag1,... );
 #if 0
 /*--- Added in v9.0 ---------------------------------------------------*/
  VOID GTLayout_LT_UpdateStrings( struct LayoutHandle *handle );
@@ -118,7 +118,7 @@ struct LayerMsg;
 #if 0
  VOID GTLayout_LT_MenuControlTagList( struct Window *window, struct Menu *intuitionMenu, struct TagItem *tags );
 #endif
- VOID LT_MenuControlTags( struct Window *window, struct Menu *intuitionMenu, ... );
+ VOID LT_MenuControlTags( struct Window *window, struct Menu *intuitionMenu, unsigned long tag1,... );
 #if 0
  struct MenuItem *GTLayout_LT_GetMenuItem( struct Menu *menu, ULONG id );
  struct MenuItem *GTLayout_LT_FindMenuCommand( struct Menu *menu, ULONG msgCode, ULONG msgQualifier, struct Gadget *msgGadget );
