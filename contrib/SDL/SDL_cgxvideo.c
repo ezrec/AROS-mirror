@@ -61,6 +61,11 @@ static char rcsid =
 #include "SDL_cgximage_c.h"
 #include "SDL_cgxyuv_c.h"
 
+#ifdef _AROS
+#include <stdlib.h>
+#include <proto/alib.h>
+#endif
+
 /* Initialization/Query functions */
 static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat);
 static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current, int width, int height, int bpp, Uint32 flags);
