@@ -13,10 +13,14 @@ struct IntuiMessage *mesg;
 struct IntuiText prompt,yprompt,t0,t1;
 struct Menu Menu1;
 struct MenuItem m0,m1;
+struct TextFont *topazfont;
 
 #define INTUITION_REV 29
 #define GRAPHICS_REV  29
 #define n             19
+
+#define CELLWIDTH 20
+#define CELLHEIGHT 16
 
 BOOL    gamewon=FALSE,firstmove=TRUE;
 USHORT  mclass,mcode,msx,msy;
@@ -27,12 +31,16 @@ SHORT   Board[n+1][n+1],Aline[4][n+1][n+1][2],Value[n+1][n+1][2];
 int     ov,xv,len;
 char    text[10];
 static  SHORT Weight[]={0,0,4,20,100,500,0};
-
+WORD wintop = 11;
 
     void OpenALL(),Human(),AddUp(),UpdateValue(),MakeMove(),FindMove();
     void CreateMes(),DrawFrame(),make_window(),init_newgame();
     void setup_menu(),show_About();
 
+struct TextAttr topaz8 =
+{
+    "topaz.font", 8, 0, 0
+};
 
 VOID main()
 {
@@ -69,15 +77,15 @@ Loop:
     else firstmove=FALSE;
 
     x0=(x-1)*20;
-    y0=(y-1)*8;
+    y0=(y-1)*CELLHEIGHT;
     SetAPen(r,1);
-    Move(r,x0+14,y0+14);
-    Draw(r,x0+26,y0+18);
-    Move(r,x0+14,y0+18);
-    Draw(r,x0+26,y0+14);
+    Move(r,x0+14,y0+wintop+5);
+    Draw(r,x0+26,y0+wintop+13);
+    Move(r,x0+14,y0+wintop+13);
+    Draw(r,x0+26,y0+wintop+5);
 
     amx=x0+13;
-    amy=y0+13;
+    amy=y0+wintop+4;
     SetAPen(r,3);
     DrawFrame();
 
@@ -146,24 +154,24 @@ HumanLoop:
         case MOUSEBUTTONS: {
             if(ReadPixel(r,msx,msy) == 2) goto HumanLoop;  /* black line */
             if(msx < 10 || msx > 10+n*20) goto HumanLoop;  /* outside board */
-            if(msy < 12 || msy > 12+n*8) goto HumanLoop;   /* outside board */
+            if(msy < wintop+1 || msy > wintop+1+n*CELLHEIGHT) goto HumanLoop;   /* outside board */
 
-            y=((msy-12)/8)+1;
+            y=((msy-wintop-1)/CELLHEIGHT)+1;
             x=((msx-10)/20)+1;
             if(Board[x][y] > 0) goto HumanLoop;            /* occupied square */
 
             Board[x][y]=1;
             i=(x-1)*20+16;
-            j=y*8+6;
+            j=(y-1)*CELLHEIGHT+wintop+5;
 
             SetAPen(r,1);
             Move(r,i+1,j);
             Draw(r,i+6,j);
             Move(r,i+7,j+1);
-            Draw(r,i+7,j+3);
-            Move(r,i+6,j+4);
-            Draw(r,i+1,j+4);
-            Move(r,i,j+3);
+            Draw(r,i+7,j+7);
+            Move(r,i+6,j+8);
+            Draw(r,i+1,j+8);
+            Move(r,i,j+7);
             Draw(r,i,j+1);
         }
     }
@@ -313,8 +321,8 @@ VOID DrawFrame()
 {
     Move(r,amx,amy);
     Draw(r,amx+14,amy);
-    Draw(r,amx+14,amy+6);
-    Draw(r,amx,amy+6);
+    Draw(r,amx+14,amy+10);
+    Draw(r,amx,amy+10);
     Draw(r,amx,amy);
 }
 
@@ -322,10 +330,19 @@ VOID DrawFrame()
 VOID make_window()        /* Open a plain window */
 
 {
+    struct Screen *scr;
+    
+    scr = LockPubScreen(NULL);
+    if (scr)
+    {
+    	wintop = scr->WBorTop + scr->Font->ta_YSize + 1;
+    	UnlockPubScreen(NULL, scr);
+    }
+    
     NewWindow.LeftEdge=0;
     NewWindow.TopEdge=0;
     NewWindow.Width=480;
-    NewWindow.Height=170;
+    NewWindow.Height=311 + wintop; //159 + wintop;
     NewWindow.DetailPen=-1;
     NewWindow.BlockPen=-1;
     NewWindow.Title="Five In Line";
@@ -341,8 +358,10 @@ VOID make_window()        /* Open a plain window */
     NewWindow.MaxWidth=640;
     NewWindow.MaxHeight=200;
 
+    topazfont = OpenFont(&topaz8);
+    
     Wind=(struct Window *) OpenWindow(&NewWindow);
-
+    if (topazfont) SetFont(Wind->RPort, topazfont);
 }
 
 
@@ -373,7 +392,7 @@ VOID init_newgame()
     }
 
     SetAPen(r,0);
-    RectFill(r,10,12,400,168);        /* blank board           */
+    RectFill(r,10,wintop+1,400,Wind->Height-Wind->BorderBottom - 1);        /* blank board           */
 
     firstmove=TRUE;
 
@@ -382,11 +401,11 @@ VOID init_newgame()
     SetAPen(r,2);
 
     for(x=10;x<=10+n*20;x=x+20) {
-        Move(r,x,12);
-        Draw(r,x,12+n*8);
+        Move(r,x,wintop+1);
+        Draw(r,x,wintop+1+n*CELLHEIGHT);
     }
 
-    for(y=12;y<=12+n*8;y=y+8) {
+    for(y=wintop+1;y<=wintop+1+n*CELLHEIGHT;y=y+CELLHEIGHT) {
         Move(r,10,y);
         Draw(r,10+n*20,y);
     }
@@ -394,15 +413,15 @@ VOID init_newgame()
 /* print scores */
 
     SetAPen(r,1);
-    Move(r,420,30);
+    Move(r,420,19+wintop);
     Text(r,"You:",4);
-    Move(r,450,30);
+    Move(r,450,19+wintop);
     len=sprintf(text,"%3d",xv);
     Text(r,text,len);
 
-    Move(r,420,45);
+    Move(r,420,34+wintop);
     Text(r,"I  :",4);
-    Move(r,450,45);
+    Move(r,450,34+wintop);
     len=sprintf(text,"%3d",ov);
     Text(r,text,len);
 }
@@ -457,7 +476,7 @@ VOID show_About()
     NewWindow2.LeftEdge=Wind->LeftEdge + 40;
     NewWindow2.TopEdge=Wind->TopEdge + 45;
     NewWindow2.Width=400;
-    NewWindow2.Height=80;
+    NewWindow2.Height=69+wintop;
     NewWindow2.DetailPen=-1;
     NewWindow2.BlockPen=-1;
     NewWindow2.Title="About Five In Line";
@@ -475,25 +494,26 @@ VOID show_About()
 
     abWind=(struct Window *) OpenWindow(&NewWindow2);
     r2=abWind->RPort;
+    if (topazfont) SetFont(r2, topazfont);
 
     SetAPen(r2,1);
-    Move(r2,10,20);
+    Move(r2,10,wintop+9);
     Text(r2,"Placed in Public Domain 1988",28);
-    Move(r2,10,30);
+    Move(r2,10,wintop+19);
     Text(r2,"by Njål Fisketjøn.",18);
 
-    Move(r2,10,50);
+    Move(r2,10,wintop+39);
     Text(r2,"Algorithm from a",16);
 
     SetAPen(r2,3);
-    Move(r2,146,50);
+    Move(r2,146,wintop+39);
     Text(r2,"Borland Turbo Pascal",20);
 
     SetAPen(r2,1);
-    Move(r2,314,50);
+    Move(r2,314,wintop+39);
     Text(r2,"program.",8);
 
-    Move(r2,10,70);
+    Move(r2,10,wintop+59);
     Text(r2,"Close window to continue playing.",33);
 
     Wait (1 << abWind->UserPort->mp_SigBit);
