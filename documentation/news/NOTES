@@ -31,6 +31,14 @@ brackets ("[]").
 200304??:
  <next day here>
 
+20030426:
+
++ bzip2 instead of gzip and custom package format instead of tar to gain some
+  more room on floppy [chodorowski]
++ floppy and CD images now uses the stripped patterns [falemagn, chodorowski]
++ diskfont update [verhaegs]
++ term 4.7 in contrib [bergers]
+
 20030425:
 
 + desktop.library updated, different views possible [psmith]
