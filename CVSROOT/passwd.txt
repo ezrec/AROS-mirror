@@ -115,5 +115,7 @@ catull:lbmA8NEO1TBIU:Carlo Dapor:carlo@vis.ethz.ch:
 alholzhey:ccy6Goxoq1BHc:Alexandre L. Holzhey:alhbr@terra.com.br:
 ksvalast:adMlRxsmsLZJ6:Kjetil Svalastog Matheussen:ksvalast@student.matnat.uio.no:
 desperado:aa9jCDuSPWmcQ:Peter Hans van den Muijzenberg:desperado@yourfreemail.com:
+giampiero:ab30rCCqL8Y:Giampiero Gabbiani:gbbgpr@geocities.com:
+ezrim:baEk/f74.0bUk:Otto van Daalen:snoeren@cluster.com:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
