@@ -276,6 +276,12 @@ out:
         wp->w_flag =  0;
         wp->w_force = 0;
 #endif
+
+
+#warning: added the next line, otherwise there is garbage in the status line
+        modeline(wp);
+
+
         wp = wp->w_wndp;
         }
 
