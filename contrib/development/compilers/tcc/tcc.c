@@ -73,7 +73,7 @@
 
 /* path to find crt1.o, crti.o and crtn.o. Only needed when generating
    executables or dlls */
-#define CONFIG_TCC_CRT_PREFIX "Workbench:lib"
+#define CONFIG_TCC_CRT_PREFIX "sys:lib"
 
 #define INCLUDE_STACK_SIZE  32
 #define IFDEF_STACK_SIZE    64
@@ -352,7 +352,7 @@ static const char **rt_bound_error_msg;
 static struct TCCState *tcc_state;
 
 /* give the path of the tcc libraries */
-static const char *tcc_lib_path = CONFIG_TCC_PREFIX "Workbench:lib";
+static const char *tcc_lib_path = CONFIG_TCC_PREFIX "sys:lib";
 
 struct TCCState {
     int output_type;
@@ -8556,7 +8556,7 @@ TCCState *tcc_new(void)
 
     /* default include paths */
     tcc_add_sysinclude_path(s, "/tcc");
-    tcc_add_sysinclude_path(s, "Workbench:include");
+    tcc_add_sysinclude_path(s, "sys:include");
 #ifndef _AROS
     tcc_add_sysinclude_path(s, "/usr/include");
     tcc_add_sysinclude_path(s, CONFIG_TCC_PREFIX "/lib/tcc/include");
@@ -8603,7 +8603,7 @@ TCCState *tcc_new(void)
     tcc_add_library_path(s, "/usr/lib");
     tcc_add_library_path(s, "/lib");
 #else 
-    tcc_add_library_path(s, "Workbench:lib");
+    tcc_add_library_path(s, "sys:lib");
 #endif
 
     /* no section zero */
@@ -8817,7 +8817,7 @@ int tcc_add_library(TCCState *s, const char *libraryname)
 #ifndef AROSC
             if (!strcmp(libraryname, "c"))
 #else
-	 if (!strcmp(libraryname, "arosc"))
+	// if (!strcmp(libraryname, "arosc"))
 #endif
                 return 0;
             h = dlopen(buf, RTLD_GLOBAL | RTLD_LAZY);
@@ -8885,7 +8885,7 @@ int tcc_set_output_type(TCCState *s, int output_type)
  	    tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/crti.o");
 #else
 	tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/detach.o");
-        tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/startup.o");
+        //tcc_add_file(s, CONFIG_TCC_CRT_PREFIX "/libautoinit.a");
 #endif 
     }
     return 0;
