@@ -51,8 +51,10 @@ extern int debug;
 
 /* configure defines USG if it can't find bcopy */
 
+#ifndef __AROS__
 #ifndef USG
 #define memcpy(dest,src,len) bcopy((src),(dest),len)
+#endif
 #endif
 
 struct file_buffer
@@ -64,9 +66,11 @@ struct file_buffer
 
 extern struct file_buffer *read_file (), *read_stdin ();
 
+#ifndef __AROS__
 /* Standard memory allocation routines.  */
 char *malloc ();
 char *realloc ();
+#endif
 
 /* Similar, but abort with an error if out of memory (see globs.c).  */
 char *xmalloc ();

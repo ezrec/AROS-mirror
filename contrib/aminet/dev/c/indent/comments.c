@@ -16,6 +16,15 @@
 #include "sys.h"
 #include "indent.h"
 
+int inc_pstack ();
+INLINE int current_column ();
+INLINE void fill_buffer ();
+void dump_line ();
+INLINE int count_columns ( int column, char *bp);
+INLINE int compute_code_target ();
+INLINE int compute_label_target ();
+
+
 /* Check the limits of the comment buffer, and expand as neccessary. */
 
 #define CHECK_COM_SIZE \

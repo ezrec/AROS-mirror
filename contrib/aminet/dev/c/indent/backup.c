@@ -48,6 +48,10 @@
 #include "sys.h"
 #include "backup.h"
 #include <ctype.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 #ifndef isascii
 #define ISDIGIT(c) (isdigit ((unsigned char) (c)))

@@ -16,6 +16,7 @@
 
 
 #include "sys.h"
+#include <stdlib.h>
 
 /* Like malloc but get error if no storage available.  size really should be
    size_t, but not all systems have size_t, so I hope "unsigned" will work.

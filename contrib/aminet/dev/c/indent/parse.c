@@ -24,6 +24,9 @@ struct parser_state *parser_state_tos;
 #define INITIAL_BUFFER_SIZE 1000
 #define INITIAL_STACK_SIZE 2
 
+void reduce();
+void diag(int level, char *msg, unsigned int a, unsigned int b);
+
 void
 init_parser ()
 {
@@ -464,6 +467,7 @@ HISTORY: initial coding 	November 1976	D A Willcox of CAC
 /*----------------------------------------------*\
 |   REDUCTION PHASE				    |
 \*----------------------------------------------*/
+void
 reduce ()
 {
 

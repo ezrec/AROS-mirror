@@ -21,7 +21,24 @@
 
 #include "sys.h"
 #include "indent.h"
+#include "backup.h"
 #include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+
+void parsefont(register struct fstate *f, char *s0);
+void writefdef(register struct fstate *f, unsigned int nm);
+INLINE void fill_buffer();
+void init_parser();
+void writefdef(register struct fstate *f, unsigned int nm);
+void diag(int level, char *msg, unsigned int a, unsigned int b);
+void dump_line(); 
+INLINE int compute_code_target();
+INLINE void parse_lparen_in_decl();
+void parse(enum codes tk);
+void reset_parser();
+void sys_error(char *offender); 
+void print_comment();
 
 void
 usage ()
@@ -87,7 +104,7 @@ int squest;
 
 #define CHECK_CODE_SIZE \
 	if (e_code >= l_code) { \
-	    register nsize = l_code-s_code+400; \
+	    register int nsize = l_code-s_code+400; \
 	    codebuf = (char *) xrealloc (codebuf, nsize); \
 	    e_code = codebuf + (e_code-s_code) + 1; \
 	    l_code = codebuf + nsize - 5; \
@@ -96,7 +113,7 @@ int squest;
 
 #define CHECK_LAB_SIZE \
 	if (e_lab >= l_lab) { \
-	    register nsize = l_lab-s_lab+400; \
+	    register int nsize = l_lab-s_lab+400; \
 	    labbuf = (char *) xrealloc (labbuf, nsize); \
 	    e_lab = labbuf + (e_lab-s_lab) + 1; \
 	    l_lab = labbuf + nsize - 5; \
@@ -190,7 +207,7 @@ indent (this_file)
 
   {
     register char *p = buf_ptr;
-    register col = 1;
+    register int col = 1;
 
     while (1)
       {
@@ -1182,6 +1199,7 @@ indent (this_file)
 	      if (is_procname == 0 || !procnames_start_line)
 		{
 		  if (!parser_state_tos->block_init)
+		  {
 		    if (troff && !parser_state_tos->dumped_decl_indent)
 		      {
 			sprintf (e_code, "\n.De %dp+\200p\n",
@@ -1195,6 +1213,7 @@ indent (this_file)
 			  CHECK_CODE_SIZE;
 			  *e_code++ = ' ';
 			}
+		   }
 		}
 	      else
 		{
@@ -1444,7 +1463,7 @@ indent (this_file)
 	    {
 	      if (blanklines_around_conditional_compilation)
 		{
-		  register c;
+		  register int c;
 		  prefix_blankline_requested++;
 		  while ((c = *in_prog_pos++) == EOL);
 		  in_prog_pos--;
@@ -1639,6 +1658,7 @@ int max_input_files = 128;
 int debug;
 #endif
 
+int
 main (argc, argv)
      int argc;
      char **argv;

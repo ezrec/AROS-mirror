@@ -23,6 +23,9 @@
 #include "sys.h"
 #include "indent.h"
 #include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #ifdef VMS
 #include <file.h>
@@ -59,9 +62,14 @@ int suppress_blanklines = 0;
 static int comment_open;
 
 int paren_target;
-
+
 /* Use `perror' to print the system error message
    caused by OFFENDER, then exit. */
+
+void diag(int level, char *msg, unsigned int a, unsigned int b);
+INLINE int compute_code_target();
+INLINE int pad_output(register int current_column, register int target_column);
+INLINE int compute_label_target ();
 
 void
 sys_error (offender)
@@ -178,7 +186,7 @@ current_column ()
 
   return column;
 }
-
+
 void
 dump_line ()
 {				/* dump_line is the routine that actually
@@ -188,7 +196,7 @@ dump_line ()
 				   level, followed by any comments */
   register int cur_col;
   register int target_col = 0;
-  static not_first_line;
+  static int not_first_line;
 
   if (parser_state_tos->procname[0])
     {
@@ -301,7 +309,7 @@ dump_line ()
       if (s_code != e_code)
 	{			/* print code section, if any */
 	  register char *p;
-	  register i;
+	  register int i;
 
 	  if (comment_open)
 	    {
@@ -408,7 +416,7 @@ dump_line ()
 	    {
 	      /* Here for comment printing.  This code is new as of
 	         version 1.8 */
-	      register target = parser_state_tos->com_col;
+	      register int target = parser_state_tos->com_col;
 	      register char *com_st = s_com;
 
 	      if (cur_col > target)
@@ -479,8 +487,8 @@ dump_line ()
 INLINE int
 compute_code_target ()
 {
-  register target_col = parser_state_tos->ind_level + 1;
-  register w, t;
+  register int target_col = parser_state_tos->ind_level + 1;
+  register int w, t;
 
   if (!parser_state_tos->paren_level)
     {
@@ -541,7 +549,7 @@ read_file (filename)
     sys_error (filename);
 
   if (file_stats.st_size <= 0)
-    diag (1, "Warning: Zero-length file %s", filename);
+    diag (1, "Warning: Zero-length file %s", filename, 0);
 
   fileptr.size = file_stats.st_size;
   if (fileptr.data != 0)
@@ -758,7 +766,7 @@ fill_buffer ()
       else if ((p - current_input->data) < current_input->size)
 	{
 	  diag (0, "Warning: File %s contains NULL-characters\n",
-		current_input->name);
+		current_input->name, 0);
 	  p++;
 	}
       /* Here for EOF with no terminating newline char. */
@@ -773,7 +781,7 @@ fill_buffer ()
   buf_ptr = cur_line;
   buf_end = in_prog_pos;
 }
-
+
 /* Fill the output line with whitespace up to TARGET_COLUMN, given that
    the line is currently in column CURRENT_COLUMN.  Returns the ending
    column. */
@@ -821,6 +829,7 @@ int found_err;
    warning.  MSG is a printf-style format string.  Additional arguments are
    additional arguments for printf.  */
 /* VARARGS2 */
+void
 diag (level, msg, a, b)
      int level;
      unsigned int a, b;
@@ -838,6 +847,7 @@ diag (level, msg, a, b)
   fprintf (stderr, "\n");
 }
 
+void
 writefdef (f, nm)
      register struct fstate *f;
      unsigned int nm;

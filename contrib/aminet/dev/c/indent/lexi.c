@@ -27,6 +27,10 @@
 #include "sys.h"
 #include "indent.h"
 #include <ctype.h>
+#include <string.h>
+
+void diag(int level, char *msg, unsigned int a, unsigned int b);
+INLINE void fill_buffer();
 
 /* Stuff that needs to be shared with the rest of indent. Documented in
    indent.h.  */
@@ -220,12 +224,15 @@ lexi ()
 	    while (1)
 	      {
 		if (*buf_ptr == '.')
+		{
 		  if (seendot)
 		    break;
 		  else
 		    seendot++;
+		}
 		buf_ptr++;
 		if (!isdigit (*buf_ptr) && *buf_ptr != '.')
+		{
 		  if ((*buf_ptr != 'E' && *buf_ptr != 'e') || seenexp)
 		    break;
 		  else
@@ -236,6 +243,7 @@ lexi ()
 		      if (*buf_ptr == '+' || *buf_ptr == '-')
 			buf_ptr++;
 		    }
+		}
 	      }
 	  /* Accept unsigned, unsigned long, and float constants
 	     (U, UL, and F suffixes).  I'm not sure if LU is ansii.
@@ -717,6 +725,7 @@ lexi ()
 }
 
 /* Add the given keyword to the keyword table, using val as the keyword type */
+void
 addkey (key, val)
      char *key;
      enum rwcodes val;

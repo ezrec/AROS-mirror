@@ -23,10 +23,13 @@
 /* Argument scanning and profile reading code.  Default parameters are set
    here as well. */
 
+#include <stdlib.h>
+#include <string.h>
 #include "sys.h"
 #include "indent.h"
 #include <ctype.h>
 #include "version.h"
+
 
 int else_endif_col;
 
@@ -34,6 +37,8 @@ extern char *in_name;
 
 char *getenv ();
 void usage ();
+void parsefont ( register struct fstate *f, char *s0);
+void addkey ( char *key, enum rwcodes val);
 
 /* profile types */
 enum profile
@@ -659,10 +664,12 @@ found:
 	  {
 	    register char *str;
 	    if (*param_start == 0)
+	    {
 	      if (!(param_start = param))
 		goto arg_missing;
 	      else
 		val = 1;
+	    }
 
 	    str = (char *) xmalloc (strlen (param_start) + 1);
 	    strcpy (str, param_start);
@@ -679,10 +686,12 @@ found:
 
 	case PRO_INT:
 	  if (*param_start == 0)
+	  {
 	    if (!(param_start = param))
 	      goto arg_missing;
 	    else
 	      val = 1;
+	  }
 	  if (!isdigit (*param_start))
 	    {
 	      fprintf (stderr,
