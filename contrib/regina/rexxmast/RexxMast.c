@@ -397,7 +397,7 @@ static void AddLib(struct RexxMsg *msg)
       return;
     }
     rsrc->rr_Arg1 = (LONG)atoi((char *)msg->rm_Args[2]);
-    rsrc->rr_Arg2 = (msg->rm_Args[3] == NULL) ? (LONG)0 : (LONG)atoi((char *)msg->rm_Args[2]);
+    rsrc->rr_Arg2 = (msg->rm_Args[3] == NULL) ? (LONG)0 : (LONG)atoi((char *)msg->rm_Args[3]);
   }
   else
     rsrc->rr_Node.ln_Type = RRT_HOST;
@@ -486,14 +486,23 @@ static void QueryFunclist(struct RexxMsg *msg)
 	    }
 	  
 	    result1 = RexxCallQueryLibFunc(msg, lib, rsrc->rr_Arg1, &result2);
-	    if (result1 == 0)
+	    if (result1 != 1)
 	    {
 	        msg->rm_Node.mn_ReplyPort = oldport;
 	        msg->rm_Action |= RXFF_FUNCLIST;
-	        msg->rm_Result1 = 0;
-	        msg->rm_Result2 = (IPTR)result2;
+	        if (result1 == 0)
+	        {
+		    msg->rm_Result1 = 0;
+		    msg->rm_Result2 = (IPTR)result2;
+		}
+	        else
+	        {
+		    msg->rm_Result1 = 10;
+		    msg->rm_Result2 = (IPTR)result1;
+		}
 	        UnlockRexxBase(0);
 	        DeletePort(replyport);
+	        CloseLibrary(lib);
 	        return;
 	    }
 	    break;
