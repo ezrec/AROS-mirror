@@ -1,7 +1,7 @@
 Summary
 -------
 
-93 tests OK, 43 tests SKIPPED and 3 tests FAILED.
+94 tests OK, 43 tests SKIPPED and 2 tests FAILED. 
 
 Notes on failed tests
 ---------------------
@@ -302,15 +302,3 @@ test_difflib
     68 tests in 13 items.
     66 passed and 2 failed.
     ***Test Failed*** 2 failures.
-
-
-test_format 
-    
-    These are the only failures:
-    
-    '%#o' % 0 =? '0' ... no
-    '%#o' % 0 == '00' != '0'
-    
-    u'%#o' % 0 =? '0' ... no
-    u'%#o' % 0 == u'00' != '0'
-    
