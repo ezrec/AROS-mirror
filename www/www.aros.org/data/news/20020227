@@ -4,7 +4,7 @@ requesters and JanoEditor, for example. Text() now respects kerning
 for monospace fonts. Next, he began porting freedom, a truetype font
 engine which complies to the Bullet API.
 
-Sebastian Bauer continued to work on MUI. Drag&amp;Drop works now.
+Sebastian Bauer continued to work on Zune. Drag&amp;Drop works now.
 
 David Somerton worked some more on his PASCAL compiler.
 

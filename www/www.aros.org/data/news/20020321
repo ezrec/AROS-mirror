@@ -1,16 +1,16 @@
 Sebastian Heutling made the partition.library update the MBR when it should.
 
 Adam Chodorowski fixed a path in the makefiles for BGUI. Everything is not
-installed under SYS:Contrib/BGUI/. He also fixed some paths in MUI (Zune).
+installed under SYS:Contrib/BGUI/. He also fixed some paths in Zune (Open Source
+MUI clone).
 
-Sebastian Bauer continued to work on MUI (sounds like nothing but in fact,
+Sebastian Bauer continued to work on Zune (sounds like nothing but in fact,
 most of the commits in the last days are from him :-) If he continues to work
-at this pace, we'll have MUI tackled before summer!
+at this pace, we'll have Zune tackled before summer!
 
-Henning Kiel made more files from AMosaic compile on AROS. Also MUI will now
+Henning Kiel made more files from AMosaic compile on AROS. Also Zune will now
 copy its header files into the correct places and programs which depend on
-MUI can use the usual include paths and need not use private headers from
-MUI.
+them can use the usual include paths and need not use Zune's private headers.
 
 Staf Verhaegen added ARexx formats to the DATE function of Regina.
 
