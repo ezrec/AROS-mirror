@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/05/29 15:42:49  stegerg
+ * fixed some "comparison is always 1 due to limited range of data type"
+ * errors
+ *
  * Revision 42.3  2000/05/29 00:40:24  bergers
  * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
@@ -752,9 +756,9 @@ METHOD(VectorClassRender, struct bmRender *, bmr)
    /*
     * Setup the correct startup-pen.
     */
-   if (vd->vd_DriPen != ~0)
+   if (vd->vd_DriPen != (UWORD)~0)
       BSetDPenA(bi, vd->vd_DriPen);
-   else if (vd->vd_Pen != ~0)
+   else if (vd->vd_Pen != (UWORD)~0)
       BSetPenA(bi, vd->vd_Pen);
    else
    {

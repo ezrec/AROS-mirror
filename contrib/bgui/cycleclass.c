@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/05/29 15:42:49  stegerg
+ * fixed some "comparison is always 1 due to limited range of data type"
+ * errors
+ *
  * Revision 42.2  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -667,7 +671,7 @@ METHOD(CycleClassHandleInput, struct gpInput *, gpi)
             /*
              * Previous selected item?
              */
-            if (cd->cd_Previous != ~0) RenderPopupEntry(bi, cd, cd->cd_Previous, FALSE);
+            if (cd->cd_Previous != (UWORD)~0) RenderPopupEntry(bi, cd, cd->cd_Previous, FALSE);
 
             /*
              * Render current entry.
@@ -692,7 +696,7 @@ METHOD(CycleClassHandleInput, struct gpInput *, gpi)
                /*
                 * Setup the new label and return VERIFY.
                 */
-               if (cd->cd_Previous != ~0)
+               if (cd->cd_Previous != (UWORD)~0)
                {
                   if (cd->cd_Active != cd->cd_Previous)
                   {
