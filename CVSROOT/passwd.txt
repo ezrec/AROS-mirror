@@ -66,5 +66,6 @@ zeus:abS0bFu15KvNE:Cristiano Contin:zeus77@dei.unipd.it:
 kingsmurf:ach2LTJWBViOU:Lars S. Jessen:ljessen@post1.netmaster.dk:
 le_gurun:dbyUluP5y6k3w:Patrice Le Gurun:le_gurun@iu-vannes.fr:
 collin:ddgk87PBDH.r.:Branko Collin:collin@xs4all.nl:
+piso:bdmG.JHcU82iI:Flag:piso@telware.it:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
