@@ -23,17 +23,18 @@
 #	Makefile for GNU Make
 #
 
-CC = gcc
-RM = DELETE
+CC = /usr/local/i386-aros/bin/gcc
+RM = rm
+LD = /usr/local/i386-aros/bin/gcc -E
 
 #CFLAGS =-O2 -fomit-frame-pointer -m68020 -mstackextend -g
-CFLAGS =-O2 -fomit-frame-pointer  -g
+CFLAGS =-O2 -fomit-frame-pointer  -g -nix
 
 #CPPFLAGS = -D_AMIGA -Dstpbrk=strpbrk  -DFILE_TIMESTAMP_HI_RES=0 -DINCLUDEDIR="\".\"" -DLIBDIR="\".\""
 CPPFLAGS = -D_AMIGA   -DFILE_TIMESTAMP_HI_RES=0 -DINCLUDEDIR="\".\"" -DLIBDIR="\".\"" -DNO_ARCHIVES
 
 #LDFLAGS = -noixemul -lamigastubs -lm -lstack -g
-LDFLAGS = -lm -g -lauto
+LDFLAGS = -lm -g 
 
 
 # Define these for your system as follows:
@@ -160,7 +161,7 @@ make.ps: make.dvi
 	dvi2ps make.dvi > make.ps
 
 make: $(objs) $(GLOB)
-	$(CC) $(LDFLAGS) $(objs) $(GLOB) $(LOADLIBES) -o make.new -lm -lstack
+	$(CC) $(LDFLAGS) $(objs) $(GLOB) $(LOADLIBES) -o make.new -lm 
 	-delete make
 	rename make.new make
 
