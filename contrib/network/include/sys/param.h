@@ -56,8 +56,9 @@
 #endif
 #endif
 
+#include <sys/types.h>
+
 //#ifndef _LOCORE
-//#include <sys/types.h>
 //#include <sys/simplelock.h>
 //#endif
 
