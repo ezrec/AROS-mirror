@@ -81,6 +81,8 @@ STime GetCurrentSTime(void){
 
 STime lasttime=0;
 
+ULONG nulloutsig=-1;
+
 void SAVEDS Amiga_timertask(void){
 	STime newtime;
 
@@ -91,8 +93,9 @@ void SAVEDS Amiga_timertask(void){
 	startamigatimersig=AllocSignal(-1);
 	tempsigbit=waitforamigatimersig=AllocSignal(-1);
 	temp2sigbit=pausesig=AllocSignal(-1);
+	nulloutsig=AllocSignal(-1);
 
-	if(-1==waitforamigatimersig || -1==startamigatimersig || -1==pausesig){
+	if(-1==waitforamigatimersig || -1==startamigatimersig || -1==pausesig || -1==nulloutsig){
 		waitforamigatimersigokey=false;
 		waitforamigatimersig=0;
 		return;
@@ -107,7 +110,12 @@ void SAVEDS Amiga_timertask(void){
 
 
 	for(;;){
-		mysignal=Wait(waitforamigatimersig | SIGBREAKF_CTRL_C | pausesig);
+		mysignal=Wait(waitforamigatimersig | SIGBREAKF_CTRL_C | pausesig | 1L<<nulloutsig);
+
+		if(mysignal & 1L<<nulloutsig){
+		  lasttime=0;
+		  SetConductorState(player,CONDSTATE_RUNNING,0);
+		}
 
 		if(mysignal & pausesig){
 			Pdebug("paused player\n");
@@ -117,15 +125,17 @@ void SAVEDS Amiga_timertask(void){
 			continue;
 		}
 
-		newtime=conductor->cdt_ClockTime*(PFREQ/1200);		// 1200 is a constant from realtime.libary
-		PlayerTask(newtime-lasttime);
-		lasttime=newtime;
+		if(mysignal & waitforamigatimersig){
+		  newtime=conductor->cdt_ClockTime*(PFREQ/1200);		// 1200 is a constant from realtime.libary
+		  PlayerTask(newtime-lasttime);
+		  lasttime=newtime;
+		}
 
 		if(mysignal & SIGBREAKF_CTRL_C) break;
 
 	}
 
-
+	FreeSignal(nulloutsig);
 	FreeSignal(tempsigbit);
 	FreeSignal(temp2sigbit);
 }
@@ -188,8 +198,6 @@ bool SAVEDS Amiga_initplayer1(void){
 	LONG playererrorcode;
 	APTR lockhandle;
 
-	debug("pre2\n");
-
 	playertaskname=malloc(500);
 	sprintf(playertaskname,"Player task for %s\n",screenname);
 
@@ -201,37 +209,25 @@ bool SAVEDS Amiga_initplayer1(void){
 
 	myhook=talloc(sizeof(struct myHook));
 
-	debug("pre3, CreateTask: %x\n",CreateTask);
-
 	amigatimertask=CreateTask(playertaskname,PLAYERPRI,Amiga_timertask,20000L);
-
-	debug("pre4\n");
 
 	if(amigatimertask==NULL){
 		fprintf(stderr,"Could not create timer-task\n");
 		return false;
 	}
 
-	debug("pre5\n");
 
 	myhook->hook.h_Entry=(ULONG(*)())&timercallback;
 	myhook->task=amigatimertask;
 
-	debug("pre6\n");
-
 	while(waitforamigatimersig==-1) Delay(20);
-
-	debug("pre7\n");
 
 	if( ! waitforamigatimersigokey){
 		fprintf(stderr,"Could not allocate signal(s) in the timer-task.\n");
 		return false;
 	}
-	debug("pre8\n");
 
 	myhook->signal=waitforamigatimersig;
-
-	debug("pre9\n");
 
 	lockhandle=LockRealTime(RT_CONDUCTORS);
 		player=CreatePlayer(
@@ -243,8 +239,6 @@ bool SAVEDS Amiga_initplayer1(void){
 			TAG_DONE
 		);
 	if(lockhandle!=NULL) UnlockRealTime(lockhandle);
-
-	debug("pre10\n");
 
 	if(player==NULL){
 		fprintf(stderr,"Cant create Player from realtime.library:\n");
@@ -272,8 +266,13 @@ bool SAVEDS Amiga_initplayer1(void){
 }
 
 void StartPlayer(void){
-	lasttime=0;
-	SetConductorState(player,CONDSTATE_RUNNING,0);
+  if(nulloutsig!=-1) Signal(amigatimertask,1L<<nulloutsig);
+  /*
+  Forbid();
+  lasttime=0;
+  SetConductorState(player,CONDSTATE_RUNNING,0);
+  Permit();
+  */
 }
 
 void PausePlayer(void){
