@@ -87,13 +87,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
     visitors = Box \
     (
         title    = _T['visitors'],
-        contents = 'Like, a counter. Duh.'
-        #FIXME: Change when the site goes online.
-        #Img \
-        #(
-        #    src = 'http://www.aros.org/cgi-bin/wwwcount.cgi?df=aros.dat&dd=B&comma=Y&pad=Y&md=7', 
-        #    height = 30, width = 94
-        #)
+        contents = Img \
+        (
+            src = 'http://www.aros.org/cgi-bin/wwwcount.cgi?df=aros.dat&dd=B&comma=Y&pad=Y&md=7', 
+            height = 30, width = 94
+        )
     )
 
     sponsors = Box \
@@ -119,23 +117,17 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 (
                     TD
                     (
-                        A
-                        ( 
-                            Img( src = '%(ROOT)simages/sourceforge-small.png', border = 0 ), 
-                            href = 'http://www.sourceforge.net/' 
+                        A \
+                        (
+                            Img \
+                            (
+                                src = 'http://sourceforge.net/sflogo.php?group_id=43586&type=1', 
+                                width = 88, height = 31, border = 0, alt = 'SourceForge Logo'
+                            ),
+                            href = 'http://sourceforge.net'
                         )
                     )
                 )
-                #FIXME: Change when the site goes online.
-                #A \
-                #( 
-                #    Img \
-                #    ( 
-                #        src = 'http://sourceforge.net/sflogo.php?group_id=43586&type=1', 
-                #        width = 88, height = 31, border = 0, alt = 'SourceForge Logo'
-                #    ), 
-                #    href = 'http://sourceforge.net' 
-                #)
             ] 
         )
     )
@@ -149,8 +141,8 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
             TR( TD(), height=15 ),
             TR( TD( navigation ) ),
             TR( TD(), height=15 ),
-            TR( TD( search ) ),
-            TR( TD(), height=15 ),
+            #TR( TD( search ) ),
+            #TR( TD(), height=15 ),
             TR( TD( visitors ) ),
             TR( TD(), height=15 ),
             TR( TD( sponsors ) )
