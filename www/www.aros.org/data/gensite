@@ -2,7 +2,7 @@
 
 '''Generate the AROS WWW site.'''
 
-import glob, os, os.path
+import glob, os, os.path, sys
 
 # Fix nameclash between Image and HTMLgen.Image
 try: #Following switcheroo ensures that if PIL is installed it's used instead
@@ -20,12 +20,50 @@ import GifImagePluginH, JpegImagePluginH, PngImagePluginH
 from HTMLcolors import *
 from HTMLgen import *
 
+_varprog = None
+
+# Copy of os.path.expandvars
+def expandvars (path, dict=os.environ):
+    """Expand shell variables of form $var and ${var}.  Unknown variables
+are left unchanged"""
+    global _varprog
+    if '$' not in path:
+        return path
+    if not _varprog:
+        import re
+        _varprog = re.compile(r'\$(\w+|\{[^}]*\})')
+    i = 0
+    while 1:
+        m = _varprog.search(path, i)
+        if not m:
+            break
+        i, j = m.span(0)
+        name = m.group(1)
+        if name[:1] == '{' and name[-1:] == '}':
+            name = name[1:-1]
+        if dict.has_key(name):
+            tail = path[j:]
+            path = path[:i] + dict[name]
+            i = len(path)
+            path = path + tail
+        else:
+            i = j
+    return path
+
 # Import global config (mostly paths)
 import config
 
+def expandpath (path):
+    return os.path.expanduser (expandvars (expandvars (path, config.__dict__)))
+
 # Copy the "interesting" items of the config into local variables.
-htmldir = config.HTMLDIR
-ftpdir = config.FTPDIR
+htmldir = expandpath (config.HTMLDIR)
+ftpdir = expandpath (config.FTPDIR)
+convert = config.__dict__.get ('CONVERT', None)
+
+# Allow to read in python modules from AROS
+path = expandpath (os.path.join (config.AROSDIR, 'docs', 'src'))
+sys.path.append (path)
 
 # The relative URL for the screenshots dir.
 screenshoturl = 'pics/screenshots'
@@ -49,26 +87,27 @@ screenshoturl = 'pics/screenshots'
 # could always open all items. That would allow the user to navigate
 # much more quickly.
 mainLinks = (
-    ( Href ('/index.html', 'NEWS'),
-	Href ('/status.html', 'Status'),
-	Href ('/oldnews.html', 'Old News'),
+    ( Href ('index.html', 'NEWS'),
+	Href ('status.html', 'Status'),
+	Href ('credits.html', 'Credits'),
+	Href ('oldnews.html', 'Old News'),
     ),
-    ( Href ('/documentation.html', 'Documentation'),
-	Href ('/autodocs/index.html', 'AutoDocs'),
+    ( Href ('documentation.html', 'Documentation'),
+	Href ('autodocs/index.html', 'AutoDocs'),
     ),
-    ( Href ('/screenshots.html', 'Screenshots'),
-	Href ('/screenshots.html#Pictures around AROS', 'Pictures'),
-	Href ('/screenshots.html#Screenshots', 'Screenshots'),
+    ( Href ('screenshots.html', 'Screenshots'),
+	Href ('screenshots.html#Pictures around AROS', 'Pictures'),
+	Href ('screenshots.html#Screenshots', 'Screenshots'),
     ),
-    ( Href ('/download.html', 'Download'),
+    ( Href ('download.html', 'Download'),
 	Href ('ftp://ftp.aros.org/pub/aros/', 'FTP Server'),
-	Href ('/snapshots.html', 'Snapshots'),
+	Href ('snapshots.html', 'Snapshots'),
     ),
-    ( Href ('/links.html', 'Links'),
-	Href ('/links.html#More Related', 'More Related'),
-	Href ('/links.html#Articles', 'Articles'),
-	Href ('/links.html#Homepages', 'Homepages'),
-	Href ('/links.html#Less Related', 'Less Related'),
+    ( Href ('links.html', 'Links'),
+	Href ('links.html#More Related', 'More Related'),
+	Href ('links.html#Articles', 'Articles'),
+	Href ('links.html#Homepages', 'Homepages'),
+	Href ('links.html#Less Related', 'Less Related'),
     ),
 )
 
@@ -123,7 +162,6 @@ class Page (SeriesDocument):
 	self.gohome = '/'
 
 	if linkBoxItem:
-	    # FIXME add links for the next/previous section.
 	    list = []
 	    for links in mainLinks:
 		if links[0].text == linkBoxItem:
@@ -138,9 +176,48 @@ class Page (SeriesDocument):
 			RawText ('&nbsp;&nbsp;&nbsp;'),
 			link, BR ()]
 
+    def relurl (self, path1, path2):
+	#print self.relurl, path1, path2
+	if not path2:
+	    return None
+	
+	if string.find (path2, '://'):
+	    return path2
+	
+	if path1[0] == '/':
+	    path1 = os.path.join (htmldir, path1[1:])
+	if path2[0] == '/':
+	    path2 = os.path.join (htmldir, path2[1:])
+
+	return relpath (path1, path2)
+
     def write (self, filename):
+	filepath = os.path.join (htmldir, filename)
+
+	# Create relative paths to other pages
+	for links in mainLinks:
+	    prev = next = top = None
+	    for i in range (len (links)):
+		url = links[i].url
+		pos = string.find (url, '#')
+		if pos != -1:
+		    url = url[:pos]
+		if url == filename:
+		    if i > 0:
+			prev = links[i-1].url
+		    if i+1 < len (links):
+			next = links[i+1].url
+		    top = links[0].url
+		    break
+	    if top:
+		break
+	
+	self.goprev = self.relurl (filepath, prev)
+	self.gonext = self.relurl (filepath, next)
+	self.gotop = self.relurl (filepath, top)
+
 	# Convert myself into HTML
-	SeriesDocument.write (self, os.path.join (htmldir, filename))
+	SeriesDocument.write (self, filepath)
 
 def genNews ():
     '''Create the news page (index.html, oldnews.html).'''
@@ -188,8 +265,6 @@ def genNews ():
 	    p = Paragraph ()
 	    p.append (Href ('oldnews.html', 'Older News'))
 	    page.meat = page.meat + [p]
-	else:
-	    page.gotop = '/'
 
 	page.write (filename)
 
@@ -220,7 +295,19 @@ def genStatus ():
     page.meat = page.meat + body
     page.write ('status.html')
 
+    #from docs.src.credits import credits
+    from credits import credits
+    page = Page (linkBoxItem='NEWS')
+    body = []
+    body.append (Heading (2, 'Credits'))
+    for area, names in credits:
+	body.append (Heading (3, area))
+	body.append (Paragraph (string.join (names, ', ')))
+    page.meat = page.meat + body
+    page.write ('credits.html')
+
 def genDocumentation ():
+
     page = Page (linkBoxItem='Documentation')
     # Put the old docs here
     page.meat = page.meat + [Text ('FIXME')]
@@ -266,8 +353,8 @@ class ThumbnailTable (TableLite):
 	    left = left.toHtml ()
 	    #print left[1]
 	    left[1].attr_dict['width'] = itemwidth
-	    print dir (left[1])
-	    print left[1].attr_dict
+	    #print dir (left[1])
+	    #print left[1].attr_dict
 	    if not right:
 		if n == 2:
 		    right = []
@@ -440,9 +527,10 @@ class Thumbnail (FileInfo):
 	    # Replace this code with code that calls convert.
 	    #thumbnail (tn, (64, 128))
 	    #tn.save (thumbnailPath, 'JPEG')
-	    os.system ('convert -geometry "64x128>" -quality 100 "%s" "%s"' % (
-		path, thumbnailPath
-	    ))
+	    if convert:
+		os.system ('%s -geometry "64x128>" -quality 100 "%s" "%s"' % (
+		    convert, path, thumbnailPath
+		))
 
 	infoFile = path[:pos] + '.txt'
 	if os.path.exists (infoFile):
