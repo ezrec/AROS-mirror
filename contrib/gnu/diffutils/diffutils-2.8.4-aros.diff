@@ -1,0 +1,37 @@
+diff -ur diffutils-2.8.4/config/config.sub diffutils-2.8.4-aros/config/config.sub
+--- diffutils-2.8.4/config/config.sub	2002-06-22 13:00:04.000000000 +0200
++++ diffutils-2.8.4-aros/config/config.sub	2004-08-26 17:27:04.000000000 +0200
+@@ -1214,6 +1214,9 @@
+         -*mint | -mint[0-9]* | -*MiNT | -MiNT[0-9]*)
+ 	        os=-mint
+ 		;;
++        -aros*)
++                os=-aros
++                ;;
+ 	-none)
+ 		;;
+ 	*)
+diff -ur diffutils-2.8.4/lib/fnmatch_.h diffutils-2.8.4-aros/lib/fnmatch_.h
+--- diffutils-2.8.4/lib/fnmatch_.h	2002-06-11 07:53:54.000000000 +0200
++++ diffutils-2.8.4-aros/lib/fnmatch_.h	2004-08-26 17:29:51.000000000 +0200
+@@ -35,6 +35,9 @@
+    non-ANSI C where `const' is problematical.  */
+ #endif /* C++ or ANSI C.  */
+ 
++#ifdef __AROS__
++# undef __const
++#endif
+ #ifndef __const
+ # define __const const
+ #endif
+diff -ur diffutils-2.8.4/lib/waitpid.c diffutils-2.8.4-aros/lib/waitpid.c
+--- diffutils-2.8.4/lib/waitpid.c	2002-03-01 08:46:31.000000000 +0100
++++ diffutils-2.8.4-aros/lib/waitpid.c	2004-08-26 17:27:04.000000000 +0200
+@@ -20,6 +20,7 @@
+ # include <config.h>
+ #endif
+ 
++#include <sys/types.h>
+ #include <errno.h>
+ #ifndef errno
+ extern int errno;
