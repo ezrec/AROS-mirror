@@ -1,4 +1,7 @@
 #include "aconfig.h"
+#include "version.h"
+
+const char VERsion[]="$VER: XaoS "XaoS_VERSION" ("__DATE__") $";
 
 /*includes */
 #include <ui.h>
@@ -45,6 +48,7 @@ ULONG	    	    	coltab[256];
 char	    	    	*buffer[2];
 int 	    	    	mousebuttons;
 int 	    	    	actbuffer = 0;
+static char 	    	*pubscreen = NULL;
 
 static int
 aros_set_color (int r, int g, int b, int init)
@@ -58,10 +62,12 @@ aros_set_color (int r, int g, int b, int init)
     return val++;
 }
 
+#if 0
 static void
 aros_setpalette (ui_palette pal, int start, int end)
 {
 }
+#endif
 
 static void
 aros_print (int x, int y, char *text)
@@ -299,7 +305,7 @@ aros_init ()
     
     topazfont = OpenFont(&topaz8);
     
-    scr = LockPubScreen(NULL);
+    scr = LockPubScreen(pubscreen);
     if (!scr)
     {
     	printf("Can't lock pub screen!\n");
@@ -396,16 +402,16 @@ aros_flush (void)
 
 static char *helptext[] =
 {
-  "AROS DRIVER VERSION 1.0                ",
+  "AROS DRIVER VERSION 1.1                ",
   "===========================            ",
-  "blah....                               ",
-  "                                       ",
+  "AROS team &                            ",
+  "Stefan Haubenthal                      ",
   "                                       ",
 };
 #define UGLYTEXTSIZE (sizeof(helptext)/sizeof(char *))
 static struct params params[] =
 {
-//  {"-flag", P_SWITCH, &variable, "Example flag..."},
+  {"-pubscreen", P_STRING, &pubscreen, "Public screen"},
   {NULL, 0, NULL, NULL}
 };
 
