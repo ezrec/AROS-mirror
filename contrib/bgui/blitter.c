@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/07/02 06:08:33  bergers
+ * Compiles library alright (except that I took stch_l & stcu_d out) and seems to create the right type of object. Test1 also compiles alright but crashes somewhere...
+ *
  * Revision 42.2  2000/05/15 19:27:00  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -210,11 +213,13 @@ __saveds void Mover(void)
    struct Screen     *s;
    struct bmDragPoint bmd;
 
+#if 0
    if (stch_l(((struct Process *)FindTask(NULL))->pr_Arguments, (long *)&bmo) == 0)
    {
       go = FALSE;
    }
    else
+#endif
    {
       go  = TRUE;
       obj = bmo->bmo_Object;

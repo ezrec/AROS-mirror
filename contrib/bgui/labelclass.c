@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/07/02 06:08:33  bergers
+ * Compiles library alright (except that I took stch_l & stcu_d out) and seems to create the right type of object. Test1 also compiles alright but crashes somewhere...
+ *
  * Revision 42.3  2000/05/29 15:42:49  stegerg
  * fixed some "comparison is always 1 due to limited range of data type"
  * errors
@@ -540,7 +543,7 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
       {
          *d++ = '\33';
          *d++ = c;
-         d += stcu_d(d, pen);
+//         d += stcu_d(d, pen);
       };
 
       *d++ = '\33';                                /* 2 */
