@@ -35,19 +35,19 @@ the existing commercial status of Directory Opus 5.
 
 #ifdef __SASC_60
 
-extern /* __chip */ USHORT
-	pageflip_data1[5],
-	pageflip_data2[3],
-	null_pointer[6];
+extern /* __chip */ UBYTE
+	pageflip_data1[10],
+	pageflip_data2[6],
+	null_pointer[12];
 
 extern /* __chip */ char beepwave[16];
 
 #else
 
-extern USHORT
-	/* __chip */ pageflip_data1[5],
-	/* __chip */ pageflip_data2[3],
-	/* __chip */ null_pointer[6];
+extern UBYTE
+	/* __chip */ pageflip_data1[10],
+	/* __chip */ pageflip_data2[6],
+	/* __chip */ null_pointer[12];
 
 extern char /* __chip */ beepwave[16];
 
