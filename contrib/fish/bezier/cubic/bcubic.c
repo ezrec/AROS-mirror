@@ -35,8 +35,11 @@
  #include <typedefs.h>
 */ 
 #include <aros/oldprograms.h>
+#include <intuition/imageclass.h>
 #include <intuition/intuition.h>
 #include <graphics/gfx.h>
+#include <graphics/gfxbase.h>
+
 typedef struct Window WIN;
 typedef struct NewWindow NW;
 typedef struct IntuiMessage IMESS;
@@ -116,8 +119,8 @@ char *av[];
      disablebreak();
     */ 
     exiterr(!init_cubic(), "");
-    init_gadgets(&Nw, &po);
     exiterr(!openlibs(INTUITION_LIB|GRAPHICS_LIB), "unable to open libs");
+    init_gadgets(&Nw, &po);
     exiterr(!(Win = (struct Window *)OpenWindow(&Nw)), "unable to open window");
     Rp = Win->RPort;
     SetAPen(Rp, 3);
@@ -199,13 +202,15 @@ char *av[];
 		char buf[32];
 		SStep = gy + 10;
 		TStep = SStep;
-		Move(Rp, 32, 16);
-		sprintf (buf, "Step: %-3ld", SStep);
-		Text(Rp, buf, strlen(buf));
 		precalculate();
 		clearwindow();
 		plotcurve();
 		plotcontrolpts();
+    	    	SetDrMd(Rp, JAM1);
+		Move(Rp, 32, Win->BorderTop + 1 + Rp->TxBaseline);
+		sprintf (buf, "Step: %-3ld", SStep);
+		Text(Rp, buf, strlen(buf));
+		
 	    }
 	}
 	if (mm && pt >= 0) {
@@ -552,7 +557,7 @@ clearwindow()
 #define G_XGLOB 2
 
 XPI Props[] = {
-    { AUTOKNOB|FREEVERT , 0, 0, 0x1FFF, 0x1FFF }
+    { AUTOKNOB|FREEVERT|PROPNEWLOOK|PROPBORDERLESS , 0, 0, 0x1FFF, 0x1FFF }
 };
 
 short pairs[] = { 0,0,10,0,10,10,0,10 };
@@ -562,7 +567,7 @@ struct Border Border[] = {
 };
 
 ITEXT Itext[] = {
-    { 0,1,JAM2,1,2,NULL,(ubyte *)"?",NULL }
+    { 0,1,JAM2,3,2,NULL,(ubyte *)"?",NULL }
 };
 
 IM Images[] = {
@@ -589,6 +594,50 @@ init_gadgets(nw, ppo)
 NW *nw;
 XPI **ppo;
 {
+    struct Screen *scr;
+    struct DrawInfo *dri;    
+    Object *sizeim;
+    WORD sizewidth  = 14;
+    WORD sizeheight = 14;
+    
+    scr = LockPubScreen(NULL);
+    if (scr)
+    {
+    	dri = GetScreenDrawInfo(scr);
+	if (dri)
+	{
+	    sizeim = NewObject(NULL, SYSICLASS, SYSIA_DrawInfo, (IPTR)dri,
+	    	    	    	    	        SYSIA_Which, SIZEIMAGE,
+						TAG_DONE);
+	
+	    if (sizeim)
+	    {
+	    	sizewidth = ((struct Image *)sizeim)->Width;
+	    	sizeheight = ((struct Image *)sizeim)->Height;
+	    	DisposeObject(sizeim);
+	    }
+	    
+	    Itext[0].DrawMode = JAM1;
+	    Itext[0].FrontPen = dri->dri_Pens[SHINEPEN];
+	    	    
+	    Itext[0].LeftEdge = (sizewidth - GfxBase->DefaultFont->tf_XSize) / 2;
+	    
+	    Gadgets[1].LeftEdge = -sizewidth + 1;
+	    Gadgets[1].TopEdge = scr->WBorTop + scr->Font->ta_YSize + 1;
+	    Gadgets[1].Width = sizewidth;
+	    Gadgets[1].Height = GfxBase->DefaultFont->tf_YSize + 2;
+    	    Gadgets[1].GadgetRender = NULL; /* no border */
+	    
+	    Gadgets[0].LeftEdge = -sizewidth + 1 + 3;			
+            Gadgets[0].TopEdge = scr->WBorTop + scr->Font->ta_YSize + 1 + Gadgets[1].Height + 2;
+	    Gadgets[0].Width  = sizewidth - 6;
+	    Gadgets[0].Height = -Gadgets[0].TopEdge - sizeheight - 2;
+	    	    
+	    FreeScreenDrawInfo(scr, dri);
+    	}
+	UnlockPubScreen(NULL, scr);
+    }
+    
     nw->FirstGadget = &Gadgets[0];
     *ppo = &Props[0];
 }

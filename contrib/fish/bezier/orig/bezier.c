@@ -20,7 +20,9 @@
 */ 
 #include <aros/oldprograms.h>
 #include <intuition/intuition.h>
+#include <intuition/imageclass.h>
 #include <graphics/gfx.h>
+#include <graphics/gfxbase.h>
 typedef struct Window WIN;
 typedef struct NewWindow NW;
 typedef struct IntuiMessage IMESS;
@@ -85,8 +87,8 @@ char *av[];
     short gy, gg = 0;
     XPI *po;
 
-    init_gadgets(&Nw, &po);
     exiterr(!openlibs(INTUITION_LIB|GRAPHICS_LIB), "unable to open libs");
+    init_gadgets(&Nw, &po);
     exiterr(!(Win = (struct Window *)OpenWindow(&Nw)), "unable to open window");
     Rp = Win->RPort;
     SetAPen(Rp, 1);
@@ -149,6 +151,7 @@ char *av[];
 		Step = gy + 1;
 	    sprintf(buf, "gran: %4ld/%ld", Step, ONE);
 	    drawcurve(ptarray);
+	    SetDrMd(Rp, JAM1);
 	    Move(Rp, Ux + 1, Uy + 16);
 	    Text(Rp, buf, strlen(buf));
 	}
@@ -283,7 +286,7 @@ register short a[4][2];
 #define G_XGLOB 2
 
 XPI Props[] = {
-    { AUTOKNOB|FREEVERT , 0, 0, 0x1FFF, 0x1FFF }
+    { AUTOKNOB|FREEVERT|PROPNEWLOOK|PROPBORDERLESS , 0, 0, 0x1FFF, 0x1FFF }
 };
 
 IM Images[] = {
@@ -305,6 +308,38 @@ init_gadgets(nw, ppo)
 NW *nw;
 XPI **ppo;
 {
+    struct Screen *scr;
+    struct DrawInfo *dri;    
+    Object *sizeim;
+    WORD sizewidth  = 14;
+    WORD sizeheight = 14;
+    
+    scr = LockPubScreen(NULL);
+    if (scr)
+    {
+    	dri = GetScreenDrawInfo(scr);
+	if (dri)
+	{
+	    sizeim = NewObject(NULL, SYSICLASS, SYSIA_DrawInfo, (IPTR)dri,
+	    	    	    	    	        SYSIA_Which, SIZEIMAGE,
+						TAG_DONE);
+	
+	    if (sizeim)
+	    {
+	    	sizewidth = ((struct Image *)sizeim)->Width;
+	    	sizeheight = ((struct Image *)sizeim)->Height;
+	    	DisposeObject(sizeim);
+	    }
+	    
+	    Gadgets[0].LeftEdge = -sizewidth + 1 + 3;			
+            Gadgets[0].TopEdge = scr->WBorTop + scr->Font->ta_YSize + 1 + 2;
+	    Gadgets[0].Width  = sizewidth - 6;
+	    Gadgets[0].Height = -Gadgets[0].TopEdge - sizeheight - 2;
+	    	    
+	    FreeScreenDrawInfo(scr, dri);
+    	}
+	UnlockPubScreen(NULL, scr);
+    }
     nw->FirstGadget = &Gadgets[0];
     *ppo = &Props[0];
 }
