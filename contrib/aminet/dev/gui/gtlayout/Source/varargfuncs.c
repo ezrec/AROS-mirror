@@ -114,3 +114,14 @@ LT_MenuControlTags(struct Window *Window,struct Menu *Menu, unsigned long tag1,.
 	LT_MenuControlTagList(Window,Menu,AROS_SLOWSTACKTAGS_ARG(tag1));
 }
 #undef AROS_TAGRETURNTYPE
+
+
+#define AROS_TAGRETURNTYPE struct Menu *
+struct Menu *
+LT_NewMenuTags(unsigned long tag1,...)
+{
+	AROS_SLOWSTACKTAGS_PRE(FirstTag)
+	retval = LT_NewMenuTagList(AROS_SLOWSTACKTAGS_ARG(tag1));
+	AROS_SLOWSTACKTAGS_POST
+}
+#undef AROS_TAGRETURNTYPE
