@@ -308,7 +308,7 @@ static const APTR InitTable[4] =
   (APTR) sizeof( struct AHIBase ),
   (APTR) &funcTable,
   0,
-  (APTR) AROS_SLIB_ENTRY( gw_initRoutine, Ahi )
+  (APTR) AROS_ASMSYMNAME( gw_initRoutine)
 };
 
 

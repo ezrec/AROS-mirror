@@ -28,11 +28,20 @@
 
 /* Library entry points (native) */
 
+#ifdef __AROS__
+#include <aros/libcall.h>
+#include <aros/asmcall.h>
+#endif
+
 #if !defined( AROS_SLIB_ENTRY )
 #define AROS_SLIB_ENTRY( f, l ) f
 #endif
 
-void AROS_SLIB_ENTRY( gw_initRoutine, Ahi )( void );
+#if !defined( AROS_ASMSYMNAME )
+#define AROS_ASMSYMNAME(f) f
+#endif
+
+void AROS_ASMSYMNAME(gw_initRoutine)( void );
 void AROS_SLIB_ENTRY( gw_DevExpunge, Ahi )( void );
 void AROS_SLIB_ENTRY( gw_DevOpen, Ahi )( void );
 void AROS_SLIB_ENTRY( gw_DevClose, Ahi )( void );

@@ -1037,6 +1037,7 @@ static struct
 
 #ifndef AROS_LIBCALL_H
 #   include <aros/libcall.h>
+#   include <aros/asmcall.h>
 #endif
 
 // Let the preprocessor re-arrange until I fix fd2inline and nuke
@@ -1053,15 +1054,17 @@ static struct
 
 /* gw_initRoutine ************************************************************/
 
-AROS_LH2( struct AHIBase*,
+AROS_UFH3( struct AHIBase*,
 	  gw_initRoutine,
-	  AROS_LHA( struct AHIBase*,  device,  D0 ),
-	  AROS_LHA( APTR,             seglist, A0 ),
-	  struct ExecBase*, sysbase, 0, Ahi )
+	  AROS_UFHA( struct AHIBase*,  device,  D0 ),
+	  AROS_UFHA( APTR,             seglist, A0 ),
+	  AROS_UFHA( struct ExecBase*, sysbase, A6 ) )
 {
-  AROS_LIBFUNC_INIT
+  AROS_USERFUNC_INIT
+
   return initRoutine( device, seglist, sysbase );
-  AROS_LIBFUNC_EXIT  
+  
+  AROS_USERFUNC_EXIT  
 }
 
 
