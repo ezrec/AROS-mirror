@@ -7,16 +7,25 @@ via cPickle) to create the inter-links.
 o Convert the C source files into hyperlinked HTML docs.
     - Generate lxr.conf from site.conf.
 
-- Add support for AutoDocs.
+o Add support for AutoDocs.
 
 - Think about a way to update the news section remotely (CGI ? Form ?
 EMail ?)
 
-- Create a list of contributors and publish it
-
 - Publish the changelogs on the web.
 
+- the mailto-link for e.g. cvs-passwords could look like this :
+
+    <a href="mailto:digulla@aros.org?subject=Access to AROS CVS
+    Server&body=Please add [my_login] [password]</a>
+
+- List of links:
+    - Homepages
+    - Less related
+
 DONE
+
+* Create a list of contributors and publish it
 
 * If a news item is very long, include only part of it in the news page
 and create a sub-page with the rest of the text.
