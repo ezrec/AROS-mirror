@@ -31,12 +31,13 @@
  * Author: Adam Dunkels <adam@sics.se>
  *         Sebastian Bauer <sebauer@t-online.de>
  *
- * $Id$
+ * $Id: sys_arch.c,v 1.1 2002/07/06 21:27:47 sebauer Exp $
  */
 
 #include <time.h>
 
 #include <exec/memory.h>
+#include <clib/alib_protos.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/timer.h>
@@ -44,15 +45,25 @@
 #include "lwip/sys.h"
 #include "lwip/def.h"
 
-struct sys_sem {
-  unsigned int c;
-  struct SignalSemaphore sem;
-};
-
 struct PtrMessage
 {
   struct Message msg;
   void *ptr;
+};
+
+struct TaskNode
+{
+  struct MinNode node;
+  struct Task *task;
+  LONG sem_signal;
+};
+
+struct sys_sem {
+  unsigned int c;
+  struct SignalSemaphore sem;
+
+  /* List of blocked tasks */
+  struct MinList queue; /* members are struct TaskNpde */
 };
 
 struct ThreadData
@@ -67,6 +78,7 @@ struct ThreadData
 
     /* For the semaphores */
     LONG sem_signal;
+    struct TaskNode task_node; /* the elementes of the queuelist in a semaphore */
 };
 
 
@@ -134,6 +146,15 @@ static struct timerequest *Timer_Send(struct ThreadData *data, ULONG millis)
     return time;
 }
 
+/*-----------------------------------------------------------------------------------*/
+
+static void Timer_Abort(struct ThreadData *data, struct timerequest *time)
+{
+    if (!CheckIO((struct IORequest*)time)) AbortIO((struct IORequest*)time);
+    WaitIO((struct IORequest*)time);
+    FreeVec(time);
+    data->TimerOutstanding--;
+}
 
 /*-----------------------------------------------------------------------------------*/
 
@@ -147,6 +168,8 @@ static int Thread_Init(struct ThreadData *data)
 	Timer_Cleanup(data);
 	return 0;
     }
+    data->task_node.task = FindTask(NULL);
+    data->task_node.sem_signal = data->sem_signal;
     return 1;
 }
 
@@ -215,21 +238,95 @@ sys_sem_t sys_sem_new(u8_t count)
 
     sem->c = count;
     InitSemaphore(&sem->sem);
+    NewList((struct List*)&sem->queue);
 
     return (sys_sem_t)sem;
 }
 /*-----------------------------------------------------------------------------------*/
 u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
 {
+    struct ThreadData *data = (struct ThreadData*)FindTask(NULL)->tc_UserData;
+    u16_t time = 1;
+
     kprintf("sys_arch_sem_wait(0x%lx,%ld)\n",sem,timeout);
-    sys_arch_block(timeout);
-    return 0;
+
+    ObtainSemaphore(&sem->sem);
+
+    while (sem->c <= 0)
+    {
+	if (timeout > 0)
+	{
+	    struct timeval val;
+	    struct Device *TimerBase = data->TimerReq->tr_node.io_Device;
+	    struct timerequest *req;
+	    GetSysTime(&val);
+
+	    if ((req = Timer_Send(data, timeout)))
+	    {
+	    	ULONG sigs;
+	    	int signaled = 0;
+
+		/* We add us now in the wait queue, so sys_sem_signal() knows which signal has to be set */
+		AddTail((struct List*)&sem->queue,(struct Node*)&data->task_node);
+
+		ReleaseSemaphore(&sem->sem);
+		sigs = Wait((1UL<<data->sem_signal)|(1UL<<data->TimerPort->mp_SigBit));
+		ObtainSemaphore(&sem->sem);
+
+                /* Now we remove us again */
+                Remove((struct Node*)&data->task_node);
+
+                if (sigs & (1UL<<data->sem_signal))
+		    signaled = 1;
+
+/*		if (sigs & (1UL<<data->TimerPort->mp_SigBit))
+		{
+		}
+*/
+		/* Should be safe even if the timer has been completed */
+		Timer_Abort(data,req);
+
+		if (signaled)
+		{
+		    /* Calulate the amount of time spent */
+		    struct timeval val2;
+		    GetSysTime(&val2);
+		    SubTime(&val2,&val);
+		    time = val2.tv_micro / 1000 + val2.tv_secs * 1000;
+		} else
+		{
+		    ReleaseSemaphore(&sem->sem);
+		    return 0;
+		}
+	    }
+	}   else
+	{
+	    Wait(1UL<<data->sem_signal);
+        }
+    }
+
+    sem->c--;
+    ReleaseSemaphore(&sem->sem);
+    return time;
 }
 /*-----------------------------------------------------------------------------------*/
 void sys_sem_signal(sys_sem_t sem)
 {
     kprintf("sys_sem_signal(0x%lx)\n",sem);
-    return;
+
+    ObtainSemaphore(&sem->sem);
+
+    sem->c++;
+    if(sem->c > 1)
+      sem->c = 1;
+
+    if (!IsListEmpty((struct List*)&sem->queue))
+    {
+	struct TaskNode *task_node = (struct TaskNode *)sem->queue.mlh_Head;
+	Signal(task_node->task,(1UL<<task_node->sem_signal));
+    }
+
+    ReleaseSemaphore(&sem->sem);
 }
 /*-----------------------------------------------------------------------------------*/
 void sys_sem_free(sys_sem_t sem)
