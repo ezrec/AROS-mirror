@@ -511,6 +511,9 @@ XmlPage (os.path.join (datadir, 'hidd-model.xml'),
 XmlPage (os.path.join (datadir, 'ideas.xml'),
     linkBoxItem='Random Ideas',
 ).write ('ideas.html')
+XmlPage (os.path.join (datadir, 'faq.xml'),
+    linkBoxItem='FAQ',
+).write ('faq.html')
 
 import htmlautodocs
 htmlautodocs.gen ()

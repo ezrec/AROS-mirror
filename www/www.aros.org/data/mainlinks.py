@@ -24,6 +24,7 @@ mainLinks = (
     ),
     ( Href ('documentation.html', 'Documentation'),
 	Href ('background.html', 'Background'),
+	Href ('faq.html', 'FAQ'),
 	Href ('cvs.html', 'CVS'),
 	Href ('mmake.html', 'MetaMake'),
 	Href ('hidd-intro.html', 'HIDD Intro'),
