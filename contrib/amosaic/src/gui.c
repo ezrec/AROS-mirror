@@ -283,8 +283,12 @@ static XmxCallback (anchor_cb)
     {
       int answer = XmxModalYesOrNo
 	(win->base, app_context,
-	 "BEWARE: Despite our best and most strenuous intentions to the contrary,\nabsolutely anything could be on the other end of this hyperlink,\nincluding -- quite possibly -- pornography, or even nudity.\n\nNCSA disclaims all responsibility regardi
-g your emotional and mental health\nand specifically all responsibility for effects of viewing salacious material via Mosaic.\n\nWith that in mind, are you *sure* you want to follow this hyperlink???",
+	 "BEWARE: Despite our best and most strenuous intentions to the contrary,\n"
+         "absolutely anything could be on the other end of this hyperlink,\n"
+         "including -- quite possibly -- pornography, or even nudity.\n\n"
+         "NCSA disclaims all responsibility regarding your emotional and mental health\n"
+         "and specifically all responsibility for effects of viewing salacious material via Mosaic.\n\n"
+         "With that in mind, are you *sure* you want to follow this hyperlink???",
 	 "Yup, I'm sure, really.", "Ack, no!  Get me outta here.");
       if (!answer)
 	return;

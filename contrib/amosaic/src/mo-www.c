@@ -466,7 +466,7 @@ void HText_appendCharacter (HText *text, char ch)
   return;
 }
 
-void HText_appendText (HText *text, char *str)
+void HText_appendText (HText *text, CONST char *str)
 {
   int len;
 
@@ -486,7 +486,7 @@ void HText_appendText (HText *text, char *str)
   return;
 }
 
-void HText_appendBlock (HText *text, char *data, int len)
+void HText_appendBlock (HText *text, CONST char *data, int len)
 {
   if (!data)
     return;
