@@ -1,3 +1,4 @@
+#include <string.h>
 #define HIGHSCOREFILE "SYS:Prefs/Presets/Mine.High"
 
 void open_hsfile()

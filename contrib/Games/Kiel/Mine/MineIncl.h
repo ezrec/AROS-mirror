@@ -1,4 +1,5 @@
 #include "../prec.c"
+#include <string.h>
 
 extern struct ExecBase *SysBase;
 struct IntuitionBase *IntuitionBase;
