@@ -38,6 +38,7 @@ the existing commercial status of Directory Opus 5.
 #include <proto/diskfont.h>
 #include <proto/icon.h>
 #include <proto/layers.h>
+#include <proto/workbench.h>
 #include <proto/arossupport.h>
 
 #include <proto/dopus.h>

@@ -89,9 +89,6 @@ foreverloop:
 			ActivateWindow(Window);
 			while ((apmsg=(struct AppMessage *)GetMsg(appmsg_port))) {
 			
-#warning We do not handle AppMessages
-kprintf("doidcmp(): WE DO NOT HANDLE AppMessage MESSAGES\n");
-#if 0
 				if (apmsg->am_Type==MTYPE_APPWINDOW && apmsg->am_ID==APPWINID) {
 					for (a=0;a<apmsg->am_NumArgs;a++) {
 						if (apmsg->am_ArgList[a].wa_Lock) {
@@ -143,7 +140,6 @@ kprintf("doidcmp(): WE DO NOT HANDLE AppMessage MESSAGES\n");
 					}
 					func_external_file[0]=0;
 				}
-#endif				
 				ReplyMsg((struct Message *)apmsg);
 			}
 		}

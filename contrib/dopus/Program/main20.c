@@ -223,11 +223,7 @@ void closedisplay()
 		if (Window) {
 			if (Window->MenuStrip) ClearMenuStrip(Window);
 			if (WorkbenchBase && dopus_appwindow) {
-#warning Cannot remove AppWindow because of missing func
-kprintf("closedisplay(): CANNOT REMOVE APPWINDOW BECAUSE OF MISSING FUNCTIONALLITY\n");			
-#if 0
 				RemoveAppWindow(dopus_appwindow);
-#endif
 				dopus_appwindow=NULL;
 			}
 			free_colour_table();

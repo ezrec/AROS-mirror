@@ -1473,14 +1473,6 @@ void open_screen()
 
 					cm=wbscreen->ViewPort.ColorMap;
 					num=1<<config->scrdepth;
-					
-#warning Need unimplemented missing funcs
-kprintf("CANNOT GET DISPLAY INFO BECAUSE OF UNIMPLEMENTED FUNCS\n");
-
-/* AROS: This line will make the iftest below #endif fail */
-pen = 0;
-#if 0			
-					
 
 					for (pen=0;pen<num;pen++) {
 						screen_pens[pen].red=config->new_palette[(pen*3)];
@@ -1494,7 +1486,6 @@ pen = 0;
 								PEN_EXCLUSIVE))==-1)) break;
 						screen_pens[pen].alloc=1;
 					}
-#endif					
 
 					if (pen<num) free_colour_table(cm);
 					else onworkbench=1;

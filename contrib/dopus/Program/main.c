@@ -962,13 +962,9 @@ tryfonts:
 		}
 
 		if (status_publicscreen) {
-#warning Function AddAppWindowA not implemented yet
-		
 			if (WorkbenchBase && !dopus_appwindow)
 				dopus_appwindow=
-				/* AROS: not implemented
-				    AddAppWindowA(APPWINID,0,Window,appmsg_port,NULL); */
-				    NULL;
+				    AddAppWindowA(APPWINID,0,Window,appmsg_port,NULL);
 
 			SetWindowTitles(Window,(char *)-1,str_arexx_portname);
 			screen_gadgets[SCRGAD_LEFTPARENT].Width=Window->BorderLeft+2;

@@ -109,12 +109,6 @@ static struct DiskObject iconify_appicon={
 void iconify(louise,buttons,banknum)
 int louise,buttons,banknum;
 {
-
-#warning  AppIcon stuff not implemented yet
-
-kprintf("iconify() NOT IMPLEMENTED BECAUSE AOF MISSING APPICON FUNCS\n");
-#if 0
-
 	ULONG class;
 	USHORT code,gadgetid;
 	struct DOpusDateTime dt;
@@ -283,10 +277,8 @@ kprintf("iconify() NOT IMPLEMENTED BECAUSE AOF MISSING APPICON FUNCS\n");
 		if (!(Window=(struct Window *) OpenWindow(&icon_win))) goto uniconify;
 		main_rp=Window->RPort;
 
-#warning Function AddAppWindowA not implemented yet
 		if (WorkbenchBase) dopus_appwindow=
-		    /* AROS: Not implemented AddAppWindowA(APPWINID,0,Window,appmsg_port,NULL);
-		    */ NULL;
+		    AddAppWindowA(APPWINID,0,Window,appmsg_port,NULL);
 
 		if (buttons) {
 			get_colour_table();
@@ -661,7 +653,6 @@ uniconify:
 			}
 		}
 	}
-#endif
 }
 
 void remiclock()
@@ -724,10 +715,6 @@ int buttons;
 
 void cleanupiconify()
 {
-#warning  AppIcon stuff not implemented yet
-
-kprintf("cleanupiconify() NOT IMPLEMENTED BECAUSE AOF MISSING APPICON FUNCS\n");
-#if 0
 	if (icon_type&ICON_APPICON) {
 		RemoveAppIcon(appicon);
 		appicon=NULL;
@@ -759,5 +746,4 @@ kprintf("cleanupiconify() NOT IMPLEMENTED BECAUSE AOF MISSING APPICON FUNCS\n");
 		}
 	}
 	LFreeRemember(&icon_key);
-#endif
 }

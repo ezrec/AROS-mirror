@@ -1302,10 +1302,6 @@ int type;
 {
 	if (WorkbenchBase && appport) {
 	
-#warning Functions need implementation
-/* AROS: Not implemented yet */
-	kprintf("CANNOT ADD APPICON BECAUSE OF UNIMPLEMENTED FNCTIONS\n");
-#if 0	
 		if (Screen && type) {
 			appobject=
 				(void *)AddAppIconA(MY_APPOBJECT,0,
@@ -1318,7 +1314,6 @@ int type;
 				(void *)AddAppWindowA(MY_APPOBJECT,0,
 					Window,appport,NULL);
 		}
-#endif		
 	}
 }
 
@@ -1326,15 +1321,10 @@ void rem_appobject(type)
 int type;
 {
 	if (WorkbenchBase && appobject) {
-#warning Functions need implementation
-/* AROS: Not implemented yet */
-	kprintf("CANNOT REMOVE APPICON BECAUSE OF UNIMPLEMENTED FNCTIONS\n");
-#if 0	
 		if (Screen && type) RemoveAppIcon(appobject);
 		else if (!Screen) RemoveAppWindow(appobject);
 		while ((appmsg=(struct AppMessage *)GetMsg(appport)))
 			ReplyMsg((struct Message *)appmsg);
-#endif	
 	}
 	appobject=NULL;
 }
