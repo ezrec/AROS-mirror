@@ -24,6 +24,7 @@
 
 #include "netif/tcpdump.h"
 #include "netif/loopif.h"
+#include "netif/tapif.h"
 
 
 #include "lwip/sockets.h"
@@ -207,43 +208,18 @@ void main(void)
     IP4_ADDR(&gw, 127,0,0,1);
     IP4_ADDR(&ipaddr, 127,0,0,1);
     IP4_ADDR(&netmask, 255,0,0,0);
-  
+
     netif_add(&ipaddr, &netmask, &gw, NULL, loopif_init, tcpip_input);
     printf("Added loopback interface 127.0.0.1\n");
 
-#if 0
-    {
-      struct icmp_echo_hdr echo;
-      struct pbuf *p;
-      int s = lwip_socket(0,SOCK_RAW,1);
-      struct sockaddr_in to;
-      struct sockaddr_in from;
-      int buf[100];
-      int from_len = sizeof(from);
+#ifdef __AROS__
+    IP4_ADDR(&gw, 192,168,10,1);
+    IP4_ADDR(&ipaddr, 192,168,10,2);
+    IP4_ADDR(&netmask, 255,255,255,0);
 
-      to.sin_len =  sizeof(to);
-      to.sin_family = AF_INET;
-      to.sin_port = 1; /* protocol */
-      to.sin_addr.s_addr = (193 << 24)|(168 << 16)|(6<<8)|100;
-      memset(&to.sin_zero,0,sizeof(to));
-
-      ICMPH_TYPE_SET(&echo, ICMP_ECHO);
-      ICMPH_CODE_SET(&echo,0);
-      echo.chksum = 0;
-      echo.seqno = 100;
-      echo.id = 100;			/* ID */
-
-      lwip_sendto(s,&echo,sizeof(echo),0,&to,sizeof(to));
-      printf("sent some stuff\n");
-
-      lwip_recvfrom(s,buf,sizeof(buf),0,&from,&from_len);
-      printf("received something from 0x%lx: 0x%x 0x%x 0x%x 0x%x 0x%x\n",from.sin_addr.s_addr,buf[0],buf[1],buf[2],buf[3],buf[4]);
-
-//      lwip_recvfrom(s,buf,sizeof(buf),0,&from,&from_len);
-//      printf("received something from 0x%lx: 0x%x 0x%x 0x%x 0x%x 0x%x\n",from.sin_addr.s_addr,buf[0],buf[1],buf[2],buf[3],buf[4]);
-    }
+    netif_set_default(netif_add(&ipaddr, &netmask, &gw, NULL, tapif_init, tcpip_input));
 #endif
-  } 
+  }
 
   start();
 
