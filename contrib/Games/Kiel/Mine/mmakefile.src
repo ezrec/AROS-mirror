@@ -33,5 +33,5 @@ clean-games :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c ../prec.c %File.h %Game.h %Incl.h
-	@$(ECHO) "Compiling $(@F)..."
-	@$(CC) $(CFLAGS) $(INCL) -c $< -o $@
+	%compile_q
+
