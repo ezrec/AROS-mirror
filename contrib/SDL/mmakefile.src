@@ -2,7 +2,7 @@
 #
 include $(TOP)/config/make.cfg
 
-##MM- linklibs : linklibs-SDL
+#MM- linklibs : linklibs-SDL
 
 #MM linklibs-SDL : linklibs-SDL-config includes
 
