@@ -108,5 +108,6 @@ ctagoe:acQNeUaH1XHuo:Christopher Tagoe:ct299@doc.ic.ac.uk:
 MastaTabs:cbI/bnAM7JzXs:Tobias Seiler:tseiler@aball.de:
 society:aau2nJ37.MZ8k:Dennis Paulisch:society@amigascne.org:
 lbischoff:bafNpDjkG3L4c:Lars Bischoff:bischoff@uni-bremen.de:
+henrik:admpLHXlpTk7s:Henrik Berglund:adb94hbd@mds.mdh.se:
 
 anon:bbrG5BSjRBYPU:Anonymous Access::
