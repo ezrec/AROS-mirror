@@ -1,6 +1,6 @@
 #   $Id$
 #
-#   Makefile to make FileMaster.
+#   Makefile to make lha.
 
 include $(TOP)/config/make.cfg
 
@@ -8,7 +8,7 @@ FILES := append extract larc lhext maketree slide crcio header lhadd\
 lhlist patmatch stat dhuf huf lharc maketbl shuf util
 
 EXEDIR := $(CONTRIBDIR)/aminet
-EXE := $(EXEDIR)/filemaster
+EXE := $(EXEDIR)/lha
 
 USE_AROSLIB := yes
 USE_CLIB_SHARED := yes
