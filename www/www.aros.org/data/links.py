@@ -161,8 +161,8 @@ lessRelated = (
 	),
     ),
     Link ('http://www.amiga.com/', 'Amiga, Inc.'),
-    Link ('http://www.geocities.com/SiliconValley/Bridge/5737/Main/oop4a_e.html',
-	'OOP4A - "Object Oriented Programming for All". Every none oop language'
+    Link ('http://www.geocities.com/SiliconValley/Bridge/5737/Main/oop4a_e.html', 'OOP4A',
+	'"Object Oriented Programming for All". Every none oop language'
 	' which offers support for Amiga Shared Libraries, is now able to'
 	' use objects and can be used to produce new classes.'),
     Link ('http://www.ninemoons.com/GG/'
@@ -203,6 +203,11 @@ lessRelated = (
     Link ('http://www.amigaemulation.de/', 'Amiga Emulation.de',
 	'A site with links and infos about Amiga emulators.'
     ),
+    Link ('http://www.universoamiga.cjb.net/',
+	'Universo Amiga',
+	'South American Amiga site.'
+    ),
+	
 )
 
 downloadLinks = (
