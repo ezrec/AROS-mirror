@@ -753,7 +753,7 @@ def processPartialPages ():
         if pp.url == 'index.html':
   	    index_meta = \
                 meta=Meta(equiv = 'refresh', content = '3; http://aros.sourceforge.net/')
-            print index_meta
+            
 	    page = HtmlPage (linkBoxItem=pp.key, meta=index_meta)
 	else:
             page = HtmlPage (linkBoxItem=pp.key)
