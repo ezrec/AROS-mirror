@@ -1,0 +1,15 @@
+# $Id$
+#
+# Makefile to contributed development tools.
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-development
+
+contrib-development : setup
+
+#MM
+setup ::
+	%mkdirs_q $(CONTRIBDIR)/Development
+	
+%common
