@@ -3,3 +3,6 @@
 *.mcc
 *.mcc.elf
 SCOPTIONS
+*.info
+*.bak
+*.mdbi
