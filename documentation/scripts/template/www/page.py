@@ -24,7 +24,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
         _N['documentation'],
         Tree \
         ( [
-            _N['users'],
+            A( _N['users'], href='%(BASE)sdocumentation/users/index.php' ),
             Tree \
             ( [
                 A( _N['installation'], href='%(BASE)sdocumentation/users/installation.php' ),
@@ -33,7 +33,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 #_N['ports'],
                 A( _N['links'], href='%(BASE)sdocumentation/users/links.php' )
             ] ),
-            _N['developers'],
+            A( _N['developers'], href='%(BASE)sdocumentation/developers/index.php' ),
             Tree \
             ( [
                 A( _N['contribute'], href='%(BASE)sdocumentation/developers/contribute.php' ),
