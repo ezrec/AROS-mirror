@@ -1,0 +1,111 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(CONTRIBDIR)/povray
+
+FILES = aros     \
+	atmosph  \
+	bbox     \
+	bcyl     \
+	bezier   \
+	blob     \
+	boxes    \
+	bsphere  \
+	camera   \
+	chi2     \
+	colour   \
+	cones    \
+	csg      \
+	discs    \
+	express  \
+	fractal  \
+	gif      \
+	gifdecod \
+	hcmplx   \
+	hfield   \
+	iff      \
+	image    \
+	interior \
+	lathe    \
+	lbuffer  \
+	lighting \
+	matrices \
+	media    \
+	mem      \
+	mesh     \
+	normal   \
+	objects  \
+	octree   \
+	optin    \
+	optout   \
+	parse    \
+	parstxtr \
+	pattern  \
+	pgm      \
+	pigment  \
+	planes   \
+	png_pov  \
+	point    \
+	poly     \
+	polygon  \
+	polysolv \
+	povray   \
+	ppm      \
+	prism    \
+	quadrics \
+	quatern  \
+	rad_data \
+	radiosit \
+	ray      \
+	render   \
+	sor      \
+	spheres  \
+	super    \
+	targa    \
+	texture  \
+	tokenize \
+	torus    \
+	triangle \
+	truetype \
+	txttest  \
+	userio   \
+	vbuffer  \
+	vlbuffer \
+	warps
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+DEPS := $(foreach f, $(FILES), $(OBJDIR)/$(f).d)
+
+LIBS := $(LIBS) -lpng -larosz -larosc
+
+EXE := $(DESTDIR)/povray
+
+.PHONY : all clean
+
+#MM povray : setup-povray
+povray : $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-povray :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	%link_q from=$(OBJS)
+
+$(OBJDIR)/%.o : %.c
+%compile_q
+
+$(OBJDIR)/%.d : %.c
+%mkdepend_q 
+
+%include_deps
+
+#MM
+clean-aminet :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
