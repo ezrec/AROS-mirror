@@ -93,7 +93,7 @@ IPTR EmulatorWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         WindowContents, (IPTR) VGroup,
             InnerSpacing(0, 0),
             GroupSpacing(0),
-            
+#if 0           
             Child, (IPTR) ToolbarObject, End,
             Child, (IPTR) pageGroup = PageGroup,
                 InnerSpacing(0, 0),
@@ -103,7 +103,11 @@ IPTR EmulatorWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                 Child, (IPTR) VGroup,
                     InnerSpacing(0, 0),
                     GroupSpacing(0),
-                    Child, (IPTR) uaedisplay = UAEDisplayObject, End,
+#endif		    
+                    Child, (IPTR) uaedisplay = UAEDisplayObject,
+		        MUIA_UAEDisplay_Width, 1, 
+		    End,
+#if 0		    
                     Child, (IPTR) HGroup,
                         ButtonFrame,
                         MUIA_Background, MUII_GroupBack,
@@ -128,6 +132,8 @@ IPTR EmulatorWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                     End,
                 End,
             End,
+#endif	    
+            MUIA_Window_DefaultObject, (IPTR)uaedisplay,
         End,
 
 	TAG_MORE, (IPTR)message->ops_AttrList
