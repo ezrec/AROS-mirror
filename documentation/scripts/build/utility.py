@@ -1,4 +1,4 @@
-import os
+import os, shutil
 from build.settings import *
 
 def newer( src, dst ):
@@ -31,6 +31,13 @@ def ignore( path ):
     else:
         return False
 
+def makedir( path ):
+    if not os.path.exists( path ):
+        os.makedirs( path )
+
+def copy( src, dst ):
+    if newer( src, dst ):
+        shutil.copy( src, dst )
 
 def reportSkipping( message ):
     print '\033[1m\033[32m*\033[30m', message, '\033[0m'
