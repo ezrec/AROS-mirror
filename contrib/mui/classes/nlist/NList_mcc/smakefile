@@ -116,9 +116,9 @@ uninstall:
 	@delete >nil: MUI:Libs/MUI/$(CLASS)
 
 clean:
-	@echo "*e[32m*e[1m$(CLASS): *e[22m*e[33mDeleting trash of $(CLASS)...*e[0m"
-	@echo "Trash" >Trash.o
-	@echo "Trash" >$(OBJECTS)Trash.o
+#	@echo "*e[32m*e[1m$(CLASS): *e[22m*e[33mDeleting trash of $(CLASS)...*e[0m"
+#	@echo "Trash" >Trash.o
+#	@echo "Trash" >$(OBJECTS)Trash.o
 #	@list pat (#?.(o|oPPC|obj|lnk|mcc|mcp|elf)) lformat "delete %p%n" >pipe:$(PROJECT)_delete
 #	@list pat ($(OBJECTS)#?.(o|oPPC|obj|lnk|mcc|mcp|elf)) lformat "delete %p%n" >>pipe:$(PROJECT)_delete
 #	@execute pipe:$(PROJECT)_delete
@@ -132,6 +132,7 @@ clean:
 zune: nlist.mcc.lib
 
 nlist.mcc.lib: NList_mcc.o NList_mcc0.o NList_mcc1.o NList_mcc2.o NList_mcc3.o NList_mcc4.o NList_mcc5.o NList_mcc6.o move.o cbio.o NList_func.o NList_func2.o NList_func3.o NList_func4.o NList_grp.o NList_img.o NList_img2.o
+  -delete nlist.mcc.lib
   oml nlist.mcc.lib A NList_mcc.o NList_mcc0.o NList_mcc1.o NList_mcc2.o NList_mcc3.o NList_mcc4.o NList_mcc5.o NList_mcc6.o move.o cbio.o NList_func.o NList_func2.o NList_func3.o NList_func4.o NList_grp.o NList_img.o NList_img2.o
 
 NList_mcc.o: NList_mcc.c

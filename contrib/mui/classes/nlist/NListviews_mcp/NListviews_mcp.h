@@ -9,16 +9,22 @@
 #ifndef MUI_NLISTVIEWS_MCP_H
 #define MUI_NLISTVIEWS_MCP_H
 
+
+#ifdef USE_ZUNE
+#include <mui.h>
+#else
 #ifndef LIBRARIES_MUI_H
 #include <libraries/mui.h>
 #endif
-
-#ifndef MUI_NListview_MCC_H
-#include <mui/NListview_mcc.h>
 #endif
 
-#include <devices/inputevent.h>
+//#ifndef MUI_NListview_MCC_H
+//#include <mui/NListview_mcc.h>
+//#endif
 
+#ifndef DEVICES_INPUTEVENT_H
+#include <devices/inputevent.h>
+#endif
 
 
 #define MUIC_NListviews_mcp "NListviews.mcp"

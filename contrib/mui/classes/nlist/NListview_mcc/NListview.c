@@ -601,7 +601,7 @@ ULONG _Dispatcher_gate(void)
   Msg msg = REG_A1;
   Object *obj = REG_A2;
 #else
-ULONG ASM SAVEDS _Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) Msg msg GNUCREG(a1) )
+ULONG ASM SAVEDS NListview_Dispatcher( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) Msg msg GNUCREG(a1) )
 {
 #endif
 
