@@ -343,6 +343,8 @@ def buildWWW():
       ], 
       toolpath 
     )
+    
+    os.system( 'chmod -R go+r %s' % DSTROOT )
 
 
 def buildHTML():
@@ -351,6 +353,8 @@ def buildHTML():
     recurse( processHTML )
 
     copy( 'targets/html/aros.css', DSTROOT )
+    
+    os.system( 'chmod -R go+r %s' % DSTROOT )
 
 
 targets = \
