@@ -3,6 +3,9 @@
  *
  * HISTORY
  * $Log$
+ * Revision 1.2  2001/12/25 22:36:15  henrik
+ * STUNREACH was not included
+ *
  * Revision 1.1  2001/12/25 22:28:13  henrik
  * amitcp
  *
@@ -144,10 +147,12 @@
 #define	ENAMETOOLONG	63		/* File name too long */
 
 /* should be rearranged */
-#ifndef _POSIX_SOURCE
+
+/* #ifndef _POSIX_SOURCE */
+
 #define	EHOSTDOWN	64		/* Host is down */
 #define	EHOSTUNREACH	65		/* No route to host */
-#endif /* _POSIX_SOURCE */
+/*#endif*/ /* _POSIX_SOURCE */
 #define	ENOTEMPTY	66		/* Directory not empty */
 
 /* quotas & mush */
