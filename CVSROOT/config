@@ -1,0 +1,2 @@
+# Specify the directory of the RCS binaries (like global option -b)
+#RCSBIN=/usr/local/bin
