@@ -8,4 +8,6 @@ FILES := Wumpus
     progname=Wumpus targetdir=$(CONTRIBDIR)/Games/Kiel \
     files=$(FILES) uselibs="arossupport amiga arosc m"
 
+#MM games-kiel-wumpus : games-kiel-wumpus-catalogs
+
 %common

@@ -41,7 +41,7 @@ static const char version[] = "$VER: Wumpus 0.2 (16.09.1997)\n";
 #define LITTLE 1
 #define MUCH 2
 
-#define MPAUSE 30
+#define MPAUSE 50
 
 struct cavity
 {
@@ -381,7 +381,7 @@ struct Border SharedBorders1[] = {
   {0,0,1,0,JAM1,5,&SharedBordersPairs14[0],NULL} };
 
 struct IntuiText shout_text = {
-  1,0,JAM1,18,8,NULL,(UBYTE *)"Shout!",NULL };
+  1,0,JAM1,18,8,NULL,NULL,NULL };
 
 #define shout_ID    4
 
@@ -394,7 +394,7 @@ struct Gadget shout_gad = {
   &shout_text,0L,NULL,shout_ID,NULL };
 
 struct IntuiText spear_text = {
-  1,0,JAM1,27,8,NULL,(UBYTE *)"Throw spear",NULL };
+  1,0,JAM1,27,8,NULL,NULL,NULL };
 
 #define spear_ID    3
 
@@ -547,10 +547,10 @@ StopMsg();
   for(a=0;a<3;a++)
     sprintf(tunnel_text[a].IText,"%2d",cave[nr-1].tunnel[a]);
   RefreshGadgets(FIRSTGADGETH,Window,NULL);
-  sprintf(outtext,"Cave %2d",nr);
+  sprintf(outtext,_(MSG_CAVE),nr);
   write_text(100,50,outtext,1);
-  draw_rect(238,239,450,257);
-  draw_rect(447,255,241,241);
+  draw_rect(238,239,450,259);
+  draw_rect(447,257,241,241);
   stinks=NONE;
   if(wumpus!=nr-1)
   {
@@ -566,11 +566,11 @@ StopMsg();
     }
     switch(stinks)
     {
-      case NONE   : write_text(245,250,"                         ",0);
+      case NONE   : write_text(245,252,_(MSG_NOWT),0);
                     break;
-      case LITTLE : write_text(245,250,"It's stinking...         ",3);
+      case LITTLE : write_text(245,252,_(MSG_STINKING),3);
                     break;
-      case MUCH   : write_text(245,250,"It's stinking terribly!!!",2);
+      case MUCH   : write_text(245,252,_(MSG_STINKINGTERRIBLE),2);
                     break;
     }
   }
@@ -583,7 +583,7 @@ BYTE nr;
 BOOL cancel=FALSE,ist=TRUE;
 struct Gadget *gad;
 
-  write_text(245,250,"Throw in which cave?     ",1);
+  write_text(245,252,_(MSG_THROUGHINTO),1);
   while(!cancel)
   {
     WaitPort(Window->UserPort);
@@ -615,14 +615,14 @@ struct Gadget *gad;
   }
   if(!ist)
   {
-    write_text(245,250,"You missed Wumpus...     ",1);
+    write_text(245,252,_(MSG_MISSED),1);
     Delay(MPAUSE);
   }
   spears--;
   if(spears==0)
   {
 StopMsg();
-    write_text(245,250,"That was your last spear.",1);
+    write_text(245,252,_(MSG_LAST),1);
     end_hunt=TRUE;
     Delay(MPAUSE);
 ContMsg();
@@ -641,9 +641,9 @@ BOOL is_abyss=FALSE;
       if(abyss[i]==cave[nr-1].tunnel[j])
         is_abyss=TRUE;
   if(is_abyss)
-    write_text(245,250,"Caution, Abyss !!!       ",2);
+    write_text(245,252,_(MSG_ABYSS),2);
   else
-    write_text(245,250,"I don't hear anything.   ",2);
+    write_text(245,252,_(MSG_SILENT),2);
 
 }
 
@@ -699,7 +699,7 @@ StopMsg();
             if(displace)
             {
               test=TRUE;
-              write_text(245,250,"You have been displaced !",2);
+              write_text(245,252,_(MSG_DISPLACED),2);
               Delay(MPAUSE);
               cave_number=random(20);
               draw_cave(cave_number);
@@ -749,15 +749,15 @@ ContMsg();
 StopMsg();
     if(eaten_up)
     {
-      write_text(245,250,"You have been eaten up...",2);
+      write_text(245,252,_(MSG_EATEN),2);
     }
     if(fallen)
     {
-      write_text(245,250,"You've fallen into Abyss!",2);
+      write_text(245,252,_(MSG_FALLEN),2);
     }
     if(killed)
     {
-      write_text(245,250,"You've shot Wumpus!!!    ",1);
+      write_text(245,252,_(MSG_SHOT),1);
     }
     Delay(MPAUSE);
     RemoveGList(Window,FIRSTGADGETH,5);
@@ -769,12 +769,16 @@ int main()
 {
   srand((unsigned)time(NULL));
   open_lib();
+  Locale_Initialize();
+  shout_text.IText = _(MSG_SHOUT);
+  spear_text.IText = _(MSG_THROW);
   open_window(&new_window);
 
   while(!end_game)
     game();
 
   close_window();
+  Locale_Deinitialize();
   close_lib();
   return(0);
 }

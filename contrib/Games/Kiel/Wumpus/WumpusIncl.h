@@ -1,5 +1,11 @@
 #include "../prec.c"
 
+#define CATALOG_NAME "contrib/Games/Kiel/Wumpus.catalog"
+#define CATALOG_VERSION 0
+#define CATCOMP_ARRAY
+#include "strings.h"
+#include "../locale.c"
+
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
 struct Window *Window;

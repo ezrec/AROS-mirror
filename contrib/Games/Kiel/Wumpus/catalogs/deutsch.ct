@@ -1,0 +1,49 @@
+## version $VER: Wumpus.catalog 1.0 (14.9.2003)
+## language deutsch
+## codeset 0
+;
+MSG_SHOUT
+Rufen!
+;
+MSG_THROW
+Speer werfen
+;
+MSG_CAVE
+Höhle %2d
+;
+MSG_NOWT
+                         
+;
+MSG_STINKING
+Es stinkt...             
+;
+MSG_STINKINGTERRIBLE
+Es stinkt fürchterlich!!!
+;
+MSG_THROUGHINTO
+In welche Höhle werfen?  
+;
+MSG_MISSED
+Vorbei geworfen...       
+;
+MSG_LAST
+Das war der letzte Speer!
+;
+MSG_ABYSS
+Vorsicht Abgrund!!!      
+;
+MSG_SILENT
+Ich höre nichts.         
+;
+MSG_DISPLACED
+Du wurdest versetzt!     
+;
+MSG_EATEN
+Du wurdest gefressen...  
+;
+MSG_FALLEN
+In den Abgrund gefallen! 
+;
+MSG_SHOT
+Du hast Wumpus getroffen!
+;

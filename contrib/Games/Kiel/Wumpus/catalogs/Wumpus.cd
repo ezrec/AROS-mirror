@@ -1,0 +1,47 @@
+;
+;
+MSG_SHOUT (//)
+Shout!
+;
+MSG_THROW (//)
+Throw spear
+;
+MSG_CAVE (//)
+Cave %2d
+;
+MSG_NOWT (//)
+                         
+;
+MSG_STINKING (//)
+It's stinking...         
+;
+MSG_STINKINGTERRIBLE (//)
+It's stinking terribly!!!
+;
+MSG_THROUGHINTO (//)
+Throw in which cave?     
+;
+MSG_MISSED (//)
+You missed Wumpus...     
+;
+MSG_LAST (//)
+That was your last spear.
+;
+MSG_ABYSS (//)
+Caution, Abyss !!!       
+;
+MSG_SILENT (//)
+I don't hear anything.   
+;
+MSG_DISPLACED (//)
+You have been displaced !
+;
+MSG_EATEN (//)
+You have been eaten up...
+;
+MSG_FALLEN (//)
+You've fallen into Abyss!
+;
+MSG_SHOT (//)
+You've shot Wumpus!!!    
+;
