@@ -525,7 +525,14 @@ if(mausx<5&&mausy<5)Fehler=loesen();
                             }
                             else
                             {
-                              SetAPen(rp,0);
+                              if(Spielfeld[oldx][oldy]==MARKE)
+                              {
+                                SetAPen(rp,3);
+                              }
+                              else
+                              {
+                                SetAPen(rp,0);
+                              }
                               RectFill(rp,(oldx-1)*box_width+2+left,(oldy-1)*box_width+2+oben,oldx*box_width-2+left,oldy*box_width-2+oben);
                             }
                             oldx=-1;
@@ -533,10 +540,15 @@ if(mausx<5&&mausy<5)Fehler=loesen();
                           }
                           if(code==MENUDOWN&&(mausx>left)&&(mausy>oben)&&(mausx<maxx)&&(mausy<maxy)&&((mausx-left) % box_width)&&(((mausx-left) % box_width)<(box_width-1))&&((mausy-oben) % box_width)&&(((mausy-oben) % box_width)<(box_width-1)))
                           {
-                            oldx=Feldx=(mausx-left) / box_width +1;
-                            oldy=Feldy=(mausy-oben) / box_width +1;
-                            SetAPen(rp,2);
-                            RectFill(rp,(Feldx-1)*box_width+2+left,(Feldy-1)*box_width+2+oben,Feldx*box_width-2+left,Feldy*box_width-2+oben);
+                            Feldx=(mausx-left) / box_width +1;
+                            Feldy=(mausy-oben) / box_width +1;
+                            if(Spielfeld[Feldx][Feldy]==GESCHLOSSEN||Spielfeld[Feldx][Feldy]==MARKE) 
+                            {
+                              SetAPen(rp,2);
+                              RectFill(rp,(Feldx-1)*box_width+2+left,(Feldy-1)*box_width+2+oben,Feldx*box_width-2+left,Feldy*box_width-2+oben);
+                              oldx=Feldx;
+                              oldy=Feldy;
+                            }
                           }
                           if((code==SELECTDOWN)&&(mausx>left)&&(mausy>oben)&&(mausx<maxx)&&(mausy<maxy)&&((mausx-left) % box_width)&&(((mausx-left) % box_width)<(box_width-1))&&((mausy-oben) % box_width)&&(((mausy-oben) % box_width)<(box_width-1)))
                           {
