@@ -23,8 +23,22 @@ PRELIBS := -lautoinit -lgtlayout -lamiga -larosc_shared -lamiga -larosm -lautoin
 LIBS := -L$(LIBDIR) $(PRELIBS)
 
 #First all intermediate files MUST be created so there is a 'defines' file!
-all: $(AROS_LIBS)/gtlayout.library  $(TESTDIR)/gtlayout_test
+all: $(AROS_LIBS)/gtlayout.library  $(TESTDIR)/gtlayout_test includes-copy
 
+
+includes-copy: $(INCDIR)/gtlayout.h $(INCDIR)/proto/gtlayout.h $(INCDIR)/defines/gtlayout.h
+
+$(INCDIR)/gtlayout.h : aros/gtlayout.h
+	@$(ECHO) Copying $^ ...
+	@$(CP) $^ $@
+
+$(INCDIR)/defines/gtlayout.h : aros/gtlayout_defines.h
+	@$(ECHO) Copying $^ ...
+	@$(CP) $^ $@
+
+$(INCDIR)/proto/gtlayout.h : aros/gtlayout_proto.h
+	@$(ECHO) Copying $^ ...
+	@$(CP) $^ $@
 
 aros/%_aros.c : %.c
 	@$(ECHO) Generating $@...
