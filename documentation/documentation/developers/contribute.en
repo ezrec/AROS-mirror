@@ -176,7 +176,7 @@ Joining the Team
 ================
 
 Want to join the development effort? Great! Then join the `development mailing
-lists`__ you are interested in (atleast joiing the main development list is
+lists`__ you are interested in (atleast joining the main development list is
 *highly* recommended) and request access to the CVS repository. That's it. :)
 
 Writing a short mail to the development list containing an introduction about
@@ -203,7 +203,7 @@ read-only access to the repository has been disabled.
 Please mail the encrypted password together with your preferred username and
 your real name to `Aaron Digulla`__ and wait for a reply. To facilitate a quick
 response, please set the subject to "Access to the AROS CVS server" and the body
-to "Please add <username> <password>", eg::
+to "Please add <username> <password>", eg.:
 
     Please add digulla xx1LtbDbOY4/E
 
