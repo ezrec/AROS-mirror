@@ -9,8 +9,6 @@
 #include <exec/memory.h>
 #include <aros/libcall.h>
 #include <aros/debug.h>
-#include <libcore/base.h>
-#include <libcore/compiler.h>
 #include <proto/exec.h>
 #include <proto/alib.h>
 
