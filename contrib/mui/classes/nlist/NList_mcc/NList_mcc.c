@@ -1230,7 +1230,6 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   { LONG *ptrd = 0;
     if (DoMethod(obj, MUIM_GetConfigItem, MUICFG_NList_WheelStep, &ptrd) && ptrd)
     {
-      kprintf("ptrd = %x\n", ptrd);
       data->NList_WheelStep = *ptrd;
     }
     else
