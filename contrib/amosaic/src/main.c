@@ -57,10 +57,7 @@ void main(int argc, char **argv)
 {
 	BOOL running=TRUE;
 	ULONG signal;
-	int blue1, blue2, red;
-	struct Screen *scr;
 	HTMLGadClData *inst;
-	struct Window *win;
 	int transfer_in_progress=0;
 
 	/* A LOT OF THE STUFF AT THE TOP HERE SHOULD BE MOVED EVENTUALLY! */
@@ -410,8 +407,8 @@ void main(int argc, char **argv)
 		break;
 
 	case mo_clear_image_cache:{
-		struct Gadget *g;
-		struct Windwo *w;
+//		struct Gadget *g;
+//		struct Window *w;
 		TO_HTML_FlushImageCache();
 
 //mjw	mo_flush_image_cache(&window);
@@ -509,7 +506,6 @@ void main(int argc, char **argv)
 		if (lib_version < 39)	/* need WB 3.x */
 			break;
 		{
-			char *img;
 			int i=transfer_in_progress;
 
 			transfer_in_progress = 1;
