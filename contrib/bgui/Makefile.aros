@@ -20,10 +20,8 @@ INCLUDES_DIR = $(BINDIR)/include
 OS_INCLUDES = -I$(OS_INCLUDES_DIR)
 USER_INCLUDES = -I. -I$(INCLUDES_DIR)
 
-USER_DEFINES = -DAROS
 
-
-INCLUDES = $(USER_DEFINES) $(USER_INCLUDES) $(OS_INCLUDES)
+INCLUDES = $(USER_INCLUDES) $(OS_INCLUDES)
 
 CFLAGS = $(INCLUDES)
 
@@ -46,7 +44,6 @@ INCLUDE_FILES = \
 	$(INCLUDES_DIR)/clib/bgui_protos.h \
 	$(INCLUDES_DIR)/defines/bgui.h
 
-OBJECTS = 
 main_o=o/lib$(o) o/libfunc$(o) o/task$(o) o/request$(o) \
 	o/misc$(o) o/bgui_locale$(o) 
 #o/miscc$(o)
@@ -149,31 +146,38 @@ $(INCLUDES_DIR)/defines/bgui.h : include/aros/bgui_defines.h
 
 o/plmain$(o): $(main_o)
 	@echo "Linking $@..."
-#	$(LD) -L$(LIBDIR) -larosc $(main_o) -o $@ 
+	@$(RM) -f $@
+	@$(LD) -r $(main_o) -o $@ 
 
 o/plboopsi$(o): $(boopsi_o)
 	@echo "Linking $@..."
-#	$(LD) $(boopsi_o) -o $@
+	@$(RM) -f $@
+	@$(LD) -r $(boopsi_o) -o $@
 
 o/plgfx$(o): $(gfx_o)
 	@echo "Linking $@..."
-#	$(LD) $(gfx_o) -o $@
+	@$(RM) -f $@
+	@$(LD) -r $(gfx_o) -o $@
 
 o/plgroupclasses$(o): $(group_o)
 	@echo "Linking $@..."
-#	$(LD) $(group_o) -o $@
+	@$(RM) -f $@
+	@$(LD) -r $(group_o) -o $@
 
 o/plimageclasses$(o) : $(image_o)
 	@echo "Linking $@..."
-#	$(LD) $(image_o) -o $@
+	@$(RM) -f $@
+	@$(LD) -r $(image_o) -o $@
 
 o/plgadgetclasses$(o) : $(gadget_o)
 	@echo "Linking $@..."
-#	$(LD) $(gadget_o) -o $@
+	@$(RM) -f $@
+	@$(LD) -r $(gadget_o) -o $@
 
 o/plaslclasses$(o) : $(asl_o)
 	@echo "Linking $@..."
-#	$(LD) $(asl_o) -o $@
+	@$(RM) -f $@
+	@$(LD) -r $(asl_o) -o $@
 
 
 o/lib$(o): lib.c
