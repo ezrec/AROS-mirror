@@ -13,12 +13,6 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "version.h"
-
-static const char version[] = "$VER: PlaySineEverywhere " VERS "\n\r";
-
-long __oslibversion = 37;
-
 struct Library* AHIBase = NULL;
 
 int
