@@ -1,4 +1,4 @@
-# Copyright © 2002, The AROS Development Team. All rights reserved.
+# Copyright © 2002-2003, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os, sys, shutil
@@ -77,8 +77,7 @@ def processPicture( src, depth ):
 
 
 def makePictures():
-    DIRECTORIES = \
-    [ 
+    DIRECTORIES = [ 
         'pictures/developers', 
         'pictures/developers-together', 
         'pictures/screenshots' 
@@ -111,8 +110,7 @@ def makePictures():
                 if pictureName == 'CVS' or os.path.isdir( picturePath ): continue 
                 if pictureFormat not in [ 'png', 'jpeg' ]: continue
                 
-                output += makePicture \
-                ( 
+                output += makePicture( 
                     picturePath, 
                     convertWWW( os.path.splitext( picturePath )[0] + '.en', 'en', options )
                 )
@@ -201,8 +199,7 @@ def convertWWW( src, language, options=None ):
     publisher.set_writer( 'html' )
     publisher.publish( argv = arguments )
 
-    return ''.join \
-    (
+    return ''.join(
         publisher.writer.body_pre_docinfo +
         publisher.writer.body
     ).encode( 'iso-8859-1' )
@@ -251,8 +248,7 @@ def processHTML( src, depth ):
 
     if newer( [ src_abs ], dst_abs ):
         reportBuilding( src )
-        arguments = \
-        [
+        arguments = [
             '--no-generator',   '--language=' + suffix,
             '--no-source-link', '--no-datestamp',
             '--output-encoding=iso-8859-1',
@@ -327,13 +323,13 @@ def buildWWW():
     toolpath = os.path.join( DSTROOT, 'tools' )
     makedir( toolpath )
 
-    copy \
-    ( [ 
-        'targets/www/tools/password.html',
-        'targets/www/tools/password.php', 
-        'targets/www/tools/redirect.php' 
-      ], 
-      toolpath 
+    copy( 
+        [ 
+            'targets/www/tools/password.html',
+            'targets/www/tools/password.php', 
+            'targets/www/tools/redirect.php' 
+        ], 
+        toolpath 
     )
     
     os.system( 'chmod -R go+r %s' % DSTROOT )
@@ -349,8 +345,7 @@ def buildHTML():
     os.system( 'chmod -R go+r %s' % DSTROOT )
 
 
-targets = \
-{
+targets = {
     'clean': buildClean,
     'www':   buildWWW,
     'html':  buildHTML
