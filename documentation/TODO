@@ -17,7 +17,17 @@ site goes public.
     similar for the "ideas" page. Warnings for the specifications page / drafts
     (them not being complete or up-to-date, and some might even be removed
     later).
-    
+   
++ Add the following pages:
+
+  - introduction/license.en
+
+    An introduction and explenation of the license, and the actual license itself. 
+
+  - "linking" ?
+
+    Information (encouragement) about linking us, and the nice banner to use...
+
 + Finish the following scripts:
 
   - Status (jobs and size)
