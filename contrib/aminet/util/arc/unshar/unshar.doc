@@ -1,0 +1,132 @@
+
+     UNSHAR V1.3(1)        AMIGA Programmer's Manual         UNSHAR V1.3(1)
+
+
+
+     ›1mNAME 
+          ›0munshar - extracts files from shar archives 
+
+     ›1mSYNOPSIS 
+          ›0munshar {-overwrite} {-nosort} file1 file2 ...  
+
+     ›1mDESCRIPTION 
+          ›0mUnshar is a utility which extracts files from the ubiquitous
+          Unix shar  archives.    It has the following advantages over
+          existing unshar utilities: 
+
+               - Small and fast 
+               - Handles many cat and sed formats 
+               - Allows extraction of subdirectories 
+               - Understands ./file type filenames 
+               - Understands file continuation with >> 
+               - Sorts file list by Subject: line 
+               - Exits cleanly with CTRL-C 
+
+          The total code size is slightly  over  5K,  for  those  with
+          packed C  directories.  It treats quotes and imbedded escape
+          sequences intelligently and handles  all  the  cat  and  sed
+          formats  I've  ever seen, including sed commands which strip
+          off more than one letter.  There  may  be  some  formats  it
+          won't handle, but I've yet to find them.  
+
+          Invoke  unshar  with  as many archive filenames as you like.
+          All the files in each archive will  be  extracted  into  the
+          current directory.    If  a file already exists, unshar asks
+          you how you want to handle it.  Entering `Y' will  overwrite
+          the  existing file with the version in the archive, `N' will
+          skip past the file  without  extracting  it,  and  `A'  will
+          overwrite  this  file  and  any other existing files without
+          prompting you again.  Including the -o flag on  the  command
+          line causes files to always be overwritten.  
+
+     ›1mOPERATION 
+          ›0mUnshar  scans  through each archive specified on the command
+          line, looking for lines beginning with `cat' or  `sed'.  All
+          other lines  are  ignored.   In particular, `echo' lines are
+          not echoed.  This way, you don't  get  a  load  of  messages
+          which  are  in  any  case  fairly  meaningless,  because the
+          operations they are describing are unsupported.  
+
+          When a shar  archive  contains  a  file  for  which  a  full
+          pathname  is  given (as in source/file.c for example) unshar
+          will create whatever directories are  necessary.    It  also
+          strips   off   leading  /'s  and  ./'s,  to  make  filenames
+          understandable by AmigaDOS.  
+
+          Occasionally, a shar file distribution will contain  a  file
+          too  large  to  fit into a single shar archive (archives are
+          typically limited to around 60K or so for transmission  over
+          Usenet). One method some archivers use to get around this is
+          to  split the large file into several smaller parts, and use
+          the shell `>>' redirection operator to concatenate the parts
+          together while extracting the files.  In order for  this  to
+
+
+     Copyright Eddy Carroll 1990      -1-
+
+
+     UNSHAR V1.3(1)        AMIGA Programmer's Manual         UNSHAR V1.3(1)
+
+
+          work  properly,  it  is important that the archive files are
+          extracted in the correct sequence; otherwise, all the pieces
+          will get joined together in the wrong order.  
+
+          To assist with this, unshar does  a  prescan  over  all  the
+          files listed on the command line, and checks each file for a
+          "Subject:" line.    If  it  finds  such  a line, it scans it
+          looking for any hints as to where  the  file  comes  in  the
+          sequence.   Most  shar  files  you  feed  to  unshar will be
+          directly from a Usenet sources or binaries group,  and  will
+          include  a  volume  and issue reference on the subject line.
+          If unshar can't find such an issue reference, it  will  look
+          for a Part number and use that instead.  
+
+          Unshar  then  extracts the archives starting with the lowest
+          numbered file.  This helps to ensure that those  extra-large
+          files are  created correctly.  You can tell when such a file
+          is being  created,  because  unshar  says  "Extending  file"
+          rather than "Unsharing file".  
+
+          If  for  some  reason you want the files to be unarchived in
+          the order listed on the command line, you  can  specify  the
+          `-n' (nosort) switch, and no sorting will take place.  
+
+     ›1mDISTRIBUTION 
+          ›0mUnshar  may  be  freely distributed, as long as no charge is
+          made for doing so.  
+
+     ›1mHISTORY 
+          ›0mV1.0  First release.  
+
+          V1.1  Added support for some more unusual uses of sed.  
+                Increased speed, and reduced size slightly.  
+                Fixed bug that truncated lines longer than 80 chars.  
+
+          V1.2  Added support for sorting by Subject: line 
+                Added support for file appending via >> 
+                Fixed small bug in detection of disk write errors 
+
+          V1.3  Fixed bug in "Overwrite (Yes, [No], All)?" prompt.  
+                No longer exits immediately on file read error.  
+                Fixed subtle bug in code to skip existing files.  
+
+     ›1mAUTHOR 
+          ›0mEddy Carroll 
+          EMAIL: ecarroll@vax1.tcd.ie 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     Copyright Eddy Carroll 1990      -2-
+
