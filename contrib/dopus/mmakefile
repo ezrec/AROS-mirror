@@ -1,0 +1,6 @@
+#   $Id$
+#
+#   Makefile to make DirOpus
+
+#MM- contrib-dopus : dopus-library DirOpus ConfigOpus
+

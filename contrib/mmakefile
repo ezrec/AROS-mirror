@@ -4,4 +4,4 @@
 #MM- contrib : contrib-$(ARCH)
 
 #MM- contrib-complete : contrib-aminet contrib-fish contrib-games \
-#MM	contrib-misc contrib-demos
+#MM	contrib-misc contrib-demos contrib-dopus

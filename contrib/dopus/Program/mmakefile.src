@@ -1,18 +1,14 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-INSTDIR	:= $(BINDIR)
-
-# INSTDIR  := $(CONTRIBDIR)/DOpus
+INSTDIR  := $(CONTRIBDIR)/DOpus
 OBJDIR := $(GENDIR)/$(CURDIR)
 STARTUP := $(LIBDIR)/startup.o
 LIBS	:= -L$(LIBDIR) -larosc -larosm -lamiga -larossupport
 DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a	\
 		$(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
 
-EXE := $(INSTDIR)/do
-
-# EXE := $(INSTDIR)/DirectoryOpus
+EXE := $(INSTDIR)/DirectoryOpus
 
 FILES = about arbiter main main1 main2 main3 main4 main5 main6 main7\
 main8 main9 main10 main11 main12 main13 main14 main15 main16\
@@ -35,7 +31,6 @@ dirtree getusage asmfuncs_in_c lsprintf dummy_asyncio # assembly
 
 OBJECTS = $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
 
-#MM- DOpus : DirOpus
 #MM
 DirOpus : make-dirs $(EXE)
 

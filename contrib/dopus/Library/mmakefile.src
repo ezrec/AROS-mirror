@@ -35,12 +35,12 @@ FUNCTIONS	:= \
 
 
 #MM dopus-library : setup includes linklibs
-dopus-library : show-flags $(SLIB)
+dopus-library : $(SLIB)
 	@$(NOP)
 
 
 #MM dopus-library-quick : 
-dopus-library-quick : show-flags $(SLIB)
+dopus-library-quick : $(SLIB)
 	
 #MM
 setup :
