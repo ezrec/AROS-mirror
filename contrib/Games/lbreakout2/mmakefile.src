@@ -20,8 +20,8 @@ $(GENDIR)/$(CURDIR)/.configured:
             cd $(GENDIR)/$(CURDIR);\
 	    SDL_CONFIG=$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-sdl-config \
                 CC=$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros-gcc \
-                $(TOP)/$(CURDIR)/configure --with-highscore-path='$(DATADIR)' \
-                --with-inst-path='$(DATADIR)' --disable-audio --disable-sdltest \
+                $(TOP)/$(CURDIR)/configure --with-highscore-path='$$(DATADIR)' \
+                --with-inst-path='$$(DATADIR)' --disable-audio --disable-sdltest \
                 --disable-network  --bindir=$(EXEDIR) \
                 --host=$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros;\
         )
