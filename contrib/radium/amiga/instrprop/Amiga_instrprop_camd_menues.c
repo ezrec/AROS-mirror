@@ -40,6 +40,7 @@ extern struct Patch *currpatch;
 
 #define APP_GetVars() struct Patch *patch=currpatch;
 
+extern struct MidiLink *AddMidiLink(struct MidiNode *mi, LONG type, Tag tag, ...);
 
 
 

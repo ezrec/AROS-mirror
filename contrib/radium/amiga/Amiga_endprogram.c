@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 #include <proto/graphics.h>
 #include <proto/input.h>
 #include <proto/reqtools.h>
+#include <proto/alib.h>
+
 
 #include "nsmtracker.h"
 #include "Amiga_player_proc.h"
