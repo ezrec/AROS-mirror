@@ -1,0 +1,311 @@
+##
+##	GadTools layout toolkit
+##
+##	Copyright © 1993-1998 by Olaf `Olsen' Barthel
+##		Freely distributable.
+##
+##	:ts=8
+##
+
+.c.o:
+	sc $< $(CFLAGS) cpu=$(CPU)
+	@ctags $< >tagfiles/$*.c
+
+.c.ol:
+	sc $< $(CFLAGS) cpu=any define=LINK_LIB objname=$>.ol
+	@ctags $< >tagfiles/$*.c
+
+.a.o:
+	asm -D -DCPU_$(CPU) -u $<
+
+#############################################################################
+#
+# Program version and revision; must match the data in the bumprev file
+# as it's used to check in and freeze a release.
+#
+#############################################################################
+
+VERSION =	45
+REVISION =	1
+
+SYMBOLIC_NAME =	V$(VERSION)_$(REVISION)
+
+###############################################################################
+
+#OPTIMIZE =	optimize optschedule nooptinlocal opttime
+OPTIMIZE =	optimize optschedule   optinlocal opttime
+GSTFILE =	gtlayout.gst
+
+CPU =		68040
+#CPU =		ANY
+
+DEBUG =		debug=line
+
+#C_UTILITY =	utillib
+#L_UTILITY =	define __CXM33=__UCXM33 define __CXD33=__UCXD33 \
+#		define __CXM22=__UCXM22 define __CXD22=__UCXD22
+
+###############################################################################
+
+CFLAGS =	data=faronly streq strmerge nostkchk nover memsize=huge params=r \
+		define=CPU_$(CPU) gst=$(GSTFILE) $(DEBUG) $(C_UTILITY) $(OPTIMIZE) \
+		ignore=306
+LFLAGS =	smallcode addsym noicons \
+		$(L_UTILITY)
+
+###############################################################################
+
+LIBS =		lib:scnb.lib lib:amiga.lib lib:debug.lib
+
+###############################################################################
+
+all:		tagfiles $(GSTFILE) gtlayout_libprotos.h gtlayout.library
+# gtlayout.lib
+
+###############################################################################
+
+SOURCE =	Assert.c Assert.h \
+		gtlayout.h gtlayout_data.c \
+		gtlayout_data.h gtlayout_global.h gtlayout_includes.h \
+		gtlayout_internal.h gtlayout_lib.c gtlayout_libprotos.h \
+		gtlayout_includes.c LTP_AddGadgets.c \
+		LTP_AddHistory.c LTP_AdjustItemPosition.c LTP_AdjustMenuPosition.c \
+		LTP_Atol.c LTP_BackFillRoutine.c LTP_BitMap.c \
+		LTP_BlinkButton.c LTP_CheckGlyph.c LTP_Clone.c \
+		LTP_ConvertNum.c LTP_CorrectItemList.c LTP_CreateExtraObject.c \
+		LTP_CreateGadgets.c LTP_CreateMenuTagList.c LTP_CreateMenuTemplate.c \
+		LTP_CreateObjectNode.c LTP_DefaultEditRoutine.c LTP_DefaultHistoryHook.c \
+		LTP_Delay.c LTP_DeleteObjectNode.c LTP_DetermineSize.c \
+		LTP_Draw.c LTP_DrawBackFore.c LTP_DrawBox.c \
+		LTP_DrawGauge.c LTP_DrawGroup.c LTP_DrawIncrementer.c \
+		LTP_DrawPalette.c LTP_DrawPicker.c LTP_DrawPrevNext.c \
+		LTP_DrawTapeButton.c LTP_FillMenu.c LTP_Find.c \
+		LTP_FixExtraLabel.c LTP_GetCommandWidth.c \
+		LTP_GetDisplayClip.c LTP_GlyphSetup.c LTP_HandleHistory.c \
+		LTP_HexEditRoutine.c LTP_ImageClass.c LTP_InitIText.c \
+		LTP_LayoutGadgets.c LTP_LayoutGroup.c LTP_LayoutMenu.c \
+		LTP_LevelClass.c LTP_MakeItem.c \
+		LTP_MakeMenu.c LTP_Memory.c LTP_MoveToWindow.c \
+		LTP_NewMenu.c LTP_PasswordEditRoutine.c LTP_PlaceGroups.c \
+		LTP_PopupClass.c LTP_PrintBoxLine.c LTP_PrintLabel.c \
+		LTP_RenderArrow.c LTP_RenderCircle.c LTP_Rescale.c \
+		LTP_ResetGroups.c LTP_RPortAttrs.c LTP_SearchKeys.c \
+		LTP_SelectKeys.c LTP_ShrinkMenu.c LTP_SizeDimensions.c \
+		LTP_Spread.c LTP_SPrintf.c LTP_Storage.c \
+		LTP_TabClass.c LT_Activate.c LT_Build.c \
+		LT_CreateHandle.c LT_DeleteHandle.c LT_DisposeMenu.c \
+		LT_FindMenuCommand.c LT_GetAttributes.c \
+		LT_GetCode.c LT_GetMenuItem.c LT_HandleInput.c \
+		LT_IMsg.c LT_InitExit.c LT_LabelWidth.c \
+		LT_LayoutMenus.c LT_LevelWidth.c LT_LockWindow.c \
+		LT_MenuControlTagList.c LT_New.c LT_NewMenuTagList.c \
+		LT_NewMenuTemplate.c LT_PressButton.c LT_Rebuild.c \
+		LT_Refresh.c LT_SetAttributes.c LT_ShowWindow.c \
+		LT_UpdateStrings.c \
+		gtlayout_lib.sfd
+
+OTHER =		SMakefile gtlayout.library_rev.h gtlayout.library_rev.i \
+		gtlayout.library_rev.rev gtlayout_libprotos.h.head \
+		gtlayout_libprotos.h.tail releasenotes
+
+OBJS =		gtlayout_lib.o gtlayout_data.o \
+		LTP_AddGadgets.o LTP_AddHistory.o LTP_AdjustItemPosition.o \
+		LTP_AdjustMenuPosition.o LTP_Atol.o LTP_BackFillRoutine.o \
+		LTP_BitMap.o LTP_BlinkButton.o LTP_CheckGlyph.o \
+		LTP_Clone.o LTP_ConvertNum.o LTP_CorrectItemList.o \
+		LTP_CreateExtraObject.o LTP_CreateGadgets.o LTP_CreateMenuTagList.o \
+		LTP_CreateMenuTemplate.o LTP_CreateObjectNode.o LTP_DefaultEditRoutine.o \
+		LTP_DefaultHistoryHook.o LTP_Delay.o LTP_DeleteObjectNode.o \
+		LTP_DetermineSize.o LTP_Draw.o LTP_DrawBackFore.o \
+		LTP_DrawBox.o LTP_DrawGauge.o LTP_DrawGroup.o \
+		LTP_DrawIncrementer.o LTP_DrawPalette.o LTP_DrawPicker.o \
+		LTP_DrawPrevNext.o LTP_DrawTapeButton.o LTP_FillMenu.o \
+		LTP_Find.o LTP_FixExtraLabel.o  \
+		LTP_GetCommandWidth.o LTP_GetDisplayClip.o LTP_GlyphSetup.o \
+		LTP_HandleHistory.o LTP_HexEditRoutine.o LTP_ImageClass.o \
+		LTP_InitIText.o LTP_LayoutGadgets.o LTP_LayoutGroup.o \
+		LTP_LayoutMenu.o LTP_LevelClass.o \
+		LTP_MakeItem.o LTP_MakeMenu.o LTP_Memory.o \
+		LTP_MoveToWindow.o LTP_NewMenu.o LTP_PasswordEditRoutine.o \
+		LTP_PlaceGroups.o LTP_PopupClass.o LTP_PrintBoxLine.o \
+		LTP_PrintLabel.o LTP_RenderArrow.o LTP_RenderCircle.o \
+		LTP_Rescale.o LTP_ResetGroups.o LTP_RPortAttrs.o \
+		LTP_SearchKeys.o LTP_SelectKeys.o LTP_ShrinkMenu.o \
+		LTP_SizeDimensions.o LTP_Spread.o LTP_SPrintf.o \
+		LTP_Storage.o LTP_TabClass.o LT_Activate.o \
+		LT_Build.o LT_CreateHandle.o LT_DeleteHandle.o \
+		LT_DisposeMenu.o LT_FindMenuCommand.o \
+		LT_GetAttributes.o LT_GetCode.o LT_GetMenuItem.o \
+		LT_HandleInput.o LT_IMsg.o LT_InitExit.o \
+		LT_LabelWidth.o LT_LayoutMenus.o LT_LevelWidth.o \
+		LT_LockWindow.o LT_MenuControlTagList.o LT_New.o \
+		LT_NewMenuTagList.o LT_NewMenuTemplate.o LT_PressButton.o \
+		LT_Rebuild.o LT_Refresh.o LT_SetAttributes.o \
+		LT_ShowWindow.o LT_UpdateStrings.o
+
+OBJS_LIB =	gtlayout_data.ol \
+		LTP_AddGadgets.ol LTP_AddHistory.ol LTP_AdjustItemPosition.ol \
+		LTP_AdjustMenuPosition.ol LTP_Atol.ol LTP_BackFillRoutine.ol \
+		LTP_BitMap.ol LTP_BlinkButton.ol LTP_CheckGlyph.ol \
+		LTP_Clone.ol LTP_ConvertNum.ol LTP_CorrectItemList.ol \
+		LTP_CreateExtraObject.ol LTP_CreateGadgets.ol LTP_CreateMenuTagList.ol \
+		LTP_CreateMenuTemplate.ol LTP_CreateObjectNode.ol LTP_DefaultEditRoutine.ol \
+		LTP_DefaultHistoryHook.ol LTP_Delay.ol LTP_DeleteObjectNode.ol \
+		LTP_DetermineSize.ol LTP_Draw.ol LTP_DrawBackFore.ol \
+		LTP_DrawBox.ol LTP_DrawGauge.ol LTP_DrawGroup.ol \
+		LTP_DrawIncrementer.ol LTP_DrawPalette.ol LTP_DrawPicker.ol \
+		LTP_DrawPrevNext.ol LTP_DrawTapeButton.ol LTP_FillMenu.ol \
+		LTP_Find.ol LTP_FixExtraLabel.ol  \
+		LTP_GetCommandWidth.ol LTP_GetDisplayClip.ol LTP_GlyphSetup.ol \
+		LTP_HandleHistory.ol LTP_HexEditRoutine.ol LTP_ImageClass.ol \
+		LTP_InitIText.ol LTP_LayoutGadgets.ol LTP_LayoutGroup.ol \
+		LTP_LayoutMenu.ol LTP_LevelClass.ol \
+		LTP_MakeItem.ol LTP_MakeMenu.ol LTP_Memory.ol \
+		LTP_MoveToWindow.ol LTP_NewMenu.ol LTP_PasswordEditRoutine.ol \
+		LTP_PlaceGroups.ol LTP_PopupClass.ol LTP_PrintBoxLine.ol \
+		LTP_PrintLabel.ol LTP_RenderArrow.ol LTP_RenderCircle.ol \
+		LTP_Rescale.ol LTP_ResetGroups.ol LTP_RPortAttrs.ol \
+		LTP_SearchKeys.ol LTP_SelectKeys.ol LTP_ShrinkMenu.ol \
+		LTP_SizeDimensions.ol LTP_Spread.ol LTP_SPrintf.ol \
+		LTP_Storage.ol LTP_TabClass.ol LT_Activate.ol \
+		LT_Build.ol LT_CreateHandle.ol LT_DeleteHandle.ol \
+		LT_DisposeMenu.ol LT_FindMenuCommand.ol \
+		LT_GetAttributes.ol LT_GetCode.ol LT_GetMenuItem.ol \
+		LT_HandleInput.ol LT_IMsg.ol LT_InitExit.ol \
+		LT_LabelWidth.ol LT_LayoutMenus.ol LT_LevelWidth.ol \
+		LT_LockWindow.ol LT_MenuControlTagList.ol LT_New.ol \
+		LT_NewMenuTagList.ol LT_NewMenuTemplate.ol LT_PressButton.ol \
+		LT_Rebuild.ol LT_Refresh.ol LT_SetAttributes.ol \
+		LT_ShowWindow.ol LT_UpdateStrings.ol
+
+PROTOS =	gtlayout_lib.c \
+		LTP_AddGadgets.c LTP_AddHistory.c LTP_AdjustItemPosition.c \
+		LTP_AdjustMenuPosition.c LTP_Atol.c LTP_BackFillRoutine.c LTP_BitMap.c \
+		LTP_BlinkButton.c LTP_CheckGlyph.c LTP_Clone.c LTP_ConvertNum.c \
+		LTP_CorrectItemList.c LTP_CreateExtraObject.c LTP_CreateGadgets.c LTP_CreateMenuTagList.c \
+		LTP_CreateMenuTemplate.c LTP_CreateObjectNode.c LTP_DefaultEditRoutine.c LTP_DefaultHistoryHook.c \
+		LTP_Delay.c LTP_DeleteObjectNode.c LTP_DetermineSize.c LTP_Draw.c \
+		LTP_DrawBackFore.c LTP_DrawBox.c LTP_DrawGauge.c LTP_DrawGroup.c \
+		LTP_DrawIncrementer.c LTP_DrawPalette.c LTP_DrawPicker.c LTP_DrawPrevNext.c \
+		LTP_DrawTapeButton.c LTP_FillMenu.c LTP_Find.c LTP_FixExtraLabel.c \
+		LTP_GetCommandWidth.c LTP_GetDisplayClip.c LTP_GlyphSetup.c LTP_HandleHistory.c \
+		LTP_HexEditRoutine.c LTP_ImageClass.c LTP_InitIText.c LTP_LayoutGadgets.c \
+		LTP_LayoutGroup.c LTP_LayoutMenu.c LTP_LevelClass.c \
+		LTP_MakeItem.c LTP_MakeMenu.c LTP_Memory.c LTP_MoveToWindow.c \
+		LTP_NewMenu.c LTP_PasswordEditRoutine.c LTP_PlaceGroups.c LTP_PopupClass.c \
+		LTP_PrintBoxLine.c LTP_PrintLabel.c LTP_RenderArrow.c LTP_RenderCircle.c \
+		LTP_Rescale.c LTP_ResetGroups.c LTP_RPortAttrs.c LTP_SearchKeys.c \
+		LTP_SelectKeys.c LTP_ShrinkMenu.c LTP_SizeDimensions.c LTP_Spread.c \
+		LTP_SPrintf.c LTP_Storage.c LTP_TabClass.c LT_Activate.c \
+		LT_Build.c LT_CreateHandle.c LT_DeleteHandle.c LT_DisposeMenu.c \
+		LT_FindMenuCommand.c LT_GetAttributes.c LT_GetCode.c LT_GetMenuItem.c \
+		LT_HandleInput.c LT_IMsg.c LT_InitExit.c LT_LabelWidth.c \
+		LT_LayoutMenus.c LT_LevelWidth.c LT_LockWindow.c LT_MenuControlTagList.c \
+		LT_New.c LT_NewMenuTagList.c LT_NewMenuTemplate.c LT_PressButton.c \
+		LT_Rebuild.c LT_Refresh.c LT_SetAttributes.c LT_ShowWindow.c \
+		LT_UpdateStrings.c
+
+###############################################################################
+
+gtlayout.lib: $(OBJS_LIB)
+	oml $@ r $(OBJS_LIB)
+
+###############################################################################
+
+gtlayout.library: $(OBJS) Assert.o
+	slink with <<
+		from $(OBJS)
+		to $@.debug
+		lib $(LIBS) Assert.o
+		$(LFLAGS)
+		map $@.map,fhx fwidth 32 pwidth 32 swidth 32
+	<
+	slink from $@.debug to $@ nd noicons
+	@type tagfiles/\#?.c >t:tags
+	@copy t:tags tags
+	@delete quiet t:tags
+
+install: gtlayout.library
+	protect gtlayout.library -e
+	copy gtlayout.library Libs:
+	-remlib gtlayout.library
+
+gtlayout_lib.o: gtlayout_lib.c gtlayout.library_rev.h
+	sc gtlayout_lib.c $(CFLAGS) cpu=any
+	@ctags gtlayout_lib.c >tagfiles/gtlayout_lib.c
+
+$(GSTFILE): gtlayout_includes.c gtlayout_includes.h
+	gst $@ unload
+	sc $(CFLAGS) nogst noobjname makegst=$@ gtlayout_includes.c
+
+tagfiles:
+	makedir $@
+
+###############################################################################
+
+version:
+	echo >gtlayout.library_rev.rev `eval $(REVISION) - 1`
+	bumprev $(VERSION) gtlayout.library
+
+###############################################################################
+
+clean:
+	-delete quiet \#?.o(l|%) tags tagfiles all
+
+realclean: clean
+	-delete quiet ID $(GSTFILE)
+
+###############################################################################
+
+mkid:
+	mkid \#?.(c|h)
+
+update:
+	mkid -u -v
+
+###############################################################################
+
+checkin:
+	ci -M -d -q -l$(VERSION) -m. -t-. $(SOURCE) $(OTHER)
+
+lock:
+	rcs -q -l $(SOURCE) $(OTHER)
+
+unlock:
+	rcs -q -u $(SOURCE) $(OTHER)
+
+freeze:
+	rcs -q -n$(SYMBOLIC_NAME): $(SOURCE) $(OTHER)
+
+###############################################################################
+
+autodocs:
+	type (gtlayout_lib.c|LT_\#?.c) >t:autodocs
+	autodoc -C -I -c t:autodocs >gtlayout.doc
+	delete quiet t:autodocs
+
+###############################################################################
+
+#gtlayout_libprotos.h: gtlayout_libprotos.h.head $(PROTOS) gtlayout_libprotos.h.tail
+gtlayout_libprotos.h:
+	copy $@.head $@
+	mkptypes -c >>$@ $(PROTOS)
+	type >>$@ $@.tail
+	splat -o "REG (d0 )" "REG(d0) " $@
+	splat -o "REG (d1 )" "REG(d1) " $@
+	splat -o "REG (d2 )" "REG(d2) " $@
+	splat -o "REG (d3 )" "REG(d3) " $@
+	splat -o "REG (d4 )" "REG(d4) " $@
+	splat -o "REG (d5 )" "REG(d5) " $@
+	splat -o "REG (d6 )" "REG(d6) " $@
+	splat -o "REG (d7 )" "REG(d7) " $@
+	splat -o "REG (a0 )" "REG(a0) " $@
+	splat -o "REG (a1 )" "REG(a1) " $@
+	splat -o "REG (a2 )" "REG(a2) " $@
+	splat -o "REG (a3 )" "REG(a3) " $@
+	splat -o "REG (a4 )" "REG(a4) " $@
+	splat -o "REG (a5 )" "REG(a5) " $@
+	splat -o "REG (a6 )" "REG(a6) " $@
+	splat -o "REG (a7 )" "REG(a7) " $@
+
+protos: gtlayout_libprotos.h

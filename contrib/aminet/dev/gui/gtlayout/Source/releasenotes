@@ -1,0 +1,126 @@
+gtlayout.library 40.11 (28.02.97)
+
+	- BOX_KIND text and background pen now default to follow the
+	  screen's pens even if the screen ends up getting cloned.
+
+gtlayout.library 40.12 (21.04.97)
+
+	- The sizes of POPUP_KIND and CYCLE_KIND objects are now
+	  calculated from the character width only. The glyph
+	  sizes are no longer added to the resulting button size.
+	  This means, a BUTTON_KIND and a CYCLE_KIND object can
+	  be made to use the same width by using the LA_Chars
+	  attribute only.
+
+	- The LEVEL_KIND object did not respond properly to
+	  ghosting after changing its value.
+
+	- Objects without labels could screw up the horizontal
+	  group layout if the contents were to be spread across
+	  the entire group width.
+
+gtlayout.library 41.3 (07.05.97)
+
+	- Completely redid the LEVEL_KIND code. The objects now
+	  look different and the slider is no longer restricted
+	  to horizontal movement only.
+
+	- Fixed yet another group/object placement bug. This
+	  is another step towards making mixing these two types
+	  work properly.
+
+	- STRINGA_ExitHelp is now enabled for all string
+	  gadgets.
+
+	- BOX_KIND objects now allow for extra space between
+	  the single lines of text.
+
+gtlayout.library 41.4 (07.05.97)
+
+	- The LEVEL_KIND object now supports disabled state.
+
+gtlayout.library 41.5 (15.05.97)
+
+	- Added a new object type "IMAGE_KIND" to allow for
+	  placing simple images in a window without having
+	  to worry about updating it (like FRAME_KIND).
+
+gtlayout.library 41.6 (27.06.97)
+
+	- Fixed a division by zero error which would occur if
+	  a LEVEL_KIND LALV_Max was set to 0.
+
+gtlayout.library 42.1 (28.06.97)
+
+	- Added LAST_CursorPosition to the attributes one can
+	  query in LT_GetAttributes().
+
+	- Updated the library initialization code.
+
+gtlayout.library 43.1 (06.07.97)
+
+	- LT_MenuControlTagList() could fail to associate the
+	  correct menu codes with LAMN_ID numbers. Fixed.
+
+gtlayout.library 43.2 (08.07.97)
+
+	- LT_MenuControlTagList() would blow big chunks if no
+	  menu/item with the given LAMN_ID could be found.
+	  Fixed as well.
+
+gtlayout.library 43.4 (27.09.97)
+
+	- Multi-line button labels now get their keyboard shortcuts
+	  picked correctly.
+
+gtlayout.library 43.5 (29.11.97)
+
+	- The menu layout code now puts the same amount of pixel
+	  padding to the left and right of the menu titles and makes
+	  sure that the single menu items are at least as long as the
+	  menu titles.
+
+	- Source code cleanup with respect to all the places in which
+	  conditional compilation has an effect on the code included
+	  in the library, smarter use of header files, safer default
+	  case switch behaviour and memory allocation code. Removed
+	  all compiler warnings.
+
+	- Took out the CyberGraphX bug compatibility code in the
+	  tab gadget class.
+
+gtlayout.library 43.6 (14.12.97)
+
+	- Rewrote part of the library close routine which could clash
+	  with the open routine if both were run at the same time.
+
+gtlayout.library 44.1 (17.2.98)
+
+	- FRAME_KIND objects can now be made resizable just like
+	  LISTVIEW_KIND objects. The catch is that just like with
+	  the listviews, only a single object in the entire window
+	  can have this property.
+
+gtlayout.library 45.1 (11.07.98)
+
+	- The POPUP_KIND now uses a different glyph and also
+	  places it at a different position. This is to make
+	  the look of the picker gadget and the pop-up
+	  gadget more consistent since they both more or less
+	  serve similar purposes.
+
+	- Added a new tag to LT_CreateHandle(): LAHN_TopGroupType.
+
+	- Requesting that the title of a group be placed anywhere
+	  else but "inside" it caused extra layout room to be allocated
+	  which was never put to use. The best example for the
+	  results is possibly the Miami 3.0 GUI in which several
+	  windows were opened much taller than necessary. I changed
+	  the object creation code so that it now ignores label
+	  placement tags for HORIZONTAL_KIND and VERTICAL_KIND
+	  objects.
+
+	- The library now does a quick consistency check on every
+	  LT_EndGroup() call (or the equivalent for LT_Add/LT_New,
+	  etc.) to see whether there is a group to be closed in
+	  the first place.

@@ -1,0 +1,18 @@
+Short:    gtlayout.library V45.1
+Author:   Olaf `Olsen' Barthel
+Uploader: poellman@informatik.tu-muenchen.de
+Type:     dev/gui
+
+
+This is the complete gtlayout.library archive including
+- library
+- includes
+- source
+- autodocs
+
+This library is very useful to create good looking and flexible
+GUIs for small- to medium-sized applications.
+
+For some unknown reasons it never appeared on Aminet. Since it's
+freely distributable I uploaded it.
+
