@@ -18,6 +18,7 @@ prefix		= @prefix@
 DISTDIR		= @DISTDIR@
 DEVSDIR		= ${DISTDIR}/User/Devs
 CATDIR		= ${DISTDIR}/User/Catalogs
+PREFIX          = @prefix@
 
 build_os	= @build_os@
 host_cpu	= @host_cpu@
@@ -36,7 +37,7 @@ ARFLAGS         = @ARFLAGS@
 
 LIBS		= @LIBS@
 
-TARGET		= ahi.device
+EXECUTABLE	= ahi.device
 
 INSTALL		= @INSTALL@
 INSTALL_PROGRAM	= @INSTALL_PROGRAM@
@@ -83,10 +84,10 @@ endif
 		install revup bindist bindist-install
 
 
-all:		$(TARGET) $(srcdir)/ahi.ct $(CATALOGS)
+all:		$(EXECUTABLE) $(srcdir)/ahi.ct $(CATALOGS)
 
 mostlyclean:
-	$(RM) $(TARGET) *.o *.a *.bak *~ \#*\# core Makefile.dep
+	$(RM) $(EXECUTABLE) *.o *.a *.bak *~ \#*\# core Makefile.dep
 
 clean:		mostlyclean
 	$(RM) $(CATALOGS) version.h
@@ -97,7 +98,12 @@ distclean:	clean
 maintainer-clean: distclean
 
 install:	all
-	$(INSTALL_PROGRAM) $(TARGET) $(PREFIX)/Devs/$(TARGET)
+	$(INSTALL) --directory $(PREFIX)/Devs
+	$(INSTALL_PROGRAM) $(EXECUTABLE) $(PREFIX)/Devs/$(EXECUTABLE)
+	for i in $(LANGUAGES); do \
+	  $(INSTALL) --directory $(PREFIX)/Catalogs/$$i; \
+	  $(INSTALL_DATA) $$i.catalog $(PREFIX)/Catalogs/$$i/ahi.catalog; \
+	done
 
 revup:
 	@rev=`cat $(srcdir)/version.rev` && echo `expr $$rev + 1` > $(srcdir)/version.rev
@@ -116,8 +122,8 @@ bindist:	all
 
 	$(INSTALL) --directory $(DEVSDIR)
 
-	$(INSTALL_PROGRAM) $(TARGET) $(DEVSDIR)/$(TARGET)
-	$(STRIP) $(DEVSDIR)/$(TARGET)
+	$(INSTALL_PROGRAM) $(EXECUTABLE) $(DEVSDIR)/$(EXECUTABLE)
+	$(STRIP) $(DEVSDIR)/$(EXECUTABLE)
 
 
 #
@@ -136,7 +142,7 @@ Makefile: Makefile.in ../config.status
 	gasp $< | $(AS) $(ASFLAGS) -o $@
 	#$(AS) $(ASFLAGS) $< -o $@
 
-$(TARGET):		$(OBJECTS) libaddroutines.a
+$(EXECUTABLE):		$(OBJECTS) libaddroutines.a
 	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
 
 libaddroutines.a:	addroutines_hifi.o addroutines_lofi.o \

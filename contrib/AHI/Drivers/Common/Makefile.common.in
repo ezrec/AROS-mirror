@@ -12,10 +12,10 @@
 
 top_srcdir	= @top_srcdir@
 common_srcdir	= ${top_srcdir}/Drivers/Common
-prefix		= @prefix@
 DISTDIR		= @DISTDIR@
 DRIVERDIR	= ${DISTDIR}/User/Devs/AHI
 MODEFILEDIR	= ${DISTDIR}/User/Devs/AudioModes
+PREFIX          = @prefix@
 
 VPATH		+= ${common_srcdir}
 

@@ -21,6 +21,7 @@ srcdir		= @srcdir@
 DISTDIR		= @DISTDIR@
 PREFSDIR	= ${DISTDIR}/User/Prefs
 CATDIR		= ${DISTDIR}/User/Catalogs
+PREFIX          = @prefix@
 
 build_os	= @build_os@
 
@@ -48,22 +49,23 @@ OBJECTS_BGUI	= gui_bgui.o
 OBJECTS_CA	= gui_ca.o
 OBJECTS_MUI	= gui_mui.o
 
-TARGETS		= AHI_MUI # AHI_BGUI AHI_CA
+EXECUTABLES	= AHI_MUI
+# AHI_BGUI AHI_CA
 
 LANGUAGES	= $(notdir $(basename $(wildcard ${srcdir}/translations/*.ct)))
 CATALOGS	= $(addsuffix .catalog, $(LANGUAGES))
 
 
 #
-# Targets
+# EXECUTABLES
 ########################################
 
 .PHONY:		all clean distclean maintainer-clean bindist revup
 
-all:		$(TARGETS) ahiprefs.ct $(CATALOGS)
+all:		$(EXECUTABLES) ahiprefs.ct $(CATALOGS)
 
 clean:
-	$(RM) $(TARGETS) $(LANGTARGETS) version.h \
+	$(RM) $(EXECUTABLES) $(LANGEXECUTABLES) version.h \
 	      *.catalog *.o *.bak *~ \#*\# core Makefile.dep
 
 distclean:	clean
@@ -72,13 +74,19 @@ distclean:	clean
 maintainer-clean: distclean
 
 install:	all
+	$(INSTALL) --directory $(PREFIX)/Prefs
 	$(INSTALL_PROGRAM) AHI_MUI $(PREFIX)/Prefs/AHI
+	$(INSTALL_DATA) ${srcdir}/AHI.info $(PREFIX)/Prefs
+	for i in $(LANGUAGES); do \
+	  $(INSTALL) --directory $(PREFIX)/Catalogs/$$i; \
+	  $(INSTALL_DATA) $$i.catalog $(PREFIX)/Catalogs/$$i/ahiprefs.catalog; \
+	done
 
 bindist:	all
 	$(INSTALL) --directory $(PREFSDIR)
 	$(INSTALL_PROGRAM) AHI_MUI $(PREFSDIR)/AHI
 	$(STRIP) $(PREFSDIR)/AHI
-#	for i in $(TARGETS); do \
+#	for i in $(EXECUTABLES); do \
 #	  $(INSTALL_PROGRAM) $$i $(PREFSDIR)/$$i; \
 #	  $(STRIP) $(PREFSDIR)/$$i; \
 #	done

@@ -15,6 +15,7 @@ srcdir		= @srcdir@
 DISTDIR		= @DISTDIR@
 DOSDRVDIR	= ${DISTDIR}/User/Devs/DOSDrivers
 LDIR		= ${DISTDIR}/User/L
+PREFIX          = @prefix@
 
 build_os	= @build_os@
 
@@ -38,19 +39,19 @@ VPATH		= @srcdir@
 ########################################
 
 OBJECTS		= main.o
-TARGET		= AHI-Handler
+EXECUTABLE	= AHI-Handler
 
 
 #
-# Targets
+# EXECUTABLEs
 ########################################
 
 .PHONY:		all clean distclean maintainer-clean install revup bindist
 
-all:		$(TARGET)
+all:		$(EXECUTABLE)
 
 clean:
-	$(RM) $(TARGET) version.h *.o *.bak *~ \#*\# core Makefile.dep
+	$(RM) $(EXECUTABLE) version.h *.o *.bak *~ \#*\# core Makefile.dep
 
 distclean:	clean
 	$(RM) Makefile
@@ -58,7 +59,7 @@ distclean:	clean
 maintainer-clean: distclean
 
 install:	all
-	$(INSTALL_PROGRAM) $(TARGET) $(PREFIX)/L/$(TARGET)
+	$(INSTALL_PROGRAM) $(EXECUTABLE) $(PREFIX)/L/$(EXECUTABLE)
 
 revup:
 	@rev=`cat $(srcdir)/version.rev` && echo `expr $$rev + 1` > $(srcdir)/version.rev
@@ -68,8 +69,8 @@ revup:
 
 bindist:	all
 	$(INSTALL) --directory $(LDIR) $(DOSDRVDIR)
-	$(INSTALL_PROGRAM) $(TARGET) $(LDIR)/$(TARGET)
-	$(STRIP) $(LDIR)/$(TARGET)
+	$(INSTALL_PROGRAM) $(EXECUTABLE) $(LDIR)/$(EXECUTABLE)
+	$(STRIP) $(LDIR)/$(EXECUTABLE)
 	$(INSTALL_DATA) ${srcdir}/AUDIO $(DOSDRVDIR)
 	$(INSTALL_DATA) ${srcdir}/AUDIO.info $(DOSDRVDIR)
 	$(INSTALL_DATA) ${srcdir}/AUDIO.MWB.info $(DOSDRVDIR)
@@ -90,7 +91,7 @@ Makefile: Makefile.in ../config.status
 # Rules
 ########################################
 
-$(TARGET):	$(OBJECTS)
+$(EXECUTABLE):	$(OBJECTS)
 	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
 
 
