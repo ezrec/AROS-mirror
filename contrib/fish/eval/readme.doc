@@ -1,0 +1,66 @@
+Eval is a floating point expression evaluator.
+This is version 1.12
+Copyright (C) 1993  Will Menninger
+
+This is my first venture into public domain software, and while I hate
+dealing with rules and licenses and all that, I decided that I had to
+protect myself, so I am using the GNU public license agreement to set
+the terms for redistributing this software.  Please read the GNU public
+license agreement in the file, COPYING.  In sum, the license allows you
+to freely copy and modify this software, but you can't pull any dirty
+tricks like using it for profit or calling it your own or making up your
+own restrictions on it if you redistribute it.
+
+This distribution comes with the full source code to Eval, which is
+written for ANSI compliant C compilers.  This distribution also includes
+an executable version of Eval for the Amiga, with a tool-type icon that
+automatically opens a window for it.  The Eval source is easily ported
+to other systems.  See below.
+
+Using Eval
+----------
+Documentation is built into Eval.  Just run the program.
+
+
+Amiga version
+-------------
+The Amiga version was compiled using Manx C 5.2a.  It uses the Amiga
+IEEE libraries, so it auto-detects the FPU.  It should work on any Amiga.
+If it bombs from your CLI, try increasing your stack size.
+
+
+The source code
+---------------
+In the source directory of this archive are nine C modules, one header
+file, and several make files.  If you would like to add custom constants
+to Eval, look at eval.c.  If you would like to add custom functions to
+Eval, look at funcs.c.
+
+To compile on Unix:   Use Makefile.unx
+
+To compile on a Mac:  There is no Makefile, but I had no trouble
+                      compiling all modules with Think C 5.0.
+                      I threw all of the modules into my project window,
+                      added the "ANSI" library, put eval.c at the top,
+                      and selected "Build Application."
+
+To compile on Amiga:  Use Makefile.asa (SAS C 6.X)
+                       or Makefile.ama (Manx C 5.X)
+
+To compile on IBM-PC: Use Makefile.tcc (Borland C 2.X)
+
+
+If you would like an Eval executable for an IBM PC or a Macintosh
+(though hopefully you've come to your senses and bought an Amiga ;-),
+and you don't have access to a C compiler, contact me.
+
+That's it.  I hope Eval is of use to you.
+
+Will Menninger
+MIT Graduate Student (until 9/93 at least :-)
+45 River St., #2
+Boston, MA 02108-1124
+
+e-mail:  willus@ilm.pfc.mit.edu
+
+No guarantees on my addresses after 9/93.

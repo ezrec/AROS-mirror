@@ -1,0 +1,34 @@
+Version history
+
+Version 1.00 (9/88)
+
+Eval was originally written to be a flexible PC calculator.  Since I
+work in a lab where bessel functions are freqently used, I placed
+emphasis on putting bessel functions in the code.  I also wanted
+something more powerful than a simple mock-up of an actual calculator.
+And since I own an Amiga but work with IBM PC clones, I used ANSI C for
+portability.  This version stayed fairly constant over four years, and I
+ran it on unix, VMS, and PC (Amiga, IBM, Mac) platforms.
+
+
+Version 1.10 (approx 1/93)
+
+A friend of mine asked me to put Eval in the public domain, so I figured
+I'd better dress it up a little.  I added more flexible output (user
+specified precision), automatic pausing every 22 lines, and the ability
+to specify input and output in any number base.  I also rewrote the math
+library using my own coding (with help from Abromowitz and Stegun :-) so
+that I would not infringe upon Numerical Recipes in C's copyright when I
+distributed my source code.  Now Eval is entirely my own doing (not
+necessarily a good thing ;-).
+
+
+Version 1.11  (approx 2/93)
+
+A version I never released.  I added better script support.
+
+
+Version 1.12  (4-9-93)
+
+I added a default write directory and read path for scripts, and I added
+the ability to specify a certain page of help.
