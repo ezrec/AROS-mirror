@@ -36,7 +36,6 @@
 static const char version[] = "$VER: Wumpus 0.2 (16.09.1997)\n";
 
 #include "WumpusIncl.h"
-#include <string.h>
 
 #define NONE 0
 #define LITTLE 1
