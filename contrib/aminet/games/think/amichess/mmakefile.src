@@ -22,8 +22,18 @@ PROMODIR := $(AMICHESSDIR)/Promote
 
 PROMOFILES := $(foreach f, $(PROMOS), $(PROMODIR)/$(f))
 
+DOCS := AmiChess.dok AmiChess.readme
+DOCDIR := $(AMICHESSDIR)
+
+DOCFILES := $(foreach f, $(DOCS), $(DOCDIR)/$(f))
+
+ICONS := AmiChess AmiChess.dok AmiChess.readme
+ICONDIR := $(AMICHESSDIR)
+
+ICONFILES := $(foreach f, $(ICONS), $(ICONDIR)/$(f).info)
+
 #MM
-aminet-games-think-amichess-datafiles : setup $(BOARDFILES) $(PIECESFILES) $(PROMOFILES)
+aminet-games-think-amichess-datafiles : setup $(BOARDFILES) $(PIECESFILES) $(PROMOFILES) $(DOCFILES) $(ICONFILES)
 
 setup :
 	%mkdirs_q $(foreach f, $(BOARDS), $(BOARDDIR)/$(f))
@@ -43,5 +53,14 @@ $(PIECESDIR)/800/% : Pieces/800/%
 	@$(CP) $< $@
 	
 $(PROMODIR)/% : Promote/%
+	@$(CP) $< $@
+
+$(DOCDIR)/%.readme : %.readme
+	@$(CP) $< $@
+
+$(DOCDIR)/%.dok : %.dok
+	@$(CP) $< $@
+
+$(ICONDIR)/%.info : icons/%.info    
 	@$(CP) $< $@
 
