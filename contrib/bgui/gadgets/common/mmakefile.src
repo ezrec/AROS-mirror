@@ -2,11 +2,15 @@ include $(TOP)/config/make.cfg
 
 FILES = bguiclass_lib.o bguiclass_libtag.o bguiclass_libendtag.o
 
-#MM bgui-gadgets-common :
+#MM
 bgui-gadgets-common : $(FILES)
 
 ./%.o : ./%.c
 	%compile_q
 
+#MM
+clean ::
+	$(RM) $(FILES)
+	
 %common
 %include_deps
