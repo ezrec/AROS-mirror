@@ -44,8 +44,12 @@
 /*	Module-Wide variables
 */
 
+#if 0
 PRIVATE char *hostname=0;		/* The name of this host */
-
+#else
+#warning "FIXME: Dummy hostname to avoid crash"
+PRIVATE char *hostname="aros_dummy_hostname";
+#endif
 
 /*	PUBLIC VARIABLES
 */
