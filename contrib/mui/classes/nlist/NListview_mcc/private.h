@@ -1,4 +1,4 @@
-#if 0
+#if 1
 
 /*
   NListview.mcc (c) Copyright 1996 by Gilles Masson
