@@ -84,11 +84,11 @@ contrib-bgui-clean : clean
 
 standard_build :
 	@$(ECHO) "Making BGUI standard version..."
-	@$(MAKE) -f Makefile.aros BUILD_TYPE=S build
+	@$(MAKE) -f mmakefile BUILD_TYPE=S build
 
 enhanced_build :
 	@$(ECHO) "Making BGUI enhanced version..."
-	@$(MAKE) -f Makefile.aros BUILD_TYPE=E build
+	@$(MAKE) -f mmakefile BUILD_TYPE=E build
 
 build : bin/bgui.library.$(BUILD_TYPE) test examples
 # tools
