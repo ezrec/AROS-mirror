@@ -3,8 +3,8 @@
 
 -include $(TOP)/config/make.cfg
 
-#MM- contrib-gnu : contrib-gnu-textutils
-#MM- contrib-gnu-textutils : development-textutils
+##MM- contrib-gnu : contrib-gnu-textutils
+##MM- contrib-gnu-textutils : development-textutils
 
 %fetch_and_build_gnu_development package=textutils version=2.1 patch=yes
 
