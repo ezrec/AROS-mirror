@@ -1,4 +1,5 @@
 
+BASEDIR=$(shell cd .. ; pwd)
 -include .Makefile.inc
 
 # Tools
@@ -6,7 +7,7 @@ SED = sed
 RM = rm -f
 CP = cp
 NOP = true # A command which does nothing
-ALLOW_READ = chmod a+r
+ALLOW_READ = chmod -R a+rX,go-w
 MKDIR = mkdir -p
 
 # Collect files
@@ -90,3 +91,15 @@ clean :
 
 config.py : site.conf
 	$(SED) -e 's;\([a-zA-Z_]*=\)\(.*$$\);\1"\2";' site.conf > $@
+
+lxr :
+	echo $(BASEDIR)
+	$(RM) -rf $(BASEDIR)/lxr/source
+	$(MKDIR) $(BASEDIR)/lxr/source
+	$(CP) -r $(AROSDIR)/bin/*/AROS/Include $(BASEDIR)/lxr/source/include
+	$(CP) -r $(AROSDIR)/config $(AROSDIR)/rom $(AROSDIR)/workbench \
+		$(BASEDIR)/lxr/source
+	$(ALLOW_READ) $(BASEDIR)/lxr/source
+	find $(BASEDIR)/lxr/source -name CVS -prune -exec $(RM) -rf "{}" \;
+	cd $(BASEDIR)/lxr ; ./bin/genxref $(BASEDIR)/lxr/source
+	$(ALLOW_READ) $(BASEDIR)/lxr/fileidx $(BASEDIR)/lxr/xref
