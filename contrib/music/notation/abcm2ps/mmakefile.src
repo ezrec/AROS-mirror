@@ -8,6 +8,7 @@ FILES := abc2ps abcparse buffer deco draw format music parse subs syms
 EXEDIR := $(CONTRIBDIR)/music
 EXE := $(EXEDIR)/abcm2ps
 
+USE_MLIB := yes
 USE_CLIB_SHARED := yes
 
 #MM contrib-music-notation-abcm2ps : includes linklibs
