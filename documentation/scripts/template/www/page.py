@@ -90,8 +90,8 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 ( 
                     A
                     ( 
-                        Img( src = '%(ROOT)simages/genesi-small.gif', border = 0 ), 
-                        href = 'http://www.genesi.lu/' 
+                        Img( src = '%(ROOT)simages/trustec-small.png', border = 0 ), 
+                        href = 'http://www.trustsec.de/' 
                     )
                 )
             ),
@@ -101,8 +101,8 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 ( 
                     A
                     ( 
-                        Img( src = '%(ROOT)simages/trustec-small.png', border = 0 ), 
-                        href = 'http://www.trustsec.de/' 
+                        Img( src = '%(ROOT)simages/genesi-small.gif', border = 0 ), 
+                        href = 'http://www.pegasosppc.com/' 
                     )
                 )
             ),

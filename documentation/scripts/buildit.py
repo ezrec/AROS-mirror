@@ -289,6 +289,7 @@ def copyImages():
     copy(
         [
             os.path.join( srcpath, 'aros-banner.gif' ),
+            os.path.join( srcpath, 'genesi.gif' ),
             os.path.join( srcpath, 'trustec.png' ),
             os.path.join( srcpath, 'sourceforge.png' ),
             os.path.join( srcpath, 'phoenix.jpeg' ),
