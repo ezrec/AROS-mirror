@@ -12,12 +12,22 @@
 #endif
 
 #ifndef LINK_LIB
+#ifndef _AROS
 struct Library * SysBase;
+#else
+struct ExecBase * SysBase;
+#endif
 #endif /* !LINK_LIB */
 
+#ifndef _AROS
 struct Library *	IntuitionBase;
 struct Library *	GfxBase;
 struct Library *	UtilityBase;
+#else
+struct IntuitionBase *	IntuitionBase;
+struct GfxBase *	GfxBase;
+struct UtilityBase *	UtilityBase;
+#endif
 struct Library *	GadToolsBase;
 struct Library *	KeymapBase;
 struct SignalSemaphore	LTP_LockSemaphore;

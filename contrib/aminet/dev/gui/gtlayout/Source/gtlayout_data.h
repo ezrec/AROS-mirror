@@ -11,10 +11,18 @@
 extern BOOLEAN			V39,
 				V40;
 
+#ifndef _AROS
 extern struct Library *		SysBase;
 extern struct Library *		IntuitionBase;
 extern struct Library *		GfxBase;
 extern struct Library *		UtilityBase;
+#else
+extern struct ExecBase *	SysBase;
+extern struct IntuitionBase *	IntuitionBase;
+extern struct GfxBase *		GfxBase;
+extern struct UtilityBase *	UtilityBase;
+#endif
+
 extern struct Library *		GadToolsBase;
 extern struct Library *		KeymapBase;
 
