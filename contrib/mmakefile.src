@@ -16,7 +16,7 @@ include $(TOP)/config/make.cfg
 #MM- contrib-complete : contrib-radium
 #DISABLE MM- contrib-complete : contrib-gc
 #MM- contrib-complete : contrib-development
-#DISABLE MM- contrib-complete : contrib-gnu
+#MM- contrib-complete : contrib-gnu
 
 CONTRIB_SRC_DIR := $(AROSDIR)/contrib
 
