@@ -6,6 +6,7 @@
 #include <exec/resident.h>
 
 #include "acdrbase.h"
+#include "cdrom.h"
 #include "devsupp.h"
 
 extern const char name[];
