@@ -24,6 +24,6 @@ FUNCS := guigfx_funcs
   modname=guigfx modtype=library \
   funcs=$(FUNCS) files=$(FILES) \
   conffile=lib.conf \
-  uselibs="amiga mui rom m renderstubs"
+  uselibs="amiga mui rom m"
 
 %common
