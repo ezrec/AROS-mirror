@@ -3,3 +3,5 @@ bgui.library_rev.rev
 bgui.library_rev.h
 bgui.library_rev.i
 *.lo
+*.o
+*.err
