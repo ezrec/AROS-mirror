@@ -1,0 +1,194 @@
+
+guigfx.library
+list of examples
+
+1. Load a single picture and draw it to a window
+2. Load a picture and use it as a bitmap
+3. Create a drawhandle for multiple pictures
+4. Create a drawhandle with a static palette
+5. Rendering varying truecolor graphics realtime
+
+
+
+1. Load a single picture and draw it to a Window
+------------------------------------------------
+
+	APTR picture = NULL, psm = NULL, drawhandle = NULL;
+
+
+initialization:
+
+
+	picture = LoadPicture(filename, TAG_DONE);
+	psm = CreatePenShareMap(TAG_DONE);
+
+	if (psm && picture)
+	{
+		if (AddPicture(psm, picture, TAG_DONE))
+		{
+			drawhandle = ObtainDrawHandle(psm, window->RPort,
+				screen->ViewPort.ColorMap, TAG_DONE);
+		}
+
+		DeletePenShareMap(psm);	/* no longer needed */
+	}
+
+	if (drawhandle)
+	{
+		DrawPicture(drawhandle, picture, x, y, TAG_DONE);
+	}
+
+
+notes:
+
+You may remove the picture now using DeletePicture(), but do
+not release the drawhandle as long as the picture is
+visible. Before you release the drawhandle, clear the
+RastPort where the picture is located.
+
+
+closedown:
+
+	DeletePicture(picture);
+	ReleaseDrawHandle(drawhandle);
+		
+
+
+
+2. Load a picture and use it as a bitmap
+----------------------------------------
+
+You should prefer using BitMaps over DrawPicture(), when the
+window is of type SIMPLE_REFRESH and the window contents may
+need to get refreshed.
+
+
+	APTR picture = NULL, psm = NULL, drawhandle = NULL;
+	struct BitMap *bm = NULL;
+
+
+initialization:
+
+
+	picture = LoadPicture(filename, TAG_DONE);
+
+	if (picture)
+	{
+		psm = CreatePenShareMap(TAG_DONE);
+	}
+
+	if (psm)
+	{
+		AddPicture(psm, picture, TAG_DONE);
+
+		drawhandle = ObtainDrawHandle(psm, window->RPort,
+			screen->ViewPort.ColorMap, TAG_DONE);
+		}
+	}
+	
+	if (drawhandle)
+	{
+		bm = CreatePictureBitMap(drawhandle, picture, TAG_DONE);
+	}
+	
+	DeletePicture(picture);  /* no need to maintain these
+	DeletePenShareMap(psm);     objects any longer */
+
+
+draw / refresh:
+
+	
+	if (bm)
+	{
+		BltBitMapRastPort(bm, srcx, srcy, window->RPort,
+			dstx, dsty, width, height, 0xc0);
+	}
+
+
+closedown:
+
+
+	FreeBitMap(bm);	/* graphics.library */
+	ReleaseDrawHandle(drawhandle);
+
+
+
+3. Create a drawhandle for multiple pictures
+--------------------------------------------
+
+initialization:
+
+	picture1 = LoadPicture(filename1, TAG_DONE);
+	picture2 = LoadPicture(filename2, TAG_DONE);
+	picture3 = LoadPicture(filename3, TAG_DONE);
+
+	psm = CreatePenShareMap(TAG_DONE);
+
+	if (psm && picture1 && picture2 && picture3)
+	{
+		AddPicture(psm, picture1, TAG_DONE);
+		AddPicture(psm, picture2, TAG_DONE);
+		AddPicture(psm, picture3, TAG_DONE);
+
+		drawhandle = ObtainDrawHandle(psm, window->RPort,
+			screen->ViewPort.ColorMap, TAG_DONE);
+		}
+	}
+	
+	DeletePenShareMap(psm);
+	
+	etc.
+
+
+
+4. Create a drawhandle with a static palette
+--------------------------------------------
+
+Typical application: WWW browser
+
+A static palette is recommended if your application has no
+idea what colors will appear in the imagery, or when their
+contents may vary. Use static palettes preferrably on a
+seperate screen.
+
+
+initialization:
+
+	drawhandle = ObtainDrawHandle(NULL, window->RPort,
+			screen->ViewPort.ColorMap, TAG_DONE);
+
+	/* NULL = no pen-sharemap available - a static palette
+	for the whole RGB space will be allocated */
+	
+	etc.
+
+
+
+5. Render truecolor graphics realtime
+-------------------------------------
+
+Typical applications: Colorful realtime spectrum analyzer,
+animation in a Workbench window, etc.
+
+
+When your application needs to render varying truecolor
+graphics, create a 'direct'-drawhandle:
+
+	APTR ddh;
+
+	ddh = CreateDirectDrawHandle(drawhandle, sourcewidth,
+		sourceheight, destwidth, destheight, NULL);
+
+As you can see, a 'direct'-drawhandle is derived from an
+already existing drawhandle. It allows to draw RGB data with
+very low overhead:
+
+	DirectDrawTrueColor(ddh, rgbdata, x,y, TAG_DONE);
+
+closedown:
+
+	DeleteDirectDrawHandle(ddh);
+	ReleaseDrawHandle(drawhandle);
+	
+	etc.
+

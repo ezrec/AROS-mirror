@@ -1,0 +1,28 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-gfx-libs-guigfx : includes linklibs contrib-gfx-libs-render 
+
+FILES := guigfx_bitmap 		\
+	 guigfx_colorhandle 	\
+	 guigfx_convolve 	\
+	 guigfx_data 		\
+	 guigfx_draw 		\
+	 guigfx_drawhandle 	\
+	 guigfx_initexit 	\
+	 guigfx_loading 	\
+	 guigfx_pensharemap 	\
+	 guigfx_picture 	\
+	 guigfx_picturemethod 	\
+	 guigfx_rasthandle
+    	    
+FUNCS := guigfx_funcs
+
+%build_module_macro mmake=contrib-gfx-libs-guigfx \
+  modname=guigfx modtype=library \
+  funcs=$(FUNCS) files=$(FILES) \
+  conffile=lib.conf \
+  uselibs="amiga mui arosc m renderstubs"
+
+%common

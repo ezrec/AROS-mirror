@@ -1,0 +1,572 @@
+
+history
+-------------------------
+
+v20.0
+	- added picture attributes PICATTR_NumPaletteEntries and
+	  PICATTR_Palette to GetPictureAttrs(). This way you can
+	  query a picture's palette. PICATTR_NumPaletteEntries will
+	  currently always return 256 if a picture is palette-based,
+	  and zero otherwise. PICATTR_Palette expects a buffer of
+	  256 ULONG entries in (by default) the format PALFMT_RGB8.
+	  Requested by Andreas Falkenhahn.
+	  
+v19.2
+    - when a picture was read from a hicolor/truecolor rastport
+      using ReadPicture(), a palette was incorporated to the picture.
+      ClonePicture() created a copy of that palette but did not
+      actually place it in the resulting picture. when the library
+      was closed, the leak was indicated with a ILLEGAL exception.
+      fixed.
+
+v19.1
+	- fixed a LOOONG standing bug when adding pictures to
+	  a pensharemap, when the picture was less than 7 lines
+	  high. ouch!
+
+v19
+	- minor vararg quirks fixed.
+	- version number bumped.
+
+v18.3
+	- minor code cleanups
+
+v18.2
+    - Forgot to remove a return(NULL) when I put back the
+	  LockSemaphore, so the semaphore would stay obtained if
+	  GGFX_Init() failed .. fixed
+
+v18.1
+	- morphos version added to the archive, thanks to
+	  Sigbjørn Skjæret for porting
+
+	- source code added to the archive
+	
+	- minor cleanups
+
+v18.0
+	- added GGFX_FormatName, (char **) for IsPictureA(),
+	  returning the picture's datatype format string.
+	  use FreeVec() to free the returned string.
+
+	- allocation of a static-palette drawhandle is quicker
+	  (now using a precalculated YUV table)
+
+	- removed some obsolete data structures
+
+v17.1
+	- added an internal hook delay counter. user hooks
+	  are now called less frequently during scaling/rendering,
+	  which gives a slight performance boost in some
+	  applications
+	
+	- guigfx.library no longer loses memory upon open/close.
+	  this leak was present for eons. fixing it caused the library
+	  itself to shrink by several kilobytes of useless object
+	  code. no, i won't tell more details about this #*&%! one :-)
+	  
+	- removed the examples from the distribution because they were
+	  everything but instructive.
+
+v17
+	- bug fixed: the drawhandle's autodither attribute
+	  was not considered in CreatePictureBitMap().
+	
+	- added GGFX_AutoDither tag for CreatePictureBitMap()
+	  for overriding the drawhandle's autodither tag.
+
+v16.4
+
+	- reconstructed 16.3 changes after a minor HD desaster
+
+v16.3
+
+	- bug fixed in LoadPicture(): GGFX_UseMask was broken.
+	  memory for an alphachannel/mask was always allocated
+	  when there was a transparency color inside the picture,
+	  regardless of the GGFX_UseMask attribute. now an
+	  alphachannel is only allocated when both GGFX_UseMask
+	  is set and a mask is actually present.
+	  
+	- added documentation for a feature that was present
+	  and considered experimental since v8.3: drawing with
+	  rotating/texture-mapping in a single pass, without
+	  additional buffers. see: ObtainDrawHandle()/GGFX_BGColor
+	  and DrawPicture()/RND_DestCoordinates.
+
+v16.2
+
+	- improved mask handling: LoadPicture() now computes an
+	  alpha-channel from a given transparency color, when no
+	  PDTA_MaskPlane was returned. this solves some
+	  outstanding compatibility problems with the picasso96
+	  picture.datatype. thanks to S. Bauer for reporting
+	  these problems.
+
+	- fixed version string
+
+v16
+	- added GGFX_RastLock for passing an optional SignalSemaphore
+	  that may be used for locking a drawhandle's rastport while
+	  rendering.
+	
+	- default dithermode is now DITHERMODE_EDD.
+	
+	- v39 exec pooled memory environment reactivated (it was
+	  disabled since v10).
+	  
+	- added StormC includes.
+	
+	- removed all assembler and E includes. I'm too lazy to
+	  keep the assembler files up-to-date manually, and the
+	  iconvert tool of E throws enforcerhits on my system.
+	  (if you're programming the respective languages, you
+	  should have better ways to transform the includes than
+	  I have)
+
+v15.2
+	- static-palette drawhandles allocate much better pens now
+	  (a YUV colorspace is used instead of RGB), and allocation
+	  is quicker.
+
+v15.1
+	- render.library crashed with an ILLEGAL exception
+	  (caused by a memhandler leak) when a HAM picture
+	  was loaded with a v42 ILBM datatype. fixed.
+	
+	- CreatePictureMask() failed to create scaled masks.
+	  fixed.
+
+v15
+	- added a few basic examples to the documentation.
+	- added GGFX_UseMask for LoadPicture(). if TRUE and supported
+	  by the datatype, a mask will be read and included to the 
+	  picture as an alpha-channel.
+	- new function: CreatePictureMask(). This function creates
+	  a single-bitplane mask from a picture's alpha-channel. it
+	  can be passed to graphics.library/BltMaskBitMapRastPort().
+	- CreatePictureBitMap() now accepts a NULL picture. This can
+	  be used to allocate a blank bitmap that can be blitted
+	  to a drawhandle efficiently.
+
+v14
+	- minor bug in MakePicture() fixed: when a blank
+	  picture was created (data = NULL), the independent
+	  flag was internally not set to TRUE.
+	- PICMTHD_AUTOCROP cropped blank pictures down to zero
+	  pixels - fixed. (oops! evil crashes :-)
+
+v13
+	- minor internal changes
+
+v12
+	- added picture method PICMTHD_AUTOCROP
+	- the includes did not contain the definitions for
+	  PICMTHD_NEGATIVE. fixed.
+
+v11
+	- the Tower JPEG codec is no longer supported directly.
+	- added documentation for the v9 directdraw functions.
+
+v10.2
+	- env/usescalepixelarray is no longer considered for
+	  CreatePictureBitMap(). this function always uses
+	  internal scaling routines now.
+
+v10.1
+	- fixed a semaphore lockup problem when MakePicture() failed due to
+	  a lack of memory
+	- parts of the library have been restructured.
+	- internal bitmap handling rewritten.
+	- MakePicture() has been rewritten. lots of sanity checks have been added.
+	  bitmap conversion is more efficient. scaling has been included.
+	- fixed DirectDrawTruecolor() on truecolor screens without scaling
+	- rewrote ReadPicture(), added tags GGFX_AspectX, GGFX_AspectY,
+	  GGFX_DestWidth, GGFX_DestHeight, and GGFX_ModeID.
+	- added picture method PICMTHD_NEGATIVE
+
+v10
+	- major stability update! thanks to Luca Longone, who encountered
+	  MystiCube crashing when started multiple times. the internal
+	  memory manager is now reset to RMHTYPE_PUBLIC, and no problems
+	  occured with 4 mysticubes, 2 mysticviews in slideshow mode,
+	  rgbplasma, plus viewworld running simultaneously for many hours
+	  under heavy debugging conditions.
+
+	  public memory management seems to solve all outstanding problems,
+	  but it causes more memory fragmentation. a more sophisticated
+	  memory manager is being planned.
+
+	- added documentation for Source-Tags in picture method
+	  PICMTHD_MIXALPHA.
+
+v9.0
+	- CreatePictureBitmap() now returns gently with a NULL pointer
+	  when no valid picture or drawhandles were specified.
+	- added CreatePictureMask(). (experimental, not for public use yet)
+
+v8.5
+	- added env variable AUTODITHERTHRESHOLD
+	- env variables are now considered only once, when the
+	  library is opened.
+	- forgot to document PICMTHD_SET in the autodocs. fixed.
+	- added method PICMTHD_CHECKAUTODITHER.
+
+v8.4
+	- GGFX_AutoDither is now considered by DrawPicture()
+
+
+v8.3
+	- fixed CreateDirectDrawHandle(). when the input and
+	  output dimensions were the same, this function returned
+	  NULL instead of a valid directdrawhandle.
+	
+	- added support for texture-mapping and rotating while
+	  drawing (no additional buffers required). currently
+	  not documented and for internal use only.
+	
+	- added env variable guigfx/USEWPA8. it is used when the
+	  drawhandle is on a native Amiga screenmode. when set to
+	  0, guigfx.library will use an internal c2p routine.
+	  when set to 1, guigfx.library will call WritePixelArray8(),
+	  WritePixelLine8() or WriteChunkyPixels().
+
+v8.2
+	- 12bit (default) drawhandles now use mapping-engines for
+	  optimized rendering to static palettes (no pen-sharemap
+	  specified for ObtainDrawHandle()). this is preliminary,
+	  for test purposes only.
+	
+	- fixed PICMTHD_INSERT to support insertion of pictures
+	  which are both mapped to the same drawhandle. untested yet.
+
+v8.1
+	- to end up problems with cybergraphics.library/ScalePixelArray(),
+	  I've included an ENV variable named guigfx/USESCALEPIXELARRAY
+	  so that the user may decide. Default is "0", and
+	  guigfx.library/DrawPicture() uses its internal scaling
+	  routines. DirectDrawTrueColor() always uses ScalePixelArray()
+	  with cgfx v41 present.
+
+v8.0
+	- added CreateDirectDrawHandle(), DeleteDirectDrawHandle()
+	  and DirectDrawTrueColor() for optimized drawing of
+	  RGB data.
+
+	- wowsers, cybergraphics.library/scalepixelarray() seems
+	  to get faster and buggier with every new cybergraphics
+	  update. i wonder if the authors still know what's going
+	  on inside? anyway, i can't really decide whether to use
+	  it or not. currently, DirectDrawTrueColor() uses it for
+	  higher performance, and DrawPicture() doesn't for
+	  accurate scaling without flicker.
+
+v7.2
+	- applied Tower JPEG Class license agreements to the
+	  legal informations.
+
+	- If you want to use the Tower JPEG codec, your program
+	  has to be in accordance to the respective license
+	  agreements. Specify the tag GGFX_License for
+	  IsPicture() and LoadPicture() to use the JPEG codec.
+	  Otherwise, datatypes are used.
+
+v7.1
+	- added picture mehtods PICMTHD_FLIPX and PICMTHD_FLIPY.
+
+v7.0
+	- added picture method PICMTHD_INSERT.
+
+v6.2
+	- improved drawing speed with OS3.0
+
+v6
+	- ClonePicture() now handles scaling.
+	- minor changes and speed improvements.
+	- JPEG is the first file format to be supported
+	  directly. LoadPicture() uses the tower.library
+	  JPEG codec if available. directly supported
+	  formats require less memory while loading.
+
+v5
+	- added method PICMTHD_TINTALPHA
+
+v4.4
+	- since v4.3, ObtainDrawHandle() crashed on screens with
+	  no sharable pens. fixed.
+	- if render.library cannot be found in LIBS:,
+	  guigfx.library now tries to open it at libs/.
+	- IsPicture() no longer crashes without datatypes.library.
+
+v4.3
+	- improved logic in ObtainDrawHandle() for
+	  truecolor-rastports and pensharemap=NULL
+	- updated autodocs.
+	- Calls to ScalePixelArray()/cybergraphics v41 have been
+	  removed. Instead, a 24bit render.library scaling-engine
+	  is used. ScalePixelArray() is too slow (especially with
+	  large images), does not scale correctly, causes
+	  flickering, and cannot be interrupted.
+	- fixed PICMTHD_SET with pictures mapped to a drawhandle.
+	- added tags GGFX_SourceWidth, GGFX_SourceHeight, 
+	  GGFX_SourceX und GGFX_SourceY to ClonePicture(). It's
+	  now possible to clone a picture in part.
+	- fixed a minor bug in MakePicture().
+	- MakePicture() now accpets NULL as the palette argument
+	  for PIXFMT_CHUNKY_CLUT, in which case a grey palette
+	  with 256 entries will be generated.
+
+v4.2
+	- DrawPicture() did not set a correct return value under
+	  rare circumstances. fixed.
+	- pictures now cache their last scaling-engine.
+	- DrawPicture() is now guaranteed to execute the line hook
+	  at least once per call.
+
+v4.1
+	- the functions LockPicture() and UnlockPicture() are now
+	  considered 'obsolete'. Calling LockPicture() will always
+	  return FALSE, and UnlockPicture() will do nothing.
+	  
+	  Please remove these functions from your code and replace
+	  them with a call to DoPictureMethod() with
+	  PICMTHD_MAPDRAWHANDLE if you need optimized rendering.
+
+	  The idea behind LockPicture() wasn't too bad, but currently
+	  it is not possible to implement it properly. LockPicture()
+	  and UnlockPicture() will no longer be documented, but the
+	  LVOs remain valid and might be reactivated some day. Calling
+	  these functions in already existing code is harmless.
+
+v4.00
+	- implemented IsPicture()
+
+v3.11
+	- fixed several memory management problems with LoadPicture().
+
+v3.10
+	- fixed a heavy bug leading to memory corruptions, especially
+	  when drawing to native Amiga screen modes.
+	
+v3.03
+	- MakePictureA() now accepts NULL as a data pointer. This
+	  will create a 'blank' picture with the specified
+	  attributes.
+	- ObtainDrawHandleA() now accepts NULL for the pensharemap
+	  argument. In this case ObtainDrawHandle creates a drawhandle
+	  with a static 9bit colorspace palette.
+	- MakePictureA() now accepts a NULL palette for PIXFMT_CHUNKY_CLUT.
+	  This will create a default-palette (256 colors from black to white)
+	- drawing to bitplanes without scaling is now performed
+	  via Chunky2BitMap/BltBitMapRastPort.
+	- implemented PICMTHD_SET.
+	- fixed lots of bugs in internal picture conversion routines.
+
+v3.02
+	- guigfx.library no longer depends on datatypes.library v40.
+	  the minimum version number is reset to v39.
+	- implemented PICMTHD_TEXTURE.
+	- bumped revision number for render.library to v25.
+
+v3.01
+	- fixed a minor bug in LockPictureA().
+	- added documentation for LockPictureA() and UnLockPicture().
+	- added a workaround for INVALID_ID originating from
+	  PDTA_ModeID. INVALID_ID returned by a datatype appears
+	  neither logical nor legal to me. anyway, guigfx.library
+	  no longer crashes with HAM8 pictures loaded by the ILBM v43
+	  datatype in an ECS/OCS environment. however, the images still
+	  appear scrambled, since guigfx.library cannot determine whether
+	  to treat an image as HAM8 or not.
+
+v3.00
+	- Some more tags implemented.
+	- the autodocs have been reworked.
+	- the internal memhandler has been reset to RMHTYPE_POOL.
+	- implemented LockPicture() and UnlockPicture().
+	- color allocation strategy improved.
+	- datatypes.Library is no longer required for guigfx.library
+	  to be opened successfully.
+
+v2.01
+	- fixed GGFX_SourceX / GGFX_SourceY when drawing truecolor data to
+	  truecolor rastports without scaling. Thanks to M. Hillenbrand
+	  who reported this obstinate bug.
+
+v2.00
+	- fixed some internal histogram-related quirks and problems.
+	  the resolution of a picture's histogram is now by default the
+	  pensharemap's resolution it is being added to. if no
+	  pensharemap is involved, then the histogram's resolution
+	  will be set to the default resolution (currently HSTYPE_12BIT_TURBO).
+	  You may as well set GGFX_HSType for LoadPicture(), MakePicture(),
+	  and ReadPicture(), but this is not required under normal
+	  circumstances. Better set the desired resolution when calling
+	  CreatePenShareMap().
+	- guigfx.library no longer crashes with old versions of
+	  render.library. Now it closes down gently (It seems as I was
+	  completely brain-dead when I wrote the setup routine)
+	- autodocs now reflect all new tags and methods.
+
+v1.99
+	- since the autodither value cannot be computed when rendering
+	  to HAM screen modes, HAM dithering is always enabled with
+	  autodither != 0 and disabled with autodither==0.
+	- fixed documentation of AddPaletteA() and fixed a bug in
+	  AddPalette() / PALFMT_RGB32. Thanks to Frank Pagels who
+	  reported these problems.
+	- added picture method PICMTHD_TINT.
+	- guigfx.library no longer tries to open Cybergraphics.library
+	  v41. The code now correctly differentiates for ScalePixelArray()
+	  and custom scaling routines. Thanks to M. Hillenbrand and
+	  S. Sommerfeld who reported this bug.
+
+v1.98
+	- drawing/scaling truecolor to truecolor drawing is now
+	  done with ScalePixelArray/cybergraphics.library which
+	  isn't as slow as I expected. It can stand the test
+	  with a render.library scaling-engine plus line-by-line
+	  drawing, and it requires no additional memory.
+	- The code now differenciates graphics v40 for drawing to
+	  graphic card rastports via WriteChunkyPixels().
+
+v1.97
+	- guigfx.library now tries to convert chunky pictures to
+	  truecolor before drawing to HAM modes. if conversion
+	  fails (i.e. with the picture in a static buffer), the
+	  image will be drawn with the 16/64 HAM base colors.
+
+v1.96
+	- fixed a minor bug that occured when drawing odd-width
+	  pictures in directdraw mode.
+	- guigfx.library now renders to HAM modes. Currently the
+	  full HAM spectrum is only used with truecolor pictures.
+	  When ObtainDrawHandle() is supplied with GGFX_ModeID, 
+	  then HAM is automatically recognized and used.
+
+v1.95
+	- removed a workaround for an incompatibility problem
+	  between the cybergraphx and picasso96 picture.datatypes.
+	  loading is faster now and requires less memory. this
+	  update requires the picasso96 picture.class datatype
+	  v43.26.
+	- revised autodocs and completed the documentation for
+	  the picture method PICMTHD_CREATEALPHAMASK.
+
+v1.94
+	- fixed a overlap-memcopy bug in PICMTHD_CROP. You need to
+	  upgrade to render.library v22.1.
+
+v1.93
+	- improved alpha-channel handling. PICMTHD_MIXALPHA
+	  now handles alpha-channels in both the source and
+	  destination picture (if present).
+	- implemented PICMTHD_CREATEALPHAMASK.
+	- added E includes
+
+v1.92
+	- fixed bug in DoPictureMethod: certain internal format
+	  conversions lead to crashes since v1.7.
+	- implemented PICMTHD_RENDER with destination format
+	  PIXFMT_RGB_24.
+	- completed alpha-channel administration. an alpha-channel
+	  is no longer discarded when the internal pixel format
+	  changes.
+	- implemented GGFX_AlphaPresent for MakePicture()
+
+v1.9
+	- rewrote all drawing routines. the code is more
+	  differentiated for optimized drawing.
+	- autodither fixed. finally this feature works as
+	  it was originally intended to.
+	- Fixed v1.8 bug when drawing to truecolor screens.
+	- implemented GGFX_DitherMode for DrawPicture() and
+	  CreatePictureBitMap(). They may be used to optionally
+	  override the drawhandle's dithermode.
+	- Note: guigfx.library v1.9 requires render.library v21.
+	- implemented GGFX_AspectX and GGFX_AspectY to
+	  MakePicture().
+
+v1.8
+	- ObtainDrawHandle() no longer allocates pens for
+	  truecolor rastports. Thanks to Stefan Sommerfeld
+	  who reported this bug.
+	- GGFX_SourceWidth and GGFX_SourceHeight were not
+	  correctly implemented for CreatePictureBitMap()
+	- fixed minor memory transfer problems: TurboCopyMem()
+	  was sometimes applied to odd-sized memory areas
+	- implemented GGFX_BufferSize for MakePicture()
+
+v1.7
+	- a picture has no longer to be maintained for an open
+	  colorhandle. with other words: you may DeletePicture()
+	  a picture after it has been added to a pensharemap via
+	  AddPicture().
+	- implemented GGFX_MaxAllocPens for ObtainDrawHandle().
+	  This limits the number of allocated pens to a specific
+	  number. Better you use this feature only if you've got
+	  a very good reason for it.
+	- math problems fixed. GGFX_Weight should work now. a better
+	  color allocation strategy has been implemented.
+	  Currently use GGFX_Weight in a range from 1-10. Maybe
+	  I will implement a more sophisticated measurement later.
+	- internal color allocation order is now PALMODE_SATURATION
+	  instead of PALMODE_SIGNIFICANCE. this improves color
+	  allocation speed drastically.
+	- drawhandles no longer maintain a global mapping-engine.
+	  this saves some memory and is remarkably faster in many
+	  situations, since the mapping-engine could not be linked
+	  to the drawhandle's histogram.
+
+v1.6
+	- implemented GGFX_ErrorCode for LoadPicture(). You specify
+	  a pointer to LONG, and a standard DOS error code will be
+	  returned (NULL when everything was OK).
+
+v1.5
+	- LoadPicture() did not always handle v43 bitmaps correctly.
+	  Fixed. Thanks to Markus Hillenbrand who reported this bug.
+	- guigfx.library's global memhandler is reset to RMHTYPE_PUBLIC
+	  for debugging, since public memory violations can be
+	  tracked down more easily.
+	- fixed PICMTHD_MIXALPHA with the source picture in
+	  PIXFMT_CHUNKY_CLUT
+	- added PICATTR_AspectX and PICATTR_AspectY to GetPictureAttrs()
+
+v1.4	- fixed minor autodither bug.
+	- GGFX_CallBackHook implemented for CreatePictureBitMap.
+	- the autodither calculation is now invoked only for rastports
+	  with a depth <= 8
+
+v1.3
+	- added GGFX_DitherMode to CreatePictureBitMap()
+	- added GGFX_DestWidth, DestHeight, DestX and DestY to
+	  method PICMTHD_MIXALPHA and PICMTHD_SETALPHA.
+	  added GGFX_DestWidth, DestHeight, DestX, DestY, SourceX,
+	  SourceY, SourceWidth, SourceHeight to method PICMTHD_MIX.
+	  after all, DoPictureMethod() can apply clip regions of alpha
+	  channel data to regions inside the picture, with automatic
+	  scaling when necessary.
+	- cleaned up all drawing routines.
+	- GGFX_CallBackHook implemented for DrawPicture.
+
+v1.2
+	- fixed a bug in ClonePicture(). When a cloned picture was
+	  deleted after the original, a memhandler-failure occured
+	  (leading to an ILLEGAL exception in render.library)
+	- fixed a bug in LoadPicture() - eliminated calls to IoErr().
+	  dos.library is not part of guigfx.library. this fixes
+	  crashes with unknown datatype objects or load errors.
+	- guigfx.library now uses a global memhandler with RMHTYPE_POOL
+	  and MEMF_REVERSE.
+	- implemented GGFX_SourceWidth, GGFX_SourceHeight, GGFX_SourceX
+	  and GGFX_SourceY for DrawPicture(). Now you can easily specify
+	  offsets.
+
+v1.1
+	- fixed a heavy bug when drawing to native Amiga screen modes.
+
+
+v1.0
+	- first internal beta release.
+

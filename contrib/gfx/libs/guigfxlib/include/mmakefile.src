@@ -1,0 +1,24 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+INCLUDE_FILES 	 := guigfx.h
+INCLUDE_SRC_DIR  := guigfx
+INCLUDE_DEST_DIR := guigfx
+
+INCL_FILES_1 := $(foreach f, $(INCLUDE_FILES), $(AROS_INCLUDES)/$(INCLUDE_DEST_DIR)/$(f))
+INCL_FILES_2 := $(foreach f, $(INCLUDE_FILES), $(GENINCDIR)/$(INCLUDE_DEST_DIR)/$(f))
+
+#MM includes-copy
+includes-copy : setup $(INCL_FILES_1) $(INCL_FILES_2)
+
+$(AROS_INCLUDES)/$(INCLUDE_DEST_DIR)/%.h : $(INCLUDE_SRC_DIR)/%.h
+	@$(CP) $< $@
+
+$(GENINCDIR)/$(INCLUDE_DEST_DIR)/%.h : $(INCLUDE_SRC_DIR)/%.h
+	@$(CP) $< $@
+
+setup ::
+	%mkdirs_q $(AROS_INCLUDES)/$(INCLUDE_DEST_DIR) $(GENINCDIR)/$(INCLUDE_DEST_DIR)
+
+%common

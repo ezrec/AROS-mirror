@@ -1,0 +1,55 @@
+
+guigfx environment variables
+----------------------------
+
+  guigfx/USESCALEPIXELARRAY
+  internal default: 0
+
+    use ScalePixelArray() / cybergraphics v41
+
+    if you have cybergraphics v41 (or later) installed to
+    your system, this flag tells guigfx.library to use
+    ScalePixelArray() for scaling truecolor data to truecolor
+    displays.
+    
+    ScalePixelArray() scales inside the graphics card's memory
+    and can thereof be very fast. it is NOT used by default,
+    due to accuracy problems. ScalePixelArray()
+    
+    - uses an incorrect bresenham algorithm
+    - overwrites areas outside the specified rectangle
+    - overwrites areas outside the specified rastport
+    - flickers
+
+    set this flag to 1 if you prefer higher performance
+    instead of higher accuracy.
+  
+    
+  guigfx/USEWPA8
+  internal default: 0
+
+    use WritePixelArray() on native Amiga screenmodes
+
+    the OS functions WriteChunkyPixels(), WritePixelArray8() and
+    WritePixelLine8() are awfully slow and almost unusable on
+    native Amiga displays. therefore, guigfx.library uses an
+    internal chunky-2-planar conversion for planar displays.
+
+    there are very fast third-party patches available to
+    improve the performance of WritePixelArray(). if you
+    are using such a patch for WritePixelArray(), set this
+    flag to 1.
+    
+    note: this flag is meaningless for graphics card displays.
+
+  
+  guigfx/AUTODITHERTHRESHOLD
+  internal default: 250
+
+    set global default autodither threshold
+  
+    this setting allows you to set a global default for
+    guigfx.library's autodither feature. the lower, the earlier
+    dithering is activated.
+
+    note: applications may override this global default value.
