@@ -809,15 +809,15 @@ GLOBAL Settings DefaultSettings
  *              Now, our global variables
  */
 
-GLOBAL struct Library *AslBase;                                 /* ASL library base                     */
+GLOBAL struct Library *AslBase;                         /* ASL library base                     */
 GLOBAL struct Library *DiskfontBase;                    /* Diskfont library base        */
 GLOBAL struct Library *GadToolsBase;                    /* GadTools library base        */
-GLOBAL struct Library *LayersBase;                              /* Layers library base          */
-GLOBAL struct Library *IconBase;                                /* Icon library base            */
-GLOBAL struct GfxBase *GfxBase;                                 /* Graphics library base        */
-GLOBAL struct Library *RexxSysBase;                             /* REXX library base            */
-GLOBAL struct Library *UtilityBase;                             /* Utility library base         */
-GLOBAL struct Library *CxBase;                                  /* Commodities base                     */
+GLOBAL struct Library *LayersBase;                      /* Layers library base          */
+GLOBAL struct Library *IconBase;                        /* Icon library base            */
+GLOBAL struct GfxBase *GfxBase;                         /* Graphics library base        */
+GLOBAL struct Library *RexxSysBase;                     /* REXX library base            */
+GLOBAL struct UtilityBase *UtilityBase;                 /* Utility library base         */
+GLOBAL struct Library *CxBase;                          /* Commodities base                     */
 GLOBAL struct Library *AmigaGuideBase;                  /* AmigaGuide base                      */
 GLOBAL struct Library *WorkbenchBase;                   /* Workbench base                       */
 GLOBAL struct Library *KeymapBase;                              /* Keymap base                          */
