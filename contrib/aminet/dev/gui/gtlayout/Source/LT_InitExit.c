@@ -91,8 +91,15 @@ LT_Init(VOID)
 
 	#ifndef LINK_LIB
 	{
+#ifdef __AROS__
+		struct ExecBase * AbsExecBase;
+		{
+			AROS_GET_SYSBASE
+			AbsExecBase = SysBase;
+		}
+#else
 		extern struct Library __far * AbsExecBase;
-
+#endif
 		SysBase = AbsExecBase;
 	}
 	#endif	// LINK_LIB
