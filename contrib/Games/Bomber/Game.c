@@ -162,7 +162,7 @@ void GameLoop ()
   Frame++;
 
   //Limit to 15fps
-  WaitFor (65);
+  WaitFor (65); /* 65 */ /* 1000 / FPS */
   //Escape quits to menu
   if (Esc) {
     StopMidi ();

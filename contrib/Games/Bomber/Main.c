@@ -23,10 +23,8 @@
 #define WIDTH 272
 #define HEIGHT 272
 
-extern struct Library *CyberGfxBase;
-
 struct Window *win;
-
+struct Screen *scr;
 
 UBYTE *MainBitmapData,
       *BackBitmapData,
@@ -50,6 +48,7 @@ static void cleanup(char *msg)
     if (msg) printf("Bomber: %s\n", msg);
     
     if (win) CloseWindow(win);
+    if (scr) UnlockPubScreen(NULL, scr);
     
     exit(0);
 }
