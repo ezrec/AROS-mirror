@@ -7,18 +7,12 @@
 * Add ARexx specific functions
   To implement:
   - ADDLIB
-  - BITCHG
-  - BITCLR
-  - BITCOND
-  - BITSET
-  - BITTST
-  - COMPRESS
+  - BITCOMP
   - EXISTS
   - EXPORT
   - FREESPACE
   - GETCLIP
   - GETSPACE
-  - HASH
   - IMPORT
   - PRAGMA
   - RANDU
@@ -26,8 +20,6 @@
   - SETCLIP
   - SHOW
   - STORAGE
-  - TRIM
-  - UPPER
   Implemented:
   - CLOSE
   - EOF
@@ -39,6 +31,14 @@
   - WRITECH
   - B2C
   - C2B
+  - BITCHG
+  - BITCLR
+  - BITSET
+  - BITTST
+  - COMPRESS
+  - HASH
+  - TRIM
+  - UPPER
 * Fix the ARexx vs. ANSI REXX incompatibilies.
   These are: ^ is XOR in ARexx but is not in ANSI REXX.
   Multiple line strings in ARexx are not there in ASNI REXX and are said
