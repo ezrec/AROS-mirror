@@ -9,3 +9,7 @@
 */
 
 #define APPNAME     "DiskSpeed"
+#define VERSION     4
+#define REVISION    9
+#define DATE        "26.1.2004"
+

@@ -82,7 +82,11 @@ struct Task *Init_CPU_Available(struct CPU_AVAIL *CPU_AVAIL_struct)
         NewList(&SPEED_Task->tc_MemEntry);
 		SPEED_Task->tc_Node.ln_Type = NT_TASK;
 		SPEED_Task->tc_Node.ln_Name = Task_Name;
+<<<<<<< DiskSpeedCPU.c
+		SPEED_Task->tc_Node.ln_Pri  = -127;
+=======
 		SPEED_Task->tc_Node.ln_Pri = -127;
+>>>>>>> 1.2
 
 		stack = AllocMem(AROS_STACKSIZE, MEMF_PUBLIC);
 

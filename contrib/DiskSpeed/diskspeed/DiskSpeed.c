@@ -154,16 +154,13 @@ struct DiskSpeedConfig_Intern diskspeedmui_config;
 
 /*********************************************************************************************/
 
-#define	VERSION                     4
-#define	REVISION                    9
-#define	DATE                        "26.1.2004"
-#define	VERS                        APPNAME " 4.9"
+#define VERS			    APPNAME " 4.9"
 #define	VSTRING                     APPNAME " 4.9 (" DATE ")\n\r"
 #define	VERSTAG                     "\0$VER: " APPNAME " 4.9 (" DATE ")"
-
+#define CXVERSION	            VERS " (" DATE ")" 
 #define STR_SEPERATOR               "------------------------------------------------------------------"
 
-char	COPYRIGHT[]=                    "Aros " APPNAME " 4.9  Copyright © 2004 The AROS Development Team" VERSTAG;
+char	COPYRIGHT[]=                    "Aros " VERS " Copyright © 2004 The AROS Development Team" VERSTAG;
 
 #ifdef	SCSI_SPEED
 #   define	MSG_BYTES_READ              MSG_BYTES_READ_S
@@ -862,7 +859,7 @@ BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem_type, 
 	if (offset & 2) type2="WORD";
 	if (offset & 1) type2="BYTE";
 
-	if (mem=AllocMem(size+offset,mem_type|MEMF_PUBLIC))
+	if ((mem=AllocMem(size+offset,mem_type|MEMF_PUBLIC)))
 	{
 		/* Set up memory... */
 		buffer=&(mem[offset]);
@@ -1392,10 +1389,10 @@ BOOL Open_GUI(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 
         diskspeedmui_intern.disk_app = ApplicationObject,
 	                    MUIA_Application_Title, (IPTR)APPNAME,
-	                    MUIA_Application_Version, (IPTR)VERSTAG,
+	                    MUIA_Application_Version, (IPTR)CXVERSION,
 	                    MUIA_Application_Copyright, (IPTR)"Copyright © 1995-2002, The AROS Development Team",
 	                    MUIA_Application_Author, (IPTR)"The AROS Development Team",
-                        MUIA_Application_Description, "Test Disk Performance.",
+                            MUIA_Application_Description, GetString(MSG_DESCRIPTION),
 	                    MUIA_Application_Base, (IPTR)APPNAME,
 		    MUIA_Application_Menustrip, MenuitemObject,
 			    MUIA_Family_Child, MenuitemObject,
