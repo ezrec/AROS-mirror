@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/08/17 15:09:18  chodorowski
+ * Fixed compiler warnings.
+ *
  * Revision 42.2  2000/05/15 19:27:02  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -124,15 +127,15 @@ STATIC VOID CalcPropMuck(Class *cl, Object *obj, struct BaseInfo *bi)
        */
       if (pd->pd_Flags & PDF_PROPHORIZ)
       {
-         arrow1.Left  += bc->bc_HitBox.Width;
-         arrow2.Left   = arrow1.Left + size;
-         arrow1.Width  = arrow2.Width = size;
+	 arrow1.Left  += bc->bc_HitBox.Width;
+	 arrow2.Left   = arrow1.Left + size;
+	 arrow1.Width  = arrow2.Width = size;
       }
       else
       {
-         arrow1.Top   += bc->bc_HitBox.Height;
-         arrow2.Top    = arrow1.Top + size;
-         arrow1.Height = arrow2.Height = size;
+	 arrow1.Top   += bc->bc_HitBox.Height;
+	 arrow2.Top    = arrow1.Top + size;
+	 arrow1.Height = arrow2.Height = size;
       }
       SetGadgetBounds(pd->pd_Arrow1, &arrow1);
       SetGadgetBounds(pd->pd_Arrow2, &arrow2);
@@ -152,9 +155,9 @@ STATIC VOID CalcPropMuck(Class *cl, Object *obj, struct BaseInfo *bi)
     * Set it up.
     */
    DoSetMethodNG(pd->pd_Prop, GA_Left,     bc->bc_InnerBox.Left,  GA_Top,    bc->bc_InnerBox.Top,
-                              GA_Width,    bc->bc_InnerBox.Width, GA_Height, bc->bc_InnerBox.Height,
-                              PGA_Top,     pd->pd_Top,            PGA_Total, pd->pd_Total,
-                              PGA_Visible, pd->pd_Visible,        TAG_DONE);
+			      GA_Width,    bc->bc_InnerBox.Width, GA_Height, bc->bc_InnerBox.Height,
+			      PGA_Top,     pd->pd_Top,            PGA_Total, pd->pd_Total,
+			      PGA_Visible, pd->pd_Visible,        TAG_DONE);
 
    if (pd->pd_Knob)
    {
@@ -163,16 +166,16 @@ STATIC VOID CalcPropMuck(Class *cl, Object *obj, struct BaseInfo *bi)
 
       if ((pd->pd_Total > 0) && (pd->pd_Total > pd->pd_Visible))
       {
-         if (pd->pd_Flags & PDF_PROPHORIZ)
-         {
-            kw = (kw * (ULONG)pd->pd_Visible) / pd->pd_Total;
-            if (kw < 4) kw = 4;
-         }
-         else
-         {
-            kh = (kh * (ULONG)pd->pd_Visible) / pd->pd_Total;
-            if (kh < 4) kh = 4;
-         }
+	 if (pd->pd_Flags & PDF_PROPHORIZ)
+	 {
+	    kw = (kw * (ULONG)pd->pd_Visible) / pd->pd_Total;
+	    if (kw < 4) kw = 4;
+	 }
+	 else
+	 {
+	    kh = (kh * (ULONG)pd->pd_Visible) / pd->pd_Total;
+	    if (kh < 4) kh = 4;
+	 }
       };
       DoSetMethodNG(pd->pd_Knob, IA_Width, kw, IA_Height, kh, TAG_DONE);
    };
@@ -227,62 +230,62 @@ METHOD(PropClassNew, struct opSet *, ops)
        */
       if (pd->pd_Flags & PDF_ARROWS)
       {
-         pd->pd_Arrow1 = BGUI_NewObject(BGUI_BUTTON_GADGET,
-                                        VIT_BuiltIn, horiz ? BUILTIN_ARROW_LEFT : BUILTIN_ARROW_UP,
-                                        BT_ParentView,bc->bc_View,
-                                        BT_ParentWindow,bc->bc_Window,
-                                        TAG_DONE);
+	 pd->pd_Arrow1 = BGUI_NewObject(BGUI_BUTTON_GADGET,
+					VIT_BuiltIn, horiz ? BUILTIN_ARROW_LEFT : BUILTIN_ARROW_UP,
+					BT_ParentView,bc->bc_View,
+					BT_ParentWindow,bc->bc_Window,
+					TAG_DONE);
 
-         pd->pd_Arrow2 = BGUI_NewObject(BGUI_BUTTON_GADGET,
-                                        VIT_BuiltIn, horiz ? BUILTIN_ARROW_RIGHT : BUILTIN_ARROW_DOWN,
-                                        BT_ParentView,bc->bc_View,
-                                        BT_ParentWindow,bc->bc_Window,
-                                        TAG_DONE);
+	 pd->pd_Arrow2 = BGUI_NewObject(BGUI_BUTTON_GADGET,
+					VIT_BuiltIn, horiz ? BUILTIN_ARROW_RIGHT : BUILTIN_ARROW_DOWN,
+					BT_ParentView,bc->bc_View,
+					BT_ParentWindow,bc->bc_Window,
+					TAG_DONE);
 
-         if (!(pd->pd_Arrow1 && pd->pd_Arrow2)) goto failure;
+	 if (!(pd->pd_Arrow1 && pd->pd_Arrow2)) goto failure;
       };
 
       if (pd->pd_Prop = NewObject(NULL, PropGClass,
-                                        GA_RelVerify,   TRUE,
-                                        PGA_Borderless, TRUE,
-                                        PGA_Freedom,    horiz ? FREEHORIZ : FREEVERT,
-                                        TAG_MORE,       tags))
+					GA_RelVerify,   TRUE,
+					PGA_Borderless, TRUE,
+					PGA_Freedom,    horiz ? FREEHORIZ : FREEVERT,
+					TAG_MORE,       tags))
       {
-         /*
-         pd->pd_Knob = BGUI_NewObject(BGUI_FRAME_IMAGE,
-                          FRM_Type,        FRTYPE_FUZZ_RIDGE,
-                          //FRM_FrameWidth,  2,
-                          //FRM_FrameHeight, 2,
-                          FRM_ThinFrame,   TRUE,
-                          FRM_BackFill,    SHINE_RASTER,
-                          IMAGE_InBorder,  GADGET(rc)->Activation & BORDERMASK,
-                          TAG_END);
-         */
+	 /*
+	 pd->pd_Knob = BGUI_NewObject(BGUI_FRAME_IMAGE,
+			  FRM_Type,        FRTYPE_FUZZ_RIDGE,
+			  //FRM_FrameWidth,  2,
+			  //FRM_FrameHeight, 2,
+			  FRM_ThinFrame,   TRUE,
+			  FRM_BackFill,    SHINE_RASTER,
+			  IMAGE_InBorder,  GADGET(rc)->Activation & BORDERMASK,
+			  TAG_END);
+	 */
 
 
-         /*
-          * No disabled.
-          */
-         DoSetMethodNG(pd->pd_Prop, GA_Disabled, FALSE, TAG_END);
+	 /*
+	  * No disabled.
+	  */
+	 DoSetMethodNG(pd->pd_Prop, GA_Disabled, FALSE, TAG_END);
 
-         if (pd->pd_Knob)
-         {
-            DoSetMethodNG(pd->pd_Prop, GA_Image, pd->pd_Knob, GA_SelectRender, pd->pd_Knob, TAG_DONE);
-         };
+	 if (pd->pd_Knob)
+	 {
+	    DoSetMethodNG(pd->pd_Prop, GA_Image, pd->pd_Knob, GA_SelectRender, pd->pd_Knob, TAG_DONE);
+	 };
 
-         /*
-          * We target the IDCMP port (when allowed).
-          */
-         if (!GetTagData(PGA_DontTarget, FALSE, tags))
-            DoSuperSetMethodNG(cl, (Object *)rc, ICA_TARGET, ICTARGET_IDCMP, TAG_END);
+	 /*
+	  * We target the IDCMP port (when allowed).
+	  */
+	 if (!GetTagData(PGA_DontTarget, FALSE, tags))
+	    DoSuperSetMethodNG(cl, (Object *)rc, ICA_TARGET, ICTARGET_IDCMP, TAG_END);
 
-         pd->pd_Flags |= PDF_READY;
+	 pd->pd_Flags |= PDF_READY;
 
-         /*
-          * So far, so good....
-          */
-         FreeTagItems(tags);
-         return rc;
+	 /*
+	  * So far, so good....
+	  */
+	 FreeTagItems(tags);
+	 return rc;
       }
       failure:
       /*
@@ -341,89 +344,89 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
       switch (tag->ti_Tag)
       {
       case PGA_Top:
-         pd->pd_Top = data;
-         break;
+	 pd->pd_Top = data;
+	 break;
 
       case PGA_Total:
-         pd->pd_Total = data;
-         break;
+	 pd->pd_Total = data;
+	 break;
 
       case PGA_Visible:
-         pd->pd_Visible = data;
-         break;
+	 pd->pd_Visible = data;
+	 break;
 
       case PGA_Freedom:
-         if (data == FREEHORIZ) pd->pd_Flags |= PDF_PROPHORIZ;
-         else                   pd->pd_Flags &= ~PDF_PROPHORIZ;
-         break;
+	 if (data == FREEHORIZ) pd->pd_Flags |= PDF_PROPHORIZ;
+	 else                   pd->pd_Flags &= ~PDF_PROPHORIZ;
+	 break;
 
       case PGA_Arrows:
-         if (data) pd->pd_Flags |= PDF_ARROWS;
-         else      pd->pd_Flags &= ~PDF_ARROWS;
-         break;
+	 if (data) pd->pd_Flags |= PDF_ARROWS;
+	 else      pd->pd_Flags &= ~PDF_ARROWS;
+	 break;
 
       case PGA_ArrowSize:
-         pd->pd_ArrowSize = data;
-         break;
+	 pd->pd_ArrowSize = data;
+	 break;
 
       case SLIDER_Level:
-         pd->pd_Level  = data;
-         break;
+	 pd->pd_Level  = data;
+	 break;
 
       case SLIDER_Min:
-         pd->pd_Min = data;
-         break;
+	 pd->pd_Min = data;
+	 break;
 
       case SLIDER_Max:
-         pd->pd_Max = data;
-         break;
+	 pd->pd_Max = data;
+	 break;
 
       case PGA_XenFrame:
-         if (data) data = FRTYPE_XEN_BUTTON;
-         else      data = FRTYPE_BUTTON;
-         goto set_frametype;
+	 if (data) data = FRTYPE_XEN_BUTTON;
+	 else      data = FRTYPE_BUTTON;
+	 goto set_frametype;
 
       case PGA_NoFrame:
       case SLIDER_NoFrame:
-         if (data) data = FRTYPE_NONE;
-         else      data = FRTYPE_BUTTON;
+	 if (data) data = FRTYPE_NONE;
+	 else      data = FRTYPE_BUTTON;
 
       case FRM_Type:
       set_frametype:
-         DoMultiSet(FRM_Type, data, 3, bc->bc_Frame, pd->pd_Arrow1, pd->pd_Arrow2);
-         fc = TRUE;
-         break;
+	 DoMultiSet(FRM_Type, data, 3, bc->bc_Frame, pd->pd_Arrow1, pd->pd_Arrow2);
+	 fc = TRUE;
+	 break;
 
       case PGA_ThinFrame:
       case SLIDER_ThinFrame:
       case FRM_ThinFrame:
-         DoMultiSet(FRM_ThinFrame, data, 3, bc->bc_Frame, pd->pd_Arrow1, pd->pd_Arrow2);
-         fc = TRUE;
-         break;
+	 DoMultiSet(FRM_ThinFrame, data, 3, bc->bc_Frame, pd->pd_Arrow1, pd->pd_Arrow2);
+	 fc = TRUE;
+	 break;
 
       case GA_TopBorder:
       case GA_BottomBorder:
       case GA_LeftBorder:
       case GA_RightBorder:
-         DoMultiSet(tag->ti_Tag, data, 4, pd->pd_Arrow1, pd->pd_Arrow2, pd->pd_Knob, pd->pd_Prop);
+	 DoMultiSet(tag->ti_Tag, data, 4, pd->pd_Arrow1, pd->pd_Arrow2, pd->pd_Knob, pd->pd_Prop);
 
-         if (data)
-         {
-            DoSetMethodNG(bc->bc_Frame,  FRM_Type, FRTYPE_BORDER, FRM_EdgesOnly, TRUE, TAG_DONE);
+	 if (data)
+	 {
+	    DoSetMethodNG(bc->bc_Frame,  FRM_Type, FRTYPE_BORDER, FRM_EdgesOnly, TRUE, TAG_DONE);
 
-            DoSetMethodNG(pd->pd_Arrow1, BT_FrameObject, NULL,
-               SYSIA_Which, (pd->pd_Flags & PDF_PROPHORIZ) ? LEFTIMAGE : UPIMAGE, TAG_DONE);
+	    DoSetMethodNG(pd->pd_Arrow1, BT_FrameObject, NULL,
+	       SYSIA_Which, (pd->pd_Flags & PDF_PROPHORIZ) ? LEFTIMAGE : UPIMAGE, TAG_DONE);
 
-            DoSetMethodNG(pd->pd_Arrow2, BT_FrameObject, NULL,
-               SYSIA_Which, (pd->pd_Flags & PDF_PROPHORIZ) ? RIGHTIMAGE : DOWNIMAGE, TAG_DONE);
-         };
-         fc = TRUE;
-         break;
+	    DoSetMethodNG(pd->pd_Arrow2, BT_FrameObject, NULL,
+	       SYSIA_Which, (pd->pd_Flags & PDF_PROPHORIZ) ? RIGHTIMAGE : DOWNIMAGE, TAG_DONE);
+	 };
+	 fc = TRUE;
+	 break;
 
       case BT_ParentWindow:
       case BT_ParentView:
-         DoMultiSet(tag->ti_Tag, data, 3, pd->pd_Arrow1, pd->pd_Arrow2, pd->pd_Knob);
-         break;
+	 DoMultiSet(tag->ti_Tag, data, 3, pd->pd_Arrow1, pd->pd_Arrow2, pd->pd_Knob);
+	 break;
       };
    };
 
@@ -434,9 +437,9 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
        */
       if (pd->pd_Min > pd->pd_Max)
       {
-         tmp        = pd->pd_Min;
-         pd->pd_Min = pd->pd_Max;
-         pd->pd_Max = tmp;
+	 tmp        = pd->pd_Min;
+	 pd->pd_Min = pd->pd_Max;
+	 pd->pd_Max = tmp;
       };
 
       /*
@@ -466,7 +469,7 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
        * Check if any of these values changed.
        */
       if ((pd->pd_Min != omin) || (pd->pd_Max != omax) || (pd->pd_Level != olev))
-         redraw = GREDRAW_UPDATE;
+	 redraw = GREDRAW_UPDATE;
    }
    else
    {
@@ -476,7 +479,7 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
        * Check if any of these values changed.
        */
       if ((pd->pd_Top != oldtop) || (pd->pd_Total != oldtot) || (pd->pd_Visible != oldvis))
-         redraw = GREDRAW_UPDATE;
+	 redraw = GREDRAW_UPDATE;
    };
 
    if (fc)
@@ -485,20 +488,20 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
       switch (data)
       {
       case FRTYPE_NONE:
-         ho = vo = 0;
+	 ho = vo = 0;
       case FRTYPE_BORDER:
-         if (GADGET(obj)->Activation & (GACT_LEFTBORDER|GACT_RIGHTBORDER)) { ho = 4; vo = 1; };
-         if (GADGET(obj)->Activation & (GACT_TOPBORDER|GACT_BOTTOMBORDER)) { ho = 2; vo = 2; };
-         DoSetMethodNG(bc->bc_Frame, FRM_Type, FRTYPE_NONE, TAG_DONE);
-         break;
+	 if (GADGET(obj)->Activation & (GACT_LEFTBORDER|GACT_RIGHTBORDER)) { ho = 4; vo = 1; };
+	 if (GADGET(obj)->Activation & (GACT_TOPBORDER|GACT_BOTTOMBORDER)) { ho = 2; vo = 2; };
+	 DoSetMethodNG(bc->bc_Frame, FRM_Type, FRTYPE_NONE, TAG_DONE);
+	 break;
       default:
-         Get_Attr(bc->bc_Frame, FRM_ThinFrame, &data);
-         vo = 1;
-         ho = data ? 1 : 2;
-         break;
+	 Get_Attr(bc->bc_Frame, FRM_ThinFrame, &data);
+	 vo = 1;
+	 ho = data ? 1 : 2;
+	 break;
       };
       DoSuperSetMethodNG(cl, obj, BT_LeftOffset,  ho,  BT_RightOffset,  ho,
-                                  BT_TopOffset,   vo,  BT_BottomOffset, vo,  TAG_DONE);
+				  BT_TopOffset,   vo,  BT_BottomOffset, vo,  TAG_DONE);
 
       redraw = GREDRAW_REDRAW;
    };
@@ -510,7 +513,7 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
        * Disable state changed?
        */
       if ((GADGET(obj)->Flags & GFLG_DISABLED) != dis)
-         redraw = GREDRAW_REDRAW;
+	 redraw = GREDRAW_REDRAW;
 
       /*
        * Re-render the gadget.
@@ -523,15 +526,15 @@ METHOD(PropClassSetUpdate, struct opUpdate *, opu)
        */
       if (pd->pd_Flags & PDF_SLIDER)
       {
-         type = (pd->pd_Level != olev) ? SLIDER_Level : 0;
+	 type = (pd->pd_Level != olev) ? SLIDER_Level : 0;
       }
       else
       {
-         type = (pd->pd_Top != oldtop) ? PGA_Top : 0;
+	 type = (pd->pd_Top != oldtop) ? PGA_Top : 0;
       };
 
       if (type) DoNotifyMethod(obj, opu->opu_GInfo, opu->MethodID == OM_UPDATE ? opu->opu_Flags : 0,
-                   GA_ID, GADGET(obj)->GadgetID, type, val, TAG_DONE);
+		   GA_ID, GADGET(obj)->GadgetID, type, val, TAG_DONE);
    }
    return 1;
 }
@@ -546,7 +549,6 @@ METHOD(PropClassRender, struct bmRender *, bmr)
    BC                   *bc = BASE_DATA(obj);
    struct BaseInfo      *bi = bmr->bmr_BInfo;
    struct RastPort      *rp = bi->bi_RPort;
-   ULONG                 rc = 0;
 
    /*
     * Render the baseclass.
@@ -568,8 +570,8 @@ METHOD(PropClassRender, struct bmRender *, bmr)
        */
       if (pd->pd_Flags & PDF_ARROWS)
       {
-         AsmDoMethod(pd->pd_Arrow1, GM_RENDER, bi, rp, GREDRAW_REDRAW);
-         AsmDoMethod(pd->pd_Arrow2, GM_RENDER, bi, rp, GREDRAW_REDRAW);
+	 AsmDoMethod(pd->pd_Arrow1, GM_RENDER, bi, rp, GREDRAW_REDRAW);
+	 AsmDoMethod(pd->pd_Arrow2, GM_RENDER, bi, rp, GREDRAW_REDRAW);
       };
 
       /*
@@ -583,15 +585,15 @@ METHOD(PropClassRender, struct bmRender *, bmr)
        * Any arrow active?
        */
       if (pd->pd_Flags & PDF_LEFT_UP)
-         AsmDoMethod(pd->pd_Arrow1, GM_RENDER, bi, rp, GREDRAW_REDRAW);
+	 AsmDoMethod(pd->pd_Arrow1, GM_RENDER, bi, rp, GREDRAW_REDRAW);
       else if (pd->pd_Flags & PDF_RIGHT_DOWN)
-         AsmDoMethod(pd->pd_Arrow2, GM_RENDER, bi, rp, GREDRAW_REDRAW);
+	 AsmDoMethod(pd->pd_Arrow2, GM_RENDER, bi, rp, GREDRAW_REDRAW);
 
       /*
        * Only re-render the slider when it isn't active.
        */
       if (!(pd->pd_Flags & PDF_PROPACTIVE))
-         AsmDoMethod(pd->pd_Prop, GM_RENDER, bi, rp, GREDRAW_UPDATE);
+	 AsmDoMethod(pd->pd_Prop, GM_RENDER, bi, rp, GREDRAW_UPDATE);
    };
 
    /*
@@ -858,12 +860,12 @@ METHOD(PropClassHandleInput, struct gpInput *, gpi)
        */
       if (gpi->gpi_IEvent->ie_Class == IECLASS_RAWMOUSE && gpi->gpi_IEvent->ie_Code == MENUDOWN)
       {
-         /*
-          * Yep. Say we need to reset to
-          * the initial value.
-          */
-         pd->pd_Flags |= PDF_RESET;
-         return GMR_NOREUSE;
+	 /*
+	  * Yep. Say we need to reset to
+	  * the initial value.
+	  */
+	 pd->pd_Flags |= PDF_RESET;
+	 return GMR_NOREUSE;
       }
       /*
        * If so adjust the click
@@ -883,67 +885,67 @@ METHOD(PropClassHandleInput, struct gpInput *, gpi)
        * still over the active arrow.
        */
       if (PointInBox(GADGETBOX(arrow), l, t))
-         sel = GFLG_SELECTED;
+	 sel = GFLG_SELECTED;
 
       /*
        * Evaluate input.
        */
       if (gpi->gpi_IEvent->ie_Class == IECLASS_RAWMOUSE)
       {
-         switch (gpi->gpi_IEvent->ie_Code)
-         {
-         case SELECTUP:
-            /*
-             * They released the left
-             * mouse button.
-             */
-            rc = GMR_NOREUSE | GMR_VERIFY;
+	 switch (gpi->gpi_IEvent->ie_Code)
+	 {
+	 case SELECTUP:
+	    /*
+	     * They released the left
+	     * mouse button.
+	     */
+	    rc = GMR_NOREUSE | GMR_VERIFY;
 
-            /*
-             * Unselect the arrow.
-             */
-            sel = 0;
-            break;
+	    /*
+	     * Unselect the arrow.
+	     */
+	    sel = 0;
+	    break;
 
-         case MENUDOWN:
-            /*
-             * Terminate when they press the menubutton.
-             */
-            sel = 0;
-            pd->pd_Flags |= PDF_RESET;
-            rc = GMR_NOREUSE;
-            break;
-         }
+	 case MENUDOWN:
+	    /*
+	     * Terminate when they press the menubutton.
+	     */
+	    sel = 0;
+	    pd->pd_Flags |= PDF_RESET;
+	    rc = GMR_NOREUSE;
+	    break;
+	 }
       }
       else if (gpi->gpi_IEvent->ie_Class == IECLASS_TIMER)
       {
-         /*
-          * On every timer event we
-          * increase or decrease the knob
-          * position.
-          */
-         if (sel)
-         {
-            /*
-             * We delay with adjusting the knob position for a little while just
-             * like the key-repeat threshold.  Probably should use the system prefs
-             * for determing the delay but this is _so_ much easier.
-             */
-            if (pd->pd_RptTicks > 3)
-            {
-               /*
-                * Adjust knob and notify when the knob position changed.
-                */
-               AdjustKnob(cl, obj, gpi);
-            }
-            else
-            {
-               /*
-                * Increase repeat treshold.
-                */
-               pd->pd_RptTicks++;
-            };
-         };
+	 /*
+	  * On every timer event we
+	  * increase or decrease the knob
+	  * position.
+	  */
+	 if (sel)
+	 {
+	    /*
+	     * We delay with adjusting the knob position for a little while just
+	     * like the key-repeat threshold.  Probably should use the system prefs
+	     * for determing the delay but this is _so_ much easier.
+	     */
+	    if (pd->pd_RptTicks > 3)
+	    {
+	       /*
+		* Adjust knob and notify when the knob position changed.
+		*/
+	       AdjustKnob(cl, obj, gpi);
+	    }
+	    else
+	    {
+	       /*
+		* Increase repeat treshold.
+		*/
+	       pd->pd_RptTicks++;
+	    };
+	 };
       };
 
       /*
@@ -952,11 +954,11 @@ METHOD(PropClassHandleInput, struct gpInput *, gpi)
        */
       if ((GADGET(arrow)->Flags & GFLG_SELECTED) != sel)
       {
-         /*
-          * Flip selected bit and re-render.
-          */
-         GADGET(arrow)->Flags ^= GFLG_SELECTED;
-         DoRenderMethod(arrow, gpi->gpi_GInfo, GREDRAW_REDRAW);
+	 /*
+	  * Flip selected bit and re-render.
+	  */
+	 GADGET(arrow)->Flags ^= GFLG_SELECTED;
+	 DoRenderMethod(arrow, gpi->gpi_GInfo, GREDRAW_REDRAW);
       };
    };
    return rc;
@@ -1021,11 +1023,11 @@ METHOD(PropClassDimensions, struct bmDimensions *, bmd)
    {
       if (!arrowsize)
       {
-         if      (vborder) arrowsize = 11;
-         else if (hborder) arrowsize = 16;
-         else              arrowsize = horiz ? 10 : 9;
+	 if      (vborder) arrowsize = 11;
+	 else if (hborder) arrowsize = 16;
+	 else              arrowsize = horiz ? 10 : 9;
 
-         pd->pd_ArrowSize = arrowsize;
+	 pd->pd_ArrowSize = arrowsize;
       };
       DoSetMethodNG(bc->bc_Frame, horiz ? FRM_OuterOffsetRight : FRM_OuterOffsetBottom, arrowsize << 1, TAG_DONE);
    };
@@ -1138,8 +1140,8 @@ STATIC DPFUNC ClassFunc[] = {
 makeproto Class *InitPropClass(void)
 {
    return BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_BASE_GADGET,
-                         CLASS_ObjectSize,     sizeof(PD),
-                         CLASS_DFTable,        ClassFunc,
-                         TAG_DONE);
+			 CLASS_ObjectSize,     sizeof(PD),
+			 CLASS_DFTable,        ClassFunc,
+			 TAG_DONE);
 }
 ///

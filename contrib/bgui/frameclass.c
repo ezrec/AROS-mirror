@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/08/17 15:09:18  chodorowski
+ * Fixed compiler warnings.
+ *
  * Revision 42.2  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -156,7 +159,7 @@ STATIC SAVEDS ASM REGFUNC3(IPTR, BuiltInBack,
    struct IBox           ib;
    struct bguiPattern   *pat;
 
-   int                   num2, fill;
+   int                   fill;
 
    int x1 = fdm->fdm_Bounds->MinX;
    int x2 = fdm->fdm_Bounds->MaxX;
@@ -197,102 +200,102 @@ STATIC SAVEDS ASM REGFUNC3(IPTR, BuiltInBack,
 
       if (pat)
       {
-         BGUI_FillRectPattern(rp, pat, x1, y1, x2, y2);
-         return FRC_OK;
+	 BGUI_FillRectPattern(rp, pat, x1, y1, x2, y2);
+	 return FRC_OK;
       };
 
       if (fd->fd_BackFill == STANDARD_FILL)
       {
-         /*
-          * A raster backfill. Set up the pens.
-          */
+	 /*
+	  * A raster backfill. Set up the pens.
+	  */
 
-         /*
-          * First check for a normal (dri)pen.
-          * If none is given we use the default color.
-          */
-         if ((apen = fd->fd_BackPen) != (UWORD)~0)
-         {
-            if (fd->fd_Flags & FRF_BACKDRI) apen = pens[apen];
+	 /*
+	  * First check for a normal (dri)pen.
+	  * If none is given we use the default color.
+	  */
+	 if ((apen = fd->fd_BackPen) != (UWORD)~0)
+	 {
+	    if (fd->fd_Flags & FRF_BACKDRI) apen = pens[apen];
 
-            if ((bpen = fd->fd_BackPen2) == (UWORD)~0)
-            {
-               bpen = apen;
-            }
-            else
-            {
-               if (fd->fd_Flags & FRF_SELDRI2) bpen = pens[bpen];
-            };
-         };
+	    if ((bpen = fd->fd_BackPen2) == (UWORD)~0)
+	    {
+	       bpen = apen;
+	    }
+	    else
+	    {
+	       if (fd->fd_Flags & FRF_SELDRI2) bpen = pens[bpen];
+	    };
+	 };
 
-         if (sel && (fd->fd_SelPen != (UWORD)~0))
-         {
-            /*
-             * First check for a selected (dri)pen.
-             * If none is given we use the default color.
-             */
-            if ((apen = fd->fd_SelPen) != (UWORD)~0)
-            {
-               if (fd->fd_Flags & FRF_SELDRI) apen = pens[apen];
+	 if (sel && (fd->fd_SelPen != (UWORD)~0))
+	 {
+	    /*
+	     * First check for a selected (dri)pen.
+	     * If none is given we use the default color.
+	     */
+	    if ((apen = fd->fd_SelPen) != (UWORD)~0)
+	    {
+	       if (fd->fd_Flags & FRF_SELDRI) apen = pens[apen];
 
-               if ((bpen = fd->fd_SelPen2) == (UWORD)~0)
-               {
-                  bpen = apen;
-               }
-               else
-               {
-                  if (fd->fd_Flags & FRF_SELDRI2) bpen = pens[bpen];
-               };
-            };
-         }
+	       if ((bpen = fd->fd_SelPen2) == (UWORD)~0)
+	       {
+		  bpen = apen;
+	       }
+	       else
+	       {
+		  if (fd->fd_Flags & FRF_SELDRI2) bpen = pens[bpen];
+	       };
+	    };
+	 }
 
-         if (apen == (UWORD)~0)
-         {
-            switch (fd->fd_Type)
-            {
-            /*
-             * NeXT, DropBox and Ridge frames do not support a SELECTED state
-             * so we force the BACKGROUNDPEN for these types.
-             */
-            case FRTYPE_NEXT:
-            case FRTYPE_DROPBOX:
-            case FRTYPE_RIDGE:
-            case FRTYPE_FUZZ_RIDGE:
-            case FRTYPE_RADIOBUTTON:
-               apen = BACKGROUNDPEN;
-               break;
-               
-            default:
-               /*
-                * Check the state of the frame
-                */
-               switch (fdm->fdm_State)
-               {
-               case IDS_SELECTED:
-                  apen = FILLPEN;
-                  break;
-               case IDS_INACTIVESELECTED:
-               case IDS_INACTIVENORMAL:
-                  apen = BACKGROUNDPEN;
-                  break;
-               default:
-                  /*
-                   * And BACKGROUNDPEN for normal frames.
-                   */
-                  apen = ((fd->fd_Flags & FRF_INBORDER) || (fd->fd_Type == FRTYPE_BORDER)) ? FILLPEN : BACKGROUNDPEN;
-                  break;
-               };
-            };
-            apen = bpen = pens[apen];
-         };
+	 if (apen == (UWORD)~0)
+	 {
+	    switch (fd->fd_Type)
+	    {
+	    /*
+	     * NeXT, DropBox and Ridge frames do not support a SELECTED state
+	     * so we force the BACKGROUNDPEN for these types.
+	     */
+	    case FRTYPE_NEXT:
+	    case FRTYPE_DROPBOX:
+	    case FRTYPE_RIDGE:
+	    case FRTYPE_FUZZ_RIDGE:
+	    case FRTYPE_RADIOBUTTON:
+	       apen = BACKGROUNDPEN;
+	       break;
+	       
+	    default:
+	       /*
+		* Check the state of the frame
+		*/
+	       switch (fdm->fdm_State)
+	       {
+	       case IDS_SELECTED:
+		  apen = FILLPEN;
+		  break;
+	       case IDS_INACTIVESELECTED:
+	       case IDS_INACTIVENORMAL:
+		  apen = BACKGROUNDPEN;
+		  break;
+	       default:
+		  /*
+		   * And BACKGROUNDPEN for normal frames.
+		   */
+		  apen = ((fd->fd_Flags & FRF_INBORDER) || (fd->fd_Type == FRTYPE_BORDER)) ? FILLPEN : BACKGROUNDPEN;
+		  break;
+	       };
+	    };
+	    apen = bpen = pens[apen];
+	 };
       }
       else
       {
-         fill = fd->fd_BackFill;
-         if (fill > FILL_BLOCK) fill = 0;
+	 fill = fd->fd_BackFill;
+	 if (fill > FILL_BLOCK) fill = 0;
 
-         apen = pens[backfill[fill][0]];
-         bpen = pens[backfill[fill][1]];
+	 apen = pens[backfill[fill][0]];
+	 bpen = pens[backfill[fill][1]];
       };
       
       /*
@@ -436,17 +439,17 @@ STATIC VOID RenderTabFrame(struct bmRender *bmr, int l0, int t0, int r0, int b0,
       BSetDPenA(bi, SHINEPEN);
       if (sel)
       {
-         Point(l0, b0);
-         Line(l1, t2, l1, b1); if (!thin) Line(l2, t2, l2, b1);
-         Line(l2, t1, l3, t1);
-         Line(l3, t0, r3, t0);
+	 Point(l0, b0);
+	 Line(l1, t2, l1, b1); if (!thin) Line(l2, t2, l2, b1);
+	 Line(l2, t1, l3, t1);
+	 Line(l3, t0, r3, t0);
       }
       else
       {
-         Line(l0, b0, r0, b0);
-         Line(l2, t3, l2, b1); if (!thin) Line(l3, t3, l3, b1);
-         Line(l3, t2, l4, t2);
-         Line(l4, t1, r4, t1);
+	 Line(l0, b0, r0, b0);
+	 Line(l2, t3, l2, b1); if (!thin) Line(l3, t3, l3, b1);
+	 Line(l3, t2, l4, t2);
+	 Line(l4, t1, r4, t1);
       };
 
       /*
@@ -455,14 +458,14 @@ STATIC VOID RenderTabFrame(struct bmRender *bmr, int l0, int t0, int r0, int b0,
       BSetDPenA(bi, SHADOWPEN);
       if (sel)
       {
-         Line(r2, t1, r3, t1);
-         Line(r1, t2, r1, b1); if (!thin) Line(r2, t2, r2, b1);
-         Point(r0, b0);
+	 Line(r2, t1, r3, t1);
+	 Line(r1, t2, r1, b1); if (!thin) Line(r2, t2, r2, b1);
+	 Point(r0, b0);
       }
       else
       {
-         Line(r3, t2, r4, t2);
-         Line(r2, t3, r2, b1); if (!thin) Line(r3, t3, r3, b1);
+	 Line(r3, t2, r4, t2);
+	 Line(r2, t3, r2, b1); if (!thin) Line(r3, t3, r3, b1);
       };
       break;
 
@@ -473,14 +476,14 @@ STATIC VOID RenderTabFrame(struct bmRender *bmr, int l0, int t0, int r0, int b0,
       BSetDPenA(bi, SHINEPEN);
       if (sel)
       {
-         Point(l0, t0);
-         Line(l1, t1, l1, b2); if (!thin) Line(l2, t1, l2, b2);
-         Line(l2, b1, l3, b1);
+	 Point(l0, t0);
+	 Line(l1, t1, l1, b2); if (!thin) Line(l2, t1, l2, b2);
+	 Line(l2, b1, l3, b1);
       }
       else
       {
-         Line(l2, t1, l2, b3); if (!thin) Line(l3, t1, l3, b3);
-         Line(l3, b2, l4, b2);
+	 Line(l2, t1, l2, b3); if (!thin) Line(l3, t1, l3, b3);
+	 Line(l3, b2, l4, b2);
       };
 
       /*
@@ -489,17 +492,17 @@ STATIC VOID RenderTabFrame(struct bmRender *bmr, int l0, int t0, int r0, int b0,
       BSetDPenA(bi, SHADOWPEN);
       if (sel)
       {
-         Point(r0, t0);
-         Line(r3, b1, r2, b1);
-         Line(r1, t1, r1, b2); if (!thin) Line(r2, t1, r2, b2);
-         Line(l3, b0, r3, b0);
+	 Point(r0, t0);
+	 Line(r3, b1, r2, b1);
+	 Line(r1, t1, r1, b2); if (!thin) Line(r2, t1, r2, b2);
+	 Line(l3, b0, r3, b0);
       }
       else
       {
-         Line(l0, t0, r0, t0);
-         Line(r4, b2, r3, b2);
-         Line(r2, t1, r2, b3); if (!thin) Line(r3, t1, r3, b3);
-         Line(l4, b1, r4, b1);
+	 Line(l0, t0, r0, t0);
+	 Line(r4, b2, r3, b2);
+	 Line(r2, t1, r2, b3); if (!thin) Line(r3, t1, r3, b3);
+	 Line(l4, b1, r4, b1);
       };
       break;
    };
@@ -582,34 +585,34 @@ STATIC ASM REGFUNC2(VOID, FrameThickness,
        */
       if (fd->fd_FrameHook)
       {
-         /*
-          * Yes. Call it to get the thickness
-          * of the custom frame.
-          */
-         tm.tm_MethodID             = FRM_THICKNESS;
-         tm.tm_Thickness.Horizontal = &h;
-         tm.tm_Thickness.Vertical   = &v;
-         tm.tm_Thin                 = thin;
+	 /*
+	  * Yes. Call it to get the thickness
+	  * of the custom frame.
+	  */
+	 tm.tm_MethodID             = FRM_THICKNESS;
+	 tm.tm_Thickness.Horizontal = &h;
+	 tm.tm_Thickness.Vertical   = &v;
+	 tm.tm_Thin                 = thin;
 
-         /*
-          * If this method is not understood
-          * by the hook we use default values.
-          */
-         if (BGUI_CallHookPkt(fd->fd_FrameHook, (VOID *)obj, (VOID *)&tm) != FRC_OK)
-         {
-            h = v = 1;
-         };
+	 /*
+	  * If this method is not understood
+	  * by the hook we use default values.
+	  */
+	 if (BGUI_CallHookPkt(fd->fd_FrameHook, (VOID *)obj, (VOID *)&tm) != FRC_OK)
+	 {
+	    h = v = 1;
+	 };
       }
       else
       {
-         /*
-          * Setup frame thickness of the internal frames.
-          */
-         type = fd->fd_Type;
-         if (type > FRTYPE_FUZZ_RIDGE) type = 0;
+	 /*
+	  * Setup frame thickness of the internal frames.
+	  */
+	 type = fd->fd_Type;
+	 if (type > FRTYPE_FUZZ_RIDGE) type = 0;
 
-         h = thick[type][thin ? 2 : 0];
-         v = thick[type][thin ? 3 : 1];
+	 h = thick[type][thin ? 2 : 0];
+	 v = thick[type][thin ? 3 : 1];
       };
       fd->fd_Horizontal = h;
       fd->fd_Vertical   = v;
@@ -627,7 +630,7 @@ STATIC ASM REGFUNC3(VOID, SetFrameAttrs,
 {
    FD                *fd = INST_DATA(cl, obj);
    struct TextFont   *tf;
-   struct TagItem    *tstate = attr, *tag, *tags;
+   struct TagItem    *tstate = attr, *tag;
    ULONG     temp = NULL;
    Object   *ob   = NULL;
    ULONG     data;
@@ -637,12 +640,12 @@ STATIC ASM REGFUNC3(VOID, SetFrameAttrs,
       ob = (Object *)tag->ti_Data;
       if (ob)
       {
-         Get_Attr(ob, FRM_Template, &temp);
-         if (temp)
-         {
-            CopyMem((FD *)temp, fd, sizeof(FD));
-            fd->fd_Flags &= ~FRF_SELFOPEN;
-         };
+	 Get_Attr(ob, FRM_Template, &temp);
+	 if (temp)
+	 {
+	    CopyMem((FD *)temp, fd, sizeof(FD));
+	    fd->fd_Flags &= ~FRF_SELFOPEN;
+	 };
       };
    };
 
@@ -658,110 +661,110 @@ STATIC ASM REGFUNC3(VOID, SetFrameAttrs,
       switch (tag->ti_Tag)
       {
       case BT_ParentGroup:
-         fd->fd_ParentGroup = (Object *)data;
-         break;
+	 fd->fd_ParentGroup = (Object *)data;
+	 break;
 
       case FRM_FrameWidth:
       case FRM_FrameHeight:
-         fd->fd_Flags |= FRF_CUST_THICK;
-         break;
+	 fd->fd_Flags |= FRF_CUST_THICK;
+	 break;
 
       case IMAGE_TextFont:
-         if (fd->fd_Font && (fd->fd_Flags & FRF_SELFOPEN))
-            BGUI_CloseFont(fd->fd_Font);
-         fd->fd_Font   = (struct TextFont *)data;
-         fd->fd_Flags &= ~FRF_SELFOPEN;
-         break;
+	 if (fd->fd_Font && (fd->fd_Flags & FRF_SELFOPEN))
+	    BGUI_CloseFont(fd->fd_Font);
+	 fd->fd_Font   = (struct TextFont *)data;
+	 fd->fd_Flags &= ~FRF_SELFOPEN;
+	 break;
 
       case FRM_TextAttr:
-         if (data)
-         {
-            if (tf = BGUI_OpenFont((struct TextAttr *)tag->ti_Data))
-            {
-               if (fd->fd_Font && (fd->fd_Flags & FRF_SELFOPEN))
-                  BGUI_CloseFont(fd->fd_Font);
-               fd->fd_Font  = tf;
-               fd->fd_TitleFont = (struct TextAttr *)tag->ti_Data;
-               fd->fd_Flags   |= FRF_SELFOPEN;
-            }
-         }
-         break;
+	 if (data)
+	 {
+	    if (tf = BGUI_OpenFont((struct TextAttr *)tag->ti_Data))
+	    {
+	       if (fd->fd_Font && (fd->fd_Flags & FRF_SELFOPEN))
+		  BGUI_CloseFont(fd->fd_Font);
+	       fd->fd_Font  = tf;
+	       fd->fd_TitleFont = (struct TextAttr *)tag->ti_Data;
+	       fd->fd_Flags   |= FRF_SELFOPEN;
+	    }
+	 }
+	 break;
 
       case FRM_BackFill:
-         fd->fd_BackFill   = data;
-         fd->fd_BackFillHook = NULL;
-         fd->fd_Flags      &= ~FRF_EDGES_ONLY;
-         break;
-            
+	 fd->fd_BackFill   = data;
+	 fd->fd_BackFillHook = NULL;
+	 fd->fd_Flags      &= ~FRF_EDGES_ONLY;
+	 break;
+	    
       case FRM_BackRasterPen:
-         fd->fd_BackPen2   = data;
-         fd->fd_Flags      &= ~FRF_BACKDRI2;
-         if (fd->fd_BackPen != (UWORD)~0) break;
+	 fd->fd_BackPen2   = data;
+	 fd->fd_Flags      &= ~FRF_BACKDRI2;
+	 if (fd->fd_BackPen != (UWORD)~0) break;
       case FRM_BackPen:
-         fd->fd_BackPen    = data;
-         fd->fd_Flags      &= ~FRF_BACKDRI;
-         break;
+	 fd->fd_BackPen    = data;
+	 fd->fd_Flags      &= ~FRF_BACKDRI;
+	 break;
 
       case FRM_BackRasterDriPen:
-         fd->fd_BackPen2   = data;
-         fd->fd_Flags      |= FRF_BACKDRI2;
-         if (fd->fd_BackPen != (UWORD)~0) break;
+	 fd->fd_BackPen2   = data;
+	 fd->fd_Flags      |= FRF_BACKDRI2;
+	 if (fd->fd_BackPen != (UWORD)~0) break;
       case FRM_BackDriPen:
-         fd->fd_BackPen    = data;
-         fd->fd_Flags      |= FRF_BACKDRI;
-         break;
+	 fd->fd_BackPen    = data;
+	 fd->fd_Flags      |= FRF_BACKDRI;
+	 break;
 
       case FRM_SelectedBackRasterPen:
-         fd->fd_SelPen2    = data;
-         fd->fd_Flags      &= ~FRF_SELDRI2;
-         if (fd->fd_SelPen != (UWORD)~0) break;
+	 fd->fd_SelPen2    = data;
+	 fd->fd_Flags      &= ~FRF_SELDRI2;
+	 if (fd->fd_SelPen != (UWORD)~0) break;
       case FRM_SelectedBackPen:
-         fd->fd_SelPen     = data;
-         fd->fd_Flags      &= ~FRF_SELDRI;
-         break;
+	 fd->fd_SelPen     = data;
+	 fd->fd_Flags      &= ~FRF_SELDRI;
+	 break;
 
       case FRM_SelectedBackRasterDriPen:
-         fd->fd_SelPen2    = data;
-         fd->fd_Flags      |= FRF_SELDRI2;
-         if (fd->fd_SelPen != (UWORD)~0) break;
+	 fd->fd_SelPen2    = data;
+	 fd->fd_Flags      |= FRF_SELDRI2;
+	 if (fd->fd_SelPen != (UWORD)~0) break;
       case FRM_SelectedBackDriPen:
-         fd->fd_SelPen     = data;
-         fd->fd_Flags      |= FRF_SELDRI;
-         break;
+	 fd->fd_SelPen     = data;
+	 fd->fd_Flags      |= FRF_SELDRI;
+	 break;
 
       case FRM_Title:
-         if (!fd->fd_Title && data)
-            fd->fd_Title = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE);
-         if (fd->fd_Title)
-         {
-            if(data)
-               DoSetMethodNG(fd->fd_Title, TEXTA_Text, data, TAG_DONE);
-            else
-            {
-               DisposeObject(fd->fd_Title);
-               fd->fd_Title=NULL;
-            }
-         }
-         break;
+	 if (!fd->fd_Title && data)
+	    fd->fd_Title = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE);
+	 if (fd->fd_Title)
+	 {
+	    if(data)
+	       DoSetMethodNG(fd->fd_Title, TEXTA_Text, data, TAG_DONE);
+	    else
+	    {
+	       DisposeObject(fd->fd_Title);
+	       fd->fd_Title=NULL;
+	    }
+	 }
+	 break;
 
       case FRM_TitleID:
-         if (!fd->fd_Title) fd->fd_Title = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE);
-         if (fd->fd_Title) DoSetMethodNG(fd->fd_Title, TEXTA_TextID, data, TAG_DONE);
-         break;
+	 if (!fd->fd_Title) fd->fd_Title = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE);
+	 if (fd->fd_Title) DoSetMethodNG(fd->fd_Title, TEXTA_TextID, data, TAG_DONE);
+	 break;
 
-         /*
-          * BGUI private!
-          */
+	 /*
+	  * BGUI private!
+	  */
       case IMAGE_InBorder:
-         if (data) fd->fd_Flags |= FRF_INBORDER;
-         else      fd->fd_Flags &= ~FRF_INBORDER;
-         break;
+	 if (data) fd->fd_Flags |= FRF_INBORDER;
+	 else      fd->fd_Flags &= ~FRF_INBORDER;
+	 break;
 
       case FRM_Type:
       case FRM_ThinFrame:
       case FRM_CustomHook:
-         FrameThickness(cl, obj);
-         break;
+	 FrameThickness(cl, obj);
+	 break;
       };
    };
    
@@ -870,45 +873,45 @@ METHOD(FrameClassGet, struct opGet *, opg)
    switch (tag)
    {
       case FRM_Template:
-         STORE fd;
-         break;
+	 STORE fd;
+	 break;
       
       case FRM_FrameWidth:
-         STORE fd->fd_Horizontal;
-         break;
+	 STORE fd->fd_Horizontal;
+	 break;
       case FRM_FrameHeight:
-         STORE fd->fd_Vertical;
-         break;
-         
+	 STORE fd->fd_Vertical;
+	 break;
+	 
       case FRM_BackPen:
-         STORE fd->fd_Flags & FRF_BACKDRI    ? ~0 : fd->fd_BackPen;
-         break;
+	 STORE fd->fd_Flags & FRF_BACKDRI    ? ~0 : fd->fd_BackPen;
+	 break;
       case FRM_BackDriPen:
-         STORE fd->fd_Flags & FRF_BACKDRI    ? fd->fd_BackPen : ~0;
-         break;
+	 STORE fd->fd_Flags & FRF_BACKDRI    ? fd->fd_BackPen : ~0;
+	 break;
       case FRM_SelectedBackPen:
-         STORE fd->fd_Flags & FRF_SELDRI     ? ~0 : fd->fd_SelPen;
-         break;
+	 STORE fd->fd_Flags & FRF_SELDRI     ? ~0 : fd->fd_SelPen;
+	 break;
       case FRM_SelectedBackDriPen:
-         STORE fd->fd_Flags & FRF_SELDRI     ? fd->fd_SelPen : ~0;
-         break;
+	 STORE fd->fd_Flags & FRF_SELDRI     ? fd->fd_SelPen : ~0;
+	 break;
       case FRM_BackRasterPen:
-         STORE fd->fd_Flags & FRF_BACKDRI2   ? ~0 : fd->fd_BackPen2;
-         break;
+	 STORE fd->fd_Flags & FRF_BACKDRI2   ? ~0 : fd->fd_BackPen2;
+	 break;
       case FRM_BackRasterDriPen:
-         STORE fd->fd_Flags & FRF_BACKDRI2   ? fd->fd_BackPen2 : ~0;
-         break;
+	 STORE fd->fd_Flags & FRF_BACKDRI2   ? fd->fd_BackPen2 : ~0;
+	 break;
       case FRM_SelectedBackRasterPen:
-         STORE fd->fd_Flags & FRF_SELDRI2    ? ~0 : fd->fd_SelPen2;
-         break;
+	 STORE fd->fd_Flags & FRF_SELDRI2    ? ~0 : fd->fd_SelPen2;
+	 break;
       case FRM_SelectedBackRasterDriPen:
-         STORE fd->fd_Flags & FRF_SELDRI2    ? fd->fd_SelPen2 : ~0;
-         break;
-         
+	 STORE fd->fd_Flags & FRF_SELDRI2    ? fd->fd_SelPen2 : ~0;
+	 break;
+	 
       default:
-         rc = BGUI_UnpackStructureTag((UBYTE *)fd, FramePackTable, tag, store);
-         if (!rc) rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
-         break;
+	 rc = BGUI_UnpackStructureTag((UBYTE *)fd, FramePackTable, tag, store);
+	 if (!rc) rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
+	 break;
    };
    return rc;
 }
@@ -981,7 +984,6 @@ METHOD(FrameClassSetupBounds, struct fmSetupBounds *, fmsb)
 METHOD(FrameClassDimensions, struct bmDimensions *, bmd)
 {
    FD                *fd = INST_DATA(cl, obj);
-   struct BaseInfo   *bi = bmd->bmd_BInfo;
    struct bguiExtent *be = bmd->bmd_Extent;
    int                ox = (fd->fd_Horizontal << 1) + fd->fd_InnerX1 + fd->fd_InnerX2;
    int                oy = (fd->fd_Vertical   << 1) + fd->fd_InnerY1 + fd->fd_InnerY2;
@@ -1014,7 +1016,6 @@ METHOD(FrameClassRender, struct bmRender *, bmr)
    struct FrameDrawMsg  fdraw;
    WORD                 l, t, r, b, place;
    ULONG                rc = 1;
-   BOOL                 thin = fd->fd_Flags & FRF_THIN_FRAME;
    int                  tv, th, dv, dh, shadow, shine, tmp, tmp2;
    int                  state = bmr->bmr_Flags;
    int                  i_fuzz, i_blank, i_swap, i_mix;
@@ -1051,9 +1052,9 @@ METHOD(FrameClassRender, struct bmRender *, bmr)
        * Adjust top position if there is a title present.
        */
       if (fd->fd_Flags & FRF_CENTER_TITLE)
-         t += (rp->TxBaseline - (rp->TxHeight >> 1));
+	 t += (rp->TxBaseline - (rp->TxHeight >> 1));
       else
-         t += rp->TxBaseline;
+	 t += rp->TxBaseline;
    };
 
    rect.MinX = l;
@@ -1070,24 +1071,24 @@ METHOD(FrameClassRender, struct bmRender *, bmr)
    {
       if (fd->fd_Flags & FRF_FILL_OUTER)
       {
-         if (fr = fd->fd_ParentGroup ? BASE_DATA(fd->fd_ParentGroup)->bc_Frame : NULL)
-         {
-            AsmDoMethod(fr, FRAMEM_BACKFILL, bi, &rect, IDS_NORMAL);
-         }
-         else
-         {
-            BSetDPenA(bi, BACKGROUNDPEN);
-            BRectFillA(bi, &rect);
-         };
-         tmp  = fd->fd_Type - FRTYPE_TAB_TOP;
-         tmp2 = ((state == IDS_SELECTED) || (state == IDS_SELECTED)) ? 1 : 0;
+	 if (fr = fd->fd_ParentGroup ? BASE_DATA(fd->fd_ParentGroup)->bc_Frame : NULL)
+	 {
+	    AsmDoMethod(fr, FRAMEM_BACKFILL, bi, &rect, IDS_NORMAL);
+	 }
+	 else
+	 {
+	    BSetDPenA(bi, BACKGROUNDPEN);
+	    BRectFillA(bi, &rect);
+	 };
+	 tmp  = fd->fd_Type - FRTYPE_TAB_TOP;
+	 tmp2 = ((state == IDS_SELECTED) || (state == IDS_SELECTED)) ? 1 : 0;
 
-         rect.MinX += taboff[tmp][0][tmp2];
-         rect.MaxX -= taboff[tmp][1][tmp2];
-         rect.MinY += taboff[tmp][2][tmp2];
-         rect.MaxY -= taboff[tmp][3][tmp2];
+	 rect.MinX += taboff[tmp][0][tmp2];
+	 rect.MaxX -= taboff[tmp][1][tmp2];
+	 rect.MinY += taboff[tmp][2][tmp2];
+	 rect.MaxY -= taboff[tmp][3][tmp2];
 
-         state = IDS_NORMAL;
+	 state = IDS_NORMAL;
       };
       AsmDoMethod(obj, FRAMEM_BACKFILL, bi, &rect, state);
    };
@@ -1139,193 +1140,193 @@ METHOD(FrameClassRender, struct bmRender *, bmr)
    {
       switch (fd->fd_Type)
       {
-         case  FRTYPE_CUSTOM:
-            /*
-             * Fill in the data structures for the custom frame hook
-             */
-            fdraw.fdm_MethodID   = FRM_RENDER;
-            fdraw.fdm_RPort      = rp;
-            fdraw.fdm_DrawInfo   = bi->bi_DrInfo;
-            fdraw.fdm_Bounds     = &rect;
-            fdraw.fdm_State      = state;
-            fdraw.fdm_Horizontal = th;
-            fdraw.fdm_Vertical   = tv;
-            /*
-             * Call the hook routine.
-             */
-            rc = BGUI_CallHookPkt(fd->fd_FrameHook, (VOID *)obj, (VOID *)&fdraw);
-            break;
+	 case  FRTYPE_CUSTOM:
+	    /*
+	     * Fill in the data structures for the custom frame hook
+	     */
+	    fdraw.fdm_MethodID   = FRM_RENDER;
+	    fdraw.fdm_RPort      = rp;
+	    fdraw.fdm_DrawInfo   = bi->bi_DrInfo;
+	    fdraw.fdm_Bounds     = &rect;
+	    fdraw.fdm_State      = state;
+	    fdraw.fdm_Horizontal = th;
+	    fdraw.fdm_Vertical   = tv;
+	    /*
+	     * Call the hook routine.
+	     */
+	    rc = BGUI_CallHookPkt(fd->fd_FrameHook, (VOID *)obj, (VOID *)&fdraw);
+	    break;
 
-         case FRTYPE_RIDGE:
-         case FRTYPE_NEXT:
-         case FRTYPE_DROPBOX:
-         case FRTYPE_FUZZ_BUTTON:
-         case FRTYPE_FUZZ_RIDGE:
-         case FRTYPE_BUTTON:
-            i_fuzz   = -1;
-            i_blank  = -1;
-            i_swap   = -1;
-            i_mix    = -1;
-            
-            dv = (tv + th - 1) / th;   if (dv < 1) dv = 1;
-            dh = (th + tv - 1) / tv;   if (dh < 1) dh = 1;
-            
-            if (fd->fd_Type == FRTYPE_FUZZ_BUTTON)
-            {
-               /*
-                * 1/4 Normal, 3/4 Raster
-                */
-               i_fuzz = (tv / dv) / 4;
-            };
-            if (fd->fd_Type == FRTYPE_FUZZ_RIDGE)
-            {
-               /*
-                * 1/3 Normal, 1/3 Blank, 1/3 Recessed
-                */
-               tmp      = shine;
-               tmp2     = shadow;
-               i_mix    = (tv / dv) / 3 - 1;
-               i_swap   = (2 * tv / dv) / 3 - 1;
-            };
-            if (fd->fd_Type == FRTYPE_DROPBOX)
-            {
-               /*
-                * 1/3 Normal, 1/3 Blank, 1/3 Recessed
-                */
-               tmp      = shine;
-               tmp2     = shadow;
-               i_blank  = (tv / dv) / 3 - 1;
-               i_swap   = (2 * tv / dv) / 3 - 1;
-            };
-            if (fd->fd_Type == FRTYPE_NEXT)
-            {
-               /*
-                * 1/2 Recessed, 1/2 Normal
-                */
-               tmp2     = shine;
-               tmp      = shadow;
-               shine    = tmp;
-               shadow   = tmp2;
-               i_swap   = (tv / dv) / 2 - 1;
-            };
-            if (fd->fd_Type == FRTYPE_RIDGE)
-            {
-               /*
-                * 1/2 Normal, 1/2 Recessed
-                */
-               tmp      = shine;
-               tmp2     = shadow;
-               i_swap   = (tv / dv) / 2 - 1;
-            };
-            
-            /*
-             * Render the bevelbox.
-             */
-            while ((tv > 0) && (th > 0))
-            {
-               if (shine >= 0)  BSetDPenA(bi, shine);
-               if(dh>0
-               && t<=b)
-                  BRectFill(bi, l, t, l + dh - 1, b);   l += dh;
-               if (shadow >= 0) BSetDPenA(bi, shadow);
-               if(dv>0
-               && l<=r)
-                  BRectFill(bi, l, b - dv + 1, r, b);   b -= dv;
-               if(dh>0
-               && t<=b)
-                  BRectFill(bi, r - dh + 1, t, r, b);   r -= dh;
-               if (shine >= 0)  BSetDPenA(bi, shine);
-               if(dv>0
-               && l<=r)
-                  BRectFill(bi, l, t, r, t + dv - 1);   t += dv;
-               tv -= dv;
-               th -= dh;
-               
-               if (i_fuzz-- == 0)
-               {
-                  BSetAfPt(bi, pat, 1);
-               };
-               if (i_blank-- == 0)
-               {
-                  shine    = BACKGROUNDPEN;
-                  shadow   = BACKGROUNDPEN;
-               };
-               if (i_swap-- == 0)
-               {
-                  BClearAfPt(bi);
-                  shine    = tmp2;
-                  shadow   = tmp;
-               };
-               if (i_mix-- == 0)
-               {
-                  BSetAfPt(bi, pat, 1);
-                  BSetDPenA(bi, shine);
-                  BSetDPenB(bi, shadow);
-                  shine = shadow = -1;
-               };
-            };
-            if (tv > 0)
-            {
-               BSetDPenA(bi, shine);
-               BRectFill(bi, l, t, r, t + tv - 1);
-               BSetDPenA(bi, shadow);
-               BRectFill(bi, l, b - tv + 1, r, b);
-            };
-            if (th > 0)
-            {
-               BSetDPenA(bi, shine);
-               BRectFill(bi, l, t, l + th - 1, b);
-               BSetDPenA(bi, shadow);
-               BRectFill(bi, r - th + 1, t, r, b);
-            };
-            break;
+	 case FRTYPE_RIDGE:
+	 case FRTYPE_NEXT:
+	 case FRTYPE_DROPBOX:
+	 case FRTYPE_FUZZ_BUTTON:
+	 case FRTYPE_FUZZ_RIDGE:
+	 case FRTYPE_BUTTON:
+	    i_fuzz   = -1;
+	    i_blank  = -1;
+	    i_swap   = -1;
+	    i_mix    = -1;
+	    
+	    dv = (tv + th - 1) / th;   if (dv < 1) dv = 1;
+	    dh = (th + tv - 1) / tv;   if (dh < 1) dh = 1;
+	    
+	    if (fd->fd_Type == FRTYPE_FUZZ_BUTTON)
+	    {
+	       /*
+		* 1/4 Normal, 3/4 Raster
+		*/
+	       i_fuzz = (tv / dv) / 4;
+	    };
+	    if (fd->fd_Type == FRTYPE_FUZZ_RIDGE)
+	    {
+	       /*
+		* 1/3 Normal, 1/3 Blank, 1/3 Recessed
+		*/
+	       tmp      = shine;
+	       tmp2     = shadow;
+	       i_mix    = (tv / dv) / 3 - 1;
+	       i_swap   = (2 * tv / dv) / 3 - 1;
+	    };
+	    if (fd->fd_Type == FRTYPE_DROPBOX)
+	    {
+	       /*
+		* 1/3 Normal, 1/3 Blank, 1/3 Recessed
+		*/
+	       tmp      = shine;
+	       tmp2     = shadow;
+	       i_blank  = (tv / dv) / 3 - 1;
+	       i_swap   = (2 * tv / dv) / 3 - 1;
+	    };
+	    if (fd->fd_Type == FRTYPE_NEXT)
+	    {
+	       /*
+		* 1/2 Recessed, 1/2 Normal
+		*/
+	       tmp2     = shine;
+	       tmp      = shadow;
+	       shine    = tmp;
+	       shadow   = tmp2;
+	       i_swap   = (tv / dv) / 2 - 1;
+	    };
+	    if (fd->fd_Type == FRTYPE_RIDGE)
+	    {
+	       /*
+		* 1/2 Normal, 1/2 Recessed
+		*/
+	       tmp      = shine;
+	       tmp2     = shadow;
+	       i_swap   = (tv / dv) / 2 - 1;
+	    };
+	    
+	    /*
+	     * Render the bevelbox.
+	     */
+	    while ((tv > 0) && (th > 0))
+	    {
+	       if (shine >= 0)  BSetDPenA(bi, shine);
+	       if(dh>0
+	       && t<=b)
+		  BRectFill(bi, l, t, l + dh - 1, b);   l += dh;
+	       if (shadow >= 0) BSetDPenA(bi, shadow);
+	       if(dv>0
+	       && l<=r)
+		  BRectFill(bi, l, b - dv + 1, r, b);   b -= dv;
+	       if(dh>0
+	       && t<=b)
+		  BRectFill(bi, r - dh + 1, t, r, b);   r -= dh;
+	       if (shine >= 0)  BSetDPenA(bi, shine);
+	       if(dv>0
+	       && l<=r)
+		  BRectFill(bi, l, t, r, t + dv - 1);   t += dv;
+	       tv -= dv;
+	       th -= dh;
+	       
+	       if (i_fuzz-- == 0)
+	       {
+		  BSetAfPt(bi, pat, 1);
+	       };
+	       if (i_blank-- == 0)
+	       {
+		  shine    = BACKGROUNDPEN;
+		  shadow   = BACKGROUNDPEN;
+	       };
+	       if (i_swap-- == 0)
+	       {
+		  BClearAfPt(bi);
+		  shine    = tmp2;
+		  shadow   = tmp;
+	       };
+	       if (i_mix-- == 0)
+	       {
+		  BSetAfPt(bi, pat, 1);
+		  BSetDPenA(bi, shine);
+		  BSetDPenB(bi, shadow);
+		  shine = shadow = -1;
+	       };
+	    };
+	    if (tv > 0)
+	    {
+	       BSetDPenA(bi, shine);
+	       BRectFill(bi, l, t, r, t + tv - 1);
+	       BSetDPenA(bi, shadow);
+	       BRectFill(bi, l, b - tv + 1, r, b);
+	    };
+	    if (th > 0)
+	    {
+	       BSetDPenA(bi, shine);
+	       BRectFill(bi, l, t, l + th - 1, b);
+	       BSetDPenA(bi, shadow);
+	       BRectFill(bi, r - th + 1, t, r, b);
+	    };
+	    break;
 
-         case FRTYPE_RADIOBUTTON:
-            RenderRadioFrame(bmr, l, t, r, b, fd);
-            break;
+	 case FRTYPE_RADIOBUTTON:
+	    RenderRadioFrame(bmr, l, t, r, b, fd);
+	    break;
 
-         case FRTYPE_XEN_BUTTON:
-            RenderXenFrame(bmr, l, t, r, b, fd);
-            break;
+	 case FRTYPE_XEN_BUTTON:
+	    RenderXenFrame(bmr, l, t, r, b, fd);
+	    break;
 
-         case FRTYPE_TAB_TOP:
-         case FRTYPE_TAB_BOTTOM:
-         case FRTYPE_TAB_LEFT:
-         case FRTYPE_TAB_RIGHT:
-            RenderTabFrame(bmr, l, t, r, b, fd);
-            break;
+	 case FRTYPE_TAB_TOP:
+	 case FRTYPE_TAB_BOTTOM:
+	 case FRTYPE_TAB_LEFT:
+	 case FRTYPE_TAB_RIGHT:
+	    RenderTabFrame(bmr, l, t, r, b, fd);
+	    break;
 
-         case FRTYPE_TAB_ABOVE:
-            /*
-             * Render the frame.
-             */
-            BSetDPenA(bi, shine);
-            BRectFill(bi, l, t, l + th - 1, b - tv);
-            BSetDPenA(bi, shadow);
-            BRectFill(bi, l + 1, b - tv + 1, r, b);
-            BRectFill(bi, r - th + 1, t, r, b);
-            break;
+	 case FRTYPE_TAB_ABOVE:
+	    /*
+	     * Render the frame.
+	     */
+	    BSetDPenA(bi, shine);
+	    BRectFill(bi, l, t, l + th - 1, b - tv);
+	    BSetDPenA(bi, shadow);
+	    BRectFill(bi, l + 1, b - tv + 1, r, b);
+	    BRectFill(bi, r - th + 1, t, r, b);
+	    break;
 
-         case FRTYPE_TAB_BELOW:
-            /*
-             * Render the frame.
-             */
-            BSetDPenA(bi, shine);
-            BRectFill(bi, l, t, l + th - 1, b - tv + 1);
-            BRectFill(bi, l, t, r - th + 1, t + tv - 1);
-            BSetDPenA(bi, shadow);
-            BRectFill(bi, r - th + 1, t, r, b);
-            break;
+	 case FRTYPE_TAB_BELOW:
+	    /*
+	     * Render the frame.
+	     */
+	    BSetDPenA(bi, shine);
+	    BRectFill(bi, l, t, l + th - 1, b - tv + 1);
+	    BRectFill(bi, l, t, r - th + 1, t + tv - 1);
+	    BSetDPenA(bi, shadow);
+	    BRectFill(bi, r - th + 1, t, r, b);
+	    break;
 
-         case FRTYPE_BORDER:
-            /*
-             * Render the borderbox.
-             */
-            RenderBevelBox(bi, l, t, r, b, state, fd->fd_Flags & FRF_RECESSED, TRUE);
-            break;
+	 case FRTYPE_BORDER:
+	    /*
+	     * Render the borderbox.
+	     */
+	    RenderBevelBox(bi, l, t, r, b, state, fd->fd_Flags & FRF_RECESSED, TRUE);
+	    break;
 
-         case FRTYPE_NONE:
-            break;
+	 case FRTYPE_NONE:
+	    break;
       }
    }
 
@@ -1346,7 +1347,7 @@ METHOD(FrameClassRender, struct bmRender *, bmr)
        * Render the title.
        */
       RenderTitle(fd->fd_Title, bi, l, t, r - l + 1,
-                  fd->fd_Flags & FRF_HIGHLIGHT_TITLE, fd->fd_Flags & FRF_CENTER_TITLE, place);
+		  fd->fd_Flags & FRF_HIGHLIGHT_TITLE, fd->fd_Flags & FRF_CENTER_TITLE, place);
 
    }
 
@@ -1389,9 +1390,9 @@ STATIC DPFUNC ClassFunc[] = {
 makeproto Class *InitFrameClass(void)
 {
    return BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_IMAGE_OBJECT,
-                         CLASS_ObjectSize,     sizeof(FD),
-                         CLASS_DFTable,        ClassFunc,
-                         TAG_DONE);
+			 CLASS_ObjectSize,     sizeof(FD),
+			 CLASS_DFTable,        ClassFunc,
+			 TAG_DONE);
 }
 ///
 

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/08/17 15:09:18  chodorowski
+ * Fixed compiler warnings.
+ *
  * Revision 42.5  2000/07/03 21:21:00  bergers
  * Replaced stch_l & stcu_d and had to make a few changes in other places because of that.
  *
@@ -172,11 +175,11 @@ METHOD(LabelClassNew, struct opSet *, ops)
       /*
       if (fail)
       {
-         /*
-          * Failure!
-          */
-         AsmCoerceMethod(cl, (Object *)rc, OM_DISPOSE);
-         rc = 0;
+	 /*
+	  * Failure!
+	  */
+	 AsmCoerceMethod(cl, (Object *)rc, OM_DISPOSE);
+	 rc = 0;
       }
       */
 #endif
@@ -250,19 +253,19 @@ METHOD(LabelClassSetCustom, struct rmAttr *, ra)
    case LAB_Template:
       if (data)
       {
-         attr = NULL;
-         Get_Attr((Object *)data, LAB_Template, &attr);
-         if (attr)
-         {
-            CopyMem((LD *)attr, ld, sizeof(LD));
-            ld->ld_Flags &= ~LABF_SELFOPEN;
-         };
+	 attr = NULL;
+	 Get_Attr((Object *)data, LAB_Template, &attr);
+	 if (attr)
+	 {
+	    CopyMem((LD *)attr, ld, sizeof(LD));
+	    ld->ld_Flags &= ~LABF_SELFOPEN;
+	 };
       };
       break;
 
    case IMAGE_TextFont:
       if (ld->ld_Font && (ld->ld_Flags & LABF_SELFOPEN))
-         BGUI_CloseFont(ld->ld_Font);
+	 BGUI_CloseFont(ld->ld_Font);
       ld->ld_Font   = (struct TextFont *)data;
       ld->ld_Flags &= ~LABF_SELFOPEN;
       break;
@@ -270,7 +273,7 @@ METHOD(LabelClassSetCustom, struct rmAttr *, ra)
    case LAB_Place:
    case LAB_NoPlaceIn:
       if ((ld->ld_Flags & LABF_NOPLACEIN) && (ld->ld_Place == PLACE_IN))
-         ld->ld_Place = PLACE_LEFT;
+	 ld->ld_Place = PLACE_LEFT;
       break;
 
    case LAB_Flags:
@@ -280,11 +283,11 @@ METHOD(LabelClassSetCustom, struct rmAttr *, ra)
    case LAB_TextAttr:
       if (data && (tf = BGUI_OpenFont((struct TextAttr *)data)))
       {
-         if (ld->ld_Font && (ld->ld_Flags & LABF_SELFOPEN))
-            BGUI_CloseFont(ld->ld_Font);
-         ld->ld_Font     = tf;
-         ld->ld_TextAttr = (struct TextAttr *)data;
-         ld->ld_Flags   |= LABF_SELFOPEN;
+	 if (ld->ld_Font && (ld->ld_Flags & LABF_SELFOPEN))
+	    BGUI_CloseFont(ld->ld_Font);
+	 ld->ld_Font     = tf;
+	 ld->ld_TextAttr = (struct TextAttr *)data;
+	 ld->ld_Flags   |= LABF_SELFOPEN;
       };
       break;
 
@@ -292,12 +295,12 @@ METHOD(LabelClassSetCustom, struct rmAttr *, ra)
    case LAB_DriPen:
       if ((UWORD)data == (UWORD)~0)
       {
-         ld->ld_Flags |= LABF_DEFPEN;
+	 ld->ld_Flags |= LABF_DEFPEN;
       }
       else
       {
-         ld->ld_Flags &= ~LABF_DEFPEN;
-         ld->ld_Pen    = data;
+	 ld->ld_Flags &= ~LABF_DEFPEN;
+	 ld->ld_Pen    = data;
       };
       if (attr == LAB_Pen) ld->ld_Flags &= ~LABF_DRIPEN;
       else                 ld->ld_Flags |=  LABF_DRIPEN;
@@ -307,12 +310,12 @@ METHOD(LabelClassSetCustom, struct rmAttr *, ra)
    case LAB_SelectedDriPen:
       if ((UWORD)data == (UWORD)~0)
       {
-         ld->ld_Flags |= LABF_DEFSELPEN;
+	 ld->ld_Flags |= LABF_DEFSELPEN;
       }
       else
       {
-         ld->ld_Flags &= ~LABF_DEFSELPEN;
-         ld->ld_SelPen = data;
+	 ld->ld_Flags &= ~LABF_DEFSELPEN;
+	 ld->ld_SelPen = data;
       };
       if (attr == LAB_SelectedPen) ld->ld_Flags &= ~LABF_SELDRIPEN;
       else                         ld->ld_Flags |=  LABF_SELDRIPEN;
@@ -339,34 +342,34 @@ METHOD(LabelClassGet, struct opGet *, opg)
    switch (tag)
    {
       case LAB_Template:
-         STORE ld;
-         break;
+	 STORE ld;
+	 break;
       case LAB_Pen:
-         STORE (!(ld->ld_Flags & LABF_DEFPEN) && !(ld->ld_Flags & LABF_DRIPEN)) ? ld->ld_Pen : (ULONG)~0;
-         break;
+	 STORE (!(ld->ld_Flags & LABF_DEFPEN) && !(ld->ld_Flags & LABF_DRIPEN)) ? ld->ld_Pen : (ULONG)~0;
+	 break;
       case LAB_DriPen:
-         STORE (!(ld->ld_Flags & LABF_DEFPEN) &&  (ld->ld_Flags & LABF_DRIPEN)) ? ld->ld_Pen : (ULONG)~0;
-         break;
+	 STORE (!(ld->ld_Flags & LABF_DEFPEN) &&  (ld->ld_Flags & LABF_DRIPEN)) ? ld->ld_Pen : (ULONG)~0;
+	 break;
       case LAB_SelectedPen:
-         STORE (!(ld->ld_Flags & LABF_DEFSELPEN) && !(ld->ld_Flags & LABF_SELDRIPEN)) ? ld->ld_SelPen : (ULONG)~0;
-         break;
+	 STORE (!(ld->ld_Flags & LABF_DEFSELPEN) && !(ld->ld_Flags & LABF_SELDRIPEN)) ? ld->ld_SelPen : (ULONG)~0;
+	 break;
       case LAB_SelectedDriPen:
-         STORE (!(ld->ld_Flags & LABF_DEFSELPEN) &&  (ld->ld_Flags & LABF_SELDRIPEN)) ? ld->ld_SelPen : (ULONG)~0;
-         break;
+	 STORE (!(ld->ld_Flags & LABF_DEFSELPEN) &&  (ld->ld_Flags & LABF_SELDRIPEN)) ? ld->ld_SelPen : (ULONG)~0;
+	 break;
       case LAB_KeyChar:
-         if (ld->ld_Text && ld->ld_UnderscoreChar)
-         {
-            if (u = strchr(ld->ld_Text, ld->ld_UnderscoreChar))
-               STORE (u + 1);
-         };
-         break;
+	 if (ld->ld_Text && ld->ld_UnderscoreChar)
+	 {
+	    if (u = strchr(ld->ld_Text, ld->ld_UnderscoreChar))
+	       STORE (u + 1);
+	 };
+	 break;
       case LAB_Flags:
-         STORE ld->ld_Flags;
-         break;
+	 STORE ld->ld_Flags;
+	 break;
       default:
-         rc = BGUI_UnpackStructureTag((UBYTE *)ld, LabelPackTable, tag, store);
-         if (!rc) rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
-         break;
+	 rc = BGUI_UnpackStructureTag((UBYTE *)ld, LabelPackTable, tag, store);
+	 if (!rc) rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
+	 break;
    };
    return rc;
 }
@@ -407,7 +410,7 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
    UWORD       *pens = NULL, pen, style;
    WORD         xpos, ypos, tw, th;
    ULONG        rc = 0;
-   int          i1, j1, i2, j2, rw, rh;
+   int          i1, j1, j2, rw, rh;
 
    BOOL         sel = (dr->imp_State == IDS_SELECTED) || (dr->imp_State == IDS_INACTIVESELECTED);
 
@@ -453,14 +456,14 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
       switch (ld->ld_Place)
       {
       case PLACE_LEFT:
-         *d++ = 'r';
-         break;
+	 *d++ = 'r';
+	 break;
       case PLACE_RIGHT:
-         *d++ = 'l';
-         break;
+	 *d++ = 'l';
+	 break;
       default:
-         *d++ = 'c';
-         break;
+	 *d++ = 'c';
+	 break;
       };
 
       /*
@@ -471,85 +474,85 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
 
       if (style != (UWORD)~0)
       {
-         if (style & FSF_ITALIC)      /* 2 */
-         {
-            *d++ = '\33';
-            *d++ = 'i';
-         };
-         if (style & FSF_BOLD)        /* 2 */
-         {
-            *d++ = '\33';
-            *d++ = 'b';
-         };
-         if (style & FSF_UNDERLINED)  /* 2 */
-         {
-            *d++ = '\33';
-            *d++ = 'u';
-         };
+	 if (style & FSF_ITALIC)      /* 2 */
+	 {
+	    *d++ = '\33';
+	    *d++ = 'i';
+	 };
+	 if (style & FSF_BOLD)        /* 2 */
+	 {
+	    *d++ = '\33';
+	    *d++ = 'b';
+	 };
+	 if (style & FSF_UNDERLINED)  /* 2 */
+	 {
+	    *d++ = '\33';
+	    *d++ = 'u';
+	 };
       };
 
       c = 0;
       if (dr->MethodID == IM_DRAW)           /* 5 */
       {
-         if (ld->ld_Flags & LABF_HIGHLIGHT)
-         {
-            c   = 'd';
-            pen = HIGHLIGHTTEXTPEN;
-         }
-         else
-         {
-            /*
-             * What state are we in?
-             */
-            if (sel)
-            {
-               /*
-                * First see if a selected (dri)pen is
-                * given. If not use the default colors.
-                */
-               if (ld->ld_Flags & LABF_DEFSELPEN)
-               {
-                  c   = 'd';
-                  pen = (dr->imp_State == IDS_SELECTED) ? FILLTEXTPEN : TEXTPEN;
-               }
-               else
-               {
-                  c = (ld->ld_Flags & LABF_SELDRIPEN) ? 'd' : 'p';
-                  pen = ld->ld_SelPen;
-               };
-            }
-            else
-            {
-               /*
-                * First see if a normal (dri)pen is
-                * given. If not use the default colors.
-                */
-               if (ld->ld_Flags & LABF_DEFPEN)
-               {
-                  c   = 'd';
-                  pen = TEXTPEN;
-               }
-               else
-               {
-                  c   = (ld->ld_Flags & LABF_DRIPEN) ? 'd' : 'p';
-                  pen = ld->ld_Pen;
-               };
-            };
-         };
+	 if (ld->ld_Flags & LABF_HIGHLIGHT)
+	 {
+	    c   = 'd';
+	    pen = HIGHLIGHTTEXTPEN;
+	 }
+	 else
+	 {
+	    /*
+	     * What state are we in?
+	     */
+	    if (sel)
+	    {
+	       /*
+		* First see if a selected (dri)pen is
+		* given. If not use the default colors.
+		*/
+	       if (ld->ld_Flags & LABF_DEFSELPEN)
+	       {
+		  c   = 'd';
+		  pen = (dr->imp_State == IDS_SELECTED) ? FILLTEXTPEN : TEXTPEN;
+	       }
+	       else
+	       {
+		  c = (ld->ld_Flags & LABF_SELDRIPEN) ? 'd' : 'p';
+		  pen = ld->ld_SelPen;
+	       };
+	    }
+	    else
+	    {
+	       /*
+		* First see if a normal (dri)pen is
+		* given. If not use the default colors.
+		*/
+	       if (ld->ld_Flags & LABF_DEFPEN)
+	       {
+		  c   = 'd';
+		  pen = TEXTPEN;
+	       }
+	       else
+	       {
+		  c   = (ld->ld_Flags & LABF_DRIPEN) ? 'd' : 'p';
+		  pen = ld->ld_Pen;
+	       };
+	    };
+	 };
       }
       else if (dr->MethodID == IM_ERASE)
       {
-         c   = 'p';
-         pen = ld->ld_ErasePen;
+	 c   = 'p';
+	 pen = ld->ld_ErasePen;
       };
       if (c)                                       /* 6 */
       {
-         *d++ = '\33';
-         *d++ = c;
+	 *d++ = '\33';
+	 *d++ = c;
 #ifdef _AROS
 	d += sprintf(d, "%u", pen);
 #else         
-         d += stcu_d(d, pen);
+	 d += stcu_d(d, pen);
 #endif
       };
 
@@ -558,32 +561,32 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
 
       while (c = *s++)
       {
-         if (c == ld->ld_UnderscoreChar)           /* 5 */
-         {
-            if (*s)
-            {
-               if ((*s < 32) || (*s == 127))
-               {
-                  s++;
-               }
-               else
-               {
-                  c = (ld->ld_Flags & LABF_HIGH_USCORE) ? 'Z' : 'z';
-                  *d++ = '\33';
-                  *d++ = c;
-                  *d++ = *s++;
-                  if (*s)
-                  {
-                     *d++ = '\33';
-                     *d++ = '-';
-                     *d++ = c;
-                  };
-               };
-               strcpy(d, s);
-            };
-            break;
-         };
-         *d++ = c;
+	 if (c == ld->ld_UnderscoreChar)           /* 5 */
+	 {
+	    if (*s)
+	    {
+	       if ((*s < 32) || (*s == 127))
+	       {
+		  s++;
+	       }
+	       else
+	       {
+		  c = (ld->ld_Flags & LABF_HIGH_USCORE) ? 'Z' : 'z';
+		  *d++ = '\33';
+		  *d++ = c;
+		  *d++ = *s++;
+		  if (*s)
+		  {
+		     *d++ = '\33';
+		     *d++ = '-';
+		     *d++ = c;
+		  };
+	       };
+	       strcpy(d, s);
+	    };
+	    break;
+	 };
+	 *d++ = c;
       };
 
       /*
@@ -604,7 +607,7 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
 
       if (ld->ld_Flags & LABF_FLIP_XY)
       {
-         i1 = th; th = tw; tw = i1;
+	 i1 = th; th = tw; tw = i1;
       };
 
       ld->ld_Width  = tw;
@@ -621,7 +624,7 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
        * want the maximum extentiions.
        */
       if (dr->MethodID == IM_EXTENT && (ie->impe_Flags & EXTF_MAXIMUM))
-         goto maximumExtent;
+	 goto maximumExtent;
 
       reCalculate:
 
@@ -630,19 +633,19 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
        */
       switch (ld->ld_Place)
       {
-         case PLACE_LEFT:
-         case PLACE_IN:
-         case PLACE_RIGHT:
-            ypos += (h - th) >> 1;
-            break;
+	 case PLACE_LEFT:
+	 case PLACE_IN:
+	 case PLACE_RIGHT:
+	    ypos += (h - th) >> 1;
+	    break;
 
-         case PLACE_ABOVE:
-            ypos -= (th + 4);
-            break;
+	 case PLACE_ABOVE:
+	    ypos -= (th + 4);
+	    break;
 
-         case PLACE_BELOW:
-            ypos += (h + 3);
-            break;
+	 case PLACE_BELOW:
+	    ypos += (h + 3);
+	    break;
       }
 
       /*
@@ -650,19 +653,19 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
        */
       switch (ld->ld_Place)
       {
-         case PLACE_ABOVE:
-         case PLACE_IN:
-         case PLACE_BELOW:
-            xpos += (w - tw) >> 1;
-            break;
+	 case PLACE_ABOVE:
+	 case PLACE_IN:
+	 case PLACE_BELOW:
+	    xpos += (w - tw) >> 1;
+	    break;
 
-         case PLACE_LEFT:
-            xpos -= (tw + 8);
-            break;
+	 case PLACE_LEFT:
+	    xpos -= (tw + 8);
+	    break;
 
-         case PLACE_RIGHT:
-            xpos += (w + 7);
-            break;
+	 case PLACE_RIGHT:
+	    xpos += (w + 7);
+	    break;
       }
 
       /*
@@ -670,168 +673,168 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
        */
       if (dr->MethodID == IM_EXTENT)
       {
-         maximumExtent:
-         /*
-          * Pick up extent storage, preset to 0.
-          */
-         bounds = ie->impe_Extent;
-         bounds->Left = bounds->Top = bounds->Width = bounds->Height = 0;
+	 maximumExtent:
+	 /*
+	  * Pick up extent storage, preset to 0.
+	  */
+	 bounds = ie->impe_Extent;
+	 bounds->Left = bounds->Top = bounds->Width = bounds->Height = 0;
 
-         /*
-          * No negative offsets.
-          */
-         if ((l <= 0) || (t <= 0))
-         {
-            if (l <= 0) l = tw + 8;
-            if (t <= 0) t = th + 4;
-            goto reCalculate;
-         }
+	 /*
+	  * No negative offsets.
+	  */
+	 if ((l <= 0) || (t <= 0))
+	 {
+	    if (l <= 0) l = tw + 8;
+	    if (t <= 0) t = th + 4;
+	    goto reCalculate;
+	 }
 
-         /*
-          * Maximum?
-          */
-         if (ie->impe_Flags & EXTF_MAXIMUM)
-         {
-            switch (ld->ld_Place)
-            {
-            case PLACE_LEFT:
-               bounds->Left   = -(tw + 8);
-               break;
-            case PLACE_RIGHT:
-               bounds->Width  =  (tw + 7);
-               break;
-            case PLACE_ABOVE:
-               bounds->Top    = -(th + 4);
-               break;
-            case PLACE_BELOW:
-               bounds->Height =  (th + 3);
-               break;
-            }
-         }
-         else
-         {
-            if (xpos < l)                    bounds->Left   = -(l - xpos);
-            if ((xpos + tw) > (l + w - 1))   bounds->Width  = (xpos + tw) - (l + w - 1);
-            if (ypos < t)                    bounds->Top    = -(t - ypos);
-            if ((ypos + th) > (t + h - 1))   bounds->Height = (ypos + th) - (t + h - 1);
-         }
+	 /*
+	  * Maximum?
+	  */
+	 if (ie->impe_Flags & EXTF_MAXIMUM)
+	 {
+	    switch (ld->ld_Place)
+	    {
+	    case PLACE_LEFT:
+	       bounds->Left   = -(tw + 8);
+	       break;
+	    case PLACE_RIGHT:
+	       bounds->Width  =  (tw + 7);
+	       break;
+	    case PLACE_ABOVE:
+	       bounds->Top    = -(th + 4);
+	       break;
+	    case PLACE_BELOW:
+	       bounds->Height =  (th + 3);
+	       break;
+	    }
+	 }
+	 else
+	 {
+	    if (xpos < l)                    bounds->Left   = -(l - xpos);
+	    if ((xpos + tw) > (l + w - 1))   bounds->Width  = (xpos + tw) - (l + w - 1);
+	    if (ypos < t)                    bounds->Top    = -(t - ypos);
+	    if ((ypos + th) > (t + h - 1))   bounds->Height = (ypos + th) - (t + h - 1);
+	 }
 
-         /*
-          * Store label width and height.
-          */
-         if (ie->impe_LabelSize.Width)  *(ie->impe_LabelSize.Width)  = tw;
-         if (ie->impe_LabelSize.Height) *(ie->impe_LabelSize.Height) = th;
+	 /*
+	  * Store label width and height.
+	  */
+	 if (ie->impe_LabelSize.Width)  *(ie->impe_LabelSize.Width)  = tw;
+	 if (ie->impe_LabelSize.Height) *(ie->impe_LabelSize.Height) = th;
       }
       else
       {
-         if (ld->ld_Flags & (LABF_FLIP_XY|LABF_FLIP_X|LABF_FLIP_Y))
-         {
-            rrp.BitMap = BGUI_AllocBitMap(tw, th, FGetDepth(&rrp), BMF_STANDARD, dr->imp_RPort->BitMap);
-            
-            if (rrp.BitMap)
-            {
-               rrp.Layer = NULL;
-               ClipBlit(dr->imp_RPort, xpos, ypos, &rrp, 0, 0, tw, th, 0xC0);
-            };
-            box.Left = box.Top = 0;
-         }
-         else
-         {
-            box.Left = xpos;
-            box.Top  = ypos;
-         };
+	 if (ld->ld_Flags & (LABF_FLIP_XY|LABF_FLIP_X|LABF_FLIP_Y))
+	 {
+	    rrp.BitMap = BGUI_AllocBitMap(tw, th, FGetDepth(&rrp), BMF_STANDARD, dr->imp_RPort->BitMap);
+	    
+	    if (rrp.BitMap)
+	    {
+	       rrp.Layer = NULL;
+	       ClipBlit(dr->imp_RPort, xpos, ypos, &rrp, 0, 0, tw, th, 0xC0);
+	    };
+	    box.Left = box.Top = 0;
+	 }
+	 else
+	 {
+	    box.Left = xpos;
+	    box.Top  = ypos;
+	 };
 
-         /*
-          * Move to the correct location.
-          */
-         box.Width   = tw;
-         box.Height  = th;
+	 /*
+	  * Move to the correct location.
+	  */
+	 box.Width   = tw;
+	 box.Height  = th;
 
-         if (rrp.BitMap) RenderInfoText(&rrp, text, pens, &box, (UWORD)~0);
-         
-         if (ld->ld_Flags & (LABF_FLIP_XY|LABF_FLIP_X|LABF_FLIP_Y))
-         {
-            if (rrp.BitMap)
-            {
-               rw = ((tw + 15) >> 4) << 4;
-               
-               if (chunky1 = BGUI_AllocPoolMem(rw * th))
-               {
-                  trp = rrp;
-                  if (trp.BitMap = BGUI_AllocBitMap(rw, 1, FGetDepth(&rrp), BMF_STANDARD, dr->imp_RPort->BitMap))
-                  {
-                     ReadPixelArray8(&rrp, 0, 0, tw - 1, th - 1, chunky1, &trp);
-                     BGUI_FreeBitMap(rrp.BitMap);
-                     rrp.BitMap = NULL;
-                     
-                     if (ld->ld_Flags & LABF_FLIP_X)
-                     {
-                        s = chunky1;
-                        
-                        for (i1 = th; i1; i1--)
-                        {                          
-                           for (j1 = 0, j2 = tw - 1; j1 < j2; j1++, j2--)
-                           {
-                              c = s[j1];
-                              s[j1] = s[j2];
-                              s[j2] = c;
-                           };
-                           s += rw;
-                        };
-                     };
+	 if (rrp.BitMap) RenderInfoText(&rrp, text, pens, &box, (UWORD)~0);
+	 
+	 if (ld->ld_Flags & (LABF_FLIP_XY|LABF_FLIP_X|LABF_FLIP_Y))
+	 {
+	    if (rrp.BitMap)
+	    {
+	       rw = ((tw + 15) >> 4) << 4;
+	       
+	       if (chunky1 = BGUI_AllocPoolMem(rw * th))
+	       {
+		  trp = rrp;
+		  if (trp.BitMap = BGUI_AllocBitMap(rw, 1, FGetDepth(&rrp), BMF_STANDARD, dr->imp_RPort->BitMap))
+		  {
+		     ReadPixelArray8(&rrp, 0, 0, tw - 1, th - 1, chunky1, &trp);
+		     BGUI_FreeBitMap(rrp.BitMap);
+		     rrp.BitMap = NULL;
+		     
+		     if (ld->ld_Flags & LABF_FLIP_X)
+		     {
+			s = chunky1;
+			
+			for (i1 = th; i1; i1--)
+			{                          
+			   for (j1 = 0, j2 = tw - 1; j1 < j2; j1++, j2--)
+			   {
+			      c = s[j1];
+			      s[j1] = s[j2];
+			      s[j2] = c;
+			   };
+			   s += rw;
+			};
+		     };
 
-                     if (ld->ld_Flags & LABF_FLIP_Y)
-                     {
-                        s = chunky1;
-                        d = chunky1 + rw * (th - 1);
-                        
-                        while (s < d)
-                        {                          
-                           for (j1 = tw - 1; j1; j1--)
-                           {
-                              c = s[j1];
-                              s[j1] = d[j1];
-                              d[j1] = c;
-                           };
-                           s += rw;
-                           d -= rw;
-                        };
-                     };
+		     if (ld->ld_Flags & LABF_FLIP_Y)
+		     {
+			s = chunky1;
+			d = chunky1 + rw * (th - 1);
+			
+			while (s < d)
+			{                          
+			   for (j1 = tw - 1; j1; j1--)
+			   {
+			      c = s[j1];
+			      s[j1] = d[j1];
+			      d[j1] = c;
+			   };
+			   s += rw;
+			   d -= rw;
+			};
+		     };
 
-                     if (ld->ld_Flags & LABF_FLIP_XY)
-                     {
-                        chunky2 = chunky1;
-                        rh = ((th + 15) >> 4) << 4;
+		     if (ld->ld_Flags & LABF_FLIP_XY)
+		     {
+			chunky2 = chunky1;
+			rh = ((th + 15) >> 4) << 4;
 
-                        if (chunky1 = BGUI_AllocPoolMem(tw * rh))
-                        {
-                           for (i1 = 0; i1 < th; i1++)
-                           {
-                              for (j1 = 0; j1 < tw; j1++)
-                              {
-                                 chunky1[(j1 * rh) + i1] = chunky2[(i1 * rw) + j1];
-                              };
-                           };
-                           BGUI_FreePoolMem(chunky2);
-                        }
-                        else chunky1 = chunky2;
-                        i1 = tw; tw = th; th = i1;
+			if (chunky1 = BGUI_AllocPoolMem(tw * rh))
+			{
+			   for (i1 = 0; i1 < th; i1++)
+			   {
+			      for (j1 = 0; j1 < tw; j1++)
+			      {
+				 chunky1[(j1 * rh) + i1] = chunky2[(i1 * rw) + j1];
+			      };
+			   };
+			   BGUI_FreePoolMem(chunky2);
+			}
+			else chunky1 = chunky2;
+			i1 = tw; tw = th; th = i1;
 
-                        BGUI_FreeBitMap(trp.BitMap);
-                        trp.BitMap = BGUI_AllocBitMap(rw, 1, FGetDepth(&rrp), BMF_STANDARD, dr->imp_RPort->BitMap);
-                     };
-                     if (trp.BitMap)
-                     {                    
-                        WritePixelArray8(dr->imp_RPort, xpos, ypos,
-                           xpos + tw - 1, ypos + th - 1, chunky1, &trp);
-                        BGUI_FreeBitMap(trp.BitMap);
-                     };
-                  };                   
-                  BGUI_FreePoolMem(chunky1);
-               };          
-               BGUI_FreeBitMap(rrp.BitMap);
-            };
-         };
+			BGUI_FreeBitMap(trp.BitMap);
+			trp.BitMap = BGUI_AllocBitMap(rw, 1, FGetDepth(&rrp), BMF_STANDARD, dr->imp_RPort->BitMap);
+		     };
+		     if (trp.BitMap)
+		     {                    
+			WritePixelArray8(dr->imp_RPort, xpos, ypos,
+			   xpos + tw - 1, ypos + th - 1, chunky1, &trp);
+			BGUI_FreeBitMap(trp.BitMap);
+		     };
+		  };                   
+		  BGUI_FreePoolMem(chunky1);
+	       };          
+	       BGUI_FreeBitMap(rrp.BitMap);
+	    };
+	 };
       };
       BGUI_FreePoolMem(text);
    }
@@ -868,11 +871,11 @@ METHOD(LabelClassDimensions, struct bmDimensions *, bmd)
 
       if(DoExtentMethod(obj, bi->bi_RPort, &extentions, &lw, &lh, EXTF_MAXIMUM))
       {
-         lw=max(lw,max(-extentions.Left,extentions.Width));
-         lh=max(lh,max(-extentions.Top,extentions.Height));
+	 lw=max(lw,max(-extentions.Left,extentions.Width));
+	 lh=max(lh,max(-extentions.Top,extentions.Height));
       }
       else
-         lw=lh=0;
+	 lw=lh=0;
    }
    switch (ld->ld_Place)
    {
@@ -936,9 +939,9 @@ STATIC DPFUNC ClassFunc[] = {
 makeproto Class *InitLabelClass(void)
 {
    return BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_IMAGE_OBJECT,
-                         CLASS_ObjectSize,     sizeof(LD),
-                         CLASS_DFTable,        ClassFunc,
-                         TAG_DONE);
+			 CLASS_ObjectSize,     sizeof(LD),
+			 CLASS_DFTable,        ClassFunc,
+			 TAG_DONE);
 }
 ///
 

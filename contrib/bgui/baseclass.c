@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2000/08/17 15:09:18  chodorowski
+ * Fixed compiler warnings.
+ *
  * Revision 42.6  2000/08/10 17:52:47  stegerg
  * temp fix for relayout refresh bug which only happens in AROS. temp. solved
  * by doing a RefreshGList in windowclass.c/WindowClassRelease method.
@@ -107,6 +110,14 @@
  */
 
 #define WW(x)
+
+/* Get the prototype for kprintf() */
+
+#ifdef _AROS
+#include <clib/arossupport_protos.h>
+#else
+#include <clib/debug_protos.h>
+#endif
 
 /// Class definitions.
 
@@ -266,7 +277,7 @@ METHOD(BaseClassNew, struct opSet *, ops)
 METHOD(BaseClassGet, struct rmAttr *, ra)
 {
    BD       *bd = (BD *)INST_DATA(cl, obj);
-   ULONG     rc, *store;
+   ULONG     rc;
 
    rc = BGUI_GetAttrChart(cl, obj, ra);
 
@@ -1138,14 +1149,14 @@ WW(kprintf("** BaseClassRelayout: minw and minh are <= outerbox.width/height\n")
       {
 kprintf("** BaseClassRelayout: not inhibited. trying GM_RENDER\n");
 
-         if((rp=BGUI_ObtainGIRPort(gi)))
-         {
+	 if((rp=BGUI_ObtainGIRPort(gi)))
+	 {
 WW(kprintf("** BaseClassRelayout: doing GM_RENDER\n"));
-            rc=AsmDoMethod(obj,GM_RENDER,gi,rp,GREDRAW_REDRAW);
-            ReleaseGIRPort(rp);
-         }
-         else
-            rc=0;
+	    rc=AsmDoMethod(obj,GM_RENDER,gi,rp,GREDRAW_REDRAW);
+	    ReleaseGIRPort(rp);
+	 }
+	 else
+	    rc=0;
       }
       else
 	 rc=1;
@@ -1156,12 +1167,12 @@ WW(kprintf("** BaseClassRelayout: minw and minh are > outerbox.width/height\n"))
       if (bd->bd_Group)
       {
 WW(kprintf("** BaseClassRelayout: has bd->bd_Group -> sending BASE_RELAYOUT to group"));
-         rc = AsmDoMethodA(bd->bd_Group, (Msg)bmr);
+	 rc = AsmDoMethodA(bd->bd_Group, (Msg)bmr);
       }
       else
       {
 WW(kprintf("** BaseClassRelayout: does not have bd->bd_Group sending WM_RELAYOUT\n"));
-         rc = AsmDoMethod(wo, WM_RELAYOUT);
+	 rc = AsmDoMethod(wo, WM_RELAYOUT);
       };
    };
    return rc;

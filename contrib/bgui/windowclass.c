@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.8  2000/08/17 15:09:18  chodorowski
+ * Fixed compiler warnings.
+ *
  * Revision 42.7  2000/08/10 17:52:47  stegerg
  * temp fix for relayout refresh bug which only happens in AROS. temp. solved
  * by doing a RefreshGList in windowclass.c/WindowClassRelease method.
@@ -421,18 +424,18 @@ STATIC SAVEDS ASM REGFUNC3(VOID, BackFill_func,
       if (bi = AllocBaseInfo(BI_RastPort, rp, TAG_DONE))
 #endif
       {
-         /*
-          * Setup the rastport.
-          */
-         BSetDrMd(bi, JAM1);
-         BSetDPenA(bi, BACKGROUNDPEN);
-         
-         /*
-          * Fill the area.
-          */
-         BRectFillA(bi, &info->bf_Rect);
+	 /*
+	  * Setup the rastport.
+	  */
+	 BSetDrMd(bi, JAM1);
+	 BSetDPenA(bi, BACKGROUNDPEN);
+	 
+	 /*
+	  * Fill the area.
+	  */
+	 BRectFillA(bi, &info->bf_Rect);
 
-         FreeBaseInfo(bi);
+	 FreeBaseInfo(bi);
       };
       rp->Layer = save_layer;
    }
@@ -460,219 +463,219 @@ METHOD(WindowClassSetUpdate, struct opSet *, ops)
       switch (tag->ti_Tag)
       {
       case WINDOW_Screen:
-         if (!w) wd->wd_Screen = (struct Screen *)data;
-         break;
+	 if (!w) wd->wd_Screen = (struct Screen *)data;
+	 break;
 
       case WINDOW_PubScreen:
-         if (!w) wd->wd_PubScreen = (struct Screen *)data;
-         break;
+	 if (!w) wd->wd_PubScreen = (struct Screen *)data;
+	 break;
 
       case WINDOW_PubScreenName:
-         if (!w) wd->wd_PubScreenName = (UBYTE *)data;
-         break;
-         
+	 if (!w) wd->wd_PubScreenName = (UBYTE *)data;
+	 break;
+	 
       case WINDOW_Locale:
-         if (wd->wd_Locale && (wd->wd_Flags & WDF_FREELOCALE))
-         {
-            CloseLocale(wd->wd_Locale->bl_Locale);
-            CloseCatalog(wd->wd_Locale->bl_Catalog);
-            BGUI_FreePoolMem(wd->wd_Locale);
-         };
-         wd->wd_Catalog = NULL;
-         wd->wd_Locale  = (struct bguiLocale *)data;
-         wd->wd_Flags  &= ~WDF_FREELOCALE;
-         break;
+	 if (wd->wd_Locale && (wd->wd_Flags & WDF_FREELOCALE))
+	 {
+	    CloseLocale(wd->wd_Locale->bl_Locale);
+	    CloseCatalog(wd->wd_Locale->bl_Catalog);
+	    BGUI_FreePoolMem(wd->wd_Locale);
+	 };
+	 wd->wd_Catalog = NULL;
+	 wd->wd_Locale  = (struct bguiLocale *)data;
+	 wd->wd_Flags  &= ~WDF_FREELOCALE;
+	 break;
       
       case WINDOW_Catalog:
-         if (LocaleBase == NULL) break;
-         
-         if (wd->wd_Locale && wd->wd_Catalog)
-         {
-            CloseLocale(wd->wd_Locale->bl_Locale);
-            CloseCatalog(wd->wd_Locale->bl_Catalog);
-            if (data == NULL)
-            {
-               BGUI_FreePoolMem(wd->wd_Locale);
-               wd->wd_Locale = NULL;
-               wd->wd_Catalog = NULL;
-               break;
-            };
-         }
-         else
-         {
-            if((wd->wd_Locale = BGUI_AllocPoolMem(sizeof(struct bguiLocale))))
-               memset(wd->wd_Locale,0,sizeof(struct bguiLocale));
-            wd->wd_Flags |= WDF_FREELOCALE;
-         };
-         if (wd->wd_Locale)
-         {
-            wd->wd_Catalog = (UBYTE *)data;
-            wd->wd_Locale->bl_Locale  = OpenLocale(NULL);
-            wd->wd_Locale->bl_Catalog = OpenCatalogA(NULL, wd->wd_Catalog, NULL);
-         };
-         break;
+	 if (LocaleBase == NULL) break;
+	 
+	 if (wd->wd_Locale && wd->wd_Catalog)
+	 {
+	    CloseLocale(wd->wd_Locale->bl_Locale);
+	    CloseCatalog(wd->wd_Locale->bl_Catalog);
+	    if (data == NULL)
+	    {
+	       BGUI_FreePoolMem(wd->wd_Locale);
+	       wd->wd_Locale = NULL;
+	       wd->wd_Catalog = NULL;
+	       break;
+	    };
+	 }
+	 else
+	 {
+	    if((wd->wd_Locale = BGUI_AllocPoolMem(sizeof(struct bguiLocale))))
+	       memset(wd->wd_Locale,0,sizeof(struct bguiLocale));
+	    wd->wd_Flags |= WDF_FREELOCALE;
+	 };
+	 if (wd->wd_Locale)
+	 {
+	    wd->wd_Catalog = (UBYTE *)data;
+	    wd->wd_Locale->bl_Locale  = OpenLocale(NULL);
+	    wd->wd_Locale->bl_Catalog = OpenCatalogA(NULL, wd->wd_Catalog, NULL);
+	 };
+	 break;
 
       case WINDOW_Title:
-         wd->wd_WindowTitle = (UBYTE *)data;
-         if (w && !(wd->wd_Flags & WFLG_BORDERLESS))
-         {
-            SetWindowTitles(w, wd->wd_WindowTitle, (UBYTE *)~0);
-            /*
-             * Notify the target when necessary.
-             */
-            DoNotifyMethod(obj, NULL, 0, tag->ti_Tag, data, TAG_END);
-         };
-         break;
+	 wd->wd_WindowTitle = (UBYTE *)data;
+	 if (w && !(wd->wd_Flags & WFLG_BORDERLESS))
+	 {
+	    SetWindowTitles(w, wd->wd_WindowTitle, (UBYTE *)~0);
+	    /*
+	     * Notify the target when necessary.
+	     */
+	    DoNotifyMethod(obj, NULL, 0, tag->ti_Tag, data, TAG_END);
+	 };
+	 break;
 
       case WINDOW_ScreenTitle:
-         wd->wd_ScreenTitle = (UBYTE *)data;
-         if (w)
-         {
-            SetWindowTitles(w, (UBYTE *)~0, wd->wd_ScreenTitle);
-            /*
-             * Notify the target when necessary.
-             */
-            DoNotifyMethod(obj, NULL, 0, tag->ti_Tag, data, TAG_END);
-         };
-         break;
+	 wd->wd_ScreenTitle = (UBYTE *)data;
+	 if (w)
+	 {
+	    SetWindowTitles(w, (UBYTE *)~0, wd->wd_ScreenTitle);
+	    /*
+	     * Notify the target when necessary.
+	     */
+	    DoNotifyMethod(obj, NULL, 0, tag->ti_Tag, data, TAG_END);
+	 };
+	 break;
 
       case WINDOW_ToolTicks:
-         wd->wd_ToolTickTime = data;
-         wd->wd_ToolTicks    = 0;
+	 wd->wd_ToolTickTime = data;
+	 wd->wd_ToolTicks    = 0;
 
-         if (wd->wd_ToolTickTime)  wd->wd_IDCMPFlags |= IDCMP_INTUITICKS;
-         else
-         {
-            if (!(wd->wd_Flags & WDF_USERTICKS))
-               wd->wd_IDCMPFlags &= ~IDCMP_INTUITICKS;
-         };
-         if (w) ModifyIDCMP(w, wd->wd_IDCMPFlags);
-         break;
+	 if (wd->wd_ToolTickTime)  wd->wd_IDCMPFlags |= IDCMP_INTUITICKS;
+	 else
+	 {
+	    if (!(wd->wd_Flags & WDF_USERTICKS))
+	       wd->wd_IDCMPFlags &= ~IDCMP_INTUITICKS;
+	 };
+	 if (w) ModifyIDCMP(w, wd->wd_IDCMPFlags);
+	 break;
 
       case WINDOW_Bounds:
-         if (data)
-         {
-            if (w)
-            {
-               ChangeWindowBox(w, IBOX(data)->Left,  IBOX(data)->Top,
-                                  IBOX(data)->Width, IBOX(data)->Height);
-            }
-            else
-            {
-               wd->wd_FixedPos = *IBOX(data);
-               wd->wd_Flags   |= WDF_CHANGE_VALID;
-            };
-         }
-         else
-            wd->wd_Flags &= ~WDF_CHANGE_VALID;
-         break;
+	 if (data)
+	 {
+	    if (w)
+	    {
+	       ChangeWindowBox(w, IBOX(data)->Left,  IBOX(data)->Top,
+				  IBOX(data)->Width, IBOX(data)->Height);
+	    }
+	    else
+	    {
+	       wd->wd_FixedPos = *IBOX(data);
+	       wd->wd_Flags   |= WDF_CHANGE_VALID;
+	    };
+	 }
+	 else
+	    wd->wd_Flags &= ~WDF_CHANGE_VALID;
+	 break;
 
       case WINDOW_CloseOnEsc:
-         if (data) wd->wd_Flags |= WDF_CLOSEONESC;
-         else      wd->wd_Flags &= ~WDF_CLOSEONESC;
-         break;
+	 if (data) wd->wd_Flags |= WDF_CLOSEONESC;
+	 else      wd->wd_Flags &= ~WDF_CLOSEONESC;
+	 break;
 
       case WINDOW_NoVerify:
-         if (w)
-         {
-            if (data) ModifyIDCMP(w, wd->wd_IDCMPFlags & ~IDCMP_SIZEVERIFY);
-            else      ModifyIDCMP(w, wd->wd_IDCMPFlags);
-         }
-         break;
+	 if (w)
+	 {
+	    if (data) ModifyIDCMP(w, wd->wd_IDCMPFlags & ~IDCMP_SIZEVERIFY);
+	    else      ModifyIDCMP(w, wd->wd_IDCMPFlags);
+	 }
+	 break;
 
       case  WINDOW_MenuFont:
-         wd->wd_MenuFont = (struct TextAttr *)data;
-         if (w && wd->wd_Menus)
-         {
-            ClearMenuStrip(w);
-            if ((!wd->wd_MenuFont) || (!LayoutMenus(wd->wd_Menus, wd->wd_VisualInfo,
-               GTMN_NewLookMenus, TRUE, GTMN_TextAttr, wd->wd_MenuFont, TAG_DONE)))
-            {
-               LayoutMenus(wd->wd_Menus, wd->wd_VisualInfo, GTMN_NewLookMenus, TRUE, TAG_END);
-            };
-            SetMenuStrip(w, wd->wd_Menus);
-         }
-         break;
+	 wd->wd_MenuFont = (struct TextAttr *)data;
+	 if (w && wd->wd_Menus)
+	 {
+	    ClearMenuStrip(w);
+	    if ((!wd->wd_MenuFont) || (!LayoutMenus(wd->wd_Menus, wd->wd_VisualInfo,
+	       GTMN_NewLookMenus, TRUE, GTMN_TextAttr, wd->wd_MenuFont, TAG_DONE)))
+	    {
+	       LayoutMenus(wd->wd_Menus, wd->wd_VisualInfo, GTMN_NewLookMenus, TRUE, TAG_END);
+	    };
+	    SetMenuStrip(w, wd->wd_Menus);
+	 }
+	 break;
 
       case WINDOW_SharedPort:
-         if (!w)
-         {
-            if (wd->wd_UserPort = (struct MsgPort *)data)
-               wd->wd_Flags |= WDF_SHARED_MSGPORT;
-            else
-               wd->wd_Flags &= ~WDF_SHARED_MSGPORT;
-         }
-         break;
+	 if (!w)
+	 {
+	    if (wd->wd_UserPort = (struct MsgPort *)data)
+	       wd->wd_Flags |= WDF_SHARED_MSGPORT;
+	    else
+	       wd->wd_Flags &= ~WDF_SHARED_MSGPORT;
+	 }
+	 break;
 
 
 
       case WINDOW_TitleID:
-         wd->wd_WindowTitleID = data;
-         break;
+	 wd->wd_WindowTitleID = data;
+	 break;
 
       case WINDOW_ScreenTitleID:
-         wd->wd_ScreenTitleID = data;
-         break;
+	 wd->wd_ScreenTitleID = data;
+	 break;
 
       case WINDOW_HelpFile:
-         wd->wd_HelpFile = (UBYTE *)data;
-         break;
+	 wd->wd_HelpFile = (UBYTE *)data;
+	 break;
 
       case WINDOW_HelpNode:
-         wd->wd_HelpNode = (UBYTE *)data;
-         break;
+	 wd->wd_HelpNode = (UBYTE *)data;
+	 break;
 
       case WINDOW_HelpLine:
-         wd->wd_HelpLine = data;
-         break;
+	 wd->wd_HelpLine = data;
+	 break;
 
       case WINDOW_HelpText:
-         wd->wd_HelpText = (UBYTE *)data;
-         break;
+	 wd->wd_HelpText = (UBYTE *)data;
+	 break;
 
       case WINDOW_HelpTextID:
-         wd->wd_HelpTextID = data;
-         break;
+	 wd->wd_HelpTextID = data;
+	 break;
 
       case WINDOW_IDCMPHook:
-         wd->wd_IDCMPHook = (struct Hook *)data;
-         break;
+	 wd->wd_IDCMPHook = (struct Hook *)data;
+	 break;
 
       case WINDOW_VerifyHook:
-         wd->wd_VerifyHook = (struct Hook *)data;
-         break;
+	 wd->wd_VerifyHook = (struct Hook *)data;
+	 break;
 
       case WINDOW_IDCMPHookBits:
-         wd->wd_IDCMPHookBits = data;
-         break;
+	 wd->wd_IDCMPHookBits = data;
+	 break;
 
       case WINDOW_VerifyHookBits:
-         wd->wd_VerifyHookBits = data;
-         break;
+	 wd->wd_VerifyHookBits = data;
+	 break;
 
       case WINDOW_Position:
-         wd->wd_Position = data;
-         break;
+	 wd->wd_Position = data;
+	 break;
 
       case WINDOW_ScaleWidth:
-         wd->wd_WidthScale = data;
-         break;
+	 wd->wd_WidthScale = data;
+	 break;
 
       case WINDOW_ScaleHeight:
-         wd->wd_HeightScale = data;
-         break;
+	 wd->wd_HeightScale = data;
+	 break;
 
       case WINDOW_Font:
-         wd->wd_Font = (struct TextAttr *)data;
-         break;
+	 wd->wd_Font = (struct TextAttr *)data;
+	 break;
 
       case WINDOW_FallBackFont:
-         wd->wd_FallBackFont = (struct TextAttr *)data;
-         break;
+	 wd->wd_FallBackFont = (struct TextAttr *)data;
+	 break;
 
       case WINDOW_UniqueID:
-         wd->wd_ID = data;
-         break;
+	 wd->wd_ID = data;
+	 break;
       };
    };
    return 1;
@@ -740,8 +743,8 @@ METHOD(WindowClassNew, struct opSet *, ops)
        * Pack user boolean tags with predefined defaults.
        */
       wd->wd_WindowFlags = PackBoolTags(WFLG_DRAGBAR | WFLG_SIZEGADGET | WFLG_CLOSEGADGET | WFLG_DEPTHGADGET |
-                                        WFLG_ACTIVATE | WFLG_NOCAREREFRESH | WFLG_SIZEBBOTTOM | WFLG_REPORTMOUSE |
-                                        WFLG_NEWLOOKMENUS, tags, boolTags1);
+					WFLG_ACTIVATE | WFLG_NOCAREREFRESH | WFLG_SIZEBBOTTOM | WFLG_REPORTMOUSE |
+					WFLG_NEWLOOKMENUS, tags, boolTags1);
 
       /*
        * Simple refresh?
@@ -749,7 +752,7 @@ METHOD(WindowClassNew, struct opSet *, ops)
       if (!GetTagData(WINDOW_SmartRefresh, FALSE, tags)) wd->wd_WindowFlags |= WFLG_SIMPLE_REFRESH;
 
       idcmp = IDCMP_RAWKEY|IDCMP_GADGETUP|IDCMP_CHANGEWINDOW|IDCMP_INACTIVEWINDOW|IDCMP_ACTIVEWINDOW|
-              IDCMP_IDCMPUPDATE|IDCMP_SIZEVERIFY|IDCMP_NEWSIZE|IDCMP_MOUSEMOVE|IDCMP_MOUSEBUTTONS|IDCMP_MENUHELP;
+	      IDCMP_IDCMPUPDATE|IDCMP_SIZEVERIFY|IDCMP_NEWSIZE|IDCMP_MOUSEMOVE|IDCMP_MOUSEBUTTONS|IDCMP_MENUHELP;
 
       /*
        * Obtain all necessary window data.
@@ -757,72 +760,72 @@ METHOD(WindowClassNew, struct opSet *, ops)
       tstate = tags;
       while (tag = NextTagItem(&tstate))
       {
-         data = tag->ti_Data;
-         
-         switch (tag->ti_Tag)
-         {
-         case WINDOW_MenuStrip:
-            if (!wd->wd_MenuStrip)
-            {
-               if (!CopyNewMenuArray(wd, (struct NewMenu *)data)) fail = TRUE;
-            }
-            break;
+	 data = tag->ti_Data;
+	 
+	 switch (tag->ti_Tag)
+	 {
+	 case WINDOW_MenuStrip:
+	    if (!wd->wd_MenuStrip)
+	    {
+	       if (!CopyNewMenuArray(wd, (struct NewMenu *)data)) fail = TRUE;
+	    }
+	    break;
 
-         case WINDOW_IDCMP:
-            wd->wd_IDCMPFlags = data;
-            if (data & IDCMP_INTUITICKS) wd->wd_Flags |= WDF_USERTICKS;
-            break;
+	 case WINDOW_IDCMP:
+	    wd->wd_IDCMPFlags = data;
+	    if (data & IDCMP_INTUITICKS) wd->wd_Flags |= WDF_USERTICKS;
+	    break;
 
-         case WINDOW_PosRelBox:
-            wd->wd_RelPos = *IBOX(data);
-            wd->wd_Flags |= WDF_RELBOX;
-            break;
-         }
+	 case WINDOW_PosRelBox:
+	    wd->wd_RelPos = *IBOX(data);
+	    wd->wd_Flags |= WDF_RELBOX;
+	    break;
+	 }
       }
       AsmCoerceMethod(cl, (Object *)rc, OM_SET, tags, NULL);
 
       if (!fail)
       {
-         /*
-          * Disable all system gadgets and bordergroups when this
-          * is a backdrop or borderless window.
-          */
-         if (wd->wd_WindowFlags & (WFLG_BORDERLESS|WFLG_BACKDROP))
-         {
-            wd->wd_WindowFlags &= ~(WFLG_SIZEGADGET|WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_DRAGBAR);
-            wd->wd_WindowFlags |= WFLG_BORDERLESS;
-            wd->wd_WindowTitle  = NULL;
-         };
+	 /*
+	  * Disable all system gadgets and bordergroups when this
+	  * is a backdrop or borderless window.
+	  */
+	 if (wd->wd_WindowFlags & (WFLG_BORDERLESS|WFLG_BACKDROP))
+	 {
+	    wd->wd_WindowFlags &= ~(WFLG_SIZEGADGET|WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_DRAGBAR);
+	    wd->wd_WindowFlags |= WFLG_BORDERLESS;
+	    wd->wd_WindowTitle  = NULL;
+	 };
 
-         /*
-          * Pickup the other boolean tags.
-          */
-         wd->wd_Flags = PackBoolTags(wd->wd_Flags, tags, boolTags);
+	 /*
+	  * Pickup the other boolean tags.
+	  */
+	 wd->wd_Flags = PackBoolTags(wd->wd_Flags, tags, boolTags);
 
-         /*
-          * Pack some IDCMP flags.
-          */
-         if (wd->wd_WindowFlags & WFLG_CLOSEGADGET) idcmp |= IDCMP_CLOSEWINDOW;
-         if (wd->wd_MenuStrip)                      idcmp |= IDCMP_MENUPICK;
+	 /*
+	  * Pack some IDCMP flags.
+	  */
+	 if (wd->wd_WindowFlags & WFLG_CLOSEGADGET) idcmp |= IDCMP_CLOSEWINDOW;
+	 if (wd->wd_MenuStrip)                      idcmp |= IDCMP_MENUPICK;
 
-         wd->wd_IDCMPFlags |= idcmp;
+	 wd->wd_IDCMPFlags |= idcmp;
 
-         if (wd->wd_Locale) AsmDoMethod((Object *)rc, BASE_LOCALIZE, wd->wd_Locale);
-         if (wd->wd_Flags & WDF_AUTOKEYLABEL) AsmDoMethod((Object *)rc, BASE_KEYLABEL);
+	 if (wd->wd_Locale) AsmDoMethod((Object *)rc, BASE_LOCALIZE, wd->wd_Locale);
+	 if (wd->wd_Flags & WDF_AUTOKEYLABEL) AsmDoMethod((Object *)rc, BASE_KEYLABEL);
 
-         DoSetMethodNG(wd->wd_Gadgets, GROUP_IsMaster, TRUE, BT_Buffer, TRUE, TAG_DONE);
+	 DoSetMethodNG(wd->wd_Gadgets, GROUP_IsMaster, TRUE, BT_Buffer, TRUE, TAG_DONE);
 
-         DoMultiSet(BT_ParentWindow, rc, 5, master, lborder, tborder, rborder, bborder);
+	 DoMultiSet(BT_ParentWindow, rc, 5, master, lborder, tborder, rborder, bborder);
 
-         if (lborder) DoSetMethodNG(lborder, GA_LeftBorder,   TRUE, TAG_DONE);
-         if (rborder) DoSetMethodNG(rborder, GA_RightBorder,  TRUE, TAG_DONE);
-         if (tborder) DoSetMethodNG(tborder, GA_TopBorder,    TRUE, TAG_DONE);
-         if (bborder) DoSetMethodNG(bborder, GA_BottomBorder, TRUE, TAG_DONE);
+	 if (lborder) DoSetMethodNG(lborder, GA_LeftBorder,   TRUE, TAG_DONE);
+	 if (rborder) DoSetMethodNG(rborder, GA_RightBorder,  TRUE, TAG_DONE);
+	 if (tborder) DoSetMethodNG(tborder, GA_TopBorder,    TRUE, TAG_DONE);
+	 if (bborder) DoSetMethodNG(bborder, GA_BottomBorder, TRUE, TAG_DONE);
       }
       else
       {
-         AsmCoerceMethod(cl, (Object *)rc, OM_DISPOSE);
-         rc = 0;
+	 AsmCoerceMethod(cl, (Object *)rc, OM_DISPOSE);
+	 rc = 0;
       };
    };
    if (!rc)
@@ -864,7 +867,7 @@ METHOD(WindowClassDispose, Msg, msg)
       CloseCatalog(wd->wd_Locale->bl_Catalog);
 
       if (wd->wd_Flags & WDF_FREELOCALE)
-         BGUI_FreePoolMem(wd->wd_Locale);
+	 BGUI_FreePoolMem(wd->wd_Locale);
    };
    
    if (wd->wd_DGMObject)
@@ -933,16 +936,16 @@ STATIC ASM REGFUNC2(BOOL, DoMenuStrip,
        * Create the menu-strip.
        */
       if ( wd->wd_Menus = CreateMenus( wd->wd_MenuStrip, TAG_END )) {
-         /*
-          * Layout the menu strip.
-          */
-         if ( LayoutMenus( wd->wd_Menus, wd->wd_VisualInfo, GTMN_NewLookMenus, TRUE, wd->wd_MenuFont ? GTMN_TextAttr : TAG_IGNORE, wd->wd_MenuFont, TAG_END ))
-            return( TRUE );
-         /*
-          * Everything below this point means failure.
-          */
-         FreeMenus( wd->wd_Menus );
-         wd->wd_Menus = NULL;
+	 /*
+	  * Layout the menu strip.
+	  */
+	 if ( LayoutMenus( wd->wd_Menus, wd->wd_VisualInfo, GTMN_NewLookMenus, TRUE, wd->wd_MenuFont ? GTMN_TextAttr : TAG_IGNORE, wd->wd_MenuFont, TAG_END ))
+	    return( TRUE );
+	 /*
+	  * Everything below this point means failure.
+	  */
+	 FreeMenus( wd->wd_Menus );
+	 wd->wd_Menus = NULL;
       }
       FreeVisualInfo( wd->wd_VisualInfo );
       wd->wd_VisualInfo = NULL;
@@ -981,7 +984,7 @@ STATIC ASM REGFUNC1(VOID, KillAppWindow,
        * Kill all remaining messages and the port.
        */
       while (msg = GetMsg(wd->wd_AppPort))
-         ReplyMsg(msg);
+	 ReplyMsg(msg);
 
       DeleteMsgPort(wd->wd_AppPort);
       wd->wd_AppPort = NULL;
@@ -1007,7 +1010,7 @@ STATIC ASM REGFUNC1(BOOL, MakeAppWindow,
 #warning Commented AddAppWindowA
 #else
       if (wd->wd_AppWindow = AddAppWindowA(0, 0, wd->wd_WindowPtr, wd->wd_AppPort, NULL))
-         return TRUE;
+	 return TRUE;
 #endif
 
       KillAppWindow(wd);
@@ -1124,16 +1127,16 @@ STATIC ASM REGFUNC3(void, WBorderSize,
        */
       if (wd->wd_WindowFlags & WFLG_SIZEGADGET)
       {
-         /*
-          * Bottom border size gadget?
-          */
-         if (wd->wd_WindowFlags & WFLG_SIZEBBOTTOM) wb = wd->wd_SizeH;
-         else                                       wr = wd->wd_SizeW;
+	 /*
+	  * Bottom border size gadget?
+	  */
+	 if (wd->wd_WindowFlags & WFLG_SIZEBBOTTOM) wb = wd->wd_SizeH;
+	 else                                       wr = wd->wd_SizeW;
 
-         /*
-          * Right border size gadget?
-          */
-         if (wd->wd_WindowFlags & WFLG_SIZEBRIGHT)  wr = wd->wd_SizeW;
+	 /*
+	  * Right border size gadget?
+	  */
+	 if (wd->wd_WindowFlags & WFLG_SIZEBRIGHT)  wr = wd->wd_SizeW;
       }
 
       /*
@@ -1141,26 +1144,26 @@ STATIC ASM REGFUNC3(void, WBorderSize,
        */
       if (wd->wd_LBorder)
       {
-         GroupDimensions(wd->wd_LBorder, at, &wd->wd_LWidth, &wd->wd_LHeight);
-         if (wd->wd_LWidth > wl) wl = wd->wd_LWidth;
+	 GroupDimensions(wd->wd_LBorder, at, &wd->wd_LWidth, &wd->wd_LHeight);
+	 if (wd->wd_LWidth > wl) wl = wd->wd_LWidth;
       }
 
       if (wd->wd_TBorder)
       {
-         GroupDimensions(wd->wd_TBorder, at, &wd->wd_TWidth, &wd->wd_THeight);
-         if (wd->wd_THeight > wt) wt = wd->wd_THeight;
+	 GroupDimensions(wd->wd_TBorder, at, &wd->wd_TWidth, &wd->wd_THeight);
+	 if (wd->wd_THeight > wt) wt = wd->wd_THeight;
       }
 
       if (wd->wd_RBorder)
       {
-         GroupDimensions(wd->wd_RBorder, at, &wd->wd_RWidth, &wd->wd_RHeight);
-         if (wd->wd_RWidth > wr) wr = wd->wd_RWidth;
+	 GroupDimensions(wd->wd_RBorder, at, &wd->wd_RWidth, &wd->wd_RHeight);
+	 if (wd->wd_RWidth > wr) wr = wd->wd_RWidth;
       }
 
       if (wd->wd_BBorder)
       {
-         GroupDimensions(wd->wd_BBorder, at, &wd->wd_BWidth, &wd->wd_BHeight);
-         if (wd->wd_BHeight > wb) wb = wd->wd_BHeight;
+	 GroupDimensions(wd->wd_BBorder, at, &wd->wd_BWidth, &wd->wd_BHeight);
+	 if (wd->wd_BHeight > wb) wb = wd->wd_BHeight;
       }
 
       /*
@@ -1276,31 +1279,31 @@ BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
        */
       if (wd->wd_LBorder)
       {
-         t1 = wd->wd_LHeight + wd->wd_Top + wd->wd_Bottom;
-         if (t1 > gmh) gmh = t1;
+	 t1 = wd->wd_LHeight + wd->wd_Top + wd->wd_Bottom;
+	 if (t1 > gmh) gmh = t1;
       };
 
       if (wd->wd_RBorder)
       {
-         t1 = wd->wd_RHeight + wd->wd_Top + wd->wd_Bottom;
-         if (t1 > gmh) gmh = t1;
+	 t1 = wd->wd_RHeight + wd->wd_Top + wd->wd_Bottom;
+	 if (t1 > gmh) gmh = t1;
       };
 
       if (wd->wd_TBorder)
       {
-         t1 = wd->wd_TWidth;
-         if ((wd->wd_Flags & WDF_TITLEZIP) ||
-            (wd->wd_WindowFlags & WFLG_SIZEGADGET)) t1 += wd->wd_ZoomW;
-         if (wd->wd_WindowFlags & WFLG_DEPTHGADGET) t1 += wd->wd_DepthW;
-         if (wd->wd_WindowFlags & WFLG_CLOSEGADGET) t1 += wd->wd_CloseW;
-         if (t1 > gmw) gmw = t1;
+	 t1 = wd->wd_TWidth;
+	 if ((wd->wd_Flags & WDF_TITLEZIP) ||
+	    (wd->wd_WindowFlags & WFLG_SIZEGADGET)) t1 += wd->wd_ZoomW;
+	 if (wd->wd_WindowFlags & WFLG_DEPTHGADGET) t1 += wd->wd_DepthW;
+	 if (wd->wd_WindowFlags & WFLG_CLOSEGADGET) t1 += wd->wd_CloseW;
+	 if (t1 > gmw) gmw = t1;
       };
 
       if (wd->wd_BBorder)
       {
-         t1 = wd->wd_BWidth;
-         if (wd->wd_WindowFlags & WFLG_SIZEGADGET) t1 += wd->wd_SizeW;
-         if (t1 > gmw) gmw = t1;
+	 t1 = wd->wd_BWidth;
+	 if (wd->wd_WindowFlags & WFLG_SIZEGADGET) t1 += wd->wd_SizeW;
+	 if (t1 > gmw) gmw = t1;
       }
 
       /*
@@ -1314,47 +1317,47 @@ BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
        */
       if (wd->wd_LBorder)
       {
-         DoSetMethodNG(wd->wd_LBorder, GA_Left,         0,
-                                       GA_Top,          wd->wd_Top,
-                                       GA_Width,        wd->wd_Left,
-                                       GA_RelHeight,  -(wd->wd_Top),
-                                       TAG_END);
+	 DoSetMethodNG(wd->wd_LBorder, GA_Left,         0,
+				       GA_Top,          wd->wd_Top,
+				       GA_Width,        wd->wd_Left,
+				       GA_RelHeight,  -(wd->wd_Top),
+				       TAG_END);
       };
 
       if (wd->wd_TBorder)
       {
-         t1  = wd->wd_WindowFlags & WFLG_DEPTHGADGET ? wd->wd_DepthW - 1: 0;
-         t1 += (wd->wd_WindowFlags & WFLG_SIZEGADGET) ||
-               (wd->wd_Flags & WDF_TITLEZIP) ? wd->wd_ZoomW  - 1: 0;
+	 t1  = wd->wd_WindowFlags & WFLG_DEPTHGADGET ? wd->wd_DepthW - 1: 0;
+	 t1 += (wd->wd_WindowFlags & WFLG_SIZEGADGET) ||
+	       (wd->wd_Flags & WDF_TITLEZIP) ? wd->wd_ZoomW  - 1: 0;
 
-         DoSetMethodNG(wd->wd_TBorder, GA_RelRight,   -(wd->wd_TWidth + t1 - 1),
-                                       GA_Top,          0,
-                                       GA_Width,        wd->wd_TWidth,
-                                       GA_Height,       wd->wd_Top,
-                                       TAG_END);
+	 DoSetMethodNG(wd->wd_TBorder, GA_RelRight,   -(wd->wd_TWidth + t1 - 1),
+				       GA_Top,          0,
+				       GA_Width,        wd->wd_TWidth,
+				       GA_Height,       wd->wd_Top,
+				       TAG_END);
       };
 
       if (wd->wd_RBorder)
       {
-         t1 = wd->wd_WindowFlags & WFLG_SIZEGADGET ? wd->wd_SizeH - wd->wd_Bottom : 0;
+	 t1 = wd->wd_WindowFlags & WFLG_SIZEGADGET ? wd->wd_SizeH - wd->wd_Bottom : 0;
 
-         DoSetMethodNG(wd->wd_RBorder, GA_RelRight,   -(wd->wd_Right - 1),
-                                       GA_Top,          wd->wd_Top,
-                                       GA_Width,        wd->wd_Right,
-                                       GA_RelHeight,  -(wd->wd_Top + wd->wd_Bottom + t1),
-                                       TAG_END);
+	 DoSetMethodNG(wd->wd_RBorder, GA_RelRight,   -(wd->wd_Right - 1),
+				       GA_Top,          wd->wd_Top,
+				       GA_Width,        wd->wd_Right,
+				       GA_RelHeight,  -(wd->wd_Top + wd->wd_Bottom + t1),
+				       TAG_END);
       };
 
       if (wd->wd_BBorder)
       {
-         t1 = /*wd->wd_LBorder ?*/ wd->wd_Left /*: 0*/;
-         t2 = wd->wd_WindowFlags & WFLG_SIZEGADGET ? wd->wd_SizeW : 0;
+	 t1 = /*wd->wd_LBorder ?*/ wd->wd_Left /*: 0*/;
+	 t2 = wd->wd_WindowFlags & WFLG_SIZEGADGET ? wd->wd_SizeW : 0;
 
-         DoSetMethodNG(wd->wd_BBorder, GA_Left,         t1,
-                                       GA_RelBottom,  -(wd->wd_Bottom - 1),
-                                       GA_RelWidth,   -(t1 + t2),
-                                       GA_Height,       wd->wd_Bottom,
-                                       TAG_END);
+	 DoSetMethodNG(wd->wd_BBorder, GA_Left,         t1,
+				       GA_RelBottom,  -(wd->wd_Bottom - 1),
+				       GA_RelWidth,   -(t1 + t2),
+				       GA_Height,       wd->wd_Bottom,
+				       TAG_END);
       };
    }
    else
@@ -1383,14 +1386,14 @@ BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
        */
       if (wd->wd_Flags & WDF_SHOWTITLE)
       {
-         sh = scr->Height - scr->BarHeight - 1;
+	 sh = scr->Height - scr->BarHeight - 1;
       }
       else
       {
-         /*
-          * Hide title?
-          */
-         ShowTitle(scr, FALSE);
+	 /*
+	  * Hide title?
+	  */
+	 ShowTitle(scr, FALSE);
       };
 
       gmw = sw;
@@ -1410,7 +1413,7 @@ BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
        * fallback font?
        */
       if (font == wd->wd_FallBackFont)
-         return FALSE;
+	 return FALSE;
 
       /*
        * Retry with the fallback font.
@@ -1445,7 +1448,7 @@ METHOD(WindowClassOpen, Msg, msg)
    BOOL               keepw = wd->wd_Flags & WDF_LOCK_WIDTH;
    BOOL               keeph = wd->wd_Flags & WDF_LOCK_HEIGHT;
    BOOL               pub = TRUE;
-   int                borders = 0, i;
+   int                borders = 0;
    struct Window     *w;
    struct Message    *imsg;
 
@@ -1501,21 +1504,21 @@ METHOD(WindowClassOpen, Msg, msg)
       if (wd->wd_PubScreen) pubscreen = wd->wd_PubScreen;
       else
       {
-         /*
-          * Lock the screen.
-          */
-         if (!(pubscreen = LockPubScreen(wd->wd_PubScreenName)))
-            /*
-             * Fallback to the default screen
-             * when locking failed. Should be
-             * made optional?
-             */
-            pubscreen = LockPubScreen(NULL);
-         /*
-          * Tell'm we locked the screen.
-          */
-         if (pubscreen)
-            wd->wd_Flags |= WDF_SCREEN_LOCKED;
+	 /*
+	  * Lock the screen.
+	  */
+	 if (!(pubscreen = LockPubScreen(wd->wd_PubScreenName)))
+	    /*
+	     * Fallback to the default screen
+	     * when locking failed. Should be
+	     * made optional?
+	     */
+	    pubscreen = LockPubScreen(NULL);
+	 /*
+	  * Tell'm we locked the screen.
+	  */
+	 if (pubscreen)
+	    wd->wd_Flags |= WDF_SCREEN_LOCKED;
       };
       wd->wd_Screen = pubscreen;
    };
@@ -1534,7 +1537,7 @@ METHOD(WindowClassOpen, Msg, msg)
    for (i = 0; i < NUMDRIPENS; i++)
    {
       wd->wd_BDI.bdi_Pens[i] = (wd->wd_BDI.bdi_DrInfo && (i < wd->wd_BDI.bdi_DrInfo->dri_NumPens)) ?
-         wd->wd_BDI.bdi_DrInfo->dri_Pens[i] : DefDriPens[i];
+	 wd->wd_BDI.bdi_DrInfo->dri_Pens[i] : DefDriPens[i];
    };
     */
 
@@ -1553,12 +1556,12 @@ METHOD(WindowClassOpen, Msg, msg)
        */
       if (QueryOverscan(modeID, &rect, OSCAN_TEXT))
       {
-         /*
-          * Compute TEXT overscan width and height
-          * for this display mode.
-          */
-         vw = rect.MaxX - rect.MinX + 1;
-         vh = rect.MaxY - rect.MinY + 1;
+	 /*
+	  * Compute TEXT overscan width and height
+	  * for this display mode.
+	  */
+	 vw = rect.MaxX - rect.MinX + 1;
+	 vh = rect.MaxY - rect.MinY + 1;
 	 
       };
    };
@@ -1590,9 +1593,9 @@ METHOD(WindowClassOpen, Msg, msg)
       wleft = 0;
 
       if (wd->wd_Flags & WDF_SHOWTITLE)
-         wtop = pubscreen->BarHeight + 1;
+	 wtop = pubscreen->BarHeight + 1;
       else
-         wtop = 0;
+	 wtop = 0;
 
       goto forceThis;
    }
@@ -1634,13 +1637,13 @@ METHOD(WindowClassOpen, Msg, msg)
        */
       if (wd->wd_Flags & WDF_RELBOX)
       {
-         wleft = ((wd->wd_RelPos.Width  - width)  >> 1) + wd->wd_RelPos.Left;
-         wtop  = ((wd->wd_RelPos.Height - height) >> 1) + wd->wd_RelPos.Top;
+	 wleft = ((wd->wd_RelPos.Width  - width)  >> 1) + wd->wd_RelPos.Left;
+	 wtop  = ((wd->wd_RelPos.Height - height) >> 1) + wd->wd_RelPos.Top;
       }
       else
       {
-         wleft = wd->wd_FixedPos.Left;
-         wtop  = wd->wd_FixedPos.Top;
+	 wleft = wd->wd_FixedPos.Left;
+	 wtop  = wd->wd_FixedPos.Top;
       }
 
       /*
@@ -1670,30 +1673,30 @@ METHOD(WindowClassOpen, Msg, msg)
        */
       if (!(wd->wd_Flags & WDF_RELBOX))
       {
-         /*
-          * What position is requested?
-          */
-         switch (wd->wd_Position)
-         {
-         case POS_CENTERSCREEN:
-            wleft = ((vw - width)  >> 1) - pubscreen->ViewPort.DxOffset;
-            wtop  = ((vh - height) >> 1) - pubscreen->ViewPort.DyOffset;
-            break;
+	 /*
+	  * What position is requested?
+	  */
+	 switch (wd->wd_Position)
+	 {
+	 case POS_CENTERSCREEN:
+	    wleft = ((vw - width)  >> 1) - pubscreen->ViewPort.DxOffset;
+	    wtop  = ((vh - height) >> 1) - pubscreen->ViewPort.DyOffset;
+	    break;
 
-         case POS_CENTERMOUSE:
-            wleft = pubscreen->MouseX - (width  >> 1) - pubscreen->ViewPort.DxOffset;
-            wtop  = pubscreen->MouseY - (height >> 1) - pubscreen->ViewPort.DyOffset;
-            break;
-         };
+	 case POS_CENTERMOUSE:
+	    wleft = pubscreen->MouseX - (width  >> 1) - pubscreen->ViewPort.DxOffset;
+	    wtop  = pubscreen->MouseY - (height >> 1) - pubscreen->ViewPort.DyOffset;
+	    break;
+	 };
       }
       else
       {
-         /*
-          * Setup window according to the
-          * rectangle.
-          */
-         wleft = ((wd->wd_RelPos.Width  - width)  >> 1) + wd->wd_RelPos.Left;
-         wtop  = ((wd->wd_RelPos.Height - height) >> 1) + wd->wd_RelPos.Top;
+	 /*
+	  * Setup window according to the
+	  * rectangle.
+	  */
+	 wleft = ((wd->wd_RelPos.Width  - width)  >> 1) + wd->wd_RelPos.Left;
+	 wtop  = ((wd->wd_RelPos.Height - height) >> 1) + wd->wd_RelPos.Top;
       };
    }
 
@@ -1708,7 +1711,7 @@ METHOD(WindowClassOpen, Msg, msg)
        * Set the menus up.
        */
       if (!DoMenuStrip(wd, pubscreen))
-         goto failure;
+	 goto failure;
    };
 
    /*
@@ -1749,19 +1752,19 @@ METHOD(WindowClassOpen, Msg, msg)
     * Open the window (finally :))
     */
    w = wd->wd_WindowPtr = OpenWindowTags(NULL,
-         WA_Left,           wleft,                           WA_Top,            wtop,
-         WA_Width,          width,                           WA_Height,         height,
-         WA_Flags,          wd->wd_WindowFlags,              WA_Gadgets,        glist,
-         WA_BackFill,       &BackFill_hook,                  WA_RptQueue,       1,
-         WA_MinWidth,       mw,                              WA_MinHeight,      mh,
-         WA_MaxWidth,       (wd->wd_Flags & WDF_LOCK_WIDTH)  ? mw : ~0,
-         WA_MaxHeight,      (wd->wd_Flags & WDF_LOCK_HEIGHT) ? mh : ~0,
-         wd->wd_WindowTitle ? WA_Title       : TAG_IGNORE,   wd->wd_WindowTitle,
-         wd->wd_ScreenTitle ? WA_ScreenTitle : TAG_IGNORE,   wd->wd_ScreenTitle,
-         pub ? WA_PubScreen : WA_CustomScreen,               pubscreen,
-         wd->wd_Flags & WDF_TITLEZIP ? WA_Zoom : TAG_IGNORE, wd->wd_Zoom,
-         WA_IDCMP,          wd->wd_IDCMPFlags,
-         WA_MenuHelp,       TRUE,                            TAG_END);
+	 WA_Left,           wleft,                           WA_Top,            wtop,
+	 WA_Width,          width,                           WA_Height,         height,
+	 WA_Flags,          wd->wd_WindowFlags,              WA_Gadgets,        glist,
+	 WA_BackFill,       &BackFill_hook,                  WA_RptQueue,       1,
+	 WA_MinWidth,       mw,                              WA_MinHeight,      mh,
+	 WA_MaxWidth,       (wd->wd_Flags & WDF_LOCK_WIDTH)  ? mw : ~0,
+	 WA_MaxHeight,      (wd->wd_Flags & WDF_LOCK_HEIGHT) ? mh : ~0,
+	 wd->wd_WindowTitle ? WA_Title       : TAG_IGNORE,   wd->wd_WindowTitle,
+	 wd->wd_ScreenTitle ? WA_ScreenTitle : TAG_IGNORE,   wd->wd_ScreenTitle,
+	 pub ? WA_PubScreen : WA_CustomScreen,               pubscreen,
+	 wd->wd_Flags & WDF_TITLEZIP ? WA_Zoom : TAG_IGNORE, wd->wd_Zoom,
+	 WA_IDCMP,          wd->wd_IDCMPFlags,
+	 WA_MenuHelp,       TRUE,                            TAG_END);
 
    if (!w) goto failure;
 
@@ -1805,10 +1808,10 @@ METHOD(WindowClassOpen, Msg, msg)
 
       while (imsg = GetMsg(w->UserPort))
       {
-         /*
-          * Dump message onto the other port.
-          */
-         PutMsg(wd->wd_UserPort, imsg);
+	 /*
+	  * Dump message onto the other port.
+	  */
+	 PutMsg(wd->wd_UserPort, imsg);
       };
       /*
        * Free intuition's port.
@@ -1880,8 +1883,8 @@ STATIC ASM REGFUNC1(VOID, ClearMsgPort,
 
    while ( succ = imsg->ExecMessage.mn_Node.ln_Succ ) {
       if ( imsg->IDCMPWindow == wd->wd_WindowPtr ) {
-         Remove(( struct Node * )imsg );
-         ReplyMsg(( struct Message * )imsg );
+	 Remove(( struct Node * )imsg );
+	 ReplyMsg(( struct Message * )imsg );
       }
       imsg = ( struct IntuiMessage * )succ;
    }
@@ -1908,7 +1911,7 @@ METHOD(WindowClassClose, Msg, msg)
       ClearMsgPort(wd);
       if (wd->wd_Flags & WDF_SHARED_MSGPORT)
       {
-         w->UserPort = NULL;
+	 w->UserPort = NULL;
       };
       ModifyIDCMP(w, 0);
       Permit();
@@ -1922,13 +1925,13 @@ METHOD(WindowClassClose, Msg, msg)
        * Wakeup the window.
        */
       while (wd->wd_SleepCnt)
-         AsmDoMethod(obj, WM_WAKEUP);
+	 AsmDoMethod(obj, WM_WAKEUP);
 
       /*
        * AppWindow?
        */
       if (wd->wd_Flags & WDF_IS_APPWINDOW)
-         KillAppWindow(wd);
+	 KillAppWindow(wd);
 
       /*
        * Remove the window menus.
@@ -1963,15 +1966,15 @@ METHOD(WindowClassClose, Msg, msg)
        */
       if (wd->wd_Menus)
       {
-         FreeMenus(wd->wd_Menus);
-         wd->wd_Menus = NULL;
+	 FreeMenus(wd->wd_Menus);
+	 wd->wd_Menus = NULL;
       }
 
       if (wd->wd_BufferRP)
       {
-         wd->wd_BufferRP->Layer = wd->wd_BufferLayer;
-         BGUI_FreeRPortBitMap(wd->wd_BufferRP);
-         wd->wd_BufferRP = NULL;
+	 wd->wd_BufferRP->Layer = wd->wd_BufferLayer;
+	 BGUI_FreeRPortBitMap(wd->wd_BufferRP);
+	 wd->wd_BufferRP = NULL;
       };
 
       rc = 1;
@@ -2028,7 +2031,7 @@ METHOD(WindowClassSleep, Msg, msg)
        * and a busy pointer.
        */
       if (wd->wd_SleepCnt++ == 0)
-         wd->wd_Lock = BGUI_LockWindow(wd->wd_WindowPtr);
+	 wd->wd_Lock = BGUI_LockWindow(wd->wd_WindowPtr);
       /*
        * Return 1 for sucess.
        */
@@ -2054,12 +2057,12 @@ METHOD(WindowClassWakeUp, Msg, msg)
    {
       if (--wd->wd_SleepCnt == 0)
       {
-         /*
-          * When the sleep nest counter becomes zero we remove the
-          * requester and reset the pointer.
-          */
-         BGUI_UnlockWindow(wd->wd_Lock);
-         wd->wd_Lock = NULL;
+	 /*
+	  * When the sleep nest counter becomes zero we remove the
+	  * requester and reset the pointer.
+	  */
+	 BGUI_UnlockWindow(wd->wd_Lock);
+	 wd->wd_Lock = NULL;
       };
       rc = 1;
    };
@@ -2110,100 +2113,100 @@ STATIC ASM REGFUNC3(ULONG, WindowClassGet,
    switch (opg->opg_AttrID)
    {
       case WINDOW_GadgetOK:
-         STORE !(wd->wd_Flags & WDF_REMOVED);
-         break;
+	 STORE !(wd->wd_Flags & WDF_REMOVED);
+	 break;
 
       case WINDOW_ToolTicks:
-         STORE wd->wd_ToolTickTime;
-         break;
+	 STORE wd->wd_ToolTickTime;
+	 break;
 
       case WINDOW_MenuStrip:
-         STORE wd->wd_Menus;
-         break;
+	 STORE wd->wd_Menus;
+	 break;
 
       case WINDOW_UserPort:
-         if (wd->wd_WindowPtr) STORE wd->wd_UserPort;
-         else                  STORE NULL;
-         break;
+	 if (wd->wd_WindowPtr) STORE wd->wd_UserPort;
+	 else                  STORE NULL;
+	 break;
 
       case WINDOW_SigMask:
-         STORE (wd->wd_WindowPtr ? (1 << wd->wd_UserPort->mp_SigBit) : 0);
-         break;
+	 STORE (wd->wd_WindowPtr ? (1 << wd->wd_UserPort->mp_SigBit) : 0);
+	 break;
 
       case WINDOW_AppMask:
-         STORE (wd->wd_AppPort ? (1 << wd->wd_AppPort->mp_SigBit) : 0);
-         break;
+	 STORE (wd->wd_AppPort ? (1 << wd->wd_AppPort->mp_SigBit) : 0);
+	 break;
 
       case WINDOW_Window:
-         STORE wd->wd_WindowPtr;
-         break;
+	 STORE wd->wd_WindowPtr;
+	 break;
 
       case WINDOW_Font:
-         STORE wd->wd_Font;
-         break;
+	 STORE wd->wd_Font;
+	 break;
 
       case WINDOW_Bounds:
-         if ( wd->wd_WindowPtr )
-            *(( struct IBox * )store ) = *(( struct IBox * )&wd->wd_WindowPtr->LeftEdge );
-         else
-            rc = 0;
-         break;
-         
+	 if ( wd->wd_WindowPtr )
+	    *(( struct IBox * )store ) = *(( struct IBox * )&wd->wd_WindowPtr->LeftEdge );
+	 else
+	    rc = 0;
+	 break;
+	 
       case WINDOW_Title:
-         STORE wd->wd_WindowTitle;
-         break;
-         
+	 STORE wd->wd_WindowTitle;
+	 break;
+	 
       case WINDOW_ScreenTitle:
-         STORE wd->wd_ScreenTitle;
-         break;
-         
+	 STORE wd->wd_ScreenTitle;
+	 break;
+	 
       case WINDOW_TitleID:
-         STORE wd->wd_WindowTitleID;
-         break;
-         
+	 STORE wd->wd_WindowTitleID;
+	 break;
+	 
       case WINDOW_ScreenTitleID:
-         STORE wd->wd_ScreenTitleID;
-         break;
-         
+	 STORE wd->wd_ScreenTitleID;
+	 break;
+	 
       case WINDOW_HelpTextID:
-         STORE wd->wd_HelpTextID;
-         break;
-         
+	 STORE wd->wd_HelpTextID;
+	 break;
+	 
       case WINDOW_AutoAspect:
-         STORE test(wd->wd_Flags & WDF_AUTOASPECT);
-         break;
-         
+	 STORE test(wd->wd_Flags & WDF_AUTOASPECT);
+	 break;
+	 
       case WINDOW_BufferRP:
-         if ((win = wd->wd_WindowPtr) && !(wd->wd_Flags & WDF_NO_BUFFER) && (FGetDepth(win->RPort) <= 8))
-         {
-            if ((wd->wd_BRW != win->Width) || (wd->wd_BRH != win->Height))
-            {
-               wd->wd_BRW = win->Width;
-               wd->wd_BRH = win->Height;
-               if (wd->wd_BufferRP)
-               {
-                  wd->wd_BufferRP->Layer = wd->wd_BufferLayer;
-                  BGUI_FreeRPortBitMap(wd->wd_BufferRP);
-                  wd->wd_BufferRP = NULL;
-               };
-            };
-            if (!wd->wd_BufferRP)
-            {
-               wd->wd_BufferRP = BGUI_CreateRPortBitMap(win->RPort, wd->wd_BRW, wd->wd_BRH, 0);
-               wd->wd_BufferLayer = wd->wd_BufferRP->Layer;
-               wd->wd_BufferRP->Layer = NULL;
-            };
-            STORE wd->wd_BufferRP;
-         }
-         else
-         {
-            STORE NULL;
-         };
-         break;
+	 if ((win = wd->wd_WindowPtr) && !(wd->wd_Flags & WDF_NO_BUFFER) && (FGetDepth(win->RPort) <= 8))
+	 {
+	    if ((wd->wd_BRW != win->Width) || (wd->wd_BRH != win->Height))
+	    {
+	       wd->wd_BRW = win->Width;
+	       wd->wd_BRH = win->Height;
+	       if (wd->wd_BufferRP)
+	       {
+		  wd->wd_BufferRP->Layer = wd->wd_BufferLayer;
+		  BGUI_FreeRPortBitMap(wd->wd_BufferRP);
+		  wd->wd_BufferRP = NULL;
+	       };
+	    };
+	    if (!wd->wd_BufferRP)
+	    {
+	       wd->wd_BufferRP = BGUI_CreateRPortBitMap(win->RPort, wd->wd_BRW, wd->wd_BRH, 0);
+	       wd->wd_BufferLayer = wd->wd_BufferRP->Layer;
+	       wd->wd_BufferRP->Layer = NULL;
+	    };
+	    STORE wd->wd_BufferRP;
+	 }
+	 else
+	 {
+	    STORE NULL;
+	 };
+	 break;
 
       default:
-         rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
-         break;
+	 rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
+	 break;
    }
    return rc;
 }
@@ -2248,38 +2251,38 @@ METHOD(WindowClassHelp, Msg, msg)
        */
       if (AsmDoMethodA(wd->wd_Gadgets, (Msg)&bsh) == BMHELP_NOT_ME)
       {
-         /*
-          * No. Show the window help.
-          */
-         if (wd->wd_HelpFile || wd->wd_HelpText)
-         {
-            /*
-             * Only if the mouse is located
-             * in the window.
-             */
-            if (bsh.bsh_Mouse.X > 0 && bsh.bsh_Mouse.Y > 0 && bsh.bsh_Mouse.X < w->Width && bsh.bsh_Mouse.Y < w->Height)
-            {
-               if (wd->wd_HelpText)
-               {
-                  ShowHelpReq(w, wd->wd_HelpText);
-                  rc = BMHELP_OK;
-               }
-               else
-               {
+	 /*
+	  * No. Show the window help.
+	  */
+	 if (wd->wd_HelpFile || wd->wd_HelpText)
+	 {
+	    /*
+	     * Only if the mouse is located
+	     * in the window.
+	     */
+	    if (bsh.bsh_Mouse.X > 0 && bsh.bsh_Mouse.Y > 0 && bsh.bsh_Mouse.X < w->Width && bsh.bsh_Mouse.Y < w->Height)
+	    {
+	       if (wd->wd_HelpText)
+	       {
+		  ShowHelpReq(w, wd->wd_HelpText);
+		  rc = BMHELP_OK;
+	       }
+	       else
+	       {
 #ifdef _AROS
 #warning Commented the following lines
 #else
-                  nag.nag_Name   = (STRPTR)wd->wd_HelpFile;
-                  nag.nag_Node   = (STRPTR)wd->wd_HelpNode;
-                  nag.nag_Line   = wd->wd_HelpLine;
-                  nag.nag_Screen = w->WScreen;
+		  nag.nag_Name   = (STRPTR)wd->wd_HelpFile;
+		  nag.nag_Node   = (STRPTR)wd->wd_HelpNode;
+		  nag.nag_Line   = wd->wd_HelpLine;
+		  nag.nag_Screen = w->WScreen;
 
-                  if (DisplayAGuideInfo(&nag, NULL))
-                     rc = BMHELP_OK;
+		  if (DisplayAGuideInfo(&nag, NULL))
+		     rc = BMHELP_OK;
 #endif
-               };
-            };
-         };
+	       };
+	    };
+	 };
       };
       /*
        * Wakeup the window.
@@ -2324,9 +2327,9 @@ STATIC ASM REGFUNC1(struct IntuiMessage *, GetIMsg,
 
    for ( imsg = ( struct IntuiMessage * )mp->mp_MsgList.lh_Head; imsg->ExecMessage.mn_Node.ln_Succ; imsg = ( struct IntuiMessage * )imsg->ExecMessage.mn_Node.ln_Succ ) {
       if ( imsg->IDCMPWindow == wd->wd_WindowPtr ) {
-         Remove(( struct Node * )imsg );
-         Permit();
-         return( imsg );
+	 Remove(( struct Node * )imsg );
+	 Permit();
+	 return( imsg );
       }
    }
 
@@ -2446,83 +2449,83 @@ STATIC ULONG KeyGadget(Class *cl, Object *obj, struct IntuiMessage *imsg)
 
       for(;;)
       {
-         WaitPort(wd->wd_UserPort);
-         while (im = GetIMsg(wd))
-         {
-            class = im->Class;
-            code  = im->Code;
-            qual  = im->Qualifier;
-            iadd  = im->IAddress;
-            
-            switch (class)
-            {
-            /*
-             * Check out the RAWKEY event.
-             */
-            case IDCMP_RAWKEY:
-               if (qual & IEQUALIFIER_REPEAT) break;
-               if ((code & IECODE_UP_PREFIX) == 0)
-               {
-                  myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
-                  goto end;
-               };
-               FillIE(&ie, im);
-               irc = BGUI_DoGadgetMethodA(ob, wd->wd_WindowPtr, NULL, (Msg)&wk);
-               if (irc & WMKF_VERIFY)
-               {
-                  myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
-                  rc = id;
-                  goto end;
-               }
-               else if (irc & WMKF_CANCEL)
-               {
-                  myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
-                  goto end;
-               };
-               break;
+	 WaitPort(wd->wd_UserPort);
+	 while (im = GetIMsg(wd))
+	 {
+	    class = im->Class;
+	    code  = im->Code;
+	    qual  = im->Qualifier;
+	    iadd  = im->IAddress;
+	    
+	    switch (class)
+	    {
+	    /*
+	     * Check out the RAWKEY event.
+	     */
+	    case IDCMP_RAWKEY:
+	       if (qual & IEQUALIFIER_REPEAT) break;
+	       if ((code & IECODE_UP_PREFIX) == 0)
+	       {
+		  myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
+		  goto end;
+	       };
+	       FillIE(&ie, im);
+	       irc = BGUI_DoGadgetMethodA(ob, wd->wd_WindowPtr, NULL, (Msg)&wk);
+	       if (irc & WMKF_VERIFY)
+	       {
+		  myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
+		  rc = id;
+		  goto end;
+	       }
+	       else if (irc & WMKF_CANCEL)
+	       {
+		  myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
+		  goto end;
+	       };
+	       break;
 
-            case IDCMP_CLOSEWINDOW:
-               /*
-                * Pass on the close window request.
-                */
-               myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
-               rc = WMHI_CLOSEWINDOW;
-               goto end;
+	    case IDCMP_CLOSEWINDOW:
+	       /*
+		* Pass on the close window request.
+		*/
+	       myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
+	       rc = WMHI_CLOSEWINDOW;
+	       goto end;
 
-            case IDCMP_GADGETUP:
-               /*
-                * Pass on the gadget request.
-                */
-               myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
-               rc = GADGET(iadd)->GadgetID;
-               goto end;
+	    case IDCMP_GADGETUP:
+	       /*
+		* Pass on the gadget request.
+		*/
+	       myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
+	       rc = GADGET(iadd)->GadgetID;
+	       goto end;
 
-            case IDCMP_INACTIVEWINDOW:
-               /*
-                * Window inactive? Abort keyboard actions.
-                */
-               myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
-               ClearMsgPort(wd);
-               goto end;
+	    case IDCMP_INACTIVEWINDOW:
+	       /*
+		* Window inactive? Abort keyboard actions.
+		*/
+	       myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
+	       ClearMsgPort(wd);
+	       goto end;
 
-            case IDCMP_SIZEVERIFY:
-               /*
-                * Exit... NOW!
-                */
-               myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
-               wd->wd_OW     = w->Width;
-               wd->wd_OH     = w->Height;
-               wd->wd_Flags |= WDF_REMOVED;
-               RemoveGadget(w, (struct Gadget *)wd->wd_Gadgets);
-               ClearMsgPort(wd);
-               goto end;
+	    case IDCMP_SIZEVERIFY:
+	       /*
+		* Exit... NOW!
+		*/
+	       myDoGadgetMethod(ob, w, NULL, WM_KEYINACTIVE, NULL);
+	       wd->wd_OW     = w->Width;
+	       wd->wd_OH     = w->Height;
+	       wd->wd_Flags |= WDF_REMOVED;
+	       RemoveGadget(w, (struct Gadget *)wd->wd_Gadgets);
+	       ClearMsgPort(wd);
+	       goto end;
 
-            };
-            /*
-             * Reply the message.
-             */
-            ReplyMsg((struct Message *)im);
-         };
+	    };
+	    /*
+	     * Reply the message.
+	     */
+	    ReplyMsg((struct Message *)im);
+	 };
       };
    };
    end:
@@ -2558,7 +2561,7 @@ STATIC ASM REGFUNC2(TABCYCLE *, GetCycleNode,
 
    for ( tc = wd->wd_CycleList.cl_First; tc->tc_Next; tc = tc->tc_Next ) {
       if ( tc->tc_Object == obj )
-         return( tc );
+	 return( tc );
    }
    return( NULL );
 }
@@ -2584,26 +2587,26 @@ STATIC ASM REGFUNC3(VOID, UpdateNotification,
        */
       for ( up = wd->wd_UpdateList.ul_First; up->up_Next; up = up->up_Next )
       {
-         /*
-          * Is this the one?
-          */
-         if ( up->up_ID == id )
-         {
-            /*
-             * Map clones when necessary.
-             */
-            if ( up->up_MapList )
-               MapTags( clones, up->up_MapList, TRUE );
-            /*
-             * Set attributes to the target.
-             */
-            myDoGadgetMethod(up->up_Target, wd->wd_WindowPtr, NULL, OM_UPDATE, clones, NULL, 0);
-            /*
-             * Unmap clones when necessary.
-             */
-            if ( up->up_MapList )
-               UnmapTags( clones, up->up_MapList );
-         }
+	 /*
+	  * Is this the one?
+	  */
+	 if ( up->up_ID == id )
+	 {
+	    /*
+	     * Map clones when necessary.
+	     */
+	    if ( up->up_MapList )
+	       MapTags( clones, up->up_MapList, TRUE );
+	    /*
+	     * Set attributes to the target.
+	     */
+	    myDoGadgetMethod(up->up_Target, wd->wd_WindowPtr, NULL, OM_UPDATE, clones, NULL, 0);
+	    /*
+	     * Unmap clones when necessary.
+	     */
+	    if ( up->up_MapList )
+	       UnmapTags( clones, up->up_MapList );
+	 }
       }
       /*
        * Free clones.
@@ -2645,103 +2648,103 @@ STATIC ASM REGFUNC3(ULONG, ToolTip_func,
       Get_Attr(ttc->ttc_Object, BT_ToolTip, (ULONG *)&tc);
       if (tc)
       {
-         /*
-          * Copy and setup the tip.
-          */
-         if (tip = (UBYTE *)BGUI_AllocPoolMem(strlen(tc) + 10))
-         {
-            args[0] = BARDETAILPEN;
-            args[1] = (ULONG)tc;
-            DoSPrintF(tip, "\033d%ld%s", args);
-         }
-         else
-         {
-            tip = tc;
-            tc = NULL;
-         };
+	 /*
+	  * Copy and setup the tip.
+	  */
+	 if (tip = (UBYTE *)BGUI_AllocPoolMem(strlen(tc) + 10))
+	 {
+	    args[0] = BARDETAILPEN;
+	    args[1] = (ULONG)tc;
+	    DoSPrintF(tip, "\033d%ld%s", args);
+	 }
+	 else
+	 {
+	    tip = tc;
+	    tc = NULL;
+	 };
 
-         rp = wd->wd_WindowPtr->RPort;
+	 rp = wd->wd_WindowPtr->RPort;
 
-         /*
-          * Set the font.
-          */
-         of = rp->Font;
-         FSetFont(rp, wd->wd_UsedFont);
+	 /*
+	  * Set the font.
+	  */
+	 of = rp->Font;
+	 FSetFont(rp, wd->wd_UsedFont);
 
-         BGUI_InfoTextSize(rp, tip, (UWORD *)&ibx.Width, (UWORD *)&ibx.Height);
-         FSetFont(rp, of);
+	 BGUI_InfoTextSize(rp, tip, (UWORD *)&ibx.Width, (UWORD *)&ibx.Height);
+	 FSetFont(rp, of);
 
-         /*
-          * Get mouse position.
-          */
-         x = wd->wd_WindowPtr->MouseX;
-         y = wd->wd_WindowPtr->MouseY;
+	 /*
+	  * Get mouse position.
+	  */
+	 x = wd->wd_WindowPtr->MouseX;
+	 y = wd->wd_WindowPtr->MouseY;
 
-         /*
-          * Tool-tip width and height.
-          */
-         ww = ibx.Width  + 8;
-         wh = ibx.Height + 4;
+	 /*
+	  * Tool-tip width and height.
+	  */
+	 ww = ibx.Width  + 8;
+	 wh = ibx.Height + 4;
 
-         /*
-          * Open tool-tip window with it's
-          * bottom right corner under the mouse.
-          */
-         if (tw = OpenWindowTags(NULL, WA_Left,         wd->wd_WindowPtr->LeftEdge + x - ww,
-                                       WA_Top,          wd->wd_WindowPtr->TopEdge  + y - wh,
-                                       WA_Width,        ww,
-                                       WA_Height,       wh,
-                                       WA_IDCMP,        0,
-                                       WA_Flags,        WFLG_BORDERLESS|WFLG_RMBTRAP,
-                                       WA_CustomScreen, wd->wd_Screen,
-                                       TAG_DONE))
-         {
-            rp = tw->RPort;
+	 /*
+	  * Open tool-tip window with it's
+	  * bottom right corner under the mouse.
+	  */
+	 if (tw = OpenWindowTags(NULL, WA_Left,         wd->wd_WindowPtr->LeftEdge + x - ww,
+				       WA_Top,          wd->wd_WindowPtr->TopEdge  + y - wh,
+				       WA_Width,        ww,
+				       WA_Height,       wh,
+				       WA_IDCMP,        0,
+				       WA_Flags,        WFLG_BORDERLESS|WFLG_RMBTRAP,
+				       WA_CustomScreen, wd->wd_Screen,
+				       TAG_DONE))
+	 {
+	    rp = tw->RPort;
 
 #ifdef DEBUG_BGUI
-            if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_Screen, wd->wd_Screen, BI_RastPort, rp, TAG_DONE))
+	    if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_Screen, wd->wd_Screen, BI_RastPort, rp, TAG_DONE))
 #else
-            if (bi = AllocBaseInfo(BI_Screen, wd->wd_Screen, BI_RastPort, rp, TAG_DONE))
+	    if (bi = AllocBaseInfo(BI_Screen, wd->wd_Screen, BI_RastPort, rp, TAG_DONE))
 #endif
-            {
-               /*
-                * Set the font.
-                */
-               of = rp->Font;
-               BSetFont(bi, wd->wd_UsedFont);
+	    {
+	       /*
+		* Set the font.
+		*/
+	       of = rp->Font;
+	       BSetFont(bi, wd->wd_UsedFont);
 
-               /*
-                * Tip background color.
-                */
-               BSetDrMd(bi, JAM1);
-               BSetDPenA(bi, BARBLOCKPEN);
-               BRectFill(bi, 1, 1, ww - 2, wh - 2);
+	       /*
+		* Tip background color.
+		*/
+	       BSetDrMd(bi, JAM1);
+	       BSetDPenA(bi, BARBLOCKPEN);
+	       BRectFill(bi, 1, 1, ww - 2, wh - 2);
 
-               /*
-                * Tip border and text.
-                */
-               BSetDPenA(bi, BARDETAILPEN);
-               Move(rp, 0,      0);
-               Draw(rp, ww - 1, 0);
-               Draw(rp, ww - 1, wh - 1);
-               Draw(rp, 0,      wh - 1);
-               Draw(rp, 0,      0);
+	       /*
+		* Tip border and text.
+		*/
+	       BSetDPenA(bi, BARDETAILPEN);
+	       Move(rp, 0,      0);
+	       Draw(rp, ww - 1, 0);
+	       Draw(rp, ww - 1, wh - 1);
+	       Draw(rp, 0,      wh - 1);
+	       Draw(rp, 0,      0);
 
-               /*
-                * Render the tip.
-                */
-               ibx.Left = 4;
-               ibx.Top  = 2;
+	       /*
+		* Render the tip.
+		*/
+	       ibx.Left = 4;
+	       ibx.Top  = 2;
 
-               RenderText(bi, tip, &ibx);
-               BSetFont(bi, of);
-            };
-            FreeBaseInfo(bi);
-         }
-         /*
-          * Free copy.
-          */
-         if (tc) BGUI_FreePoolMem(tip);
+	       RenderText(bi, tip, &ibx);
+	       BSetFont(bi, of);
+	    };
+	    FreeBaseInfo(bi);
+	 }
+	 /*
+	  * Free copy.
+	  */
+	 if (tc) BGUI_FreePoolMem(tip);
       }
       break;
 
@@ -2815,9 +2818,9 @@ METHOD(WindowClassIDCMP, Msg, msg)
        */
       if (wd->wd_Flags & WDF_DRAGSELECT)
       {
-         code = wd->wd_NextSelect;
-         imsg = NULL;
-         goto dragSelect;
+	 code = wd->wd_NextSelect;
+	 imsg = NULL;
+	 goto dragSelect;
       }
 
       /*
@@ -2825,10 +2828,10 @@ METHOD(WindowClassIDCMP, Msg, msg)
        */
       if ((id = GetIDReport(w)) != ~0)
       {
-         /*
-          * Return the ID.
-          */
-         return id;
+	 /*
+	  * Return the ID.
+	  */
+	 return id;
       };
    };
 
@@ -2841,34 +2844,34 @@ METHOD(WindowClassIDCMP, Msg, msg)
        * Any movement?
        */
       {
-         BOOL close_tooltip;
+	 BOOL close_tooltip;
 
-         if(!(close_tooltip=(w->MouseX != wd->wd_ToolX || w->MouseY != wd->wd_ToolY)))
-         {
-            switch(imsg->Class)
-            {
-               
-               case IDCMP_IDCMPUPDATE:
-               case IDCMP_DISKINSERTED:
-               case IDCMP_DISKREMOVED:
-               case IDCMP_WBENCHMESSAGE:
-               case IDCMP_INTUITICKS:
-                  break;
-               default:
-                  close_tooltip=TRUE;
-                  break;
-            }
-         }
-         if(close_tooltip)
-         {
-            /*
-             * Do we have a tool-tip to close?
-             */
-            if (wd->wd_ToolTip)
-               AsmDoMethod(obj, WM_CLOSETOOLTIP);
-            else
-               wd->wd_ToolTicks = 0;
-         }
+	 if(!(close_tooltip=(w->MouseX != wd->wd_ToolX || w->MouseY != wd->wd_ToolY)))
+	 {
+	    switch(imsg->Class)
+	    {
+	       
+	       case IDCMP_IDCMPUPDATE:
+	       case IDCMP_DISKINSERTED:
+	       case IDCMP_DISKREMOVED:
+	       case IDCMP_WBENCHMESSAGE:
+	       case IDCMP_INTUITICKS:
+		  break;
+	       default:
+		  close_tooltip=TRUE;
+		  break;
+	    }
+	 }
+	 if(close_tooltip)
+	 {
+	    /*
+	     * Do we have a tool-tip to close?
+	     */
+	    if (wd->wd_ToolTip)
+	       AsmDoMethod(obj, WM_CLOSETOOLTIP);
+	    else
+	       wd->wd_ToolTicks = 0;
+	 }
       }
 
       /*
@@ -2876,11 +2879,11 @@ METHOD(WindowClassIDCMP, Msg, msg)
        */
       if (wd->wd_Flags & WDF_LOCKOUT)
       {
-         /*
-          * Yes. Reply this message and continue.
-          */
-         ReplyMsg((struct Message *)imsg);
-         continue;
+	 /*
+	  * Yes. Reply this message and continue.
+	  */
+	 ReplyMsg((struct Message *)imsg);
+	 continue;
       };
 
       /*
@@ -2889,12 +2892,12 @@ METHOD(WindowClassIDCMP, Msg, msg)
        */
       if (wd->wd_VerifyHook)
       {
-         if ((wd->wd_VerifyHookBits & imsg->Class) == imsg->Class)
-         {
-            BGUI_CallHookPkt(wd->wd_VerifyHook, (void *)obj, (void *)imsg);
-            ReplyMsg((struct Message *)imsg);
-            return rc;
-         }
+	 if ((wd->wd_VerifyHookBits & imsg->Class) == imsg->Class)
+	 {
+	    BGUI_CallHookPkt(wd->wd_VerifyHook, (void *)obj, (void *)imsg);
+	    ReplyMsg((struct Message *)imsg);
+	    return rc;
+	 }
       }
 
       /*
@@ -2903,7 +2906,7 @@ METHOD(WindowClassIDCMP, Msg, msg)
        
       if (wd->wd_IDCMPHook && (wd->wd_IDCMPHookBits & imsg->Class))
       {
-         BGUI_CallHookPkt(wd->wd_IDCMPHook, (VOID *)obj, (VOID *)imsg);
+	 BGUI_CallHookPkt(wd->wd_IDCMPHook, (VOID *)obj, (VOID *)imsg);
       };
 
       code = imsg->Code;
@@ -2911,391 +2914,394 @@ METHOD(WindowClassIDCMP, Msg, msg)
       switch (imsg->Class)
       {
       case IDCMP_SIZEVERIFY:
-         /*
-          * Save window size and remove
-          * the master.
-          */
-         wd->wd_OW = w->Width;
-         wd->wd_OH = w->Height;
-         if (!(wd->wd_Flags & WDF_REMOVED))
-         {
-            wd->wd_Flags |= WDF_REMOVED;
-            RemoveGadget(w, (struct Gadget *)wd->wd_Gadgets);
-         }
-         break;
+	 /*
+	  * Save window size and remove
+	  * the master.
+	  */
+	 wd->wd_OW = w->Width;
+	 wd->wd_OH = w->Height;
+	 if (!(wd->wd_Flags & WDF_REMOVED))
+	 {
+	    wd->wd_Flags |= WDF_REMOVED;
+	    RemoveGadget(w, (struct Gadget *)wd->wd_Gadgets);
+	 }
+	 break;
 
       case IDCMP_NEWSIZE:
 WW(kprintf("WindowClassIDCMP: received IDCMP_NEWSIZE\n"));
-         /*
-          * If we have manually removed the
-          * master object we adjust the size
-          * ourselves.
-          */
-         if (wd->wd_Flags & WDF_REMOVED)
-         {
-            /*
-             * Setup new size for the master.
-             */
-            DoSetMethodNG(wd->wd_Gadgets, GA_Left,        w->BorderLeft,
-                                          GA_Top,         w->BorderTop,
-                                          GA_RelWidth,  -(w->BorderLeft + w->BorderRight ),
-                                          GA_RelHeight, -(w->BorderTop  + w->BorderBottom),
-                                          TAG_END);
-            /*
-             * Put master back online.
-             */
-            AddGadget(w, (struct Gadget *)wd->wd_Gadgets, -1);
+	 /*
+	  * If we have manually removed the
+	  * master object we adjust the size
+	  * ourselves.
+	  */
+	 if (wd->wd_Flags & WDF_REMOVED)
+	 {
+	    /*
+	     * Setup new size for the master.
+	     */
+	    DoSetMethodNG(wd->wd_Gadgets, GA_Left,        w->BorderLeft,
+					  GA_Top,         w->BorderTop,
+					  GA_RelWidth,  -(w->BorderLeft + w->BorderRight ),
+					  GA_RelHeight, -(w->BorderTop  + w->BorderBottom),
+					  TAG_END);
+	    /*
+	     * Put master back online.
+	     */
+	    AddGadget(w, (struct Gadget *)wd->wd_Gadgets, -1);
 
-            /*
-             * Clear removed flag.
-             */
-            wd->wd_Flags &= ~WDF_REMOVED;
+	    /*
+	     * Clear removed flag.
+	     */
+	    wd->wd_Flags &= ~WDF_REMOVED;
 
-            /*
-             * Only refresh the window when the
-             * size actually changed.
-             */
-            if ((w->Width  != wd->wd_OW) || (w->Height != wd->wd_OH))
-               RefreshWindowFrame(w);
-         }
-         break;
+	    /*
+	     * Only refresh the window when the
+	     * size actually changed.
+	     *
+	     */
+
+
+	    if ((w->Width  != wd->wd_OW) || (w->Height != wd->wd_OH))
+	       RefreshWindowFrame(w);
+	 }
+	 break;
 
       case IDCMP_MOUSEBUTTONS:
-         if ((code | IECODE_UP_PREFIX) != SELECTUP)
-         {
-            /*
-             * Preset GRM_WHICHOBJECT method.
-             */
-            grwo.MethodID      = GRM_WHICHOBJECT;
-            grwo.grwo_Coords.X = imsg->MouseX;
-            grwo.grwo_Coords.Y = imsg->MouseY;
+	 if ((code | IECODE_UP_PREFIX) != SELECTUP)
+	 {
+	    /*
+	     * Preset GRM_WHICHOBJECT method.
+	     */
+	    grwo.MethodID      = GRM_WHICHOBJECT;
+	    grwo.grwo_Coords.X = imsg->MouseX;
+	    grwo.grwo_Coords.Y = imsg->MouseY;
 
-            if (obja = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo))
-            {
-               Get_Attr(obja, BT_MouseActivation, &mouseact);
+	    if (obja = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo))
+	    {
+	       Get_Attr(obja, BT_MouseActivation, &mouseact);
 
-               if ((mouseact & MOUSEACT_RMB_ACTIVE) && (code == IECODE_RBUTTON)
-                || (mouseact & MOUSEACT_MMB_ACTIVE) && (code == IECODE_MBUTTON))
-               {
-                  SetAttrs(obja, BT_ReportID,
-                  ((mouseact & MOUSEACT_RMB_REPORT) && (code == IECODE_RBUTTON)) ||
-                  ((mouseact & MOUSEACT_MMB_REPORT) && (code == IECODE_MBUTTON)), TAG_DONE);
+	       if ((mouseact & MOUSEACT_RMB_ACTIVE) && (code == IECODE_RBUTTON)
+		|| (mouseact & MOUSEACT_MMB_ACTIVE) && (code == IECODE_MBUTTON))
+	       {
+		  SetAttrs(obja, BT_ReportID,
+		  ((mouseact & MOUSEACT_RMB_REPORT) && (code == IECODE_RBUTTON)) ||
+		  ((mouseact & MOUSEACT_MMB_REPORT) && (code == IECODE_MBUTTON)), TAG_DONE);
 
-                  if (wd->wd_DGMObject)
-                  {
-                     DoSetMethodNG(wd->wd_DGMObject, DGM_Object, obja, DGM_IntuiMsg, imsg,TAG_END);
-                     ActivateGadget((struct Gadget *)wd->wd_DGMObject, w, NULL);
-                  };
-               };
-            };
-         };
-         break;
+		  if (wd->wd_DGMObject)
+		  {
+		     DoSetMethodNG(wd->wd_DGMObject, DGM_Object, obja, DGM_IntuiMsg, imsg,TAG_END);
+		     ActivateGadget((struct Gadget *)wd->wd_DGMObject, w, NULL);
+		  };
+	       };
+	    };
+	 };
+	 break;
 
       case IDCMP_MOUSEMOVE:
-         if (wd->wd_WindowFlags & WFLG_RMBTRAP)
-         {
-            Forbid();
-            wd->wd_WindowPtr->Flags |= WFLG_RMBTRAP;
-            Permit();
-         }
-         else
-         {
-            mouseact = 0;
-            /*
-             * Preset GRM_WHICHOBJECT method.
-             */
-            grwo.MethodID        = GRM_WHICHOBJECT;
-            grwo.grwo_Coords.X   = imsg->MouseX;
-            grwo.grwo_Coords.Y   = imsg->MouseY;
+	 if (wd->wd_WindowFlags & WFLG_RMBTRAP)
+	 {
+	    Forbid();
+	    wd->wd_WindowPtr->Flags |= WFLG_RMBTRAP;
+	    Permit();
+	 }
+	 else
+	 {
+	    mouseact = 0;
+	    /*
+	     * Preset GRM_WHICHOBJECT method.
+	     */
+	    grwo.MethodID        = GRM_WHICHOBJECT;
+	    grwo.grwo_Coords.X   = imsg->MouseX;
+	    grwo.grwo_Coords.Y   = imsg->MouseY;
 
-            if (obja = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo))
-            {
-               Get_Attr(obja, BT_MouseActivation, &mouseact);
-            };
+	    if (obja = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo))
+	    {
+	       Get_Attr(obja, BT_MouseActivation, &mouseact);
+	    };
 
-            Forbid();
-            if (mouseact & MOUSEACT_RMB_ACTIVE)
-            {
-               wd->wd_WindowPtr->Flags |= WFLG_RMBTRAP;
-            }
-            else
-            {
-               wd->wd_WindowPtr->Flags &= ~WFLG_RMBTRAP;
-            };
-            Permit();
-         };
-         break;
+	    Forbid();
+	    if (mouseact & MOUSEACT_RMB_ACTIVE)
+	    {
+	       wd->wd_WindowPtr->Flags |= WFLG_RMBTRAP;
+	    }
+	    else
+	    {
+	       wd->wd_WindowPtr->Flags &= ~WFLG_RMBTRAP;
+	    };
+	    Permit();
+	 };
+	 break;
 
       case  IDCMP_ACTIVEWINDOW:
-         rc = WMHI_ACTIVE;
-         break;
+	 rc = WMHI_ACTIVE;
+	 break;
 
       case  IDCMP_INACTIVEWINDOW:
-         rc = WMHI_INACTIVE;
-         break;
+	 rc = WMHI_INACTIVE;
+	 break;
 
       case  IDCMP_CLOSEWINDOW:
-         rc = WMHI_CLOSEWINDOW;
-         break;
+	 rc = WMHI_CLOSEWINDOW;
+	 break;
 
       case  IDCMP_CHANGEWINDOW:
 WW(kprintf("WindowClassIDCMP: received IDCMP_CHANGEWINDOW\n"));
-         if (wd->wd_Flags & WDF_CONSTRAINTS)
-         {
+	 if (wd->wd_Flags & WDF_CONSTRAINTS)
+	 {
 WW(kprintf("WindowClassIDCMP: WDF_CONSTRAINTS is set\n"));
 WW(kprintf("WindowClassIDCMP: calling WindowLimits(%d,%d,%d,%d)\n",wd->wd_MinW,wd->wd_MinH,wd->wd_MaxW,wd->wd_MaxH));
-            WindowLimits(w, wd->wd_MinW, wd->wd_MinH, wd->wd_MaxW, wd->wd_MaxH);
-            wd->wd_Flags &= ~WDF_CONSTRAINTS;
+	    WindowLimits(w, wd->wd_MinW, wd->wd_MinH, wd->wd_MaxW, wd->wd_MaxH);
+	    wd->wd_Flags &= ~WDF_CONSTRAINTS;
 
 WW(kprintf("WindowClassIDCMP: calling WM_RELEASE\n"));
-            AsmDoMethod(obj, WM_RELEASE);
-         };
+	    AsmDoMethod(obj, WM_RELEASE);
+	 };
 WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
-         WindowClassChange(cl, obj, (Msg)NULL);
-         break;
+	 WindowClassChange(cl, obj, (Msg)NULL);
+	 break;
 
       case IDCMP_MENUPICK:
-         /*
-          * Menu selected?
-          */
-         if (code != MENUNULL)
-         {
-            dragSelect:
-            /*
-             * Get the selected item.
-             */
-            mi = ItemAddress(wd->wd_Menus, code);
+	 /*
+	  * Menu selected?
+	  */
+	 if (code != MENUNULL)
+	 {
+	    dragSelect:
+	    /*
+	     * Get the selected item.
+	     */
+	    mi = ItemAddress(wd->wd_Menus, code);
 
-            /*
-             * Setup the return code ID.
-             */
-            rc = (ULONG)GTMENUITEM_USERDATA(mi);
+	    /*
+	     * Setup the return code ID.
+	     */
+	    rc = (ULONG)GTMENUITEM_USERDATA(mi);
 
-            /*
-             * Menu a CHECKIT item?
-             */
-            if (mi->Flags & CHECKIT)
-               /*
-                * Fix the NewMenu array to represent
-                * any changes in the CHECKED flag.
-                */
-               AsmDoMethod(obj, WM_CHECKITEM, rc, mi->Flags & CHECKED);
-            /*
-             * Set up the next item and say were
-             * drag-selecting.
-             */
-            if (mi->NextSelect != MENUNULL)
-            {
-               wd->wd_NextSelect = mi->NextSelect;
-               wd->wd_Flags     |= WDF_DRAGSELECT;
-               break;
-            };
-         };
-         /*
-          * Drag-selecting is done.
-          */
-         wd->wd_Flags &= ~WDF_DRAGSELECT;
-         break;
+	    /*
+	     * Menu a CHECKIT item?
+	     */
+	    if (mi->Flags & CHECKIT)
+	       /*
+		* Fix the NewMenu array to represent
+		* any changes in the CHECKED flag.
+		*/
+	       AsmDoMethod(obj, WM_CHECKITEM, rc, mi->Flags & CHECKED);
+	    /*
+	     * Set up the next item and say were
+	     * drag-selecting.
+	     */
+	    if (mi->NextSelect != MENUNULL)
+	    {
+	       wd->wd_NextSelect = mi->NextSelect;
+	       wd->wd_Flags     |= WDF_DRAGSELECT;
+	       break;
+	    };
+	 };
+	 /*
+	  * Drag-selecting is done.
+	  */
+	 wd->wd_Flags &= ~WDF_DRAGSELECT;
+	 break;
 
       case IDCMP_MENUHELP:
-         /*
-          * Get the selected item.
-          */
-         mi = ItemAddress(wd->wd_Menus, code);
+	 /*
+	  * Get the selected item.
+	  */
+	 mi = ItemAddress(wd->wd_Menus, code);
 
-         /*
-          * Setup the return code ID.
-          */
-         if (mi) rc = WMHI_MENUHELP | (ULONG)GTMENUITEM_USERDATA(mi);
-         break;
+	 /*
+	  * Setup the return code ID.
+	  */
+	 if (mi) rc = WMHI_MENUHELP | (ULONG)GTMENUITEM_USERDATA(mi);
+	 break;
 
       case IDCMP_RAWKEY:
-         if (code == 0x45)
-         {
-            /*
-             * Close on ESC?
-             */
-            if (wd->wd_Flags & WDF_CLOSEONESC)
-            {
-               rc = WMHI_CLOSEWINDOW;
-               break;
-            };
-         };
-         if (code == 0x5F)
-         {
-            /*
-             * HELP!!!!
-             */
-            WindowClassHelp(cl, obj, (Msg)NULL);
-            break;
-         };
-         /*
-          * See if this key triggers a gadget activation.
-          */
-         rc = KeyGadget(cl, obj, imsg);
-         /*
-          * The KeyGadget() routine has already replied the message for us.
-          */
-         imsg = NULL;
-         break;
+	 if (code == 0x45)
+	 {
+	    /*
+	     * Close on ESC?
+	     */
+	    if (wd->wd_Flags & WDF_CLOSEONESC)
+	    {
+	       rc = WMHI_CLOSEWINDOW;
+	       break;
+	    };
+	 };
+	 if (code == 0x5F)
+	 {
+	    /*
+	     * HELP!!!!
+	     */
+	    WindowClassHelp(cl, obj, (Msg)NULL);
+	    break;
+	 };
+	 /*
+	  * See if this key triggers a gadget activation.
+	  */
+	 rc = KeyGadget(cl, obj, imsg);
+	 /*
+	  * The KeyGadget() routine has already replied the message for us.
+	  */
+	 imsg = NULL;
+	 break;
 
       case IDCMP_GADGETUP:
-         rc = GADGET(imsg->IAddress)->GadgetID;
-         break;
+	 rc = GADGET(imsg->IAddress)->GadgetID;
+	 break;
 
       case IDCMP_IDCMPUPDATE:
-         /*
-          * IDCMP_IDCMPUPDATE handles the messages from
-          * slider, scroller objects and tab-cycling.
-          */
-         attr = (struct TagItem *)imsg->IAddress;
+	 /*
+	  * IDCMP_IDCMPUPDATE handles the messages from
+	  * slider, scroller objects and tab-cycling.
+	  */
+	 attr = (struct TagItem *)imsg->IAddress;
 
-         /*
-          * GA_ID makes sure it's comes from a gadget.
-          */
-         if (tag = FindTagItem(GA_ID, attr))
-         {
-            /*
-             * Pick up ID.
-             */
-            if (!FindTagItem(STRINGA_TextVal, attr) && !FindTagItem(STRINGA_LongVal, attr))
-               id = tag->ti_Data;
-            else
-               id = WMHI_IGNORE;
+	 /*
+	  * GA_ID makes sure it's comes from a gadget.
+	  */
+	 if (tag = FindTagItem(GA_ID, attr))
+	 {
+	    /*
+	     * Pick up ID.
+	     */
+	    if (!FindTagItem(STRINGA_TextVal, attr) && !FindTagItem(STRINGA_LongVal, attr))
+	       id = tag->ti_Data;
+	    else
+	       id = WMHI_IGNORE;
 
-            if (tabbed = (Object *)GetTagData(STRINGA_Tabbed, NULL, attr))
-            {
-               forward = TRUE;
-               /*
-                * Do not notify!
-                */
-               rc = WMHI_IGNORE;
-            }
-            else if (tabbed = (Object *)GetTagData(STRINGA_ShiftTabbed, NULL, attr))
-            {
-               forward = FALSE;
-               /*
-                * Do not notify!
-                */
-               rc = WMHI_IGNORE;
-            }
-            else if (tabbed = (Object *)GetTagData(WINDOW_ActNext, NULL, attr))
-            {
-               forward = TRUE;
-               /*
-                * Notify.
-                */
-               rc = id;
-            }
-            else if (tabbed = (Object *)GetTagData(WINDOW_ActPrev, NULL, attr))
-            {
-               forward = FALSE;
-               /*
-                * Notify.
-                */
-               rc = id;
-            }
+	    if (tabbed = (Object *)GetTagData(STRINGA_Tabbed, NULL, attr))
+	    {
+	       forward = TRUE;
+	       /*
+		* Do not notify!
+		*/
+	       rc = WMHI_IGNORE;
+	    }
+	    else if (tabbed = (Object *)GetTagData(STRINGA_ShiftTabbed, NULL, attr))
+	    {
+	       forward = FALSE;
+	       /*
+		* Do not notify!
+		*/
+	       rc = WMHI_IGNORE;
+	    }
+	    else if (tabbed = (Object *)GetTagData(WINDOW_ActNext, NULL, attr))
+	    {
+	       forward = TRUE;
+	       /*
+		* Notify.
+		*/
+	       rc = id;
+	    }
+	    else if (tabbed = (Object *)GetTagData(WINDOW_ActPrev, NULL, attr))
+	    {
+	       forward = FALSE;
+	       /*
+		* Notify.
+		*/
+	       rc = id;
+	    }
 
-            /*
-             * String gadget tabbed?
-             */
-            if (tabbed)
-            {
-               /*
-                * Check if it's in our list.
-                */
-               if (tc = GetCycleNode(wd, tabbed))
-               {
-                  nextTabbed:
-                  if (forward)
-                  {
-                     /*
-                      * Activate next or first object.
-                      */
-                     if (tc != wd->wd_CycleList.cl_Last) tc = tc->tc_Next;
-                     else                                tc = wd->wd_CycleList.cl_First;
-                 }
-                 else
-                 {
-                     /*
-                      * Activate previous or last object.
-                      */
-                     if (tc != wd->wd_CycleList.cl_First) tc = tc->tc_Prev;
-                     else                                 tc = wd->wd_CycleList.cl_Last;
-                  };
-                  Get_Attr(tc->tc_Object, BT_Inhibit, &inhibit);
-                  if ((GADGET(tc->tc_Object)->Flags & GFLG_DISABLED) || inhibit)
-                     goto nextTabbed;
-                  ActivateGadget(GADGET(tc->tc_Object), w, NULL);
-               };
-            }
-            else
-            {
-               /*
-                * Update notification.
-                */
-               UpdateNotification(wd, attr, id);
-               /*
-                * Setup return code.
-                */
-               rc = id;
-            }
-         }
-         break;
+	    /*
+	     * String gadget tabbed?
+	     */
+	    if (tabbed)
+	    {
+	       /*
+		* Check if it's in our list.
+		*/
+	       if (tc = GetCycleNode(wd, tabbed))
+	       {
+		  nextTabbed:
+		  if (forward)
+		  {
+		     /*
+		      * Activate next or first object.
+		      */
+		     if (tc != wd->wd_CycleList.cl_Last) tc = tc->tc_Next;
+		     else                                tc = wd->wd_CycleList.cl_First;
+		 }
+		 else
+		 {
+		     /*
+		      * Activate previous or last object.
+		      */
+		     if (tc != wd->wd_CycleList.cl_First) tc = tc->tc_Prev;
+		     else                                 tc = wd->wd_CycleList.cl_Last;
+		  };
+		  Get_Attr(tc->tc_Object, BT_Inhibit, &inhibit);
+		  if ((GADGET(tc->tc_Object)->Flags & GFLG_DISABLED) || inhibit)
+		     goto nextTabbed;
+		  ActivateGadget(GADGET(tc->tc_Object), w, NULL);
+	       };
+	    }
+	    else
+	    {
+	       /*
+		* Update notification.
+		*/
+	       UpdateNotification(wd, attr, id);
+	       /*
+		* Setup return code.
+		*/
+	       rc = id;
+	    }
+	 }
+	 break;
 
       case  IDCMP_INTUITICKS:
-         if ( wd->wd_ToolTip || ( ! wd->wd_ToolTickTime ))
-            break;
+	 if ( wd->wd_ToolTip || ( ! wd->wd_ToolTickTime ))
+	    break;
 
-         /*
-          * Pick up mouse coordinates.
-          */
-         x = w->MouseX;
-         y = w->MouseY;
+	 /*
+	  * Pick up mouse coordinates.
+	  */
+	 x = w->MouseX;
+	 y = w->MouseY;
 
-         /*
-          * Preset GRM_WHICHOBJECT method.
-          */
-         grwo.MethodID      = GRM_WHICHOBJECT;
-         grwo.grwo_Coords.X = x;
-         grwo.grwo_Coords.Y = y;
+	 /*
+	  * Preset GRM_WHICHOBJECT method.
+	  */
+	 grwo.MethodID      = GRM_WHICHOBJECT;
+	 grwo.grwo_Coords.X = x;
+	 grwo.grwo_Coords.Y = y;
 
-         /*
-          * Did the mouse position change?
-          */
-         if (x == wd->wd_ToolX && y == wd->wd_ToolY)
-         {
-            /*
-             * Tick delay reached?
-             */
-            if (wd->wd_ToolTicks++ == wd->wd_ToolTickTime)
-            {
-               /*
-                * Find object under the mouse.
-                */
-               if (wd->wd_ToolTipObject = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo))
-               {
-                  /*
-                   * Show the tool tip.
-                   */
-                  ttc.ttc_Command  = TT_SHOW;
-                  ttc.ttc_Object   = wd->wd_ToolTipObject;
-                  ttc.ttc_UserData = (APTR)wd;
+	 /*
+	  * Did the mouse position change?
+	  */
+	 if (x == wd->wd_ToolX && y == wd->wd_ToolY)
+	 {
+	    /*
+	     * Tick delay reached?
+	     */
+	    if (wd->wd_ToolTicks++ == wd->wd_ToolTickTime)
+	    {
+	       /*
+		* Find object under the mouse.
+		*/
+	       if (wd->wd_ToolTipObject = (Object *)AsmDoMethodA(wd->wd_Gadgets, (Msg)&grwo))
+	       {
+		  /*
+		   * Show the tool tip.
+		   */
+		  ttc.ttc_Command  = TT_SHOW;
+		  ttc.ttc_Object   = wd->wd_ToolTipObject;
+		  ttc.ttc_UserData = (APTR)wd;
 
-                  wd->wd_ToolTip   = (APTR)BGUI_CallHookPkt(wd->wd_ToolTipHook ? wd->wd_ToolTipHook : &ToolTipHook,
-                                                 (void *)obj, (void *)&ttc);
-               };
+		  wd->wd_ToolTip   = (APTR)BGUI_CallHookPkt(wd->wd_ToolTipHook ? wd->wd_ToolTipHook : &ToolTipHook,
+						 (void *)obj, (void *)&ttc);
+	       };
 
-               /*
-                * Clear tip data.
-                */
-               wd->wd_ToolTicks  = 0;
-            }
-         } else {
-            wd->wd_ToolX = x;
-            wd->wd_ToolY = y;
-         }
-         break;
+	       /*
+		* Clear tip data.
+		*/
+	       wd->wd_ToolTicks  = 0;
+	    }
+	 } else {
+	    wd->wd_ToolX = x;
+	    wd->wd_ToolY = y;
+	 }
+	 break;
       }
 
       /*
@@ -3338,8 +3344,8 @@ STATIC ASM REGFUNC2(struct Menu *, FindMenu,
 
    if ( tmp = ptr ) {
       while ( tmp ) {
-         if ( id == ( ULONG )GTMENU_USERDATA( tmp )) return( tmp );
-         tmp = tmp->NextMenu;
+	 if ( id == ( ULONG )GTMENU_USERDATA( tmp )) return( tmp );
+	 tmp = tmp->NextMenu;
       }
    }
 
@@ -3359,19 +3365,19 @@ STATIC ASM REGFUNC2(struct MenuItem *, FindItem,
 
    if ( tmp = ptr ) {
       while ( tmp ) {
-         if ( item = tmp->FirstItem ) {
-            while ( item ) {
-               if ( id == ( ULONG )GTMENUITEM_USERDATA( item )) return( item );
-               if ( sub = item->SubItem ) {
-                  while ( sub ) {
-                     if ( id == ( ULONG )GTMENUITEM_USERDATA( sub )) return( sub );
-                     sub = sub->NextItem;
-                  }
-               }
-               item = item->NextItem;
-            }
-         }
-         tmp = tmp->NextMenu;
+	 if ( item = tmp->FirstItem ) {
+	    while ( item ) {
+	       if ( id == ( ULONG )GTMENUITEM_USERDATA( item )) return( item );
+	       if ( sub = item->SubItem ) {
+		  while ( sub ) {
+		     if ( id == ( ULONG )GTMENUITEM_USERDATA( sub )) return( sub );
+		     sub = sub->NextItem;
+		  }
+	       }
+	       item = item->NextItem;
+	    }
+	 }
+	 tmp = tmp->NextMenu;
       }
    }
 
@@ -3419,17 +3425,17 @@ STATIC ASM REGFUNC3(ULONG, WindowClassDisableMenu,
        */
       ClearMenuStrip( wd->wd_WindowPtr );
       if ( menu = FindMenu( wd->wd_Menus, wmma->wmma_MenuID )) {
-         /*
-          * Change the menu status.
-          */
-         if ( wmma->wmma_Set ) menu->Flags &= ~MENUENABLED;
-         else           menu->Flags |= MENUENABLED;
+	 /*
+	  * Change the menu status.
+	  */
+	 if ( wmma->wmma_Set ) menu->Flags &= ~MENUENABLED;
+	 else           menu->Flags |= MENUENABLED;
       } else if ( item = FindItem( wd->wd_Menus, wmma->wmma_MenuID )) {
-         /*
-          * Otherwise the (sub)item status.
-          */
-         if ( wmma->wmma_Set ) item->Flags &= ~ITEMENABLED;
-         else           item->Flags |= ITEMENABLED;
+	 /*
+	  * Otherwise the (sub)item status.
+	  */
+	 if ( wmma->wmma_Set ) item->Flags &= ~ITEMENABLED;
+	 else           item->Flags |= ITEMENABLED;
       }
       /*
        * Put the menus back online.
@@ -3442,14 +3448,14 @@ STATIC ASM REGFUNC3(ULONG, WindowClassDisableMenu,
     */
    if ( wd->wd_MenuStrip ) {
       if ( newmenu = FindNewMenu( wd->wd_MenuStrip, wmma->wmma_MenuID )) {
-         rc = TRUE;
-         if ( newmenu->nm_Type == NM_TITLE ) {
-            if ( wmma->wmma_Set ) newmenu->nm_Flags |= NM_MENUDISABLED;
-            else           newmenu->nm_Flags &= ~NM_MENUDISABLED;
-         } else if ( newmenu->nm_Type != NM_END ) {
-            if ( wmma->wmma_Set ) newmenu->nm_Flags |= NM_ITEMDISABLED;
-            else           newmenu->nm_Flags &= ~NM_ITEMDISABLED;
-         }
+	 rc = TRUE;
+	 if ( newmenu->nm_Type == NM_TITLE ) {
+	    if ( wmma->wmma_Set ) newmenu->nm_Flags |= NM_MENUDISABLED;
+	    else           newmenu->nm_Flags &= ~NM_MENUDISABLED;
+	 } else if ( newmenu->nm_Type != NM_END ) {
+	    if ( wmma->wmma_Set ) newmenu->nm_Flags |= NM_ITEMDISABLED;
+	    else           newmenu->nm_Flags &= ~NM_ITEMDISABLED;
+	 }
       }
    }
 
@@ -3483,8 +3489,8 @@ STATIC ASM REGFUNC3(ULONG, WindowClassCheckItem,
        * CHECKED status.
        */
       if ( item = FindItem( wd->wd_Menus, wmma->wmma_MenuID )) {
-         if ( wmma->wmma_Set ) item->Flags |= CHECKED;
-         else           item->Flags &= ~CHECKED;
+	 if ( wmma->wmma_Set ) item->Flags |= CHECKED;
+	 else           item->Flags &= ~CHECKED;
       }
       /*
        * Put the menus back online.
@@ -3497,9 +3503,9 @@ STATIC ASM REGFUNC3(ULONG, WindowClassCheckItem,
     */
    if ( wd->wd_MenuStrip ) {
       if ( newmenu = FindNewMenu( wd->wd_MenuStrip, wmma->wmma_MenuID )) {
-         rc = TRUE;
-         if ( wmma->wmma_Set ) newmenu->nm_Flags |= CHECKED;
-         else           newmenu->nm_Flags &= ~CHECKED;
+	 rc = TRUE;
+	 if ( wmma->wmma_Set ) newmenu->nm_Flags |= CHECKED;
+	 else           newmenu->nm_Flags &= ~CHECKED;
       }
    }
 
@@ -3520,10 +3526,10 @@ STATIC ASM REGFUNC3(ULONG, WindowClassMenuDisabled,
 
    if ( wd->wd_MenuStrip ) {
       if ( newmenu = FindNewMenu( wd->wd_MenuStrip, wmmq->wmmq_MenuID )) {
-         if ( newmenu->nm_Type == NM_TITLE )
-            return (ULONG)(newmenu->nm_Flags & NM_MENUDISABLED ? 1 : 0);
-         else if ( newmenu->nm_Type != NM_END )
-            return (ULONG)(newmenu->nm_Flags & NM_ITEMDISABLED ? 1 : 0);
+	 if ( newmenu->nm_Type == NM_TITLE )
+	    return (ULONG)(newmenu->nm_Flags & NM_MENUDISABLED ? 1 : 0);
+	 else if ( newmenu->nm_Type != NM_END )
+	    return (ULONG)(newmenu->nm_Flags & NM_ITEMDISABLED ? 1 : 0);
       }
    }
 
@@ -3544,7 +3550,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassItemChecked,
 
    if ( wd->wd_MenuStrip ) {
       if ( newmenu = FindNewMenu( wd->wd_MenuStrip, wmmq->wmmq_MenuID ))
-         return (ULONG)(newmenu->nm_Flags & CHECKED ? 1 : 0);
+	 return (ULONG)(newmenu->nm_Flags & CHECKED ? 1 : 0);
    }
 
    return ~0;
@@ -3570,20 +3576,20 @@ METHOD(WindowClassCycleOrder, struct wmTabCycleOrder *, tco)
        */
       if (tc = (TABCYCLE *)BGUI_AllocPoolMem(sizeof(TABCYCLE)))
       {
-         /*
-          * Initialize structure.
-          */
-         tc->tc_Object = *ob;
-         /*
-          * Setup the object for tab-cycling.
-          */
-         DoSetMethodNG( *ob, GA_TabCycle, TRUE, ICA_TARGET, ICTARGET_IDCMP, TAG_END );
-         /*
-          * Add it to the list.
-          */
-         AddTail(( struct List * )&wd->wd_CycleList, ( struct Node * )tc );
+	 /*
+	  * Initialize structure.
+	  */
+	 tc->tc_Object = *ob;
+	 /*
+	  * Setup the object for tab-cycling.
+	  */
+	 DoSetMethodNG( *ob, GA_TabCycle, TRUE, ICA_TARGET, ICTARGET_IDCMP, TAG_END );
+	 /*
+	  * Add it to the list.
+	  */
+	 AddTail(( struct List * )&wd->wd_CycleList, ( struct Node * )tc );
       } else
-         rc = 0;
+	 rc = 0;
       ob++;
    };
    return rc;
@@ -3626,17 +3632,17 @@ METHOD(WindowClassAddUpdate, struct wmAddUpdate *, wmau)
        */
       if (up = (UPN *)BGUI_AllocPoolMem(sizeof(UPN)))
       {
-         /*
-          * Initialize node.
-          */
-         up->up_ID      = wmau->wmau_SourceID;
-         up->up_Target  = wmau->wmau_Target;
-         up->up_MapList = wmau->wmau_MapList;
-         /*
-          * Add it to the list.
-          */
-         AddTail((struct List *)&wd->wd_UpdateList, (struct Node *)up);
-         rc = 1;
+	 /*
+	  * Initialize node.
+	  */
+	 up->up_ID      = wmau->wmau_SourceID;
+	 up->up_Target  = wmau->wmau_Target;
+	 up->up_MapList = wmau->wmau_MapList;
+	 /*
+	  * Add it to the list.
+	  */
+	 AddTail((struct List *)&wd->wd_UpdateList, (struct Node *)up);
+	 rc = 1;
       };
    };
    return rc;
@@ -3652,7 +3658,6 @@ METHOD(WindowClassReportID, struct wmReportID *, wmri)
 {
    WD            *wd = INST_DATA(cl, obj);
    ULONG          rc = 0;
-   BOOL           doub = FALSE;
    struct Task   *task;
    struct Window *w;
    /*
@@ -3674,7 +3679,7 @@ METHOD(WindowClassReportID, struct wmReportID *, wmri)
        */
       if (wmri->wmri_Flags & WMRIF_DOUBLE_CLICK)
       {
-         rc = AddIDReport(w, wmri->wmri_ID, task);
+	 rc = AddIDReport(w, wmri->wmri_ID, task);
       };
       /*
        *  Set signal.
@@ -3700,15 +3705,15 @@ METHOD(WindowClassGetSigWin, Msg, msg )
        * Any messages at the port?
        */
       if ( wd->wd_UserPort->mp_MsgList.lh_Head->ln_Succ )
-         /*
-          * Yes. Get the first.
-          */
-         win = (( struct IntuiMessage * )wd->wd_UserPort->mp_MsgList.lh_Head )->IDCMPWindow;
+	 /*
+	  * Yes. Get the first.
+	  */
+	 win = (( struct IntuiMessage * )wd->wd_UserPort->mp_MsgList.lh_Head )->IDCMPWindow;
       else
-         /*
-          * Try for the first reported ID.
-          */
-         win = GetFirstIDReportWindow();
+	 /*
+	  * Try for the first reported ID.
+	  */
+	 win = GetFirstIDReportWindow();
    } else
       /*
        * This window.
@@ -3728,10 +3733,10 @@ METHOD(WindowClassRemove, struct wmRemoveObject *, wmro )
 
    if ( wmro->wmro_Object ) {
       if ( wmro->wmro_Flags & WMROF_CYCLE_LIST ) {
-         if ( cyc = GetCycleNode( wd, wmro->wmro_Object )) {
-            Remove(( struct Node * )cyc );
-            BGUI_FreePoolMem( cyc );
-         }
+	 if ( cyc = GetCycleNode( wd, wmro->wmro_Object )) {
+	    Remove(( struct Node * )cyc );
+	    BGUI_FreePoolMem( cyc );
+	 }
       }
       return( TRUE );
    }
@@ -3758,11 +3763,11 @@ METHOD(WindowClassSecure, Msg, msg)
        */
       if (!(wd->wd_Flags & WDF_REMOVED))
       {
-         /*
-          * No. Remove it now.
-          */
-         wd->wd_Flags |= WDF_REMOVED;
-         RemoveGadget(w, (struct Gadget *)wd->wd_Gadgets);
+	 /*
+	  * No. Remove it now.
+	  */
+	 wd->wd_Flags |= WDF_REMOVED;
+	 RemoveGadget(w, (struct Gadget *)wd->wd_Gadgets);
       }
       rc = 1;
    };
@@ -3793,13 +3798,13 @@ WW(kprintf("WindowClassRelease: window is open\n"));
       if (wd->wd_Flags & WDF_REMOVED)
       {
 WW(kprintf("WindowClassRelease: WDF_REMOVED set = master gadget was removed. Calling AddGadget\n"));
-         /*
-          * Put the master back on-line.
-          */
-         AddGadget(w, (struct Gadget *)wd->wd_Gadgets, -1);
+	 /*
+	  * Put the master back on-line.
+	  */
+	 AddGadget(w, (struct Gadget *)wd->wd_Gadgets, -1);
 WW(kprintf("WindowClassRelease: clearing WDF_REMOVED flag\n"));
 
-         wd->wd_Flags &= ~WDF_REMOVED;
+	 wd->wd_Flags &= ~WDF_REMOVED;
 
       };
 WW(kprintf("WindowClassRelease: calling RefreshGList: gad = %x\n", (struct Gadget *)wd->wd_Gadgets));
@@ -3840,8 +3845,8 @@ WW(kprintf("** WindowClassRelayout: calling WinSize\n"));
 
       if (!WinSize(wd, &min_x, &min_y))
       {
-         AsmDoMethod(obj, WM_RELEASE);
-         return 0;
+	 AsmDoMethod(obj, WM_RELEASE);
+	 return 0;
       };
 WW(kprintf("** WindowClassRelayout: WinSize call ok min_x = %d, min_y = %d\n", min_x, min_y));
 
@@ -3853,56 +3858,56 @@ WW(kprintf("** WindowClassRelayout: WinSize call ok min_x = %d, min_y = %d\n", m
 
       if (!(wd->wd_WindowFlags & WFLG_BACKDROP))
       {
-         /*
-          * Default window position/size.
-          */
-         newl = w->LeftEdge;
-         newt = w->TopEdge;
-         neww = w->Width;
-         newh = w->Height;
+	 /*
+	  * Default window position/size.
+	  */
+	 newl = w->LeftEdge;
+	 newt = w->TopEdge;
+	 neww = w->Width;
+	 newh = w->Height;
 
-         if (lock_w || (min_x > neww)) neww = min_x;
-         if (lock_h || (min_y > newh)) newh = min_y;
+	 if (lock_w || (min_x > neww)) neww = min_x;
+	 if (lock_h || (min_y > newh)) newh = min_y;
 
-         /*
-          * Find out how much we have to
-          * move the window.
-          */
-         if ((newl + neww) > s->Width)  newl = s->Width  - neww;
-         if ((newt + newh) > s->Height) newt = s->Height - newh;
+	 /*
+	  * Find out how much we have to
+	  * move the window.
+	  */
+	 if ((newl + neww) > s->Width)  newl = s->Width  - neww;
+	 if ((newt + newh) > s->Height) newt = s->Height - newh;
 
-         /*
-          * Compute the new maximum values.
-          */
-         if (neww > max_x) max_x = neww;
-         if (newh > max_y) max_y = newh;
+	 /*
+	  * Compute the new maximum values.
+	  */
+	 if (neww > max_x) max_x = neww;
+	 if (newh > max_y) max_y = newh;
 
-         /*
-          * Re-size the window accoording to the master
-          * minimum size change.
-          */
+	 /*
+	  * Re-size the window accoording to the master
+	  * minimum size change.
+	  */
 
-         WindowLimits(w, 1, 1, -1, -1);
+	 WindowLimits(w, 1, 1, -1, -1);
 
 WW(kprintf("** WindowClassRelayout: Calling ChangeWindowBox(%d,%d,%d,%d)\n",newl,newt,neww,newh));
 
-         ChangeWindowBox(w, newl, newt, neww, newh);
+	 ChangeWindowBox(w, newl, newt, neww, newh);
 
-         wd->wd_MinW = lock_w ? neww : min_x;
-         wd->wd_MinH = lock_h ? newh : min_y;
-         wd->wd_MaxW = lock_w ? neww : max_x;
-         wd->wd_MaxH = lock_h ? newh : max_y;
+	 wd->wd_MinW = lock_w ? neww : min_x;
+	 wd->wd_MinH = lock_h ? newh : min_y;
+	 wd->wd_MaxW = lock_w ? neww : max_x;
+	 wd->wd_MaxH = lock_h ? newh : max_y;
 WW(kprintf("** WindowClassRelayout: setting wd->wd_MinW/H to %d,%d  wd->wd_MaxW/H to %d,%d\n",
 wd->wd_MinW,
 wd->wd_MinH,
 wd->wd_MaxW,
 wd->wd_MaxH));
 
-         wd->wd_Flags |= WDF_CONSTRAINTS;
+	 wd->wd_Flags |= WDF_CONSTRAINTS;
       }
       else
       {
-         AsmDoMethod(obj, WM_RELEASE);
+	 AsmDoMethod(obj, WM_RELEASE);
       };
    };
    return 1;
@@ -3934,14 +3939,14 @@ METHOD(WindowClassWhichObject, Msg, msg)
        * On the window?
        */
       if ((mx >= 0) && (my >= 0) && (mx < w->Width) && (my < w->Height))
-         /*
-          * Let's see what the master returns to us.
-          */
+	 /*
+	  * Let's see what the master returns to us.
+	  */
 	  
 	 #ifdef _AROS
-         rc = AsmDoMethod(wd->wd_Gadgets, GRM_WHICHOBJECT, mx, my);
+	 rc = AsmDoMethod(wd->wd_Gadgets, GRM_WHICHOBJECT, mx, my);
 	 #else
-         rc = AsmDoMethod(wd->wd_Gadgets, GRM_WHICHOBJECT, (mx << 16) | my);
+	 rc = AsmDoMethod(wd->wd_Gadgets, GRM_WHICHOBJECT, (mx << 16) | my);
 	 #endif
    }
    return rc;
@@ -3974,27 +3979,27 @@ METHOD(WindowClassFindKey, struct bmFindKey *, bmfk)
    if (gr = wd->wd_Gadgets)
    {
       if (ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk))
-         return (ULONG)ob;
+	 return (ULONG)ob;
    };
    if (gr = wd->wd_LBorder)
    {
       if (ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk))
-         return (ULONG)ob;
+	 return (ULONG)ob;
    };
    if (gr = wd->wd_RBorder)
    {
       if (ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk))
-         return (ULONG)ob;
+	 return (ULONG)ob;
    };
    if (gr = wd->wd_TBorder)
    {
       if (ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk))
-         return (ULONG)ob;
+	 return (ULONG)ob;
    };
    if (gr = wd->wd_BBorder)
    {
       if (ob = (Object *)AsmDoMethodA(gr, (Msg)bmfk))
-         return (ULONG)ob;
+	 return (ULONG)ob;
    };
    return NULL;
 }
@@ -4064,34 +4069,34 @@ METHOD(WindowClassClip, struct wmClip *, wmc)
       switch (wmc->wmc_Action)
       {
       case CLIPACTION_NONE:
-         if (br && br->Layer)
-         {
-            wd->wd_BufferLayer = br->Layer;
-            br->Layer = NULL;
-         };
-         return 1;
+	 if (br && br->Layer)
+	 {
+	    wd->wd_BufferLayer = br->Layer;
+	    br->Layer = NULL;
+	 };
+	 return 1;
       case CLIPACTION_CLEAR:
-         ClearRegion(r);
-         rc = 1;
-         break;
+	 ClearRegion(r);
+	 rc = 1;
+	 break;
       case CLIPACTION_OR:
-         rc = OrRectRegion(r, cr);
-         break;
+	 rc = OrRectRegion(r, cr);
+	 break;
       case CLIPACTION_AND:
-         AndRectRegion(r, cr);
-         rc = 1;
-         break;
+	 AndRectRegion(r, cr);
+	 rc = 1;
+	 break;
       };
 
       if (rc)
       {
-         InstallClipRegion(wl, r);
+	 InstallClipRegion(wl, r);
 
-         if (br)
-         {
-            if (!br->Layer) br->Layer = wd->wd_BufferLayer;
-            InstallClipRegion(br->Layer, r);
-         };
+	 if (br)
+	 {
+	    if (!br->Layer) br->Layer = wd->wd_BufferLayer;
+	    InstallClipRegion(br->Layer, r);
+	 };
       };
    };
    return rc;
@@ -4106,9 +4111,9 @@ METHOD(WindowClassSetupGadget, struct wmSetupGadget *, wmsg)
    {
       switch(tag->ti_Tag)
       {
-         case BT_Inhibit:
-            AsmDoMethod(wmsg->wmsg_Object, BASE_INHIBIT, tag->ti_Tag);
-            break;
+	 case BT_Inhibit:
+	    AsmDoMethod(wmsg->wmsg_Object, BASE_INHIBIT, tag->ti_Tag);
+	    break;
       }
    }
 
@@ -4120,17 +4125,17 @@ METHOD(WindowClassSetupGadget, struct wmSetupGadget *, wmsg)
 
       if(wd->wd_UsedFont)
       {
-         struct RastPort rp;
+	 struct RastPort rp;
 
-         InitRastPort(&rp);
-         SetFont(&rp,wd->wd_UsedFont);
-         AskFont(&rp,&current_font);
+	 InitRastPort(&rp);
+	 SetFont(&rp,wd->wd_UsedFont);
+	 AskFont(&rp,&current_font);
       }
 
       SetAttrs(wmsg->wmsg_Object,
-         wd->wd_UsedFont ? BT_TextAttr : TAG_IGNORE,&current_font,
-         ((wd->wd_Flags & WDF_AUTOASPECT) && wd->wd_DrawInfo) ? FRM_ThinFrame : TAG_IGNORE, ((wd->wd_DrawInfo->dri_Resolution.X / wd->wd_DrawInfo->dri_Resolution.Y) <= 1),
-         TAG_END);
+	 wd->wd_UsedFont ? BT_TextAttr : TAG_IGNORE,&current_font,
+	 ((wd->wd_Flags & WDF_AUTOASPECT) && wd->wd_DrawInfo) ? FRM_ThinFrame : TAG_IGNORE, ((wd->wd_DrawInfo->dri_Resolution.X / wd->wd_DrawInfo->dri_Resolution.Y) <= 1),
+	 TAG_END);
    }
    return(1);
 }
@@ -4187,8 +4192,8 @@ STATIC DPFUNC ClassFunc[] = {
 makeproto Class *InitWindowClass(void)
 {
    return WindowClass = BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_ROOT_OBJECT,
-                                       CLASS_ObjectSize,     sizeof(WD),
-                                       CLASS_DFTable,        ClassFunc,
-                                       TAG_DONE);
+				       CLASS_ObjectSize,     sizeof(WD),
+				       CLASS_DFTable,        ClassFunc,
+				       TAG_DONE);
 }
 ///

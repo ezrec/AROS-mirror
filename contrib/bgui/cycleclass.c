@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/08/17 15:09:18  chodorowski
+ * Fixed compiler warnings.
+ *
  * Revision 42.5  2000/07/18 18:32:38  stegerg
  * The AllocBaseInfo/AllocBaseInfoDebug calls in OpenPopUpWindow method
  * missed a TAG_DONE. Manuel, if you read this: this is a real (also in AmigaOS)
@@ -97,8 +100,8 @@ typedef struct {
 METHOD(CycleClassNew, struct opSet *, ops)
 {
    CD             *cd;
-   struct TagItem *tags, *tag;
-   ULONG           rc, data;
+   struct TagItem *tags;
+   ULONG           rc;
 
    tags = DefTagList(BGUI_CYCLE_GADGET, ops->ops_AttrList);
 
@@ -119,27 +122,27 @@ METHOD(CycleClassNew, struct opSet *, ops)
       cd->cd_ImageWidth = 18;
 
       cd->cd_Image      = BGUI_NewObject(BGUI_VECTOR_IMAGE, VIT_BuiltIn,     BUILTIN_CYCLE,
-                                                            TAG_DONE);
+							    TAG_DONE);
 
       /*
        * Setup a Label class object used to render the active label.
        */
       cd->cd_ArrayLabel = BGUI_NewObject(BGUI_LABEL_IMAGE,  LAB_Place,       PLACE_IN,
-                                                            LAB_Highlight,   FALSE,
-                                                            LAB_Underscore,  0,
-                                                            IMAGE_ErasePen,  0,
-                                                            TAG_DONE);
+							    LAB_Highlight,   FALSE,
+							    LAB_Underscore,  0,
+							    IMAGE_ErasePen,  0,
+							    TAG_DONE);
 
       AsmCoerceMethod(cl, (Object *)rc, OM_SET, tags, NULL);
 
       if (cd->cd_ArrayLabel && cd->cd_Image && cd->cd_Labels)
       {
-         ;
+	 ;
       }
       else
       {
-         AsmCoerceMethod(cl, (Object *)rc, OM_DISPOSE);
-         rc = 0;
+	 AsmCoerceMethod(cl, (Object *)rc, OM_DISPOSE);
+	 rc = 0;
       };
    };
    FreeTagItems(tags);
@@ -179,50 +182,50 @@ METHOD(CycleClassSetUpdate, struct opUpdate *, opu)
       switch (tag->ti_Tag)
       {
       case BT_TextAttr:
-         cd->cd_PopupFont = (struct TextAttr *)data;
-         /*
-          * Let the label know.
-          */
-         DoSetMethodNG(cd->cd_ArrayLabel, LAB_TextAttr, data, TAG_DONE);
-         break;
+	 cd->cd_PopupFont = (struct TextAttr *)data;
+	 /*
+	  * Let the label know.
+	  */
+	 DoSetMethodNG(cd->cd_ArrayLabel, LAB_TextAttr, data, TAG_DONE);
+	 break;
 
       case FRM_ThinFrame:
-         if (data) cd->cd_Flags |= CDF_THIN;
-         else      cd->cd_Flags &= ~CDF_THIN;
-         break;
+	 if (data) cd->cd_Flags |= CDF_THIN;
+	 else      cd->cd_Flags &= ~CDF_THIN;
+	 break;
 
       case CYC_Active:
-         cd->cd_Active = data;
-         break;
+	 cd->cd_Active = data;
+	 break;
 
       case CYC_Labels:
-         /*
-          * Count the number of labels in the array (offset by 1).
-          */
-         num_labels = data ? CountLabels((UBYTE **)data) : -1;
+	 /*
+	  * Count the number of labels in the array (offset by 1).
+	  */
+	 num_labels = data ? CountLabels((UBYTE **)data) : -1;
 
-         if (num_labels >= 0)
-         {
-            if (new_labels = BGUI_AllocPoolMem((num_labels + 2) * sizeof(UBYTE *)))
-            {
-               if (cd->cd_Labels) BGUI_FreePoolMem(cd->cd_Labels);
-               cd->cd_Labels    = new_labels;
-               cd->cd_NumLabels = num_labels;
-               CopyMem((UBYTE *)data, (UBYTE *)new_labels, (num_labels + 1) * sizeof(UBYTE *));
-            };
-         };
-         render = TRUE;
-         break;
+	 if (num_labels >= 0)
+	 {
+	    if (new_labels = BGUI_AllocPoolMem((num_labels + 2) * sizeof(UBYTE *)))
+	    {
+	       if (cd->cd_Labels) BGUI_FreePoolMem(cd->cd_Labels);
+	       cd->cd_Labels    = new_labels;
+	       cd->cd_NumLabels = num_labels;
+	       CopyMem((UBYTE *)data, (UBYTE *)new_labels, (num_labels + 1) * sizeof(UBYTE *));
+	    };
+	 };
+	 render = TRUE;
+	 break;
 
       case CYC_Popup:
-         if (data) cd->cd_Flags |= CDF_POPUP;
-         else      cd->cd_Flags &= ~CDF_POPUP;
-         break;
+	 if (data) cd->cd_Flags |= CDF_POPUP;
+	 else      cd->cd_Flags &= ~CDF_POPUP;
+	 break;
 
       case CYC_PopActive:
-         if (data) cd->cd_Flags |= CDF_POPACTIVE;
-         else      cd->cd_Flags &= ~CDF_POPACTIVE;
-         break;
+	 if (data) cd->cd_Flags |= CDF_POPACTIVE;
+	 else      cd->cd_Flags &= ~CDF_POPACTIVE;
+	 break;
       };
    };
 
@@ -493,12 +496,12 @@ METHOD(OpenPopupWindow, struct gpInput *, gpi)
     * Pop the window.
     */
    cd->cd_PopWindow = OpenWindowTags(NULL, WA_Left,           wleft,   WA_Top,            wtop,
-                                           WA_Width,          wwi,     WA_Height,         wwh,
-                                           WA_Flags,          0,       WA_IDCMP,          0,
-                                           WA_Borderless,     TRUE,    WA_AutoAdjust,     TRUE,
-                                           WA_SmartRefresh,   TRUE,    WA_NoCareRefresh,  TRUE,
-                                           WA_RMBTrap,        TRUE,    WA_CustomScreen,   gi->gi_Screen,
-                                           TAG_DONE);
+					   WA_Width,          wwi,     WA_Height,         wwh,
+					   WA_Flags,          0,       WA_IDCMP,          0,
+					   WA_Borderless,     TRUE,    WA_AutoAdjust,     TRUE,
+					   WA_SmartRefresh,   TRUE,    WA_NoCareRefresh,  TRUE,
+					   WA_RMBTrap,        TRUE,    WA_CustomScreen,   gi->gi_Screen,
+					   TAG_DONE);
    /*
     * success?
     */
@@ -516,53 +519,53 @@ METHOD(OpenPopupWindow, struct gpInput *, gpi)
       if (bi = AllocBaseInfo(BI_Screen, gi->gi_Screen, BI_RastPort, rp = cd->cd_PopWindow->RPort, TAG_DONE))
 #endif
       {
-         /*
-          * Setup the font.
-          */
-         if (cd->cd_Font) BSetFont(bi, cd->cd_Font);
+	 /*
+	  * Setup the font.
+	  */
+	 if (cd->cd_Font) BSetFont(bi, cd->cd_Font);
 
-         /*
-          * Setup pop window rastport.
-          */
-         BSetDPenA(bi, BARBLOCKPEN);
-         BSetDrMd(bi, JAM1);
+	 /*
+	  * Setup pop window rastport.
+	  */
+	 BSetDPenA(bi, BARBLOCKPEN);
+	 BSetDrMd(bi, JAM1);
 
-         /*
-          * Fill...
-          */
-         BBoxFill(bi, 0, 0, wwi, wwh);
+	 /*
+	  * Fill...
+	  */
+	 BBoxFill(bi, 0, 0, wwi, wwh);
 
-         /*
-          * Setup pop window rastport.
-          */
-         BSetDPenA(bi, BARDETAILPEN);
+	 /*
+	  * Setup pop window rastport.
+	  */
+	 BSetDPenA(bi, BARDETAILPEN);
 
-         /*
-          * Render border.
-          */
-         Move(rp, 0, 0 );
-         Draw(rp, wwi - 1, 0);
-         Draw(rp, wwi - 1, wwh - 1 );
-         Draw(rp, 0, wwh - 1 );
-         Draw(rp, 0, 0 );
+	 /*
+	  * Render border.
+	  */
+	 Move(rp, 0, 0 );
+	 Draw(rp, wwi - 1, 0);
+	 Draw(rp, wwi - 1, wwh - 1 );
+	 Draw(rp, 0, wwh - 1 );
+	 Draw(rp, 0, 0 );
 
-         if (!(cd->cd_Flags & CDF_THIN))
-         {
-            Move(rp, 1, 0 );
-            Draw(rp, 1, wwh - 1 );
-            Move(rp, wwi - 2, 0 );
-            Draw(rp, wwi - 2, wwh - 1 );
-         }
+	 if (!(cd->cd_Flags & CDF_THIN))
+	 {
+	    Move(rp, 1, 0 );
+	    Draw(rp, 1, wwh - 1 );
+	    Move(rp, wwi - 2, 0 );
+	    Draw(rp, wwi - 2, wwh - 1 );
+	 }
 
-         /*
-          * Render list-entries.
-          */
-         for (i = 0; i < num_items; i++)
-            RenderPopupEntry(bi, cd, i, FALSE);
+	 /*
+	  * Render list-entries.
+	  */
+	 for (i = 0; i < num_items; i++)
+	    RenderPopupEntry(bi, cd, i, FALSE);
 
-         FreeBaseInfo(bi);
+	 FreeBaseInfo(bi);
 
-         rc = GMR_MEACTIVE;
+	 rc = GMR_MEACTIVE;
       };
    }
    return rc;
@@ -600,14 +603,14 @@ METHOD(CycleClassGoActive, struct gpInput *, gpi)
        */
       if (cd->cd_Flags & CDF_POPUP)
       {
-         if (gpi->gpi_GInfo->gi_Window->MouseX > (bc->bc_HitBox.Left + cd->cd_ImageWidth))
-         {
-            /*
-             * Open the popup window.
-             * Do normal selection if the popup window will not open.
-             */
-            if (OpenPopupWindow(cl, obj, gpi) == 0) return 0;
-         };
+	 if (gpi->gpi_GInfo->gi_Window->MouseX > (bc->bc_HitBox.Left + cd->cd_ImageWidth))
+	 {
+	    /*
+	     * Open the popup window.
+	     * Do normal selection if the popup window will not open.
+	     */
+	    if (OpenPopupWindow(cl, obj, gpi) == 0) return 0;
+	 };
       };
       GADGET(obj)->Flags |= GFLG_SELECTED;
       DoRenderMethod(obj, gpi->gpi_GInfo, GREDRAW_REDRAW);
@@ -666,7 +669,7 @@ METHOD(CycleClassHandleInput, struct gpInput *, gpi)
        * Security. Intuition should do this already.
        */
       if (!(gi->gi_Window->Flags & WFLG_WINDOWACTIVE))
-         return GMR_NOREUSE;
+	 return GMR_NOREUSE;
 
 #ifdef DEBUG_BGUI
       if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, cd->cd_PopWindow->RPort, TAG_DONE))
@@ -674,83 +677,83 @@ METHOD(CycleClassHandleInput, struct gpInput *, gpi)
       if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, cd->cd_PopWindow->RPort, TAG_DONE))
 #endif
       {
-         /*
-          * Where is the mouse?
-          */
-         item = Selected(cd, bi->bi_RPort);
+	 /*
+	  * Where is the mouse?
+	  */
+	 item = Selected(cd, bi->bi_RPort);
 
-         /*
-          * Changed?
-          */
-         if (item != cd->cd_Previous)
-         {
-            /*
-             * Previous selected item?
-             */
-            if (cd->cd_Previous != (UWORD)~0) RenderPopupEntry(bi, cd, cd->cd_Previous, FALSE);
+	 /*
+	  * Changed?
+	  */
+	 if (item != cd->cd_Previous)
+	 {
+	    /*
+	     * Previous selected item?
+	     */
+	    if (cd->cd_Previous != (UWORD)~0) RenderPopupEntry(bi, cd, cd->cd_Previous, FALSE);
 
-            /*
-             * Render current entry.
-             */
-            if (item != ~0) RenderPopupEntry(bi, cd, item, TRUE);
+	    /*
+	     * Render current entry.
+	     */
+	    if (item != ~0) RenderPopupEntry(bi, cd, item, TRUE);
 
-            /*
-             * Setup item.
-             */
-            cd->cd_Previous = item;
-         }
-         FreeBaseInfo(bi);
+	    /*
+	     * Setup item.
+	     */
+	    cd->cd_Previous = item;
+	 }
+	 FreeBaseInfo(bi);
 
-         /*
-          * What's the event?
-          */
-         if (gpi->gpi_IEvent->ie_Class == IECLASS_RAWMOUSE)
-         {
-            switch (gpi->gpi_IEvent->ie_Code)
-            {
-            case SELECTUP:
-               /*
-                * Setup the new label and return VERIFY.
-                */
-               if (cd->cd_Previous != (UWORD)~0)
-               {
-                  if (cd->cd_Active != cd->cd_Previous)
-                  {
-                     /*
-                      * We need notification.
-                      */
-                     cd->cd_Flags |= CDF_NOTIFY;
+	 /*
+	  * What's the event?
+	  */
+	 if (gpi->gpi_IEvent->ie_Class == IECLASS_RAWMOUSE)
+	 {
+	    switch (gpi->gpi_IEvent->ie_Code)
+	    {
+	    case SELECTUP:
+	       /*
+		* Setup the new label and return VERIFY.
+		*/
+	       if (cd->cd_Previous != (UWORD)~0)
+	       {
+		  if (cd->cd_Active != cd->cd_Previous)
+		  {
+		     /*
+		      * We need notification.
+		      */
+		     cd->cd_Flags |= CDF_NOTIFY;
 
-                     /*
-                      * New active entry.
-                      */
-                     cd->cd_Active = cd->cd_Previous;
+		     /*
+		      * New active entry.
+		      */
+		     cd->cd_Active = cd->cd_Previous;
 
-                     /*
-                      * Setup the new label.
-                      */
-                     DoSetMethodNG(cd->cd_ArrayLabel, LAB_Label, cd->cd_Labels[cd->cd_Active], LAB_Place, PLACE_IN, TAG_END);
+		     /*
+		      * Setup the new label.
+		      */
+		     DoSetMethodNG(cd->cd_ArrayLabel, LAB_Label, cd->cd_Labels[cd->cd_Active], LAB_Place, PLACE_IN, TAG_END);
 
-                     /*
-                      * Re-render to show the change.
-                      */
-                     DoRenderMethod(obj, gi, GREDRAW_REDRAW);
+		     /*
+		      * Re-render to show the change.
+		      */
+		     DoRenderMethod(obj, gi, GREDRAW_REDRAW);
 
-                     /*
-                      * We want to notify about the attribute change.
-                      */
-                     rc = GMR_NOREUSE | GMR_VERIFY;
-                  } else
-                     rc = GMR_NOREUSE;
-               } else
-                  rc = GMR_NOREUSE;
-               break;
+		     /*
+		      * We want to notify about the attribute change.
+		      */
+		     rc = GMR_NOREUSE | GMR_VERIFY;
+		  } else
+		     rc = GMR_NOREUSE;
+	       } else
+		  rc = GMR_NOREUSE;
+	       break;
 
-            case MENUDOWN:
-               rc = GMR_NOREUSE;
-               break;
-            }
-         }
+	    case MENUDOWN:
+	       rc = GMR_NOREUSE;
+	       break;
+	    }
+	 }
       }
    }
    else
@@ -764,52 +767,52 @@ METHOD(CycleClassHandleInput, struct gpInput *, gpi)
       gph.gpht_Mouse.Y  = gpi->gpi_Mouse.Y;
 
       if ( AsmDoMethodA( obj, ( Msg )&gph ) == GMR_GADGETHIT )
-         sel = GFLG_SELECTED;
+	 sel = GFLG_SELECTED;
 
       if ( gpi->gpi_IEvent->ie_Class == IECLASS_RAWMOUSE ) {
-         switch ( gpi->gpi_IEvent->ie_Code ) {
+	 switch ( gpi->gpi_IEvent->ie_Code ) {
 
-            case  SELECTUP:
-               /*
-                * When we are selected we setup a new label
-                * and return VERIFY.
-                */
-               if ( sel ) {
-                  /*
-                   * Clicked with the shift key down cycles backward.
-                   */
-                  if ( gpi->gpi_IEvent->ie_Qualifier & ( IEQUALIFIER_LSHIFT | IEQUALIFIER_RSHIFT )) {
-                     if ( cd->cd_Active )       cd->cd_Active--;
-                     else              cd->cd_Active = cd->cd_NumLabels;
-                  } else {
-                     if ( cd->cd_Active < cd->cd_NumLabels ) cd->cd_Active++;
-                     else              cd->cd_Active = 0;
-                  }
+	    case  SELECTUP:
+	       /*
+		* When we are selected we setup a new label
+		* and return VERIFY.
+		*/
+	       if ( sel ) {
+		  /*
+		   * Clicked with the shift key down cycles backward.
+		   */
+		  if ( gpi->gpi_IEvent->ie_Qualifier & ( IEQUALIFIER_LSHIFT | IEQUALIFIER_RSHIFT )) {
+		     if ( cd->cd_Active )       cd->cd_Active--;
+		     else              cd->cd_Active = cd->cd_NumLabels;
+		  } else {
+		     if ( cd->cd_Active < cd->cd_NumLabels ) cd->cd_Active++;
+		     else              cd->cd_Active = 0;
+		  }
 
-                  /*
-                   * Setup the new label.
-                   */
-                  DoSetMethodNG( cd->cd_ArrayLabel, LAB_Label, cd->cd_Labels[ cd->cd_Active ], LAB_Place, PLACE_IN, TAG_END  );
+		  /*
+		   * Setup the new label.
+		   */
+		  DoSetMethodNG( cd->cd_ArrayLabel, LAB_Label, cd->cd_Labels[ cd->cd_Active ], LAB_Place, PLACE_IN, TAG_END  );
 
-                  /*
-                   * We want to notify about the attribute change.
-                   */
-                  rc = GMR_NOREUSE | GMR_VERIFY;
-                  cd->cd_Flags |= CDF_NOTIFY;
-               } else
-                  /*
-                   * We are not selected anymore.
-                   */
-                  rc = GMR_NOREUSE;
+		  /*
+		   * We want to notify about the attribute change.
+		   */
+		  rc = GMR_NOREUSE | GMR_VERIFY;
+		  cd->cd_Flags |= CDF_NOTIFY;
+	       } else
+		  /*
+		   * We are not selected anymore.
+		   */
+		  rc = GMR_NOREUSE;
 
-               sel = 0;
-               break;
+	       sel = 0;
+	       break;
 
-            case  MENUDOWN:
-               sel = 0;
-               rc = GMR_REUSE;
-               break;
-         }
+	    case  MENUDOWN:
+	       sel = 0;
+	       rc = GMR_REUSE;
+	       break;
+	 }
       }
 
       /*
@@ -817,15 +820,15 @@ METHOD(CycleClassHandleInput, struct gpInput *, gpi)
        */
       if ((GADGET(obj)->Flags & GFLG_SELECTED) != sel)
       {
-         /*
-          * Toggle the selected bit.
-          */
-         GADGET(obj)->Flags ^= GFLG_SELECTED;
+	 /*
+	  * Toggle the selected bit.
+	  */
+	 GADGET(obj)->Flags ^= GFLG_SELECTED;
 
-         /*
-          * Re-render the gadget.
-          */
-         DoRenderMethod(obj, gi, GREDRAW_REDRAW);
+	 /*
+	  * Re-render the gadget.
+	  */
+	 DoRenderMethod(obj, gi, GREDRAW_REDRAW);
       };
    };
    return rc;
@@ -1010,8 +1013,8 @@ STATIC DPFUNC ClassFunc[] = {
 makeproto Class *InitCycleClass(void)
 {
    return BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_BASE_GADGET,
-                         CLASS_ObjectSize,     sizeof(CD),
-                         CLASS_DFTable,        ClassFunc,
-                         TAG_DONE);
+			 CLASS_ObjectSize,     sizeof(CD),
+			 CLASS_DFTable,        ClassFunc,
+			 TAG_DONE);
 }
 ///

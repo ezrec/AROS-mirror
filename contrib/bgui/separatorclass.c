@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/08/17 15:09:18  chodorowski
+ * Fixed compiler warnings.
+ *
  * Revision 42.1  2000/05/15 19:27:02  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -105,52 +108,52 @@ METHOD(SepClassSet, struct opSet *, ops)
       {
       case FRM_ThinFrame:
       case SEP_Thin:
-         /*
-          * Pickup thin lines.
-          */
-         if (data) sd->sd_Flags |= SDF_THIN;
-         else      sd->sd_Flags &= ~SDF_THIN;
-         break;
+	 /*
+	  * Pickup thin lines.
+	  */
+	 if (data) sd->sd_Flags |= SDF_THIN;
+	 else      sd->sd_Flags &= ~SDF_THIN;
+	 break;
 
       case SEP_CenterTitle:
-         if (data) sd->sd_Flags |= SDF_CENTER;
-         else      sd->sd_Flags &= ~SDF_CENTER;
-         break;
+	 if (data) sd->sd_Flags |= SDF_CENTER;
+	 else      sd->sd_Flags &= ~SDF_CENTER;
+	 break;
 
       case SEP_Horiz:
-         if (data) sd->sd_Flags |= SDF_HORIZONTAL;
-         else      sd->sd_Flags &= ~SDF_HORIZONTAL;
-         break;
+	 if (data) sd->sd_Flags |= SDF_HORIZONTAL;
+	 else      sd->sd_Flags &= ~SDF_HORIZONTAL;
+	 break;
 
       case SEP_Highlight:
-         if (data) sd->sd_Flags |= SDF_HIGHLIGHT;
-         else      sd->sd_Flags &= ~SDF_HIGHLIGHT;
-         break;
+	 if (data) sd->sd_Flags |= SDF_HIGHLIGHT;
+	 else      sd->sd_Flags &= ~SDF_HIGHLIGHT;
+	 break;
 
       case SEP_Recessed:
-         if (data) sd->sd_Flags |= SDF_RECESSED;
-         else      sd->sd_Flags &= ~SDF_RECESSED;
-         break;
+	 if (data) sd->sd_Flags |= SDF_RECESSED;
+	 else      sd->sd_Flags &= ~SDF_RECESSED;
+	 break;
 
       case SEP_TitleLeft:
-         if (data) sd->sd_Place = 1;
-         else      sd->sd_Place = 0;
-         break;
+	 if (data) sd->sd_Place = 1;
+	 else      sd->sd_Place = 0;
+	 break;
 
       case SEP_TitleRight:
-         if (data) sd->sd_Place = 2;
-         else      sd->sd_Place = 0;
-         break;
+	 if (data) sd->sd_Place = 2;
+	 else      sd->sd_Place = 0;
+	 break;
 
       case SEP_Title:
-         if (!sd->sd_Title) sd->sd_Title = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE);
-         if (sd->sd_Title) DoSetMethodNG(sd->sd_Title, TEXTA_Text, data, TAG_DONE);
-         break;
+	 if (!sd->sd_Title) sd->sd_Title = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE);
+	 if (sd->sd_Title) DoSetMethodNG(sd->sd_Title, TEXTA_Text, data, TAG_DONE);
+	 break;
 
       case SEP_TitleID:
-         if (!sd->sd_Title) sd->sd_Title = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE);
-         if (sd->sd_Title) DoSetMethodNG(sd->sd_Title, TEXTA_TextID, data, TAG_DONE);
-         break;
+	 if (!sd->sd_Title) sd->sd_Title = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE);
+	 if (sd->sd_Title) DoSetMethodNG(sd->sd_Title, TEXTA_TextID, data, TAG_DONE);
+	 break;
       };
    };
    return rc;
@@ -166,7 +169,6 @@ METHOD(SepClassRender, struct bmRender *, bmr)
    BC               *bc = BASE_DATA(obj);
    struct BaseInfo  *bi = bmr->bmr_BInfo;
    struct RastPort  *rp = bi->bi_RPort;
-   ULONG             rc;
    int               l, t, w, h, s;
    BOOL              recessed;
 
@@ -205,8 +207,8 @@ METHOD(SepClassRender, struct bmRender *, bmr)
        */
       if (sd->sd_Title)
       {
-         if (sd->sd_Flags & SDF_CENTER) t += h >> 1;
-         else                           t += h - (rp->TxHeight - rp->TxBaseline);
+	 if (sd->sd_Flags & SDF_CENTER) t += h >> 1;
+	 else                           t += h - (rp->TxHeight - rp->TxBaseline);
       };
 
       /*
@@ -233,16 +235,16 @@ METHOD(SepClassRender, struct bmRender *, bmr)
        */
       if (sd->sd_Title)
       {
-         /*
-          * Set font if necessary.
-          */
-         if (bc->bc_TextFont) BSetFont(bi, bc->bc_TextFont);
+	 /*
+	  * Set font if necessary.
+	  */
+	 if (bc->bc_TextFont) BSetFont(bi, bc->bc_TextFont);
 
-         /*
-          * Render the title.
-          */
-         RenderTitle(sd->sd_Title, bi, l, t, w,
-                     sd->sd_Flags & SDF_HIGHLIGHT, sd->sd_Flags & SDF_CENTER, sd->sd_Place);
+	 /*
+	  * Render the title.
+	  */
+	 RenderTitle(sd->sd_Title, bi, l, t, w,
+		     sd->sd_Flags & SDF_HIGHLIGHT, sd->sd_Flags & SDF_CENTER, sd->sd_Place);
       }
    }
    else
@@ -273,14 +275,14 @@ METHOD(SepClassRender, struct bmRender *, bmr)
        */
       if (!(sd->sd_Flags & SDF_THIN))
       {
-         Draw(rp, l + 1, t + h - 1);
-         Draw(rp, l + 1, t);
-         Draw(rp, l + 3, t);
+	 Draw(rp, l + 1, t + h - 1);
+	 Draw(rp, l + 1, t);
+	 Draw(rp, l + 3, t);
       }
       else
       {
-         Move(rp, l, t);
-         Draw(rp, l + 1, t);
+	 Move(rp, l, t);
+	 Draw(rp, l + 1, t);
       }
 
       /*
@@ -299,14 +301,14 @@ METHOD(SepClassRender, struct bmRender *, bmr)
        */
       if (!(sd->sd_Flags & SDF_THIN))
       {
-         s++;
-         Draw(rp, l + s, t + h - 1);
-         Draw(rp, l + s, t + 1);
-         Move(rp, l, t + h - 1);
-         Draw(rp, l + s, t + h - 1);
+	 s++;
+	 Draw(rp, l + s, t + h - 1);
+	 Draw(rp, l + s, t + 1);
+	 Move(rp, l, t + h - 1);
+	 Draw(rp, l + s, t + h - 1);
       }
       else
-         Draw(rp, l, t + h - 1);
+	 Draw(rp, l, t + h - 1);
    };
    return 1;
 }
@@ -340,7 +342,7 @@ METHOD(SepClassDimensions, struct bmDimensions *, bmd)
        * Do we have a font?
        */
       if (bc->bc_TextFont && sd->sd_Title)
-         BSetFont(bi, bc->bc_TextFont);
+	 BSetFont(bi, bc->bc_TextFont);
 
       mx = 2;
 
@@ -388,8 +390,8 @@ STATIC DPFUNC ClassFunc[] = {
 makeproto Class *InitSepClass(void)
 {
    return BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_BASE_GADGET,
-                         CLASS_ObjectSize,     sizeof(SD),
-                         CLASS_DFTable,        ClassFunc,
-                         TAG_DONE);
+			 CLASS_ObjectSize,     sizeof(SD),
+			 CLASS_DFTable,        ClassFunc,
+			 TAG_DONE);
 }
 ///
