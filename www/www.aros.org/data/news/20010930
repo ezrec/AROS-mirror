@@ -4,8 +4,8 @@ Radium is now part of the default build. Doesn't work completely,
 yet, though.
 
 Peter Eriksson worked on Font prefs (fixed a typo in the Swedish
-translation, the Escape key, Ctrl-C and the close button now close
-the window).
+translation) and the ReqTools pref (the Escape key, Ctrl-C and the
+close button now close the window).
 
 Nicholai Benalal began to merge MorphOS patches into asl.library.
 
