@@ -25,13 +25,13 @@
 #include <dos/dos.h>
 #include <dos/rdargs.h>
 
-#include <clib/dos_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/graphics_protos.h>
-#include <clib/commodities_protos.h>
-#include <clib/intuition_protos.h>
-#include <clib/gadtools_protos.h>
+#include <proto/dos.h>
+#include <proto/exec.h>
+#include <proto/alib.h>
+#include <proto/graphics.h>
+#include <proto/commodities.h>
+#include <proto/intuition.h>
+#include <proto/gadtools.h>
 
 #include <stdlib.h>
 #include <string.h>
