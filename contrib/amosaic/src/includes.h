@@ -35,6 +35,7 @@
 #include <classes/cycle.h>
 #include <classes/gauge.h>
 #include <classes/list.h>
+#include <classes/listview.h>
 #include <classes/popstring.h>
 #include <classes/virtgroup.h>
 #include <classes/window.h>
