@@ -165,6 +165,12 @@ interested in the source for the OS because it could run some apps much
 faster if it could replace the OS calls by native code. On the other hand,
 AROS needs hardware drivers (eg. audio.device).</p>
 
+<p>Since most code will not be available on AROS from the start, 
+Fabio Alemagna has started to port UAE to AROS so you can at least
+run the old code in an emulation box. Since we concentrated on
+writing AmigaOS functions, many functions of the c.lib are still
+missing, so this will take some time.</p>
+
 </section>
 <section title="You should not use Linux or X11 !">
 
@@ -288,6 +294,21 @@ a part of AROS, namely the Colorwheel gadget in OS 3.9. So in a way,
 AROS has become part of the official AmigaOS. Of course, this
 doesn't imply anything. AROS has not become the development branch
 of Amiga Inc :-)</p>
+
+</section>
+<section title="What programming languages are available ?">
+
+<p>Currently, all development is done in ANSI C. We just use some tools
+to automatically generate the C header files (clib, protos, pragmas, fds)
+and AutoDocs from the sources and <a href="mmake.html">MetaMake</a>
+to build everything.</p>
+
+<p>There are some plans to port at least a C compiler to AROS, so we
+could compile code inside of AROS instead of cross compiling but that
+will take some time. For example, we need some extensions to C (namely the
+Macro Varargs of GCC) to make TagLists work. Then some people are
+investigating to port a BASIC dialect to AROS and Aaron Digulla
+wants Python. These are still future plans, though.</p>
 
 </section>
 </chapter>
