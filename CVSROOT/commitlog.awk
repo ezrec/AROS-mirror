@@ -80,7 +80,7 @@ function dump(t,flist,area)
     if (!match (Dir, /\//))
 	RSTART=length(Dir);
     area = substr(Dir,1,RSTART);
-#print RSTART,":",Dir,":",area >> stderr;
+print RSTART,":",Dir,":",area >> stderr;
 
     # First: Who did it when ?
     pout("* " User " " Date " " Dir "/\n\n");
