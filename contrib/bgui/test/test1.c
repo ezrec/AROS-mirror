@@ -73,7 +73,9 @@ printf("%s: Trying to create Window Object\n",__FILE__);
 			EndObject,  EndMember,
 #endif
 			StartMember, ar[WIN1_CYCLE1] = CycleObject,
+				ButtonFrame,
 				LAB_Label, "Cycle",
+				LAB_Place, PLACE_LEFT,
 				GA_ID, WIN1_CYCLE1,
 				CYC_Labels, cycle_labels,
 				CYC_Active, 0,
