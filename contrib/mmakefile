@@ -1,0 +1,6 @@
+# $Id$
+
+# The apps target points back to config/$(ARCH)/mmakefile:
+#MM apps : apps-$(ARCH)
+apps :
+	@$(NOP)
