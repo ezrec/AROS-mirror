@@ -80,11 +80,18 @@ struct dopus_func_start *func;
 
 	func->status=FS_SEGMENT;
 
-	func->startup.wbstartup.sm_Segment=func->segment;
-	if (!(func->startup.wbstartup.sm_Process=CreateProc(func->procname,
-		main_proc->pr_Task.tc_Node.ln_Pri,func->startup.wbstartup.sm_Segment,func->stack)))
-		return(0);
+    	{
+	    ULONG stacksize = func->stack;
 
+#ifdef _AROS
+    	    if (stacksize < AROS_STACKSIZE) stacksize = AROS_STACKSIZE;
+#endif	    
+	    func->startup.wbstartup.sm_Segment=func->segment;
+	    if (!(func->startup.wbstartup.sm_Process=CreateProc(func->procname,
+		    main_proc->pr_Task.tc_Node.ln_Pri,func->startup.wbstartup.sm_Segment,stacksize)))
+		    return(0);
+    	}
+	
 	func->startup.wbstartup.sm_ToolWindow=NULL;
 	PutMsg(func->startup.wbstartup.sm_Process,(struct Message *)&func->startup);
 
@@ -100,6 +107,7 @@ int wait;
 		WaitPort(func->replyport);
 		GetMsg(func->replyport);
 	}
+
 	if (func->status>=FS_SEGMENT) {
 		Forbid();
 		if (func->resseg) {
@@ -116,8 +124,10 @@ int wait;
 		CurrentDir(func->olddir);
 		UnLock(func->startup.wbstartup.sm_ArgList[0].wa_Lock);
 	}
+
 	if (func->replyport) LDeletePort(func->replyport);
 	LFreeRemember(&func->key);
+
 	return(func->startup.retcode);
 }
 
