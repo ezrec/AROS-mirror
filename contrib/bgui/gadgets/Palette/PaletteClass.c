@@ -10,6 +10,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/08/08 13:51:35  chodorowski
+ * Removed all REGFUNC, REGPARAM and REG macros. Now includes
+ * contrib/bgui/compilerspecific.h where they are defined.
+ *
  * Revision 42.3  2000/07/11 17:17:24  stegerg
  * struct Library *BGUIBase, not struct BGUIBase *BGUIBase.
  * fixed a "comparison always 0 due to limited ..." bug.
@@ -67,26 +71,12 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "compilerspecific.h"
+
 #ifdef _AROS
 extern struct Library * BGUIBase;
 #endif
 
-/*
- * Compiler stuff.
- */
-#ifdef _AROS
-
-#else
-#ifdef _DCC
-#define SAVEDS __geta4
-#define ASM
-#define REG(x) __ ## x
-#else
-#define SAVEDS __saveds
-#define ASM __asm
-#define REG(x) register __ ## x
-#endif
-#endif
 
 /*
  * Clamp a value in a range.
@@ -101,14 +91,14 @@ extern struct Library * BGUIBase;
 //#define METHOD(f,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) m)
 #ifdef _AROS
   #define METHOD(f,mtype,m) AROS_UFH3(STATIC ULONG, f, \
-			  AROS_UFHA(Class *, cl, A0), \
-			  AROS_UFHA(Object *, obj, A2), \
-			  AROS_UFHA(mtype, m, A1))
+                          AROS_UFHA(Class *, cl, A0), \
+                          AROS_UFHA(Object *, obj, A2), \
+                          AROS_UFHA(mtype, m, A1))
 #else
   #define METHOD(f,mtype,m) static ASM ULONG f( \
-  			  REG(A0) Class *cl, \
-  			  REG(A2) Object *obj, \
-			  REG(A1) mtype m)
+                          REG(A0) Class *cl, \
+                          REG(A2) Object *obj, \
+                          REG(A1) mtype m)
 #endif
 
 /*
@@ -150,8 +140,8 @@ typedef struct {
  */
 //STATIC ASM UWORD ValidateColor( REG(a0) PD *pd, REG(d0) ULONG pen )
 STATIC ASM REGFUNC2(UWORD, ValidateColor,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(D0, ULONG, pen))
+        REGPARAM(A0, PD *, pd),
+        REGPARAM(D0, ULONG, pen))
 {
    UWORD       *tab = pd->pd_PenTable, i;
 
@@ -368,10 +358,10 @@ METHOD(PaletteClassGet, struct opGet *,opg)
  */
 //STATIC ASM VOID RenderColorRects( REG(a0) PD *pd, REG(a1) struct RastPort *rp, REG(a2) struct IBox *area, REG(a3) struct DrawInfo *dri )
 STATIC ASM REGFUNC4(VOID, RenderColorRects,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(A1, struct RastPort *, rp),
-	REGPARAM(A2, struct IBox *, area),
-	REGPARAM(A3, struct DrawInfo *, dri))
+        REGPARAM(A0, PD *, pd),
+        REGPARAM(A1, struct RastPort *, rp),
+        REGPARAM(A2, struct IBox *, area),
+        REGPARAM(A3, struct DrawInfo *, dri))
 {
    UWORD    colorwidth, colorheight, columns = 1, rows = 1, depth = pd->pd_Depth;
    UWORD    hadjust, vadjust, left, top, colsize, rowsize, c, r, color;
@@ -582,8 +572,8 @@ METHOD(PaletteClassRender, struct gpRender *,gpr)
  */
 //STATIC ASM ULONG GetPenNumber( REG(a0) PD *pd, REG(d0) ULONG num )
 STATIC ASM REGFUNC2(ULONG, GetPenNumber,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(D0, ULONG, num))
+        REGPARAM(A0, PD *, pd),
+        REGPARAM(D0, ULONG, num))
 {
    /*
     * Return the pen number
@@ -603,8 +593,8 @@ STATIC ASM REGFUNC2(ULONG, GetPenNumber,
  */
 //STATIC ASM ULONG GetOrdinalNumber( REG(a0) PD *pd, REG(d0) ULONG pen )
 STATIC ASM REGFUNC2(ULONG, GetOrdinalNumber,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(D0, ULONG, pen))
+        REGPARAM(A0, PD *, pd),
+        REGPARAM(D0, ULONG, pen))
 {
    UWORD       *tab = pd->pd_PenTable, i;
 
@@ -636,9 +626,9 @@ STATIC ASM REGFUNC2(ULONG, GetOrdinalNumber,
  */
 //STATIC ASM UWORD GetColor( REG(a0) PD *pd, REG(d0) ULONG x, REG(d1) ULONG y )
 STATIC ASM REGFUNC3(UWORD, GetColor,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(D0, ULONG, x),
-	REGPARAM(D1, ULONG, y))
+        REGPARAM(A0, PD *, pd),
+        REGPARAM(D0, ULONG, x),
+        REGPARAM(D1, ULONG, y))
 {
    UWORD    col, row;
 
@@ -663,10 +653,10 @@ STATIC ASM REGFUNC3(UWORD, GetColor,
  */
 //STATIC ASM VOID GetTopLeft( REG(a0) PD *pd, REG(d0) UWORD color, REG(a1) UWORD *x, REG(a2) UWORD *y )
 STATIC ASM REGFUNC4(VOID, GetTopLeft,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(D0, UWORD, color),
-	REGPARAM(A1, UWORD *, x),
-	REGPARAM(A2, UWORD *, y))
+        REGPARAM(A0, PD *, pd),
+        REGPARAM(D0, UWORD, color),
+        REGPARAM(A1, UWORD *, x),
+        REGPARAM(A2, UWORD *, y))
 {
    UWORD       row, col;
 
@@ -699,9 +689,9 @@ STATIC ULONG NotifyAttrChange( Object *obj, struct GadgetInfo *gi, ULONG flags, 
  */
 //STATIC ASM VOID ChangeSelectedColor( REG(a0) PD *pd, REG(a1) struct GadgetInfo *gi, REG(d0) ULONG newcolor )
 STATIC ASM REGFUNC3(VOID, ChangeSelectedColor,
-	REGPARAM(A0, PD *, pd),
-	REGPARAM(A1, struct GadgetInfo *, gi),
-	REGPARAM(D0, ULONG, newcolor))
+        REGPARAM(A0, PD *, pd),
+        REGPARAM(A1, struct GadgetInfo *, gi),
+        REGPARAM(D0, ULONG, newcolor))
 {
    struct RastPort         *rp;
    UWORD        l, t;
