@@ -1197,6 +1197,9 @@ case $os in
         -*mint | -mint[0-9]* | -*MiNT | -MiNT[0-9]*)
 	        os=-mint
 		;;
+        -aros*)
+                os=-aros
+                ;;
 	-none)
 		;;
 	*)

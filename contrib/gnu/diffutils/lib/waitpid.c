@@ -20,6 +20,7 @@
 # include <config.h>
 #endif
 
+#include <sys/types.h>
 #include <errno.h>
 #ifndef errno
 extern int errno;
