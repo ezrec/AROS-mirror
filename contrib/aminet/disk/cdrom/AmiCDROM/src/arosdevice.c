@@ -103,6 +103,7 @@ AROS_LH2(struct ACDRBase *, init,
 			NEWLIST(&task->tc_MemEntry);
 			task->tc_Node.ln_Type = NT_TASK;
 			task->tc_Node.ln_Name = "cdrom.handler task";
+			task->tc_Node.ln_Pri = 10;
 			stack = AllocMem(AROS_STACKSIZE, MEMF_PUBLIC);
 			if (stack != NULL)
 			{
