@@ -13,9 +13,6 @@
 #include <memory.h>
 #include <string.h>
 
-#define SCREENWIDTH  320
-#define SCREENHEIGHT 200
-
 /***********************************************************************************/
 
 struct IntuitionBase *IntuitionBase;
@@ -31,10 +28,13 @@ BYTE Keys[256];
 /***********************************************************************************/
 
 UWORD pal=2;
-UWORD a,c,d,x,y,z;
-UWORD s[256];
+ULONG a,c,d,x,y,z;
+ULONG s[256];
 UBYTE p[65536];
-UBYTE buf[SCREENWIDTH * SCREENHEIGHT];
+UBYTE *buf;
+
+ULONG screenwidth  = 320;
+ULONG screenheight = 200;
 
 /***********************************************************************************/
 
@@ -47,6 +47,8 @@ void cleanup(char *msg)
     
     if (win) CloseWindow(win);
     
+    if (buf) free(buf);
+    
     if (scr) UnlockPubScreen(0, scr);
     
     if (CyberGfxBase) CloseLibrary(CyberGfxBase);
@@ -54,6 +56,33 @@ void cleanup(char *msg)
     if (IntuitionBase) CloseLibrary((struct Library *)IntuitionBase);
     
     exit(0);
+}
+
+/***********************************************************************************/
+
+void getarguments(void)
+{
+    struct RDArgs *myargs;
+    IPTR args[2] = {0, 0};
+    
+    myargs = ReadArgs("W=WIDTH/N/K,H=HEIGHT/N/K", args, NULL);
+    if (!myargs)
+    {
+    	Fault(IoErr(), 0, p, 256);
+	cleanup(p);
+    }
+    
+    if (args[0] || args[1])
+    {
+    	if (args[0]) screenwidth = *(ULONG *)args[0];
+    	if (args[1]) screenheight = *(ULONG *)args[1];
+    }
+    else
+    {
+    	puts("Tip: You can have different window size by using WIDTH and HEIGHT start arguments!");
+    }
+    
+    FreeArgs(p);
 }
 
 /***********************************************************************************/
@@ -107,6 +136,9 @@ void setuppal(WORD pal)
 
 void setupdemo(void)
 {
+    buf = malloc(screenwidth * screenheight);
+    if (!buf) cleanup("Out of memory!");
+    
     setuppal(pal);
     
     for(a = 0; a < 256; a++)
@@ -139,15 +171,13 @@ void render(void)
     a = 0;
     c -= 2;
     
-    for(y = 0; y < SCREENHEIGHT; y++)
+    for(y = 0; y < screenheight; y++)
     {
-    	for(x = 0; x < SCREENWIDTH; x++)
+    	for(x = 0; x < screenwidth; x++)
 	{
 	    buf[a++] = p[((UBYTE)((y - 100) & 255)) * 256 + ((UBYTE)(x & 255))];
 	}
     }
-
-#if 1
 
     for(y = 0; y < 128; y++)
     {
@@ -157,16 +187,12 @@ void render(void)
 	}
     }
 
-#endif
-
-#if 1    
     for(y = 0; y < 128; y++)
     {
     	memmove(p + y * 256 + 128, p + y * 256, 128);
     }
     
     memmove(p + 128 * 256, p, 32768);
-#endif
     
     for(y = 0; y < 256; y++)
     {
@@ -180,13 +206,13 @@ void render(void)
     WriteLUTPixelArray(buf,
 		       0,
 		       0,
-		       SCREENWIDTH,
+		       screenwidth,
 		       rp,
 		       cgfx_coltab,
 		       win->BorderLeft,
 		       win->BorderTop,
-		       SCREENWIDTH,
-		       SCREENHEIGHT,
+		       screenwidth,
+		       screenheight,
 		       CTABFMT_XRGB8);
     
 }
@@ -196,9 +222,9 @@ void render(void)
 void makewin(void)
 {
     win = OpenWindowTags(NULL, WA_CustomScreen, (IPTR)scr, 
-    			       WA_InnerWidth, SCREENWIDTH,
-    			       WA_InnerHeight, SCREENHEIGHT,
-			       WA_Title, (IPTR)"Parallax",
+    			       WA_InnerWidth, screenwidth,
+    			       WA_InnerHeight, screenheight,
+			       WA_Title, (IPTR)"Parallax: Use LMB to change palette",
 			       WA_DragBar, TRUE,
 			       WA_DepthGadget, TRUE,
 			       WA_CloseGadget, TRUE,
@@ -263,6 +289,7 @@ main(int argc, char *argv[])
 {
     BOOL done = FALSE;
     
+    getarguments();
     openlibs();
     getvisual();
     setupdemo(); 
