@@ -76,7 +76,7 @@ static void fill_in_buf(struct FileInfoBlock *fp, struct stat *buf);
 //extern int __io2errno(int);
 
 static long blockSize;
-
+/*
 int stat(const char *name, struct stat *buf)
 {
   BPTR l;
@@ -95,7 +95,7 @@ int stat(const char *name, struct stat *buf)
 
   return success;
 }
-
+*/
 static void fill_in_buf(struct FileInfoBlock *fp, struct stat *buf)
 {
   long
