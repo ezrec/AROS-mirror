@@ -2,6 +2,11 @@
 #define STRINGS_H
 
 /*
+    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    $Id$
+*/
+
+/*
 ** When implementing localization in the future, the getString() macro
 ** will hopefully make it a bit easier. You just have to change the
 ** string #defines to string-ids and remake getString() as a function
@@ -47,9 +52,9 @@
 #define ABT_WINDOWTITLE     "About AROS"
 
 #define ABT_TEXT            ISEQ_C "--=<( " ISEQ_B "AROS" ISEQ_N " )>=--\n\n" \
-                            ISEQ_C "the Amiga Research OS\n\n"   \
-                            ISEQ_C "Copyright © 1995-2000 the AROS Development Team.\n"
-#define ABT_TEXT2A          ISEQ_C "All Rights Reserved. Read the"
+                            ISEQ_C "The Amiga Research OS\n\n"   \
+                            ISEQ_C "Copyright © 1995-2001, The AROS Development Team. All rights reserved.\n"
+#define ABT_TEXT2A          ISEQ_C "Read the"
 #define ABT_TEXT2B          "license"
 #define ABT_TEXT2C          "for more information."
 

@@ -1,6 +1,11 @@
 #ifndef WB_COMMON_H
 #define WB_COMMON_H
 
+/*
+    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    $Id$
+*/
+
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <exec/tasks.h>

@@ -1,6 +1,11 @@
 #ifndef WB_DEVELOPERS_H
 #define WB_DEVELOPERS_H
 
+/*
+    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    $Id$
+*/
+
 char *developers[] = {
   "Aaron Digulla (Coordinator)",
   "Matthias Fleischer (Exec, DOS, drivers)",
