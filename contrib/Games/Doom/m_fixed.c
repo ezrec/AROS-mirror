@@ -15,6 +15,10 @@
 // for more details.
 //
 // $Log$
+// Revision 1.2  2002/04/27 09:51:47  hkiel
+// reversed order of FixedDiv() and helper function FixedDiv2() to avoid
+// implicit prototype
+//
 // Revision 1.1  2000/02/29 18:21:04  stegerg
 // Doom port based on ADoomPPC. Read README.AROS!
 //
@@ -58,18 +62,6 @@ FixedMul
 //
 
 fixed_t
-FixedDiv
-( fixed_t	a,
-  fixed_t	b )
-{
-    if ( (abs(a)>>14) >= abs(b))
-	return (a^b)<0 ? MININT : MAXINT;
-    return FixedDiv2 (a,b);
-}
-
-
-
-fixed_t
 FixedDiv2
 ( fixed_t	a,
   fixed_t	b )
@@ -89,3 +81,18 @@ FixedDiv2
     return (fixed_t) c;
 #endif
 }
+
+
+
+fixed_t
+FixedDiv
+( fixed_t	a,
+  fixed_t	b )
+{
+    if ( (abs(a)>>14) >= abs(b))
+	return (a^b)<0 ? MININT : MAXINT;
+    return FixedDiv2 (a,b);
+}
+
+
+
