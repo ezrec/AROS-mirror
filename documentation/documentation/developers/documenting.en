@@ -127,7 +127,6 @@ Requirements
 You will need the following to build the AROS documentation from scratch:
 
 + Python__ 2.2.1
-+ Docutils__ dated 2002-09-24 or later (from CVS)
 
 To build the website you will additionally need:
 
@@ -135,7 +134,6 @@ To build the website you will additionally need:
 + Ploticus__ 2.04
 
 __ http://www.python.org/
-__ http://docutils.sourceforge.net/
 __ http://www.pythonware.com/products/pil/
 __ http://ploticus.sourceforge.net/
 
