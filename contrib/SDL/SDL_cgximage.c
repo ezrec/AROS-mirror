@@ -209,7 +209,7 @@ int CGX_AllocHWSurface(_THIS, SDL_Surface *surface)
 	surface->hwdata->videodata=this;
 	surface->hwdata->allocated=0;
 
-	if(surface->hwdata->bmap=AllocBitMap(surface->w,surface->h,this->hidden->depth,BMF_MINPLANES,SDL_Display->RastPort.BitMap))
+	if((surface->hwdata->bmap=AllocBitMap(surface->w,surface->h,this->hidden->depth,BMF_MINPLANES,SDL_Display->RastPort.BitMap)))
 	{
 		surface->hwdata->allocated=1;
 		surface->flags|=SDL_HWSURFACE;
@@ -661,8 +661,8 @@ static void CGX_NormalUpdate(_THIS, int numrects, SDL_Rect *rects)
 
 //		D(bug("Using customroutine!\n"));
 
-		if(handle=LockBitMapTags(SDL_RastPort->BitMap,LBMI_BASEADDRESS,(ULONG)&bm_address,
-								LBMI_BYTESPERROW,(ULONG)&destpitch,TAG_DONE))
+		if((handle=LockBitMapTags(SDL_RastPort->BitMap,LBMI_BASEADDRESS,(ULONG)&bm_address,
+								LBMI_BYTESPERROW,(ULONG)&destpitch,TAG_DONE)))
 		{
 			unsigned char *destbase;
 			register int j,srcwidth;
@@ -904,9 +904,9 @@ void CGX_RefreshDisplay(_THIS)
 		Uint32	destpitch;
 		APTR handle;
 
-		if(handle=LockBitMapTags(SDL_RastPort->BitMap,
+		if((handle=LockBitMapTags(SDL_RastPort->BitMap,
 					LBMI_BASEADDRESS,(ULONG)&bm_address,
-					LBMI_BYTESPERROW,(ULONG)&destpitch,TAG_DONE))
+					LBMI_BYTESPERROW,(ULONG)&destpitch,TAG_DONE)))
 		{
 			register int j;
 			register unsigned char *src,*dest;

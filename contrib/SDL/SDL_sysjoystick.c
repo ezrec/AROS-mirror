@@ -82,7 +82,7 @@ int SDL_SYS_JoystickInit(void)
 {
 	if(!LowLevelBase)
 	{
-		if(LowLevelBase=OpenLibrary("lowlevel.library",37))
+		if((LowLevelBase=OpenLibrary("lowlevel.library",37)))
 			return 2;
 	}
 	else

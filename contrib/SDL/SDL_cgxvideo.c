@@ -839,7 +839,7 @@ int CGX_CreateWindow(_THIS, SDL_Surface *screen,
 
 	if(screen->flags & SDL_DOUBLEBUF)
 	{
-		if(SDL_RastPort=malloc(sizeof(struct RastPort)))
+		if((SDL_RastPort=malloc(sizeof(struct RastPort)))
 		{
 			InitRastPort(SDL_RastPort);
 			SDL_RastPort->BitMap=this->hidden->SB[1]->sb_BitMap;
@@ -1010,9 +1010,9 @@ buildnewscreen:
 					int ok=0;
 					D(bug("Start of DBuffering allocations...\n"));
 
-					if(this->hidden->SB[0]=AllocScreenBuffer(SDL_Display,NULL,SB_SCREEN_BITMAP)) {
+					if((this->hidden->SB[0]=AllocScreenBuffer(SDL_Display,NULL,SB_SCREEN_BITMAP))) {
 
-						if(this->hidden->SB[1]=AllocScreenBuffer(SDL_Display,NULL,0L)) {
+						if((this->hidden->SB[1]=AllocScreenBuffer(SDL_Display,NULL,0L))) {
 							extern struct MsgPort *safeport,*dispport;
 
 							safeport=CreateMsgPort();

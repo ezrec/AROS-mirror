@@ -298,7 +298,7 @@ void amiga_PumpEvents(_THIS)
 
 	/* Keep processing pending events */
 	pending = 0;
-	while ( m=(struct IntuiMessage *)GetMsg(SDL_Window->UserPort) ) {
+	while (( m=(struct IntuiMessage *)GetMsg(SDL_Window->UserPort) )) {
 		amiga_DispatchEvent(this,m);
 		++pending;
 	}
@@ -457,9 +457,9 @@ SDL_keysym *amiga_TranslateKey(int code, SDL_keysym *keysym)
 			#ifdef STORMC4_WOS
 			KeymapBase=OpenLibrary("keymap.library", 0L);
 			#else
-			if(ConPort=CreateMsgPort())
+			if((ConPort=CreateMsgPort()))
 			{
-				if(ConReq=CreateIORequest(ConPort,sizeof(struct IOStdReq)))
+				if((ConReq=CreateIORequest(ConPort,sizeof(struct IOStdReq))))
 				{
 					if(!OpenDevice("console.device",-1,(struct IORequest *)ConReq,0))
 						ConsoleDevice=(struct Library *)ConReq->io_Device;
