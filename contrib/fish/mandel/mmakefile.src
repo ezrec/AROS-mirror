@@ -23,6 +23,7 @@ EXE := $(DESTDIR)/mand
 
 #MM fish-mandel : setup-fish-mandel
 fish-mandel 	: $(OBJS) $(EXE)
+	@$(NOP)
 
 #MM
 setup-fish-mandel :
@@ -36,7 +37,7 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 
 
 #MM
-clean-utilities :
+clean-fish :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c

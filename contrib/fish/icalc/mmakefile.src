@@ -27,6 +27,7 @@ EXE := $(DESTDIR)/icalc
 
 #MM fish-icalc : setup-fish-icalc
 fish-icalc 	: $(OBJS) $(EXE)
+	@$(NOP)
 
 #MM
 setup-fish-icalc :
@@ -40,7 +41,7 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 
 
 #MM
-clean-utilities :
+clean-fish :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c

@@ -19,6 +19,7 @@ EXE := $(DESTDIR)/grep
 
 #MM fish-grep : setup-fish-grep
 fish-grep 	: $(OBJS) $(EXE)
+	@$(NOP)
 
 #MM
 setup-fish-grep :
@@ -32,7 +33,7 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 
 
 #MM
-clean-utilities :
+clean-fish :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c

@@ -19,6 +19,7 @@ EXE := $(DESTDIR)/tree
 
 #MM fish-tree : setup-fish-tree
 fish-tree 	: $(OBJS) $(EXE)
+	@$(NOP)
 
 #MM
 setup-fish-tree :
@@ -32,7 +33,7 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 
 
 #MM
-clean-utilities :
+clean-fish :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c

@@ -19,6 +19,7 @@ EXE := $(DESTDIR)/bezier1
 
 #MM fish-bezier1 : setup-fish-bezier1
 fish-bezier1 	: $(OBJS) $(EXE)
+	@$(NOP)
 
 #MM
 setup-fish-bezier1 :
@@ -32,7 +33,7 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 
 
 #MM
-clean-utilities :
+clean-fish :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c

@@ -21,6 +21,7 @@ EXE := $(DESTDIR)/input_test
 
 #MM fish-input : setup-fish-input
 fish-input 	: $(OBJS) $(EXE)
+	@$(NOP)
 
 #MM
 setup-fish-input :
@@ -34,7 +35,7 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 
 
 #MM
-clean-utilities :
+clean-fish :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c

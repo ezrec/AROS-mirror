@@ -19,6 +19,7 @@ EXE := $(DESTDIR)/bcubic
 
 #MM fish-bcubic : setup-fish-bcubic
 fish-bcubic 	: $(OBJS) $(EXE)
+	@$(NOP)
 
 #MM
 setup-fish-bcubic :
@@ -32,7 +33,7 @@ $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
 
 
 #MM
-clean-utilities :
+clean-fish :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c
