@@ -32,7 +32,7 @@ USE_MLIB := yes
 USE_ZLIB := yes
 USE_EXPATLIB := yes
 
-##MM- contrib-development : contrib-development-python
+#MM- contrib-development : contrib-development-python
 #MM contrib-development-python : setup-contrib-development-python 
 
 %make_prog_setup mmake=contrib-development-python
