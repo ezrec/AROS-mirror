@@ -90,7 +90,7 @@ trap *gettraps( const tsd_t *TSD, proclevel level )
    {
       for (ptr=level; ptr && ptr->traps==NULL; ptr=ptr->prev ) ;
       if (ptr==NULL || ptr->traps==NULL)
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
       level->traps = dupltraps( TSD, ptr->traps ) ;
       ptr = level ;
@@ -123,7 +123,7 @@ int condition_hook( tsd_t *TSD, int type, int errorno, int suberrorno, int linen
 #ifdef NDEBUG
          lineno = 0 ;
 #else
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 #endif
    }
    if ( traps[type].on_off) /* condition is being trapped */
@@ -196,7 +196,7 @@ int identify_trap( int type )
       case X_S_ERROR:    return SIGNAL_ERROR ;
       case X_S_FAILURE:  return SIGNAL_FAILURE ;
    }
-   exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+   exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
    return SIGNAL_FATAL ;
 }
 
@@ -235,10 +235,13 @@ signal_handler regina_signal(int signum,signal_handler action)
 #else
 signal_handler regina_signal(int signum,signal_handler action)
 {
+# if defined(__WINS__) || defined(__EPOC32__)
+   return 0;
+# else
    return( signal ( signum, action ) ) ;
+# endif
 }
 #endif
-
 
 /* Yuk! Some of these should *really* have been volatilized */
 static void halt_handler( int num )
@@ -250,7 +253,7 @@ static void halt_handler( int num )
 #endif
 
    if (regina_signal( num, halt_handler ) == SIG_ERR)
-       exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
+      exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
 
    if (!condition_hook(TSD,
                        SIGNAL_HALT,
@@ -260,12 +263,13 @@ static void halt_handler( int num )
                        Str_creTSD(signals_names[num]),
                        NULL
                        ))
-       exiterror( ERR_PROG_INTERRUPT, 0 )  ;
+      exiterror( ERR_PROG_INTERRUPT, 0 )  ;
 
    return ;
 }
 
-#if defined(SIGHUP)
+#if !defined(__WINS__) && !defined(__EPOC32__)
+# if defined(SIGHUP)
 static void hup_handler( int dummy )
 {
    tsd_t *TSD = __regina_get_tsd();
@@ -278,6 +282,7 @@ static void hup_handler( int dummy )
    }
    TSD->MTExit( 0 ) ;
 }
+# endif
 #endif
 
 
@@ -285,22 +290,24 @@ void signal_setup( const tsd_t *TSD )
 {
    TSD = TSD; /* keep compiler happy */
 
-#ifndef __AROS__
-   
-#if defined(SIGTERM)
+/*
+ * EPOC32 does not have signal()!!
+ * AROS at the moment also lacks signal
+ */
+#if !defined(__WINS__) && !defined(__EPOC32__) && !defined(__AROS__)
+# if defined(SIGTERM)
    if (regina_signal( SIGTERM, halt_handler ) == SIG_ERR)
-       exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
-#endif
-#if defined(SIGINT)
+      exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
+# endif
+# if defined(SIGINT)
    if (regina_signal( SIGINT, halt_handler) == SIG_ERR)
-       exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
-#endif
-#if defined(SIGHUP)
+      exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
+# endif
+# if defined(SIGHUP)
    if (regina_signal( SIGHUP, (TSD->isclient)?(hup_handler):(halt_handler)) == SIG_ERR)
-       exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
+      exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
+# endif
 #endif
-
-#endif //AROS
 }
 
 void set_rexx_halt( void )

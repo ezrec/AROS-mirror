@@ -187,6 +187,7 @@ tsd_t *ReginaInitializeThread(void)
    OK &= init_shell(retval);            /* Initialize the shell module       */
    OK &= init_envir(retval);            /* Initialize the envir module       */
    OK &= init_expr(retval);             /* Initialize the expr module        */
+   OK &= init_error(retval);            /* Initialize the error module       */
 #ifdef VMS
    OK &= init_vms(retval);              /* Initialize the vmscmd module      */
    OK &= init_vmf(retval);              /* Initialize the vmsfuncs module    */
@@ -198,6 +199,7 @@ tsd_t *ReginaInitializeThread(void)
 
    if (!OK)
       exiterror( ERR_STORAGE_EXHAUSTED, 0 ) ;
+
    return(retval);
 }
 
@@ -298,7 +300,7 @@ struct tm *localtime(const time_t *time)
    return(localtime_r(time,&mt->localtime_retval));
 }
 
-#ifdef HAVE_RANDOM_DATA
+#if defined( HAVE_RANDOM_DATA ) && !defined( HAVE_RANDOM )
 /* see documentation of random and random_r. If you get compile time errors
  * exclude this function.
  */

@@ -105,7 +105,7 @@ static char *RCSid = "$Id$";
 # ifdef HAVE_UNISTD_H
 #  include <unistd.h>                                   /* MH 10-06-96 */
 # endif
-# ifdef _MSC_VER
+# if defined(_MSC_VER) && !defined(__WINS__)
 #  include <io.h>
 # endif
 #elif defined(WIN32) && defined(__IBMC__)               /* LM 26-02-99 */
@@ -126,10 +126,6 @@ static char *RCSid = "$Id$";
 # ifdef HAVE_UNISTD_H
 #  include <unistd.h>
 # endif
-#endif
-
-#ifdef HAVE_LINUX_STAT_H_NO
-# include <linux/stat.h>
 #endif
 
 #ifdef __EMX__
@@ -580,7 +576,6 @@ typedef struct { /* fil_tsd: static variables of this module (thread-safe) */
 static int positioncharfile( tsd_t *TSD, const char *bif, int argno, fileboxptr fileptr, int oper, long where, int from );
 static int positionfile( tsd_t *TSD, const char *bif, int argno, fileboxptr ptr, int oper, int lineno, int from );
 static void handle_file_error( tsd_t *TSD, fileboxptr ptr, int rc, const char *errmsg, int level) ;
-static void closefile( tsd_t *TSD, const streng *name )  ;
 
 /*
  * Marks all entries in the filetable. Used only by the memory
@@ -611,7 +606,7 @@ void mark_filetable( const tsd_t *TSD )
 
 #if defined(WIN32) && defined(_MSC_VER)
 /*
- * This is a repalcement fo the BSD ftruncate() function.
+ * This is a replacement fo the BSD ftruncate() function.
  * The code in this function was written by Les Moull.
  */
 
@@ -627,6 +622,10 @@ int ftruncate( int fd, long pos )
 
    return 0;
 }
+#endif
+
+#if defined(__WATCOMC__) && defined(__QNX__)
+# define ftruncate( fd, pos ) ltrunc( fd, pos, SEEK_SET )
 #endif
 
 /*
@@ -709,9 +708,9 @@ static char get_querycommand( const streng *cmd )
 
 static char get_querypositioncommand( const streng *cmd )
 {
-   if (cmd->len==4 && !memcmp(cmd->value,  "READ", 4))
+   if (cmd->len>=4 && !memcmp(cmd->value,  "READ", 4))
       return COMMAND_QUERY_POSITION_READ ;
-   if (cmd->len==5 && !memcmp(cmd->value,  "WRITE", 5))
+   if (cmd->len>=5 && !memcmp(cmd->value,  "WRITE", 5))
       return COMMAND_QUERY_POSITION_WRITE ;
    if (cmd->len==3 && !memcmp(cmd->value,  "SYS", 3))
       return COMMAND_QUERY_POSITION_SYS ;
@@ -906,7 +905,7 @@ nextfile:
 
    errno = 0 ;
    if (fclose( ft->swappoint->fileptr )==EOF)
-      exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
+      exiterror( ERR_SYSTEM_FAILURE, 1, strerror(errno) )  ;
 
    ft->swappoint->fileptr = NULL ;
    ft->swappoint->flag |= FLAG_SWAPPED ;
@@ -944,7 +943,7 @@ static void swapin_file( tsd_t *TSD, fileboxptr ptr )
      faccess = ACCMODE_NONE ;
 
    if (faccess == ACCMODE_NONE)
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
 tryagain:
 #ifdef SGIkludges
@@ -1317,7 +1316,7 @@ void fixup_file( tsd_t *TSD, const streng *filename )
  * So closing doesn't have to be faked. Remove the file, whatever
  * happens.
  */
-static void closefile( tsd_t *TSD, const streng *name )
+void closefile( tsd_t *TSD, const streng *name )
 {
    fileboxptr ptr=NULL ;
 
@@ -1387,7 +1386,7 @@ static void closefile( tsd_t *TSD, const streng *name )
 static void reopen_file( tsd_t *TSD, fileboxptr ptr )
 {
    if (!ptr)
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
    /*
     * We can not reopen the default streams, that makes no sence. If
@@ -1430,7 +1429,7 @@ static void reopen_file( tsd_t *TSD, fileboxptr ptr )
     * different anyway, so it will probably not create any problems.
     * Besides, we don't do exec() and system() on VMS.
     */
-#if !defined(VMS) && !defined(MAC) && !defined(OS2) && !defined(DOS) && !defined(__WATCOMC__) && !defined(_MSC_VER) && !(defined(WIN32) && defined(__IBMC__)) && !defined(_AMIGA) && !defined(__MINGW32__) && !defined(__BORLANDC__) && !defined(__AROS__)
+#if !defined(VMS) && !defined(MAC) && !defined(OS2) && !defined(DOS) && !defined(__WATCOMC__) && !defined(_MSC_VER) && !(defined(WIN32) && defined(__IBMC__)) && !defined(_AMIGA) && !defined(__MINGW32__) && !defined(__BORLANDC__) && !defined(__EPOC32__) && !defined(__AROS__)
    if (ptr && ptr->fileptr)
    {
       int flags, fno ;
@@ -1439,7 +1438,7 @@ static void reopen_file( tsd_t *TSD, fileboxptr ptr )
       flags = fcntl( fno, F_GETFD ) ;
       flags |= FD_CLOEXEC ;
       if (fcntl( fno, F_SETFD, flags)== -1)
-         exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
+         exiterror( ERR_SYSTEM_FAILURE, 1, strerror(errno) )  ;
    }
 #endif
 
@@ -1756,9 +1755,9 @@ try_to_open:
          file_error( ptr, errno, NULL ) ;
    }
    else
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
-#if !defined(VMS) && !defined(MAC) && !defined(OS2) && !defined(DOS) && !defined(__WATCOMC__) && !defined(_MSC_VER) && !defined(_AMIGA) && !defined(__MINGW32__) && !defined(__BORLANDC__)
+#if !defined(VMS) && !defined(MAC) && !defined(OS2) && !defined(DOS) && !defined(__WATCOMC__) && !defined(_MSC_VER) && !defined(_AMIGA) && !defined(__MINGW32__) && !defined(__BORLANDC__) && !defined(__EPOC32__)
    /*
     * Then we check to see if this is a transient or persistent file.
     * We can remove a 'persistent' setting, but add one, since we
@@ -1789,7 +1788,7 @@ try_to_open:
       flags = fcntl( fno, F_GETFD ) ;
       flags |= FD_CLOEXEC ;
       if (fcntl( fno, F_SETFD, flags)== -1)
-         exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
+         exiterror( ERR_SYSTEM_FAILURE, 1, strerror(errno) )  ;
    }
 #endif
 
@@ -1858,8 +1857,10 @@ static fileboxptr get_file_ptr( tsd_t *TSD, const streng *name, int faccess, int
  *
  * This way, be normally use little memory, but we are still able to
  * read as large lines as the memory allows, if it is needed.
+ *
+ * No error condition is raised if noerrors is set. Instead, NULL is returned.
  */
-static streng *readoneline( tsd_t *TSD, fileboxptr ptr )
+static streng *readoneline( tsd_t *TSD, fileboxptr ptr, int noerrors )
 {
    int i=0, j=0, eolf=0, eolchars=1 ;
 #if !defined(UNIX)
@@ -1876,6 +1877,8 @@ static streng *readoneline( tsd_t *TSD, fileboxptr ptr )
     */
    if ( ptr->flag & FLAG_ERROR )
    {
+      if (noerrors)
+         return( NULL ) ;
       if (!(ptr->flag & FLAG_FAKE))
          file_error( ptr, 0, NULL ) ;
 
@@ -1888,16 +1891,20 @@ static streng *readoneline( tsd_t *TSD, fileboxptr ptr )
     */
    if ( ptr->flag & FLAG_RDEOF )
    {
+      if (noerrors)
+         return( NULL ) ;
       file_warning( ptr, 0, "EOF on line input" ) ;
    }
 
    /*
     * If the string is not yet allocated, allocate it, and use an
     * initial size of 512 bytes. This can be increased during runtime.
+    * Using higher initial sizes will waste allocation time on modern systems
+    * with page sizes around 4KB. 512 fits most cases at its best.
     */
    if (!ft->rol_string)
    {
-      ft->rol_string = MallocTSD( (ft->rol_size=5120) ) ;
+      ft->rol_string = MallocTSD( (ft->rol_size=512) ) ;
 #ifdef TRACEMEM
       ft->rdarea = ft->rol_string ;
 #endif
@@ -1981,7 +1988,7 @@ static streng *readoneline( tsd_t *TSD, fileboxptr ptr )
     * Attempt to set the read pointer and the current file
     * pointer based on the lenght of the line we just read.
     */
-#ifdef FGC /* really MH */
+#if 1 /* really MH */
    if ( ptr->thispos == ptr->readpos )
    {
       if ( ptr->thispos == EOF )
@@ -2015,7 +2022,7 @@ static streng *readoneline( tsd_t *TSD, fileboxptr ptr )
     */
    if ((eolf==REGINA_EOL) && (ptr->readline > 0))
    {
-#ifdef FGC /* really MH */
+#if 1 /* really MH */
       ptr->readline += 1 ;  /* only if we actually saw the "\n" !!! */
 #else
       ptr->readline += eolchars ;  /* only if we actually saw the "\n" !!! */
@@ -2052,6 +2059,8 @@ static streng *readoneline( tsd_t *TSD, fileboxptr ptr )
     *
     */
 /*   if (i>1000) i = 1000 ; */
+   if (noerrors && (i == 0) && (ptr->flag | FLAG_RDEOF))
+      return( NULL ) ;
    ret = Str_makeTSD( i ) ;
    memcpy( ret->value, ft->rol_string, ret->len=i ) ;
    return ret ;
@@ -3002,8 +3011,11 @@ static int calc_chars_left( tsd_t *TSD, fileboxptr ptr )
  * This routine writes a line to the file indicated by 'ptr'. The line
  * to be written is 'data', and it will be terminated by an extra
  * EOL marker after the charactrers in 'data'.
+ *
+ * No error condition is raised if noerrors is set.
  */
-static int writeoneline( tsd_t *TSD, fileboxptr ptr, const streng *data )
+static int writeoneline( tsd_t *TSD, fileboxptr ptr, const streng *data,
+                                                                 int noerrors )
 {
    const char *i=NULL ;
 
@@ -3018,7 +3030,8 @@ static int writeoneline( tsd_t *TSD, fileboxptr ptr, const streng *data )
          return 0 ;
       else
       {
-         file_error( ptr, 0, NULL ) ;
+         if (!noerrors)
+            file_error( ptr, 0, NULL ) ;
          if (ptr->flag & FLAG_FAKE)
             return 0 ;
          return 1 ;
@@ -3032,11 +3045,7 @@ static int writeoneline( tsd_t *TSD, fileboxptr ptr, const streng *data )
     * function ftruncate() available. And not if we are already there.
     */
 #if defined(HAVE_FTRUNCATE)
-# if OLD_OPTIONS
-   if (TSD->currlevel->u.options.lineouttrunc)
-# else
    if ( get_options_flag( TSD->currlevel, EXT_LINEOUTTRUNC ) )
-# endif
    {
       if (ptr->oper != OPER_WRITE && !(ptr->flag & (FLAG_WREOF)) &&
                                      (ptr->flag & FLAG_PERSIST))
@@ -3047,22 +3056,24 @@ static int writeoneline( tsd_t *TSD, fileboxptr ptr, const streng *data )
                                  * the meaning of POSIX. This shouldn't do
                                  * any harm in other systems.
                                  */
+
         fno = fileno( ptr->fileptr ) ;
-        if (ftruncate( fno, ptr->writepos))
-          {
-            file_error( ptr, errno, NULL ) ;
-            return !(ptr->flag & FLAG_FAKE) ;
-          }
+        if (ftruncate( fno, ptr->writepos) == -1)
+        {
+           if (!noerrors)
+              file_error( ptr, errno, NULL ) ;
+           return !(ptr->flag & FLAG_FAKE) ;
+        }
         if ( ptr->flag & FLAG_PERSIST )
            fseek( ptr->fileptr, 0, SEEK_END ) ;
         ptr->oper = OPER_NONE;
         ptr->thispos = ptr->writepos = ftell( ptr->fileptr ) ;
         if (ptr->readpos>ptr->thispos && ptr->readpos!=EOF)
-          {
-            ptr->readpos = ptr->thispos ;
-            ptr->readline = 0 ;
-            ptr->linesleft = 0 ;
-          }
+        {
+           ptr->readpos = ptr->thispos ;
+           ptr->readline = 0 ;
+           ptr->linesleft = 0 ;
+        }
       }
    }
 #endif
@@ -3077,7 +3088,8 @@ static int writeoneline( tsd_t *TSD, fileboxptr ptr, const streng *data )
    {
       if (putc( *i, ptr->fileptr)==EOF)
       {
-         file_error( ptr, errno, NULL ) ;
+         if (!noerrors)
+            file_error( ptr, errno, NULL ) ;
          return 1 ;
       }
    }
@@ -3092,7 +3104,8 @@ static int writeoneline( tsd_t *TSD, fileboxptr ptr, const streng *data )
    SWITCH_OPER_WRITE(ptr);
    if (putc( REGINA_CR, ptr->fileptr)==EOF)
    {
-      file_error( ptr, errno, NULL ) ;
+      if (!noerrors)
+         file_error( ptr, errno, NULL ) ;
       return 1 ;
    }
 #endif
@@ -3100,7 +3113,8 @@ static int writeoneline( tsd_t *TSD, fileboxptr ptr, const streng *data )
    SWITCH_OPER_WRITE(ptr);
    if (putc( REGINA_EOL, ptr->fileptr)==EOF)
    {
-      file_error( ptr, errno, NULL ) ;
+      if (!noerrors)
+         file_error( ptr, errno, NULL ) ;
       return 1 ;
    }
 #endif
@@ -3129,7 +3143,8 @@ static int writeoneline( tsd_t *TSD, fileboxptr ptr, const streng *data )
    errno = 0 ;
    if (fflush( ptr->fileptr ))
    {
-      file_error( ptr, errno, NULL ) ;
+      if (!noerrors)
+         file_error( ptr, errno, NULL ) ;
       return 1 ;
    }
 
@@ -3149,7 +3164,7 @@ static streng *getstatus( tsd_t *TSD, const streng *filename , int subcommand)
    fileboxptr ptr=NULL ;
    int rc=0 ;
    int fno=0 ;
-#ifdef __EMX__
+#if defined(__EMX__) || defined(__WINS__) || defined(__EPOC32__)
    int i;
 #endif
    long pos_read = -2L, pos_write = -2L, pos_line = -2L;
@@ -3223,7 +3238,7 @@ static streng *getstatus( tsd_t *TSD, const streng *filename , int subcommand)
                   "%ld %ld %03o %d %s %s %ld",
                   (long)(buffer.st_dev), (long)(buffer.st_ino),
                   buffer.st_mode & 0x7f, buffer.st_nlink,
-#if defined(VMS) || defined(MAC) || defined(OS2) || defined(DOS) || defined (__WATCOMC__) || defined(_MSC_VER) || (defined(WIN32) && defined(__IBMC__)) || defined(_AMIGA) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__AROS__)
+#if defined(VMS) || defined(MAC) || defined(OS2) || defined(DOS) || defined (__WATCOMC__) || defined(_MSC_VER) || (defined(WIN32) && defined(__IBMC__)) || defined(_AMIGA) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__EPOC32__) || defined(__AROS__)
                   "USER", "GROUP",
 #else
                   getpwuid( buffer.st_uid )->pw_name,
@@ -3254,12 +3269,26 @@ static streng *getstatus( tsd_t *TSD, const streng *filename , int subcommand)
                }
 # endif
 #elif defined(HAVE__TRUENAME)
-               result = Str_makeTSD( _MAX_PATH ) ;
+               result = Str_makeTSD( REXX_PATH_MAX ) ;
                _truename(fn, result->value);
 #else
-               result = Str_makeTSD( 1024 ) ;
-               if (my_fullpath(result->value, fn, 1024) == -1)
+               result = Str_makeTSD( REXX_PATH_MAX ) ;
+               if (my_fullpath(result->value, fn, REXX_PATH_MAX) == -1)
                   result = nullstringptr() ;
+# if defined(__WINS__) || defined(__EPOC32__)
+               else
+               {
+                  /*
+                   * Convert / to \ as the API call doesn't do this for us
+                   */
+                  result->len = strlen( result->value ) ;
+                  for ( i=0; i < result->len; i++)
+                  {
+                     if ( result->value[i] == '/' )
+                        result->value[i] = '\\';
+                  }
+               }
+# endif
 #endif
             }
             break;
@@ -3415,11 +3444,11 @@ static streng *getquery( tsd_t *TSD, const streng *filename , const streng *subc
 {
    streng *result=NULL, *psub=NULL, *psubsub=NULL ;
    char oper = 0;
+   char seek_oper = 0;
 
    /*
     * Get the subcommand to QUERY
     */
-
    oper = get_querycommand( subcommand );
    switch ( oper )
    {
@@ -3434,9 +3463,15 @@ static streng *getquery( tsd_t *TSD, const streng *filename , const streng *subc
       case COMMAND_QUERY_SEEK :
       case COMMAND_QUERY_POSITION :
          if ( oper == COMMAND_QUERY_SEEK )
+         {
             psub = Str_nodupTSD( subcommand, 4, subcommand->len - 4 );
+            seek_oper = 1;
+         }
          else
+         {
             psub = Str_nodupTSD( subcommand, 8, subcommand->len - 8 );
+            seek_oper = 0;
+         }
          psub = Str_strp( psub, ' ', STRIP_LEADING);
          oper = get_querypositioncommand( psub );
          switch ( oper )
@@ -3446,6 +3481,7 @@ static streng *getquery( tsd_t *TSD, const streng *filename , const streng *subc
                break;
             case COMMAND_QUERY_POSITION_READ :
                psubsub = Str_nodupTSD( psub, 4, psub->len - 4 );
+               psubsub = Str_strp( psubsub, ' ', STRIP_LEADING);
                oper = get_querypositionreadcommand( psubsub );
                switch( oper )
                {
@@ -3454,12 +3490,13 @@ static streng *getquery( tsd_t *TSD, const streng *filename , const streng *subc
                      result = getstatus( TSD, filename, oper );
                      break;
                   default:
-                     exiterror( ERR_STREAM_COMMAND, 1, "QUERY POSITION READ", "CHAR LINE ''", tmpstr_of( TSD, psubsub ) )  ;
+                     exiterror( ERR_STREAM_COMMAND, 1, (seek_oper)?"QUERY SEEK READ":"QUERY POSITION READ", "CHAR LINE ''", tmpstr_of( TSD, psubsub ) )  ;
                      break;
                }
                break;
             case COMMAND_QUERY_POSITION_WRITE :
                psubsub = Str_nodupTSD( psub, 5, psub->len - 5 );
+               psubsub = Str_strp( psubsub, ' ', STRIP_LEADING);
                oper = get_querypositionwritecommand( psubsub );
                switch( oper )
                {
@@ -3468,12 +3505,12 @@ static streng *getquery( tsd_t *TSD, const streng *filename , const streng *subc
                      result = getstatus( TSD, filename, oper );
                      break;
                   default:
-                     exiterror( ERR_STREAM_COMMAND, 1, "QUERY POSITION WRITE", "CHAR LINE ''", tmpstr_of( TSD, psubsub ) )  ;
+                     exiterror( ERR_STREAM_COMMAND, 1, (seek_oper)?"QUERY SEEK WRITE":"QUERY POSITION WRITE", "CHAR LINE ''", tmpstr_of( TSD, psubsub ) )  ;
                      break;
                }
                break;
             default:
-               exiterror( ERR_STREAM_COMMAND, 1, "QUERY POSITION", "READ WRITE SYS", tmpstr_of( TSD, psub ) )  ;
+               exiterror( ERR_STREAM_COMMAND, 1, (seek_oper)?"QUERY SEEK":"QUERY POSITION", "READ WRITE SYS", tmpstr_of( TSD, psub ) )  ;
                break;
          }
          Free_stringTSD(psub);
@@ -3511,6 +3548,8 @@ static streng *getopen( tsd_t *TSD, const streng *filename , const streng *subco
             psub = Str_dupTSD( subcommand );
          psub = Str_strp( psub, ' ', STRIP_LEADING);
          oper = get_opencommandboth( psub );
+         if ( TSD->restricted )
+            exiterror( ERR_RESTRICTED, 4 )  ;
          switch ( oper )
          {
             case COMMAND_OPEN_BOTH :
@@ -3550,9 +3589,12 @@ static streng *getopen( tsd_t *TSD, const streng *filename , const streng *subco
          }
          break;
       case COMMAND_OPEN_WRITE :
+         if ( TSD->restricted )
+            exiterror( ERR_RESTRICTED, 4 )  ;
          psub = Str_nodupTSD( subcommand, 5, subcommand->len - 5 );
          psub = Str_strp( psub, ' ', STRIP_LEADING);
          oper = get_opencommandwrite( psub );
+
          switch ( oper )
          {
             case COMMAND_OPEN_WRITE :
@@ -3594,7 +3636,7 @@ static streng *getseek( tsd_t *TSD, const streng *filename, const streng *cmd )
 #define STATE_START 0
 #define STATE_WORD  1
 #define STATE_DELIM 2
-   char *word[4] = {NULL,NULL,NULL,NULL};
+   char *word[5] = {NULL,NULL,NULL,NULL};
    char *str;
    char *offset=NULL;
    int i,j=0;
@@ -3610,8 +3652,8 @@ static streng *getseek( tsd_t *TSD, const streng *filename, const streng *cmd )
    char buf[20];
 
    str = str_ofTSD(cmd);
-   words = 3;
-   for (i=0;i<Str_len(cmd) && j<words;i++)
+   words = 4;
+   for (i=0;i<Str_len(cmd);i++)
    {
       switch(state)
       {
@@ -3621,7 +3663,9 @@ static streng *getseek( tsd_t *TSD, const streng *filename, const streng *cmd )
                state = STATE_DELIM;
                break;
             }
-            word[j++] = str+str_start;
+            if ( j < 3 )
+               word[j] = str+str_start;
+            j++;
             if (str_end != (-1))
             {
                *(str+str_end) = '\0';
@@ -3645,7 +3689,9 @@ static streng *getseek( tsd_t *TSD, const streng *filename, const streng *cmd )
             }
             if (state == STATE_WORD)
             {
-               word[j++] = str+str_start;
+               if ( j < 3 )
+                  word[j] = str+str_start;
+               j++;
                if (str_end != (-1))
                {
                   *(str+str_end) = '\0';
@@ -3656,9 +3702,9 @@ static streng *getseek( tsd_t *TSD, const streng *filename, const streng *cmd )
    }
    num_params = j;
    if (num_params < 1)
-      exiterror( ERR_INCORRECT_CALL, 922, "STREAM", 3, 3, num_params );
+      exiterror( ERR_INCORRECT_CALL, 922, "STREAM", 3, 2, num_params+1 );
    if (num_params > 3)
-      exiterror( ERR_INCORRECT_CALL, 923, "STREAM", 3, 3, num_params );
+      exiterror( ERR_INCORRECT_CALL, 923, "STREAM", 3, 4, num_params+1 );
 
    switch( num_params )
    {
@@ -3675,7 +3721,7 @@ static streng *getseek( tsd_t *TSD, const streng *filename, const streng *cmd )
       /* meant to fall through */
       case 2:
          /*
-          * 2 params, last one (word[1]) could be READ/WRITE or CHAR/LINE
+          * 2 params(to SEEK), last one (word[1]) could be READ/WRITE or CHAR/LINE
           */
          if (strcmp(word[1],"READ") == 0)
             pos_type = OPER_READ;
@@ -3702,45 +3748,6 @@ static streng *getseek( tsd_t *TSD, const streng *filename, const streng *cmd )
             pos_type |= OPER_WRITE;
       }
    }
-#if 0
-   if (num_params == 3)
-   {
-      if (strcmp(word[2],"CHAR") == 0)
-         seek_on = 0;
-      else
-      {
-         if (strcmp(word[2],"LINE") == 0)
-            seek_on = 1;
-         else
-            exiterror( ERR_INCORRECT_CALL, 924, "STREAM", 3, "CHAR LINE", word[2] );
-      }
-   }
-   else if (num_params == 1)
-   {
-      ptr = getfileptr( filename ) ;
-      if ( ptr == NULL
-      ||   ptr->oper == OPER_NONE )
-         pos_type = OPER_READ;
-      else
-         pos_type = ptr->oper;
-   }
-   else
-   {
-      /*
-       * 2 params, last one (word[1]) could be READ/WRITE or CHAR/LINE
-       */
-      if (strcmp(word[1],"READ") == 0)
-         pos_type = OPER_READ;
-      else if (strcmp(word[1],"WRITE") == 0)
-         pos_type = OPER_WRITE;
-      else if (strcmp(word[1],"CHAR") == 0)
-         seek_on = 0;
-      else if (strcmp(word[1],"LINE") == 0)
-         seek_on = 1;
-      else
-         exiterror( ERR_INCORRECT_CALL, 924, "STREAM", 3, "READ WRITE CHAR LINE", word[1] );
-   }
-#endif
    offset = word[0];
    switch(*offset)
    {
@@ -3828,7 +3835,7 @@ streng *std_chars( tsd_t *TSD, cparamboxptr parms )
    checkparam(  parms,  0,  2 , "CHARS" ) ;
 
    if (parms&&parms->next&&parms->next->value)
-      opt = getoptionchar( TSD, parms->next->value, "CHARS", 2, "CN" ) ;
+      opt = getoptionchar( TSD, parms->next->value, "CHARS", 2, "CN", "" ) ;
 
    string = (parms->value && parms->value->len) ? parms->value : ft->stdio_ptr[0]->filename0 ;
    /*
@@ -3936,6 +3943,9 @@ streng *std_charout( tsd_t *TSD, cparamboxptr parms )
 
    ft = TSD->fil_tsd;
 
+   if ( TSD->restricted )
+      exiterror( ERR_RESTRICTED, 1, "CHAROUT" )  ;
+
    /* Syntax: charout([filename][,[string][,start]]) */
    checkparam(  parms,  0,  3 , "CHAROUT" ) ;
 
@@ -4011,7 +4021,7 @@ streng *std_lines( tsd_t *TSD, cparamboxptr parms )
    checkparam(  parms,  0,  2 , "LINES" ) ;
 
    if (parms&&parms->next&&parms->next->value)
-      opt = getoptionchar( TSD, parms->next->value, "LINES", 2, "CN" ) ;
+      opt = getoptionchar( TSD, parms->next->value, "LINES", 2, "CN", "" ) ;
 
    /*
     * Get the name of the file (use defaults if necessary), and get
@@ -4102,7 +4112,7 @@ streng *std_linein( tsd_t *TSD, cparamboxptr parms )
    {
       count = atozpos( TSD, parms->value, "LINEIN", 3 ) ;
       if (count!=0 && count!=1)
-         exiterror( ERR_STREAM_COMMAND, 2, "LINEIN", 3, tmpstr_of( TSD, parms->value ) )  ;
+         exiterror( ERR_INCORRECT_CALL, 39, "LINEIN", tmpstr_of( TSD, parms->value ) )  ;
    }
    else
       count = 1 ;  /* The default */
@@ -4126,7 +4136,7 @@ streng *std_linein( tsd_t *TSD, cparamboxptr parms )
     * but call flushing if line wasn't specified either.
     */
    if (count)
-      res = readoneline( TSD, ptr ) ;
+      res = readoneline( TSD, ptr, 0 ) ;
    else
    {
       if (!line)
@@ -4154,6 +4164,9 @@ streng *std_lineout( tsd_t *TSD, cparamboxptr parms )
    fil_tsd_t *ft;
 
    ft = TSD->fil_tsd;
+
+   if ( TSD->restricted )
+      exiterror( ERR_RESTRICTED, 1, "LINEOUT" )  ;
 
    /* Syntax: lineout([filename][,[string][,line]]) */
    checkparam(  parms,  0,  3 , "LINEOUT" ) ;
@@ -4209,7 +4222,7 @@ streng *std_lineout( tsd_t *TSD, cparamboxptr parms )
     * a linenumber, something magic may happen.
     */
    if (string)
-      result = writeoneline( TSD, ptr, string ) ;
+      result = writeoneline( TSD, ptr, string, 0 ) ;
    else
    {
       if (!lineno)
@@ -4251,7 +4264,7 @@ static int is_accessable( const tsd_t *TSD, const streng *filename, int mode )
    res=-1;
    Attrib=GetFileAttributes(fn);
    if (Attrib==(DWORD)-1)
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
    if ((Attrib&FILE_ATTRIBUTE_DIRECTORY)!=FILE_ATTRIBUTE_DIRECTORY)
    {
       if ((mode == COMMAND_READABLE) && ((Attrib&FILE_ATTRIBUTE_READONLY)==FILE_ATTRIBUTE_READONLY))
@@ -4268,7 +4281,7 @@ static int is_accessable( const tsd_t *TSD, const streng *filename, int mode )
    else if (mode == COMMAND_EXECUTABLE)
       res = access( fn, X_OK ) ;
    else
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 #endif
 
    /*
@@ -4345,7 +4358,7 @@ streng* std_stream( tsd_t *TSD, cparamboxptr parms )
     */
    parms = parms->next ;
    if (parms && parms->value)
-      oper = getoptionchar( TSD, parms->value, "STREAM", 2, "CSD" ) ;
+      oper = getoptionchar( TSD, parms->value, "STREAM", 2, "CSD", "" ) ;
    else
       oper = 'S' ;
 
@@ -4519,7 +4532,7 @@ streng* std_stream( tsd_t *TSD, cparamboxptr parms )
             {
                result = Str_creTSD( "ERROR" ) ;
             }
-#ifdef FGC /* really MH */
+#if 1 /* really MH */
             else if (ptr->flag & FLAG_AFTER_RDEOF)
             {
                result = Str_creTSD( "NOTREADY" ) ;
@@ -4541,7 +4554,7 @@ streng* std_stream( tsd_t *TSD, cparamboxptr parms )
          break ;
 
       default:
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
    }
 
    if (result==NULL)
@@ -4626,13 +4639,13 @@ streng *dbg_dumpfiles( tsd_t *TSD, cparamboxptr parms )
  * This should really go out .... We definitively don't want to do this.
  * we want to go through readoneline() for the default input stream.
  */
-#ifdef FGC /* really MH */
+#if 1 /* really MH */
 streng *readkbdline( tsd_t *TSD )
 {
    fil_tsd_t *ft;
 
    ft = TSD->fil_tsd;
-   return readoneline( TSD, ft->stdio_ptr[DEFAULT_STDIN_INDEX] );
+   return readoneline( TSD, ft->stdio_ptr[DEFAULT_STDIN_INDEX], 0 );
 }
 #else
 streng *readkbdline( const tsd_t *TSD )
@@ -4665,6 +4678,64 @@ streng *readkbdline( const tsd_t *TSD )
 }
 #endif
 
+void *addr_reopen_file( tsd_t *TSD, const streng *filename, char code )
+/* This is the open routine for the ADDRESS WITH-redirection. filename is
+ * the name of the file. code is either 'r' for "READ",
+ * 'A' for "WRITE APPEND", 'R' for "WRITE REPLACE". In case of READ
+ * already opened files will be reused. In case of APPEND or REPLACE the
+ * files are (re-)opened. An internal structure for files is returned and
+ * should be used for calls to addr_io_file.
+ * An already opened file for write can't be used. See J18PUB.pdf, 5.5.1.
+ * The return value may be NULL in case of an error. A NOTREADY condition
+ * may have been raised in this case.
+ */
+{
+   fileboxptr ptr ;
+
+   switch (code) {
+      case 'r':
+         ptr = get_file_ptr( TSD, filename, OPER_READ, ACCESS_READ ) ;
+         break;
+
+      case 'A':
+         closefile( TSD, filename ) ;
+         ptr = openfile( TSD, filename, ACCESS_STREAM_APPEND ) ;
+         break;
+
+      case 'R':
+         closefile( TSD, filename ) ;
+         ptr = openfile( TSD, filename, ACCESS_STREAM_REPLACE ) ;
+         break;
+
+      default:
+         ptr = NULL ;
+         break;
+   }
+
+   if ((ptr != NULL) && (ptr->fileptr == NULL))
+      ptr = NULL;
+
+   return( ptr ) ;
+}
+
+streng *addr_io_file( tsd_t *TSD, void *fileptr, const streng *line )
+/* This is the working routine for the ADDRESS WITH-redirection. fileptr is
+ * the return value of addr_reopen_file. line must be NULL for a read
+ * operation or a filled string.
+ * The return value is NULL in case of a write operation or in case of EOF
+ * while reading.
+ * A NOTREADY condition won't be raised.
+ */
+{
+   streng *retval = NULL ;
+
+   if (line == NULL)
+      retval = readoneline( TSD, fileptr, 1 ) ;
+   else
+      writeoneline( TSD, fileptr, line, 1 ) ;
+
+   return( retval ) ;
+}
 
 
 /*
@@ -4683,7 +4754,7 @@ streng *unx_open( tsd_t *TSD, cparamboxptr parms )
 
    if ((parms->next)&&(parms->next->value))
    {
-      ch = getoptionchar( TSD, parms->next->value, "OPEN", 2, "RW" ) ;
+      ch = getoptionchar( TSD, parms->next->value, "OPEN", 2, "RW", "" ) ;
       if ( ch == 'R' ) /* bja */
          iaccess = ACCESS_READ ;
       else if ( ch == 'W' ) /* bja */
@@ -4750,16 +4821,25 @@ streng *arexx_exists( tsd_t *TSD, cparamboxptr parms )
  * effect? */
 void get_external_routine(const tsd_t *TSD,const char *env, const char *inname, FILE **fp, char *retname, int startup)
 {
-   static const char *extensions[] = {"",".rexx",".rex",".cmd",NULL};
+   static const char *extensions[] = {"",".rexx",".rex",".cmd",".rx",NULL};
    char *env_path;
    char *paths = NULL;
-   char outname[1024];
-   char buf[2048];
+   char outname[REXX_PATH_MAX+1];
+   char buf[REXX_PATH_MAX+1];
    int i = 0;
+   int start_ext;
 
+   /*
+    * If we are searching PATH for Rexx programs, don't look for files
+    * without an extension.
+    */
+   if ( strcmp( env, "PATH" ) == 0 )
+      start_ext = 1;
+   else
+      start_ext = 0;
    env_path = mygetenv( TSD, env, buf, sizeof(buf) );
    outname[0] = '\0';
-   for (i=0;extensions[i]!=NULL && *fp == NULL;i++)
+   for (i=start_ext;extensions[i]!=NULL && *fp == NULL;i++)
    {
       /*
        * Try the filename without any path first
@@ -4780,7 +4860,7 @@ void get_external_routine(const tsd_t *TSD,const char *env, const char *inname, 
 #elif defined(HAVE__TRUENAME)
             _truename(outname, retname);
 #else
-            if (my_fullpath(retname, outname, 1024) == -1)
+            if (my_fullpath(retname, outname, REXX_PATH_MAX) == -1)
                retname[0] = '\0';
 #endif
          }
@@ -4821,7 +4901,7 @@ void get_external_routine(const tsd_t *TSD,const char *env, const char *inname, 
 #elif defined(HAVE__TRUENAME)
                _truename(outname, retname);
 #else
-               if (my_fullpath(retname, outname, 1024) == -1)
+               if (my_fullpath(retname, outname, REXX_PATH_MAX) == -1)
                   retname[0] = '\0';
 #endif
             }
@@ -4836,8 +4916,8 @@ void get_external_routine(const tsd_t *TSD,const char *env, const char *inname, 
 void find_shared_library(const tsd_t *TSD, const char *inname, const char *inenv, char *retname)
 {
    char *paths = NULL;
-   char outname[1024];
-   char buf[2048];
+   char outname[REXX_PATH_MAX+1];
+   char buf[REXX_PATH_MAX+1];
    char *env_path;
 
    env_path = mygetenv( TSD, inenv, buf, sizeof(buf) );
@@ -4929,24 +5009,24 @@ int my_fullpath( char *dst, const char *src, int size )
 
 int my_fullpath( char *dst, const char *src, int size )
 {
-   char tmp[1024];
-   char curr_path[1024];
-   char path[1024];
-   char fname[1024];
+   char tmp[REXX_PATH_MAX+1];
+   char curr_path[REXX_PATH_MAX+1];
+   char path[REXX_PATH_MAX+1];
+   char fname[REXX_PATH_MAX+1];
    int i = 0, len = -1;
    struct stat stat_buf;
 
 # ifdef __EMX__
-   _getcwd2(curr_path,1024);
+   _getcwd2(curr_path,REXX_PATH_MAX);
 # else
-   getcwd(curr_path,1024);
+   getcwd(curr_path,REXX_PATH_MAX);
 # endif
 
    strcpy(tmp,src);
    /*
     * First determine if the supplied filename is a directory.
     */
-# if defined(__EMX__) || defined(DJGPP)
+# if defined(__EMX__) || defined(DJGPP) || defined(__WINS__) || defined(__EPOC32__)
    for ( i = 0; i < strlen( tmp ); i++ )
       if ( tmp[ i ] == '\\' )
          tmp[ i ] = '/';
@@ -4971,9 +5051,9 @@ int my_fullpath( char *dst, const char *src, int size )
       {
          case (-1):
 # ifdef __EMX__
-            _getcwd2(path,1024);
+            _getcwd2(path,REXX_PATH_MAX);
 # else
-            getcwd(path,1024);
+            getcwd(path,REXX_PATH_MAX);
 # endif
             strcpy(fname,tmp);
             break;
@@ -5000,7 +5080,7 @@ int my_fullpath( char *dst, const char *src, int size )
       _chdir2(curr_path);
       return(-1);
    }
-   _getcwd2(path,1024);
+   _getcwd2(path,REXX_PATH_MAX);
    _chdir2(curr_path);
 # else
    if (chdir(path) != 0)
@@ -5008,7 +5088,7 @@ int my_fullpath( char *dst, const char *src, int size )
       chdir(curr_path);
       return(-1);
    }
-   getcwd(path,1024);
+   getcwd(path,REXX_PATH_MAX);
    chdir(curr_path);
 # endif
    /*
@@ -5018,13 +5098,17 @@ int my_fullpath( char *dst, const char *src, int size )
    len = strlen(path);
    if (len > 0)
    {
+# if defined(__WINS__) || defined(__EPOC32__)
+      if ( path[ len - 1 ] != '\\'
+#else
       if ( path[ len - 1 ] != '/'
+#endif
       &&  strlen( fname ) != 0 )
       {
          strcat(path,"/");
          len++;
       }
-# if defined(__EMX__) || defined(DJGPP)
+# if defined(__EMX__) || defined(DJGPP) || defined(__WINS__) || defined(__EPOC32__)
       for ( i = 0; i < len; i++ )
          if ( path[ i ] == '/' )
             path[ i ] = '\\';

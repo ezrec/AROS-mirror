@@ -37,33 +37,19 @@ static char *RCSid = "$Id$";
 #endif
 
 #include "rexx.h"
-#include <limits.h>
+/*#include <limits.h> */
 #include <stdio.h>
-#if defined(VMS) || defined(MAC)
-# include <time.h>
-#elif defined(__AROS__)
-# include <time.h>
-# include <unistd.h>
-#else
-# ifdef HAVE_UNISTD_H
-#  include <unistd.h>
-# endif
-# if (defined(__WATCOMC__) && !defined(__QNX__)) || defined(_MSC_VER) || defined(__MINGW32__) || defined(__BORLANDC__)         /* MH 10-06-96 */
-#  include <process.h>                                  /* MH 10-06-96 */
-# else                                                  /* MH 10-06-96 */
-#  include <sys/wait.h>                                 /* MH 10-06-96 */
-#  include <sys/time.h>                                 /* MH 10-06-96 */
-# endif                                                 /* MH 10-06-96 */
-# include <fcntl.h>
-#endif
 
 #include <string.h>
-#include <ctype.h>
+#include <signal.h>
+/* #include <ctype.h>   */
 #include <errno.h>
 #ifdef HAVE_ASSERT_H
 # include <assert.h>
 #endif
-#include <signal.h>
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 
 #if defined(VMS)
 # define fork() vfork()
@@ -73,22 +59,35 @@ static char *RCSid = "$Id$";
 # define posix_do_command __regina_vms_do_command
 #endif
 
-#if defined(DOS) || defined(MAC) || (defined(__WATCOMC__) && !defined(__QNX__)) || defined(_MSC_VER) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(_AMIGA) || defined(__AROS__) /* MH 10-06-96 */
-# ifdef  posix_do_command
-#  undef posix_do_command
-# endif
-# define posix_do_command __regina_dos_do_command
+#if defined(__WINS__) || defined(__EPOC32__)
+# define REGINA_MAX_BUFFER_LENGTH 256
+#else
+# define REGINA_MAX_BUFFER_LENGTH 4096
 #endif
+
+#define STD_IO    0x00
+#define simQUEUE  0x01
+#define simLIFO   0x02
+#define simFIFO   0x04
+#define STREAM    0x08
+#define STEM      0x10
+#define STRING    0x20
+#define QUEUE     0x40
+#define LIFO      0x80
+#define FIFO      0x100
 
 #if defined(_POSIX_PIPE_BUF) && !defined(PIPE_BUF)
 # define PIPE_BUF _POSIX_PIPE_BUF
 #endif
 
 typedef struct { /* shl_tsd: static variables of this module (thread-safe) */
-   char *cbuff ;
-   int   child ;
-   int   status ;
-   int   running ;
+   char         *cbuff ;
+   int           child ;
+   int           status ;
+   int           running ;
+   void         *AsyncInfo ;
+   unsigned char IObuf[4096]; /* write cache */
+   unsigned      IOBused;
 } shl_tsd_t; /* thread-specific but only needed by this module. see
               * init_shell
               */
@@ -110,852 +109,904 @@ int init_shell( tsd_t *TSD )
    return(1);
 }
 
-
-static int getenvir( const streng *envir )
+const streng *stem_access( tsd_t *TSD, environpart *e, int pos,
+                                                           const streng *value)
+/* puts e->name+"."+itoa(pos) to e->currname and accesses this variable.
+ * value is NULL to access the current value or non-NULL to set the new value.
+ * The return value is NULL if a new value is set or the old one.
+ */
 {
-   if (envir->len==4 && !strncmp( envir->value, "PATH", 4 ))
-      return SUBENVIR_PATH ;
-   else if (envir->len==3 && !strncmp( envir->value, "CMD", 3 ))
-      return SUBENVIR_COMMAND ;
-   else if (envir->len==7 && !strncmp( envir->value, "COMMAND", 7 ))
-      return SUBENVIR_COMMAND ;
+   int stemlen, leaflen ;
+
+   stemlen = Str_len( e->name ) ;
+   leaflen = sprintf( e->currname->value + stemlen, "%d", pos ) ;
+
+   e->currname->len = stemlen + leaflen ;
+
+   if (value == NULL)
+#ifndef NON_ANSI_BEFORE_NOV_2001
+      return( get_it_anyway_compound( TSD, e->currname ) ) ;
+#else
+      return( getdirvalue_compound( TSD, e->currname ) ) ;
+#endif
+
+   setdirvalue_compound( TSD, e->currname, Str_dupTSD( value ) ) ;
+   return( NULL ) ;
+}
+
+void open_env_io( tsd_t *TSD, environpart *e )
+/* Prepares the WITH-IO-redirection from envpart and sets *flag to either
+ * STREAM or STEM. Nothing happens if there isn't a redirection.
+ */
+{
+   const streng *h ;
+   int error ;
+   char code ;
+
+   e->SameAsOutput = 0;
+   e->FileRedirected = 0;
+   e->tempname = NULL ; /* none as default, might become char* RedirTempFile */
+   e->type = STD_IO ;
+   e->hdls[0] = e->hdls[1] = -1 ;
+
+   if (e->name == NULL)
+      return ;
+
+   switch (e->flags.awt) {
+      case isSTREAM:
+         /*
+          * For a STREAM input/output redirection, set the file reopen
+          * flag, and reopen the file.
+          */
+         e->type = STREAM ;
+         if (e->flags.isinput)
+            code = 'r' ;
+         else if (e->flags.append)
+            code = 'A' ;
+         else /* REPLACE */
+            code = 'R' ;
+         e->file = addr_reopen_file( TSD, get_it_anyway( TSD, e->name ), code ) ;
+         break;
+
+      case isSTEM:
+         /*
+          * For a STEM input/output redirection, check that existing state of
+          * the stem if appropriate and initialise the stem
+          */
+         e->type  = STEM ;
+
+         if (e->flags.isinput || e->flags.append)
+         {
+            /*
+             * For a STEM input redirection, the stem must already exist and be
+             * a valid Rexx "array". This happens to an existing output stem in
+             * the append mode, too.
+             */
+            h = stem_access( TSD, e, 0, NULL ) ;
+            /* h must be a whole positive number */
+            e->maxnum = streng_to_int( TSD, h, &error ) ;
+            if (error || (e->maxnum < 0))
+               exiterror( ERR_INVALID_STEM_OPTION, /* needs stem.0 and      */
+                          1,                       /* (stem.0) as arguments */
+                          tmpstr_of( TSD, e->currname ),
+                          tmpstr_of( TSD, h ) )  ;
+            e->currnum = (e->flags.isinput) ? 1 : e->maxnum + 1;
+         }
+         else /* must be REPLACE */
+         {
+            e->maxnum = 0 ;
+            e->currnum = 1 ;
+            e->base->value[0] = '0' ;
+            e->base->len = 1 ;
+            stem_access( TSD, e, 0, e->base ) ;
+         }
+         break;
+
+      case isLIFO:
+         if (Str_len(e->name) == 0)
+         {
+            if (e->flags.isinput)
+               e->type = QUEUE;
+            else
+               e->type = LIFO;
+            break;
+         }
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "LIFO isn't implemented yet" )  ;
+         break;
+
+      case isFIFO:
+         if (Str_len(e->name) == 0)
+         {
+            if (e->flags.isinput)
+               e->type = QUEUE;
+            else
+               e->type = FIFO;
+            break;
+         }
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "FIFO isn't implemented yet" )  ;
+         break;
+
+      default:
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "Illegal address code in open_env_io()" )  ;
+   }
+}
+
+void put_stem( tsd_t *TSD, environpart *e, streng *str )
+/* Adds one line to the stem specified in e. */
+{
+   /*
+    * FGC: 2 lines commented on 27.02.2002 17:08:46 FIXME
+    * const streng *h;
+    * int dummy;
+    */
+
+   e->maxnum = e->currnum ;
+   e->currnum++ ;
+
+   /* FGC: FIXME: Do we still need the following two lines?
+    * Needed by doscmd.c?
+    */
+   /*
+    * FGC: 2 lines commented on 27.02.2002 17:08:46 FIXME
+    * h = stem_access( TSD, e, 0, NULL ) ;
+    * e->maxnum = e->currnum = streng_to_int( TSD, h, &dummy ) + 1 ;
+    */
+   e->base->len = sprintf( e->base->value, "%d", e->maxnum ) ;
+   stem_access( TSD, e, 0, e->base ) ;
+   stem_access( TSD, e, e->maxnum, str ) ;
+}
+
+static int write_buffered(const tsd_t *TSD, int hdl, const void *buf,
+                                               unsigned size, void *async_info)
+{
+   int rc, done;
+   unsigned todo;
+   shl_tsd_t *st = TSD->shl_tsd;
+
+   if ((buf == NULL) || (size == 0)) /* force flush buffers */
+   {
+      if (st->IOBused)
+         rc = __regina_write(hdl, st->IObuf, st->IOBused, async_info);
+      else
+         rc = 0;
+      if (rc >= 0)
+         rc = __regina_write(hdl, NULL, 0, async_info);
+      else
+         __regina_write(hdl, NULL, 0, async_info);
+      return(rc);
+   }
+
+   done = 0;
+   while (size) {
+      todo = size;
+      if (todo > sizeof(st->IObuf) - st->IOBused)
+         todo = sizeof(st->IObuf) - st->IOBused;
+      if (todo > 0)
+      {
+         memcpy(st->IObuf + st->IOBused, buf, todo);
+         st->IOBused += todo;
+      }
+
+      done += todo;
+      if (st->IOBused < sizeof(st->IObuf))
+         return(done);
+
+      /* buffer full */
+      rc = __regina_write(hdl, st->IObuf, st->IOBused, async_info);
+      if (rc <= 0)
+      {
+         if (done)
+            break; /* something done sucessfully */
+         return(rc);
+      }
+      if (rc == (int) st->IOBused)
+         st->IOBused = 0;
+      else
+      {
+         memmove(st->IObuf, st->IObuf + rc, st->IOBused - rc);
+         st->IOBused -= rc;
+      }
+
+      buf = (const char *) buf + todo;
+      size -= todo;
+   }
+
+   return(done); /* something done sucessfully */
+}
+
+static int feed( const tsd_t *TSD, streng **string, int hdl, void *async_info )
+/* Writes the content of *string into the file associated with hdl. The
+ * string is shortened and, after the final write, deleted and *string set
+ * to NULL.
+ * async_info is both a structure and a flag. If set, asynchronous IO shall
+ * be used, otherwise blocked IO has to be used.
+ * feed returns 0 on success or an errno value on error.
+ * A return value of EAGAIN is set if we have to wait.
+ */
+{
+   unsigned total ;
+   int done ;
+
+   if ((string == NULL) || (*string == NULL))
+      return( 0 ) ;
+
+   total = Str_len( *string ) ;
+   if (total == 0)
+      return( 0 ) ;
+
+   done = write_buffered(TSD, hdl, (*string)->value, total, async_info);
+   if (done <= 0)
+   {
+      if (done == 0)      /* no error set? */
+         done = ENOSPC ;  /* good assumption */
+      else
+         done = -done;
+      if ((done != EAGAIN) && (done != EPIPE))
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, strerror(done) )  ;
+      return( done ) ; /* error */
+   }
+
+   if ((unsigned) done < total)
+   {
+      (*string)->len -= done ;
+      memmove((*string)->value, (*string)->value + done, (*string)->len);
+   }
    else
-      return SUBENVIR_SYSTEM ;
+   {
+      assert((unsigned)done==total);
+      Free_stringTSD(*string);
+      *string = NULL;
+   }
+   return(0);
 }
 
-static char **makeargs( const tsd_t *TSD, const char *string )
+static int reap( const tsd_t *TSD, streng **string, int hdl, void *async_info )
+/* Reads data from the file associated with hdl and returns it in *string.
+ * *string may be NULL or valid, in which case it is expanded.
+ * reap returns 0 on success or an errno value on error. The value -1 indicates
+ * EOF.
+ * async_info is both a structure and a flag. If set, asynchronous IO shall
+ * be used, otherwise blocked IO has to be used.
+ * A maximum chunk of REGINA_MAX_BUFFER_LENGTH (usually 4096) bytes is read in one operation.
+ * A return value of EAGAIN is set if we have to wait.
+ */
 {
-   int i, words = 0, j, k ;
-   char **ccptr ;
-   size_t len = strlen(string);
+   char buf[REGINA_MAX_BUFFER_LENGTH] ;
+   unsigned len, total ;
+   streng *s ;
+   int done ;
 
-   if ( len == 0 )
-      return NULL;
-   for (i=0; i<len; i++)
+   if (string == NULL)
+      return( 0 ) ;
+
+   done = __regina_read( hdl, buf, sizeof(buf), async_info ) ;
+   if (done <= 0)
    {
-      words += ((isgraph(string[i])) &&
-                (i>=(len-1) || !isgraph(string[i+1]))) ;
+      if (done == 0)
+         return( -1 ); /* EOF */
+      else
+         done = -done;
+      /* FGC, FIXME: Not sure, this is the right processing. Setting RS, etc? */
+      if ( done != EAGAIN )
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, strerror(done) )  ;
+      return( done ) ; /* error */
    }
 
-   ccptr = MallocTSD((words+2)*sizeof(char*)) ;
-   for (j=1,i=0; j<=words; j++)
+   if (( s = *string ) == NULL)
    {
-      for(k=i; i<len && isgraph(string[i]); i++) ;
-      strncpy(ccptr[j]=MallocTSD(i-k+1),&string[k],i-k) ;
-      (ccptr[j])[i-k] = 0x00 ;
-      for (; i<len &&(!isgraph(string[i])); i++) ;
-   }
-   ccptr[j] = NULL ;
-
-   ccptr[0] = ccptr[1] ;
-   for (i=strlen(ccptr[0])-1; (i>=0)&&((ccptr[0])[i]!='/'); i--) ;
-   strcpy( ccptr[1]=MallocTSD(strlen(&((ccptr[0])[i+1]))+1), &(ccptr[0])[i+1]) ;
-
-   return ccptr ;
-}
-
-static void destroyargs( const tsd_t *TSD, char **args )
-{
-   char **ccptr=NULL ;
-
-   ccptr = args ;
-   for (; *ccptr; ccptr++)
-      FreeTSD( *ccptr ) ;
-
-   FreeTSD( args ) ;
-}
-
-#if defined(__QNX__) || (!defined(MAC) && !defined(VMS) && !defined(DOS) && !defined(WIN32) && !defined(__WATCOMC__) && !defined(_MSC_VER) && !defined(_AMIGA) && !defined(__AROS__))
-int posix_do_command( tsd_t *TSD, const streng *command, int io_flags, int envir )
-{
-   char **args ;
-   int child, rc, i, fdin[2], fdout[2] ;
-   char *cmd, *cmdline ;
-   int in, out, fout ;
-   streng *string = NULL;
-   streng *istring = NULL;
-   int pipe_buf = 0;
-   int length, rcode, j, flush, status ;
-   streng *result ;
-   char flags=' ' ;
-   int count ;
-   shl_tsd_t *st;
-
-   st = TSD->shl_tsd;
-
-   in = io_flags & REDIR_INPUT ;
-   out = io_flags & REDIR_OUTLIFO ;
-   fout = io_flags & REDIR_OUTFIFO ;
-
-   cmdline = str_ofTSD( command ) ;
-   flush = (out!=0) + ((fout!=0)*2) ;
-
-   if ((!in)&&(!out)&&(!fout))
-   {
-      ;       /* maybe this should not be allowed. ... */
-   }
-
-   cmd = NULL ;
-   if (envir != SUBENVIR_SYSTEM
-   && strlen(cmdline))
-   {
-      args = makeargs( TSD, cmdline ) ;
-      cmd = *args ;
+      len = 0 ;
+      s = Str_makeTSD( done ) ;
    }
    else
-      args = NULL ;
+   {
+      len = Str_len( s ) ;
+      total = Str_max( s ) ;
+      if (len + done > total)
+      {
+         s = Str_makeTSD( len + done ) ;
+         s->len = len ;
+         memcpy( s->value, (*string)->value, len ) ;
+         Free_stringTSD( *string ) ;
+      }
+   }
+   memcpy( s->value + len, buf, done ) ;
+   s->len += done ;
+   *string = s ;
+   return( 0 ) ;
+}
+
+void cleanup_envirpart(const tsd_t *TSD, environpart *ep)
+/* Closes the associated file handles of ep and deletes a temporary file
+ * if necessary.
+ */
+{
+   shl_tsd_t *st = TSD->shl_tsd;
+
+   if (ep->hdls[0] != -1)
+   {
+      __regina_close(ep->hdls[0], (ep->FileRedirected) ? NULL : st->AsyncInfo);
+      ep->hdls[0] = -1;
+   }
+   if (ep->hdls[1] != -1)
+   {
+      __regina_close(ep->hdls[1], (ep->FileRedirected) ? NULL : st->AsyncInfo);
+      ep->hdls[1] = -1;
+   }
+   if (ep->tempname)
+   {
+      unlink(ep->tempname);
+      FreeTSD(ep->tempname);
+      ep->tempname = NULL;
+   }
+}
+
+static void cleanup( tsd_t *TSD, environment *env )
+/* Closes all open handles in env and deletes temporary files. Already closed
+ * handles are marked by a value of -1.
+ * -1 is set to each handle after closing.
+ */
+{
+   shl_tsd_t *st = TSD->shl_tsd;
+
+   cleanup_envirpart(TSD, &env->input);
+   cleanup_envirpart(TSD, &env->output);
+   cleanup_envirpart(TSD, &env->error);
+   purge_input_queue(TSD);
+
+   if (st->AsyncInfo)
+      delete_async_info(st->AsyncInfo);
+   st->AsyncInfo = NULL;
+   st->IOBused = 0;
+}
+
+static int setup_io( tsd_t *TSD, int io_flags, environment *env )
+/* Sets up the IO-redirections based on the values in io_flags and env.
+ * Each environpart (env->input, env->output, env->error) is set up as follows:
+ * a) The enviroment-based streams and stems are set up if used or not.
+ *    env->input.type (or output or error) is set to STREAM, STEM or STD_IO.
+ * b) The io_flags overwrite the different settings and may have
+ *    values QUEUE, simLIFO, simFIFO.
+ * c) If a redirection takes place (type != STD_IO) a pipe() or temporary
+ *    file is opened and used.
+ * This function returns 1 on success, 0 on error, in which case an error is
+ * already reported..
+ */
+{
+   shl_tsd_t *st = TSD->shl_tsd;
+
+   cleanup( TSD, env ); /* Useful in case of an undetected previous error */
+
+   /*
+    * Determine which ANSI redirections are in effect
+    */
+   open_env_io( TSD, &env->input ) ;
+   open_env_io( TSD, &env->output ) ;
+   open_env_io( TSD, &env->error ) ;
+
+   if ((env->output.type == STEM) && (env->error.type == STEM))
+   {
+      /* env->output.name and env->error.name must exist here
+       *
+       * We have to take special care if output and error are
+       * redirected to the same stem. We neither want to overwrite
+       * stem values twice nor want to read "stem.0" for every
+       * stem on every access to prevent it.
+       */
+      if (Str_ccmp(env->output.name, env->error.name) == 0)
+      {
+         env->error.SameAsOutput = 1;
+         if (env->error.maxnum == 0)
+         {
+            /* error may has the REPLACE option while output has not.
+             * Force a silent replace in this case.
+             */
+            env->output.maxnum = 0;
+            env->output.currnum = 1 ;
+         }
+      }
+   }
+
+   if (env->input.type == STEM)
+   {
+      /* Same procedure. To prevent overwriting variables while
+       * outputting to a stem wherefrom we have to read, buffer
+       * the input stem of the names do overlap.
+       */
+
+      if ((env->output.type == STEM) &&
+          (Str_ccmp(env->input.name, env->output.name) == 0))
+         env->input.SameAsOutput = 1;
+
+      if ((env->error.type == STEM) &&
+          (Str_ccmp(env->input.name, env->error.name) == 0))
+         env->input.SameAsOutput = 1;
+
+      if (env->input.SameAsOutput)
+         fill_input_queue(TSD, env->input.name, env->input.maxnum);
+   }
+   /*
+    * Override any Regina redirections
+    */
+   if (io_flags & REDIR_INPUT)
+      env->input.type = QUEUE ;
+   if (io_flags & REDIR_OUTLIFO)
+      env->output.type  = simLIFO ;
+   else if (io_flags & REDIR_OUTFIFO)
+      env->output.type = simFIFO ;
+   else if (io_flags & REDIR_OUTSTRING)
+      env->output.type = STRING ;
+
+   if (env->input.type != STD_IO)
+   {
+      if (open_subprocess_connection(TSD, &env->input) != 0)
+      {
+         cleanup( TSD, env ) ;
+         exiterror( ERR_SYSTEM_FAILURE, 920, "creating redirection", "for input", strerror(errno) )  ;
+         return( 0 ) ;
+      }
+   }
+   if (env->output.type != STD_IO)
+   {
+      if (open_subprocess_connection(TSD, &env->output) != 0)
+      {
+         cleanup( TSD, env ) ;
+         exiterror( ERR_SYSTEM_FAILURE, 920, "creating redirection", "for output", strerror(errno) )  ;
+         return( 0 ) ;
+      }
+   }
+   else
+      fflush(stdout);
+   if (env->error.type != STD_IO)
+   {
+      if (open_subprocess_connection(TSD, &env->error) != 0)
+      {
+         cleanup( TSD, env ) ;
+         exiterror( ERR_SYSTEM_FAILURE, 920, "creating redirection", "for error", strerror(errno) )  ;
+         return( 0 ) ;
+      }
+   }
+   else
+      fflush(stderr);
+   st->AsyncInfo = create_async_info(TSD);
+   return( 1 ) ;
+}
+
+static streng *fetch_food( tsd_t *TSD, environment *env )
+/* returns one streng fetched either from a queue (env->input.type == QUEUE) or
+ * from a stem or stream.
+ * Returns NULL if there is no more input to feed the child process.
+ */
+{
+   const streng *c ;
+   streng *retval ;
+   int delflag = 0 ;
+
+   switch (env->input.type)
+   {
+      case QUEUE:
+         if (stack_empty( TSD ))
+            return( NULL ) ;
+         delflag = 1 ;
+         c = popline( TSD, NULL, NULL, 0 ) ;
+         break;
+
+      case STREAM:
+         if (env->input.file == NULL)
+            return( NULL ) ;
+         delflag = 1 ;
+         c = addr_io_file( TSD, env->input.file, NULL ) ;
+         if (!c)
+            return( NULL ) ;
+         break;
+
+      case STEM:
+         if (!env->input.SameAsOutput)
+         {
+            if (env->input.currnum > env->input.maxnum)
+               return( NULL ) ;
+            c = stem_access( TSD, &env->input, env->input.currnum++, NULL ) ;
+         }
+         else
+         {
+            delflag = 1 ;
+            c = get_input_queue( TSD ) ;
+         }
+         if (!c)
+            return( NULL ) ;
+         break;
+
+      default:
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "Illegal feeder in fetch_food()" )  ;
+         return( NULL ) ;
+         break ;
+   }
+
+   /* Append a newline to the end of the line before returning */
+   retval = Str_makeTSD( c->len + 1 ) ;
+   memcpy(retval->value, c->value, c->len);
+   retval->value[c->len] = REGINA_EOL;
+   retval->len = c->len + 1;
+   if (delflag)
+      Free_stringTSD( (streng *) c ) ;
+   return( retval ) ;
+}
+
+static void drop_crop_line( tsd_t *TSD, environment *env, const char *data,
+                                                unsigned length, int is_error )
+/* Called while reading the output of the child. The output is in data and
+ * contains length bytes without the line terminator.
+ * which may be empty or not yet completed. The exact destination is determined
+ * by env->x.type, where x is either output or error depending on is_error.
+ * type may have one of the values simLIFO, simFIFO, STRING, STREAM or STEM.
+ * is_error is set if the error redirection should happen.
+ */
+{
+   streng *string ;
+   int type;
+
+   string = Str_makeTSD( length + 1 ) ; /* We need a terminating 0 in some */
+                                        /* cases                           */
+   memcpy( string->value, data, length ) ;
+   string->len = length ;
+   string->value[length] = '\0' ;
+
+   if (is_error)
+      type = env->error.type;
+   else
+      type = env->output.type;
+
+   switch (type)
+   {
+      case simLIFO:
+         tmp_stack(TSD, string, 0 ) ;
+         return;  /* consumes the new string */
+
+      case simFIFO:
+      case STRING:
+         tmp_stack(TSD, string, 1 ) ;
+         return;  /* consumes the new string */
+
+      case STREAM:
+         if (is_error)
+         {
+            if (env->error.file)
+               addr_io_file( TSD, env->error.file, string ) ;
+         }
+         else
+         {
+            if (env->output.file)
+               addr_io_file( TSD, env->output.file, string ) ;
+         }
+         break;
+
+      case STEM:
+         if (is_error && !env->error.SameAsOutput)
+            put_stem( TSD, &env->error, string ) ;
+         else
+            put_stem( TSD, &env->output, string ) ;
+         return;  /* consumes the new string */
+
+      default:
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "Illegal crop in drop_crop_line()" )  ;
+         break ;
+   }
+
+   Free_stringTSD( string ) ;
+}
+
+static void drop_crop( tsd_t *TSD, environment *env, streng **string,
+                                                  int EOFreached, int is_error)
+/* Called while reading the output of the child. The output is in *string,
+ * which may be empty or not yet completed. The exact destination is determined
+ * by env->x.type, where x is either output or error depending on is_error.
+ * type may have one of the values simLIFO, simFIFO, STRING, STREAM or STEM.
+ * If EOFreached is set and some data is in *string, this data is interpreted
+ * as a completed line.
+ * Completed lines are cut of the string. The string itself isn't deleted.
+ * is_error is set if the error redirection should happen.
+ */
+{
+   streng *s ;
+   char *ptr ;
+   char *ccr, *clf ;
+   int len=0, max, found, termlen=0 ;
+
+
+   s = *string;
+   if (s == NULL) /* might happen on a first call */
+      return;
+
+   ptr = s->value ;
+   max = Str_len( s ) ;
+
+   for (;;)
+   {
+      /* We have to find the line end. This is painful because we don't
+       * know the used line style. Allow '\r', '\n', "\r\n" ,and "\n\r".
+       */
+      /* memchr calling twice is much faster than a locally defined loop */
+      ccr = memchr( ptr, '\r', max ) ;
+      clf = memchr( ptr, '\n', max ) ;
+      found = 0 ;
+      if (ccr)
+      {
+         if (clf == ccr + 1)
+         {
+            len = ccr - ptr ;
+            termlen = 2 ;
+            found = 1 ;
+         }
+         else if (ccr == clf + 1)
+         {
+            len = clf - ptr ;
+            termlen = 2 ;
+            found = 1 ;
+         }
+         else /* '\r' found, but we must know if it terminates */
+         {
+            len = ccr - ptr ;
+            if ((len < max) || EOFreached)
+            {
+               termlen = 1 ;
+               found = 1 ;
+            }
+         }
+      }
+      else if (clf) /* simple line feed */
+      {
+         len = clf - ptr ;
+         if ((len < max) || EOFreached)
+         {
+            termlen = 1 ;
+            found = 1 ;
+         }
+      }
+      else if (EOFreached)
+      {
+         len = max ;
+         termlen = 0 ;
+         if (len)
+            found = 1;
+      }
+      if (!found)
+         break;
+
+      drop_crop_line( TSD, env, ptr, (unsigned) len, is_error ) ;
+      len += termlen ;
+      max -= len ;
+
+      memcpy( s->value, s->value + len, max ) ;
+   }
+   s->len = max ;
+   *string = s ;
+}
+
+int posix_do_command( tsd_t *TSD, const streng *command, int io_flags, environment *env )
+{
+   int child, rc ;
+   int in, out, err;
+   streng *istring = NULL, *ostring = NULL, *estring = NULL ;
+   char *cmdline ;
+   shl_tsd_t *st = TSD->shl_tsd;
 
    fflush( stdout ) ;
    fflush( stderr ) ;
 
-   if ((in)&&(pipe( fdin )))     /* for info from stack to child */
-      perror("While opening input pipe") ;
+   if (!setup_io(TSD, io_flags, env))
+      exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
 
-   if (((out)||(fout))&&(pipe( fdout )))   /* for info from child to stack */
-      perror("While opening output pipe") ;
-
-   if ((child=fork()))
+   if (env->input.FileRedirected)
    {
-      regina_signal( SIGPIPE, SIG_IGN ) ;
+      /* fill up the input file without closing the stream. */
 
-      if (out || fout)
-      {
-#if defined(PIPE_BUF)
-         pipe_buf = PIPE_BUF ;
-#else
-# ifndef _PC_PIPE_BUF
-         /* Some vendors just don't get it right ... sigh! The number */
-         /* 512 is my 'invention' ... it might not be what you want */
-         pipe_buf = 512 ;
-# else
-         pipe_buf = fpathconf( fdout[0], _PC_PIPE_BUF ) ;
-         assert( pipe_buf > 0 ) ;
-# endif
+      while ((istring = fetch_food(TSD, env)) != NULL) {
+         if (feed(TSD, &istring, env->input.hdls[1], NULL) != 0)
+            break; /* shall not happen! */
+      }
+      /* seek positions of both fdin may have been destroyed */
+      restart_file(env->input.hdls[0]);
+      __regina_close(env->input.hdls[1], NULL);
+      env->input.hdls[1] = -1;
+   }
+
+   cmdline = str_ofTSD( command ) ;
+   child = fork_exec(TSD, env, cmdline);
+   FreeTSD( cmdline ) ;
+   if ((child == -1) || (child == -2))
+   {
+      cleanup( TSD, env ) ;
+      exiterror( ERR_SYSTEM_FAILURE, 1, strerror(errno) ) ;
+   }
+
+   /* Close the child part of the handles */
+   if (env->input.hdls[0]  != -1) __regina_close(env->input.hdls[0], NULL) ;
+   if (env->output.hdls[1] != -1) __regina_close(env->output.hdls[1], NULL) ;
+   if (env->error.hdls[1]  != -1) __regina_close(env->error.hdls[1], NULL) ;
+   env->input.hdls[0] = env->output.hdls[1] = env->error.hdls[1] = -1;
+
+   /* Force our own handles to become nonblocked */
+   if (!env->input.FileRedirected)
+   {
+      in = env->input.hdls[1];
+      unblock_handle( &in, st->AsyncInfo ) ;
+   }
+   else
+      in = -1;
+   if (!env->output.FileRedirected)
+   {
+      out = env->output.hdls[0];
+      unblock_handle( &out, st->AsyncInfo ) ;
+   }
+   else
+      out = -1;
+   if (!env->error.FileRedirected)
+   {
+      err = env->error.hdls[0];
+      unblock_handle( &err, st->AsyncInfo ) ;
+   }
+   else
+      err = -1;
+
+#ifdef SIGPIPE
+   regina_signal( SIGPIPE, SIG_IGN ) ;
 #endif
-      }
 
-      if (st->cbuff==NULL && (out||fout))
-         st->cbuff = MallocTSD( pipe_buf+1 ) ;
-
-      if (child<0)
-         exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
-
-      if (in)
-         close( fdin[0]) ;
-
-      if ((out)||(fout))
-         close( fdout[1] ) ;
-
-      if ((in)&&((out)||(fout)))
+   while ((in != -1) || (out != -1) || (err != -1))
+   {
+      reset_async_info(st->AsyncInfo);
+      if (in != -1)
       {
-         fcntl( fdin[1], F_SETFL, O_NONBLOCK ) ;
-         fcntl( fdout[0], F_SETFL, O_NONBLOCK ) ;
-      }
-
-      for (;(in)||(out)||(fout);)
-      {
-         if (in)
-         {
-            if (((!string)&&(stack_empty( TSD ))))
+         do {
+            if (!istring)
+               istring = fetch_food( TSD, env ) ;
+            if (!istring)
             {
-               if (close(fdin[1]))
-                  perror("During close") ;
-               in = 0 ;
-               if ((out)||(fout))
+               rc = write_buffered(TSD, in, NULL, 0, st->AsyncInfo);
+               if (rc == -EAGAIN)
+                  add_async_waiter(st->AsyncInfo, in, 0);
+               else
                {
-#if !defined(VMS) && !defined(DOS) && !defined(__WATCOMC__) && !defined(_MSC_VER) && !defined(_AMIGA) && !defined(__BORLANDC__)
-/*
- * Kludge for OS/2 ... see below
- */
-                  flags = fcntl( fdout[0], F_GETFL, NULL ) ;
-                  fcntl( fdout[0], F_SETFL, flags & (~O_NONBLOCK)) ;
-#endif
+                  if (rc < 0)
+                  {
+                     errno = -rc;
+                     exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, strerror(errno) ) ;
+                  }
+                  if (__regina_close(in, st->AsyncInfo))
+                     exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, strerror(errno) ) ;
+                  env->input.hdls[1] = in = -1 ;
+                  rc = -1 ; /* indicate a closed stream */
                }
-
             }
             else  /* nothing left in string, but more in the stack */
             {
-               if (!string)
+               rc = feed( TSD, &istring, in, st->AsyncInfo ) ;
+               if (rc)
                {
-                  streng *h;
-                  /* pop a line and append a newline. no term. zero needed */
-                  string = popline( TSD, NULL, NULL, 0 ) ;
-                  h = Str_make( string->len + 1 );
-                  memcpy(h->value,string->value,string->len);
-                  h->value[string->len] = '\n';
-                  h->len = string->len + 1;
-                  Free_stringTSD( string ) ;
-                  string = h ;
+                  if (rc == EAGAIN)
+                     add_async_waiter(st->AsyncInfo, in, 0);
+                  else
+                  {
+                     __regina_close(in, st->AsyncInfo) ;
+                     env->input.hdls[1] = in = -1 ;
+                  }
                }
-
-               rcode = write( fdin[1], string->value, string->len ) ;
-
-#ifdef EWOULDBLOCK
-               /* POSIX says EAGAIN, but BSD trad. uses EWOULDBLOCK, */
-               /* so if EWOULDBLOCK is defined, check for that, too  */
-               if ((rcode== -1)&&((errno==EAGAIN)||(errno==EWOULDBLOCK)))
-#else
-               if ((rcode== -1)&&(errno==EAGAIN))
-#endif
-                  continue ;
-
-               if ((rcode== -1)&&(errno==EPIPE))
+               else if (istring != NULL)
                {
-                  Free_stringTSD( string ) ;
-                  for (; (!stack_empty( TSD )); )
-                     Free_stringTSD( popline( TSD, NULL, NULL, 0 ) ) ;
-                  string = NULL ;
-                  continue ;
+                  /* hasn't written all at once, therefore is blocked.
+                   * do a little performance boost and don't try to write
+                   * once more, perform the wait instead.
+                   */
+                  rc = -1;
+                  add_async_waiter(st->AsyncInfo, in, 0);
                }
+            }
+         } while (rc == 0); /* It is best for performance and no penalty for */
+                            /* security to write as much as possible         */
 
-               if (rcode < 0)
-               {
-                  perror("While writing") ;
-                  continue ;
-               }
+      } /* if (in != -1) */
 
-               if (rcode<string->len)
-               {
-                  string->len -= rcode ;
-                  memmove(string->value,string->value + rcode,string->len) ;
-               }
+      if (out != -1)
+      {
+         do {
+            rc = reap( TSD, &ostring, out, st->AsyncInfo );
+            if (rc)
+            {
+               if (rc == EAGAIN)
+                  add_async_waiter(st->AsyncInfo, out, 1);
                else
                {
-                  assert( rcode==string->len ) ;
-                  Free_stringTSD( string ) ;
-                  string = NULL ;
+                  __regina_close(out, st->AsyncInfo) ;
+                  env->output.hdls[0] = out = -1 ;
                }
             }
-         }
+            else if (ostring != NULL)
+               drop_crop( TSD, env, &ostring, 0, 0 ) ;
+         } while (rc == 0); /* It is best for performance and no penalty for */
+                            /* security to write as much as possible         */
+      } /* if (out != -1) */
 
-         if ((out)||(fout))
-         {
-            rcode = read( fdout[0], st->cbuff, pipe_buf ) ;
-            if (rcode>0)
-               st->cbuff[rcode] = 0x00 ;
-
-            if ((rcode==(-1))&&(errno==EAGAIN))
-               continue ;
-
-            if ((rcode==(0)))
+      if (err != -1)
+      {
+         do {
+            rc = reap( TSD, &estring, err, st->AsyncInfo );
+            if (rc)
             {
-               close( fdout[0] ) ;
-               if (in)
-               {
-#if !defined(VMS) && !defined(DOS) && !defined(__WATCOMC__) && !defined(_MSC_VER) && !defined(_AMIGA) && !defined(__BORLANDC__)
-/*
- * OS/2 haven't defined fcntl() correctly, so we try to make it
- * work, by adding an extra parameter ... sigh!
- */
-                  flags = fcntl( fdin[1], F_GETFL, NULL ) ;
-                  fcntl( fdin[1], F_SETFL, flags & (~O_NONBLOCK)) ;
-#endif
-               }
-
-               out = fout = 0 ;
-               break ;
-            }
-
-            for (i=j=0; (i<rcode)&&(st->cbuff[i]); i++)
-            {
-               if ( st->cbuff[i] == REGINA_CR )
-                  st->cbuff[i] = ' ' ;
-
-               if ( st->cbuff[i] != '\n' )
-                  continue ;
-
-               if (istring)
-               {
-                  result = Str_makeTSD( (length=Str_len(istring)) + i-j + 1 ) ;
-                  result = Str_catTSD( result, istring ) ;
-                  for (count=0; count<(i-j); count++)
-                     result->value[count+length] = st->cbuff[j+count] ;
-/*                result->value[length+count] = 0x00 ;
- *                FreeTSD( istring ) ;
- *
- * Previous two lines changed to next to lines, after bugfix from
- * G. Fuchs <fuchs@vax1.rz.uni-regensburg.dbp.de>, 7th July 92
- */
-                  result->value[result->len=length+count] = 0x00 ;
-                  Free_stringTSD( istring ) ; istring=NULL ;
-               }
+               if (rc == EAGAIN)
+                  add_async_waiter(st->AsyncInfo, err, 1);
                else
                {
-                  result = Str_makeTSD( (i-j) + 1 ) ;
-                  for (count=0; count<(i-j); count++ )
-                     result->value[count] = st->cbuff[j+count] ;
-                  result->value[result->len=(i-j)] = 0x00 ;
+                  __regina_close(err, st->AsyncInfo) ;
+                  env->error.hdls[0] = err = -1 ;
                }
-
-               tmp_stack(TSD, result, flush==2) ;
-               j = i + 1 ;
             }
-            assert((j<=i)&&(j>=0)&&(i>=0)) ;
-            if ((j<i)&&(!istring)) /* some leftover chars ... */
-            {
-               istring = Str_makeTSD( i-j+1 ) ;
-               for (count=0; count<(i-j); count++ )
-                  istring->value[count] = st->cbuff[j+count] ;
-               istring->value[ istring->len=(i-j) ] = 0x00 ;
-            }
-            else if ((j!=i)&&(istring)) /* leftover chars but no lf */
-            {
-               result = Str_makeTSD( (length=Str_len(istring)) + (i-j) + 1 ) ;
-               result = Str_catTSD( result, istring ) ;
-               result = Str_catstrTSD( result, st->cbuff ) ;
-               Free_stringTSD( istring );  /* bja */
-               istring = result ;
-            }
-            else if ((i==j)) /* read ended with a lf */
-            {
-               assert( !istring ) ;
-            }
+            else if (estring != NULL)
+               drop_crop( TSD, env, &estring, 0, 1 ) ;
+         } while (rc == 0); /* It is best for performance and no penalty for */
+                            /* security to write as much as possible         */
+      } /* if (err != -1) */
 
-         }
-      }
+      wait_async_info(st->AsyncInfo); /* wait for any more IO */
+   } /* end of IO */
 
-      if (flush)
-         flush_stack( TSD, (flush==2) ) ;
+   if (istring)
+      Free_stringTSD( istring );
 
-      if (in) {
-         close( fdin[0] ) ;
-         close( fdin[1] ) ;
-      }
-      if ((out)||(fout)) {
-         close( fdout[0] ) ;
-         close( fdout[1] ) ;
-      }
-      if ( istring )              /* bja */
-         Free_stringTSD( istring );  /* bja */
-
-#ifdef VMS
-      wait( &status ) ;
-      rc = status & 0xff ;
-#else
-#ifdef NEXT
-      /*
-       * According to Paul F. Kunz, NeXTSTEP 3.1 Prerelease doesn't have
-       * the waitpid() function, so wait() must be used instead. The
-       * following klugde will remain until NeXTSTEP gets waitpid().
-       */
-      wait( &status ) ;
-#else
-# ifdef DOS
-      wait( &status ) ;
-# else
-      waitpid( child, &status, 0 ) ;
-# endif
-#endif
-      if (WIFEXITED(status))
-         rc = ( int ) WEXITSTATUS(status) ;
-      else if (WIFSIGNALED(status))
-         rc = -100 - WTERMSIG(status) ;
-      else
-         rc = -1 ;
-#endif
-      regina_signal( SIGPIPE, SIG_DFL ) ;
-   }
-   else /* child part of the fork */
+   if (ostring && Str_len(ostring))
    {
-     if (in)
-     {
-        dup2( fdin[0], 0 ) ;
-        if (fdin[0] != 0)
-         close( fdin[0] ) ;
-        if (fdin[1] != 0)
-        close( fdin[1] ) ;
-     }
+      drop_crop( TSD, env, &ostring, 1, 0 ) ;
+      Free_stringTSD( ostring );
+   }
 
-     if ((out)||(fout))
-     {
-        dup2( fdout[1], 1 ) ;
-        if (fdin[0] != 1)
-        close( fdout[0] ) ;
-        if (fdin[1] != 1)
-        close( fdout[1] ) ;
-     }
+   if (estring && Str_len(estring))
+   {
+      drop_crop( TSD, env, &estring, 1, 1 ) ;
+      Free_stringTSD( estring );
+   }
 
-     for (i=3; i<32; i++)
-       close( i ) ;
+   if (env->input.type == QUEUE)
+   {
+      while (!stack_empty( TSD ))
+      {
+         Free_stringTSD( popline( TSD, NULL, NULL, 0 ) ) ;
+      }
+   }
 
-     if (envir==SUBENVIR_PATH)
-        execvp( cmd, ++args ) ;
-     else if (envir==SUBENVIR_COMMAND)
-        execv( cmd, ++args ) ;
-     else if (envir==SUBENVIR_SYSTEM)
-     {
-#if defined(HAVE_WIN32GUI)
-        int foo = mysystem( cmdline ) ;
-#else
-        int foo = system( cmdline ) ;
-#endif
-#ifdef VMS
-        exit (foo) ; /* This is a separate process, exit() is allowed */
-#else
-        if (WIFEXITED(foo))
-        {
-           exit( ( int )WEXITSTATUS(foo) ) ; /* This is a separate process, exit() is allowed */
-        }
-        else if (WIFSIGNALED(foo))
-        {
-           exit( -100 - WTERMSIG(foo) ); /* This is a separate process, exit() is allowed */
-        }
-        else
-        {
-           exit( 0 ) ; /* This is a separate process, exit() is allowed */
-        }
+   rc = __regina_wait(child);
+
+#ifdef SIGPIPE
+   regina_signal( SIGPIPE, SIG_DFL ) ;
 #endif
 
-     }
-     else
-        exit( -1 ) ; /* This is a separate process, exit() is allowed */
+   if (env->output.FileRedirected)
+   {
+      /* The file position is usually at the end: */
+      restart_file(env->output.hdls[0]);
+      while (reap( TSD, &ostring, env->output.hdls[0], NULL ) == 0) {
+         if (ostring != NULL)
+            drop_crop( TSD, env, &ostring, 0, 0 ) ;
+      }
+      if (ostring != NULL)
+         drop_crop( TSD, env, &ostring, 1, 0 ) ;
 
-     exit( -2 ) ; /* This is a separate process, exit() is allowed */
-  }
+      /* use the automatted closing feature of cleanup */
+   }
+   if (env->error.FileRedirected)
+   {
+      /* The file position is usually at the end: */
+      restart_file(env->error.hdls[0]);
+      while (reap( TSD, &estring, env->error.hdls[0], NULL ) == 0) {
+         if (estring != NULL)
+            drop_crop( TSD, env, &estring, 0, 1 ) ;
+      }
+      if (estring != NULL)
+         drop_crop( TSD, env, &estring, 1, 1 ) ;
+      /* use the automatted closing feature of cleanup */
+   }
 
-  if (args)
-     destroyargs( TSD, args ) ;
+   if ((env->output.type == simLIFO) || (env->output.type == simFIFO))
+      flush_stack( TSD, env->output.type == simFIFO ) ;
 
-  FreeTSD( cmdline );
-  return rc ;
+   cleanup( TSD, env ) ;
+
+   return rc ;
 }
-#endif
-
-#if defined(WIN32)                                      /* MH 10-06-96 */
-streng *run_popen( const tsd_t *TSD, const streng *command, const streng *envir )
-{
-   char *cbuffer, *sum = NULL, *h ;
-   char comspec[1024] ;
-   int pipe_buf = 512;
-   long rc,i,chars_read;
-   size_t length = 0;
-   int envirno ;
-   char *cmdline;
-   HANDLE read_handle, write_handle ;
-   STARTUPINFO sinfo;
-   PROCESS_INFORMATION pinfo;
-   SECURITY_ATTRIBUTES sattr;
-   streng *result;
-
-   fflush(stdout) ;
-   fflush(stderr) ;
-
-   envirno = getenvir( envir ) ;
-
-   sattr.nLength = sizeof(sattr);
-   sattr.lpSecurityDescriptor = NULL;
-   sattr.bInheritHandle = TRUE;
-
-   if (!CreatePipe(&read_handle, &write_handle, &sattr, (DWORD)0))
-   {
-      return NULL ;
-   }
-
-   if (envirno==SUBENVIR_SYSTEM)
-   {
-      char *p;
-
-      if (mygetenv( TSD, "COMSPEC", comspec, sizeof(comspec)) == NULL)
-         strcpy(comspec, "CMD.EXE");
-      cmdline = MallocTSD(command->len+strlen(comspec)+20);
-      sprintf(cmdline, "%s /c ", comspec) ;
-      p = cmdline + strlen(cmdline);
-      memcpy(p,command->value,command->len);
-      p[command->len] = '\0';
-   }
-   else
-      cmdline = str_ofTSD(command);
-
-   memset(&sinfo, '\0', sizeof(sinfo));
-
-   sinfo.cb = sizeof(sinfo);
-   sinfo.hStdInput = GetStdHandle( STD_INPUT_HANDLE ) ;
-   sinfo.hStdOutput = write_handle ;
-   sinfo.hStdError = GetStdHandle( STD_ERROR_HANDLE ) ;
-#if defined(HAVE_WIN32GUI)
-   sinfo.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
-   sinfo.wShowWindow=SW_HIDE;
-#else
-   sinfo.dwFlags = STARTF_USESTDHANDLES ;
-#endif
-
-   if (!CreateProcess(NULL, cmdline, NULL, NULL, TRUE, 0, NULL, NULL, &sinfo, &pinfo))
-   {
-      FreeTSD( cmdline ) ;
-      return NULL ;
-   }
-
-   FreeTSD( cmdline ) ;
-   CloseHandle(write_handle);
-   cbuffer = MallocTSD(pipe_buf+1) ;
-
-   for (;;)
-   {
-      if (!ReadFile( read_handle, cbuffer, pipe_buf, (DWORD*)&chars_read, NULL ) )
-      {
-         if (GetLastError() != ERROR_BROKEN_PIPE)
-         {
-            FreeTSD( cbuffer ) ;
-            if (sum)
-               FreeTSD( sum ) ;
-            return NULL;
-         }
-         break;
-      }
-
-      for (i=0; (i<chars_read)&&(cbuffer[i]); i++)
-        if ((cbuffer[i]=='\n')||(cbuffer[i]=='\r'))
-           cbuffer[i] = ' ' ;
-
-      h = MallocTSD( length + chars_read + 1 /* Allow a zero length string */ ) ;
-      if (sum)
-      {
-         memcpy( h, sum, length ) ;
-         FreeTSD( sum ) ;
-      }
-      sum = h;
-      memcpy( sum+length, cbuffer, chars_read ) ;
-
-      length += chars_read;
-
-      if (chars_read==0)
-         break ;
-   }
-   FreeTSD( cbuffer ) ;
-
-   CloseHandle(read_handle);
-
-   while(length && sum[length-1] == ' ')
-      length--;
-
-   WaitForSingleObject( pinfo.hProcess, INFINITE ) ;
-
-   if (!GetExitCodeProcess(pinfo.hProcess,(DWORD*)&rc ))
-      rc = -1;
-
-   CloseHandle(read_handle);
-
-   /* should this be set? */
-   setvalue( TSD, &RC_name, int_to_streng( TSD,rc) ) ;
-
-   if (rc < 0)
-   {
-      if (sum)
-         FreeTSD( sum ) ;
-      return( NULL );
-   }
-
-   /* Note: until Feb. 17th 2000 the result was 0-terminated. I think it was useless.
-    * FGC
-    */
-   result = Str_makeTSD( length ) ;
-   if ( sum )
-   {
-      memcpy( result->value, sum, length ) ;
-      result->len = length ;
-      FreeTSD( sum ) ;
-   }
-   else
-      result->len = 0 ;
-
-   return( result ) ;
-}
-#elif defined(DOS) || defined(OS2) || defined(_AMIGA) || defined(MAC) || defined(__AROS__)
-/* FIXME, FGC:
- * 1) OS/2 can handle real pipes! OS/2 should get an own section.
- * 2) At least DOS has an execv-statement. We may try to load the first
- *    parameter. Lets have a look at "make" for an alternative.
- */
-streng *run_popen( const tsd_t *TSD, const streng *command, const streng *envir )
-{
-   FILE *fptr;
-   streng *result=NULL ; /* Keep the compiler happy */
-   int i ;
-   int rcode ;
-   int c ;
-   char *cmdline ;
-   char outfile[REXX_PATH_MAX];
-
-   envir = envir; /* keep compiler happy */
-   /*
-    * Create a temporary file to accept the stdout from the
-    * command to be run
-    */
-   if ( !create_tmpname( TSD, outfile ) )
-   {
-      perror("While getting temporary out-file name") ;
-      return (NULL);
-   }
-   cmdline = MallocTSD(command->len+strlen(outfile)+20);
-   memcpy(cmdline,command->value,command->len);
-   cmdline[command->len] = '\0';
-   strcat(cmdline," > ");
-   strcat(cmdline, str_trans(outfile,'/','\\'));
-
-   /*
-    * Run the command, with all stdout going to the temporary file
-    */
-#if defined(HAVE_WIN32GUI)
-   rcode = mysystem(cmdline);
-#else
-   rcode = system(cmdline);
-#endif
-   FreeTSD(cmdline);
-   /*
-    * Read the temporary file, and set RC to the content
-    * of the file.
-    */
-   if (rcode != -1)
-   {
-      fptr = fopen(outfile, "r");
-      if (fptr != NULL)
-      {
-         result = Str_makeTSD( 500 );
-         for (i=0; i < 500; i++)
-         {
-            c = fgetc(fptr);
-            if (c == EOF)
-               break;
-            if ((c=='\n')||(c=='\r'))
-               result->value[i] = ' ' ;
-            else
-               result->value[i] = c;
-         }
-         result->value[i] = 0x00;
-         result->len = i;
-         fclose(fptr);
-      }
-   }
-   /*
-    * Delete the temporary file and free up resources for it
-    */
-   unlink(outfile);
-
-   setvalue( TSD, &RC_name, int_to_streng( TSD,rcode) ) ;
-
-   return((rcode==-1)?NULL:result);
-}
-#else
-
-/* run_as_child is called after a fork in run_popen. The function has no
- * input. ouput must be done into the outhandle channel. The functions
- * executes command in the "environment" envirno.
- */
-static void run_as_child(const tsd_t *TSD,int outhandle,const streng *command,int envirno)
-{
-   int i;
-   char *cmdline = str_of(TSD,command);
-
-   /* Make outhandle the handle of stdout. stdin is closed already. */
-   dup2(outhandle, 1) ;
-   if (outhandle != 1)
-      close(outhandle);
-
-   /* stderr is still bound to the original value! */
-
-   for (i = 3;i < 1024;i++)
-      close(i);
-
-   if ((envirno==SUBENVIR_PATH)||(envirno==SUBENVIR_COMMAND))
-   {
-      char *cmd, **args;
-
-      args = makeargs( TSD, cmdline ) ;
-      cmd = *args ;
-      args++ ; /* FIXME, FGC: Why ??? argv[0] should be cmd! */
-
-      if (envirno==SUBENVIR_PATH)
-         execvp( cmd, args ) ;
-      else /* must be SUBENVIR_COMMAND */
-         execv( cmd, args ) ;
-   }
-   else if (envirno==SUBENVIR_SYSTEM)
-   {
-#if defined(VMS)
-      int foo = system( cmdline ) ;
-      exit ( foo ) ; /* This is a separate process, exit() is allowed */
-#else
-#if defined(HAVE_WIN32GUI)
-      int foo = mysystem( cmdline ) ;
-#else
-      int foo = system( cmdline ) ;
-#endif
-      if (WIFEXITED(foo))
-      {
-         if (WEXITSTATUS(foo)==1)
-            exit( -2 ) ; /* sh returns 2 if cmd could not be executed */
-         exit( ( int )WEXITSTATUS(foo) ) ; /* This is a separate process, exit() is allowed */
-      }
-      else if (WIFSIGNALED(foo))
-         exit( -100 - WTERMSIG(foo) ); /* This is a separate process, exit() is allowed */
-      else
-         exit( 0 ) ; /* This is a separate process, exit() is allowed */
-#endif
-   }
-   else /* unknown envirno */
-      exit( -1 ) ; /* This is a separate process, exit() is allowed */
-
-   /* error in calling system or execv */
-   exit( -2 ) ; /* We (the child) MUST die! */
-}
-
-streng *run_popen( const tsd_t *TSD, const streng *command, const streng *envir )
-{
-   char *cbuffer ;
-   int pipe_buf ;
-   streng *result = NULL ; /* This is the "sum" of the output of the command */
-   int rc, rsize, rcode, i ;
-   int length ;
-   int fd[2] ;
-   shl_tsd_t *st;
-
-   st = TSD->shl_tsd;
-
-   fflush(stdout) ;
-   fflush(stderr) ;
-
-   /*
-    * first, kill any old st->children, the execution of them must have
-    * been interrupted, leaving them un-waited.
-    */
-   if (st->running)
-   {
-      kill( st->child, SIGKILL ) ;
-#if defined(VMS) || defined(NEXT) || defined (DOS)
-      wait( &st->status ) ;
-#else
-      waitpid( st->child, &st->status, WNOHANG ) ;
-#endif
-   }
-
-   /*
-    * Create ourselves a pipe on which we communicate with the
-    * st->child process
-    */
-   pipe(fd) ;
-   /*
-    * Create the st->child process...
-    * No error checking if st->child process cannot be started!!
-    */
-   if ( ( st->child = fork() ) == 0 )
-   {
-      /*
-       * This is the new child of the process.
-       *
-       * Close the read end of the pipe; the st->child only
-       * writes to the pipe.
-       */
-      close(fd[0]) ;
-      run_as_child(TSD,fd[1],command,getenvir( envir ));
-      /* run_as_child will always die! */
-   }
-
-   /*
-    * We are still the parent process
-    *
-    * Close the write end of the pipe; the parent only
-    * reads from the pipe.
-    */
-   close(fd[1]) ; /* Close the write pipe */
-   if (st->child == -1) /* An error occurs while forking */
-      rc = -1;
-   else
-   {
-      /* The child has started the execution */
-      rsize = 0 ;
-#if defined(PIPE_BUF)
-      pipe_buf = PIPE_BUF ;
-#else
-# if !defined(_PC_PIPE_BUF) || defined(WIN32)           /* MH 10-06-96 */
-      /* See comment on PIPE_BUF above */
-      pipe_buf = 512 ;
-# else
-      pipe_buf = fpathconf( fd[0], _PC_PIPE_BUF ) ;
-      if (pipe_buf < 1)
-         pipe_buf = 512 ;
-# endif
-#endif
-      cbuffer = MallocTSD(pipe_buf) ;
-
-      for (;;)
-      {
-         rcode = read( fd[0], cbuffer, pipe_buf ) ;
-
-         for (i=0; i<rcode; i++) /* Change CR and LF to blanks */
-            if ((cbuffer[i]=='\n')||(cbuffer[i]=='\r'))
-               cbuffer[i] = ' ' ;
-
-         if ((rcode>=0) || ((rcode==(-1)) && (errno==EINTR))) /* MH 10-06-96 */
-         {
-            if (rcode>=0)
-            {
-               streng *nresult ;
-
-               length = (result) ? Str_len(result) : 0; /* current length */
-               nresult = Str_makeTSD(length+rcode+1) ;
-               if (result)
-                  memcpy(nresult->value,result->value,length);
-               memcpy(nresult->value+length,cbuffer,rcode);
-               /* FIXME, FGC: Why do we terminate the string? */
-               nresult->value[length+rcode] = '\0';
-               nresult->len = length+rcode;
-               if (result)
-                  Free_stringTSD(result);
-               result = nresult;
-            }
-
-            if (rcode==0)
-               break ;
-         }
-         else if (rcode<=0)
-         {
-            if (rcode<0)
-               perror( "While reading from pipe" ) ;
-            break ;
-         }
-      }
-      FreeTSD( cbuffer ) ;
-
-      if (result)
-      {
-         /* Strip blanks at the end of the string AND TERMINATE THE STRING! */
-         while (Str_len(result))
-            if (result->value[Str_len(result) - 1] == ' ')
-               Str_len(result)--;
-            else
-               break;
-         result->value[Str_len(result)] = '\0';
-      }
-      /*
-       * Wait for the st->child process to finish...
-       */
-#if defined(VMS)
-      wait( &st->status ) ;
-      rc = st->status & 0xff ;
-#else
-#ifdef NEXT
-      wait( &st->status ) ;
-#else
-# ifdef DOS
-      wait( &st->status ) ;
-# else
-      waitpid( st->child, &st->status, 0 ) ;
-# endif
-#endif
-
-      if (WIFEXITED(st->status))
-         rc = ( int ) WEXITSTATUS(st->status) ;
-      else if (WIFSIGNALED(st->status))
-         rc = -100 - WTERMSIG(st->status) ;
-      else
-         rc = -1 ;
-#endif
-   }
-   close(fd[0]);
-
-   setvalue( TSD, &RC_name, int_to_streng( TSD,rc) ) ;
-   return(((rc>=0))?result:NULL) ;
-
-}
-#endif                                                  /* MH 10-06-96 */
-

@@ -13,6 +13,7 @@ typedef struct _tsd_t {
    void *                  fil_tsd ;           /* local variables of files.c */
    void *                  itp_tsd ;           /* local variables of interprt.c */
    void *                  tra_tsd ;           /* local variables of tracing.c */
+   void *                  err_tsd ;           /* local variables of error.c */
    void *                  vms_tsd ;           /* local variables of vmscmd.c */
    void *                  bui_tsd ;           /* local variables of builtin.c */
    void *                  vmf_tsd ;           /* local variables of vmsfuncs.c */
@@ -55,6 +56,7 @@ typedef struct _tsd_t {
    int                     instore_is_errorfree;
    char                    trace_stat;
    int                     called_from_saa;
+   int                     restricted;
    /* Stuff for a delayed exit()/setjmp(): */
    int                     in_protected;
    jmp_buf                 protect_return;

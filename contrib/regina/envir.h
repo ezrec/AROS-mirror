@@ -1,8 +1,7 @@
 struct envir
 {
-   streng *name ;
+   environment e ;
    int type ;
-   int subtype ;
    struct envir *next, *prev ;
 };
 

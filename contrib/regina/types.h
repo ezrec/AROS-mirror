@@ -48,6 +48,19 @@ typedef struct {
    unsigned int rcvar:1 ;
 } compflags ;
 
+typedef enum {
+   isUNKNOWN = 0,
+   isSTREAM = 1,
+   isSTEM = 2,
+   isLIFO = 3,
+   isFIFO = 4
+} AddressWithType;
+typedef struct {
+   unsigned int append:1 ;
+   unsigned int isinput:1 ;
+   unsigned int awt:3 ; /* overlay with AddressWithType */
+} outputflags ; /* used by ADDRESS WITH resourceo */
+
 typedef struct pparambox *paramboxptr ;
 typedef const struct pparambox *cparamboxptr ;
 typedef struct tnode *nodeptr ;
@@ -76,6 +89,8 @@ typedef struct tnode {
       num_descr *number ;
       compflags flags ;
       variable *varbx ;
+      outputflags of ;
+      int nonansi ;
    } u ;
    struct tnode *next ;
    unsigned long nodeindex ; /* for an effectiv relocation, never change! */
@@ -125,14 +140,38 @@ typedef struct sig_type
 
 typedef void (*signal_handler)(int);
 
-typedef struct option
+typedef struct __regina_option
 {
    char *name ;
    int offset ;
    char *contains ;
 } option_type ;
 
+typedef struct { /* one for each redirection in environment */
+   streng      *name; /* stemname or streamname if any */
+   outputflags  flags;
+   streng      *base;     /* "number" if name is a stem         */
+   streng      *currname; /* name + ".number" if name is a stem */
+   int          currnum;  /* current number for a stem position */
+                          /* or -1 if unknown                   */
+   int          maxnum;   /* maximum number for a stem position */
+                          /* or -1 if unknown                   */
+   void        *file;     /* fileboxptr of the file with the    */
+                          /* above name or NULL.                */
+   unsigned int SameAsOutput:1;   /* locally used in shell.c    */
+   unsigned int FileRedirected:1; /* locally used in shell.c    */
+   char        *tempname; /* locally used filename in shell.c   */
+   int          type;     /* locally used source in shell.c     */
+   int          hdls[2];  /* locally used connection in shell.c */
+} environpart;
 
+typedef struct {
+   struct strengtype *name; /* stemname or streamname if any */
+   int subtype;             /* SUBENVIR_... */
+   environpart input;
+   environpart output;
+   environpart error;
+} environment;
 
 typedef struct proclevelbox *proclevel ;
 typedef const struct proclevelbox *cproclevel ;
@@ -144,40 +183,11 @@ typedef struct proclevelbox {
    variableptr *vars ;
    paramboxptr args ;
    struct strengtype *environment, *prev_env ;
-   char tracestat, varflag ;
+   char tracestat, traceint, varflag ; /* MDW 30012002 */
    sigtype *sig ;
    trap *traps ;
    jmp_buf *buf ;  /* for use by longjmp */
    union {
-#ifdef OLD_OPTIONS
-      struct {
-         unsigned int flushstack : 1 ;
-         unsigned int lineouttrunc : 1 ;
-         unsigned int close_bif : 1 ;
-         unsigned int open_bif : 1 ;
-         unsigned int buftype_bif : 1 ;
-         unsigned int desbuf_bif : 1 ;
-         unsigned int dropbuf_bif : 1 ;
-         unsigned int makebuf_bif : 1 ;
-         unsigned int cacheext : 1 ;
-         unsigned int find_bif : 1 ;
-         unsigned int prune_trace : 1 ;
-         unsigned int ext_commands_as_funcs : 1 ;
-         unsigned int stdout_for_stderr : 1 ;
-         unsigned int trace_html : 1 ;
-         unsigned int default_lines_bif_is_actual : 1 ;
-         unsigned int ansi : 1 ;
-         unsigned int unusedbit0 : 1 ;
-         unsigned int unusedbit1 : 1 ;
-         unsigned int unusedbit2 : 1 ;
-         unsigned int unusedbit3 : 1 ;
-         unsigned int unusedbit4 : 1 ;
-         unsigned int unusedbit5 : 1 ;
-         unsigned int unusedbit6 : 1 ;
-         unsigned int unusedbit7 : 1 ;
-         unsigned char unusedchar3 ;
-      } options ;
-#endif
       unsigned char flags[4] ;
    } u ;
 } proclevbox ;
@@ -215,8 +225,10 @@ typedef struct { /* internal_parser_type is a structure containing data from a
                   */
    lineboxptr     first_source_line; /* Either this two values  */
    lineboxptr     last_source_line ; /* exist or srclines below */
-   int            tline;
-   int            tstart;
+   int            tline;             /* line number where error occured */
+   int            tstart;            /* column number where error occured */
+   int            if_linenr;         /* line number of last IF keyword */
+   int            when_linenr;       /* line number of last WHEN keyword */
    labelboxptr    first_label;
    labelboxptr    last_label;
    unsigned long  numlabels;

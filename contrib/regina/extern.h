@@ -58,11 +58,7 @@
 /*
  * Routines in files.c
  */
-#ifdef FGC
    streng *readkbdline( tsd_t *TSD ) ;
-#else
-   streng *readkbdline( const tsd_t *TSD);
-#endif
    void mark_filetable( const tsd_t *TSD) ;
    void purge_filetable( tsd_t *TSD ) ;
    int init_filetable( tsd_t *TSD ) ;
@@ -78,6 +74,9 @@
    streng *std_lineout( tsd_t *TSD, cparamboxptr parms ) ;
    streng *std_lines( tsd_t *TSD, cparamboxptr parms ) ;
    streng *std_stream( tsd_t *TSD, cparamboxptr parms ) ;
+   void closefile( tsd_t *TSD, const streng *name )  ;
+   void *addr_reopen_file( tsd_t *TSD, const streng *filename, char code ) ;
+   streng *addr_io_file( tsd_t *TSD, void *fileptr, const streng *line ) ;
 #ifndef NDEBUG
    streng *dbg_dumpfiles( tsd_t *TSD, cparamboxptr parms ) ;
 #endif
@@ -202,9 +201,14 @@
    int make_buffer( tsd_t *TSD ) ;
    void type_buffer( tsd_t *TSD ) ;
    void tmp_stack( tsd_t *TSD, streng*, int ) ;
+   void fill_input_queue(tsd_t *TSD, streng *stemname, int stem0);
+   streng *get_input_queue(const tsd_t *TSD);
+   void purge_input_queue(const tsd_t *TSD);
    void flush_stack( const tsd_t *TSD, int is_fifo ) ;
+   streng *stack_to_line( const tsd_t *TSD );
    int create_queue( tsd_t *TSD, streng *queue_name, streng **result );
    int delete_queue( tsd_t *TSD, streng *queue_name );
+   int timeout_queue( tsd_t *TSD, streng *timeout, streng *queue_name );
    streng *get_queue( tsd_t *TSD );
    streng *set_queue( tsd_t *TSD, streng *queue_name );
 
@@ -224,8 +228,8 @@
 /*
  * Routines in error.c
  */
-   const char *errortext( int errorno ) ;
-   const char *suberrortext( int , int );
+   int init_error( tsd_t *TSD ) ;
+   const char *errortext( const tsd_t *TSD, int errorno, int suberrnum, int request_english, int apply_inserts ) ;
    void exiterror( int errorno , int suberrorno, ... ) ;
    void __reginaerror( char *errtext ) ;
    const char *getsym( int numb ) ;
@@ -235,11 +239,7 @@
 /*
  * Routines in variable.c
  */
-#ifdef DEBUG
    void detach( const tsd_t *TSD, variableptr ptr ) ;
-#else
-   void detach( variableptr ptr ) ;
-#endif
    int init_vars( tsd_t *TSD ) ;
    void expand_to_str( const tsd_t *TSD, variableptr ptr ) ;
    int var_was_found( const tsd_t *TSD ) ;
@@ -248,13 +248,17 @@
    void setvalue( const tsd_t *TSD, const streng *name, streng *value ) ;
    num_descr *fix_compoundnum( tsd_t *TSD, nodeptr this, num_descr *new ) ;
    void setshortcutnum( const tsd_t *TSD, nodeptr this, num_descr *value ) ;
+   void setdirvalue_compound( const tsd_t *TSD, const streng *name, streng *value ) ;
+   const streng *getdirvalue_compound( tsd_t *TSD, const streng *name ) ;
    const streng *getdirvalue( tsd_t *TSD, const streng *name, int trace ) ;
    const streng *getvalue( tsd_t *TSD, const streng *name, int trace ) ;
    const streng *isvariable( tsd_t *TSD, const streng *name ) ;
    const streng *get_it_anyway( tsd_t *TSD, const streng *name ) ;
+   const streng *get_it_anyway_compound( tsd_t *TSD, const streng *str ) ;
    void expose_var( const tsd_t *TSD, const streng *name ) ;
    void drop_var( const tsd_t *TSD, const streng *name ) ;
    void drop_dirvar( const tsd_t *TSD, const streng *name ) ;
+   void upper_var( tsd_t *TSD, const streng *name ) ;
    void set_ignore_novalue( const tsd_t *TSD ) ;
    int valid_var_symbol( const streng *symbol ) ;
    void clear_ignore_novalue( const tsd_t *TSD ) ;
@@ -272,9 +276,12 @@
 /*
  * Routines in shell.c
  */
+   const streng *stem_access( tsd_t *TSD, environpart *e, int pos, const streng *value);
+   void open_env_io( tsd_t *TSD, environpart *e );
+   void put_stem( tsd_t *TSD, environpart *e, streng *str );
    int init_shell( tsd_t *TSD ) ;
-   int posix_do_command( tsd_t *TSD, const streng *command, int flag, int envir ) ;
-   streng *run_popen( const tsd_t *TSD, const streng *command, const streng *envir ) ;
+   void cleanup_envirpart(const tsd_t *TSD, environpart *ep);
+   int posix_do_command( tsd_t *TSD, const streng *command, int flag, environment *env ) ;
 
 
 
@@ -340,7 +347,7 @@
    paramboxptr initplist( tsd_t *TSD, cnodeptr this ) ;
    int myatol( const tsd_t *TSD, const streng *text ) ;
    void checkparam( cparamboxptr params, int min, int max, const char *name ) ;
-   char getoptionchar( tsd_t *TSD, const streng *param, const char *bif, int argnum, const char *options ) ;
+   char getoptionchar( tsd_t *TSD, const streng *param, const char *bif, int argnum, const char *ansi_options, const char *regina_options ) ;
    int atozpos( tsd_t *TSD, const streng *text, const char *bif, int argnum ) ;
    int atopos( tsd_t *TSD, const streng *text, const char *bif, int argnum ) ;
    int atoposorzero( tsd_t *TSD, const streng *text, const char *bif, int argnum ) ;
@@ -372,6 +379,7 @@
 #else
    int main(int argc,char *argv[]) ;
 #endif
+   int __regina_reexecute_main(int argc, char **argv);
    void mark_systeminfo( const tsd_t *TSD) ;
    nodeptr treadit( cnodeptr ) ;
    sysinfobox *creat_sysinfo( const tsd_t *TSD, streng *envir ) ;
@@ -435,10 +443,12 @@
  * Functions in envir.c
  */
    streng *perform( tsd_t *TSD, const streng *command, const streng *envir, cnodeptr this ) ;
-   void add_envir( tsd_t *TSD, streng *name, int type, int subtype ) ;
+   void add_envir( tsd_t *TSD, const streng *name, int type, int subtype ) ;
    int envir_exists( const tsd_t *TSD, const streng *name );
    int init_envir( tsd_t *TSD ) ;
    void del_envir( tsd_t *TSD, const streng *name ) ;
+   int set_envir( const tsd_t *TSD, const streng *envirname, const nodeptr ios ) ;
+   streng *run_popen( tsd_t *TSD, const streng *command, const streng *envir ) ;
 
 
 /*
@@ -458,9 +468,20 @@
 /*
  * Routines in doscmd.c
  */
-   int dos_do_command( tsd_t *TSD, const streng *command, int flag, int envir ) ;
    int my_win32_setenv( const char *name, const char *value ) ;
-   int create_tmpname( const tsd_t *TSD, char *name );
+   int fork_exec(tsd_t *TSD, environment *env, const char *cmdline);
+   int __regina_wait(int process);
+   int open_subprocess_connection(const tsd_t *TSD, environpart *ep);
+   void unblock_handle( int *handle, void *async_info );
+   void restart_file(int hdl);
+   int __regina_close(int handle, void *async_info);
+   int __regina_read(int hdl, void *buf, unsigned size, void *async_info) ;
+   int __regina_write(int hdl, const void *buf, unsigned size, void *async_info) ;
+   void *create_async_info(const tsd_t *TSD);
+   void delete_async_info(void *async_info);
+   void reset_async_info(void *async_info);
+   void add_async_waiter(void *async_info, int handle, int add_as_read_handle);
+   void wait_async_info(void *async_info);
 
 /*
  * Routines in aroscmd.c
@@ -483,12 +504,16 @@
    char *mygetenv( const tsd_t *TSD, const char *name, char *buf, int bufsize ) ;
    streng *rex_userid( tsd_t *TSD, cparamboxptr parms ) ;
    streng *rex_rxqueue( tsd_t *TSD, cparamboxptr parms ) ;
+#if defined(WIN32) && !defined(__WINS__) && !defined(__EPOC32__)
+   void set_pause_at_exit( void );
+   void dont_pause_at_exit( void );
+#endif
 
 /*
  * Routines in vmscmd.c
  */
    int init_vms( tsd_t *TSD ) ;
-   int vms_do_command( tsd_t *TSD, const streng *cmd, int in, int out, int fout, int envir ) ;
+   int vms_do_command( tsd_t *TSD, const streng *cmd, int in, int out, int fout, environment *env ) ;
    int vms_killproc( void ) ;
    streng *vms_resolv_symbol( tsd_t *TSD, streng *name, streng *new, streng *pool ) ;
 
@@ -575,12 +600,12 @@
 # endif
    streng *dbg_dumpvars( tsd_t *TSD, cparamboxptr parms ) ;
    streng *dbg_dumptree( tsd_t *TSD, cparamboxptr parms ) ;
-   streng *dbg_traceback( tsd_t *TSD, cparamboxptr parms ) ;
 # ifdef TRACEMEM
    streng *dbg_listleaked( tsd_t *TSD, cparamboxptr parms ) ;
    streng *dbg_memorystats( tsd_t *TSD, cparamboxptr parms ) ;
 # endif /* TRACEMEM */
 #endif /* !NDEBUG */
+   streng *dbg_traceback( tsd_t *TSD, cparamboxptr parms ) ;
 
 /*
  * Routines in vmsfuncs.c
@@ -629,11 +654,7 @@
    streng *unx_eof( tsd_t *TSD, cparamboxptr parms ) ;
    streng *unx_uname( tsd_t *TSD, cparamboxptr parms ) ;
    streng *unx_fork( tsd_t *TSD, cparamboxptr parms ) ;
-#ifndef FGC
-   char *unx_unixerror( tsd_t *TSD, cparamboxptr parms ) ;
-#else
    streng *unx_unixerror( tsd_t *TSD, cparamboxptr parms ) ;
-#endif
    streng *unx_chdir( tsd_t *TSD, cparamboxptr parms ) ;
    streng *unx_getenv( tsd_t *TSD, cparamboxptr parms ) ;
    streng *unx_crypt( tsd_t *TSD, cparamboxptr parms ) ;
@@ -839,6 +860,19 @@
 extern internal_parser_type parser_data;
 extern int retlength ; /* value shared by lexsrc.l and yaccsrc.y only */
 extern char retvalue[] ; /* value shared by lexsrc.l and yaccsrc.y only */
+extern char *__reginatext ; /* value shared by lexsrc.l and yaccsrc.y only */
+extern unsigned SymbolDetect ; /* value shared by lexsrc.l and yaccsrc.y only */
+#define SD_INPUT        0x00000001
+#define SD_OUTPUT       0x00000002
+#define SD_ERROR        0x00000004
+#define SD_NORMAL       0x00000008
+#define SD_APPEND       0x00000010
+#define SD_REPLACE      0x00000020
+#define SD_STREAM       0x00000040
+#define SD_STEM         0x00000080
+#define SD_LIFO         0x00000100
+#define SD_FIFO         0x00000200
+#define SD_ADDRWITH     0x000003FF /* All the above */
 #ifndef NDEBUG
 extern int __reginadebug ;
 #endif
@@ -851,9 +885,11 @@ extern const char *signalnames[];
 extern const streng RC_name;
 extern const streng SIGL_name;
 extern const streng *RESULT_name;
+extern const streng *dotRS_name;
 extern const unsigned char u_to_l[];
 extern const char *numeric_forms[] ;
 extern const char *invo_strings[] ;
+extern const char *argv0 ;
 
 /* Don't terminate the following lines by a semicolon */
 EXPORT_GLOBAL_PROTECTION_VAR(regina_globals)

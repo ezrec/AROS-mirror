@@ -938,7 +938,7 @@ void purge_flists( const tsd_t *TSD )
    while( ptr )
    {
       next = ptr->next;
-      TSD->MTFree( TSD, ptr );
+      TSD->MTFree(TSD, ptr ) ;
       ptr = next;
    }
    mt->first_entry = mt->curr_entry = NULL;
@@ -1126,7 +1126,7 @@ void myfreeTSD( const tsd_t *TSD, void *cptr )
     * problems somewhere. Inform the user about it, and exit.
     */
    if (memptr->magic != MAGIC_COOKIE)
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
    /*
     * Update the statistics. Remember that we do not decrement the
@@ -1209,7 +1209,7 @@ void regmarker( const tsd_t *TSD, void (*marker)(const tsd_t *TSD) )
    mt = TSD->mem_tsd;
 
    if (mt->max_markers_regd>=MAX_MARKERS)
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
    mt->markers[mt->max_markers_regd++] = marker ;
 }
@@ -1376,7 +1376,7 @@ void markmemory( void *ptr, int flag )
      memptr->flag = (unsigned char) flag ;
   }
   else
-      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+      exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 }
 
 

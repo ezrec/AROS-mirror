@@ -50,7 +50,34 @@ static char *RCSid = "$Id$";
 #    pragma warning(default: 4115 4201 4214)
 #   endif
 #  endif
+# else /* not RXLIB */
+#  if defined(__WATCOMC__) && defined(__NT__)
+#   include <windows.h>
 # endif
+#  if defined(__MINGW32__)
+#   include <windows.h>
+#  endif
+#  if defined(WIN32) && defined(__BORLANDC__)
+#   include <windows.h>
+#  endif
+
+#  if defined(_MSC_VER) && !defined(__WINS__)
+#   if _MSC_VER >= 1100
+/* Stupid MSC can't compile own headers without warning at least in VC 5.0 */
+#    pragma warning(disable: 4115 4201 4214)
+#   endif
+#   include <windows.h>
+#   if _MSC_VER >= 1100
+#    pragma warning(default: 4115 4201 4214)
+#   endif
+#  endif
+# endif
+#endif
+
+#if defined(OS2) || defined(__EMX__)
+# define INCL_BASE
+# include <os2.h>
+# define DONT_TYPEDEF_PFN
 #endif
 
 #include "rexx.h"
@@ -67,9 +94,15 @@ static char *RCSid = "$Id$";
 # include <sys/stat.h>
 #endif
 
-#if defined(DJGPP) || defined(__EMX__) || defined(_MSC_VER) || (defined(__WATCOMC__) && !defined(__QNX__))
+#if defined(DJGPP) || defined(__EMX__) || defined(_MSC_VER) || (defined(__WATCOMC__) && !defined(__QNX__)) || defined(__EPOC32__)
 # include <fcntl.h>
-# include <io.h>
+# if !defined(__WINS__) && !defined(__EPOC32__)
+#  include <io.h>
+# endif
+#endif
+
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
 #endif
 
 /*
@@ -95,8 +128,9 @@ const char *numeric_forms[] = { "SCIENTIFIC", "ENGINEERING" } ;
 /*
  * Note: these must match the definitions of INVO_* in defs.h
  */
-const char *invo_strings[] = {
-   "COMMAND", "FUNCTION", "SUBROUTINE" } ;
+const char *invo_strings[] = { "COMMAND", "FUNCTION", "SUBROUTINE" } ;
+
+const char *argv0 = NULL;
 
 #ifdef TRACEMEM
 void marksubtree( nodeptr ptr )
@@ -121,8 +155,6 @@ void marksubtree( nodeptr ptr )
             markmemory( ptr->u.strng, TRC_TREENODE ) ;
    }
 }
-
-
 #endif /* TRACEMEM */
 
 
@@ -174,16 +206,67 @@ nodeptr treadit( cnodeptr tree )
  */
 }
 
+/* GetArgv0 tries to find the fully qualified filename of the current program.
+ * It uses some ugly and system specific tricks and it may return NULL if
+ * it can't find any useful value.
+ * The argument should be argv[0] of main() and it may be returned.
+ * This function must not be called from another as the sole one when starting
+ * up.
+ */
+static const char *GetArgv0(const char *argv0)
+{
+#ifdef WIN32
+   char buf[512];
+
+   if (GetModuleFileName(NULL, buf, sizeof(buf)) != 0)
+      return(strdup(buf)); /* never freed up */
+#elif defined(OS2)
+   char buf[512];
+   PPIB ppib;
+
+# ifdef __EMX__
+   if (_osmode == OS2_MODE)
+   {
+# endif
+      if (DosGetInfoBlocks(NULL, &ppib) == 0)
+         if (DosQueryModuleName(ppib->pib_hmte, sizeof(buf), buf) == 0)
+            return(strdup(buf));
+# ifdef __EMX__
+   }
+# endif
+#endif
+
+   /* No specific code has found the right file name. Maybe, it's coded
+    * in argv0. Check it, if it is an absolute path. Be absolutely sure
+    * to detect it safely!
+    */
+   if (argv0 == NULL)
+      return(NULL);
+
+   if (argv0[0] == '/') /* unix systems and some others */
+      return(argv0);
+
+   if ((argv0[0] == '\\') && (argv0[1] == '\\')) /* MS and OS/2 UNC names */
+      return(argv0);
+
+   if (isalpha(argv0[0]) && (argv0[1] == ':') && (argv0[2] == '\\'))
+      return(argv0); /* MS and OS/2 drive letter with path */
+
+   return(NULL); /* not a proven argv0 argument */
+}
+
 #ifdef RXLIB
 int APIENTRY __regina_faked_main(int argc,char *argv[])
+#define CALL_MAIN __regina_faked_main
 #else
 int main(int argc,char *argv[])
+#define CALL_MAIN main
 #endif
 {
    FILE *fptr = NULL ;
    streng *string=NULL ;
    int i=0, j=0, stdinput=1, state=0, rcode=0, oldi=0, trace_override=0 ;
-   paramboxptr args=NULL ;
+   paramboxptr args=NULL, prev ;
    char *arg=NULL ;
    int make_perl=0 ;
    int do_yydebug=0;
@@ -194,6 +277,19 @@ int main(int argc,char *argv[])
 #ifdef MAC
    InitCursorCtl(nil);
 #endif
+    /*
+     * For WIN32, set an atexit() function to allow the user to see the output
+     * from the program if run from Explorer or the Start menu.
+     * Only do this if we are running Regina, and not from another process
+     * that uses the API.
+     */
+#if defined(WIN32) && !defined(__WINS__) && !defined(__EPOC32__)
+   set_pause_at_exit();
+#endif
+
+   if (argv0 == NULL)
+      argv0 = GetArgv0(argv[0]);
+
    TSD = GLOBAL_ENTRY_POINT();
 
    TSD->stddump = stderr ;
@@ -203,6 +299,7 @@ int main(int argc,char *argv[])
 
    TSD->systeminfo->currlevel0 = TSD->currlevel = newlevel( TSD, NULL ) ;
    TSD->systeminfo->trace_override = 0;
+   TSD->isclient = 0;
 
    for (i=1; i<argc; i++)
    {
@@ -222,7 +319,12 @@ int main(int argc,char *argv[])
 
                case 'C':
                   if (*(arg+1)=='i')
+                  {
                      TSD->isclient = 1 ; /* Other than the default value of 0 */
+#if defined(WIN32) && !defined(__WINS__) && !defined(__EPOC32__)
+                     dont_pause_at_exit();
+#endif
+                  }
                   break ;
 
                case 'p':
@@ -238,6 +340,10 @@ int main(int argc,char *argv[])
                   do_yydebug = 1 ;
                   break ;
 
+               case 'r': /* safe-rexx */
+                  TSD->restricted = 1 ;
+                  break ;
+
                case 't':
                   queue_trace_char(TSD, (char) (*(arg+1)? *(++arg) : 'A')) ;
                   trace_override = 1;
@@ -246,6 +352,10 @@ int main(int argc,char *argv[])
                case 'd':
                   if (*(arg+1)=='m')
                      TSD->listleakedmemory = 1 ;
+                  break ;
+
+               case 'a':
+                  TSD->systeminfo->invoked = INVO_SUBROUTINE;
                   break ;
             }
          }
@@ -259,7 +369,7 @@ int main(int argc,char *argv[])
                if ( !fptr )
                {
                   TSD->systeminfo->input_file = Str_crestrTSD(argv[i]) ;
-                  exiterror( ERR_PROG_UNREADABLE, 1, "Program is unreadable" )  ;
+                  exiterror( ERR_PROG_UNREADABLE, 1, "Program was not found" )  ;
                }
             }
             TSD->systeminfo->input_file = Str_crestrTSD(name) ;
@@ -271,7 +381,7 @@ int main(int argc,char *argv[])
     /*
      * Under DJGPP setmode screws up Parse Pull and entering code interactively :-(
      */
-#if defined(__EMX__) || defined(_MSC_VER) || (defined(__WATCOMC__) && !defined(__QNX__))
+#if defined(__EMX__) || (defined(_MSC_VER) && !defined(__WINS__)) || (defined(__WATCOMC__) && !defined(__QNX__))
     setmode( fileno( stdin ), O_BINARY );
     setmode( fileno( stdout ), O_BINARY );
     setmode( fileno( stderr ), O_BINARY );
@@ -288,31 +398,49 @@ int main(int argc,char *argv[])
 
    oldi = ++i ;
 
-   for (j=1;i<argc;i++)
-      j += strlen(argv[i]) + 1 ;
-
-   TSD->currlevel->args = args = MallocTSD(sizeof(parambox)) ;
-   memset(args,0,sizeof(parambox)); /* especially ->value */
-/*
-   args->value = Str_dupTSD(TSD->systeminfo->input_file) ;
-   args = args->next = MallocTSD(sizeof(parambox)) ;
- */
-   args->next = NULL ;
-   if (oldi>=argc)
-      args->value = string = NULL ;
+   if ( TSD->systeminfo->invoked == INVO_SUBROUTINE )
+   {
+      prev = NULL;
+      for (i=oldi;i<argc;i++)
+      {
+         args = MallocTSD(sizeof(parambox)) ;
+         if ( i == oldi )
+            TSD->currlevel->args = args;
+         else
+            prev->next = args;
+         memset(args,0,sizeof(parambox)); /* especially ->value */
+         args->value = Str_cre_TSD( TSD, argv[i] ) ;
+         prev = args;
+      }
+   }
    else
    {
-      args->value = string = Str_makeTSD( j ) ;
-      string->len = 0 ;
+      for (j=1;i<argc;i++)
+         j += strlen(argv[i]) + 1 ;
+   
+      TSD->currlevel->args = args = MallocTSD(sizeof(parambox)) ;
+      memset(args,0,sizeof(parambox)); /* especially ->value */
+   /*
+      args->value = Str_dupTSD(TSD->systeminfo->input_file) ;
+      args = args->next = MallocTSD(sizeof(parambox)) ;
+    */
+      args->next = NULL ;
+      if (oldi>=argc)
+         args->value = string = NULL ;
+      else
+      {
+         args->value = string = Str_makeTSD( j ) ;
+         string->len = 0 ;
+      }
+   
+      for (i=oldi;i<argc;i++)
+      {
+         string = Str_catstrTSD(string,argv[i]) ;
+         string->value[string->len++] = ' ' ;
+      }
+      if (string && string->len)
+        string->len-- ;
    }
-
-   for (i=oldi;i<argc;i++)
-   {
-      string = Str_catstrTSD(string,argv[i]) ;
-      string->value[string->len++] = ' ' ;
-   }
-   if (string && string->len)
-     string->len-- ;
 
    signal_setup( TSD ) ;
 
@@ -322,7 +450,7 @@ int main(int argc,char *argv[])
    fetch_file( TSD, fptr ? fptr : stdin, &parsing );
 
    if (parsing.result != 0)
-      exiterror( ERR_YACC_SYNTAX, 0 ) ;
+      exiterror( ERR_YACC_SYNTAX, 1, parsing.tline ) ;
    else
       TSD->systeminfo->tree = parsing;
 
@@ -415,6 +543,37 @@ int main(int argc,char *argv[])
 
    return(rcode) ;
 
+}
+
+/* reexecute_main is possibly called by one of the fork_exec routines.
+ * This functions cleans up some stuff to reexecute without problems.
+ * The most useful thing to be done here is freeing all used memory.
+ * NOTE: usage is always the last thing you should try. Better use
+ * spawn or exec to let a fresh interpreter do the work.
+ */
+int __regina_reexecute_main(int argc, char **argv)
+{
+   tsd_t *TSD;
+
+   TSD = __regina_get_tsd(); /* hopefully not multithreading! */
+
+   if (TSD != NULL) /* yes! I don't know what happens on forking */
+   {                /* and active multi-threading                */
+
+      purge_stacks(TSD);    /* see main above for comments */
+      purge_filetable(TSD);
+#ifdef DYNAMIC
+      purge_library(TSD);
+#endif
+#if defined(FLISTS)
+# if defined(NEW_FLISTS)
+      free_flists();
+# endif
+      purge_flists(TSD);
+#endif
+   }
+
+   return(CALL_MAIN(argc, argv));
 }
 
 #ifdef TRACEMEM

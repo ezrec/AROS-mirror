@@ -19,4 +19,9 @@
   execution the code for pragma is executed in a function so calling
   StackSwap in this function and then returning from the function will cause
   havoc.
+* When signals are present in AROS signals.c should be update to use the
+  signal C function.
+* In doscmd.c now NEED_STUPID_DOSCMD is defined for _AMIGA and __AROS__.
+  Maybe a closer look can be made on this file to have a better port for
+  AROS and/or Amiga.
 * and probably a lot more ...

@@ -422,11 +422,13 @@ volatile char *tmpstr_of( tsd_t *TSD, const streng *input )
    if (input == NULL)
    {
       for (i = 0; i < sizeof(TSD->tmp_strs) / sizeof(TSD->tmp_strs[0]); i++)
+      {
          if (TSD->tmp_strs[i] != NULL)
          {
             FreeTSD( (char *) TSD->tmp_strs[i] ) ;
             TSD->tmp_strs[i] = NULL ;
          }
+      }
       TSD->next_tmp_str = 0;
       return NULL;
    }

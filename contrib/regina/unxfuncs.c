@@ -39,6 +39,14 @@ static char *RCSid = "$Id$";
 # define _GNU_SOURCE
 #endif
 
+#define HAVE_FORK
+#if !defined(__WATCOMC__) && !defined(_MSC_VER)  && !(defined(__IBMC__) && defined(WIN32)) && !defined(__SASC) && !defined(__MINGW32__) && !defined(__BORLANDC__)
+# undef HAVE_FORK
+#endif
+#if defined(__WATCOMC__) && defined(__QNX__)
+# define HAVE_FORK
+#endif
+
 #include "rexx.h"
 #include <stdio.h>
 #include <string.h>
@@ -69,9 +77,9 @@ typedef struct utsname
    char *version ;
    char *machine ;
 } _utsname ;
-# elif defined(__WATCOMC__) || defined(_MSC_VER) || defined(__SASC) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__AROS__)
+# elif defined(__WATCOMC__) || defined(_MSC_VER) || defined(__SASC) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__AROS__) || defined(__WINS__) || defined(__EPOC32__)
 #  include "utsname.h"
-#  if !defined(__SASC) && !defined(__QNX__) && !defined(__AROS__)
+#  if !defined(__SASC) && !defined(__QNX__) && !defined(__AROS__) && !defined(__WINS__) && !defined(__EPOC32__)
 #   include <process.h>
 #   include <direct.h>
 #  endif
@@ -80,10 +88,6 @@ typedef struct utsname
 #  include <sys/utsname.h>
 #  endif
 # endif
-#endif
-
-#if defined(CRAY)
-FILE *popen( char *command, char *access ) ;
 #endif
 
 streng *unx_getpath( tsd_t *TSD, cparamboxptr dummy )
@@ -100,6 +104,9 @@ streng *unx_popen( tsd_t *TSD, cparamboxptr parms )
    streng *cptr=NULL ;
    int length=0, lines=0 ;
    int save_internal_queues_option;
+
+   if ( TSD->restricted )
+      exiterror( ERR_RESTRICTED, 1, "POPEN" )  ;
 
    checkparam(  parms,  1,  2 , "POPEN" ) ;
    string = (parms->value) ;
@@ -121,7 +128,7 @@ streng *unx_popen( tsd_t *TSD, cparamboxptr parms )
       lines = lines_in_stack( TSD, NULL ) ;
    }
 
-   result = perform( TSD, cptr, TSD->currlevel->environment, NULL ) ;
+   result = perform( TSD, cptr, TSD->currlevel->environment, TSD->currentnode ) ;
    Free_stringTSD( cptr ) ;
 
    if (parms->next && parms->next->value)
@@ -138,8 +145,10 @@ streng *unx_popen( tsd_t *TSD, cparamboxptr parms )
       cptr = varname->value ;
       eptr = cptr + varstem->len ;
       for (; cptr<eptr; cptr++)
+      {
          if (islower(*cptr))
             *cptr = (char) toupper(*cptr) ;
+      }
 
       if (*(eptr-1)!='.')
       {
@@ -203,7 +212,7 @@ streng *unx_uname( tsd_t *TSD, cparamboxptr parms )
 
    checkparam(  parms,  0,  1 , "UNAME" ) ;
    if (parms->value)
-      option = getoptionchar( TSD, parms->value, "UNAME", 1, "ASMNRV" ) ;
+      option = getoptionchar( TSD, parms->value, "UNAME", 1, "ASMNRV", "" ) ;
    else
       option = 'A' ;
 
@@ -241,17 +250,17 @@ streng *unx_uname( tsd_t *TSD, cparamboxptr parms )
 
 streng *unx_fork( tsd_t *TSD, cparamboxptr parms )
 {
-   int i=0 ;
+   int i=1 ;
 
    checkparam(  parms,  0,  0 , "FORK" ) ;
-#if !defined(MAC) && !defined(__WATCOMC__) && !defined(_MSC_VER)  && !(defined(__IBMC__) && defined(WIN32)) && !defined(__SASC) && !defined(__MINGW32__) && !defined(__BORLANDC__) && !defined(__AROS__)
+#if defined(HAVE_FORK)
    i = fork() ;
 #endif                                                  /* MH 10-06-96 */
    return int_to_streng( TSD, i ) ;
 }
 
 
-#ifndef FGC
+#if 0
 char *unx_unixerror( tsd_t *TSD, cparamboxptr parms )
 {
    const char *errtxt=NULL ;

@@ -265,6 +265,7 @@ tsd_t *ReginaInitializeThread(void)
    OK &= init_shell(retval);            /* Initialize the shell module       */
    OK &= init_envir(retval);            /* Initialize the envir module       */
    OK &= init_expr(retval);             /* Initialize the expr module        */
+   OK &= init_error(retval);            /* Initialize the error module       */
 #ifdef VMS
    OK &= init_vms(retval);              /* Initialize the vmscmd module      */
    OK &= init_vmf(retval);              /* Initialize the vmsfuncs module    */

@@ -190,7 +190,9 @@
 #define X_S_GTE         168
 #define X_S_LT          169
 #define X_S_LTE         170
-#define X_ADDR_W        171
+#define X_ADDR_WITH     171
+#define X_S_LOSTDIGITS  172
+#define X_DO_EXPR       173
 
 
 /* The three first two numbers have not errortext attched to them */
@@ -239,44 +241,24 @@
 /* No errortexts have not been defined to the next to numbers */
 #define ERR_SYSTEM_FAILURE      48
 #define ERR_INTERPRETER_FAILURE 49
+#define ERR_UNQUOTED_FUNC_STOP  51
+#define ERR_INVALID_OPTION      53
+#define ERR_INVALID_STEM_OPTION 54
 
 #define ERR_CANT_REWIND         60
 #define ERR_IMPROPER_SEEK       61
-#if 0
-#define ERR_BUFFER_TOO_SMALL    62
-#define ERR_NO_SUCH_FILE        63
-#endif
+
 #define ERR_YACC_SYNTAX         64
 
-#define ERR_UNKNOWN_FS_ERROR    90
+#define ERR_NON_ANSI_FEATURE    90
 #define ERR_STREAM_COMMAND      93
-
 #define ERR_EXTERNAL_QUEUE      94
 
-#define ERR_STORAGE_EXHAUSTED_TMPL       "System resources exhausted"
+#define ERR_RESTRICTED          95
 
-#define ERR_RXSTACK_CANT_CONNECT       101
-#define ERR_RXSTACK_CANT_CONNECT_TMPL    "Error connecting to %s on port %d: \"%s\""
-#define ERR_RXSTACK_NO_IP              102
-#define ERR_RXSTACK_NO_IP_TMPL           "Unable to obtain IP address for %s"
-#define ERR_RXSTACK_INVALID_SERVER     103
-#define ERR_RXSTACK_INVALID_SERVER_TMPL  "Invalid format for server in specified queue name: \"%s\""
-#define ERR_RXSTACK_INVALID_QUEUE      104
-#define ERR_RXSTACK_INVALID_QUEUE_TMPL   "Invalid format for queue name: \"%s\""
-#define ERR_RXSTACK_NO_WINSOCK         105
-#define ERR_RXSTACK_NO_WINSOCK_TMPL      "Unable to start Windows Socket interface: %s"
-#define ERR_RXSTACK_TOO_MANY_QUEUES    106
-#define ERR_RXSTACK_TOO_MANY_QUEUES_TMPL "Maximum number of external queues exceeded: %d"
-#define ERR_RXSTACK_READING_SOCKET     107
-#define ERR_RXSTACK_READING_SOCKET_TMPL  "Error occured reading socket: %s"
-#define ERR_RXSTACK_INVALID_SWITCH     108
-#define ERR_RXSTACK_INVALID_SWITCH_TMPL  "Invalid switch passed. Must be one of \"%s\""
+#define ERR_UNKNOWN_FS_ERROR    100
 
-#define ERR_RXSTACK_INTERNAL            99
-#define ERR_RXSTACK_INTERNAL_TMPL        "Internal error with external queue interface: %d \"%s\""
-#define ERR_RXSTACK_GENERAL            100
-#define ERR_RXSTACK_GENERAL_TMPL         "General system error with external queue interface. %s. %s"
-
+#define ERR_MAX_NUMBER          100
 /*
  #define ENV_BOURNE_SH  0
  #define ENV_C_SHELL    1
@@ -357,14 +339,16 @@
 #define SUBENVIR_PATH 1
 #define SUBENVIR_SYSTEM 2
 #define SUBENVIR_COMMAND 3
+#define SUBENVIR_REXX 4
 
 
-#define REDIR_NONE     0x00000000
-#define REDIR_INPUT    0x00000001
-#define REDIR_OUTLIFO  0x00000002
-#define REDIR_OUTFIFO  0x00000004
-#define REDIR_OUTPUT   0x00000006
-#define REDIR_CLEAR    0x00000008
+#define REDIR_NONE      0x00000000
+#define REDIR_INPUT     0x00000001
+#define REDIR_OUTLIFO   0x00000002
+#define REDIR_OUTFIFO   0x00000004
+#define REDIR_OUTPUT    0x00000006
+#define REDIR_CLEAR     0x00000008
+#define REDIR_OUTSTRING 0x00000010
 
 
 #define HOOK_LINEFEED  1
@@ -411,21 +395,22 @@
  * For refering to the extensions, must correspond with the bitfields
  * in the definition of the u.options field of proclevel in types.h
  */
-#define EXT_FLUSHSTACK             0
-#define EXT_LINEOUTTRUNC           1
-#define EXT_CLOSE_BIF              2
-#define EXT_OPEN_BIF               3
-#define EXT_BUFTYPE_BIF            4
-#define EXT_DESBUF_BIF             5
-#define EXT_DROPBUF_BIF            6
-#define EXT_MAKEBUF_BIF            7
-#define EXT_CACHEEXT               8
-#define EXT_FIND_BIF               9
-#define EXT_PRUNE_TRACE           10
-#define EXT_EXT_COMMANDS_AS_FUNCS 11
-#define EXT_STDOUT_FOR_STDERR     12
-#define EXT_TRACE_HTML            13
+#define EXT_FLUSHSTACK              0
+#define EXT_LINEOUTTRUNC            1
+#define EXT_CLOSE_BIF               2
+#define EXT_OPEN_BIF                3
+#define EXT_BUFTYPE_BIF             4
+#define EXT_DESBUF_BIF              5
+#define EXT_DROPBUF_BIF             6
+#define EXT_MAKEBUF_BIF             7
+#define EXT_CACHEEXT                8
+#define EXT_FIND_BIF                9
+#define EXT_PRUNE_TRACE            10
+#define EXT_EXT_COMMANDS_AS_FUNCS  11
+#define EXT_STDOUT_FOR_STDERR      12
+#define EXT_TRACE_HTML             13
 #define EXT_FAST_LINES_BIF_DEFAULT 14
-#define EXT_ANSI                  15
-#define EXT_INTERNAL_QUEUES       16
-#define EXT_PGB_PATCH1            17  /* pgb */
+#define EXT_STRICT_ANSI            15
+#define EXT_INTERNAL_QUEUES        16
+#define EXT_PGB_PATCH1             17  /* pgb */
+#define EXT_REGINA_BIFS            18

@@ -32,7 +32,7 @@
 # include <windows.h>
 #endif
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(__WINS__)
 # if _MSC_VER >= 1100
 /* Stupid MSC can't compile own headers without warning at least in VC 5.0 */
 #   pragma warning(disable: 4115 4201 4214)
@@ -452,6 +452,11 @@ EXTNAME("RexxQueryExit");
 #define RXCOMMAND         0
 #define RXSUBROUTINE      1
 #define RXFUNCTION        2
+/*
+ * RXRESTRICTED is OR'ed with one of the above values to run Regina
+ * in "restricted" mode
+ */
+#define RXRESTRICTED    256
 
 
 #ifdef INCL_RXSHV

@@ -5,6 +5,7 @@ TARGETDIR := $(CONTRIBDIR)/Regina/trip
 REXXFILES := \
     arith.rexx \
     builtin.rexx \
+    error.rexx \
     files.rexx \
     funcs.rexx \
     lexical.rexx \

@@ -34,10 +34,6 @@ static char *RCSid = "$Id$";
 # include <assert.h>
 #endif
 
-#if defined(CRAY)
-FILE *popen( char *command, char *access ) ;
-#endif
-
 #define XOR(a,b) (( (a) && (!(b)) )||( (!(a)) && (b) ))
 
 #define OPTIMIZE
@@ -50,6 +46,9 @@ const streng RC_name = { 2, 2, "RC" } ;
 const streng SIGL_name = { 4, 4, "SIGL" };
 static const streng8 RESULT_name8 = { 6, 6, "RESULT" };
 const streng *RESULT_name = (streng *)&RESULT_name8 ;
+const streng _dotRS_name = {3, 3, ".RS" };
+const streng *dotRS_name = &_dotRS_name;
+
 
 static const char default_action[SIGNALS] = { 1, 1, 0, 1, 1, 0 } ;
 static const char default_ignore[SIGNALS] = { 1, 1, 0, 0, 1, 0 } ;
@@ -649,6 +648,7 @@ reinterpret:
                      break ;
 
                   case X_DO_FOR:
+                  case X_DO_EXPR:
                   {
                      int iptr, error ;
                      streng *chptr ;
@@ -656,7 +656,7 @@ reinterpret:
                      tmpptr = this->p[0]->p[i]->p[0] ;
                      chptr = evaluate(TSD, tmpptr, NULL);
                      iptr = streng_to_int(TSD, chptr, &error) ;
-                     if (error)  exiterror( ERR_INVALID_INTEGER, 0 )  ;
+                     if (error)  exiterror( ERR_INVALID_INTEGER, (this->p[0]->p[i]->type==X_DO_EXPR) ? 2 : 3, chptr->value )  ;
                      if (iptr<0)  exiterror( ERR_INVALID_RESULT, 0 )  ;
                      s.number = iptr ;
                      Free_stringTSD( chptr ) ;
@@ -736,7 +736,12 @@ one:
          {
 #ifdef OPTIMIZE
             tdescr = shortcutnum( TSD, this->p[0] ) ;
-            assert( tdescr ) ;
+            /*
+             * Check if we still have a valid number. If not
+             * exit with arithmetic error.
+             */
+            if (!tdescr)
+               exiterror( ERR_BAD_ARITHMETIC, 0 )  ;
 /*
             if ((this->p[0]->u.varbx) && ( this->p[0]->u.varbx->valid ))
             {
@@ -949,7 +954,7 @@ endloop: if (s.increment)
                Free_stringTSD( tptr ) ;
             }
             else
-               exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+               exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          }
 
          break ;
@@ -1037,34 +1042,18 @@ endloop: if (s.increment)
          break ;
       }
 
-      case X_ADDR_W:   /* ADDRESS environment WITH [expr] - incomplete */
-      {
-         streng *envir, *tmp ;
-         update_envirs( TSD, TSD->currlevel ) ;
-         envir = this->name ;
-         if (this->p[0])
-         {
-            /* bja - added Free_stringTSD() around perform() */
-            tmp = evaluate(TSD,this->p[0],NULL);
-            Free_stringTSD(perform(TSD, tmp, envir, this)) ;
-            Free_stringTSD( tmp ) ;
-         }
-         else
-         {
-            Free_stringTSD( TSD->currlevel->prev_env ) ;
-            TSD->currlevel->prev_env = TSD->currlevel->environment ;
-            TSD->currlevel->environment = Str_dupTSD(envir) ;
-         }
-         break ;
-      }
-
 
       case X_ADDR_V:   /* ADDRESS [VALUE] expr */
       {
          streng *cptr ;
 
+         if ( this->u.nonansi &&
+              get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+            exiterror( ERR_NON_ANSI_FEATURE, 2, "ADDRESS \"(\"...\")\"") ;
+
          update_envirs( TSD, TSD->currlevel ) ;
          cptr = evaluate(TSD,this->p[0],NULL) ;
+         set_envir( TSD, cptr, this->p[1] ) ;
          Free_stringTSD( TSD->currlevel->prev_env ) ;
          TSD->currlevel->prev_env = TSD->currlevel->environment ;
          TSD->currlevel->environment = cptr ;
@@ -1092,7 +1081,9 @@ endloop: if (s.increment)
             if (nptr->name)
             {
                if (nptr->type == X_SIM_SYMBOL)
+               {
                   drop_var( TSD, nptr->name ) ;
+               }
                else
                {
                   if (nptr->type == X_IND_SYMBOL)
@@ -1120,6 +1111,63 @@ endloop: if (s.increment)
                         memcpy(name->value, value->value + begin, Str_len(name));
                         Str_upper(name);
                         drop_var( TSD, name ) ;
+                        Free_stringTSD( name ) ;
+                     }
+                  }
+               }
+            }
+         }
+         break ;
+      }
+
+      case X_UPPER_VAR:
+      {
+         /*
+          * If we are running in STRICT_ANSI mode, disallow this
+          * keyword.
+          * Copy the code above for DROP.
+          * Need to cause error if stem variable is specified
+          * Need to handle NOVALUE
+          */
+         nodeptr nptr ;
+
+         if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+            exiterror( ERR_NON_ANSI_FEATURE, 2, "UPPER" )  ;
+         for (nptr=this->p[0]; nptr; nptr=nptr->p[0] )
+         {
+            if (nptr->name)
+            {
+               if (nptr->type == X_SIM_SYMBOL)
+               {
+                  upper_var( TSD, nptr->name ) ;
+               }
+               else
+               {
+                  if (nptr->type == X_IND_SYMBOL)
+                  {
+                     int begin,end;
+                     streng *name;
+                     const streng *value = shortcut(TSD,nptr) ;
+
+                     /* Chop space separated words and drop them one by one */
+                     for (end = 0;;)
+                     {
+                        begin = end; /* end of last word processed + 1 */
+                        while ((begin < Str_len(value)) &&
+                               isspace(value->value[begin]))
+                           begin++;
+                        if (begin == Str_len(value))
+                           break;
+                        end = begin + 1; /* find next separator */
+                        while ((end < Str_len(value)) &&
+                               !isspace(value->value[end]))
+                           end++;
+                        /* end now on space after word or past end of string */
+                        name = Str_makeTSD(end - begin);
+                        name->len = end - begin;
+                        memcpy(name->value, value->value + begin, Str_len(name));
+                        Str_upper(name);
+                        upper_var( TSD, name ) ;
                         Free_stringTSD( name ) ;
                      }
                   }
@@ -1201,7 +1249,7 @@ endloop: if (s.increment)
                   assert( ptr->type==X_SIM_SYMBOL) ;
             }
             else
-               exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+               exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          }
          expose_var(TSD,NULL) ;
          break ;
@@ -1239,6 +1287,7 @@ endloop: if (s.increment)
             TSD->currlevel = oldlevel ;
             TSD->currlevel->next = NULL ;
             TSD->trace_stat = TSD->currlevel->tracestat ;
+            TSD->systeminfo->interactive = TSD->currlevel->traceint ; /* MDW 30012002 */
 
             if (result)
                setvalue( TSD, RESULT_name, result ) ;
@@ -1246,33 +1295,36 @@ endloop: if (s.increment)
                drop_var( TSD, RESULT_name ) ;
 
             break ;
-        }
-     }
+         }
+      }
+      /* THIS IS MEANT TO FALL THROUGH! */
+      case X_EX_FUNC:
+      case X_IS_BUILTIN:
+      {
+         streng *result ;
 
-     case X_EX_FUNC:
-     case X_IS_BUILTIN:
-     {
-        streng *result ;
+         if ((result = buildtinfunc( TSD, this )) == NOFUNC)
+         {
+            this->type = X_IS_EXTERNAL ;
+         }
+         else
+         {
+            if (result)
+               setvalue( TSD, RESULT_name, result ) ;
+            else
+               drop_var( TSD, RESULT_name ) ;
 
-        if ((result = buildtinfunc( TSD, this )) == NOFUNC)
-        {
-           this->type = X_IS_EXTERNAL ;
-        }
-        else
-        {
-           if (result)
-              setvalue( TSD, RESULT_name, result ) ;
-           else
-              drop_var( TSD, RESULT_name ) ;
-
-           break ;
-        }
+            break ;
+         }
       }
 
       case X_IS_EXTERNAL:
       {
          streng *ptr, *command ;
          paramboxptr args, targs ;
+
+         if ( TSD->restricted )
+            exiterror( ERR_RESTRICTED, 5 )  ;
 
          update_envirs( TSD, TSD->currlevel ) ;
 
@@ -1329,13 +1381,10 @@ endloop: if (s.increment)
              * "this->name" wasn't an external Rexx program, so
              * see if it is an OS command
              * Only do this if the OPTIONS EXT_COMMANDS_AS_FUNCS is
-             * set.
+             * set and STRICT_ANSI is NOT set.
              */
-#if OLD_OPTIONS
-            if ( TSD->currlevel->u.options.ext_commands_as_funcs )
-#else
-            if ( get_options_flag( TSD->currlevel, EXT_EXT_COMMANDS_AS_FUNCS ) )
-#endif
+            if ( get_options_flag( TSD->currlevel, EXT_EXT_COMMANDS_AS_FUNCS )
+            &&  !get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
             {
                command = Str_makeTSD( 1000 ) ;
                command = Str_catTSD(command,this->name ) ;
@@ -1519,7 +1568,12 @@ endloop: if (s.increment)
          for (;;) /* while iteration counter name not found */
          {
             if (Stacked<=0)
-               exiterror( ERR_INVALID_LEAVE, 0 )  ;
+            {
+               if (innerloop)
+                  exiterror( ERR_INVALID_LEAVE, (this->type==X_LEAVE)?3:4, tmpstr_of( TSD, this->name ) )  ;
+               else
+                  exiterror( ERR_INVALID_LEAVE, (this->type==X_LEAVE)?1:2 )  ;
+            }
             iptr = top->this ;
             if (this->name==NULL)
                break;
@@ -1541,7 +1595,7 @@ endloop: if (s.increment)
          nstackcleanup(TSD,nstktrigger,&iptr);
 
          if (Stacked<=0)
-            exiterror( ERR_INVALID_LEAVE, 0 )  ;
+            exiterror( ERR_INVALID_LEAVE, 0 );
          if (this->type==X_LEAVE)
          {
             popcallstack(TSD,-1) ;
@@ -1571,6 +1625,8 @@ endloop: if (s.increment)
             s = stackpop(TSD);
             innerloop = s.this;
          }
+         else
+            innerloop = NULL;
          goto fakereturn ;
          break ;
       }
@@ -1673,7 +1729,7 @@ endloop: if (s.increment)
          break ;
 
       default:
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
          break ;
    }
 
@@ -1794,6 +1850,7 @@ fakerecurse:
          TSD->currlevel = oldlevel ;
          TSD->currlevel->next = NULL ;
          TSD->trace_stat = TSD->currlevel->tracestat ;
+         TSD->systeminfo->interactive = TSD->currlevel->traceint ; /* MDW 30012002 */
       }
 
    }
@@ -1934,24 +1991,7 @@ proclevel newlevel( tsd_t *TSD, proclevel oldlevel )
       level->next = NULL ;
       level->args = NULL ;
       memset(level->u.flags,0,sizeof(level->u.flags));
-#if OLD_OPTIONS
-      level->u.options.lineouttrunc = DEFAULT_LINEOUTTRUNC ;
-      level->u.options.flushstack = DEFAULT_FLUSHSTACK ;
-      level->u.options.close_bif = DEFAULT_CLOSE_BIF ;
-      level->u.options.open_bif = DEFAULT_OPEN_BIF ;
-      level->u.options.makebuf_bif = DEFAULT_MAKEBUF_BIF ;
-      level->u.options.dropbuf_bif = DEFAULT_DROPBUF_BIF ;
-      level->u.options.desbuf_bif = DEFAULT_DESBUF_BIF ;
-      level->u.options.buftype_bif = DEFAULT_BUFTYPE_BIF ;
-      level->u.options.cacheext = DEFAULT_CACHEEXT ;
-      level->u.options.find_bif = DEFAULT_FIND_BIF ;
-      level->u.options.prune_trace = DEFAULT_PRUNE_TRACE ;
-      level->u.options.ext_commands_as_funcs = DEFAULT_EXT_COMMANDS_AS_FUNCS ;
-      level->u.options.stdout_for_stderr = DEFAULT_STDOUT_FOR_STDERR ;
-      level->u.options.trace_html = DEFAULT_TRACE_HTML ;
-      level->u.options.fast_lines_bif_default = DEFAULT_FAST_LINES_BIF_DEFAULT ;
-      level->u.options.ansi = DEFAULT_ANSI ;
-#else
+
       set_options_flag( level, EXT_LINEOUTTRUNC, DEFAULT_LINEOUTTRUNC ) ;
       set_options_flag( level, EXT_FLUSHSTACK, DEFAULT_FLUSHSTACK ) ;
       set_options_flag( level, EXT_CLOSE_BIF, DEFAULT_CLOSE_BIF ) ;
@@ -1967,12 +2007,14 @@ proclevel newlevel( tsd_t *TSD, proclevel oldlevel )
       set_options_flag( level, EXT_STDOUT_FOR_STDERR, DEFAULT_STDOUT_FOR_STDERR ) ;
       set_options_flag( level, EXT_TRACE_HTML, DEFAULT_TRACE_HTML ) ;
       set_options_flag( level, EXT_FAST_LINES_BIF_DEFAULT, DEFAULT_FAST_LINES_BIF_DEFAULT ) ;
-      set_options_flag( level, EXT_ANSI, DEFAULT_ANSI ) ;
+      set_options_flag( level, EXT_STRICT_ANSI, DEFAULT_STRICT_ANSI ) ;
       set_options_flag( level, EXT_INTERNAL_QUEUES, DEFAULT_INTERNAL_QUEUES ) ;
       set_options_flag( level, EXT_PGB_PATCH1, DEFAULT_PGB_PATCH1 ) ;
-#endif
+      set_options_flag( level, EXT_REGINA_BIFS, DEFAULT_REGINA_BIFS ) ;
+
       level->varflag = 1 ;
       level->tracestat = (char) TSD->systeminfo->tracing ;
+      level->traceint = (char) TSD->systeminfo->interactive ; /* MDW 30012002 */
       level->environment = Str_dupTSD( TSD->systeminfo->environment ) ;
       level->prev_env = Str_dupTSD( TSD->systeminfo->environment ) ;
       level->vars = create_new_varpool( TSD ) ;

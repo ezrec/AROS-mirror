@@ -31,7 +31,7 @@ static char *RCSid = "$Id$";
 
 struct function_type
 {
-   int length ;
+   int compat ;
    streng *(*function)(tsd_t *,cparamboxptr) ;
    const char *funcname ;
 } ;
@@ -41,227 +41,227 @@ struct function_type
 #endif
 
 static const struct function_type functions[] = {
-  { 0,              std_abbrev, "ABBREV" },
-  { 0,              std_abs, "ABS" },
+  { 0,              std_abbrev,            "ABBREV" },
+  { 0,              std_abs,               "ABS" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              arexx_addlib, "ADDLIB" },
+  { 0,              arexx_addlib,          "ADDLIB" },
 #endif
-  { 0,              std_address, "ADDRESS" },
+  { 0,              std_address,           "ADDRESS" },
 #ifdef TRACEMEM
-  { 0,              dbg_allocated, "ALLOCATED" },
+  { EXT_REGINA_BIFS,dbg_allocated,         "ALLOCATED" },
 #endif
-  { 0,              std_arg, "ARG" },
-  { 0,              arexx_b2c, "B2C" },
-  { 0,              std_b2x, "B2X" },
-  { 0,              os2_beep, "BEEP" },
-  { 0,              std_bitand, "BITAND" },
-  { 0,              arexx_bitchg, "BITCHG" },
-  { 0,              arexx_bitclr, "BITCLR" },
-  { 0,              arexx_bitcomp, "BITCOMP" },
-  { 0,              std_bitor, "BITOR" },
-  { 0,              arexx_bitset, "BITSET" },
-  { 0,              arexx_bittst, "BITTST" },
-  { 0,              std_bitxor, "BITXOR" },
-  { EXT_BUFTYPE_BIF,cms_buftype, "BUFTYPE" },
-  { 0,              arexx_c2b, "C2B" },
-  { 0,              std_c2d, "C2D" },
-  { 0,              std_c2x, "C2X" },
-  { 0,              unx_chdir, "CD" },
-  { 0,              std_center, "CENTER" },
-  { 0,              std_center, "CENTRE" },
-  { 0,              std_changestr, "CHANGESTR" }, /* ANSI Std 1996 - MH 10-06-96 */
-  { 0,              std_charin, "CHARIN" },
-  { 0,              std_charout, "CHAROUT" },
-  { 0,              std_chars, "CHARS" },
-  { 0,              unx_chdir, "CHDIR" },
+  { 0,              std_arg,               "ARG" },
+  { 0,              arexx_b2c,             "B2C" },
+  { 0,              std_b2x,               "B2X" },
+  { EXT_REGINA_BIFS,os2_beep,              "BEEP" },
+  { 0,              std_bitand,            "BITAND" },
+  { 0,              arexx_bitchg,          "BITCHG" },
+  { 0,              arexx_bitclr,          "BITCLR" },
+  { 0,              arexx_bitcomp,         "BITCOMP" },
+  { 0,              std_bitor,             "BITOR" },
+  { 0,              arexx_bitset,          "BITSET" },
+  { 0,              arexx_bittst,          "BITTST" },
+  { 0,              std_bitxor,            "BITXOR" },
+  { EXT_BUFTYPE_BIF,cms_buftype,           "BUFTYPE" },
+  { 0,              arexx_c2b,             "C2B" },
+  { 0,              std_c2d,               "C2D" },
+  { 0,              std_c2x,               "C2X" },
+  { EXT_REGINA_BIFS,unx_chdir,             "CD" },
+  { 0,              std_center,            "CENTER" },
+  { 0,              std_center,            "CENTRE" },
+  { 0,              std_changestr,         "CHANGESTR" }, /* ANSI Std 1996 - MH 10-06-96 */
+  { 0,              std_charin,            "CHARIN" },
+  { 0,              std_charout,           "CHAROUT" },
+  { 0,              std_chars,             "CHARS" },
+  { EXT_REGINA_BIFS,unx_chdir,             "CHDIR" },
 #ifdef OLD_REGINA_FEATURES
-  { 0,              unx_close, "CLOSE" },
+  { EXT_REGINA_BIFS,unx_close,             "CLOSE" },
 #endif
 #ifdef AREXXIO
-  { 0,              arexx_close, "CLOSE" },
+  { 0,              arexx_close,           "CLOSE" },
 #endif
-  { 0,              std_compare, "COMPARE" },
-  { 0,              arexx_compress, "COMPRESS" },
-  { 0,              std_condition, "CONDITION" },
-  { 0,              std_copies, "COPIES" },
-  { 0,              std_countstr, "COUNTSTR" },   /* ANSI Std 1996 - MH 10-06-96 */
-  { 0,              unx_crypt, "CRYPT" },
-  { 0,              std_d2c, "D2C" },
-  { 0,              std_d2x, "D2X" },
-  { 0,              std_datatype, "DATATYPE" },
-  { 0,              std_date, "DATE" },
-  { 0,              std_delstr, "DELSTR" },
-  { 0,              std_delword, "DELWORD" },
-  { EXT_DESBUF_BIF, cms_desbuf, "DESBUF" },
-  { 0,              std_digits, "DIGITS" },
-  { 0,              os2_directory, "DIRECTORY" },
-  { EXT_DROPBUF_BIF,cms_dropbuf, "DROPBUF" },
+  { 0,              std_compare,           "COMPARE" },
+  { 0,              arexx_compress,        "COMPRESS" },
+  { 0,              std_condition,         "CONDITION" },
+  { 0,              std_copies,            "COPIES" },
+  { 0,              std_countstr,          "COUNTSTR" },   /* ANSI Std 1996 - MH 10-06-96 */
+  { EXT_REGINA_BIFS,unx_crypt,             "CRYPT" },
+  { 0,              std_d2c,               "D2C" },
+  { 0,              std_d2x,               "D2X" },
+  { 0,              std_datatype,          "DATATYPE" },
+  { 0,              std_date,              "DATE" },
+  { 0,              std_delstr,            "DELSTR" },
+  { 0,              std_delword,           "DELWORD" },
+  { EXT_DESBUF_BIF, cms_desbuf,            "DESBUF" },
+  { 0,              std_digits,            "DIGITS" },
+  { EXT_REGINA_BIFS,os2_directory,         "DIRECTORY" },
+  { EXT_DROPBUF_BIF,cms_dropbuf,           "DROPBUF" },
 #ifndef NDEBUG
-  { 0,              dbg_dumpfiles, "DUMPFILES" },
-  { 0,              dbg_dumptree, "DUMPTREE" },
-  { 0,              dbg_dumpvars, "DUMPVARS" },
+  { EXT_REGINA_BIFS,dbg_dumpfiles,         "DUMPFILES" },
+  { EXT_REGINA_BIFS,dbg_dumptree,          "DUMPTREE" },
+  { EXT_REGINA_BIFS,dbg_dumpvars,          "DUMPVARS" },
 #endif
 #ifdef OLD_REGINA_FEATURES
-  { 0,              unx_eof, "EOF" },
+  { EXT_REGINA_BIFS,unx_eof,               "EOF" },
 #endif
 #ifdef AREXXIO
-  { 0,              arexx_eof, "EOF" },
+  { 0,              arexx_eof,             "EOF" },
 #endif
-  { 0,              std_errortext, "ERRORTEXT" },
-  { 0,              arexx_exists, "EXISTS" },
-  { 0,              arexx_export, "EXPORT" },
+  { 0,              std_errortext,         "ERRORTEXT" },
+  { 0,              arexx_exists,          "EXISTS" },
+  { 0,              arexx_export,          "EXPORT" },
 #ifdef VMS
-  { 0,              vms_f_cvsi, "F$CVSI" },
-  { 0,              vms_f_cvtime, "F$CVTIME" },
-  { 0,              vms_f_cvui, "F$CVUI" },
-  { 0,              vms_f_directory, "F$DIRECTORY" },
-  { 0,              vms_f_element, "F$ELEMENT" },
-  { 0,              vms_f_extract, "F$EXTRACT" },
-  { 0,              vms_f_fao, "F$FAO" },
-  { 0,              vms_f_file_attributes, "F$FILE_ATTRIBUTES" },
-  { 0,              vms_f_getdvi, "F$GETDVI" },
-  { 0,              vms_f_getjpi, "F$GETJPI" },
-  { 0,              vms_f_getqui, "F$GETQUI" },
-  { 0,              vms_f_getsyi, "F$GETSYI" },
-  { 0,              vms_f_identifier, "F$IDENTIFIER" },
-  { 0,              vms_f_integer, "F$INTEGER" },
-  { 0,              vms_f_length, "F$LENGTH" },
-  { 0,              vms_f_locate, "F$LOCATE" },
-  { 0,              vms_f_logical, "F$LOGICAL" },
-  { 0,              vms_f_message, "F$MESSAGE" },
-  { 0,              vms_f_mode, "F$MODE" },
-  { 0,              vms_f_parse, "F$PARSE" },
-  { 0,              vms_f_pid, "F$PID" },
-  { 0,              vms_f_privilege, "F$PRIVILEGE" },
-  { 0,              vms_f_process, "F$PROCESS" },
-  { 0,              vms_f_search, "F$SEARCH" },
-  { 0,              vms_f_setprv, "F$SETPRV" },
-  { 0,              vms_f_string, "F$STRING" },
-  { 0,              vms_f_time, "F$TIME" },
-  { 0,              vms_f_trnlnm, "F$TRNLNM" },
-  { 0,              vms_f_type, "F$TYPE" },
-  { 0,              vms_f_user, "F$USER" },
-/*{ 0,              vms_f_verify, "F$VERIFY" }, */
+  { EXT_REGINA_BIFS,vms_f_cvsi,            "F$CVSI" },
+  { EXT_REGINA_BIFS,vms_f_cvtime,          "F$CVTIME" },
+  { EXT_REGINA_BIFS,vms_f_cvui,            "F$CVUI" },
+  { EXT_REGINA_BIFS,vms_f_directory,       "F$DIRECTORY" },
+  { EXT_REGINA_BIFS,vms_f_element,         "F$ELEMENT" },
+  { EXT_REGINA_BIFS,vms_f_extract,         "F$EXTRACT" },
+  { EXT_REGINA_BIFS,vms_f_fao,             "F$FAO" },
+  { EXT_REGINA_BIFS,vms_f_file_attributes, "F$FILE_ATTRIBUTES" },
+  { EXT_REGINA_BIFS,vms_f_getdvi,          "F$GETDVI" },
+  { EXT_REGINA_BIFS,vms_f_getjpi,          "F$GETJPI" },
+  { EXT_REGINA_BIFS,vms_f_getqui,          "F$GETQUI" },
+  { EXT_REGINA_BIFS,vms_f_getsyi,          "F$GETSYI" },
+  { EXT_REGINA_BIFS,vms_f_identifier,      "F$IDENTIFIER" },
+  { EXT_REGINA_BIFS,vms_f_integer,         "F$INTEGER" },
+  { EXT_REGINA_BIFS,vms_f_length,          "F$LENGTH" },
+  { EXT_REGINA_BIFS,vms_f_locate,          "F$LOCATE" },
+  { EXT_REGINA_BIFS,vms_f_logical,         "F$LOGICAL" },
+  { EXT_REGINA_BIFS,vms_f_message,         "F$MESSAGE" },
+  { EXT_REGINA_BIFS,vms_f_mode,            "F$MODE" },
+  { EXT_REGINA_BIFS,vms_f_parse,           "F$PARSE" },
+  { EXT_REGINA_BIFS,vms_f_pid,             "F$PID" },
+  { EXT_REGINA_BIFS,vms_f_privilege,       "F$PRIVILEGE" },
+  { EXT_REGINA_BIFS,vms_f_process,         "F$PROCESS" },
+  { EXT_REGINA_BIFS,vms_f_search,          "F$SEARCH" },
+  { EXT_REGINA_BIFS,vms_f_setprv,          "F$SETPRV" },
+  { EXT_REGINA_BIFS,vms_f_string,          "F$STRING" },
+  { EXT_REGINA_BIFS,vms_f_time,            "F$TIME" },
+  { EXT_REGINA_BIFS,vms_f_trnlnm,          "F$TRNLNM" },
+  { EXT_REGINA_BIFS,vms_f_type,            "F$TYPE" },
+  { EXT_REGINA_BIFS,vms_f_user,            "F$USER" },
+/*{ EXT_REGINA_BIFS,vms_f_verify,          "F$VERIFY" }, */
 #endif
-  { 0,              os2_filespec, "FILESPEC" },
-  { EXT_FIND_BIF,   cms_find, "FIND" },
+  { EXT_REGINA_BIFS,os2_filespec,          "FILESPEC" },
+  { EXT_FIND_BIF,   cms_find,              "FIND" },
 #ifdef OLD_REGINA_FEATURES
-  { 0,              unx_close, "FINIS" },
+  { EXT_REGINA_BIFS,unx_close,             "FINIS" },
 #endif /* OLD_REGINA_FEATURES */
-  { 0,              unx_fork, "FORK" },
-  { 0,              std_form, "FORM" },
-  { 0,              std_format, "FORMAT" },
+  { EXT_REGINA_BIFS,unx_fork,              "FORK" },
+  { 0,              std_form,              "FORM" },
+  { 0,              std_format,            "FORMAT" },
 #if defined(REGINA_DEBUG_MEMORY)
-  { 0,              dbg_freelists, "FREELISTS" },
+  { EXT_REGINA_BIFS,dbg_freelists,         "FREELISTS" },
 #endif
-  { 0,              arexx_freespace, "FREESPACE" },
-  { 0,              std_fuzz, "FUZZ" },
+  { 0,              arexx_freespace,       "FREESPACE" },
+  { 0,              std_fuzz,              "FUZZ" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              arexx_getclip, "GETCLIP" },
+  { 0,              arexx_getclip,         "GETCLIP" },
 #endif
-  { 0,              unx_getenv, "GETENV" },
-  { 0,              unx_getpath, "GETPATH" },
-  { 0,              unx_getpid, "GETPID" },
-  { 0,              arexx_getspace, "GETSPACE" },
-  { 0,              unx_gettid, "GETTID" },
-  { 0,              arexx_hash, "HASH" },
-  { 0,              arexx_import, "IMPORT" },
-  { 0,              cms_index, "INDEX" },
-  { 0,              std_insert, "INSERT" },
-  { 0,              cms_justify, "JUSTIFY" },
-  { 0,              std_lastpos, "LASTPOS" },
-  { 0,              std_left, "LEFT" },
-  { 0,              std_length, "LENGTH" },
-  { 0,              std_linein, "LINEIN" },
-  { 0,              std_lineout, "LINEOUT" },
-  { 0,              std_lines, "LINES" },
+  { EXT_REGINA_BIFS,unx_getenv,            "GETENV" },
+  { EXT_REGINA_BIFS,unx_getpath,           "GETPATH" },
+  { EXT_REGINA_BIFS,unx_getpid,            "GETPID" },
+  { 0,              arexx_getspace,        "GETSPACE" },
+  { EXT_REGINA_BIFS,unx_gettid,            "GETTID" },
+  { 0,              arexx_hash,            "HASH" },
+  { 0,              arexx_import,          "IMPORT" },
+  { EXT_REGINA_BIFS,cms_index,             "INDEX" },
+  { 0,              std_insert,            "INSERT" },
+  { EXT_REGINA_BIFS,cms_justify,           "JUSTIFY" },
+  { 0,              std_lastpos,           "LASTPOS" },
+  { 0,              std_left,              "LEFT" },
+  { 0,              std_length,            "LENGTH" },
+  { 0,              std_linein,            "LINEIN" },
+  { 0,              std_lineout,           "LINEOUT" },
+  { 0,              std_lines,             "LINES" },
 #ifdef TRACEMEM
-  { 0,              dbg_listleaked, "LISTLEAKED" },
+  { EXT_REGINA_BIFS,dbg_listleaked,        "LISTLEAKED" },
 #endif
-  { EXT_MAKEBUF_BIF,cms_makebuf, "MAKEBUF" },
-  { 0,              std_max, "MAX" },
+  { EXT_MAKEBUF_BIF,cms_makebuf,           "MAKEBUF" },
+  { 0,              std_max,               "MAX" },
 #ifdef TRACEMEM
-  { 0,              dbg_memorystats, "MEMORYSTATS" },
+  { EXT_REGINA_BIFS,dbg_memorystats,       "MEMORYSTATS" },
 #endif
-  { 0,              std_min, "MIN" },
+  { 0,              std_min,               "MIN" },
 #ifdef OLD_REGINA_FEATURES
-  { EXT_OPEN_BIF,   unx_open, "OPEN" },
+  { EXT_OPEN_BIF,   unx_open,              "OPEN" },
 #endif /* OLD_REGINA_FEATURES */
 #ifdef AREXXIO
-  { 0,              arexx_open, "OPEN" },
+  { 0,              arexx_open,            "OPEN" },
 #endif
-  { 0,              std_overlay, "OVERLAY" },
-  { 0,              unx_popen, "POPEN" },
-  { 0,              std_pos, "POS" },
+  { 0,              std_overlay,           "OVERLAY" },
+  { EXT_REGINA_BIFS,unx_popen,             "POPEN" },
+  { 0,              std_pos,               "POS" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              arexx_pragma, "PRAGMA" },
+  { 0,              arexx_pragma,          "PRAGMA" },
 #endif
-  { 0,              std_qualify, "QUALIFY" },
-  { 0,              std_queued, "QUEUED" },
-  { 0,              std_random, "RANDOM" },
-  { 0,              arexx_randu, "RANDU" },
+  { 0,              std_qualify,           "QUALIFY" },
+  { 0,              std_queued,            "QUEUED" },
+  { 0,              std_random,            "RANDOM" },
+  { 0,              arexx_randu,           "RANDU" },
 #ifdef AREXXIO
-  { 0,              arexx_readch, "READCH" },
-  { 0,              arexx_readln, "READLN" },
+  { 0,              arexx_readch,          "READCH" },
+  { 0,              arexx_readln,          "READLN" },
 #endif
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              arexx_remlib, "REMLIB" },
+  { 0,              arexx_remlib,          "REMLIB" },
 #endif
-  { 0,              std_reverse, "REVERSE" },
-  { 0,              std_right, "RIGHT" },
+  { 0,              std_reverse,           "REVERSE" },
+  { 0,              std_right,             "RIGHT" },
 
-  { 0,              rex_rxfuncadd, "RXFUNCADD" },
-  { 0,              rex_rxfuncdrop, "RXFUNCDROP" },
-  { 0,              rex_rxfuncerrmsg, "RXFUNCERRMSG" },
-  { 0,              rex_rxfuncquery, "RXFUNCQUERY" },
-  { 0,              rex_rxqueue, "RXQUEUE" },
+  { 0,              rex_rxfuncadd,         "RXFUNCADD" },
+  { 0,              rex_rxfuncdrop,        "RXFUNCDROP" },
+  { 0,              rex_rxfuncerrmsg,      "RXFUNCERRMSG" },
+  { 0,              rex_rxfuncquery,       "RXFUNCQUERY" },
+  { 0,              rex_rxqueue,           "RXQUEUE" },
 
 #ifdef AREXXIO
-  { 0,              arexx_seek, "SEEK" },
+  { 0,              arexx_seek,            "SEEK" },
 #endif
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              arexx_setclip, "SETCLIP" },
+  { 0,              arexx_setclip,         "SETCLIP" },
 #endif
-  { 0,              arexx_show, "SHOW" },
-  { 0,              std_sign, "SIGN" },
-  { 0,              cms_sleep, "SLEEP" },
-  { 0,              std_sourceline, "SOURCELINE" },
-  { 0,              std_space, "SPACE" },
-  { 0,              cms_state, "STATE" },
-  { 0,              arexx_storage, "STORAGE" },
-  { 0,              std_stream, "STREAM" },
-  { 0,              std_strip, "STRIP" },
-  { 0,              std_substr, "SUBSTR" },
-  { 0,              std_subword, "SUBWORD" },
-  { 0,              std_symbol, "SYMBOL" },
-  { 0,              std_time, "TIME" },
-  { 0,              std_trace, "TRACE" },
-#ifndef NDEBUG
-  { 0,              dbg_traceback, "TRACEBACK" },
-#endif
-  { 0,              std_translate, "TRANSLATE" },
-  { 0,              arexx_trim, "TRIM" },
-  { 0,              std_trunc, "TRUNC" },
-  { 0,              unx_uname, "UNAME" },
-  { 0,              unx_unixerror, "UNIXERROR" },
-  { 0,              arexx_upper, "UPPER" },
-  { 0,              rex_userid, "USERID" },
-  { 0,              std_value, "VALUE" },
-  { 0,              std_verify, "VERIFY" },
-  { 0,              std_word, "WORD" },
-  { 0,              std_wordindex, "WORDINDEX" },
-  { 0,              std_wordlength, "WORDLENGTH" },
-  { 0,              std_wordpos, "WORDPOS" },
-  { 0,              std_words, "WORDS" },
+  { 0,              arexx_show,            "SHOW" },
+  { 0,              std_sign,              "SIGN" },
+  { EXT_REGINA_BIFS,cms_sleep,             "SLEEP" },
+  { 0,              std_sourceline,        "SOURCELINE" },
+  { 0,              std_space,             "SPACE" },
+  { EXT_REGINA_BIFS,cms_state,             "STATE" },
+  { 0,              std_stream,            "STREAM" },
+  { 0,              std_strip,             "STRIP" },
+  { 0,              arexx_storage,         "STORAGE" },
+  { 0,              std_substr,            "SUBSTR" },
+  { 0,              std_subword,           "SUBWORD" },
+  { 0,              std_symbol,            "SYMBOL" },
+  { 0,              std_time,              "TIME" },
+  { 0,              std_trace,             "TRACE" },
+  { 0,              arexx_trim,            "TRIM" },
+  
+  { EXT_REGINA_BIFS,dbg_traceback,         "TRACEBACK" },
+
+  { 0,              std_translate,         "TRANSLATE" },
+  { 0,              std_trunc,             "TRUNC" },
+  { EXT_REGINA_BIFS,unx_uname,             "UNAME" },
+  { EXT_REGINA_BIFS,unx_unixerror,         "UNIXERROR" },
+  { 0,              arexx_upper,           "UPPER" },
+  { EXT_REGINA_BIFS,rex_userid,            "USERID" },
+  { 0,              std_value,             "VALUE" },
+  { 0,              std_verify,            "VERIFY" },
+  { 0,              std_word,              "WORD" },
+  { 0,              std_wordindex,         "WORDINDEX" },
+  { 0,              std_wordlength,        "WORDLENGTH" },
+  { 0,              std_wordpos,           "WORDPOS" },
+  { 0,              std_words,             "WORDS" },
 #ifdef AREXXIO
-  { 0,              arexx_writech, "WRITECH" },
-  { 0,              arexx_writeln, "WRITELN" },
+  { 0,              arexx_writech,         "WRITECH" },
+  { 0,              arexx_writeln,         "WRITELN" },
 #endif
-  { 0,              std_x2b, "X2B" },
-  { 0,              std_x2c, "X2C" },
-  { 0,              std_x2d, "X2D" },
-  { 0,              std_xrange, "XRANGE" },
-  { 0,              NULL, NULL }
+  { 0,              std_x2b,               "X2B" },
+  { 0,              std_x2c,               "X2C" },
+  { 0,              std_x2d,               "X2D" },
+  { 0,              std_xrange,            "XRANGE" },
+  { 0,              NULL,                  NULL }
 } ;
 
 static const int num_funcs = sizeof(functions) / (sizeof(functions[0])) - 1 ;
@@ -270,7 +270,7 @@ static const int MonthDays[] = {31,28,31,30,31,30,31,31,30,31,30,31};
 static const int DaysInYear[] = {0,31,59,90,120,151,181,212,243,273,304,334};
 
 static int leapyear(long year) ;
-static int base2date(long basedate,void *conv_tmdata) ;
+static void base2date(long basedate,void *conv_tmdata) ;
 
 #ifdef TRACEMEM
 void mark_listleaked_params( const tsd_t *TSD )
@@ -347,25 +347,17 @@ streng *buildtinfunc( tsd_t *TSD, nodeptr this )
          }
          if (!end)
          {
-#if OLD_OPTIONS
-            if (functions[mid].length)
+            /*
+             * Check if the function is an extension. If it is and it matches
+             * an extension specified with the OPTIONS keyword, then allow it.
+             * If the OPTION; STRICT_ANSI is in effect however, this overrides
+             * the extension.
+             */
+            if (functions[mid].compat)
             {
-               int obyte = functions[mid].length/(sizeof(unsigned char)*8) ;
-               int obit = functions[mid].length%(sizeof(unsigned char)*8) ;
-
-               if (!(TSD->currlevel->u.flags[obyte] & (1<<(7-obit))))
-                  func = NULL ;
-               else
-               {
-                  func = functions[mid].function ;
-                  if (TSD->currlevel->u.options.cacheext)
-                     this->u.func = func ;
-               }
-            }
-#else
-            if (functions[mid].length)
-            {
-               if ( ! get_options_flag( TSD->currlevel, functions[mid].length ) )
+               if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+                  exiterror( ERR_NON_ANSI_FEATURE, 1, functions[mid].funcname );
+               if ( ! get_options_flag( TSD->currlevel, functions[mid].compat ) )
                   func = NULL ;
                else
                {
@@ -374,7 +366,6 @@ streng *buildtinfunc( tsd_t *TSD, nodeptr this )
                      this->u.func = func ;
                }
             }
-#endif
             else
                this->u.func = func = functions[mid].function ;
          }
@@ -444,8 +435,8 @@ streng *buildtinfunc( tsd_t *TSD, nodeptr this )
       else
          return NOFUNC ;
    }
-   /* add return to keep compiler happy. won't ever reach here */
-   return NULL;
+   /* can return valid ptr! */
+   return ptr;
 }
 
 paramboxptr initplist( tsd_t *TSD, cnodeptr this )
@@ -636,22 +627,47 @@ int atozpos( tsd_t *TSD, const streng *text, const char *bif, int argnum )
 }
 
 
-char getoptionchar( tsd_t *TSD, const streng *text, const char* bif, int argnum, const char *choices )
+char getoptionchar( tsd_t *TSD, const streng *text, const char* bif, int argnum, const char *ansi_choices, const char *regina_choices )
 {
    char ch=0 ;
    const char *ptr = NULL;
+   char tmp[50];
 
    if (text->len == 0)
       exiterror( ERR_INCORRECT_CALL, 21, bif, argnum )  ;
 
    ch = (char) toupper( text->value[0] ) ;
-
-   for ( ptr = choices; *ptr; ptr++ )
+   /*
+    * If the option supplied is ANSI, then return when we find it.
+    */
+   for ( ptr = ansi_choices; *ptr; ptr++ )
    {
       if ( *ptr == ch )
          return ch ;
    }
-   exiterror( ERR_INCORRECT_CALL, 28, bif, argnum, choices, tmpstr_of( TSD, text ) );
+   /*
+    * If the option supplied is a Regina extension, and we are NOT running in
+    * ANSI mode, then return when we find it.
+    */
+   for ( ptr = regina_choices; *ptr; ptr++ )
+   {
+      if ( *ptr == ch )
+      {
+         if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+            exiterror( ERR_NON_ANSI_FEATURE, 3, bif, argnum, ansi_choices, tmpstr_of( TSD, text ) );
+         else
+            return ch ;
+      }
+   }
+
+   if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) )
+      exiterror( ERR_INCORRECT_CALL, 28, bif, argnum, ansi_choices, tmpstr_of( TSD, text ) );
+   else
+   {
+      strcpy( tmp, ansi_choices );
+      strcat( tmp, regina_choices );
+      exiterror( ERR_INCORRECT_CALL, 28, bif, argnum, tmp, tmpstr_of( TSD, text ) );
+   }
    return 0 ;
 }
 
@@ -742,7 +758,7 @@ const streng *param( cparamboxptr ptr, int num )
    int i=0 ;
    for (i=1;i<num;i++,ptr=ptr->next)
       if (!ptr)
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
 
    return ((ptr)&&(ptr->value)) ? ptr->value : NULL ;
 }
@@ -761,30 +777,29 @@ int convert_date(const streng *suppdate, char suppformat, struct tm *indate)
    long num1=0,num2=0,num3=0;
    char buf[20];
    const char *ptr=suppdate->value;
+   struct tm *tmpTime;
 
+   indate->tm_sec = indate->tm_min = indate->tm_hour = 0;
    switch(suppformat)
    {
       case 'B':
-         if (suppdate->len > 19)
-            return(1);
-         memcpy(buf,ptr,suppdate->len);
-         buf[suppdate->len] = '\0';
-         if ((num1 = atol(buf)) == 0)
-            for (i=0;i<suppdate->len;i++)
-               if (buf[i] != '0')
-                  return(1);
-         base2date(num1,indate);
-         break;
       case 'D':
          if (suppdate->len > 19)
             return(1);
          memcpy(buf,ptr,suppdate->len);
          buf[suppdate->len] = '\0';
          if ((num1 = atol(buf)) == 0)
+         {
             for (i=0;i<suppdate->len;i++)
+            {
                if (buf[i] != '0')
                   return(1);
-         base2date(num1+basedays(indate->tm_year)-1,indate);
+            }
+         }
+         if ( suppformat == 'B' )
+            base2date(num1,indate);
+         else
+            base2date(num1+basedays(indate->tm_year)-1,indate);
          break;
       case 'I':
          if (suppdate->len > 19)
@@ -898,6 +913,12 @@ int convert_date(const streng *suppdate, char suppformat, struct tm *indate)
          indate->tm_mon = num2-1;
          indate->tm_year = num1;
          break;
+      case 'T':
+         num1 = atol( ptr );
+         tmpTime = localtime( &num1 );
+         memcpy( indate, tmpTime, sizeof(struct tm) );
+         indate->tm_year += 1900;
+         break;
       default:
          /* should not get here */
          break;
@@ -940,7 +961,7 @@ static int leapyear(long year)
  * Converts a number (representing the number of days since 01 Jan 0001)
  * to a struct tm value (individual fields for year, month, day and days in year)
  */
-static int base2date(long basedate,void *conv_tmdata)
+static void base2date(long basedate,void *conv_tmdata)
 {
    struct tm *outdate=(struct tm *)conv_tmdata;
    int i=0;
@@ -970,7 +991,7 @@ static int base2date(long basedate,void *conv_tmdata)
    outdate->tm_mday = day;
    outdate->tm_yday = yeardays;
    outdate->tm_wday = ((basedate+8) % 7);
-   return(0);
+   return;
 }
 
 /*
@@ -983,6 +1004,7 @@ int convert_time( const tsd_t *TSD, const streng *supptime, char suppformat, str
    long num1=0,num2=0,num3=0,num4=0;
    char buf[20];
    const char *ptr=supptime->value;
+   struct tm *tmpTime;
 
    switch(suppformat)
    {
@@ -1030,6 +1052,8 @@ int convert_time( const tsd_t *TSD, const streng *supptime, char suppformat, str
           */
          num1 = streng_to_int( TSD, supptime, &rc );
          if ( rc ) return 1;
+         if ( num1 < 0 )
+            return(1);
          switch(suppformat)
          {
             case 'H':
@@ -1047,7 +1071,7 @@ int convert_time( const tsd_t *TSD, const streng *supptime, char suppformat, str
                intime->tm_sec = (num1 % 3600) % 60;
                break;
          }
-         if (intime->tm_sec > 59 || intime->tm_hour > 23 || intime->tm_min > 59)
+         if ( intime->tm_sec > 59 || intime->tm_hour > 23 || intime->tm_min > 59 )
             return(1);
          *unow = 0;
          break;
@@ -1096,6 +1120,12 @@ int convert_time( const tsd_t *TSD, const streng *supptime, char suppformat, str
          if (num4 < 0)
             return(1);
          *unow = num4;
+         break;
+      case 'T':
+         num1 = atol( ptr );
+         tmpTime = localtime( &num1 );
+         memcpy( intime, tmpTime, sizeof(struct tm) );
+         *unow = 0;
          break;
       default:
          /* should not get here */

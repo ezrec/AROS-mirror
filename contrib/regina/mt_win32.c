@@ -91,7 +91,8 @@ static DWORD AcquireThreadIndex(void)
    if (ThreadIndex == 0xFFFFFFFF)
    {  /* get a unique access variable for the whole process */
       AcquireCriticalSection(&cs);
-      ThreadIndex = TlsAlloc();
+      if (ThreadIndex == 0xFFFFFFFF) /* may've changed just before Acquire */
+         ThreadIndex = TlsAlloc();
       LeaveCriticalSection(&cs);
       /* give back a possible error value. nothing will help at this point */
    }
@@ -202,6 +203,7 @@ tsd_t *ReginaInitializeThread(void)
    OK &= init_shell(retval);            /* Initialize the shell module       */
    OK &= init_envir(retval);            /* Initialize the envir module       */
    OK &= init_expr(retval);             /* Initialize the expr module        */
+   OK &= init_error(retval);            /* Initialize the error module       */
 #ifdef VMS
    OK &= init_vms(retval);              /* Initialize the vmscmd module      */
    OK &= init_vmf(retval);              /* Initialize the vmsfuncs module    */
@@ -213,6 +215,7 @@ tsd_t *ReginaInitializeThread(void)
 
    if (!OK)
       exiterror( ERR_STORAGE_EXHAUSTED, 0 ) ;
+
    return(retval);
 }
 

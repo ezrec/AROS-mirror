@@ -40,12 +40,15 @@ static char *RCSid = "$Id$";
 #  endif
 # endif
 # include <windows.h>
+# include <conio.h>
 # ifdef _MSC_VER
 #  if _MSC_VER >= 1100
 #   pragma warning(default: 4115 4201 4214)
 #  endif
 # endif
 #endif
+
+static int actually_pause = 1;
 
 streng *rex_userid( tsd_t *TSD, cparamboxptr parms )
 {
@@ -54,8 +57,8 @@ streng *rex_userid( tsd_t *TSD, cparamboxptr parms )
    DWORD bufsize=sizeof( buf );
 #endif
    checkparam(  parms,  0,  0 , "USERID" ) ;
-#if defined(VMS) || defined(MAC) || defined(__WATCOMC__) || defined(_MSC_VER) || defined(_AMIGA) || defined(__AROS__) || defined(__MINGW32__) || defined(__BORLANDC__)
-# if defined(WIN32)
+#if defined(VMS) || defined(MAC) || defined(__WATCOMC__) || defined(_MSC_VER) || defined(_AMIGA) || defined(__AROS__) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__EPOC32__)
+# if defined(WIN32) && !defined(WDOSX)
    if ( GetUserName( buf, &bufsize ) )
    {
       return( Str_creTSD( buf ) ) ;
@@ -77,7 +80,7 @@ streng *rex_rxqueue( tsd_t *TSD, cparamboxptr parms )
 
    checkparam(  parms,  1,  2 , "RXQUEUE" ) ;
 
-   opt = getoptionchar( TSD, parms->value, "RXQUEUE", 1, "CDGS" ) ;
+   opt = getoptionchar( TSD, parms->value, "RXQUEUE", 1, "CDGS", "T" ) ;
    switch ( opt )
    {
       case 'C': /* Create */
@@ -109,6 +112,14 @@ streng *rex_rxqueue( tsd_t *TSD, cparamboxptr parms )
          if ( ( parms->next )
          && ( parms->next->value ) )
             result = Str_dup_TSD( TSD, set_queue( TSD, parms->next->value ) );
+         else
+            exiterror( ERR_INCORRECT_CALL, 5, "RXQUEUE", 2 );
+         break;
+      case 'T': /* Timeout */
+         if ( ( parms->next )
+         && ( parms->next->value ) )
+            result = int_to_streng( TSD, timeout_queue(TSD, parms->next->value, NULL ) );
+            /* result created here */
          else
             exiterror( ERR_INCORRECT_CALL, 5, "RXQUEUE", 2 );
          break;
@@ -186,3 +197,59 @@ char *mygetenv( const tsd_t *TSD, const char *name, char *buf, int bufsize )
    return ptr1;
 #endif
 }
+
+#if defined(WIN32) && !defined(__WINS__) && !defined(__EPOC32__)
+/*
+ * These functions are used to allow Regina to display "Press ENTER key to exit..."
+ * in the console if it is NOT started from a console.
+ */
+void do_pause_at_exit( void )
+{
+   int ch;
+   if ( actually_pause )
+   {
+      printf("\nPress ENTER key to exit...");
+      fflush( stdout );
+      ch = getchar();
+   }
+}
+
+void flush_stdout( void )
+{
+   fflush( stdout );
+   return;
+}
+
+void dont_pause_at_exit( void )
+{
+   actually_pause = 0;
+}
+
+void set_pause_at_exit( void )
+{
+   CONSOLE_SCREEN_BUFFER_INFO csbi;
+   HANDLE hStdOutput;
+
+   hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+   if ( GetConsoleScreenBufferInfo( hStdOutput, &csbi ) )
+   {
+      /* 
+       * if cursor position is (0,0) then use pause
+       */
+      if ( csbi.dwCursorPosition.X == 0 
+      &&   csbi.dwCursorPosition.Y == 0 )
+      {
+         atexit( do_pause_at_exit );
+      }
+      else
+      {
+         atexit( flush_stdout );
+      }
+   }
+   else
+   {
+      atexit( flush_stdout );
+   }
+   return;
+}
+#endif

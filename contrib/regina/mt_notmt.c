@@ -61,6 +61,7 @@ tsd_t *ReginaInitializeProcess(void)
    OK |= init_shell(&__regina_tsd);     /* Initialize the shell module       */
    OK |= init_envir(&__regina_tsd);     /* Initialize the envir module       */
    OK |= init_expr(&__regina_tsd);      /* Initialize the expr module        */
+   OK |= init_error(&__regina_tsd);     /* Initialize the error module       */
 #ifdef VMS
    OK |= init_vms(&__regina_tsd);       /* Initialize the vmscmd module      */
    OK |= init_vmf(&__regina_tsd);       /* Initialize the vmsfuncs module    */

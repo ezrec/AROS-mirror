@@ -24,12 +24,25 @@
 /*
  * For platforms that don't use autoconf, put these here...
  */
-# define HAVE_ASSERT_H        1
-# define HAVE_ERRNO_H         1
-# define HAVE_CTYPE_H         1
-# define HAVE_STDARG_H        1
+#define HAVE_ASSERT_H        1
+#define HAVE_ERRNO_H         1
+#define HAVE_CTYPE_H         1
+#define HAVE_STDARG_H        1
+#define HAVE_SYS_STAT_H      1
 
 #if defined(DOS) && defined(EMX)
+# define HAVE_ALLOCA_H        1
+# define HAVE_FTIME           1
+# define HAVE_MATH_H          1
+# define HAVE_RANDOM          1
+#undef HAVE_RANDOM /* needs bsd support and linking with -lbsd */
+# define HAVE_SIGACTION       1
+# define HAVE_STDIO_H         1
+# define HAVE_SYS_TIME_H      1
+# define HAVE_SYSCONF         1
+# define HAVE_TERMIOS_H       1
+# define HAVE_TIME_H          1
+# define HAVE_FCNTL_H         1
 # define HAVE_GRP_H           1
 # define HAVE_PWD_H           1
 # define HAVE_LIMITS_H        1
@@ -57,6 +70,18 @@
 #endif
 
 #if defined(OS2) && defined(EMX)
+# define HAVE_ALLOCA_H        1
+# define HAVE_FTIME           1
+# define HAVE_MATH_H          1
+# define HAVE_RANDOM          1
+#undef HAVE_RANDOM /* needs bsd support and linking with -lbsd */
+# define HAVE_SIGACTION       1
+# define HAVE_STDIO_H         1
+# define HAVE_SYS_TIME_H      1
+# define HAVE_SYSCONF         1
+# define HAVE_TERMIOS_H       1
+# define HAVE_TIME_H          1
+# define HAVE_FCNTL_H         1
 # define HAVE_GRP_H           1
 # define HAVE_PWD_H           1
 # define HAVE_LIMITS_H        1
@@ -137,6 +162,7 @@
 #endif
 
 #if defined(WIN32) && defined(_MSC_VER)
+# define HAVE_FCNTL_H       
 # define HAVE_LIMITS_H
 # define HAVE_MALLOC_H
 # define HAVE_PROCESS_H
@@ -231,6 +257,7 @@
 #endif
 
 #if defined(DOS) && defined(DJGPP)
+# define HAVE_FCNTL_H
 # define HAVE_GRP_H
 # define HAVE_PWD_H
 # define HAVE_LIMITS_H
@@ -349,6 +376,67 @@
 /* # define TIME_WITH_SYS_TIME   1 */
 #endif
 
+/*
+ * The following are for Epoc32 platform
+ */
+#if defined(__VC32__) && defined(__WINS__)
+# define HAVE_SYS_FCNTL_H
+# define HAVE_LIMITS_H
+# define HAVE_PROCESS_H
+# define HAVE_SETJMP_H
+# define HAVE_SIGNAL_H
+# define HAVE_STDLIB_H
+# define HAVE_STRING_H
+/* # define HAVE__FULLPATH */
+/* # define HAVE__SPLITPATH */
+/* # define HAVE_FTRUNCATE */
+/* # define HAVE_MY_WIN32_SETENV */
+# define HAVE_MEMCPY
+# define HAVE_MEMMOVE
+# define HAVE_STRERROR
+# define HAVE_VSPRINTF
+# define HAVE_GETPID  
+# define HAVE_SYS_SOCKET_H
+# define HAVE_NETINET_IN_H
+# define HAVE_NETDB_H
+# define HAVE_ARPA_INET_H
+# define HAVE_UNISTD_H
+# if defined(DYNAMIC)
+#  define DYNAMIC_WIN32
+# endif
+#endif
+
+#if defined(__GCC32__) && defined(__EPOC32__)
+# define HAVE_SYS_FCNTL_H     1
+/* # define HAVE_GRP_H           1 */
+/* # define HAVE_PWD_H           1 */
+# define HAVE_LIMITS_H        1
+/*# define HAVE_MALLOC_H        1 */
+# define HAVE_PROCESS_H       1
+# define HAVE_SETJMP_H        1
+# define HAVE_SIGNAL_H        1
+# define HAVE_STDLIB_H        1
+# define HAVE_STRING_H        1
+# define HAVE_UNISTD_H        1
+/* # define HAVE__FULLPATH        1 */
+/* # define HAVE_PUTENV          1 */
+# define HAVE_GETTIMEOFDAY    1
+/*# define HAVE_FTRUNCATE       1 */
+# define HAVE_MEMCPY          1
+# define HAVE_MEMMOVE         1
+# define HAVE_STRERROR        1
+# define HAVE_VSPRINTF        1
+# define HAVE_GETPID          1
+# define TIME_WITH_SYS_TIME   1
+# define HAVE_SYS_SOCKET_H    1
+# define HAVE_NETINET_IN_H    1
+# define HAVE_NETDB_H         1
+# define HAVE_ARPA_INET_H     1
+# if defined(DYNAMIC)
+#  define DYNAMIC_WIN32
+# endif
+#endif
+
 #if defined(__vms)
 # include "vms.h"
 #endif
@@ -419,8 +507,9 @@
 #define DEFAULT_INTERNAL_QUEUES        0
 #define DEFAULT_TRACE_HTML             0
 #define DEFAULT_FAST_LINES_BIF_DEFAULT 1
-#define DEFAULT_ANSI                   1
+#define DEFAULT_STRICT_ANSI            0
 #define DEFAULT_PGB_PATCH1             0  /* pgb */
+#define DEFAULT_REGINA_BIFS            1 
 
 /*
  * Define the following if your machine has putenv(), unfortunately,
@@ -438,30 +527,26 @@
  * directories, from one another in a PATH environment variable.
  */
 
-#if defined(MSDOS) || defined(__WATCOMC__) || defined(_MSC_VER) || defined(DOS) || defined(OS2)
+#if defined(MSDOS) || ( defined(__WATCOMC__) && !defined(__QNX__) ) || defined(_MSC_VER) || defined(DOS) || defined(OS2) || defined(__WINS__) || defined(__EPOC32__)
 # define FILE_SEPARATOR      '\\'
 # define FILE_SEPARATOR_STR  "\\"
 # define PATH_SEPARATOR      ';'
 # define PATH_SEPARATOR_STR  ";"
+#elif defined(VMS)
+# define FILE_SEPARATOR     ']'
+# define FILE_SEPARATOR_STR "]"
+# define PATH_SEPARATOR     '?'
+# define PATH_SEPARATOR_STR "?"
+#elif defined(MAC)
+# define FILE_SEPARATOR     ']'
+# define FILE_SEPARATOR_STR "]"
+# define PATH_SEPARATOR     '?'
+# define PATH_SEPARATOR_STR "?"
 #else
-# if defined(VMS)
-#  define FILE_SEPARATOR     ']'
-#  define FILE_SEPARATOR_STR "]"
-#  define PATH_SEPARATOR     '?'
-#  define PATH_SEPARATOR_STR "?"
-# else
-#  if defined(MAC)
-#   define FILE_SEPARATOR     ']'
-#   define FILE_SEPARATOR_STR "]"
-#   define PATH_SEPARATOR     '?'
-#   define PATH_SEPARATOR_STR "?"
-#  else
-#   define FILE_SEPARATOR     '/'
-#   define FILE_SEPARATOR_STR "/"
-#   define PATH_SEPARATOR     ':'
-#   define PATH_SEPARATOR_STR ":"
-#  endif
-# endif
+# define FILE_SEPARATOR     '/'
+# define FILE_SEPARATOR_STR "/"
+# define PATH_SEPARATOR     ':'
+# define PATH_SEPARATOR_STR ":"
 #endif
 
 
@@ -583,6 +668,12 @@
  * WIN32    - LoadLibrary()/GetProcAddress() under Win32
  */
 
+/*
+ * QNX 4.2x does have a ftrunc() equivalent: ltrunc()
+ */
+#if defined(__WATCOMC__) && defined(__QNX__)
+# define HAVE_FTRUNCATE
+#endif
 /*
  * If we don't have ftruncate() then we don't want the default setting
  * of LINEOUT() to be to truncate after each new line written out.

@@ -79,12 +79,17 @@
 #define Str_strp                     __regina_Str_strp
 #define Str_upper                    __regina_Str_upper
 #define SubCom                       __regina_SubCom
+#define SymbolDetect                 __regina_SymbolDetect
 #define TinTree                      __regina_TinTree
 #ifndef __GNUC__
 # define __yy_memcpy                  __regina___yy_memcpy
 #endif
+#define add_async_waiter             __regina_add_async_waiter
 #define add_envir                    __regina_add_envir
 #define addfunc                      __regina_addfunc
+#define addr_io_file                 __regina_addr_io_file
+#define addr_reopen_file             __regina_addr_reopen_file
+#define arexx_addlib                 __regina_arexx_addlib
 #define arexx_b2c                    __regina_arexx_b2c
 #define arexx_bitchg                 __regina_arexx_bitchg
 #define arexx_bitclr                 __regina_arexx_bitclr
@@ -95,16 +100,28 @@
 #define arexx_c2b                    __regina_arexx_c2b
 #define arexx_close                  __regina_arexx_close
 #define arexx_eof                    __regina_arexx_eof
+#define arexx_exists                 __regina_arexx_exists
+#define arexx_export                 __regina_arexx_export
+#define arexx_freespace              __regina_arexx_freespace
+#define arexx_getclip                __regina_arexx_getclip
+#define arexx_getspace               __regina_arexx_getspace
 #define arexx_hash                   __regina_arexx_hash
+#define arexx_import                 __regina_arexx_import
 #define arexx_open                   __regina_arexx_open
+#define arexx_pragma                 __regina_arexx_pragma
 #define arexx_randu                  __regina_arexx_randu
 #define arexx_readch                 __regina_arexx_readch
 #define arexx_readln                 __regina_arexx_readln
+#define arexx_remlib                 __regina_arexx_remlib
 #define arexx_seek                   __regina_arexx_seek
+#define arexx_setclip                __regina_arexx_setclip
+#define arexx_show                   __regina_arexx_show
+#define arexx_storage                __regina_arexx_storage
 #define arexx_trim                   __regina_arexx_trim
 #define arexx_upper                  __regina_arexx_upper
 #define arexx_writech                __regina_arexx_writech
 #define arexx_writeln                __regina_arexx_writeln
+#define argv0                        __regina_argv0
 #define atopos                       __regina_atopos
 #define atoposorzero                 __regina_atoposorzero
 #define atozpos                      __regina_atozpos
@@ -113,6 +130,7 @@
 #define buildtinfunc                 __regina_buildtinfunc
 #define calcul                       __regina_calcul
 #define checkparam                   __regina_checkparam
+#define cleanup_envirpart            __regina_cleanup_envirpart
 #define clear_ignore_novalue         __regina_clear_ignore_novalue
 #define cms_buftype                  __regina_cms_buftype
 #define cms_desbuf                   __regina_cms_desbuf
@@ -123,6 +141,7 @@
 #define cms_makebuf                  __regina_cms_makebuf
 #define cms_sleep                    __regina_cms_sleep
 #define cms_state                    __regina_cms_state
+#define closefile                    __regina_closefile
 #define condition_hook               __regina_condition_hook
 #define connect_to_rxstack           __regina_connect_to_rxstack
 #define convert_date                 __regina_convert_date
@@ -131,10 +150,10 @@
 #define count_params                 __regina_count_params
 #define cpu_time                     __regina_cpu_time
 #define creat_sysinfo                __regina_creat_sysinfo
+#define create_async_info            __regina_create_async_info
 #define create_new_varpool           __regina_create_new_varpool
 #define create_queue                 __regina_create_queue
 #define create_queue_on_rxstack      __regina_create_queue_on_rxstack
-#define create_tmpname               __regina_create_tmpname
 #define dbg_allocated                __regina_dbg_allocated
 #define dbg_dumpfiles                __regina_dbg_dumpfiles
 #define dbg_dumptree                 __regina_dbg_dumptree
@@ -148,6 +167,7 @@
 #define del_envir                    __regina_del_envir
 #define delete_queue_from_rxstack    __regina_delete_queue_from_rxstack
 #define delete_an_internal_queue     __regina_delete_an_internal_queue
+#define delete_async_info            __regina_delete_async_info
 #define delete_queue                 __regina_delete_queue
 #define delfunc                      __regina_delfunc
 #define descr_copy                   __regina_descr_copy
@@ -163,6 +183,7 @@
 #define dointerpret                  __regina_dointerpret
 #define doparse                      __regina_doparse
 #define dos_do_command               __regina_dos_do_command
+#define dotRS_name                   __regina_dotRS_name
 #define drop_buffer                  __regina_drop_buffer
 #define drop_dirvar                  __regina_drop_dirvar
 #define drop_var                     __regina_drop_var
@@ -180,6 +201,7 @@
 #define external_func                __regina_external_func
 #define fetch_file                   __regina_fetch_file
 #define fetch_string                 __regina_fetch_string
+#define fill_input_queue             __regina_fill_input_queue
 #define find_shared_library          __regina_find_shared_library
 #define find_stack_direction         __regina_find_stack_direction
 #define firstmacro                   __regina_firstmacro
@@ -188,6 +210,7 @@
 #define fixup_file                   __regina_fixup_file
 #define flush_stack                  __regina_flush_stack
 #define flush_trace_chars            __regina_flush_trace_chars
+#define fork_exec                    __regina_fork_exec
 #define free_a_descr                 __regina_free_a_descr
 #define get_a_chunk                  __regina_get_a_chunk
 #define get_a_chunkTSD               __regina_get_a_chunkTSD
@@ -197,7 +220,9 @@
 #define get_default_port_number      __regina_get_default_port_number
 #define get_default_server_address   __regina_get_default_server_address
 #define get_external_routine         __regina_get_external_routine
+#define get_input_queue              __regina_get_input_queue
 #define get_it_anyway                __regina_get_it_anyway
+#define get_it_anyway_compound       __regina_get_it_anyway_compound
 #define get_length_from_header       __regina_get_length_from_header
 #define get_line_from_rxstack        __regina_get_line_from_rxstack
 #define get_next_variable            __regina_get_next_variable
@@ -209,6 +234,7 @@
 #define get_sys_errlist              __regina_get_sys_errlist
 #define getdescr                     __regina_getdescr
 #define getdirvalue                  __regina_getdirvalue
+#define getdirvalue_compound         __regina_getdirvalue_compound
 #define getlabel                     __regina_getlabel
 #define getonechar                   __regina_getonechar
 #define getoptionchar                __regina_getoptionchar
@@ -235,6 +261,7 @@
 #define init_builtin                 __regina_init_builtin
 #define init_client                  __regina_init_client
 #define init_envir                   __regina_init_envir
+#define init_error                   __regina_init_error
 #define init_expr                    __regina_init_expr
 #define init_external_queue          __regina_init_external_queue
 #define init_filetable               __regina_init_filetable
@@ -297,6 +324,8 @@
 #define newlevel                     __regina_newlevel
 #define numeric_forms                __regina_numeric_forms
 #define os2_beep                     __regina_os2_beep
+#define open_env_io                  __regina_open_env_io
+#define open_subprocess_connection   __regina_open_subprocess_connection
 #define os2_directory                __regina_os2_directory
 #define os2_filespec                 __regina_os2_filespec
 #define param                        __regina_param
@@ -307,11 +336,14 @@
 #define popcallstack                 __regina_popcallstack
 #define popline                      __regina_popline
 #define posix_do_command             __regina_posix_do_command
+#define posix_run_as_child           __regina_posix_run_as_child
 #define purge_filetable              __regina_purge_filetable
 #define purge_flists                 __regina_purge_flists
+#define purge_input_queue            __regina_purge_input_queue
 #define purge_library                __regina_purge_library
 #define purge_stacks                 __regina_purge_stacks
 #define pushcallstack                __regina_pushcallstack
+#define put_stem                     __regina_put_stem
 #define queue_line_fifo_to_rxstack   __regina_queue_line_fifo_to_rxstack
 #define queue_line_lifo_to_rxstack   __regina_queue_line_lifo_to_rxstack
 #define queue_trace_char             __regina_queue_trace_char
@@ -320,6 +352,8 @@
 #define regina_signal                __regina_regina_signal
 #define regmarker                    __regina_regmarker
 #define removelevel                  __regina_removelevel
+#define reset_async_info             __regina_reset_async_info
+#define restart_file                 __regina_restart_file
 #define retlength                    __regina_retlength
 #define retvalue                     __regina_retvalue
 #define rex_rxfuncadd                __regina_rex_rxfuncadd
@@ -333,6 +367,7 @@
 #define run_popen                    __regina_run_popen
 #define set_err_message              __regina_set_err_message
 #define send_command_to_rxstack      __regina_send_command_to_rxstack
+#define set_envir                    __regina_set_envir
 #define set_ignore_novalue           __regina_set_ignore_novalue
 #define set_options_flag             __regina_set_options_flag
 #define set_queue                    __regina_set_queue
@@ -342,6 +377,7 @@
 #define set_trace                    __regina_set_trace
 #define set_trace_char               __regina_set_trace_char
 #define setdirvalue                  __regina_setdirvalue
+#define setdirvalue_compound         __regina_setdirvalue_compound
 #define setshortcut                  __regina_setshortcut
 #define setshortcutnum               __regina_setshortcutnum
 #define setvalue                     __regina_setvalue
@@ -424,6 +460,7 @@
 #define std_x2c                      __regina_std_x2c
 #define std_x2d                      __regina_std_x2d
 #define std_xrange                   __regina_std_xrange
+#define stem_access                  __regina_stem_access
 #define str_abs                      __regina_str_abs
 #define str_add                      __regina_str_add
 #define str_binerize                 __regina_str_binerize
@@ -448,6 +485,8 @@
 #define suberrortext                 __regina_suberrortext
 #define system_type                  __regina_system_type
 #define term_external_queue          __regina_term_external_queue
+#define timeout_queue                __regina_timeout_queue
+#define timeout_queue_on_rxstack     __regina_timeout_queue_on_rxstack
 #define tmp_stack                    __regina_tmp_stack
 #define tmpstr_of                    __regina_tmpstr_of
 #define traceback                    __regina_traceback
@@ -460,6 +499,7 @@
 #define treadit                      __regina_treadit
 #define type_buffer                  __regina_type_buffer
 #define u_to_l                       __regina_u_to_l
+#define unblock_handle               __regina_unblock_handle
 #define unx_chdir                    __regina_unx_chdir
 #define unx_close                    __regina_unx_close
 #define unx_crypt                    __regina_unx_crypt
@@ -475,6 +515,7 @@
 #define unx_unixerror                __regina_unx_unixerror
 #define upcase                       __regina_upcase
 #define update_envirs                __regina_update_envirs
+#define upper_var                    __regina_upper_var
 #define valid_var_symbol             __regina_valid_var_symbol
 #define var_was_found                __regina_var_was_found
 #define vms_do_command               __regina_vms_do_command
@@ -510,6 +551,7 @@
 #define vms_f_user                   __regina_vms_f_user
 #define vms_killproc                 __regina_vms_killproc
 #define vms_resolv_symbol            __regina_vms_resolv_symbol
+#define wait_async_info              __regina_wait_async_info
 #define wrapper_dummy_for_aix        __regina_wrapper_dummy_for_aix
 #define wrapper_get_addr             __regina_wrapper_get_addr
 #define wrapper_load                 __regina_wrapper_load

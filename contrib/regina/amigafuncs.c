@@ -85,7 +85,7 @@ int init_amigaf ( tsd_t *TSD )
   /* Allocate later because systeminfo is not initialized at the moment */
   atsd->amilevel = NULL;
 #if defined(_AMIGA) || defined(__AROS__)
-  atsd->portenvir.envir.name = NULL;
+  atsd->portenvir.envir.e.name = NULL;
   atsd->portenvir.envir.type = ENVIR_AMIGA;
   atsd->rexxsysbase = (struct RxsLib *)OpenLibrary( "rexxsyslib.library", 44 );
   if ( atsd->rexxsysbase == NULL )
@@ -292,7 +292,7 @@ streng *arexx_open( tsd_t *TSD, cparamboxptr parm1 )
        || parm3->value==NULL
        || parm3->value->len==0 )
     mode=0;
-  else switch( getoptionchar( TSD, parm3->value, "OPEN", 3, "WRA" ) )
+  else switch( getoptionchar( TSD, parm3->value, "OPEN", 3, "", "WRA" ) )
   {
   case 'W':
     mode=0;
@@ -409,7 +409,7 @@ streng *arexx_seek( tsd_t *TSD, cparamboxptr parm1 )
        || parm3->value==NULL
        || parm3->value->len == 0 )
     wench = SEEK_CUR;
-  else switch( getoptionchar( TSD, parm3->value, "SEEK", 3, "CBE" ) )
+  else switch( getoptionchar( TSD, parm3->value, "SEEK", 3, "", "CBE" ) )
   {
   case 'C':
     wench = SEEK_CUR;
@@ -1056,9 +1056,9 @@ streng *arexx_show( tsd_t *TSD, cparamboxptr parm1 )
     sep = Str_dup_TSD( TSD, parm3->value );
   
 #if defined(_AMIGA) || defined(__AROS__)
-  switch( getoptionchar( TSD, parm1->value, "SHOW", 1, "CFLP" ) )
+  switch( getoptionchar( TSD, parm1->value, "SHOW", 1, "", "CFLP" ) )
 #else
-  switch( getoptionchar( TSD, parm1->value, "SHOW", 1, "F" ) )
+  switch( getoptionchar( TSD, parm1->value, "SHOW", 1, "", "F" ) )
 #endif
   {
   case 'F':
@@ -1141,10 +1141,10 @@ struct envir *amiga_find_envir( const tsd_t *TSD, const streng *name )
   if (port == NULL)
     return NULL;
 
-  if ( atsd->portenvir.envir.name != NULL )
-    Free_stringTSD( atsd->portenvir.envir.name );
+  if ( atsd->portenvir.envir.e.name != NULL )
+    Free_stringTSD( atsd->portenvir.envir.e.name );
     
-  atsd->portenvir.envir.name = Str_dupTSD( name );
+  atsd->portenvir.envir.e.name = Str_dupTSD( name );
   atsd->portenvir.port = port;
 
   return (struct envir *)&(atsd->portenvir);
@@ -1478,7 +1478,7 @@ streng *arexx_pragma( tsd_t *TSD, cparamboxptr parm1 )
   checkparam( parm1, 1, 2, "PRAGMA" );
   parm2 = parm1->next;
   
-  switch( getoptionchar( TSD, parm1->value, "PRAGMA", 1, "DPIS" ) )
+  switch( getoptionchar( TSD, parm1->value, "PRAGMA", 1, "", "DPIS" ) )
   {
   case 'D':
     {

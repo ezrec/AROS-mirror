@@ -685,8 +685,8 @@ streng *std_value( tsd_t *TSD, cparamboxptr parms )
          {
             /*
              * Either there was no exit handler, or the exit handler didn't
-             * handle the GETENV. Get the environment directly from the
-             * system.
+             * handle the GETENV. Get the environment variable directly from
+             * the system.
              */
 #ifdef VMS
             ptr = vms_resolv_symbol( TSD, string, value, env ) ;
@@ -709,6 +709,13 @@ streng *std_value( tsd_t *TSD, cparamboxptr parms )
 
          if (value)
          {
+            /*
+             * We are setting a value in the external environment
+             */
+
+            if ( TSD->restricted )
+               exiterror( ERR_RESTRICTED, 2, "VALUE", 2 )  ;
+
             if (TSD->systeminfo->hooks & HOOK_MASK(HOOK_SETENV))
                ok = hookup_output2( TSD, HOOK_SETENV, string, value ) ;
 
@@ -739,7 +746,7 @@ streng *std_value( tsd_t *TSD, cparamboxptr parms )
                strvalue = Str_dupstrTSD( value ) ;
                my_win32_setenv(string->value, strvalue->value ) ;
 # else
-               exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
+               exiterror( ERR_SYSTEM_FAILURE, 1, "No support for setting an environment variable" )  ;
 # endif /* HAVE_PUTENV */
             }
             else
@@ -749,7 +756,7 @@ streng *std_value( tsd_t *TSD, cparamboxptr parms )
 #endif /* VMS */
       }
       else
-         exiterror( ERR_INCORRECT_CALL, 914, "VALUE", 3, "SYSTEM ENVIRONMENT OS2ENVIRONMENT", tmpstr_of( TSD, env ) )  ;
+         exiterror( ERR_INCORRECT_CALL, 37, "VALUE", tmpstr_of( TSD, env ) )  ;
 
       Free_stringTSD( string ) ;
       if (ptr==NULL)
@@ -788,7 +795,7 @@ streng *std_condition( tsd_t *TSD, cparamboxptr parms )
    checkparam(  parms,  0,  1 , "CONDITION" ) ;
 
    if (parms&&parms->value)
-      opt = getoptionchar( TSD, parms->value, "CONDITION", 1, "CEIDS" ) ;
+      opt = getoptionchar( TSD, parms->value, "CONDITION", 1, "CEIDS", "" ) ;
 
    result = NULL ;
    sig = getsigs(TSD->currlevel) ;
@@ -965,7 +972,7 @@ streng *std_time( tsd_t *TSD, cparamboxptr parms )
 
    checkparam(  parms,  0,  3 , "TIME" ) ;
    if ((parms)&&(parms->value))
-      format = getoptionchar( TSD, parms->value, "TIME", 1, "CEHJLMNORS" ) ;
+      format = getoptionchar( TSD, parms->value, "TIME", 1, "CEHLMNORS", "JT" ) ;
 
    if (parms->next)
    {
@@ -979,7 +986,7 @@ streng *std_time( tsd_t *TSD, cparamboxptr parms )
          if (tmpptr->value)
          {
             str_suppformat = tmpptr->value;
-            suppformat = getoptionchar( TSD, tmpptr->value, "TIME", 3, "CHLMNS" ) ;
+            suppformat = getoptionchar( TSD, tmpptr->value, "TIME", 3, "CHLMNS", "T" ) ;
          }
       }
       else
@@ -1002,11 +1009,11 @@ streng *std_time( tsd_t *TSD, cparamboxptr parms )
    }
 
    rnow = now ;
-#ifdef FGC /* really MH */
+
    if (unow>=(500*1000)
    &&  format != 'L')
       now ++ ;
-#endif
+
 
    if ((tmptr = localtime(&now)) != NULL)
       tmdata = *tmptr;
@@ -1116,6 +1123,12 @@ streng *std_time( tsd_t *TSD, cparamboxptr parms )
          answer->len = strlen(answer->value);
          break ;
 
+      case 'T':
+         rnow = mktime( &tmdata );
+         sprintf(answer->value, "%ld", rnow );
+         answer->len = strlen(answer->value);
+         break ;
+
       default:
          /* should not get here */
          break;
@@ -1136,11 +1149,11 @@ streng *std_date( tsd_t *TSD, cparamboxptr parms )
    streng *suppdate=NULL;
    streng *str_suppformat=NULL;
    struct tm tmdata, *tmptr ;
-   time_t now=0, unow=0 ;
+   time_t now=0, unow=0, rnow=0 ;
 
    checkparam(  parms,  0,  3 , "DATE" ) ;
    if ((parms)&&(parms->value))
-      format = getoptionchar( TSD, parms->value, "DATE", 1, "BCDEIJMNOSUW" ) ;
+      format = getoptionchar( TSD, parms->value, "DATE", 1, "BDEMNOSUW", "CIJT" ) ;
 
    if (parms->next)
    {
@@ -1154,7 +1167,7 @@ streng *std_date( tsd_t *TSD, cparamboxptr parms )
          if (tmpptr->value)
          {
             str_suppformat = tmpptr->value;
-            suppformat = getoptionchar( TSD, tmpptr->value, "DATE", 3, "BDEINOSU" ) ;
+            suppformat = getoptionchar( TSD, tmpptr->value, "DATE", 3, "BDENOSU", "IT" ) ;
          }
       }
       else
@@ -1206,6 +1219,11 @@ streng *std_date( tsd_t *TSD, cparamboxptr parms )
             p2 = "N";
          exiterror( ERR_INCORRECT_CALL, 19, "DATE", p1, p2 )  ;
       }
+      /*
+       * Check for crazy years...
+       */
+      if ( tmdata.tm_year < 0 || tmdata.tm_year > 9999 )
+         exiterror( ERR_INCORRECT_CALL, 18, "DATE" )  ;
    }
 
    switch (format)
@@ -1264,6 +1282,12 @@ streng *std_date( tsd_t *TSD, cparamboxptr parms )
          sprintf(answer->value, iso, tmdata.tm_year, tmdata.tm_mon+1,
                            tmdata.tm_mday) ;
          answer->len = strlen(answer->value);
+         break ;
+
+      case 'T':
+         tmdata.tm_year -= 1900;
+         rnow = mktime( &tmdata );
+         answer->len = sprintf(answer->value, "%ld", rnow );
          break ;
 
       case 'U':
@@ -1362,7 +1386,7 @@ streng *std_address( tsd_t *TSD, cparamboxptr parms )
    checkparam(  parms,  0,  1 , "ADDRESS" ) ;
 
    if ( parms && parms->value )
-      opt = getoptionchar( TSD, parms->value, "ADDRESS", 1, "EINO" ) ;
+      opt = getoptionchar( TSD, parms->value, "ADDRESS", 1, "EINO", "" ) ;
 
    update_envirs( TSD, TSD->currlevel ) ;
    return Str_dupTSD( TSD->currlevel->environment ) ;
@@ -1456,7 +1480,7 @@ streng *std_strip( tsd_t *TSD, cparamboxptr parms )
    checkparam(  parms,  1,  3 , "STRIP" ) ;
    if ( ( parms->next )
    && ( parms->next->value ) )
-      option = getoptionchar( TSD, parms->next->value, "STRIP", 2, "LTB" );
+      option = getoptionchar( TSD, parms->next->value, "STRIP", 2, "LTB", "" );
 
    if ( ( parms->next )
    && ( parms->next->next )
@@ -1547,7 +1571,7 @@ streng *std_arg( tsd_t *TSD, cparamboxptr parms )
    {
       number = atopos( TSD, parms->value, "ARG", 1 ) ;
       if ( parms->next )
-         flag = getoptionchar( TSD, parms->next->value, "ARG", 2, "ENO" ) ;
+         flag = getoptionchar( TSD, parms->next->value, "ARG", 2, "ENO", "" ) ;
    }
 
    ptr = TSD->currlevel->args ;
@@ -1599,7 +1623,7 @@ static char logic( char first, char second, int ltype )
       case ( LOGIC_OR  ) : return (char)( first | second ) ;
       case ( LOGIC_XOR ) : return (char)( first ^ second ) ;
       default :
-         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;
+         exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__, "" )  ;
    }
    /* not reached, next line only to satisfy compiler */
    return 'X' ;
@@ -1754,15 +1778,18 @@ streng *std_sourceline( tsd_t *TSD, cparamboxptr parms )
       */
       otp = ipt->srclines; /* NULL if incore_source==NULL */
       if (line > 0)
-         while (otp && ((int) otp->num < line)) {
+      {
+         while (otp && ((int) otp->num < line)) 
+         {
             line -= otp->num;
             otp = otp->next;
          }
-
+      }
       if ((otp == NULL) || /* line not found or error */
           (line < 1))
-         exiterror( ERR_INCORRECT_CALL, 34,
-                    "SOURCELINE", 1, line, num_sourcelines( ipt ) )  ;
+      {
+         exiterror( ERR_INCORRECT_CALL, 34, "SOURCELINE", 1, line, num_sourcelines( ipt ) )  ;
+      }
 
       line--;
       i = otp->elems[line].length ;
@@ -1782,13 +1809,7 @@ streng *std_sourceline( tsd_t *TSD, cparamboxptr parms )
    {
       if ((bt->srcline_ptr=bt->srcline_ptr->next)==NULL)
       {
-         /*
-          * All this just to get the number of lines in the program :-(
-          */
-         bt->srcline_ptr = ipt->first_source_line ;
-         for ( i = 0; bt->srcline_ptr; i++ )
-            bt->srcline_ptr = bt->srcline_ptr->next;
-         exiterror( ERR_INCORRECT_CALL, 34, "SOURCELINE", 1, line, i )  ;
+         exiterror( ERR_INCORRECT_CALL, 34, "SOURCELINE", 1, line, num_sourcelines( ipt ) )  ;
       }
       bt->srcline_lineno = bt->srcline_ptr->lineno ;
    }
@@ -1845,12 +1866,14 @@ streng *std_errortext( tsd_t *TSD, cparamboxptr parms )
    char opt = 'N';
    streng *tmp,*tmp1,*tmp2;
    int numdec=0, errnum, suberrnum, pos=0, i;
+#if 0
    const char *err=NULL;
+#endif
 
    checkparam(  parms,  1,  2 , "ERRORTEXT" ) ;
 
    if (parms&&parms->next&&parms->next->value)
-      opt = getoptionchar( TSD, parms->next->value, "ERRORTEXT", 2, "NS" ) ;
+      opt = getoptionchar( TSD, parms->next->value, "ERRORTEXT", 2, "NS", "" ) ;
    tmp = Str_dupTSD( parms->value );
    for (i=0; i<Str_len( tmp); i++ )
    {
@@ -1878,11 +1901,16 @@ streng *std_errortext( tsd_t *TSD, cparamboxptr parms )
       errnum = atoposorzero( TSD, tmp, "ERRORTEXT", 1  );
       suberrnum = 0;
    }
-   if (errnum > 90 || suberrnum > 900)
+   /*
+    * Only restrict the error number passed if STRICT_ANSI is in effect.
+    */
+   if ( get_options_flag( TSD->currlevel, EXT_STRICT_ANSI ) 
+   &&   ( errnum > 90 || suberrnum > 900 ) )
       exiterror( ERR_INCORRECT_CALL, 17, "ERRORTEXT", tmpstr_of( TSD, parms->value ) )  ;
 
    Free_stringTSD( tmp ) ;
 
+#if 0
    if ( suberrnum == 0)
       return Str_creTSD( errortext( errnum ) ) ;
    else
@@ -1893,6 +1921,9 @@ streng *std_errortext( tsd_t *TSD, cparamboxptr parms )
       else
          return Str_creTSD( err );
    }
+#else
+   return Str_creTSD( errortext( TSD, errnum, suberrnum, (opt=='S')?1:0, 1 ) ) ;
+#endif
 }
 
 
@@ -1976,17 +2007,9 @@ streng *std_verify( tsd_t *TSD, cparamboxptr parms )
    {
       if ( parms->next->next->value )
       {
-#if 0
-         ch = (*(parms->next->next->value->value)&0xdf) ;
-         if (ch=='M')
-            inv = 1 ;
-         else if (ch!='N')
-             exiterror( ERR_INCORRECT_CALL, 0 )  ;
-#else
-         ch = getoptionchar( TSD, parms->next->next->value, "VERIFY", 3, "MN" ) ;
+         ch = getoptionchar( TSD, parms->next->next->value, "VERIFY", 3, "MN", "" ) ;
          if ( ch == 'M' )
             inv = 1 ;
-#endif
       }
       if (parms->next->next->next)
          start = atopos( TSD, parms->next->next->next->value, "VERIFY", 4 ) - 1 ;
@@ -2119,14 +2142,18 @@ streng *std_random( tsd_t *TSD, cparamboxptr parms )
          if (parms->next)
             min = atozpos( TSD, parms->value, "RANDOM", 1 ) ;
          else
-            max = atozpos( TSD, parms->value, "RANDOM", 2 ) ;
+         {
+            max = atozpos( TSD, parms->value, "RANDOM", 1 ) ;
+            if ( max > 100000 )
+               exiterror( ERR_INCORRECT_CALL, 31, "RANDOM", max )  ;
+         }
       }
       if (parms->next!=NULL)
       {
          if (parms->next->value!=NULL)
             max = atozpos( TSD, parms->next->value, "RANDOM", 2 ) ;
 
-         if (parms->next->next!=NULL)
+         if (parms->next->next!=NULL&&parms->next->next->value!=NULL)
          {
             seed = atozpos( TSD, parms->next->next->value, "RANDOM", 3 ) ;
 #if defined(HAVE_RANDOM)
@@ -2389,7 +2416,7 @@ streng *std_datatype( tsd_t *TSD, cparamboxptr parms )
 
    if ((parms->next)&&(parms->next->value))
    {
-      option = getoptionchar( TSD, parms->next->value, "DATATYPE", 2, "ABLMNSUWX" ) ;
+      option = getoptionchar( TSD, parms->next->value, "DATATYPE", 2, "ABLMNSUWX", "" ) ;
       res = 1 ;
       cptr = string->value ;
       if ((Str_len(string)==0)&&(option!='X')&&(option!='B'))
@@ -2502,12 +2529,10 @@ streng *std_trace( tsd_t *TSD, cparamboxptr parms )
             break;
       }
       TSD->trace_stat =
-      TSD->currlevel->tracestat = getoptionchar( TSD, Str_strp( string,
-                                                                '?',
-                                                               STRIP_LEADING ),
+      TSD->currlevel->tracestat = getoptionchar( TSD, Str_strp( string, '?', STRIP_LEADING ),
                                                  "TRACE",
                                                  1,
-                                                 "ACEFILNOR" ) ;
+                                                 "ACEFILNOR", "" ) ;
       Free_stringTSD( string );
    }
 #endif
