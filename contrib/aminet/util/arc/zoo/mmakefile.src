@@ -19,7 +19,7 @@ USE_MLIB := yes
 
 USER_CFLAGS := -DGENERIC -DNOSIGNAL
 
-#MM aminet-util-arc-zoo : includes linklibs
+##MM aminet-util-arc-zoo : includes linklibs
 
 %make_prog_setup mmake=aminet-util-arc-zoo
 
