@@ -18,7 +18,7 @@ OBJDIR   				:= $(GENDIR)/$(CURDIR)
 
 EXE 					:= $(INSTDIR)/mame
 
-#MM- contrib-emu : Mame
+#MM- contrib-emu : MameSourceFix Mame
 #MM
 Mame : setup $(EXE)
 
@@ -34,7 +34,7 @@ MameSourceFix: $(TOOLDIR)/stripcr
 	@find . -name "*.c" -or -name "*.h" -or -name "*.txt" | xargs $(TOOLDIR)/stripcr
 	
 $(TOOLDIR)/stripcr: src/aros/stripcr/stripcr.c
-	@$(CC) -s $< -o $@ 
+	@$(HOST_CC) -s $< -o $@ 
 
 #ASM = nasm
 ASM = nasmw
