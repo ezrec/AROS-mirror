@@ -28,6 +28,7 @@
 	 Defines und Strukturen
 ***************************************/
 /* DICE defines these (but this file hides the other definition) */
+#ifndef __AROS
 #define GetHead(list)       ((APTR) \
 	(((struct List *)(list))->lh_Head->ln_Succ ? \
 		((struct List *)(list))->lh_Head : NULL ))
@@ -40,7 +41,7 @@
 #define GetSucc(node)       ((APTR) \
 	(((struct Node *)(node))->ln_Succ->ln_Succ ? \
 		((struct Node *)(node))->ln_Succ : NULL ))
-
+#endif
 
 /***************************************
 	       Prototypes

@@ -2,7 +2,6 @@
 
 
 #include <exec/types.h>
-#define AROS_ALMOST_COMPATIBLE
 #include <exec/lists.h>
 #include <assert.h>
 #include <string.h>
@@ -18,11 +17,6 @@
 #include <proto/exec.h>
 
 BOOL flexprintf (void* outstream, int (*writestring)(void*, char *), char * tmplt, void* instream, char * (*getstring)(void*, char *));
-
-
-#define RemoveNode(l,n)   REMOVE(n)
-
-
 
 
 
@@ -46,7 +40,7 @@ void node_free (struct node *n) {
 
 
 void node_drop (struct node *n) {
-    RemoveNode (&current->nodes, &n->node);
+    REMOVE (&n->node);
     node_free(n);
 } /* node_drop */
 
@@ -104,7 +98,7 @@ void carrier_drop (struct carrier *c) {
     if	((c == &defaults[0]) || (c == &defaults[1]) || (c == &defaults[2]) || (c == &defaults[3]))
 	return;
 
-    RemoveNode (&carriers, &c->node);
+    REMOVE (&c->node);
 
     if (c->node.ln_Name);
 	free (c->node.ln_Name);
@@ -160,13 +154,13 @@ fprintf (stderr, "sorting\n");
 
     while (m = GetHead(&carriers)) {
 	if (!m->node.ln_Name) {
-	    RemoveNode(&carriers, &m->node);
+	    REMOVE(&m->node);
 	    continue;
 	}
 	for (c = GetSucc(m); c; c = GetSucc(c))
 	    if (strcmp(m->node.ln_Name, c->node.ln_Name) < 0)
 		m = c;
-	RemoveNode (&carriers, &m->node);
+	REMOVE (&m->node);
 	ADDHEAD(&inter, &m->node);
     }
 

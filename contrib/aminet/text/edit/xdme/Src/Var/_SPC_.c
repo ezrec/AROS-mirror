@@ -134,7 +134,8 @@ value = ltostr((long)Ep->config.wwcol);
 value = GETF_MODIFIED(Ep) ?"1":"0"; 
     break;
     case ~22: /* menustrip */
-if ((value = (void *)currentmenu()))
+
+	if ((value = (void *)currentmenu()))
 	    value = ((struct Node *)value)->ln_Name;
     
     break;
@@ -145,12 +146,14 @@ value = ltostr((long)Ep->config.margin);
 value = ltostr((long)Ep->line + 1); 
     break;
     case ~25: /* keytable */
-if ((value = (void*)currenthash()))
+
+	if ((value = (void*)currenthash()))
 	    value = ((struct Node *)value)->ln_Name;
     
     break;
     case ~26: /* itemcheck */
-if (active_menu)
+
+      if (active_menu)
 	  value = (((struct MenuItem *)active_menu)->Flags & CHECKED) ? "1": "0";
     
     break;

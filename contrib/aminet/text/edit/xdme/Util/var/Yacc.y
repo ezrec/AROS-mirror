@@ -30,7 +30,7 @@ extern DSTR  value;
 extern DSTR  structname;
 extern DSTR  typename;
 
-#define PTR void *
+typedef void * PTR;
 
 
 
@@ -38,6 +38,8 @@ extern struct carrier *current;
 extern struct carrier  defaults[];
 
 
+extern int yyerror (const char *x);
+extern int yylex ();
 
 
 

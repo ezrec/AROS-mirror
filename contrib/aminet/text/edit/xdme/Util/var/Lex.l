@@ -9,6 +9,7 @@
 
 */
 
+#include <string.h>
 #include "Dyn.h"
 #include "Yacc.tab.h"
 

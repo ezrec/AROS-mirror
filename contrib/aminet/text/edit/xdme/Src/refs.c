@@ -22,6 +22,7 @@
 		Includes
 **************************************/
 #include "defs.h"
+#include <unistd.h>
 #include <proto/exec.h>
 #include <proto/intuition.h>
 
@@ -64,7 +65,7 @@ void path_init (void)
 
     NewList ((struct List *)&PBase);
 
-    if (pen = malloc (sizeof(PEN)))
+    if ((pen = malloc (sizeof(PEN))))
     {
 	*pen->path = 0;
 	pen->Node.ln_Name = pen->path;
@@ -122,7 +123,7 @@ DEFUSERCMD("addpath", 1, CF_VWM|CF_ICO, void, do_addpath, (void),)
 	    return;
     }
 
-    if (pen = malloc (sizeof (PEN) + len))
+    if ((pen = malloc (sizeof (PEN) + len)))
 	strcpy (pen->path, av[1]);
 
     AddTail ((LIST *) & PBase, (NODE *) pen);
@@ -257,7 +258,7 @@ DEFUSERCMD("ctags",  0, CF_VWM, void, do_ctags, (void),)
 	    strcpy (path, pen->path);
 	    AddPart (path, "tags", sizeof(path));
 
-	    if (fi = fopen (path, "r"))
+	    if ((fi = fopen (path, "r")))
 	    {
 		mountrequest (1);
 
@@ -393,7 +394,7 @@ DEFUSERCMD("ctags",  0, CF_VWM, void, do_ctags, (void),)
 				for (i=0; sbuf[i] && i<slen; i++)
 				{
 				    printf ("%02x", sbuf[i]);
-				    if (i & 3 == 3)
+				    if ((i & 3) == 3)
 					printf (" ");
 				}
 				printf ("\n");
@@ -523,7 +524,7 @@ found:
 	    {
 autoseek:
 		title ("load..");
-		if (fj = fopen (tmpfile, "w"))
+		if ((fj = fopen (tmpfile, "w")))
 		{
 		    tmph = 0;
 		    tmpw = 0;
@@ -620,7 +621,7 @@ static int searchref (char * file, char * find, char ** psstr, char ** pfile, lo
 
     /* WORD  findlen = strlen(find); TODO */
 
-    if (fi = fopen (file, "r"))
+    if ((fi = fopen (file, "r")))
     {
 	while (xefgets (fi, (base = buf), MAXLINELEN) >= 0)
 	{
@@ -632,7 +633,7 @@ static int searchref (char * file, char * find, char ** psstr, char ** pfile, lo
 	    /* TODO if (ptr && *ptr && strncmp(ptr, find, findlen) == 0) */
 	    if (ptr && *ptr && strcmp (ptr, find) == 0)
 	    {
-		if (ptr = breakout (&base, &quoted, &b2))
+		if ((ptr = breakout (&base, &quoted, &b2)))
 		{
 		    *pestr = NULL;
 		    *plines = atoi (ptr);
@@ -643,12 +644,12 @@ static int searchref (char * file, char * find, char ** psstr, char ** pfile, lo
 			strcpy (*pestr, ptr);
 		    }
 
-		    if (ptr = breakout (&base, &quoted, &b3))
+		    if ((ptr = breakout (&base, &quoted, &b3)))
 		    {
 			*pfile = (char *) malloc (strlen (ptr) + 1);
 			strcpy (*pfile, ptr);
 
-			if (ptr = breakout (&base, &quoted, &b4))
+			if ((ptr = breakout (&base, &quoted, &b4)))
 			{
 			    *psstr = (char *) malloc (strlen (ptr) + 1);
 
@@ -694,6 +695,7 @@ static int searchref (char * file, char * find, char ** psstr, char ** pfile, lo
 } /* searchref */
 
 
+/*
 static int dirpart (char * str)
 {
     WORD    i;
@@ -705,7 +707,7 @@ static int dirpart (char * str)
     }
 
     return (i + 1);
-} /* dirpart */
+} / * dirpart */
 
 
 /******************************************************************************

@@ -68,6 +68,9 @@ struct pos
     Column  col;
 };
 
+/* Make GCC happy */
+struct RexxMsg;
+
 /* do this after all types have been defined */
 #define DEFUSERCMD(str,nargs,flags,ret,func,param,ext)  extern ret func param;
 #define DEFCMD(ret,func,param)                          extern ret func param;

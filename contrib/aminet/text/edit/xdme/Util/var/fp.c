@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+/* #include <ctype.h> */
+#define isspace(c)	((c) == ' ' || (c) == '\t')
 
 
 #define FLEXPRINT_BUFFER 0

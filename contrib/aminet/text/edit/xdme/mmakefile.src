@@ -30,7 +30,8 @@ USE_MLIB := yes
 USE_BGUILIB := yes
 USE_REQTOOLSLIB := yes
 
-#MM aminet-text-edit-xdme : includes linklibs setup-xdme
+#MM aminet-text-edit-xdme-quick : setup-xdme
+#MM aminet-text-edit-xdme : includes linklibs aminet-text-edit-xdme-quick
 
 %make_prog_setup mmake=aminet-text-edit-xdme
 
