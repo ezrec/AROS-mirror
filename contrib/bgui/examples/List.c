@@ -16,6 +16,9 @@
  * list.
  *
  * $Log$
+ * Revision 42.1  2000/08/10 11:50:54  chodorowski
+ * Cleaned up and prettyfied the GUIs a bit.
+ *
  * Revision 42.0  2000/05/09 22:19:53  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -40,7 +43,7 @@ quit
 #include "DemoCode.h"
 
 /*
- *	Just a bunch of entries...
+ *      Just a bunch of entries...
  */
 STATIC UBYTE *entries[] = {
 	"Entry 1",
@@ -67,7 +70,7 @@ STATIC UBYTE *entries[] = {
 };
 
 /*
- *	Object ID's
+ *      Object ID's
  */
 #define ID_QUIT         1
 
@@ -78,81 +81,82 @@ static char *TabLabels[] =
 	NULL
 };
 /*
-**	Cycle to Page map-list.
+**      Cycle to Page map-list.
 **/
 static ULONG Cyc2Page[] = { MX_Active, PAGE_Active, TAG_END };
 
 /*
- *	Here we go...
+ *      Here we go...
  */
 VOID StartDemo( void )
 {
-	struct Window			*window;
-	Object			*WO_Window, *tabs, *page;
-	ULONG				 signal, rc;
-	BOOL				 running = TRUE;
+	struct Window                   *window;
+	Object                  *WO_Window, *tabs, *page;
+	ULONG                            signal, rc;
+	BOOL                             running = TRUE;
 
 	/*
-	 *	Build the window object tree.
+	 *      Build the window object tree.
 	 */
 	WO_Window = WindowObject,
-		WINDOW_Title,		"Listview DragNDrop",
-		WINDOW_ScaleWidth,	25,
-		WINDOW_ScaleHeight,	20,
-		WINDOW_RMBTrap,		TRUE,
-		WINDOW_AutoAspect,	TRUE,
-		WINDOW_AutoKeyLabel,	TRUE,
+		WINDOW_Title,           "Listview DragNDrop",
+		WINDOW_ScaleWidth,      25,
+		WINDOW_ScaleHeight,     20,
+		WINDOW_RMBTrap,         TRUE,
+		WINDOW_AutoAspect,      TRUE,
+		WINDOW_AutoKeyLabel,    TRUE,
+		WINDOW_CloseOnEsc,      TRUE,
 		WINDOW_MasterGroup,
-			VGroupObject, NormalVOffset, NormalSpacing,
+			VGroupObject, NormalOffset, Spacing( 0 ),
 				StartMember,
 					tabs = Tabs(NULL, TabLabels, 0, 0),
 				EndMember,
 				StartMember,
-					page = PageObject,
+					page = PageObject, FRM_Type, FRTYPE_TAB_ABOVE,
 					PageMember,
-						VGroupObject, NormalHOffset, NormalSpacing,
+						VGroupObject, WideVOffset, WideHOffset, NormalSpacing,
 							StartMember,
 								InfoFixed(NULL, ISEQ_C "Single-Select Drag-n-Drop\nListview object.", NULL, 2 ), FixMinHeight,
 							EndMember,
 							StartMember,
 							/*
-							 *	Create a draggable and droppable listview
-							 *	and make it show the drop-spot.
+							 *      Create a draggable and droppable listview
+							 *      and make it show the drop-spot.
 							 */
 								ListviewObject,
-									LISTV_EntryArray,		entries,
-									LISTV_ShowDropSpot,	TRUE,
-									BT_DragObject,			TRUE,
-									BT_DropObject,			TRUE,
+									LISTV_EntryArray,               entries,
+									LISTV_ShowDropSpot,             TRUE,
+									BT_DragObject,                  TRUE,
+									BT_DropObject,                  TRUE,
 								EndObject,
 							EndMember,
 						EndObject,
 					PageMember,
-						VGroupObject, NormalHOffset, NormalSpacing,
+						VGroupObject, WideVOffset, WideHOffset, NormalSpacing,
 							StartMember,
 								InfoFixed( NULL, ISEQ_C "Multi-Select Drag-n-Drop\nListview object.", NULL, 2 ), FixMinHeight,
 							EndMember,
 							StartMember,
 							/*
-							 *	Create a multi-select, draggable and
-							 *	droppable listview and make it show
-							 *	the drop-spot.
+							 *      Create a multi-select, draggable and
+							 *      droppable listview and make it show
+							 *      the drop-spot.
 							 */
 								ListviewObject,
-									LISTV_MultiSelect,	TRUE,
-									LISTV_EntryArray,		entries,
-									LISTV_ShowDropSpot,	TRUE,
-									BT_DragObject,			TRUE,
-									BT_DropObject,			TRUE,
+									LISTV_MultiSelect,      TRUE,
+									LISTV_EntryArray,               entries,
+									LISTV_ShowDropSpot,     TRUE,
+									BT_DragObject,                  TRUE,
+									BT_DropObject,                  TRUE,
 								EndObject,
 							EndMember,
 						EndObject,
 					EndObject,
 				EndMember,
 				StartMember,
-					HGroupObject,
+					HGroupObject, NormalOffset, NormalSpacing,
 						VarSpace( DEFAULT_WEIGHT ),
-						StartMember, FuzzButton( "_Quit", ID_QUIT ), EndMember,
+						StartMember, PrefButton( "_Quit", ID_QUIT ), EndMember,
 						VarSpace( DEFAULT_WEIGHT ),
 					EndObject, FixMinHeight,
 				EndMember,
@@ -160,31 +164,31 @@ VOID StartDemo( void )
 	EndObject;
 
 	/*
-	 *	Window object tree OK?
+	 *      Window object tree OK?
 	 */
 	if ( WO_Window ) {
 		/*
-		**	Connect the cycle to the page.
+		**      Connect the cycle to the page.
 		**/
 		AddMap(tabs, page, Cyc2Page );
 		/*
-		 *	Open the window.
+		 *      Open the window.
 		 */
 		if ( window = WindowOpen( WO_Window )) {
 			/*
-			 *	Get signal wait mask.
+			 *      Get signal wait mask.
 			 */
 			GetAttr( WINDOW_SigMask, WO_Window, &signal );
 
 			do {
 				Wait( signal );
 					/*
-				 *	Handle messages.
+				 *      Handle messages.
 				 */
 				while (( rc = HandleEvent( WO_Window )) != WMHI_NOMORE ) {
 					switch ( rc ) {
-						case	WMHI_CLOSEWINDOW:
-						case	ID_QUIT:
+						case    WMHI_CLOSEWINDOW:
+						case    ID_QUIT:
 							running = FALSE;
 							break;
 					}

@@ -11,6 +11,9 @@
  * Description: Very simple test program for the area class.
  *
  * $Log$
+ * Revision 42.1  2000/08/10 11:50:54  chodorowski
+ * Cleaned up and prettyfied the GUIs a bit.
+ *
  * Revision 42.0  2000/05/09 22:19:19  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -34,17 +37,18 @@ quit
 #include "DemoCode.h"
 #include <intuition/icclass.h>
 
-#define ID_REDRAW_AREA		1	/* When this ID is encountered we (re-)render the area. */
+#define ID_REDRAW_AREA          1       /* When this ID is encountered we (re-)render the area. */
 #define ID_QUIT            2
 
 /*
-**	Simply took from the old BGUIDemo. Renders a simple
-**	integer mandel in the area.
+**      Simply took from the old BGUIDemo. Renders a simple
+**      integer mandel in the area.
 **/
+
 ULONG RenderMandel( struct Window *win, struct IBox *ibox, Object *area, Object *wd )
 {
-	LONG	zr, zi, ar, ai, dr, di, sr, si, st, x, y, i;
-	LONG	xsize, ysize, depth;
+	LONG    zr, zi, ar, ai, dr, di, sr, si, st, x, y, i;
+	LONG    xsize, ysize, depth;
 	ULONG rc;
 
 	depth = win->WScreen->BitMap.Depth;
@@ -77,10 +81,10 @@ ULONG RenderMandel( struct Window *win, struct IBox *ibox, Object *area, Object 
 			SetAPen(win->RPort, i % (1 << depth));
 			WritePixel(win->RPort, x + ibox->Left, y + ibox->Top);
 			/*
-			**	To keep things simple I sortof duplicated
-			**	the event handler here. It simply returns
-			**	to the main event handler (below) when
-			**	necessary.
+			**      To keep things simple I sortof duplicated
+			**      the event handler here. It simply returns
+			**      to the main event handler (below) when
+			**      necessary.
 			**/
 			while ((rc = HandleEvent( wd )) != WMHI_NOMORE)
 			{
@@ -95,66 +99,68 @@ ULONG RenderMandel( struct Window *win, struct IBox *ibox, Object *area, Object 
 }
 
 /*
-**	Here we go...
+**      Here we go...
 **/
 void StartDemo(void)
 {
-	struct Window	*w;
-	Object		*Win, *Area, *But;
-	ULONG		 signal, rc;
-	struct IBox	*area_box;
-	BOOL		 running = TRUE;
+	struct Window   *w;
+	Object          *Win, *Area, *But;
+	ULONG            signal, rc;
+	struct IBox     *area_box;
+	BOOL             running = TRUE;
 
 	/*
-	**	Make a window.
+	**      Make a window.
 	**/
 	Win = WindowObject,
-		WINDOW_Title,				"AreaClass demo.",
-		WINDOW_AutoAspect,		TRUE,
-		WINDOW_SmartRefresh,		TRUE,
-		WINDOW_AutoKeyLabel,		TRUE,
+		WINDOW_Title,                           "AreaDemo",
+		WINDOW_AutoAspect,              TRUE,
+		WINDOW_SmartRefresh,            TRUE,
+		WINDOW_AutoKeyLabel,            TRUE,
+		WINDOW_ScaleHeight,               15,
+		WINDOW_ScaleWidth,                15,
 		WINDOW_MasterGroup,
 			VGroupObject, HOffset(4), VOffset(4), Spacing(4),
 				GROUP_BackFill,         SHINE_RASTER,
 				StartMember,
 					/*
-					**	Create AreaClass object.
+					**      Create AreaClass object.
 					**
-					**	Note the usage of the ICA_TARGET attribute. This is
-					**	required otherwise the object will never notify you
-					**	of size changes!!
+					**      Note the usage of the ICA_TARGET attribute. This is
+					**      required otherwise the object will never notify you
+					**      of size changes!!
 					**/
 					Area = AreaObject,
-						FRM_Type,			FRTYPE_BUTTON,
-						FRM_EdgesOnly,		TRUE,
-					   AREA_MinWidth,		40,
-						AREA_MinHeight,	10,
-						GA_ID,				ID_REDRAW_AREA,
-						ICA_TARGET,			ICTARGET_IDCMP,
+						FRM_Type,                       FRTYPE_BUTTON,
+						FRM_EdgesOnly,          TRUE,
+					   AREA_MinWidth,               40,
+						AREA_MinHeight, 10,
+						GA_ID,                          ID_REDRAW_AREA,
+						ICA_TARGET,                     ICTARGET_IDCMP,
 					EndObject,
 				EndMember,
 				StartMember,
-					But = FuzzButton("_Quit", ID_QUIT), FixMinHeight,
+					But = PrefButton("_Quit", ID_QUIT), FixMinHeight,
 				EndMember,
 			EndObject,
 		EndObject;
 
 	/*
-	**	OK?
+	**      OK?
 	**/
 	if (Win)
 	{
 		/*
-		**	Open the window.
+		**      Open the window.
 		**/
 		if (w = WindowOpen(Win))
 		{
 			/*
-			**	Get window signal.
+			**      Get window signal.
 			**/
 			GetAttr(WINDOW_SigMask, Win, &signal);
 			/*
-			**	Poll messages...
+			**      Poll messages...
 			**/
 			do
 			{
@@ -167,22 +173,22 @@ void StartDemo(void)
 					{
 					case ID_REDRAW_AREA:
 						/*
-						**	Were signalled to redraw the
-						**	area. Obtain the area bounds.
+						**      Were signalled to redraw the
+						**      area. Obtain the area bounds.
 						**/
 						GetAttr(AREA_AreaBox, Area, (ULONG *)&area_box);
 						/*
-						**	Render inside the area.
-						**	When this routine returns we
-						**	evaluate the return code.
+						**      Render inside the area.
+						**      When this routine returns we
+						**      evaluate the return code.
 						**/
 						if (rc = RenderMandel(w, area_box, Area, Win))
 							goto handleMsg;
 
 						break;
 
-					case	WMHI_CLOSEWINDOW:
-					case	ID_QUIT:
+					case    WMHI_CLOSEWINDOW:
+					case    ID_QUIT:
 						running = FALSE;
 						break;
 					}
