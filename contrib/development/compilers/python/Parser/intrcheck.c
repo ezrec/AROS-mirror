@@ -99,6 +99,26 @@ PyOS_InterruptOccurred(void)
 
 #endif /* macintosh */
 
+#ifdef AROS
+
+void
+PyOS_InitInterrupts(void)
+{
+}
+
+void
+PyOS_FiniInterrupts(void)
+{
+}
+
+int
+PyOS_InterruptOccurred(void)
+{
+	// FIXME: Check SIGF_CTRL_C signal
+}
+
+#define OK
+#endif
 
 #ifndef OK
 
