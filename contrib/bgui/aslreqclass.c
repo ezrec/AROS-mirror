@@ -10,26 +10,6 @@
  * (C) Copyright 1993-1996 Jan van den Baard.
  * All Rights Reserved.
  *
- * $Log$
- * Revision 42.2  2000/05/29 00:40:23  bergers
- * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
- *
- * Revision 42.1  2000/05/15 19:27:00  stegerg
- * another hundreds of REG() macro replacements in func headers/protos.
- *
- * Revision 42.0  2000/05/09 22:08:16  mlemos
- * Bumped to revision 42.0 before handing BGUI to AROS team
- *
- * Revision 41.11  2000/05/09 19:53:47  mlemos
- * Merged with the branch Manuel_Lemos_fixes.
- *
- * Revision 41.10  1998/02/25 21:11:31  mlemos
- * Bumping to 41.10
- *
- * Revision 1.1  1998/02/25 17:07:22  mlemos
- * Ian sources
- *
- *
  */
 
 #include "include/classdefs.h"
