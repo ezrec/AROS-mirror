@@ -3,7 +3,7 @@
 include $(TOP)/config/make.cfg
 
 #MM- linklibs: linklibs-renderstubs
-#MM linklibs-renderstubs : includes
+#MM linklibs-renderstubs : contrib-gfx-libs-render-includes includes
 
 FILES := remaparray 	    	\
     	 creatermhandler    	\
