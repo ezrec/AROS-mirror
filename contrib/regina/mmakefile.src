@@ -15,7 +15,7 @@ contrib-regina-exes-quick : contrib-regina-module contrib-regina-exes
 
 #MM contrib-regina-module : includes linklibs
 #MM
-contrib-regina-module-quick : contrib-regina-module contrib-regina-includes
+contrib-regina-module-quick : contrib-regina-module
 
 EXEDIR := $(CONTRIBDIR)/Regina
 
