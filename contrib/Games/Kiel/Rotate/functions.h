@@ -260,7 +260,7 @@ int i,j;
       SetAPen(rp, 1);
       Move(rp,bleft-(fwidth/2),j);
       Draw(rp,i,j);
-      SetAPen(rp, 1);
+      SetAPen(rp, 2);
       Move(rp,i,j+2);
       Draw(rp,bleft-(fwidth/2),j+2);
     }

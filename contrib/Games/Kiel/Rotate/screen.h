@@ -472,10 +472,8 @@ int i;
 
 void clearwin()
 {
-/*
   SetAPen(rp, 0);
-  RectFill(rp,4,12,Window->Width-5,Window->Height-3);
-*/
+  RectFill(rp,Window->BorderLeft,Window->BorderTop,Window->Width-Window->BorderRight-1,Window->Height-Window->BorderBottom-1);
 }
 
 void close_screen()
