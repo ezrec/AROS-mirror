@@ -17,25 +17,28 @@
      Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
+#include <exec/types.h>
+#include <exec/memory.h>
+#include <intuition/intuition.h>
+#include <intuition/intuitionbase.h>
+#include <intuition/gadgetclass.h>
+#include <libraries/bgui.h>
+#include <libraries/bgui_macros.h>
 #include <aros/debug.h>
 #include <aros/bigendianio.h>
 #include <graphics/gfxbase.h>
 #include <workbench/workbench.h>
 #include <workbench/icon.h>
 #include <devices/inputevent.h>
- 
+#include <libraries/gadtools.h>
+
 #include <proto/icon.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/intuition.h>
- 
-#include <exec/types.h>
-#include <intuition/intuition.h>
-#include <intuition/intuitionbase.h>
-#include <intuition/gadgetclass.h>
-#include <libraries/bgui.h>
-#include <libraries/bgui_macros.h>
-#include <exec/memory.h>
+#include <proto/gadtools.h>
+#include <proto/utility.h>
+#include <proto/keymap.h>
 
 #include <proto/bgui.h>
 #include <string.h>
@@ -47,11 +50,11 @@
 int GADGDISABLED, SELECTED, TOGGLESELECT, STRGADGET;
 
 extern struct UtilityBase *UtilityBase;
-extern struct GadToolsBase *GadToolsBase;
+extern struct Library *GadToolsBase;
 extern struct ExecBase *SysBase;
 extern struct IntuitionBase *IntuitionBase;
 extern struct GfxBase *GfxBase;
-extern struct KeymapBase *KeymapBase;
+extern struct Library *KeymapBase;
 
 extern struct FMMain fmmain;
 extern struct FMConfig *fmconfig;

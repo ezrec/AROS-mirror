@@ -25,10 +25,6 @@
 #include <workbench/icon.h>
 #include <devices/inputevent.h>
  
-#include <proto/icon.h>
-#include <proto/exec.h>
-#include <proto/dos.h>
-#include <proto/intuition.h>
 #include <dos/dosextens.h>
 #include <exec/types.h>
 #include <exec/execbase.h>
@@ -40,10 +36,15 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <proto/icon.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/gadtools.h>
 #include "fmnode.h"
 #include "fmlocale.h"
 
-extern struct GadToolsBase *GadToolsBase;
+extern struct Library *GadToolsBase;
 extern struct ExecBase *SysBase;
 extern struct IntuitionBase *IntuitionBase;
 extern struct GfxBase  *GfxBase;

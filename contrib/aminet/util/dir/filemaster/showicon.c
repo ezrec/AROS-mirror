@@ -25,6 +25,7 @@
 #include <intuition/iobsolete.h>
 #include <intuition/intuitionbase.h>
 #include <intuition/intuition.h>  
+#include <proto/gadtools.h>
 
 #include <stdio.h>
 #include <string.h>
