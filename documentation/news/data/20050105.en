@@ -96,7 +96,7 @@ Ported applications and toolkits
 - `ScummVM`__ (Jack Patton)
 - `XRick`__ (Jack Patton)
 - `libogg/libvorbis`__ (Adam Chodorowski)
-- `SDL_mixer`__ and 'SDL_ttf'__ (Jack Patton)
+- `SDL_mixer`__ and `SDL_ttf`__ (Jack Patton)
 - `D-BUS`__ (Martin Blom)
 - Plus a bunch of other applications aswell
 
