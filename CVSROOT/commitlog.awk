@@ -1,7 +1,8 @@
 BEGIN {
 	# Who did it ?
 	#system ("printenv > /tmp/cvs.env");
-	User=ENVIRON["CVSLOGNAME"];
+	User=ENVIRON["CVSLOGINNAME"];
+	#User=ENVIRON["LOGNAME"];
 	#User=ENVIRON["USER"];
 	# Where is CVSROOT ?
 	CVSROOT=ENVIRON["CVSROOT"];
