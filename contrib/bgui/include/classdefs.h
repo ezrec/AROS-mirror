@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.13  2004/06/19 20:28:58  verhaegs
+ * When not compiling for AROS define AROS_LIBFUNC_INIT/EXIT to be empty
+ *
  * Revision 42.12  2004/06/16 20:16:49  verhaegs
  * Use METHODPROTO, METHOD_END and REGFUNCPROTOn where needed.
  *
@@ -123,6 +126,9 @@
 
 extern struct Library * BGUIBase;
 
+#else
+#define AROS_LIBFUNC_INIT
+#define AROS_LIBFUNC_EXIT
 #endif
 
 #ifndef BGUI_COMPILERSPECIFIC_H
