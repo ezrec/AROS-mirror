@@ -533,7 +533,7 @@ void debugmain (void)
 #endif
 
     global->Dbport = CreateMsgPort ();
-    fh = (void *) Open ((UBYTE *) "con:0/0/640/100/debugwindow", 1006);
+    fh = (void *) Open ((UBYTE *) "con:0/0/640/200/debugwindow", 1006);
     PutMsg(global->Dback, &global->DummyMsg);
 #ifdef LOG_MESSAGES
 #ifdef LOG_TO_PAR
@@ -563,6 +563,12 @@ void debugmain (void)
     PutMsg(global->Dback,&global->DummyMsg);	      /*  Kill handshake  */
 }
 
+#ifdef __MORPHOS__
+#define CODETYPE NP_CodeType, CODETYPE_PPC,
+#else
+#define CODETYPE
+#endif
+
 void dbinit (void)
 {
     TASK *task = FindTask(NULL);
@@ -573,10 +579,11 @@ void dbinit (void)
         		   NP_Name, "DEV_DB",
        			   NP_Priority, task->tc_Node.ln_Pri+1,
        			   NP_StackSize, 4096,
+                           CODETYPE
        			   TAG_DONE)) {
       WaitPort(global->Dback);				    /* handshake startup    */
       GetMsg(global->Dback);				    /* remove dummy msg     */
-      dbprintf("Debugger running: %s, %s, %s\n", ACDR_resident.rt_Version+6,
+      dbprintf("Debugger running:" HANDLER_VERSION "%s, %s\n",
 #define asString(x) #x
 #if defined(LATTICE)
 	       "SAS/C" asString(__VERSION__) "." asString(__REVISION__),
@@ -586,9 +593,6 @@ void dbinit (void)
 	       "???",
 #endif
       	       __TIME__);
-
-      dbprintf ("g_cd = %08lx\n", global->g_cd);
-    
     };
 }
 
@@ -619,6 +623,7 @@ void dbprintf (char *format, ...)
     char buf[256];
     MSG *msg;
 
+
     va_start (arg, format);
     if (global->Dbport && !global->DBDisable) {
 	vsprintf (buf, format, arg);
@@ -629,5 +634,19 @@ void dbprintf (char *format, ...)
     }
     va_end (arg);
 }
+
+/* This hack is intended to suppress linking DOS access functions from libnix.
+   Libnix v1.2 is written badly and vsprintf() uses the same code as vfprintf()
+   whicn in turn relies on fputc(). This causes linker to add whole
+   dos.library-based I/O stuff to the code together with BREAK checking
+   functions. One of bad effects of this is that the handler can't be linked at
+   all due to lack of exit() function (i think even if it would link it is
+   unlikely to work properly) */
+#ifndef __AROS__
+int __fflush(void);
+int __fflush() {
+    return 1;
+}
+#endif
 
 #endif /* !NDEBUG || DEBUG_SECTORS */

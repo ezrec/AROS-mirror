@@ -11,14 +11,11 @@ NOEXEC		= /c/protect flags=-e
 # add the switch -DNDEBUG to CFLAGS in order to disable the debug window.
 
 CC		= gcc
-
-DEFS		=-DNDEBUG
-
 OPT		=-O
 
 # -fbaserel does not work, -msmall-code likewise, -fno-builtin requires ixemul
 
-CFLAGS		= -w $(DEFS) $(OPT) -fno-function-cse
+CFLAGS		= -w $(DEFS) -fno-function-cse
 
 LDFLAGS1	= -noixemul -nostartfiles
 LDFLAGS2	= -noixemul
@@ -30,9 +27,7 @@ else
 LDLIBS1 = -lamiga
 endif
 
-#LDLIBS1	= -lnix
 LDLIBS2		=
-#LDLIBS2	= -lnixmain -lnix -lstubs
 
 .c.o:
 		$(CC) $(CFLAGS) -o $@ $< -c

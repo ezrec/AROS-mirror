@@ -139,6 +139,7 @@ extern struct Globals *global;
 #else
 struct Globals glob;
 struct Globals *global=&glob;
+struct ExecBase *SysBase;
 #endif
 
 void btos(BSTR, char *);
@@ -203,23 +204,26 @@ ULONG signals;
      *  process only.
      */
 
-#ifdef __AROS__
+#ifndef __AROS__
+    SysBase = *(struct ExecBase **) 4L;
+#endif
     global->SysBase = SysBase;
-#else
-    global->SysBase = *(struct ExecBase **) 4L;
-#endif
-#ifdef SysBase
-#	undef SysBase
-#endif
-#define SysBase global->SysBase
     global->DosProc = (PROC *) FindTask(NULL);
     if (global->DosProc->pr_CLI)
       return RETURN_FAIL;
     global->DOSBase = (struct DOSBase *)OpenLibrary("dos.library",37);
     global->UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",37);
+#if !defined(NDEBUG) || defined(DEBUG_SECTORS)
+    global->DBDisable = 0;				  /*  Init. globals	  */
+    global->Dbport = global->Dback = NULL;
 
-    BUG2(global->DBDisable = 0;)				/*  Init. globals	*/
-    BUG2(global->Dbport = global->Dback = NULL;)
+    /*
+     *	Initialize debugging code
+     */
+
+    if (global->DOSBase)
+        dbinit();
+#endif
     global->DevList = NULL;
     {
 	WaitPort(&global->DosProc->pr_MsgPort); 	/*  Get Startup Packet	*/
@@ -275,6 +279,7 @@ ULONG signals;
 	    Remove_Seglist ();
 #endif
 	    if (global->DOSBase) {
+              BUG2(dbuninit();)
 	      Close_Intui ();
               if (global->UtilityBase)
                 CloseLibrary((struct Library *)global->UtilityBase);
@@ -286,12 +291,7 @@ ULONG signals;
 
     global->g_inhibited = 0;
 
-    /*
-     *	Initialize debugging code
-     */
-
-    BUG2(dbinit();)
-
+    BUG2(dbprintf ("g_cd = %08lx\n", global->g_cd);)
     BUG(dbprintf("%d std buffers, %d file buffers\n",
     		 global->g_std_buffers, global->g_file_buffers);)
 
@@ -343,26 +343,27 @@ ULONG signals;
       Cleanup_CDROM (global->g_cd);
 
     Close_Intui ();
+#ifdef DOSBase
+#	undef DOSBase
+#endif
+#define DOSBase global->DOSBase
 
     /*
      *	Remove debug process, closedown, fall of the end of the world
      *	(which is how you kill yourself if a PROCESS.  A TASK would have
      *	had to RemTask(NULL) itself).
      */
-
     BUG2(Delay (50);)
     BUG2(dbuninit();)
-    if (global->UtilityBase)
-      CloseLibrary((struct Library *)global->UtilityBase);
-    if (global->DOSBase)
-      CloseLibrary((struct Library *)global->DOSBase);
+    CloseLibrary((struct Library *)global->UtilityBase);
+    CloseLibrary((struct Library *)DOSBase);
     return 0;
 }
 
-#ifdef DOSBase
-#	undef DOSBase
+#ifdef SysBase
+#       undef SysBase
 #endif
-#define DOSBase global->DOSBase
+#define SysBase global->SysBase
 #ifdef UtilityBase
 #	undef UtilityBase
 #endif
