@@ -64,6 +64,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
         ] ),
         BR(),
         A( _N['credits'], href='%(BASE)scredits.php' ),
+        A( 'Acknowledgements', href='%(BASE)sacknowledgements.php' ),
         BR(),
         _N['pictures'],
         Tree \
