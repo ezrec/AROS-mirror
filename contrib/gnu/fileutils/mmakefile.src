@@ -3,7 +3,7 @@
 
 -include $(TOP)/config/make.cfg
 
-#MM- contrib-gnu : contrib-gnu-fileutils
+##MM- contrib-gnu : contrib-gnu-fileutils
 #MM- contrib-gnu-fileutils : development-fileutils
 
 %fetch_and_build_gnu_development package=fileutils version=4.1 patch=yes
