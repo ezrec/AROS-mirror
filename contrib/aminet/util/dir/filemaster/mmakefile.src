@@ -23,7 +23,7 @@ EXE := $(DESTDIR)/filemaster
 
 .PHONY : all clean
 
-#MM aminet-util-dir-filemaster : setup-aminet-util-dir-filemaster setup-filemaster-catalogs
+#MM aminet-util-dir-filemaster : contrib-bgui setup-aminet-util-dir-filemaster setup-filemaster-catalogs
 aminet-util-dir-filemaster 	: $(OBJS) $(EXE)
 	@$(NOP)
 
