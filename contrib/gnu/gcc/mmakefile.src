@@ -11,10 +11,10 @@ REPOSITORY  = $(GNU_REPOSITORY)/gcc/gcc-$(VERSION)
 
 %fetch_and_build_gnu_development package=gcc subpackage=core version=$(VERSION) patch=yes \
     package_repo=$(REPOSITORY) extraoptions="--enable-longlong --enable-sjlj-exceptions"  \
-    postinstall=development-gcc-delete-specs
+    postinstall=development-gcc-core-delete-specs
 
 #MM
-development-gcc-delete-specs :
-	$(RM) $(AROS_DEVELOPMENT)/lib/gcc-lib/$(AROS_TARGET_CPU)-aros/$(VERSION)/specs
+development-gcc-core-delete-specs :
+	$(RM) $(development-gcc-core-package-dir)/lib/gcc-lib/$(AROS_TARGET_CPU)-aros/$(VERSION)/specs
 
 
