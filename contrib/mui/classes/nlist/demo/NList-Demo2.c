@@ -54,8 +54,16 @@ extern struct Library *SysBase,*IntuitionBase,*UtilityBase,*GfxBase,*DOSBase,*Ic
 
 extern struct Library *MUIMasterBase;
 
+#ifdef _AROS
+#include <aros/asmcall.h>
+#include <MUI/NList_mcc.h>
+#endif
+
 #include <MUI/NListview_mcc.h>
+
+#ifndef _AROS
 #include <MUI/NFloattext_mcc.h>
+#endif
 
 #include "NList-Demo2.h"
 
@@ -79,11 +87,21 @@ struct LITD {
 SAVEDS ASM APTR ConstructLI_TextFunc(REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct NList_ConstructMessage *ncm)
 {
 #endif
+
 #ifdef __GNUC__
+#ifdef _AROS
+AROS_UFH3S(APTR, ConstructLI_TextFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(struct NList_ConstructMessage *, ncm, A1))
+{
+  AROS_USERFUNC_INIT
+#else
 static APTR ConstructLI_TextFunc(void)
 { register Object *a2 __asm("a2");                        Object *obj = a2;
   register struct NList_ConstructMessage *a1 __asm("a1"); struct NList_ConstructMessage *ncm = a1;
   register struct Hook *a0 __asm("a0");                   struct Hook *hook = a0;
+#endif
 #endif
 
   struct LITD *new_entry = (struct LITD *) AllocVec(sizeof(struct LITD),0);
@@ -103,6 +121,9 @@ static APTR ConstructLI_TextFunc(void)
     return (new_entry);
   }
   return (NULL);
+#ifdef _AROS
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 const struct Hook ConstructLI_TextHook = { { NULL,NULL },(VOID *)ConstructLI_TextFunc, NULL,NULL };
@@ -115,14 +136,25 @@ SAVEDS ASM void DestructLI_TextFunc(REG(a0) struct Hook *hook, REG(a2) Object *o
 {
 #endif
 #ifdef __GNUC__
+#ifdef _AROS
+AROS_UFH3S(void, DestructLI_TextFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(struct NList_DestructMessage *, ndm, A1))
+{
+  AROS_USERFUNC_INIT
+#else
 static void DestructLI_TextFunc(void)
 { register Object *a2 __asm("a2");                        Object *obj = a2;
   register struct NList_DestructMessage *a1 __asm("a1"); struct NList_DestructMessage *ndm = a1;
   register struct Hook *a0 __asm("a0");                   struct Hook *hook = a0;
 #endif
-
+#endif
   if (ndm->entry)
     FreeVec((void *) ndm->entry);
+#ifdef _AROS
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 const struct Hook DestructLI_TextHook = { { NULL,NULL },(VOID *)DestructLI_TextFunc, NULL,NULL };
@@ -137,10 +169,19 @@ SAVEDS ASM void DisplayLI_TextFunc(REG(a0) struct Hook *hook, REG(a2) Object *ob
 {
 #endif
 #ifdef __GNUC__
+#ifdef _AROS
+AROS_UFH3S(void, DisplayLI_TextFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(struct NList_DisplayMessage *, ndm, A1))
+{
+  AROS_USERFUNC_INIT
+#else
 static void DisplayLI_TextFunc(void)
 { register Object *a2 __asm("a2");                      Object *obj = a2;
   register struct NList_DisplayMessage *a1 __asm("a1"); struct NList_DisplayMessage *ndm = a1;
   register struct Hook *a0 __asm("a0");                 struct Hook *hook = a0;
+#endif
 #endif
 
   struct LITD *entry = (struct LITD *) ndm->entry;
@@ -173,6 +214,10 @@ static void DisplayLI_TextFunc(void)
     ndm->strings[1]  = "Short";
     ndm->strings[2]  = "This is the list title !\033n\033b   :-)";
   }
+
+#ifdef _AROS
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 
@@ -186,10 +231,19 @@ SAVEDS ASM LONG CompareLI_TextFunc(REG(a0) struct Hook *hook, REG(a2) Object *ob
 {
 #endif
 #ifdef __GNUC__
+#ifdef _AROS
+AROS_UFH3S(LONG, CompareLI_TextFunc,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(struct NList_CompareMessage *, ncm, A1))
+{
+    AROS_USERFUNC_INIT
+#else
 static LONG CompareLI_TextFunc(void)
 { register Object *a2 __asm("a2");                      Object *obj = a2;
   register struct NList_CompareMessage *a1 __asm("a1"); struct NList_CompareMessage *ncm = a1;
   register struct Hook *a0 __asm("a0");                 struct Hook *hook = a0;
+#endif
 #endif
 
   struct LITD *entry1 = (struct LITD *) ncm->entry1;
@@ -248,6 +302,10 @@ kprintf("%lx|Compare() %lx / %lx / %lx\n",obj,ncm->sort_type,st,ncm->sort_type2)
   }
 
   return (result);
+
+#ifdef _AROS
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 const struct Hook CompareLI_TextHook = { { NULL,NULL },(VOID *)CompareLI_TextFunc, NULL,NULL };
