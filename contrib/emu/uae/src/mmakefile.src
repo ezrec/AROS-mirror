@@ -147,7 +147,7 @@ cpudefs.o: cpudefs.c
 
 %build_prog mmake=uae \
     progname=uae targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m" usehostlibs=gcc
+    files=$(FILES)  uselibs="arossupport amiga arosc m" usehostlibs=gcc nix=yes
 
 %common
 
