@@ -1,9 +1,10 @@
 '''Routines to convert XML to HTML.'''
 
-import xmlsupport, code2html, cStringIO
+import xmlsupport, code2html, cStringIO, string
 
 from util import TableLite, TR, TD, Heading, RawText, Page, arosRC, \
-	Developers, cvsrootdir, exampleBorderColor, exampleBGColor
+	Developers, cvsrootdir, exampleBorderColor, exampleBGColor, \
+	DefinitionList
 
 def writeVerbatim (p, xmlfile, item):
     if isinstance (item, xmlsupport.Tag):
@@ -223,6 +224,74 @@ def treeToHtml (p, xmlfile, item):
     '''
     recursiveTreeToHtml (p, xmlfile, item, '')
 
+def adocInputToHtml (p, xmlfile, item):
+    '''<input><parameter name="...">description</parameter>...</input>'''
+    
+    dl = DefinitionList ()
+    
+    for child in item.content:
+	if isinstance (child, xmlsupport.Tag):
+	    if child.name != 'parameter':
+		raise 'Unexpected element <%s> in <input> (%s)' % (child.name, `item`)
+	    
+	    name = child.attr['name']
+
+	    p.fh = cStringIO.StringIO ()
+	    xmlfile.processRecursive (p, child.content)
+	    s = p.fh.getvalue ()
+	    p.fh.close ()
+	    dl.append ((name, s))
+
+    return str (dl)
+
+def autodocToHtml (p, xmlfile, item):
+    '''An autodoc element contains these children:
+
+	name, function, input, result
+
+    and these optional children:
+    
+	notes, bugs, seealso
+
+    '''
+    dict = {}
+
+    for child in item.content:
+	if isinstance (child, xmlsupport.Tag):
+	    if dict.has_key (child.name):
+		raise 'Found element %s twice (%s)' % (child.name, `child`)
+
+	    dict[child.name] = child
+    
+    oldFH = p.fh
+    dl = DefinitionList ()
+
+    for key in ('name', 'function', 'input', 'result'):
+	if not dict.has_key (key):
+	    raise '<autodoc> element is missing the mandatory element <%s> (%s)' % (key, `item`)
+	
+	name = string.upper (key)
+	
+	if key == 'input':
+	    s = adocInputToHtml (p, xmlfile, dict[key])
+	else:
+	    list = dict[key].content
+	    if not isinstance (list[0], xmlsupport.Tag) or \
+		list[0].name != 'p':
+		par = xmlsupport.Tag ('p')
+		par.setContents (list)
+		list = [par]
+
+	    p.fh = cStringIO.StringIO ()
+	    xmlfile.processRecursive (p, dict[key].content)
+	    s = p.fh.getvalue ()
+	    p.fh.close ()
+
+	dl.append ((name, s))
+
+    p.fh = oldFH
+    p.fh.write (str (dl))
+
 class Xml2HtmlProcessor (xmlsupport.Processor):
     def __init__ (self, **kw):
 	xmlsupport.Processor.__init__ (self,
@@ -240,6 +309,7 @@ class Xml2HtmlProcessor (xmlsupport.Processor):
 	    code=codeToHtml,
 	    idea=ideaToHtml,
 	    comment=commentToHtml,
+	    autodoc=autodocToHtml,
 	)
 	self.add ('class', classToHtml)
 	self.processors.update (kw)
@@ -279,3 +349,8 @@ def elementToHtml (element, page):
     page.meat = page.meat + [RawText (XML2HTML.fh.getvalue ())]
     XML2HTML.fh.close ()
 
+if __name__ == '__main__':
+    import sys
+
+    xf = XmlPage (sys.argv[1])
+    xf.write (sys.argv[2])
