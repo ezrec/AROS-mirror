@@ -247,16 +247,29 @@ D(bug("****************acdr-open: %s\n", iofs->io_Union.io_OPEN_FILE.io_Filename
                     new = AllocMem(sizeof(struct ACDRHandle), MEMF_PUBLIC | MEMF_CLEAR);
                     if (new)
                     {
+		    	struct FileLock dummyfl;
+		    	void *handle;
+			
+		    	if (!(acdrhandle->flags & AHF_IS_LOCK))
+			{
+			    dummyfl.fl_Link = acdrhandle->handle;
+			    handle = &dummyfl;
+			}
+			else
+			{
+			    handle = acdrhandle->handle;
+			}
                         packet.dp_Type = ACTION_LOCATE_OBJECT;
                         packet.dp_Arg1 =
                             (acdrhandle ==  &acdrhandle->device->rootfh) ?
                             0 :
-                            (IPTR)MKBADDR(acdrhandle->handle);
+                            (IPTR)MKBADDR(handle);
                         packet.dp_Arg2 =(IPTR)iofs->io_Union.io_OPEN_FILE.io_Filename;
                         packet.dp_Arg3 = 
                             (iofs->io_Union.io_OPEN.io_FileMode == FMF_LOCK) ?
                             EXCLUSIVE_LOCK :
                             SHARED_LOCK;
+
                         sendPacket(acdrbase, &packet, acdrhandle->device->taskmp);
                         error = packet.dp_Res2;
                         if (error == 0)
@@ -312,6 +325,7 @@ D(bug("****************acdr openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FI
                         ,0
 #endif
                     };
+		    
                         packet.dp_Arg1 = (IPTR)MKBADDR(&fh);
                         packet.dp_Arg2 =
                             (acdrhandle ==  &acdrhandle->device->rootfh) ?
