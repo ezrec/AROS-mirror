@@ -177,57 +177,18 @@ def genDownload ():
 import time
 
 def genSnapshots ():
-    '''Create the page with the snapshots with sizes and links for
-    download.'''
+    '''From now on, the snapshots are only available on the SF site.'''
 
     page = PageMeat ('Snapshots', 'snapshots.html')
     page.append (
 	Heading (2, "Snapshots"),
+	Paragraph ("""From now on, you can find the list of snapshots """,
+	    Href ("http://aros.sourceforge.net/snapshots2.html",
+		"on the SourceForge.net pages"),
+	    "."),
+	Paragraph ("""Go there to download and then return here with the
+		back button of your browser."""),
     )
-
-    today         = time.localtime(time.time())[0:3]
-    yesterday     = today[0], today[1], today[2] - 1
-
-    all_packages =  ('source',    'Core sources',                                    0) \
-                   ,('contrib',   'Contributed programs sources',                    0) \
-                   ,('ibmpc-bin', 'Floppy disk image of the standalone x86 version', 1) \
-                   ,('lx86-bin',  'Binaries to be run under x86 linux',              1)
-
-    def snapLink(date, package, ext):
-        file     = 'AROS-' + package + '-' + '%02d%02d%02d' % date + '.' + ext
-        location = 'http://aros.sourceforge.net/cgi-bin/snapdownload.cgi?' + file
-	return Href(location, file)
-
-    def snapLinkNA(date, package, ext):
-        return Center(Bold('n/a'))
-
-    log_func = [snapLinkNA, snapLink]
-
-    table = TableLite(cellpadding=5, border=0)
-
-    page.append(
-        BR(),
-        table
-    )
-
-    for package in all_packages:
-	table.append(
-  	    TR(TD(Heading(3, package[1]), colspan=3)),
-            TR(
-                TH('Date'), TH('Archive'), TH('Log')
-            ),
-            TR(
-                TD('%d.%d.%d' % yesterday),
-                TD(snapLink(yesterday, package[0], 'tgz')),
-	        TD(log_func[package[2]](yesterday, package[0], 'log'))
-            ),
-            TR(
-                TD('%d.%d.%d' % today),
-                TD(snapLink(today, package[0], 'tgz')),
-                TD(log_func[package[2]](today, package[0], 'log'))
-            )
-        )
-        
     page.write ()
 
 def processLinks (links):
