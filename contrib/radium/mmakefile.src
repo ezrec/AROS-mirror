@@ -1,0 +1,141 @@
+#   $Id$
+#
+
+include $(TOP)/config/make.cfg
+
+VERSION=0.55
+VERSION_LETTER=
+DISKVERSION=0.51
+PLAYERPRI=40
+
+
+AD=amiga/
+CD=common/
+AR=aros/
+
+VERSION=0.51
+DISKVERSION=0.43
+
+PLAYERPRI=40
+
+MAKEFILE=mmakefile.src
+
+
+
+DEFINES=-DVERSION=$(VERSION) -DDISKVERSION=$(DISKVERSION) -DPLAYERPRI=$(PLAYERPRI) -DVERSION_LETTER="" -D__int8_t_defined -DAMIAROS
+# -DMEMORY_DEBUG
+# define SYSBASEDEBUG
+# define TRACKER_DEBUG
+# define MEMORY_DEBUG
+# define TRACKER_GB
+
+
+OBJ1=  $(AD)Amiga_main $(AD)Amiga_config $(AD)Amiga_colors $(CD)windows \
+       $(CD)window_config $(CD)list $(AD)GFX_Amiga_egc $(CD)song $(CD)blocks \
+       $(CD)block_insert $(CD)block_delete $(CD)block_properties $(CD)tracks
+OBJ14= $(CD)localzooms $(AD)Amiga_readstr $(CD)control $(AD)Amiga_endprogram \
+       $(CD)lines $(CD)font $(CD)track_insert $(CD)track_onoff \
+       $(AD)Amiga_Error $(AD)Amiga_Semaphores
+OBJ2=  $(CD)notes $(CD)notes_legalize $(CD)wblocks $(CD)wtracks $(CD)sliders \
+       $(CD)gfx_wblocks $(CD)gfx_wblocks_reltempo $(CD)gfx_window_title
+OBJ15= $(CD)gfx_tempotrackheader $(CD)gfx_upperleft $(CD)common \
+       $(CD)gfx_wtracks
+OBJ3=  $(CD)gfx_wtext $(CD)eventreciever $(CD)reallines $(CD)notestext \
+       $(CD)trackreallines $(CD)clipboard_range $(CD)clipboard_range_calc \
+       $(CD)clipboard_range_copy $(CD)clipboard_range_paste
+OBJ16= $(CD)clipboard_range_cut $(CD)transpose $(CD)new/backwards \
+       $(CD)new/invert $(CD)trackreallineelements $(CD)clipboard_track_copy \
+       $(CD)clipboard_track_paste $(CD)clipboard_track_cut \
+       $(CD)clipboard_tempos_copy
+OBJ4=  $(CD)mouse $(CD)mouse_wtrack $(CD)mouse_wtrackheader \
+       $(CD)mouse_tempoheader $(CD)mouse_wtrackborder $(CD)mouse_temponodeborder \
+       $(CD)mouse_fxarea $(CD)mouse_vellinenode $(CD)mouse_vellineend \
+       $(CD)mouse_vellinestart $(CD)mouse_fxnode $(CD)mouse_quantitize
+OBJ17= $(CD)mouse_reltemposlider $(CD)tbox $(CD)area \
+       $(CD)clipboard_localzooms $(CD)clipboard_block_copy \
+       $(CD)clipboard_block_paste $(CD)quantitize
+OBJ5=  $(AD)Amiga_debug $(CD)memory $(AD)Amiga_memory $(CD)placement \
+       $(CD)t_gc $(CD)cursor $(CD)cursor_updown $(CD)subtrack \
+       $(CD)velocities $(CD)blts $(CD)scroll $(CD)scroll_play $(CD)pixmap
+OBJ6=  $(CD)realline_calc $(CD)gfx_subtrack $(CD)LPB $(CD)resizewindow \
+       $(CD)gfx_wtrackheaders $(CD)gfx_wtrackheader_volpan $(CD)gfx_slider \
+       $(CD)reallines_insert $(CD)gfx_shrink $(CD)gfx_shrink_t
+OBJ7=  $(CD)nodelines $(CD)blackbox \
+       $(AD)plug-ins/camd_i_plugin $(AD)plug-ins/camd_fx $(CD)instruments \
+       $(CD)patch $(CD)fxlines $(CD)fxlines_legalize $(AD)Amiga_bs
+OBJ18= $(AD)Amiga_bs_edit $(CD)blocklist $(AD)plug-ins/camd_get_clustername \
+       $(AD)plug-ins/camd_getMidiLink $(AD)plug-ins/camd_i_input \
+       $(AD)plug-ins/camd_playfromstart $(AR)gc
+
+#Tempos and time
+OBJ8=  $(CD)reltempo $(CD)temponodes $(CD)tempos $(CD)time $(CD)time2place \
+       $(CD)mouse_temponodes $(CD)temponodes_legalize
+
+#Playing
+OBJ9=  $(CD)Ptask2Mtask $(AD)Amiga_Ptask2Mtask $(AD)Amiga_player $(CD)player \
+       $(CD)PEQrealline $(CD)PEQmempool $(CD)PEQblock $(CD)PEQnotes \
+       $(CD)PEQcommon $(CD)playerclass $(CD)player_startstop \
+       $(CD)PEQvelocities $(CD)PEQ_calc $(CD)PEQfxs $(CD)player_pause \
+       $(CD)PEQ_type $(CD)PEQ_calc_64bit $(CD)PEQ_clock
+
+#Disk
+OBJ10= $(CD)disk $(CD)disk_fxs $(CD)disk_wblock $(CD)disk_localzooms \
+       $(CD)disk_track $(CD)disk_fx $(CD)disk_fxnodelines $(CD)disk_wtrack \
+       $(CD)disk_temponodes $(CD)disk_tempos $(CD)disk_song \
+       $(CD)disk_velocities $(CD)disk_block $(CD)disk_placement \
+       $(CD)disk_load
+OBJ11= $(CD)disk_instrument $(CD)disk_patches $(AD)plug-ins/disk_camd_i_plugin \
+       $(CD)disk_stops $(CD)disk_playlist $(CD)disk_root $(CD)disk_notes \
+       $(CD)disk_lpbs $(CD)disk_windows $(CD)disk_warea $(CD)disk_save \
+       $(AD)plug-ins/disk_camd_fx $(CD)disk_slider \
+       $(AD)plug-ins/disk_camd_mymidilinks $(AD)disk_amiga
+
+#Undo
+OBJ12= $(CD)undo $(CD)undo_notes $(CD)undo_fxs $(CD)undo_temponodes \
+       $(CD)undo_tempos $(CD)undo_lpbs $(CD)undo_notesandfxs \
+       $(CD)undo_reallines $(CD)undo_tracks $(CD)undo_range \
+       $(CD)undo_blocks $(CD)undo_trackheader $(CD)undo_reltempomax \
+       $(CD)undo_maintempos $(CD)undo_block_insertdelete $(CD)undo_reltemposlider
+
+#$(AD)instrprop
+OBJ13= $(AD)instrprop/Amiga_instrprop $(AD)instrprop/Amiga_instrprop_init \
+       $(AD)instrprop/Amiga_instrprop_temp_help \
+       $(AD)instrprop/Amiga_instrprop_temp_camd \
+       $(AD)instrprop/Amiga_instrprop_edit \
+       $(AD)instrprop/Amiga_instrprop_camd_menues
+
+OBJ=  $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) $(OBJ5) $(OBJ6) $(OBJ7) $(OBJ8) $(OBJ9) $(OBJ10) $(OBJ11) $(OBJ12) $(OBJ13) \
+      $(OBJ14) $(OBJ15) $(OBJ16) $(OBJ17) $(OBJ18)
+
+FILES := $(OBJ)
+
+EXEDIR := $(CONTRIBDIR)
+EXE := $(EXEDIR)/Radium
+
+USE_AROSLIB := yes
+USE_CLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+
+USER_CFLAGS := -O2 -Wunused -Wall -I$(AD) -I$(AR) $(DEFINES)
+
+#MM contrib-radium : setup-contrib-radium
+
+%make_prog_setup mmake=contrib-radium
+
+contrib-radium : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+#MM
+setup ::
+	%mkdirs_q $(CONTRIBDIR)/radium
+
+%common
+%include_deps
+
+
+
+
+
+
