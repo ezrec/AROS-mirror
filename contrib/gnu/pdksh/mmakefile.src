@@ -21,6 +21,6 @@ development-pdksh-fetch :
 	
 
 %build_with_configure mmake=development-pdksh srcdir=$(PORTSDIR)/pdksh/$(ARCHBASE) \
-     nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development"
+     nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development
 
 
