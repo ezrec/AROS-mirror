@@ -39,8 +39,6 @@
  * THIS CODE NEEDS TO BE FIXED - IT IS NOT In SYNC WITH CURRENT ETHARP API
  */
 
-#include "lwip/debug.h"
-
 #include "lwip/opt.h"
 #include "lwip/def.h"
 #include "lwip/mem.h"
@@ -63,7 +61,7 @@ static const struct eth_addr ethbroadcast = {{0xff,0xff,0xff,0xff,0xff,0xff}};
 /* Forward declarations. */
 static void  ethernetif_input(struct netif *netif);
 static err_t ethernetif_output(struct netif *netif, struct pbuf *p,
-			       struct ip_addr *ipaddr);
+             struct ip_addr *ipaddr);
 
 /*-----------------------------------------------------------------------------------*/
 static void
@@ -144,7 +142,7 @@ low_level_input(struct ethernetif *ethernetif)
   /* We allocate a pbuf chain of pbufs from the pool. */
   p = pbuf_alloc(PBUF_RAW, len, PBUF_POOL);
   
-  if(p != NULL) {
+  if (p != NULL) {
     /* We iterate over the pbuf chain until we have read the entire
        packet into the pbuf. */
     for(q = p; q != NULL; q = q->next) {
@@ -179,7 +177,7 @@ low_level_input(struct ethernetif *ethernetif)
 /*-----------------------------------------------------------------------------------*/
 static err_t
 ethernetif_output(struct netif *netif, struct pbuf *p,
-		  struct ip_addr *ipaddr)
+      struct ip_addr *ipaddr)
 {
   struct ethernetif *ethernetif;
   struct pbuf *q;
@@ -192,11 +190,11 @@ ethernetif_output(struct netif *netif, struct pbuf *p,
   ethernetif = netif->state;
 
   /* Make room for Ethernet header. */
-  if(pbuf_header(p, 14) != 0) {
+  if (pbuf_header(p, 14) != 0) {
     /* The pbuf_header() call shouldn't fail, but we allocate an extra
        pbuf just in case. */
     q = pbuf_alloc(PBUF_LINK, 14, PBUF_RAM);
-    if(q == NULL) {
+    if (q == NULL) {
 #ifdef LINK_STATS
       lwip_stats.link.drop++;
       lwip_stats.link.memerr++;
@@ -212,10 +210,10 @@ ethernetif_output(struct netif *netif, struct pbuf *p,
      multicasts are special, all other addresses are looked up in the
      ARP table. */
   queryaddr = ipaddr;
-  if(ip_addr_isany(ipaddr) ||
+  if (ip_addr_isany(ipaddr) ||
      ip_addr_isbroadcast(ipaddr, &(netif->netmask))) {
     dest = (struct eth_addr *)&ethbroadcast;
-  } else if(ip_addr_ismulticast(ipaddr)) {
+  } else if (ip_addr_ismulticast(ipaddr)) {
     /* Hash IP multicast address to MAC address. */
     mcastaddr.addr[0] = 0x01;
     mcastaddr.addr[1] = 0x0;
@@ -226,7 +224,7 @@ ethernetif_output(struct netif *netif, struct pbuf *p,
     dest = &mcastaddr;
   } else {
 
-    if(ip_addr_maskcmp(ipaddr, &(netif->ip_addr), &(netif->netmask))) {
+    if (ip_addr_maskcmp(ipaddr, &(netif->ip_addr), &(netif->netmask))) {
       /* Use destination IP address if the destination is on the same
          subnet as we are. */
       queryaddr = ipaddr;
@@ -241,9 +239,9 @@ ethernetif_output(struct netif *netif, struct pbuf *p,
 
   /* If the arp_lookup() didn't find an address, we send out an ARP
      query for the IP address. */
-  if(dest == NULL) {
+  if (dest == NULL) {
     q = arp_query(netif, ethernetif->ethaddr, queryaddr);
-    if(q != NULL) {
+    if (q != NULL) {
       err = low_level_output(ethernetif, q);
       pbuf_free(q);
       return err;
@@ -289,7 +287,7 @@ ethernetif_input(struct netif *netif)
   
   p = low_level_input(ethernetif);
 
-  if(p != NULL) {
+  if (p != NULL) {
 
 #ifdef LINK_STATS
     lwip_stats.link.recv++;
@@ -297,7 +295,7 @@ ethernetif_input(struct netif *netif)
 
     ethhdr = p->payload;
     
-    switch(htons(ethhdr->type)) {
+    switch (htons(ethhdr->type)) {
     case ETHTYPE_IP:
       arp_ip_input(netif, p);
       pbuf_header(p, -14);
@@ -305,9 +303,9 @@ ethernetif_input(struct netif *netif)
       break;
     case ETHTYPE_ARP:
       p = arp_arp_input(netif, ethernetif->ethaddr, p);
-      if(p != NULL) {
-	low_level_output(ethernetif, p);
-	pbuf_free(p);
+      if (p != NULL) {
+  low_level_output(ethernetif, p);
+  pbuf_free(p);
       }
       break;
     default:

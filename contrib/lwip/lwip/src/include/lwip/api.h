@@ -21,7 +21,7 @@
  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
@@ -38,6 +38,7 @@
 
 #include "lwip/ip.h"
 
+#include "lwip/raw.h"
 #include "lwip/udp.h"
 #include "lwip/tcp.h"
 
@@ -50,7 +51,8 @@ enum netconn_type {
   NETCONN_TCP,
   NETCONN_UDP,
   NETCONN_UDPLITE,
-  NETCONN_UDPNOCHKSUM
+  NETCONN_UDPNOCHKSUM,
+  NETCONN_RAW
 };
 
 enum netconn_state {
@@ -82,6 +84,7 @@ struct netconn {
   union {
     struct tcp_pcb *tcp;
     struct udp_pcb *udp;
+    struct raw_pcb *raw;
   } pcb;
   err_t err;
   sys_mbox_t mbox;
@@ -99,20 +102,20 @@ void              netbuf_delete   (struct netbuf *buf);
 void *            netbuf_alloc    (struct netbuf *buf, u16_t size);
 void              netbuf_free     (struct netbuf *buf);
 void              netbuf_ref      (struct netbuf *buf,
-				   void *dataptr, u16_t size);
+           void *dataptr, u16_t size);
 void              netbuf_chain    (struct netbuf *head,
-				   struct netbuf *tail);
+           struct netbuf *tail);
 
 u16_t             netbuf_len      (struct netbuf *buf);
 err_t             netbuf_data     (struct netbuf *buf,
-				   void **dataptr, u16_t *len);
+           void **dataptr, u16_t *len);
 s8_t              netbuf_next     (struct netbuf *buf);
 void              netbuf_first    (struct netbuf *buf);
 
 void              netbuf_copy     (struct netbuf *buf,
-				   void *dataptr, u16_t len);
+           void *dataptr, u16_t len);
 void              netbuf_copy_partial(struct netbuf *buf, void *dataptr, 
-				      u16_t len, u16_t offset);
+              u16_t len, u16_t offset);
 struct ip_addr *  netbuf_fromaddr (struct netbuf *buf);
 u16_t             netbuf_fromport (struct netbuf *buf);
 
@@ -121,29 +124,32 @@ struct netconn *  netconn_new     (enum netconn_type type);
 struct
 netconn *netconn_new_with_callback(enum netconn_type t,
                                    void (*callback)(struct netconn *, enum netconn_evt, u16_t len));
+struct
+netconn *netconn_new_with_proto_and_callback(enum netconn_type t, u16_t proto,
+                                   void (*callback)(struct netconn *, enum netconn_evt, u16_t len));
 err_t             netconn_delete  (struct netconn *conn);
 enum netconn_type netconn_type    (struct netconn *conn);
 err_t             netconn_peer    (struct netconn *conn,
-				   struct ip_addr *addr,
-				   u16_t *port);
+           struct ip_addr *addr,
+           u16_t *port);
 err_t             netconn_addr    (struct netconn *conn,
-				   struct ip_addr **addr,
-				   u16_t *port);
+           struct ip_addr **addr,
+           u16_t *port);
 err_t             netconn_bind    (struct netconn *conn,
-				   struct ip_addr *addr,
-				   u16_t port);
+           struct ip_addr *addr,
+           u16_t port);
 err_t             netconn_connect (struct netconn *conn,
-				   struct ip_addr *addr,
-				   u16_t port);
+           struct ip_addr *addr,
+           u16_t port);
 err_t             netconn_disconnect (struct netconn *conn);
 err_t             netconn_listen  (struct netconn *conn);
 struct netconn *  netconn_accept  (struct netconn *conn);
 struct netbuf *   netconn_recv    (struct netconn *conn);
 err_t             netconn_send    (struct netconn *conn,
-				   struct netbuf *buf);
+           struct netbuf *buf);
 err_t             netconn_write   (struct netconn *conn,
-				   void *dataptr, u16_t size,
-				   u8_t copy);
+           void *dataptr, u16_t size,
+           u8_t copy);
 err_t             netconn_close   (struct netconn *conn);
 
 err_t             netconn_err     (struct netconn *conn);

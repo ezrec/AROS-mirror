@@ -1,3 +1,9 @@
+/** @file
+ *
+ * Dynamic memory manager
+ *
+ */
+
 /* 
  * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
@@ -30,13 +36,6 @@
  *
  */
 
-/*-----------------------------------------------------------------------------------*/
-/* mem.c
- *
- * Memory manager.
- *
- */
-/*-----------------------------------------------------------------------------------*/
 
 #include "lwip/arch.h"
 #include "lwip/opt.h"
@@ -64,17 +63,18 @@ static struct mem *ram_end;
 static u8_t ram[MEM_SIZE + sizeof(struct mem) + MEM_ALIGNMENT];
 
 #define MIN_SIZE 12
-#define SIZEOF_STRUCT_MEM MEM_ALIGN_SIZE(sizeof(struct mem))
-/*#define SIZEOF_STRUCT_MEM (sizeof(struct mem) + \
+#if 0 /* this one does not align correctly for some, resulting in crashes */
+#define SIZEOF_STRUCT_MEM (unsigned int)MEM_ALIGN_SIZE(sizeof(struct mem))
+#else
+#define SIZEOF_STRUCT_MEM (sizeof(struct mem) + \
                           (((sizeof(struct mem) % MEM_ALIGNMENT) == 0)? 0 : \
-                          (4 - (sizeof(struct mem) % MEM_ALIGNMENT))))*/
-
+                          (4 - (sizeof(struct mem) % MEM_ALIGNMENT))))
+#endif
 
 static struct mem *lfree;   /* pointer to the lowest free block */
 
 static sys_sem_t mem_sem;
 
-/*-----------------------------------------------------------------------------------*/
 static void
 plug_holes(struct mem *mem)
 {
@@ -89,8 +89,8 @@ plug_holes(struct mem *mem)
   LWIP_ASSERT("plug_holes: mem->next <= MEM_SIZE", mem->next <= MEM_SIZE);
   
   nmem = (struct mem *)&ram[mem->next];
-  if(mem != nmem && nmem->used == 0 && (u8_t *)nmem != (u8_t *)ram_end) {
-    if(lfree == nmem) {
+  if (mem != nmem && nmem->used == 0 && (u8_t *)nmem != (u8_t *)ram_end) {
+    if (lfree == nmem) {
       lfree = mem;
     }
     mem->next = nmem->next;
@@ -99,8 +99,8 @@ plug_holes(struct mem *mem)
 
   /* plug hole backward */
   pmem = (struct mem *)&ram[mem->prev];
-  if(pmem != mem && pmem->used == 0) {
-    if(lfree == mem) {
+  if (pmem != mem && pmem->used == 0) {
+    if (lfree == mem) {
       lfree = pmem;
     }
     pmem->next = mem->next;
@@ -108,7 +108,6 @@ plug_holes(struct mem *mem)
   }
 
 }
-/*-----------------------------------------------------------------------------------*/
 void
 mem_init(void)
 {
@@ -132,27 +131,27 @@ mem_init(void)
   lwip_stats.mem.avail = MEM_SIZE;
 #endif /* MEM_STATS */
 }
-/*-----------------------------------------------------------------------------------*/
 void
 mem_free(void *rmem)
 {
   struct mem *mem;
 
-  if(rmem == NULL) {
+  if (rmem == NULL) {
+    LWIP_DEBUGF(MEM_DEBUG | DBG_TRACE | 2, ("mem_free(p == NULL) was called.\n"));
     return;
   }
   
   sys_sem_wait(mem_sem);
 
   LWIP_ASSERT("mem_free: legal memory", (u8_t *)rmem >= (u8_t *)ram &&
-	 (u8_t *)rmem < (u8_t *)ram_end);
+    (u8_t *)rmem < (u8_t *)ram_end);
   
-  
-  if((u8_t *)rmem < (u8_t *)ram || (u8_t *)rmem >= (u8_t *)ram_end) {
-    DEBUGF(MEM_DEBUG, ("mem_free: illegal memory\n"));
+  if ((u8_t *)rmem < (u8_t *)ram || (u8_t *)rmem >= (u8_t *)ram_end) {
+    LWIP_DEBUGF(MEM_DEBUG | 3, ("mem_free: illegal memory\n"));
 #ifdef MEM_STATS
     ++lwip_stats.mem.err;
 #endif /* MEM_STATS */
+    sys_sem_signal(mem_sem);
     return;
   }
   mem = (struct mem *)((u8_t *)rmem - SIZEOF_STRUCT_MEM);
@@ -161,24 +160,23 @@ mem_free(void *rmem)
   
   mem->used = 0;
 
-  if(mem < lfree) {
+  if (mem < lfree) {
     lfree = mem;
   }
   
 #ifdef MEM_STATS
-  lwip_stats.mem.used -= mem->next - ((u8_t *)mem - ram) - SIZEOF_STRUCT_MEM;
+  lwip_stats.mem.used -= mem->next - ((u8_t *)mem - ram);
   
 #endif /* MEM_STATS */
   plug_holes(mem);
   sys_sem_signal(mem_sem);
 }
-/*-----------------------------------------------------------------------------------*/
 void *
 mem_reallocm(void *rmem, mem_size_t newsize)
 {
   void *nmem;
   nmem = mem_malloc(newsize);
-  if(nmem == NULL) {
+  if (nmem == NULL) {
     return mem_realloc(rmem, newsize);
   }
   memcpy(nmem, rmem, newsize);
@@ -192,14 +190,24 @@ mem_realloc(void *rmem, mem_size_t newsize)
   mem_size_t size;
   mem_size_t ptr, ptr2;
   struct mem *mem, *mem2;
+
+  /* Expand the size of the allocated memory region so that we can
+     adjust for alignment. */
+  if ((newsize % MEM_ALIGNMENT) != 0) {
+   newsize += MEM_ALIGNMENT - ((newsize + SIZEOF_STRUCT_MEM) % MEM_ALIGNMENT);
+  }
+  
+  if (newsize > MEM_SIZE) {
+    return NULL;
+  }
   
   sys_sem_wait(mem_sem);
   
   LWIP_ASSERT("mem_realloc: legal memory", (u8_t *)rmem >= (u8_t *)ram &&
-	 (u8_t *)rmem < (u8_t *)ram_end);
+   (u8_t *)rmem < (u8_t *)ram_end);
   
-  if((u8_t *)rmem < (u8_t *)ram || (u8_t *)rmem >= (u8_t *)ram_end) {
-    DEBUGF(MEM_DEBUG, ("mem_realloc: illegal memory\n"));
+  if ((u8_t *)rmem < (u8_t *)ram || (u8_t *)rmem >= (u8_t *)ram_end) {
+    LWIP_DEBUGF(MEM_DEBUG | 3, ("mem_realloc: illegal memory\n"));
     return rmem;
   }
   mem = (struct mem *)((u8_t *)rmem - SIZEOF_STRUCT_MEM);
@@ -211,14 +219,14 @@ mem_realloc(void *rmem, mem_size_t newsize)
   lwip_stats.mem.used -= (size - newsize);
 #endif /* MEM_STATS */
   
-  if(newsize + SIZEOF_STRUCT_MEM + MIN_SIZE < size) {
+  if (newsize + SIZEOF_STRUCT_MEM + MIN_SIZE < size) {
     ptr2 = ptr + SIZEOF_STRUCT_MEM + newsize;
     mem2 = (struct mem *)&ram[ptr2];
     mem2->used = 0;
     mem2->next = mem->next;
     mem2->prev = ptr;
     mem->next = ptr2;
-    if(mem2->next != MEM_SIZE) {
+    if (mem2->next != MEM_SIZE) {
       ((struct mem *)&ram[mem2->next])->prev = ptr2;
     }
 
@@ -227,32 +235,31 @@ mem_realloc(void *rmem, mem_size_t newsize)
   sys_sem_signal(mem_sem);  
   return rmem;
 }
-/*-----------------------------------------------------------------------------------*/
 void *
 mem_malloc(mem_size_t size)
 {
   mem_size_t ptr, ptr2;
   struct mem *mem, *mem2;
 
-  if(size == 0) {
+  if (size == 0) {
     return NULL;
   }
 
   /* Expand the size of the allocated memory region so that we can
      adjust for alignment. */
-  if((size % MEM_ALIGNMENT) != 0) {
+  if ((size % MEM_ALIGNMENT) != 0) {
     size += MEM_ALIGNMENT - ((size + SIZEOF_STRUCT_MEM) % MEM_ALIGNMENT);
   }
   
-  if(size > MEM_SIZE) {
+  if (size > MEM_SIZE) {
     return NULL;
   }
   
   sys_sem_wait(mem_sem);
 
-  for(ptr = (u8_t *)lfree - ram; ptr < MEM_SIZE; ptr = ((struct mem *)&ram[ptr])->next) {
+  for (ptr = (u8_t *)lfree - ram; ptr < MEM_SIZE; ptr = ((struct mem *)&ram[ptr])->next) {
     mem = (struct mem *)&ram[ptr];
-    if(!mem->used &&
+    if (!mem->used &&
        mem->next - (ptr + SIZEOF_STRUCT_MEM) >= size + SIZEOF_STRUCT_MEM) {
       ptr2 = ptr + SIZEOF_STRUCT_MEM + size;
       mem2 = (struct mem *)&ram[ptr2];
@@ -260,42 +267,41 @@ mem_malloc(mem_size_t size)
       mem2->prev = ptr;      
       mem2->next = mem->next;
       mem->next = ptr2;      
-      if(mem2->next != MEM_SIZE) {
+      if (mem2->next != MEM_SIZE) {
         ((struct mem *)&ram[mem2->next])->prev = ptr2;
       }
       
       mem2->used = 0;      
       mem->used = 1;
 #ifdef MEM_STATS
-      lwip_stats.mem.used += size;
-      /*      if(lwip_stats.mem.max < lwip_stats.mem.used) {
+      lwip_stats.mem.used += (size + SIZEOF_STRUCT_MEM);
+      /*      if (lwip_stats.mem.max < lwip_stats.mem.used) {
         lwip_stats.mem.max = lwip_stats.mem.used;
-	} */
-      if(lwip_stats.mem.max < ptr2) {
+  } */
+      if (lwip_stats.mem.max < ptr2) {
         lwip_stats.mem.max = ptr2;
       }      
 #endif /* MEM_STATS */
 
-      if(mem == lfree) {
-	/* Find next free block after mem */
-        while(lfree->used && lfree != ram_end) {
-	  lfree = (struct mem *)&ram[lfree->next];
+      if (mem == lfree) {
+  /* Find next free block after mem */
+        while (lfree->used && lfree != ram_end) {
+    lfree = (struct mem *)&ram[lfree->next];
         }
         LWIP_ASSERT("mem_malloc: !lfree->used", !lfree->used);
       }
       sys_sem_signal(mem_sem);
       LWIP_ASSERT("mem_malloc: allocated memory not above ram_end.",
-	     (u32_t)mem + SIZEOF_STRUCT_MEM + size <= (u32_t)ram_end);
+       (u32_t)mem + SIZEOF_STRUCT_MEM + size <= (u32_t)ram_end);
       LWIP_ASSERT("mem_malloc: allocated memory properly aligned.",
-	     (unsigned long)((u8_t *)mem + SIZEOF_STRUCT_MEM) % MEM_ALIGNMENT == 0);
+       (unsigned long)((u8_t *)mem + SIZEOF_STRUCT_MEM) % MEM_ALIGNMENT == 0);
       return (u8_t *)mem + SIZEOF_STRUCT_MEM;
     }    
   }
-  DEBUGF(MEM_DEBUG, ("mem_malloc: could not allocate %d bytes\n", (int)size));
+  LWIP_DEBUGF(MEM_DEBUG | 2, ("mem_malloc: could not allocate %d bytes\n", (int)size));
 #ifdef MEM_STATS
   ++lwip_stats.mem.err;
 #endif /* MEM_STATS */  
   sys_sem_signal(mem_sem);
   return NULL;
 }
-/*-----------------------------------------------------------------------------------*/

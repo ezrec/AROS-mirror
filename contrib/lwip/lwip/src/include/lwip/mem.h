@@ -49,11 +49,13 @@ void mem_free(void *mem);
 void *mem_realloc(void *mem, mem_size_t size);
 void *mem_reallocm(void *mem, mem_size_t size);
 
-#define MEM_ALIGN_SIZE(size) (size + \
-                             ((((size) % MEM_ALIGNMENT) == 0)? 0 : \
-                             (MEM_ALIGNMENT - ((size) % MEM_ALIGNMENT))))
+#ifndef MEM_ALIGN_SIZE
+#define MEM_ALIGN_SIZE(size) (((size) + MEM_ALIGNMENT - 1) & ~(MEM_ALIGNMENT-1))
+#endif
 
-#define MEM_ALIGN(addr) (void *)MEM_ALIGN_SIZE((mem_ptr_t)addr)
+#ifndef MEM_ALIGN
+#define MEM_ALIGN(addr) ((void *)(((mem_ptr_t)(addr) + MEM_ALIGNMENT - 1) & ~(mem_ptr_t)(MEM_ALIGNMENT-1)))
+#endif
 
 #endif /* __LWIP_MEM_H__ */
 

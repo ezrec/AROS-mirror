@@ -37,6 +37,7 @@
 
 typedef enum {
   MEMP_PBUF,
+  MEMP_RAW_PCB,
   MEMP_UDP_PCB,
   MEMP_TCP_PCB,
   MEMP_TCP_PCB_LISTEN,
@@ -58,8 +59,5 @@ void *memp_malloc(memp_t type);
 void *memp_realloc(memp_t fromtype, memp_t totype, void *mem);
 void memp_free(memp_t type, void *mem);
 
-void *memp_mallocp(memp_t type);
-void memp_freep(memp_t type, void *mem);
-
 #endif /* __LWIP_MEMP_H__  */
-	  
+    

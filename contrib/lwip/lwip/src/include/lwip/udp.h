@@ -38,8 +38,6 @@
 #include "lwip/inet.h"
 #include "lwip/ip.h"
 
-#include "lwip/err.h"
-
 #define UDP_HLEN 8
 
 struct udp_hdr {
@@ -54,16 +52,20 @@ struct udp_hdr {
 #define UDP_FLAGS_CONNECTED  0x04U
 
 struct udp_pcb {
+/* Common members of all PCB types */
+  IP_PCB;
+
+/* Protocol specific PCB members */
+
   struct udp_pcb *next;
 
-  struct ip_addr local_ip, remote_ip;
+  u8_t flags;
   u16_t local_port, remote_port;
   
-  u8_t flags;
   u16_t chksum_len;
   
   void (* recv)(void *arg, struct udp_pcb *pcb, struct pbuf *p,
-		struct ip_addr *addr, u16_t port);
+    struct ip_addr *addr, u16_t port);
   void *recv_arg;  
 };
 
@@ -72,16 +74,16 @@ struct udp_pcb {
 struct udp_pcb * udp_new        (void);
 void             udp_remove     (struct udp_pcb *pcb);
 err_t            udp_bind       (struct udp_pcb *pcb, struct ip_addr *ipaddr,
-				 u16_t port);
+                 u16_t port);
 err_t            udp_connect    (struct udp_pcb *pcb, struct ip_addr *ipaddr,
-				 u16_t port);
-void            udp_disconnect    (struct udp_pcb *pcb);
+                 u16_t port);
+void             udp_disconnect    (struct udp_pcb *pcb);
 void             udp_recv       (struct udp_pcb *pcb,
-				 void (* recv)(void *arg, struct udp_pcb *upcb,
-					       struct pbuf *p,
-					       struct ip_addr *addr,
-					       u16_t port),
-				 void *recv_arg);
+         void (* recv)(void *arg, struct udp_pcb *upcb,
+                 struct pbuf *p,
+                 struct ip_addr *addr,
+                 u16_t port),
+         void *recv_arg);
 err_t            udp_send       (struct udp_pcb *pcb, struct pbuf *p);
 
 #define          udp_flags(pcb)  ((pcb)->flags)

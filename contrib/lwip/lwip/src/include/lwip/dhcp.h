@@ -5,6 +5,7 @@
 #define __LWIP_DHCP_H__
 
 #include "lwip/opt.h"
+#include "lwip/netif.h"
 #include "lwip/udp.h"
 
 /** period (in seconds) of the application calling dhcp_coarse_tmr() */
@@ -35,8 +36,8 @@ struct dhcp
   struct dhcp_msg *msg_out; /* outgoing msg */
   u16_t options_out_len; /* outgoing msg options length */
   u16_t request_timeout; /* #ticks with period DHCP_FINE_TIMER_SECS for request timeout */
-  u16_t t1_timeout;	/* #ticks with period DHCP_COARSE_TIMER_SECS for renewal time */
-  u16_t t2_timeout;	/* #ticks with period DHCP_COARSE_TIMER_SECS for rebind time */
+  u16_t t1_timeout;  /* #ticks with period DHCP_COARSE_TIMER_SECS for renewal time */
+  u16_t t2_timeout;  /* #ticks with period DHCP_COARSE_TIMER_SECS for rebind time */
   struct ip_addr server_ip_addr; /* dhcp server address that offered this lease */
   struct ip_addr offered_ip_addr;
   struct ip_addr offered_sn_mask;
@@ -44,7 +45,14 @@ struct dhcp
   struct ip_addr offered_bc_addr;
   u32_t offered_t0_lease; /* lease period (in seconds) */
   u32_t offered_t1_renew; /* recommended renew time (usually 50% of lease period) */
-  u32_t offered_t2_rebind; /* recommended rebind time (usually 66% of lease period)	*/
+  u32_t offered_t2_rebind; /* recommended rebind time (usually 66% of lease period)  */
+/** Patch #1308
+ *  TODO: See dhcp.c "TODO"s
+ */
+#if 0
+  struct ip_addr offered_si_addr;
+  u8_t *boot_file_name;
+#endif
 };
 
 /* MUST be compiled with "pack structs" or equivalent! */
@@ -86,11 +94,6 @@ PACK_STRUCT_END
 #  include "arch/epstruct.h"
 #endif
 
-/* Declare here to avoid including netif.h creating a circular dependency */
-struct netif;
-
-/** initialize DHCP client */
-void dhcp_init(void);
 /** start DHCP configuration */
 err_t dhcp_start(struct netif *netif);
 /** stop DHCP configuration */
@@ -131,7 +134,7 @@ void dhcp_fine_tmr(void);
 #define DHCP_COOKIE_OFS (DHCP_MSG_OFS + DHCP_MSG_LEN)
 #define DHCP_OPTIONS_OFS (DHCP_MSG_OFS + DHCP_MSG_LEN + 4)
 
-#define DHCP_CLIENT_PORT 68	
+#define DHCP_CLIENT_PORT 68  
 #define DHCP_SERVER_PORT 67
 
 /** DHCP client states */
@@ -145,8 +148,9 @@ void dhcp_fine_tmr(void);
 #define DHCP_CHECKING 8
 #define DHCP_PERMANENT 9
 #define DHCP_BOUND 10
-#define DHCP_BACKING_OFF 11
-#define DHCP_OFF 12
+/** not yet implemented #define DHCP_RELEASING 11 */
+#define DHCP_BACKING_OFF 12
+#define DHCP_OFF 13
  
 #define DHCP_BOOTREQUEST 1
 #define DHCP_BOOTREPLY 2
@@ -202,7 +206,7 @@ void dhcp_fine_tmr(void);
 /** possible combinations of overloading the file and sname fields with options */
 #define DHCP_OVERLOAD_NONE 0
 #define DHCP_OVERLOAD_FILE 1
-#define DHCP_OVERLOAD_SNAME	2
+#define DHCP_OVERLOAD_SNAME  2
 #define DHCP_OVERLOAD_SNAME_FILE 3
 
 #endif /*__LWIP_DHCP_H__*/

@@ -44,18 +44,23 @@
 
 /** must be the maximum of all used hardware address lengths
     across all types of interfaces in use */
-#define NETIF_MAX_HWADDR_LEN 6
+#define NETIF_MAX_HWADDR_LEN 6U
+
+/** TODO: define the use (where, when, whom) of netif flags */
 
 /** whether the network interface is 'up'. this is
  * a software flag used to control whether this network
  * interface is enabled and processes traffic */
-#define NETIF_FLAG_UP 1U
+#define NETIF_FLAG_UP 0x1U
 /** if set, the netif has broadcast capability */
-#define NETIF_FLAG_BROADCAST 2U
+#define NETIF_FLAG_BROADCAST 0x2U
 /** if set, the netif is one end of a point-to-point connection */
-#define NETIF_FLAG_POINTTOPOINT 4U
+#define NETIF_FLAG_POINTTOPOINT 0x4U
 /** if set, the interface is configured using DHCP */
-#define NETIF_FLAG_DHCP 8U
+#define NETIF_FLAG_DHCP 0x08U
+/** if set, the interface has an active link
+ *  (set by the interface) */
+#define NETIF_FLAG_LINK_UP 0x10U
 
 /** generic data structure used for all lwIP network interfaces */
 struct netif {
@@ -76,7 +81,7 @@ struct netif {
       to send a packet on the interface. This function typically
       first resolves the hardware address, then sends the packet. */
   err_t (* output)(struct netif *netif, struct pbuf *p,
-		   struct ip_addr *ipaddr);
+       struct ip_addr *ipaddr);
   /** This function is called by the ARP module when it wants
       to send a packet on the interface. This function outputs
       the pbuf as-is on the link medium. */
@@ -111,14 +116,14 @@ extern struct netif *netif_default;
 void netif_init(void);
 
 struct netif *netif_add(struct ip_addr *ipaddr, struct ip_addr *netmask,
-			struct ip_addr *gw,
-			void *state,
-			err_t (* init)(struct netif *netif),
-			err_t (* input)(struct pbuf *p, struct netif *netif));
+      struct ip_addr *gw,
+      void *state,
+      err_t (* init)(struct netif *netif),
+      err_t (* input)(struct pbuf *p, struct netif *netif));
 
 void
 netif_set_addr(struct netif *netif,struct ip_addr *ipaddr, struct ip_addr *netmask,
-	  struct ip_addr *gw);
+    struct ip_addr *gw);
 void netif_remove(struct netif * netif);
 
 /* Returns a network interface given its name. The name is of the form

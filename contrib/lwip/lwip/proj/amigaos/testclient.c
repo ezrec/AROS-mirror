@@ -12,7 +12,7 @@ void main(void)
 {
     if ((SocketBase = OpenLibrary("bsdsocket.library",0)))
     {
-	int sock = socket(0,SOCK_STREAM,0);
+	int sock = socket(AF_INET,SOCK_STREAM,0);
 
 	if (sock != -1)
 	{

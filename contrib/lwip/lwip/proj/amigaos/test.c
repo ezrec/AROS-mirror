@@ -50,6 +50,9 @@
 
 /* ----------------------------------------------- */
 
+/* Some tests when not using as bsdsocket.library */
+
+#if 0
 void client_test(void *arg)
 {
 	  int sock = lwip_socket(0,SOCK_STREAM,0);
@@ -58,18 +61,23 @@ void client_test(void *arg)
 	  {
         struct sockaddr_in src;
 
-        kprintf("Client: Client socket at 0x%ld\n",sock);
+        kprintf("CLIENT: Client socket at 0x%ld\n",sock);
 
         src.sin_family = AF_INET;
         src.sin_addr.s_addr = htonl(0x7f000001);
         src.sin_port = htons(6000);
 
-        kprintf("Client: connects\n");
+				kprintf("CLIENT: waiting 3 seconds\n");
+				Delay(150);
+        kprintf("CLIENT: connects\n");
 
 				if (lwip_connect(sock, (struct sockaddr *) &src, sizeof(src)) != -1)
 				{
-            kprintf("Client: Connected to socket\n");
+            kprintf("CLIENT: Connected to socket...after waiting 3 secs\n");
+            Delay(150);
+            kprintf("CLIENT: sending test string\n");
             lwip_write(sock,"test string",12);
+            kprintf("CLIENT: Test string written\n");
 				}
 
 				lwip_close(sock);
@@ -103,7 +111,7 @@ void server_init(void)
 
       	Printf("Server: listen() success\n");
 
-      	sys_thread_new(client_test,NULL);
+      	sys_thread_new(client_test,NULL,0);
 
         s = lwip_accept(sock,(struct sockaddr *) &fromend, &fromlen);
         if (s != -1)
@@ -118,6 +126,7 @@ void server_init(void)
   	lwip_close(sock);
   }
 }
+#endif
 
 static void tcpip_init_done(void *arg)
 {
@@ -126,6 +135,7 @@ static void tcpip_init_done(void *arg)
   sys_sem_t *sem;
   sem = arg;
 
+#if 0
 #ifndef __AROS__
   /* We must add the interface here because this is the task where the output happens and we create a message port in
    * sioslipif_input. This needs of course improvements */
@@ -135,6 +145,7 @@ static void tcpip_init_done(void *arg)
   
   netif_set_default(netif_add(&ipaddr, &netmask, &gw, NULL /*state*/, slipif_init,
 			      tcpip_input));
+#endif
 #endif
   sys_sem_signal(*sem);
 }
@@ -153,6 +164,7 @@ void start(void)
   LIB_remove();
 }
 
+#if 0
 void raw_recv_func(void *arg, struct raw_pcb *upcb, struct pbuf *p, struct ip_addr *addr)
 {
   struct ip_hdr *hdr = (struct ip_hdr*)p->payload;
@@ -160,6 +172,7 @@ void raw_recv_func(void *arg, struct raw_pcb *upcb, struct pbuf *p, struct ip_ad
   kprintf("received raw packet: protocol %ld\n",IPH_PROTO(hdr));
   
 }
+#endif
 
 void main(void)
 {
@@ -235,5 +248,5 @@ void main(void)
   start();
 
   /* TODO: If the program would be finished it would crash */
-  Wait(4069);
+  Wait(4096);
 }

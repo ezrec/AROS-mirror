@@ -60,41 +60,12 @@
 #define MYDEBUG 1
 #include "debug.h"
 
-struct PtrMessage
-{
-  struct Message msg;
-  void *ptr;
-};
-
-struct sys_mbox_msg {
-  struct sys_mbox_msg *next;
-  void *msg;
-};
-
-#define SYS_MBOX_SIZE 100
-
-struct sys_mbox {
-  u16_t first, last;
-  void *msgs[SYS_MBOX_SIZE];
-  struct sys_sem *mail;
-  struct sys_sem *mutex;
-};
-
 /* The structure used for sys_sem->queue */
 struct TaskNode
 {
   struct MinNode node;
   struct Task *task;
   LONG sem_signal;
-};
-
-
-struct sys_sem {
-  unsigned int c;
-  struct SignalSemaphore sem;
-
-  /* List of blocked tasks */
-  struct MinList queue; /* members are struct TaskNpde */
 };
 
 struct ThreadData
@@ -115,13 +86,38 @@ struct ThreadData
 struct StartupMsg		    /* startup message sent to child */
 {
     struct Message msg;
-    int (*fp)(void *);              /* function we're going to call */
+    void (*fp)(void *);              /* function we're going to call */
     void *global_data;              /* global data reg (A4)         */
     long return_code;               /* return code from process     */
     void *UserData;                 /* User-supplied data pointer   */
     struct Process *child;	    /* The child process itselv     */
 };
 
+
+/*-----------------------------------------------------------------------------------*/
+
+struct sys_mbox_msg {
+  struct sys_mbox_msg *next;
+  void *msg;
+};
+
+#define SYS_MBOX_SIZE 128
+
+struct sys_mbox {
+  int first, last;
+  void *msgs[SYS_MBOX_SIZE];
+  struct sys_sem *mail;
+  struct sys_sem *mutex;
+  int wait_send;
+};
+
+struct sys_sem {
+  unsigned int c;
+  struct SignalSemaphore sem;
+
+  /* List of blocked tasks */
+  struct MinList queue; /* members are struct TaskNode */
+};
 
 /*-----------------------------------------------------------------------------------*/
 
@@ -243,9 +239,9 @@ struct ThreadData *Thread_Alloc(void)
 
 void Thread_Free(struct ThreadData *data)
 {
-	if (!data) return;
-	Thread_Cleanup(data);
-  FreeVec(data);
+    if (!data) return;
+    Thread_Cleanup(data);
+    FreeVec(data);
 }
 
 /*-----------------------------------------------------------------------------------*/
@@ -277,15 +273,13 @@ static int Thread_Entry(void)
     putreg(REG_A4, (long)mess->global_data);
 #endif
 
-    ReplyMsg(mess);
+    ReplyMsg((struct Message*)mess);
 
 
     if (Thread_Init(&data))
     {
     	FindTask(NULL)->tc_UserData = &data;
-//    	kprintf("Thread at 0x%lx initialized. Now jumping to user defined function\n",FindTask(NULL));
 	fp(ud,ud,ud);
-//    	kprintf("Thread at 0x%lx finished. Cleanup now\n",FindTask(NULL));
 	Thread_Cleanup(&data);
     }
     return 0;
@@ -297,12 +291,13 @@ sys_mbox_t sys_mbox_new(void)
 {
     struct sys_mbox *mbox;
 
-    mbox = AllocVec(sizeof(struct sys_mbox),MEMF_PUBLIC|MEMF_CLEAR);
-    if (!mbox) return SYS_MBOX_NULL;
+    if (!(mbox = AllocVec(sizeof(struct sys_mbox),MEMF_PUBLIC)))
+	return SYS_MBOX_NULL;
 
     mbox->first = mbox->last = 0;
     mbox->mail = sys_sem_new(0);
     mbox->mutex = sys_sem_new(1);
+    mbox->wait_send = 0;
 
 #ifdef SYS_STATS
     lwip_stats.sys.mbox.used++;
@@ -311,14 +306,11 @@ sys_mbox_t sys_mbox_new(void)
     }
 #endif /* SYS_STATS */
 
-//    kprintf("sys_mbox_new()=0x%lx\n",mbox);
     return (sys_mbox_t)mbox;
 }
 /*-----------------------------------------------------------------------------------*/
 void sys_mbox_free(sys_mbox_t mbox)
 {
-//    kprintf("sys_mbox_free(mbox=0x%lx)\n",mbox);
-
     if(mbox != SYS_MBOX_NULL) {
 #ifdef SYS_STATS
 	lwip_stats.sys.mbox.used--;
@@ -334,71 +326,80 @@ void sys_mbox_free(sys_mbox_t mbox)
 /*-----------------------------------------------------------------------------------*/
 void sys_mbox_post(sys_mbox_t mbox, void *msg)
 {
-    u8_t first;
-
-    if (!mbox)
-    {
-//	kprintf("sys_mbox_post(mbox=0x%lx,data=0x%lx)  no mbox!\n",mbox,msg);
-	return;
-    }
-
-//    kprintf("sys_mbox_post(mbox=0x%lx,data=0x%lx)\n",mbox,msg);
-
-    sys_sem_wait(mbox->mutex);
-    mbox->msgs[mbox->last] = msg;
-
-    if(mbox->last == mbox->first) {
-        first = 1;
-    } else {
-        first = 0;
-    }
+  u8_t first;
   
-    mbox->last++;
-    if(mbox->last == SYS_MBOX_SIZE) {
-	mbox->last = 0;
-    }
-
-    if(first) {
-      sys_sem_signal(mbox->mail);
-    }
+  sys_sem_wait(mbox->mutex);
   
+  LWIP_DEBUGF(SYS_DEBUG, ("sys_mbox_post: mbox %p msg %p\n", (void *)mbox, (void *)msg));
+  
+  while ((mbox->last + 1) >= (mbox->first + SYS_MBOX_SIZE)) {
+    mbox->wait_send++;
     sys_sem_signal(mbox->mutex);
+    sys_arch_sem_wait(mbox->mail, 0);
+    sys_arch_sem_wait(mbox->mutex, 0);
+    mbox->wait_send--;
+  }
+  
+  mbox->msgs[mbox->last % SYS_MBOX_SIZE] = msg;
+  
+  if (mbox->last == mbox->first) {
+    first = 1;
+  } else {
+    first = 0;
+  }
+  
+  mbox->last++;
+  
+  if (first) {
+    sys_sem_signal(mbox->mail);
+  }
+
+  sys_sem_signal(mbox->mutex);
 }
 /*-----------------------------------------------------------------------------------*/
 u32_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u32_t timeout)
 {
-    u32_t time = 1;
-//    kprintf("sys_arch_mbox_fetch(mbox=0x%lx,timeout=%ld)\n",mbox,timeout);
+  u32_t time = 0;
 
-    /* The mutex lock is quick so we don't bother with the timeout
-       stuff here. */
-    sys_arch_sem_wait(mbox->mutex, 0);
+  D(bug("sys_arch_mbox_fetch(mbox=0x%lx,timeout=%ld)\n",mbox,timeout));
   
-    while(mbox->first == mbox->last)
-    {
-        sys_sem_signal(mbox->mutex);
-    
-        /* We block while waiting for a mail to arrive in the mailbox. We
-           must be prepared to timeout. */
-        if(timeout != 0)
-        {
-            time = sys_arch_sem_wait(mbox->mail, timeout);
-      
-          /* If time == 0, the sem_wait timed out, and we return 0. */
-            if(time == 0) return 0;
-        } else sys_arch_sem_wait(mbox->mail, 0);
-	sys_arch_sem_wait(mbox->mutex, 0);
-    }
-  
-    if (msg)
-	*msg = mbox->msgs[mbox->first];
-  
-    mbox->first++;
-    if(mbox->first == SYS_MBOX_SIZE)
-        mbox->first = 0;
+  /* The mutex lock is quick so we don't bother with the timeout
+     stuff here. */
+  sys_arch_sem_wait(mbox->mutex, 0);
 
+  while (mbox->first == mbox->last) {
     sys_sem_signal(mbox->mutex);
-    return time;
+    
+    /* We block while waiting for a mail to arrive in the mailbox. We
+       must be prepared to timeout. */
+    if (timeout != 0) {
+      time = sys_arch_sem_wait(mbox->mail, timeout);
+      
+      if (time == SYS_ARCH_TIMEOUT) {
+        return SYS_ARCH_TIMEOUT;
+      }
+    } else {
+      sys_arch_sem_wait(mbox->mail, 0);
+    }
+    
+    sys_arch_sem_wait(mbox->mutex, 0);
+  }
+
+  LWIP_DEBUGF(SYS_DEBUG, ("sys_mbox_fetch: mbox %p msg %p\n", (void *)mbox, *msg));
+
+  if (msg != NULL) {
+    *msg = mbox->msgs[mbox->first % SYS_MBOX_SIZE];
+  }
+
+  mbox->first++;
+  
+  if (mbox->wait_send) {
+    sys_sem_signal(mbox->mail);
+  }
+
+  sys_sem_signal(mbox->mutex);
+
+  return time;
 }
 
 /*-----------------------------------------------------------------------------------*/
@@ -408,8 +409,6 @@ sys_sem_t sys_sem_new(u8_t count)
 
     if (!(sem = AllocVec(sizeof(struct sys_sem),MEMF_PUBLIC)))
 	return NULL;
-
-//    kprintf("sys_sem_new(%ld) sem at 0x%lx\n",count,sem);
 
     sem->c = count;
     InitSemaphore(&sem->sem);
@@ -421,9 +420,10 @@ sys_sem_t sys_sem_new(u8_t count)
 u32_t sys_arch_sem_wait(sys_sem_t sem, u32_t timeout)
 {
     struct ThreadData *data = (struct ThreadData*)FindTask(NULL)->tc_UserData;
-    u16_t time = 1;
+    struct Device *TimerBase = data->TimerReq->tr_node.io_Device;
+    struct timeval val,val2;
 
-//    kprintf("sys_arch_sem_wait(0x%lx,%ld)\n",sem,timeout);
+    GetSysTime(&val);
 
     ObtainSemaphore(&sem->sem);
 
@@ -431,15 +431,12 @@ u32_t sys_arch_sem_wait(sys_sem_t sem, u32_t timeout)
     {
 	if (timeout > 0)
 	{
-	    struct timeval val;
-	    struct Device *TimerBase = data->TimerReq->tr_node.io_Device;
 	    struct timerequest *req;
-	    GetSysTime(&val);
 
 	    if ((req = Timer_Send(data, timeout)))
 	    {
 	    	ULONG sigs;
-	    	int signaled = 0;
+	    	ULONG signaled;
 
 		/* We add us now in the wait queue, so sys_sem_signal() knows which signal has to be set */
 		AddTail((struct List*)&sem->queue,(struct Node*)&data->task_node);
@@ -451,8 +448,8 @@ u32_t sys_arch_sem_wait(sys_sem_t sem, u32_t timeout)
                 /* Now we remove us again */
                 Remove((struct Node*)&data->task_node);
 
-                if (sigs & (1UL<<data->sem_signal))
-		    signaled = 1;
+		/* Check if we were signaled, else a timeout has happened */
+		signaled = sigs & (1UL<<data->sem_signal);
 
 		if (sigs & (1UL<<data->TimerPort->mp_SigBit))
 		{
@@ -465,17 +462,10 @@ u32_t sys_arch_sem_wait(sys_sem_t sem, u32_t timeout)
 		    }
 		} else Timer_Abort(data,req);
 
-		if (signaled)
-		{
-		    /* Calulate the amount of time spent */
-		    struct timeval val2;
-		    GetSysTime(&val2);
-		    SubTime(&val2,&val);
-		    time = val2.tv_micro / 1000 + val2.tv_secs * 1000;
-		} else
+		if (!signaled)
 		{
 		    ReleaseSemaphore(&sem->sem);
-		    return 0;
+		    return SYS_ARCH_TIMEOUT;
 		}
 	    }
 	}  else
@@ -494,13 +484,15 @@ u32_t sys_arch_sem_wait(sys_sem_t sem, u32_t timeout)
 
     sem->c--;
     ReleaseSemaphore(&sem->sem);
-    return time;
+
+    /* Calulate the amount of time spent and return it */
+    GetSysTime(&val2);
+    SubTime(&val2,&val);
+    return val2.tv_micro / 1000 + val2.tv_secs * 1000;
 }
 /*-----------------------------------------------------------------------------------*/
 void sys_sem_signal(sys_sem_t sem)
 {
-//    kprintf("sys_sem_signal(0x%lx)\n",sem);
-
     ObtainSemaphore(&sem->sem);
 
     sem->c++;
@@ -518,35 +510,37 @@ void sys_sem_signal(sys_sem_t sem)
 /*-----------------------------------------------------------------------------------*/
 void sys_sem_free(sys_sem_t sem)
 {
-//    kprintf("sys_sem_free(%lx)\n",sem);
     if (sem) FreeVec(sem);
 }
 /*-----------------------------------------------------------------------------------*/
 void sys_init(void)
 {
-//    kprintf("sys_init() ");
     if (Thread_Init(&mainThread))
     {
-//    	kprintf("successfull\n");
     	FindTask(NULL)->tc_UserData = &mainThread;
-    }// else kprintf("failed\n");
+    }
 }
 /*-----------------------------------------------------------------------------------*/
 struct sys_timeouts *sys_arch_timeouts(void)
 {
     struct ThreadData *data = (struct ThreadData*)FindTask(NULL)->tc_UserData;
-
-//    kprintf("sys_arch_timeouts()\n");
     return &data->timeouts;
 }
 /*-----------------------------------------------------------------------------------*/
-sys_thread_t sys_thread_new(void (* function)(void *arg), void *arg)
+sys_thread_t sys_thread_new(void (* function)(void *arg), void *arg, int prio)
 {
     struct Process *pr;
     struct StartupMsg *start_msg;
     struct MsgPort *child_port;
 
-//    kprintf("sys_thread_new()\n");
+    /* A primitive way to build a task name */
+    static char taskname[] = "LwIP Process 0";
+    char newtaskname[32];
+
+    Forbid();
+    strcpy(newtaskname,taskname);
+    taskname[13]++;
+    Permit();
 
     if (!(start_msg = (struct StartupMsg *)AllocMem(sizeof(struct StartupMsg), MEMF_PUBLIC|MEMF_CLEAR)))
 	return NULL;
@@ -559,7 +553,11 @@ sys_thread_t sys_thread_new(void (* function)(void *arg), void *arg)
 
     CacheClearU();
 
-    pr = CreateNewProcTags(NP_Entry, Thread_Entry, TAG_DONE);
+    pr = CreateNewProcTags(
+	NP_Entry, Thread_Entry,
+	NP_StackSize, 16384,
+	NP_Name, newtaskname,
+	TAG_DONE);
 
     if (!pr)
     {

@@ -33,11 +33,7 @@
 
 #ifndef __LWIP_SOCKETS_H__
 #define __LWIP_SOCKETS_H__
-
-struct in_addr {
-  u32_t s_addr;
-};
-
+#include "lwip/ip_addr.h"
 
 struct sockaddr_in {
   u8_t sin_len;
@@ -65,29 +61,30 @@ struct sockaddr {
 /*
  * Option flags per-socket.
  */
-#define	SO_DEBUG	0x0001		/* turn on debugging info recording */
-#define	SO_ACCEPTCONN	0x0002		/* socket has had listen() */
-#define	SO_REUSEADDR	0x0004		/* allow local address reuse */
-#define	SO_KEEPALIVE	0x0008		/* keep connections alive */
-#define	SO_DONTROUTE	0x0010		/* just use interface addresses */
-#define	SO_BROADCAST	0x0020		/* permit sending of broadcast msgs */
-#define	SO_USELOOPBACK	0x0040		/* bypass hardware when possible */
-#define	SO_LINGER	0x0080		/* linger on close if data present */
-#define	SO_OOBINLINE	0x0100		/* leave received OOB data in line */
+#define  SO_DEBUG  0x0001    /* turn on debugging info recording */
+#define  SO_ACCEPTCONN  0x0002    /* socket has had listen() */
+#define  SO_REUSEADDR  0x0004    /* allow local address reuse */
+#define  SO_KEEPALIVE  0x0008    /* keep connections alive */
+#define  SO_DONTROUTE  0x0010    /* just use interface addresses */
+#define  SO_BROADCAST  0x0020    /* permit sending of broadcast msgs */
+#define  SO_USELOOPBACK  0x0040    /* bypass hardware when possible */
+#define  SO_LINGER  0x0080    /* linger on close if data present */
+#define  SO_OOBINLINE  0x0100    /* leave received OOB data in line */
+#define	 SO_REUSEPORT	0x0200		/* allow local address & port reuse */
 
 #define SO_DONTLINGER   (int)(~SO_LINGER)
 
 /*
  * Additional options, not kept in so_options.
  */
-#define SO_SNDBUF	0x1001		/* send buffer size */
-#define SO_RCVBUF	0x1002		/* receive buffer size */
-#define SO_SNDLOWAT	0x1003		/* send low-water mark */
-#define SO_RCVLOWAT	0x1004		/* receive low-water mark */
-#define SO_SNDTIMEO	0x1005		/* send timeout */
-#define SO_RCVTIMEO	0x1006		/* receive timeout */
-#define	SO_ERROR	0x1007		/* get error status and clear */
-#define	SO_TYPE		0x1008		/* get socket type */
+#define SO_SNDBUF  0x1001    /* send buffer size */
+#define SO_RCVBUF  0x1002    /* receive buffer size */
+#define SO_SNDLOWAT  0x1003    /* send low-water mark */
+#define SO_RCVLOWAT  0x1004    /* receive low-water mark */
+#define SO_SNDTIMEO  0x1005    /* send timeout */
+#define SO_RCVTIMEO  0x1006    /* receive timeout */
+#define  SO_ERROR  0x1007    /* get error status and clear */
+#define  SO_TYPE    0x1008    /* get socket type */
 
 
 
@@ -102,13 +99,15 @@ struct linger {
 /*
  * Level number for (get/set)sockopt() to apply to socket itself.
  */
-#define	SOL_SOCKET	0xfff		/* options for socket level */
+#define  SOL_SOCKET  0xfff    /* options for socket level */
 
 
 #define AF_UNSPEC       0
 #define AF_INET         2
 #define PF_INET         AF_INET
+#define PF_UNSPEC       AF_UNSPEC
 
+#define IPPROTO_IP      0
 #define IPPROTO_TCP     6
 #define IPPROTO_UDP     17
 
@@ -117,6 +116,36 @@ struct linger {
 
 /* Flags we can use with send and recv. */
 #define MSG_DONTWAIT    0x40            /* Nonblocking i/o for this operation only */
+
+
+/*
+ * Options for level IPPROTO_IP
+ */
+#define IP_TOS       1
+#define IP_TTL       2
+
+
+#define IPTOS_TOS_MASK          0x1E
+#define IPTOS_TOS(tos)          ((tos) & IPTOS_TOS_MASK)
+#define IPTOS_LOWDELAY          0x10
+#define IPTOS_THROUGHPUT        0x08
+#define IPTOS_RELIABILITY       0x04
+#define IPTOS_LOWCOST           0x02
+#define IPTOS_MINCOST           IPTOS_LOWCOST
+
+/*
+ * Definitions for IP precedence (also in ip_tos) (hopefully unused)
+ */
+#define IPTOS_PREC_MASK                 0xe0
+#define IPTOS_PREC(tos)                ((tos) & IPTOS_PREC_MASK)
+#define IPTOS_PREC_NETCONTROL           0xe0
+#define IPTOS_PREC_INTERNETCONTROL      0xc0
+#define IPTOS_PREC_CRITIC_ECP           0xa0
+#define IPTOS_PREC_FLASHOVERRIDE        0x80
+#define IPTOS_PREC_FLASH                0x60
+#define IPTOS_PREC_IMMEDIATE            0x40
+#define IPTOS_PREC_PRIORITY             0x20
+#define IPTOS_PREC_ROUTINE              0x00
 
 
 /*
@@ -161,7 +190,7 @@ struct linger {
 #endif
 
 #ifndef O_NONBLOCK
-#define O_NONBLOCK    04000
+#define O_NONBLOCK    04000U
 #endif
 
 #ifndef FD_SET
@@ -177,8 +206,8 @@ struct linger {
         } fd_set;
 
   struct timeval {
-	  long    tv_sec;         /* seconds */
-	  long    tv_usec;        /* and microseconds */
+    long    tv_sec;         /* seconds */
+    long    tv_usec;        /* and microseconds */
   };
 
 #endif
@@ -196,10 +225,10 @@ int lwip_listen(int s, int backlog);
 int lwip_recv(int s, void *mem, int len, unsigned int flags);
 int lwip_read(int s, void *mem, int len);
 int lwip_recvfrom(int s, void *mem, int len, unsigned int flags,
-		  struct sockaddr *from, socklen_t *fromlen);
+      struct sockaddr *from, socklen_t *fromlen);
 int lwip_send(int s, void *dataptr, int size, unsigned int flags);
 int lwip_sendto(int s, void *dataptr, int size, unsigned int flags,
-		struct sockaddr *to, socklen_t tolen);
+    struct sockaddr *to, socklen_t tolen);
 int lwip_socket(int domain, int type, int protocol);
 int lwip_write(int s, void *dataptr, int size);
 int lwip_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset,
@@ -225,7 +254,7 @@ int lwip_ioctl(int s, long cmd, void *argp);
 #define socket(a,b,c)         lwip_socket(a,b,c)
 #define write(a,b,c)          lwip_write(a,b,c)
 #define select(a,b,c,d,e)     lwip_select(a,b,c,d,e)
-#define ioctlsocket(a,b,c)     lwip_ioctl(a,b,c)
+#define ioctlsocket(a,b,c)    lwip_ioctl(a,b,c)
 #endif /* LWIP_COMPAT_SOCKETS */
 
 #endif /* __LWIP_SOCKETS_H__ */

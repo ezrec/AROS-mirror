@@ -41,8 +41,13 @@
 u16_t inet_chksum(void *dataptr, u16_t len);
 u16_t inet_chksum_pbuf(struct pbuf *p);
 u16_t inet_chksum_pseudo(struct pbuf *p,
-			 struct ip_addr *src, struct ip_addr *dest,
-			 u8_t proto, u16_t proto_len);
+       struct ip_addr *src, struct ip_addr *dest,
+       u8_t proto, u16_t proto_len);
+
+u32_t inet_addr(const char *cp);
+int inet_aton(const char *cp, struct in_addr *addr);
+u8_t *inet_ntoa(u32_t addr); /* returns ptr to static buffer; not reentrant! */
+
 #ifdef htons
 #undef htons
 #endif /* htons */
@@ -62,6 +67,13 @@ u16_t inet_chksum_pseudo(struct pbuf *p,
 #define htonl(x) (x)
 #define ntohl(x) (x)
 #else
+#ifdef LWIP_PREFIX_BYTEORDER_FUNCS
+/* workaround for naming collisions on some platforms */
+#define htons lwip_htons
+#define ntohs lwip_ntohs
+#define htonl lwip_htonl
+#define ntohl lwip_ntohl
+#endif
 u16_t htons(u16_t x);
 u16_t ntohs(u16_t x);
 u32_t htonl(u32_t x);

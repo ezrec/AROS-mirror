@@ -57,16 +57,14 @@ struct sys_timeout {u8_t dummy;};
 #define sys_mbox_post(m,d)
 #define sys_mbox_free(m)
 
-#define sys_thread_new(t,a)
-
-/* We don't need protection if there is no OS */
-#define SYS_ARCH_DECL_PROTECT(lev)
-#define SYS_ARCH_PROTECT(lev)
-#define SYS_ARCH_UNPROTECT(lev)
+#define sys_thread_new(t,a,p)
 
 #else /* NO_SYS */
 
 #include "arch/sys_arch.h"
+
+/** Return code for timeouts from sys_arch_mbox_fetch and sys_arch_sem_wait */
+#define SYS_ARCH_TIMEOUT 0xffffffff
 
 typedef void (* sys_timeout_handler)(void *arg);
 
@@ -105,12 +103,31 @@ void sys_sem_free(sys_sem_t sem);
 void sys_sem_wait(sys_sem_t sem);
 int sys_sem_wait_timeout(sys_sem_t sem, u32_t timeout);
 
+/* Time functions. */
+#ifndef sys_msleep
+void sys_msleep(u32_t ms); /* only has a (close to) 1 jiffy resolution. */
+#endif
+#ifndef sys_jiffies
+u32_t sys_jiffies(void); /* since power up. */
+#endif
+
 /* Mailbox functions. */
 sys_mbox_t sys_mbox_new(void);
 void sys_mbox_post(sys_mbox_t mbox, void *msg);
 u32_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u32_t timeout);
 void sys_mbox_free(sys_mbox_t mbox);
 void sys_mbox_fetch(sys_mbox_t mbox, void **msg);
+
+
+/* Thread functions. */
+sys_thread_t sys_thread_new(void (* thread)(void *arg), void *arg, int prio);
+
+/* The following functions are used only in Unix code, and
+   can be omitted when porting the stack. */
+/* Returns the current time in microseconds. */
+unsigned long sys_now(void);
+
+#endif /* NO_SYS */
 
 /* Critical Region Protection */
 /* These functions must be implemented in the sys_arch.c file.
@@ -152,18 +169,15 @@ void sys_mbox_fetch(sys_mbox_t mbox, void **msg);
 #define SYS_ARCH_UNPROTECT(lev) sys_arch_unprotect(lev)
 sys_prot_t sys_arch_protect(void);
 void sys_arch_unprotect(sys_prot_t pval);
+
+#else
+
+#define SYS_ARCH_DECL_PROTECT(lev)
+#define SYS_ARCH_PROTECT(lev)
+#define SYS_ARCH_UNPROTECT(lev)
+
 #endif /* SYS_LIGHTWEIGHT_PROT */
 
 #endif /* SYS_ARCH_PROTECT */
-
-/* Thread functions. */
-sys_thread_t sys_thread_new(void (* thread)(void *arg), void *arg);
-
-/* The following functions are used only in Unix code, and
-   can be omitted when porting the stack. */
-/* Returns the current time in microseconds. */
-unsigned long sys_now(void);
-
-#endif /* NO_SYS */
 
 #endif /* __LWIP_SYS_H__ */

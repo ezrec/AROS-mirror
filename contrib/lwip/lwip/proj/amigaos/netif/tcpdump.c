@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -44,14 +44,12 @@ static FILE *file = NULL;
 void
 tcpdump_init(void)
 {
-  char *fname;
-
-  fname = "t:tcpdump";
-  file = fopen(fname, "w");
-  if(file == NULL) {
-    perror("tcpdump_init: fopen");
+#define TCPDUMP_FNAME "t:tcpdump"
+  file = fopen(TCPDUMP_FNAME, "w");
+  if (file == NULL) {
+    perror("tcpdump_init: cannot open \""TCPDUMP_FNAME"\" for writing");
   }
-  DEBUGF(TCPDUMP_DEBUG, ("tcpdump: file %s\n", fname));
+  LWIP_DEBUGF(TCPDUMP_DEBUG, ("tcpdump: file %s\n", TCPDUMP_FNAME));
 }
 /*-----------------------------------------------------------------------------------*/
 void
@@ -65,20 +63,20 @@ tcpdump(struct pbuf *p)
   int len;
   int offset;
 
-  if(file == NULL) {
+  if (file == NULL) {
     return;
   }
 #ifdef IPv4  
   iphdr = p->payload;
-  switch(IPH_PROTO(iphdr)) {
+  switch (IPH_PROTO(iphdr)) {
   case IP_PROTO_TCP:    
     tcphdr = (struct tcp_hdr *)((char *)iphdr + IP_HLEN);
     
     pbuf_header(p, -IP_HLEN);
-    if(inet_chksum_pseudo(p, (struct ip_addr *)&(iphdr->src),
+    if (inet_chksum_pseudo(p, (struct ip_addr *)&(iphdr->src),
 			  (struct ip_addr *)&(iphdr->dest),
 			  IP_PROTO_TCP, p->tot_len) != 0) {
-      DEBUGF(TCPDUMP_DEBUG, ("tcpdump: IP checksum failed!\n"));
+      LWIP_DEBUGF(TCPDUMP_DEBUG, ("tcpdump: IP checksum failed!\n"));
       /*    fprintf(file, "chksum 0x%lx ", tcphdr->chksum);
 	    tcphdr->chksum = 0;
 	    fprintf(file, "should be 0x%lx ", inet_chksum_pseudo(p, (struct ip_addr *)&(iphdr->src),
@@ -88,19 +86,19 @@ tcpdump(struct pbuf *p)
     }
     
     i = 0;
-    if(TCPH_FLAGS(tcphdr) & TCP_SYN) {
+    if (TCPH_FLAGS(tcphdr) & TCP_SYN) {
       flags[i++] = 'S';
     }
-    if(TCPH_FLAGS(tcphdr) & TCP_PSH) {
+    if (TCPH_FLAGS(tcphdr) & TCP_PSH) {
       flags[i++] = 'P';
     }
-    if(TCPH_FLAGS(tcphdr) & TCP_FIN) {
+    if (TCPH_FLAGS(tcphdr) & TCP_FIN) {
       flags[i++] = 'F';
     }
-    if(TCPH_FLAGS(tcphdr) & TCP_RST) {
+    if (TCPH_FLAGS(tcphdr) & TCP_RST) {
       flags[i++] = 'R';
     }
-    if(i == 0) {
+    if (i == 0) {
       flags[i++] = '.';
     }
     flags[i++] = 0;    
@@ -121,14 +119,14 @@ tcpdump(struct pbuf *p)
     offset = TCPH_OFFSET(tcphdr) >> 4;
     
     len = ntohs(IPH_LEN(iphdr)) - offset * 4 - IP_HLEN;
-    if(len != 0 || flags[0] != '.') {
+    if (len != 0 || flags[0] != '.') {
       fprintf(file, "%s %lu:%lu(%u) ",
 	      flags,
 	      ntohl(tcphdr->seqno),
 	      ntohl(tcphdr->seqno) + len,
 	      len);
     }
-    if(TCPH_FLAGS(tcphdr) & TCP_ACK) {
+    if (TCPH_FLAGS(tcphdr) & TCP_ACK) {
       fprintf(file, "ack %lu ",
 	      ntohl(tcphdr->ackno));
     }
@@ -144,10 +142,10 @@ tcpdump(struct pbuf *p)
     udphdr = (struct udp_hdr *)((char *)iphdr + IP_HLEN);
     
     pbuf_header(p, -IP_HLEN);
-    if(inet_chksum_pseudo(p, (struct ip_addr *)&(iphdr->src),
+    if (inet_chksum_pseudo(p, (struct ip_addr *)&(iphdr->src),
 			  (struct ip_addr *)&(iphdr->dest),
 			  IP_PROTO_UDP, p->tot_len) != 0) {
-      DEBUGF(TCPDUMP_DEBUG, ("tcpdump: IP checksum failed!\n"));
+      LWIP_DEBUGF(TCPDUMP_DEBUG, ("tcpdump: IP checksum failed!\n"));
       /*    fprintf(file, "chksum 0x%lx ", tcphdr->chksum);
 	    tcphdr->chksum = 0;
 	    fprintf(file, "should be 0x%lx ", inet_chksum_pseudo(p, (struct ip_addr *)&(iphdr->src),
@@ -180,7 +178,4 @@ tcpdump(struct pbuf *p)
 #endif /* IPv4 */
 }
 /*-----------------------------------------------------------------------------------*/
-
-
-
 

@@ -46,7 +46,7 @@
 static void (* tcpip_init_done)(void *arg) = NULL;
 static void *tcpip_init_done_arg;
 static sys_mbox_t mbox;
-
+#if LWIP_TCP
 static int tcpip_tcp_timer_active = 0;
 
 
@@ -57,54 +57,60 @@ tcpip_tcp_timer(void *arg)
   (void)arg;
 
   tcp_tmr();
-  if(tcp_active_pcbs || tcp_tw_pcbs) {
-  	sys_timeout(TCP_TMR_INTERVAL, tcpip_tcp_timer, NULL);
+  if (tcp_active_pcbs || tcp_tw_pcbs) {
+    sys_timeout(TCP_TMR_INTERVAL, tcpip_tcp_timer, NULL);
   } else {
-	tcpip_tcp_timer_active = 0;
+  tcpip_tcp_timer_active = 0;
   }
 }
 
 void
 tcp_timer_needed(void)
 {
-  if(!tcpip_tcp_timer_active && (tcp_active_pcbs || tcp_tw_pcbs)) {
-	tcpip_tcp_timer_active = 1;
-  	sys_timeout(TCP_TMR_INTERVAL, tcpip_tcp_timer, NULL);
+  if (!tcpip_tcp_timer_active && (tcp_active_pcbs || tcp_tw_pcbs)) {
+  tcpip_tcp_timer_active = 1;
+    sys_timeout(TCP_TMR_INTERVAL, tcpip_tcp_timer, NULL);
   }
 }
+#endif /* LWIP_TCP */
 /*-----------------------------------------------------------------------------------*/
 static void
 tcpip_thread(void *arg)
 {
   struct tcpip_msg *msg;
 
-  ip_init();
-  udp_init();
-  tcp_init();
+  (void)arg;
 
-  if(tcpip_init_done != NULL) {
+  ip_init();
+#if LWIP_UDP  
+  udp_init();
+#endif
+#if LWIP_TCP
+  tcp_init();
+#endif
+  if (tcpip_init_done != NULL) {
     tcpip_init_done(tcpip_init_done_arg);
   }
 
-  while(1) {                          /* MAIN Loop */
+  while (1) {                          /* MAIN Loop */
     sys_mbox_fetch(mbox, (void *)&msg);
-    switch(msg->type) {
+    switch (msg->type) {
     case TCPIP_MSG_API:
-      DEBUGF(TCPIP_DEBUG, ("tcpip_thread: API message %p\n", (void *)msg));
+      LWIP_DEBUGF(TCPIP_DEBUG, ("tcpip_thread: API message %p\n", (void *)msg));
       api_msg_input(msg->msg.apimsg);
       break;
     case TCPIP_MSG_INPUT:
-      DEBUGF(TCPIP_DEBUG, ("tcpip_thread: IP packet %p\n", (void *)msg));
+      LWIP_DEBUGF(TCPIP_DEBUG, ("tcpip_thread: IP packet %p\n", (void *)msg));
       ip_input(msg->msg.inp.p, msg->msg.inp.netif);
       break;
-    case TCPIP_MSG_LINK:
-      DEBUGF(TCPIP_DEBUG, ("tcpip_thread: LINK packet %p\n", (void *)msg));
-      msg->msg.inp.netif->input(msg->msg.inp.p, msg->msg.inp.netif);
+    case TCPIP_MSG_CALLBACK:
+      LWIP_DEBUGF(TCPIP_DEBUG, ("tcpip_thread: CALLBACK %p\n", (void *)msg));
+      msg->msg.cb.f(msg->msg.cb.ctx);
       break;
     default:
       break;
     }
-    memp_freep(MEMP_TCPIP_MSG, msg);
+    memp_free(MEMP_TCPIP_MSG, msg);
   }
 }
 /*-----------------------------------------------------------------------------------*/
@@ -113,8 +119,8 @@ tcpip_input(struct pbuf *p, struct netif *inp)
 {
   struct tcpip_msg *msg;
   
-  msg = memp_mallocp(MEMP_TCPIP_MSG);
-  if(msg == NULL) {
+  msg = memp_malloc(MEMP_TCPIP_MSG);
+  if (msg == NULL) {
     pbuf_free(p);    
     return ERR_MEM;  
   }
@@ -127,19 +133,18 @@ tcpip_input(struct pbuf *p, struct netif *inp)
 }
 /*-----------------------------------------------------------------------------------*/
 err_t
-tcpip_link_input(struct pbuf *p, struct netif *inp)
+tcpip_callback(void (*f)(void *ctx), void *ctx)
 {
   struct tcpip_msg *msg;
   
-  msg = memp_mallocp(MEMP_TCPIP_MSG);
-  if(msg == NULL) {
-    pbuf_free(p);    
+  msg = memp_malloc(MEMP_TCPIP_MSG);
+  if (msg == NULL) {
     return ERR_MEM;  
   }
   
-  msg->type = TCPIP_MSG_LINK;
-  msg->msg.inp.p = p;
-  msg->msg.inp.netif = inp;
+  msg->type = TCPIP_MSG_CALLBACK;
+  msg->msg.cb.f = f;
+  msg->msg.cb.ctx = ctx;
   sys_mbox_post(mbox, msg);
   return ERR_OK;
 }
@@ -148,8 +153,8 @@ void
 tcpip_apimsg(struct api_msg *apimsg)
 {
   struct tcpip_msg *msg;
-  msg = memp_mallocp(MEMP_TCPIP_MSG);
-  if(msg == NULL) {
+  msg = memp_malloc(MEMP_TCPIP_MSG);
+  if (msg == NULL) {
     memp_free(MEMP_API_MSG, apimsg);
     return;
   }
@@ -164,7 +169,7 @@ tcpip_init(void (* initfunc)(void *), void *arg)
   tcpip_init_done = initfunc;
   tcpip_init_done_arg = arg;
   mbox = sys_mbox_new();
-  sys_thread_new(tcpip_thread, NULL);
+  sys_thread_new(tcpip_thread, NULL, TCPIP_THREAD_PRIO);
 }
 /*-----------------------------------------------------------------------------------*/
 

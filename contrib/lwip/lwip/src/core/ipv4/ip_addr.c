@@ -33,8 +33,6 @@
 #include "lwip/ip_addr.h"
 #include "lwip/inet.h"
 
-struct ip_addr ip_addr_broadcast = {0xffffffff};
-
-/*-----------------------------------------------------------------------------------*/
-
-/*-----------------------------------------------------------------------------------*/
+/* used by IP_ADDR_ANY and IP_ADDR_BROADCAST in ip_addr.h */
+const struct ip_addr ip_addr_any = { 0x00000000UL };
+const struct ip_addr ip_addr_broadcast = { 0xffffffffUL };
