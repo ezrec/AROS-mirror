@@ -14,7 +14,7 @@ SDL_CONFIG:=$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-sdl-config
 export SDL_CONFIG
 
 lb2_real: .files-touched $(GENDIR)/$(CURDIR)/.configured
-	@DATADIR=PROGDIR:data $(MAKE) -C $(GENDIR)/$(CURDIR) LIBS='-lSDL -lpng -larosz'
+	@DATADIR=PROGDIR:data $(MAKE) -C $(GENDIR)/$(CURDIR) LIBS='-lSDL -lpng -lz'
 	@DATADIR=$(EXEDIR)/data $(MAKE) -C $(GENDIR)/$(CURDIR) install
 
 .files-touched:

@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 AROSMAME_USEZLIB			:= "yes"
 
 ifeq ($(AROSMAME_USEZLIB),"yes")
-    %define_libs prelibs=-larosz
+    %define_libs prelibs=-lz
 
     AROSMAME_EXTRADEFS			:= -DAROSMAME_USEZLIB
 else
