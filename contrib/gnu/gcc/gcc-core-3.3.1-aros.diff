@@ -1,402 +1,471 @@
-diff -drP gcc-3.3.1/ChangeLogAROS gcc-3.3.1-aros/ChangeLogAROS
-0a1,18
-> gcc
-> {
->     * Added *-*-aros* and i[3456]86-*-aros* entries to config.gcc
->     * Added __AROS__ to the list of the OS's for which the INO_T_EQ()
->       macro has to be defined to 0 in cppinit.c
->     
->     config
->     {
->         * Added aros.h
-> 
->         i386 
-> 	{
-> 	    * Added aros.h
-> 	}
->     }
-> }
->     
->      
+diff -rNu gcc-3.3.1/config.if gcc-3.3.1-aros/config.if
+--- gcc-3.3.1/config.if	2003-01-30 12:53:39.000000000 +0100
++++ gcc-3.3.1-aros/config.if	2003-11-11 10:13:23.000000000 +0100
+@@ -56,16 +56,16 @@
+     then
+       dummy=if$$
+       cat >$dummy.c <<EOF
+-#include <features.h>                      
++#include <features.h>
+ main(argc, argv)
+-     int argc;          
++     int argc;
+      char *argv[];
+ {
+   printf("%d\n", __GLIBC_MINOR__);
+   return 0;
+ }
+ EOF
+-      ${CC-cc} $dummy.c -o $dummy 2>/dev/null
++      ${CC_FOR_BUILD-cc} $dummy.c -o $dummy
+       if [ "$?" = 0 ]
+       then
+ 	libc_interface=-libc6.`./$dummy`-
+diff -rNu gcc-3.3.1/configure.in gcc-3.3.1-aros/configure.in
+--- gcc-3.3.1/configure.in	2003-06-27 13:44:14.000000000 +0200
++++ gcc-3.3.1-aros/configure.in	2003-11-11 10:29:44.000000000 +0100
+@@ -235,6 +235,9 @@
+   ppc*-*-pe)
+      noconfigdirs="patch diff make tk tcl expect dejagnu autoconf automake texinfo bison send-pr gprof rcs guile perl itcl tix db snavigator gnuserv"
+     ;;
++  *-*-aros*)
++     noconfigdirs="patch diff make tk tcl expect dejagnu autoconf automake texinfo bison send-pr gprof rcs guile perl itcl tix db snavigator gnuserv gdb"
++    ;;
+   powerpc-*-beos*)
+     noconfigdirs="$noconfigdirs tk itcl tix libgui gdb dejagnu readline"
+     ;;
+@@ -1061,6 +1064,8 @@
+   i[3456]86-*-msdosdjgpp*)
+     host_makefile_frag="config/mh-djgpp"
+     ;;
++  *-*-aros*)
++    ;;
+   *-cygwin*)
+     host_makefile_frag="config/mh-cygwin"
+     ;;
+@@ -1232,7 +1237,6 @@
+   *) shared=yes ;;
+ esac
+ 
+-
+ # Default to using --with-stabs for certain targets.
+ if test x${with_stabs} = x ; then
+   case "${target}" in
+@@ -1248,7 +1252,7 @@
+ # hpux11 in 64bit mode has libraries in a weird place.  Arrange to find
+ # them automatically.
+ case "${host}" in
+-  hppa*64*-*-hpux11*)	
++  hppa*64*-*-hpux11*)
+     withoptions="$withoptions -x-libraries=/usr/lib/pa20_64 -x-includes=/usr/X11R6/include"
+     ;;
+ esac
+@@ -1279,13 +1283,14 @@
+ # executable--we might be using a cross compiler--we only care whether it
+ # can be created.  At this point the main configure script has set CC.
+ we_are_ok=no
++
+ echo "int main () { return 0; }" > conftest.c
+ ${CC} -o conftest ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} conftest.c
+ if test $? = 0 ; then
+   if test -s conftest || test -s conftest.exe ; then
+     we_are_ok=yes
+   fi
+-fi 
++fi
+ case $we_are_ok in
+   no)
+     echo 1>&2 "*** The command '${CC} -o conftest ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} conftest.c' failed."
+@@ -1344,7 +1349,6 @@
+ rm -f Makefile
+ mv -f Makefile.tem Makefile
+ 
+-
+ # Base args.  Strip norecursion, cache-file, srcdir, host, build, target.
+ # These are the ones we might not want to pass down to subconfigures.
+ baseargs=`echo "${arguments}" | \
+diff -rNu gcc-3.3.1/gcc/config/aros.h gcc-3.3.1-aros/gcc/config/aros.h
+--- gcc-3.3.1/gcc/config/aros.h	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.3.1-aros/gcc/config/aros.h	2003-10-25 14:01:28.000000000 +0200
+@@ -0,0 +1,96 @@
++/* Definitions for AROS
++   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
++   Contributed by Fabio Alemagna
++   Based upon linux.h, contributed by Eric Youngdale.
++
++This file is part of GNU CC.
++
++GNU CC is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 2, or (at your option)
++any later version.
++
++GNU CC is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with GNU CC; see the file COPYING.  If not, write to
++the Free Software Foundation, 59 Temple Place - Suite 330,
++Boston, MA 02111-1307, USA.  */
++
++/* Don't assume anything about the header files.  */
++#define NO_IMPLICIT_EXTERN_C
++
++/* AROS uses ctype from libc.a. I am not sure how complete it is.
++   For now, we play safe. It may change later.  */
++
++#if 0
++#undef MULTIBYTE_CHARS
++#define MULTIBYTE_CHARS 1
++#endif
++
++#define TARGET_OS_CPP_BUILTINS()		\
++  do						\
++    {						\
++	builtin_define_std ("unix");		\
++	builtin_define_std ("AROS");            \
++	builtin_define ("__ELF__");		\
++	builtin_assert ("system=posix");	\
++	if (flag_pic)				\
++	  {					\
++	    builtin_define ("__PIC__");		\
++	    builtin_define ("__pic__");		\
++	  }					\
++    }						\
++  while (0)
++
++#undef ASM_APP_ON
++#define ASM_APP_ON "#APP\n"
++
++#undef ASM_APP_OFF
++#define ASM_APP_OFF "#NO_APP\n"
++
++#undef MD_EXEC_PREFIX
++#undef MD_STARTFILE_PREFIX
++
++/* Provide a STARTFILE_SPEC appropriate for AROS. AROS has its own
++   set of startup files which also take care of handling C++
++   constructors/destructors.  */
++
++#undef	STARTFILE_SPEC
++#define STARTFILE_SPEC \
++  "%{detach:detach.o%s} startup.o%s %{nix:nixmain.o%s}"
++
++/* Provide a ENDFILE_SPEC appropriate for AROS. */
++
++#undef	ENDFILE_SPEC
++#define ENDFILE_SPEC \
++  "-lautoinit"
++
++/* This is for -profile to use -lc_p instead of -lc.  */
++#ifndef CC1_SPEC
++#define CC1_SPEC "%{profile:-p}"
++#endif
++
++/* The GNU C++ standard library requires that these macros be defined.  */
++#undef CPLUSPLUS_CPP_SPEC
++#define CPLUSPLUS_CPP_SPEC "-D_GNU_SOURCE %(cpp)"
++
++#undef	LIB_SPEC
++#define LIB_SPEC \
++  "-lamiga -larossupport -larosc -lm"
++
++#if !defined(USE_GNULIBC_1) && defined(HAVE_LD_EH_FRAME_HDR)
++#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
++#endif
++
++/* AROS uses its own collect-like program for the moment.  */
++#undef LINKER_NAME
++#define LINKER_NAME "collect-aros"
++
++/* Define this so we can compile MS code for use with WINE.  */
++#define HANDLE_PRAGMA_PACK_PUSH_POP
++
++#define TARGET_HAS_F_SETLKW
+diff -rNu gcc-3.3.1/gcc/config/i386/aros.h gcc-3.3.1-aros/gcc/config/i386/aros.h
+--- gcc-3.3.1/gcc/config/i386/aros.h	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.3.1-aros/gcc/config/i386/aros.h	2003-10-25 13:59:02.000000000 +0200
+@@ -0,0 +1,125 @@
++/* Definitions for Intel 386 running AROS systems with ELF format.
++   Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002
++   Free Software Foundation, Inc.
++   Contributed by Fabio Alemagna.
++   Based upon i386/linux.h by Eric Youngdale.
++
++This file is part of GNU CC.
++
++GNU CC is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 2, or (at your option)
++any later version.
++
++GNU CC is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with GNU CC; see the file COPYING.  If not, write to
++the Free Software Foundation, 59 Temple Place - Suite 330,
++Boston, MA 02111-1307, USA.  */
++
++/* Output at beginning of assembler file.  */
++/* The .file command should always begin the output.  */
++#undef ASM_FILE_START
++#define ASM_FILE_START(FILE)						\
++  do {									\
++	output_file_directive (FILE, main_input_filename);		\
++	if (ix86_asm_dialect == ASM_INTEL)				\
++	  fputs ("\t.intel_syntax\n", FILE);				\
++  } while (0)
++
++#define TARGET_VERSION fprintf (stderr, " (i386 AROS/ELF)");
++
++/* The svr4 ABI for the i386 says that records and unions are returned
++   in memory.  */
++#undef DEFAULT_PCC_STRUCT_RETURN
++#define DEFAULT_PCC_STRUCT_RETURN 1
++
++#undef ASM_COMMENT_START
++#define ASM_COMMENT_START "#"
++
++#undef DBX_REGISTER_NUMBER
++#define DBX_REGISTER_NUMBER(n) \
++  (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
++
++/* Output assembler code to FILE to call the profiler.
++   To the best of my knowledge, no Linux libc has required the label
++   argument to mcount.  */
++
++#define NO_PROFILE_COUNTERS
++
++#undef MCOUNT_NAME
++#define MCOUNT_NAME "mcount"
++
++/* The GLIBC version of mcount for the x86 assumes that there is a
++   frame, so we cannot allow profiling without a frame pointer.  */
++
++#undef SUBTARGET_FRAME_POINTER_REQUIRED
++#define SUBTARGET_FRAME_POINTER_REQUIRED current_function_profile
++
++#undef SIZE_TYPE
++#define SIZE_TYPE "unsigned int"
++
++#undef PTRDIFF_TYPE
++#define PTRDIFF_TYPE "int"
++
++#undef WCHAR_TYPE
++#define WCHAR_TYPE "long int"
++
++#undef WCHAR_TYPE_SIZE
++#define WCHAR_TYPE_SIZE BITS_PER_WORD
++
++#undef CPP_SPEC
++#define CPP_SPEC "%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
++
++#undef CC1_SPEC
++#define CC1_SPEC "%(cc1_cpu) %{profile:-p}"
++
++/* Provide a LINK_SPEC appropriate for AROS.  */
++
++#undef	LINK_SPEC
++#define LINK_SPEC "-m elf_i386"
++
++/* A C statement (sans semicolon) to output to the stdio stream
++   FILE the assembler definition of uninitialized global DECL named
++   NAME whose size is SIZE bytes and alignment is ALIGN bytes.
++   Try to use asm_output_aligned_bss to implement this macro.  */
++
++#define ASM_OUTPUT_ALIGNED_BSS(FILE, DECL, NAME, SIZE, ALIGN) \
++  asm_output_aligned_bss (FILE, DECL, NAME, SIZE, ALIGN)
++
++/* A C statement to output to the stdio stream FILE an assembler
++   command to advance the location counter to a multiple of 1<<LOG
++   bytes if it is within MAX_SKIP bytes.
++
++   This is used to align code labels according to Intel recommendations.  */
++
++#ifdef HAVE_GAS_MAX_SKIP_P2ALIGN
++#define ASM_OUTPUT_MAX_SKIP_ALIGN(FILE,LOG,MAX_SKIP)			\
++  do {									\
++    if ((LOG) != 0) {							\
++      if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\
++      else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\
++    }									\
++  } while (0)
++#endif
++
++/* Handle special EH pointer encodings.  Absolute, pc-relative, and
++   indirect are handled automatically.  */
++#define ASM_MAYBE_OUTPUT_ENCODED_ADDR_RTX(FILE, ENCODING, SIZE, ADDR, DONE) \
++  do {									\
++    if ((SIZE) == 4 && ((ENCODING) & 0x70) == DW_EH_PE_datarel)		\
++      {									\
++        fputs (ASM_LONG, FILE);			\
++        assemble_name (FILE, XSTR (ADDR, 0));				\
++	fputs (((ENCODING) & DW_EH_PE_indirect ? "@GOT" : "@GOTOFF"), FILE); \
++        goto DONE;							\
++      }									\
++  } while (0)
++
++
++/* FIXME: AROS doesn't support dw2 unwinding yet.  */
++#undef MD_FALLBACK_FRAME_STATE_FOR
+diff -rNu gcc-3.3.1/gcc/config/t-aros gcc-3.3.1-aros/gcc/config/t-aros
+--- gcc-3.3.1/gcc/config/t-aros	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.3.1-aros/gcc/config/t-aros	2003-10-26 10:54:01.000000000 +0100
+@@ -0,0 +1,2 @@
++#AROS doesn't use collect2 at all, it doesn't even have to be built
++USE_COLLECT2 :=
 \ No newline at end of file
-diff -drP gcc-3.3.1/config.if gcc-3.3.1-aros/config.if
-59c59
-< #include <features.h>                      
----
-> #include <features.h>
-61c61
-<      int argc;          
----
->      int argc;
-68c68
-<       ${CC-cc} $dummy.c -o $dummy 2>/dev/null
----
->       ${CC_FOR_BUILD-cc} $dummy.c -o $dummy
-diff -drP gcc-3.3.1/configure.in gcc-3.3.1-aros/configure.in
-237a238,240
->   *-*-aros*)
->      noconfigdirs="patch diff make tk tcl expect dejagnu autoconf automake texinfo bison send-pr gprof rcs guile perl itcl tix db snavigator gnuserv gdb"
->     ;;
-1063a1067,1068
->   *-*-aros*)
->     ;;
-1235d1239
-< 
-1251c1255
-<   hppa*64*-*-hpux11*)	
----
->   hppa*64*-*-hpux11*)
-1281a1286
-> 
-1288c1293
-< fi 
----
-> fi
-1347d1351
-< 
-diff -drP gcc-3.3.1/gcc/config/aros.h gcc-3.3.1-aros/gcc/config/aros.h
-0a1,96
-> /* Definitions for AROS
->    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
->    Contributed by Fabio Alemagna
->    Based upon linux.h, contributed by Eric Youngdale.
-> 
-> This file is part of GNU CC.
-> 
-> GNU CC is free software; you can redistribute it and/or modify
-> it under the terms of the GNU General Public License as published by
-> the Free Software Foundation; either version 2, or (at your option)
-> any later version.
-> 
-> GNU CC is distributed in the hope that it will be useful,
-> but WITHOUT ANY WARRANTY; without even the implied warranty of
-> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> GNU General Public License for more details.
-> 
-> You should have received a copy of the GNU General Public License
-> along with GNU CC; see the file COPYING.  If not, write to
-> the Free Software Foundation, 59 Temple Place - Suite 330,
-> Boston, MA 02111-1307, USA.  */
-> 
-> /* Don't assume anything about the header files.  */
-> #define NO_IMPLICIT_EXTERN_C
-> 
-> /* AROS uses ctype from libc.a. I am not sure how complete it is.
->    For now, we play safe. It may change later.  */
-> 
-> #if 0
-> #undef MULTIBYTE_CHARS
-> #define MULTIBYTE_CHARS 1
-> #endif
-> 
-> #define TARGET_OS_CPP_BUILTINS()		\
->   do						\
->     {						\
-> 	builtin_define_std ("unix");		\
-> 	builtin_define_std ("AROS");            \
-> 	builtin_define ("__ELF__");		\
-> 	builtin_assert ("system=posix");	\
-> 	if (flag_pic)				\
-> 	  {					\
-> 	    builtin_define ("__PIC__");		\
-> 	    builtin_define ("__pic__");		\
-> 	  }					\
->     }						\
->   while (0)
-> 
-> #undef ASM_APP_ON
-> #define ASM_APP_ON "#APP\n"
-> 
-> #undef ASM_APP_OFF
-> #define ASM_APP_OFF "#NO_APP\n"
-> 
-> #undef MD_EXEC_PREFIX
-> #undef MD_STARTFILE_PREFIX
-> 
-> /* Provide a STARTFILE_SPEC appropriate for AROS. AROS has its own
->    set of startup files which also take care of handling C++
->    constructors/destructors.  */
-> 
-> #undef	STARTFILE_SPEC
-> #define STARTFILE_SPEC \
->   "%{detach:detach.o%s} startup.o%s %{nix:nixmain.o%s}"
-> 
-> /* Provide a ENDFILE_SPEC appropriate for AROS. */
-> 
-> #undef	ENDFILE_SPEC
-> #define ENDFILE_SPEC \
->   "-lautoinit"
-> 
-> /* This is for -profile to use -lc_p instead of -lc.  */
-> #ifndef CC1_SPEC
-> #define CC1_SPEC "%{profile:-p}"
-> #endif
-> 
-> /* The GNU C++ standard library requires that these macros be defined.  */
-> #undef CPLUSPLUS_CPP_SPEC
-> #define CPLUSPLUS_CPP_SPEC "-D_GNU_SOURCE %(cpp)"
-> 
-> #undef	LIB_SPEC
-> #define LIB_SPEC \
->   "-lamiga -larossupport -larosc -lm"
-> 
-> #if !defined(USE_GNULIBC_1) && defined(HAVE_LD_EH_FRAME_HDR)
-> #define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
-> #endif
-> 
-> /* AROS uses its own collect-like program for the moment.  */
-> #undef LINKER_NAME
-> #define LINKER_NAME "collect-aros"
-> 
-> /* Define this so we can compile MS code for use with WINE.  */
-> #define HANDLE_PRAGMA_PACK_PUSH_POP
-> 
-> #define TARGET_HAS_F_SETLKW
-diff -drP gcc-3.3.1/gcc/config/i386/aros.h gcc-3.3.1-aros/gcc/config/i386/aros.h
-0a1,125
-> /* Definitions for Intel 386 running AROS systems with ELF format.
->    Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002
->    Free Software Foundation, Inc.
->    Contributed by Fabio Alemagna.
->    Based upon i386/linux.h by Eric Youngdale.
-> 
-> This file is part of GNU CC.
-> 
-> GNU CC is free software; you can redistribute it and/or modify
-> it under the terms of the GNU General Public License as published by
-> the Free Software Foundation; either version 2, or (at your option)
-> any later version.
-> 
-> GNU CC is distributed in the hope that it will be useful,
-> but WITHOUT ANY WARRANTY; without even the implied warranty of
-> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> GNU General Public License for more details.
-> 
-> You should have received a copy of the GNU General Public License
-> along with GNU CC; see the file COPYING.  If not, write to
-> the Free Software Foundation, 59 Temple Place - Suite 330,
-> Boston, MA 02111-1307, USA.  */
-> 
-> /* Output at beginning of assembler file.  */
-> /* The .file command should always begin the output.  */
-> #undef ASM_FILE_START
-> #define ASM_FILE_START(FILE)						\
->   do {									\
-> 	output_file_directive (FILE, main_input_filename);		\
-> 	if (ix86_asm_dialect == ASM_INTEL)				\
-> 	  fputs ("\t.intel_syntax\n", FILE);				\
->   } while (0)
-> 
-> #define TARGET_VERSION fprintf (stderr, " (i386 AROS/ELF)");
-> 
-> /* The svr4 ABI for the i386 says that records and unions are returned
->    in memory.  */
-> #undef DEFAULT_PCC_STRUCT_RETURN
-> #define DEFAULT_PCC_STRUCT_RETURN 1
-> 
-> #undef ASM_COMMENT_START
-> #define ASM_COMMENT_START "#"
-> 
-> #undef DBX_REGISTER_NUMBER
-> #define DBX_REGISTER_NUMBER(n) \
->   (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
-> 
-> /* Output assembler code to FILE to call the profiler.
->    To the best of my knowledge, no Linux libc has required the label
->    argument to mcount.  */
-> 
-> #define NO_PROFILE_COUNTERS
-> 
-> #undef MCOUNT_NAME
-> #define MCOUNT_NAME "mcount"
-> 
-> /* The GLIBC version of mcount for the x86 assumes that there is a
->    frame, so we cannot allow profiling without a frame pointer.  */
-> 
-> #undef SUBTARGET_FRAME_POINTER_REQUIRED
-> #define SUBTARGET_FRAME_POINTER_REQUIRED current_function_profile
-> 
-> #undef SIZE_TYPE
-> #define SIZE_TYPE "unsigned int"
-> 
-> #undef PTRDIFF_TYPE
-> #define PTRDIFF_TYPE "int"
-> 
-> #undef WCHAR_TYPE
-> #define WCHAR_TYPE "long int"
-> 
-> #undef WCHAR_TYPE_SIZE
-> #define WCHAR_TYPE_SIZE BITS_PER_WORD
-> 
-> #undef CPP_SPEC
-> #define CPP_SPEC "%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
-> 
-> #undef CC1_SPEC
-> #define CC1_SPEC "%(cc1_cpu) %{profile:-p}"
-> 
-> /* Provide a LINK_SPEC appropriate for AROS.  */
-> 
-> #undef	LINK_SPEC
-> #define LINK_SPEC "-m elf_i386"
-> 
-> /* A C statement (sans semicolon) to output to the stdio stream
->    FILE the assembler definition of uninitialized global DECL named
->    NAME whose size is SIZE bytes and alignment is ALIGN bytes.
->    Try to use asm_output_aligned_bss to implement this macro.  */
-> 
-> #define ASM_OUTPUT_ALIGNED_BSS(FILE, DECL, NAME, SIZE, ALIGN) \
->   asm_output_aligned_bss (FILE, DECL, NAME, SIZE, ALIGN)
-> 
-> /* A C statement to output to the stdio stream FILE an assembler
->    command to advance the location counter to a multiple of 1<<LOG
->    bytes if it is within MAX_SKIP bytes.
-> 
->    This is used to align code labels according to Intel recommendations.  */
-> 
-> #ifdef HAVE_GAS_MAX_SKIP_P2ALIGN
-> #define ASM_OUTPUT_MAX_SKIP_ALIGN(FILE,LOG,MAX_SKIP)			\
->   do {									\
->     if ((LOG) != 0) {							\
->       if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\
->       else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\
->     }									\
->   } while (0)
-> #endif
-> 
-> /* Handle special EH pointer encodings.  Absolute, pc-relative, and
->    indirect are handled automatically.  */
-> #define ASM_MAYBE_OUTPUT_ENCODED_ADDR_RTX(FILE, ENCODING, SIZE, ADDR, DONE) \
->   do {									\
->     if ((SIZE) == 4 && ((ENCODING) & 0x70) == DW_EH_PE_datarel)		\
->       {									\
->         fputs (ASM_LONG, FILE);			\
->         assemble_name (FILE, XSTR (ADDR, 0));				\
-> 	fputs (((ENCODING) & DW_EH_PE_indirect ? "@GOT" : "@GOTOFF"), FILE); \
->         goto DONE;							\
->       }									\
->   } while (0)
-> 
-> 
-> /* FIXME: AROS doesn't support dw2 unwinding yet.  */
-> #undef MD_FALLBACK_FRAME_STATE_FOR
-diff -drP gcc-3.3.1/gcc/config/t-aros gcc-3.3.1-aros/gcc/config/t-aros
-0a1,2
-> #AROS doesn't use collect2 at all, it doesn't even have to be built
-> USE_COLLECT2 :=
-\ No newline at end of file
-diff -drP gcc-3.3.1/gcc/config.gcc gcc-3.3.1-aros/gcc/config.gcc
-403a404,423
-> *-*-aros*)
-> 	# On AROS, the setup is just about the same on
-> 	# each different CPU.  The specific machines that we
-> 	# support are matched above and just set $cpu_type.
-> 	##xm_defines=POSIX
-> 	##tm_file="${cpu_type}/gnu.h"
-> 	##extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o crtbeginT.o"
-> 	# AROS always uses ELF.
-> 	elf=yes
-> 	# GNU tools are the only tools.
-> 	gnu_ld=yes
-> 	gas=yes
-> 	thread_file=single
-> 	use_collect2=
-> 	xm_defines='STDC_HEADERS=1'
-> 	# These details are the same as for Linux.
-> 	# But here we need a little extra magic.
-> 	##tmake_file="t-slibgcc-elf-ver t-linux t-gnu"
-> 	tmake_file="t-aros"
-> 	;;
-1194a1215,1217
-> i[34567]86-*-aros*)
-> 	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h svr4.h aros.h i386/aros.h"
-> 	;;
-diff -drP gcc-3.3.1/gcc/cppinit.c gcc-3.3.1-aros/gcc/cppinit.c
-38c38
-< # if (defined _WIN32 && ! defined (_UWIN)) || defined __MSDOS__
----
-> # if (defined _WIN32 && ! defined (_UWIN)) || defined __MSDOS__ || defined __AROS__
-diff -drP gcc-3.3.1/gcc/cs-prova gcc-3.3.1-aros/gcc/cs-prova
-0a1
-> timestamp
-diff -drP gcc-3.3.1/libiberty/pexecute.c gcc-3.3.1-aros/libiberty/pexecute.c
-315c315
-< 	     is escaped by the trailing backslash and things get confused. 
----
-> 	     is escaped by the trailing backslash and things get confused.
-318,319c318,319
-< 	  if (len > 1 
-< 	      && argvec[i][len-1] == '\\' 
----
-> 	  if (len > 1
-> 	      && argvec[i][len-1] == '\\'
-662a663,724
-> #ifdef __AROS__
-> 
-> #include <process.h>
-> 
-> static int __pid;
-> 
-> int
-> pexecute (program, argv, this_pname, temp_base, errmsg_fmt, errmsg_arg, flags)
->      const char *program;
->      char * const *argv;
->      const char *this_pname;
->      const char *temp_base;
->      char **errmsg_fmt, **errmsg_arg;
->      int flags;
-> {
->   int rc;
-> 
->   if ((flags & PEXECUTE_ONE) != PEXECUTE_ONE)
->     {
->       *errmsg_fmt = "-pipe not supported yet.";
->       *errmsg_arg = NULL;
->       return -1;
->     }
-> 
->   if (flags & PEXECUTE_SEARCH)
->     {
->       *errmsg_fmt = "PEXECUTE_SEARCH not supported yet.";
->       *errmsg_arg = NULL;
->       return -1;
->     }
-> 
->   rc = spawnv(P_WAIT, program, argv);
->   if (rc == -1)
->     {
->       *errmsg_fmt = install_error_msg;
->       *errmsg_arg = program;
->       return -1;
->     }
->   else
->   if (rc != 0)
->   {
->       *errmsg_fmt = "%s failed";
->       *errmsg_arg = program;
->       return -1;
->   }
-> 
->   return ++__pid;
-> }
-> 
-> 
-> int
-> pwait (pid, status, flags)
->      int pid;
->      int *status;
->      int flags;
-> {
->   *status = 0;
->   return __pid--;
-> }
-> 
-> #endif /* AROS */
-> 
-665c727
-<     && ! (defined (_WIN32) && ! defined (_UWIN))
----
->     && ! (defined (_WIN32) && ! defined (_UWIN)) && ! defined(__AROS__)
-792c854
-< #endif /* ! __MSDOS__ && ! OS2 && ! MPW && ! (_WIN32 && ! _UWIN) */
----
-> #endif /* ! __MSDOS__ && ! OS2 && ! MPW && ! (_WIN32 && ! _UWIN) && ! __AROS__ */
+diff -rNu gcc-3.3.1/gcc/config.gcc gcc-3.3.1-aros/gcc/config.gcc
+--- gcc-3.3.1/gcc/config.gcc	2003-06-27 13:44:22.000000000 +0200
++++ gcc-3.3.1-aros/gcc/config.gcc	2003-10-26 10:55:32.000000000 +0100
+@@ -401,6 +401,26 @@
+ 		;;
+ 	esac
+ 	;;
++*-*-aros*)
++	# On AROS, the setup is just about the same on
++	# each different CPU.  The specific machines that we
++	# support are matched above and just set $cpu_type.
++	##xm_defines=POSIX
++	##tm_file="${cpu_type}/gnu.h"
++	##extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o crtbeginT.o"
++	# AROS always uses ELF.
++	elf=yes
++	# GNU tools are the only tools.
++	gnu_ld=yes
++	gas=yes
++	thread_file=single
++	use_collect2=
++	xm_defines='STDC_HEADERS=1'
++	# These details are the same as for Linux.
++	# But here we need a little extra magic.
++	##tmake_file="t-slibgcc-elf-ver t-linux t-gnu"
++	tmake_file="t-aros"
++	;;
+ *-*-openbsd*)
+ 	tm_file=${cpu_type}/openbsd.h
+ 	tmake_file="t-libc-ok t-openbsd t-libgcc-pic"
+@@ -1192,6 +1212,9 @@
+ 	;;
+ i[34567]86-*-gnu*)
+ 	;;
++i[34567]86-*-aros*)
++	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h svr4.h aros.h i386/aros.h"
++	;;
+ i[34567]86-go32-msdos | i[34567]86-*-go32*)
+ 	echo "GO32/DJGPP V1.X is no longer supported. Use *-pc-msdosdjgpp for DJGPP V2.X instead."
+ 	exit 1
+diff -rNu gcc-3.3.1/gcc/cppinit.c gcc-3.3.1-aros/gcc/cppinit.c
+--- gcc-3.3.1/gcc/cppinit.c	2003-03-16 15:13:09.000000000 +0100
++++ gcc-3.3.1-aros/gcc/cppinit.c	2003-11-05 18:07:12.000000000 +0100
+@@ -35,7 +35,7 @@
+ # define INO_T_EQ(A, B) (!memcmp (&(A), &(B), sizeof (A)))
+ # define INO_T_COPY(DEST, SRC) memcpy(&(DEST), &(SRC), sizeof (SRC))
+ #else
+-# if (defined _WIN32 && ! defined (_UWIN)) || defined __MSDOS__
++# if (defined _WIN32 && ! defined (_UWIN)) || defined __MSDOS__ || defined __AROS__
+ #  define INO_T_EQ(A, B) 0
+ # else
+ #  define INO_T_EQ(A, B) ((A) == (B))
+diff -rNu gcc-3.3.1/libiberty/pexecute.c gcc-3.3.1-aros/libiberty/pexecute.c
+--- gcc-3.3.1/libiberty/pexecute.c	2001-10-17 23:15:41.000000000 +0200
++++ gcc-3.3.1-aros/libiberty/pexecute.c	2003-11-11 09:52:56.000000000 +0100
+@@ -312,11 +312,11 @@
+ 	     space ends in a backslash (such as in the case of -iprefix arg
+ 	     passed to cpp). The resulting quoted strings gets misinterpreted
+ 	     by the command interpreter -- it thinks that the ending quote
+-	     is escaped by the trailing backslash and things get confused. 
++	     is escaped by the trailing backslash and things get confused.
+ 	     We handle this case by escaping the trailing backslash, provided
+ 	     it was not escaped in the first place.  */
+-	  if (len > 1 
+-	      && argvec[i][len-1] == '\\' 
++	  if (len > 1
++	      && argvec[i][len-1] == '\\'
+ 	      && argvec[i][len-2] != '\\')
+ 	    {
+ 	      trailing_backslash = 1;
+@@ -660,9 +660,71 @@
+ 
+ #endif /* MPW */
+ 
++#ifdef __AROS__
++
++#include <process.h>
++
++static int __pid;
++
++int
++pexecute (program, argv, this_pname, temp_base, errmsg_fmt, errmsg_arg, flags)
++     const char *program;
++     char * const *argv;
++     const char *this_pname;
++     const char *temp_base;
++     char **errmsg_fmt, **errmsg_arg;
++     int flags;
++{
++  int rc;
++
++  if ((flags & PEXECUTE_ONE) != PEXECUTE_ONE)
++    {
++      *errmsg_fmt = "-pipe not supported yet.";
++      *errmsg_arg = NULL;
++      return -1;
++    }
++
++  if (flags & PEXECUTE_SEARCH)
++    {
++      *errmsg_fmt = "PEXECUTE_SEARCH not supported yet.";
++      *errmsg_arg = NULL;
++      return -1;
++    }
++
++  rc = spawnv(P_WAIT, program, argv);
++  if (rc == -1)
++    {
++      *errmsg_fmt = install_error_msg;
++      *errmsg_arg = program;
++      return -1;
++    }
++  else
++  if (rc != 0)
++  {
++      *errmsg_fmt = "%s failed";
++      *errmsg_arg = program;
++      return -1;
++  }
++
++  return ++__pid;
++}
++
++
++int
++pwait (pid, status, flags)
++     int pid;
++     int *status;
++     int flags;
++{
++  *status = 0;
++  return __pid--;
++}
++
++#endif /* AROS */
++
+ /* include for Unix-like environments but not for Dos-like environments */
+ #if ! defined (__MSDOS__) && ! defined (OS2) && ! defined (MPW) \
+-    && ! (defined (_WIN32) && ! defined (_UWIN))
++    && ! (defined (_WIN32) && ! defined (_UWIN)) && ! defined(__AROS__)
+ 
+ extern int execv ();
+ extern int execvp ();
+@@ -789,4 +851,4 @@
+   return pid;
+ }
+ 
+-#endif /* ! __MSDOS__ && ! OS2 && ! MPW && ! (_WIN32 && ! _UWIN) */
++#endif /* ! __MSDOS__ && ! OS2 && ! MPW && ! (_WIN32 && ! _UWIN) && ! __AROS__ */
