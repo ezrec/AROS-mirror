@@ -27,7 +27,7 @@ SAVEDS VOID AboutTask( void )
     ULONG          rc, signal = 0;
     BOOL           running    = TRUE;
 
-    char          *pagelabels[] = { "About", "Developers" };
+    char          *pagelabels[] = { "About", "Developers", NULL };
     ULONG          tabs2pages[] = { MX_Active, PAGE_Active, TAG_END };
 
     AboutCount++;
