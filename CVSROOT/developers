@@ -1,8 +1,8 @@
 digulla:Aaron Digulla:digulla@hepe.com:Coordinator
 matthias:Matthias Fleischer:fleischr@IZFM.Uni-Stuttgart.DE:Exec, DOS, drivers
 pgpeter:Peter Boeckmann:pgpeter@informatik.uni-siegen.de:Sparc, Alpha
-iaint:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:HIDDs, Docs
-zino:Peter Bortas:zino@lysator.liu.se:WWW site
+iaint:Iain Templeton:iain@ugh.net.au:HIDDs, Docs
+zino:Peter Bortas:peter@bortas.org:
 mreckt:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, layers
 ldp:Lennard voor den Dag:ldp@xs4all.nl:Amiga port, layers
 quango:Chris Lawrence:quango@socomm.net:Linux/m68k
@@ -25,6 +25,7 @@ hkiel:Henning Kiel:kiel@student.physik.uni-dortmund.de:Games, Misc
 przemek:Przemys³aw Szczygielski:przemek.szczygielski@polkomtel.com.pl:Alpha port
 schulz:Michael Schulz:schulz@kki.net.pl:x86 standalone
 rodo:Adrian Brown:Support@hamilton.wa.edu.au:Wintel port
+mattiasg:Mattias Gustavsson:f97magu@dd.chalmers.se:Solaris port
 stepan:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:Christopher D. Judd:juddc@rpi.edu:
 frv95tjn:Tommy Johansson:frv95tjn@mds.mdh.se:

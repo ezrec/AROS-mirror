@@ -25,6 +25,7 @@ hkiel:ccL6.C5LgMNSM:Henning Kiel:kiel@student.physik.uni-dortmund.de:Games, Misc
 przemek:aaHMm4JFKQqLI:Przemys³aw Szczygielski:przemek.szczygielski@polkomtel.com.pl:Alpha port
 schulz:cdA83T3EV9pyw:Michael Schulz:schulz@kki.net.pl:x86 standalone
 rodo:9c4vG6n8WOKZs:Adrian Brown:Support@hamilton.wa.edu.au:Wintel port
+mattiasg:bbkFrq7bjTN0c:Mattias Gustavsson:f97magu@dd.chalmers.se:Solaris port
 
 stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
