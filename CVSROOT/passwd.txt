@@ -100,4 +100,4 @@ megabob:xx9.a9AF9wFuM:Magnani Christophe:magnani@dactyl-buro.fr:
 sebauer:ad3LrQ7MbYCkM:Sebastian Bauer:sebauer@t-online.de:
 poellman:cd6d0HVQZXWKs:Markus Poellmann:poellman@informatik.tu-muenchen.de:
 
-#anon:bbrG5BSjRBYPU:Anonymous Access::
+anon:bbrG5BSjRBYPU:Anonymous Access::
