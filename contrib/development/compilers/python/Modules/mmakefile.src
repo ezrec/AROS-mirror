@@ -9,6 +9,7 @@ LIB   := python-modules
 FILES := \
 	config \
 	environment \
+	amigamodule \
 	_codecsmodule \
 	_sre \
 	_testcapimodule \
@@ -51,7 +52,6 @@ FILES := \
 #	fcntlmodule
 #	mathmodule
 #	pcremodule
-#	pypcre
 #	pypcre
 
 # Modules that need a bit of work to be ported.

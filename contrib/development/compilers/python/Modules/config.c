@@ -13,6 +13,7 @@ redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
 #include "Python.h"
 
+extern void initamiga(void);
 extern void initenvironment(void);
 extern void init_codecs(void);
 extern void init_sre(void);
@@ -48,6 +49,7 @@ extern void PyMarshal_Init(void);
 extern void initimp(void);
 
 struct _inittab _PyImport_Inittab[] = {
+    	{"amiga",   	initamiga},
 	{"environment", initenvironment},
 	{"_codecs",     init_codecs},
 	{"_sre",        init_sre},
