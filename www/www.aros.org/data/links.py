@@ -41,15 +41,15 @@ moreRelated = (
 #	'You can find releases, nightly snapshots and other'
 #	' stuff on this server.',
 #    ),
-    Link ('ftp://ftp.aros.org/pub/aros/snapshots/', 
-	'Snapshots',
-	'Here, you find daily snapshots of AROS sources and binaries'
-	' incl. build logs.',
-    ),
-    Link ('ftp://ftp.aros.org/pub/aros/DiskImages/', 
-	'Disk Images',
-	'Here, you can find current disk images for AROS Native/x86.'
-    ),
+#    Link ('ftp://ftp.aros.org/pub/aros/snapshots/', 
+#	'Snapshots',
+#	'Here, you find daily snapshots of AROS sources and binaries'
+#	' incl. build logs.',
+#    ),
+#    Link ('ftp://ftp.aros.org/pub/aros/DiskImages/', 
+#	'Disk Images',
+#	'Here, you can find current disk images for AROS Native/x86.'
+#    ),
     Link ('http://wh2-315.st.uni-magdeburg.de/~sheutlin/aros/',
 	'Sebastians site with Disk Images',
 	'The images here are mirrored on the AROS main site above.'
@@ -214,8 +214,8 @@ lessRelated = (
 )
 
 downloadLinks = (
-    Link ('ftp://ftp.aros.org/pub/aros/', 'FTP Server',
-	'The official main AROS FTP Server',
+    Link ('http://sourceforge.net/project/showfiles.php?group_id=43586', 'Files on SourceForge',
+	'Releases, Snapshots and the like',
     ),
     Link ('ftp://ftp.aros.org/pub/aros/DiskImages/',
 	'Disk images on our FTP server',
