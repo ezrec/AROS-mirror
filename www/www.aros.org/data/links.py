@@ -50,7 +50,7 @@ moreRelated = (
 	'Sebastians site with Disk Images',
 	'The images here are mirrored on the AROS main site above.'
     ),
-    Link ('http://www.www.ahsodit.com/aros/index.html',
+    Link ('http://www.ahsodit.com/aros/index.html',
 	"Matt 'Crazy' Parsons Disk Images",
 	'The images on this page are usually tested on several different PCs,'
 	' so chances that they work for you are much higher',
@@ -147,7 +147,7 @@ homepages = (
     Link ('http://www.dtek.chalmers.se/~d95duvan/', 'Johan Alfredsson'),
     Link ('http://www.xs4all.nl/~ldp/', 'Lennard voor den Dag'),
     Link ('http://home.pages.de/~helios/', 'Martin Steigerwald'),
-    Link ('http://www.www.ahsodit.com/', "Matt 'Crazy' Parsons",),
+    Link ('http://www.ahsodit.com/', "Matt 'Crazy' Parsons",),
     Link ('http://www.in-berlin.de/User/jroger/index.html', 'Sebastian Rittau'),
     Link ('http://www.twinklestar.demon.co.uk/', 'Wez Furlong'),
 )
@@ -219,7 +219,7 @@ downloadLinks = (
 	'These images are copies of the ones made by Sebastian Heutling'
 	' plus you can find the CD-ROM images here.'
     ),
-    Link ('http://www.www.ahsodit.com/aros/index.html',
+    Link ('http://www.ahsodit.com/aros/index.html',
 	'Disk Images by Matt Parsons',
 	'Matt creates his own disk images and tries them on several'
 	' computers before uploading them so they tend to work better'
