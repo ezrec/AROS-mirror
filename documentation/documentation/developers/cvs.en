@@ -7,25 +7,26 @@ Working with CVS
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
+:Abstract: 
+    CVS is a version control tool which maintains a database of the files in a 
+    project. With CVS, it is possible to inspect and control the changes 
+    applied to any specific file: what changes were done and when, who did 
+    those changes, what the purpose of some change was (as long as there is a
+    log entry), possibly reverting bad changes made, merging changes from 
+    several different people and much more. 
+    
+    In essence, it makes it *much* easier for a group of people to collaborate
+    on a common project by allowing everyone to know what is happening to the
+    files, making sure that people do not trash each others changes by mistake
+    and providing the means to do this over the Internet. Naturally, we use it
+    to collaborate on AROS.
+
 
 .. Contents::
 
 
 Introduction
 ============
-
-CVS is a version control tool which maintains a database of the files in a 
-project. With CVS, it is possible to inspect and control the changes applied 
-to any specific file: what changes were done and when, who did those changes,
-what the purpose of some change was (as long as there is a log entry), 
-possibly reverting bad changes made, merging changes from several different 
-people and much more. 
-
-In essence, it makes it *much* easier for a group of people to collaborate on
-a common project by allowing everyone to know what is happening to the files,
-making sure that people do not trash each others changes by mistake and 
-providing the means to do this over the Internet. Naturally, we use it to 
-collaborate on AROS.
 
 The server maintains a central "repository", which is the main database 
 containing the published common codebase of the project. Individual developers 
