@@ -376,6 +376,11 @@ ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   APTR img_tr,grp;
   char *img_name = "noimage";
 
+#ifdef USE_ZUNE
+  if (!NGR_Class) NGR_Create();
+  if (!NGR_Class) return NULL;
+#endif
+
   if (tag = FindTagItem(MUIA_FixHeightTxt, taglist))
     tag->ti_Tag = TAG_IGNORE;
   if (tag = FindTagItem(MUIA_FixWidthTxt, taglist))
