@@ -25,5 +25,5 @@ development-gcc-fetch :
 
 #MM
 development-gcc-delete-specs :
-	$(RM) $(AROS_DEVELOPMENT)/lib/gcc-lib/3.3.1/specs
+	$(RM) $(AROS_DEVELOPMENT)/lib/gcc-lib/$(AROS_TARGET_CPU)-aros/3.3.1/specs
 
