@@ -44,9 +44,9 @@ struct ExecBase      *SysBase;
 
 ULONG SAVEDS STDARGS LC_BUILDNAME(L_InitLib) (LC_LIBHEADERTYPEPTR GuiGFXBase)
 {
-    D(bug("Inside Init func of guigfx.library\n"));
-
     SysBase = LC_SYSBASE_FIELD(GuiGFXBase);
+
+    D(bug("Inside Init func of guigfx.library\n"));
 
     InitSemaphore(&GuiGFXBase->LockSemaphore);
 
