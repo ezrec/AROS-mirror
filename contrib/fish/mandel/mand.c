@@ -69,8 +69,8 @@ Enjoy!
 
 #include "mand.h"
 
-struct MathBase* MathBase;
-struct MathTransBase* MathTransBase;
+struct Library* MathBase;
+struct Library* MathTransBase;
 
 struct DosLibrary* DOSBase;
 
@@ -89,16 +89,6 @@ struct   IntuitionBase *IntuitionBase;
 /* what they do...           */
 void loc_abort(char *s);
 
-#warning FIXME: Original used Lattice which has stpblk()
-char *stpblk(char *string) /* Return pointer to next word in string */
-{
-char *ptr=string;
-  while( *ptr && !isblank(*ptr))
-    ptr++;
-  while( *ptr && isblank(*ptr))
-    ptr++;
-return ptr;
-}
 
 #warning FIXME: Original used Lattice which has Chk_Abort()
 int Chk_Abort() /* Disabled by now */
@@ -129,13 +119,14 @@ FILE *console,*v_fp = NULL,*redir_fp = NULL;
 SHORT ZoomCenterX, ZoomCenterY, ZoomBoxSizeX, ZoomBoxSizeY;
 SHORT ZoomBoxStartX, ZoomBoxStartY;
 
-int cur_resource = NULL;
+
+int cur_resource = 0;
 
 
 /*-------------*/
 /* Here we go! */
 
-main()
+int main()
 {
    FILE *fopen();
    char *fgets(),*stpblk();
@@ -164,12 +155,12 @@ main()
       loc_abort("Can't allocate memory for set storage");
    cur_resource |= F_SETSTORE;
 
-   MathBase = (struct MathBase *)OpenLibrary("mathffp.library",0);
+   MathBase = OpenLibrary("mathffp.library",0);
    if (MathBase == NULL)
       loc_abort("Can't open mathffp.library");
    cur_resource |= F_MATH;
 
-   MathTransBase = (struct MathTransBase*)OpenLibrary("mathtrans.library",0);
+   MathTransBase = OpenLibrary("mathtrans.library",0);
    if (MathTransBase == NULL)
       loc_abort("Can't open mathtrans.library");
    cur_resource |= F_MATHTRANS;
@@ -584,6 +575,8 @@ command:
             goto command;
       }
    }
+   
+   return 0;
 }
 
 ill_cmd()

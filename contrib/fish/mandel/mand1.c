@@ -20,10 +20,6 @@ notice is retained.
 
 #include "mand.h"
 
-extern struct MathBase		*MathBase;
-extern struct MathTransBase	*MathTransBase;
-
-
 /*----------------------*/
 /* Graphics definitions */
 

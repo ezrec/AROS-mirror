@@ -1,7 +1,5 @@
 include $(TOP)/config/make.cfg
 
-USER_CFLAGS := -D__NOLIBBASE__
-
 CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(CFLAGS))
 
 %build_prog mmake=fish-mandel \

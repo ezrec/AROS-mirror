@@ -31,8 +31,7 @@ notice is retained.
 extern FILE *console;
 
 
-Information(page)
-SHORT page;
+void Information(SHORT page)
 {
    FILE *c;
 
@@ -178,7 +177,7 @@ break;
 }
 
 
-AvailableCommands()
+void AvailableCommands()
 {
     FILE *c;
 

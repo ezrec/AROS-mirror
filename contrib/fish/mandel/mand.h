@@ -78,7 +78,8 @@ notice is retained.
 #include <intuition/intuitionbase.h>
 #include <stdio.h>
 #include <ctype.h>
-
+#include <stdlib.h>
+#include <string.h>
 
 /*-------------------*/
 /* Misc. definitions */
@@ -166,3 +167,4 @@ extern   int     SPFieee();
 #define ZOOM_COUNT        6
 
 void ZoomAlongDarling(KLUDGE_INT rzoom, KLUDGE_INT izoom);
+void AvailableCommands();
