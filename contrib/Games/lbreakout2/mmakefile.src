@@ -1,40 +1,19 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Games/lbreakout2
+#MM- contrib-games : contrib-games-lbreakout2
+#MM- lbreakout2 : contrib-games-lbreakout2
 
-#MM- contrib-games : lbreakout2
-#MM lbreakout2 : linklibs-SDL
-lbreakout2 : lb2_real
+#MM- contrib-games-quick : contrib-games-lbreakout2-quick
+#MM- lbreakout2-quick : contrib-games-lbreakout2-quick
 
-#MM lbreakout2-quick : linklibs-SDL-quick
-lbreakout2-quick : lb2_real
+#MM- linklibs : contrib-development-parsers-pcre
 
-SDL_CONFIG:=$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-sdl-config
+SDL_CONFIG := $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-sdl-config
+
 export SDL_CONFIG
 
-lb2_real: .files-touched $(GENDIR)/$(CURDIR)/.configured
-	@DATADIR=PROGDIR:data $(MAKE) -C $(GENDIR)/$(CURDIR) LIBS='-lSDL -lpng -lz'
-	@DATADIR=$(EXEDIR)/data $(MAKE) -C $(GENDIR)/$(CURDIR) install
-
-.files-touched:
-	@find . | xargs $(TOUCH) -r configure 
-	@$(ECHO) YES > $@
-
-$(GENDIR)/$(CURDIR)/.configured: mmakefile
-	%mkdirs_q $(GENDIR)/$(CURDIR)
-	@cd $(GENDIR)/$(CURDIR);\
-	    $(RM) config.cache; \
-	     CC=$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros-gcc \
-             $(TOP)/$(CURDIR)/configure --with-highscore-path='$$(DATADIR)' \
-             --with-inst-path='$$(DATADIR)' --disable-audio --disable-sdltest \
-             --disable-network  --bindir=$(EXEDIR) --with-doc-path=$(EXEDIR)/docs\
-             --host=$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros
-	@$(ECHO) YES > $@
-
-#MM lbreakout2-clean :
-lbreakout2-clean :
-	@if [ -e $(GENDIR)/$(CURDIR)/Makefile ]; then\
-	    $(MAKE) -C $(GENDIR)/$(CURDIR) uninstall;\
-         fi
-	@$(RM) $(GENDIR)/$(CURDIR)
+%build_with_configure mmake=contrib-games-lbreakout2 nix=yes \
+    extraoptions="--with-highscore-path='$$(PROGDIR)data' --with-inst-path='$$(PROGDIR)data' --disable-audio --disable-sdltest --disable-network --with-doc-path=$(PROGDIR)docs" \
+    bindir=$(CONTRIBDIR)/Games/lbreakout2
+    
