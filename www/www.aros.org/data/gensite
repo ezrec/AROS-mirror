@@ -289,6 +289,7 @@ def genLinks ():
 	BR(), HR(), BR(),
     )
 
+    page.extend (processSection (links.mirrors, 'Mirrors'))
     page.extend (processSection (links.moreRelated, 'More Related'))
     page.extend (processSection (links.articles, 'Articles'))
     page.extend (processSection (links.homepages, 'Homepages'))

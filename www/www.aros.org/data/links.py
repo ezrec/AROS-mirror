@@ -18,9 +18,14 @@ class Link:
 	self.href = Href (url, label)
 	self.text, self.logo = text, logo
 
+# Mirrors of AROS
+mirrors = (
+    Link ('http://aros.planetmirror.com/', 'AROS Mirror in Australia'),
+    Link ('http://www.mds.mdh.se/~adb94hbd/', 'AROS Mirror in Sweden'),
+)
+
 # More related to the AROS project
 moreRelated = (
-    Link ('http://aros.planetmirror.com', 'AROS Mirror in Australia'),
     Link ('ftp://ftp.aros.org/pub/aros/', 'The official AROS FTP server',
 	'You can find releases, nightly snapshots and other'
 	' stuff on this server.',
