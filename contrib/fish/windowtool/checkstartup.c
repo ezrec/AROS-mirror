@@ -1,8 +1,9 @@
 #include <workbench/startup.h>
 #include <workbench/workbench.h>
-#include <clib/icon_protos.h>
-#include <clib/reqtools_protos.h>
-#include <clib/dos_protos.h>
+#include <proto/icon.h>
+#include <proto/reqtools.h>
+#include <proto/dos.h>
+#include <proto/icon.h>
 #include <libraries/commodities.h>
 #include <libraries/reqtools.h>
 #include <dos/rdargs.h>

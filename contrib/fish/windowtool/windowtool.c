@@ -1,5 +1,6 @@
 #define chip 
-
+#define USHORT unsigned short
+#include <intuition/iobsolete.h>
 
 /*********************************************************/
 /* Programmname		  : WindowTool      						*/
@@ -27,21 +28,15 @@
 #include <libraries/gadtools.h>
 #include <libraries/asl.h>
 #include <libraries/reqtools.h>
-#include <pragmas/exec_pragmas.h>
-#include <pragmas/intuition_pragmas.h>
-#include <pragmas/gadtools_pragmas.h>
-#include <pragmas/asl_pragmas.h>
-#include <pragmas/reqtools.h>
-#include <clib/icon_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/intuition_protos.h>
-#include <clib/gadtools_protos.h>
-#include <clib/asl_protos.h>
-#include <clib/intuition_protos.h>
-#include <clib/reqtools_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/commodities_protos.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/gadtools.h>
+#include <proto/asl.h>
+#include <proto/alib.h>
+#include <proto/commodities.h>
+#include <proto/icon.h>
+#include <proto/reqtools.h>
 #include <workbench/startup.h>
 #include <workbench/workbench.h>
 
@@ -95,7 +90,7 @@ struct Library *GadToolsBase;
 struct Library *AslBase;
 struct ReqToolsBase *ReqToolsBase;
 struct GfxBase *GfxBase;
-struct IconBase *IconBase;
+struct Library *IconBase;
 
 extern struct WBStartup *WBenchMsg;
 
@@ -157,7 +152,7 @@ char prgname[256];					/* Programm Pfad und Name */
 
 char filename[34]="windowtool.config";	/* Default Settings */
 char dirname[256]="s:";
-fullname[300];				/* Nur Zwischenspeicher */
+char fullname[300];				/* Nur Zwischenspeicher */
 
 struct TagItem reqtags[]=
 {
@@ -419,7 +414,7 @@ void about(void)
 }
 
 
-void main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -452,7 +447,7 @@ char *argv[];
 	while(1)
 		{
 			if(windowopen==FALSE)break;
-			if(!(mes=GT_GetIMsg(Wnd->UserPort)))break;
+			if(!(mes=(struct IntuiMessage *)GT_GetIMsg(Wnd->UserPort)))break;
 			
 			class=mes->Class;
 			code=mes->Code;
@@ -589,7 +584,7 @@ char *argv[];
 		}
 
 		if(signals & (1<<mp->mp_SigBit))
-		while(msg=GetMsg(mp))
+		while(msg=(struct Message *)GetMsg(mp))
 			{
 				id=CxMsgID((CxMsg *)msg);
 
@@ -645,13 +640,14 @@ char *argv[];
 				}
 			}
 	}
+	return 0;
 }
 
 void openlibs(void)
 {
-	if(!(AslBase=OpenLibrary("asl.library",37)))
+	if(!(AslBase=(struct Library *)OpenLibrary("asl.library",37)))
 					ende("asl.library not found !");
-	if(!(GadToolsBase=OpenLibrary("gadtools.library",37)))
+	if(!(GadToolsBase=(struct Library *)OpenLibrary("gadtools.library",37)))
 					ende("gadtools.library not found !");
 	if(!(GfxBase=(struct GfxBase *)OpenLibrary("graphics.library",37)))
 					ende("graphics.library not found !");
@@ -659,7 +655,7 @@ void openlibs(void)
 					ende("Intuition.library not found !");
 	if(!(	ReqToolsBase=(struct ReqToolsBase *)OpenLibrary(REQTOOLSNAME,REQTOOLSVERSION)))
 			ende("reqtools.library not found !");
-	if(!(CxBase=OpenLibrary("commodities.library",37)))
+	if(!(CxBase=(struct Library *)OpenLibrary("commodities.library",37)))
 			ende("commodities.library not found !");
 	if(!(IconBase=OpenLibrary("icon.library",37)))
 					ende("icon.library not found !");
@@ -668,13 +664,13 @@ void openlibs(void)
 void openrest(void)
 {
 	int k;
-	if(!(mp=CreateMsgPort()))ende("Unable to create MsgPort !");
+	if(!(mp=(struct MsgPort *)CreateMsgPort()))ende("Unable to create MsgPort !");
 	nb.nb_Port=mp;
 
 	for(k=0;k<KEYNUMMER;k++)
 			filter[k]=HotKey(keys[k],mp,k);
 
-	if(!(broker=CxBroker(&nb,0)))ende(0);/* WT läuft schon */
+	if(!(broker=(CxObj *)CxBroker(&nb,0)))ende(0);/* WT läuft schon */
 
 	for(k=0;k<KEYNUMMER;k++)
 	AttachCxObj(broker,filter[k]);
@@ -701,7 +697,7 @@ void ende(char *text)
 	if(GfxBase)CloseLibrary ((struct Library *)GfxBase);
 	if(GadToolsBase)CloseLibrary(GadToolsBase);
 	if(AslBase)CloseLibrary(AslBase);
-	if(IconBase)CloseLibrary((struct Library *)IconBase);
+	if(IconBase)CloseLibrary(IconBase);
 
 	exit(0);
 }

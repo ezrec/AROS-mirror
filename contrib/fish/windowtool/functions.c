@@ -5,7 +5,11 @@
 #include <intuition/intuitionbase.h>
 #include <intuition/intuition.h>
 #include <intuition/screens.h>
-#include <clib/exec_protos.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/asl.h>
+#include <proto/reqtools.h>
 
 extern struct IntuitionBase *IntuitionBase;
 
