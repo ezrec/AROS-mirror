@@ -1,26 +1,24 @@
 #   $Id$
-#
-#   Makefile for the Workbench:Tools directory.
 
 include $(TOP)/config/make.cfg
 
 FILES	:= \
     calculator_bgui
 
-EXEDIR := $(AROSDIR)/Tools
+EXEDIR := $(CONTRIBDIR)/BGUI/Examples
 EXES := $(foreach f,$(FILES),$(EXEDIR)/$(f))
 
 USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MLIB := yes
-USE_BGUILIB := yes
+USE_AMIGALIB    := yes
+USE_MLIB        := yes
+USE_BGUILIB     := yes
 
-#MM- workbench : workbench-tools
-#MM workbench-tools : includes linklibs contrib-bgui
+#MM- contrib-bgui : contrib-bgui-workbench-tools
+#MM contrib-bgui-workbench-tools : includes linklibs contrib-bgui
 
-%make_prog_setup mmake=workbench-tools
+%make_prog_setup mmake=contrib-bgui-workbench-tools
 
-workbench-tools : setup $(EXES)
+contrib-bgui-workbench-tools : setup $(EXES)
 
 %make_prog_single dir=$(EXEDIR)
 %common
