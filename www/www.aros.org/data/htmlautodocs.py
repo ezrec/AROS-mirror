@@ -2,8 +2,8 @@
 import string, re, os
 from util import Page, arosdir, DefinitionList, Text, Href, BR, TT, Dummy, \
     Name, SeriesDocument, MyRawText, Heading, Paragraph, \
-    NonBulletList, TableLite, TR, TD, relpath
-import code2html
+    NonBulletList, TableLite, TR, TD, relpath, RawText
+import code2html, xml2html
 
 codeConverter = code2html.AROSCodeConverter ('..')
 
@@ -75,6 +75,13 @@ class AutoDocItem:
 	
 	text = text + '\n<P>\n'
 	return text
+
+class AutoDocTextItem:
+    def __init__ (self, contents):
+	self.contents = contents
+
+    def __str__ (self):
+	return xml2html.xmlStringToHtmlString (self.contents)
 
 def makelibcell (func, absolute=os.path.abspath(autodocdir)):
     return TD (
@@ -170,18 +177,18 @@ def genPage (db, lib, func):
 
 	#print `func.section['FUNCTION']`
 	#print func.section.keys ()
-	dl.append (('FUNCTION', AutoDocItem (func.section['FUNCTION'])))
+	dl.append (('FUNCTION', AutoDocTextItem (func.section['FUNCTION'])))
 	parList = DefinitionList ()
 	for parameter in func.parameters:
 	    parList.append ((Dummy ([
 		    Name (parameter.name),
 		    parameter.name,
-		]), parameter.explanation))
+		]), RawText (xml2html.xmlStringToHtmlString (parameter.explanation))))
 	dl.append (('INPUTS', AutoDocItem (parList)))
-	dl.append (('RESULT', AutoDocItem (func.section['RESULT'])))
-	dl.append (('NOTES', AutoDocItem (func.section['NOTES'])))
+	dl.append (('RESULT', AutoDocTextItem (func.section['RESULT'])))
+	dl.append (('NOTES', AutoDocTextItem (func.section['NOTES'])))
 	dl.append (('EXAMPLE', AutoDocItem (MyCode (func.section['EXAMPLE']))))
-	dl.append (('BUGS', AutoDocItem (func.section['BUGS'])))
+	dl.append (('BUGS', AutoDocTextItem (func.section['BUGS'])))
 
 	# Render SEE ALSO. The first item in the list is always
 	# the library
@@ -216,7 +223,7 @@ def genPage (db, lib, func):
 	#print list
 	dl.append (('SEE ALSO', AutoDocItem (list)))
 	
-	dl.append (('INTERNALS', AutoDocItem (func.section['INTERNALS'])))
+	dl.append (('INTERNALS', AutoDocTextItem (func.section['INTERNALS'])))
 	#dl.append (('HISTORY', AutoDocItem (func.section['HISTORY'])))
 
 	func.url = page.filename
