@@ -122,9 +122,15 @@ static void renderx_rgb_dither_floyd(struct RenderData *rnd, ULONG *src, UBYTE *
 		while (width--)
 		{
 			rgb = *src++;
+		#ifdef RENDER_LITTLE_ENDIAN
+			r = *dithbuf++ + ((rgb & 0x0000ff00) >> 8);
+			g = *dithbuf++ + ((rgb & 0x00ff0000) >> 16);
+			b = *dithbuf++ + ((rgb & 0xff000000) >> 24);
+		#else
 			r = *dithbuf++ + ((rgb & 0xff0000) >> 16);
 			g = *dithbuf++ + ((rgb & 0x00ff00) >> 8);
 			b = *dithbuf++ + (rgb & 0x0000ff);
+		#endif
 			*dst++ = rnd->pentab[dither_floyd(rnd, dithbuf - 3, r, g, b)];
 		}
 	}
@@ -136,9 +142,15 @@ static void renderx_rgb_dither_floyd(struct RenderData *rnd, ULONG *src, UBYTE *
 		while (width--)
 		{
 			rgb = *--src;
+		#ifdef RENDER_LITTLE_ENDIAN
+			b = *--dithbuf + ((rgb & 0xff000000) >> 24);
+			g = *--dithbuf + ((rgb & 0x00ff0000) >> 16);
+			r = *--dithbuf + ((rgb & 0x0000ff00) >> 8);
+		#else
 			b = *--dithbuf + (rgb & 0x0000ff);
 			g = *--dithbuf + ((rgb & 0x00ff00) >> 8);
 			r = *--dithbuf + ((rgb & 0xff0000) >> 16);
+		#endif
 			*--dst = rnd->pentab[dither_floyd(rnd, dithbuf + 3, r, g, b)];
 		}
 	}
@@ -243,7 +255,12 @@ static void renderx_rgb_dither_edd(struct RenderData *rnd, ULONG *src, UBYTE *ds
 	{	
 		while (width--)
 		{
+		#ifdef RENDER_LITTLE_ENDIAN
+		    	ULONG pix = *src++;
+			rgb = AROS_BE2LONG(pix);
+		#else
 			rgb = *src++;
+		#endif
 			dither_edd(rgb);
 			*dst++ = pentab[pen];
 			dithbuf += 3;
@@ -257,7 +274,15 @@ static void renderx_rgb_dither_edd(struct RenderData *rnd, ULONG *src, UBYTE *ds
 		while (width--)
 		{
 			dithbuf -= 3;
+			
+		#ifdef RENDER_LITTLE_ENDIAN
+		    	{
+			    	ULONG pix = *--src;
+			    	rgb = AROS_BE2LONG(pix);
+			}
+		#else
 			rgb = *--src;
+		#endif
 			dither_edd(rgb);
 			*--dst = pentab[pen];
 		}
@@ -357,7 +382,12 @@ static void renderx_rgb_dither_rand(struct RenderData *rnd, ULONG *src, UBYTE *d
 	{	
 		while (width--)
 		{
+		#ifdef RENDER_LITTLE_ENDIAN
+		    	ULONG pix = *src++;
+			rgb = AROS_BE2LONG(pix);
+		#else
 			rgb = *src++;
+		#endif
 			dither_random(rgb);
 			*dst++ = pentab[pen];
 			dithbuf += 3;
@@ -371,7 +401,14 @@ static void renderx_rgb_dither_rand(struct RenderData *rnd, ULONG *src, UBYTE *d
 		while (width--)
 		{
 			dithbuf -= 3;
+		#ifdef RENDER_LITTLE_ENDIAN
+		    	{
+			    	ULONG pix = *--src;
+			    	rgb = AROS_BE2LONG(pix);
+			}
+		#else
 			rgb = *--src;
+		#endif
 			dither_random(rgb);
 			*--dst = pentab[pen];
 		}
@@ -435,7 +472,12 @@ static void renderx_rgb_plain(struct RenderData *rnd, ULONG *src, UBYTE *dst, LO
 	RNDPAL *dstpal = rnd->dstpal;
 	while (width--)
 	{
+	#ifdef RENDER_LITTLE_ENDIAN
+	    	ULONG pix = *src++;
+		*dst++ = P2Lookup(dstpal, AROS_BE2LONG(pix));
+	#else
 		*dst++ = P2Lookup(dstpal, *src++);
+	#endif
 	}
 }
 
@@ -449,7 +491,12 @@ static void renderx_rgb_pentab(struct RenderData *rnd, ULONG *src, UBYTE *dst, L
 	RNDPAL *dstpal = rnd->dstpal;
 	while (width--)
 	{
+	#ifdef RENDER_LITTLE_ENDIAN
+	    	ULONG pix = *src++;
+		*dst++ = pentab[P2Lookup(dstpal, AROS_BE2LONG(pix))];
+	#else
 		*dst++ = pentab[P2Lookup(dstpal, *src++)];
+    	#endif
 	}
 }
 
@@ -515,6 +562,9 @@ static void renderx_rgb_ham6(struct RenderData *rnd, ULONG *src, UBYTE *dst, LON
 	while (width--)
 	{
 		rgb = *src++;
+	#ifdef RENDER_LITTLE_ENDIAN
+	    	rgb = AROS_BE2LONG(rgb);
+	#endif
 		lookupham6(rgb, hr,hg,hb);
 		*dst++ = pen;
 	}
@@ -538,7 +588,12 @@ static void renderx_chunky_ham6(struct RenderData *rnd, ULONG *src, UBYTE *dst, 
 	
 	while (width--)
 	{
+	#ifdef RENDER_LITTLE_ENDIAN
+	    	ULONG pix = *src++;
+		rgb = srcpal->table[AROS_BE2LONG(pix)];
+	#else
 		rgb = srcpal->table[*src++];
+	#endif
 		lookupham6(rgb, hr,hg,hb);
 		*dst++ = pen;
 	}
@@ -607,6 +662,9 @@ static void renderx_rgb_ham8(struct RenderData *rnd, ULONG *src, UBYTE *dst, LON
 	while (width--)
 	{
 		rgb = *src++;
+	#ifdef RENDER_LITTLE_ENDIAN
+	    	rgb = AROS_BE2LONG(rgb);
+	#endif
 		lookupham8(rgb, hr,hg,hb);
 		*dst++ = pen;
 	}
@@ -630,7 +688,12 @@ static void renderx_chunky_ham8(struct RenderData *rnd, ULONG *src, UBYTE *dst, 
 	
 	while (width--)
 	{
+	#ifdef RENDER_LITTLE_ENDIAN
+	    	ULONG pix = *src++;
+		rgb = srcpal->table[AROS_BE2LONG(pix)];
+	#else
 		rgb = srcpal->table[*src++];
+	#endif
 		lookupham8(rgb, hr,hg,hb);
 		*dst++ = pen;
 	}
@@ -799,21 +862,23 @@ static ULONG initrender(struct RenderData *rnd, struct TagItem *tags)
 	rnd->pentab = (UBYTE *) GetTagData(RND_PenTable, NULL, tags);
 	if (!rnd->pentab)
 	{
-		LONG oz = GetTagData(RND_OffsetColorZero, 0xffff, tags);
-		if (oz != 0xffff)
+		LONG oz = GetTagData(RND_OffsetColorZero, 0, tags);
+
+		LONG i;
+		for (i = 0; i < 256; ++i)
 		{
-			LONG i;
-			for (i = 0; i < 256; ++i)
-			{
-				rnd->pens[i] = i + oz;
-			}
+			rnd->pens[i] = i + oz;
+		}
+
+		if (oz)
+		{
 			rnd->pentab = rnd->pens;
 		}
 	}
 
 	rnd->proghook = (struct Hook *) GetTagData(RND_ProgressHook, NULL, tags);
 	rnd->linehook = (struct Hook *) GetTagData(RND_LineHook, NULL, tags);
-
+	
 	rnd->fetchmsg.RND_LMsg_type = LMSGTYPE_LINE_FETCH;
 	rnd->rendermsg.RND_LMsg_type = LMSGTYPE_LINE_RENDERED;
 	rnd->progmsg.RND_PMsg_type = PMSGTYPE_LINES_RENDERED;
@@ -951,7 +1016,7 @@ static ULONG initrender(struct RenderData *rnd, struct TagItem *tags)
 
 static void exitrender(struct RenderData *data)
 {
-	FreeRenderMem(data->rmh, data->randtab, NUMRAND);
+	if (data->randtab) FreeRenderMem(data->rmh, data->randtab, NUMRAND);
 	FreeRenderVec((ULONG *) data->ditherbuf);
 }
 

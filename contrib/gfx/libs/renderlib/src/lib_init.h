@@ -3,7 +3,9 @@
 #define _LIBRARY_INIT_H
 
 #ifdef __SASC
+#ifdef _M68881
 #include <m68881.h>
+#endif
 #endif
 
 #include <exec/libraries.h>
@@ -11,17 +13,24 @@
 #include <exec/resident.h>
 #include <dos/dosextens.h>
 
+#ifdef __AROS__
+#if !AROS_BIG_ENDIAN
+#include <aros/macros.h>
+#define RENDER_LITTLE_ENDIAN
+#endif
+#endif
+
 #define LIB_VERSION  		40
-#define LIB_REVISION 		3
+#define LIB_REVISION 		8
 #define LIB_NAME			"render.library"
-#define LIB_DATE 			"(21.12.2002)"
+#define LIB_DATE 			"(30.03.2003)"
 
 typedef struct RenderBase
 {
 	struct Library LibNode;
+	struct SignalSemaphore LockSemaphore;
 	struct ExecBase *ExecBase;
 	BPTR LibSegment;
-	struct SignalSemaphore LockSemaphore;
 
 } LIB_BASE_T;
 

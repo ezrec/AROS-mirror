@@ -545,7 +545,8 @@ static LONG cmpfunc_histo_asc(APTR data, struct SortHistoEntry *ref1, struct Sor
 
 /* 
 **	adapthistogram(h, palette)
-**	scan histogram. put best matching pen in each node's upper RGB byte
+**	adapt histogram to palette, calculate entries in
+**	sorthisto table
 */
 
 static void adapthistogram(struct RNDTreeNode *node, RNDPAL *p, struct SortHistoEntry *table, ULONG sortmode)
@@ -607,12 +608,12 @@ LIBAPI ULONG SortPaletteA(RNDPAL *p, ULONG mode, struct TagItem *tags)
 			case PALMODE_SIGNIFICANCE | PALMODE_ASCENDING:
 			case PALMODE_REPRESENTATION | PALMODE_ASCENDING:
 			case PALMODE_POPULARITY | PALMODE_ASCENDING:
-				cmpfunc = cmpfunc_histo_asc;
+				cmpfunc = (CMPFUNC) cmpfunc_histo_asc;
 
 			case PALMODE_SIGNIFICANCE:
 			case PALMODE_REPRESENTATION:
 			case PALMODE_POPULARITY:
-				if (!cmpfunc) cmpfunc = cmpfunc_histo_desc;
+				if (!cmpfunc) cmpfunc = (CMPFUNC) cmpfunc_histo_desc;
 				if (!h) goto fail;
 				result = SORTP_NOT_ENOUGH_MEMORY;
 				if (!GetP2Table(p)) goto fail;
@@ -650,7 +651,6 @@ LIBAPI ULONG SortPaletteA(RNDPAL *p, ULONG mode, struct TagItem *tags)
 				break;
 
 			default:
-				DB(kprintf("not implemented: %ld\n", mode));
 				result = SORTP_NOT_IMPLEMENTED;
 				goto fail;
 		}

@@ -18,7 +18,7 @@ struct TxLine
 
 #define NUMV		4
 
-void inittexture(WORD *coords, WORD *texcoords, LONG width, LONG height, struct TxLine *txline)
+static void inittexture(WORD *coords, WORD *texcoords, LONG width, LONG height, struct TxLine *txline)
 {
 	LONG upperindex, index, lowery, uppery, j, k;
 	LONG bordertableft[8], bordertabright[8];

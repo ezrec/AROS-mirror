@@ -144,7 +144,7 @@ static LONG addrgb_tree(RNDHISTO *h, ULONG rgb, ULONG count)
 	
 	rgb &= rgbmask;
 
-	while (node = *nodeptr)
+	while ((node = *nodeptr))
 	{
 		if (node->entry.rgb == rgb)
 		{
@@ -225,7 +225,12 @@ LIBAPI ULONG AddRGBImageA(RNDHISTO *h, ULONG *rgb, UWORD width, UWORD height, st
 		{
 			for (x = 0; x < width; ++x)
 			{
+			#ifdef RENDER_LITTLE_ENDIAN
+			    	ULONG pix = *rgb++;
+				result = addrgb_tree(h, AROS_BE2LONG(pix), 1);
+			#else
 				result = addrgb_tree(h, *rgb++, 1);
+			#endif
 				if (result != ADDH_SUCCESS) goto fail;
 			}
 

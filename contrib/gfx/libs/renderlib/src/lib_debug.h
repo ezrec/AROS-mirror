@@ -5,7 +5,7 @@
 #ifdef DEBUG
 #define DB(x)	x
 #else
-#define DB(x)	;
+#define DB(x)
 #endif
 
 #ifdef __MORPHOS__

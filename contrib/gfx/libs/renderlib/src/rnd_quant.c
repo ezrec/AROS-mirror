@@ -309,70 +309,64 @@ abort:
 
 LIBAPI ULONG ExtractPaletteA(RNDHISTO *h, RNDPAL *p, UWORD numcol, struct TagItem *tags)
 {
-	RNDMH *rmh;
-	BOOL newpal;
-	ULONG firstcol;
 	ULONG result = EXTP_NO_DATA;
-	ULONG numhcol;
-	struct RNDHistoEntry **hparray;
-	struct Hook *proghook;
 	
-	if (!h || !p || !numcol) return result;
-
-	proghook = (struct Hook *) GetTagData(RND_ProgressHook, NULL, tags);
-	rmh = (APTR) GetTagData(RND_RMHandler, (ULONG) h->rmh, tags);
-	newpal = (BOOL) GetTagData(RND_NewPalette, TRUE, tags);
-	firstcol = GetTagData(RND_FirstColor, 0, tags);
-	
-	ObtainSemaphoreShared(&h->lock);
-
-	numhcol = QueryHistogram(h, RND_NumColors);
-	if (numhcol >= numcol)
+	if (h && p && numcol)
 	{
-		hparray = CreateHistogramPointerArray(h);
-		if (hparray)
+		ULONG numhcol;
+		ObtainSemaphoreShared(&h->lock);
+	
+		numhcol = QueryHistogram(h, RND_NumColors);
+		if (numhcol > 0)
 		{
-			ULONG *pptr;
-			ObtainSemaphore(&p->lock);
-
-			FlushPalette(p);
-	
-			if (newpal)
+			struct RNDHistoEntry **hparray = CreateHistogramPointerArray(h);
+			if (hparray)
 			{
-				p->numcolors = 0;
-				memfill32(p->table, 256*4, 0);
-			}
-	
-			pptr = p->table + firstcol;
-	
-			if (numhcol == numcol)
-			{
-				LONG i;
-				for (i = 0; i < numcol; ++i)
+				BOOL newpal = (BOOL) GetTagData(RND_NewPalette, TRUE, tags);
+				ULONG firstcol = GetTagData(RND_FirstColor, 0, tags);
+				ULONG *pptr = p->table + firstcol;
+		
+				ObtainSemaphore(&p->lock);
+				FlushPalette(p);
+			
+				if (newpal)
 				{
-					*pptr++ = hparray[i]->rgb;
+					p->numcolors = 0;
+					memfill32(p->table, 256*4, 0);
 				}
-				result = EXTP_SUCCESS;
+	
+				if (firstcol + numcol > p->numcolors)
+				{
+					p->numcolors = firstcol + numcol;
+				}
+				
+				if (numhcol > numcol)
+				{
+					RNDMH *rmh = (APTR) GetTagData(RND_RMHandler, (ULONG) h->rmh, tags);
+					struct Hook *proghook = (struct Hook *) GetTagData(RND_ProgressHook, NULL, tags);
+
+					result = Quantize(rmh, hparray, numhcol, pptr, numcol, proghook, h);
+				}
+				else
+				{
+					LONG i;
+					for (i = 0; i < numhcol; ++i)
+					{
+						*pptr++ = hparray[i]->rgb;
+					}
+					result = EXTP_SUCCESS;
+				}
+	
+				ReleaseSemaphore(&p->lock);
+				FreeRenderVec((ULONG *) hparray);
 			}
 			else
 			{
-				result = Quantize(rmh, hparray, numhcol, pptr, numcol, proghook, h);
+				result = EXTP_NOT_ENOUGH_MEMORY;
 			}
-	
-			if (firstcol + numcol > p->numcolors)
-			{
-				p->numcolors = firstcol + numcol;
-			}
-	
-			ReleaseSemaphore(&p->lock);
-			FreeRenderVec((ULONG *) hparray);
 		}
-		else
-		{
-			result = EXTP_NOT_ENOUGH_MEMORY;
-		}
+		ReleaseSemaphore(&h->lock);
 	}
 
-	ReleaseSemaphore(&h->lock);
 	return result;
 }

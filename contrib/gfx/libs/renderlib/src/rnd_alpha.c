@@ -19,8 +19,13 @@ LIBAPI void InsertAlphaChannelA(UBYTE *chunky, UWORD width, UWORD height, ULONG 
 		for (x = 0; x < width; ++x)
 		{
 			col = *rgb;
+		#ifdef RENDER_LITTLE_ENDIAN
+			col &= 0xffffff00;
+			col |= *chunky++;
+		#else
 			col &= 0x00ffffff;
 			col |= *chunky++ << 24;
+		#endif
 			*rgb++ = col;
 		}
 		rgb += tsw - width;
@@ -39,7 +44,11 @@ LIBAPI void ExtractAlphaChannelA(ULONG *rgb, UWORD width, UWORD height, UBYTE *c
 	{
 		for (x = 0; x < width; ++x)
 		{
+		#ifdef RENDER_LITTLE_ENDIAN
+			*chunky++ = (*rgb++) & 0xFF;
+		#else
 			*chunky++ = *rgb++ >> 24;
+		#endif
 		}
 		rgb += tsw - width;
 		chunky += tdw - width;
@@ -75,12 +84,19 @@ LIBAPI void ApplyAlphaChannelA(ULONG *src, UWORD width, UWORD height, ULONG *dst
 			rgb |= s + (((d - s) * a) >> 8);
 			rgb <<= 8;
 
+		#ifdef RENDER_LITTLE_ENDIAN
+			s = (col1 & 0xff000000) >> 24;
+			d = (col2 & 0xff000000) >> 24;
+			rgb |= (s + (((d - s) * a) >> 8)) << 24;
+			
+			rgb |= (col2 & 0xff);			/* keep alpha channel in dest */
+		#else
 			s = (col1 & 0x0000ff);
 			d = (col2 & 0x0000ff);
 			rgb |= s + (((d - s) * a) >> 8);
 			
 			rgb |= (col2 & 0xff000000);		/* keep alpha channel in dest */
-			
+		#endif			
 			*dst++ = rgb;
 			alpha += alphaoffs;
 		}
@@ -108,7 +124,20 @@ LIBAPI void TintRGBArrayA(ULONG *src, UWORD width, UWORD height, ULONG rgb, UWOR
 		for (x = 0; x < width; ++x)
 		{
 			col = *src++;
+		#ifdef RENDER_LITTLE_ENDIAN
+			s = (col & 0xff0000) >> 16;
+			s += (((g - s) * ratio) >> 8);
+			rgb = s << 8;
 
+			s = (col & 0x00ff00) >> 8;
+			rgb |= s + (((r - s) * ratio) >> 8);
+			rgb <<= 8;
+
+			s = (col & 0xff000000) >> 24;
+			rgb |= (s + (((b - s) * ratio) >> 8)) << 24;
+			
+			rgb |= (col & 0xff);			/* keep alpha channel in dest */
+		#else
 			s = (col & 0xff0000) >> 16;
 			s += (((r - s) * ratio) >> 8);
 			rgb = s << 8;
@@ -121,7 +150,7 @@ LIBAPI void TintRGBArrayA(ULONG *src, UWORD width, UWORD height, ULONG rgb, UWOR
 			rgb |= s + (((b - s) * ratio) >> 8);
 			
 			rgb |= (col & 0xff000000);		/* keep alpha channel in dest */
-			
+		#endif			
 			*dst++ = rgb;
 		}
 		src += tsw - width;
@@ -136,6 +165,8 @@ LIBAPI void MixRGBArrayA(ULONG *src, UWORD width, UWORD height, ULONG *dst, UWOR
 	LONG x, s, d;
 	ULONG col1, col2, rgb;
 	if (!src || !width || !height || !dst) return;
+	
+	ratio = 255 - ratio;		/* ! */
 	
 	while (height--)
 	{
@@ -154,12 +185,19 @@ LIBAPI void MixRGBArrayA(ULONG *src, UWORD width, UWORD height, ULONG *dst, UWOR
 			rgb |= s + (((d - s) * ratio) >> 8);
 			rgb <<= 8;
 
+		#ifdef RENDER_LITTLE_ENDIAN
+			s = (col1 & 0xff000000) >> 24;
+			d = (col2 & 0xff000000) >> 24;
+			rgb |= (s + (((d - s) * ratio) >> 8)) << 24;
+			
+			rgb |= (col2 & 0xff);			/* keep alpha channel in dest */
+		#else
 			s = (col1 & 0x0000ff);
 			d = (col2 & 0x0000ff);
 			rgb |= s + (((d - s) * ratio) >> 8);
 			
 			rgb |= (col2 & 0xff000000);		/* keep alpha channel in dest */
-			
+		#endif
 			*dst++ = rgb;
 		}
 		src += tsw - width;
@@ -183,49 +221,52 @@ LIBAPI void MixAlphaChannelA(ULONG *src1, ULONG *src2, UWORD width, UWORD height
 
 	if (!src1 || !src2 || !width || !height || !dst) return;
 
-	DB(kprintf("mixalphachannels\n"));
-
 	while (height--)
 	{
 		for (x = 0; x < width; ++x)
 		{
-			if (alpha1)
+			a = 0;
+
+			if (alpha2)
 			{
-				a = *alpha1;
-				alpha1 += aoffs1;
-				if (alpha2)
-				{
-					a -= *alpha2;
-					alpha2 += aoffs2;
-					a >>= 1;
-				}
-			}
-			else if (alpha2)
-			{
-				a = -(LONG) *alpha2;
+				a = 255 - *alpha2;
 				alpha2 += aoffs2;
 			}
-			else a = 128;
+
+			if (alpha1)
+			{
+				a += *alpha1;
+				alpha1 += aoffs1;
+
+				if (alpha2) a >>= 1;
+			}
 			
 			col1 = *src1++;
 			col2 = *src2++;
-
+			
 			s = (col1 & 0xff0000) >> 16;
 			d = (col2 & 0xff0000) >> 16;
-			s += (((d - s) * a) >> 8);
-			rgb = s << 8;
+			d += (((s - d) * a) >> 8);
+			rgb = d << 8;
 
 			s = (col1 & 0x00ff00) >> 8;
 			d = (col2 & 0x00ff00) >> 8;
-			rgb |= s + (((d - s) * a) >> 8);
+			rgb |= d + (((s - d) * a) >> 8);
 			rgb <<= 8;
 
+		#ifdef RENDER_LITTLE_ENDIAN
+			s = (col1 & 0xff000000) >> 24;
+			d = (col2 & 0xff000000) >> 24;
+			rgb |= (d + (((s - d) * a) >> 8)) << 24;
+			
+			rgb |= (*dst & 0xff);			/* keep alpha channel in dest */
+		#else
 			s = (col1 & 0x0000ff);
 			d = (col2 & 0x0000ff);
-			rgb |= s + (((d - s) * a) >> 8);
+			rgb |= d + (((s - d) * a) >> 8);
 			
 			rgb |= (*dst & 0xff000000);		/* keep alpha channel in dest */
-			
+		#endif
 			*dst++ = rgb;
 		}
 		
@@ -238,7 +279,9 @@ LIBAPI void MixAlphaChannelA(ULONG *src1, ULONG *src2, UWORD width, UWORD height
 	}
 }
 
-#define ABS(x) (x) > 0 ? (x) : -(x)
+
+
+#define ABS(x) ((x) >= 0 ? (x) : -(x))
 
 LIBAPI void CreateAlphaArrayA(ULONG *rgb, UWORD width, UWORD height, struct TagItem *tags)
 {
@@ -253,20 +296,27 @@ LIBAPI void CreateAlphaArrayA(ULONG *rgb, UWORD width, UWORD height, struct TagI
 
 	if (!width || !height || !rgb || !dst) return;
 
-	DB(kprintf("createalphamask\n"));
-
 	while (height--)
 	{
 		for (x = 0; x < width; ++x)
 		{
 			col = *rgb++;
+		#ifdef RENDER_LITTLE_ENDIAN
+			r = (maskrgb & 0xff0000) >> 16;
+			r -= (col & 0x00ff00) >> 8;
+			g = (maskrgb & 0x00ff00) >> 8;
+			g -= (col & 0xff0000) >> 16;
+			b = (maskrgb & 0x0000ff);
+			b -= (col & 0xff000000) >> 24;
+		#else			
 			r = (maskrgb & 0xff0000) >> 16;
 			r -= (col & 0xff0000) >> 16;
 			g = (maskrgb & 0x00ff00) >> 8;
 			g -= (col & 0x00ff00) >> 8;
 			b = (maskrgb & 0x0000ff);
 			b -= (col & 0x0000ff);
-			*dst = 0.299 * ABS(r) + 0.587 * ABS(g) + 0.114 * ABS(b);
+		#endif
+			*dst = 0.299f * ABS(r) + 0.587f * ABS(g) + 0.114f * ABS(b);
 			dst += aoffs;
 		}
 		

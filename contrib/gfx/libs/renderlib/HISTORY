@@ -2,9 +2,51 @@
 history
 -----------------------------
 
-    - morphos version compiled by Sigbjørn Skjæret. added.
+  40.8
+    - fixed libinit check: AFF_68881 now queried
+    - When a histogram contained less colors than specified
+      with ExtractPalette(), no colors were copied at all, which
+      resulted in an entirely black palette. Fixed.
+
+  40.7
+    - MixAlphaChannelA() now produces the intended behavior of
+      versions prior to v40. The old library was buggy too, and did
+      not handle a single second alpha channel correctly, as it
+      seems. Reported by Matthias Böcker.
+    - added GCC inline (fdpragma special 40). the proto file was
+      created using fdpragma special 35, and modified to include
+      the original SAS/C-style pragmas as well
+    - Morphos version 40.6 included
+    - turned around ratio argument interpretation in MixRGBArrayA().
+      it is now in compliance with the old version again. Reported
+      by Andreas Falkenhahn. note: some other functions with ratio
+      arguments are untested yet
+    - library base was NOT freed correctly in case of LibInit()
+      failure, now fixed
+
+  40.6
+    - more changes from Gunther Nikl applied: debug macro, register
+      argument macro, padding of libbase fields, compiler warnings.
+    - reduced the excessive amount of automatic inlinings in the
+      gcc release build, which leads to a much smaller binary. this
+      also fixes the misplaced LibNull() entry, and the result is
+      still much faster than sas/c. okay, agreed, gcc is it.
+    - more source and build cleanups
+
+  40.5
+    - CreateAlphaArrayA() has been fixed. a broken macro was used.
+      reported by Bernd Roesch.
+    - fixed a freemem(null) condition that showed up in MuForce.
+      reported by hexaae.
+    - improvements to the build procedure added by Gunther Nikl
+    - morphos version updated to 40.4
+
+  40.4
+    - dithered rendering with neither RND_PenTable or
+      RND_OffsetColorZero rendered to a table of black pens. fixed.
 
   40.3
+    - morphos version compiled by Sigbjørn Skjæret. added.
     - HAM8 rendering was not 100% accurate. should be correct now.
     - added missing semaphore locks
     - minor cleanup

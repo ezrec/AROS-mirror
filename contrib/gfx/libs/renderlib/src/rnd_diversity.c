@@ -34,8 +34,13 @@ LIBAPI LONG RGBArrayDiversityA(ULONG *src, UWORD width, UWORD height, struct Tag
 			{
 				for (x = 0; x < width; x += xstep)
 				{
+				#ifdef RENDER_LITTLE_ENDIAN
+					rgb1 = AROS_BE2LONG(src[x]);
+				#else
 					rgb1 = src[x];
+				#endif
 					rgb2 = dstpal->table[P2Lookup(dstpal, rgb1)];
+
 					dr = ((rgb1 & 0xff0000) >> 16);
 					dr -= (LONG) ((rgb2 & 0xff0000) >> 16);
 					dg = ((rgb1 & 0x00ff00) >> 8);
@@ -53,8 +58,6 @@ LIBAPI LONG RGBArrayDiversityA(ULONG *src, UWORD width, UWORD height, struct Tag
 		
 		D = DF / num;
 	}
-
-	/*DB(kprintf("rgbdiversity: %ld\n", D));*/
 
 	return D;
 }
@@ -110,8 +113,6 @@ LIBAPI LONG ChunkyArrayDiversityA(UBYTE *src, RNDPAL *srcpal, UWORD width, UWORD
 		D = DF / num;
 	}
 
-	/*DB(kprintf("chunkydiversity: %ld\n", D));*/
-	
 	return D;
 }
 

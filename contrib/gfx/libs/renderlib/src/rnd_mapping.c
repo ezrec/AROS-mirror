@@ -40,7 +40,12 @@ LIBAPI ULONG MapRGBArrayA(RNDPAL *pal, ULONG *src, UWORD width, UWORD height, UB
 				{
 					for (x = 0; x < width; ++x)
 					{
+					#ifdef RENDER_LITTLE_ENDIAN
+					    	ULONG pix = *src++;
+						*dst++ = pentab[P2Lookup(pal, AROS_BE2LONG(pix))];
+					#else
 						*dst++ = pentab[P2Lookup(pal, *src++)];
+					#endif
 					}
 					src += tsw - width;
 					dst += tdw - width;
@@ -52,7 +57,12 @@ LIBAPI ULONG MapRGBArrayA(RNDPAL *pal, ULONG *src, UWORD width, UWORD height, UB
 				{
 					for (x = 0; x < width; ++x)
 					{
+					#ifdef RENDER_LITTLE_ENDIAN
+					    	ULONG pix = *src++;
+						*dst++ = P2Lookup(pal, AROS_BE2LONG(pix));
+					#else
 						*dst++ = P2Lookup(pal, *src++);
+					#endif
 					}
 					src += tsw - width;
 					dst += tdw - width;

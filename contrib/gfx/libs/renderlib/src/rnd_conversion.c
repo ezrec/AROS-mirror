@@ -150,7 +150,11 @@ LIBAPI ULONG Chunky2RGBA(UBYTE *src, UWORD width, UWORD height,
 								col |= nib;
 								break;
 						}
+					#ifdef RENDER_LITTLE_ENDIAN
+					    	if (x >= left) *dst++ = AROS_LONG2BE(col);
+					#else
 						if (x >= left) *dst++ = col;
+					#endif
 					}
 					break;
 				}
@@ -184,7 +188,11 @@ LIBAPI ULONG Chunky2RGBA(UBYTE *src, UWORD width, UWORD height,
 								col |= nib << 2;
 								break;
 						}
+					#ifdef RENDER_LITTLE_ENDIAN
+					    	if (x >= left) *dst++ = AROS_LONG2BE(col);
+					#else
 						if (x >= left) *dst++ = col;
+					#endif
 					}
 					break;
 				}
@@ -196,14 +204,24 @@ LIBAPI ULONG Chunky2RGBA(UBYTE *src, UWORD width, UWORD height,
 					{
 						for (x = 0; x < width; ++x)
 						{
+						#ifdef RENDER_LITTLE_ENDIAN
+						    	ULONG pix = pal->table[pentab[*src++]];
+							*dst++ = AROS_LONG2BE(pix);
+						#else
 							*dst++ = pal->table[pentab[*src++]];
+						#endif
 						}
 					}
 					else
 					{
 						for (x = 0; x < width; ++x)
 						{
+						#ifdef RENDER_LITTLE_ENDIAN
+						    	ULONG pix = pal->table[*src++];
+							*dst++ = AROS_LONG2BE(pix);
+						#else
 							*dst++ = pal->table[*src++];
+						#endif
 						}
 					}
 					break;
@@ -247,6 +265,11 @@ LIBAPI void Planar2ChunkyA(UWORD **planetab, UWORD bytewidth, UWORD rows, UWORD 
 	UBYTE p;
 	
 	if (!planetab || !bytewidth || !rows || !depth || !dst) return;
+	
+
+#ifdef	RENDER_LITTLE_ENDIAN
+#warning "Endianess fixes in Planar2ChunkyA() not yet done!"
+#endif
 	
 	for (y = 0; y < rows; ++y)
 	{
