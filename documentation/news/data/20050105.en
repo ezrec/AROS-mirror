@@ -103,6 +103,17 @@ __ http://www.libsdl.org/projects/SDL_mixer/
 __ http://www.libsdl.org/projects/SDL_ttf/
 __ http://www.freedesktop.org/Software/dbus
 
+Build System
+------------
+
+Aswell as the bug fixes and changes needed for the BSD build, Fabio 
+Alemagna implemented a source fetch, patch and compile mechanism - similar 
+to the port system of BSD fame - to the AROS build system. Basically, it 
+allows you to make a one-line makefile to fetch a source archive, apply 
+patches to the files, build it and prepare a binary distribution of the 
+installed files.
+
+
 Other
 -----
 
