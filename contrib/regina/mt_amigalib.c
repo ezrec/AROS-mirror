@@ -9,11 +9,7 @@
 #include "rexx.h"
 
 #include <proto/alib.h>
-
 #include <exec/memory.h>
-#include <exec/semaphores.h>
-#include <exec/lists.h>
-#include <exec/nodes.h>
 
 #include <assert.h>
 
@@ -24,12 +20,6 @@ typedef struct _mt_tsd_t {
   APTR mempool;
 } mt_tsd_t;
 
-typedef struct _tsd_node_t {
-  struct MinNode node;
-  struct Task *task;
-  tsd_t *TSD;
-} tsd_node_t;
-
 
 /* Lowest level memory allocation function for normal circumstances. */
 static void *MTMalloc(const tsd_t *TSD,size_t size)
@@ -39,8 +29,10 @@ static void *MTMalloc(const tsd_t *TSD,size_t size)
 
    size += sizeof(size_t);
    mem = AllocPooled( mt->mempool, size);
-   *((size_t*)mem)=size;
+   if ( mem == NULL )
+      return NULL;
 
+  *((size_t*)mem)=size;
   return (void *)(((char *)mem)+sizeof(size_t));
 }
 

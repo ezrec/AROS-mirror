@@ -66,3 +66,14 @@ tsd_t *__regina_get_tsd(void);
 extern APTR __regina_semaphorepool;
 void AmigaLockSemaphore(struct SignalSemaphore **);
 void AmigaUnlockSemaphore(struct SignalSemaphore *);
+
+#include <exec/lists.h>
+#include <exec/nodes.h>
+
+typedef struct _tsd_node_t {
+  struct MinNode node;
+  struct Task *task;
+  tsd_t *TSD;
+} tsd_node_t;
+
+extern struct MinList *__regina_tsdlist;
