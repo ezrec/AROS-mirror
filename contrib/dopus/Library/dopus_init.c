@@ -13,6 +13,7 @@
 #include <exec/lists.h>
 #include <exec/resident.h>
 #include <aros/libcall.h>
+#include <aros/asmcall.h>
 #include <proto/exec.h>
 
 /* #include "initstruct.h" */
@@ -139,12 +140,12 @@ void set_global_dopusbase(struct DOpusBase *base)
 	DOpusBase = base;
 }
 
-AROS_LH2(struct DOpusBase *, init,
-    AROS_LHA(struct DOpusBase *, LIBBASE, D0),
-    AROS_LHA(BPTR,               segList,   A0),
-    struct ExecBase *, sysBase, 0, BASENAME)
+AROS_UFH3(struct DOpusBase *, AROS_SLIB_ENTRY(init,BASENAME),
+    AROS_UFHA(struct DOpusBase *, LIBBASE, D0),
+    AROS_UFHA(BPTR,               segList,   A0),
+    AROS_UFHA(struct ExecBase *, sysBase, A6))
 {
-    AROS_LIBFUNC_INIT
+    AROS_USERFUNC_INIT
 
     /* This function is single-threaded by exec by calling Forbid. */
 
@@ -217,7 +218,7 @@ kprintf("DOPUS_INIT: ct: %p, cb: %p\n"
 
     /* You would return NULL here if the init failed. */
     return LIBBASE;
-    AROS_LIBFUNC_EXIT
+    AROS_USERFUNC_EXIT
 }
 
 
