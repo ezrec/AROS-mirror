@@ -48,7 +48,7 @@ some good points about the goals of the syntax.
 
 Since the format is basically plaintext it is very easy to learn by simply
 inspecting existing documentation and using some common sense, but nevertheless
-it is recommended to atleast quickly read through the `ReStructuredText
+it is recommended to at least quickly read through the `ReStructuredText
 Primer`__ before starting to work on AROS documentation. 
 
 For more information about the format, the following documents are recommended
@@ -198,5 +198,5 @@ directory.
     There are currently quite many intermediate files generated in the source
     directories, so you cannot put it on a read-only filesystem. If you have
     checked out the sources from CVS there's no need to worry: the generated
-    files are ignored as apropriate.
+    files are ignored as appropriate.
 
