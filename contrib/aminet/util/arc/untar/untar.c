@@ -2,9 +2,10 @@
 /* By Andrew Church           */
 /* 95ACHURCH@vax.mbhs.edu     */
 
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <proto/dos.h>
 
 struct FileHeader {
   int  type;
@@ -74,58 +75,96 @@ struct FileHeader *hdr;
   pos+=512;
 }
 
-void MakeDirs (char * s)
+int mkdirhier(char *path, int mode)
 {
-  char *temp;
-  int i = 0;
+    char *endpath   = path;
+    int   err = 0;
+    int   putback = 0;
 
-  do
-  {
-     while (s[i] && s[i] != '/') i++;
-     if (s[i] == '/')
-     {
-       temp = strdup (s);
-       temp[i] = 0;
-       mkdir (temp, 0);
-       free (temp);
-       i++;
-     }
-  }
-  while (s[i]);
+    while (*endpath != '\0')
+    {
+	while (*endpath != '\0' && *endpath != '/')
+            endpath++;
+
+        if (*endpath == '/')
+        {
+            *endpath = '\0';
+	    putback = 1;
+	}
+
+	err = mkdir(path, mode);
+
+	if (err)
+	{
+	    if (errno != EEXIST)
+	        return err;
+	}
+	else
+	    printf("Created directory %s\n", path);
+
+	if (putback)
+	{
+	    putback = 0;
+	    *(endpath++) = '/';
+	}
+    }
+
+    return 0;
 }
 
 int main(argc,argv)
 int argc;
 char **argv;
 {
-  if(argc==1) {
-    puts("Required argument missing");
-    exit(20);
-  }
-  if(tar=fopen(argv[1],"r")) {
-    printf("Extracting files from archive: %s\n",argv[1]);
-    pos=0;
-    ReadHeader(&hdr);
-    while(ftell(tar)!=EOF && hdr.name[0]) {
-      if(hdr.name[strlen(hdr.name)-1]=='/') {
-        hdr.name[strlen(hdr.name)-1]=0;  /* remove trailing '/' */
-        printf("Creating directory %s\n",hdr.name);
-        mkdir(hdr.name,0);
-      } else {
-        MakeDirs (hdr.name);
-        if(f=fopen(hdr.name,"w")) {
-          printf("Extracting (%8d bytes) %s\n",hdr.size,hdr.name);
-          CopyData(tar,f,hdr.size);
-          fclose(f);
-        }
-        pos+=(hdr.size+511) & -512;
-        AbsSeek(tar,pos);
-      }
-      ReadHeader(&hdr);
+    if(argc==1)
+    {
+        fputs(stderr, "Required argument missing");
+        exit(20);
     }
-    fclose(tar);
-    exit(0);
-  }
-  printf("File not found: %s\n",argv[1]);
-  exit(20);
+
+    if((tar=fopen(argv[1],"r")))
+    {
+        printf("Extracting files from archive: %s\n",argv[1]);
+        pos=0;
+        ReadHeader(&hdr);
+
+	while(ftell(tar)!=EOF && hdr.name[0])
+	{
+	    char *fp = PathPart(hdr.name);
+
+	    if (*fp == '/')
+	    {
+		*fp = '\0';  /* remove trailing '/' */
+        	mkdirhier(hdr.name,0);
+		*fp = '/';   /* put it back */
+      	    }
+
+	    if (fp != hdr.name + strlen(hdr.name) - 1)
+	    {
+	        printf("Extracting (%8d bytes) %s\n",hdr.size,hdr.name);
+	        if((f=fopen(hdr.name,"w")))
+	        {
+                    CopyData(tar,f,hdr.size);
+          	    fclose(f);
+	        }
+	        else
+	        {
+		    perror("Couldn't create file");
+	        }
+	    }
+
+	    pos+=(hdr.size+511) & -512;
+            AbsSeek(tar,pos);
+
+	    ReadHeader(&hdr);
+	 }
+
+	 fclose(tar);
+
+	 exit(0);
+
+    }
+    printf("File not found: %s\n",argv[1]);
+
+    exit(20);
 }
