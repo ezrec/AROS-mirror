@@ -40,7 +40,7 @@ site.conf : site.conf.in
 	@exit 1
 
 ifdef GNUPLOT
-pics : config.py $(HTMLDIR)/aros_size.png $(HTMLDIR)/contrib_size.png
+pics : config.py $(HTMLDIR)/aros_size.png $(HTMLDIR)/contrib_size.png $(DEVPICS) $(SCREENSHOTS)
 
 $(HTMLDIR)/%_size.png : %.size size2plot.py
 	python size2plot.py $(subst _size.png,,$@) $<
