@@ -33,7 +33,7 @@ $(HTMLDIR)/%.html :
 # is newer.
 .stamp : HTMLcolors.py HTMLgen.py aros.rc gensite imgsize.py \
 	    config.py htmlautodocs.py mainlinks.py news.py status.py \
-	    util.py xmlsupport.py $(wildcard *.xml) \
+	    util.py xmlsupport.py code2html.py $(wildcard *.xml) \
 	    $(wildcard news/*) links.py $(DEVPICS) $(SCREENSHOTS)
 	@python gensite
 	@touch $@
