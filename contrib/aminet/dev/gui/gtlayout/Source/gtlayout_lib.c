@@ -464,6 +464,7 @@ struct GTLayoutBase
 
 /*****************************************************************************/
 struct GTLayoutBase *GTLayoutBase;
+/*****************************************************************************/
 
 STATIC struct Library * LIBENT
 LibInit(

@@ -132,7 +132,7 @@ FILES = \
 
 TESTFILES = test/gui test/Tools
 
-OBJS = $(foreach f,$(API_SOURCE) $(UFC_SOURCE) $(FILES),$(f).o)
+OBJS = $(foreach f,$(API_SOURCE) $(UFC_SOURCE) $(FILES) ,$(f).o)
 TESTOBJS = test/gui.o test/Tools.o
 
 #First all intermediate files MUST be created so there is a 'defines' file!
@@ -145,5 +145,5 @@ test_aros: $(TESTOBJS)
 	$(CC) $(TESTOBJS) -L$(LIBDIR) -lamiga -o $@
  
 clean:
-	$(RM) $(INTERMEDIATES) $(OBJS) gtlayout.library aros/gtlayout_defines_aros.h
+	$(RM) $(INTERMEDIATES) $(OBJS) gtlayout.library aros/gtlayout_defines_aros.h gtlayout_lib.o gtlayout_data.o
 
