@@ -25,6 +25,13 @@ void open_window()
 			    | IDCMP_MOUSEBUTTONS
 			    | IDCMP_GADGETUP
 			    | IDCMP_CLOSEWINDOW
+	, WA_Flags,	    WFLG_DRAGBAR
+			    |WFLG_DEPTHGADGET
+			    |WFLG_CLOSEGADGET
+			    |WFLG_NOCAREREFRESH
+			    |WFLG_SMART_REFRESH
+			    |WFLG_ACTIVATE
+			    |WFLG_RMBTRAP
 	, WA_SimpleRefresh, TRUE
 	, WA_Gadgets,	    &Start
 	, TAG_END

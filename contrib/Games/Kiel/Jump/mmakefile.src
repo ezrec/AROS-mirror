@@ -13,6 +13,9 @@ EXES := $(DESTDIR)/Jump $(DESTDIR)/JumpEd
 
 .PHONY : all clean
 
+#MM
+games-jump : setup-games games
+
 #MM games : setup-games
 games : $(EXES)
 

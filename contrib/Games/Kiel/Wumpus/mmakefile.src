@@ -13,6 +13,9 @@ EXES := $(DESTDIR)/Wumpus
 
 .PHONY : all clean
 
+#MM
+games-wumpus : setup-games games
+
 #MM games : setup-games
 games : $(EXES)
 

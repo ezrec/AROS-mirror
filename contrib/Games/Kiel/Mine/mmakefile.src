@@ -12,6 +12,9 @@ EXES := $(DESTDIR)/Mine
 
 .PHONY : all clean
 
+#MM
+games-mine : setup-games games
+
 #MM games : setup-games
 games : $(EXES)
 

@@ -4,7 +4,7 @@ void open_datei()
 {
 int count,j;
 char Puffer[21],Zahl[4];
-  if((filehandle=Open("S:Mine.High",MODE_OLDFILE))!=0)
+  if((filehandle=(struct FileHandle *)Open("S:Mine.High",MODE_OLDFILE))!=0)
   {
     for(j=1;j<4;j++)
     {
@@ -21,9 +21,9 @@ void schliessedatei()
 {
 int count,j;
 char Zahl[4];
-  if((filehandle=Open("S:Mine.High",MODE_OLDFILE))==0)
+  if((filehandle=(struct FileHandle *)Open("S:Mine.High",MODE_OLDFILE))==0)
   {
-    filehandle=Open("S:Mine.High",MODE_NEWFILE);
+    filehandle=(struct FileHandle *)Open("S:Mine.High",MODE_NEWFILE);
   }
   for(j=1;j<4;j++)
   {

@@ -13,6 +13,9 @@ EXES := $(DESTDIR)/Quad
 
 .PHONY : all clean
 
+#MM
+games-quad : setup-games games
+
 #MM games : setup-games
 games : $(EXES)
 

@@ -29,7 +29,7 @@ void open_file()
 {
 int count=1,j;
 char buffer[2];
-  if((filehandle=Open("S:Jump.dat",MODE_OLDFILE))!=0)
+  if((filehandle=(struct FileHandle *)Open("S:Jump.dat",MODE_OLDFILE))!=0)
   {
     for(j=0;j<33&&count==1;j++)
     {

@@ -25,7 +25,7 @@ void open_file()
 {
 int count=1,j;
 char Puffer[2];
-  if((filehandle=Open("S:Jump.dat",MODE_OLDFILE))!=0)
+  if((filehandle=(struct FileHandle *)Open("S:Jump.dat",MODE_OLDFILE))!=0)
   {
     for(j=0;j<33&&count==1;j++)
     {
@@ -48,9 +48,9 @@ void write_file()
 {
 int count,j;
 char Zahl[2];
-  if((filehandle=Open("S:Jump.dat",MODE_OLDFILE))==0)
+  if((filehandle=(struct FileHandle *)Open("S:Jump.dat",MODE_OLDFILE))==0)
   {
-    filehandle=Open("S:Jump.dat",MODE_NEWFILE);
+    filehandle=(struct FileHandle *)Open("S:Jump.dat",MODE_NEWFILE);
   }
   for(j=0;j<33;j++)
   {
