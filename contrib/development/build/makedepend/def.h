@@ -22,12 +22,13 @@ in this Software without prior written authorization from The Open Group.
 */
 /* $XFree86: xc/config/makedepend/def.h,v 3.10 2001/07/25 15:04:40 dawes Exp $ */
 
-#include "Xos.h"
-#include "Xfuncproto.h"
+//#include "Xos.h"
+//#include "Xfuncproto.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <unistd.h>
 #if 0
 #ifndef X_NOT_POSIX
 #ifndef _POSIX_SOURCE
@@ -39,12 +40,19 @@ in this Software without prior written authorization from The Open Group.
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#ifdef AROS
+#define OBJSUFFIX ".o"
+#endif
+
 #define MAXDEFINES	512
 #define MAXFILES	1024
 #define MAXDIRS		64
 #define SYMTABINC	10	/* must be > 1 for define() to work right */
+
+#ifndef AROS
 #define	TRUE		1
 #define	FALSE		0
+#endif 
 
 /* the following must match the directives table in main.c */
 #define	IF		0
