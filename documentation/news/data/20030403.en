@@ -77,9 +77,18 @@ There are news also from the device drivers front, thanks to Johan Grip.
 Applications
 ------------
 
-Worth mentioning, application-wise, is HDToolBox [3]_, which has seen many bugs fixed and its GUI improved.
-For the ones that don't know yet, thanks to the partition.library [4]_, HDToolBox handles both RDB and MBR
-partitioning models, and it allows for nested partitions, even of different models.
+AROS doesn't have a wide set of applications yet, however it has a few cute ones, and some of them
+have seen great improvements during the last months.
+
+    - HDToolBox [3]_ has seen many bugs fixed and its GUI improved. For the ones that
+      don't know yet, thanks to the partition.library [4]_, HDToolBox handles both RDB and MBR
+      partitioning models, and it allows for nested partitions, even of different models.
+
+    - Staf Verhaegen has managed to port Regina_, a free and portable REXX interpreter, to AROS,
+      making it fully compatible with AREXX.
+
+    - The AROS port of python_, manteined by Adam Chodorowski, has a site__ of its own now,
+      and got the name of *PyAROS*.
 
 
 Miscellaneous
@@ -151,8 +160,11 @@ __ http://aros.sourceforge.net/downloads/kitty/
 __ http://www.coax.net/people/erics/
 __ screenshots_
 __ http://aros.sourceforge.net/pictures/screenshots/20030403/masonicons.png
+__ http://pyaros.sf.net/
 
 .. _MUI: http://www.sasg.com/mui/index.html
 .. _MOS: http://www.morphos.de/
 .. _freenode: http://www.freenode.net/
 .. _screenshots: /pictures/screenshots/
+.. _Regina: http://regina-rexx.sourceforge.net/
+.. _python: http://www.pythin.org/
