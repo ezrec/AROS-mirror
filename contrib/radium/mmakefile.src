@@ -125,6 +125,7 @@ contrib-radium : setup $(EXE)
 #MM
 setup ::
 	%mkdirs_q $(CONTRIBDIR)/radium
+	cp RADIUM.RUN $(CONTRIBDIR)/radium/Execute.Me
 
 %common
 %include_deps
