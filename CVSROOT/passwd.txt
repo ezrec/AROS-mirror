@@ -47,5 +47,6 @@ claus:TovO1K/.ndeMk:Claus Herrmann:claus@frontgate.phase5.de:
 fanciulli:dbQukt.jPYnvs:Marco Fanciulli:master@fw.sacis.it:
 crayor:abMnCt/4hEYUE:Jörg Rebenstorf:crayor@zedat.fu-berlin.de:
 gdprete:dcZM1RIri4/PY:Gabriele Del Prete:gdprete@tin.it:
+mmaso:cbgEtQf6JtAq:Milos Masopust:mmaso@ipex.cz:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
