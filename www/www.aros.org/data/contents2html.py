@@ -11,6 +11,14 @@ def list2html (list):
 	
     return MyRawText (s)
 
+def convertParagraph (page, list):
+    if not isinstance (list[0], xmlsupport.Tag) or \
+	list[0].name != 'p':
+	p = xmlsupport.Tag ('p')
+	p.setContents (list)
+	list = p
+    xml2html.elementToHtml (list, page)
+
 def convertItem (page, c, dirlist, item):
     list = ('contents',) + dirlist
     path = apply (os.path.join, list)
@@ -25,7 +33,7 @@ def convertItem (page, c, dirlist, item):
 	    list.append (Href (os.path.join (dir, 'contents.html'),
 		'%s/' % dir))
 	    
-	    convertContents (child, dirlist+(dir,), c)
+	    convertContents (child, dirlist+(dir,), item)
 
 	list.append (Text (', '))
 
@@ -40,12 +48,7 @@ def convertItem (page, c, dirlist, item):
 
     list = item.description[:]
     if list:
-	if not isinstance (list[0], xmlsupport.Tag) or \
-	    list[0].name != 'p':
-	    p = xmlsupport.Tag ('p')
-	    p.setContents (list)
-	    list = p
-	xml2html.elementToHtml (list, page)
+	convertParagraph (page, list)
     else:
 	page.meat = page.meat + [Paragraph ('No description for this entry available.')]
 
@@ -79,9 +82,9 @@ def convertContents (c, dirlist, parent):
     page.meat = page.meat + [Heading (1, list2html (list))]
 
     if c.description:
-	xml2html.elementToHtml (c.description, page)
+	convertParagraph (page, c.description)
     elif parent:
-	xml2html.elementToHtml (parent.description, page)
+	convertParagraph (page, parent.description)
 
     for item in c.items:
 	convertItem (page, c, dirlist, item)
