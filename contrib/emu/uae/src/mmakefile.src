@@ -66,7 +66,7 @@ USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
 	       -fno-strength-reduce -DREGPARAM='__attribute__((regparm(3)))'\
 	       -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
 	       -I$(SRCDIR) -I$(SRCDIR)/include \
-	       -UAMIGA
+	       -UAMIGA -U_AMIGA
 
 #MM- contrib-complete: uae
 #MM uae : setup includes uae-setup uae-od-aros
