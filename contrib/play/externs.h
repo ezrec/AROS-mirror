@@ -10,7 +10,8 @@
 #include "SDL.h"
 
 extern int use_audio, audio_sample_rate, audio_channels, frame_width,
-    frame_height, verbose, bytes_in_buffer, benchmark_mode, debugging;
+    frame_height, verbose, bytes_in_buffer, benchmark_mode, debugging,
+    no_video;
 extern unsigned long sample_frame;
 extern double frame_rate;
 
