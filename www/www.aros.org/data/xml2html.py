@@ -9,7 +9,7 @@ from util import TableLite, TR, TD, Heading, RawText, Page, arosRC, \
 def writeVerbatim (p, xmlfile, item):
     if isinstance (item, xmlsupport.Tag):
 	# Give a hint if a tag might be unsupported
-	if not item.name in ('p', 'ul', 'li', 'strong', 'i', 'a', 'img', 'tt', 'ol', 'br'):
+	if not item.name in ('p', 'ul', 'li', 'strong', 'i', 'a', 'img', 'tt', 'ol', 'br', 'table', 'tr', 'th', 'td'):
 	    print item.name
 	p.fh.write ('<%s' % item.name)
 	for attr, value in item.attr.items ():
