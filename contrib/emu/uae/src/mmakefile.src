@@ -158,4 +158,4 @@ cpudefs.o: cpudefs.c
 
 #MM
 uae-docs-copy :
-	cd $(TOP)/$(CURDIR)/../docs; tar c . | tar x -C $(EXEDIR)/Docs
+	cd $(TOP)/$(CURDIR)/../docs; tar cf - . | tar xf - -C $(EXEDIR)/Docs
