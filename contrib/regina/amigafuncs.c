@@ -209,7 +209,7 @@ streng *arexx_writech( tsd_t *TSD, cparamboxptr parm1 )
 
   file = getfile( TSD, parm1->value );
   if ( file==NULL )
-    exiterror( ERR_INCORRECT_CALL, 0);
+    exiterror( ERR_INCORRECT_CALL, 27, "WRITECH", tmpstr_of( TSD, parm1->value ));
   
   txt = str_of( TSD, parm2->value );
   count = fprintf( file, "%s", txt );
@@ -231,7 +231,7 @@ streng *arexx_writeln( tsd_t *TSD, cparamboxptr parm1 )
 
   file = getfile( TSD, parm1->value );
   if ( file==NULL )
-    exiterror( ERR_INCORRECT_CALL, 0 );
+    exiterror( ERR_INCORRECT_CALL, 27, "WRITELN", tmpstr_of( TSD, parm1->value ) );
 
   txt = str_of( TSD, parm2->value );
   count = fprintf(file, "%s\n", txt);
@@ -254,11 +254,11 @@ streng *arexx_seek( tsd_t *TSD, cparamboxptr parm1 )
   
   file = getfile( TSD, parm1->value );
   if ( file==NULL )
-    exiterror( ERR_INCORRECT_CALL, 0 );
+    exiterror( ERR_INCORRECT_CALL, 27, "SEEK", tmpstr_of( TSD, parm1->value ) );
   
   offset = streng_to_int( TSD, parm2->value, &error );
   if (error)
-    exiterror( ERR_INCORRECT_CALL, 0 );
+    exiterror( ERR_INCORRECT_CALL, 11, "SEEK", 2, tmpstr_of( TSD, parm2->value ) );
   
   if ( parm3==NULL
        || parm3->value==NULL
@@ -298,7 +298,7 @@ streng *arexx_readch( tsd_t *TSD, cparamboxptr parm1 )
   
   file = getfile( TSD, parm1->value );
   if ( file==NULL )
-    exiterror( ERR_INCORRECT_CALL, 0 );
+    exiterror( ERR_INCORRECT_CALL, 27, "READCH", tmpstr_of( TSD, parm1->value ) );
   
   if ( parm2==NULL )
   {
@@ -316,8 +316,8 @@ streng *arexx_readch( tsd_t *TSD, cparamboxptr parm1 )
     
     count = streng_to_int( TSD, parm2->value, &error );
     
-    if ( error )
-      exiterror( ERR_INVALID_INTEGER, 0 );
+    if ( error || count<=0 )
+      exiterror( ERR_INVALID_INTEGER, 14, "READCH", 2, tmpstr_of( TSD, parm2->value ) );
     
     buffer = malloc( count + 1 );
 
@@ -340,7 +340,7 @@ streng *arexx_readln( tsd_t *TSD, cparamboxptr parm )
   
   file = getfile( TSD, parm->value );
   if ( file==NULL )
-    exiterror( ERR_INCORRECT_CALL, 0 );
+    exiterror( ERR_INCORRECT_CALL, 27, "READLN", tmpstr_of( TSD, parm->value ) );
   
   fgets( buffer, 1001, file );
   if ( buffer[strlen(buffer)-1]=='\n' )
@@ -358,7 +358,7 @@ streng *arexx_eof( tsd_t *TSD, cparamboxptr parm )
   
   file = getfile( TSD, parm->value );
   if ( file==NULL )
-    exiterror( ERR_INCORRECT_CALL, 0 );
+    exiterror( ERR_INCORRECT_CALL, 27, "EOF", tmpstr_of( TSD, parm->value ) );
   
   return int_to_streng( TSD, feof( file )!=0 );
 }
@@ -417,8 +417,8 @@ streng *arexx_bitchg( tsd_t *TSD, cparamboxptr parm1 )
   parm2 = parm1->next;
   
   bit = streng_to_int( TSD, parm2->value, &error );
-  if (error)
-    exiterror( ERR_INCORRECT_CALL, 0 );
+  if (error || bit<0 )
+    exiterror( ERR_INCORRECT_CALL, 13, "BITCHG", 2, tmpstr_of( TSD, parm2->value ) );
   
   dt = div( bit, 8 );
 
@@ -444,7 +444,7 @@ streng *arexx_bitclr( tsd_t *TSD, cparamboxptr parm1 )
   
   bit = streng_to_int( TSD, parm2->value, &error );
   if (error)
-    exiterror( ERR_INCORRECT_CALL, 0 );
+    exiterror( ERR_INCORRECT_CALL, 13, "BITCLR", 2, tmpstr_of( TSD, parm2->value ) );
   
   dt = div( bit, 8 );
   
@@ -470,7 +470,7 @@ streng *arexx_bitset( tsd_t *TSD, cparamboxptr parm1 )
   
   bit = streng_to_int( TSD, parm2->value, &error );
   if (error)
-    exiterror( ERR_INCORRECT_CALL, 0 );
+    exiterror( ERR_INCORRECT_CALL, 13, "BITSET", 2, tmpstr_of( TSD, parm2->value ) );
   
   dt = div( bit, 8 );
   
@@ -496,7 +496,7 @@ streng *arexx_bittst( tsd_t *TSD, cparamboxptr parm1 )
   
   bit = streng_to_int( TSD, parm2->value, &error );
   if (error)
-    exiterror( ERR_INCORRECT_CALL, 0 );
+    exiterror( ERR_INCORRECT_CALL, 13, "BITTST", 2, tmpstr_of( TSD, parm2->value ) );
   
   dt = div( bit, 8 );
   
@@ -580,10 +580,8 @@ streng *arexx_upper( tsd_t *TSD, cparamboxptr parm1 )
   checkparam( parm1, 1, 1, "UPPER" );
   
   ret = Str_dup_TSD( TSD, parm1->value );
-  for( i=0; i<ret->len; i++)
-    ret->value[i] = toupper( ret->value[i] );
-  
-  return ret;
+
+   return Str_upper( ret );
 }
 
 
@@ -598,7 +596,7 @@ streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 )
   {
     seed = streng_to_int( TSD, parm1->value, &error );
     if (error)
-      exiterror( ERR_INVALID_INTEGER, 0 );
+      exiterror( ERR_INVALID_INTEGER, 11, "RANDU", 1, tmpstr_of( TSD, parm1->value ) );
     
     srand48( (long int)seed );
   }
