@@ -4,5 +4,5 @@
 include $(TOP)/config/make.cfg
 
 %build_catalogs mmake=setup-filemaster-catalogs \
-                name=FileMaster subdir=  include=../filemaster_strings.h \
+                name=FileMaster subdir=  source=../filemaster_strings.h \
                 dir=$(CONTRIBDIR)/aminet/Catalogs

@@ -4,5 +4,5 @@
 include $(TOP)/config/make.cfg
 
 %build_catalogs mmake=setup-typeface-catalogs \
-                name=Typeface subdir=  include=../locale.h \
+                name=Typeface subdir=  source=../locale.h \
                 dir=$(CONTRIBDIR)/aminet/Catalogs

@@ -4,5 +4,5 @@
 include $(TOP)/config/make.cfg
 
 %build_catalogs mmake=setup-soliton-catalogs \
-                name=Soliton subdir=  include=../common/Catalog.h \
+                name=Soliton subdir=  source=../common/Catalog.h \
                 dir=$(CONTRIBDIR)/aminet/Soliton/Catalogs
