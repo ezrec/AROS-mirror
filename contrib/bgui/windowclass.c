@@ -11,6 +11,11 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/07/07 17:11:50  stegerg
+ * had to change BASE_FINDKEY and GRM_WHICHOBJECT method calls
+ * for AROS (#ifdef), because of changed types in method structs
+ * (UWORD --> STACKUWORD, ...)
+ *
  * Revision 42.4  2000/06/01 01:41:38  bergers
  * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
  *
@@ -2358,9 +2363,14 @@ STATIC ULONG KeyGadget(Class *cl, Object *obj, struct IntuiMessage *imsg)
       code = code | 0xFF00;
    };
 
+   #ifdef _AROS
+   if (!(ob = (Object *)AsmDoMethod(obj, BASE_FINDKEY, qual, code)))
+      goto end;
+   #else
    if (!(ob = (Object *)AsmDoMethod(obj, BASE_FINDKEY, (qual << 16) | code)))
       goto end;
-
+   #endif
+   
    /*
     * Initialize wmKeyInput structure.
     */
@@ -3876,7 +3886,12 @@ METHOD(WindowClassWhichObject, Msg, msg)
          /*
           * Let's see what the master returns to us.
           */
+	  
+	 #ifdef _AROS
+         rc = AsmDoMethod(wd->wd_Gadgets, GRM_WHICHOBJECT, mx, my);
+	 #else
          rc = AsmDoMethod(wd->wd_Gadgets, GRM_WHICHOBJECT, (mx << 16) | my);
+	 #endif
    }
    return rc;
 }
