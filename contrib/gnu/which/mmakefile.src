@@ -1,0 +1,9 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+##MM- contrib-gnu : contrib-gnu-which
+##MM- contrib-gnu-which : development-which
+
+%fetch_and_build_gnu_development package=which version=2.16 patch=yes
