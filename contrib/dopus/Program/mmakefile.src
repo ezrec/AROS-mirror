@@ -12,7 +12,7 @@ FILES := about arbiter main main1 main2 main3 main4 main5 main6 main7\
 
 EXEDIR := $(CONTRIBDIR)/DOpus
 
-#MM- DirOpus : dopus-library
+#MM- DirOpus : dopus-library workbench-libs-rexxsyslib
 
 %build_prog mmake=DirOpus \
     progname=DirectoryOpus targetdir=$(EXEDIR) \
