@@ -124,7 +124,7 @@ You will need the following to build the AROS documentation from scratch:
 
 To build the website you will additionally need:
 
-+ The `Python Imaging Library`__ 1.1.2
++ The `Python Imaging Library`__ 1.1.3
 
 __ http://www.python.org/
 __ http://docutils.sourceforge.net/
