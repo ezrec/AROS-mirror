@@ -78,6 +78,12 @@ void __stdargs filteron(void);
 
 #warning Fix varargs
 void lsprintf (char *,char *,...);
+int getusage(void); /* AROS FIX: is in getusage.c: converted from asm */
+int countlines(struct ViewData *vd); /* AROS FIX: in asmfuncs_in_c.c*/
+int smartcountlines(struct ViewData *vd);  /* AROS FIX: in asmfuncs_in_c.c*/
+int ansicountlines(struct ViewData *vd);  /* AROS FIX: in asmfuncs_in_c.c*/
+void removetabs(struct ViewData *vd);    /* AROS FIX: in asmfuncs_in_c.c*/
+
 
 #endif
 
