@@ -17,4 +17,4 @@
 # name and listing the modified file names.
 #
 # For example:
-DEFAULT		(/bin/echo ""; /bin/echo "CVS COMMIT OF %s BY `/usr/bin/printenv USER`"; /bin/date; /bin/cat) | tee -a $CVSROOT/CVSROOT/commitlog.new >> $CVSROOT/CVSROOT/commitlog
+DEFAULT		gawk -f $CVSROOT/CVSROOT/commitlog.awk --assign File="%s" --assign Out="$CVSROOT/CVSROOT/commitlog"
