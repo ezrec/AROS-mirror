@@ -1,8 +1,11 @@
 @import url(docutils.css);
 
+div.document {
+    padding: 0px 10px 0px 10px }
+
 h1 {
-    margin:             10px -15px 10px -15px ;
-    padding:            2px   13px 2px   13px ;
+    margin:             10px -25px 10px -25px ;
+    padding:            2px   23px 2px   23px ;
     border:             thin solid black      ;
     background:         #ccccff               }
 
@@ -11,10 +14,10 @@ h1.title {
     background: #9999ff }
 
 h2 {
-    border:             thin dotted black ;
-    background:         #bbbbbb           ;
-    padding:            2px  2px 2px  2px ;
-    margin:             0px -2px 0px -2px }
+    border:             thin dotted black   ;
+    background:         #bbbbbb             ;
+    padding:            2px   9px 2px   9px ;
+    margin:             0px -10px 0px -10px }
 
 pre.literal-block, pre.doctest-block {
     background-color: #cccccc }
