@@ -130,9 +130,6 @@ static UBYTE            *Line;
 static struct RastPort  *RP;
 static struct Screen    *S;
 static struct Window    *W;
-static struct RastPort  *TempRPort;
-static struct BitMap    *BitMap;
-static struct ColorMap  *CM;
 static Object           *Pointer; /* for os 39 */
 static UWORD            *Sprite;
 static int              XOffset,YOffset;
@@ -144,8 +141,6 @@ static int   maxpen;
 static UBYTE pen[256];
 
 static void set_title(void);
-static LONG ObtainColor(ULONG, ULONG, ULONG);
-static void ReleaseColors(void);
 static int  DoSizeWindow(struct Window *,int,int);
 static void disk_hotkeys(void);
 static int  init_ham(void);
@@ -209,13 +204,9 @@ static int RPDepth(struct RastPort *RP)
 
 /****************************************************************************/
 
-static int init_colors(void)
+static int init_colors(int depth)
 {
-    gfxvidinfo.can_double = 0;
-
-    ULONG depth = RPDepth(RP);
-
-    switch(RPDepth(RP)) {
+    switch(depth) {
       case 15:
         alloc_colors64k(5,5,5,10,5,0);
         break;
@@ -233,8 +224,8 @@ static int init_colors(void)
         break;
 
       default:
-        printf("Unsupported bit depth: %d\n", depth);
-	return 0;
+	printf("Shouln't have arrived here\n");
+	abort();
     }
 
     printf("Using %d bits truecolor.\n", depth);
@@ -287,7 +278,6 @@ static int setup_customscreen(void)
         return 0;
     }
 
-    CM = S->ViewPort.ColorMap;
     RP = &S->RastPort;
 
     NewWindowStructure.Width  = S->Width;
@@ -316,8 +306,6 @@ static int setup_publicscreen(void)
 
     ZoomArray[2] = 128;
     ZoomArray[3] = S->BarHeight+1;
-
-    CM = S->ViewPort.ColorMap;
 
     if((S->ViewPort.Modes & (HIRES|LACE))==HIRES) {
         if(currprefs.gfx_height + S->BarHeight + 1 >= S->Height) {
@@ -357,7 +345,6 @@ static int setup_publicscreen(void)
 
     if(!W) {
         fprintf(stderr,"Can't open window on public screen !\n");
-        CM = NULL;
         return 0;
     }
 
@@ -497,8 +484,6 @@ static int setup_userscreen(void)
         return 0;
     }
 
-    CM  = S->ViewPort.ColorMap;
-
     PointerLine  = malloc(4);/* autodocs says it needs not be in chip memory */
     if(PointerLine) PointerLine[0]=PointerLine[1]=0;
     InitBitMap(&PointerBitMap,2,16,1);
@@ -535,7 +520,7 @@ static int setup_userscreen(void)
 
     if(!W) {
         fprintf(stderr,"Unable to open the window.\n");
-        CloseScreen(S);S=NULL;RP=NULL;CM=NULL;
+        CloseScreen(S);S=NULL;RP=NULL;
         return 0;
     }
     if(!Pointer) setup_sprite(W,0);
@@ -675,35 +660,21 @@ int graphics_init(void)
         break;
     }
 	*/
-      fprintf(stderr,"Trying on public screen...\n");
+      printf("Trying on public screen...\n");
       if(setup_publicscreen()) usepub = 1;
       else return 0;
 
-    Line = AllocVec((currprefs.gfx_width + 15) & ~15,MEMF_ANY|MEMF_PUBLIC);
-    if(!Line) {
-        fprintf(stderr,"Unable to allocate raster buffer.\n");
-        return 0;
-    }
-    BitMap = AllocBitMap(currprefs.gfx_width,1,RPDepth(RP),BMF_CLEAR,RP->BitMap);
-    if(!BitMap) {
-        fprintf(stderr,"Unable to allocate BitMap.\n");
-        return 0;
-    }
-    TempRPort = AllocVec(sizeof(struct RastPort),MEMF_ANY|MEMF_PUBLIC);
-    if(!TempRPort) {
-        fprintf(stderr,"Unable to allocate RastPort.\n");
-        return 0;
-    }
-    CopyMem(RP,TempRPort,sizeof(struct RastPort));
-    TempRPort->Layer  = NULL;
-    TempRPort->BitMap = BitMap;
 
     if(usepub) set_title();
 
     bitdepth = RPDepth(RP);
-    if(bitdepth <= 8) {
-        /* chunk2planar is slow so we define use_delta_buffer for all modes */
-    } else {
+    if(bitdepth <= 8)
+    {
+        fprintf(stderr, "**error**: Unsupported bith depth %d\n", bitdepth);
+	return 0;
+    }
+    else
+    {
         /* Cybergfx mode */
         gfxvidinfo.pixbytes = (bitdepth >= 24) ? 4 : (bitdepth >= 12) ? 2 : 1;
     }
@@ -715,18 +686,16 @@ int graphics_init(void)
     gfxvidinfo.bufmem = (char *)calloc(gfxvidinfo.rowbytes, currprefs.gfx_height+1);
     gfxvidinfo.maxblocklines = currprefs.gfx_height-1;
 
-        /*                                                           ^^ */
-        /*            This is because DitherLine may read one extra row */
-
     if(!gfxvidinfo.bufmem) {
         fprintf(stderr,"Not enough memory for video bufmem.\n");
         return 0;
     }
 
-    if (!init_colors()) {
+    if (!init_colors(bitdepth)) {
         fprintf(stderr,"Failed to init colors.\n");
         return 0;
     }
+
     switch (gfxvidinfo.pixbytes) {
      case 2:
         for (i = 0; i < 4096; i++) xcolors[i] *= 0x00010001;
@@ -746,8 +715,8 @@ int graphics_init(void)
     buttonstate[0] = buttonstate[1] = buttonstate[2] = 0;
     for(i=0; i<256; i++)
         keystate[i] = 0;
-    
-    lastmx = lastmy = 0; 
+
+    lastmx = lastmy = 0;
     newmousecounters = 0;
     inwindow = 0;
 
@@ -765,23 +734,6 @@ int check_prefs_changed_gfx (void)
 
 void graphics_leave(void)
 {
-    if(BitMap) {
-        WaitBlit();
-        FreeBitMap(BitMap);
-        BitMap = NULL;
-    }
-    if(TempRPort) {
-        FreeVec(TempRPort);
-        TempRPort = NULL;
-    }
-    if(Line) {
-        FreeVec(Line);
-        Line = NULL;
-    }
-    if(CM) {
-        ReleaseColors();
-        CM = NULL;
-    }
     if(W) {
         CloseWindow(W);
         W = NULL;
@@ -1137,57 +1089,6 @@ static void disk_hotkeys(void)
         disk_insert(drive,last_file);
         free(last_file);
     }
-}
-
-/****************************************************************************/
-/*
- * find the best appropriate color. return -1 if none is available
- */
-static LONG ObtainColor(ULONG r,ULONG g,ULONG b)
-{
-    int i, crgb;
-    int colors;
-
-    if(usepub && CM) {
-        i = ObtainBestPen(CM,r,g,b,
-                          OBP_Precision, PRECISION_GUI,
-                          OBP_FailIfBad, TRUE,
-                          TAG_DONE);
-        if(i != -1) {
-            if(maxpen<256) pen[maxpen++] = i;
-            else i = -1;
-        }
-        return i;
-    }
-
-    colors = 1<<RPDepth(RP);
-
-    /* private screen => standard allocation */
-    if(!usepub) {
-        if(maxpen >= colors) return -1; /* no more colors available */
-        SetRGB32(&S->ViewPort, maxpen, r, g, b);
-	return maxpen++;
-    }
-
-    /* public => find exact match */
-    r >>= 28; g >>= 28; b >>= 28;
-    crgb = (r<<8)|(g<<4)|b;
-    for(i=0; i<colors; i++ ) {
-        int rgb = GetRGB4(CM, i);
-        if(rgb == crgb) return i;
-    }
-    return -1;
-}
-
-/****************************************************************************/
-/*
- * free a color entry
- */
-static void ReleaseColors(void)
-{
-    if(usepub && CM)
-        while(maxpen>0) ReleasePen(CM, pen[--maxpen]);
-    else maxpen = 0;
 }
 
 /****************************************************************************/
