@@ -1,5 +1,6 @@
 BEGIN {
     stderr = "/dev/stderr";
+    Out = ENVIRON["OUT"];
 
     # Who did it ?
     #system ("printenv > /tmp/cvs.env");
