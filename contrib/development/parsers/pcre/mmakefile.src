@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-development : contrib-development-parsers-pcre
 #MM- linklibs : contrib-development-parsers-pcre
+#MM contrib-development-parsers-pcre : linklibs-startup linklibs-amiga linklibs-arossupport linklibs-clib
 
 %build_with_configure mmake=contrib-development-parsers-pcre nix=yes \
     extraoptions="--disable-stack-for-recursion --without-pic --disable-shared"
