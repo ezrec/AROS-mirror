@@ -108,8 +108,10 @@ ASM struct RastPort *BGUI_ObtainGIRPort(REG(a0) struct GadgetInfo * gi)
 ULONG AsmDoMethod(Object * obj, ULONG MethodID, ...)
 {
      AROS_SLOWSTACKMETHODS_PRE(MethodID)
+#if 0
      ASSERT_VALID_PTR(obj);
      ASSERT_VALID_PTR(OCLASS(obj));
+#endif
      if (!obj)
        retval = 0L;
      else

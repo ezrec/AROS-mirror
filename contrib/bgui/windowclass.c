@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/06/01 01:41:38  bergers
+ * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
+ *
  * Revision 42.3  2000/05/29 00:40:24  bergers
  * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
@@ -945,7 +948,11 @@ STATIC ASM REGFUNC1(VOID, KillAppWindow,
     */
    if (wd->wd_AppWindow)
    {
+#ifdef _AROS
+#warning Commented RemoveAppWindow
+#else
       RemoveAppWindow(wd->wd_AppWindow);
+#endif
       wd->wd_AppWindow = NULL;
    };
 
@@ -980,8 +987,12 @@ STATIC ASM REGFUNC1(BOOL, MakeAppWindow,
       /*
        * Create the app window.
        */
+#ifdef _AROS
+#warning Commented AddAppWindowA
+#else
       if (wd->wd_AppWindow = AddAppWindowA(0, 0, wd->wd_WindowPtr, wd->wd_AppPort, NULL))
          return TRUE;
+#endif
 
       KillAppWindow(wd);
    };

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/06/01 01:41:37  bergers
+ * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
+ *
  * Revision 42.4  2000/05/31 01:23:10  bergers
  * Changes to make BGUI compilable and linkable.
  *
@@ -717,7 +720,7 @@ static SAVEDS ASM REGFUNC4(APTR, BGUI_AllocPooledDebug,
 	REGPARAM(D1, ULONG, line))
 #else
 //static SAVEDS ASM APTR BGUI_AllocPooled(REG(a0) APTR poolHeader, REG(d0) ULONG memSize)
-static SAVEDS ASM REGFUNC2(APTR, BGUI_AllocPooledDebug,
+static SAVEDS ASM REGFUNC2(APTR, BGUI_AllocPooled,
 	REGPARAM(A0, APTR, poolHeader),
 	REGPARAM(D0, ULONG, memSize))
 #endif
@@ -776,7 +779,7 @@ static SAVEDS ASM REGFUNC5(VOID, BGUI_FreePooledDebug,
 	REGPARAM(D2, ULONG, line))
 #else
 //static SAVEDS ASM VOID BGUI_FreePooled(REG(a0) APTR poolHeader, REG(a1) APTR memory, REG(d1) ULONG memSize)
-static SAVEDS ASM REGFUNC3(VOID, BGUI_FreePooledDebug,
+static SAVEDS ASM REGFUNC3(VOID, BGUI_FreePooled,
 	REGPARAM(A0, APTR, poolHeader),
 	REGPARAM(A1, APTR, memory),
 	REGPARAM(D1, ULONG, memSize))

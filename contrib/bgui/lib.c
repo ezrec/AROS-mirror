@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/06/01 01:41:37  bergers
+ * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
+ *
  * Revision 42.2  2000/05/31 01:23:10  bergers
  * Changes to make BGUI compilable and linkable.
  *
@@ -85,6 +88,47 @@ struct Catalog       *Catalog       = NULL;
 struct Task          *InputDevice   = NULL;
 APTR                  InputStack    = NULL;
 
+
+#ifdef _AROS
+   extern BGUI_BGUI_GetClassPtr();
+   extern BGUI_BGUI_NewObjectA();
+   extern BGUI_BGUI_RequestA();
+   extern BGUI_BGUI_Help();
+   extern BGUI_BGUI_LockWindow();
+   extern BGUI_BGUI_UnlockWindow();
+   extern BGUI_BGUI_DoGadgetMethodA();
+   /*
+    * Private routines.
+    */
+   extern BGUI_BGUI_AllocPoolMem();
+   extern BGUI_BGUI_FreePoolMem();
+   /*
+    * Public routines.
+    */ 
+   extern BGUI_BGUI_AllocBitMap();
+   extern BGUI_BGUI_FreeBitMap();
+   extern BGUI_BGUI_CreateRPortBitMap();
+   extern BGUI_BGUI_FreeRPortBitMap();
+   extern BGUI_BGUI_InfoTextSize();
+   extern BGUI_BGUI_InfoText();
+   extern BGUI_BGUI_GetLocaleStr();
+   extern BGUI_BGUI_GetCatalogStr();
+   extern BGUI_BGUI_FillRectPattern();
+   extern BGUI_BGUI_PostRender();
+   extern BGUI_BGUI_MakeClassA();
+   extern BGUI_BGUI_FreeClass();
+   extern BGUI_BGUI_PackStructureTags();
+   extern BGUI_BGUI_UnpackStructureTags();
+   /*
+    * Private routines.
+    */
+   extern BGUI_BGUI_GetDefaultTags();
+   extern BGUI_BGUI_DefaultPrefs();
+   extern BGUI_BGUI_LoadPrefs();
+   extern BGUI_BGUI_AllocPoolMemDebug();
+   extern BGUI_BGUI_FreePoolMemDebug();
+#endif
+
 /*
  * Library function table.
  */
@@ -100,7 +144,43 @@ STATIC const LONG Vectors[] = {
     * Public routines.
     */
 #ifdef _AROS
-#warning Commented all the library functions!!!!!!!!!!!!!!!!!!
+   (LONG)BGUI_BGUI_GetClassPtr,
+   (LONG)BGUI_BGUI_NewObjectA,
+   (LONG)BGUI_BGUI_RequestA,
+   (LONG)BGUI_BGUI_Help,
+   (LONG)BGUI_BGUI_LockWindow,
+   (LONG)BGUI_BGUI_UnlockWindow,
+   (LONG)BGUI_BGUI_DoGadgetMethodA,
+   /*
+    * Private routines.
+    */
+   (LONG)BGUI_BGUI_AllocPoolMem,
+   (LONG)BGUI_BGUI_FreePoolMem,
+   /*
+    * Public routines.
+    */
+   (LONG)BGUI_BGUI_AllocBitMap,
+   (LONG)BGUI_BGUI_FreeBitMap,
+   (LONG)BGUI_BGUI_CreateRPortBitMap,
+   (LONG)BGUI_BGUI_FreeRPortBitMap,
+   (LONG)BGUI_BGUI_InfoTextSize,
+   (LONG)BGUI_BGUI_InfoText,
+   (LONG)BGUI_BGUI_GetLocaleStr,
+   (LONG)BGUI_BGUI_GetCatalogStr,
+   (LONG)BGUI_BGUI_FillRectPattern,
+   (LONG)BGUI_BGUI_PostRender,
+   (LONG)BGUI_BGUI_MakeClassA,
+   (LONG)BGUI_BGUI_FreeClass,
+   (LONG)BGUI_BGUI_PackStructureTags,
+   (LONG)BGUI_BGUI_UnpackStructureTags,
+   /*
+    * Private routines.
+    */
+   (LONG)BGUI_BGUI_GetDefaultTags,
+   (LONG)BGUI_BGUI_DefaultPrefs,
+   (LONG)BGUI_BGUI_LoadPrefs,
+   (LONG)BGUI_BGUI_AllocPoolMemDebug,
+   (LONG)BGUI_BGUI_FreePoolMemDebug,
 #else
    (LONG)BGUI_GetClassPtr,
    (LONG)BGUI_NewObjectA,
@@ -239,7 +319,11 @@ makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struc
    LocaleBase     = OpenLibrary("locale.library",        38);
    DataTypesBase  = OpenLibrary("datatypes.library",     39);
 
+#ifdef _AROS
+#warning Commented InitInputStack
+#else
    InitInputStack();
+#endif
 
 #ifdef OUTDATE_BUILD
       if(DOSBase)
@@ -386,7 +470,11 @@ makeproto SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
    if (Catalog)
       CloseCatalog(Catalog);
 
+#ifdef _AROS
+#warning Commented FreeInputStack
+#else
    FreeInputStack();
+#endif
 
    /*
     * Close system libraries.

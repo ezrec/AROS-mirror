@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/06/01 01:41:37  bergers
+ * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
+ *
  * Revision 42.3  2000/05/29 00:40:24  bergers
  * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
@@ -240,7 +243,11 @@ STATIC CLASSDEF Classes[] =
    { NULL, InitFontReqClass,     BGUI_FONTREQ_OBJECT,     "bgui_fontreq.class",              NULL, FALSE, FALSE },
    { NULL, InitScreenReqClass,   BGUI_SCREENREQ_OBJECT,   "bgui_screenreq.class",            NULL, FALSE, FALSE },
 
+#ifdef _AROS
+#warning InitArexxClass commented
+#else
    { NULL, InitArexxClass,       BGUI_AREXX_OBJECT,       "bgui_arexx.class",                NULL, FALSE, FALSE },
+#endif
 
    { NULL, InitSpacingClass,     BGUI_SPACING_OBJECT,     NULL,                              NULL, FALSE, FALSE },
 
@@ -987,9 +994,16 @@ static ULONG CallHookWithStack(struct CallHookData *call_hook_data)
    register APTR stack;
    register ULONG result;
 
+#ifdef _AROS
+#warning Commented EnsureStack
+#else
    stack=EnsureStack();
+#endif
    result=CallHookPkt(call_hook_data->Hook,call_hook_data->Object,call_hook_data->Message);
+#ifdef _AROS
+#else
    RevertStack(stack);
+#endif
    return(result);
 }
 

@@ -170,7 +170,7 @@
 	AROS_LCA(ULONG , id, D0), 		\
 	struct Library *, BGUIBase, 28, BGUI)
 	
-#define BGUI_GetDefaultPrefs() 			\
+#define BGUI_DefaultPrefs() 			\
 	AROS_LC0(VOID, GetDefaultPrefs, 	\
 	struct Library *, BGUIBase, 29, BGUI)
 	

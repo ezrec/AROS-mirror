@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/06/01 01:41:37  bergers
+ * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
+ *
  * Revision 42.4  2000/05/31 01:23:10  bergers
  * Changes to make BGUI compilable and linkable.
  *
@@ -219,9 +222,16 @@ static ASM REGFUNC1(ULONG, CallMethod,
    register APTR stack;
    register ULONG result;
 
+#ifdef _AROS
+#warning Commented EnsureStack
+#else
    stack=EnsureStack();
+#endif
    result=(*call_data->dispatcher)(call_data->cl,call_data->obj,call_data->msg,call_data->global_data);
+#ifdef _AROS
+#else
    RevertStack(stack);
+#endif
    return(result);
 }
 

@@ -4,12 +4,16 @@ TOP = ../..
 
 ver=41
 o=+$(BUILD_TYPE).o
+DEBUG_OPTIONS=
+STANDARD_OPTIONS=
+ENHANCED_OPTIONS=-DENHANCED
 
 CC = gcc
 LD = ld
 CP = cp
 RM = rm
-DEFINES = -D_AROS
+#DEFINES should really not define ENHANCED but for AROS it's fine.
+DEFINES = -D_AROS -DENHANCED
 MAKE = make
 ECHO = echo
 
@@ -144,14 +148,14 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 		o/plgadgetclasses$(o) \
 		o/plgroupclasses$(o) \
 		o/plaslclasses$(o)
-#	if $(BUILD_TYPE) eq D
-	@$(CC) $(DEFINES) -c ver.c -o o/ver.o
+#	if ($(BUILD_TYPE) eq D)
+	@$(CC) $(DEBUG_OPTIONS) $(DEFINES) -c ver.c -o o/ver.o
 #	endif
-#	if $(BUILD_TYPE) eq S
-#	@$(CC) $(DEFINES) -c ver.c -o o/ver.o
+#	ifeq ($(BUILD_TYPE),S)
+#	@$(CC) $(STANDARD_OPTIONS) $(DEFINES) -c ver.c -o o/ver.o
 #	endif
-#	if $(BUILD_TYPE) eq E
-#	@$(CC) $(DEFINES) -c ver.c -o o/ver.o
+#	ifeq ($(BUILD_TYPE),E)
+#	@$(CC) $(ENHANCED_OPTIONS) $(DEFINES) -c ver.c -o o/ver.o
 #	endif
 	@$(ECHO) Linking $@...
 	@$(LD) o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
