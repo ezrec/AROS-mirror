@@ -153,7 +153,7 @@ def makeStatus():
 
     tasks  = db.tasks.parse.parse( file( 'db/tasks', 'r' ) )
     db.tasks.format.html.format( tasks, dstdir, TEMPLATE_DATA )
-       
+
 
 def makeNews():
     NEWS_SRC_DIR = os.path.join( SRCROOT, 'news/data' )
@@ -166,14 +166,14 @@ def makeNews():
         if len( filename ) >= 4:
             language = filename[-2:]
             date     = filename[:-3]
-    
+
             if language in LANGUAGES and len( date ) == 8 and date.isdigit():
                 news.append( os.path.join( NEWS_SRC_DIR, filename ) )
                 year = date[:4]
-                
+
                 if not archives.has_key( year ):
                     archives[year] = list()
-                
+
                 archives[year].append( os.path.join( NEWS_SRC_DIR, filename ) )
 
     news.sort()
@@ -181,11 +181,13 @@ def makeNews():
     current = news[:5]
     _dst = os.path.join( SRCROOT, 'news/index.en' )
 
-    if newer( current, _dst ): 
+    if newer( current, _dst ):
         output  = file( _dst, 'w' )
         output.write( 'News\n====\n\n' )
         for filename in current:
-            output.write( '.. include:: %s\n\n\n' % filename )
+            output.write( '.. raw:: html\n\n   <a name="%s">\n' % filename[-11:-3])
+            output.write( '.. include:: %s\n' % filename )
+            output.write( '.. raw:: html\n\n   </a>\n\n\n')
         output.close()
 
     for year in archives.keys():
@@ -197,49 +199,51 @@ def makeNews():
             output = file( _dst, 'w' )
             output.write( 'News archive for ' + year + '\n=====================\n\n' )
             for filename in archives[year]:
-                output.write( '.. include:: %s\n\n\n' % filename )
+                output.write( '.. raw:: html\n\n   <a name="%s">\n' % filename[-11:-3])
+                output.write( '.. include:: %s\n' % filename )
+                output.write( '.. raw:: html\n\n   </a>\n\n\n')
             output.close()
 
 def convertWWW( src, language, options=None ):
     arguments = [
         '--no-generator',   '--language=' + language,
-        '--no-source-link', '--no-datestamp', 
+        '--no-source-link', '--no-datestamp',
         '--output-encoding=iso-8859-1',
         src, '' ]
-        
+
     if options:
         for option in options:
             arguments.insert( 0, option )
-            
+
     publisher = Publisher( destination_class = NullOutput )
     publisher.set_reader( 'standalone', None, 'restructuredtext' )
     publisher.set_writer( 'html' )
     publisher.publish( argv = arguments )
 
     return ''.join \
-    ( 
-        publisher.writer.body_pre_docinfo + 
-        publisher.writer.body 
+    (
+        publisher.writer.body_pre_docinfo +
+        publisher.writer.body
     ).encode( 'iso-8859-1' )
 
 def processWWW( src, depth ):
     src     = os.path.normpath( src )
-    
+
     prefix = os.path.splitext( src )[0]
     suffix = os.path.splitext( src )[1][1:]
     if suffix not in LANGUAGES: return
-    
+
     dst     = prefix + '.php' # .' + suffix
     dst_abs = os.path.normpath( os.path.join( DSTROOT, dst ) )
     src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
     dst_dir = os.path.dirname( dst_abs )
-    
+
     makedir( dst_dir )
-    
+
     #_tmp_src = os.path.join( SRCROOT, 'targets/www/htaccess' )
     #_tmp_dst = os.path.join( dst_dir, '.htaccess' )
     #copy( _tmp_src, _tmp_dst )
-    
+
     if newer( [ TEMPLATE, src_abs ], dst_abs ):
         reportBuilding( src )
         strings = {
@@ -247,9 +251,9 @@ def processWWW( src, depth ):
             'BASE'    : '../' * depth,
             'CONTENT' : convertWWW( src_abs, suffix )
         }
-        
+
         file( dst_abs, 'w').write( TEMPLATE_DATA % strings )
-        
+
     else:
         reportSkipping( dst )
 
@@ -265,9 +269,9 @@ def processHTML( src, depth ):
     dst_abs = os.path.normpath( os.path.join( DSTROOT, dst ) )
     src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
     dst_dir = os.path.dirname( dst_abs )
-    
+
     makedir( dst_dir )
-    
+
     if newer( [ src_abs ], dst_abs ):
         reportBuilding( src )
         arguments = \
@@ -276,7 +280,7 @@ def processHTML( src, depth ):
             '--no-source-link', '--no-datestamp',
             '--output-encoding=iso-8859-1',
             '--stylesheet=' + '../' * depth + 'aros.css',
-            src_abs, dst_abs 
+            src_abs, dst_abs
         ]
 
         publisher = Publisher()
@@ -295,7 +299,7 @@ def buildWWW():
 
     makeNews()
     makeTemplates()
-    
+
     global TEMPLATE_DATA
     TEMPLATE_DATA = file( TEMPLATE, 'r' ).read()
 
@@ -319,17 +323,17 @@ def buildWWW():
 
     copy( '../license.html', DSTROOT )
 
-    imagepath = os.path.join( DSTROOT, 'images' ) 
+    imagepath = os.path.join( DSTROOT, 'images' )
     makedir( imagepath )
 
-    copy( 
+    copy(
         [
             'images/aros-banner.gif',
             'images/trustec.png',
             'images/sourceforge.png',
             'images/amigados-online-reference-manual.png',
             'targets/www/images/trustec-small.png',
-            'targets/www/images/bullet.gif', 
+            'targets/www/images/bullet.gif',
             'targets/www/images/aros.png',
             'targets/www/images/aros.png',
             'targets/www/images/aros_text.png',
@@ -343,9 +347,9 @@ def buildWWW():
             'targets/www/images/v_arc.png',
             'targets/www/images/vertical_border.png',
             'targets/www/images/spacer.gif',
-           
-        ], 
-        imagepath 
+
+        ],
+        imagepath
     )
     
     copy( 'targets/www/docutils.css', DSTROOT )
