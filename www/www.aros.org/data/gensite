@@ -20,6 +20,8 @@ mainLinks = (
 	Href ('/autodocs/index.html', 'AutoDocs'),
     ),
     ( Href ('/screenshots.html', 'Screenshots'),
+	Href ('/screenshots.html#Pictures around AROS', 'Pictures'),
+	Href ('/screenshots.html#Screenshots', 'Screenshots'),
     ),
     ( Href ('/download.html', 'Download'),
 	Href ('ftp://ftp.aros.org/pub/aros/', 'FTP Server'),
@@ -205,6 +207,7 @@ def genScreenshots ():
     page = Page (linkBoxItem='Screenshots')
 
     page.meat = page.meat + [
+	Name ('Pictures around AROS'),
 	Heading (2, 'Pictures around AROS'),
 	Paragraph ('If you ever wanted to know what Aaron "Optimizer" Digulla'
 	    ' looks like, here are two pictures:'),
@@ -218,6 +221,7 @@ def genScreenshots ():
 	),
 	Paragraph ('Hopefully, more pictures of AROS developers will'
 	    ' show up here :-)'),
+	Name ('Screenshots'),
 	Heading (2, 'Screenshots'),
     ]
 
