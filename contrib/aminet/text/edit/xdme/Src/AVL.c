@@ -60,10 +60,8 @@
 	    Includes
 **************************************/
 
-/* we do not import AVL.h since we did hide tn_Balance from the user there */
 #ifndef   AVL_H
-/* #include <AVL.h> */
-#define   AVL_H
+#include <AVL.h>
 #endif /* AVL_H */
 
 #ifndef   EXEC_TYPES_H
@@ -99,23 +97,6 @@ void (*error)(char const *, char const *, char const *) = NULL;
 	    Internal Defines & Structures
 **************************************/
 
-/* redefine it here as we did comment out tn_Balance in AVL.h */
-struct TreeNode {
-	struct Node tn_Node;
-#if 0
-	struct TreeNode * tn_Left;
-	struct TreeNode * tn_Right;
-	UBYTE		  tn_Type;
-	BYTE		  tn_Balance; /* !PRIVATE! for AVL - do not use it! */
-	char		* tn_Name;
-#endif
-}; /* struct TreeNode */
-
-#define tn_Left tn_Node.ln_Succ
-#define tn_Right tn_Node.ln_Pred
-#define tn_Type tn_Node.ln_Type
-#define tn_Balance tn_Node.ln_Pri
-#define tn_Name tn_Node.ln_Name
 
 /**************************************
 	    Internal Variables

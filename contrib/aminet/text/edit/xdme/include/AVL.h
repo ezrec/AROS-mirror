@@ -19,11 +19,9 @@
 /**************************************
 	    Includes
 **************************************/
-
-/* for BYTE, UBYTE */
-#ifndef   EXEC_TYPES_H
-#include <exec/types.h>
-#endif /* EXEC_TYPES_H */
+#ifndef   EXEC_NODES_H
+#include <exec/nodes.h>
+#endif
 
 /**************************************
 	    Global Variables
@@ -35,6 +33,17 @@
 	    Defines & Structures
 **************************************/
 
+struct TreeNode {
+        struct Node tn_Node;
+};
+
+#define tn_Left tn_Node.ln_Succ
+#define tn_Right tn_Node.ln_Pred
+#define tn_Type tn_Node.ln_Type
+#define tn_Balance tn_Node.ln_Pri
+#define tn_Name tn_Node.ln_Name
+
+#if 0
 struct TreeNode {		      /* that struct should exactly fit into a Node */
 	struct TreeNode * tn_Left;
 	struct TreeNode * tn_Right;
@@ -42,6 +51,7 @@ struct TreeNode {		      /* that struct should exactly fit into a Node */
       BYTE		tn_Balance; /* !PRIVATE! for AVL - do not use it! */
 	char		* tn_Name;
 }; /* struct TreeNode */
+#endif
 
 #define AVL_SCAN_PRAEFIX  0
 #define AVL_SCAN_INFIX	  1
