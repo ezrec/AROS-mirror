@@ -18,8 +18,6 @@ site goes public.
 
   - Status (jobs and size)
 
-+ Synchronize against the few changes done in the old docs dir...
-
 + Better language selection system
 
   The current system uses the content negatotiation support using the
