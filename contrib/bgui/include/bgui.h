@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/07/08 20:14:06  stegerg
+ * fixed the BITOFFSET_OF macro which did not work on little endian machines.
+ *
  * Revision 42.1  2000/07/07 17:14:52  stegerg
  * STACK???? stuff in method structures.
  *
@@ -489,6 +492,13 @@ struct rmRefresh {
 #define TYPE_OF(type,field)       ((LENGTH_OF(type,field) == 2) ? RAF_WORD :\
                                   ((LENGTH_OF(type,field) == 4) ? RAF_LONG : RAF_BYTE))
 #define BITOFFSET_OF(type,field,f) (LENGTH_OF(type,field) - (f>>8?(f>>16?(f>>24?4:3):2):1))
+
+#ifdef _AROS
+ #if !AROS_BIG_ENDIAN
+  #undef  BITOFFSET_OF
+  #define BITOFFSET_OF(type,field,f) (f>>8?(f>>16?(f>>24?3:2):1):0)
+ #endif
+#endif
 
 #define CHART_ATTR(type,field)       ((offsetof(struct type,field) << 16) | TYPE_OF(type,field))
 #define CHART_FLAG(type,field,flag) (((offsetof(struct type,field) + BITOFFSET_OF(type,field,flag)) << 16) \
