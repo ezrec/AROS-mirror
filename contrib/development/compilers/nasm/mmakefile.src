@@ -23,7 +23,7 @@ USE_ZLIB     := yes
 
 %make_prog_setup mmake=contrib-development-nasm
 
-contrib-development-nasm : setup $(EXE) includes
+contrib-development-nasm : setup $(EXE) asm_includes
 
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
@@ -33,8 +33,14 @@ setup ::
 	cp test/arostest.s test/arostest.README $(EXEDIR)
 
 
-includes:
-	$(AWK) -f genasminc.awk $(INCDIR)/defines/*.h >$(EXEDIR)/include/libs.i
+asm_includes:
+	$(foreach f, \
+		$(wildcard $(INCDIR)/defines/*.h), \
+		$(AWK) -f genasminc.awk $(f) \
+			>$(EXEDIR)/include/$(notdir $(f:%.h=%.i)) ; )
+	$(foreach f, \
+		$(wildcard $(EXEDIR)/include/*.i), \
+		sort -n -k 4 $(f) >$(f:%.i=%.inc) ; )
 
 %common
 %include_deps
