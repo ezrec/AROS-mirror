@@ -1,0 +1,24 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+FILES := hextris stdsys arosio
+
+EXEDIR := $(CONTRIBDIR)/Games/CXHextris
+
+USER_CFLAGS = -DHIGHSCOREFILE=\""S:chextris-scores"\"
+
+#MM- contrib-games : contrib-games-cxhextris
+#MM- contrib-games-cxhextris : contrib-games-cxhextris-docs
+
+%build_prog mmake=contrib-games-cxhextris \
+    progname=CXHextris targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc m"
+
+#MM contrib-games-cxhextris-docs : contrib-games-cxhextris-setup
+contrib-games-cxhextris-docs : $(EXEDIR)/README
+	@$(NOP)
+	
+$(EXEDIR)/README : README
+	@$(CP) $< $@
+
+%common
