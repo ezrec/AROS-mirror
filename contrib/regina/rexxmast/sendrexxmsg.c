@@ -13,7 +13,7 @@ int main(void)
 {
     struct RexxMsg *msg, *reply;
     struct MsgPort *port, *replyport;
-    const char *command = "emu:contrib/regina/rexxdir.rexx";
+    const char *command = "rexxdir een test  ";
     
     RexxSysBase = OpenLibrary("rexxsyslib.library", 44);
     if (RexxSysBase == NULL)
@@ -53,7 +53,7 @@ int main(void)
     printf("Result1: %d\n", reply->rm_Result1);
     if (reply->rm_Result1==0 && reply->rm_Result2!=NULL)
     {
-	puts(reply->rm_Result2);
+	printf("Result2: %s\n", reply->rm_Result2);
 	DeleteArgstring(reply->rm_Result2);
     }
     DeleteArgstring(msg->rm_Args[0]);

@@ -19,7 +19,7 @@ struct Library *ReginaBase;
 struct Library *RexxSysBase;
 struct IntuitionBase *IntuitionBase;
 
-static void StartCommand(struct RexxMsg *);
+static void StartFile(struct RexxMsg *);
 
 int main(void)
 {
@@ -83,7 +83,8 @@ int main(void)
 		    switch (action)
 		    {
 		    case RXCOMM:
-			StartCommand(msg);
+		    case RXFUNC:
+			StartFile(msg);
 			break;
 			
 		    case RXCLOSE:
@@ -110,18 +111,31 @@ int main(void)
     return 0;
 }
 
-void StartCommand(struct RexxMsg *msg)
+static void StartFile(struct RexxMsg *msg)
 {
     UBYTE *s, *filename;
-    RXSTRING rxarg, rxresult;
+    RXSTRING rxresult, rxargs[15];
     USHORT rc;
     BPTR lock;
-    unsigned int len=0;
-    
-    s = msg->rm_Args[0];
-    while (*s != 0 && !isspace(*s)) s++;
-    len = s - msg->rm_Args[0];
-    filename = malloc(len+6+(msg->rm_FileExt==NULL ? 5 : strlen(msg->rm_FileExt)));
+    unsigned int len=0, extlen, argcount=0;
+    LONG type;
+    BOOL iscommand = ((msg->rm_Action & RXCODEMASK) == RXCOMM);
+
+    if (iscommand)
+    {
+	/* For a command the characters up to the first space is the filename */
+	s = msg->rm_Args[0];
+	while (*s != 0 && !isspace(*s)) s++;
+	len = s - msg->rm_Args[0];
+    }
+    else
+    {
+	/* For a function whole ARG0 is the filename */
+	len = LengthArgstring(msg->rm_Args[0]);
+    }
+    extlen = msg->rm_FileExt==NULL ? 5 : strlen(msg->rm_FileExt);
+
+    filename = malloc(len + 6 + extlen);
     memcpy(filename, msg->rm_Args[0], len);
     filename[len] = 0;
     if (strchr(filename, ':') == NULL)
@@ -143,18 +157,50 @@ void StartCommand(struct RexxMsg *msg)
 	return;
     }
     UnLock(lock);
-    
-    len = LengthArgstring(msg->rm_Args[0]) - (s - msg->rm_Args[0]);
+
+    if (iscommand)
+    {
+	type = RXCOMMAND;
+	while (isspace(*s))
+	    s++;
+	
+	if (!(msg->rm_Action & RXFF_TOKEN))
+	{
+	    if (*s == 0)
+		argcount = 0;
+	    else
+	    {
+		argcount = 1;
+		len = LengthArgstring(msg->rm_Args[0]) - (s - msg->rm_Args[0]);
+		MAKERXSTRING(rxargs[0], s, len);
+	    }
+	}
+	else
+	{
+	    UBYTE *s2;
+	    while (*s != 0)
+	    {
+		s2 = s;
+		while((*s2 != 0) && !isspace(*s2)) s2++;
+		MAKERXSTRING(rxargs[argcount], s, s2-s);
+		
+		while(isspace(*s2)) s2++;
+		s = s2;
+		argcount++;
+	    }
+	}
+    }
+    else /* is a function call */
+    {
+	for (argcount = 0; msg->rm_Args[1+argcount] != NULL; argcount++)
+	{
+	    UBYTE *argstr = msg->rm_Args[1+argcount];
+	    MAKERXSTRING(rxargs[argcount], argstr, LengthArgstring(argstr));
+	}
+    }
     MAKERXSTRING(rxresult, NULL, 0);
-    if (len>0)
-    {
-	MAKERXSTRING(rxarg, s, len);
-	RexxStart(1, &rxarg, filename, NULL, msg->rm_CommAddr, RXCOMMAND, NULL, &rc, &rxresult);
-    }
-    else
-    {
-	RexxStart(0, NULL, filename, NULL, msg->rm_CommAddr, RXCOMMAND, NULL, &rc, &rxresult);
-    }
+    RexxStart(argcount, rxargs, filename, NULL, msg->rm_CommAddr, RXFUNCTION, NULL, &rc, &rxresult);
+	    
     fflush(stdout);
     msg->rm_Result1 = rc;
     if (rc==0 && (msg->rm_Action & RXFF_RESULT) && RXVALIDSTRING(rxresult))
