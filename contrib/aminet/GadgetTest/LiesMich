@@ -1,0 +1,32 @@
+
+
+Alle Codes und Dateien in diesem Verzeichnis sind Public Domain.
+
+Inhalt:
+
+
+Ich habe einmal eine C Quelldatei verfaßt, die alle möglichen Arten von
+Gadgets unter OS 2.xx behandelt.
+
+Es wird ein Fenster mit allen Gadgetarten geöffnet und die ankommenden
+Nachrichten ausgewertet. Ich hoffe, daß der Quellcode einigermaßen leser-
+lich ist.
+
+Ich benutze den Manx 5.2a Compiler und denke, daß es auch bei anderen
+Compilern zu keinerlei Problemen kommen dürfte. Man kann das Programm
+einfach mit `cc <Name>` compilieren und mit `lc <name.o> -lc` linken.
+
+Ich denke es gibt eine Menge Programmierer, die noch Probleme haben, unter
+dem neuen Betriebssystem Intuitions-Benutzer-Schnittstellen zu entwerfen
+und zu verwalten.
+
+Ich hoffe, daß ich damit jemanden behilfreich sein kann und hoffe auf viele
+neue wundervolle Programme
+
+Das wars
+
+Tschau
+
+        H.P.G
+
+Fuldatal, den 29.01.1993

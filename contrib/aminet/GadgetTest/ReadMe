@@ -1,0 +1,33 @@
+
+
+All codes and files in this drawer are fully Public Domain.
+and may not be copied in any other then the original form.
+
+
+Contents:
+
+
+I`ve tried to write a sample source code of all new OS 2.xx gadget types.
+
+The code opens a window which contains all thoses gadgets and handles
+them. I hope the code is easy understandable.
+
+
+I`m using thew Manx 5.2a Compiler and I think there should be no problems to
+compile it under other systems too. You can easily compile this code with
+`cc <Name>` and link it with `lc <name.o> -lc`.
+
+I think there are some programmers, which might have some problems to
+create the new gadget types and their handling. Or to write a correct
+gadtools-user-interface.
+
+I hope this little example will help someone and I`m looking forward for
+a lot of wonderful programs.
+
+Done
+
+Tschau
+
+        H.P.G
+
+Fuldatal, the 29-Jan-1993
