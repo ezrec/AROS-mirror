@@ -140,11 +140,11 @@ homepages = (
 )
 
 lessRelated = (
-    Link ('http://www.edenmarket.de/', 'Edenmarket',
+    Link ('http://www.trustsec.de/', 'trustsec',
 	(   'These people provide us with web space. If you need Java'
 	    'development or courses in Germany, contact them !',
 	    BR(),
-	    Href ('http://www.edenmarket.de/', Image ('pics/edenmarket_still.png')),
+	    Href ('http://www.trustsec.de/', Image ('pics/trustsec-logo-slim-120dpi.png')),
 	),
     ),
     Link ('http://www.amiga.com/', 'Amiga, Inc.'),
