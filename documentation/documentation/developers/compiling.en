@@ -71,25 +71,27 @@ First of all, you need to run configure in the root of the AROS sources::
 You can specify several options to configure. The following options are 
 available for all targets:
 
-``--enable-mungwall-debug [default: enabled]`` 
-    Enable memory wall debug. This is useful for finding buffer overflows 
-    and off-by-one loop bugs.
-
-``--enable-stack-debug [default: enabled]``
-    Enable stack debug.
-
-``--enable-modules-debug [default: disabled]`` 
-    Enable special module debug support (for libraries, devices and similar).
-
-``--enable-debug [default: disabled]``
-    Enable general debug.
-
-
-.. Tip::
-   
-   Options on the form ``--enable-FEATURE`` can be reversed (ie. disabled 
-   instead of enabled) by using ``--disable-FEATURE`` or ``enable-FEATURE=no``. 
-
+``--enable--debug=LIST [default: none]`` 
+    Enable different types of debug. Commas or whitespaces can be used to 
+    separate the items in the list. If no list is provided then ``all`` is 
+    assumed. If ``--enable-debug`` is not specified at all, ``none`` is the
+    default. Available types:
+    
+    ``none``
+        Disables all debug types, and debugging in general.
+    
+    ``all``
+        Enables all debug types below.
+        
+    ``stack``
+        Enables stack debug.
+        
+    ``mungwall``
+        Enables mungwall debug.
+        
+    ``modules``
+        Enables modules debug.
+    
 
 Hosted AROS/i386-linux or AROS/i386-freebsd
 """""""""""""""""""""""""""""""""""""""""""
