@@ -1,4 +1,5 @@
-#include <inttypes.h> /* For uintptr_t */
+#include <inttypes.h>     /* For uintptr_t */
+#include <aros/machine.h> /* Machine dependant defines */
 
 /* Define if type char is unsigned and you are not using gcc.  */
 #ifndef __CHAR_UNSIGNED__
@@ -59,9 +60,7 @@
 
 /* Define if your processor stores words with the most significant
    byte first (like Motorola and SPARC, unlike Intel and VAX).  */
-/* FIXME: This should be pulled from machine-dependant includes */
-/* FIXME: WARNING: Assumes Little Endian for now!!! */
-/* #define WORDS_BIGENDIAN 1 */
+#define WORDS_BIGENDIAN AROS_BIG_ENDIAN
 
 /* Define for AIX if your compiler is a genuine IBM xlC/xlC_r
    and you want support for AIX C++ shared extension modules. */
