@@ -4,16 +4,25 @@
 
 include $(TOP)/config/make.cfg
 
-FILES = test1 \
-	test2 \
-	test3 \
-	test4 \
-	test5 \
-	test6 \
-	test7 \
-	test8 \
-	test9 \
-	test13
+FILES = AddButtons \
+	Area \
+	BGUIDemo \
+	Backdrop \
+	CXDemo \
+	FieldList \
+	FileRequester \
+	IDCMPHook \
+	Images \
+	List \
+	MultiColumn \
+	MultiFont \
+	MultiSelect \
+	StringHook \
+	Useless \
+	ViewGroup \
+
+#	ColorWheel \
+#	TextField
 
 BGUIPROGDIR := $(AROSDIR)/bgui
 
@@ -26,11 +35,11 @@ USE_AMIGALIB := yes
 USE_MLIB := yes
 USE_AROSLIB := yes
 
-#MM bgui-test : includes linklibs
+#MM bgui-examples : includes linklibs
 
-%make_prog_setup mmake=bgui-test
+%make_prog_setup mmake=bgui-examples
 
-bgui-test : setup $(EXES)
+bgui-examples : setup $(EXES)
 
 %make_prog_single dir=$(BGUIPROGDIR)
 
