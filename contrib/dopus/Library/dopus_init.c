@@ -14,7 +14,6 @@
 #include <exec/resident.h>
 #include <aros/libcall.h>
 #include <proto/exec.h>
-#include <proto/boopsi.h>
 
 /* #include "initstruct.h" */
 #include "dopuslib.h"
