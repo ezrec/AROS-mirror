@@ -23,7 +23,10 @@ struct Window *win;
 struct RastPort *rp;
 
 ULONG cgfx_coltab[256];
+UBYTE remaptable[256];
 BYTE Keys[256];
+BOOL forcescreen, forcewindow;
+BOOL mustremap, truecolor, remapped, wbscreen = TRUE;
 
 /***********************************************************************************/
 
@@ -31,7 +34,7 @@ UWORD pal=2;
 ULONG a,c,d,x,y,z;
 ULONG s[256];
 UBYTE p[65536];
-UBYTE *buf;
+UBYTE *buf, *buf_remapped;
 
 ULONG screenwidth  = 320;
 ULONG screenheight = 200;
@@ -48,8 +51,25 @@ void cleanup(char *msg)
     if (win) CloseWindow(win);
     
     if (buf) free(buf);
+    if (buf_remapped) free(buf_remapped);
     
-    if (scr) UnlockPubScreen(0, scr);
+    if (remapped)
+    {
+    	WORD i;
+	
+	for(i = 0; i < 256; i++)
+	{
+	    ReleasePen(scr->ViewPort.ColorMap, remaptable[i]);
+	}
+    }
+
+    if (scr)
+    {
+    	if (wbscreen)
+	    UnlockPubScreen(0, scr);
+	else
+	    CloseScreen(scr);
+    }
     
     if (CyberGfxBase) CloseLibrary(CyberGfxBase);
     if (GfxBase) CloseLibrary((struct Library *)GfxBase);
@@ -63,14 +83,19 @@ void cleanup(char *msg)
 void getarguments(void)
 {
     struct RDArgs *myargs;
-    IPTR args[2] = {0, 0};
+    IPTR args[4] = {0, 0, 0, 0};
     
-    myargs = ReadArgs("W=WIDTH/N/K,H=HEIGHT/N/K", args, NULL);
+    myargs = ReadArgs("W=WIDTH/N/K,H=HEIGHT/N/K,FORCESCREEN=SCR/S,FORCEWINDOW=WIN/S", args, NULL);
     if (!myargs)
     {
     	Fault(IoErr(), 0, p, 256);
 	cleanup(p);
     }
+    
+    if (args[2])
+    	forcescreen = TRUE;
+    else if (args[3])
+    	forcewindow = TRUE;
     
     if (args[0] || args[1])
     {
@@ -116,8 +141,31 @@ void getvisual(void)
     
     if (GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH) <= 8)
     {
-        cleanup("Need hi or true color screen!");
+    	if (!forcewindow)
+	{
+	    wbscreen = FALSE;
+	}
+	else
+	{
+	    mustremap = TRUE;
+	}
     }
+    
+    if (forcescreen) wbscreen = FALSE;
+    
+    if (!wbscreen)
+    {
+    	UnlockPubScreen(NULL, scr);
+        wbscreen = FALSE;
+	
+        scr = OpenScreenTags(NULL, SA_Width	, screenwidth	,
+				   SA_Height	, screenheight	,
+				   SA_Depth	, 8	    	,
+				   TAG_DONE);
+    	if (!scr) cleanup("Can't open screen!");
+    }
+    
+    truecolor = (GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH) >= 15) ? TRUE : FALSE;
 }
 
 /***********************************************************************************/
@@ -126,9 +174,51 @@ void setuppal(WORD pal)
 {
     WORD a;
     
+    if (remapped)
+    {
+    	for(a = 0; a < 256; a++)
+	{
+	    ReleasePen(scr->ViewPort.ColorMap, remaptable[a]);
+	}
+    }
+    
     for(a = 0; a < 256; a ++)
     {
-    	cgfx_coltab[a] = a << (pal * 8);
+    	ULONG r, g, b;
+	
+	r = (pal == 0) * a;
+	g = (pal == 1) * a;
+	b = (pal == 2) * a;
+
+	if (truecolor)
+	{
+	  cgfx_coltab[a] = (r<<16) + (g<<8) + (b);
+	}
+	else if (mustremap)
+	{
+	  ULONG red   = r * 0x01010101;
+	  ULONG green = g * 0x01010101;
+	  ULONG blue  = b * 0x01010101;
+
+	  remaptable[a] = ObtainBestPen(scr->ViewPort.ColorMap,
+      	    	    	    		red,
+					green,
+					blue,
+					OBP_Precision, PRECISION_IMAGE,
+					OBP_FailIfBad, FALSE,
+					TAG_DONE);
+	  remapped = TRUE;
+	}
+	else
+	{
+
+	  ULONG red   = r * 0x01010101;
+	  ULONG green = g * 0x01010101;
+	  ULONG blue  = b * 0x01010101;
+
+	  SetRGB32(&scr->ViewPort, a, red, green, blue);
+	}
+	
     }
 }
 
@@ -138,6 +228,12 @@ void setupdemo(void)
 {
     buf = malloc(screenwidth * screenheight);
     if (!buf) cleanup("Out of memory!");
+    
+    if (mustremap)
+    {
+	buf_remapped = malloc(screenwidth * screenheight);
+	if (!buf) cleanup("Out of memory!");   
+    }
     
     setuppal(pal);
     
@@ -203,17 +299,49 @@ void render(void)
 	}
     }
     
-    WriteLUTPixelArray(buf,
-		       0,
-		       0,
-		       screenwidth,
-		       rp,
-		       cgfx_coltab,
-		       win->BorderLeft,
-		       win->BorderTop,
-		       screenwidth,
-		       screenheight,
-		       CTABFMT_XRGB8);
+    if (truecolor)
+    {
+	WriteLUTPixelArray(buf,
+			   0,
+			   0,
+			   screenwidth,
+			   rp,
+			   cgfx_coltab,
+			   win->BorderLeft,
+			   win->BorderTop,
+			   screenwidth,
+			   screenheight,
+			   CTABFMT_XRGB8);
+    }
+    else if (mustremap)
+    {
+	LONG i;
+	UBYTE *src = buf;
+	UBYTE *dest = buf_remapped;
+
+	for(i = 0; i < screenwidth * screenheight; i++)
+	{
+	    *dest++ = remaptable[*src++];
+	}
+	WriteChunkyPixels(rp,
+	    	    	  win->BorderLeft,
+			  win->BorderTop,
+			  win->BorderLeft + screenwidth - 1,
+			  win->BorderTop + screenheight - 1,
+			  buf_remapped,
+			  screenwidth);
+
+    }
+    else
+    {
+	WriteChunkyPixels(rp,
+	    	    	  win->BorderLeft,
+			  win->BorderTop,
+			  win->BorderLeft + screenwidth - 1,
+			  win->BorderTop + screenheight - 1,
+			  buf,
+			  screenwidth);
+    }
     
 }
 
@@ -221,18 +349,33 @@ void render(void)
 
 void makewin(void)
 {
-    win = OpenWindowTags(NULL, WA_CustomScreen, (IPTR)scr, 
-    			       WA_InnerWidth, screenwidth,
-    			       WA_InnerHeight, screenheight,
-			       WA_Title, (IPTR)"Parallax: Use LMB to change palette",
-			       WA_DragBar, TRUE,
-			       WA_DepthGadget, TRUE,
-			       WA_CloseGadget, TRUE,
-			       WA_Activate, TRUE,
-			       WA_IDCMP, IDCMP_CLOSEWINDOW |
-			       		 IDCMP_RAWKEY      |
-					 IDCMP_MOUSEBUTTONS,
-			       TAG_DONE);
+    struct TagItem winonwbtags[] =
+    {
+    	{WA_DragBar	, TRUE	    	    },
+	{WA_DepthGadget	, TRUE	    	    },
+	{WA_CloseGadget	, TRUE	    	    },
+	{WA_Title	, (IPTR)"Parallax: Use LMB to change palette"},
+	{TAG_DONE   	    	    	    }
+    };
+    
+    struct TagItem winonscrtags[] =
+    {
+    	{WA_Borderless, TRUE },
+	{TAG_DONE   	     }
+    };
+    
+    win = OpenWindowTags(NULL, WA_CustomScreen	, (IPTR)scr,
+    			       WA_Left		, (scr->Width - screenwidth - scr->WBorLeft - scr->WBorRight) / 2,
+			       WA_Top		, (scr->Height - screenheight - scr->WBorTop - scr->WBorTop - scr->Font->ta_YSize - 1) / 2,
+    			       WA_InnerWidth	, screenwidth,
+    			       WA_InnerHeight	, screenheight,
+			       WA_AutoAdjust	, TRUE,
+	    	    	       WA_Activate	, TRUE,
+			       WA_IDCMP		, IDCMP_CLOSEWINDOW |
+			       			  IDCMP_RAWKEY |
+						  IDCMP_MOUSEBUTTONS ,
+			       TAG_MORE     	, wbscreen ? winonwbtags : winonscrtags);
+			       
 			       
    if (!win) cleanup("Can't open window");
 
@@ -303,6 +446,7 @@ main(int argc, char *argv[])
 	{
 	    done = TRUE;
 	}
+	WaitTOF();
     }
 
     cleanup(0);

@@ -50,7 +50,10 @@ struct Window *win;
 struct RastPort *rp;
 
 ULONG cgfx_coltab[256];
+UBYTE remaptable[256];
 BYTE Keys[256];
+BOOL forcescreen, forcewindow;
+BOOL mustremap, truecolor, remapped, wbscreen = TRUE;
 
 /***********************************************************************************/
 
@@ -59,6 +62,7 @@ typedef unsigned char byte;
 byte HMap[256*256];      /* Height field */
 byte CMap[256*256];      /* Color map */
 byte Video[SCREENWIDTH*SCREENHEIGHT];     /* Off-screen buffer */
+byte Video_Remapped[SCREENWIDTH*SCREENHEIGHT];
 
 /***********************************************************************************/
 
@@ -263,17 +267,49 @@ void View(int x0,int y0,float aa)
              h-30,SCREENCY*256/(d+1));
     }
 
-    WriteLUTPixelArray(Video,
-		       0,
-		       0,
-		       SCREENWIDTH,
-		       rp,
-		       cgfx_coltab,
-		       win->BorderLeft,
-		       win->BorderTop,
-		       SCREENWIDTH,
-		       SCREENHEIGHT,
-		       CTABFMT_XRGB8);
+    if (truecolor)
+    {
+	WriteLUTPixelArray(Video,
+			   0,
+			   0,
+			   SCREENWIDTH,
+			   rp,
+			   cgfx_coltab,
+			   win->BorderLeft,
+			   win->BorderTop,
+			   SCREENWIDTH,
+			   SCREENHEIGHT,
+			   CTABFMT_XRGB8);
+    }
+    else if (mustremap)
+    {
+	LONG i;
+	UBYTE *src = Video;
+	UBYTE *dest = Video_Remapped;
+
+	for(i = 0; i < SCREENWIDTH * SCREENHEIGHT; i++)
+	{
+	    *dest++ = remaptable[*src++];
+	}
+	WriteChunkyPixels(rp,
+	    	    	  win->BorderLeft,
+			  win->BorderTop,
+			  win->BorderLeft + SCREENWIDTH - 1,
+			  win->BorderTop + SCREENHEIGHT - 1,
+			  Video_Remapped,
+			  SCREENWIDTH);
+
+    }
+    else
+    {
+	WriteChunkyPixels(rp,
+	    	    	  win->BorderLeft,
+			  win->BorderTop,
+			  win->BorderLeft + SCREENWIDTH - 1,
+			  win->BorderTop + SCREENHEIGHT - 1,
+			  Video,
+			  SCREENWIDTH);
+    }
 
 }
 
@@ -288,13 +324,53 @@ void cleanup(char *msg)
     
     if (win) CloseWindow(win);
     
-    if (scr) UnlockPubScreen(0, scr);
+    if (remapped)
+    {
+    	WORD i;
+	
+	for(i = 0; i < 256; i++)
+	{
+	    ReleasePen(scr->ViewPort.ColorMap, remaptable[i]);
+	}
+    }
+
+    if (scr)
+    {
+    	if (wbscreen)
+	    UnlockPubScreen(0, scr);
+	else
+	    CloseScreen(scr);
+    }
     
     if (CyberGfxBase) CloseLibrary(CyberGfxBase);
     if (GfxBase) CloseLibrary((struct Library *)GfxBase);
     if (IntuitionBase) CloseLibrary((struct Library *)IntuitionBase);
     
     exit(0);
+}
+
+/***********************************************************************************/
+
+#define ARG_TEMPLATE "FORCESCREEN=SCR/S,FORCEWINDOW=WIN/S"
+#define ARG_SCR 0
+#define ARG_WIN 1
+#define NUM_ARGS 2
+
+static IPTR args[NUM_ARGS];
+
+static void getarguments(void)
+{
+    struct RDArgs *myargs;
+    
+    if ((myargs = ReadArgs(ARG_TEMPLATE, args, NULL)))
+    {
+    	if (args[ARG_SCR])
+	    forcescreen = TRUE;
+	else if (args[ARG_WIN])
+	    forcewindow = TRUE;
+	    
+    	FreeArgs(myargs);
+    }
 }
 
 /***********************************************************************************/
@@ -328,25 +404,63 @@ void getvisual(void)
     
     if (GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH) <= 8)
     {
-        cleanup("Need hi or true color screen!");
+    	if (!forcewindow)
+	{
+	    wbscreen = FALSE;
+	}
+	else
+	{
+	    mustremap = TRUE;
+	}
     }
+    
+    if (forcescreen) wbscreen = FALSE;
+    
+    if (!wbscreen)
+    {
+    	UnlockPubScreen(NULL, scr);
+        wbscreen = FALSE;
+	
+        scr = OpenScreenTags(NULL, SA_Width	, SCREENWIDTH	,
+				   SA_Height	, SCREENHEIGHT	,
+				   SA_Depth	, 8	    	,
+				   TAG_DONE);
+    	if (!scr) cleanup("Can't open screen!");
+    }
+    
+    truecolor = (GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH) >= 15) ? TRUE : FALSE;
 }
 
 /***********************************************************************************/
 
 void makewin(void)
 {
-    win = OpenWindowTags(NULL, WA_CustomScreen, (IPTR)scr, 
-    			       WA_InnerWidth, SCREENWIDTH,
-    			       WA_InnerHeight, SCREENHEIGHT,
-			       WA_Title, (IPTR)"NewVox",
-			       WA_DragBar, TRUE,
-			       WA_DepthGadget, TRUE,
-			       WA_CloseGadget, TRUE,
-			       WA_Activate, TRUE,
-			       WA_IDCMP, IDCMP_CLOSEWINDOW |
-			       		 IDCMP_RAWKEY,
-			       TAG_DONE);
+    struct TagItem winonwbtags[] =
+    {
+    	{WA_DragBar	, TRUE	    	    },
+	{WA_DepthGadget	, TRUE	    	    },
+	{WA_CloseGadget	, TRUE	    	    },
+	{WA_Title	, (IPTR)"NewVox"    },
+	{TAG_DONE   	    	    	    }
+    };
+    
+    struct TagItem winonscrtags[] =
+    {
+    	{WA_Borderless, TRUE },
+	{TAG_DONE   	     }
+    };
+    
+    win = OpenWindowTags(NULL, WA_CustomScreen	, (IPTR)scr,
+    			       WA_Left		, (scr->Width - SCREENWIDTH - scr->WBorLeft - scr->WBorRight) / 2,
+			       WA_Top		, (scr->Height - SCREENHEIGHT - scr->WBorTop - scr->WBorTop - scr->Font->ta_YSize - 1) / 2,
+    			       WA_InnerWidth	, SCREENWIDTH,
+    			       WA_InnerHeight	, SCREENHEIGHT,
+			       WA_AutoAdjust	, TRUE,
+	    	    	       WA_Activate	, TRUE,
+			       WA_IDCMP		, IDCMP_CLOSEWINDOW |
+			       			  IDCMP_RAWKEY,
+			       TAG_MORE     	, wbscreen ? winonwbtags : winonscrtags);
+			       
 			       
    if (!win) cleanup("Can't open window");
 
@@ -399,6 +513,7 @@ main(int argc, char *argv[])
     float ss,sa,a,s;
     int x0,y0;
 
+    getarguments();
     openlibs();
     getvisual();
    
@@ -422,6 +537,43 @@ main(int argc, char *argv[])
 	red = green = 255 - (i * 255 / (256 - 64 - 1));
 
 	cgfx_coltab[64 + i] = (red << 16) + (green << 8) + blue;	
+    }
+    
+    if (!truecolor)
+    {
+    	WORD i;
+	
+	for(i = 0; i < 256; i++)
+	{
+	    ULONG r = (cgfx_coltab[i] >> 16) & 0xFF;
+	    ULONG g = (cgfx_coltab[i] >> 8) & 0xFF;
+	    ULONG b = cgfx_coltab[i] & 0xFF;
+	    
+	    if (mustremap)
+	    {
+	      ULONG red   = r * 0x01010101;
+	      ULONG green = g * 0x01010101;
+	      ULONG blue  = b * 0x01010101;
+
+	      remaptable[i] = ObtainBestPen(scr->ViewPort.ColorMap,
+      	    	    	    		    red,
+					    green,
+					    blue,
+					    OBP_Precision, PRECISION_IMAGE,
+					    OBP_FailIfBad, FALSE,
+					    TAG_DONE);
+	      remapped = TRUE;
+	    }
+	    else
+	    {
+
+	      ULONG red   = r * 0x01010101;
+	      ULONG green = g * 0x01010101;
+	      ULONG blue  = b * 0x01010101;
+
+	      SetRGB32(&scr->ViewPort, i, red, green, blue);
+	    }
+	}
     }
     
     /* Compute the height map */
@@ -478,6 +630,8 @@ main(int argc, char *argv[])
 	if (Keys[KC_LEFT]) {
 	    sa-=0.003;
 	}
+	
+	WaitTOF();
     }
 
     cleanup(0);

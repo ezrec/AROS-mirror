@@ -531,7 +531,7 @@ int main()
 			   screenwidth,
 			   screenheight,
 			   CTABFMT_XRGB8);
-
+    	WaitTOF();
         frame++;
         }while(!ende);
 	

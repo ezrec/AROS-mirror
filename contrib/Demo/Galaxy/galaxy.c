@@ -20,10 +20,12 @@
 
 /***********************************************************************************/
 
-#define ARG_TEMPLATE "NOBLUR/S"
+#define ARG_TEMPLATE "NOBLUR/S,FORCESCREEN=SCR/S,FORCEWINDOW=WIN/S"
 
 #define ARG_NOBLUR 	0
-#define NUM_ARGS   	1
+#define ARG_SCR     	1
+#define ARG_WIN     	2
+#define NUM_ARGS   	3
 
 struct IntuitionBase 	*IntuitionBase;
 struct GfxBase 		*GfxBase;
@@ -33,9 +35,12 @@ struct Window 		*win;
 struct RastPort 	*rp;
 struct RDArgs		*myargs;
 ULONG 			cgfx_coltab[256];
+UBYTE	    	    	remaptable[256];
 UBYTE 			Keys[128];
 char			s[256];
 LONG			args[NUM_ARGS];
+BOOL	    	    	forcescreen, forcewindow;
+BOOL	    	    	mustremap, truecolor, remapped, wbscreen = TRUE;
 
 static void cleanup(char *msg);
 
@@ -51,6 +56,7 @@ static void cleanup(char *msg);
 
 int            motion_blur;
 char *b8;   /* working 8bits buffer */
+char *b8_remapped;
 
 typedef struct
 {
@@ -151,17 +157,49 @@ void rotate3d(float *xr, float *yr, float *zr,  /* point to rotate */
 
 void aff () {
 
-    WriteLUTPixelArray(b8,
-		       0,
-		       0,
-		       W,
-		       rp,
-		       cgfx_coltab,
-		       win->BorderLeft,
-		       win->BorderTop,
-		       W,
-		       H,
-		       CTABFMT_XRGB8);
+    if (truecolor)
+    {
+	WriteLUTPixelArray(b8,
+			   0,
+			   0,
+			   W,
+			   rp,
+			   cgfx_coltab,
+			   win->BorderLeft,
+			   win->BorderTop,
+			   W,
+			   H,
+			   CTABFMT_XRGB8);
+    }
+    else if (mustremap)
+    {
+	LONG i;
+	UBYTE *src = b8;
+	UBYTE *dest = b8_remapped;
+
+	for(i = 0; i < W * H; i++)
+	{
+	    *dest++ = remaptable[*src++];
+	}
+	WriteChunkyPixels(rp,
+	    	    	  win->BorderLeft,
+			  win->BorderTop,
+			  win->BorderLeft + W - 1,
+			  win->BorderTop + H - 1,
+			  b8_remapped,
+			  W);
+
+    }
+    else
+    {
+	WriteChunkyPixels(rp,
+	    	    	  win->BorderLeft,
+			  win->BorderTop,
+			  win->BorderLeft + W - 1,
+			  win->BorderTop + H - 1,
+			  b8,
+			  W);
+    }
 
 }
 
@@ -169,8 +207,13 @@ void init_plouf(){
   int i;
 
   b8 = (unsigned char *)malloc(W*(H+1)); /* +1 : I dont trust my range checkings... */
-
   if (!b8) cleanup("Out of memory!");
+  
+  if (mustremap)
+  {
+    b8_remapped = (unsigned char *)malloc(W*H);
+    if (!b8_remapped) cleanup("Out of memory!");
+  }
   
   for (i=0; i<256; i++){
     unsigned int r,g,b;
@@ -178,7 +221,34 @@ void init_plouf(){
     g = (int)(i*0.8);
     b = i;
 
-    cgfx_coltab[i]=((r<<16)|(g<<8)|(b));  
+    if (truecolor)
+    {
+    	cgfx_coltab[i]=((r<<16)|(g<<8)|(b));  
+    }
+    else if (mustremap)
+    {
+       ULONG red   = r * 0x01010101;
+       ULONG green = g * 0x01010101;
+       ULONG blue  = b * 0x01010101;
+
+       remaptable[i] = ObtainBestPen(scr->ViewPort.ColorMap,
+      	    	    	    	     red,
+				     green,
+				     blue,
+				     OBP_Precision, PRECISION_IMAGE,
+				     OBP_FailIfBad, FALSE,
+				     TAG_DONE);
+       remapped = TRUE;
+    }
+    else
+    {
+
+       ULONG red   = r * 0x01010101;
+       ULONG green = g * 0x01010101;
+       ULONG blue  = b * 0x01010101;
+
+       SetRGB32(&scr->ViewPort, i, red, green, blue);
+    } 
 
   }
 
@@ -388,7 +458,23 @@ static void cleanup(char *msg)
     
     if (win) CloseWindow(win);
     
-    if (scr) UnlockPubScreen(0, scr);
+    if (remapped)
+    {
+    	WORD i;
+	
+	for(i = 0; i < 256; i++)
+	{
+	    ReleasePen(scr->ViewPort.ColorMap, remaptable[i]);
+	}
+    }
+
+    if (scr)
+    {
+    	if (wbscreen)
+	    UnlockPubScreen(0, scr);
+	else
+	    CloseScreen(scr);
+    }
     
     if (myargs) FreeArgs(myargs);
     
@@ -435,6 +521,12 @@ static void getargs(void)
     } else {
         motion_blur = 1;
     }
+    
+    if (args[ARG_SCR])
+	forcescreen = TRUE;
+    else if (args[ARG_WIN])
+	forcewindow = TRUE;
+    
 }
 
 /***********************************************************************************/
@@ -448,30 +540,65 @@ static void getvisual(void)
     
     if (GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH) <= 8)
     {
-        cleanup("Need hi or true color screen!");
+    	if (!forcewindow)
+	{
+	    wbscreen = FALSE;
+	}
+	else
+	{
+	    mustremap = TRUE;
+	}
     }
+    
+    if (forcescreen) wbscreen = FALSE;
+    
+    if (!wbscreen)
+    {
+    	UnlockPubScreen(NULL, scr);
+        wbscreen = FALSE;
+	
+        scr = OpenScreenTags(NULL, SA_Width	, W	,
+				   SA_Height	, H	,
+				   SA_Depth	, 8	,
+				   TAG_DONE);
+    	if (!scr) cleanup("Can't open screen!");
+    }
+    
+    truecolor = (GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH) >= 15) ? TRUE : FALSE;
 }
 
 /***********************************************************************************/
 
 static void makewin(void)
 {
+    struct TagItem winonwbtags[] =
+    {
+    	{WA_DragBar	, TRUE	    	    },
+	{WA_DepthGadget	, TRUE	    	    },
+	{WA_CloseGadget	, TRUE	    	    },
+	{WA_Title	, (IPTR)"Galaxy"    },
+	{TAG_DONE   	    	    	    }
+    };
+    
+    struct TagItem winonscrtags[] =
+    {
+    	{WA_Borderless, TRUE },
+	{TAG_DONE   	     }
+    };
+    
     win = OpenWindowTags(NULL, WA_CustomScreen	, (IPTR)scr,
     			       WA_Left		, (scr->Width - W - scr->WBorLeft - scr->WBorRight) / 2,
 			       WA_Top		, (scr->Height - H - scr->WBorTop - scr->WBorTop - scr->Font->ta_YSize - 1) / 2,
     			       WA_InnerWidth	, W,
     			       WA_InnerHeight	, H,
 			       WA_AutoAdjust	, TRUE,
-			       WA_Title		, (IPTR)"Galaxy",
-			       WA_DragBar	, TRUE,
-			       WA_DepthGadget	, TRUE,
-			       WA_CloseGadget	, TRUE,
-			       WA_Activate	, TRUE,
+	    	    	       WA_Activate	, TRUE,
 			       WA_IDCMP		, IDCMP_CLOSEWINDOW |
 			       			  IDCMP_RAWKEY,
-			       TAG_DONE);
+			       TAG_MORE     	, wbscreen ? winonwbtags : winonscrtags);
 			       
-   if (!win) cleanup("Can't open window");
+			       
+    if (!win) cleanup("Can't open window");
 
    rp = win->RPort; 
 }
@@ -528,7 +655,7 @@ static void action(void)
 	drawgalaxy();
 
 	aff();
-	//next_fps();
+	WaitTOF();
 	opti_sched_nextframe();
 	opti_sched_update();
 
@@ -542,8 +669,8 @@ static void action(void)
 
 int main(void)
 {
-    openlibs();
     getargs();
+    openlibs();
     getvisual();
     makewin();
     action();
