@@ -3,6 +3,6 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-gnu : contrib-gnu-grep
+#DISABLE MM- contrib-gnu : contrib-gnu-grep
 	
 %build_with_configure mmake=contrib-gnu-grep nix=yes prefix=$(CONTRIBDIR)/gnu
