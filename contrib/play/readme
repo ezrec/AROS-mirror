@@ -1,7 +1,14 @@
-To compile:
-export TOP= path to you AROS directory
-export AROS_TARGET_CPU=i386
-export AROS_TARGET_ARCH=linux
-mkdir obj
-make
+To compile play on i386
+-----------------------
 
+Hosted:
+>export AROS_TARGET_ARCH=linux
+
+Native:
+>export AROS_TARGET_ARCH=pc
+
+Common to both:
+>export TOP=<path to you AROS directory>
+>export AROS_TARGET_CPU=i386
+>mkdir obj
+>make
