@@ -44,11 +44,11 @@ FILES := \
 	symtable \
 	sysmodule \
 	thread \
-	traceback 
+	traceback \
+	pythonrun
 
 # Needs more work to compile.
 #	dup2
-#	pythonrun
 
 # Highly platform-specific stuff, not for AROS.
 #	dynload_aix 
@@ -62,9 +62,9 @@ FILES := \
 #	dynload_stub 
 #	dynload_win 
 									
-USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR)
+USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR) -DAROS
 
-#MM linklibs-python-python
+#MM linklibs-python-python : includes
 
 %make_linklib_setup mmake=linklibs-python-python
 %make_linklib 
