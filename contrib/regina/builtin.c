@@ -1470,7 +1470,7 @@ streng *std_queued( tsd_t *TSD, cparamboxptr parms )
 streng *std_strip( tsd_t *TSD, cparamboxptr parms )
 {
 #if defined(_AMIGA) || defined(__AROS__)
-   char option='B', *padstr=" " ;
+   char option='B', *padstr=" ", alloc=0;
 #else
    char option='B', padch=' ' ;
 #endif
@@ -1486,7 +1486,10 @@ streng *std_strip( tsd_t *TSD, cparamboxptr parms )
    && ( parms->next->next )
    && ( parms->next->next->value ) )
 #if defined(_AMIGA) || defined(__AROS__)
+   {
       padstr = str_of( TSD, parms->next->next->value ) ;
+      alloc = 1;
+   }
 #else
       padch = getonechar( TSD, parms->next->next->value, "STRIP", 3 ) ;
 #endif
@@ -1506,7 +1509,8 @@ streng *std_strip( tsd_t *TSD, cparamboxptr parms )
       stop = start - 1 ; /* FGC: If this happens, it will crash */
 
 #if defined(_AMIGA) || defined(__AROS__)
-   FreeTSD( padstr );
+   if (alloc)
+      FreeTSD( padstr );
 #endif
    return Str_nocatTSD(Str_makeTSD(stop-start+2),input,stop-start+1, start) ;
 }
