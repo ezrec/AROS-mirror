@@ -9,7 +9,7 @@ from util import TableLite, TR, TD, Heading, RawText, Page, arosRC, \
 def writeVerbatim (p, xmlfile, item):
     if isinstance (item, xmlsupport.Tag):
 	# Give a hint if a tag might be unsupported
-	if not item.name in ('p', 'ul', 'li', 'strong', 'i', 'a', 'img', 'tt', 'ol'):
+	if not item.name in ('p', 'ul', 'li', 'strong', 'i', 'a', 'img', 'tt', 'ol', 'br'):
 	    print item.name
 	p.fh.write ('<%s' % item.name)
 	for attr, value in item.attr.items ():
@@ -409,6 +409,22 @@ def elementToHtml (element, page):
 	
     page.meat = page.meat + [RawText (XML2HTML.fh.getvalue ())]
     XML2HTML.fh.close ()
+
+def xmlStringToHtmlString (s):
+    xmlfile = xmlsupport.AROSXmlFile ()
+
+    XML2HTML = Xml2HtmlProcessor ()
+    XML2HTML.toccount = [0, 0, 0, 0, 0]
+    XML2HTML.toc = []
+
+    xmlfile.parseString (s)
+    xmlfile.process (XML2HTML)
+    # TODO There is no support for toc :-/
+	
+    s = XML2HTML.fh.getvalue ()
+    XML2HTML.fh.close ()
+
+    return s
 
 if __name__ == '__main__':
     import sys
