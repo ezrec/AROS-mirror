@@ -1,4 +1,6 @@
 #include <exec/types.h>
+
+#include <sys/types.h>
 #include <stdio.h>
 
 struct hostent *gethostbyname(const char *name)
