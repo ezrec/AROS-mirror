@@ -36,6 +36,9 @@ AHI -d contrib/AHI contrib/AHI
 # Aminet
 aminet -d contrib/aminet contrib/aminet
 
+# BGUI
+bgui -d contrib/bgui contrib/bgui
+
 # DOpus
 dopus -d contrib/dopus contrib/dopus
 
