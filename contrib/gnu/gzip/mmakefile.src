@@ -6,4 +6,4 @@
 ##MM- contrib-gnu : contrib-gnu-gzip
 ##MM- contrib-gnu-gzip : development-gzip
 
-%fetch_and_build_gnu_development package=gzip version=1.3.3 patch=yes
+%fetch_and_build_gnu_development package=gzip package_repo=http://www.gzip.org version=1.3.3 patch=yes
