@@ -25,7 +25,7 @@ __asm void LIB_SetSocketSignals(register __d0 unsigned long intmask, register __
 /*  SYNOPSIS */
   AROS_LHA(unsigned long, intmask, D0),
   AROS_LHA(unsigned long, iomask, D1),
-  AROS_LHA(unsigned long, urgentmask, D2)
+  AROS_LHA(unsigned long, urgentmask, D2),
 
 /*  LOCATION */
 	struct Library *, SocketBase, 132, Socket)

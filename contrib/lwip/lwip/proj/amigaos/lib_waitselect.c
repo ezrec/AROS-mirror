@@ -14,8 +14,9 @@
 #include "debug.h"
 
 /* temporary */
+#ifndef _AROS
 typedef int fd_set;
-
+#endif
 /*****************************************************************************
 
     NAME */
@@ -28,10 +29,10 @@ __asm int LIB_WaitSelect(register __d0 long nfds, register __a0 fd_set *readfds,
 /*  SYNOPSIS */
 	AROS_LHA(long, nfds, D0),
 	AROS_LHA(fd_set *, readfds, A0),
-  AROS_LHA(fd_set *, writefds, A1),
-  AROS_LHA(fd_set *, exceptfds, A2),
-  AROS_LHA(struct timeval *, timeout, A3),
-  AROS_LHA(ULONG *,signals,D1)
+        AROS_LHA(fd_set *, writefds, A1),
+        AROS_LHA(fd_set *, exceptfds, A2),
+        AROS_LHA(struct timeval *, timeout, A3),
+        AROS_LHA(ULONG *,signals,D1),
 
 /*  LOCATION */
 	struct Library *, SocketBase, 126, Socket)

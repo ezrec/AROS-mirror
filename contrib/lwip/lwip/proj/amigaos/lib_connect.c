@@ -27,7 +27,7 @@ __asm int LIB_connect(register __d0 long s, register __a0 struct sockaddr *name,
 
 /*  SYNOPSIS */
 	AROS_LHA(long, s, D0),
-	AROS_LHA(struct sockaddr, name, A0),
+	AROS_LHA(struct sockaddr, *name, A0),
 	AROS_LHA(long, namelen, D1),
 
 /*  LOCATION */

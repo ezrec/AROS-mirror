@@ -20,7 +20,7 @@
 
 __asm int LIB_SocketBaseTagList(register __a0 struct TagItem *tags)
 #else
-	AROS_LH1(int, LIB_SocketBaseTagList
+	AROS_LH1(int, LIB_SocketBaseTagList,
 
 /*  SYNOPSIS */
   AROS_LHA(struct TagItem *, tags, A0),
