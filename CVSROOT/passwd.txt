@@ -59,5 +59,6 @@ bernie:ad091UoEjSOlA:Bernardo Innocenti:bernie@shock.cosmos.it:
 wojcz:dbdFnjNkcreJM:Wojciech Czyz:wojcz@elsoft.com.pl:
 fsoft:37awEQ15O35vQ:Fabio Rotondo:Fabio.Rotondo@deagostini.it:
 tT85.:db.2ZKYLqIvaY:???:hmichelo@so-razor.ms.sophia.schneider.fr:
+paul:dduLZ9yokBXXk:Paul Firth:paul@minds-eye.net:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
