@@ -1,0 +1,23 @@
+============
+Miscellanous
+============
+
+:Author: Daniel Holmen
+:Date:   2002-09-14
+
+We've been mentioned in a `news item`__ at OSNews__.
+
+Sebastian Heutling implemented an intuition-based boot menu on AROS/x86 native.
+You can now choose to boot with or without executing the startup-sequence. The
+plans for this menu also include enabling HIDD switching at boot time.
+
+Georg Steger fixed some text formatting bugs in graphics.library. He also
+renamed con-handler to con.handler to be consistent, and implemented
+eac_MatchString/MatchFunc in ExAll (DOS). He added an assign HOME: in AROS/linux
+to point to the current user's home directory.
+
+Adam Chodorowski started porting the Font Prefs to Zune.
+
+__ http://www.osnews.com/comment.php?news_id=1738
+__ http://www.osnews.com/
+
