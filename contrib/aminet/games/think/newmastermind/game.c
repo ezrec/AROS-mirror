@@ -7,6 +7,7 @@
  */
 
 #include <math.h>
+#include <stdlib.h>
 #include <exec/types.h>
 #include <intuition/gadgetclass.h>
 #include "requesters.h"

@@ -7,6 +7,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <time.h>
@@ -132,9 +133,9 @@ main (
             (num_colors / 2 - 2) + 8].nm_Flags |= CHECKED;
    
    init_locale ("newmastermind.catalog");
+   srand48 (time (NULL));
    if (initialize ())
    {
-      srand48 (time (NULL));
       event_loop ();
    }
    finalize ();
