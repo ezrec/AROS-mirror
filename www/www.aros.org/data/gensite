@@ -186,7 +186,7 @@ def genSnapshots ():
     page.append (
 	Heading (2, "Snapshots"),
 	Paragraph ("""From now on, you can find the list of snapshots """,
-	    Href ("http://aros.sourceforge.net/snapshots2.html",
+	    Href ("http://aros.sourceforge.net/snapshots.html",
 		"on the SourceForge.net pages"),
 	    "."),
 	Paragraph ("""Go there to download and then return here with the
