@@ -6,18 +6,8 @@
 ##MM- contrib-gnu : contrib-gnu-fileutils
 ##MM- contrib-gnu-fileutils : development-fileutils
 
-#MM- development : development-fileutils
-#MM development-fileutils-quick : development-fileutils-fetch
+REPOSITORIES := http://ftp.gnu.org/pub/gnu/fileutils
 
-ORIGINS := http://ftp.gnu.org/pub/gnu/fileutils/
-
-#MM
-development-fileutils-fetch :
-	%fetch archive=fileutils-4.1.tar.gz destination=$(PORTSDIR)/fileutils archive_origins=$(ORIGINS) \
-	patches_specs=fileutils-4.1-aros.diff:fileutils-4.1:-p1
-
-%build_with_configure mmake=development-fileutils srcdir=$(PORTSDIR)/fileutils/fileutils-4.1 nix=yes \
-    prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development extraoptions="--target=$(AROS_TARGET_CPU)-aros \
-    --build=local --enable-longlong --disable-nls"
-
-
+%fetch_and_build_gnu_development package=fileutils version=4.1 \
+    package_repo=$(REPOSITORIES) \
+    extraoptions="--target=$(AROS_TARGET_CPU)-aros --build=local --disable-nls"
