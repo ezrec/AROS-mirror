@@ -55,9 +55,8 @@ BEGIN {
     gsub (CVSROOT"/", "", Dir);
 
     # Find the first name in the path
-    if (!match (Dir, /\//))
-	RSTART=length(Dir);
-    Area = substr(Dir,1,RSTART);
+    Area = Dir;
+    sub (/\/.*/, "", Area);
 #print RSTART,":",Dir,":",Area
 
     next;
