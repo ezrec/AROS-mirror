@@ -9,9 +9,9 @@ set format x "%d.%m"
 set format y "%6.2f"
 set timefmt "%d.%m.%Y"
 set grid
-set terminal pbm small color
+set terminal png small color
 set size 1,0.5
-set output "@HTMLDIR@/plot.pbm"
+set output "@OUTPUTFILE@"
 set xrange ["@XAXIS@":]
 set xtics nomirror "@XAXIS@", 1209600
 #set ytics nomirror 28.0, 1.0

@@ -54,14 +54,13 @@ ifdef GNUPLOT
 pics : $(HTMLDIR)/aros_size.png $(HTMLDIR)/contrib_size.png
 
 $(HTMLDIR)/%_size.png : %.size size2plot
-	$(SED) -e "s;@HTMLDIR@;$(HTMLDIR);" \
+	$(SED) -e "s;@OUTPUTFILE@;$@;" \
             -e "s;@SIZEFILE@;$<;" \
 	    -e "s;@XAXIS@;$$(python -c "import time; start=time.time()-3600*24*90; print time.strftime ('%d.%m.%Y', time.localtime(start));");" \
             size2plot > size2plot.gp
 	$(GNUPLOT) size2plot.gp
-	$(CONVERT) $(HTMLDIR)/plot.pbm $@
-	$(CONVERT) $(HTMLDIR)/plot.pbm $(basename $@).jpg
-	@$(RM) size2plot.gp $(HTMLDIR)/plot.pbm
+	$(CONVERT) $@ $(basename $@).jpg
+	@$(RM) size2plot.gp
 else
 pics :
 	@$(NOP)
