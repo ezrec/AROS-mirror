@@ -1,0 +1,54 @@
+if.c: In function `link_rtrequest':
+if.c:421: warning: suggest parentheses around assignment used as truth value
+if.c: In function `if_qflush':
+if.c:456: warning: suggest parentheses around assignment used as truth value
+if.c: In function `ifconf':
+if.c:681: warning: suggest parentheses around assignment used as truth value
+if_loop.c: In function `looutput':
+if_loop.c:176: warning: long int format, int arg (arg 2)
+if_loop.c:176: warning: long int format, int arg (arg 3)
+raw_cb.c: In function `raw_attach':
+raw_cb.c:162: warning: suggest parentheses around assignment used as truth value
+raw_usrreq.c: In function `raw_input':
+raw_usrreq.c:194: warning: suggest parentheses around assignment used as truth value
+route.c: In function `rtinit':
+route.c:626: warning: suggest parentheses around assignment used as truth value
+rtsock.c: In function `rt_walk':
+rtsock.c:717: warning: suggest parentheses around assignment used as truth value
+rtsock.c: At top level:
+rtsock.c:744: warning: initialization from incompatible pointer type
+radix.c: In function `rn_match':
+radix.c:218: warning: suggest parentheses around assignment used as truth value
+radix.c:224: warning: suggest parentheses around assignment used as truth value
+radix.c:245: warning: suggest parentheses around assignment used as truth value
+radix.c: In function `rn_addroute':
+radix.c:426: warning: suggest parentheses around assignment used as truth value
+radix.c:472: warning: suggest parentheses around assignment used as truth value
+radix.c:492: warning: suggest parentheses around assignment used as truth value
+radix.c: In function `rn_delete':
+radix.c:539: warning: suggest parentheses around assignment used as truth value
+radix.c:562: warning: suggest parentheses around assignment used as truth value
+radix.c:611: warning: suggest parentheses around assignment used as truth value
+if_sana.c: In function `sana_poll':
+if_sana.c:199: warning: suggest parentheses around assignment used as truth value
+if_sana.c: In function `sana_run':
+if_sana.c:442: warning: suggest parentheses around assignment used as truth value
+if_sana.c: In function `sana_unrun':
+if_sana.c:509: warning: suggest parentheses around assignment used as truth value
+if_sana.c: In function `sana_read':
+if_sana.c:732: warning: initialization from incompatible pointer type
+if_sana.c: In function `sana_online':
+if_sana.c:844: warning: initialization from incompatible pointer type
+if_sana.c: In function `sana_output':
+if_sana.c:948: warning: suggest parentheses around assignment used as truth value
+sana2config.c: In function `ssconfig_parse':
+sana2config.c:75: warning: initialization discards `const' from pointer target type
+sana2config.c: In function `ssconfig_make':
+sana2config.c:161: warning: implicit declaration of function `strncpy'
+sana2config.c:161: warning: assignment makes pointer from integer without a cast
+sana2config.c:196: warning: suggest parentheses around assignment used as truth value
+sana2copybuff.c: In function `ioip_alloc_mbuf':
+sana2copybuff.c:181: warning: suggest parentheses around assignment used as truth value
+sana2copybuff.c:192: warning: suggest parentheses around assignment used as truth value
+sana2arp.c: In function `in_arpinput':
+sana2arp.c:576: warning: suggest parentheses around assignment used as truth value

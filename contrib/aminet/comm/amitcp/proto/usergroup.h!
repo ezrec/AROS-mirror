@@ -1,0 +1,12 @@
+/* Automatically generated header! Do not edit! */
+
+#ifndef PROTO__H
+#define PROTO__H
+
+#include <clib/_protos.h>
+
+#ifdef __GNUC__
+#include <inline/.h>
+#endif /* __GNUC__ */
+
+#endif /* !PROTO__H */
