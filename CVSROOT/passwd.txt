@@ -23,7 +23,7 @@ karcher:*:John J. Karcher:jkarcher@cynet.net:Slim Binaries
 adieb:*:Adrian Brown:adieb@carmen.murdoch.edu.au:Win95 port
 hkiel:ccL6.C5LgMNSM:Henning Kiel:kiel@student.physik.uni-dortmund.de:Games, Misc
 przemek:aaHMm4JFKQqLI:Przemys³aw Szczygielski:przemek.szczygielski@polkomtel.com.pl:Alpha port
-schulz:cdA83T3EV9pyw:Michael Schulz:michal.schulz@tu-clausthal.de:x86 standalone
+schulz:cdA83T3EV9pyw:Michael Schulz:michal.schulz@gmx.de:x86 standalone
 rodo:9c4vG6n8WOKZs:Adrian Brown:Support@hamilton.wa.edu.au:Wintel port
 mattiasg:bbkFrq7bjTN0c:Mattias Gustavsson:f97magu@dd.chalmers.se:Solaris port
 
