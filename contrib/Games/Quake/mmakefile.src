@@ -4,8 +4,8 @@ include $(TOP)/config/make.cfg
 INSTDIR  := $(CONTRIBDIR)/Games/Quake
 BUILDDIR := $(GENDIR)/$(CURDIR)
 STARTUP := $(LIBDIR)/startup.o
-LIBS	:= -L$(LIBDIR) -larosc -larosm -lamiga -larossupport
-DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a	\
+LIBS	:= -L$(LIBDIR) -larosc_shared -larosm -lamiga -larossupport -lautoinit
+DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc_shared.a $(LIBDIR)/libarosm.a	\
 		$(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
 
 EXE := $(INSTDIR)/quake
@@ -46,13 +46,13 @@ CC=$(EGCS)
 
 BASE_CFLAGS=-Dstricmp=strcasecmp
 
-RELEASE_CFLAGS=$(BASE_CFLAGS) -g -O3 -ffast-math -funroll-loops \
+RELEASE_CFLAGS=$(BASE_CFLAGS) -O3 -ffast-math -funroll-loops \
 	-fomit-frame-pointer -fexpensive-optimizations
 
 DEBUG_CFLAGS=$(BASE_CFLAGS) -g
 
-AROSCFLAGS=-DAROS $(RELEASE_CFLAGS) -g
-AROSLDFLAGS=-L$(LIBDIR) -larosc -larosm $(LIBDIR)/startup.o -lamiga
+AROSCFLAGS=-DAROS $(RELEASE_CFLAGS)
+AROSLDFLAGS=-L$(LIBDIR) -larosc_shared -larosm $(LIBDIR)/startup.o -lamiga -lautoinit
 
 DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
 DO_DEBUG_CC=$(CC) $(DEBUG_CFLAGS) -o $@ -c $<
