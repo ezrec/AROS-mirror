@@ -36,7 +36,7 @@
 #define errno		(-1)
 #endif
 
-#ifdef AROS
+#ifdef __AROS__
 #define setlocale(a,b)	((void)a, strcmp((b),"C")==0?"C":NULL)
 #endif
 

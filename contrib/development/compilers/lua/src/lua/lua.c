@@ -59,7 +59,7 @@ static void userinit (void) {
 
 
 static handler lreset (void) {
-#ifndef AROS
+#ifndef __AROS__
   return signal(SIGINT, laction);
 #else
   return SIG_IGN;
@@ -77,7 +77,7 @@ static void lstop (void) {
 
 static void laction (int i) {
   (void)i;  /* to avoid warnings */
-#ifndef AROS
+#ifndef __AROS__
   signal(SIGINT, SIG_DFL); /* if another SIGINT happens before lstop,
                               terminate process (default action) */
 #endif  
@@ -92,7 +92,7 @@ static int ldo (int (*f)(lua_State *l, const char *), const char *name) {
   int top = lua_gettop(L);
   res = f(L, name);  /* dostring | dofile */
   lua_settop(L, top);  /* remove eventual results */
-#ifndef AROS
+#ifndef __AROS__
   signal(SIGINT, h);  /* restore old action */
 #endif
   /* Lua gives no message in such cases, so lua.c provides one */
