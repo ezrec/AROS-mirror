@@ -25,7 +25,7 @@ to Alt-E). Only topaz/8 has the symbol for now.
 Staf Verhaegen implemented thread support with use of SignalSemaphores and
 Pooled Memory in Regina.
 
-Henning Kiel cleaned the build a bit. AROS should nwo compile with CYGWIN
-on Windows and the emul.handler which allows AROS to access a native
-Unix filesystem when run as an emulation is now move into
+Henning Kiel cleaned the build a bit. AROS should now almost compile with
+CYGWIN on Windows and emul.handler which allows AROS to access a native
+Unix filesystem when run as an emulation is now moved into
 AROS/config/unix/, where it belongs.
