@@ -5,8 +5,12 @@
 SED = sed
 RM = rm -f
 CP = cp
+NOP = true # A command which does nothing
+ALLOW_READ = chmod a+r
 MKDIR = mkdir -p
-GNUPLOT = gnuplot # gnuplot
+# Comment these definitions out if you don't have them. Then the graphs
+# for the size of the repositories will not be generated.
+GNUPLOT = #gnuplot # gnuplot
 CONVERT = convert # ImageMagick
 
 # Collect files
@@ -14,8 +18,11 @@ DEVPICS := $(subst $(BINDIR)/developers/,$(HTMLDIR)/pics/developers/,$(wildcard 
 SCREENSHOTS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/*.* $(BINDIR)/screenshots/[0-9]*/*.* $(BINDIR)/screenshots/[0-9]*/README))
 SCREENSHOTDIRS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/[0-9]*))
 
-all : pics makedirs check-html .stamp apache.conf
-	@true
+all : dummy pics makedirs check-html .stamp apache.conf
+	@$(NOP)
+
+dummy :
+	echo "x$(GNUPLOT)x"
 
 # These two rules will make sure that gensite is run if one of the
 # files gensite creates is missing.
@@ -25,6 +32,7 @@ check-html : $(HTMLDIR)/documentation.html $(HTMLDIR)/download.html \
 	    $(HTMLDIR)/snapshots.html $(HTMLDIR)/status.html
 
 $(HTMLDIR)/%.html :
+	@echo "$@ is missing."
 	$(RM) .stamp
 
 # Run gensite if .stamp is missing or if one of the source files
@@ -49,17 +57,8 @@ site.conf : site.conf.in
 	fi
 	@exit 1
 
+ifdef GNUPLOT
 pics : $(HTMLDIR)/aros_size.png $(HTMLDIR)/contrib_size.png
-
-makedirs :
-	@$(MKDIR) $(HTMLDIR)/pics/developers $(HTMLDIR)/pics/screenshots \
-	    $(SCREENSHOTDIRS)
-
-$(HTMLDIR)/pics/developers/% : $(BINDIR)/developers/%
-	$(CP) $< $@
-
-$(HTMLDIR)/pics/screenshots/% : $(BINDIR)/screenshots/%
-	$(CP) $< $@
 
 $(HTMLDIR)/%_size.png : %.size size2plot
 	$(SED) -e "s;@HTMLDIR@;$(HTMLDIR);" \
@@ -70,6 +69,22 @@ $(HTMLDIR)/%_size.png : %.size size2plot
 	$(CONVERT) $(HTMLDIR)/plot.pbm $@
 	$(CONVERT) $(HTMLDIR)/plot.pbm $(basename $@).jpg
 	@$(RM) size2plot.gp $(HTMLDIR)/plot.pbm
+else
+pics :
+	@$(NOP)
+endif
+
+makedirs :
+	@$(MKDIR) $(HTMLDIR)/pics/developers $(HTMLDIR)/pics/screenshots \
+	    $(SCREENSHOTDIRS)
+
+$(HTMLDIR)/pics/developers/% : $(BINDIR)/developers/%
+	$(CP) $< $@
+	$(ALLOW_READ) $@
+
+$(HTMLDIR)/pics/screenshots/% : $(BINDIR)/screenshots/%
+	$(CP) $< $@
+	$(ALLOW_READ) $@
 
 compileall:
 	@python -c "import compileall; compileall.compile_dir('.',0)"
