@@ -1798,8 +1798,8 @@ static pgcit_t* get_PGCIT(vm_t *vm) {
 
 /*
  * $Log$
- * Revision 1.1  2004/09/06 04:15:00  NicJA
- * Initial Port (not quite working) of AMP2
+ * Revision 1.2  2004/09/06 05:53:59  NicJA
+ * Initial Port (not quite working) of AMP2.  OVERLAY support isnt yet possible due to lack of cgxvideo.  Possibly a number of other issues (and a function needs coded in aros/arossupport.c)
  *
  * Revision 1.24  2002/07/05 14:18:55  mroi
  * report all spu types (widescreen, letterbox and pan&scan), not widescreen

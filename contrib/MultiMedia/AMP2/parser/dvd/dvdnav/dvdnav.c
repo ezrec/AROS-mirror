@@ -995,8 +995,8 @@ uint32_t dvdnav_get_next_still_flag(dvdnav_t *this) {
 
 /*
  * $Log$
- * Revision 1.1  2004/09/06 04:15:00  NicJA
- * Initial Port (not quite working) of AMP2
+ * Revision 1.2  2004/09/06 05:53:59  NicJA
+ * Initial Port (not quite working) of AMP2.  OVERLAY support isnt yet possible due to lack of cgxvideo.  Possibly a number of other issues (and a function needs coded in aros/arossupport.c)
  *
  * Revision 1.29  2002/07/25 14:51:40  richwareham
  * Moved get_current_nav_pci into dvdnac.c, changed example to use it instead of 'home-rolled'
