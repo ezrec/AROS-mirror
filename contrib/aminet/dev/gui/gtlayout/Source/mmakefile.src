@@ -1,0 +1,205 @@
+include $(TOP)/config/make.cfg
+
+STARTUP=$(LIBDIR)/startup.o
+
+MODULE     := gtlayout.library
+STATIC_LIB := $(AROS_LIB)/libgtlayout.a
+
+LOCALINCLUDES = -I. -I../Include
+
+LIBS := -L$(LIBDIR) -lamiga -lgtlayout
+#Please leave the linklibs in that order. I could not get the app to work if I changed
+#the order of the linklibs. S.
+APP_LIBS := -L$(LIBDIR) -lautoinit -lgtlayout -lamiga -larosc_shared -lamiga -larosm -lautoinit
+
+
+$(INCDIR)/gtlayout.h : aros/gtlayout.h
+	@$(ECHO) Copying $^ ...
+	@$(CP) $^ $@
+
+$(INCDIR)/defines/gtlayout.h : aros/gtlayout_defines.h
+	@$(ECHO) Copying $^ ...
+	@$(CP) $^ $@
+
+$(INCDIR)/proto/gtlayout.h : aros/gtlayout_proto.h
+	@$(ECHO) Copying $^ ...
+	@$(CP) $^ $@
+
+
+$(OBJDIR)/aros_src/%_aros.c : %.c
+	@$(ECHO) Generating $@...
+	@$(ARCHTOOL) -R aros/gtlayout_pragmas_aros.h  $^ $@ aros/gtlayout_defines_aros.h >/dev/null
+
+$(OBJDIR)/%.o : $(OBJDIR)/aros_src/%_aros.c
+	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES) $(DEFINES) -include aros/arosspecific.h"
+
+
+$(OBJDIR)/%.ol : $(OBJDIR)/aros_src/%_aros.c
+	%compile_q opt="$(CFLAGS) -DLINK_LIB $(LOCALINCLUDES) -include aros/arosspecific.h"
+
+
+$(OBJDIR)/test/%.o : test/%.c
+	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES)"
+
+
+
+API_SOURCE = \
+	LT_Activate \
+	LT_Build \
+	LT_CreateHandle \
+	LT_DeleteHandle \
+	LT_DisposeMenu \
+	LT_FindMenuCommand \
+	LT_GetAttributes \
+	LT_GetCode \
+	LT_GetMenuItem \
+	LT_HandleInput \
+	LT_IMsg \
+	LT_InitExit \
+	LT_LabelWidth \
+	LT_LayoutMenus \
+	LT_LevelWidth \
+	LT_LockWindow \
+	LT_MenuControlTagList \
+	LT_New \
+	LT_NewMenuTagList \
+	LT_NewMenuTemplate \
+	LT_PressButton \
+	LT_Rebuild \
+	LT_Refresh \
+	LT_SetAttributes \
+	LT_ShowWindow \
+	LT_UpdateStrings
+
+
+UFC_SOURCE = \
+	LTP_ImageClass \
+	LTP_PopupClass \
+	LTP_HexEditRoutine \
+	LTP_DefaultHistoryHook \
+	LTP_DefaultEditRoutine \
+	LTP_BackFillRoutine \
+	LTP_PasswordEditRoutine
+
+OTHERS = gtlayout_lib
+
+INTERMEDIATES = $(foreach f,$(API_SOURCE) $(UFC_SOURCE) $(OTHERS),$(OBJDIR)/aros_src/$(f)_aros.c)
+
+FILES = \
+	LTP_AddGadgets \
+	LTP_AddHistory \
+	LTP_AdjustItemPosition \
+	LTP_AdjustMenuPosition \
+	LTP_Atol \
+	LTP_BitMap \
+	LTP_BlinkButton \
+	LTP_CheckGlyph \
+	LTP_Clone \
+	LTP_ConvertNum \
+	LTP_CorrectItemList \
+	LTP_CreateExtraObject \
+	LTP_CreateGadgets \
+	LTP_CreateMenuTagList \
+	LTP_CreateMenuTemplate \
+	LTP_CreateObjectNode \
+	LTP_Delay \
+	LTP_DeleteObjectNode \
+	LTP_DetermineSize \
+	LTP_Draw \
+	LTP_DrawBackFore \
+	LTP_DrawBox \
+	LTP_DrawGauge \
+	LTP_DrawGroup \
+	LTP_DrawIncrementer \
+	LTP_DrawPalette \
+	LTP_DrawPicker \
+	LTP_DrawPrevNext \
+	LTP_DrawTapeButton \
+	LTP_FillMenu \
+	LTP_Find \
+	LTP_FixExtraLabel \
+	LTP_GetCommandWidth \
+	LTP_GetDisplayClip \
+	LTP_GlyphSetup \
+	LTP_HandleHistory \
+	LTP_InitIText \
+	LTP_LayoutGadgets \
+	LTP_LayoutGroup \
+	LTP_LayoutMenu \
+	LTP_LevelClass \
+	LTP_MakeItem \
+	LTP_MakeMenu \
+	LTP_Memory \
+	LTP_MoveToWindow \
+	LTP_NewMenu \
+	LTP_PlaceGroups \
+	LTP_PrintBoxLine \
+	LTP_PrintLabel \
+	LTP_RenderArrow \
+	LTP_RenderCircle \
+	LTP_Rescale \
+	LTP_ResetGroups \
+	LTP_RPortAttrs \
+	LTP_SearchKeys \
+	LTP_SelectKeys \
+	LTP_ShrinkMenu \
+	LTP_SizeDimensions \
+	LTP_Spread \
+	LTP_SPrintf \
+	LTP_Storage \
+	LTP_TabClass \
+	min_max \
+	asmpoolfunctions
+
+LINKLIB_FILES = \
+	varargfuncs
+
+#MM- aminet-dev-gui-gtlayout : linklibs-aminet-dev-gui-gtlayout
+#MM linklibs-aminet-dev-gui-gtlayout : linklibs setup-gtlayoutlib
+
+#First all intermediate files MUST be created so there is a 'defines' file!
+linklibs-aminet-dev-gui-gtlayout: $(INTERMEDIATES) $(STATIC_LIB) $(AROS_LIBS)/gtlayout.library  $(TESTDIR)/gtlayout_test includes-copy
+
+includes-copy: $(INCDIR)/gtlayout.h $(INCDIR)/proto/gtlayout.h $(INCDIR)/defines/gtlayout.h
+
+
+TESTFILES = test/gui test/Tools
+
+TESTOBJS = $(OBJDIR)/test/gui.o $(OBJDIR)/test/Tools.o
+
+MODULE_OBJ   = $(foreach f,$(API_SOURCE) $(API_SOURCE_EXTRA) $(UFC_SOURCE) $(FILES) $(OTHERS) gtlayout_data,$(OBJDIR)/$(f).o)
+STATIC_OBJ   = $(foreach f,$(LINKLIB_FILES) gtlayout_data,$(OBJDIR)/$f.ol)
+
+#I need to create all $(INTERMEDIATES) first (!) for the compile to be successful!
+$(AROS_LIBS)/$(MODULE) : $(MODULE_OBJ)
+	@$(ECHO) "Building $(notdir $@) ..."
+	@$(CC) $(MODULE_OBJ) -static -lamiga -lgtlayout -o $@ -nostartfiles
+
+$(STATIC_LIB) : $(STATIC_OBJ)
+	%mklib_q from=$^
+
+$(TESTDIR)/gtlayout_test: $(TESTOBJS)
+	@$(ECHO) "Building $(notdir $@) ..."
+	@$(STATIC_LD) $(LDFLAGS) $(STARTUP) $^ -o $@ $(APP_LIBS) $(COMPILER_LIBS)
+
+$(OBJDIR)/test/%.d : %.c
+	%mkdepend_q flags=$(CFLAGS)
+
+$(OBJDIR)/aros_src/%.d : %.c
+	%mkdepend_q flags=$(CFLAGS)
+
+$(OBJDIR)/%.d : %.c
+	%mkdepend_q flags=$(CFLAGS)
+
+
+#MM
+setup-gtlayoutlib :
+	%mkdirs_q $(AROS_INCLUDES) $(OBJDIR) $(OBJDIR)/test $(OBJDIR)/aros_src
+	%mkdirs_q $(AROS_LIB) $(AROS_LIBS)
+
+#MM 
+clean ::
+	-$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) $(AROS_LIBS)/gtlayout.library aros/gtlayout_defines_aros.h $(OBJDIR)/gtlayout_data.o $(OBJDIR)/gtlayout_data.ol $(STATIC_LIB)
+
+%common
+%include_deps
