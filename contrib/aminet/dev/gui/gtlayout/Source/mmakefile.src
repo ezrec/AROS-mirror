@@ -199,6 +199,9 @@ setup-aminet-dev-gui-gtlayout ::
 	%mkdirs_q $(AROS_INCLUDES) $(OBJDIR) $(OBJDIR)/test $(OBJDIR)/aros_src
 	%mkdirs_q $(AROSDIR)/test $(AROS_LIB) $(AROS_LIBS)
 
+#MM aminet-dev-gui-gtlayout-clean :
+aminet-dev-gui-gtlayout-clean : clean
+	@$(NOP)
 #MM 
 clean ::
 	-$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) $(AROS_LIBS)/gtlayout.library aros/gtlayout_defines_aros.h $(OBJDIR)/gtlayout_data.o $(OBJDIR)/gtlayout_data.ol $(STATIC_LIB)
