@@ -23,7 +23,9 @@
 #include <proto/alib.h>
 #endif
 
+
 struct Library *BGUIBase=NULL;
+struct IntuitionBase * IntuitionBase;
 
 enum
 {
@@ -98,6 +100,12 @@ int main(argc,argv)
 {
 	Object *window;
 
+	if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+	{
+	  printf("Could not open Intuition.library!\n");
+	  return -1;
+	}
+
 	if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
 	{
 		if((window=InitTest_1())!=NULL
@@ -126,4 +134,6 @@ int main(argc,argv)
 		}
 		CloseLibrary(BGUIBase);
 	}
+	
+	CloseLibrary((struct Library *)IntuitionBase);
 }
