@@ -32,6 +32,10 @@ static char rcsid =
 #include "SDL_video.h"
 #include "SDL_cgxvideo.h"
 
+#ifdef AROS
+#include <stdlib.h>
+#endif
+
 static int CGX_HWAccelBlit(SDL_Surface *src, SDL_Rect *srcrect,
 					SDL_Surface *dst, SDL_Rect *dstrect);
 

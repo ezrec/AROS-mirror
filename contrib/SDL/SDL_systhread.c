@@ -34,6 +34,10 @@ static char rcsid =
 #include "SDL_systhread.h"
 #include "mydebug.h"
 
+#ifdef AROS
+#include <stdlib.h>
+#endif
+
 typedef struct {
 	int (*func)(void *);
 	void *data;
