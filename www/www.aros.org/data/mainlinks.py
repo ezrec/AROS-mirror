@@ -29,6 +29,7 @@ mainLinks = (
 	Href ('mmake.html', 'MetaMake'),
 	Href ('hidd-intro.html', 'HIDD Intro'),
 	Href ('hidd-model.html', 'HIDD Model'),
+	Href ('contents/contents.html', 'Contents'),
 	Href ('autodocs/index.html', 'AutoDocs'),
 	Href ('ideas.html', 'Random Ideas'),
     ),
