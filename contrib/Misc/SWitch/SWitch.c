@@ -385,7 +385,7 @@ void main( int argc, char *argv[] )
 
    // report errors?
    temp = ArgString( ttypes, "QUIET", "FALSE" );
-   if ( strcmpi( temp, "TRUE" ) == 0 )
+   if ( stricmp( temp, "TRUE" ) == 0 )
    {
       MG.fBeQuiet = TRUE;
    }
