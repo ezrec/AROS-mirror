@@ -1,0 +1,67 @@
+diff -u -r sox-12.17.4/8svx.c sox-aros/8svx.c
+--- sox-12.17.4/8svx.c	Fri Nov 30 21:17:18 2001
++++ sox-aros/8svx.c	Fri Jun  4 15:19:42 2004
+@@ -271,6 +271,12 @@
+ 	/* open channel output files */
+ 	p->ch[0] = ft->fp;
+ 	for (i = 1; i < ft->info.channels; i++) {
++#ifdef __AROS__
++#warning #TODO Implement tmpfile() in AROS
++			st_fail_errno(ft,errno,"Can't open channel output file");
++			return(ST_EOF);
++#endif
++
+ 		if ((p->ch[i] = tmpfile()) == NULL)
+ 		{
+ 			st_fail_errno(ft,errno,"Can't open channel output file");
+diff -u -r sox-12.17.4/config.sub sox-aros/config.sub
+--- sox-12.17.4/config.sub	Mon Dec 17 11:20:40 2001
++++ sox-aros/config.sub	Fri Jun  4 15:09:11 2004
+@@ -360,6 +360,10 @@
+ 		basic_machine=m68k-unknown
+ 		os=-sysv4
+ 		;;
++	aros)
++		basic_machine=i386-unknown
++		os=-aros
++		;;
+ 	apollo68)
+ 		basic_machine=m68k-apollo
+ 		os=-sysv
+@@ -1057,7 +1061,7 @@
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -solaris* | -sym* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* \
++	      | -aos* | -aros* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -netbsd* | -openbsd* | -freebsd* | -riscix* \
+diff -u -r sox-12.17.4/reverse.c sox-aros/reverse.c
+--- sox-12.17.4/reverse.c	Thu Nov 22 22:42:57 2001
++++ sox-aros/reverse.c	Fri Jun  4 15:21:29 2004
+@@ -51,6 +51,11 @@
+ int st_reverse_start(eff_t effp)
+ {
+ 	reverse_t reverse = (reverse_t) effp->priv;
++#ifdef __AROS__
++#warning TODO implement tmpfile() in AROS
++		st_fail("Reverse effect can't create temporary file\n");
++		return (ST_EOF);
++#endif
+ 	reverse->fp = tmpfile();
+ 	if (reverse->fp == NULL)
+ 	{
+diff -u -r sox-12.17.4/synth.c sox-aros/synth.c
+--- sox-12.17.4/synth.c	Thu Nov 22 22:42:57 2001
++++ sox-aros/synth.c	Fri Jun  4 15:11:53 2004
+@@ -723,7 +723,9 @@
+ 		 * will be a little bigger, depends on when the
+ 		 * signal gets to the plugin
+ 		 */
++		#ifndef __AROS__
+ 		raise(SIGINT); /* only once */
++		#endif /* __AROS__ */
+ 		*osamp = done*chan;
+ 		break;
+ 
