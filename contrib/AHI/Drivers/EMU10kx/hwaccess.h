@@ -166,8 +166,8 @@ struct emu10k1_card
 	spinlock_t		timer_lock;
 #endif
 
-#ifdef __AMIGAOS4__
-	struct PCIDevice	*pci_dev;
+#ifdef AHI
+	APTR			pci_dev;
 #else
 	struct pci_dev		*pci_dev;
 #endif

@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
 
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -45,6 +45,7 @@ driver! Anything that is based on this driver has to be GPL:ed.
 #include "8010.h"
 #include "emu10kx-misc.h"
 #include "pci_wrapper.h"
+
 
 /******************************************************************************
 ** Globals ********************************************************************
@@ -288,10 +289,18 @@ _AHIsub_Start( ULONG                   flags,
     if( AudioCtrl->ahiac_Flags & AHIACF_MULTICHANNEL )
     {
       num_voices = 4;
+
+      // Disable front-to-center/LFE routing
+      emu10k1_set_volume_gpr( &dd->card, VOL_FRONT_CENTER, 0, VOL_5BIT);
+      emu10k1_set_volume_gpr( &dd->card, VOL_FRONT_LFE,    0, VOL_5BIT);
     }
     else
     {
       num_voices = 1;
+
+      // Enable front-to-center/LFE routing
+      emu10k1_set_volume_gpr( &dd->card, VOL_FRONT_CENTER, 100, VOL_5BIT);
+      emu10k1_set_volume_gpr( &dd->card, VOL_FRONT_LFE,    100, VOL_5BIT);
     }
     
     for( i = 0; i < num_voices; ++i )
@@ -509,6 +518,11 @@ _AHIsub_Start( ULONG                   flags,
 
     SaveMixerState( dd );
     UpdateMonitorMixer( dd );
+    
+    #ifdef __AMIGAOS4__
+    // invalidate the whole record_buffer just to be on the safe side
+    CacheClearE( dd->record_buffer, RECORD_BUFFER_SAMPLES * 4, CACRF_InvalidateD );
+    #endif
 
     sblive_writeptr( &dd->card, ADCBA, 0, dd->record_dma_handle );
     sblive_writeptr( &dd->card, ADCBS, 0, RECORD_BUFFER_SIZE_VALUE );
@@ -815,13 +829,13 @@ _AHIsub_HardwareControl( ULONG                   attribute,
 
       if( dd->output == 0 )
       {
-	emu10k1_set_volume_gpr( &dd->card, 0x19, 0, VOL_5BIT);
-	emu10k1_set_volume_gpr( &dd->card, 0x1a, 0, VOL_5BIT);
+	emu10k1_set_volume_gpr( &dd->card, VOL_FRONT_REAR_L, 0, VOL_5BIT);
+	emu10k1_set_volume_gpr( &dd->card, VOL_FRONT_REAR_R, 0, VOL_5BIT);
       }
       else
       {
-	emu10k1_set_volume_gpr( &dd->card, 0x19, 100, VOL_5BIT);
-	emu10k1_set_volume_gpr( &dd->card, 0x1a, 100, VOL_5BIT);
+	emu10k1_set_volume_gpr( &dd->card, VOL_FRONT_REAR_L, 100, VOL_5BIT);
+	emu10k1_set_volume_gpr( &dd->card, VOL_FRONT_REAR_R, 100, VOL_5BIT);
       }
       return TRUE;
 

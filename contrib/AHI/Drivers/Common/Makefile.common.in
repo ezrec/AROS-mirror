@@ -1,4 +1,3 @@
-#  $Id$
 #
 #  Makefile.common.in: Can be included by drivers to simplify
 #  driver development.

@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -53,6 +51,12 @@
 #include "gateway.h"
 #include "header.h"
 #include "misc.h"
+
+#ifdef __MORPHOS__
+#define IS_MORPHOS 1
+#else
+#define IS_MORPHOS 0
+#endif
 
 /*
 ** Message passed to the Unit Process at
@@ -284,18 +288,17 @@ _DevOpen ( struct AHIRequest* ioreq,
     {
       AHI_LoadModeFile("DEVS:AudioModes");
 
-#ifdef __MORPHOS__
       // Be quiet here. - Piru
+      if (IS_MORPHOS)
       {
-        struct Process *Self = (struct Process *) FindTask(NULL);
-        APTR oldwindowptr = Self->pr_WindowPtr;
-        Self->pr_WindowPtr = (APTR) -1;
+        APTR *windowptr = &((struct Process *) FindTask(NULL))->pr_WindowPtr;
+        APTR oldwindowptr = *windowptr;
+        *windowptr = (APTR) -1;
 
         AHI_LoadModeFile("MOSSYS:DEVS/AudioModes");
 
-        Self->pr_WindowPtr = oldwindowptr;
+        *windowptr = oldwindowptr;
       }
-#endif
     }
   }
 
@@ -558,6 +561,7 @@ ReadConfig ( struct AHIDevUnit *iounit,
   struct IFFHandle *iff;
   struct StoredProperty *prhd,*ahig;
   struct CollectionItem *ci;
+  ULONG *mode;
 
   if(iounit)
   {
@@ -659,6 +663,16 @@ ReadConfig ( struct AHIDevUnit *iounit,
                 AHIBase->ahib_AntiClickTime = 0;
               }
 
+              if( (ULONG) ahig->sp_Size > offsetof( struct AHIGlobalPrefs, 
+                                                    ahigp_ScaleMode ) )
+              {
+                AHIBase->ahib_ScaleMode = globalprefs->ahigp_ScaleMode;
+		EndianSwap( sizeof (UWORD), &AHIBase->ahib_ScaleMode );
+              }
+              else
+              {
+                AHIBase->ahib_ScaleMode = AHI_SCALE_FIXED_0_DB;
+              }
             }
             ci=FindCollection(iff,ID_PREF,ID_AHIU);
             while(ci)
@@ -679,7 +693,6 @@ ReadConfig ( struct AHIDevUnit *iounit,
                   iounit->OutputVolume    = unitprefs->ahiup_OutputVolume;
                   iounit->Input           = unitprefs->ahiup_Input;
                   iounit->Output          = unitprefs->ahiup_Output;
-		  iounit->ScaleMode	  = unitprefs->ahiup_ScaleMode;
 
 		  EndianSwap( sizeof (ULONG), &iounit->AudioMode );
 		  EndianSwap( sizeof (ULONG), &iounit->Frequency );
@@ -728,18 +741,12 @@ ReadConfig ( struct AHIDevUnit *iounit,
   // since doesn't open all sub libraries.
 
   if(iounit)
-  {
-    if(iounit->AudioMode == (ULONG) AHI_INVALID_ID)
-    {
-      iounit->AudioMode = AHI_BestAudioID(AHIDB_Realtime, TRUE, TAG_DONE);
-    }
-  }
+    mode = &iounit->AudioMode;
   else
-  {
-    if(AHIBase->ahib_AudioMode == (ULONG) AHI_INVALID_ID)
-    {
-      AHIBase->ahib_AudioMode = AHI_BestAudioID( AHIDB_Realtime, TRUE, TAG_DONE);
-    }
+    mode = &AHIBase->ahib_AudioMode;
+  if(mode[0] == (ULONG) AHI_INVALID_ID)
+  { static const Tag tags[] = { AHIDB_Realtime,TRUE,TAG_DONE };
+    mode[0] = AHI_BestAudioIDA((struct TagItem *)tags);
   }
 
   return TRUE;

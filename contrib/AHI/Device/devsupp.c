@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -49,13 +47,13 @@ RecM8S( ULONG  size,
 	ULONG* offset,
 	void** dest )
 {
-  Fixed64        offs = (Fixed64) 0;
-  Fixed64        step = (Fixed64) add << 32;
+  Fixed64        offs = 0;
+  Fixed64        step = ((Fixed64) add) << 16;
   struct sample* from = (struct sample*) ((ULONG)src + *offset);
-  BYTE*          to   = (BYTE*) dest;
+  BYTE*          to   = *dest;
   ULONG          i;
 
-  for( i = 0; i < size; ++size )
+  for( i = 0; i < size; ++i )
   {
     *to++ = from[ offs >> 32 ].left >> 8;
 
@@ -73,13 +71,13 @@ RecS8S( ULONG  size,
 	ULONG* offset,
 	void** dest )
 {
-  Fixed64        offs = (Fixed64) 0;
-  Fixed64        step = (Fixed64) add << 32;
+  Fixed64        offs = 0;
+  Fixed64        step = ((Fixed64) add) << 16;
   struct sample* from = (struct sample*) ((ULONG)src + *offset);
-  BYTE*          to   = (BYTE*) dest;
+  BYTE*          to   = *dest;
   ULONG          i;
 
-  for( i = 0; i < size; ++size )
+  for( i = 0; i < size; ++i )
   {
     *to++ = from[ offs >> 32 ].left  >> 8;
     *to++ = from[ offs >> 32 ].right >> 8;
@@ -98,13 +96,13 @@ RecM16S( ULONG  size,
 	 ULONG* offset,
 	 void** dest )
 {
-  Fixed64        offs = (Fixed64) 0;
-  Fixed64        step = (Fixed64) add << 32;
+  Fixed64        offs = 0;
+  Fixed64        step = ((Fixed64) add) << 16;
   struct sample* from = (struct sample*) ((ULONG)src + *offset);
-  WORD*          to   = (WORD*) dest;
+  WORD*          to   = *dest;
   ULONG          i;
 
-  for( i = 0; i < size; ++size )
+  for( i = 0; i < size; ++i )
   {
     *to++ = from[ offs >> 32 ].left;
 
@@ -122,13 +120,13 @@ RecS16S( ULONG  size,
 	 ULONG* offset,
 	 void** dest )
 {
-  Fixed64        offs = (Fixed64) 0;
-  Fixed64        step = (Fixed64) add << 32;
+  Fixed64        offs = 0;
+  Fixed64        step = ((Fixed64) add) << 16;
   struct sample* from = (struct sample*) ((ULONG)src + *offset);
-  WORD*          to   = (WORD*) dest;
+  WORD*          to   = *dest;
   ULONG          i;
 
-  for( i = 0; i < size; ++size )
+  for( i = 0; i < size; ++i )
   {
     *to++ = from[ offs >> 32 ].left;
     *to++ = from[ offs >> 32 ].right;
@@ -147,13 +145,13 @@ RecM32S( ULONG  size,
 	 ULONG* offset,
 	 void** dest )
 {
-  Fixed64        offs = (Fixed64) 0;
-  Fixed64        step = (Fixed64) add << 32;
+  Fixed64        offs = 0;
+  Fixed64        step = ((Fixed64) add) << 16;
   struct sample* from = (struct sample*) ((ULONG)src + *offset);
-  LONG*          to   = (LONG*) dest;
+  LONG*          to   = *dest;
   ULONG          i;
 
-  for( i = 0; i < size; ++size )
+  for( i = 0; i < size; ++i )
   {
     *to++ = from[ offs >> 32 ].left << 16;
 
@@ -171,13 +169,13 @@ RecS32S( ULONG  size,
 	 ULONG* offset,
 	 void** dest )
 {
-  Fixed64        offs = (Fixed64) 0;
-  Fixed64        step = (Fixed64) add << 32;
+  Fixed64        offs = 0;
+  Fixed64        step = ((Fixed64) add) << 16;
   struct sample* from = (struct sample*) ((ULONG)src + *offset);
-  LONG*          to   = (LONG*) dest;
+  LONG*          to   = *dest;
   ULONG          i;
 
-  for( i = 0; i < size; ++size )
+  for( i = 0; i < size; ++i )
   {
     *to++ = from[ offs >> 32 ].left  << 16;
     *to++ = from[ offs >> 32 ].right << 16;

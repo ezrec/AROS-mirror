@@ -1,14 +1,11 @@
-## version $VER: ahiprefs.ct 4.5 (30.12.01)
+## version $VER: ahiprefs.ct 4.6 (4.8.2004)
 ## language magyar
 ## codeset 0
 ;
 ## chunk AUTH Dósa Márton (dm_@freemail.hu)
 ;
-; The .ct file was generated from
-; $Id$
-;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -110,7 +107,7 @@ Zene egység
 ; *** Properties box ***
 ;
 msgProperties
-Mód ID\nFelvétel\nSzerzõ\nCopyright\nMeghajtóprogram\nVerzió
+Mód ID\nFelvétel\nSzerzõ\nCopyright\nMeghajtóprogram\nVerzió\nAnnotation
 ; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull

@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -266,7 +264,7 @@ AddWords71( ADDARGS )
 
     dst[ 0 ] += ScaleLeft * startpointL;
     dst[ 1 ] += ScaleRight * startpointR;
-    dst += 0;
+    dst += 8;
 
     offset += Add;
   }
@@ -729,7 +727,7 @@ AddWords71B( ADDARGS )
 
     dst[ 0 ] += ScaleLeft * startpointL;
     dst[ 1 ] += ScaleRight * startpointR;
-    dst += 0;
+    dst += 8;
 
     offset -= Add;
   }

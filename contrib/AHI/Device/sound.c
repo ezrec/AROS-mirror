@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -38,6 +36,10 @@
 #include "debug.h"
 #include "effectinit.h"
 #include "mixer.h"
+
+#ifdef __AMIGAOS4__
+#define IAHIsub audioctrl->ahiac_IAHIsub
+#endif
 
 /******************************************************************************
 ** AHI_SetVol *****************************************************************

@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -48,6 +46,10 @@
 #include "device.h"
 #include "devsupp.h"
 
+
+#ifdef __AMIGAOS4__
+#define IAHIsub ((struct AHIPrivAudioCtrl *) iounit->AudioCtrl)->ahiac_IAHIsub
+#endif
 
 static void TermIO(struct AHIRequest *, struct AHIBase *);
 static void Devicequery(struct AHIRequest *, struct AHIBase *);
@@ -730,10 +732,8 @@ ReadCmd ( struct AHIRequest *ioreq,
       error = AHIE_HALFDUPLEX;   // FIXIT!
     }
     else
-    {
-      error = AHI_ControlAudio(iounit->AudioCtrl,
-         AHIC_Record,TRUE,
-         TAG_DONE);
+    { static const Tag tags[] = { AHIC_Record,TRUE,TAG_DONE };
+      error = AHI_ControlAudioA(iounit->AudioCtrl, (struct TagItem *)tags);
     }
 
     if( ! error)
@@ -853,10 +853,8 @@ WriteCmd ( struct AHIRequest *ioreq,
       error = AHIE_HALFDUPLEX;   // FIXIT!
     }
     else
-    {
-      error = AHI_ControlAudio(iounit->AudioCtrl,
-         AHIC_Play,TRUE,
-         TAG_DONE);
+    { static const Tag tags[] = { AHIC_Play,TRUE,TAG_DONE };
+      error = AHI_ControlAudioA(iounit->AudioCtrl, (struct TagItem *)tags);
     }
 
     if( ! error)
@@ -1027,10 +1025,8 @@ FeedReaders ( struct AHIDevUnit *iounit,
   if( ! iounit->ReadList.mlh_Head->mln_Succ )
   {
     if(--iounit->RecordOffDelay == 0)
-    {
-      AHI_ControlAudio(iounit->AudioCtrl,
-          AHIC_Record,FALSE,
-          TAG_DONE);
+    { static const Tag tags[] = { AHIC_Record,FALSE,TAG_DONE };
+      AHI_ControlAudioA(iounit->AudioCtrl, (struct TagItem *)tags);
       iounit->IsRecording = FALSE;
     }
   }
@@ -1633,7 +1629,7 @@ static void UpdateMasterVolume( struct AHIDevUnit *iounit,
       minscale = 0x10000 / c;
     }
 
-    switch( iounit->ScaleMode )
+    switch( AHIBase->ahib_ScaleMode )
     {
       case AHI_SCALE_DYNAMIC_SAFE:
 	if( GetExtras(ioreq1)->VolumeScale > minscale )
@@ -1694,7 +1690,7 @@ static void UpdateMasterVolume( struct AHIDevUnit *iounit,
       0x10000
     };
     
-    switch( iounit->ScaleMode )
+    switch( AHIBase->ahib_ScaleMode )
     {
       case AHI_SCALE_FIXED_SAFE:
 	vol.ahiemv_Volume = 0x10000;

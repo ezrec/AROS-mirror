@@ -38,7 +38,7 @@ AC_MSG_RESULT(${enable_warpup})
 case $host in
  i?86be-pc-amithlon)
   : ${CPU="i686"}
-  linkerflags="-noixemul -r"
+  linkerflags="-noixemul -mcpu=${CPU} -r"
   optflags="-mcpu=${CPU} -O2"
   asflags="--defsym CPU=${CPU} --defsym LITTLE_ENDIAN=1"
   resident=""   dnl *** Not supported (yet?)
@@ -46,7 +46,7 @@ case $host in
  ;;
  m68k-unknown-amigaos)
   : ${CPU="68020-60"}
-  linkerflags="-noixemul"
+  linkerflags="-noixemul -m${CPU}"
   optflags="-m${CPU} -O2 -fomit-frame-pointer -ffast-math"
   asCPU=`echo ${CPU} | sed 's/-.*//'`
   asflags="-m${asCPU} --register-prefix-optional --bitwise-or --defsym CPU=${asCPU}"
@@ -56,7 +56,7 @@ case $host in
  powerpc-unknown-amigaos)
   : ${CPU="603"}
   AC_DEFINE(__USE_INLINE__)
-  linkerflags="-noixemul"
+  linkerflags="-noixemul -mcpu=${CPU}"
   optflags="-mcpu=${CPU} -O2"
   asflags="-m${CPU} -mregnames --defsym CPU=${CPU}"
   resident="-mresident32"
@@ -65,7 +65,7 @@ case $host in
  powerpc-unknown-morphos)
   : ${CPU="603"}
   AC_DEFINE(USE_INLINE_STDARG)
-  linkerflags="-noixemul"
+  linkerflags="-noixemul -mcpu=${CPU}"
   optflags="-mcpu=${CPU} -O2"
   asflags="-m${CPU} -mregnames --defsym CPU=${CPU}"
     resident="-mresident32"

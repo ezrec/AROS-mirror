@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -78,6 +76,7 @@ struct AHIBase
   ULONG                    ahib_Output;
   Fixed                    ahib_MaxCPU;
   Fixed                    ahib_AntiClickTime;
+  UWORD                    ahib_ScaleMode;
 };
 
 
@@ -229,6 +228,9 @@ struct AHIPrivAudioCtrl
   UWORD                      ahiac_MaxCPU;
   struct PowerPCContext*     ahiac_PowerPCContext;
   char                       ahiac_DriverName[ 256 ];
+  #ifdef __AMIGAOS4__
+  struct AHIsubIFace*        ahiac_IAHIsub;
+  #endif
 };
 
 #ifdef __AMIGAOS4__

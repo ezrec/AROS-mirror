@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -119,7 +117,7 @@ DummyHook( void )
 }
 
 
-static struct Hook DefPlayerHook =
+static const struct Hook DefPlayerHook =
 {
   {0, 0},
   (HOOKFUNC) HookEntry,
@@ -128,7 +126,7 @@ static struct Hook DefPlayerHook =
 };
 
 
-static struct TagItem boolmap[] =
+static const struct TagItem boolmap[] =
 {
   { AHIDB_Volume,    AHIACF_VOL },
   { AHIDB_Panning,   AHIACF_PAN },
@@ -473,6 +471,9 @@ _AHI_AllocAudioA( struct TagItem* tags,
   struct Library *AHIsubBase;
   struct AHI_AudioDatabase *audiodb;
   struct TagItem *dbtags;
+#ifdef __AMIGAOS4__
+  struct AHIsubIFace* IAHIsub;
+#endif
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {
@@ -493,14 +494,19 @@ _AHI_AllocAudioA( struct TagItem* tags,
   AHIsubBase = OpenLibrary(audioctrl->ahiac_DriverName,DriverVersion);
 //KPrintF("Opened AHIsubBase()\n");
 
+#ifdef __AMIGAOS4__
+  audioctrl->ahiac_IAHIsub = NULL;
+#endif
+
   if(!AHIsubBase)
     goto error;
 
 #ifdef __AMIGAOS4__
-  if ((IAHIsub = (struct AHIsubIFace *) GetInterface((struct Library *) AHIsubBase, "main", 1, NULL)) == NULL)
+  if ((audioctrl->ahiac_IAHIsub = (struct AHIsubIFace *) GetInterface((struct Library *) AHIsubBase, "main", 1, NULL)) == NULL)
   {    
        goto error;
   }
+  IAHIsub = audioctrl->ahiac_IAHIsub;
 #endif
 
   // Never allow drivers that are newer than ahi.device.
@@ -729,6 +735,10 @@ _AHI_FreeAudio( struct AHIPrivAudioCtrl* audioctrl,
   {
     if((AHIsubBase=audioctrl->ahiac_SubLib))
     {
+#ifdef __AMIGAOS4__
+      struct AHIsubIFace* IAHIsub = audioctrl->ahiac_IAHIsub;
+#endif
+
       if(!(audioctrl->ahiac_SubAllocRC & AHISF_ERROR))
       {
 //KPrintF("Called AHIsub_Stop(play|record)\n");
@@ -939,6 +949,9 @@ _AHI_ControlAudioA( struct AHIPrivAudioCtrl* audioctrl,
   UBYTE update=FALSE;
   struct TagItem *tag,*tstate=tags;
   struct Library *AHIsubBase=audioctrl->ahiac_SubLib;
+#ifdef __AMIGAOS4__
+  struct AHIsubIFace* IAHIsub = audioctrl->ahiac_IAHIsub;
+#endif
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {

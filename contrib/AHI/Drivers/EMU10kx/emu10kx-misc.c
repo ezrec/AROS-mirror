@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
 
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -35,6 +35,8 @@ extern const UWORD InputBits[];
 int emu10k1_init(struct emu10k1_card *card);
 void emu10k1_cleanup(struct emu10k1_card *card);
 
+static void AddResetHandler(struct EMU10kxData* dd);
+
 /******************************************************************************
 ** DriverData allocation ******************************************************
 ******************************************************************************/
@@ -48,15 +50,9 @@ INTGW( static, void,  recordinterrupt,   RecordInterrupt );
 INTGW( static, ULONG, emu10kxinterrupt,  EMU10kxInterrupt );
 
 
-#ifdef __AMIGAOS4__
 struct EMU10kxData*
-AllocDriverData( struct PCIDevice *    dev,
+AllocDriverData( APTR               dev,
 		 struct DriverBase* AHIsubBase )
-#else
-struct EMU10kxData*
-AllocDriverData( struct pci_dev*    dev,
-		 struct DriverBase* AHIsubBase )
-#endif
 {
   struct EMU10kxBase* EMU10kxBase = (struct EMU10kxBase*) AHIsubBase;
   struct EMU10kxData* dd;
@@ -108,7 +104,7 @@ AllocDriverData( struct pci_dev*    dev,
 
   // FIXME: How about latency/pcibios_set_master()??
 
-  dd->card.iobase  = ahi_pci_get_base_address(0, dev);
+  dd->card.iobase  = (unsigned long) ahi_pci_get_base_address(0, dev);
   dd->card.length  = ~( ahi_pci_get_base_size(0, dev) & PCI_BASE_ADDRESS_IO_MASK );
   dd->card.irq     = ahi_pci_get_irq(dev);
   dd->card.chiprev = ahi_pci_read_config_byte( PCI_REVISION_ID, dev );
@@ -182,6 +178,10 @@ AllocDriverData( struct pci_dev*    dev,
     // No attenuation for center/LFE
     emu10k1_writeac97( &dd->card, AC97_SURROUND_MASTER, 0x0 );
   }
+
+#ifdef __AMIGAOS4__
+  AddResetHandler(dd);
+#endif
   
   return dd;
 }
@@ -402,3 +402,28 @@ SamplerateToLinearPitch( ULONG samplingrate )
   samplingrate = (samplingrate << 8) / 375;
   return (samplingrate >> 1) + (samplingrate & 1);
 }
+
+
+#ifdef __AMIGAOS4__
+static ULONG ResetHandler(struct ExceptionContext *ctx, struct ExecBase *pExecBase, struct EMU10kxData* dd)
+{
+    emu10k1_irq_disable( &dd->card, INTE_INTERVALTIMERENB );
+    emu10k1_voices_stop( dd->voices, dd->voices_started );
+
+    return 0UL;
+}
+
+
+void AddResetHandler(struct EMU10kxData* dd)
+{
+    static struct Interrupt interrupt;
+
+    interrupt.is_Code = (void (*)())ResetHandler;
+    interrupt.is_Data = (APTR) dd;
+    interrupt.is_Node.ln_Pri  = 0;
+    interrupt.is_Node.ln_Type = NT_EXTINTERRUPT;
+    interrupt.is_Node.ln_Name = "reset handler";
+
+    AddResetCallback( &interrupt );
+}
+#endif

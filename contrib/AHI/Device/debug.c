@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -494,7 +492,7 @@ AROS_UFH2( void,
 
 #else
 
-static UWORD rawputchar_m68k[] = 
+static const UWORD rawputchar_m68k[] = 
 {
   0x2C4B,             // MOVEA.L A3,A6
   0x4EAE, 0xFDFC,     // JSR     -$0204(A6)

@@ -1,4 +1,6 @@
 
+#include <config.h>
+
 #include <proto/dos.h>
 #include <proto/exec.h>
 

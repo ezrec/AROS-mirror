@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -117,10 +115,11 @@ Fixed DizzyTestAudioID(ULONG id, struct TagItem *tags )
     {
       // Check source mode
 
-      case AHIDB_AudioID:    
-        total++;
+      case AHIDB_AudioID:
+	// Give two points for this
+        total+=2;
         if( ((tag->ti_Data)&0xffff0000) == (id & 0xffff0000) )
-          hits++;
+          hits+=2;
         break;
 
       // Boolean tags
@@ -703,21 +702,23 @@ _AHI_BestAudioIDA( struct TagItem* tags,
   ULONG id = AHI_INVALID_ID, bestid = 0;
   Fixed score, bestscore = 0;
   struct TagItem *dizzytags;
-  static const struct TagItem defdizzy[] =
+  static const struct TagItem const_defdizzy[] =
   {
-    // Default is off for performance reasons..
-    { AHIDB_Volume,     FALSE },
-    { AHIDB_Stereo,     FALSE },
+    { AHIDB_Volume,     TRUE },
+    { AHIDB_Stereo,     TRUE },
     { AHIDB_MultiChannel, FALSE },
-    { AHIDB_Panning,    FALSE },
-    { AHIDB_HiFi,       FALSE },
-    { AHIDB_PingPong,   FALSE },
-    // Default is on, 'cause they won't hurt performance (?)
-    { AHIDB_Record,     TRUE  },
+    { AHIDB_Panning,    TRUE },
+    { AHIDB_HiFi,       TRUE  },
     { AHIDB_Realtime,   TRUE  },
-    { AHIDB_FullDuplex, TRUE  },
     // And we don't care about the rest...
     { TAG_DONE,         0     }
+  };
+  
+  const struct TagItem defdizzy[] =
+  {
+    // Give the user's preferred sound card extra points
+    { AHIDB_AudioID,    AHIBase->ahib_AudioMode },
+    { TAG_MORE,         (ULONG) &const_defdizzy }
   };
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)

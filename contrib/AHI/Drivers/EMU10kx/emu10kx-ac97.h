@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
 
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@
 
 #include <config.h>
 #include <exec/semaphores.h>
+#include <utility/hooks.h>
 
 #define EMU10KX_AC97_SEMAPHORE "emu10kx.ac97"
 

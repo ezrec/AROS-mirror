@@ -30,6 +30,8 @@
  */
 
 #ifdef AHI
+#include <config.h>
+
 #include "linuxsupport.h"
 #include <string.h>
 #else

@@ -1,4 +1,3 @@
-#  $Id$
 #
 #  Makefile.in for the drivers
 #
@@ -16,7 +15,7 @@ DISTDIR		= @DISTDIR@
 DEVDIR		= ${DISTDIR}/Developer
 DRIVERDIR	= ${DEVDIR}/Drivers
 
-build_os	= @build_os@
+host		= @host@
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -46,6 +45,14 @@ SUBDIRS		+= AROS
 endif
 
 ifneq ($(strip $(HAVE_OPENPCI)),)
+SUBDIRS		+= EMU10kx
+endif
+
+ifeq ($(strip $(host)),powerpc-unknown-amigaos)
+SUBDIRS		+= EMU10kx
+endif
+
+ifeq ($(patsubst %-aros,yes,$(host)),yes)
 SUBDIRS		+= EMU10kx
 endif
 

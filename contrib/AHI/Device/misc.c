@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -128,16 +126,15 @@ ReqA( const char* text, APTR args )
 ** SprintfA *******************************************************************
 ******************************************************************************/
 
-static UWORD struffChar[] =
-{
-  0x16c0,     // moveb %d0,%a3@+
-  0x4e75      // rts
-};
-
 char*
 SprintfA( char *dst, const char *fmt, ULONG* args )
 {
 #ifndef __AMIGAOS4__
+  static const UWORD struffChar[] =
+  {
+    0x16c0,     // moveb %d0,%a3@+
+    0x4e75      // rts
+  };
   return RawDoFmt( (UBYTE*) fmt,
                    args, 
                    (void(*)(void)) &struffChar,
@@ -181,7 +178,7 @@ AHIObtainSemaphore( struct SignalSemaphore* sigSem )
   struct Task *me;
 
   Disable(); // Not Forbid()!
-  me=SysBase->ThisTask;
+  me = FindTask(NULL);
   sigSem->ss_QueueCount++;
   if( sigSem->ss_QueueCount == 0 )
   {

@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      toccata.library - AHI-based Toccata emulation library
-     Copyright (C) 1997-2003 Martin Blom <martin@blom.org> and Teemu Suikki.
+     Copyright (C) 1997-2004 Martin Blom <martin@blom.org> and Teemu Suikki.
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -20,29 +18,6 @@
      MA 02139, USA.
 */
 
-/*
- * $Log$
- * Revision 1.5  2004/08/04 17:45:09  stegerg
- * Updated sources to AHI 5.13
- *
- * Revision 1.5  2003/01/19 12:22:59  martin
- * Another year, another copyright update.
- *  ... which seems to have caused the translation files to change slightly.
- *
- * Revision 1.4  2002/01/03 08:56:24  martin
- * Added license notice.
- *
- * Revision 1.3  2002/01/03 08:51:06  martin
- * Imported RCS archive to the AHI CVS tree.
- * Imported the last source snapshot I got from Teemu.
- *
- * Revision 1.2  1997/07/27 22:07:32  lcs
- * Last check-in, Leviticus signing off... ;)
- *
- * Revision 1.1  1997/06/29 03:04:02  lcs
- * Initial revision
- *
- */
 
 #include <devices/ahi.h>
 #include <dos/dos.h>

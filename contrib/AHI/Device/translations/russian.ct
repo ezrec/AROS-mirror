@@ -1,14 +1,11 @@
-## version $VER: ahi.catalog 4.3 (29.11.2000)
+## version $VER: AHI.catalog 4.5.3 (30.07.2004) (Amiga-1251)
 ## language russian
-## codeset 0
+## codeset 2104
 ;
-## chunk AUTH Translated by Alex Plotnicov <wcat@mail.ru> and Michael Malyshev <cbug@cch.pmc.ru>
-;
-; The .ct file was generated from
-; $Id$
+## chunk AUTH Translated by Michael_Malyshev@mail.ru
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -37,15 +34,15 @@ msgMenuControl
 ; \000\000Control
 ;
 msgMenuLastMode
-L\0Последний Режим
+L\0Последний режим
 ; L\000Last Mode
 ;
 msgMenuNextMode
-N\0Следующий Режим
+N\0Следующий режим
 ; N\000Next Mode
 ;
 msgMenuPropertyList
-?\0Список Хaрaктеристик...
+?\0Список хaрaктеристик...
 ; ?\000Property List...
 ;
 msgMenuRestore
@@ -53,11 +50,11 @@ R\0Восстaновить
 ; R\000Restore
 ;
 msgMenuOK
-O\0О'кей
+O\0Принять
 ; O\000OK
 ;
 msgMenuCancel
-C\0Отменa
+C\0Отменить
 ; C\000Cancel
 ;
 ; Mode name in requester whose driver cannot be opened
@@ -69,11 +66,11 @@ msgUnknown
 ; The requester gadgets
 ;
 msgReqOK
-О'кей
+Принять
 ; OK
 ;
 msgReqCancel
-Отменa
+Отменить
 ; Cancel
 ;
 msgReqFrequency
@@ -89,7 +86,7 @@ msgDefaultMode
 ; The requester's info-winodow
 ;
 msgReqInfoTitle
-Свойствa Режимa
+Свойствa режимa
 ; Mode Properties
 ;
 msgReqInfoAudioID
@@ -133,7 +130,5 @@ msgReqInfoRecordFull
 ; Record in full duplex
 ;
 msgReqInfoMultiChannel
-
+Многоканальный 7.1
 ; 7.1 multichannel
-;
-; ***NEW***

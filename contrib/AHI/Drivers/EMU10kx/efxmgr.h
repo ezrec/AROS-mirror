@@ -133,40 +133,151 @@ struct patch_manager {
 #ifdef AHI
 
 /* AHI streams */
-#define AHI_FRONT_L     0x00
-#define AHI_FRONT_R     0x01
-#define AHI_REAR_L      0x04
-#define AHI_REAR_R      0x05
-#define AHI_SURROUND_L  0x06
-#define AHI_SURROUND_R	0x07
-#define AHI_CENTER	0x08
-#define AHI_LFE		0x09
+#define AHI_FRONT_L     	0x00
+#define AHI_FRONT_R     	0x01
+#define AHI_REAR_L      	0x04
+#define AHI_REAR_R      	0x05
+#define AHI_SURROUND_L  	0x06
+#define AHI_SURROUND_R		0x07
+#define AHI_CENTER		0x08
+#define AHI_LFE			0x09
 
-/* Input volume */
-#define RES_SPDIF_CD_L	0x100
-#define RES_SPDIF_CD_R	0x101
-#define VOL_SPDIF_CD_L	0x102
-#define VOL_SPDIF_CD_R	0x103
+/* Hardware outputs */
+#define L_ANALOG_FRONT_L	0x20
+#define L_ANALOG_FRONT_R	0x21
+#define L_ANALOG_REAR_L		0x28
+#define L_ANALOG_REAR_R		0x29
+#define L_ANALOG_CENTER		0x31
+#define L_ANALOG_LFE		0x32
 
-/* Output volume */
-#define SUM_SPDIF_FRONT_L	0x104
-#define SUM_SPDIF_FRONT_R	0x105
-#define VOL_SPDIF_FRONT_L	0x106
-#define VOL_SPDIF_FRONT_R	0x107
-#define SUM_SPDIF_REAR_L	0x108
-#define SUM_SPDIF_REAR_R	0x109
-#define VOL_SPDIF_REAR_L	0x10a
-#define VOL_SPDIF_REAR_R	0x10b
-#define SUM_SPDIF_CENTER	0x10c
-#define VOL_SPDIF_CENTER	0x10d
-#define SUM_SPDIF_LFE		0x10e
-#define VOL_SPDIF_LFE		0x10f
+#define L_SPDIF_FRONT_L		0x22
+#define L_SPDIF_FRONT_R		0x23
+//#define L_SPDIF_REAR_L	(Shared with Analog Rear)
+//#define L_SPDIF_REAR_R	(Shared with Analog Rear)
+#define L_SPDIF_SURROUND_L	0x26
+#define L_SPDIF_SURROUND_R	0x27
+#define L_SPDIF_CENTER		0x24
+#define L_SPDIF_LFE		0x25
 
-/* AHI_FRONT-to-rear */
-#define RES_REAR_FRONT_L	0x110
-#define RES_REAR_FRONT_R	0x111
-#define VOL_REAR_FRONT_L	0x119
-#define VOL_REAR_FRONT_R	0x11a
+#define L_ADC_REC_L		0x2a
+#define L_ADC_REC_R		0x2b
+
+
+#define A_ANALOG_FRONT_L	0x68
+#define A_ANALOG_FRONT_R	0x69
+#define A_ANALOG_REAR_L		0x6e
+#define A_ANALOG_REAR_R		0x6f
+#define A_ANALOG_SURROUND_L	0x6c	// Correct??
+#define A_ANALOG_SURROUND_R	0x6d	// Correct??
+#define A_ANALOG_CENTER		0x6a
+#define A_ANALOG_LFE		0x6b
+
+#define A_SPDIF_FRONT_L		0x60
+#define A_SPDIF_FRONT_R		0x61
+#define A_SPDIF_REAR_L		0x66
+#define A_SPDIF_REAR_R		0x67
+#define A_SPDIF_SURROUND_L	0x64
+#define A_SPDIF_SURROUND_R	0x65
+#define A_SPDIF_CENTER		0x62
+#define A_SPDIF_LFE		0x63
+
+#define A_ADC_REC_L		0x76
+#define A_ADC_REC_R		0x77
+
+
+/* Hardware inputs */
+#define L_AC97_IN_L		0x10
+#define L_AC97_IN_R		0x11
+#define L_SPDIF_CD_L		0x12
+#define L_SPDIF_CD_R		0x13
+#define L_SPDIF_IN_L		0x16
+#define L_SPDIF_IN_R		0x17
+
+#define A_AC97_IN_L		0x40
+#define A_AC97_IN_R		0x41
+#define A_SPDIF_CD_L		0x42
+#define A_SPDIF_CD_R		0x43
+#define A_SPDIF_IN_L		0x44
+#define A_SPDIF_IN_R		0x45
+
+/* Input volume GPR */
+#define VOL_AHI_FRONT_L     	0x00
+#define VOL_AHI_FRONT_R     	0x01
+#define VOL_AHI_REAR_L      	0x02
+#define VOL_AHI_REAR_R      	0x03
+#define VOL_AHI_SURROUND_L  	0x04
+#define VOL_AHI_SURROUND_R	0x05
+#define VOL_AHI_CENTER		0x06
+#define VOL_AHI_LFE		0x07
+
+#define VOL_SPDIF_CD_L		0x08
+#define VOL_SPDIF_CD_R		0x09
+#define VOL_SPDIF_IN_L		0x0a
+#define VOL_SPDIF_IN_R		0x0b
+
+/* Output volume GPR */
+#define VOL_SPDIF_FRONT_L	0x10
+#define VOL_SPDIF_FRONT_R	0x11
+#define VOL_SPDIF_REAR_L	0x12
+#define VOL_SPDIF_REAR_R	0x13
+#define VOL_SPDIF_SURROUND_L	0x14
+#define VOL_SPDIF_SURROUND_R	0x15
+#define VOL_SPDIF_CENTER	0x16
+#define VOL_SPDIF_LFE		0x17
+
+#define VOL_ANALOG_FRONT_L	0x18
+#define VOL_ANALOG_FRONT_R	0x19
+#define VOL_ANALOG_REAR_L	0x1a
+#define VOL_ANALOG_REAR_R	0x1b
+#define VOL_ANALOG_SURROUND_L	0x1c
+#define VOL_ANALOG_SURROUND_R	0x1d
+#define VOL_ANALOG_CENTER	0x1e
+#define VOL_ANALOG_LFE		0x1f
+
+/* AHI_FRONT-to-rear GPR */
+#define VOL_FRONT_REAR_L	0x20
+#define VOL_FRONT_REAR_R	0x21
+
+/* AHI_SURROUND-to-rear GPR */
+#define VOL_SURROUND_REAR_L	0x22
+#define VOL_SURROUND_REAR_R	0x23
+
+/* AHI_FRONT-to-center and AHI_FRONT-to-LFE GPRs */
+#define VOL_FRONT_CENTER	0x24
+#define VOL_FRONT_LFE		0x25
+
+/* Temporary GPRs */
+#define RES_JUNK		0x7f;
+#define RES_AHI_FRONT_L     	0x80
+#define RES_AHI_FRONT_R     	0x81
+#define RES_AHI_REAR_L      	0x82
+#define RES_AHI_REAR_R      	0x83
+#define RES_AHI_SURROUND_L  	0x84
+#define RES_AHI_SURROUND_R	0x85
+#define RES_AHI_CENTER		0x86
+#define RES_AHI_LFE		0x87
+
+#define RES_SPDIF_CD_L		0x88
+#define RES_SPDIF_CD_R		0x89
+#define RES_SPDIF_IN_L		0x8a
+#define RES_SPDIF_IN_R		0x8b
+
+#define SUM_FRONT_L		0x90
+#define SUM_FRONT_R		0x91
+#define SUM_REAR_L		0x92
+#define SUM_REAR_R		0x93
+#define SUM_SURROUND_L		0x94
+#define SUM_SURROUND_R		0x95
+#define SUM_CENTER		0x96
+#define SUM_LFE			0x97
+
+#define RES_FRONT_REAR_L	0xa0
+#define RES_FRONT_REAR_R	0xa1
+#define RES_SURROUND_REAR_L	0xa2
+#define RES_SURROUND_REAR_R	0xa3
+#define RES_FRONT_CENTER	0xa4
+#define RES_FRONT_LFE		0xa5
+#define RES_FRONT_MONO		0xa6
 
 #else
 
@@ -200,7 +311,6 @@ struct patch_manager {
 #define MULTI_REAR_R	0x0b
 #define MULTI_CENTER	0x0c
 #define MULTI_LFE	0x0d
-#endif // AHI
 
 #define AC97_IN_L	0x10
 #define AC97_IN_R	0x11
@@ -222,6 +332,8 @@ struct patch_manager {
 
 #define ANALOG_CENTER	0x31
 #define ANALOG_LFE	0x32
+
+#endif // AHI
 
 
 #define INPUT_PATCH_START(patch, nm, ln, i)		\

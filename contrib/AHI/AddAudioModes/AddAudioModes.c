@@ -1,6 +1,6 @@
 /*
      AddAudioModes - Manipulates AHI's audio mode database 
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -54,6 +54,11 @@ struct {
   ULONG   dblscan;
 } args = {NULL, FALSE, FALSE, FALSE, FALSE};
 
+#ifdef __MORPHOS__
+#define IS_MORPHOS 1
+#else
+#define IS_MORPHOS 0
+#endif
 
 void
 cleanup( void )
@@ -152,46 +157,39 @@ main( void )
 
       /* Now add all modes */
 
-#ifdef __MORPHOS__
       if( !AHI_LoadModeFile( "DEVS:AudioModes" ) )
       {
-        rc++;
-      }
-
-      /* Be quiet here. - Piru */
-      {
-        struct Process *Self = (struct Process *) FindTask(NULL);
-        APTR oldwindowptr = Self->pr_WindowPtr;
-        Self->pr_WindowPtr = (APTR) -1;
-
-        if( !AHI_LoadModeFile( "MOSSYS:DEVS/AudioModes" ) )
+        if( IS_MORPHOS )
         {
-          rc++;
+          ULONG res;
+
+          /* Be quiet here. - Piru */
+          APTR *windowptr = &((struct Process *) FindTask(NULL))->pr_WindowPtr;
+          APTR oldwindowptr = *windowptr;
+          *windowptr = (APTR) -1;
+          res = AHI_LoadModeFile( "MOSSYS:DEVS/AudioModes" );
+          *windowptr = oldwindowptr;
+
+          if( !res )
+          {
+            if( !args.quiet )
+            {
+              PrintFault( IoErr(), "AudioModes" );
+            }
+
+            rc = RETURN_ERROR;
+          }
         }
-
-        Self->pr_WindowPtr = oldwindowptr;
-      }
-
-      if( rc > 1)
-      {
-        if( !args.quiet )
+        else
         {
-          PrintFault( IoErr(), "AudioModes" );
-        }
+          if ( !args.quiet )
+          {
+            PrintFault( IoErr(), "DEVS:AudioModes" );
+          }
 
-        rc = RETURN_ERROR;
+          rc = RETURN_ERROR;
+        }
       }
-      else
-      {
-        rc = RETURN_OK;
-      }
-#else
-      if( !AHI_LoadModeFile( "DEVS:AudioModes" ) && !args.quiet )
-      {
-        PrintFault( IoErr(), "DEVS:AudioModes" );
-        rc = RETURN_ERROR;
-      }
-#endif
     }
 
     /* Load mode files */

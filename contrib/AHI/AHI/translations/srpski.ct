@@ -1,14 +1,11 @@
-## version $VER: AHI.catalog 4.5 (18.6.97)
+## version $VER: AHI.catalog 4.6 (4.8.2004)
 ## language srpski
 ## codeset 0
 ;
 ## chunk AUTH Translated by Ljubomir Jankovi· <lurch@afrodita.rcub.bg.ac.yu>
 ;
-; The .ct file was generated from
-; $Id$
-;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -110,7 +107,7 @@ Muziüka jedinica
 ; *** Properties box ***
 ;
 msgProperties
-ID moda\nSnimak\nAutor\nKopirajt\nDrajver\nVerzija
+ID moda\nSnimak\nAutor\nKopirajt\nDrajver\nVerzija\nAnnotation
 ; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull

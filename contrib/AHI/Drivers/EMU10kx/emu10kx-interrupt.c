@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
 
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -30,28 +30,16 @@
 
 #define min(a,b) ((a)<(b)?(a):(b))
 
-#define BIG_ENDIAN_MACHINE 1
-
-#ifdef __AROS__
-
-#if !AROS_BIG_ENDIAN
-#undef BIG_ENDIAN_MACHINE
-#define BIG_ENDIAN_MACHINE 0
-#endif
-
-#endif
-
-
 #ifdef __AMIGAOS4__
 # define CallHookA CallHookPkt
 #endif
 
 
 static WORD*
-copy_mono( WORD* src, WORD* dst, int count, int stride, BOOL flush_caches );
+copy_mono( WORD* src, WORD* dst, int count, int stride, BOOL src32, BOOL flush_caches );
 
 static WORD*
-copy_stereo( WORD* lsrc, WORD* rsrc, WORD* dst, int count, int stride, BOOL flush_caches );
+copy_stereo( WORD* lsrc, WORD* rsrc, WORD* dst, int count, int stride, BOOL src32, BOOL flush_caches );
 
 
 /******************************************************************************
@@ -73,7 +61,7 @@ EMU10kxInterrupt( struct EMU10kxData* dd )
   ULONG intreq;
   BOOL  handled = FALSE;
   
-  while( ( intreq = SWAPLONG( ahi_pci_inl( dd->card.iobase + IPR, dd->card.pci_dev ) ) ) != 0 )
+  while( ( intreq = ahi_pci_inl( dd->card.iobase + IPR, dd->card.pci_dev ) ) != 0 )
   {
 //    KPrintF("IRQ: %08lx\n", intreq );
     if( intreq & IPR_INTERVALTIMER &&
@@ -176,7 +164,7 @@ EMU10kxInterrupt( struct EMU10kxData* dd )
     }
 
     /* Clear interrupt pending bit(s) */
-    ahi_pci_outl( SWAPLONG( intreq ), dd->card.iobase + IPR, dd->card.pci_dev );
+    ahi_pci_outl( intreq, dd->card.iobase + IPR, dd->card.pci_dev );
 
     handled = TRUE;
   }
@@ -231,58 +219,45 @@ PlaybackInterrupt( struct EMU10kxData* dd )
     {
       case AHIST_M16S:
 	dd->current_buffers[0] = copy_mono( src, dd->current_buffers[0],
-					    s, 1, EMU10kxBase->flush_caches );
+					    s, 1, FALSE,
+					    EMU10kxBase->flush_caches );
 	src += s;
 	break;
 	
       case AHIST_S16S:
 	dd->current_buffers[0] = copy_stereo( src, src + 1, dd->current_buffers[0],
-					      s, 2, EMU10kxBase->flush_caches );
+					      s, 2, FALSE,
+					      EMU10kxBase->flush_caches );
 	src += s * 2;
 	break;
 	
       case AHIST_M32S:
-      #if BIG_ENDIAN_MACHINE
 	dd->current_buffers[0] = copy_mono( src, dd->current_buffers[0],
-					    s, 2, EMU10kxBase->flush_caches );
-      #else
-	dd->current_buffers[0] = copy_mono( src + 1, dd->current_buffers[0],
-					    s, 2, EMU10kxBase->flush_caches );
-      #endif
+					    s, 2, TRUE,
+					    EMU10kxBase->flush_caches );
 	src += s * 2;
 	break;
 	
       case AHIST_S32S:
-      #if BIG_ENDIAN_MACHINE
 	dd->current_buffers[0] = copy_stereo( src, src + 2, dd->current_buffers[0],
-					      s, 4, EMU10kxBase->flush_caches );
-      #else
-	dd->current_buffers[0] = copy_stereo( src + 1, src + 3, dd->current_buffers[0],
-					      s, 4, EMU10kxBase->flush_caches );
-      #endif
+					      s, 4, TRUE,
+					      EMU10kxBase->flush_caches );
 	src += s * 4;
 	break;
 	
       case AHIST_L7_1:
-      #if BIG_ENDIAN_MACHINE
 	dd->current_buffers[0] = copy_stereo( src, src + 2, dd->current_buffers[0],
-					      s, 16, EMU10kxBase->flush_caches );
+					      s, 16, TRUE,
+					      EMU10kxBase->flush_caches );
 	dd->current_buffers[1] = copy_stereo( src + 4, src + 6, dd->current_buffers[1],
-					      s, 16, EMU10kxBase->flush_caches );
+					      s, 16, TRUE,
+					      EMU10kxBase->flush_caches );
 	dd->current_buffers[2] = copy_stereo( src + 8, src + 10, dd->current_buffers[2],
-					      s, 16, EMU10kxBase->flush_caches );
+					      s, 16, TRUE,
+					      EMU10kxBase->flush_caches );
 	dd->current_buffers[3] = copy_stereo( src + 12, src + 14, dd->current_buffers[3],
-					      s, 16, EMU10kxBase->flush_caches );
-      #else
-	dd->current_buffers[0] = copy_stereo( src + 1, src + 3, dd->current_buffers[0],
-					      s, 16, EMU10kxBase->flush_caches );
-	dd->current_buffers[1] = copy_stereo( src + 5, src + 7, dd->current_buffers[1],
-					      s, 16, EMU10kxBase->flush_caches );
-	dd->current_buffers[2] = copy_stereo( src + 9, src + 11, dd->current_buffers[2],
-					      s, 16, EMU10kxBase->flush_caches );
-	dd->current_buffers[3] = copy_stereo( src + 13, src + 15, dd->current_buffers[3],
-					      s, 16, EMU10kxBase->flush_caches );
-      #endif
+					      s, 16, TRUE,
+					      EMU10kxBase->flush_caches );
 	src += s * 16;
 	break;
     }
@@ -307,33 +282,41 @@ PlaybackInterrupt( struct EMU10kxData* dd )
       {
 	case AHIST_M16S:
 	  dd->current_buffers[0] = copy_mono( src, dd->current_buffers[0],
-					      s, 1, EMU10kxBase->flush_caches );
+					      s, 1, FALSE,
+					      EMU10kxBase->flush_caches );
 	  break;
 	
 	case AHIST_S16S:
 	  dd->current_buffers[0] = copy_stereo( src, src + 1, dd->current_buffers[0],
-						s, 2, EMU10kxBase->flush_caches );
+						s, 2, FALSE,
+						EMU10kxBase->flush_caches );
 	  break;
 	
 	case AHIST_M32S:
 	  dd->current_buffers[0] = copy_mono( src, dd->current_buffers[0],
-					      s, 2, EMU10kxBase->flush_caches );
+					      s, 2, TRUE,
+					      EMU10kxBase->flush_caches );
 	  break;
 	
 	case AHIST_S32S:
 	  dd->current_buffers[0] = copy_stereo( src, src + 2, dd->current_buffers[0],
-						s, 4, EMU10kxBase->flush_caches );
+						s, 4, TRUE,
+						EMU10kxBase->flush_caches );
 	  break;
 	
 	case AHIST_L7_1:
 	  dd->current_buffers[0] = copy_stereo( src, src + 2, dd->current_buffers[0],
-						s, 16, EMU10kxBase->flush_caches );
+						s, 16, TRUE,
+						EMU10kxBase->flush_caches );
 	  dd->current_buffers[1] = copy_stereo( src + 4, src + 6, dd->current_buffers[1],
-						s, 16, EMU10kxBase->flush_caches );
+						s, 16, TRUE,
+						EMU10kxBase->flush_caches );
 	  dd->current_buffers[2] = copy_stereo( src + 8, src + 10, dd->current_buffers[2],
-						s, 16, EMU10kxBase->flush_caches );
+						s, 16, TRUE,
+						EMU10kxBase->flush_caches );
 	  dd->current_buffers[3] = copy_stereo( src + 12, src + 14, dd->current_buffers[3],
-						s, 16, EMU10kxBase->flush_caches );
+						s, 16, TRUE,
+						EMU10kxBase->flush_caches );
 	  break;
       }
     
@@ -344,20 +327,27 @@ PlaybackInterrupt( struct EMU10kxData* dd )
   }
 
   dd->playback_interrupt_enabled = TRUE;
-
 }
 
 
 static WORD*
-copy_mono( WORD* src, WORD* dst, int count, int stride, BOOL flush_caches )
+copy_mono( WORD* src, WORD* dst, int count, int stride, BOOL src32, BOOL flush_caches )
 {
   WORD* first = dst;
   WORD* last  = dst + count;
   int x, y;
 
+#ifndef WORDS_BIGENDIAN
+  if( src32 )
+  {
+    // Move to high 16 bits
+    ++src;
+  }
+#endif
+
   for( x = 0, y = 0; y < count; x += stride, ++y )
   {
-#if !BIG_ENDIAN_MACHINE
+#ifndef WORDS_BIGENDIAN
     dst[y] = src[x];
 #else
     dst[y] = ( ( src[x] & 0xff ) << 8 ) | ( ( src[x] & 0xff00 ) >> 8 );
@@ -374,15 +364,24 @@ copy_mono( WORD* src, WORD* dst, int count, int stride, BOOL flush_caches )
 
 
 static WORD*
-copy_stereo( WORD* lsrc, WORD* rsrc, WORD* dst, int count, int stride, BOOL flush_caches )
+copy_stereo( WORD* lsrc, WORD* rsrc, WORD* dst, int count, int stride, BOOL src32, BOOL flush_caches )
 {
   WORD* first = dst;
   WORD* last  = dst + count * 2;
   int x, y;
 
+#ifndef WORDS_BIGENDIAN
+  if( src32 )
+  {
+    // Move to high 16 bits
+    ++lsrc;
+    ++rsrc;
+  }
+#endif
+
   for( x = 0, y = 0; y < count * 2; x += stride, y += 2 )
   {
-#if !BIG_ENDIAN_MACHINE
+#ifndef WORDS_BIGENDIAN
     dst[y+0] = lsrc[x];
     dst[y+1] = rsrc[x];
 #else
@@ -415,6 +414,12 @@ RecordInterrupt( struct EMU10kxData* dd )
   struct AHIAudioCtrlDrv* AudioCtrl = dd->audioctrl;
   struct DriverBase*  AHIsubBase = (struct DriverBase*) dd->ahisubbase;
   struct EMU10kxBase* EMU10kxBase = (struct EMU10kxBase*) AHIsubBase;
+#ifdef __AMIGAOS4__
+  ULONG  CacheCommand = CACRF_InvalidateD;
+#else
+  ULONG  CacheCommand = CACRF_ClearD;
+#endif
+
 
   struct AHIRecordMessage rm =
   {
@@ -426,38 +431,44 @@ RecordInterrupt( struct EMU10kxData* dd )
   int   i   = 0;
   WORD* ptr = dd->current_record_buffer;
 
+#ifndef __AMIGAOS4__
+  // As OS4 can do invalidate only, we don't need to do flushing here.
+  // Between the invalidate at the end, DMA and entering this interrupt code,
+  // nobody should have touched this half of the record buffer.
+ 
   if( EMU10kxBase->flush_caches )
   {
     // This is used to invalidate the cache
 
     CacheClearE( dd->current_record_buffer,
 		 RECORD_BUFFER_SAMPLES / 2 * 4,
-		 CACRF_ClearD );
+		 CacheCommand );
   }
+#endif
 
+#ifdef WORDS_BIGENDIAN
   while( i < RECORD_BUFFER_SAMPLES / 2 * 2 )
   {
-  #if BIG_ENDIAN_MACHINE
     *ptr = ( ( *ptr & 0xff ) << 8 ) | ( ( *ptr & 0xff00 ) >> 8 );
-  #endif
+    
     ++i;
     ++ptr;
   }
+#endif
+
+  CallHookA( AudioCtrl->ahiac_SamplerFunc, (Object*) AudioCtrl, &rm );
 
   if( EMU10kxBase->flush_caches )
   {
-    // This is used to make sure the call above doesn't pushes dirty data
+    // This is used to make sure the call above doesn't push dirty data
     // the next time it's called. God help us if dd->current_record_buffer
     // is not a the beginning of a cache line and there are dirty data
-    // in the DMA buffer before or after the current buffer. Ok I will stop
-    // talking now. Thanks for listening.
+    // in the DMA buffer before or after the current buffer.
     
     CacheClearE( dd->current_record_buffer,
 		 RECORD_BUFFER_SAMPLES / 2 * 4,
-		 CACRF_ClearD );
+		 CacheCommand );
   }
-
-  CallHookA( AudioCtrl->ahiac_SamplerFunc, (Object*) AudioCtrl, &rm );
 
   dd->record_interrupt_enabled = TRUE;
 }

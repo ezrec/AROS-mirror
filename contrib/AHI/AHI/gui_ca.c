@@ -1,6 +1,6 @@
 /*
      AHI - The AHI preferences program
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -17,38 +17,6 @@
      Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-/* $Id$
- * $Log$
- * Revision 1.5  2004/08/04 17:45:05  stegerg
- * Updated sources to AHI 5.13
- *
- * Revision 5.2  2003/09/22 20:06:17  martin
- * Nuked CompilerSpecific.h
- *
- * Revision 5.1  2003/01/19 12:22:29  martin
- * Another year, another copyright update.
- *  ... which seems to have caused the translation files to change slightly.
- *
- * Revision 5.0  2000/11/28 00:13:25  lcs
- * Bumped CVS revision to 5.0.
- *
- * Revision 1.4  1999/04/22 19:41:18  lcs
- * Removed SAS/C smakefile.
- * I had the copyright date screwed up: Changed to 1996-1999 (which is only
- * partly correct, but still better than 1997-1999....)
- *
- * Revision 1.3  1999/03/28 22:30:46  lcs
- * AHI is now GPL/LGPL software.
- * Make target bindist work correctly when using a separate build directory.
- * Small first steps towards a WarpOS PPC version.
- *
- * Revision 1.2  1999/01/09 23:14:10  lcs
- * Switched from SAS/C to gcc
- *
- * Revision 1.1.1.1  1998/12/20 12:09:27  lcs
- * Import of AHI sources 1998-12-20
- *
- */
 
 #define NO_INLINE_STDARG
 
@@ -1343,7 +1311,7 @@ void EventLoop(void) {
                 Req( (char *) msgButtonOK,
                     (char *) msgTextCopyright,
                     "",(char *) msgTextProgramName,
-                    "1996-2003 Martin Blom" );
+                    "1996-2004 Martin Blom" );
                 break;
 
               case ACTID_SAVE:

@@ -23,7 +23,7 @@ This file documents AHI release @value{ahiver}, a hardware independent
 audio subsystem for Amiga. The version number of this document is
 @value{docver}.
 
-Copyright @copyright{} 1994-2003 Martin Blom.
+Copyright @copyright{} 1994-2004 Martin Blom.
 
 Permission is granted to make and distribute verbatim copies of this manual
 provided the copyright notice and this permission notice are preserved on
@@ -63,8 +63,22 @@ publication, even if advised of the possibility of such damage.}
 
 $Id$
 $Log$
-Revision 1.5  2004/08/04 17:45:06  stegerg
-Updated sources to AHI 5.13
+Revision 1.6  2005/01/11 22:01:47  lcs
+Merged 5.15.
+
+Revision 5.9.2.5  2005/01/08 22:38:09  martin
+Added note about the volume scaling.
+Removed list of names in Honourable mention.
+
+Revision 5.9.2.4  2004/11/02 13:18:53  martin
+Updated copyright year and removed almost all CVS/RCS tags from the
+source code.
+
+Revision 5.9.2.3  2004/10/23 12:19:39  martin
+Fixed some typos.
+
+Revision 5.9.2.2  2004/09/08 13:56:37  martin
+Added description of the default anti-click time
 
 Revision 5.9.2.1  2004/06/08 21:16:16  martin
 Added 7.1 multichannel support.
@@ -191,7 +205,7 @@ Initial revision.
 
 @vskip 0pt plus 1filll
 
-Copyright @copyright{} 1994-2003 Martin Blom. 
+Copyright @copyright{} 1994-2004 Martin Blom. 
 
 Permission is granted to make and distribute verbatim copies of this manual
 provided the copyright notice and this permission notice are preserved on
@@ -234,7 +248,7 @@ publication, even if advised of the possibility of such damage.}
 
 For @sc{Ahi} release @value{ahiver}. Document version @value{docver}.
 
-Copyright @copyright{} 1994-2003 Martin Blom
+Copyright @copyright{} 1994-2004 Martin Blom
 
 The latest release of @sc{Ahi} can always be found at
 @url{http://www.lysator.liu.se/~lcs/ahi.html}. 
@@ -333,7 +347,7 @@ ever get.
 @cindex Software license
 @cindex Copyright
 
-Copyright @copyright{} 1994-2003 Martin Blom
+Copyright @copyright{} 1994-2004 Martin Blom
 
 @sc{Ahi} is available under a dual license. The device itself is under
 the ``GNU Library General Public License'' (@pxref{LGPL}), while the
@@ -681,6 +695,36 @@ your mouse pointer freezes when playing music, reduce the limit slightly.
 If on the other hand the sound becomes cut and distorted, you can try to
 increase the limit---but remember that you risk locking up the computer!
 
+@cindex Anti-click
+@cindex Default anti-click time
+
+@item Default anti-click time
+Starting with @sc{Ahi} V6, the software mixer can delay the sounds an
+application wants to play until the currently playing sound goes
+through a zero-crossing, in order to avoid nasty clicks. Normally,
+it's the applications job to specify the maximum time the sounds may
+be delayed, but not all applications provide this information. By
+setting this slider to the desired value, all applications not
+specifying their own limit will will default to this value instead.
+
+@cindex Volume scaling
+
+@item Volume scaling
+When more than one application is using @sc{Ahi} at the same time,
+care has to be taken so no audible distortion is created. In @sc{Ahi}
+V4 and before, this implied that the volume was lowered in such a way
+that there were never any distortion. Since ``clipping'' (see above)
+was optional, this was the only sensible thing to do. In @sc{Ahi} V6,
+clipping is always used and the distortion created is often not
+audible. Because of this, all sounds are now played at full volume.
+
+However, should you wish so, it's possible to manually select that
+strategy to use. The available options are @samp{Safe} (as in @sc{Ahi}
+V4), @samp{Safe, Dynamic} (volume is dynamically adjusted based on how
+many sounds are curreltly being played), @samp{Full volume} (the new
+default) and finally @samp{-3 dB} and @samp{-6 dB}, which plays all
+sounds at -3 or -6 dB.
+
 @end table
 
 
@@ -761,7 +805,7 @@ The default options for reading are @samp{BITS=8} @samp{CHANNELS=1}
 @samp{FREQUENCY=8000} @samp{TYPE=SIGNED} @samp{LENGTH=very-very-much}
 @samp{BUFFER=32768} @samp{UNIT=0}.
 
-The default options for reading are @samp{BITS=8} @samp{CHANNELS=1}
+The default options for writing are @samp{BITS=8} @samp{CHANNELS=1}
 @samp{FREQUENCY=8000} @samp{TYPE=<none>} @samp{VOLUME=100}
 @samp{POSITION=0} @samp{PRIORITY=0} @samp{LENGTH=very-very-much}
 @samp{BUFFER=32768 UNIT=0}.
@@ -942,7 +986,7 @@ at the Kato Development Group's WWW page:
 On startup, the file
 @file{ENV:CyberSound/SoundDrivers/14Bit_Calibration} is read and used
 for the 14 bit DAC calibration. This file can be created by using
-Christian Buchner's CyberSound calibration tool, which is avalilable
+Christian Buchner's CyberSound calibration tool, which is available
 from
 @url{http://www.lysator.liu.se/~lcs/files/ahi/extras/CyberSound.lha},
 among other places.
@@ -1004,7 +1048,7 @@ This will turn on the screen mode checking again.
 @cindex CyberGraphX
 @cindex AddAudioModes
 
-Please note that this 31 kHz screen mode is not neccessary the screen mode
+Please note that this 31 kHz screen mode is not necessary the screen mode
 you're seeing on your monitor.  If you're using a graphic card, you must
 force the Amiga video signal to 31 kHz.  CyberGraphX users might want to
 try this command (@pxref{AddAudioModes} for more information):
@@ -1560,7 +1604,7 @@ Many thanks!
 The following people has donated money to the project. It has ment a
 lot to me, and please forgive me for not being able to finish a
 working WarpUp or PowerUp PPC version of @sc{Ahi}. I hope the MorphOS
-and upcomming AmigaOS 4 versions made up for that.
+and upcoming AmigaOS 4 versions made up for that.
 
 Agneta Nord,
 Alan Surrette,
@@ -1640,70 +1684,8 @@ still get mail from people who want me to publish their music now and
 then!}).
 
 Some people actually took their time to fill in the source code
-registration form:
-
-Agneta Nord,
-Andrea Favini,
-Andreas Johansson,
-Benoit Deschenes,
-Bernardo Innocenti,
-Bob Rutkowski,
-Chioccioli Guido,
-Christian Leon Christensen,
-DHR A.Roell,
-Daichi Shinozaki,
-Dan Anderson,
-Daniel Schubert,
-Darrell Swan,
-David Gerber,
-Ed Vishoot,
-Enrique Ortegón Moreno,
-Eric Keisler,
-Hyrum Summerhays,
-Iain Tyrrell,
-Ian Fletcher,
-Ilya Sharin,
-J. Stronks,
-Jack Sauce,
-James Diffendaffer,
-Jeff Brown,
-Johan Hofmeyer,
-John Klos,
-Jonathan Adamczewski,
-Jyrki Saarinen,
-Kai Weber,
-Kent Seaton,
-Kirk Strauser,
-Manos S. Pappas,
-Mark van Oudheusden,
-Murat Oezkilic,
-Niels Froehling,
-Pampuch Marek,
-Pete Wason,
-Rainer Haiduga,
-Richard Griffith,
-Risto Mäki-Petäys,
-Robert A. Salzer,
-Ron Ethridge,
-S van der Linden,
-Salvatore Bavastrelli,
-Serge,
-Sergio Corda,
-Simon Parry,
-Steven Solie,
-Stian Strøm,
-Stuart Smith,
-Ted Nilsen,
-Terme Vigliatore,
-Tero Peippola,
-Thomas Krafzik,
-Trevor Johnson,
-Vincent Gouret,
-Vincenzo Sanfilippo and
-William W. Toner II.
-
-Thank you! I'm sure I'll figure out what to do will all addresses real
-soon now.
+registration form. You know who you are. Thank you! I'm sure I'll
+figure out what to do will all addresses real soon now.
 
 But here comes the best part: Benoit Deschenes (Quebec, Canada),
 Thomas Houlberg (Sdr. Bjert, Denmark) and Patrice Machin (Paris,
@@ -1714,8 +1696,6 @@ this unusually long delivery delay, I've decided to produce three
 extra copies and send them to you for free. Benoit, Thomas and
 Patrice, if you read this and have moved since 1999, please let me
 know of your new address as soon as possible!
-
-Thanks guys! You really made my day @enddots{}
 
 
 @c ***********************************************************************

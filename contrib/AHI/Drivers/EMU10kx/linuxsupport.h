@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -19,6 +19,8 @@
 
 #ifndef AHI_Drivers_EMU10kx_linuxsupport_h
 #define AHI_Drivers_EMU10kx_linuxsupport_h
+
+#include <config.h>
 
 #include <stdlib.h>
 #include <proto/exec.h>
@@ -116,9 +118,7 @@ static __inline__ void set_bit(int nr, volatile void * addr)
   (((volatile unsigned int *) addr)[nr >> 5]) |= (1UL << (nr & 31));
 }
 
-#ifdef __AROS__
-
-#if AROS_BIG_ENDIAN
+#ifdef WORDS_BIGENDIAN
 static __inline__ u32 cpu_to_le32( u32 x )
 {
   u32 res = ((((x) & 0xff000000) >> 24) | (((x) & 0x00ff0000) >>  8) | \
@@ -128,16 +128,6 @@ static __inline__ u32 cpu_to_le32( u32 x )
 }
 #else
 #define cpu_to_le32(x)  x
-#endif
-
-#else
-static __inline__ u32 cpu_to_le32( u32 x )
-{
-  u32 res = ((((x) & 0xff000000) >> 24) | (((x) & 0x00ff0000) >>  8) | \
-	     (((x) & 0x0000ff00) <<  8) | (((x) & 0x000000ff) << 24));
-
-  return res;
-}
 #endif
 
 #endif /* AHI_Drivers_EMU10kx_linuxsupport_h */

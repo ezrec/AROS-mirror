@@ -30,8 +30,8 @@
  */
 
 #ifdef AHI
+#include <config.h>
 
-#include "linuxsupport.h"
 #include "voicemgr.h"
 #include "8010.h"
 #include "pci_wrapper.h"
@@ -111,11 +111,9 @@ int emu10k1_voice_alloc_buffer(struct emu10k1_card *card, struct voice_mem *mem,
 #endif
 		for (i = 0; i < PAGE_SIZE / EMUPAGESIZE; i++) {
 #ifdef AHI
-
 			busaddx = (u32) ahi_pci_logic_to_physic_addr(
 			  mem->addr + pagecount * PAGE_SIZE, card->pci_dev )
 			  + i * EMUPAGESIZE;
-
 #else
 			busaddx = (u32) mem->dma_handle[pagecount] + i * EMUPAGESIZE;
 #endif

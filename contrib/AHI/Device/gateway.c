@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -315,7 +313,7 @@ m68k_DevProc( void )
 
 /* m68k_PreTimer  ************************************************************/
 
-BOOL ASMCALL
+BOOL
 m68k_PreTimer( REG(a2, struct AHIPrivAudioCtrl* audioctrl ) )
 {
   return PreTimer( audioctrl );
@@ -512,7 +510,7 @@ m68k_PostTimer( struct AHIPrivAudioCtrl* audioctrl __asm("a2") )
 
 #else
 
-struct
+const struct
 {
     UWORD nop;                    // Just make sure the addr is 32-bit aligned
     UWORD pushm_d0_d1_a0_a1[2];
@@ -522,7 +520,7 @@ struct
     UWORD rts;
 } HookEntryPreserveAllRegs __attribute__ ((aligned (4))) =
 {
-  0x4E71,
+  0x4DD6,
   {0x48E7, 0xC0C0},
   0x4EB9, (ULONG) HookEntry,
   {0x4CDF, 0x0303},
@@ -530,7 +528,7 @@ struct
 };
 
 
-struct
+const struct
 {
     UWORD nop;
     UWORD pushm_d1_a0_a1[2];
@@ -541,7 +539,7 @@ struct
     UWORD rts;
 } PreTimerPreserveAllRegs =
 {
-  0x4E71,
+  0x4DD6,
   {0x48E7, 0x40C0},
   0x4EB9, (ULONG) &m68k_PreTimer,
   {0x4CDF, 0x0302},
@@ -550,7 +548,7 @@ struct
 };
 
 
-struct
+const struct
 {
     UWORD nop;                    // Just make sure the addr is 32-bit aligned
     UWORD pushm_d0_d1_a0_a1[2];
@@ -560,7 +558,7 @@ struct
     UWORD rts;
 } PostTimerPreserveAllRegs __attribute__ ((aligned (4))) =
 {
-  0x4E71,
+  0x4DD6,
   {0x48E7, 0xC0C0},
   0x4EB9, (ULONG) &m68k_PostTimer,
   {0x4CDF, 0x0303},

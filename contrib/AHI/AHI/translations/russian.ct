@@ -1,14 +1,11 @@
-## version $VER: ahiprefs.catalog 4.6 (29.11.2000)
+## version $VER: AHIprefs.catalog 4.5.5 (30.07.2004) (Amiga-1251)
 ## language russian
-## codeset 0
+## codeset 2104
 ;
-## chunk AUTH Translated by Alex Plotnicov <wcat@mail.ru> and Michael Malyshev <cbug@cch.pmc.ru>
-;
-; The .ct file was generated from
-; $Id$
+## chunk AUTH Translated by Michael_Malyshev@mail.ru
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -80,7 +77,7 @@ Help\0Помощь...
 ; Help\000Help...
 ;
 msgItemUsersGuide
-H\0Справка по AHI...
+H\0Руководство по AHI...
 ; H\000AHI User's guide...
 ;
 msgItemConceptIndex
@@ -110,7 +107,13 @@ msgUnitMusic
 ; *** Properties box ***
 ;
 msgProperties
-Режим ID\nЗапись\nАвтор\nАвторство\nДрайвер\nВерсия
+Режим ID\n\
+Запись\n\
+Автор\n\
+Авторство\n\
+Драйвер\n\
+Версия\n\
+Примечание
 ; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull
@@ -183,7 +186,7 @@ msgGlobalOptions
 ; Global options
 ;
 msgGlobOptDebugLevel
-У_ровень отладки:
+У_ровень отладки
 ; _Debug level
 ;
 msgGlobOptEcho
@@ -191,11 +194,11 @@ _Эхо
 ; _Echo
 ;
 msgGlobOptSurround
-Э_ффект присутствия режимов \"Fast\":
+Э_ффект присутствия в режимах "Fast"
 ; Surround in "_Fast" modes
 ;
 msgGlobOptCPULimit
-Ограничение _загрузки CPU:
+Ограничение _загрузки ЦП
 ; CPU usage _limit
 ;
 ; *** Debug levels ***
@@ -251,11 +254,11 @@ msgButtonUse
 ; _Use
 ;
 msgButtonCancel
-_Отмена
+_Отменить
 ; _Cancel
 ;
 msgButtonOK
-О'кей
+Принять
 ; OK
 ;
 ; *** Texts ***
@@ -266,11 +269,13 @@ msgTextProgramName
 ;
 ;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
 msgTextCopyright
-%s%s\nАвторство (c) %s\nРусский перевод: А. Плотников, О. Сергеев
+%s%s\n\
+Авторство (c) %s\n\
+Русский перевод: Михаил Малышев
 ; %s%s\nCopyright ©%s
 ;
 msgTextNoWindow
-Не открыть окно.
+Невозможно открыть окно.
 ; Unable to open window.
 ;
 msgTextNoFileRequester
@@ -278,11 +283,11 @@ msgTextNoFileRequester
 ; Unable to allocate file requester.
 ;
 msgTextNoFind
-Не найти \"%s\"!
+Невозможно найти "%s"!
 ; Unable to find `%s'!
 ;
 msgTextNoOpen
-Не открыть \"%s\" версии %ld.
+Невозможно открыть "%s" версии %ld.
 ; Unable to open `%sґ version %ld.
 ;
 ; *** Additions
@@ -304,30 +309,30 @@ msgGlobOptACTime
 ; Default anti-click time
 ;
 msgButtonPlay
-
+Проиграть _тестовый звук
 ; _Play a test sound
 ;
 msgOptScalemode
-
+У_ровень
 ; Volume sc_aling
 ;
 msgSMFixedSafe
-
+Безопасный
 ; Safe
 ;
 msgSMDynSafe
-
+Безопасный, динамический
 ; Safe, dynamic
 ;
 msgSM0dB
-
+Полная громкость
 ; Full volume
 ;
 msgSM3dB
-
+-3 дБ
 ; -3 dB
 ;
 msgSM6dB
-
+-6 дБ
 ; -6 dB
 ;

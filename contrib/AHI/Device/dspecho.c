@@ -1,8 +1,6 @@
-/* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -279,5 +277,14 @@ do_DSPEchoStereo32( struct Echo *es,
                     struct AHIPrivAudioCtrl *audioctrl )
 { 
   do_DSPEcho( es, buf, audioctrl, EchoStereo32 );
+}
+
+
+void
+do_DSPEchoMulti32( struct Echo *es,
+		   void *buf,
+		   struct AHIPrivAudioCtrl *audioctrl )
+{ 
+  do_DSPEcho( es, buf, audioctrl, EchoMulti32 );
 }
 

@@ -2,8 +2,8 @@
      Changes since last release
      ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
      This version of AHI adds "anti-click" mixing routines, playback of
-     32 bit samples and and support for the PowerPC microprocessor
-     (currently MorphOS only).
+     32 bit samples, multi-channel audio and and support for the
+     PowerPC microprocessor (MorphOS and AmigaOS 4.x only).
 
      The 68000 processor is no longer supported; a 68020 or better is
      required.

@@ -5,6 +5,19 @@
 #   include <exec/types.h>
 #endif
 
+#include "DriverData.h"
+
+#undef PCI_COMMAND
+#undef PCI_COMMAND_IO
+#undef PCI_COMMAND_MEMORY
+#undef PCI_COMMAND_MASTER
+#undef PCI_BASE_ADDRESS_IO_MASK
+#undef PCI_REVISION_ID
+#undef PCI_SUBSYSTEM_ID
+#undef PCI_DEVICE_ID
+#undef PCI_SUBSYSTEM_VENDOR_ID
+
+
 #define PCI_COMMAND 	    4
 #define PCI_COMMAND_IO      1
 #define PCI_COMMAND_MEMORY  2
@@ -17,7 +30,7 @@
 #define PCI_DEVICE_ID	    	    2
 #define PCI_SUBSYSTEM_VENDOR_ID     0x2c
 
-BOOL ahi_pci_init(struct EMU10kxBase* EMU10kxBase);
+BOOL ahi_pci_init(struct DriverBase* AHIsubBase);
 void ahi_pci_exit(void);
 
 APTR ahi_pci_find_device(ULONG vendorid, ULONG deviceid, APTR dev);

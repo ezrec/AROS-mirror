@@ -1,4 +1,3 @@
-#  $Id$
 #
 #  Makefile.in for the user and developer documentation
 #
@@ -151,7 +150,7 @@ C-inline-ahi.h:		SFD/ahi_lib.sfd
 C-inline-ahi_sub.h:	SFD/ahi_sub_lib.sfd
 	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=macros
 
-C-defines-ahi.h:		SFD/ahi_lib.sfd
+C-defines-ahi.h:	SFD/ahi_lib.sfd
 	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=macros
 
 C-defines-ahi_sub.h:	SFD/ahi_sub_lib.sfd

@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
 
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -16,7 +16,6 @@
      along with this program; if not, write to the Free Software
      Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
-
 
 #include <config.h>
 
@@ -62,10 +61,6 @@ DriverInit( struct DriverBase* ahisubbase )
   APTR	    	      dev;
   int                 card_no;
 
-#ifdef __AMIGAOS4__
-  SysBase = AbsExecBase;
-#endif
-
   /*** Libraries etc. ********************************************************/
 
   AHIsubBase = ahisubbase;
@@ -79,7 +74,6 @@ DriverInit( struct DriverBase* ahisubbase )
   }
 
 #ifdef __AMIGAOS4__
-
   if ((IDOS = (struct DOSIFace *) GetInterface((struct Library *) DOSBase, "main", 1, NULL)) == NULL)
   {
        Req("Couldn't open IDOS interface!\n");
@@ -97,12 +91,15 @@ DriverInit( struct DriverBase* ahisubbase )
        Req("Couldn't open IMMU interface!\n");
        return FALSE;
   }
-  
-  IUtility = SysBase->UtilityInterface;
 
+  if ((IUtility = (struct UtilityIFace *) GetInterface((struct Library *) UtilityBase, "main", 1, NULL)) == NULL)
+  {
+       Req("Couldn't open IUtility interface!\n");
+       return FALSE;
+  }
 #endif
 
-  if (!ahi_pci_init(EMU10kxBase))
+  if (!ahi_pci_init(ahisubbase))
   {
        return FALSE;
   }
@@ -136,12 +133,6 @@ DriverInit( struct DriverBase* ahisubbase )
 
   if( EMU10kxBase->cards_found == 0 )
   {
-//    Req( "No SoundBlaster Live! or Audigy card present.\n" );
-#ifdef __AMIGAOS4__
-    KPrintF( ":No SoundBlaster Live! or Audigy card present.\n" );
-#else
-    KPrintF( DRIVER ":No SoundBlaster Live! or Audigy card present.\n" );
-#endif
     return FALSE;
   }
 

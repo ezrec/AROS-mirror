@@ -1,6 +1,6 @@
 /*
      AHI - The AHI preferences program
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -253,7 +253,6 @@ static BOOL AddUnit(struct List *list, int unit) {
   }
 
   u->prefs.ahiup_Unit           = unit;
-  u->prefs.ahiup_ScaleMode      = AHI_SCALE_FIXED_SAFE;
   u->prefs.ahiup_Channels       = 1;
   u->prefs.ahiup_AudioMode      = AHI_BestAudioID(AHIDB_Realtime, TRUE, TAG_DONE);
   u->prefs.ahiup_Frequency      = 8000;
@@ -307,6 +306,7 @@ struct List *GetUnits(char *name) {
   globalprefs.ahigp_ClipMasterVolume = FALSE;
   globalprefs.ahigp_Pad              = 0;
   globalprefs.ahigp_AntiClickTime    = 0;
+  globalprefs.ahigp_ScaleMode        = AHI_SCALE_FIXED_0_DB;
 
   list = AllocVec(sizeof(struct List), MEMF_CLEAR);
   
@@ -345,6 +345,8 @@ struct List *GetUnits(char *name) {
 			     *p, globalprefs, global->sp_Size );
 		CopyIfValid( struct AHIGlobalPrefs, ahigp_AntiClickTime,
 			     *p, globalprefs, global->sp_Size );
+		CopyIfValid( struct AHIGlobalPrefs, ahigp_ScaleMode,
+			     *p, globalprefs, global->sp_Size );
 
 
 		/* Set upsupported options to their defaults */
@@ -352,6 +354,7 @@ struct List *GetUnits(char *name) {
 		if( AHIBase->lib_Version <= 4 )
 		{
 		  globalprefs.ahigp_AntiClickTime = 0;
+		  globalprefs.ahigp_ScaleMode     = AHI_SCALE_FIXED_SAFE;
 		}
 		
 		if( AHIBase->lib_Version >= 5 )
@@ -372,7 +375,6 @@ struct List *GetUnits(char *name) {
                   break;
 
 		u->prefs.ahiup_Unit          = ci_cnt;
-		u->prefs.ahiup_ScaleMode     = AHI_SCALE_FIXED_SAFE;
 		u->prefs.ahiup_Channels      = 1;
 		u->prefs.ahiup_AudioMode     = AHI_DEFAULT_ID;
 		u->prefs.ahiup_Frequency     = AHI_DEFAULT_FREQ;
@@ -385,8 +387,6 @@ struct List *GetUnits(char *name) {
 		++ci_cnt;
 		
 		CopyIfValid( struct AHIUnitPrefs, ahiup_Unit,
-			     *p, u->prefs, ci->ci_Size );
-		CopyIfValid( struct AHIUnitPrefs, ahiup_ScaleMode,
 			     *p, u->prefs, ci->ci_Size );
 		CopyIfValid( struct AHIUnitPrefs, ahiup_Channels,
 			     *p, u->prefs, ci->ci_Size );
@@ -638,6 +638,9 @@ BOOL SaveSettings(char *name, struct List *list) {
 			 globalprefs, p, sizeof p );
 	    CopyIfValid( struct AHIGlobalPrefs, ahigp_AntiClickTime,
 			 globalprefs, p, sizeof p );
+	    CopyIfValid( struct AHIGlobalPrefs, ahigp_ScaleMode,
+			 globalprefs, p, sizeof p );
+
 		
             WriteChunkBytes(iff, &p, sizeof p);
             PopChunk(iff);
@@ -651,8 +654,6 @@ BOOL SaveSettings(char *name, struct List *list) {
 		struct AHIUnitPrefs p;
 
 		CopyIfValid( struct AHIUnitPrefs, ahiup_Unit,
-			     ((struct UnitNode *) n)->prefs, p, sizeof p );
-		CopyIfValid( struct AHIUnitPrefs, ahiup_ScaleMode,
 			     ((struct UnitNode *) n)->prefs, p, sizeof p );
 		CopyIfValid( struct AHIUnitPrefs, ahiup_Channels,
 			     ((struct UnitNode *) n)->prefs, p, sizeof p );
@@ -829,7 +830,7 @@ BOOL PlaySound( struct AHIUnitPrefs* prefs )
         {
 	  ULONG volume = 0x10000;
 	  
-	  switch( prefs->ahiup_ScaleMode )
+	  switch( globalprefs.ahigp_ScaleMode )
 	  {
 	    case AHI_SCALE_DYNAMIC_SAFE:
 	      volume = 0x10000;
@@ -865,7 +866,7 @@ BOOL PlaySound( struct AHIUnitPrefs* prefs )
 
 	  if( AHI_ControlAudio( actrl, AHIC_Play, TRUE, TAG_DONE ) == AHIE_OK )
 	  {
-	    if( prefs->ahiup_ScaleMode == AHI_SCALE_DYNAMIC_SAFE )
+	    if( globalprefs.ahigp_ScaleMode == AHI_SCALE_DYNAMIC_SAFE )
 	    {
 	      Delay( 10 );
 	      AHI_SetVol( 0, volume / 2, 0x8000, actrl, AHISF_IMM );

@@ -1,14 +1,11 @@
-## version $VER: ahiprefs.catalog 4.5 (13.5.97)
+## version $VER: ahiprefs.catalog 4.6 (28.07.04)
 ## language deutsch
 ## codeset 0
 ;
-## chunk AUTH Translated by Martin Sprenger <smart-e@chillout.org>, updated by Sönke Tesch/ATO <soenke@vapor.com>
-;
-; The .ct file was generated from
-; $Id$
+## chunk AUTH Translated by Uwe Bojartschuk
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -28,63 +25,63 @@
 ; *** Menus ***
 ;
 msgMenuProject
-\000Projekt
+\0Projekt
 ; \000Project
 ;
 msgItemOpen
-O\000Öffnen...
+O\0Öffnen
 ; O\000Open...
 ;
 msgItemSaveAs
-A\000Speichern als...
+A\0Speichern als...
 ; A\000Save As...
 ;
 msgItemAbout
-?\000Über...
+?\0Über...
 ; ?\000About...
 ;
 msgItemQuit
-Q\000Beenden
+Q\0Beenden
 ; Q\000Quit
 ;
 msgMenuEdit
-\000Vorgaben
+\0Vorgaben
 ; \000Edit
 ;
 msgItemDefaults
-Z\000Auf Vorgaben zurücksetzen
+D\0auf Vorgaben zurücksertzen
 ; D\000Reset To Defaults
 ;
 msgItemLastSaved
-L\000Auf zuletzt gespeichertes
+L\0auf zuletzt gespeichertes
 ; L\000Last Saved
 ;
 msgItemRestore
-S\000Auf vorherigen Stand
+R\0auf vorherigen Stand
 ; R\000Restore
 ;
 msgMenuSettings
-\000Optionen
+\0Einstellungen
 ; \000Settings
 ;
 msgItemCreateIcons
-I\000Piktogramme erzeugen?
+I\0Piktogramme erzeugen?
 ; I\000Create Icons?
 ;
 msgMenuHelp
-\000Hilfe
+\0Hilfe
 ; \000Help
 ;
 msgItemHelp
-Help\000Hilfe...
+Help\0Hilfe
 ; Help\000Help...
 ;
 msgItemUsersGuide
-H\000AHI Anleitung...
+H\0AHI Anleitung
 ; H\000AHI User's guide...
 ;
 msgItemConceptIndex
-\000Index
+\0Begriffe Index
 ; \000Concept Index...
 ;
 ; *** The pages ***
@@ -110,7 +107,7 @@ Musikeinheit
 ; *** Properties box ***
 ;
 msgProperties
-Modus ID\nAufnahme\nAutor\nCopyright\nTreiber\nVersion
+Modus ID\nAufnahme\nVerfasser\nCopyright\nTreiber\nVersion\nAnmerkung
 ; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull
@@ -128,7 +125,7 @@ Nicht möglich
 ; *** Options ***
 ;
 msgOptions
-Optionen
+Einstellungen
 ; Options
 ;
 msgOptFrequency
@@ -140,7 +137,7 @@ _Kanäle
 ; C_hannels
 ;
 msgOptNoChannels
-
+Selbsttätig
 ; 
 ;
 msgOptVolume
@@ -156,7 +153,7 @@ _Verstärkung
 ; _Gain
 ;
 msgOptMuted
-aus
+Stumm
 ; Muted
 ;
 msgOptInput
@@ -179,11 +176,11 @@ Keine Ausgänge
 ; *** Global Options ***
 ;
 msgGlobalOptions
-Globale Optionen
+Globale Einstellungen
 ; Global options
 ;
 msgGlobOptDebugLevel
-_Debugstufe
+_Fehlermitschnittstufe
 ; _Debug level
 ;
 msgGlobOptEcho
@@ -195,7 +192,7 @@ Surround im "_Fast"-Modus
 ; Surround in "_Fast" modes
 ;
 msgGlobOptCPULimit
-_CPU-Auslastungsgrenze
+CPU-Auslastungsgrenze
 ; CPU usage _limit
 ;
 ; *** Debug levels ***
@@ -205,39 +202,39 @@ Nichts
 ; None
 ;
 msgDebugLow
-Wenig
+Niedrig
 ; Low
 ;
 msgDebugHigh
-Viel
+Hoch
 ; High
 ;
 msgDebugFull
-Alles
+Vollständig
 ; Full
 ;
 ; *** Echo ***
 ;
 msgEchoEnabled
-an
+Eingeschaltet
 ; Enabled
 ;
 msgEchoFast
-schnell
+Schnell
 ; Fast
 ;
 msgEchoDisabled
-aus
+Ausgeschaltet
 ; Disabled
 ;
 ; *** Surround ***
 ;
 msgSurroundEnabled
-an
+Eingeschaltet
 ; Enabled
 ;
 msgSurroundDisabled
-aus
+Ausgeschaltet
 ; Disabled
 ;
 ; *** Buttons ***
@@ -247,7 +244,7 @@ _Speichern
 ; _Save
 ;
 msgButtonUse
-Benut_zen
+Ben_utzen
 ; _Use
 ;
 msgButtonCancel
@@ -266,7 +263,7 @@ AHI Voreinstellungen
 ;
 ;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
 msgTextCopyright
-%s%s\nCopyright ©%s\nDeutsche Übersetzung von Martin Sprenger\nUpdate von Sönke Tesch/ATO
+%s%s\nCopyright ©%s\nDeutsche Übersetzung von Uwe Bojartschuk
 ; %s%s\nCopyright ©%s
 ;
 msgTextNoWindow
@@ -278,17 +275,17 @@ Kann Datei-Requester nicht öffnen.
 ; Unable to allocate file requester.
 ;
 msgTextNoFind
-Kann `%s' nicht finden.
+Kann `%s' nicht finden!
 ; Unable to find `%s'!
 ;
 msgTextNoOpen
-Kann `%s´ Version %ld nicht öffnen.
+Kann `%s' Version %Id nicht öffnen.
 ; Unable to open `%s´ version %ld.
 ;
 ; *** Additions
 ;
 msgGlobOptMasterVol
-_Lautstärke
+_Hauptlautstärke
 ; _Master volume
 ;
 msgMVNoClip
@@ -300,34 +297,34 @@ Mit Clipping
 ; With clipping
 ;
 msgGlobOptACTime
-
+Vorgabe der Anti-Click Zeit
 ; Default anti-click time
 ;
 msgButtonPlay
-
+Spiele einen _Prüfton
 ; _Play a test sound
 ;
 msgOptScalemode
-
+Lautstärke Einteilung
 ; Volume sc_aling
 ;
 msgSMFixedSafe
-
+Sicher
 ; Safe
 ;
 msgSMDynSafe
-
+Sicher, anpassend
 ; Safe, dynamic
 ;
 msgSM0dB
-
+Volle Lautstärke
 ; Full volume
 ;
 msgSM3dB
-
+-3 dB
 ; -3 dB
 ;
 msgSM6dB
-
+-6 dB
 ; -6 dB
 ;

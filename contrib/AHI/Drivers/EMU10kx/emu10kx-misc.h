@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
 
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -26,19 +26,9 @@
 #include <DriverData.h>
 
 
-#ifdef __AMIGAOS4__
-
 struct EMU10kxData*
-AllocDriverData( struct PCIDevice*    dev,
+AllocDriverData( APTR               dev,
 		 struct DriverBase* AHIsubBase );
-
-#else
-
-struct EMU10kxData*
-AllocDriverData( struct pci_dev*    dev,
-		 struct DriverBase* AHIsubBase );
-
-#endif
 
 void
 FreeDriverData( struct EMU10kxData* dd,

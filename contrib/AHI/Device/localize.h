@@ -1,21 +1,4 @@
-/* $Id$
-* $Log$
-* Revision 1.5  2004/08/04 17:45:05  stegerg
-* Updated sources to AHI 5.13
-*
-* Revision 5.3.2.1  2004/06/08 21:16:12  martin
-* Added 7.1 multichannel support.
-*
-* Revision 5.0  2000/11/28 00:15:18  lcs
-* Bumped CVS revision to 5.0.
-*
-* Revision 4.1  1997/04/02 22:29:53  lcs
-* Bumped to version 4
-*
-* Revision 1.1  1997/02/03 16:22:45  lcs
-* Initial revision
-*
-*/
+
 /****************************************************************
    This file was created automatically by `FlexCat 2.4'
    from "../../ahisrc/Device/ahi.cd".

@@ -1,26 +1,6 @@
 ##stringtype C
 ##shortstrings
-/* $Id$
-* $Log$
-* Revision 1.5  2004/08/04 17:45:05  stegerg
-* Updated sources to AHI 5.13
-*
-* Revision 5.0  2000/11/28 00:15:17  lcs
-* Bumped CVS revision to 5.0.
-*
-* Revision 4.3  1999/09/22 20:11:06  lcs
-* Removed some "uninitialized variable" warnings.
-*
-* Revision 4.2  1999/01/15 22:40:25  lcs
-* Fixed a couple of warnings.
-*
-* Revision 4.1  1997/04/02 22:29:53  lcs
-* Bumped to version 4
-*
-* Revision 1.1  1997/02/03 16:22:45  lcs
-* Initial revision
-*
-*/
+
 /****************************************************************
    This file was created automatically by `%fv'
    from "%f0".
@@ -33,66 +13,38 @@
 #include <libraries/locale.h>
 #include <proto/locale.h>
 
-
-static LONG %b_Version = %v;
-static const STRPTR %b_BuiltInLanguage = (STRPTR) %l;
-
 struct FC_Type
 {   LONG   ID;
     STRPTR Str;
 };
 
-
 const struct FC_Type _%i = { %d, %s };
-
 
 static struct Catalog *%b_Catalog = NULL;
 
+static const struct TagItem %b_tags[] = {
+  { OC_BuiltInLanguage, (ULONG)%l },
+  { OC_Version,         %v },
+  { TAG_DONE,           0  }
+};
+
 void Open%bCatalog(struct Locale *loc, STRPTR language)
 {
-  LONG tag = 0, tagarg = 0;
-
   if(LocaleBase != NULL  &&  %b_Catalog == NULL)
   {
-    if(language == NULL)
-    {
-      tag = TAG_IGNORE;
-    }
-    else
-    {
-      tag = OC_Language;
-      tagarg = (LONG) language;
-    }
-
     %b_Catalog = OpenCatalog(loc, (STRPTR) "%b.catalog",
-        OC_BuiltInLanguage, (ULONG) %b_BuiltInLanguage,
-        tag, tagarg,
-        OC_Version, %b_Version,
-        TAG_DONE);
+        language ? OC_Language : TAG_IGNORE, (ULONG)language,
+        TAG_MORE, (ULONG)&%b_tags[0]);
   }
 }
 
 struct Catalog *ExtOpenCatalog(struct Locale *loc, STRPTR language)
 {
-  LONG tag = 0, tagarg = 0;
-
   if(LocaleBase != NULL)
   {
-    if(language == NULL)
-    {
-      tag = TAG_IGNORE;
-    }
-    else
-    {
-      tag = OC_Language;
-      tagarg = (LONG) language;
-    }
-
     return OpenCatalog(loc, (STRPTR) "%b.catalog",
-        OC_BuiltInLanguage, (ULONG) %b_BuiltInLanguage,
-        tag, tagarg,
-        OC_Version, %b_Version,
-        TAG_DONE);
+        language ? OC_Language : TAG_IGNORE, (ULONG)language,
+        TAG_MORE, (ULONG)&%b_tags[0]);
   }
   return NULL;
 }
@@ -116,24 +68,16 @@ void ExtCloseCatalog(struct Catalog *catalog)
 
 STRPTR Get%bString(APTR fcstr)
 {
-  STRPTR defaultstr;
-  LONG strnum;
-
-  strnum = ((struct FC_Type *) fcstr)->ID;
-  defaultstr = ((struct FC_Type *) fcstr)->Str;
-
-  return(%b_Catalog ? GetCatalogStr(%b_Catalog, strnum, defaultstr) :
-		      defaultstr);
+  STRPTR defaultstr = ((struct FC_Type *)fcstr)->Str;
+  if (%b_Catalog)
+    return GetCatalogStr(%b_Catalog, ((struct FC_Type *)fcstr)->ID, defaultstr);
+  return defaultstr;
 }
 
 STRPTR GetString(APTR fcstr, struct Catalog *catalog)
 {
-  STRPTR defaultstr;
-  LONG strnum;
-
-  strnum = ((struct FC_Type *) fcstr)->ID;
-  defaultstr = ((struct FC_Type *) fcstr)->Str;
-
-  return(catalog ? GetCatalogStr(catalog, strnum, defaultstr) :
-		      defaultstr);
+  STRPTR defaultstr = ((struct FC_Type *)fcstr)->Str;
+  if (catalog)
+    return GetCatalogStr(catalog, ((struct FC_Type *)fcstr)->ID, defaultstr);
+  return defaultstr;
 }

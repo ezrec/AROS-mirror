@@ -1,8 +1,6 @@
-//* $Id$ */
-
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -49,6 +47,12 @@
 #include "misc.h"
 
 static ULONG AddModeFile ( UBYTE *filename );
+
+#ifdef __MORPHOS__
+#define IS_MORPHOS 1
+#else
+#define IS_MORPHOS 0
+#endif
 
 /******************************************************************************
 ** Audio Database *************************************************************
@@ -657,11 +661,7 @@ AddModeFile ( UBYTE *filename )
   {
     { AHIDB_Driver,         0 },
     { AHIDB_Data,           0 },
-#ifdef __MORPHOS__
-    { AHIDB_DriverBaseName, (ULONG) "MOSSYS:DEVS/AHI" },
-#else
-    { AHIDB_DriverBaseName, (ULONG) "DEVS:AHI" },
-#endif
+    { AHIDB_DriverBaseName, (ULONG) (IS_MORPHOS ? "MOSSYS:DEVS/AHI" : "DEVS:AHI") },
     { TAG_MORE,             0 }
   };
   ULONG rc=FALSE;
@@ -734,46 +734,39 @@ AddModeFile ( UBYTE *filename )
 
               // Now verify that the driver can really be opened
 
-#ifdef __MORPHOS__
-
-              strcpy( driver_name, "MOSSYS:DEVS/AHI/" );
+              strcpy( driver_name, IS_MORPHOS ? "MOSSYS:DEVS/AHI/" : "DEVS:AHI/" );
               strncat( driver_name, name->sp_Data, 100 );
               strcat( driver_name, ".audio" );
 
               driver_base = OpenLibrary( driver_name, DriverVersion );
               if( driver_base == NULL )
               {
-                // Make it MOSSYS:DEVS:AHI/...
-                //                    ^
-                driver_name[7 + 4] = ':';
-
-				// Try "DEVS:AHI/...."
-				//
-                driver_base = OpenLibrary( driver_name + 7, DriverVersion );
-
-                if( driver_base == NULL )
+                if (IS_MORPHOS == 0)
                 {
                   rc = FALSE;
                 }
                 else
                 {
-                  // It is a DEVS:AHI driver!
-                  extratags[2].ti_Data = (ULONG) "DEVS:AHI";
+                  // Make it MOSSYS:DEVS:AHI/...
+                  //                    ^
+                  driver_name[7 + 4] = ':';
 
-                  CloseLibrary( driver_base );
+				// Try "DEVS:AHI/...."
+				//
+                  driver_base = OpenLibrary( driver_name + 7, DriverVersion );
+                  if( driver_base == NULL )
+                  {
+                    rc = FALSE;
+                  }
+                  else
+                  {
+                    // It is a DEVS:AHI driver!
+                    extratags[2].ti_Data = (ULONG) "DEVS:AHI";
+
+                    CloseLibrary( driver_base );
+                  }
                 }
               }
-#else
-              strcpy( driver_name, "DEVS:AHI/" );
-              strncat( driver_name, name->sp_Data, 100 );
-              strcat( driver_name, ".audio" );
-
-              driver_base = OpenLibrary( driver_name, DriverVersion );
-              if( driver_base == NULL )
-              {
-                rc = FALSE;
-              }
-#endif
               else
               {
                 CloseLibrary( driver_base );

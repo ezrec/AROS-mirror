@@ -1,14 +1,11 @@
-## version $VER: ahiprefs.catalog 4.5 (17.06.97)
+## version $VER: ahiprefs.catalog 4.6 (4.8.2004)
 ## language dansk
 ## codeset 0
 ;
 ## chunk AUTH Translated by Thomas Petersen/ATO <thomaslp@post1.tele.dk>
 ;
-; The .ct file was generated from
-; $Id$
-;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2003 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -110,7 +107,7 @@ Musik enhed
 ; *** Properties box ***
 ;
 msgProperties
-Modus-ID\nOptager\nProgrammør\nCopyright\nDrivprogram\nVersion
+Modus-ID\nOptager\nProgrammør\nCopyright\nDrivprogram\nVersion\nAnnotation
 ; Mode ID\nRecording\nAuthor\nCopyright\nDriver\nVersion\nAnnotation
 ;
 msgPropRecordFull

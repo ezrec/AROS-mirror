@@ -1,27 +1,4 @@
-/* $Id$
-* $Log$
-* Revision 1.5  2004/08/04 17:45:05  stegerg
-* Updated sources to AHI 5.13
-*
-* Revision 5.3.2.1  2004/06/08 21:16:12  martin
-* Added 7.1 multichannel support.
-*
-* Revision 5.0  2000/11/28 00:15:17  lcs
-* Bumped CVS revision to 5.0.
-*
-* Revision 4.3  1999/09/22 20:11:06  lcs
-* Removed some "uninitialized variable" warnings.
-*
-* Revision 4.2  1999/01/15 22:40:25  lcs
-* Fixed a couple of warnings.
-*
-* Revision 4.1  1997/04/02 22:29:53  lcs
-* Bumped to version 4
-*
-* Revision 1.1  1997/02/03 16:22:45  lcs
-* Initial revision
-*
-*/
+
 /****************************************************************
    This file was created automatically by `FlexCat 2.4'
    from "../../ahisrc/Device/ahi.cd".
@@ -34,15 +11,10 @@
 #include <libraries/locale.h>
 #include <proto/locale.h>
 
-
-static LONG ahi_Version = 4;
-static const STRPTR ahi_BuiltInLanguage = (STRPTR) "english";
-
 struct FC_Type
 {   LONG   ID;
     STRPTR Str;
 };
-
 
 const struct FC_Type _msgDefault = { 0, "Default" };
 const struct FC_Type _msgMenuControl = { 1, "\000\000Control" };
@@ -70,54 +42,31 @@ const struct FC_Type _msgReqInfoRecordHalf = { 22, "Record in half duplex" };
 const struct FC_Type _msgReqInfoRecordFull = { 23, "Record in full duplex" };
 const struct FC_Type _msgReqInfoMultiChannel = { 24, "7.1 multichannel" };
 
-
 static struct Catalog *ahi_Catalog = NULL;
+
+static const struct TagItem ahi_tags[] = {
+  { OC_BuiltInLanguage, (ULONG)"english" },
+  { OC_Version,         4 },
+  { TAG_DONE,           0  }
+};
 
 void OpenahiCatalog(struct Locale *loc, STRPTR language)
 {
-  LONG tag = 0, tagarg = 0;
-
   if(LocaleBase != NULL  &&  ahi_Catalog == NULL)
   {
-    if(language == NULL)
-    {
-      tag = TAG_IGNORE;
-    }
-    else
-    {
-      tag = OC_Language;
-      tagarg = (LONG) language;
-    }
-
     ahi_Catalog = OpenCatalog(loc, (STRPTR) "ahi.catalog",
-        OC_BuiltInLanguage, (ULONG) ahi_BuiltInLanguage,
-        tag, tagarg,
-        OC_Version, ahi_Version,
-        TAG_DONE);
+        language ? OC_Language : TAG_IGNORE, (ULONG)language,
+        TAG_MORE, (ULONG)&ahi_tags[0]);
   }
 }
 
 struct Catalog *ExtOpenCatalog(struct Locale *loc, STRPTR language)
 {
-  LONG tag = 0, tagarg = 0;
-
   if(LocaleBase != NULL)
   {
-    if(language == NULL)
-    {
-      tag = TAG_IGNORE;
-    }
-    else
-    {
-      tag = OC_Language;
-      tagarg = (LONG) language;
-    }
-
     return OpenCatalog(loc, (STRPTR) "ahi.catalog",
-        OC_BuiltInLanguage, (ULONG) ahi_BuiltInLanguage,
-        tag, tagarg,
-        OC_Version, ahi_Version,
-        TAG_DONE);
+        language ? OC_Language : TAG_IGNORE, (ULONG)language,
+        TAG_MORE, (ULONG)&ahi_tags[0]);
   }
   return NULL;
 }
@@ -141,24 +90,16 @@ void ExtCloseCatalog(struct Catalog *catalog)
 
 STRPTR GetahiString(APTR fcstr)
 {
-  STRPTR defaultstr;
-  LONG strnum;
-
-  strnum = ((struct FC_Type *) fcstr)->ID;
-  defaultstr = ((struct FC_Type *) fcstr)->Str;
-
-  return(ahi_Catalog ? GetCatalogStr(ahi_Catalog, strnum, defaultstr) :
-		      defaultstr);
+  STRPTR defaultstr = ((struct FC_Type *)fcstr)->Str;
+  if (ahi_Catalog)
+    return GetCatalogStr(ahi_Catalog, ((struct FC_Type *)fcstr)->ID, defaultstr);
+  return defaultstr;
 }
 
 STRPTR GetString(APTR fcstr, struct Catalog *catalog)
 {
-  STRPTR defaultstr;
-  LONG strnum;
-
-  strnum = ((struct FC_Type *) fcstr)->ID;
-  defaultstr = ((struct FC_Type *) fcstr)->Str;
-
-  return(catalog ? GetCatalogStr(catalog, strnum, defaultstr) :
-		      defaultstr);
+  STRPTR defaultstr = ((struct FC_Type *)fcstr)->Str;
+  if (catalog)
+    return GetCatalogStr(catalog, ((struct FC_Type *)fcstr)->ID, defaultstr);
+  return defaultstr;
 }

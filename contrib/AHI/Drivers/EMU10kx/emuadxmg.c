@@ -30,6 +30,10 @@
  ********************************************************************** 
  */
 
+#ifdef AHI
+#include <config.h>
+#endif
+
 #include "hwaccess.h"
 
 /* Allocates emu address space */
