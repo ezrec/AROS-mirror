@@ -3,7 +3,7 @@ Frequently Asked Questions
 ==========================
 
 :Authors:   Aaron Digulla, Adam Chodorowski
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Copyright: Copyright © 1995-2004, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -279,9 +279,9 @@ What programming languages are available?
 -----------------------------------------
 
 Most development for AROS is done using ANSI C by crosscompiling the sources
-under a different OS, eg. Linux, FreeBSD or NetBSD. There is currently no native
-C compiler that can be run under AROS, but there are plans to port one. This
-however will probably take some time, so don't hold your breath. ;-)
+under a different OS, eg. Linux, FreeBSD or NetBSD. Fabio Alemagna has 
+completed an inital port of GCC to i386 native, however it is not currently on the 
+ISO or integrated into the build system.
 
 The languages that are available natively are Python_, Regina_ and False_:
 
