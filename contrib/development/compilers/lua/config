@@ -28,8 +28,10 @@
 # ------------------------------------------------------------------ C compiler
 
 # You need an ANSI C compiler. gcc is a popular one.
-CC= gcc
-WARN= -ansi -pedantic -Wall
+#CC= gcc
+CC=/home/adam/Projekt/AROS-Misc/AROS/bin/linux-i386/tools/i386-linux-aros-gcc -DAROS
+#WARN= -ansi -pedantic -Wall
+WARN=
 
 # On IRIX, cc is a good ANSI compiler.
 #CC= cc
@@ -56,7 +58,7 @@ POSIX= -D_POSIX_SOURCE
 # in libm.a (-lm).  If your C library already includes the math functions,
 # or if you are using a modified interpreter that does not need them,
 # then comment the following line.
-EXTRA_LIBS= -lm
+EXTRA_LIBS= -larosm
 
 # ------------------------------------------------------------------ librarian
 
