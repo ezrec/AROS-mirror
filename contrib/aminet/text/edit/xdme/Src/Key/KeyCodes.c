@@ -1008,8 +1008,9 @@ MK_AUTOINIT( init_kb )
 {
     struct IOStdReq cio;
 
-/* printf ("init_kb\n"); */
-
+#if 1
+ printf ("init_kb\n");
+#endif
     if (!ConsoleDevice) {
 	OpenDevice ("console.device", -1, (struct IORequest *)&cio, 0);
 	ConsoleDevice = (struct Library *)cio.io_Device;

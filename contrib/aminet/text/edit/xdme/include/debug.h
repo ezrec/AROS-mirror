@@ -10,6 +10,8 @@
 #endif
 
 #if MYDEBUG
+#include <proto/dos.h>
+
 /*
  * MYDEBUG User Options
  */
@@ -108,6 +110,7 @@ extern __stdargs void dprintf(UBYTE *fmt,...);
 #define DD(x) ;
 #endif
 
+#define DL  D(bug("%s:%d\n", __FILE__, __LINE__))
 
 #endif /* MYDEBUG_H */
 

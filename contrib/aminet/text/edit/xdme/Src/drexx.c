@@ -158,6 +158,7 @@ Prototype void openrexx (void);
 void openrexx (void)
 /* initalizes the Arexx-stuff */
 {
+#ifndef __AROS__
    int number;
 
    number = 1;
@@ -175,6 +176,7 @@ void openrexx (void)
 
    if (!RexxMask)
 	exiterr ("Cannot open AREXX-Port");
+#endif
 }
 
 

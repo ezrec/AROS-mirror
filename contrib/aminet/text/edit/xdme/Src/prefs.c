@@ -15,6 +15,8 @@
 #include <proto/dos.h>
 #include <proto/graphics.h>
 
+#define MYDEBUG 1
+#include "debug.h"
 
 /**************************************
 	    Globale Variable
@@ -147,7 +149,7 @@ DEFUSERCMD("chfilename", 1, CF_VWM|CF_ICO, void, do_chfilename, (void),)
 	char c = *ptr;
 	*ptr = 0;
 
-	if (new_lock = Lock (tmp_buffer, SHARED_LOCK))
+	if ( (new_lock = Lock (tmp_buffer, SHARED_LOCK)) )
 	{
 	    UnLock (Ep->dirlock);
 
@@ -246,7 +248,7 @@ DEFUSERCMD("saveconfig", 0, CF_VWM|CF_COK|CF_ICO, void, do_saveconfig, (void),)
 	ep->config.winheight = win->Height;
    }
 
-    if (fi = fopen (XDME_CONFIG, "w"))
+    if ( (fi = fopen (XDME_CONFIG, "w")) )
     {
 	fwrite (CONFIG_VERSION, sizeof(CONFIG_VERSION)-1, 1, fi);
 	fwrite (&ep->beginconfig, CONFIG_SIZE, 1, fi);
@@ -262,28 +264,39 @@ void loadconfig (ED * ep)
     static int showed_error = 0;
     FILE * fi;
 
+DL;
     /* Always init the fields */
     movmem (&default_config, &ep->beginconfig, CONFIG_SIZE);
 
+DL;
     if (fi = fopen (XDME_CONFIG, "r"))
     {
+DL;
 	fread (tmp_buffer, sizeof(CONFIG_VERSION)-1, 1, fi);
+DL;
 
 	if (strncmp (CONFIG_VERSION, tmp_buffer, sizeof(CONFIG_VERSION)-1) )
 	{
+DL;
 	    if (!showed_error)
 	    {
+DL;
 		error ("loadconfig:\n"
 			"Wrong version for\n"
 			"configuration file !\n"
 			"Using defaults");
 		showed_error = 1;
 	    }
-	} else
+	}
+	else
+	{
+DL;
 	    fread (&ep->beginconfig, 1, CONFIG_SIZE, fi);
-
+	}
+DL;
 	fclose (fi);
     }
+DL;
 } /* loadconfig */
 
 

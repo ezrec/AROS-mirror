@@ -9,7 +9,8 @@
 		Includes
 **************************************/
 #include "defs.h"
-
+#define MYDEBUG 1
+#include "debug.h"
 
 /**************************************
 	    Globale Variable
@@ -93,7 +94,7 @@ ED * uninit_init (ED * ep)
     ep->win  = win;
 
     /* set new font */
-    if (ep->font = font)
+    if ( (ep->font = font) )
     {
 	SetFont (ep->win->RPort, font);
 	set_window_params ();
@@ -111,7 +112,7 @@ ED * uninit_init (ED * ep)
 
     /* create new lock */
     UnLock (ep->dirlock);
-    ep->dirlock = (long)lock;
+    ep->dirlock = (BPTR)lock;
 
     /* free buffer */
     free (buf);
@@ -221,25 +222,31 @@ int text_init (ED * oldep, WIN * win, struct NewWindow * nw)
 {
     ED * ep;
 
+DL;
     if (!(ep = (ED *)allocb (sizeof(ED))) )
 	return (0);
+DL;
 
     memset (ep, 0, sizeof(ED));
     ep->win = win;
 
+DL;
     if (oldep)
     {
 	ep->dirlock = (long)DupLock (oldep->dirlock);
+DL;
 
 	movmem (&oldep->beginconfig, &ep->beginconfig, CONFIG_SIZE);
 
 	if (oldep->font)
 	{
+DL;
 	    ep->font = oldep->font;
 	    ep->font->tf_Accessors ++;
 
 	    if (win)
 		SetFont (win->RPort, ep->font);
+DL;
 	}
 
 	/* change oldep to "last editor" to have the iconified window
@@ -273,11 +280,14 @@ int text_init (ED * oldep, WIN * win, struct NewWindow * nw)
     else
     {
 	PROC * proc = (PROC *)FindTask (NULL);
+DL;
 
 	ep->dirlock = (long)DupLock (proc->pr_CurrentDir);
+DL;
 
 	loadconfig (ep);
     }
+DL;
 
     ep->lines	  = 1;
     ep->maxlines  = 32;
@@ -299,6 +309,7 @@ int text_init (ED * oldep, WIN * win, struct NewWindow * nw)
     if (win)
 	text_cursor (1);
 
+DL;
     if (nw)
     {
 	if (!GETF_ICONMODE(ep) && ep->win)
@@ -327,6 +338,7 @@ int text_init (ED * oldep, WIN * win, struct NewWindow * nw)
 	nw->DetailPen = TEXT_BPEN(ep);
 	nw->BlockPen  = TEXT_FPEN(ep);
     }
+DL;
 
     return (1);
 } /* text_init */
@@ -449,7 +461,7 @@ BOOL text_sync (void)
 	   blocks). */
 	if ((!len && Clen) || len_in_blocks != clen_in_blocks)
 	{
-	    if (ptr = allocline(Clen+1))
+	    if ( (ptr = allocline(Clen+1)) )
 	    {
 
 #ifdef DEBUG_MEM_H
@@ -698,7 +710,7 @@ void text_uninit (void)
 	UnLock (ep->dirlock);
 	FreeMem (ep, sizeof(ED));
 
-	if (ep = (ED *)GetHead (&DBase))
+	if ( (ep = (ED *)GetHead (&DBase)) )
 	{
 	    Ep = NULL;
 

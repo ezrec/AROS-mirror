@@ -21,7 +21,7 @@
 
 #define MYDEBUG     1
 #include "debug.h"
-//#define DEBUG
+#define DEBUG
 //#define DETACH
 
 
@@ -181,15 +181,17 @@ int main (int mac, char ** mav)
     BOOL   mmove       = 0; /* Mousemove		   */
     int    show_cursor;     /* shall I redraw the cursor ? */
 
-/*#if MYDEBUG
+#if MYDEBUG
     D(bug("------------- Hallo, hier ist XDME ----------------\n"));
-#endif // */
+#endif
 
+#if 0
 #ifdef DETACH
     /* Detach from CLI */
     fclose (stdin);
     fclose (stdout);        /*  debugging output needs kprintf ! */
     fclose (stderr);        /*  close stderr & console ref. */
+#endif
 #endif
 
     /* cd to dir of shell */
@@ -209,7 +211,7 @@ int main (int mac, char ** mav)
 	exiterr ("cannot open intuition or graphics library");
 
     AslBase = OpenLibrary ("asl.library", 37L); */
-    ReqToolsBase = (struct ReqToolsBase *)OpenLibrary ("reqtools.library", 37);
+/*    ReqToolsBase = (struct ReqToolsBase *)OpenLibrary ("reqtools.library", 37);*/
 
     PageJump = 80;	    /* 80% of page for Propgad & pageup/down */
 
@@ -239,17 +241,23 @@ int main (int mac, char ** mav)
     mountrequest (0);
     openrexx ();     /*   do this after the last possible call to exiterr() */
     mountrequest (1);
+DL;
 
     /* Init Keyboard */
     new_menustrip ("default",1);        /* PATCH_NULL [13 Sep 1994] : instead of init_structures(); */
+DL;
     new_keytable  ("default",1);        /* PATCH_NULL [13 Sep 1994] : instead of init_structures(); */
+DL;
 
     /* Init CommandShell */ /* PATCH_NULL [13 Sep 1994] : added */
     CMDSH_Initialize ();
+DL;
     Mask |= CMDSH_SigMask;
+DL;
 
     /* Init AppIcon */ /* PATCH_NULL [21 Sep 1994] : added */
     APIC_Initialize ();
+DL;
     Mask |= APIC_SigMask;
 
     {
@@ -261,6 +269,7 @@ int main (int mac, char ** mav)
 
 	newxdme = (!strcmp (RexxPortName, "XDME.1") || !mp);
     }
+DL;
 
     nf = 0;
     /* Here we have to set the names BEFORE the parsing since none of the
@@ -271,6 +280,7 @@ int main (int mac, char ** mav)
     /* WB-Startup or CLI ? */
     if (Wbs)
     {
+DL;
 	/* Work on TOOLTypes */
 	if (Wbs->sm_ArgList[0].wa_Lock)
 	{
@@ -309,8 +319,10 @@ int main (int mac, char ** mav)
 	    /* CD to new base-dir */
 	    UnLock (CurrentDir (DupLock (Wbs->sm_ArgList[0].wa_Lock)));
 	}
-    } else
+    }
+    else
     {
+DL;
 	XDMEArgs.newxdme = newxdme;
 
 	/* Parse CLI-args */
@@ -335,6 +347,7 @@ int main (int mac, char ** mav)
 	    }
 	}
     }
+DL;
 
 #ifdef DEBUG
     D(bug("Parsed ARGS\n"));
@@ -376,34 +389,50 @@ int main (int mac, char ** mav)
 		XDMEArgs.publicscreenname : "WBench"));
 #endif
 
+DL;
     /* Free args */
     if (XDMEArgs.ra)
 	FreeArgs (XDMEArgs.ra);
+DL;
 
     if (!nf)
     {  /* no files to edit: Open simple empty window */
+DL;
 	if (XDMEArgs.newxdme || newxdme)
 	{
+DL;
 	    do_newwindow ();
+DL;
 	    if (!Ep)
 		goto quit_dme;
+DL;
 
 	    if (XDMEArgs.iconify)
+	    {
+DL;
 		do_iconify ();
-	} else
+	    }
+DL;
+	}
+	else
 	{
+DL;
 	    if (XDMEArgs.iconify)
 	    {
+DL;
 		do_rexx ("XDME.1", "newwindow iconify");
 	    } else
 	    {
+DL;
 		do_rexx ("XDME.1", "newwindow");
 	    }
 	}
     } /* No files */
+DL;
 
     if (!XDMEArgs.newxdme) /* All done, quit */
 	goto quit_dme;
+DL;
 
     /* Read main .edrc file */
     mountrequest (0);
@@ -419,6 +448,7 @@ int main (int mac, char ** mav)
 	do_source (FALSE); /* Not */
     }
     mountrequest (1);
+DL;
 
     /* Initialize certain fields in structure */
     {
@@ -447,10 +477,12 @@ int main (int mac, char ** mav)
     /* Get Wait()-Mask */
     Mask |= 1 << Sharedport->mp_SigBit;
     wait_ret = 0;
+DL;
 
 loop:
     if (!GETF_ICONMODE(Ep))  /* Display cursor ? */
 	text_cursor (1);
+DL;
 
     for ( ; !GETF_QUITFLAG(Ep); )
     {

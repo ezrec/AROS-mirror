@@ -25,9 +25,12 @@
 
     HISTORY
 	$Log$
-	Revision 1.1  2001/10/06 20:12:14  digulla
-	Initial revision
+	Revision 1.2  2001/10/07 12:08:42  digulla
+	Runs now until Src/prefs.c:271 where it throws a GURU: Corrupt memory list detected in FreeMem
 
+	Revision 1.1.1.1  2001/10/06 20:12:14  digulla
+	Initial import of XDME
+	
  * Revision 1.1  1994/12/22  09:28:07  digulla
  * Initial revision
  *
@@ -88,6 +91,9 @@
 #define MACRO struct MacroNode /* trick 17 * OPAQUE */
 #include "defs.h"
 #include "AVL.h"
+
+#define MYDEBUG     0
+#include "debug.h"
 
 
 
@@ -208,15 +214,22 @@ DelMacro(char* name)
 {
     MACRO* m;
 
+DL;
     if ((m = getmacro(name))) {         /* find the node representing the macro ... */
+DL;
 	AVL_Remove (&macros, (APTR)m);  /* , remove it from its tree ... */
+DL;
 	if (!m->NCalls) {               /* and if it is not in use */
+DL;
 	    FreeMacro(m);               /* ... free its contents */
 	} else {			/* ... else put it into a certain kill-list */
 	    m->killme++;		/* ... and mark it to be killed */
+DL;
 	    AVL_Append (&delenda, (APTR)m);
+DL;
 	} /* if */
     } /* if */
+DL;
 } /* DelMacro */
 
 
@@ -239,8 +252,10 @@ SetMacro(char* name, char* body, int nargs)
 	return(0);
     } /* if too many args */
 
+DL;
     DelMacro(name);                                         /* for sure: remove all macros of the same name */
 
+DL;
     if ((m = malloc(sizeof(MACRO)))) {                      /* allocate a macro-structure... */
 	setmem(m, sizeof(MACRO),0);
 	if ((m->Node.ln_Name = strdup(name))) {             /* ... the name ... */
@@ -248,13 +263,16 @@ SetMacro(char* name, char* body, int nargs)
 		m->NArgs= nargs;			    /* fill in all values,  */
 		m->freeme = 1;
 		AVL_Append (&macros, (APTR)m);              /* and append the structure to a certain macro-list */
+DL;
 		return(1);
 	    } /* if block copied */
 	    free(m->Node.ln_Name);                          /* if anything went wrong */
 	} /* if name copied */				    /* free all allocated frags */
 	free(m);                                            /* and set an error */
     } /* if struct allocated */
+DL;
     nomemory();
+DL;
     return(0);
 } /* SetMacro */
 
@@ -459,7 +477,9 @@ getmacro(char* name)
 {
     MACRO* m;
 
+DL;
     m = (MACRO*)AVL_Find (&macros, name);
+DL;
     return(m);
 } /* getmacro */
 
@@ -552,13 +572,16 @@ int
 GetDefMacros (void)
 {
     int i;
-
-    for (i = 0; resmacros[i].name; i++) {
+DL;
+    for (i = 0; resmacros[i].name; i++)
+    {
+	D(bug("name=%s\n", resmacros[i].name));
 	if (!SetMacro(resmacros[i].name, resmacros[i].body, resmacros[i].numargs)) {
 	    return (0);                 /* PATCH_NULL [25 Jan 1993] : line added */
 	} /* if error */		/* PATCH_NULL [25 Jan 1993] : line added */
     } /* for all builtins */
 
+    DL;
     return (1);
 } /* GetDefMacros */
 
@@ -951,7 +974,7 @@ int init_macros (void) {
 
     delenda = NULL;
     macros  = NULL;
-
+DL;
     return GetDefMacros ();
 
 } /* init_macros */

@@ -74,6 +74,13 @@
 #include <strings.h>
 #endif /* STRINGS_H */
 
+#ifndef   EXEC_NODES_H
+#include <exec/nodes.h>
+#endif /* EXEC_TYPES_H */
+
+#define MYDEBUG 0
+#include "debug.h"
+
 /**************************************
 	    Global Variables
 **************************************/
@@ -94,12 +101,21 @@ void (*error)(char const *, char const *, char const *) = NULL;
 
 /* redefine it here as we did comment out tn_Balance in AVL.h */
 struct TreeNode {
+	struct Node tn_Node;
+#if 0
 	struct TreeNode * tn_Left;
 	struct TreeNode * tn_Right;
 	UBYTE		  tn_Type;
 	BYTE		  tn_Balance; /* !PRIVATE! for AVL - do not use it! */
 	char		* tn_Name;
+#endif
 }; /* struct TreeNode */
+
+#define tn_Left tn_Node.ln_Succ
+#define tn_Right tn_Node.ln_Pred
+#define tn_Type tn_Node.ln_Type
+#define tn_Balance tn_Node.ln_Pri
+#define tn_Name tn_Node.ln_Name
 
 /**************************************
 	    Internal Variables
@@ -688,6 +704,7 @@ PRE struct TreeNode* AVL_Find (A0( struct TreeNode** tree ), A1( const char* nam
 {
     int 	     diff;
     struct TreeNode* n;
+DL;
 
     if (!tree) {
 #ifdef	 AVL_DEBUG
@@ -698,14 +715,24 @@ PRE struct TreeNode* AVL_Find (A0( struct TreeNode** tree ), A1( const char* nam
 
     n = *tree;
 
+D(bug("tree=%p n=%p\n", tree, n));
+DL;
+if (n)
+    D(bug ("name=%s\n", NAME(n)));
     while ((n != NULL) && (diff = strcmp (name, NAME(n)))) {
+DL;
 	if (diff > 0) {
 	    n = RSON(n);
 	} else {
 	    n = LSON(n);
 	} /* if */
+DL;
+D(bug("n=%p\n", tree, n));
+if (n)
+    D(bug ("name=%s\n", NAME(n)));
     } /* while */
 
+DL;
     return n;
 } /* AVL_Find */
 

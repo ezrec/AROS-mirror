@@ -316,30 +316,44 @@ DEFUSERCMD("uniconify", 0, CF_VWM|CF_ICO, void, uniconify, (void),)
 DEFUSERCMD("newwindow", 0, CF_VWM|CF_ICO, void, do_newwindow, (void),)
 {
     WIN * win;
-
+DL;
     if (Ep)
+    {
+DL;
 	text_sync ();
-
+    }
+    
+DL;
     if (text_init (Ep, NULL, &Nw))
     {
+DL;
 	Nw.Title = Ep->wtitle;
 	Nw.Flags = WINDOWFLAGS;
 
+DL;
 	if (win = opensharedwindow (&Nw))
 	{
+DL;
 	    menu_strip (currentmenu(),win);   /* PATCH_NULL [13 Jan 1993] : added currentmenu(), */
+DL;
 
 	    Ep->win = win;
+DL;
 	    set_window_params ();
+DL;
 	    Ep->propgad = (struct Gadget *)add_prop (win);
+DL;
 
 	    text_load ();
+DL;
 	}
 	else
 	{
+DL;
 	    text_uninit ();
 	} /* if opensharedwindow */
     } /* if text_init */
+DL;
 } /* do_newwindow */
 
 
