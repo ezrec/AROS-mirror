@@ -879,6 +879,20 @@ class HTMLTranslator(nodes.NodeVisitor):
     def visit_reference(self, node):
         if node.has_key('refuri'):
             href = node['refuri']
+            print '[HTML] visit_reference: after %s' % href
+            if ':' not in href:
+                # This is a relative URL, so we assume we want to mangle it. :-)
+                words = href.split( '#' )
+                if not words[0].endswith( '.html' ) and not words[0].endswith( '/' ):
+                    # It doesn't have the correct suffix...
+                    words[0] = words[0] + '.html'
+                
+                href = words[0]
+                if len( words ) > 1:
+                    href = href + '#' + words[1]
+                
+            print '[HTML] visit_reference: after %s' % href
+            
         elif node.has_key('refid'):
             href = '#' + node['refid']
         elif node.has_key('refname'):

@@ -311,7 +311,7 @@ def buildWWW():
 
     if newer( [ _src_1, _src_2, _src_3 ], _dst ):
         text  = extractAbstract( file( _src_1, 'r' ) )
-        text += '\n`Read more...`__\n\n__ introduction\n\n'
+        text += '\n`Read more...`__\n\n__ introduction/\n\n'
         text += extractAbstract( file( _src_2, 'r' ) )
         text += '\n`Read more...`__\n\n__ documentation/developers/contribute\n\n'
         text += file( _src_3, 'r' ).read()
