@@ -135,7 +135,7 @@ void main(int argc,char **argv)
   sscanf(argv[3],"%lf",&xymax);
   sscanf(argv[4],"%lf",&xystep);
   sscanf(argv[5],"%ld",&itera);
-
+  
   /****** PREPARE EVERYTHING ******/
 
   IntuitionBase=(struct IntuitionBase *) OpenLibrary("intuition.library",37);
@@ -168,8 +168,11 @@ void main(int argc,char **argv)
     return;
   }
 
-  if(os2) my_screen=(struct Screen*) OpenScreenTags(&my_new_screen,SA_Pens,PenData,TAG_DONE,0);
-  else my_screen=(struct Screen*) OpenScreen(&my_new_screen);
+  if(os2) 
+    my_screen=(struct Screen*) OpenScreenTags(&my_new_screen,SA_Pens,PenData,TAG_DONE,0);
+  else 
+    my_screen=(struct Screen*) OpenScreen(&my_new_screen);
+
   if(my_screen==NULL)
   {
     puts("Can't open Screen");
@@ -189,10 +192,13 @@ void main(int argc,char **argv)
   SetAPen(my_window->RPort,1);
   black_text.IText=buf;
 
-  cosinus=IEEEDPCos(a);
-  sinus=IEEEDPSin(a);
+  //cosinus=IEEEDPCos(a);
+  //sinus=IEEEDPSin(a);
+  cosinus = cos(a);
+  sinus=sin(a);
 
   /****** DRAW PICTURE ******/
+SetAPen(my_window->RPort,1);
 
   for(xa=xymin;xa<=xymax;xa+=xystep)
   {
@@ -207,7 +213,6 @@ void main(int argc,char **argv)
       x=xx;
       WritePixel(my_window->RPort,(ULONG)((XSIZE*x)+370.0),(ULONG)(105-(SIZE*y)));
     }
-
     my_message=(struct IntuiMessage *)GetMsg(my_window->UserPort);
     if(my_message)
     {
@@ -215,12 +220,10 @@ void main(int argc,char **argv)
       ReplyMsg((struct Message *)my_message);
       if(class==CLOSEWINDOW) close_me=TRUE;
     }
-
     if(close_me==TRUE) break;
   }
 
   /****** PRINT INFO ******/
-
   sprintf(buf,"A      : %lf",a);
   PrintIText(my_window->RPort,&black_text,8,15);
   sprintf(buf,"XYMin  : %lf",xymin);
