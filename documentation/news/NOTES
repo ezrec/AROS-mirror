@@ -31,6 +31,8 @@ brackets ("[]").
 200304??:
  <next day here>
 
+20030425: STATUS UPDATE [chodorowski] ========================================
+
 20030423:
 
 + Several fixes to ide.device to improve stability (race conditions) [stegerg]
