@@ -85,6 +85,8 @@ program so feel free to send whatever you think would be helpful
 */
 
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 #ifdef __AROS
 #define SHORTNAMES
