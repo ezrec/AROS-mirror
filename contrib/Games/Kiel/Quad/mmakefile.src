@@ -11,7 +11,6 @@ USE_AROSLIB := yes
 #MM- contrib-games : games-kiel-quad
 
 %make_prog_setup mmake=games-kiel-quad
-%make_vpath
 
 #MM
 games-kiel-quad : setup $(EXES)

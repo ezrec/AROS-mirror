@@ -12,7 +12,6 @@ USE_AROSLIB := yes
 #MM- contrib-games : games-kiel-jump
 
 %make_prog_setup mmake=games-kiel-jump
-%make_vpath
 
 #MM
 games-kiel-jump : setup $(EXES)

@@ -11,7 +11,6 @@ USE_AROSLIB := yes
 #MM- contrib-games : games-kiel-wumpus
 
 %make_prog_setup mmake=games-kiel-wumpus
-%make_vpath
 
 #MM
 games-kiel-wumpus : setup $(EXES)
