@@ -7,7 +7,7 @@
 ##MM- contrib-gnu-fileutils : development-fileutils
 
 ##MM- development : development-fileutils
-#MM development-fileutils-build-quick : development-fileutils-fetch
+#MM development-fileutils-quick : development-fileutils-fetch
 
 ORIGINS := http://ftp.gnu.org/pub/gnu/fileutils/
 
@@ -16,11 +16,8 @@ development-fileutils-fetch :
 	%fetch archive=fileutils-4.1.tar.gz destination=$(PORTDIR)/fileutils archive_origins=$(ORIGINS) \
 	patches_specs=fileutils-4.1-aros.diff:fileutils-4.1:-p1
 
-%build_with_configure mmake=development-fileutils-build configure=$(PORTDIR)/fileutils/fileutils-4.1/configure nix=yes \
+%build_with_configure mmake=development-fileutils srcdir=$(PORTDIR)/fileutils/fileutils-4.1 nix=yes \
     prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development extraoptions="--target=$(AROS_TARGET_CPU)-aros \
-    --build=local --enable-longlong --disable-nls --enable-sjlj-exceptions"
-
-#MM- development-fileutils : development-fileutils-build 
-#MM- development-fileutils-quick : development-gcc-build-quick 
+    --build=local --enable-longlong --disable-nls"
 
 

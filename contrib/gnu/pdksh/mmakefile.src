@@ -1,3 +1,4 @@
+
 # Copyright © 2004, The AROS Development Team. All rights reserved.
 # $Id$
 
@@ -19,7 +20,7 @@ development-pdksh-fetch :
 	patches_specs=pdksh-5.2.14-aros.diff:pdksh-5.2.14:-p1
 	
 
-%build_with_configure mmake=development-pdksh configure=$(PORTDIR)/pdksh/$(ARCHBASE)/configure \
+%build_with_configure mmake=development-pdksh srcdir=$(PORTDIR)/pdksh/$(ARCHBASE) \
      nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
      extraoptions="--target=$(AROS_TARGET_CPU)-aros  --build=local --disable-nls"
 

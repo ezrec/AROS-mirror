@@ -1,3 +1,5 @@
+
+
 # Copyright © 2004, The AROS Development Team. All rights reserved.
 # $Id$
 
@@ -19,7 +21,7 @@ development-gawk-fetch :
 	patches_specs=gawk-3.1.3-aros.diff:gawk-3.1.3:-p1
 	
 
-%build_with_configure mmake=development-gawk configure=$(PORTDIR)/gawk/$(ARCHBASE)/configure \
+%build_with_configure mmake=development-gawk srcdir=$(PORTDIR)/gawk/$(ARCHBASE) \
      nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
      extraoptions="--target=$(AROS_TARGET_CPU)-aros  --build=local --disable-nls"
 

@@ -11,14 +11,14 @@
 
 ORIGINS := http://ftp.gnu.org/pub/gnu/binutils
 
-ARCHBASE := binutils-2.15
+ARCHBASE := binutils-2.15 
 
 #MM
 development-binutils-fetch :
 	%fetch archive=$(ARCHBASE).tar.bz2 destination=$(PORTDIR)/binutils archive_origins="$(ORIGINS)"
 	
 
-%build_with_configure mmake=development-binutils configure=$(PORTDIR)/binutils/$(ARCHBASE)/configure \
+%build_with_configure mmake=development-binutils srcdir=$(PORTDIR)/binutils/$(ARCHBASE) \
      nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
      extraoptions="--target=$(AROS_TARGET_CPU)-aros  --build=local --disable-nls"
 
