@@ -1,8 +1,18 @@
 
 import string, re, os
 from util import Page, arosdir, DefinitionList, Text, Href, BR, TT, Dummy, \
-    Name, MyCode, SeriesDocument, MyRawText, Heading, Paragraph, \
+    Name, SeriesDocument, MyRawText, Heading, Paragraph, \
     NonBulletList, TableLite, TR, TD, relpath
+import code2html
+
+codeConverter = code2html.AROSCodeConverter ('..')
+
+class MyCode:
+    def __init__ (self, text):
+	self.text = text
+	
+    def __str__ (self):
+	return codeConverter.convert (self.text)
 
 autodocdir = 'autodocs'
 includedir = 'includes'
@@ -106,6 +116,7 @@ def processFuncList (funcs, meat):
 	table.append (row)
     
 def genPage (db, lib, func):
+    codeConverter.push ()
     try:
 	page = AutoDocPage (lib, func)
 
@@ -124,31 +135,36 @@ def genPage (db, lib, func):
 	    match = includePattern.match (line)
 	    if match:
 		include = match.group (1)
-		list.append (Text ('#include <'))
-		href = Href (
-		    os.path.join ('include', include),
-		    include
-		)
-		page.linksToFix.append (href)
-		list.append (href)
-		list.append (Text ('>'))
-		list.append (BR ())
+		text = MyCode ('#include <' + include + '>\n')
+		#list.append (Text ('#include <'))
+		#href = Href (
+		#    os.path.join ('include', include),
+		#    include
+		#)
+		#page.linksToFix.append (href)
+		#list.append (href)
+		#list.append (Text ('>'))
+		#list.append (BR ())
+		list.append (text)
 		hasIncludes = 1
 	
 	if hasIncludes:
 	    list.append (BR ())
 	
-	list.append (TT ('%s %s ()' % (func.result.type, func.name)))
-	list.append (BR ())
+	#list.append (TT ('%s %s ()' % (func.result.type, func.name)))
+	#list.append (BR ())
+	list.append (MyCode ('%s %s ()\n' % (func.result.type, func.name)))
 	#list.append (Nbsp ())
 
 	dl.append (('NAME', AutoDocItem (list)))
 
+	for parameter in func.parameters:
+	    codeConverter.addIdentifier (parameter.name, '#%s' % parameter.name)
+
 	list = []
 	for parameter in func.parameters:
-	    list.append (TT ('%s ' % parameter.type))
-	    list.append (Href ('#%s' % parameter.name, parameter.name))
-	    list.append (BR ())
+	    #list.append (TT ('%s ' % parameter.type))
+	    list.append (MyCode ('%s %s\n' % (parameter.type, parameter.name)))
 
 	dl.append (('SYNOPSIS', AutoDocItem (list)))
 
@@ -208,6 +224,7 @@ def genPage (db, lib, func):
     except:
 	print 'Error in %s/%s' % (lib.name, func.name)
 	raise
+    codeConverter.pop ()
 
 def gen ():
     if not os.path.exists (autodocdir):
