@@ -978,7 +978,7 @@ BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem_type, 
 
 		if (worked)
 		{
-			for (loop=0;loop<size;loop++) worked &= (buffer[loop] == (unsigned short )loop);
+			for (loop=0;loop<size;loop++) worked &= (buffer[loop] == (char)loop);
 			if (!worked) AddDisplayLine(global,GetString(MSG_ERR_DATA));
 		}
 
