@@ -10,13 +10,15 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 30-Aug-04 sheutlin  fixed using handling of "/" to get the parent directory
+ *                     the way Georg Steger suggested
+ * 07-Jul-02 sheutlin  various changes when porting to AROS
+ *                     - global variables are now in a struct Globals *global
  * 22-May-94   fmu   Performance improvement for lock+filehandle processing.
  * 01-Jan-94   fmu   Added multisession support.
  * 29-Nov-93   fmu   New function Block_Size().
  * 15-Nov-93   fmu   Missing return value for 'Location' inserted.
  * 10-Nov-93   fmu   Added HFS/ISO-9660-lookup reversing in Which_Protocol.
- * 07-Jul-02 sheutlin  various changes when porting to AROS
- *                     - global variables are now in a struct Globals *global
  */
 
 
@@ -212,7 +214,11 @@ char name[100];
 			global->iso_errno = ISOERR_NO_MEMORY;
 			return NULL;
 		}
-		while (*cp == '/')
+	}
+
+	while (*cp)
+	{
+		if (*cp == '/')
 		{
 			if (Is_Top_Level_Object(obj))
 			{
@@ -226,11 +232,8 @@ char name[100];
 			Close_Object(obj);
 			obj = new;
 			cp++;
+			continue;
 		}
-	}
-
-	while (*cp)
-	{
 		for (np = name; *cp && *cp != '/'; )
 			*np++ = *cp++;
 		*np = 0;
