@@ -18,6 +18,9 @@
  * enable/disable status of an item.
 
  * $Log$
+ * Revision 42.3  2000/07/11 17:07:01  stegerg
+ * compiles now. again a temp fix for not yet working INVERSVID drawmode.
+ *
  * Revision 42.2  2000/07/09 03:05:09  bergers
  * Makes the gadgets compilable.
  *
@@ -54,12 +57,18 @@
 #include <proto/bgui.h>
 #include <proto/utility.h>
 #include <proto/layers.h>
+#ifndef _AROS
 #include <proto/rexxsyslib.h>
+#endif
 #include <proto/dos.h>
 
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+
+#ifdef _AROS
+extern struct Library * BGUIBase;
+#endif
 
 /*
  * Compiler stuff.
@@ -455,8 +464,15 @@ STATIC VOID RenderMenuEntry( struct RastPort *rp, PMD *pmd, UWORD *pens, ULONG n
    /*
    ** Set the pens.
    **/
+
+#ifdef _AROS
+#warning INVERSVID DrawMode does not work yet in AROS. Remove this temp fix once it does.
+   SetAPen( rp, sel ? penb : pena);
+   SetBPen( rp, sel ? pena : penb);   
+#else
    SetAPen( rp, pena );
    SetBPen( rp, penb );
+#endif
 
    /*
    ** Render the menu label.
