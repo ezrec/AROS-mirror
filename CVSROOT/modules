@@ -51,5 +51,8 @@ Quake -d contrib/Games/Quake contrib/Games/Quake
 # Misc
 Misc -d contrib/Misc contrib/Misc
 
+# Standalone stuff
+ScalosV2 -d contrib/ScalosV2 contrib/ScalosV2
+
 # (Large) binaries
 screenshots binaries/screenshots
