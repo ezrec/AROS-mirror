@@ -14,9 +14,9 @@
 
     NAME */
 #ifndef __AROS
-__asm APTR LIB_shutdown(register __d0 long s, register __d1 long how)
+__asm int LIB_shutdown(register __d0 long s, register __d1 long how)
 #else
-	AROS_LH2(APTR, LIB_shutdown,
+	AROS_LH2(int, LIB_shutdown,
 
 /*  SYNOPSIS */
 	AROS_LHA(long, s, D0),

@@ -55,6 +55,7 @@ __asm int LIB_recvfrom(register __d0 long s, register __a0 unsigned char *buf, r
     AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
 //    return CallStackFunction(SOCKB(SocketBase), LIBMSG_SOCKET, 6, s, buf, len, flags, addr, addrlen);
+	return -1;
 
     AROS_LIBFUNC_EXIT
 

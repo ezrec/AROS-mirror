@@ -69,10 +69,10 @@ __asm struct hostent *LIB_gethostbyname(register __a0 const char *name)
 *****************************************************************************/
 {
     struct in_addr in;
-    struct hostent *ret;
+    struct hostent *ret = NULL;
 
 
-    struct HostentNode *node;
+/*      struct HostentNode *node; */
 
 
     AROS_LIBFUNC_INIT

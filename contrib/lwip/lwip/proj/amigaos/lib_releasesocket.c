@@ -19,7 +19,7 @@
 #ifndef __AROS
 __asm int LIB_ReleaseSocket(register __d0 long s, register __d1 long id)
 #else
-	AROS_LH2(APTR, LIB_ReleaseSocket,
+	AROS_LH2(int, LIB_ReleaseSocket,
 
 /*  SYNOPSIS */
 	AROS_LHA(long, s, D0),

@@ -26,7 +26,7 @@ __asm int LIB_bind(register __d0 long s, register __a0 struct sockaddr *name, re
 
 /*  SYNOPSIS */
 	AROS_LHA(long, s, D0),
-	AROS_LHA(struct sockaddr, *name, A0),
+	AROS_LHA(struct sockaddr *, name, A0),
 	AROS_LHA(long, namelen, D1),
 
 /*  LOCATION */

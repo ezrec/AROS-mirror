@@ -19,7 +19,7 @@
 #ifndef __AROS
 __asm int LIB_ObtainSocket(register __d0 long id, register __d1 long domain, register __d2 long type, register __d3 long protocol )
 #else
-	AROS_LH4(APTR, LIB_ObtainSocket,
+	AROS_LH4(int, LIB_ObtainSocket,
 
 /*  SYNOPSIS */
 	AROS_LHA(long, id, D0),

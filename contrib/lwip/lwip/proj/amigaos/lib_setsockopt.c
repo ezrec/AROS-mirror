@@ -14,9 +14,9 @@
 
     NAME */
 #ifndef __AROS
-__asm APTR LIB_setsockopt(register __d0 long s, register __d1 long level, register __d2 long optname, register __a0 void *optval, register __a1 long *optlen)
+__asm int LIB_setsockopt(register __d0 long s, register __d1 long level, register __d2 long optname, register __a0 void *optval, register __a1 long *optlen)
 #else
-	AROS_LH3(APTR, LIB_setsockopt,
+	AROS_LH3(int, LIB_setsockopt,
 
 /*  SYNOPSIS */
 	AROS_LHA(LONG, domain, D0),

@@ -16,18 +16,21 @@
 /* #define MYDEBUG */
 #include "debug.h"
 
+/* dlc changed addrlen to int * instead of long * to conform with lwip_accept
+   (should be the other way round ?) */
+
 /*****************************************************************************
 
     NAME */
 #ifndef __AROS
-__asm int LIB_accept(register __d0 long s, register __a0 struct sockaddr *addr, register __a1 long *addrlen)
+__asm int LIB_accept(register __d0 long s, register __a0 struct sockaddr *addr, register __a1 int *addrlen)
 #else
 	AROS_LH3(int, LIB_accept,
 
 /*  SYNOPSIS */
 	AROS_LHA(long, s, D0),
 	AROS_LHA(struct sockaddr *, addr, A0),
-	AROS_LHA(long *, addrlen, A1),
+	AROS_LHA(int *, addrlen, A1),
 
 /*  LOCATION */
 	struct Library *, SocketBase, 48, Socket)
