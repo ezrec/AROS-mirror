@@ -70,7 +70,7 @@ def convertContents (c, dirlist, parent):
 	relPath = '.'
 	rootUrl = 'contents.html'
     
-    print filename, relPath
+    #print filename, relPath
     
     list = [Href (rootUrl, 'AROS'), Text (' / ')]
     path = relPath
