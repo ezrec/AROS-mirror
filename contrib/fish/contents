@@ -11,6 +11,8 @@ bezier/bouncing
 bezier/cubic
 bezier/orig   From Fish Disk 75
 
+fiveinline/   From Fish Disk 163
+
 grep/         From Fish Disk 4
 
 henon/        From Fish Disk 636
@@ -37,9 +39,13 @@ rubik/        From Fish Disk 29
 
 screenzap/   From Fish Disk 303
 
+sunmaze/     From Fish Disk 255
+
 surf/        From Fish Disk 315
 
 tree/         From Fish Disk 31
+
+watchman/     From Fish Disk 283
 
 yachtc/       From Fish Disk 10
                (Unfortunately some functions are still missing.)
