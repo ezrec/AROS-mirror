@@ -21,15 +21,15 @@ def writeVerbatim (p, xmlfile, item):
 	p.fh.write (item.text)
 
 def chapterToHtml (p, xmlfile, item):
-    p.fh.write (str (Heading (1, item.attr['title'])))
+    p.fh.write (str (Heading (1, RawText (item.attr['title']))))
     xmlfile.processRecursive (p, item.content)
 
 def sectionToHtml (p, xmlfile, item):
-    p.fh.write (str (Heading (2, item.attr['title'])))
+    p.fh.write (str (Heading (2, RawText (item.attr['title']))))
     xmlfile.processRecursive (p, item.content)
 
 def subsectionToHtml (p, xmlfile, item):
-    p.fh.write (str (Heading (3, item.attr['title'])))
+    p.fh.write (str (Heading (3, RawText (item.attr['title']))))
     xmlfile.processRecursive (p, item.content)
 
 def emailToHtml (p, xmlfile, item):
@@ -244,6 +244,46 @@ def adocInputToHtml (p, xmlfile, item):
 
     return str (dl)
 
+def adocSeeAlsoToHtml (p, xmlfile, item):
+    '''<seealso><item>description</item>...</seealso>'''
+    
+    list = []
+    
+    for child in item.content:
+	if isinstance (child, xmlsupport.Tag):
+	    if child.name != 'item':
+		raise 'Unexpected element <%s> in <seealso> (%s)' % (child.name, `item`)
+	    
+	    p.fh = cStringIO.StringIO ()
+	    xmlfile.processRecursive (p, child.content)
+	    s = p.fh.getvalue ()
+	    p.fh.close ()
+	    list.append (s)
+
+    return string.join (list, ', ')
+
+def adocAutodocToHtml (p, xmlfile, dict, key):
+    name = string.upper (key)
+    item = dict[key]
+    if key == 'input':
+	s = adocInputToHtml (p, xmlfile, item)
+    elif key == 'seealso':
+	s = adocSeeAlsoToHtml (p, xmlfile, item)
+    else:
+	list = item.content
+	if not isinstance (list[0], xmlsupport.Tag) or \
+	    list[0].name != 'p':
+	    par = xmlsupport.Tag ('p')
+	    par.setContents (list)
+	    list = [par]
+
+	p.fh = cStringIO.StringIO ()
+	xmlfile.processRecursive (p, item.content)
+	s = p.fh.getvalue ()
+	p.fh.close ()
+
+    return name, s
+
 def autodocToHtml (p, xmlfile, item):
     '''An autodoc element contains these children:
 
@@ -270,24 +310,13 @@ def autodocToHtml (p, xmlfile, item):
 	if not dict.has_key (key):
 	    raise '<autodoc> element is missing the mandatory element <%s> (%s)' % (key, `item`)
 	
-	name = string.upper (key)
+	dl.append ((adocAutodocToHtml (p, xmlfile, dict, key)))
+
+    for key in ('notes', 'bugs', 'seealso'):
+	if not dict.has_key (key):
+	    continue
 	
-	if key == 'input':
-	    s = adocInputToHtml (p, xmlfile, dict[key])
-	else:
-	    list = dict[key].content
-	    if not isinstance (list[0], xmlsupport.Tag) or \
-		list[0].name != 'p':
-		par = xmlsupport.Tag ('p')
-		par.setContents (list)
-		list = [par]
-
-	    p.fh = cStringIO.StringIO ()
-	    xmlfile.processRecursive (p, dict[key].content)
-	    s = p.fh.getvalue ()
-	    p.fh.close ()
-
-	dl.append ((name, s))
+	dl.append ((adocAutodocToHtml (p, xmlfile, dict, key)))
 
     p.fh = oldFH
     p.fh.write (str (dl))
