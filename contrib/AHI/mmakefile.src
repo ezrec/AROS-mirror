@@ -2,23 +2,21 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+#MM- contrib-quick : contrib-AHI-quick
+#MM- contrib       : contrib-AHI
 
-EXEDIR   := $(CONTRIBDIR)/AHI
-BUILDDIR := $(GENDIR)/$(CURDIR)
+#MM- AHI-quick : contrib-AHI-quick
+#MM- AHI       : contrib-AHI
 
-#MM contrib-AHI
-contrib-AHI: $(BUILDDIR)/.configured 
-	PATH=$$PATH:$(TOOLDIR) $(MAKE) -C $(BUILDDIR) all install
-	cp $(TOP)/$(CURDIR)/AHI-Startup $(EXEDIR)
+EXEDIR := $(CONTRIBDIR)/AHI
 
-$(BUILDDIR)/.configured:
-	%mkdirs_q $(BUILDDIR)
-	cd $(BUILDDIR)                                          ; \
-	$(RM) config.cache                                      ; \
-	PATH=$$PATH:$(TOOLDIR) $(TOP)/$(CURDIR)/configure         \
-            --host=$(CPU)-$(ARCH)-aros --prefix=$(EXEDIR)       ; \
-	$(ECHO) YES >$@
+%build_with_configure mmake=contrib-AHI prefix=$(EXEDIR)
 
-#MM contrib-AHI-clean
-contrib-AHI-clean:
-	@$(RM) $(BUILDDIR)
+#MM contrib-AHI-quick : contrib-AHI-copy-stuff
+
+#MM
+contrib-AHI-copy-stuff : $(EXEDIR)/AHI-Startup
+
+$(EXEDIR)/AHI-Startup : AHI-Startup
+	%mkdirs_q $(EXEDIR)
+	cp $< $@
