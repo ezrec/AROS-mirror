@@ -14,7 +14,7 @@ with AmigaOS 3.1 has been more or less finished.
 .. Contents::
 
 
-Miscellanous
+Miscellaneous
 ============
 
 All lists and public structures must be protected by semaphores

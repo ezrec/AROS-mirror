@@ -179,7 +179,7 @@ class Input( Standard ):
         Standard.__init__( self, 'input', attributes, contents )
 
 
-# Miscellanous classes
+# Miscellaneous classes
 # ====================
 
 class A( Standard ):
