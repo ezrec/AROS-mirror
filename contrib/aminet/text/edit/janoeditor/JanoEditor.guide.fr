@@ -1,0 +1,588 @@
+@DATABASE JanoDoc
+$VER: Documentation de JanoEditor
+@AUTHOR cyrille.guillaume@wanadoo.fr, tpierron@free.fr
+@node MAIN "JanoEditor v1.01"
+
+
+		  ####     #à     ##à.  ##  .d###b.
+		    ##    é##à    ###à. ##  d#' `#b
+		    ##   é# `#à   ##`#à.##  ##   ##
+		##__#p  é#====#à  ## `####  q#. .#p
+		*###*   ##    ##  ##  `###   *###*   Editor v1.01
+
+	@{b}========================= LES AUTEURS ==========================@{ub}
+	@{b}Cyrille Guillaume@{ub}...................@{i}cyrille.guillaume@wanadoo.fr@{ui}
+	@{b}Thierry Pierron@{ub}.................................@{i}tpierron@free.fr@{ui}
+	@{b}Site web@{ub}..............@{i}http://perso.wanadoo.fr/cyrille.guillaume/@{ui}
+	@{b}================================================================@{ub}
+	
+
+  @{fg SHINE}@{"   Introduction   " link Intro }@{fg TEXT}		Pourquoi ce logiciel
+
+  @{fg SHINE}@{"       Usage      " link Usage }@{fg TEXT}		Comment l'utiliser
+
+  @{fg SHINE}@{"    Historique    " link Story }@{fg TEXT}		Les améliorations depuis la ß1
+
+  @{fg SHINE}@{" Futures versions " link Futur }@{fg TEXT}		Les versions suivantes
+
+  @{fg SHINE}@{"      Sources     " link Source }@{fg TEXT}		Notes à propos des sources
+
+@endnode
+@node Intro "Introduction"
+
+		______________
+		 @{b}INTRODUCTION@{ub}
+		¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+Jano est un éditeur de texte gratuit pour Amiga programmé par Cyrille GUILLAUME
+et Thierry PIERRON. Notre but est de concevoir un éditeur de texte simple,
+rapide, ergonomique, efficace, inter-opérable et le moment venu, distribué en free
+software.
+Rien à voir avec les usines à gaz habituelles, où il faut trois heures de char-
+gement (GoldED, Emacs, ...), 6 mois d'apprentissage (vi, ed, ...), 8Mo de RAM
+pour se retrouver face à un outil à l'ergonomie douteuse. Il existe bien-sûr
+des outils se rapprochant de Jano sur Amiga, malheureusement leur développement
+semble arrêté, inutile de faire une liste, il suffit de regarder dans
+/text/editor sur Aminet.
+
+
+Aussi, si vous l'utilisez, envoyez un mail pour nous encourager avec comme
+sujet [JANO], à:
+@{b}cyrille.guillaume@wanadoo.fr@{ub}
+
+@endnode
+@node Usage "Usage de Jano"
+
+			________________________________
+			   @{b}MANUEL UTILISATEUR DE JANO@{ub}
+			¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+  @{fg shine}1. Introduction@{fg text}
+
+Cet éditeur de texte a avant tout été conçu pour être le plus simple possible.
+Nous espérons avoir atteint notre but de ce point de vue, en respectant autant
+que possible les standards en vigueurs sur Amiga. Inutile de préciser donc
+que vous en apprendrez autant en essayant directement Jano. Vous verrez, c'est
+l'adopter.
+
+  @{fg shine}2. Lancement@{fg text}
+
+Jano peut être lancé soit du @{b}CLI@{ub} soit du @{b}Workbench@{ub}. Il accepte un nombre
+quelconque de fichier en argument, y compris des motifs AmigaDOS. A noter que les
+le drag'n drop d'icônes sous Workbench ne fonctionne pas encore. Patience, c'est
+prévu.
+
+Bien-sûr pour fonctionner, Jano à besoin du Workbench 2.0 ou supérieur ainsi
+que des bibliothèques suivantes dans votre répertoire "libs:"
+   * @{b}asl.library v36  @{ub}   Pour utiliser les requêtes de fichiers
+   * @{b}diskfont.library @{ub}   Pour changer la ou les polices de l'éditeur
+   * @{b}locale.library   @{ub}   Pour utiliser une autre langue que l'anglais.
+Rien de bien phénoménal en somme.
+
+  @{fg shine}3. Utilisation@{fg text}
+
+Si tout c'est bien passé, vous vous retrouverez face à l'éditeur. Vous pouvez
+dès lors saisir votre texte ou utiliser les commandes du menu. Celles-ci
+sont assez explicites, mais si vous voulez une documentation de référence,
+vous pouvez voir le @{b}détail des menus@{ub}:
+
+ @{" Projet " link ProjectMenu}  @{" Édition " link EditMenu}  @{" Recherche " link SearchMenu}  @{" Macro " link MacroMenu}  @{" Paramétrage " link SettingMenu}
+
+Pour connaître aussi tous les raccourcis des @{b}touches spéciales@{ub} de Jano, vous
+pouvez aussi consulter la section @{"Raccourcis clavier" link KeyBindings}.
+
+Il est aussi possible d'améliorer l'@{b}environnement de Jano@{ub}. Pour cela, un
+éditeur de préférence à part est fournit. Il peut aussi bien éditer les
+fichiers de préférences que la configuration interne de Jano. Pour en savoir
+plus, voyez la section @{"Préférences de Jano" link JanoPrefs}.
+
+  @{fg shine}4. Bugs@{fg text}
+
+On a fait du mieux qu'on a pu, pour avoir une version aussi propre que
+possible, mais si vous trouvez un bug, même minime, envoyez sans hésitez
+un mail à:
+	@{b}cyrille.guillaume@wanadoo.fr@{ub}
+En décrivant le mieux possible la nature du problème.
+
+Vous pouvez aussi faire part de toutes autres suggestions.
+
+@endnode
+@node ProjectMenu "JanoEditor: Le menu Projet"
+
+			______________________________
+			   @{b}JanoEditor: MENU PROJET@{ub}
+			¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+Voici une description succincte des entrées de ce menu. La plupart s'expliquent
+par elles-même. A noter que certains raccourcis ne sont pas représentés dans le
+menu pour éviter les menus trop larges où il n'y a que vide:
+
+  @{b}Nom du menu        Raccourci       Fonction@{ub}
+  Nouveau            Amiga-N       Crée un nouvel onglet avec un projet vide.
+  Ouvrir fichier     Amiga-O       Crée un nouvel onglet et charge le fichier demandé.
+  Charger fichier    Amiga-L       Charge le fichier demandé dans l'onglet courant.
+  Recharger          Amiga-Shift-L Recharge le projet courant. De cette façon, cela
+                                   réduira la fragmentation du fichier sur le disque,
+                                   mais le journal des modif. sera irrémédiablement
+                                   perdu.
+  Sauver             Amiga-W
+  Sauver sous        Amiga-Shift-W
+  Sauver changements Amiga-F
+  Information        Amiga-?       Affiche des infos. sur le fichier édité.
+  Fermer             Ctrl-Q        Ferme le fichier en cours d'édition.
+  Quitter            Amiga-Q       Ferme tous les fichiers, @{u}s'arrêtant@{uu} au premier
+                                   fichier modifié non-confirmé.
+
+@endnode
+@node EditMenu "JanoEditor: Le menu édition"
+
+			_______________________________
+			   @{b}JanoEditor: MENU ÉDITION@{ub}
+			¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+Ce menu contient les commandes pour gérer l'édition du fichier:
+
+  @{b}Nom du menu        Raccourci     Fonction@{ub}
+  Couper             Amiga-X       Copie le texte dans le presse-papiers et l'efface
+                                   du fichier édité.
+  Copier             Amiga-C       Copie le texte sélectionné dans le presse-papiers.
+  Coller             Amiga-V       Copie le texte du presse-papiers dans le fichier.
+                                   A noter que le curseur sera déplacé en fin du bloc,
+                                   pour que le curseur reste au début appuyez sur Shift.
+  Marquer            Amiga-B       Change le curseur en mode sélection de caractère
+                                   A noter qu'en utilisant une seconde fois ce menu,
+                                   vous passerez en mode sélection de mots, puis en
+                                   mode sélection de ligne.
+  Marquer colonne    Amiga-Shift-B Sélection du texte par bloc rectangulaire.
+  Tout sélectionner  Amiga-A
+  Effacer ligne      Amiga-K ou Amiga-BS
+  Outils »                         S'applique au caractère sous le curseur ou à tout
+                                   le bloc s'il y en a un de sélectionné. Pour
+                                   l'indentation de bloc, cela fonctionne aussi bien
+                                   avec des tabulations que des espaces.
+  Insérer            Amiga-I       Insère un fichier à la position du curseur.
+  Annuler            Amiga-U       @{u}Toutes@{uu} les modifications sont enregistrées, vous
+                                   pouvez les annuler une à une, avec ce menu.
+  Refaire            Amiga-Shift-U Refait la dernière opération annulée.
+
+@endnode
+@node SearchMenu "JanoEditor: Le menu de recherche"
+
+			_________________________________
+			   @{b}JanoEditor: MENU RECHERCHE@{ub}
+			¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+Contient les commandes pour rechercher une ligne dans un fichier:
+
+  @{b}Nom du menu        Raccourci        Fonction@{ub}
+  Chercher           Amiga-S          Ouvre une requête pour rechercher un texte.
+  Remplacer          Amiga-R          Remplacement de texte.
+  Chercher »                          Pour la recherche d'une autre occurrence.
+  Page précédente    PgUp ou Ctrl-Nk9
+  Page suivante      PgDn ou Ctrl-Nk3
+  Aller à la ligne   Amiga-J
+  Verif. Parenth.    Amiga-[          Positionne le curseur sur la parenthèse réciproque.
+                                      Les parenthèses reconnues sont:[, (, { et <.
+  Dernière modif.    Ctrl-Z           Va à l'endroit de la dernière modification.
+  Début de ligne     Home ou Ctrl-Nk7
+  Fin de ligne       End ou Ctrl-Nk1
+
+Dans la fenêtre de recherche, les raccourcis suivant sont reconnus:
+
+  @{b}Raccourcis         Fonction@{ub}
+  Q ou C             Ferme la fenêtre et annule les modifications.
+  Echap ou U         Ferme la fenêtre en enregistrant les modifications.
+  N                  Recherche l'occurrence suivante.
+  P                  Recherche l'occurrence précédente.
+  R                  Remplacement si l'expression concorde.
+  / ou F             Active la zone de recherche de motif.
+  S                  Active la zone de remplacement, si présente.
+  Shift A            Tout remplacer.
+
+Note: Les expressions régulières ne sont pas encore supportées.
+
+Note 2: Pour faciliter la recherche d'une occurence d'un mot, vous pouvez
+placer le curseur sur l'un d'eux et appuyer sur 'Ctrl S' pour rechercher
+la @{b}prochaine occurence@{ub} de ce mot. Pour rechercher @{b}la précédente@{ub}, appuyez
+sur 'Shift Ctrl S'.
+
+@endnode
+@node MacroMenu "JanoEditor: Enregistrement de macros"
+			___________________________
+			   @{b}JanoEditor: MENU MACRO@{ub}
+			¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+Ce menu permet l'enregistrement d'une séquence de touche et qui peut
+être par la suite répétée un certain nombre de fois.
+
+  @{b}Nom du menu               Raccourci   Fonction@{ub}
+  Début de l'enregistrement Ctrl [      Toutes séquences de touche qui suit sera
+                                        enregistrée, à l'exception des déplacements
+                                        de la souris et des actions externes à la
+                                        fenêtre d'édition.
+  Fin de l'enregistrement   Ctrl ]      Termine l'enregistrement. A noter que si
+                                        aucune action n'a été faite, l'éventuelle
+                                        macro précédemment enregistrée ne sera pas
+                                        effacée.
+  Exécuter la macro         Amiga+M     Refait la séquence d'action une seule fois.
+  Répéter la macro                      Refait la macro une ou plusieurs fois.
+
+Note: Pour savoir si une macro est en cours d'enregistrement, un @{b}marqueur [ENR]@{ub}
+est affiché dans la barre de titre.
+
+@endnode
+@node SettingMenu "JanoEditor: Le menu de paramétrage"
+
+			_________________________________
+			   @{b}JanoEditor: MENU PARAMÉTRAGE@{ub}
+			¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+Contient les outils pour configurer l'éditeur
+
+  @{b}Nom du menu        Raccourci   Fonction@{ub}
+  Mode d'écran       Amiga-D     Pour faire passer Jano sur un écran privé.
+  Police                         Change la police de l'éditeur
+  Paramétrage gén.   Amiga-T     Lance l'éditeur de préférence @{"JanoPrefs" link JanoPrefs}.
+  Charger param.                 Modifie les paramètres depuis un fichier
+  Sauver param.                  Sauvegarde toute la configuration de Jano, @{u}y compris@{uu}
+                                 la position de la fenêtre d'édition.
+
+@endnode
+@node KeyBindings "JanoEditor: Les raccourcis claviers"
+
+			__________________________________________
+			   @{b}JanoEditor: LES RACCOURCIS CLAVIERS@{ub}
+			¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+Cette partie n'est là que pour être exhaustive. Elle indique tous les
+raccourcis claviers qui ne sont pas indiqués dans les menus:
+
+  @{b}Raccourcis         Fonction@{ub}
+  Alt-curseur        Déplacement par mots.
+  Shift-curseur      Déplace le curseur à l'extrémité de l'écran ou d'une page
+                     s'il y est déjà.
+  Ctrl curseur       Déplace le curseur aux extrémités du fichier.
+  Alt Shift curseur  Déplace l'écran avec le curseur.
+  Ctrl+pave num.     Force l'usage d'un pavé numérique de type PC.
+  Ctrl+Shift+<-, ->  Active le projet précédent/suivant (si possible).
+  Ctrl+0 ... 9       Active le nième projet (rq: 0 = 10).
+  Amiga Shift Q      Quitte en sauvegardant les projets modifiés.
+  Ctrl Shift Q       Ferme le projet en le sauvegardant si nécessaire.
+  Ctrl+J             Jointure de ligne avec réduction des espaces initiaux en
+                     un seul.
+  Ctrl+Shift+R       Tout remplacer
+  Amiga+2 ... 9      Change la valeur des tabulations, sans changer celle des
+                     préférences de Jano.
+
+Il existe @{b}un raccourci spécial@{ub} pour les programmeurs C. Il est possible d'utiliser
+le raccourci Ctrl+Entrée pour @{b}inclure directement un fichier@{ub} sans passer par une
+requète ASL. Pour cela, il suffit de placer le curseur sur une directive #include
+et d'appuyez sur ces deux touches. Si le fichier est entouré de <>, le chemin sera
+préfixé de l'assignation logique "INCLUDE:", dans le cas contraire c'est le
+répertoire courant du document en cours qui sera utilisé. Par défaut, le fichier
+est ouvert dans un nouvel onglet. Pour utiliser l'onglet courant, appuyez en plus
+sur Shift.
+
+@endnode
+@node JanoPrefs "Éditeur de préférences de Jano"
+
+		________________________________________
+		 @{b}JanoPrefs: L'ÉDITEUR DE PRÉFÉRENCES@{ub}
+		¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+  @{fg shine}1. Introduction@{fg text}
+
+Depuis la version 1.0, l'éditeur de préférence est un programme séparé de
+Jano, afin d'alléger le programme principal. JanoPrefs peut-être soit lancé
+à part, soit lorsque Jano tourne en arrière plan. Dans ce dernier cas,
+JanoPrefs sera suffisamment intelligent pour retrouver l'éditeur, lui
+demander sa configuration courante et vous laisser le loisir de la modifier.
+Vous pourrez bien-sûr appliquer ces changements de manière dynamique à Jano.
+
+
+  @{fg shine}2. Lancement@{fg text}
+
+Un menu intégré à Jano permet de lancer l'éditeur directement, ou en utilisant le
+raccourci Amiga+T. Pour cela, Jano regarde à divers endroit où il s'attend à trouver
+l'éditeur de préférence, avec dans l'ordre:
+	1. SYS:Prefs/JanoPrefs
+	2. Prefs/JanoPrefs         (ie: depuis le répertoire courant de Jano)
+	3. JanoPrefs               (ie: accessible dans un des répertoire du "path")
+
+Si vous le lancez indépendamment, JanoPrefs essayera de charger le fichier
+"ENVARC:JanoEditor.prefs". Si ce dernier n'existe pas, les préférences par
+défaut seront affichées. Pour savoir si l'éditeur a été trouvé, dans la
+barre de titre de la fenêtre il est normallement indiqué "Paramétrage général",
+dans le cas contraire, c'est le chemin d'accès au fichier de préférence
+qui apparaît.
+
+
+  @{fg shine}3. Utilisation@{fg text}
+
+L'utilisation de l'éditeur est relativement simple. Néanmoins, pour ceux qui
+désirent tout savoir, voici la description de toutes les commandes du programme:
+
+  @{b}Tabulation:@{ub}
+  Spécifie la taille des tabulations entre 2 et 99 (y compris). Raccourci: T.
+
+  @{b}Séparateurs:@{ub}
+  Indique quels caractères doivent être considérés comme étant des séparateurs
+  de mots, pour sélectionner du texte, recherche des occurences de mots complet
+  ou pour l'annulation des modifications par mots. Faites donc attention à ce
+  que vous entrez.
+  Ce champ énumère simplement, un à un, tous les caractères devant être
+  considérés comme tel. A noter que l'on peut spécifier un intervalle (pris
+  dans le code ASCII ISO-Latin1) avec le caracètre '-' (moins) et donc pour
+  annuler la signification spéciale d'un caractère, il est possible de le 
+  réfixer avec '\\' (anti-slash)¹.
+  @{u}Par exemple@{uu}:
+    ";:.,?!\\-'"        Correspond aux sépérateurs habituels d'une langue.
+    "!-/:-?[-]^`{-¿×÷" L'intervalle par défaut.
+
+  Les sépérateurs par défaut sont plus adaptés aux langages de programmation,
+  ils peuvent être génants dans la mesure où cet ensemble découpe souvent les
+  mots en de trop petite partie.
+
+  @{b}Police texte:@{ub}
+  Police à chasse fixe utilisée pour éditer le fichier. La police par défaut
+  correspond à celle définie dans l'outil de préférence "Font".
+
+  @{b}Police d'écran:@{ub}
+  C'est la police utilisée pour représenter les menus, la barre des projets
+  et des fenêtres de l'application. Par défaut c'est aussi celle définie dans
+  ce même outil.
+
+  @{b}Mode d'écran:@{ub}
+  Permet d'indiquer où va s'ouvrir la fenêtre de Jano. Trois possibilités:
+	1. Écran par défaut: C'est l'écran actif au lancement de Jano.
+	2. Cloner parent: Jano ouvre son propre écran en copiant les paramètres
+	   de celui qui est actif au lancement du programme.
+	3. Personnalisé: Vous pouvez choisir votre propre taille et mode d'écran.
+
+  @{b}Mise en arrière plan:@{ub}
+  Si (et seulement si) vous utilisez un écran personnalisé, vous pouvez
+  cocher cette case et la fenêtre utilisée restera toujours en arrière plan
+  et ses bordures seront supprimées, pour garder un maximum d'espace.
+
+  @{b}Indentation automatique:@{ub}
+  Indente les lignes de façon automatique. C'est à dire qu'à chaque fois que vous
+  appuyez sur Entrée, Jano recopiera exactement les premiers espaces et tabulations
+  de la ligne précédente, sur la nouvelle ligne créée.
+
+  @{b}Pavé numérique étendu:@{ub}
+  Force l'utilisation d'un pavé numérique de type PC, sans être obligé d'appuyer
+  sur la touche Ctrl.
+
+  @{b}Couleur personnalisée:@{ub}
+  Cela permet de changer très finement les couleurs de l'éditeur. A noter que si vous
+  avez un Amiga de base, cela peut influencer la vitesse de défilement du texte.
+  Par défaut les couleurs sont réglées pour apporter une vitesse maximale.
+
+  @{b}Comment ça marche?@{ub}
+  Note: cette partie est technique et non indispensable à l'utilisation de l'éditeur.
+
+  Ce phénomène est du à l'Amiga qui affiche les couleurs en bit-plan: un bit-plan est
+  une matrice de la taille de l'écran où chaque pixel est représenté par un unique
+  bit (0 ou 1). C'est en combinant donc ces bit-plans qu'on peut afficher plus que 2
+  couleurs. Or plus il y a de couleurs, plus c'est lent à traiter (puisqu'il y a
+  plus de bit-plan): c'est ce qui peut se passer lorsque vous choisissez les couleurs
+  de la zone d'édition. Par défaut, les réglages ne font intervenir qu'un bit-plan,
+  en utilisant les couleurs 0 pour le fond et 1 pour le texte. Par contre, si vous
+  utiliser la couleur 2 pour le texte: deux bit-plans seront nécessaires, ce qui veut
+  dire que le défilement sera plus lent. Pour les matheux: le nombre de bit-plans
+  affectés est le nombre de bit à 1 avec le @{u}ou exclusif@{uu} entre la couleur
+  de fond et la couleur du texte.
+
+  @{b}Sauver/Utiliser/Annuler@{ub}
+  Pour enregistrer les modifications et envoyer le résultat à Jano, si ce dernier
+  est lancé. Raccourcis respectifs: S, U, Echap.
+
+@{fg highlight}Note 1@{fg text}
+  Hélas, en fonction de votre version d'amigaguide (ou de multiview), il se peut
+  qu'il y ait deux caractères anti-slash qui apparaîssent à cet endroit. Dans
+  la fenêtre de préférence il ne faut en mettre qu'@{b}un et un seul@{ub}.
+
+@endnode
+@node Story "Historique de Jano"
+
+		_____________
+		 @{b}HISTORIQUE:@{ub}
+		¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+@{b}ß1 17/08/1998@{ub}
+	Première version
+	Choix de la résolution
+	Charger
+	Sauvegarder
+	Saisie du texte
+	Scrolling vertical
+	Déplacement du curseur avec les flèches du clavier.
+	Touches Amiga-Q pour quitter rapidement
+	Touches d'effacement.
+
+@{b}ß2 24/08/1998@{ub}
+	Shift Up/Down pour monter et descendre pages/pages
+	Shift Left/Right pour aller en début ou en fin de ligne.
+	Une meilleure gestion des déplacements du curseur.
+	Suppression de ligne avec Amiga-K.
+	Amélioration de la gestion du menu.
+	La taille de l'écran est automatiquement en OVERSCANTEXT.
+	Ouvrir le fichier en argument.
+	Impression.
+	Meilleure gestion des requêtes de sauvegarde.
+
+@{b}ß3 29/08/1998@{ub}
+	Les tabulations
+	Un scrolling horizontal
+
+@{b}ß4 04/09/1998@{ub}
+	Un ascenseur (il ne peut pas encore être bougé avec la souris)
+	Un déplacement pages/pages plus rapide.
+	Un remplacement majuscule/minuscule avec AMIGA-g.
+	Le fonctionnement de la touche AMIGA-gauche.
+	Une belle icône (JanoEditor.info)
+
+@{b}ß5 04/10/1998@{ub}
+	Insertion de ligne avec Amiga-L.
+	Une meilleure gestion des effacements (en début et en fin de ligne).
+	Compilation pour 68000, à la demande de Krzysiek.
+
+@{b}ß6 07/11/1998@{ub}
+	Correction d'un bug (la première ligne ne s'effaçait pas avec Amiga-K)
+	Ajout de couper/copier dans le menu uniquement!
+	Fonction "coller". (elle est un peu lente!)
+	Fonction "copier". (1 ligne et non visible!)
+	Gestion de la souris
+	Localisation
+
+@{b}ß7 14/11/1998@{ub}
+	Choix des fontes.
+
+@{b}ß8 23/01/1999@{ub}
+	Catalogs deutsch et greek.
+	Un menu NewLook.
+	Correction d'un bug de décalage vertical
+	Correction d'un bug CloseCatalog() était lancé trop tôt.
+	Ajout dans le menu de undo/redo Search/Replace Mark/colonne.
+
+@{b}ß9 11/11/1999@{ub}
+	Correction d'un bug d'affichage pour certaines hauteurs d'écran.
+	Lancement d'une requête quand un screenmode n'est pas disponible
+	Est enregistré dans les préférences.
+	Le choix des fontes s'applique également sur la barre de menu.
+	Accélération de la fonction "coller".
+	Catalog Italiano (merci à Dolci Roberto).
+	Catalog Dutch (merci à Edwin de Koning).
+
+@{b}ß10 29/07/2000@{ub}
+	J'ai (T.Pierron) rejoint le développement en Janvier 2000. Je fus
+	intéressé par Jano pour sa légèreté et sa rapidité et aussi parce
+	que les éditeurs présent sur Aminet ne me satisfaisaient pas. Il y a
+	eu beaucoup de modifications, parmis les plus notables:
+
+	* Couper/copier/coller en bloc et en colonne.
+	* Fenêtre de paramétrage (elle était intégré à l'éditeur).
+	* Utilisation de l'éditeur dans une fenêtre (ie: sous le Workbench).
+	* Indentation automatique.
+	* Aller à la ligne.
+
+	Le scrolling utilisait encore BltBitmap: c'était rapide mais relativement
+	chaotique en multitâche.
+
+@{b}v1.0 1/7/2001@{ub}
+	Le grand chamboulement!
+	Que d'améliorations faites depuis la ß10. En vrac:
+	* Multi-projet avec une barre de menu, style NextStep.
+	* Chargement de fichier amélioré: plus rapide et permet de lire
+	  les fichiers MS-DOS et MACOS (encore faut-il les bonnes polices!).
+	* Sélection par ligne/mots et étendue au menu Édition->Outils.
+	* Séparation et amélioration de l'outil de configuration (JanoPrefs).
+	* Undo multiple.
+	* Chercher / Remplacer.
+	* Chargement / sauvegarde de préférences.
+	* Vérification des parenthèses.
+	Des centaines d'heures de développement, c'était le minimum!
+
+@{b}v1.01 12/8/2001@{ub}
+	Moins d'améliorations, mais néanmoins significatives:
+	* Redo multiple.
+	* Expressions régulières sous CLI et ASL.
+	* Arguments du workbench pris en compte.
+	* Modif des tabulations via Amiga+2 ... 9
+	* Rechargement et insertion de fichier
+	* Support de la directive #include
+	* Enregistrement de macros
+
+@endnode
+@node Futur "Fonctionnalités des versions futures"
+
+		_______________________
+		   @{b}VERSIONS FUTURES@{ub}
+		¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+Nous cherchons toujours à réaliser un éditeur digne de ce nom sur Amiga.
+Pour cela les prochaines améliorations prévues pour la version 1.02:
+
+	* Ergonomie encore améliorée.
+	* Des catalogs.
+	* Vue multiple sur le même fichier.
+
+C'est prévu, c'est sûr, mais pas pour tout de suite:
+	* Colorisation syntaxique.
+	* Portage sous d'autres systèmes (Unix)
+	
+	@{b}Et vos suggestions à:
+	mailto:@{ub}cyrille.guillaume@wanadoo.fr
+
+@endnode
+@node Source "Notes au sujet des sources"
+
+		______________________
+		   @{b}SOURCES DE JANO@{ub}
+		¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+Depuis la version 1.0, Jano est livré avec l'intégralité du code source,
+que vous pouvez vous même analyser, corriger, améliorer, prendre tout ou
+partie pour vos propres besoins, etc...
+Jano est écrit en C ANSI, pour un total d'environ 6100 lignes de codes. C'est
+donc une application relativement imposante, qui utilise deux méthodes pour
+recompiler les sources sans risque de migraine:
+	* @{b}La méthode propre@{ub}: en utilisant les Makefiles GNU.
+	* @{b}A l'arrache@{ub}: via de simples shell scripts.
+
+Pourquoi des scripts? En fait les outils GNU, bien que disponibles sur Amiga,
+sont assez délicats à utiliser, principalement à cause de la différence entre
+les chemins d'accès en vigueur sur Unix. Sans compter que les options à passer
+au compilateur (notamment SAS/C) sont particulièrement longues et laborieuses à
+entrer manuellement. Toutefois, Jano n'est pas si difficile que cela à compiler,
+un simple "gcc #?.c -o jano" est théoriquement largement suffisant pour tout
+recompiler, le problème se complique dès lors qu'on veut optimiser un tant
+soit peu le code.
+
+
+  @{fg shine}1. Utilisation des Makefiles@{fg text}
+
+Pour @{b}recompiler le programme en utilisant gcc@{ub}, il suffit de taper dans un shell:
+	$ make
+Pour le recompiler en utilisant SAS/C:
+	$ make -f Makefile.SASC
+Pour enlever les fichiers temporaires, utilisez la commande:
+	$ make clean
+Ce n'est pas plus compliqué que cela. Notez qu'il faudra bien un @{b}make GNU@{ub}
+pour recompiler l'application.
+
+  @{fg shine}2. Utilisation du shell script@{fg text}
+
+Le shell script en question s'appelle "mked". Ce script utilise SAS/C comme
+compilateur et accepte un argument, dont voici les différentes valeurs
+possibles:
+	* all: recompile tous les fichiers sources et lance l'édition des liens.
+	* exe: lance l'édition des liens en utilisant les fichiers objets du
+	  répertoire courant.
+	* cat: recompile les catalogues de Jano en utilisant CatComp.
+	* @{i}fichier@{ui}.c: génère un fichier objet du fichier C.
+
+Comme on peut le voir, aucune dépendance entre les fichiers n'est gérée,
+pour cela il est indispensable d'utiliser les Makefiles.
+
+@endnode
