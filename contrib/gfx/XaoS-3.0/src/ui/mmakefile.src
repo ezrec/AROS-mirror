@@ -21,7 +21,6 @@ FILES := \
 #MM linklibs-xaosui : includes setup-gfx-xaos
 
 %make_linklib_setup mmake=linklibs-xaosui
-%make_vpath
 %make_linklib
 
 %common

@@ -32,7 +32,6 @@ FILES := \
 #MM linklibs-xaosengine : includes setup-gfx-xaos
 
 %make_linklib_setup mmake=linklibs-xaosengine
-%make_vpath
 %make_linklib
 
 %common

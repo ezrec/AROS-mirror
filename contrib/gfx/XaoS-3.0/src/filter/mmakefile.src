@@ -17,7 +17,6 @@ FILES := \
 #MM linklibs-xaosfilter : includes setup-gfx-xaos
 
 %make_linklib_setup mmake=linklibs-xaosfilter
-%make_vpath
 %make_linklib
 
 %common

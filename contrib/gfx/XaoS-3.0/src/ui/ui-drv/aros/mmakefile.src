@@ -13,7 +13,6 @@ FILES := ui_aros
 #MM linklibs-xaosuiaros : includes setup-gfx-xaos
 
 %make_linklib_setup mmake=linklibs-xaosuiaros
-%make_vpath
 %make_linklib
 
 %common
