@@ -219,7 +219,9 @@ _AHIsub_Start( ULONG                   flags,
     }
 
     // Since OSS kind of sucks, we have to close and reopen it here ...
-    
+
+    Forbid(); /* To prevent slave task from calling OSS_GetOutputInfo
+                 inbetween OSS_Open/OSS_Close */
     OSS_Close();
 
     if( ! OSS_Open( "/dev/dsp", FALSE, TRUE, FALSE ) )
@@ -227,7 +229,8 @@ _AHIsub_Start( ULONG                   flags,
       Req( "OSS device would not reopen." );
       return AHIE_UNKNOWN;
     }
-
+    Permit();
+    
     // 32 fragments times 256 bytes each
     
     if( ! OSS_SetFragmentSize( 32, 8 ) )
