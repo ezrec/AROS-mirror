@@ -1,0 +1,21 @@
+# Copyright © 1995-2003, The AROS Development Team. All rights reserved.
+# $Id$
+#
+# Makefile to make MystiCube.
+
+include $(TOP)/config/make.cfg
+
+FILES := mysticube logo
+
+EXEDIR := $(CONTRIBDIR)/Gfx/MystiCube
+
+USER_CFLAGS := -D__far
+
+##MM- contrib-gfx : contrib-gfx-mysticube
+#MM contrib-gfx-mysticube : includes linklibs contrib-gfx-libs-guigfx
+
+%build_prog mmake=contrib-gfx-mysticube \
+    progname=MystiCube targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="arossupport amiga arosc m"
+
+%common

@@ -1,0 +1,138 @@
+
+#include <intuition/intuition.h>
+
+#define PROGNAME				"MystiCube"
+#define	VERSION				    	" 1.0"
+
+#define	TASKPRIO				-2
+
+#define GUIGFX_VERSION			4
+
+#define	MAXFILENAMELEN			40
+#define	MAXPATHNAMELEN			2000
+
+#define	DEFAULT_WINTITLE		PROGNAME VERSION
+
+#define	DEFAULT_MINWIDTH		100
+#define	DEFAULT_MINHEIGHT		100
+#define	DEFAULT_MAXWIDTH		-1
+#define	DEFAULT_MAXHEIGHT		-1
+
+#define	BGCOLOR					0x003366
+
+#define	LOGOWIDTH				128
+#define	LOGOHEIGHT				128
+#define	LOGONUMCOLORS			256
+
+#define	HISTOGRAMTYPE			HSTYPE_12BIT_TURBO
+
+
+//	vector data
+
+#define XROT		0.02		// fraction of pi per 1/50 second
+#define YROT		0.011
+#define ZROT		0.007
+#define DISTANCE	7
+#define	ZOOM		4.5
+
+
+/*********************************************************************
+----------------------------------------------------------------------
+
+	structures
+
+----------------------------------------------------------------------
+*********************************************************************/
+
+struct mvwindow
+{
+	struct Screen *screen;
+	struct Window *window;
+
+	struct MsgPort *appmsgport;
+	struct AppWindow *appwindow;
+	ULONG appSignal;
+	ULONG idcmpSignal;
+
+	UWORD winleft, wintop;
+	UWORD winwidth, winheight;
+	UWORD innerwidth, innerheight;
+	UWORD innerleft, innertop;
+
+	WORD otherwinpos[4];			/* alternate window position x,y,w,h */
+};
+
+
+
+typedef struct point2d {WORD x, y;} point2d;
+typedef struct point3d {WORD x, y, z;} point3d;
+
+
+struct face
+{
+	PICTURE *texturepic;			// original texture
+	PICTURE *mappedtexturepic;		// texture mapped to drawhandle
+	APTR colorhandle;				// colorhandle for this texture
+
+	int a, b, c, d;					// edge indices
+	
+	point2d edges[4];				// current 2d coordinates
+
+	BOOL visible;					// currently visible?
+};
+
+
+struct cube
+{
+	point3d coords3d[8];
+	point2d coords2d[8];
+
+	struct face faces[6];
+	double xrot, yrot, zrot;
+
+	ULONG bgcolor;					// background color
+
+	PICTURE *defaultpic;			// default texture
+	PICTURE *mappeddefaultpic;		// default texture mapped to drawhandle
+	APTR defaultcolorhandle;		// colorhandle for the default texture
+
+	APTR psm;						// guigfx.library pen-sharemap
+	APTR drawhandle;				// guigfx.library drawhandle
+};
+
+
+
+
+
+
+/*********************************************************************
+----------------------------------------------------------------------
+
+	data
+
+----------------------------------------------------------------------
+*********************************************************************/
+
+struct Library *GuiGFXBase = NULL;
+PICTURE *logopic = NULL;
+
+extern UBYTE MysticLogo[LOGOWIDTH*LOGOHEIGHT];
+ULONG MysticLogoPalette[LOGONUMCOLORS] =
+{
+		0x00000000,0x002D1004,0x00310800,0x00391008,0x00391808,0x00391C10,0x00392D14,0x00450800,0x00491004,0x00491808,0x00511000,0x00492004,0x00511804,0x00551810,0x00492010,0x00452018,
+		0x00512008,0x00512010,0x00592008,0x00492814,0x00512810,0x00393120,0x00453120,0x00513118,0x00592810,0x00593518,0x00493928,0x00592010,0x00553120,0x00513924,0x00494128,0x00593924,
+		0x00553931,0x00494531,0x00554528,0x00554531,0x00591400,0x00591808,0x00651808,0x00692004,0x00612010,0x00612810,0x00711804,0x00712008,0x00692010,0x00692810,0x00612808,0x00692808,
+		0x00653110,0x00653118,0x00653120,0x00712810,0x00613920,0x00554520,0x00693920,0x00613931,0x00713518,0x00712808,0x00713110,0x00792004,0x00792804,0x00752818,0x00792810,0x00793110,
+		0x00793108,0x00793910,0x00793118,0x00713920,0x00694520,0x00793918,0x00694128,0x00594939,0x00694928,0x00654931,0x00714124,0x00793920,0x00794124,0x00654939,0x00862008,0x00862804,
+		0x00862010,0x00862810,0x00863108,0x00863110,0x008E2D08,0x00962804,0x00863118,0x008A3904,0x008E3110,0x008A3910,0x00794518,0x00863918,0x00863920,0x00864518,0x008E3918,0x00864124,
+		0x00963108,0x00963110,0x009A3908,0x00963118,0x00963914,0x008E3920,0x009E3914,0x009A4508,0x00964514,0x00794924,0x00714928,0x008E4124,0x008A4920,0x00754931,0x008A4928,0x00963920,
+		0x00964120,0x009A4920,0x009E4514,0x008A4931,0x00964928,0x00595131,0x00655131,0x00595139,0x00795531,0x00655139,0x00755139,0x00655141,0x00414141,0x00595545,0x00514149,0x00695941,
+		0x00795939,0x00865139,0x00715945,0x00695949,0x00795945,0x0069614D,0x008A5531,0x00756549,0x00964931,0x009A5528,0x00865939,0x00A64518,0x009E4928,0x00A64924,0x00A65514,0x00965535,
+		0x00865945,0x00866145,0x009E5535,0x00756151,0x00966139,0x00965945,0x00A63920,0x00A64931,0x00AA5128,0x00AA5131,0x00AE4931,0x00AA5935,0x008A6949,0x00797149,0x00867149,0x00AA6139,
+		0x00966549,0x00494949,0x00494149,0x00495959,0x00614159,0x00796955,0x00695169,0x00866955,0x00516161,0x00796D61,0x00714969,0x008A7555,0x00516961,0x00967551,0x00AA6545,0x00967559,
+		0x008E7561,0x00967965,0x00597169,0x009A8659,0x00B65939,0x00B66945,0x009A8665,0x008E5979,0x00616571,0x00617971,0x00617179,0x00965979,0x008E5179,0x00865179,0x00AE4924,0x00BE4924,
+		0x00B6552D,0x00C65528,0x00C65931,0x00BA6539,0x00CA6139,0x00C66945,0x00413941,0x00393141,0x009E5986,0x00965986,0x009E6186,0x00495969,0x00A6618E,0x00AE6196,0x00AE6996,0x00B66996,
+		0x00416169,0x00496971,0x00616186,0x00618679,0x00B66D9E,0x00BE699E,0x00202028,0x00BE719E,0x00C6719E,0x00C671A6,0x00CE79A6,0x00D679AE,0x00618E86,0x0061968E,0x00699E96,0x008686AE,
+		0x0071A696,0x0071A69E,0x0069A69E,0x00DF86B6,0x0071AEA6,0x0079B6A6,0x00E786BE,0x0079B6AE,0x0079BEAE,0x00101014,0x00EF8EBE,0x00F78EC6,0x0086C6B6,0x008ECEBE,0x00FF96CE,0x00AEAED6,
+		0x00FF9ED6,0x0086CEBE,0x008ED6BE,0x0096DFC6,0x008EDFC6,0x0096E7CE,0x00FF9EDF,0x009EF7D6,0x00FFA6DF,0x00FFA6E7,0x00FFAEE7,0x00A6FFDF,0x00AEFFE7,0x00B6FFF7,0x00BEFFFF,0x00FFFFFF,
+};

@@ -1,0 +1,86 @@
+
+MysticCube
+--------------------------------------
+
+  drag'n'drop picture viewer on a cube
+  
+  written by captain bifat
+  © 1997 TEK neoscientists
+
+  submit bug reports, ideas, comments to:
+
+  timm.mueller@darmstadt.netsurf.de
+  
+  www support site:
+  
+  tek.flynet.de/binarydistillery/index.html
+
+
+introduction
+--------------------------------------
+
+  welcome to another workbench toy.
+
+  MystiCube opens a scalable window on the default pubscreen
+  with a rotating, texture-mapped cube. you can drag'n'drop
+  pictures on the cube's faces in order to display them.
+
+  MystiCube works on all kinds of screen modes (including hi- and
+  truecolor).
+
+  press the 't' key for a frames-per-second counter.
+
+
+requirements
+--------------------------------------
+
+  - OS3.0 (v39)
+  - 68020
+  - datatypes.library v39
+  - guigfx.library v4
+  - render.library v27
+
+  supports
+  
+  - higher CPUs, FPU
+  - OS3.1
+  - CybergraphX, Picasso96
+
+
+demonstrated features
+--------------------------------------
+
+  MystiCube is a quick hack to demonstrate some features of
+  guigfx.library.
+
+  - dynamic palette creation with a set of different pictures
+  - screen-pen management
+  - datatype loading
+  - texture-mapping
+  
+  the source codes are included. feel free to cut'n'paste or
+  modify whatever you want.
+
+  guigfx.library is under development. updates, includes, and
+  autodocs are available at the Binary Distillery support site:
+  
+  tek.flynet.de/binarydistillery/guigfx.html
+
+
+legal status
+--------------------------------------
+
+  public domain
+
+
+author
+--------------------------------------
+
+  Timm S. Müller
+
+  timm.mueller@darmstadt.netsurf.de
+
+  homepage:
+  
+  tek.flynet.de/index.html
+
