@@ -814,21 +814,23 @@ extern char
 extern struct StringInfo namesinfo,funcsinfo;
 
 /* AROS: No point in __chip keyword */
+#ifdef _AROS
 #define __chip
+#endif
 
 #ifdef __SASC_60
-extern __chip USHORT
-	glass_data[2][18],uparrow_data[6],downarrow_data[6],
-	pageflip_data1[5],pageflip_data2[3];
+extern __chip UBYTE
+	glass_data[2][36],uparrow_data[12],downarrow_data[12],
+	pageflip_data1[10],pageflip_data2[6];
 #else
-extern USHORT
-	__chip glass_data[2][18],
-	__chip uparrow_data[6],
-	__chip downarrow_data[6],
-	__chip leftarrow_data[6],
-	__chip rightarrow_data[6],
-	__chip pageflip_data1[5],
-	__chip pageflip_data2[3];
+extern UBYTE
+	__chip glass_data[2][36],
+	__chip uparrow_data[12],
+	__chip downarrow_data[12],
+/*	__chip leftarrow_data[6],
+	__chip rightarrow_data[6],*/ /* AROS: unused ? */
+	__chip pageflip_data1[10],
+	__chip pageflip_data2[6];
 #endif
 
 extern struct IntuiMessage *getintuimsg();
