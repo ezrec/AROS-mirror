@@ -1,0 +1,248 @@
+struct gadgetstyle
+{
+	LONG outer1;
+	LONG outer2;
+	LONG inner1;
+	LONG inner2;
+	LONG outer1sel;
+	LONG outer2sel;
+	LONG inner1sel;
+	LONG inner2sel;
+	LONG outer1hi;
+	LONG outer2hi;
+	LONG inner1hi;
+	LONG inner2hi;
+	LONG bg;
+	LONG bgsel;
+	LONG bghi;
+	LONG fg;
+	LONG fgsel;
+	LONG fghi;
+};
+
+#define GADSTYLE_WIN95A 	0
+#define GADSTYLE_WIN95B 	1
+#define GADSTYLE_KDE			2
+#define GADSTYLE_QT			3
+#define GADSTYLE_MONOA		4
+#define GADSTYLE_MONOB		5
+#define GADSTYLE_AMITHICK	6
+#define GADSTYLE_AMITHIN	7
+#define NUM_GADGETSTYLES	8
+
+#define DR(x) (RCOLOR_DIRECT + (x))
+
+static struct gadgetstyle gadstylearray[NUM_GADGETSTYLES] =
+{
+	{	/* WIN95A */
+
+		-SHINEPEN,
+		-SHADOWPEN,
+		0xE0E0E0,
+		0x808080,
+
+		-SHADOWPEN,
+		-SHADOWPEN,
+		0x808080,
+		0x808080,
+
+		-SHINEPEN,
+		-SHADOWPEN,
+		0xE0E0E0,
+		0x808080,
+		
+		0xC0C0C0,
+		0xC0C0C0,
+		0xC0C0C0,
+		
+		-TEXTPEN,
+		-TEXTPEN,
+		-TEXTPEN	
+	},
+
+	{	/* WIN95B */
+
+		-SHINEPEN,
+		-SHADOWPEN,
+		0xE0E0E0,
+		0x808080,
+
+		-SHADOWPEN,
+		-SHINEPEN,
+		0x808080,
+		0xE0E0E0,
+
+		-SHINEPEN,
+		-SHADOWPEN,
+		0xE0E0E0,
+		0x808080,
+
+		0xC0C0C0,
+		0xC0C0C0,
+		0xC0C0C0,
+		
+		-TEXTPEN,
+		-TEXTPEN,
+		-TEXTPEN
+	},
+	
+	{	/* KDE */
+		
+		-SHINEPEN,
+		-SHADOWPEN,
+		0xDFDFDF,
+		0x626262,
+		
+		-SHADOWPEN,
+		-SHINEPEN,
+		0x626262,
+		0xC7C3C7,
+		
+		-SHINEPEN,
+		-SHADOWPEN,
+		0xDFDFDF,
+		0x626262,
+				
+		0xC7C3C7,
+		0xC7C3C7,
+		0xC7C3C7,
+		
+		-TEXTPEN,
+		-TEXTPEN,
+		-TEXTPEN
+	},
+
+	{	/* QT */
+		
+		-SHINEPEN,
+		0x868286,
+		-SHINEPEN,
+		0x868286,
+
+		0x868286,
+		-SHINEPEN,
+		0x868286,
+		-SHINEPEN,
+
+		-SHINEPEN,
+		0x868286,
+		-SHINEPEN,
+		0x868286,
+		
+		0xC7C3C7,
+		0xA7A3A7,
+		0xC7C3C7,
+		
+		-TEXTPEN,
+		-TEXTPEN,
+		-TEXTPEN
+	},
+
+	{	/* MONOA */
+		
+		DR(1),
+		DR(1),
+		RCOLOR_IGNORE,
+		RCOLOR_IGNORE,
+
+		DR(1),
+		DR(1),
+		RCOLOR_IGNORE,
+		RCOLOR_IGNORE,
+
+		DR(1),
+		DR(1),
+		RCOLOR_IGNORE,
+		RCOLOR_IGNORE,
+		
+		DR(0),
+		DR(1),
+		DR(0),
+		
+		DR(1),
+		DR(0),
+		DR(1)
+	},
+
+	{	/* MONOB */
+		
+		-SHADOWPEN,
+		-SHADOWPEN,
+		RCOLOR_IGNORE,
+		RCOLOR_IGNORE,
+
+		-SHADOWPEN,
+		-SHADOWPEN,
+		RCOLOR_IGNORE,
+		RCOLOR_IGNORE,
+
+		-SHADOWPEN,
+		-SHADOWPEN,
+		RCOLOR_IGNORE,
+		RCOLOR_IGNORE,
+		
+		-SHINEPEN,
+		-SHADOWPEN,
+		-SHINEPEN,
+		
+		-SHADOWPEN,
+		-SHINEPEN,
+		-SHADOWPEN
+	},
+
+	{	/* AMITHICK */
+		
+		-SHINEPEN,
+		-SHADOWPEN,
+		-SHINEPEN,
+		-SHADOWPEN,
+
+		-SHADOWPEN,
+		-SHINEPEN,
+		-SHADOWPEN,
+		-SHINEPEN,
+
+		-SHINEPEN,
+		-SHADOWPEN,
+		-SHINEPEN,
+		-SHADOWPEN,
+		
+		-BACKGROUNDPEN,
+		-FILLPEN,
+		-BACKGROUNDPEN,
+		
+		-TEXTPEN,
+		-FILLTEXTPEN,
+		-TEXTPEN
+	},
+
+	{	/* AMITHIN */
+		
+		-SHINEPEN,
+		-SHADOWPEN,
+		RCOLOR_IGNORE,
+		RCOLOR_IGNORE,
+
+		-SHADOWPEN,
+		-SHINEPEN,
+		RCOLOR_IGNORE,
+		RCOLOR_IGNORE,
+
+		-SHINEPEN,
+		-SHADOWPEN,
+		RCOLOR_IGNORE,
+		RCOLOR_IGNORE,
+		
+		-BACKGROUNDPEN,
+		-FILLPEN,
+		-BACKGROUNDPEN,
+		
+		-TEXTPEN,
+		-FILLTEXTPEN,
+		-TEXTPEN
+	}
+	
+	
+};
+
+
