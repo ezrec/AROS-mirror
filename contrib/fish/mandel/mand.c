@@ -85,6 +85,7 @@ struct   IntuitionBase *IntuitionBase;
 /* Added by hkiel@aros.org   */
 /* Correct them if YOU know  */
 /* what they do...           */
+void loc_abort(char *s);
 
 #warning FIXME: Original used Lattice which has stpblk()
 char *stpblk(char *string) /* Return pointer to next word in string */
@@ -153,37 +154,37 @@ main()
 
    color_table = (UWORD *)malloc(4096*sizeof(UWORD));
    if (color_table == NULL)
-      abort("Can't allocate memory for color table");
+      loc_abort("Can't allocate memory for color table");
    cur_resource |= F_COLORTAB;
 
    v_mand_store = (UWORD *)malloc(MAXX*max_mem_y*sizeof(UWORD));
    if (v_mand_store == NULL)
-      abort("Can't allocate memory for set storage");
+      loc_abort("Can't allocate memory for set storage");
    cur_resource |= F_SETSTORE;
 
    MathBase = (struct MathBase *)OpenLibrary("mathffp.library",0);
    if (MathBase == NULL)
-      abort("Can't open mathffp.library");
+      loc_abort("Can't open mathffp.library");
    cur_resource |= F_MATH;
 
    MathTransBase = (struct MathTransBase*)OpenLibrary("mathtrans.library",0);
    if (MathTransBase == NULL)
-      abort("Can't open mathtrans.library");
+      loc_abort("Can't open mathtrans.library");
    cur_resource |= F_MATHTRANS;
 
    GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0);
    if (GfxBase == NULL)
-      abort("Can't open graphics.library");
+      loc_abort("Can't open graphics.library");
    cur_resource |= F_GRAPHICS;
  
    IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
    if (IntuitionBase == NULL)
-      abort("Can't open intuition.library");
+      loc_abort("Can't open intuition.library");
    cur_resource |= F_INTUITION;
 
    console = fopen("con:0/0/640/200/Mandelbrot Commands","w+");
    if (console == NULL)
-      abort("Can't open console window");
+      loc_abort("Can't open console window");
    cur_resource |= F_CONSOLE;
 
    fprintf(console,
@@ -362,7 +363,7 @@ command:
                   fputs("Can't allocate that much memory for set storage",console);
                   v_mand_store = (UWORD *)malloc(MAXX*max_mem_y*sizeof(UWORD));
                   if (v_mand_store == NULL)
-                     abort("Can't reallocate memory!!!");
+                     loc_abort("Can't reallocate memory!!!");
                   goto command;
                }
                max_mem_y = temp;
@@ -568,7 +569,7 @@ command:
                fprintf(console,"Can't open file %s!\n",stpblk(cmd+1));
             goto command;
          case 'Q':
-            abort("Bye!");
+            loc_abort("Bye!");
          case '?':
          case 'H':
          default:
@@ -626,7 +627,7 @@ v_flush()
    modified = FALSE;
 }
 
-abort(s)
+void loc_abort(s)
 char *s;
 {
    if (cur_resource & F_MATHTRANS)

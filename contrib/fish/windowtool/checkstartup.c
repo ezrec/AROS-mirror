@@ -60,6 +60,9 @@ struct cliresults
 };
 struct cliresults clir={0,0,0,{0,0,0,0,0,0,0,0,0,0}};
 
+void ende(char *);
+
+
 void checkstartup(int argc,char *argv[],struct WBStartup *msg)
 {
 	int k;

@@ -5,6 +5,7 @@
  *                      ScreenZap
  */
  
+#include <stdlib.h>
 #include <intuition/intuitionbase.h>
 #include <graphics/gfxbase.h>
 #include <exec/ports.h>
@@ -111,7 +112,7 @@ struct Window *win;
 }
 
 /* bail out! */
-void abort(nr)
+void loc_abort(nr)
 int nr;
 {
 	CloseWindow(myw);
@@ -131,12 +132,12 @@ void OpenIt()
 	GfxBase = (struct GfxBase *)OpenLibrary("graphics.library",0L);
 	if (GfxBase == 0)
 	{
-	   abort(1);
+	   loc_abort(1);
 	}
 	myw = OpenWindow(&nw);
 	if (myw == 0)
 	{
-	   abort(2);
+	   loc_abort(2);
 	}
 	SetWindowTitles(myw,"Click To Zap Window Or Screen","ScreenZapper V2.3 (c) 1989 Lars R. Clausen. This Program is PD.");
 }
@@ -204,7 +205,7 @@ void WindowZap()
 							 "ScreenZapper V2.3 (c) 1989 Lars R. Clausen. This Program is PD.");
 			WaitPort(myw->UserPort);
 			UserMsg=(struct IntuiMessage *)GetMsg(myw->UserPort);
-			if (UserMsg->Class==CLOSEWINDOW) abort(0);
+			if (UserMsg->Class==CLOSEWINDOW) loc_abort(0);
 			else
 			SetWindowTitles(myw,"Thanks! Maybe the window has gone - try a Screen kill.",
 							 "ScreenZapper V2.3 (c) 1989 Lars R. Clausen. This Program is PD.");
@@ -237,5 +238,5 @@ void main()
 		WaitPort(myw->UserPort);
 	}
 	ReplyMsg((struct Message *)msg);
-	abort(0);
+	loc_abort(0);
 }

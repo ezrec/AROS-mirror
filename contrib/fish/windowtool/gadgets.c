@@ -1,3 +1,4 @@
+#include <string.h>
 #include <exec/types.h>
 #include <intuition/intuition.h>
 #include <intuition/gadgetclass.h>
@@ -58,8 +59,8 @@ struct TagItem    WindowTags[] = {
     {WA_Zoom,          (Tag)Zoom},
     {TAG_DONE }};
 
-struct IntuiText  IText[] = {
-    2, 0, JAM1,45, 17, &topaz8, (UBYTE *)"Hotkeys:", NULL };
+struct IntuiText  IText[] = { {
+    2, 0, JAM1,45, 17, &topaz8, (UBYTE *)"Hotkeys:", NULL } };
 
 struct NewMenu NewMenu[] = {
     {NM_TITLE, "Project", 0l, 0, 0, 0l},

@@ -12,6 +12,8 @@
 #define VERSIONSTRING "1.00"
 #define DATESTRING __DATE__" "__TIME__
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <exec/exec.h>
 #include <exec/types.h>
 #include <graphics/displayinfo.h>
@@ -101,6 +103,7 @@ void openrest(void);
 void setkeys(void);
 void switchstate(void);
 void about(void);
+void cycle(void);
 
 BOOL state=0;						/* Status 0=Normal,~0=Dauerabfrage */
 #define POPUPFLAG 1

@@ -63,6 +63,7 @@ extern FILE *console,*v_fp,*redir_fp;
 extern SHORT ZoomCenterX, ZoomCenterY, ZoomBoxSizeX, ZoomBoxSizeY;
 extern SHORT ZoomBoxStartX, ZoomBoxStartY;
 
+void loc_abort(char *s);
 
 /*----------------*/
 /* Color routines */
@@ -145,7 +146,7 @@ gen_mand()
 
    v_fp = fopen("Mandelbrot.temp.file","w+");
    if (v_fp == NULL) {
-      abort("Can't open temporary file!");
+      loc_abort("Can't open temporary file!");
    }
 
    v_starty = 1;

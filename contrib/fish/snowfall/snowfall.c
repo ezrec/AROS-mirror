@@ -3,7 +3,7 @@
 #include <graphics/gfxbase.h>
 #include <exec/memory.h>
 #include <stdio.h>
-//#include <stdlib.h> // Don't include it!!!
+#include <stdlib.h>
 #include "myiff.h"
 #include <ctype.h>
 
@@ -25,7 +25,7 @@ int LoadPicture( char *);
 int  GetBMHD(FILE *fd, struct BitMapHeader *bmhd, long *formsize);
 int GetCMap(FILE *fd,long *formsize,UWORD *colortable,UWORD *modes);
 int LoadBitMap (FILE *fd, struct ViewPort *vp, struct BitMapHeader *header);
-
+void loc_abort(char *errortext);
 
 void OpenAll(filename,backup)
 char *filename;
@@ -33,17 +33,17 @@ int backup;
 {
 	long sec,mic;
 	
-	if ((GfxBase=(struct GfxBase *)OpenLibrary("graphics.library",0L))==0) abort("No gfxbase");
+	if ((GfxBase=(struct GfxBase *)OpenLibrary("graphics.library",0L))==0) loc_abort("No gfxbase");
 	if ((IntuitionBase=(struct IntuitionBase *)OpenLibrary("intuition.library",0L))==0)
-		abort("No intuition");
+		loc_abort("No intuition");
 	CurrentTime(&sec,&mic);
 	srand((int)mic);
-	if ((LoadPicture(filename))==0) abort("Can't load picture");
+	if ((LoadPicture(filename))==0) loc_abort("Can't load picture");
 	if (backup) 
 		BltBitMap(&s->BitMap,0L,0L,&bs->BitMap,0L,0L,(long)s->Width,(long)s->Height,0xC0L,0xFFL,0L);
 }
 
-void abort(errortext)
+void loc_abort(errortext)
 char *errortext;
 {
 	if (errortext!=0) puts(errortext);
@@ -84,13 +84,13 @@ char *filename;
 	ns.Depth=bmhd.nplanes;
 	ns.ViewModes=modes;
 	ns.Type=CUSTOMSCREEN;
-	if ((bs=OpenScreen(&ns))==0) abort("Can't open backupscreen");
-	if ((s=(struct Screen *)OpenScreen(&ns))==0) abort("No memory for screen");
+	if ((bs=OpenScreen(&ns))==0) loc_abort("Can't open backupscreen");
+	if ((s=(struct Screen *)OpenScreen(&ns))==0) loc_abort("No memory for screen");
 	LoadRGB4(&s->ViewPort,BlackColors,(long)1<<bmhd.nplanes);
 	nw.Screen=s;
 	nw.Width=bmhd.w;
 	nw.Height=bmhd.h;
-	if ((w=(struct Window *)OpenWindow(&nw))==0) abort("No window here");
+	if ((w=(struct Window *)OpenWindow(&nw))==0) loc_abort("No window here");
 	if (LoadBitMap(fd,&s->ViewPort,&bmhd)==-1) return(0);
 	LoadRGB4(&s->ViewPort,colortable,(long)1<<bmhd.nplanes);
 	return(1);
@@ -374,5 +374,5 @@ char **argv;
 	if (refresh>-1) OpenAll(file,1);
 	else OpenAll(file,0);
 	DoSnow((long)number,(long)refresh,(long)wind);
-	abort(0);
+	loc_abort(0);
 }
