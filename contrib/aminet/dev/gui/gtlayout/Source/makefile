@@ -89,7 +89,8 @@ UFC_SOURCE = \
 	LTP_HexEditRoutine \
 	LTP_DefaultHistoryHook \
 	LTP_DefaultEditRoutine \
-	LTP_BackFillRoutine
+	LTP_BackFillRoutine \
+	LTP_PasswordEditRoutine
 
 OTHERS = gtlayout_lib
 
@@ -142,7 +143,6 @@ FILES = \
 	LTP_Memory \
 	LTP_MoveToWindow \
 	LTP_NewMenu \
-	LTP_PasswordEditRoutine \
 	LTP_PlaceGroups \
 	LTP_PrintBoxLine \
 	LTP_PrintLabel \
