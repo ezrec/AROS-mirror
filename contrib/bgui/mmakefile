@@ -68,9 +68,6 @@ contrib-bgui : bgui-library bgui-gadgets bgui-test bgui-examples
 #MM contrib-bgui-setup : setup includes linklibs bgui-setup bgui-includes-copy
 contrib-bgui-setup : bgui-setup bgui-includes-copy
 
-#MM bgui-test
-bgui-test : test
-
 #MM bgui-gadgets : bgui-gadgets-common
 bgui-gadgets : gadgets
 
@@ -92,11 +89,6 @@ enhanced_build :
 
 build : bin/bgui.library.$(BUILD_TYPE) test examples
 # tools
-
-test: $(INCLUDE_FILES) $(test) compile_test
-
-compile_test :
-	$(MAKE) -Ctest -fMakefile.aros all
 
 examples: $(INCLUDE_FILES) compile_examples
 
