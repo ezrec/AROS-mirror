@@ -484,8 +484,13 @@ struct PacketRef {
         { ACTION_SET_OWNER,               MSG_ACT_SET_OWNER,               4, PK_BOOLEAN },
         { ACTION_DOUBLE,                  MSG_ACT_DOUBLE,                  3, PK_BOOLEAN },
         { ACTION_FORCE,                   MSG_ACT_FORCE,                   3, PK_BOOLEAN },
-        { ACTION_STACK,                   MSG_ACT_STACK,                   3, PK_BOOLEAN },
-        { ACTION_QUEUE,                   MSG_ACT_QUEUE,                   3, PK_BOOLEAN },
+
+/*
+ * Where are these supposed to be defined?
+ *
+ *        { ACTION_STACK,                   MSG_ACT_STACK,                   3, PK_BOOLEAN },
+ *        { ACTION_QUEUE,                   MSG_ACT_QUEUE,                   3, PK_BOOLEAN },
+ */
         { ACTION_DROP,                    MSG_ACT_DROP,                    1, PK_BOOLEAN },
         { ACTION_LOCK_RECORD,             MSG_ACT_LOCK_RECORD,     5, PK_BOOLEAN },
         { ACTION_FREE_RECORD,             MSG_ACT_FREE_RECORD,     3, PK_BOOLEAN },
@@ -859,7 +864,7 @@ void CleanupPatches(void)
                 pmsg.msg.mn_Node.ln_Name = NULL;
 
                 SetSignal(0, SIGF_SINGLE);              /* Ensure signal is clear first */
-                PutMsg(&BackgroundPort, &pmsg); /* Send quit message to process */
+                PutMsg(&BackgroundPort, (struct Message *)&pmsg); /* Send quit message to process */
                 Wait(SIGF_SINGLE);                              /* Wait for acknowledgement             */
         }
         if (NewEventSig    != -1) FreeSignal(NewEventSig),    NewEventSig    = -1;
@@ -985,8 +990,12 @@ void UpdateDeviceList(int method)
         while ((dlist = NextDosEntry(dlist, LDF_DEVICES))
                          && i < (MAX_DOS_DEVICES-1))
         {
+#ifdef _AROS
+	#warning Add AROS specific code for DosList access
+#else
                 if (dlist->dol_Task)
                         DeviceTaskList[i++] = dlist->dol_Task->mp_SigTask;
+#endif
         }
         UnLockDosList(LDF_DEVICES | LDF_READ);
         DeviceTaskList[i] = 0;
@@ -1163,7 +1172,7 @@ void LoadFuncSettings(FuncSettings *func)
  *              We keep going until we get a QUIT_MSG from the main task,
  *              at which point we exit.
  */
-void __saveds BackgroundProcCode(void)
+void SAVEDS BackgroundProcCode(void)
 {
 #if DEBUG_PATTERN
         BPTR dbfile = Open("CON:100/100/400/100/Pattern/WAIT/AUTO/CLOSE",
@@ -1377,7 +1386,7 @@ int CheckPattern(char *taskname, int namelen)
         pmsg.msg.mn_Node.ln_Name = NULL;
 
         SetSignal(0, SIGF_SINGLE);              /* Ensure signal is clear first         */
-        PutMsg(&BackgroundPort, &pmsg); /* Send request to background task      */
+        PutMsg(&BackgroundPort, (struct Message *)&pmsg); /* Send request to background task      */
         Wait(SIGF_SINGLE);                              /* Wait for acknowledgement                     */
         pc->match = pmsg.match;                 /* And save result in cache                     */
 
@@ -1409,16 +1418,26 @@ void GetVolName(BPTR lock, char *buf, int maxlen)
                 NameFromLock(lock, buf, maxlen);
                 return;
         }
+#ifdef _AROS
+		vol = BTOC(lock)
+#else
         vol = BTOC(((struct FileLock *)BTOC(lock))->fl_Volume);
+#endif
 
         if (UseDevNames == 0 || vol->dl_Task == NULL) {
                 /*
                  *              Use volume name, especially if the volume isn't currently
                  *              mounted!
                  */
-                UBYTE *volname = BTOC(vol->dl_Name);
-                int len = MIN(maxlen-2, *volname);
-
+				UBYTE *volname;
+				int len;
+#ifdef _AROS
+				volname = vol->dl_DevName;
+				len = MIN(maxlen-2,strlen(volname));
+#else
+                volname = BTOC(vol->dl_Name);
+                len = MIN(maxlen-2, *volname);
+#endif
                 memcpy(buf, volname+1, len);
                 buf[len++] = ':';
                 buf[len] = '\0';
