@@ -1,146 +1,149 @@
 BEGIN {
-	# Who did it ?
-	#system ("printenv > /tmp/cvs.env");
-	User=ENVIRON["CVSLOGINNAME"];
-	if (User == "")
-	    User=ENVIRON["LOGNAME"];
-	if (User == "")
-	    User=ENVIRON["USER"];
-	# Where is CVSROOT ?
-	CVSROOT=ENVIRON["CVSROOT"];
-	gsub(/:[a-z]+:.+@.+:/,"",CVSROOT);
+    # Who did it ?
+    #system ("printenv > /tmp/cvs.env");
+    User=ENVIRON["CVSLOGINNAME"];
+    if (User == "")
+	User=ENVIRON["LOGNAME"];
+    if (User == "")
+	User=ENVIRON["USER"];
+    # Where is CVSROOT ?
+    CVSROOT=ENVIRON["CVSROOT"];
+    gsub(/:[a-z]+:.+@.+:/,"",CVSROOT);
 
-	# Get the current date
-	cmd="date \"+%d.%m.%Y %X\"";
-	cmd | getline;
-	Date=$0;
-	close (cmd);
+    # Get the current date
+    cmd="date \"+%d.%m.%Y %X\"";
+    cmd | getline;
+    Date=$0;
+    close (cmd);
 
-	# First message: Who did it when ?
-	pout("* " User " " Date "\n\n");
+    # First message: Who did it when ?
+    pout("* " User " " Date "\n\n");
 
-	# Read the file which CVS generates
+    # Read the file which CVS generates
+    Dir="";
+    while (getline > 0)
+    {
+	# If there was only a single line after the last CVS header,
+	# then Dir is already set
+	if (Dir=="")
+	{
+	    # The first thing is "Update of x/y/z"
+	    Dir=$3
+	}
+
+	# Get rid of the CVSROOT in Dir
+	gsub(CVSROOT "/","",Dir);
+
+	# Skip until the filenames
+	while (getline > 0)
+	{
+	    if ($0 == "Modified Files:" || $0 == "Added Files:" || $0 == "Removed Files:")
+		break;
+	}
+
+	# Read in all filenames
+	nfiles=0;
+	if ($0 == "Modified Files:")
+	    app="(M)";
+	else if ($0 == "Added Files:")
+	    app="(A)";
+	else
+	    app="(R)";
+
+	while (getline > 0)
+	{
+	    # If we have reached the logmessages, terminate the loop
+	    if ($0 == "Log Message:")
+		break;
+
+	    # Don't add "Added" and "Files:" to the list of files :-)
+	    if ($0 == "Added Files:")
+	    {
+		app="(A)";
+		continue;
+	    }
+	    if ($0 == "Removed Files:")
+	    {
+		app="(R)";
+		continue;
+	    }
+
+	    # Add all filenames in the line
+	    for (t=1; t<=NF; t++)
+		file[nfiles++] = $t app;
+	}
+
+	# Now show the directory and all files
+	flist="    " Dir "/: ";
+	for (t=0; t<nfiles; t++)
+	{
+	    if (t!=nfiles-1)
+		flist=flist file[t] ", ";
+	    else
+		flist=flist file[t] ":";
+	}
+	flist=wrap(flist,70);
+	gsub ("\n","\n\t",flist);
+	gsub ("\t\n","\n",flist);
+	pout(flist);
+	pout("\n");
+
+	# Add the logmessage
+	ende=0;
+	logmsg="";
 	Dir="";
 	while (getline > 0)
 	{
-	    # If there was only a single line after the last CVS header,
-	    # then Dir is already set
-	    if (Dir=="")
+	    if ($0 == "")
 	    {
-		# The first thing is "Update of x/y/z"
-		Dir=$3
-	    }
+		ende ++;
 
-	    # Get rid of the CVSROOT in Dir
-	    gsub(CVSROOT "/","",Dir);
-
-	    # Skip until the filenames
-	    while (getline > 0)
-	    {
-		if ($0 == "Modified Files:" || $0 == "Added Files:" || $0 == "Removed Files:")
+		if (ende==2)
 		    break;
-	    }
 
-	    # Read in all filenames
-	    nfiles=0;
-	    if ($0 == "Modified Files:")
-		app="(M)";
-	    else if ($0 == "Added Files:")
-		app="(A)";
+		logmsg=logmsg $0 "\n";
+	    }
 	    else
-		app="(R)";
-
-	    while (getline > 0)
 	    {
-		# If we have reached the logmessages, terminate the loop
-		if ($0 == "Log Message:")
-		    break;
-
-		# Don't add "Added" and "Files:" to the list of files :-)
-		if ($0 == "Added Files:")
+		if (ende)
 		{
-		    app="(A)";
-		    continue;
-		}
-		if ($0 == "Removed Files:")
-		{
-		    app="(R)";
-		    continue;
-		}
-
-		# Add all filenames in the line
-		for (t=1; t<=NF; t++)
-		    file[nfiles++] = $t app;
-	    }
-
-	    # Now show the directory and all files
-	    flist="    " Dir "/: ";
-	    for (t=0; t<nfiles; t++)
-	    {
-		if (t!=nfiles-1)
-		    flist=flist file[t] ", ";
-		else
-		    flist=flist file[t] ":";
-	    }
-	    flist=wrap(flist,70);
-	    gsub ("\n","\n\t",flist);
-	    gsub ("\t\n","\n",flist);
-	    pout(flist);
-	    pout("\n");
-
-	    # Add the logmessage
-	    ende=0;
-	    logmsg="";
-	    Dir="";
-	    while (getline > 0)
-	    {
-		if ($0 == "")
-		{
-		    ende ++;
-
-		    if (ende==2)
-			break;
-
-		    logmsg=logmsg $0 "\n";
-		}
-		else
-		{
-		    if (ende)
+		    if ($1 == "Update" && $2 == "of" && match ($3,/(\/[-a-zA-Z0-9_.,]+)+/))
 		    {
-			if ($1 == "Update" && $2 == "of" && match ($3,/(\/[-a-zA-Z0-9_.,]+)+/))
-			{
-			    Dir = $3;
-			    break;
-			}
+			Dir = $3;
+			break;
 		    }
-
-		    ende=0;
-		    logmsg=logmsg $0 " ";
 		}
 
-		#pout("\t" $0 "\n");
+		ende=0;
+		logmsg=logmsg $0 " ";
 	    }
 
-	    gsub (/\n*$/,"",logmsg);
-	    gsub (/^\n*/,"",logmsg);
-	    logmsg=wrap(logmsg,70);
-#print "2" logmsg
-	    gsub ("\n","\n\t",logmsg);
-	    gsub ("\t\n","\n",logmsg);
-#print "3" logmsg
-	    pout("\t" logmsg);
-	    pout("\n");
+	    #pout("\t" $0 "\n");
 	}
 
-	close (Out);
-	close (Out ".new");
+	gsub (/\n*$/,"",logmsg);
+	gsub (/^\n*/,"",logmsg);
+	logmsg=wrap(logmsg,70);
+#print "2" logmsg
+	gsub ("\n","\n\t",logmsg);
+	gsub ("\t\n","\n",logmsg);
+#print "3" logmsg
+	pout("\t" logmsg);
+	pout("\n");
+    }
+
+    close (Out);
+    close (Out ".new");
 }
 
 function pout(str) {
     # Add a string to the file "Out" and "Out.new"
 #print str
     printf ("%s", str) >> Out;
-    printf ("%s", str) >> Out ".new";
+    # Find the first name in the path
+    match (Dir, /\//);
+    area = substr(Dir,1,RSTART);
+    printf ("%s", str) >> Out ".new." area;
 }
 
 function wrap(str,width         ,line,rest,pos) {
