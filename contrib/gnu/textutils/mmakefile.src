@@ -1,0 +1,26 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+##MM- contrib-gnu : contrib-gnu-textutils
+##MM- contrib-gnu-textutils : development-textutils
+
+#MM- development : development-textutils
+#MM development-textutils-build-quick : development-textutils-fetch
+
+ORIGINS := http://ftp.gnu.org/pub/gnu/textutils/
+
+#MM
+development-textutils-fetch :
+	%fetch archive=textutils-2.1.tar.gz destination=$(PORTDIR)/textutils archive_origins=$(ORIGINS) \
+	patches_specs=textutils-2.1-aros.diff:textutils-2.1:-p1
+
+%build_with_configure mmake=development-textutils-build configure=$(PORTDIR)/textutils/textutils-2.1/configure nix=yes \
+    prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development extraoptions="--target=$(AROS_TARGET_CPU)-aros \
+    --build=local --enable-longlong --disable-nls --enable-sjlj-exceptions"
+
+#MM- development-textutils : development-textutils-build 
+#MM- development-textutils-quick : development-gcc-build-quick 
+
+
