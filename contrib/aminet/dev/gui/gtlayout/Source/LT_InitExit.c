@@ -85,19 +85,17 @@ struct ClassInitEntry
 /*****************************************************************************/
 
 BOOL LIBENT
+#ifdef __AROS__
+LT_Init(struct ExecBase * AbsExecBase)
+#else
 LT_Init(VOID)
+#endif
 {
 	BOOL success = TRUE;
 
 	#ifndef LINK_LIB
 	{
-#ifdef __AROS__
-		struct ExecBase * AbsExecBase;
-		{
-			AROS_GET_SYSBASE
-			AbsExecBase = SysBase;
-		}
-#else
+#ifndef __AROS__
 		extern struct Library __far * AbsExecBase;
 #endif
 		SysBase = AbsExecBase;
@@ -160,7 +158,6 @@ LT_Init(VOID)
 		};
 
 		LONG i;
-
 #ifndef __AROS__
 		V39 = (BOOLEAN)(SysBase->lib_Version >= 39);
 		V40 = (BOOLEAN)(SysBase->lib_Version >= 40);
