@@ -515,8 +515,8 @@ streng *arexx_bittst( tsd_t *TSD, cparamboxptr parm1 )
 /* Help function for arexx_bitcomp */
 static int firstbit(char c)
 {
-  assert(c!=0);
   int i;
+  assert(c!=0);
   
   for( i=0; i<8; i++)
   {
