@@ -84,6 +84,11 @@ Nate Downes is now working on TeamAROS `bounty #12`__, FAT32 filesystem.
 Michal Shulz and Frederic Requin started working on TeamAROS `bounty #11`__, which aims at rewriting the device driver that is in charge of handling ATA/ATAPI devices, to make it faster
 and more reliable. Johan Grip will be helping them out along the way.
 
+Wez Furlong, a long time lurker of the AROS-Dev mailing list, has 
+finally decided to come out of the bag and show up what brave man he 
+is: he has taken up on the TeamAROS `bounty #3`__, which requires him
+to write a complete TCP/IP stack!
+
 Ian Templeton committed his usual fixes to make AROS hosted compile and work also on FreeBSD, and
 he also fixed a bug__ in the timer.device.
 
@@ -92,6 +97,7 @@ header files so that C++ programs can use them seamlessy. He also fixed a bug in
 
 __ http://thenostromo.com/teamaros/bounty_details_12.html
 __ http://thenostromo.com/teamaros/bounty_details_11.html
+__ http://thenostromo.com/teamaros/bounty_details_3.html
 __ http://sourceforge.net/tracker/index.php?func=detail&aid=741580&group_id=43586&atid=439463
 
 Documentation
