@@ -1,11 +1,11 @@
 WORD SharedBordersPairs0[] = {
-  0,0,0,13,1,13,1,0,73,0,0,0 };
+  0,0,0,18,1,18,1,0,73,0,0,0 };
 WORD SharedBordersPairs1[] = {
-  1,13,73,13,73,1,74,0,74,13 };
+  1,18,73,18,73,1,74,0,74,18 };
 WORD SharedBordersPairs2[] = {
-  0,0,0,14,1,14,1,0,27,0,0,0 };
+  0,0,0,24,1,24,1,0,27,0,0,0 };
 WORD SharedBordersPairs3[] = {
-  1,14,27,14,27,1,28,0,28,14 };
+  1,24,27,24,27,1,28,0,28,24 };
 
 struct Border SharedBorders[] = {
   {0,0,1,1,JAM1,5,&SharedBordersPairs1[0],&SharedBorders[1]},
@@ -18,12 +18,12 @@ struct Border SharedBorders[] = {
   {0,0,1,1,JAM1,6,&SharedBordersPairs0[0],NULL} };
 
 struct IntuiText Gadget35_text = {
-  1,0,JAM1,10,3,NULL,(UBYTE *)"Default",NULL };
+  1,0,JAM1,17,4,NULL,(UBYTE *)"Default",NULL };
 
 #define Gadget35_ID	35
 
 struct Gadget Gadget35 = {
-  NULL,26,75,75,14,
+  NULL,16,64,75,19,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -31,12 +31,12 @@ struct Gadget Gadget35 = {
   &Gadget35_text,0L,NULL,Gadget35_ID,NULL };
 
 struct IntuiText Gadget34_text = {
-  1,0,JAM1,22,3,NULL,(UBYTE *)"Save",NULL };
+  1,0,JAM1,22,4,NULL,(UBYTE *)"Save",NULL };
 
 #define Gadget34_ID	34
 
 struct Gadget Gadget34 = {
-  &Gadget35,26,55,75,14,
+  &Gadget35,16,44,75,19,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -44,231 +44,231 @@ struct Gadget Gadget34 = {
   &Gadget34_text,0L,NULL,Gadget34_ID,NULL };
 
 struct Gadget g[] = {
-  {&g[1],200,34,29,15,
+  {&g[1],100,34,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,1,NULL},
 
-  {&g[2],234,34,29,15,
+  {&g[2],134,34,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,2,NULL},
 
-  {&g[3],268,34,29,15,
+  {&g[3],168,34,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,3,NULL},
 
-  {&g[4],200,52,29,15,
+  {&g[4],100,62,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,4,NULL},
 
-  {&g[5],234,52,29,15,
+  {&g[5],134,62,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,5,NULL},
 
-  {&g[6],268,52,29,15,
+  {&g[6],168,62,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,6,NULL},
 
-  {&g[7],131,70,29,15,
+  {&g[7],31,90,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,7,NULL},
 
-  {&g[8],166,70,29,15,
+  {&g[8],66,90,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,8,NULL},
 
-  {&g[9],200,70,29,15,
+  {&g[9],100,90,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,9,NULL},
 
-  {&g[10],234,70,29,15,
+  {&g[10],134,90,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,10,NULL},
 
-  {&g[11],268,70,29,15,
+  {&g[11],168,90,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,11,NULL},
 
-  {&g[12],302,70,29,15,
+  {&g[12],202,90,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,12,NULL},
 
-  {&g[13],337,70,29,15,
+  {&g[13],237,90,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,13,NULL},
 
-  {&g[14],131,89,29,15,
+  {&g[14],31,119,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,14,NULL},
 
-  {&g[15],166,89,29,15,
+  {&g[15],66,119,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,15,NULL},
 
-  {&g[16],200,89,29,15,
+  {&g[16],100,119,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,16,NULL},
 
-  {&g[17],234,89,29,15,
+  {&g[17],134,119,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,17,NULL},
 
-  {&g[18],268,89,29,15,
+  {&g[18],168,119,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,18,NULL},
 
-  {&g[19],302,89,29,15,
+  {&g[19],202,119,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,19,NULL},
 
-  {&g[20],337,89,29,15,
+  {&g[20],237,119,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,20,NULL},
 
-  {&g[21],131,108,29,15,
+  {&g[21],31,148,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,21,NULL},
 
-  {&g[22],166,108,29,15,
+  {&g[22],66,148,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,22,NULL},
 
-  {&g[23],200,108,29,15,
+  {&g[23],100,148,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,23,NULL},
 
-  {&g[24],234,108,29,15,
+  {&g[24],134,148,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,24,NULL},
 
-  {&g[25],268,108,29,15,
+  {&g[25],168,148,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,25,NULL},
 
-  {&g[26],302,108,29,15,
+  {&g[26],202,148,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,26,NULL},
 
-  {&g[27],337,108,29,15,
+  {&g[27],237,148,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,27,NULL},
 
-  {&g[28],200,126,29,15,
+  {&g[28],100,176,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,28,NULL},
 
-  {&g[29],234,126,29,15,
+  {&g[29],134,176,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,29,NULL},
 
-  {&g[30],268,126,29,15,
+  {&g[30],168,176,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,30,NULL},
 
-  {&g[31],200,144,29,15,
+  {&g[31],100,204,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,31,NULL},
 
-  {&g[32],234,144,29,15,
+  {&g[32],134,204,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
   (APTR)&SharedBorders[2],(APTR)&SharedBorders[4],
   NULL,0L,NULL,32,NULL},
 
-  {&Gadget34,268,144,29,15,
+  {&Gadget34,168,204,29,25,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -276,10 +276,10 @@ struct Gadget g[] = {
   NULL,0L,NULL,33,NULL}};
 
 struct IntuiText load_text = {
-  1,0,JAM1,22,3,NULL,(UBYTE *)"Load",NULL };
+  1,0,JAM1,22,4,NULL,(UBYTE *)"Load",NULL };
 
 struct Gadget load = {
-  &g[0],26,34,75,14,
+  &g[0],16,24,75,19,
   GFLG_GADGHIMAGE,
   GACT_RELVERIFY,
   GTYP_BOOLGADGET,
@@ -289,7 +289,7 @@ struct Gadget load = {
 #define FIRSTGADGET	&load
 
 struct NewWindow new_window = {
-  1,0,521,195,0,1,
+  0,0,300,250,0,1,
   IDCMP_GADGETUP+IDCMP_MOUSEBUTTONS+IDCMP_CLOSEWINDOW+IDCMP_RAWKEY,
   WFLG_DRAGBAR+WFLG_DEPTHGADGET+WFLG_CLOSEGADGET+WFLG_NOCAREREFRESH+WFLG_SMART_REFRESH+WFLG_ACTIVATE+WFLG_RMBTRAP,
   FIRSTGADGET,NULL,
