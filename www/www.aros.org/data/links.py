@@ -129,6 +129,10 @@ moreRelated = (
 )
 
 articles = (
+    Link ('http://batman.jypoly.fi/~saku/lehti/online/uusi/index.html',
+	'''Article about AROS and an interview with A. Digulla
+	(in Finnish)''',
+    ),
     Link ('http://amiga.eden.it/dossier/aros/aros_eng.html',
 	'Article by Amiga Life',
 	(   'Also ',
