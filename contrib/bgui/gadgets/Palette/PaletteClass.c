@@ -10,6 +10,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/08/11 08:05:01  chodorowski
+ * Fixed an unterminated comment, and some other stuff to build properly.
+ *
  * Revision 42.5  2000/08/09 10:17:25  chodorowski
  * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
  * macros. Some of these files didn't need them at all...
@@ -94,19 +97,6 @@ extern struct Library * BGUIBase;
  */
 #define GADGET(x) ((struct Gadget *)x)
 
-//#define METHOD(f,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) m)
-#ifdef _AROS
-  #define METHOD(f,mtype,m) AROS_UFH3(STATIC ULONG, f, \
-                          AROS_UFHA(Class *, cl, A0), \
-                          AROS_UFHA(Object *, obj, A2), \
-                          AROS_UFHA(mtype, m, A1))
-#else
-  #define METHOD(f,mtype,m) static ASM ULONG f( \
-                          REG(A0) Class *cl, \
-                          REG(A2) Object *obj, \
-                          REG(A1) mtype m)
-#endif
-
 /*
 ** OS macros.
 **/
@@ -146,8 +136,8 @@ typedef struct {
  */
 //STATIC ASM UWORD ValidateColor( REG(a0) PD *pd, REG(d0) ULONG pen )
 STATIC ASM REGFUNC2(UWORD, ValidateColor,
-        REGPARAM(A0, PD *, pd),
-        REGPARAM(D0, ULONG, pen))
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(D0, ULONG, pen))
 {
    UWORD       *tab = pd->pd_PenTable, i;
 
@@ -159,12 +149,12 @@ STATIC ASM REGFUNC2(UWORD, ValidateColor,
        * Check the pens in the table.
        */
       for ( i = 0; i < pd->pd_NumColors; i++ ) {
-         /*
-          * Does the pen exist in the
-          * pen table?
-          */
-         if ( pen == tab[ i + pd->pd_ColorOffset ] )
-            return(( UWORD )pen );
+	 /*
+	  * Does the pen exist in the
+	  * pen table?
+	  */
+	 if ( pen == tab[ i + pd->pd_ColorOffset ] )
+	    return(( UWORD )pen );
       }
       /*
        * The pen does not exist in the table.
@@ -177,7 +167,7 @@ STATIC ASM REGFUNC2(UWORD, ValidateColor,
        * in range.
        */
       if ( pen >= pd->pd_ColorOffset && pen <= ( pd->pd_ColorOffset + pd->pd_NumColors - 1 ))
-         return(( UWORD )pen );
+	 return(( UWORD )pen );
       /*
        * No. Default to the first pen.
        */
@@ -225,35 +215,39 @@ METHOD(PaletteClassNew, struct opSet *,ops)
        */
       while (tag = NextTagItem(&tstate))
       {
-         data = tag->ti_Data;
-         switch (tag->ti_Tag)
-         {
-         case PALETTE_Depth:
-            CLAMP(data, 1, 8);
-            pd->pd_Depth     = data;
-            pd->pd_NumColors = 1 << data;
-            break;
+	 data = tag->ti_Data;
+	 switch (tag->ti_Tag)
+	 {
+	 case PALETTE_Depth:
+	    CLAMP(data, 1, 8);
+	    pd->pd_Depth     = data;
+	    pd->pd_NumColors = 1 << data;
+	    break;
 
-         case PALETTE_ColorOffset:
-            pd->pd_ColorOffset = data;
-            break;
+	 case PALETTE_ColorOffset:
+	    pd->pd_ColorOffset = data;
+	    break;
 
-         case PALETTE_PenTable:
-            pd->pd_PenTable = (UWORD *)data;
-            break;
+	 case PALETTE_PenTable:
+	    pd->pd_PenTable = (UWORD *)data;
+	    break;
 
-         case PALETTE_CurrentColor:
-            pd->pd_CurrentColor = data;
-            break;
-         };
+	 case PALETTE_CurrentColor:
+	    pd->pd_CurrentColor = data;
+	    break;
+	 };
       };
 
       /*
        * Make sure the offset stays in range.
        */
        
-      /* AROS FIX: (WORD) typecast, otherwise gcc error "comparison always 0, due to limited datatype..."
-      CLAMP((WORD)pd->pd_ColorOffset, 0, 256 - (WORD)pd->pd_NumColors); 
+      /* AROS FIX: (WORD) typecast, otherwise gcc error "comparison always 0, due to limited datatype..." */
+      #ifdef _AROS
+      CLAMP((WORD)pd->pd_ColorOffset, 0, 256 - (WORD)pd->pd_NumColors);
+      #else
+      CLAMP( pd->pd_ColorOffset, 0, 256 - pd->pd_NumColors );
+      #endif
 
       /*
        * The color must remain OK.
@@ -267,13 +261,13 @@ METHOD(PaletteClassNew, struct opSet *,ops)
       DoMethod((Object *)rc, OM_GET, BT_LabelObject, &label);
       if (label)
       {
-         /*
-          * Yes. Query the place because it may
-          * not be PLACE_IN for obvious reasons.
-          */
-         DoMethod(label, OM_GET, LAB_Place, &place);
-         if (place == PLACE_IN)
-            SetAttrs(label, LAB_Place, PLACE_LEFT, TAG_END);
+	 /*
+	  * Yes. Query the place because it may
+	  * not be PLACE_IN for obvious reasons.
+	  */
+	 DoMethod(label, OM_GET, LAB_Place, &place);
+	 if (place == PLACE_IN)
+	    SetAttrs(label, LAB_Place, PLACE_LEFT, TAG_END);
       }
 
       /*
@@ -281,7 +275,7 @@ METHOD(PaletteClassNew, struct opSet *,ops)
        * currently selected pen.
        */
       if (pd->pd_Frame = BGUI_NewObject(BGUI_FRAME_IMAGE, FRM_Type, FRTYPE_BUTTON, FRM_Flags, FRF_RECESSED, TAG_END))
-         return rc;
+	 return rc;
 
       /*
        * No frame means no object.
@@ -364,10 +358,10 @@ METHOD(PaletteClassGet, struct opGet *,opg)
  */
 //STATIC ASM VOID RenderColorRects( REG(a0) PD *pd, REG(a1) struct RastPort *rp, REG(a2) struct IBox *area, REG(a3) struct DrawInfo *dri )
 STATIC ASM REGFUNC4(VOID, RenderColorRects,
-        REGPARAM(A0, PD *, pd),
-        REGPARAM(A1, struct RastPort *, rp),
-        REGPARAM(A2, struct IBox *, area),
-        REGPARAM(A3, struct DrawInfo *, dri))
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(A1, struct RastPort *, rp),
+	REGPARAM(A2, struct IBox *, area),
+	REGPARAM(A3, struct DrawInfo *, dri))
 {
    UWORD    colorwidth, colorheight, columns = 1, rows = 1, depth = pd->pd_Depth;
    UWORD    hadjust, vadjust, left, top, colsize, rowsize, c, r, color;
@@ -394,11 +388,11 @@ STATIC ASM REGFUNC4(VOID, RenderColorRects,
     */
    while ( depth ) {
       if (( colorheight << 1 ) > colorwidth ) {
-         colorheight >>= 1;
-         rows      <<= 1;
+	 colorheight >>= 1;
+	 rows      <<= 1;
       } else {
-         colorwidth  >>= 1;
-         columns     <<= 1;
+	 colorwidth  >>= 1;
+	 columns     <<= 1;
       }
       depth--;
    }
@@ -455,41 +449,41 @@ STATIC ASM REGFUNC4(VOID, RenderColorRects,
    {
       for (c = 0; c < columns; c++)
       {
-         /*
-          * The currently selected color
-          * is done with a frameclass object.
-          */
-         if (color == pd->pd_CurrentColor)
-         {
-            /*
-             * Setup the object.
-             */
-            SetAttrs( pd->pd_Frame, IA_Left, left,
-                     IA_Top,         top,
-                     IA_Width,   colsize - 1,
-                     IA_Height,  rowsize - 1,
-                     FRM_BackPen,   color,
-                     TAG_END );
-            /*
-             * Render it.
-             */
-            DrawImageState( rp, ( struct Image * )pd->pd_Frame, 0, 0, IDS_NORMAL, dri );
-         }
-         else
-         {
-            /*
-             * Other colors we do ourselves.
-             */
-            SetAPen( rp, color );
-            RectFill( rp, left, top, left + colsize - 2, top + rowsize - 2 );
-         }
-         left += colsize;
-         /*
-          * Get the next color from the
-          * displayed palette.
-          */
-         if ( pd->pd_PenTable ) color = pd->pd_PenTable[ ++offset ];
-         else            color++;
+	 /*
+	  * The currently selected color
+	  * is done with a frameclass object.
+	  */
+	 if (color == pd->pd_CurrentColor)
+	 {
+	    /*
+	     * Setup the object.
+	     */
+	    SetAttrs( pd->pd_Frame, IA_Left, left,
+		     IA_Top,         top,
+		     IA_Width,   colsize - 1,
+		     IA_Height,  rowsize - 1,
+		     FRM_BackPen,   color,
+		     TAG_END );
+	    /*
+	     * Render it.
+	     */
+	    DrawImageState( rp, ( struct Image * )pd->pd_Frame, 0, 0, IDS_NORMAL, dri );
+	 }
+	 else
+	 {
+	    /*
+	     * Other colors we do ourselves.
+	     */
+	    SetAPen( rp, color );
+	    RectFill( rp, left, top, left + colsize - 2, top + rowsize - 2 );
+	 }
+	 left += colsize;
+	 /*
+	  * Get the next color from the
+	  * displayed palette.
+	  */
+	 if ( pd->pd_PenTable ) color = pd->pd_PenTable[ ++offset ];
+	 else            color++;
       }
       left = area->Left + 1;
       top += rowsize;
@@ -531,21 +525,21 @@ METHOD(PaletteClassRender, struct gpRender *,gpr)
        */
       DoMethod( obj, OM_GET, BT_FrameObject, &frame );
       if ( frame ) {
-         /*
-          * Find out the frame thickness.
-          */
-         DoMethod( frame, OM_GET, FRM_FrameWidth,  &fw );
-         DoMethod( frame, OM_GET, FRM_FrameHeight, &fh );
-         fw++;
-         fh++;
+	 /*
+	  * Find out the frame thickness.
+	  */
+	 DoMethod( frame, OM_GET, FRM_FrameWidth,  &fw );
+	 DoMethod( frame, OM_GET, FRM_FrameHeight, &fh );
+	 fw++;
+	 fh++;
 
-         /*
-          * Adjust bounds accoordingly.
-          */
-         pd->pd_ColorBox.Left   += fw;
-         pd->pd_ColorBox.Top    += fh;
-         pd->pd_ColorBox.Width     -= fw << 1;
-         pd->pd_ColorBox.Height    -= fh << 1;
+	 /*
+	  * Adjust bounds accoordingly.
+	  */
+	 pd->pd_ColorBox.Left   += fw;
+	 pd->pd_ColorBox.Top    += fh;
+	 pd->pd_ColorBox.Width     -= fw << 1;
+	 pd->pd_ColorBox.Height    -= fh << 1;
       }
 
       /*
@@ -557,13 +551,13 @@ METHOD(PaletteClassRender, struct gpRender *,gpr)
        * Disabled?
        */
       if ( GADGET(obj)->Flags & GFLG_DISABLED ) {
-         SetAPen( &rp, dri ? dri->dri_Pens[ SHADOWPEN ] : 2 );
-         SetDrMd( &rp, JAM1 );
-         SetAfPt( &rp, dispat, 1 );
-         RectFill( &rp, bounds->Left,
-                   bounds->Top,
-                   bounds->Left + bounds->Width  - 1,
-                   bounds->Top  + bounds->Height - 1 );
+	 SetAPen( &rp, dri ? dri->dri_Pens[ SHADOWPEN ] : 2 );
+	 SetDrMd( &rp, JAM1 );
+	 SetAfPt( &rp, dispat, 1 );
+	 RectFill( &rp, bounds->Left,
+		   bounds->Top,
+		   bounds->Left + bounds->Width  - 1,
+		   bounds->Top  + bounds->Height - 1 );
       }
 
    }
@@ -578,8 +572,8 @@ METHOD(PaletteClassRender, struct gpRender *,gpr)
  */
 //STATIC ASM ULONG GetPenNumber( REG(a0) PD *pd, REG(d0) ULONG num )
 STATIC ASM REGFUNC2(ULONG, GetPenNumber,
-        REGPARAM(A0, PD *, pd),
-        REGPARAM(D0, ULONG, num))
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(D0, ULONG, num))
 {
    /*
     * Return the pen number
@@ -599,8 +593,8 @@ STATIC ASM REGFUNC2(ULONG, GetPenNumber,
  */
 //STATIC ASM ULONG GetOrdinalNumber( REG(a0) PD *pd, REG(d0) ULONG pen )
 STATIC ASM REGFUNC2(ULONG, GetOrdinalNumber,
-        REGPARAM(A0, PD *, pd),
-        REGPARAM(D0, ULONG, pen))
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(D0, ULONG, pen))
 {
    UWORD       *tab = pd->pd_PenTable, i;
 
@@ -612,11 +606,11 @@ STATIC ASM REGFUNC2(ULONG, GetOrdinalNumber,
        * Look up the pen in the table.
        */
       for ( i = 0; i < pd->pd_NumColors; i++ ) {
-         /*
-          * Is this the one?
-          */
-         if ( tab[ i + pd->pd_ColorOffset ] == pen )
-            return( i );
+	 /*
+	  * Is this the one?
+	  */
+	 if ( tab[ i + pd->pd_ColorOffset ] == pen )
+	    return( i );
       }
    }
 
@@ -632,9 +626,9 @@ STATIC ASM REGFUNC2(ULONG, GetOrdinalNumber,
  */
 //STATIC ASM UWORD GetColor( REG(a0) PD *pd, REG(d0) ULONG x, REG(d1) ULONG y )
 STATIC ASM REGFUNC3(UWORD, GetColor,
-        REGPARAM(A0, PD *, pd),
-        REGPARAM(D0, ULONG, x),
-        REGPARAM(D1, ULONG, y))
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(D0, ULONG, x),
+	REGPARAM(D1, ULONG, y))
 {
    UWORD    col, row;
 
@@ -659,10 +653,10 @@ STATIC ASM REGFUNC3(UWORD, GetColor,
  */
 //STATIC ASM VOID GetTopLeft( REG(a0) PD *pd, REG(d0) UWORD color, REG(a1) UWORD *x, REG(a2) UWORD *y )
 STATIC ASM REGFUNC4(VOID, GetTopLeft,
-        REGPARAM(A0, PD *, pd),
-        REGPARAM(D0, UWORD, color),
-        REGPARAM(A1, UWORD *, x),
-        REGPARAM(A2, UWORD *, y))
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(D0, UWORD, color),
+	REGPARAM(A1, UWORD *, x),
+	REGPARAM(A2, UWORD *, y))
 {
    UWORD       row, col;
 
@@ -695,9 +689,9 @@ STATIC ULONG NotifyAttrChange( Object *obj, struct GadgetInfo *gi, ULONG flags, 
  */
 //STATIC ASM VOID ChangeSelectedColor( REG(a0) PD *pd, REG(a1) struct GadgetInfo *gi, REG(d0) ULONG newcolor )
 STATIC ASM REGFUNC3(VOID, ChangeSelectedColor,
-        REGPARAM(A0, PD *, pd),
-        REGPARAM(A1, struct GadgetInfo *, gi),
-        REGPARAM(D0, ULONG, newcolor))
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(A1, struct GadgetInfo *, gi),
+	REGPARAM(D0, ULONG, newcolor))
 {
    struct RastPort         *rp;
    UWORD        l, t;
@@ -719,9 +713,9 @@ STATIC ASM REGFUNC3(VOID, ChangeSelectedColor,
        */
       SetAPen( rp, pd->pd_CurrentColor );
       RectFill( rp, l + 1,
-               t + 1,
-               l + pd->pd_RectWidth  - 1,
-               t + pd->pd_RectHeight - 1 );
+	       t + 1,
+	       l + pd->pd_RectWidth  - 1,
+	       t + pd->pd_RectHeight - 1 );
 
       /*
        * Now pickup the coordinates
@@ -734,11 +728,11 @@ STATIC ASM REGFUNC3(VOID, ChangeSelectedColor,
        * reflect the new data.
        */
       SetAttrs( pd->pd_Frame, IA_Left,     l + 1,
-               IA_Top,      t + 1,
-               IA_Width,    pd->pd_RectWidth  - 1,
-               IA_Height,   pd->pd_RectHeight - 1,
-               FRM_BackPen, newcolor,
-               TAG_END );
+	       IA_Top,      t + 1,
+	       IA_Width,    pd->pd_RectWidth  - 1,
+	       IA_Height,   pd->pd_RectHeight - 1,
+	       FRM_BackPen, newcolor,
+	       TAG_END );
 
       DrawImageState( rp, ( struct Image * )pd->pd_Frame, 0, 0, IDS_NORMAL, gi->gi_DrInfo );
 
@@ -795,12 +789,12 @@ METHOD(PaletteClassSet, struct opUpdate *,opu)
        * Did it really change?
        */
       if ( new != pd->pd_CurrentColor ) {
-         /*
-          * Yes. Show it and notify
-          * the change.
-          */
-         ChangeSelectedColor( pd, opu->opu_GInfo, new );
-         NotifyAttrChange( obj, opu->opu_GInfo, opu->MethodID == OM_UPDATE ? opu->opu_Flags : 0L, GA_ID, GADGET(obj)->GadgetID, PALETTE_CurrentColor, pd->pd_CurrentColor, TAG_END );
+	 /*
+	  * Yes. Show it and notify
+	  * the change.
+	  */
+	 ChangeSelectedColor( pd, opu->opu_GInfo, new );
+	 NotifyAttrChange( obj, opu->opu_GInfo, opu->MethodID == OM_UPDATE ? opu->opu_Flags : 0L, GA_ID, GADGET(obj)->GadgetID, PALETTE_CurrentColor, pd->pd_CurrentColor, TAG_END );
       }
    }
 
@@ -809,8 +803,8 @@ METHOD(PaletteClassSet, struct opUpdate *,opu)
     */
    if ((GADGET(obj)->Flags & GFLG_DISABLED ) != dis ) {
       if ( opu->opu_GInfo && ( rp = ObtainGIRPort( opu->opu_GInfo ))) {
-         DoMethod( obj, GM_RENDER, opu->opu_GInfo, rp, GREDRAW_REDRAW );
-         ReleaseGIRPort( rp );
+	 DoMethod( obj, GM_RENDER, opu->opu_GInfo, rp, GREDRAW_REDRAW );
+	 ReleaseGIRPort( rp );
       }
    }
 
@@ -860,12 +854,12 @@ METHOD(PaletteClassGoActive, struct gpInput *,gpi)
        * Did the color change?
        */
       if (( newcol = GetColor( pd, l, t )) != pd->pd_CurrentColor ) {
-         /*
-          * Yes. Setup the new color and send
-          * a notification.
-          */
-         ChangeSelectedColor( pd, gpi->gpi_GInfo, newcol );
-         change = TRUE;
+	 /*
+	  * Yes. Setup the new color and send
+	  * a notification.
+	  */
+	 ChangeSelectedColor( pd, gpi->gpi_GInfo, newcol );
+	 change = TRUE;
       }
 
       /*
@@ -875,24 +869,24 @@ METHOD(PaletteClassGoActive, struct gpInput *,gpi)
        * supported or memory does not allow for it.
        */
       if ( DoSuperMethodA( cl, obj, ( Msg )gpi ) == GMR_NOREUSE ) {
-         /*
-          * We only notify when we do not support
-          * drag and drop and the color changed.
-          */
-         if ( change )
-            NotifyAttrChange( obj, gpi->gpi_GInfo, 0L, GA_ID, GADGET(obj)->GadgetID, PALETTE_CurrentColor, pd->pd_CurrentColor, TAG_END );
-         /*
-          * When this is set to FALSE we do
-          * normal notification.
-          */
-         pd->pd_Dragging = FALSE;
+	 /*
+	  * We only notify when we do not support
+	  * drag and drop and the color changed.
+	  */
+	 if ( change )
+	    NotifyAttrChange( obj, gpi->gpi_GInfo, 0L, GA_ID, GADGET(obj)->GadgetID, PALETTE_CurrentColor, pd->pd_CurrentColor, TAG_END );
+	 /*
+	  * When this is set to FALSE we do
+	  * normal notification.
+	  */
+	 pd->pd_Dragging = FALSE;
       } else
-         /*
-          * Do not do any notification except when
-          * the mouse button is release before the
-          * object was actually dragged.
-          */
-         pd->pd_Dragging = TRUE;
+	 /*
+	  * Do not do any notification except when
+	  * the mouse button is release before the
+	  * object was actually dragged.
+	  */
+	 pd->pd_Dragging = TRUE;
 
       /*
        * Go active.
@@ -922,83 +916,83 @@ METHOD(PaletteClassHandleInput, struct gpInput *,gpi)
    switch (( rcd = DoMethodA(obj, (Msg)&gpd)))
    {
       case BDR_CANCEL:
-         /*
-          * Reset initially selected color.
-          */
-          pd->pd_ResetInitial = TRUE;
+	 /*
+	  * Reset initially selected color.
+	  */
+	  pd->pd_ResetInitial = TRUE;
 
       case BDR_DROP:
       case BDR_NONE:
-         /*
-          * BDR_NONE means that we must process the input.
-          */
+	 /*
+	  * BDR_NONE means that we must process the input.
+	  */
 
-         /*
-          * Get the coordinates relative
-          * to the top-left of the colorbox.
-          */
-         l = gpi->gpi_Mouse.X - ( pd->pd_ColorBox.Left - GADGET(obj)->LeftEdge );
-         t = gpi->gpi_Mouse.Y - ( pd->pd_ColorBox.Top  - GADGET(obj)->TopEdge  );
+	 /*
+	  * Get the coordinates relative
+	  * to the top-left of the colorbox.
+	  */
+	 l = gpi->gpi_Mouse.X - ( pd->pd_ColorBox.Left - GADGET(obj)->LeftEdge );
+	 t = gpi->gpi_Mouse.Y - ( pd->pd_ColorBox.Top  - GADGET(obj)->TopEdge  );
 
-         /*
-          * Mouse pointer located over the object?
-          */
-         if ( l >= 0 && t >= 0 && l < pd->pd_ColorBox.Width && t < pd->pd_ColorBox.Height ) {
-            /*
-             * Mouse over a new color?
-             */
-            if (( newcol = GetColor( pd, l, t )) != pd->pd_CurrentColor ) {
-               /*
-                * We do not change the color when we
-                * are in drag and drop mode.
-                */
-               if (!pd->pd_Dragging)
-               {
-                  /*
-                   * Change the selected color.
-                   */
-                  ChangeSelectedColor( pd, gpi->gpi_GInfo, newcol );
-                  /*
-                   * Send notification
-                   * about the change.
-                   */
-                  NotifyAttrChange( obj, gpi->gpi_GInfo, 0L, GA_ID, GADGET(obj)->GadgetID, PALETTE_CurrentColor, pd->pd_CurrentColor, TAG_END );
-               }
-            }
-         }
+	 /*
+	  * Mouse pointer located over the object?
+	  */
+	 if ( l >= 0 && t >= 0 && l < pd->pd_ColorBox.Width && t < pd->pd_ColorBox.Height ) {
+	    /*
+	     * Mouse over a new color?
+	     */
+	    if (( newcol = GetColor( pd, l, t )) != pd->pd_CurrentColor ) {
+	       /*
+		* We do not change the color when we
+		* are in drag and drop mode.
+		*/
+	       if (!pd->pd_Dragging)
+	       {
+		  /*
+		   * Change the selected color.
+		   */
+		  ChangeSelectedColor( pd, gpi->gpi_GInfo, newcol );
+		  /*
+		   * Send notification
+		   * about the change.
+		   */
+		  NotifyAttrChange( obj, gpi->gpi_GInfo, 0L, GA_ID, GADGET(obj)->GadgetID, PALETTE_CurrentColor, pd->pd_CurrentColor, TAG_END );
+	       }
+	    }
+	 }
 
-         /*
-          * Check mouse input.
-          */
-         if ( gpi->gpi_IEvent->ie_Class == IECLASS_RAWMOUSE ) {
-            switch ( gpi->gpi_IEvent->ie_Code ) {
+	 /*
+	  * Check mouse input.
+	  */
+	 if ( gpi->gpi_IEvent->ie_Class == IECLASS_RAWMOUSE ) {
+	    switch ( gpi->gpi_IEvent->ie_Code ) {
 
-               case SELECTUP:
-                  /*
-                   * If we are in drag mode we still send
-                   * one final notification here.
-                   */
-                  if (pd->pd_Dragging && (rcd == BDR_NONE))
-                     NotifyAttrChange( obj, gpi->gpi_GInfo, 0L, GA_ID, GADGET(obj)->GadgetID, PALETTE_CurrentColor, pd->pd_CurrentColor, TAG_END );
+	       case SELECTUP:
+		  /*
+		   * If we are in drag mode we still send
+		   * one final notification here.
+		   */
+		  if (pd->pd_Dragging && (rcd == BDR_NONE))
+		     NotifyAttrChange( obj, gpi->gpi_GInfo, 0L, GA_ID, GADGET(obj)->GadgetID, PALETTE_CurrentColor, pd->pd_CurrentColor, TAG_END );
 
-                  /*
-                   * Left-mouse button up means we
-                   * return GMR_VERIFY.
-                   */
-                  rc = GMR_NOREUSE | GMR_VERIFY;
-                  break;
+		  /*
+		   * Left-mouse button up means we
+		   * return GMR_VERIFY.
+		   */
+		  rc = GMR_NOREUSE | GMR_VERIFY;
+		  break;
 
-               case MENUDOWN:
-                  /*
-                   * The menu button aborts the
-                   * selection.
-                   */
-                  pd->pd_ResetInitial = TRUE;
-                  rc = GMR_NOREUSE;
-                  break;
-            }
-         }
-         break;
+	       case MENUDOWN:
+		  /*
+		   * The menu button aborts the
+		   * selection.
+		   */
+		  pd->pd_ResetInitial = TRUE;
+		  rc = GMR_NOREUSE;
+		  break;
+	    }
+	 }
+	 break;
 
    }
    return rc;
@@ -1071,20 +1065,20 @@ METHOD(PaletteClassDimensions, struct grmDimensions *,dim)
       case 2:
       case 4:
       case 8:
-         mx = 16;
-         my = 16;
-         break;
+	 mx = 16;
+	 my = 16;
+	 break;
 
       case 16:
       case 32:
-         mx = 32;
-         my = 32;
-         break;
+	 mx = 32;
+	 my = 32;
+	 break;
 
       default:
-         mx = 64;
-         my = 64;
-         break;
+	 mx = 64;
+	 my = 64;
+	 break;
    }
 
    /*
@@ -1170,12 +1164,12 @@ METHOD(PaletteClassGetObject, struct bmGetDragObject *,bmgo)
       rp.BitMap=bm;
 
       SetAttrs(pd->pd_Frame,
-         IA_Left,0,
-         IA_Top,0,
-         IA_Width,pd->pd_RectWidth,
-         IA_Height,pd->pd_RectHeight,
-         FRM_BackPen,pd->pd_CurrentColor,
-         TAG_END );
+	 IA_Left,0,
+	 IA_Top,0,
+	 IA_Width,pd->pd_RectWidth,
+	 IA_Height,pd->pd_RectHeight,
+	 FRM_BackPen,pd->pd_CurrentColor,
+	 TAG_END );
 
       DrawImageState(&rp,(struct Image *)pd->pd_Frame,0,0,IDS_NORMAL,gi->gi_DrInfo);
 
@@ -1243,9 +1237,9 @@ STATIC DPFUNC ClassFunc[] = {
 SAVEDS ASM Class *BGUI_ClassInit(void)
 {
    ClassBase = BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_BASE_GADGET,
-                              CLASS_DFTable,        ClassFunc,
-                              CLASS_ObjectSize,     sizeof(PD),
-                              TAG_DONE);
+			      CLASS_DFTable,        ClassFunc,
+			      CLASS_ObjectSize,     sizeof(PD),
+			      TAG_DONE);
    return ClassBase;
 }
 
@@ -1257,4 +1251,3 @@ SAVEDS ASM BOOL BGUI_ClassFree(void)
 {
    return BGUI_FreeClass(ClassBase);
 }
-
