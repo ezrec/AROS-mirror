@@ -443,9 +443,6 @@ class Nbsp:
     def __str__ (self):
 	return '&nbsp;'
 
-class MyCode (Pre):
-    pass
-
 class ThumbnailTable (TableLite):
     '''Helper class to create a table with thumbnails.'''
 
