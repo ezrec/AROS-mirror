@@ -300,13 +300,11 @@ amiga_do_stat(PyObject *self, PyObject *args, int (*statfunc)(const char *, stru
 
 
 /* AMIGA methods */
-#ifndef AROS // FIXME: Implement for AROS
 static PyObject *
 amiga_chdir(PyObject *self, PyObject *args)
 {
 	return amiga_1str(args, chdir);
 }
-#endif
 
 static PyObject *
 amiga_chmod(PyObject *self, PyObject *args)
@@ -1101,9 +1099,7 @@ amiga_crc32(PyObject *self, PyObject *args)
 #endif
 
 static struct PyMethodDef amiga_methods[] = {
-#ifndef AROS
     { "chdir",   amiga_chdir, METH_VARARGS },
-#endif
     { "chmod",   amiga_chmod, METH_VARARGS },
 #ifdef HAVE_CHOWN
     { "chown",   amiga_chown, METH_VARARGS },
