@@ -1,0 +1,7 @@
+Aaron Digulla fixed a bug which broke the nightly builds and Michael
+Schulz began to commit the new AROS i386/Native core. AROS uses now
+GRUB to boot. Georg Steger began to implement the ASL Font requester.
+He and Johan Alfredsson also fixed a few compiler warnings.
+To test the new font requester, Georg committed some PD TrueType
+fonts.
+Peter Hans van den Muijzenberg improved the ideas for a MMU.HIDD.

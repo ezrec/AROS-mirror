@@ -1,0 +1,5 @@
+Adam Chodorowski made C:Ping compile (it would work if there
+were a TCP/IP stack :-). Also, the About window of LoadWB shows
+the AROS license now. Georg Steger improved the Graphics.HIDD,
+font handling, DOpus and DataTypes. He and Johan Alfredsson fixed the
+RAW: bug in console.device.

@@ -1,0 +1,18 @@
+Johan Alfredsson improved C:Info and FPutC() and fixed a bug
+in DOS. Flavio Stanchina improved INSTALL.amiga and 
+Adam Chodorowski worked a bit in the new socket.library.
+He committed the network includes from OpenBSD 2.7, so we
+at least have an interface definition for a 100% compatible
+TCP/IP stack. Only the stack itself is still missing :-)
+Iain Templeton made AROS compile on FreeBSD again, 
+Johan Alfredsson completed C:NewShell, Georg Steger fixed
+a bug in MultiView, the text.datatype and Intuition.
+Lars Bischoff added support for hi- and true-color screens
+in DisplayBeep().
+
+Adam Chodorowski committed some tools from the GPL:ed AmiTCP-3.0b
+sources as found on AmiNET and used these to fix bugs in the
+new network includes. bsdsocket.library compiles now without
+errors but still doesn't do anything useful. Georg Steger made
+the new layers.library a bit more compatible with the AmigaOS
+and Henning Kiel fixed a bug with DisplayBeep().

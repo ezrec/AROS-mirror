@@ -1,0 +1,5 @@
+Georg Steger worked a bit more in the backport of reqtools to AmigaOS.
+Johan Alfredsson implemented DisplayError() and Stefan Berger improved
+his layers.library. DisplayBeep() works now and Henning Kiel committed
+a small utility (C:Beep) to use it from the shell. Adam Chodorowski
+continued his work on the workbench.library.

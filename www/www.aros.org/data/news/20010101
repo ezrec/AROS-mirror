@@ -1,0 +1,8 @@
+Happy New Year, everyone ! :-)
+
+Adam Chodorowski began to hunt a bug in RAW: and committed a skeleton
+for a skeleton for bsdsocket.library. The includes are there but
+all functions are empty. Then, he improved his LoadWB command. Henning Kiel
+helped him and then fixed all the lint in the docs (email addresses, etc).
+Georg Steger began to improve the RAW mode of the console. Johan Alfredsson
+fixed a bug in the c.lib and C:Dir.

@@ -1,0 +1,5 @@
+Adam Chodorowski ported the new V44+ prefs header files to AROS.
+Georg Steger and Flavio Stanchina fixed a couple of bugs.
+Johan Alfredsson committed C:Eval and Henning Kiel added the
+neccessary code to compile it. They also fixed some more bugs
+in the docs and DOS.

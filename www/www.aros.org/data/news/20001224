@@ -1,0 +1,4 @@
+Flavio Stanchina fixed bugs in the build process and some header files.
+Johan Alfredsson finished the C:Info command. Georg Steger improved
+the shape window demo (you can now switch the shape on and off) and
+fixed a bug in AmigaTerm.

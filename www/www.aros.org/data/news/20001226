@@ -1,0 +1,8 @@
+Johan Alfredsson rewrote C:List (everything except the ALL option works
+now). WiMP can now show some info about windows and screens, thanks
+to Henning Kiel. Flavio Stanchina continues in his quest to squish
+bugs in header and the build process and Stefan Berger applied some
+refactoring to his layers.library. Georg Steger did the same with
+the serial, parallel and UnixIO HIDDs. Stefan Berger supported this
+by adding a couple of skeletons for the hardware interfaces of the
+HIDDs.
