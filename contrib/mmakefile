@@ -6,7 +6,7 @@ apps :
 	@$(NOP)
 
 #MM fish : fish-microemacs fish-lotto fish-henon fish-bcubic
-#MM fish : fish-bezier1 fish-bezier2 fish-tree fish-grep
+#MM fish : fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines
 
 
 # The apps below are not working yet as functions are still missing
