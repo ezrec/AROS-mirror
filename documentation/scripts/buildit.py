@@ -143,7 +143,7 @@ def makePictures():
         file \
         ( 
             #os.path.join( DSTROOT, root, 'index.html.en' ), 'w'
-            os.path.join( DSTROOT, root, 'index.html.en' ), 'w'
+            os.path.join( DSTROOT, root, 'index.html' ), 'w'
         ).write( TEMPLATE_DATA % strings )
 
 
