@@ -210,6 +210,6 @@ lro:766dOIwjJER7U:Lars Riis Olsen:lro@cs.auc.dk:
 mdma:11Gb4P5fRzOjQ:Nicholas Otley:nicholas_otley@hotmail.com:
 markpapadakis:phaistos:Mark Papadakis:markp@phaistosnetworks.gr:
 sketch:XQH7HBH9szbVg:Jonathan Perkin:sketch@rd.bbc.co.uk:
-caronas:bclUEi11PrVm:Frank Hornscheidt:Caronas@web.de:
+caronas:caronas:Frank Hornscheidt:Caronas@web.de:
 lcs:45/wAI3.NJ2Ng:Martin Blom:martin@blom.org:
 timelore:fa232fOQCF/Ic:Sami Klemola:contact@timelore.fi:
