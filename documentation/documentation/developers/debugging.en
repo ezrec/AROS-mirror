@@ -306,13 +306,30 @@ it is data you can find in ``SysBase->ThisTask``::
     40231fb8 00000000 00000000    40960      872 -128    1 Idle Task
 
 
+Tips and tricks
+===============
+
+Program-induced breakpoint on i386
+----------------------------------
+
+If you insert::
+
+    asm("int $3");
+
+in C code, a trap/breakpoint exception will be generated at execution.
+It may be very useful while running with GDB, to enter interactive
+debugging when a specific condition occurs::
+
+    if (byteSize == 112)
+        asm("int $3");
 
 -----------------
 Resource tracking
 -----------------
 
-AROS provides some tools for this, either integrated in the OS, or as
-separate programs.
+Resource Tracking as known from other OSes isn't readily available for AROS
+at the moment, so you'll have to take care of releasing resources yourself.
+You'll find here some tools to help you check that your program is clean.
 
 Tracking memory with Mungwall
 =============================
@@ -320,9 +337,9 @@ Tracking memory with Mungwall
 If configured with ``--enable-debug``, AROS enables ``Mungwall``. It keeps tracks of
 a small zone before and after your allocations to verify that you don't write
 out of your bounds. This check is done in memory allocation routines, or at
-any time by calling ``Avail(MEMF_CLEAR)``.
+any time by calling ``AvailMem(MEMF_CLEAR)``.
 
-The ``CheckMem`` command line tool just call this function, and reports to the
+The ``CheckMem`` command line tool just calls this function, and reports to the
 debug output (serial for native, or terminal for hosted). If no bound violation
 has been detected, it will report the current number of allocation and their
 total size::
@@ -330,10 +347,6 @@ total size::
     === MUNGWALL MEMORY CHECK ============
     
     Num allocations: 1579   Memory allocated 3333326
-
-A neat trick is to modify the scheduler to call this function on each task switch,
-when you have a strange memory corruption that you can't trace by other means.
-It's slow, but there's no way the culprit can escape.
 
 LeakWatch
 =========
@@ -394,3 +407,17 @@ Devlist
 -------
 
 Same as ``Liblist``, but for Exec Devices.
+
+Tips and tricks
+===============
+
+Mungwall check in the scheduler
+-------------------------------
+
+A neat ``Mungwall`` trick is to modify the scheduler to call
+``AvailMem(MEMF_CLEAR)`` on each task switch, when you have a strange
+memory corruption that you can't trace by other means. This way you'll
+force a memory check after each task has had its time quantum.
+It's slow, but there's no way the culprit can escape.
+
+
