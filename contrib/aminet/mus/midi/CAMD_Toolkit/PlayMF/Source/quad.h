@@ -54,6 +54,7 @@
  */
 
 #include <sys/types.h>
+#include <sys/cdefs.h>
 #include <limits.h>
 
 /*
@@ -94,11 +95,6 @@ union uu {
 #define	HHALF(x)	((x) >> HALF_BITS)
 #define	LHALF(x)	((x) & ((1 << HALF_BITS) - 1))
 #define	LHUP(x)		((x) << HALF_BITS)
-
-#warning Remove define of __P when the AROS includes have it.
-#ifndef __P
-#   define __P(p) p
-#endif
 
 extern u_quad_t __qdivrem __P((u_quad_t u, u_quad_t v, u_quad_t *rem));
 
