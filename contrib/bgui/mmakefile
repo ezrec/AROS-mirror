@@ -21,6 +21,8 @@ BINDIR = $(TOP)/bin/linux-i386/AROS
 LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
 AROSLIBDIR = $(TOP)/bin/linux-i386/AROS/Libs
 
+BGUIPROGDIR = $(BINDIR)/bgui
+
 OS_INCLUDES_DIR = $(BINDIR)/Include
 INCLUDES_DIR = $(BINDIR)/Include
 
@@ -91,164 +93,15 @@ enhanced_build :
 build : bin/bgui.library.$(BUILD_TYPE) test examples
 # tools
 
-bin/test1: test/test1.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test1 -R
+test: $(INCLUDE_FILES) $(test) compile_test
 
-bin/test2: test/test2.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test2 -R
+compile_test :
+	$(MAKE) -Ctest -fMakefile.aros all -R
 
-bin/test3: test/test3.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test3 -R
+examples: $(INCLUDE_FILES) compile_examples
 
-bin/test4: test/test4.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test4 -R
-
-bin/test5: test/test5.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test5 -R
-
-bin/test6: test/test6.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test6 -R
-
-bin/test7: test/test7.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test7 -R
-
-bin/test8: test/test8.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test8 -R
-
-bin/test9: test/test9.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test9 -R
-
-bin/test10: test/test10.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test10 -R
-
-bin/test11: test/test11.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test11 -R
-
-bin/test13: test/test13.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test13 -R
-
-
-test = \
-bin/test1 \
-bin/test2 \
-bin/test3 \
-bin/test4 \
-bin/test5 \
-bin/test6 \
-bin/test7 \
-bin/test8 \
-bin/test9 \
-bin/test13
-
-test: $(INCLUDE_FILES) $(test)
-
-bin/AddButtons: examples/AddButtons.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros AddButtons -R
-
-bin/Area: examples/Area.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros Area -R
-
-bin/Backdrop: examples/Backdrop.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros Backdrop -R
-
-bin/BGUIDemo: examples/BGUIDemo.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros BGUIDemo -R
-
-bin/CXDemo: examples/CXDemo.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros CXDemo -R
-
-bin/FieldList: examples/FieldList.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros FieldList -R
-
-bin/FileRequester: examples/FileRequester.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros FileRequester -R
-
-bin/IDCMPHook: examples/IDCMPHook.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros IDCMPHook -R
-
-bin/Images: examples/Images.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros Images -R
-
-bin/List: examples/List.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros List -R
-
-bin/MultiColumn: examples/MultiColumn.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros MultiColumn -R
-
-bin/MultiFont: examples/MultiFont.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros MultiFont -R
-
-bin/MultiSelect: examples/MultiSelect.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros MultiSelect -R
-
-bin/StringHook: examples/StringHook.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros StringHook -R
-
-bin/TextField: examples/TextField.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros TextField -R
-
-bin/Useless: examples/Useless.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros Useless -R
-
-bin/ViewGroup: examples/ViewGroup.c
-	@$(ECHO) Making $@...
-	@$(MAKE) -Cexamples -fMakefile.aros ViewGroup -R
-
-
-
-
-
-examples = \
-bin/AddButtons \
-bin/Area \
-bin/Backdrop \
-bin/BGUIDemo \
-bin/CXDemo \
-bin/FieldList \
-bin/FileRequester \
-bin/IDCMPHook \
-bin/Images \
-bin/List \
-bin/MultiColumn \
-bin/MultiFont \
-bin/MultiSelect \
-bin/StringHook \
-bin/Useless \
-bin/ViewGroup
-
-others = \
-bin/ColorWheel \
-bin/TextField \
-
-examples: $(INCLUDE_FILES) $(examples)
+compile_examples :
+	$(MAKE) -Cexamples -fMakefile.aros all -R
 
 gadget_directories = \
 gadgets/common \
@@ -302,6 +155,7 @@ makedirs :
 	mkdir -p $(INCLUDES_DIR)/libraries
 	mkdir -p $(INCLUDES_DIR)/bgui
 	mkdir -p $(INCLUDES_DIR)/pragma
+	mkdir -p $(BGUIPROGDIR)
 
 o/bgui.library_rev.h: bgui.library_rev.rev
 	@$(CP) bgui.library_rev.rev o/bgui.library_rev.h
