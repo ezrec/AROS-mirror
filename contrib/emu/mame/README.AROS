@@ -23,13 +23,7 @@ it contains CRLF line terminations which the GCC compiler doesn't like:
 
     mmake .MameSourceFix
 
-You can ignore the warnings. To compile Mame you must have the zlib includes
-installed on your computer, because some of the source code files #include
-"zlib.h" and/or "zconf.h". So there should be "zlib.h" and "zconf.h" in
-your "/usr/include". Probably this files already are installed on your
-computer. You still won't be able to directly use zipped games with AROS
-Mame because AROS does not have a zlib. You will have to unpack the
-games. But first let's build AROS Mame:
+You can ignore the warnings. Now let's build AROS Mame:
 
     make
     mmake .Mame
@@ -66,19 +60,26 @@ If you don't know which game to try out take one of the following:
    Outrun           : racing game
    RType2           : famous horizontal shooter
 
-Now to install the game <coolgamefilename.zip> first cd into
-the Mame ROMS directory:
+Now to install the game <coolgamefilename.zip> you can either copy it
+to Mame's rom directory and leave it there as it is, because Mame
+can handle zip files itself:
 
-   cd bin/$(TARGET_ARCH)-$(TARGET_CPU)/AROS/contrib/Emu/Mame/roms
+   cp <download-dir>/<coolgamefilename.zip> bin/$(TARGET_ARCH)-$(TARGET_CPU)/AROS/contrib/Emu/Mame/roms
    
-Then make a new dir with the same name as the game archive
-name (without the .zip suffix):
+or unzip it to it's own directory which takes a bit longer:
 
-   mkdir <coolgamefilename>
+   First cd into the Mame ROMS directory:
 
-CD into the created directory and unzip the game archive:
+       cd bin/$(TARGET_ARCH)-$(TARGET_CPU)/AROS/contrib/Emu/Mame/roms
+   
+   Then make a new dir with the same name as the game archive
+   name (without the .zip suffix):
 
-   unzip <download-dir>/<coolgamefilename.zip>
+       mkdir <coolgamefilename>
+
+   CD into the created directory and unzip the game archive:
+
+       unzip <download-dir>/<coolgamefilename.zip>
 
 Start AROS and CD to where the Mame executable is. Note that Mame needs
 lots of memory, even 32 MByte might not be enough for some Games!!!!
@@ -92,6 +93,8 @@ For example if you had downloaded raiden.zip to "/usr/download"
 then you whould have done this to install and then play it on a
 Linux-i386 target:
 
+A) without unpacking the zip file (Mame can handle zip files itself):
+
   cd bin/linux-i386/AROS/contrib/Emu/Mame/roms
   mkdir raiden
   cd raiden
@@ -101,6 +104,15 @@ Linux-i386 target:
   cd contrib/Emu/Mame
   mame raiden
 
+B) with unpacking the zip file
+
+  cd bin/linux-i386/AROS/contrib/Emu/Mame/roms
+  cp /usr/download/raiden.zip .
+  
+  aros --memsize 64
+  cd contrib/Emu/Mame
+  mame raiden
+  
 During game press TAB for information about input keys, etc. You can also
 change the key mapping in the menu that appears.
 
