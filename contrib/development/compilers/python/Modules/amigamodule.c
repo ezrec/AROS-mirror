@@ -98,92 +98,93 @@ static int
 convertenviron(PyObject **glob, PyObject **loc,
 			   PyObject **both, PyObject **aliases)
 {
-	BPTR dlok;
-	struct FileInfoBlock __aligned fib;
-	PyObject *v;
-	char *dynbuf;
-	struct LocalVar *lvar;
-	struct List *localvars;
+    BPTR dlok;
+    struct FileInfoBlock __aligned fib;
+    PyObject *v;
+    char *dynbuf;
+    struct LocalVar *lvar;
+    struct List *localvars;
 
-	*glob=PyDict_New();
-	*loc=PyDict_New();
-	*both=PyDict_New();
-	*aliases=PyDict_New();
+    *glob=PyDict_New();
+    *loc=PyDict_New();
+    *both=PyDict_New();
+    *aliases=PyDict_New();
 
-	if(!*glob || !*loc || !*both || !*aliases)
-	{
-		if(*glob) Py_DECREF(*glob);
-		if(*loc) Py_DECREF(*loc);
-		if(*both) Py_DECREF(*both);
-		if(*aliases) Py_DECREF(*aliases);
-		return 0;
-	}
+    if(!*glob || !*loc || !*both || !*aliases)
+    {
+    	if(*glob) Py_DECREF(*glob);
+    	if(*loc) Py_DECREF(*loc);
+    	if(*both) Py_DECREF(*both);
+    	if(*aliases) Py_DECREF(*aliases);
+    	return 0;
+    }
 
-	/* Read global vars from ENV: */
-	/* Put them in 'glob' and in 'both'. */
+    /* Read global vars from ENV: */
+    /* Put them in 'glob' and in 'both'. */
 
-	if(dlok=Lock("ENV:",ACCESS_READ))
-	{
-		if(Examine(dlok,&fib))
-		{
-			while(ExNext(dlok,&fib))
-			{
-				if(fib.fib_DirEntryType<0)
-				{
-					if(dynbuf=malloc(fib.fib_Size+1))
-					{
-						int len=GetVar(fib.fib_FileName,dynbuf,fib.fib_Size+1,GVF_GLOBAL_ONLY);
-						if(len>=0 && (v=PyString_FromString(dynbuf)))
-						{
-							PyDict_SetItemString(*glob,fib.fib_FileName,v);
-							PyDict_SetItemString(*both,fib.fib_FileName,v);
-							Py_DECREF(v);
-						}
-						free(dynbuf);
-					}
-				}
-			}
-		}
-	}
+    if(dlok=Lock("ENV:",ACCESS_READ))
+    {
+    	if(Examine(dlok,&fib))
+    	{
+    	    while(ExNext(dlok,&fib))
+    	    {
+    	    	if(fib.fib_DirEntryType<0)
+    	    	{
+    	    	    if(dynbuf=malloc(fib.fib_Size+1))
+    	    	    {
+    	    	    	int len=GetVar(fib.fib_FileName,dynbuf,fib.fib_Size+1,GVF_GLOBAL_ONLY);
+    	    	    	if(len>=0 && (v=PyString_FromString(dynbuf)))
+    	    	    	{
+    	    	    	    PyDict_SetItemString(*glob,fib.fib_FileName,v);
+    	    	    	    PyDict_SetItemString(*both,fib.fib_FileName,v);
+    	    	    	    Py_DECREF(v);
+    	    	    	}
+    	    	        free(dynbuf);
+    	    	    }
+    	    	}
+    	    }
+    	}
+    }
 
-	if(dlok) UnLock(dlok);
+    if(dlok) UnLock(dlok);
 
-	/* Scan the local shell environment, including "RC" and "Result2"!   */
-	/* Put shell vars in 'loc' and 'both', and aliases in 'aliases'. */
-	/* Because of the fact that the inserting of local vars into 'both' */
-	/* happens AFTER the insertion of global vars, the formor overwrite */
-	/* the latter, and thus have higher priority (as it should be). */
+    /* Scan the local shell environment, including "RC" and "Result2"!   */
+    /* Put shell vars in 'loc' and 'both', and aliases in 'aliases'. */
+    /* Because of the fact that the inserting of local vars into 'both' */
+    /* happens AFTER the insertion of global vars, the formor overwrite */
+    /* the latter, and thus have higher priority (as it should be). */
 
-	localvars = (struct List*) &((struct Process*)FindTask(0))->pr_LocalVars;
+    localvars = (struct List*) &((struct Process*)FindTask(0))->pr_LocalVars;
 
-	if(!IsListEmpty(localvars))
-	{
-		lvar = (struct LocalVar*) localvars->lh_Head;
-		do {
-			if(dynbuf=malloc(lvar->lv_Len+1))
-			{
-				strncpy(dynbuf,lvar->lv_Value,lvar->lv_Len);
-				dynbuf[lvar->lv_Len]=0;
+    if(!IsListEmpty(localvars))
+    {
+    	lvar = (struct LocalVar*) localvars->lh_Head;
+    	do {
+    	    if(dynbuf=malloc(lvar->lv_Len+1))
+    	    {
+    	    	strncpy(dynbuf,lvar->lv_Value,lvar->lv_Len);
+    	    	dynbuf[lvar->lv_Len]=0;
 
-				if(v=PyString_FromString(dynbuf))
-				{
-					if(lvar->lv_Node.ln_Type==LV_VAR)
-					{
-						PyDict_SetItemString(*loc,lvar->lv_Node.ln_Name,v);
-						PyDict_SetItemString(*both,lvar->lv_Node.ln_Name,v);
-					}
-					else if(lvar->lv_Node.ln_Type==LV_ALIAS)
-						PyDict_SetItemString(*aliases,lvar->lv_Node.ln_Name,v);
+    	    	if(v=PyString_FromString(dynbuf))
+    	    	{
+    	    	    if(lvar->lv_Node.ln_Type==LV_VAR)
+    	    	    {
+    	    	    	PyDict_SetItemString(*loc,lvar->lv_Node.ln_Name,v);
+    	    	    	PyDict_SetItemString(*both,lvar->lv_Node.ln_Name,v);
+    	    	    }
+    	    	    else if(lvar->lv_Node.ln_Type==LV_ALIAS) 
+		    {
+    	    	    	PyDict_SetItemString(*aliases,lvar->lv_Node.ln_Name,v);
+    	    	    }
+		    
+    	    	    Py_DECREF(v);
+    	    	}
+    	    	free(dynbuf);
+    	    }
+    	} while((lvar=(struct LocalVar*)lvar->lv_Node.ln_Succ)->lv_Node.ln_Succ);
+    }
 
-					Py_DECREF(v);
-				}
-				free(dynbuf);
-			}
-		} while((lvar=(struct LocalVar*)lvar->lv_Node.ln_Succ)->lv_Node.ln_Succ);
-	}
-
-
-	return 1;
+    return 1;
 }
 
 
@@ -191,11 +192,11 @@ convertenviron(PyObject **glob, PyObject **loc,
 
 static PyObject * amiga_error(void)
 {
-	return PyErr_SetFromErrno(PyExc_OSError);
+    return PyErr_SetFromErrno(PyExc_OSError);
 }
 static PyObject * amiga_error_with_filename(char *name)
 {
-	return PyErr_SetFromErrnoWithFilename(PyExc_OSError, name);
+    return PyErr_SetFromErrnoWithFilename(PyExc_OSError, name);
 }
 
 
@@ -394,14 +395,10 @@ amiga_mkdir(PyObject *self, PyObject *args)
 	int mode = 0777;
 	if (!PyArg_ParseTuple(args, "s|i", &path, &mode)) return NULL;
 	Py_BEGIN_ALLOW_THREADS
-#ifdef INET225
+#if defined INET225 || defined AROS
 	res = mkdir(path, mode);
 #else
-#ifndef AROS
 	res = my_mkdir(path, mode);
-#else
-    	res = mkdir(path, mode);
-#endif
 #endif
 	Py_END_ALLOW_THREADS
 	if (res < 0) return amiga_error_with_filename(path);
@@ -441,7 +438,7 @@ amiga_system(PyObject *self, PyObject *args)
 }
 #endif
 
-#if defined(AMITCP) || defined(INET225)
+#if defined AMITCP || defined INET225 || defined AROS
 static PyObject *
 amiga_umask(PyObject *self, PyObject *args)
 {
@@ -449,7 +446,9 @@ amiga_umask(PyObject *self, PyObject *args)
 #ifdef AMITCP
 	if (!checkusergrouplib()) return NULL;
 #else
+#  ifdef INET225
 	if (!checksocketlib()) return NULL;
+#  endif
 #endif
 	if (!PyArg_ParseTuple(args,"i",&i))
 		return NULL;
@@ -488,7 +487,7 @@ amiga_unlink(PyObject *self, PyObject *args)
 	return amiga_1str(args, unlink);
 }
 
-#if defined(AMITCP) || defined(INET225)
+#if defined AMITCP  || defined INET225 || defined AROS
 static PyObject *
 amiga_utime(PyObject *self, PyObject *args)
 {
@@ -542,7 +541,9 @@ amiga_getegid(PyObject *self, PyObject *args)
 #ifdef AMITCP
 	if (!checkusergrouplib()) return NULL;
 #else
+#  ifdef INET225
 	if (!checksocketlib()) return NULL;
+#  endif
 #endif
 	if (!PyArg_Parse(args,""))
 		return NULL;
@@ -557,7 +558,9 @@ amiga_geteuid(PyObject *self, PyObject *args)
 #ifdef AMITCP
 	if (!checkusergrouplib()) return NULL;
 #else
+#  ifdef INET225
 	if (!checksocketlib()) return NULL;
+#  endif
 #endif
 	if (!PyArg_Parse(args,""))
 		return NULL;
@@ -572,7 +575,9 @@ amiga_getgid(PyObject *self, PyObject *args)
 #ifdef AMITCP
 	if (!checkusergrouplib()) return NULL;
 #else
+#  ifdef INET225
 	if (!checksocketlib()) return NULL;
+#  endif 
 #endif
 	if (!PyArg_Parse(args,""))
 		return NULL;
@@ -595,7 +600,9 @@ amiga_getpgrp(PyObject *self, PyObject *args)
 #ifdef AMITCP
 	if (!checkusergrouplib()) return NULL;
 #else
+#  ifdef INET225
 	if (!checksocketlib()) return NULL;
+#  endif
 #endif
 	if (!PyArg_ParseTuple(args,""))
 		return NULL;
@@ -614,7 +621,9 @@ amiga_setpgrp(PyObject *self, PyObject *args)
 #ifdef AMITCP
 	if (!checkusergrouplib()) return NULL;
 #else
+#  ifdef INET225
 	if (!checksocketlib()) return NULL;
+#  endif
 #endif
 	if (!PyArg_ParseTuple(args,""))
 		return NULL;
@@ -647,7 +656,9 @@ amiga_getuid(PyObject *self, PyObject *args)
 #ifdef AMITCP
 	if (!checkusergrouplib()) return NULL;
 #else
+#  ifdef INET225
 	if (!checksocketlib()) return NULL;
+#  endif
 #endif
 	if (!PyArg_ParseTuple(args,""))
 		return NULL;
@@ -686,7 +697,9 @@ amiga_setuid(PyObject *self, PyObject *args)
 #ifdef AMITCP
 	if (!checkusergrouplib()) return NULL;
 #else
+#  ifdef INET225
 	if (!checksocketlib()) return NULL;
+#  endif
 #endif
 	if (!PyArg_ParseTuple(args, "i", &uid))
 		return NULL;
@@ -705,7 +718,9 @@ amiga_setgid(PyObject *self, PyObject *args)
 #ifdef AMITCP
 	if (!checkusergrouplib()) return NULL;
 #else
+#  ifdef INET225
 	if (!checksocketlib()) return NULL;
+#   endif
 #endif
 	if (!PyArg_ParseTuple(args, "i", &gid))
 		return NULL;
@@ -759,7 +774,9 @@ amiga_setsid(PyObject *self, PyObject *args)
 #ifdef AMITCP
 	if (!checkusergrouplib()) return NULL;
 #else
+#  ifdef INET225
 	if (!checksocketlib()) return NULL;
+#  endif
 #endif
 	if (!PyArg_ParseTuple(args,""))
 		return NULL;
@@ -844,36 +861,54 @@ static PyObject *amiga_ftruncate( PyObject *self, PyObject *args )
 }
 #endif
 
-#if defined(AMITCP) || defined(INET225)
+#if defined AMITCP || defined INET225 || defined AROS
 static PyObject *
 amiga_dup(PyObject *self, PyObject *args)
 {
-	int fd;
-	if (!checksocketlib()) { PyErr_Clear(); errno=EIO; return amiga_error(); }
-	if (!PyArg_ParseTuple(args, "i", &fd))
-		return NULL;
-	Py_BEGIN_ALLOW_THREADS
-	fd = dup(fd);
-	Py_END_ALLOW_THREADS
-	if (fd < 0)
-		return amiga_error();
-	return PyInt_FromLong((long)fd);
+    int fd;
+
+#ifndef AROS	
+    if (!checksocketlib()) 
+    { 
+    	PyErr_Clear(); 
+    	errno=EIO; 
+    	return amiga_error(); 
+    }
+#endif
+
+    if (!PyArg_ParseTuple(args, "i", &fd))
+    	return NULL;
+    Py_BEGIN_ALLOW_THREADS
+    fd = dup(fd);
+    Py_END_ALLOW_THREADS
+    if (fd < 0)
+    	return amiga_error();
+    return PyInt_FromLong((long)fd);
 }
 
 static PyObject *
 amiga_dup2(PyObject *self, PyObject *args)
 {
-	int fd, fd2, res;
-	if (!checksocketlib()) { PyErr_Clear(); errno=EIO; return amiga_error(); }
-	if (!PyArg_ParseTuple(args, "(ii)", &fd, &fd2))
-		return NULL;
-	Py_BEGIN_ALLOW_THREADS
-	res = dup2(fd, fd2);
-	Py_END_ALLOW_THREADS
-	if (res < 0)
-		return amiga_error();
-	Py_INCREF(Py_None);
-	return Py_None;
+    int fd, fd2, res;
+
+#ifndef AROS
+    if (!checksocketlib()) 
+    { 
+    	PyErr_Clear(); 
+	errno=EIO; 
+	return amiga_error(); 
+    }
+#endif
+    
+    if (!PyArg_ParseTuple(args, "(ii)", &fd, &fd2))
+    	return NULL;
+    Py_BEGIN_ALLOW_THREADS
+    res = dup2(fd, fd2);
+    Py_END_ALLOW_THREADS
+    if (res < 0)
+    	return amiga_error();
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 #endif
 
@@ -1126,7 +1161,7 @@ static struct PyMethodDef amiga_methods[] = {
 #ifdef HAVE_SYSTEM
     { "system",    amiga_system,    METH_VARARGS },
 #endif
-#if defined(AMITCP) || defined(INET225)
+#if defined AMITCP || defined INET225 || defined AROS
     { "umask",     amiga_umask,     METH_VARARGS },
 #endif
 #ifdef HAVE_UNAME
@@ -1134,7 +1169,7 @@ static struct PyMethodDef amiga_methods[] = {
 #endif
     { "unlink",    amiga_unlink,    METH_VARARGS },
     { "remove",    amiga_unlink,    METH_VARARGS },
-#if defined(AMITCP) || defined(INET225)
+#if defined AMITCP || defined INET225 || defined AROS 
     { "utime",     amiga_utime,     METH_VARARGS },
 #endif
 #ifdef HAVE_TIMES
@@ -1189,7 +1224,7 @@ static struct PyMethodDef amiga_methods[] = {
 #endif
     { "open",      amiga_open,      METH_VARARGS },
     { "close",     amiga_close,     METH_VARARGS },
-#if defined(AMITCP) || defined(INET225)
+#if defined AMITCP || defined INET225 || defined AROS
     { "dup",       amiga_dup,       METH_VARARGS },
     { "dup2",      amiga_dup2,      METH_VARARGS },
 #endif
