@@ -1,6 +1,7 @@
 include $(TOP)/config/make.cfg
 
 %define_libs
+%make_common_setup
 
 OBJDIR		:= $(GENDIR)/$(CURDIR)
 DESTDIR		:= $(CONTRIBDIR)/Gfx/XaoS
