@@ -70,13 +70,23 @@ def gen (datadir):
     '''Create the news page (index.html, oldnews.html).'''
 
     # Search all known news items, and sort them in reverse order
-    list = glob.glob (os.path.join (datadir, 'news', '*'))
-    list.remove (os.path.join (datadir, 'news', 'CVS'))
+    list = glob.glob (os.path.join (datadir, 'news', '2002*'))
+    #list.remove (os.path.join (datadir, 'news', 'CVS'))
     list.sort ()
     list.reverse ()
     
     # Create a main page with the Top 5 news items and another page
     # with the rest.
-    genPage ('NEWS', 'index.html', list[:5])
+    genPage ('NEWS', 'index.html', list[:5])    
     genPage ('NEWS/Old News', 'oldnews.html', list[5:])
+    
+    list = glob.glob (os.path.join (datadir, 'news', '2001*'))
+    list.sort ()
+    list.reverse ()
+    genPage ('NEWS/Old News (2001)', 'oldnews2001.html', list)
+
+    list = glob.glob (os.path.join (datadir, 'news', '2000*'))
+    list.sort ()
+    list.reverse ()
+    genPage ('NEWS/Old News (2000)', 'oldnews2000.html', list)
 
