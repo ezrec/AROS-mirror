@@ -1,4 +1,5 @@
-BASEDIR=$(TOP)/bin/$(AROS_TARGET_ARCH)-$(AROS_HOST_CPU)
+BASEDIR=$(TOP)/bin/$(AROS_HOST_ARCH)-$(AROS_HOST_CPU)
+DESTDIR=$(TOP)/bin/$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)
 CC=$(BASEDIR)/tools/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros-gcc
 OBJ = ./obj/
 PROJECTNAME = play
@@ -13,7 +14,7 @@ LIBS =  -Llibavcodec -Llibavformat -L../SDL \
 all:  $(PROJECTNAME)
 
 install:
-	cp $(PROJECTNAME) $(BASEDIR)/AROS/Tests/
+	cp $(PROJECTNAME) $(DESTDIR)/AROS/Tests/
     
 libavformat/libavformat.a: libavformat/*.c libavformat/*.h
 	make -C libavformat
