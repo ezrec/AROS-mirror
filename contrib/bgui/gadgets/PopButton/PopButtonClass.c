@@ -18,6 +18,10 @@
  * enable/disable status of an item.
 
  * $Log$
+ * Revision 42.7  2002/09/17 17:11:16  stegerg
+ * inversvid drawmode together with Text() works now, so no
+ * workaround needed.
+ *
  * Revision 42.6  2000/08/11 08:09:39  chodorowski
  * Removed METHOD #define, already defined in bgui_compilerspecific.h.
  *
@@ -450,14 +454,8 @@ STATIC VOID RenderMenuEntry( struct RastPort *rp, PMD *pmd, UWORD *pens, ULONG n
    ** Set the pens.
    **/
 
-#ifdef _AROS
-#warning INVERSVID DrawMode does not work yet in AROS. Remove this temp fix once it does.
-   SetAPen( rp, sel ? penb : pena);
-   SetBPen( rp, sel ? pena : penb);   
-#else
    SetAPen( rp, pena );
    SetBPen( rp, penb );
-#endif
 
    /*
    ** Render the menu label.

@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2002/09/17 17:11:16  stegerg
+ * inversvid drawmode together with Text() works now, so no
+ * workaround needed.
+ *
  * Revision 42.6  2000/08/17 15:09:18  chodorowski
  * Fixed compiler warnings.
  *
@@ -357,14 +361,8 @@ STATIC VOID RenderPopupEntry(struct BaseInfo *bi, CD *cd, ULONG num, BOOL sel)
    /*
     * Setup pens for text.
     */
-#ifdef _AROS
-#warning INVERSVID DrawMode does not work yet in AROS. Remove this temp fix once it does.
-   BSetDPenA(bi, sel ? BARBLOCKPEN : BARDETAILPEN);
-   BSetDPenB(bi, sel ? BARDETAILPEN : BARBLOCKPEN);
-#else
    BSetDPenA(bi, BARDETAILPEN);
    BSetDPenB(bi, BARBLOCKPEN);
-#endif
 
    /*
     * Move to the desired location and render.
