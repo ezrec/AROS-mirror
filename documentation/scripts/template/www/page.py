@@ -7,7 +7,7 @@ from components import *
 def makePage( _T, _N, _M, MIRRORS_DATA ):
     navigation = Tree \
     ( [
-        A( 'Home', href='%(BASE)s' ),
+        A( 'Home', href='%(BASE)sindex.php' ),
         BR(),
         A( _N['news'], href='%(BASE)snews/' ),
         Tree ( A( _N['archive'], href='%(BASE)snews/archive/' ) ),
