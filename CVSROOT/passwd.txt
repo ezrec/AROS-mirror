@@ -16,6 +16,7 @@ srittau:aaRBXVNGOCKiY:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Gadtool
 laguest:baLtYMMsFjGms:L. A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
 SDuvan:dbfBDWZL8B0q.:Johan Alfredsson:d95duvan@dtek.chalmers.se:Commodities
 bergers:bdKC5UL24VXQI:Stefan Berger:bergers@cip.e-technik.uni-erlangen.de:Math libs
+jskov:bdclJpF6gyfHU:Jesper Skov:jskov@cs.auc.dk:Linux/m68k
 
 stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
