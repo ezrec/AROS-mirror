@@ -58,7 +58,7 @@ prohst03:abyLiBXA/85KY:Erhan Bilgili:prohst03@leon.unimedya.net.tr:
 bernie:ad091UoEjSOlA:Bernardo Innocenti:bernie@shock.cosmos.it:
 wojcz:dbdFnjNkcreJM:Wojciech Czyz:wojcz@elsoft.com.pl:
 fsoft:37awEQ15O35vQ:Fabio Rotondo:Fabio.Rotondo@deagostini.it:
-tT85.:db.2ZKYLqIvaY:???:hmichelo@so-razor.ms.sophia.schneider.fr:
+tT85.:db.2ZKYLqIvaY::hmichelo@so-razor.ms.sophia.schneider.fr:
 paul:dduLZ9yokBXXk:Paul Firth:paul@minds-eye.net:
 vitas:db5VTm//PP8yA:Vitas Povilaitis:vitas@wavemark.com:
 bsidhi:ipMAO8VFGp3Wk:Bill Sidhipong:vsidhi@enteract.com:
