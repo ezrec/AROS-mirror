@@ -5,12 +5,15 @@
 #include "lwip/mem.h"
 #include "lwip/memp.h"
 #include "lwip/sys.h"
+#include "lwip/pbuf.h"
 
 #include "lwip/stats.h"
 
 #include "lwip/ip.h"
+#include "lwip/raw.h"
 #include "lwip/udp.h"
 #include "lwip/tcp.h"
+#include "lwip/icmp.h"
 
 #include "lwip/tcpip.h"
 #include "lwip/netif.h"
@@ -221,6 +224,14 @@ void start(void)
   }
 }
 
+void raw_recv_func(void *arg, struct raw_pcb *upcb, struct pbuf *p, struct ip_addr *addr)
+{
+  struct ip_hdr *hdr = (struct ip_hdr*)p->payload;
+
+  kprintf("received raw packet: protocol %ld\n",IPH_PROTO(hdr));
+  
+}
+
 void main(void)
 {
   struct ip_addr ipaddr, netmask, gw;
@@ -256,6 +267,29 @@ void main(void)
     IP4_ADDR(&netmask, 255,0,0,0);
   
     netif_add(&ipaddr, &netmask, &gw, loopif_init, tcpip_input);
+
+    {
+    	struct raw_pcb *raw = raw_new(1);
+    	struct ip_addr to;
+      struct icmp_echo_hdr echo;
+      struct pbuf *p;
+
+    	IP4_ADDR(&to,192,168,6,100);
+    	raw_connect(raw,&to);
+
+      ICMPH_TYPE_SET(&echo, ICMP_ECHO);
+      ICMPH_CODE_SET(&echo,0);
+      echo.chksum = 0;
+      echo.seqno = 100;
+      echo.id = 100;			/* ID */
+
+      p = pbuf_alloc(PBUF_TRANSPORT, 0, PBUF_ROM);
+      p->payload = &echo;
+      p->len = sizeof(echo);
+
+      raw_recv(raw,raw_recv_func,NULL);
+      raw_send(raw,p);
+    }
   } 
 
   start();
