@@ -2,7 +2,7 @@
 include $(TOP)/config/make.cfg
 
 #MM- workbench-datatypes-complete: workbench-datatypes-png
-#MM workbench-datatypes-png : setup includes linklibs linklibs-png
+#MM workbench-datatypes-png : includes linklibs linklibs-png
 
 FILES := pngclass libfunc
 FUNCS := obtainengine

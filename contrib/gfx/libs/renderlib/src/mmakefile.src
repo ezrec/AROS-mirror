@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-gfx-libs-render : setup includes linklibs
+#MM- contrib-gfx-libs-render : includes linklibs
 
 FILES := lib_global 	\
     	 rnd_memory 	\
