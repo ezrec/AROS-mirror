@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/07/04 05:02:22  bergers
+ * Made examples compilable.
+ *
  * Revision 42.1  2000/05/15 19:29:50  stegerg
  * replacements for REG macro.
  *
@@ -716,11 +719,15 @@ ULONG SAVEDS ASM
 #else
 SAVEDS ASM ULONG
 #endif
-//BackFillHook( REG(a0) struct Hook *hook, REG(a2) Object *imo, REG(a1) struct FrameDrawMsg *fdm )
-REGFUNC3(,BackFillHook
-	REGPARAM(A0, struct Hook *, hook),
-	REGPARAM(A2, Object *, imo),
-	REGPARAM(A1, struct FrameDrawMsg *, fdm))
+
+#ifdef _AROS
+AROS_UFH3(, BackFillHook,
+	AROS_LHA(struct Hook *, hook, A0),
+	AROS_LHA(Object *, imo, A2),
+	AROS_LHA(struct FrameDrawMsg *, fdm, A1))
+#else
+BackFillHook( REG(a0) struct Hook *hook, REG(a2) Object *imo, REG(a1) struct FrameDrawMsg *fdm )
+#endif
 {
    UWORD pat[] =
    {
@@ -866,11 +873,14 @@ VOID SAVEDS ASM
 #else
 SAVEDS ASM VOID
 #endif
-//TabHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct IntuiMessage *msg )
-REGFUNC3(,TabHookFunc,
-	REGPARAM(A0, struct Hook *, hook),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct IntuiMessage *, msg))
+#ifdef _AROS
+AROS_UFH3(,TabHookFunc,
+	AROS_LHA(struct Hook *, hook, A0),
+	AROS_LHA(Object *, obj, A2),
+	AROS_LHA(struct IntuiMessage *, msg, A1))
+#else
+TabHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct IntuiMessage *msg )
+#endif
 {
    struct Window        *window;
    Object            *mx_obj = ( Object * )hook->h_Data;

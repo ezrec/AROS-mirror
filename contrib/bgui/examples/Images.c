@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/07/04 05:02:22  bergers
+ * Made examples compilable.
+ *
  * Revision 42.0  2000/05/09 22:19:51  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -31,10 +34,15 @@ quit
 
 #include "DemoCode.h"
 
+
 /*
 **	Generated with IconEdit.
 **/
+#ifdef _AROS
+UWORD HelpI1Data[] =
+#else
 CHIP( UWORD ) HelpI1Data[] =
+#endif
 {
 /* Plane 0 */
     0x0000,0x0020,0x0000,0x00A0,0x0020,0x0000,0x0143,0xE020,
@@ -69,7 +77,11 @@ struct Image HelpI1 =
     NULL			/* Next image */
 };
 
+#ifdef _AROS
+UWORD HelpI2Data[] =
+#else
 CHIP( UWORD ) HelpI2Data[] =
+#endif
 {
 /* Plane 0 */
     0x0000,0x0020,0x0000,0x00A0,0x0020,0x0000,0x0140,0xE020,

@@ -127,6 +127,105 @@ bin/test13
 
 test: $(INCLUDE_FILES) $(test)
 
+bin/AddButtons: examples/AddButtons.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros AddButtons -R
+
+bin/Area: examples/Area.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros Area -R
+
+bin/Backdrop: examples/Backdrop.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros Backdrop -R
+
+bin/BGUIDemo: examples/BGUIDemo.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros BGUIDemo -R
+
+bin/CXDemo: examples/CXDemo.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros CXDemo -R
+
+bin/FieldList: examples/FieldList.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros FieldList -R
+
+bin/FileRequester: examples/FileRequester.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros FileRequester -R
+
+bin/IDCMPHook: examples/IDCMPHook.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros IDCMPHook -R
+
+bin/Images: examples/Images.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros Images -R
+
+bin/List: examples/List.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros List -R
+
+bin/MultiColumn: examples/MultiColumn.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros MultiColumn -R
+
+bin/MultiFont: examples/MultiFont.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros MultiFont -R
+
+bin/MultiSelect: examples/MultiSelect.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros MultiSelect -R
+
+bin/StringHook: examples/StringHook.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros StringHook -R
+
+bin/TextField: examples/TextField.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros TextField -R
+
+bin/Useless: examples/Useless.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros Useless -R
+
+bin/ViewGroup: examples/ViewGroup.c
+	@$(ECHO) Making $@...
+	@$(MAKE) -Cexamples -fMakefile.aros ViewGroup -R
+
+
+
+
+
+examples = \
+bin/AddButtons \
+bin/Area \
+bin/Backdrop \
+bin/BGUIDemo \
+bin/CXDemo \
+bin/FieldList \
+bin/FileRequester \
+bin/IDCMPHook \
+bin/Images \
+bin/List \
+bin/MultiColumn \
+bin/MultiFont \
+bin/MultiSelect \
+bin/StringHook \
+bin/Useless \
+bin/ViewGroup
+
+others = \
+bin/ColorWheel \
+bin/TextField \
+
+examples: $(INCLUDE_FILES) $(examples)
+
+
+
+
 OBJECTS =  \
 	o/plmain$(o) \
 	o/plboopsi$(o) \

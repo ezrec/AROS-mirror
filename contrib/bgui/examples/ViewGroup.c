@@ -11,6 +11,9 @@
  * Description: Test program for the clipped view groups.
  *
  * $Log$
+ * Revision 42.2  2000/07/04 05:02:22  bergers
+ * Made examples compilable.
+ *
  * Revision 42.1  2000/05/15 19:29:50  stegerg
  * replacements for REG macro.
  *
@@ -64,6 +67,7 @@ quit
 Object *TestWindow, *text, *GO_BottomProp, *GO_RightProp;
 struct Window *win;
 struct Library *BGUIBase;
+struct IntuitionBase * IntuitionBase;
 
 /*
 ** Cycle and Mx labels.
@@ -114,9 +118,11 @@ int main(void)
 {
    Object            *c, *p, *m, *v, *s1, *s2, *s3;
 
+   IntuitionBase = OpenLibrary("intuition.library",0);
+
    BGUIBase = OpenLibrary("bgui.library",37);
 
-   if(!BGUIBase) {
+   if(!BGUIBase || !IntuitionBase) {
        exit(20);
    }
 
