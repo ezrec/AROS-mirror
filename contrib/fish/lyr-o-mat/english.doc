@@ -1,0 +1,172 @@
+***********************************************************
+*                                                         *
+*                     Lyr-O-Mat                           *
+*              Version 1.0 April 17, 1993                 *
+*              Copyright ©1993 CEKASOFT                   *
+*                All Rights reserved                      *
+*                                                         *
+***********************************************************
+
+Lyr-O-Mat may be distributed freely as long as all related
+files (see below) are distributed.
+
+These files are
+
+       - Lyr-O-Mat       ;  executable
+       - demo.wds             \
+       - deutsch_patterns.wds  > database in german
+       - deutsch_classes.wds  /
+       - Deutsch.Dok     ; german manual
+       - english_demo.wds     \
+       - english_patterns.wds  > database in english
+       - english_classes.wds  /
+       - english.doc     ; english manual
+
+***********************************************************
+The author cannot be held liable for the  suitability or  
+accuracy  of this manual  and/or  the  program(s)  it  describes.
+Any  damage  directly  or indirectly caused by the use or misuse 
+of  this manual  and/or the  programit describes is the sole
+responsibility of the user her/him self.
+***********************************************************
+
+Lyr-O-Mat was programmed using SAS/C 6.0 on an A4000/40 under
+OS 3.0. However, Lyr-O-Mat needs OS2.04 (Version 37+) or later.
+Special thanks to Jan van den Baard for his "GadToolsBox", which
+was used in this program.
+
+***********************************************************
+
+Lyr-O-Mat is a program designed to enjoy and amuse the user.
+The program attempts to reach this goal by displaying stupid
+statements, insolent requests and other silly sentences.
+These sentences are generated at random out from a sentence
+pattern list which may (should) contain wordclass names, which 
+are replaced with a random word from the word list of this
+class. To explain this please follow the instructions of the
+
+***********************************************************
+
+                 Quickstart
+
+1. run the Lyr-O-Mat program by double-clicking its program
+   icon. You will then recognize the program window with several
+   lists and gadgets and the output window(which may be resized or
+   moved).
+2. Select "Project->Load->Patterns & Classes" from the menu (right
+   Mousebutton menu), then select the file "english_demo.wds", which
+   should reside in the same directory as this manual.
+   The english database will now be loaded and displayed in the
+   lists.
+3. click the "Generate"-button (or press the "g"-Key or the white space
+   key on the keyboard) to generate a sentence. Lyr-O-Mat picks a
+   random pattern from the pattern list, replaces classes with a
+   random word from this class and displays the generated sentence.
+ 
+***********************************************************
+
+The sentence may look like this (from english_demo.wds)
+
+  "10: impossible computer discs can be sold today in El Peso."
+  
+How does Lyr-O-Mat compose this rubbish ?
+
+  Looking at the pattern list you find at No. 10
+  
+  "10: >adj >nouns can be >wds-4 >future in >place."
+  
+You can recognize that this pattern contains normal words as
+well as class names (introduced with the ">"-Character).
+When Lyr-O-Mat generates a sentence, it is looking for ">"
+characters in the pattern and searching the wordclass list if
+such a class is known. If it is, the classname in the
+pattern is replaced with a random word from the associated
+wordlist.
+Note: the items in the wordclass list do not have the
+      introducing ">". 
+Note: Words from a wordlist may contain wordclass names.
+  
+***********************************************************
+
+        Adding wordclasses and words
+        
+To add a wordclass click the "Add"-button of the wordclass
+list, type in the name and press "return".
+To add a word to an existing wordclass click the classname
+in the classlist, click the "Add"-button of the wordlist and
+type in the new word.
+To remove an item from any of the 3 lists click on the item
+in the list and click the corresponding "Delete"-button.
+
+Note: If you delete a wordclass, the corresponding wordlist 
+      will be deleted, too.
+      
+***********************************************************
+    
+        Writing a database using an editor
+        
+This is much faster if you intend to make a large database
+on your own. The format of a data file is like this
+
+
+Words.File
+; remark
+this is a pattern
+another pattern
+#wordclass
+?word of "wordclass"
+?word of "wordclass"
+#anotherclass
+?word of "anotherclass"
+?word of "anotherclass"
+
+The introducing string "Words.File" must be present in the first
+line, because Lyr-O-Mat searches for it to identify the file as
+one of it's own files.
+
+Classes  are introduced with a "#" character and
+words    are introduces with a "?" character.
+
+Note: the "#","?" and ";"- characters MUST be in the
+      first column. If they are not there Lyr-O-Mat treats the
+      line as a pattern.
+
+***********************************************************
+      
+                 Load and Save
+                 
+Load and save functions are separately available for patterns,
+classes and "patterns & classes". 
+Note: the "load" functions are clearing all lists before loading
+      a file, the "append" functions are appending files to
+      the current database. 
+
+***********************************************************
+
+                 Pattern- / Textmode
+                 
+The Gadget Text/Pattern determines how Lyr-O-Mat works:
+
+"Pattern" generates a single sentence from a random picked pattern.
+"Text"    generates a sentence from each pattern in the order of
+          the pattern list.
+
+***********************************************************
+
+If you like Lyr-O-Mat you may send bug reports, money, disks,
+jewellery and other gifts to me. If you don't like it you
+are encouraged to send me such things too.
+
+Enjoy !!
+
+                 CEKASOFT
+                 Karlheinz Klingbeil
+                 Elzstr. 42
+                 
+                 7809 Gutach i.Br.
+                 Germany
+                 
+
+***********************************************************
+  
+ 

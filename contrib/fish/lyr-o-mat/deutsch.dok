@@ -1,0 +1,177 @@
+***********************************************************
+*                                                         *
+*                     Lyr-O-Mat                           *
+*              Version 1.0 17-April-1993                  *
+*              Copyright ©1993 CEKASOFT                   *
+*               Alle Rechte vorbehalten                   *
+*                                                         *
+***********************************************************
+
+Lyr-O-Mat darf frei kopiert und weitergegeben werden, wenn
+dabei alle Dateien kopiert werden.
+
+Zu Lyr-O-Mat gehören die folgenden Dateien:
+
+       - Lyr-O-Mat       ; das Programm
+       - demo.wds             \
+       - deutsch_patterns.wds  > database in deutsch
+       - deutsch_classes.wds  /
+       - Deutsch.Dok     ; deutsche Anleitung
+       - english_demo.wds     \
+       - english_patterns.wds  > database in englisch
+       - english_classes.wds  /
+       - english.doc     ; englische Anleitung
+
+***********************************************************************
+--ACHTUNG--ACHTNG--ACHTUNG--ACHTUNG --ACHTUNG--ACHTNG--ACHTUNG--ACHTUNG
+
+Ich übernehme keinerlei Garantie für eine einwandfreie Funktion des
+Programmes. Die Benutzung von Lyr-O-Mat geschieht vollkommen auf Ihre
+eigene Gefahr ! Insbesondere übernehme ich keine Haftung für
+Schäden, die aus der Benutzung von Lyr-O-Mat entstehen könnten. 
+
+--ACHTUNG--ACHTNG--ACHTUNG--ACHTUNG --ACHTUNG--ACHTNG--ACHTUNG--ACHTUNG
+***********************************************************************
+ 
+Lyr-O-Mat wurde mit SAS/C 6.0 auf einem A4000/40 erstellt und
+benötigt mindesten OS2.04 (Version 37+) !!!
+Ein besonderes Dankeschön geht an Jan van den Baard, dessen
+Programm "GadToolsBox" bei der Programmierung behilflich war.
+
+***********************************************************************
+
+
+Lyr-O-Mat ist ein Programm, dessen Hauptzweck darin besteht, den
+Bediener zu erfreuen und zum Lachen zu bringen. Das Programm 
+versucht dieses Ziel mittels haltloser Behauptungen, hysterischen
+Forderungen oder anderen Aussagen in Form von zufällig erzeugten
+Sätzen zu erreichen. Diese Sätze werden aus (benutzerdefinierten)
+Schablonen (Patterns) aufgebaut, die an bestimmten Stellen
+Hinweise auf Wortklassen (Classes) enthalten können (sollen).
+Beim Bearbeiten werden dann diese Hinweise durch zufällige
+Worte aus der jeweiligen Wortklasse ersetzt. An dieser Stelle ist
+ein Beispiel angebracht; folgen Sie bitte der 
+
+***********************************************************************
+
+             Kurzanleitung
+             
+1. Laden Sie Lyr-O-Mat durch Doppelklick auf das Programmicon.
+   Es erscheint das Hauptfenster sowie ein Fenster für die
+   Ausgabe der Sätze. Arrangieren Sie die Fenster nach Belieben.
+   (das letztere können Sie auch in der Größe verändern)
+2. Wählen Sie aus dem Menü (rechte Maustaste) den Punkt
+   Project->Load->Patterns & Classes. Wählen Sie im erscheinenden
+   Dateirequester die Datei "demo.wds" im selben Verzeichnis wie
+   diese Anleitung. Daraufhin werden Worte und Satzmuster geladen.
+3. Klicken Sie auf den "Generate"-Knopf (oder die g-Taste bzw. 
+   Leertaste). Daraufhin wählt das Programm aus der Liste der
+   Satzmuster (Patterns) ein zufälliges Muster aus, ersetzt die
+   darin vorkommenden Platzhalter für Wortklassen (in der Liste 
+   links unten) durch ein beliebiges Wort dieser Klasse (in der
+   Liste rechts unten sehen Sie die Wortliste der ausgewählten 
+   Klasse), und gibt den entstehenden Satz aus.
+   
+   
+***********************************************************************
+   
+Aussehen könnte ein solcher Satz folgendermaßen (mit demo.wds)
+
+ "28: geschlafen wird nur, wenn laute, feste Bahnhöfe gebaut werden."
+ 
+Wie kommt Lyr-O-Mat nun auf diesen Stuß ?
+In der Liste der Satzmuster finden wir als Nr. 28 das Muster    
+   
+ "28: >verb-5 wird nur, wenn >eig-2, >eig-2 >hwm >verb-5 werden."
+ 
+Sie sehen, das neben normalen worten auch durch ">"-Zeichen eingeleitete
+Worte vorkommen; das sind die Platzhalter für Wortklassen.
+Diese Wortklassen sind in der Liste unten links aufgeführt (ohne ">").
+Wenn Lyr-O-Mat nun auf einen solchen Platzhalter stößt, durchsucht
+es diese Liste, ob es diesen Platzhalter gibt. Wenn ja, dann wird
+ein zufälliges der zu dieser Klasse gehörenden Worte für den 
+Platzhalter eingefügt. 
+Anmerkung: Diese Worte dürfen selbst wieder Platzhalter enthalten.
+
+***********************************************************************
+
+           Eingabe von Wortklassen und Worten
+           
+Um eine neue Wortklasse zu definieren, betätigen Sie den "Add"-Schalter
+unter der Klassenliste, geben Sie den Namen ein und betätigen Sie die
+"Return"-Taste. 
+Um Worte an eine bestehende Klasse anzufügen, klicken Sie die Klasse
+in der Liste an, worauf die bestehende Wortliste angezeigt wird, und 
+drücken Sie den "Add"-Schalter unter der Wortliste.
+
+Zum Entfernen eines Eintrages einer Liste klicken Sie den betreffenden
+Eintrag an und drücken Sie den "Delete"-Schalter der jeweiligen
+Liste. 
+Anmerkung: Beim Entfernen einer Wortklasse wird die dazugehörende
+           Wortliste gelöscht.
+           
+***********************************************************************
+           
+           Database erstellen mit dem Editor
+           
+Diese Methode eignet sich zum schnelleren Erstellen großer 
+Wortlisten. Die Database-datei ist ein normales ASCII-File mit
+dem folgenden Aufbau:
+
+
+Words.File
+; Kommentar         
+Satzmuster (Pattern)
+Satzmuster
+#Wortklasse
+?wort zur wortklasse
+?wort zur wortklasse
+#neue Wortklasse
+?neues wort zur Wortklasse   
+   
+   
+Die Zeichenkette "Words.File" dient dem Programm zum Identifizieren
+eigener Dateien und MUß vorhanden sein.
+das Zeichen "+" bezeichnet ein Satzmuster,
+das Zeichen "#" bezeichnet eine Wortklasse und
+das Zeichen "?" bezeichnet ein Wort zur jeweils obenstehenden Wortklasse
+
+Anmerkung: Die Zeichen ";","+","#" und "?" müssen in der ersten Spalte
+           stehen. Das "+"-Zeichen ist nicht unbedingt notwendig.
+
+***********************************************************************
+ 
+            Laden und Speichern von Databases
+
+Im Menü stehen Lade- und Speicherfunktionen jeweils getrennt
+für Pattern, Classes (mit ihren Wortlisten) und Pattern und
+Classes zur Verfügung.
+Anmerkung: Die "Load->"-Funktion löscht alle Listen vor dem Laden,
+           die "Append"-Funktion fügt die geladene Datei der bereits
+           vorhandenen an, wobei gleiche Listenelemente nicht
+           doppelt aufgenommen werden.
+           
+***********************************************************************
+
+            Text- / Patternmodus
+
+Der Schalter Text/Pattern bestimmt die Arbeitsweise des Programms;
+Wenn er auf "Pattern" steht, so werden einzelne Sätze aus der
+Patternliste erzeugt, mit "Text" werden alle Pattern der Liste
+nacheinander ausgeführt.
+            
+***********************************************************************
+
+Wenn Ihnen Lyr-O-Mat gefällt, scheuen Sie sich bitte nicht, mir
+Disketten, Geld, Schmuck, Kritik, Anregungen usw. zukommen zu lassen.
+Wenn es Ihnen nicht gefällt bitte ich von der Zusendung von
+Bomben usw. abzusehen.
+
+            Viel Spaß wünscht Ihnen...
+            
+            CEKASOFT
+            Karlheinz Klingbeil
+            Elzstraße 42               
+
+            7809 Gutach i.Br.
+            Germany

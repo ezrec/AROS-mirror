@@ -1,0 +1,192 @@
+Words.File
+               Horoskop
+>sternd
+>satz1 >satz2 >satz3 >satz4
+_tmode
+#was_schlechter
+?Pech
+?Unglück
+?der Verlust eines Freundes
+?das Ende deiner Partnerschaft
+?ein herber Verlust
+?großes Unglück
+?sieben Tage Pech
+#tag_schlecht
+?Pechtag
+?ausgesprochen schlechter Tag
+?sehr schlechter Tag
+?schlechter Tag
+?unheilvoller Tag
+?unheilverkündender Tag
+#schlechter
+?drückender
+?schlechter
+?schlechter für dich
+?sehr viel schlechter für dich
+?unglücklicher für dich
+?unheilvoller
+?viel schlechter
+#was_besser
+?Aufbruch
+?Blumenstrauß
+?Beginn einer neuen Liebe
+?Geldgewinn
+?Lottogewinn
+?e gute Nachricht
+?großes Glück
+?neuer Anfang
+#positionh
+?über dem Horizont
+?im ersten Haus
+?im zweiten Haus
+?im dritten Haus
+?im vierten Haus
+?im fünften Haus
+?im sechsten Haus
+?im siebten Haus
+?unter dem Horizont
+#position
+?hinter >planetak
+?hinter >sterne
+?in Opposition >planetak
+?in Konjunktion >planetak
+?in einer Reihe >planetak
+?in Opposition zu >sterne
+?in Konjunktion zu >sterne
+?in einer Reihe zu >sterne
+?vor >planetak
+?vor >sterne
+#planetak
+?zum Merkur
+?zur Venus
+?zur Erde
+?zum Mars
+?zum Jupiter
+?zum Saturn
+?zum Uranus
+?zum Neptun
+?zum Pluto
+#tag_gut
+?Glückstag
+?ausgesprochen glücklicher Tag
+?ausgesprochen guter Tag
+?guter Tag
+?glücklicher Tag
+?sehr guter Tag
+#planeta
+?der Merkur
+?die Venus
+?die Erde
+?der Mars
+?der Jupiter
+?der Saturn
+?der Uranus
+?der Neptun
+?der Pluto
+#sternd
+?Fische     (20.2. - 20.3)
+?Jungfrau   (24.8. - 23.9)
+?Krebs      (22.6. - 23.7)
+?Löwe       (24.7. - 23.8)
+?Skorpion   (24.10. - 22.11)
+?Schütze    (23.11. - 21.12)
+?Steinbock  (22.12. - 20.1)
+?Stier      (21.4. - 20.5)
+?Wassermann (21.1. - 19.2)
+?Widder     (21.3. - 20.4)
+?Zwillinge  (21.5. - 21.6)
+#sterne
+?Andromeda
+?Alpha Centauri
+?Beteigeuze
+?Castor
+?Canopus
+?Polaris
+?Pollux
+?Sirius
+?Spica
+#besser
+?besser
+?besser für dich
+?befreiender
+?glücklicher für dich
+?heller
+?sehr viel besser für dich
+?sonniger
+?viel besser
+#stern
+?Fische
+?Jungfrau
+?Krebs
+?Löwe
+?Skorpion
+?Schütze
+?Steinbock
+?Stier
+?Wassermann
+?Widder
+?Zwillinge
+#satz1
+?>planeta steht >position , was bedeutet, daß heute ein >tag_gut für dich ist.
+?>planeta steht  >position , was bedeutet, daß heute ein >tag_schlecht für dich ist.
+?>sterne steht im >positionh !
+?heute ist ein >tag_gut für dich, weil >planeta >position steht.
+?heute ist ein >tag_schlecht für dich, weil >planeta >position steht.
+#satz2
+?>tage wird es >besser werden, dann winkt ein >was_besser !
+?>tage wird es >schlechter werden, dann droht >was_schlechter !
+#satz3
+?Gehe >wen1 aus dem Weg, wenn du kein Unglück heraufbeschwören willst.
+?Höre auf >wen2 meint es gut mit dir.
+?Meide deswegen >wen2 könnte Unglück über dich bringen
+?Wäge die Vorschläge >wen3 gut ab.
+?darauf solltest du vorbereitet sein.
+#satz4
+?Am >tag solltest du im Bett bleiben.
+?Am >tag darfst du hoffen.
+?Am >tag ist allen deinen Unternehmungen Glück beschieden.
+?Am >tag wirst du einen Fehler machen.
+?Am >tag wird alles schiefgehen.
+?Fürchte dich jedoch nicht vor dem >tag.
+?Hoffnung für den >tag.
+?Zittere vor dem >tag !
+#tage
+?übermorgen
+?Am >tag
+?in 3 Tagen
+?morgen
+#wen1
+?deinem Chef
+?deinem Partner
+?deinem Freund
+?deiner Freundin
+?dem Postboten
+?den Frauen
+?den Männern
+?den Kollegen
+?den Kindern
+?den Nachbarn
+#wen2
+?deinen Chef, er
+?deinen Partner, er
+?deinen Freund, er
+?deine Freundin, sie
+?deinen Kollegen, er
+?deinen Nachbarn, er
+?deine Nachbarin, sie
+#wen3
+?deines Chefs
+?deines Partners
+?deines Freundes
+?deiner Freundin
+?deiner Kollegen
+?deines Kollegen
+?deines Nachbars
+#tag
+?Dienstag
+?Donnerstag
+?Freitag
+?Montag
+?Mittwoch
+?Sonntag
+?Samstag

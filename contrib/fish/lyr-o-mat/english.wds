@@ -1,0 +1,313 @@
+Words.File
++1 : the >noun >wds-2 >conj the >adj >noun.
++2 : >past >names >wds-1 >conj the >adj >noun.
++3 : >future you can >wds >adj >nouns in >place.
++4 : >names and >names from >place are >wds-3 >adj >nouns.
++5 : Is the >adj >noun >wds-3 ?
++6 : If the >adj >noun >wds-2 >nouns, the >adj >nouns are >wds-3 >conj >adj >nouns.
++7 : >names of >place is a >adj >noun !
++8 : >adj >nouns are >wds-3 >names, because >names is a >adj >noun.
++9 : >future >place is the host of a >noun-meeting.
++10: >adj >nouns can be >wds-4 >future in >place.
++11: the day before >names comes, we are >wds-3 >adj >nouns.
+#future
+?in a few days
+?in a few weeks
+?in a few months
+?in a few years
+?next week
+?next month
+?next year
+?today
+?tomorrow
+#names
+?Bill
+?Dietrich
+?Doug
+?Dad
+?Douglas
+?Edmund
+?Francois
+?George
+?Henry
+?Karlheinz
+?Mum
+?Peter
+?Saddam
+?Susy
+?Steve
+?Walter
+#place
+?Aircondido
+?Boregon
+?Cutah
+?El Peso
+?Grand Cannon
+?Kanvas City
+?Los Hellsangeles
+?Nought Darkota
+?Pencilmania
+?Potatomac
+?Rentucky
+?Sandy Ego
+?Screw York
+?Scarizona
+?Washingdown
+#wds-1
+?ate
+?bought
+?cooked
+?cried
+?counted
+?drank
+?forced
+?felt
+?guided
+?given
+?given us
+?given them
+?jumped
+?lied
+?looked
+?left
+?printed
+?read
+?ran
+?stood
+?saw
+?sat
+?sold
+?swallowed
+?took
+?threw
+?walked
+?wrote
+?went
+#wds-2
+?buys
+?cooks
+?cries
+?counts
+?drinks
+?eats
+?forces
+?feels
+?guides
+?gives
+?goes to
+?gives us
+?gives them
+?jumps
+?lies
+?looks
+?leaves
+?prints
+?reads
+?runs
+?stands
+?sees
+?sits
+?sells
+?takes
+?throws
+?walks
+?writes
+#wds-3
+?buying
+?beating
+?cooking
+?crying
+?counting
+?drinking
+?eating
+?forcing
+?feeling
+?guiding
+?giving
+?going to
+?jumping
+?lying
+?looking
+?leaving
+?printing
+?reading
+?running
+?standing
+?seeing
+?sitting
+?selling
+?swallowing
+?taking
+?throwing
+?walking
+?writing
+#wds-4
+?bought
+?cooked
+?cried
+?counted
+?drank
+?eaten
+?forced
+?felt
+?guided
+?given
+?jumped
+?lied
+?looked
+?left
+?printed
+?read
+?ran
+?stood
+?seen
+?sold
+?swallowed
+?taken
+?thrown
+?walked
+?written
+#past
+?last week
+?last month
+?last year
+?many years ago
+?the day before yesterday
+?the day before you came
+?yesterday
+#conj
+?after
+?behind
+?before
+?beneath
+?beyond
+?down
+?in
+?in front of
+?out of
+?on top of
+?over
+?through
+?under
+#noun
+?AMIGA
+?TV set
+?airplane
+?apple
+?bed
+?book
+?bird
+?beer
+?car
+?computer
+?chair
+?computer disc
+?cd-player
+?cat
+?city
+?cable
+?closet
+?desk
+?dining room
+?dog
+?dishwasher
+?drawer
+?foto
+?house
+?highway
+?horse
+?hedgehog
+?kitchen
+?living room
+?lemming
+?lamp
+?liquor
+?mountain
+?mailbox
+?monk
+?nun
+?ocean
+?pencil
+?program
+?plug
+?package
+?painting
+?radio
+?raspberry
+?street
+?sewer
+?skyscraper
+?speaker
+?train
+?tree
+?vavuum cleaner
+#adj
+?blue
+?black
+?big
+?bad
+?beastly
+?clean
+?cold
+?comfortable
+?convenient
+?chocolate-flavoured
+?celestial
+?dirty
+?delicate
+?fast
+?flowered
+?green
+?good
+?greasy
+?hot
+?honest
+?impossible
+?incredible
+?imbecile
+?large
+?lonely
+?lovely
+?merry
+?marvellous
+?red
+?small
+?slow
+?stupid
+?senseless
+?sweet
+?useless
+?white
+?well
+?yellow
+#wds
+?buy
+?cook
+?cry
+?count
+?drink
+?eat
+?force
+?feel
+?guide
+?give
+?go
+?give me
+?give us
+?give them
+?jump
+?lie
+?look
+?leave
+?print
+?read
+?run
+?stand
+?see
+?sit
+?sell
+?swallow
+?take
+?throw
+?walk
+?write

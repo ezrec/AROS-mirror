@@ -1,0 +1,828 @@
+Words.File
+1: >ws >verb-2 >bind >hwak.
+2: >er-es >verb-3 >bind >hwak.
+3: >name >verb-3 >bind >eig-3 >hwm.
+4: >verb-3 >hwa ?
+5: >hwa >verb-3 !
+6: Wir sollten >eig-2 >hwm >verb-1.
+7: Wir sollten >eig-2 >hwm >bind >eig-3 >hwm >verb-1.
+8: Ich würde gerne >eig-2 >hwm >verb-1.
+9: Ich würde gerne >bind >hwak >eig-2 >hwm >verb-1.
+10: Wenn >eig-2 >hwm >eig-2 >hwm >verb-1, dann >verb-1 >eig-2 >hwm >eig-2 >hwm.
+11: Auf >hwak, do gibts koa >hw.
+12: >name und >name >verb-1 >hwm.
+13: >name >verb-3 >name >bind >hwak.
+14: Bei mir >verb-3 >hwa >bind >hwak.
+15: Wir müssen unbedingt >eig-2, >eig-2 >hwm >verb-1 !!!
+16: >hwa+eig-2 >verb-3 >bind >hwa+eig-3.
+17: >name >verb-3 >bind >hwa+eig-3.
+18: >hwa+eig-2 und >hwa+eig-2 >verb-1 >bind >hwa+eig-3.
+19: >vergangen >verb-4 >name >eig-2 >hwm.
+20: >zukunft findet in >orte ein >hwm-Kongress statt.
+21: >vergangen konnte >name in >orte >eig-2 >hwm >verb-1.
+22: In >orte gab es >vergangen >eig-2 >hwm.
+23: >zukunft gibt es >eig-2 >hwm.
+24: >hwa+eig-2 >verb-3 >zukunft >eig-2 >hwm.
+25: >name >verb-4 >vergangen in >orte >eig-2 >hwm.
+26: >hwa+eig-3 geht es in >orte ganz gut.
+27: >vergangen habe ich in >orte >eig-2, >eig-2 >hwm >verb-5.
+28: >verb-5 wird nur, wenn >eig-2, >eig-2 >hwm >verb-5 werden.
+29: >vergangen >verb-4 ich in >orte >eig-2 >hwm.
+30: >hwa+eig-2 >verb-4 >eig-2, >eig-2 >hwm.
+31: Prima >verb-1 und >verb-1.
+32: Nur >hwa+eig-2 ergibt >eig-2 >hwm.
+33: >name+eig-2 sollte >bind >hwa+eig-3 >hwm >verb-1.
+34: >vergangen hat >name+eig-2 in >orte >hwm >verb-5.
+35: Zwischen >hwa+eig-3 und >hwa+eig-3 gibt es keinen Unterschied.
+_pmode
+#name+eig-2
+?der >eig-2 Karlheinz
+?der >eig-2 Dietrich
+?der >eig-2 Kohl
+?der >eig-2 David
+?der >eig-2 Blüm
+?der >eig-2 Clinton
+?der >eig-2 Bill
+?der >eig-2 Johann
+?der >eig-2 Paul
+?der >eig-2 Felix
+?der >eig-2 Alf
+?die >eig-2 Martha
+?die >eig-2 Johanna
+?die >eig-2 Katja
+?der >eig-2 Dyba
+?der >eig-2 Johannes Paul
+?der >eig-2 Bundeskanzler
+?der >eig-2 Luigi
+?der >eig-2 Donaudampfschiffahrtsvertretungskapitän
+?der >eig-2 Bischof Beutel
+?der >eig-2 Papst Pontifex
+?der >eig-2 Schwarzbrenner
+?der >eig-2 Streiblmax
+?die >eig-2 lila Kuh
+?der >eig-2 Nikolaus
+?der >eig-2 Oschterhas
+?der >eig-2 Sonnenkönig
+?der >eig-2 Schneekönig
+#hwa+eig-2
+?das >eig-2 Auto
+?der >eig-2 Zug
+?das >eig-2 Fahrrad
+?das >eig-2 Haus
+?der >eig-2 Garten
+?die >eig-2 Fabrik
+?der >eig-2 Betrieb
+?das >eig-2 Bild
+?das >eig-2 Foto
+?der >eig-2 Tisch
+?der >eig-2 Schreibtisch
+?der >eig-2 Stuhl
+?das >eig-2 Sofa
+?das >eig-2 Bett
+?das >eig-2 Schlafzimmer
+?das >eig-2 Bad
+?die >eig-2 Dusche
+?die >eig-2 Küche
+?das >eig-2 Wohnzimmer
+?das >eig-2 Eßzimmer
+?die >eig-2 Straße
+?der >eig-2 Boden
+?die >eig-2 Decke
+?das >eig-2 Dach
+?der >eig-2 Keller
+?der >eig-2 Bahnhof
+?die >eig-2 Stadtmitte
+?die >eig-2 Kreuzung
+?der >eig-2 Computer
+?die >eig-2 Diskette
+?die >eig-2 Festplatte
+?das >eig-2 Laufwerk
+?das >eig-2 Essen
+?das >eig-2 Getränk
+?der >eig-2 Staubsauger
+?die >eig-2 Steuererklärung
+?das >eig-2 Finanzamt
+?die >eig-2 Sonne
+?der >eig-2 Mond
+?der >eig-2 Stern
+?der >eig-2 Planet
+?der >eig-2 Mann
+?die >eig-2 Frau
+?das >eig-2 Kind
+?das >eig-2 Buch
+?der >eig-2 Brennkessel
+?der >eig-2 Perserteppich
+?der >eig-2 Lautsprecher
+?der >eig-2 Nagel
+?der >eig-2 Faden
+?die >eig-2 Nadel
+?die >eig-2 Schlange
+?die >eig-2 Katze
+?der >eig-2 Hund
+?das >eig-2 Schaf
+?der >eig-2 Vogel
+#hwa+eig-3
+?dem >eig-3 Auto
+?dem >eig-3 Zug
+?dem >eig-3 Fahrrad
+?dem >eig-3 Haus
+?dem >eig-3 Garten
+?der >eig-3 Fabrik
+?dem >eig-3 Betrieb
+?dem >eig-3 Bild
+?dem >eig-3 Foto
+?dem >eig-3 Tisch
+?dem >eig-3 Schreibtisch
+?dem >eig-3 Stuhl
+?dem >eig-3 Sofa
+?dem >eig-3 Bett
+?dem >eig-3 Schlafzimmer
+?dem >eig-3 Bad
+?der >eig-3 Dusche
+?der >eig-3 Küche
+?dem >eig-3 Wohnzimmer
+?dem >eig-3 Eßzimmer
+?der >eig-3 Straße
+?dem >eig-3 Boden
+?der >eig-3 Decke
+?dem >eig-3 Dach
+?dem >eig-3 Keller
+?dem >eig-3 Bahnhof
+?der >eig-3 Stadtmitte
+?der >eig-3 Kreuzung
+?dem >eig-3 Computer
+?der >eig-3 Diskette
+?der >eig-3 Festplatte
+?dem >eig-3 Laufwerk
+?dem >eig-2 Buch
+?dem >eig-2 Brennkessel
+?dem >eig-2 Perserteppich
+?dem >eig-2 Lautsprecher
+?dem >eig-2 Nagel
+?dem >eig-2 Faden
+?der >eig-2 Nadel
+?dem >eig-3 Essen
+?dem >eig-3 Getränk
+?dem >eig-3 Staubsauger
+?der >eig-3 Steuererklärung
+?dem >eig-3 Finanzamt
+?der >eig-3 Sonne
+?dem >eig-3 Mond
+?den >eig-3 Sternen
+?dem >eig-3 Planeten
+?dem >eig-3 Mann
+?der >eig-3 Frau
+?dem >eig-3 Kind
+?dem >eig-3 Hund
+?dem >eig-3 Schaf
+?dem >eig-3 Vogel
+?der >eig-3 Katze
+?der >eig-3 Schlange
+#vergangen
+?gestern
+?in ferner Vergangenheit
+?im finsteren Mittelalter
+?letzte Woche
+?letzten Monat
+?letztes Jahr
+?vorgestern
+?vor kurzem
+?vor langer Zeit
+?vor Jahren
+?vor Monaten
+#zukunft
+?übermorgen
+?bald
+?heute
+?in vielen Jahren
+?in vielen Tagen
+?in vielen Monaten
+?in Kürze
+?morgen
+?nächste Woche
+?nächsten Monat
+?nächstes Jahr
+#verb-1
+?backen
+?bügeln
+?baden
+?brennen
+?duschen
+?drucken
+?essen
+?fangen
+?gucken
+?hüpfen
+?hopsen
+?hocken
+?hassen
+?kochen
+?kleben
+?lesen
+?liegen
+?laufen
+?legen
+?lieben
+?mopsen
+?putzen
+?rennen
+?schlafen
+?sitzen
+?stehen
+?schreiben
+?sehen
+?stellen
+?staubsaugen
+?trinken
+?tippen
+?werfen
+?waschen
+#verb-2
+?backe
+?bügele
+?bade
+?brenne
+?dusche
+?drucke
+?esse
+?fange
+?gucke
+?hüpfe
+?hopse
+?hocke
+?hasse
+?koche
+?klebe
+?lese
+?liege
+?laufe
+?lege
+?liebe
+?mopse
+?putze
+?renne
+?schlafe
+?sitze
+?stehe
+?schreibe
+?sehe
+?stelle
+?sauge Staub
+?tippe
+?trinke
+?wasche
+?werfe
+#verb-3
+?bäckt
+?bügelt
+?badet
+?brennt
+?duscht
+?druckt
+?fängt
+?guckt
+?hüpft
+?hopst
+?hockt
+?haßt
+?ißt
+?kocht
+?klebt
+?liest
+?liegt
+?läuft
+?legt
+?liebt
+?mopst
+?putzt
+?rennt
+?schläft
+?sitzt
+?steht
+?schreibt
+?sieht
+?stellt
+?saugt Staub
+?tippt
+?trinkt
+?wäscht
+?wirft
+#verb-4
+?aß
+?buk
+?bügelte
+?badete
+?brannte
+?duschte
+?druckte
+?erfand
+?fing
+?guckte
+?hüpfte
+?hopste
+?hockte
+?haßte
+?kochte
+?klebte
+?las
+?lag
+?lief
+?legte
+?liebte
+?mopste
+?putzte
+?rannte
+?schlief
+?saß
+?stand
+?schrieb
+?sah
+?stellte
+?tippte
+?trank
+?wusch
+?warf
+?zerstörte
+#verb-5
+?erstanden
+?gegessen
+?getrunken
+?gelesen
+?geschlafen
+?gekocht
+?gebacken
+?gebügelt
+?gesessen
+?gelegen
+?gerannt
+?gewaschen
+?gehockt
+?gebrannt
+?getippt
+?gedruckt
+?gestanden
+?gelaufen
+?gehüpft
+?gehopst
+?gemopst
+?geschrieben
+?geklebt
+?geguckt
+?gesehen
+?gestellt
+?gelegt
+?geworfen
+?gefangen
+?geputzt
+?gebadet
+?geduscht
+?geliebt
+?gehaßt
+?staubgesaugt
+#er-es
+?er
+?es
+#eig-1
+?ölig
+?blau
+?cool
+?dick
+?dünn
+?depressiv
+?flüssig
+?fest
+?feucht
+?feist
+?grün
+?gelb
+?grau
+?gut
+?glatt
+?hoch
+?heiß
+?kurz
+?kalt
+?langsam
+?lila
+?laut
+?leise
+?locker
+?lang
+?leger
+?naß
+?rot
+?rutschig
+?schnell
+?sehr schnell
+?sehr langsam
+?schwarz
+?sehr laut
+?sehr leise
+?staubig
+?sauber
+?schmutzig
+?schön
+?schlecht
+?tief
+?tranig
+?trocken
+?unschön
+?weiß
+?warm
+#eig-2
+?ölige
+?blaue
+?coole
+?dicke
+?dünne
+?depressive
+?flüssige
+?feste
+?feiste
+?glatte
+?grüne
+?gelbe
+?graue
+?gute
+?heiße
+?hohe
+?kalte
+?kurze
+?lockere
+?legere
+?langsame
+?lilane
+?laute
+?leise
+?lange
+?nasse
+?rutschige
+?rote
+?schnelle
+?sehr schnelle
+?sehr langsame
+?schwarze
+?sehr laute
+?sehr leise
+?staubige
+?saubere
+?schutzige
+?schöne
+?schlechte
+?trockene
+?tiefe
+?tranige
+?unschöne
+?warme
+?weiße
+#eig-3
+?öligen
+?blauen
+?coolen
+?dicken
+?dünnen
+?depressiven
+?flüssigen
+?festen
+?feisten
+?grünen
+?gelben
+?glatten
+?grauen
+?guten
+?heißen
+?hohen
+?kalten
+?kurzen
+?lockeren
+?legeren
+?langsamen
+?lilanen
+?lauten
+?leisen
+?langen
+?nassen
+?rutschigen
+?roten
+?schnellen
+?sehr schnellen
+?sehr langsamen
+?schwarzen
+?sehr lauten
+?sehr leisen
+?staubigen
+?sauberen
+?schutzigen
+?schönen
+?schlechten
+?trockenen
+?tiefen
+?tranigen
+?unschönen
+?warmen
+?weißen
+#name
+?Anton
+?Alf
+?Björn
+?Bischof Beutel
+?Betonkrause
+?Charly
+?Dietrich
+?David
+?Emil
+?Helmut
+?Johannes Paul
+?Katja
+?Klaus
+?Lukas
+?Martha
+?Madonna
+?Matthäus
+?Nobbi
+?Paul
+?Papst Pontifex
+?Rudi
+?Sonny
+?Streiblmax
+?Theo
+?Wolfgang
+#bind
+?über
+?auf
+?bei
+?gleich neben
+?gleich vor
+?gleich nach
+?hinter
+?in
+?kurz vor
+?kurz nach
+?links neben
+?mit
+?neben
+?rechts neben
+?unter
+?vor
+?zwischen
+#hwak
+?dem Auto
+?dem Zug
+?dem Fahrrad
+?dem Haus
+?dem Garten
+?der Fabrik
+?dem Betrieb
+?dem Bild
+?dem Foto
+?dem Tisch
+?dem Schreibtisch
+?dem Stuhl
+?dem Sofa
+?dem Bett
+?dem Schlafzimmer
+?dem Bad
+?der Dusche
+?der Küche
+?dem Wohnzimmer
+?dem Eßzimmer
+?der Straße
+?dem Boden
+?der Decke
+?dem Dach
+?dem Buch
+?dem Brennkessel
+?dem Perserteppich
+?dem Lautsprecher
+?dem Nagel
+?dem Faden
+?der Nadel
+?dem Keller
+?dem Bahnhof
+?der Stadtmitte
+?der Kreuzung
+?dem Computer
+?der Diskette
+?dem Flughafen
+?der Festplatte
+?dem Laufwerk
+?dem Essen
+?dem Getränk
+?dem Staubsauger
+?der Steuererklärung
+?dem Finanzamt
+?der Sonne
+?dem Mond
+?den Sternen
+?dem Planeten
+?dem Mann
+?der Frau
+?dem Kind
+?dem Schaf
+?dem Vogel
+?dem Hund
+?der Katze
+?der Schlange
+?der Mops
+#orte
+?Auckland
+?Bad Wuschl
+?Berlin
+?Basel
+?Christchurch
+?Caracas
+?Freiburg
+?Frankfurt
+?Gutach
+?Kollnau
+?London
+?München
+?Mexico City
+?Manzanillo
+?Nierarschkragen
+?New York
+?Oberarschkragen
+?Oslo
+?Paris
+?Rotorua
+?Simon Bolivár
+?Tokio
+?Wellington
+?Waldkirch
+#hwa
+?das Auto
+?der Zug
+?das Fahrrad
+?das Haus
+?der Garten
+?die Fabrik
+?der Betrieb
+?das Bild
+?das Foto
+?der Tisch
+?das Buch
+?der Brennkessel
+?der Perserteppich
+?der Lautsprecher
+?der Nagel
+?der Faden
+?die Nadel
+?der Schreibtisch
+?der Stuhl
+?das Sofa
+?das Bett
+?das Schlafzimmer
+?das Bad
+?die Dusche
+?die Küche
+?das Wohnzimmer
+?das Eßzimmer
+?die Straße
+?der Boden
+?die Decke
+?das Dach
+?der Keller
+?der Bahnhof
+?die Stadtmitte
+?die Kreuzung
+?der Computer
+?die Diskette
+?die Festplatte
+?das Laufwerk
+?das Essen
+?das Getränk
+?der Staubsauger
+?die Steuererklärung
+?das Finanzamt
+?die Sonne
+?der Mond
+?der Stern
+?der Planet
+?der Mann
+?die Frau
+?das Kind
+?das Schaf
+?der Hund
+?die Katze
+?der Vogel
+#hwm
+?Autos
+?Betriebe
+?Bilder
+?Betten
+?Bäder
+?Böden
+?Bahnhöfe
+?Bücher
+?Brennkessel
+?Computer
+?Duschen
+?Decken
+?Dächer
+?Disketten
+?Eßzimmer
+?Essen
+?Fahrräder
+?Fabriken
+?Fotos
+?Festplatten
+?Finanzämter
+?Frauen
+?Fäden
+?Gärten
+?Getränke
+?Häuser
+?Hunde
+?Küchen
+?Keller
+?Kreuzungen
+?Kinder
+?Katzen
+?Lautsprecher
+?Laufwerke
+?Monde
+?Männer
+?Möpse
+?Nägel
+?Nadeln
+?Perserteppiche
+?Planeten
+?Pferde
+?Schreibtische
+?Stühle
+?Sofa
+?Schlafzimmer
+?Straßen
+?Stadtmitten
+?Staubsauger
+?Steuererklärungen
+?Sonnen
+?Sterne
+?Schafe
+?Schlangen
+?Tische
+?Vögel
+?Wohnzimmer
+?Züge
+#ws
+?ich
+?sie
+?wir
+#hw
+?Auto
+?Betrieb
+?Bild
+?Bett
+?Bad
+?Boden
+?Bahnhof
+?Buch
+?Brennkessel
+?Computer
+?Dusche
+?Decke
+?Dach
+?Diskette
+?Eßzimmer
+?Essen
+?Fahrrad
+?Fabrik
+?Foto
+?Festplatte
+?Finanzamt
+?Frau
+?Faden
+?Garten
+?Getränk
+?Haus
+?Hund
+?Küche
+?Keller
+?Kreuzung
+?Kind
+?Katze
+?Lautsprecher
+?Laufwerk
+?Mond
+?Mann
+?Mops
+?Nagel
+?Nadel
+?Perserteppich
+?Planet
+?Schreibtisch
+?Stuhl
+?Sofa
+?Schlafzimmer
+?Straße
+?Stadtmitte
+?Staubsauger
+?Steuererklärung
+?Sonne
+?Stern
+?Schlange
+?Schaf
+?Tisch
+?Vogel
+?Wohnzimmer
+?Zug
