@@ -381,6 +381,8 @@ struct FileReqData *freqdata;
 		else Text(rp,nullstring,freqdata->width);
 		y+=freqdata->fh;
 	}
+	
+	return 0;
 }
 
 void deallocate_entries(freqdata)
@@ -801,6 +803,8 @@ int type,size;
 	else strcpy(work->size,"    Dir");
 	work->type=type;
 	++freqdata->fileentries;
+	
+	return 0;
 }
 
 int repeatscroll(freqdata,dir,menu)
@@ -821,8 +825,8 @@ int dir,menu;
 	Delay(5);
 	FOREVER {
 		if (getintuimsg(freqdata->fr_Window,&class,&code,NULL,&gadgetid) &&
-			(class==GADGETUP || (class==MOUSEBUTTONS && code==SELECTUP)) ||
-			(menu && class==MOUSEBUTTONS && code==MENUUP)) break;
+			(((class==GADGETUP) || ((class==MOUSEBUTTONS) && (code==SELECTUP))) ||
+			(menu && (class==MOUSEBUTTONS) && (code==MENUUP)))) break;
 		if (menu) {
 			x=freqdata->fr_Window->MouseX; y=freqdata->fr_Window->MouseY;
 			if (x>9 && x<freqdata->ww+10) {
@@ -838,6 +842,8 @@ int dir,menu;
 		displayfiles(freqdata);
 		doprops(freqdata);
 	}
+	
+	return 0;
 }
 
 void doprops(freqdata)
