@@ -36,7 +36,16 @@
 #define __ARCH_CPU_H__
 
 #ifndef BYTE_ORDER
-#define BYTE_ORDER BIG_ENDIAN
+# ifndef __AROS
+#  define BYTE_ORDER BIG_ENDIAN
+# else
+#  if AROS_BIG_ENDIAN 
+#   define BYTE_ORDER BIG_ENDIAN
+#  else
+#   define BYTE_ORDER LITTLE_ENDIAN
+#  endif /* AROS_BIG_ENDIAN */
+# endif /* __AROS */
 #endif /* BYTE_ORDER */
 
 #endif /* __ARCH_CPU_H__ */
+

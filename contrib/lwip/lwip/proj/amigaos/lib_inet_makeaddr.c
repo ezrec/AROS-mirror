@@ -19,7 +19,7 @@
 #ifndef __AROS
 __asm int LIB_Inet_MakeAddr(register __d0 unsigned long net, register __d1 unsigned long host)
 #else
-	AROS_LH2(int, LIB_Inet_NetOf,
+	AROS_LH2(int, LIB_Inet_MakeAddr,
 
 /*  SYNOPSIS */
   AROS_LHA(unsigned long, net, D0),

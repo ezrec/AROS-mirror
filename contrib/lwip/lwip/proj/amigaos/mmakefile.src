@@ -20,14 +20,14 @@ NETIFOBJS = $(SRCDIR)/netif/loopif $(SRCDIR)/netif/slipif
 APIOBJS = $(SRCDIR)/api/api_lib $(SRCDIR)/api/api_msg\
 $(SRCDIR)/api/err $(SRCDIR)/api/sockets $(SRCDIR)/api/tcpip\
 
-LIBOBJS = calling globaldata lib_accept lib_bind lib_connect lib_getpeername\
-lib_getsockname lib_getsockopt lib_ioctlsocket lib_listen\
-lib_recv lib_recvfrom lib_send lib_sendto lib_setsockopt\
+LIBOBJS = calling globaldata inet_aton lib_accept lib_bind lib_connect lib_errno lib_getdtablesize lib_gethostbyname lib_getpeername\
+lib_getsockname lib_getsockopt lib_inet_addr lib_inet_lnaof lib_inet_makeaddr lib_inet_netof lib_inet_network lib_inet_ntoa lib_ioctlsocket lib_listen lib_obtainsocket\
+lib_recv lib_recvfrom lib_releasecopyofsocket lib_releasesocket lib_send lib_sendto lib_seterrnoptr lib_setsockopt\
 lib_shutdown lib_closesocket lib_socket lib_stuff\
 lib_waitselect lib_setsocketsignals lib_socketbasetaglist\
 localdata
 
-FLAGS = -specs=/home/cvs/AROS/bin/linux-i386/gen/config/specs
+#FLAGS = -specs=/home/cvs/AROS/bin/linux-i386/gen/config/specs
 FILES = $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) $(LIBOBJS) test
 
 OBJS1 = ./testserver.c
@@ -50,11 +50,11 @@ USER_CFLAGS := -O2 -I$(SRCDIR)/include -I$(ARCHINCLUDE) -I$(IPVXINCLUDE) -I./ -I
 lwip : setup $(EXE)
 
 #MM 
-testserver : 
-	@$(CC) $(FLAGS) $(OBJS1)
+testserver : $(OBJS1)
+	%compile_q
 #MM
-testclient :
-	@$(CC) $(FLAGS) $(OBJS2)
+testclient :$(OBJS2)
+	%compile_q
 
 $(OBJDIR)/%.o: %.S
 	%compile_q opt=$(USER_CFLAGS)

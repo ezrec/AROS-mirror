@@ -19,7 +19,7 @@
 #ifndef __AROS
 __asm int LIB_ReleaseCopyOfSocket(register __d0 long s, register __d1 long id)
 #else
-	AROS_LH4(int, LIB_ReleaseCopyOfSocket,
+	AROS_LH2(int, LIB_ReleaseCopyOfSocket,
 
 /*  SYNOPSIS */
 	AROS_LHA(long, s, D0),

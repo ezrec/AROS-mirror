@@ -6,8 +6,11 @@
 #include "lwip/sockets.h"
 #include "lwip/inet.h"
 
+/* defined in AROS/Include/sys/types.h */
+#if 0
 typedef u32_t u_long;
 typedef u32_t u_int;
+#endif
 
 /* <A HREF="/libc">&lt;- Back to the Main Page</A> <pre> */
 /*	$NetBSD: inet_addr.c,v 1.7 1997/04/13 10:30:40 mrg Exp $	*/
