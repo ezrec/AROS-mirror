@@ -1,0 +1,19 @@
+
+Critical BUGS:
++ The 'print' command doesn't work, you always get an exception right away.
+  However, using sys.stdout.write() works fine. This might be connected 
+  with the disapearing-exception-problem, described below.
+
++ Exceptions aren't printed properly, only the beginning headers are 
+  displayed. The actual message (eg. type of exception, like "ImportError") 
+  isn't displayed, ie:
+
+  >>> raise NameError, 'Test'
+  TraceBack (most recent call last):
+     File "<stdin>", line 1, in ?
+  >>>
+
++ Importing modules written in Python doesn't work (you get an exception 
+  right away), even after having hacked getpath.c and friends to be 
+  AROS-compatible. Hmmm...
+  
