@@ -11,6 +11,11 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.13  2004/07/11 17:10:21  stegerg
+ * LibInit() function may not leave out D0 param, even if unused,
+ * otherwise it crashes on machines where all arguments are passed
+ * on stack.
+ *
  * Revision 42.12  2004/06/20 12:24:31  verhaegs
  * Use REGFUNC macro's in BGUI source code, not AROS_UFH
  *
@@ -344,7 +349,8 @@ makeproto SAVEDS
 #else
 makeproto
 #endif
-ASM REGFUNC2(struct Library *, LibInit,
+ASM REGFUNC3(struct Library *, LibInit,
+    	     REGPARAM(D0, ULONG, dummy),
 	     REGPARAM(A0, BPTR, segment),
 	     REGPARAM(A6, struct ExecBase *, syslib)
 )
