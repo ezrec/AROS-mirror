@@ -21,6 +21,7 @@ EXE := $(DESTDIR)/henon
 
 #MM fish-henon : setup-fish-henon
 fish-henon 	: $(OBJS) $(EXE)
+	@$(NOP)
 
 #MM
 setup-fish-henon :

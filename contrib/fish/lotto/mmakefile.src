@@ -19,6 +19,7 @@ EXE := $(DESTDIR)/lotto
 
 #MM fish-lotto : setup-fish-lotto
 fish-lotto	: $(OBJS) $(EXE)
+	@$(NOP)
 
 #MM
 setup-fish-lotto :

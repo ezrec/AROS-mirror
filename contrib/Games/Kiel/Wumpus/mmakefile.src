@@ -18,6 +18,7 @@ games-wumpus : setup-games games
 
 #MM games : setup-games
 games : $(EXES)
+	@$(NOP)
 
 #MM
 setup-games :

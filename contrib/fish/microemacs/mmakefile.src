@@ -37,6 +37,7 @@ EXE := $(DESTDIR)/microemacs
 
 #MM fish-microemacs : setup-fish-microemacs
 fish-microemacs : $(OBJS) $(EXE)
+	@$(NOP)
 
 #MM
 setup-fish-microemacs :
