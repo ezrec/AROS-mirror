@@ -402,6 +402,8 @@ int DX_FillResolutions (uae_u16 *ppixel_format)
 
     for (j = 0; (j < (sizeof(modes)/sizeof(modes[0]))) && (j < MAX_PICASSO_MODES); j++)
     {
+        static const int bpx2format[] = {0, RGBFF_CHUNKY, RGBFF_R5G6B5PC, 0, RGBFF_B8G8R8A8};
+
 	if (modes[j].width > maxw || modes[j].height > maxh)
 	    continue;
 
@@ -411,7 +413,7 @@ int DX_FillResolutions (uae_u16 *ppixel_format)
         DisplayModes[count].refresh    = 75;
 
         count++;
-        *ppixel_format |= RGBFF_B8G8R8A8;
+        *ppixel_format |= bpx2format[bpx];
     }
 
     return count;
