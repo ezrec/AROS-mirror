@@ -171,6 +171,7 @@ class Page (SeriesDocument):
 	if linkBoxItem:
 	    for links in mainLinks:
 		text = links[0].text
+		text = RawText (string.replace (text, ' ', '&nbsp;'))
 		if text == linkBoxItem:
 		    text = Strong (text)
 		nl = Href (links[0].url, text)
@@ -178,6 +179,7 @@ class Page (SeriesDocument):
 		self.linkbox = self.linkbox + [nl, BR (), RawText ('\n')]
 		for link in links[1:]:
 		    text = link.text
+		    text = RawText (string.replace (text, ' ', '&nbsp;'))
 		    if string.find (link.url,'#') == -1 and text == linkBoxItem:
 			text = Strong (text)
 		    nl = Href (link.url, text)
