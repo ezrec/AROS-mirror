@@ -16,63 +16,63 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
         title    = _T['contents'],
         contents = Tree \
         ( [
-            A( _N['news'], hclass='almost', href='%(ROOT)snews' ),
-            Tree ( A( _N['archive'], hclass='done', href='%(ROOT)snews/archive' ) ),
-            A( _N['introduction'], hclass='done', href='%(ROOT)sintroduction' ),
+            A( _N['news'], hclass='almost', href='%(BASE)snews' ),
+            Tree ( A( _N['archive'], hclass='done', href='%(BASE)snews/archive' ) ),
+            A( _N['introduction'], hclass='done', href='%(BASE)sintroduction' ),
             Tree \
             ( [
-                A( _N['status'], hclass='almost', href='%(ROOT)sintroduction/status/everything.html' ),
-                A( _N['screenshots'], hclass='done', href='%(ROOT)spictures/screenshots' ),
-                A( _N['ports'], hclass='done', href='%(ROOT)sintroduction/ports' ),
-                A( _N['license'], hclass='almost', href='%(ROOT)slicense.html' )
+                A( _N['status'], hclass='almost', href='%(BASE)sintroduction/status/everything.html' ),
+                A( _N['screenshots'], hclass='done', href='%(BASE)spictures/screenshots' ),
+                A( _N['ports'], hclass='done', href='%(BASE)sintroduction/ports' ),
+                A( _N['license'], hclass='almost', href='%(BASE)slicense.html' )
             ] ),
-            A( _N['download'], hclass='almost', href='%(ROOT)sdownload' ),
+            A( _N['download'], hclass='almost', href='%(BASE)sdownload' ),
             _N['documentation'],
             Tree \
             ( [
                 _N['users'],
                 Tree \
                 ( [
-                    A( _N['installation'], hclass='done', href='%(ROOT)sdocumentation/users/installation' ),
-                    A( _N['using'], hclass='nope', href='%(ROOT)sdocumentation/users/using' ),
-                    A( _N['faq'], hclass='done', href='%(ROOT)sdocumentation/users/faq' ),
+                    A( _N['installation'], hclass='done', href='%(BASE)sdocumentation/users/installation' ),
+                    A( _N['using'], hclass='nope', href='%(BASE)sdocumentation/users/using' ),
+                    A( _N['faq'], hclass='done', href='%(BASE)sdocumentation/users/faq' ),
                     _N['ports'],
-                    A( _N['links'], hclass='done', href='%(ROOT)sdocumentation/users/links' )
+                    A( _N['links'], hclass='done', href='%(BASE)sdocumentation/users/links' )
                 ] ),
                 _N['developers'],
                 Tree \
                 ( [
-                    A( _N['contribute'], hclass='done', href='%(ROOT)sdocumentation/developers/contribute' ),
-                    A( _N['working-with-cvs'], hclass='done', href='%(ROOT)sdocumentation/developers/cvs' ),
-                    A( _N['compiling'], hclass='nope', href='%(ROOT)sdocumentation/developers/compiling' ),
-                    A( _N['application-development-manual'], hclass='nope', href='%(ROOT)sdocumentation/developers/application-development' ),
-                    A( _N['system-development-manual'], hclass='almost', href='%(ROOT)sdocumentation/developers/system-development' ),
-                    A( _N['reference'], hclass='nope', href='%(ROOT)sdocumentation/developers/reference' ),
-                    A( _N['specifications'], hclass='nope', href='%(ROOT)sdocumentation/developers/specifications' ),
-                    A( _N['ui-style-guide'], hclass='nope', href='%(ROOT)sdocumentation/developers/ui' ),
-                    A( _N['documenting'], hclass='nope', href='%(ROOT)sdocumentation/developers/documenting' ),
-                    A( _N['translating'], hclass='nope', href='%(ROOT)sdocumentation/developers/translating' ),
-                    A( _N['summaries'], hclass='nope', href='%(ROOT)sdocumentation/developers/summaries' ),
-                    A( _N['links'], hclass='done', href='%(ROOT)sdocumentation/developers/links' )
+                    A( _N['contribute'], hclass='done', href='%(BASE)sdocumentation/developers/contribute' ),
+                    A( _N['working-with-cvs'], hclass='done', href='%(BASE)sdocumentation/developers/cvs' ),
+                    A( _N['compiling'], hclass='nope', href='%(BASE)sdocumentation/developers/compiling' ),
+                    A( _N['application-development-manual'], hclass='nope', href='%(BASE)sdocumentation/developers/application-development' ),
+                    A( _N['system-development-manual'], hclass='almost', href='%(BASE)sdocumentation/developers/system-development' ),
+                    A( _N['reference'], hclass='nope', href='%(BASE)sdocumentation/developers/reference' ),
+                    A( _N['specifications'], hclass='nope', href='%(BASE)sdocumentation/developers/specifications' ),
+                    A( _N['ui-style-guide'], hclass='nope', href='%(BASE)sdocumentation/developers/ui' ),
+                    A( _N['documenting'], hclass='nope', href='%(BASE)sdocumentation/developers/documenting' ),
+                    A( _N['translating'], hclass='nope', href='%(BASE)sdocumentation/developers/translating' ),
+                    A( _N['summaries'], hclass='nope', href='%(BASE)sdocumentation/developers/summaries' ),
+                    A( _N['links'], hclass='done', href='%(BASE)sdocumentation/developers/links' )
                 ] )
             ] ),
-            A( _N['contact'], hclass='done', href='%(ROOT)scontact' ),
+            A( _N['contact'], hclass='done', href='%(BASE)scontact' ),
             Tree \
             ( [
-                A( _N['mailing-lists'], hclass='done', href='%(ROOT)scontact#mailing-lists' ),
-                A( _N['forums'], hclass='done', href='%(ROOT)scontact#forums' ),
-                A( _N['irc-channels'], hclass='done', href='%(ROOT)scontact#irc-channels' )
+                A( _N['mailing-lists'], hclass='done', href='%(BASE)scontact#mailing-lists' ),
+                A( _N['forums'], hclass='done', href='%(BASE)scontact#forums' ),
+                A( _N['irc-channels'], hclass='done', href='%(BASE)scontact#irc-channels' )
             ] ),
-            A( _N['credits'], hclass='done', href='%(ROOT)scredits' ),
+            A( _N['credits'], hclass='done', href='%(BASE)scredits' ),
             _N['pictures'],
             Tree \
             ( [
-                A( _N['developers'], hclass='done', href='%(ROOT)spictures/developers' ),
-                A( _N['developers-together'], hclass='done', href='%(ROOT)spictures/developers-together' )
+                A( _N['developers'], hclass='done', href='%(BASE)spictures/developers' ),
+                A( _N['developers-together'], hclass='done', href='%(BASE)spictures/developers-together' )
             ] ),
-            A( _N['sponsors'], hclass='done', href='%(ROOT)ssponsors' ),
-            A( _N['linking'], hclass='done', href='%(ROOT)slinking' ),
-            A( _N['links'], hclass='done', href='%(ROOT)slinks' )
+            A( _N['sponsors'], hclass='done', href='%(BASE)ssponsors' ),
+            A( _N['linking'], hclass='done', href='%(BASE)slinking' ),
+            A( _N['links'], hclass='done', href='%(BASE)slinks' )
         ] )
     )
 

@@ -28,8 +28,9 @@ TEMPLATE   = 'targets/www/template.html.en'
 TEMPLATE_DATA = None
 
 # Languages not supported by docutils yet (but that we have files written in):
-# 'no', 'sv'
-LANGUAGES  = [ 'en' ]
+# 'no'
+LANGUAGES = [ 'en' ]
+#LANGUAGES  = [ 'en', 'sv', 'de' ]
 
 # FIXME: Move this somewhere else...
 if (not os.path.exists( 'credits.en' ) ) \
@@ -135,6 +136,7 @@ def makePictures():
         
         strings = {
             'ROOT'    : '../../',
+            'BASE'    : '../../',
             'CONTENT' : output
         }
         
@@ -238,6 +240,7 @@ def processWWW( src, depth ):
         reportBuilding( src )
         strings = {
             'ROOT'    : '../' * depth,
+            'BASE'    : '../' * depth,
             'CONTENT' : convertWWW( src_abs, suffix )
         }
         
