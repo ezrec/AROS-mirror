@@ -1,0 +1,28 @@
+What is this?
+ Directory contains a set off diffs and this file of 
+instructions on how to obtain and build the gnu which command 
+for AROS.
+ At this point I have only used a fully-built crosscompiler 
+(see: AROS/contrib/gnu/gcc/README) to build this command.
+
+Basic instructions:
+
+fetch ftp://ftp.gnu.org/pub/gnu/which/which-2.16.tar.gz
+tar -zxvf which-2.16.tar.gz
+cd which-2.16
+patch -p1 < ../which-2.16-aros.diff
+./configure --host=i386-aros
+gmake
+
+Using:
+
+ The only file you actually need from the directory you built 
+the which command in is the which executeable itself. 
+
+Todo:
+
+ I need to go through and redo some of the brutal workarounds 
+with proper ifndefs and the like.
+
+Jack Patton <jpatton@aros.org>
+4/21/04
