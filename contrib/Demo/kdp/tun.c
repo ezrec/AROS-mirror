@@ -115,10 +115,10 @@ main()
   float mx,my;
   float mulx,muly;
   UBYTE *vmem;
-  float rot;
+  float rot = 0.0;
   float tox,toy;
   float doy;
-  float qx,qy;
+  float qx = 0.0,qy = 0.0;
   int l;
   int ii;
   UBYTE pal[256*3];
