@@ -1463,7 +1463,7 @@ static void CheckShadowing (HTMLGadClData *inst){
 
 extern int lib_version;
 
-/*
+#if 0
 /* This routine doesn't use transparent gifs */
 int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
 {
@@ -1558,10 +1558,10 @@ int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
   return 1;
 }
 
-*/
+#endif
 /* This routine handles transparent gifs. However, it seems like it
 doesn't work under cybergfx */
-/*
+#if 0
 int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
 {
   APTR dtobject;
@@ -1705,7 +1705,7 @@ int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
 
   return 1;
 }
-*/
+#endif
 
 int ImageLoadAndCache(HTMLGadClData *HTML_Data, char *src)
 {
@@ -1910,7 +1910,7 @@ static ULONG HTMLTextClSet(Class *cl, Object *obj, Msg msg){
       
     case HTMLA_scroll_y:
 /* Take care of the virtual group here */ /* OBSOLETE? */
-/*		kprintf("HTML Virt gad: Getting a new Y scroll: %ld\n",ti->ti_Data);
+/*		kprintf("HTML Virt gad: Getting a new Y scroll: %ld\n",ti->ti_Data); */
 		inst->new_scroll_value=ti->ti_Data;
 		inst->new_scroll_dir=0;
 		MUI_Redraw(obj,MADF_DRAWUPDATE); */
@@ -1918,7 +1918,7 @@ static ULONG HTMLTextClSet(Class *cl, Object *obj, Msg msg){
       
     case HTMLA_scroll_x:
 /* Take care of the virtual group here */ /* OBSOLETE? */
-/*		kprintf("HTML Virt gad: Getting a new X scroll: %ld\n",ti->ti_Data);
+/*		kprintf("HTML Virt gad: Getting a new X scroll: %ld\n",ti->ti_Data); */
 		inst->new_scroll_value=ti->ti_Data;
 		inst->new_scroll_dir=1;
 		MUI_Redraw(obj,MADF_DRAWUPDATE); */
@@ -3575,7 +3575,8 @@ ULONG __saveds __asm LayoutFunc(register __a0 struct Hook *h,register __a2 Objec
 
 		case MUILM_MINMAX:
 		{
-/*			/*
+#if 0
+			/*
 			** MinMax calculation function. When this is called,
 			** the children of your group have already been asked
 			** about their min/max dimension so you can use their
@@ -3600,7 +3601,7 @@ ULONG __saveds __asm LayoutFunc(register __a0 struct Hook *h,register __a2 Objec
 			}
 
 			/* set the result fields in the message */
-*/
+#endif
 			lm->lm_MinMax.MinWidth  = 5000; /* Don't care since this */
 			lm->lm_MinMax.MinHeight = 5000; /* is a virtual group */
 			lm->lm_MinMax.DefWidth  = 5000;
@@ -3668,7 +3669,7 @@ ULONG __saveds __asm LayoutFunc(register __a0 struct Hook *h,register __a2 Objec
 	}
 	return(MUILM_UNKNOWN);
 }
-/*
+#if 0
 Calling sequence when loading new page:
 
 main.c calls gui-documents.c/mo_load_window_text (see below)
@@ -3700,8 +3701,6 @@ Calls mo_set_win_current_node
 
 
 
-*/
-/*
 Check this URL!
 http://www.ncsa.uiuc.edu/SDG/Software/Mosaic/Docs/fill-out-forms/overview.html
 
@@ -3730,4 +3729,4 @@ All in all:
 
 Editing doesn't work.
 
-*/
+#endif
