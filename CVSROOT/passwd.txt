@@ -18,13 +18,13 @@ SDuvan:dbfBDWZL8B0q.:Johan Alfredsson:d95duvan@dtek.chalmers.se:Commodities
 bergers:bdKC5UL24VXQI:Stefan Berger:bergers@cip.e-technik.uni-erlangen.de:Math, DOS, Arp
 jskov:bdclJpF6gyfHU:Jesper Skov:jskov@cs.auc.dk:Linux/m68k
 Wez:Wk.Op1sXVRJJo:Wez Furlong:wjf103@york.ac.uk:Shell
-usul:ad88oJEDSJ7hA:Stefan Czinczoll:scholle@unidui.uni-duisburg.de:WWW
+usul:abeqjOyocW2Ec:Stefan Czinczoll:scholle@unidui.uni-duisburg.de:WWW
 karcher:*:John J. Karcher:jkarcher@cynet.net:Slim Binaries
 adieb:*:Adrian Brown:adieb@carmen.murdoch.edu.au:Win95 port
 hkiel:ccL6.C5LgMNSM:Henning Kiel:kiel@student.physik.uni-dortmund.de:Games, Misc
 przemek:aaHMm4JFKQqLI:Przemys³aw Szczygielski:przemek.szczygielski@polkomtel.com.pl:Alpha port
 schulz:cdA83T3EV9pyw:Michael Schulz:schulz@kki.net.pl:x86 standalone
-rodo:baHylpMeidW3c:Adrian Brown:adieb@carmen.murdoch.edu.au:Wintel port
+rodo:9c4vG6n8WOKZs:Adrian Brown:Support@hamilton.wa.edu.au:Wintel port
 
 stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
