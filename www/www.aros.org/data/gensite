@@ -2,12 +2,14 @@
 
 '''Generate the AROS WWW site.'''
 
-import glob, os, os.path, stat
+import glob, os, os.path
 from HTMLcolors import *
 from HTMLgen import *
+import PIL.Image
 
 htmldir = os.environ['HTMLDIR']
 ftpdir = os.environ['FTPDIR']
+screenshoturl = 'pics/screenshots'
 
 mainLinks = (
     ( Href ('/index.html', 'NEWS'),
@@ -154,9 +156,104 @@ def genDocumentation ():
     page.meat = page.meat + [Text ('FIXME')]
     page.write ('documentation.html')
 
+class ThumbnailTable (TableLite):
+    def __init__ (self, *pics):
+	if len (pics) == 1:
+	    width = "40%"
+	else:
+	    width = "75%"
+
+	TableLite.__init__ (self,
+	    border="0",
+	    width=width,
+	    align="center",
+	    bgcolor="#000066",
+	    cellpadding=0,
+	)
+	row = TR ()
+	self.append (row)
+	td = TD ()
+	row = row + [td]
+	table2 = TableLite (
+	    border="0",
+	    bgcolor="#CCCCCC",
+	    cellspacing="2",
+	    cellpadding="5",
+	)
+	td = td + [table2]
+
+	if (len (pics) & 1) == 1:
+	    pics = list (pics) + [None]
+	i, n = 0, len (pics)
+	while i < n:
+	    row = TR ()
+	    left, right = pics[i], pics[i+1]
+	    i = i + 2
+	    left = left.toHtml ()
+	    if not right:
+		if n == 2:
+		    right = []
+		else:
+		    right = [TD ()]
+	    else:
+		right = right.toHtml ()
+	    row = row + left + right
+	    
+	    table2.append (row)
+
 def genScreenshots ():
     page = Page (linkBoxItem='Screenshots')
-    page.meat = page.meat + [Text ('FIXME')]
+
+    page.meat = page.meat + [
+	Heading (2, 'Pictures around AROS'),
+	Paragraph ('If you ever wanted to know what Aaron "Optimizer" Digulla'
+	    ' looks like, here are two pictures:'),
+	ThumbnailTable (
+	    Thumbnail ('pics/developers/Digulla-2.jpg'),
+	    Thumbnail ('pics/developers/Digulla-1.jpg'),
+	),
+	Paragraph ('Picture of Nils Henrik Lorentzen:'),
+	ThumbnailTable (
+	    Thumbnail ('pics/developers/nlorentz.jpg'),
+	),
+	Paragraph ('Hopefully, more pictures of AROS developers will'
+	    ' show up here :-)'),
+	Heading (2, 'Screenshots'),
+    ]
+
+    def processDir (dir):
+	str = os.path.basename (dir)
+	date = '%d.%d.%d' % (
+	    int (str[6:8]),
+	    int (str[4:6]),
+	    int (str[0:4]),
+	)
+	fh = open (os.path.join (dir, 'README'), 'r')
+	text = fh.read ()
+	fh.close ()
+	
+	list = [
+	    Paragraph (RawText ('%s - %s' % (date, text))),
+	]
+	files = glob.glob (os.path.join (dir, "*.*"))
+	files.sort ()
+	pics = []
+	for file in files:
+	    if file[-4:] == '.txt' or string.find (file, '_mini.') != -1:
+		continue
+
+	    pics.append (Thumbnail (os.path.join (screenshoturl, str,
+		os.path.basename (file))))
+	
+	list.append (apply (ThumbnailTable, pics))
+	return list
+	    
+    dirs = glob.glob (os.path.join (htmldir, screenshoturl, '[0-9]*'))
+    dirs.sort ()
+    dirs.reverse ()
+    for dir in dirs:
+	page.meat = page.meat + processDir (dir)
+
     page.write ('screenshots.html')
 
 def genDownload ():
@@ -164,19 +261,12 @@ def genDownload ():
     page.meat = page.meat + [Text ('FIXME')]
     page.write ('download.html')
 
-class Snapshot:
+class FileInfo:
     def __init__ (self, path):
 	filename = os.path.basename (path)
-	self.filename = filename
+	self.filename, self.path = filename, path
 
-	self.ext = filename[-3:]
-	filename = filename[:-4]
-	self.date = filename[-8:]
-	filename = filename[:-8]
-	self.title = filename[5:-1]
-	
-	info = os.stat (path)
-	size = info[stat.ST_SIZE]
+	size = os.path.getsize (path)
 
 	if size > 1024:
 	    size = ((size+1023) / 1024)
@@ -185,33 +275,112 @@ class Snapshot:
 		size = ((size+1023) / 1024)
 		self.size = '%dMB' % size
 
+class Snapshot (FileInfo):
+    def __init__ (self, path):
+	FileInfo.__init__ (self, path)
+
+	filename = self.filename
+	self.ext = filename[-3:]
+	filename = filename[:-4]
+	self.date = filename[-8:]
+	filename = filename[:-8]
+	self.title = filename[5:-1]
+	
+	logfile = path[:-3] + 'log'
+	if os.path.exists (logfile):
+	    self.log = FileInfo (logfile)
+	else:
+	    self.log = None
 	#print self.__dict__
+
+def thumbnail(self, size):
+    "Create thumbnail representation (modifies image in place)"
+
+    # preserve aspect ratio
+    x, y = self.size
+    if x > size[0]: y = y * size[0] / x; x = size[0]
+    if y > size[1]: x = x * size[1] / y; y = size[1]
+    size = x, y
+
+    if size == self.size:
+	return
+
+    self.draft(None, size)
+
+    self.load()
+
+    im = self.resize(size, PIL.Image.BICUBIC)
+
+    self.im = im.im
+    self.mode = im.mode
+    self.size = size
+
+class Thumbnail (FileInfo):
+    def __init__ (self, url):
+	path = os.path.join (htmldir, url)
+	FileInfo.__init__ (self, path)
+
+	self.url = url
+	try:
+	    pic = PIL.Image.open (path)
+	except:
+	    print path
+	    raise
+	self.width, self.height = pic.size
+	self.format = pic.format
+
+	pos = string.rfind (url, '.')
+	self.thumbnailURL = url[:pos] + '_mini.jpg'
+	pos = string.rfind (path, '.')
+	thumbnailPath = path[:pos] + '_mini.jpg'
+	tn = pic.convert ('RGB')
+	# Unfortunately, thumbnail() doesn't filter :-(
+	#tn.thumbnail = thumbnail
+	thumbnail (tn, (64, 128))
+	tn.save (thumbnailPath, 'JPEG')
+
+	infoFile = path[:pos] + '.txt'
+	fh = open (infoFile)
+	self.text = fh.read ()
+	fh.close ()
+
+    def toHtml (self):
+	return [
+	    TD (
+		Href (self.url, Image ((self.thumbnailURL, 0,0))),
+		width="64",
+		valign="TOP",
+	    ),
+	    TD (
+		Paragraph (RawText (self.text)),
+		Text (Strong ('%s %dx%d (%s)' % (
+		    self.format,
+		    self.width, self.height,
+		    self.size,
+		))),
+		#width="50%",
+		valign="TOP",
+	    ),
+	]
 
 def genSnapshots ():
     page = Page (linkBoxItem='Download')
 
-    files = glob.glob (os.path.join (ftpdir, 'snapshots/*'))
+    files = glob.glob (os.path.join (ftpdir, 'snapshots/*.tgz'))
     if not files:
         page.meat = page.meat + [Text ('No snapshots found')]
     else:
-	dayFiles = {}
-	dayLogs = {}
+	dict = {}
 	columns = {}
 	days = {}
 
 	for file in files:
 	    ss = Snapshot (file)
-	    if ss.ext == 'log':
-		day = dayLogs.get (ss.date, None)
-		if not day:
-		    day = {}
-		    dayLogs[ss.date] = day
-	    elif ss.ext == 'tgz':
-		day = dayFiles.get (ss.date, None)
-		if not day:
-		    day = {}
-		    dayFiles[ss.date] = day
-	    else:
+	    day = dict.get (ss.date, None)
+	    if not day:
+		day = {}
+		dict[ss.date] = day
+	    if ss.ext != 'tgz':
 		print 'Unknown Snapshot', file
 		continue
 
@@ -247,12 +416,11 @@ def genSnapshots ():
 	    )
 	    row = row + [TD (str)]
 
-	    logs = dayLogs.get (date, {})
-	    files = dayFiles.get (date, {})
+	    day = dict.get (date, {})
 
 	    for col in colList:
 		t = Text ()
-		ss = files.get (col, None)
+		ss = day.get (col, None)
 		if ss:
 		    t.append (Href ('ftp://ftp.aros.org/pub/aros/snapshots/%s' % ss.filename,
 			ss.size
@@ -260,11 +428,12 @@ def genSnapshots ():
 		else:
 		    t.append ('-')
 		
-		log = logs.get (col, None)
-		if log:
+		if ss.log:
 		    t.append ('(Log: ')
-		    t.append (Href ('ftp://ftp.aros.org/pub/aros/snapshots/%s' % log.filename,
-			log.size
+		    t.append (Href (
+			'ftp://ftp.aros.org/pub/aros/snapshots/%s' % \
+			    ss.log.filename,
+			ss.log.size
 		    ))
 		    t.append (')')
 		else:

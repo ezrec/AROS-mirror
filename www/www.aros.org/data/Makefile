@@ -1,18 +1,28 @@
 HTMLDIR = ../www
+SCREENSHOTDIR = $(HTMLDIR)/pics/screenshots
 FTPDIR = /home/ftp/pub/aros
+BINDIR = $(HOME)/packages/AROS/binaries
 
 # Tools
 SED = sed
 RM = rm
+CP = cp
+MKDIR = mkdir -p
 GNUPLOT = gnuplot # gnuplot
 CONVERT = convert # ImageMagick
 
-all : apache.conf pics .stamp
+# Collect files
+DEVPICS := $(subst $(BINDIR)/developers/,$(HTMLDIR)/pics/developers/,$(wildcard $(BINDIR)/developers/*.*))
+SCREENSHOTS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/*.* $(BINDIR)/screenshots/[0-9]*/*.* $(BINDIR)/screenshots/[0-9]*/README))
+SCREENSHOTDIRS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/[0-9]*))
+
+all : apache.conf pics makedirs .stamp
 	@true
 
 .stamp : HTMLcolors.py HTMLgen.py aros.rc gensite imgsize.py \
-	    $(wildcard news/*) links.py
-	@HTMLDIR=$(HTMLDIR) FTPDIR=$(FTPDIR) python gensite
+	    $(wildcard news/*) links.py $(DEVPICS) $(SCREENSHOTS)
+	@HTMLDIR=$(HTMLDIR) FTPDIR=$(FTPDIR) \
+	    SCREENSHOTDIR=$(SCREENSHOTDIR) python gensite
 	@touch $@
 
 apache.conf : genconf apache.conf.in site.conf
@@ -24,6 +34,16 @@ site.conf :
 	@exit 1
 
 pics : $(HTMLDIR)/aros_size.png $(HTMLDIR)/contrib_size.png
+
+makedirs :
+	@$(MKDIR) $(HTMLDIR)/pics/developers $(HTMLDIR)/pics/screenshots \
+	    $(SCREENSHOTDIRS)
+
+$(HTMLDIR)/pics/developers/% : $(BINDIR)/developers/%
+	$(CP) $< $@
+
+$(HTMLDIR)/pics/screenshots/% : $(BINDIR)/screenshots/%
+	$(CP) $< $@
 
 $(HTMLDIR)/%_size.png : %.size size2plot
 	$(SED) -e "s;@HTMLDIR@;$(HTMLDIR);" \
