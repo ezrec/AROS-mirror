@@ -34,7 +34,6 @@ pcosta:bbFkszi19YU6M:Paolo Costabel:pcosta@mbox.vol.it:
 daniel:b9bwcTjXjo3Gc:Daniel Verite:daniel@brainstorm.eu.org:
 mroth:da/M1jS3sNsHg:Michael Roth:mroth@inlet.lake.de:
 nico:bbHYNBwvWxgYE:Nico Heinz:nico@fh-konstanz.de:
-fasten:ddwaK4sSMGEYs:Bernhard Fastenrath:fasten@informatik.uni-bonn.de:
 jaxom:dcZ/NTob1tC2I:Thomas Schwarz:Thomas.Schwarz@munich.netsurf.de:
 ykoehler:acabfgzf8gWEk:Yannick Koehler:yannick@generation.net:
 hansvi:aaoWAgKjckBIc:Hans Van Ingelgom:hansvi@igwe1.vub.ac.be:
