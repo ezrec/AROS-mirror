@@ -21,9 +21,19 @@
 #define MYDEBUG
 #include "debug.h"
 
+#ifndef BYTE_ORDER
+#error "define a proper BYTE_ORDER"
+#endif
+
+#if BYTE_ORDER == BIG_ENDIAN
+#define LOCALHOST 0x7f000001
+#else
+#define LOCALHOST 0x0100007f
+#endif
+
 struct HostentNode localnode;
 char *local_aliases[] = {"local",NULL};
-struct in_addr local = {0x7f000001};
+struct in_addr local = {LOCALHOST};
 struct in_addr *local_addr[] = {&local,NULL};
 
 /**************************************************************************
