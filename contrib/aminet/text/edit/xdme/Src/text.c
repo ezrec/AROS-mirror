@@ -222,31 +222,25 @@ int text_init (ED * oldep, WIN * win, struct NewWindow * nw)
 {
     ED * ep;
 
-DL;
     if (!(ep = (ED *)allocb (sizeof(ED))) )
 	return (0);
-DL;
 
     memset (ep, 0, sizeof(ED));
     ep->win = win;
 
-DL;
     if (oldep)
     {
 	ep->dirlock = (long)DupLock (oldep->dirlock);
-DL;
 
 	movmem (&oldep->beginconfig, &ep->beginconfig, CONFIG_SIZE);
 
 	if (oldep->font)
 	{
-DL;
 	    ep->font = oldep->font;
 	    ep->font->tf_Accessors ++;
 
 	    if (win)
 		SetFont (win->RPort, ep->font);
-DL;
 	}
 
 	/* change oldep to "last editor" to have the iconified window
@@ -280,14 +274,11 @@ DL;
     else
     {
 	PROC * proc = (PROC *)FindTask (NULL);
-DL;
 
 	ep->dirlock = (long)DupLock (proc->pr_CurrentDir);
-DL;
 
 	loadconfig (ep);
     }
-DL;
 
     ep->lines	  = 1;
     ep->maxlines  = 32;
@@ -309,7 +300,6 @@ DL;
     if (win)
 	text_cursor (1);
 
-DL;
     if (nw)
     {
 	if (!GETF_ICONMODE(ep) && ep->win)
@@ -338,7 +328,6 @@ DL;
 	nw->DetailPen = TEXT_BPEN(ep);
 	nw->BlockPen  = TEXT_FPEN(ep);
     }
-DL;
 
     return (1);
 } /* text_init */

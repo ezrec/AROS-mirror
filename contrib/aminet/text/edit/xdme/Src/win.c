@@ -21,7 +21,7 @@
 #include <proto/exec.h>
 #include <proto/graphics.h>
 #include <string.h>
-#define MYDEBUG 1
+#define MYDEBUG 0
 #include "debug.h"
 
 
@@ -316,44 +316,32 @@ DEFUSERCMD("uniconify", 0, CF_VWM|CF_ICO, void, uniconify, (void),)
 DEFUSERCMD("newwindow", 0, CF_VWM|CF_ICO, void, do_newwindow, (void),)
 {
     WIN * win;
-DL;
+
     if (Ep)
     {
-DL;
 	text_sync ();
     }
     
-DL;
     if (text_init (Ep, NULL, &Nw))
     {
-DL;
 	Nw.Title = Ep->wtitle;
 	Nw.Flags = WINDOWFLAGS;
 
-DL;
 	if (win = opensharedwindow (&Nw))
 	{
-DL;
 	    menu_strip (currentmenu(),win);   /* PATCH_NULL [13 Jan 1993] : added currentmenu(), */
-DL;
 
 	    Ep->win = win;
-DL;
 	    set_window_params ();
-DL;
 	    Ep->propgad = (struct Gadget *)add_prop (win);
-DL;
 
 	    text_load ();
-DL;
 	}
 	else
 	{
-DL;
 	    text_uninit ();
 	} /* if opensharedwindow */
     } /* if text_init */
-DL;
 } /* do_newwindow */
 
 
@@ -1023,7 +1011,7 @@ struct PropGadget * add_prop (struct Window * win)
 	return NULL;
 
     /* copy default flags/modes/etc. */
-    movmem (&gadgetdefaults, pg, sizeof(struct PropGadget));
+    memmove (pg, &gadgetdefaults, sizeof(struct PropGadget));
 
     /* find out sizes */
     mydrawinfo = GetScreenDrawInfo (win->WScreen);

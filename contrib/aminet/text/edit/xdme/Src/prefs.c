@@ -15,7 +15,7 @@
 #include <proto/dos.h>
 #include <proto/graphics.h>
 
-#define MYDEBUG 1
+#define MYDEBUG 0
 #include "debug.h"
 
 /**************************************
@@ -264,23 +264,18 @@ void loadconfig (ED * ep)
     static int showed_error = 0;
     FILE * fi;
 
-DL;
     /* Always init the fields */
-    movmem (&default_config, &ep->beginconfig, CONFIG_SIZE);
+    /*movmem (&default_config, &ep->beginconfig, CONFIG_SIZE);*/
+    memmove (&ep->beginconfig, &default_config, CONFIG_SIZE);
 
-DL;
     if (fi = fopen (XDME_CONFIG, "r"))
     {
-DL;
 	fread (tmp_buffer, sizeof(CONFIG_VERSION)-1, 1, fi);
-DL;
 
 	if (strncmp (CONFIG_VERSION, tmp_buffer, sizeof(CONFIG_VERSION)-1) )
 	{
-DL;
 	    if (!showed_error)
 	    {
-DL;
 		error ("loadconfig:\n"
 			"Wrong version for\n"
 			"configuration file !\n"
@@ -290,13 +285,10 @@ DL;
 	}
 	else
 	{
-DL;
 	    fread (&ep->beginconfig, 1, CONFIG_SIZE, fi);
 	}
-DL;
 	fclose (fi);
     }
-DL;
 } /* loadconfig */
 
 
