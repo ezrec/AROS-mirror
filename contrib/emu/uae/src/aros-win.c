@@ -63,6 +63,8 @@ extern xcolnr xcolors[4096];
 static int  keystate[256];
 static int  screen_is_picasso;
 static char picasso_invalid_lines[1200];
+static int  picasso_invalid_start;
+static int  picasso_invalid_end;
 
 extern int buttonstate[3];
 extern int lastmx, lastmy;
@@ -283,6 +285,31 @@ void handle_events(void)
 {
     newmousecounters = 0;
 
+    #ifdef PICASSO96
+    if (screen_is_picasso)
+    {
+        int i;
+
+        picasso_invalid_lines[picasso_invalid_end+1] = 0;
+        picasso_invalid_lines[picasso_invalid_end+2] = 1;
+
+	for (i = picasso_invalid_start; i < picasso_invalid_end;)
+	{
+	    int start = i;
+
+            for (;picasso_invalid_lines[i]; i++)
+	        picasso_invalid_lines[i] = 0;
+
+            DoMethod(uaedisplay, MUIM_UAEDisplay_Update, start, i);
+
+	    for (; !picasso_invalid_lines[i]; i++);
+	}
+
+	picasso_invalid_start = picasso_vidinfo.height + 1;
+	picasso_invalid_end   = -1;
+    }
+    #endif
+
     gui_handle_events();
 }
 
@@ -314,10 +341,13 @@ void LED(int on)
 
 void DX_Invalidate (int first, int last)
 {
-    do {
-	picasso_invalid_lines[first] = 1;
-	first++;
-    } while (first <= last);
+    if (first < picasso_invalid_start)
+        picasso_invalid_start = first;
+
+    if (last > picasso_invalid_end)
+        picasso_invalid_end = last;
+
+    memset(&picasso_invalid_lines[first], 1, last-first+1);
 }
 
 int DX_BitsPerCannon (void)
@@ -343,13 +373,20 @@ int DX_FillResolutions (uae_u16 *ppixel_format)
     DisplayModes[count].refresh    = 75;
 
     count++;
-    *ppixel_format |= RGBFF_CHUNKY;
+    *ppixel_format |= RGBFF_B8G8R8A8;
 
     return count;
 }
 
-void gfx_set_picasso_modeinfo (int w, int h, int depth)
+void gfx_set_picasso_modeinfo (int w, int h, int depth, int rgbfmt)
 {
+    kprintf ("::: %d %d %d, %d\n", w, h, depth, rgbfmt);
+    picasso_vidinfo.width = w;
+    picasso_vidinfo.height = h;
+    picasso_vidinfo.depth = depth;
+    picasso_vidinfo.rgbformat = (depth == 8 ? RGBFB_CHUNKY
+				 : depth == 16 ? RGBFB_R5G6B5PC
+				 : RGBFB_B8G8R8A8);
 }
 
 void gfx_set_picasso_baseaddr (uaecptr a)
@@ -358,7 +395,49 @@ void gfx_set_picasso_baseaddr (uaecptr a)
 
 void gfx_set_picasso_state (int on)
 {
+    if (on == screen_is_picasso)
+	return;
+    screen_is_picasso = on;
+    if (on)
+    {
+        SetAttrs
+        (
+            uaedisplay,
+            MUIA_UAEDisplay_Width,  picasso_vidinfo.width,
+	    MUIA_UAEDisplay_Height, picasso_vidinfo.height,
+	    TAG_DONE
+        );
+	picasso_vidinfo.extra_mem = 1;
+        picasso_vidinfo.rowbytes = XGET(uaedisplay, MUIA_UAEDisplay_BytesPerRow);
+        picasso_vidinfo.pixbytes = XGET(uaedisplay, MUIA_UAEDisplay_BytesPerPix);
+
+	picasso_invalid_start = picasso_vidinfo.height + 1;
+	picasso_invalid_end   = -1;
+
+	//picasso_vidinfo.pixbytes = depth>>3;
+        //picasso_vidinfo.rowbytes = info->linewidth;
+    }
+    else
+    {
+        SetAttrs
+        (
+            uaedisplay,
+            MUIA_UAEDisplay_Width,  currprefs.gfx_width,
+	    MUIA_UAEDisplay_Height, currprefs.gfx_height,
+	    TAG_DONE
+        );
+        gfxvidinfo.bufmem = (APTR)XGET(uaedisplay, MUIA_UAEDisplay_Memory);
+    }
 }
+
+uae_u8 *gfx_lock_picasso (void)
+{
+    return (APTR)XGET(uaedisplay, MUIA_UAEDisplay_Memory);
+}
+void gfx_unlock_picasso (void)
+{
+}
+
 #endif
 
 
