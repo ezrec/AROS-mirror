@@ -8,8 +8,10 @@ VERSION := 1.84
 VERDATE := $(shell date +"%d.%m.%Y")
 INCDIR := ./include
 USER_CFLAGS := -DVERSION="\"$(VERSION)\"" -DVERDATE="\"$(VERDATE)\"" -I$(INCDIR)
-EXTRACT := $(OBJDIR)/Util/extract/extract
-MAKEGUIDE:= $(OBJDIR)/Util/cag/cag
+EXTRACT := $(OBJDIR)/Util/extract
+EXTRACT_C := Util/extract/extract.c
+MAKEGUIDE := $(OBJDIR)/Util/cag
+MAKEGUIDE_C := Util/cag/cag.c
 PARSER	:= $(OBJDIR)/Util/var/Parser
 DOCDIR := Docs
 
@@ -79,10 +81,10 @@ $(DOCDIR)/xdme_cmds.guide : $(MAKEGUIDE) $(DOCDIR)/xdme_cmds_guide_src.head \
 $(INCDIR)/commands: $(SRCS)
 	$(EXTRACT) "DEFUSERCMD" $(SRCS) | sort > $@
 
-$(EXTRACT) : $(EXTRACT).c
+$(EXTRACT) : $(EXTRACT_C)
 	$(HOST_CC) -o $@ $<
 
-$(MAKEGUIDE) : $(MAKEGUIDE).c
+$(MAKEGUIDE) : $(MAKEGUIDE_C)
 	$(HOST_CC) -o $@ $<
 
 %common
