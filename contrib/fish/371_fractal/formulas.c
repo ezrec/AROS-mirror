@@ -117,7 +117,7 @@ struct ViewPort *WVP;
 void ColorWindow(),scanmenu();
 void PutBoolGadget(),PutGadget();
 void prepult(),runfractal();
-void toggletitle(),ShowTitle();
+void toggletitle();
 
 static short biomorph=BIO0;
 static short newton=NR0;

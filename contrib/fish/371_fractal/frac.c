@@ -63,7 +63,7 @@ void switchrun(),switchfrac();
 /* functions in file formulas2.c */
 void stratt();
 
-void toggletitle(),ShowTitle();
+void toggletitle();
 double sqrt(),atan(),log(),atof(),exp(),sin(),cos(),fabs();
 
 struct RastPort *rport;
