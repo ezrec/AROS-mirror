@@ -28,9 +28,14 @@ contrib-development-nasm : setup $(EXE) asm_includes
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
 #MM
-setup ::
+setup :: $(EXEDIR)/test/arostest.s $(EXEDIR)/test/arostest.README
 	%mkdirs_q $(EXEDIR) $(EXEDIR)/include
-	cp test/arostest.s test/arostest.README $(EXEDIR)
+
+$(EXEDIR)/test/arostest.s : test/arostest.s
+	@$(CP) test/arostest.s $(EXEDIR)
+
+$(EXEDIR)/test/arostest.README : test/arostest.README
+	@$(CP) test/arostest.README $(EXEDIR)
 
 
 asm_includes:
