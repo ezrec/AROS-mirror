@@ -10,28 +10,28 @@ clearwin();
   drawfield(40,90,130,105);
   drawfield(40,120,130,135);
   sprintf(number,"%3d",width);
-  write_text(50,72,number,1);
+  write_text(50,70,number,1);
   sprintf(number,"%3d",height);
-  write_text(50,102,number,1);
+  write_text(50,100,number,1);
   sprintf(number,"%3d",Anzahl);
-  write_text(50,132,number,1);
-  write_text(80,72,"Breite",1);
-  write_text(80,102,"Hoehe",1);
-  write_text(80,132,"Bomben",1);
+  write_text(50,130,number,1);
+  write_text(80,70,"Breite",1);
+  write_text(80,100,"Hoehe",1);
+  write_text(80,130,"Bomben",1);
   drawfield(250,80,325,115);
-  write_text(260,102,"Weiter",2);
+  write_text(265,100,"Weiter",2);
 
   drawfield(175,135,140,120);
   drawfield(180,120,215,135);
-  write_text(145,132,"± 1",1);
-  write_text(185,132,"±10",1);
+  write_text(145,130,"± 1",1);
+  write_text(185,130,"±10",1);
 
   drawfield(40,20,115,40);
-  write_text(45,35,"Anfänger",3);
+  write_text(45,33,"Anfänger",3);
   drawfield(120,20,260,40);
-  write_text(125,35,"Fortgeschrittene",3);
+  write_text(125,33,"Fortgeschrittene",3);
   drawfield(265,20,325,40);
-  write_text(270,35,"Profis",3);
+  write_text(270,33,"Profis",3);
 
   switch(Spielart)
   {
@@ -45,9 +45,23 @@ clearwin();
   }
 
   drawfield(130,150,230,165);
-  write_text(140,162,"HighScores",3);
+  write_text(140,160,"HighScores",3);
 
-  write_text(160,87,"Menü",2);
+  drawfield(250,150,265,165);
+  write_text(275,160,"Cheat",2);
+  if(Cheat)
+  {
+    SetAPen(rp,1);
+  }
+  else
+  {
+    SetAPen(rp,0);
+  }
+  Move(rp,253,158);
+  Draw(rp,257,161);
+  Draw(rp,262,153);
+
+  write_text(160,85,"Menü",2);
 
 }
 
@@ -71,7 +85,7 @@ clearwin();
   write_text(30,105,outtext,2);
   write_text(62,117,names[3],2);
   drawfield(100,125,150,150);
-  write_text(102,142,"Weiter",2);
+  write_text(102,140,"Weiter",2);
 
   while(!weiter)
   {
@@ -132,6 +146,21 @@ BYTE deltab=1;
                                 if(Anzahl>width*height-1)
                                   Anzahl=1;
                               }
+                            }
+                            if(mausx>250&&mausx<265&&mausy>150&&mausy<165)
+                            {
+                              Cheat=1-Cheat;
+                              if(Cheat)
+                              {
+                                SetAPen(rp,1);
+                              }
+                              else
+                              {
+                                SetAPen(rp,0);
+                              }
+                              Move(rp,253,158);
+                              Draw(rp,257,161);
+                              Draw(rp,262,153);
                             }
                             if(mausx>140&&mausx<175&&mausy>120&&mausy<135)
                             {
@@ -220,11 +249,11 @@ BYTE deltab=1;
     if(Anzahl>width*height-2)
       Anzahl=width*height-1;
     sprintf(number,"%3d",width);
-    write_text(50,72,number,1);
+    write_text(50,70,number,1);
     sprintf(number,"%3d",height);
-    write_text(50,102,number,1);
+    write_text(50,100,number,1);
     sprintf(number,"%3d",Anzahl);
-    write_text(50,132,number,1);
+    write_text(50,130,number,1);
   }
 }
 
@@ -294,7 +323,7 @@ clearwin();
     AnzMarken=0;
 
     MaleSpielfeld();
-    write_text(left+box_width*width/2-16,25,"Stop",2);
+    write_text(left+box_width*width/2-16,23,"Stop",2);
 
   }
 }
@@ -312,7 +341,7 @@ void FeldZahl(int x, int y, int anz)
 {
   char outtext[2];
   sprintf(outtext,"%d",anz);
-  write_text((x-1)*box_width+6+left,(y-1)*box_width+14+oben,outtext,2);
+  write_text((x-1)*box_width+6+left,(y-1)*box_width+13+oben,outtext,2);
 }
 
 void aufdecken()
@@ -471,7 +500,8 @@ int oldx=-1, oldy=-1;
     ReplyMsg((struct Message *)msg);
     switch(class)
     {
-      case IDCMP_CLOSEWINDOW  : Fehler=loesen();
+      case IDCMP_CLOSEWINDOW  : ende=AutoRequest(Window,&q_gbody,&p,&n,0L,0L,200,75);
+                                SpielAbbr=ende;
                           break;
       case IDCMP_MOUSEBUTTONS : if(start==FALSE)
                           {
@@ -481,7 +511,6 @@ int oldx=-1, oldy=-1;
                             Wait(1<<sigbit1); /* Wait for his signal */
                             time(&tstart);
                           }
-if(mausx<5&&mausy<5)Fehler=loesen();
                           if(code==SELECTUP&&oldx!=-1)
                           {
                             Feldx=(mausx-left) / box_width +1;
@@ -503,6 +532,7 @@ if(mausx<5&&mausy<5)Fehler=loesen();
                             }
                             oldx=-1;
                             oldy=-1;
+                            if(Cheat)Fehler=(Fehler?Fehler:loesen());
                           }
                           if((code==SELECTUP)&&(mausx>left+box_width*width/2-25)&&(mausy>5)&&(mausx<left+box_width*width/2+25)&&(mausy<35))
                           {
@@ -537,6 +567,7 @@ if(mausx<5&&mausy<5)Fehler=loesen();
                             }
                             oldx=-1;
                             oldy=-1;
+                            if(Cheat)Fehler=(Fehler?Fehler:loesen());
                           }
                           if(code==MENUDOWN&&(mausx>left)&&(mausy>oben)&&(mausx<maxx)&&(mausy<maxy)&&((mausx-left) % box_width)&&(((mausx-left) % box_width)<(box_width-1))&&((mausy-oben) % box_width)&&(((mausy-oben) % box_width)<(box_width-1)))
                           {
@@ -566,8 +597,11 @@ if(mausx<5&&mausy<5)Fehler=loesen();
   }
 
   /* stop timer */
-  finish = TRUE;
-  Wait(1<<sigbit1); /* Wait for timer to stop */
+  if(start)
+  {
+    finish = TRUE;
+    Wait(1<<sigbit1); /* Wait for timer to stop */
+  }
 }
 
 void Auswertung()
@@ -606,7 +640,7 @@ char Zeit[30];
 
       sprintf(Zeit,"Fertig! %4d Sek.",(int)(tend-tstart));
       write_text(left+width*box_width/2-65,oben+height*box_width+15,Zeit,1);
-      if((tend-tstart)<Zeiten[Spielart])
+      if((tend-tstart)<Zeiten[Spielart]&&!Cheat)
       {
         clearwin();
 
@@ -633,7 +667,7 @@ char Zeit[30];
         drawfield(left+box_width*width/2-25,5,left+box_width*width/2+25,35);
       }
     }
-    write_text(left+box_width*width/2-23,25,"Weiter",2);
+    write_text(left+box_width*width/2-23,23,"Weiter",2);
 
     while(!weiter)
     {
@@ -646,6 +680,10 @@ char Zeit[30];
       ReplyMsg((struct Message *)msg);
       if((class==IDCMP_MOUSEBUTTONS)&&(code==SELECTUP)&&(mausx>left+box_width*width/2-25)&&(mausy>5)&&(mausx<left+box_width*width/2+25)&&(mausy<35))
         weiter=TRUE;
+      if(class==IDCMP_CLOSEWINDOW)
+      {
+        weiter=WEnde=ende=AutoRequest(Window,&q_body,&p,&n,0L,0L,200,75);
+      }
     }
   }
 }

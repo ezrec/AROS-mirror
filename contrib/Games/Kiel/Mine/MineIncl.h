@@ -15,7 +15,18 @@ void close_lib();
 void open_lib()
 {
   IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library",0L);
+  if(IntuitionBase==NULL)
+  {
+    fprintf(stderr,"Unable to open intuition.library.\n");
+    exit(-1);
+  }
   GfxBase = (struct GfxBase *) OpenLibrary("graphics.library",0L);
+  if(GfxBase==NULL)
+  {
+    fprintf(stderr,"Unable to open graphics.library.\n");
+    CloseLibrary((struct Library *)IntuitionBase);
+    exit(-1);
+  }
 }
 
 void open_window(struct NewWindow *newwindow)
@@ -76,7 +87,7 @@ void close_window()
 
 void close_lib()
 {
-  CloseLibrary((struct Library *)IntuitionBase);
   CloseLibrary((struct Library *)GfxBase);
+  CloseLibrary((struct Library *)IntuitionBase);
 }
 

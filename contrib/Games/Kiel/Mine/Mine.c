@@ -94,6 +94,7 @@ struct Gadget Name_Gad = {
 struct IntuiText p = {1,0,JAM1,10,30,NULL,(UBYTE *)"OK",NULL };
 struct IntuiText n = {1,0,JAM1,70,30,NULL,(UBYTE *)"Cancel",NULL };
 struct IntuiText q_body = {1,0,JAM1,0,0,NULL,(UBYTE *)"Wirklich beenden?",NULL };
+struct IntuiText q_gbody = {1,0,JAM1,0,0,NULL,(UBYTE *)"Spiel abbrechen?",NULL };
 
 
 struct NewWindow NeuesWindow =
@@ -112,7 +113,7 @@ struct NewWindow NeuesWindow =
 };
 
 BYTE Spielfeld[maxwidth+1][maxheight+1],Feldx,Feldy,width,height,Spielart;
-BOOL Karte[maxwidth+2][maxheight+2],ende,Fehler,menuean,SpielAbbr,WEnde;
+BOOL Karte[maxwidth+2][maxheight+2],ende,Fehler,menuean,SpielAbbr,WEnde,Cheat;
 ULONG class;
 UWORD code;
 int Rest,Anzahl,AnzMarken,maxx,maxy,mausx,mausy,Zeiten[4];
@@ -165,12 +166,17 @@ int counter;
         {
           counter=tend-tstart;
           sprintf(outtext,"%3d",Anzahl-AnzMarken);
-          write_text(left+box_width*width/2-55,25,outtext,1);
+          write_text(left+box_width*width/2-55,23,outtext,1);
           sprintf(outtext,"%3d",(int)(tend-tstart));
-          write_text(left+box_width*width/2+35,25,outtext,1);
+          write_text(left+box_width*width/2+35,23,outtext,1);
         }
         Delay(10);
       }
+      counter=tend-tstart;
+      sprintf(outtext,"%3d",Anzahl-AnzMarken);
+      write_text(left+box_width*width/2-55,23,outtext,1);
+      sprintf(outtext,"%3d",(int)(tend-tstart));
+      write_text(left+box_width*width/2+35,23,outtext,1);
       Signal(parent,1<<sigbit1); /* We stopped counting */
     }
   }
@@ -190,6 +196,7 @@ BYTE i;
   Anzahl=30;
   menuean=TRUE;
   Spielart=EIGENDEF;
+  Cheat=FALSE;
   for(i=1;i<4;i++)
   {
     Zeiten[i]=999;
@@ -232,13 +239,13 @@ BOOL Frage()
 BOOL weiter=FALSE,ret=FALSE;
 
   MaleSpielfeld();
-  write_text(left+box_width*width/2-19,25,"Start",2);
+  write_text(left+box_width*width/2-19,23,"Start",2);
 
   EraseRect(rp,left+box_width*width/2-30,oben+box_width*height/2-30,left+box_width*width/2+30,oben+box_width*height/2+30);
   drawfield(left+box_width*width/2-30,oben+box_width*height/2-30,left+box_width*width/2+30,oben+box_width*height/2+30);
   drawfield(left+box_width*width/2-29,oben+box_width*height/2-29,left+box_width*width/2+29,oben+box_width*height/2+29);
   drawfield(left+box_width*width/2-28,oben+box_width*height/2-28,left+box_width*width/2+28,oben+box_width*height/2+28);
-  write_text(left+box_width*width/2-20,oben+box_width*height/2+5,"Menue",2);
+  write_text(left+box_width*width/2-20,oben+box_width*height/2+3,"Menue",2);
 
   while(!weiter)
   {
@@ -317,10 +324,10 @@ int main()
       {
         Spiel();
 	Auswertung();
-	ende=Frage();
+	ende=(ende?ende:Frage());
       }
     }
-    WEnde=AutoRequest(Window,&q_body,&p,&n,0L,0L,200,75);
+    WEnde=(WEnde?WEnde:AutoRequest(Window,&q_body,&p,&n,0L,0L,200,75));
   }
   CleanUp();
   return(0);
