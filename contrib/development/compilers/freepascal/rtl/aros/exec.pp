@@ -143,6 +143,22 @@ FUNCTION WaitPort(port : pMsgPort) : pMessage;
 
 IMPLEMENTATION
 
+const
+  LVO_AbortIO = -(80 * 4);
+
+Procedure AbortIO(ioRequest : pIORequest);
+Begin
+  asm
+    mov   eax, long _ExecBase
+    push  eax
+    mov   ebx, long ioRequest
+    push  ebx
+    mov   eax, [LVO_AbortIO+eax]
+    call  eax
+    add   esp, 8
+  end;
+end;
+(*
 PROCEDURE AbortIO(ioRequest : pIORequest);
 BEGIN
   ASM
@@ -153,6 +169,7 @@ BEGIN
     MOVEA.L (A7)+,A6
   END;
 END;
+*)
 
 PROCEDURE AddDevice(device : pDevice);
 BEGIN
@@ -1555,8 +1572,15 @@ END. (* UNIT EXEC *)
 
 {
   $Log$
-  Revision 1.1  2002/02/19 08:24:43  sasu
-  Initial revision
+  Revision 1.2  2002/02/27 08:45:39  dgs
+  Work in progress.
+
+  Revision 1.1.1.1  2002/02/19 08:24:43  sasu
+  Initial import. See readme.aros in freepascal/rtl/aros.
+
+  Compiler have target AROS now. Left to do is hundreds of m68k asm parts of system includes, mainly libcall wrappers.
+  To find places where to make AROS specifig version, seek {AROS VERSION HERE} string and write i386 version of function or
+  procedure.
 
   Revision 1.1  2000/07/13 06:30:27  michael
   + Initial import

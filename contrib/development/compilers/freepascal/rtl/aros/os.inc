@@ -22,8 +22,15 @@
 
 {
   $Log$
-  Revision 1.1  2002/02/19 08:24:54  sasu
-  Initial revision
+  Revision 1.2  2002/02/27 08:45:39  dgs
+  Work in progress.
+
+  Revision 1.1.1.1  2002/02/19 08:24:54  sasu
+  Initial import. See readme.aros in freepascal/rtl/aros.
+
+  Compiler have target AROS now. Left to do is hundreds of m68k asm parts of system includes, mainly libcall wrappers.
+  To find places where to make AROS specifig version, seek [AROS VERSION HERE] string and write i386 version of function or
+  procedure.
 
   Revision 1.1  2000/07/13 06:30:28  michael
   + Initial import

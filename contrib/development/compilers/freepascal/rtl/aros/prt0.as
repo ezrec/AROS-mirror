@@ -1,55 +1,81 @@
+/*
+** Startup code: AROS version
+**
+** unsigned long _start(char *argstr,                 -- A0
+**                      unsigned long argsize,        -- D0
+**                      struct ExecBase *sysbase);    -- A6 ??
+**
+** esp+12  sysbase
+** esp+8   argsize
+** esp+4   argstr
+** esp+0   return address
+**
+*/
+
+  /*----------------------------------------------------*/
 
    .text
-
    .align 4
 
    .globl _start
    .globl start
+
 _start:
 start:
-|	Save stack pointer for exit() routine
 
-	movel	   sp,STKPTR	| save stack pointer
-| This was wrong compared to PCQ
-|	addl	   #4,STKPTR	| account for this jsr to get to original
+  /* Save stack pointer for exit() routine */
+  movl	   %esp,STKPTR
 
-|	Save the command line pointer to CommandLine
+  /* Save the exec library base */
+  movl     12(%esp),SYSBASE
 
-    movel	a0,__ARGS
-    beq    .Ldont_nullit
+  /* Save the command line pointer length to CommandLineLen */
+  movl     8(%esp),%ecx
+  movl     %ecx,CommandLineLen
+
+  /* Save the command line pointer to CommandLine */
+  movl     4(%esp),%eax
+  movl     %eax,CommandLine
+  movl     %eax,__ARGS
+  test     %eax,%eax
+  jz       .Ldont_nullit
 
 
-| Remove $0a character from end of string
-    movew  d0,d1
-    subqw  #1,d1
-    cmpb   #0x0a,a0@(0,d1:w)
-    bne    .Lcontt
-| Decrement count by one to remove the $0a character
-    movew  d1,d0
- .Lcontt:
-	 moveb  #0,a0@(0,d0:w)	   | null terminate it
-    movew  d0,__ARGC
- .Ldont_nullit:
+  /* Remove $0a character from end of string */
+  cmpb   #0x0a,-1(%eax+%ecx:w)
+  jne    .Lcontt
 
-    jsr PASCALMAIN
+  /* Decrement count by one to remove the $0a character */
+  subl   #1,%ecx
+ 
+.Lcontt:
+  movb   #0,0(%eax+%ecx:w)	   /* null terminate it */
+  movw   %ecx,__ARGC
 
-    movel  STKPTR,sp
-    rts
+.Ldont_nullit:
+    call   PASCALMAIN
+    movl   STKPTR,%esp
+    ret
+
+  /*----------------------------------------------------*/
 
     .data
 
+    .global __ARGS              ; pointer to the arguments
+    .global __ARGC              ; number of arguments
+    .global CommandLineLen      ; byte length of command line
+    .global CommandLine         ;
+    .global STKPTR              ; Used to terminate the program, initial SP
+    .global SYSBASE             ; exec library base
+
     .align 4
 
-    .globl __ARGS
- __ARGS:                   | pointer to the arguments
-      .long 0
-    .globl  __ARGC
- __ARGC:                    | number of arguments
-      .word 0
-    .globl STKPTR          | Used to terminate the program, initial SP
- STKPTR:
-      .long 0
-
+ __ARGS:        .long   0
+ __ARGC:        .word   0
+CommandLine:    .long   0
+CommandLineLen: .long   0
+STKPTR:         .long   0
+SYSBASE:        .long   0
 
 
 

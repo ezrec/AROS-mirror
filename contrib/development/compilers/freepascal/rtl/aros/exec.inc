@@ -6,10 +6,13 @@ TYPE
        APTR     = Pointer;
        BPTR     = Longint;
        BSTR     = Longint;
+
+{ DGS -- defined in systemh.inc
+
        pWord    = ^Word;
        pLongint = ^Longint;
        pInteger = ^Integer;
-
+}
 
 TYPE
 
