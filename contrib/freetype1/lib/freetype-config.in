@@ -48,11 +48,11 @@ while test $# -gt 0; do
       echo -I@AROS_INCLUDE@/freetype1/freetype  -D_REENTRANT
       ;;
     --libs)
-      echo -L@AROS_LIB@ $libdirs -lFreetype1
+      echo -L@AROS_LIB@ $libdirs -lfreetype1
       ;;
     --static-libs)
 #    --libs|--static-libs)
-      echo -L@AROS_LIB@ -lFreetype1
+      echo -L@AROS_LIB@ -lfreetype1
       ;;
     *)
       echo "${usage}" 1>&2
