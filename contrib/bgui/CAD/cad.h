@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/08/08 19:29:08  chodorowski
+ * Added #include <proto/alib.h> to fix some warning.
+ *
  * Revision 42.3  2000/08/08 13:47:32  chodorowski
  * Removed all REGFUNC, REGPARAM and REG macros; now includes
  * compilerspecific.h where they are defined.
@@ -66,6 +69,12 @@
 #include <proto/bgui.h>
 #include <proto/utility.h>
 #include <proto/locale.h>
+
+#ifdef _AROS
+#include <proto/alib.h>
+#else
+#include <clib/alib_protos.h>
+#endif
 
 #include <string.h>
 #include <ctype.h>
@@ -142,4 +151,4 @@ BOOL GenerateXML(BOOL window_opened);   /* generate  XML document - Anton */
 BOOL GenerateGuide(BOOL window_opened); /* generate AmigaGuide document - Anton */
 UBYTE *MapSlash(UBYTE *source, UBYTE *destination); /* support function for GenerateGuide() */
 
-#endif
+#endif /* CAD_H */
