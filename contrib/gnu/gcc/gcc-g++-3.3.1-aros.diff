@@ -1,0 +1,1321 @@
+diff -rNu gcc-3.3.1/libstdc++-v3/config/os/aros/ctype_base.h gcc-3.3.1-aros/libstdc++-v3/config/os/aros/ctype_base.h
+--- gcc-3.3.1/libstdc++-v3/config/os/aros/ctype_base.h	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.3.1-aros/libstdc++-v3/config/os/aros/ctype_base.h	2003-11-13 00:59:33.000000000 +0100
+@@ -0,0 +1,55 @@
++// Locale support -*- C++ -*-
++
++// Copyright (C) 1997-1999 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 2, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING.  If not, write to the Free
++// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
++// USA.
++
++// As a special exception, you may use this file as part of a free software
++// library without restriction.  Specifically, if other files instantiate
++// templates or use macros or inline functions from this file, or you compile
++// this file and link it with other files to produce an executable, this
++// file does not by itself cause the resulting executable to be covered by
++// the GNU General Public License.  This exception does not however
++// invalidate any other reasons why the executable file might be covered by
++// the GNU General Public License.
++
++//
++// ISO C++ 14882: 22.1  Locales
++//
++  
++// Information as gleaned from ctype.h on AROS
++  
++  struct ctype_base
++  {
++    // Non-standard typedefs.
++    typedef int* 		__to_type;
++
++    // NB: Offsets into ctype<char>::_M_table force a particular size
++    // on the mask type. Because of this, we don't use an enum.
++    typedef unsigned short int 	mask;
++    static const mask upper    	= _ISupper;
++    static const mask lower 	= _ISlower;
++    static const mask alpha 	= _ISalpha;
++    static const mask digit 	= _ISdigit;
++    static const mask xdigit 	= _ISxdigit;
++    static const mask space 	= _ISspace;
++    static const mask print 	= _ISprint;
++    static const mask graph 	= _ISgraph;
++    static const mask cntrl 	= _IScntrl;
++    static const mask punct 	= _ISpunct;
++    static const mask alnum 	= _ISalnum;
++  };
+diff -rNu gcc-3.3.1/libstdc++-v3/config/os/aros/ctype_inline.h gcc-3.3.1-aros/libstdc++-v3/config/os/aros/ctype_inline.h
+--- gcc-3.3.1/libstdc++-v3/config/os/aros/ctype_inline.h	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.3.1-aros/libstdc++-v3/config/os/aros/ctype_inline.h	2003-11-13 01:54:45.000000000 +0100
+@@ -0,0 +1,69 @@
++// Locale support -*- C++ -*-
++
++// Copyright (C) 2000, 2002 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 2, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING.  If not, write to the Free
++// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
++// USA.
++
++// As a special exception, you may use this file as part of a free software
++// library without restriction.  Specifically, if other files instantiate
++// templates or use macros or inline functions from this file, or you compile
++// this file and link it with other files to produce an executable, this
++// file does not by itself cause the resulting executable to be covered by
++// the GNU General Public License.  This exception does not however
++// invalidate any other reasons why the executable file might be covered by
++// the GNU General Public License.
++
++//
++// ISO C++ 14882: 22.1  Locales
++//
++  
++// ctype bits to be inlined go here. Non-inlinable (ie virtual do_*)
++// functions go in ctype.cc
++  
++  bool
++  ctype<char>::
++  is(mask __m, char __c) const
++  { return _M_table[static_cast<unsigned char>(__c)] & __m; }
++
++  const char*
++  ctype<char>::
++  is(const char* __low, const char* __high, mask* __vec) const
++  {
++    while (__low < __high)
++      *__vec++ = _M_table[static_cast<unsigned char>(*__low++)];
++    return __high;
++  }
++
++  const char*
++  ctype<char>::
++  scan_is(mask __m, const char* __low, const char* __high) const
++  {
++    while (__low < __high 
++	   && !(_M_table[static_cast<unsigned char>(*__low)] & __m))
++      ++__low;
++    return __low;
++  }
++
++  const char*
++  ctype<char>::
++  scan_not(mask __m, const char* __low, const char* __high) const
++  {
++    while (__low < __high 
++	   && (_M_table[static_cast<unsigned char>(*__low)] & __m) != 0)
++      ++__low;
++    return __low;
++  }
+diff -rNu gcc-3.3.1/libstdc++-v3/config/os/aros/ctype_noninline.h gcc-3.3.1-aros/libstdc++-v3/config/os/aros/ctype_noninline.h
+--- gcc-3.3.1/libstdc++-v3/config/os/aros/ctype_noninline.h	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.3.1-aros/libstdc++-v3/config/os/aros/ctype_noninline.h	2003-11-13 01:53:21.000000000 +0100
+@@ -0,0 +1,82 @@
++// Locale support -*- C++ -*-
++
++// Copyright (C) 2002 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 2, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING.  If not, write to the Free
++// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
++// USA.
++
++// As a special exception, you may use this file as part of a free software
++// library without restriction.  Specifically, if other files instantiate
++// templates or use macros or inline functions from this file, or you compile
++// this file and link it with other files to produce an executable, this
++// file does not by itself cause the resulting executable to be covered by
++// the GNU General Public License.  This exception does not however
++// invalidate any other reasons why the executable file might be covered by
++// the GNU General Public License.
++
++//
++// ISO C++ 14882: 22.1  Locales
++//
++  
++// Information as gleaned from /usr/include/ctype.h
++  
++  const ctype_base::mask*
++  ctype<char>::classic_table() throw()
++  {
++      locale::classic();
++      return __ctype_b;
++  }
++
++  ctype<char>::ctype(__c_locale, const mask* __table, bool __del,
++		     size_t __refs)
++  : __ctype_abstract_base<char>(__refs), _M_del(__table != 0 && __del),
++  _M_toupper(NULL), _M_tolower(NULL), _M_table(__table ? __table : __ctype_b)
++  { }
++
++  ctype<char>::ctype(const mask* __table, bool __del, size_t __refs)
++  : __ctype_abstract_base<char>(__refs), _M_del(__table != 0 && __del),
++  _M_toupper(NULL), _M_tolower(NULL), _M_table(__table ? __table : __ctype_b)
++  { }
++
++  char
++  ctype<char>::do_toupper(char __c) const
++  { return ::toupper((int) __c); }
++
++  const char*
++  ctype<char>::do_toupper(char* __low, const char* __high) const
++  {
++    while (__low < __high)
++      {
++	*__low = ::toupper((int) *__low);
++	++__low;
++      }
++    return __high;
++  }
++
++  char
++  ctype<char>::do_tolower(char __c) const
++  { return ::tolower((int) __c); }
++
++  const char* 
++  ctype<char>::do_tolower(char* __low, const char* __high) const
++  {
++    while (__low < __high)
++      {
++	*__low = ::tolower((int) *__low);
++	++__low;
++      }
++    return __high;
++  }
+diff -rNu gcc-3.3.1/libstdc++-v3/config/os/aros/os_defines.h gcc-3.3.1-aros/libstdc++-v3/config/os/aros/os_defines.h
+--- gcc-3.3.1/libstdc++-v3/config/os/aros/os_defines.h	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.3.1-aros/libstdc++-v3/config/os/aros/os_defines.h	2003-11-13 05:13:13.000000000 +0100
+@@ -0,0 +1,39 @@
++// Specific definitions for AEOS -*- C++ -*-
++
++// Copyright (C) 2001 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 2, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING.  If not, write to the Free
++// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
++// USA.
++
++// As a special exception, you may use this file as part of a free software
++// library without restriction.  Specifically, if other files instantiate
++// templates or use macros or inline functions from this file, or you compile
++// this file and link it with other files to produce an executable, this
++// file does not by itself cause the resulting executable to be covered by
++// the GNU General Public License.  This exception does not however
++// invalidate any other reasons why the executable file might be covered by
++// the GNU General Public License.
++
++
++#ifndef _GLIBCPP_OS_DEFINES
++#define _GLIBCPP_OS_DEFINES 1
++
++// System-specific #define, typedefs, corrections, etc, go here.  This
++// file will come before all others.
++
++#endif
++
++
+diff -rNu gcc-3.3.1/libstdc++-v3/configure gcc-3.3.1-aros/libstdc++-v3/configure
+--- gcc-3.3.1/libstdc++-v3/configure	2003-07-17 20:32:00.000000000 +0200
++++ gcc-3.3.1-aros/libstdc++-v3/configure	2003-11-13 13:51:27.000000000 +0100
+@@ -4213,6 +4213,1006 @@
+   # GLIBCPP_CHECK_MATH_SUPPORT
+ 
+   case "$target" in
++    *-aros*)
++      os_include_dir="os/aros"
++      for ac_hdr in nan.h ieeefp.h endian.h sys/isa_defs.h \
++        machine/endian.h machine/param.h sys/machine.h sys/types.h \
++        fp.h locale.h float.h inttypes.h
++do
++ac_safe=`echo "$ac_hdr" | sed 'y%./+-%__p_%'`
++echo $ac_n "checking for $ac_hdr""... $ac_c" 1>&6
++echo "configure:4225: checking for $ac_hdr" >&5
++if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4230 "configure"
++#include "confdefs.h"
++#include <$ac_hdr>
++EOF
++ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
++{ (eval echo configure:4235: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
++ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
++if test -z "$ac_err"; then
++  rm -rf conftest*
++  eval "ac_cv_header_$ac_safe=yes"
++else
++  echo "$ac_err" >&5
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_header_$ac_safe=no"
++fi
++rm -f conftest*
++fi
++if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++    ac_tr_hdr=HAVE_`echo $ac_hdr | sed 'y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%'`
++  cat >> confdefs.h <<EOF
++#define $ac_tr_hdr 1
++EOF
++
++else
++  echo "$ac_t""no" 1>&6
++fi
++done
++
++  #SECTION_FLAGS='-ffunction-sections -fdata-sections'
++
++
++  # If we're not using GNU ld, then there's no point in even trying these
++  # tests.  Check for that first.  We should have already tested for gld
++  # by now (in libtool), but require it now just to be safe...
++  test -z "$SECTION_LDFLAGS" && SECTION_LDFLAGS=''
++  test -z "$OPT_LDFLAGS" && OPT_LDFLAGS=''
++
++
++  # The name set by libtool depends on the version of libtool.  Shame on us
++  # for depending on an impl detail, but c'est la vie.  Older versions used
++  # ac_cv_prog_gnu_ld, but now it's lt_cv_prog_gnu_ld, and is copied back on
++  # top of with_gnu_ld (which is also set by --with-gnu-ld, so that actually
++  # makes sense).  We'll test with_gnu_ld everywhere else, so if that isn't
++  # set (hence we're using an older libtool), then set it.
++  if test x${with_gnu_ld+set} != xset; then
++    if test x${ac_cv_prog_gnu_ld+set} != xset; then
++      # We got through "ac_require(ac_prog_ld)" and still not set?  Huh?
++      with_gnu_ld=no
++    else
++      with_gnu_ld=$ac_cv_prog_gnu_ld
++    fi
++  fi
++
++  # Start by getting the version number.  I think the libtool test already
++  # does some of this, but throws away the result.
++
++  ldver=`$LD --version 2>/dev/null | head -1 | \
++         sed -e 's/GNU ld version \([0-9.][0-9.]*\).*/\1/'`
++
++  glibcpp_gnu_ld_version=`echo $ldver | \
++         $AWK -F. '{ if (NF<3) $3=0; print ($1*100+$2)*100+$3 }'`
++
++  # Set --gc-sections.
++  if test "$with_gnu_ld" = "notbroken"; then
++    # GNU ld it is!  Joy and bunny rabbits!
++
++    # All these tests are for C++; save the language and the compiler flags.
++    # Need to do this so that g++ won't try to link in libstdc++
++    ac_test_CFLAGS="${CFLAGS+set}"
++    ac_save_CFLAGS="$CFLAGS"
++    CFLAGS='-x c++  -Wl,--gc-sections'
++
++    # Check for -Wl,--gc-sections
++    # XXX This test is broken at the moment, as symbols required for
++    # linking are now in libsupc++ (not built yet.....). In addition,
++    # this test has cored on solaris in the past. In addition,
++    # --gc-sections doesn't really work at the moment (keeps on discarding
++    # used sections, first .eh_frame and now some of the glibc sections for
++    # iconv). Bzzzzt. Thanks for playing, maybe next time.
++    echo $ac_n "checking for ld that supports -Wl,--gc-sections""... $ac_c" 1>&6
++echo "configure:4313: checking for ld that supports -Wl,--gc-sections" >&5
++    if test "$cross_compiling" = yes; then
++  ac_sectionLDflags=yes
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4318 "configure"
++#include "confdefs.h"
++
++     int main(void)
++     {
++       try { throw 1; }
++       catch (...) { };
++       return 0;
++     }
++
++EOF
++if { (eval echo configure:4329: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
++then
++  ac_sectionLDflags=yes
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -fr conftest*
++  ac_sectionLDflags=no
++fi
++rm -fr conftest*
++fi
++
++    if test "$ac_test_CFLAGS" = set; then
++      CFLAGS="$ac_save_CFLAGS"
++    else
++      # this is the suspicious part
++      CFLAGS=''
++    fi
++    if test "$ac_sectionLDflags" = "yes"; then
++      SECTION_LDFLAGS="-Wl,--gc-sections $SECTION_LDFLAGS"
++    fi
++    echo "$ac_t""$ac_sectionLDflags" 1>&6
++  fi
++
++  # Set linker optimization flags.
++  if test x"$with_gnu_ld" = x"yes"; then
++    OPT_LDFLAGS="-Wl,-O1 $OPT_LDFLAGS"
++  fi
++
++
++
++
++
++    echo $ac_n "checking for main in -lm""... $ac_c" 1>&6
++echo "configure:4363: checking for main in -lm" >&5
++ac_lib_var=`echo m'_'main | sed 'y%./+-%__p_%'`
++if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  ac_save_LIBS="$LIBS"
++LIBS="-lm  $LIBS"
++cat > conftest.$ac_ext <<EOF
++#line 4371 "configure"
++#include "confdefs.h"
++
++int main() {
++main()
++; return 0; }
++EOF
++if { (eval echo configure:4378: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
++  rm -rf conftest*
++  eval "ac_cv_lib_$ac_lib_var=yes"
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_lib_$ac_lib_var=no"
++fi
++rm -f conftest*
++LIBS="$ac_save_LIBS"
++
++fi
++if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++    ac_tr_lib=HAVE_LIB`echo m | sed -e 's/[^a-zA-Z0-9_]/_/g' \
++    -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'`
++  cat >> confdefs.h <<EOF
++#define $ac_tr_lib 1
++EOF
++
++  LIBS="-lm $LIBS"
++
++else
++  echo "$ac_t""no" 1>&6
++fi
++
++  for ac_func in nan copysignf
++do
++echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
++echo "configure:4408: checking for $ac_func" >&5
++if eval "test \"`echo '$''{'ac_cv_func_$ac_func'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4413 "configure"
++#include "confdefs.h"
++/* System header to define __stub macros and hopefully few prototypes,
++    which can conflict with char $ac_func(); below.  */
++#include <assert.h>
++/* Override any gcc2 internal prototype to avoid an error.  */
++/* We use char because int might match the return type of a gcc2
++    builtin and then its argument prototype would still apply.  */
++char $ac_func();
++
++int main() {
++
++/* The GNU C library defines this for functions which it implements
++    to always fail with ENOSYS.  Some functions are actually named
++    something starting with __ and the normal name is an alias.  */
++#if defined (__stub_$ac_func) || defined (__stub___$ac_func)
++choke me
++#else
++$ac_func();
++#endif
++
++; return 0; }
++EOF
++if { (eval echo configure:4436: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=yes"
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=no"
++fi
++rm -f conftest*
++fi
++
++if eval "test \"`echo '$ac_cv_func_'$ac_func`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++    ac_tr_func=HAVE_`echo $ac_func | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
++  cat >> confdefs.h <<EOF
++#define $ac_tr_func 1
++EOF
++
++else
++  echo "$ac_t""no" 1>&6
++LIBMATHOBJS="$LIBMATHOBJS ${ac_func}.lo"
++fi
++done
++
++
++    for ac_func in __signbit
++do
++echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
++echo "configure:4465: checking for $ac_func" >&5
++if eval "test \"`echo '$''{'ac_cv_func_$ac_func'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4470 "configure"
++#include "confdefs.h"
++/* System header to define __stub macros and hopefully few prototypes,
++    which can conflict with char $ac_func(); below.  */
++#include <assert.h>
++/* Override any gcc2 internal prototype to avoid an error.  */
++/* We use char because int might match the return type of a gcc2
++    builtin and then its argument prototype would still apply.  */
++char $ac_func();
++
++int main() {
++
++/* The GNU C library defines this for functions which it implements
++    to always fail with ENOSYS.  Some functions are actually named
++    something starting with __ and the normal name is an alias.  */
++#if defined (__stub_$ac_func) || defined (__stub___$ac_func)
++choke me
++#else
++$ac_func();
++#endif
++
++; return 0; }
++EOF
++if { (eval echo configure:4493: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=yes"
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=no"
++fi
++rm -f conftest*
++fi
++
++if eval "test \"`echo '$ac_cv_func_'$ac_func`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++    ac_tr_func=HAVE_`echo $ac_func | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
++  cat >> confdefs.h <<EOF
++#define $ac_tr_func 1
++EOF
++
++else
++  echo "$ac_t""no" 1>&6
++LIBMATHOBJS="$LIBMATHOBJS signbit.lo"
++fi
++done
++
++  for ac_func in __signbitf
++do
++echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
++echo "configure:4521: checking for $ac_func" >&5
++if eval "test \"`echo '$''{'ac_cv_func_$ac_func'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4526 "configure"
++#include "confdefs.h"
++/* System header to define __stub macros and hopefully few prototypes,
++    which can conflict with char $ac_func(); below.  */
++#include <assert.h>
++/* Override any gcc2 internal prototype to avoid an error.  */
++/* We use char because int might match the return type of a gcc2
++    builtin and then its argument prototype would still apply.  */
++char $ac_func();
++
++int main() {
++
++/* The GNU C library defines this for functions which it implements
++    to always fail with ENOSYS.  Some functions are actually named
++    something starting with __ and the normal name is an alias.  */
++#if defined (__stub_$ac_func) || defined (__stub___$ac_func)
++choke me
++#else
++$ac_func();
++#endif
++
++; return 0; }
++EOF
++if { (eval echo configure:4549: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=yes"
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=no"
++fi
++rm -f conftest*
++fi
++
++if eval "test \"`echo '$ac_cv_func_'$ac_func`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++    ac_tr_func=HAVE_`echo $ac_func | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
++  cat >> confdefs.h <<EOF
++#define $ac_tr_func 1
++EOF
++ 
++else
++  echo "$ac_t""no" 1>&6
++LIBMATHOBJS="$LIBMATHOBJS signbitf.lo"
++fi
++done
++
++
++          if test x$ac_cv_func_copysignl = x"yes"; then
++    for ac_func in __signbitl
++do
++echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
++echo "configure:4579: checking for $ac_func" >&5
++if eval "test \"`echo '$''{'ac_cv_func_$ac_func'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4584 "configure"
++#include "confdefs.h"
++/* System header to define __stub macros and hopefully few prototypes,
++    which can conflict with char $ac_func(); below.  */
++#include <assert.h>
++/* Override any gcc2 internal prototype to avoid an error.  */
++/* We use char because int might match the return type of a gcc2
++    builtin and then its argument prototype would still apply.  */
++char $ac_func();
++
++int main() {
++
++/* The GNU C library defines this for functions which it implements
++    to always fail with ENOSYS.  Some functions are actually named
++    something starting with __ and the normal name is an alias.  */
++#if defined (__stub_$ac_func) || defined (__stub___$ac_func)
++choke me
++#else
++$ac_func();
++#endif
++
++; return 0; }
++EOF
++if { (eval echo configure:4607: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=yes"
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=no"
++fi
++rm -f conftest*
++fi
++
++if eval "test \"`echo '$ac_cv_func_'$ac_func`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++    ac_tr_func=HAVE_`echo $ac_func | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
++  cat >> confdefs.h <<EOF
++#define $ac_tr_func 1
++EOF
++ 
++else
++  echo "$ac_t""no" 1>&6
++LIBMATHOBJS="$LIBMATHOBJS signbitl.lo"
++fi
++done
++
++  fi
++
++  if test -n "$LIBMATHOBJS"; then
++    need_libmath=yes
++  fi
++  
++  
++
++if test "$need_libmath" = yes; then
++  GLIBCPP_BUILD_LIBMATH_TRUE=
++  GLIBCPP_BUILD_LIBMATH_FALSE='#'
++else
++  GLIBCPP_BUILD_LIBMATH_TRUE='#'
++  GLIBCPP_BUILD_LIBMATH_FALSE=
++fi
++
++      
++    enable_wchar_t=no
++
++      echo $ac_n "checking for mbstate_t""... $ac_c" 1>&6
++echo "configure:4652: checking for mbstate_t" >&5
++  cat > conftest.$ac_ext <<EOF
++#line 4654 "configure"
++#include "confdefs.h"
++#include <wchar.h>
++int main() {
++mbstate_t teststate;
++; return 0; }
++EOF
++if { (eval echo configure:4661: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
++  rm -rf conftest*
++  have_mbstate_t=yes
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  have_mbstate_t=no
++fi
++rm -f conftest*
++  echo "$ac_t""$have_mbstate_t" 1>&6
++  if test x"$have_mbstate_t" = xyes; then
++    cat >> confdefs.h <<\EOF
++#define HAVE_MBSTATE_T 1
++EOF
++
++  fi
++
++    for ac_hdr in wchar.h
++do
++ac_safe=`echo "$ac_hdr" | sed 'y%./+-%__p_%'`
++echo $ac_n "checking for $ac_hdr""... $ac_c" 1>&6
++echo "configure:4683: checking for $ac_hdr" >&5
++if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4688 "configure"
++#include "confdefs.h"
++#include <$ac_hdr>
++EOF
++ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
++{ (eval echo configure:4693: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
++ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
++if test -z "$ac_err"; then
++  rm -rf conftest*
++  eval "ac_cv_header_$ac_safe=yes"
++else
++  echo "$ac_err" >&5
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_header_$ac_safe=no"
++fi
++rm -f conftest*
++fi
++if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++    ac_tr_hdr=HAVE_`echo $ac_hdr | sed 'y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%'`
++  cat >> confdefs.h <<EOF
++#define $ac_tr_hdr 1
++EOF
++ ac_has_wchar_h=yes
++else
++  echo "$ac_t""no" 1>&6
++ac_has_wchar_h=no
++fi
++done
++
++  for ac_hdr in wctype.h
++do
++ac_safe=`echo "$ac_hdr" | sed 'y%./+-%__p_%'`
++echo $ac_n "checking for $ac_hdr""... $ac_c" 1>&6
++echo "configure:4724: checking for $ac_hdr" >&5
++if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4729 "configure"
++#include "confdefs.h"
++#include <$ac_hdr>
++EOF
++ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
++{ (eval echo configure:4734: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
++ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
++if test -z "$ac_err"; then
++  rm -rf conftest*
++  eval "ac_cv_header_$ac_safe=yes"
++else
++  echo "$ac_err" >&5
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_header_$ac_safe=no"
++fi
++rm -f conftest*
++fi
++if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++    ac_tr_hdr=HAVE_`echo $ac_hdr | sed 'y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQRSTUVWXYZ___%'`
++  cat >> confdefs.h <<EOF
++#define $ac_tr_hdr 1
++EOF
++ ac_has_wctype_h=yes
++else
++  echo "$ac_t""no" 1>&6
++ac_has_wctype_h=no
++fi
++done
++
++  
++    if test x"$ac_has_wchar_h" = xyes &&
++     test x"$ac_has_wctype_h" = xyes &&
++     test x"$enable_c_mbchar" != xno; then
++      
++            echo $ac_n "checking for WCHAR_MIN and WCHAR_MAX""... $ac_c" 1>&6
++echo "configure:4767: checking for WCHAR_MIN and WCHAR_MAX" >&5
++    cat > conftest.$ac_ext <<EOF
++#line 4769 "configure"
++#include "confdefs.h"
++#include <wchar.h>
++int main() {
++int i = WCHAR_MIN; int j = WCHAR_MAX;
++; return 0; }
++EOF
++if { (eval echo configure:4776: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
++  rm -rf conftest*
++  has_wchar_minmax=yes
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  has_wchar_minmax=no
++fi
++rm -f conftest*
++    echo "$ac_t""$has_wchar_minmax" 1>&6
++    
++            echo $ac_n "checking for WEOF""... $ac_c" 1>&6
++echo "configure:4789: checking for WEOF" >&5
++    cat > conftest.$ac_ext <<EOF
++#line 4791 "configure"
++#include "confdefs.h"
++
++      #include <wchar.h>
++      #include <stddef.h>
++int main() {
++wint_t i = WEOF;
++; return 0; }
++EOF
++if { (eval echo configure:4800: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
++  rm -rf conftest*
++  has_weof=yes
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  has_weof=no
++fi
++rm -f conftest*
++    echo "$ac_t""$has_weof" 1>&6
++  
++        ac_wfuncs=yes
++    for ac_func in wcslen wmemchr wmemcmp wmemcpy wmemmove wmemset
++do
++echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
++echo "configure:4816: checking for $ac_func" >&5
++if eval "test \"`echo '$''{'ac_cv_func_$ac_func'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4821 "configure"
++#include "confdefs.h"
++/* System header to define __stub macros and hopefully few prototypes,
++    which can conflict with char $ac_func(); below.  */
++#include <assert.h>
++/* Override any gcc2 internal prototype to avoid an error.  */
++/* We use char because int might match the return type of a gcc2
++    builtin and then its argument prototype would still apply.  */
++char $ac_func();
++
++int main() {
++
++/* The GNU C library defines this for functions which it implements
++    to always fail with ENOSYS.  Some functions are actually named
++    something starting with __ and the normal name is an alias.  */
++#if defined (__stub_$ac_func) || defined (__stub___$ac_func)
++choke me
++#else
++$ac_func();
++#endif
++
++; return 0; }
++EOF
++if { (eval echo configure:4844: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=yes"
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=no"
++fi
++rm -f conftest*
++fi
++
++if eval "test \"`echo '$ac_cv_func_'$ac_func`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++    ac_tr_func=HAVE_`echo $ac_func | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
++  cat >> confdefs.h <<EOF
++#define $ac_tr_func 1
++EOF
++ 
++else
++  echo "$ac_t""no" 1>&6
++\
++    ac_wfuncs=no
++fi
++done
++
++  
++        for ac_func in btowc wctob fgetwc fgetws fputwc fputws fwide \
++    fwprintf fwscanf swprintf swscanf vfwprintf vfwscanf vswprintf vswscanf \
++    vwprintf vwscanf wprintf wscanf getwc getwchar mbsinit mbrlen mbrtowc \
++    mbsrtowcs wcsrtombs putwc putwchar ungetwc wcrtomb wcstod wcstof wcstol \
++    wcstoul wcscpy wcsncpy wcscat wcsncat wcscmp wcscoll wcsncmp wcsxfrm \
++    wcscspn wcsspn wcstok wcsftime wcschr wcspbrk wcsrchr wcsstr
++do
++echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
++echo "configure:4879: checking for $ac_func" >&5
++if eval "test \"`echo '$''{'ac_cv_func_$ac_func'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4884 "configure"
++#include "confdefs.h"
++/* System header to define __stub macros and hopefully few prototypes,
++    which can conflict with char $ac_func(); below.  */
++#include <assert.h>
++/* Override any gcc2 internal prototype to avoid an error.  */
++/* We use char because int might match the return type of a gcc2
++    builtin and then its argument prototype would still apply.  */
++char $ac_func();
++
++int main() {
++
++/* The GNU C library defines this for functions which it implements
++    to always fail with ENOSYS.  Some functions are actually named
++    something starting with __ and the normal name is an alias.  */
++#if defined (__stub_$ac_func) || defined (__stub___$ac_func)
++choke me
++#else
++$ac_func();
++#endif
++
++; return 0; }
++EOF
++if { (eval echo configure:4907: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=yes"
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=no"
++fi
++rm -f conftest*
++fi
++
++if eval "test \"`echo '$ac_cv_func_'$ac_func`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++    ac_tr_func=HAVE_`echo $ac_func | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
++  cat >> confdefs.h <<EOF
++#define $ac_tr_func 1
++EOF
++ 
++else
++  echo "$ac_t""no" 1>&6
++\
++    ac_wfuncs=no
++fi
++done
++
++
++    echo $ac_n "checking for ISO C99 wchar_t support""... $ac_c" 1>&6
++echo "configure:4935: checking for ISO C99 wchar_t support" >&5
++    if test x"$has_weof" = xyes &&
++       test x"$has_wchar_minmax" = xyes &&
++       test x"$ac_wfuncs" = xyes; then
++      ac_isoC99_wchar_t=yes
++    else
++      ac_isoC99_wchar_t=no
++    fi
++    echo "$ac_t""$ac_isoC99_wchar_t" 1>&6
++  
++            ac_safe=`echo "iconv.h" | sed 'y%./+-%__p_%'`
++echo $ac_n "checking for iconv.h""... $ac_c" 1>&6
++echo "configure:4947: checking for iconv.h" >&5
++if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4952 "configure"
++#include "confdefs.h"
++#include <iconv.h>
++EOF
++ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
++{ (eval echo configure:4957: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
++ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
++if test -z "$ac_err"; then
++  rm -rf conftest*
++  eval "ac_cv_header_$ac_safe=yes"
++else
++  echo "$ac_err" >&5
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_header_$ac_safe=no"
++fi
++rm -f conftest*
++fi
++if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++  ac_has_iconv_h=yes
++else
++  echo "$ac_t""no" 1>&6
++ac_has_iconv_h=no
++fi
++
++    ac_safe=`echo "langinfo.h" | sed 'y%./+-%__p_%'`
++echo $ac_n "checking for langinfo.h""... $ac_c" 1>&6
++echo "configure:4981: checking for langinfo.h" >&5
++if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 4986 "configure"
++#include "confdefs.h"
++#include <langinfo.h>
++EOF
++ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
++{ (eval echo configure:4991: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
++ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
++if test -z "$ac_err"; then
++  rm -rf conftest*
++  eval "ac_cv_header_$ac_safe=yes"
++else
++  echo "$ac_err" >&5
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_header_$ac_safe=no"
++fi
++rm -f conftest*
++fi
++if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++  ac_has_langinfo_h=yes
++else
++  echo "$ac_t""no" 1>&6
++ac_has_langinfo_h=no
++fi
++
++
++        echo $ac_n "checking for iconv in -liconv""... $ac_c" 1>&6
++echo "configure:5015: checking for iconv in -liconv" >&5
++ac_lib_var=`echo iconv'_'iconv | sed 'y%./+-%__p_%'`
++if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  ac_save_LIBS="$LIBS"
++LIBS="-liconv  $LIBS"
++cat > conftest.$ac_ext <<EOF
++#line 5023 "configure"
++#include "confdefs.h"
++/* Override any gcc2 internal prototype to avoid an error.  */
++/* We use char because int might match the return type of a gcc2
++    builtin and then its argument prototype would still apply.  */
++char iconv();
++
++int main() {
++iconv()
++; return 0; }
++EOF
++if { (eval echo configure:5034: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
++  rm -rf conftest*
++  eval "ac_cv_lib_$ac_lib_var=yes"
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_lib_$ac_lib_var=no"
++fi
++rm -f conftest*
++LIBS="$ac_save_LIBS"
++
++fi
++if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++  libiconv="-liconv"
++else
++  echo "$ac_t""no" 1>&6
++fi
++
++    ac_save_LIBS="$LIBS"
++    LIBS="$LIBS $libiconv"
++
++    for ac_func in iconv_open iconv_close iconv nl_langinfo
++do
++echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
++echo "configure:5060: checking for $ac_func" >&5
++if eval "test \"`echo '$''{'ac_cv_func_$ac_func'+set}'`\" = set"; then
++  echo $ac_n "(cached) $ac_c" 1>&6
++else
++  cat > conftest.$ac_ext <<EOF
++#line 5065 "configure"
++#include "confdefs.h"
++/* System header to define __stub macros and hopefully few prototypes,
++    which can conflict with char $ac_func(); below.  */
++#include <assert.h>
++/* Override any gcc2 internal prototype to avoid an error.  */
++/* We use char because int might match the return type of a gcc2
++    builtin and then its argument prototype would still apply.  */
++char $ac_func();
++
++int main() {
++
++/* The GNU C library defines this for functions which it implements
++    to always fail with ENOSYS.  Some functions are actually named
++    something starting with __ and the normal name is an alias.  */
++#if defined (__stub_$ac_func) || defined (__stub___$ac_func)
++choke me
++#else
++$ac_func();
++#endif
++
++; return 0; }
++EOF
++if { (eval echo configure:5088: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=yes"
++else
++  echo "configure: failed program was:" >&5
++  cat conftest.$ac_ext >&5
++  rm -rf conftest*
++  eval "ac_cv_func_$ac_func=no"
++fi
++rm -f conftest*
++fi
++
++if eval "test \"`echo '$ac_cv_func_'$ac_func`\" = yes"; then
++  echo "$ac_t""yes" 1>&6
++    ac_tr_func=HAVE_`echo $ac_func | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
++  cat >> confdefs.h <<EOF
++#define $ac_tr_func 1
++EOF
++ \
++    ac_XPG2funcs=yes
++else
++  echo "$ac_t""no" 1>&6
++ac_XPG2funcs=no
++fi
++done
++
++  
++    LIBS="$ac_save_LIBS"
++
++    echo $ac_n "checking for XPG2 wchar_t support""... $ac_c" 1>&6
++echo "configure:5118: checking for XPG2 wchar_t support" >&5
++    if test x"$ac_has_iconv_h" = xyes &&
++       test x"$ac_has_langinfo_h" = xyes &&
++       test x"$ac_XPG2funcs" = xyes; then
++      ac_XPG2_wchar_t=yes
++    else
++      ac_XPG2_wchar_t=no
++    fi
++    echo "$ac_t""$ac_XPG2_wchar_t" 1>&6
++  
++            if test x"$ac_isoC99_wchar_t" = xyes &&
++       test x"$ac_XPG2_wchar_t" = xyes; then
++       cat >> confdefs.h <<\EOF
++#define _GLIBCPP_USE_WCHAR_T 1
++EOF
++
++       enable_wchar_t=yes 
++    fi
++  fi
++  echo $ac_n "checking for enabled wchar_t specializations""... $ac_c" 1>&6
++echo "configure:5138: checking for enabled wchar_t specializations" >&5
++  echo "$ac_t""$enable_wchar_t" 1>&6	
++  
++
++if test "$enable_wchar_t" = yes; then
++  GLIBCPP_TEST_WCHAR_T_TRUE=
++  GLIBCPP_TEST_WCHAR_T_FALSE='#'
++else
++  GLIBCPP_TEST_WCHAR_T_TRUE='#'
++  GLIBCPP_TEST_WCHAR_T_FALSE=
++fi	
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_COPYSIGN 1
++EOF
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_COPYSIGNF 1
++EOF
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_FINITE 1
++EOF
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_FINITEF 1
++EOF
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_FREXPF 1
++EOF
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_HYPOTF 1
++EOF
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_ISINF 1
++EOF
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_ISINFF 1
++EOF
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_ISNAN 1
++EOF
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_ISNANF 1
++EOF
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_SINCOS 1
++EOF
++
++      cat >> confdefs.h <<\EOF
++#define HAVE_SINCOSF 1
++EOF
++
++      if test x"long_double_math_on_this_cpu" = x"yes"; then
++        cat >> confdefs.h <<\EOF
++#define HAVE_FINITEL 1
++EOF
++
++        cat >> confdefs.h <<\EOF
++#define HAVE_HYPOTL 1
++EOF
++
++        cat >> confdefs.h <<\EOF
++#define HAVE_ISINFL 1
++EOF
++
++        cat >> confdefs.h <<\EOF
++#define HAVE_ISNANL 1
++EOF
++
++      fi
++      ;;
+     *-linux*)
+       os_include_dir="os/gnu-linux"
+       for ac_hdr in nan.h ieeefp.h endian.h sys/isa_defs.h \
+diff -rNu gcc-3.3.1/libstdc++-v3/configure.in gcc-3.3.1-aros/libstdc++-v3/configure.in
+--- gcc-3.3.1/libstdc++-v3/configure.in	2003-07-17 20:32:00.000000000 +0200
++++ gcc-3.3.1-aros/libstdc++-v3/configure.in	2003-11-13 15:31:15.000000000 +0100
+@@ -117,6 +117,33 @@
+   # GLIBCPP_CHECK_MATH_SUPPORT
+ 
+   case "$target" in
++    *-aros*)
++      os_include_dir="os/aros"
++      AC_CHECK_HEADERS([nan.h ieeefp.h endian.h sys/isa_defs.h \
++        machine/endian.h machine/param.h sys/machine.h sys/types.h \
++        fp.h locale.h float.h inttypes.h])
++      GLIBCPP_CHECK_LINKER_FEATURES
++      GLIBCPP_CHECK_COMPLEX_MATH_SUPPORT
++      GLIBCPP_CHECK_WCHAR_T_SUPPORT
++      AC_DEFINE(HAVE_COPYSIGN)
++      AC_DEFINE(HAVE_COPYSIGNF)
++      AC_DEFINE(HAVE_FINITE)
++      AC_DEFINE(HAVE_FINITEF)
++      AC_DEFINE(HAVE_FREXPF)
++      AC_DEFINE(HAVE_HYPOTF)
++      AC_DEFINE(HAVE_ISINF)
++      AC_DEFINE(HAVE_ISINFF)
++      AC_DEFINE(HAVE_ISNAN)
++      AC_DEFINE(HAVE_ISNANF)
++      AC_DEFINE(HAVE_SINCOS)
++      AC_DEFINE(HAVE_SINCOSF)
++      if test x"long_double_math_on_this_cpu" = x"yes"; then
++        AC_DEFINE(HAVE_FINITEL)
++        AC_DEFINE(HAVE_HYPOTL)
++        AC_DEFINE(HAVE_ISINFL)
++        AC_DEFINE(HAVE_ISNANL)
++      fi
++      ;;
+     *-linux*)
+       os_include_dir="os/gnu-linux"
+       AC_CHECK_HEADERS([nan.h ieeefp.h endian.h sys/isa_defs.h \
+diff -rNu gcc-3.3.1/libstdc++-v3/configure.target gcc-3.3.1-aros/libstdc++-v3/configure.target
+--- gcc-3.3.1/libstdc++-v3/configure.target	2003-06-24 06:14:45.000000000 +0200
++++ gcc-3.3.1-aros/libstdc++-v3/configure.target	2003-11-13 01:55:52.000000000 +0100
+@@ -170,6 +170,9 @@
+     os_include_dir="os/qnx/qnx6.1"
+     c_model=c
+     ;;
++  aros*)
++   os_include_dir="os/aros"
++   ;;
+   *)
+     os_include_dir="os/generic"
+     ;;

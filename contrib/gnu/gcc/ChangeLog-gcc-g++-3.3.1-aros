@@ -1,0 +1,13 @@
+-- in toplevel/libstdc++-v3 --
+
+2003-11-13  Fabio Alemagna  <falemagn@aros.org>
+
+	* configure.target: handle aros*.
+	* configure.in: handle aros*.
+	* configure: regenerated from configure.in (by hand, since
+	  my autoconf installation is not working properly, at the
+	  moment).
+	* config/os/aros/os_defines.h: new file.
+	* config/os/aros/ctype_base.h: new file.
+	* config/os/aros/ctype_noninline.h: new file.
+	* config/os/aros/ctype_inline.h: new file.
