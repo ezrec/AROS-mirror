@@ -6,7 +6,7 @@
 ##MM- contrib-gnu : contrib-gnu-gcc
 ##MM- contrib-gnu-gcc : development-gcc
 
-#MM development : development-gcc
+#MM- development : development-gcc
 #MM development-gcc-quick : development-gcc-fetch
 
 ORIGINS := http://ftp.gnu.org/pub/gnu/gcc/gcc-3.3.1
