@@ -1,6 +1,7 @@
 #include <exec/types.h>
 
 #include <sys/types.h>
+#include <sys/time.h>
 #include <stdio.h>
 
 struct hostent *gethostbyname(const char *name)
@@ -20,7 +21,7 @@ int  select(int  n,  fd_set  *readfds,  fd_set  *writefds,
 return -1;
 }
 
-in_addr_t inet_addr(const char *cp)
+u_long inet_addr(const char *cp)
 {
 return 0;
 }
