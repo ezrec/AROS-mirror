@@ -202,6 +202,8 @@ static void makewin(void)
 			       WA_Gadgets, (IPTR)draggad,
 			       WA_Shape, (IPTR)shape,
 			       TAG_DONE);
+
+    if (!win) cleanup("Can't open window!");
 }
 
 static void paintwin(void)
