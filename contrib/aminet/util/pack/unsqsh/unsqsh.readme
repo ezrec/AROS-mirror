@@ -1,0 +1,30 @@
+Short:    Portable unpack source for XPK-SQSH
+Author:   wepl@kagi.com,h430827@stud.u-szeged.hu
+Uploader: wepl@kagi.com
+Version:  0.2
+Type:     dev/misc
+
+***** version 0.2
+
+this is the second release off an portable source to uncompress XPK-SQSH
+files. improvements done:
+ - support for uncompressed chunks
+ - chksum verification
+ - header chksum verification
+ - some optimizing
+
+***** version 0.1
+
+because I have burned my mods some time ago and my brother wants to hear them
+on his i486 linux machine I have written this quick and dirty piece of source
+by reassembling the appropriate xpk library and converted the stuff to nearly
+unreadable c.
+
+I have tested it a while and it seems to work clearly. It should compile on 
+every standard c compiler.
+
+This  program  is  distributed  in  the  hope that it will be useful, but
+WITHOUT  ANY  WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+
+Thanks and greetings are going to John Hendrikx for creating SQSH.
