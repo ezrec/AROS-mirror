@@ -55,7 +55,7 @@ Portability
 
 AROS executables for a specific CPU are portable across all ports using that
 CPU, which means that executables compiled for "i386-pc" will work fine on
-"i386-linux" or "i386-freebsd".
+"i386-linux" and "i386-freebsd".
 
 
 Existing ports
