@@ -53,7 +53,7 @@ LIBOBJS= \
   lib_setsocketsignals.o \
   lib_socketbasetaglist.o
 
-all: test testserver testclient ping
+all: test testserver testclient testgethostbyname ping
 
 test: $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) $(LIBOBJS) test.o
   sc NOVERS TO test link with <<
@@ -69,6 +69,9 @@ testclient: testclient.o
 ping: ping.o
   sc TO ping link ping.o
 
+testgethostbyname: testgethostbyname.o
+  sc TO testgethostbyname link testgethostbyname.o
+
 testserver.o: testserver.c
 	$(CC) RESOPT $(CFLAGS) $(INC)netinclude: $(INC)include: $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
 
@@ -76,6 +79,9 @@ testclient.o: testclient.c
 	$(CC) RESOPT $(CFLAGS) $(INC)netinclude: $(INC)include: $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
 
 ping.o: ping.c
+	$(CC) RESOPT DEBUG=sf $(CFLAGS) $(INC)netinclude: $(INC)include: $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
+
+testgethostbyname.o: testgethostbyname.c
 	$(CC) RESOPT DEBUG=sf $(CFLAGS) $(INC)netinclude: $(INC)include: $(INC)$(SRCDIR)/include $(INC)$(SRCDIR)/include/ipv4 $(INC)$(SRCDIR)/arch/amigaos/include $(INC)`cd` $(OPTFLAGS) $(DEBUGFLAGS) $*.c #$(TO)objs/$*.o
 
 

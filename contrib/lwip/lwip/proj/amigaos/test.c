@@ -216,8 +216,8 @@ void main(void)
       lwip_recvfrom(s,buf,sizeof(buf),0,&from,&from_len);
       printf("received something from 0x%lx: 0x%x 0x%x 0x%x 0x%x 0x%x\n",from.sin_addr.s_addr,buf[0],buf[1],buf[2],buf[3],buf[4]);
 
-      lwip_recvfrom(s,buf,sizeof(buf),0,&from,&from_len);
-      printf("received something from 0x%lx: 0x%x 0x%x 0x%x 0x%x 0x%x\n",from.sin_addr.s_addr,buf[0],buf[1],buf[2],buf[3],buf[4]);
+//      lwip_recvfrom(s,buf,sizeof(buf),0,&from,&from_len);
+//      printf("received something from 0x%lx: 0x%x 0x%x 0x%x 0x%x 0x%x\n",from.sin_addr.s_addr,buf[0],buf[1],buf[2],buf[3],buf[4]);
     }
   } 
 
