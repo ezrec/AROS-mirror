@@ -113,19 +113,6 @@ span = len( dates )
 
 print '''Content-Type: text/html\n\n'''
 print '''
-    <p>Nightly snapshots are done, as the name implies, automatically every night
-    directly from the CVS tree and contain the latest code. However, they have
-    not been tested in any way and can be horribly broken and extremely buggy 
-    if you are unlucky. Most of the time though, they work just fine.</p>
-
-    <p>Please report any bug you may discover while using these snapshots trough the
-    <a href="http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse">
-    AROS bug tracking system</a>.</p>
- 
-    <p>For any other necessity, please feel free to contact us trough the 
-    <a href="http://www.aros.org/mailman/listinfo/aros-user/">AROS Users Mailing
-    List</a>.</p>
-    
     <p><table class="layout" border="0" cellpadding="2" cellspacing="1" bgcolor="%(colorFrame)s">
         <tr bgcolor="%(colorTH)s">
             <td class="layout" width="35%%" rowspan="2"><b>Package</b></td>
