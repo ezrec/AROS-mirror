@@ -36,13 +36,14 @@ AllocPages( size_t size, ULONG req )
 #if defined(__AMIGAOS4__) || defined(__AROS__)
   unsigned long a;
   // FIXME: This should be non-cachable, DMA-able memory
-  address = AllocVec( size + PAGE_SIZE, MEMF_PUBLIC );
+  address = AllocVec( size + PAGE_SIZE + sizeof(APTR), MEMF_PUBLIC );
 
   if( address != NULL )
   {
     a = (unsigned long) address;
-    a = (a + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1); //(((unsigned long) (a + 4096)) / 4096) * 4096; // get a 4K-aligned memory pointer
-    address = (void *) a; // tbd: we just lost a couple of bytes
+    a = (a + PAGE_SIZE - 1 + sizeof(APTR)) & ~(PAGE_SIZE - 1); //(((unsigned long) (a + 4096)) / 4096) * 4096; // get a 4K-aligned memory pointer
+    ((APTR *)a)[-1] = address;
+    address = (void *) a;
   }
 #else
   // FIXME: This should be non-cachable, DMA-able memory
@@ -77,7 +78,9 @@ void
 free_page( unsigned long addr )
 {
 //  printf( "Freeing page at %08x\n", addr );
-#if !defined(__AMIGAOS4__) && !defined(__AROS__)
+#if defined(__AMIGAOS4__) || defined(__AROS__)
+  if (addr) FreeVec(((APTR *)addr)[-1]);
+#else
   FreeMem( (void*) addr, PAGE_SIZE );
 #endif
 }
@@ -101,10 +104,7 @@ pci_free_consistent( void* pci_dev, size_t size, void* addr, dma_addr_t dma_hand
 //  printf( "Freeing pages (%d bytes) at %08x\n", size, addr );
 
 #if defined(__AMIGAOS4__) || defined(__AROS__)
-  void *pageaddr = addr - 8;
-  
-  //DebugPrintF("FreeAbs %lx size = %ld\n", pageaddr, size);
-  //FreeVec( pageaddr, size + PAGE_SIZE); tbd
+  if (addr) FreeVec(((APTR *)addr)[-1]);  
 #else
   FreeMem( addr, size );
 //  pci_free_dmamem( pci_dev, addr, size );
