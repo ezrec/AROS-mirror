@@ -9453,11 +9453,20 @@ int tcc_add_library(TCCState *s, const char *libraryname)
     
     /* first we look for the dynamic library if not static linking */
     if (!s->static_link) {
+#ifndef __AROS__
         snprintf(buf, sizeof(buf), "lib%s.so", libraryname);
+#else
+	snprintf(buf, sizeof(buf), "lib%s_shared.a", libraryname);
+#endif
         /* if we output to memory, then we simply we dlopen(). */
+
         if (s->output_type == TCC_OUTPUT_MEMORY) {
             /* Since the libc is already loaded, we don't need to load it again */
+#ifndef __AROS__
             if (!strcmp(libraryname, "c"))
+#else
+	    if (!strcmp(libraryname, "arosc"))
+#endif
                 return 0;
             h = dlopen(buf, RTLD_GLOBAL | RTLD_LAZY);
             if (h)
