@@ -1,6 +1,7 @@
 include $(TOP)/config/make.cfg
 
 %define_libs
+%make_common_setup
 
 CFLAGS		:= $(USER_DEFINES) -O2 -ffast-math -funroll-loops \
 		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
