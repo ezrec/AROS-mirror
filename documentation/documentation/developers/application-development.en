@@ -360,6 +360,7 @@ the most important ones is:
 + Several AROS specific tools that will be explained more when appropriate
   during the rest of this documentation.
 
+
 MetaMake
 --------
 
@@ -381,29 +382,32 @@ metatargets. The name of the makefile itself is defined in the MetaMake
 config file that is discussed in one of the following sections.
 
 There exist three ways of defining a metatarget in a makefile:
-+ #MM metatarget : metaprerequisites
 
-  This defines a metatarget with it's metaprerquisites. When a user asks to
-  build this metatarget first the metaprerequisites will be build as
-  metatargets and afterwards the given metatarget.
++ This defines a metatarget with it's metaprerquisites::
+
+      #MM metatarget : metaprerequisites
+
+  When a user asks to build this metatarget first the metaprerequisites will 
+  be build as metatargets and afterwards the given metatarget.
   
   This form also indicates that in this makefile also a makefile target is
   present with the same.
   
-+ #MM- metatarget : metaprerequisites
-
-  This is the same definition as in the previous paragraph only now no
++ This is the same definition as in the previous paragraph only now no
   normal make target is present in the makefile with the same name as the
-  metatarget.
+  metatarget::
   
-+ #MM
-  metatarget : prerequisites
+      #MM- metatarget : metaprerequisites
   
-  This form indicates the the make target on the next line is also a
-  metatarget but the prerequisites are no metaprerequisites.
++ This form indicates the the make target on the next line is also a
+  metatarget but the prerequisites are no metaprerequisites::
+  
+      #MM
+      metatarget : prerequisites
 
 The line for the definition of a metatarget can be spread over several lines
-if one end every line with the \ character and start the next line with #MM.
+if one end every line with the \ character and start the next line with 
+``#MM.``
 
 How MetaMake works
 """"""""""""""""""
@@ -445,6 +449,8 @@ The next few examples are taken from the AROS project.
 Example 1: normal dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+::
+
     #MM contrib-regina-module : setup linklibs includes contrib-regina-includes
 
 This example says that in this makefile a contrib-regina-module is present
@@ -454,6 +460,8 @@ linklibs etc have to be present before that this module can be build.
 
 Example 2: metatarget consisting of submetatargets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
 
    #MM- contrib-freetype : contrib-freetype-linklib \
    #MM      contrib-freetype-graph \
@@ -472,6 +480,8 @@ here.
 Example 3: Quick building of a target
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+::
+
     #MM workbench-utilities : includes linklibs setup-clock-catalogs
     #MM
     workbench-utilities-quick : workbench-utilities
@@ -484,89 +494,89 @@ above only that target will be build in this directory. Of course the user
 has then to be sure that the metatargets on which workbench-utilities depend
 are up-to-date.
 
+
 Usage and configuration files
 """""""""""""""""""""""""""""
 
 ``Usage: mmake [options] [metatargets]``
 
-To build mmake, just compile ``mmake.c``. It doesn't need any
-other files.
+To build mmake, just compile ``mmake.c``. It doesn't need any other files.
 
-mmake looks for a config file ``mmake.config`` or
-``.mmake.config`` in the current directory for a file in the
-environment variable ``$MMAKE_CONFIG`` or a file ``.mmake.config``
-in the directory ``$HOME``.
+mmake looks for a config file ``mmake.config`` or ``.mmake.config`` in the 
+current directory for a file in the environment variable ``$MMAKE_CONFIG`` 
+or a file ``.mmake.config`` in the directory ``$HOME``.
+
 This file can contain the following things:
 
-
-``#``
-    This must be the first character in a line and begins a comment.
-    Comments are completely ignored my mmake (as are empty lines).
-
-``text="[<name>]"``
-    This begins a config section for the project ``name``.
-    You can build targets for this project by saying ``name.target``.
-
-``maketool <tool options...>``
-    Specifies the name of the tool to build a target. The
-    default is ``make "TOP=$(TOP)" "CURDIR=$(CURDIR)"``.
-
-``top <dir>`` 
-    Specifies the root directory for a project. You
-    will later find this config option in the variable ``$(TOP)``.
-    The default is the current directory.
-
-``defaultmakefilename <filename>``
-    Specifies the basename for
-    makefiles in your project. Basename means that mmake will consider
-    other files which have this stem and an extension, too. See the
-    items to generate makefiles for details. The default
-    is ``Makefile``.
-
-``defaulttarget <target>`` 
-    The name of the default target which
-    mmake will try to make if you call it with the name of the
-    project alone. The default is ``all``.
-
-``genmakefilescript <cmdline...>`` 
-    mmake will check for files
-    with the basename as specified in ``defaultmakefilename``
-    with the extension ``.src``. If such a file is found, the
-    following conditions are checked: Whether this file is newer
-    than the makefile, whether the makefile doesn't exist and
-    whether the file ``genmakefiledeps`` is newer than the
-    makefile. If any of these is true, mmake will call this script
-    the the name of the source file as an extra option and the
-    stdout of this script will be redirected to ``defaultmakefilename``.
-    If this is missing, mmake will not try to regenerate makefiles.
-
-``genmakefiledeps <path>``
-    This is the name of a file which is
-    considered when mmake tries to decide whether a makefile must
-    be regenerated. Currently, only one such file can be specified.
-
-``globalvarfile <path>``
-    This is a file which contains more
-    variables in the normal make(1) syntax. mmake doesn't
-    know about any special things like line continuation, so
-    be careful not to use such variables later (but they
-    don't do any harm if they exist in the file. You should
-    just not use them anywhere in mmake).
+    ``#``
+        This must be the first character in a line and begins a comment.
+        Comments are completely ignored my mmake (as are empty lines).
     
-``add <path>`` 
-    Adds a nonstandard makefile to the list of
-    makefiles for this project. mmake will apply the standard
-    rules to it as if the ``defaultmakefilename`` was
-    like this filename.
+    ``text="[<name>]"``
+        This begins a config section for the project ``name``.
+        You can build targets for this project by saying ``name.target``.
     
-``ignoredir <path>``
-    Will tell mmake to ignore directories
-    with this name. Try ``ignore CVS`` if you use CVS to
-    manage your projects' sources.
+    ``maketool <tool options...>``
+        Specifies the name of the tool to build a target. The
+        default is ``make "TOP=$(TOP)" "CURDIR=$(CURDIR)"``.
+    
+    ``top <dir>`` 
+        Specifies the root directory for a project. You
+        will later find this config option in the variable ``$(TOP)``.
+        The default is the current directory.
+    
+    ``defaultmakefilename <filename>``
+        Specifies the basename for
+        makefiles in your project. Basename means that mmake will consider
+        other files which have this stem and an extension, too. See the
+        items to generate makefiles for details. The default
+        is ``Makefile``.
+    
+    ``defaulttarget <target>`` 
+        The name of the default target which
+        mmake will try to make if you call it with the name of the
+        project alone. The default is ``all``.
+    
+    ``genmakefilescript <cmdline...>`` 
+        mmake will check for files
+        with the basename as specified in ``defaultmakefilename``
+        with the extension ``.src``. If such a file is found, the
+        following conditions are checked: Whether this file is newer
+        than the makefile, whether the makefile doesn't exist and
+        whether the file ``genmakefiledeps`` is newer than the
+        makefile. If any of these is true, mmake will call this script
+        the the name of the source file as an extra option and the
+        stdout of this script will be redirected to ``defaultmakefilename``.
+        If this is missing, mmake will not try to regenerate makefiles.
+    
+    ``genmakefiledeps <path>``
+        This is the name of a file which is
+        considered when mmake tries to decide whether a makefile must
+        be regenerated. Currently, only one such file can be specified.
+    
+    ``globalvarfile <path>``
+        This is a file which contains more
+        variables in the normal make(1) syntax. mmake doesn't
+        know about any special things like line continuation, so
+        be careful not to use such variables later (but they
+        don't do any harm if they exist in the file. You should
+        just not use them anywhere in mmake).
+        
+    ``add <path>`` 
+        Adds a nonstandard makefile to the list of
+        makefiles for this project. mmake will apply the standard
+        rules to it as if the ``defaultmakefilename`` was
+        like this filename.
+        
+    ``ignoredir <path>``
+        Will tell mmake to ignore directories
+        with this name. Try ``ignore CVS`` if you use CVS to
+        manage your projects' sources.
 
-Any option which is not recognised will be added to the list
-of known variables (ie. ``foo bar`` will create a
-variable ``$(foo)`` which is expanded to ``bar``).
+Any option which is not recognised will be added to the list of known 
+variables (ie. ``foo bar`` will create a variable ``$(foo)`` which is 
+expanded to ``bar``).
+
 
 Example
 ^^^^^^^
@@ -618,6 +628,7 @@ A metatarget look like so: ``project.target``. Example:
 target of the first project in the config file. If the project is specified
 but no target, mmake will make the default target of this project.
 
+
 Genmf
 -----
 
@@ -631,13 +642,14 @@ used.
 Syntax
 """"""
 
-In general the '%' character is used as the special character for genmf
+In general the ``%`` character is used as the special character for genmf
 source makefiles.
+
 
 Macro definition
 ^^^^^^^^^^^^^^^^
 
-A macro definition has the following syntax:
+A macro definition has the following syntax::
 
     %define macroname option1[=[default][\A][\M]] option2[=[default][\A][\M]] ...
     ...
@@ -650,34 +662,41 @@ typing %(option1). This will be replaced be the value of option1.
 The macro can be followed by a default value. If no default value is
 specified an empty string is taken. Normally no space are allowed in the
 default value of an argument. If this is needed this can be done by
-surrounding the value with double quotes (").
+surrounding the value with double quotes (``"``).
 
 Also two switches can be given:
+    
+    ``\A``
+        Is the switch to always need a value for this. When the macro is
+        instantiated always a value need to be assigned to this argument.
+    
+    ``\M``
+        Is the switch to turn on multi words. This means that all the words
+        following this argument will be assigned to this argument. This also
+        means that after the use of such an argument no other argument can be
+        present because it will become part of this argument.
 
-+ \A: Is the switch to always need a value for this. When the macro is
-  instantiated always a value need to be assigned to this argument.
-+ \M: Is the switch to turn on multi words. This means that all the words
-  following this argument will be assigned to this argument. This also
-  means that after the use of such an argument no other argument can be
-  present because it will become part of this argument.
   
 Macro instantiation
 ^^^^^^^^^^^^^^^^^^^
 
 The instantiation of the macro is done by using the '%' character followed
-by the name of the macro to instantiate (without a round brackets around it).
+by the name of the macro to instantiate (without a round brackets around it)::
 
     %macro_name [option1=]value [option2=]value
 
 Two ways are possible to specify value for arguments to a macro:
 
-+ value: This will assign the value to the argument defined as the first
-  argument to this macro. The time this format is used it will be assigned to
-  the second argument and so on.
-+ option1=value: This will assign the given value to the option with the
-  specified name.
+    ``value`` 
+        This will assign the value to the argument defined as the first 
+        argument to this macro. The time this format is used it will be 
+        assigned to the second argument and so on.
+    
+    ``option1=value``
+        This will assign the given value to the option with the specified 
+        name.
 
-when giving values to arguments also double quotes need to be used if one
+When giving values to arguments also double quotes need to be used if one
 wants to include spaces in the values of the arguments.
 
 Macro instantiation may be used inside the body of a macro, even macro's
@@ -727,11 +746,11 @@ contents of the module.
 The mmakefile.src macro
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-This is the definition header of the build_module macro:
+This is the definition header of the build_module macro::
 
-    %define build_module mmake=\A modname=\A modtype=\A \
+    %define build_module mmake=\A modname=\A modtype=\A            \
       conffile=%(modname).conf files="$(basename $(wildcard *.c))" \
-      cflags=$(CFLAGS) dflags=%(cflags) objdir=$(OBJDIR) \
+      cflags=$(CFLAGS) dflags=%(cflags) objdir=$(OBJDIR)           \
       linklibname=%(modname) uselibs=
 
 In the definition no macro arguments may be used in the default value for
@@ -740,115 +759,119 @@ variables assign with the macro argument.
 
 Here is a list of the arguments for this macro:
 
-mmake=\A
-    This is the name of the metatarget that will build the module. It will
-    define that metatarget but won't include any metaprerequisites. If you
-    need these you can add by yourself with an extra #MM metatargets : ...
-    line. Also a %(mmake)-quick and %(mmake)-clean metatarget will be defined.
+    ``mmake=\A``
+        This is the name of the metatarget that will build the module. It will
+        define that metatarget but won't include any metaprerequisites. If you
+        need these you can add by yourself with an extra 
+        ``#MM metatargets : ...`` line. Also a ``%(mmake)-quick`` and 
+        ``%(mmake)-clean`` metatarget will be defined.
+        
+    ``modname=\A``
+        This is the name of the module without the suffix.
+        
+    ``modtype=\A``
+        This is the type of the module and corresponds with the suffix a the
+        module. At the moment only library is supported but support for 
+        device, gadget, hidd and class is planned.
+        
+    ``conffile=%(modname).conf``
+        The name of the configuration file. Default is modname.conf.
     
-modname=\A
-    This is the name of the module without the suffix.
+    ``files="$(basename $(wildcard *.c))"``
+        A list of all the source files with the .c suffix that contain the 
+        code for this module. By default all the .c files in the current 
+        directory will be taken.
+        
+    ``cflags=$(CFLAGS)``
+        The flags to add when compiling the .c files. By default the standard
+        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also 
+        means that some flags can be added by assigning these to the 
+        USER_CFLAGS and USER_INCLUDES make variables before using this macro.
     
-modtype=\A
-    This is the type of the module and corresponds with the suffix a the
-    module. At the moment only library is supported but support for device,
-    gadget, hidd and class is planned.
+    ``dflags=%(cflags)``
+        The flags to add when doing the dependency check. Default is the same 
+        as the ``cflags``.
     
-conffile=%(modname).conf
-    The name of the configuration file. Default is modname.conf.
+    ``objdir=$(OBJDIR)``
+        The directory where to generate all the intermediate files. The 
+        default value is ``$(OBJDIR)`` which in itself is by default equal to
+        ``$(GENDIR)/$(CURDIR)``.
+    
+    ``linklibname=%(modname)``
+        The name to be used for the static link library that contains the
+        library autoinit code and the stubs converting C stack calling
+        convention to a call off the function from the library functable with
+        the appropriate calling mechanism. These stubs are normally not needed
+        when the AROS defines for module function are not disabled.
+        
+        There will always be a file generated with the name
+        ``$(LIBDIR)/lib%(linklibname).a`` and by default linklibname will be 
+        the same as modname.
+        
+    ``uselibs=``
+        A list of static libraries to add when linking the module. This is the
+        name of the library without the lib prefix or the .a suffix not the -l
+        prefix for the use in the flags for the C compiler.
+        
+        By default no libraries are used when linking the module.
 
-files="$(basename $(wildcard *.c))"
-    A list of all the source files with the .c suffix that contain the code
-    for this module. By default all the .c files in the current directory
-    will be taken.
-    
-cflags=$(CFLAGS)
-    The flags to add when compiling the .c files. By default the standard
-    AROS cflags (the $(CFLAGS) make variables are taken. This also means
-    that some flags can be added by assigning these to the USER_CFLAGS and
-    USER_INCLUDES make variables before using this macro.
-
-dflags=%(cflags)
-    The flags to add when doing the dependency check. Default is the same as
-    the cflags.
-
-objdir=$(OBJDIR)
-    The directory where to generate all the intermediate files. The default
-    value is $(OBJDIR) which in itself is by default equal to
-    $(GENDIR)/$(CURDIR).
-
-linklibname=%(modname)
-    The name to be used for the static link library that contains the
-    library autoinit code and the stubs converting C stack calling
-    convention to a call off the function from the library functable with
-    the appropriate calling mechanism. These stubs are normally not needed
-    when the AROS defines for module function are not disabled.
-    
-    There will always be a file generated with the name
-    $(LIBDIR)/lib%(linklibname).a and by default linklibname will be the
-    same as modname.
-    
-uselibs=
-    A list of static libraries to add when linking the module. This is the
-    name of the library without the lib prefix or the .a suffix not the -l
-    prefix for the use in the flags for the C compiler.
-    
-    By default no libraries are used when linking the module.
 
 The module configuration file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The module configuration file is subdived in several sections. A section is
-defined with the following lines:
+defined with the following lines::
 
     ## begin sectionname
     ...
     ## end sectionname
     
-The interpretation of the lines between the ##begin and ##end statement is
-different for every section. The following sections are defined:
+The interpretation of the lines between the ``##begin`` and ``##end`` 
+statement is different for every section. The following sections are defined:
 
-+ config
++ ``config``
 
-  The lines in this section have all the same format:
+  The lines in this section have all the same format::
+  
       optionname string
+  
   with the string starting from the first non white space after optionname
   to the last non white space character on that line.
   
   A list of all the options available:
   
-  basename
+  ``basename``
       Followed by the base name for this module. This will be used as a
       prefix for a lot of symbols. By default the modname specified in the
       makefile is taken with the first letter capitalized.
       
-  libbase
+  ``libbase``
       The name of the variable to the library base in. By default the
       basename will be taken with Base added to the end.
   
-  libbasetype
+  ``libbasetype``
       The type to use for the libbase for use internally for the library code.
       E.g. the sizeof operator applied to this type has to yield the real
       size of the object. Be aware that it may not be specified as a pointer.
       By default 'struct LibHeader' is taken.
   
-  libbasetypeextern
+  ``libbasetypeextern``
       The type to use for the libbase for code using the library externally.
       By default 'struct Library' is taken.
       
-  version
+  ``version``
       The version to compile into the module. This has to be specified as
       major.minor. By default 0.0 will be used.
   
-  date
+  ``date``
       The date that this library was made. This has to have the format of
       DD.MM.YYYY. As a default 00.00.0000 is taken.
   
-  libcall
+  ``libcall``
       The argument passing mechanism used for the functions in this module.
       It can be either 'stack' or 'register'. By default 'stack' will be used.
   
-  forcebase
+  ``forcebase``
       This will force the use of a certain base variable in the static
       link library for auto opening the module. Thus it is only valid for
       module that support auto opening. This option can be present more then
@@ -856,13 +879,13 @@ different for every section. The following sections are defined:
       library. By default no base variable will be present in the link
       library.
 
-+ cdef
++ ``cdef``
 
   In this section all the C code has to be written that will declare all the
   type of the arguments of the function listed in the function. All valid C
   code is possible including the use of #include.
   
-+ functionlist
++ ``functionlist``
 
   In this section all the functions externally accessible by programs.
   
@@ -870,9 +893,10 @@ different for every section. The following sections are defined:
   given. For register based argument passing the names of the register have
   to be given between rounded brackets. If you have function foo with the
   first argument in D0 and the second argument in A0 it gives the following
-  line in in the list:
+  line in in the list::
 
       foo(D0,A0)
+
 
 Lower level mmakefile.src macro's
 ---------------------------------
@@ -883,6 +907,7 @@ AROS portable makefile variables
 --------------------------------
 
 FIXME
+
 
 -----------------------
 The Multitasking Kernel
