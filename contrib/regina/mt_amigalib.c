@@ -2,41 +2,66 @@
  * We initialize the global data structure and the global access variable.
  */
 
+#if !defined(__AROS__) && !defined(_AMIGA)
+# error mt_amiga.c only works on Amiga or AROS
+#endif
+
 #include "rexx.h"
+
+#include <exec/memory.h>
+#include <exec/semaphores.h>
+
+typedef struct _mt_tsd_t {
+  APTR mempool;
+} mt_tsd_t;
 
 /* Lowest level memory allocation function for normal circumstances. */
 static void *MTMalloc(const tsd_t *TSD,size_t size)
 {
-   TSD = TSD; /* keep compiler happy */
-   return(malloc(size));
+   mt_tsd_t *mt = (mt_tsd_t *)TSD->mt_tsd;
+   void *mem = AllocPooled( mt->mempool, size+sizeof(size_t));
+   *((size_t*)mem)=size;
+   return (void *)(((char *)mem)+sizeof(size_t));
 }
 
 /* Lowest level memory deallocation function for normal circumstances. */
 static void MTFree(const tsd_t *TSD,void *chunk)
 {
-   TSD = TSD; /* keep compiler happy */
-   free(chunk);
+   mt_tsd_t *mt = (mt_tsd_t *)TSD->mt_tsd;
+   APTR mem = (APTR)(((char *)chunk)-sizeof(size_t));
+  
+   FreePooled( mt->mempool, (APTR)mem, *(size_t *)mem );
 }
 
 /* Lowest level exit handler. Use this indirection to prevent errors. */
 static void MTExit(int code)
 {
+   tsd_t *TSD = __regina_get_tsd();
+   mt_tsd_t *mt = (mt_tsd_t *)TSD->mt_tsd;
+  
+   DeletePool( mt->mempool );
+
    exit(code);
 }
 
-tsd_t *ReginaInitializeProcess(void)
+tsd_t *ReginaInitializeThread(void)
 {
    int OK;
 
    tsd_t *__regina_tsd = malloc(sizeof(tsd_t));
-
+   mt_tsd_t *mt;
+  
    /* Default all values to zero        */
    memset(__regina_tsd,0,sizeof(tsd_t));
    __regina_tsd->MTMalloc = MTMalloc;
    __regina_tsd->MTFree = MTFree;
    __regina_tsd->MTExit = MTExit;
 
-   OK = init_memory(__regina_tsd);     /* Initialize the memory module FIRST*/
+   OK = ( __regina_tsd->mt_tsd = malloc(sizeof(mt_tsd_t))) != NULL;
+   mt = (mt_tsd_t *)__regina_tsd->mt_tsd;
+   OK |= ( mt->mempool = CreatePool(MEMF_PUBLIC, 8192, 1024) ) != NULL;
+
+   OK |= init_memory(__regina_tsd);     /* Initialize the memory module FIRST*/
 
    /* Without the initial memory we don't have ANY chance! */
    if (!OK)
@@ -63,39 +88,44 @@ tsd_t *ReginaInitializeProcess(void)
    __regina_tsd->traceparse = -1;
    __regina_tsd->thread_id = 1;
 
+   /* Initiliaze thread specific data */
    if (!OK)
       exiterror( ERR_STORAGE_EXHAUSTED, 0 ) ;
 
    return(__regina_tsd);
 }
 
-
-#ifdef TRACK_TSD_USAGE
-/* We may want to check the counts of calls to __regina_get_tsd() which may do
- * MUCH work on different platforms. We do some not optimizable work here.
- * If you really wanna track down all calls to figure out WHERE to
- * optimize try under a GNU friendly system:
- * 1) In Makefile: Add "-pg -a" to the variable called "CFLAGS".
- * 2) "make rexx" (Other targets might not work)
- * 3) "./rexx whatyoulike.rexx"
- * 4) "gprof rexx >usage.lst"
- * 5) look at usage.lst for occurances of "WorkHeavy".
- */
-
-volatile int __regina_Calls = 300; /* factor to get a "feel" for multithreading */
-volatile int __regina_Point = 1;
-
-void __regina_Nop(void)
+void AmigaLockSemaphore(struct SignalSemaphore **semaphoreptr)
 {
-   __regina_Point = 2;
+  if (*semaphoreptr == NULL)
+  {
+    Forbid();
+    if (*semaphoreptr == NULL)
+    {
+      tsd_t *TSD = __regina_get_tsd(); 
+      *semaphoreptr = Malloc_TSD(TSD, sizeof(struct SignalSemaphore));
+      InitSemaphore(*semaphoreptr);
+    }
+    Permit();
+  }
+  
+  ObtainSemaphore(*semaphoreptr);
 }
 
-/* WorkHeavy does some work and returns the correct thread-specific data. */
-tsd_t *__regina_WorkHeavy(void)
+void AmigaUnlockSemaphore(struct SignalSemaphore *semaphore)
 {
-   int todo = __regina_Calls;
-   while (todo--)
-      __regina_Nop();
-   return((tsd_t*)(FindTask(NULL)->tc_UserData));
+  ReleaseSemaphore(semaphore);
 }
-#endif
+
+tsd_t *__regina_get_tsd(void)
+{
+  tsd_t *TSD = ((tsd_t *)(FindTask(NULL)->tc_UserData));
+    
+  if (TSD==NULL)
+  {
+    TSD=ReginaInitializeThread();
+    FindTask(NULL)->tc_UserData=TSD;
+  }
+  
+  return TSD;
+}

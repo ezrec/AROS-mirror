@@ -40,17 +40,17 @@
 #  error This file should included by mt.h, only.
 #endif
 
-#define THREAD_PROTECT(varname)    {
-#define THREAD_UNPROTECT(varname)  }
-#define PROTECTION_VAR(varname)
-#define EXPORT_GLOBAL_PROTECTION_VAR(varname)
-#define GLOBAL_PROTECTION_VAR(varname)
+#define THREAD_PROTECT(varname)               AmigaLockSemaphore(&varname);
+#define THREAD_UNPROTECT(varname)             AmigaUnlockSemaphore(varname);
+#define PROTECTION_VAR(varname)               static struct SignalSemaphore *varname = NULL;
+#define EXPORT_GLOBAL_PROTECTION_VAR(varname) extern struct SignalSemaphore *varname;
+#define GLOBAL_PROTECTION_VAR(varname)        struct SignalSemaphore *varname = NULL;
 
 
-tsd_t *ReginaInitializeProcess(void);
+tsd_t *ReginaInitializeThread(void);
 #include <proto/exec.h>
 #define GLOBAL_ENTRY_POINT() (__regina_get_tsd())
-#define __regina_get_tsd() ((tsd_t *)(FindTask(NULL)->tc_UserData))
+tsd_t *__regina_get_tsd(void);
 
 /* NEVER USE __regina_get_tsd() IF YOU CAN GET THE VALUE FROM SOMEWHERE ELSE.
  * IT REDUCES THE EXECUTION SPEED SIGNIFICANTLY. TAKE THE VALUE FROM THE CALLER
@@ -58,7 +58,8 @@ tsd_t *ReginaInitializeProcess(void);
  */
 
 #ifdef TRACK_TSD_USAGE
-tsd_t *__regina_WorkHeavy(void);
-# undef __regina_get_tsd
-# define __regina_get_tsd() __regina_WorkHeavy()
+#error TRACK_TSD_USAGE not implemented in amiga thread support
 #endif
+
+void AmigaLockSemaphore(struct SignalSemaphore **);
+void AmigaUnlockSemaphore(struct SignalSemaphore *);

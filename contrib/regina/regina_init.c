@@ -60,8 +60,8 @@ ULONG SAVEDS STDARGS LC_BUILDNAME(L_OpenLib) (LC_LIBHEADERTYPEPTR ReginaBase)
 {
     D(bug("Inside Open func of regina.library\n"));
 
-    FindTask(NULL)->tc_UserData = ReginaInitializeProcess();
-/*    ReginaBase->tsd = ReginaInitializeProcess();*/
+    FindTask(NULL)->tc_UserData = ReginaInitializeThread();
+
     return TRUE;
 }
 
