@@ -323,6 +323,9 @@ def buildWWW():
         'images/trustec.png',
         'images/sourceforge.png',
         'images/amigados-online-reference-manual.png',
+        'images/kitty_small.jpeg',
+        'images/kitty_small.png',
+        'images/aros-logo.png',
         'targets/www/images/trustec-small.png',
         'targets/www/images/bullet.png', 
         'targets/www/images/aros.png'
