@@ -1,0 +1,304 @@
+******************************************************************************
+                       Anleitung zu WindowTool V1.0
+******************************************************************************
+
+Was ist WindowTool für ein Programm ?
+=====================================
+   WindowTool ist ein Programm, daß es ermöglicht mit der Tastatur zwischen
+   Windows umzuschalten, sie zu schließen und ihre Größe zu verändern.Außerdem
+   kann man eine neue Shell öffnen lassen und das Multitasking blockieren.
+   Das Programm ist ein standard Commodity und kann über das Exchangeprogramm
+   der Workbench gesteuert werden.
+
+Der Vertrieb:
+=============
+   Das Programm ist sogenannte Giftware. Dies bedeutet,daß jeder dieses
+   Programm kopieren darf.Ich erhebe keine weitern Ansprüche, würde mich
+   aber freuen, wenn jemandem das Programm gefällt von diesem ein kleines
+   Geschenk zu erhalten (eine PD-Disk,sein neues Programm,Schokolade (bitte
+   nur im Winter),Postkarte aus dem Urlaub,ein kleiner A600 ...).
+   Für Schäden, die das Programm verursacht (sehr unwahrscheinlich), wird
+   keine Haftung übernommen.Jeder benutzt das Programm auf eigenes Risiko.
+   Für das Filerequester und die normalen Requester wird die
+   'reqtools.library' gebraucht. ReqTools ist Copyright (c) von Nico Francois.
+
+Starten des Programms:
+======================
+    Das Programm kann sowohl von der Workbench als auch von der Shell aus
+    gestartet werden.
+ 
+    Start von der Workbench:
+    ------------------------
+     Um das Programm zu starten, einfach das Icon doppelt anklicken.
+     Um die Einstellungen zu bestimmen existierten verschiedene Tooltypes,
+     die in der .Infodatei eingestellt werden können.
+  
+     Tooltypes:
+     ----------
+      -CX_PRIORITY:
+   	 Hiermit wird die Priorität des Brokers eingestellt (default = 21).  
+       
+      -CX_POPUP:
+       Hiermit wird eingestellt, ob das Einstellungswindow bei Programmstart
+       geöffnet werden soll.
+       Mit 'CX_POPUP=YES' wird es anfangs geöffnet,
+       mit 'CX_POPUP=NO' nicht.
+
+      -CX_SETTINGS:
+       Hiermit kann eine Konfigurationsdatei bestimmt werden, aus der die 
+       Tastaurkombinationen geladen werden.Die Einstellungen über die
+       Tooltypes werden nicht beachtet.
+       
+      Nun die Tastaturkombinationen:
+      Mit 'CX_???KEY = Kombination' werden diese eingestellt.
+      Die Namen der Tooltypes entsprechen den Gadgets:
+      -CX_STOPKEY
+      -CX_NEWSHELLKEY
+      -CX_QUITKEY
+      -CX_CYCLEKEY
+      -CX_WORKBENCHKEY
+      -CX_CLOSEWINDOW
+      -CX_FRONTKEY
+      -CX_MAKEBIGKEY
+      -CX_MAKESMALLKEY
+      -CX_ZIPKEY
+      -CX_POPKEY
+      -CX_ACTIVETOFRONT
+
+    Start von der Shell:
+    --------------------
+     Das Programm kann ganz normal gestartet werden, um das Shellfenster aber
+     schließen zu können empfiehlt sich der Start mittels 'runback WindowTool'.
+     
+     In der Commandline können die Einstellungen auch eingestellt werden 
+     mittels der folgenden Schlüsselwörter.Sie können auch durch die Eingabe
+     von 'WindowTool ?' aufgelistet werden:
+      
+     -CX_PRIORITY/N:
+      Priorität des Broker (default=21).
+
+     -CX_POPUP/S:
+      Muß gesetzt werden, falls das Einstellungswindow geöffnet werden soll.
+	  
+     -SETTINGS/K:
+      Hiermit kann eine Konfigurationsdatei bestimmt werden, die bei
+      Programmstart geladen werden soll.
+
+      Nun folgen die Schlüsselwörter für die Tastaurkombinationen. Sie ent-
+      sprechen den Namen der Gadgets im Einstellungswindow:
+
+     -CX_STOPKEY/K
+     -CX_NEWSHELLKEY/K
+     -CX_QUITKEY/K
+     -CX_CYCLEKEY/K
+     -CX_WORKBENCHKEY/K
+     -CX_CLOSEWINDOW/K
+     -CX_FRONTKEY/K
+     -CX_MAKEBIGKEY/K
+     -CX_MAKESMALLKEY/K
+     -CX_ZIPKEY/K
+     -CX_POPKEY/K
+     -CX_ACTIVETOFRONT/K
+   
+Das Einstellungswindow:
+=======================
+   Im Einstellungswindow können alle Tastaurkombinationen eingegeben werden.
+	
+   Die Gadgets:
+   ------------
+    -Save:
+     Mit Save werden alle Kombinationen in der aktuellen Konfigurationsdatei
+     abgespeichert.
+     
+    -Hide:
+     Mit Hide wird das Window geschloßen.
+
+    -Cancel:
+     Mit Cancel werden die Tastaturkombinationen, die beim Öffnen des Windows
+     aktiv waren, wieder gesetzt und das Window wird geschloßen.
+
+    -Quit:
+     Mit Quit wird das Programm nach einer Sicherheitsabfrage beendet.
+
+   Die Menus:
+   ----------
+    -New:
+     New löscht alle Stringgadgets, die alten Tastaturkombinationen bleiben
+     aber noch so lange erhalten bis neue eingegeben worden sind.
+	
+    -Open...:
+     Open öffnet ein Filerequester zum Laden einer Konfigurationsdatei.Diese
+     wird geladen und falls keine Fehler entstanden, werden die Tastatur-
+     kombinationen gesetzt.
+
+    -Open .info:
+     Open .info läd die .infodatei ein und setzt die Einstellungen aus ihr.
+
+    -Save:
+     Save hat die gleiche Funktion wie das SaveGadget.Die aktuellen Einstell-
+     ungen werden in der aktuellen Konfigurationsdatei abgespeichert.
+
+    -Save as...:
+     Diese Funktion öffnet ein Filerequester und speichert die Konfiguration
+     in der gewählten datei ab.
+
+    -Save as .info:
+     Diese Funktion speichert die Konfiguration in der .infodatei ab. Falls
+     das Programm noch kein Icon hat, wird das standard CommodityIcon er-
+     zeugt.
+
+    -About...:
+     Ein paar Informationen über das Programm.
+	  
+    -Hide:
+     Gleiche Funktion wie das HideGadget.Das Window wird geschloßen.
+
+    -Cancel:
+     Gleiche Funktion wie das CancelGadget.Die Einstellungen vor dem Öffnen
+     des Windows werden übernommen.
+  
+    -Quit:
+     Gleiche Funktion wie das QuitGadget.Nach einer Sicherheitsabfrage wird
+     das Programm beendet.
+
+   Aufbau einer Tastaurkombination (HotKey):
+   -----------------------------------------
+    Eine Tastaturkombination muß folgendermaßen aussehen:
+    
+    [<qualifier> [<qualifier>...]] <key>
+
+    Qualifier:
+    ----------
+     alt           eine Alt-Taste
+     ralt          rechte Alt-Taste
+     lalt          linke Alt-Taste
+     shift         eine Shift-Taste
+     rshift        rechte Shift-Taste
+     lshift        linke Shift-Taste
+     capslock      Caps Lock Taste
+     rcommand      rechte Amiga-Taste
+     lcommand      linke Amiga-Taste
+     control       Control-Taste
+     numericpad    Benutzung der Zehnertastatur
+     rbutton       Click der rechten Maus-Taste
+     midbutton     Click der mittleren Maus-Taste
+     leftbutton    Click der rechten Maustaste
+     newprefs      Preferences wurden geändert
+     diskremoved   Disk entfernt
+     diskinserted  Disk eingelegt
+
+    Tasten:
+    -------
+     a .. z, 0 .. 9, etc.   Normale Tasten
+     f1 .. f10              Funktions-Tasten
+     up, down, left, right  Cursor-Tasten
+     help                   Help-Taste
+     del                    Delete-Taste
+     return                 Return-Taste
+     enter                  Enter-Taste ('numericpad' muß gesetzt sein !)
+     backspace              Backspace-Taste
+     esc                    Escape-Taste
+     space                  Space-Taste
+     comma                  Comma-Taste
+     upstroke               Tilde-Taste
+
+    Beispiele:
+    ----------
+    
+    'rcommand shift alt esc'
+    'lshift rshift lalt ralt return'
+    'shift alt esc'
+    'control rshift numericpad enter'
+    'alt help' 
+     ...
+
+Die Funktionen im einzelnen:
+============================
+   -Stop:
+    Mit der Funktion Stop bekommt der eigene Task eine höhere Priorität und
+    es wird in einer Dauerschleife auf Signale gewartet.Dies bedeutet für den
+    Benutzer, daß (fast) alle anderen Programm zum Stillstand kommen.Wenn die
+    Tastaturkombination noch mal gedrückt wird, läuft alles wieder normal.
+    Da manche Leser jetzt sicherlich nach dem Nutzen dieser Funktion fragen,
+    möchte ich erklären, wie sie entstanden ist: Ein Freund und ich saßen
+    öfter zusammen vor meinem Computer. Er wollte immer Dinge machen, wozu
+    ich keine Lust hatte(Bilder malen,Icons malen,Pointer verändern,Workbench-
+    farben ändern usw.). Eines Tages habe ich dann ein Programm geschrieben,
+    daß über eine Tastaturkombination den Computer blockierte. So konnte er
+    nichts mehr machen, ohne die Tastaturkombination zu kennen. Und wir
+    machten das ,wozu ich Lust hatte.
+
+   -MakeBig:
+    MakeBig vergrößert das aktive Window auf maximale Größe.
+
+   -MakeSmall:
+    MakeSmall verkleinert das aktuelle Fenster auf die minimale Größe. Manche
+    Fenster "verschwinden", da sie keine minimale Größe haben.Diese können
+    nicht mehr mit der Maus aktiviert werden und sollten mit MakeBig sofort
+    wieder vergrößert werden.
+
+   -Zip:
+    Zip aktiviert das ZipGadget.Das Window wird gezipt!!!
+ 
+   -Cycle:
+    Cycle bringt das aktuelle Window in den Hintergrund  und aktiviert das
+    Window, das nun im Vordergrund ist.
+    (ähnlich "linke AmigaTaste + m" für Screens)
+
+   -Workbench:
+    Diese Funktion aktiviert ein Workbenchwindow,d.h. ein Window mit den Menus
+    der Workbench.
+ 
+   -ActivateFront:
+    Diese Funktion aktiviert das vorderste Window auf dem vordersten Screen.
+
+   -ActiveToFront:
+    Diese Funktion bring das aktive Window nach vorne.
+
+   -CloseWindow:
+    Diese Funtion betätigt das CloseGadget des aktiven Windows.
+	 
+   -Newshell:
+    Newshell öffnet eine Shell (Der Befehl "Newshell" wird aufgerufen).
+
+   -Show:
+    Diese Funktion öffnet das Einstellungswindow.
+
+   -Quit:
+    Beendet WindowTool (mit Sicherheitsabfrage).
+
+Der Aufbau der Konfigurationsdatei:
+===================================
+    Die Konfigurationsdatei ist ein reiner ASCII-Text. Die 10 Tastaturkombi-
+    nationen müssen in Anführungszeichen in der Reihenfolge der Gadgets im 
+    Einstellungswindow angegeben werden. Es ist jedoch zu empfehlen sie im
+    Programm zu verändern und von dort abzuspeichern.
+
+Der Sourcecode:
+===============
+    Das Programm wurde mit dem Lattice/Sas-C-Compiler geschrieben und läßt
+    sich durch die Eingabe von 'lmk' compilieren.Um den Sourcecode gut lesen
+    zu können sollte man eine Tabsize von 4 nehmen.
+    
+Die Entwicklung:
+================
+    Version 1.0 (1.7.92):
+    ---------------------
+    Programm wurde fertiggestellt und es sind noch keine Fehler bekannt.
+    
+Schluß der Anleitung:
+=====================
+    Zum Schluß möchte ich ein paar Grüße an ein paar Freunde richten:
+     Benjamin Schörner für seine tolle Anregung (s.Stop-Funktion) und die
+                        englische Version der Anleitung.
+     Christian Flaccus für die tollen Grafiken (welche Grafik ?).
+
+    Falls jemand einen Fehler findet oder noch ein paar Ideen für das Programm
+    hat, der soll mir schreiben und wird umgehend eine verbesserte Version des
+    Programms erhalten(dies gilt auch für den, der mir kein Geschenk schickt).
+    Hier meine Adresse:
+    
+         Klaas Hermanns
+         Weberstraße 42
+         4190 Kleve
+         Deutschland

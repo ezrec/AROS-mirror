@@ -1,0 +1,286 @@
+****************************************************************************
+                    Instructions for WindowTool V1.0
+****************************************************************************
+
+What is WindowTool ?
+====================
+    WindowTool is a program that allows you to switch between windows, to 
+    close them and to change their size by keyboard. You can also open a
+    new Shell and stop the multitasking. The program is a standard Com-
+    modity and can be controled with the Exchangeprogram of the Workbench.
+
+The distribution :
+==================
+    The program is so-called giftware. This means everyone is allowed to
+    copy it. I haven't any other demands but would be glad if someone who
+    likes my program could send me a little gift (e.g. a PD-disk, his (or
+    her) new program, sweets, a holidaypostcard, a little A600 ...).
+    I'm not responsible for any damages caused by the program (anyhow it's
+    very improbable). The utilization of the program is on own risk !
+    I use the 'reqtools.library' for the filerequester and the normal
+    requesters. ReqTools is Copyright (c) by Nico François.
+
+How to start the program:
+=========================
+    The program can be started as well from the Workbench as from the Shell.
+
+    Starting from the workbench:
+    ----------------------------
+     To start the program from the workbench, simply doubleclick the icon.
+     There are different tooltypes to define the settings, that can be
+     set in the .infofile.
+
+     Tooltypes:
+     ----------
+      -CX_PRIORITY:
+       Sets the brokers priority (default = 21).  
+       
+      -CX_POPUP:
+       Defines if the configurationwindow will be opened at programstart.
+       'CX_POPUP=YES' means the window will be opened,
+       'CX_POPUP=NO' means it won't.
+
+      -CX_SETTINGS:
+       Here you can define the configurationfile the hotkeys will be loaded
+       from. The Tooltype-settings won't be noticed.
+       
+      The hotkeys:
+      'CX_???KEY = combination' defines them. The names of the tooltypes
+      correspond to the appropriating gadgets:
+      -CX_STOPKEY
+      -CX_NEWSHELLKEY
+      -CX_QUITKEY
+      -CX_CYCLEKEY
+      -CX_WORKBENCHKEY
+      -CX_CLOSEWINDOW
+      -CX_FRONTKEY
+      -CX_MAKEBIGKEY
+      -CX_MAKESMALLKEY
+      -CX_ZIPKEY
+      -CX_POPKEY
+      -CX_ACTIVETOFRONT
+
+    Starting from the Shell:
+    ------------------------
+     The program can be started as usually, but for closing the Shell
+     afterwards I suggest to use 'runback WindowTool'.
+
+     You can also set the settings in the commandline by using the following
+     keywords. They can be listed by 'WindowTool ?':
+      
+     -CX_PRIORITY/N:
+      Priority of the Broker (default=21).
+
+     -CX_POPUP/S:
+      Has to be set if you want the configurationwindow to be opened.
+	  
+     -SETTINGS/K:
+      Here you can define the configurationfile that you want to be loaded
+      at programstart.
+
+      And now the keywords for the hotkeys. They correspond to the names 
+      of the gadgets in the configurationwindow:
+
+     -CX_STOPKEY/K
+     -CX_NEWSHELLKEY/K
+     -CX_QUITKEY/K
+     -CX_CYCLEKEY/K
+     -CX_WORKBENCHKEY/K
+     -CX_CLOSEWINDOW/K
+     -CX_FRONTKEY/K
+     -CX_MAKEBIGKEY/K
+     -CX_MAKESMALLKEY/K
+     -CX_ZIPKEY/K
+     -CX_POPKEY/K
+     -CX_ACTIVETOFRONT/K
+
+The configurationwindow:
+========================
+   Here you can enter all hotkeys.
+	
+   The gadgets:
+   ------------
+    -Save:
+     Saves all combinations to the current configurationfile.
+     
+    -Hide:
+     Closes the window.
+
+    -Cancel:
+     Sets the old hotkeys and closes the window.     
+
+    -Quit:
+     Ends the program after a security-request.
+
+   The menus:
+   ----------
+    -New:
+     Clears all stringgadgets. The old hotkeys stay still alive as long as
+     you enter new ones.
+	
+    -Open...:
+     Opens a filerequester to load a configuartionfile. This will be loaded
+     and if there;s no error, the new hotkeys will be set.
+
+    -Open .info:
+     Opens the .infofile and sets its hotkeys.
+
+    -Save:
+     Has the same function as the save-gadget.
+
+    -Save as...:
+     Opens a filerequester and saves the configuration to the chosen file.
+
+    -Save as .info:
+     Saves the configuration to the .infofile. If ther's no .infofile, the
+     standard commodityicon will be created.
+
+    -About...:
+     Some information about the program.
+	  
+    -Hide:
+     Same function as the hidegadget.
+
+    -Cancel:
+     Same function as the cancel-gadget.
+  
+    -Quit:
+     Same function as the quit-gadget.
+
+   How to build a hotkey:
+   ----------------------
+    A hotkey has to look like this:
+    
+    [<qualifier> [<qualifier>...]] <key>
+
+    Qualifier:
+    ----------
+     alt           any alt-key
+     ralt          right alt-key
+     lalt          left alt-key
+     shift         any shift-key
+     rshift        right shift-key
+     lshift        left shift-key
+     capslock      caps lock key
+     rcommand      right amiga-key
+     lcommand      left amiga-key
+     control       control-key
+     numericpad    enables the use of the numeric pad
+     rbutton       right mouse-button
+     midbutton     middle mouse-button
+     leftbutton    left mouse-buuton
+     newprefs      preferences have been changed
+     diskremoved   disk removed
+     diskinserted  disk inserted
+
+    keys:
+    -------
+     a .. z, 0 .. 9, etc.   normal keys
+     f1 .. f10              funktion-keys
+     up, down, left, right  cursor-keys
+     help                   help-key
+     del                    delete-key
+     return                 return-key
+     enter                  enter-key ('numericpad' has to be set !)
+     backspace              backspace-key
+     esc                    escape-key
+     space                  space-key
+     comma                  comma-key
+     upstroke               ~-key
+
+    Examples:
+    ----------
+    
+    'rcommand shift alt esc'
+    'lshift rshift lalt ralt return'
+    'shift alt esc'
+    'control rshift numericpad enter'
+    'alt help' 
+     ...
+
+The functions:
+==============
+   -Stop:
+    This gives the own task a higher priority and the program waits for a
+    signal. This means that (nearly) all programs stop. If the hotkey is 
+    pressed again, everything will go on as normal.
+    I think some readers might ask what the reason for such a function is,
+    so let me tell you, why I decided to code such a routine: A friend of
+    mine and me often sat together in front of my computer. He always
+    wanted to do things I didn't want to do (e.g. draw pictures, draw icons,
+    draw pointers, adjust colors ...). One day I coded a routine that
+    blocked my computer so he couldn't do anything because he didn't know
+	 the hotkey and we did what I wanted to do.
+
+   -MakeBig:
+    Increases a window to maximum size.
+
+   -MakeSmall:
+    Decreases a window to minimum size. Attention ! Some windows disappear
+    because they don'have a minimum size and can't be activated per mouse
+    anymore. So it's better to make them immediatly big again.
+
+   -Zip:
+    Activates the zip-gadget.The window will be zipped !
+ 
+   -Cycle:
+    Puts the current window in the back and activates the window that's now
+    in the foreground.  (like 'Left Amiga + m' for screens)
+
+   -Workbench:
+    This activates the workbenchwindow or better the window with the
+    workbennch menus.
+ 
+   -ActivateFront:
+    Activates the foremost window.
+
+   -ActiveToFront:
+    Brings the active window to front.
+
+   -CloseWindow:
+    Activates the closegadget of the active window.
+	 
+   -Newshell:
+    Opens a new Shell. ('NewShell' is started)
+
+   -Show:
+    Opens the Configuratiowindow.
+
+   -Quit:
+    Quits Windowtool (with securityrequest).
+
+How the configurationfile is built:
+===================================
+    The Configurationfile is a pure ASCII-Text. The 10 Hotkeys have to be
+    specified in order of the gadgets in the configurationwindow. But I
+    think it's better to set them in the configurationwindow and to save
+    them from there out.
+
+The sourcecode:
+===============
+    The program was coded with the Lattice/Sas-C-Compiler. You can compile
+    it by entering 'lmk'. Do read the sourcecode I suggest a Tabsize of 4.
+
+The developement:
+=================
+    Version 1.0 (Wednesday,1st July,1992):
+    ---------------------
+    Program is ready and no error is known yet ...
+    
+End of documentation:
+=====================
+    At the end I want to greet (and thank) some friends:
+     Benjamin Schörner for his great ideas (e.g. stop-function) and for
+                        the English translation of the documentation.    
+     Christian Flaccus for his wonderful grafix (what grafix ???).
+
+    If somebody finds a mistake or if he's got some new ideas, he should
+    write me and he will immediatly get a new update of the program. (This
+    is ment to the people who didn't send me a present,too).
+    Here's my address:
+    
+         Klaas Hermanns
+         Weberstraße 42
+         4190 Kleve
+         GERMANY
+
