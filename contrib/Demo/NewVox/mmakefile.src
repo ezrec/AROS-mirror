@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 DESTDIR := $(CONTRIBDIR)/Demos/NewVox
 
 %build_prog mmake=demo-newvox \
-    progname=NewVow targetdir=$(DESTDIR) \
+    progname=NewVox targetdir=$(DESTDIR) \
     files=newvox uselibs="arossupport amiga arosc m"
 
 
