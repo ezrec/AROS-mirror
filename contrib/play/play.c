@@ -15,7 +15,7 @@ int no_video = 1;
 int verbose = 0, debugging = 0;
 int benchmark_mode = 0;
 double frame_rate = 20.0;
-
+int force_fps = -1;
 LONG __stack = 600000;  /* Make it big!! */
 
 void show_formats(void)
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     
     av_register_all();
 
-    while ((i = getopt(argc, argv, "hbBndvi")) != EOF) {
+    while ((i = getopt(argc, argv, "hbBndvif:")) != EOF) {
         switch(i) {
             case 'h':
                 printf("Usage: %s [options] [filename]\n"
@@ -75,6 +75,7 @@ int main(int argc, char *argv[])
                         "-v\tVerbose mode\n"
                         "-i\tShow supported formats and exits\n"
                         "-d\tDelay initialization for debugging purposes\n"
+                        "-f <value>\tForce frames per second to value\n"
                         , argv[0]);
 
                 return 0;
@@ -90,6 +91,9 @@ int main(int argc, char *argv[])
             case 'n':
                 use_audio = -1;
                 break;
+            case 'f':
+                force_fps = atoi(optarg);
+                break;               
             case 'i':
                 show_formats();
                 return 0;
@@ -160,6 +164,9 @@ int main(int argc, char *argv[])
     
     dump_format(ic, 0, filename, 0);
 
+    if (verbose)
+        fprintf(stderr, "Examining %d streams...\n", ic->nb_streams);
+    
     for(i=0;i<ic->nb_streams;i++) {
         AVCodecContext *enc = &ic->streams[i]->codec;
         switch(enc->codec_type) {
@@ -186,6 +193,12 @@ int main(int argc, char *argv[])
                 enc->error_concealment = 3; 
                 enc->idct_algo= 0;
 #endif
+                if(force_fps > 0) {
+                    fprintf(stderr, "FPS forced from %f to %f.\n",
+                            frame_rate, (double) force_fps);
+                    frame_rate = force_fps;
+                }
+                
                 if(verbose)
                     fprintf(stderr, "video: %dx%d %f fps\n",
                             frame_width, frame_height, frame_rate);
