@@ -16,25 +16,6 @@
 	    4- an end-position. If the line is -1, the end-position is not
 	       yet defined.
 
-    $Log$
-    Revision 1.1  2001/10/06 20:12:01  digulla
-    Initial revision
-
- * Revision 1.4  1994/12/22  09:17:30  digulla
- * Makros und DEFCMD eingeführt
- * Änderungen vom Todd eingebaut
- *
- * Revision 1.3  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- * added function IsBlockVisible()
- *
- * Revision 1.2  1994/08/30  11:06:14  digulla
- * added some parentheses for GCC
- *
- * Revision 1.1  1994/08/14  12:28:34  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 

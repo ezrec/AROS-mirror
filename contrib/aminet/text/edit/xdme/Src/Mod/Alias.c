@@ -23,20 +23,6 @@
 
     INDEX
 
-    HISTORY
-	$Log$
-	Revision 1.2  2001/10/07 12:08:42  digulla
-	Runs now until Src/prefs.c:271 where it throws a GURU: Corrupt memory list detected in FreeMem
-
-	Revision 1.1.1.1  2001/10/06 20:12:14  digulla
-	Initial import of XDME
-	
- * Revision 1.1  1994/12/22  09:28:07  digulla
- * Initial revision
- *
-	21-09-94 b_noll added DEFCMD/DEFHELP-support
-
-
 ******************************************************************************/
 
 /*

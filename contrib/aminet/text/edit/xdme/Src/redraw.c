@@ -7,22 +7,6 @@
 	This contains all functionality that is needed to refresh
 	part of the display.
 
-    $Log$
-    Revision 1.1  2001/10/06 20:12:01  digulla
-    Initial revision
-
- * Revision 1.3  1994/12/22  09:20:34  digulla
- * Makros und DEFCMD eingeführt
- * Änderungen von Todd eingebaut
- *
- * Revision 1.2  1994/09/09  12:31:30  digulla
- * made local functions static
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.1  1994/08/19  14:03:12  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************

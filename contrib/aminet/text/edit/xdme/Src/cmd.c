@@ -7,31 +7,6 @@
 	In this file you find all routines for programming like
 	IF, WHILE, REPEAT
 
-    HISTORY
-	14. Nov 1992	ada created
-	$Log$
-	Revision 1.2  2001/10/07 00:09:02  digulla
-	Compiles and links now but crashes at startup
-
-	Revision 1.1.1.1  2001/10/06 20:11:26  digulla
-	Initial import of XDME
-	
- * Revision 1.4  1994/12/22  09:06:44  digulla
- * Makros und DEFCMD eingeführt
- * Textflags in IF ergänzt
- *
- * Revision 1.3  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- * fixed two bugs in POP (Activate window after POP ED and refresh screen
- * after POP BLOCK
- *
- * Revision 1.2  1994/08/30  11:05:10  digulla
- * fixed bug in CB (now checks if it is really inside
- *
- * Revision 1.1  1994/08/14  12:30:15  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************

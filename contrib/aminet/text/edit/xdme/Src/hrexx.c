@@ -4,31 +4,6 @@
  *	einfaches ARexx-Interface für Amiga
  *	Achtung der Code ist NICHT reentrant
  *
- *	Date	   Modification 				by
- *	06.01.90   created					D. Heckmman
- *	22.02.90   Vergessen Printf entfernt			D. Heckmann
- *		   BefehlsErkennung bei RexxMessageHandler
- *		   korrigiert, wenn befehl ohne Argumente kam,
- *		   wurde er nicht erkannt.
- *	01.08.90   angepasst an ANSI-C				D. Heckmann
- *		   OpenRexx gibt die Maske für Wait zurück
- *		   GetRexxPort eingebaut.
- *	08.09.90   ModifyRepCount eingebaut,			D. Heckmann
- *	09.09.90   wartet nicht mehr auf NONRET Messages !!	D. Heckmann
- *	22.11.91   An DICE angepasst (includes eingebaut)       D. Heckmann
- *		   fehlende Protos korrigiert ...
- *		   Function Pointersalat endgültig ok (Hoffentlich)
- *	$Log$
- *	Revision 1.2  2001/10/06 23:06:14  digulla
- *	Compiles for me
- *
- *	Revision 1.1.1.1  2001/10/06 20:11:54  digulla
- *	Initial import of XDME
- *	
- * Revision 1.1  1994/08/14  12:30:15  digulla
- * Initial revision
- *
- *
  */
 
 /*

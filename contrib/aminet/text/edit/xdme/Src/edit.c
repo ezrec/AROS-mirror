@@ -6,33 +6,6 @@
     DESCRIPTION
 	Everything for editing like DEL, BS, INDENT, DELINE, INSLINE, ...
 
-    HISTORY
-	14. Nov 1992	ada created
-	$Log$
-	Revision 1.2  2001/10/07 00:09:02  digulla
-	Compiles and links now but crashes at startup
-
-	Revision 1.1.1.1  2001/10/06 20:11:39  digulla
-	Initial import of XDME
-	
- * Revision 1.5  1994/12/22  09:12:08  digulla
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.4  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- * fixed a bug in do_join()
- *
- * Revision 1.3  1994/08/30  11:09:32  digulla
- * use BLOCK_MASK over ALL_MASK
- *
- * Revision 1.2  1994/08/19  14:09:10  digulla
- * fixed SetWrMsk()
- * removed dead assignments
- *
- * Revision 1.1  1994/08/13  17:14:04  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************

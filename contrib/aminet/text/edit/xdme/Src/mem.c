@@ -14,19 +14,6 @@
 **
 **	(this is done for sure)
  *
- * $Log$
- * Revision 1.1  2001/10/06 20:11:26  digulla
- * Initial revision
- *
- * Revision 1.3  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.2  1994/08/30  11:05:55  digulla
- * added const to Prototype of DupFunc
- *
- * Revision 1.1  1994/08/14  12:30:15  digulla
- * Initial revision
- *
 */
 
 

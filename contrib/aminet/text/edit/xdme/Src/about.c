@@ -1,7 +1,6 @@
 
-/* $Header
+/* $Id$
 
-   $Log
 */
 
 #include "defs.h"

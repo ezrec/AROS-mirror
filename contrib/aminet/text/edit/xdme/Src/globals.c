@@ -2,21 +2,6 @@
 /*
  * $Id$
  *
- * $Log$
- * Revision 1.1  2001/10/06 20:11:52  digulla
- * Initial revision
- *
- * Revision 1.3  1994/12/22  09:13:09  digulla
- * ActualBlock nach block.c (lokal)
- * 256 durch MAXLINELEN ersetzt
- *
- * Revision 1.2  1994/09/14  20:47:04  digulla
- * moved version string to about.c
- *
- * Revision 1.1  1994/08/14  12:30:15  digulla
- * Initial revision
- *
- *
  */
 
 #include "defs.h"

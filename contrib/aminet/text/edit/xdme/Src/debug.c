@@ -14,20 +14,6 @@
 	  I use here code from the allround.lib by Dirk Heckmann.
 	  Thanks for work, Dirk.
 
-     date      done			by
-     10.08.90  initial release		D. Heckmann
-     01.08.91  modified for debug	A. Digulla
-     $Log$
-     Revision 1.2  2001/10/07 00:09:02  digulla
-     Compiles and links now but crashes at startup
-
-     Revision 1.1.1.1  2001/10/06 20:11:20  digulla
-     Initial import of XDME
-
- * Revision 1.1  1994/09/09  12:31:30  digulla
- * Initial revision
- *
-
      TODO
 	  The method of replacing Message() by printf() has to be replaced.
 	  We need a Requester or Alert here (especially for WB-Startup).

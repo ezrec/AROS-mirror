@@ -6,25 +6,6 @@
     DESCRIPTION
 	Amiga specific things
 
-    HISTORY
-	10. Oct 1992	ada created
-	$Log$
-	Revision 1.1  2001/10/06 20:11:51  digulla
-	Initial revision
-
- * Revision 1.4  1994/12/22  09:16:33  digulla
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.3  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.2  1994/08/30  11:07:20  digulla
- * added some parentheses for GCC
- *
- * Revision 1.1  1994/08/14  12:27:53  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************

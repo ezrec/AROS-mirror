@@ -14,18 +14,6 @@
 
     NOTES
 
-    $Log$
-    Revision 1.1  2001/10/06 20:12:27  digulla
-    Initial revision
-
- * Revision 1.1  1994/12/22  09:25:34  digulla
- * Initial revision
- *
- * Revision 1.1  1994/09/20  11:14:01  b_noll
- * Initial revision
- *
-
-
 ******************************************************************************/
 
 /**************************************

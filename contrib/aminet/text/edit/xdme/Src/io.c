@@ -1,26 +1,6 @@
 /*
  * $Id$
  *
- * $Log$
- * Revision 1.2  2001/10/06 23:06:14  digulla
- * Compiles for me
- *
- * Revision 1.1.1.1  2001/10/06 20:11:18  digulla
- * Initial import of XDME
- *
- * Revision 1.4  1994/12/22  09:19:18  digulla
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.3  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.2  1994/08/19  14:10:47  digulla
- * Incorporated code by B.Noll. Fixes some problems with icons
- *
- * Revision 1.1  1994/08/13  16:36:27  digulla
- * Initial revision
- *
- *
  */
 
 #include "rexx.h"
