@@ -6,11 +6,16 @@ include $(TOP)/config/make.cfg
 
 #MM- AROS : contrib-regina
 
-#MM contrib-regina : setup linklibs includes contrib-regina-libs
-#MM contrib-regina-quick : contrib-regina-libs-quick
+#MM- contrib-regina : contrib-regina-exes contrib-regina-module
+#MM- contrib-regina-quick : contrib-regina-exes-quick contrib-regina-module-quick
 
-#MM- contrib-regina-libs : setup linklibs includes contrib-regina-libs-module
-#MM- contrib-regina-libs-quick : contrib-regina-libs-module-quick contrib-regina-libs-linklib-quick
+#MM contrib-regina-exes : contrib-regina-module
+#MM
+contrib-regina-exes-quick : contrib-regina-module contrib-regina-exes
+
+#MM contrib-regina-module : setup linklibs includes contrib-regina-includes
+#MM
+contrib-regina-module-quick : contrib-regina-module contrib-regina-includes
 
 EXEDIR := $(CONTRIBDIR)/Regina
 
@@ -18,7 +23,7 @@ REXXEXE := $(EXEDIR)/rexx
 REGINAEXE := $(EXEDIR)/regina
 EXES := $(REXXEXE) $(REGINAEXE)
 
-contrib-regina : setup $(EXES)
+contrib-regina-exes : setup $(EXES)
 
 # At the moment don't support threads.
 # Files shared by executables and shared library
@@ -49,65 +54,21 @@ FILES := $(OFILES) rexx nosaa mt_notmt
 FILES := regina
 %make_prog_multi dir=$(EXEDIR) target=$(REGINAEXE) id=1
 
-USER_INCLUDES := -I. -Iaros_funcs
+USER_INCLUDES := -I.
 USER_CFLAGS   := -DRXLIB -DINCL_REXXSAA -DAPIENTRY="" \
 -DNO_EXTERNAL_QUEUES -DAREXXIO
-
-OBJDIR2 := $(GENDIR)/$(CURDIR)/shared
-
-#Libraries to use
-USE_AROS_LIB     :=
-USE_CLIB_SHARED  :=
-USE_CLIB_LIBRARY := yes
-USE_AMIGALIB     := yes
-USE_MLIB         := YES
-
-MODNAME := regina
-MODTYPE := library
 
 FILES := $(OFILES) \
          rexxsaa \
 	 rexx \
 	 client \
-	 mt_amigalib
+	 mt_amigalib \
+	 isreginamsg \
+	 regina_init
 
-FUNCS := aros_funcs/rexxstart \
-      	 aros_funcs/rexxregistersubcomexe \
-      	 aros_funcs/rexxregistersubcomdll \
-      	 aros_funcs/rexxquerysubcom \
-      	 aros_funcs/rexxderegistersubcom \
-      	 aros_funcs/rexxvariablepool \
-      	 aros_funcs/rexxregisterexitexe \
-      	 aros_funcs/rexxregisterexitdll \
-      	 aros_funcs/rexxderegisterexit \
-      	 aros_funcs/rexxqueryexit \
-      	 aros_funcs/rexxregisterfunctionexe \
-      	 aros_funcs/rexxregisterfunctiondll \
-      	 aros_funcs/rexxqueryfunction \
-      	 aros_funcs/rexxderegisterfunction \
-      	 aros_funcs/rexxsethalt \
-      	 aros_funcs/rexxcreatequeue \
-      	 aros_funcs/rexxdeletequeue \
-      	 aros_funcs/rexxqueryqueue \
-      	 aros_funcs/rexxaddqueue \
-      	 aros_funcs/rexxpullqueue \
-      	 aros_funcs/rexxaddmacro \
-      	 aros_funcs/rexxclearmacrospace \
-      	 aros_funcs/rexxdropmacro \
-      	 aros_funcs/rexxloadmacrospace \
-      	 aros_funcs/rexxquerymacro \
-      	 aros_funcs/rexxreordermacro \
-      	 aros_funcs/rexxsavemacrospace \
-      	 aros_funcs/rexxfreememory \
-      	 aros_funcs/rexxallocatememory \
-      	 aros_funcs/reginaversion \
-      	 aros_funcs/__regina_faked_main \
-	 aros_funcs/isreginamsg
+%build_module mmake=contrib-regina-module modname=regina modtype=library files=$(FILES) uselibs="amiga arosc_shared arosm" objdir=$(GENDIR)/$(CURDIR)/shared
 
-%make_module_setup mmake=contrib-regina-libs id=2
-%make_module_cpak id=2
-%make_module mmake=contrib-regina-libs id=2
-%make_lib_includes id=2
+%copy_includes mmake=contrib-regina-includes includes=rexxsaa.h dir=
 
 %common
 %include_deps
