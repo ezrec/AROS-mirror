@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/07/03 21:21:00  bergers
+ * Replaced stch_l & stcu_d and had to make a few changes in other places because of that.
+ *
  * Revision 42.3  2000/07/02 06:08:33  bergers
  * Compiles library alright (except that I took stch_l & stcu_d out) and seems to create the right type of object. Test1 also compiles alright but crashes somewhere...
  *
@@ -213,13 +216,15 @@ __saveds void Mover(void)
    struct Screen     *s;
    struct bmDragPoint bmd;
 
-#if 0
+#ifdef _AROS
+   if (0 == sscanf(((struct Process *)FindTask(NULL))->pr_Arguments, "%lx", &bmo))
+#else
    if (stch_l(((struct Process *)FindTask(NULL))->pr_Arguments, (long *)&bmo) == 0)
+#endif
    {
       go = FALSE;
    }
    else
-#endif
    {
       go  = TRUE;
       obj = bmo->bmo_Object;

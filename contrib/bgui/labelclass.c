@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/07/03 21:21:00  bergers
+ * Replaced stch_l & stcu_d and had to make a few changes in other places because of that.
+ *
  * Revision 42.4  2000/07/02 06:08:33  bergers
  * Compiles library alright (except that I took stch_l & stcu_d out) and seems to create the right type of object. Test1 also compiles alright but crashes somewhere...
  *
@@ -543,7 +546,11 @@ METHOD(LabelClassDrawErase, struct impDraw *, dr)
       {
          *d++ = '\33';
          *d++ = c;
-//         d += stcu_d(d, pen);
+#ifdef _AROS
+	d += sprintf(d, "%u", pen);
+#else         
+         d += stcu_d(d, pen);
+#endif
       };
 
       *d++ = '\33';                                /* 2 */

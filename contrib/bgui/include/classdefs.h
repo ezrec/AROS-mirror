@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/07/03 21:21:01  bergers
+ * Replaced stch_l & stcu_d and had to make a few changes in other places because of that.
+ *
  * Revision 42.4  2000/05/31 01:23:10  bergers
  * Changes to make BGUI compilable and linkable.
  *
@@ -163,6 +166,7 @@ extern struct Library * BGUIBase;
 #include <ctype.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #undef abs
 #undef min

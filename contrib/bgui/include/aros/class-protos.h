@@ -29,7 +29,10 @@ extern Class *InitAslReqClass(void);
 
 extern ASM ULONG CompStrlenF(REG(a0) UBYTE *, REG(a1) ULONG *);
 extern ASM VOID DoSPrintF(REG(a0) UBYTE *, REG(a1) UBYTE *, REG(a2) ULONG *);
+#ifdef _AROS
+#else
 extern void sprintf(char *, char *, ...);
+#endif
 extern void tprintf(char *, ...);
 
 /* misc.c                                     */
