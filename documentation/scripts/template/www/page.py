@@ -71,6 +71,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 A( _N['developers-together'], hclass='done', href='%(ROOT)spictures/developers-together' )
             ] ),
             A( _N['sponsors'], hclass='done', href='%(ROOT)ssponsors' ),
+            A( _N['linking'], hclass='done', href='%(ROOT)slinking' ),
             A( _N['links'], hclass='done', href='%(ROOT)slinks' )
         ] )
     )
