@@ -325,6 +325,7 @@ int n;
  *		Also skips over chars prefixed by a \. Returns pointer to first
  *		occurance of char c inside string s, or NULL.
  */
+#undef index
 char *index(s,c,skip)
 char *s,c;
 int skip;
