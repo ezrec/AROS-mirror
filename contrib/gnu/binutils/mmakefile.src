@@ -1,0 +1,25 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+##MM- contrib-gnu : contrib-gnu-binutils
+##MM- contrib-gnu-binutils : development-binutils
+
+#MM- development : development-binutils
+#MM development-binutils-quick : development-binutils-fetch
+
+ORIGINS := http://ftp.gnu.org/pub/gnu/binutils
+
+ARCHBASE := binutils-2.15 
+
+#MM
+development-binutils-fetch :
+	%fetch archive=$(ARCHBASE).tar.bz2 destination=$(PORTDIR)/binutils archive_origins="$(ORIGINS)"
+	
+
+%build_with_configure mmake=development-binutils configure=$(PORTDIR)/binutils/$(ARCHBASE)/configure \
+     nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
+     extraoptions="--target=$(AROS_TARGET_CPU)-aros  --build=local --disable-nls"
+
+
