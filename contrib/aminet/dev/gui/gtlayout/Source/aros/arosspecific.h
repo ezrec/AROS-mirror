@@ -55,8 +55,7 @@ struct LayerMsg;
  struct LayoutHandle *GTLayout_LT_CreateHandle( struct Screen *screen, struct TextAttr *font );
  struct LayoutHandle *GTLayout_LT_CreateHandleTagList( struct Screen *screen, struct TagItem *tagList );
 #endif
- struct LayoutHandle *GTLayout_LT_CreateHandleTags( struct Screen *screen, ... );
- #define LT_CreateHandleTags GTLayout_LT_CreateHandleTags
+ struct LayoutHandle *LT_CreateHandleTags( struct Screen *screen, ... );
 #if 0
  BOOL GTLayout_LT_Rebuild( struct LayoutHandle *handle, struct IBox *bounds, LONG extraWidth, LONG extraHeight, LONG clear );
  VOID GTLayout_LT_HandleInput( struct LayoutHandle *handle, ULONG msgQualifier, ULONG *msgClass, UWORD *msgCode, struct Gadget **msgGadget );
@@ -64,13 +63,11 @@ struct LayerMsg;
  VOID GTLayout_LT_EndRefresh( struct LayoutHandle *handle, LONG complete );
  LONG GTLayout_LT_GetAttributesA( struct LayoutHandle *handle, LONG id, struct TagItem *tagList );
 #endif
- LONG GTLayout_LT_GetAttributes( struct LayoutHandle *handle, LONG id, ... );
- #define LT_GetAttributes GTLayout_LT_GetAttributes
+ LONG LT_GetAttributes( struct LayoutHandle *handle, LONG id, ... );
 #if 0
  VOID GTLayout_LT_SetAttributesA( struct LayoutHandle *handle, LONG id, struct TagItem *tagList );
 #endif
- VOID GTLayout_LT_SetAttributes( struct LayoutHandle *handle, LONG id, ... );
- #define LT_SetAttributes GTLayout_LT_SetAttributes
+ VOID LT_SetAttributes( struct LayoutHandle *handle, LONG id, ... );
 #if 0
  VOID GTLayout_LT_AddA( struct LayoutHandle *handle, LONG type, STRPTR label, LONG id, struct TagItem *tagList );
 #endif
