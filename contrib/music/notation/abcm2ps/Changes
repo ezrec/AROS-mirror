@@ -1,0 +1,149 @@
+---- Version 3.1.0 - 02/07/21 ----
+
+Problem when grace notes before a bar and multi-voices.
+Comments in %%pseudo-comments not seen.
+Bad rest alone in a measure on second voices and M: in tune.
+Bad clef changes when multi-voices.
+Have %%scale global. !! INCOMPATIBILITY with previous versions !!
+Crash when '-N' at the end of the command line.
+
+---- Version 3.0.20 - 02/07/14 ----
+
+'-N' command line option extension (thanks to John Fattaruso).
+Have the decorations tied to the note under the slurs.
+
+---- Version 3.0.19 - 02/07/07 ----
+
+May read any number of characters from stdin.
+Bad repeat bars when 2nd repeat at start of line.
+
+---- Version 3.0.18 - 02/06/23 ----
+
+Change the bounding box in .eps files which makes graphical
+	image generation easier (see -E in options.txt).
+
+---- Version 3.0.17 - 02/06/16 ----
+
+Adjust some decorations.
+Have %%maxshrink work again.
+Don't change the stem height on chords.
+Crash when same head on 2 voices at end of staff.
+More space between beams.
+
+---- Version 3.0.16 - 02/06/11 ----
+
+Bad measure numbering on time signature change.
+Adjust the decorations of centered rests.
+New format option %%slurheight (Guido Gonzato).
+Ignore position chars in guitar chords (^_<>@ - Guido Gonzato).
+
+---- Version 3.0.15 - 02/06/02 ----
+
+Fix some problems with grace notes.
+Crash on grace notes in n-plet sequence.
+Continue coding the staff break.
+Bad clef change position since 3.0.14.
+
+---- Version 3.0.14 - 02/05/26 ----
+
+Start coding the staff break (see sample3.abc).
+Have %%left/right margin work inside a tune (?).
+Double repeat bar added.
+More decorations in deco.abc.
+
+---- Version 3.0.13 - 02/05/20 ----
+
+Move some non-standard decorations to deco.abc.
+Font definition problems tied to %%lefmargin in 3.0.12.
+Authorize again white spaces at start of lines.
+
+---- Version 3.0.12 - 02/05/19 ----
+
+Handle blank lines and spaces in %%begintext / %%endtext.
+Postscript error when '|' in %%staves.
+Slurs back in grace notes.
+Have %%lefmargin change to work correctly.
+%%multicol working.
+
+---- Version 3.0.11 - 02/05/12 ----
+
+Pseudo %%multicol added (but does not work fine yet!).
+Accept 'merge', 'up' and 'down' in V:.
+Accept Barfly V: with note line ending with ']'.
+Bad vertical offset of guitar chord when long text.
+deco.abc: postscript stack pb in pedal - glissando added.
+
+---- Version 3.0.10 - 02/05/05 ----
+
+Bad horizontal space on key signature change.
+Have the guitar chords a bit upper.
+Opening slur before a grace note sequence was ignored.
+Command line option -Q/+Q and pseudo 'printtempo' added.
+Accept '.' (dot) and '"text"' in repeat bars.
+Have 0.5cm before lyrics at end of tune.
+Do indentation when '.' as a second character in 'W:'.
+EPS box was truncated on the right side.
+
+---- Version 3.0.9 - 02/04/28 ----
+
+Better slurs between adjacent notes (?).
+Too much space under the notes with accidental on a bass staff.
+Better (?) accidental position in chord.
+Have room for long repeat bar information.
+
+---- Version 3.0.8 - 02/04/22 ----
+
+Bad guitar chord offset in 3.0.7.
+
+---- Version 3.0.7 - 02/04/21 ----
+
+Align the guitar chords.
+Fix many crashes in 3.0.6.
+
+---- Version 3.0.6 - 02/04/14 ----
+
+Have room for the slurs above/below the grace notes.
+
+---- Version 3.0.5 - 02/04/07 ----
+
+Don't complain about ties followed by grace notes.
+Have better curved grace note flags (from Ed. Bradshow).
+Crash when grace notes at end of line.
+Don't cut a line on a grace note sequence.
+
+---- Version 3.0.4 - 02/04/01 ----
+
+Bad note pitch when K: in floating voices.
+%%postscript definitions lost at start of tune.
+Too much space above grace notes under beams.
+Bad vertical offset of slurs when stop and start on a same note.
+Have all helper lines on grace notes.
+Have taller stems on grace notes.
+Problem on vertical offset of P: and Q:.
+Have room above and below the accidentals.
+
+---- Version 3.0.3 - 02/03/24 ----
+
+Have a better place for the bar numbers.
+
+---- Version 3.0.2 - 02/03/17 ----
+
+May have grace notes anywhere.
+Remove the DEBUG option.
+Option for straight flags in bagpipe tune.
+Better (?) lyrics vertical offset.
+Have a thicker line.
+Problem on vertical offset of P: inside tune.
+Fix M: horizontal offsets.
+Handle '+' in M:.
+
+---- Version 3.0.1 - 02/03/10 ----
+
+M: extensions (see sample3.abc)
+
+---- Version 3.0.0 - 02/03/02 ----
+
+May have grace notes before bars.
+No limitation in grace note number.
+
+Creation from abcm2ps version 2.10.13.

@@ -1,0 +1,70 @@
+%%deco alcoda 3 dacs 20 0 0 Al Coda
+
+X:1
+T:abcm2ps version 3 features
+M:2/4 3/4
+K:C
+C2D2 E2F2G2{FG}|G4-G6|1.2[M:5/4 (2/4 3/4)]G4{AB}z6:|["last time"A2B2 c6||
+%%multicol start
+%%rightmargin 11.5cm
+[M:2/4]C2G2|C4|//|
+%%multicol new
+%%leftmargin 11.5cm
+%%begintext
+
+Multi column text on the right after a blank line.
+%%endtext
+%%multicol end
+%%multicol start
+%%rightmargin 11.5cm
+%%begintext
+         And now at the left side.
+Here, there are spaces to align
+                the text on the right.
+%%endtext
+%%multicol new
+%%leftmargin 11.5cm
+CD EF|GA Bc|
+%%multicol end
+%
+%%leftmargin 7cm
+%%rightmargin 11cm
+CD EF|
+%%leftmargin 11cm
+%%rightmargin 7cm
+CD EF|
+% restore the left and right margins
+%%leftmargin 1.78cm
+%%rightmargin 1.78cm
+%%center Is this centered?
+
+X:2
+T:Staff break
+M:none
+L:1/8
+K:G clef=C
+%%staffbreak 0.2cm
+[K:G clef=treble][M:C]SDE FG|AB !alcoda!cdO|AB cdS||\
+%%staffbreak 2cm
+[K:G clef=treble]OA2d2||
+
+X:3
+T:Staff break multi-staves
+M:none
+L:1/8
+%%staves {1 2}
+K:G
+V:1 clef=C
+%%staffbreak 0.2cm
+V:2 clef=F
+%%staffbreak 0.2cm
+V:1
+[K:G clef=treble][M:C]SDE FG|AB !alcoda!cdO|AB cdS||\
+V:2
+[K:G clef=bass]D,4|A,4|D,4|
+V:1
+%%staffbreak 2cm
+[K:G clef=treble]OA2d2||
+V:2
+%%staffbreak 2cm
+[K:G clef=bass]A,2D,,2||
