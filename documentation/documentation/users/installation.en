@@ -7,23 +7,20 @@ AROS Installation Guide
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done. 
+:Abstract:
+    This manual will guide you through the necessary steps for installing 
+    AROS.
+
+    .. Warning:: 
+    
+        AROS is alpha quality software. This means that it is currently mostly
+        fun to play with and cool to develop for. If you came here because you
+        thought AROS was a finished, complete and fully usable operating 
+        system, you will most likely be dissapointed. AROS isn't there yet, 
+        but we're slowly moving in the right direction.
+
 
 .. Contents::
-
-
-Introduction
-============
-
-This manual will guide you through the necessary steps for installing AROS.
-
-
-.. Warning:: 
-
-    AROS is alpha quality software. This means that it is currently mostly fun
-    to play with and cool to develop for. If you came here because you thought
-    AROS was a finished, complete and fully usable operating system, you will
-    most likely be dissapointed. AROS isn't there yet, but we're slowly moving
-    in the right direction.
 
 
 Downloading
