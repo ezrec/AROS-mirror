@@ -85,6 +85,9 @@ MyKPrintFArgs( UBYTE*           fmt,
 	q t n(void);
 # define INTERRUPT_NODE_TYPE NT_INTERRUPT
 
+#define SWAPLONG(y) y
+#define SWAPWORD(y) y
+
 #elif defined(__AMIGAOS4__)
 
 # define INTGW(q,t,n,f) \
