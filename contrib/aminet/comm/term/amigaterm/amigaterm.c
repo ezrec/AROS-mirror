@@ -23,7 +23,11 @@
 #include <hardware/blit.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include <libraries/dos.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/intuition.h>
 
 #define INTUITION_REV 1
 #define GRAPHICS_REV  1
