@@ -1,0 +1,17 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+#MM contrib-zune-classes-toolbar : includes linklibs
+
+USER_INCLUDES = -I../../../nlist/commonaros
+
+FILES := Dispatcher \
+	 CreatePrefs \
+	 MyLocale
+	 
+%build_module_macro mmake=contrib-zune-classes-toolbarmcp \
+  modname=Toolbar modtype=mcp dir=$(CONTRIBDIR)/MCC_Toolbar/Classes/Zune \
+  initfile=library files=$(FILES) \
+  uselibs="amiga mui rom m"
+
+%common
