@@ -424,15 +424,15 @@ void makewin(void)
 			       WA_DragBar, TRUE,
 			       WA_DepthGadget, TRUE,
 			       WA_CloseGadget, TRUE,
-			#if RESIZEABLE
-			       WA_SizeGadget, TRUE,
-			       WA_SizeBBottom, TRUE,
-			#endif
+			       RESIZEABLE    ?
+	                       WA_SizeGadget :
+                               TAG_IGNORE    , TRUE,
+                               RESIZEABLE    ?
+			       WA_SizeBBottom:
+                               TAG_IGNORE    , TRUE,
 			       WA_Activate, TRUE,
 			       WA_IDCMP, IDCMP_CLOSEWINDOW |
-			#if RESIZEABLE
-					 IDCMP_NEWSIZE |
-			#endif
+  			   (RESIZEABLE * IDCMP_NEWSIZE) |
 			       		 IDCMP_RAWKEY,
 			       TAG_DONE);
 			       
