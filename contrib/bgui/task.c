@@ -11,6 +11,12 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2000/08/08 14:17:30  chodorowski
+ * Fixes to compile on Amiga. There was some wrongly nested #ifdefs here,
+ * around the BGUI_FreePooled and BGUI_FreePooledDebug functions.
+ * Now it compiles, but I'm a bit dubiuos if it works as it should.
+ * Could someone have a look please?
+ *
  * Revision 42.6  2000/07/06 16:44:03  stegerg
  * AddTaskMember can now be called. Problem was Cli()->cli_CommandName
  * which BGUI expected to be a BSTR with size in first byte.
@@ -106,22 +112,22 @@ static void DefPrefs(void);
 
 static struct BlockHeader
 {
-	struct BlockHeader *NextBlock;
-	ULONG BlockSize;
-	APTR Address;
-	ULONG Size;
-	APTR PoolHeader;
-	STRPTR File;
-	ULONG Line;
+        struct BlockHeader *NextBlock;
+        ULONG BlockSize;
+        APTR Address;
+        ULONG Size;
+        APTR PoolHeader;
+        STRPTR File;
+        ULONG Line;
 }
 *MemoryBlocks=NULL;
 
 union TypesUnion
 {
-	long int LongInteger;
-	long double LongDouble;
-	void *DataPointer;
-	void (*FunctionPointer)(void);
+        long int LongInteger;
+        long double LongDouble;
+        void *DataPointer;
+        void (*FunctionPointer)(void);
 };
 
 #define AlignMemory(offset) (((offset)+sizeof(union TypesUnion)-1)/sizeof(union TypesUnion))*sizeof(union TypesUnion)
@@ -137,55 +143,55 @@ union TypesUnion
 
 //static ASM VOID FreeVecMemDebug(REG(a0) APTR pool, REG(a1) APTR memptr, REG(a2) STRPTR file, REG(d0) ULONG line);
 static ASM REGFUNC4(VOID, FreeVecMemDebug,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A1, APTR, memptr),
-	REGPARAM(A2, STRPTR, file),
-	REGPARAM(D0, ULONG, line));
+        REGPARAM(A0, APTR, pool),
+        REGPARAM(A1, APTR, memptr),
+        REGPARAM(A2, STRPTR, file),
+        REGPARAM(D0, ULONG, line));
 
 //static ASM APTR AllocVecMemDebug(REG(a0) APTR mempool, REG(d0) ULONG size,REG(a1) STRPTR file, REG(d1) ULONG line);
 static ASM REGFUNC4(APTR, AllocVecMemDebug,
-	REGPARAM(A0, APTR, mempool),
-	REGPARAM(D0, ULONG, size),
-	REGPARAM(A1, STRPTR, file),
-	REGPARAM(D1, ULONG, line));
+        REGPARAM(A0, APTR, mempool),
+        REGPARAM(D0, ULONG, size),
+        REGPARAM(A1, STRPTR, file),
+        REGPARAM(D1, ULONG, line));
 
 #define AllocVecMem(mempool,size) AllocVecMemDebug(mempool,size,__FILE__,__LINE__)
 #define FreeVecMem(pool,memptr) FreeVecMemDebug(pool,memptr,__FILE__,__LINE__)
 
 static BOOL VerifyMemoryWall(char *memory)
 {
-	ULONG size;
+        ULONG size;
 
-	for(size=MEMORY_WALL_SIZE;size;size--,memory++)
-	{
-		if(*memory!=MEMORY_WALL_TRASH)
-			return(FALSE);
-	}
-	return(TRUE);
+        for(size=MEMORY_WALL_SIZE;size;size--,memory++)
+        {
+                if(*memory!=MEMORY_WALL_TRASH)
+                        return(FALSE);
+        }
+        return(TRUE);
 }
 
 #else
 //static ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size);
 static ASM REGFUNC2(APTR, AllocVecMem,
-	REGPARAM(A0, APTR, mempool),
-	REGPARAM(D0, ULONG, size));
+        REGPARAM(A0, APTR, mempool),
+        REGPARAM(D0, ULONG, size));
 
 //static ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr);
 static ASM REGFUNC2(VOID, FreeVecMem,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A1, APTR, memptr));
+        REGPARAM(A0, APTR, pool),
+        REGPARAM(A1, APTR, memptr));
 #endif
 
 //static SAVEDS ASM APTR BGUI_CreatePool(REG(d0) ULONG memFlags, REG(d1) ULONG puddleSize, REG(d2) ULONG threshSize);
 static SAVEDS ASM REGFUNC3(APTR, BGUI_CreatePool,
-	REGPARAM(D0, ULONG, memFlags),
-	REGPARAM(D1, ULONG, puddleSize),
-	REGPARAM(D2, ULONG, threshSize));
+        REGPARAM(D0, ULONG, memFlags),
+        REGPARAM(D1, ULONG, puddleSize),
+        REGPARAM(D2, ULONG, threshSize));
 
 
 //static SAVEDS ASM VOID BGUI_DeletePool(REG(a0) APTR poolHeader);
 static SAVEDS ASM REGFUNC1(VOID, BGUI_DeletePool,
-	REGPARAM(A0, APTR, poolHeader));
+        REGPARAM(A0, APTR, poolHeader));
 
 /*
  * Initialize task list.
@@ -217,85 +223,85 @@ makeproto void InitTaskList(void)
 
 static struct FontEntry
 {
-	struct FontEntry *NextFont;
-	struct TextFont *Font;
-	BOOL Closed;
-	STRPTR File;
-	ULONG Line;
-	struct TextFont Copy;
+        struct FontEntry *NextFont;
+        struct TextFont *Font;
+        BOOL Closed;
+        STRPTR File;
+        ULONG Line;
+        struct TextFont Copy;
 }
 *FontEntries=NULL;
 
 static void BGUI_CloseAllFonts(void)
 {
-	struct FontEntry *font_entry;
+        struct FontEntry *font_entry;
 
-	for(font_entry=FontEntries;font_entry;font_entry=font_entry->NextFont)
-	{
-		if(font_entry->Closed==FALSE)
-		{
-	    D(bug("***Font leak (%lx) \"%s\" %s,%lu:\n",font_entry->Font,font_entry->Font->tf_Message.mn_Node.ln_Name ? font_entry->Font->tf_Message.mn_Node.ln_Name : "Unnamed font",font_entry->File ? font_entry->File : (STRPTR)"Unknown source",font_entry->Line));
-			CloseFont(font_entry->Font);
-			font_entry->Closed=TRUE;
-		}
-	}
-	while((font_entry=FontEntries))
-	{
-		FontEntries=font_entry->NextFont;
-		BGUI_FreePoolMemDebug(font_entry,__FILE__,__LINE__);
-	}
+        for(font_entry=FontEntries;font_entry;font_entry=font_entry->NextFont)
+        {
+                if(font_entry->Closed==FALSE)
+                {
+            D(bug("***Font leak (%lx) \"%s\" %s,%lu:\n",font_entry->Font,font_entry->Font->tf_Message.mn_Node.ln_Name ? font_entry->Font->tf_Message.mn_Node.ln_Name : "Unnamed font",font_entry->File ? font_entry->File : (STRPTR)"Unknown source",font_entry->Line));
+                        CloseFont(font_entry->Font);
+                        font_entry->Closed=TRUE;
+                }
+        }
+        while((font_entry=FontEntries))
+        {
+                FontEntries=font_entry->NextFont;
+                BGUI_FreePoolMemDebug(font_entry,__FILE__,__LINE__);
+        }
 }
 
 makeproto struct TextFont *BGUI_OpenFontDebug(struct TextAttr *textAttr,STRPTR file,ULONG line)
 {
-	struct TextFont *font;
+        struct TextFont *font;
 
-	if((font=OpenFont(textAttr)))
-	{
-		struct FontEntry *font_entry;
+        if((font=OpenFont(textAttr)))
+        {
+                struct FontEntry *font_entry;
 
-		if((font_entry=BGUI_AllocPoolMemDebug(sizeof(*font_entry),__FILE__,__LINE__)))
-		{
-			font_entry->Font=font;
-			font_entry->Closed=FALSE;
-			font_entry->File=file;
-			font_entry->Line=line;
-			font_entry->Copy= *font;
-			ObtainSemaphore(&TaskLock);
-			font_entry->NextFont=FontEntries;
-			FontEntries=font_entry;
-			ReleaseSemaphore(&TaskLock);
-			font= &font_entry->Copy;
-		}
-		else
-		{
-			CloseFont(font);
-			font=NULL;
-		}
-	}
-	return(font);
+                if((font_entry=BGUI_AllocPoolMemDebug(sizeof(*font_entry),__FILE__,__LINE__)))
+                {
+                        font_entry->Font=font;
+                        font_entry->Closed=FALSE;
+                        font_entry->File=file;
+                        font_entry->Line=line;
+                        font_entry->Copy= *font;
+                        ObtainSemaphore(&TaskLock);
+                        font_entry->NextFont=FontEntries;
+                        FontEntries=font_entry;
+                        ReleaseSemaphore(&TaskLock);
+                        font= &font_entry->Copy;
+                }
+                else
+                {
+                        CloseFont(font);
+                        font=NULL;
+                }
+        }
+        return(font);
 }
 
 makeproto void BGUI_CloseFontDebug(struct TextFont *font,STRPTR file,ULONG line)
 {
-	struct FontEntry **font_entry,*free_font_entry;
+        struct FontEntry **font_entry,*free_font_entry;
 
-	if(font==NULL)
-	{
-		D(bug("***Attempt to close an NULL font (%s,%lu)\n",file ? file : (STRPTR)"Unknown source",line));
-		return;
-	}
-	ObtainSemaphore(&TaskLock);
-	for(font_entry=&FontEntries;*font_entry && (&((*font_entry)->Copy)!=font || (*font_entry)->Closed);font_entry=&(*font_entry)->NextFont);
-	if((free_font_entry=*font_entry)
-	&& &free_font_entry->Copy==font)
-	{
-		CloseFont(free_font_entry->Font);
-		free_font_entry->Closed=TRUE;
-	}
-	else
-		D(bug("***Attempt to close an unknown font (%lx) \"%s\" (%s,%lu)\n",font,font->tf_Message.mn_Node.ln_Name ? font->tf_Message.mn_Node.ln_Name : "Unnamed font",file ? file : (STRPTR)"Unknown source",line));
-	ReleaseSemaphore(&TaskLock);
+        if(font==NULL)
+        {
+                D(bug("***Attempt to close an NULL font (%s,%lu)\n",file ? file : (STRPTR)"Unknown source",line));
+                return;
+        }
+        ObtainSemaphore(&TaskLock);
+        for(font_entry=&FontEntries;*font_entry && (&((*font_entry)->Copy)!=font || (*font_entry)->Closed);font_entry=&(*font_entry)->NextFont);
+        if((free_font_entry=*font_entry)
+        && &free_font_entry->Copy==font)
+        {
+                CloseFont(free_font_entry->Font);
+                free_font_entry->Closed=TRUE;
+        }
+        else
+                D(bug("***Attempt to close an unknown font (%lx) \"%s\" (%s,%lu)\n",font,font->tf_Message.mn_Node.ln_Name ? font->tf_Message.mn_Node.ln_Name : "Unnamed font",file ? file : (STRPTR)"Unknown source",line));
+        ReleaseSemaphore(&TaskLock);
 }
 
 #else
@@ -407,19 +413,19 @@ makeproto UWORD AddTaskMember(void)
       {
          STRPTR command_name,insert;
          size_t offset;
-	 UWORD command_len;
-	 
+         UWORD command_len;
+         
          command_name=BADDR(Cli()->cli_CommandName);
          strcpy(buffer,"ENV:BGUI/");
          insert=buffer+sizeof("ENV:BGUI/")-1;
-	 #ifdef _AROS
+         #ifdef _AROS
          strcpy(insert,command_name);
-	 command_len = strlen(command_name);
-	 #else
+         command_len = strlen(command_name);
+         #else
          memcpy(insert,command_name+1,*command_name);
-	 command_len = *command_name;
+         command_len = *command_name;
          *(insert+ command_len)='\0';
-	 #endif
+         #endif
          if((offset=FilePart(insert)-insert)!=0)
            memcpy(insert,command_name+1+offset,command_len-offset);
          insert+= command_len-offset;
@@ -632,40 +638,40 @@ makeproto VOID SetWindowBounds(ULONG windowID, struct IBox *set)
  */
 //extern ASM APTR AsmCreatePool  ( REG(d0) ULONG, REG(d1) ULONG, REG(d2) ULONG, REG(a6) struct ExecBase * );
 extern ASM REGFUNC4(APTR, AsmCreatePool,
-	REGPARAM(D0, ULONG, a),
-	REGPARAM(D1, ULONG, b),
-	REGPARAM(D2, ULONG, c),
-	REGPARAM(A6, struct ExecBase *, sysbase));
+        REGPARAM(D0, ULONG, a),
+        REGPARAM(D1, ULONG, b),
+        REGPARAM(D2, ULONG, c),
+        REGPARAM(A6, struct ExecBase *, sysbase));
 
 
 //extern ASM APTR AsmAllocPooled ( REG(a0) APTR,  REG(d0) ULONG,                REG(a6) struct ExecBase * );
 extern ASM REGFUNC3(APTR, AsmAllocPooled,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(D0, ULONG, size),
-	REGPARAM(A6, struct ExecBase *, sysbase));
+        REGPARAM(A0, APTR, pool),
+        REGPARAM(D0, ULONG, size),
+        REGPARAM(A6, struct ExecBase *, sysbase));
 
 
 //extern ASM APTR AsmFreePooled  ( REG(a0) APTR,  REG(a1) APTR,  REG(d0) ULONG, REG(a6) struct ExecBase * );
 extern ASM REGFUNC4(APTR, AsmFreePooled,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A1, APTR, mem),
-	REGPARAM(D0, ULONG, size),
-	REGPARAM(A6, struct ExecBase *, sysbase));
+        REGPARAM(A0, APTR, pool),
+        REGPARAM(A1, APTR, mem),
+        REGPARAM(D0, ULONG, size),
+        REGPARAM(A6, struct ExecBase *, sysbase));
 
 
 //extern ASM APTR AsmDeletePool  ( REG(a0) APTR,                                REG(a6) struct ExecBase * );
 extern ASM REGFUNC2(APTR, AsmDeletePool,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A6, struct ExecBase *, sysbase));
+        REGPARAM(A0, APTR, pool),
+        REGPARAM(A6, struct ExecBase *, sysbase));
 
 /*
  * Create a memory pool.
  */
 //static SAVEDS ASM APTR BGUI_CreatePool(REG(d0) ULONG memFlags, REG(d1) ULONG puddleSize, REG(d2) ULONG threshSize)
 static SAVEDS ASM REGFUNC3(APTR, BGUI_CreatePool,
-	REGPARAM(D0, ULONG, memFlags),
-	REGPARAM(D1, ULONG, puddleSize),
-	REGPARAM(D2, ULONG, threshSize))
+        REGPARAM(D0, ULONG, memFlags),
+        REGPARAM(D1, ULONG, puddleSize),
+        REGPARAM(D2, ULONG, threshSize))
 {
    #ifdef ENHANCED
    /*
@@ -687,7 +693,7 @@ static SAVEDS ASM REGFUNC3(APTR, BGUI_CreatePool,
  */
 //static SAVEDS ASM VOID BGUI_DeletePool(REG(a0) APTR poolHeader)
 static SAVEDS ASM REGFUNC1(VOID, BGUI_DeletePool,
-	REGPARAM(A0, APTR, poolHeader))
+        REGPARAM(A0, APTR, poolHeader))
 {
 #ifdef DEBUG_BGUI
    struct BlockHeader **header;
@@ -725,15 +731,15 @@ static SAVEDS ASM REGFUNC1(VOID, BGUI_DeletePool,
 #ifdef DEBUG_BGUI
 //static SAVEDS ASM APTR BGUI_AllocPooledDebug(REG(a0) APTR poolHeader, REG(d0) ULONG memSize,REG(a1) STRPTR file,REG(d1) ULONG line)
 static SAVEDS ASM REGFUNC4(APTR, BGUI_AllocPooledDebug,
-	REGPARAM(A0, APTR, poolHeader),
-	REGPARAM(D0, ULONG, memSize),
-	REGPARAM(A1, STRPTR, file),
-	REGPARAM(D1, ULONG, line))
+        REGPARAM(A0, APTR, poolHeader),
+        REGPARAM(D0, ULONG, memSize),
+        REGPARAM(A1, STRPTR, file),
+        REGPARAM(D1, ULONG, line))
 #else
 //static SAVEDS ASM APTR BGUI_AllocPooled(REG(a0) APTR poolHeader, REG(d0) ULONG memSize)
 static SAVEDS ASM REGFUNC2(APTR, BGUI_AllocPooled,
-	REGPARAM(A0, APTR, poolHeader),
-	REGPARAM(D0, ULONG, memSize))
+        REGPARAM(A0, APTR, poolHeader),
+        REGPARAM(D0, ULONG, memSize))
 #endif
 {
    APTR memory;
@@ -760,18 +766,18 @@ static SAVEDS ASM REGFUNC2(APTR, BGUI_AllocPooled,
 #ifdef DEBUG_BGUI
    if(memory)
    {
-   		struct BlockHeader *header=memory;
+                struct BlockHeader *header=memory;
 
-   		memory=((char *)memory)+BLOCK_HEADER_OFFSET;
-   		header->NextBlock=MemoryBlocks;
-   		header->Address=memory;
-   		header->Size=size;
-   		header->PoolHeader=poolHeader;
-   		header->File=file;
-   		header->Line=line;
-   		MemoryBlocks=header;
-   		TrashMemory(((char *)memory)-MEMORY_WALL_SIZE,MEMORY_WALL_SIZE,MEMORY_WALL_TRASH);
-   		TrashMemory(((char *)memory)+size,MEMORY_WALL_SIZE,MEMORY_WALL_TRASH);
+                memory=((char *)memory)+BLOCK_HEADER_OFFSET;
+                header->NextBlock=MemoryBlocks;
+                header->Address=memory;
+                header->Size=size;
+                header->PoolHeader=poolHeader;
+                header->File=file;
+                header->Line=line;
+                MemoryBlocks=header;
+                TrashMemory(((char *)memory)-MEMORY_WALL_SIZE,MEMORY_WALL_SIZE,MEMORY_WALL_TRASH);
+                TrashMemory(((char *)memory)+size,MEMORY_WALL_SIZE,MEMORY_WALL_TRASH);
    }
 #endif
    return(memory);
@@ -783,17 +789,17 @@ static SAVEDS ASM REGFUNC2(APTR, BGUI_AllocPooled,
 #ifdef DEBUG_BGUI
 //static SAVEDS ASM VOID BGUI_FreePooledDebug(REG(a0) APTR poolHeader, REG(a1) APTR memory, REG(d1) ULONG memSize,REG(a2) STRPTR file,REG(d2) ULONG line)
 static SAVEDS ASM REGFUNC5(VOID, BGUI_FreePooledDebug,
-	REGPARAM(A0, APTR, poolHeader),
-	REGPARAM(A1, APTR, memory),
-	REGPARAM(D1, ULONG, memSize),
-	REGPARAM(A2, STRPTR, file),
-	REGPARAM(D2, ULONG, line))
+        REGPARAM(A0, APTR, poolHeader),
+        REGPARAM(A1, APTR, memory),
+        REGPARAM(D1, ULONG, memSize),
+        REGPARAM(A2, STRPTR, file),
+        REGPARAM(D2, ULONG, line))
 #else
 //static SAVEDS ASM VOID BGUI_FreePooled(REG(a0) APTR poolHeader, REG(a1) APTR memory, REG(d1) ULONG memSize)
 static SAVEDS ASM REGFUNC3(VOID, BGUI_FreePooled,
-	REGPARAM(A0, APTR, poolHeader),
-	REGPARAM(A1, APTR, memory),
-	REGPARAM(D1, ULONG, memSize))
+        REGPARAM(A0, APTR, poolHeader),
+        REGPARAM(A1, APTR, memory),
+        REGPARAM(D1, ULONG, memSize))
 #endif
 {
 #ifdef DEBUG_BGUI
@@ -802,7 +808,7 @@ static SAVEDS ASM REGFUNC3(VOID, BGUI_FreePooled,
    for(header= &MemoryBlocks;*header;header= &(*header)->NextBlock)
    {
       if((*header)->Address==memory)
-      	break;
+        break;
    }
    if(*header==NULL)
    {
@@ -811,7 +817,7 @@ static SAVEDS ASM REGFUNC3(VOID, BGUI_FreePooled,
    }
    else
    {
-   	  if((*header)->PoolHeader!=poolHeader)
+          if((*header)->PoolHeader!=poolHeader)
       {
          D(bug("***Attempt to free a memory block from a wrong memory pool (%lx) (%s,%lu)\n",poolHeader,file ? file : (STRPTR)"Unknown file", line));
          D(bug("***The original memory pool was (%lx) (%s,%lu)\n",(*header)->PoolHeader,(*header)->File ? (*header)->File : (STRPTR)"Unknown file", (*header)->Line));
@@ -857,15 +863,15 @@ static SAVEDS ASM REGFUNC3(VOID, BGUI_FreePooled,
 #ifdef DEBUG_BGUI
 //static ASM APTR AllocVecMemDebug(REG(a0) APTR mempool, REG(d0) ULONG size,REG(a1) STRPTR file, REG(d1) ULONG line)
 static ASM REGFUNC4(APTR, AllocVecMemDebug,
-	REGPARAM(A0, APTR, mempool),
-	REGPARAM(D0, ULONG, size),
-	REGPARAM(A1, STRPTR, file),
-	REGPARAM(D1, ULONG, line))
+        REGPARAM(A0, APTR, mempool),
+        REGPARAM(D0, ULONG, size),
+        REGPARAM(A1, STRPTR, file),
+        REGPARAM(D1, ULONG, line))
 #else
 //static ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size)
 static ASM REGFUNC2(APTR, AllocVecMem,
-	REGPARAM(A0, APTR, mempool),
-	REGPARAM(D0, ULONG, size))
+        REGPARAM(A0, APTR, mempool),
+        REGPARAM(D0, ULONG, size))
 #endif
 {
    ULONG    *mem;
@@ -905,15 +911,15 @@ static ASM REGFUNC2(APTR, AllocVecMem,
 #ifdef DEBUG_BGUI
 //static ASM VOID FreeVecMemDebug(REG(a0) APTR pool, REG(a1) APTR memptr, REG(a2) STRPTR file, REG(d0) ULONG line)
 static ASM REGFUNC4(VOID, FreeVecMemDebug,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A1, APTR, memptr),
-	REGPARAM(A2, STRPTR, file),
-	REGPARAM(D0, ULONG, line))
+        REGPARAM(A0, APTR, pool),
+        REGPARAM(A1, APTR, memptr),
+        REGPARAM(A2, STRPTR, file),
+        REGPARAM(D0, ULONG, line))
 #else
 //static ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr)
 static ASM REGFUNC2(VOID, FreeVecMem,
-	REGPARAM(A0, APTR, pool),
-	REGPARAM(A1, APTR, memptr))
+        REGPARAM(A0, APTR, pool),
+        REGPARAM(A1, APTR, memptr))
 #endif
 {
    ULONG    *mem = (ULONG *)memptr;
@@ -957,7 +963,7 @@ SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
 #endif
 
   D(bug("BGUI_AllocPoolMem is being called from unknown location\n"));
-	return(BGUI_AllocPoolMemDebug(size,__FILE__,__LINE__));
+        return(BGUI_AllocPoolMemDebug(size,__FILE__,__LINE__));
 
 #ifdef _AROS
    AROS_LIBFUNC_EXIT
@@ -995,7 +1001,7 @@ SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG size, REG(a0) STRPTR file, 
 #endif
 
   bug("BGUI_AllocPoolMemDebug is being called from (%s,%lu)\n",file ? file : (STRPTR)"unknown",line);
-	return(BGUI_AllocPoolMem(size));
+        return(BGUI_AllocPoolMem(size));
 
 #ifdef _AROS
    AROS_LIBFUNC_EXIT
@@ -1049,106 +1055,96 @@ makeproto SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
  * Free memory from the pool.
  */
 #ifdef DEBUG_BGUI
-#ifdef _AROS
-AROS_LH1(VOID, BGUI_FreePoolMem,
-    AROS_LHA(APTR, memPtr, A0),
-    struct Library *, BGUIBase, 13, BGUI)
+    #ifdef _AROS
+    AROS_LH1(VOID, BGUI_FreePoolMem,
+        AROS_LHA(APTR, memPtr, A0),
+        struct Library *, BGUIBase, 13, BGUI)
+    #else
+    SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
+    #endif
+    {
+    #ifdef _AROS
+       AROS_LIBFUNC_INIT
+       AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+    #endif
+
+      D(bug("BGUI_FreePoolMem is being called from unknown location\n"));
+            BGUI_FreePoolMemDebug(memPtr,__FILE__,__LINE__);
+
+    #ifdef _AROS
+       AROS_LIBFUNC_EXIT
+    #endif
+    }
+
+    #ifdef _AROS
+    makearosproto
+    AROS_LH3(VOID, BGUI_FreePoolMemDebug,
+        AROS_LHA(APTR, memPtr, A0),
+        AROS_LHA(STRPTR, file, A1),
+        AROS_LHA(ULONG, line, D0),
+        struct Library *, BGUIBase, 32, BGUI)
+    #else
+    makeproto SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR memPtr, REG(a1) STRPTR file, REG(d0) ULONG line)
+    #endif
+    {
+    #ifdef _AROS
+       AROS_LIBFUNC_INIT
+       AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+    #endif
+
+      bug("BGUI_FreePoolMemDebug is being called from (%s,%lu)\n",file ? file : (STRPTR)"unknown",line);
+            BGUI_FreePoolMem(memPtr);
+
+    #ifdef _AROS
+       AROS_LIBFUNC_EXIT
+    #endif
+    }
 #else
-SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
-#endif
-{
-#ifdef _AROS
-   AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
+    #ifdef _AROS
+    makearosproto
+    AROS_LH1(VOID, BGUI_FreePoolMem,
+        AROS_LHA(APTR, memPtr, A0),
+        struct Library *, BGUIBase, 13, BGUI)
+    #else
+    makeproto SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
+    #endif
+    {
+    #ifdef _AROS
+       AROS_LIBFUNC_INIT
+       AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
+    #endif
 
-  D(bug("BGUI_FreePoolMem is being called from unknown location\n"));
-	BGUI_FreePoolMemDebug(memPtr,__FILE__,__LINE__);
+       if (memPtr)
+       {
+          /*
+           * Lock the list.
+           */
+          ObtainSemaphore(&TaskLock);
 
-#ifdef _AROS
-   AROS_LIBFUNC_EXIT
+          /*
+           * Free the memory.
+           */
+    #ifdef DEBUG_BGUI
+          FreeVecMemDebug(MemPool, memPtr, file, line);
+    #else
+          FreeVecMem(MemPool, memPtr);
+    #endif
+
+          /*
+           * Unlock the list.
+           */
+          ReleaseSemaphore(&TaskLock);
+       }
+    #ifdef DEBUG_BGUI
+       else
+          D(bug("*** Attempt to free memory with a NULL pointer\n"));
+    #endif
+
+    #ifdef _AROS
+       AROS_LIBFUNC_EXIT
+    #endif
+    }
 #endif
-}
-
-#ifdef _AROS
-makearosproto
-AROS_LH3(VOID, BGUI_FreePoolMemDebug,
-    AROS_LHA(APTR, memPtr, A0),
-    AROS_LHA(STRPTR, file, A1),
-    AROS_LHA(ULONG, line, D0),
-    struct Library *, BGUIBase, 32, BGUI)
-#else
-makeproto SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR memPtr, REG(a1) STRPTR file, REG(d0) ULONG line)
-#endif
-{
-#else
-//SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR memPtr, REG(a1) STRPTR file, REG(d0) ULONG line)
-AROS_LH3(VOID, BGUI_FreePoolMemDebug,
-    AROS_LHA(APTR, memPtr, A0),
-    AROS_LHA(STRPTR, file, A1),
-    AROS_LHA(ULONG, line, D0),
-    struct Library *, BGUIBase, 32, BGUI)
-{
-#ifdef _AROS
-   AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
-
-  bug("BGUI_FreePoolMemDebug is being called from (%s,%lu)\n",file ? file : (STRPTR)"unknown",line);
-	BGUI_FreePoolMem(memPtr);
-
-#ifdef _AROS
-   AROS_LIBFUNC_EXIT
-#endif
-}
-
-#ifdef _AROS
-makearosproto
-AROS_LH1(VOID, BGUI_FreePoolMem,
-    AROS_LHA(APTR, memPtr, A0),
-    struct Library *, BGUIBase, 13, BGUI)
-#else
-makeproto SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
-#endif
-{
-#endif
-
-#ifdef _AROS
-   AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
-#endif
-
-   if (memPtr)
-   {
-      /*
-       * Lock the list.
-       */
-      ObtainSemaphore(&TaskLock);
-
-      /*
-       * Free the memory.
-       */
-#ifdef DEBUG_BGUI
-      FreeVecMemDebug(MemPool, memPtr, file, line);
-#else
-      FreeVecMem(MemPool, memPtr);
-#endif
-
-      /*
-       * Unlock the list.
-       */
-      ReleaseSemaphore(&TaskLock);
-   }
-#ifdef DEBUG_BGUI
-   else
-      D(bug("*** Attempt to free memory with a NULL pointer\n"));
-#endif
-
-#ifdef _AROS
-   AROS_LIBFUNC_EXIT
-#endif
-}
-
 /*
  *  Add an ID to the list.
  *
@@ -1160,9 +1156,9 @@ makeproto SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
 
 //makeproto ASM BOOL AddIDReport(REG(a0) struct Window *window, REG(d0) ULONG id, REG(a1) struct Task *task)
 makeproto ASM REGFUNC3(BOOL, AddIDReport,
-	REGPARAM(A0, struct Window *, window),
-	REGPARAM(D0, ULONG, id),
-	REGPARAM(A1, struct Task *, task))
+        REGPARAM(A0, struct Window *, window),
+        REGPARAM(D0, ULONG, id),
+        REGPARAM(A1, struct Task *, task))
 {
    RID         *rid;
    TM          *tm;
@@ -1206,7 +1202,7 @@ makeproto ASM REGFUNC3(BOOL, AddIDReport,
  */
 //makeproto ASM ULONG GetIDReport(REG(a0) struct Window *window)
 makeproto ASM REGFUNC1(ULONG, GetIDReport,
-	REGPARAM(A0, struct Window *, window))
+        REGPARAM(A0, struct Window *, window))
 {
    RID         *rid;
    TM          *tm;
@@ -1291,7 +1287,7 @@ makeproto struct Window *GetFirstIDReportWindow(void)
  */
 //makeproto ASM VOID RemoveIDReport(REG(a0) struct Window *window)
 makeproto ASM REGFUNC1(VOID, RemoveIDReport,
-	REGPARAM(A0, struct Window *, window))
+        REGPARAM(A0, struct Window *, window))
 {
    RID      *rid, *succ;
    TM       *tm;
@@ -1329,8 +1325,8 @@ makeproto ASM REGFUNC1(VOID, RemoveIDReport,
  */
 //makeproto ASM VOID AddWindow(REG(a0) Object *wo, REG(a1) struct Window *win)
 makeproto ASM REGFUNC2(VOID, AddWindow,
-	REGPARAM(A0, Object *, wo),
-	REGPARAM(A1, struct Window *, win))
+        REGPARAM(A0, Object *, wo),
+        REGPARAM(A1, struct Window *, win))
 {
    WNODE       *wn;
 
@@ -1367,7 +1363,7 @@ makeproto ASM REGFUNC2(VOID, AddWindow,
  */
 //makeproto ASM VOID RemWindow(REG(a0) Object *wo)
 makeproto ASM REGFUNC1(VOID, RemWindow,
-	REGPARAM(A0, Object *, wo))
+        REGPARAM(A0, Object *, wo))
 {
    WNODE       *wn;
 
@@ -1409,7 +1405,7 @@ makeproto ASM REGFUNC1(VOID, RemWindow,
  * Find the window located under the mouse.
  */
 makeproto ASM REGFUNC1(Object *, WhichWindow,
-	REGPARAM(A0, struct Screen *, screen))
+        REGPARAM(A0, struct Screen *, screen))
 {
    Object         *win = NULL;
    struct Layer   *layer;
@@ -1717,7 +1713,7 @@ makeproto struct TagItem *DefTagList(ULONG id, struct TagItem *tags)
 
 //makeproto SAVEDS ASM ULONG BGUI_CountTagItems(REG(a0) struct TagItem *tags)
 makeproto SAVEDS ASM REGFUNC1(ULONG, BGUI_CountTagItems,
-	REGPARAM(A0, struct TagItem *, tags))
+        REGPARAM(A0, struct TagItem *, tags))
 {
    struct TagItem *tstate = tags;
    ULONG n = 0;
@@ -1729,8 +1725,8 @@ makeproto SAVEDS ASM REGFUNC1(ULONG, BGUI_CountTagItems,
 
 //makeproto SAVEDS ASM struct TagItem *BGUI_MergeTagItems(REG(a0) struct TagItem *tags1, REG(a1) struct TagItem *tags2)
 makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_MergeTagItems,
-	REGPARAM(A0, struct TagItem *, tags1),
-	REGPARAM(A1, struct TagItem *, tags2))
+        REGPARAM(A0, struct TagItem *, tags1),
+        REGPARAM(A1, struct TagItem *, tags2))
 {
    struct TagItem *tags, *t, *tag, *tstate1 = tags1, *tstate2 = tags2;
 
@@ -1756,8 +1752,8 @@ makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_MergeTagItems,
 
 //makeproto SAVEDS ASM struct TagItem *BGUI_CleanTagItems(REG(a0) struct TagItem *tags, REG(d0) LONG dir)
 makeproto SAVEDS ASM REGFUNC2(struct TagItem *, BGUI_CleanTagItems,
-	REGPARAM(A0, struct TagItem *, tags),
-	REGPARAM(D0, LONG, dir))
+        REGPARAM(A0, struct TagItem *, tags),
+        REGPARAM(D0, LONG, dir))
 {
    struct TagItem *tstate = tags, *tag, *tag2;
 
