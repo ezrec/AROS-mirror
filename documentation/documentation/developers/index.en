@@ -6,6 +6,7 @@ Developers Resources
 + `CVS access and usage`__
 + `How to compile`__
 + `Applications development manual`__
++ `Zune Applications development manual`__
 + `System development manual`__
 + `Debugging manual`__
 + `Specifications`__
@@ -17,6 +18,7 @@ __ contribute
 __ cvs
 __ compiling
 __ application-development
+__ zune-application-development
 __ system-development
 __ debugging
 __ specifications/index

@@ -45,6 +45,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 A( _N['working-with-cvs'], href='%(BASE)sdocumentation/developers/cvs.php' ),
                 A( _N['compiling'],  href='%(BASE)sdocumentation/developers/compiling.php' ),
                 A( _N['application-development-manual'], href='%(BASE)sdocumentation/developers/application-development.php' ),
+                A( _N['zune-application-development-manual'], href='%(BASE)sdocumentation/developers/zune-application-development.php' ),
                 A( _N['system-development-manual'], href='%(BASE)sdocumentation/developers/system-development.php' ),
                 A( _N['debugging-manual'], href='%(BASE)sdocumentation/developers/debugging.php' ),
                 #A( _N['reference'], href='%(BASE)sdocumentation/developers/reference' ),

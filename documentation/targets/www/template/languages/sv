@@ -29,6 +29,7 @@ bug-tracker:      Bug Tracker
 working-with-cvs: Arbeta med CVS
 compiling:        Kompilering
 application-development-manual: Manual för applikationsutveckling
+zune-application-development-manual: Manual för Zune applikationsutveckling
 system-development-manual:      Manual för systemutveckling
 debugging-manual: Manual för debugging
 reference:        Referens
