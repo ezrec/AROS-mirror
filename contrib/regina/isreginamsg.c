@@ -3,9 +3,11 @@
     $Id$
 */
 
+#define timeval timeval_aros
 #include <exec/types.h>
 #include <rexx/storage.h>
 #include <proto/rexxsyslib.h>
+#undef timeval
 
 #include "rexx.h"
 
