@@ -128,7 +128,9 @@ struct XPR_IO {
 /*
 *   The functions
 */
-
+#ifdef __AROS__
+#include <proto/xpr.h>
+#else
 LONG XProtocolCleanup(struct XPR_IO *);
 LONG XProtocolSetup(struct XPR_IO *);
 LONG XProtocolSend(struct XPR_IO *);
@@ -145,3 +147,4 @@ LONG XProtocolUserMon(struct XPR_IO *,APTR,LONG,LONG);
 #pragma libcall XProtocolBase XProtocolHostMon 36 109804
 #pragma libcall XProtocolBase XProtocolUserMon 3c 109804
 #endif	/* NO_PRAGMAS */
+#endif

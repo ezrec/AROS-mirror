@@ -94,7 +94,11 @@ extern struct IntuitionBase	*IntuitionBase;
 	 */
 
 LONG SAVE_DS STACKARGS
+#ifndef __AROS__
 Start(VOID)
+#else
+main(VOID)
+#endif
 {
 	extern LONG Main(VOID);
 
@@ -102,8 +106,9 @@ Start(VOID)
 
 		/* Get SysBase. */
 
+#ifndef __AROS__
 	SysBase = *(struct ExecBase **)4;
-
+#endif
 		/* Is the minimum required processor type and Kickstart 2.04 (or higher)
 		 * available?
 		 */

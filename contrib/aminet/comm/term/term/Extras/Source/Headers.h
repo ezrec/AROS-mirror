@@ -52,6 +52,17 @@
 #include <devices/console.h>
 #include <devices/conunit.h>
 #include <devices/serial.h>
+
+#ifdef __AROS__
+#warning Some AROS-specific defines that need to go into other files
+#define SER_STATF_COMCD		(1<<1)
+#define SER_STATF_COMDSR	(1<<2)
+#define SER_STATF_COMRTS	(1<<3)
+#define SER_STATF_COMCTS	(1<<4)
+#define SER_STATF_COMDTR	(1<<5)
+
+#endif
+
 #include <devices/audio.h>
 #include <devices/input.h>
 #include <devices/timer.h>

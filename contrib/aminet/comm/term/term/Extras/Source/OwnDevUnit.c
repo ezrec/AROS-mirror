@@ -24,7 +24,9 @@ UnlockDevice()
 {
 	if(DeviceLocked)
 	{
+#ifndef __AROS__
 		FreeDevUnit(DeviceName,UnitNumber);
+#endif
 		DeviceLocked = FALSE;
 	}
 }
@@ -38,6 +40,7 @@ LockDevice(STRPTR Device,LONG Unit,STRPTR ErrorString,LONG ErrorStringSize)
 	{
 		STRPTR Error;
 
+#ifndef __AROS__
 		if(Error = AttemptDevUnit(Device,Unit,TermIDString,OwnDevBit))
 		{
 				/* Check for the type of error, if any */
@@ -53,6 +56,7 @@ LockDevice(STRPTR Device,LONG Unit,STRPTR ErrorString,LONG ErrorStringSize)
 			return(FALSE);
 		}
 		else
+#endif
 		{
 			LimitedStrcpy(sizeof(DeviceName),DeviceName,Device);
 

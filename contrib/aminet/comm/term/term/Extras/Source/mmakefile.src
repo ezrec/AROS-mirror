@@ -2,6 +2,7 @@ include $(TOP)/config/make.cfg
 
 %define_libs
 
+USER_DEFINES = -DINCLUDEALL -DCPU_ANY
 CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(CONTRIBDIR)/aminet
@@ -9,13 +10,13 @@ DESTDIR := $(CONTRIBDIR)/aminet
 %make_common_setup
 
 FILES := \
+	About \
+	Accountant \
+	AmigaGuide \
 	ARexx \
 	ARexxCommands \
 	ASCIIPanel \
 	ASCIITransfer \
-	About \
-	Accountant \
-	AmigaGuide \
 	Beep \
 	Boxes \
 	Buffer \
@@ -48,14 +49,12 @@ FILES := \
 	FastMacros \
 	FixPath \
 	Flow \
-	Headers \
 	HotkeyPanel \
 	Hotkeys \
 	ImportPanel \
 	InfoWindow \
 	Init \
 	Job \
-	JobHandler \
 	KeyConvert \
 	LibPanel \
 	LibPanelPlus \
@@ -116,17 +115,16 @@ FILES := \
 	VSPrintf \
 	Verify \
 	WindowMarker \
+	XEM \
 	zmodem \
 	Data \
 	Emulation \
 	EmulationSpecial \
 	Identify \
-	Marker \
 	Start \
 	Main \
 	Serial \
 	SerialIO \
-	XEM \
 	Speech \
 	SpeechPanel \
 	\
@@ -139,19 +137,23 @@ FILES := \
 	\
 	Matrix \
 	XPR \
+	\
+	StackCall \
+	VersionTag
 
 
 
 SRCS := $(foreach f, $(FILES), $(f).c )
 OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+DEPS := $(foreach f, $(FILES), $(OBJDIR)/$(f).d)
 
-LIBS := -L$(LIBDIR) -larosc_shared -lamiga -larossupport -larosm -lautoinit
+LIBS := -L$(LIBDIR) -lgtlayout -larosc_shared -lamiga -larossupport -larosm -larosc_shared -lautoinit
 
 EXE := $(DESTDIR)/Term
 
 .PHONY : all clean
 
-#MM aminet-comm-term-term : aminet-dev-gui-gtlayout setup-aminet-comm-term-term
+#MM aminet-comm-term-term : aminet-dev-gui-gtlayout aminet-comm-term-xprz aminet-comm-term-xem setup-aminet-comm-term-term
 aminet-comm-term-term 	: $(OBJS) $(EXE)
 	@$(NOP)
 
@@ -168,3 +170,6 @@ clean-aminet :
 
 $(OBJDIR)/%.o : %.c 
 	%compile_q
+
+%common
+%include_deps

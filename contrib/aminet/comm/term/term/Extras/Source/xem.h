@@ -112,6 +112,10 @@ struct XEM_IO
 	LONG		(* ASM xem_process_macrokeys)(REG(a0) struct XEmulatorMacroKey *);
 };
 
+#ifdef __AROS__
+#include <proto/xem.h>
+#else
+
 BOOL	XEmulatorSetup(struct XEM_IO *io);
 BOOL	XEmulatorOpenConsole(struct XEM_IO *io);
 VOID	XEmulatorCloseConsole(struct XEM_IO *io);
@@ -149,3 +153,5 @@ BOOL	XEmulatorPreferences(struct XEM_IO *xem_io, STRPTR fileName, ULONG mode);
 #pragma libcall XEmulatorBase XEmulatorInfo 78 802
 #pragma libcall XEmulatorBase XEmulatorPreferences 7E 9803
 #endif	/* NO_PRAGMAS */
+
+#endif

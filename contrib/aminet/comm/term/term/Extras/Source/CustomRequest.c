@@ -82,8 +82,8 @@ VOID SAVE_DS ASM
 CustomStuffText(REG(a3) LONG *Data,REG(d0) UBYTE Char)
 #else
 AROS_UFH2(VOID, CustomStuffText,
- AROS_UFHA(LONG *         , Data, A3),
- AROS_UFHA(UBYTE          , Char, D0))
+ AROS_UFHA(UBYTE          , Char, D0),
+ AROS_UFHA(LONG *         , Data, A3))
 #endif
 {
 	struct IntuiText *IText;
@@ -148,8 +148,8 @@ VOID ASM
 CustomCountChar(REG(a3) LONG *Count,REG(d0) UBYTE Char)
 #else
 AROS_UFH2(VOID, CustomCountChar,
- AROS_UFHA(LONG *        , Count, A3),
- AROS_UFHA(UBYTE         , Char , D0))
+ AROS_UFHA(UBYTE         , Char , D0),
+ AROS_UFHA(LONG *        , Count, A3))
 #endif
 {
 	if(Char == Count[2] || Char == '\0')	/* Count the number of lines */

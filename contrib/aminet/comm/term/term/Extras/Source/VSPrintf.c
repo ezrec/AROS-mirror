@@ -24,8 +24,8 @@ VOID ASM
 StuffChar(REG(a3) struct FormatContext *Context,REG(d0) UBYTE Char)
 #else
 AROS_UFH2(VOID, StuffChar,
- AROS_UFHA(struct FormatContext *, Context, A3),
- AROS_UFHA(UBYTE                 , Char   , D0))
+ AROS_UFHA(UBYTE                 , Char   , D0),
+ AROS_UFHA(struct FormatContext *, Context, A3))
 #endif
 {
 	if(Context->Size > 0)
@@ -112,7 +112,8 @@ SPrintf(STRPTR Buffer,STRPTR FormatString,...)
 VOID ASM
 CountChar(REG(a3) ULONG *Count)
 #else
-AROS_UFH1(VOID, CountChar,
+AROS_UFH2(VOID, CountChar,
+ AROS_UFHA(UBYTE          , dummy, D0),
  AROS_UFHA(ULONG *        , Count, A3))
 #endif
 {

@@ -425,6 +425,8 @@ IsBlockMappedDevice(struct MsgPort *Handler)
 
 	while(Entry = NextDosEntry(Entry,LDF_DEVICES))
 	{
+#warning Deactivated to make it compile for AROS.
+#ifndef __AROS__
 		if(Entry->dol_Task == Handler)
 		{
 			struct FileSysStartupMsg *Startup = (struct FileSysStartupMsg *)BADDR(Entry->dol_misc.dol_handler.dol_Startup);
@@ -464,6 +466,7 @@ IsBlockMappedDevice(struct MsgPort *Handler)
 				}
 			}
 		}
+#endif
 	}
 
 	UnLockDosList(LDF_DEVICES | LDF_READ);

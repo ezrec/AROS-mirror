@@ -15,9 +15,9 @@
 
 #ifdef __AROS__
 #include <aros/asmcall.h>
-#ifdef Dispatch
-#undef Dispatch
-#endif
+# ifdef Dispatch
+#  undef Dispatch
+# endif
 AROS_UFP3(STATIC ULONG, Dispatch,
  AROS_UFPA(Class *        , class , A0),
  AROS_UFPA(Object *       , obj, A2),
@@ -178,12 +178,12 @@ NotifyIndex(Class *class,Object *object,struct GadgetInfo *GInfo,struct opUpdate
 STATIC BOOL
 SetMethod(Class *class,Object *object,struct opSet *SetInfo)
 {
-	struct TagItem *Tag;
+	struct TagItem * Tag_;
 	MatrixInfo *Info;
 
 	Info = INST_DATA(class,object);
 
-	if(Tag = FindTagItem(MIA_Index,SetInfo->ops_AttrList))
+	if(Tag_ = FindTagItem(MIA_Index,SetInfo->ops_AttrList))
 	{
 		struct RastPort *RPort;
 
@@ -192,7 +192,7 @@ SetMethod(Class *class,Object *object,struct opSet *SetInfo)
 			UWORD *Pens;
 			LONG Index;
 
-			Index	= (LONG)Tag->ti_Data;
+			Index	= (LONG)Tag_->ti_Data;
 			Pens	= SetInfo->ops_GInfo->gi_DrInfo->dri_Pens;
 
 			SetFont(RPort,Info->Font);

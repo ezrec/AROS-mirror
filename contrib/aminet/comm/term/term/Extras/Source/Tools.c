@@ -13,6 +13,17 @@
 #include "Global.h"
 #endif
 
+#ifdef __AROS__
+#include <aros/asmcall.h>
+# ifdef Dispatch
+#  undef Dispatch
+# endif
+AROS_UFP3(VOID, Dispatch,
+ AROS_UFPA(struct Hook *        , UnusedHook , A0),
+ AROS_UFPA(struct RastPort *    , RPort, A2),
+ AROS_UFPA(LayerMsg *           , Bounds, A1));
+#endif
+
 	/* Current timer state. */
 
 STATIC BOOL TimerRunning;
@@ -591,11 +602,14 @@ GoodStream(BPTR Stream)
 	{
 		struct FileHandle *Handle = (struct FileHandle *)BADDR(Stream);
 
+#warning Deactivated to make it compile for AROS.
+#ifndef __AROS__
 		if(Handle->fh_Type)
 		{
 			if(IsInteractive(Stream))
 				return(TRUE);
 		}
+#endif
 	}
 
 	return(FALSE);
@@ -2271,7 +2285,7 @@ SplitFileName(STRPTR FullName,STRPTR *FileName,STRPTR DrawerName)
 VOID SAVE_DS ASM
 BackfillRoutine(REG(a0) struct Hook *UnusedHook,REG(a2) struct RastPort *RPort,REG(a1) LayerMsg *Bounds)
 #else
-AROS_UFH3(VOID, Dispatch,
+AROS_UFH3(VOID, BackfillRoutine,
  AROS_UFHA(struct Hook *        , UnusedHook , A0),
  AROS_UFHA(struct RastPort *    , RPort, A2),
  AROS_UFHA(LayerMsg *           , Bounds, A1))
@@ -2767,6 +2781,8 @@ IsAssign(STRPTR Name)
 				 * BCPL to `C' style string.
 				 */
 
+#warning Deactivated to make it compile for AROS.
+#ifndef __AROS__
 			AssignName = (STRPTR)BADDR(DosList->dol_Name);
 
 				/* Does the name length match? */
@@ -2782,6 +2798,7 @@ IsAssign(STRPTR Name)
 					break;
 				}
 			}
+#endif
 		}
 
 			/* Unlock the list of assignments. */
@@ -3169,9 +3186,12 @@ LaunchProcess(STRPTR Name,VOID (*Entry)(VOID),BPTR Stream)
 {
 	struct MsgPort *ConsoleTask;
 
+#warning Deactivated to make it compile for AROS.
+#ifndef __AROS__
 	if(Stream && GoodStream(Stream))
 		ConsoleTask = ((struct FileHandle *)BADDR(Stream))->fh_Type;
 	else
+#endif
 		ConsoleTask = NULL;
 
 	return(CreateNewProcTags(
@@ -3834,10 +3854,10 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 		struct MemList	MemList;
 		struct MemEntry	MemEntry;
 	};
-
 	struct MemList *LocalMemList,*MemList;
 	struct FatMemList FatMemList;
 	struct Task *Task;
+
 
 		/* Limit the Task priority to legal values. */
 
@@ -3924,8 +3944,17 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 			}
 
 				/* Try to launch the Task... */
-
+#ifdef AROS_BUG_FIXED
 			Task = AddTask(Task,(APTR)Entry,NULL);
+#else
+			if (0 == NumArgs) {
+				kprintf("AROS-term: Launched task with name '%s'!\n",Name);
+				Task = AddTask(Task,(APTR)Entry,NULL);
+			} else {
+				kprintf("AROS-term: Supposed to launch task with name '%s', but cannot do it!\n",Name);
+				Task = NULL;
+			}
+#endif
 		}
 
 			/* Check if the Task could be launched and clean
@@ -4004,6 +4033,8 @@ SpeechSynthesizerAvailable()
 
 	if(LocalTranslatorBase = OpenLibrary("translator.library",0))
 	{
+#warning Deactivated to make it compile for AROS.
+#ifndef __AROS__
 		struct narrator_rb NarratorRequest;
 
 		memset(&NarratorRequest,0,sizeof(NarratorRequest));
@@ -4017,6 +4048,7 @@ SpeechSynthesizerAvailable()
 		}
 
 		CloseLibrary(LocalTranslatorBase);
+#endif
 	}
 
 	return(SpeechAvailable);

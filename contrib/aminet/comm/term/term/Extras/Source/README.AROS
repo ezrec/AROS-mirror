@@ -1,0 +1,6 @@
+Some code need to be deactivated to make it compile for AROS. I used
+#ifndef/#ifdef __AROS__ to deactivate code.
+
+Some code would not allow it to run properly due to other bugs. I
+deactivated those parts with AROS_BUG_FIXED.
+

@@ -196,8 +196,10 @@ FileBufferServer(VOID)
 		}
 		else
 		{
+#warning Deactivated to make it compile for AROS.
+#ifndef __AROS__
 			Buffer->InfoPort = ((struct FileHandle *)BADDR(Buffer->FileHandle))->fh_Type;
-
+#endif
 			ObtainInfo(Buffer);
 
 			Signal((struct Task *)Buffer->Caller,SIG_HANDSHAKE);
@@ -554,8 +556,10 @@ OpenFileSimple(STRPTR Name,STRPTR AccessMode)
 
 			if(Buffer->WriteAccess)
 			{
+#warning Deactivated to make it compile for AROS.
+#ifndef __AROS__
 				Buffer->InfoPort = ((struct FileHandle *)BADDR(Buffer->FileHandle))->fh_Type;
-
+#endif
 				ObtainInfo(Buffer);
 			}
 

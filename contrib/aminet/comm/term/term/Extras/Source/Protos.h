@@ -383,8 +383,13 @@ VOID Decrypt(UBYTE *Source, LONG SourceLen, UBYTE *Destination, UBYTE *Key, LONG
 BOOL CursorPanelConfig(struct Configuration *LocalConfig, struct CursorKeys *CursorKeys, STRPTR LastCursorKeys, struct Window *Parent, BOOL *ChangedPtr);
 
 /* CustomRequest.c */
+#ifdef __AROS__
+VOID SAVE_DS ASM CustomStuffText(REG(d0) UBYTE Char, REG(a3) LONG *Data);
+VOID ASM CustomCountChar(REG(d0) UBYTE Char, REG(a3) LONG *Count);
+#else
 VOID SAVE_DS ASM CustomStuffText(REG(a3) LONG *Data, REG(d0) UBYTE Char);
 VOID ASM CustomCountChar(REG(a3) LONG *Count, REG(d0) UBYTE Char);
+#endif
 LONG ShowInfo(struct Window *Parent, STRPTR Title, STRPTR Continue, STRPTR FormatString, ...);
 
 /* DatePanel.c */
@@ -1225,12 +1230,20 @@ BOOL FindProgram(struct Window *Parent, STRPTR Program, LONG *Error);
 BOOL FindLibDev(struct Window *Parent, STRPTR File, LONG Type, LONG *Error);
 
 /* VSPrintf.c */
+#ifdef __AROS__
+VOID ASM StuffChar(REG(d0) UBYTE Char, REG(a3) struct FormatContext *Context);
+#else
 VOID ASM StuffChar(REG(a3) struct FormatContext *Context, REG(d0) UBYTE Char);
+#endif
 VOID LimitedVSPrintf(LONG Size, STRPTR Buffer, STRPTR FormatString, va_list VarArgs);
 VOID LimitedSPrintf(LONG Size, STRPTR Buffer, STRPTR FormatString, ...);
 VOID VSPrintf(STRPTR Buffer, STRPTR FormatString, va_list VarArgs);
 VOID SPrintf(STRPTR Buffer, STRPTR FormatString, ...);
+#ifdef __AROS__
+VOID ASM CountChar(REG(d0) UBYTE dummy,REG(a3) ULONG *Count);
+#else
 VOID ASM CountChar(REG(a3) ULONG *Count);
+#endif
 ULONG GetFormatLength(STRPTR FormatString, va_list VarArgs);
 ULONG GetFormatLengthArgs(STRPTR FormatString, ...);
 VOID LimitedStrcat(LONG Size, STRPTR To, STRPTR From);

@@ -91,8 +91,10 @@ LaunchEntry(VOID)
 		if(!OutputStream)
 		{
 			SelectInput(InputStream);
-
+#warning Deactivated to make it compile for AROS.
+#ifndef __AROS__
 			SetConsoleTask(((struct FileHandle *)BADDR(InputStream))->fh_Type);
+#endif
 
 			if(!(OutputStream = Open("CONSOLE:",MODE_NEWFILE)))
 				Startup->Result2 = IoErr();

@@ -55,6 +55,12 @@
 #define REG(x)
 #endif	/* __STORM__ */
 
+#ifdef __AROS__
+#ifdef USE_GLUE
+# undef USE_GLUE
+#endif
+#endif
+
 	/* Should we use glue code, i.e. no direct assembly interface routines? */
 
 #ifdef USE_GLUE

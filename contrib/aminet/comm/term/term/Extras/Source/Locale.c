@@ -616,7 +616,7 @@ LocaleString(ULONG ID)
 STRPTR SAVE_DS ASM
 LocaleHookFunc(REG(a0) struct Hook *UnusedHook,REG(a2) APTR Unused,REG(a1) LONG ID)
 #else
-AROS_UFH3(STRPTR, LocaleHookFun,
+AROS_UFH3(STRPTR, LocaleHookFunc,
  AROS_UFHA(struct Hook * , UnusedHook , A0),
  AROS_UFHA(APTR          , Unused, A2),
  AROS_UFHA(LONG          , ID, A1))

@@ -4478,12 +4478,15 @@ OpenAll(STRPTR ConfigPath)
 			 * rexx messages asynchronously.
 			 */
 
+#ifdef AROS_BUG_FIXED
+// Blocks everything if started.
 		if(!(RexxProcess = StartProcessWaitForHandshake("term Rexx Process",(TASKENTRY)RexxServer,
 			NP_Priority,	5,
 			NP_StackSize,	8000,
 			NP_WindowPtr,	-1,
 		TAG_END)))
 			return(LocaleString(MSG_TERMINIT_UNABLE_TO_CREATE_AREXX_PROCESS_TXT));
+#endif
 	}
 
 		/* Install the public screen name, assumes that the user
@@ -4508,8 +4511,11 @@ OpenAll(STRPTR ConfigPath)
 
 		/* Start the rates accounting */
 
+#ifdef AROS_BUG_FIXED
+// Blocks everything if started
 	if(!CreateAccountant())
 		return(LocaleString(MSG_GLOBAL_NO_AUX_BUFFERS_TXT));
+#endif
 
 	if(DoIconify)
 		return(NULL);
