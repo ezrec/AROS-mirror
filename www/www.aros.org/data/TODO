@@ -8,6 +8,8 @@ o Convert the C source files into hyperlinked HTML docs.
     - Generate lxr.conf from site.conf.
 
 o Add support for AutoDocs.
+    - Navigation in the autodocs is clumsy: prev/next is missing,
+	"Top" doesn't move to the library
 
 - Think about a way to update the news section remotely (CGI ? Form ?
 EMail ?)
@@ -22,6 +24,8 @@ EMail ?)
 - List of links:
     - Homepages
     - Less related
+
+- Merge old docs
 
 DONE
 
