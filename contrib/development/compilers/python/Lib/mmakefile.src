@@ -1,0 +1,24 @@
+#   $Id$
+#
+#   Makefile to copy the Python modules.
+
+include $(TOP)/config/make.cfg
+
+PYTHONDIR := $(CONTRIBDIR)/Python
+DST_DIR   := $(PYTHONDIR)/Libs/Python
+
+SRC_FILES := $(wildcard *.py)
+DST_FILES := $(subst %.py,$(DST_DIR)/%.py,$(SRC_FILES))
+
+#MM contrib-python-modules 
+
+contrib-python-modules : setup 
+	@$(ECHO) "Copying Python modules to "$(DST_DIR)"..."
+	@$(CP) $(SRC_FILES) $(DST_DIR)
+
+#MM
+setup ::
+	%mkdirs_q $(CONTRIBDIR)/Python/Libs
+	%mkdirs_q $(CONTRIBDIR)/Python/Libs/Python
+
+%common
