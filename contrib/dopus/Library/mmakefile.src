@@ -4,9 +4,6 @@ include $(TOP)/config/make.cfg
 LIBNAME		:= dopus
 ULIBNAME	:= DOpus
 
-DEST_INC	:= $(INCDIR)/proto/dopus.h
-GEN_INC		:= $(GENINCDIR)/proto/dopus.h
-
 FILES	:= functable data
 
 FUNCTIONS	:= \
@@ -57,14 +54,6 @@ setup-includes :
 includes-copy : $(DEST_INC) $(GEN_INC)
 	@$(NOP)
 	
-$(INCDIR)/proto/dopus.h : ./proto_dopus.h
-	$(CP) $(notdir $<) $@
-
-
-$(GENINCDIR)/proto/dopus.h : ./proto_dopus.h
-	$(CP) $(notdir $<) $@
-	
-
 #MM dopus-library-clean :
 dopus-library-clean : clean
 
