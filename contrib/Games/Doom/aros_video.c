@@ -161,12 +161,16 @@ static __inline unsigned int end_timer (void)
 /**********************************************************************/
 static void video_do_fps (struct RastPort *rp, int yoffset)
 {
+  #define FPS_STAT_COUNT 50
+  
   static ULONG oldsecs = 0;
   static LONG oldmicro = 0;
+  static LONG fps_stat[FPS_STAT_COUNT];
+  static LONG fps_stat_pos;
   struct timeval tv;
   ULONG secs;
   LONG micro;
-  LONG time, fps = 0;
+  LONG time, fps = 0, i;
   char msg[4];
   
   GetSysTime(&tv);
@@ -176,11 +180,23 @@ static void video_do_fps (struct RastPort *rp, int yoffset)
   time = (secs - oldsecs) * 1000000 + (micro - oldmicro);
   if (time > 0) fps = 1000000 / time;
   
+  fps_stat[fps_stat_pos++] = fps;
+  fps_stat_pos %= FPS_STAT_COUNT;
+  
+  fps = 0;
+  for (i = 0; i < FPS_STAT_COUNT; i++)
+  {
+    fps += fps_stat[i];
+  }
+  fps /= FPS_STAT_COUNT;
+  
   msg[0] = (fps % 1000) / 100 + '0';
   msg[1] = (fps % 100) / 10 + + '0';
   msg[2] = (fps % 10) + '0';
   msg[3] = '\0';
 
+  SetABPenDrMd(rp, 2, 1, JAM2);
+  
   Move (rp, video_window->BorderLeft + SCREENWIDTH - 24,
   	    video_window->BorderTop  + yoffset + rp->TxBaseline + 3);
   Text (rp, msg, 3);
