@@ -53,7 +53,6 @@ struct decode_option {
 #define MAXMATCH 256    /* formerly F (not more than UCHAR_MAX + 1) */
 #define THRESHOLD  3    /* choose optimal value */
 
-extern int errno;
 extern int unpackable;
 extern unsigned long origsize, compsize;
 extern unsigned short dicbit;
