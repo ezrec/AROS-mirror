@@ -77,7 +77,6 @@ Base                      Name                       Class
 (MUIB_AROS | 0x00000400)  MUIB_AboutWindow           AboutWindow.mcc
 (MUIB_AROS | 0x00000500)  MUIB_PrefsEditor           PrefsEditor.mcc
 (MUIB_AROS | 0x00000600)  MUIB_SystemPrefsWindow     SystemPrefsWindow.mcc
-(MUIB_AROS | 0x00000700)  MUIB_FontString            FontString.mcc
 ========================  =========================  ========================
 
 
