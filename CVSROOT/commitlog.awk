@@ -57,7 +57,7 @@ BEGIN {
     # Find the first name in the path
     Area = Dir;
     sub (/\/.*/, "", Area);
-#print RSTART,":",Dir,":",Area
+#print Dir,":",Area
 
     next;
 }
@@ -71,7 +71,7 @@ BEGIN {
     }
     else if (mode == "logmsg")
     {
-	logmsg=logmsg $0 "\n";
+	logmsg=logmsg $0 " ";
     }
 }
 END {
