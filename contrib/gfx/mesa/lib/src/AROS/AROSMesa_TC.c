@@ -21,6 +21,9 @@
 
 /*
 $Log$
+Revision 1.5  2005/01/22 08:59:35  NicJA
+obsolete - replaced by contrib/mesa
+
 Revision 1.4  2005/01/13 08:59:01  NicJA
 fixed a couple more rendering issues, and corrected mouse coordinate passing from tk
 
@@ -1203,29 +1206,20 @@ D(bug("[AMESA:TC] : arosTC_Standard_init(amctx=%x,taglist=%x)\n",c,tagList));
     c->width = GetTagData(AMA_Width,c->RealWidth - c->left - c->right,tagList);
     c->height= GetTagData(AMA_Height,c->RealHeight - c->top - c->bottom,tagList);
 
-    if (CyberGfxBase!=NULL && IsCyberModeID(GetVPModeID(&c->Screen->ViewPort)))
-    {
-        c->depth = GetCyberMapAttr(c->rp->BitMap,CYBRMATTR_DEPTH);
-    } 
-    else
-    {
-        c->depth = GetBitMapAttr(c->rp->BitMap,BMA_DEPTH);
-    }
+    if (CyberGfxBase != NULL && IsCyberModeID(GetVPModeID(&c->Screen->ViewPort))) c->depth = GetCyberMapAttr(c->rp->BitMap,CYBRMATTR_DEPTH);
+    else c->depth = GetBitMapAttr(c->rp->BitMap,BMA_DEPTH);
 
 /*  c->gl_ctx->BufferWidth = c->width;*/
 /*  c->gl_ctx->BufferHeight = c->height;*/
 
     c->pixel = 0;   /* current drawing pen */
 
-    if (c->depth<=8)
-    {
-        AllocCMap(c->Screen);
-    }
+    if (c->depth <= 8) AllocCMap(c->Screen);
 
     if (c->visual->db_flag==GL_TRUE)
     {
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : Doublebuff inside arosTC_Standard_init\n"));
+D(bug("[AMESA:TC] : Allocating DOUBLE BUFFERED display inside arosTC_Standard_init\n"));
 #endif
         if((c->back_rp = make_rastport(c->RealWidth,c->RealHeight,c->depth, c->rp->BitMap))!=NULL)
         {
@@ -1238,10 +1232,8 @@ D(bug("[AMESA:TC] : Doublebuff inside arosTC_Standard_init\n"));
             c->gl_ctx->Color.DrawBuffer = GL_FRONT;
         }
     }
-    else
-    {
-      c->gl_ctx->Color.DrawBuffer = GL_FRONT;
-    }
+    else c->gl_ctx->Color.DrawBuffer = GL_FRONT;
+
     AllocOneLine(c); /* A linebuffer for WritePixelLine */
 
 /* this shall not be invoked att all if not cybergfx

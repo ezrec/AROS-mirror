@@ -29,9 +29,12 @@
 /* Mesa tkAROS by Stefan Z (d94sz@efd.lth.se)*/
 
 /*$Log$
- *Revision 1.2  2005/01/13 08:59:00  NicJA
- *fixed a couple more rendering issues, and corrected mouse coordinate passing from tk
+ *Revision 1.3  2005/01/22 08:59:34  NicJA
+ *obsolete - replaced by contrib/mesa
  *
+/*Revision 1.2  2005/01/13 08:59:00  NicJA
+/*fixed a couple more rendering issues, and corrected mouse coordinate passing from tk
+/*
 /*Revision 1.1  2005/01/11 14:58:28  NicJA
 /*AROSMesa 3.0
 /*
@@ -661,9 +664,9 @@ GLenum tkInitWindow(char *title)
 							AMA_DoubleBuf,                  DB_Flag,
 							AMA_RGBMode,                    RGB_Flag,
 
-							AMA_Left,                       tkhwnd->BorderLeft,
+							AMA_Left,                       tkhwnd->BorderLeft+1,
 							AMA_Right,                      tkhwnd->BorderRight+1,
-							AMA_Top,                        tkhwnd->BorderTop,
+							AMA_Top,                        tkhwnd->BorderTop+1,
 							AMA_Bottom,                     tkhwnd->BorderBottom+1,
 							TAG_DONE,0);
 

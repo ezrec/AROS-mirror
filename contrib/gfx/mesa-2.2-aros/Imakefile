@@ -1,8 +1,0 @@
-#define IHaveSubdirs
-#define PassCDebugFlags
-
-SUBDIRS = src src-glu src-tk src-aux demos samples book
-MakeSubdirs($(SUBDIRS))
-DependSubdirs($(SUBDIRS))
-
-
