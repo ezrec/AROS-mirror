@@ -90,5 +90,6 @@ rorytoma:dcoooSZdKV3MM:Rory Toma:rorytoma@ix.netcom.com:
 cirdan:dbrVEaJw5mEgw:Troein Carl:carlt@netch.se:
 pgoetz:arp8bddNFHBVM:Philippe GOETZ:philippe.goetz@wanadoo.fr:
 starhawk:ddNinopA8D95Q:Mathias Spjuth:f95msp@student.tdb.uu.se:
+mjs:ba9rKHtyC8Wqc:Mark Junker:mjs@prg.hannover.sgh-net.de:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
