@@ -1,36 +1,23 @@
-# $Id$
 include $(TOP)/config/make.cfg
 
-%define_libs
+FILES	:= Jump JumpEd
 
-CFLAGS	:= $(USER_DEFINES) -O2 -Wunused -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/Games/Kiel
+EXES := $(foreach f,$(FILES), $(CONTRIBDIR)/Games/Kiel/$(f))
 
-EXES := $(DESTDIR)/Jump $(DESTDIR)/JumpEd
-
-.PHONY : all clean
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_AROSLIB := yes
 
 #MM- contrib-games : games-kiel-jump
-#MM
-games-kiel-jump : setup-games games
 
-games : $(EXES)
-	@$(NOP)
-
-setup-games :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
-
-$(EXES) : $(DESTDIR)/% : $(OBJDIR)/%.o $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) -o $@ $(STARTUP) $< $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
+%make_prog_setup mmake=games-kiel-jump
+%make_vpath
 
 #MM
-clean-contrib-games :
-	@$(RM) $(OBJDIR) $(DESTDIR)
+games-kiel-jump : setup $(EXES)
 
-$(OBJDIR)/%.o : %.c ../prec.c %.h %File.h
-	%compile_q
+%make_prog_single dir=$(CONTRIBDIR)/Games/Kiel
 
+%common
+%include_deps
