@@ -1,0 +1,71 @@
+AncientEgypt V1.0	© 1992 by PARADISE SOFT   FREEWARE
+
+---------------------------------------------------------------------------
+
+				  COPYRIGHT
+				  ¯¯¯¯¯¯¯¯¯
+
+AncientAgypt is FREEWARE, you are allowed to copy it, as long as all
+important files are included, these are :
+
+    sources (DIR)
+	Egypt.c     - the C-source
+	gfx.h	    - the graphics
+
+    Egypt	    - the game itself
+    Egypt.info
+    Egypt.doc	    - this file
+    Egypt.doc.info
+
+You are not allowed to sell AcientEgypt or a disk containing AncientEgypt
+for more than DM 8.-, $5 or equavalent.
+
+AncientEgypt was compiled using DICE V2.06.40 © by Matthew Dillon. Simply
+write »dcc Egypt.c -oEgypt«.
+
+You are not allowed to publish any changed versions of AncientEgypt. The
+sourcecode is included for learning purpose only.
+
+---------------------------------------------------------------------------
+
+				ABOUT
+				¯¯¯¯¯
+
+	     Coding and Graphics by Pink
+			    Idea by Romulus
+
+
+---------------------------------------------------------------------------
+
+			    CONTACT ADDRESS
+			    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+If you find bugs or you have any other suggestions write to :
+
+PARADISE SOFT	    Benjamin Stegemann
+		    Kiwittsmoor 32
+
+		    2000 Hamburg 62
+		    Germany
+
+---------------------------------------------------------------------------
+
+				PLAYING
+				¯¯¯¯¯¯¯
+
+You are an archaeologist exploring a ancient pyramid. Examining the
+hieroglyphics you read, that there are five chests full of gold hidden in
+the maze. Now you try to find them..
+
+When starting AncientEygpt you can select, whether you use the one or the
+two player mode. By pressing start a new map is generated and the game
+begins. Player one moves is hero using the keys 'w', 'a', 's' and 'y'.
+Player two uses '8', '4', '6' and '2' on the numeric pad.
+
+---------------------------------------------------------------------------
+
+
+				Pink says : "Goodbye.."
+
+						    21-Dec-1992  Hamburg
+
