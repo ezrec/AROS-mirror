@@ -12,7 +12,7 @@ class Tree( Container ):
     def __str__( self ):
         depth    = self.getDepth()
         table    = Table( 
-            border = 1, cellpadding = 0, cellspacing = 2, CLASS = 'tree', valign = 'top',
+            border = 0, cellpadding = 0, cellspacing = 2, CLASS = 'tree',
             contents = self.buildLevel( self, 0, depth )
         )
 
