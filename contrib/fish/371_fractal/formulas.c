@@ -1717,7 +1717,7 @@ void Ult_l()
 {
 short pos;
 Ult_cnt++;
-pos=rulebuf[pos]-'0';
+pos=rulebuf[Ult_cnt]-'0';
 Ult_re-=Ult_cre[pos];
 Ult_im-=Ult_cim[pos];
 }
