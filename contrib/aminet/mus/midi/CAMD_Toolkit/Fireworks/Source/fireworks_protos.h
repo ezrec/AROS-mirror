@@ -3,6 +3,7 @@
 
 #include "fireworks.h"
 
+
                              /* fireworks.c */
 
 void BusyPointer(struct Globals *glob, struct Prefs *pref);
@@ -48,7 +49,11 @@ struct Menu *CreateMenus(struct NewMenu *newmenu,Tag tag,...);
 BOOL LayoutMenus(struct Menu *menu,APTR vi,Tag tag,...);
 ULONG BestModeID(Tag tag,...);
 
+#ifdef __AROS__
+#include <proto/arossupport.h>
+#else
 void kprintf(UBYTE *fmt,...);
+#endif
 /*
 APTR __stdargs SPrintf(char *, const char *, ...);
 APTR __stdargs VSPrintf(char *, const char *, va_list);
