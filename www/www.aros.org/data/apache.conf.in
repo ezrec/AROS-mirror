@@ -3,9 +3,10 @@ ServerName @HOSTNAME@
 DocumentRoot @BASEDIR@/www
 ErrorLog @BASEDIR@/log/error.log
 TransferLog @BASEDIR@/log/access.log
-ScriptAlias @BASEDIR@www.aros.org/cgi-bin/
+ScriptAlias /cgi-bin/ @BASEDIR@/cgi-bin/
 ScriptAlias /mailman/ @MAILMAN@/cgi-bin/
-AddType text/plain c h src
+ScriptAlias /lxr/ @BASEDIR@/lxr/http/
+#AddType text/plain c h src
 </VirtualHost>
 
 <Directory @BASEDIR@/www>
@@ -16,9 +17,15 @@ allow from all
 </Directory>
 
 <Directory @BASEDIR@/cgi-bin>
-Options FollowSymLinks ExecCGI
+Options ExecCGI
 AllowOverride None
 order allow,deny
 allow from all
 </Directory>
 
+<Directory @BASEDIR@/lxr/http>
+Options ExecCGI
+AllowOverride None
+order allow,deny
+allow from all
+</Directory>
