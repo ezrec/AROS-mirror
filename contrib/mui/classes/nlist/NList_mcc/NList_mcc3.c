@@ -652,7 +652,13 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 /*D(bug("%lx|Refresh %ld %ld %ld %ld %lx %lx\n",obj,data->DRAW,data->do_draw_all,data->do_draw,(LONG)data->refreshing,(LONG)(muiRenderInfo(obj)->mri_Flags & MUIMRI_REFRESHMODE),(LONG)(data->rp->Layer->Flags & LAYERREFRESH)));*/
     /* Avoid Superclass to draw anything *in* the object */
     if (muiRenderInfo(obj)->mri_Flags & MUIMRI_REFRESHMODE)
-    { muiAreaData(obj)->mad_Flags &= ~0x00000001;
+    {
+#ifndef __AROS__
+      muiAreaData(obj)->mad_Flags &= ~0x00000001;
+#else
+#warning "AROS: FIXME: No frame drawn if doing: muiAreaData(obj)->mad_Flags &= ~0x00000001;"
+#endif
+      
       DoSuperMethodA(cl,obj,(Msg) msg);
     }
     DrawRefresh(obj,data);
@@ -690,7 +696,11 @@ ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 
   /* Avoid Superclass to draw anything *in* the object */
+#ifndef __AROS__
   muiAreaData(obj)->mad_Flags &= ~0x00000001;
+#else
+#warning "AROS: FIXME: No frame drawn if doing: muiAreaData(obj)->mad_Flags &= ~0x00000001;"
+#endif
 
   DoSuperMethodA(cl,obj,(Msg) msg);
 
