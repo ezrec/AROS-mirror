@@ -2357,7 +2357,7 @@ void Group14(UWORD inst)
             /* LSR */
             mask = 0x1 << (count-1);
             if (mask & ((BYTE *)&CPU.D[reg_field])[L_BYTE])
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_LSR_BYTE;
@@ -2369,12 +2369,17 @@ void Group14(UWORD inst)
           if (inst & 0x100)
           {
             /* ROXL */
-            ((UBYTE *)&CPU.D[reg_field])[L_BYTE] = ((UBYTE *)&CPU.D[reg_field])[L_BYTE] << count | (CPU.SR & CPUFLAG_X) >> 4;
+            ((UBYTE *)&CPU.D[reg_field])[L_BYTE] = ((UBYTE *)&CPU.D[reg_field])[L_BYTE] << count | 
+                                                   ((UBYTE *)&CPU.D[reg_field])[L_BYTE] >> (9 - count);
+
+            CPU.lastop = OP_ROXL_BYTE;
           }
           else
           {
             /* ROXR */
-            ((UBYTE *)&CPU.D[reg_field])[L_BYTE] = ((UBYTE *)&CPU.D[reg_field])[L_BYTE] >> count | (CPU.SR & CPUFLAG_X) << 3;
+            ((UBYTE *)&CPU.D[reg_field])[L_BYTE] = ((UBYTE *)&CPU.D[reg_field])[L_BYTE] >> count | 
+                                                   ((UBYTE *)&CPU.D[reg_field])[L_BYTE] << (9 - count);
+            CPU.lastop = OP_ROXR_BYTE;
           } 
         break;
           
@@ -2395,7 +2400,7 @@ void Group14(UWORD inst)
             /* ROR */
             mask = 0x1 << (count-1);
             if (mask & ((BYTE *)&CPU.D[reg_field])[L_BYTE])
-              CPU.SR |= CPUDFLAG_C;
+              CPU.SR |= CPUFLAG_C;
             else
               CPU.SR &= CPUFLAG_X;
             CPU.lastop = OP_ROR_BYTE;
@@ -2424,7 +2429,7 @@ void Group14(UWORD inst)
             /* ASL */
             mask = 0x8000 >> (count-1);
             if (mask & ((UWORD *)&CPU.D[reg_field])[L_WORD])
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_ASL_WORD;
@@ -2435,7 +2440,7 @@ void Group14(UWORD inst)
             /* ASR */
             mask = 0x1 << (count-1);
             if (mask & ((WORD *)&CPU.D[reg_field])[L_WORD])
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_ASR_WORD;
@@ -2449,7 +2454,7 @@ void Group14(UWORD inst)
             /* LSL */
             mask = 0x8000 >> (count-1);
             if (mask & ((UWORD *)&CPU.D[reg_field])[L_WORD])
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_LSL_WORD;
@@ -2460,7 +2465,7 @@ void Group14(UWORD inst)
             /* LSR */
             mask = 0x1 << (count-1);
             if (mask & ((WORD *)&CPU.D[reg_field])[L_WORD])
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_LSR_WORD;
@@ -2472,12 +2477,17 @@ void Group14(UWORD inst)
           if (inst & 0x100)
           {
             /* ROXL */
-            (UWORD)CPU.D[reg_field] = (UWORD)CPU.D[reg_field] << count | (CPU.SR & CPUFLAG_X) >> 4;
+            ((UWORD *)&CPU.D[reg_field])[L_WORD] = (UWORD)CPU.D[reg_field] << count |
+                                                   (UWORD)CPU.D[reg_field] >> (17 - count);
+ 
+            CPU.lastop = OP_ROXL_WORD;
           }
           else
           {
             /* ROXR */
-            (UWORD)CPU.D[reg_field] = (UWORD)CPU.D[reg_field] >> count | (CPU.SR & CPUFLAG_X) << 11;
+            ((UWORD *)&CPU.D[reg_field])[L_WORD] = (UWORD)CPU.D[reg_field] >> count |
+                                                   (UWORD)CPU.D[reg_field] << (17 - count);
+            CPU.lastop = OP_ROXR_WORD;
           } 
         break;
           
@@ -2498,7 +2508,7 @@ void Group14(UWORD inst)
             /* ROR */
             mask = 0x1 << (count-1);
             if (mask & ((WORD *)&CPU.D[reg_field])[L_WORD])
-              CPU.SR |= CPUDFLAG_C;
+              CPU.SR |= CPUFLAG_C;
             else
               CPU.SR &= CPUFLAG_X;
             CPU.lastop = OP_ROR_WORD;
@@ -2527,7 +2537,7 @@ void Group14(UWORD inst)
             /* ASL */
             mask = 0x80000000 >> (count-1);
             if (mask & CPU.D[reg_field])
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_ASL_LONG;
@@ -2538,7 +2548,7 @@ void Group14(UWORD inst)
             /* ASR */
             mask = 0x1 << (count-1);
             if (mask & CPU.D[reg_field])
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_ASR_LONG;
@@ -2552,7 +2562,7 @@ void Group14(UWORD inst)
             /* LSL */
             mask = 0x80000000 >> (count-1);
             if (mask & CPU.D[reg_field])
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_LSL_LONG;
@@ -2563,7 +2573,7 @@ void Group14(UWORD inst)
             /* LSR */
             mask = 0x1 << (count-1);
             if (mask & CPU.D[reg_field])
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_LSR_LONG;
@@ -2575,13 +2585,14 @@ void Group14(UWORD inst)
           if (inst & 0x100)
           {
             /* ROXL */
-            (ULONG)CPU.D[reg_field] = (ULONG)CPU.D[reg_field] << count | (CPU.SR & CPUFLAG_X) >> 4;
+            (ULONG)CPU.D[reg_field] = (ULONG)CPU.D[reg_field] << count |
+                                      (ULONG)CPU.D[reg_field] >> (33 - count);
           }
           else
-
           {
             /* ROXR */
-            (ULONG)CPU.D[reg_field] = (ULONG)CPU.D[reg_field] >> count | (CPU.SR & CPUFLAG_X) << 11;
+            (ULONG)CPU.D[reg_field] = (ULONG)CPU.D[reg_field] >> count |
+                                      (ULONG)CPU.D[reg_field] << (33 - count);
           } 
         break;
           
@@ -2602,7 +2613,7 @@ void Group14(UWORD inst)
             /* ROR */
             mask = 0x1 << (count-1);
             if (mask & CPU.D[reg_field])
-              CPU.SR |= CPUDFLAG_C;
+              CPU.SR |= CPUFLAG_C;
             else
               CPU.SR &= CPUFLAG_X;
             CPU.lastop = OP_ROR_LONG;
@@ -2621,7 +2632,7 @@ void Group14(UWORD inst)
           {
             /* ASL */
             if (CPU.lastresult & 0x8000)
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_ASL_WORD;
@@ -2632,7 +2643,7 @@ void Group14(UWORD inst)
           {
             /* ASR */
             if (CPU.lastresult & 1)
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_ASR_WORD;
@@ -2646,7 +2657,7 @@ void Group14(UWORD inst)
           {
             /* LSL */
             if (CPU.lastresult & 0x8000)
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_LSL_WORD;
@@ -2657,7 +2668,7 @@ void Group14(UWORD inst)
           {
             /* LSR */
             if (CPU.lastresult & 1)
-              CPU.SR = CPUFLAG_X|CPUDFLAG_C;
+              CPU.SR = CPUFLAG_X|CPUFLAG_C;
             else
               CPU.SR = 0;
             CPU.lastop = OP_LSR_WORD;
@@ -2670,12 +2681,16 @@ void Group14(UWORD inst)
           if (inst & 0x100)
           {
             /* ROXL */
-            CPU.lastresult = ((UWORD)CPU.lastresult) << 1 | ((CPU.SR & CPUFLAG_X) >> 4);
+            CPU.lastresult = ((UWORD)CPU.lastresult) << 1 |
+                             ((UWORD)CPU.lastresult) >> 16;
+            CPU.lastop = OP_ROXL_WORD;
           }
           else
           {
             /* ROXR */
-            CPU.lastresult = ((UWORD)CPU.lastresult) >> 1 | ((CPU.SR & CPUFLAG_X ) << 11);
+            CPU.lastresult = ((UWORD)CPU.lastresult) >> 1 |
+                             ((UWORD)CPU.lastresult) << 16;
+            CPU.lastop = OP_ROXR_WORD;
           }
         break;
         
@@ -2693,9 +2708,8 @@ void Group14(UWORD inst)
           else
           {
             /* ROR */
-            mask = 0x1 << (count-1);
-            if (mask & CPU.lastresult)
-              CPU.SR |= CPUDFLAG_C;
+            if (1 & CPU.lastresult)
+              CPU.SR |= CPUFLAG_C;
             else
               CPU.SR &= CPUFLAG_X;
             CPU.lastop = OP_ROR_LONG;

@@ -1,0 +1,10 @@
+- All instructions that modify the condiction codes should be replaced by
+  inlince assembly code for the specific target processor.
+
+- the instruction code word should not be passed to the Group functions
+  but written into the M68k structure. This should speed it up.
+
+- the register field and mode field should not be passed to the addressing
+  function but rather taken from th eM68k structure where the current 
+  instruction word can be found.
+
