@@ -1,3 +1,4 @@
+
 /*
 **	GadTools layout toolkit
 **
@@ -484,6 +485,7 @@ LibInit(
 #endif	// CPU_ANY
 #endif
 
+
 	if(ExecBase->LibNode.lib_Version >= 37)
 	{
 		GTLayoutBase->LibNode.lib_Revision = REVISION;
@@ -520,16 +522,16 @@ LibOpen(REG(d0) ULONG version,
 	struct Library *result = GTLayoutBase;
 	UWORD openCnt;
 
+	openCnt = GTLayoutBase->LibNode.lib_OpenCnt;
+
 	GTLayoutBase->LibNode.lib_OpenCnt++;
 	GTLayoutBase->LibNode.lib_Flags &= ~LIBF_DELEXP;
-
-	openCnt = GTLayoutBase->LibNode.lib_OpenCnt;
 
 	ObtainSemaphore(&GTLayoutBase->LockSemaphore);
 
 	if(openCnt == 0)
 	{
-		if(!LT_Init())
+		if(!LT_Init(SysBase))
 		{
 			LT_Exit();
 
