@@ -1,0 +1,617 @@
+@database find.guide
+@rem 25. Mai 1993 V1.0
+
+@rem ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node MAIN
+@title "Guide to FIND V1.0"
+
+             Welcome to Find V1.0
+
+       @{"Disclaimer & Distribution "link DISCLAIMER}
+       
+       @{"       Introduction       "link INTRODUCTION}
+       
+       @{"       Installation       "link INSTALLATION}
+       
+       @{"           Usage          "link USAGE}
+
+       @{"    The control window    "link WINDOW.0}
+       
+       @{"     Arexx Commands       "link AREXX.0}
+       
+       @{"          Info            "link INFO}
+@endnode
+
+@rem ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node DISCLAIMER
+@title Disclaimer & Distribution
+
+       Find is Copyright (©) 1993 by CEKASOFT All Rights Reserved
+       Karlheinz Klingbeil
+       Elzstraße 42
+       7809 Gutach
+       Germany
+       
+Find is provided "AS IS" !The author cannot be held liable 
+for the  suitability or  accuracy of this manual  and/or 
+the  program(s)  it  describes.   Any  damage
+directly  or indirectly caused by the use or misuse of  this manual
+and/or the  program it describes is the sole responsibility of the
+user her/him self.
+
+This   program  may  be  freely  distributed  as  long  as all source code,
+documentation and executable remain unchanged and are included  with the
+distribution.
+
+@endnode
+@rem ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+@rem ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node INTRODUCTION
+@title Introduction to Find
+
+Find is yet another pattern matching program (I should have called
+it YAPMP) like search (AmigaDOS) or grep (UNIX). Unlike these
+programs, which use regular Patterns , Find uses a different
+algorithm, the weighted Levensthein Distance.
+
+This Algorithm tries to transform a given word into the search
+pattern using 3 operations:
+
+        1. Insert a character
+        2. Delete a character
+        3. Substitute a character
+        
+The algorithm uses a different "expense" for each of these
+operations, that's why it is called weighted. Let's show
+an example.
+
+Imagine you have a large file with the names of your customers 
+and their telephone numbers. You want to know the number of
+your second best customer, Mr. Swy... ,no Shwuy... no, damn !
+It's a strange name and you can't remember how it is spelled.
+Luckily you have the Find program, so you simply let it search
+for the name "schwizürd". 
+
+The output of Find could be:
+DIST=11 LINE=24 WORD=3 Swzyhirdyc
+
+The DIST is the computed distance value and depends
+on the setting for Insert,Delete and Substitute
+
+One more simple example:
+
+to transform "printf" into "arintf" only 1 substitution will do,
+so the distance corresponds to the setting for substitution.
+
+You can control Find using its @{"Window"link WINDOW.0} or its
+@{"Arexx"link AREXX.0}-Port.
+
+@endnode
+@rem ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+@rem ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node INSTALLATION
+@title Installation & Requirements
+
+
+       Find is a standalone program and does not use
+       any special installation routines. Just copy
+       the executable anywhere you want it to reside.
+       Note that the "commodities.library" and the
+       "rexxsyslib.library" must be present in your
+       sys:libs directory.
+       
+       Find requires System Software 2.04 or later.
+       Library Version 37+.
+       
+@endnode
+@rem ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node USAGE
+@title Usage
+
+
+       from the shell type 
+       
+       FIND [CX_POPUP=YES|NO][CX_PRIORITY=X][CX_POPKEY=key]
+       
+       from Workbench simply click the FIND icon; the
+       TOOLTYPES are the same as above. Refer to the 
+       Amiga Manual, chapter "Commodities"
+       
+       to Quit Find use the menu item "FIND:quit program" from
+       the Workbench-Tools-Menu or the "Quit" item from
+       the Find Control window menu.
+             
+@endnode
+@rem ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+@rem ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node WINDOW.0
+@title Find Control Window
+
+The control window can be opened in several ways.
+
+1. At startup by using the CX_POPUP=YES keyword or TOOLTYPE
+
+2. At runtime by typing the (CX_POPKEY=) Hotkey or
+
+3. by choosing the menu item "FIND:toggle window" from the
+   Workbench-Tool-Menu.
+   
+The window can be closed by choosing "Hide Window" from its
+menustrip, by clicking its close gadget or by choosing the
+menu item "FIND:toggle window" from the Workbench-Tools-Menu.
+
+       In the window you see several @{"Gadgets"link gadgets}
+       and some @{"Menu Items"link menus} 
+   
+@endnode
+@node  gadgets
+
+       Gadgets of the Control Window
+       
+       
+              @{"?              "link C_?}  
+              @{"File           "link C_file}
+              @{"Search         "link C_search}
+              @{"Delimiter      "link C_delim}
+              @{"Insert         "link C_insert}
+              @{"Delete         "link C_delete}
+              @{"Substitute     "link C_sub}
+              @{"Distance filter"link C_filter}
+              @{"Size           "link C_size}
+              @{"From Line      "link C_from}
+              @{"To Line        "link C_to}
+              @{"Start          "link C_start}
+              @{"Stop           "link C_stop}
+              @{"Output         "link C_output}
+              @{"Wordnumber     "link C_wnum}
+              @{"Linenumber     "link C_linenum}
+              @{"Distance       "link C_distance}
+              @{"Word           "link C_word}
+
+@endnode
+@node  menus
+
+       Menu Items of the Control Window                
+       
+              @{"Project->Load..."link m_load}
+              @{"Project->Save"link m_save}
+              @{"Project->Save As..."link m_saveas}
+              @{"Project->Save as Default"link m_savedefault}
+              @{"Project->About..."link m_about}
+              @{"Project->Hide Window"link m_hide}
+              @{"Project->Quit"link m_quit}
+              
+              @{"Settings->Reset to default"link m_resetdef}
+              @{"Settings->Reset to last saved"link m_reset}
+              
+              @{"Options->Write Icon"link m_icon}
+
+                                                           
+@endnode
+@rem ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+@rem ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node AREXX.0
+@title Arexx
+
+The Portname of the Arexx Port is "FIND"
+the ports understands a number of commands:
+
+   
+              @{"requestfile    "link C_?}  
+              @{"filename       "link C_file}
+              @{"pattern        "link C_search}
+              @{"delimiter      "link C_delim}
+              @{"insert         "link C_insert}
+              @{"delete         "link C_delete}
+              @{"substitute     "link C_sub}
+              @{"filter         "link C_filter}
+              @{"fromline       "link C_from}
+              @{"toline         "link C_to}
+              @{"start          "link C_start}
+              @{"output         "link C_output}
+              @{"outfilename    "link C_outfile}
+              @{"wordnumber     "link C_wnum}
+              @{"linenumber     "link C_linenum}
+              @{"distance       "link C_distance}
+              @{"word           "link C_word}
+              @{"reset          "link C_reset}
+              @{"showwindow     "link C_show}
+              @{"hidewindow     "link C_hide}
+              @{"matchsingle    "link C_matchsingle}
+              @{"matchline      "link C_matchline}
+              @{"matchfile      "link C_matchfile}
+              @{"makecliplist   "link C_cliplist}
+              @{"datasize       "link C_size}
+              @{"quit           "link C_quit}
+
+@endnode
+
+@node C_?
+
+Button        : ?
+Arexx Command : requestfile
+
+      Show a FileRequester and put the choice
+      into the @{"Filename"link C_file} Gadget 
+
+@endnode
+
+@node C_file
+
+Button        : Filename
+Arexx Command : filename NAME/F/A
+
+      Contains the path and name of the file to scan
+
+@endnode
+@node C_search
+
+Button        : Search
+Arexx Command : pattern PATTERN/M/A
+
+      Contains the pattern to search for.
+          
+@endnode
+@node C_delim
+
+Button        : Delimiter
+Arexx Command : delimiter DELIM/M/A
+
+      Contains the characters that should be treated as
+      word delimiters. 
+
+@endnode
+@node C_insert
+
+Button        : Insert
+Arexx Command : insert NUMBER/N/A
+
+      This is the "Expense" for an insert operation.
+      Must be >= 0.
+      
+      See also @{"substitute"link C_sub} and @{"Delete"link C_delete}
+@endnode
+@node C_sub
+
+Button        : Substitute
+Arexx Command : substitute NUMBER/N/A
+
+      This is the "Expense" for a substitute operation.
+      Must be >= 0.
+
+      See also @{"insert"link C_insert} and @{"Delete"link C_delete}
+
+@endnode
+@node C_delete
+
+Button        : Delete
+Arexx Command : delete NUMBER/N/A
+
+      This is the "Expense" for a delete operation.
+      Must be >= 0.
+
+      See also @{"substitute"link C_sub} and @{"Insert"link C_insert}
+
+@endnode
+
+@node C_filter
+
+Button        : Filter
+Arexx Command : filter NUMBER/N/A
+
+      This sets the filter value for the match list.
+      If the distance of a match is > filter, no match will
+      be displayed. Teh value must be >= 0 and < 128
+@endnode
+
+@node C_size
+
+Button        : Size
+Arexx Command : datasize SIZE/N/A
+
+      This is the maximum length of the words that can be
+      processed. If a word is longer it will be truncated.
+      If you have texts that contain a large number of
+      long words, set size to a higher value.
+      The value must be >= 20.
+      Note: this value has no effect on the computing speed.
+
+@endnode
+@node C_from
+
+Button        : From Line
+Arexx Command : fromline NUMBER/N/A
+
+      The first line of the File "@{"Filename"link C_file}" that will
+      be processed. This number must be < than @{"To Line"link C_to}
+   
+@endnode
+@node C_to
+
+Button        : To Line
+Arexx Command : toline NUMBER/N/A
+
+      The last line of the File "@{"Filename"link C_file}" that will
+      be processed. This number must be > than @{"From Line"link C_to}
+ 
+@endnode
+@node C_start
+
+Button        : Start
+Arexx Command : @{"matchfile"link C_matchfile}/@{"matchline"link C_matchline}
+
+      Starts the scan. Note that while scanning all Gadgets are 
+      disabled and the menus are removed from the window. The 
+      hotkey won't work either. If started from Arexx, the scan
+      can't be aborted. The only way to stop the scan is to
+      press the @{"Stop"link C_stop} button in the window.
+       
+@endnode
+
+@node C_stop
+
+Button        : Stop
+
+      Stops the scan and enables gadgets, menus and the hotkey.
+      
+@endnode
+@node C_output
+
+Button        : Output
+Arexx Command : output NONE/S FILE/S PRINTER/S
+
+      If you have selected "none", the match list will only 
+      be displayed in the control window. If you have selected
+      "File", you have to supply a @{"output filename"link C_outfile}
+      to which the match list will be written,too. If you select
+      "Printer", the match list will be printed. From Arexx you
+      can build a Clip List via the @{"makecliplist"link C_cliplist}command.
+
+@endnode      
+@node  C_outfile
+
+Button        : Ouput filename
+Arexx Command : outfilename NAME/F/A
+
+      The filename to which the match list will be written if you have
+      selected @{"Output File"link C_output}
+       
+@endnode
+@node C_wnum
+
+Button        : Wordnumber
+Arexx Command : wordnumber ON/S OFF/S
+
+      If ON, a match line will contain the number of the
+      word in the line 
+      
+      WORD=XXX
+      
+@endnode
+
+@node C_linenum
+
+Button        : Linenumber
+Arexx Command : linenumber ON/S OFF/S
+
+      If ON, a match line will contain the Line number of a match
+      
+      LINE=XXX
+      
+@endnode
+@node C_distance
+
+Button        : Distance
+Arexx Command : distance ON/S OFF/S
+
+      If ON, a match line will contain the distance of the
+      match
+      
+      DIST=XXX
+@endnode
+@node C_word
+
+Button        : Word
+Arexx Command : word ON/S OFF/S
+
+      If ON, the match line will contain the matching word.
+      
+@endnode
+@node C_reset
+
+Arexx Command : reset
+
+      Resets all values to the internal defaults.
+      
+      @{"Insert      = 1    "link C_insert}
+      @{"Substitute  = 2    "link C_sub}    
+      @{"Delete      = 3    "link C_delete}
+      @{"Size        = 40   "link C_size}
+      @{"Filter      = 5    "link C_filter}
+      @{"From Line   = 1    "link C_from}
+      @{"To Line     = 99999"link C_to}
+      @{"Output      = NONE "link C_output}
+      @{"Delimiter   = ( ){}[]/+-*<>.',;:!?$&=#" link C_delim}
+       
+@endnode
+
+@node  C_show
+
+Arexx Command : showwindow
+
+      Open the control window if it is closed.
+
+@endnode
+
+@node  C_hide
+
+Arexx Command : hideindow
+     
+      Hide the control window if it is open.
+      
+@endnode
+@node C_matchsingle
+
+Arexx Command : matchsingle PATTERN/M/A WORD/M/A
+
+      Matches only one word. The Return code contains the
+      distance. Note that the distance will be returned even
+      if it is greater than the @{"Filter"link}value. 
+
+@endnode
+@node C_matchline
+
+Arexx Command : matchline LINE/F/A
+
+      Matches a single line instead of a file. The current
+      settings are used.
+
+@endnode
+@node C_matchfile
+
+Arexx Command : matchfile FILE/M/A PATTERN/M/A
+
+      matches the filename with the pattern. The current
+      settings are used.
+      
+@endnode
+@node C_cliplist
+
+Arexx Command : makecliplist
+
+      Builds entries for the global Arexx Clip List (Refer to
+      your Arexx User's Manual) out of the current match list.
+      Use this command immediately after the @{"Start"link C_start},
+      @{"matchfile"link C_matchfile} or @{"matchline"link C_matchline}command.
+      The first entry is the MATCHCOUNT, which contains the number of 
+      matches in the list. The matches are named MATCH.0, MATCH.1,MATCH.2 ...
+      and the value is the match list string.
+
+@endnode
+@node C_quit
+
+Menu Item     : Project->Quit 
+Arexx Command : quit
+
+      quits the program.
+@endnode
+
+@node m_load
+
+Menu          : Project
+Item          : Load...
+
+      Loads a configuration File.
+      
+@endnode
+
+@node m_save
+
+Menu          : Project
+Item          : Save...
+
+      Saves a configuration file using the last used
+      filename. The default filename is "find.config".
+@endnode
+
+@node m_saveas
+
+Menu          : Project
+Item          : Save As...
+
+      Displays a FileRequester and saves a configuration
+      file with the given name.
+             
+@endnode
+
+@node m_savedefault
+
+Menu          : Project
+Item          : Save as default
+
+      Saves the configuration both to the ENV: and ENVARC:
+      directory.
+@endnode
+
+@node m_about
+
+Menu          : Project
+Item          : About
+
+      Displays a Copyright Message
+@endnode
+
+@node m_hide
+
+Menu          : Project
+Item          : Hide Window
+
+      Hides the control window. The Program itself is still
+      active. 
+      
+@endnode
+
+@node m_quit
+
+Menu          : Project
+Item          : Quit
+
+      Quits the program.
+@endnode
+
+@node m_resetdef
+
+Menu          : Settings
+Item          : Reset to default
+
+      Resets all @{"Values "link C_reset} to internal defaults
+      
+@endnode
+
+@node m_reset
+
+Menu          : Settings
+Item          : Reset to last saved
+
+      Loads the last saved configuration file from the ENV:
+      directory
+
+@endnode
+
+@node m_icon
+
+Menu          : Options
+Item          : Write Icons
+
+      If checked, Configuration files will be saved with an
+      Icon.
+@endnode
+
+@node INFO
+ 
+Some Information
+
+     Find was written on an Amiga 4000/40, Kickstart 39.106, WB 39.29
+     using SAS/C 6.0. Thanks to Jan van den Baard for his
+     "GadToolsBox" which is a great Tool for designing windows.
+     Suggestions, money, bug reports, gifts.... to
+     
+                  CEKASOFT
+                  Karlheinz Klingbeil
+                  Elzstr. 42
+                  
+                  7809 Gutach
+                  Germany
+                  
+     Enjoy !
+     
+@endnode
+

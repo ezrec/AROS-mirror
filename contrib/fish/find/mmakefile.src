@@ -1,0 +1,40 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(CONTRIBDIR)/fish
+
+FILES := find find_broker find_error find_file find_main find_match find_rx \
+	find_temp
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+EXE := $(DESTDIR)/find
+
+.PHONY : all clean
+
+#MM fish-find : setup-fish-find
+fish-find 	: $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-fish-find :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+
+#MM
+clean-fish :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+
