@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 EXEDIR := $(CONTRIBDIR)/Games/Doom
 EXE    := $(EXEDIR)/doom
 
-USE_CLIB     := yes
+USE_CLIB_SHARED := yes
 USE_MLIB     := yes
 USE_AMIGALIB := yes
 
