@@ -1,3 +1,6 @@
+# Copyright © 2002, The AROS Development Team. All rights reserved.
+# $Id$
+
 import sys, os
 from db.tasks.model import *
 from html_ import *

@@ -1,3 +1,6 @@
+# Copyright © 2002, The AROS Development Team. All rights reserved.
+# $Id$
+
 class Task:
     DONE   = 2
     INWORK = 1

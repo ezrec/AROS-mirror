@@ -1,3 +1,6 @@
+# Copyright © 2002, The AROS Development Team. All rights reserved.
+# $Id$
+
 import os, sys, shutil
 
 import db.credits.parse

@@ -1,3 +1,8 @@
+# Copyright © 2002, The AROS Development Team. All rights reserved.
+# $Id$
+
+# Not used. Just keep it here because I have an idea about usage... :)
+
 class Borg:
     __hive_mind = {}
 

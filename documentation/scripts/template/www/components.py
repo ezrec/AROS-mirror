@@ -1,3 +1,6 @@
+# Copyright © 2002, The AROS Development Team. All rights reserved.
+# $Id$
+
 from html import *
 
 class Tree( Container ):

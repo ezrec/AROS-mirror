@@ -1,6 +1,5 @@
-"""
-
-"""
+# Copyright © 2002, The AROS Development Team. All rights reserved.
+# $Id$
 
 from db.tasks.model import *
 from data import *
