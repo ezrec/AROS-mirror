@@ -149,7 +149,7 @@ works in other direction.
 
 Driver creation
 ===============
-In order to write PCI hardware driver, one has to create class derivateing from
+In order to write PCI hardware driver, one has to create class deriving from
 the CLID_Hidd_PCIDriver class. That simplifies the work on driver, as only few
 methods have to be implemented:
 
