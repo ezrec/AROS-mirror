@@ -25,6 +25,10 @@
 # endif
 #endif
 
+#if !defined getpagesize && defined __AROS__
+# define getpagesize() 4096
+#endif
+
 #ifndef getpagesize
 # include <sys/param.h>
 # ifdef EXEC_PAGESIZE
