@@ -5,9 +5,8 @@ Short term / relatively easy
   - Fix dependencies between the python executable and the various
     linklibs (rebuilt exe if linklibs change, rebuild linklibs if
     linklib functions change).
-  - Fix the copying of Python modules (only copy if changed, be 
-    more selective about what to copy (eg. not TERMIOS.py)).
-
+    - Seem to be a general problem with linklibs in AROS.
+    
 + Make config.h smarter about things (ie. 'autodetect' stuff that
   should be autodetected (eg. SIZEOF_INT etc)). It assumes to much
   right now.
@@ -52,7 +51,9 @@ Long term / hard
   - Make executable resident? (Can you do that in AROS? Is it possible
     with Python (because of global variables)?). 
   - Look at size-reduction methods in Pippy.
-
+  - Make shared libraries out of linklibs Python uses (ie. zlib and 
+    expat). Should save about 270 kB.
+  
 + Implement Python threads.
 
 + Investigate if there is any performance gain by using obmalloc.c
