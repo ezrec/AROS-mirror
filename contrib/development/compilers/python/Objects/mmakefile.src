@@ -1,0 +1,46 @@
+#   $Id$
+#
+#   Makefile to make the Python objects.
+
+include $(TOP)/config/make.cfg
+
+LIB   := python-objects
+
+FILES := \
+	abstract \
+	bufferobject \
+	cellobject \
+	classobject \
+	cobject \
+	complexobject \
+	dictobject \
+	fileobject \
+	frameobject \
+	funcobject \
+	intobject \
+	listobject \
+	longobject \
+	methodobject \
+	moduleobject \
+	object \
+	rangeobject \
+	sliceobject \
+	stringobject \
+	tupleobject \
+	typeobject \
+	unicodectype \
+	unicodeobject 
+
+# Objects that need more work to compile.
+#	floatobject
+#	obmalloc
+
+USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include
+
+#MM linklibs-python-objects
+
+%make_linklib_setup mmake=linklibs-python-objects
+%make_linklib 
+
+%common
+%include_deps
