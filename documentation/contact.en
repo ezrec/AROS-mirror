@@ -1,9 +1,9 @@
 ===================
-Contact information
+Contact Information
 ===================
 
 :Authors:   Adam Chodorowski 
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Copyright: Copyright © 1995-2005, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -11,26 +11,23 @@ Contact information
 .. Contents::
 
 
-Project coordinator
-===================
+Contact Person
+==============
 
-The project coordinator is Aaron "Optimizer" Digulla and he's the main contact
-person for the AROS Development Team. If you want to address the team as
-a whole, `join the development team`__ to `contribute`__ to the project or
-propose a sponsoring deal, this is the guy to talk to. ;-) You can reach him by
-sending a mail to `digulla@aros.org`__.
+The main contact person for the AROS Development Team is Aaron "Optimizer"
+Digulla. If you want to address the team as a whole, eg. if you want to propose
+a sponsoring deal or other forms of cooperation, this is the guy to talk to. 
+You can reach him by sending a mail to `digulla@aros.org`__.
 
-__ documentation/developers/contribute#joining-the-team
-__ documentation/developers/contribute
 __ mailto:digulla@aros.org
 
 
-Mailing lists
+Mailing Lists
 =============
 
 There are a couple of AROS related mailing lists available, which are the main
-channels of information and discussion about AROS. The following mailings lists
-are available:
+channels of information and discussion about AROS for developers. The following 
+mailings lists are available:
 
 + `AROS Announce`__
   
@@ -89,21 +86,28 @@ __ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
 .. _`bug database`: http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 
 
-IRC channels
+Forums
+======
+
+AROS-Exec__ is the official community portal for AROS. There you can find the
+latest news related to AROS, online discussion forums, picture galleries, and
+much more. It's the perfect meeting place for AROS users from all over the
+world.
+
+__ http://aros-exec.org/
+
+
+IRC Channels
 ============
 
-There are two official IRC channels for AROS on FreeNode_:
+There is an official IRC channel for AROS, unsurprisingly named `#aros`__, on
+the FreeNode__ network. Please connect to `irc.freenode.net`__, which will 
+redirect to a server close to you. It's for discussing everything and anything
+related to AROS, including development and how to take over the world. On rare
+occasions, if the main channel is very noisy, development related discussions
+move to `#aros.dev`__.
 
-+ #aros
-
-  General discussions about AROS and other things. It happens that discussions
-  veer off into unrelated topics, so the channel can be quite noisy sometimes.
-
-+ #aros.dev
-
-  Development discussions; basically the place where developers can talk about
-  ideas and problems without all the noise that there can be on #aros.  
-  
-The channels are administered by Ola "4pLaY" Jensen. 
-
-.. _FreeNode: http://www.freenode.net/
+__ irc://irc.freenode.net/aros
+__ http://www.freenode.net/
+__ irc://irc.freenode.net/
+__ irc://irc.freenode.net/aros.dev
