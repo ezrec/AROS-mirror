@@ -1,7 +1,5 @@
 TODO
 
-- Generate TOC for each page
-
 - Make a logo contest
 
 - Split the code which generates the pages into separate scripts and
@@ -30,7 +28,7 @@ o Merge old docs
     o filesys.src
     - hidd.src
     - missing.src
-    - style.src
+    * style.src
     (- core.src)
     * hidd-intro.src
     * hidd-model.src
@@ -41,6 +39,8 @@ o Merge old docs
 - Mirror Matts Diskimage
 
 DONE
+
+* Generate TOC for each page
 
 * Implement filtermakefile
 
