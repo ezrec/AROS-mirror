@@ -58,13 +58,14 @@ INDEX
 
   3) Apply the patch
 
-  4) Prepare a build tree for gcc, so that you can then "configure" it
-
-  5) Configure gcc like described in its documentation, but taking care
-     of specifying the following parameters:
-
-     --target=<cpu>-aros --enable-sjlj-exceptions --enable-long-long
-     --with-headers=<path/to/AROS/headers> --with-libs=<path/to/AROS/libs>
+  4) Assuming the patched gcc sources are in the "gcc-aros" directory,
+     make a new directory named "gcc-aros-x-bin" and cd onto it.
+    
+  5) Now issue the following command (all on one line):
+  
+     ../gcc/configure --target=<cpu>-aros --enable-sjlj-exceptions
+     --enable-long-long  --with-headers=<path/to/AROS/headers> 
+     --with-libs=<path/to/AROS/libs>
 
      replace the various <...> with the proper values.
 
@@ -101,48 +102,21 @@ INDEX
   already, follow the below procedure in order to build a native
   compiler:
 
-    1) CD into gcc's source directory and run the "config.guess"
-       script you find there. Note its output, you'll need it
-       in a few seconds. On an i686-linux system it should be
-       something like "i686-pc-linux-gnu".
-
-    2) Now it comes a bit tricky part: you need to prefix the names
-       of all tools involved in the build process with the text that
-       you've noted in the previous step. This is so because the
-       build process will not be looking for, say, "gcc", but rather,
-       in the example above, "i686-pc-linux-gnu-gcc".
-
-       I don't suggest you to really rename the executables, because
-       then you would have to always invoke them with the new names,
-       what I suggest you is to make symlinks to the various
-       executables. For example:
-
-         $ ln -s /usr/bin/gcc /usr/bin/i686-pc-linux-gnu-gcc
-
-       If for any reasons you can't create the symlinks in /usr/bin,
-       create them wherever you want, as long as the place you chose
-       is in the PATH.
-
-       The names of the executables you need to create links for are, in
-       sparse order: as, nm, objcopy, ld, gcc, ar, ranlib.
-
-       I might have forgotten some, but you will notice because the
-       build process will stop and tell you it can't find a given
-       executable file: simply take note of that file, make
-       the needed symlink, and run "make" again.
-
-    3) Now proceed with configuring gcc like at point 2.5 above, except
-       that you now also need to use the following options:
-
-         --host=<cpu>-aros --build=<output of config.guess>
-	 --prefix=<prefix for the gcc installation, from the AROS point of view>
-
-       Again, <output of config.guess> refers to the output of
-       the config.guess script you've taken note of at step 3.1.
+    1) Assuming the patched gcc sources are in the "gcc-aros" directory,
+       make a new directory named "gcc-aros-bin" and cd onto it.
+    
+    2) Now issue the following command (all on one line):
+  
+       CC='i386-aros-gcc -nix' ../gcc/configure --target=<cpu>-aros
+       --host=<cpu>-aros --build=local --enable-sjlj-exceptions
+       --prefix=<prefix for the gcc installation, from the AROS point of view>
+       --enable-long-long 
+ 
+       Replace the various <...> with the proper values.
 
        <prefix for...> refers to the prefix, from the AROS point of
        view, which will be put before the names of all the directories
-       the build system will install files and executables in.
+       the build system will install files and executables into.
        For instance, the gcc executable will be installed in
        <prefix>/bin, thus if you set the prefix to "GCC:" (or /GCC), for
        instance, then the gcc executable will be installed in GCC:/bin
@@ -150,9 +124,9 @@ INDEX
        point of view, which uses some unix path conversion routines built
        in the AROS libc). Feel free to set that prefix to whatever you want.
 
-    4) Type "make", without quotes.
+    3) Type "make", without quotes.
 
-    5) Type "make install prefix=<XXX> exec_prefix=<XXX>", without
+    4) Type "make install prefix=<XXX> exec_prefix=<XXX>", without
        quotes.
 
        <XXX> refers to the prefix, from the BUILD SYSTEM
