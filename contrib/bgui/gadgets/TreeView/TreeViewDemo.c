@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:08  stegerg
+ * replacements for REG macro
+ *
  * Revision 42.0  2000/05/09 22:22:17  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -95,8 +98,12 @@
 
 int main(int argc,char **argv);
 
-ASM SAVEDS ULONG WindowHandler(REG(a0) struct Hook *hook,
-	REG(a2) Object *obj, REG(a1) struct IntuiMessage *imsg);
+//ASM SAVEDS ULONG WindowHandler(REG(a0) struct Hook *hook,
+//	REG(a2) Object *obj, REG(a1) struct IntuiMessage *imsg);
+ASM SAVEDS REGFUNC3(ULONG, WindowHandler,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct IntuiMessage *, imsg));
 
 extern void __stdargs KPrintF(char *fmt,...);
 
@@ -311,8 +318,12 @@ return(0);
 *
 *************************************************************************/
 
-ASM SAVEDS ULONG WindowHandler(REG(a0) struct Hook *hook,
-	REG(a2) Object *obj, REG(a1) struct IntuiMessage *imsg)
+//ASM SAVEDS ULONG WindowHandler(REG(a0) struct Hook *hook,
+//	REG(a2) Object *obj, REG(a1) struct IntuiMessage *imsg)
+ASM SAVEDS REGFUNC3(ULONG, WindowHandler,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct IntuiMessage *, imsg))
 {
 struct Window	*win;
 ULONG			cursel,method,entry,which,flags;

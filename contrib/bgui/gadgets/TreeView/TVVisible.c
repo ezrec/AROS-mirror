@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:08  stegerg
+ * replacements for REG macro
+ *
  * Revision 42.0  2000/05/09 22:22:09  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -55,7 +58,11 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-ASM ULONG TV_Visible(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve);
+//ASM ULONG TV_Visible(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve);
+ASM REGFUNC3(ULONG, TV_Visible,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvEntry *, tve));
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
@@ -106,7 +113,11 @@ ASM ULONG TV_Visible(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntr
 *
 *************************************************************************/
 
-ASM ULONG TV_Visible(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve)
+//ASM ULONG TV_Visible(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve)
+ASM REGFUNC3(ULONG, TV_Visible,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvEntry *, tve))
 {
 struct tvAnchor	tva;
 struct TagItem	tags[2];

@@ -10,6 +10,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:07  stegerg
+ * replacements for REG macro
+ *
  * Revision 42.0  2000/05/09 22:21:13  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -80,7 +83,18 @@
  */
 #define GADGET(x) ((struct Gadget *)x)
 
-#define METHOD(f,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) m)
+//#define METHOD(f,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) m)
+#ifdef _AROS
+  #define METHOD(f,mtype,m) AROS_UFH3(STATIC ULONG, f, \
+			  AROS_UFHA(Class *, cl, A0), \
+			  AROS_UFHA(Object *, obj, A2), \
+			  AROS_UFHA(mtype, m, A1))
+#else
+  #define METHOD(f,mtype,m) static ASM ULONG f( \
+  			  REG(A0) Class *cl, \
+  			  REG(A2) Object *obj, \
+			  REG(A1) mtype m)
+#endif
 
 /*
 ** OS macros.
@@ -119,7 +133,10 @@ typedef struct {
  * pen number in the colors which are displayed
  * in the palette object.
  */
-STATIC ASM UWORD ValidateColor( REG(a0) PD *pd, REG(d0) ULONG pen )
+//STATIC ASM UWORD ValidateColor( REG(a0) PD *pd, REG(d0) ULONG pen )
+STATIC ASM REGFUNC2(UWORD, ValidateColor,
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(D0, ULONG, pen))
 {
    UWORD       *tab = pd->pd_PenTable, i;
 
@@ -162,7 +179,7 @@ STATIC ASM UWORD ValidateColor( REG(a0) PD *pd, REG(d0) ULONG pen )
 /*
  * Create a new palette object.
  */
-METHOD(PaletteClassNew, struct opSet *ops)
+METHOD(PaletteClassNew, struct opSet *,ops)
 {
    PD             *pd;
    struct TagItem *tstate = ops->ops_AttrList, *tag;
@@ -271,7 +288,7 @@ METHOD(PaletteClassNew, struct opSet *ops)
 /*
  * Dispose of the object.
  */
-METHOD(PaletteClassDispose, Msg msg)
+METHOD(PaletteClassDispose, Msg,msg)
 {
    PD       *pd = INST_DATA(cl, obj);
    ULONG rc;
@@ -297,7 +314,7 @@ METHOD(PaletteClassDispose, Msg msg)
 /*
  * Get an attribute.
  */
-METHOD(PaletteClassGet, struct opGet *opg)
+METHOD(PaletteClassGet, struct opGet *,opg)
 {
    PD         *pd = INST_DATA( cl, obj );
    ULONG       rc = 1;
@@ -332,7 +349,12 @@ METHOD(PaletteClassGet, struct opGet *opg)
  * inside the palette object it's
  * color box.
  */
-STATIC ASM VOID RenderColorRects( REG(a0) PD *pd, REG(a1) struct RastPort *rp, REG(a2) struct IBox *area, REG(a3) struct DrawInfo *dri )
+//STATIC ASM VOID RenderColorRects( REG(a0) PD *pd, REG(a1) struct RastPort *rp, REG(a2) struct IBox *area, REG(a3) struct DrawInfo *dri )
+STATIC ASM REGFUNC4(VOID, RenderColorRects,
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(A1, struct RastPort *, rp),
+	REGPARAM(A2, struct IBox *, area),
+	REGPARAM(A3, struct DrawInfo *, dri))
 {
    UWORD    colorwidth, colorheight, columns = 1, rows = 1, depth = pd->pd_Depth;
    UWORD    hadjust, vadjust, left, top, colsize, rowsize, c, r, color;
@@ -464,7 +486,7 @@ STATIC ASM VOID RenderColorRects( REG(a0) PD *pd, REG(a1) struct RastPort *rp, R
 /*
  * Render the palette object.
  */
-METHOD(PaletteClassRender, struct gpRender *gpr)
+METHOD(PaletteClassRender, struct gpRender *,gpr)
 {
    PD                *pd = INST_DATA(cl, obj);
    struct RastPort    rp = *gpr->gpr_RPort;
@@ -541,7 +563,10 @@ METHOD(PaletteClassRender, struct gpRender *gpr)
  * Get the pen number of
  * ordinal color number "num".
  */
-STATIC ASM ULONG GetPenNumber( REG(a0) PD *pd, REG(d0) ULONG num )
+//STATIC ASM ULONG GetPenNumber( REG(a0) PD *pd, REG(d0) ULONG num )
+STATIC ASM REGFUNC2(ULONG, GetPenNumber,
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(D0, ULONG, num))
 {
    /*
     * Return the pen number
@@ -559,7 +584,10 @@ STATIC ASM ULONG GetPenNumber( REG(a0) PD *pd, REG(d0) ULONG num )
  * Determine the ordinal number
  * of the pen in the object.
  */
-STATIC ASM ULONG GetOrdinalNumber( REG(a0) PD *pd, REG(d0) ULONG pen )
+//STATIC ASM ULONG GetOrdinalNumber( REG(a0) PD *pd, REG(d0) ULONG pen )
+STATIC ASM REGFUNC2(ULONG, GetOrdinalNumber,
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(D0, ULONG, pen))
 {
    UWORD       *tab = pd->pd_PenTable, i;
 
@@ -589,7 +617,11 @@ STATIC ASM ULONG GetOrdinalNumber( REG(a0) PD *pd, REG(d0) ULONG pen )
  * Determine which color rectangle
  * the coordinates are in.
  */
-STATIC ASM UWORD GetColor( REG(a0) PD *pd, REG(d0) ULONG x, REG(d1) ULONG y )
+//STATIC ASM UWORD GetColor( REG(a0) PD *pd, REG(d0) ULONG x, REG(d1) ULONG y )
+STATIC ASM REGFUNC3(UWORD, GetColor,
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(D0, ULONG, x),
+	REGPARAM(D1, ULONG, y))
 {
    UWORD    col, row;
 
@@ -612,7 +644,12 @@ STATIC ASM UWORD GetColor( REG(a0) PD *pd, REG(d0) ULONG x, REG(d1) ULONG y )
  * Get the top-left position of
  * a color in the color box.
  */
-STATIC ASM VOID GetTopLeft( REG(a0) PD *pd, REG(d0) UWORD color, REG(a1) UWORD *x, REG(a2) UWORD *y )
+//STATIC ASM VOID GetTopLeft( REG(a0) PD *pd, REG(d0) UWORD color, REG(a1) UWORD *x, REG(a2) UWORD *y )
+STATIC ASM REGFUNC4(VOID, GetTopLeft,
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(D0, UWORD, color),
+	REGPARAM(A1, UWORD *, x),
+	REGPARAM(A2, UWORD *, y))
 {
    UWORD       row, col;
 
@@ -643,7 +680,11 @@ STATIC ULONG NotifyAttrChange( Object *obj, struct GadgetInfo *gi, ULONG flags, 
 /*
  * Change the currently selected color.
  */
-STATIC ASM VOID ChangeSelectedColor( REG(a0) PD *pd, REG(a1) struct GadgetInfo *gi, REG(d0) ULONG newcolor )
+//STATIC ASM VOID ChangeSelectedColor( REG(a0) PD *pd, REG(a1) struct GadgetInfo *gi, REG(d0) ULONG newcolor )
+STATIC ASM REGFUNC3(VOID, ChangeSelectedColor,
+	REGPARAM(A0, PD *, pd),
+	REGPARAM(A1, struct GadgetInfo *, gi),
+	REGPARAM(D0, ULONG, newcolor))
 {
    struct RastPort         *rp;
    UWORD        l, t;
@@ -702,7 +743,7 @@ STATIC ASM VOID ChangeSelectedColor( REG(a0) PD *pd, REG(a1) struct GadgetInfo *
 /*
  * Set attributes.
  */
-METHOD(PaletteClassSet, struct opUpdate *opu)
+METHOD(PaletteClassSet, struct opUpdate *,opu)
 {
    PD                *pd = INST_DATA(cl, obj);
    struct TagItem    *tag;
@@ -766,7 +807,7 @@ METHOD(PaletteClassSet, struct opUpdate *opu)
 /*
  * Let's go active :)
  */
-METHOD(PaletteClassGoActive, struct gpInput *gpi)
+METHOD(PaletteClassGoActive, struct gpInput *,gpi)
 {
    PD          *pd = INST_DATA(cl, obj);
    WORD         l, t;
@@ -851,7 +892,7 @@ METHOD(PaletteClassGoActive, struct gpInput *gpi)
 /*
  * Handle the user input.
  */
-METHOD(PaletteClassHandleInput, struct gpInput *gpi)
+METHOD(PaletteClassHandleInput, struct gpInput *,gpi)
 {
    PD               *pd = INST_DATA(cl, obj);
    struct gpInput    gpd = *gpi;
@@ -953,7 +994,7 @@ METHOD(PaletteClassHandleInput, struct gpInput *gpi)
 /*
  * Go inactive.
  */
-METHOD(PaletteClassGoInactive, struct gpGoInactive *ggi)
+METHOD(PaletteClassGoInactive, struct gpGoInactive *,ggi)
 {
    PD        *pd = INST_DATA(cl, obj);
    ULONG      rc;
@@ -992,7 +1033,7 @@ METHOD(PaletteClassGoInactive, struct gpGoInactive *ggi)
 /*
  * Tell'm our minimum dimensions.
  */
-METHOD(PaletteClassDimensions, struct grmDimensions *dim)
+METHOD(PaletteClassDimensions, struct grmDimensions *,dim)
 {
    PD          *pd = INST_DATA(cl, obj);
    UWORD        mx, my;
@@ -1045,7 +1086,7 @@ METHOD(PaletteClassDimensions, struct grmDimensions *dim)
 /*
  * Key activation.
  */
-METHOD(PaletteClassKeyActive, struct wmKeyInput *wmki)
+METHOD(PaletteClassKeyActive, struct wmKeyInput *,wmki)
 {
    PD          *pd = INST_DATA( cl, obj );
    UWORD        qual = wmki->wmki_IEvent->ie_Qualifier, new;
@@ -1090,7 +1131,7 @@ METHOD(PaletteClassKeyActive, struct wmKeyInput *wmki)
  * The baseclass is asking us to create a bitmap containing
  * the image which needs to be dragged arround.
  */
-METHOD(PaletteClassGetObject, struct bmGetDragObject *bmgo)
+METHOD(PaletteClassGetObject, struct bmGetDragObject *,bmgo)
 {
    PD                  *pd = INST_DATA(cl, obj);
    struct BitMap       *bm;
@@ -1147,7 +1188,7 @@ METHOD(PaletteClassGetObject, struct bmGetDragObject *bmgo)
 /*
  * Deallocate the bitmap we created above.
  */
-METHOD(PaletteClassFreeObject, struct bmFreeDragObject *bmfo)
+METHOD(PaletteClassFreeObject, struct bmFreeDragObject *,bmfo)
 {
    /*
     * Simply free the bitmap.

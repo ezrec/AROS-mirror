@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:08  stegerg
+ * replacements for REG macro
+ *
  * Revision 42.0  2000/05/09 22:21:41  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -56,8 +59,17 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-ASM ULONG TV_Get(REG(a0) Class *cl, REG(a2) Object *obj,REG(a1) struct opGet *opg);
-ASM ULONG TV_Set(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops);
+//ASM ULONG TV_Get(REG(a0) Class *cl, REG(a2) Object *obj,REG(a1) struct opGet *opg);
+ASM REGFUNC3(ULONG, TV_Get,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opGet *, opg));
+
+//ASM ULONG TV_Set(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops);
+ASM REGFUNC3(ULONG, TV_Set,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opSet *, ops));
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
@@ -73,7 +85,11 @@ ASM ULONG TV_Set(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops
 *
 *************************************************************************/
 
-ASM ULONG TV_Get(REG(a0) Class *cl, REG(a2) Object *obj,REG(a1) struct opGet *opg)
+//ASM ULONG TV_Get(REG(a0) Class *cl, REG(a2) Object *obj,REG(a1) struct opGet *opg)
+ASM REGFUNC3(ULONG, TV_Get,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opGet *, opg))
 {
 TVData	*tv;
 ULONG	rc;
@@ -132,7 +148,11 @@ return(rc);
 *
 *************************************************************************/
 
-ASM ULONG TV_Set(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops)
+//ASM ULONG TV_Set(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct opSet *ops)
+ASM REGFUNC3(ULONG, TV_Set,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opSet *, ops))
 {
 struct TagItem	*tag;
 TVData			*tv;

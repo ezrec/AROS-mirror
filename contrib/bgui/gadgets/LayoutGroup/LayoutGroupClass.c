@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:07  stegerg
+ * replacements for REG macro
+ *
  * Revision 42.0  2000/05/09 22:20:52  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -80,7 +83,18 @@ typedef struct
 }
 GD;
 
-#define METHOD(method,message) static __asm ULONG method(register __a0 Class *cl,register __a2 Object *obj,register __a1 message)
+//#define METHOD(method,message) static __asm ULONG method(register __a0 Class *cl,register __a2 Object *obj,register __a1 message)
+#ifdef _AROS
+  #define METHOD(f,mtype,m) AROS_UFH3(STATIC ULONG, f, \
+			  AROS_UFHA(Class *, cl, A0), \
+			  AROS_UFHA(Object *, obj, A2), \
+			  AROS_UFHA(mtype, m, A1))
+#else
+  #define METHOD(f,mtype,m) static ASM ULONG f( \
+  			  REG(A0) Class *cl, \
+  			  REG(A2) Object *obj, \
+			  REG(A1) mtype m)
+#endif
 
 static ULONG MultipleGet(Object *obj,ULONG attribute,...)
 {
@@ -91,7 +105,7 @@ static ULONG MultipleGet(Object *obj,ULONG attribute,...)
 	return(DoMethodA(obj,(Msg)&mget));
 }
 
-METHOD(GroupClassLayout,struct bmLayout *bml)
+METHOD(GroupClassLayout,struct bmLayout *,bml)
 {
 	GD *gd=INST_DATA(cl,obj);
 	unsigned long member;
@@ -138,7 +152,7 @@ METHOD(GroupClassLayout,struct bmLayout *bml)
 	return(TRUE);
 }
 
-METHOD(GroupClassDimensions,struct bmDimensions *bmd)
+METHOD(GroupClassDimensions,struct bmDimensions *,bmd)
 {
 	GD *gd=INST_DATA(cl,obj);
 	ULONG member_count;
@@ -430,7 +444,7 @@ static ULONG GroupSet(Class *cl,Object *obj,struct opSet *ops)
 	return(success);
 }
 
-METHOD(GroupClassNew,struct opSet *ops)
+METHOD(GroupClassNew,struct opSet *,ops)
 {
 	if((obj=(Object *)DoSuperMethodA(cl,obj,(Msg)ops)))
 	{
@@ -458,7 +472,7 @@ METHOD(GroupClassNew,struct opSet *ops)
 	return((ULONG)obj);
 }
 
-METHOD(GroupClassDispose,Msg msg)
+METHOD(GroupClassDispose,Msg,msg)
 {
 	GD *gd=INST_DATA(cl,obj);
 
@@ -481,7 +495,7 @@ METHOD(GroupClassDispose,Msg msg)
 	return(DoSuperMethodA(cl,obj,msg));
 }
 
-METHOD(GroupClassSet,struct opSet *ops)
+METHOD(GroupClassSet,struct opSet *,ops)
 {
 	BOOL success;
 
@@ -498,17 +512,17 @@ METHOD(GroupClassSet,struct opSet *ops)
 	return(success);
 }
 
-METHOD(GroupClassGet,struct opGet *opg)
+METHOD(GroupClassGet,struct opGet *,opg)
 {
 	return(DoSuperMethodA(cl,obj,(Msg)opg));
 }
 
-METHOD(GroupClassNewMember,struct opSet *ops)
+METHOD(GroupClassNewMember,struct opSet *,ops)
 {
 	return((ULONG)NewObjectA(((struct oBGUIGroupClassData *)cl->cl_UserData)->NodeClass,NULL,ops->ops_AttrList));
 }
 
-METHOD(GroupClassAll, Msg msg)
+METHOD(GroupClassAll, Msg,msg)
 {
    ULONG rc;
 
@@ -634,7 +648,7 @@ static BOOL SetGroupNodeAttributes(MD *md,struct opSet *ops)
 	return(success);
 }
 
-METHOD(GroupNodeClassNew,struct opSet *ops)
+METHOD(GroupNodeClassNew,struct opSet *,ops)
 {
 	if((obj=(Object *)DoSuperMethodA(cl,obj,(Msg)ops)))
 	{
@@ -796,12 +810,12 @@ static GetAttribute(MD *md,ULONG attribute,ULONG *store)
 	return(TRUE);
 }
 
-METHOD(GroupNodeClassGet,struct opGet *opg)
+METHOD(GroupNodeClassGet,struct opGet *,opg)
 {
 	return(GetAttribute(INST_DATA(cl,obj),opg->opg_AttrID,opg->opg_Storage) ? 1 : DoSuperMethodA(cl,obj,(Msg)opg));
 }
 
-METHOD(GroupNodeClassMultipleGet,struct ogpMGet *ogp)
+METHOD(GroupNodeClassMultipleGet,struct ogpMGet *,ogp)
 {
 	MD *md=INST_DATA(cl,obj);
 	ULONG got;

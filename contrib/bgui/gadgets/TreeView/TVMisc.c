@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:08  stegerg
+ * replacements for REG macro
+ *
  * Revision 42.0  2000/05/09 22:21:51  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -56,13 +59,48 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-ASM ULONG TV_Clear(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-ASM ULONG TV_Lock(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) Msg msg);
-ASM ULONG TV_Unlock(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-ASM ULONG TV_Sort(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-ASM ULONG TV_Redraw(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-ASM ULONG TV_Refresh(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-ASM ULONG TV_Rebuild(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
+//ASM ULONG TV_Clear(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
+ASM REGFUNC3(ULONG, TV_Clear,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc));
+
+//ASM ULONG TV_Lock(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) Msg msg);
+ASM REGFUNC3(ULONG, TV_Lock,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg));
+
+//ASM ULONG TV_Unlock(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
+ASM REGFUNC3(ULONG, TV_Unlock,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc));
+
+
+//ASM ULONG TV_Sort(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
+ASM REGFUNC3(ULONG, TV_Sort,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc));
+
+//ASM ULONG TV_Redraw(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
+ASM REGFUNC3(ULONG, TV_Redraw,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc));
+
+//ASM ULONG TV_Refresh(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
+ASM REGFUNC3(ULONG, TV_Refresh,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc));
+
+//ASM ULONG TV_Rebuild(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
+ASM REGFUNC3(ULONG, TV_Rebuild,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc));
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
@@ -73,7 +111,11 @@ ASM ULONG TV_Rebuild(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvComm
 *****************************  TV_CLEAR()  ******************************
 ************************************************************************/
 
-ASM ULONG TV_Clear(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+//ASM ULONG TV_Clear(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+ASM REGFUNC3(ULONG, TV_Clear,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc))
 {
 TVData	*tv;
 
@@ -91,7 +133,11 @@ return(0);
 ******************************  TV_LOCK()  ******************************
 ************************************************************************/
 
-ASM ULONG TV_Lock(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) Msg msg)
+//ASM ULONG TV_Lock(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) Msg msg)
+ASM REGFUNC3(ULONG, TV_Lock,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
 TVData	*tv;
 
@@ -109,7 +155,11 @@ return(0);
 *****************************  TV_UNLOCK()  *****************************
 ************************************************************************/
 
-ASM ULONG TV_Unlock(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+//ASM ULONG TV_Unlock(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+ASM REGFUNC3(ULONG, TV_Unlock,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc))
 {
 TVData	*tv;
 
@@ -133,7 +183,11 @@ return(0);
 *
 *************************************************************************/
 
-ASM ULONG TV_Sort(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+//ASM ULONG TV_Sort(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+ASM REGFUNC3(ULONG, TV_Sort,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc))
 {
 return(0);
 }
@@ -145,7 +199,11 @@ return(0);
 *
 *************************************************************************/
 
-ASM ULONG TV_Redraw(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+//ASM ULONG TV_Redraw(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+ASM REGFUNC3(ULONG, TV_Redraw,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc))
 {
 TVData	*tv;
 
@@ -158,7 +216,11 @@ return(DoMethod(tv->tv_Listview,LVM_REFRESH,tvc->tvc_GInfo));
 ****************************  TV_REFRESH()  *****************************
 ************************************************************************/
 
-ASM ULONG TV_Refresh(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+//ASM ULONG TV_Refresh(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+ASM REGFUNC3(ULONG, TV_Refresh,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc))
 {
 TVData	*tv;
 
@@ -175,7 +237,11 @@ return(DoMethod(tv->tv_Listview,LVM_REFRESH,tvc->tvc_GInfo));
 *
 *************************************************************************/
 
-ASM ULONG TV_Rebuild(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+//ASM ULONG TV_Rebuild(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc)
+ASM REGFUNC3(ULONG, TV_Rebuild,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct tvCommand *, tvc))
 {
 TVData	*tv;
 TNPTR	tn;

@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:08  stegerg
+ * replacements for REG macro
+ *
  * Revision 42.0  2000/05/09 22:21:43  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -55,9 +58,24 @@
 *****************************  PROTOTYPES  ******************************
 ************************************************************************/
 
-ASM ULONG TV_GoActive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi);
-ASM ULONG TV_HandleInput(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi);
-ASM ULONG TV_GoInactive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpGoInactive *gpgi);
+//ASM ULONG TV_GoActive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi);
+ASM REGFUNC3(ULONG, TV_GoActive,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *, gpi));
+
+//ASM ULONG TV_HandleInput(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi);
+ASM REGFUNC3(ULONG, TV_HandleInput,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *, gpi));
+
+
+//ASM ULONG TV_GoInactive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpGoInactive *gpgi);
+ASM REGFUNC3(ULONG, TV_GoInactive,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpGoInactive *, gpgi));
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
@@ -71,7 +89,11 @@ ASM ULONG TV_GoInactive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpG
 *
 *************************************************************************/
 
-ASM ULONG TV_GoActive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi)
+//ASM ULONG TV_GoActive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi)
+ASM REGFUNC3(ULONG, TV_GoActive,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *, gpi))
 {
 TVData		*tv;
 ULONG		rc;
@@ -114,7 +136,11 @@ return(rc);
 *
 *************************************************************************/
 
-ASM ULONG TV_HandleInput(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi)
+//ASM ULONG TV_HandleInput(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpInput *gpi)
+ASM REGFUNC3(ULONG, TV_HandleInput,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *, gpi))
 {
 TVData	*tv;
 
@@ -127,7 +153,11 @@ return(DoMethodA(tv->tv_Listview,(Msg) gpi));
 ***************************  TV_GOINACTIVE()  ***************************
 ************************************************************************/
 
-ASM ULONG TV_GoInactive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpGoInactive *gpgi)
+//ASM ULONG TV_GoInactive(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct gpGoInactive *gpgi)
+ASM REGFUNC3(ULONG, TV_GoInactive,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpGoInactive *, gpgi))
 {
 TVData	*tv;
 

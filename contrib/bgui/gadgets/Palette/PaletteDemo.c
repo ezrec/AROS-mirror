@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:07  stegerg
+ * replacements for REG macro
+ *
  * Revision 42.0  2000/05/09 22:21:17  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -101,7 +104,11 @@ UBYTE	       *InfoTxt = ISEQ_C "As you can see the colors of the below button\n"
  *	dispatchers, hook routines or anything else which may get
  *	called by a task other than your own.
  */
-SAVEDS ASM ULONG myButtonDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+//SAVEDS ASM ULONG myButtonDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+SAVEDS ASM REGFUNC3(ULONG, myButtonDispatch,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
 	ULONG			rc, pen, tag;
 

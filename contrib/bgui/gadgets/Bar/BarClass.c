@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:07  stegerg
+ * replacements for REG macro
+ *
  * Revision 42.0  2000/05/09 22:20:29  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -90,7 +93,19 @@ GD;
 
 static ULONG instances=0;
 
-#define METHOD(method,message) static __asm ULONG method(register __a0 Class *cl,register __a2 Object *obj,register __a1 message)
+//#define METHOD(method,message) static __asm ULONG method(register __a0 Class *cl,register __a2 Object *obj,register __a1 message)
+
+#ifdef _AROS
+  #define METHOD(f,mtype,m) AROS_UFH3(STATIC ULONG, f, \
+			  AROS_UFHA(Class *, cl, A0), \
+			  AROS_UFHA(Object *, obj, A2), \
+			  AROS_UFHA(mtype, m, A1))
+#else
+  #define METHOD(f,mtype,m) static ASM ULONG f( \
+  			  REG(A0) Class *cl, \
+  			  REG(A2) Object *obj, \
+			  REG(A1) mtype m)
+#endif
 
 static void ComputeHitBox(Object *obj,GD *gd)
 {
@@ -538,7 +553,7 @@ static ULONG BarSet(Class *cl,Object *obj,struct opUpdate *opu,BOOL creation)
 	return(success);
 }
 
-METHOD(BarClassNew,struct opSet *ops)
+METHOD(BarClassNew,struct opSet *,ops)
 {
 	D(bug("BarClassNew\n"));
 	if(BGUIBase==NULL
@@ -611,7 +626,7 @@ METHOD(BarClassNew,struct opSet *ops)
 	return((ULONG)obj);
 }
 
-METHOD(BarClassDispose,Msg msg)
+METHOD(BarClassDispose,Msg,msg)
 {
 	GD *gd=INST_DATA(cl,obj);
 	ULONG rc;
@@ -628,7 +643,7 @@ METHOD(BarClassDispose,Msg msg)
 	return(rc);
 }
 
-METHOD(BarClassSet,struct opUpdate *opu)
+METHOD(BarClassSet,struct opUpdate *,opu)
 {
 	BOOL success;
 
@@ -684,13 +699,13 @@ static GetAttribute(Class *cl,GD *gd,ULONG attribute,ULONG *store)
 	return(TRUE);
 }
 
-METHOD(BarClassGet,struct opGet *opg)
+METHOD(BarClassGet,struct opGet *,opg)
 {
 	D(bug("BarClassGet\n"));
 	return(GetAttribute(cl,INST_DATA(cl,obj),opg->opg_AttrID,opg->opg_Storage) ? 1 : DoSuperMethodA(cl,obj,(Msg)opg));
 }
 
-METHOD(BarClassRender, struct gpRender *gpr)
+METHOD(BarClassRender, struct gpRender *,gpr)
 {
 	GD *gd=INST_DATA(cl,obj);
 	ULONG result;
@@ -705,7 +720,7 @@ METHOD(BarClassRender, struct gpRender *gpr)
 	return(result);
 }
 
-METHOD(BarClassGoActive, struct gpInput *gpi)
+METHOD(BarClassGoActive, struct gpInput *,gpi)
 {
 	GD *gd=INST_DATA(cl,obj);
 	ULONG result;
@@ -775,7 +790,7 @@ METHOD(BarClassGoActive, struct gpInput *gpi)
 	return(result);
 }
 
-METHOD(BarClassHandleInput, struct gpInput *gpi)
+METHOD(BarClassHandleInput, struct gpInput *,gpi)
 {
 	GD *gd=INST_DATA(cl,obj);
 	struct gpInput copy;
@@ -891,7 +906,7 @@ METHOD(BarClassHandleInput, struct gpInput *gpi)
 	return(result);
 }
 
-METHOD(BarClassGoInactive, struct gpGoInactive *ggi)
+METHOD(BarClassGoInactive, struct gpGoInactive *,ggi)
 {
 	GD *gd=INST_DATA(cl,obj);
 
@@ -900,7 +915,7 @@ METHOD(BarClassGoInactive, struct gpGoInactive *ggi)
 	return(DoSuperMethodA(cl,obj,(Msg)ggi));
 }
 
-METHOD(BarClassDimensions, struct grmDimensions *dim)
+METHOD(BarClassDimensions, struct grmDimensions *,dim)
 {
 	GD *gd=INST_DATA(cl,obj);
 	ULONG result;

@@ -18,6 +18,9 @@
  * enable/disable status of an item.
 
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:07  stegerg
+ * replacements for REG macro
+ *
  * Revision 42.0  2000/05/09 22:21:23  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -78,7 +81,18 @@
  */
 #define GADGET(x) ((struct Gadget *)x)
 
-#define METHOD(f,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) m)
+//#define METHOD(f,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) m)
+#ifdef _AROS
+  #define METHOD(f,mtype,m) AROS_UFH3(STATIC ULONG, f, \
+			  AROS_UFHA(Class *, cl, A0), \
+			  AROS_UFHA(Object *, obj, A2), \
+			  AROS_UFHA(mtype, m, A1))
+#else
+  #define METHOD(f,mtype,m) static ASM ULONG f( \
+  			  REG(A0) Class *cl, \
+  			  REG(A2) Object *obj, \
+			  REG(A1) mtype m)
+#endif
 
 /*
 ** OS macros.
@@ -156,7 +170,9 @@ STATIC ULONG VectorAttrs[] = {   VIT_VectorArray,
 /*
 ** See if we should create a vector image.
 **/
-STATIC ASM Object *CreateVectorImage( REG(a1) struct TagItem *attrs )
+//STATIC ASM Object *CreateVectorImage( REG(a1) struct TagItem *attrs )
+STATIC ASM REGFUNC1(Object *, CreateVectorImage
+	REGPARAM(A1, struct TagItem *, attrs))
 {
    Class       *class;
    struct TagItem    *clones;
@@ -201,7 +217,10 @@ STATIC ULONG NotifyAttrChange( Object *obj, struct GadgetInfo *gi, ULONG flags, 
 /*
 ** Copy the menu array.
 **/
-STATIC ASM BOOL CopyArray( REG(a0) PMD *pmd, REG(a1) struct PopMenu *pm )
+//STATIC ASM BOOL CopyArray( REG(a0) PMD *pmd, REG(a1) struct PopMenu *pm )
+STATIC ASM REGFUNC2(BOOL, CopyArray,
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(A1, struct PopMenu *, pm))
 {
    struct PopMenu *tmp = pm;
    ULONG     size;
@@ -252,7 +271,10 @@ STATIC ASM BOOL CopyArray( REG(a0) PMD *pmd, REG(a1) struct PopMenu *pm )
 /*
 ** Scale the checkmark.
 **/
-STATIC ASM VOID ScaleCheckMark( REG(a0) PMD *pmd, REG(a1) struct RastPort *rp )
+//STATIC ASM VOID ScaleCheckMark( REG(a0) PMD *pmd, REG(a1) struct RastPort *rp )
+STATIC ASM REGFUNC2(VOID, ScaleCheckMark,
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(A1, struct RastPort *, rp))
 {
    UBYTE        *refstr = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,_:";
 
@@ -270,7 +292,10 @@ STATIC ASM VOID ScaleCheckMark( REG(a0) PMD *pmd, REG(a1) struct RastPort *rp )
 /*
 ** Re-compute the size of the popup window.
 **/
-STATIC ASM VOID ComputePopWindowSize( REG(a0) PMD *pmd, REG(a1) struct TextFont *tf )
+//STATIC ASM VOID ComputePopWindowSize( REG(a0) PMD *pmd, REG(a1) struct TextFont *tf )
+STATIC ASM REGFUNC2(VOID, ComputePopWindowSize,
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(A1, struct TextFont *, tf))
 {
    struct RastPort         rp;
    UWORD       width = 0, height = 0, tlen;
@@ -319,7 +344,11 @@ STATIC ASM VOID ComputePopWindowSize( REG(a0) PMD *pmd, REG(a1) struct TextFont 
 /*
 ** Render a bar-label.
 **/
-STATIC ASM VOID RenderBarLabel( REG(a0) struct RastPort *rp, REG(d0) UWORD top, REG(d1) UWORD width )
+//STATIC ASM VOID RenderBarLabel( REG(a0) struct RastPort *rp, REG(d0) UWORD top, REG(d1) UWORD width )
+STATIC ASM REGFUNC3(VOID, RenderBarLabel,
+	REGPARAM(A0, struct RastPort *, rp),
+	REGPARAM(D0, UWORD, top),
+	REGPARAM(D1, UWORD, width))
 {
    /*
    ** Render first line.
@@ -342,7 +371,11 @@ STATIC ASM VOID RenderBarLabel( REG(a0) struct RastPort *rp, REG(d0) UWORD top, 
 ** Get the y-position of the item
 ** number "entry".
 **/
-STATIC ASM UWORD GetYPos( REG(a0) struct RastPort *rp, REG(a1) struct PopMenu *labels, REG(d0) ULONG entry )
+//STATIC ASM UWORD GetYPos( REG(a0) struct RastPort *rp, REG(a1) struct PopMenu *labels, REG(d0) ULONG entry )
+STATIC ASM REGFUNC3(UWORD, GetYPos,
+	REGPARAM(A0, struct RastPort *, rp),
+	REGPARAM(A1, struct PopMenu *, labels),
+	REGPARAM(D0, ULONG, entry))
 {
    UWORD       num = 0, ypos = 2;
 
@@ -468,7 +501,12 @@ STATIC VOID RenderMenuEntry( struct RastPort *rp, PMD *pmd, UWORD *pens, ULONG n
 ** there will fit on the screen the list is clipped
 ** off at the bottom.
 **/
-STATIC ASM ULONG OpenPopupWindow( REG(a0) PMD *pmd, REG(a1) Object *obj, REG(a2) struct gpInput *gpi, REG(d0) BOOL mouse )
+//STATIC ASM ULONG OpenPopupWindow( REG(a0) PMD *pmd, REG(a1) Object *obj, REG(a2) struct gpInput *gpi, REG(d0) BOOL mouse )
+STATIC ASM REGFUNC4(ULONG, OpenPopupWindow,
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(A1, Object *, obj),
+	REGPARAM(A2, struct gpInput *, gpi),
+	REGPARAM(D0, BOOL, mouse))
 {
    struct Screen     *screen = gpi->gpi_GInfo->gi_Screen;
    struct RastPort          rpt;
@@ -626,7 +664,10 @@ STATIC ASM ULONG OpenPopupWindow( REG(a0) PMD *pmd, REG(a1) Object *obj, REG(a2)
 ** Return the menu number under the mouse
 **      or ~0 if mouse not over selectable item. (NMC:added)
 **/
-STATIC ASM LONG Selected( REG(a0) PMD *pmd, REG(a1) struct RastPort *rp )
+//STATIC ASM LONG Selected( REG(a0) PMD *pmd, REG(a1) struct RastPort *rp )
+STATIC ASM REGFUNC2(LONG, Selected,
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(A1, struct RastPort *, rp))
 {
    WORD        mx = pmd->pmd_PopWindow->MouseX, my = pmd->pmd_PopWindow->MouseY, ypos = 2;
    struct PopMenu        *labels = pmd->pmd_MenuLabels;
@@ -691,7 +732,10 @@ STATIC ASM LONG Selected( REG(a0) PMD *pmd, REG(a1) struct RastPort *rp )
 ** returning TRUE or FALSE. (NMC:Added)
 **/
 
-STATIC ASM BOOL ItemSelectable( REG(a0) PMD *pmd, REG(d0) ULONG num )
+//STATIC ASM BOOL ItemSelectable( REG(a0) PMD *pmd, REG(d0) ULONG num )
+STATIC ASM REGFUNC2(BOOL, ItemSelectable,
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(D0, ULONG, num))
 {
    if ( ( pmd->pmd_MenuLabels[ num ].pm_Label == PMB_BARLABEL ) ||
       ( pmd->pmd_MenuLabels[ num ].pm_Flags & PMF_DISABLED ) )
@@ -704,7 +748,9 @@ STATIC ASM BOOL ItemSelectable( REG(a0) PMD *pmd, REG(d0) ULONG num )
 ** Return current selection if no previous
 ** found or no item selected to begin with. (NMC:Added)
 **/
-STATIC ASM ULONG PrevItem( REG(a0) PMD *pmd )
+//STATIC ASM ULONG PrevItem( REG(a0) PMD *pmd )
+STATIC ASM REGFUNC1(ULONG, PrevItem,
+	REGPARAM(A0, PMD *, pmd))
 {
    ULONG    prev = pmd->pmd_Selected - 1;
 
@@ -731,7 +777,9 @@ STATIC ASM ULONG PrevItem( REG(a0) PMD *pmd )
 ** Find the next selectable item.
 ** Return current selection if no next found. (NMC:Added)
 **/
-STATIC ASM ULONG NextItem( REG(a0) PMD *pmd )
+//STATIC ASM ULONG NextItem( REG(a0) PMD *pmd )
+STATIC ASM REGFUNC1(ULONG, NextItem,
+	REGPARAM(A0, PMD *, pmd))
 {
    ULONG    next = pmd->pmd_Selected + 1;
 
@@ -758,7 +806,9 @@ STATIC ASM ULONG NextItem( REG(a0) PMD *pmd )
 /*
 ** Mutually exclude other items.
 **/
-STATIC ASM VOID MutEx( REG(a0) PMD *pmd )
+//STATIC ASM VOID MutEx( REG(a0) PMD *pmd )
+STATIC ASM REGFUNC1(VOID, MutEx,
+	REGPARAM(A0, PMD *, pmd))
 {
    struct PopMenu        *labels = pmd->pmd_MenuLabels, *the_one = &pmd->pmd_MenuLabels[ pmd->pmd_Selected ];
    UWORD       i;
@@ -803,7 +853,12 @@ STATIC ASM VOID MutEx( REG(a0) PMD *pmd )
 /*
 ** Compute minimum object dimensions.
 **/
-STATIC ASM VOID SetDimensions( REG(a0) Object *obj, REG(a1) struct grmDimensions *dim, REG(d0) UWORD mx, REG(d1) UWORD my )
+//STATIC ASM VOID SetDimensions( REG(a0) Object *obj, REG(a1) struct grmDimensions *dim, REG(d0) UWORD mx, REG(d1) UWORD my )
+STATIC ASM REGFUNC4(VOID, SetDimensions,
+	REGPARAM(A0, Object *, obj),
+	REGPARAM(A1, struct grmDimensions *, dim),
+	REGPARAM(D0, UWORD, mx),
+	REGPARAM(D1, UWORD, my))
 {
    Object            *label = NULL, *frame = NULL;
    ULONG           place, fh = 0, fv = 0;
@@ -879,7 +934,11 @@ STATIC ASM VOID SetDimensions( REG(a0) Object *obj, REG(a1) struct grmDimensions
 /*
 ** Create a shiny new object.
 **/
-STATIC ASM ULONG PMBClassNew( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops )
+//STATIC ASM ULONG PMBClassNew( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops )
+STATIC ASM REGFUNC3(ULONG, PMBClassNew,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opSet *, ops))
 {
    PMD         *pmd;
    struct TagItem    *tstate = ops->ops_AttrList, *tag;
@@ -964,7 +1023,11 @@ STATIC ASM ULONG PMBClassNew( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) st
 /*
 ** Set object attributes.
 **/
-STATIC ASM ULONG PMBClassSet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops )
+//STATIC ASM ULONG PMBClassSet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops )
+STATIC ASM REGFUNC3(ULONG, PMBClassSet,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opSet *, ops))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    struct TagItem    *tstate = ops->ops_AttrList, *tag;
@@ -1036,7 +1099,11 @@ STATIC ASM ULONG PMBClassSet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) st
 /*
 ** Re-render the object.
 **/
-STATIC ASM ULONG PMBClassRender( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpRender *gpr )
+//STATIC ASM ULONG PMBClassRender( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpRender *gpr )
+STATIC ASM REGFUNC3(ULONG, PMBClassRender,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpRender *, gpr))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    struct RastPort         *rp = gpr->gpr_RPort;
@@ -1111,7 +1178,11 @@ STATIC ASM ULONG PMBClassRender( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1)
 /*
 ** Let's go active.
 **/
-STATIC ASM ULONG PMBClassGoActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
+//STATIC ASM ULONG PMBClassGoActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
+STATIC ASM REGFUNC3(ULONG, PMBClassGoActive,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *, gpi))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    UWORD       *pens;
@@ -1188,7 +1259,11 @@ STATIC ASM ULONG PMBClassGoActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a
 /*
 ** Handle the user input.
 **/
-STATIC ASM ULONG PMBClassHandleInput( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
+//STATIC ASM ULONG PMBClassHandleInput( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
+STATIC ASM REGFUNC3(ULONG, PMBClassHandleInput,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *, gpi))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    ULONG        item, rc = GMR_MEACTIVE;
@@ -1359,7 +1434,11 @@ STATIC ASM ULONG PMBClassHandleInput( REG(a0) Class *cl, REG(a2) Object *obj, RE
 /*
 ** Go inactive...
 **/
-STATIC ASM ULONG PMBClassGoInActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpGoInactive *gpgi )
+//STATIC ASM ULONG PMBClassGoInActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpGoInactive *gpgi )
+STATIC ASM REGFUNC3(ULONG, PMBClassGoInActive,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpGoInactive *, gpgi))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
 
@@ -1387,7 +1466,11 @@ STATIC ASM ULONG PMBClassGoInActive( REG(a0) Class *cl, REG(a2) Object *obj, REG
 /*
 ** Get an attribute.
 **/
-STATIC ASM ULONG PMBClassGet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opGet *opg )
+//STATIC ASM ULONG PMBClassGet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opGet *opg )
+STATIC ASM REGFUNC3(ULONG, PMBClassGet,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opGet *, opg))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    ULONG        rc = 1;
@@ -1410,7 +1493,11 @@ STATIC ASM ULONG PMBClassGet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) st
 /*
 ** Dump the object.
 **/
-STATIC ASM ULONG PMBClassDispose( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+//STATIC ASM ULONG PMBClassDispose( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+STATIC ASM REGFUNC3(ULONG, PMBClassDispose,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    ULONG rc;
@@ -1443,7 +1530,11 @@ STATIC ASM ULONG PMBClassDispose( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1
 /*
  * They want our minimum dimensions.
  */
-STATIC ASM ULONG PMBClassDimensions( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct grmDimensions *dim )
+//STATIC ASM ULONG PMBClassDimensions( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct grmDimensions *dim )
+STATIC ASM REGFUNC3(ULONG, PMBClassDimensions,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct grmDimensions *, dim))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    UWORD        mx, my;
@@ -1542,7 +1633,11 @@ STATIC ASM ULONG PMBClassDimensions( REG(a0) Class *cl, REG(a2) Object *obj, REG
 /*
 ** Do a command on the menu.
 **/
-STATIC ASM ULONG PMBClassCommand( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct pmbmCommand *pc )
+//STATIC ASM ULONG PMBClassCommand( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct pmbmCommand *pc )
+STATIC ASM REGFUNC3(ULONG, PMBClassCommand,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct pmbmCommand *, pc))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    struct PopMenu    *label = &pmd->pmd_MenuLabels[ pc->pmbm_MenuNumber ];
@@ -1603,7 +1698,7 @@ STATIC ASM ULONG PMBClassCommand( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1
    return( rc );
 }
 
-METHOD(PMBClassKeyActive, Msg msg)
+METHOD(PMBClassKeyActive, Msg, msg)
 {
    return WMKF_ACTIVATE;
 }
