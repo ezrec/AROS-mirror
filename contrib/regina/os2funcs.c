@@ -1,0 +1,260 @@
+#ifndef lint
+static char *RCSid = "$Id$";
+#endif
+
+/*
+ *  The Regina Rexx Interpreter
+ *  Copyright (C) 1992-1994  Anders Christensen <anders@pvv.unit.no>
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Library General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Library General Public
+ *  License along with this library; if not, write to the Free
+ *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#ifdef OS2
+# define INCL_DOSPROCESS
+#endif
+
+#ifdef __EMX__
+# define DONT_TYPEDEF_PFN
+# include <io.h>
+# include <os2emx.h>
+#endif
+
+#include "rexx.h"
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
+#ifdef HAVE_ASSERT_H
+# include <assert.h>
+#endif
+#ifdef HAVE_LIMITS_H
+# include <limits.h>
+#endif
+#include <ctype.h>
+#include <time.h>
+
+#if defined(VMS)
+# include <stat.h>
+#elif defined(OS2)
+# include <sys/stat.h>
+# ifdef HAVE_UNISTD_H
+#  include <unistd.h>
+# endif
+#elif defined(__WATCOMC__) || defined(_MSC_VER)
+# include <sys/stat.h>
+# include <fcntl.h>
+# ifdef HAVE_UNISTD_H
+#  include <unistd.h>
+# endif
+# ifdef _MSC_VER
+#  include <io.h>
+#  include <direct.h>
+# endif
+#elif defined(MAC)
+# include "mac.h"
+#else
+# include <sys/stat.h>
+# ifdef HAVE_PWD_H
+#  include <pwd.h>
+# endif
+# ifdef HAVE_GRP_H
+#  include <grp.h>
+# endif
+# include <fcntl.h>
+# ifdef HAVE_UNISTD_H
+#  include <unistd.h>
+# endif
+#endif
+
+#ifdef HAVE_LINUX_STAT_H_NO
+# include <linux/stat.h>
+#endif
+
+#ifdef DJGPP
+# include <pc.h>
+# include <dir.h>
+#endif
+
+
+#ifdef __WATCOMC__
+# include <i86.h>
+#endif
+
+#ifdef WIN32
+# if defined(__BORLANDC__)
+#  include <dir.h>
+# endif
+# if defined(_MSC_VER)
+#  if _MSC_VER >= 1100
+/* Stupid MSC can't compile own headers without warning at least in VC 5.0 */
+#   pragma warning(disable: 4115 4201 4214)
+#  endif
+# endif
+# include <windows.h>
+# ifdef _MSC_VER
+#  if _MSC_VER >= 1100
+#   pragma warning(default: 4115 4201 4214)
+#  endif
+# endif
+# if defined(__WATCOMC__)
+#  include <io.h>
+# endif
+#endif
+
+/*
+ * Since development of Ultrix has ceased, and they never managed to
+ * fix a few things, we want to define a few things, just in order
+ * to kill a few warnings ...
+ */
+#if defined(FIX_PROTOS) && defined(FIX_ALL_PROTOS) && defined(ultrix)
+   int fstat( int fd, struct stat *buf ) ;
+   int stat( char *path, struct stat *buf ) ;
+#endif
+
+streng *os2_directory( tsd_t *TSD, cparamboxptr parms )
+{
+   streng *result ;
+#ifdef __EMX__
+   int i;
+#endif
+   char *path;
+
+   checkparam(  parms,  0,  1 , "DIRECTORY" ) ;
+
+   if (parms&&parms->value)
+   {
+      path = str_of( TSD, parms->value ) ;
+      if (chdir( path ) )
+      {
+         FreeTSD( path ) ;
+         return nullstringptr() ;
+      }
+      FreeTSD( path ) ;
+   }
+
+#if defined(HAVE__FULLPATH)
+   result = Str_makeTSD( REXX_PATH_MAX );
+   _fullpath(result->value, ".", REXX_PATH_MAX);
+# if defined(__EMX__)
+   /*
+    * Convert / to \ as the API call doesn't do this for us
+    */
+   result->len = strlen( result->value ) ;
+   for ( i=0; i < result->len; i++)
+   {
+      if ( result->value[i] == '/' )
+         result->value[i] = '\\';
+   }
+# endif
+#elif defined(HAVE__TRUENAME)
+   result = Str_makeTSD( _MAX_PATH ) ;
+   _truename(".", result->value);
+#else
+   result = Str_makeTSD( 1024 ) ;
+   if (my_fullpath(result->value, ".", 1024) == -1)
+      result = nullstringptr() ;
+#endif
+   result->len = strlen( result->value ) ;
+
+   return result;
+}
+
+streng *os2_beep( tsd_t *TSD, cparamboxptr parms )
+{
+   int freq=0,dur=1;
+
+   checkparam(  parms,  2,  1 , "BEEP" ) ;
+
+   if (parms && parms->value)
+   {
+      freq = atopos( TSD, parms->value, "BEEP", 1 ) ;
+      if (freq < 37 || freq > 32767)
+         exiterror( ERR_INCORRECT_CALL, 0 );
+   }
+   if (parms->next && parms->next->value)
+   {
+      dur = atopos( TSD, parms->next->value, "BEEP", 2 ) ;
+      if (dur < 1 || freq > 60000)
+         exiterror( ERR_INCORRECT_CALL, 0 );
+   }
+
+#if defined(WIN32)
+   Beep( (DWORD)freq, (DWORD)dur );
+#elif defined(DOS) && defined(__EMX__)
+   putchar(7);
+#elif defined(OS2)
+   DosBeep( freq, dur );
+#elif defined(__QNX__)
+   printf("\a");
+#elif defined(__WATCOMC__)
+   sound( freq );
+   delay( dur );
+   nosound( );
+#elif defined(__DJGPP__)
+   sound( freq );
+   delay( dur );
+   nosound( );
+#else
+#endif
+   return nullstringptr();
+}
+
+streng *os2_filespec( tsd_t *TSD, cparamboxptr parms )
+{
+   streng *result=NULL ;
+   streng *inpath=NULL;
+   char format = '?' ;
+#if defined(DJGPP)
+   char fdrive[MAXDRIVE], fdir[MAXDIR], fname[MAXFILE], fext[MAXEXT];
+#elif defined(__EMX__)
+   char fdrive[_MAX_DRIVE], fdir[_MAX_DIR], fname[_MAX_FNAME], fext[_MAX_EXT];
+#elif defined(HAVE__SPLITPATH2)
+   char fpath[_MAX_PATH2], *fdrive=NULL, *fdir=NULL, *fname=NULL, *fext=NULL;
+#elif defined(HAVE__SPLITPATH)
+   char fdrive[_MAX_PATH], fdir[_MAX_PATH], fname[_MAX_PATH], fext[_MAX_PATH];
+#else
+   char fpath[REXX_PATH_MAX+5],*fdrive=NULL,*fdir=NULL,*fname=NULL,*fext=NULL;
+#endif
+
+   checkparam(  parms,  2,  2 , "FILESPEC" ) ;
+   format = getoptionchar( TSD, parms->value, "FILESPEC", 1, "DNP" ) ;
+   inpath = Str_dupstrTSD( parms->next->value ) ;
+#if defined(DJGPP)
+   fnsplit( inpath->value, fdrive, fdir, fname, fext );
+#elif defined(__EMX__)
+   _splitpath( inpath->value, fdrive, fdir, fname, fext );
+#elif defined(HAVE__SPLITPATH2)
+   _splitpath2( inpath->value, fpath, &fdrive, &fdir, &fname, &fext );
+#elif defined(HAVE__SPLITPATH)
+   _splitpath( inpath->value, fdrive, fdir, fname, fext );
+#else
+   my_splitpath2( inpath->value, fpath, &fdrive, &fdir, &fname, &fext );
+#endif
+   switch( format )
+   {
+      case 'D':
+         result = Str_creTSD( fdrive );
+         break;
+      case 'N':
+         result = Str_makeTSD( strlen( fname) + strlen( fext ) );
+         Str_catstrTSD( result, fname );
+         Str_catstrTSD( result, fext );
+         break;
+      case 'P':
+         result = Str_creTSD( fdir );
+         break;
+   }
+   FreeTSD( inpath );
+   return result;
+}

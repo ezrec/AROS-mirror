@@ -1,0 +1,90 @@
+                        Regina 2.2
+                      for Win9x/NT/2k
+
+This distribution contains 32 bit executables of the Regina Rexx interpreter 
+for Win9x/NT/2k, and some sample programs, most of which are designed to test
+new features of this interpreter.
+
+Regina is distributed under the GNU Library General Public Licence.
+See COPYING-LIB for details.
+
+This port of Regina to Win9x/NT/2k differs from the port of Regina on the
+Windows NT Resource Kit in two ways:
+
+1)  This port is sanctioned by the author of Regina, Anders Christensen.
+2)  This port does not provide any OLE or Win32 support nor does it
+    provide builtin access to the Registry.  It does however, provide the
+    standard Rexx API.  This enables C programs written under OS/2 and
+    Unix that use the standard API, to be easily ported to Win9x/NT/2k.
+    It also means that C programs written using Quercus Rexx and Object
+    Rexx under Win9x/NT/2k to be recompiled using Regina, and C programs
+    written for Regina to be recompiled using Quercus Rexx or Object
+    Rexx.
+    The Win32 functions that were built into Regina are available as
+    an external function package from http://www.interlog.com/~ptjm
+
+The files in this archive are:
+
+README             - this file
+README.2x          - readme files for 2.x releases of Regina
+COPYING-LIB        - GNU Library General Public Licence
+file_id.diz        - Description file for BBS use
+regina.exe         - 32bit Regina Rexx interpreter executable
+regina.dll         - 32bit Regina Rexx interpreter dynamic library
+regina.lib         - Import library for Visual C++
+libregina_cygwin.a - Import Library for Cygwin
+regina_borland.lib - Import Library for Borland C++
+libregina_ming.a   - Import Library for MingW32
+rexx.lib           - Static library for Visual C++
+rexx.exe           - Regina executable - does not require regina.dll
+rexxsaa.h          - Header file for access to regina.dll
+test1.dll          - Sample external function packages; used by dynfunc.rexx
+test2.dll            demo Rexx program
+demo\*.rexx        - Sample Rexx programs
+
+The remainder of this document is relevant only if you are not installing
+Regina via the InstallShield (R) installation.
+
+Installation is simply a matter of copying the regina.exe and regina.dll
+files into a directory specified in your PATH environment variable.
+
+If you wish to be able to run Rexx programs automatically, ie without
+specifying the regina.exe or the file extension, then run the following
+Windows commands from a command prompt: (you only need to do this once)
+Note: The following commands will only work under NT/2k; they are not
+supported under Windows 95/98.
+
+C:\> ftype Regina=c:\bin\regina.exe "%1" %*
+C:\> assoc .rexx=Regina
+C:\> set PATHEXT=%PATHEXT%;.rexx
+
+The above commands assume that regina.exe is in c:\bin and that you
+only want to execute Rexx programs that have an extension of .rexx.
+Add another ASSOC command to associate files with other extensions.
+
+You will probably want to set the PATHEXT variable in the Environment 
+section of the System Control Panel applet.
+
+Using this build of Regina with other Win32 Compilers
+=====================================================
+Nearly every C compiler on the Win32 platforms generates object code that
+is incompatible with one another.  So using this build of Regina with a
+C compiler other than MS Visual C/C++ requires that you link with the
+import library appropriate to your compiler.  The import libraries supplied
+in this package are:
+
+Compiler        Library Name
+--------------------------------
+Cygwin          libregina_cygwin.a
+Borland C++     regina_borland.lib
+MingW32         libregina_ming.a
+
+Please report bugs at http://www.lightlink.com/hessling/bugreport.html
+
+Cheers, Mark.
+------------------------------------------------------------------------
+* Mark Hessling,  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
+* Author of THE, a Free XEDIT/KEDIT editor and, Rexx/SQL
+* Maintainer of PDCurses: Public Domain Curses and, Regina Rexx interpreter
+* Use Rexx ? join the Rexx Language Association: http://www.rexxla.org
+------------------------------------------------------------------------

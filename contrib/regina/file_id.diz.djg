@@ -1,0 +1,13 @@
+ 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+          Regina Rexx Interpreter
+ Version 2.2     DOS/DPMI       rx22djg.zip
+ ------------------------------------------
+ Port of Regina Rexx interpreter with SAA
+ Rexx API support.  DOS/DPMI version, runs
+ under DOS with DPMI memory manager.
+ Ports also available for OS/2, Win32, Unix,
+ Amiga, QNX, BeOS.
+ Freeware. Source available under GNU
+ Library General License in file
+ regina22.zip. See enclosed COPYING-LIB.
+ 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴

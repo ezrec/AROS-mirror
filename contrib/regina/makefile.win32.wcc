@@ -1,0 +1,712 @@
+#
+# Makefile for Regina REXX Interpreter using Watcom C++ 10.6
+#
+
+VER=20
+
+#
+# good from here down
+#
+
+SRC=$(%REGINA_SRCDIR)
+LIBFILE=rexx.lib
+DLLBASE=regina
+DLLFILE=$(DLLBASE).dll
+IMPFILE=$(DLLBASE).lib
+
+DLLTEST1=test1.dll
+DLLTEST2=test2.dll
+
+CC              = wcc386
+TARGET=nt
+
+!ifeq DEBUG Y
+CFLAGS  = /d2
+LDFLAGS = DEBUG WATCOM ALL
+!ifeq TRACEMEM Y
+MEMTRACE = /DTRACEMEM
+!else
+MEMTRACE =
+!endif
+!else
+CFLAGS  =  /DNDEBUG /oneatx
+LDFLAGS =
+!endif
+
+!ifeq FLISTS N
+NOFLISTS = /uFLISTS
+!else
+NOFLISTS =
+!endif
+
+!ifeq MULTI Y
+MT_FILE = mt_win32
+!else
+MT_FILE = mt_notmt
+!endif
+
+OFILES =      &
+funcs.obj     &
+builtin.obj   &
+error.obj     &
+variable.obj  &
+interprt.obj  &
+debug.obj     &
+dbgfuncs.obj  &
+memory.obj    &
+parsing.obj   &
+files.obj     &
+misc.obj      &
+unxfuncs.obj  &
+os2funcs.obj  &
+cmsfuncs.obj  &
+shell.obj     &
+rexxext.obj   &
+stack.obj     &
+tracing.obj   &
+interp.obj    &
+cmath.obj     &
+convert.obj   &
+strings.obj   &
+library.obj   &
+strmath.obj   &
+signals.obj   &
+macros.obj    &
+envir.obj     &
+expr.obj      &
+extlib.obj    &
+yaccsrc.obj   &
+lexsrc.obj    &
+wrappers.obj  &
+options.obj   &
+instore.obj   &
+extstack.obj  &
+rexxbif.obj   &
+$(MT_FILE).obj   &
+doscmd.obj
+
+
+DLOFILES =      &
+funcs.dlo     &
+builtin.dlo   &
+error.dlo     &
+variable.dlo  &
+interprt.dlo  &
+debug.dlo     &
+dbgfuncs.dlo  &
+memory.dlo    &
+parsing.dlo   &
+files.dlo     &
+misc.dlo      &
+unxfuncs.dlo  &
+os2funcs.dlo  &
+cmsfuncs.dlo  &
+shell.dlo     &
+rexxext.dlo   &
+stack.dlo     &
+tracing.dlo   &
+interp.dlo    &
+cmath.dlo     &
+convert.dlo   &
+strings.dlo   &
+library.dlo   &
+strmath.dlo   &
+signals.dlo   &
+macros.dlo    &
+envir.dlo     &
+expr.dlo      &
+extlib.dlo    &
+yaccsrc.dlo   &
+lexsrc.dlo    &
+wrappers.dlo  &
+options.dlo   &
+instore.dlo   &
+extstack.dlo  &
+rexxbif.dlo   &
+$(MT_FILE).dlo   &
+doscmd.dlo
+
+CPPFLAGS        = /DFGC /DWIN32 /i=$(SRC) #/i=d:\h /i=d:\h\nt
+CCFLAGS         = /zz /ei /zq /mf $(CFLAGS) $(CPPFLAGS) $(MEMTRACE) $(NOFLISTS)
+
+DYN_COMP        =/bd /DDYNAMIC
+
+LINK            = wlink
+
+LIBEXE          = wlib
+LIBFLAGS                = /q /n
+
+HFILES = $(SRC)\rexx.h $(SRC)\defs.h $(SRC)\extern.h $(SRC)\types.h $(SRC)\strings.h
+
+all : rexx.exe regina.exe execiser.exe $(DLLFILE) $(LIBFILE) test1.dll test2.dll
+
+rexx.exe : $(OFILES) rexx.obj nosaa.obj
+        @%create dummy.lnk
+        @%append dummy.lnk option quiet
+        @%append dummy.lnk option stack=0x20000
+        @%append dummy.lnk option heapsize=40960
+        @%append dummy.lnk system $(TARGET)
+        @%append dummy.lnk name rexx.exe
+        @%append dummy.lnk file rexx.obj
+        @%append dummy.lnk file funcs.obj
+        @%append dummy.lnk file builtin.obj
+        @%append dummy.lnk file error.obj
+        @%append dummy.lnk file variable.obj
+        @%append dummy.lnk file interprt.obj
+        @%append dummy.lnk file debug.obj
+        @%append dummy.lnk file dbgfuncs.obj
+        @%append dummy.lnk file memory.obj
+        @%append dummy.lnk file parsing.obj
+        @%append dummy.lnk file files.obj
+        @%append dummy.lnk file misc.obj
+        @%append dummy.lnk file unxfuncs.obj
+        @%append dummy.lnk file os2funcs.obj
+        @%append dummy.lnk file cmsfuncs.obj
+        @%append dummy.lnk file shell.obj
+        @%append dummy.lnk file rexxext.obj
+        @%append dummy.lnk file stack.obj
+        @%append dummy.lnk file tracing.obj
+        @%append dummy.lnk file interp.obj
+        @%append dummy.lnk file cmath.obj
+        @%append dummy.lnk file convert.obj
+        @%append dummy.lnk file strings.obj
+        @%append dummy.lnk file library.obj
+        @%append dummy.lnk file strmath.obj
+        @%append dummy.lnk file signals.obj
+        @%append dummy.lnk file macros.obj
+        @%append dummy.lnk file envir.obj
+        @%append dummy.lnk file expr.obj
+        @%append dummy.lnk file extlib.obj
+        @%append dummy.lnk file yaccsrc.obj
+        @%append dummy.lnk file lexsrc.obj
+        @%append dummy.lnk file wrappers.obj
+        @%append dummy.lnk file options.obj
+        @%append dummy.lnk file nosaa.obj
+        @%append dummy.lnk file instore.obj
+        @%append dummy.lnk file extstack.obj
+        @%append dummy.lnk file rexxbif.obj
+        @%append dummy.lnk file $(MT_FILE).obj
+        @%append dummy.lnk file doscmd.obj
+        $(LINK) $(LDFLAGS) @dummy.lnk
+        del dummy.lnk
+
+regina.exe : $(IMPFILE) regina.obj
+        @%create dummy.lnk
+        @%append dummy.lnk option quiet
+        @%append dummy.lnk option stack=0x20000
+        @%append dummy.lnk option heapsize=40960
+        @%append dummy.lnk system $(TARGET)
+        @%append dummy.lnk name regina.exe
+        @%append dummy.lnk file regina.obj
+        @%append dummy.lnk file $(IMPFILE)
+        $(LINK) $(LDFLAGS) @dummy.lnk
+        del dummy.lnk
+
+execiser.exe : $(LIBFILE) execiser.obj
+        @%create dummy.lnk
+        @%append dummy.lnk option quiet
+        @%append dummy.lnk option stack=0x20000
+        @%append dummy.lnk option heapsize=40960
+        @%append dummy.lnk system $(TARGET)
+        @%append dummy.lnk name execiser.exe
+        @%append dummy.lnk file execiser.obj
+        @%append dummy.lnk file $(LIBFILE)
+        $(LINK) $(LDFLAGS) @dummy.lnk
+        del dummy.lnk
+
+rxstack.exe : rxstack.obj erexxbif.obj eextstack.obj
+        @%create dummy.lnk
+        @%append dummy.lnk option quiet
+        @%append dummy.lnk option stack=0x20000
+        @%append dummy.lnk option heapsize=40960
+        @%append dummy.lnk system $(TARGET)
+        @%append dummy.lnk name rxstack.exe
+        @%append dummy.lnk file rxstack.obj
+        @%append dummy.lnk file eextstack.obj
+        @%append dummy.lnk file erexxbif.obj
+        $(LINK) $(LDFLAGS) @dummy.lnk
+        del dummy.lnk
+
+rxqueue.exe : rxqueue.obj erexxbif.obj eextstack.obj
+        @%create dummy.lnk
+        @%append dummy.lnk option quiet
+        @%append dummy.lnk option stack=0x20000
+        @%append dummy.lnk option heapsize=40960
+        @%append dummy.lnk system $(TARGET)
+        @%append dummy.lnk name rxqueue.exe
+        @%append dummy.lnk file rxqueue.obj
+        @%append dummy.lnk file eextstack.obj
+        @%append dummy.lnk file erexxbif.obj
+        $(LINK) $(LDFLAGS) @dummy.lnk
+        del dummy.lnk
+
+$(LIBFILE): $(OFILES) client.obj drexx.obj rexxsaa.obj
+        @%create lib.rsp
+        @%append lib.rsp +client.obj
+        @%append lib.rsp +drexx.obj
+        @%append lib.rsp +rexxsaa.obj
+        @%append lib.rsp +funcs.obj
+        @%append lib.rsp +builtin.obj
+        @%append lib.rsp +error.obj
+        @%append lib.rsp +variable.obj
+        @%append lib.rsp +interprt.obj
+        @%append lib.rsp +debug.obj
+        @%append lib.rsp +dbgfuncs.obj
+        @%append lib.rsp +memory.obj
+        @%append lib.rsp +parsing.obj
+        @%append lib.rsp +files.obj
+        @%append lib.rsp +misc.obj
+        @%append lib.rsp +unxfuncs.obj
+        @%append lib.rsp +os2funcs.obj
+        @%append lib.rsp +cmsfuncs.obj
+        @%append lib.rsp +shell.obj
+        @%append lib.rsp +rexxext.obj
+        @%append lib.rsp +stack.obj
+        @%append lib.rsp +tracing.obj
+        @%append lib.rsp +interp.obj
+        @%append lib.rsp +cmath.obj
+        @%append lib.rsp +convert.obj
+        @%append lib.rsp +strings.obj
+        @%append lib.rsp +library.obj
+        @%append lib.rsp +strmath.obj
+        @%append lib.rsp +signals.obj
+        @%append lib.rsp +macros.obj
+        @%append lib.rsp +envir.obj
+        @%append lib.rsp +expr.obj
+        @%append lib.rsp +extlib.obj
+        @%append lib.rsp +yaccsrc.obj
+        @%append lib.rsp +lexsrc.obj
+        @%append lib.rsp +wrappers.obj
+        @%append lib.rsp +options.obj
+        @%append lib.rsp +instore.obj
+        @%append lib.rsp +extstack.obj
+        @%append lib.rsp +rexxbif.obj
+        @%append lib.rsp +$(MT_FILE).obj
+        @%append lib.rsp +doscmd.obj
+        $(LIBEXE) $(LIBFLAGS) $@ @lib.rsp
+        del lib.rsp
+
+$(DLLFILE): $(DLOFILES) client.dlo drexx.dlo rexxsaa.dlo
+        @%create dummy.lnk
+        @%append dummy.lnk option quiet
+        @%append dummy.lnk option stack=40960
+        @%append dummy.lnk option heapsize=40960
+        @%append dummy.lnk system $(TARGET)_dll initinstance terminstance
+        @%append dummy.lnk name $(DLLFILE)
+        @%append dummy.lnk file client.dlo
+        @%append dummy.lnk file drexx.dlo
+        @%append dummy.lnk file rexxsaa.dlo
+        @%append dummy.lnk file funcs.dlo
+        @%append dummy.lnk file builtin.dlo
+        @%append dummy.lnk file error.dlo
+        @%append dummy.lnk file variable.dlo
+        @%append dummy.lnk file interprt.dlo
+        @%append dummy.lnk file debug.dlo
+        @%append dummy.lnk file dbgfuncs.dlo
+        @%append dummy.lnk file memory.dlo
+        @%append dummy.lnk file parsing.dlo
+        @%append dummy.lnk file files.dlo
+        @%append dummy.lnk file misc.dlo
+        @%append dummy.lnk file unxfuncs.dlo
+        @%append dummy.lnk file os2funcs.dlo
+        @%append dummy.lnk file cmsfuncs.dlo
+        @%append dummy.lnk file shell.dlo
+        @%append dummy.lnk file rexxext.dlo
+        @%append dummy.lnk file stack.dlo
+        @%append dummy.lnk file tracing.dlo
+        @%append dummy.lnk file interp.dlo
+        @%append dummy.lnk file cmath.dlo
+        @%append dummy.lnk file convert.dlo
+        @%append dummy.lnk file strings.dlo
+        @%append dummy.lnk file library.dlo
+        @%append dummy.lnk file strmath.dlo
+        @%append dummy.lnk file signals.dlo
+        @%append dummy.lnk file macros.dlo
+        @%append dummy.lnk file envir.dlo
+        @%append dummy.lnk file expr.dlo
+        @%append dummy.lnk file extlib.dlo
+        @%append dummy.lnk file yaccsrc.dlo
+        @%append dummy.lnk file lexsrc.dlo
+        @%append dummy.lnk file wrappers.dlo
+        @%append dummy.lnk file options.dlo
+        @%append dummy.lnk file instore.dlo
+        @%append dummy.lnk file extstack.dlo
+        @%append dummy.lnk file rexxbif.dlo
+        @%append dummy.lnk file $(MT_FILE).dlo
+        @%append dummy.lnk file doscmd.dlo
+        @%append dummy.lnk export _RexxStart
+        @%append dummy.lnk export _RexxRegisterSubcomExe
+        @%append dummy.lnk export _RexxRegisterSubcomDll
+        @%append dummy.lnk export _RexxQuerySubcom
+        @%append dummy.lnk export _RexxDeregisterSubcom
+        @%append dummy.lnk export _RexxVariablePool
+        @%append dummy.lnk export _RexxRegisterExitExe
+        @%append dummy.lnk export _RexxDeregisterExit
+        @%append dummy.lnk export _RexxRegisterFunctionExe
+        @%append dummy.lnk export _RexxRegisterFunctionDll
+        @%append dummy.lnk export _RexxQueryFunction
+        @%append dummy.lnk export _RexxDeregisterFunction
+        @%append dummy.lnk export _ReginaVersion
+        @%append dummy.lnk export ___regina_faked_main
+        $(LINK) $(LDFLAGS) @dummy.lnk
+        del dummy.lnk
+
+$(DLLTEST1): test1.dlo $(IMPFILE)
+        @%create dummy.lnk
+        @%append dummy.lnk option quiet
+        @%append dummy.lnk option stack=40960
+        @%append dummy.lnk option heapsize=40960
+        @%append dummy.lnk system $(TARGET)_dll initinstance terminstance
+        @%append dummy.lnk name $(DLLTEST1)
+        @%append dummy.lnk file test1.dlo
+        @%append dummy.lnk export Test1Function1=_Test1Function1
+        @%append dummy.lnk export Test1Function2=_Test1Function2
+        @%append dummy.lnk export Test1DropFuncs=_Test1DropFuncs
+        @%append dummy.lnk export Test1LoadFuncs=_Test1LoadFuncs
+        @%append dummy.lnk library $(IMPFILE)
+        $(LINK) $(LDFLAGS) @dummy.lnk
+        del dummy.lnk
+
+$(DLLTEST2): test2.dlo $(IMPFILE)
+        @%create dummy.lnk
+        @%append dummy.lnk option quiet
+        @%append dummy.lnk option stack=40960
+        @%append dummy.lnk option heapsize=40960
+        @%append dummy.lnk system $(TARGET)_dll initinstance terminstance
+        @%append dummy.lnk name $(DLLTEST2)
+        @%append dummy.lnk file test2.dlo
+        @%append dummy.lnk export Test2Function1=_Test2Function1
+        @%append dummy.lnk export Test2Function2=_Test2Function2
+        @%append dummy.lnk export Test2DropFuncs=_Test2DropFuncs
+        @%append dummy.lnk export Test2LoadFuncs=_Test2LoadFuncs
+        @%append dummy.lnk library $(IMPFILE)
+        $(LINK) $(LDFLAGS) @dummy.lnk
+        del dummy.lnk
+
+$(IMPFILE): $(DLLFILE)
+        $(LIBEXE) $(LIBFLAGS) $(DLLBASE) +$(DLLFILE)
+
+#
+# rules for making normal object files
+#
+funcs.obj:    $(SRC)\funcs.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+builtin.obj:  $(SRC)\builtin.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+error.obj:    $(SRC)\error.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+variable.obj: $(SRC)\variable.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+interprt.obj: $(SRC)\interprt.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+debug.obj:    $(SRC)\debug.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+dbgfuncs.obj: $(SRC)\dbgfuncs.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+memory.obj:   $(SRC)\memory.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+parsing.obj:  $(SRC)\parsing.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+files.obj:    $(SRC)\files.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+misc.obj:     $(SRC)\misc.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+unxfuncs.obj: $(SRC)\unxfuncs.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+os2funcs.obj: $(SRC)\os2funcs.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+cmsfuncs.obj: $(SRC)\cmsfuncs.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+shell.obj:    $(SRC)\shell.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+rexxext.obj:  $(SRC)\rexxext.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+stack.obj:    $(SRC)\stack.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+tracing.obj:  $(SRC)\tracing.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+interp.obj:   $(SRC)\interp.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+cmath.obj:    $(SRC)\cmath.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+convert.obj:  $(SRC)\convert.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+strings.obj:  $(SRC)\strings.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+library.obj:  $(SRC)\library.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+strmath.obj:  $(SRC)\strmath.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+signals.obj:  $(SRC)\signals.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+macros.obj:   $(SRC)\macros.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+envir.obj:    $(SRC)\envir.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+expr.obj:     $(SRC)\expr.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+extlib.obj:   $(SRC)\extlib.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+wrappers.obj: $(SRC)\wrappers.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+options.obj:  $(SRC)\options.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+doscmd.obj:   $(SRC)\doscmd.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+instore.obj:  $(SRC)\instore.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+extstack.obj:  $(SRC)\extstack.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+rexxbif.obj:  $(SRC)\rexxbif.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+eextstack.obj:  $(SRC)\extstack.c $(HFILES)
+        $(CC) -DEXTERNAL_TO_REGINA $(CCFLAGS) /fo=$@ $(SRC)\extstack.c
+
+erexxbif.obj:  $(SRC)\rexxbif.c $(HFILES)
+        $(CC) -DEXTERNAL_TO_REGINA $(CCFLAGS) /fo=$@ $(SRC)\rexxbif.c
+
+rxstack.obj:  $(SRC)\rxstack.c $(HFILES)
+        $(CC) -DEXTERNAL_TO_REGINA $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+rxqueue.obj:  $(SRC)\rxqueue.c $(HFILES)
+        $(CC) -DEXTERNAL_TO_REGINA $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+nosaa.obj:    $(SRC)\nosaa.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+mt_win32.obj: $(SRC)\mt_win32.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+mt_notmt.obj: $(SRC)\mt_notmt.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+rexx.obj:   $(SRC)\rexx.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+lexsrc.obj : $(SRC)\lexsrc.c $(SRC)\yaccsrc.h $(SRC)\rexx.h
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+#lexsrc.c : lexsrc.l
+#       $(LEX) lexsrc.l
+#       $(MV) lex.yy.c lexsrc.c
+
+yaccsrc.obj: $(SRC)\yaccsrc.c $(SRC)\defs.h $(SRC)\rexx.h
+        $(CC) $(CCFLAGS) /DYYMAXDEPTH=10000 /fo=$@ $(SRC)\$*.c
+
+#yaccsrc.c yaccsrc.h : yaccsrc.y
+#       $(YACC) -dv yaccsrc.y
+#       $(MV) y.tab.h yaccsrc.h
+#       $(MV) y.tab.c yaccsrc.c
+
+drexx.obj: $(SRC)\rexx.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=drexx.obj -DRXLIB $(SRC)\rexx.c
+
+client.obj: $(SRC)\client.c $(HFILES) $(SRC)\rexxsaa.h $(SRC)\rxiface.h
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+rexxsaa.obj: $(SRC)\rexxsaa.c $(HFILES) $(SRC)\rexxsaa.h $(SRC)\rxiface.h
+        $(CC) $(CCFLAGS) /fo=$@ $(SRC)\$*.c
+
+#
+# rules for DLL objects
+#
+funcs.dlo:    $(SRC)\funcs.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+builtin.dlo:  $(SRC)\builtin.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+error.dlo:    $(SRC)\error.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+variable.dlo: $(SRC)\variable.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+interprt.dlo: $(SRC)\interprt.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+debug.dlo:    $(SRC)\debug.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+dbgfuncs.dlo: $(SRC)\dbgfuncs.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+memory.dlo:   $(SRC)\memory.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+parsing.dlo:  $(SRC)\parsing.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+files.dlo:    $(SRC)\files.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+misc.dlo:     $(SRC)\misc.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+unxfuncs.dlo: $(SRC)\unxfuncs.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+os2funcs.dlo: $(SRC)\os2funcs.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+cmsfuncs.dlo: $(SRC)\cmsfuncs.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+shell.dlo:    $(SRC)\shell.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+rexxext.dlo:  $(SRC)\rexxext.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+stack.dlo:    $(SRC)\stack.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+tracing.dlo:  $(SRC)\tracing.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+interp.dlo:   $(SRC)\interp.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+cmath.dlo:    $(SRC)\cmath.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+convert.dlo:  $(SRC)\convert.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+strings.dlo:  $(SRC)\strings.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+library.dlo:  $(SRC)\library.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+strmath.dlo:  $(SRC)\strmath.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+signals.dlo:  $(SRC)\signals.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+macros.dlo:   $(SRC)\macros.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+envir.dlo:    $(SRC)\envir.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+expr.dlo:     $(SRC)\expr.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+extlib.dlo:   $(SRC)\extlib.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+wrappers.dlo: $(SRC)\wrappers.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+options.dlo:  $(SRC)\options.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+doscmd.dlo:   $(SRC)\doscmd.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+instore.dlo:  $(SRC)\instore.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+rexxbif.dlo:  $(SRC)\rexxbif.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+exstack.obj:  $(SRC)\exstack.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+nosaa.dlo:    $(SRC)\nosaa.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+mt_win32.dlo: $(SRC)\mt_win32.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+mt_notmt.dlo: $(SRC)\mt_notmt.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+rexx.dlo:   $(SRC)\rexx.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+lexsrc.dlo : $(SRC)\lexsrc.c $(SRC)\yaccsrc.h $(SRC)\rexx.h
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+#lexsrc.c : lexsrc.l
+#       $(LEX) lexsrc.l
+#       $(MV) lex.yy.c lexsrc.c
+
+yaccsrc.dlo: $(SRC)\yaccsrc.c $(SRC)\defs.h $(SRC)\rexx.h
+        $(CC) $(CCFLAGS) /DYYMAXDEPTH=10000 $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+#yaccsrc.c yaccsrc.h : yaccsrc.y
+#       $(YACC) -dv yaccsrc.y
+#       $(MV) y.tab.h yaccsrc.h
+#       $(MV) y.tab.c yaccsrc.c
+
+drexx.dlo: $(SRC)\rexx.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=drexx.dlo -DRXLIB $(SRC)\rexx.c
+
+client.dlo: $(SRC)\client.c $(HFILES) $(SRC)\rexxsaa.h $(SRC)\rxiface.h
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+rexxsaa.dlo: $(SRC)\rexxsaa.c $(HFILES) $(SRC)\rexxsaa.h $(SRC)\rxiface.h
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+
+test1.dlo:   $(SRC)\test1.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+test2.dlo:   $(SRC)\test2.c $(HFILES)
+        $(CC) $(CCFLAGS) $(DYN_COMP) /fo=$*.dlo $(SRC)\$*.c
+
+regina.obj:   $(SRC)\regina.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$*.obj $(SRC)\$*.c
+
+rexxa.obj:   $(SRC)\regina.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$*.obj $(SRC)\regina.c
+
+execiser.obj:   $(SRC)\execiser.c $(HFILES)
+        $(CC) $(CCFLAGS) /fo=$*.obj $(SRC)\$*.c
+
+zip:
+        zip rexxw32 README README.W32 rexx.exe regina.exe
+        zip rexxw32 rexx.dll test1.dll test2.dll
+        zip rexxw32 rexx.lib regina.lib
+        zip rexxw32 dynfunc.rex dateconv.rex timeconv.rex
+        zip rexxw32 newstr.rex rexxcps.rex
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.

@@ -1,0 +1,52 @@
+                        Regina 2.2
+                       for OS/2 EMX
+
+This file contains 32 bit executables of the Regina Rexx interpreter for
+OS/2 EMX, and some sample programs, most of which are designed to test
+new features of this interpreter.
+
+Regina is distributed under the GNU Library General Public Licence.
+See COPYING-LIB for details.
+
+This port of Regina is for use in OS/2. It uses the EMX 0.9d runtime.
+
+The files in this archive are:
+
+README       - this file
+README.2x    - readme files for 2.x releases of Regina
+COPYING-LIB  - GNU Library General Public Licence
+file_id.diz  - Description file for BBS use
+rexx.exe     - 32bit Regina Rexx interpreter static executable
+regina.exe   - 32bit Regina Rexx interpreter executable (uses regina.dll)
+rxstack.exe  - 32bit Regina Stack server
+rxqueue.exe  - 32bit Regina Stack client
+regina.dll   - Regina dynamic library
+rexx.a       - Regina static library
+rexx.lib     - Regina static library
+regina.a     - Regina import library for regina.dll
+regina.lib   - Regina import library for regina.dll
+rexxsaa.h    - Header file for access to regina.a
+test1.dll    - Sample external function packages; used by dynfunc.rexx
+test2.dll      demo Rexx program
+demo\*.rexx  - Sample Rexx programs
+
+Installation is simply a matter of copying the rexx.exe
+files into a directory specified in your PATH environment variable.
+
+You also need the EMX 09d runtime distribution; emxrt.zip.  This file
+provides emx.dll, the only file from emxrt.zip that Regina requires.
+
+See the README file in emxrt.zip for details on setting up the EMX
+runtime.
+
+Please report any bugs with this release of Regina to me, NOT to Anders.
+Most likely the bugs are of my origin, so I will attempt to fix them.
+As with previous bugs fixed by me, I will pass these fixes on to Anders.
+
+Cheers, Mark.
+------------------------------------------------------------------------
+* Mark Hessling,  M.Hessling@qut.edu.au  http://www.lightlink.com/hessling/
+* Author of THE, a Free XEDIT/KEDIT editor and, Rexx/SQL
+* Maintainer of PDCurses: Public Domain Curses and, Regina Rexx interpreter
+* Use Rexx ? join the Rexx Language Association: http://www.rexxla.org
+------------------------------------------------------------------------
