@@ -32,6 +32,7 @@
  *                     - changed SAME_LOCK returning LOCK_SAME/LOCK_DIFFERENT
  *                     - replaced DOS_[TRUE|FALSE] by dos/dos.h/DOS[TRUE|FALSE]
  *                     - optimisations here and there
+ *                     - removed static definitions
  * 03-Nov-94   fmu   Truncate file names to 30 characters.
  * 12-Oct-94   fmu   Return startup packet even if the scsi device cannot
  *                   be opened immediately.
@@ -275,7 +276,6 @@ ULONG signals;
 	    }
 	    return 0;			    /*	exit process		    */
 	}
-	returnpacket(packet);
     }
 
     global->g_inhibited = 0;
@@ -305,6 +305,7 @@ ULONG signals;
     }
 
     global->g_dos_sigbit = 1L << global->DosProc->pr_MsgPort.mp_SigBit;
+    returnpacket(packet);
 
     /*
      *	Here begins the endless loop, waiting for requests over our
@@ -1345,7 +1346,7 @@ int len = p_info->name_length;
 void Create_Volume_Node (LONG p_disk_type, ULONG p_volume_date) {
 struct DeviceList *dl;
 
-	dl = Find_Volume_Node (global->g_vol_name + 1);
+	dl = Find_Volume_Node (global->g_vol_name);
 	if (dl)
 	{
 		BUG(dbprintf("[Reusing old volume node]");)
@@ -1360,7 +1361,6 @@ struct DeviceList *dl;
 	}
 	else
 	{
-		Forbid ();
 		global->DevList = dl = (struct DeviceList *)MakeDosEntry(global->g_vol_name+1, DLT_VOLUME);
 #ifdef _AROS
 		dl->dl_Device = &global->acdrbase->device;
@@ -1373,7 +1373,6 @@ struct DeviceList *dl;
 		dl->dl_VolumeDate.ds_Minute = (p_volume_date % (24 * 60 * 60)) / 60;
 		dl->dl_VolumeDate.ds_Tick = (p_volume_date % 60) * TICKS_PER_SECOND;
 		AddDosEntry((struct DosList *)dl);
-		Permit ();
 		Register_Volume_Node (dl);
 	}
 }
@@ -1404,7 +1403,6 @@ void Mount (void)
   }
   
   BUG(dbprintf ("***mounting*** ");)
-
   Volume_ID (global->g_volume, buf, sizeof (buf)-1);  
   global->g_vol_name[0] = strlen (buf);
   CopyMem(buf, global->g_vol_name+1, strlen (buf));
@@ -1665,60 +1663,68 @@ void Send_Timer_Request (void)
  *  Check whether the disk has been removed or inserted.
  */
 
-void Check_Disk (void)
-{
-  int i;
-  ULONG l1, l2;
+void Check_Disk (void) {
+int i;
+ULONG l1, l2;
 
-  BUG(dbprintf ("Checking Disk... ");)
-  if (global->g_cd->use_trackdisk) {
-    i = (Test_Unit_Ready (global->g_cd) ||
-         Test_Unit_Ready (global->g_cd));
-    l1 = global->g_cd->t_changeint;
-    l2 = global->g_cd->t_changeint2;
-    BUG(if (l1==l2 && i) dbprintf ("no disk change (T %ld)", l1);)
-    if (l1!=l2 && i) {
-      global->g_disk_inserted = TRUE;
-      BUG(dbprintf ("disk has been inserted (T %ld)", l1);)
-      if (global->DevList)
-        Unmount (FALSE);
-      Delay (50);
-      Clear_Sector_Buffers (global->g_cd);
-      Mount ();
-    }
-    BUG(if (l1==l2 && !i) dbprintf ("no disk in drive (T %ld)", l1);)
-    if (l1!=l2 && !i) {
-      global->g_disk_inserted = FALSE;
-      BUG(dbprintf ("disk has been removed (T %ld)", l1);)
-      global->playing = FALSE;
-      if (global->DevList)
-        Unmount (FALSE);
-      global->g_cd->t_changeint2 = global->g_cd->t_changeint;
-    }
-  } else {
-    if (global->g_disk_inserted) {
-      if (Test_Unit_Ready (global->g_cd)) {
-        BUG(dbprintf ("no disk change"));
-      } else {
-        global->g_disk_inserted = FALSE;
-        BUG(dbprintf ("disk has been removed");)
-	global->playing = FALSE;
-        if (global->DevList)
-          Unmount (FALSE);
-        Hide_CDDA_Icon ();
-      }
-    }
-    if (!global->g_disk_inserted) {
-      if (Test_Unit_Ready (global->g_cd) ||
-          Test_Unit_Ready (global->g_cd)) {
-        global->g_disk_inserted = TRUE;
-        BUG(dbprintf ("disk has been inserted");)
-        Clear_Sector_Buffers (global->g_cd);
-        Mount ();
-      }
-    }
-  }
-  BUG(dbprintf ("\n");)
+	BUG(dbprintf ("Checking Disk... ");)
+	if (global->g_cd->use_trackdisk)
+	{
+		i = (Test_Unit_Ready (global->g_cd) || Test_Unit_Ready (global->g_cd));
+		l1 = global->g_cd->t_changeint;
+		l2 = global->g_cd->t_changeint2;
+		BUG(if (l1==l2 && i) dbprintf ("no disk change (T %ld)", l1);)
+		if (l1!=l2 && i)
+		{
+			global->g_disk_inserted = TRUE;
+			BUG(dbprintf ("disk has been inserted (T %ld)", l1);)
+			if (global->DevList)
+				Unmount (FALSE);
+			Delay (50);
+			Clear_Sector_Buffers (global->g_cd);
+			Mount ();
+		}
+		BUG(if (l1==l2 && !i) dbprintf ("no disk in drive (T %ld)", l1);)
+ 		if (l1!=l2 && !i)
+		{
+			global->g_disk_inserted = FALSE;
+			BUG(dbprintf ("disk has been removed (T %ld)", l1);)
+			global->playing = FALSE;
+			if (global->DevList)
+				Unmount (FALSE);
+			global->g_cd->t_changeint2 = global->g_cd->t_changeint;
+		}
+	}
+	else
+	{
+		if (global->g_disk_inserted)
+		{
+			if (Test_Unit_Ready (global->g_cd))
+			{
+				BUG(dbprintf ("no disk change"));
+			}
+			else
+			{
+				global->g_disk_inserted = FALSE;
+				BUG(dbprintf ("disk has been removed");)
+				global->playing = FALSE;
+				if (global->DevList)
+					Unmount (FALSE);
+				Hide_CDDA_Icon ();
+			}
+		}
+		if (!global->g_disk_inserted)
+		{
+			if (Test_Unit_Ready (global->g_cd) || Test_Unit_Ready (global->g_cd))
+			{
+				global->g_disk_inserted = TRUE;
+				BUG(dbprintf ("disk has been inserted");)
+				Clear_Sector_Buffers (global->g_cd);
+				Mount ();
+			}
+		}
+	}
+	BUG(dbprintf ("\n");)
 }
 
 /* The following lines will generate a `disk inserted/removed' event, in order
@@ -1730,6 +1736,8 @@ void Send_Event (int p_inserted)
 {
   struct IOStdReq *InputRequest;
   struct MsgPort *InputPort;
+  struct InputEvent InputEvent;
+
 
   InputPort = (struct MsgPort *) CreateMsgPort ();
   if (InputPort)
@@ -1741,8 +1749,6 @@ void Send_Event (int p_inserted)
       if (!OpenDevice ((UBYTE *) "input.device", 0,
       		       (struct IORequest *) InputRequest, 0))
       {
-	static struct InputEvent InputEvent;
-
 	memset (&InputEvent, 0, sizeof (struct InputEvent));
 
 	InputEvent.ie_Class = p_inserted ? IECLASS_DISKINSERTED :
