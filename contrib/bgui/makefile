@@ -12,6 +12,11 @@
 # All Rights Reserved.
 #
 # $Log$
+# Revision 42.2  2000/08/08 19:24:11  chodorowski
+# Disabled compiling examples/TextField.c because of missing includes.
+# Couldn't find proto/textfield.h or gadgets/textfield.h in the NDK,
+# and yet textfield.gadget seems to come with the OS. Hmmm...
+#
 # Revision 42.1  2000/08/08 13:31:05  chodorowski
 # Fixes to make BGUI compile on AmigaOS. Disabled auto-generation of o/class-protos.h by MakeProto
 # since it couldn't handle functions using the REGFUNC and REGPARAM macros; now
@@ -400,7 +405,6 @@ test: $(includes) $(test)
 examples= \
 bin/AddButtons \
 bin/ColorWheel \
-bin/TextField \
 bin/Area \
 bin/ARexxDemo \
 bin/BGUIDemo \
@@ -417,7 +421,8 @@ bin/MultiFont \
 bin/FileRequester \
 bin/List \
 bin/MultiColumn \
-bin/ViewGroup
+bin/ViewGroup \
+#bin/TextField
 
 examples: $(includes) $(examples)
 
