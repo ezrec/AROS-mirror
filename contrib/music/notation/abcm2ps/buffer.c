@@ -38,7 +38,6 @@ static float ln_scale[BUFFLN];	/* scale of buffered lines */
 static char buf[BUFFSZ];	/* output buffer.. should hold one tune */
 static float cur_lmarg = 0;	/* current left margin */
 static float cur_scale = 1.0;	/* current scale */
-static float botpage;		/* bottom of page */
 static float posy;		/* vertical position on page */
 static float bposy;		/* current position in buffered data */
 static int nepsf;		/* counter for epsf output files */
@@ -57,6 +56,7 @@ static void init_ps(char *str,
 {
 	time_t ltime;
 	char tstr[41];
+	int enc;
 
 	if (is_epsf) {
 /*fixme: no landscape for EPS?*/
@@ -65,6 +65,7 @@ static void init_ps(char *str,
 			cfmt.pagewidth - cfmt.leftmargin
 				- cfmt.rightmargin + 20,
 			-bposy);
+		cur_lmarg = cfmt.leftmargin - 10;
 	} else	fprintf(fout, "%%!PS-Adobe-3.0\n");
 
 	/* Title */
@@ -88,20 +89,34 @@ static void init_ps(char *str,
 			"gsave /origstate save def mark\n100 dict begin\n\n");
 
 	fprintf(fout, "%%%%BeginSetup\n"
-		"/bdef {bind def} bind def\n"
-		"/T {translate} bdef\n"
-		"/M {moveto} bdef\n"
-		"/dlw {0.7 setlinewidth} bdef\n");
+		"/!{bind def}bind def\n"
+		"/bdef{bind def}!\n"		/* for compatibility */
+		"/T/translate load def\n"
+		"/M/moveto load def\n"
+		"/RM/rmoveto load def\n"
+		"/RL/rlineto load def\n"
+		"/RC/rcurveto load def\n"
+		"/dlw{0.7 setlinewidth}!\n"
 #if PS_LEVEL==1
-	fprintf(fout,
-		"/selectfont { exch findfont exch dup	%% emulate level 2 op\n"
-		"	type /arraytype eq {makefont}{scalefont} ifelse setfont\n"
-		"} bdef\n");
+		"/selectfont{exch findfont exch dup	%% emulate level 2 op\n"
+		"	type /arraytype eq {makefont}{scalefont} ifelse setfont}!\n"
 #endif
+		);
 	define_encoding(cfmt.encoding);
+	if ((enc = cfmt.encoding) == 0)
+		enc = 1;
+	fprintf(fout, "/mkfontext{\n"
+		"	findfont dup length dict begin\n"
+                "		{1 index /FID ne {def}{pop pop} ifelse} forall\n"
+		"		/Encoding ISOLatin%dEncoding def\n"
+		"		currentdict\n"
+		"	end\n"
+		"	definefont pop}!\n",
+		enc);
 	define_fonts();
 	define_symbols();
-	fprintf(fout, "\n0 setlinecap 0 setlinejoin\n");
+	fprintf(fout, "0 setlinecap 0 setlinejoin\n");
+
 	write_user_ps();
 	fprintf(fout, "%%%%EndSetup\n");
 	file_initialized = 1;
@@ -114,7 +129,7 @@ static void close_page(void)
 		return;
 	in_page = 0;
 
-	fprintf(fout, "\n%%%%PageTrailer\n"
+	fprintf(fout, "%%%%PageTrailer\n"
 		"grestore\n"
 		"showpage\n");
 	cur_lmarg = 0;
@@ -128,21 +143,22 @@ void close_output_file(void)
 
 	if (fout == 0)
 		return;
-
+	if (tunenum == 0)
+		error(0, 0, "No tunes written to output file");
 	close_page();
 	fprintf(fout, "%%%%Trailer\n"
 		"%%%%Pages: %d\n"
-		"%%EOF\n",
-		nbpages);
-	m = ftell(fout);
-	fclose(fout);
-	if (tunenum == 0)
-		ERROR(("Warning: no tunes written to output file"));
-	printf("Output written on %s (%d page%s, %d title%s, %ld byte%s)\n",
-		outfnam,
-		nbpages, nbpages == 1 ? "" : "s",
-		tunenum, tunenum == 1 ? "" : "s",
-		m, m == 1 ? "" : "s");
+		"%%EOF\n", nbpages);
+	if (fout != stdout) {
+		m = ftell(fout);
+		fclose(fout);
+		fprintf(stderr,
+			"Output written on %s (%d page%s, %d title%s, %ld byte%s)\n",
+			outfnam,
+			nbpages, nbpages == 1 ? "" : "s",
+			tunenum, tunenum == 1 ? "" : "s",
+			m, m == 1 ? "" : "s");
+	}
 	fout = 0;
 	file_initialized = 0;
 	nbpages = tunenum = 0;
@@ -196,58 +212,76 @@ static float headfooter(int header,
 			float pheight)
 {
 	char str[256];
-	char *p, *q;
-	float size, y;
+	char *p, *q, *r;
+	float size, y, wsize;
 	int fnum;
 
 	if (header) {
 		p = cfmt.header;
 		size = cfmt.headerfont.size;
 		fnum = cfmt.headerfont.fnum;
-		y = cfmt.topmargin - 32.0;
+		y = 2.;
+		wsize = 0;
 	} else {
 		p = cfmt.footer;
 		size = cfmt.footerfont.size;
 		fnum = cfmt.footerfont.fnum;
 		y = - (pheight - cfmt.topmargin - cfmt.botmargin)
-			+ size + 3.;
+			- size + 2.;
+		wsize = 0;
 	}
 
 	fprintf(fout, "%.1f F%d ", size, fnum);
 
-	tex_str(str, p, sizeof str, 0);
+	/* may have 2 lines */
+	if ((r = strstr(p, "\\n")) != 0) {
+		if (!header)
+			y += size;
+		wsize += size;
+		*r = '\0';
+	}
 
-	/* left side */
-	p = str;
-	if ((q = strchr(p, '\t')) != 0) {
-		if (q != p) {
+	for (;;) {
+		tex_str(str, p, sizeof str, 0);
+
+		/* left side */
+		p = str;
+		if ((q = strchr(p, '\t')) != 0) {
+			if (q != p) {
+				*q = '\0';
+				fprintf(fout, "%.1f %.1f M (",
+					cfmt.leftmargin, y);
+				format_hf(p);
+				fprintf(fout, ") show\n");
+			}
+			p = q + 1;
+		}
+		if ((q = strchr(p, '\t')) != 0)
 			*q = '\0';
+		if (q != p) {
 			fprintf(fout, "%.1f %.1f M (",
-				cfmt.leftmargin, y);
+				pwidth * 0.5, y);
 			format_hf(p);
-			fprintf(fout, ") show\n");
+			fprintf(fout, ") cshow\n");
 		}
-		p = q + 1;
-	}
-	if ((q = strchr(p, '\t')) != 0)
-		*q = '\0';
-	if (q != p) {
-		fprintf(fout, "%.1f %.1f M (",
-			pwidth * 0.5, y);
-		format_hf(p);
-		fprintf(fout, ") cshow\n");
-	}
-	if (q != 0) {
-		p = q + 1;
-		if (*p != '\0') {
-			fprintf(fout, "%.1f %.1f M (",
-				pwidth - cfmt.rightmargin, y);
-			format_hf(p);
-			fprintf(fout, ") lshow\n");
+		if (q != 0) {
+			p = q + 1;
+			if (*p != '\0') {
+				fprintf(fout, "%.1f %.1f M (",
+					pwidth - cfmt.rightmargin, y);
+				format_hf(p);
+				fprintf(fout, ") lshow\n");
+			}
 		}
+		if (r == 0)
+			break;
+		*r = '\\';
+		p = r + 2;
+		r = 0;
+		y -= size;
 	}
 
-	return size + 6.;
+	return wsize;
 }
 
 /* -- initialize postscript page -- */
@@ -263,10 +297,8 @@ static void init_page(void)
 	in_page = 1;
 	nbpages++;
 
-	fprintf(fout, "\n%%%%Page: %d %d\n"
-		"%%%%BeginPageSetup\n",
+	fprintf(fout, "%%%%Page: %d %d\n",
 		nbpages, nbpages);
-	fprintf(fout, "%%%%EndPageSetup\n");
 	if (cfmt.landscape) {
 		pheight = cfmt.pagewidth;
 		pwidth = cfmt.pageheight;
@@ -280,8 +312,7 @@ static void init_page(void)
 			pheight - cfmt.topmargin);
 	}
 
-	posy = pheight - cfmt.topmargin;
-	botpage = cfmt.botmargin;
+	posy = pheight - cfmt.topmargin - cfmt.botmargin;
 
 	/* output the header and footer */
 	if (cfmt.header == 0 && pagenumbers != 0) {
@@ -292,27 +323,36 @@ static void init_page(void)
 		case 4: cfmt.header = "$P1\t\t$P0"; break;
 		}
 	}
-	if (cfmt.header != 0)
-		headfooter(1, pwidth, pheight);
+	if (cfmt.header != 0) {
+		float dy;
+
+		dy = headfooter(1, pwidth, pheight);
+		if (dy != 0) {
+			fprintf(fout, "0 %.1f T\n", -dy);
+			posy -= dy;
+		}
+	}
 	if (cfmt.footer != 0)
-		botpage += headfooter(0, pwidth, pheight);
+		posy -= headfooter(0, pwidth, pheight);
 	pagenum++;
 }
 
-/* -- open_output_file -- */
-void open_output_file(char *fnam)
+/* -- open the output file -- */
+void open_output_file(void)
 {
-	if (strcmp(fnam, outfnam) == 0)
+	if (strcmp(outf, outfnam) == 0)
 		return;
 
 	if (fout != 0)
 		close_output_file();
 
-	strcpy(outfnam, fnam);
-	if ((fout = fopen(outfnam, "w")) == 0) {
-		printf("Cannot open output file %s\n", outf);
-		exit(2);
-	}
+	strcpy(outfnam, outf);
+	if (outf[0] != '-' || outf[1] != '\0') {
+		if ((fout = fopen(outf, "w")) == 0) {
+			fprintf(stderr, "Cannot create output file %s\n", outf);
+			exit(2);
+		}
+	} else	fout = stdout;
 }
 
 /* -- epsf_title -- */
@@ -346,13 +386,13 @@ void write_eps(void)
 	}
 	sprintf(finf, "%s (%s)", in_fname, info.xref);
 	if ((fout = fopen(fnm, "w")) == 0) {
-		printf("Cannot open output file %s\n", fnm);
+		fprintf(stderr, "Cannot open output file %s\n", fnm);
 		exit(2);
 	}
 	init_ps(finf, 1);
 	fprintf(fout, "0 %.1f T\n", -bposy);
 	write_buffer();
-	fprintf(fout, "\nshowpage\nend\n"
+	fprintf(fout, "showpage\nend\n"
 		"cleartomark origstate restore grestore\n\n");
 	fclose(fout);
 	fout = 0;
@@ -382,7 +422,7 @@ void a2b(void)
 
 	nbuf += l;
 	if (nbuf >= BUFFSZ - 500) {	/* must have place for 1 more line */
-		ERROR(("a2b: buffer full, BUFFSZ=%d", BUFFSZ));
+		error(1, 0, "a2b: buffer full, BUFFSZ=%d", BUFFSZ);
 		exit(3);
 	}
 
@@ -426,7 +466,7 @@ void write_buffer(void)
 	for (l = 0; l < ln_num; l++) {
 		b2 = ln_buf[l];
 		dp = ln_pos[l] - p1;
-		if (posy + dp < botpage && !epsf)
+		if (posy + dp < 0 && !epsf)
 			write_pagebreak();
 		if (ln_scale[l] != cur_scale) {
 			fprintf(fout, "%.2f dup scale\n",
@@ -455,8 +495,8 @@ void write_buffer(void)
 void buffer_eob(void)
 {
 	if (ln_num >= BUFFLN) {
-		ERROR(("max number of buffer lines exceeded"
-			" -- check BUFFLN"));
+		error(1, 0, "max number of buffer lines exceeded"
+			" -- check BUFFLN");
 		exit(3);
 	}
 
@@ -471,7 +511,7 @@ void buffer_eob(void)
 		return;
 	}
 
-	if ((posy + bposy < botpage
+	if ((posy + bposy < 0
 	     || cfmt.oneperpage)
 	    && !epsf) {
 		if (tunenum != 1)
@@ -485,8 +525,8 @@ void buffer_eob(void)
 void check_buffer(void)
 {
 	if (nbuf + BUFFSZ1 > BUFFSZ) {
-		ERROR(("possibly bad page breaks, BUFFSZ exceeded at line %d",
-		      ln_num));
+		error(0, ln_num,
+		      "Possibly bad page breaks, BUFFSZ exceeded");
 		write_buffer();
 		use_buffer = 0;
 	}
@@ -495,7 +535,7 @@ void check_buffer(void)
 /* -- return the current vertical offset in the page -- */
 float get_bposy(void)
 {
-	return bposy;
+	return posy + bposy;
 }
 
 /* -- set value in the output buffer -- */

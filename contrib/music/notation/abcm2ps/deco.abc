@@ -4,66 +4,58 @@
 % == postscript definitions - must be before any tune ==
 %
 % -- cresc / decresc / dimin
-%%postscript /crdc {  % usage: str x y crdc - cresc, decresc, ..
+%%postscript /crdc{	% usage: str x y crdc - cresc, decresc, ..
 %%postscript	/Times-Italic 14 selectfont
-%%postscript	M -6 4 rmoveto show
-%%postscript } bdef
+%%postscript	M -6 4 RM show}!
 
 %
 % -- alternate piano/forte indication between parenthesis
-%%postscript /apf {	% usage: str x y apf
-%%postscript	M -6 5 rmoveto
+%%postscript /apf{	% usage: str x y apf
+%%postscript	M -6 5 RM
 %%postscript	/Times-Italic 16 selectfont (\() show
 %%postscript	/Times-BoldItalic 16 selectfont show
-%%postscript	/Times-Italic 16 selectfont (\)) show
-%%postscript } bdef
+%%postscript	/Times-Italic 16 selectfont (\)) show}!
 %
 % -- draw parenthesis around a note
-%%postscript /opnot {	% usage: x y opnot
-%%postscript	M -6 -3 rmoveto /Times-Roman 16 selectfont (\(   \)) show
-%%postscript } bdef
+%%postscript /opnot{	% usage: x y opnot
+%%postscript	M -6 -3 RM /Times-Roman 16 selectfont (\(   \)) show}!
 %
 % -- draw octava indication
-%%postscript /octava {	% usage: len x y octava
+%%postscript /octava{	% usage: len x y octava
 %%postscript	exch -9 add exch 2 copy 
-%%postscript	M 0 10 rmoveto /Times-Roman 16 selectfont (8) show
+%%postscript	M 0 10 RM /Times-Roman 16 selectfont (8) show
 %%postscript	/Times-Roman 12 selectfont (va) show
-%%postscript	M 0 6 rlineto currentpoint stroke M
-%%postscript	[6] 0 setdash 30 add 0 rlineto currentpoint stroke M
-%%postscript	[] 0 setdash 0 -6 rlineto stroke
-%%postscript } bdef
-%%postscript /octavab {	% usage: len x y octavab
+%%postscript	M 0 6 RL currentpoint stroke M
+%%postscript	[6] 0 setdash 30 add 0 RL currentpoint stroke M
+%%postscript	[] 0 setdash 0 -6 RL stroke}!
+%%postscript /octavab{	% usage: len x y octavab
 %%postscript	exch -10 add exch 2 copy 
-%%postscript	M 0 -10 rmoveto /Times-Roman 16 selectfont (8) show
+%%postscript	M 0 -10 RM /Times-Roman 16 selectfont (8) show
 %%postscript	/Times-Roman 12 selectfont (va basso) show
-%%postscript	10 add M 0 -6 rlineto currentpoint stroke M
-%%postscript	[6] 0 setdash 30 add 0 rlineto stroke
-%%postscript	[] 0 setdash
-%%postscript } bdef
+%%postscript	10 add M 0 -6 RL currentpoint stroke M
+%%postscript	[6] 0 setdash 30 add 0 RL stroke
+%%postscript	[] 0 setdash}!
 %
 % -- repeat sign in a stem
-%%postscript /repst {	% usage: x y repst
-%%postscript	M -3 -13 rmoveto 9 3 rlineto 0 -3 rlineto -9 -3 rlineto fill
-%%postscript } bdef
+%%postscript /repst{	% usage: x y repst
+%%postscript	M -3 -13 RM 9 3 RL 0 -3 RL -9 -3 RL fill}!
 %
 % -- write big letters (position marks) above the staff
 % (from Guido Gonzato)
-%%postscript /bigl {	% usage: str x y bigl
+%%postscript /bigl{	% usage: str x y bigl
 %%postscript	/Times-Bold 26 selectfont
 %%postscript	4 add M cshow gsave
-%%postscript	1 setlinewidth 1 -2 rmoveto 
-%%postscript	0 22 rlineto -22 0 rlineto
-%%postscript	0 -22 rlineto 22 0 rlineto
-%%postscript	stroke grestore
-%%postscript } bdef
+%%postscript	1 setlinewidth 1 -2 RM 
+%%postscript	0 22 RL -22 0 RL
+%%postscript	0 -22 RL 22 0 RL
+%%postscript	stroke grestore}!
 % (from Jonas Petersson)
 %%postscript /biglc {    % usage: str x y biglc
 %%postscript    2 copy 5 2 roll /Times-Bold 22 selectfont
 %%postscript    6 add M cshow gsave
 %%postscript    1 setlinewidth 13 add newpath
 %%postscript    12 0 360 arc
-%%postscript    stroke grestore
-%%postscript } bdef
+%%postscript    stroke grestore}!
 %
 % -- pedal glyph
 % (from CMN http://ccrma-www.stanford.edu/software/cmn/cmn/cmn.html)
@@ -102,8 +94,7 @@
 %%postscript	0.729 0.170 0.712 0.025 0.627 0.019 curveto
 %%postscript	eofill
 %%postscript	0.8 0.04 0.04 0 360 newpath arc fill
-%%postscript	pop grestore
-%%postscript } bdef
+%%postscript	pop grestore}!
 %
 % -- pedal off glyph
 % (from CMN http://ccrma-www.stanford.edu/software/cmn/cmn/cmn.html)
@@ -145,26 +136,23 @@
 %%postscript	0.102 0.264 0.082 0.237 0.062 0.261 curveto
 %%postscript	0.028 0.302 0.077 0.347 0.118 0.318 curveto
 %%postscript	0.138 0.297 0.116 0.275 0.144 0.242 curveto
-%%postscript	fill pop grestore
-%%postscript } bdef
+%%postscript	fill pop grestore}!
 %
 % -- glissendo start/stop
 %%postscript /glistart {	% usage: x y glistart
-%%postscript	/yg exch def 5 add /xg exch def
-%%postscript } bdef
+%%postscript	/yg exch def 5 add /xg exch def}!
 %%postscript /glistop {		% usage: x y glistop
 %%postscript	gsave xg yg T
 %%postscript	yg sub exch 5 add xg sub exch	% dx dy
 %%postscript	2 copy exch atan dup rotate	% dx dy alpha
 %%postscript	exch pop cos div		% len
 %%postscript	10 0 T 0 0 M
-% %postscript	20 sub 0 rlineto		% simple line
+% %postscript	20 sub 0 RL		% simple line
 %%postscript	26 sub 0 8 3 -1 roll {		% squiggly line
 %%postscript	2 -1.15 2.30 150 30 arcn 4 0 T
 %%postscript	2 1.15 2.30 -150 -30 arc 4 0 T pop
 %%postscript	} for
-%%postscript	stroke grestore
-%%postscript } bdef
+%%postscript	stroke grestore}!
 %
 % -- upper glissendo
 %%postscript /glissup {		% usage: x y glissup
@@ -174,8 +162,7 @@
 %%postscript	2 -1.15 2.30 150 30 arcn 4 0 T
 %%postscript	2 1.15 2.30 -150 -30 arc 4 0 T pop
 %%postscript	} for
-%%postscript	stroke grestore
-%%postscript } bdef
+%%postscript	stroke grestore}!
 %
 % -- note decorations
 % (sorry for I don't know the name of these: there so many ones)
@@ -184,55 +171,74 @@
 %	- ta or tb: turn from above or from below
 %	- b, ub or db: middle, upper or lower bar
 %%postscript /tr3 {		% usage: x y tr3 - mordent with 3 peeks
-%%postscript	M 2.2 2.2 rlineto 2.1 -2.9 rlineto 0.7 0.7 rlineto
-%%postscript	2.2 2.2 rlineto 2.1 -2.9 rlineto 0.7 0.7 rlineto
-%%postscript	2.2 2.2 rlineto 2.1 -2.9 rlineto 0.7 0.7 rlineto
-%%postscript	-2.2 -2.2 rlineto -2.1 2.9 rlineto -0.7 -0.7 rlineto
-%%postscript	-2.2 -2.2 rlineto -2.1 2.9 rlineto -0.7 -0.7 rlineto
-%%postscript	-2.2 -2.2 rlineto -2.1 2.9 rlineto -0.7 -0.7 rlineto fill
-%%postscript } bdef
+%%postscript	M 2.2 2.2 RL 2.1 -2.9 RL 0.7 0.7 RL
+%%postscript	2.2 2.2 RL 2.1 -2.9 RL 0.7 0.7 RL
+%%postscript	2.2 2.2 RL 2.1 -2.9 RL 0.7 0.7 RL
+%%postscript	-2.2 -2.2 RL -2.1 2.9 RL -0.7 -0.7 RL
+%%postscript	-2.2 -2.2 RL -2.1 2.9 RL -0.7 -0.7 RL
+%%postscript	-2.2 -2.2 RL -2.1 2.9 RL -0.7 -0.7 RL fill}!
 %%postscript /t2ub {	% usage: x y t2ub - mordent ending with an upper bar
 %%postscript	2 copy umrd 0.6 setlinewidth
-%%postscript	M 5 4 rmoveto 0 6 rlineto stroke
-%%postscript } bdef
+%%postscript	M 5 4 RM 0 6 RL stroke}!
 %%postscript /t3tab {	% usage: x y t3tab - mordent + upper turn and bar
 %%postscript	4 add 2 copy exch 7.5 sub exch tr3 exch 7.5 add exch
-%%postscript	2 copy 0.6 setlinewidth M 2 6 14 6 16 0 rcurveto
-%%postscript	M 8 1 rmoveto 0 6 rlineto stroke
-%%postscript } bdef
+%%postscript	2 copy 0.6 setlinewidth M 2 6 14 6 16 0 RC
+%%postscript	M 8 1 RM 0 6 RL stroke}!
 %%postscript /ubt3ta {	% usage: x y ubt3ta - up bar + mordent + upper turn
 %%postscript	4 add 2 copy 0.6 setlinewidth
-%%postscript	M -7.5 0 rmoveto 0 6 rlineto stroke
+%%postscript	M -7.5 0 RM 0 6 RL stroke
 %%postscript	2 copy exch 7.5 sub exch tr3
-%%postscript	M 7.5 0 rmoveto 2 6 14 6 16 0 rcurveto stroke
-%%postscript } bdef
+%%postscript	M 7.5 0 RM 2 6 14 6 16 0 RC stroke}!
 %%postscript /tbt3 {	% usage: x y tbt3 - low turn + long mordent
 %%postscript	exch 10 sub exch 6 add 2 copy 0.6 setlinewidth
-%%postscript	M -8 0 rmoveto 2 -6 14 -6 16 0 rcurveto stroke
-%%postscript	exch 8 add exch tr3
-%%postscript } bdef
+%%postscript	M -8 0 RM 2 -6 14 -6 16 0 RC stroke
+%%postscript	exch 8 add exch tr3}!
 %%postscript /t2ta {	% usage: x y t2ta - mordent + upper turn
 %%postscript	2 copy umrd
-%%postscript	M 5 4 rmoveto 1 5 9 5 10 0 rcurveto stroke
-%%postscript } bdef
+%%postscript	M 5 4 RM 1 5 9 5 10 0 RC stroke}!
 %%postscript /t3b {	% usage: x y t3b - upper + lower mordent
 %%postscript	2 copy exch -7.5 add exch 4 add tr3 0.6 setlinewidth
-%%postscript	M 2.5 0 rmoveto 0 8 rlineto stroke
-%%postscript } bdef
+%%postscript	M 2.5 0 RM 0 8 RL stroke}!
 %%postscript /sharp {	% usage: x y sharp - sharp above note
-%%postscript	4 add gsave T 0.6 dup scale 0 0 sh0 grestore
-%%postscript } bdef
+%%postscript	4 add gsave T 0.6 dup scale 0 0 sh0 grestore}!
 %%postscript /flat {	% usage: x y flat - flat above note
-%%postscript	4 add gsave T 0.6 dup scale 0 0 ft0 grestore
-%%postscript } bdef
+%%postscript	4 add gsave T 0.6 dup scale 0 0 ft0 grestore}!
 %%postscript /natural {	% usage: x y natural - natural sign above note
-%%postscript	4 add gsave T 0.6 dup scale 0 0 nt0 grestore
-%%postscript } bdef
+%%postscript	4 add gsave T 0.6 dup scale 0 0 nt0 grestore}!
 %
 % -- 'treble-8' customization
 %%postscript /octl {
-%%postscript	/Times-Italic-Bold 16 selectfont M 5.5 -14 rmoveto (8vb) show
-%%postscript } bdef
+%%postscript	/Times-BoldItalic 16 selectfont M 5.5 -14 RM (8vb) show}!
+%
+% -- latin guitar chords
+%%postscript /gcshow{
+%%postscript	-5 0 RM
+%%postscript	dup 0 get
+%%postscript	dup 65 eq {(La) show}
+%%postscript	  {dup 66 eq {(Si) show}
+%%postscript	    {dup 67 eq {(Do) show}
+%%postscript	      {dup 68 eq {(Re) show}
+%%postscript		{dup 69 eq {(Mi) show}
+%%postscript		  {dup 70 eq {(Fa) show}
+%%postscript		    {dup 71 eq {(Sol) show}
+%%postscript		      {tempstr 0 2 index put tempstr show
+%%postscript		      } ifelse
+%%postscript		    } ifelse
+%%postscript		  } ifelse
+%%postscript		} ifelse
+%%postscript	      } ifelse
+%%postscript	    } ifelse
+%%postscript	  } ifelse
+%%postscript	pop dup dup length 1 sub 1 exch getinterval
+%%postscript	{dup 129 eq {sharp_glyph}
+%%postscript	  {dup 130 eq {flat_glyph}
+%%postscript	    {dup 131 eq {nat_glyph}
+%%postscript		{tempstr 0 2 index put tempstr show}
+%%postscript		ifelse}
+%%postscript	    ifelse}
+%%postscript	  ifelse pop}
+%%postscript	forall
+%%postscript	pop}!
 %
 % == decoration definitions ==
 %
@@ -297,8 +303,8 @@ X:1
 T:Customized decorations
 M:C
 K:C treble-8
-!biga!y!fp!C!t2ub!C !cresc!D!t3tab!D !decresc!E!ubt3ta!E !dimin!F!tbt3!F|\
-!mp!G!t2ta!G !(p)!A!t3b!c !b!T!(pp)!A2 !#!P!(f)!B2|!=!M!(ff)!c8|
+!biga!y!fp!"C"C!t2ub!C !cresc!"D"D!t3tab!D !decresc!"E"E!ubt3ta!E !dimin!"F"F!tbt3!F|\
+!mp!"G"G!t2ta!G !(p)!A!t3b!c !b!T!(pp)!A2 !#!P!(f)!B2|!=!M!(ff)!c8|
 K: clef=treble
 !8(!!riten!EF !-!G2 !ped!GA!ped-end!B!8)!c|!8b(!!bigb!CDE!()!F GAB!8b)!!alcoda!c|\
-CD!-(!E2!-)!!/!c4|
+CD!-(!E2!-)!!/!"free text"c4|

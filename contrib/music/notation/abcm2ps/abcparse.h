@@ -20,23 +20,16 @@ enum accidentals {
 	A_DF		/* double flat */
 };
 
-/* bar types */
-enum bar_type {			/* codes for different types of bars */
-	B_INVIS,		/* invisible; for endings without bars and [] */
-	B_SINGLE,		/* |	single bar */
-	B_DOUBLE,		/* ||	thin double bar */
-	B_THIN_THICK,		/* |]   thick at section end  */
-	B_THICK_THIN,		/* [|   thick at section start */
-	B_LREP,			/* |:	left repeat bar */
-	B_RREP,			/* :|	right repeat bar */
-	B_DREP,			/* ::	double repeat bar */
-	B_DASH			/* :    dashed bar */
-};
+/* bar types - 4 bits per symbol */
+#define B_BAR 1		/* | */
+#define B_OBRA 2	/* [ */
+#define B_CBRA 3	/* ] */
+#define B_COL 4		/* : */
 
 /* note structure */
 struct deco {			/* describes decorations */
 	char n;			/* number of decorations */
-	unsigned char t[MAXDC];	/* type of deco */
+	unsigned char t[MAXDC];	/* decoration type */
 };
 
 struct note {		/* note or rest */
@@ -58,6 +51,7 @@ struct note {		/* note or rest */
 	char p_plet, q_plet, r_plet; /* data for n-plets */
 	char slur_st; 		/* how many slurs start here */
 	char slur_end;		/* how many slurs end here */
+	signed char brhythm;	/* broken rhythm */
 	struct deco dc;		/* decorations */
 };
 
@@ -81,20 +75,23 @@ struct abcsym {
 #define ABC_T_MREP 10		/* measure repeat */
 #define ABC_T_V_OVER 11		/* voice overlay */
 	char state;		/* symbol state in file/tune */
-#define ABC_S_GLOBAL 0			/* global definition */
-#define ABC_S_HEAD 1			/* header definition (after X:) */
-#define ABC_S_TUNE 2			/* in tune definition (after K:) */
+#define ABC_S_GLOBAL 0			/* global */
+#define ABC_S_HEAD 1			/* in header (after X:) */
+#define ABC_S_TUNE 2			/* in tune (after K:) */
 #define ABC_S_EMBED 3			/* embedded header (between [..]) */
 	short linenum;		/* line number / ABC file */
 	char *text;		/* main text (INFO, PSCOM),
 				 * guitar chord (NOTE, REST, BAR) */
 	char *comment;		/* comment part (when keep_comment) */
 	union {			/* type dependent part */
-		struct {		/* K: info */
+		struct key_s {		/* K: info */
 			signed char sf;		/* sharp (> 0) flats (< 0) */
-			char bagpipe;
+			char bagpipe;		/* HP or Hp */
 			char minor;		/* major (0) / minor (1) */
 			char empty;		/* clef alone if 1 */
+			char nacc;		/* explicit accidentals */
+			char pits[8];
+			char accs[8];
 		} key;
 		struct {		/* L: info */
 			int base_length;	/* basic note length */
@@ -109,21 +106,22 @@ struct abcsym {
 			} meter[MAX_MEASURE];
 		} meter;
 		struct {		/* Q: info */
-			char *str;
-			int length;
-			int value;		/* (0: no tempo) */
+			char *str1;		/* string before */
+			short length[4];	/* up to 4 note lengths */
+			short value;		/* tempo value */
+			char *str2;		/* string after */
 		} tempo;
 		struct {		/* V: info */
 			char *name;		/* name */
 			char *fname;		/* full name */
 			char *nname;		/* nick name */
-			char voice;		/* voice number */
+			unsigned char voice;	/* voice number */
 			char merge;		/* merge with previous voice */
 			signed char stem;	/* have all stems up or down */
 		} voice;
 		struct {		/* bar, mrest or mrep */
 			struct deco dc;		/* decorations */
-			enum bar_type type;
+			int type;
 			char repeat_bar;
 			char len;		/* len if mrest or mrep */
 		} bar;
@@ -136,6 +134,10 @@ struct abcsym {
 			char line;
 			signed char octave;
 			signed char transpose;
+			char invis;
+#ifndef CLEF_TRANSPOSE
+			char check_pitch;	/* check if old abc2ps transposition */
+#endif
 		} clef;
 		struct note note;	/* note, rest */
 		struct {		/* user defined accent */
@@ -143,7 +145,7 @@ struct abcsym {
 			unsigned char value;
 		} user;
 		struct staff_s {	/* %%staves */
-			char voice;
+			unsigned char voice;
 			char flags;
 #define OPEN_BRACE 0x01
 #define CLOSE_BRACE 0x02
@@ -161,6 +163,7 @@ struct abcsym {
 #define V_OVER_SS 2				/* (& */
 #define V_OVER_SD 3				/* (&& */
 #define V_OVER_E 4				/* )& */
+			unsigned char voice;
 		} v_over;
 	} u;
 };

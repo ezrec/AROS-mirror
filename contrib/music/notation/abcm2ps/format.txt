@@ -90,7 +90,7 @@ List of the format parameters
 			3, 4, 5: decoration near the note, outside the staff,
 					generally printed above the staff.
 				3: general
-				4: actually same as 3
+				4: below the staff
 				5: long 'trill' (with start and stop)
 			6, 7: decoration tied to the staff,
 					generally printed below the staff.
@@ -147,8 +147,12 @@ List of the format parameters
 	Compilation: none
 	Command line: none
 	Description:
-		Set the text printed at the bottom of each page.
-		3 areas may be defined: left, center and right.
+		Define the text printed at the bottom of each page.
+		There may be one or two lines. When 2 lines, these
+		ones must be separated by the 2 characters "\n" (not
+		a real 'newline').
+		In each lines 3 areas may be defined: left, center and
+		right.
 		These areas are separated by tabulations (real TABs,
 		not '\t') and may be empty (if the left area is empty,
 		quote the string - see sample3.abc for example).
@@ -163,7 +167,6 @@ List of the format parameters
 		as:
 			%%header "$P0		$P1"
 		(note the 2 TABs).
-			
 
   footerfont <font> <size>
 	Default: Times-Roman 12
@@ -312,6 +315,23 @@ List of the format parameters
 	Description:
 		Set the vertical space before the first staff to <unit>.
 
+  notespacingfactor <float>
+	Default: 1.414
+	Compilation: none
+	Command line: none
+	Description:
+		Set the note spacing factor to <float>.
+		This value is used to compute the natural space of
+		the notes. The base space of the crotchet is always
+		40 pts. When the duration of a note type is twice the
+		one of an other note type, its space is multiplied by
+		this factor.
+		The default value makes a note space to be multiplied
+		by 2 when its duration is multiplied by 4, i.e. the
+		space of the semibreve is 80 pts and the space of the
+		semiquaver is 20 pts.
+		Setting this value to 1 sets all note spaces to 40 pts.
+
   oneperpage <bool>
 	Default: 0
 	Compilation: none
@@ -390,7 +410,7 @@ List of the format parameters
 		Set the right margin to <unit>.
 
   scale <float>
-	Default: 0.7
+	Default: 0.75
 	Compilation: none
 	Command line: -s<float>
 	Description:
@@ -403,6 +423,15 @@ List of the format parameters
 	Command line: none
 	Description:
 		Set the slur height factor to <float>.
+
+  splittune <bool>
+	Default: 0
+	Compilation: none
+	Command line: -0
+	Description:
+		If false, a tune starts on a new page if it does not
+		fit in the current one. If true, there is no page
+		checking, and the tune may be splitted.
 
   squarebreve <bool>
 	Default: 0

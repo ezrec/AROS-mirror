@@ -1,7 +1,7 @@
 		Command line options
 		====================
 
-The list of the command line options may be know running:
+The list of the command line options may be known running:
 	'abcm2ps -h'
 
 When an option starts with '+', this one is disabled.
@@ -43,7 +43,7 @@ List of the options
 			-dBATCH -dNOPAUSE \
 			-sOutputFile=quitolis.png Out001.eps
 	(the values for -g are the values of the bounding box in
-	 the .eps, multiplied by (80 / 72),where 80 is the value
+	 the .eps, multiplied by (80 / 72), where 80 is the value
 	 for -r, and 72 is the default resolution)
 
   -e<list>
@@ -59,7 +59,8 @@ List of the options
 	Note: Filtering may raise problems, mainly on global definitions.
 
   -F<file>, +F
-	Read format file <file>.fmt
+	Read the format file <file>.fmt. In the form '+F', the default
+	format file ('default.fmt') is not read.
 
   -f
 	See: format - flatbeams <bool>
@@ -71,7 +72,7 @@ List of the options
 	Display the current format values.
 
   -h
-	Quick help, equivalent to "abc2ps" without any arguments.
+	Quick help, equivalent to "abcm2ps" without any arguments.
 	This also shows the default settings for some parameters.
 
   -I<unit>
@@ -115,9 +116,10 @@ List of the options
 	By default, the output file name is 'Out.ps' for PS, and
 	'Outnnn.eps' for EPSF (see option '-E' for the Postscript
 	mode).
-	With this option, it will be <name>.ps or <name>nnn.eps.
-	If <name> is '=', the output file as the name of the ABC
-	source file with the extension '.ps' (or '.eps').
+	With this option, it will be <name> or <name>nnn.eps.
+	If <name> is '=', the output file has the name of the ABC
+	source file with the extension '.ps' or '.eps'.
+	If <name> is '-', the result is written on stdout.
 
   -s<float>
 	See: format - scale <float>
@@ -125,21 +127,24 @@ List of the options
   -u
 	Select the abc2ps implicit decorations.
 
-  -v<int>
-	Set the verbosity for output to the screen to <int>.
-	Hereby -v0 gives very little, -v1,v2,v3.. show successively 
-	more information. Verbosity >= 10 is for debugging.
-	This option works only when abcm2ps is compiled with the
-	-DDEBUG option.
-
   -V
 	Show the version number.
 
   -w<unit>
 	See: format - staffwidth <unit>
 
+  -W<voice><keypitch>, +W
+	Display a tin whistle tablature for the voice number <voice>.
+	This number ('1' to '9' only) is the number internally
+	incremented as new voices are encountered; it is not the voice
+	name. Up to 4 tablatures may be defined.
+	Ex: '-W1c -W2Bb,'.
+
   -x, +x
 	See: format - withxrefs <bool>
+
+  -0, +0
+	See: format - splittune <bool>
 
   -1, +1
 	See: format - oneperpage <bool>

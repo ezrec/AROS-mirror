@@ -22,6 +22,7 @@
  */
 
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
@@ -31,8 +32,6 @@
 #include "abc2ps.h" 
 
 static float twidth;		/* text width for %%begintext..%%endtext */
-
-char newline[] = "\n";
 
 /* width of characters according to the encoding */
 /* these are the widths for Times-Roman, extracted from the 'a2ps' package */
@@ -197,25 +196,33 @@ static struct text {
 void bug(char *msg,
 	 int fatal)
 {
-	ERROR(("This cannot happen!\n"
-	       "Internal error: %s.\n", msg));
+	error(1, 0, "This cannot happen!\n"
+	       "Internal error: %s.\n", msg);
 	if (fatal) {
-		printf("Emergency stop.\n\n");
+		fprintf(stderr, "Emergency stop.\n\n");
 		exit(3);
 	}
-	printf("Trying to continue...\n\n");
+	fprintf(stderr, "Trying to continue...\n");
 }
 
 /* -- print an error message -- */
-void error_head(void)
+void error(int sev,	/* 0: warning, 1: error */
+	   int linenum,
+	   char *fmt, ...)
 {
+	va_list args;
 static char *t;
 
 	if (t != info.title[0]) {
 		t = info.title[0];
-		printf("%s:\n", t);
+		fprintf(stderr, "   - In tune `%s':\n", t);
 	}
-	printf("  - ");
+	fprintf(stderr,
+		"%s in line %d: ", sev == 0 ? "Warning" : "Error", linenum);
+	va_start(args, fmt);
+	vfprintf(stderr, fmt, args);
+	va_end(args);
+	fprintf(stderr, "\n");
 }
 
 /* -- return random float between x1 and x2 -- */
@@ -247,7 +254,7 @@ float scan_u(char *str)
 		if (!strncasecmp(str + nch, "pt", 2))
 			return a * PT;
 	}
-	ERROR(("\n++++ Unknown unit value \"%s\"", str));
+	error(1, 0, "\n++++ Unknown unit value \"%s\"", str);
 	return 20 * PT;
 }
 
@@ -309,7 +316,7 @@ void tex_str(char *d,
 				break;
 			if (c1 == ' ')
 				goto addchar1;
-			if ((c2 = s[1]) == '\0') {
+			if (c1 == '\\' || (c2 = s[1]) == '\0') {
 				if (--maxlen <= 0)
 					break;
 				*d++ = '\\';
@@ -423,7 +430,7 @@ void add_to_text_block(char *s,
 	/* follow lines */
 	if (job == OBEYLINES || job == OBEYCENTER) {
 		bskip(cfmt.textfont.size * cfmt.lineskipfac);
-		if (strlen(buf) > 0) {
+		if (buf[0] != '\0') {
 			if (job == OBEYLINES)
 				PUT1("0 0 M (%s) show\n", buf);
 			else	{
@@ -433,8 +440,8 @@ void add_to_text_block(char *s,
 					* 0.5 / cfmt.scale,
 				     buf);
 			}
-			buffer_eob();
 		}
+		buffer_eob();
 		twidth += lw;
 		return;
 	}
@@ -444,7 +451,7 @@ void add_to_text_block(char *s,
 		float baseskip;
 
 		baseskip = cfmt.textfont.size * cfmt.lineskipfac;
-		PUT1("/LF {0 %.1f rmoveto} bdef\n", -baseskip);
+		PUT1("/LF {0 %.1f RM}!\n", -baseskip);
 		bskip(baseskip);
 		PUT0("0 0 M (");
 	}
@@ -489,7 +496,7 @@ void write_text_block(int job,
 	buffer_eob();
 
 	/* next line to allow pagebreak after each paragraph */
-	if (!epsf && abc_state != ABC_S_TUNE && multicol_start > 0)
+	if (!epsf && abc_state != ABC_S_TUNE && multicol_start == 0)
 		write_buffer();
 	page_init[0] = '\0';
 
@@ -690,7 +697,7 @@ static void put_text(int type,
 void put_history(void)
 {
 	struct text *t;
-	float baseskip,parskip;
+	float baseskip, parskip;
 
 	set_font_init(&cfmt.textfont);
 	baseskip = cfmt.textfont.size * cfmt.lineskipfac;
@@ -740,26 +747,33 @@ void put_history(void)
 	page_init[0] = '\0';
 }
 
-/* -- write_inside_title -- */
-void write_inside_title(void)
+/* -- write a title -- */
+void write_title(int i)
 {
-	char t[201];
+	char t[200];
 
-	bskip(cfmt.subtitlefont.size + 0.2 * CM);
-	set_font(&cfmt.subtitlefont);
+	if (i == 0) {
+		bskip(cfmt.titlespace + cfmt.titlefont.size);
+		set_font(&cfmt.titlefont);
+	} else {
+		bskip(cfmt.subtitlespace + cfmt.subtitlefont.size);
+		set_font(&cfmt.subtitlefont);
+	}
 
-	strcpy(t, info.title[info.ntitle - 1]);
+	strncpy(t, info.title[i], sizeof t - 1);
+	t[sizeof t - 1] = '\0';
 
 	if (cfmt.titlecaps)
 		cap_str(t);
 	PUT0(" (");
+	if (i == 0 && cfmt.withxrefs)
+		PUT1("%s.  ", info.xref);
 	put_str(t);
 	if (cfmt.titleleft)
 		PUT0(") 0 0 M show\n");
 	else	PUT1(") %.1f 0 M cshow\n",
 		     0.5 * ((cfmt.landscape ? cfmt.pageheight : cfmt.pagewidth)
 		     - cfmt.leftmargin - cfmt.rightmargin) / cfmt.scale);
-	bskip(cfmt.musicspace + 0.2 * CM);
 }
 
 /* -- write_heading -- */
@@ -767,36 +781,18 @@ void write_heading(void)
 {
 	float lwidth, down1, down2;
 	int i, ncl;
-	char t[201];
 	char *rhythm;
 
 	lwidth = ((cfmt.landscape ? cfmt.pageheight : cfmt.pagewidth)
 		- cfmt.leftmargin - cfmt.rightmargin) / cfmt.scale;
 
-	/* write the titles */
-	for (i = 0; i < info.ntitle; i++) {
-		if (i == 0) {
-			bskip(cfmt.titlespace + cfmt.titlefont.size);
-			set_font(&cfmt.titlefont);
-		} else {
-			bskip(cfmt.subtitlespace + cfmt.subtitlefont.size);
-			set_font(&cfmt.subtitlefont);
-		}
-		PUT0("(");
-		if (i == 0 && cfmt.withxrefs)
-			PUT1("%s.  ", info.xref);
-		strcpy(t, info.title[i]);
-		if (cfmt.titlecaps)
-			cap_str(t);
-		put_str(t);
-		if (cfmt.titleleft)
-			PUT0(") 0 0 M show\n");
-		else	PUT1(") %.1f 0 M cshow\n", lwidth * 0.5);
-	}
+	/* titles */
+	for (i = 0; i < info.ntitle; i++)
+		write_title(i);
 
-	/* write rhythm, composer, origin */
+	/* rhythm, composer, origin */
 	down1 = cfmt.composerspace + cfmt.composerfont.size;
-	rhythm = (first_voice->bagpipe && !cfmt.infoline) ? info.rhyth : 0;
+	rhythm = (first_voice->key.bagpipe && !cfmt.infoline) ? info.rhyth : 0;
 	if (rhythm) {
 		set_font(&cfmt.composerfont);
 		PUT2("0 -%.1f M (%s) show\n",
@@ -826,7 +822,7 @@ void write_heading(void)
 		if ((rhythm || info.area) && cfmt.infoline) {
 
 			/* if only one of rhythm or area then do not use ()'s
-			 * otherwise set rythm (area) */
+			 * otherwise output 'rhythm (area)' */
 			set_font(&cfmt.infofont);
 			bskip(cfmt.infofont.size + cfmt.infospace);
 			PUT1("%.1f 0 M (", lwidth);
@@ -843,7 +839,7 @@ void write_heading(void)
 		down2 = cfmt.composerspace + cfmt.composerfont.size;
 	}
 
-	/* write parts */
+	/* parts */
 	if (info.parts) {
 		down1 = cfmt.partsspace + cfmt.partsfont.size - down1;
 		if (down1 > 0)

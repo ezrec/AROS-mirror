@@ -6,19 +6,19 @@
  * Adapted from abc2ps-1.2.5:
  *  Copyright (C) 1996,1997  Michael Methfessel
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  * Jean-François Moine
  *	mailto:moinejf@free.fr
@@ -27,11 +27,10 @@
  *	http://moinejf.free.fr/
  *
  * Original abc2ps:
- *  Michael Methfessel
- *  msm@ihp-ffo.de
- *  Institute for Semiconductor Physics, PO Box 409,
- *  D-15204 Frankfurt (Oder), Germany
- *
+ *	Michael Methfessel
+ *	msm@ihp-ffo.de
+ *	Institute for Semiconductor Physics, PO Box 409,
+ *	D-15204 Frankfurt (Oder), Germany
  */
 
 /* Main program abcm2ps.c */
@@ -68,11 +67,15 @@ char outf[STRL1];		/* output file name */
 int  file_initialized;		/* for output file */
 FILE *fout;			/* output file */
 
+struct WHISTLE_S whistle_tb[MAXWHISTLE];
+int nwhistle;
+
 /* -- local variables -- */
 
 static int include_xrefs = -1;	/* to include xref numbers in title */
-static int one_per_page = -1;	/* new page for each tune ? */
-static int write_history = -1;	/* write history and notes ? */
+static int one_per_page = -1;	/* new page for each tune */
+static int splittune = -1;	/* tune may be splitted */
+static int write_history = -1;	/* write history and notes */
 static float alfa_c = -1.0;	/* max compression allowed */
 static int bars_per_line = -1;	/* bars for auto linebreaking */
 static int encoding = -1;	/* latin encoding number */
@@ -86,8 +89,8 @@ static int flatbeams = -1;	/* flat beams when bagpipe */
 static int graceslurs = -1;	/* slurs in grace notes */
 static float scalefac = -1.0;	/* scale factor for symbol size */
 static float staffsep = -1.0;	/* staff separation */
-static char *styf;		/* layout style file name */
-static char *styd = DEFAULT_FDIR; /* layout style directory */
+static char *styd = DEFAULT_FDIR; /* format search directory */
+static int def_fmt_done = 0;	/* default format read */
 static float swidth = -1.0;	/* staff width */
 static int measurenb = -1;	/* measure numbering (-1: none, 0: on the left, or every n bars) */
 static int measurebox = -1;	/* display measure numbers in a box */
@@ -117,12 +120,12 @@ static void do_select(struct abctune *t,
 		      int last_tune);
 static char *getext(char *fid);
 static void output_file(void);
+static void read_def_format(void);
 static char *read_file(void);
 static void set_page_format(void);
 static void usage(void);
+static void whistle_parse(char *p);
 static void write_version(void);
-static void strext(char *fid,
-		   char *ext);
 
 /* -- main program -- */
 int main(int argc,
@@ -131,10 +134,9 @@ int main(int argc,
 	int j;
 	char *p;
 	char c, *aaa;
-	int help_me;		/* need help? */
 
 	/* -- set default options and parse arguments -- */
-	printf("abcm2ps-" VERSION " (" VDATE ")\n");
+	fprintf(stderr, "abcm2ps-" VERSION " (" VDATE ")\n");
 	if (argc <= 1)
 		usage();
 
@@ -150,9 +152,9 @@ int main(int argc,
 		(void (*)(int level)) lvlarena, /* new level */
 		 sizeof(struct SYMBOL) - sizeof(struct abcsym),
 		 0);			/* don't keep comments */
+	set_format();
 
 	/* parse the arguments - as soon as a file ends, it is treated */
-	help_me = 0;
 	while (--argc > 0) {
 		argv++;
 		p = *argv;
@@ -162,7 +164,7 @@ int main(int argc,
 				case 'B': bars_per_line = 0; break;
 				case 'c': continue_lines = 0; break;
 				case 'E': epsf = 0; break;
-				case 'F': styf = 0; break;
+				case 'F': def_fmt_done = 1; break;
 				case 'G': graceslurs = 1; break;
 				case 'j':
 				case 'k': measurenb = -1; break;
@@ -176,10 +178,13 @@ int main(int argc,
 					break;
 				case 'Q': printtempo = 0; break;
 				case 'x': include_xrefs = 0; break;
+				case 'W': nwhistle = 0; break;
+				case '0': splittune = 0; break;
 				case '1': one_per_page = 0; break;
 				default:
-					printf("++++ Cannot switch off flag: +%c\n",
-					       *p);
+					fprintf(stderr,
+						"++++ Cannot switch off flag: +%c\n",
+						*p);
 					severity = 1;
 					break;
 				}
@@ -202,7 +207,11 @@ int main(int argc,
 				case 'E': epsf = 1; break;
 				case 'f': flatbeams = 1; break;
 				case 'G': graceslurs = 0; break;
-				case 'H': help_me = 1; break;
+				case 'H': 
+					if (fout == 0)
+						set_page_format();
+					print_format();
+					return 0;
 				case 'h': usage(); break;
 				case 'l': landscape = 1; break;
 				case 'M': music_only = 1; break;
@@ -217,8 +226,9 @@ int main(int argc,
 				case 'T':
 				case 'o':
 				case 'v':
-					printf("'-%c' is obsolete - option ignored\n",
-					       c);
+					fprintf(stderr,
+						"'-%c' is obsolete - option ignored\n",
+						c);
 					break;
 				case 'Q': printtempo = 1; break;
 				case 'u': deco_old = 1; break;
@@ -226,17 +236,20 @@ int main(int argc,
 					write_version();
 					return 0;
 				case 'x': include_xrefs = 1; break;
+				case '0': splittune = 1; break;
 				case '1': one_per_page = 1; break;
 
 				case 'e':	/* filtering */
 					if (sel != 0) {
-						printf("++++Too many '-e'\n");
+						fprintf(stderr,
+							"++++ Too many '-e'\n");
 						return 2;
 					}
 					sel = p + 1;
 					if (sel[0] == '\0') {
 						if (--argc <= 0) {
-							printf("++++ No filter in '-e'\n");
+							fprintf(stderr,
+								"++++ No filter in '-e'\n");
 							return 2;
 						}
 						argv++;
@@ -271,12 +284,14 @@ int main(int argc,
 				case 'O':
 				case 's':
 				case 'w':
+				case 'W':
 					aaa = p + 1;
 					if (*aaa == '\0') {
 						aaa = *++argv;
 						if (--argc <= 0 || *aaa == '-') {
-							printf("++++ Missing parameter after flag -%c\n",
-							       c);
+							fprintf(stderr,
+								"++++ Missing parameter after flag -%c\n",
+								c);
 							return 2;
 						}
 					} else {
@@ -293,8 +308,9 @@ int main(int argc,
 								    && (c == 'j'
 									|| c == 'k'))
 									break;
-								printf("++++ Invalid parameter <%s> for flag -%c\n",
-								       aaa, c);
+								fprintf(stderr,
+									"++++ Invalid parameter <%s> for flag -%c\n",
+									aaa, c);
 								return 2;
 							}
 					}
@@ -303,8 +319,9 @@ int main(int argc,
 					case 'a':
 						sscanf(aaa, "%f", &alfa_c);
 						if (alfa_c > 1. || alfa_c < 0) {
-							printf("++++ Bad parameter for flag -a: %s\n",
-							       aaa);
+							fprintf(stderr,
+								"++++ Bad parameter for flag -a: %s\n",
+								aaa);
 							return 2;
 						}
 						break;
@@ -322,7 +339,13 @@ int main(int argc,
 						staffsep = scan_u(aaa);
 						break;
 					case 'F':
-						styf = aaa;
+						read_def_format();
+						if (read_fmt_file(aaa, styd) < 0) {
+							fprintf(stderr,
+								"++++ Cannot open format file: %s\n",
+								aaa);
+							severity = 1;
+						}
 						break;
 					case 'I':
 						indent = scan_u(aaa);
@@ -336,8 +359,9 @@ int main(int argc,
 						break;
 					case 'L':
 						sscanf(aaa, "%d", &encoding);
-						if (encoding < 0 || encoding > 6) {
-							printf("++++ Bad encoding value %s - changed to 0\n",
+						if ((unsigned) encoding > MAXENC) {
+							fprintf(stderr,
+								"++++ Bad encoding value %s - reset to 0\n",
 								aaa);
 							encoding = 0;
 						}
@@ -348,44 +372,34 @@ int main(int argc,
 					case 'N':
 						sscanf(aaa, "%d", &pagenumbers);
 						if (pagenumbers < 0 || pagenumbers > 4) {
-							printf("++++ '-N' value %s - changed to 2\n",
+							fprintf(stderr,
+								"++++ '-N' value %s - changed to 2\n",
 								aaa);
 							pagenumbers = 2;
 						}
 						break;
-					case 'O': {
-						char *ext;
-
+					case 'O':
 						if (!strcmp(aaa, "=")) {
 							choose_outname = 1;
 							break;
 						}
-						ext = getext(aaa);
-						if (ext != 0
-						    && strcmp(ext, "ps")
-						    && strcmp(ext, "eps")) {
-							printf("Wrong extension for output file: %s\n",
-							       aaa);
-							return 2;
-						}
 						strcpy(outf, aaa);
-#if 0
-						if (ext == 0)
-							strext(outf, "ps");
-#endif
 						choose_outname = 0;
 						break;
-					    }
 					case 's':
 						sscanf(aaa, "%f", &scalefac);
 						break;
 					case 'w':
 						swidth = scan_u(aaa);
 						break;
+					case 'W':
+						whistle_parse(aaa);
+						break;
 					}
 					break;
 				default:
-					printf("++++ Unknown flag: -%c\n", c);
+					fprintf(stderr,
+						"++++ Unknown flag: -%c\n", c);
 					severity = 1;
 					break;
 				}
@@ -394,7 +408,13 @@ int main(int argc,
 		}
 
 		if (strstr(p, ".fmt")) {	/* implicit -F */
-			styf = p;
+			read_def_format();
+			if (read_fmt_file(p, styd) < 0) {
+				fprintf(stderr,
+					"++++ Cannot open format file: %s\n",
+					p);
+				severity = 1;
+			}
 			continue;
 		}
 
@@ -403,18 +423,11 @@ int main(int argc,
 		in_fname = p;
 	}
 
-	if (help_me) {
-		if (fout == 0)
-			set_page_format();
-		print_format();
-		return 0;
-	}
-
 	if (in_fname != 0)
 		output_file();
 
 	if (!epsf && fout == 0) {
-		printf("No input file specified\n");
+		fprintf(stderr, "No input file specified\n");
 		return 1;
 	}
 
@@ -434,8 +447,9 @@ static void output_file(void)
 #ifdef unix
 		perror("read_file");
 #endif
-		printf("++++ Cannot read input file '%s'\n",
-		       in_fname);
+		fprintf(stderr, "++++ Cannot read input file '%s'\n",
+			in_fname);
+		severity = 1;
 		return;
 	}
 
@@ -449,12 +463,13 @@ static void output_file(void)
 	reset_deco(deco_old);
 	memcpy(&deco_tune, &deco_glob, sizeof deco_tune);
 	if (!epsf) {
-		if (choose_outname)
+		if (choose_outname) {
 			strcpy(outf, in_fname);
-		strext(outf, "ps");
-		open_output_file(outf);
+			strext(outf, "ps");
+		}
+		open_output_file();
 	} else	cutext(outf);
-	printf("%s\n", in_fname);
+	fprintf(stderr, "File %s\n", in_fname);
 	clrarena(1);
 	lvlarena(0);
 	t = abc_parse(file);
@@ -547,7 +562,7 @@ static char *getext(char *fid)
 	return 0;
 }
 
-/* -- ops_into_fmt -- */
+/* -- copy the command line options to the current format -- */
 void ops_into_fmt(void)
 {
 	struct FORMAT *fmt;
@@ -564,7 +579,7 @@ void ops_into_fmt(void)
 	if (swidth >= 0) {
 		fmt->rightmargin = fmt->pagewidth - swidth - fmt->leftmargin;
 		if (fmt->rightmargin < 0)
-			printf("Warning: staffwidth too big\n");
+			fprintf(stderr, "Warning: staffwidth too big\n");
 	}
 	if (continue_lines >= 0)
 		fmt->continueall = continue_lines;
@@ -580,6 +595,8 @@ void ops_into_fmt(void)
 		fmt->staffsep = staffsep;
 	if (one_per_page >= 0)
 		fmt->oneperpage = one_per_page;
+	if (splittune >= 0)
+		fmt->splittune = splittune;
 	if (music_only >= 0)
 		fmt->musiconly = music_only;
 	if (graceslurs >= 0)
@@ -596,6 +613,15 @@ void ops_into_fmt(void)
 		fmt->printtempo = printtempo;
 	if (alfa_c >= 0)
 		fmt->maxshrink = alfa_c;
+}
+
+/* -- read the default format -- */
+static void read_def_format(void)
+{
+	if (def_fmt_done)
+		return;
+	def_fmt_done = 1;
+	read_fmt_file("default.fmt", styd);
 }
 
 /* -- read an input file -- */
@@ -658,28 +684,14 @@ static char *read_file(void)
 /* -- set_page_format --- */
 static void set_page_format(void)
 {
-	set_format();
-
-	if (styf != 0) {
-		char tmp[256];
-
-		strcpy(tmp, styf);
-		strext(tmp, "fmt");
-		if (read_fmt_file(tmp, styd) < 0) {
-			printf("++++ Cannot open file: %s\n",
-			       styf);
-			exit(3);
-		}
-		cfmt.name = styf;
-	}
+	read_def_format();
 	ops_into_fmt();
-
 	make_font_list();
 }
 
 /* -- set extension on a file identifier -- */
-static void strext(char *fid,
-		   char *ext)
+void strext(char *fid,
+	    char *ext)
 {
 	char *p, *q;
 
@@ -694,78 +706,125 @@ static void strext(char *fid,
 /* -- display usage and exit -- */
 static void usage(void)
 {
-	printf("ABC to Postscript translator.\n"
-	       "Usage: abcm2ps [options] file [file_options] ..\n"
-	       "where:\n"
-	       " file   input ABC file, or '-'\n"
-	       " options and file_options:\n"
-	       "  .output file options:\n"
-	       "     -E      produce EPSF output, one tune per file\n"
-	       "     -O fff  set outfile name to fff\n"
-	       "     -O =    make outfile name from infile/title\n"
-	       "  .output formatting:\n"
-	       "     -s xx   set scale factor to xx\n"
-	       "     -w xx   set staff width (cm/in/pt)\n"
-	       "     -m xx   set left margin (cm/in/pt)\n"
-	       "     -d xx   set staff separation (cm/in/pt)\n"
-	       "     -a xx   set max shrinkage to xx (between 0 and 1)\n"
-	       "     -F foo  read format from \"foo.fmt\"\n"
-	       "     -D bar  look for format files in directory \"bar\"\n"
-	       "  .output options:\n"
-	       "     -l      landscape mode\n"
-	       "     -I xx   indent 1st line (cm/in/pt)\n"
-	       "     -x      include xref numbers in output\n"
-	       "     -M      don't ouput the lyrics\n"
-	       "     -n      include notes and history in output\n"
-	       "     -N n    set page number mode to n\n"
-	       "             0=off 1=left 2=right 3=even left,odd right 4=even right,odd left\n"
-	       "     -1      write one tune per page\n"
-	       "     -G      no slur in grace notes\n"
-	       "     -j n[b] number the measures every n bars (or on the left if n=0)\n"
-	       "             if 'b', display in a box\n"
-	       "     -k n[b] same as '-j' (abc2ps compatibility)\n"
-	       "     -b n    set the first measure number to n\n"
-	       "     -f      have flat beams when bagpipe tunes\n"
-	       "  .line breaks:\n"
-	       "     -c      auto line break\n"
-	       "     -B n    break every n bars\n"
-	       "  .input file selection/options:\n"
-	       "     -e pattern\n"
-	       "             xref list of tunes to select\n"
-	       "     -u      abc2ps implicit decorations\n"
-	       "     -L n    set char encoding to Latin number n\n"
-	       "  .help/configuration:\n"
-	       "     -V      show program version\n"
-	       "     -h      show this command summary\n"
-	       "     -H      show the format parameters\n");
+	fprintf(stderr, 
+		"ABC to Postscript translator.\n"
+		"Usage: abcm2ps [options] file [file_options] ..\n"
+		"where:\n"
+		" file        input ABC file, or '-'\n"
+		" options and file_options:\n"
+		"  .output file options:\n"
+		"     -E      produce EPSF output, one tune per file\n"
+		"     -O fff  set outfile name to fff\n"
+		"     -O =    make outfile name from infile/title\n"
+		"  .output formatting:\n"
+		"     -s xx   set scale factor to xx\n"
+		"     -w xx   set staff width (cm/in/pt)\n"
+		"     -m xx   set left margin (cm/in/pt)\n"
+		"     -d xx   set staff separation (cm/in/pt)\n"
+		"     -a xx   set max shrinkage to xx (between 0 and 1)\n"
+		"     -F foo  read format from \"foo.fmt\"\n"
+		"     -D bar  look for format files in directory \"bar\"\n"
+		"  .output options:\n"
+		"     -l      landscape mode\n"
+		"     -I xx   indent 1st line (cm/in/pt)\n"
+		"     -x      include xref numbers in output\n"
+		"     -M      don't ouput the lyrics\n"
+		"     -n      include notes and history in output\n"
+		"     -N n    set page number mode to n\n"
+		"             0=off 1=left 2=right 3=even left,odd right 4=even right,odd left\n"
+		"     -1      write one tune per page\n"
+		"     -G      no slur in grace notes\n"
+		"     -j n[b] number the measures every n bars (or on the left if n=0)\n"
+		"             if 'b', display in a box\n"
+		"     -k n[b] same as '-j' (abc2ps compatibility)\n"
+		"     -b n    set the first measure number to n\n"
+		"     -f      have flat beams when bagpipe tunes\n"
+		"     -W vk   output a whistle tablature for voice 'v', key 'k'\n"
+		"  .line breaks:\n"
+		"     -c      auto line break\n"
+		"     -B n    break every n bars\n"
+		"  .input file selection/options:\n"
+		"     -e pattern\n"
+		"             xref list of tunes to select\n"
+		"     -u      abc2ps implicit decorations\n"
+		"     -L n    set char encoding to Latin number n\n"
+		"  .help/configuration:\n"
+		"     -V      show program version\n"
+		"     -h      show this command summary\n"
+		"     -H      show the format parameters\n");
 	exit(0);
 }
 
-/* -- write_version -- */
+/* -- parse the whistle command ('-Wvk') -- */
+static void whistle_parse(char *p)
+{
+	short pitch;
+	char *q;
+	static char notes_tb[14] = "CDEFGABcdefgab";
+	static char pitch_tb[14] = {60, 62, 64, 65, 67, 69, 71,
+				    72, 74, 76, 77, 79, 81, 83};
+
+	if (nwhistle >= MAXWHISTLE) {
+		fprintf(stderr, "++++ Too many '-W'\n");
+		return;
+	}
+	if ((unsigned) (*p - '0') > 9) {
+		fprintf(stderr, "++++ Bad voice number in '-W'\n");
+		return;
+	}
+	whistle_tb[nwhistle].voice = *p++ - '0' - 1;
+	pitch = 0;
+	if (*p == '^' || *p == '_') {
+		if (*p++ == '^')
+			pitch++;
+		else	pitch--;
+	}
+	if ((q = strchr(notes_tb, *p)) == 0) {
+		fprintf(stderr, "++++ Bad note name in '-W'\n");
+		return;
+	}
+	pitch += pitch_tb[q - notes_tb];
+	p++;
+	if (*p == '#' || *p == 'b') {
+		if (*p++ == '#')
+			pitch++;
+		else	pitch--;
+	}
+	while (*p == '\'' || *p == ',') {
+		if (*p++ == '\'')
+			pitch += 12;
+		else	pitch -= 12;
+	}
+	whistle_tb[nwhistle].pitch = pitch;
+	nwhistle++;
+}
+
+/* -- write the program version -- */
 static void write_version(void)
 {
-	printf("Compiled: " __DATE__ "\n"
-	       "Options:");
+	fprintf(stderr, "Compiled: " __DATE__ "\n"
+	       "Options:"
 #ifdef BSTEM_DOWN
-	printf(" BSTEM_DOWN");
+		" BSTEM_DOWN"
 #endif
 #ifdef A4_FORMAT
-	printf(" A4_FORMAT");
+		" A4_FORMAT"
 #endif
 #ifdef CLEF_TRANSPOSE
-	printf(" CLEF_TRANSPOSE");
+		" CLEF_TRANSPOSE"
 #endif
 #ifdef DECO_IS_ROLL
-	printf(" DECO_IS_ROLL");
+		" DECO_IS_ROLL"
 #endif
-#if !defined(BSTEM_DOWN) && !defined(A4_FORMAT)
-	printf(" NONE\n");
-#else
-	printf("\n");
+#if !defined(BSTEM_DOWN) && !defined(A4_FORMAT) && !defined(CLEF_TRANSPOSE) \
+     && !defined(DECO_IS_ROLL)
+		" NONE"
 #endif
+		"\n");
 
 	if (strlen(DEFAULT_FDIR) > 0)
-		printf("Default format directory: %s\n", DEFAULT_FDIR);
+		fprintf(stderr,
+			"Default format directory: %s\n", DEFAULT_FDIR);
 }
 
 /* -- arena routines -- */

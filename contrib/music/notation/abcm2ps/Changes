@@ -1,3 +1,159 @@
+---- Version 3.7.1 - 03/08/03 ----
+
+Accept '.|' as a dashed bar.
+When less accidentals of the same type in K:, put neutrals before
+	the remaining accidentals.
+Print the colomn number in error/warning messages.
+A chord length is now the length of the first note.
+Have the line number in some more error messages.
+Reduce horizontal spacing when hyphens in lyrics.
+Better place for accidentals in multivoice.
+
+---- Version 3.7.0 - 03/07/24 ----
+
+Accept '-O-' for PostScript output on stdout.
+Don't set the '.ps' extension in the output file name.
+Output messages on stderr.
+Exit just after encountering '-H' in the command line.
+Accept Q: without beat.
+Assume a abc2win line break when blank found after '!'.
+Ignore the back quotes ('`').
+Have a double bar at end of line when next line starts with a repeat bar.
+End the 2nd time repeat braket on complex measure bars.
+Better slurs when not starting or ending on a note.
+Bad P: when inlined.
+In acciaccaturas, have a bar on the first note only.
+
+---- Version 3.6.4 - 03/07/06 ----
+
+Accept '!' as new line inside a music line (thanks to John Chambers).
+Accept any character in 'U:'.
+Crash when using a bad decoration.
+%%splittune and '-0' added.
+Do '\\' work in texts.
+Loss of music lines in big tunes.
+Change a bit horizontal spacing.
+Smaller beam stubs in grace notes.
+Fix some beam stub directions.
+New straight gracenote flags (from Ewan A. Macpherson).
+
+---- Version 3.6.3 - 03/06/29 ----
+
+Don't print the full name of the voices after some pseudo-comments.
+Small changes in the ISO-Latin-1 encoding.
+%%multicol problems with tunes on many pages.
+Don't add spaces before and after the tempo in Q:.
+Nicer hyphens in lyrics.
+Bad unit length and clef transpose in overlaid voices.
+Tin whistle tablature added.
+Center the voice names.
+Cut the slurs on repeat bars.
+Have a max slope of beams in grace notes.
+Bad grace note length when inside a broken rhythm.
+May have postscript sequence before staff definition.
+Program loop when '-c' or '-B' and repeat bar at EOL.
+Problems with special bars at end of line.
+
+---- Version 3.6.2 - 03/06/22 ----
+
+Better slurs (?).
+Obey the %%staves (ignore the extra voices).
+Extended syntax of Q:.
+Accept ']' as end of repeat indication.
+Better K: scan.
+
+---- Version 3.6.1 - 03/06/15 ----
+
+No repeat bars on the 2nd staff of a brace system.
+Have a default %%notespacingfactor of 1.414.
+Crash when a line starts with a repeat indication.
+May have explicit accidentals in K:.
+Fix many problems with repeat bars.
+Don't switch to abc2ps mode when 'middle=' in clef definition.
+
+---- Version 3.6.0 - 03/06/08 ----
+
+Accept more bar types.
+May have many format files.
+Read a default format file at startup time.
+Change a bit multivoice horizontal spacing.
+Handle spaces at start of continuation lines.
+Newer 'config.guess' and 'config.sub'.
+Accept 'clef=none' and 'middle=xx' in clef definition.
+Accept broken rhythm across bars.
+Bad triple broken rhythm.
+
+---- Version 3.5.5 - 03/05/25 ----
+
+Broken rhythm inverted since 3.5.2.
+Problems with 3 voices per staff.
+Problems in parsing voice overlay.
+Latin guitar chords in deco.abc.
+
+---- Version 3.5.4 - 03/05/18 ----
+
+Problem with ties and voice overlay.
+
+---- Version 3.5.3 - 03/05/04 ----
+
+Bad horizontal spacing when %%maxshrink too small.
+Less note head shift on voice unisson.
+
+---- Version 3.5.2 - 03/04/20 ----
+
+Less note head shift on voice unisson.
+Problem with voice overlay and bar at start of tune.
+Fix a compilation error with the QuickC Compiler.
+Accept spaces before broken rhythm signs.
+Crash when no end of guitar chord.
+Crash when lack of ending slur in grace note sequence.
+abcMIDI like errors (from Seymour Shlien).
+
+---- Version 3.5.1 - 03/03/23 ----
+
+Problem with beams on 2 staves - not fixed.
+Better beam stub directions.
+Set the clef of all voices when defined in the first K:.
+Reduce again the size of the PostScript header.
+Print the end of 1st repeat when at end of line.
+Better place for decorations when notes are shifted.
+May have voice names on many lines.
+
+---- Version 3.5.0 - 03/03/16 ----
+
+Reduce the size of the PostScript header.
+Fix some problems in %%EPS.
+Fix an overlap problem when multi-voices and max shrinking.
+May have many annotations on one symbol.
+May force some decorations to go under the staff (with %%deco).
+%%notespacingfactor added.
+Note pitch problem when mixing clef=bass and clef=F,.
+
+---- Version 3.4.2 - 03/03/09 ----
+
+Bad horizontal spacing at start of voice overlay.
+Problem when a voice overlay did not end with a bar.
+Lack of tie continuation at start of lines since 3.3.1.
+Bad staff vertical offset when headers with 2 lines.
+
+---- Version 3.4.1 - 03/03/02 ----
+
+Bad vertical offset of some rests since 3.4.0.
+Fix warnings when compiling syms.c.
+Remove the top of page alignment (KO when generating .epsi).
+
+---- Version 3.4.0 - 03/02/23 ----
+
+Handle the beam breaks after embedded headers.
+Align at top of page when changing the page size.
+Bad horizontal offset in EPS output.
+May have 2 lines in header and footer.
+Bad demi-semi-quaver beam breaks.
+Better place for rests in the middle of 3 voices of a same staff.
+Reduce the width of grace notes.
+Rest problem when under a beam and 2nd voice.
+Correct double repeat bar.
+
 ---- Version 3.3.1 - 03/01/26 ----
 
 Have bigger stems when notes outside the staff.

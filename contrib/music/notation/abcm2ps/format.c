@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "abcparse.h"
 #include "abc2ps.h"
@@ -78,6 +79,7 @@ static struct format {
 	{"measurenb", FORMAT_I, 0, &cfmt.measurenb},
 	{"musiconly", FORMAT_B, 0, &cfmt.musiconly},
 	{"musicspace", FORMAT_U, 0, &cfmt.musicspace},
+	{"notespacingfactor", FORMAT_R, 1, &cfmt.notespacingfactor},
 	{"oneperpage", FORMAT_B, 0, &cfmt.oneperpage},
 	{"pageheight", FORMAT_U, 0, &cfmt.pageheight},
 	{"pagewidth", FORMAT_U, 0, &cfmt.pagewidth},
@@ -89,6 +91,7 @@ static struct format {
 	{"rightmargin", FORMAT_U, 0, &cfmt.rightmargin},
 	{"scale", FORMAT_R, 0, &cfmt.scale},
 	{"slurheight", FORMAT_R, 0, &cfmt.slurheight},
+	{"splittune", FORMAT_B, 0, &cfmt.splittune},
 	{"squarebreve", FORMAT_B, 0, &cfmt.squarebreve},
 	{"staffsep", FORMAT_U, 0, &cfmt.staffsep},
 	{"staffwidth", FORMAT_U, 1, &staffwidth},
@@ -129,11 +132,12 @@ static int add_font(char *fname)
 			return fnum;		/* already there */
 
 	if (nfontnames >= MAXFONTS) {
-		ERROR(("Too many fonts\n"));
+		error(1, 0, "Too many fonts\n");
 		exit(1);
 	}
 	if (file_initialized)
-		ERROR(("Cannot have a new font when the output file is opened"));
+		error(1, 0,
+		      "Cannot have a new font when the output file is opened");
 	fnum = nfontnames++;
 	fontnames[fnum] = getarena(strlen(fname) + 1);
 	strcpy(fontnames[fnum], fname);
@@ -166,7 +170,7 @@ void define_fonts(void)
 
 	for (i = 0; i < nfontnames; i++) {
 		if (used_font[i])
-			define_font(fontnames[i], i, cfmt.encoding);
+			define_font(fontnames[i], i);
 	}
 }
 
@@ -197,7 +201,6 @@ void set_format(void)
 
 	f = &cfmt;
 	memset(f, 0, sizeof *f);
-	f->name = "standard";
 	f->pageheight	= PAGEHEIGHT;
 	f->pagewidth	= PAGEWIDTH;
 	f->leftmargin	= MARGIN;
@@ -225,6 +228,7 @@ void set_format(void)
 	f->measurefirst = 1;
 	f->printtempo = 1;
 	f->autoclef = 1;
+	f->notespacingfactor = 1.414;
 	fontspec(&f->titlefont,	"Times-Roman", 20.0);
 	fontspec(&f->subtitlefont, "Times-Roman", 16.0);
 	fontspec(&f->composerfont, "Times-Italic", 14.0);
@@ -244,13 +248,12 @@ void print_format(void)
 	struct format *fd;
 static char yn[2][5]={"no","yes"};
 
-	printf("Format \"%s\":\n", cfmt.name);
 	for (fd = format_tb; fd->name; fd++) {
 		printf("  %-13s ", fd->name);
 		switch (fd->type) {
 		case FORMAT_I:
 			switch (fd->subtype) {
-			case 0:
+			default:
 				printf("%d\n", *((int *) fd->v));
 				break;
 			case 1:
@@ -309,7 +312,8 @@ static int g_logv(char *l)
 	case 'F':
 		break;
 	default:
-		printf("++++ Unknown logical '%s' - false assumed\n", l);
+		fprintf(stderr,
+			"++++ Unknown logical '%s' - false assumed\n", l);
 		break;
 	}
 	return 0;
@@ -376,9 +380,10 @@ int interpret_format_line(char *p)
 			sscanf(p, "%d", (int *) fd->v);
 			switch (fd->subtype) {
 			case 1:
-				if ((unsigned) cfmt.encoding > 6) {
-					ERROR(("Bad encoding value %d - reset to 0",
-					       cfmt.encoding));
+				if ((unsigned) cfmt.encoding > MAXENC) {
+					error(1, 0,
+					      "Bad encoding value %d - reset to 0",
+					      cfmt.encoding);
 					cfmt.encoding = 0;
 				}
 				break;
@@ -389,6 +394,27 @@ int interpret_format_line(char *p)
 			break;
 		case FORMAT_R:
 			*((float *) fd->v) = g_fltv(p);
+			if (fd->subtype == 1) {	/* note spacing factor */
+				int i;
+				float w;
+
+				if (cfmt.notespacingfactor <= 0) {
+					fprintf(stderr,
+						"Bad value for 'notespacingfactor'\n");
+					break;
+				}
+				dot_space = sqrt(cfmt.notespacingfactor);
+				w = space_tb[SPACETB_SZ/2];
+				for (i = SPACETB_SZ/2; --i >= 0; ) {
+					w /= cfmt.notespacingfactor;
+					space_tb[i] = w;
+				}
+				w = space_tb[SPACETB_SZ/2];
+				for (i = SPACETB_SZ/2; ++i < SPACETB_SZ; ) {
+					w *= cfmt.notespacingfactor;
+					space_tb[i] = w;
+				}
+			}
 			break;
 		case FORMAT_F:
 			g_fspc(p, (struct FONTSPEC *) fd->v);
@@ -403,7 +429,7 @@ int interpret_format_line(char *p)
 				rmargin = (cfmt.landscape ? cfmt.pageheight : cfmt.pagewidth)
 					- staffwidth - cfmt.leftmargin;
 				if (rmargin < 0)
-					printf("'staffwidth' too big\n");
+					fprintf(stderr, "'staffwidth' too big\n");
 				cfmt.rightmargin = rmargin;
 			}
 			break;
@@ -443,8 +469,8 @@ int read_fmt_file(char *filename,
 	char fname[256];
 
 	strcpy(fname, filename);
+	strext(fname, "fmt");
 	if ((fp = fopen(fname, "r")) == 0) {
-
 		if (*dirname == '\0')
 			return -1;
                 sprintf(fname, "%s%c%s", dirname, DIRSEP, filename);
@@ -472,8 +498,9 @@ void set_font(struct FONTSPEC *font)
 
 	fnum = font->fnum;
 	if (!used_font[fnum]) {
-		ERROR(("Font \"%s\" not predefined; using first in list",
-			fontnames[fnum]));
+		error(1, 0,
+		      "Font \"%s\" not predefined; using first in list",
+		      fontnames[fnum]);
 		fnum = 0;
 	}
 	PUT2("%.1f F%d ", font->size, fnum);

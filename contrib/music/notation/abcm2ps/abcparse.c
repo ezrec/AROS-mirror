@@ -46,8 +46,9 @@ static struct deco dc;		/* decorations */
 static int lyric_started;	/* lyric started */
 static struct abcsym *lyric_start;	/* 1st note of the line for d: */
 static struct abcsym *lyric_cont;	/* current symbol when d: continuation */
+static int vover_bar;		/* in a simple voice overlay sequence */
 
-#define VOICE_NAME_SZ 32	/* max size of a voice name */
+#define VOICE_NAME_SZ 64	/* max size of a voice name */
 
 static unsigned char *file;	/* remaining abc file */
 static short linenum;		/* current line number */
@@ -57,14 +58,14 @@ static int line_length;		/* current line length */
 
 static short nvoice;		/* number of voices (0..n-1) */
 static struct {			/* voice table and current pointer */
-	char *name;			/* voice name */
+	char name[32];			/* voice name */
+	struct abcsym *last_note;	/* last note or rest */
+	struct abcsym *tie;		/* last note with starting ties */
 	short ulen;			/* unit note length */
-	signed char carryover;		/* for interpreting > and < chars */
-	unsigned char ntinext;
-	signed char tinext[MAXHD];	/* chord ties */
 	char slur;			/* number of slur start */
 	unsigned char pplet, qplet, rplet; /* nplet - fixme: may be global?*/
 	signed char add_pitch;		/* key transpose */
+	unsigned char mvoice;		/* main voice when voice overlay */
 } voice_tb[MAXVOICE], *curvoice;
 
 /* char table for note line parsing */
@@ -79,21 +80,24 @@ static struct {			/* voice table and current pointer */
 #define CHAR_BSLASH 8
 #define CHAR_OBRA 9
 #define CHAR_BAR 10
-#define CHAR_COL 11
-#define CHAR_OPAR 12
-#define CHAR_VOV 13
-#define CHAR_CPAR 14
+#define CHAR_OPAR 11
+#define CHAR_VOV 12
+#define CHAR_VOVE 13
+#define CHAR_SPAC 14
+#define CHAR_MINUS 15
+#define CHAR_CPAR 16
+#define CHAR_BRHY 17
 static char char_tb[256] = {
-	0, 0, 0, 0, 0, 0, 0, 0, 0, CHAR_IGN, 0, 0, 0, 0, 0, 0,	/* 00 - 0f */
+	0, 0, 0, 0, 0, 0, 0, 0, 0, CHAR_SPAC, 0, 0, 0, 0, 0, 0,	/* 00 - 0f */
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,		/* 10 - 1f */
-	CHAR_IGN, CHAR_DECO, CHAR_GCHORD, CHAR_BAD,	/* (sp) ! " # */
+	CHAR_SPAC, CHAR_DECO, CHAR_GCHORD, CHAR_BAD,	/* (sp) ! " # */
 	CHAR_BAD, CHAR_BAD, CHAR_VOV, CHAR_BAD, 	/* $ % & ' */
-	CHAR_OPAR, CHAR_BAD, CHAR_BAD, CHAR_BAD, 	/* ( ) * + */
-	CHAR_BAD, CHAR_BAD, CHAR_DECO, CHAR_BAD, 	/* , - . / */
+	CHAR_OPAR, CHAR_CPAR, CHAR_IGN, CHAR_BAD, 	/* ( ) * + */
+	CHAR_BAD, CHAR_MINUS, CHAR_DECO, CHAR_BAD, 	/* , - . / */
 	CHAR_BAD, CHAR_BAD, CHAR_BAD, CHAR_BAD, 	/* 0 1 2 3 */
 	CHAR_BAD, CHAR_BAD, CHAR_BAD, CHAR_BAD, 	/* 4 5 6 7 */
-	CHAR_BAD, CHAR_BAD, CHAR_COL, CHAR_BAD, 	/* 8 9 : ; */
-	CHAR_BAD, CHAR_ACC, CHAR_BAD, CHAR_BAD, 	/* < = > ? */
+	CHAR_BAD, CHAR_BAD, CHAR_BAR, CHAR_BAD, 	/* 8 9 : ; */
+	CHAR_BRHY, CHAR_ACC, CHAR_BRHY, CHAR_BAD, 	/* < = > ? */
 	CHAR_BAD, CHAR_NOTE, CHAR_NOTE, CHAR_NOTE, 	/* @ A B C */
 	CHAR_NOTE, CHAR_NOTE, CHAR_NOTE, CHAR_NOTE, 	/* D E F G */
 	CHAR_DECO, CHAR_DECO, CHAR_DECO, CHAR_DECO, 	/* H I J K */
@@ -101,8 +105,8 @@ static char char_tb[256] = {
 	CHAR_DECO, CHAR_DECO, CHAR_DECO, CHAR_DECO, 	/* P Q R S */
 	CHAR_DECO, CHAR_DECO, CHAR_DECO, CHAR_DECO, 	/* T U V W */
 	CHAR_DECO, CHAR_DECO, CHAR_REST, CHAR_OBRA, 	/* X Y Z [ */
-	CHAR_BSLASH, CHAR_BAD, CHAR_ACC, CHAR_ACC, 	/* \ ] ^ _ */
-	CHAR_BAD, CHAR_NOTE, CHAR_NOTE, CHAR_NOTE, 	/* ` a b c */
+	CHAR_BSLASH, CHAR_BAR, CHAR_ACC, CHAR_ACC, 	/* \ ] ^ _ */
+	CHAR_IGN, CHAR_NOTE, CHAR_NOTE, CHAR_NOTE, 	/* ` a b c */
 	CHAR_NOTE, CHAR_NOTE, CHAR_NOTE, CHAR_NOTE, 	/* d e f g */
 	CHAR_DECO, CHAR_DECO, CHAR_DECO, CHAR_DECO, 	/* h i j k */
 	CHAR_DECO, CHAR_DECO, CHAR_DECO, CHAR_DECO, 	/* l m n o */
@@ -126,10 +130,13 @@ char *deco_tb[128];
 int severity;
 
 static unsigned char *get_line(void);
-static char *get_tempo(unsigned char *p,
-		       struct abcsym *s);
 static unsigned char *parse_len(unsigned char *p,
 				int *p_len);
+static char *parse_basic_note(char *p,
+			      int *pitch,
+			      int *length,
+			      int *accidental,
+			      int *stemless);
 static unsigned char *parse_clef(unsigned char *p,
 				 struct clef_s *p_clef);
 static void parse_header(struct abctune *t,
@@ -140,6 +147,21 @@ static int parse_line(struct abctune *t,
 static unsigned char *parse_note(struct abctune *t,
 				 unsigned char *p);
 static void syntax(char *msg, char *q);
+static void vover_new(void);
+
+/* -- abcMIDI like errors -- */
+static void print_error(char *s,
+			int col)
+{
+	if (col >= 0)
+		fprintf(stderr, "Error in line %d.%d: %s\n", linenum, col, s);
+	else	fprintf(stderr, "Error in line %d: %s\n", linenum, s);
+}
+
+static void print_warning(char *s)
+{
+	fprintf(stderr, "Warning in line %d: %s\n", linenum, s);
+}
 
 /* -- delete an ABC symbol -- */
 void abc_delete(struct abcsym *as)
@@ -148,8 +170,10 @@ void abc_delete(struct abcsym *as)
 	case ABC_T_INFO:
 		switch (as->text[0]) {
 		case 'Q':
-			if (as->u.tempo.str)
-				free_f(as->u.tempo.str);
+			if (as->u.tempo.str1)
+				free_f(as->u.tempo.str1);
+			if (as->u.tempo.str2)
+				free_f(as->u.tempo.str2);
 			break;
 		case 'V':
 			if (as->u.voice.name)
@@ -222,7 +246,7 @@ void abc_init(void *alloc_f_api(int size),
 	      int keep_comment_api)
 {
 	if (scratch_line != 0) {
-		printf("abc_init already initialized\n");
+		fprintf(stderr, "abc_init already initialized\n");
 		return;
 	}
 	scratch_line = malloc(256 + 1);
@@ -256,12 +280,12 @@ void abc_insert(char *file_api,
 			break;			/* done */
 
 		if (*p == '\0')
-			return;			/* blank line --> done */
+			break;			/* blank line --> done */
 
 /*fixme-insert: don't accept X: nor T:*/
 		/* parse the music line */
 		if (!parse_line(t, p))
-			return;
+			break;
 	}
 }
 
@@ -317,15 +341,13 @@ struct abctune *abc_parse(char *file_api)
 	for (;;) {
 		if ((p = get_line()) == 0) {
 			if (abc_state == ABC_S_HEAD) {
-				printf("\n+++ unexpected EOF in header definition at line %d\n",
-				       linenum);
+				print_error("unexpected EOF in header definition",
+					    -1);
 				severity = 1;
 			}
 			break;			/* done */
 		}
-
-		/* skip starting blanks */
-		while (isspace(*p))
+		while (isspace(*p))		/* skip starting blanks */
 			p++;
 
 		/* start a new tune if not done */
@@ -401,7 +423,7 @@ static char *def_voice(unsigned char *p,
 	sep = *p;
 	*p = '\0';
 
-	if (voice_tb[0].name == 0)
+	if (voice_tb[0].name[0] == '\0')
 		voice = 0;		/* first voice */
 	else {
 		for (voice = 0; voice <= nvoice; voice++) {
@@ -414,8 +436,8 @@ static char *def_voice(unsigned char *p,
 		}
 	}
 	nvoice = voice;
-	voice_tb[voice].name = alloc_f(strlen(name) + 1);
-	strcpy(voice_tb[voice].name, name);
+	strncpy(voice_tb[voice].name, name, sizeof voice_tb[voice].name - 1);
+	voice_tb[voice].mvoice = voice;
 done:
 	*p_voice = voice;
 	*p = sep;
@@ -430,21 +452,42 @@ static void broken_rhythm(struct note *note,
 
 	num *= 2;
 	if (num > 0) {
+		if (num == 6)
+			num = 8;
 		n = num * 2 - 1;
 		for (m = 0; m <= note->nhd; m++)
 			note->lens[m] = (note->lens[m] * n) / num;
 	} else {
 		n = -num;
+		if (n == 6)
+			n = 8;
 		for (m = 0; m <= note->nhd; m++)
 			note->lens[m] /= n;
-		if (note->lens[0] < BASE_LEN)
-			note->stemless = 0;
 	}
 	l = note->lens[0];
 	for (m = 1; m <= note->nhd; m++)
 		if (note->lens[m] < l)
 			l = note->lens[m];
 	note->len = l;
+}
+
+/* -- check for the '!' as end of line (ABC2Win) -- */
+static int check_nl(unsigned char *p)
+{
+	while (*p != '\0') {
+		switch (*p++) {
+		case '!':
+			return 0;
+		case '|':
+		case '[':
+		case ':':
+		case ']':
+		case ' ':
+		case '\t':
+			return 1;
+		}
+	}
+	return 1;
 }
 
 /* -- parse a decoration '[!]xxx[!]' -- */
@@ -494,15 +537,36 @@ static char *get_deco(unsigned char *p,
 	return p;
 }
 
+/* -- parse a list of accidentals (K:) -- */
+static unsigned char *parse_acc(unsigned char *p,
+				struct abcsym *s)
+{
+	int pit, len, acc, nostem, nacc;
+
+	nacc = s->u.key.nacc;
+	for (;;) {
+		if (nacc >= sizeof s->u.key.pits) {
+			syntax("Too many accidentals", 0);
+			break;
+		}
+		p = parse_basic_note(p, &pit, &len, &acc, &nostem);
+		s->u.key.pits[nacc] = pit - curvoice->add_pitch;
+		s->u.key.accs[nacc++] = acc;
+		if (*p == '\0')
+			break;
+		if (*p != '^' && *p != '_' && *p != '=')
+			break;
+	}
+	s->u.key.nacc = nacc;
+	return p;
+}
+
 /* -- parse a 'K:' -- */
 static void parse_key(unsigned char *p,
 		      struct abcsym *s)
 {
-	int sf, j;
-	char w[81];
-	int bagpipe;
+	int sf;
 	struct clef_s clef;
-	int minor = 0;
 
 	/* check for clef alone */
 	p = parse_clef(p, &clef);
@@ -518,26 +582,17 @@ static void parse_key(unsigned char *p,
 		return;
 	}
 
-	bagpipe = 0;
 	sf = 0;
 	switch (*p) {
-	case 'F':
-		sf = -1;
-		break;
-	case 'B':
-		sf++;
-	case 'E':
-		sf++;
-	case 'A':
-		sf++;
-	case 'D':
-		sf++;
-	case 'G':
-		sf++;
-	case 'C':
-		break;
+	case 'F': sf = -1; break;
+	case 'B': sf++;
+	case 'E': sf++;
+	case 'A': sf++;
+	case 'D': sf++;
+	case 'G': sf++;
+	case 'C': break;
 	case 'H':
-		bagpipe = 1;
+		s->u.key.bagpipe = 1;
 		p++;
 		if (*p == 'P')
 			;
@@ -545,6 +600,11 @@ static void parse_key(unsigned char *p,
 			sf = 2;
 		else	syntax("Unknown bagpipe-like key", p);
 		break;
+	case '^':
+	case '_':
+	case '=':
+		p--;
+		break;			/* explicit accidentals */
 	default:
 		syntax("Key not recognized", p);
 		break;
@@ -558,8 +618,7 @@ static void parse_key(unsigned char *p,
 		p++;
 	}
 
-	/* loop over blank-delimited words: get the next token in lower case */
-	for (;;) {
+	while (*p != '\0') {
 		while (isspace(*p))
 			p++;
 		if (*p == '\0')
@@ -575,59 +634,88 @@ static void parse_key(unsigned char *p,
 			memcpy(&s2->u.clef, &clef, sizeof s2->u.clef);
 			continue;
 		}
-
-		j = 0;
-		while (*p != '\0' && !isspace(*p)) {
-			if (j < sizeof w - 1)
-				w[j++] = tolower(*p);
-			p++;
+		switch (*p) {
+		case 'a':
+		case 'A':
+			if (strncasecmp(p, "aeo", 3) == 0) {
+				sf -= 3;
+				s->u.key.minor = 1;
+			} else	goto unk;
+			break;
+		case 'd':
+		case 'D':
+			if (strncasecmp(p, "dor", 3) == 0)
+				sf -= 2;
+			else	goto unk;
+			break;
+		case 'i':
+		case 'I':
+			if (strncasecmp(p, "ion", 3) == 0)
+				break;
+			goto unk;
+		case 'l':
+		case 'L':
+			if (strncasecmp(p, "loc", 3) == 0)
+				sf -= 5;
+			else if (strncasecmp(p, "lyd", 3) == 0)
+				sf += 1;
+			else	goto unk;
+			break;
+		case 'm':
+		case 'M':
+			if (strncasecmp(p, "maj", 3) == 0)
+				;
+			else if (strncasecmp(p, "mix", 3) == 0)
+				sf -= 1;
+			else if (strncasecmp(p, "min", 3) == 0
+				 || !isalpha(p[1])) {		/* 'm' alone */
+				sf -= 3;
+				s->u.key.minor = 1;
+			} else	goto unk;
+			break;
+		case 'o':
+		case 'O':
+			if (strncasecmp(p, "octave", 6) == 0) {	/* (abcMIDI) */
+				p += 6;
+				while (!isspace(*p) && *p != '\0')
+					p++;
+				continue;
+			}
+			goto unk;
+		case 'p':
+		case 'P':
+			if (strncasecmp(p, "phr", 3) == 0)
+				sf -= 4;
+			else	goto unk;
+			break;
+		case '^':
+		case '_':
+		case '=':
+			p = parse_acc(p, s);	/* explicit accidentals */
+			continue;
+		case '+':
+		case '-':
+			if (p[1] == '8') {
+				/* "+8" / "-8" (fixme: not standard) */
+				if (*p == '+')
+					curvoice->add_pitch += 7;
+				else	curvoice->add_pitch -= 7;
+				p += 2;
+				continue;
+			}
+			goto unk;
+		default:
+		unk:
+			syntax("Unknown token in key specifier", p);
+			while (!isspace(*p) && *p != '\0')
+				p++;
+			continue;
 		}
-		w[j] = '\0';
-
-		/* now identify this word */
-
-		/* check for mode specifier */
-		if (strncmp(w, "mix", 3) == 0)
-			sf -= 1;
-		/* dorian mode on the second note (D in C scale) */
-		else if (strncmp(w, "dor", 3) == 0)
-			sf -= 2;
-		/* phrygian mode on the third note (E in C scale) */
-		else if (strncmp(w, "phr", 3) == 0)
-			sf -= 4;
-		/* lydian mode on the fourth note (F in C scale) */
-		else if (strncmp(w, "lyd", 3) == 0)
-			sf += 1;
-		/* locrian mode on the seventh note (B in C scale) */
-		else if (strncmp(w, "loc", 3) == 0)
-			sf -= 5;
-		/* major and ionian are the same keysig */
-		else if (strncmp(w, "maj", 3) == 0)
-			;
-		else if (strncmp(w, "ion", 3) == 0)
-			;
-		/* aeolian, m, minor are the same keysig - sixth note (A in C scale) */
-		else if (strncmp(w, "aeo", 3) == 0
-			 || strncmp(w, "min", 3) == 0
-			 || strcmp(w, "m") == 0) {
-			sf -= 3;
-			minor = 1;
-		/* check for "+8" or "-8" */
-		} else if (!strcmp(w, "+8"))
-			curvoice->add_pitch += 7;
-		else if (!strcmp(w, "-8"))
-			curvoice->add_pitch -= 7;
-		/* check for "octave=...", no spaces allowed */
-		else if (strncmp(w, "octave", 6) == 0)
-			;
-		else	syntax("Unknown token in key specifier",
-			       p - strlen(w));
-
-	}  /* end of loop over blank-delimited words */
+		while (isalpha(*p))
+			p++;
+	}
 
 	s->u.key.sf = sf;
-	s->u.key.bagpipe = bagpipe;
-	s->u.key.minor = minor;
 }
 
 /* -- set default length from 'L:' -- */
@@ -941,68 +1029,99 @@ char *get_str(unsigned char *d,		/* destination */
 	return s;
 }
 
-/* -- get a tempo (Q:) -- */
-static char *get_tempo(unsigned char *p,
-		       struct abcsym *s)
+/* -- parse a tempo (Q:) -- */
+static char *parse_tempo(unsigned char *p,
+			 struct abcsym *s)
 {
-	int len = ulen ? ulen : BASE_LEN / 8;
-	int value = 0;
 	int have_error = 0;
+	unsigned char *q;
+	int l;
 
-	/* get the string if any */
+	/* string before */
 	if (*p == '"') {
-		unsigned char *q;
-		int l;
-
 		q = ++p;
 		while (*p != '"' && *p != '\0')
 			p++;
 		l = p - q;
-		s->u.tempo.str = alloc_f(l + 1);
-		strncpy(s->u.tempo.str, q, l);
-		s->u.tempo.str[l] = '\0';
+		s->u.tempo.str1 = alloc_f(l + 1);
+		strncpy(s->u.tempo.str1, q, l);
+		s->u.tempo.str1[l] = '\0';
 		if (*p == '"')
 			p++;
 		while (isspace(*p))
 			p++;
 	}
 
-	/* get the tempo indication if specified */
+	/* beat */
 	if (*p == 'C' || *p == 'c'
 	    || *p == 'L' || *p == 'l') {
+		int len;
+
 		p = parse_len(p + 1, &len);
+		if (len <= 0)
+			have_error++;
+		else	s->u.tempo.length[0] = len;
 		while (isspace(*p))
 			p++;
-		if (*p != '=')
-			have_error++;
-		else	value = atoi(++p);
-	} else if (isdigit(*p)) {
-		int top, bot;
+	} else if (isdigit(*p) && strchr(p, '/') != 0) {
+		int i;
 
-		if (sscanf(p, "%d /%d =%d", &top, &bot, &value) == 3)
-			len = (BASE_LEN * top) / bot;
-		else	value = atoi(p);
-	} else if (*p != '\0')
-		have_error++;
+		i = 0;
+		while (isdigit(*p)) {
+			int top, bot, n;
 
-	if (len <= 0 || value < 0)
-		have_error++;
-	if (have_error) {
-		len = ulen ? ulen : BASE_LEN / 8;
-		value = 0;
+			if (sscanf(p, "%d /%d%n", &top, &bot, &n) != 2
+			    || bot <= 0) {
+				have_error++;
+				break;
+			}
+			l = (BASE_LEN * top) / bot;
+			if (l <= 0
+			    || i >= sizeof s->u.tempo.length
+					/ sizeof s->u.tempo.length[0])
+				have_error++;
+			else	s->u.tempo.length[i++] = l;
+			p += n;
+			while (isspace(*p))
+				p++;
+		}
 	}
 
-	s->u.tempo.length = len;
-	s->u.tempo.value = value;
-	return have_error ? "Invalid tempo specifier" : 0;
+	/* tempo value ('Q:beat=value' or 'Q:value') */
+	if (*p == '=')
+		p++;
+	if (isdigit(*p)) {
+		int value;
+
+		value = atoi(p);
+		if (value < 0)
+			have_error++;
+		else	s->u.tempo.value = value;
+		while (isdigit(*p) || isspace(*p))
+			p++;
+	}
+
+	/* string after */
+	if (*p == '"') {
+		q = ++p;
+		while (*p != '"' && *p != '\0')
+			p++;
+		l = p - q;
+		s->u.tempo.str2 = alloc_f(l + 1);
+		strncpy(s->u.tempo.str2, q, l);
+		s->u.tempo.str2[l] = '\0';
+	}
+
+	return have_error ? "Invalid tempo" : 0;
 }
 
 /* -- get a user defined accent (U:) -- */
 static char *get_user(unsigned char *p,
 		      struct abcsym *s)
 {
-	if (char_tb[*p] != CHAR_DECO)
-		return "Invalid decoration";
+	if (char_tb[*p] != CHAR_DECO)	/* accept any character */
+/*fixme: should be for the current tune only */
+		char_tb[*p] = CHAR_DECO;
 	s->u.user.symbol = *p++;
 
 	/* '=' and '!' are not important */
@@ -1043,19 +1162,14 @@ static struct kw_s {
 	/* save the unit note length of the previous voice */
 	curvoice->ulen = ulen;
 
-	if (voice_tb[0].name == 0) {
+	if (voice_tb[0].name[0] == '\0') {
 		switch (s->prev->type) {
 		case ABC_T_EOLN:
 		case ABC_T_NOTE:
 		case ABC_T_REST:
 		case ABC_T_BAR:
 			/* the previous voice was implicit (after K:) */
-			voice_tb[0].name = alloc_f(2);
-			strcpy(voice_tb[0].name, "1");
-			break;
-		default:
-			/* declaration of the first voice */
-			nvoice = -1;
+			voice_tb[0].name[0] = '1';
 			break;
 		}
 	}
@@ -1167,12 +1281,50 @@ void note_sort(struct abcsym *s)
 
 /* -- parse a bar -- */
 static char *parse_bar(struct abctune *t,
-		       unsigned char *p,
-		       enum bar_type bar_type)
+		       unsigned char *p)
 {
 	struct abcsym *s;
+	int bar_type;
 	char repeat_value[32];
 
+	p--;
+	bar_type = 0;
+	for (;;) {
+		switch (*p++) {
+		case '|':
+			bar_type <<= 4;
+			bar_type |= B_BAR;
+			continue;
+		case '[':
+			bar_type <<= 4;
+			bar_type |= B_OBRA;
+			continue;
+		case ']':
+			bar_type <<= 4;
+			bar_type |= B_CBRA;
+			continue;
+		case ':':
+			bar_type <<= 4;
+			bar_type |= B_COL;
+			continue;
+		default:
+			break;
+		}
+		break;
+	}
+	p--;
+	if ((bar_type & 0x0f) == B_OBRA && bar_type != B_OBRA) {
+		bar_type >>= 4;		/* have an other bar for '[' */
+		p--;
+	}
+	if (bar_type == (B_OBRA << 8) + (B_BAR << 4) + B_CBRA)	/* [|] */
+		bar_type = (B_OBRA << 4) + B_CBRA;		/* [] */
+
+/*	curvoice->last_note = 0; */
+	if (vover_bar) {
+		curvoice = &voice_tb[curvoice->mvoice];
+		vover_bar = 0;
+	}
 	s = abc_new(t, gchord, 0);
 	if (gchord) {
 		if (free_f)
@@ -1203,7 +1355,7 @@ static char *parse_bar(struct abctune *t,
 		s = abc_new(t, 0, 0);
 		s->type = ABC_T_MREP;
 		s->state = ABC_S_TUNE;
-		s->u.bar.type = B_SINGLE;
+		s->u.bar.type = 0;
 		s->u.bar.len = n;
 		return p;
 	}
@@ -1224,12 +1376,12 @@ static char *parse_bar(struct abctune *t,
 		}
 		*q = '\0';
 	}
-	if (bar_type != B_INVIS
+	if (bar_type != B_OBRA
 	    || s->text != 0) {
 		s = abc_new(t, repeat_value, 0);
 		s->type = ABC_T_BAR;
 		s->state = ABC_S_TUNE;
-		s->u.bar.type = B_INVIS;
+		s->u.bar.type = B_OBRA;
 	} else {
 		s->text = alloc_f(strlen(repeat_value) + 1);
 		strcpy(s->text, repeat_value);
@@ -1252,23 +1404,24 @@ static char *parse_basic_note(char *p,
 	/* look for accidental sign */
 	switch (*p) {
 	case '^':
-		if (p[1] == '^') {
+		p++;
+		if (*p == '^') {
 			acc = A_DS;
 			p++;
 		} else	acc = A_SH;
 		break;
 	case '=':
+		p++;
 		acc = A_NT;
 		break;
 	case '_':
-		if (p[1] == '_') {
+		p++;
+		if (*p == '_') {
 			acc = A_DF;
 			p++;
 		} else	acc = A_FT;
 		break;
 	}
-	if (acc)
-		p++;
 	{
 		char *p_n;
 
@@ -1305,7 +1458,7 @@ static char *parse_basic_note(char *p,
 	*pitch = pit + curvoice->add_pitch;
 	*length = len;
 	*accidental = acc;
-	*stemless = len >= BASE_LEN ? 1 : nostem;
+	*stemless = nostem;
 
 	return p;
 }
@@ -1315,50 +1468,46 @@ static unsigned char *parse_clef(unsigned char *p,
 				 struct clef_s *p_clef)
 {
 	int clef = -1;
-	int explicit_clef = 0;
 	int transpose = 0;
-	int clef_line = 0;
+	int clef_line = 2;
 
 	memset(p_clef, 0, sizeof *p_clef);
 	if (strncmp(p, "clef=", 5) == 0) {
 		p += 5;
-		explicit_clef = 1;
 		switch (*p) {
 		case 'g':
 			transpose = -7;
 		case 'G':
 			clef = TREBLE;
-			clef_line = 2;
 			break;
 		case 'f':
-			transpose = 14;
+			transpose = -14;
 			clef = BASS;
 			clef_line = 4;
 			break;
 		case 'F':
-			transpose = 7;
+			transpose = -7;
 			clef = BASS;
 			clef_line = 4;
 			break;
 		case 'c':
-			transpose = 7;
+			transpose = -7;
 		case 'C':
 			clef = ALTO;
 			clef_line = 3;
 			break;
 		case 'P':
 			clef = PERC;
-			clef_line = 2;
 			break;
 		}
 		if (clef >= 0) {
 			p++;
 			while (*p == ',') {
-				transpose -= 7;
+				transpose += 7;
 				p++;
 			}
 			while (*p == '\'') {
-				transpose += 7;
+				transpose -= 7;
 				p++;
 			}
 		}
@@ -1368,40 +1517,41 @@ static unsigned char *parse_clef(unsigned char *p,
 			clef = BASS;
 			clef_line = 4;
 #ifdef CLEF_TRANSPOSE
-			transpose = 14;
+			transpose = -14;
+#else
+			p_clef->check_pitch = 1;
 #endif
 			p += 4;
 		} else if (!strncmp(p, "treble", 6)) {
 			clef = TREBLE;
-			clef_line = 2;
 			p += 6;
-		} else if (!strncmp(p, "alto", 4)) {
+		} else if (!strncmp(p, "alto", 4)
+			   || !strncmp(p, "tenor", 5)) {
 			clef = ALTO;
-			clef_line = 3;
+			clef_line = *p == 'a' ? 3 : 4;
 #ifdef CLEF_TRANSPOSE
-			transpose = 7;
+			transpose = -7;
+#else
+			p_clef->check_pitch = 1;
 #endif
-			p += 4;
-		} else if (!strncmp(p, "tenor", 5)) {
-			clef = ALTO;
-			clef_line = 4;
-#ifdef CLEF_TRANSPOSE
-			transpose = 7;
-#endif
-			p += 5;
+			if (*p == 'a')
+				p += 4;
+			else	p += 5;
 		} else if (!strncmp(p, "perc", 4)) {
 			clef = PERC;
-			clef_line = 2;
 			p += 4;
-		} else	{
+		} else if (strncmp(p, "none", 4) == 0) {
+			clef = TREBLE;
+			p_clef->invis = 1;
+			p += 4;
+		} else if (!strncmp(p, "middle=", 7)) {
+			clef = TREBLE;
+		} else {
 			p_clef->type = -1;
 			return p;
 		}
 	}
 
-	p_clef->type = clef;
-	p_clef->transpose = transpose;
-	curvoice->add_pitch = -transpose;
 	switch (*p) {
 	case '1':
 	case '2':
@@ -1411,7 +1561,6 @@ static unsigned char *parse_clef(unsigned char *p,
 		clef_line = *p++ - '0';
 		break;
 	}
-	p_clef->line = clef_line;
 	if (p[1] == '8') {
 		if (*p == '-') {
 			p_clef->octave = -1;
@@ -1424,6 +1573,36 @@ static unsigned char *parse_clef(unsigned char *p,
 	while (isspace(*p))
 		p++;
 
+	/* accept 'middle=<note pitch>' */
+	if (strncmp(p, "middle=", 7) == 0) {
+		int pit, len, acc, nostem, l;
+
+		p += 7;
+		curvoice->add_pitch = 0;
+		p = parse_basic_note(p, &pit, &len, &acc, &nostem);
+		l = 20;
+		switch (clef) {
+		case ALTO:
+			l = 16;
+			break;
+		case BASS:
+			l = 12;
+			break;
+		}
+		l = l - pit + 4 + 14;
+		clef_line = (l % 7) / 2 + 1;
+		transpose = l / 7 * 7 - 14;
+#ifndef CLEF_TRANSPOSE
+		p_clef->check_pitch = 0;
+#endif
+		while (isspace(*p))
+			p++;
+	}
+
+	p_clef->type = clef;
+	p_clef->line = clef_line;
+	p_clef->transpose = transpose;
+	curvoice->add_pitch = transpose;
 	return p;
 }
 
@@ -1523,55 +1702,6 @@ static char *parse_decoline(unsigned char *p)
 	return 0;
 }
 
-/* -- parse extra characters after note -- */
-static char *parse_extra(char *p,
-			 struct note *note)
-{
-	int i;
-
-	for (;;) {
-		switch (*p++) {
-		case ' ':
-		case '\t':
-			note->word_end = 1;
-			break;
-		case '-':		/* tie */
-			for (i = 0; i <= note->nhd; i++)
-				note->ti1[i] = 1;
-			break;
-		case ')':
-			if (char_tb[')'] == CHAR_CPAR)
-				return p - 1;	/* ')' after '(&' */
-			note->slur_end++;
-			break;
-		case '>':
-			i = 1;
-			while (*p == '>') {
-				i++;
-				p++;
-			}
-			broken_rhythm(note, i);
-			curvoice->carryover = -i;
-			break;
-		case '<':
-			i = -1;
-			while (*p == '<') {
-				i--;
-				p++;
-			}
-			broken_rhythm(note, i);
-			curvoice->carryover = -i;
-			break;
-		case '\0':
-			note->word_end = 1;
-			/* fall thru */
-		default:
-			return p - 1;
-		}
-	}
-	/*not reached*/
-}
-
 /* -- parse a note length -- */
 static unsigned char *parse_len(unsigned char *p,
 				int *p_len)
@@ -1609,8 +1739,9 @@ static int parse_line(struct abctune *t,
 {
 	struct abcsym *s;
 	unsigned char *comment;
-	signed char carryover_sav = 0;	/* (compiler warning) */
+	struct abcsym *last_note_sav = 0;
 	unsigned char *q, c;
+	int i;
 	char sappo = 0;
 	static char qtb[10] = {1, 1, 3, 2, 3, 0, 2, 0, 3, 0};
 
@@ -1716,6 +1847,9 @@ again:					/* for history */
 		return 1;
 	}
 
+	if (scratch_line[0] == ' ' && curvoice->last_note != 0)
+		curvoice->last_note->u.note.word_end = 1;
+
 	lyric_started = 0;
 	lyric_start = lyric_cont = 0;
 	while (*p != '\0') {
@@ -1760,7 +1894,7 @@ again:					/* for history */
 				if ((p = get_line()) == 0) {
 					syntax("EOF reached while parsing guitar chord",
 					       q);
-					break;
+					return 0;
 				}
 				goto gch_continue;
 			}
@@ -1774,19 +1908,29 @@ again:					/* for history */
 				}
 				char_tb['{'] = CHAR_BAD;
 				char_tb['}'] = CHAR_GRACE;
-				carryover_sav = curvoice->carryover;
-				curvoice->carryover = 0;
+				last_note_sav = curvoice->last_note;
+				curvoice->last_note = 0;
 			} else {
-				p = parse_extra(p, &t->last_sym->u.note);
 				char_tb['{'] = CHAR_GRACE;
 				char_tb['}'] = CHAR_BAD;
-				curvoice->carryover = carryover_sav;
+/*fixme:bad*/
 				t->last_sym->u.note.word_end = 1;
+				curvoice->last_note = last_note_sav;
 			}
 			break;
 		case CHAR_DECO:
-			if (*p == '\0' && p[-1] == '!')
-				break;		/* ignore abc2win EOL */
+			if (p[-1] == '!' && check_nl(p)) {
+				s = abc_new(t, 0, 0);	/* abc2win EOL */
+				s->type = ABC_T_EOLN;
+				s->state = abc_state;
+				break;
+			}
+			if (p[-1] == '.' && *p == '|') {
+				p = parse_bar(t, p + 1);
+/*fixme: should have other dashed bars, as '.||' */
+				t->last_sym->u.bar.type = B_COL;
+				break;
+			}
 			p = parse_deco(p - 1, &dc);
 			break;
 		case CHAR_ACC:
@@ -1797,33 +1941,18 @@ again:					/* for history */
 				t->last_sym->u.note.sappo = 1;
 				sappo = 0;
 			}
+			curvoice->last_note = t->last_sym;
 			break;
 		case CHAR_BSLASH:		/* '\\' */
+/*fixme: KO if in grace note sequence*/
 			if (*p == '\0')
 				return 1;
 			syntax("'\\' ignored", p - 1);
 			break;
 		case CHAR_OBRA:			/* '[' */
-			if (*p == '|') {
-				if (p[1] != ']') {
-					/* [| thick-thin bar */
-					p = parse_bar(t,
-						      p + 1,
-						      B_THICK_THIN);
-				} else {
-					/* [|] invisible bar */
-					p = parse_bar(t, p + 2, B_INVIS);
-				}
-				break;
-			}
-			if (*p == ']') {
-				/* [] invisible bar */
-				p = parse_bar(t, p + 1, B_INVIS);
-				break;
-			}
-			if (isdigit(*p) || *p == '"') {
-				/* repeat bar */
-				p = parse_bar(t, p, B_INVIS);
+			if (*p == '|' || *p == ']'
+			    || isdigit(*p) || *p == '"') {
+				p = parse_bar(t, p);
 				break;
 			}
 			if (p[1] != ':') {
@@ -1832,6 +1961,7 @@ again:					/* for history */
 					t->last_sym->u.note.sappo = 1;
 					sappo = 0;
 				}
+				curvoice->last_note = t->last_sym;
 				break;
 			}
 
@@ -1850,44 +1980,9 @@ again:					/* for history */
 			abc_state = ABC_S_TUNE;
 			*p++ = c;
 			break;
-		case CHAR_BAR: {		/* '|' */
-			enum bar_type bar_type = B_SINGLE;
-
-			switch (*p) {
-			case '|':
-				bar_type = B_DOUBLE;
-				p++;
-				break;
-			case ':':
-				bar_type = B_LREP;
-				do {		/* ignore |:: */
-					p++;
-				} while (*p == ':');
-				break;
-			case ']':		/* code |] for fat end bar */
-				bar_type = B_THIN_THICK;
-				p++;
-				break;
-			}
-			p = parse_bar(t, p, bar_type);
+		case CHAR_BAR:			/* '|', ':' or ']' */
+			p = parse_bar(t, p);
 			break;
-		}
-		case CHAR_COL: {		/* ':' */
-			enum bar_type bar_type = B_RREP;
-
-			if (*p == ':') {
-				do {		/* ignore ::| */
-					p++;
-				} while (*p == ':');
-				if (*p == '|')
-					p++;
-				else	bar_type = B_DREP;
-			} else if (*p == '|') {
-				p++;
-			} else	bar_type = B_DASH;
-			p = parse_bar(t, p, bar_type);
-			break;
-		}
 		case CHAR_OPAR:			/* '(' */
 			if (isdigit(*p)) {
 				curvoice->pplet = *p - '0';
@@ -1920,7 +2015,8 @@ again:					/* for history */
 					s->u.v_over.type = V_OVER_SD;
 					p++;
 				} else	s->u.v_over.type = V_OVER_SS;
-				char_tb[')'] = CHAR_CPAR;
+				s->u.v_over.voice = curvoice - voice_tb;
+				char_tb[')'] = CHAR_VOVE;
 			} else	curvoice->slur++;
 			break;
 		case CHAR_VOV:			/* '&' */
@@ -1929,28 +2025,74 @@ again:					/* for history */
 			if (*p == '&') {
 				s->u.v_over.type = V_OVER_D;
 				p++;
-			} /* else s->u.v_over.type = V_OVER_S; */
+			} /*else s->u.v_over.type = V_OVER_S; */
+			vover_new();
+			s->u.v_over.voice = curvoice - voice_tb;
+			if (char_tb[')'] != CHAR_VOVE)
+				vover_bar = 1;
 			break;
-		case CHAR_CPAR:			/* ')' after '(&' */
+		case CHAR_VOVE:			/* ')' after '(&' */
 			s = abc_new(t, 0, 0);
 			s->type = ABC_T_V_OVER;
 			s->u.v_over.type = V_OVER_E;
-			char_tb[')'] = CHAR_BAD;
+			s->u.v_over.voice = curvoice->mvoice;
+			char_tb[')'] = CHAR_CPAR;
+			if (curvoice->last_note != 0) {
+				curvoice->last_note->u.note.word_end = 1;
+				curvoice->last_note = 0;
+			}
+			curvoice = &voice_tb[curvoice->mvoice];
 			break;
-		case CHAR_IGN:			/* ' ', '\t', '*' */
+		case CHAR_SPAC:			/* ' ' and '\t' */
+			if (curvoice->last_note != 0)
+				curvoice->last_note->u.note.word_end = 1;
+			break;
+		case CHAR_MINUS:		/* '-' */
+			if ((curvoice->tie = curvoice->last_note) == 0
+			    || curvoice->tie->type != ABC_T_NOTE)
+				goto bad_char;
+			for (i = 0; i <= curvoice->tie->u.note.nhd; i++)
+				curvoice->tie->u.note.ti1[i] = 1;
+			break;
+		case CHAR_CPAR:			/* ')' */
+			if (curvoice->last_note == 0)
+				goto bad_char;
+			curvoice->last_note->u.note.slur_end++;
+			break;
+		case CHAR_BRHY:			/* '>' and '<' */
+			if (curvoice->last_note == 0)
+				goto bad_char;
+			i = 1;
+			while (*p == p[-1]) {
+				i++;
+				p++;
+			}
+			if (i > 3) {
+				syntax("Bad broken rhythm", p - 1);
+				i = 3;
+			}
+			if (p[-1] == '<')
+				i = -i;
+			broken_rhythm(&curvoice->last_note->u.note, i);
+			curvoice->last_note->u.note.brhythm = i;
+			break;
+		case CHAR_IGN:			/* '*' & '`' */
 			break;
 		default:
+		bad_char:
 			syntax("Bad character", p - 1);
 			break;
 		}
 	}
 
-/*fixme: may we have grace notes across lines ? */
+/*fixme: may we have grace notes across lines?*/
 	if (char_tb['{'] == CHAR_BAD) {
 		syntax("No end of grace note sequence", 0);
 		char_tb['{'] = CHAR_GRACE;
 		char_tb['}'] = CHAR_BAD;
-		curvoice->carryover = carryover_sav;
+		if (curvoice->last_note != 0)
+			curvoice->last_note->u.note.word_end = 1;
+		curvoice->last_note = last_note_sav;
 	}
 
 	/* add eoln */
@@ -1970,6 +2112,8 @@ static unsigned char *parse_note(struct abctune *t,
 	int pit, len, acc, nostem;
 	int chord, sl1, sl2;
 	int j, m;
+	int ntie;
+	signed char tie_pit[MAXHD];
 
 	s = abc_new(t, gchord, 0);
 	s->type = ABC_T_NOTE;
@@ -2003,16 +2147,15 @@ static unsigned char *parse_note(struct abctune *t,
 			while (isdigit(*p))
 				p++;
 		}
-		s->u.bar.type = B_SINGLE;
+		s->u.bar.type = 0;
 		s->u.bar.len = len;
 		return p;
 	case 'y':			/* space (BarFly) */
 		s->type = ABC_T_REST;
 		s->u.note.invis = 1;
-		p = parse_extra(p + 1, &s->u.note);
 		s->u.note.slur_st += curvoice->slur;
 		curvoice->slur = 0;
-		return p;
+		return p + 1;
 	case 'x':			/* invisible rest */
 		s->u.note.invis = 1;
 		/* fall thru */
@@ -2020,11 +2163,11 @@ static unsigned char *parse_note(struct abctune *t,
 		s->type = ABC_T_REST;
 		p = parse_len(p + 1, &len);
 		s->u.note.len = s->u.note.lens[0] = len * ulen / BASE_LEN;
-		if (curvoice->carryover != 0) {
-			broken_rhythm(&s->u.note, curvoice->carryover);
-			curvoice->carryover = 0;
-		}
-		return parse_extra(p, &s->u.note);
+		if (curvoice->last_note != 0
+		    && curvoice->last_note->u.note.brhythm != 0)
+			broken_rhythm(&s->u.note,
+				      -curvoice->last_note->u.note.brhythm);
+		return p;
 	}
 
 	if (!s->u.note.grace && !lyric_started) {
@@ -2038,6 +2181,16 @@ static unsigned char *parse_note(struct abctune *t,
 	if (*p == '[') {	/* accept only '[..]' for chord */
 		chord = 1;
 		p++;
+	}
+
+	/* prepare searching the end of ties */
+	ntie = 0;
+	if (curvoice->tie != 0) {
+		for (m = 0; m <= curvoice->tie->u.note.nhd; m++) {
+			if (curvoice->tie->u.note.ti1[m])
+				tie_pit[ntie++] = curvoice->tie->u.note.pits[m];
+		}
+		curvoice->tie = 0;
 	}
 
 	/* get pitch and length */
@@ -2070,10 +2223,10 @@ static unsigned char *parse_note(struct abctune *t,
 			s->u.note.accs[m] = acc;
 			nostem |= tmp;
 
-			for (j = 0; j < curvoice->ntinext; j++) {
-				if (curvoice->tinext[j] == pit) {
+			for (j = 0; j < ntie; j++) {
+				if (tie_pit[j] == pit) {
 					s->u.note.ti2[m] = 1;
-					curvoice->tinext[j] = 0;
+					tie_pit[j] = -128;
 					break;
 				}
 			}
@@ -2081,6 +2234,7 @@ static unsigned char *parse_note(struct abctune *t,
 			if (chord) {
 				if (*p == '-') {
 					s->u.note.ti1[m] = 1;
+					curvoice->tie = s;
 					p++;
 				}
 				if (*p == ')') {
@@ -2110,8 +2264,8 @@ static unsigned char *parse_note(struct abctune *t,
 
 	/* warn about the bad ties */
 	if (char_tb['{'] != CHAR_BAD) {	/* if not in a grace note sequence */
-		for (j = 0; j < curvoice->ntinext; j++) {
-			if (curvoice->tinext[j] != 0)
+		for (j = 0; j < ntie; j++) {
+			if (tie_pit[j] != -128)
 				syntax("Bad tie", p);
 		}
 	}
@@ -2123,30 +2277,17 @@ static unsigned char *parse_note(struct abctune *t,
 		return p;
 	}
 	s->u.note.nhd = m - 1;
+
+	/* the chord length is the length of the first note */
+	s->u.note.len = s->u.note.lens[0];
+
 	note_sort(s);			/* sort the notes in chord */
-	if (curvoice->carryover != 0) {	/* add carryover from previous > or < */
-		broken_rhythm(&s->u.note, curvoice->carryover);
-		curvoice->carryover = 0;
-	}
-	p = parse_extra(p, &s->u.note);
+	if (curvoice->last_note != 0
+	    && curvoice->last_note->u.note.brhythm != 0)
+		broken_rhythm(&s->u.note,
+			      -curvoice->last_note->u.note.brhythm);
 	s->u.note.slur_st += curvoice->slur;
 	curvoice->slur = 0;
-
-	/* mark the ties (found in extra) */
-	curvoice->ntinext = 0;
-	for (j = 0; j <= s->u.note.nhd; j++) {
-		if (s->u.note.ti1[j]) {
-			curvoice->tinext[curvoice->ntinext] = s->u.note.pits[j];
-			curvoice->ntinext++;
-		}
-	}
-
-	/* use the shortest note length when in chord */
-	len = s->u.note.lens[0];
-	for (j = 1; j <= s->u.note.nhd; j++)
-		if (s->u.note.lens[j] < len)
-			len = s->u.note.lens[j];
-	s->u.note.len = len;
 
 	return p;
 }
@@ -2195,7 +2336,7 @@ static void parse_header(struct abctune *t,
 		error_txt = parse_meter(p, s);
 		break;
 	case 'Q':
-		error_txt = get_tempo(p, s);
+		error_txt = parse_tempo(p, s);
 		break;
 	case 'U':
 		error_txt = get_user(p, s);
@@ -2209,7 +2350,7 @@ static void parse_header(struct abctune *t,
 		if (abc_state != ABC_S_GLOBAL)
 			break;
 		/* 'T:' may start a new tune without 'X:' */
-		printf("++ Line %d: T: without X:\n", linenum);
+		print_warning("T: without X:");
 		/* fall thru */
 	case 'X':
 		if (abc_state != ABC_S_GLOBAL) {
@@ -2232,43 +2373,67 @@ static void parse_header(struct abctune *t,
 static void syntax(char *msg,
 		   char *q)
 {
-	int i, n, len, m1, m2, pp;
+	int n, len, m1, m2, pp;
 	int maxcol = 73;
 
 	severity = 1;
 	n = q - scratch_line;
-	if ((unsigned) n >= line_length) {
-		if (q == 0)
-			printf("\n%s\n", msg);
-		else	printf("\n%s at '%s'\n", msg, q);
+	if ((unsigned) n >= line_length)
+		n = -1;
+	print_error(msg, n);
+	if (n < 0) {
+		if (q != 0)
+			fprintf(stderr, " (near '%s')\n", q);
 		return;
 	}
-	printf("\n++++ %s in line %d.%d\n", msg, linenum, n + 1);
+/*	printf("\n++++ %s in line %d.%d\n", msg, linenum, n + 1);	*/
 	m1 = 0;
 	m2 = len = line_length - 1;
 	if (m2 > maxcol) {
 		if (n < maxcol)
 			m2 = maxcol;
 		else {
-			m1 = n - 10;
+			m1 = n - 20;
 			m2 = m1 + maxcol;
 			if (m2 > len)
 				m2 = len;
 		}
 	}
 
-	printf("%4d ", linenum);
+	fprintf(stderr, "%4d ", linenum);
 	pp = 6;
 	if (m1 > 0) {
-		printf("...");
+		fprintf(stderr, "...");
 		pp += 3;
 	}
-	for (i = m1; i <= m2; i++)
-		printf("%c", scratch_line[i]);
+	fprintf(stderr, "%*s", m2 - m1, &scratch_line[m1]);
 	if (m2 < len)
-		printf("...");
-	printf("\n");
+		fprintf(stderr, "...");
+	fprintf(stderr, "\n");
 
-	if (n >= 0 && n < 200)
-		printf("%*s\n", n + pp - m1, "^");
+	if ((unsigned) n < 200)
+		fprintf(stderr, "%*s\n", n + pp - m1, "^");
+}
+
+/* -- switch to a new voice overlay -- */
+static void vover_new(void)
+{
+	int voice, mvoice;
+
+	mvoice = curvoice - voice_tb;
+	for (voice = mvoice + 1; voice <= nvoice; voice++)
+		if (voice_tb[voice].mvoice == mvoice)
+			break;
+	if (voice > nvoice) {
+		if (nvoice >= MAXVOICE) {
+			syntax("Too many voices", 0);
+			return;
+		}
+		nvoice = voice;
+		voice_tb[voice].name[0] = '&';
+		voice_tb[voice].mvoice = mvoice;
+	}
+	voice_tb[voice].ulen = curvoice->ulen;
+	voice_tb[voice].add_pitch = curvoice->add_pitch;
+	curvoice = &voice_tb[voice];
 }

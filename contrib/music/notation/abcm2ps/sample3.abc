@@ -1,5 +1,5 @@
 %%deco alcoda 3 dacs 20 0 0 Al Coda
-%%header "	$T	Page $P"
+%%header "		$T\n		Page $P"
 %%footer "	$F"
 
 X:1
@@ -92,7 +92,7 @@ M:C
 L:1/8
 K:C
 "^normal"CD"_below"EG "<left"cd">right"ec|\
-"@20,-50anywhere"gfed (c4y)||
+"@20,-50anywhere"gf"<("">)"ed (c4y)||
 
 X:6
 T:Grace notes
@@ -100,8 +100,9 @@ M:C
 L:1/4
 %%graceslurs 0
 K:C
-{B2}A{B}A{B/}A{B//}A|{c4B4}A{c2B2}A{cB}A{c/B/}A|{a2g2f2 e2d2c2B4}A4||
-{(AB)}c{(AB}c){(GA)B}c{G(AB}c)|(c2{BA)G}{(G/A/B/) (G/A/B/)}c2|
+V:1 name="voice name\non\nthree lines"
+{B2}A{B}A{B/}A{B//}A|{c4B4}A{c2B2}A{cB}A{c/B/}A|
+{a2g2f2 e2d2c2B4}A4|{(AB)}c{(AB}c){(GA)B}c{G(AB}c)|(c2{BA)G}{(G/A/B/) (G/A/B/)}c2||
 
 X:7
 T:Drum

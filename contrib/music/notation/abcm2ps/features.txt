@@ -1,5 +1,5 @@
-Features in abcm2ps 3.3.0 (J.F. Moine, January 2003)
-====================================================
+Features in abcm2ps 3.6.2 (J.F. Moine, June 2003)
+=================================================
 
 ----- EPS inclusion -----
 
@@ -86,7 +86,7 @@ Measure numbering may be indicated:
     - in tune by the pseudo-comments '%%measurenb', '%%measurebox' and
       '%%measurefirst'.
 
-In a tune, the measure number may set to an explicit value using:
+In a tune, the measure number may be set to an explicit value using:
 
    %%setbarnb <value>
 
@@ -98,7 +98,7 @@ Their note lengths are handled. The unit note length is not tied
 to L: (or M:). Instead, for compatibility, it is:
 	- a semi-quaver for a single note and a demi-semi-quaver for
 	  many notes in standard tunes,
-	- a demi-demi-semi-quaver in bagpipe tunes.
+	- a hemi-demi-semi-quaver in bagpipe tunes.
 Grace notes greater than crotchets are drawn as crotchets.
 
 The decorations (dynamics, accents, ..) are either indicated by
@@ -116,10 +116,15 @@ Time signatures may have a single number (ex: 'M:2').
 Repeat bars may contain a string of digits, '-' (hyphen), ',' (comma)
 or '.' (dot), or even a free string, instead of only '1' or '2'. Ex:
 	|: ... [1,3 ... :|2,4-6 :|["last time" ...
-(note that a '[' is needed before the free string - the string may be
-empty)
+(note that a '[' is needed before the string - this one may be empty)
 
-Multiple repeat indications (|:: .. ::|) are accepted but not displayed.
+Measure bars may have any shape, using a sequence of '|' (thin bar),
+'[' or ']' (thick bar), and ':' (dots). Ex: '|[|', '[|:::'.
+
+Invisible bars are indicated by '[]' or '[|]', and dashed bars by
+a single ':'.
+
+The repeat indication may be explicitly stopped with a ']'.
 
 Multimeasure rests are indicated by 'Z' followed by the number of
 measures.
@@ -129,15 +134,14 @@ sharps, flats and natural signs. To inhibit this feature, either set
 the format parameter 'freegchord' to 1, or use a position flag
 (^, _, <, > or @).
 
-Invisible bars are indicated by '[]' or '[|]', and dashed bars by
-a single ':'.
-
 Invisible rests are indicated by 'x'.
 
 'y' adds some space between symbols (BarFly extension).
 
-The Q field may contain a text that is written before the tempo
-definition. The tempo itself may be omitted.
+The Q field may contain text that is written before and/or after the
+tempo definition. The beat and tempo may be omitted. There may be
+up to 4 beats. Ex:
+	Q: "string before" 1/4 3/8 1/4 3/8=40 "string after"
 
 The following decorations are added: !slide!, !fp!, !cresc!, !decresc!,
 !mp!, !dimin!, !turnx!, !invertedturn!, !invertedturnx!, !arpeggio!,
@@ -145,7 +149,7 @@ The following decorations are added: !slide!, !fp!, !cresc!, !decresc!,
 The !slide! decoration is assigned to the letter 'J'.
 
 Acciaccatura (short appogiattura) are indicated by a '/' starting a
-grace note sequence (one note only - ex: {/B}c).
+grace note sequence (ex: {/B}c).
 
 Multiple lines of guitar chord are normally indicated by separate
 quoted strings appearing before a same note (or rest or bar). They may
@@ -162,14 +166,12 @@ A note length starting with '0' (zero) indicates a stemless black note
 The header field 'X:' may be ommited: a new tune may start directly on
 the first 'T:'.
 
-The note length may be divided by many '/' ('A///' is the same as 'A/8').
-
 
 ----- Clef specification -----
 
 A clef may be provided in' K:' and 'V:'. The general syntax is:
 
-	[clef=]<clef type>[<line number>][+8 | -8]
+	[clef=]<clef type>[<line number>][+8 | -8] [middle=<pitch>]
 
 - 'clef=' starts the clef definition. It may be omitted in K: or V: when
   the clef type is a clef name.
@@ -194,6 +196,8 @@ A clef may be provided in' K:' and 'V:'. The general syntax is:
 		alto / tenor	c
 		bass		f
 
+  - 'none' in which case no clef is displayed.
+
 - <line number> indicates on which staff line the base clef is written.
   Defaults values are:
 		G / treble	2
@@ -202,6 +206,10 @@ A clef may be provided in' K:' and 'V:'. The general syntax is:
 		F / bass	4
 
 - '+8' or '-8' draws '8' above or below the staff.
+
+- 'middle=<pitch>' is an alternate way to define the line number of
+  the clef. The pitch indicates what note is displayed on the 3rd
+  (middle) line of the staff.
 
 When no clef is specified, clef changes are automatically inserted
 when needed (only 'bass' or 'treble').
@@ -221,12 +229,12 @@ The <voice definition> may contain:
 	- 'clef=..' (see above)
 	- 'name="voice name"' or 'nm="voice name"'
 	  The voice name is printed on the left of the first staff
-	  only.
+	  only. It may contain one or many '\n'.
 	- 'subname="voice subname"' or 'snm="voice subname"'
 	  The voice subname is printed on the left of all staves but
-	  the first one.
+	  the first one. It may contain one or many '\n'.
 	- 'merge'
-	  The voice goes in the same staff as the previous one.
+	  The voice goes in the same staff as the previous voice.
 	- 'up' or 'down'
 	  Force the stem direction for the voice.
 	- the other definitions are ignored.
@@ -250,15 +258,19 @@ pair of '[]', '{}' and '()':
 The character '|' (bar) may appear between the voice names in which case
 measure bars are not drawn between the associated staves.
 
-When this pseudo-comment appears inside a tune, the postscript generation
-is restarted as if there was a new tune.
+After this pseudo-comment is found, the voices which are not declared
+in it are ignored. This feature may be used as a voice filter.
+
+In the current version, when this pseudo-comment appears inside a tune,
+the postscript generation is restarted as if there was a new tune, thus
+forcing a line break.
 
 This program is normally compatible with abc2ps except for automatic
 clef handling: when no clef is indicated, the program tries to set
 either treble or bass clef according to the notes height.
 
-New in abcm2ps-2.5.5: abcm2ps now accepts the BarFly voice definition
-in tune (V:x <notes>, i.e. voice + notes on the same line).
+The BarFly voice switch in tune (V:x <notes>, i.e. voice + notes on
+the same line) may work.
 
 
 ----- Indentation -----
@@ -283,7 +295,7 @@ The format 'staffwidth' is obsolete. Use 'pagewidth' instead.
 Clef indications (in K: or V:) do not change the note pitches.
 
 The parser has been rewritten and follows more strictly the ABC draft
-(1.7.3 - date 199/06/23).
+(1.7.3 - date 1999/06/23).
 
 Tune selection has been simplified (only '-e').
 
