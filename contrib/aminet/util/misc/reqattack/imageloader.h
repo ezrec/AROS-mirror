@@ -31,6 +31,24 @@ struct RAImage
 	UBYTE *data;
 };
 
+struct FileRAImage 
+{
+	UBYTE	id[4];
+	UBYTE	filelen[4];
+	UBYTE	version[2];
+	UBYTE	width[2];
+	UBYTE	height[2];
+	UBYTE	framewidth[2];
+	UBYTE	frameheight[2];
+	UBYTE	numcols[2];
+	UBYTE	frames[2];
+	UBYTE	animspeed[2];
+	UBYTE 	flags[4];
+	UBYTE	reserved[16];
+	UBYTE 	pal[4];
+	UBYTE 	data[4];
+};
+
 struct RAImageNode
 {
 	struct Node			 node;

@@ -115,6 +115,7 @@ void CleanupImageLoader(void)
 struct RAImageNode *LoadRAImage(char *name)
 {
 	static struct RAImage header;
+	static struct FileRAImage fileheader;
 	static struct gpLayout gpLay;
 //	static struct adtFrame adtFra;
 	struct RAImageNode *node = 0;
@@ -135,13 +136,43 @@ struct RAImageNode *LoadRAImage(char *name)
 		D(bug("Open done\n"));
 		D(bug("Read header \n"));
 
-		if (Read(MyHandle,&header,sizeof(struct RAImage)) == sizeof(struct RAImage))
+		if (Read(MyHandle,&fileheader,sizeof(struct FileRAImage)) == sizeof(struct FileRAImage))
 		{
 			D(bug("Read header done\n"));
-
+			
+    	    	#ifdef __AROS__
+		#define CONVLONG(x) header.x = (fileheader.x[0] << 24) + \
+		    	    		       (fileheader.x[1] << 16) + \
+					       (fileheader.x[2] << 8) + \
+					       (fileheader.x[3])
+		#define CONVWORD(x) header.x = (fileheader.x[0] << 8) + \
+		    	    	    	       (fileheader.x[1])
+				
+		    	CONVLONG(id);
+			CONVLONG(filelen);
+			CONVWORD(version);
+			CONVWORD(width);
+			CONVWORD(height);
+			CONVWORD(framewidth);
+			CONVWORD(frameheight);
+			CONVWORD(numcols);
+			CONVWORD(frames);
+			CONVWORD(animspeed);
+			CONVLONG(flags);
+			/* reserved */
+			CONVLONG(pal);
+			CONVLONG(data);
+			
+		#undef CONVWORD
+		#undef CONVLONG
+			
+		#else
+		    	header = (struct RAImage *)fileheader;
+		#endif
+		
 			if (header.id == REQATTACK_IMAGEID)
 			{
-				l = header.filelen - sizeof(struct RAImage);
+				l = header.filelen - sizeof(struct FileRAImage);
 				allocsize = sizeof(struct RAImageNode) + l;
 
 				if ((node = (struct RAImageNode *)AllocPooled(mempool,allocsize)))
@@ -154,8 +185,8 @@ struct RAImageNode *LoadRAImage(char *name)
 					{
 						D(bug("Read image done\n"));
 
-						node->spec.data = (ULONG *)((ULONG)header.data + (ULONG)node->raimage - sizeof(struct RAImage));
-						node->spec.col  = (UBYTE *)((ULONG)header.pal + (ULONG)node->raimage - sizeof(struct RAImage));
+						node->spec.data = (ULONG *)((ULONG)header.data + (ULONG)node->raimage - sizeof(struct FileRAImage));
+						node->spec.col  = (UBYTE *)((ULONG)header.pal + (ULONG)node->raimage - sizeof(struct FileRAImage));
 						node->spec.width = header.width;
 						node->spec.height = header.height;
 						node->spec.numcols = header.numcols;
@@ -287,7 +318,7 @@ struct RAImageNode *LoadRAImage(char *name)
 
 			}
 
-		} /* if (Read(MyHandle,&header,sizeof(struct RAImage)) == sizeof(struct RAImage)) */
+		} /* if (Read(MyHandle,&fileheader,sizeof(struct FileRAImage)) == sizeof(struct FileRAImage)) */
 
 		D(bug("Close\n"));
 		Close(MyHandle);MyHandle=0;
