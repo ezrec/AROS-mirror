@@ -605,7 +605,9 @@ calculate_path(void)
         defpath = delim + 1;
     }
 
+#if !defined AROS && !defined _AMIGA
     bufsz += strlen(exec_prefix) + 1;
+#endif 
 
     /* This is the only malloc call in this file */
     buf = PyMem_Malloc(bufsz);
@@ -649,10 +651,13 @@ calculate_path(void)
             }
             defpath = delim + 1;
         }
+
+#if !defined AROS && !defined _AMIGA
         strcat(buf, delimiter);
 
         /* Finally, on goes the directory for dynamic-load modules */
         strcat(buf, exec_prefix);
+#endif 
 
         /* And publish the results */
         module_search_path = buf;
