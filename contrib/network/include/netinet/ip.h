@@ -42,7 +42,7 @@
  */
 #define	IPVERSION	4
 
-#include <aros/machine.h>
+#include <sys/types.h>
 
 /*
  * Structure of an internet header, naked of options.
