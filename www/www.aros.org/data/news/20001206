@@ -1,0 +1,6 @@
+Michael Schulz committed a PS/2 Mouse.HIDD and removed the respective
+code in the keyboard handler.
+
+Adam Chodorowski implemented the Intuition-Functions OpenWorkbench()
+and CloseWorkbench(). LockPubScreen() will now open the workbench
+if it isn't already open.

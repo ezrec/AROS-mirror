@@ -1,0 +1,4 @@
+Johan Alfredsson added a couple of function to dos.library.
+Georg Steger fixed a couple of bugs in the ASL ScreenMode
+requester and made the close button in the X11 Window
+kill AROS. He also committed a 3D Space Invaders clone.

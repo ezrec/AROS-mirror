@@ -1,0 +1,12 @@
+Stefan Berger has commited a completely rewritten layers.library which
+is much faster and much more simple then the one we had. It's now
+based on OO techniques, much easier to extend (we're currently thinking
+about child layers and layer groups which will keep their stacking
+order). Also, the new layers.library allows to move windows outside
+the screen (the first windows have already been lost out there ;-)
+
+Georg Steger committed additional files for ReqTools which should
+make it compile on Amiga.
+
+Adam Chodorowski began the work on workbench.library and the
+workbench process.
