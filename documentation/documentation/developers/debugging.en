@@ -28,6 +28,9 @@ the AROS tree.
 Low-level hardware developers will rather use the serial debug output on
 the native port.
 
+Application developers need to ensure that their programs release all
+the resources they take. AROS provides some tools for this.
+
 -------------------------
 Printing debug statements
 -------------------------
@@ -45,9 +48,9 @@ The usage is the same as ``printf()``.
 On hosted, the output will be displayed in the console where AROS
 has been started.
 
------------------------
-Under hosted: using GDB
------------------------
+---------------------------
+With AROS hosted: using GDB
+---------------------------
 
 You can either run AROS under GDB, or use GDB after AROS has terminated
 and left a core dump. Don't forget to compile AROS with debugging enabled
@@ -117,8 +120,8 @@ Now you can start GDB, by specifying the aros executable name and the core file:
     (gdb)
 
 
-Using GDB (basic commands)
-==========================
+GDB (basic commands)
+====================
 
 The command ``help`` gives help on all GDB commands::
 
@@ -185,8 +188,8 @@ Use ``q`` to quit::
     >
 
 
-Using GDB (AROS-specific)
-=========================
+GDB (AROS-specific)
+===================
 
 AROS specific GDB commands are supplied in ``/AROS/_gdbinit``, which gets
 installed to ``/AROS/bin/linux-i386/AROS/.gdbinit``.
@@ -246,3 +249,93 @@ it is data you can find in ``SysBase->ThisTask``::
     Task     SigWait  SigRecvd StkSize   StkUsed Pri Type Name
     -----------------------------------------------------------------------------
     40231fb8 00000000 00000000    40960      872 -128    1 Idle Task
+
+
+
+-----------------
+Resource tracking
+-----------------
+
+AROS provides some tools for this, either integrated in the OS, or as
+separate programs.
+
+Tracking memory with Mungwall
+=============================
+
+If configured with ``--enable-debug``, AROS enables ``Mungwall``. It keeps tracks of
+a small zone before and after your allocations to verify that you don't write
+out of your bounds. This check is done in memory allocation routines, or at
+any time by calling ``Avail(MEMF_CLEAR)``.
+
+The ``CheckMem`` command line tool just call this function, and reports to the
+debug output (serial for native, or terminal for hosted). If no bound violation
+has been detected, it will report the current number of allocation and their
+total size::
+
+    === MUNGWALL MEMORY CHECK ============
+    
+    Num allocations: 1579   Memory allocated 3333326
+
+A neat trick is to modify the scheduler to call this function on each task switch,
+when you have a strange memory corruption that you can't trace by other means.
+It's slow, but there's no way the culprit can escape.
+
+LeakWatch
+=========
+
+It's a dumb but helpful tool. It tracks down total memory and Exec objects:
+libraries, devices, fonts, resources, ports and semaphores.
+It triggers a flush of the unused objects still in memory to report
+the real amount of memory after some resources are closed.
+
+Launch ``LeakWatch`` in its own shell, then use the following keys:
+
++ ``Ctrl-C`` to quit :)
++ ``Ctrl-D`` to display the current state of resources
++ ``Ctrl-E`` to display resources differences since you launched it
++ ``Ctrl-F`` to display resources differences since the last time
+  you hit ``Ctrl-F``.
+
+``Ctrl-F`` is the most useful key: hit it before running your program, then after.
+It should report no resources. In the opposite case:
+
++ Verify that no other program is allocating resources during this time
++ Repeat the runs. See if the leaks are consistent.
++ Narrow the place where the leak takes place by reducing the features
+  you use, then by commenting out code.
+
+If you think that your program triggered a leak in an AROS library,
+find an existing test program or write a small one using the leaking
+calls, to ensure that the leak really comes from there (as of 2004-01-21,
+opening a TrueType font with OpenDiskFont leaks some bytes - see
+``Tests/opendiskfont``).
+
+Misc CLI tools
+==============
+
+There are also simpler debugging tools available in ``C:``.
+
+
+AROS Shell
+----------
+
+Type ``set __debug_mem`` in the Shell to enable reporting available memory
+before and after each command, as well as the memory difference. Mostly
+the same as ``LeakWatch`` for memory only.
+
+Avail
+-----
+
+Use ``Avail`` to display informations on memory. The FLUSH parameter
+will force unused objects to be expunged.
+
+Liblist
+-------
+
+It displays a list of the currently opened libraries as well as some infos
+like version and open count.
+
+Devlist
+-------
+
+Same as ``Liblist``, but for Exec Devices.
