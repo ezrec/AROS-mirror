@@ -15,6 +15,9 @@
 // for more details.
 //
 // $Log$
+// Revision 1.2  2004/04/27 16:42:56  hkiel
+// Fixed #ifdef AMIGA to #ifdef AMIGAOS
+//
 // Revision 1.1  2000/02/29 18:21:04  stegerg
 // Doom port based on ADoomPPC. Read README.AROS!
 //
@@ -34,7 +37,7 @@ rcsid[] = "$Id$";
 #endif
 
 #include <stdlib.h>
-#ifdef AMIGA
+#ifdef AMIGAOS
 #include <dos.h>
 #endif
 
@@ -525,7 +528,7 @@ P_LookForPlayers
     for ( ; ; actor->lastlook = (actor->lastlook+1)&3 )
     {
 	if (!playeringame[actor->lastlook]) {
-#ifdef AMIGA
+#ifdef AMIGAOS
             chkabort ();
 #endif
 	    continue;
