@@ -477,6 +477,7 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
 {
   struct RexxMsg *msg;
   struct MsgPort *port = ((struct amiga_envir *)envir)->port;
+  streng *retval = NULL;
 
   msg = createreginamessage( TSD );
   msg->rm_Action = RXCOMM;
@@ -488,20 +489,23 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
   sendandwait( TSD, port, msg );
 
   *rc = msg->rm_Result1;
-  DeleteRexxMsg( msg );
   if (msg->rm_Result1 == 0)
   {
     if (msg->rm_Result2 == NULL)
-      return Str_crestrTSD( "" );
+      retval = Str_crestrTSD( "" );
     else
     {
-      streng *retval = Str_ncre_TSD( TSD, (UBYTE *)msg->rm_Result2, LengthArgstring( (UBYTE *)msg->rm_Result2 ) );
+      retval = Str_ncre_TSD( TSD, (UBYTE *)msg->rm_Result2, LengthArgstring( (UBYTE *)msg->rm_Result2 ) );
       DeleteArgstring( (UBYTE *)msg->rm_Result2 );
-      return retval;
     }
   }
   else
-    return Str_cre_TSD( TSD, "" );
+    retval = Str_crestrTSD( "" );
+
+  DeleteArgstring( (UBYTE *)msg->rm_Args[0]);
+  DeleteRexxMsg( msg );
+    
+  return retval;
 }
 
 
