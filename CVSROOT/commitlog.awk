@@ -1,7 +1,6 @@
 BEGIN {
 	# Who did it ?
-	print "Test: LOGNAME="ENVIRON["LOGNAME"];
-	print "Test: USER="ENVIRON["USER"];
+	system ("printenv > /tmp/cvs.env");
 	User=ENVIRON["LOGNAME"];
 	#User=ENVIRON["USER"];
 	# Where is CVSROOT ?
