@@ -1,5 +1,6 @@
 #include <exec/exec.h>
 #include <dos/dos.h>
+#include <dos/dosextens.h>
 #include <graphics/text.h>
 #include <intuition/intuition.h>
 #include <diskfont/diskfont.h>
@@ -14,8 +15,22 @@
 #include <proto/graphics.h>
 #include <proto/utility.h>
 
+#ifdef _AROS
+
 #include <aros/debug.h>
 #include <aros/macros.h>
+
+#else
+
+typedef ULONG IPTR;
+#define kprintf printf
+
+#define AROS_WORD2BE(x) (x)
+#define AROS_LONG2BE(x) (x)
+
+#define DeinitRastPort(x)
+
+#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -65,14 +80,26 @@ Notes:
   (expected == fontheight in pixels), then the centered portion of it
   is blitted into the font's chardata.
   
+- availfonts: must list an entry for each size listed by {OT_AvailSizes}
+              as AFF_DISK. Outline fonts which are in memory are of course
+	      also listed as AFF_MEMORY.
+
+- textfont extension for outline fonts which were converted to bitmap fonts
+  contain following tags:
+  
+    OT_PointHeight,
+    OT_DeviceDPI,
+    OT_DotSize
 */
 
 /****************************************************************************************/
 
-#define ARG_TEMPLATE "FONTNAME/A,FONTSIZE/N/A"
+#define ARG_TEMPLATE "FONTNAME/A,FONTSIZE/N/A,TAXDPI=XDPI/K/N,TAYDPI=YDPI/K/N"
 #define ARG_FONTNAME 0
 #define ARG_FONTSIZE 1
-#define NUM_ARGS 2
+#define ARG_TAXDPI   2
+#define ARG_TAYDPI   3
+#define NUM_ARGS     4
 
 /****************************************************************************************/
 
@@ -106,7 +133,8 @@ APTR   gfxdata;
 STRPTR fontname;
 ULONG fontsize;
 
-LONG xdpi, ydpi, lochar, hichar, baseline, gfxwidth;
+LONG xdpi, ydpi, taxdpi = 1, taydpi = 1, lochar, hichar, baseline, gfxwidth, spacewidth, style;
+BOOL isfixed;
 
 struct RDArgs *myargs;
 IPTR args[NUM_ARGS];
@@ -127,7 +155,7 @@ static void cleanup(char *msg)
     freeglyphmaps();
     
     if (ge) CloseEngine(ge);
-    if (BulletBase) CloseLibrary(BulletBase);    
+    //if (BulletBase) CloseLibrary(BulletBase);    
     if (otaglist) FreeVec(otaglist);
     
     if (UtilityBase) CloseLibrary((struct Library *)UtilityBase);
@@ -151,6 +179,9 @@ static void getarguments(void)
 
     fontname = (STRPTR)args[ARG_FONTNAME];
     fontsize = *(IPTR *)args[ARG_FONTSIZE];
+    
+    if (args[ARG_TAXDPI]) taxdpi = *(IPTR *)args[ARG_TAXDPI];
+    if (args[ARG_TAYDPI]) taydpi = *(IPTR *)args[ARG_TAYDPI];
     
 }
 
@@ -334,7 +365,7 @@ static void setupfontengine(void)
     ysizefactor_low = ysizefactor & 0xFFFF;
     ysizefactor_high = (ysizefactor >> 16) & 0xFFFF;
     
-    xdpi = 72 * ysizefactor_high / ysizefactor_low;
+    xdpi = 72 * ysizefactor_high / ysizefactor_low * taxdpi / taydpi;
     ydpi = 72 * ysizefactor_high / ysizefactor_low;
 
     kprintf("\n\nxdpi = %d   ydpi = %d\n", xdpi, ydpi);
@@ -351,7 +382,40 @@ static void setupfontengine(void)
     {
     	cleanup("Setting size tags failed!");
     }
- 
+
+    isfixed = GetTagData(OT_IsFixed, FALSE, otaglist) != FALSE;
+    spacewidth = GetTagData(OT_SpaceWidth, 3000, otaglist);
+
+    /*
+       OT_SpaceWidth     pointsize 
+       -------------- *  --------- * xdpi
+	   2540            250
+    */
+    
+    spacewidth =  spacewidth * fontsize / 250 * xdpi / 2540;
+    
+    /* A font gets FSF_BOLD if OT_StemWeight >= 0x90 */
+    
+    if (GetTagData(OT_StemWeight, 0, otaglist) >= 0x90)
+    {
+    	style |= FSF_BOLD;
+    }
+    
+    /* A font gets FSF_ITALIC if OT_SlantStyle != OTS_Upright */
+    
+    if (GetTagData(OT_SlantStyle, OTS_Upright, otaglist) != OTS_Upright)
+    {
+    	style |= FSF_ITALIC;
+    }
+    
+    /* A font gets FSF_EXTENDED if OT_HorizStyle >= 0xA0 */
+    
+    if (GetTagData(OT_HorizStyle, 0, otaglist) >= 0xA0)
+    {
+    	style |= FSF_EXTENDED;
+    }
+
+    
 }
 
 /****************************************************************************************/
@@ -419,11 +483,15 @@ static void getglyphmaps(void)
 	    gfxwidth += gm[i]->glm_BlackWidth;
 	}
     }
-
-    printf("lochar   = %ld\n", lochar);
-    printf("hichar   = %ld\n", hichar);
-    printf("baseline = %ld\n", baseline);
-    printf("gfxwidth = %ld\n", baseline);
+        
+    if (baseline >= fontsize) baseline = fontsize;
+    if (lochar > 32) lochar = 32;
+    
+    printf("lochar   = %d\n", lochar);
+    printf("hichar   = %d\n", hichar);
+    printf("baseline = %d\n", baseline);
+    printf("gfxwidth = %d\n", gfxwidth);
+    printf("isfixed  = %d\n", isfixed);
 
 }
 
@@ -503,7 +571,8 @@ static void makefontbitmap(void)
 	    //kprintf("blackwidth [%d] = %d\n", i, g->glm_BlackWidth);
 	
 	    charloc[i - lochar] = (xpos << 16) + g->glm_BlackWidth;
-	    
+	
+	    kprintf("charloc[%d] = %x\n", i, charloc[i - lochar]);
 	    xpos += g->glm_BlackWidth;
 		    
 	}
@@ -526,7 +595,24 @@ static void makefontbitmap(void)
 	    charkern [i - lochar] = ((WORD)g->glm_BlackLeft) - g->glm_X0;	
 	    charspace[i - lochar] = g->glm_X1 - (WORD)g->glm_BlackLeft;
 
-    	#if 0
+   	    if (isfixed)
+	    {
+		/*
+		    In a fixed font (charkern + charspace) must always equal
+	            calculated fontwidth.
+
+		    x = propspace - propkern
+		    fixedkern = (fontwidth - x + 1) / 2
+		    fixedspace = fontwidth - fixedkern
+	     	*/
+ 
+	    	LONG w = charspace[i - lochar] - charkern[i - lochar];
+		
+	    	charkern[i - lochar]  = (spacewidth - w + 1) / 2;
+		charspace[i - lochar] = spacewidth - charkern[i - lochar];
+	    }
+	    
+    	#if 1
     	    kprintf("#%d  kern = %d  black = %d space = %d\n",
 	    i,
 	    charkern[i - lochar],
@@ -540,6 +626,11 @@ static void makefontbitmap(void)
 	    	 ( fontsize x --------- x ------------- ) - charkern
 		                 72          65536     
 	    */
+	}
+	else if ((i == 32) || isfixed)
+	{
+	    charkern [i - lochar] = 0;
+	    charspace[i - lochar] = spacewidth;
 	}
     }
 }
@@ -578,10 +669,10 @@ static void makefont(void)
     font.tf_Message.mn_Node.ln_Type = NT_FONT;
     font.tf_Message.mn_Node.ln_Name = "convertedfont.font";
     font.tf_YSize = fontsize;
-    font.tf_Style = 0;
-    font.tf_Flags = FPF_ROMFONT | FPF_PROPORTIONAL | FPF_DESIGNED;
-    font.tf_XSize = 10;
-    font.tf_Baseline = baseline - 1; /* CHECKME: */
+    font.tf_Style = style;
+    font.tf_Flags = FPF_ROMFONT | (isfixed ? 0 : FPF_PROPORTIONAL);
+    font.tf_XSize = spacewidth;
+    font.tf_Baseline = baseline - 1; /* CHECKME */
     font.tf_BoldSmear = 1;
     font.tf_Accessors = 0;
     font.tf_LoChar = lochar;
@@ -595,7 +686,9 @@ static void makefont(void)
     {
     	struct TagItem fonttags[] =
 	{
-	    {TA_DeviceDPI, (xdpi << 16) | ydpi  },
+	    {OT_PointHeight, fontsize << 16 	},
+	    {OT_DeviceDPI, (xdpi << 16) | ydpi  },
+	    {OT_DotSize, (100 << 16) | 100  	},
 	    {TAG_DONE	    	    	    	}
 	};
     	ExtendFont(&font, fonttags);
