@@ -6,5 +6,7 @@ SCOPTIONS
 test
 testserver
 testclient
+simpleping
+testgethostbyname
 ping
 mmakefile
