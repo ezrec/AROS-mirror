@@ -51,17 +51,17 @@ thumbnailBorderColor = darkestBlue
 
 from mainlinks import mainLinks
 
-def commonprefix (path1, path2):
-    list1 = string.split(path1, os.sep)
-    list2 = string.split(path2, os.sep)
+def commonPath (path1, path2):
+    list1 = string.split (path1, os.sep)
+    list2 = string.split (path2, os.sep)
 
-    prefix = []
+    i, n = 0, min (len (list1), len (list2))
+    while i < n:
+        if list1[i] != list2[i]:
+            break
+        i = i + 1
 
-    while list1 and list1[0] == list2[0]:
-	prefix.append (list1.pop (0))
-	list2.pop (0)
-
-    return string.join (prefix, '/') + '/'
+    return string.join (list1[:i], os.sep)
 
 def relpath(path1, path2):
     """Return the relative path from directory 'path1' to directory 'path2'
@@ -77,7 +77,8 @@ def relpath(path1, path2):
     in places where the pathnames are for files yet to be created.
     """
     #print 'relpath', path1, path2
-    common = os.path.commonprefix([path1, path2])
+    #common = os.path.commonprefix([path1, path2])
+    common = commonPath (path1, path2)
     #print 'common=', common
     sliceoff = len(common)
     # Cut only at os.sep
