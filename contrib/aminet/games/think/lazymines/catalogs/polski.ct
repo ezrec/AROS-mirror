@@ -1,0 +1,134 @@
+## version $VER: lazymines.catalog 3.0 (12.5.95)
+## codeset 0
+## language polski
+;
+MSG_GAME_MENU
+ \0Gra
+;
+MSG_GAME_NEW
+N\0Nowa
+;
+MSG_GAME_NOVICE
+1\0Nowicjusz
+;
+MSG_GAME_AMATEUR
+2\0Amator
+;
+MSG_GAME_EXPERT
+3\0Ekspert
+;
+MSG_GAME_OPTIONAL
+0\0Opcje...
+;
+MSG_GAME_HIGHSCORE
+ \0Najszybsi minerzy...
+;
+MSG_GAME_ABOUT
+?\0O programie...
+;
+MSG_GAME_QUIT
+Q\0Skoïcz
+;
+MSG_SETTINGS_MENU
+ \0Ustawienia
+;
+MSG_SETTINGS_TASK
+ \0Rodzaj zadania:
+;
+MSG_SETTINGS_TASK_ALL
+ \0oznacz caîe pole.
+;
+MSG_SETTINGS_TASK_PATH
+ \0wyznacz ôcieûkë.
+;
+MSG_SETTINGS_AUTOOPEN
+ \0Automatyczne otwarcia...
+;
+MSG_SETTINGS_WARNINGS
+ \0Ostrzeûenia
+;
+MSG_SETTINGS_NOCOLORS
+ \0Bez kolorów
+;
+MSG_SETTINGS_SAVE
+ \0Zapisz ustawienia
+;
+MSG_CONTINUE_GAD
+Kontynuuj
+;
+MSG_OK_GAD
+OK
+;
+MSG_NUMROWS_GAD
+Iloôê szeregów
+;
+MSG_NUMCOLS_GAD
+Iloôê kolumn
+;
+MSG_NUMMINES_GAD
+Iloôê min
+;
+MSG_NAME_GAD
+Gracz:
+;
+MSG_ABOUT_REQTITLE
+O programie
+;
+MSG_ABOUT_REQMSG
+%s (%s)\n\
+Copyright © %s %s
+;
+MSG_OPTIONAL_REQTITLE
+Opcje gracza
+;
+MSG_AUTOOPEN_REQTITLE
+Automatyczne otwarcia
+;
+MSG_NAME_REQTITLE
+To naprawdë szybka akcja!!!
+;
+MSG_HIGHSCORES_REQTITLE
+Najszybsi minerzy
+;
+MSG_ERROR_REQTITLE
+Komunikat o bîëdzie
+;
+MSG_INITIALIZE_FIELD
+Tworzë pole minowe...
+;
+MSG_GENERATE_PATH
+Generujë ôcieûkë (%3d)...
+;
+MSG_OPEN_ERROR
+Nie mogë otworzyê %s!
+;
+MSG_CREATE_ERROR
+Nie mogë stworzyê %s!
+;
+MSG_GET_ERROR
+Nie mogë wziâê %s!
+;
+MSG_SMALLSCREEN_ERROR
+Ekran jest zbyt maîy!!!
+;
+MSG_LOCKSCREEN_ERROR
+Nie mogë znalúê ekranu publicznego!!!
+;
+MSG_SETMENU_ERROR
+Nie mogë ustawiê menustrip!
+;
+MSG_LAYOUTMENU_ERROR
+Nie mogë uîoûyê menu!
+;
+MSG_MINEFIELD
+pole minowe
+;
+MSG_COUNTERS
+counters
+;
+MSG_WINDOW
+okno
+;
+MSG_MENU
+menu
+;

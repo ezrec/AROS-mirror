@@ -1,0 +1,135 @@
+## version $VER: lazymines.catalog 3.0 (19.5.95)
+## codeset 0
+## language norsk
+;
+MSG_GAME_MENU
+ \0Spill
+;
+MSG_GAME_NEW
+N\0Nytt
+;
+MSG_GAME_NOVICE
+1\0Nybegynner
+;
+MSG_GAME_AMATEUR
+2\0Amatør
+;
+MSG_GAME_EXPERT
+3\0Ekspert
+;
+MSG_GAME_OPTIONAL
+0\0Egendefinert...
+;
+MSG_GAME_HIGHSCORE
+ \0Raskeste mineryddere...
+;
+MSG_GAME_ABOUT
+?\0Om...
+;
+MSG_GAME_QUIT
+A\0Avslutte LazyMines
+;
+MSG_SETTINGS_MENU
+ \0Innstillinger
+;
+MSG_SETTINGS_TASK
+ \0Oppgave
+;
+MSG_SETTINGS_TASK_ALL
+ \0Rydde alt
+;
+MSG_SETTINGS_TASK_PATH
+ \0Rydde vei
+;
+MSG_SETTINGS_AUTOOPEN
+ \0Automatisk åpning...
+;
+MSG_SETTINGS_WARNINGS
+ \0Advarsler
+;
+MSG_SETTINGS_NOCOLORS
+ \0Ingen farger
+;
+MSG_SETTINGS_SAVE
+ \0Lagre innstillinger
+;
+MSG_CONTINUE_GAD
+Fortsett
+;
+MSG_OK_GAD
+OK
+;
+MSG_NUMROWS_GAD
+Antall linjer
+;
+MSG_NUMCOLS_GAD
+Antall kolonner
+;
+MSG_NUMMINES_GAD
+Antall miner
+;
+MSG_NAME_GAD
+Navn:
+;
+MSG_ABOUT_REQTITLE
+Om
+;
+MSG_ABOUT_REQMSG
+By %s (%s)\n\
+Copyright © %s %s\n\
+Oversatt til norsk av Lars Christian Schreiner
+;
+MSG_OPTIONAL_REQTITLE
+Egendefinert nivå
+;
+MSG_AUTOOPEN_REQTITLE
+Automatisk åpning
+;
+MSG_NAME_REQTITLE
+Det gikk fort!!!
+;
+MSG_HIGHSCORES_REQTITLE
+Raskeste mineryddere
+;
+MSG_ERROR_REQTITLE
+Feilmelding
+;
+MSG_INITIALIZE_FIELD
+Initialiserer minefelt...
+;
+MSG_GENERATE_PATH
+Genererer vei (%3d)...
+;
+MSG_OPEN_ERROR
+Kunne ikke åpne %s!
+;
+MSG_CREATE_ERROR
+Kunne ikke opprette %s!
+;
+MSG_GET_ERROR
+Kunne ikke lese %s!
+;
+MSG_SMALLSCREEN_ERROR
+Skjermen er for liten!
+;
+MSG_LOCKSCREEN_ERROR
+Kunne ikke låse offentlig skjerm!
+;
+MSG_SETMENU_ERROR
+Kunne ikke sette menylinjen!
+;
+MSG_LAYOUTMENU_ERROR
+Kunne ikke utforme menyen!
+;
+MSG_MINEFIELD
+minefelt
+;
+MSG_COUNTERS
+tellere
+;
+MSG_WINDOW
+vindu
+;
+MSG_MENU
+meny
+;

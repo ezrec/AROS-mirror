@@ -1,0 +1,137 @@
+## version $VER: lazymines.catalog 3.0 (29.05.95)
+## codeset 0
+## language dansk
+;
+MSG_GAME_MENU
+ \0Spil
+;
+MSG_GAME_NEW
+N\0Nyt
+;
+MSG_GAME_NOVICE
+1\0Begynder
+;
+MSG_GAME_AMATEUR
+2\0Amatør
+;
+MSG_GAME_EXPERT
+3\0Ekspert
+;
+MSG_GAME_OPTIONAL
+0\0Valgfrit...
+;
+MSG_GAME_HIGHSCORE
+ \0Hurtigste Mineryddere...
+;
+MSG_GAME_ABOUT
+?\0Om...
+;
+MSG_GAME_QUIT
+A\0Afslut LazyMines
+;
+MSG_SETTINGS_MENU
+ \0Indstillinger
+;
+MSG_SETTINGS_TASK
+ \0Opgave
+;
+MSG_SETTINGS_TASK_ALL
+ \0Ryd alle
+;
+MSG_SETTINGS_TASK_PATH
+ \0Ryd Sti
+;
+MSG_SETTINGS_AUTOOPEN
+ \0Automatisk Åbning...
+;
+MSG_SETTINGS_WARNINGS
+ \0Advarsler
+;
+MSG_SETTINGS_NOCOLORS
+ \0Ingen Farver
+;
+MSG_SETTINGS_SAVE
+ \0Gem Præferencer
+;
+MSG_CONTINUE_GAD
+Fortsæt
+;
+MSG_OK_GAD
+OK
+;
+MSG_NUMROWS_GAD
+Antal Rækker
+;
+MSG_NUMCOLS_GAD
+Antal Søjler
+;
+MSG_NUMMINES_GAD
+Antal Miner
+;
+MSG_NAME_GAD
+Navn:
+;
+MSG_ABOUT_REQTITLE
+Om
+;
+MSG_ABOUT_REQMSG
+Af %s (%s)\n\
+Copyright © %s %s\n\
+\n\
+Oversat til dansk af\n\
+Kenneth Fribert
+;
+MSG_OPTIONAL_REQTITLE
+Valgfrit Niveau
+;
+MSG_AUTOOPEN_REQTITLE
+Automatisk Åbning
+;
+MSG_NAME_REQTITLE
+Det var hurtigt!!!
+;
+MSG_HIGHSCORES_REQTITLE
+Hurtigste Mineryddere
+;
+MSG_ERROR_REQTITLE
+Fejl Meddelelse
+;
+MSG_INITIALIZE_FIELD
+Opretter Minefeldt...
+;
+MSG_GENERATE_PATH
+Genererer Sti (%3d)...
+;
+MSG_OPEN_ERROR
+Kunne ikke åbne %s!
+;
+MSG_CREATE_ERROR
+Kunne ikke oprette %s!
+;
+MSG_GET_ERROR
+Kunne ikke få %s!
+;
+MSG_SMALLSCREEN_ERROR
+Skærmen er for lille!
+;
+MSG_LOCKSCREEN_ERROR
+Kunne ikke finde offentlig skærm!
+;
+MSG_SETMENU_ERROR
+Kunne ikke sætte menuer op!
+;
+MSG_LAYOUTMENU_ERROR
+Kunne ikke opsætte menu!
+;
+MSG_MINEFIELD
+minefeldt
+;
+MSG_COUNTERS
+tællere
+;
+MSG_WINDOW
+vindue
+;
+MSG_MENU
+menu
+;

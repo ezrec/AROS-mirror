@@ -1,0 +1,134 @@
+## version $VER: lazymines.catalog 3.0 (19.5.95)
+## codeset 0
+## language svenska
+;
+MSG_GAME_MENU
+ \0Spel
+;
+MSG_GAME_NEW
+N\0Nytt
+;
+MSG_GAME_NOVICE
+1\0Nybörjare
+;
+MSG_GAME_AMATEUR
+2\0Amatör
+;
+MSG_GAME_EXPERT
+3\0Expert
+;
+MSG_GAME_OPTIONAL
+0\0Valfri...
+;
+MSG_GAME_HIGHSCORE
+ \0Snabbaste röjare...
+;
+MSG_GAME_ABOUT
+?\0Om...
+;
+MSG_GAME_QUIT
+Q\0Avsluta LazyMines
+;
+MSG_SETTINGS_MENU
+ \0Inställningar
+;
+MSG_SETTINGS_TASK
+ \0Uppgift
+;
+MSG_SETTINGS_TASK_ALL
+ \0Röj allt
+;
+MSG_SETTINGS_TASK_PATH
+ \0Röj väg
+;
+MSG_SETTINGS_AUTOOPEN
+ \0Automatisk Öppning...
+;
+MSG_SETTINGS_WARNINGS
+ \0Varningar
+;
+MSG_SETTINGS_NOCOLORS
+ \0Inga färger
+;
+MSG_SETTINGS_SAVE
+ \0Spara Inställningar
+;
+MSG_CONTINUE_GAD
+Fortsätt
+;
+MSG_OK_GAD
+OK
+;
+MSG_NUMROWS_GAD
+Antal rader
+;
+MSG_NUMCOLS_GAD
+Antal kolumner
+;
+MSG_NUMMINES_GAD
+Antal minor
+;
+MSG_NAME_GAD
+Namn:
+;
+MSG_ABOUT_REQTITLE
+Om
+;
+MSG_ABOUT_REQMSG
+Av %s (%s)\n\
+Copyright © %s %s
+;
+MSG_OPTIONAL_REQTITLE
+Valfri nivå
+;
+MSG_AUTOOPEN_REQTITLE
+Automatisk öppning
+;
+MSG_NAME_REQTITLE
+Det var snabbt!!!
+;
+MSG_HIGHSCORES_REQTITLE
+Snabbaste röjare
+;
+MSG_ERROR_REQTITLE
+Felmeddelande
+;
+MSG_INITIALIZE_FIELD
+Initierar minfält...
+;
+MSG_GENERATE_PATH
+Genererar väg (%3d)...
+;
+MSG_OPEN_ERROR
+Kunde inte öppna %s!
+;
+MSG_CREATE_ERROR
+Kunde inte skapa %s!
+;
+MSG_GET_ERROR
+Kunde inte läsa %s!
+;
+MSG_SMALLSCREEN_ERROR
+Skärmen är för liten!
+;
+MSG_LOCKSCREEN_ERROR
+Kunde inte låsa offentlig skärm!
+;
+MSG_SETMENU_ERROR
+Kunde inte sätta menyraden!
+;
+MSG_LAYOUTMENU_ERROR
+Kunde inte utforma menyn!
+;
+MSG_MINEFIELD
+minfält
+;
+MSG_COUNTERS
+räknare
+;
+MSG_WINDOW
+fönster
+;
+MSG_MENU
+meny
+;

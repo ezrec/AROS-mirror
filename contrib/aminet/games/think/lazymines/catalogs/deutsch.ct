@@ -1,0 +1,135 @@
+## version $VER: lazymines.catalog 3.0 (28.05.95)
+## codeset 0
+## language deutsch
+;
+MSG_GAME_MENU
+ \0Spiel
+;
+MSG_GAME_NEW
+N\0Neu
+;
+MSG_GAME_NOVICE
+1\0Anfänger
+;
+MSG_GAME_AMATEUR
+2\0Fortgeschrittene
+;
+MSG_GAME_EXPERT
+3\0Profis
+;
+MSG_GAME_OPTIONAL
+0\0Selbstdefiniert...
+;
+MSG_GAME_HIGHSCORE
+ \0Bestenliste...
+;
+MSG_GAME_ABOUT
+?\0Information...
+;
+MSG_GAME_QUIT
+Q\0Beenden
+;
+MSG_SETTINGS_MENU
+ \0Einstellungen
+;
+MSG_SETTINGS_TASK
+ \0Aufgabe
+;
+MSG_SETTINGS_TASK_ALL
+ \0Feld räumen
+;
+MSG_SETTINGS_TASK_PATH
+ \0Pfad räumen
+;
+MSG_SETTINGS_AUTOOPEN
+ \0Automatische Eröffnung...
+;
+MSG_SETTINGS_WARNINGS
+ \0Warnmarkierungen
+;
+MSG_SETTINGS_NOCOLORS
+ \0Ohne Farben
+;
+MSG_SETTINGS_SAVE
+ \0Einstellungen speichern
+;
+MSG_CONTINUE_GAD
+Weiter
+;
+MSG_OK_GAD
+OK
+;
+MSG_NUMROWS_GAD
+Anzahl der Zeilen
+;
+MSG_NUMCOLS_GAD
+Anzahl der Spalten
+;
+MSG_NUMMINES_GAD
+Anzahl der Minen
+;
+MSG_NAME_GAD
+Name:
+;
+MSG_ABOUT_REQTITLE
+Information
+;
+MSG_ABOUT_REQMSG
+Von %s (%s)\n\
+Copyright © %s %s\n\
+Übersetzt von Niels Knoop
+;
+MSG_OPTIONAL_REQTITLE
+Selbstdefiniertes Feld
+;
+MSG_AUTOOPEN_REQTITLE
+Automatische Eröffnung
+;
+MSG_NAME_REQTITLE
+Gute Arbeit!
+;
+MSG_HIGHSCORES_REQTITLE
+Bestenliste
+;
+MSG_ERROR_REQTITLE
+Fehlermeldung
+;
+MSG_INITIALIZE_FIELD
+Baue das Minenfeld auf...
+;
+MSG_GENERATE_PATH
+Erzeuge Pfad (%3d)...
+;
+MSG_OPEN_ERROR
+Konnte %s nicht öffnen!
+;
+MSG_CREATE_ERROR
+Konnte %s nicht erzeugen!
+;
+MSG_GET_ERROR
+Konnte %s nicht bekommen!
+;
+MSG_SMALLSCREEN_ERROR
+Bildschirm ist zu klein!
+;
+MSG_LOCKSCREEN_ERROR
+Konnte öffentlichen Bildschirm nicht sperren!
+;
+MSG_SETMENU_ERROR
+Konnte Menüstreifen nicht setzen!
+;
+MSG_LAYOUTMENU_ERROR
+Konnte Menü nicht anlegen!
+;
+MSG_MINEFIELD
+Minenfeld
+;
+MSG_COUNTERS
+Zähler
+;
+MSG_WINDOW
+Fenster
+;
+MSG_MENU
+Menü
+;

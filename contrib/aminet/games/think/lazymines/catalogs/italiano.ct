@@ -1,0 +1,177 @@
+## version $VER: lazymines.catalog 3.0 (05.07.95)
+## codeset 0
+## language italiano
+;
+MSG_GAME_MENU
+
+;  \0Gioco
+;
+MSG_GAME_NEW
+
+; N\0Nuovo
+;
+MSG_GAME_NOVICE
+
+; 1\0Facile
+;
+MSG_GAME_AMATEUR
+
+; 2\0Medio
+;
+MSG_GAME_EXPERT
+
+; 3\0Difficile
+;
+MSG_GAME_OPTIONAL
+
+; 0\0Opzionale...
+;
+MSG_GAME_HIGHSCORE
+
+;  \0I più veloci...
+;
+MSG_GAME_ABOUT
+
+; ?\0Informazioni...
+;
+MSG_GAME_QUIT
+
+; Q\0Esci
+;
+MSG_SETTINGS_MENU
+
+;  \0Impostazioni
+;
+MSG_SETTINGS_TASK
+
+;  \0Tipo di gioco
+;
+MSG_SETTINGS_TASK_ALL
+
+;  \0Pulisci tutto
+;
+MSG_SETTINGS_TASK_PATH
+
+;  \0Cerca percorso
+;
+MSG_SETTINGS_AUTOOPEN
+
+;  \0Apertura automatica...
+;
+MSG_SETTINGS_WARNINGS
+
+;  \0Segnalazioni
+;
+MSG_SETTINGS_NOCOLORS
+
+;  \0Senza colori
+;
+MSG_SETTINGS_SAVE
+
+;  \0Salva impostazioni
+;
+MSG_CONTINUE_GAD
+
+; Continua
+;
+MSG_OK_GAD
+
+; OK
+;
+MSG_NUMROWS_GAD
+
+; Numero di righe
+;
+MSG_NUMCOLS_GAD
+
+; Numero di colonne
+;
+MSG_NUMMINES_GAD
+
+; Numero di mine
+;
+MSG_NAME_GAD
+
+; Nome:
+;
+MSG_ABOUT_REQTITLE
+
+; Informazioni
+;
+MSG_ABOUT_REQMSG
+
+; Di %s (%s)\nCopyright © %s %s
+; Tradotto in italiano da Luca Del Buono (punto@ascuan.unian.it)
+;
+MSG_OPTIONAL_REQTITLE
+
+; Livello opzionale
+;
+MSG_AUTOOPEN_REQTITLE
+
+; Apertura automatica
+;
+MSG_NAME_REQTITLE
+
+; Sei stato veloce!!!
+;
+MSG_HIGHSCORES_REQTITLE
+
+; I più veloci
+;
+MSG_ERROR_REQTITLE
+
+; Messaggio d'errore
+;
+MSG_INITIALIZE_FIELD
+
+; Inizializzo campo minato...
+;
+MSG_GENERATE_PATH
+
+; Genero Percorso (%3d)...
+;
+MSG_OPEN_ERROR
+
+; Non si può aprire %s!
+;
+MSG_CREATE_ERROR
+
+; Non si può creare %s!
+;
+MSG_GET_ERROR
+
+; Non trovo %s!
+;
+MSG_SMALLSCREEN_ERROR
+
+; Schermo troppo piccolo!
+;
+MSG_LOCKSCREEN_ERROR
+
+; Non si può usare lo schermo pubblico!
+;
+MSG_SETMENU_ERROR
+
+; Non si può impostare la barra menù!
+;
+MSG_LAYOUTMENU_ERROR
+
+; Non si può disegnare il menù!
+;
+MSG_MINEFIELD
+
+; campo minato
+;
+MSG_COUNTERS
+
+; contatori
+;
+MSG_WINDOW
+
+; finestra
+;
+MSG_MENU
+
+; menù
+;
