@@ -8,14 +8,12 @@ C_DONE   = 'green'
 C_INWORK = 'yellow'
 C_TODO   = 'red'
 
-def format( root, directory ):
+def format( root, directory, template ):
     # First, format this category.
-    output  = file( os.path.join( directory, root.id + '.html' ), 'w' )
-    
-    content = Table( bgcolor = '#AAAAAA', width = '100%', cellpadding = 2 )
+    content = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
 
     for item in root:
-        row = TR( bgcolor = 'white' )
+        row = TR( bgcolor = '#dddddd' )
         
         if isinstance( item, Category ):
             row.append \
@@ -92,12 +90,18 @@ def format( root, directory ):
 
         content.append( row )
 
-    output.write( str( content ) )
+    strings = {
+        'ROOT' : '../../',
+        'CONTENT' : '<h1>Status: ' + root.description + '</h1>' + str( content )
+    }
+
+    output = file( os.path.join( directory, root.id + '.html' ), 'w' )
+    output.write( template % strings )
     output.close()
 
     # Second, recurse down.
     for item in root:
         if isinstance( item, Category ):
-            format( item, directory )
+            format( item, directory, template )
 
 
