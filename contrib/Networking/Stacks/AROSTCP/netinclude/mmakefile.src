@@ -5,7 +5,7 @@ INCSUBDIRS :=	arpa \
 		bsdsocket \
 		libraries \
 		net \
-            netinet \
+		netinet \
 		sys
 
 INCFILES :=  netdb.h \
