@@ -1,3 +1,12 @@
-#MM- contrib-demos : demo-voxel demo-newvox demo-galaxy demo-dawafire demo-flamme
+#MM- contrib-demos : \
+#MM		demo-voxel \
+#MM		demo-newvox \
+#MM		demo-galaxy  \
+#MM		demo-dawafire \
+#MM		demo-flamme \
+#MM		demo-tunnel \
+#MM		demo-ftunnel \
+#MM		demo-infplane
+
 
 
