@@ -373,6 +373,7 @@ class Page (SeriesDocument):
 	img = Image(self.logo, align='bottom')
 	self.calc_rel_path (img, self.filename)
         s.append('<BR>' + str(img))
+        s.append('\n<FONT SIZE="-1"><P>Amiga is a trademark of Amiga Inc. All other trademarks belong to their respective owners.<BR>\n' \
         s.append('\n<FONT SIZE="-1"><P>Copyright &#169 %s<BR>All Rights Reserved<BR>\n' \
             % self.author)
         s.append('\nComments to author: ' + str(MailTo(self.email)) )
