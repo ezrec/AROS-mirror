@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+
+'''
+    NAME
+    
+        Compactify
+
+    SYNOPSIS
+        
+        Compactify
+    
+    FUNCTION
+    
+        Makes Python source more compact by removing unnecessary
+        comments, documentation strings and spacing. The program 
+        reads from stdin and writes the result to stdout. 
+
+    EXAMPLE
+
+        ; Create a more compact version of 'big.py' and save it 
+        ; as out 'small.py'.
+
+        Compactify <big.py >small.py    
+    
+    BUGS
+    
+        Documentation strings not belonging to an indented block
+        (such as this documentation) are not removed.
+'''
+
+import sys
+from token    import *
+from tokenize import *
+
+operators = [ '.', ',', '(', ')', '[', ']', '{', '}', 
+              ':', '+', '-', '*', '/', '=',
+              '==', '<>', '!=', '+=', '-=', '*=', '/=' ]
+
+indents  = 0    # Current number of indentation levels.
+doSpace  = 0    # Output a space before next token?
+doIndent = 0    # Output indentation before next token?
+
+output   = sys.stdout.write
+
+def compactifier( type, string, start, end, line ):
+    global indents, doSpace, doIndent, operators
+
+    if type == INDENT:
+        indents += 1
+        doIndent = 1
+        doSpace  = 0
+    elif type == DEDENT:
+        indents -= 1
+        doIndent = 1
+        doSpace  = 0
+    elif type == COMMENT:
+        pass
+    elif type == STRING:
+        if doIndent == 0:
+            if doSpace:
+                output( ' ' )    
+            output( string )
+    elif type == NEWLINE:
+        doIndent = 1
+        doSpace  = 0
+        output( '\n' )
+    elif type == NL:
+        doSpace  = 0
+    else:
+        if doIndent:
+            output( '\t' * indents )
+            doIndent = 0
+        if doSpace:
+            if string in operators:
+                doSpace = 0
+            else:   
+                output( ' ' )
+        else:
+            doSpace = 1
+            
+        output( string )
+
+if __name__ == '__main__':
+    tokenize( sys.stdin.readline, compactifier )

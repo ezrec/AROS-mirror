@@ -1,0 +1,52 @@
+Short term / relatively easy
+----------------------------
+  
++ Make config.h smarter about things (ie. 'autodetect' stuff that
+  should be autodetected (eg. SIZEOF_INT etc)). It assumes to much
+  right now.
+
+
+Medium term / more work
+-----------------------
+
++ Work on the IntuitionLibrary module.
+  - Implement more drawing method for Canvas. Text rendering!
+  - Implement the Screen class.
+  - Implement some form of event handling (maybe need an ExecLibrary 
+    module for signals and messages?).
+
++ More AROS/AmigaOS specific modules:
+  - ASL / ReqTools
+  - Locale
+  - DataTypes
+  - Devices?
+  - ...more?
+
++ Port PYRO to AROS using Exec messages instead of sockets.
+  - Definately need an ExecLibrary module.
+
+
+Long term / hard
+----------------
+
++ Port the ARexx module from Amiga Python:
+  - A *lot* of work since big parts of ARexx infrastructure missing
+    under AROS. Maybe give up and use Python and PYRO as an ARexx
+    replacement?
+
++ Reduce size of executable and make more modular
+  - Transform parts of Python to shared libraries, especially the 
+    builtin modules (one library per module, preferably). Should
+    detect which libraries (-> modules) are available automatically.
+  - Make executable resident? (Can you do that in AROS? Is it possible
+    with Python (because of global variables)?). 
+  - Look at size-reduction methods in Pippy.
+  - Make shared libraries out of linklibs Python uses (ie. zlib and 
+    expat). Should save about 270 kB.
+  
++ Implement Python threads.
+
++ Investigate if there is any performance gain by using obmalloc.c
+  instead of AROS' malloc()/free(). Look at the DataManager in Pippy 
+  (gives *huge* performance improvement on Palm).
+

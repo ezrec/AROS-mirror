@@ -1,0 +1,53 @@
+Summary
+-------
+
+94 tests OK, 43 tests SKIPPED and 2 tests FAILED. 
+
+Notes on failed tests
+---------------------
+
+test_time
+
+    test_time.py, line 3
+    attributeerror: 'time' module has no attribute 'altzone'
+
+test_difflib 
+
+    [...]
+    Trying: get_close_matches("wheel", keyword.kwlist)
+    Expecting: ['while']
+    *****************************************************************
+    Failure in example: get_close_matches("wheel", keyword.kwlist)
+    from line #25 of difflib
+    Expected: ['while']
+    Got: []
+    [...]
+    Trying: get_close_matches("wheel", keyword.kwlist)
+    Expecting: ['while']
+    *****************************************************************
+    Failure in example: get_close_matches("wheel", keyword.kwlist)
+    from line #20 of difflib.get_close_matches
+    Expected: ['while']
+    Got: []
+    
+    1 of 5 examples failed in difflib.get_close_matches.__doc__
+    4 items had no tests:
+        difflib.SequenceMatcher
+        difflib.SequenceMatcher.__init__
+        difflib.SequenceMatcher.quick_ratio
+        difflib.SequenceMatcher.real_quick_ratio
+    7 items passed all tests:
+       6 tests in difflib.SequenceMatcher.find_longest_match
+       2 tests in difflib.SequenceMatcher.get_matching_blocks
+       4 tests in difflib.SequenceMatcher.get_opcodes
+       4 tests in difflib.SequenceMatcher.ratio
+       4 tests in difflib.SequenceMatcher.set_seq1
+       4 tests in difflib.SequenceMatcher.set_seq2
+       3 tests in difflib.SequenceMatcher.set_seqs
+    *****************************************************************
+    2 items had failures:
+       1 of  36 in difflib
+       1 of   5 in difflib.get_close_matches
+    68 tests in 13 items.
+    66 passed and 2 failed.
+    ***Test Failed*** 2 failures.
