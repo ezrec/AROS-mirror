@@ -65,7 +65,11 @@
 
 /* libwww includes */
 #include "HTUtils.h"
+#ifdef _AROS
 #include "libwww2/tcp.h"
+#else
+#include "tcp.h"
+#endif
 #include "HTString.h"
 #include "HTTCP.h"
 #include "HTParse.h"

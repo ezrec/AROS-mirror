@@ -22,7 +22,7 @@ WWWDNET 	= /www-dnet.lib
 
 #HTML		= /libhtmlg/htmlg.lib
 
-NETAMITCP	= //amitcp_30_net.lib
+NETAMITCP	= netlib:miami.lib #//amitcp_30_net.lib
 NETAS225	= as225.o Def _AS225=1
 NETDNET 	= /dnet.lib
 

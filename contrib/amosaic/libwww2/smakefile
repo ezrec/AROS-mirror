@@ -2,14 +2,14 @@
 # www.lib
 #
 
-OBJS =	HTAABrow.o  HTAssoc.o	    HTFormat.o	 HTInit.o  HTMLDTD.o	   HTPlain.o   HTTP.o
-#	 HTAAUtil.o  HTAtom.o	     HTFTP.o	  HTList.o  HTMLGen.o	    HTSort.o	HTUU.o	   \
-#	 HTAccess.o  HTChunk.o	     HTFWriter.o  HTMail.o  HTMosaicHTML.o  HTString.o	HTWAIS.o   \
-#	 HTAlert.o   HTCompressed.o  HTGopher.o   HTMIME.o  HTNews.o	    HTTCP.o	HTWriter.o \
-#	 HTAnchor.o  HTFile.o	     HTIcon.o	  HTML.o    HTParse.o	    HTTelnet.o	HTWSRC.o   \
-#	 SGML.o
+OBJS =	HTAABrow.o  HTAssoc.o	    HTFormat.o	 HTInit.o  HTMLDTD.o	   HTPlain.o   HTTP.o \
+	 HTAAUtil.o  HTAtom.o	     HTFTP.o	  HTList.o  HTMLGen.o	    HTSort.o	HTUU.o	   \
+	 HTAccess.o  HTChunk.o	     HTFWriter.o  HTMail.o  HTMosaicHTML.o  HTString.o	HTWAIS.o   \
+	 HTAlert.o   HTCompressed.o  HTGopher.o   HTMIME.o  HTNews.o	    HTTCP.o	HTWriter.o \
+	 HTAnchor.o  HTFile.o	     HTIcon.o	  HTML.o    HTParse.o	    HTTelnet.o	HTWSRC.o   \
+	 SGML.o
 
-CFLAGS = Def _AS225=1
+CFLAGS = Def _AS225=0
 
 .c.o:
 	@echo "Compiling $*.c..."

@@ -8,7 +8,11 @@
 
 /* Prototypes */
 #include <proto/gadtools.h>
+#ifdef _AROS
 #include <proto/alib.h>
+#else
+#include <clib/alib_protos.h>
+#endif
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/icon.h>
@@ -28,6 +32,7 @@
 #define MUI_OBSOLETE
 #define MUIMASTER_NAME "muimaster.library"
 #include <libraries/mui.h>
+#ifdef _AROS
 #include <classes/application.h>
 #include <classes/area.h>
 #include <classes/bitmap.h>
@@ -40,6 +45,7 @@
 #include <classes/virtgroup.h>
 #include <classes/window.h>
 #include <priv/Image.h>
+#endif
 
 /* System */
 #include <dos/dos.h>
