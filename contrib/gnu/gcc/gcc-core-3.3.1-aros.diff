@@ -1,6 +1,6 @@
 diff -rNu gcc-3.3.1/config.if gcc-3.3.1-aros/config.if
 --- gcc-3.3.1/config.if	2003-01-30 12:53:39.000000000 +0100
-+++ gcc-3.3.1-aros/config.if	2003-11-11 10:13:23.000000000 +0100
++++ gcc-3.3.1-aros/config.if	2003-11-23 19:51:48.000000000 +0100
 @@ -56,16 +56,16 @@
      then
        dummy=if$$
@@ -17,13 +17,13 @@ diff -rNu gcc-3.3.1/config.if gcc-3.3.1-aros/config.if
  }
  EOF
 -      ${CC-cc} $dummy.c -o $dummy 2>/dev/null
-+      ${CC_FOR_BUILD-cc} $dummy.c -o $dummy
++      ${CC_FOR_BUILD-cc} $dummy.c -o $dummy 2>/dev/null
        if [ "$?" = 0 ]
        then
  	libc_interface=-libc6.`./$dummy`-
 diff -rNu gcc-3.3.1/configure.in gcc-3.3.1-aros/configure.in
 --- gcc-3.3.1/configure.in	2003-06-27 13:44:14.000000000 +0200
-+++ gcc-3.3.1-aros/configure.in	2003-11-11 10:29:44.000000000 +0100
++++ gcc-3.3.1-aros/configure.in	2003-11-23 19:51:48.000000000 +0100
 @@ -235,6 +235,9 @@
    ppc*-*-pe)
       noconfigdirs="patch diff make tk tcl expect dejagnu autoconf automake texinfo bison send-pr gprof rcs guile perl itcl tix db snavigator gnuserv"
@@ -86,7 +86,7 @@ diff -rNu gcc-3.3.1/configure.in gcc-3.3.1-aros/configure.in
  baseargs=`echo "${arguments}" | \
 diff -rNu gcc-3.3.1/gcc/config/aros.h gcc-3.3.1-aros/gcc/config/aros.h
 --- gcc-3.3.1/gcc/config/aros.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-3.3.1-aros/gcc/config/aros.h	2003-10-25 14:01:28.000000000 +0200
++++ gcc-3.3.1-aros/gcc/config/aros.h	2003-11-23 19:51:48.000000000 +0100
 @@ -0,0 +1,96 @@
 +/* Definitions for AROS
 +   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
@@ -186,7 +186,7 @@ diff -rNu gcc-3.3.1/gcc/config/aros.h gcc-3.3.1-aros/gcc/config/aros.h
 +#define TARGET_HAS_F_SETLKW
 diff -rNu gcc-3.3.1/gcc/config/i386/aros.h gcc-3.3.1-aros/gcc/config/i386/aros.h
 --- gcc-3.3.1/gcc/config/i386/aros.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-3.3.1-aros/gcc/config/i386/aros.h	2003-10-25 13:59:02.000000000 +0200
++++ gcc-3.3.1-aros/gcc/config/i386/aros.h	2003-11-23 19:51:48.000000000 +0100
 @@ -0,0 +1,125 @@
 +/* Definitions for Intel 386 running AROS systems with ELF format.
 +   Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002
@@ -315,14 +315,14 @@ diff -rNu gcc-3.3.1/gcc/config/i386/aros.h gcc-3.3.1-aros/gcc/config/i386/aros.h
 +#undef MD_FALLBACK_FRAME_STATE_FOR
 diff -rNu gcc-3.3.1/gcc/config/t-aros gcc-3.3.1-aros/gcc/config/t-aros
 --- gcc-3.3.1/gcc/config/t-aros	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-3.3.1-aros/gcc/config/t-aros	2003-10-26 10:54:01.000000000 +0100
++++ gcc-3.3.1-aros/gcc/config/t-aros	2003-11-23 19:51:48.000000000 +0100
 @@ -0,0 +1,2 @@
 +#AROS doesn't use collect2 at all, it doesn't even have to be built
 +USE_COLLECT2 :=
 \ No newline at end of file
 diff -rNu gcc-3.3.1/gcc/config.gcc gcc-3.3.1-aros/gcc/config.gcc
 --- gcc-3.3.1/gcc/config.gcc	2003-06-27 13:44:22.000000000 +0200
-+++ gcc-3.3.1-aros/gcc/config.gcc	2003-10-26 10:55:32.000000000 +0100
++++ gcc-3.3.1-aros/gcc/config.gcc	2003-11-23 19:51:48.000000000 +0100
 @@ -401,6 +401,26 @@
  		;;
  	esac
@@ -362,7 +362,7 @@ diff -rNu gcc-3.3.1/gcc/config.gcc gcc-3.3.1-aros/gcc/config.gcc
  	exit 1
 diff -rNu gcc-3.3.1/gcc/cppinit.c gcc-3.3.1-aros/gcc/cppinit.c
 --- gcc-3.3.1/gcc/cppinit.c	2003-03-16 15:13:09.000000000 +0100
-+++ gcc-3.3.1-aros/gcc/cppinit.c	2003-11-05 18:07:12.000000000 +0100
++++ gcc-3.3.1-aros/gcc/cppinit.c	2003-11-23 19:51:48.000000000 +0100
 @@ -35,7 +35,7 @@
  # define INO_T_EQ(A, B) (!memcmp (&(A), &(B), sizeof (A)))
  # define INO_T_COPY(DEST, SRC) memcpy(&(DEST), &(SRC), sizeof (SRC))
@@ -374,7 +374,7 @@ diff -rNu gcc-3.3.1/gcc/cppinit.c gcc-3.3.1-aros/gcc/cppinit.c
  #  define INO_T_EQ(A, B) ((A) == (B))
 diff -rNu gcc-3.3.1/libiberty/pexecute.c gcc-3.3.1-aros/libiberty/pexecute.c
 --- gcc-3.3.1/libiberty/pexecute.c	2001-10-17 23:15:41.000000000 +0200
-+++ gcc-3.3.1-aros/libiberty/pexecute.c	2003-11-11 09:52:56.000000000 +0100
++++ gcc-3.3.1-aros/libiberty/pexecute.c	2003-11-23 19:51:56.000000000 +0100
 @@ -312,11 +312,11 @@
  	     space ends in a backslash (such as in the case of -iprefix arg
  	     passed to cpp). The resulting quoted strings gets misinterpreted
@@ -390,15 +390,16 @@ diff -rNu gcc-3.3.1/libiberty/pexecute.c gcc-3.3.1-aros/libiberty/pexecute.c
  	      && argvec[i][len-2] != '\\')
  	    {
  	      trailing_backslash = 1;
-@@ -660,9 +660,71 @@
+@@ -660,9 +660,62 @@
  
  #endif /* MPW */
  
 +#ifdef __AROS__
 +
 +#include <process.h>
++#include <errno.h>
 +
-+static int __pid;
++static int __pid, __rc;
 +
 +int
 +pexecute (program, argv, this_pname, temp_base, errmsg_fmt, errmsg_arg, flags)
@@ -409,8 +410,6 @@ diff -rNu gcc-3.3.1/libiberty/pexecute.c gcc-3.3.1-aros/libiberty/pexecute.c
 +     char **errmsg_fmt, **errmsg_arg;
 +     int flags;
 +{
-+  int rc;
-+
 +  if ((flags & PEXECUTE_ONE) != PEXECUTE_ONE)
 +    {
 +      *errmsg_fmt = "-pipe not supported yet.";
@@ -418,29 +417,15 @@ diff -rNu gcc-3.3.1/libiberty/pexecute.c gcc-3.3.1-aros/libiberty/pexecute.c
 +      return -1;
 +    }
 +
-+  if (flags & PEXECUTE_SEARCH)
-+    {
-+      *errmsg_fmt = "PEXECUTE_SEARCH not supported yet.";
-+      *errmsg_arg = NULL;
-+      return -1;
-+    }
-+
-+  rc = spawnv(P_WAIT, program, argv);
-+  if (rc == -1)
++  __rc = ((flags & PEXECUTE_SEARCH) ? spawnvp : spawnv) (P_WAIT, program, argv);
++  if (__rc == -1)
 +    {
 +      *errmsg_fmt = install_error_msg;
 +      *errmsg_arg = program;
 +      return -1;
 +    }
-+  else
-+  if (rc != 0)
-+  {
-+      *errmsg_fmt = "%s failed";
-+      *errmsg_arg = program;
-+      return -1;
-+  }
 +
-+  return ++__pid;
++  return (__pid <= 0) ? __pid = 100 : ++__pid;
 +}
 +
 +
@@ -450,8 +435,14 @@ diff -rNu gcc-3.3.1/libiberty/pexecute.c gcc-3.3.1-aros/libiberty/pexecute.c
 +     int *status;
 +     int flags;
 +{
-+  *status = 0;
-+  return __pid--;
++  if (pid != __pid)
++    {
++      errno = EINVAL;
++      return -1;
++    }
++
++  *status = (__rc & 0xFF) << 8;
++  return __pid;
 +}
 +
 +#endif /* AROS */
@@ -463,7 +454,7 @@ diff -rNu gcc-3.3.1/libiberty/pexecute.c gcc-3.3.1-aros/libiberty/pexecute.c
  
  extern int execv ();
  extern int execvp ();
-@@ -789,4 +851,4 @@
+@@ -789,4 +842,4 @@
    return pid;
  }
  
