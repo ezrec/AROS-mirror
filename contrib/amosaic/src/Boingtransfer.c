@@ -226,8 +226,6 @@ void __inline DrawBoingBall(struct RastPort *RP,double Radius,struct BoingTransf
 {
   long x,y,xw,ResX,ResY;
 
-return;
-
   for(x=0;x<16;x++)
   {
     xw=x*2+WinkelOffset;
