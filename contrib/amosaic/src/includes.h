@@ -72,6 +72,11 @@
 #define ASM    __asm
 #define SAVEDS __saveds
 #else
+
+#ifndef AROS_ASMCALL_H
+#include <aros/asmcall.h>
+#endif
+
 #define REG(x) /* */
 #define ASM /* */
 #define SAVEDS /* */
