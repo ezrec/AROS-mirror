@@ -1,0 +1,27 @@
+Summary
+-------
+
+79 tests OK, 55 tests SKIPPED and 16 tests FAILED.
+
+
+Notes on failed tests
+---------------------
+
+test_builtin 
+test_cpickle 
+test_difflib 
+test_format 
+test_gzip 
+test_import
+test_minidom
+test_pickle 
+test_pkg
+test_sax
+test_string
+test_strop 
+test_time
+test_unicode 
+test_wave 
+test_zipfile
+
+    No details yet.
