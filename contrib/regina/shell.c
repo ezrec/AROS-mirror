@@ -807,7 +807,7 @@ int posix_do_command( tsd_t *TSD, const streng *command, int io_flags, environme
       }
       /* seek positions of both fdin may have been destroyed */
       restart_file(env->input.hdls[0]);
-      __regina_close(env->input.hdls[1], NULL);
+      __regina_close(env->input.hdls[1], st->AsyncInfo );
       env->input.hdls[1] = -1;
    }
 
@@ -821,9 +821,9 @@ int posix_do_command( tsd_t *TSD, const streng *command, int io_flags, environme
    }
 
    /* Close the child part of the handles */
-   if (env->input.hdls[0]  != -1) __regina_close(env->input.hdls[0], NULL) ;
-   if (env->output.hdls[1] != -1) __regina_close(env->output.hdls[1], NULL) ;
-   if (env->error.hdls[1]  != -1) __regina_close(env->error.hdls[1], NULL) ;
+   if (env->input.hdls[0]  != -1) __regina_close(env->input.hdls[0], st->AsyncInfo ) ;
+   if (env->output.hdls[1] != -1) __regina_close(env->output.hdls[1], st->AsyncInfo ) ;
+   if (env->error.hdls[1]  != -1) __regina_close(env->error.hdls[1], st->AsyncInfo ) ;
    env->input.hdls[0] = env->output.hdls[1] = env->error.hdls[1] = -1;
 
    /* Force our own handles to become nonblocked */
