@@ -51,7 +51,8 @@ struct Library *BulletBase;
 struct TagItem *otaglist;
 struct GlyphEngine *ge;
 struct GlyphMap *gm[257];
-LONG charloc[257];
+struct TextFont font;
+ULONG charloc[257];
 WORD charspace[257];
 WORD charkern[257];
 
@@ -60,7 +61,7 @@ APTR   gfxdata;
 STRPTR fontname;
 ULONG fontsize;
 
-LONG lochar, hichar, baseline, gfxwidth;
+LONG xdpi, ydpi, lochar, hichar, baseline, gfxwidth;
 
 struct RDArgs *myargs;
 IPTR args[NUM_ARGS];
@@ -276,7 +277,7 @@ static void setupfontengine(void)
 	{OT_DotSize    , 0  },
 	{TAG_DONE   	    }
     };
-    LONG xdpi, ydpi, pointheight, xdot, ydot;
+    LONG pointheight, xdot, ydot;
     LONG ysizefactor, ysizefactor_low, ysizefactor_high;
     
     if (SetInfoA(ge, maintags) != OTERR_Success)
@@ -290,7 +291,9 @@ static void setupfontengine(void)
     
     xdpi = 72 * ysizefactor_high / ysizefactor_low;
     ydpi = 72 * ysizefactor_high / ysizefactor_low;
-    
+
+    kprintf("\n\nxdpi = %d   ydpi = %d\n", xdpi, ydpi);
+        
     pointheight = fontsize << 16;
     
     xdot = ydot = 100;
@@ -372,10 +375,10 @@ static void getglyphmaps(void)
 	}
     }
 
-    printf("lochar   = %d\n", lochar);
-    printf("hichar   = %d\n", hichar);
-    printf("baseline = %d\n", baseline);
-    printf("gfxwidth = %d\n", baseline);
+    printf("lochar   = %ld\n", lochar);
+    printf("hichar   = %ld\n", hichar);
+    printf("baseline = %ld\n", baseline);
+    printf("gfxwidth = %ld\n", baseline);
 
 }
 
@@ -390,13 +393,13 @@ static void makefontbitmap(void)
     /* Make gfxwidth a multiple of 32 */
     gfxwidth = (gfxwidth + 31) & ~31;
     
-    gfxdata = AllocVec(gfxwidth / 8 * fontsize * 2, MEMF_CHIP);
+    gfxdata = AllocVec(gfxwidth / 8 * fontsize * 3, MEMF_CHIP);
     if (!gfxdata) cleanup("Out of memory!");
     
     InitBitMap(&bm, 1, gfxwidth, fontsize);
     bm.Planes[0] = gfxdata;
    
-    glyphbm.Planes[0] = ((IPTR)gfxdata) + (gfxwidth / 8 * fontsize);
+    glyphbm.Planes[0] = (APTR)((IPTR)gfxdata) + (gfxwidth / 8 * (fontsize * 2));
   
     xpos = 0;
     
@@ -421,7 +424,7 @@ static void makefontbitmap(void)
 	    UBYTE *src, *dest;
 	    
 	    blackl = g->glm_BlackLeft  & ~15;
-	    blackr = (g->glm_BlackLeft + g->glm_BlackWidth - 1 + 15) & ~15;
+	    blackr = ((g->glm_BlackLeft + g->glm_BlackWidth - 1) & ~15) + 16;
 	    blackw = blackr - blackl;
 	    
 	    src = g->glm_BitMap +
@@ -441,7 +444,8 @@ static void makefontbitmap(void)
 	    
 	    ypos = baseline - (g->glm_Y0 - (WORD)g->glm_BlackTop);
 
-    	#if 1    
+    	#if 1 
+	//if (i != 32)   
 	    BltTemplate(glyphbm.Planes[0],
 	    	        g->glm_BlackLeft & 15,
 		        blackw / 8,
@@ -451,6 +455,10 @@ static void makefontbitmap(void)
 			g->glm_BlackWidth,
 			g->glm_BlackHeight);
     	#endif	
+	    //kprintf("blackwidth [%d] = %d\n", i, g->glm_BlackWidth);
+	
+	    charloc[i - lochar] = (xpos << 16) + g->glm_BlackWidth;
+	    
 	    xpos += g->glm_BlackWidth;
 		    
 	}
@@ -458,6 +466,37 @@ static void makefontbitmap(void)
     }
     
     DeinitRastPort(&temprp);
+    
+    for(i = lochar; i <= hichar + 1; i++)
+    {
+    	struct GlyphMap *g;
+    	WORD index;
+	
+	index = (i <= hichar) ? i : 256;
+	g = gm[index];
+    	if (!g) g = gm[256];
+	
+	if (g)
+	{
+	    charkern [i - lochar] = ((WORD)g->glm_BlackLeft) - g->glm_X0;	
+	    charspace[i - lochar] = g->glm_X1 - (WORD)g->glm_BlackLeft;
+
+    	#if 0
+    	    kprintf("#%d  kern = %d  black = %d space = %d\n",
+	    i,
+	    charkern[i - lochar],
+	    charloc[i - lochar] & 0xffff,
+	    charspace[i - lochar]);
+	#endif
+	    
+    	    /* alternative way to calculate charspace based on g->glm_Width:
+	    
+	                         xdpi       glm_Width   
+	    	 ( fontsize x --------- x ------------- ) - charkern
+		                 72          65536     
+	    */
+	}
+    }
 }
 
 /****************************************************************************************/
@@ -489,6 +528,46 @@ static void showfontbitmap(void)
 
 /****************************************************************************************/
 
+static void makefont(void)
+{
+    font.tf_Message.mn_Node.ln_Type = NT_FONT;
+    font.tf_Message.mn_Node.ln_Name = "convertedfont.font";
+    font.tf_YSize = fontsize;
+    font.tf_Style = 0;
+    font.tf_Flags = FPF_ROMFONT | FPF_PROPORTIONAL | FPF_DESIGNED;
+    font.tf_XSize = 10;
+    font.tf_Baseline = baseline - 1; /* CHECKME: */
+    font.tf_BoldSmear = 1;
+    font.tf_Accessors = 0;
+    font.tf_LoChar = lochar;
+    font.tf_HiChar = hichar;
+    font.tf_CharData = gfxdata;
+    font.tf_Modulo = gfxwidth / 8;
+    font.tf_CharLoc = charloc;
+    font.tf_CharSpace = charspace;
+    font.tf_CharKern = charkern;
+    
+    {
+    	struct TagItem fonttags[] =
+	{
+	    {TA_DeviceDPI, (xdpi << 16) | ydpi  },
+	    {TAG_DONE	    	    	    	}
+	};
+    	ExtendFont(&font, fonttags);
+    }
+
+    AddFont(&font);
+    
+    printf("Font ready!\n");
+    Wait(SIGBREAKF_CTRL_C);
+    
+    RemFont(&font);
+    StripFont(&font);
+    
+}
+
+/****************************************************************************************/
+
 int main(void)
 {
     getarguments();
@@ -499,8 +578,9 @@ int main(void)
     setupfontengine();
     getglyphmaps();
     makefontbitmap();
+    makefont();
     
-    showfontbitmap();
+    //showfontbitmap();
     
     cleanup(0);
     
