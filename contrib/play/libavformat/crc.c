@@ -33,7 +33,7 @@
 #define DO8(buf)  DO4(buf); DO4(buf);
 #define DO16(buf) DO8(buf); DO8(buf);
 
-static uint32_t adler32(uint32_t adler, uint8_t *buf, unsigned int len)
+unsigned long update_adler32(unsigned long adler, const uint8_t *buf, unsigned int len)
 {
     unsigned long s1 = adler & 0xffff;
     unsigned long s2 = (adler >> 16) & 0xffff;
@@ -66,17 +66,15 @@ static int crc_write_header(struct AVFormatContext *s)
     CRCState *crc = s->priv_data;
 
     /* init CRC */
-    crc->crcval = adler32(0, NULL, 0);
+    crc->crcval = update_adler32(0, NULL, 0);
 
     return 0;
 }
 
-static int crc_write_packet(struct AVFormatContext *s, 
-                            int stream_index,
-                            unsigned char *buf, int size, int force_pts)
+static int crc_write_packet(struct AVFormatContext *s, AVPacket *pkt)
 {
     CRCState *crc = s->priv_data;
-    crc->crcval = adler32(crc->crcval, buf, size);
+    crc->crcval = update_adler32(crc->crcval, pkt->data, pkt->size);
     return 0;
 }
 

@@ -474,6 +474,12 @@ static int gif_read_header1(GifState *s)
     s->transparent_color_index = -1;
     s->screen_width = get_le16(f);
     s->screen_height = get_le16(f);
+    if(   (unsigned)s->screen_width  > 32767 
+       || (unsigned)s->screen_height > 32767){
+        av_log(NULL, AV_LOG_ERROR, "picture size too large\n");
+        return -1;
+    } 
+
     v = get_byte(f);
     s->color_resolution = ((v & 0x70) >> 4) + 1;
     has_global_palette = (v & 0x80);
@@ -505,21 +511,21 @@ static int gif_parse_next_image(GifState *s)
 	switch (code) {
 	case ',':
 	    if (gif_read_image(s) < 0)
-		return -EIO;
+		return AVERROR_IO;
 	    ret = 0;
 	    goto the_end;
 	case ';':
 	    /* end of image */
-	    ret = -EIO;
+	    ret = AVERROR_IO;
 	    goto the_end;
 	case '!':
             if (gif_read_extension(s) < 0)
-                return -EIO;
+                return AVERROR_IO;
 	    break;
 	case EOF:
 	default:
 	    /* error or errneous EOF */
-	    ret = -EIO;
+	    ret = AVERROR_IO;
 	    goto the_end;
 	}
     }
@@ -572,7 +578,7 @@ static int gif_read_packet(AVFormatContext * s1,
 
     /* XXX: avoid copying */
     if (av_new_packet(pkt, s->screen_width * s->screen_height * 3)) {
-	return -EIO;
+	return AVERROR_IO;
     }
     pkt->stream_index = 0;
     memcpy(pkt->data, s->image_buf, s->screen_width * s->screen_height * 3);

@@ -68,7 +68,7 @@ static int jpeg_get_buffer(AVCodecContext *c, AVFrame *picture)
     }
 }
 
-static void img_copy(uint8_t *dst, int dst_wrap, 
+static void jpeg_img_copy(uint8_t *dst, int dst_wrap, 
                      uint8_t *src, int src_wrap,
                      int width, int height)
 {
@@ -147,7 +147,7 @@ static int jpeg_read(ByteIOContext *f,
                 break;
             }
         }
-        img_copy(picture->data[i], picture->linesize[i],
+        jpeg_img_copy(picture->data[i], picture->linesize[i],
                  picture1.data[i], picture1.linesize[i],
                  w, h);
     }
@@ -160,9 +160,9 @@ static int jpeg_read(ByteIOContext *f,
     return jctx.ret_code;
 }
 
+#ifdef CONFIG_ENCODERS
 static int jpeg_write(ByteIOContext *pb, AVImageInfo *info)
 {
-#ifdef CONFIG_ENCODERS
     AVCodecContext *c;
     uint8_t *outbuf = NULL;
     int outbuf_size, ret, size, i;
@@ -221,8 +221,8 @@ static int jpeg_write(ByteIOContext *pb, AVImageInfo *info)
  fail2:
     av_free(c);
     return ret;
-#endif
 }
+#endif //CONFIG_ENCODERS
 
 AVImageFormat jpeg_image_format = {
     "jpeg",
@@ -230,5 +230,9 @@ AVImageFormat jpeg_image_format = {
     jpeg_probe,
     jpeg_read,
     (1 << PIX_FMT_YUVJ420P) | (1 << PIX_FMT_YUVJ422P) | (1 << PIX_FMT_YUVJ444P),
+#ifdef CONFIG_ENCODERS
     jpeg_write,
+#else
+    NULL,
+#endif //CONFIG_ENCODERS
 };

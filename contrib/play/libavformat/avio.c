@@ -17,9 +17,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "avformat.h"
-#include <ctype.h>
+
+static int default_interrupt_cb(void);
 
 URLProtocol *first_protocol = NULL;
+URLInterruptCB *url_interrupt_cb = default_interrupt_cb;
 
 int register_protocol(URLProtocol *protocol)
 {
@@ -93,22 +95,24 @@ int url_read(URLContext *h, unsigned char *buf, int size)
 {
     int ret;
     if (h->flags & URL_WRONLY)
-        return -EIO;
+        return AVERROR_IO;
     ret = h->prot->url_read(h, buf, size);
     return ret;
 }
 
+#ifdef CONFIG_ENCODERS
 int url_write(URLContext *h, unsigned char *buf, int size)
 {
     int ret;
     if (!(h->flags & (URL_WRONLY | URL_RDWR)))
-        return -EIO;
+        return AVERROR_IO;
     /* avoid sending too big packets */
     if (h->max_packet_size && size > h->max_packet_size)
-        return -EIO; 
+        return AVERROR_IO; 
     ret = h->prot->url_write(h, buf, size);
     return ret;
 }
+#endif //CONFIG_ENCODERS
 
 offset_t url_seek(URLContext *h, offset_t pos, int whence)
 {
@@ -143,7 +147,7 @@ offset_t url_filesize(URLContext *h)
     offset_t pos, size;
     
     pos = url_seek(h, 0, SEEK_CUR);
-    size = url_seek(h, 0, SEEK_END);
+    size = url_seek(h, -1, SEEK_END)+1;
     url_seek(h, pos, SEEK_SET);
     return size;
 }
@@ -164,4 +168,23 @@ int url_get_max_packet_size(URLContext *h)
 void url_get_filename(URLContext *h, char *buf, int buf_size)
 {
     pstrcpy(buf, buf_size, h->filename);
+}
+
+
+static int default_interrupt_cb(void)
+{
+    return 0;
+}
+
+/** 
+ * The callback is called in blocking functions to test regulary if
+ * asynchronous interruption is needed. -EINTR is returned in this
+ * case by the interrupted function. 'NULL' means no interrupt
+ * callback is given.  
+ */
+void url_set_interrupt_cb(URLInterruptCB *interrupt_cb)
+{
+    if (!interrupt_cb)
+        interrupt_cb = default_interrupt_cb;
+    url_interrupt_cb = interrupt_cb;
 }

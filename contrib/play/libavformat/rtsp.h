@@ -34,6 +34,7 @@ enum RTSPProtocol {
 
 #define RTSP_DEFAULT_PORT   554
 #define RTSP_MAX_TRANSPORTS 8
+#define RTSP_TCP_MAX_PACKET_SIZE 1472
 
 typedef struct RTSPTransportField {
     int interleaved_min, interleaved_max;  /* interleave ids, if TCP transport */
@@ -49,6 +50,8 @@ typedef struct RTSPHeader {
     int content_length;
     enum RTSPStatusCode status_code; /* response code from server */
     int nb_transports;
+    /* in AV_TIME_BASE unit, AV_NOPTS_VALUE if not used */
+    int64_t range_start, range_end; 
     RTSPTransportField transports[RTSP_MAX_TRANSPORTS];
     int seq; /* sequence number */
     char session_id[512];
@@ -77,10 +80,13 @@ void rtsp_set_callback(FFRTSPCallback *rtsp_cb);
 int rtsp_init(void);
 void rtsp_parse_line(RTSPHeader *reply, const char *buf);
 
-extern int rtsp_abort_req;
 extern int rtsp_default_protocols;
 extern int rtsp_rtp_port_min;
 extern int rtsp_rtp_port_max;
 extern FFRTSPCallback *ff_rtsp_callback;
+extern AVInputFormat rtsp_demux;
+
+int rtsp_pause(AVFormatContext *s);
+int rtsp_resume(AVFormatContext *s);
 
 #endif /* RTSP_H */

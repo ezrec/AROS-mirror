@@ -39,18 +39,18 @@ static const CodecTag codec_au_tags[] = {
     { 0, 0 },
 };
 
+#ifdef CONFIG_ENCODERS
 /* AUDIO_FILE header */
 static int put_au_header(ByteIOContext *pb, AVCodecContext *enc)
 {
-    int tag;
-
-    tag = codec_get_tag(codec_au_tags, enc->codec_id);
-    if (tag == 0)
+    if(!enc->codec_tag)
+       enc->codec_tag = codec_get_tag(codec_au_tags, enc->codec_id);
+    if(!enc->codec_tag)
         return -1;
     put_tag(pb, ".snd");       /* magic number */
     put_be32(pb, 24);           /* header size */
     put_be32(pb, AU_UNKOWN_SIZE); /* data size */
-    put_be32(pb, (uint32_t)tag);     /* codec ID */
+    put_be32(pb, (uint32_t)enc->codec_tag);     /* codec ID */
     put_be32(pb, enc->sample_rate);
     put_be32(pb, (uint32_t)enc->channels);
     return 0;
@@ -72,11 +72,10 @@ static int au_write_header(AVFormatContext *s)
     return 0;
 }
 
-static int au_write_packet(AVFormatContext *s, int stream_index_ptr,
-                           uint8_t *buf, int size, int force_pts)
+static int au_write_packet(AVFormatContext *s, AVPacket *pkt)
 {
     ByteIOContext *pb = &s->pb;
-    put_buffer(pb, buf, size);
+    put_buffer(pb, pkt->data, pkt->size);
     return 0;
 }
 
@@ -98,6 +97,7 @@ static int au_write_trailer(AVFormatContext *s)
 
     return 0;
 }
+#endif //CONFIG_ENCODERS
 
 static int au_probe(AVProbeData *p)
 {
@@ -113,7 +113,7 @@ static int au_probe(AVProbeData *p)
 
 /* au input */
 static int au_read_header(AVFormatContext *s,
-                           AVFormatParameters *ap)
+                          AVFormatParameters *ap)
 {
     int size;
     unsigned int tag;
@@ -140,21 +140,15 @@ static int au_read_header(AVFormatContext *s,
     }
 
     /* now we are ready: build format streams */
-    st = av_malloc(sizeof(AVStream));
+    st = av_new_stream(s, 0);
     if (!st)
         return -1;
-    avcodec_get_context_defaults(&st->codec);
-
-    s->nb_streams = 1;
-    s->streams[0] = st;
-
-    st->id = 0;
-    
     st->codec.codec_type = CODEC_TYPE_AUDIO;
     st->codec.codec_tag = id;
     st->codec.codec_id = codec;
     st->codec.channels = channels;
     st->codec.sample_rate = rate;
+    av_set_pts_info(st, 64, 1, rate);
     return 0;
 }
 
@@ -166,9 +160,9 @@ static int au_read_packet(AVFormatContext *s,
     int ret;
 
     if (url_feof(&s->pb))
-        return -EIO;
+        return AVERROR_IO;
     if (av_new_packet(pkt, MAX_SIZE))
-        return -EIO;
+        return AVERROR_IO;
     pkt->stream_index = 0;
 
     ret = get_buffer(&s->pb, pkt->data, pkt->size);
@@ -193,8 +187,10 @@ static AVInputFormat au_iformat = {
     au_read_header,
     au_read_packet,
     au_read_close,
+    pcm_read_seek,
 };
 
+#ifdef CONFIG_ENCODERS
 static AVOutputFormat au_oformat = {
     "au",
     "SUN AU Format",
@@ -207,10 +203,13 @@ static AVOutputFormat au_oformat = {
     au_write_packet,
     au_write_trailer,
 };
+#endif //CONFIG_ENCODERS
 
 int au_init(void)
 {
     av_register_input_format(&au_iformat);
+#ifdef CONFIG_ENCODERS
     av_register_output_format(&au_oformat);
+#endif //CONFIG_ENCODERS
     return 0;
 }

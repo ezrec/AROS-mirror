@@ -21,7 +21,7 @@
 
 const CodecTag codec_wav_tags[] = {
     { CODEC_ID_MP2, 0x50 },
-    { CODEC_ID_MP3LAME, 0x55 },
+    { CODEC_ID_MP3, 0x55 },
     { CODEC_ID_AC3, 0x2000 },
     { CODEC_ID_PCM_S16LE, 0x01 },
     { CODEC_ID_PCM_U8, 0x01 }, /* must come after s16le in this list */
@@ -29,29 +29,40 @@ const CodecTag codec_wav_tags[] = {
     { CODEC_ID_PCM_MULAW, 0x07 },
     { CODEC_ID_ADPCM_MS, 0x02 },
     { CODEC_ID_ADPCM_IMA_WAV, 0x11 },
+    { CODEC_ID_ADPCM_G726, 0x45 },
+    { CODEC_ID_ADPCM_IMA_DK4, 0x61 },  /* rogue format number */
+    { CODEC_ID_ADPCM_IMA_DK3, 0x62 },  /* rogue format number */
     { CODEC_ID_WMAV1, 0x160 },
     { CODEC_ID_WMAV2, 0x161 },
+    { CODEC_ID_AAC, 0x706d },
+    { CODEC_ID_VORBIS, ('V'<<8)+'o' }, //HACK/FIXME, does vorbis in WAV/AVI have an (in)official id?
+    { CODEC_ID_SONIC, 0x2048 },
+    { CODEC_ID_SONIC_LS, 0x2048 },
+    { CODEC_ID_ADPCM_CT, 0x200 },
     { 0, 0 },
 };
 
+#ifdef CONFIG_ENCODERS
 /* WAVEFORMATEX header */
 /* returns the size or -1 on error */
 int put_wav_header(ByteIOContext *pb, AVCodecContext *enc)
 {
-    int tag, bps, blkalign, bytespersec;
+    int bps, blkalign, bytespersec;
     int hdrsize = 18;
 
-    tag = codec_get_tag(codec_wav_tags, enc->codec_id);
-    if (tag == 0)
+    if(!enc->codec_tag)
+       enc->codec_tag = codec_get_tag(codec_wav_tags, enc->codec_id);
+    if(!enc->codec_tag)
         return -1;
-    put_le16(pb, tag);
+
+    put_le16(pb, enc->codec_tag);
     put_le16(pb, enc->channels);
     put_le32(pb, enc->sample_rate);
     if (enc->codec_id == CODEC_ID_PCM_U8 ||
         enc->codec_id == CODEC_ID_PCM_ALAW ||
         enc->codec_id == CODEC_ID_PCM_MULAW) {
         bps = 8;
-    } else if (enc->codec_id == CODEC_ID_MP2 || enc->codec_id == CODEC_ID_MP3LAME) {
+    } else if (enc->codec_id == CODEC_ID_MP2 || enc->codec_id == CODEC_ID_MP3) {
         bps = 0;
     } else if (enc->codec_id == CODEC_ID_ADPCM_IMA_WAV || enc->codec_id == CODEC_ID_ADPCM_MS) {
         bps = 4;
@@ -59,8 +70,8 @@ int put_wav_header(ByteIOContext *pb, AVCodecContext *enc)
         bps = 16;
     }
     
-    if (enc->codec_id == CODEC_ID_MP2 || enc->codec_id == CODEC_ID_MP3LAME) {
-        blkalign = 1;
+    if (enc->codec_id == CODEC_ID_MP2 || enc->codec_id == CODEC_ID_MP3) {
+        blkalign = enc->frame_size; //this is wrong, but seems many demuxers dont work if this is set correctly
         //blkalign = 144 * enc->bit_rate/enc->sample_rate;
     } else if (enc->block_align != 0) { /* specified by the codec */
         blkalign = enc->block_align;
@@ -75,7 +86,7 @@ int put_wav_header(ByteIOContext *pb, AVCodecContext *enc)
     put_le32(pb, bytespersec); /* bytes per second */
     put_le16(pb, blkalign); /* block align */
     put_le16(pb, bps); /* bits per sample */
-    if (enc->codec_id == CODEC_ID_MP3LAME) {
+    if (enc->codec_id == CODEC_ID_MP3) {
         put_le16(pb, 12); /* wav_extra_size */
         hdrsize += 12;
         put_le16(pb, 1); /* wID */
@@ -96,12 +107,23 @@ int put_wav_header(ByteIOContext *pb, AVCodecContext *enc)
         put_le32(pb, 0);  /* dwPTSHigh */
     } else if (enc->codec_id == CODEC_ID_ADPCM_IMA_WAV) {
         put_le16(pb, 2); /* wav_extra_size */
+        hdrsize += 2;
         put_le16(pb, ((enc->block_align - 4 * enc->channels) / (4 * enc->channels)) * 8 + 1); /* wSamplesPerBlock */
-    } else
-        put_le16(pb, 0); /* wav_extra_size */
+    } else if(enc->extradata_size){
+        put_le16(pb, enc->extradata_size);
+        put_buffer(pb, enc->extradata, enc->extradata_size);
+        hdrsize += enc->extradata_size;
+        if(hdrsize&1){
+            hdrsize++;
+            put_byte(pb, 0);
+        }
+    } else {
+        hdrsize -= 2;
+    }
 
     return hdrsize;
 }
+#endif //CONFIG_ENCODERS
 
 /* We could be given one of the three possible structures here:
  * WAVEFORMAT, PCMWAVEFORMAT or WAVEFORMATEX. Each structure
@@ -126,13 +148,13 @@ void get_wav_header(ByteIOContext *pb, AVCodecContext *codec, int size)
     }else
         codec->bits_per_sample = get_le16(pb);
     codec->codec_id = wav_codec_get_id(id, codec->bits_per_sample);
-
+    
     if (size > 16) {  /* We're obviously dealing with WAVEFORMATEX */
 	codec->extradata_size = get_le16(pb);
 	if (codec->extradata_size > 0) {
 	    if (codec->extradata_size > size - 18)
 	        codec->extradata_size = size - 18;
-            codec->extradata = av_mallocz(codec->extradata_size);
+            codec->extradata = av_mallocz(codec->extradata_size + FF_INPUT_BUFFER_PADDING_SIZE);
             get_buffer(pb, codec->extradata, codec->extradata_size);
         } else
 	    codec->extradata_size = 0;
@@ -156,6 +178,7 @@ int wav_codec_get_id(unsigned int tag, int bps)
     return id;
 }
 
+#ifdef CONFIG_ENCODERS
 typedef struct {
     offset_t data;
 } WAVContext;
@@ -186,11 +209,10 @@ static int wav_write_header(AVFormatContext *s)
     return 0;
 }
 
-static int wav_write_packet(AVFormatContext *s, int stream_index_ptr,
-                           uint8_t *buf, int size, int force_pts)
+static int wav_write_packet(AVFormatContext *s, AVPacket *pkt)
 {
     ByteIOContext *pb = &s->pb;
-    put_buffer(pb, buf, size);
+    put_buffer(pb, pkt->data, pkt->size);
     return 0;
 }
 
@@ -213,6 +235,7 @@ static int wav_write_trailer(AVFormatContext *s)
     }
     return 0;
 }
+#endif //CONFIG_ENCODERS
 
 /* return the size of the found tag */
 /* XXX: > 2GB ? */
@@ -277,7 +300,10 @@ static int wav_read_header(AVFormatContext *s,
         return AVERROR_NOMEM;
 
     get_wav_header(pb, &st->codec, size);
-    
+    st->need_parsing = 1;
+
+    av_set_pts_info(st, 64, 1, st->codec.sample_rate);
+
     size = find_tag(pb, MKTAG('d', 'a', 't', 'a'));
     if (size < 0)
         return -1;
@@ -289,12 +315,21 @@ static int wav_read_header(AVFormatContext *s,
 static int wav_read_packet(AVFormatContext *s,
                            AVPacket *pkt)
 {
-    int ret;
+    int ret, size;
+    AVStream *st;
 
     if (url_feof(&s->pb))
-        return -EIO;
-    if (av_new_packet(pkt, MAX_SIZE))
-        return -EIO;
+        return AVERROR_IO;
+    st = s->streams[0];
+
+    size = MAX_SIZE;
+    if (st->codec.block_align > 1) {
+        if (size < st->codec.block_align)
+            size = st->codec.block_align;
+        size = (size / st->codec.block_align) * st->codec.block_align;
+    }
+    if (av_new_packet(pkt, size))
+        return AVERROR_IO;
     pkt->stream_index = 0;
 
     ret = get_buffer(&s->pb, pkt->data, pkt->size);
@@ -311,6 +346,26 @@ static int wav_read_close(AVFormatContext *s)
     return 0;
 }
 
+static int wav_read_seek(AVFormatContext *s, 
+                         int stream_index, int64_t timestamp, int flags)
+{
+    AVStream *st;
+
+    st = s->streams[0];
+    switch(st->codec.codec_id) {
+    case CODEC_ID_MP2:
+    case CODEC_ID_MP3:
+    case CODEC_ID_AC3:
+    case CODEC_ID_DTS:
+        /* use generic seeking with dynamically generated indexes */
+        return -1;
+    default:
+        break;
+    }
+    return pcm_read_seek(s, stream_index, timestamp, flags);
+}
+
+
 static AVInputFormat wav_iformat = {
     "wav",
     "wav format",
@@ -319,8 +374,10 @@ static AVInputFormat wav_iformat = {
     wav_read_header,
     wav_read_packet,
     wav_read_close,
+    wav_read_seek,
 };
 
+#ifdef CONFIG_ENCODERS
 static AVOutputFormat wav_oformat = {
     "wav",
     "wav format",
@@ -333,10 +390,13 @@ static AVOutputFormat wav_oformat = {
     wav_write_packet,
     wav_write_trailer,
 };
+#endif //CONFIG_ENCODERS
 
-int wav_init(void)
+int ff_wav_init(void)
 {
     av_register_input_format(&wav_iformat);
+#ifdef CONFIG_ENCODERS
     av_register_output_format(&wav_oformat);
+#endif //CONFIG_ENCODERS
     return 0;
 }

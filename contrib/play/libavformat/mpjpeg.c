@@ -22,6 +22,7 @@
 
 #define BOUNDARY_TAG "ffserver"
 
+#ifdef CONFIG_ENCODERS
 static int mpjpeg_write_header(AVFormatContext *s)
 {
     uint8_t buf1[256];
@@ -32,14 +33,13 @@ static int mpjpeg_write_header(AVFormatContext *s)
     return 0;
 }
 
-static int mpjpeg_write_packet(AVFormatContext *s, int stream_index, 
-                               uint8_t *buf, int size, int force_pts)
+static int mpjpeg_write_packet(AVFormatContext *s, AVPacket *pkt)
 {
     uint8_t buf1[256];
 
     snprintf(buf1, sizeof(buf1), "Content-type: image/jpeg\n\n");
     put_buffer(&s->pb, buf1, strlen(buf1));
-    put_buffer(&s->pb, buf, size);
+    put_buffer(&s->pb, pkt->data, pkt->size);
 
     snprintf(buf1, sizeof(buf1), "\n--%s\n", BOUNDARY_TAG);
     put_buffer(&s->pb, buf1, strlen(buf1));
@@ -74,10 +74,9 @@ static int single_jpeg_write_header(AVFormatContext *s)
     return 0;
 }
 
-static int single_jpeg_write_packet(AVFormatContext *s, int stream_index,
-                            uint8_t *buf, int size, int force_pts)
+static int single_jpeg_write_packet(AVFormatContext *s, AVPacket *pkt)
 {
-    put_buffer(&s->pb, buf, size);
+    put_buffer(&s->pb, pkt->data, pkt->size);
     put_flush_packet(&s->pb);
     return 1; /* no more data can be sent */
 }
@@ -106,3 +105,4 @@ int jpeg_init(void)
     av_register_output_format(&single_jpeg_format);
     return 0;
 }
+#endif //CONFIG_ENCODERS

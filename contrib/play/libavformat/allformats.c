@@ -26,41 +26,69 @@
  */
 void av_register_all(void)
 {
+    static int inited = 0;
+    
+    if (inited != 0)
+        return;
+    inited = 1;
+
     avcodec_init();
     avcodec_register_all();
 
     mpegps_init();
     mpegts_init();
+#ifdef CONFIG_ENCODERS
     crc_init();
     img_init();
+    img2_init();
+#endif //CONFIG_ENCODERS
     raw_init();
+    mp3_init();
     rm_init();
 #ifdef CONFIG_RISKY
     asf_init();
 #endif
+#ifdef CONFIG_ENCODERS
     avienc_init();
+#endif //CONFIG_ENCODERS
     avidec_init();
-    wav_init();
+    ff_wav_init();
     swf_init();
     au_init();
+#ifdef CONFIG_ENCODERS
     gif_init();
+#endif //CONFIG_ENCODERS
     mov_init();
+#ifdef CONFIG_ENCODERS
+    movenc_init();
     jpeg_init();
-    dv_init();
+#endif //CONFIG_ENCODERS
+    ff_dv_init();
     fourxm_init();
+#ifdef CONFIG_ENCODERS
+    flvenc_init();
+#endif //CONFIG_ENCODERS
+    flvdec_init();
+    str_init();
+    roq_init();
+    ipmovie_init();
+    wc3_init();
+    westwood_init();
+    film_init();
+    idcin_init();
+    flic_init();
+    vmd_init();
 
-#ifdef AMR_NB
+#if defined(AMR_NB) || defined(AMR_NB_FIXED) || defined(AMR_WB)
     amr_init();
 #endif
-    av_register_output_format(&yuv4mpegpipe_oformat);
+    yuv4mpeg_init();
     
 #ifdef CONFIG_VORBIS
     ogg_init();
 #endif
 
-#ifndef CONFIG_WIN32
     ffm_init();
-#endif
 #ifdef CONFIG_VIDEO4LINUX
     video_grab_init();
 #endif
@@ -72,7 +100,19 @@ void av_register_all(void)
     dv1394_init();
 #endif
 
+#ifdef CONFIG_DC1394
+    dc1394_init();
+#endif
+
+    nut_init();
+    matroska_init();
+    sol_init();
+    ea_init();
+    nsvdec_init();
+
+#ifdef CONFIG_ENCODERS
     /* image formats */
+#if 0
     av_register_image_format(&pnm_image_format);
     av_register_image_format(&pbm_image_format);
     av_register_image_format(&pgm_image_format);
@@ -84,7 +124,10 @@ void av_register_all(void)
     av_register_image_format(&png_image_format);
 #endif
     av_register_image_format(&jpeg_image_format);
-    av_register_image_format(&gif_image_format);
+#endif
+    av_register_image_format(&gif_image_format);  
+//    av_register_image_format(&sgi_image_format); heap corruption, dont enable
+#endif //CONFIG_ENCODERS
 
     /* file protocols */
     register_protocol(&file_protocol);

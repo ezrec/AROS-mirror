@@ -38,6 +38,7 @@
  */
 
 #include "avformat.h"
+#include "bitstream.h"
 
 /* bitstream minipacket size */
 #define GIF_CHUNKS 100
@@ -220,12 +221,12 @@ static inline unsigned char gif_clut_index(uint8_t r, uint8_t g, uint8_t b)
 
 static int gif_image_write_image(ByteIOContext *pb, 
                                  int x1, int y1, int width, int height,
-                                 uint8_t *buf, int linesize, int pix_fmt)
+                                 const uint8_t *buf, int linesize, int pix_fmt)
 {
     PutBitContext p;
     uint8_t buffer[200]; /* 100 * 9 / 8 = 113 */
     int i, left, w, v;
-    uint8_t *ptr;
+    const uint8_t *ptr;
     /* image block */
 
     put_byte(pb, 0x2c);
@@ -240,7 +241,7 @@ static int gif_image_write_image(ByteIOContext *pb,
 
     left= width * height;
 
-    init_put_bits(&p, buffer, 130, NULL, NULL);
+    init_put_bits(&p, buffer, 130);
 
 /*
  * the thing here is the bitstream is written as little packets, with a size byte before
@@ -252,7 +253,7 @@ static int gif_image_write_image(ByteIOContext *pb,
 
         gif_put_bits_rev(&p, 9, 0x0100); /* clear code */
 
-        for(i=0;i<GIF_CHUNKS;i++) {
+        for(i=(left<GIF_CHUNKS)?left:GIF_CHUNKS;i;i--) {
             if (pix_fmt == PIX_FMT_RGB24) {
                 v = gif_clut_index(ptr[0], ptr[1], ptr[2]);
                 ptr+=3;
@@ -274,15 +275,12 @@ static int gif_image_write_image(ByteIOContext *pb,
         if(pbBufPtr(&p) - p.buf > 0) {
             put_byte(pb, pbBufPtr(&p) - p.buf); /* byte count of the packet */
             put_buffer(pb, p.buf, pbBufPtr(&p) - p.buf); /* the actual buffer */
-            p.data_out_size += pbBufPtr(&p) - p.buf;
             p.buf_ptr = p.buf; /* dequeue the bytes off the bitstream */
         }
-        if(left<=GIF_CHUNKS) {
-            put_byte(pb, 0x00); /* end of image block */
-        }
-
         left-=GIF_CHUNKS;
     }
+    put_byte(pb, 0x00); /* end of image block */
+    
     return 0;
 }
 
@@ -331,7 +329,7 @@ static int gif_write_header(AVFormatContext *s)
 }
 
 static int gif_write_video(AVFormatContext *s, 
-                           AVCodecContext *enc, uint8_t *buf, int size)
+                           AVCodecContext *enc, const uint8_t *buf, int size)
 {
     ByteIOContext *pb = &s->pb;
     GIFContext *gif = s->priv_data;
@@ -365,14 +363,13 @@ static int gif_write_video(AVFormatContext *s,
     return 0;
 }
 
-static int gif_write_packet(AVFormatContext *s, int stream_index, 
-                           uint8_t *buf, int size, int force_pts)
+static int gif_write_packet(AVFormatContext *s, AVPacket *pkt)
 {
-    AVCodecContext *codec = &s->streams[stream_index]->codec;
+    AVCodecContext *codec = &s->streams[pkt->stream_index]->codec;
     if (codec->codec_type == CODEC_TYPE_AUDIO)
         return 0; /* just ignore audio */
     else
-        return gif_write_video(s, codec, buf, size);
+        return gif_write_video(s, codec, pkt->data, pkt->size);
 }
 
 static int gif_write_trailer(AVFormatContext *s)

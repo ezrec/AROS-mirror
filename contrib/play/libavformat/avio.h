@@ -28,6 +28,8 @@ typedef struct URLPollEntry {
 #define URL_WRONLY 1
 #define URL_RDWR   2
 
+typedef int URLInterruptCB(void);
+
 int url_open(URLContext **h, const char *filename, int flags);
 int url_read(URLContext *h, unsigned char *buf, int size);
 int url_write(URLContext *h, unsigned char *buf, int size);
@@ -37,6 +39,12 @@ int url_exist(const char *filename);
 offset_t url_filesize(URLContext *h);
 int url_get_max_packet_size(URLContext *h);
 void url_get_filename(URLContext *h, char *buf, int buf_size);
+
+/* the callback is called in blocking functions to test regulary if
+   asynchronous interruption is needed. -EINTR is returned in this
+   case by the interrupted function. 'NULL' means no interrupt
+   callback is given. */
+void url_set_interrupt_cb(URLInterruptCB *interrupt_cb);
 
 /* not implemented */
 int url_poll(URLPollEntry *poll_table, int n, int timeout);
@@ -52,6 +60,7 @@ typedef struct URLProtocol {
 } URLProtocol;
 
 extern URLProtocol *first_protocol;
+extern URLInterruptCB *url_interrupt_cb;
 
 int register_protocol(URLProtocol *protocol);
 
@@ -61,7 +70,7 @@ typedef struct {
     unsigned char *buf_ptr, *buf_end;
     void *opaque;
     int (*read_packet)(void *opaque, uint8_t *buf, int buf_size);
-    void (*write_packet)(void *opaque, uint8_t *buf, int buf_size);
+    int (*write_packet)(void *opaque, uint8_t *buf, int buf_size);
     int (*seek)(void *opaque, offset_t offset, int whence);
     offset_t pos; /* position in the file of the current buffer */
     int must_flush; /* true if the next seek should flush */
@@ -69,6 +78,10 @@ typedef struct {
     int write_flag;  /* true if open for writing */
     int is_streamed;
     int max_packet_size;
+    unsigned long checksum;
+    unsigned char *checksum_ptr;
+    unsigned long (*update_checksum)(unsigned long checksum, const uint8_t *buf, unsigned int size);
+    int error;         ///< contains the error code or 0 if no error happened
 } ByteIOContext;
 
 int init_put_byte(ByteIOContext *s,
@@ -77,7 +90,7 @@ int init_put_byte(ByteIOContext *s,
                   int write_flag,
                   void *opaque,
                   int (*read_packet)(void *opaque, uint8_t *buf, int buf_size),
-                  void (*write_packet)(void *opaque, uint8_t *buf, int buf_size),
+                  int (*write_packet)(void *opaque, uint8_t *buf, int buf_size),
                   int (*seek)(void *opaque, offset_t offset, int whence));
 
 void put_byte(ByteIOContext *s, int b);
@@ -97,15 +110,21 @@ offset_t url_fseek(ByteIOContext *s, offset_t offset, int whence);
 void url_fskip(ByteIOContext *s, offset_t offset);
 offset_t url_ftell(ByteIOContext *s);
 int url_feof(ByteIOContext *s);
+int url_ferror(ByteIOContext *s);
 
 #define URL_EOF (-1)
 int url_fgetc(ByteIOContext *s);
+#ifdef __GNUC__
+int url_fprintf(ByteIOContext *s, const char *fmt, ...) __attribute__ ((__format__ (__printf__, 2, 3)));
+#else
 int url_fprintf(ByteIOContext *s, const char *fmt, ...);
+#endif
 char *url_fgets(ByteIOContext *s, char *buf, int buf_size);
 
 void put_flush_packet(ByteIOContext *s);
 
 int get_buffer(ByteIOContext *s, unsigned char *buf, int size);
+int get_partial_buffer(ByteIOContext *s, unsigned char *buf, int size);
 int get_byte(ByteIOContext *s);
 unsigned int get_le32(ByteIOContext *s);
 uint64_t get_le64(ByteIOContext *s);
@@ -135,6 +154,10 @@ int url_close_buf(ByteIOContext *s);
 int url_open_dyn_buf(ByteIOContext *s);
 int url_open_dyn_packet_buf(ByteIOContext *s, int max_packet_size);
 int url_close_dyn_buf(ByteIOContext *s, uint8_t **pbuffer);
+
+unsigned long get_checksum(ByteIOContext *s);
+void init_checksum(ByteIOContext *s, unsigned long (*update_checksum)(unsigned long c, const uint8_t *p, unsigned int len), unsigned long checksum);
+unsigned long update_adler32(unsigned long adler, const uint8_t *buf, unsigned int len);
 
 /* file.c */
 extern URLProtocol file_protocol;

@@ -18,7 +18,6 @@
  */
 #include "avformat.h"
 #include <unistd.h>
-#include <ctype.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -47,8 +46,10 @@ typedef struct {
     char location[URL_SIZE];
 } HTTPContext;
 
-static int http_connect(URLContext *h, const char *path, const char *hoststr);
+static int http_connect(URLContext *h, const char *path, const char *hoststr,
+                        const char *auth);
 static int http_write(URLContext *h, uint8_t *buf, int size);
+static char *b64_encode( unsigned char *src );
 
 
 /* return non zero if error */
@@ -56,6 +57,7 @@ static int http_open(URLContext *h, const char *uri, int flags)
 {
     const char *path, *proxy_path;
     char hostname[1024], hoststr[1024];
+    char auth[1024];
     char path1[1024];
     char buf[1024];
     int port, use_proxy, err;
@@ -77,7 +79,7 @@ static int http_open(URLContext *h, const char *uri, int flags)
     /* fill the dest addr */
  redo:
     /* needed in any case to build the host string */
-    url_split(NULL, 0, hostname, sizeof(hostname), &port, 
+    url_split(NULL, 0, auth, sizeof(auth), hostname, sizeof(hostname), &port, 
               path1, sizeof(path1), uri);
     if (port > 0) {
         snprintf(hoststr, sizeof(hoststr), "%s:%d", hostname, port);
@@ -86,7 +88,7 @@ static int http_open(URLContext *h, const char *uri, int flags)
     }
 
     if (use_proxy) {
-        url_split(NULL, 0, hostname, sizeof(hostname), &port, 
+        url_split(NULL, 0, auth, sizeof(auth), hostname, sizeof(hostname), &port, 
                   NULL, 0, proxy_path);
         path = uri;
     } else {
@@ -104,7 +106,7 @@ static int http_open(URLContext *h, const char *uri, int flags)
         goto fail;
 
     s->hd = hd;
-    if (http_connect(h, path, hoststr) < 0)
+    if (http_connect(h, path, hoststr, auth) < 0)
         goto fail;
     if (s->http_code == 303 && s->location[0] != '\0') {
         /* url moved, get next */
@@ -117,7 +119,7 @@ static int http_open(URLContext *h, const char *uri, int flags)
     if (hd)
         url_close(hd);
     av_free(s);
-    return -EIO;
+    return AVERROR_IO;
 }
 
 static int http_getc(HTTPContext *s)
@@ -126,7 +128,7 @@ static int http_getc(HTTPContext *s)
     if (s->buf_ptr >= s->buf_end) {
         len = url_read(s->hd, s->buffer, BUFFER_SIZE);
         if (len < 0) {
-            return -EIO;
+            return AVERROR_IO;
         } else if (len == 0) {
             return -1;
         } else {
@@ -173,7 +175,8 @@ static int process_line(HTTPContext *s, char *line, int line_count)
     return 1;
 }
 
-static int http_connect(URLContext *h, const char *path, const char *hoststr)
+static int http_connect(URLContext *h, const char *path, const char *hoststr,
+                        const char *auth)
 {
     HTTPContext *s = h->priv_data;
     int post, err, ch;
@@ -184,18 +187,20 @@ static int http_connect(URLContext *h, const char *path, const char *hoststr)
     post = h->flags & URL_WRONLY;
 
     snprintf(s->buffer, sizeof(s->buffer),
-             "%s %s HTTP/1.0\n"
-             "User-Agent: FFmpeg %s\n"
-             "Accept: */*\n"
-             "Host: %s\n"
-             "\n",
+             "%s %s HTTP/1.0\r\n"
+             "User-Agent: %s\r\n"
+             "Accept: */*\r\n"
+             "Host: %s\r\n"
+             "Authorization: Basic %s\r\n"
+             "\r\n",
              post ? "POST" : "GET",
              path,
-             LIBAVFORMAT_VERSION,
-             hoststr);
+             LIBAVFORMAT_IDENT,
+             hoststr,
+             b64_encode(auth));
     
     if (http_write(h, s->buffer, strlen(s->buffer)) < 0)
-        return -EIO;
+        return AVERROR_IO;
         
     /* init input buffer */
     s->buf_ptr = s->buffer;
@@ -212,7 +217,7 @@ static int http_connect(URLContext *h, const char *path, const char *hoststr)
     for(;;) {
         ch = http_getc(s);
         if (ch < 0)
-            return -EIO;
+            return AVERROR_IO;
         if (ch == '\n') {
             /* process line */
             if (q > line && q[-1] == '\r')
@@ -239,29 +244,19 @@ static int http_connect(URLContext *h, const char *path, const char *hoststr)
 static int http_read(URLContext *h, uint8_t *buf, int size)
 {
     HTTPContext *s = h->priv_data;
-    int size1, len;
+    int len;
 
-    size1 = size;
-    while (size > 0) {
-        /* read bytes from input buffer first */
-        len = s->buf_end - s->buf_ptr;
-        if (len > 0) {
-            if (len > size)
-                len = size;
-            memcpy(buf, s->buf_ptr, len);
-            s->buf_ptr += len;
-        } else {
-            len = url_read (s->hd, buf, size);
-            if (len < 0) {
-                return len;
-            } else if (len == 0) {
-                break;
-            }
-        }
-        size -= len;
-        buf += len;
+    /* read bytes from input buffer first */
+    len = s->buf_end - s->buf_ptr;
+    if (len > 0) {
+        if (len > size)
+            len = size;
+        memcpy(buf, s->buf_ptr, len);
+        s->buf_ptr += len;
+    } else {
+        len = url_read(s->hd, buf, size);
     }
-    return size1 - size;
+    return len;
 }
 
 /* used only when posting data */
@@ -287,4 +282,51 @@ URLProtocol http_protocol = {
     NULL, /* seek */
     http_close,
 };
+
+/*****************************************************************************
+ * b64_encode: stolen from VLC's http.c
+ *****************************************************************************/
+                                                                                
+static char *b64_encode( unsigned char *src )
+{
+    static const char b64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    unsigned int len= strlen(src);
+    char *ret, *dst;
+    unsigned i_bits = 0;
+    unsigned i_shift = 0;
+
+    if(len < UINT_MAX/4){
+        ret=dst= av_malloc( len * 4 / 3 + 12 );
+    }else
+        return NULL;
+
+    for( ;; )
+    {
+        if( *src )
+        {
+            i_bits = ( i_bits << 8 )|( *src++ );
+            i_shift += 8;
+        }
+        else if( i_shift > 0 )
+        {
+           i_bits <<= 6 - i_shift;
+           i_shift = 6;
+        }
+        else
+        {
+            *dst++ = '=';
+            break;
+        }
+                                                                                
+        while( i_shift >= 6 )
+        {
+            i_shift -= 6;
+            *dst++ = b64[(i_bits >> i_shift)&0x3f];
+        }
+    }
+                                                                                
+    *dst++ = '\0';
+                                                                                
+    return ret;
+}
 

@@ -13,6 +13,9 @@
 #define AVI_MAX_RIFF_SIZE       0x40000000LL
 #define AVI_MASTER_INDEX_SIZE   256
 
+/* index flags */
+#define AVIIF_INDEX             0x10
+
 offset_t start_tag(ByteIOContext *pb, const char *tag);
 void end_tag(ByteIOContext *pb, offset_t start);
 
@@ -32,5 +35,9 @@ extern const CodecTag codec_wav_tags[];
 
 unsigned int codec_get_tag(const CodecTag *tags, int id);
 enum CodecID codec_get_id(const CodecTag *tags, unsigned int tag);
+unsigned int codec_get_bmp_tag(int id);
+unsigned int codec_get_wav_tag(int id);
+enum CodecID codec_get_bmp_id(unsigned int tag);
+enum CodecID codec_get_wav_id(unsigned int tag);
 
 #endif /* FFMPEG_AVI_H */
