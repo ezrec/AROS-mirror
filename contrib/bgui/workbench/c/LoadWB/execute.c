@@ -7,7 +7,7 @@
 #include "strings.h"
 
 #define CMD_SIZE 1024
-#define CON_FILE "CON:////AROS Shell/CLOSE/AUTO"
+#define CON_FILE "CON:////Command Output/CLOSE/AUTO/WAIT"
 
 /*** Prototypes *************************************************************/
 
@@ -117,9 +117,26 @@ SAVEDS VOID ExecuteTask( void )
     }
 
     /* Run the command? */
-    if( runcommand ) {
-        if( (file = Open( CON_FILE, MODE_OLDFILE )) ) {
-            SystemTags( lastcommand, SYS_Input, file, SYS_Output, NULL, TAG_END );
+    if( runcommand )
+    {
+        BPTR file = Open(CON_FILE, MODE_OLDFILE);
+
+        if
+        (
+            SystemTags
+            (
+                lastcommand,
+                SYS_Asynch, TRUE,
+                SYS_Input,  (IPTR)file,
+                SYS_Output, (IPTR)NULL,
+                SYS_Error,  (IPTR)NULL,
+                TAG_END
+            ) == -1
+            &&
+            file
+        )
+        {
+            Close(file);
         }
     }
 }
