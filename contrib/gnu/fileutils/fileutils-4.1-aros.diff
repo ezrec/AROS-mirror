@@ -127,3 +127,19 @@ diff -u -r fileutils-4.1/src/ls.c fileutils-4.1-aros/src/ls.c
  #endif
  
    /* Using the TABSIZE environment variable is not POSIX-approved.
+diff -urN fileutils-4.1/lib/getpass.c fileutils-4.1-aros/lib/getpass.c
+--- fileutils-4.1/lib/getpass.c	2000-06-21 22:21:03.000000000 +0200
++++ fileutils-4.1-aros/lib/getpass.c	2004-08-26 13:03:17.000000000 +0200
+@@ -16,6 +16,7 @@
+    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.  */
+ 
++#ifndef __AROS__
+ #if HAVE_CONFIG_H
+ # include <config.h>
+ #endif
+@@ -99,3 +100,4 @@
+ 
+   return buf;
+ }
++#endif
