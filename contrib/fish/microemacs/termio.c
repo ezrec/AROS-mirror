@@ -64,7 +64,7 @@ struct  sgttyb  nstate;		 /* values for editor mode */
 int ttopen(void)
 {
 #if	AMIGA
-	terminal = Open("RAW:1/1/639/199/MicroEmacs", MODE_NEWFILE);
+	terminal = Open("RAW:1/1/639/399/MicroEmacs", MODE_NEWFILE);
 	return  (terminal != 0);
 	
 #endif
