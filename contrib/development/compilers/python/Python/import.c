@@ -1079,7 +1079,7 @@ case_ok(char *buf, int len, int namelen, char *name)
 #ifdef __CYGWIN__
 	char tempbuf[MAX_PATH];
 #endif
-
+        
 	if (getenv("PYTHONCASEOK") != NULL)
 		return 1;
 
@@ -1192,6 +1192,54 @@ case_ok(char *buf, int len, int namelen, char *name)
 	}
 	return 0 ; /* Not found */
 
+#elif defined AROS || defined _AMIGA
+        struct FileInfoBlock *fib  = NULL;
+        BPTR                  lock = NULL;
+        char                  temp[MAXPATHLEN + 1];
+        
+        if( GetVar( "PYTHONCASEOK", temp, MAXPATHLEN, NULL ) >= 0 )
+        {
+            return 1;
+        }
+        
+        if( (fib = AllocDosObject( DOS_FIB, NULL )) == NULL )
+        {
+            PyErr_Format
+            (
+                PyExc_MemoryError,
+                "Could not allocate FileInfoBlock" 
+            );
+            
+            return 0;
+        }
+        
+        if( (lock = Lock( buf, ACCESS_READ )) != NULL )
+        {
+            if( Examine( lock, fib ) )
+            {
+                UnLock( lock );
+                
+                if( strncmp( fib->fib_FileName, name, namelen ) != 0 )
+                {
+                    return 0; 
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            
+            UnLock( lock );
+        }
+        
+        PyErr_Format
+        ( 
+            PyExc_NameError,
+            "Can't find file for module %.100s\n(filename %.300s)", name, buf 
+        );
+            
+        return 0;
+        
 /* assuming it's a case-sensitive filesystem, so there's nothing to do! */
 #else
 	return 1;
