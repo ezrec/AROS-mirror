@@ -1054,7 +1054,7 @@ forget_multi:
 #define BUFSIZ 4096
 #endif
 
-		char filepath[MAXPATHLEN];
+		char filepath[512];
 		char buffer[4096];
 
 		char *ptr;
