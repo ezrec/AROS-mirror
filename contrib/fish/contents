@@ -7,9 +7,13 @@
 371_fractals  From Fish Disk 371
               (doesn't work, yet)
 
+asimplex      From Fish Disk 199
+
 bezier/bouncing
 bezier/cubic
 bezier/orig   From Fish Disk 75
+
+cube          From Fish Disk 733
 
 fiveinline/   From Fish Disk 163
 
@@ -46,6 +50,8 @@ surf/        From Fish Disk 315
 tree/         From Fish Disk 31
 
 watchman/     From Fish Disk 283
+
+worldtime/    From Fish Disk 583
 
 yachtc/       From Fish Disk 10
                (Unfortunately some functions are still missing.)
