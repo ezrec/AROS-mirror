@@ -4,6 +4,8 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- AROS : contrib-regina
+
 #MM contrib-regina : setup linklibs includes contrib-regina-libs
 #MM contrib-regina-quick : contrib-regina-libs-quick
 
