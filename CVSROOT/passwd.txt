@@ -37,3 +37,5 @@ morten-h:9KDC6O.tUkOCg:Morten Holm:morten-h@post3.tele.dk:
 hkiel:ccL6.C5LgMNSM:Henning Kiel:kiel@student.physik.uni-dortmund.de:
 rlumley:D0TvThpFULPfQ:Robert Lumley:rlumley@telmaron.com:
 indy:acJyggTBJDfL6:Sven Drieling:indy@welcome.north.de:
+jamesm:acG4jeQ9/fj8:James McArthur:jamesm@it.ntu.edu.au:
+glauschwuffel:aaZMtNc7J4uk:Gregor Goldbach:glauschwuffel@amt.comlink.de:
