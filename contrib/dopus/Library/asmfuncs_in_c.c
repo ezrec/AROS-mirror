@@ -481,9 +481,9 @@ AROS_UFH2 (void, stuffChar,
 	AROS_UFHA(char **, buf, A3)
 )
 {
-	AROS_LIBFUNC_INIT
+	AROS_USERFUNC_INIT
 	*(*buf) ++ = c;
-	AROS_LIBFUNC_EXIT
+	AROS_USERFUNC_EXIT
 }
 
 void LSprintf(char *str, char *fmt, ...)
