@@ -50,7 +50,7 @@ SUBDIRS 	+= AHI-Handler
 endif
 
 all:
-	@cd Include && make gcc-include
+	@cd Include && $(MAKE) gcc-include
 	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@) || exit; done
 
 install:
@@ -85,7 +85,7 @@ bindist:
 	$(INSTALL_DATA) ${srcdir}/README.ATO $(CATDIR)
 	$(INSTALL_DATA) ${srcdir}/README.TRANSLATIONS $(CATDIR)
 
-	cd Include && make gcc-include
+	cd Include && $(MAKE) gcc-include
 	for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@) || exit; done
 
 	-$(RM) $(USRARCHIVE) $(DEVARCHIVE)
