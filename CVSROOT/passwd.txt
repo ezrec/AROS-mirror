@@ -13,7 +13,7 @@ ruppert:aaIqf1gX0RDUU:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatype
 vmc:abZN7WlNN.1yU:Harald Frank:support@isdntown.east.de:Amiga port
 helios:acwZVMiQtI78o:Martin Steigerwald:Martin-Steigerwald@gmx.net:Beta tester
 srittau:bcTJngqBSdc4U:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Gadtools, Docs
-laguest:baLtYMMsFjGms:L. A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
+laguest:baLtYMMsFjGms:Luke A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
 SDuvan:dbfBDWZL8B0q.:Johan Alfredsson:d95duvan@dtek.chalmers.se:Commodities
 bergers:bdKC5UL24VXQI:Stefan Berger:bergers@cip.e-technik.uni-erlangen.de:Math, DOS, Arp
 jskov:bdclJpF6gyfHU:Jesper Skov:jskov@cs.auc.dk:Linux/m68k
