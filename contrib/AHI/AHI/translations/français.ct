@@ -37,7 +37,7 @@ S\000Sauver en...
 ; A\000Save As...
 ;
 msgItemAbout
-?\000A propos...
+?\000À propos...
 ; ?\000About...
 ;
 msgItemQuit
@@ -49,7 +49,7 @@ msgMenuEdit
 ; \000Edit
 ;
 msgItemDefaults
-D\000Réinitialiser au défaut
+D\000Réinitialiser
 ; D\000Reset To Defaults
 ;
 msgItemLastSaved
@@ -137,7 +137,7 @@ Canau_x
 ; C_hannels
 ;
 msgOptNoChannels
-
+Aucun Canal
 ; 
 ;
 msgOptVolume
@@ -180,7 +180,7 @@ Options générales
 ; Global options
 ;
 msgGlobOptDebugLevel
-Mode _Déboggue
+Mode _Debug
 ; _Debug level
 ;
 msgGlobOptEcho
@@ -188,7 +188,7 @@ _Echo
 ; _Echo
 ;
 msgGlobOptSurround
-Surround en modes "_Fast"
+Surround en mode "_Fast"
 ; Surround in "_Fast" modes
 ;
 msgGlobOptCPULimit
@@ -267,64 +267,64 @@ msgTextCopyright
 ; %s%s\nCopyright ©%s
 ;
 msgTextNoWindow
-Incapable d'ouvrir la fenêtre
+Inpossible d'ouvrir la fenêtre
 ; Unable to open window.
 ;
 msgTextNoFileRequester
-Incapable d'allouer la fenêtre de requête de fichiers
+Impossible d'allouer la fenêtre de requête de fichiers
 ; Unable to allocate file requester.
 ;
 msgTextNoFind
-Incapable de trouver `%s'!
+Impossible de trouver `%s'!
 ; Unable to find `%s'!
 ;
 msgTextNoOpen
-Incapable d'ouvrir `%s´ version %ld.
+Impossible d'ouvrir `%s´ version %ld.
 ; Unable to open `%s´ version %ld.
 ;
 ; *** Additions
 ;
 msgGlobOptMasterVol
-
+_Master volume
 ; _Master volume
 ;
 msgMVNoClip
-
+Sans clipping
 ; Without clipping
 ;
 msgMVClip
-
+Avec clipping
 ; With clipping
 ;
 msgGlobOptACTime
-
+Durée de l'anti-click
 ; Default anti-click time
 ;
 msgButtonPlay
-
+Tester
 ; _Play a test sound
 ;
 msgOptScalemode
-
+Échelle de volume
 ; Volume sc_aling
 ;
 msgSMFixedSafe
-
+Sûr
 ; Safe
 ;
 msgSMDynSafe
-
+Sûr, dynamique
 ; Safe, dynamic
 ;
 msgSM0dB
-
+Volume à fond
 ; Full volume
 ;
 msgSM3dB
-
+-3 dB
 ; -3 dB
 ;
 msgSM6dB
-
+-6 dB
 ; -6 dB
 ;

@@ -106,8 +106,8 @@ install:	all
 	$(INSTALL) -d $(PREFIX)/Devs
 	$(INSTALL_PROGRAM) $(EXECUTABLE) $(PREFIX)/Devs/$(EXECUTABLE)
 	for i in $(LANGUAGES); do \
-	  $(INSTALL) -d $(PREFIX)/Catalogs/$$i; \
-	  $(INSTALL_DATA) $$i.catalog $(PREFIX)/Catalogs/$$i/ahi.catalog; \
+	  $(INSTALL) -d $(PREFIX)/Locale/Catalogs/$$i; \
+	  $(INSTALL_DATA) $$i.catalog $(PREFIX)/Locale/Catalogs/$$i/ahi.catalog; \
 	done
 
 revup:

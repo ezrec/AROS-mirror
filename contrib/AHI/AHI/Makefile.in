@@ -74,10 +74,10 @@ maintainer-clean: distclean
 install:	all
 	$(INSTALL) -d $(PREFIX)/Prefs
 	$(INSTALL_PROGRAM) AHI_MUI $(PREFIX)/Prefs/AHI
-	$(INSTALL_DATA) ${srcdir}/AHI.info $(PREFIX)/Prefs
+	$(INSTALL_DATA) ${srcdir}/AHI.info $(PREFIX)/Prefs/AHI.info
 	for i in $(LANGUAGES); do \
-	  $(INSTALL) -d $(PREFIX)/Catalogs/$$i; \
-	  $(INSTALL_DATA) $$i.catalog $(PREFIX)/Catalogs/$$i/ahiprefs.catalog; \
+	  $(INSTALL) -d $(PREFIX)/Locale/Catalogs/$$i; \
+	  $(INSTALL_DATA) $$i.catalog $(PREFIX)/Locale/Catalogs/$$i/ahiprefs.catalog; \
 	done
 
 bindist:	all
