@@ -12,7 +12,7 @@ CP = cp
 BINDIR = $(TOP)/bin/linux-i386/AROS
 LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
 
-BGUIPROGDIR = $(BINDIR)/bgui
+BGUIPROGDIR = $(BINDIR)/Prefs
 
 OS_INCLUDES_DIR = $(BINDIR)/Include
 
