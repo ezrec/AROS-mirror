@@ -52,8 +52,10 @@ struct RastPort *rp;
 ULONG cgfx_coltab[256];
 UBYTE remaptable[256];
 BYTE Keys[256];
+WORD winx = -1, winy = -1;
 BOOL forcescreen, forcewindow;
 BOOL mustremap, truecolor, remapped, wbscreen = TRUE;
+float startflyspeed = 0;
 
 /***********************************************************************************/
 
@@ -351,10 +353,13 @@ void cleanup(char *msg)
 
 /***********************************************************************************/
 
-#define ARG_TEMPLATE "FORCESCREEN=SCR/S,FORCEWINDOW=WIN/S"
-#define ARG_SCR 0
-#define ARG_WIN 1
-#define NUM_ARGS 2
+#define ARG_TEMPLATE "STARTFLYSPEED=S/N/K,WINPOSX=X/N/K,WINPOSY=Y/N/K,FORCESCREEN=SCR/S,FORCEWINDOW=WIN/S"
+#define ARG_SPEED 0
+#define ARG_X 1
+#define ARG_Y 2
+#define ARG_SCR 3
+#define ARG_WIN 4
+#define NUM_ARGS 5
 
 static IPTR args[NUM_ARGS];
 
@@ -369,6 +374,11 @@ static void getarguments(void)
 	else if (args[ARG_WIN])
 	    forcewindow = TRUE;
 	    
+	if (args[ARG_X]) winx = *(IPTR *)args[ARG_X];
+	if (args[ARG_Y]) winy = *(IPTR *)args[ARG_Y];
+	
+	if (args[ARG_SPEED]) startflyspeed = (float)(*(IPTR *)args[ARG_SPEED]);
+	
     	FreeArgs(myargs);
     }
 }
@@ -449,10 +459,13 @@ void makewin(void)
     	{WA_Borderless, TRUE },
 	{TAG_DONE   	     }
     };
+
+    if (winx == -1) winx = (scr->Width - SCREENWIDTH - scr->WBorLeft - scr->WBorRight) / 2;
+    if (winy == -1) winy = (scr->Height - SCREENHEIGHT - scr->WBorTop - scr->WBorTop - scr->Font->ta_YSize - 1) / 2;
     
     win = OpenWindowTags(NULL, WA_CustomScreen	, (IPTR)scr,
-    			       WA_Left		, (scr->Width - SCREENWIDTH - scr->WBorLeft - scr->WBorRight) / 2,
-			       WA_Top		, (scr->Height - SCREENHEIGHT - scr->WBorTop - scr->WBorTop - scr->Font->ta_YSize - 1) / 2,
+    			       WA_Left		, winx,
+			       WA_Top		, winy,
     			       WA_InnerWidth	, SCREENWIDTH,
     			       WA_InnerHeight	, SCREENHEIGHT,
 			       WA_AutoAdjust	, TRUE,
@@ -592,7 +605,7 @@ main(int argc, char *argv[])
     done=0;
     a=0; k=x0=y0=0;
     s=1024; /*s=4096;*/
-    ss=0; sa=0;
+    ss=startflyspeed; sa=0;
     while(!done)
     {
 	/* Draw the frame */

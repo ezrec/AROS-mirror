@@ -24,6 +24,7 @@ struct RastPort *rp;
 
 ULONG cgfx_coltab[256];
 UBYTE remaptable[256];
+WORD winx = -1, winy = -1;
 BYTE Keys[256];
 BOOL forcescreen, forcewindow;
 BOOL mustremap, truecolor, remapped, wbscreen = TRUE;
@@ -80,27 +81,41 @@ void cleanup(char *msg)
 
 /***********************************************************************************/
 
+#define ARG_TEMPLATE "WINPOSX=X/N/K,WINPOSY=Y/N/K,W=WIDTH/N/K,H=HEIGHT/N/K,FORCESCREEN=SCR/S,FORCEWINDOW=WIN/S"
+
+#define ARG_X 0
+#define ARG_Y 1
+#define ARG_WIDTH 2
+#define ARG_HEIGHT 3
+#define ARG_SCR 4
+#define ARG_WIN 5
+#define NUM_ARGS 6
+
+static IPTR args[NUM_ARGS];
+
 void getarguments(void)
 {
     struct RDArgs *myargs;
-    IPTR args[4] = {0, 0, 0, 0};
     
-    myargs = ReadArgs("W=WIDTH/N/K,H=HEIGHT/N/K,FORCESCREEN=SCR/S,FORCEWINDOW=WIN/S", args, NULL);
+    myargs = ReadArgs(ARG_TEMPLATE, args, NULL);
     if (!myargs)
     {
     	Fault(IoErr(), 0, p, 256);
 	cleanup(p);
     }
     
-    if (args[2])
+    if (args[ARG_SCR])
     	forcescreen = TRUE;
-    else if (args[3])
+    else if (args[ARG_WIN])
     	forcewindow = TRUE;
+
+    if (args[ARG_X]) winx = *(IPTR *)args[ARG_X];
+    if (args[ARG_Y]) winy = *(IPTR *)args[ARG_Y];
     
-    if (args[0] || args[1])
+    if (args[ARG_WIDTH] || args[ARG_HEIGHT])
     {
-    	if (args[0]) screenwidth = *(ULONG *)args[0];
-    	if (args[1]) screenheight = *(ULONG *)args[1];
+    	if (args[ARG_WIDTH]) screenwidth = *(ULONG *)args[ARG_WIDTH];
+    	if (args[ARG_HEIGHT]) screenheight = *(ULONG *)args[ARG_HEIGHT];
     }
     else
     {
@@ -363,10 +378,13 @@ void makewin(void)
     	{WA_Borderless, TRUE },
 	{TAG_DONE   	     }
     };
+
+    if (winx == -1) winx = (scr->Width - screenwidth - scr->WBorLeft - scr->WBorRight) / 2;
+    if (winy == -1) winy = (scr->Height - screenheight - scr->WBorTop - scr->WBorTop - scr->Font->ta_YSize - 1) / 2;
     
     win = OpenWindowTags(NULL, WA_CustomScreen	, (IPTR)scr,
-    			       WA_Left		, (scr->Width - screenwidth - scr->WBorLeft - scr->WBorRight) / 2,
-			       WA_Top		, (scr->Height - screenheight - scr->WBorTop - scr->WBorTop - scr->Font->ta_YSize - 1) / 2,
+    			       WA_Left		, winx,
+			       WA_Top		, winy,
     			       WA_InnerWidth	, screenwidth,
     			       WA_InnerHeight	, screenheight,
 			       WA_AutoAdjust	, TRUE,
