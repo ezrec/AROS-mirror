@@ -95,8 +95,6 @@ FILES :=    SDL_error 	    	\
  
 USER_CFLAGS := -DENABLE_CYBERGRAPHICS -DNO_SIGNAL_H -DENABLE_AHI
 
-CFLAGS += -I$(GENDIR)/contrib/AHI/Include/gcc
-
 %build_linklib mmake=linklibs-SDL libname=SDL files=$(FILES)
 
 %common

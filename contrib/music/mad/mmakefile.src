@@ -43,8 +43,6 @@ FILES  := madahi \
 	  timer \
 	  version
 
-CFLAGS += -I$(GENDIR)/contrib/AHI/Include/gcc
-
 #MM sound-madahi : contrib-AHI
 
 %build_prog mmake=sound-madahi \
