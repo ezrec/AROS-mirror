@@ -150,14 +150,12 @@ void getwindow()
 		}
 
 	InitArea(&ai,&(areabuffer[0]),10);
-
+        
+        InitTmpRas(&tmpras,AllocRaster(320,199),RASSIZE(320,199));
+	
 	wnd1->RPort->AreaInfo = &ai;
-	wnd1->RPort->TmpRas = InitTmpRas
-									(
-									&tmpras,
-									AllocRaster(320,199),
-									RASSIZE(320,199)
-									);
+
+	wnd1->RPort->TmpRas = &tmpras; 
 	wnd2->RPort->AreaInfo = &ai;
 	wnd2->RPort->TmpRas = wnd1->RPort->TmpRas;
 	

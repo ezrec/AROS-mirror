@@ -6,7 +6,7 @@
 
 #include "header.c"
 
-extern BPTR _Backstdout;		/*	std output when run in background	*/
+//!!!extern BPTR _Backstdout;		/*	std output when run in background	*/
 long _BackGroundIO = 1;			/*	Flag to tell it we want to do I/O	*/
 long _stack = 4000;				/*	Amount of stack space task needs	*/
 char *_procname = "Rubik";		/*	The name of the task to create		*/
@@ -212,7 +212,7 @@ void main (char *cmd)
 				case CLOSEWINDOW:
 	 				ReplyMsg((struct Message *) msg);
 	 				cleanup();
-					Close (_Backstdout);
+//!!!					Close (_Backstdout);
 	 				exit(0L);
 	 				break;
 					
