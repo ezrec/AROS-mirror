@@ -193,28 +193,33 @@ def genSnapshots ():
                    ,('ibmpc-bin', 'Floppy disk image of the standalone x86 version') \
                    ,('lx86-bin',  'Binaries to be run under x86 linux')
 
-    def snapLink(date, location):
-        location = 'http://aros.sourceforge.net/snapshots/AROS-' + location + '-' + '%d%d%d' % date + '.tgz'
-	return Href(location, location)
+    def snapLink(date, package, ext):
+        file     = 'AROS-' + package + '-' + '%d%d%d' % date + '.' + ext
+        location = 'http://aros.sourceforge.net/snapshots/' + file
+	return Href(location, file)
+
+    table = TableLite(cellpadding=5, border=0)
+
+    page.append(
+        BR(),
+        table
+    )
 
     for package in all_packages:
-	page.append(
-            BR(),
-            Heading(3, package[1]),
-
-            TableLite(
-                TR(
-                    TH('Date'), TH('Location')
-                ),
-                TR(
-                    TD('%d.%d.%d' % yesterday),
-                    TD(snapLink(yesterday, package[0]))
-                ),
-                TR(
-                    TD('%d.%d.%d' % today),
-                    TD(snapLink(today, package[0]))
-                ),
-                cellpadding=5, border=0
+	table.append(
+  	    TR(TD(Heading(3, package[1]), colspan=3)),
+            TR(
+                TH('Date'), TH('Archive', TH('Log'))
+            ),
+            TR(
+                TD('%d.%d.%d' % yesterday),
+                TD(snapLink(yesterday, package[0], 'tgz')),
+                TD(snapLink(yesterday, package[0], 'log'))
+            ),
+            TR(
+                TD('%d.%d.%d' % today),
+                TD(snapLink(today, package[0], 'tgz')),
+                TD(snapLink(today, package[0], 'log'))
             )
         )
 
