@@ -36,7 +36,7 @@
 #include <devices/ahi.h>
 #include <proto/ahi.h>
 
-#define AHI_WRITE_INTERVAL 4
+#define AHI_WRITE_INTERVAL 20
 
 #define SRCBUFSIZE 60000
 #define DESTBUFSIZE (8900*AHI_WRITE_INTERVAL)
