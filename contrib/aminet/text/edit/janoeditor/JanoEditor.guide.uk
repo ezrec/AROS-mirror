@@ -74,6 +74,7 @@ following library located in your "LIBS:" directory:
    * @{b}asl.library v36  @{ub}   To enable file requester chooser
    * @{b}diskfont.library @{ub}   To change default text font of editor
    * @{b}locale.library   @{ub}   To use a different language than built-in english
+   * @{b}iffparse.library @{ub}   For clipboard and config file.
 Nothing surprising, after all.
 
 
@@ -492,6 +493,10 @@ everything, here follows the description of each entries:
 	* C include support
 	* Record macro
 
+	Many thanks to Georg Steger and , who sent lots of bug fixes for the editor.
+	Especially Georg, who cleanup all source files, with -Wall directive of gcc,
+	and port Jano to AROS.
+
 @endnode
 @node Futur "Features of further versions"
 
@@ -588,8 +593,11 @@ Of course, no dependancies are managed, Makefiles are required for that.
   Notice that there is a special trick with error messages: you can insert at
   the beginning of the string, the character  (DEL, decimal ASCII code 127).
   This character will actually just force Jano to do not flash the screen when
-  this message appears.
-  
+  this message appears. Another quick hack is for menu shortcut. You can start
+  menu name with the same character () and follow it with an upper case
+  letter. Actually, this letter will be used as the new shorcut for the menu.
+  Be aware to do not reused an existing one.
+
   Once all english string has been translated, you need to compile it with
   a special tool: CatComp. This is programmer detail, you shouldn't have to
   bother with it. Nevertheless, if you really want to enable new translated

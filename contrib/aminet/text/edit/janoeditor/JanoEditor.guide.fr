@@ -77,6 +77,7 @@ que des bibliothèques suivantes dans votre répertoire "libs:"
    * @{b}asl.library v36  @{ub}   Pour utiliser les requêtes de fichiers
    * @{b}diskfont.library @{ub}   Pour changer la ou les polices de l'éditeur
    * @{b}locale.library   @{ub}   Pour utiliser une autre langue que l'anglais.
+	* @{b}iffparse.library @{ub}   Pour le fichier de configuration et le presse papier.
 Rien de bien phénoménal en somme.
 
   @{fg shine}3. Utilisation@{fg text}
