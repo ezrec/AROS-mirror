@@ -56,14 +56,10 @@ reading:
 
 + `Quick reStructuredText Reference`__
 
-
-
 __ http://docutils.sourceforge.net/
 __ http://docutils.sourceforge.net/spec/rst/introduction.html
 __ http://docutils.sourceforge.net/docs/rst/quickstart.html
 __ http://docutils.sourceforge.net/docs/rst/quickref.html
-
-
 
 ---------------
 Technical notes
@@ -141,10 +137,11 @@ __ http://ploticus.sourceforge.net/
 Setting up
 ----------
 
-Before you can start building the documentation, there is some settup up
-required so that the scripts can find Docutils and the right Python interpreter
-to use (as some systems installs it under a different name than "python"
-sometimes). First, copy the default settings::
+Before you can start building the documentation, there might be some setup
+required if the needed version of the Python interpreter is not named "python"
+on your system. If it is, you can simply skip this section.
+
+First, copy the default settings::
 
     % cd AROS/documentation/scripts/config
     % cp defaults user
@@ -153,14 +150,10 @@ Next, edit the ``user`` file and make sure that the variables are correct for
 your system. An example configuration file might look like this::
 
     PYTHON=python
-    DOCUTILS=/home/adam/Projekt/docutils
 
 ``PYTHON`` indicates the name of the Python interpreter; it may also be an
-absolute path if you don't have it in the search path. You might need to set it
-to ``python2`` or ``python2.2`` on some systems. ``DOCUTILS`` points to the root
-of the Docutils source directory; **not** the ``docutils`` module directory
-inside that root directory. If you get strange errors when running the build,
-check that this is correct.
+absolute path if you don't have it in the search path. You might need to set 
+it to ``python2`` or ``python2.2`` on some systems. 
 
 
 Targets
