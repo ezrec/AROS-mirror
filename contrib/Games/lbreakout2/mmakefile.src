@@ -7,11 +7,7 @@ include $(TOP)/config/make.cfg
 #MM- contrib-games-quick : contrib-games-lbreakout2-quick
 #MM- lbreakout2-quick : contrib-games-lbreakout2-quick
 
-SDL_CONFIG := $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-sdl-config
-
-export SDL_CONFIG
-
 %build_with_configure mmake=contrib-games-lbreakout2 nix=yes \
-    extraoptions="--with-highscore-path='$$(PROGDIR)data' --with-inst-path='$$(PROGDIR)data' --disable-audio --disable-sdltest --disable-network --with-doc-path=$$(PROGDIR)docs" \
+    extraoptions="--with-highscore-path='$$(PROGDIR)data' --with-inst-path='$$(PROGDIR)data' --disable-sdltest --disable-network --with-doc-path='$$(PROGDIR)docs'" \
     bindir=$(CONTRIBDIR)/Games/lbreakout2
     
