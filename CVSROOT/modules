@@ -31,8 +31,11 @@
 contrib contrib
 
 # Stuff necessary to compile AROS
-necessary -a contrib_README grub bgui
+necessary -a grub bgui
 
+## This doesn't work :-/ How can I make sure when contrib/ is checked out,
+## that the README gets created ?
+#necessary -a contrib_README grub bgui
 contrib_README -d contrib contrib README
 
 # Amiga C Manual
