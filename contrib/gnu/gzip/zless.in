@@ -1,5 +1,0 @@
-:
-#!/bin/sh
-PATH="BINDIR:$PATH"; export PATH
-LESSOPEN="|gzip -cdfq %s"; export LESSOPEN
-exec less "$@"
