@@ -1,6 +1,7 @@
 #!/bin/sh
 
 gawk -f filter.awk passwd.txt
+gawk -f mailfilter.awk passwd.txt > aros.org.mail
 cvs com passwd passwd.txt developers
 
 dir="`cat CVS/Repository`"
