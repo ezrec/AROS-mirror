@@ -1,0 +1,119 @@
+diff -u -r textutils-2.1/config/config.sub textutils-2.1-aros/config/config.sub
+--- textutils-2.1/config/config.sub	Wed Jul 17 06:50:33 2002
++++ textutils-2.1-aros/config/config.sub	Wed Apr 28 10:38:55 2004
+@@ -378,6 +378,10 @@
+ 		basic_machine=m68k-unknown
+ 		os=-sysv4
+ 		;;
++	aros)
++		basic_machine=i386-unknown
++		os=-aros
++		;;
+ 	apollo68)
+ 		basic_machine=m68k-apollo
+ 		os=-sysv
+@@ -1093,7 +1097,7 @@
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -solaris* | -sym* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* \
++	      | -aos* | -aros* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -386bsd* | -netbsd* | -openbsd* | -freebsd* | -riscix* \
+diff -u -r textutils-2.1/configure textutils-2.1-aros/configure
+--- textutils-2.1/configure	Sun Jul 28 16:16:25 2002
++++ textutils-2.1-aros/configure	Wed Apr 28 11:30:12 2004
+@@ -2358,7 +2358,7 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-nix -O2"
+   else
+     CFLAGS="-g"
+   fi
+diff -u -r textutils-2.1/lib/fnmatch.c textutils-2.1-aros/lib/fnmatch.c
+--- textutils-2.1/lib/fnmatch.c	Wed Jul 17 06:50:34 2002
++++ textutils-2.1-aros/lib/fnmatch.c	Wed Apr 28 11:17:05 2004
+@@ -329,8 +329,8 @@
+ 
+ int
+ fnmatch (pattern, string, flags)
+-     const char *pattern;
+-     const char *string;
++   /*  const */ char *pattern;
++   /*  const */ char *string;
+      int flags;
+ {
+ # if HANDLE_MULTIBYTE
+diff -u -r textutils-2.1/lib/fnmatch_.h textutils-2.1-aros/lib/fnmatch_.h
+--- textutils-2.1/lib/fnmatch_.h	Sat Jun 22 04:55:43 2002
++++ textutils-2.1-aros/lib/fnmatch_.h	Wed Apr 28 11:07:13 2004
+@@ -70,9 +70,14 @@
+ 
+ /* Match NAME against the filename pattern PATTERN,
+    returning zero if it matches, FNM_NOMATCH if not.  */
++#ifndef __AROS__zz
+ extern int fnmatch __P ((__const char *__pattern, __const char *__name,
+ 			 int __flags));
+-
++#else
++extern int t_fnmatch __P ((__const char *__pattern, __const char 
++*__name,
++			 int __flags));
++#endif
+ # ifdef	__cplusplus
+ }
+ # endif
+diff -u -r textutils-2.1/lib/getloadavg.c textutils-2.1-aros/lib/getloadavg.c
+--- textutils-2.1/lib/getloadavg.c	Mon Jun 19 03:25:01 2000
++++ textutils-2.1-aros/lib/getloadavg.c	Wed Apr 28 11:18:01 2004
+@@ -70,7 +70,7 @@
+ 
+    We also #define LDAV_PRIVILEGED if a program will require
+    special installation to be able to call getloadavg.  */
+-
++#ifndef __AROS__
+ /* This should always be first.  */
+ #ifdef HAVE_CONFIG_H
+ # include <config.h>
+@@ -1084,3 +1084,4 @@
+   exit (0);
+ }
+ #endif /* TEST */
++#endif /* __AROS__ */
+diff -u -r textutils-2.1/src/cat.c textutils-2.1-aros/src/cat.c
+--- textutils-2.1/src/cat.c	Tue Jul  2 01:15:06 2002
++++ textutils-2.1-aros/src/cat.c	Wed Apr 28 11:20:03 2004
+@@ -28,7 +28,9 @@
+ #include <getopt.h>
+ #include <sys/types.h>
+ #ifndef _POSIX_SOURCE
++#ifndef __AROS__
+ # include <sys/ioctl.h>
++#endif /* __AROS__ */
+ #endif
+ #include "system.h"
+ #include "closeout.h"
+diff -u -r textutils-2.1/src/sort.c textutils-2.1-aros/src/sort.c
+--- textutils-2.1/src/sort.c	Mon Jul 29 04:40:37 2002
++++ textutils-2.1-aros/src/sort.c	Wed Apr 28 11:22:10 2004
+@@ -2182,7 +2182,7 @@
+ #if HAVE_NL_LANGINFO
+   hard_LC_TIME = hard_locale (LC_TIME);
+ #endif
+-
++#ifndef __AROS__
+ #if HAVE_SETLOCALE
+   /* Let's get locale's representation of the decimal point */
+   {
+@@ -2201,7 +2201,7 @@
+       th_sep = CHAR_MAX + 1;
+   }
+ #endif
+-
++#endif /* __AROS__ */
+   have_read_stdin = 0;
+   inittables ();
+ 
