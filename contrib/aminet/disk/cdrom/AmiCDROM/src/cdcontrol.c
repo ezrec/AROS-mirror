@@ -12,22 +12,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <clib/dos_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/utility_protos.h>
+#include <proto/dos.h>
+#include <proto/exec.h>
+#include <proto/utility.h>
 
+#include <dos/dosextens.h>
 #include <exec/memory.h>
 
 #ifdef LATTICE
-#include <pragmas/dos_pragmas.h>
-#include <pragmas/exec_pragmas.h>
-#include <pragmas/utility_pragmas.h>
 extern struct Library *DOSBase;
 #endif
 
 #include "cdcontrol.h"
 
-struct UtilityBase *UtilityBase = NULL;
+struct Library *UtilityBase = NULL;
 
 struct MsgPort *g_device_proc;
 
@@ -40,18 +38,22 @@ enum partype {
 void Cleanup (void)
 {
   if (UtilityBase)
-    CloseLibrary ((struct Library*) UtilityBase);
+    CloseLibrary (UtilityBase);
 }
 
 void Send_Packet (int p_cmd, void *p_1, void *p_2)
 {
-  struct MsgPort *replyport = CreateMsgPort ();
+  struct MsgPort *replyport = CreateMsgPort();
   struct StandardPacket *packet = AllocMem (sizeof (struct StandardPacket),
   					    MEMF_CLEAR | MEMF_PUBLIC);
   long res1, res2;
 
   if (!packet || !replyport) {
     fprintf (stderr, "ERROR: cannot send packet\n");
+    if (packet)
+        FreeMem (packet, sizeof (struct StandardPacket));
+    if (replyport)
+        DeleteMsgPort(replyport);
     exit (1);
   }
   
@@ -158,8 +160,7 @@ void main (int argc, char *argv[])
   if (argc != 4)
     Usage ();
 
-  if (!(UtilityBase = (struct UtilityBase *)
-         OpenLibrary ((UBYTE *) "utility.library", 37))) {
+  if (!(UtilityBase = OpenLibrary ((UBYTE *) "utility.library", 37))) {
     fprintf (stderr, "cannot open utility.library\n");
     exit (1);
   }  

@@ -3,12 +3,12 @@
 #
 
 #Turn these flags on to enable debugging
-DEBUGLIBS  = -ldebug
-DEBUGFLAGS = -DDEBUG
+#DEBUGLIBS  = -ldebug
+#DEBUGFLAGS = -DDEBUG
 
 #And these ones are for normal operation
-#DEBUGLIBS  =
-#DEBUGFLAGS = -DNDEBUG
+DEBUGLIBS  =
+DEBUGFLAGS = -DNDEBUG
 
 # some shortcuts
 
