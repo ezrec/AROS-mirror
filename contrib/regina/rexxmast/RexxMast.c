@@ -153,6 +153,7 @@ static void StartFile(struct RexxMsg *msg)
     LONG type;
     BOOL iscommand = ((msg->rm_Action & RXCODEMASK) == RXCOMM);
     struct FileHandle *input = NULL, *output = NULL;
+    struct Process *process = (struct Process *)msg->rm_Node.mn_ReplyPort->mp_SigTask;
     
     if (iscommand)
     {
@@ -240,12 +241,11 @@ static void StartFile(struct RexxMsg *msg)
     /* Set input/output to the task that sent the message */
     if (!(msg->rm_Action & RXFF_NOIO))
     {
-	struct Process *process = (struct Process *)msg->rm_Node.mn_ReplyPort->mp_SigTask;
-	
 	if (process->pr_Task.tc_Node.ln_Type == NT_PROCESS)
 	{
 	    input = process->pr_CIS;
 	    output = process->pr_COS;
+	    lock = CurrentDir(process->pr_CurrentDir);
 	}
 	if (msg->rm_Stdin != NULL)
 	    input = msg->rm_Stdin;
@@ -261,11 +261,16 @@ static void StartFile(struct RexxMsg *msg)
     RexxStart(argcount, rxargs, filename, NULL, msg->rm_CommAddr, RXFUNCTION, NULL, &rc, &rxresult);
 
     /* Return to the old input/output if it was changed */
-    if (input != NULL)
-	SelectInput(input);
-    if (output != NULL)
-	SelectOutput(output);
-    updatestdio();
+    if (!(msg->rm_Action & RXFF_NOIO))
+    {
+        if (input != NULL)
+	    SelectInput(input);
+        if (output != NULL)
+	    SelectOutput(output);
+        updatestdio();
+        if (process->pr_Task.tc_Node.ln_Type == NT_PROCESS)
+	  lock = CurrentDir(lock);
+    }
     
     fflush(stdout);
     msg->rm_Result1 = rc;
