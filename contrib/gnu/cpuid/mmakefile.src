@@ -1,8 +1,7 @@
-include $(TOP)/config/make.cfg
+include ../make.cfg
 
-FILES = cpuid
-
-EXEDIR := $(CONTRIBDIR)/gnu
+EXEDIR := $(GNUDIR)/cpuid/bin
+FILES  := cpuid
 
 #MM- contrib-gnu-cpuid : cpuid
 #MM- contrib-gnu      : cpuid

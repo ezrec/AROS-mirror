@@ -1,9 +1,8 @@
 # Copyright © 2003, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(TOP)/config/make.cfg
+include ../make.cfg
 
 #MM- contrib-gnu : contrib-gnu-flex
-
 	
-%build_with_configure mmake=contrib-gnu-flex nix=yes prefix=$(CONTRIBDIR)/gnu
+%build_with_configure mmake=contrib-gnu-flex nix=yes prefix=$(GNUDIR)/flex
