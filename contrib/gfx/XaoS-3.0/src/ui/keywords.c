@@ -4,6 +4,7 @@
 #include <u.h>
 #include <libc.h>
 #endif
+#include <string.h>
 #include <filter.h>
 #include <fractal.h>
 #include <ui_helper.h>
