@@ -10,6 +10,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/07/09 18:06:21  bergers
+ * Made the Preferences tool compilable for AROS. This one has an MMakefile!
+ *
  * Revision 42.0  2000/05/09 22:16:54  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -34,6 +37,10 @@
  *
  *
  */
+
+#ifdef _AROS
+extern struct Library * BGUIBase;
+#endif
 
 //
 //	INCLUDES
@@ -182,7 +189,32 @@ GetFilename( int mode )
 
 }
 
+#ifdef _AROS
 
+struct IntuitionBase * IntuitionBase;
+struct UtilityBase * UtilityBase;
+struct Library * IFFParseBase;
+
+BOOL openlibs(void)
+{
+  IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
+  UtilityBase   = (struct UtilityBase   *)OpenLibrary("utility.library",0);
+  IFFParseBase  =                         OpenLibrary("iffparse.library",0);
+  
+  if(IntuitionBase && UtilityBase && IFFParseBase)
+    return TRUE;
+  
+  return FALSE;
+}
+
+void closelibs(void)
+{
+  if (IntuitionBase) CloseLibrary((struct Library *)IntuitionBase);
+  if (UtilityBase) CloseLibrary((struct Library *)UtilityBase);
+  if (IFFParseBase) CloseLibrary((struct Library *)IFFParseBase);
+}
+
+#endif
 
 /*
 **	int = main( int, char ** )
@@ -199,6 +231,15 @@ int main( int count, char **args )
 						 signal = 0,
 						 frame = 0;
 	BOOL				 running = TRUE;
+
+#ifdef _AROS
+	if (FALSE == openlibs())
+	{
+	  closelibs();
+	  printf("Failed to open lib!\n");
+	  return -1;
+	}
+#endif
 
 	// Open the library, at least version 41 required.
 	if( BGUIBase = OpenLibrary( "bgui.library", 41 )) {
@@ -532,6 +573,10 @@ int main( int count, char **args )
 		// Close the library when we're done with it.
 		CloseLibrary( BGUIBase );
 	}
+
+#ifdef _AROS
+	closelibs();
+#endif
 
 	// Return error code.
 	return( 0 );

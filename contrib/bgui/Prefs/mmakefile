@@ -1,0 +1,48 @@
+TOP = ../../..
+
+#include $(TOP)/config/make.cfg
+
+CC = gcc
+DEFINES = -D_AROS
+MAKE = make
+ECHO = echo
+RM = rm
+CP = cp
+
+BINDIR = $(TOP)/bin/linux-i386/AROS
+LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
+
+OS_INCLUDES_DIR = $(BINDIR)/Include
+
+OS_INCLUDES = -I$(OS_INCLUDES_DIR)
+USER_INCLUDES = -Iinclude
+
+INCLUDES = $(USER_INCLUDES) $(OS_INCLUDES)
+
+CFLAGS = $(INCLUDES) $(DEFINES)
+
+COMMONDIR = ../common
+
+LIBS = -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -lbgui
+
+FLAGS = -nostartfiles -nostdlib -Wl,-i
+
+EXEC = BGUI
+
+TARGETS = BGUIPrefs.o 
+
+STARTUP = $(LIBDIR)/startup.o
+
+#MM bgui-prefs :
+bgui-prefs : BGUI
+	@$(NOP)
+
+BGUI: $(TARGETS)
+	$(CC) $(FLAGS) $(STARTUP) $(TARGETS) -o $@ $(LIBS)
+	$(ECHO) Installing $@
+	$(CP) $@ $(BINDIR)
+
+all : $(EXEC)
+
+clean :
+	$(RM) -rf $(TARGETS) $(EXEC)
