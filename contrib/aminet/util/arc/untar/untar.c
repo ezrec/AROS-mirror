@@ -146,7 +146,7 @@ int main(int argc, char **argv)
 	    *fp = '/';   /* put it back */
         }
 
-	if (!fp || fp[1] != '\0')
+	if (hdr.size && (!fp || fp[1] != '\0'))
 	{
 	    FILE *f;
 
