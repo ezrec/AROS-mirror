@@ -1,0 +1,4 @@
+; AHI Setup
+Assign DEVS: Sys:contrib/AHI/Devs ADD
+Path SYS:contrib/AHI/C ADD
+Path SYS:Contrib/AHI/Prefs ADD

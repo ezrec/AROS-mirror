@@ -9,6 +9,7 @@ BUILDDIR := $(GENDIR)/$(CURDIR)
 #MM contrib-AHI
 contrib-AHI: $(BUILDDIR)/.configured 
 	PATH=$$PATH:$(TOOLDIR) $(MAKE) -C $(BUILDDIR) all install
+	cp $(TOP)/$(CURDIR)/AHI-Startup $(EXEDIR)
 
 $(BUILDDIR)/.configured:
 	%mkdirs_q $(BUILDDIR)
