@@ -59,6 +59,7 @@ Misc -d contrib/Misc contrib/Misc
 
 # Standalone stuff
 ScalosV2 -d contrib/ScalosV2 contrib/ScalosV2
+Freetype -d contrib/freetype contrib/freetype
 
 # (Large) binaries
 screenshots binaries/screenshots
