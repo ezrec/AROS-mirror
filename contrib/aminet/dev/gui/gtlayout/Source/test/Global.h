@@ -7,8 +7,9 @@
 #include <libraries/gadtools.h>
 #include <gtlayout.h>
 #include <utility/hooks.h>
+#ifndef __AROS__
 #include <gtlayout_protos.h>
-//#include <gtlayout_pragmas_aros.h>
+#endif
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/intuition.h>
