@@ -1,6 +1,7 @@
-diff -urN bison-1.875.orig/config/config.sub bison-1.875/config/config.sub
---- bison-1.875.orig/config/config.sub	2003-01-01 10:06:37.000000000 +0100
-+++ bison-1.875/config/config.sub	2003-01-01 10:12:59.000000000 +0100
+Only in bison-1.875-aros: .files-touched
+diff -ur bison-1.875/config/config.sub bison-1.875-aros/config/config.sub
+--- bison-1.875/config/config.sub	2003-01-01 04:06:37.000000000 -0500
++++ bison-1.875-aros/config/config.sub	2003-01-01 04:12:59.000000000 -0500
 @@ -382,6 +382,10 @@
  		basic_machine=m68k-unknown
  		os=-sysv4
@@ -21,3 +22,16 @@ diff -urN bison-1.875.orig/config/config.sub bison-1.875/config/config.sub
  	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
  	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
  	      | -hiux* | -386bsd* | -netbsd* | -openbsd* | -freebsd* | -riscix* \
+diff -ur bison-1.875/lib/subpipe.c bison-1.875-aros/lib/subpipe.c
+--- bison-1.875/lib/subpipe.c	2002-10-20 02:28:23.000000000 -0400
++++ bison-1.875-aros/lib/subpipe.c	2004-09-25 23:29:04.000000000 -0400
+@@ -194,3 +194,9 @@
+     }
+ #endif
+ }
++#ifdef __AROS__
++void fork() {
++	return -1;
++}
++#endif /* __AROS__ */
++
