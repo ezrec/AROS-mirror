@@ -278,7 +278,7 @@ int 	UserMove ( BYTE 	board [26],
   while (Valid == 0) {
     Wait(msg_flag);
 
-    while (message=(struct IntuiMessage *) GetMsg(w->UserPort)) {
+    while ((message=(struct IntuiMessage *) GetMsg(w->UserPort))) {
       Code = message->Code;
       Class = message->Class;
       x = message->MouseX;
@@ -530,8 +530,8 @@ int 	main ( void ) 	/* main procedure */
 cleanup:
   /* lbischoff: Added CloseLibrary calls */
   if (DiskfontBase) CloseLibrary (DiskfontBase);
-  if (GfxBase) CloseLibrary (GfxBase);
-  if (IntuitionBase) CloseLibrary (IntuitionBase);
+  if (GfxBase) CloseLibrary ((struct Library *)GfxBase);
+  if (IntuitionBase) CloseLibrary ((struct Library *)IntuitionBase);
   
   return 0;
 } /* end of main */
