@@ -4,4 +4,7 @@ expansion.library on AROS Native/x86.
 Peter Eriksson enhanced the calculator and WiMP tool.
 
 Fabio Alemagna wrote a linker wrapper for AROS which makes
-building more simple.
+building more simple. The new wrapper allows for autoinit
+code (which can setup data structures and open libraries).
+The new autoinit code is used to setup the structures needed
+for malloc() and free(), for example.
