@@ -37,7 +37,12 @@ aminet-text-edit-xdme : setup $(EXE)
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
 #MM setup-xdme : setup-xdme-parser
-setup-xdme : make-dirs protos docs sources
+setup-xdme : make-dirs protos docs sources copy-files
+
+copy-files : $(AROS_S)/XDME.edrc
+
+$(AROS_S)/XDME.edrc : S/english.edrc
+	$(CP) $< $@
 
 make-dirs :
 	$(MKDIR) $(EXEDIR) $(OBJDIR)/Src $(OBJDIR)/Src/Key \
