@@ -30,6 +30,7 @@ working-with-cvs: Arbeta med CVS
 compiling:        Kompilering
 application-development-manual: Manual för applikationsutveckling
 system-development-manual:      Manual för systemutveckling
+debugging-manual: Manual för debugging
 reference:        Referens
 specifications:   Specifikationer
 ui-style-guide:   UI Style Guide    

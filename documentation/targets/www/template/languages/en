@@ -28,6 +28,7 @@ working-with-cvs: Working with CVS
 compiling:        Compiling
 application-development-manual: Application Development Manual
 system-development-manual:      System Development Manual
+debugging-manual: Debugging Manual
 reference:        Reference
 specifications:   Specifications
 ui-style-guide:   UI Style Guide
