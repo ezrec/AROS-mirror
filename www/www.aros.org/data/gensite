@@ -65,7 +65,8 @@ ftpdir = expandpath (config.FTPDIR)
 convert = config.__dict__.get ('CONVERT', None)
 
 # Allow to read in python modules from AROS
-path = expandpath (os.path.join (config.AROSDIR, 'docs', 'src'))
+arosdir = expandpath (config.AROSDIR)
+path = os.path.join (arosdir, 'docs', 'src')
 sys.path.append (path)
 
 # The relative URL for the screenshots dir.
@@ -114,6 +115,37 @@ mainLinks = (
     ),
 )
 
+def relpath(path1, path2):
+    """Return the relative path from directory 'path1' to directory 'path2'
+
+    Both arguments are assumed to be directory names as there is no
+    way to really distinguish a file from a directory by names
+    alone. To loosen this restriction one can either assume that both
+    arguments represent files or directories currently extant so that
+    they can be tested, or add extra arguments to flag the path types
+    (file or directory).
+
+    I chose to impose this restriction because I will use this function
+    in places where the pathnames are for files yet to be created.
+    """
+    #print 'relpath', path1, path2
+    common = os.path.commonprefix([path1, path2])
+    sliceoff = len(common)
+    path1 = path1[sliceoff:]
+    path2 = path2[sliceoff:]
+
+    dirs1 = string.split(path1, os.sep) # list of directory components below
+                                        # the common path
+    dirs1 = filter(lambda x: x, dirs1)  # filter out empty elements
+    rel = (os.pardir+os.sep)*len(dirs1) # construct the relative path to the
+                                        # common point
+    rel = os.curdir + os.sep + rel
+    
+    result = os.path.normpath (rel+path2)
+    #print result
+
+    return result
+
 class Page (SeriesDocument):
     def __init__ (self, rcFile='aros.rc', linkBoxItem='', **kw):
 	'''Base class to generate a page. linkBoxItem must be the
@@ -137,7 +169,12 @@ class Page (SeriesDocument):
 	row = TR ()
 	table.append (row)
 	td = TD (valign='TOP')
-	logo = Href ('/', Image (('pics/logo.gif', 300, 123), alt='AROS'))
+	logo = Href ('/', Image (
+		('/pics/logo.gif', 300, 123),
+		alt='AROS',
+		#absolute=os.path.abspath (os.path.join (htmldir, 'pics')),
+	    )
+	)
 	td = td + [logo]
 	row = row + [td, TD (Text ('Amiga Research OS'))]
 
@@ -187,16 +224,14 @@ class Page (SeriesDocument):
 	if string.find (path2, '://'):
 	    return path2
 	
-	if path1[0] == '/':
-	    path1 = os.path.join (htmldir, path1[1:])
-	if path2[0] == '/':
-	    path2 = os.path.join (htmldir, path2[1:])
+	if path1[0] != '/':
+	    path1 = os.path.abspath (os.path.join (htmldir, path1))
+	if path2[0] != '/':
+	    path2 = os.path.abspath (os.path.join (htmldir, path2))
 
 	return relpath (path1, path2)
 
     def write (self, filename):
-	filepath = os.path.join (htmldir, filename)
-
 	# Create relative paths to other pages
 	for links in mainLinks:
 	    prev = next = top = None
@@ -215,12 +250,19 @@ class Page (SeriesDocument):
 	    if top:
 		break
 	
-	self.goprev = self.relurl (filepath, prev)
-	self.gonext = self.relurl (filepath, next)
-	self.gotop = self.relurl (filepath, top)
+	path = os.path.abspath (os.path.join (htmldir, os.path.dirname (filename)))
+	self.goprev = self.relurl (path, prev)
+	self.gonext = self.relurl (path, next)
+	self.gotop = self.relurl (path, top)
 
 	# Convert myself into HTML
-	SeriesDocument.write (self, filepath)
+	SeriesDocument.write (self, os.path.join (htmldir, filename))
+
+parSep = re.compile ('\n\n+', re.MULTILINE)
+
+class MyRawText (RawText):
+    def __init__ (self, text):
+	RawText.__init__ (self, parSep.sub ('<P>\n\n', text))
 
 def genNews ():
     '''Create the news page (index.html, oldnews.html).'''
@@ -251,8 +293,7 @@ def genNews ():
 	    body = fh.read ()
 	    fh.close ()
 
-	    body = string.replace (body, '\n\n', '<P>\n\n')
-	    td = td + [RawText (body)]
+	    td = td + [MyRawText (body)]
 	    
 	    return row
 	    
@@ -282,13 +323,55 @@ def genNews ():
     genPage (list[:5], 'index.html')
     genPage (list[5:], 'oldnews.html')
 
+import barchart
+class MyDataList (barchart.DataList):
+    def sum_totals (self):
+	# Totals are passed in
+	pass
+
+    def load_tuple (self, t):
+	label, total, rest = t[0], t[1], t[2:]
+	barchart.DataList.load_tuple (self, [label]+list (rest))
+	self[-1]['total'] = total
+
+class MyStackedBarChart (barchart.StackedBarChart):
+    def initialize (self):
+	barchart.StackedBarChart.initialize (self)
+	self.colors = ('red', 'yellow', 'green')
+
 def genStatus ():
     '''Create the status page. This page contains two images (jpg&png)
     with graphs of the sizes of repositories.'''
 
-    # FIXME Read jobs.dat and create a table.
+    import jobs, time
+
     page = Page (linkBoxItem='NEWS')
     body = []
+    body.append (Heading (2, 'Status'))
+    body.append (Paragraph (
+	'This status was generated %s' % time.strftime ('%d. %B %Y',
+	    time.localtime (time.time ()))
+    ))
+
+    keys = jobs.jobs.keys ()
+    keys.sort ()
+    data = []
+    for key in keys:
+	lib = jobs.jobs[key]
+	data.append ((lib.longName,
+	    lib.jobsTotal,
+	    lib.status[0], lib.status[1], lib.status[2])
+	)
+
+    dataList = MyDataList ()
+    dataList.segment_names = ('Todo', 'In Work', 'Done')
+    dataList.load_tuples (data)
+    dataList.sort ()
+    chart = MyStackedBarChart (dataList)
+    chart.label_shade = AQUA
+    chart.title = 'AROS Status'
+    
+    body.append (chart)
     body.append (Heading (2, 'Size of AROS sources'))
     body.append (Paragraph (Image ('aros_size.png')))
     body.append (Paragraph (Href ('aros_size.jpg', 'Also as JPEG')))
@@ -315,6 +398,252 @@ def genDocumentation ():
     # Put the old docs here
     page.meat = page.meat + [Text ('FIXME')]
     page.write ('documentation.html')
+
+autodocdir = os.path.join (htmldir, 'autodocs')
+includedir = os.path.join (htmldir, 'includes')
+sourcedir = os.path.join (htmldir, 'sources')
+
+class AutoDocPage (Page):
+    def __init__ (self, lib, func):
+	Page.__init__ (self)
+	
+	self.filename = os.path.join (autodocdir,
+	    '%s_%s.html' % (
+		string.lower (lib.name),
+		string.lower (func.name),
+	    )
+	)
+	self.absname = os.path.abspath (autodocdir)
+
+    def relurl (self, dest):
+	absdest = os.path.abspath (dest)
+	url = relpath (self.absname, absdest)
+	return url
+
+    def write (self):
+	self.gotop = self.relurl (os.path.join (autodocdir, 'index.html'))
+
+	SeriesDocument.write (self, self.filename)
+
+class Dummy:
+    def __init__ (self, list):
+	self.list = list
+
+    def __str__ (self):
+	text = ''
+	for item in self.list:
+	    text = text + str (item)
+	
+	return text
+
+class Nbsp:
+    def __str__ (self):
+	return '&nbsp;'
+
+class AutoDocItem:
+    def __init__ (self, contents):
+	self.contents = contents
+
+    def __str__ (self):
+	if type (self.contents) == type ([]):
+	    text = ''
+	    for item in self.contents:
+		text = text + str (item)
+	elif type (self.contents) == type (''):
+	    text = str (MyRawText (string.strip (self.contents)))
+	else:
+	    text = str (self.contents)
+	
+	text = text + '\n<P>\n'
+	return text
+
+class MyCode (Pre):
+    pass
+
+includePattern = re.compile (r'\s*#\s*include\s*<([^>]+)>')
+
+def genAutodocs ():
+    if not os.path.exists (autodocdir):
+	os.makedirs (autodocdir)
+
+    def genPage (db, lib, func):
+	try:
+	    page = AutoDocPage (lib, func)
+
+	    page.title = 'AROS - %s/%s' % (lib.longName, func.name)
+
+	    dl = DefinitionList ()
+	    page.meat = page.meat + [dl]
+
+	    list = []
+	    hasIncludes = 0
+	    for isLocal, line in func.header:
+		#print isLocal, line
+		if isLocal:
+		    continue
+		
+		match = includePattern.match (line)
+		if match:
+		    include = match.group (1)
+		    list.append (Text ('#include <'))
+		    list.append (Href (
+			page.relurl (
+			    os.path.join (htmldir, 'include', include)),
+			    include,
+			)
+		    )
+		    list.append (Text ('>'))
+		    list.append (BR ())
+		    hasIncludes = 1
+	    
+	    if hasIncludes:
+		list.append (BR ())
+	    
+	    list.append (TT ('%s %s ()' % (func.result.type, func.name)))
+	    list.append (BR ())
+	    #list.append (Nbsp ())
+
+	    dl.append (('NAME', AutoDocItem (list)))
+
+	    list = []
+	    for parameter in func.parameters:
+		list.append (TT ('%s ' % parameter.type))
+		list.append (Href ('#%s' % parameter.name, parameter.name))
+		list.append (BR ())
+
+	    dl.append (('SYNOPSIS', AutoDocItem (list)))
+
+	    #print `func.section['FUNCTION']`
+	    dl.append (('FUNCTION', AutoDocItem (func.section['FUNCTION'])))
+	    parList = DefinitionList ()
+	    for parameter in func.parameters:
+		parList.append ((Dummy ([
+			Name (parameter.name),
+			parameter.name,
+		    ]), parameter.explanation))
+	    dl.append (('INPUTS', AutoDocItem (parList)))
+	    dl.append (('RESULT', AutoDocItem (func.section['RESULT'])))
+	    dl.append (('NOTES', AutoDocItem (func.section['NOTES'])))
+	    dl.append (('EXAMPLE', AutoDocItem (MyCode (func.section['EXAMPLE']))))
+	    dl.append (('BUGS', AutoDocItem (func.section['BUGS'])))
+
+	    # Render SEE ALSO. The first item in the list is always
+	    # the library
+	    list = []
+	    list.append (Href (
+		page.relurl (os.path.join (autodocdir,
+		    'index.html#%s' % lib.longName)),
+		lib.longName
+	    ))
+	    dl.append (('SEE ALSO', AutoDocItem (list)))
+	    
+	    dl.append (('INTERNALS', AutoDocItem (func.section['INTERNALS'])))
+	    dl.append (('HISTORY', AutoDocItem (func.section['HISTORY'])))
+
+	    func.url = page.filename
+	    page.write ()
+	except:
+	    print 'Error in %s/%s' % (lib.name, func.name)
+	    raise
+	
+    import archtool
+
+    archives = archtool.findArchives (
+	    os.path.join (arosdir, 'rom'),
+	    os.path.join (arosdir, 'workbench'),
+	    os.path.join (arosdir, 'contrib'),
+    )
+
+    adocs = archtool.Archive (archives,
+	postFunctionCB=genPage,
+    )
+
+    page = Page (linkBoxItem='Documentation')
+
+    meat = []
+    meat.append (Heading (2, 'Libraries sorted by Name'))
+
+    list = []
+    libs = adocs.libs.values ()
+    libs.sort ()
+    libAnchors = {}
+    for lib in libs:
+	key = string.upper (lib.longName[0])
+	if not libAnchors.has_key (key):
+	    libAnchors[key] = Href ('#%s' % lib.longName, 
+		Font (key, size="-1")
+	    )
+
+    keys = libAnchors.keys ()
+    keys.sort ()
+    keylist = []
+    for key in keys:
+	keylist.append (libAnchors[key])
+	keylist.append (Text (' '))
+    meat.append (apply (Paragraph, keylist))
+
+    meat.append (Name ('Functions sorted by Library'))
+    meat.append (Heading (2, 'Functions sorted by Library'))
+
+    for lib in libs:
+	list.append (Font (
+	    Href ('#%s' % lib.longName, lib.longName),
+	    size="-1",
+	))
+
+    meat.append (NonBulletList (list))
+
+    def makecell (page, func, absolute=os.path.abspath(autodocdir)):
+	return TD (
+	    Font (
+		Href (relpath (absolute, os.path.abspath (func.url)),
+		    func.name),
+		size="-1",
+	    ),
+	    width="33%",
+	    align="LEFT",
+	)
+
+    for lib in libs:
+	meat.append (Name (lib.longName))
+	meat.append (Heading (2, lib.longName))
+
+	funcs = lib.functions.values ()
+	funcs.sort ()
+	
+	table = TableLite (
+	    width="100%",
+	    border="0",
+	    cellspacing="0",
+	    cellpadding="0",
+	)
+	meat.append (table)
+	
+	i, n = 0, len (funcs)
+	while i < n:
+	
+	    left = funcs[i]
+	    middle = right = None
+	    if i+1 < n:
+		middle = funcs[i+1]
+	    if i+2 < n:
+		right = funcs[i+2]
+	    i = i + 3
+	    
+	    list = [makecell (page, left)]
+	    if middle:
+		list.append (makecell (page, middle))
+	    if right:
+		list.append (makecell (page, right))
+
+	    row = TR ()
+	    row = row + list
+	    table.append (row)
+	    
+    meat.append (Heading (2, 'Functions sorted by Name'))
+
+    page.meat = page.meat + meat
+    page.write (os.path.join ('autodocs', 'index.html'))
 
 class ThumbnailTable (TableLite):
     '''Helper class to create a table with thumbnails.'''
@@ -363,7 +692,7 @@ class ThumbnailTable (TableLite):
 		    right = []
 		else:
 		    td = TD (colspan="2")
-		    td = td + [RawText ('&nbsp;')]
+		    td = td + [Nbsp ()]
 		    right = [td]
 	    else:
 		right = right.toHtml ()
@@ -708,6 +1037,7 @@ def genLinks ():
 genNews ()
 genStatus ()
 genDocumentation ()
+genAutodocs ()
 genScreenshots ()
 genDownload ()
 genSnapshots ()
