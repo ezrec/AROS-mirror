@@ -73,7 +73,7 @@ USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
 	       -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
 	       -I$(SRCDIR) -I$(SRCDIR)/include
 
-#MM- contrib: uae
+#MM- contrib-complete: uae
 #MM uae : setup uae-setup
 uae : $(EXE)
 
@@ -125,11 +125,14 @@ blittable.c: genblitter blitfunc.h
 #	./cpuopti <cputmp.s >$@
 #	rm cputmp.s
 
-genblitter: genblitter.c blitops.c $(OBJDIR)/writelog.o
+$(OBJDIR)/_writelog.o : writelog.c
+	$(HOST_CC) $(USER_CFLAGS) $^ -c -o $@
+
+genblitter: genblitter.c blitops.c $(OBJDIR)/_writelog.o
 	$(HOST_CC) $(USER_CFLAGS) $^ -o $@
-build68k: build68k.c $(OBJDIR)/writelog.o
+build68k: build68k.c $(OBJDIR)/_writelog.o
 	$(HOST_CC) $(USER_CFLAGS) $^ -o $@
-gencpu: gencpu.c readcpu.c cpudefs.c missing.c $(OBJDIR)/writelog.o
+gencpu: gencpu.c readcpu.c cpudefs.c missing.c $(OBJDIR)/_writelog.o
 	$(HOST_CC) $(USER_CFLAGS) $^ -o $@
 
 cpuemu.c: gencpu
