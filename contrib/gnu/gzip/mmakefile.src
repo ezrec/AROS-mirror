@@ -1,0 +1,8 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+include ../make.cfg
+
+#MM- contrib-gnu : contrib-gnu-gzip
+	
+%build_with_configure mmake=contrib-gnu-gzip nix=yes prefix=$(GNUDIR)/gzip
