@@ -1,0 +1,101 @@
+## SAS/C 6.2 Smakefile für FileX V1.0 ##
+## Copyright © 1993 bei Klaas Hermanns
+
+OTHEROBJS = 
+ASMOBJS = 
+AREXXOBJS = FileXArexx.o FileXArexx_rxcl.o FileXArexx_rxif.o
+OBJS = Start.o Main.o Convert.o ListReq.o Calc.o ClipConv.o Grab.o Iconify.o Cursor.o Set.o FileXData.o Undo.o Rest.o Cut.o Search.o Misc.o Print.o Settings.o FileXWindow.o MainWindow.o FileXMenu.o Display.o $(AREXXOBJS) $(ASMOBJS) $(OTHEROBJS)
+
+MACHINE		= ANY
+
+GST		=	GSTIMM GST=FileX.gst
+
+CF			=									#Compiler Optionen
+LF			= 									#Linker Optionen
+
+LIBS		= LIB:amiga.lib LIB:sc.lib LIB:reqtools.lib LIB:debug.lib
+
+.a.o:
+	asm $*.a
+
+.c.o: 
+	@echo "*e[32mCompiling $*.c*e[0m"
+	sc $(CF) CPU=$(MACHINE) $(GST) $*.c
+
+.cpp.o: 
+	@echo "*e[32mCompiling $*.c*e[0m"
+	sc $(CF) CPU=$(MACHINE) $(GST) $*.cpp
+
+all:	FileX
+
+FileX: $(OBJS)
+	@echo "*e[32mLinking FileX*e[0m"
+	SLINK WITH T:FileX.WITH <<!(T:FileX.WITH)
+		FROM
+		$(OBJS)
+		TO
+		$@
+		LIB
+		$(LIBS)
+		$(LF)
+		VERBOSE
+	<
+
+FileX.gst: Preinclude.c
+	sc NOOBJNAME MGST=$@ $(cf) preinclude.c
+
+Start.o: Start.c
+	@echo "*e[32mCompiling $*.c*e[0m"
+	sc $(cf) $*.c
+
+
+Cats:	Deutsch Finnland Frankreich Schweden	#Fehlen Niederlande, Norwegen
+
+Deutsch:
+	avail flush >nil:
+	catcomp locale/FileX.cd locale/deutsch.ct catalog catalogs/deutsch/FileX.catalog verbosity 3
+
+Niederlande:
+	avail flush >nil:
+	catcomp locale/FileX.cd locale/nederlands.ct catalog catalogs/nederlands/FileX.catalog verbosity 3
+
+Finnland:
+	avail flush >nil:
+	catcomp locale/FileX.cd locale/suomi.ct catalog catalogs/suomi/FileX.catalog verbosity 3
+
+Frankreich:
+	avail flush >nil:
+	catcomp locale/FileX.cd locale/français.ct catalog catalogs/français/FileX.catalog verbosity 3
+
+Schweden:
+	avail flush >nil:
+	catcomp locale/FileX.cd locale/svenska.ct catalog catalogs/svenska/FileX.catalog verbosity 3
+
+Strings:
+	cat2h locale/FileX.cd FileXStrings.h
+
+Ref:
+	cxref >xref \#?.c -x
+
+Release:
+	copy FileX.000 dh2:FileX/FileX
+	copy FileX.020 dh2:FileX/FileX.020
+
+	copy Dok/Deutsch/FileX.dok dh2:FileX/Docs/Deutsch/FileX.dok
+	copy Dok/Deutsch/FileXARexx.dok dh2:FileX/Docs/Deutsch/FileXARexx.dok
+	copy Dok/Deutsch/FileX.guide dh2:FileX/Docs/Deutsch/FileX.guide
+	copy Dok/Deutsch/FileXARexx.guide dh2:FileX/Docs/Deutsch/FileXARexx.guide
+	copy Dok/Deutsch/FileX.reg dh2:FileX/Docs/Deutsch/FileX.reg
+
+	copy Dok/English/FileX.doc dh2:FileX/Docs/English/FileX.doc
+	copy Dok/English/FileXARexx.doc dh2:FileX/Docs/English/FileXARexx.doc
+	copy Dok/English/FileX.guide dh2:FileX/Docs/English/FileX.guide
+	copy Dok/English/FileXARexx.guide dh2:FileX/Docs/English/FileXARexx.guide
+	copy Dok/English/FileX.reg dh2:FileX/Docs/English/FileX.reg
+
+	copy Catalogs/Deutsch/FileX.catalog dh2:FileX/Catalogs/Deutsch/FileX.catalog
+	copy Catalogs/Français/FileX.catalog dh2:FileX/Catalogs/Français/FileX.catalog
+	copy Catalogs/Suomi/FileX.catalog dh2:FileX/Catalogs/Suomi/FileX.catalog
+	copy Catalogs/Svenska/FileX.catalog dh2:FileX/Catalogs/Svenska/FileX.catalog
+	copy Locale/FileXCats.lha dh2:FileX/Catalogs/FileXCats.lha
+
