@@ -271,6 +271,9 @@ chunkyim_new (
    struct DrawInfo     *dri = NULL;
    ULONG                bgpen;
    
+kprintf("%s %d: data->normal_rpi.rp: %p\n",__FUNCTION__,__LINE__,data->normal_rpi.rp);
+#warning Had to add the following line.
+data->normal_rpi.rp = NULL;
    
    /* If IA_Width or IA_Height are not explicitly given on initialization, */
    /* set them to their corresponding values in IA_Data.                   */
@@ -583,9 +586,13 @@ chunkyi_dispatcher (
    switch (msg->MethodID)
    {
    case OM_NEW:
+{
+struct chunkyidata  *data = INST_DATA (cl, obj);
+kprintf("%s %d: data->normal_rpi.rp: %p\n",__FUNCTION__,__LINE__,data->normal_rpi.rp);
       if (retval = (APTR)DoSuperMethodA (cl, obj, msg))
          chunkyim_new (cl, retval, (struct opSet *)msg);
       break;
+}
    case OM_DISPOSE:
       chunkyim_dispose (cl, obj);
       retval = (APTR)DoSuperMethodA (cl, obj, msg);
