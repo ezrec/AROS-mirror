@@ -1,0 +1,127 @@
+                    TT - Tiny Terminal
+                    ==================
+                   Version 1.0 08-Aug-90
+          © Mikael Karlsson & Absolut Software 1990
+
+
+Is it Public Domain?
+
+  TT is NOT Public Domain. TT is 'Freely distributable
+  copyrighted software with a shareware option'.
+
+  "Permission is hereby granted to copy TT provided that
+   the copyright notice and this document is left intact.
+   Copies may not be made for profit."
+
+  I don't know if the above should hold in court but what
+  I mean is: Copy TT if you want to but don't make a
+  business of it. It is of course free to include it on
+  public domain disks or putting it on a BBS.
+  If you find TT useful, please feel free to send a
+  donation ($10 is a nice round number) or a nice program (PD).
+  Please don't send personal checks. It costs me $5 to
+  cash them. Or you can buy me a beer or two when we meet.
+  If you wish to include TT with a commercial product,
+  please contact me first. I just want to make sure that
+  my ego can stand for it. Of course it would also be nice
+  with a registered copy of the product.
+
+
+What is it?
+
+  TT is a very small communications program. I got fed up
+  with 100+ KBytes communications programs that had millions
+  of options, buttons, bells and whistles.
+  TT is
+    * small (approximately 13 KBytes)
+    * uses no chipmem (runs in the CLI)
+    * has no built-in protocol (uses the XPR standard)
+    * does no terminal emulation (ANSI is good enough for most BBSing)
+    * doesn't have any phonebook.
+
+
+Starting
+
+  TT accepts a couple of command line arguments.
+
+  Argument              Specifies                       Example
+  --------              ---------                       -------
+  -S serial.device      The device                      -Ssupra.device
+
+  -U n                  The device unit                 -U3
+
+  -P protocol           The XPR protocol                -Pzmodem
+
+  -K keymap             The keymap                      -Ks
+
+  -F font/size          Name and size of the font.      -Ftopaz/8
+
+  -D xferdirectory      Upload/download directory.      -Dsys:transfer
+
+  Everything else that is specified on the command line is
+  sent to the modem. A newline is inserted after each word
+  on the command line.
+  Example: TT ATDT555-4132
+
+  I have found that the easiest way to use TT is to have a
+  couple of aliases, where each alias is a host that I want
+  to call.
+  Example:
+    alias npd "TT -Pzmodem ATDT112196"
+    alias dogs "TT -Pzmodem ATDT261204"
+  When I want to call a host, I simply type the name of it.
+
+
+Running
+
+  When TT is running, you can use a couple of command keys.
+  Hold down the right Amiga key and type the appropriate
+  character.
+
+    P   prompts for a new XPR protocol.
+
+    D   prompts for a filename and downloads that file.
+
+    U   prompts for a filename and uploads that file.
+
+    Q   exits TT.
+
+
+That's all folks
+
+  That's it. Now you know how to use TT. Doesn't seem too
+  hard, does it? Have fun.
+
+
+The future
+
+  Fixing the bugs. I can't find any at the moment, but I'm
+  sure there are some.
+  ARexx, ARexx, ARexx!
+
+
+Note to programmers
+
+  I'm sure that a lot of programmers will find the source code
+  interesting. It explains how to do asynchronous IO in the
+  CLI. It took some job getting it right.
+  It also provides a complete working (well :-) example of how
+  to use the XPR standard.
+
+
+s-mail: Mikael Karlsson
+        Lövsättersvägen 10
+        S-585 98  LINKÖPING
+        SWEDEN
+
+e-mail: micke@slaka.sirius.se
+        micke@slaka.UUCP
+        {mcvax|munnari|seismo}!sunic!liuida!slaka!micke
+
+Phone:  +46-13 50479
+        +46-431 50623 (in the summer)
+
+ \_/   Mikael Karlsson, Lovsattersvagen 10, S-585 98  LINKOPING, SWEDEN
+  V                           | micke@slaka.sirius.se
+  |      Absolut Software     | micke@slaka.UUCP
+ ~~~                          | {mcvax,seismo}!sunic!liuida!slaka!micke
