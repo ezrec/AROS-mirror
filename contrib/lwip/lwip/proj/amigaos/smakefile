@@ -4,7 +4,7 @@ TO  = OBJNAME=
 INC = IDIR=
 # How to tell the compiler new defines
 DEF = DEFINE=
-CFLAGS = NOVERS
+CFLAGS = NOVERS NOSTACKCHECK SMALLDATA
 
 CC = sc
 
@@ -103,4 +103,4 @@ dirs:
 <
 
 clean:
-  -delete $(SRCDIR)/core/\#?.o $(SRCDIR)/core/ipv4/\#?.o $(SRCDIR)/netif/\#?.o $(SRCDIR)/arch/amigaos/\#?.o $(SRCDIR)/api/\#?.o \#?.o
+  -delete \#?.o $(SRCDIR)/core/\#?.o $(SRCDIR)/core/ipv4/\#?.o $(SRCDIR)/netif/\#?.o $(SRCDIR)/arch/amigaos/\#?.o $(SRCDIR)/arch/amigaos/netif/\#?.o $(SRCDIR)/api/\#?.o \#?.o

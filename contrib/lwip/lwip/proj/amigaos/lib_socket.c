@@ -13,7 +13,7 @@
 #include "lwip/sys.h"
 #include "lwip/sockets.h"
 
-/* #define MYDEBUG */
+#define MYDEBUG
 #include "debug.h"
 
 /*****************************************************************************
