@@ -131,3 +131,9 @@ Ta opp i halv dupleks
 msgReqInfoRecordFull
 Ta opp i full dupleks
 ; Record in full duplex
+;
+msgReqInfoMultiChannel
+
+; 7.1 multichannel
+;
+; ***NEW***

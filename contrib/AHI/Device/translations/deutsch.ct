@@ -131,3 +131,9 @@ Halb Duplex Aufnahme
 msgReqInfoRecordFull
 Voll Duplex Aufnahme
 ; Record in full duplex
+;
+msgReqInfoMultiChannel
+
+; 7.1 multichannel
+;
+; ***NEW***

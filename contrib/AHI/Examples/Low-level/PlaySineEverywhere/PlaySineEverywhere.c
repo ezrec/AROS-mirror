@@ -59,7 +59,7 @@ main( int argc, char* argv[] ) {
 	  CloseDevice( (struct IORequest *) io );
 	}
 	else {
-	  fprintf( stderr, "Unable to open '" AHINAME "' version 4.\n" );
+	  fprintf( stderr, "Unable to open '" AHINAME "' version 6.\n" );
 	  rc = RETURN_FAIL;
 	}
 	

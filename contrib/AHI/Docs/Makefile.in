@@ -52,8 +52,7 @@ all:		$(TARGETS)
 clean:
 	$(RM) $(TARGETS) ahidev.ver ahiusr.ver device.all-c \
 	      ahidev.texinfo-exp ahiusr.texinfo-exp tmp-iso.sty\
-	      *.cps *.fns *.tps *.vrs *.ky *.pg *.log *.aux *.cp *.fn *.vr *.tp *.toc \
-	      *.bak *~ \#*\# core
+	      *.cps *.fns *.tps *.vrs *.ky *.pg *.log *.aux *.cp *.fn *.vr *.tp *.toc
 
 distclean:	clean
 	$(RM) Makefile

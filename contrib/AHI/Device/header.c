@@ -31,8 +31,6 @@
 #include <proto/gadtools.h>
 #include <proto/graphics.h>
 #include <proto/iffparse.h>
-
-
 #include "ahi_def.h"
 
 #include "header.h"
@@ -41,6 +39,10 @@
 #include "localize.h"
 #include "misc.h"
 #include "version.h"
+#ifdef __AMIGAOS4__
+#include "devcommands.h"
+#include "device.h"
+#endif
 
 static BOOL
 OpenLibs ( void );
@@ -80,7 +82,7 @@ extern const char DevName[];
 extern const char IDString[];
 static const APTR InitTable[4];
 
-#if defined( __amigaos4__  )
+#if defined( __AMIGAOS4__  )
 static struct TagItem libCreateTags[];
 #endif
 
@@ -95,7 +97,7 @@ static const struct Resident RomTag =
   RTF_EXTENDED | RTF_PPC | RTF_AUTOINIT,
 #elif defined( __amithlon__ )
   RTF_PPC | RTF_AUTOINIT,
-#elif defined( __amigaos4__ )
+#elif defined( __AMIGAOS4__ )
   RTF_NATIVE | RTF_AUTOINIT,
 #else
   RTF_AUTOINIT,
@@ -105,7 +107,7 @@ static const struct Resident RomTag =
   0,                      /* priority */
   (BYTE *) DevName,
   (BYTE *) IDString,
-#if defined( __amigaos4__ )
+#if defined( __AMIGAOS4__ )
   libCreateTags
 #else
   (APTR) &InitTable
@@ -131,7 +133,7 @@ struct LocaleBase         *LocaleBase     = NULL;
 struct Device             *TimerBase      = NULL;
 struct UtilityBase        *UtilityBase    = NULL;
 
-#if defined( __amigaos4__ )
+#if defined( __AMIGAOS4__ )
 struct ExecIFace          *IExec          = NULL;
 struct AHIIFace           *IAHI           = NULL;
 struct DOSIFace           *IDOS           = NULL;
@@ -142,6 +144,7 @@ struct IntuitionIFace     *IIntuition     = NULL;
 struct LocaleIFace        *ILocale        = NULL;
 struct TimerIFace         *ITimer         = NULL;
 struct UtilityIFace       *IUtility       = NULL;
+struct AHIsubIFace        *IAHIsub        = NULL;
 #endif
 
 struct Resident           *MorphOSRes     = NULL;
@@ -154,28 +157,46 @@ void                      *PPCObject      = NULL;
 
 ADDFUNC* AddByteMonoPtr                   = NULL;
 ADDFUNC* AddByteStereoPtr                 = NULL;
+ADDFUNC* AddByte71Ptr                     = NULL;
 ADDFUNC* AddBytesMonoPtr                  = NULL;
 ADDFUNC* AddBytesStereoPtr                = NULL;
+ADDFUNC* AddBytes71Ptr                    = NULL;
 ADDFUNC* AddWordMonoPtr                   = NULL;
 ADDFUNC* AddWordStereoPtr                 = NULL;
+ADDFUNC* AddWord71Ptr                     = NULL;
 ADDFUNC* AddWordsMonoPtr                  = NULL;
 ADDFUNC* AddWordsStereoPtr                = NULL;
+ADDFUNC* AddWords71Ptr                    = NULL;
 ADDFUNC* AddLongMonoPtr                   = NULL;
 ADDFUNC* AddLongStereoPtr                 = NULL;
+ADDFUNC* AddLong71Ptr                     = NULL;
 ADDFUNC* AddLongsMonoPtr                  = NULL;
 ADDFUNC* AddLongsStereoPtr                = NULL;
+ADDFUNC* Add71MonoPtr                     = NULL;
+ADDFUNC* Add71StereoPtr                   = NULL;
+ADDFUNC* AddLongs71Ptr                    = NULL;
+ADDFUNC* Add7171Ptr                       = NULL;
 ADDFUNC* AddByteMonoBPtr                  = NULL;
 ADDFUNC* AddByteStereoBPtr                = NULL;
+ADDFUNC* AddByte71BPtr                    = NULL;
 ADDFUNC* AddBytesMonoBPtr                 = NULL;
 ADDFUNC* AddBytesStereoBPtr               = NULL;
+ADDFUNC* AddBytes71BPtr                   = NULL;
 ADDFUNC* AddWordMonoBPtr                  = NULL;
 ADDFUNC* AddWordStereoBPtr                = NULL;
+ADDFUNC* AddWord71BPtr                    = NULL;
 ADDFUNC* AddWordsMonoBPtr                 = NULL;
 ADDFUNC* AddWordsStereoBPtr               = NULL;
+ADDFUNC* AddWords71BPtr                   = NULL;
 ADDFUNC* AddLongMonoBPtr                  = NULL;
 ADDFUNC* AddLongStereoBPtr                = NULL;
+ADDFUNC* AddLong71BPtr                    = NULL;
 ADDFUNC* AddLongsMonoBPtr                 = NULL;
 ADDFUNC* AddLongsStereoBPtr               = NULL;
+ADDFUNC* AddLongs71BPtr                   = NULL;
+ADDFUNC* Add71MonoBPtr                    = NULL;
+ADDFUNC* Add71StereoBPtr                  = NULL;
+ADDFUNC* Add7171BPtr                      = NULL;
 
 ADDFUNC* AddLofiByteMonoPtr               = NULL;
 ADDFUNC* AddLofiByteStereoPtr             = NULL;
@@ -212,10 +233,17 @@ const ULONG	 __LIB_Revision = REVISION;
 const char DevName[]   = AHINAME;
 const char IDString[]  = AHINAME " " VERS "\r\n";
 
+#ifndef __AMIGAOS4__
 static const char VersTag[] =
  "$VER: " AHINAME " " VERS " ©1994-2003 Martin Blom. "
  CPU 
  " version.\r\n";
+#else
+static const char VersTag[] =
+ "$VER: " AHINAME " " VERS " ©1994-2003 Martin Blom. "
+ "603e" 
+ " version.\r\n";
+#endif
 
 enum MixBackend_t          MixBackend     = MB_NATIVE;
 
@@ -236,9 +264,7 @@ _DevInit( struct AHIBase*  device,
   SysBase = sysbase;
   AHIBase = device;
 
-#if defined( __amigaos4__ )
-  IExec = SysBase->MainInterface;
-#else
+#ifndef __AMIGAOS4__
   AHIBase->ahib_Library.lib_Node.ln_Type = NT_DEVICE;
   AHIBase->ahib_Library.lib_Node.ln_Name = (STRPTR) DevName;
   AHIBase->ahib_Library.lib_Flags        = LIBF_SUMUSED | LIBF_CHANGED;
@@ -281,6 +307,8 @@ BPTR
 _DevExpunge( struct AHIBase* device )
 {
   BPTR seglist = 0;
+
+   //DebugPrintF("AHI: _DevExpunge\n");
 
   if( device->ahib_Library.lib_OpenCnt == 0)
   {
@@ -359,104 +387,141 @@ static const APTR InitTable[4] =
 };
 
 
-#if defined( __amigaos4__ )
-static ULONG generic_Obtain (struct Interface *Self)
+#ifdef __AMIGAOS4__
+struct AHIBase *dev_init(struct AHIBase *dev, APTR seglist, struct ExecIFace *exec)
 {
-  return Self->Data.RefCount++;
+    IExec = exec;
+    SysBase = (struct ExecBase *)exec->Data.LibBase;
+    
+    return _DevInit( dev, seglist, SysBase);
 }
 
-
-static ULONG generic_Release (struct Interface *Self)
+VOID dev_begin_io(struct DeviceManagerInterface *Self, struct IORequest *ior)
 {
-  return Self->Data.RefCount--;
+    _DevBeginIO((struct AHIRequest*) ior, (struct AHIBase*) Self->Data.LibBase);
 }
 
-
-static APTR dev_manager_vectors[] =
+LONG dev_abort_io(struct DeviceManagerInterface *Self, struct IORequest *ior)
 {
-  generic_Obtain,
-  generic_Release,
-  NULL,
-  NULL,
-  gwDevOpen,
-  gwDevClose,
-  gwDevExpunge,
-  NULL,
-  gwDevBeginIO,
-  gwDevAbortIO,
-  (APTR) -1
-};
+    return _DevAbortIO((struct AHIRequest*) ior, (struct AHIBase*) Self->Data.LibBase);
+}
 
-
-static struct TagItem devmanagerTags[] =
+LONG dev_open(struct DeviceManagerInterface *Self,
+              struct IORequest *ior,
+              ULONG unit,
+              ULONG flags)
 {
-  {MIT_Name,             (ULONG)"_ device"},
-  {MIT_VectorTable,      (ULONG)dev_manager_vectors},
-  {MIT_Version,          1},
-  {TAG_DONE,             0}
+    return _DevOpen((struct AHIRequest *) ior, unit, flags, (struct AHIBase*) Self->Data.LibBase);
+}
+
+APTR dev_close(struct DeviceManagerInterface *Self, struct IORequest *ior)
+{
+    return (APTR) _DevClose ((struct AHIRequest*) ior, (struct AHIBase*) Self->Data.LibBase);
+
+}
+
+APTR dev_expunge(struct DeviceManagerInterface *Self)
+{
+    return (APTR) _DevExpunge((struct AHIBase*) Self->Data.LibBase);
+}
+
+ULONG generic_Obtain (struct Interface *Self)
+{
+	return Self->Data.RefCount++;
+}
+
+ULONG generic_Release (struct Interface *Self)
+{
+	return Self->Data.RefCount--;
+}
+
+static void *dev_manager_vectors[] =
+{
+	(void *)generic_Obtain,
+	(void *)generic_Release,
+	(void *)NULL,
+	(void *)NULL,
+	(void *)dev_open,
+	(void *)dev_close,
+	(void *)dev_expunge,
+	(void *)NULL,
+	(void *)dev_begin_io,
+	(void *)dev_abort_io,
+	(void *)-1,
 };
 
-
-static APTR main_vectors[] = {
-  generic_Obtain,
-  generic_Release,
-  NULL,
-  NULL,
-  gwAHI_AllocAudioA,
-  gwAHI_FreeAudio,
-  gwAHI_KillAudio,
-  gwAHI_ControlAudioA,
-  gwAHI_SetVol,
-  gwAHI_SetFreq,
-  gwAHI_SetSound,
-  gwAHI_SetEffect,
-  gwAHI_LoadSound,
-  gwAHI_UnloadSound,
-  gwAHI_NextAudioID,
-  gwAHI_GetAudioAttrsA,
-  gwAHI_BestAudioIDA,
-  gwAHI_AllocAudioRequestA,
-  gwAHI_AudioRequestA,
-  gwAHI_FreeAudioRequest,
-  gwAHI_PlayA,
-  gwAHI_SampleFrameSize,
-  gwAHI_AddAudioMode,
-  gwAHI_RemoveAudioMode,
-  gwAHI_LoadModeFile,
-  (APTR) -1
+static struct TagItem devmanagerTags[] = 
+{
+	{MIT_Name,             (ULONG)"__device"},
+	{MIT_VectorTable,      (ULONG)dev_manager_vectors},
+	{MIT_Version,          1},
+	{TAG_DONE,             0}
 };
 
+static void *main_vectors[] = {
+	(void *)generic_Obtain,
+	(void *)generic_Release,
+	(void *)NULL,
+	(void *)NULL,
+	(void *)gwAHI_AllocAudioA,
+	(void *)gwAHI_AllocAudio,
+	(void *)gwAHI_FreeAudio,
+	(void *)gwAHI_KillAudio,
+	(void *)gwAHI_ControlAudioA,
+	(void *)gwAHI_ControlAudio,
+	(void *)gwAHI_SetVol,
+	(void *)gwAHI_SetFreq,
+	(void *)gwAHI_SetSound,
+	(void *)gwAHI_SetEffect,
+	(void *)gwAHI_LoadSound,
+	(void *)gwAHI_UnloadSound,
+	(void *)gwAHI_NextAudioID,
+	(void *)gwAHI_GetAudioAttrsA,
+	(void *)gwAHI_GetAudioAttrs,
+	(void *)gwAHI_BestAudioIDA,
+	(void *)gwAHI_BestAudioID,
+	(void *)gwAHI_AllocAudioRequestA,
+	(void *)gwAHI_AllocAudioRequest,
+	(void *)gwAHI_AudioRequestA,
+	(void *)gwAHI_AudioRequest,
+	(void *)gwAHI_FreeAudioRequest,
+	(void *)gwAHI_PlayA,
+	(void *)gwAHI_Play,
+	(void *)gwAHI_SampleFrameSize,
+	(void *)gwAHI_AddAudioMode,
+	(void *)gwAHI_RemoveAudioMode,
+	(void *)gwAHI_LoadModeFile,
+	(void *)-1
+};
 
 static struct TagItem mainTags[] =
 {
-  {MIT_Name,              (ULONG)"main"},
-  {MIT_VectorTable,       (ULONG)main_vectors},
-  {MIT_Version,           1},
-  {TAG_DONE,              0}
+	{MIT_Name,              (ULONG)"main"},
+	{MIT_VectorTable,       (ULONG)main_vectors},
+	{MIT_Version,           1},
+	{TAG_DONE,              0}
 };
-
 
 /* MLT_INTERFACES array */
 
 static ULONG devInterfaces[] =
 {
-  (ULONG)devmanagerTags,
-  (ULONG)mainTags,
-  0
+	(ULONG)devmanagerTags,
+	(ULONG)mainTags,
+	0
 };
 
 extern ULONG VecTable68K;
 // tbd extern
 
-
 /* CreateLibrary tag list */
 static struct TagItem libCreateTags[] =
 {
-  {CLT_DataSize,         (ULONG)sizeof(struct AHIBase)},
-  {CLT_Interfaces,       (ULONG)devInterfaces},
-  {CLT_Vector68K,        (ULONG)&VecTable68K},
-  {CLT_InitFunc,         (ULONG)dev_init},
-  {TAG_DONE,             0}
+	{CLT_DataSize,         (ULONG)sizeof(struct AHIBase)},
+	{CLT_Interfaces,       (ULONG)devInterfaces},
+	{CLT_Vector68K,        (ULONG)&VecTable68K},
+	{CLT_InitFunc,         (ULONG)dev_init},
+	{TAG_DONE,             0}
 };
 #endif
 
@@ -535,8 +600,6 @@ OpenLibs ( void )
     return FALSE;
   }
 
-  TimerIO->tr_node.io_Message.mn_Length = sizeof(struct timerequest);
-
   if( OpenDevice( "timer.device",
                   UNIT_VBLANK,
                   (struct IORequest *)
@@ -561,24 +624,28 @@ OpenLibs ( void )
     return FALSE;
   }
 
-#if defined( __amigaos4__ )
+
+#ifdef __AMIGAOS4__
   if ((IIntuition = (struct IntuitionIFace *) GetInterface((struct Library *) IntuitionBase, "main", 1, NULL)) == NULL)
   {
        Req("Couldn't open IIntuition interface!\n");
        return FALSE;
   }
 
+
   if ((IDOS = (struct DOSIFace *) GetInterface((struct Library *) DOSBase, "main", 1, NULL)) == NULL)
   {
        Req("Couldn't open IDOS interface!\n");
        return FALSE;
   }
-  
+
+
   if ((IGraphics = (struct GraphicsIFace *) GetInterface((struct Library *) GfxBase, "main", 1, NULL)) == NULL)
   {
        Req("Couldn't open Graphics interface!\n");
        return FALSE;
   }
+  
 
   if ((IGadTools = (struct GadToolsIFace *) GetInterface((struct Library *) GadToolsBase, "main", 1, NULL)) == NULL)
   {
@@ -586,12 +653,14 @@ OpenLibs ( void )
        return FALSE;
   }
 
+
   if ((IIFFParse = (struct IFFParseIFace *) GetInterface((struct Library *) IFFParseBase, "main", 1, NULL)) == NULL)
   {
        Req("Couldn't open IFFParse interface!\n");
        return FALSE;
   }
 
+  
   if ((ILocale = (struct LocaleIFace *) GetInterface((struct Library *) LocaleBase, "main", 1, NULL)) == NULL)
   {
        Req("Couldn't open ILocale interface!\n");
@@ -603,40 +672,60 @@ OpenLibs ( void )
        Req("Couldn't open Timer interface!\n");
        return FALSE;
   }
-
+  
   if ((IUtility = (struct UtilityIFace *) GetInterface((struct Library *) UtilityBase, "main", 1, NULL)) == NULL)
   {
        Req("Couldn't open Utility interface!\n");
        return FALSE;
   }
+
 #endif
-  
+
   // Fill in some defaults...
 
   AddByteMonoPtr         = AddByteMono;
   AddByteStereoPtr       = AddByteStereo;
+  AddByte71Ptr           = AddByte71;
   AddBytesMonoPtr        = AddBytesMono;
   AddBytesStereoPtr      = AddBytesStereo;
+  AddBytes71Ptr          = AddBytes71;
   AddWordMonoPtr         = AddWordMono;
   AddWordStereoPtr       = AddWordStereo;
+  AddWord71Ptr           = AddWord71;
   AddWordsMonoPtr        = AddWordsMono;
   AddWordsStereoPtr      = AddWordsStereo;
+  AddWords71Ptr          = AddWords71;
   AddLongMonoPtr         = AddLongMono;
   AddLongStereoPtr       = AddLongStereo;
+  AddLong71Ptr           = AddLong71;
   AddLongsMonoPtr        = AddLongsMono;
   AddLongsStereoPtr      = AddLongsStereo;
+  Add71MonoPtr           = Add71Mono;
+  Add71StereoPtr         = Add71Stereo;
+  AddLongs71Ptr          = AddLongs71;
+  Add7171Ptr             = Add7171;
+ 
   AddByteMonoBPtr        = AddByteMonoB;
   AddByteStereoBPtr      = AddByteStereoB;
+  AddByte71BPtr          = AddByte71B;
   AddBytesMonoBPtr       = AddBytesMonoB;
   AddBytesStereoBPtr     = AddBytesStereoB;
+  AddBytes71BPtr         = AddBytes71B;
   AddWordMonoBPtr        = AddWordMonoB;
   AddWordStereoBPtr      = AddWordStereoB;
+  AddWord71BPtr          = AddWord71B;
   AddWordsMonoBPtr       = AddWordsMonoB;
   AddWordsStereoBPtr     = AddWordsStereoB;
+  AddWords71BPtr         = AddWords71B;
   AddLongMonoBPtr        = AddLongMonoB;
   AddLongStereoBPtr      = AddLongStereoB;
+  AddLong71BPtr          = AddLong71B;
   AddLongsMonoBPtr       = AddLongsMonoB;
   AddLongsStereoBPtr     = AddLongsStereoB;
+  AddLongs71BPtr         = AddLongs71B;
+  Add71MonoBPtr          = Add71MonoB;
+  Add71StereoBPtr        = Add71StereoB;
+  Add7171BPtr            = Add7171B;
 
   AddLofiByteMonoPtr     = AddLofiByteMono;
   AddLofiByteStereoPtr   = AddLofiByteStereo;
@@ -883,6 +972,56 @@ CloseLibs ( void )
     CloseDevice( (struct IORequest *) TimerIO );
   }
   FreeVec( TimerIO );
+
+
+#ifdef __AMIGAOS4__
+  if (IIntuition)
+  {
+       DropInterface((struct Interface *) IIntuition );
+  }
+
+
+  if (IDOS)
+  {
+       DropInterface((struct Interface *) IDOS );
+  }
+
+
+  if (IGraphics)
+  {
+       DropInterface((struct Interface *) IGraphics );
+  }
+  
+
+  if (IGadTools)
+  {
+       DropInterface((struct Interface *) IGadTools );
+  }
+
+
+  if (IIFFParse)
+  {
+       DropInterface((struct Interface *) IIFFParse );
+  }
+
+  
+  if (ILocale)
+  {
+       DropInterface((struct Interface *) ILocale );
+  }
+
+  if (ITimer)
+  {
+       DropInterface((struct Interface *) ITimer );
+  }
+  
+  if (IUtility)
+  {
+       DropInterface((struct Interface *) IUtility );
+  }
+#endif
+
+
   CloseLibrary( (struct Library *) LocaleBase );
   CloseLibrary( (struct Library *) IntuitionBase );
   CloseLibrary( IFFParseBase );

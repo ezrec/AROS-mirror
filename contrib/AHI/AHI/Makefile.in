@@ -65,7 +65,7 @@ all:		$(EXECUTABLES) ahiprefs.ct $(CATALOGS)
 
 clean:
 	$(RM) $(EXECUTABLES) $(LANGTARGETS) version.h \
-	      *.catalog *.o *.bak *~ \#*\# core Makefile.dep
+	      *.catalog *.o Makefile.dep
 
 distclean:	clean
 	$(RM) Makefile

@@ -83,6 +83,7 @@ AHIDB_UserBase	EQU AHI_TagBase+500		; Use for driver specific tags
 	BITDEF	AHIS,KNOWHIFI,4
 	BITDEF	AHIS,CANRECORD,5
 	BITDEF	AHIS,CANPOSTPROCESS,6
+	BITDEF	AHIS,KNOWMULTICHANNEL,7
 
  ; AHIsub_Start() and AHIsub_Stop() flags
 	BITDEF	AHIS,PLAY,0
@@ -96,6 +97,7 @@ AHIDB_UserBase	EQU AHI_TagBase+500		; Use for driver specific tags
 	BITDEF	AHIAC,PINGPONG,4
 	BITDEF	AHIAC,RECORD,5
 	BITDEF	AHIAC,MULTTAB,6			; Private!
+	BITDEF	AHIAC,MULTICHANNEL,7
 
  ; AHIsub_Set#? and AHIsub_(Un)LoadSound return code
 AHIS_UNKNOWN	EQU	~0

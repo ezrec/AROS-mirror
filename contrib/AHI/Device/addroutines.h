@@ -54,6 +54,18 @@
                 Fixed64  *Offset,\
                 BOOL      StopAtZero
 
+#define ADDARGS71 LONG      Samples,\
+                LONG      ScaleLeft,\
+                LONG      ScaleRight,\
+                LONG	 *StartPoints,\
+                LONG	 *Unused,\
+                void     *Src,\
+                void    **Dst,\
+                LONG	  FirstOffsetI,\
+                Fixed64   Add,\
+                Fixed64  *Offset,\
+                BOOL      StopAtZero
+
 typedef LONG (ADDFUNC)(ADDARGS);
 
 LONG AddByteMono( ADDARGS );
@@ -68,6 +80,16 @@ LONG AddLongMono( ADDARGS );
 LONG AddLongStereo( ADDARGS );
 LONG AddLongsMono( ADDARGS );
 LONG AddLongsStereo( ADDARGS );
+LONG Add71Mono( ADDARGS );
+LONG Add71Stereo( ADDARGS );
+
+LONG AddByte71( ADDARGS );
+LONG AddBytes71( ADDARGS );
+LONG AddWord71( ADDARGS );
+LONG AddWords71( ADDARGS );
+LONG AddLong71( ADDARGS );
+LONG AddLongs71( ADDARGS );
+LONG Add7171( ADDARGS71 );
 
 LONG AddByteMonoB( ADDARGS );
 LONG AddByteStereoB( ADDARGS );
@@ -81,6 +103,16 @@ LONG AddLongMonoB( ADDARGS );
 LONG AddLongStereoB( ADDARGS );
 LONG AddLongsMonoB( ADDARGS );
 LONG AddLongsStereoB( ADDARGS );
+LONG Add71MonoB( ADDARGS );
+LONG Add71StereoB( ADDARGS );
+
+LONG AddByte71B( ADDARGS );
+LONG AddBytes71B( ADDARGS );
+LONG AddWord71B( ADDARGS );
+LONG AddWords71B( ADDARGS );
+LONG AddLong71B( ADDARGS );
+LONG AddLongs71B( ADDARGS );
+LONG Add7171B( ADDARGS71 );
 
 LONG AddLofiByteMono( ADDARGS );
 LONG AddLofiByteStereo( ADDARGS );

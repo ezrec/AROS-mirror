@@ -1,10 +1,10 @@
 /* $Id$
 * $Log$
-* Revision 1.4  2003/12/30 20:25:35  stegerg
-* Updated to latest AHI sources.
+* Revision 1.5  2004/08/04 17:45:05  stegerg
+* Updated sources to AHI 5.13
 *
-* Revision 5.3  2003/04/22 18:19:05  martin
-* Now creates localize.[ch] in srcdir.
+* Revision 5.3.2.1  2004/06/08 21:16:12  martin
+* Added 7.1 multichannel support.
 *
 * Revision 5.0  2000/11/28 00:15:18  lcs
 * Bumped CVS revision to 5.0.
@@ -94,5 +94,7 @@ extern const APTR _msgReqInfoRecordHalf;
 #define msgReqInfoRecordHalf ((APTR) &_msgReqInfoRecordHalf)
 extern const APTR _msgReqInfoRecordFull;
 #define msgReqInfoRecordFull ((APTR) &_msgReqInfoRecordFull)
+extern const APTR _msgReqInfoMultiChannel;
+#define msgReqInfoMultiChannel ((APTR) &_msgReqInfoMultiChannel)
 
 #endif /*   !ahi_CAT_H  */

@@ -181,11 +181,15 @@ AC_OUTPUT(Makefile
           Drivers/Makefile
           Drivers/AROS/Makefile
           Drivers/Common/Makefile.common
+          Drivers/Device/Makefile
           Drivers/EMU10kx/Makefile
           Drivers/Filesave/Makefile
           Drivers/Void/Makefile
 	  Examples/Makefile
+	  Examples/Device/PlayTest/Makefile
 	  Examples/Extras/CloneAudioModes/Makefile
 	  Examples/Low-level/PlaySineEverywhere/Makefile
+	  Examples/Low-level/Test-7.1/Makefile
+	  Examples/Low-level/ScanAudioModes/Makefile
           Include/Makefile,
           echo timestamp > stamp-h)

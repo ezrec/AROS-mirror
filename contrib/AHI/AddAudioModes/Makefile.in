@@ -49,7 +49,7 @@ EXECUTABLE	= AddAudioModes
 all:		$(EXECUTABLE)
 
 clean:
-	$(RM) $(EXECUTABLE) version.h *.o *.bak *~ \#*\# core Makefile.dep
+	$(RM) $(EXECUTABLE) version.h *.o Makefile.dep
 
 distclean:	clean
 	$(RM) Makefile

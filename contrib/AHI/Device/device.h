@@ -90,7 +90,7 @@ struct Extras
 {
         UWORD   Channel;
         UWORD   Sound;
-        LONG    VolumeDiv;
+        Fixed   VolumeScale;
 };
 
 /* Voice->Flags definitions */
@@ -170,7 +170,7 @@ struct AHIDevUnit
         ULONG                    AudioMode;
         ULONG                    Frequency;
         UWORD                    Channels;
-        UWORD                    ChannelsInUse;
+        UWORD                    ScaleMode;
         Fixed                    MonitorVolume;
         Fixed                    InputGain;
         Fixed                    OutputVolume;

@@ -22,8 +22,8 @@
 
 /*
  * $Log$
- * Revision 1.4  2003/12/30 20:25:37  stegerg
- * Updated to latest AHI sources.
+ * Revision 1.5  2004/08/04 17:45:09  stegerg
+ * Updated sources to AHI 5.13
  *
  * Revision 1.6  2003/01/19 12:22:59  martin
  * Another year, another copyright update.

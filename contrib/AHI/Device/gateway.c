@@ -289,11 +289,177 @@ AROS_UFH1( void,
   AROS_USERFUNC_EXIT  
 }
 
-#else // Not MorphOS, not Amithlon, not AROS
-
+#elif defined( __AMIGAOS4__ )
 
 /******************************************************************************
-** AmigaOS gateway functions **************************************************
+** AmigaOS 4.x gateway functions **********************************************
+******************************************************************************/
+
+/* m68k_IndexToFrequency *****************************************************/
+
+LONG STDARGS SAVEDS
+m68k_IndexToFrequency( struct Gadget *gad, WORD level )
+{
+  return IndexToFrequency( gad, level );
+}
+
+
+/* m68k_DevProc **************************************************************/
+
+void
+m68k_DevProc( void )
+{
+  DevProc();
+}
+
+
+/* m68k_PreTimer  ************************************************************/
+
+BOOL ASMCALL
+m68k_PreTimer( REG(a2, struct AHIPrivAudioCtrl* audioctrl ) )
+{
+  return PreTimer( audioctrl );
+}
+
+
+/* m68k_PostTimer  ***********************************************************/
+
+void
+m68k_PostTimer( REG(a2, struct AHIPrivAudioCtrl* audioctrl ) )
+{
+  PostTimer( audioctrl );
+}
+
+
+UWORD PreTimerPreserveAllRegs[] = {
+    0x206A, 0x0054,
+    0x93C9,
+    0x2F28, 0x0008,
+    0x4E75
+};
+
+UWORD PostTimerPreserveAllRegs[] = {
+    0x206A, 0x0058,
+    0x93C9,
+    0x2F28, 0x0008,
+    0x4E75
+};
+
+struct VARARGS68K AHIAudioCtrl * _AHI_AllocAudio(
+
+	struct AHIBase *AHIBase, ...
+)
+{
+	va_list ap;
+	struct TagItem * varargs;
+	va_startlinear(ap, AHIBase);
+	varargs = va_getlinearva(ap, struct TagItem *);
+	return	_AHI_AllocAudioA(
+		varargs, AHIBase);
+}
+
+
+
+
+ULONG VARARGS68K _AHI_ControlAudio(
+
+	struct AHIAudioCtrl * AudioCtrl,
+	struct AHIBase *AHIBase, ...
+)
+{
+	va_list ap;
+	struct TagItem * varargs;
+	va_startlinear(ap, AHIBase);
+	varargs = va_getlinearva(ap, struct TagItem *);
+	return	_AHI_ControlAudioA(
+		(struct AHIPrivAudioCtrl*) AudioCtrl,
+		varargs, AHIBase);
+}
+
+
+BOOL VARARGS68K _AHI_GetAudioAttrs(
+
+	ULONG ID,
+	struct AHIAudioCtrl * Audioctrl,
+	struct AHIBase *AHIBase,
+    ...
+)
+{
+	va_list ap;
+	struct TagItem * varargs;
+	va_startlinear(ap, AHIBase);
+	varargs = va_getlinearva(ap, struct TagItem *);
+
+	return	_AHI_GetAudioAttrsA(
+		ID,
+		(struct AHIPrivAudioCtrl*) Audioctrl,
+		varargs, AHIBase);
+}
+
+
+ULONG VARARGS68K _AHI_BestAudioID(
+
+	struct AHIBase *AHIBase, ...
+)
+{
+	va_list ap;
+	struct TagItem * varargs;
+	va_startlinear(ap, AHIBase);
+	varargs = va_getlinearva(ap, struct TagItem *);
+	return	_AHI_BestAudioIDA(
+		varargs, AHIBase);
+}
+
+
+struct VARARGS68K AHIAudioModeRequester * _AHI_AllocAudioRequest(
+
+	struct AHIBase *AHIBase, ...
+)
+{
+	va_list ap;
+	struct TagItem * varargs;
+	va_startlinear(ap, AHIBase);
+	varargs = va_getlinearva(ap, struct TagItem *);
+	return	_AHI_AllocAudioRequestA(
+		varargs, AHIBase);
+}
+
+
+BOOL VARARGS68K _AHI_AudioRequest(
+
+	struct AHIAudioModeRequester * Requester,
+	struct AHIBase *AHIBase, ...
+)
+{
+	va_list ap;
+	struct TagItem * varargs;
+	va_startlinear(ap, AHIBase);
+	varargs = va_getlinearva(ap, struct TagItem *);
+	return	_AHI_AudioRequestA(
+		Requester,
+		varargs, AHIBase);
+}
+
+
+void VARARGS68K _AHI_Play(
+
+	struct AHIAudioCtrl * Audioctrl,
+	struct AHIBase *AHIBase, ...
+)
+{
+	va_list ap;
+	struct TagItem * varargs;
+	va_startlinear(ap, AHIBase);
+	varargs = va_getlinearva(ap, struct TagItem *);
+		_AHI_PlayA(
+		(struct AHIPrivAudioCtrl*) Audioctrl,
+		varargs, AHIBase);
+}
+
+#else // Not MorphOS, not Amithlon, not AROS, not AmigaOS 4.x
+
+/******************************************************************************
+** AmigaOS 2.x/3.x gateway functions ******************************************
 ******************************************************************************/
 
 /* m68k_IndexToFrequency *****************************************************/
@@ -339,6 +505,10 @@ m68k_PostTimer( struct AHIPrivAudioCtrl* audioctrl __asm("a2") )
 #if defined( __AROS__ ) && !defined( __mc68000__ )
 
 // We're not binary compatible!
+
+#elif defined( __AMIGAOS4__ )
+
+// No need to do this
 
 #else
 
@@ -397,4 +567,4 @@ struct
   0x4E75
 };
 
-#endif /* !defined( __AROS__ ) */
+#endif /* defined( __AROS__ ) / defined( __AMIGAOS4__ ) */

@@ -102,7 +102,7 @@ enum actionIDs {
   ACTID_UNIT, ACTID_MODE, 
   SHOWID_MODE,
 
-  ACTID_FREQ, ACTID_CHANNELS, ACTID_OUTVOL, ACTID_MONVOL, ACTID_GAIN,
+  ACTID_FREQ, ACTID_CHANNELS, ACTID_SCALEMODE, ACTID_OUTVOL, ACTID_MONVOL, ACTID_GAIN,
   ACTID_INPUT, ACTID_OUTPUT,
   SHOWID_FREQ, SHOWID_CHANNELS, SHOWID_OUTVOL, SHOWID_MONVOL, SHOWID_GAIN,
   SHOWID_INPUT, SHOWID_OUTPUT,
@@ -153,6 +153,15 @@ static char *PageNames[] =
 {
   NULL,  /* Mode settings */
   NULL,  /* Advanced settings */
+  NULL
+};
+
+static char * ScaleLabels[] = {
+  NULL,  /* Safe */
+  NULL,  /* Safe, dynamic */
+  NULL,  /* Full volume */
+  NULL,  /* -3 dB */
+  NULL,  /* -6 dB */
   NULL
 };
 
@@ -238,12 +247,16 @@ static void UpdateStrings(void) {
   SurroundLabels[1] = (char *) msgSurroundDisabled;
   ClipMVLabels[0] = (char *) msgMVNoClip;
   ClipMVLabels[1] = (char *) msgMVClip;
-
+  ScaleLabels[0] = (char *) msgSMFixedSafe;
+  ScaleLabels[1] = (char *) msgSMDynSafe;
+  ScaleLabels[2] = (char *) msgSM0dB;
+  ScaleLabels[3] = (char *) msgSM3dB;
+  ScaleLabels[4] = (char *) msgSM6dB;
 }
 
 
 static Object *MUIWindow,*MUIList,*MUIInfos,*MUIUnit;
-static Object *MUIFreq,*MUIChannels,*MUIOutvol,*MUIMonvol,*MUIGain,*MUIInput,*MUIOutput;
+static Object *MUIFreq,*MUIChannels,*MUIScalemode,*MUIOutvol,*MUIMonvol,*MUIGain,*MUIInput,*MUIOutput;
 static Object *MUILFreq,*MUILChannels,*MUILOutvol,*MUILMonvol,*MUILGain,*MUILInput,*MUILOutput,*MUIPlay;
 static Object *MUIDebug,*MUIEcho,*MUISurround,*MUIClipvol,*MUICpu,*MUIACTime;
 
@@ -335,6 +348,17 @@ static void GUINewMode(void)
   }
   set(MUILChannels, MUIA_Text_Contents, (ULONG) getChannels());
 
+  if( state.ChannelsDisabled || AHIBase->lib_Version < 5)
+  {
+    set(MUIScalemode, MUIA_Disabled, TRUE);
+    set(MUIScalemode, MUIA_Cycle_Active, AHI_SCALE_FIXED_SAFE);
+  }
+  else
+  {
+    set(MUIScalemode, MUIA_Disabled, FALSE);
+    set(MUIScalemode, MUIA_Cycle_Active, state.ScaleModeSelected);
+  }
+  
   Max = max(state.OutVols -1, 0);
   Sel = min(Max, state.OutVolSelected);
   Dis = Max==0;
@@ -512,7 +536,7 @@ BOOL BuildGUI(char *screenname)
 {
   Object *MUISave, *MUIUse, *MUICancel;
   Object *page1,*page2;
-  Object *MUITFreq,*MUITChannels,*MUITOutvol,*MUITMonvol,*MUITGain,*MUITInput,*MUITOutput,*MUITDebug,*MUITEcho,*MUITSurround,*MUITClipvol,*MUITCpu,*MUITACTime;
+  Object *MUITFreq,*MUITChannels,*MUITScalemode,*MUITOutvol,*MUITMonvol,*MUITGain,*MUITInput,*MUITOutput,*MUITDebug,*MUITEcho,*MUITSurround,*MUITClipvol,*MUITCpu,*MUITACTime;
 
   UpdateStrings();
 
@@ -563,6 +587,12 @@ BOOL BuildGUI(char *screenname)
         Child, MUITChannels = SpecialButton((STRPTR)msgOptChannels),
         Child, MUIChannels = SpecialSlider(1,state.Channels,state.ChannelsSelected),
         Child, MUILChannels = SpecialLabel(getChannels()),
+        Child, MUITScalemode = SpecialButton((STRPTR)msgOptScalemode),
+        Child, MUIScalemode = CycleObject,
+          MUIA_CycleChain, 1,
+          MUIA_Cycle_Entries, ScaleLabels,
+        End,
+        Child, SpecialLabel(""),
         Child, MUITOutvol = SpecialButton((STRPTR)msgOptVolume),
         Child, MUIOutvol = SpecialSlider(0,max(state.OutVols-1,0),state.OutVolSelected),
         Child, MUILOutvol = SpecialLabel(getOutVol()),
@@ -682,6 +712,7 @@ BOOL BuildGUI(char *screenname)
 
     DoMethod(MUITFreq, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUIFreq);
     DoMethod(MUITChannels, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUIChannels);
+    DoMethod(MUITScalemode, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUIScalemode);
     DoMethod(MUITOutvol, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUIOutvol);
     DoMethod(MUITMonvol, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUIMonvol);
     DoMethod(MUITGain, MUIM_Notify, MUIA_Pressed, TRUE, MUIWindow, 3, MUIM_Set, MUIA_Window_ActiveObject, MUIGain);
@@ -709,6 +740,7 @@ BOOL BuildGUI(char *screenname)
     DoMethod(MUIACTime, MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime, MUIApp, 2, MUIM_Application_ReturnID,  ACTID_ACTIME);
     DoMethod(MUIFreq, MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime, MUIV_Notify_Self, 3, MUIM_CallHook, &hookSlider, MUIV_TriggerValue);
     DoMethod(MUIChannels, MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime, MUIV_Notify_Self, 3, MUIM_CallHook, &hookSlider, MUIV_TriggerValue);
+    DoMethod(MUIScalemode, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime, MUIApp, 2, MUIM_Application_ReturnID,  ACTID_SCALEMODE);
     DoMethod(MUIOutvol, MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime, MUIV_Notify_Self, 3, MUIM_CallHook, &hookSlider, MUIV_TriggerValue);
     DoMethod(MUIMonvol, MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime, MUIV_Notify_Self, 3, MUIM_CallHook, &hookSlider, MUIV_TriggerValue);
     DoMethod(MUIGain, MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime, MUIV_Notify_Self, 3, MUIM_CallHook, &hookSlider, MUIV_TriggerValue);
@@ -918,6 +950,15 @@ void EventLoop(void)
         GUINewMode();
         break;
         
+      case ACTID_SCALEMODE:
+      {
+        ULONG scalemode = AHI_SCALE_FIXED_SAFE;
+
+        get(MUIScalemode, MUIA_Cycle_Active, &scalemode);
+        state.ScaleModeSelected = scalemode;
+        break;
+      }
+	
       case ACTID_PLAY:
       {
         int              unit_id;

@@ -131,3 +131,9 @@ Campionamento half duplex
 msgReqInfoRecordFull
 Campionamento full duplex
 ; Record in full duplex
+;
+msgReqInfoMultiChannel
+
+; 7.1 multichannel
+;
+; ***NEW***

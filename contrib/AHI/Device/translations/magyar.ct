@@ -131,3 +131,9 @@ Felvétel fél duplexben
 msgReqInfoRecordFull
 Felvétel duplexben
 ; Record in full duplex
+;
+msgReqInfoMultiChannel
+
+; 7.1 multichannel
+;
+; ***NEW***

@@ -40,18 +40,18 @@ BOOL	  StopAtZero		50(sp) word		StopAtZero
 
 */
 
-Samples		.equ	11*4 + 4
-ScaleLeft	.equ	11*4 + 8
-ScaleRight	.equ	11*4 + 12
-StartPointLeft	.equ	11*4 + 16
-StartPointRight	.equ	11*4 + 20
-Src		.equ	11*4 + 24
-Dst		.equ	11*4 + 28
-FirstOffsetI	.equ	11*4 + 32
-AddI		.equ	11*4 + 36
-AddF		.equ	11*4 + 40
-Offset		.equ	11*4 + 44
-StopAtZero	.equ	11*4 + 50
+.set	Samples,	11*4 + 4
+.set	ScaleLeft,	11*4 + 8
+.set	ScaleRight,	11*4 + 12
+.set	StartPointLeft,	11*4 + 16
+.set	StartPointRight,11*4 + 20
+.set	Src,		11*4 + 24
+.set	Dst,		11*4 + 28
+.set	FirstOffsetI,	11*4 + 32
+.set	AddI,		11*4 + 36
+.set	AddF,		11*4 + 40
+.set	Offset,		11*4 + 44
+.set	StopAtZero,	11*4 + 50
 
 /*
 

@@ -63,8 +63,11 @@ publication, even if advised of the possibility of such damage.}
 
 $Id$
 $Log$
-Revision 1.4  2003/12/30 20:25:35  stegerg
-Updated to latest AHI sources.
+Revision 1.5  2004/08/04 17:45:06  stegerg
+Updated sources to AHI 5.13
+
+Revision 5.3.2.1  2004/06/08 21:16:16  martin
+Added 7.1 multichannel support.
 
 Revision 5.3  2003/01/19 16:15:40  martin
 Added descriptions of AHIA_AntiClickSamples and AHISF_NODELAY.
@@ -774,9 +777,9 @@ frequency the sound will be played at and Fm is the actual mixing frequency
 
 @end vtable
 
-The samples can be in one of six different formats, named @code{AHIST_M8S},
-@code{AHIST_S8S}, @code{AHIST_M16S}, @code{AHIST_S16S}, @code{AHIST_M32S}
-and @code{AHIST_S32S}.
+The samples can be in one of seven different formats, named @code{AHIST_M8S},
+@code{AHIST_S8S}, @code{AHIST_M16S}, @code{AHIST_S16S}, @code{AHIST_M32S},
+@code{AHIST_S32S} and @code{AHIST_L7_1}
 
 @vtable @code
 
@@ -811,6 +814,16 @@ representing the left channel, followed by another one for the right
 channel. Note that only the 24 most significant bits are guaranteed to
 be processed correctly! Support for this sample format was added in
 V6.
+
+@item AHIST_L7_1
+This is a 32 bit 7.1 sound.  @strong{It will currently only work with
+7.1 audio modes!} Each sample frame is one signed 32 bit word, in big
+endian/network order format (most significant byte first) representing
+the left front channel, followed by six other words for the right
+front, left back, right back, left surround, right surround, front
+center and the LFE channel. Note that only the 24 most significant
+bits are guaranteed to be processed correctly! ``Support'' for this
+sample format was added in V6.
 
 @end vtable
 

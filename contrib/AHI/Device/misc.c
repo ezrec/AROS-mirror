@@ -116,6 +116,9 @@ ReqA( const char* text, APTR args )
     (STRPTR) DevName,
     (STRPTR) text,
     "OK"
+#ifdef __AMIGAOS4__
+    ,0,0
+#endif
   };
 
   EasyRequestArgs( NULL, &es, NULL, args );
@@ -134,10 +137,17 @@ static UWORD struffChar[] =
 char*
 SprintfA( char *dst, const char *fmt, ULONG* args )
 {
+#ifndef __AMIGAOS4__
   return RawDoFmt( (UBYTE*) fmt,
                    args, 
-                   (void(*)(void)) &struffChar, 
+                   (void(*)(void)) &struffChar,
                    dst );
+#else
+  return RawDoFmt( (UBYTE*) fmt,
+                   args, 
+                   0,
+                   dst );
+#endif
 }
 
 /******************************************************************************

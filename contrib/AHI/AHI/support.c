@@ -253,6 +253,7 @@ static BOOL AddUnit(struct List *list, int unit) {
   }
 
   u->prefs.ahiup_Unit           = unit;
+  u->prefs.ahiup_ScaleMode      = AHI_SCALE_FIXED_SAFE;
   u->prefs.ahiup_Channels       = 1;
   u->prefs.ahiup_AudioMode      = AHI_BestAudioID(AHIDB_Realtime, TRUE, TAG_DONE);
   u->prefs.ahiup_Frequency      = 8000;
@@ -371,7 +372,7 @@ struct List *GetUnits(char *name) {
                   break;
 
 		u->prefs.ahiup_Unit          = ci_cnt;
-		u->prefs.ahiup_Pad           = 0;
+		u->prefs.ahiup_ScaleMode     = AHI_SCALE_FIXED_SAFE;
 		u->prefs.ahiup_Channels      = 1;
 		u->prefs.ahiup_AudioMode     = AHI_DEFAULT_ID;
 		u->prefs.ahiup_Frequency     = AHI_DEFAULT_FREQ;
@@ -385,7 +386,7 @@ struct List *GetUnits(char *name) {
 		
 		CopyIfValid( struct AHIUnitPrefs, ahiup_Unit,
 			     *p, u->prefs, ci->ci_Size );
-		CopyIfValid( struct AHIUnitPrefs, ahiup_Pad,
+		CopyIfValid( struct AHIUnitPrefs, ahiup_ScaleMode,
 			     *p, u->prefs, ci->ci_Size );
 		CopyIfValid( struct AHIUnitPrefs, ahiup_Channels,
 			     *p, u->prefs, ci->ci_Size );
@@ -474,7 +475,8 @@ struct List *GetModes(struct AHIUnitPrefs *prefs) {
             AHIDB_Realtime,   (ULONG) &realtime,
             TAG_DONE);
 
-        if((prefs->ahiup_Unit == AHI_NO_UNIT) || realtime ) {
+        if((prefs->ahiup_Unit == AHI_NO_UNIT) ||
+	   (realtime && (id & 0x00ff0000) != 0x00030000 /* Argh!! */)) {
           // Insert node alphabetically
           for(node = list->lh_Head;
               node->ln_Succ;
@@ -650,7 +652,7 @@ BOOL SaveSettings(char *name, struct List *list) {
 
 		CopyIfValid( struct AHIUnitPrefs, ahiup_Unit,
 			     ((struct UnitNode *) n)->prefs, p, sizeof p );
-		CopyIfValid( struct AHIUnitPrefs, ahiup_Pad,
+		CopyIfValid( struct AHIUnitPrefs, ahiup_ScaleMode,
 			     ((struct UnitNode *) n)->prefs, p, sizeof p );
 		CopyIfValid( struct AHIUnitPrefs, ahiup_Channels,
 			     ((struct UnitNode *) n)->prefs, p, sizeof p );
@@ -825,9 +827,37 @@ BOOL PlaySound( struct AHIUnitPrefs* prefs )
                                      AHIC_Output,        prefs->ahiup_Output,
                                      TAG_DONE ) == AHIE_OK )
         {
+	  ULONG volume = 0x10000;
+	  
+	  switch( prefs->ahiup_ScaleMode )
+	  {
+	    case AHI_SCALE_DYNAMIC_SAFE:
+	      volume = 0x10000;
+	      break;
+
+	    case AHI_SCALE_FIXED_SAFE:
+	      if( prefs->ahiup_Channels != 0 )
+	      {
+		volume = 0x10000 / prefs->ahiup_Channels;
+	      }
+	      break;
+
+	    case AHI_SCALE_FIXED_0_DB:
+	      volume = 0x10000;
+	      break;
+	
+	    case AHI_SCALE_FIXED_3_DB:
+	      volume = 0xB505;
+	      break;
+
+	    case AHI_SCALE_FIXED_6_DB:
+	      volume = 0x8000;
+	      break;
+	  }
+	  
           AHI_Play( actrl, AHIP_BeginChannel, 0,
                            AHIP_Freq,         48000,
-                           AHIP_Vol,          0x10000,
+                           AHIP_Vol,          volume,
                            AHIP_Pan,          0x8000,
                            AHIP_Sound,        0,
                            AHIP_EndChannel,   0,
@@ -835,7 +865,18 @@ BOOL PlaySound( struct AHIUnitPrefs* prefs )
 
 	  if( AHI_ControlAudio( actrl, AHIC_Play, TRUE, TAG_DONE ) == AHIE_OK )
 	  {
-	    Delay( 50 );
+	    if( prefs->ahiup_ScaleMode == AHI_SCALE_DYNAMIC_SAFE )
+	    {
+	      Delay( 10 );
+	      AHI_SetVol( 0, volume / 2, 0x8000, actrl, AHISF_IMM );
+	      Delay( 30 );
+	      AHI_SetVol( 0, volume, 0x8000, actrl, AHISF_IMM );
+	      Delay( 10 );
+	    }
+	    else
+	    {
+	      Delay( 50 );
+	    }
           
 	    AHI_Play( actrl, AHIP_BeginChannel, 0,
                              AHIP_Sound,        AHI_NOSOUND,

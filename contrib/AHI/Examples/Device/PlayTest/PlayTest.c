@@ -40,7 +40,7 @@ void cleanup(LONG rc)
   exit(rc);
 }
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   BYTE *p1=buffer1,*p2=buffer2;
   void *tmp;
@@ -56,10 +56,10 @@ void main(int argc, char *argv[])
   pri = priority;
   Printf("Sound priority: %ld\n", pri);
 
-  if(AHImp=CreateMsgPort()) {
-    if(AHIio=(struct AHIRequest *)CreateIORequest(AHImp,sizeof(struct AHIRequest))) {
+  if((AHImp=CreateMsgPort()) != NULL) {
+    if((AHIio=(struct AHIRequest *)CreateIORequest(AHImp,sizeof(struct AHIRequest))) != NULL) {
       AHIio->ahir_Version = 4;
-      AHIDevice=OpenDevice(AHINAME,0,(struct IORequest *)AHIio,NULL);
+      AHIDevice=OpenDevice(AHINAME,0,(struct IORequest *)AHIio,0);
     }
   }
 
@@ -149,4 +149,5 @@ void main(int argc, char *argv[])
   }
 
   cleanup(RETURN_OK);
+  return RETURN_OK; // Make compiler happy
 }

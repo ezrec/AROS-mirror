@@ -314,3 +314,27 @@ msgButtonPlay
 _Prova de so
 ; _Play a test sound
 ;
+msgOptScalemode
+
+; Volume sc_aling
+;
+msgSMFixedSafe
+
+; Safe
+;
+msgSMDynSafe
+
+; Safe, dynamic
+;
+msgSM0dB
+
+; Full volume
+;
+msgSM3dB
+
+; -3 dB
+;
+msgSM6dB
+
+; -6 dB
+;

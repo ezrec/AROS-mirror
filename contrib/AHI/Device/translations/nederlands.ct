@@ -131,3 +131,9 @@ Opname in half duplex
 msgReqInfoRecordFull
 Opname in full duplex
 ; Record in full duplex
+;
+msgReqInfoMultiChannel
+
+; 7.1 multichannel
+;
+; ***NEW***

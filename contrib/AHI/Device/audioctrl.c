@@ -30,13 +30,15 @@
 #include <proto/exec.h>
 #include <proto/utility.h>
 #include <proto/dos.h>
+#ifndef __AMIGAOS4__
 #define __NOLIBBASE__
 #include <proto/ahi.h>
 #undef  __NOLIBBASE__
+#endif
 #include <proto/ahi_sub.h>
 #include <clib/alib_protos.h>
 
-#include <strings.h>
+#include <string.h>
 
 #include "ahi_def.h"
 #include "audioctrl.h"
@@ -135,6 +137,7 @@ static struct TagItem boolmap[] =
   { AHIDB_PingPong,  AHIACF_PINGPONG },
   { AHIDB_Record,    AHIACF_RECORD },
   { AHIDB_MultTable, AHIACF_MULTTAB },
+  { AHIDB_MultiChannel, AHIACF_MULTICHANNEL },
   { TAG_DONE,        0 }
 };
 
@@ -493,6 +496,13 @@ _AHI_AllocAudioA( struct TagItem* tags,
   if(!AHIsubBase)
     goto error;
 
+#ifdef __AMIGAOS4__
+  if ((IAHIsub = (struct AHIsubIFace *) GetInterface((struct Library *) AHIsubBase, "main", 1, NULL)) == NULL)
+  {    
+       goto error;
+  }
+#endif
+
   // Never allow drivers that are newer than ahi.device.
   if(AHIsubBase->lib_Version > Version)
     goto error;
@@ -527,6 +537,10 @@ _AHI_AllocAudioA( struct TagItem* tags,
   if(!(audioctrl->ahiac_SubAllocRC & AHISF_KNOWSTEREO))
     audioctrl->ac.ahiac_Flags &= ~AHIACF_STEREO;
 
+// Multichannel 7.1
+  if(!(audioctrl->ahiac_SubAllocRC & AHISF_KNOWMULTICHANNEL))
+    audioctrl->ac.ahiac_Flags &= ~AHIACF_MULTICHANNEL;
+  
 // HiFi
 
   if(!(audioctrl->ahiac_SubAllocRC & AHISF_KNOWHIFI))
@@ -538,7 +552,7 @@ _AHI_AllocAudioA( struct TagItem* tags,
 
   if(!(audioctrl->ac.ahiac_Flags & AHIACF_NOMIXING))
   {
-    switch(audioctrl->ac.ahiac_Flags & (AHIACF_STEREO | AHIACF_HIFI))
+    switch(audioctrl->ac.ahiac_Flags & (AHIACF_STEREO | AHIACF_HIFI | AHIACF_MULTICHANNEL))
     {
       case 0:
         audioctrl->ac.ahiac_BuffType=AHIST_M16S;
@@ -553,6 +567,10 @@ _AHI_AllocAudioA( struct TagItem* tags,
       case (AHIACF_STEREO | AHIACF_HIFI):
         audioctrl->ac.ahiac_Flags |= AHIACF_CLIPPING;
         audioctrl->ac.ahiac_BuffType=AHIST_S32S;
+        break;
+      case (AHIACF_STEREO | AHIACF_HIFI | AHIACF_MULTICHANNEL):
+        audioctrl->ac.ahiac_Flags |= AHIACF_CLIPPING;
+        audioctrl->ac.ahiac_BuffType=AHIST_L7_1;
         break;
       default:
         Alert(AT_Recovery|AG_BadParm);
@@ -724,6 +742,11 @@ _AHI_FreeAudio( struct AHIPrivAudioCtrl* audioctrl,
 //KPrintF("Called AHIsub_FreeAudio()\n");
       AHIsub_FreeAudio((struct AHIAudioCtrlDrv *) audioctrl);
 //KPrintF("Closed AHIsubbase\n");
+#ifdef __AMIGAOS4__
+      DropInterface((struct Interface *) IAHIsub);
+      IAHIsub = NULL;
+#endif
+      
       CloseLibrary(AHIsubBase);
     }
 

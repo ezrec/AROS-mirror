@@ -59,6 +59,8 @@ FORMEND:
 .SET AHIDB_HiFi,      AHI_TagBase+106
 .SET AHIDB_MultTable, AHI_TagBase+108
 .SET AHIDB_Name,      AHI_TagBaseR+109
+.SET AHIDB_MultiChannel, AHI_TagBase+144
+.SET AHIDB_PingPong,  AHI_TagBase+107
 
 .SET AHIDB_UserBase,  AHI_TagBase+500
 

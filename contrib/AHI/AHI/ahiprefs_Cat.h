@@ -1,6 +1,6 @@
 /****************************************************************
    This file was created automatically by `FlexCat 2.4'
-   from "/usr/local/aros/AROS/contrib/AHI/AHI/ahiprefs.cd".
+   from "../../ahisrc/AHI/ahiprefs.cd".
 
    Do NOT edit by hand!
 ****************************************************************/
@@ -31,7 +31,7 @@ struct FC_String {
     LONG id;
 };
 
-extern struct FC_String ahiprefs_Strings[64];
+extern struct FC_String ahiprefs_Strings[70];
 
 #define msgMenuProject (ahiprefs_Strings[0].msg)
 #define _msgMenuProject (ahiprefs_Strings+0)
@@ -161,5 +161,17 @@ extern struct FC_String ahiprefs_Strings[64];
 #define _msgGlobOptACTime (ahiprefs_Strings+62)
 #define msgButtonPlay (ahiprefs_Strings[63].msg)
 #define _msgButtonPlay (ahiprefs_Strings+63)
+#define msgOptScalemode (ahiprefs_Strings[64].msg)
+#define _msgOptScalemode (ahiprefs_Strings+64)
+#define msgSMFixedSafe (ahiprefs_Strings[65].msg)
+#define _msgSMFixedSafe (ahiprefs_Strings+65)
+#define msgSMDynSafe (ahiprefs_Strings[66].msg)
+#define _msgSMDynSafe (ahiprefs_Strings+66)
+#define msgSM0dB (ahiprefs_Strings[67].msg)
+#define _msgSM0dB (ahiprefs_Strings+67)
+#define msgSM3dB (ahiprefs_Strings[68].msg)
+#define _msgSM3dB (ahiprefs_Strings+68)
+#define msgSM6dB (ahiprefs_Strings[69].msg)
+#define _msgSM6dB (ahiprefs_Strings+69)
 
 #endif

@@ -49,7 +49,7 @@ char            **Modes      = NULL;
 char            **Inputs     = NULL;
 char            **Outputs    = NULL;
 
-struct state state = { 0, 0, 0, 0, 0, 0, 0, 0, 0,
+struct state state = { 0, 0, 0, 0, AHI_SCALE_FIXED_SAFE, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0,
                        FALSE, FALSE, FALSE, FALSE,
                        0.0, 0.0, 0.0 };
@@ -306,6 +306,7 @@ void NewMode(int selectedmode) {
   }
 
   state.ChannelsSelected = unit->prefs.ahiup_Channels;
+  state.ScaleModeSelected = unit->prefs.ahiup_ScaleMode;
   state.InputSelected    = unit->prefs.ahiup_Input;
   state.OutputSelected   = unit->prefs.ahiup_Output;
 
@@ -397,6 +398,9 @@ void NewMode(int selectedmode) {
   state.ChannelsSelected = max(state.ChannelsSelected, 1);
   state.ChannelsSelected = min(state.ChannelsSelected, state.Channels);
   
+  state.ScaleModeSelected = max(state.ScaleModeSelected, 0);
+  state.ScaleModeSelected = min(state.ScaleModeSelected, AHI_SCALE_FIXED_6_DB);
+  
   state.OutVolSelected = max(state.OutVolSelected, 0);
   state.OutVolSelected = min(state.OutVolSelected, state.OutVols);
   
@@ -443,9 +447,11 @@ void FillUnit() {
 
   if(unit->prefs.ahiup_Unit != AHI_NO_UNIT) {
     unit->prefs.ahiup_Channels    = state.ChannelsSelected;
+    unit->prefs.ahiup_ScaleMode   = state.ScaleModeSelected;
   }
   else {
     unit->prefs.ahiup_Channels    = 0;
+    unit->prefs.ahiup_ScaleMode   = 0;
   }
 
   if( state.ModeSelected != ~0 )

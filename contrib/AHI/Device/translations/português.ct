@@ -131,3 +131,9 @@ Gravar em 'half duplex'
 msgReqInfoRecordFull
 Gravar em 'full duplex'
 ; Record in full duplex
+;
+msgReqInfoMultiChannel
+
+; 7.1 multichannel
+;
+; ***NEW***

@@ -131,3 +131,9 @@ Optage i halv duplex
 msgReqInfoRecordFull
 Optage i fuld duplex
 ; Record in full duplex
+;
+msgReqInfoMultiChannel
+
+; 7.1 multichannel
+;
+; ***NEW***

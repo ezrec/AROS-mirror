@@ -33,12 +33,14 @@
 #include <proto/dos.h>
 #include <proto/iffparse.h>
 #include <proto/utility.h>
-#define __NOLIBBASE__
-#include <proto/ahi.h>
-#undef  __NOLIBBASE__
+#ifndef __AMIGAOS4__
+# define __NOLIBBASE__
+# include <proto/ahi.h>
+# undef  __NOLIBBASE__
+#endif
 #include <proto/ahi_sub.h>
 
-#include <strings.h>
+#include <string.h>
 
 #include "ahi_def.h"
 #include "database.h"

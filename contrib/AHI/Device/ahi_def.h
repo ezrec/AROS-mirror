@@ -160,6 +160,29 @@ struct AHIChannelData
   LONG    cd_StartPointR;         /* for linear interpolation routines */
   LONG    cd_TempStartPointR;     /* for linear interpolation routines */
 
+  // NOTE!! These must follow directly after cd_TempStartPointR ...
+  LONG    cd_StartPointRL;        /* for linear interpolation routines */
+  LONG    cd_TempStartPointRL;    /* for linear interpolation routines */
+  LONG    cd_StartPointRR;        /* for linear interpolation routines */
+  LONG    cd_TempStartPointRR;    /* for linear interpolation routines */
+  LONG    cd_StartPointSL;        /* for linear interpolation routines */
+  LONG    cd_TempStartPointSL;    /* for linear interpolation routines */
+  LONG    cd_StartPointSR;        /* for linear interpolation routines */
+  LONG    cd_TempStartPointSR;    /* for linear interpolation routines */
+  LONG    cd_StartPointC;         /* for linear interpolation routines */
+  LONG    cd_TempStartPointC;     /* for linear interpolation routines */
+  LONG    cd_StartPointLFE;       /* for linear interpolation routines */
+  LONG    cd_TempStartPointLFE;   /* for linear interpolation routines */
+
+#define CD_L			0
+#define CD_R			2
+#define CD_RL			4
+#define CD_RR			6
+#define CD_SL			8
+#define CD_SR			10
+#define CD_C			12
+#define CD_LFE			14
+    
   struct AHIChannelData *cd_Succ; /* For the wet and dry lists */
   UWORD   cd_ChannelNo;
   UWORD   cd_Pad3;
@@ -208,5 +231,115 @@ struct AHIPrivAudioCtrl
   char                       ahiac_DriverName[ 256 ];
 };
 
+#ifdef __AMIGAOS4__
+
+#include <stdarg.h>
+#include "database.h"
+#include "audioctrl.h"
+#include "modeinfo.h"
+#include "requester.h"
+#include "sound.h"
+
+struct AHIAudioCtrl * VARARGS68K _AHI_AllocAudio(
+
+	struct AHIBase *AHIBase, ...
+);
+
+
+
+
+
+ULONG VARARGS68K _AHI_ControlAudio(
+
+	struct AHIAudioCtrl * AudioCtrl,
+	struct AHIBase *AHIBase, ...
+);
+
+
+
+BOOL VARARGS68K _AHI_GetAudioAttrs(
+
+	ULONG ID,
+	struct AHIAudioCtrl * Audioctrl,
+	struct AHIBase *AHIBase,
+    ...
+);
+
+
+
+ULONG VARARGS68K _AHI_BestAudioID(
+
+	struct AHIBase *AHIBase, ...
+);
+
+
+
+struct AHIAudioModeRequester * VARARGS68K _AHI_AllocAudioRequest(
+
+	struct AHIBase *AHIBase, ...
+);
+
+
+
+BOOL VARARGS68K _AHI_AudioRequest(
+
+	struct AHIAudioModeRequester * Requester,
+	struct AHIBase *AHIBase, ...
+);
+
+
+
+void VARARGS68K _AHI_Play(
+
+	struct AHIAudioCtrl * Audioctrl,
+	struct AHIBase *AHIBase, ...
+);
+
+
+
+#define AHI_AllocAudioA(tagList) _AHI_AllocAudioA(tagList, AHIBase) 
+#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
+#define AHI_AllocAudio(...) _AHI_AllocAudio(AHIBase, __VA_ARGS__) 
+#endif
+#define AHI_FreeAudio(AudioCtrl) _AHI_FreeAudio(AudioCtrl, AHIBase) 
+#define AHI_KillAudio() _AHI_KillAudio(AHIBase) 
+#define AHI_ControlAudioA(AudioCtrl, tagList) _AHI_ControlAudioA(AudioCtrl, tagList, AHIBase) 
+#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
+#define AHI_ControlAudio(AudioCtrl, ...) _AHI_ControlAudio(AudioCtrl, AHIBase, __VA_ARGS__) 
+#endif
+#define AHI_SetVol(Channel, Volume, Pan, AudioCtrl, Flags) _AHI_SetVol(Channel, Volume, Pan, AudioCtrl, Flags, AHIBase) 
+#define AHI_SetFreq(Channel, Freq, AudioCtrl, Flags) _AHI_SetFreq(Channel, Freq, AudioCtrl, Flags, AHIBase) 
+#define AHI_SetSound(Channel, Sound, Offset, Length, AudioCtrl, Flags) _AHI_SetSound(Channel, Sound, Offset, Length, AudioCtrl, Flags, AHIBase) 
+#define AHI_SetEffect(Effect, AudioCtrl) _AHI_SetEffect(Effect, AudioCtrl, AHIBase) 
+#define AHI_LoadSound(Sound, Type, Info, AudioCtrl) _AHI_LoadSound(Sound, Type, Info, AudioCtrl, AHIBase) 
+#define AHI_UnloadSound(Sound, Audioctrl) _AHI_UnloadSound(Sound, Audioctrl, AHIBase) 
+#define AHI_NextAudioID(Last_ID) _AHI_NextAudioID(Last_ID, AHIBase) 
+#define AHI_GetAudioAttrsA(ID, Audioctrl, tagList) _AHI_GetAudioAttrsA(ID, Audioctrl, tagList, AHIBase) 
+#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
+#define AHI_GetAudioAttrs(ID, Audioctrl, ...) _AHI_GetAudioAttrs(ID, Audioctrl, AHIBase, __VA_ARGS__) 
+#endif
+#define AHI_BestAudioIDA(tagList) _AHI_BestAudioIDA(tagList, AHIBase) 
+#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
+#define AHI_BestAudioID(...) _AHI_BestAudioID(AHIBase, __VA_ARGS__) 
+#endif
+#define AHI_AllocAudioRequestA(tagList) _AHI_AllocAudioRequestA(tagList, AHIBase) 
+#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
+#define AHI_AllocAudioRequest(...) _AHI_AllocAudioRequest(AHIBase, __VA_ARGS__) 
+#endif
+#define AHI_AudioRequestA(Requester, tagList) _AHI_AudioRequestA(Requester, tagList, AHIBase) 
+#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
+#define AHI_AudioRequest(...) _AHI_AudioRequest(AHIBase, __VA_ARGS__) 
+#endif
+#define AHI_FreeAudioRequest(Requester) _AHI_FreeAudioRequest(Requester, AHIBase) 
+#define AHI_PlayA(Audioctrl, tagList) _AHI_PlayA(Audioctrl, tagList, AHIBase) 
+#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
+#define AHI_Play(Audioctrl, ...) _AHI_Play(Audioctrl, AHIBase, __VA_ARGS__) 
+#endif
+#define AHI_SampleFrameSize(SampleType) _AHI_SampleFrameSize(SampleType, AHIBase) 
+#define AHI_AddAudioMode(priv) _AHI_AddAudioMode(priv, AHIBase) 
+#define AHI_RemoveAudioMode(priv) _AHI_RemoveAudioMode(priv, AHIBase) 
+#define AHI_LoadModeFile(priv) _AHI_LoadModeFile(priv, AHIBase) 
+
+#endif
 
 #endif /* ahi_ahi_def_h */

@@ -32,9 +32,11 @@
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/utility.h>
+#ifndef __AMIGAOS4__
 #define __NOLIBBASE__
 #include <proto/ahi.h>
 #undef  __NOLIBBASE__
+#endif
 
 #include "ahi_def.h"
 
@@ -341,6 +343,16 @@ SelectAddRoutine ( Fixed     VolumeLeft,
               *AddRoutine = AddLongsMonoPtr;
             break;
 
+          case AHIST_L7_1:
+          case AHIST_BW|AHIST_L7_1:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+              *AddRoutine = Add71MonoBPtr;
+            else
+              *AddRoutine = Add71MonoPtr;
+            break;
+
           default:
             *ScaleLeft  = 0;
             *ScaleRight = 0;
@@ -415,6 +427,16 @@ SelectAddRoutine ( Fixed     VolumeLeft,
               *AddRoutine = AddLongsStereoPtr;
             break;
 
+          case AHIST_L7_1:
+          case AHIST_BW|AHIST_L7_1:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+              *AddRoutine = Add71StereoBPtr;
+            else
+              *AddRoutine = Add71StereoPtr;
+            break;
+
           default:
             *ScaleLeft  = 0;
             *ScaleRight = 0;
@@ -423,6 +445,90 @@ SelectAddRoutine ( Fixed     VolumeLeft,
         }
         break;
 
+      case AHIST_L7_1:
+
+        // ...and then the source format.
+
+        switch(SampleType)
+        {
+          case AHIST_M8S:
+          case AHIST_BW|AHIST_M8S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+	      *AddRoutine = AddByte71BPtr;
+	    else
+	      *AddRoutine = AddByte71Ptr;
+            break;
+
+          case AHIST_S8S:
+          case AHIST_BW|AHIST_S8S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+	      *AddRoutine = AddBytes71BPtr;
+	    else
+	      *AddRoutine = AddBytes71Ptr;
+            break;
+
+          case AHIST_M16S:
+          case AHIST_BW|AHIST_M16S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+	      *AddRoutine = AddWord71BPtr;
+	    else
+	      *AddRoutine = AddWord71Ptr;
+            break;
+
+          case AHIST_S16S:
+          case AHIST_BW|AHIST_S16S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+	      *AddRoutine = AddWords71BPtr;
+	    else
+	      *AddRoutine = AddWords71Ptr;
+            break;
+
+          case AHIST_M32S:
+          case AHIST_BW|AHIST_M32S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+	      *AddRoutine = AddLong71BPtr;
+	    else
+	      *AddRoutine = AddLong71Ptr;
+            break;
+
+          case AHIST_S32S:
+          case AHIST_BW|AHIST_S32S:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+	      *AddRoutine = AddLongs71BPtr;
+	    else
+	      *AddRoutine = AddLongs71Ptr;
+            break;
+
+          case AHIST_L7_1:
+          case AHIST_BW|AHIST_L7_1:
+            *ScaleLeft  = VolumeLeft;
+            *ScaleRight = VolumeRight;
+            if(SampleType & AHIST_BW)
+	      *AddRoutine = Add7171BPtr;
+	    else
+	      *AddRoutine = Add7171Ptr;
+            break;
+	    
+          default:
+            *ScaleLeft  = 0;
+            *ScaleRight = 0;
+            *AddRoutine = NULL;
+            break;
+        }
+        break;
+	
       default:
         *ScaleLeft  = 0;
         *ScaleRight = 0;
@@ -657,8 +763,14 @@ Mix( struct Hook*             unused_Hook,
 
           if( try_samples > 0 )
           {
-            cd->cd_TempStartPointL = cd->cd_StartPointL;
-            cd->cd_TempStartPointR = cd->cd_StartPointR;
+            cd->cd_TempStartPointL   = cd->cd_StartPointL;
+            cd->cd_TempStartPointR   = cd->cd_StartPointR;
+            cd->cd_TempStartPointRL  = cd->cd_StartPointRL;
+            cd->cd_TempStartPointRR  = cd->cd_StartPointRR;
+            cd->cd_TempStartPointSL  = cd->cd_StartPointSL;
+            cd->cd_TempStartPointSR  = cd->cd_StartPointSR;
+            cd->cd_TempStartPointC   = cd->cd_StartPointC;
+            cd->cd_TempStartPointLFE = cd->cd_StartPointLFE;
 
             processed = ((ADDFUNC *) cd->cd_AddRoutine)( try_samples,
                                                          cd->cd_ScaleLeft,
@@ -763,8 +875,14 @@ Mix( struct Hook*             unused_Hook,
 
           if( samples > 0 )
           {
-            cd->cd_TempStartPointL = cd->cd_StartPointL;
-            cd->cd_TempStartPointR = cd->cd_StartPointR;
+            cd->cd_TempStartPointL   = cd->cd_StartPointL;
+            cd->cd_TempStartPointR   = cd->cd_StartPointR;
+            cd->cd_TempStartPointRL  = cd->cd_StartPointRL;
+            cd->cd_TempStartPointRR  = cd->cd_StartPointRR;
+            cd->cd_TempStartPointSL  = cd->cd_StartPointSL;
+            cd->cd_TempStartPointSR  = cd->cd_StartPointSR;
+            cd->cd_TempStartPointC   = cd->cd_StartPointC;
+            cd->cd_TempStartPointLFE = cd->cd_StartPointLFE;
 	    
 	    processed = ((ADDFUNC *) cd->cd_AddRoutine)( samples,
                                                          cd->cd_ScaleLeft,
@@ -777,7 +895,6 @@ Mix( struct Hook*             unused_Hook,
                                                          cd->cd_Add,
                                                         &cd->cd_Offset,
                                                          FALSE );
-
             cd->cd_Samples -= processed;
             samplesleft    -= processed;
           }

@@ -32,9 +32,11 @@
 #include <clib/alib_protos.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
+#ifndef __AMIGAOS4__
 #define __NOLIBBASE__
 #include <proto/ahi.h>
 #undef  __NOLIBBASE__
+#endif
 #include <proto/ahi_sub.h>
 
 #include <math.h>
@@ -693,6 +695,7 @@ ResetCmd ( struct AHIRequest *ioreq,
 *   EXAMPLE
 *
 *   NOTES
+*       It's only possible to read signed mono or stereo samples.
 *
 *   BUGS
 *
@@ -873,7 +876,7 @@ WriteCmd ( struct AHIRequest *ioreq,
     // Initialize the structure
     GetExtras(ioreq)->Channel   = NOCHANNEL;
     GetExtras(ioreq)->Sound     = AHI_NOSOUND;
-    GetExtras(ioreq)->VolumeDiv = 1;
+    GetExtras(ioreq)->VolumeScale = 0x10000;
   }
 
   if(iounit->IsPlaying && !error)
@@ -1251,8 +1254,8 @@ NewWriter ( struct AHIRequest *ioreq,
               AHI_Play(iounit->AudioCtrl,
                   AHIP_BeginChannel,  channel,
                   AHIP_LoopFreq,      ioreq->ahir_Frequency,
-                  AHIP_LoopVol,       ( ioreq->ahir_Volume /
-					GetExtras(ioreq)->VolumeDiv ),
+                  AHIP_LoopVol,       (ULONG) (((long long) ioreq->ahir_Volume *
+					GetExtras(ioreq)->VolumeScale ) >> 16),
                   AHIP_LoopPan,       ioreq->ahir_Position,
                   AHIP_LoopSound,     GetExtras(ioreq)->Sound,
                   AHIP_LoopOffset,    ioreq->ahir_Std.io_Actual,
@@ -1429,7 +1432,8 @@ PlayRequest ( int channel,
   AHI_Play(iounit->AudioCtrl,
       AHIP_BeginChannel,  channel,
       AHIP_Freq,          ioreq->ahir_Frequency,
-      AHIP_Vol,           ioreq->ahir_Volume / GetExtras(ioreq)->VolumeDiv,
+      AHIP_Vol,           (ULONG) (((long long) ioreq->ahir_Volume *
+				    GetExtras(ioreq)->VolumeScale) >> 16),
       AHIP_Pan,           ioreq->ahir_Position,
       AHIP_Sound,         GetExtras(ioreq)->Sound,
       AHIP_Offset,        ioreq->ahir_Std.io_Actual,
@@ -1605,7 +1609,7 @@ static void UpdateMasterVolume( struct AHIDevUnit *iounit,
   {
     ULONG id     = ioreq1->ahir_Private[1];
     int   c      = 0;
-    LONG  maxdiv = 1;
+    LONG  minscale = 0x10000;
 
 /*     KPrintF( "Checking id %08lx on request %08lx... ", id, ioreq1 ); */
     
@@ -1617,21 +1621,33 @@ static void UpdateMasterVolume( struct AHIDevUnit *iounit,
       {
 	++c;
 
-	if( GetExtras(ioreq2) && GetExtras(ioreq2)->VolumeDiv > maxdiv )
+	if( GetExtras(ioreq2) && GetExtras(ioreq2)->VolumeScale < minscale )
 	{
-	  maxdiv = GetExtras(ioreq2)->VolumeDiv;
+	  minscale = GetExtras(ioreq2)->VolumeScale;
 	}
       }
     }
-
-    if( maxdiv < c )
+    
+    if( minscale > 0x10000 / c )
     {
-      maxdiv = c;
+      minscale = 0x10000 / c;
     }
 
-    if( GetExtras(ioreq1)->VolumeDiv < maxdiv )
+    switch( iounit->ScaleMode )
     {
-      GetExtras(ioreq1)->VolumeDiv = maxdiv;
+      case AHI_SCALE_DYNAMIC_SAFE:
+	if( GetExtras(ioreq1)->VolumeScale > minscale )
+	{
+	  GetExtras(ioreq1)->VolumeScale = minscale;
+	}
+	break;
+
+      case AHI_SCALE_FIXED_SAFE:
+      case AHI_SCALE_FIXED_0_DB:
+      case AHI_SCALE_FIXED_3_DB:
+      case AHI_SCALE_FIXED_6_DB:
+	GetExtras(ioreq1)->VolumeScale = 0x10000;
+	break;
     }
 
 /*     KPrintF( "%ld requests, maxdiv = %ld -> Vol %05lx => %05lx\n", */
@@ -1650,7 +1666,8 @@ static void UpdateMasterVolume( struct AHIDevUnit *iounit,
     if( GetExtras(ioreq1)->Channel != NOCHANNEL )
     {
       AHI_SetVol( GetExtras(ioreq1)->Channel,
-		  ioreq1->ahir_Volume / GetExtras(ioreq1)->VolumeDiv,
+		  (ULONG) (((long long) ioreq1->ahir_Volume *
+			    GetExtras(ioreq1)->VolumeScale) >> 16),
 		  ioreq1->ahir_Position,
 		  iounit->AudioCtrl,
 		  AHISF_IMM );
@@ -1660,37 +1677,52 @@ static void UpdateMasterVolume( struct AHIDevUnit *iounit,
   AHIsub_Enable((struct AHIAudioCtrlDrv *) iounit->AudioCtrl);
 
   // And now the real master volume ...
-  
-  // Always "reserve" one channel for each opener (yes, even if
-  // they're not actually writing anything)
 
-  if( iounit->Unit.unit_OpenCnt != iounit->ChannelsInUse )
+  if( iounit->Unit.unit_OpenCnt == 0 )
   {
-    iounit->ChannelsInUse = iounit->Unit.unit_OpenCnt;
+    struct AHIEffMasterVolume vol = {
+      AHIET_MASTERVOLUME | AHIET_CANCEL,
+      0x10000
+    };
+      
+    AHI_SetEffect( &vol, iounit->AudioCtrl );
+  }
+  else
+  {
+    struct AHIEffMasterVolume vol = {
+      AHIET_MASTERVOLUME,
+      0x10000
+    };
     
-    if( iounit->Unit.unit_OpenCnt == 0 )
+    switch( iounit->ScaleMode )
     {
-      struct AHIEffMasterVolume vol = {
-	AHIET_MASTERVOLUME | AHIET_CANCEL,
-	0x10000
-      };
+      case AHI_SCALE_FIXED_SAFE:
+	vol.ahiemv_Volume = 0x10000;
+	break;
+      
+      case AHI_SCALE_DYNAMIC_SAFE:
+	vol.ahiemv_Volume = iounit->Channels * 0x10000 / iounit->Unit.unit_OpenCnt;
+	break;
 
-      AHI_SetEffect( &vol, iounit->AudioCtrl );
+      case AHI_SCALE_FIXED_0_DB:
+	vol.ahiemv_Volume = iounit->Channels * 0x10000;
+	break;
+      
+      case AHI_SCALE_FIXED_3_DB:
+	vol.ahiemv_Volume = iounit->Channels * 0xB505;
+	break;
+	
+      case AHI_SCALE_FIXED_6_DB:
+	vol.ahiemv_Volume = iounit->Channels * 0x8000;
+	break;
     }
-    else
+      
+    if( iounit->PseudoStereo )
     {
-      struct AHIEffMasterVolume vol = {
-	AHIET_MASTERVOLUME,
-	iounit->Channels * 0x10000 / iounit->Unit.unit_OpenCnt
-      };
-
-      if( iounit->PseudoStereo )
-      {
-	vol.ahiemv_Volume = vol.ahiemv_Volume / 2;
-      }
-
-      AHI_SetEffect( &vol, iounit->AudioCtrl );
+      vol.ahiemv_Volume = vol.ahiemv_Volume / 2;
     }
+
+    AHI_SetEffect( &vol, iounit->AudioCtrl );
   }
   
   AHIReleaseSemaphore(&iounit->Lock);

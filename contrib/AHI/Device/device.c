@@ -37,9 +37,11 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/iffparse.h>
+#ifndef __AMIGAOS4__
 #define __NOLIBBASE__
 #include <proto/ahi.h>
 #undef  __NOLIBBASE__
+#endif
 #include <proto/ahi_sub.h>
 
 #include <stddef.h>
@@ -126,14 +128,15 @@ ChannelInfoFunc( struct Hook*              hook,
 *  
 *       * Fast, powerful mixing routines (yeah, right... haha)
 *  
-*       The device's mixing routines mix 8- or 16-bit signed samples, both
-*       mono and stereo, located in Fast-RAM and outputs 16-bit mono or stereo
-*       (with stereo panning if desired) data, using any number of channels
-*       (as long as 'any' means less than 128).  Tables can be used speed
-*       the mixing up (especially when using 8-bit samples).  The samples can
-*       have any length (including odd) and can have any number of loops.
-*       There are also so-called HiFi mixing routines that can be used, that
-*       use linear interpolation and gives 32 bit output.
+*       The device's mixing routines mix 8- or 16-bit signed samples,
+*       both mono, stereo and 7.1, located in Fast-RAM and outputs
+*       16-bit mono or stereo (with stereo panning if desired) data,
+*       using any number of channels (as long as 'any' means less than
+*       128).  Tables can be used speed the mixing up (especially when
+*       using 8-bit samples).  The samples can have any length
+*       (including odd) and can have any number of loops.  There are
+*       also so-called HiFi mixing routines that can be used, that use
+*       linear interpolation and gives 32 bit output.
 *       
 *       * Support for non-realtime mixing
 *  
@@ -254,13 +257,18 @@ _DevOpen ( struct AHIRequest* ioreq,
 
 // One more check...
 
-  if((unit != AHI_NO_UNIT) && (ioreq->ahir_Version >= Version))
+  if((unit != AHI_NO_UNIT) && (ioreq->ahir_Version >= 4))
   {
     if(ioreq->ahir_Std.io_Message.mn_Length < sizeof(struct AHIRequest))
     {
       Req( "Bad parameters to OpenDevice()." );
       ioreq->ahir_Std.io_Error=IOERR_OPENFAIL;
       return IOERR_OPENFAIL;
+    }
+    else
+    {
+/*       KPrintF( "Tagging %08lx on task %08lx\n", ioreq, FindTask(0)); */
+      ioreq->ahir_Private[1] = (ULONG) ioreq;
     }
   }
 
@@ -307,8 +315,6 @@ _DevOpen ( struct AHIRequest* ioreq,
 
   if(!error)
   {
-/*     KPrintF( "Tagging %08lx on task %08lx\n", ioreq, FindTask(0)); */
-    ioreq->ahir_Private[1] = (ULONG) ioreq;
     ioreq->ahir_Std.io_Unit=(struct Unit *) iounit;
     if(iounit)    // Is NULL for AHI_NO_UNIT
       iounit->Unit.unit_OpenCnt++;
@@ -474,8 +480,6 @@ InitUnit ( ULONG unit,
             v++;
           }
 
-	  iounit->ChannelsInUse = 0;
-          
           replyport = CreateMsgPort();
 
           if( replyport != NULL )
@@ -675,6 +679,7 @@ ReadConfig ( struct AHIDevUnit *iounit,
                   iounit->OutputVolume    = unitprefs->ahiup_OutputVolume;
                   iounit->Input           = unitprefs->ahiup_Input;
                   iounit->Output          = unitprefs->ahiup_Output;
+		  iounit->ScaleMode	  = unitprefs->ahiup_ScaleMode;
 
 		  EndianSwap( sizeof (ULONG), &iounit->AudioMode );
 		  EndianSwap( sizeof (ULONG), &iounit->Frequency );

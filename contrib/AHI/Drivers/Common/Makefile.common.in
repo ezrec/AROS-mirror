@@ -61,7 +61,7 @@ OBJECTS		+= library.o gatestubs.o
 all:		$(DRIVER) $(MODEFILE)
 
 mostlyclean:
-	$(RM) $(DRIVER) $(MODEFILE) *.o *.a *.bak *~ \#*\# core Makefile.dep
+	$(RM) $(DRIVER) $(MODEFILE) *.o *.a Makefile.dep
 
 clean:		mostlyclean
 	$(RM) version.h gatestubs.c gatestubs.h
@@ -103,7 +103,7 @@ Makefile: Makefile.in Makefile.common.in ../../config.status
 ########################################
 
 %.o:	%.s
-	gasp  $< | $(AS) $(ASFLAGS) -o $@
+	$(AS) $(ASFLAGS) $^ -o $@
 
 $(DRIVER):		$(OBJECTS)
 	$(CC) $(LDFLAGS) $^ -o $@
@@ -112,7 +112,7 @@ $(MODEFILE):	$(MODEFILE).o
 	$(OBJCOPY) --output-target=binary $< $@
 
 $(MODEFILE).o:	MODEFILE.s $(MODEFILE).s
-	cat  $^ | $(AS) $(ASFLAGS) -o $@
+	$(AS) $(ASFLAGS) $^ -o $@
 
 gatestubs.c:	$(top_srcdir)/Include/SFD/ahi_sub_lib.sfd
 	$(SFDC) --mode=gatestubs --gateprefix=gw --libprefix=_ --libarg=last \

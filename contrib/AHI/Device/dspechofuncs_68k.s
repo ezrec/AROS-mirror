@@ -30,21 +30,21 @@
 	.type	_EchoStereo32,@func
 
 
-ahiecho_Delay		.equ	0
-ahiecho_Code		.equ	4
-ahiecho_FeedbackDS	.equ	8
-ahiecho_FeedbackDO	.equ	12
-ahiecho_FeedbackNS	.equ	16
-ahiecho_FeedbackNO	.equ	20
-ahiecho_MixN		.equ	24
-ahiecho_MixD		.equ	28
-ahiecho_Offset		.equ	32
-ahiecho_SrcPtr		.equ	36
-ahiecho_DstPtr		.equ	40
-ahiecho_EndPtr		.equ	44
-ahiecho_BufferLength	.equ	48
-ahiecho_BufferSize	.equ	52
-ahiecho_Buffer		.equ	56
+.set	ahiecho_Delay,		0
+.set	ahiecho_Code,		4
+.set	ahiecho_FeedbackDS,	8
+.set	ahiecho_FeedbackDO,	12
+.set	ahiecho_FeedbackNS,	16
+.set	ahiecho_FeedbackNO,	20
+.set	ahiecho_MixN,		24
+.set	ahiecho_MixD,		28
+.set	ahiecho_Offset,		32
+.set	ahiecho_SrcPtr,		36
+.set	ahiecho_DstPtr,		40
+.set	ahiecho_EndPtr,		44
+.set	ahiecho_BufferLength,	48
+.set	ahiecho_BufferSize,	52
+.set	ahiecho_Buffer,		56
 	
 /**
 *** DSPECHO

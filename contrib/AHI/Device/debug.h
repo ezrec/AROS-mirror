@@ -31,11 +31,15 @@ void
 KPrintFArgs( UBYTE* fmt, 
              ULONG* args );
 
+#ifndef __AMIGAOS4__
 #define KPrintF( fmt, ... )        \
 ({                                 \
   ULONG _args[] = { __VA_ARGS__ }; \
   KPrintFArgs( (fmt), _args );     \
 })
+#else
+#define KPrintF DebugPrintF
+#endif
 
 void
 Debug_AllocAudioA( struct TagItem *tags );

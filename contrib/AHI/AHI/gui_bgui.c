@@ -19,8 +19,8 @@
 
 /* $Id$
  * $Log$
- * Revision 1.4  2003/12/30 20:25:34  stegerg
- * Updated to latest AHI sources.
+ * Revision 1.5  2004/08/04 17:45:04  stegerg
+ * Updated sources to AHI 5.13
  *
  * Revision 5.2  2003/09/22 20:06:17  martin
  * Nuked CompilerSpecific.h

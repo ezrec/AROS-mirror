@@ -16,29 +16,41 @@ ReqA( const char*        text,
       APTR               args,
       struct DriverBase* AHIsubBase );
 
+#if !defined(__AMIGAOS4__)
 #define Req(a0, args...) \
         ({ULONG _args[] = { args }; ReqA((a0), (APTR)_args, AHIsubBase);})
+#else
+#define Req(a0, args...)
+#endif
 
 void
 MyKPrintFArgs( UBYTE*           fmt, 
 	       ULONG*           args,
 	       struct DriverBase* AHIsubBase );
 
+#if !defined(__AMIGAOS4__)
 #define KPrintF( fmt, ... )        \
 ({                                 \
   ULONG _args[] = { __VA_ARGS__ }; \
   MyKPrintFArgs( (fmt), _args, AHIsubBase ); \
 })
+#else
+#define KPrintF DebugPrintF
+#endif
 
 
 #if defined(__MORPHOS__)
+
 # include <emul/emulregs.h>
 # define INTGW(q,t,n,f)							\
 	q t n ## _code(void) { APTR d = (APTR) REG_A1; return f(d); }	\
 	q struct EmulLibEntry n = { TRAP_LIB, 0, (APTR) n ## _code };
 # define PROCGW(q,t,n,f)						\
 	q struct EmulLibEntry n = { TRAP_LIB, 0, (APTR) f };
+# define INTERRUPT_NODE_TYPE NT_INTERRUPT
+
 #elif defined(__amithlon__)
+
 # define INTGW(q,t,n,f)							\
 	__asm("	.text");						\
 	__asm("	.align 4");						\
@@ -56,7 +68,10 @@ MyKPrintFArgs( UBYTE*           fmt,
 # define PROCGW(q,t,n,f)						\
 	__asm(#n "=" #f "+1");						\
 	q t n(void);
+# define INTERRUPT_NODE_TYPE NT_INTERRUPT
+
 #elif defined(__AROS__)
+
 # include <aros/asmcall.h>
 # define INTGW(q,t,n,f)							\
 	q AROS_UFH4(t, n,						\
@@ -68,12 +83,28 @@ MyKPrintFArgs( UBYTE*           fmt,
 # define PROCGW(q,t,n,f)						\
 	__asm(#n "=" #f );						\
 	q t n(void);
+# define INTERRUPT_NODE_TYPE NT_INTERRUPT
+
+#elif defined(__AMIGAOS4__)
+
+# define INTGW(q,t,n,f) \
+    __asm(#n "=" #f ); \
+    q t n(APTR);
+# define PROCGW(q,t,n,f)						\
+	q t n(void) {f();}
+# define INTERRUPT_NODE_TYPE NT_EXTINTERRUPT
+#define	SWAPLONG(y) y
+#define	SWAPWORD(y) y
+
 #elif defined(__amiga__) && defined(__mc68000__)
-# define INTGW(q,t,n,f)							\
-	q t n(APTR d __asm("a1")) { return f(d); }
+
+# define INTGW(q,t,n,f)                                                 \
+       q t n(APTR d __asm("a1")) { return f(d); }
 # define PROCGW(q,t,n,f)						\
 	__asm("_" #n "= _" #f);						\
 	q t n(void);
+# define INTERRUPT_NODE_TYPE NT_INTERRUPT
+
 #else
 # error Unknown OS/CPU
 #endif

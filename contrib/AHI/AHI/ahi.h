@@ -45,6 +45,7 @@ struct state
   LONG ModeSelected;
   LONG FreqSelected;
   LONG ChannelsSelected;
+  LONG ScaleModeSelected;
   LONG InputSelected;
   LONG OutputSelected;
   LONG OutVolSelected;

@@ -63,8 +63,17 @@ publication, even if advised of the possibility of such damage.}
 
 $Id$
 $Log$
-Revision 1.4  2003/12/30 20:25:35  stegerg
-Updated to latest AHI sources.
+Revision 1.5  2004/08/04 17:45:06  stegerg
+Updated sources to AHI 5.13
+
+Revision 5.9.2.1  2004/06/08 21:16:16  martin
+Added 7.1 multichannel support.
+
+Revision 5.9  2004/06/01 19:00:01  martin
+Makeinfo fix.
+
+Revision 5.8  2004/02/19 20:45:03  martin
+Added note about AddAudioModes and sound card/AC97 initializing.
 
 Revision 5.7  2003/07/20 17:04:14  martin
 Replaced Nicolas Sallin with Genesi and bbrv.
@@ -219,7 +228,7 @@ publication, even if advised of the possibility of such damage.}
 
 @node    Top, Overview, (dir), (dir)
 
-@ifinfo
+@c @ifinfo
 
 @majorheading @sc{Ahi} User's Guide
 
@@ -246,7 +255,7 @@ The latest release of @sc{Ahi} can always be found at
 
 @end menu
 
-@end ifinfo
+@c @end ifinfo
 
 @c Part 5:  The Body of the Document
 @c ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -349,7 +358,7 @@ consider, right?
 @cindex System description
 
 @menu
-* AddAudioModes::               Database maintenance
+* AddAudioModes::               Database maintenance and more
 * AHI::                         Preferences program
 * AHI-Handler::                 DOS-device
 
@@ -388,6 +397,12 @@ C:ADDAUDIOMODES
 have to run this program, since @code{ahi.device} automatically reads all
 mode descriptors when it is used for the first time.  It can, however, be
 useful in installation scripts.
+
+In addition to rebuilding the audio mode database, it has the side
+effect that the audio drivers are loaded into memory. This causes the
+audio hardware to be initialized and, perhaps, AC97 mixers to be set
+up to the default, which is good if, for example, your CD is connected
+to your soundcard.
 
 The @samp{FILES} option specifies with descriptor(s) to be added to the
 current mode list.
@@ -1172,6 +1187,12 @@ volume with clipping automatically (@pxref{Advanced settings}).
 ``HiFi'' modes are useful when you're playing music---@dfn{MIDI} songs or
 @dfn{modules}, for example---and want the best possible quality @sc{Ahi}
 has to offer.
+
+
+@cindex HiFi 7.1 (audio mode)
+
+@item  HiFi 7.1
+``HiFi 7.1'' modes can be used by movie players or audio editors.
 
 @end table
 

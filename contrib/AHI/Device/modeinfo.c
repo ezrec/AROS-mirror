@@ -28,9 +28,11 @@
 #include <utility/tagitem.h>
 #include <proto/exec.h>
 #include <proto/utility.h>
+#ifndef __AMIGAOS4__
 #define __NOLIBBASE__
 #include <proto/ahi.h>
 #undef  __NOLIBBASE__
+#endif
 #include <proto/ahi_sub.h>
 
 #include "ahi_def.h"
@@ -77,7 +79,7 @@ stccpy( char *to, const char *from, int n )
 Fixed DizzyTestAudioID(ULONG id, struct TagItem *tags )
 {
   ULONG volume=0,stereo=0,panning=0,hifi=0,pingpong=0,record=0,realtime=0,
-        fullduplex=0,bits=0,channels=0,minmix=0,maxmix=0;
+        fullduplex=0,bits=0,channels=0,minmix=0,maxmix=0,multichannel=0;
   ULONG total=0,hits=0;
   struct TagItem *tstate, *tag;
   
@@ -95,6 +97,7 @@ Fixed DizzyTestAudioID(ULONG id, struct TagItem *tags )
                      AHIDB_Volume,      (ULONG) &volume,
                      AHIDB_Stereo,      (ULONG) &stereo,
                      AHIDB_Panning,     (ULONG) &panning,
+                     AHIDB_MultiChannel,(ULONG) &multichannel,
                      AHIDB_HiFi,        (ULONG) &hifi,
                      AHIDB_PingPong,    (ULONG) &pingpong,
                      AHIDB_Record,      (ULONG) &record,
@@ -136,6 +139,11 @@ Fixed DizzyTestAudioID(ULONG id, struct TagItem *tags )
       case AHIDB_Panning:
         total++;
         if(XNOR(tag->ti_Data, panning))
+          hits++;
+        break;
+      case AHIDB_MultiChannel:
+        total++;
+        if(XNOR(tag->ti_Data, multichannel))
           hits++;
         break;
       case AHIDB_HiFi:
@@ -251,6 +259,8 @@ BOOL TestAudioID(ULONG id, struct TagItem *tags )
 *       AHIDB_Stereo (ULONG *) - TRUE if output is in stereo. Unless
 *           AHIDB_Panning (see below) is TRUE, all even channels are played
 *           to the left and all odd to the right.
+*
+*       AHIDB_MultiChannel (ULONG *) - TRUE if output is in 7.1 channels.
 *
 *       AHIDB_Panning (ULONG *) - TRUE if this mode supports stereo panning.
 *
@@ -447,6 +457,12 @@ _AHI_GetAudioAttrsA( ULONG                    id,
         stringlen=GetTagData(AHIDB_BufferLen,0,tags);
         if((AHIsubBase=OpenLibrary(((struct AHIPrivAudioCtrl *)audioctrl)->ahiac_DriverName,DriverVersion)))
         {
+#ifdef __AMIGAOS4__
+          struct AHIsubIFace *IAHIsub;
+          if ((IAHIsub = (struct AHIsubIFace *) GetInterface((struct Library *) AHIsubBase, "main", 1, NULL)) != NULL)
+          {
+#endif
+
           while((tag1=NextTagItem(&tstate)))
           {
             ptr=(ULONG *)tag1->ti_Data;
@@ -533,7 +549,9 @@ _AHI_GetAudioAttrsA( ULONG                    id,
               break;
 // Booleans that defaults to TRUE
             case AHIDB_PingPong:
-              *ptr=AHIsub_GetAttr(tag1->ti_Tag,0,TRUE,dbtags,audioctrl);
+              *ptr=AHIsub_GetAttr(tag1->ti_Tag,0,
+				  audioctrl->ahiac_BuffType != AHIST_L7_1,
+				  dbtags,audioctrl);
               break;
 // Tags from the database.
             default:
@@ -542,6 +560,14 @@ _AHI_GetAudioAttrsA( ULONG                    id,
               break;
             }
           }
+#ifdef __AMIGAOS4__
+          if (IAHIsub) {
+             DropInterface((struct Interface *) IAHIsub);
+             IAHIsub = NULL;
+             }
+          }
+#endif
+
         }
         else // no AHIsubBase
           rc=FALSE;
@@ -608,6 +634,9 @@ _AHI_GetAudioAttrsA( ULONG                    id,
 *
 *       AHIDB_Stereo (BOOL) - If TRUE: mode must have stereo output.
 *           If FALSE: mode must not have stereo output (=mono).
+*
+*       AHIDB_MultiChannel (BOOL) - If TRUE: mode must have 7.1 channel output.
+*           If FALSE: mode must not have 7.1 channel output (=mono or stereo).
 *
 *       AHIDB_Panning (BOOL) - If TRUE: mode must support volume panning.
 *           If FALSE: mode must not support volume panning. 
@@ -679,6 +708,7 @@ _AHI_BestAudioIDA( struct TagItem* tags,
     // Default is off for performance reasons..
     { AHIDB_Volume,     FALSE },
     { AHIDB_Stereo,     FALSE },
+    { AHIDB_MultiChannel, FALSE },
     { AHIDB_Panning,    FALSE },
     { AHIDB_HiFi,       FALSE },
     { AHIDB_PingPong,   FALSE },

@@ -80,6 +80,11 @@ _AHIsub_AllocAudio( struct TagItem*         taglist,
 		    struct DriverBase*      AHIsubBase )
 {
   struct VoidBase* VoidBase = (struct VoidBase*) AHIsubBase;
+
+  // NOTE! A Real sound card driver would allocate *and lock* the
+  // audio hardware here. If this function gets called a second time,
+  // and the hardware is not capable of handling several audio streams
+  // at the same time, return AHISF_ERROR now!
   
   dd = AllocVec( sizeof( struct VoidData ),
 		 MEMF_CLEAR | MEMF_PUBLIC );
@@ -103,6 +108,7 @@ _AHIsub_AllocAudio( struct TagItem*         taglist,
 
   return ( AHISF_KNOWHIFI | 
 	   AHISF_KNOWSTEREO |
+	   AHISF_KNOWMULTICHANNEL |
 	   AHISF_MIXING |
 	   AHISF_TIMING );
 }

@@ -93,7 +93,7 @@ GENERATED	= version.h \
 all:		$(EXECUTABLE) $(srcdir)/ahi.ct $(CATALOGS)
 
 mostlyclean:
-	$(RM) $(EXECUTABLE) *.o *.a *.bak *~ \#*\# core Makefile.dep
+	$(RM) $(EXECUTABLE) *.o *.a Makefile.dep
 
 clean:		mostlyclean
 	$(RM) $(CATALOGS) $(GENERATED)
@@ -145,14 +145,13 @@ Makefile: Makefile.in ../config.status
 ########################################
 
 %.o:	%.s
-	gasp $< | $(AS) $(ASFLAGS) -o $@
-	#$(AS) $(ASFLAGS) $< -o $@
+	$(AS) $(ASFLAGS) $< -o $@
 
 $(EXECUTABLE):		$(OBJECTS) libaddroutines.a
 	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
 
 libaddroutines.a:	addroutines_hifi.o addroutines_lofi.o \
-			addroutines_32bit.o dspechofuncs.o
+			addroutines_32bit.o addroutines_71.o dspechofuncs.o
 	$(AR) $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 

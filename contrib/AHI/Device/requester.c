@@ -40,9 +40,11 @@ struct VSPrite;
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <proto/utility.h>
+#ifndef __AMIGAOS4__
 #define __NOLIBBASE__
 #include <proto/ahi.h>
 #undef  __NOLIBBASE__
+#endif
 #include <proto/ahi_sub.h>
 
 #include <math.h>
@@ -631,7 +633,7 @@ static BOOL LayOutReq (struct AHIAudioModeRequesterExt *req, struct TextAttr *Te
  * (note that we don't rely on the ln_Succ pointer
  *  of a message after we have replied it)
  */
-static void StripIntuiMessages( struct MsgPort *mp, struct Window *win )
+static void StripIntuiMessagesAHI( struct MsgPort *mp, struct Window *win )
 {
     struct IntuiMessage *msg;
     struct Node *succ;
@@ -662,7 +664,7 @@ static void CloseWindowSafely( struct Window *win )
     /* send back any messages for this window 
      * that have not yet been processed
      */
-    StripIntuiMessages( win->UserPort, win );
+    StripIntuiMessagesAHI( win->UserPort, win );
 
     /* clear UserPort so Intuition will not free it */
     win->UserPort = NULL;
@@ -972,7 +974,7 @@ static void OpenInfoWindow( struct AHIAudioModeRequesterExt *req )
 static void UpdateInfoWindow( struct AHIAudioModeRequesterExt *req )
 {
   LONG id=0, bits=0, stereo=0, pan=0, hifi=0, channels=0, minmix=0, maxmix=0,
-       record=0, fullduplex=0;
+       record=0, fullduplex=0, multichannel=0;
   int i;
 
   id = req->tempAudioID;
@@ -983,6 +985,7 @@ static void UpdateInfoWindow( struct AHIAudioModeRequesterExt *req )
   if(req->InfoWindow)
   {
     AHI_GetAudioAttrs(id, NULL,
+      AHIDB_MultiChannel, (ULONG) &multichannel,
       AHIDB_Stereo,       (ULONG) &stereo,
       AHIDB_Panning,      (ULONG) &pan,
       AHIDB_HiFi,         (ULONG) &hifi,
@@ -1013,9 +1016,9 @@ static void UpdateInfoWindow( struct AHIAudioModeRequesterExt *req )
         id);
     AddTail((struct List *) &req->InfoList,(struct Node *) &req->AttrNodes[i]);
     Sprintf(req->AttrNodes[i++].text, GetString(msgReqInfoResolution, req->Catalog),
-        bits, (ULONG) GetString((stereo ?
+        bits, (ULONG) GetString((multichannel ? msgReqInfoMultiChannel : (stereo ?
           (pan ? msgReqInfoStereoPan : msgReqInfoStereo) :
-          msgReqInfoMono), req->Catalog));
+          msgReqInfoMono)), req->Catalog));
     AddTail((struct List *) &req->InfoList,(struct Node *) &req->AttrNodes[i]);
     Sprintf(req->AttrNodes[i++].text, GetString(msgReqInfoChannels, req->Catalog),
         channels);
@@ -1380,7 +1383,6 @@ _AHI_AudioRequestA( struct AHIAudioModeRequester* req_in,
 
 
 // Scan audio database for modes and create list
-
   req->list=&list;
   NewList((struct List *)req->list);
   while(AHI_INVALID_ID != (id=AHI_NextAudioID(id)))
@@ -1399,7 +1401,9 @@ _AHI_AudioRequestA( struct AHIAudioModeRequester* req_in,
       node->node.ln_Pri=0;
       node->node.ln_Name=node->name;
       node->ID=id;
+#ifndef __AMIGAOS4__
       Sprintf(node->node.ln_Name, GetString(msgUnknown, req->Catalog),id);
+#endif
       AHI_GetAudioAttrs(id, NULL,
           AHIDB_BufferLen,80,
           AHIDB_Name, (ULONG) node->node.ln_Name,

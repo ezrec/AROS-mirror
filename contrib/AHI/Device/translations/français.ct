@@ -131,3 +131,9 @@ Enregistrement en 'half duplex'
 msgReqInfoRecordFull
 Enregistrement en 'full duplex'
 ; Record in full duplex
+;
+msgReqInfoMultiChannel
+
+; 7.1 multichannel
+;
+; ***NEW***

@@ -52,4 +52,8 @@ void PostTimerPreserveAllRegs( void );
 
 #endif /* defined( __AROS__ ) && !defined( __mc68000__ ) */
 
+#ifdef __AMIGAOS4__
+ULONG HookEntry( struct Hook* h, void* o, void* m );
+#endif
+
 #endif /* ahi_gateway_h */

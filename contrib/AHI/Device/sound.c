@@ -26,9 +26,11 @@
 #include <utility/tagitem.h>
 #include <proto/exec.h>
 #include <proto/utility.h>
+#ifndef __AMIGAOS4__
 #define __NOLIBBASE__
 #include <proto/ahi.h>
 #undef  __NOLIBBASE__
+#endif
 #include <proto/ahi_sub.h>
 #include <stdlib.h>
 
@@ -863,6 +865,7 @@ _AHI_SetEffect( ULONG*                   effect,
 *                   AHIST_S16S: Stereo, 16 bit signed (2×WORDs) (V4).
 *                   AHIST_M32S: Mono, 32 bit signed (LONGs). (V6)
 *                   AHIST_S32S: Stereo, 32 bit signed (2×LONGs) (V6).
+*                   AHIST_L7_1: 7.1, 32 bit signed (8×LONGs) (V6).
 *               ahisi_Address - Address to the sample array.
 *               ahisi_Length - The size of the array, in samples.
 *               Don't even think of setting ahisi_Address to 0 and
@@ -890,6 +893,8 @@ _AHI_SetEffect( ULONG*                   effect,
 *       MEMF_PUBLIC flag set. 
 *
 *   BUGS
+*       AHIST_L7_1 can only be played using 7.1 audio modes -- it will NOT
+*       be downmixed! It can't be played backwards either.
 *
 *   SEE ALSO
 *       AHI_UnloadSound(), AHI_SetEffect(), AHI_SetFreq(), AHI_SetSound(),
@@ -935,6 +940,17 @@ _AHI_LoadSound( UWORD                    sound,
 
       switch(si->ahisi_Type)
       {
+        case AHIST_L7_1:
+	  if( (audioctrl->ac.ahiac_Flags & AHIACF_HIFI) == 0 )
+	  {
+	    rc = AHIE_BADSAMPLETYPE;
+	    break;
+	  }
+	  else
+	  {
+	    // Fall through ...
+	  }
+	  
         case AHIST_M8S:
         case AHIST_M16S:
         case AHIST_S8S:
@@ -946,7 +962,6 @@ _AHI_LoadSound( UWORD                    sound,
           audioctrl->ahiac_SoundDatas[sound].sd_Type   = si->ahisi_Type;
           audioctrl->ahiac_SoundDatas[sound].sd_Addr   = si->ahisi_Address;
           audioctrl->ahiac_SoundDatas[sound].sd_Length = si->ahisi_Length;
-
           break;
 
         default:
@@ -1255,12 +1270,15 @@ _AHI_PlayA( struct AHIPrivAudioCtrl* audioctrl,
 *           possible types.
 *
 *   RESULT
+*       The number of bytes, or 0 for invalid types.
 *
 *   EXAMPLE
 *
 *   NOTES
 *
 *   BUGS
+*       This function returned trash for invalid sample types
+*       before V6.
 *
 *   SEE ALSO
 *      <devices/ahi.h>
@@ -1288,11 +1306,22 @@ ULONG
 _AHI_SampleFrameSize( ULONG           sampletype,
 		      struct AHIBase* AHIBase )
 {
+  ULONG result = 0;
+  
+  if(sampletype <= AHIST_S32S )
+  {
+    result = type2bytes[sampletype];
+  }
+  else if(sampletype == AHIST_L7_1)
+  {
+    result = 32;
+  }
+
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {
     Debug_SampleFrameSize(sampletype);
     KPrintF("=>%ld\n",type2bytes[sampletype]);
   }
 
-  return type2bytes[sampletype];
+  return result;
 }

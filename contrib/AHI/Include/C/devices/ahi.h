@@ -2,11 +2,11 @@
 #define DEVICES_AHI_H
 
 /*
-**	$VER: ahi.h 5.3 (19.1.2003)
+**	$VER: ahi.h 5.4 (25.7.2004)
 **
 **	ahi.device definitions
 **
-**	(C) Copyright 1994-2003 Martin Blom
+**	(C) Copyright 1994-2004 Martin Blom
 **	All Rights Reserved.
 **
 ** (TAB SIZE: 8)
@@ -245,6 +245,8 @@ struct AHIEffChannelInfo
 /* --- New for V4, they will be ignored by V2 and earlier --- */
 #define AHIDB_Data		(AHI_TagBaseR+142)	/* Private! */
 #define AHIDB_DriverBaseName	(AHI_TagBaseR+143)	/* Private! */
+/* --- New for V6, they will be ignored by V4 and earlier --- */
+#define AHIDB_MultiChannel	(AHI_TagBase+144)	/* Boolean */
 
  /* AHI_BestAudioIDA tags */
 /* --- New for V4, they will be ignored by V2 and earlier --- */
@@ -322,7 +324,7 @@ struct AHIEffChannelInfo
 
  /* Sample types */
 /* Note that only AHIST_M8S, AHIST_S8S, AHIST_M16S and AHIST_S16S
-   (plus AHIST_M32S and AHIST_S32S in V6)
+   (plus AHIST_M32S, AHIST_S32S and AHIST_L7_1 in V6)
    are supported by AHI_LoadSound(). */
 #define AHIST_M8S		(0UL)			/* Mono, 8 bit signed (BYTE) */
 #define AHIST_M16S		(1UL)			/* Mono, 16 bit signed (WORD) */
@@ -332,6 +334,7 @@ struct AHIEffChannelInfo
 #define AHIST_S32S		(10UL)			/* Stereo, 32 bit signed (2×LONG) */
 
 #define AHIST_M8U		(4UL)			/* OBSOLETE! */
+#define AHIST_L7_1		(0x00c3000aUL)		/* 7.1, 32 bit signed (8×LONG) */
 
  /* Error codes */
 #define AHIE_OK			(0UL)			/* No error */
@@ -360,7 +363,7 @@ struct AHIEffChannelInfo
 struct AHIUnitPrefs
 {
 	UBYTE	ahiup_Unit;
-        UBYTE	ahiup_Pad;
+        UBYTE	ahiup_ScaleMode;			/* See below (V6) */
         UWORD	ahiup_Channels;
         ULONG	ahiup_AudioMode;
         ULONG	ahiup_Frequency;
@@ -370,6 +373,13 @@ struct AHIUnitPrefs
         ULONG	ahiup_Input;
         ULONG	ahiup_Output;
 };
+
+ /* Scale modes */
+#define AHI_SCALE_FIXED_SAFE	(0U)			/* x=y*1/max(ch)	*/
+#define AHI_SCALE_DYNAMIC_SAFE	(1U)			/* x=y*1/ch		*/
+#define AHI_SCALE_FIXED_0_DB	(2U)			/* x=y			*/
+#define AHI_SCALE_FIXED_3_DB	(3U)			/* x=y*1/sqrt(2)	*/
+#define AHI_SCALE_FIXED_6_DB	(4U)			/* x=y*1/2		*/
 
 struct AHIGlobalPrefs
 {

@@ -1,10 +1,10 @@
 /* $Id$
 * $Log$
-* Revision 1.4  2003/12/30 20:25:35  stegerg
-* Updated to latest AHI sources.
+* Revision 1.5  2004/08/04 17:45:05  stegerg
+* Updated sources to AHI 5.13
 *
-* Revision 5.3  2003/04/22 18:19:05  martin
-* Now creates localize.[ch] in srcdir.
+* Revision 5.3.2.1  2004/06/08 21:16:12  martin
+* Added 7.1 multichannel support.
 *
 * Revision 5.0  2000/11/28 00:15:17  lcs
 * Bumped CVS revision to 5.0.
@@ -68,6 +68,7 @@ const struct FC_Type _msgReqInfoMixrate = { 20, "Mixing rates: %ld-%ld Hz" };
 const struct FC_Type _msgReqInfoHiFi = { 21, "HiFi mixing" };
 const struct FC_Type _msgReqInfoRecordHalf = { 22, "Record in half duplex" };
 const struct FC_Type _msgReqInfoRecordFull = { 23, "Record in full duplex" };
+const struct FC_Type _msgReqInfoMultiChannel = { 24, "7.1 multichannel" };
 
 
 static struct Catalog *ahi_Catalog = NULL;
