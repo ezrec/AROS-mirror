@@ -62,20 +62,20 @@ typedef struct CDROM_INFO {
  */
 
 typedef struct handler {
-  /*M*/ void       (*close_vol_info)(struct ACDRBase *, VOLUME *);
-  /*M*/ CDROM_OBJ *(*open_top_level_directory)(struct ACDRBase *, VOLUME *);
-  /*M*/ CDROM_OBJ *(*open_obj_in_directory)(struct ACDRBase *, CDROM_OBJ *, char *);
-  /*M*/ CDROM_OBJ *(*find_parent)(struct ACDRBase *, CDROM_OBJ *);
-  /*M*/ void       (*close_obj)(struct ACDRBase *, CDROM_OBJ *);
-  /*M*/ int        (*read_from_file)(struct ACDRBase *, CDROM_OBJ *, char *, int);
-  /*M*/ t_bool     (*cdrom_info)(struct ACDRBase *, CDROM_OBJ *, CDROM_INFO *);
-  /*M*/ t_bool     (*examine_next)(struct ACDRBase *, CDROM_OBJ *, CDROM_INFO *, unsigned long *);
-  /*M*/ void      *(*clone_obj_info)(struct ACDRBase *, void *);
+  /*M*/ void       (*close_vol_info)(VOLUME *);
+  /*M*/ CDROM_OBJ *(*open_top_level_directory)(VOLUME *);
+  /*M*/ CDROM_OBJ *(*open_obj_in_directory)(CDROM_OBJ *, char *);
+  /*M*/ CDROM_OBJ *(*find_parent)(CDROM_OBJ *);
+  /*M*/ void       (*close_obj)(CDROM_OBJ *);
+  /*M*/ int        (*read_from_file)(CDROM_OBJ *, char *, int);
+  /*M*/ t_bool     (*cdrom_info)(CDROM_OBJ *, CDROM_INFO *);
+  /*M*/ t_bool     (*examine_next)(CDROM_OBJ *, CDROM_INFO *, unsigned long *);
+  /*M*/ void      *(*clone_obj_info)(void *);
   /*M*/ t_bool     (*is_top_level_obj)(CDROM_OBJ *);
   /*M*/ t_bool     (*same_objects)(CDROM_OBJ *, CDROM_OBJ *);
-  /*O*/	t_ulong   (*creation_date)(struct ACDRBase *acdrbase, VOLUME *);
+  /*O*/	t_ulong   (*creation_date)(VOLUME *);
   /*M*/ t_ulong    (*volume_size)(VOLUME *);
-  /*M*/ void       (*volume_id)(struct ACDRBase *, VOLUME *, char *, int);
+  /*M*/ void       (*volume_id)(VOLUME *, char *, int);
   /*M*/ t_ulong    (*location)(CDROM_OBJ *);
   /*M*/ t_ulong    (*file_length)(CDROM_OBJ *);
   /*M*/ t_ulong    (*block_size)(VOLUME *);
@@ -99,75 +99,35 @@ typedef struct handler {
 extern int iso_errno;
 
 t_protocol Which_Protocol
-	(
-		struct ACDRBase *,
-		CDROM *p_cdrom,
-		t_bool p_use_rock_ridge,
-		int *p_skip,
-		t_ulong *p_offset
-	);
+	(CDROM *p_cdrom, t_bool p_use_rock_ridge, int *p_skip, t_ulong *p_offset);
 
-VOLUME *Open_Volume(struct ACDRBase *, CDROM *p_cdrom, t_bool p_use_rock_ridge);
-void Close_Volume(struct ACDRBase *, VOLUME *p_volume);
+VOLUME *Open_Volume(CDROM *p_cdrom, t_bool p_use_rock_ridge);
+void Close_Volume(VOLUME *p_volume);
 
-CDROM_OBJ *Open_Top_Level_Directory(struct ACDRBase *, VOLUME *p_volume);
-CDROM_OBJ *Open_Object
-	(
-		struct ACDRBase *,
-		CDROM_OBJ *p_current_dir,
-		char *p_path_name
-	);
-void Close_Object(struct ACDRBase *, CDROM_OBJ *p_object);
+CDROM_OBJ *Open_Top_Level_Directory(VOLUME *p_volume);
+CDROM_OBJ *Open_Object(CDROM_OBJ *p_current_dir, char *p_path_name);
+void Close_Object(CDROM_OBJ *p_object);
 
-int Read_From_File
-	(
-		struct ACDRBase *,
-		CDROM_OBJ *p_file,
-		char *p_buffer,
-		int p_buffer_length
-	);
+int Read_From_File(CDROM_OBJ *p_file, char *p_buffer, int p_buffer_length);
 
-int CDROM_Info(struct ACDRBase *, CDROM_OBJ *p_obj, CDROM_INFO *p_info);
+int CDROM_Info(CDROM_OBJ *p_obj, CDROM_INFO *p_info);
 t_bool Examine_Next
-	(
-		struct ACDRBase *,
-		CDROM_OBJ *p_dir,
-		CDROM_INFO *p_info,
-		unsigned long *p_offset
-	);
+	(CDROM_OBJ *p_dir, CDROM_INFO *p_info, unsigned long *p_offset);
 
-CDROM_OBJ *Clone_Object(struct ACDRBase *, CDROM_OBJ *p_object);
-CDROM_OBJ *Find_Parent(struct ACDRBase *, CDROM_OBJ *p_object);
+CDROM_OBJ *Clone_Object(CDROM_OBJ *p_object);
+CDROM_OBJ *Find_Parent(CDROM_OBJ *p_object);
 
 t_bool Is_Top_Level_Object (CDROM_OBJ *p_object);
 
 int Seek_Position (CDROM_OBJ *p_object, long p_offset, int p_mode);
 
 t_bool Same_Objects (CDROM_OBJ *p_object1, CDROM_OBJ *p_object2);
-t_ulong Volume_Creation_Date(struct ACDRBase *, VOLUME *p_volume);
+t_ulong Volume_Creation_Date(VOLUME *p_volume);
 t_ulong Volume_Size (VOLUME *p_volume);
 t_ulong Block_Size (VOLUME *p_volume);
-void Volume_ID
-	(
-		struct ACDRBase *,
-		VOLUME *p_volume,
-		char *p_buffer,
-		int p_buf_length
-	);
+void Volume_ID(VOLUME *p_volume, char *p_buffer, int p_buf_length );
 t_ulong Location (CDROM_OBJ *p_object);
-int Full_Path_Name
-	(
-		struct ACDRBase *,
-		CDROM_OBJ *p_obj,
-		char *p_buf,
-		int p_buf_length
-	);
+int Full_Path_Name(CDROM_OBJ *p_obj, char *p_buf, int p_buf_length);
 
-int Strncasecmp(struct ACDRBase *, char *p_str1, char *p_str2, int p_length);
-#warning "this should go into path.h!"
-t_path_list Append_Path_List(struct ACDRBase *, t_path_list, char *);
-t_path_list Copy_Path_List (t_path_list, int);
-void Free_Path_List(struct ACDRBase *, t_path_list);
-t_bool Path_Name_From_Path_List(struct ACDRBase *, t_path_list, char*, int);
-
+int Strncasecmp(char *p_str1, char *p_str2, int p_length);
 #endif /* _GENERIC_H_ */

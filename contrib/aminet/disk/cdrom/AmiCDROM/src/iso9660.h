@@ -132,32 +132,11 @@ typedef struct iso_obj_info {
   unsigned long		parent_loc; /* for files only */
 } t_iso_obj_info;
 
-t_bool Iso_Init_Vol_Info
-	(
-		struct ACDRBase *,
-		VOLUME *p_volume,
-		int p_skip,
-		t_ulong p_offset
-	);
-t_bool Uses_Iso_Protocol
-	(
-		struct ACDRBase *acdrbase,
-		CDROM *p_cdrom,
-		t_ulong *p_offset
-	);
-t_bool Uses_High_Sierra_Protocol(struct ACDRBase *, CDROM *p_cdrom);
+t_bool Iso_Init_Vol_Info(VOLUME *p_volume, int p_skip, t_ulong p_offset);
+t_bool Uses_Iso_Protocol(CDROM *p_cdrom, t_ulong *p_offset);
+t_bool Uses_High_Sierra_Protocol(CDROM *p_cdrom);
 directory_record *Get_Directory_Record
-	(
-		struct ACDRBase *,
-		VOLUME *p_volume,
-		unsigned long p_location,
-		unsigned long p_offset
-	);
-CDROM_OBJ *Iso_Create_Directory_Obj
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		unsigned long p_location
-	);
+	(VOLUME *p_volume, unsigned long p_location, unsigned long p_offset);
+CDROM_OBJ *Iso_Create_Directory_Obj(VOLUME *p_volume, unsigned long p_location);
 
 #endif /* _ISO9660_H_ */

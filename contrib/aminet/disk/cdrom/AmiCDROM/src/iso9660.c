@@ -34,33 +34,43 @@
  * 16-Sep-93   fmu   Fixed bug in Seek_Position.
  * 16-Sep-93   fmu   Bugfix: Top level object recognition in CDROM_Info
  *                   had to be changed for Rock Ridge disks.
+ * 07-Jul-02 sheutlin  various changes when porting to AROS
+ *                     - global variables are now in a struct Globals *global
  */
 
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
 
+#include <proto/exec.h>
+#include <proto/utility.h>
 #include <aros/debug.h>
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <utility/date.h>
-
-#include <proto/exec.h>
-#include <proto/utility.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 #include "cdrom.h"
 #include "iso9660.h"
 #include "rock.h"
+#include "globals.h"
 
 #include "clib_stuff.h"
-#include "baseredef.h"
 
 t_bool Iso_Is_Top_Level_Object (CDROM_OBJ *);
 
-int iso_errno;
-
 #define VOL(vol,tag) (((t_iso_vol_info *)(vol->vol_info))->tag)
 #define OBJ(obj,tag) (((t_iso_obj_info *)(obj->obj_info))->tag)
+
+extern struct Globals *global;
+
+#ifdef SysBase
+#	undef SysBase
+#endif
+#define SysBase global->SysBase
+#ifdef UtilityBase
+#	undef UtilityBase
+#endif
+#define UtilityBase global->UtilityBase
 
 /* Check whether the given volume uses the ISO 9660 Protocol.
  * The protocol is identified by the sequence
@@ -72,13 +82,7 @@ int iso_errno;
  * Returns TRUE iff the ISO protocol is used; FALSE otherwise.
  */
 
-t_bool Uses_Iso_Protocol
-	(
-		struct ACDRBase *acdrbase,
-		CDROM *p_cdrom,
-		t_ulong *p_offset
-	)
-{
+t_bool Uses_Iso_Protocol(CDROM *p_cdrom, t_ulong *p_offset) {
 int i, len;
 t_ulong *buf;
 
@@ -86,13 +90,10 @@ t_ulong *buf;
 		If Data_Tracks() returns -1, then the drive probably doesn't support
 		the SCSI-2 READ TOC command.
 	*/
-	if (
-			p_cdrom->use_trackdisk ||
-			(len = Data_Tracks(acdrbase, p_cdrom, &buf)) < 0
-		)
+	if (p_cdrom->use_trackdisk || (len = Data_Tracks(p_cdrom, &buf)) < 0)
 	{
 		*p_offset = 0;
-		if (!Read_Sector(acdrbase, p_cdrom, 16))
+		if (!Read_Sector(p_cdrom, 16))
 			return FALSE;  
 		return StrNCmp((char *) p_cdrom->buffer + 1, "CD001", 5) == 0;
 	}
@@ -105,8 +106,8 @@ t_ulong *buf;
 		session:
 	*/
 	if (
-			Find_Last_Session(acdrbase, p_cdrom, p_offset) &&
-			Read_Sector(acdrbase, p_cdrom, 16 + *p_offset) &&
+			Find_Last_Session(p_cdrom, p_offset) &&
+			Read_Sector(p_cdrom, 16 + *p_offset) &&
 			StrNCmp((char *) p_cdrom->buffer + 1, "CD001", 5) == 0
 		)
 	{
@@ -118,7 +119,7 @@ t_ulong *buf;
 	for (i=len-1; i>=0; i--)
 	{
 		*p_offset = buf[i];
-		if (!Read_Sector(acdrbase, p_cdrom, 16 + *p_offset))
+		if (!Read_Sector(p_cdrom, 16 + *p_offset))
 			continue;
 		if (StrNCmp((char *) p_cdrom->buffer + 1, "CD001", 5) == 0)
 		{
@@ -133,7 +134,7 @@ t_ulong *buf;
 		On some disks, the information in the TOC may not be valid. Therefore
 		also check sector 16:
 	*/
-	if (!Read_Sector(acdrbase, p_cdrom, 16))
+	if (!Read_Sector(p_cdrom, 16))
 		return FALSE;
 	if (StrNCmp((char *) p_cdrom->buffer + 1, "CD001", 5) == 0)
 	{
@@ -152,21 +153,14 @@ t_ulong *buf;
  * Returns TRUE iff the High Sierra protocol is used; FALSE otherwise.
  */
 
-t_bool Uses_High_Sierra_Protocol(struct ACDRBase *acdrbase, CDROM *p_cdrom) {
-	if (!Read_Sector(acdrbase, p_cdrom, 16))
+t_bool Uses_High_Sierra_Protocol(CDROM *p_cdrom) {
+	if (!Read_Sector(p_cdrom, 16))
 		return FALSE;
 
 	return StrNCmp((char *) p_cdrom->buffer + 9, "CDROM", 5) == 0;
 }
 
-t_bool Iso_Init_Vol_Info
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		int p_skip,
-		t_ulong p_offset
-	)
-{
+t_bool Iso_Init_Vol_Info(VOLUME *p_volume, int p_skip, t_ulong p_offset) {
 long loc = 16 + p_offset;
 extern t_handler g_iso_handler, g_rr_handler;
 
@@ -178,15 +172,15 @@ extern t_handler g_iso_handler, g_rr_handler;
 	p_volume->vol_info = AllocMem (sizeof (t_iso_vol_info), MEMF_PUBLIC);
 	if (!p_volume->vol_info)
 	{
-		iso_errno = ISOERR_NO_MEMORY;
+		global->iso_errno = ISOERR_NO_MEMORY;
 		return FALSE;
 	}
 
 	for (;;)
 	{
-		if (!Read_Sector(acdrbase, p_volume->cd, loc))
+		if (!Read_Sector(p_volume->cd, loc))
 		{
-			iso_errno = ISOERR_SCSI_ERROR;
+			global->iso_errno = ISOERR_SCSI_ERROR;
 			FreeMem (p_volume->vol_info, sizeof (t_iso_vol_info));
 			return FALSE;
 		}
@@ -204,7 +198,7 @@ extern t_handler g_iso_handler, g_rr_handler;
 
 		if (p_volume->cd->buffer[0] == 255 || loc > 1000)
 		{
-			iso_errno = ISOERR_NO_PVD;
+			global->iso_errno = ISOERR_NO_PVD;
 			FreeMem (p_volume->vol_info, sizeof (t_iso_vol_info));
 			return FALSE;
 		}
@@ -250,23 +244,18 @@ extern t_handler g_iso_handler, g_rr_handler;
 	return TRUE;
 }
 
-void Iso_Close_Vol_Info(struct ACDRBase *acdrbase, VOLUME *p_volume)
+void Iso_Close_Vol_Info(VOLUME *p_volume)
 {
 	FreeMem (p_volume->vol_info, sizeof (t_iso_vol_info));
 }
 
-CDROM_OBJ *Iso_Alloc_Obj
-	(
-		struct ACDRBase *acdrbase,
-		int p_length_of_dir_record
-	)
-{
+CDROM_OBJ *Iso_Alloc_Obj(int p_length_of_dir_record) {
 CDROM_OBJ *obj;
 
 	obj = AllocMem (sizeof (CDROM_OBJ), MEMF_PUBLIC | MEMF_CLEAR);
 	if (!obj)
 	{
-		iso_errno = ISOERR_NO_MEMORY;
+		global->iso_errno = ISOERR_NO_MEMORY;
 		return NULL;
 	}
 
@@ -280,7 +269,7 @@ CDROM_OBJ *obj;
 	OBJ(obj,dir) = AllocMem (p_length_of_dir_record, MEMF_PUBLIC);
 	if (!OBJ(obj,dir))
 	{
-		iso_errno = ISOERR_NO_MEMORY;
+		global->iso_errno = ISOERR_NO_MEMORY;
 		FreeMem (obj->obj_info, sizeof (t_iso_obj_info));
 		FreeMem (obj, sizeof (CDROM_OBJ));
 		return NULL;
@@ -292,15 +281,10 @@ CDROM_OBJ *obj;
 /* Get the "CDROM object" for the root directory of the volume.
  */
 
-CDROM_OBJ *Iso_Open_Top_Level_Directory
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume
-	)
-{
+CDROM_OBJ *Iso_Open_Top_Level_Directory(VOLUME *p_volume) {
 CDROM_OBJ *obj;
 
-	obj = Iso_Alloc_Obj(acdrbase, VOL(p_volume,pvd).root.length);
+	obj = Iso_Alloc_Obj(VOL(p_volume,pvd).root.length);
 	if (!obj)
 		return NULL;
 
@@ -320,18 +304,8 @@ CDROM_OBJ *obj;
 /* Test on equality of directory names (ignoring case).
  */
 
-int Directory_Names_Equal
-	(
-		struct ACDRBase *acdrbase,
-		char *p_iso_name,
-		int p_length,
-		char *p_name
-	)
-{
-	return (
-				Strncasecmp(acdrbase, p_iso_name, p_name, p_length) == 0 &&
-				p_name[p_length] == 0
-			);
+int Directory_Names_Equal(char *p_iso_name, int p_length, char *p_name) {
+	return (Strncasecmp(p_iso_name, p_name, p_length)==0 && p_name[p_length]==0);
 }
 
 /* Compare the name of the directory entry p_iso_name (with length p_length)
@@ -340,20 +314,10 @@ int Directory_Names_Equal
  *       name (without version number).
  */
 
-int Names_Equal
-	(
-		struct ACDRBase *acdrbase,
-		char *p_iso_name,
-		int p_length,
-		char *p_name
-	)
-{
+int Names_Equal(char *p_iso_name, int p_length, char *p_name) {
 int pos;
 
-	if (
-			Strncasecmp(acdrbase, p_iso_name, p_name, p_length) == 0 &&
-      	p_name[p_length] == 0
-		)
+	if (Strncasecmp(p_iso_name, p_name, p_length) == 0 && p_name[p_length] == 0)
 		return TRUE;
 
 	/* compare without version number: */
@@ -363,10 +327,7 @@ int pos;
 			break;
 
 	if (pos>=0)
-		return (
-					Strncasecmp(acdrbase, p_iso_name, p_name, pos) == 0 &&
-          		p_name[pos] == 0
-				);
+		return (Strncasecmp(p_iso_name, p_name, pos) == 0 && p_name[pos] == 0);
 	else
 		return FALSE;
 }
@@ -375,22 +336,18 @@ int pos;
  * p_location is a LOGICAL BLOCK number.
  */
 
+#warning "FIXME: static variable may cause problems with 2 processes started!!!"
 directory_record *Get_Directory_Record
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		unsigned long p_location,
-		unsigned long p_offset
-	)
+	(VOLUME *p_volume, unsigned long p_location, unsigned long p_offset)
 {
 static unsigned char result[256];
 int len;
 int loc;
   
 	loc = (p_location >> VOL(p_volume,blockshift)) + (p_offset >> 11);
-	if (!Read_Sector(acdrbase, p_volume->cd, loc))
+	if (!Read_Sector(p_volume->cd, loc))
 	{
-		iso_errno = ISOERR_SCSI_ERROR;
+		global->iso_errno = ISOERR_SCSI_ERROR;
 		return NULL;
 	}
 
@@ -407,13 +364,7 @@ int loc;
  * at sector p_location.
  */
 
-CDROM_OBJ *Iso_Create_Directory_Obj
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		unsigned long p_location
-	)
-{
+CDROM_OBJ *Iso_Create_Directory_Obj(VOLUME *p_volume, unsigned long p_location){
 directory_record *dir;
 unsigned long loc;
 int offset = 0;
@@ -421,13 +372,13 @@ CDROM_OBJ *obj;
 unsigned long len;
 
 	if (p_location == VOL(p_volume,pvd).root.extent_loc)
-		 return Iso_Open_Top_Level_Directory(acdrbase, p_volume);
+		 return Iso_Open_Top_Level_Directory(p_volume);
 
-	dir = Get_Directory_Record(acdrbase, p_volume, p_location, 0);
+	dir = Get_Directory_Record(p_volume, p_location, 0);
 	if (!dir)
 		return NULL;
 
-	dir = Get_Directory_Record(acdrbase, p_volume, p_location, dir->length);
+	dir = Get_Directory_Record(p_volume, p_location, dir->length);
 	if (!dir)
 		return NULL;
 
@@ -437,7 +388,7 @@ unsigned long len;
 	{
 		if (offset >= len)
 			return NULL;
-		dir = Get_Directory_Record(acdrbase, p_volume, loc, offset);
+		dir = Get_Directory_Record(p_volume, loc, offset);
 		if (!dir)
 			return NULL;
 		if (!dir->length)
@@ -451,7 +402,7 @@ unsigned long len;
 		offset += dir->length;
 	}
 
-	obj = Iso_Alloc_Obj(acdrbase, dir->length);
+	obj = Iso_Alloc_Obj(dir->length);
 	if (!obj)
 		return NULL;
 
@@ -468,13 +419,7 @@ unsigned long len;
  * p_name must not contain '/' or ':' characters.
  */
 
-CDROM_OBJ *Iso_Open_Obj_In_Directory
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_dir,
-		char *p_name
-	)
-{
+CDROM_OBJ *Iso_Open_Obj_In_Directory(CDROM_OBJ *p_dir, char *p_name) {
 unsigned long loc =
 	OBJ(p_dir,dir)->extent_loc + OBJ(p_dir,dir)->ext_attr_length;
 unsigned long len = OBJ(p_dir,dir)->data_length;
@@ -485,12 +430,12 @@ long cl;
 
 	/* skip first two entries: */
 
-	dir = Get_Directory_Record(acdrbase, p_dir->volume, loc, 0);
+	dir = Get_Directory_Record(p_dir->volume, loc, 0);
 	if (!dir)
 		return NULL;
 
 	offset = dir->length;
-	dir = Get_Directory_Record(acdrbase, p_dir->volume, loc, offset);
+	dir = Get_Directory_Record(p_dir->volume, loc, offset);
 	if (!dir)
 	return NULL;
 
@@ -499,10 +444,10 @@ long cl;
 	{
 		if (offset >= len)
 		{
-			iso_errno = ISOERR_NOT_FOUND;
+			global->iso_errno = ISOERR_NOT_FOUND;
 			return NULL;
 		}
-		dir = Get_Directory_Record(acdrbase, p_dir->volume, loc, offset);
+		dir = Get_Directory_Record(p_dir->volume, loc, offset);
 		if (!dir)
 			return NULL;
 		if (!dir->length)
@@ -517,41 +462,32 @@ long cl;
 		int len;
 
 			if (
-					(
-						len = Get_RR_File_Name
-							(
-								acdrbase,
-								p_dir->volume,
-								dir,
-								buf,
-								sizeof (buf)
-							)
-					) > 0 &&
-          		(Strncasecmp(acdrbase, buf, p_name, len) == 0) &&
+					(len=Get_RR_File_Name(p_dir->volume,dir,buf,sizeof(buf))) > 0 &&
+          		(Strncasecmp(buf, p_name, len) == 0) &&
 					p_name[len] == 0
 				)
 				break;
 		}
 
-		if (Names_Equal(acdrbase, dir->file_id, dir->file_id_length, p_name))
+		if (Names_Equal(dir->file_id, dir->file_id_length, p_name))
 			break;
 		offset += dir->length;
 	}
 
 	if (
 			p_dir->volume->protocol == PRO_ROCK &&
-      	(cl = RR_Child_Link(acdrbase, p_dir->volume, dir)) >= 0
+      	(cl = RR_Child_Link(p_dir->volume, dir)) >= 0
 		)
-		return Iso_Create_Directory_Obj(acdrbase, p_dir->volume, cl);
+		return Iso_Create_Directory_Obj(p_dir->volume, cl);
 
-	obj = Iso_Alloc_Obj(acdrbase, dir->length);
+	obj = Iso_Alloc_Obj(dir->length);
 	if (!obj)
 		return NULL;
 
 	obj->directory_f = (dir->flags & 2);
 	if (
 			p_dir->volume->protocol == PRO_ROCK &&
-			Is_A_Symbolic_Link(acdrbase, p_dir->volume, dir)
+			Is_A_Symbolic_Link(p_dir->volume, dir)
 		)
 	{
 		obj->symlink_f = 1;
@@ -569,7 +505,7 @@ long cl;
 /* Close a "CDROM object" and deallocate all associated resources.
  */
 
-void Iso_Close_Obj(struct ACDRBase *acdrbase, CDROM_OBJ *p_object) {
+void Iso_Close_Obj(CDROM_OBJ *p_object) {
 	FreeMem (OBJ(p_object,dir), OBJ(p_object,dir)->length);
 	FreeMem (p_object->obj_info, sizeof (t_iso_obj_info));
 	FreeMem (p_object, sizeof (CDROM_OBJ));
@@ -578,14 +514,7 @@ void Iso_Close_Obj(struct ACDRBase *acdrbase, CDROM_OBJ *p_object) {
 /* Read bytes from a file.
  */
 
-int Iso_Read_From_File
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_file,
-		char *p_buffer,
-		int p_buffer_length
-	)
-{
+int Iso_Read_From_File(CDROM_OBJ *p_file, char *p_buffer, int p_buffer_length) {
 unsigned long loc;
 int remain_block, remain_file, remain;
 int len;
@@ -632,9 +561,9 @@ unsigned long firstblock;
 
 	while (todo)
 	{
-		if (!Read_Contiguous_Sectors(acdrbase, cd, loc, last_loc))
+		if (!Read_Contiguous_Sectors(cd, loc, last_loc))
 		{
-			iso_errno = ISOERR_SCSI_ERROR;
+			global->iso_errno = ISOERR_SCSI_ERROR;
 			return -1;
 		}
 
@@ -663,12 +592,7 @@ unsigned long firstblock;
 	return buf_pos;
 }
 
-t_ulong Extract_Date
-	(
-		struct ACDRBase *acdrbase,
-		directory_record *p_dir_record
-	)
-{
+t_ulong Extract_Date(directory_record *p_dir_record) {
 struct ClockData ClockData;
 
 	ClockData.sec   = p_dir_record->second;
@@ -688,13 +612,7 @@ struct ClockData ClockData;
 /* Return information on a "CDROM object."
  */
 
-int Iso_CDROM_Info
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_obj,
-		CDROM_INFO *p_info
-	)
-{
+int Iso_CDROM_Info(CDROM_OBJ *p_obj, CDROM_INFO *p_info) {
 int len;
 
 	if (Iso_Is_Top_Level_Object (p_obj))
@@ -703,7 +621,7 @@ int len;
 		p_info->name[0] = ':';
 		p_info->directory_f = TRUE;
 		p_info->file_length = 0;
-		p_info->date = Volume_Creation_Date(acdrbase, p_obj->volume);
+		p_info->date = Volume_Creation_Date(p_obj->volume);
 	}
 	else
 	{
@@ -712,7 +630,6 @@ int len;
 				(
 					len = Get_RR_File_Name
 						(
-							acdrbase,
 							p_obj->volume, OBJ(p_obj,dir),
 							p_info->name, sizeof (p_info->name)
 						)
@@ -729,7 +646,7 @@ int len;
 		p_info->directory_f = p_obj->directory_f;
 		p_info->symlink_f = p_obj->symlink_f;
 		p_info->file_length = OBJ(p_obj,dir)->data_length;
-		p_info->date = Extract_Date(acdrbase, OBJ(p_obj,dir));
+		p_info->date = Extract_Date(OBJ(p_obj,dir));
 	}
 
 	return 1;
@@ -739,12 +656,7 @@ int len;
  */
 
 int Iso_Examine_Next
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_dir,
-		CDROM_INFO *p_info,
-		unsigned long *p_offset
-	)
+	(CDROM_OBJ *p_dir, CDROM_INFO *p_info, unsigned long *p_offset)
 {
 unsigned long offset;
 directory_record *rec;
@@ -752,7 +664,7 @@ int len;
 
 	if (!p_dir->directory_f || p_dir->symlink_f)
 	{
-		iso_errno = ISOERR_BAD_ARGUMENTS;
+		global->iso_errno = ISOERR_BAD_ARGUMENTS;
 		return 0;
 	}
 
@@ -762,7 +674,6 @@ int len;
 
 		rec = Get_Directory_Record
 			(
-				acdrbase,
 				p_dir->volume,
 				 OBJ(p_dir,dir)->extent_loc + OBJ(p_dir,dir)->ext_attr_length,
 				0
@@ -774,7 +685,6 @@ int len;
 
 		rec = Get_Directory_Record
 			(
-				acdrbase,
 				p_dir->volume,
 				OBJ(p_dir,dir)->extent_loc + OBJ(p_dir,dir)->ext_attr_length,
 				offset
@@ -792,10 +702,8 @@ int len;
 
 		rec = Get_Directory_Record
 					(
-						acdrbase,
 						p_dir->volume,
-						OBJ(p_dir,dir)->extent_loc +
-							OBJ(p_dir,dir)->ext_attr_length,
+						OBJ(p_dir,dir)->extent_loc + OBJ(p_dir,dir)->ext_attr_length,
 						*p_offset
 					);
 		if (!rec)
@@ -816,12 +724,7 @@ int len;
 			p_dir->volume->protocol == PRO_ROCK &&
 			(
 				len = Get_RR_File_Name
-					(
-						acdrbase,
-						p_dir->volume, rec,
-						p_info->name,
-						sizeof (p_info->name)
-					)
+					(p_dir->volume, rec, p_info->name, sizeof (p_info->name))
 			) > 0
 		)
 	{
@@ -834,7 +737,7 @@ int len;
 	}
 	if (
 			p_dir->volume->protocol == PRO_ROCK &&
-			Is_A_Symbolic_Link(acdrbase, p_dir->volume, rec)
+			Is_A_Symbolic_Link(p_dir->volume, rec)
 		)
 	{
 		p_info->symlink_f = 1;
@@ -843,7 +746,7 @@ int len;
 	else if
 		(
 			p_dir->volume->protocol == PRO_ROCK &&
-			Has_System_Use_Field(acdrbase, p_dir->volume, rec, "CL")
+			Has_System_Use_Field(p_dir->volume, rec, "CL")
 		)
 	{
 		p_info->symlink_f = 0;
@@ -855,7 +758,7 @@ int len;
 		p_info->directory_f = rec->flags & 2;
 	}
 	p_info->file_length = rec->data_length;
-	p_info->date = Extract_Date(acdrbase, rec);
+	p_info->date = Extract_Date(rec);
 	p_info->suppl_info = rec;
 
 	return 1;
@@ -864,7 +767,7 @@ int len;
 /* Clone a "CDROM object info."
  */
 
-void *Iso_Clone_Obj_Info(struct ACDRBase *acdrbase, void *p_info) {
+void *Iso_Clone_Obj_Info(void *p_info) {
 t_iso_obj_info *info = (t_iso_obj_info *) p_info;
 t_iso_obj_info *new;
   
@@ -888,7 +791,7 @@ t_iso_obj_info *new;
 /* Find parent directory.
  */
 
-CDROM_OBJ *Iso_Find_Parent(struct ACDRBase *acdrbase, CDROM_OBJ *p_object) {
+CDROM_OBJ *Iso_Find_Parent(CDROM_OBJ *p_object) {
 directory_record *dir;
 unsigned long dir_loc;
 long pl;
@@ -899,34 +802,23 @@ long pl;
 	else
 		dir_loc = OBJ(p_object,parent_loc);
 
-	dir = Get_Directory_Record(acdrbase, p_object->volume, dir_loc, 0);
+	dir = Get_Directory_Record(p_object->volume, dir_loc, 0);
 	if (!dir)
 		return NULL;
 
 	if (p_object->directory_f)
 	{
-		dir = Get_Directory_Record
-			(
-				acdrbase,
-				p_object->volume,
-				dir_loc,
-				dir->length
-			);
+		dir = Get_Directory_Record(p_object->volume, dir_loc, dir->length);
 		if (!dir)
 			return NULL;
 		if (
 				p_object->volume->protocol == PRO_ROCK &&
-				(pl = RR_Parent_Link(acdrbase, p_object->volume, dir)) >= 0
+				(pl = RR_Parent_Link(p_object->volume, dir)) >= 0
 			)
-			return Iso_Create_Directory_Obj(acdrbase, p_object->volume, pl);
+			return Iso_Create_Directory_Obj(p_object->volume, pl);
 	}
 
-	return Iso_Create_Directory_Obj
-				(
-					acdrbase,
-					p_object->volume,
-					dir->extent_loc
-				);
+	return Iso_Create_Directory_Obj(p_object->volume, dir->extent_loc);
 }
 
 /* Test if p_object is the root directory.
@@ -967,7 +859,7 @@ int Digs_To_Int (char *p_digits, int p_num)
  * Return volume creation date as number of seconds since 1-Jan-1978:
  */
 
-t_ulong Iso_Creation_Date(struct ACDRBase *acdrbase, VOLUME *p_volume) {
+t_ulong Iso_Creation_Date(VOLUME *p_volume) {
 struct ClockData ClockData;
 char *dt = VOL(p_volume,pvd).vol_creation;
 
@@ -995,14 +887,7 @@ t_ulong Iso_Block_Size (VOLUME *p_volume)
   return VOL(p_volume,pvd).block_size;
 }
 
-void Iso_Volume_ID
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		char *p_buffer,
-		int p_buf_length
-	)
-{
+void Iso_Volume_ID(VOLUME *p_volume, char *p_buffer, int p_buf_length) {
 char *iso_name = VOL(p_volume,pvd).volume_id;
 int iso_len;
 int len;

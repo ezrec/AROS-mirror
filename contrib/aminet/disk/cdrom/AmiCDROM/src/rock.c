@@ -12,23 +12,31 @@
  * 
  * 05-Feb-94   fmu   Added support for relocated directories.
  * 16-Oct-93   fmu   Adapted to new VOLUME structure.
+ * 07-Jul-02 sheutlin  various changes when porting to AROS
+ *                     - global variables are now in a struct Globals *global
+ *                     - replaced (unsigned) long by (U)LONG
  */
 
+#include <proto/exec.h>
+#include <aros/debug.h>
+#include <exec/memory.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <aros/debug.h>
-#include <exec/memory.h>
-
-#include <proto/exec.h>
-
 #include "rock.h"
+#include "globals.h"
 
 #include "clib_stuff.h"
-#include "baseredef.h"
 
 #define VOL(vol,tag) (((t_iso_vol_info *)(vol->vol_info))->tag)
 #define OBJ(obj,tag) (((t_iso_obj_info *)(obj->obj_info))->tag)
+
+extern struct Globals *global;
+
+#ifdef SysBase
+#	undef SysBase
+#endif
+#define SysBase global->SysBase
 
 /* Check whether the given volume uses the Rock Ridge Interchange Protocol.
  * The protocol is identified by the sequence
@@ -41,19 +49,13 @@
  * specified in the SP system use field.
  */
 
-t_bool Uses_Rock_Ridge_Protocol
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		int *p_skip
-	)
-{
-unsigned long loc = VOL(p_volume,pvd).root.extent_loc;
+t_bool Uses_Rock_Ridge_Protocol(VOLUME *p_volume, int *p_skip) {
+ULONG loc = VOL(p_volume,pvd).root.extent_loc;
 directory_record *dir;
 int system_use_pos;
 unsigned char *sys;
 
-	if (!(dir = Get_Directory_Record(acdrbase, p_volume, loc, 0)))
+	if (!(dir = Get_Directory_Record(p_volume, loc, 0)))
 		return 0;
 
 	system_use_pos = 33 + dir->file_id_length;
@@ -93,7 +95,6 @@ unsigned char *sys;
 
 int Get_System_Use_Field
 	(
-		struct ACDRBase *acdrbase,
 		VOLUME *p_volume, directory_record *p_dir,
 		char *p_name,
 		char *p_buf,
@@ -103,7 +104,7 @@ int Get_System_Use_Field
 {
 int system_use_pos;
 int slen, len;
-unsigned long length = p_dir->length;
+ULONG length = p_dir->length;
 unsigned char *buf = (unsigned char *) p_dir;
 
 	system_use_pos = 33 + p_dir->file_id_length;
@@ -135,11 +136,11 @@ unsigned char *buf = (unsigned char *) p_dir;
 				buf[system_use_pos+1] == 'E'
 			)
 		{
-		unsigned long newloc, offset;
+		ULONG newloc, offset;
 			CopyMem(buf + system_use_pos + 8, &newloc, 4);
 			CopyMem(buf + system_use_pos + 16, &offset, 4);
 			CopyMem(buf + system_use_pos + 24, &length, 4);
-			if (!Read_Sector(acdrbase, p_volume->cd, newloc))
+			if (!Read_Sector(p_volume->cd, newloc))
 				return 0;
 			buf = p_volume->cd->buffer;
 			system_use_pos = offset;
@@ -166,13 +167,7 @@ unsigned char *buf = (unsigned char *) p_dir;
  */
 
 int Get_RR_File_Name
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		directory_record *p_dir,
-		char *p_buf,
-		int p_buf_len
-	)
+	(VOLUME *p_volume, directory_record *p_dir, char *p_buf, int p_buf_len)
 {
 struct nm_system_use_field {
 	char	  id[2];
@@ -189,15 +184,7 @@ int total = 0;
 	{
 		if (
 				!Get_System_Use_Field
-					(
-						acdrbase,
-						p_volume,
-						p_dir,
-						"NM",
-						(char *) &nm,
-						sizeof (nm),
-						index
-					)
+					(p_volume,p_dir,"NM",(char *)&nm,sizeof(nm),index)
 			)
 			return -1;
 
@@ -219,33 +206,22 @@ int total = 0;
 /* Returns 1 if the PX system use field indicates a symbolic link.
  */
 
-int Is_A_Symbolic_Link
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		directory_record *p_dir
-	)
-{
+int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir) {
 struct px_system_use_field {
 	char	  id[2];
 	unsigned char length;
 	unsigned char version;
-	unsigned long mode_i;
-	unsigned long mode_m;
-	unsigned long links_i;
-	unsigned long links_m;
-	unsigned long user_id_i;
-	unsigned long user_id_m;
-	unsigned long group_id_i;
-	unsigned long group_id_m;
+	ULONG mode_i;
+	ULONG mode_m;
+	ULONG links_i;
+	ULONG links_m;
+	ULONG user_id_i;
+	ULONG user_id_m;
+	ULONG group_id_i;
+	ULONG group_id_m;
 } px;
 
-	if (
-			!Get_System_Use_Field
-				(
-					acdrbase, p_volume, p_dir, "PX", (char *) &px, sizeof (px), 0
-				)
-		)
+	if (!Get_System_Use_Field(p_volume,p_dir,"PX",(char *)&px,sizeof(px),0))
 		return 0;
 
 	/*
@@ -258,14 +234,7 @@ struct px_system_use_field {
  * A full path name (starting with ":" or "sys:") will always be returned.
  */
 
-t_bool Get_Link_Name
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_obj,
-		char *p_buf,
-		int p_buf_len
-	)
-{
+t_bool Get_Link_Name(CDROM_OBJ *p_obj, char *p_buf, int p_buf_len) {
 unsigned char buf[256];
 char out[530];
 int index = 0;
@@ -278,14 +247,7 @@ char c;
 	{
 		if (
 				!Get_System_Use_Field
-					(
-						acdrbase,
-						p_obj->volume,
-						OBJ(p_obj,dir),
-						"SL",
-						(char *) buf,
-						sizeof (buf), index
-					)
+					(p_obj->volume,OBJ(p_obj,dir),"SL",(char *)buf,sizeof(buf),index)
 			)
 		{
 			return (index == 0) ? 0 : 1;
@@ -304,23 +266,18 @@ char c;
 
 				if (buf[5] & 4) /* parent directory */
 				{
-				CDROM_OBJ *parent1 = Find_Parent(acdrbase, p_obj);
+				CDROM_OBJ *parent1 = Find_Parent(p_obj);
 				CDROM_OBJ *parent2;
 				char fullpath[256];
 					if (!parent1)
 						return 0;
-					parent2 = Find_Parent(acdrbase, parent1);
+					parent2 = Find_Parent(parent1);
 					if (!parent2)
 						return 0;
-					if (
-							!Full_Path_Name
-								(
-									acdrbase, parent2, fullpath, sizeof (fullpath)
-								)
-						)
+					if (!Full_Path_Name(parent2, fullpath, sizeof (fullpath)))
 						return 0;
-					Close_Object(acdrbase, parent1);
-					Close_Object(acdrbase, parent2);
+					Close_Object(parent1);
+					Close_Object(parent2);
 					StrCat (out, fullpath);
 					if (out[1] != 0)
 						StrCat (out, "/");
@@ -332,18 +289,13 @@ char c;
 				else
 				{
 				/* current directory */
-				CDROM_OBJ *parent = Find_Parent(acdrbase, p_obj);
+				CDROM_OBJ *parent = Find_Parent(p_obj);
 				char fullpath[256];
 					if (!parent)
 						return 0;
-					if (
-							!Full_Path_Name
-								(
-									acdrbase, parent, fullpath, sizeof (fullpath)
-								)
-						)
+					if (!Full_Path_Name(parent, fullpath, sizeof (fullpath)))
 						return 0;
-					Close_Object(acdrbase, parent);
+					Close_Object(parent);
 					StrCat (out, fullpath);
 					if (out[1] != 0)
 						StrCat (out, "/");
@@ -376,40 +328,25 @@ char c;
 /* Check whether a system use field is present: */
 
 int Has_System_Use_Field
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		directory_record *p_dir,
-		char *p_name)
+	(VOLUME *p_volume, directory_record *p_dir, char *p_name)
 {
-	return Get_System_Use_Field(acdrbase, p_volume, p_dir, p_name, NULL, 0, 0);
+	return Get_System_Use_Field(p_volume, p_dir, p_name, NULL, 0, 0);
 }
 
 /* Return content of "CL" system use field, or -1, if no such system use field
  * is present.
  */
 
-long RR_Child_Link
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		directory_record *p_dir
-	)
-{
+LONG RR_Child_Link(VOLUME *p_volume, directory_record *p_dir) {
 struct cl {
 	char    	name[2];
 	char    	length[1];
 	char    	version[1];
-	long	pos_i;
-	long	pos_m;
+	LONG	pos_i;
+	LONG	pos_m;
 } buf;
 
-	if (
-			!Get_System_Use_Field
-				(
-					acdrbase, p_volume, p_dir, "CL", (char*) &buf, sizeof (buf), 0
-				)
-		)
+	if (!Get_System_Use_Field(p_volume, p_dir,"CL",(char *)&buf,sizeof(buf),0))
 		return -1;
 	else
 		return buf.pos_m;
@@ -419,27 +356,16 @@ struct cl {
  * is present.
  */
 
-long RR_Parent_Link
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		directory_record *p_dir
-	)
-{
+LONG RR_Parent_Link(VOLUME *p_volume, directory_record *p_dir) {
 struct pl {
 	char    	name[2];
 	char    	length[1];
 	char    	version[1];
-	long	pos_i;
-	long	pos_m;
+	LONG	pos_i;
+	LONG	pos_m;
 } buf;
 
-	if (
-			!Get_System_Use_Field
-				(
-					acdrbase, p_volume, p_dir, "PL", (char*) &buf, sizeof (buf), 0
-				)
-		)
+	if (!Get_System_Use_Field(p_volume,p_dir,"PL",(char *)&buf,sizeof(buf),0))
 		return -1;
 	else
 	return buf.pos_m;

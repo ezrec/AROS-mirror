@@ -15,17 +15,18 @@
  * 29-Nov-93   fmu   New function Block_Size().
  * 15-Nov-93   fmu   Missing return value for 'Location' inserted.
  * 10-Nov-93   fmu   Added HFS/ISO-9660-lookup reversing in Which_Protocol.
+ * 07-Jul-02 sheutlin  various changes when porting to AROS
+ *                     - global variables are now in a struct Globals *global
  */
 
-#include <stdlib.h>
-#include <string.h>
-
-#include <aros/debug.h>
-#include <exec/types.h>
-#include <exec/memory.h>
 
 #include <proto/exec.h>
 #include <proto/utility.h>
+#include <aros/debug.h>
+#include <exec/types.h>
+#include <exec/memory.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "cdrom.h"
 #include "generic.h"
@@ -33,25 +34,28 @@
 #include "rock.h"
 #include "hfs.h"
 #include "params.h"
+#include "path.h"
+#include "globals.h"
 
-#include "baseredef.h"
 
 #define HAN(vol,func) (*(vol)->handler->func)
 #define HANX(vol,func) ((vol)->handler->func)
 
-t_bool g_hfs_first = FALSE;
+extern struct Globals *global;
+
+#ifdef SysBase
+#	undef SysBase
+#endif
+#define SysBase global->SysBase
+#ifdef UtilityBase
+#	undef UtilityBase
+#endif
+#define UtilityBase global->UtilityBase
 
 /* Strncasecmp works like 'strncmp' but ignores case differences.
  */
 
-int Strncasecmp
-	(
-		struct ACDRBase *acdrbase,
-		char *p_str1,
-		char *p_str2,
-		int p_length
-	)
-{
+int Strncasecmp(char *p_str1,char *p_str2,int p_length) {
 int i;
 int len = 0;
   
@@ -79,27 +83,21 @@ int len = 0;
  */
 
 t_protocol Which_Protocol
-	(
-		struct ACDRBase *acdrbase,
-		CDROM *p_cdrom,
-		t_bool p_use_rock_ridge,
-		int *p_skip,
-		t_ulong *p_offset
-	)
+	(CDROM *p_cdrom,t_bool p_use_rock_ridge,int *p_skip,t_ulong *p_offset)
 {
 
 	if (p_cdrom->model == MODEL_TOSHIBA_3401)
 	{
-		if (Is_XA_Mode_Disk(acdrbase, p_cdrom))
-			Mode_Select(acdrbase, p_cdrom, 0x81, 2048);
+		if (Is_XA_Mode_Disk(p_cdrom))
+			Mode_Select(p_cdrom, 0x81, 2048);
 		else
-			Mode_Select(acdrbase, p_cdrom, 0x00, 2048);
+			Mode_Select(p_cdrom, 0x00, 2048);
 	}
 
-	if (g_hfs_first && Uses_HFS_Protocol(acdrbase, p_cdrom, p_skip))
+	if (global->g_hfs_first && Uses_HFS_Protocol(p_cdrom, p_skip))
 		return PRO_HFS;
 
-	if (Uses_Iso_Protocol(acdrbase, p_cdrom, p_offset))
+	if (Uses_Iso_Protocol(p_cdrom, p_offset))
 	{
 		if (p_use_rock_ridge)
 		{
@@ -108,31 +106,25 @@ t_protocol Which_Protocol
 
 			tmp_vol.cd = p_cdrom;
 			tmp_vol.protocol = PRO_ISO;
-			Iso_Init_Vol_Info(acdrbase, &tmp_vol, 0, *p_offset);
-			rr = Uses_Rock_Ridge_Protocol(acdrbase, &tmp_vol, p_skip);
-			HAN(&tmp_vol, close_vol_info)(acdrbase, &tmp_vol);
+			Iso_Init_Vol_Info(&tmp_vol, 0, *p_offset);
+			rr = Uses_Rock_Ridge_Protocol(&tmp_vol, p_skip);
+			HAN(&tmp_vol, close_vol_info)(&tmp_vol);
 			return rr ? PRO_ROCK : PRO_ISO;
 		}
 		else
 			return PRO_ISO;
 	}
   
-	if (Uses_High_Sierra_Protocol(acdrbase, p_cdrom))
+	if (Uses_High_Sierra_Protocol(p_cdrom))
 		return PRO_HIGH_SIERRA;
 
-	if (!g_hfs_first && Uses_HFS_Protocol(acdrbase, p_cdrom, p_skip))
+	if (!global->g_hfs_first && Uses_HFS_Protocol(p_cdrom, p_skip))
 		return PRO_HFS;
 
 	return PRO_UNKNOWN;
 }
 
-VOLUME *Open_Volume
-	(
-		struct ACDRBase *acdrbase,
-		CDROM *p_cdrom,
-		t_bool p_use_rock_ridge
-	)
-{
+VOLUME *Open_Volume(CDROM *p_cdrom, t_bool p_use_rock_ridge) {
 VOLUME *res;
 int skip;
 t_ulong offset;
@@ -140,7 +132,7 @@ t_ulong offset;
 	res = AllocMem (sizeof (VOLUME), MEMF_PUBLIC);
 	if (!res)
 	{
-		iso_errno = ISOERR_NO_MEMORY;
+		global->iso_errno = ISOERR_NO_MEMORY;
 		return NULL;
 	}
 
@@ -148,39 +140,25 @@ t_ulong offset;
   
 	res->locks = 0;        /* may be modified by application program */
 	res->file_handles = 0; /* may be modified by application program */
-	res->protocol = Which_Protocol
-		(
-			acdrbase,
-			p_cdrom,
-			p_use_rock_ridge,
-			&skip,
-			&offset
-		);
+	res->protocol = Which_Protocol(p_cdrom, p_use_rock_ridge, &skip, &offset);
 	if (res->protocol == PRO_UNKNOWN)
 	{
 		/* give it a second try: */
-		res->protocol = Which_Protocol
-			(
-				acdrbase,
-				p_cdrom,
-				p_use_rock_ridge,
-				&skip,
-				&offset
-			);
+		res->protocol = Which_Protocol(p_cdrom, p_use_rock_ridge, &skip, &offset);
 	}
 
 	switch (res->protocol)
 	{
 	case PRO_ROCK:
 	case PRO_ISO:
-		if (!Iso_Init_Vol_Info(acdrbase, res, skip, offset))
+		if (!Iso_Init_Vol_Info(res, skip, offset))
 		{
 			FreeMem (res, sizeof (VOLUME));
 			return NULL;
 		}
 		break;
 	case PRO_HFS:
-		if (!HFS_Init_Vol_Info(acdrbase, res, skip))
+		if (!HFS_Init_Vol_Info(res, skip))
 		{
 			FreeMem (res, sizeof (VOLUME));
 			return NULL;
@@ -194,33 +172,22 @@ t_ulong offset;
 	return res;
 }
 
-void Close_Volume(struct ACDRBase *acdrbase, VOLUME *p_volume) {
-	HAN(p_volume, close_vol_info)(acdrbase, p_volume);
+void Close_Volume(VOLUME *p_volume) {
+	HAN(p_volume, close_vol_info)(p_volume);
 	FreeMem (p_volume, sizeof (VOLUME));
 }
 
-CDROM_OBJ *Open_Top_Level_Directory
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume
-	)
-{
+CDROM_OBJ *Open_Top_Level_Directory(VOLUME *p_volume) {
 CDROM_OBJ * result = HAN
 	(
-		p_volume, open_top_level_directory)(acdrbase, p_volume
+		p_volume, open_top_level_directory)(p_volume
 	);
 	if (result)
 	result->pathlist = NULL;
 	return result;
 }
 
-CDROM_OBJ *Open_Object
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_current_dir,
-		char *p_path_name
-	)
-{
+CDROM_OBJ *Open_Object(CDROM_OBJ *p_current_dir, char *p_path_name) {
 char *cp = p_path_name;
 CDROM_OBJ *obj, *new;
 VOLUME *vol = p_current_dir->volume;
@@ -231,7 +198,7 @@ char name[100];
 	{
 		obj = HAN
 			(
-				vol, open_top_level_directory)(acdrbase, p_current_dir->volume
+				vol, open_top_level_directory)(p_current_dir->volume
 			);
 		if (obj)
 			obj->pathlist = NULL;
@@ -239,25 +206,24 @@ char name[100];
 	}
 	else
 	{
-		obj = Clone_Object(acdrbase, p_current_dir);
+		obj = Clone_Object(p_current_dir);
 		if (!obj)
 		{
-			iso_errno = ISOERR_NO_MEMORY;
+			global->iso_errno = ISOERR_NO_MEMORY;
 			return NULL;
 		}
 		while (*cp == '/')
 		{
 			if (Is_Top_Level_Object(obj))
 			{
-kprintf("returning error\n");
-				iso_errno = ISOERR_NOT_FOUND;
+				global->iso_errno = ISOERR_NOT_FOUND;
 				return NULL;
 			}
-			new = HAN(vol, find_parent)(acdrbase, obj);
+			new = HAN(vol, find_parent)(obj);
 			if (!new)
 				return NULL;
 			new->pathlist = Copy_Path_List (obj->pathlist, TRUE);
-			Close_Object(acdrbase, obj);
+			Close_Object(obj);
 			obj = new;
 			cp++;
 		}
@@ -272,28 +238,28 @@ kprintf("returning error\n");
 		if (*cp)
 			cp++;
 
-		new = HAN(vol, open_obj_in_directory)(acdrbase, obj, name);
+		new = HAN(vol, open_obj_in_directory)(obj, name);
 		if (new)
 		{
-			new->pathlist = Append_Path_List(acdrbase, obj->pathlist, name);
-			Close_Object(acdrbase, obj);
+			new->pathlist = Append_Path_List(obj->pathlist, name);
+			Close_Object(obj);
 			if (*cp && new->symlink_f)
 			{
-				HAN(vol, close_obj)(acdrbase, new);
-				iso_errno = ISOERR_IS_SYMLINK;
+				HAN(vol, close_obj)(new);
+				global->iso_errno = ISOERR_IS_SYMLINK;
 				return NULL;
 			}
 			if (*cp && !new->directory_f)
 			{
-				HAN(vol, close_obj)(acdrbase, new);
-				iso_errno = ISOERR_NOT_FOUND;
+				HAN(vol, close_obj)(new);
+				global->iso_errno = ISOERR_NOT_FOUND;
 				return NULL;
 			}
 			obj = new;
 		}
 		else
 		{
-			Close_Object(acdrbase, obj);
+			Close_Object(obj);
 			return NULL;
 		}
 	}
@@ -301,49 +267,28 @@ kprintf("returning error\n");
 	return obj;
 }
 
-void Close_Object(struct ACDRBase *acdrbase, CDROM_OBJ *p_object)
+void Close_Object(CDROM_OBJ *p_object)
 {
-	Free_Path_List(acdrbase, p_object->pathlist);
-	HAN(p_object->volume, close_obj)(acdrbase, p_object);
+	Free_Path_List(p_object->pathlist);
+	HAN(p_object->volume, close_obj)(p_object);
 }
 
-int Read_From_File
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_file,
-		char *p_buffer,
-		int p_buffer_length
-	)
-{
+int Read_From_File(CDROM_OBJ *p_file, char *p_buffer, int p_buffer_length) {
 	return HAN
-				(
-					p_file->volume, read_from_file
-				)
-				(acdrbase, p_file, p_buffer, p_buffer_length);
+				(p_file->volume, read_from_file)(p_file, p_buffer, p_buffer_length);
 }
 
-int CDROM_Info
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_obj,
-		CDROM_INFO *p_info
-	)
-{
-	return HAN(p_obj->volume, cdrom_info)(acdrbase, p_obj, p_info);
+int CDROM_Info(CDROM_OBJ *p_obj, CDROM_INFO *p_info) {
+	return HAN(p_obj->volume, cdrom_info)(p_obj, p_info);
 }
 
 t_bool Examine_Next
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_dir,
-		CDROM_INFO *p_info,
-		unsigned long *p_offset
-	)
+	(CDROM_OBJ *p_dir, CDROM_INFO *p_info, unsigned long *p_offset)
 {
-	return HAN(p_dir->volume, examine_next)(acdrbase, p_dir, p_info, p_offset);
+	return HAN(p_dir->volume, examine_next)(p_dir, p_info, p_offset);
 }
 
-CDROM_OBJ *Clone_Object(struct ACDRBase *acdrbase, CDROM_OBJ *p_object) {
+CDROM_OBJ *Clone_Object(CDROM_OBJ *p_object) {
 CDROM_OBJ *new = AllocMem (sizeof (CDROM_OBJ), MEMF_PUBLIC);
 
 	if (!new)
@@ -351,7 +296,7 @@ CDROM_OBJ *new = AllocMem (sizeof (CDROM_OBJ), MEMF_PUBLIC);
 
 	CopyMem(p_object, new, sizeof (CDROM_OBJ));
 	new->obj_info =
-		HAN(p_object->volume,clone_obj_info)(acdrbase, p_object->obj_info);
+		HAN(p_object->volume,clone_obj_info)(p_object->obj_info);
 	if (!new->obj_info)
 	{
 		FreeMem (new, sizeof (CDROM_OBJ));
@@ -363,8 +308,8 @@ CDROM_OBJ *new = AllocMem (sizeof (CDROM_OBJ), MEMF_PUBLIC);
 	return new;
 }
 
-CDROM_OBJ *Find_Parent(struct ACDRBase *acdrbase, CDROM_OBJ *p_object) {
-CDROM_OBJ *result = HAN(p_object->volume, find_parent)(acdrbase, p_object);
+CDROM_OBJ *Find_Parent(CDROM_OBJ *p_object) {
+CDROM_OBJ *result = HAN(p_object->volume, find_parent)(p_object);
 
 	if (result)
 		result->pathlist = Copy_Path_List (p_object->pathlist, TRUE);
@@ -383,10 +328,10 @@ t_bool Same_Objects (CDROM_OBJ *p_object1, CDROM_OBJ *p_object2)
   return HAN(p_object1->volume, same_objects)(p_object1, p_object2);
 }
 
-t_ulong Volume_Creation_Date(struct ACDRBase *acdrbase, VOLUME *p_volume) {
+t_ulong Volume_Creation_Date(VOLUME *p_volume) {
 	if (!HANX(p_volume, creation_date))
 		return 0;
-	return HAN(p_volume, creation_date)(acdrbase, p_volume);
+	return HAN(p_volume, creation_date)(p_volume);
 }
 
 t_ulong Volume_Size (VOLUME *p_volume)
@@ -399,15 +344,8 @@ t_ulong Block_Size (VOLUME *p_volume)
   return HAN(p_volume, block_size)(p_volume);
 }
 
-void Volume_ID
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		char *p_buffer,
-		int p_buf_length
-	)
-{
-  HAN(p_volume, volume_id)(acdrbase, p_volume, p_buffer, p_buf_length);
+void Volume_ID(VOLUME *p_volume, char *p_buffer, int p_buf_length) {
+  HAN(p_volume, volume_id)(p_volume, p_buffer, p_buf_length);
 }
 
 t_ulong Location (CDROM_OBJ *p_object)
@@ -424,14 +362,14 @@ int Seek_Position (CDROM_OBJ *p_object, long p_offset, int p_mode)
   t_ulong max_len = HAN(p_object->volume, file_length)(p_object);
 
   if (p_object->directory_f) {
-    iso_errno = ISOERR_BAD_ARGUMENTS;
+    global->iso_errno = ISOERR_BAD_ARGUMENTS;
     return 0;
   }
   
   switch (p_mode) {
   case SEEK_FROM_START:
     if (p_offset < 0 || p_offset > max_len) {
-      iso_errno = ISOERR_OFF_BOUNDS;
+      global->iso_errno = ISOERR_OFF_BOUNDS;
       return 0;
     }
     new_pos = p_offset;
@@ -439,20 +377,20 @@ int Seek_Position (CDROM_OBJ *p_object, long p_offset, int p_mode)
   case SEEK_FROM_CURRENT_POS:
     if ((p_offset < 0 && -p_offset > p_object->pos) ||
     	(p_offset > 0 && p_object->pos + p_offset > max_len)) {
-      iso_errno = ISOERR_OFF_BOUNDS;
+      global->iso_errno = ISOERR_OFF_BOUNDS;
       return 0;
     }
     new_pos = p_object->pos + p_offset;
     break;
   case SEEK_FROM_END:
     if (p_offset > 0 || -p_offset > max_len) {
-      iso_errno = ISOERR_OFF_BOUNDS;
+      global->iso_errno = ISOERR_OFF_BOUNDS;
       return 0;
     }
     new_pos = max_len + p_offset;
     break;
   default:
-    iso_errno = ISOERR_BAD_ARGUMENTS;
+    global->iso_errno = ISOERR_BAD_ARGUMENTS;
     return 0;    
   }
   p_object->pos = new_pos;
@@ -463,16 +401,6 @@ int Seek_Position (CDROM_OBJ *p_object, long p_offset, int p_mode)
  *
  */
 
-int Full_Path_Name
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_obj,
-		char *p_buf,
-		int p_buf_length
-	)
-{
-  return Path_Name_From_Path_List
-				(
-					acdrbase, p_obj->pathlist, p_buf, p_buf_length
-				);
+int Full_Path_Name(CDROM_OBJ *p_obj, char *p_buf, int p_buf_length) {
+  return Path_Name_From_Path_List(p_obj->pathlist, p_buf, p_buf_length);
 }

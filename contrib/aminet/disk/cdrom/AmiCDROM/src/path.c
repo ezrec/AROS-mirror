@@ -7,35 +7,35 @@
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
+ * ----------------------------------------------------------------------
+ * History:
+ *
+ * 07-Jul-02 sheutlin  various changes when porting to AROS
+ *                     - global variables are now in a struct Globals *global
+ *                     - moved structure to path.h
  */
 
+#include <proto/exec.h>
+#include <exec/memory.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <exec/memory.h>
-
-#include <proto/exec.h>
-
 #include "generic.h"
+#include "path.h"
+#include "globals.h"
 
 #include "clib_stuff.h"
-#include "baseredef.h"
 
-typedef struct path_node {
-  unsigned long references;
-  char *name;
-  struct path_node *next;
-} t_path_node;
+extern struct Globals *global;
+
+#ifdef SysBase
+#	undef SysBase
+#endif
+#define SysBase global->SysBase
 
 /* Append p_name to path list: */
 
-t_path_list Append_Path_List
-	(
-		struct ACDRBase *acdrbase,
-		t_path_list p_list,
-		char *p_name
-	)
-{
+t_path_list Append_Path_List(t_path_list p_list, char *p_name) {
 t_path_node *node;
 
 	if (!(node = AllocMem (sizeof (*node), MEMF_PUBLIC)))
@@ -70,7 +70,7 @@ t_path_list Copy_Path_List (t_path_list p_src, int p_strip)
   return start;
 }
 
-void Free_Path_List(struct ACDRBase *acdrbase, t_path_list p_list) {
+void Free_Path_List(t_path_list p_list) {
 t_path_node *node, *next;
 
 	if (!p_list)
@@ -88,12 +88,7 @@ t_path_node *node, *next;
 }
 
 t_bool Path_Name_From_Path_List
-	(
-		struct ACDRBase *acdrbase,
-		t_path_list p_list,
-		char *p_buffer,
-		int p_buffer_length
-	)
+	(t_path_list p_list, char *p_buffer, int p_buffer_length)
 {
 int len;
 t_path_node *node;

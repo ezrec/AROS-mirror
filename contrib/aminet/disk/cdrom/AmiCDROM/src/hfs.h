@@ -141,31 +141,37 @@ typedef union catalog_record {
   t_file_thread_record	ft;
 } t_catalog_record;
 
-int HFS_Find_Master_Directory_Block
-	(
-		struct ACDRBase *,
-		CDROM *p_cd,
-		t_mdb *p_mdb
-	);
-t_bool Uses_HFS_Protocol(struct ACDRBase *, CDROM *p_cd, int *p_skip);
+typedef struct hfs_vol_info {
+  t_mdb			mdb;
+  int			start_block;
+  t_ulong		root_node;
+} t_hfs_vol_info;
+
+typedef struct hfs_obj_info {
+  t_bool		data_fork;
+  t_ulong		parent_id;
+  char			name[50];
+  t_catalog_record	cat_rec;
+} t_hfs_obj_info;
+
+typedef struct leaf_record_pos {
+  t_ulong		node;
+  t_ushort		record;
+  t_node_descr		node_descr;
+  t_catalog_record	cat_rec;
+  t_leaf_record		leaf_rec;
+  char			pad[32]; /* space for name from t_leaf_record */
+} t_leaf_record_pos;
+
+
+int HFS_Find_Master_Directory_Block(CDROM *p_cd, t_mdb *p_mdb);
+t_bool Uses_HFS_Protocol(CDROM *p_cd, int *p_skip);
 t_bool HFS_Get_Header_Node
-	(
-		struct ACDRBase *,
-		CDROM *p_cd,
-		t_ulong p_mdb_pos,
-		t_mdb *p_mdb,
-		t_hdr_node *p_hdr_node
-	);
+	(CDROM *p_cd,t_ulong p_mdb_pos,t_mdb *p_mdb,t_hdr_node *p_hdr_node);
 t_node_descr *HFS_Get_Node
-	(
-		struct ACDRBase *,
-		CDROM *p_cd,
-		t_ulong p_mdb_pos,
-		t_mdb *p_mdb,
-	 	t_ulong p_node
-	);
+	(CDROM *p_cd,t_ulong p_mdb_pos,t_mdb *p_mdb,t_ulong p_node);
 void Convert_Mac_Characters (char *p_buf, int p_buf_len);
 
-t_bool HFS_Init_Vol_Info(struct ACDRBase *, VOLUME *p_volume, int p_start_block);
+t_bool HFS_Init_Vol_Info(VOLUME *p_volume, int p_start_block);
 #endif
 

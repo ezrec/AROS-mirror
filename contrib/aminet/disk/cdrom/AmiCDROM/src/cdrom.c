@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 07-Jul-02 sheutlin  various changes when porting to AROS
+ *                     - global variables are now in a struct Globals *global
  * 02-Sep-94   fmu   Display READ TOC for Apple CD 150 drives.
  * 01-Sep-94   fmu   Workaround for bad NEC 3X READ TOC command in 
  *		     Has_Audio_Tracks() and Data_Tracks().
@@ -39,32 +41,33 @@
  *                   - TD_CHANGESTATE instead of CMD_READ in Test_Unit_Ready
  */
 
-#include <string.h>
-
-#include <proto/exec.h>
 #include <proto/alib.h>
-
+#include <proto/exec.h>
 #include <aros/debug.h>
 #include <devices/trackdisk.h>
+#include <limits.h>
+#include <string.h>
 
 #include "cdrom.h"
+#include "globals.h"
 
-#include <limits.h>
-
-#include "baseredef.h"
 #include "clib_stuff.h"
 
-int g_cdrom_errno;
-int g_ignore_blocklength = FALSE;
+extern struct Globals *global;
 
-void Determine_Drive_Type(struct ACDRBase *acdrbase, CDROM *p_cd) {
+#ifdef SysBase
+#	undef SysBase
+#endif
+#define SysBase global->SysBase
+
+void Determine_Drive_Type(CDROM *p_cd) {
 t_inquiry_data data;
 char buf[33];
   
 	p_cd->scsi_compliance = 1;
 	p_cd->model = MODEL_ANY;
 
-	if (!Inquire (acdrbase, p_cd, &data))
+	if (!Inquire (p_cd, &data))
 		return;
 
 	if ((data.version & 0x7) >= 2)
@@ -88,7 +91,6 @@ char buf[33];
 
 CDROM *Open_CDROM
 	(
-		struct ACDRBase *acdrbase,
 		char *p_device,
 		int p_scsi_id,
 		int p_use_trackdisk,
@@ -101,7 +103,7 @@ CDROM *cd;
 int i;
 int bufs = p_std_buffers + p_file_buffers + 1;
   
-	g_cdrom_errno = CDROMERR_NO_MEMORY;
+	global->g_cdrom_errno = CDROMERR_NO_MEMORY;
 
 	cd = AllocMem (sizeof (CDROM), MEMF_PUBLIC | MEMF_CLEAR | p_memory_type);
 	if (!cd)
@@ -113,28 +115,28 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 	cd->buffer_data = AllocMem (SCSI_BUFSIZE * bufs + 15, MEMF_PUBLIC | p_memory_type);
 	if (!cd->buffer_data)
 	{
-		Cleanup_CDROM(acdrbase, cd);
+		Cleanup_CDROM(cd);
 		return NULL;
 	}
 
 	cd->buffers = AllocMem (sizeof (unsigned char *) * bufs, MEMF_PUBLIC);
 	if (!cd->buffers)
 	{
-		Cleanup_CDROM(acdrbase, cd);
+		Cleanup_CDROM(cd);
 		return NULL;
 	}
   
 	cd->current_sectors = AllocMem (sizeof (long) * bufs, MEMF_PUBLIC);
 	if (!cd->current_sectors)
 	{
-		Cleanup_CDROM(acdrbase, cd);
+		Cleanup_CDROM(cd);
 		return NULL;
 	}
 
 	cd->last_used = AllocMem (sizeof (unsigned long) * p_std_buffers, MEMF_PUBLIC | MEMF_CLEAR);
 	if (!cd->last_used)
 	{
-		Cleanup_CDROM(acdrbase, cd);
+		Cleanup_CDROM(cd);
 		return NULL;
 	}
   
@@ -152,23 +154,23 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 	cd->port = CreateMsgPort ();
 	if (!cd->port)
 	{
-		g_cdrom_errno = CDROMERR_MSGPORT;
-		Cleanup_CDROM(acdrbase, cd);
+		global->g_cdrom_errno = CDROMERR_MSGPORT;
+		Cleanup_CDROM(cd);
 		return NULL;
 	}
 
 	cd->scsireq = (struct IOStdReq *)CreateIORequest (cd->port, sizeof (struct IOExtTD));
 	if (!cd->scsireq)
 	{
-		g_cdrom_errno = CDROMERR_IOREQ;
-		Cleanup_CDROM(acdrbase, cd);
+		global->g_cdrom_errno = CDROMERR_IOREQ;
+		Cleanup_CDROM(cd);
 		return NULL;
 	}
 
 	if (OpenDevice ((UBYTE *) p_device, p_scsi_id, (struct IORequest *) cd->scsireq, 0))
 	{
-		g_cdrom_errno = CDROMERR_DEVICE;
-		Cleanup_CDROM(acdrbase, cd);
+		global->g_cdrom_errno = CDROMERR_DEVICE;
+		Cleanup_CDROM(cd);
 		return NULL;
 	}
 
@@ -193,18 +195,18 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 	/* 'tick' is incremented every time a sector is accessed. */
 	cd->tick = 0;
 
-	g_cdrom_errno = 0;
+	global->g_cdrom_errno = 0;
 
-	Determine_Drive_Type(acdrbase, cd);
+	Determine_Drive_Type(cd);
 
-	if (g_ignore_blocklength)
+	if (global->g_ignore_blocklength)
 	{
 		cd->block_length = 0;
 		cd->blocking_factor = 0;
 	}
 	else
 	{
-		cd->block_length = Block_Length(acdrbase, cd);
+		cd->block_length = Block_Length(cd);
 		switch (cd->block_length)
 		{
 		case 2048:
@@ -220,8 +222,8 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 			cd->blocking_factor = 0;
 			break;
 		default:
-			g_cdrom_errno = CDROMERR_BLOCKSIZE;
-			Cleanup_CDROM(acdrbase, cd);
+			global->g_cdrom_errno = CDROMERR_BLOCKSIZE;
+			Cleanup_CDROM(cd);
 			return NULL;
 		}
 	}
@@ -230,7 +232,6 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 
 int Do_SCSI_Command
 	(
-		struct ACDRBase *acdrbase,
 		CDROM *p_cd,
 		unsigned char *p_buf,
 		long p_buf_length,
@@ -270,7 +271,6 @@ int bufs = p_cd->std_buffers + p_cd->file_buffers + 1;
 
 int Read_From_Drive
 	(
-		struct ACDRBase *acdrbase,
 		CDROM *p_cd,
 		unsigned char *p_buf,
 		long p_buf_length,
@@ -309,22 +309,14 @@ int bufs = p_cd->std_buffers + p_cd->file_buffers + 1;
 		cmd[8] = p_number_of_sectors << p_cd->blocking_factor;
 
 		return Do_SCSI_Command
-					(
-						acdrbase,
-						p_cd,
-						p_buf,
-						p_buf_length,
-						cmd,
-						sizeof (cmd),
-						SCSIF_READ
-					);
+					(p_cd, p_buf, p_buf_length, cmd, sizeof (cmd), SCSIF_READ);
 	}
 }
 
 /* Read one sector from the CDROM drive.
  */
 
-int Read_Sector (struct ACDRBase *acdrbase, CDROM *p_cd, long p_sector) {
+int Read_Sector (CDROM *p_cd, long p_sector) {
 int status;
 int i;
 int maxbuf = p_cd->std_buffers;
@@ -362,14 +354,7 @@ int loc;
 		}
 	}
 
-	status = Read_From_Drive
-		(
-			acdrbase,
-			p_cd,
-			p_cd->buffers[loc],
-			SCSI_BUFSIZE,
-			p_sector, 1
-		);
+	status = Read_From_Drive(p_cd,p_cd->buffers[loc],SCSI_BUFSIZE, p_sector, 1);
 	if (status)
 	{
 		p_cd->current_sectors[loc] = p_sector;
@@ -388,7 +373,6 @@ int loc;
 
 int Read_Contiguous_Sectors
 	(
-		struct ACDRBase *acdrbase,
 		CDROM *p_cd,
 		long p_sector,
 		long p_last_sector
@@ -416,14 +400,7 @@ int Read_Contiguous_Sectors
   }
 
   status = Read_From_Drive
-		(
-			acdrbase,
-			p_cd,
-			p_cd->buffers[p_cd->std_buffers],
-			SCSI_BUFSIZE * len,
-			p_sector,
-			len
-		);
+		(p_cd,p_cd->buffers[p_cd->std_buffers],SCSI_BUFSIZE *len, p_sector, len);
   if (status) {
     long sector = p_sector;
     for (i=p_cd->std_buffers; len; i++, len--)
@@ -434,7 +411,7 @@ int Read_Contiguous_Sectors
   return status;
 }
 
-int Test_Unit_Ready(struct ACDRBase *acdrbase, CDROM *p_cd) {
+int Test_Unit_Ready(CDROM *p_cd) {
 
 	if (p_cd->use_trackdisk)
 	{
@@ -458,41 +435,21 @@ int Test_Unit_Ready(struct ACDRBase *acdrbase, CDROM *p_cd) {
 	static unsigned char cmd[6] = { 0, 0, 0, 0, 0, 0 };
 
 		return Do_SCSI_Command
-					(
-						acdrbase,
-						p_cd,
-						p_cd->buffers[dummy_buf],
-						SCSI_BUFSIZE,
-						cmd,
-						6,
-						SCSIF_READ
-					);
+					(p_cd,p_cd->buffers[dummy_buf],SCSI_BUFSIZE, cmd, 6, SCSIF_READ);
 	}
 }
 
-int Is_XA_Mode_Disk(struct ACDRBase *acdrbase, CDROM *p_cd) {
+int Is_XA_Mode_Disk(CDROM *p_cd) {
 static unsigned char cmd[10] = { 0xC7, 3, 0, 0, 0, 0, 0, 0, 0, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 
-	if (
-			!Do_SCSI_Command
-				(
-					acdrbase,
-					p_cd,
-					p_cd->buffers[dummy_buf],
-					4,
-					cmd,
-					10,
-					SCSIF_READ
-				)
-		)
+	if (!Do_SCSI_Command(p_cd,p_cd->buffers[dummy_buf],4,cmd,10,SCSIF_READ))
 		return FALSE;
 	return *(p_cd->buffers[dummy_buf]) == 0x20;
 }
 
 int Mode_Select
 	(
-		struct ACDRBase *acdrbase,
 		CDROM *p_cd,
 		int p_mode,
 		int p_block_length
@@ -527,36 +484,17 @@ int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 
 	CopyMem(mode, p_cd->buffers[dummy_buf], sizeof (mode));
 	return Do_SCSI_Command
-				(
-					acdrbase,
-					p_cd,
-					p_cd->buffers[dummy_buf],
-					sizeof (mode),
-					cmd,
-					6,
-					SCSIF_WRITE
-				);
+				(p_cd,p_cd->buffers[dummy_buf],sizeof (mode),cmd,6,SCSIF_WRITE);
 }
 
-int Inquire (struct ACDRBase *acdrbase, CDROM *p_cd, t_inquiry_data *p_data)
+int Inquire (CDROM *p_cd, t_inquiry_data *p_data)
 {
 static unsigned char cmd[6] = { 0x12, 0, 0, 0, 96, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
   
 	if (p_cd->use_trackdisk)
 		return FALSE;
-	if (
-			!Do_SCSI_Command
-				(
-					acdrbase,
-					p_cd,
-					p_cd->buffers[dummy_buf],
-					96,
-					cmd,
-					6,
-					SCSIF_READ
-				)
-		)
+	if (!Do_SCSI_Command(p_cd,p_cd->buffers[dummy_buf],96,cmd,6,SCSIF_READ))
 		return FALSE;
 
 	CopyMem(p_cd->buffers[dummy_buf], p_data, sizeof (*p_data));
@@ -567,7 +505,6 @@ int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 
 t_toc_data *Read_TOC
 	(
-		struct ACDRBase *acdrbase,
 		CDROM *p_cd,
 		t_toc_header *p_toc_header
 	)
@@ -584,15 +521,7 @@ int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 
 	if (
 			!Do_SCSI_Command
-				(
-					acdrbase,
-					p_cd,
-					p_cd->buffers[dummy_buf],
-					TOC_SIZE,
-					cmd,
-					10,
-					SCSIF_READ
-				)
+				(p_cd,p_cd->buffers[dummy_buf],TOC_SIZE,cmd,10,SCSIF_READ)
 		)
 		return NULL;
 
@@ -600,13 +529,13 @@ int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 	return (t_toc_data *) (p_cd->buffers[dummy_buf] + 4);
 }
 
-int Has_Audio_Tracks(struct ACDRBase *acdrbase, CDROM *p_cd) {
+int Has_Audio_Tracks(CDROM *p_cd) {
 t_toc_header hdr;
 t_toc_data *toc;
 int i, len;
 
 	
-	toc = Read_TOC (acdrbase, p_cd, &hdr);
+	toc = Read_TOC (p_cd, &hdr);
 	if (!toc)
 		return FALSE;
 
@@ -627,13 +556,13 @@ int i, len;
  *  number of tracks or -1 on error.
  */
 
-int Data_Tracks(struct ACDRBase *acdrbase, CDROM *p_cd, unsigned long** p_buf) {
+int Data_Tracks(CDROM *p_cd, unsigned long** p_buf) {
 int cnt=0;
 t_toc_header hdr;
 t_toc_data *toc;
 int i, j, len;
 
-	toc = Read_TOC(acdrbase, p_cd, &hdr);
+	toc = Read_TOC(p_cd, &hdr);
 	if (!toc)
 		return -1;
 
@@ -660,7 +589,7 @@ int i, j, len;
 	return cnt;
 }
 
-int Start_Play_Audio(struct ACDRBase *acdrbase, CDROM *p_cd) {
+int Start_Play_Audio(CDROM *p_cd) {
 static unsigned char cmd[10] = { 0x48, 0, 0, 0, 0, 1, 0, 99, 1, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 
@@ -673,40 +602,22 @@ int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 	if (p_cd->model == MODEL_CDU_8002)
 		cmd[0] = 0xC9;
 
-	cmd[4] = Has_Audio_Tracks(acdrbase, p_cd);
+	cmd[4] = Has_Audio_Tracks(p_cd);
 
-	return Do_SCSI_Command
-				(
-					acdrbase,
-					p_cd,
-					p_cd->buffers[dummy_buf],
-					0,
-					cmd,
-					10,
-					SCSIF_WRITE
-				);
+	return Do_SCSI_Command(p_cd,p_cd->buffers[dummy_buf],0,cmd,10,SCSIF_WRITE);
 }
 
-int Stop_Play_Audio(struct ACDRBase *acdrbase, CDROM *p_cd) {
+int Stop_Play_Audio(CDROM *p_cd) {
 static unsigned char cmd[6] = { 0x1B, 0, 0, 0, 0, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 
 	if (p_cd->use_trackdisk)
 	return FALSE;
 
-	return Do_SCSI_Command
-				(
-					acdrbase,
-					p_cd,
-					p_cd->buffers[dummy_buf],
-					0,
-					cmd,
-					6,
-					SCSIF_WRITE
-				);
+	return Do_SCSI_Command(p_cd,p_cd->buffers[dummy_buf],0,cmd,6,SCSIF_WRITE);
 }
 
-int Block_Length(struct ACDRBase *acdrbase, CDROM *p_cd) {
+int Block_Length(CDROM *p_cd) {
 static unsigned char cmd[6] = { 0x1A, 0, 1, 0, 100, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 unsigned char *buf = p_cd->buffers[dummy_buf];
@@ -714,18 +625,7 @@ unsigned char *buf = p_cd->buffers[dummy_buf];
 	if (p_cd->use_trackdisk)
 		return 0;
 
-	if (
-			!Do_SCSI_Command
-				(
-					acdrbase,
-					p_cd,
-					buf,
-					100,
-					cmd,
-					6,
-					SCSIF_READ
-				)
-		)
+	if (!Do_SCSI_Command(p_cd,buf,100,cmd,6,SCSIF_READ))
 		return 0;
 
 	if (buf[3] == 0)
@@ -734,7 +634,7 @@ unsigned char *buf = p_cd->buffers[dummy_buf];
 	return (buf[9]<<16) + (buf[10]<<8) + buf[11];
 }
 
-void Cleanup_CDROM (struct ACDRBase *acdrbase, CDROM *p_cd) {
+void Cleanup_CDROM (CDROM *p_cd) {
 int bufs = p_cd->std_buffers + p_cd->file_buffers + 1;
 
 	if (p_cd->device_open)
@@ -770,12 +670,7 @@ void Clear_Sector_Buffers (CDROM *p_cd)
  *          - TRUE if the offset of the last session has been determined.
  */
 
-int Find_Last_Session
-	(
-		struct ACDRBase *acdrbase,
-		CDROM *p_cd,
-		unsigned long *p_result
-	)
+int Find_Last_Session(CDROM *p_cd, unsigned long *p_result)
 {
 static unsigned char cmd[10] = { 0xC7, 3, 0, 0, 0, 0, 0, 0, 0, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
@@ -791,7 +686,6 @@ int min, sec, frame;
 	if (
 			!Do_SCSI_Command
 				(
-					acdrbase,
 					p_cd,
 					p_cd->buffers[dummy_buf],
 					SCSI_BUFSIZE,

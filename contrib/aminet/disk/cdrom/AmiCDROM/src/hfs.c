@@ -22,48 +22,23 @@
  * 29-Nov-93   fmu   New function HFS_Block_Size().
  * 15-Nov-93   fmu   Corrected some typing mistakes in the HFS->ISO conversion
  *                   table.
+ * 07-Jul-02 sheutlin  various changes when porting to AROS
+ *                     - global variables are now in a struct Globals *global
+ *                     - moved some definitions into hfs.h
  */
-
-#include <stdlib.h>
-#include <string.h>
 
 #include <proto/exec.h>
 #include <proto/utility.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "cdrom.h"
 #include "generic.h"
 #include "hfs.h"
 #include "params.h"
+#include "globals.h"
 
 #include "clib_stuff.h"
-#include "baseredef.h"
-
-char g_data_fork_extension[17] = { 0, };
-char g_resource_fork_extension[17] = { 0, };
-t_bool g_convert_hfs_filenames = FALSE;
-t_bool g_convert_hfs_spaces = FALSE;
-
-typedef struct hfs_vol_info {
-  t_mdb			mdb;
-  int			start_block;
-  t_ulong		root_node;
-} t_hfs_vol_info;
-
-typedef struct hfs_obj_info {
-  t_bool		data_fork;
-  t_ulong		parent_id;
-  char			name[50];
-  t_catalog_record	cat_rec;
-} t_hfs_obj_info;
-
-typedef struct leaf_record_pos {
-  t_ulong		node;
-  t_ushort		record;
-  t_node_descr		node_descr;
-  t_catalog_record	cat_rec;
-  t_leaf_record		leaf_rec;
-  char			pad[32]; /* space for name from t_leaf_record */
-} t_leaf_record_pos;
 
 #define VOL(vol,tag) (((t_hfs_vol_info *)(vol->vol_info))->tag)
 #define OBJ(obj,tag) (((t_hfs_obj_info *)(obj->obj_info))->tag)
@@ -71,6 +46,17 @@ typedef struct leaf_record_pos {
 /* Number of seconds betweem 01-Jan-1904 and 01-Jan-1978: */
 
 #define TIME_DIFF ((74 * 365 + 19) * 24 * 60 * 60)
+
+extern struct Globals *global;
+
+#ifdef SysBase
+#	undef SysBase
+#endif
+#define SysBase global->SysBase
+#ifdef UtilityBase
+#	undef UtilityBase
+#endif
+#define UtilityBase global->UtilityBase
 
 static char g_conv_table[128] = {
   'Ä', 'Å', 'Ç', 'É', 'Ñ', 'Ö', 'Ü',
@@ -120,36 +106,17 @@ void Convert_HFS_Spaces (char *p_buf, int p_buf_len)
       *cp = '_';
 }
 
-t_uchar *Read_Block
-	(
-		struct ACDRBase *acdrbase,
-		CDROM *p_cdrom,
-		t_ulong p_block
-	)
-{
-	if (!Read_Sector(acdrbase, p_cdrom, p_block >> 2))
+t_uchar *Read_Block(CDROM *p_cdrom, t_ulong p_block) {
+	if (!Read_Sector(p_cdrom, p_block >> 2))
 		return NULL;
 
 	return p_cdrom->buffer + ((p_block & 3) << 9);
 }
 
 t_uchar *Read_Contiguous_Blocks
-	(
-		struct ACDRBase *acdrbase,
-		CDROM *p_cdrom,
-		t_ulong p_block,
-		t_ulong p_last_block
-	)
+	(CDROM *p_cdrom, t_ulong p_block, t_ulong p_last_block)
 {
-	if (
-			!Read_Contiguous_Sectors
-				(
-					acdrbase,
-					p_cdrom,
-					p_block >> 2,
-					p_last_block >> 2
-				)
-		)
+	if (!Read_Contiguous_Sectors(p_cdrom, p_block >> 2, p_last_block >> 2))
 		return NULL;
 
 	return p_cdrom->buffer + ((p_block & 3) << 9);
@@ -164,13 +131,7 @@ t_ulong AB_to_Block (VOLUME *p_volume, t_ulong p_alloc_block)
   	 VOL(p_volume,mdb).AlBlSt + VOL(p_volume,start_block);
 }
 
-int HFS_Find_Master_Directory_Block
-	(
-		struct ACDRBase *acdrbase,
-		CDROM *p_cd,
-		t_mdb *p_mdb
-	)
-{
+int HFS_Find_Master_Directory_Block(CDROM *p_cd, t_mdb *p_mdb) {
 t_uchar *block;
 typedef struct partition_map
 {
@@ -185,14 +146,14 @@ typedef struct partition_map
 int i, entries;
 int result;
     
-	block = Read_Block(acdrbase, p_cd, 1);
+	block = Read_Block(p_cd, 1);
 	if (!block || block[0] != 0x50 || block[1] != 0x4D)
 		return -1;
 
 	entries = ((t_partition_map *) block)->pmMapBlkCnt;
 	for (i=0; i<entries; i++)
 	{
-		block = Read_Block(acdrbase, p_cd, i+1);
+		block = Read_Block(p_cd, i+1);
 		if (!block || block[0] != 0x50 || block[1] != 0x4D)
 			return -1;
 		if (
@@ -204,7 +165,7 @@ int result;
 			)
 		{
 			result = ((t_partition_map *) block)->pmPyPartStart + 2;
-			block = Read_Block(acdrbase, p_cd, result);
+			block = Read_Block(p_cd, result);
 			if (!block || block[0] != 0x42 || block[1] != 0x44)
 				return -1;
 			else
@@ -218,11 +179,11 @@ int result;
 	return -1;
 }
 
-t_bool Uses_HFS_Protocol(struct ACDRBase *acdrbase, CDROM *p_cd, int *p_skip) {
+t_bool Uses_HFS_Protocol(CDROM *p_cd, int *p_skip) {
 t_mdb mdb;
 int blk;
 
-	blk = HFS_Find_Master_Directory_Block(acdrbase, p_cd, &mdb);
+	blk = HFS_Find_Master_Directory_Block(p_cd, &mdb);
 	if (blk == -1)
 		return FALSE;
 
@@ -231,13 +192,7 @@ int blk;
 }
 
 t_bool HFS_Get_Header_Node
-	(
-		struct ACDRBase *acdrbase,
-		CDROM *p_cd,
-		t_ulong p_mdb_pos,
-		t_mdb *p_mdb,
-		t_hdr_node *p_hdr_node
-	)
+	(CDROM *p_cd, t_ulong p_mdb_pos, t_mdb *p_mdb, t_hdr_node *p_hdr_node)
 {
 t_ulong pos =
 	(
@@ -246,7 +201,7 @@ t_ulong pos =
 	);
 t_hdr_node *hdr;
   
-	hdr = (t_hdr_node *) Read_Block(acdrbase, p_cd, pos);
+	hdr = (t_hdr_node *) Read_Block(p_cd, pos);
 	if (!hdr)
 		return FALSE;
 
@@ -255,13 +210,7 @@ t_hdr_node *hdr;
 }
 
 t_node_descr *HFS_Get_Node
-	(
-		struct ACDRBase *acdrbase,
-		CDROM *p_cd,
-		t_ulong p_mdb_pos,
-		t_mdb *p_mdb,
-		t_ulong p_node
-	)
+	(CDROM *p_cd, t_ulong p_mdb_pos, t_mdb *p_mdb, t_ulong p_node)
 {
 t_ulong first_node;
 t_ulong pos;
@@ -285,27 +234,16 @@ int i;
 
 	pos = first_node + (p_node - sub);
 
-	return (t_node_descr *) Read_Block(acdrbase, p_cd, pos);
+	return (t_node_descr *) Read_Block(p_cd, pos);
 }
 
-t_node_descr *HFS_Node
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		t_ulong p_node
-	)
-{
-  return HFS_Get_Node (acdrbase, p_volume->cd, VOL(p_volume,start_block) + 2,
+t_node_descr *HFS_Node(VOLUME *p_volume, t_ulong p_node) {
+  return HFS_Get_Node (p_volume->cd, VOL(p_volume,start_block) + 2,
   		       &VOL(p_volume,mdb), p_node);
 }
 
 void HFS_Load_Catalog_Record
-	(
-		struct ACDRBase *acdrbase,
-		t_catalog_record *p_cat_rec,
-		char *p_node,
-		int p_record
-	)
+	(t_catalog_record *p_cat_rec, char *p_node, int p_record)
 {
 short *sp = (short *) p_node;
 int len;
@@ -321,18 +259,12 @@ int start;
 }
 
 
-t_bool HFS_Find_Next_Leaf
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		t_leaf_record_pos *p_leaf
-	)
-{
+t_bool HFS_Find_Next_Leaf(VOLUME *p_volume, t_leaf_record_pos *p_leaf) {
 t_node_descr *node;
 short *sp;
 int pos;
 
-	node = HFS_Node(acdrbase, p_volume, p_leaf->node);
+	node = HFS_Node(p_volume, p_leaf->node);
 	if (!node)
 		return FALSE;
 
@@ -341,7 +273,7 @@ int pos;
 	{
 		if (node->FLink)
 		{
-			node = HFS_Node(acdrbase, p_volume, p_leaf->node = node->FLink);
+			node = HFS_Node(p_volume, p_leaf->node = node->FLink);
 			if (!node)
 				return FALSE;
 			p_leaf->record = 0;
@@ -354,10 +286,7 @@ int pos;
 	pos = sp[255-p_leaf->record];
 	CopyMem(node, &p_leaf->node_descr, sizeof (t_node_descr));
 	CopyMem((char *)node+pos, &p_leaf->leaf_rec, ((char *) node)[pos] + 1);
-	HFS_Load_Catalog_Record
-		(
-			acdrbase, &p_leaf->cat_rec, (char *) node, p_leaf->record
-		);
+	HFS_Load_Catalog_Record(&p_leaf->cat_rec, (char *) node, p_leaf->record);
 
 	if (p_leaf->leaf_rec.name_length > 30)
 	{
@@ -372,18 +301,12 @@ int pos;
  * Store the result in *p_leaf.
  */
 
-t_bool HFS_Find_This_Leaf
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		t_leaf_record_pos *p_leaf
-	)
-{
+t_bool HFS_Find_This_Leaf(VOLUME *p_volume, t_leaf_record_pos *p_leaf) {
 t_node_descr *node;
 short *sp;
 int pos;
 
-	node = HFS_Node(acdrbase, p_volume, p_leaf->node);
+	node = HFS_Node(p_volume, p_leaf->node);
 	if (!node)
 		return FALSE;
 
@@ -391,10 +314,7 @@ int pos;
 	pos = sp[255-p_leaf->record];
 	CopyMem(node, &p_leaf->node_descr, sizeof (t_node_descr));
 	CopyMem((char *)node+pos, &p_leaf->leaf_rec, ((char *) node)[pos] + 1);
-	HFS_Load_Catalog_Record
-		(
-			acdrbase, &p_leaf->cat_rec, (char *) node, p_leaf->record
-		);
+	HFS_Load_Catalog_Record(&p_leaf->cat_rec, (char *) node, p_leaf->record);
 
 	return TRUE;
 }
@@ -405,12 +325,7 @@ int pos;
  */
 
 t_bool HFS_Find_Leaf_Record
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		t_leaf_record_pos *p_leaf,
-		t_ulong p_parent_id
-	)
+	(VOLUME *p_volume, t_leaf_record_pos *p_leaf, t_ulong p_parent_id)
 {
 t_node_descr *node;
 short *sp;
@@ -418,10 +333,10 @@ int i;
 t_ulong this_node = VOL(p_volume,root_node);
 t_ulong next_node;
 
-	node = HFS_Node(acdrbase, p_volume, VOL(p_volume,root_node));
+	node = HFS_Node(p_volume, VOL(p_volume,root_node));
 	if (!node)
 	{
-		iso_errno = ISOERR_SCSI_ERROR;
+		global->iso_errno = ISOERR_SCSI_ERROR;
 		return FALSE;
 	}
 
@@ -450,20 +365,20 @@ t_ulong next_node;
 		}
 		else
 		{
-			iso_errno = ISOERR_INTERNAL;
+			global->iso_errno = ISOERR_INTERNAL;
 			return FALSE;
 		}
 
 		if (next_node == -1)
 		{
-			iso_errno = ISOERR_INTERNAL;
+			global->iso_errno = ISOERR_INTERNAL;
 			return FALSE;
 		}
 
-		node = HFS_Node(acdrbase, p_volume, next_node);
+		node = HFS_Node(p_volume, next_node);
 		if (!node)
 		{
-			iso_errno = ISOERR_SCSI_ERROR;
+			global->iso_errno = ISOERR_SCSI_ERROR;
 			return FALSE;
 		}
 		this_node = next_node;
@@ -473,7 +388,7 @@ t_ulong next_node;
 	p_leaf->record = 0;
 	CopyMem(node, &p_leaf->node_descr, sizeof (t_node_descr));
 	CopyMem((char *)node +0xE, &p_leaf->leaf_rec, ((char *) node)[0xe] + 1);
-	HFS_Load_Catalog_Record(acdrbase, &p_leaf->cat_rec, (char *) node, 0);
+	HFS_Load_Catalog_Record(&p_leaf->cat_rec, (char *) node, 0);
 
 	/* walk forwards until the same key is found: */
 	for (;;)
@@ -482,13 +397,13 @@ t_ulong next_node;
 			break;
 		if (p_leaf->leaf_rec.parent_id > p_parent_id)
 		{
-			iso_errno = ISOERR_INTERNAL;
+			global->iso_errno = ISOERR_INTERNAL;
 			return FALSE;
 		}
 
-		if (!HFS_Find_Next_Leaf(acdrbase, p_volume, p_leaf))
+		if (!HFS_Find_Next_Leaf(p_volume, p_leaf))
 		{
-			iso_errno = ISOERR_INTERNAL;
+			global->iso_errno = ISOERR_INTERNAL;
 			return FALSE;
 		}
 
@@ -504,12 +419,7 @@ t_ulong next_node;
 }
 
 t_bool HFS_Init_Vol_Info
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		int p_start_block
-	)
-{
+	(VOLUME *p_volume, int p_start_block) {
 extern t_handler g_hfs_handler;
 t_uchar *block;
 t_hdr_node hdr;
@@ -520,10 +430,10 @@ t_hdr_node hdr;
 	*/
 
 	if (
-			g_data_fork_extension[0] == 0 &&
-			(g_resource_fork_extension[0] == 0)
+			global->g_data_fork_extension[0] == 0 &&
+			(global->g_resource_fork_extension[0] == 0)
 		)
-		StrCpy (g_resource_fork_extension, ".rsrc");
+		StrCpy (global->g_resource_fork_extension, ".rsrc");
 
 	/*
 		Volume info initialization:
@@ -534,15 +444,15 @@ t_hdr_node hdr;
 	p_volume->vol_info = AllocMem (sizeof (t_hfs_vol_info), MEMF_PUBLIC);
 	if (!p_volume->vol_info)
 	{
-		iso_errno = ISOERR_NO_MEMORY;
+		global->iso_errno = ISOERR_NO_MEMORY;
 		return FALSE;
 	}
 
 	VOL(p_volume,start_block) = p_start_block;
 
-	if (!(block = Read_Block(acdrbase, p_volume->cd, p_start_block + 2)))
+	if (!(block = Read_Block(p_volume->cd, p_start_block + 2)))
 	{
-		iso_errno = ISOERR_SCSI_ERROR;
+		global->iso_errno = ISOERR_SCSI_ERROR;
 		FreeMem (p_volume->vol_info, sizeof (t_hfs_vol_info));
 		return FALSE;
 	}
@@ -551,15 +461,10 @@ t_hdr_node hdr;
 
 	if (
 			!HFS_Get_Header_Node
-				(
-					acdrbase,
-					p_volume->cd,
-					p_start_block + 2,
-					&VOL(p_volume,mdb), &hdr
-				)
+				(p_volume->cd, p_start_block + 2, &VOL(p_volume,mdb), &hdr)
 		)
 	{
-		iso_errno = ISOERR_SCSI_ERROR;
+		global->iso_errno = ISOERR_SCSI_ERROR;
 		FreeMem (p_volume->vol_info, sizeof (t_hfs_vol_info));
 		return FALSE;
 	}
@@ -571,17 +476,17 @@ t_hdr_node hdr;
 	return TRUE;
 }
 
-void HFS_Close_Vol_Info(struct ACDRBase *acdrbase, VOLUME *p_volume)
+void HFS_Close_Vol_Info(VOLUME *p_volume)
 {
 	FreeMem (p_volume->vol_info, sizeof (t_hfs_vol_info));
 }
 
-CDROM_OBJ *HFS_Alloc_Obj(struct ACDRBase *acdrbase) {
+CDROM_OBJ *HFS_Alloc_Obj(void) {
 CDROM_OBJ *obj = AllocMem (sizeof (CDROM_OBJ), MEMF_PUBLIC | MEMF_CLEAR);
   
 	if (!obj)
 	{
-		iso_errno = ISOERR_NO_MEMORY;
+		global->iso_errno = ISOERR_NO_MEMORY;
 		return NULL;
 	}
 
@@ -595,13 +500,8 @@ CDROM_OBJ *obj = AllocMem (sizeof (CDROM_OBJ), MEMF_PUBLIC | MEMF_CLEAR);
 	return obj;
 }
 
-CDROM_OBJ *HFS_Open_Top_Level_Directory
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume
-	)
-{
-CDROM_OBJ *obj = HFS_Alloc_Obj(acdrbase);
+CDROM_OBJ *HFS_Open_Top_Level_Directory(VOLUME *p_volume) {
+CDROM_OBJ *obj = HFS_Alloc_Obj();
 
   if (!obj)
     return NULL;
@@ -616,21 +516,14 @@ CDROM_OBJ *obj = HFS_Alloc_Obj(acdrbase);
   return obj;
 }
 
-CDROM_OBJ *HFS_Open_Object
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		char *p_name,
-		t_ulong p_parent
-	)
-{
+CDROM_OBJ *HFS_Open_Object(VOLUME *p_volume, char *p_name, t_ulong p_parent) {
 t_leaf_record_pos leaf;
 CDROM_OBJ *obj;
 char name[50];
 char type;
 t_bool data_fork;
 
-	if (!HFS_Find_Leaf_Record(acdrbase, p_volume, &leaf, p_parent))
+	if (!HFS_Find_Leaf_Record(p_volume, &leaf, p_parent))
 		return NULL;
 
 	for (;;)
@@ -640,16 +533,16 @@ t_bool data_fork;
 		{
  			if (leaf.leaf_rec.parent_id != p_parent)
 			{
-				iso_errno = ISOERR_NOT_FOUND;
+				global->iso_errno = ISOERR_NOT_FOUND;
 				return NULL;
 			}
 
 			CopyMem(leaf.leaf_rec.name, name, leaf.leaf_rec.name_length);
 			name[leaf.leaf_rec.name_length] = 0;
 
-			if (g_convert_hfs_filenames)
+			if (global->g_convert_hfs_filenames)
 				Convert_Mac_Characters (name, leaf.leaf_rec.name_length);
-			if (g_convert_hfs_spaces)
+			if (global->g_convert_hfs_spaces)
 				Convert_HFS_Spaces (name, leaf.leaf_rec.name_length);
 
 			if (type == 1)
@@ -659,14 +552,14 @@ t_bool data_fork;
 			}
 			else
 			{
-				StrCat (name, g_data_fork_extension);
+				StrCat (name, global->g_data_fork_extension);
 				if (Stricmp ((UBYTE *) p_name, (UBYTE *) name) == 0)
 				{
 					data_fork = TRUE;
 					break;
 				}
 				name[leaf.leaf_rec.name_length] = 0;
-				StrCat (name, g_resource_fork_extension);
+				StrCat (name, global->g_resource_fork_extension);
 				if (Stricmp ((UBYTE *) p_name, (UBYTE *) name) == 0)
 				{
 					data_fork = FALSE;
@@ -674,11 +567,11 @@ t_bool data_fork;
 				}
 			}
 		}
-		if (!HFS_Find_Next_Leaf(acdrbase, p_volume, &leaf))
+		if (!HFS_Find_Next_Leaf(p_volume, &leaf))
 			return NULL;
 	}
 
-	obj = HFS_Alloc_Obj(acdrbase);
+	obj = HFS_Alloc_Obj();
 	obj->directory_f = (type == 1);
 	obj->volume = p_volume;
 
@@ -694,41 +587,24 @@ t_bool data_fork;
  * p_name must not contain '/' or ':' characters.
  */
 
-CDROM_OBJ *HFS_Open_Obj_In_Directory
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_dir,
-		char *p_name
-	)
-{
-	return HFS_Open_Object
-		(
-			acdrbase,
-			p_dir->volume,
-			p_name,
-			OBJ(p_dir,cat_rec).d.DirID
-		);
+CDROM_OBJ *HFS_Open_Obj_In_Directory(CDROM_OBJ *p_dir, char *p_name) {
+	return HFS_Open_Object(p_dir->volume, p_name, OBJ(p_dir,cat_rec).d.DirID);
 }
 
-CDROM_OBJ *HFS_Find_Parent(struct ACDRBase *acdrbase, CDROM_OBJ *p_obj) {
+CDROM_OBJ *HFS_Find_Parent(CDROM_OBJ *p_obj) {
 t_leaf_record_pos leaf;
 
 	if (OBJ(p_obj,parent_id) == 2)
-		return HFS_Open_Top_Level_Directory(acdrbase, p_obj->volume);
+		return HFS_Open_Top_Level_Directory(p_obj->volume);
 
-	if (
-			!HFS_Find_Leaf_Record
-				(
-					acdrbase, p_obj->volume, &leaf, OBJ(p_obj,parent_id)
-				)
-		)
+	if (!HFS_Find_Leaf_Record(p_obj->volume, &leaf, OBJ(p_obj,parent_id)))
 		return NULL;
 
 	for (;;)
 	{
 		if (leaf.leaf_rec.parent_id != OBJ(p_obj,parent_id))
 		{
-			iso_errno = ISOERR_INTERNAL;
+			global->iso_errno = ISOERR_INTERNAL;
 			return NULL;
 		}
 		if (leaf.cat_rec.d.type == 3)
@@ -736,31 +612,24 @@ t_leaf_record_pos leaf;
 		char buf[50];
 			CopyMem(leaf.cat_rec.dt.CName, buf, leaf.cat_rec.dt.CNameLen);
 			buf[leaf.cat_rec.dt.CNameLen] = 0;
-			if (g_convert_hfs_filenames)
+			if (global->g_convert_hfs_filenames)
 				Convert_Mac_Characters (buf, leaf.cat_rec.dt.CNameLen);
-			if (g_convert_hfs_spaces)
+			if (global->g_convert_hfs_spaces)
 				Convert_HFS_Spaces (buf, leaf.cat_rec.dt.CNameLen);
-			return HFS_Open_Object(acdrbase, p_obj->volume, buf, leaf.cat_rec.dt.ParID);
+			return HFS_Open_Object(p_obj->volume, buf, leaf.cat_rec.dt.ParID);
 		}
-		if (!HFS_Find_Next_Leaf(acdrbase, p_obj->volume, &leaf))
+		if (!HFS_Find_Next_Leaf(p_obj->volume, &leaf))
 			return NULL;
 	}
 }
 
-void HFS_Close_Obj(struct ACDRBase *acdrbase, CDROM_OBJ *p_obj)
+void HFS_Close_Obj(CDROM_OBJ *p_obj)
 {
 	FreeMem (p_obj->obj_info, sizeof (t_hfs_obj_info));
 	FreeMem (p_obj, sizeof (CDROM_OBJ));
 }
 
-int HFS_Read_From_File
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_file,
-		char *p_buffer,
-		int p_buffer_length
-	)
-{
+int HFS_Read_From_File(CDROM_OBJ *p_file, char *p_buffer, int p_buffer_length) {
 unsigned long block;
 int remain_block, remain_file, remain;
 int len;
@@ -796,9 +665,9 @@ t_ulong data_length = (data_fork ? OBJ(p_file,cat_rec).f.LgLen :
 	{
 	t_uchar *data;
 
-		if (!(data = Read_Contiguous_Blocks(acdrbase, cd, block, last_block)))
+		if (!(data = Read_Contiguous_Blocks(cd, block, last_block)))
 		{
-			iso_errno = ISOERR_SCSI_ERROR;
+			global->iso_errno = ISOERR_SCSI_ERROR;
 			return -1;
 		}
 
@@ -820,12 +689,7 @@ t_ulong data_length = (data_fork ? OBJ(p_file,cat_rec).f.LgLen :
 	return buf_pos;
 }
 
-t_bool HFS_Cdrom_Info
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_obj, CDROM_INFO *p_info
-	)
-{
+t_bool HFS_Cdrom_Info(CDROM_OBJ *p_obj, CDROM_INFO *p_info) {
 	p_info->symlink_f = 0;
 	p_info->directory_f = p_obj->directory_f;
 	p_info->name_length = StrLen (OBJ(p_obj,name));
@@ -862,12 +726,7 @@ t_bool HFS_Cdrom_Info
  */
 
 t_bool HFS_Examine_Next
-	(
-		struct ACDRBase *acdrbase,
-		CDROM_OBJ *p_obj,
-		CDROM_INFO *p_info,
-		unsigned long *p_offset
-	)
+	(CDROM_OBJ *p_obj, CDROM_INFO *p_info, unsigned long *p_offset)
 {
 t_leaf_record_pos leaf;
 short fork = 3;
@@ -878,10 +737,7 @@ short fork = 3;
 		{
 			if (
 					!HFS_Find_Leaf_Record
-						(
-							acdrbase,
-							p_obj->volume, &leaf, OBJ(p_obj,cat_rec).d.DirID
-						)
+						(p_obj->volume, &leaf, OBJ(p_obj,cat_rec).d.DirID)
 				)
 				return FALSE;
 		}
@@ -893,12 +749,12 @@ short fork = 3;
 
 			if (fork == 0)
 			{
-				if (!HFS_Find_This_Leaf(acdrbase, p_obj->volume, &leaf))
+				if (!HFS_Find_This_Leaf(p_obj->volume, &leaf))
 					return FALSE;
 			}
 			else
 			{
-				if (!HFS_Find_Next_Leaf(acdrbase, p_obj->volume, &leaf))
+				if (!HFS_Find_Next_Leaf(p_obj->volume, &leaf))
 					return FALSE;
 				if (leaf.leaf_rec.parent_id != OBJ(p_obj,cat_rec).d.DirID)
 					return FALSE;
@@ -923,9 +779,9 @@ short fork = 3;
 	p_info->directory_f = (leaf.cat_rec.d.type == 1);
 	p_info->name_length = leaf.leaf_rec.name_length;
 	CopyMem(leaf.leaf_rec.name, p_info->name, leaf.leaf_rec.name_length);
-	if (g_convert_hfs_filenames)
+	if (global->g_convert_hfs_filenames)
 		Convert_Mac_Characters (p_info->name, p_info->name_length);
-	if (g_convert_hfs_spaces)
+	if (global->g_convert_hfs_spaces)
 		Convert_HFS_Spaces (p_info->name, p_info->name_length);
 	if (p_info->directory_f)
 	{
@@ -938,22 +794,22 @@ short fork = 3;
 		{
 			CopyMem
 				(
-					g_data_fork_extension,
+					global->g_data_fork_extension,
 					p_info->name + p_info->name_length,
-      	      StrLen (g_data_fork_extension)
+      	      StrLen (global->g_data_fork_extension)
 				);
-			p_info->name_length += StrLen (g_data_fork_extension);
+			p_info->name_length += StrLen (global->g_data_fork_extension);
 			p_info->file_length = leaf.cat_rec.f.LgLen;
 		}
 		else
 		{
 			CopyMem
 				(
-					g_resource_fork_extension,
+					global->g_resource_fork_extension,
 					p_info->name + p_info->name_length,
-      	      StrLen (g_resource_fork_extension)
+      	      StrLen (global->g_resource_fork_extension)
 				);
-			p_info->name_length += StrLen (g_resource_fork_extension);
+			p_info->name_length += StrLen (global->g_resource_fork_extension);
 			p_info->file_length = leaf.cat_rec.f.RLgLen;
 		}
 		p_info->date = leaf.cat_rec.f.CrDat - TIME_DIFF;
@@ -963,7 +819,7 @@ short fork = 3;
 	return TRUE;
 }
 
-void *HFS_Clone_Obj_Info(struct ACDRBase *acdrbase, void *p_info) {
+void *HFS_Clone_Obj_Info(void *p_info) {
 t_hfs_obj_info *info = (t_hfs_obj_info *) p_info;
 t_hfs_obj_info *new;
   
@@ -992,7 +848,7 @@ t_bool HFS_Same_Objects (CDROM_OBJ *p_obj1, CDROM_OBJ *p_obj2)
     return OBJ(p_obj1,cat_rec).f.FlNum == OBJ(p_obj2,cat_rec).f.FlNum;
 }
 
-t_ulong HFS_Creation_Date(struct ACDRBase *acdrbase, VOLUME *p_volume)
+t_ulong HFS_Creation_Date(VOLUME *p_volume)
 {
 	return VOL(p_volume,mdb).CrDate - TIME_DIFF;
 }
@@ -1010,14 +866,7 @@ t_ulong HFS_Block_Size (VOLUME *p_volume)
   return 512;
 }
 
-void HFS_Volume_Id
-	(
-		struct ACDRBase *acdrbase,
-		VOLUME *p_volume,
-		char *p_buf,
-		int p_buf_length
-	)
-{
+void HFS_Volume_Id(VOLUME *p_volume, char *p_buf, int p_buf_length) {
 int len = p_buf_length - 1;
 
 	if (len > VOL(p_volume,mdb).VolNameLen)
@@ -1026,9 +875,9 @@ int len = p_buf_length - 1;
 	CopyMem(VOL(p_volume,mdb).VolName, p_buf, len);
 	p_buf[len] = 0;
 
-	if (g_convert_hfs_filenames)
+	if (global->g_convert_hfs_filenames)
 		Convert_Mac_Characters (p_buf, len);
-	if (g_convert_hfs_spaces)
+	if (global->g_convert_hfs_spaces)
 		Convert_HFS_Spaces (p_buf, len);
 }
 

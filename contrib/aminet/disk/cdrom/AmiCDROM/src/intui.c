@@ -10,6 +10,8 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 07-Jul-02 sheutlin  various changes when porting to AROS
+ *                     - global variables are now in a struct Globals *global
  * 18-Jul-94   fmu   - New CDDA icon (by Olivier Tonino)
  *                   - User-definable icon
  * 05-Jan-94   fmu   Retry displaying CD-DA icon if WB is not open.
@@ -19,31 +21,27 @@
  * 09-Oct-93   fmu   SAS/C support added
  */
 
-#include <stdarg.h>
-#include <stdio.h>
-
+#include <proto/exec.h>
+#include <proto/intuition.h>
+#include <proto/icon.h>
+#include <proto/wb.h>
 #include <exec/types.h>
 #include <intuition/intuition.h>
 #include <intuition/iobsolete.h>
 #include <workbench/workbench.h>
 #include <workbench/startup.h>
+#include <stdarg.h>
+#include <stdio.h>
 
-#include <proto/exec.h>
-#include <proto/intuition.h>
-#include <proto/icon.h>
-#include <proto/wb.h>
-
+#define DEBUG 1
 #include <aros/debug.h>
 
 #include "intui.h"
-#include "baseredef.h"
+#include "globals.h"
 
 #define AROS_KERNEL 1
 
-struct MsgPort *g_app_port;
-struct AppIcon *g_app_icon;
-ULONG g_app_sigbit;
-int g_retry_show_cdda_icon = FALSE;
+extern struct Globals *global;
 
 UWORD g_image_data[] = {
 	/* Plane 0 */
@@ -87,174 +85,202 @@ UWORD g_image_data[] = {
 		0xFFF8,0xFFFC,0x3FFE,0xFFFF,0x0001,0xFFFE,0xFFFF,0xFFFF,0xFFFE
 };
 
-struct Image g_disk_object_image = {
-  0, 0,			/* top corner */
-  47, 36, 3,		/* width, height, depth */
-  g_image_data,
-  0xff, 0x00,		/* planepick, planeonoff */
-  NULL,			/* next image */
-};
-
-UBYTE *g_tool_types[] = {
-  NULL
-};
-
-struct DiskObject *g_user_disk_object = NULL;
-
-struct DiskObject g_disk_object = {
-  WB_DISKMAGIC,
-  WB_DISKVERSION,
-  {
-    NULL,
-    0, 0,
-    47, 37,
-    GADGIMAGE | GADGHCOMP,
-    RELVERIFY | GADGIMMEDIATE,
-    BOOLGADGET,
-    (APTR) &g_disk_object_image,
-    NULL,
-  },
-  0,
-  "",
-  (char **) g_tool_types,
-  NO_ICON_POSITION,
-  NO_ICON_POSITION,
-  NULL,
-  NULL,
-  0
-};
-
-long g_xpos = NO_ICON_POSITION;
-long g_ypos = NO_ICON_POSITION;
-
 char *g_iconname = "CD-DA";
 
-void Init_Intui(struct ACDRBase *acdrbase) {
+#ifdef SysBase
+#	undef SysBase
+#endif
+#define SysBase global->SysBase
 
-	IntuitionBase = 
-		OpenLibrary ((UBYTE *) "intuition.library", 37);
-	IconBase = OpenLibrary ((UBYTE *) "icon.library", 37);
-	if (!IconBase)
-		Display_Error (acdrbase, "cannot open icon.library");
-	WorkbenchBase = OpenLibrary ((UBYTE *) "workbench.library", 37);
-	if (!WorkbenchBase)
-		Display_Error(acdrbase, "cannot open workbench.library");
+void Init_Intui() {
+struct IconBase *IconBase;
+
+	global->IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 37);
+	IconBase = (struct IconBase *)OpenLibrary("icon.library", 37);
+	if (IconBase)
+		Display_Error ("cannot open icon.library");
+	global->IconBase = IconBase;
+	global->WorkbenchBase = (struct WorkbenchBase *)OpenLibrary("workbench.library", 37);
+	if (!global->WorkbenchBase)
+		Display_Error("cannot open workbench.library");
 
 #ifndef AROS_KERNEL
-	g_user_disk_object = GetDiskObject ("env:cdda");
-	if (!g_user_disk_object)
+	global->g_user_disk_object = GetDiskObject ("env:cdda");
+	if (!global->g_user_disk_object)
 	{
 #endif
-		g_user_disk_object = &g_disk_object;
+		global->g_xpos = NO_ICON_POSITION;
+		global->g_ypos = NO_ICON_POSITION;
+		global->g_disk_object_image.LeftEdge = 0;
+		global->g_disk_object_image.TopEdge = 0;
+		global->g_disk_object_image.Width = 47;
+		global->g_disk_object_image.Height = 36;
+		global->g_disk_object_image.Depth = 3;
+		global->g_disk_object_image.ImageData = g_image_data;
+		global->g_disk_object_image.PlanePick = 0xff;
+		global->g_disk_object_image.PlaneOnOff = 0x00;
+		global->g_disk_object_image.NextImage = NULL;
+
+		global->g_disk_object.do_Magic = WB_DISKMAGIC;
+		global->g_disk_object.do_Version = WB_DISKVERSION;
+		global->g_disk_object.do_Gadget.NextGadget = NULL;
+		global->g_disk_object.do_Gadget.LeftEdge = 0;
+		global->g_disk_object.do_Gadget.TopEdge = 0;
+		global->g_disk_object.do_Gadget.Width = 47;
+		global->g_disk_object.do_Gadget.Height = 37;
+		global->g_disk_object.do_Gadget.Flags = GADGIMAGE | GADGHCOMP;
+		global->g_disk_object.do_Gadget.Activation = RELVERIFY | GADGIMMEDIATE;
+		global->g_disk_object.do_Gadget.GadgetType = BOOLGADGET;
+		global->g_disk_object.do_Gadget.GadgetRender = &global->g_disk_object_image;
+		global->g_disk_object.do_Gadget.SelectRender = NULL;
+		global->g_disk_object.do_Gadget.GadgetText = NULL;
+		global->g_disk_object.do_Gadget.MutualExclude = 0;
+		global->g_disk_object.do_Gadget.SpecialInfo = NULL;
+		global->g_disk_object.do_Gadget.GadgetID = 0;
+		global->g_disk_object.do_Gadget.UserData = NULL;
+		global->g_disk_object.do_Type = 0;
+		global->g_disk_object.do_DefaultTool = "";
+		global->g_disk_object.do_ToolTypes = (char **)global->g_tool_types;
+		global->g_disk_object.do_CurrentX = NO_ICON_POSITION;
+		global->g_disk_object.do_CurrentY = NO_ICON_POSITION;
+		global->g_disk_object.do_DrawerData = NULL;
+		global->g_disk_object.do_ToolWindow = NULL;
+		global->g_disk_object.do_StackSize = 0;
+		global->g_user_disk_object = &global->g_disk_object;
 #ifndef AROS_KERNEL
 	}
 	else
 	{
 	char *name;
-		name = FindToolType (g_user_disk_object->do_ToolTypes, "ICONNAME");
+		name = FindToolType (global->g_user_disk_object->do_ToolTypes, "ICONNAME");
 		if (name)
 			g_iconname = name;
 	}
 #endif
 
-	g_app_port = NULL;
-	g_app_sigbit = 0;
-	g_app_icon = NULL;
+	global->g_app_port = NULL;
+	global->g_app_sigbit = 0;
+	global->g_app_icon = NULL;
 }
 
-void Close_Intui(struct ACDRBase *acdrbase) {
-	if (WorkbenchBase)
-		CloseLibrary (WorkbenchBase);
-	if (IconBase)
-		CloseLibrary (IconBase);
-	if (IntuitionBase)
-		CloseLibrary ((struct Library *) IntuitionBase);
+void Close_Intui() {
+	if (global->WorkbenchBase)
+		CloseLibrary ((struct Library *)global->WorkbenchBase);
+	if (global->IconBase)
+		CloseLibrary ((struct Library *)global->IconBase);
+	if (global->IntuitionBase)
+		CloseLibrary ((struct Library *)global->IntuitionBase);
 }
 
-void Display_Error (struct ACDRBase *acdrbase, char *p_message, ...) {
+#ifdef SysBase
+#	undef SysBase
+#endif
+#define SysBase global->SysBase
+#ifdef IntuitionBase
+#	undef IntutitionBase
+#endif
+#define IntuitionBase global->IntuitionBase
+#ifdef IconBase
+#	undef IconBase
+#endif
+#define IconBase global->IconBase
+#ifdef WorkbenchBase
+#	undef WorkbenchBase
+#endif
+#define WorkbenchBase global->WorkbenchBase
+
+void Display_Error (char *p_message, ...) {
 va_list arg;
-
-#ifndef AROS_KERNEL
-        static struct EasyStruct req =
-	{
-		sizeof (struct EasyStruct),
-		0,
-		(UBYTE *) "CDROM Handler Error",
-		NULL,
-		(UBYTE *) "Abort"
-	};
+static struct EasyStruct req =
+{
+	sizeof (struct EasyStruct),
+	0,
+	(UBYTE *) "CDROM Handler Error",
+	NULL,
+	(UBYTE *) "Abort"
+};
           
 	va_start (arg, p_message);
 	if (IntuitionBase)
 	{
-		req.es_TextFormat = (UBYTE *) p_message;
-		EasyRequestArgs (NULL, &req, NULL, arg);
+#ifdef _AROS
+		if (IntuitionBase->FirstScreen)
+		{
+#endif
+			req.es_TextFormat = (UBYTE *) p_message;
+			EasyRequestArgs (NULL, &req, NULL, arg);
+			va_end (p_message);
+			return;
+#ifdef _AROS
+		}
+#endif
 	}
+#ifdef _AROS
+	kprintf("cdrom.handler error: ");
+	vkprintf(p_message, arg);
 	va_end (p_message);
-#else        
-        kprintf( "cdrom.handler error: %s\n", p_message );
 #endif
 }
 
-void Show_CDDA_Icon (struct ACDRBase *acdrbase) {
+void Show_CDDA_Icon (void) {
 
 	if (!IconBase || !WorkbenchBase)
 		return;
 
-	g_user_disk_object->do_CurrentX = g_xpos;
-	g_user_disk_object->do_CurrentY = g_ypos;
+	global->g_user_disk_object->do_CurrentX = global->g_xpos;
+	global->g_user_disk_object->do_CurrentY = global->g_ypos;
 
-	if (g_app_icon)
-		Display_Error(acdrbase, "Show_CDDA_Icon called twice!");
+	if (global->g_app_icon)
+		Display_Error("Show_CDDA_Icon called twice!");
 
-	g_app_port = CreateMsgPort ();
-	if (!g_app_port)
+	global->g_app_port = CreateMsgPort ();
+	if (!global->g_app_port)
 		return;
 
-	g_app_sigbit = 1<<g_app_port->mp_SigBit;
+	global->g_app_sigbit = 1<<global->g_app_port->mp_SigBit;
 
-	g_app_icon = AddAppIconA
+	global->g_app_icon = AddAppIconA
 		(
 			0,
 			0,
 			(UBYTE *) g_iconname,
-			g_app_port,
+			global->g_app_port,
 			NULL,
-			g_user_disk_object,
+			global->g_user_disk_object,
 			NULL
 		);
 
 	/*
 		AddAppIconA may fail if the Workbench has not yet been loaded.
    */
-	if (!g_app_icon)
+	if (!global->g_app_icon)
 	{
-		DeleteMsgPort (g_app_port);
-		g_app_port = NULL;
-		g_retry_show_cdda_icon = TRUE;
+		DeleteMsgPort (global->g_app_port);
+		global->g_app_port = NULL;
+		global->g_retry_show_cdda_icon = TRUE;
 		return;
 	}
-	g_retry_show_cdda_icon = FALSE;
+	global->g_retry_show_cdda_icon = FALSE;
 }
 
-void Hide_CDDA_Icon(struct ACDRBase *acdrbase) {
+void Hide_CDDA_Icon(void) {
 struct Message *msg;
 
-	g_retry_show_cdda_icon = FALSE;
+	global->g_retry_show_cdda_icon = FALSE;
 
 	if (!IconBase || !WorkbenchBase)
 		return;
 
-	if (g_app_icon)
-		RemoveAppIcon (g_app_icon);
-	if (g_app_port)
+	if (global->g_app_icon)
+		RemoveAppIcon (global->g_app_icon);
+	if (global->g_app_port)
 	{
-		while (msg = GetMsg (g_app_port))
+		while ((msg = GetMsg (global->g_app_port)))
 			ReplyMsg (msg);
-		DeleteMsgPort (g_app_port);
+		DeleteMsgPort (global->g_app_port);
 	}
 
-	g_app_port = NULL;
-	g_app_sigbit = 0;
-	g_app_icon = NULL;
+	global->g_app_port = NULL;
+	global->g_app_sigbit = 0;
+	global->g_app_icon = NULL;
 }

@@ -8,18 +8,30 @@
 
 struct ACDRBase {
 	struct Device device;
-	BPTR seglist;
 	struct ExecBase *SysBase;
 	struct DOSBase *DOSBase;
+	BPTR seglist;
+	struct MsgPort port;   /* message port for the handler */
+	struct MsgPort rport;  /* reply port of the handler */
+	struct MsgPort prport; /* 2nd replyport (answer of packets) */
+	struct IOFileSys *iofs;
+	struct List process_list; /* list of packet style processes */
+	void *(*GetData)(struct ACDRBase *);
+#if 0
 	struct Library *UtilityBase;
 	struct IntuitionBase *IntuitionBase;
 	struct Library *IconBase;
 	struct Library *WorkbenchBase;
-	struct MsgPort port;
-	struct MsgPort rport;
+#endif
+};
+
+struct ProcNode {
+	struct Node ln;
+	struct Process *proc; /* packet style process */
+	void *data;           /* data of the process (globals) */
 };
 
 #define expunge() AROS_LC0(BPTR, expunge, struct ACDRBase *, acdrbase, 3, acdr)
 
-#endif
+#endif /* ACDRBASE_H */
 

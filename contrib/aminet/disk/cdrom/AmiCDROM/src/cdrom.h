@@ -8,8 +8,6 @@
 #include <exec/io.h>
 #include <devices/scsidisk.h>
 
-#include "acdrbase.h"
-
 #define VERSION "CDROM-Handler 1.15 (03.11.94)"
 
 #define SCSI_BUFSIZE 2048
@@ -73,7 +71,6 @@ typedef struct toc_data {
 
 CDROM *Open_CDROM
 	(
-		struct ACDRBase *,
 		char *p_device,
 		int p_scsi_id,
 		int p_use_trackdisk,
@@ -81,32 +78,30 @@ CDROM *Open_CDROM
 		int p_std_buffers,
 		int p_file_buffers
 	);
-int Read_Sector(struct ACDRBase *, CDROM *p_cd, long p_sector);
+int Read_Sector(CDROM *p_cd, long p_sector);
 int Read_Contiguous_Sectors
 	(
-		struct ACDRBase *,
 		CDROM *p_cd,
 		long p_sector,
 		long p_last_sector
 	);
-void Cleanup_CDROM(struct ACDRBase *, CDROM *p_cd);
-int Test_Unit_Ready(struct ACDRBase *, CDROM *p_cd);
-int Mode_Select(struct ACDRBase *, CDROM *p_cd, int p_on, int p_block_length);
-int Inquire(struct ACDRBase *, CDROM *p_cd, t_inquiry_data *p_data);
-int Is_XA_Mode_Disk(struct ACDRBase *, CDROM *p_cd);
+void Cleanup_CDROM(CDROM *p_cd);
+int Test_Unit_Ready(CDROM *p_cd);
+int Mode_Select(CDROM *p_cd, int p_on, int p_block_length);
+int Inquire(CDROM *p_cd, t_inquiry_data *p_data);
+int Is_XA_Mode_Disk(CDROM *p_cd);
 t_toc_data *Read_TOC
 	(
-		struct ACDRBase *,
 		CDROM *p_cd,
 		t_toc_header *p_toc_header
 	);
-int Has_Audio_Tracks(struct ACDRBase *, CDROM *p_cd);
-int Data_Tracks(struct ACDRBase *, CDROM *p_cd, unsigned long** p_buf);
-int Start_Play_Audio(struct ACDRBase *, CDROM *p_cd);
-int Stop_Play_Audio(struct ACDRBase *, CDROM *p_cd);
-int Block_Length(struct ACDRBase *, CDROM *p_cd);
+int Has_Audio_Tracks(CDROM *p_cd);
+int Data_Tracks(CDROM *p_cd, unsigned long** p_buf);
+int Start_Play_Audio(CDROM *p_cd);
+int Stop_Play_Audio(CDROM *p_cd);
+int Block_Length(CDROM *p_cd);
 void Clear_Sector_Buffers (CDROM *p_cd);
-int Find_Last_Session(struct ACDRBase *, CDROM *p_cd, unsigned long *p_result);
+int Find_Last_Session(CDROM *p_cd, unsigned long *p_result);
 
 extern int g_cdrom_errno;
 extern int g_ignore_blocklength;
