@@ -31,7 +31,7 @@ DSTR structname=EmptyDyn;
 DSTR value    = EmptyDyn;
 DSTR nodename = EmptyDyn;
 
-#if 1
+#if 0
 #define SHOW printf ("<%s>\n", yytext);
 #else
 #define SHOW ;

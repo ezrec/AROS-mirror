@@ -323,7 +323,7 @@ int main (int ac, char **av) {
     extern int yydebug;
 
     yy_flex_debug = 0;
-    yydebug	  = 1;
+    yydebug	  = 0;
     if (ac >= 2 && av[1][0] == '-' && av[1][1] == 'd') {
 	yydebug       = 1;
 	yy_flex_debug = 1;
