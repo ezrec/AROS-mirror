@@ -345,9 +345,13 @@ AROS_UFCA(struct Hook *, putCharFunc, A0),
 AROS_UFCA(struct Locale *, locale, A2),
 AROS_UFCA(char , c, A1))
 {
-     char * xyz = putCharFunc->h_Data;
-     *xyz = c;
-     ((ULONG)putCharFunc->h_Data)++;
+    AROS_USERFUNC_INIT
+
+    char * xyz = putCharFunc->h_Data;
+    *xyz = c;
+    ((ULONG)putCharFunc->h_Data)++;
+
+    AROS_USERFUNC_EXIT
 }
 
 void rawdo(UBYTE*, void*, UBYTE*);
