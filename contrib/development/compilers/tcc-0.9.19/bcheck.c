@@ -22,7 +22,9 @@
 #include <stdarg.h>
 #include <string.h>
 #ifndef __FreeBSD__
+#ifndef __AROS__
 #include <malloc.h>
+#endif
 #endif
 
 //#define BOUND_DEBUG
@@ -36,8 +38,8 @@
 
 #define HAVE_MEMALIGN
 
-#ifdef __FreeBSD__
-#warning Bound checking not fully supported on FreeBSD
+#if defined (__FreeBSD__) || (__AROS__)
+#warning Bound checking not fully supported on FreeBSD or AROS
 #undef CONFIG_TCC_MALLOC_HOOKS
 #undef HAVE_MEMALIGN
 #endif
@@ -782,7 +784,11 @@ void *__bound_calloc(size_t nmemb, size_t size)
 {
     void *ptr;
     size = size * nmemb;
+#ifndef __AROS__
     ptr = __bound_malloc(size);
+#else
+	ptr = __bound_malloc(size, NULL);
+#endif
     if (!ptr)
         return NULL;
     memset(ptr, 0, size);

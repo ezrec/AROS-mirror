@@ -18,6 +18,8 @@ contrib-development-compilers-tcc-0.9.19 : setup $(EXE)
 %make_prog_setup mmake=contrib-development-compilers-tcc-0.9.19
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 setup ::
+	$(CC) -c bcheck.c
+	cp ./bcheck.o $(LIBDIR)		
 	cp ./stdarg.h $(EXEDIR)
 %common
 %include_deps
