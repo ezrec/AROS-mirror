@@ -70,6 +70,7 @@ typedef struct _amiga_tsd_t {
   struct MsgPort *listenport, *replyport;
   BYTE maintasksignal, subtasksignal;
   struct Task *parent, *child;
+  UBYTE *value; /* Here a temporary argstring will be stored for RXGETVAR */
 } amiga_tsd_t;
 
 
@@ -89,7 +90,7 @@ static void exit_amigaf( int dummy, void *ptr )
   ForeachNode( &atsd->resources, rsrc )
     CallRsrcFunc( rsrc->rr_Base, rsrc->rr_Func, rsrc );
   
-  DeletePort( atsd->replyport );
+  DeleteMsgPort( atsd->replyport );
   Signal( atsd->child, 1<<atsd->subtasksignal );
   if ( atsd->rexxsysbase != NULL )
     CloseLibrary( (struct Library *)atsd->rexxsysbase );
@@ -98,6 +99,33 @@ static void exit_amigaf( int dummy, void *ptr )
   free(ptr);
 }
 
+streng *createstreng( tsd_t *TSD, char *value, int length )
+{
+  streng *retval;
+
+#ifdef CHECK_MEMORY
+  retval = TSD->MTMalloc( TSD, sizeof(streng) );
+  if ( retval != NULL )
+  {
+    retval->value = TSD->MTMalloc( TSD, length );
+    if ( retval->value == NULL )
+    {
+      TSD->MTFree( retval );
+      retval = NULL;
+    }
+    else
+      memcpy( retval->value, value, length );
+  }
+#else
+  retval = TSD->MTMalloc( TSD, sizeof(streng)-4*sizeof(char)+length );
+  if ( retval != NULL )
+    memcpy( retval->value, value, length );
+#endif
+  retval->len = length;
+  retval->max = length;
+
+  return retval;
+}
 
 /* ReginaHandleMessages will be executed in a subtask and will be
  * able to handle messages send to it asynchronously
@@ -111,7 +139,7 @@ void ReginaHandleMessages(void)
   struct RexxMsg *msg;
   struct MsgPort *listenport;
   
-  listenport = CreatePort( NULL, 0 );
+  listenport = CreateMsgPort();
   atsd->listenport = listenport;
   if ( listenport == NULL )
     atsd->child = NULL;
@@ -141,7 +169,76 @@ void ReginaHandleMessages(void)
 	  Remove( (struct Node *)ARG0( msg ) );
 	  msg->rm_Result1 = RC_OK;
 	  break;
-	  
+
+	case RXSETVAR:
+	{
+	  if ( ( msg->rm_Action & RXARGMASK ) != 2 )
+	  {
+	    msg->rm_Result1 = RC_ERROR;
+	    msg->rm_Result2 = (IPTR)ERR10_017;
+	  }
+	  else
+	  {
+	    streng *name, *value;
+	    
+	    /* Using own allocation so I can get a NULL return value when allocation
+	     * and not Exiterror is called
+	     */
+	    name = createstreng( TSD, (char *)msg->rm_Args[0], LengthArgstring( (UBYTE *)msg->rm_Args[0] ) );
+	    value = createstreng( TSD, (UBYTE *)msg->rm_Args[1], LengthArgstring( (UBYTE *)msg->rm_Args[1] ) );
+	    
+	    if ( name == NULL || value == NULL )
+	    {
+	      if ( name != NULL ) Free_stringTSD( name );
+	      if ( value != NULL ) Free_stringTSD( value );
+	      msg->rm_Result1 = RC_ERROR;
+	      msg->rm_Result2 = ERR10_003;
+	    }
+	    else
+	    {
+	      setvalue( TSD, name, value );
+	      Free_stringTSD( name );
+	      msg->rm_Result1 = RC_OK;
+	      msg->rm_Result2 = (IPTR)NULL;
+	    }
+	  }
+	}
+	break;
+
+	case RXGETVAR:
+	{
+	  if ( ( msg->rm_Action & RXARGMASK ) != 1 )
+	  {
+	    msg->rm_Result1 = RC_ERROR;
+	    msg->rm_Result2 = (IPTR)ERR10_017;
+	  }
+	  else
+	  {
+	    amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
+	    streng *name;
+	    const streng *value;
+	    
+	    name = createstreng( TSD, (char *)msg->rm_Args[0], LengthArgstring( (UBYTE *)msg->rm_Args[0] ) );
+	    if ( name == NULL )
+	    {
+	      msg->rm_Result1 = RC_ERROR;
+	      msg->rm_Result2 = (IPTR)ERR10_003;
+	    }
+	    else
+	    {
+	      value = getvalue( TSD, name, 0 );
+	      Free_stringTSD( name );
+	      
+	      if ( atsd->value != NULL) DeleteArgstring( (UBYTE *)atsd->value );
+	      atsd->value = CreateArgstring( (STRPTR)value->value, value->len );
+
+	      msg->rm_Result1 = RC_OK;
+	      msg->rm_Result2 = (IPTR)atsd->value;
+	    }
+	  }
+	}
+        break;
+	    
 	default:
 	  msg->rm_Result1 = RC_ERROR;
 	  msg->rm_Result2 = ERR10_010;
@@ -182,7 +279,9 @@ int init_amigaf ( tsd_t *TSD )
   atsd->replyport = CreatePort( NULL, 0 );
   atsd->maintasksignal = AllocSignal( -1 );
   atsd->parent = FindTask( NULL );
-  
+
+  atsd->value = NULL;
+
   THREAD_PROTECT(createtask)
   subtask_tsd = TSD;
   atsd->child = CreateTask( "Regina Helper", 0, (APTR)ReginaHandleMessages, 8192 );
@@ -345,8 +444,10 @@ struct RexxMsg *createreginamessage( const tsd_t *TSD )
 
   msg = CreateRexxMsg( atsd->replyport, NULL, NULL );
   if ( msg != NULL )
+  {
     msg->rm_Private1 = (IPTR)atsd->listenport;
-  
+    msg->rm_Private2 = (IPTR)TSD;
+  }
   return msg;
 }
 
@@ -361,7 +462,7 @@ void sendandwait( const tsd_t *TSD, struct MsgPort *port, struct RexxMsg *msg )
   struct RexxMsg *msg2;
 
   PutMsg( port, (struct Message *)msg );
-  
+
   msg2 = NULL;
   while ( msg2 != msg )
   {
@@ -378,13 +479,14 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
 {
   struct RexxMsg *msg;
   struct MsgPort *port = ((struct amiga_envir *)envir)->port;
-  
+
   msg = createreginamessage( TSD );
   msg->rm_Action = RXCOMM;
   msg->rm_Args[0] = (IPTR)CreateArgstring( (STRPTR)command->value, command->len );
   fflush(stdout);
   msg->rm_Stdin = Input();
   msg->rm_Stdout = Output();
+
   sendandwait( TSD, port, msg );
 
   *rc = msg->rm_Result1;

@@ -14,6 +14,7 @@
 #include <dos/dosextens.h>
 #include <dos/dostags.h>
 #include <rexx/storage.h>
+#include <rexx/errors.h>
 #include <rexx/rxslib.h>
 #include <ctype.h>
 #include <string.h>
@@ -55,7 +56,14 @@ int main(int argc, char **argv)
     {
 	es.es_TextFormat = "Error opening rexxsyslib.library V44";
 	EasyRequest(NULL, &es, NULL);
-	CloseLibrary(ReginaBase);
+	CloseLibrary(RexxSysBase);
+	return 20;
+    }
+    ReginaBase = OpenLibrary("regina.library", 2);
+    if (ReginaBase == NULL)
+    {
+	es.es_TextFormat = "Error opening regina.library V2";
+	EasyRequest(NULL, &es, NULL);
 	return 20;
     }
 
@@ -63,13 +71,6 @@ int main(int argc, char **argv)
     {
         struct RexxMsg *msg;
       
-        ReginaBase = OpenLibrary("regina.library", 2);
-        if (ReginaBase == NULL)
-        {
-	    es.es_TextFormat = "Error opening regina.library V2";
-	    EasyRequest(NULL, &es, NULL);
-	    return 20;
-        }
         sscanf(argv[2], "%p", &msg);
         StartFileSlave(msg);
         ReplyMsg((struct Message *)msg);
@@ -135,9 +136,24 @@ int main(int argc, char **argv)
 
 		    case RXADDRSRC:
 		    case RXREMRSRC:
-		        /* Forward to the appropriate port */
-		        PutMsg( (struct MsgPort *)msg->rm_Private1, msg );
-		        reply = FALSE;
+		    case RXCHECKMSG:
+		    case RXSETVAR:
+		    case RXGETVAR:
+			if (!IsReginaMsg(msg))
+			{
+			    msg->rm_Result1 = RC_ERROR;
+			    msg->rm_Result2 = (IPTR)ERR10_010;
+			}
+			else if (action==RXCHECKMSG)
+			{
+			    msg->rm_Result1 = RC_OK;
+			}
+			else
+			{
+			    /* Forward to the appropriate port */
+			    PutMsg( (struct MsgPort *)msg->rm_Private1, (struct Message *)msg );
+			    reply = FALSE;
+			}
 		        break;
 		    
 		    case RXCLOSE:
@@ -158,6 +174,7 @@ int main(int argc, char **argv)
     } while(!done);
 
     DeletePort(port);
+    CloseLibrary(ReginaBase);
     CloseLibrary((struct Library *)RexxSysBase);
     CloseLibrary((struct Library *)IntuitionBase);
 
