@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/08/08 14:08:00  chodorowski
+ * Minor fixes to make BGUI compile on Amiga.
+ *
  * Revision 42.5  2000/07/06 16:44:03  stegerg
  * AddTaskMember can now be called. Problem was Cli()->cli_CommandName
  * which BGUI expected to be a BSTR with size in first byte.
@@ -59,7 +62,9 @@
 
 #include "include/classdefs.h"
 
+#ifdef _AROS
 #include <aros/debug.h>
+#endif
 
 /*
  * Global data (written to once at initalization time).
@@ -465,7 +470,6 @@ makeproto SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0
        */
       return lib;
    }
-ALIVE
 
    return NULL;
 }
@@ -498,8 +502,8 @@ makeproto SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
    if (lib->lib_Flags & LIBF_DELEXP)
 #ifdef _AROS
       return AROS_UFC2(BPTR, BGUI_LibExpunge,
-      		AROS_UFCA(struct Library *, lib, D0),
-      		AROS_UFCA(struct ExecBase *, SysBase, A6));
+                AROS_UFCA(struct Library *, lib, D0),
+                AROS_UFCA(struct ExecBase *, SysBase, A6));
 #else
       return LibExpunge(lib);
 #endif

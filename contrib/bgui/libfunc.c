@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/08/08 14:08:00  chodorowski
+ * Minor fixes to make BGUI compile on Amiga.
+ *
  * Revision 42.5  2000/07/09 03:05:07  bergers
  * Makes the gadgets compilable.
  *
@@ -373,7 +376,7 @@ AROS_LH1(Class *, BGUI_GetClassPtr,
     AROS_LHA(ULONG, classID, D0),
     struct Library *, BGUIBase, 5, BGUI)
 #else
-makeproto SAVEDS ASM Class *BGUI_GetClassPtr(REG(d0) ULONG classID)
+makeproto SAVEDS ASM Class *BGUI_GetClassPtr( REG(d0) ULONG classID )
 #endif
 {
 #ifdef _AROS
@@ -439,7 +442,7 @@ AROS_LH2(Object *, BGUI_NewObjectA,
     AROS_LHA(struct TagItem *, attr, A0),
     struct Library *, BGUIBase, 6, BGUI)
 #else
-makeproto SAVEDS ASM Object *BGUI_NewObjectA(REG(d0) ULONG classID, REG(a0) struct TagItem *attr)
+makeproto SAVEDS ASM Object *BGUI_NewObjectA( REG(d0) ULONG classID, REG(a0) struct TagItem *attr )
 #endif
 {
 #ifdef _AROS
@@ -473,8 +476,8 @@ AROS_LH5(struct BitMap *, BGUI_AllocBitMap,
     AROS_LHA(struct BitMap *, fr, A0),
     struct Library *, BGUIBase, 14, BGUI)
 #else
-makeproto SAVEDS ASM struct BitMap *BGUI_AllocBitMap(REG(d0) ULONG width, REG(d1) ULONG height, REG(d2) ULONG depth,
-   REG(d3) ULONG flags, REG(a0) struct BitMap *fr)
+makeproto SAVEDS ASM struct BitMap *BGUI_AllocBitMap( REG(d0) ULONG width, REG(d1) ULONG height, REG(d2) ULONG depth,
+   REG(d3) ULONG flags, REG(a0) struct BitMap *fr )
 #endif
 {
 #ifdef _AROS
@@ -538,7 +541,7 @@ AROS_LH1(VOID, BGUI_FreeBitMap,
     AROS_LHA(struct BitMap *, bm, A0),
     struct Library *, BGUIBase, 15, BGUI)
 #else
-makeproto SAVEDS ASM VOID BGUI_FreeBitMap(REG(a0) struct BitMap *bm)
+makeproto SAVEDS ASM VOID BGUI_FreeBitMap( REG(a0) struct BitMap *bm )
 #endif
 {
 #ifdef _AROS
@@ -604,8 +607,8 @@ AROS_LH4(struct RastPort *, BGUI_CreateRPortBitMap,
     AROS_LHA(ULONG, depth, D2),
     struct Library *, BGUIBase, 16, BGUI)
 #else
-makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap(REG(a0) struct RastPort *source,
-   REG(d0) ULONG width, REG(d1) ULONG height, REG(d2) ULONG depth)
+makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap( REG(a0) struct RastPort *source,
+   REG(d0) ULONG width, REG(d1) ULONG height, REG(d2) ULONG depth )
 #endif
 {
 #ifdef _AROS
@@ -683,7 +686,7 @@ AROS_LH1(VOID, BGUI_FreeRPortBitMap,
     AROS_LHA(struct RastPort *, rp, A0),
     struct Library *, BGUIBase, 17, BGUI)
 #else
-makeproto SAVEDS ASM VOID BGUI_FreeRPortBitMap(REG(a0) struct RastPort *rp)
+makeproto SAVEDS ASM VOID BGUI_FreeRPortBitMap( REG(a0) struct RastPort *rp )
 #endif
 {
 #ifdef _AROS
@@ -733,7 +736,7 @@ AROS_LH4(BOOL, BGUI_Help,
     AROS_LHA(ULONG, line, D0),
     struct Library *, BGUIBase, 8, BGUI)
 #else
-makeproto SAVEDS ASM BOOL BGUI_Help(REG(a0) struct Window *win, REG(a1) UBYTE *file, REG(a2) UBYTE *node, REG(d0) ULONG line)
+makeproto SAVEDS ASM BOOL BGUI_Help( REG(a0) struct Window *win, REG(a1) UBYTE *file, REG(a2) UBYTE *node, REG(d0) ULONG line )
 #endif
 {
 #ifdef _AROS
@@ -769,9 +772,7 @@ makeproto SAVEDS ASM BOOL BGUI_Help(REG(a0) struct Window *win, REG(a1) UBYTE *f
  * Set or clear the busy pointer.
  */
 //STATIC ASM VOID Busy(REG(a0) struct Window *win, REG(d0) BOOL set)
-STATIC ASM REGFUNC2(VOID, Busy,
-	REGPARAM(A0, struct Window *, win),
-	REGPARAM(D0, BOOL, set))
+STATIC ASM REGFUNC2(VOID, Busy, REGPARAM(a0, struct Window *, win), REGPARAM(d0, BOOL, set))
 {
    #ifdef ENHANCED
 
@@ -920,7 +921,7 @@ AROS_LH2(STRPTR, BGUI_GetLocaleStr,
     AROS_LHA(ULONG, id, D0),
     struct Library *, BGUIBase, 20, BGUI)
 #else
-makeproto SAVEDS ASM STRPTR BGUI_GetLocaleStr(REG(a0) struct bguiLocale *bl, REG(d0) ULONG id)
+makeproto SAVEDS ASM STRPTR BGUI_GetLocaleStr( REG(a0) struct bguiLocale *bl, REG(d0) ULONG id )
 #endif
 {
 #ifdef _AROS
@@ -959,7 +960,7 @@ AROS_LH3(STRPTR, BGUI_GetCatalogStr,
     AROS_LHA(STRPTR, str, A1),
     struct Library *, BGUIBase, 21, BGUI)
 #else
-makeproto SAVEDS ASM STRPTR BGUI_GetCatalogStr(REG(a0) struct bguiLocale *bl, REG(d0) ULONG id, REG(a1) STRPTR str)
+makeproto SAVEDS ASM STRPTR BGUI_GetCatalogStr( REG(a0) struct bguiLocale *bl, REG(d0) ULONG id, REG(a1) STRPTR str )
 #endif
 {
 #ifdef _AROS
@@ -1015,10 +1016,7 @@ static ULONG CallHookWithStack(struct CallHookData *call_hook_data)
 }
 
 //makeproto SAVEDS ASM ULONG BGUI_CallHookPkt(REG(a0) struct Hook *hook,REG(a2) APTR object,REG(a1) APTR message)
-makeproto SAVEDS ASM REGFUNC3(ULONG, BGUI_CallHookPkt,
-	REGPARAM(A0, struct Hook *, hook),
-	REGPARAM(A2, APTR, object),
-	REGPARAM(A1, APTR, message))
+makeproto SAVEDS ASM REGFUNC3(ULONG, BGUI_CallHookPkt, REGPARAM(a0, struct Hook *, hook), REGPARAM(a2, APTR, object), REGPARAM(a1, APTR, message))
 {
    struct CallHookData call_hook_data;
 

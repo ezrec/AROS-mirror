@@ -12,6 +12,9 @@
 ; All Rights Reserved.
 ;
 ; $Log$
+; Revision 42.1  2000/08/08 14:08:00  chodorowski
+; Minor fixes to make BGUI compile on Amiga.
+;
 ; Revision 42.0  2000/05/09 22:09:45  mlemos
 ; Bumped to revision 42.0 before handing BGUI to AROS team
 ;
@@ -56,7 +59,7 @@ call     MACRO
          jsr _LVO\1(a6)
          ENDM
 
-         include  "exec/exec_lib.i"
+         include  "include:exec/exec_lib.i"
          include  "include:utility/hooks.i"
          include  "include:utility/utility_lib.i"
          include  "include:intuition/classes.i"
