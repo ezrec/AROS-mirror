@@ -452,6 +452,7 @@ UBYTE   notdone = 1;
 		packet->dp_Res1 = DOSTRUE;
 		packet->dp_Res2 = 0;
 		error = 0;
+    	    #ifndef __AROS__		
 		BUG(dbprintf(
 			"Packet: %3ld %08lx %08lx %08lx %10s ",
 			packet->dp_Type,
@@ -460,6 +461,7 @@ UBYTE   notdone = 1;
 			packet->dp_Arg3,
 			typetostr(packet->dp_Type)
 		);)
+    	    #endif		
 		if (!global->g_cd)
 		{
 			switch (packet->dp_Type)
