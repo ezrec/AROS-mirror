@@ -10,7 +10,7 @@ EXEDIR := $(CONTRIBDIR)/aminet
 EXE := $(EXEDIR)/untgz
 
 USE_AROSLIB := yes
-USE_CLIB_SHARED := yes
+USE_CLIB_STATIC := yes
 USE_AMIGALIB := yes
 USE_MLIB := yes
 USE_ZLIB := yes
