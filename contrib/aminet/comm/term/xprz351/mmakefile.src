@@ -47,7 +47,7 @@ MODULE_OBJ   = $(foreach f,$(FILES),$(OBJDIR)/$(f).o)
 
 $(AROS_LIBS)/$(MODULE) : $(MODULE_OBJ)
 	@$(ECHO) "Building $(notdir $@) ..."
-	@$(CC) $(MODULE_OBJ) -static -lamiga -o $@ -nostartfiles
+	@$(STATIC_LD) $(STATIC_LDFLAGS) $(LDFLAGS) $(MODULE_OBJ) -static -lamiga -larosc -lautoinit -o $@ -nostartfiles
 
 $(OBJDIR)/test/%.d : %.c
 	%mkdepend_q flags=$(CFLAGS)
