@@ -75,7 +75,7 @@ BOOL SetzeCursorMaus( WORD x, WORD y, struct DisplayData *SetDD, struct DisplayI
 
 	DD = GetroffenerView(x,y,DI);
 
-	if(( !SetDD ) || ( SetDD == DD ))
+	if(DD && (( !SetDD ) || ( SetDD == DD )))
 	{
 		WORD xoff,yoff;
 
