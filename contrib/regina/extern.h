@@ -811,9 +811,9 @@
    int IsValidTin(const external_parser_type *ept, unsigned long eptlen);
 
 /*
- * Routines in amigafuncs.c
+ * Routines in arexxfuncs.c
  */
-   int init_amigaf( tsd_t *TSD );
+   int init_arexxf( tsd_t *TSD );
    streng *arexx_open ( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_close( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_writech( tsd_t *TSD, cparamboxptr parm1 );
@@ -840,13 +840,19 @@
    streng *arexx_export( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_storage( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_show( tsd_t *TSD, cparamboxptr parm1 );
+
 #if defined(_AMIGA) || defined(__AROS__)
-   streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 );
-   streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 );
+/*
+ * Routines in amigafuncs.c
+ */
+   int init_amigaf( tsd_t *TSD );
+   streng *amiga_show( tsd_t *TSD, cparamboxptr parm1 );
+   streng *amiga_addlib( tsd_t *TSD, cparamboxptr parm1 );
+   streng *amiga_remlib( tsd_t *TSD, cparamboxptr parm1 );
    streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char called );
-   streng *arexx_setclip( tsd_t *TSD, cparamboxptr parm1 );
-   streng *arexx_getclip( tsd_t *TSD, cparamboxptr parm1 );
-   streng *arexx_pragma( tsd_t *TSD, cparamboxptr parm1 );
+   streng *amiga_setclip( tsd_t *TSD, cparamboxptr parm1 );
+   streng *amiga_getclip( tsd_t *TSD, cparamboxptr parm1 );
+   streng *amiga_pragma( tsd_t *TSD, cparamboxptr parm1 );
 #endif
 
 /*

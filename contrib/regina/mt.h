@@ -22,6 +22,7 @@ typedef struct _tsd_t {
    void *                  shl_tsd ;           /* local variables of shell.c */
    void *                  mat_tsd ;           /* local variables of strmath.c */
    void *                  cli_tsd ;           /* local variables of client.c */
+   void *                  arx_tsd ;           /* local variables of arexxfuncs.c */
    void *                  ami_tsd ;           /* local variables of amigafuncs.c */
    void *                  mt_tsd ;            /* local variables of mt_???.c */
 

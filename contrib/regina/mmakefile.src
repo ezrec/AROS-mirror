@@ -28,7 +28,7 @@ OFILES := \
   shell rexxext stack tracing interp cmath convert \
   strings library strmath signals macros envir expr \
   instore extlib yaccsrc lexsrc wrappers options \
-  rexxbif aroscmd amigafuncs
+  rexxbif aroscmd arexxfuncs amigafuncs
 
 USER_INCLUDES := -I.
 OBJDIR1 := $(GENDIR)/$(CURDIR)/static

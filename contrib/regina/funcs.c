@@ -44,7 +44,7 @@ static const struct function_type functions[] = {
   { 0,              std_abbrev,            "ABBREV" },
   { 0,              std_abs,               "ABS" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              arexx_addlib,          "ADDLIB" },
+  { 0,              amiga_addlib,          "ADDLIB" },
 #endif
   { 0,              std_address,           "ADDRESS" },
 #ifdef TRACEMEM
@@ -157,7 +157,7 @@ static const struct function_type functions[] = {
   { 0,              arexx_freespace,       "FREESPACE" },
   { 0,              std_fuzz,              "FUZZ" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              arexx_getclip,         "GETCLIP" },
+  { 0,              amiga_getclip,         "GETCLIP" },
 #endif
   { EXT_REGINA_BIFS,unx_getenv,            "GETENV" },
   { EXT_REGINA_BIFS,unx_getpath,           "GETPATH" },
@@ -194,7 +194,7 @@ static const struct function_type functions[] = {
   { EXT_REGINA_BIFS,unx_popen,             "POPEN" },
   { 0,              std_pos,               "POS" },
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              arexx_pragma,          "PRAGMA" },
+  { 0,              amiga_pragma,          "PRAGMA" },
 #endif
   { 0,              std_qualify,           "QUALIFY" },
   { 0,              std_queued,            "QUEUED" },
@@ -205,7 +205,7 @@ static const struct function_type functions[] = {
   { 0,              arexx_readln,          "READLN" },
 #endif
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              arexx_remlib,          "REMLIB" },
+  { 0,              amiga_remlib,          "REMLIB" },
 #endif
   { 0,              std_reverse,           "REVERSE" },
   { 0,              std_right,             "RIGHT" },
@@ -220,9 +220,13 @@ static const struct function_type functions[] = {
   { 0,              arexx_seek,            "SEEK" },
 #endif
 #if defined(_AMIGA) || defined(__AROS__)
-  { 0,              arexx_setclip,         "SETCLIP" },
+  { 0,              amiga_setclip,         "SETCLIP" },
 #endif
+#if defined(_AMIGA) || defined(__AROS__)
+  { 0,              amiga_show,            "SHOW" },
+#else
   { 0,              arexx_show,            "SHOW" },
+#endif
   { 0,              std_sign,              "SIGN" },
   { EXT_REGINA_BIFS,cms_sleep,             "SLEEP" },
   { 0,              std_sourceline,        "SOURCELINE" },
