@@ -518,7 +518,7 @@ request_optional_size (
    ng1.ng_TopEdge = win->BorderTop + 3 * INTERHEIGHT + LINEHEIGHT +
                     ta.ta_YSize;
    ng1.ng_Width = TextLength (&layout_rp, label, strlen (label));
-   ng1.ng_Height = ta.ta_YSize;
+   ng1.ng_Height = ta.ta_YSize + 6;
    ng1.ng_GadgetText = label;
    ng1.ng_GadgetID = 1;
    ng1.ng_Flags = PLACETEXT_ABOVE;
@@ -753,13 +753,13 @@ request_autoopening (
    ng1.ng_LeftEdge = win->BorderLeft + 2 * INTERWIDTH + LINEWIDTH;
    ng1.ng_TopEdge = win->BorderTop + 2 * INTERHEIGHT + LINEHEIGHT;
    ng1.ng_Width = (MAX_OPENING - MIN_OPENING + 1) * INTERWIDTH;
-   ng1.ng_Height = ta.ta_YSize;
+   ng1.ng_Height = ta.ta_YSize + 6;
    ng1.ng_GadgetText = NULL;
    ng1.ng_GadgetID = 1;
    ng1.ng_Flags = 0;
    box_w = ng1.ng_Width + 3 * INTERWIDTH + 2 * LINEWIDTH +
            TextLength (&layout_rp, "00%", 3);
-   box_h = ta.ta_YSize + 2 * (INTERHEIGHT + LINEHEIGHT);
+   box_h = ta.ta_YSize + 6 + 2 * (INTERHEIGHT + LINEHEIGHT);
    label = localized_string (MSG_AUTOOPEN_REQTITLE);
    temp = TextLength (&win->WScreen->RastPort, label, strlen (label)) + 24;
    if (temp > box_w)
