@@ -185,6 +185,7 @@ AC_OUTPUT(Makefile
           Drivers/EMU10kx/Makefile
           Drivers/Filesave/Makefile
           Drivers/Void/Makefile
+	  Drivers/ac97/Makefile
 	  Examples/Makefile
 	  Examples/Device/PlayTest/Makefile
 	  Examples/Extras/CloneAudioModes/Makefile
