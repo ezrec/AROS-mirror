@@ -2,6 +2,12 @@
 The exec microkernel
 ====================
 
+:Author:    Unknown
+:Copyright: Copyright © 2001, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+
+
 This document describes the inner workings of exec.library. It's not for normal
 application programmers but for people who are interested in such a thing. Most
 of the things described herein are system private - they may or may not be true

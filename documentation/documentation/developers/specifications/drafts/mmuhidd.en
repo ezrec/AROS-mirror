@@ -2,6 +2,11 @@
 MMU HIDD
 ========
 
+:Author:    Michael Schulz
+:Copyright: Copyright © 2001, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+
 mmu.hidd will be the hardware interface for the Memory Management devices,
 and should have the following characteristics:
 

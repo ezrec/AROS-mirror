@@ -7,10 +7,8 @@ AROS Application Development Manual
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; integration started (looong way left to go).
+:ToDo:      Integrate the various parts. Update and revise. Complete... 
 
-.. FIXME: Convert everything to reST. Integrate the two parts.
-          Update and revise. Integrate more documents (there are quite
-          a lot developer material spread around...). Complete... 
 
 .. Contents::
 
