@@ -37,10 +37,6 @@ extern struct MidiNode *midinode;
 
 extern struct Root *root;
 
-#ifdef __AROS__
-extern struct InputBase *InputBase;
-#endif
-
 bool GetMidiInput(int *note,int *velocity){
 	struct Patch *patch;
 	struct PatchData *patchdata;
