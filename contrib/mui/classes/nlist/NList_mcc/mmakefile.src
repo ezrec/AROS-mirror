@@ -1,10 +1,49 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
+USER_INCLUDES := -I../commonaros
+
+MODNAME 	:= NList
+MODTYPE		:= mcc
+
+INIT_FILE := library
+FILES := NList_mcc  	\
+         NList_mcc0 	\
+         NList_mcc1 	\
+         NList_mcc2 	\
+         NList_mcc3 	\
+         NList_mcc4 	\
+         NList_mcc5 	\
+         NList_mcc6 	\
+	 move	    	\
+	 cbio	    	\
+	 NList_func 	\
+	 NList_func2 	\
+	 NList_func3 	\
+	 NList_func4 	\
+	 NList_grp  	\
+	 NList_img  	\
+	 NList_img2 	
+	 
+FUNCS := 
+
 INCLUDE_FILES := $(TOP)/$(CURDIR)/NList_mcc.h
+
+USE_ROMLIB  	:= yes
+USE_MLIB    	:= yes
+USE_AMIGALIB 	:= yes
+USE_MUILIB  	:= yes
+
+USE_LIBDEFS := no
+
+#MM contrib-zune-classes-nlist : setup includes linklibs \
+#MM	contrib-zune-classes-nlist-module
+%make_module_setup mmake=contrib-zune-classes-nlist
+%make_module_cpak
+%make_module mmake=contrib-zune-classes-nlist
 
 #MM includes-copy
 %copy_includes path=MUI dir=$(TOP)/$(CURDIR)
 
 %common
-
+%include_deps
