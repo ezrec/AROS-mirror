@@ -554,17 +554,12 @@ extern UBYTE /* __chip */ glass_image2[];
 	int x,y;
 	char op,om;
 
-	rp = &IntuitionBase->ActiveScreen->RastPort;
-	
 	om=rp->DrawMode; op=rp->FgPen;
 	SetDrMd(rp,JAM1);
 
 	if (type==0) {
 		x=gadget->LeftEdge+((gadget->Width-16)/2);
 		y=gadget->TopEdge+((gadget->Height-8)/2);
-
-		x = y = 0;
-		
 		SetAPen(rp,shine);
 		BltTemplate((char *)glass_image2,0,2,rp,x,y,16,8);
 		SetAPen(rp,shadow);
