@@ -233,8 +233,8 @@ BOOL weiter=FALSE,ret=FALSE;
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
     class=msg->Class;
     code=msg->Code;
-    mausx=msg->MouseX-3;
-    mausy=msg->MouseY-13;
+    mausx=msg->MouseX-Window->BorderLeft;
+    mausy=msg->MouseY-Window->BorderTop;
     ReplyMsg((struct Message *)msg);
     switch(class)
     {
@@ -280,8 +280,8 @@ BOOL weiter=FALSE,ret=FALSE;
     msg=(struct IntuiMessage *)GetMsg(Window->UserPort);
     class=msg->Class;
     code=msg->Code;
-    mausx=msg->MouseX-3;
-    mausy=msg->MouseY-13;
+    mausx=msg->MouseX-Window->BorderLeft;
+    mausy=msg->MouseY-Window->BorderTop;
     ReplyMsg((struct Message *)msg);
     switch(class)
     {
