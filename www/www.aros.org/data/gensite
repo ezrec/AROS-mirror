@@ -53,7 +53,7 @@ pm.append (Text ('You are now being redirected to'),\
 
 pm.write ()
 
-BasicDocument.html_head = old_html_head
+SimpleDocument.html_head = old_html_head
 
 #pm = PageMeat ('Test2', 'test1.html')
 #pm.append (Text ('Test2'))
