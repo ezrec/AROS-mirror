@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: tcpdump.c,v 1.1.1.1 2002/05/27 00:41:13 henrik Exp $
+ * $Id: tcpdump.c,v 1.2 2002/06/10 11:11:48 chodorowski Exp $
  */
 
 #include <stdio.h>
@@ -49,7 +49,7 @@ tcpdump_init(void)
 {
   char *fname;
 
-  fname = "/tmp/tcpdump";
+  fname = "T:tcpdump";
   file = fopen(fname, "w");
   if(file == NULL) {
     perror("tcpdump_init: fopen");
