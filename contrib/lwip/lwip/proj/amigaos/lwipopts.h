@@ -189,9 +189,8 @@ a lot of data that needs to be copied, this should be set high. */
 
 
 /* The following is missing in the orginal files */
-#ifndef __AROS__
-#define ntohl(x) (x)
-#define ntohs(x) (x)
+#ifndef __AROS
+#define BYTE_ORDER BIG_ENDIAN
 #endif
 
 #include <stdlib.h> /* for abort() */

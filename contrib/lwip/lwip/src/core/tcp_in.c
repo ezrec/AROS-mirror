@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -41,7 +41,6 @@
  */
 /*-----------------------------------------------------------------------------------*/
 
-#include "lwip/debug.h"
 
 #include "lwip/def.h"
 #include "lwip/opt.h"
@@ -157,9 +156,9 @@ tcp_input(struct pbuf *p, struct netif *inp)
      for an active connection. */  
   prev = NULL;  
   for(pcb = tcp_active_pcbs; pcb != NULL; pcb = pcb->next) {
-    ASSERT("tcp_input: active pcb->state != CLOSED", pcb->state != CLOSED);
-    ASSERT("tcp_input: active pcb->state != TIME-WAIT", pcb->state != TIME_WAIT);
-    ASSERT("tcp_input: active pcb->state != LISTEN", pcb->state != LISTEN);
+    LWIP_ASSERT("tcp_input: active pcb->state != CLOSED", pcb->state != CLOSED);
+    LWIP_ASSERT("tcp_input: active pcb->state != TIME-WAIT", pcb->state != TIME_WAIT);
+    LWIP_ASSERT("tcp_input: active pcb->state != LISTEN", pcb->state != LISTEN);
     if(pcb->remote_port == tcphdr->src &&
        pcb->local_port == tcphdr->dest &&
        ip_addr_cmp(&(pcb->remote_ip), &(iphdr->src)) &&
@@ -168,13 +167,13 @@ tcp_input(struct pbuf *p, struct netif *inp)
       /* Move this PCB to the front of the list so that subsequent
 	 lookups will be faster (we exploit locality in TCP segment
 	 arrivals). */
-      ASSERT("tcp_input: pcb->next != pcb (before cache)", pcb->next != pcb);
+      LWIP_ASSERT("tcp_input: pcb->next != pcb (before cache)", pcb->next != pcb);
       if(prev != NULL) {
 	prev->next = pcb->next;
 	pcb->next = tcp_active_pcbs;
 	tcp_active_pcbs = pcb; 
       }
-      ASSERT("tcp_input: pcb->next != pcb (after cache)", pcb->next != pcb);
+      LWIP_ASSERT("tcp_input: pcb->next != pcb (after cache)", pcb->next != pcb);
       break;
     }
     prev = pcb;
@@ -185,7 +184,7 @@ tcp_input(struct pbuf *p, struct netif *inp)
        in the TIME-WAIT state. */
 
     for(pcb = tcp_tw_pcbs; pcb != NULL; pcb = pcb->next) {
-      ASSERT("tcp_input: TIME-WAIT pcb->state == TIME-WAIT", pcb->state == TIME_WAIT);
+      LWIP_ASSERT("tcp_input: TIME-WAIT pcb->state == TIME-WAIT", pcb->state == TIME_WAIT);
       if(pcb->remote_port == tcphdr->src &&
 	 pcb->local_port == tcphdr->dest &&
 	 ip_addr_cmp(&(pcb->remote_ip), &(iphdr->src)) &&
@@ -201,7 +200,7 @@ tcp_input(struct pbuf *p, struct netif *inp)
     }  
   
   /* Finally, if we still did not get a match, we check all PCBs that
-     are LISTENing for incomming connections. */
+     are LISTENing for incoming connections. */
     prev = NULL;  
     for(lpcb = tcp_listen_pcbs; lpcb != NULL; lpcb = lpcb->next) {
       if((ip_addr_isany(&(lpcb->local_ip)) ||
@@ -274,7 +273,7 @@ tcp_input(struct pbuf *p, struct netif *inp)
       } else {
 	err = ERR_OK;
 	/* If the application has registered a "sent" function to be
-	   called when new send buffer space is avaliable, we call it
+	   called when new send buffer space is available, we call it
 	   now. */
 	if(pcb->acked > 0) {
 	  TCP_EVENT_SENT(pcb, pcb->acked, err);
@@ -326,7 +325,7 @@ tcp_input(struct pbuf *p, struct netif *inp)
     pbuf_free(p);
   }
 
-  ASSERT("tcp_input: tcp_pcbs_sane()", tcp_pcbs_sane());  
+  LWIP_ASSERT("tcp_input: tcp_pcbs_sane()", tcp_pcbs_sane());  
   PERF_STOP("tcp_input");
 }
 /*-----------------------------------------------------------------------------------*/
@@ -356,7 +355,7 @@ tcp_listen_input(struct tcp_pcb_listen *pcb)
     npcb = tcp_alloc(pcb->prio);
     /* If a new PCB could not be created (probably due to lack of memory),
        we don't do anything, but rely on the sender will retransmit the
-       SYN at a time when we have more memory avaliable. */
+       SYN at a time when we have more memory available. */
     if(npcb == NULL) {
       DEBUGF(TCP_DEBUG, ("tcp_listen_input: could not allocate PCB\n"));
 #ifdef TCP_STATS
@@ -387,7 +386,7 @@ tcp_listen_input(struct tcp_pcb_listen *pcb)
     tcp_parseopt(npcb);
     
     /* Build an MSS option. */
-    optdata = HTONL(((u32_t)2 << 24) | 
+    optdata = htonl(((u32_t)2 << 24) | 
 		    ((u32_t)4 << 16) | 
 		    (((u32_t)npcb->mss / 256) << 8) |
 		    (npcb->mss & 255));
@@ -450,7 +449,7 @@ tcp_process(struct tcp_pcb *pcb)
     
     if(acceptable) {
       DEBUGF(TCP_INPUT_DEBUG, ("tcp_process: Connection RESET\n"));
-      ASSERT("tcp_input: pcb->state != CLOSED", pcb->state != CLOSED);
+      LWIP_ASSERT("tcp_input: pcb->state != CLOSED", pcb->state != CLOSED);
       recv_flags = TF_RESET;
       pcb->flags &= ~TF_ACK_DELAY;
       return ERR_RST;
@@ -500,7 +499,7 @@ tcp_process(struct tcp_pcb *pcb)
 	 TCP_SEQ_LEQ(ackno, pcb->snd_nxt)) {
         pcb->state = ESTABLISHED;
         DEBUGF(DEMO_DEBUG, ("TCP connection established %d -> %d.\n", inseg.tcphdr->src, inseg.tcphdr->dest));
-	ASSERT("pcb->accept != NULL", pcb->accept != NULL);
+	LWIP_ASSERT("pcb->accept != NULL", pcb->accept != NULL);
 	/* Call the accept function. */
 	TCP_EVENT_ACCEPT(pcb, ERR_OK, err);
 	if(err != ERR_OK) {
@@ -725,12 +724,10 @@ tcp_receive(struct tcp_pcb *pcb)
 	tcp_seg_free(next);
 	
 	DEBUGF(TCP_QLEN_DEBUG, ("%d (after freeing unacked)\n", pcb->snd_queuelen));
-#ifdef LWIP_DEBUG
 	if(pcb->snd_queuelen != 0) {
-	  ASSERT("tcp_receive: valid queue length", pcb->unacked != NULL ||
+	  LWIP_ASSERT("tcp_receive: valid queue length", pcb->unacked != NULL ||
 		 pcb->unsent != NULL);      
 	}
-#endif /* LWIP_DEBUG */
       }
       pcb->polltmr = 0;
     }
@@ -756,12 +753,10 @@ tcp_receive(struct tcp_pcb *pcb)
 	pcb->snd_queuelen -= pbuf_clen(next->p);
 	tcp_seg_free(next);
 	DEBUGF(TCP_QLEN_DEBUG, ("%d (after freeing unsent)\n", pcb->snd_queuelen));
-#ifdef LWIP_DEBUG
 	if(pcb->snd_queuelen != 0) {
-	  ASSERT("tcp_receive: valid queue length", pcb->unacked != NULL ||
+	  LWIP_ASSERT("tcp_receive: valid queue length", pcb->unacked != NULL ||
 		 pcb->unsent != NULL);      
 	}
-#endif /* LWIP_DEBUG */
 	
         if(pcb->unsent != NULL) {
           pcb->snd_nxt = htonl(pcb->unsent->tcphdr->seqno);
@@ -872,7 +867,8 @@ tcp_receive(struct tcp_pcb *pcb)
 	/* the whole segment is < rcv_nxt */
 	/* must be a duplicate of a packet that has already been correctly handled */
 	
-	DEBUGF(TCP_INPUT_DEBUG, ("tcp_receive: duplicate seqno %ld\n", seqno));
+	DEBUGF(TCP_INPUT_DEBUG, ("tcp_receive: duplicate seqno %lu\n", seqno));
+	tcp_ack_now(pcb);
       }
     }
 

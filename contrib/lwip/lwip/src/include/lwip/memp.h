@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -33,9 +33,7 @@
 #ifndef __LWIP_MEMP_H__
 #define __LWIP_MEMP_H__
 
-#include "lwip/debug.h"
-#include "arch/cc.h"
-#include "lwipopts.h"
+#include "lwip/opt.h"
 
 typedef enum {
   MEMP_PBUF,

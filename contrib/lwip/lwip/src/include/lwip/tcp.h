@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -43,8 +43,6 @@
 #include "lwip/sys.h"
 
 #include "lwip/err.h"
-
-#include "lwip/event.h"
 
 struct tcp_pcb;
 
@@ -170,11 +168,11 @@ PACK_STRUCT_END
 #  include "arch/epstruct.h"
 #endif
 
-#define TCPH_OFFSET(hdr) (NTOHS((hdr)->_offset_flags) >> 8)
-#define TCPH_FLAGS(hdr) (NTOHS((hdr)->_offset_flags) & 0xff)
+#define TCPH_OFFSET(hdr) (ntohs((hdr)->_offset_flags) >> 8)
+#define TCPH_FLAGS(hdr) (ntohs((hdr)->_offset_flags) & 0xff)
 
-#define TCPH_OFFSET_SET(hdr, offset) (hdr)->_offset_flags = HTONS(((offset) << 8) | TCPH_FLAGS(hdr))
-#define TCPH_FLAGS_SET(hdr, flags) (hdr)->_offset_flags = HTONS((TCPH_OFFSET(hdr) << 8) | (flags))
+#define TCPH_OFFSET_SET(hdr, offset) (hdr)->_offset_flags = htons(((offset) << 8) | TCPH_FLAGS(hdr))
+#define TCPH_FLAGS_SET(hdr, flags) (hdr)->_offset_flags = htons((TCPH_OFFSET(hdr) << 8) | (flags))
 
 #define TCP_TCPLEN(seg) ((seg)->len + ((TCPH_FLAGS((seg)->tcphdr) & TCP_FIN || \
 					TCPH_FLAGS((seg)->tcphdr) & TCP_SYN)? 1: 0))
@@ -202,6 +200,7 @@ struct tcp_pcb {
 
   struct ip_addr local_ip;
   u16_t local_port;
+  enum tcp_state state;   /* TCP state */
   
   struct ip_addr remote_ip;
   u16_t remote_port;
@@ -210,14 +209,13 @@ struct tcp_pcb {
   u32_t rcv_nxt;   /* next seqno expected */
   u16_t rcv_wnd;   /* receiver window */
 
-  enum tcp_state state;   /* TCP state */
   
   /* Timers */
   u32_t tmr;
   u8_t polltmr, pollinterval;
   
   /* Retransmission timer. */
-  u8_t rtime;
+  u16_t rtime;
   
   u16_t mss;   /* maximum segment size */
 
@@ -293,7 +291,12 @@ struct tcp_pcb_listen {
   void *callback_arg;
   
   struct ip_addr local_ip;
-  u16_t local_port;  
+  u16_t local_port; 
+  /* Even if state is obviously LISTEN this is here for
+   * field compatibility with tpc_pcb to which it is cast sometimes
+   * Until a cleaner solution emerges this is here.FIXME
+   */ 
+  enum tcp_state state;   /* TCP state */
 
 #if LWIP_CALLBACK_API
   /* Function to call when a listener has been connected. */
@@ -302,6 +305,22 @@ struct tcp_pcb_listen {
 };
 
 #if LWIP_EVENT_API
+
+enum lwip_event {
+  LWIP_EVENT_ACCEPT,
+  LWIP_EVENT_SENT,
+  LWIP_EVENT_RECV,
+  LWIP_EVENT_CONNECTED,
+  LWIP_EVENT_POLL,
+  LWIP_EVENT_ERR
+};
+
+err_t lwip_tcp_event(void *arg, struct tcp_pcb *pcb,
+		     enum lwip_event,
+		     struct pbuf *p,
+		     u16_t size,
+		     err_t err);
+
 #define TCP_EVENT_ACCEPT(pcb,err,ret)    ret = lwip_tcp_event((pcb)->callback_arg, (pcb),\
 						    LWIP_EVENT_ACCEPT, NULL, 0, err)
 #define TCP_EVENT_SENT(pcb,space,ret) ret = lwip_tcp_event((pcb)->callback_arg, (pcb),\
@@ -323,7 +342,8 @@ struct tcp_pcb_listen {
                         (ret = (pcb)->sent((pcb)->callback_arg,(pcb),(space)))
 #define TCP_EVENT_RECV(pcb,p,err,ret) \
                         if((pcb)->recv != NULL) \
-                        (ret = (pcb)->recv((pcb)->callback_arg,(pcb),(p),(err)))
+                        { ret = (pcb)->recv((pcb)->callback_arg,(pcb),(p),(err)); } else { \
+						pbuf_free(p); }
 #define TCP_EVENT_CONNECTED(pcb,err,ret) \
                         if((pcb)->connected != NULL) \
                         (ret = (pcb)->connected((pcb)->callback_arg,(pcb),(err)))
@@ -390,6 +410,11 @@ int tcp_pcbs_sane(void);
 #define tcp_pcbs_sane() 1
 #endif /* TCP_DEBUG */
 
+#if NO_SYS
+#define tcp_timer_needed()
+#else
+void tcp_timer_needed(void);
+#endif
 
 /* The TCP PCB lists. */
 extern struct tcp_pcb_listen *tcp_listen_pcbs;  /* List of all TCP PCBs in LISTEN state. */
@@ -415,16 +440,17 @@ extern struct tcp_pcb *tcp_tmp_pcb;      /* Only used for temporary storage. */
                             for(tcp_tmp_pcb = *pcbs; \
 				  tcp_tmp_pcb != NULL; \
 				tcp_tmp_pcb = tcp_tmp_pcb->next) { \
-                                ASSERT("TCP_REG: already registered\n", tcp_tmp_pcb != npcb); \
+                                LWIP_ASSERT("TCP_REG: already registered\n", tcp_tmp_pcb != npcb); \
                             } \
-                            ASSERT("TCP_REG: pcb->state != CLOSED", npcb->state != CLOSED); \
+                            LWIP_ASSERT("TCP_REG: pcb->state != CLOSED", npcb->state != CLOSED); \
                             npcb->next = *pcbs; \
-                            ASSERT("TCP_REG: npcb->next != npcb", npcb->next != npcb); \
+                            LWIP_ASSERT("TCP_REG: npcb->next != npcb", npcb->next != npcb); \
                             *(pcbs) = npcb; \
-                            ASSERT("TCP_RMV: tcp_pcbs sane", tcp_pcbs_sane()); \
+                            LWIP_ASSERT("TCP_RMV: tcp_pcbs sane", tcp_pcbs_sane()); \
+							tcp_timer_needed(); \
                             } while(0)
 #define TCP_RMV(pcbs, npcb) do { \
-                            ASSERT("TCP_RMV: pcbs != NULL", *pcbs != NULL); \
+                            LWIP_ASSERT("TCP_RMV: pcbs != NULL", *pcbs != NULL); \
                             DEBUGF(TCP_DEBUG, ("TCP_RMV: removing %p from %p\n", npcb, *pcbs)); \
                             if(*pcbs == npcb) { \
                                *pcbs = (*pcbs)->next; \
@@ -435,7 +461,7 @@ extern struct tcp_pcb *tcp_tmp_pcb;      /* Only used for temporary storage. */
                                } \
                             } \
                             npcb->next = NULL; \
-                            ASSERT("TCP_RMV: tcp_pcbs sane", tcp_pcbs_sane()); \
+                            LWIP_ASSERT("TCP_RMV: tcp_pcbs sane", tcp_pcbs_sane()); \
                             DEBUGF(TCP_DEBUG, ("TCP_RMV: removed %p from %p\n", npcb, *pcbs)); \
                             } while(0)
 
@@ -443,6 +469,7 @@ extern struct tcp_pcb *tcp_tmp_pcb;      /* Only used for temporary storage. */
 #define TCP_REG(pcbs, npcb) do { \
                             npcb->next = *pcbs; \
                             *(pcbs) = npcb; \
+							tcp_timer_needed(); \
                             } while(0)
 #define TCP_RMV(pcbs, npcb) do { \
                             if(*(pcbs) == npcb) { \

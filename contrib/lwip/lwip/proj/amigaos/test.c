@@ -39,8 +39,14 @@
 
 /* ----------------------------------------------- */
 
+/* We redefine the timeval here, because lwip defines an own timeval struct,
+   should be changed in the future */
+#define timeval timeval_amiga
+
 #include <proto/exec.h>
 #include <proto/dos.h>
+
+#undef timeval
 
 /* ----------------------------------------------- */
 
@@ -127,7 +133,7 @@ static void tcpip_init_done(void *arg)
   IP4_ADDR(&ipaddr, 192,168,6,1);
   IP4_ADDR(&netmask, 255,255,255,0);
   
-  netif_set_default(netif_add(&ipaddr, &netmask, &gw, slipif_init,
+  netif_set_default(netif_add(&ipaddr, &netmask, &gw, NULL /*state*/, slipif_init,
 			      tcpip_input));
 #endif
   sys_sem_signal(*sem);
@@ -188,8 +194,8 @@ void main(void)
     IP4_ADDR(&gw, 127,0,0,1);
     IP4_ADDR(&ipaddr, 127,0,0,1);
     IP4_ADDR(&netmask, 255,0,0,0);
-
-    netif_add(&ipaddr, &netmask, &gw, loopif_init, tcpip_input);
+  
+    netif_add(&ipaddr, &netmask, &gw, NULL, loopif_init, tcpip_input);
     printf("Added loopback interface 127.0.0.1\n");
 
 #if 0

@@ -5,11 +5,16 @@
     $Id: lib_connect.c,v 1.2 2002/07/12 08:38:07 sebauer Exp $
 */
 
+/* We redefine the timeval here, because lwip defines an own timeval struct,
+   should be changed in the future */
+#define timeval timeval_amiga
+
 #include <exec/types.h>
 #include <proto/exec.h>
 
 #include "socket_intern.h"
-#include "calling.h"
+
+#undef timeval
 
 #include "lwip/sys.h"
 #include "lwip/sockets.h"

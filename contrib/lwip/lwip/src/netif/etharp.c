@@ -3,6 +3,92 @@
  * Address Resolution Protocol module for IP over Ethernet
  *
  * $Log: etharp.c,v $
+ * Revision 1.29  2003/02/24 10:49:05  jani
+ * cleaned up opt.h a bit, added more option defaults ad changed SYS_LIGHTWEIGHT_PROT to be a 0/1 define.The same for COMPAT_SOCKET
+ *
+ * Revision 1.28  2003/02/21 16:43:46  jani
+ * byte-order handling functions are in inet.c now and the uperrcase counterparts are gone. opt.h has all the
+ * configurable items debug does not need to be directly included.
+ *
+ * Revision 1.27  2003/02/20 16:32:24  jani
+ * do not directly include lwipopts.h but lwip/opt.h instead
+ *
+ * Revision 1.26  2003/02/20 13:13:56  likewise
+ * Fixed some issues open after merging 'leon-dhcp'. Added new debugging.
+ *
+ * Revision 1.25  2003/02/20 08:42:04  likewise
+ * Merged with leon-dhcp branch. Tagged as POST_leon-dhcp afterwards.
+ *
+ * Revision 1.24.2.1  2003/02/10 22:42:59  likewise
+ * Massive amount of refactoring DHCP code.
+ *
+ * Revision 1.24  2003/02/06 22:18:57  davidhaas
+ * Add the following features and bugfixes:
+ *
+ * Added select() functionality to sockets library.
+ * Support for errno in sockets library.
+ * Byte ordering fixes.
+ * basic lwip_ioctl(), FIONREAD, get/setsockopt() etc. support
+ *
+ * - added additional argument to netif_add to pass state pointer so that the
+ * if_init function has access to context information before
+ * the interface is added, without accessing globals.
+ *
+ * - added netif_remove()
+ *
+ * - to conserve cpu load the tcpip_tcp_timer should only be active
+ * when tcbs that need it exist.
+ *
+ * - pass length of available data to callbacks for NETCONN_EVT_RCV events
+ *
+ * - added tcpip_link_input(), a hack to allow processing of PPP
+ * packets in tcpip_thread() context. This saves threads and context
+ * switches.
+ *
+ * - renamed incompatible ASSERT() macro to LWIP_ASSERT() to avoid name
+ * collision.
+ *
+ * - changed a bunch of %d's to %u's in format strings for unsigned values.
+ *
+ * - added ip_frag to lwip_stats.
+ *
+ * - changed IP_REASS_MAXAGE and IP_REASS_TMO defaults to more realistic
+ * values.
+ *
+ * - added sys_timeout_remove() function to cancel timeouts (needed by PPP
+ * amongst other things).
+ *
+ * - tolerate NULL returns from sys_arch_timeouts() since some threads might
+ * not need to use or have timeouts.
+ *
+ * - added sys_sem_wait_timeout()
+ *
+ * - moved mem_malloc() function to end of mem.c to work around tasking
+ * compiler bug.
+ *
+ * - automatically bind to local tcp port if 0.
+ *
+ * - allow customization of port ranges for automatic local bindings.
+ *
+ * - corrected various typos, spelling errors, etc..
+ *
+ * Thanks to Marc Boucher for many of these changes.
+ *
+ * Revision 1.23  2003/01/18 16:05:24  jani
+ * When all entries are 0 due to the whole table changing since the last arp tick (past 10 seconds) there's no oldest entry and the new entry does not  get a spot.Fix this (from Ed Sutter)
+ *
+ * Revision 1.22  2003/01/13 09:38:21  jani
+ * remove global ctime.Each entry's ctime is now absolute.This avoids wrapping and also solves naming clash reported on the list
+ *
+ * Revision 1.21  2003/01/08 11:04:36  likewise
+ * Moved ETHARP_ALWAYS_INSERT switch to lwipopts.h
+ *
+ * Revision 1.19  2003/01/08 10:09:43  likewise
+ * Updated lwIP module copyright years to include 2003. Committers must check theirs.
+ *
+ * Revision 1.18  2003/01/08 09:24:50  likewise
+ * Removed etharp_output_sent() as etharp.c no longer returns ARP packets to the driver.
+ *
  * Revision 1.17  2002/12/18 12:49:02  jani
  * renamed (hopefully everywhere) stats to lwip_stats.closes bug #1901
  *
@@ -10,21 +96,10 @@
  * Use C style comments.In debug stataments cast various struct pointers to void* to
  * avoid printf warnings.misc warnings in etharp.
  *
- * Revision 1.15  2002/12/05 09:41:52  kieranm
- * Fixed compiler warnings when ARP_QUEUEING is not defined.
- *
- * Revision 1.14  2002/12/02 16:08:09  likewise
- * Fixed wrong assertion condition.
- *
- * Revision 1.13  2002/11/29 16:02:11  likewise
- * More complete ARP protocol implementation.
- *
- * Revision 1.12  2002/11/28 09:26:18  likewise
- * All ARP queueing code is now conditionally compiled-in.
  */
 
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -88,12 +163,10 @@ RFC 3220 4.6          IP Mobility Support for IPv4          January 2002
 */
 
 #include "lwip/opt.h"
-#include "lwip/debug.h"
 #include "lwip/inet.h"
 #include "netif/etharp.h"
 #include "lwip/ip.h"
 #include "lwip/stats.h"
-#include "lwipopts.h"
 
 /* ARP needs to inform DHCP of any ARP replies? */
 #if (LWIP_DHCP && DHCP_DOES_ARP_CHECK)
@@ -105,30 +178,17 @@ RFC 3220 4.6          IP Mobility Support for IPv4          January 2002
 /** the time an ARP entry stays pending after first request, (2 * 10) seconds = 20 seconds. */
 #define ARP_MAXPENDING 2 
 
-/**
- * 
- * - If enabled, cache entries are generated for every kind of ARP/IP traffic.
- * This enhances behaviour for sending to a dynamic set of hosts, for example
- * if acting as a gateway.
- * - If disabled, cache entries are generated only for IP destination addresses
- * in use by lwIP or applications. This enhances performance if sending to a small,
- * reasonably static number of hosts. Typically for embedded devices.
- */
-#ifndef ETHARP_ALWAYS_INSERT
-#  define ETHARP_ALWAYS_INSERT 1
-#endif
-
 #define HWTYPE_ETHERNET 1
 
 /** ARP message types */
 #define ARP_REQUEST 1
 #define ARP_REPLY 2
 
-#define ARPH_HWLEN(hdr) (NTOHS((hdr)->_hwlen_protolen) >> 8)
-#define ARPH_PROTOLEN(hdr) (NTOHS((hdr)->_hwlen_protolen) & 0xff)
+#define ARPH_HWLEN(hdr) (ntohs((hdr)->_hwlen_protolen) >> 8)
+#define ARPH_PROTOLEN(hdr) (ntohs((hdr)->_hwlen_protolen) & 0xff)
 
-#define ARPH_HWLEN_SET(hdr, len) (hdr)->_hwlen_protolen = HTONS(ARPH_PROTOLEN(hdr) | ((len) << 8))
-#define ARPH_PROTOLEN_SET(hdr, len) (hdr)->_hwlen_protolen = HTONS((len) | (ARPH_HWLEN(hdr) << 8))
+#define ARPH_HWLEN_SET(hdr, len) (hdr)->_hwlen_protolen = htons(ARPH_PROTOLEN(hdr) | ((len) << 8))
+#define ARPH_PROTOLEN_SET(hdr, len) (hdr)->_hwlen_protolen = htons((len) | (ARPH_HWLEN(hdr) << 8))
 
 enum etharp_state {
   ETHARP_STATE_EMPTY,
@@ -148,7 +208,6 @@ struct etharp_entry {
 
 static const struct eth_addr ethbroadcast = {{0xff,0xff,0xff,0xff,0xff,0xff}};
 static struct etharp_entry arp_table[ARP_TABLE_SIZE];
-static u8_t ctime;
 
 static struct pbuf *update_arp_entry(struct netif *netif, struct ip_addr *ipaddr, struct eth_addr *ethaddr, u8_t flags);
 #define ARP_INSERT_FLAG 1
@@ -167,8 +226,6 @@ etharp_init(void)
     arp_table[i].p = NULL;
 #endif
   }
-  /* reset ARP current time */
-  ctime = 0;
 }
 
 /**
@@ -182,12 +239,12 @@ etharp_tmr(void)
 {
   u8_t i;
   
-  ++ctime;
   DEBUGF(ETHARP_DEBUG, ("etharp_timer\n"));
   /* remove expired entries from the ARP table */
   for(i = 0; i < ARP_TABLE_SIZE; ++i) {
+    arp_table[i].ctime++;	  
     if((arp_table[i].state == ETHARP_STATE_STABLE) &&       
-       (ctime - arp_table[i].ctime >= ARP_MAXAGE)) {
+       (arp_table[i].ctime >= ARP_MAXAGE)) {
       DEBUGF(ETHARP_DEBUG, ("etharp_timer: expired stable entry %u.\n", i));
       arp_table[i].state = ETHARP_STATE_EMPTY;
 #if ARP_QUEUEING
@@ -196,7 +253,7 @@ etharp_tmr(void)
       arp_table[i].p = NULL;
 #endif
     } else if((arp_table[i].state == ETHARP_STATE_PENDING) &&
-	      (ctime - arp_table[i].ctime >= ARP_MAXPENDING)) {
+	      (arp_table[i].ctime >= ARP_MAXPENDING)) {
       arp_table[i].state = ETHARP_STATE_EMPTY;
 #if ARP_QUEUEING
       DEBUGF(ETHARP_DEBUG, ("etharp_timer: expired pending entry %u - dequeueing %p.\n", i, (void *)(arp_table[i].p)));
@@ -231,15 +288,15 @@ find_arp_entry(void)
   }
   
   /* If no unused entry is found, we try to find the oldest entry and
-     throw it away. */
+     throw it away. If all entries are new and have 0 ctime drop one  */
   if(i == ARP_TABLE_SIZE) {
     maxtime = 0;
     j = ARP_TABLE_SIZE;
     for(i = 0; i < ARP_TABLE_SIZE; ++i) {
       /* remember entry with oldest stable entry in j*/
       if((arp_table[i].state == ETHARP_STATE_STABLE) &&
-      (ctime - arp_table[i].ctime > maxtime)) {
-        maxtime = ctime - arp_table[i].ctime;
+      (arp_table[i].ctime >= maxtime)) {
+        maxtime = arp_table[i].ctime;
 	      j = i;
       }
     }
@@ -300,8 +357,8 @@ update_arp_entry(struct netif *netif, struct ip_addr *ipaddr, struct eth_addr *e
         for(k = 0; k < 6; ++k) {
           arp_table[i].ethaddr.addr[k] = ethaddr->addr[k];
         }
-        /* time stamp */
-        arp_table[i].ctime = ctime;
+        /* reset time stamp */
+        arp_table[i].ctime = 0;
 #if ARP_QUEUEING
         /* queued packet present? */
         if(arp_table[i].p != NULL) {	
@@ -327,7 +384,7 @@ update_arp_entry(struct netif *netif, struct ip_addr *ipaddr, struct eth_addr *e
   } /* for */
 
   /* no matching ARP entry was found */
-  ASSERT("update_arp_entry: i == ARP_TABLE_SIZE", i == ARP_TABLE_SIZE);
+  LWIP_ASSERT("update_arp_entry: i == ARP_TABLE_SIZE", i == ARP_TABLE_SIZE);
 
   DEBUGF(ETHARP_DEBUG, ("update_arp_entry: IP address not yet in table\n"));
   /* allowed to insert an entry? */
@@ -344,10 +401,12 @@ update_arp_entry(struct netif *netif, struct ip_addr *ipaddr, struct eth_addr *e
     if (arp_table[i].state == ETHARP_STATE_STABLE) {
       DEBUGF(ETHARP_DEBUG, ("update_arp_entry: overwriting old stable entry %u\n", i));
       /* stable entries should have no queued packets (TODO: allow later) */
-      ASSERT("update_arp_entry: arp_table[i].p == NULL", arp_table[i].p == NULL);
+#if ARP_QUEUEING
+      LWIP_ASSERT("update_arp_entry: arp_table[i].p == NULL", arp_table[i].p == NULL);
+#endif
     } else {
       DEBUGF(ETHARP_DEBUG, ("update_arp_entry: filling empty entry %u with state %u\n", i, arp_table[i].state));
-      ASSERT("update_arp_entry: arp_table[i].state == ETHARP_STATE_EMPTY", arp_table[i].state == ETHARP_STATE_EMPTY);
+      LWIP_ASSERT("update_arp_entry: arp_table[i].state == ETHARP_STATE_EMPTY", arp_table[i].state == ETHARP_STATE_EMPTY);
     }
     /* set IP address */  
     ip_addr_set(&arp_table[i].ipaddr, ipaddr);
@@ -355,8 +414,8 @@ update_arp_entry(struct netif *netif, struct ip_addr *ipaddr, struct eth_addr *e
     for(k = 0; k < 6; ++k) {
       arp_table[i].ethaddr.addr[k] = ethaddr->addr[k];
     }
-    /* time-stamp */  
-    arp_table[i].ctime = ctime;
+    /* reset time-stamp */  
+    arp_table[i].ctime = 0;
     /* mark as stable */  
     arp_table[i].state = ETHARP_STATE_STABLE;
     /* no queued packet */  
@@ -487,7 +546,7 @@ etharp_arp_input(struct netif *netif, struct eth_addr *ethaddr, struct pbuf *p)
     DEBUGF(ETHARP_DEBUG, ("etharp_arp_input: incoming ARP reply\n"));
 #if (LWIP_DHCP && DHCP_DOES_ARP_CHECK)
     /* DHCP needs to know about ARP replies */
-    dhcp_arp_reply(&hdr->sipaddr);
+    dhcp_arp_reply(netif, &hdr->sipaddr);
 #endif
     /* ARP reply directed to us? */
     if(ip_addr_cmp(&(hdr->dipaddr), &(netif->ip_addr))) {
@@ -646,31 +705,6 @@ etharp_output(struct netif *netif, struct ip_addr *ipaddr, struct pbuf *q)
 }
 
 /**
- * Free the ARP request pbuf.
- *
- * Free the ARP request pbuf that was allocated by ARP
- *
- * as a result of calling etharp_output(). Must be called
- * with the pbuf returned by etharp_output(), after you
- * have sent that packet.
- *
- * @param p pbuf returned earlier by etharp_output().
- *
- * @see etharp_output().
- */
-struct pbuf *
-etharp_output_sent(struct pbuf *p)
-{
-  struct etharp_hdr *hdr;
-  hdr = p->payload;
-  if (hdr->opcode == htons(ARP_REQUEST)) {
-    pbuf_free(p);
-    p = NULL;
-  }
-  return p;
-}
-
-/**
  * Send an ARP request for the given IP address.
  *
  * Sends an ARP request for the given IP address, unless
@@ -732,7 +766,7 @@ struct pbuf *etharp_query(struct netif *netif, struct ip_addr *ipaddr, struct pb
     DEBUGF(ETHARP_DEBUG, ("etharp_query: created ARP table entry.\n"));
     /* i is available, create ARP entry */
     ip_addr_set(&arp_table[i].ipaddr, ipaddr);
-    arp_table[i].ctime = ctime;
+    arp_table[i].ctime = 0;
     arp_table[i].state = ETHARP_STATE_PENDING;
 #if ARP_QUEUEING
     arp_table[i].p = NULL;

@@ -7,16 +7,21 @@
 
 #include <string.h>
 
+/* We redefine the timeval here, because lwip defines an own timeval struct,
+   should be changed in the future */
+#define timeval timeval_amiga
+
 #include <exec/types.h>
 #include <proto/exec.h>
 
-#include "lwip/sys.h"
-#include "lwip/sockets.h"
-
 #include "inet_aton.h"
-
 #include "localdata.h"
 #include "socket_intern.h"
+
+#undef timeval
+
+#include "lwip/sys.h"
+#include "lwip/sockets.h"
 
 #define MYDEBUG
 #include "debug.h"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -86,6 +86,7 @@ struct stats_sys {
 
 struct stats_ {
   struct stats_proto link;
+  struct stats_proto ip_frag;
   struct stats_proto ip;
   struct stats_proto icmp;
   struct stats_proto udp;

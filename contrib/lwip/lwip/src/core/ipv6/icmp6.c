@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -33,7 +33,7 @@
 /* Some ICMP messages should be passed to the transport protocols. This
    is not implemented. */
 
-#include "lwip/debug.h"
+#include "lwip/opt.h"
 
 #include "lwip/icmp.h"
 #include "lwip/inet.h"
@@ -121,7 +121,7 @@ icmp_dest_unreach(struct pbuf *p, enum icmp_dur_type t)
   struct ip_hdr *iphdr;
   struct icmp_dur_hdr *idur;
   
-  q = pbuf_alloc(PBUF_TRANSPORT, 8 + IP_HLEN + 8, PBUF_RAM);
+  q = pbuf_alloc(PBUF_IP, 8 + IP_HLEN + 8, PBUF_RAM);
   /* ICMP header + IP header + 8 bytes of data */
 
   iphdr = p->payload;
@@ -153,7 +153,7 @@ icmp_time_exceeded(struct pbuf *p, enum icmp_te_type t)
 
   DEBUGF(ICMP_DEBUG, ("icmp_time_exceeded\n"));
   
-  q = pbuf_alloc(PBUF_TRANSPORT, 8 + IP_HLEN + 8, PBUF_RAM);
+  q = pbuf_alloc(PBUF_IP, 8 + IP_HLEN + 8, PBUF_RAM);
 
   iphdr = p->payload;
   

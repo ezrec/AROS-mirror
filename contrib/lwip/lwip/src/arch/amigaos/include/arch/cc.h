@@ -51,4 +51,17 @@ typedef u32_t mem_ptr_t;
 #define PACK_STRUCT_BEGIN
 #define PACK_STRUCT_END
 
+/* prototypes for printf() and abort() */
+#include <stdio.h>
+#include <stdlib.h>
+/* Plaform specific diagnostic output */
+#define LWIP_PLATFORM_DIAG(x)	do {Printf x;} while(0)
+
+#define LWIP_PLATFORM_ASSERT(x) do {Printf("Assertion \"%s\" failed at line %d in %s\n", \
+                                     x, __LINE__, __FILE__); /*fflush(NULL); abort();*/} while(0)
+
+#define SYS_ARCH_DECL_PROTECT(x)
+#define SYS_ARCH_PROTECT(x)
+#define SYS_ARCH_UNPROTECT(x)
+
 #endif /* __ARCH_CC_H__ */

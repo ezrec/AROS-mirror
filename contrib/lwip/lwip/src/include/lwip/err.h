@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -32,7 +32,7 @@
 #ifndef __LWIP_ERR_H__
 #define __LWIP_ERR_H__
 
-#include "lwip/debug.h"
+#include "lwip/opt.h"
 
 #include "arch/cc.h"
 
@@ -58,6 +58,7 @@ typedef s8_t err_t;
 
 #define ERR_USE  -10     /* Address in use.          */
 
+#define ERR_IF   -11     /* Low-level netif error    */
 
 
 #ifdef LWIP_DEBUG

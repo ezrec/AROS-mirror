@@ -365,9 +365,9 @@ void sys_mbox_post(sys_mbox_t mbox, void *msg)
     sys_sem_signal(mbox->mutex);
 }
 /*-----------------------------------------------------------------------------------*/
-u16_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u16_t timeout)
+u32_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u32_t timeout)
 {
-    u16_t time = 1;
+    u32_t time = 1;
 //    kprintf("sys_arch_mbox_fetch(mbox=0x%lx,timeout=%ld)\n",mbox,timeout);
 
     /* The mutex lock is quick so we don't bother with the timeout
@@ -418,7 +418,7 @@ sys_sem_t sys_sem_new(u8_t count)
     return (sys_sem_t)sem;
 }
 /*-----------------------------------------------------------------------------------*/
-u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
+u32_t sys_arch_sem_wait(sys_sem_t sem, u32_t timeout)
 {
     struct ThreadData *data = (struct ThreadData*)FindTask(NULL)->tc_UserData;
     u16_t time = 1;
@@ -540,7 +540,7 @@ struct sys_timeouts *sys_arch_timeouts(void)
     return &data->timeouts;
 }
 /*-----------------------------------------------------------------------------------*/
-void sys_thread_new(void (* function)(void *arg), void *arg)
+sys_thread_t sys_thread_new(void (* function)(void *arg), void *arg)
 {
     struct Process *pr;
     struct StartupMsg *start_msg;
@@ -549,14 +549,12 @@ void sys_thread_new(void (* function)(void *arg), void *arg)
 //    kprintf("sys_thread_new()\n");
 
     if (!(start_msg = (struct StartupMsg *)AllocMem(sizeof(struct StartupMsg), MEMF_PUBLIC|MEMF_CLEAR)))
-    {
-	return;
-    }
+	return NULL;
 
     if (!(start_msg->msg.mn_ReplyPort = CreateMsgPort()))
     {
 	FreeMem((void *)start_msg, sizeof(*start_msg));
-	return;
+	return NULL;
     }
 
     CacheClearU();
@@ -567,7 +565,7 @@ void sys_thread_new(void (* function)(void *arg), void *arg)
     {
 	DeleteMsgPort(start_msg->msg.mn_ReplyPort);
 	FreeMem((void *)start_msg, sizeof(*start_msg));
-	return;
+	return NULL;
     }
 
     child_port = &pr->pr_MsgPort;
@@ -588,5 +586,44 @@ void sys_thread_new(void (* function)(void *arg), void *arg)
     PutMsg(child_port, (struct Message *)start_msg);
     WaitPort(start_msg->msg.mn_ReplyPort);
     FreeMem(start_msg,sizeof(struct StartupMsg));
+
+    return NULL;
 }
 /*-----------------------------------------------------------------------------------*/
+
+
+/*-----------------------------------------------------------------------------------*/
+/** sys_prot_t sys_arch_protect(void)
+
+This optional function does a "fast" critical region protection and returns
+the previous protection level. This function is only called during very short
+critical regions. An embedded system which supports ISR-based drivers might
+want to implement this function by disabling interrupts. Task-based systems
+might want to implement this by using a mutex or disabling tasking. This
+function should support recursive calls from the same task or interrupt. In
+other words, sys_arch_protect() could be called while already protected. In
+that case the return value indicates that it is already protected.
+
+sys_arch_protect() is only required if your port is supporting an operating
+system.
+*/
+sys_prot_t sys_arch_protect(void)
+{
+    Forbid();
+    return 0; /* return value is not used */
+}
+/*-----------------------------------------------------------------------------------*/
+/** void sys_arch_unprotect(sys_prot_t pval)
+
+This optional function does a "fast" set of critical region protection to the
+value specified by pval. See the documentation for sys_arch_protect() for
+more information. This function is only required if your port is supporting
+an operating system.
+*/
+void sys_arch_unprotect(sys_prot_t pval)
+{
+    Permit();
+}
+
+/*-----------------------------------------------------------------------------------*/
+

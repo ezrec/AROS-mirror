@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -30,19 +30,25 @@
  *
  */
 
-#include "lwip/debug.h"
-
 #include "lwip/sys.h"
 #include "lwip/opt.h"
 #include "lwip/def.h"
 #include "lwip/memp.h"
 
 #if (NO_SYS == 0)
+
+struct sswt_cb
+{
+    int timeflag;
+    sys_sem_t *psem;
+};
+
+
 /*-----------------------------------------------------------------------------------*/
 void
 sys_mbox_fetch(sys_mbox_t mbox, void **msg)
 {
-  u16_t time;
+  u32_t time;
   struct sys_timeouts *timeouts;
   struct sys_timeout *tmptimeout;
   sys_timeout_handler h;
@@ -52,7 +58,7 @@ sys_mbox_fetch(sys_mbox_t mbox, void **msg)
  again:
   timeouts = sys_arch_timeouts();
     
-  if(timeouts->next == NULL) {
+  if(!timeouts || !timeouts->next) {
     sys_arch_mbox_fetch(mbox, msg, 0);
   } else {
     if(timeouts->next->time > 0) {
@@ -70,7 +76,10 @@ sys_mbox_fetch(sys_mbox_t mbox, void **msg)
       h = tmptimeout->h;
       arg = tmptimeout->arg;
       memp_free(MEMP_SYS_TIMEOUT, tmptimeout);
-      h(arg);
+      if(h != NULL) {
+        DEBUGF(SYS_DEBUG, ("smf calling h=%p(%p)\n", (void *)h, (void *)arg));
+      	h(arg);
+      }
       
       /* We try again to fetch a message from the mbox. */
       goto again;
@@ -91,7 +100,7 @@ sys_mbox_fetch(sys_mbox_t mbox, void **msg)
 void
 sys_sem_wait(sys_sem_t sem)
 {
-  u16_t time;
+  u32_t time;
   struct sys_timeouts *timeouts;
   struct sys_timeout *tmptimeout;
   sys_timeout_handler h;
@@ -104,7 +113,7 @@ sys_sem_wait(sys_sem_t sem)
   
   timeouts = sys_arch_timeouts();
   
-  if(timeouts->next == NULL) {
+  if(!timeouts || !timeouts->next) {
     sys_arch_sem_wait(sem, 0);
   } else {
     if(timeouts->next->time > 0) {
@@ -122,7 +131,10 @@ sys_sem_wait(sys_sem_t sem)
       h = tmptimeout->h;
       arg = tmptimeout->arg;
       memp_free(MEMP_SYS_TIMEOUT, tmptimeout);
-      h(arg);
+      if(h != NULL) {
+	DEBUGF(SYS_DEBUG, ("ssw h=%p(%p)\n", (void *)h, (void *)arg));
+      	h(arg);
+      }
 	    
       
       /* We try again to fetch a message from the mbox. */
@@ -142,7 +154,7 @@ sys_sem_wait(sys_sem_t sem)
 }
 /*-----------------------------------------------------------------------------------*/
 void
-sys_timeout(u16_t msecs, sys_timeout_handler h, void *arg)
+sys_timeout(u32_t msecs, sys_timeout_handler h, void *arg)
 {
   struct sys_timeouts *timeouts;
   struct sys_timeout *timeout, *t;
@@ -158,6 +170,9 @@ sys_timeout(u16_t msecs, sys_timeout_handler h, void *arg)
   
   timeouts = sys_arch_timeouts();
   
+  DEBUGF(SYS_DEBUG, ("sys_timeout: %p msecs=%lu h=%p arg=%p\n", (void *)timeout, msecs, (void *)h, (void *)arg));
+
+  LWIP_ASSERT("sys_timeout: timeouts != NULL", timeouts != NULL);
   if(timeouts->next == NULL) {
     timeouts->next = timeout;
     return;
@@ -183,5 +198,86 @@ sys_timeout(u16_t msecs, sys_timeout_handler h, void *arg)
   }
   
 }
+
+/* Go through timeout list (for this task only) and remove the first matching entry,
+   even though the timeout has not triggered yet.
+*/
 /*-----------------------------------------------------------------------------------*/
+void
+sys_untimeout(sys_timeout_handler h, void *arg)
+{
+    struct sys_timeouts *timeouts;
+    struct sys_timeout *prev_t, *t;
+
+    timeouts = sys_arch_timeouts();
+    
+    if (timeouts->next == NULL)
+        return;
+
+    for (t = timeouts->next, prev_t = NULL; t != NULL; prev_t = t, t = t->next)
+    {
+        if ((t->h == h) && (t->arg == arg))
+        {
+            /* We have a match */
+            /* Unlink from previous in list */
+            if (prev_t == NULL)
+                timeouts->next = t->next;
+            else
+                prev_t->next = t->next;
+            /* If not the last one, add time of this one back to next */
+            if (t->next != NULL)
+                t->next->time += t->time;
+            memp_free(MEMP_SYS_TIMEOUT, t);
+            return;
+        }
+    }
+    return;
+}
+
+            
+                
+    
+/*-----------------------------------------------------------------------------------*/
+static void
+sswt_handler(void *arg)
+{
+    struct sswt_cb *sswt_cb = (struct sswt_cb *) arg;
+    
+    /* Timeout. Set flag to TRUE and signal semaphore */
+    sswt_cb->timeflag = 1;
+    sys_sem_signal(*(sswt_cb->psem));
+}
+
+/* Wait for a semaphore with timeout (specified in ms) */
+/* timeout = 0: wait forever */
+/* Returns 0 on timeout. 1 otherwise */
+/*-----------------------------------------------------------------------------------*/
+int
+sys_sem_wait_timeout(sys_sem_t sem, u32_t timeout)
+{
+    struct sswt_cb sswt_cb;
+
+    sswt_cb.psem = &sem;
+    sswt_cb.timeflag = 0;
+    
+    /* If timeout is zero, then just wait forever */
+    if (timeout > 0)
+        /* Create a timer and pass it the address of our flag */
+        sys_timeout(timeout, sswt_handler, &sswt_cb);
+    sys_sem_wait(sem);
+    /* Was it a timeout? */
+    if (sswt_cb.timeflag)
+    {
+        /* timeout */
+        return 0;
+    } else {
+        /* Not a timeout. Remove timeout entry */
+        sys_untimeout(sswt_handler, &sswt_cb);
+        return 1;
+    }
+    
+}
+
+/*-----------------------------------------------------------------------------------*/
+
 #endif /* NO_SYS */

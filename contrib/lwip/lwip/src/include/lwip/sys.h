@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -36,6 +36,7 @@
 
 #include "lwip/opt.h"
 
+
 #if NO_SYS
 
 /* For a totally minimal and standalone system, we provide null
@@ -46,6 +47,7 @@ struct sys_timeout {u8_t dummy;};
 
 #define sys_init()
 #define sys_timeout(m,h,a)
+#define sys_untimeout(m,a)
 #define sys_sem_new(c) c
 #define sys_sem_signal(s)
 #define sys_sem_wait(s)
@@ -57,6 +59,11 @@ struct sys_timeout {u8_t dummy;};
 
 #define sys_thread_new(t,a)
 
+/* We don't need protection if there is no OS */
+#define SYS_ARCH_DECL_PROTECT(lev)
+#define SYS_ARCH_PROTECT(lev)
+#define SYS_ARCH_UNPROTECT(lev)
+
 #else /* NO_SYS */
 
 #include "arch/sys_arch.h"
@@ -65,7 +72,7 @@ typedef void (* sys_timeout_handler)(void *arg);
 
 struct sys_timeout {
   struct sys_timeout *next;
-  u16_t time;
+  u32_t time;
   sys_timeout_handler h;
   void *arg;
 };
@@ -86,25 +93,71 @@ void sys_init(void);
  * called.
  *
  */
-void sys_timeout(u16_t msecs, sys_timeout_handler h, void *arg);
+void sys_timeout(u32_t msecs, sys_timeout_handler h, void *arg);
+void sys_untimeout(sys_timeout_handler h, void *arg);
 struct sys_timeouts *sys_arch_timeouts(void);
 
 /* Semaphore functions. */
 sys_sem_t sys_sem_new(u8_t count);
 void sys_sem_signal(sys_sem_t sem);
-u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout);
+u32_t sys_arch_sem_wait(sys_sem_t sem, u32_t timeout);
 void sys_sem_free(sys_sem_t sem);
 void sys_sem_wait(sys_sem_t sem);
+int sys_sem_wait_timeout(sys_sem_t sem, u32_t timeout);
 
 /* Mailbox functions. */
 sys_mbox_t sys_mbox_new(void);
 void sys_mbox_post(sys_mbox_t mbox, void *msg);
-u16_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u16_t timeout);
+u32_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u32_t timeout);
 void sys_mbox_free(sys_mbox_t mbox);
 void sys_mbox_fetch(sys_mbox_t mbox, void **msg);
 
+/* Critical Region Protection */
+/* These functions must be implemented in the sys_arch.c file.
+   In some implementations they can provide a more light-weight protection
+   mechanism than using semaphores. Otherwise semaphores can be used for
+   implementation */
+#ifndef SYS_ARCH_PROTECT
+/** SYS_LIGHTWEIGHT_PROT
+ * define SYS_LIGHTWEIGHT_PROT in lwipopts.h if you want inter-task protection
+ * for certain critical regions during buffer allocation, deallocation and memory
+ * allocation and deallocation.
+ */
+#if SYS_LIGHTWEIGHT_PROT
+
+/** SYS_ARCH_DECL_PROTECT
+ * declare a protection variable. This macro will default to defining a variable of
+ * type sys_prot_t. If a particular port needs a different implementation, then
+ * this macro may be defined in sys_arch.h.
+ */
+#define SYS_ARCH_DECL_PROTECT(lev) sys_prot_t lev
+/** SYS_ARCH_PROTECT
+ * Perform a "fast" protect. This could be implemented by
+ * disabling interrupts for an embedded system or by using a semaphore or
+ * mutex. The implementation should allow calling SYS_ARCH_PROTECT when
+ * already protected. The old protection level is returned in the variable
+ * "lev". This macro will default to calling the sys_arch_protect() function
+ * which should be implemented in sys_arch.c. If a particular port needs a
+ * different implementation, then this macro may be defined in sys_arch.h
+ */
+#define SYS_ARCH_PROTECT(lev) lev = sys_arch_protect()
+/** SYS_ARCH_UNPROTECT
+ * Perform a "fast" set of the protection level to "lev". This could be
+ * implemented by setting the interrupt level to "lev" within the MACRO or by
+ * using a semaphore or mutex.  This macro will default to calling the
+ * sys_arch_unprotect() function which should be implemented in
+ * sys_arch.c. If a particular port needs a different implementation, then
+ * this macro may be defined in sys_arch.h
+ */
+#define SYS_ARCH_UNPROTECT(lev) sys_arch_unprotect(lev)
+sys_prot_t sys_arch_protect(void);
+void sys_arch_unprotect(sys_prot_t pval);
+#endif /* SYS_LIGHTWEIGHT_PROT */
+
+#endif /* SYS_ARCH_PROTECT */
+
 /* Thread functions. */
-void sys_thread_new(void (* thread)(void *arg), void *arg);
+sys_thread_t sys_thread_new(void (* thread)(void *arg), void *arg);
 
 /* The following functions are used only in Unix code, and
    can be omitted when porting the stack. */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -30,7 +30,6 @@
  *
  */
 
-#include "lwip/debug.h"
 #include "lwip/ip_addr.h"
 #include "lwip/inet.h"
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -37,9 +37,10 @@
 #include "lwip/def.h"
 #include "lwip/pbuf.h"
 #include "lwip/ip_addr.h"
-#include "lwip/netif.h"
 
 #include "lwip/err.h"
+
+struct netif;
 
 void ip_init(void);
 u8_t ip_lookup(void *header, struct netif *inp);
@@ -96,25 +97,23 @@ PACK_STRUCT_END
 #  include "arch/epstruct.h"
 #endif
 
-#define IPH_V(hdr)  (NTOHS((hdr)->_v_hl_tos) >> 12)
-#define IPH_HL(hdr) ((NTOHS((hdr)->_v_hl_tos) >> 8) & 0x0f)
-#define IPH_TOS(hdr) HTONS((NTOHS((hdr)->_v_hl_tos) & 0xff))
+#define IPH_V(hdr)  (ntohs((hdr)->_v_hl_tos) >> 12)
+#define IPH_HL(hdr) ((ntohs((hdr)->_v_hl_tos) >> 8) & 0x0f)
+#define IPH_TOS(hdr) (htons((ntohs((hdr)->_v_hl_tos) & 0xff)))
 #define IPH_LEN(hdr) ((hdr)->_len)
 #define IPH_ID(hdr) ((hdr)->_id)
 #define IPH_OFFSET(hdr) ((hdr)->_offset)
-#define IPH_TTL(hdr) (NTOHS((hdr)->_ttl_proto) >> 8)
-#define IPH_PROTO(hdr) (NTOHS((hdr)->_ttl_proto) & 0xff)
+#define IPH_TTL(hdr) (ntohs((hdr)->_ttl_proto) >> 8)
+#define IPH_PROTO(hdr) (ntohs((hdr)->_ttl_proto) & 0xff)
 #define IPH_CHKSUM(hdr) ((hdr)->_chksum)
 
-#define IPH_VHLTOS_SET(hdr, v, hl, tos) (hdr)->_v_hl_tos = HTONS(((v) << 12) | ((hl) << 8) | (tos))
+#define IPH_VHLTOS_SET(hdr, v, hl, tos) (hdr)->_v_hl_tos = (htons(((v) << 12) | ((hl) << 8) | (tos)))
 #define IPH_LEN_SET(hdr, len) (hdr)->_len = (len)
 #define IPH_ID_SET(hdr, id) (hdr)->_id = (id)
 #define IPH_OFFSET_SET(hdr, off) (hdr)->_offset = (off)
-#define IPH_TTL_SET(hdr, ttl) (hdr)->_ttl_proto = HTONS(IPH_PROTO(hdr) | ((ttl) << 8))
-#define IPH_PROTO_SET(hdr, proto) (hdr)->_ttl_proto = HTONS((proto) | (IPH_TTL(hdr) << 8))
+#define IPH_TTL_SET(hdr, ttl) (hdr)->_ttl_proto = (htons(IPH_PROTO(hdr) | ((ttl) << 8)))
+#define IPH_PROTO_SET(hdr, proto) (hdr)->_ttl_proto = (htons((proto) | (IPH_TTL(hdr) << 8)))
 #define IPH_CHKSUM_SET(hdr, chksum) (hdr)->_chksum = (chksum)
-
-
 
 #if IP_DEBUG
 void ip_debug_print(struct pbuf *p);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -39,12 +39,13 @@
  */
 /*-----------------------------------------------------------------------------------*/
 
-#include "lwip/debug.h"
+#include "lwip/opt.h"
 #include "lwip/sys.h"
 #include "lwip/ip.h"
 #include "lwip/ip_frag.h"
 #include "lwip/netif.h"
 
+#include "lwip/stats.h"
 
 
 /*
@@ -74,8 +75,8 @@ copy_from_pbuf(struct pbuf *p, u16_t * offset,
 }
 
 #define IP_REASS_BUFSIZE 5760
-#define IP_REASS_MAXAGE 10
-#define IP_REASS_TMO 100
+#define IP_REASS_MAXAGE 30
+#define IP_REASS_TMO 1000
 
 static u8_t ip_reassbuf[IP_HLEN + IP_REASS_BUFSIZE];
 static u8_t ip_reassbitmap[IP_REASS_BUFSIZE / (8 * 8)];
@@ -92,9 +93,11 @@ static u8_t ip_reasstmr;
 static void 
 ip_reass_timer(void *arg)
 {
-  if(ip_reasstmr)	
+  if(ip_reasstmr > 1) {
     ip_reasstmr--;
-  sys_timeout(IP_REASS_TMO, (sys_timeout_handler) ip_reass_timer, NULL);
+    sys_timeout(IP_REASS_TMO, ip_reass_timer, NULL);
+  } else if(ip_reasstmr == 1)
+	ip_reasstmr = 0;
 }
 
 struct pbuf *
@@ -105,6 +108,10 @@ ip_reass(struct pbuf *p)
   u16_t offset, len;
   u16_t i;
 
+#ifdef IP_STATS
+  ++lwip_stats.ip_frag.recv;
+#endif /* IP_STATS */
+
   iphdr = (struct ip_hdr *) ip_reassbuf;
   fraghdr = (struct ip_hdr *) p->payload;
   /* If ip_reasstmr is zero, no packet is present in the buffer, so we
@@ -114,7 +121,7 @@ ip_reass(struct pbuf *p)
     DEBUGF(IP_REASS_DEBUG, ("ip_reass: new packet\n"));
     memcpy(iphdr, fraghdr, IP_HLEN);
     ip_reasstmr = IP_REASS_MAXAGE;
-    sys_timeout(IP_REASS_TMO, (sys_timeout_handler) ip_reass_timer, NULL);
+    sys_timeout(IP_REASS_TMO, ip_reass_timer, NULL);
     ip_reassflags = 0;
     /* Clear the bitmap. */
     memset(ip_reassbitmap, 0, sizeof(ip_reassbitmap));
@@ -127,6 +134,9 @@ ip_reass(struct pbuf *p)
       ip_addr_cmp(&iphdr->dest, &fraghdr->dest) &&
       IPH_ID(iphdr) == IPH_ID(fraghdr)) {
     DEBUGF(IP_REASS_DEBUG, ("ip_reass: matching old packet\n"));
+#ifdef IP_STATS
+    ++lwip_stats.ip_frag.cachehit;
+#endif /* IP_STATS */
     /* Find out the offset in the reassembly buffer where we should
        copy the fragment. */
     len = ntohs(IPH_LEN(fraghdr)) - IPH_HL(fraghdr) * 4;
@@ -138,6 +148,7 @@ ip_reass(struct pbuf *p)
       DEBUGF(IP_REASS_DEBUG,
 	     ("ip_reass: fragment outside of buffer (%d:%d/%d).\n", offset,
 	      offset + len, IP_REASS_BUFSIZE));
+      sys_untimeout(ip_reass_timer, NULL);
       ip_reasstmr = 0;
       goto nullreturn;
     }
@@ -225,6 +236,7 @@ ip_reass(struct pbuf *p)
       /* If we have come this far, we have a full packet in the
          buffer, so we allocate a pbuf and copy the packet into it. We
          also reset the timer. */
+      sys_untimeout(ip_reass_timer, NULL);
       ip_reasstmr = 0;
       pbuf_free(p);
       p = pbuf_alloc(PBUF_LINK, ip_reasslen, PBUF_POOL);
@@ -232,7 +244,7 @@ ip_reass(struct pbuf *p)
 	i = 0;
 	for (q = p; q != NULL; q = q->next) {
 	  /* Copy enough bytes to fill this pbuf in the chain. The
-	     avaliable data in the pbuf is given by the q->len
+	     available data in the pbuf is given by the q->len
 	     variable. */
 	  DEBUGF(IP_REASS_DEBUG,
 		 ("ip_reass: memcpy from %p (%d) to %p, %d bytes\n",
@@ -242,6 +254,13 @@ ip_reass(struct pbuf *p)
 		q->len > ip_reasslen - i ? ip_reasslen - i : q->len);
 	  i += q->len;
 	}
+#ifdef IP_STATS
+	++lwip_stats.ip_frag.fw;
+#endif /* IP_STATS */
+      } else {
+#ifdef IP_STATS
+	++lwip_stats.ip_frag.memerr;
+#endif /* IP_STATS */
       }
       DEBUGF(IP_REASS_DEBUG, ("ip_reass: p %p\n", (void*)p));
       return p;
@@ -249,6 +268,9 @@ ip_reass(struct pbuf *p)
   }
 
 nullreturn:
+#ifdef IP_STATS
+  ++lwip_stats.ip_frag.drop;
+#endif /* IP_STATS */
   pbuf_free(p);
   return NULL;
 }
@@ -324,6 +346,9 @@ ip_frag(struct pbuf *p, struct netif *netif, struct ip_addr *dest)
     header = pbuf_alloc(PBUF_LINK, 0, PBUF_RAM);
     pbuf_chain(header, rambuf);
     netif->output(netif, header, dest);
+#ifdef IP_STATS
+    ++lwip_stats.ip_frag.xmit;
+#endif /* IP_STATS */
     pbuf_dechain(header);
     pbuf_free(header);
 

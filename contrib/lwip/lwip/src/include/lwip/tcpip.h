@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -38,10 +38,14 @@
 void tcpip_init(void (* tcpip_init_done)(void *), void *arg);
 void tcpip_apimsg(struct api_msg *apimsg);
 err_t tcpip_input(struct pbuf *p, struct netif *inp);
+err_t tcpip_link_input(struct pbuf *p, struct netif *inp);
+
+void tcpip_tcp_timer_needed(void);
 
 enum tcpip_msg_type {
   TCPIP_MSG_API,
-  TCPIP_MSG_INPUT
+  TCPIP_MSG_INPUT,
+  TCPIP_MSG_LINK
 };
 
 struct tcpip_msg {

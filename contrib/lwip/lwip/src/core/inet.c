@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -39,7 +39,7 @@
  */
 /*-----------------------------------------------------------------------------------*/
 
-#include "lwip/debug.h"
+#include "lwip/opt.h"
 
 #include "lwip/arch.h"
 
@@ -53,7 +53,9 @@ lwip_chksum(void *dataptr, int len)
 {
   u32_t acc;
     
+  DEBUGF(INET_DEBUG, ("lwip_chksum(%p, %d)\n", dataptr, len));
   for(acc = 0; len > 1; len -= 2) {
+      /*    acc = acc + *((u16_t *)dataptr)++;*/
     acc += *(u16_t *)dataptr;
     dataptr = (void *)((u16_t *)dataptr + 1);
   }
@@ -62,6 +64,8 @@ lwip_chksum(void *dataptr, int len)
   if(len == 1) {
     acc += htons((u16_t)((*(u8_t *)dataptr) & 0xff) << 8);
     DEBUGF(INET_DEBUG, ("inet: chksum: odd byte %d\n", *(u8_t *)dataptr));
+  } else {
+    DEBUGF(INET_DEBUG, ("inet: chksum: no odd byte\n"));
   }
   acc = (acc >> 16) + (acc & 0xffffUL);
 
@@ -88,8 +92,11 @@ inet_chksum_pseudo(struct pbuf *p,
 
   acc = 0;
   swapped = 0;
+  /* iterate through all pbuf in chain */
   for(q = p; q != NULL; q = q->next) {    
+    DEBUGF(INET_DEBUG, ("inet_chksum_pseudo(): checksumming pbuf %p (has next %p) \n", (void *) q, (void *)q->next));
     acc += lwip_chksum(q->payload, q->len);
+    /*DEBUGF(INET_DEBUG, ("inet_chksum_pseudo(): unwrapped lwip_chksum()=%lx \n", acc));*/
     while(acc >> 16) {
       acc = (acc & 0xffffUL) + (acc >> 16);
     }
@@ -97,6 +104,7 @@ inet_chksum_pseudo(struct pbuf *p,
       swapped = 1 - swapped;
       acc = ((acc & 0xff) << 8) | ((acc & 0xff00UL) >> 8);
     }
+    /*DEBUGF(INET_DEBUG, ("inet_chksum_pseudo(): wrapped lwip_chksum()=%lx \n", acc));*/
   }
 
   if(swapped) {
@@ -112,6 +120,7 @@ inet_chksum_pseudo(struct pbuf *p,
   while(acc >> 16) {
     acc = (acc & 0xffffUL) + (acc >> 16);
   }    
+  DEBUGF(INET_DEBUG, ("inet_chksum_pseudo(): pbuf chain lwip_chksum()=%lx\n", acc));
   return ~(acc & 0xffffUL);
 }
 /*-----------------------------------------------------------------------------------*/
@@ -159,5 +168,33 @@ inet_chksum_pbuf(struct pbuf *p)
   return ~(acc & 0xffffUL);
 }
 
-
+#if BYTE_ORDER == LITTLE_ENDIAN
 /*-----------------------------------------------------------------------------------*/
+u16_t
+htons(u16_t n)
+{
+  return ((n & 0xff) << 8) | ((n & 0xff00) >> 8);
+}
+/*-----------------------------------------------------------------------------------*/
+u16_t
+ntohs(u16_t n)
+{
+  return htons(n);
+}
+/*-----------------------------------------------------------------------------------*/
+u32_t
+htonl(u32_t n)
+{
+  return ((n & 0xff) << 24) |
+    ((n & 0xff00) << 8) |
+    ((n & 0xff0000) >> 8) |
+    ((n & 0xff000000) >> 24);
+}
+/*-----------------------------------------------------------------------------------*/
+u32_t
+ntohl(u32_t n)
+{
+  return htonl(n);
+}
+/*-----------------------------------------------------------------------------------*/
+#endif /* BYTE_ORDER == LITTLE_ENDIAN */

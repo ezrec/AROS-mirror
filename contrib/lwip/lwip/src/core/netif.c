@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -30,7 +30,7 @@
  *
  */
 
-#include "lwip/debug.h"
+#include "lwip/opt.h"
 
 #include "lwip/def.h"
 #include "lwip/mem.h"
@@ -39,11 +39,23 @@
 struct netif *netif_list = NULL;
 struct netif *netif_default = NULL;
 
-/*-----------------------------------------------------------------------------------*/
+/**
+ * Add a network interface to the list of lwIP netifs.
+ *
+ * @param ipaddr IP address for the new netif
+ * @param netmask network mask for the new netif
+ * @param gw default gateway IP address for the new netif
+ * @param state opaque data passed to the new netif
+ * @param init callback function that initializes the interface
+ * @param input callback function that...
+ *
+ * @return netif, or NULL if failed.
+ */
 struct netif *
 netif_add(struct ip_addr *ipaddr, struct ip_addr *netmask,
 	  struct ip_addr *gw,
-	  void (* init)(struct netif *netif),
+	  void *state,
+	  err_t (* init)(struct netif *netif),
 	  err_t (* input)(struct pbuf *p, struct netif *netif))
 {
   struct netif *netif;
@@ -55,14 +67,17 @@ netif_add(struct ip_addr *ipaddr, struct ip_addr *netmask,
     return NULL;
   }
   
+  netif->state = state;
   netif->num = netifnum++;
   netif->input = input;
-  ip_addr_set(&(netif->ip_addr), ipaddr);
-  ip_addr_set(&(netif->netmask), netmask);
-  ip_addr_set(&(netif->gw), gw);
 
-  init(netif);
+  netif_set_addr(netif, ipaddr, netmask, gw);
   
+  if (init(netif) != ERR_OK) {
+      mem_free(netif);
+      return NULL;
+  }
+ 
   netif->next = netif_list;
   netif_list = netif;
 #if NETIF_DEBUG
@@ -77,6 +92,46 @@ netif_add(struct ip_addr *ipaddr, struct ip_addr *netmask,
 #endif /* NETIF_DEBUG */
   return netif;
 }
+
+void
+netif_set_addr(struct netif *netif,struct ip_addr *ipaddr, struct ip_addr *netmask,
+	  struct ip_addr *gw)
+{
+  netif_set_ipaddr(netif, ipaddr);
+  netif_set_netmask(netif, netmask);
+  netif_set_gw(netif, gw);
+}
+
+/*-----------------------------------------------------------------------------------*/
+void netif_remove(struct netif * netif)
+{
+	if ( netif == NULL ) return;  
+ 
+	/*  is it the first netif? */
+	if(netif_list == netif) {
+		netif_list = netif->next;
+	}    
+	else
+	{	
+		/*  look for netif further down the list */
+		struct netif * tmpNetif;
+ 		for(tmpNetif = netif_list; tmpNetif != NULL; tmpNetif = tmpNetif->next) {
+			if(tmpNetif->next == netif) {
+				tmpNetif->next = netif->next;
+				break;
+			}    
+		}
+		if(tmpNetif == NULL)
+			return; /*  we didn't find any netif today */
+	}
+
+	if(netif_default == netif)
+		netif_default = NULL;
+
+	DEBUGF(NETIF_DEBUG, ("netif_remove: removed netif"));
+	mem_free( netif );
+}
+
 /*-----------------------------------------------------------------------------------*/
 struct netif *
 netif_find(char *name)
@@ -131,7 +186,7 @@ netif_set_default(struct netif *netif)
 {
   netif_default = netif;
   DEBUGF(NETIF_DEBUG, ("netif: setting default interface %c%c\n",
-		       netif->name[0], netif->name[1]));
+		       netif ? netif->name[0] : '\'', netif ? netif->name[1] : '\''));
 }
 /*-----------------------------------------------------------------------------------*/
 void

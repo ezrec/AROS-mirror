@@ -1,13 +1,17 @@
 /*
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
-    
-    $Id: globaldata.c,v 1.1 2002/07/28 11:13:55 sebauer Exp $
 */
+
+/* We redefine the timeval here, because lwip defines an own timeval
+ * struct */
+#define timeval timeval_amiga
 
 #include <exec/types.h>
 #include <clib/alib_protos.h>
 #include <proto/exec.h>
+
+#undef timeval
 
 #include "lwip/sys.h"
 #include "lwip/sockets.h"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -33,12 +33,10 @@
 /* This is the part of the API that is linked with
    the application */
 
-#include "lwip/debug.h"
+#include "lwip/opt.h"
 #include "lwip/api.h"
 #include "lwip/api_msg.h"
 #include "lwip/memp.h"
-
-#include "lwip/debug.h"
 
 /*-----------------------------------------------------------------------------------*/
 struct
@@ -215,8 +213,25 @@ netconn *netconn_new(enum netconn_type t)
   conn->acceptmbox = SYS_MBOX_NULL;
   conn->sem = SYS_SEM_NULL;
   conn->state = NETCONN_NONE;
+  conn->socket = 0;
+  conn->callback = 0;
+  conn->recv_avail = 0;
   return conn;
 }
+/*-----------------------------------------------------------------------------------*/
+struct
+netconn *netconn_new_with_callback(enum netconn_type t,
+                                   void (*callback)(struct netconn *, enum netconn_evt, u16_t len))
+{
+    struct netconn *conn;
+    
+    /* get a netconn and then initialize callback pointer and socket */
+    conn = netconn_new(t);
+    if (conn)
+        conn->callback = callback;
+    return conn;
+}
+
 /*-----------------------------------------------------------------------------------*/
 err_t
 netconn_delete(struct netconn *conn)
@@ -279,18 +294,20 @@ netconn_type(struct netconn *conn)
 }
 /*-----------------------------------------------------------------------------------*/
 err_t
-netconn_peer(struct netconn *conn, struct ip_addr **addr,
+netconn_peer(struct netconn *conn, struct ip_addr *addr,
 	     u16_t *port)
 {
   switch(conn->type) {
   case NETCONN_UDPLITE:
   case NETCONN_UDPNOCHKSUM:
   case NETCONN_UDP:
-    *addr = &(conn->pcb.udp->remote_ip);
+    if ((conn->pcb.udp->flags & UDP_FLAGS_CONNECTED) == 0)
+     return -1;
+    *addr = (conn->pcb.udp->remote_ip);
     *port = conn->pcb.udp->remote_port;
     break;
   case NETCONN_TCP:
-    *addr = &(conn->pcb.tcp->remote_ip);
+    *addr = (conn->pcb.tcp->remote_ip);
     *port = conn->pcb.tcp->remote_port;
     break;
   }
@@ -345,6 +362,7 @@ netconn_bind(struct netconn *conn, struct ip_addr *addr,
   memp_freep(MEMP_API_MSG, msg);
   return conn->err;
 }
+
 /*-----------------------------------------------------------------------------------*/
 err_t
 netconn_connect(struct netconn *conn, struct ip_addr *addr,
@@ -374,6 +392,27 @@ netconn_connect(struct netconn *conn, struct ip_addr *addr,
   sys_mbox_fetch(conn->mbox, NULL);
   memp_freep(MEMP_API_MSG, msg);
   return conn->err;
+}
+
+err_t
+netconn_disconnect(struct netconn *conn)
+{
+  struct api_msg *msg;
+  
+  if(conn == NULL) {
+    return ERR_VAL;
+  }
+
+  if((msg = memp_mallocp(MEMP_API_MSG)) == NULL) {
+    return ERR_MEM;
+  }
+  msg->type = API_MSG_DISCONNECT;
+  msg->msg.conn = conn;  
+  api_msg_post(msg);
+  sys_mbox_fetch(conn->mbox, NULL);
+  memp_freep(MEMP_API_MSG, msg);
+  return conn->err;
+
 }
 /*-----------------------------------------------------------------------------------*/
 err_t
@@ -413,7 +452,10 @@ netconn_accept(struct netconn *conn)
   }
   
   sys_mbox_fetch(conn->acceptmbox, (void **)&newconn);
-
+  /* Register event with callback */
+  if (conn->callback)
+      (*conn->callback)(conn, NETCONN_EVT_RCVMINUS, 0);
+  
   return newconn;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -423,6 +465,7 @@ netconn_recv(struct netconn *conn)
   struct api_msg *msg;
   struct netbuf *buf;
   struct pbuf *p;
+  u16_t len;
     
   if(conn == NULL) {
     return NULL;
@@ -452,7 +495,19 @@ netconn_recv(struct netconn *conn)
     }
     
     sys_mbox_fetch(conn->recvmbox, (void **)&p);
+
+    if (p != NULL)
+    {
+        len = p->tot_len;
+        conn->recv_avail -= len;
+    }
+    else
+        len = 0;
     
+    /* Register event with callback */
+      if (conn->callback)
+        (*conn->callback)(conn, NETCONN_EVT_RCVMINUS, len);
+
     /* If we are closed, we indicate that we no longer wish to recieve
        data by setting conn->recvmbox to SYS_MBOX_NULL. */
     if(p == NULL) {
@@ -485,6 +540,10 @@ netconn_recv(struct netconn *conn)
     memp_freep(MEMP_API_MSG, msg);
   } else {
     sys_mbox_fetch(conn->recvmbox, (void **)&buf);
+	conn->recv_avail -= buf->p->tot_len;
+    /* Register event with callback */
+    if (conn->callback)
+        (*conn->callback)(conn, NETCONN_EVT_RCVMINUS, buf->p->tot_len);
   }
 
   
@@ -596,6 +655,7 @@ netconn_write(struct netconn *conn, void *dataptr, u16_t size, u8_t copy)
     sys_sem_free(conn->sem);
     conn->sem = SYS_SEM_NULL;
   }
+  
   return conn->err;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -633,7 +693,3 @@ netconn_err(struct netconn *conn)
   return conn->err;
 }
 /*-----------------------------------------------------------------------------------*/
-
-
-
-

@@ -5,10 +5,16 @@
     $Id: lib_listen.c,v 1.3 2002/07/12 13:11:20 sebauer Exp $
 */
 
+/* We redefine the timeval here, because lwip defines an own timeval struct,
+   should be changed in the future */
+#define timeval timeval_amiga
+
 #include <exec/types.h>
 #include <proto/exec.h>
 
 #include "socket_intern.h"
+
+#undef timeval
 
 #include "lwip/sys.h"
 #include "lwip/sockets.h"

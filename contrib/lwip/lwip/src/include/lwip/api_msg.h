@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -49,6 +49,7 @@ enum api_msg_type {
   
   API_MSG_BIND,
   API_MSG_CONNECT,
+  API_MSG_DISCONNECT,
 
   API_MSG_LISTEN,
   API_MSG_ACCEPT,

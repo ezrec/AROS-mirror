@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -29,11 +29,13 @@
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
-#include "lwip/debug.h"
 #include "lwip/mem.h"
 #include "lwip/opt.h"
 #include "netif/loopif.h"
+
+#if defined(LWIP_DEBUG) && defined(LWIP_TCPDUMP)
 #include "netif/tcpdump.h"
+#endif /* LWIP_DEBUG && LWIP_TCPDUMP */
 
 #include "lwip/tcp.h"
 #include "lwip/ip.h"
@@ -46,9 +48,9 @@ loopif_output(struct netif *netif, struct pbuf *p,
   struct pbuf *q, *r;
   char *ptr;
 
-#ifdef LWIP_DEBUG
+#if defined(LWIP_DEBUG) && defined(LWIP_TCPDUMP)
   tcpdump(p);
-#endif /* LWIP_DEBUG */
+#endif /* LWIP_DEBUG && LWIP_TCPDUMP */
   
   r = pbuf_alloc(PBUF_RAW, p->tot_len, PBUF_RAM);
   if(r != NULL) {
@@ -64,12 +66,13 @@ loopif_output(struct netif *netif, struct pbuf *p,
   return ERR_MEM;
 }
 /*-----------------------------------------------------------------------------------*/
-void
+err_t
 loopif_init(struct netif *netif)
 {
   netif->name[0] = 'l';
   netif->name[1] = 'o';
   netif->output = loopif_output;
+  return ERR_OK;
 }
 /*-----------------------------------------------------------------------------------*/
 

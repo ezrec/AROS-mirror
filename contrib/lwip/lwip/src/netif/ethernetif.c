@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -73,11 +73,20 @@ low_level_init(struct netif *netif)
 
   ethernetif = netif->state;
   
-  /* Obtain MAC address from network interface. */
-  ethernetif->ethaddr->addr[0] = ;
-  ethernetif->ethaddr->addr[1] = ;
-  ethernetif->ethaddr->addr[2] = ;
+  /* set MAC hardware address length */
+  netif->hwaddr_len = 6;
 
+  /* set MAC hardware address */
+  netif->hwaddr[0] = ;
+  ...
+  netif->hwaddr[6] = ;
+
+  /* maximum transfer unit */
+  netif->mtu = 1500;
+  
+  /* broadcast capability */
+  netif->flags = NETIF_FLAG_BROADCAST;
+ 
   /* Do whatever else is needed to initialize interface. */  
 }
 /*-----------------------------------------------------------------------------------*/
@@ -133,14 +142,14 @@ low_level_input(struct ethernetif *ethernetif)
   len = ;
 
   /* We allocate a pbuf chain of pbufs from the pool. */
-  p = pbuf_alloc(PBUF_LINK, len, PBUF_POOL);
+  p = pbuf_alloc(PBUF_RAW, len, PBUF_POOL);
   
   if(p != NULL) {
     /* We iterate over the pbuf chain until we have read the entire
        packet into the pbuf. */
     for(q = p; q != NULL; q = q->next) {
       /* Read enough bytes to fill this pbuf in the chain. The
-         avaliable data in the pbuf is given by the q->len
+         available data in the pbuf is given by the q->len
          variable. */
       read data into(q->payload, q->len);
     }
@@ -312,7 +321,7 @@ static void
 arp_timer(void *arg)
 {
   arp_tmr();
-  sys_timeout(ARP_TMR_INTERVAL, (sys_timeout_handler)arp_timer, NULL);
+  sys_timeout(ARP_TMR_INTERVAL, arp_timer, NULL);
 }
 /*-----------------------------------------------------------------------------------*/
 /*
@@ -341,6 +350,6 @@ ethernetif_init(struct netif *netif)
   low_level_init(netif);
   arp_init();
 
-  sys_timeout(ARP_TMR_INTERVAL, (sys_timeout_handler)arp_timer, NULL);
+  sys_timeout(ARP_TMR_INTERVAL, arp_timer, NULL);
 }
 /*-----------------------------------------------------------------------------------*/

@@ -30,14 +30,13 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: slipif.h,v 1.1 2002/10/22 12:32:58 likewise Exp $
  */
 #ifndef __NETIF_SLIPIF_H__
 #define __NETIF_SLIPIF_H__
 
 #include "lwip/netif.h"
 
-void slipif_init(struct netif * netif);
+err_t slipif_init(struct netif * netif);
  
 #endif 
 

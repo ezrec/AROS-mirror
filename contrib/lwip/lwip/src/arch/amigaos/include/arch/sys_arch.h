@@ -47,5 +47,10 @@ typedef struct sys_mbox *sys_mbox_t;
 struct sys_thread;
 typedef struct sys_thread * sys_thread_t;
 
+struct sys_prot;
+typedef struct sys_prot * sys_prot_t;
+
+#define LWIP_PROVIDE_ERRNO
+
 #endif /* __ARCH_SYS_ARCH_H__ */
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -30,7 +30,7 @@
  *
  */
 
-#include "lwipopts.h"
+#include "lwip/opt.h"
 
 #include "lwip/memp.h"
 
@@ -110,7 +110,9 @@ static u8_t memp_memory[(MEMP_NUM_PBUF *
 					sizeof(struct memp)))];
 
 /*-----------------------------------------------------------------------------------*/
+#if !SYS_LIGHTWEIGHT_PROT
 static sys_sem_t mutex;
+#endif
 /*-----------------------------------------------------------------------------------*/
 #ifdef LWIP_DEBUG
 static int
@@ -168,7 +170,9 @@ memp_init(void)
     }
   }
 
+#if !SYS_LIGHTWEIGHT_PROT
   mutex = sys_sem_new(1);
+#endif
 
   
 }
@@ -179,7 +183,7 @@ memp_malloc(memp_t type)
   struct memp *memp;
   void *mem;
  
-  ASSERT("memp_malloc: type < MEMP_MAX", type < MEMP_MAX);
+  LWIP_ASSERT("memp_malloc: type < MEMP_MAX", type < MEMP_MAX);
 
   memp = memp_tab[type];
   
@@ -192,7 +196,7 @@ memp_malloc(memp_t type)
       lwip_stats.memp[type].max = lwip_stats.memp[type].used;
     }
 #endif /* MEMP_STATS */
-    ASSERT("memp_malloc: memp properly aligned",
+    LWIP_ASSERT("memp_malloc: memp properly aligned",
 	   ((u32_t)MEM_ALIGN((u8_t *)memp + sizeof(struct memp)) % MEM_ALIGNMENT) == 0);
 
     mem = MEM_ALIGN((u8_t *)memp + sizeof(struct memp));
@@ -212,35 +216,22 @@ void *
 memp_mallocp(memp_t type)
 {
   void *mem;
+#if SYS_LIGHTWEIGHT_PROT
+  SYS_ARCH_DECL_PROTECT(old_level);
+  SYS_ARCH_PROTECT(old_level);
+#else /* SYS_LIGHTWEIGHT_PROT */  
   sys_sem_wait(mutex);
+#endif /* SYS_LIGHTWEIGHT_PROT */  
+
   mem = memp_malloc(type);
+
+#if SYS_LIGHTWEIGHT_PROT
+  SYS_ARCH_UNPROTECT(old_level);
+#else /* SYS_LIGHTWEIGHT_PROT */
   sys_sem_signal(mutex);
+#endif /* SYS_LIGHTWEIGHT_PROT */  
   return mem;
 }
-/*-----------------------------------------------------------------------------------*/
-#if 0
-void *
-memp_realloc(memp_t fromtype, memp_t totype, void *mem)
-{
-  void *rmem;
-  u16_t size;
-  
-  if(mem == NULL) {
-    return NULL;
-  }
-  
-  rmem = memp_malloc(totype);
-  if(rmem != NULL) { 
-    size = memp_sizes[totype];
-    if(memp_sizes[fromtype] < size) {
-      size = memp_sizes[fromtype];
-    }
-    bcopy(mem, rmem, size);
-    memp_free(fromtype, mem);
-  }
-  return rmem;
-}
-#endif /* 0 */
 /*-----------------------------------------------------------------------------------*/
 void
 memp_free(memp_t type, void *mem)
@@ -259,7 +250,7 @@ memp_free(memp_t type, void *mem)
   memp->next = memp_tab[type]; 
   memp_tab[type] = memp;
 
-  ASSERT("memp sanity", memp_sanity());
+  LWIP_ASSERT("memp sanity", memp_sanity());
 
   return;
 }
@@ -267,8 +258,20 @@ memp_free(memp_t type, void *mem)
 void 
 memp_freep(memp_t type, void *mem)
 {
+#if SYS_LIGHTWEIGHT_PROT
+    SYS_ARCH_DECL_PROTECT(old_level);
+    SYS_ARCH_PROTECT(old_level);
+#else /* SYS_LIGHTWEIGHT_PROT */  
   sys_sem_wait(mutex);
+#endif /* SYS_LIGHTWEIGHT_PROT */  
+
   memp_free(type, mem);
+
+#if SYS_LIGHTWEIGHT_PROT
+  SYS_ARCH_UNPROTECT(old_level);
+#else /* SYS_LIGHTWEIGHT_PROT */
   sys_sem_signal(mutex);
+#endif /* SYS_LIGHTWEIGHT_PROT */  
+
 }
 /*-----------------------------------------------------------------------------------*/

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, 2002 Swedish Institute of Computer Science.
+ * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
  * All rights reserved. 
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -49,8 +49,9 @@ struct udp_hdr {
   PACK_STRUCT_FIELD(u16_t chksum);
 } PACK_STRUCT_STRUCT;
 
-#define UDP_FLAGS_NOCHKSUM 0x01
-#define UDP_FLAGS_UDPLITE  0x02
+#define UDP_FLAGS_NOCHKSUM 0x01U
+#define UDP_FLAGS_UDPLITE  0x02U
+#define UDP_FLAGS_CONNECTED  0x04U
 
 struct udp_pcb {
   struct udp_pcb *next;
@@ -74,6 +75,7 @@ err_t            udp_bind       (struct udp_pcb *pcb, struct ip_addr *ipaddr,
 				 u16_t port);
 err_t            udp_connect    (struct udp_pcb *pcb, struct ip_addr *ipaddr,
 				 u16_t port);
+void            udp_disconnect    (struct udp_pcb *pcb);
 void             udp_recv       (struct udp_pcb *pcb,
 				 void (* recv)(void *arg, struct udp_pcb *upcb,
 					       struct pbuf *p,
@@ -86,7 +88,7 @@ err_t            udp_send       (struct udp_pcb *pcb, struct pbuf *p);
 #define          udp_setflags(pcb, f)  ((pcb)->flags = (f))
 
 
-/* The following functions is the lower layer interface to UDP. */
+/* The following functions are the lower layer interface to UDP. */
 u8_t             udp_lookup     (struct ip_hdr *iphdr, struct netif *inp);
 void             udp_input      (struct pbuf *p, struct netif *inp);
 void             udp_init       (void);
