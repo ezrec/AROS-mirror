@@ -18,8 +18,7 @@ lb2_real: .files-touched $(GENDIR)/$(CURDIR)/.configured
 	@DATADIR=$(EXEDIR)/data $(MAKE) -C $(GENDIR)/$(CURDIR) install
 
 .files-touched:
-        @find . -name Makefile.in | xargs $(TOUCH) 
-	@$(TOUCH) aclocal.m4 configure config.h.in
+        @find . | xargs $(TOUCH) -r configure 
 	@$(ECHO) YES > $@
 
 $(GENDIR)/$(CURDIR)/.configured: mmakefile
