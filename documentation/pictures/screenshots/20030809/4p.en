@@ -1,0 +1,4 @@
+The UberPaint 4p bitmap drawing program, recently ported to AROS (which was 
+fairly easy as it uses SDL). As you can see, it's a Deluxe Paint clone. You
+can also see the beautiful art that Adam Chodorowski has produced
+with this program. ;-)
