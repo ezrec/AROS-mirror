@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/28 21:46:40  stegerg
+ * *** empty log message ***
+ *
  * Revision 42.1  2000/05/15 19:28:20  stegerg
  * REG() macro replacementes
  *
@@ -562,9 +565,30 @@ extern const UBYTE LibID[];
 #define BRectFill(bi,l,t,r,b) BRectFillDebug(bi,l,t,r,b,__FILE__,__LINE__)
 #define RenderBackFillRaster(rp,ib,apen,bpen) RenderBackFillRasterDebug(rp,ib,apen,bpen,__FILE__,__LINE__)
 #else
-ASM VOID SRectFill(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
-ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
-ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen);
+//ASM VOID SRectFill(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
+ASM REGFUNC5(VOID, SRectFill,
+	REGPARAM(A0, struct RastPort *, rp),
+	REGPARAM(D0, LONG, l),
+	REGPARAM(D1, LONG, t),
+	REGPARAM(D2, LONG, r),
+	REGPARAM(D3, LONG, b));
+
+
+//ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b);
+ASM REGFUNC5(VOID, BRectFill,
+	REGPARAM(A0, struct BaseInfo *, bi),
+	REGPARAM(D0, LONG, l),
+	REGPARAM(D1, LONG, t),
+	REGPARAM(D2, LONG, r),
+	REGPARAM(D3, LONG, b));
+
+
+//ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen);
+ASM REGFUNC4(VOID, RenderBackFillRaster,
+	REGPARAM(A0, struct RastPort *, rp),
+	REGPARAM(A1, struct IBox *, ib),
+	REGPARAM(D0, UWORD, apen),
+	REGPARAM(D1, UWORD, bpen));
 #endif
 
 #endif
