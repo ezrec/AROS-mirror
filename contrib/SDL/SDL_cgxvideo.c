@@ -282,186 +282,174 @@ VideoBootStrap CGX_bootstrap = {
 
 Uint32 MakeBitMask(_THIS,int type,int format,int *bpp)
 {
-	D(if(type==0)bug("REAL pixel format: "));
+    if (this->hidden->depth==*bpp)  {
+        D(if(type==0)bug("REAL pixel format: "));
 
-	if(this->hidden->depth==*bpp)
-	{
+        switch(format) {
+            case PIXFMT_LUT8:
+                D(if(type==0)bug("LUT8\n"));
+                return 0;
+            case PIXFMT_BGR15:
+            case PIXFMT_RGB15PC:
+                switch(type) {
+                    case 0:
+                        D(bug("RGB15PC/BGR15\n"));
+                        return 31;
+                    case 1:
+                        return 992;
+                    case 2:
+                        return 31744;
+                }
+            case PIXFMT_RGB15:
+            case PIXFMT_BGR15PC:
+                switch(type) {
+                    case 0:
+                        D(bug("RGB15/BGR15PC\n"));
+                        return 31744;
+                    case 1:
+                        return 992;
+                    case 2:
+                        return 31;
+                }
+            case PIXFMT_BGR16PC:
+            case PIXFMT_RGB16:
+                switch(type) {
+                    case 0:
+                        D(bug("RGB16PC\n"));
+                        return 63488;
+                    case 1:
+                        return 2016;
+                    case 2:
+                        return 31;
+                }
+            case PIXFMT_BGR16:
+            case PIXFMT_RGB16PC:
+                switch(type) {
+                    case 0:
+                        D(bug("RGB16PC/BGR16\n"));
+                        return 248;
+                    case 1:
+                        return 57351;
+                    case 2:
+                        return 7936;
+                }
 
-	switch(format)
-    	{
-		case PIXFMT_LUT8:
-			D(if(type==0)bug("LUT8\n"));
-			return 0;
-		case PIXFMT_BGR15:
-		case PIXFMT_RGB15PC:
-			switch(type)
-			{
-				case 0:
-					D(bug("RGB15PC/BGR15\n"));
-					return 31;
-				case 1:
-					return 992;
-				case 2:
-					return 31744;
-			}
-		case PIXFMT_RGB15:
-		case PIXFMT_BGR15PC:
-			switch(type)
-			{
-				case 0:
-					D(bug("RGB15/BGR15PC\n"));
-					return 31744;
-				case 1:
-					return 992;
-				case 2:
-					return 31;
-			}
-		case PIXFMT_BGR16PC:
-		case PIXFMT_RGB16:
-			switch(type)
-			{
-				case 0:
-					D(bug("RGB16PC\n"));
-					return 63488;
-				case 1:
-					return 2016;
-				case 2:
-					return 31;
-			}
-		case PIXFMT_BGR16:
-		case PIXFMT_RGB16PC:
-			switch(type)
-			{
-				case 0:
-					D(bug("RGB16PC/BGR16\n"));
-					return 248;
-				case 1:
-					return 57351;
-				case 2:
-					return 7936;
-			}
-
-		case PIXFMT_RGB24:
-			switch(type)
-			{
-				case 0:
-					D(bug("RGB24/BGR24\n"));
-					return 0xff0000;
-				case 1:
-					return 0xff00;
-				case 2:
-					return 0xff;
-			}
-		case PIXFMT_BGR24:
-			switch(type)
-			{
-				case 0:
-					D(bug("BGR24\n"));
-					return 0xff;
-				case 1:
-					return 0xff00;
-				case 2:
-					return 0xff0000;
-			}
-		case PIXFMT_ARGB32:
-			switch(type)
-			{
-				case 0:
-					D(bug("ARGB32\n"));
-					return 0xff0000;
-				case 1:
-					return 0xff00;
-				case 2:
-					return 0xff;
-			}
-		case PIXFMT_BGRA32:
-			switch(type)
-			{
+            case PIXFMT_RGB24:
+                switch(type) {
+                    case 0:
+                        D(bug("RGB24/BGR24\n"));
+                        return 0xff0000;
+                    case 1:
+                        return 0xff00;
+                    case 2:
+                        return 0xff;
+                }
+            case PIXFMT_BGR24:
+                switch(type) {
+                    case 0:
+                        D(bug("BGR24\n"));
+                        return 0xff;
+                    case 1:
+                        return 0xff00;
+                    case 2:
+                        return 0xff0000;
+                }
+            case PIXFMT_ARGB32:
+                switch(type) {
+                    case 0:
+                        D(bug("ARGB32\n"));
+                        return 0xff0000;
+                    case 1:
+                        return 0xff00;
+                    case 2:
+                        return 0xff;
+                }
+            case PIXFMT_BGRA32:
+                switch(type) {
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
-                case 0:
-					D(bug("BGRA32\n"));
-					return 0xff;
-				case 1:
-					return 0xff00;
-				case 2:
-					return 0xff0000;
+                    case 0:
+                        D(bug("BGRA32\n"));
+                        return 0xff;
+                    case 1:
+                        return 0xff00;
+                    case 2:
+                        return 0xff0000;
 #else
-                case 0:
-					D(bug("BGRA32\n"));
-					return 0xff00;
-				case 1:
-					return 0xff0000;
-				case 2:
-					return 0xff000000;
+                    case 0:
+                        D(bug("BGRA32\n"));
+                        return 0xff00;
+                    case 1:
+                        return 0xff0000;
+                    case 2:
+                        return 0xff000000;
 
 #endif
-            }
-		case PIXFMT_RGBA32:
-			switch(type)
-			{
-				case 0:
-					D(bug("RGBA32\n"));
-					return 0xff000000;
-				case 1:
-					return 0xff0000;
-				case 2:
-					return 0xff00;
-			}
-		default:
-			D(bug("Unknown pixel format! Default to 24bit\n"));
-			return (Uint32) (255<<(type*8));
-	}
-	}
-	else
-	{
-		D(if(type==0)bug("DIFFERENT from screen.\nAllocated screen format: "));
+                }
+            case PIXFMT_RGBA32:
+                switch(type) {
+                    case 0:
+                        D(bug("RGBA32\n"));
+                        return 0xff000000;
+                    case 1:
+                        return 0xff0000;
+                    case 2:
+                        return 0xff00;
+                }
+            default:
+                D(bug("Unknown pixel format! Default to 24bit\n"));
+                return (Uint32) (255<<(type*8));
+        }
+    } else {
+        D(if(type==0)bug("DIFFERENT from screen.\nAllocated screen format: "));
 
-		switch(*bpp)
-		{
-			case 32:
-				D(if(type==0) bug("RGBA32\n"));
-				switch(type)
-				{
-					case 0:
-						return 0xff000000;
-					case 1:
-						return 0xff0000;
-					case 2:
-						return 0xff00;
-				}
-				break;
-			case 24:
+        switch(*bpp)
+        {
+            case 32:
+                D(if(type==0) bug("RGBA32\n"));
+                switch(type)
+                {
+                    case 0:
+                        return 0xff000000;
+                    case 1:
+                        return 0xff0000;
+                    case 2:
+                        return 0xff00;
+                }
+                break;
+            case 24:
 use_truecolor:
-				switch(type)
-				{
-					case 0:
-						D(bug("RGB24\n"));
-						return 0xff0000;
-					case 1:
-						return 0xff00;
-					case 2:
-						return 0xff;
-				}
-			case 16:
-			case 15:
-				D(if(type==0) bug("Not supported, switching to 24bit!\n"));
-				*bpp=24;
-				goto use_truecolor;
-				break;
-			default:
-				D(if(type==0)bug("This is a chunky display\n"));
-// For chunky display mask is always 0;
-				return 0;
-		}
-	}
-	return 0;
+                switch(type)
+                {
+                    case 0:
+                        D(bug("RGB24\n"));
+                        return 0xff0000;
+                    case 1:
+                        return 0xff00;
+                    case 2:
+                        return 0xff;
+                }
+            case 16:
+            case 15:
+                D(if(type==0) bug("Not supported, switching to 24bit!\n"));
+                *bpp=24;
+                goto use_truecolor;
+                break;
+            default:
+                D(if(type==0)bug("This is a chunky display\n"));
+                // For chunky display mask is always 0;
+                return 0;
+        }
+    }
+    return 0;
 }
 
 static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 {
 	int i;
+#ifndef AROS
     char *test;
     struct Library *RTGBase;
+#endif
 
 	D(bug("VideoInit... Opening libraries\n"));
 
@@ -582,22 +570,7 @@ static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 	vformat->BitsPerPixel = this->hidden->visuals[i].depth; /* this->hidden->visuals[i].bpp; */
 
 	{
-		int form;
-		APTR handle;
-		struct DisplayInfo info;
-
-		if(!(handle=FindDisplayInfo(this->hidden->visuals[i].visual)))
-		{
-			D(bug("Unable to get visual info...\n"));
-			return -1;
-		}
-
-		if(!GetDisplayInfoData(handle,(char *)&info,sizeof(struct DisplayInfo),DTAG_DISP,NULL)) {
-			D(bug("Unable to get visual info data...\n"));
-			return -1;
-		}
-
-		form=GetCyberIDAttr(CYBRIDATTR_PIXFMT,SDL_Visual);
+		int form = GetCyberIDAttr(CYBRIDATTR_PIXFMT,SDL_Visual);
 
 // In this case I use makebitmask in a way that I'm sure I'll get PIXFMT pixel mask
 
@@ -610,8 +583,8 @@ static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 	}
 
 	/* See if we have been passed a window to use */
-/*	SDL_windowid = getenv("SDL_WINDOWID"); */
-	SDL_windowid=NULL;
+	SDL_windowid = getenv("SDL_WINDOWID"); 
+//	SDL_windowid=NULL;
 
 	/* Create the blank cursor */
 	SDL_BlankCursor = AllocMem(16,MEMF_CHIP|MEMF_CLEAR);
@@ -708,186 +681,168 @@ static void CGX_SetSizeHints(_THIS, int w, int h, Uint32 flags)
 int CGX_CreateWindow(_THIS, SDL_Surface *screen,
 			    int w, int h, int bpp, Uint32 flags)
 {
-#if 0
-	int i, depth;
-	Uint32 vis;
+    Uint32 form, rb, gb, bb;
+
+    D(bug("CGX_CreateWindow\n"));
+
+    /* If a window is already present, destroy it and start fresh */
+    if ( SDL_Window )
+        CGX_DestroyWindow(this, screen);
+
+    /* See if we have been given a window id */
+    if ( SDL_windowid )
+        SDL_Window = (struct Window *)atol(SDL_windowid);
+    else
+        SDL_Window = 0;
+
+    /* Allocate the new pixel format for this video mode */
+
+    form = GetCyberIDAttr(CYBRIDATTR_PIXFMT,SDL_Visual);
+
+    if (flags&SDL_HWSURFACE && bpp!=this->hidden->depth) {
+        bpp=this->hidden->depth;
+        D(bug("Accel forces bpp to be equal (%ld)\n",bpp));
+    }
+
+#if 0 
+    D(bug("BEFORE screen allocation: bpp:%ld (real:%ld)\n",bpp,this->hidden->depth));
+
+    /*
+     * With this call if needed I'll revert the wanted bpp to a bpp best 
+     * suited for the display, actually occurs
+     * only with requested format 15/16bit and display format != 15/16bit
+     */
+    rb = MakeBitMask(this,0,form,&bpp);
+    gb = MakeBitMask(this,1,form,&bpp);
+    bb = MakeBitMask(this,2,form,&bpp);
+
+    if ( ! SDL_ReallocFormat(screen, bpp, rb, gb, bb, 0))
+        return -1;
 #endif
-	D(bug("CGX_CreateWindow\n"));
+    D(bug("AFTER screen allocation: bpp:%ld (real:%ld)\n",
+                bpp,
+                this->hidden->depth));
 
-	/* If a window is already present, destroy it and start fresh */
-	if ( SDL_Window ) {
-		CGX_DestroyWindow(this, screen);
-	}
+    /* Create the appropriate colormap */
+    if ( GetCyberMapAttr(SDL_Display->RastPort.BitMap, CYBRMATTR_PIXFMT)
+            ==PIXFMT_LUT8 || 
+            bpp==8 ) {
+        int ncolors,i;
+        D(bug("XPixels palette allocation...\n"));
 
-	/* See if we have been given a window id */
-	if ( SDL_windowid ) {
-		SDL_Window = (struct Window *)atol(SDL_windowid);
-	} else {
-		SDL_Window = 0;
-	}
+        /* Allocate the pixel flags */
 
-	/* Allocate the new pixel format for this video mode */
-	{
-		Uint32 form;
-		APTR handle;
-		struct DisplayInfo info;
+        if(bpp==8)
+            ncolors=256;
+        else
+            ncolors = 1 << screen->format->BitsPerPixel;
 
-		if(!(handle=FindDisplayInfo(SDL_Visual)))
-			return -1;
+        SDL_XPixels = (Sint32 *)malloc(ncolors * sizeof(Sint32));
 
-		if(!GetDisplayInfoData(handle,(char *)&info,sizeof(struct DisplayInfo),DTAG_DISP,NULL))
-			return -1;
-
-		form=GetCyberIDAttr(CYBRIDATTR_PIXFMT,SDL_Visual);
-
-		if(flags&SDL_HWSURFACE)
-		{
-			if(bpp!=this->hidden->depth)
-			{
-				bpp=this->hidden->depth;
-				D(bug("Accel forces bpp to be equal (%ld)\n",bpp));
-			}
-		}
-
-		D(bug("BEFORE screen allocation: bpp:%ld (real:%ld)\n",bpp,this->hidden->depth));
-
-/* With this call if needed I'll revert the wanted bpp to a bpp best suited for the display, actually occurs
-   only with requested format 15/16bit and display format != 15/16bit
- */
-
-		if ( ! SDL_ReallocFormat(screen, bpp,
-				MakeBitMask(this,0,form,&bpp), MakeBitMask(this,1,form,&bpp), MakeBitMask(this,2,form,&bpp), 0) )
-			return -1;
-
-		D(bug("AFTER screen allocation: bpp:%ld (real:%ld)\n",bpp,this->hidden->depth));
-
-	}
-
-	/* Create the appropriate colormap */
-/*
-	if ( SDL_XColorMap != SDL_DisplayColormap ) {
-		XFreeColormap(SDL_Display, SDL_XColorMap);
-	}
-*/
-	if ( GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_PIXFMT)==PIXFMT_LUT8 || bpp==8 ) {
-	    int ncolors,i;
-	    D(bug("XPixels palette allocation...\n"));
-
-	    /* Allocate the pixel flags */
-
-	    if(bpp==8)
-		ncolors=256;
-	    else
-		ncolors = 1 << screen->format->BitsPerPixel;
-
-	    SDL_XPixels = (Sint32 *)malloc(ncolors * sizeof(Sint32));
-
-	    if(SDL_XPixels == NULL) {
-		SDL_OutOfMemory();
-		return -1;
-	    }
+        if(SDL_XPixels == NULL) {
+            SDL_OutOfMemory();
+            return -1;
+        }
 
 
-	    for(i=0;i<ncolors;i++)
-		    SDL_XPixels[i]=-1;
+        for(i=0;i<ncolors;i++)
+            SDL_XPixels[i]=-1;
 
-	    /* always allocate a private colormap on non-default visuals */
-	    if(bpp==8)
-		flags |= SDL_HWPALETTE;
+        /* always allocate a private colormap on non-default visuals */
+        if(bpp==8)
+            flags |= SDL_HWPALETTE;
 
-	    if ( flags & SDL_HWPALETTE )
-			screen->flags |= SDL_HWPALETTE;
-	} 
+        if ( flags & SDL_HWPALETTE )
+            screen->flags |= SDL_HWPALETTE;
+    } 
 
-	/* resize the (possibly new) window manager window */
+    /* resize the (possibly new) window manager window */
 
-	/* Create (or use) the X11 display window */
+    /* Create (or use) the X11 display window */
 
-	if ( !SDL_windowid ) {
-			if( flags & SDL_FULLSCREEN )
-			{
-				SDL_Window = OpenWindowTags(NULL,WA_Width,w,WA_Height,h,
-											WA_Flags,WFLG_ACTIVATE|WFLG_RMBTRAP|WFLG_BORDERLESS|WFLG_BACKDROP|WFLG_REPORTMOUSE,
-											WA_IDCMP,IDCMP_RAWKEY|IDCMP_MOUSEBUTTONS|IDCMP_MOUSEMOVE,
-											WA_CustomScreen,(ULONG)SDL_Display,
-											TAG_DONE);
+    if ( !SDL_windowid ) {
+        if ( flags & SDL_FULLSCREEN ) {
+            SDL_Window = OpenWindowTags(NULL,WA_Width,w,WA_Height,h,
+                    WA_Flags,WFLG_ACTIVATE|WFLG_RMBTRAP|WFLG_BORDERLESS|WFLG_BACKDROP|WFLG_REPORTMOUSE,
+                    WA_IDCMP,IDCMP_RAWKEY|IDCMP_MOUSEBUTTONS|IDCMP_MOUSEMOVE,
+                    WA_CustomScreen,(ULONG)SDL_Display,
+                    TAG_DONE);
 
-				D(bug("Opening backdrop window %ldx%ld on display %lx!\n",w,h,SDL_Display));
-			}
-			else
-			{
-				/* Create GimmeZeroZero window when OpenGL is used */
-				unsigned long gzz = FALSE;
-				if( flags & SDL_OPENGL ) {
-					gzz = TRUE;
-				}
+            D(bug("Opening backdrop window %ldx%ld on display %lx!\n",w,h,SDL_Display));
+        }
+        else {
+            /* Create GimmeZeroZero window when OpenGL is used */
+            unsigned long gzz = FALSE;
+            if( flags & SDL_OPENGL )
+                gzz = TRUE;
 
-				SDL_Window = OpenWindowTags(NULL,WA_InnerWidth,w,WA_InnerHeight,h,
-											WA_Flags,WFLG_REPORTMOUSE|WFLG_ACTIVATE|WFLG_RMBTRAP | ((flags&SDL_NOFRAME) ? 0 : (WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_DRAGBAR | ((flags&SDL_RESIZABLE) ? WFLG_SIZEGADGET|WFLG_SIZEBBOTTOM : 0))),
-											WA_IDCMP,IDCMP_RAWKEY|IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_NEWSIZE|IDCMP_MOUSEMOVE,
-											WA_PubScreen,(ULONG)SDL_Display,
-											WA_GimmeZeroZero, gzz,
-														TAG_DONE);
-				D(bug("Opening WB window of size: %ldx%ld!\n",w,h));
-			}
+            SDL_Window = OpenWindowTags(NULL,WA_InnerWidth,w,WA_InnerHeight,h,
+                    WA_Flags,WFLG_REPORTMOUSE|WFLG_ACTIVATE|WFLG_RMBTRAP | ((flags&SDL_NOFRAME) ? 0 : (WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_DRAGBAR | ((flags&SDL_RESIZABLE) ? WFLG_SIZEGADGET|WFLG_SIZEBBOTTOM : 0))),
+                    WA_IDCMP,IDCMP_RAWKEY|IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_NEWSIZE|IDCMP_MOUSEMOVE,
+                    WA_PubScreen,(ULONG)SDL_Display,
+                    WA_GimmeZeroZero, gzz,
+                    TAG_DONE);
+            D(bug("Opening WB window of size: %ldx%ld!\n",w,h));
+        }
 
-		if(!SDL_Window)
-			return -1;
-	}
+        if(!SDL_Window)
+            return -1;
+    }
 
-	this->hidden->BytesPerPixel=GetCyberMapAttr(SDL_Window->RPort->BitMap,CYBRMATTR_BPPIX);
+    this->hidden->BytesPerPixel = 
+        GetCyberMapAttr(SDL_Window->RPort->BitMap,CYBRMATTR_BPPIX);
 
-	if(screen->flags & SDL_DOUBLEBUF)
-	{
-		if((SDL_RastPort=malloc(sizeof(struct RastPort))))
-		{
-			InitRastPort(SDL_RastPort);
-			SDL_RastPort->BitMap=this->hidden->SB[1]->sb_BitMap;
-		}
-		else
-			return -1;
-	}
-	else SDL_RastPort=SDL_Window->RPort;
+    if(screen->flags & SDL_DOUBLEBUF) {
+        if((SDL_RastPort=malloc(sizeof(struct RastPort)))) {
+            InitRastPort(SDL_RastPort);
+            SDL_RastPort->BitMap=this->hidden->SB[1]->sb_BitMap;
+        }
+        else
+            return -1;
+    }
+    else SDL_RastPort = SDL_Window->RPort;
 
-	if(flags&SDL_HWSURFACE)
-		screen->flags|=SDL_HWSURFACE;
+    if(flags&SDL_HWSURFACE)
+        screen->flags|=SDL_HWSURFACE;
 
-	if( !SDL_windowid ) {
-	    CGX_SetSizeHints(this, w, h, flags);
-		current_w = w;
-		current_h = h;
-	}
+    if( !SDL_windowid ) {
+        CGX_SetSizeHints(this, w, h, flags);
+        current_w = w;
+        current_h = h;
+    }
 
-	/* Map them both and go fullscreen, if requested */
-	if ( ! SDL_windowid ) {
-		if ( flags & SDL_FULLSCREEN ) {
-			screen->flags |= SDL_FULLSCREEN;
-			currently_fullscreen=1;
-//			CGX_EnterFullScreen(this); Ci siamo gia'!
-		} else {
-			screen->flags &= ~SDL_FULLSCREEN;
-		}
-	}
-	screen->w = w;
-	screen->h = h;
-	screen->pitch = SDL_CalculatePitch(screen);
-	CGX_ResizeImage(this, screen, flags);
+    /* Map them both and go fullscreen, if requested */
+    if ( ! SDL_windowid ) {
+        if ( flags & SDL_FULLSCREEN ) {
+            screen->flags |= SDL_FULLSCREEN;
+            currently_fullscreen=1;
+            //			CGX_EnterFullScreen(this); Ci siamo gia'!
+        } else {
+            screen->flags &= ~SDL_FULLSCREEN;
+        }
+    }
+    screen->w = w;
+    screen->h = h;
+    screen->pitch = SDL_CalculatePitch(screen);
+    CGX_ResizeImage(this, screen, flags);
 
-	/* Make OpenGL Context if needed*/
-	if(flags & SDL_OPENGL) {
-		if(this->gl_data->gl_active == 0) {
-			if(CGX_GL_Init(this) < 0)
-				return -1;
-			else
-				screen->flags |= SDL_OPENGL;
-		}
-		else {
-			if(CGX_GL_Update(this) < 0)
-				return -1;
-			else
-				screen->flags |= SDL_OPENGL;
-		}
-	}
+    /* Make OpenGL Context if needed*/
+    if(flags & SDL_OPENGL) {
+        if(this->gl_data->gl_active == 0) {
+            if(CGX_GL_Init(this) < 0)
+                return -1;
+            else
+                screen->flags |= SDL_OPENGL;
+        }
+        else {
+            if(CGX_GL_Update(this) < 0)
+                return -1;
+            else
+                screen->flags |= SDL_OPENGL;
+        }
+    }
+
+    return 0;
 }
 
 int CGX_ResizeWindow(_THIS,
@@ -901,7 +856,8 @@ int CGX_ResizeWindow(_THIS,
 		current_w = w;
 		current_h = h;
 
-		ChangeWindowBox(SDL_Window,SDL_Window->LeftEdge,SDL_Window->TopEdge, w+SDL_Window->BorderLeft+SDL_Window->BorderRight,
+		ChangeWindowBox(SDL_Window,SDL_Window->LeftEdge,SDL_Window->TopEdge, 
+                    w+SDL_Window->BorderLeft+SDL_Window->BorderRight,
 					h+SDL_Window->BorderTop+SDL_Window->BorderBottom);
 
 		screen->w = w;
@@ -909,7 +865,8 @@ int CGX_ResizeWindow(_THIS,
 		screen->pitch = SDL_CalculatePitch(screen);
 		CGX_ResizeImage(this, screen, flags);
 	}
-	return(0);
+    
+	return 0;
 }
 
 static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current,
@@ -962,9 +919,9 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current,
 		if ( SDL_windowid ) {
 			flags &= ~SDL_FULLSCREEN;
 		}
-		else if(current && current->flags&SDL_FULLSCREEN ) {
-			if(current->w!=width ||
-				current->h!=height ||
+		else if (current && current->flags&SDL_FULLSCREEN ) {
+			if (current->w != width ||
+				current->h != height ||
 				(this->hidden && this->hidden->depth!=bpp))
 			{
 				D(bug("Deleting previous window...\n"));
@@ -974,9 +931,9 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current,
 				goto buildnewscreen;
 			}
 		}
-		else
+		else 
 buildnewscreen:
-		{
+        {
             Uint32 okid=BestCModeIDTags(CYBRBIDTG_NominalWidth,width,
 				CYBRBIDTG_NominalHeight,height,
 				CYBRBIDTG_Depth,bpp,
@@ -995,8 +952,8 @@ buildnewscreen:
 								SA_DisplayID,okid,
 								TAG_DONE);
 
-			if(!GFX_Display) {
-				GFX_Display=SDL_Display;
+			if (!GFX_Display) {
+				GFX_Display = SDL_Display;
 				flags &= ~SDL_FULLSCREEN;
 				flags &= ~SDL_DOUBLEBUF;
 			}
@@ -1045,7 +1002,9 @@ buildnewscreen:
 								ok=1;
 								D(bug("Dbuffering enabled!\n"));
 								this->hidden->dbuffer=1;
-								current->flags|=SDL_DOUBLEBUF;
+
+                                if (current)
+    								current->flags|=SDL_DOUBLEBUF;
 							}
 						}
 						else {
@@ -1054,16 +1013,20 @@ buildnewscreen:
 						}
 					}
 
-					if(!ok)
-						flags&=~SDL_DOUBLEBUF;
+					if (!ok)
+						flags &= ~SDL_DOUBLEBUF;
 				}
 			}
 
-			if(GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH)==bpp)
-				this->hidden->same_format=1;
+			if (GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH)==bpp) {
+				this->hidden->same_format = 1; // XXX check also pixfmt?
+                D(bug("SAME FORMAT bitmap -> Using RAW blits!\n"));
+            }
 		}
 
-		bpp=this->hidden->depth=GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH);
+		bpp=this->hidden->depth = 
+            GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH);
+        
 		D(bug("Setting screen depth to: %ld\n",this->hidden->depth));
 
 		for ( i = 0; i < this->hidden->nvisuals; i++ )
@@ -1093,17 +1056,6 @@ buildnewscreen:
 			goto done;
 		}
 	}
-
-#if 0
-	/* Set up the new mode framebuffer */
-	if ( ((current->w != width) || (current->h != height)) ||
-             ((saved_flags&SDL_OPENGL) != (flags&SDL_OPENGL)) ) {
-		current->w = width;
-		current->h = height;
-		current->pitch = SDL_CalculatePitch(current);
-		CGX_ResizeImage(this, current, flags);
-	}
-#endif
 
 	current->flags |= (flags&SDL_RESIZABLE); // Resizable only if the user asked it
 
@@ -1150,74 +1102,6 @@ static int CGX_ToggleFullScreen(_THIS, int on)
 	return(1);
 }
 
-static void SetSingleColor(Uint32 fmt, unsigned char r, unsigned char g, unsigned char b, unsigned char *c)
-{
-	switch(fmt)
-	{
-		case PIXFMT_BGR15:
-		case PIXFMT_RGB15PC:
-			{
-				Uint16 *t=(Uint16 *)c;
-				*t=(r>>3) | ((g>>3)<<5) | ((b>>3)<<10) ;
-			}
-			break;
-		case PIXFMT_RGB15:
-		case PIXFMT_BGR15PC:
-			{
-				Uint16 *t=(Uint16 *)c;
-				*t=(b>>3) | ((g>>3)<<5) | ((r>>3)<<10) ;
-			}
-			break;
-		case PIXFMT_BGR16PC:
-		case PIXFMT_RGB16:
-			{
-				Uint16 *t=(Uint16 *)c;
-				*t=(b>>3) | ((g>>2)<<5) | ((r>>3)<<11) ;
-			}
-			break;
-		case PIXFMT_BGR16:
-		case PIXFMT_RGB16PC:
-			{
-				Uint16 *t=(Uint16 *)c;
-				*t=(r>>3) | ((g>>2)<<5) | ((b>>3)<<11) ;
-			}
-			break;
-		case PIXFMT_RGB24:
-			c[0]=r;
-			c[1]=g;
-			c[2]=b;
-			c[3]=0;
-			break;
-		case PIXFMT_BGR24:
-			c[0]=b;
-			c[1]=g;
-			c[2]=r;
-			c[3]=0;
-			break;
-		case PIXFMT_ARGB32:
-			c[0]=0;
-			c[1]=r;
-			c[2]=g;
-			c[3]=b;
-			break;
-		case PIXFMT_BGRA32:
-			c[0]=b;
-			c[1]=g;
-			c[2]=r;
-			c[3]=0;
-			break;
-		case PIXFMT_RGBA32:
-			c[0]=r;
-			c[1]=g;
-			c[2]=b;
-			c[3]=0;
-			break;
-
-		default:
-			D(bug("Error, SetSingleColor with PIXFMT %ld!\n",fmt));
-	}
-}
-
 /* Update the current mouse state and position */
 static void CGX_UpdateMouse(_THIS)
 {
@@ -1231,8 +1115,10 @@ static void CGX_UpdateMouse(_THIS)
 	}
 	else
 	{
-		if(	SDL_Display->MouseX>=(SDL_Window->LeftEdge+SDL_Window->BorderLeft) && SDL_Display->MouseX<(SDL_Window->LeftEdge+SDL_Window->Width-SDL_Window->BorderRight) &&
-			SDL_Display->MouseY>=(SDL_Window->TopEdge+SDL_Window->BorderLeft) && SDL_Display->MouseY<(SDL_Window->TopEdge+SDL_Window->Height-SDL_Window->BorderBottom)
+		if(	SDL_Display->MouseX>=(SDL_Window->LeftEdge+SDL_Window->BorderLeft) && 
+            SDL_Display->MouseX<(SDL_Window->LeftEdge+SDL_Window->Width-SDL_Window->BorderRight) &&
+			SDL_Display->MouseY>=(SDL_Window->TopEdge+SDL_Window->BorderLeft) && 
+            SDL_Display->MouseY<(SDL_Window->TopEdge+SDL_Window->Height-SDL_Window->BorderBottom)
 			)
 		{
 			SDL_PrivateAppActive(1, SDL_APPMOUSEFOCUS);
@@ -1297,20 +1183,9 @@ static int CGX_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 		}
 		else
 		{
-#ifndef USE_CGX_WRITELUTPIXEL
-			Uint32 fmt;
-//			D(bug("Preparing a conversion pixel table...\n"));
-
-			fmt=GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_PIXFMT);
-
-			for(i=0;i<ncolors;i++) {
-				SetSingleColor(fmt,colors[i].r,colors[i].g,colors[i].b,(unsigned char *)&SDL_XPixels[firstcolor+i]);
-			}
-#else
 //			D(bug("Executing XPixel(%lx) remapping: (from %ld, %ld colors) first: r%ld g%ld b%ld\n",SDL_XPixels,firstcolor,ncolors,colors[firstcolor].r,colors[firstcolor].g,colors[firstcolor].b));
 			for(i=0;i<ncolors;i++)
 				SDL_XPixels[i+firstcolor]=(colors[i].r<<16)+(colors[i].g<<8)+colors[i].b;
-#endif
 		}
 	}
 

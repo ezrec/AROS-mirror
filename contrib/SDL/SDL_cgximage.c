@@ -705,10 +705,10 @@ static void CGX_NormalUpdate(_THIS, int numrects, SDL_Rect *rects)
 	else
 	{
 		for ( i=0; i<numrects; ++i ) {
-			if ( ! rects[i].w ) { /* Clipped? */
+			if ( ! rects[i].w ) /* Clipped? */
 				continue;
-			}
-			USE_WPA(this->screen->pixels,rects[i].x, rects[i].y,this->screen->pitch,
+			
+            USE_WPA(this->screen->pixels,rects[i].x, rects[i].y,this->screen->pitch,
 					SDL_RastPort,SDL_Window->BorderLeft+rects[i].x,SDL_Window->BorderTop+rects[i].y,
 					rects[i].w,rects[i].h,format);
 		}
