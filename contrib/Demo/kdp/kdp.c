@@ -53,6 +53,7 @@ BOOL wbscreen;
 void  KDPwaitVr()
 {
   //sync stuff goes here...
+   WaitTOF();
 }
 
 
