@@ -7,7 +7,11 @@
 #include <libraries/gadtools.h>
 #include <gtlayout.h>
 #include <utility/hooks.h>
-#ifndef __AROS__
+#ifdef __AROS__
+#include <aros/system.h>
+#include "../aros/arosspecific.h"
+#include "../aros/gtlayout_defines_aros.h"
+#else
 #include <gtlayout_protos.h>
 #endif
 #include <proto/exec.h>
