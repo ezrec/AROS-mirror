@@ -114,15 +114,18 @@ void main(int argc,char **argv)
 
   /****** INTERPRET ARGUMENTS ******/
 
-  if(strcmp(argv[1],"?")==0)
+  if(argc == 2)
   {
-    Write(Output(),"Hénon v1.00 by ! WIZARD WORKS !\nUsage : ",40);
-    Write(Output(),argv[0],strlen(argv[0]));
-    Write(Output()," <a> <xymin> <xymax> <xystep> <itera>\n",38);
-    cleanexit();
-    return;
+    if(strcmp(argv[1],"?")==0)
+    {
+      Write(Output(),"Hénon v1.00 by ! WIZARD WORKS !\nUsage : ",40);
+      Write(Output(),argv[0],strlen(argv[0]));
+      Write(Output()," <a> <xymin> <xymax> <xystep> <itera>\n",38);
+      cleanexit();
+      return;
+    }
   }
-
+  
   if(argc!=6)
   {
     puts("Bad args.");
