@@ -21,7 +21,7 @@ REXXFILES := \
 TARGETS = $(foreach f,$(REXXFILES),$(TARGETDIR)/$(f))
 
 #MM
-contrib-regina : contrib-regina-quick
+contrib-regina : $(TARGETS)
 #MM
 contrib-regina-quick : $(TARGETS)
 
