@@ -19,13 +19,13 @@
 
 static __inline struct Library *ELL_Open(struct Library * libPtr, ULONG version)
 {
-  register struct Library *_res __asm("edx");
-  register struct Library *eax __asm("eax") = libPtr;
-  register ULONG edx __asm("edx") = version;
-  __asm __volatile ("jsr eax@(-0x6)"
+  register struct Library *_res __asm("d0");
+  register struct Library *a6 __asm("a6") = libPtr;
+  register ULONG d0 __asm("d0") = version;
+  __asm __volatile ("jsr a6@(-0x6)"
 		    : "=r" (_res)
-		    : "r" (a6), "r" (edx)
-		    : "edx", "memory");
+		    : "r" (a6), "r" (d0)
+		    : "d0", "memory");
   return _res;
 }
 

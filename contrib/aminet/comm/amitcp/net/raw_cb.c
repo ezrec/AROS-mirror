@@ -9,6 +9,9 @@
  *
  * HISTORY
  * $Log$
+ * Revision 1.2  2001/12/26 21:22:25  henrik
+ * *** empty log message ***
+ *
  * Revision 1.1  2001/12/25 22:28:13  henrik
  * amitcp
  *
@@ -125,8 +128,8 @@
 #include <net/raw_cb.h>
 #include <netinet/in.h>
 
-#include <protos/kern/uipc_socket_protos.h>
-#include <protos/kern/uipc_socket2_protos.h>
+#include <kern/uipc_socket_protos.h>
+#include <kern/uipc_socket2_protos.h>
 
 /* --- start moved from raw_cb.h --- */
 struct rawcb rawcb = {0};	/* head of list */
