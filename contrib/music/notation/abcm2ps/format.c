@@ -39,10 +39,13 @@ static struct format {
 	{"exprabove", FORMAT_B, 0, &cfmt.exprabove},
 	{"exprbelow", FORMAT_B, 0, &cfmt.exprbelow},
 	{"footer", FORMAT_S, 0, &cfmt.footer},
+	{"footerfont", FORMAT_F, 0, &cfmt.footerfont},
 	{"freegchord", FORMAT_B, 0, &cfmt.freegchord},
 	{"flatbeams", FORMAT_B, 0, &cfmt.flatbeams},
 	{"gchordfont", FORMAT_F, 0, &cfmt.gchordfont},
 	{"graceslurs", FORMAT_B, 0, &cfmt.graceslurs},
+	{"header", FORMAT_S, 0, &cfmt.header},
+	{"headerfont", FORMAT_F, 0, &cfmt.headerfont},
 	{"indent", FORMAT_U, 0, &cfmt.indent},
 	{"infofont", FORMAT_F, 0, &cfmt.infofont},
 	{"infoline", FORMAT_B, 0, &cfmt.infoline},
@@ -60,11 +63,12 @@ static struct format {
 	{"pageheight", FORMAT_U, 0, &cfmt.pageheight},
 	{"pagewidth", FORMAT_U, 0, &cfmt.pagewidth},
 	{"parskipfac", FORMAT_R, 0, &cfmt.parskipfac},
+	{"partsbox", FORMAT_B, 0, &cfmt.partsbox},
 	{"partsfont", FORMAT_F, 1, &cfmt.partsfont},
 	{"partsspace", FORMAT_U, 0, &cfmt.partsspace},
 	{"printtempo", FORMAT_B, 0, &cfmt.printtempo},
 	{"rightmargin", FORMAT_U, 0, &cfmt.rightmargin},
-	{"scale", FORMAT_R, 1, &cfmt.scale},
+	{"scale", FORMAT_R, 0, &cfmt.scale},
 	{"slurheight", FORMAT_R, 0, &cfmt.slurheight},
 	{"squarebreve", FORMAT_B, 0, &cfmt.squarebreve},
 	{"staffsep", FORMAT_U, 0, &cfmt.staffsep},
@@ -137,13 +141,13 @@ static void fontspec(struct FONTSPEC *f,
 }
 
 /* -- output the font definitions -- */
-void define_fonts(FILE *fp)
+void define_fonts(void)
 {
 	int i;
 
 	for (i = 0; i < nfontnames; i++) {
 		if (used_font[i])
-			define_font(fp, fontnames[i], i, cfmt.encoding);
+			define_font(fontnames[i], i, cfmt.encoding);
 	}
 }
 
@@ -163,6 +167,8 @@ void make_font_list(void)
 	used_font[f->wordsfont.fnum] = 1;
 	used_font[f->gchordfont.fnum] = 1;
 	used_font[f->infofont.fnum] = 1;
+	used_font[f->footerfont.fnum] = 1;
+	used_font[f->headerfont.fnum] = 1;
 }
 
 /* -- set the default standard format -- */
@@ -208,7 +214,9 @@ void set_standard_format(void)
 	fontspec(&f->textfont,	"Times-Roman", 16.0);
 	fontspec(&f->wordsfont,	"Times-Roman", 16.0);
 	fontspec(&f->gchordfont, "Helvetica", 12.0);
-	fontspec(&f->infofont, "Times-Italic", 14.0); /* same as composer by default */
+	fontspec(&f->infofont,	"Times-Italic", 14.0); /* same as composer by default */
+	fontspec(&f->footerfont, "Times-Roman", 12.0);	/* not scaled */
+	fontspec(&f->headerfont, "Times-Roman", 12.0);	/* not scaled */
 }
 
 /* -- set_pretty_format -- */
@@ -413,18 +421,9 @@ int interpret_format_line(char *p)
 				break;
 			}
 			break;
-		case FORMAT_R: {
-			float old_scale;
-
-			old_scale = cfmt.scale;
+		case FORMAT_R:
 			*((float *) fd->v) = g_fltv(p);
-
-			/* if in page and scale change, adjust */
-			if (fd->subtype == 1
-			    && in_page)
-				PUT1("%.2f dup scale\n", cfmt.scale / old_scale);
 			break;
-		    }
 		case FORMAT_F:
 			g_fspc(p, (struct FONTSPEC *) fd->v);
 			if (fd->subtype == 1)

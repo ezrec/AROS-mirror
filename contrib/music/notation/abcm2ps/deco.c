@@ -68,14 +68,14 @@ static struct deco_def_s {
 	{"dot", 0, 0, 4},		/* 1 */
 	{"roll", 3, 10, 10},		/* 2 */
 	{"fermata", 3, 6, 12},		/* 3 */
-	{"emphasis", 3, 21, 6},		/* 4 */
+	{"emphasis", 3, 21, 8},		/* 4 */
 	{"lowermordent", 3, 5, 10},	/* 5 */
 	{"coda", 3, 16, 22},		/* 6 */
 	{"uppermordent", 3, 4, 10},	/* 7 */
 	{"segno", 3, 17, 20},		/* 8 */
 	{"trill", 3, 7, 11},		/* 9 */
 	{"upbow", 3, 8, 10},		/* 10 */
-	{"downbow", 3, 9, 10},		/* 11 */
+	{"downbow", 3, 9, 9},		/* 11 */
 	{"gmark", 3, 3, 6},		/* 12 */
 	{"slide", 1, 2, 3, 7},		/* 13 */
 	{"tenuto", 0, 1, 4},		/* 14 */
@@ -352,13 +352,20 @@ static void d_cresc(struct deco_elt *de)
 	}
 	de->staff = staff = s2->staff;
 
+#if 1
+/*fixme: test*/
+	if (s->multi != 0)
+		up = s->multi > 0 ? 1 : 0;
+	else
+#endif
 	if (cfmt.exprabove
 	    || (!cfmt.exprbelow
 		&& staff_tb[staff].nvocal != 0))
 		up = 1;
 	else	up = 0;
 
-	if (s2 == s) {			/* if no decoration end */
+	if (s2 == s
+	    && dd->ps_func < 0) {	/* if no decoration end */
 		dx = realwidth - x - 6.;
 		if (dx < 20.) {		/* deco ends at start of line */
 			x = realwidth - 20. - 6.;
@@ -430,6 +437,12 @@ static void d_pf(struct deco_elt *de)
 
 	s = de->s;
 	dd = &deco_def_tb[de->t];
+#if 1
+/*fixme: test*/
+	if (s->multi != 0)
+		up = s->multi > 0 ? 1 : 0;
+	else
+#endif
 	if (cfmt.exprabove
 	    || (!cfmt.exprbelow
 		&& staff_tb[s->staff].nvocal != 0))
@@ -1293,13 +1306,16 @@ static void draw_gchord(struct SYMBOL *s,
 		s->dc_top = gchy + yspc;
 		break;
 	case 1:			/* below */
-		gchy = -20;
-		if (s->dc_bot > gchy + yspc * n)
-			s->dc_bot = gchy + yspc * n;
+		gchy = s->dc_bot - yspc;
+		if (s->dc_bot > gchy - yspc * n)
+			s->dc_bot = gchy - yspc * n;
 		break;
 	case 2:			/* left */
 	case 3:			/* right */
 		gchy = s->y - yspc * 0.25 + yspc * 0.5 * (n - 1);
+		break;
+	default:		/* absolute */
+		gchy += s->y;
 		break;
 	}
 
@@ -1403,10 +1419,11 @@ float draw_partempo(float top,
 			/* draw the tempo indication, if specified */
 			if (s->as.u.tempo.value == 0)
 				continue;
-			identify_note(s, &head, &dots, &flags);
+			identify_note(s, s->as.u.tempo.length,
+				      &head, &dots, &flags);
 
 			/* draw the note */
-			sc = 0.8 * cfmt.tempofont.size / 15.0;	/*fixme: 15.0 = original tempofont*/
+			sc = 0.7 * cfmt.tempofont.size / 15.0;	/*fixme: 15.0 = original tempofont*/
 			PUT1("gsave %.2f dup scale 15 3 rmoveto currentpoint\n",
 			     sc);
 			switch (head) {
@@ -1444,12 +1461,14 @@ float draw_partempo(float top,
 				}
 			}
 			/* (16 is the stem height) */
-			if (s->as.u.tempo.length < SEMIBREVE)
-				PUT0(" 16 su");
-			if (flags > 0) {
-				PUT1(" 16 f%du", flags);
-				if (dx < 6.0)
-					dx = 6.0;
+			if (s->as.u.tempo.length < SEMIBREVE) {
+				if (flags == 0)
+					PUT1(" %d su", STEM);
+				else {
+					PUT2(" %d %d sfu", flags, STEM);
+					if (dx < 6.0)
+						dx = 6.0;
+				}
 			}
 			PUT2(" grestore %.2f 0 rmoveto ( = %d) show\n",
 			     (dx + 18) * sc, s->as.u.tempo.value);

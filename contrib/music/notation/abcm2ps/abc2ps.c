@@ -55,7 +55,7 @@ struct SYMBOL *sym;		/* (points to the symbols of the current voice) */
 char page_init[201];		/* initialization string after page break */
 int tunenum;			/* number of current tune */
 int nsym;			/* number of symbols in line */
-int pagenum;			/* current page in output file */
+int pagenum = 1;		/* current page in output file */
 
 int in_page;
 

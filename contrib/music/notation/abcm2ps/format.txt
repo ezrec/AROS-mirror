@@ -7,7 +7,7 @@ The general layout of the printed scores may be changed in four ways:
 	3- at startup time in the command line,
 	4- by pseudo-comments inside the tunes.
 
-For 1), see layout.txt, and for 3), see options.txt.
+For more about 3), have a look at options.txt.
 
 A format file contains lines giving the parameters values, format:
 
@@ -19,9 +19,13 @@ The pseudo-comments used for formatting have the format:
 
 	%%parameter [parameter list]
 
+Some pseudo-comments are treated while being parsed and cannot appear
+in a format file. These ones are listed at the end of this file and
+fully described in the file features.txt.
 
-List of the parameters
-----------------------
+
+List of the format parameters
+-----------------------------
 
   barsperstaff <int>
 	Default: 0 / 0 / 0
@@ -136,6 +140,14 @@ List of the parameters
 	Description:
 		Set the text printed at the bottom of each page.
 
+  footerfont <font> <size>
+	Default: Times-Roman 12 / Times-Roman 12 / Times-Roman 12
+	Compilation: none
+	Command line: none
+	Description:
+		Set the footer font to <font> with a size <size>.
+		Note that the footer is not scaled.
+
   freegchord <bool>
 	Default: 0 / 0 / 0
 	Compilation: none
@@ -159,6 +171,23 @@ List of the parameters
 	Command line: -G
 	Description:
 		Draw slurs on grace notes.
+
+  header <text>
+	Default: (none) / (none) / (none)
+	Compilation: none
+	Command line: none
+	Description:
+		Set the text printed at the top of each page.
+		(does not work yet - the header is just the page
+		number)
+
+  headerfont <font> <size>
+	Default: Times-Roman 12 / Times-Roman 12 / Times-Roman 12
+	Compilation: none
+	Command line: none
+	Description:
+		Set the header font to <font> with a size <size>.
+		Note that the header is not scaled.
 
   indent <unit>
 	Default: 0 / 0 / 0
@@ -218,22 +247,24 @@ List of the parameters
 		are chosen automatically.
 		<float> must be between 0 and 1.
 
-  measurebox <bool>
-	Default: 0 / 0 / 0
-	Compilation: none
-	Command line: trailing 'b' at end of -j or -k - see measurenb.
-	Description:
-		Set a box around the measures numbers.
-
   measurefirst <int>
 	Default: 1 / 1 / 1
 	Compilation: none
 	Command line: -b<int>
 	Description:
-		Start numbering the measures from <int>.
+		Start measure numbering of the tune at <int>.
+		If the measure number needs to be changed inside a tune,
+		use '%%setbarnb' (see features.txt).
+
+  measurebox <bool>
+	Default: 0 / 0 / 0
+	Compilation: none
+	Command line: trailing 'b' at end of -j or -k - see measurenb.
+	Description:
+		Draw a box around the measure numbers.
 
   measurenb <int>
-	Default: 0 / 0 / 0
+	Default: -1 / -1 / -1
 	Compilation: none
 	Command line: -j<int>[b] or -k<int>[b]
 	Description:
@@ -285,12 +316,20 @@ List of the parameters
 	Description:
 		Set the factor for spacing between parts to <float>.
 
-  partsfont <font> <size>
+  partsbox <bool>
+	Default: 0 / 0 / 0
+	Compilation: none
+	Command line: none
+	Description:
+		Draw a box around the part names.
+
+  partsfont <font> <size> [box]
 	Default: Times-Roman 15 / Times-Roman 15 / Times-Roman 17
 	Compilation: none
 	Command line: none
 	Description:
 		Set the part font to <font> with a size <size>.
+		If 'box' is present, draw a box around the part names.
 
   partsspace <unit>
 	Default: 0.3cm / 0.3cm / 0.2cm
@@ -308,6 +347,9 @@ List of the parameters
 		header of the output file.
 		This format may be used to override any postscript function
 		or to define new functions for use in the 'deco' format.
+		Such commands should be parsed before any output occurs,
+		that is in a format file or at the beginning of the first
+		ABC file.
 
   printtempo <bool>
 	Default: 1 / 1 / 1
@@ -328,7 +370,8 @@ List of the parameters
 	Compilation: none
 	Command line: -s<float>
 	Description:
-		Set the music scale factor to <float>.
+		Set the page scale factor to <float>.
+		Note that the header and footer are not scaled.
 
   slurheight <float>
 	Default: 1.0 / 1.0 / 1.0
@@ -373,7 +416,7 @@ List of the parameters
 		Stretch the last staff of the tune when underfull.
 
   stretchstaff <bool>
-	Default: 0 / 0 / 0
+	Default: 1 / 1 / 1
 	Compilation: none
 	Command line: none
 	Description:
@@ -513,8 +556,69 @@ List of the parameters
 	Compilation: none
 	Command line: -n
 	Description:
-		Output notes, history, ...
+		Output notes, history...
 
   Note:
 	There are 3 default values: one for each pretty option: 'standard',
 	'pretty' and 'pretty2'. See the command line options '-p' and 'P'.
+
+
+
+List of the pseudo-comments treated while parsed
+------------------------------------------------
+
+  begintext [<parameter>]
+	Start printing a free text. The text appears on the next lines
+	(starting with '%%' or not). The text ends on a line containing
+		%%endtext
+	'parameter' may be:
+	    obeylines:		keep lines as they are (default)
+	    align or justify:	justify the lines
+	    ragged or fill:	fill the lines
+	    skip:		don't print the lines (same as comments)
+
+  center <line of text>
+	Print one line of centered text.
+
+  endtext
+	See 'begintext'.
+
+  multicol <command>
+	Define multicolomn printing.
+	'command' may be:
+	    start:	save the current vertical position and the left
+			and right margins. Then, these margins may
+			be changed to print music or text.
+	    new:	reset the vertical offset at the place of the
+			previous '%%multicol start', and restore the left
+			and right margins.
+	    end:	restore the left and right margins, and skip down
+			to a safe place.
+	(see 'sample3.abc' for example).
+
+  newpage [<int>]
+	Continue printing on a new page and eventually restart page
+	numbering from 'int'.
+
+  sep [<h1> <h2> <len>]
+	Print a separator of length 'len' with space 'h1' above and
+	space 'h2' below (defaults: h1 = h2 = 0.5cm, len = 3.0cm).
+
+  setbarnb <int>
+	Set the measure number to <int>.
+
+  staffbreak <unit>
+	Have a break in the current staff. <unit> gives the width of the
+	break (in points, inches or cm). As a side effect, when the width
+	is bigger than 0.5 cm, the left side of the staff system is redrawn.
+	When used in a multi-voice tune, a staff break must be inserted
+	in each voice.
+
+  staves <definition>
+	See 'features.txt' for description.
+
+  text <line of text>
+	Print one line of text.
+
+  vskip <h>
+	Skip vertical space of height 'h'.

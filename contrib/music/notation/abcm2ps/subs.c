@@ -1,4 +1,4 @@
-/*  
+/*
  * This file is part of abcm2ps.
  * Copyright (C) 1998-2002 Jean-François Moine
  * (adapted from abc2ps, Copyright (C) 1996,1997 Michael Methfessel)
@@ -13,8 +13,6 @@
 
 #include "abcparse.h"
 #include "abc2ps.h" 
-
-static char outfnam[STRL1];	/* internal file name for open/close */
 
 static float twidth;		/* text width for %%begintext..%%endtext */
 
@@ -396,64 +394,6 @@ static void set_font_str(char *str,
 	sprintf(str, "%.1f F%d ", font->size, font->fnum);
 }
 
-/* -- epsf_title -- */
-void epsf_title(char *p,
-		char *q)
-{
-	char c;
-
-	while ((c = *p++) != '\0') {
-		if (c == ' ')
-			c = '_';
-		else if (c == DIRSEP)
-			c = '.';
-		*q++ = c;
-	}
-	*q = '\0';
-}
-
-/* -- close_output_file -- */
-void close_output_file()
-{
-	long m;
-
-	if (fout == 0)
-		return;
-
-	close_page(fout);
-	close_ps();
-	m = ftell(fout);
-	fclose(fout);
-	if (tunenum == 0)
-		ERROR(("Warning: no tunes written to output file"));
-	printf("Output written on %s (%d page%s, %d title%s, %ld byte%s)\n",
-		outfnam,
-		pagenum, pagenum == 1 ? "" : "s",
-		tunenum, tunenum == 1 ? "" : "s",
-		m, m == 1 ? "" : "s");
-	fout = 0;
-	file_initialized = 0;
-}
-
-/* -- open_output_file -- */
-void open_output_file(char *fnam)
-{
-	if (strcmp(fnam, outfnam) == 0)
-		return;
-
-	if (fout != 0)
-		close_output_file();
-
-	strcpy(outfnam, fnam);
-	if ((fout = fopen(outfnam, "w")) == 0) {
-		printf("Cannot open output file %s\n", outf);
-		exit(2);
-	}
-	pagenum = 0;
-	tunenum = 0;
-	file_initialized = 0;
-}
-
 /* -- add_to_text_block -- */
 void add_to_text_block(char *s,
 		       int job)
@@ -539,7 +479,7 @@ void write_text_block(int  job,
 
 	/* next line to allow pagebreak after each paragraph */
 	if (!epsf && abc_state != ABC_S_TUNE)
-		write_buffer(fout);
+		write_buffer();
 	page_init[0] = '\0';
 
 	twidth = 0;
@@ -698,7 +638,12 @@ void put_words(void)
 				if (--n == 0) {
 					if (t != 0)
 						n++;
-					else	middle *= 0.7;
+					else if (u->next != 0) {
+
+						/* center the last words */
+/*fixme: should compute the width average.. */
+						middle *= 0.6;
+					}
 				}
 			}
 			u = u->next;
@@ -904,14 +849,14 @@ void write_heading(void)
 }
 
 /* -- output the user defined postscript sequences -- */
-void write_user_ps(FILE *fp)
+void write_user_ps(void)
 {
 	struct text *t;
 
 	if ((t = text_tb[TEXT_PS]) == 0)
 		return;
 	while (t != 0) {
-		fprintf(fp, "%s\n", t->text);
+		fprintf(fout, "%s\n", t->text);
 		t = t->next;
 	}
 }

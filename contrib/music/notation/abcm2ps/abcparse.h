@@ -47,10 +47,13 @@ struct note {		/* note or rest */
 	char sl2[MAXHD];	/* which slur ends on this head */
 	char ti1[MAXHD];	/* flag to start tie here */
 	char ti2[MAXHD];	/* flag to end tie here */
+	short len;		/* note length (shortest in chords) */
 	unsigned invis:1;	/* invisible rest */
 	unsigned word_end:1;	/* 1 if word ends here */
 	unsigned stemless:1;	/* note with no stem */
 	unsigned lyric_start:1;	/* may start a lyric here */
+	unsigned grace:1;	/* grace note */
+	unsigned sappo:1;	/* short appoggiatura */
 	char nhd;		/* number of notes in chord - 1 */
 	char p_plet, q_plet, r_plet; /* data for n-plets */
 	char slur_st; 		/* how many slurs start here */
@@ -76,9 +79,7 @@ struct abcsym {
 #define ABC_T_INFO2 8		/* (info without header - H:) */
 #define ABC_T_MREST 9		/* multi-measure rest */
 #define ABC_T_MREP 10		/* measure repeat */
-#define ABC_T_GRACE_START 11	/* start of grace note sequence */
-#define ABC_T_GRACE_END 12	/* end of grace note sequence */
-#define ABC_T_V_OVER 13		/* voice overlay */
+#define ABC_T_V_OVER 11		/* voice overlay */
 	char state;		/* symbol state in file/tune */
 #define ABC_S_GLOBAL 0			/* global definition */
 #define ABC_S_HEAD 1			/* header definition (after X:) */
@@ -131,6 +132,7 @@ struct abcsym {
 #define TREBLE 0
 #define ALTO 1
 #define BASS 2
+#define PERC 3
 			char line;
 			signed char octave;
 			signed char transpose;
@@ -152,9 +154,6 @@ struct abcsym {
 #define STOP_BAR 0x40
 			char *name;
 		} staves[MAXVOICE];
-		struct {		/* start of grace note sequence */
-			char sappo;		/* short appoggiatura */
-		} grace_start;
 		struct {		/* voice overlay */
 			char type;
 #define V_OVER_S 0				/* single & */

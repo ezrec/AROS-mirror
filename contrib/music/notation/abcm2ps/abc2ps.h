@@ -164,7 +164,6 @@ struct SYMBOL { 		/* struct for a drawable symbol */
 #define S_2S_BEAM	0x0010	/* beam on 2 staves */
 #define S_NPLET_ST	0x0020	/* start or in a n-plet sequence */
 #define S_NPLET_END	0x0040	/* end or in a n-plet sequence */
-#define SG_SLUR		0x0080	/* some slur in grace note sequence */
 	unsigned char nhd;	/* number of notes in chord - 1 */
 	signed char stem;	/* 1 / -1 for stem up / down */
 	char	nflags;		/* number of note flags */
@@ -179,10 +178,12 @@ struct SYMBOL { 		/* struct for a drawable symbol */
 				 *	- small clef when CLE
 				 *	- old key signature when KEYSIG
 				 *	- reset bar number when BAR
-				 *	- subtype when FMTCHG (format change) */
+				 *	- subtype when FMTCHG (format change)
+				 *	  with value in xmx */
 #define LMARG 0				/* left margin */
 #define RMARG 1				/* right margin */
 #define STBRK 2				/* staff break */
+#define SCALE 3				/* new scale */
 	short	doty;		/* dot y pos when voices overlap */
 	float	x;		/* position */
 	short	y;
@@ -220,9 +221,10 @@ struct FORMAT { 		/* struct for page layout */
 	int	encoding, partsbox, infoline, printtempo;
 	int	measurenb, measurefirst, measurebox, flatbeams, squarebreve;
 	int	exprabove, exprbelow, breathlow, vocalabove, freegchord;
-	char	*footer;
+	char	*footer, *header;
 	struct FONTSPEC titlefont, subtitlefont, vocalfont, textfont, tempofont;
-	struct FONTSPEC composerfont, partsfont, gchordfont, wordsfont, infofont;
+	struct FONTSPEC composerfont, partsfont, gchordfont, wordsfont;
+	struct FONTSPEC footerfont, headerfont, infofont;
 };
 
 extern struct FORMAT cfmt;	/* current format for output */
@@ -235,7 +237,7 @@ extern int use_buffer;		/* 1 if lines are being accumulated */
 
 extern char page_init[201];	/* initialization string after page break */
 extern int tunenum;		/* number of current tune */
-extern int pagenum;		/* current page in output file */
+extern int pagenum;		/* current page number */
 extern int nbar;		/* current measure number */
 
 extern float posy;	 	/* vertical position on page */
@@ -320,19 +322,18 @@ char *getarena(int len);
 void ops_into_fmt(void);
 /* buffer.c */
 void a2b(void);
+void abskip(float h);
 void buffer_eob(void);
 void bskip(float h);
 void check_buffer(void);
-void check_margin(void);
 void clear_buffer(void);
+void close_output_file(void);
 float get_bposy(void);
-void init_pdims(void);
-void write_buffer(FILE *fp);
-void close_ps(void);
-void close_page(FILE *fp);
+void write_buffer(void);
+void open_output_file(char *fnam);
 void set_buffer(float *p_v);
 void write_eps(void);
-void write_pagebreak(FILE *fp);
+void write_pagebreak(void);
 /* deco.c */
 void deco_add(char *text);
 void deco_cnv(struct deco *dc);
@@ -355,7 +356,7 @@ void draw_sym_near(void);
 void draw_symbols(struct VOICE_S *p_voice);
 /* format.c */
 int interpret_format_line(char *l);
-void define_fonts(FILE *fp);
+void define_fonts(void);
 void make_font_list(void);
 void print_format(void);
 int read_fmt_file(char *filename,
@@ -373,9 +374,10 @@ void voice_dup(void);
 void do_tune(struct abctune *t,
 	     int header_only);
 void identify_note(struct SYMBOL *s,
-		  int *p_head,
-		  int *p_dots,
-		  int *p_flags);
+		   int len,
+		   int *p_head,
+		   int *p_dots,
+		   int *p_flags);
 struct SYMBOL *ins_sym(int type,
 		       struct SYMBOL *s);
 /* subs.c */
@@ -401,12 +403,8 @@ void add_text(char *str,
 void add_to_text_block(char *s,
 		       int job);
 void clear_text(void);
-void close_output_file(void);
 float cwid(unsigned char c);
-void epsf_title(char *title,
-		char *fnm);
 int is_xrefstr(char *str);
-void open_output_file(char *fnam);
 void put_history(void);
 void put_words(void);
 void set_font(struct FONTSPEC *font);
@@ -416,14 +414,12 @@ void tex_str(char *d,
 	     float *wid);
 void write_inside_title(void);
 void write_heading(void);
-void write_user_ps(FILE *fp);
+void write_user_ps(void);
 void write_text_block(int job,
 		      int abc_state);
 /* syms.c */
-void define_encoding(FILE *fp,
-		     int enc);
-void define_font(FILE *fp,
-		 char *name,
+void define_encoding(int enc);
+void define_font(char *name,
 		 int num,
 		 int enc);
-void define_symbols(FILE *fp);
+void define_symbols(void);

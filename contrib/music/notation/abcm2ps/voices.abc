@@ -27,7 +27,7 @@ L:1/16
 Q:1/8=66
 %%staves {1 2}
 K:Cm
-% .. even when there are plenty of notes
+% .. even when there are a lot of notes
 !fp![E,4G,4C4]- [E,3/G,3/C3/]!3![G,/C/]!4![G,3/=B,3/D3/]!5![G,/C/E/] ([=A,4C4E4]!4![=B,2D2])z2|\
 !fp!!3![=B,4D4F4]- [B,3/D3/F3/][B,/D/F/][B,3/D3/G3/][B,/D/A/] ([B,4D4A4]!3![C2E2G2])z2|
 V:2

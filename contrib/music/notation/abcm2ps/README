@@ -1,4 +1,4 @@
-			--- abcm2ps version 3.0.x ---
+			--- abcm2ps version 3.1.x ---
 
 Overview
 ========
@@ -13,7 +13,7 @@ Features
 ========
 
 The main features of abcm2ps are quite the same as the abc2ps ones and the
-file 'New.Features' contains an updated description of these ones.
+file 'features.txt' contains an updated description of these ones.
 
 
 Installation and usage
@@ -36,7 +36,7 @@ Documentation
 - abc-draft.txt is the ABC draft on which abcm2ps is developped.
 - options.txt contains the list of the command line options.
 - format.txt contains the list of the format parameters.
-- New.Features lists some differences from, and extensions to
+- features.txt lists some differences from, and extensions to
   the ABC standard.
 
 
@@ -72,7 +72,7 @@ My friend Guido Gonzatto maintains Win32 and RedHat binaries at:
 
 	http://abcplus.sourceforge.net/
 
-Don't forget: abc2ps is still alive and is developped by Michael Methfessel:
+abc2ps was developped by Michael Methfessel:
 
 	http://www.ihp-ffo.de/~msm/
 	mailto:msm@ihp-ffo.de

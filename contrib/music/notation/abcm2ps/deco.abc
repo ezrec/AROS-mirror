@@ -49,6 +49,14 @@
 %%postscript	0 -22 rlineto 22 0 rlineto
 %%postscript	stroke grestore
 %%postscript } bdef
+% (from Jonas Petersson)
+%%postscript /biglc {    % usage: str x y biglc
+%%postscript    2 copy 5 2 roll /Times-Bold 22 selectfont
+%%postscript    6 add M cshow gsave
+%%postscript    1 setlinewidth 13 add newpath
+%%postscript    12 0 360 arc
+%%postscript    stroke grestore
+%%postscript } bdef
 %
 % -- pedal glyph
 % (from CMN http://ccrma-www.stanford.edu/software/cmn/cmn/cmn.html)
@@ -254,7 +262,7 @@
 %
 % -- big letters
 %%deco biga 3 bigl 20 0 0 A
-%%deco bigb 3 bigl 20 0 0 B
+%%deco bigb 3 biglc 20 0 0 B
 % ...
 %
 % -- glissendo
@@ -277,7 +285,7 @@ X:1
 T:Customized decorations
 M:C
 K:C
-!fp!C!t2ub!C !cresc!D!t3tab!D !decresc!E!ubt3ta!E !dimin!F!tbt3!F|\
+!biga!y!fp!C!t2ub!C !cresc!D!t3tab!D !decresc!E!ubt3ta!E !dimin!F!tbt3!F|\
 !mp!G!t2ta!G !(p)!A!t2t2b!c !b!T!(pp)!A2 !#!P!(f)!B2|!=!M!(ff)!c8|
-!8(!!riten!EF !-!G2 !ped!GA!ped-end!B!8)!c|!biga!CDE!()!F GAB!alcoda!c|\
-!bigb!CD!-(!E2!-)!!/!c4|
+!8(!!riten!EF !-!G2 !ped!GA!ped-end!B!8)!c|!bigb!CDE!()!F GAB!alcoda!c|\
+CD!-(!E2!-)!!/!c4|
