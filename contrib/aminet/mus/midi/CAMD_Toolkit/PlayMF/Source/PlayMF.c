@@ -73,7 +73,7 @@ void dprintf(UBYTE *fmt,...);
 /* S M F  Header  File */
 /*---------------------*/
 /* Four-character IDentifier builder*/
-#ifndef AROS_BIG_ENDIAN
+#if AROS_BIG_ENDIAN
 #  define MakeID(a,b,c,d)  ( (LONG)(a)<<24L | (LONG)(b)<<16L | (c)<<8 | (d) )
 #  define LGET(a) a
 #  define WGET(a) a
