@@ -22,6 +22,8 @@ static char *RCSid = "$Id$";
  */
 
 #include "rexx.h"
+#include "envir.h"
+
 #include <string.h>
 
 #ifdef HAVE_CTYPE_H
@@ -42,15 +44,6 @@ static char *RCSid = "$Id$";
 # endif
 # define posix_do_command __regina_dos_do_command
 #endif
-
-
-struct envir
-{
-   streng *name ;
-   int type ;
-   int subtype ;
-   struct envir *next, *prev ;
-};
 
 void add_envir( tsd_t *TSD, streng *name, int type, int subtype )
 {
@@ -86,6 +79,11 @@ static void markenvir( const tsd_t *TSD )
 static struct envir *find_envir( const tsd_t *TSD, const streng *name )
 {
    struct envir *ptr=NULL ;
+
+#if defined(_AMIGA) || defined(__AROS__)
+   if (ptr=amiga_find_envir( TSD, name))
+      return ptr;
+#endif
 
    for (ptr=TSD->firstenvir; ptr; ptr=ptr->prev)
       if (!Str_cmp(ptr->name, name))
@@ -388,6 +386,12 @@ streng *perform( tsd_t *TSD, const streng *command, const streng *envir, cnodept
             }
             retstr = int_to_streng( TSD, rc ) ;
             break ;
+
+#if defined(_AMIGA) || defined(__AROS__)
+         case ENVIR_AMIGA:
+	    retstr = AmigaSubCom( TSD, cmd, eptr, &rc);
+	    break;
+#endif
 
          default:
             exiterror( ERR_INTERPRETER_FAILURE, 1, __FILE__, __LINE__ )  ;

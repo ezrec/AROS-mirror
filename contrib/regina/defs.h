@@ -350,6 +350,9 @@
 
 #define ENVIR_SHELL 1
 #define ENVIR_PIPE 2
+#if defined(_AMIGA) || defined(__AROS__)
+#define ENVIR_AMIGA 3
+#endif
 
 #define SUBENVIR_PATH 1
 #define SUBENVIR_SYSTEM 2

@@ -23,8 +23,21 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#if defined(_AMIGA) || defined(__AROS__)
+#include "envir.h"
+#include <exec/ports.h>
+
+struct amiga_envir {
+  struct envir envir;
+  struct MsgPort *port;
+};
+#endif
+
 typedef struct _amiga_tsd_t {
   proclevel amilevel;
+#if defined(_AMIGA) || defined(__AROS__)
+  struct amiga_envir portenvir;
+#endif
 } amiga_tsd_t;
 
 
@@ -39,6 +52,10 @@ int init_amigaf ( tsd_t *TSD )
 
   /* Allocate later because systeminfo is not initialized at the moment */
   atsd->amilevel = NULL;
+#if defined(_AMIGA) || defined(__AROS__)
+  atsd->portenvir.envir.name = NULL;
+  atsd->portenvir.envir.type = ENVIR_AMIGA;
+#endif
   TSD->ami_tsd = (void *)atsd;
 
   return 1;
@@ -681,3 +698,64 @@ streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 )
   
   return retval;
 }
+
+#if defined(_AMIGA) || defined(__AROS__)
+
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/rexxsyslib.h>
+#include <rexx/storage.h>
+
+#include "rxiface.h"
+
+struct envir *amiga_find_envir( const tsd_t *TSD, const streng *name )
+{
+  amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
+  char *s;
+  struct MsgPort *port; 
+  
+  s = str_of( TSD, name );
+  port = FindPort( s );
+  FreeTSD( s );
+  
+  if (port == NULL)
+    return NULL;
+
+  if ( atsd->portenvir.envir.name != NULL )
+    Free_stringTSD( atsd->portenvir.envir.name );
+    
+  atsd->portenvir.envir.name = Str_dupTSD( name );
+  atsd->portenvir.port = port;
+
+  return (struct envir *)&(atsd->portenvir);
+}
+
+streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envir, int *rc )
+{
+  struct Library *RexxSysBase;
+  struct RexxMsg *msg;
+  struct MsgPort *port = ((struct amiga_envir *)envir)->port, *replyport;
+  
+  RexxSysBase = OpenLibrary( "rexxsyslib.library", 44 );
+  if ( RexxSysBase == NULL )
+  {
+    *rc = RXFLAG_FAILURE;
+    return nullstringptr();
+  }
+
+  replyport = CreatePort( NULL, 0 );
+  msg = CreateRexxMsg( port, NULL, NULL );
+  msg->rm_Action = RXCOMM;
+  msg->rm_Args[0] = CreateArgstring( command->value, command->len );
+  fflush(stdout);
+  msg->rm_Stdin = Input();
+  msg->rm_Stdout = Output();
+  PutMsg(port, msg);
+
+  *rc = RXFLAG_OK;
+  DeleteRexxMsg( msg );
+  CloseLibrary( RexxSysBase );
+  return Str_crestrTSD( "Message sent and replied" );
+}
+#endif /* _AMIGA || __AROS__ */
