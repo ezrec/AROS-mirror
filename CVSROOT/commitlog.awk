@@ -1,5 +1,6 @@
 BEGIN {
 	# Who did it ?
+	User=ENVIRON["LOGNAME"];
 	#User=ENVIRON["USER"];
 	# Where is CVSROOT ?
 	CVSROOT=ENVIRON["CVSROOT"];
