@@ -73,11 +73,11 @@ Since AROS/i386-linux and AROS/i386-freebsd are hosted flavours of AROS,
 installation is simple. Simply get the apropriate archives for your platform
 from the `download page`_ and extract them where you want them::
 
-    > tar -vxzf AROS-<version>-i386-<platform>-system.tar.gz
+    > tar -vxjf AROS-<version>-i386-<platform>-system.tar.bz2
 
 If you downloaded the contrib archive, you may want to extract it too::
 
-    > tar -vxzf AROS-<version>-i386-all-contrib.tar.gz
+    > tar -vxjf AROS-<version>-i386-all-contrib.tar.bz2
 
 
 Running
