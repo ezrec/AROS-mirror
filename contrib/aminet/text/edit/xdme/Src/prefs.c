@@ -6,30 +6,14 @@
     DESCRIPTION
 	Everything to set, edit, get, load and save settings !
 
-    HISTORY
-	14. Nov 1992	ada created
-	$Log$
-	Revision 1.1  2001/10/06 20:12:02  digulla
-	Initial revision
-
- * Revision 1.3  1994/12/22  09:07:26  digulla
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.2  1994/09/09  12:31:30  digulla
- * added function tas_flag() to set a flag and display the result in the title
- * added new style Prototypes, DEFCMD and DEFHELP
- * added functions for several flags
- *
- * Revision 1.1  1994/08/14  12:30:15  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************
 		Includes
 **************************************/
 #include "defs.h"
+#include <proto/dos.h>
+#include <proto/graphics.h>
 
 
 /**************************************

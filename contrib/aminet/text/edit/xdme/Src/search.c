@@ -6,32 +6,13 @@
     DESCRIPTION
 	Inherits all the search/replace stuff for DME
 
-    HISTORY
-	28. May 1992	ada created
-	$Log$
-	Revision 1.1  2001/10/06 20:11:40  digulla
-	Initial revision
-
- * Revision 1.4  1994/12/22  09:17:30  digulla
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.3  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.2  1994/08/19  14:07:15  digulla
- * some reformatting
- * fixed some minor bugs in search_operation
- *
- * Revision 1.1  1994/08/14  12:35:51  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /* Includes */
 #include "defs.h"
 #define MYDEBUG     0
 #include <debug.h>
+#include <proto/intuition.h>
 
 /* Globale Variable */
 

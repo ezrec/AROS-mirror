@@ -39,11 +39,10 @@ char		 MShowTitle;	    /* Should DME refresh the title ? */
 char		 noadj; 	    /* for blocking software adj. of prop gad
 				       when intuition (user) already did it */
 
-/* extern struct IntuitionBase * IntuitionBase;
+extern struct IntuitionBase * IntuitionBase;
 extern struct GfxBase	    * GfxBase;
 extern struct Library	    * IconBase;
-extern struct Library	    * AslBase; */
-
+extern struct Library	    * AslBase;
 extern struct Library	    * LayersBase;
 
 #ifndef __AROS__

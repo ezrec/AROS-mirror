@@ -19,30 +19,13 @@
 	In addition I added my new commands in the commandtable in
 	"command.c"
 
-    HISTORY
-	dirk	26. Dec 1991	created
-	$Log$
-	Revision 1.2  2001/10/06 23:06:14  digulla
-	Compiles for me
-
-	Revision 1.1.1.1  2001/10/06 20:11:34  digulla
-	Initial import of XDME
-	
- * Revision 1.3  1994/12/22  09:03:38  digulla
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.2  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.1  1994/08/14  12:30:15  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************
 		Includes
 **************************************/
+#include <proto/dos.h>
+#include <proto/intuition.h>
 #include "defs.h"
 #include "hrexx.h"
 #include "rexx/storage.h"
@@ -97,6 +80,7 @@ __stkargs static void in_rexx (struct RexxMsg *rmsg)
  * --> rmsg	pointer to the RexxMessage
  */
 {
+#ifndef __AROS__
     long ret;
     foundcmd = 0;
 
@@ -112,6 +96,9 @@ __stkargs static void in_rexx (struct RexxMsg *rmsg)
     *rexx_result= 0;
 
     do_command ("null");     /* reset foundcommand */
+#else
+#warning ARG0 is not defined on AROS
+#endif
 }
 
 
@@ -244,6 +231,7 @@ void extern_rexx_command (void)
  * executes a command, comming in from an external port
  */
 {
+#ifndef __AROS__
     long	     ret;
     struct RexxMsg * rmsg;
 
@@ -262,6 +250,9 @@ void extern_rexx_command (void)
 	ReplyRexxMsg (rmsg, ret, 0);
 
     *rexx_result = 0;
+#else
+#warning ARG0 is not defined on AROS
+#endif
 } /* extern_rexx_command */
 
 

@@ -15,16 +15,6 @@
 	Writing and reading complex FTXT, ILBM, etc. requires more work.
 	Under 2.0 it is highly recommended that you use iffparse.library.
 
-    HISTORY
-	29. May 1992	ada created
-	$Log$
-	Revision 1.1  2001/10/06 20:11:33  digulla
-	Initial revision
-
- * Revision 1.1  1994/08/14  12:30:15  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /* Includes */
@@ -34,12 +24,11 @@
 #include <exec/memory.h>
 #include <devices/clipboard.h>
 #include "clipboard.h"
-#include <clib/exec_protos.h>
-#include <clib/alib_protos.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <pragmas/exec_pragmas.h>
+#include <proto/exec.h>
+#include <proto/alib.h>
 
 /* Globale Variable */
 

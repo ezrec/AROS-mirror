@@ -45,6 +45,7 @@
 #include <devices/keymap.h>
 #include <devices/console.h>
 #include "keyhashes.h"
+#include <proto/console.h>
 #ifdef PATCH_NULL
 #include "AUTO.h"
 #else

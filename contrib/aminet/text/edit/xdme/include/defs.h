@@ -11,6 +11,11 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/graphics.h>
+#include <proto/intuition.h>
+
 #undef PATCH_RXVARS
 
 #include "all.h"
@@ -81,6 +86,7 @@ BOOL WildCmp (const char *, const char *);
 #define allocl(lwords)      AllocMem ((lwords)<<2, 0)
 #define bmovl(s,d,n)        memmove ((d), (s), (n) << 2)
 #define movmem(s,d,n)       memmove ((d), (s), (n) << 2)
+#define setmem(d,n,c)       memset ((d), (c), (n))
 
 #define GETLINE(ed,nr)      ((ed)->list[(nr)])
 #define SETLINE(ed,nr,ptr)  (ed)->list[(nr)] = (ptr)

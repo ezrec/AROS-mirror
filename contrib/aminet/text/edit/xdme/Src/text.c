@@ -3,30 +3,6 @@
     MODUL
 	$Id$
 
-    HISTORY
-	04. Oct 1992	ada created
-	$Log$
-	Revision 1.1  2001/10/06 20:11:48  digulla
-	Initial revision
-
- * Revision 1.5  1994/12/22  09:03:07  digulla
- * Makros eingeführt
- * DEFCMD eingeführt
- *
- * Revision 1.4  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.3  1994/08/30  11:03:38  digulla
- * used BLOCK_MASK instead of ALL_MASK
- *
- * Revision 1.2  1994/08/19  14:06:00  digulla
- * set all masks to ALL_MASK (SetWrMsk())
- * removed dead assignments
- *
- * Revision 1.1  1994/08/13  16:37:39  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************
@@ -248,7 +224,7 @@ int text_init (ED * oldep, WIN * win, struct NewWindow * nw)
     if (!(ep = (ED *)allocb (sizeof(ED))) )
 	return (0);
 
-    setmem (ep, sizeof(ED), 0);
+    memset (ep, 0, sizeof(ED));
     ep->win = win;
 
     if (oldep)

@@ -10,9 +10,12 @@
     HISTORY
 	14. Nov 1992	ada created
 	$Log$
-	Revision 1.1  2001/10/06 20:11:26  digulla
-	Initial revision
+	Revision 1.2  2001/10/07 00:09:02  digulla
+	Compiles and links now but crashes at startup
 
+	Revision 1.1.1.1  2001/10/06 20:11:26  digulla
+	Initial import of XDME
+	
  * Revision 1.4  1994/12/22  09:06:44  digulla
  * Makros und DEFCMD eingeführt
  * Textflags in IF ergänzt
@@ -37,7 +40,7 @@
 #include "defs.h"
 #define MYDEBUG     0
 #include "debug.h"
-
+#include <proto/intuition.h>
 
 /**************************************
 	    Globale Variable

@@ -18,8 +18,11 @@
      10.08.90  initial release		D. Heckmann
      01.08.91  modified for debug	A. Digulla
      $Log$
-     Revision 1.1  2001/10/06 20:11:20  digulla
-     Initial revision
+     Revision 1.2  2001/10/07 00:09:02  digulla
+     Compiles and links now but crashes at startup
+
+     Revision 1.1.1.1  2001/10/06 20:11:20  digulla
+     Initial import of XDME
 
  * Revision 1.1  1994/09/09  12:31:30  digulla
  * Initial revision
@@ -36,8 +39,8 @@
 #include <exec/types.h>
 #include <exec/execbase.h>
 #include <exec/memory.h>
-#include <clib/exec_protos.h>
-#include <clib/dos_protos.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
 #include <string.h>
 
 #define DEBUG_C

@@ -9,9 +9,12 @@
     HISTORY
 	14. Nov 1992	ada created
 	$Log$
-	Revision 1.1  2001/10/06 20:11:39  digulla
-	Initial revision
+	Revision 1.2  2001/10/07 00:09:02  digulla
+	Compiles and links now but crashes at startup
 
+	Revision 1.1.1.1  2001/10/06 20:11:39  digulla
+	Initial import of XDME
+	
  * Revision 1.5  1994/12/22  09:12:08  digulla
  * Makros und DEFCMD eingeführt
  *
@@ -39,6 +42,7 @@
 #include "clipboard.h"
 #define MYDEBUG     0
 #include <debug.h>
+#include <string.h>
 
 
 /**************************************
@@ -367,7 +371,7 @@ DEFUSERCMD("reformat", 0, 0, void, do_reformat, (int n),)
 		{
 		    movmem(Current, Current + indent,
 			    strlen((char *)Current)+1);
-		    setmem(Current, indent, ' ');
+		    memset(Current, ' ', indent);
 		    Clen += indent;
 		}
 	    }

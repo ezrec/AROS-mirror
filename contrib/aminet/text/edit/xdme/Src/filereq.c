@@ -7,29 +7,16 @@
 	All routines that handle file-requesters. We try to open ASL and
 	if that's not possible, REQTOOLS.
 
-    HISTORY
-	28. Nov 1992	ada created
-	$Log$
-	Revision 1.1  2001/10/06 20:11:21  digulla
-	Initial revision
-
- * Revision 1.3  1994/12/22  09:05:42  digulla
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.2  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.1  1994/08/14  12:30:15  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************
 		Includes
 **************************************/
 #include "defs.h"
-
+#include <proto/asl.h>
+#include <proto/intuition.h>
+#include <proto/reqtools.h>
+#include <proto/dos.h>
 
 /**************************************
 	    Globale Variable

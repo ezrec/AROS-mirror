@@ -23,6 +23,7 @@
 **************************************/
 #include "defs.h"
 #include <proto/exec.h>
+#include <proto/intuition.h>
 
 /**************************************
 	    Globale Variable

@@ -41,9 +41,8 @@
 #include "defs.h"
 #include <devices/keymap.h>
 #include <devices/console.h>
-#include <clib/utility_protos.h>
-extern struct Library *UtilityBase;
-#include <pragmas/utility_pragmas.h>
+#include <proto/utility.h>
+#include <proto/console.h>
 #ifdef PATCH_NULL
 #include "AUTO.h"
 #else

@@ -16,6 +16,7 @@
 #include <proto/graphics.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
+#include <proto/diskfont.h>
 #define MYDEBUG     0
 #include "debug.h"
 

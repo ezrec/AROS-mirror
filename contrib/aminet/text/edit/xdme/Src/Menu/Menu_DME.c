@@ -32,10 +32,6 @@
 
     INDEX
 
-    HISTORY
-	20 Dec 1992 b_null created
-	$Date$ last update
-
 ******************************************************************************/
 
 /**************************************
@@ -46,9 +42,7 @@
 #include "menubase.h"
 
 #include <libraries/gadtools.h>
-#include <clib/gadtools_protos.h>
-extern struct Library * GadToolsBase;
-#include <pragmas/gadtools_pragmas.h>
+#include <proto/gadtools.h>
 
 /**************************************
 	    Globale Variable

@@ -51,7 +51,6 @@
 	    Global Variables
 **************************************/
 
-
 Prototype UBYTE 	    *APIC_IconTitle;
 Prototype UBYTE 	    *APIC_IconFile;
 Prototype UBYTE 	    *APIC_ActionDblClick;
