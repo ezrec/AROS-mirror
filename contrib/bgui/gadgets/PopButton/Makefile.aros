@@ -1,17 +1,14 @@
 include $(TOP)/config/make.cfg
 include ../../make.cfg
 
+CC := $(AROS_CC)
+
 BINDIR = $(AROSDIR)
 LIBDIR = $(AROS_LIB)
 
-OS_INCLUDES_DIR = $(BINDIR)/Include
-
-OS_INCLUDES = -I$(OS_INCLUDES_DIR)
 USER_INCLUDES = -Iinclude -I../..
 
-INCLUDES = $(USER_INCLUDES) $(OS_INCLUDES)
-
-CFLAGS = $(INCLUDES) $(DEFINES)
+CFLAGS = $(USER_INCLUDES) $(DEFINES)
 
 COMMONDIR = ../common
 
@@ -25,19 +22,17 @@ DEMO = PopButtonDemo
 
 LIBTARGETS = PopButtonClass.o
 
-STARTUP = $(LIBDIR)/startup.o
-
 $(BGUIGADGETSDIR)/$(GADGET) : $(GADGET)
 	@$(ECHO) Installing $@...
 	@$(CP) $< $@
 
 $(GADGET) : $(LIBTARGETS) Makefile.aros
-	$(STATIC_LD) $(STATIC_LDFLAGS) $(LDFLAGS) \
+	$(AROS_LD) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) \
 		$(COMMONDIR)/bguiclass_libtag.o \
 		$(COMMONDIR)/bguiclass_lib.o \
 		$(LIBTARGETS) \
 		$(COMMONDIR)/bguiclass_libendtag.o \
-		-lamiga -larossupport -lbgui -lrom \
+		-lbgui -lrom \
 		-o $@
 
 $(BGUIEXAMPLESDIR)/$(DEMO) : $(DEMO)
@@ -45,7 +40,7 @@ $(BGUIEXAMPLESDIR)/$(DEMO) : $(DEMO)
 	@$(CP) $< $@
 
 $(DEMO) : $(DEMO).o Makefile.aros
-	@$(CC) $(LDFLAGS) $(STARTUP) $< -o $@ $(EXELIBS)
+	@$(AROS_LD) $(LDFLAGS) $< -o $@ $(EXELIBS)
 
 %.o : %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
