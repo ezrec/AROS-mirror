@@ -31,9 +31,9 @@ void set_prefs()
   prefs.stereo         = PREFS_OFF;          /* Off */
   prefs.no_video       = PREFS_OFF;          /* Off */
   prefs.no_audio       = PREFS_OFF;          /* Off */
-  strcpy(prefs.device, "atapi.device");      /* atapi.device */
+  strcpy(prefs.device, "ata.device");      /* atapi.device */
   prefs.unit           = 2;                  /* 2 */
-  prefs.ahi            = PREFS_OFF;          /* Off */
+  prefs.ahi            = PREFS_ON;          /* Off */
   prefs.triple         = PREFS_OFF;          /* Off */
   prefs.filter         = PREFS_OFF;          /* Off */
   prefs.readall        = PREFS_OFF;          /* Off */
