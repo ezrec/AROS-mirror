@@ -15,7 +15,7 @@ LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
 OS_INCLUDES_DIR = $(BINDIR)/Include
 
 OS_INCLUDES = -I$(OS_INCLUDES_DIR)
-USER_INCLUDES = -Iinclude
+USER_INCLUDES = -Iinclude -I../..
 
 INCLUDES = $(USER_INCLUDES) $(OS_INCLUDES)
 
@@ -49,7 +49,7 @@ $(GADGET) : $(LIBTARGETS)
 	@$(CP) $@ $(BINDIR)/Classes/Gadgets
 
 $(DEMO) : $(DEMO).c
-	@$(CC) $(OS_INCLUDES) $(DEFINES) -c $^ -o $@.o
+	@$(CC) $(INCLUDES) $(USER_INCLUDES) $(DEFINES) -c $^ -o $@.o
 	@$(CC) $(FLAGS) $(STARTUP) $@.o -o $@ $(LIBS)
 	@$(ECHO) Installing $@
 	@$(CP) $@ $(BINDIR)
