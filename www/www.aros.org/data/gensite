@@ -260,11 +260,11 @@ genXmlPage ('hidd-model', 'HIDD Model')
 genXmlPage ('ideas', 'Random Ideas')
 genXmlPage ('faq', 'FAQ')
 
-import htmlautodocs
-htmlautodocs.gen ()
-
 import contents2html
 contents2html.gen ()
+
+import htmlautodocs
+htmlautodocs.gen ()
 
 genScreenshots ()
 genDownload ()
