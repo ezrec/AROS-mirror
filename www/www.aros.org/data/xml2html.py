@@ -34,7 +34,7 @@ def addToc (p, level, item):
 	label = label[:-1]
     
     title = label + ' ' + item.attr['title']
-    print title
+    #print title
     
     p.fh.write (str (Name (label)) + '\n')
     p.fh.write (str (Heading (level, RawText (title)))+'\n')
