@@ -51,10 +51,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 #define GFX_DONTSHRINK
 #include "visual_proc.h"
 
-#ifdef _AROS
-extern struct AslBase *AslBase;
-#endif
-
 extern struct Root *root;
 extern struct Screen *Scr;
 extern struct Screen *mainscreen;

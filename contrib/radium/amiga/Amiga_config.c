@@ -53,10 +53,6 @@ struct TextFont *sysfont=NULL;
 UWORD DriPens[] = {
 	(UWORD)~0 };
 
-#ifdef _AROS
-extern struct AslBase *AslBase;
-#endif
-
 extern void Amiga_memory_config(void);
 
 bool AmigaConfig(void){
