@@ -41,7 +41,7 @@
 #include "intui.h"
 #include "globals.h"
 
-//#define AROS_KERNEL 1
+#define AROS_KERNEL 1
 
 extern struct Globals *global;
 
