@@ -1,3 +1,47 @@
+0. AROS PYTHON DISCLAIMER
+=========================
+
+This disclaimer applies to the small parts of this program (ie. the AROS 
+Python distribution) written by members of The AROS Development Team.
+
+A majority of the AROS specific parts of this program are largely based on 
+code by Irmen de Jong and are covered by the disclaimer below. The rest of 
+the the code written by Guido van Rossum and others is covered by the 
+disclaimer from the Python Software Foundation a bit further down.
+
+The parts of this program written by the AROS Development Team is licensed 
+under the same terms as the rest of Python, covered by the licenses and 
+disclaimers below. This program is provided "as is" without any warranty: 
+USE OF THIS PROGRAM IS AT YOUR OWN RISK. In no event will any member of the 
+AROS Development Team be held liable for any damage incurred by the use of 
+or inability to use this program, indirect or consequential, including, but 
+not limited to, loss of data or other nasty things. NO WARRANTIES ARE MADE. 
+In short, if something breakes IT'S YOUR OWN FAULT.
+
+
+
+1. AMIGA PYTHON DISCLAIMER 
+==========================
+
+("this program" = the Python executable in this distribution in particular,
+but also all other files.)
+
+I  tried  to  make this program error-free and safe to use, for your and my
+own  benefit.   This  disclamer  applies  to the (small) part of the code I
+wrote  myself.   The  disclamer  from  the  copyright notice from Stichting
+Mathematisch  Centrum  (included  below)  applies  to the rest of the code,
+written by Guido van Rossum and others.
+  
+I  provide  this program "as is".  USE THE PROGRAM AT YOUR OWN RISK.  In no
+event will I be liable for damages to you - whether they arise from the use
+of  this  program  or  the  inability to use it, whether they are direct or
+consequential,  including,  but  not  limited  to,  the loss of data or the
+generation of inaccurate data.  No warranties are made.
+
+    	Irmen de Jong.
+
+
+
 A. HISTORY OF THE SOFTWARE
 ==========================
 
