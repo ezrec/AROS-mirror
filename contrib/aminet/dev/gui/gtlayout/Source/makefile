@@ -18,6 +18,14 @@ CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros-gcc
 DEFINES =
 OPTIMIZE = -O2 -g3
 
+PRELIBS := -lgtlayout -lamiga -larosc -lamiga -lautoinit -larosm
+
+LIBS := -L$(LIBDIR) -L./ $(PRELIBS)
+
+#First all intermediate files MUST be created so there is a 'defines' file!
+all: gtlayout.library libgtlayout.a test_aros
+
+
 aros/%_aros.c : %.c
 	$(ARCHTOOL) -R aros/gtlayout_pragmas_aros.h  $^ $@ aros/gtlayout_defines_aros.h
 
@@ -155,8 +163,6 @@ OBJS         = $(foreach f,$(API_SOURCE) $(API_SOURCE_EXTRA) $(UFC_SOURCE) $(FIL
 LINKLIB_OBJS = $(foreach f,$(API_SOURCE)                     $(UFC_SOURCE) $(FILES),$(f).ol)
 TESTOBJS = test/gui.o test/Tools.o
 
-#First all intermediate files MUST be created so there is a 'defines' file!
-all: gtlayout.library libgtlayout.a test_aros
 
 gtlayout.library : $(INTERMEDIATES) $(OBJS) gtlayout_lib.o gtlayout_data.o
 	$(CC) gtlayout_lib.o gtlayout_data.o $(OBJS) -static -lamiga -o $@ -nostartfiles
@@ -165,7 +171,8 @@ libgtlayout.a : $(LINKLIB_OBJS) gtlayout_data.ol
 	$(AR) $@ $^
 
 test_aros: $(TESTOBJS)
-	$(CC) $(TESTOBJS) -L$(LIBDIR) -lgtlayout -lamiga -L./ -o $@
+	$(ECHO) Linking $^ to $@
+	$(STATIC_LD) $(LDFLAGS) $(STARTUP) $^ -o $@ $(LIBS) $(COMPILER_LIBS)
  
 clean:
 	$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) gtlayout.library aros/gtlayout_defines_aros.h gtlayout_lib.o gtlayout_data.o gtlayout_data.ol libgtlayout.a
