@@ -25,7 +25,6 @@ static char *rcsid = "@(#)$Id$";
 
 #include "ed.h"
 
-#include <sys/file.h>
 #include <sys/stat.h>
 
 

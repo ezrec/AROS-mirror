@@ -24,7 +24,6 @@ static char *rcsid = "@(#)$Id$";
 
 
 #include <setjmp.h>
-#include <sys/ioctl.h>
 
 #include "ed.h"
 
