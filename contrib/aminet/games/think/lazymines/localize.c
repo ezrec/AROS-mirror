@@ -14,10 +14,13 @@
 #include <intuition/intuition.h>
 #include <libraries/locale.h>
 #include <proto/locale.h>
+#include <proto/alib.h>
 
 #include "localize.h"
 
-
+char * GetString(struct LocaleInfo * li,
+                 LONG stringNum);
+		 
 struct LocaleBase *LocaleBase = NULL;
 
 static struct LocaleInfo   li;
