@@ -37,6 +37,11 @@ The following software is required for compiling AROS:
 + Automake
 + Common utilities like cp, mv, sort, uniq, head, ...
 
+If you want to compile the hosted i386-linux or i386-freebsd ports, the 
+following is also required:
+
++ X11 development headers and libraries
+
 
 Sources
 =======
