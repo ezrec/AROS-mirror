@@ -114,7 +114,8 @@ PyOS_FiniInterrupts(void)
 int
 PyOS_InterruptOccurred(void)
 {
-	// FIXME: Check SIGF_CTRL_C signal
+    // FIXME: Check SIGF_CTRL_C signal
+    return FALSE;
 }
 
 #define OK
