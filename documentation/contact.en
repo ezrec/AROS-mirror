@@ -38,11 +38,6 @@ are available:
   basically mirrors the content of the news section of the website. Normal
   posting is not allowed.
 
-+ `AROS User`__
-    
-  General discussion and support list for users. Currently the volume on the
-  list is quite low, since AROS doesn't have many users yet.  
-
 + `AROS Developer`__
 
   This is the developer mailing list, where discussions about the development of
@@ -57,11 +52,6 @@ are available:
             but every request is verified by the list administrator. So there 
             might be some delay from the time you send a subscription request 
             to when you actually have become a member.
-
-+ `AROS Networking`__
-
-  This is a developer mailing list for discussing development of networking
-  software for AROS. 
 
 + `AROS Bugs`__
 
