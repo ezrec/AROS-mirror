@@ -37,6 +37,7 @@ void get_comment PARMS ((struct direntry *, ZOOFILE, char *));
 void copyfields PARMS ((struct direntry *, struct tiny_header *));
 void storefname PARMS ((struct direntry *, char *, int));
 char *choosefname PARMS ((struct direntry *));
+int isadir (ZOOFILE file);
 
 extern struct zoo_header zoo_header;
 

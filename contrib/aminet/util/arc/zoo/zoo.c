@@ -25,6 +25,8 @@ Copyright (C) 1986, 1987 Rahul Dhesi -- All rights reserved
 #include "errors.i"
 #include "zoomem.h"
 
+#include <unistd.h>
+
 /*#define MS_HELP*/
 #ifdef MS_HELP
 static void ms_help PARMS((char *));

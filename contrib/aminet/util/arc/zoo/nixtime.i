@@ -10,6 +10,7 @@ The contents of this file are hereby released to the public domain.
 
                                     -- Rahul Dhesi  1986/12/31
 */
+#include <utime.h>
 
 struct tm *localtime();
 
