@@ -22,9 +22,10 @@
 #define MAX_VOLUME 64
 
 	/* Stereo/channel sample type. */
-
+#if 0
+/* This should be in datatypes/soundclass.h */
 typedef LONG SampleType;
-
+#endif
 	/* Channel definitions. */
 
 #define SAMPLE_LEFT		2
