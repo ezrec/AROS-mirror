@@ -1,0 +1,167 @@
+## version $VER: yahzee.catalog 2.0 (31.10.94)
+## codeset 0
+## language nederlands
+;
+; Dutch translation by Edmund Vermeulen (edmundv@grafix.wlink.nl)
+;
+MSG_GAME_MENU
+ \0Spel
+;
+MSG_GAME_NEW
+N\0Nieuw
+;
+MSG_GAME_UNDO
+Z\0Maak ongedaan
+;
+MSG_GAME_HIGHSCORE
+ \0Hoogste scores...
+;
+MSG_GAME_ABOUT
+?\0Over...
+;
+MSG_GAME_QUIT
+Q\0Einde Yahzee
+;
+MSG_SETTINGS_MENU
+ \0Instellingen
+;
+MSG_SETTINGS_NUMPLAYERS
+ \0Aantal spelers
+;
+MSG_SETTINGS_NUMPLAYERS_1
+1\0001 speler
+;
+MSG_SETTINGS_NUMPLAYERS_2
+2\0002 spelers
+;
+MSG_SETTINGS_NUMPLAYERS_3
+3\0003 spelers
+;
+MSG_SETTINGS_NUMPLAYERS_4
+4\0004 spelers
+;
+MSG_SETTINGS_NUMPLAYERS_5
+5\0005 spelers
+;
+MSG_SETTINGS_NUMPLAYERS_6
+6\0006 spelers
+;
+MSG_SETTINGS_SCORING
+ \0Scoringsmethode
+;
+MSG_SETTINGS_SCORING_DEFAULT
+ \0Traditioneel
+;
+MSG_SETTINGS_SCORING_AMERICAN
+ \0Amerikaans
+;
+MSG_SETTINGS_SAVE
+ \0Bewaar instellingen
+;
+MSG_HIGHSCORE_REQTITLE
+Hoogste scores
+;
+MSG_ABOUT_REQTITLE
+Over %s
+;
+MSG_ABOUT_REQMSG
+%s v%s\nDoor %s %s\nCopyright © %s %s
+;
+MSG_NAME_REQTITLE
+Geweldige score speler %d!!!
+;
+MSG_CONTINUE_GAD
+Doorgaan
+;
+MSG_NAME_GAD
+Naam:
+;
+MSG_ROLL_GAD
+Werp
+;
+MSG_ACES_LABEL
+Enen
+;
+MSG_TWOS_LABEL
+Tweeën
+;
+MSG_THREES_LABEL
+Drieën
+;
+MSG_FOURS_LABEL
+Vieren
+;
+MSG_FIVES_LABEL
+Vijven
+;
+MSG_SIXES_LABEL
+Zessen
+;
+MSG_UPPERTOTAL_LABEL
+Bovenste totaal
+;
+MSG_BONUS_LABEL
+Bonus
+;
+MSG_ONEPAIR_LABEL
+Eén paar
+;
+MSG_TWOPAIRS_LABEL
+Twee paren
+;
+MSG_THREEKIND_LABEL
+Drie gelijke
+;
+MSG_FOURKIND_LABEL
+Carré
+;
+MSG_SMSTRAIGHT_LABEL
+Kleine straat
+;
+MSG_LGSTRAIGHT_LABEL
+Grote straat
+;
+MSG_FULLHOUSE_LABEL
+Full house
+;
+MSG_CHANCE_LABEL
+Kans
+;
+MSG_YAHZEE_LABEL
+YAHZEE
+;
+MSG_TOTAL_LABEL
+Totaal
+;
+;
+;
+MSG_SETTINGS_GAMETYPE
+ \0Speltype
+;
+MSG_SETTINGS_GAMETYPE_ORIGINAL
+ \0Origineel
+;
+MSG_SETTINGS_GAMETYPE_MAXI
+ \0Maxi
+;
+MSG_THREEPAIRS_LABEL
+Drie paren
+;
+MSG_FIVEKIND_LABEL
+Vijf gelijke
+;
+MSG_FULLSTRAIGHT_LABEL
+Complete straat
+;
+MSG_HOUSE_LABEL
+Huis
+;
+MSG_TOWER_LABEL
+Toren
+;
+MSG_MAXIYAHZEE_LABEL
+MAXI-YAHZEE
+;
+MSG_SAVEDROLLS_LABEL
+Gespaarde worpen
+;

@@ -1,0 +1,218 @@
+## version $VER: yahzee.catalog 2.1 (8.4.95)
+## codeset 0
+## language svenska
+;
+MSG_GAME_MENU
+ \0Spel
+;  \0Game
+;
+MSG_GAME_NEW
+N\0Nytt
+; N\0New
+;
+MSG_GAME_UNDO
+Z\0Ångra
+; Z\0Undo
+;
+MSG_GAME_HIGHSCORE
+ \0Bästa resultat...
+;  \0High Scores...
+;
+MSG_GAME_ABOUT
+?\0Om...
+; ?\0About...
+;
+MSG_GAME_QUIT
+Q\0Avsluta Yahzee
+; Q\0Quit Yahzee
+;
+MSG_SETTINGS_MENU
+ \0Inställningar
+;  \0Settings
+;
+MSG_SETTINGS_NUMPLAYERS
+ \0Antal spelare
+;  \0Number of Players
+;
+MSG_SETTINGS_NUMPLAYERS_1
+1\0001 Spelare
+; 1\0001 Player
+;
+MSG_SETTINGS_NUMPLAYERS_2
+2\0002 Spelare
+; 2\0002 Players
+;
+MSG_SETTINGS_NUMPLAYERS_3
+3\0003 Spelare
+; 3\0003 Players
+;
+MSG_SETTINGS_NUMPLAYERS_4
+4\0004 Spelare
+; 4\0004 Players
+;
+MSG_SETTINGS_NUMPLAYERS_5
+5\0005 Spelare
+; 5\0005 Players
+;
+MSG_SETTINGS_NUMPLAYERS_6
+6\0006 Spelare
+; 6\0006 Players
+;
+MSG_SETTINGS_SCORING
+ \0Poängberäkningsmetod
+;  \0Scoring Method
+;
+MSG_SETTINGS_SCORING_DEFAULT
+ \0Traditionell
+;  \0Traditional
+;
+MSG_SETTINGS_SCORING_AMERICAN
+ \0Amerikansk
+;  \0American
+;
+MSG_SETTINGS_SAVE
+ \0Spara inställningar
+;  \0Save Settings
+;
+MSG_HIGHSCORE_REQTITLE
+Bästa resultat
+; High Scores
+;
+MSG_ABOUT_REQTITLE
+Om %s
+; About %s
+;
+MSG_ABOUT_REQMSG
+%s v%s\nAv %s %s\nCopyright © %s %s
+; %s v%s\nBy %s %s\nCopyright © %s %s
+;
+MSG_NAME_REQTITLE
+Fantastiskt resultat spelare %d!!!
+; Great Score Player %d!!!
+;
+MSG_CONTINUE_GAD
+Fortsätt
+; Continue
+;
+MSG_NAME_GAD
+Namn:
+; Name:
+;
+MSG_ROLL_GAD
+Kasta
+; Roll
+;
+MSG_ACES_LABEL
+Ettor
+; Aces
+;
+MSG_TWOS_LABEL
+Tvåor
+; Twos
+;
+MSG_THREES_LABEL
+Treor
+; Threes
+;
+MSG_FOURS_LABEL
+Fyror
+; Fours
+;
+MSG_FIVES_LABEL
+Femmor
+; Fives
+;
+MSG_SIXES_LABEL
+Sexor
+; Sixes
+;
+MSG_UPPERTOTAL_LABEL
+Summa
+; Upper Total
+;
+MSG_BONUS_LABEL
+Bonus
+; Bonus
+;
+MSG_ONEPAIR_LABEL
+Ett par
+; One Pair
+;
+MSG_TWOPAIRS_LABEL
+Två par
+; Two Pairs
+;
+MSG_THREEKIND_LABEL
+Tretal
+; Three of a Kind
+;
+MSG_FOURKIND_LABEL
+Fyrtal
+; Four of a Kind
+;
+MSG_SMSTRAIGHT_LABEL
+Liten Straight
+; Small Straight
+;
+MSG_LGSTRAIGHT_LABEL
+Stor Straight
+; Large Straight
+;
+MSG_FULLHOUSE_LABEL
+Kåk
+; Full House
+;
+MSG_CHANCE_LABEL
+Chans
+; Chance
+;
+MSG_YAHZEE_LABEL
+YATZY
+; YAHZEE
+;
+MSG_TOTAL_LABEL
+Totalsumma
+; Total
+;
+;
+;
+MSG_SETTINGS_GAMETYPE
+ \0Speltyp
+;  \0Type of Game
+;
+MSG_SETTINGS_GAMETYPE_ORIGINAL
+ \0Original
+;  \0Original
+;
+MSG_SETTINGS_GAMETYPE_MAXI
+ \0Maxi
+;  \0Maxi
+;
+MSG_THREEPAIRS_LABEL
+Tre par
+; Three Pairs
+;
+MSG_FIVEKIND_LABEL
+Femtal
+; Five of a Kind
+;
+MSG_FULLSTRAIGHT_LABEL
+Full Straight
+; Full Straight
+;
+MSG_HOUSE_LABEL
+Hus
+; House
+;
+MSG_TOWER_LABEL
+Torn
+; Tower
+;
+MSG_MAXIYAHZEE_LABEL
+MAXI-YATZY
+; MAXI-YAHZEE
+;
+MSG_SAVEDROLLS_LABEL
+Sparade kast
+; Saved Rolls
+;

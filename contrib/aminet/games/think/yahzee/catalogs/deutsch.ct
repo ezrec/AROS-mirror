@@ -1,0 +1,218 @@
+## version $VER: yahzee.catalog 2.0 (3.1.95)
+## codeset 0
+## language deutsch
+;
+MSG_GAME_MENU
+ \0Spiel
+;  \0Game
+;
+MSG_GAME_NEW
+N\0Neu
+; N\0New
+;
+MSG_GAME_UNDO
+Z\0Zurück
+; Z\0Undo
+;
+MSG_GAME_HIGHSCORE
+ \0High Scores...
+;  \0High Scores...
+;
+MSG_GAME_ABOUT
+?\0Über...
+; ?\0About...
+;
+MSG_GAME_QUIT
+Q\0Beenden Yahzee
+; Q\0Quit Yahzee
+;
+MSG_SETTINGS_MENU
+ \0Einstellungen
+;  \0Settings
+;
+MSG_SETTINGS_NUMPLAYERS
+ \0Anzahl der Spieler
+;  \0Number of Players
+;
+MSG_SETTINGS_NUMPLAYERS_1
+1\0001 Spieler
+; 1\0001 Player
+;
+MSG_SETTINGS_NUMPLAYERS_2
+2\0002 Spieler
+; 2\0002 Players
+;
+MSG_SETTINGS_NUMPLAYERS_3
+3\0003 Spieler
+; 3\0003 Players
+;
+MSG_SETTINGS_NUMPLAYERS_4
+4\0004 Spieler
+; 4\0004 Players
+;
+MSG_SETTINGS_NUMPLAYERS_5
+5\0005 Spieler
+; 5\0005 Players
+;
+MSG_SETTINGS_NUMPLAYERS_6
+6\0006 Spieler
+; 6\0006 Players
+;
+MSG_SETTINGS_SCORING
+ \0Punktezählweise
+;  \0Scoring Method
+;
+MSG_SETTINGS_SCORING_DEFAULT
+ \0Traditionell
+;  \0Traditional
+;
+MSG_SETTINGS_SCORING_AMERICAN
+ \0Amerikanisch
+;  \0American
+;
+MSG_SETTINGS_SAVE
+ \0Einstellungen sichern
+;  \0Save Settings
+;
+MSG_HIGHSCORE_REQTITLE
+High Scores
+; High Scores
+;
+MSG_ABOUT_REQTITLE
+Über %s
+; About %s
+;
+MSG_ABOUT_REQMSG
+%s v%s\nVon %s %s\nCopyright © %s %s
+; %s v%s\nBy %s %s\nCopyright © %s %s
+;
+MSG_NAME_REQTITLE
+Tolles Ergebnis, Spieler %d!!!
+; Great Score Player %d!!!
+;
+MSG_CONTINUE_GAD
+Weiter
+; Continue
+;
+MSG_NAME_GAD
+Name:
+; Name:
+;
+MSG_ROLL_GAD
+Würfeln
+; Roll
+;
+MSG_ACES_LABEL
+Einser
+; Aces
+;
+MSG_TWOS_LABEL
+Zweier
+; Twos
+;
+MSG_THREES_LABEL
+Dreier
+; Threes
+;
+MSG_FOURS_LABEL
+Vierer
+; Fours
+;
+MSG_FIVES_LABEL
+Fünfer
+; Fives
+;
+MSG_SIXES_LABEL
+Sechser
+; Sixes
+;
+MSG_UPPERTOTAL_LABEL
+Oben gesamt
+; Upper Total
+;
+MSG_BONUS_LABEL
+Bonus
+; Bonus
+;
+MSG_ONEPAIR_LABEL
+Ein Paar
+; One Pair
+;
+MSG_TWOPAIRS_LABEL
+Zwei Paare
+; Two Pairs
+;
+MSG_THREEKIND_LABEL
+Dreier Pasch
+; Three of a Kind
+;
+MSG_FOURKIND_LABEL
+Vierer Pasch
+; Four of a Kind
+;
+MSG_SMSTRAIGHT_LABEL
+Kleine Straße
+; Small Straight
+;
+MSG_LGSTRAIGHT_LABEL
+Grosse Straße
+; Large Straight
+;
+MSG_FULLHOUSE_LABEL
+Full House
+; Full House
+;
+MSG_CHANCE_LABEL
+Chance
+; Chance
+;
+MSG_YAHZEE_LABEL
+YAHZEE
+; YAHZEE
+;
+MSG_TOTAL_LABEL
+Gesamt
+; Total
+;
+;
+;
+MSG_SETTINGS_GAMETYPE
+ \0Spielart
+;  \0Type of Game
+;
+MSG_SETTINGS_GAMETYPE_ORIGINAL
+ \0Original
+;  \0Original
+;
+MSG_SETTINGS_GAMETYPE_MAXI
+ \0Maxi
+;  \0Maxi
+;
+MSG_THREEPAIRS_LABEL
+Drei Paare
+; Three Pairs
+;
+MSG_FIVEKIND_LABEL
+Fünfer Pasch
+; Five of a Kind
+;
+MSG_FULLSTRAIGHT_LABEL
+Volle Straße
+; Full Straight
+;
+MSG_HOUSE_LABEL
+House
+; House
+;
+MSG_TOWER_LABEL
+Tower
+; Tower
+;
+MSG_MAXIYAHZEE_LABEL
+MAXI-YAHZEE
+; MAXI-YAHZEE
+;
+MSG_SAVEDROLLS_LABEL
+Gesicherte Würfel
+; Saved Rolls
+;

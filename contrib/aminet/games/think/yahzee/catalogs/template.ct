@@ -1,0 +1,218 @@
+## version $VER: XX.catalog XX.XX (XX.XX.XX)
+## codeset X
+## language X
+;
+MSG_GAME_MENU
+
+;  \0Game
+;
+MSG_GAME_NEW
+
+; N\0New
+;
+MSG_GAME_UNDO
+
+; Z\0Undo
+;
+MSG_GAME_HIGHSCORE
+
+;  \0High Scores...
+;
+MSG_GAME_ABOUT
+
+; ?\0About...
+;
+MSG_GAME_QUIT
+
+; Q\0Quit Yahzee
+;
+MSG_SETTINGS_MENU
+
+;  \0Settings
+;
+MSG_SETTINGS_NUMPLAYERS
+
+;  \0Number of Players
+;
+MSG_SETTINGS_NUMPLAYERS_1
+
+; 1\0001 Player
+;
+MSG_SETTINGS_NUMPLAYERS_2
+
+; 2\0002 Players
+;
+MSG_SETTINGS_NUMPLAYERS_3
+
+; 3\0003 Players
+;
+MSG_SETTINGS_NUMPLAYERS_4
+
+; 4\0004 Players
+;
+MSG_SETTINGS_NUMPLAYERS_5
+
+; 5\0005 Players
+;
+MSG_SETTINGS_NUMPLAYERS_6
+
+; 6\0006 Players
+;
+MSG_SETTINGS_SCORING
+
+;  \0Scoring Method
+;
+MSG_SETTINGS_SCORING_DEFAULT
+
+;  \0Traditional
+;
+MSG_SETTINGS_SCORING_AMERICAN
+
+;  \0American
+;
+MSG_SETTINGS_SAVE
+
+;  \0Save Settings
+;
+MSG_HIGHSCORE_REQTITLE
+
+; High Scores
+;
+MSG_ABOUT_REQTITLE
+
+; About %s
+;
+MSG_ABOUT_REQMSG
+
+; %s v%s\nBy %s %s\nCopyright © %s %s
+;
+MSG_NAME_REQTITLE
+
+; Great Score Player %d!!!
+;
+MSG_CONTINUE_GAD
+
+; Continue
+;
+MSG_NAME_GAD
+
+; Name:
+;
+MSG_ROLL_GAD
+
+; Roll
+;
+MSG_ACES_LABEL
+
+; Aces
+;
+MSG_TWOS_LABEL
+
+; Twos
+;
+MSG_THREES_LABEL
+
+; Threes
+;
+MSG_FOURS_LABEL
+
+; Fours
+;
+MSG_FIVES_LABEL
+
+; Fives
+;
+MSG_SIXES_LABEL
+
+; Sixes
+;
+MSG_UPPERTOTAL_LABEL
+
+; Upper Total
+;
+MSG_BONUS_LABEL
+
+; Bonus
+;
+MSG_ONEPAIR_LABEL
+
+; One Pair
+;
+MSG_TWOPAIRS_LABEL
+
+; Two Pairs
+;
+MSG_THREEKIND_LABEL
+
+; Three of a Kind
+;
+MSG_FOURKIND_LABEL
+
+; Four of a Kind
+;
+MSG_SMSTRAIGHT_LABEL
+
+; Small Straight
+;
+MSG_LGSTRAIGHT_LABEL
+
+; Large Straight
+;
+MSG_FULLHOUSE_LABEL
+
+; Full House
+;
+MSG_CHANCE_LABEL
+
+; Chance
+;
+MSG_YAHZEE_LABEL
+
+; YAHZEE
+;
+MSG_TOTAL_LABEL
+
+; Total
+;
+;
+;
+MSG_SETTINGS_GAMETYPE
+
+;  \0Type of Game
+;
+MSG_SETTINGS_GAMETYPE_ORIGINAL
+
+;  \0Original
+;
+MSG_SETTINGS_GAMETYPE_MAXI
+
+;  \0Maxi
+;
+MSG_THREEPAIRS_LABEL
+
+; Three Pairs
+;
+MSG_FIVEKIND_LABEL
+
+; Five of a Kind
+;
+MSG_FULLSTRAIGHT_LABEL
+
+; Full Straight
+;
+MSG_HOUSE_LABEL
+
+; House
+;
+MSG_TOWER_LABEL
+
+; Tower
+;
+MSG_MAXIYAHZEE_LABEL
+
+; MAXI-YAHZEE
+;
+MSG_SAVEDROLLS_LABEL
+
+; Saved Rolls
+;
