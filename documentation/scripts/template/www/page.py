@@ -16,7 +16,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
             A( _N['status'], href='%(BASE)sintroduction/status/everything.html' ),
             A( _N['screenshots'], href='%(BASE)spictures/screenshots/' ),
             A( _N['ports'], href='%(BASE)sintroduction/ports.php' ),
-            A( _N['license'], href='%(BASE)slicense.php' )
+            A( _N['license'], href='%(BASE)slicense.html' )
         ] ),
         BR(),
         A( _N['download'], href='%(BASE)sdownload.php' ),
