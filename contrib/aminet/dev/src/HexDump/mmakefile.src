@@ -1,0 +1,35 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(CONTRIBDIR)/aminet
+
+FILES := HexDump
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+EXE := $(DESTDIR)/hexdump
+
+.PHONY : all clean
+
+#MM aminet-dev-src-hexdump : setup-aminet-dev-src-hexdump
+aminet-dev-src-hexdump 	: $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-aminet-dev-src-hexdump :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	%link_q from=$(OBJS)
+
+#MM
+clean-aminet :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+

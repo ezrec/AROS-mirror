@@ -1,0 +1,11 @@
+Short:    Simple Hex dumper incl. C-Source
+Uploader: Tcn@techbase.in-berlin.de (Timo C. Nentwig)
+Author:   Tcn@techbase.in-berlin.de (Timo C. Nentwig)
+Type:     dev/src
+
+USAGE: HexDump <file1> <file2> ...
+
+Pattern matching is supported.
+
+C-Source is included.
+
