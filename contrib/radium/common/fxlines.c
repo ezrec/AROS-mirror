@@ -262,9 +262,7 @@ struct FX *selectFX(
 		if(selection==-1) return NULL;
 		if(selection<num_usedFX) return getTrackFX(wtrack->track,selection);
 	}
-
 	fx=talloc(sizeof(struct FX));
-
 	if(
 		(*wtrack->track->instrument->getFX)(window,wtrack->track,fx)
 		==
@@ -272,13 +270,11 @@ struct FX *selectFX(
 	){
 		return NULL;
 	}
-
 	if(fx->color==0){
 		fx->color=nextcolor;
 		nextcolor++;
 		if(nextcolor==256) nextcolor=4;
 	}
-
 	return fx;
 }
 
@@ -294,15 +290,12 @@ void AddFXNodeLine(
 	Place p2;
 	struct FXs *fxs;
 	struct FXNodeLines *fxnodeline;
-
 	fxs=ListFindElement1_r0(&wtrack->track->fxs->l,fx->l.num);
 	if(fxs==NULL){
-		printf("new, fx->l.num: %d, wtrack->fxs->l.num:%d\n",fx->l.num,wtrack->track->fxs->l.num);
 		fxs=talloc(sizeof(struct FXs));
 		fxs->l.num=fx->l.num;
 		fxs->fx=fx;
 		ListAddElement1(&wtrack->track->fxs,&fxs->l);
-
 		realline=FindRealLineFor(wblock,0,p1);
 		if(realline==wblock->num_reallines-1){
 			PlaceSetLastPos(wblock->block,&p2);
@@ -314,12 +307,10 @@ void AddFXNodeLine(
 		PlaceCopy(&fxnodeline->l.p,&p2);
 		ListAddElement3(&fxs->fxnodelines,&fxnodeline->l);
 	}
-
 	fxnodeline=talloc(sizeof(struct FXNodeLines));
 	fxnodeline->val=val;
 	PlaceCopy(&fxnodeline->l.p,p1);
 	ListAddElement3_ns(&fxs->fxnodelines,&fxnodeline->l);
-
 }
 
 void AddFXNodeLineCurrPos(struct Tracker_Windows *window){
@@ -333,17 +324,14 @@ void AddFXNodeLineCurrPos(struct Tracker_Windows *window){
 	wtrack=wblock->wtrack;
 
 	Undo_FXs_CurrPos(window);
-
 	fx=selectFX(window,wblock,wtrack);
 	if(fx==NULL) return;
-
 	AddFXNodeLine(
 		window,wblock,wtrack,
 		fx,
 		(fx->max + fx->min)/2,
 		&wblock->reallines[wblock->curr_realline]->l.p
 	);
-
 	UpdateFXNodeLines(window,wblock,wtrack);
 //	ClearTrack(window,wblock,wtrack,wblock->top_realline,wblock->bot_realline);
 	UpdateWTrack(window,wblock,wtrack,wblock->top_realline,wblock->bot_realline);
