@@ -6,6 +6,8 @@
 #include "generic.h"
 #ifdef __AROS__
 #include <aros/macros.h>
+#else
+#define AROS_BIG_ENDIAN 1
 #endif
 
 typedef struct directory_record {
@@ -140,5 +142,13 @@ t_bool Uses_High_Sierra_Protocol(CDROM *p_cdrom);
 directory_record *Get_Directory_Record
 	(VOLUME *p_volume, unsigned long p_location, unsigned long p_offset);
 CDROM_OBJ *Iso_Create_Directory_Obj(VOLUME *p_volume, unsigned long p_location);
+
+#if !AROS_BIG_ENDIAN
+#define l_table m_table
+#define opt_l_table opt_m_table
+#else
+#define l_table i_table
+#define opt_l_table opt_i_table
+#endif
 
 #endif /* _ISO9660_H_ */

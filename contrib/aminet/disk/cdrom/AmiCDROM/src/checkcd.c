@@ -19,12 +19,14 @@
 #include <dos/var.h>
 
 #include <clib/dos_protos.h>
-#include <clib/exec_protos.h>
 #include <clib/utility_protos.h>
+
+#include <proto/exec.h>
 
 #include "cdrom.h"
 #include "iso9660.h"
 #include "rock.h"
+#include "globals.h"
 
 #ifdef LATTICE
 #include <pragmas/dos_pragmas.h>
@@ -36,14 +38,17 @@ extern struct Library *SysBase, *DOSBase;
 #define STD_BUFFERS 20
 #define FILE_BUFFERS 2
 
-CDROM *g_cd = NULL;
+/*CDROM *g_cd = NULL;
 char g_the_device[80];
 int g_the_unit;
-t_ulong g_memory_type = MEMF_CHIP;
+t_ulong g_memory_type = MEMF_CHIP;*/
 t_ulong g_check_sector;
 char *g_check_name;
 prim_vol_desc g_pvd;
 int g_path_table_records = 0;
+
+struct Globals glob;
+struct Globals *global = &glob;
 
 struct Library *UtilityBase;
 
@@ -90,29 +95,29 @@ void Check_Optional_Path_Tables (void)
   
   for (i=0; i<=1; i++) {
   
-    int remain = g_pvd.path_size_m;
+    int remain = g_pvd.path_size;
 
     if (i == 0)
       loc1 = GET731((char*) &g_pvd.l_table),
       loc2 = GET731((char *) &g_pvd.opt_l_table);
     else
-      loc1 = g_pvd.m_table, loc2 = g_pvd.opt_m_table;
+      loc1 = g_pvd.table, loc2 = g_pvd.opt_table;
     if (!loc2)
       continue;
 
     for (;;) {
     
-      if (!Read_Sector (g_cd, loc1)) {
+      if (!Read_Sector (global->g_cd, loc1)) {
         printf ("ERROR: illegal sector %lu\n", loc1);
         exit (1);
       }
-      buf1 = g_cd->buffer;
+      buf1 = global->g_cd->buffer;
     
-      if (!Read_Sector (g_cd, loc2)) {
+      if (!Read_Sector (global->g_cd, loc2)) {
         printf ("ERROR: illegal sector %lu\n", loc2);
         exit (1);
       }
-      buf2 = g_cd->buffer;
+      buf2 = global->g_cd->buffer;
 
       if (memcmp (buf1, buf2, remain > 2048 ? 2048 : remain) != 0) {
         printf ("ERROR: %c path table and optional %c path table differ"
@@ -137,24 +142,24 @@ void Get_Path_Table_Record (t_uchar *p_buf, t_ulong p_loc, t_ulong *p_offset)
   t_ulong sector = p_loc + (*p_offset >> 11);
   int len;
 
-  if (!Read_Sector (g_cd, sector)) {
+  if (!Read_Sector (global->g_cd, sector)) {
     printf ("ERROR: illegal sector %lu\n", sector);
     exit (1);
   }
-  len = g_cd->buffer[*p_offset & 2047] + 8;
+  len = global->g_cd->buffer[*p_offset & 2047] + 8;
   if (len & 1)
     len++;
 
   if (len + (*p_offset & 2047) > 2048) {
     int part1_len = 2048 - (*p_offset & 2047);
-    memcpy (p_buf, g_cd->buffer + (*p_offset & 2047), part1_len);
-    if (!Read_Sector (g_cd, sector+1)) {
+    memcpy (p_buf, global->g_cd->buffer + (*p_offset & 2047), part1_len);
+    if (!Read_Sector (global->g_cd, sector+1)) {
       printf ("ERROR: illegal sector %lu\n", sector+1);
       exit (1);
     }
-    memcpy (p_buf + part1_len, g_cd->buffer, len - part1_len);
+    memcpy (p_buf + part1_len, global->g_cd->buffer, len - part1_len);
   } else
-    memcpy (p_buf, g_cd->buffer + (*p_offset & 2047), len);
+    memcpy (p_buf, global->g_cd->buffer + (*p_offset & 2047), len);
   
   *p_offset += len;
 }
@@ -164,13 +169,13 @@ void Get_Path_Table_Record (t_uchar *p_buf, t_ulong p_loc, t_ulong *p_offset)
 void Compare_L_And_M_Path_Table (void)
 {
   t_ulong loc1 = GET731((char*) &g_pvd.l_table);
-  t_ulong loc2 = g_pvd.m_table;
+  t_ulong loc2 = g_pvd.table;
   t_ulong offset1 = 0;
   t_ulong offset2 = 0;
   static t_uchar buf1[256];
   static t_uchar buf2[256];
 
-  while (offset1 < g_pvd.path_size_m) {
+  while (offset1 < g_pvd.path_size) {
 
     t_ulong tmp = offset1;
 
@@ -207,7 +212,7 @@ void Compare_L_And_M_Path_Table (void)
 
 void Compare_Path_Table_With_Directory_Records (void)
 {
-  t_ulong loc = g_pvd.m_table;
+  t_ulong loc = g_pvd.table;
   t_ulong offset = 0;
   static t_uchar buf[256];
   int rec = 1;
@@ -217,13 +222,13 @@ void Compare_Path_Table_With_Directory_Records (void)
   t_ulong pos;
   t_bool warn_case = 0;
 
-  vol = Open_Volume (g_cd, 0);
+  vol = Open_Volume (global->g_cd, 0);
   if (!vol) {
     printf ("ERROR: cannot open volume\n");
     exit (10);
   }
 
-  for (; offset < g_pvd.path_size_m; rec++) {
+  for (; offset < g_pvd.path_size; rec++) {
     t_ulong tmp = offset;
 
     if ((rec & 7) == 1) {
@@ -279,11 +284,11 @@ void Check_PVD (void)
   prim_vol_desc *pvd;
 
   do {
-    if (!Read_Sector (g_cd, loc)) {
+    if (!Read_Sector (global->g_cd, loc)) {
       printf ("ERROR: illegal sector %d\n", loc);
       exit (1);
     }
-    pvd = (prim_vol_desc *) g_cd->buffer;
+    pvd = (prim_vol_desc *) global->g_cd->buffer;
     if (memcmp (pvd->id, "CD001", 5) != 0) {
       printf ("ERROR: missing standard identifier at sector %d\n", loc);
       exit (10);
@@ -297,11 +302,11 @@ void Check_PVD (void)
     loc++;
   } while (pvd->type != 255);
 
-  if (!Read_Sector (g_cd, pvd_pos)) {
+  if (!Read_Sector (global->g_cd, pvd_pos)) {
     printf ("ERROR: illegal sector %d\n", loc);
     exit (1);
   }
-  pvd = (prim_vol_desc *) g_cd->buffer;
+  pvd = (prim_vol_desc *) global->g_cd->buffer;
   g_check_name = "primary volume descriptor";
   g_check_sector = pvd_pos;
   Check_733 (pvd, 81);
@@ -335,7 +340,7 @@ void Check_Subdirectory (CDROM_OBJ *p_home, char *p_name)
 
     Close_Object (obj);
   } else {
-    printf ("ERROR: Object '%s': iso_errno = %d\n", p_name, iso_errno);
+    printf ("ERROR: Object '%s': iso_errno = %d\n", p_name, global->iso_errno);
     return;
   }
 
@@ -363,7 +368,7 @@ void Check_Subdirectory (CDROM_OBJ *p_home, char *p_name)
     }
     Close_Object (obj);
   } else {
-    printf ("ERROR: Object '%s': iso_errno = %d\n", p_name, iso_errno);
+    printf ("ERROR: Object '%s': iso_errno = %d\n", p_name, global->iso_errno);
   }
 
   printf ("  %*s\r", strlen (p_name), "");
@@ -374,13 +379,13 @@ void Check_Directories (void)
   VOLUME *vol;
   CDROM_OBJ *home;
 
-  if (!(vol = Open_Volume (g_cd, 1))) {
-    printf ("ERROR: cannot open volume; iso_errno = %d\n", iso_errno);
+  if (!(vol = Open_Volume (global->g_cd, 1))) {
+    printf ("ERROR: cannot open volume; iso_errno = %d\n", global->iso_errno);
     exit (10);
   }
 
   if (!(home = Open_Top_Level_Directory (vol))) {
-    printf ("ERROR: cannot open top level directory; iso_errno = %d\n", iso_errno);
+    printf ("ERROR: cannot open top level directory; iso_errno = %d\n", global->iso_errno);
     Close_Volume (vol);
     exit (1);
   }
@@ -393,8 +398,8 @@ void Check_Directories (void)
 
 void Cleanup (void)
 {
-  if (g_cd)
-    Cleanup_CDROM (g_cd);
+  if (global->g_cd)
+    Cleanup_CDROM (global->g_cd);
 
   if (UtilityBase)
     CloseLibrary (UtilityBase);
@@ -405,15 +410,15 @@ int Get_Device_And_Unit (void)
   int len;
   char buf[10];
   
-  len = GetVar ((UBYTE *) "CDROM_DEVICE", (UBYTE *) g_the_device,
-  		sizeof (g_the_device), 0);
+  len = GetVar ((UBYTE *) "CDROM_DEVICE", (UBYTE *) global->g_device,
+  		sizeof (global->g_device), 0);
   if (len < 0)
     return 0;
-  if (len >= sizeof (g_the_device)) {
+  if (len >= sizeof (global->g_device)) {
     fprintf (stderr, "CDROM_DEVICE too long\n");
     exit (1);
   }
-  g_the_device[len] = 0;
+  global->g_device[len] = 0;
   
   len = GetVar ((UBYTE *) "CDROM_UNIT", (UBYTE *) buf,
   		sizeof (buf), 0);
@@ -424,12 +429,12 @@ int Get_Device_And_Unit (void)
     exit (1);
   }
   buf[len] = 0;
-  g_the_unit = atoi (buf);
+  global->g_unit = atoi (buf);
   
   if (GetVar ((UBYTE *) "CDROM_FASTMEM", (UBYTE *) buf,
       sizeof (buf), 0) > 0) {
     fprintf (stderr, "using fastmem\n");
-    g_memory_type = MEMF_FAST;
+    global->g_memory_type = MEMF_FAST;
   }
 
   return 1;
@@ -437,6 +442,9 @@ int Get_Device_And_Unit (void)
 
 void main (int argc, char *argv[])
 {
+  global->g_cd = NULL;
+  global->g_memory_type = MEMF_CHIP;
+  global->SysBase = SysBase;
   atexit (Cleanup);
 
   if (!(UtilityBase = (struct Library *)
@@ -444,6 +452,7 @@ void main (int argc, char *argv[])
     fprintf (stderr, "cannot open utility.library\n");
     exit (1);
   }
+  global->UtilityBase = UtilityBase;
 
   if (!Get_Device_And_Unit ()) {
     fprintf (stderr,
@@ -460,12 +469,12 @@ void main (int argc, char *argv[])
     exit (1);
   }
 
-  g_ignore_blocklength = TRUE;
+  global->g_ignore_blocklength = TRUE;
 
-  g_cd = Open_CDROM (g_the_device, g_the_unit, 1, g_memory_type,
+  global->g_cd = Open_CDROM (global->g_device, global->g_unit, 1, global->g_memory_type,
   		   STD_BUFFERS, FILE_BUFFERS);
-  if (!g_cd) {
-    fprintf (stderr, "cannot open CDROM, error code = %d\n", g_cdrom_errno);
+  if (!global->g_cd) {
+    fprintf (stderr, "cannot open CDROM, error code = %d\n", global->g_cdrom_errno);
     exit (1);
   }
 

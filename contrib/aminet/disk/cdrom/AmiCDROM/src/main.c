@@ -138,8 +138,8 @@ void Show_Directory_Record (directory_record *p_dir)
   char buf[256];
 
   printf ("Extended Attr Record Length: %d\n", (int) p_dir->ext_attr_length);
-  printf ("Location of Extent:          %lu\n", p_dir->extent_loc_m);
-  printf ("Data Length:                 %lu\n", p_dir->data_length_m);
+  printf ("Location of Extent:          %lu\n", p_dir->extent_loc);
+  printf ("Data Length:                 %lu\n", p_dir->data_length);
   printf ("Recording Date and Time:     %02d.%02d.19%02d %02d:%02d:%02d %+d\n",
   	  (int) p_dir->day, (int) p_dir->month, (int) p_dir->year,
 	  (int) p_dir->hour, (int) p_dir->minute, (int) p_dir->second,
@@ -149,7 +149,7 @@ void Show_Directory_Record (directory_record *p_dir)
   printf (")\n");
   printf ("File Unit Size:              %d\n", (int) p_dir->file_unit_size);
   printf ("Gap Size:                    %d\n", (int) p_dir->gap_size);
-  printf ("Volume Sequence Number:      %hu\n", p_dir->sequence_m);
+  printf ("Volume Sequence Number:      %hu\n", p_dir->sequence);
   printf ("File Identifier:             ");
   if (p_dir->file_id[0] == 0)
     printf ("(00)\n");
@@ -226,13 +226,13 @@ void Show_Primary_Volume_Descriptor (CDROM *p_cd)
     printf ("Volume Descriptor Version:       %d\n", (int) pvd->version);
     printf ("System Identifier:               %s\n", MKSTR (pvd->system_id,32,buf));
     printf ("Volume Identifier:               %s\n", MKSTR (pvd->volume_id,32,buf));
-    printf ("Volume Space Size:               %lu\n", pvd->space_size_m);
-    printf ("Volume Set Size:                 %hu\n", pvd->set_size_m);
-    printf ("Volume Sequence Number:          %hu\n", pvd->sequence_m);
-    printf ("Logical Block Size:              %hu\n", pvd->block_size_m);
-    printf ("Path Table Size:                 %lu\n", pvd->path_size_m);
-    printf ("Location of Occ of M Path Table: %lu\n", pvd->m_table); 
-    printf ("Location of Occ of Opt M Path T: %lu\n", pvd->opt_m_table);
+    printf ("Volume Space Size:               %lu\n", pvd->space_size);
+    printf ("Volume Set Size:                 %hu\n", pvd->set_size);
+    printf ("Volume Sequence Number:          %hu\n", pvd->sequence);
+    printf ("Logical Block Size:              %hu\n", pvd->block_size);
+    printf ("Path Table Size:                 %lu\n", pvd->path_size);
+    printf ("Location of Occ of M Path Table: %lu\n", pvd->table);
+    printf ("Location of Occ of Opt M Path T: %lu\n", pvd->opt_table);
     printf ("Volume Set Identifier:           %s\n",
   					MKSTR (pvd->volume_set_id,128,buf));  
     printf ("Publisher Identifier:            %s\n",
@@ -333,7 +333,7 @@ void Show_Root_Directory (CDROM *p_cd)
 
   pvd = (prim_vol_desc *) p_cd->buffer;
 
-  Show_Directory (p_cd, pvd->root.extent_loc_m, pvd->root.data_length_m);
+  Show_Directory (p_cd, pvd->root.extent_loc, pvd->root.data_length);
 }
 
 void Check_Protocol (CDROM *p_cd)
@@ -476,6 +476,7 @@ void Show_File_Contents (CDROM *p_cd, char *p_name)
       fwrite (buffer, cnt, 1, stdout);
     }
 
+    putchar ('\n');
     Close_Object (obj);
   } else {
     fprintf (stderr, "Object '%s': iso_errno = %d\n", p_name, global->iso_errno);
@@ -565,9 +566,9 @@ void Show_Subdirectory (CDROM_OBJ *p_home, char *p_name, int p_long_info,
 
   if (obj = Open_Object (p_home, p_name)) {
     unsigned long offset = 0;
-    
+
     while (Examine_Next (obj, &info, &offset)) {
-      directory_record *dir = info.suppl_info;
+     directory_record *dir = info.suppl_info;
       fwrite (info.name, info.name_length, 1, stdout);
       if (info.symlink_f)
         printf (" (symbolic link)");
@@ -582,8 +583,8 @@ void Show_Subdirectory (CDROM_OBJ *p_home, char *p_name, int p_long_info,
 		(int) dir->hour,
 		(int) dir->minute,
 		(int) dir->second);
-	printf ("%lu  ", dir->data_length_m);
-	printf ("loc=%lu  ", dir->extent_loc_m);
+	printf ("%lu  ", dir->data_length);
+	printf ("loc=%lu  ", dir->extent_loc);
 	Show_Flags (dir->flags);
 	putchar ('\n');
         if (dir->ext_attr_length)
@@ -961,7 +962,6 @@ void main (int argc, char *argv[])
   global->g_trackdisk = 0;
   global->g_memory_type = MEMF_CHIP;
   global->SysBase = SysBase;
-
   atexit (Cleanup);
 
   if (argc < 2)
@@ -972,6 +972,7 @@ void main (int argc, char *argv[])
     fprintf (stderr, "cannot open utility.library\n");
     exit (1);
   }
+  global->UtilityBase = UtilityBase;
 
   if (!Get_Device_And_Unit ()) {
     fprintf (stderr,
