@@ -58,7 +58,7 @@ BEGIN {
     if (!match (Dir, /\//))
 	RSTART=length(Dir);
     Area = substr(Dir,1,RSTART);
-print RSTART,":",Dir,":",Area
+#print RSTART,":",Dir,":",Area
 
     next;
 }
@@ -113,7 +113,7 @@ function dump(t,flist)
 
 function pout(str) {
     # Add a string to the file "Out" and "Out.new"
-printf ("%s", str);
+#printf ("%s", str);
     printf ("%s", str) >> Out;
     printf ("%s", str) >> Out ".new." Area;
 }
