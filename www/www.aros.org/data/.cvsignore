@@ -2,3 +2,5 @@
 .stamp
 apache.conf
 site.conf
+config.py
+.Makefile.inc
