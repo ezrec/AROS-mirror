@@ -259,10 +259,11 @@ import faq2html
 faq2html.gen (arosRC, 'FAQ', os.path.join (arosdir, 'docs', 'faq')).write ('faq.html')
 
 genXmlPage ('mmake', 'MetaMake')
+genXmlPage ('style', 'Coding Style')
 genXmlPage ('hidd-intro', 'HIDD Intro')
 genXmlPage ('hidd-model', 'HIDD Model')
-genXmlPage ('ideas', 'Random Ideas')
 genXmlPage ('filesys', 'Filesystems')
+genXmlPage ('ideas', 'Random Ideas')
 
 import contents2html
 contents2html.gen ()
