@@ -6,7 +6,9 @@ DEBUG_OPTIONS=
 STANDARD_OPTIONS=
 ENHANCED_OPTIONS=-DENHANCED
 
-LD = ld
+LD = $(AROS_LD)
+LDINCR_FLAG = -r
+
 #DEFINES should really not define ENHANCED but for AROS it's fine.
 DEFINES := -DENHANCED
 
@@ -232,7 +234,7 @@ bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 #	@$(CC) $(ENHANCED_OPTIONS) $(DEFINES) -c ver.c -o o/ver.o
 #	endif
 	@$(ECHO) Linking $@...
-	@$(AROS_LD) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) \
+	@$(AROS_CC) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) \
 	      o/libtag.o o/ver.o o/plmain$(o) o/plgfx$(o) o/plboopsi$(o) \
 	      o/plimageclasses$(o) o/plgadgetclasses$(o) o/plaslclasses$(o) \
 	      o/plgroupclasses$(o) o/endtag.o \
@@ -264,37 +266,37 @@ asl_o=o/aslreqclass$(o) o/filereqclass$(o) o/fontreqclass$(o) o/screenreqclass$(
 o/plmain$(o): $(main_o)
 	@echo "Linking $@..."
 	@$(RM) -f $@
-	@$(LD) -r $(main_o) -o $@ 
+	$(LD) $(LDINCR_FLAG) $(main_o) -o $@ 
 
 o/plboopsi$(o): $(boopsi_o)
 	@echo "Linking $@..."
 	@$(RM) -f $@
-	@$(LD) -r $(boopsi_o) -o $@
+	@$(LD) $(LDINCR_FLAG) $(boopsi_o) -o $@
 
 o/plgfx$(o): $(gfx_o)
 	@echo "Linking $@..."
 	@$(RM) -f $@
-	@$(LD) -r $(gfx_o) -o $@
+	@$(LD) $(LDINCR_FLAG) $(gfx_o) -o $@
 
 o/plgroupclasses$(o): $(group_o)
 	@echo "Linking $@..."
 	@$(RM) -f $@
-	@$(LD) -r $(group_o) -o $@
+	@$(LD) $(LDINCR_FLAG) $(group_o) -o $@
 
 o/plimageclasses$(o) : $(image_o)
 	@echo "Linking $@..."
 	@$(RM) -f $@
-	@$(LD) -r $(image_o) -o $@
+	@$(LD) $(LDINCR_FLAG) $(image_o) -o $@
 
 o/plgadgetclasses$(o) : $(gadget_o)
 	@echo "Linking $@..."
 	@$(RM) -f $@
-	@$(LD) -r $(gadget_o) -o $@
+	@$(LD) $(LDINCR_FLAG) $(gadget_o) -o $@
 
 o/plaslclasses$(o) : $(asl_o)
 	@echo "Linking $@..."
 	@$(RM) -f $@
-	@$(LD) -r $(asl_o) -o $@
+	@$(LD) $(LDINCR_FLAG) $(asl_o) -o $@
 
 o/libtag.o: libtag.c
 	@$(CC) $(INCLUDES) -c $^ -o $@
