@@ -88,7 +88,7 @@ struct ReqToolsBase *ReqToolsBase=NULL;
 #endif
 
 
-struct Library *InputBase;
+struct Device *InputBase;
 struct IOStdReq *InputIO;
 struct MsgPort *keyPort;
 
