@@ -14,9 +14,9 @@
 
 #include "inifile_intern.h"
 #include "ini.h"
-#include <aros/libcall.h>
 
-int _iniPropertyRead( HINI hIni, char *szLine, char *pszPropertyName, char *pszPropertyValue )
+#undef _iniPropertyRead
+int _iniPropertyRead( HINI hIni, char *szLine, char *pszPropertyName, char *pszPropertyValue, struct Library *inifileBase )
 {
 
     /* SANITY CHECKS */

@@ -44,19 +44,18 @@ FUNCS := \
     iniToUpper \
     iniValue
 
-#MM workbench-libs-inifile-includes : \
-#MM     includes-copy
-#MM- workbench-libs-inifile-module : linklibs
+#MM- workbench-libs-libini-includes : includes-copy
+#MM- workbench-libs-libini : linklibs
 
 USER_CFLAGS := -I./ -I./include
 
 
 BDID := $(BDID)_
-ifneq ($(filter $(TARGET),workbench-libs-inifile-module workbench-libs-inifile-module-includes workbench-libs-inifile-module-setup workbench-libs-inifile-module-clean workbench-libs-inifile-module-quick workbench-libs-inifile-module-kobj),)
+ifneq ($(filter $(TARGET),workbench-libs-libini workbench-libs-libini-includes workbench-libs-libini-setup workbench-libs-libini-clean workbench-libs-libini-quick workbench-libs-libini-kobj),)
 BDTARGETID := $(BDID)
 endif
 
-.PHONY : setup-module$(BDID) workbench-libs-inifile-module workbench-libs-inifile-module-includes workbench-libs-inifile-module-setup workbench-libs-inifile-module-clean workbench-libs-inifile-module-quick workbench-libs-inifile-module-kobj
+.PHONY : setup-module$(BDID) workbench-libs-libini workbench-libs-libini-includes workbench-libs-libini-setup workbench-libs-libini-clean workbench-libs-libini-quick workbench-libs-libini-kobj
 
 ifeq (inifile,)
 $(error using %build_module: modname may not be empty)
@@ -302,21 +301,21 @@ ifeq ($(BD_MODTYPE$(BDID)),library)
   BD_DFILE_DEPS$(BDID) += $(addprefix $(INCDIR)/,$(BD_GENINCS$(BDID)))
 endif
 
-#MM workbench-libs-inifile-module : workbench-libs-inifile-module-includes
-#MM workbench-libs-inifile-module-kobj : workbench-libs-inifile-module-includes
-#MM workbench-libs-inifile-module-includes : workbench-libs-inifile-module-setup
+#MM workbench-libs-libini : workbench-libs-libini-includes
+#MM workbench-libs-libini-kobj : workbench-libs-libini-includes
+#MM workbench-libs-libini-includes : workbench-libs-libini-setup
 
 #MM
-workbench-libs-inifile-module-quick : workbench-libs-inifile-module
+workbench-libs-libini-quick : workbench-libs-libini
 
 #MM
-workbench-libs-inifile-module : $(BD_GENFILES$(BDID))
+workbench-libs-libini : $(BD_GENFILES$(BDID))
 
 #MM
-workbench-libs-inifile-module-includes : $(addprefix $(AROS_INCLUDES)/,$(BD_GENINCS$(BDID)))
+workbench-libs-libini-includes : $(addprefix $(AROS_INCLUDES)/,$(BD_GENINCS$(BDID)))
 
 #MM
-workbench-libs-inifile-module-clean ::
+workbench-libs-libini-clean ::
 	@$(ECHO) "Cleaning up for module $(BD_MODNAME$(BDID))"
 	@$(RM) $(BD_OBJS$(BDID)) $(BD_DEPS$(BDID)) $(BD_REFFILE$(BDID)) \
 	    $(BD_REFFILES$(BDID))\
@@ -329,9 +328,9 @@ workbench-libs-inifile-module-clean ::
 	    $(BD_STARTOBJ$(BDID)) $(BD_ENDOBJ$(BDID))
 
 #MM
-workbench-libs-inifile-module-setup : setup-module$(BDID)
+workbench-libs-libini-setup : setup-module$(BDID)
 
-ifneq ($(filter $(TARGET),workbench-libs-inifile-module workbench-libs-inifile-module-includes workbench-libs-inifile-module-quick workbench-libs-inifile-module-kobj),) # Avoid conflicts
+ifneq ($(filter $(TARGET),workbench-libs-libini workbench-libs-libini-includes workbench-libs-libini-quick workbench-libs-libini-kobj),) # Avoid conflicts
 ifneq ($(dir $(BD_FILES$(BDID))),./)
 vpath %.c $(filter-out ./,$(dir $(BD_FILES$(BDID))))
 endif
@@ -487,7 +486,7 @@ $(TMP_TARGETBASE).d : $(BD_OBJDIR$(BDID))/$(BD_MODNAME$(BDID))_end.c
 endif
 
 # Some include files need to be generated before the .c can be parsed.
-ifneq ($(filter $(TARGET),workbench-libs-inifile-module workbench-libs-inifile-module-includes workbench-libs-inifile-module-quick workbench-libs-inifile-module-kobj),) # Only for this target these deps are wanted
+ifneq ($(filter $(TARGET),workbench-libs-libini workbench-libs-libini-includes workbench-libs-libini-quick workbench-libs-libini-kobj),) # Only for this target these deps are wanted
 $(BD_REFFILES$(BDID)) : $(BD_REFFILE_DEPS$(BDID)) $(dir $(GENMODULE))/genmod_inc/aros/libcall.h
 $(BD_DEPS$(BDID)) : $(BD_DFILE_DEPS$(BDID))
 endif
@@ -609,7 +608,7 @@ $(TOCREATE_TMP) :
   endif
 endif
 
-workbench-libs-inifile-module-kobj : $(KOBJSDIR)/$(BD_MODNAME$(BDID))_$(BD_MODTYPE$(BDID)).o
+workbench-libs-libini-kobj : $(KOBJSDIR)/$(BD_MODNAME$(BDID))_$(BD_MODTYPE$(BDID)).o
 
 $(KOBJSDIR)/$(BD_MODNAME$(BDID))_$(BD_MODTYPE$(BDID)).o : \
 $(BD_OBJDIR$(BDID))/$(BD_MODNAME$(BDID))_start.o \
@@ -618,8 +617,8 @@ $(BD_OBJDIR$(BDID))/$(BD_MODNAME$(BDID))_end.o
 	@$(LD) -r -o $@ $^
 
 ifneq ($(BD_DEPS$(BDID)),)
-  ifneq (workbench-libs-inifile-module workbench-libs-inifile-module-quick,)
-    ifneq ($(findstring $(TARGET),workbench-libs-inifile-module workbench-libs-inifile-module-quick),)
+  ifneq (workbench-libs-libini workbench-libs-libini-quick,)
+    ifneq ($(findstring $(TARGET),workbench-libs-libini workbench-libs-libini-quick),)
       -include $(BD_DEPS$(BDID))
     endif
   else
@@ -628,7 +627,52 @@ ifneq ($(BD_DEPS$(BDID)),)
     endif
   endif
 endif
- 
+
+
+ifneq (include,)
+INCL_FILES_1 := $(subst include,$(AROS_INCLUDES)/inifile,include/ini.h)
+INCL_FILES_2 := $(subst include,$(GENINCDIR)/inifile,include/ini.h)
+_INC_PATH := include/
+else
+INCL_FILES_1 := $(foreach f,include/ini.h,$(AROS_INCLUDES)/inifile/$(f))
+INCL_FILES_2 := $(foreach f,include/ini.h,$(GENINCDIR)/inifile/$(f))
+_INC_PATH :=
+endif
+
+ifneq (,)
+#MM 
+includes-copy : 
+
+#MM
+ : -includes-setup $(INCL_FILES_1) $(INCL_FILES_2)
+
+.PHONY: 
+
+else
+#MM
+includes-copy : includes-setup $(INCL_FILES_1) $(INCL_FILES_2)
+endif
+
+
+$(AROS_INCLUDES)/inifile/%.h : $(_INC_PATH)%.h
+	@$(CP) $< $@
+
+$(GENINCDIR)/inifile/%.h : $(_INC_PATH)%.h
+	@$(CP) $< $@
+
+ifneq (,)
+-includes-setup : $(AROS_INCLUDES)/inifile $(GENINCDIR)/inifile
+
+.PHONY: -includes-setup
+else
+includes-setup : $(AROS_INCLUDES)/inifile $(GENINCDIR)/inifile
+endif
+
+$(AROS_INCLUDES)/inifile $(GENINCDIR)/inifile :
+	@$(IF) $(TEST) ! -d $@ ; then $(MKDIR) $@ ; else $(NOP) ; fi
+
+,PHONY: includes-copy includes-setup
+
 # Delete generated makefiles
 #MM
 clean ::

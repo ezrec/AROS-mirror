@@ -12,9 +12,9 @@
 
 #include "inifile_intern.h"
 #include "ini.h"
-#include <aros/libcall.h>
 
-int _iniScanUntilObject( HINI hIni, FILE *hFile, char *pszLine )
+#undef _iniScanUntilObject
+int _iniScanUntilObject( HINI hIni, FILE *hFile, char *pszLine, struct Library *inifileBase )
 {
 	/* SCAN UNTIL WE GET TO AN OBJECT NAME OR EOF */
 	pszLine[0] = '\0';

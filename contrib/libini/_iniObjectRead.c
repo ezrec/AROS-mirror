@@ -13,9 +13,9 @@
 
 #include "inifile_intern.h"
 #include "ini.h"
-#include <aros/libcall.h>
 
-int _iniObjectRead( HINI hIni, char *szLine, char *pszObjectName )
+#undef _iniObjectRead
+int _iniObjectRead( HINI hIni, char *szLine, char *pszObjectName, struct Library *inifileBase )
 {
     int     	nChar;
 

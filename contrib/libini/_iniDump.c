@@ -19,9 +19,9 @@
 
 #include "inifile_intern.h"
 #include "ini.h"
-#include <aros/libcall.h>
 
-int _iniDump( HINI hIni, FILE *hStream )
+#undef _iniDump
+int _iniDump( HINI hIni, FILE *hStream, struct Library *inifileBase )
 {
 
     /* SANITY CHECK */
