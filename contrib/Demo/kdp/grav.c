@@ -2,7 +2,6 @@
 #include "kdp.h"
 #include "kdpgfx.h"
 #include <math.h>
- 
 #include <stdlib.h>
 
 #define NUM 64000

@@ -2,7 +2,7 @@
 #include "kdp.h"
 #include "kdpgfx.h"
 #include <math.h>
- #include <stdlib.h>
+#include <stdlib.h>
 
 UBYTE vm2[64000];
 UBYTE tv[64000];
@@ -89,8 +89,3 @@ main()
   KDPclose(&screen);
 }
 
-    
-    
-    
-        
-    
