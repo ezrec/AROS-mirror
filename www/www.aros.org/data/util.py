@@ -81,6 +81,21 @@ os.chdir (htmldir)
 # Make all paths absolute
 htmldir = os.getcwd ()
 
+# Colors
+darkestBlue = '#000066'
+darkBlue = '#60A0D0'
+lightBlue = '#80C0F0'
+lighterBlue = '#A0E0FF'
+lightGray = '#CCCCCC'
+newsColor = lightBlue
+#exampleBGColor = "#CCCCCC"
+exampleBGColor = lightGray
+exampleBorderColor = darkestBlue
+#linkBoxColor = '#40FF80'
+linkBoxColor = lighterBlue
+thumbnailBGColor = lightGray
+thumbnailBorderColor = darkestBlue
+
 from mainlinks import mainLinks
 
 def relpath(path1, path2):
@@ -195,7 +210,7 @@ class Page (SeriesDocument):
 	td = td + [table2,]
 	row2 = TR ()
 	table2.append (row2)
-	td2 = TD (bgcolor='#40FF80', valign='TOP')
+	td2 = TD (bgcolor=linkBoxColor, valign='TOP')
 	row2 = row2 + [td2]
 	#self.linkbox = Font (size='-2')
 	self.linkbox = []
@@ -442,7 +457,7 @@ class ThumbnailTable (TableLite):
 	    border="0",
 	    width=width,
 	    align="center",
-	    bgcolor="#000066",
+	    bgcolor=thumbnailBorderColor,
 	    cellpadding=0,
 	    cellspacing=0,
 	)
@@ -454,7 +469,7 @@ class ThumbnailTable (TableLite):
 	    border="0",
 	    width="100%",
 	    align="center",
-	    bgcolor="#000066",
+	    bgcolor=thumbnailBorderColor,
 	    cellpadding=5,
 	    cellspacing=2,
 	)
@@ -464,7 +479,7 @@ class ThumbnailTable (TableLite):
 	    pics = list (pics) + [None]
 	i, n = 0, len (pics)
 	while i < n:
-	    row = TR (bgcolor="#000066")
+	    row = TR (bgcolor=thumbnailBorderColor)
 	    left, right = pics[i], pics[i+1]
 	    i = i + 2
 	    left = left.toHtml ()
@@ -473,7 +488,7 @@ class ThumbnailTable (TableLite):
 	    #print dir (left[1])
 	    #print left[1].attr_dict
 	    if not right:
-		td = TD (colspan="2", bgcolor="#CCCCCC", width="50%")
+		td = TD (colspan="2", bgcolor=thumbnailBGColor, width="50%")
 		td = td + [Nbsp ()]
 		right = [td]
 	    else:
@@ -592,7 +607,7 @@ class Thumbnail (FileInfo):
 		self.href,
 		width="64",
 		valign="TOP",
-		bgcolor="#CCCCCC",
+		bgcolor=thumbnailBGColor,
 	    ),
 	    TD (
 		Paragraph (RawText (self.text)),
@@ -603,7 +618,7 @@ class Thumbnail (FileInfo):
 		)), size="-1"),
 		#width="35%",
 		valign="TOP",
-		bgcolor="#CCCCCC",
+		bgcolor=thumbnailBGColor,
 	    ),
 	]
 

@@ -1,7 +1,7 @@
 
 import string, os
 from util import Page, Heading, Paragraph, MyDataList, MyStackedBarChart, \
-    Paragraph, Href, AQUA, Image
+    Paragraph, Href, Image, lightBlue, darkBlue, WHITE, BR
 
 def gen ():
     '''Create the status page. This page contains two images (jpg&png)
@@ -32,10 +32,13 @@ def gen ():
     dataList.load_tuples (data)
     dataList.sort ()
     chart = MyStackedBarChart (dataList)
-    chart.label_shade = AQUA
+    chart.label_shade = lightBlue
+    chart.value_shade = darkBlue
+    chart.bar_shade = WHITE
     chart.title = 'AROS Status'
     
     body.append (chart)
+    body.append (BR ())
     body.append (Heading (2, 'Size of AROS sources'))
     img = Image ('aros_size.png')
     page.imagesToFix.append (img)

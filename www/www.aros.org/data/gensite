@@ -278,7 +278,7 @@ def exampleToHtml (p, xmlfile, item):
 	border="0",
 	width="804",
 	#align="left",
-	bgcolor="#000066",
+	bgcolor=exampleBorderColor,
 	cellpadding=2,
 	cellspacing=0,
     )
@@ -290,7 +290,7 @@ def exampleToHtml (p, xmlfile, item):
 	border="0",
 	width="800",
 	#align="left",
-	bgcolor="#CCCCCC",
+	bgcolor=exampleBGColor,
 	cellpadding=2,
 	cellspacing=0,
     )

@@ -1,12 +1,13 @@
 
 import glob, os
-from util import TR, TD, Page, TableLite, Paragraph, Name, MyRawText, Href
+from util import TR, TD, Page, TableLite, Paragraph, Name, MyRawText, Href, \
+	newsColor
 
 def prepareNewsItem (filename):
     '''Convert a single news item into HTML.'''
 
     row = TR ()
-    td = TD (bgcolor='#80C0F0', valign='TOP')
+    td = TD (bgcolor=newsColor, valign='TOP')
     row = row + [td]
     str = os.path.basename (filename)
     date = '%d.%d.%d' % (
