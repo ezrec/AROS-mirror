@@ -1,8 +1,7 @@
 Summary
 -------
 
-79 tests OK, 55 tests SKIPPED and 16 tests FAILED.
-
+84 tests OK, 43 tests SKIPPED and 12 tests FAILED.
 
 Notes on failed tests
 ---------------------
@@ -18,44 +17,20 @@ test_cpickle
       x2 = pickle.loads(s)
       ValueError: could not convert string to float
 
-test_difflib 
-test_format 
-
-    ??? (lots of output)
-
-test_gzip 
-
-    libs/python/tempfile.py, line 55, in gettempdir
-    fp = os.fdopen( fd, 'w' )
-    OSError: [Errno 22] Invalid argument
-
 test_import
 
     libs/python/test/test_import.py, line 14, in ?
-    import RaNdOm should have failed (case mitmatch
+    import RaNdOm should have failed (case mitmatch)
 
-test_minidom
+test_gzip 
 
-    ??? Lots of crap (importerror urllib?)
-
-test_zipfile
-test_pickle 
-test_pkg
-test_wave 
-
-    libs/tempfile.py line 73 in gettempdir
-    IOError: can't find usable temp dir
-
-test_sax
-
-    libs/xml/sax/saxutils.py line6
-    importerror: no module named urllib
-
-test_string
-test_strop 
-
-    ??? lots of output
-
+    line 27
+    f = gzip.GzipFile( filename, 'rb' ); d = f.read(); f.close()
+    libs/gzip.py, line 105, in _read_gzip_header
+    IOError: Not a gzipped file
+    
+    -> Appending to a file doesn't seem to work -> bug in open/fopen/fdopen?
+    
 test_time
 
     test_time.py, line 3
@@ -67,3 +42,19 @@ test_unicode
     testing builtin codecs...
     test_support.py, line 91, in verify
     more...
+
+test_sax
+
+    libs/xml/sax/saxutils.py line6
+    importerror: no module named urllib
+
+test_minidom
+
+    ??? Lots of crap (importerror urllib?)
+
+test_difflib 
+test_format 
+test_string
+test_strop 
+
+    ??? (lots of output)
