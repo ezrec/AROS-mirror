@@ -1,4 +1,4 @@
-digulla:cac4LV26eOfdI:Aaron Digulla:digulla@aros.fh-konstanz.de:Coordinator
+digulla:cac4LV26eOfdI:Aaron Digulla:digulla@hepe.com:Coordinator
 matthias:bbxf6C1JfqE7U:Matthias Fleischer:fleischr@IZFM.Uni-Stuttgart.DE:Exec, DOS, drivers
 pgpeter:ggX6o8c4l:Peter Boeckmann:pgpeter@informatik.uni-siegen.de:Sparc, Alpha
 iaint:adwVPoZf6iJ6U:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:HIDDs, Docs
