@@ -101,7 +101,8 @@ FUNCS := aros_funcs/rexxstart \
       	 aros_funcs/rexxfreememory \
       	 aros_funcs/rexxallocatememory \
       	 aros_funcs/reginaversion \
-      	 aros_funcs/__regina_faked_main
+      	 aros_funcs/__regina_faked_main \
+	 aros_funcs/isreginamsg
 
 %make_module_setup mmake=contrib-regina-libs id=2
 %make_module_cpak id=2
