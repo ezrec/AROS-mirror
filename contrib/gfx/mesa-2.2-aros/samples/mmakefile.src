@@ -5,10 +5,12 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-mesa2-samples : contrib-mesa2-common setup-mesa2-samples
+#MM contrib-mesa2-samples : contrib-mesa2-common setup-mesa2-samples 
 #MM setup-mesa2-samples : setup
+#MM setup-mesa2-sampdemos : setup
 
 MESASAMPFILES = 1.rgb 2.rgb 3.rgb 4.rgb
+MESASAMPDEMOFILES = 1.rgb
 
 MESASAMPLES :=  accum \
             bitmap1 \
@@ -46,5 +48,8 @@ USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
 
 setup-mesa2-samples : files-copy
 %copy_files_q files="$(MESASAMPFILES)" dst=$(CONTRIBDIR)/Gfx/Mesa2/Samples
+
+setup-mesa2-sampdemos : files-copy
+%copy_files_q files="$(MESASAMPDEMOFILES)" dst=$(CONTRIBDIR)/Gfx/Mesa2/Demos
 
 %common

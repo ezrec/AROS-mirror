@@ -5,10 +5,10 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-mesa2-demos : contrib-mesa2-common setup-mesa2-demos
+#MM contrib-mesa2-demos : contrib-mesa2-common setup-mesa2-demos setup-mesa2-sampdemos
 #MM setup-mesa2-demos : setup
 
-MESADEMOSFILES := isosurf.dat 
+MESADEMOSFILES := isosurf.dat
 
 MESADEMOS :=  bounce \
             gamma \

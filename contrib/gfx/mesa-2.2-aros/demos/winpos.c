@@ -72,7 +72,7 @@ static void reshape( int width, int height )
 
 static void init( void )
 {
-   char *filename = "../samples/1.rgb";
+   char *filename = "1.rgb";
    image = tkRGBImageLoad( filename );
 
    if (!image) {
