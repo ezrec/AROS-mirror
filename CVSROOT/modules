@@ -31,7 +31,7 @@
 contrib contrib
 
 # Stuff necessary to compile AROS
-necessary -a AmiCDROM nlist
+necessary -a AmiCDROM nlist AHI
 
 nlist -d contrib/mui/classes/nlist contrib/mui/classes/nlist
 
