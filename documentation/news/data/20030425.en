@@ -5,7 +5,7 @@ Status Update
 :Author: Adam Chodorowski <chodorowski AT aros DOT org>
 :Date:   2003-04-25
 
-Almost another whole months has gone by, which means that it's definately time
+Almost another whole months has gone by, which means that it's definitely time
 for another status update. I'm sure you're all perched for information about
 what's happening with AROS. ;-)
 
@@ -19,14 +19,14 @@ Ports
 Matthew Parsons contacted Genesi__ and asked if they would be interested in
 sponsoring a Pegasos board to get AROS ported to it, and they thought it was a
 great idea! After some discussion on the ML and hard thinking on Johan Grip's 
-part, he decided to accept the offer and try his outmost to port AROS to the 
+part, he decided to accept the offer and try his utmost to port AROS to the 
 Pegasos. All agree that he's the best suited for this task. The Pegasos board
 is at the time of writing on it's way to Johan. Hopefully this will result in 
 AROS running on it in the near future!
 
 Stefan Berger did some more work on the m68k-pp (Palm) port, which include 
 bits of an input driver for the touchscreen and several fixes. He also 
-commited parts of a native ARM port (it's not complete, and there are no 
+committed parts of a native ARM port (it's not complete, and there are no 
 promises that he will continue working on it).
 
 __ http://www.thendic-france.com/
@@ -98,17 +98,17 @@ Datatypes
 
 Thanks to Martin Gierich who wrote jpeg.datatype based on libjpeg__ and 
 Georg Steger who wrote png.datatype based on libpng__, AROS now supports most
-popular image formats! The png.datatype supports transparancy with palettized
+popular image formats! The png.datatype supports transparency with indexed
 (256 colors or less) images. You can see them in action in the screenshot_.
 
 __ http://www.libpng.org/pub/png/libpng.html
 __ http://www.ijg.org/
 
 
-Miscellanous
-------------
+Miscellaneous
+-------------
 
-Some miscellanous things that have happened:
+Some miscellaneous things that have happened:
 
 + Staf Verhaegen merged the diskfont.library sources with the MorphOS version,
   and then continued with reworking it in several ways. 
@@ -128,7 +128,7 @@ Some miscellanous things that have happened:
   running in windowed mode or in 16bit screen depth (works fine in 24bit modes
   though). Take a look at the screenshot__!
   
-+ Olivier Adam wrote french translations for many programs.
++ Olivier Adam wrote French translations for many programs.
 
 __ http://lgames.sourceforge.net/index.php?project=LBreakout2
 __ http://www.aros.org/pictures/screenshots/20030425/lbreakout2.png
@@ -138,7 +138,7 @@ Repository Cleanup
 -------------------
 
 During the last month there has also been an effort to clean up the CVS 
-repository, mostly spearheaded by Adam Chodorowski. Basically there are two
+repository, mostly spear-headed by Adam Chodorowski. Basically there are two
 parts to this effort: 
 
 1. Make sure that all software in the main tree follows the 
@@ -149,7 +149,7 @@ parts to this effort:
    from contrib to the main tree, and moving things that don't belong in the 
    main tree to contrib.
 
-The following things have resultet from this effort:
+The following things have resulted from this effort:
 
 + The authors of FlexCat, which we use in development, have been contacted to 
   clarify the license since the documentation is very vague about it. They 
@@ -164,8 +164,8 @@ The following things have resultet from this effort:
   server, to avoid loosing the CVS history.
 
   In the near future more software will most likely be moved to the main 
-  tree, like Regina (to provide ARexx compatability), FreeType__ 2 (support 
-  for scaleable TrueType fonts), libpng and png.datatype. 
+  tree, like Regina (to provide ARexx compatibility), FreeType__ 2 (support 
+  for scalable TrueType fonts), libpng and png.datatype. 
 
 __ http://www.aros.org/documentation/developers/system-development.php#licensing-policy
 __ http://www.gnu.org/licenses/gpl.html
@@ -181,7 +181,7 @@ Documentation
 After a consensus had been reached in the discussion about buttons in prefs 
 programs, Adam Chodorowski decided to write the first part of the AROS `User
 Interface Style Guide`__ about this topic. It's still a long way from being 
-a comprehensive guide on user interface issues, but atleast it's a start. 
+a comprehensive guide on user interface issues, but at least it's a start. 
 
 __ http://www.aros.org/documentation/developers/ui.php
 
