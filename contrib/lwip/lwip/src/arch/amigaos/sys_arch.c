@@ -31,7 +31,7 @@
  * Author: Adam Dunkels <adam@sics.se>
  *         Sebastian Bauer <sebauer@t-online.de>
  *
- * $Id: sys_arch.c,v 1.5 2002/07/08 17:13:16 sebauer Exp $
+ * $Id: sys_arch.c,v 1.6 2002/07/09 21:24:34 sebauer Exp $
  */
 
 #include <time.h>
@@ -133,6 +133,7 @@ static int Timer_Init(struct ThreadData *data)
 	DeleteMsgPort(data->TimerPort);
 	return 0;
     }
+    data->TimerOutstanding = 0;
     return 1;
 }
 
@@ -242,9 +243,9 @@ static int Thread_Entry(void)
     if (Thread_Init(&data))
     {
     	FindTask(NULL)->tc_UserData = &data;
-    	kprintf("Thread at 0x%lx initialized. Now jumping to user defined function\n",FindTask(NULL));
+//    	kprintf("Thread at 0x%lx initialized. Now jumping to user defined function\n",FindTask(NULL));
 	fp(ud,ud,ud);
-    	kprintf("Thread at 0x%lx finished. Cleanup now\n",FindTask(NULL));
+//    	kprintf("Thread at 0x%lx finished. Cleanup now\n",FindTask(NULL));
 	Thread_Cleanup(&data);
     }
     return 0;
@@ -327,7 +328,7 @@ void sys_mbox_post(sys_mbox_t mbox, void *msg)
 u16_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u16_t timeout)
 {
     u16_t time = 1;
-//    kprintf("sys_arch_mbox_fetch(mbox=0x%lx,timeout=%d)\n",mbox,timeout);
+//    kprintf("sys_arch_mbox_fetch(mbox=0x%lx,timeout=%ld)\n",mbox,timeout);
 
     /* The mutex lock is quick so we don't bother with the timeout
        stuff here. */
@@ -413,12 +414,16 @@ u16_t sys_arch_sem_wait(sys_sem_t sem, u16_t timeout)
                 if (sigs & (1UL<<data->sem_signal))
 		    signaled = 1;
 
-/*		if (sigs & (1UL<<data->TimerPort->mp_SigBit))
+		if (sigs & (1UL<<data->TimerPort->mp_SigBit))
 		{
-		}
-*/
-		/* Should be safe even if the timer has been completed */
-		Timer_Abort(data,req);
+		    struct timerequest *treq;
+
+		    while ((treq = (struct timerequest*)GetMsg(data->TimerPort)))
+		    {
+			FreeVec(treq);
+			data->TimerOutstanding--;
+		    }
+		} else Timer_Abort(data,req);
 
 		if (signaled)
 		{
