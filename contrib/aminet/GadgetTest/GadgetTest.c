@@ -66,7 +66,7 @@
     #define Test__CNT                              11
 
     #define IB IntuitionBase
-    #define GTB GadToolsBase
+    #define GTB Library
     #define GFX GfxBase
     // These defines saves a lot of typing time
 

@@ -17,9 +17,6 @@
 
 #include "chunkyiclass.h"
 
-extern struct GfxBase * GfxBase;
-extern struct UtilityBase * UtilityBase;
-
 struct rp_info {
    UWORD             width, height;
    struct RastPort  *rp;
