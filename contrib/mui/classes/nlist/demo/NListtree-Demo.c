@@ -1253,7 +1253,7 @@ int main( int argc, STRPTR argv[] )
 				lt_nodes, 2, MUIM_CallHook, &numselhook );
 
 			DoMethod( bt_seltogg, MUIM_Notify, MUIA_Pressed, FALSE,
-				lt_nodes, 4, MUIM_NListtree_Select, MUIV_NListtree_Select_All, MUIV_NListtree_Select_Toggle, 0); /* stegerg: FIXME, State param omitted! Crash! */
+				lt_nodes, 5, MUIM_NListtree_Select, MUIV_NListtree_Select_All, MUIV_NListtree_Select_Toggle, 0, NULL);
 
 			DoMethod( bt_showtree, MUIM_Notify, MUIA_Pressed, FALSE,
 				lt_nodes, 3, MUIM_Set, MUIA_NListtree_ShowTree, MUIV_NListtree_ShowTree_Toggle );
