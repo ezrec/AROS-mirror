@@ -6,3 +6,4 @@ SCOPTIONS
 *.info
 *.bak
 *.mdbi
+nlistview.mcc.lib
