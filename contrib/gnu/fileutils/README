@@ -40,3 +40,10 @@ As usual, any feedback would be greatly appreciated.
 Jack Patton <jpatton@aros.org>
 4/26/04
 
+Update (4/28/04 JP):
+- Hennig (HK) has moved the getgrnam and fchown fucntions in to AROS 
+  libc, I have removed them from the patch.
+- I got rid of the rediculous workaround for getloadavg.c. Instead of 
+  leaving a pretty much blank file, I put an #ifndef __AROS__ at the 
+  top.
+
