@@ -59,10 +59,10 @@ INCLUDE_FILES = \
 	$(INCLUDES_DIR)/libraries/bgui_layoutgroup.h \
 	$(INCLUDES_DIR)/bgui/bgui_prefs.h
 
-#MM contrib-bgui : contrib-bgui-setup linklib-bgui
+#MM contrib-bgui : contrib-bgui-setup linklib-bgui bgui-prefs
 contrib-bgui : bgui-library bgui-gadgets bgui-test bgui-examples
 
-#MM contrib-bgui-setup : setup includes linklibs
+#MM contrib-bgui-setup : setup includes linklibs bgui-setup bgui-includes-copy
 contrib-bgui-setup : bgui-setup bgui-includes-copy
 
 #MM bgui-test
@@ -275,10 +275,10 @@ OBJECTS =  \
 bgui-setup : makedirs
 
 #MM bgui-includes-copy
-bgui-includes-copy : $(INCLUDES_FILES)
+bgui-includes-copy : $(INCLUDE_FILES)
 
 #MM bgui-library
-bgui-library : bin/bgui.library.E
+bgui-library : enhanced_build
 
 all: makedirs \
 	$(INCLUDE_FILES) \
