@@ -1,0 +1,7 @@
+include $(TOP)/config/make.cfg
+
+#MM games-wumpus : includes linklibs
+
+%build_prog mmake=games-wumpus \
+    progname=wumpus targetdir=$(CONTRIBDIR)/Games \
+    files=wumpus uselibs="arossupport amiga arosc m"
