@@ -1019,7 +1019,12 @@ char *score_str = "0000";
    SetDrMd(BdRp,JAM1);
    Move (BdRp,DOTL + (DOTS*player), (row*TEXTS)+DOTT );
    Text (BdRp, "    ",4);
+#ifdef LATTICE
    length = stcu_d (score_str,score,4);
+#else
+   score = strtol (score_str,NULL,10);
+   length=log10(score);
+#endif
    Move (BdRp,
       DOTL + (DOTS*player + ((4-length)*SPACEW) ), (row*TEXTS)+DOTT );
    Text (BdRp, score_str, length);
