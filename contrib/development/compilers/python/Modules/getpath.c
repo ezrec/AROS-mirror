@@ -144,6 +144,8 @@ static char progpath[MAXPATHLEN+1];
 static char *module_search_path = NULL;
 static char lib_python[] = "lib/python" VERSION;
 
+static int isxfile(char *filename);
+
 #if defined(AROS) || defined(_AMIGA)
 extern void Py_GetArgcArgv Py_PROTO((int *argc, char ***argv));  /* in main.c */
 

@@ -53,10 +53,6 @@ static void cleanup(char *msg)
     exit(0);
 }
 
-#include "GraphicStuff.c"
-#include "Game.c"
-#include "WindowStuff.c"
-
 static void HandleIntuiMessages(void)
 {
   struct IntuiMessage *msg;
@@ -86,6 +82,10 @@ static void HandleIntuiMessages(void)
   }
 }
 
+#include "GraphicStuff.c"
+#include "Game.c"
+#include "WindowStuff.c"
+
 int main(void)
 {
   InitWindow();
@@ -110,7 +110,7 @@ int main(void)
 		       WIDTH,
 		       HEIGHT,
 		       CTABFMT_XRGB8);
-		       
+
 
     HandleIntuiMessages();
        
@@ -123,6 +123,6 @@ int main(void)
   CloseGraph ();
 
   cleanup(0);
-  
+
   return 0;
 }
