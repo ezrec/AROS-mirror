@@ -56,11 +56,11 @@
 */
 
 VOID LIBENT
-LT_DisposeMenu(REG(a0) struct Menu *Menu)
+LT_DisposeMenu(REG(a0) struct Menu *menu)
 {
-	if(Menu)
+	if(menu)
 	{
-		struct RootMenu *Root = (struct RootMenu *)((ULONG)Menu - offsetof(struct RootMenu,Menu));
+		struct RootMenu *Root = (struct RootMenu *)((ULONG)menu - offsetof(struct RootMenu,Menu));
 
 		FreeScreenDrawInfo(Root->Screen,Root->DrawInfo);
 
