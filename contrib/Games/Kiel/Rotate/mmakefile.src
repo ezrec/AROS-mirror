@@ -1,0 +1,39 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+STARTUP := $(LIBDIR)/startup.o
+LIBS	:= -L$(LIBDIR) -larossupport -lamiga -larosc
+DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a \
+	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
+CFLAGS	:= $(USER_DEFINES) -O2 -Wunused -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(BINDIR)/Games
+
+EXES := $(DESTDIR)/Rotate
+
+.PHONY : all clean
+
+#MM
+games-rotate : setup-games games
+
+#MM games : setup-games
+games : $(EXES)
+	@$(NOP)
+
+#MM
+setup-games :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXES) : $(DESTDIR)/% : $(OBJDIR)/%.o $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) -o $@ $(STARTUP) $< $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+#MM
+clean-games :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c defines.h functions.h includes.h screen.h
+	%compile_q
+
