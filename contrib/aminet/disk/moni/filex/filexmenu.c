@@ -9,6 +9,7 @@
 #include <proto/gadtools.h>
 #include <clib/alib_protos.h>
 
+#include <string.h>
 #include <stdio.h>
 #endif
 

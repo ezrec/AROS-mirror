@@ -31,6 +31,7 @@
 #include <proto/wb.h>
 #include <clib/alib_protos.h>
 
+#include <string.h>
 #include <stdio.h>
 #endif
 
