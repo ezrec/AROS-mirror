@@ -61,13 +61,11 @@ int myHandleCPPWindowIDCMP( void )
 	struct MenuItem		*n;
 	int			(*func)();
 	BOOL			running = TRUE;
+	struct Gadget *gad;
 
 	while( m = GT_GetIMsg( CPPWindowWnd->UserPort )) {
-
 		CopyMem(( char * )m, ( char * )&CPPWindowMsg, (long)sizeof( struct IntuiMessage ));
-
 		GT_ReplyIMsg( m );
-
 		switch ( CPPWindowMsg.Class ) {
 
 			case	IDCMP_REFRESHWINDOW:
@@ -78,8 +76,15 @@ int myHandleCPPWindowIDCMP( void )
 			case IDCMP_MOUSEMOVE:
 			case	IDCMP_GADGETUP:
 			case	IDCMP_GADGETDOWN:
-				func = ( void * )(( struct Gadget * )CPPWindowMsg.IAddress )->UserData;
-				running = func();
+			  gad=(struct Gadget *)CPPWindowMsg.IAddress;
+				func = ( void * )gad->UserData;
+
+				if(func==NULL){
+				  kprintf("\n\n\n\nfunc==NULL in line 80 in amiga/instrprop/Amiga_instrprop_init.c. Gadget: %x, func: %x\n",CPPWindowMsg.IAddress,func);
+				  kprintf("Class: %x, (gad)Type: %x, (gad)ID: %x\n\n",CPPWindowMsg.Class,gad->GadgetType,gad->GadgetID);
+				 }else{
+				   running = func();
+				 }
 				break;
 
 			case	IDCMP_MENUPICK:
