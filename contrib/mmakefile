@@ -7,11 +7,9 @@
 #MM- fish : fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines
 #MM- fish : fish-304_clines fish-304_lines fish-screenzap fish-watchman
 #MM- fish : fish-sunmaze fish-fiveinline fish-362_rubik fish-yachtc
-#MM- fish : fish-rubik fish-icalc
+#MM- fish : fish-rubik fish-icalc fish-asimplex fish-worldtime
 
 # The apps below are not working yet as functions are still missing
-
-
 
 # M fish : fish-371_fractal
 #   SetMenuStrip, ShowTitle
@@ -20,3 +18,5 @@
 # MM fish-mandelbrotsrc 
 # MM fish-mandel
 # MM fish-layers
+
+# MM fish-cube
