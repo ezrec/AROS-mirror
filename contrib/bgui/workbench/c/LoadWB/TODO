@@ -1,0 +1,21 @@
+Minor:
+
+- Fix the prototypes of ExecuteTask() and AboutTask() for AROS.
+  Implement running them as tasks/processes, which should be
+  quite easy (they are written with that in mind from the
+  beginning).
+
+- Figure out why the background-pattern is drawn so slowly.
+  Probably something with BGUI.
+
+- Implement a memory-meter in the screen-title. Just write it
+  as a hook to be called by BGUI when IDCMP_IntuiTicks occurs.
+
+Major:
+
+- Well, the filemanager part of Workbench. With icons and
+  fancy stuff like that. :-)
+
+  Probably needs new BGUI classes to work nicely (IconClass,
+  IcongroupClass), but a quickie could be done with normal gadgets.
+  Or you could skip using BGUI for that part of Workbench.
