@@ -1,0 +1,860 @@
+/*
+ * @(#) $Header$
+ *
+ * BGUI library
+ * textclass.c
+ *
+ * (C) Copyright 1998 Manuel Lemos.
+ * (C) Copyright 1996-1997 Ian J. Einman.
+ * (C) Copyright 1993-1996 Jaba Development.
+ * (C) Copyright 1993-1996 Jan van den Baard.
+ * All Rights Reserved.
+ *
+ * $Log$
+ * Revision 1.1  1998/02/25 17:09:58  mlemos
+ * Ian sources
+ *
+ *
+ */
+
+/// Class definitions.
+#include "include/classdefs.h"
+
+/*
+ * Object instance data.
+ */
+typedef struct td_ {
+   ULONG            td_Flags;              /* Flags.                           */
+   UBYTE           *td_Text;               /* The text itself.                 */
+   ULONG            td_TextID;             /* Text ID.                         */
+   ULONG           *td_Args;               /* Arguments for format string.     */
+}  TD;
+
+#define TEXTF_COPY         (1<<0)          /* Copy text.                       */
+#define TEXTF_COPIED       (1<<1)          /* This text is a copy.             */
+
+///
+
+/// Text_Get
+
+STATIC UBYTE *Text_Get(TD *td)
+{
+   UBYTE  *text;
+
+   if (td->td_Text && td->td_Args)
+   {
+      if (text = BGUI_AllocPoolMem(CompStrlenF(td->td_Text, td->td_Args)))
+      {
+         DoSPrintF(text, td->td_Text, td->td_Args);
+         return text;
+      };
+      return NULL;
+   };
+   return td->td_Text;
+}
+///
+/// Text_Clear
+
+STATIC VOID Text_Clear(TD *td)
+{
+   if (td->td_Flags & TEXTF_COPIED)
+   {
+      BGUI_FreePoolMem(td->td_Text);
+      td->td_Flags &= ~TEXTF_COPIED;
+   };
+   td->td_Text = NULL;
+}
+///
+/// Text_Set
+
+static void Text_Set(TD *td, char *text)
+{
+   Text_Clear(td);
+
+   if (text && (td->td_Flags & TEXTF_COPY))
+   {
+      if (td->td_Text = BGUI_AllocPoolMem(strlen(text)))
+      {
+         strcpy(td->td_Text, text);
+         td->td_Flags |= TEXTF_COPIED;
+      };
+   }
+   else
+   {
+      td->td_Text = text;
+   };
+}
+///
+/// OM_NEW
+/*
+ * Create a shiny new object.
+ */
+METHOD(TextClassNew, struct opSet *ops)
+{
+   ULONG     rc;
+
+   /*
+    * First we let the superclass
+    * create an object.
+    */
+   if (rc = AsmDoSuperMethodA(cl, obj, (Msg)ops))
+   {
+      /*
+       * Set attributes.
+       */
+      AsmCoerceMethod(cl, (Object *)rc, RM_SETM, ops->ops_AttrList, RAF_INITIAL);
+   }
+   return rc;
+}
+///
+/// RM_GETATTRFLAGS
+/*
+ * Get the flags of an attribute.
+ */
+METHOD(TextClassGetAttrFlags, struct rmAttr *ra)
+{
+   static struct TagItem chart[] =
+   {
+      TEXTA_Text,           CHART_ATTR(td_, td_Text               ) | RAF_CUSTOM | RAF_NOP | RAF_RESIZE,
+      TEXTA_TextID,         CHART_ATTR(td_, td_TextID             ),
+      TEXTA_Args,           CHART_ATTR(td_, td_Args               ) | RAF_RESIZE,
+
+      TEXTA_CopyText,       CHART_FLAG(td_, td_Flags,  TEXTF_COPY ) | RAF_CUSTOM,
+
+      TAG_DONE
+   };
+
+   ULONG rc = GetTagData(ra->ra_Attr->ti_Tag, 0, chart);
+
+   return rc;
+}
+///
+/// RM_SET
+/*
+ * Set standard attributes.
+ */
+METHOD(TextClassSet, struct rmAttr *ra)
+{
+   return BGUI_SetAttrChart(cl, obj, ra);
+}
+///
+/// RM_SETCUSTOM
+/*
+ * Set custom attributes.
+ */
+METHOD(TextClassSetCustom, struct rmAttr *ra)
+{
+   TD               *td = INST_DATA(cl, obj);
+   ULONG             attr = ra->ra_Attr->ti_Tag;
+   ULONG             data = ra->ra_Attr->ti_Data;
+
+   switch (attr)
+   {
+   case TEXTA_Text:
+      Text_Set(td, (char *)data);
+      break;
+
+   case TEXTA_CopyText:
+      if (data && !(td->td_Flags & TEXTF_COPIED))
+      {
+         Text_Set(td, td->td_Text);
+      };
+      break;
+   };
+   return 1;
+}
+///
+/// RM_GET
+/*
+ * Get an attribute.
+ */
+METHOD(TextClassGet, struct rmAttr *ra)
+{
+   return BGUI_GetAttrChart(cl, obj, ra);
+}
+///
+/// RM_GETCUSTOM
+/*
+ * Get custom attributes.
+ */
+METHOD(TextClassGetCustom, struct rmAttr *ra)
+{
+   TD               *td = INST_DATA(cl, obj);
+   ULONG             attr = ra->ra_Attr->ti_Tag;
+   ULONG            *store = (ULONG *)ra->ra_Attr->ti_Data;
+
+   switch (attr)
+   {
+   case TEXTA_Text:
+      STORE td->td_Text;
+      break;
+   };
+   return 1;
+}
+///
+/// OM_DISPOSE
+/*
+ * Dispose of the object.
+ */
+METHOD(TextClassDispose, Msg msg)
+{
+   TD       *td = INST_DATA(cl, obj);
+
+   /*
+    * Clear the text.
+    */
+   Text_Clear(td);
+
+   /*
+    * The rest goes to the superclass.
+    */
+   return AsmDoSuperMethodA(cl, obj, msg);
+}
+///
+/// TEXTM_RENDER
+/*
+ * Render a text graphic.
+ */
+METHOD(TextClassRender, struct tmRender *tmr)
+{
+   TD                *td = INST_DATA(cl, obj);
+   UBYTE             *text;
+
+   if (text = Text_Get(td))
+   {
+      RenderText(tmr->tmr_BInfo, text, tmr->tmr_Bounds);
+      if (td->td_Args) BGUI_FreePoolMem(text);
+   };
+   return 1;
+}
+///
+/// TEXTM_DIMENSIONS
+/*
+ * Render a text graphic.
+ */
+METHOD(TextClassDimensions, struct tmDimensions *tmd)
+{
+   TD                *td = INST_DATA(cl, obj);
+   UBYTE             *text;
+
+   if (text = Text_Get(td))
+   {
+      if (tmd->tmd_Extent.Width)  *(tmd->tmd_Extent.Width)  = TotalWidth (tmd->tmd_RPort, text);
+      if (tmd->tmd_Extent.Height) *(tmd->tmd_Extent.Height) = TotalHeight(tmd->tmd_RPort, text);
+
+      if (td->td_Args) BGUI_FreePoolMem(text);
+   };
+   return 1;
+}
+///
+/// BASE_LOCALIZE
+
+METHOD(TextClassLocalize, struct bmLocalize *bml)
+{
+   TD        *td = INST_DATA(cl, obj);
+   ULONG      rc = 0;
+   
+   if (td->td_TextID)
+   {
+      Text_Set(td, BGUI_GetCatalogStr(bml->bml_Locale, td->td_TextID, td->td_Text));
+      rc = 1;
+   }
+   return rc;
+}
+///
+
+/// Class initialization.
+
+/*
+ * Class function table.
+ */
+STATIC DPFUNC ClassFunc[] = {
+   TEXTM_RENDER,          (FUNCPTR)TextClassRender,
+   TEXTM_DIMENSIONS,      (FUNCPTR)TextClassDimensions,
+
+   RM_GETATTRFLAGS,       (FUNCPTR)TextClassGetAttrFlags,
+   RM_SET,                (FUNCPTR)TextClassSet,
+   RM_SETCUSTOM,          (FUNCPTR)TextClassSetCustom,
+   RM_GET,                (FUNCPTR)TextClassGet,
+   RM_GETCUSTOM,          (FUNCPTR)TextClassGetCustom,
+   OM_NEW,                (FUNCPTR)TextClassNew,
+   OM_DISPOSE,            (FUNCPTR)TextClassDispose,
+   BASE_LOCALIZE,         (FUNCPTR)TextClassLocalize,
+   DF_END,                NULL
+};
+
+/*
+ * Simple class initialization.
+ */
+makeproto Class *InitTextClass(void)
+{
+   return BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_ROOT_OBJECT,
+                         CLASS_ObjectSize,     sizeof(TD),
+                         CLASS_DFTable,        ClassFunc,
+                         TAG_DONE);
+}
+///
+
+
+
+
+
+
+/*
+ * Figure out the total text width and height
+ * of an text with info-style command sequences.
+ */
+makeproto SAVEDS ASM VOID BGUI_InfoTextSize(REG(a0) struct RastPort *rp, REG(a1) UBYTE *text, REG(a2) UWORD *wi, REG(a3) UWORD *wh)
+{
+   if (wi) *wi = TotalWidth( rp, text);
+   if (wh) *wh = TotalHeight(rp, text);
+}
+
+/*
+ * Render the text with info-style command sequences
+ * inside the bounding box. Text is automatically
+ * trucated when out of bounds.
+ */
+makeproto SAVEDS ASM VOID BGUI_InfoText( REG(a0) struct RastPort *rp, REG(a1) UBYTE *text, REG(a2) struct IBox *bounds, REG(a3) struct DrawInfo *dri )
+{
+   RenderInfoText(rp, text, PENS(dri), bounds, (UWORD)~0);
+}
+
+/*
+ * Alignment flags.
+ */
+#define TF_CENTER          (1<<0)
+#define TF_RIGHT           (1<<1)
+#define TF_SHADOW          (1<<2)
+#define TF_UNDERLINE       (1<<3)
+#define TF_HIGHUNDERLINE   (1<<4)
+#define TF_KEEP            (1<<5)
+#define TF_WRAP            (1<<6)
+
+/*
+ * Command sequences:
+ *
+ * \33b     Switch to bold
+ * \33i     Switch to italic
+ * \33u     Switch to underlined
+ * \33n     Switch to normal
+ * \33s     Switch to shadow
+ * \33z     Switch to underlined, offset 2
+ * \33Z     Switch to highlight underlined, offset 2
+ * \33c     Center this and the following lines
+ * \33r     Right-align this and the following lines
+ * \33l     Left-align this and the following lines
+ * \33j     Full justify this and the following lines
+ * \33k     Keep style flags.
+ * \33w     Wrap text.
+ * \33d<n>  Switch to DrawInfo pen <n>
+ * \33p<n>  Switch to pen <n>
+ * \33D<n>  Switch to background DrawInfo pen <n>
+ * \33P<n>  Switch to background pen <n>
+ *
+ * \21i<
+ */
+
+/// ParseCommSeq
+/*
+ * Parse a command sequence.
+ */
+STATIC UBYTE *ParseCommSeq(struct BaseInfo *bi, UBYTE *text, UWORD *old_style, UWORD *flags)
+{
+   UWORD    new_style = *old_style;
+
+   /*
+    * Let's see what we have here...
+    */
+   switch (*text++)
+   {
+   case '-':                           /* Turn off.   */
+      switch (*text++)
+      {
+      case 'b':
+         new_style &= ~FSF_BOLD;
+         break;
+      case 'i':
+         new_style &= ~FSF_ITALIC;
+         break;
+      case 'u':
+         new_style &= ~FSF_UNDERLINED;
+         break;
+      case 's':
+         *flags &= ~TF_SHADOW;
+         break;
+      case 'k':
+         *flags &= ~TF_KEEP;
+         break;
+      case 'w':
+         *flags &= ~TF_WRAP;
+         break;
+      case 'z':
+         *flags &= ~TF_UNDERLINE;
+         break;
+      case 'Z':
+         *flags &= ~TF_HIGHUNDERLINE;
+         break;
+      default:
+         text -= 2;
+         break;
+      };
+      break;
+         
+   case 'b':                           /* Bold.       */
+      new_style |= FSF_BOLD;
+      break;
+
+   case 'i':                           /* Italic.     */
+      new_style |= FSF_ITALIC;
+      break;
+
+   case 'u':                           /* Underscore. */
+      new_style |= FSF_UNDERLINED;
+      break;
+
+   case 'n':                           /* Normal.     */
+      new_style = FS_NORMAL;
+      *flags &= ~(TF_SHADOW|TF_UNDERLINE|TF_HIGHUNDERLINE);
+      break;
+
+   case 'k':                           /* Keep styles. */
+      *flags |= TF_KEEP;
+      break;
+
+   case 'w':                           /* Wrap text. */
+      *flags |= TF_WRAP;
+      break;
+
+   case 's':                           /* Shadowed.   */
+      *flags |= TF_SHADOW;
+      break;
+
+   case 'z':                           /* Underlined offset = 2. */
+      *flags |= TF_UNDERLINE;
+      break;
+
+   case 'Z':                           /* Highlight underlined offset = 2. */
+      *flags |= TF_HIGHUNDERLINE;
+      break;
+      
+   case  'c':                          /* Center.     */
+      *flags &= ~TF_RIGHT;
+      *flags |= TF_CENTER;
+      break;
+
+   case  'r':                          /* Right.      */
+      *flags &= ~TF_CENTER;
+      *flags |= TF_RIGHT;
+      break;
+
+   case  'l':                          /* Left.       */
+      *flags &= ~(TF_RIGHT|TF_CENTER);
+      break;
+
+   case 'd':                           /* DriPen.     */
+      BSetDPenA(bi, strtol(text, &text, 0));
+      break;
+   case 'D':
+      BSetDrMd(bi, JAM2);
+      BSetDPenB(bi, strtol(text, &text, 0));
+      break;
+
+   case 'p':                           /* Pen.        */
+      BSetPenA(bi, strtol(text, &text, 0));
+      break;
+   case 'P':
+      BSetDrMd(bi, JAM2);
+      BSetPenB(bi, strtol(text, &text, 0));
+      break;
+      
+   case '\33':                         /* Do nothing. */
+      break;
+      
+   case '\0':
+      /*
+       * EOL.
+       */
+   default:
+      text--;
+      break;
+   };
+
+   /*
+    * Style changed?
+    */
+   if (new_style != *old_style)
+   {
+      *old_style = new_style;
+      BSetFontStyle(bi, new_style);
+   }
+   return text;
+}
+///
+/// XPos
+/*
+ * Determine the x position
+ * where to render the line.
+ */
+STATIC WORD XPos(struct BaseInfo *bi, UBYTE *text, UWORD *old_style, struct IBox *domain, UWORD *flags)
+{
+   struct RastPort *rp = bi->bi_RPort;
+   struct RastPort  rp2 = *rp;
+   struct BaseInfo  bi2 = *bi;
+   ULONG            line_len = 0;
+   UWORD            new_style = *old_style;
+   WORD             xpos, i;
+
+   bi2.bi_RPort = &rp2;
+
+   /*
+    * Scan text.
+    */
+   while (*text && (*text != '\n'))
+   {
+      /*
+       * What have we got...
+       */
+      switch (*text)
+      {
+      case '\33':
+         /*
+          * Command sequence.
+          */
+         text = ParseCommSeq(&bi2, text + 1, &new_style, flags);
+         break;
+
+      default:
+         i = 0;
+         /*
+          * Count non-action characters.
+          */
+         while (text[i] && (text[i] != '\33') && (text[i] != '\n')) i++;
+
+         if (i)
+         {
+            /*
+             * Determine their length.
+             */
+            line_len += TextWidthNum(rp, text, i);
+
+            /*
+             * Adjust pointer.
+             */
+            text += i;
+         }
+         break;
+      }
+   }
+
+   /*
+    * Calculate x-position.
+    */
+   if (*flags & TF_CENTER)     xpos = domain->Left + ((domain->Width - line_len) >> 1);
+   else if (*flags & TF_RIGHT) xpos = domain->Left + domain->Width - 1 - line_len;
+   else                        xpos = domain->Left;
+
+   /*
+    * Don't pass the left edge.
+    */
+   if (xpos < domain->Left) xpos = domain->Left;
+
+   return xpos;
+}
+///
+/// TotalHeight
+/*
+ * Determine the total height of the text.
+ */
+makeproto UWORD ASM TotalHeight( REG(a0) struct RastPort *rp, REG(a1) UBYTE *text )
+{
+   UWORD    nl = 1;
+   UBYTE    c;
+
+   /*
+    * Count the number of lines.
+    */
+   while (c = *text++)
+   {
+      if (c == '\n') nl++;
+   }
+   return (UWORD)(nl * rp->TxHeight);
+}
+///
+/// TotalWidth
+/*
+ * Determine the total width
+ * of the information text.
+ */
+makeproto UWORD ASM TotalWidth(REG(a0) struct RastPort *rp, REG(a1) UBYTE *text)
+{
+   struct RastPort rport = *rp;
+   ULONG           line_len = 0, len = 0;
+   UWORD           new_style = FS_NORMAL, flags = 0, i;
+
+   struct BaseInfo bi;
+
+   bi.bi_Pens  = DefDriPens;
+   bi.bi_RPort = &rport;
+
+   /*
+    * Start as FS_NORMAL.
+    */
+   BSetFontStyle(&bi, FS_NORMAL);
+
+   /*
+    * Scan text.
+    */
+   while (*text)
+   {
+      /*
+       * What have we got.
+       */
+      switch (*text)
+      {
+      case '\33':
+         /*
+          * Escape sequence.
+          */
+         text = ParseCommSeq(&bi, ++text, &new_style, &flags);
+         break;
+
+      default:
+         i = 0;
+         /*
+          * Count the non-action characters.
+          */
+         while (text[i] && (text[i] != '\33') && (text[i] != '\n')) i++;
+
+         /*
+          * Determine their length.
+          */
+         line_len += TextWidthNum(&rport, text, i);
+
+         /*
+          * New line or end-of-line?
+          */
+         if (text[i] == '\n' || text[i] == '\0')
+         {
+            if (!(flags & TF_WRAP))
+            {
+               /*
+                * Is it wider than the previous ones?
+                */
+               if (line_len > len)
+                  len = line_len;
+            };
+
+            /*
+             * Go on when this was a new line.
+             */
+            if (text[i] == '\n')
+            {
+               text++;
+               BSetFontStyle(&bi, FS_NORMAL);
+            };
+
+            /*
+             * Set line_len to 0.
+             */
+            line_len = 0;
+         };
+         text += i;
+         break;
+      };
+   };
+   return (UWORD)len;
+}
+///
+/// RenderInfoText
+/*
+ * Render the information text.
+ */
+makeproto void RenderInfoText(struct RastPort *rp, UBYTE *text, UWORD *pens, struct IBox *domain, UWORD backpen)
+{
+   struct BaseInfo *bi;
+
+   if (bi = AllocBaseInfo(BI_RastPort, rp, BI_Pens, pens, TAG_DONE))
+   {
+      if (!pens) pens = DefDriPens;
+
+      BSetDrMd(bi, JAM1);
+      BClearAfPt(bi);
+      /*
+       * First we fill the background.
+       */
+      if (backpen != (UWORD)~1)
+      {
+         if (backpen != (UWORD)~0)
+         {
+            BSetPenA(bi, backpen);
+            BBoxFillA(bi, domain);
+         };
+
+         /*
+          * Set initial pen.
+          */
+         BSetDPenA(bi, (backpen == bi->bi_Pens[FILLPEN]) ? FILLTEXTPEN : TEXTPEN);
+      };
+      RenderText(bi, text, domain);
+
+      FreeBaseInfo(bi);
+   };
+}
+///
+/// RenderText
+/*
+ * Render the information text.
+ */
+makeproto void RenderText(struct BaseInfo *bi, UBYTE *text, struct IBox *domain)
+{
+   struct RastPort     *rp = bi->bi_RPort;
+   struct TextExtent    extent;
+   WORD                 xpos, ypos = domain->Top + rp->TxBaseline;
+   UWORD                style = FS_NORMAL, dubstyle = FS_NORMAL, flags = 0, i, nl, numc;
+   ULONG                old_a, old_m;
+
+   /*
+    * Start as FS_NORMAL.
+    */
+   BSetFontStyle(bi, FS_NORMAL);
+
+   /*
+    * Get the height of the text.
+    */
+   nl = TotalHeight(rp, text);
+
+   /*
+    * Is it smaller than
+    * the domain?
+    */
+   if (nl < domain->Height)
+      /*
+       * Yes. Adjust the top size
+       * so that it get's centered.
+       */
+      ypos += (domain->Height - nl) >> 1;
+
+   /*
+    * Find out starting position.
+    */
+   xpos = XPos(bi, text, &dubstyle, domain, &flags);
+
+   BSetDrMd(bi, JAM1);
+   BSetFontStyle(bi, FS_NORMAL);
+   flags &= ~(TF_SHADOW|TF_UNDERLINE|TF_HIGHUNDERLINE);
+
+   /*
+    * Scan text.
+    */
+   while (*text)
+   {
+      /*
+       * What have we got...
+       */
+      switch (*text)
+      {
+      case '\33':
+         /*
+          * Command sequence.
+          */
+         text = ParseCommSeq(bi, ++text, &style, &flags);
+         break;
+
+      case '\n':
+         /*
+          * Newline.
+          */
+         text++;
+
+         /*
+          * New position.
+          */
+         xpos = XPos(bi, text, &dubstyle, domain, &flags);
+
+         /*
+          * Are we passing the bottom of the
+          * rendering area?
+          */
+         if ((ypos += rp->TxHeight ) > domain->Top + domain->Height - 1)
+            return;
+
+         Move(rp, xpos, ypos);
+         if (!(flags & TF_KEEP))
+         {
+            BSetFontStyle(bi, FS_NORMAL);
+            flags &= ~(TF_SHADOW|TF_UNDERLINE|TF_HIGHUNDERLINE);
+         };
+         break;
+
+      default:
+         /*
+          * Count non-action characters.
+          */
+         i = 0;
+         while (text[i] && (text[i] != '\33') && (text[i] != '\n')) i++;
+
+         if (i)
+         {
+            /*
+             * Render them.
+             */
+            if (numc = TextFit(rp, text, i, &extent, NULL, 0, max((LONG)(domain->Width - (xpos - domain->Left)), 0), rp->TxHeight))
+            {
+               if (flags & TF_SHADOW)
+               {
+                  old_a = FGetAPen(rp);
+                  old_m = FGetDrMd(rp);
+                  BSetDPenA(bi, SHADOWPEN);
+                  Move(rp, xpos + 1, ypos + 1);
+                  Text(rp, text, numc);
+                  BSetPenA(bi, old_a);
+                  BSetDrMd(bi, JAM1);
+                  Move(rp, xpos, ypos);
+                  Text(rp, text, numc);
+                  BSetDrMd(bi, old_m);
+               }
+               else
+               {
+                  if (flags & (TF_UNDERLINE|TF_HIGHUNDERLINE))
+                  {
+                     if (flags & TF_HIGHUNDERLINE)
+                     {
+                        old_a = FGetAPen(rp);
+                        BSetDPenA(bi, SHINEPEN);
+                     };
+                     Move(rp, xpos, ypos + 2);
+                     Draw(rp, xpos + TextLength(rp, text, numc) - 2, ypos + 2);
+                     if (flags & TF_HIGHUNDERLINE)
+                     {
+                        BSetPenA(bi, old_a);
+                     };
+                  };
+                  Move(rp, xpos, ypos);
+                  Text(rp, text, numc);
+               };
+
+               /*
+                * Skip remainder of the line
+                * if possible.
+                */
+               if (numc < i)
+               {
+                  while (text[i] && text[i] != '\n')
+                     i++;
+               };
+               /*
+                * Adjust x position.
+                */
+               xpos += TextWidthNum(rp, text, numc);
+            };
+            /*
+             * Adjust pointer.
+             */
+            text += i;
+         }
+         break;
+      }
+   }
+}
+///

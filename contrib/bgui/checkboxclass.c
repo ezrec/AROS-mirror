@@ -1,0 +1,81 @@
+/*
+ * @(#) $Header$
+ *
+ * BGUI library
+ * checkboxclass.c
+ *
+ * (C) Copyright 1998 Manuel Lemos.
+ * (C) Copyright 1996-1997 Ian J. Einman.
+ * (C) Copyright 1993-1996 Jaba Development.
+ * (C) Copyright 1993-1996 Jan van den Baard.
+ * All Rights Reserved.
+ *
+ * $Log$
+ * Revision 1.1  1998/02/25 17:07:47  mlemos
+ * Ian sources
+ *
+ *
+ */
+
+#include "include/classdefs.h"
+
+/// OM_NEW
+/*
+ * Create a shiny new object.
+ */
+METHOD(CBClassNew, struct opSet *ops)
+{
+   ULONG           rc;
+   Object         *check;
+   struct TagItem  ttags[2], *tags;
+
+   /*
+    * Get us a checkbox image.
+    */
+   if (check = BGUI_NewObject(BGUI_VECTOR_IMAGE, VIT_BuiltIn, BUILTIN_CHECKMARK, VIT_DriPen, TEXTPEN, TAG_DONE))
+   {
+      ttags[0].ti_Tag  = BUTTON_SelectedVector;
+      ttags[0].ti_Data = (ULONG)check;
+      ttags[1].ti_Tag  = TAG_MORE;
+      ttags[1].ti_Data = (ULONG)ops->ops_AttrList;
+
+      tags = DefTagList(BGUI_CHECKBOX_GADGET, ttags);
+
+      /*
+       * Let the superclass setup an object for us.
+       */
+      if (rc = NewSuperObject(cl, obj, tags))
+      {
+         /*
+          * No recessed rendering.
+          */
+         DoSetMethodNG((Object *)rc, FRM_EdgesOnly, FALSE, GA_ToggleSelect, TRUE, TAG_DONE);
+      }
+      else
+      {
+         AsmDoMethod(check, OM_DISPOSE);
+      };
+      FreeTagItems(tags);
+   }
+   return rc;
+}
+///
+/// Class initialization.
+/*
+ * Class function table.
+ */
+STATIC DPFUNC ClassFunc[] = {
+   OM_NEW,           (FUNCPTR)CBClassNew,
+   DF_END
+};
+
+/*
+ * Initialize the checkbox class.
+ */
+makeproto Class *InitCheckBoxClass(void)
+{
+   return BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_BUTTON_GADGET,
+                         CLASS_DFTable,        ClassFunc,
+                         TAG_DONE);
+}
+///

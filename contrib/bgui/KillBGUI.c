@@ -1,0 +1,41 @@
+/*
+ * @(#) $Header$
+ *
+ * KillBGUI.c
+ *
+ * This program will flush bgui.library out of memory, if this is not possible;
+ * then the existing one is renamed "bgui.flushed" so it will not be found again.
+ *
+ * (C) Copyright 1998 Manuel Lemos.
+ * (C) Copyright 1996-1997 Ian J. Einman.
+ * (C) Copyright 1993-1996 Jaba Development.
+ * (C) Copyright 1993-1996 Jan van den Baard.
+ * All Rights Reserved.
+ *
+ * $Log$
+ * Revision 1.1  1998/02/25 17:07:05  mlemos
+ * Ian sources
+ *
+ *
+ */
+/* KillBGUI.c
+ *
+ * This program will flush bgui.library out of memory, if this is not possible;
+ * then the existing one is renamed "bgui.flushed" so it will not be found again.
+ */
+
+#include <proto/exec.h>
+#include <exec/execbase.h>
+#include <strings.h>
+#include <stdio.h>
+
+void main(void)
+{
+   struct Node *BGUIBase;
+   
+   AllocMem(0x10000000, 0);
+   Forbid();
+   BGUIBase = FindName(&((struct ExecBase *)SysBase)->LibList, "bgui.library");
+   Permit();
+   if (BGUIBase) strcpy(BGUIBase->ln_Name + 5, "flushed");
+}

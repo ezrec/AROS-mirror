@@ -1,0 +1,598 @@
+/*
+ * @(#) $Header$
+ *
+ * BGUI library
+ * gfx.c
+ *
+ * (C) Copyright 1998 Manuel Lemos.
+ * (C) Copyright 1996-1997 Ian J. Einman.
+ * (C) Copyright 1993-1996 Jaba Development.
+ * (C) Copyright 1993-1996 Jan van den Baard.
+ * All Rights Reserved.
+ *
+ * $Log$
+ * Revision 1.1  1998/02/25 17:08:24  mlemos
+ * Ian sources
+ *
+ *
+ */
+
+#include "include/classdefs.h"
+
+/*
+ * Default drawinfo pens.
+ */
+makeproto UWORD DefDriPens[12] = { 0, 1, 1, 2, 1, 3, 1, 0, 2, 1, 2, 1 };
+
+/*
+ * Disabled pattern.
+ */
+STATIC UWORD DisPat[2] = { 0x2222, 0x8888 };
+
+/*
+ * Calculate the text width.
+ */
+makeproto ASM ULONG TextWidth(REG(a1) struct RastPort *rp, REG(a0) UBYTE *text)
+{
+   return TextWidthNum(rp, text, strlen(text));
+}
+
+makeproto ASM ULONG TextWidthNum(REG(a1) struct RastPort *rp, REG(a0) UBYTE *text, REG(d0) ULONG len)
+{
+   struct TextExtent te;
+   ULONG             extent;
+
+   /*
+    * Call TextExtent to find out the text width.
+    */
+   TextExtent(rp, text, len, &te);
+
+   /*
+    * Figure out extent width.
+    */
+   extent = te.te_Extent.MaxX - te.te_Extent.MinX + 1;
+
+   /*
+    * Return which ever is bigger.. extent or te.te_Width.
+    */
+   return( extent /*( extent > te.te_Width ) ? extent : te.te_Width */);
+}
+
+/*
+ * Disable the given area.
+ */
+makeproto ASM VOID BDisableBox(REG(a0) struct BaseInfo *bi, REG(a1) struct IBox *area)
+{
+   BSetAfPt(bi, DisPat, 1);
+   BSetDrMd(bi, JAM1);
+   BSetDPenA(bi, SHADOWPEN);
+   BBoxFillA(bi, area);
+   BClearAfPt(bi);
+}
+
+/*
+ * Render a frame/separator title.
+ */
+makeproto VOID RenderTitle(Object *title, struct BaseInfo *bi, WORD l, WORD t, WORD w, BOOL highlight, BOOL center, UWORD place)
+{
+   struct IBox box;
+
+   w -= 24;
+   l += 12;
+   
+   if (w > 8)
+   {
+      DoMethod(title, TEXTM_DIMENSIONS, bi->bi_RPort, &box.Width, &box.Height);
+         
+      /*
+       * Figure out where to render.
+       */
+      if (box.Width > w) box.Width = w;
+
+      switch (place)
+      {
+      case 1:
+         box.Left = l;
+         break;
+      case 2:
+         box.Left = l + w - box.Width;
+         break;
+      default:
+         box.Left = l + ((w - box.Width) >> 1);
+         break;
+      };
+      if (box.Left < l) box.Left = l;
+
+      /*
+       * Figure out y position.
+       */
+      if (center) box.Top = t - (box.Height >> 1);
+      else        box.Top = t - bi->bi_RPort->TxBaseline;
+
+      /*
+       * Setup rastport.
+       */
+      BSetDPenA(bi, BACKGROUNDPEN);
+      BSetDrMd(bi, JAM1);
+      BClearAfPt(bi);
+
+      /*
+       * Clear text area.
+       */
+      BRectFill(bi, box.Left - 4, box.Top, box.Left + box.Width + 4, box.Top + box.Height);
+
+      BSetDPenA(bi, highlight ? HIGHLIGHTTEXTPEN : TEXTPEN);
+      DoMethod(title, TEXTM_RENDER, bi, &box);
+   };
+}
+
+makeproto VOID ASM SetDashedLine(REG(a0) struct BaseInfo *bi, REG(d0) UWORD offset)
+{
+   /*
+    * Render a SHINE/SHADOW pen, dotted box or,
+    * when the two pens are equal a SHADOW/BACKGROUND
+    * pen dotted box.
+    */
+   BSetDPenA(bi, SHINEPEN);
+   BSetDPenB(bi, SHADOWPEN);
+   BSetDrMd(bi, JAM2);
+   BSetDrPt(bi, 0xF0F0F0F0 >> offset);
+
+   if (bi->bi_RPort->FgPen == bi->bi_RPort->BgPen)
+      BSetDPenA(bi, BACKGROUNDPEN);
+}
+
+/*
+ * Quickly render a bevelled box.
+ */
+makeproto VOID RenderBevelBox(struct BaseInfo *bi, WORD l, WORD t, WORD r, WORD b, UWORD state, BOOL recessed, BOOL thin)
+{
+   struct RastPort *rp = bi->bi_RPort;
+
+   /*
+    * Selected or normal?
+    */
+   if ((state == IDS_SELECTED) || (state == IDS_INACTIVESELECTED))
+   {
+      recessed = !recessed;
+   };
+   
+   /*
+    * Shiny side.
+    */
+   BSetDPenA(bi, recessed ? SHADOWPEN : SHINEPEN);
+
+   HLine(rp, l, t, r);
+   VLine(rp, l, t, b - 1);
+   if (!thin) VLine(rp, l + 1, t + 1, b - 1);
+
+   /*
+    * Shadow side.
+    */
+   BSetDPenA(bi, recessed ? SHINEPEN : SHADOWPEN);
+
+   HLine(rp, l, b, r);
+   VLine(rp, r, t + 1, b);
+   if (!thin) VLine(rp, r - 1, t + 1, b - 1);
+}
+
+/*
+ * Do a safe rect-fill.
+ */
+makeproto ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b)
+{
+   if ((r >= l) && (b >= t)) RectFill(bi->bi_RPort, l, t, r, b);
+}
+
+makeproto ASM VOID BRectFillA(REG(a0) struct BaseInfo *bi, REG(a1) struct Rectangle *rect)
+{
+   BRectFill(bi, rect->MinX, rect->MinY, rect->MaxX, rect->MaxY);
+}
+
+makeproto ASM VOID BBoxFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG w, REG(d3) LONG h)
+{
+   if ((w > 0) && (h > 0)) RectFill(bi->bi_RPort, l, t, l + w - 1, t + h - 1);
+}
+
+makeproto ASM VOID BBoxFillA(REG(a0) struct BaseInfo *bi, REG(a1) struct IBox *box)
+{
+   BBoxFill(bi, box->Left, box->Top, box->Width, box->Height);
+}
+
+/*
+ * Background filling.
+ */
+makeproto ASM VOID RenderBackFill(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(a2) UWORD *pens,
+   REG(d0) ULONG type)
+{
+   int apen, bpen;
+
+   if (!pens) pens = DefDriPens;
+
+   /*
+    * Which type?
+    */
+   switch (type)
+   {
+   case  SHINE_RASTER:
+      apen = SHINEPEN;
+      bpen = BACKGROUNDPEN;
+      break;
+
+   case  SHADOW_RASTER:
+      apen = SHADOWPEN;
+      bpen = BACKGROUNDPEN;
+      break;
+
+   case  SHINE_SHADOW_RASTER:
+      apen = SHINEPEN;
+      bpen = SHADOWPEN;
+      break;
+
+   case  FILL_RASTER:
+      apen = FILLPEN;
+      bpen = BACKGROUNDPEN;
+      break;
+
+   case  SHINE_FILL_RASTER:
+      apen = SHINEPEN;
+      bpen = FILLPEN;
+      break;
+
+   case  SHADOW_FILL_RASTER:
+      apen = SHADOWPEN;
+      bpen = FILLPEN;
+      break;
+
+   case  SHINE_BLOCK:
+      apen = SHINEPEN;
+      bpen = apen;
+      break;
+
+   case  SHADOW_BLOCK:
+      apen = SHADOWPEN;
+      bpen = apen;
+      break;
+
+   default:
+      apen = BACKGROUNDPEN;
+      bpen = apen;
+      break;
+   };
+   RenderBackFillRaster(rp, ib, pens[apen], pens[bpen]);
+}
+
+makeproto ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib,
+   REG(d0) UWORD apen, REG(d1) UWORD bpen)
+{
+   static UWORD pat[] = { 0x5555, 0xAAAA };
+   /*
+    * Setup RastPort.
+    */
+
+   FSetABPenDrMd(rp, apen, bpen, JAM2);
+
+   if (apen == bpen)
+   {
+      FSetDrMd(rp, JAM1);
+      FClearAfPt(rp);
+   }
+   else
+   {
+      SetAfPt(rp, pat, 1);
+   };
+
+   /*
+    * Render...
+    */
+   RectFill(rp, ib->Left, ib->Top, ib->Left + ib->Width - 1, ib->Top + ib->Height - 1);
+
+   /*
+    * Clear area pattern.
+    */
+   FClearAfPt(rp);
+}
+
+/*
+ * Draw a dotted box.
+ */
+makeproto ASM VOID DottedBox(REG(a0) struct BaseInfo *bi, REG(a1) struct IBox *ibx)
+{
+   int x1 = ibx->Left;
+   int x2 = ibx->Left + ibx->Width - 1;
+   int y1 = ibx->Top;
+   int y2 = ibx->Top + ibx->Height - 1;
+   
+   ULONG secs, micros, hundredths;
+
+   struct RastPort *rp = bi->bi_RPort;
+   
+   /*
+    * We clear any thick framing which may be
+    * there or not.
+    */
+   BSetDPenA(bi, BACKGROUNDPEN);
+   Move(rp, x1 + 1, y1 + 1);
+   Draw(rp, x1 + 1, y2 - 1);
+   Draw(rp, x2 - 1, y2 - 1);
+   Draw(rp, x2 - 1, y1 + 1);
+   Draw(rp, x1 + 2, y1 + 1);
+
+   CurrentTime(&secs, &micros);
+   hundredths = ((secs & 0xFFFFFF) * 100) + (micros / 10000);
+   SetDashedLine(bi, (hundredths / 5) % 8);
+
+   /*
+    * Draw the box.
+    */
+   Move(rp, x1, y1);
+   Draw(rp, x2, y1);
+   Draw(rp, x2, y2);
+   Draw(rp, x1, y2);
+   Draw(rp, x1, y1 + 1);
+}
+
+/*
+ * Find out rendering state.
+ */
+makeproto ASM ULONG GadgetState(REG(a0) struct BaseInfo *bi, REG(a1) Object *obj, REG(d0) BOOL norec)
+{
+   BOOL active = !(GADGET(obj)->Activation & BORDERMASK) || (bi->bi_IWindow->Flags & WFLG_WINDOWACTIVE);
+   BOOL normal = !(GADGET(obj)->Flags & GFLG_SELECTED) || norec;
+   
+   return active ? (ULONG)(normal ? IDS_NORMAL         : IDS_SELECTED)
+                 : (ULONG)(normal ? IDS_INACTIVENORMAL : IDS_INACTIVESELECTED);
+}
+
+makeproto SAVEDS ASM VOID BGUI_FillRectPattern(REG(a1) struct RastPort *r, REG(a0) struct bguiPattern *bp,
+   REG(d0) ULONG x1, REG(d1) ULONG y1, REG(d2) ULONG x2, REG(d3) ULONG y2)
+{
+   int i, j;
+
+   int x0 = bp->bp_Left;
+   int y0 = bp->bp_Top;
+   int w  = bp->bp_Width;
+   int h  = bp->bp_Height;
+   
+   int col_min, col_max;
+   int row_min, row_max;
+
+   int from_x, to_x1, to_x2, to_w;
+   int from_y, to_y1, to_y2, to_h;
+
+   struct BitMap *bm = bp->bp_BitMap;
+   
+   if (bm && w && h)
+   {
+      col_min = x1 / w;
+      row_min = y1 / h;
+      col_max = x2++ / w + 1;
+      row_max = y2++ / h + 1;
+   
+      for (i = col_min; i <= col_max; i++)
+      {
+         to_x1 = i * w;
+         to_x2 = to_x1 + w;
+      
+         if (to_x1 < x1)
+         {
+            from_x = x0 + x1 - to_x1;
+            to_x1  = x1;
+         }
+         else
+         {
+            from_x = x0;
+         };
+         if (to_x2 > x2)
+         {
+            to_x2 = x2;
+         };
+         if ((to_w = to_x2 - to_x1) > 0)
+         {
+            for (j = row_min; j <= row_max; j++)
+            {
+               to_y1 = j * h;
+               to_y2 = to_y1 + h;      
+   
+               if (to_y1 < y1)
+               {
+                  from_y = y0 + y1 - to_y1;
+                  to_y1  = y1;
+               }
+               else
+               {
+                  from_y = y0;
+               }
+               if (to_y2 > y2)
+               {
+                  to_y2 = y2;
+               };
+               if ((to_h = to_y2 - to_y1) > 0)
+               {
+                  BltBitMapRastPort(bm, from_x, from_y, r, to_x1, to_y1, to_w, to_h, 0xC0);
+               };
+            };
+         };
+      };
+   };
+}
+
+makeproto VOID ASM HLine(REG(a1) struct RastPort *rp, REG(d0) UWORD l, REG(d1) UWORD t, REG(d2) UWORD r)
+{
+   Move(rp, l, t);
+   Draw(rp, r, t);
+}
+
+makeproto VOID ASM VLine(REG(a1) struct RastPort *rp, REG(d0) UWORD l, REG(d1) UWORD t, REG(d2) UWORD b)
+{
+   Move(rp, l, t);
+   Draw(rp, l, b);
+}
+
+makeproto ASM ULONG FGetAPen(REG(a1) struct RastPort *rp)
+{
+   #ifdef ENHANCED
+   return GetAPen(rp);
+   #else
+   if (OS30) return GetAPen(rp);
+   return rp->FgPen;
+   #endif
+}
+
+makeproto ASM ULONG FGetBPen(REG(a1) struct RastPort *rp)
+{
+   #ifdef ENHANCED
+   return GetBPen(rp);
+   #else
+   if (OS30) return GetBPen(rp);
+   return rp->BgPen;
+   #endif
+}
+
+makeproto ASM ULONG FGetDrMd(REG(a1) struct RastPort *rp)
+{
+   #ifdef ENHANCED
+   return GetDrMd(rp);
+   #else
+   if (OS30) return GetDrMd(rp);
+   return rp->DrawMode;
+   #endif
+}
+
+makeproto ASM ULONG FGetDepth(REG(a1) struct RastPort *rp)
+{
+   #ifdef ENHANCED
+   return GetBitMapAttr(rp->BitMap, BMA_DEPTH);
+   #else
+   if (OS30) return GetBitMapAttr(rp->BitMap, BMA_DEPTH);
+   return rp->BitMap->Depth;
+   #endif
+}
+
+makeproto ASM VOID FSetAPen(REG(a1) struct RastPort *rp, REG(d0) ULONG pen)
+{
+   #ifdef ENHANCED
+   SetRPAttrs(rp, RPTAG_APen, pen, TAG_END);
+   #else
+   if (OS30) SetRPAttrs(rp, RPTAG_APen, pen, TAG_END);
+   else if (rp->FgPen != pen) SetAPen(rp, pen);
+   #endif
+}
+
+makeproto ASM VOID FSetBPen(REG(a1) struct RastPort *rp, REG(d0) ULONG pen)
+{
+   #ifdef ENHANCED
+   SetRPAttrs(rp, RPTAG_BPen, pen, TAG_END);
+   #else
+   if (OS30) SetRPAttrs(rp, RPTAG_BPen, pen, TAG_END);
+   else if (rp->BgPen != pen) SetBPen(rp, pen);
+   #endif
+}
+
+makeproto ASM VOID FSetDrMd(REG(a1) struct RastPort *rp, REG(d0) ULONG drmd)
+{
+   #ifdef ENHANCED
+   SetRPAttrs(rp, RPTAG_DrMd, drmd, TAG_END);
+   #else
+   if (OS30) SetRPAttrs(rp, RPTAG_DrMd, drmd, TAG_END);
+   else if (rp->DrawMode != drmd) SetDrMd(rp, drmd);
+   #endif
+}
+
+makeproto ASM VOID FSetABPenDrMd(REG(a1) struct RastPort *rp, REG(d0) ULONG apen, REG(d1) ULONG bpen, REG(d2) ULONG mode)
+{
+   #ifdef ENHANCED
+   SetABPenDrMd(rp, apen, bpen, mode);
+   #else
+   if (OS30) SetABPenDrMd(rp, apen, bpen, mode);
+   else
+   {
+      SetAPen(rp, apen);
+      SetBPen(rp, bpen);
+      SetDrMd(rp, mode);
+   };
+   #endif
+}
+
+makeproto ASM VOID FSetFont(REG(a1) struct RastPort *rp, REG(a0) struct TextFont *tf)
+{
+   #ifdef ENHANCED
+   SetRPAttrs(rp, RPTAG_Font, tf, TAG_END);
+   #else
+   if (OS30) SetRPAttrs(rp, RPTAG_Font, tf, TAG_END);
+   else
+   {
+      if (rp->Font != tf) SetFont(rp, tf);
+   }
+   #endif
+}
+
+makeproto ASM VOID FSetFontStyle(REG(a1) struct RastPort *rp, REG(d0) ULONG style)
+{
+   SetSoftStyle(rp, style, AskSoftStyle(rp));
+}
+
+makeproto ASM VOID FClearAfPt(REG(a1) struct RastPort *rp)
+{
+   SetAfPt(rp, NULL, 0);
+}
+
+
+
+
+makeproto ASM VOID BSetDPenA(REG(a0) struct BaseInfo *bi, REG(d0) LONG pen)
+{
+   FSetAPen(bi->bi_RPort, bi->bi_Pens[pen]);
+}
+
+makeproto ASM VOID BSetPenA(REG(a0) struct BaseInfo *bi, REG(d0) ULONG pen)
+{
+   FSetAPen(bi->bi_RPort, pen);
+}
+
+makeproto ASM VOID BSetDPenB(REG(a0) struct BaseInfo *bi, REG(d0) LONG pen)
+{
+   FSetBPen(bi->bi_RPort, bi->bi_Pens[pen]);
+}
+
+makeproto ASM VOID BSetPenB(REG(a0) struct BaseInfo *bi, REG(d0) ULONG pen)
+{
+   FSetBPen(bi->bi_RPort, pen);
+}
+
+makeproto ASM VOID BSetDrMd(REG(a0) struct BaseInfo *bi, REG(d0) ULONG drmd)
+{
+   FSetDrMd(bi->bi_RPort, drmd);
+}
+
+makeproto ASM VOID BSetFont(REG(a0) struct BaseInfo *bi, REG(a1) struct TextFont *tf)
+{
+   FSetFont(bi->bi_RPort, tf);
+}
+
+makeproto ASM VOID BSetFontStyle(REG(a0) struct BaseInfo *bi, REG(d0) ULONG style)
+{
+   SetSoftStyle(bi->bi_RPort, style, AskSoftStyle(bi->bi_RPort));
+}
+
+makeproto ASM VOID BSetAfPt(REG(a0) struct BaseInfo *bi, REG(a1) UWORD *pat, REG(d0) ULONG size)
+{
+   SetAfPt(bi->bi_RPort, pat, size);
+}
+
+makeproto ASM VOID BClearAfPt(REG(a0) struct BaseInfo *bi)
+{
+   SetAfPt(bi->bi_RPort, NULL, 0);
+}
+
+makeproto ASM VOID BSetDrPt(REG(a0) struct BaseInfo *bi, REG(d0) ULONG pat)
+{
+   SetDrPt(bi->bi_RPort, pat & 0xFFFF);
+}
+
+makeproto ASM VOID BDrawImageState(REG(a0) struct BaseInfo *bi, REG(a1) Object *image,
+   REG(d0) ULONG x, REG(d1) ULONG y, REG(d2) ULONG state)
+{
+   //tprintf("%08lx %08lx %ld %ld %04lx %08lx\n", /4*
+   DrawImageState(bi->bi_RPort, IMAGE(image), x, y, state, bi->bi_DrInfo);
+}
