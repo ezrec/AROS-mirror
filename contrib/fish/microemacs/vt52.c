@@ -78,7 +78,7 @@ vt52beep()
 
 #endif
 
-vt52open()
+int vt52open(void)
 {
 #if     V7
         register char *cp;
@@ -93,6 +93,6 @@ vt52open()
                 exit(1);
         }
 #endif
-        ttopen();
+        return ttopen();
 }
 

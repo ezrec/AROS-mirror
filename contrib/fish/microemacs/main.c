@@ -280,7 +280,6 @@ char    *argv[];
         if (argc > 1)                           /* the default buffer.  */
                 makename(bname, argv[1]);
         edinit(bname);                          /* Buffers, windows.    */
-printf("Opening displays!!\n");      
         vtinit();                               /* Displays.            */
         if (argc > 1) {
                 update();                       /* You have to update   */

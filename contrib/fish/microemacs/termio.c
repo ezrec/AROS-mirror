@@ -10,7 +10,6 @@
 #include	"ed.h"
 
 #if	AMIGA
-#define NEW 1006
 #define	AMG_MAXBUF	1024
 static long terminal;
 static char	scrn_tmp[AMG_MAXBUF+1];
@@ -62,10 +61,12 @@ struct  sgttyb  nstate;		 /* values for editor mode */
  * On VMS, it translates SYS$INPUT until it finds the terminal, then assigns
  * a channel to it and sets it raw. On CPM it is a no-op.
  */
-ttopen()
+int ttopen(void)
 {
 #if	AMIGA
-	terminal = Open("RAW:1/1/639/199/MicroEmacs", NEW);
+	terminal = Open("RAW:1/1/639/199/MicroEmacs", MODE_NEWFILE);
+	return  (terminal != 0);
+	
 #endif
 #if	VMS
 	struct  dsc$descriptor  idsc;

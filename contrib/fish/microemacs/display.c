@@ -39,12 +39,14 @@ VIDEO   **pscreen;                      /* Physical screen. */
  * The original window has "WFCHG" set, so that it will get completely
  * redrawn on the first call to "update".
  */
-vtinit()
+void vtinit(void)
 {
     register int i;
     register VIDEO *vp;
 
-    (*term.t_open)();
+    if (!(*term.t_open)())
+	exit(1);
+
     vscreen = (VIDEO **) malloc(term.t_nrow*sizeof(VIDEO *));
 
     if (vscreen == NULL)
@@ -148,7 +150,7 @@ vteeol()
  * correct for the current window. Third, make the virtual and physical
  * screens the same.
  */
-update()
+void update(void)
 {
     register LINE *lp;
     register WINDOW *wp;
