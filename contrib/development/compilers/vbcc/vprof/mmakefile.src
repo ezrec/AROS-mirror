@@ -1,0 +1,24 @@
+include $(TOP)/config/make.cfg
+
+FILES = vprof
+
+EXEDIR := $(CONTRIBDIR)/vbcc
+EXE    := $(EXEDIR)/vprof
+
+USE_CLIB_SHARED := yes
+
+USER_CFLAGS := -O2
+
+#MM- contrib-development-compilers-vbcc-vprof : vprof
+#MM
+vprof : setup $(EXE)
+
+$(OBJDIR)/%.o: %.S
+	%compile_q opt=$(USER_CFLAGS)
+
+%make_prog_setup mmake=vprof
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
+

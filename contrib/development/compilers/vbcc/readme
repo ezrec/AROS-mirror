@@ -1,0 +1,4 @@
+To compile vbcc download the source from vbcc from http://www.compilers.de/vbcc/
+and extract it to this directory then run make contrib-development-compilers-vbcc
+in the aros top directrory.
+

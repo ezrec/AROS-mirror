@@ -1,0 +1,47 @@
+include $(TOP)/config/make.cfg
+
+TRGDIR = ./
+arosobj = $(TRGDIR)/aros/divdi3 $(TRGDIR)/aros/qdivrem\
+	$(TRGDIR)/aros/fixunsxfdi  $(TRGDIR)/aros/moddi3\
+	$(TRGDIR)/aros/udivdi3 $(TRGDIR)/aros/umoddi3
+
+bobjects = $(TRGDIR)/main $(TRGDIR)/vars $(TRGDIR)/declaration \
+	$(TRGDIR)/parse_expr $(TRGDIR)/type_expr $(TRGDIR)/ic \
+	$(TRGDIR)/machines/i386/machine $(TRGDIR)/statements \
+	$(TRGDIR)/tmp $(TRGDIR)/dt \
+	$(TRGDIR)/ucpp/assert $(TRGDIR)/ucpp/cpp $(TRGDIR)/ucpp/hash \
+	$(TRGDIR)/ucpp/lexer $(TRGDIR)/ucpp/macro $(TRGDIR)/ucpp/mem \
+	$(TRGDIR)/ucpp/eval $(arosobj)
+
+fobjects = $(TRGDIR)/opt $(TRGDIR)/av $(TRGDIR)/rd $(TRGDIR)/regs \
+	$(TRGDIR)/flow $(TRGDIR)/cse $(TRGDIR)/cp $(TRGDIR)/loop \
+	$(TRGDIR)/alias $(bobjects)
+
+FILES = $(bobjects) $(fobjects)
+
+
+EXEDIR := $(CONTRIBDIR)/vbcc
+EXE    := $(EXEDIR)/vbcc
+
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+
+USER_CFLAGS := -O2 -DAROS -D_QUAD_HIGHWORD=1 -D_QUAD_LOWWORD=0 -DNO_UCPP_ERROR_FUNCTIONS -I./ -I./machines/i386
+#MM- contrib-development-compilers-vbcc : contrib-development-compilers-vbcc-frontend 
+#MM- contrib-development-compilers-vbcc : contrib-development-compilers-vbcc-datatypes
+#MM- contrib-development-compilers-vbcc : contrib-development-compilers-vbcc-vprof
+#MM- contrib-development-compilers-vbcc : contrib-development-compilers-vbcc-aros
+#MM- contrib-development-compilers-vbcc : vbcc
+#MM
+vbcc : setup $(EXE) cleanup
+
+$(OBJDIR)/%.o: %.S
+	%compile_q opt=$(USER_CFLAGS)
+cleanup :: 
+	rm -rf tmp.c
+%make_prog_setup mmake=vbcc
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps

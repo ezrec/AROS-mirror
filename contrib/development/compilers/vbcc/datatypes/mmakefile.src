@@ -1,0 +1,24 @@
+include $(TOP)/config/make.cfg
+
+FILES = dtgen
+
+EXEDIR := $(CONTRIBDIR)/vbcc
+EXE    := $(EXEDIR)/dtgen
+
+USE_CLIB_SHARED := yes
+
+USER_CFLAGS := -O2
+
+#MM- contrib-development-compilers-vbcc-datatypes : datatypes
+#MM
+datatypes : setup $(EXE)
+
+%make_prog_setup mmake=datatypes
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+setup ::
+	gcc dtgen.c -o dtgen
+	./dtgen ../machines/i386/machine.dt ../dt.h ../dt.c
+
+%common
+%include_deps
+
