@@ -33,8 +33,17 @@ $(HTMLDIR)/%.html :
 # is newer.
 .stamp : HTMLcolors.py HTMLgen.py aros.rc gensite imgsize.py \
 	    config.py htmlautodocs.py mainlinks.py news.py status.py \
-	    util.py xmlsupport.py code2html.py contents.py \
-	    contents2html.py xml2html.py $(wildcard *.xml) \
+	    util.py code2html.py faq2html.py \
+	    contents2html.py xml2html.py \
+	    $(AROSDIR)/docs/src/contents.py \
+	    $(AROSDIR)/docs/src/xmlsupport.py \
+	    $(AROSDIR)/docs/src/abbreviations.py \
+	    $(AROSDIR)/docs/src/credits.py \
+	    $(AROSDIR)/docs/src/genadocs.py \
+	    $(AROSDIR)/docs/src/archtool.py \
+	    $(AROSDIR)/docs/src/faq.py \
+	    $(AROSDIR)/docs/src/jobs.py \
+	    $(wildcard $(AROSDIR)/docs/src/*.xml) \
 	    $(wildcard news/*) links.py $(DEVPICS) $(SCREENSHOTS)
 	@python gensite
 	@touch $@
