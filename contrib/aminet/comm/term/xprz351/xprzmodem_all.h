@@ -50,7 +50,7 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/locale.h>
-#include <proto/xpr.h>
+//#include <proto/xpr.h>
 
 #endif
 
