@@ -159,81 +159,81 @@ o/bgui.library_rev.h: bgui.library_rev.rev
 	@$(CP) bgui.library_rev.rev o/bgui.library_rev.h
 
 $(INCLUDES_DIR)/libraries/bgui.h : include/libraries_bgui.h
-	$(CP) include/libraries_bgui.h $@
+	@$(CP) include/libraries_bgui.h $@
 
 $(INCLUDES_DIR)/libraries/bgui_macros.h : include/libraries_bgui_macros.h
-	$(CP) include/libraries_bgui_macros.h $@
+	@$(CP) include/libraries_bgui_macros.h $@
 
 $(INCLUDES_DIR)/bgui/bgui_compilerspecific.h : include/bgui_compilerspecific.h
-	$(CP) include/bgui_compilerspecific.h $@
+	@$(CP) include/bgui_compilerspecific.h $@
 
 $(INCLUDES_DIR)/bgui/bgui.h : include/bgui.h
-	$(CP) include/bgui.h $@
+	@$(CP) include/bgui.h $@
 
 $(INCLUDES_DIR)/bgui/bgui_image.h : include/bgui_image.h
-	$(CP) include/bgui_image.h $@
+	@$(CP) include/bgui_image.h $@
 
 $(INCLUDES_DIR)/bgui/bgui_locale.h : include/bgui_locale.h
-	$(CP) include/bgui_locale.h $@
+	@$(CP) include/bgui_locale.h $@
 
 $(INCLUDES_DIR)/bgui/bgui_asl.h : include/bgui_asl.h
-	$(CP) include/bgui_asl.h $@
+	@$(CP) include/bgui_asl.h $@
 
 $(INCLUDES_DIR)/bgui/bgui_arexx.h : include/bgui_arexx.h
-	$(CP) include/bgui_arexx.h $@
+	@$(CP) include/bgui_arexx.h $@
 
 $(INCLUDES_DIR)/bgui/bgui_cx.h : include/bgui_cx.h
-	$(CP) include/bgui_cx.h $@
+	@$(CP) include/bgui_cx.h $@
 
 $(INCLUDES_DIR)/bgui/bgui_obsolete.h : include/bgui_obsolete.h
-	$(CP) include/bgui_obsolete.h $@
+	@$(CP) include/bgui_obsolete.h $@
 
 $(INCLUDES_DIR)/bgui/bgui_macros.h : include/bgui_macros.h
-	$(CP) include/bgui_macros.h $@
+	@$(CP) include/bgui_macros.h $@
 
 $(INCLUDES_DIR)/bgui/bgui_proto.h : include/bgui_proto.h
-	$(CP) include/bgui_proto.h $@
+	@$(CP) include/bgui_proto.h $@
 
 $(INCLUDES_DIR)/bgui/bgui_pragmas.h : include/bgui_pragmas.h
-	$(CP) include/bgui_pragmas.h $@
+	@$(CP) include/bgui_pragmas.h $@
 
 $(INCLUDES_DIR)/pragma/bgui_lib.h : include/pragma/bgui_lib.h
-	$(CP) include/pragma/bgui_lib.h $@
+	@$(CP) include/pragma/bgui_lib.h $@
 
 $(INCLUDES_DIR)/bgui/bgui_lib.fd : include/bgui_lib.fd
-	$(CP) include/bgui_lib.fd $@
+	@$(CP) include/bgui_lib.fd $@
 
 $(INCLUDES_DIR)/clib/bgui_protos.h : include/aros/bgui_protos_clib.h
-	$(CP) include/aros/bgui_protos_clib.h $@
+	@$(CP) include/aros/bgui_protos_clib.h $@
 
 $(INCLUDES_DIR)/defines/bgui.h : include/aros/bgui_defines.h
-	$(CP) include/aros/bgui_defines.h $@
+	@$(CP) include/aros/bgui_defines.h $@
 
 $(INCLUDES_DIR)/proto/bgui.h : include/bgui_proto_aros.h
-	$(CP) $^ $@
+	@$(CP) $^ $@
 
 #Gadgets includes
 
 $(INCLUDES_DIR)/bgui/bgui_bar.h : gadgets/Bar/include/BarClass.h
-	$(CP) $^ $@
+	@$(CP) $^ $@
 
 $(INCLUDES_DIR)/libraries/bgui_bar.h : include/libraries_bgui_bar.h
-	$(CP) $^ $@
+	@$(CP) $^ $@
 
 $(INCLUDES_DIR)/bgui/bgui_treeview.h : gadgets/TreeView/include/TreeViewClass.h
-	$(CP) $^ $@
+	@$(CP) $^ $@
 
 $(INCLUDES_DIR)/libraries/bgui_treeview.h : include/libraries_bgui_treeview.h
-	$(CP) $^ $@
+	@$(CP) $^ $@
 
 $(INCLUDES_DIR)/bgui/bgui_layoutgroup.h : gadgets/LayoutGroup/include/LayoutGroupClass.h
-	$(CP) $^ $@
+	@$(CP) $^ $@
 
 $(INCLUDES_DIR)/libraries/bgui_layoutgroup.h : include/libraries_bgui_layoutgroup.h
-	$(CP) $^ $@
+	@$(CP) $^ $@
 
 $(INCLUDES_DIR)/bgui/bgui_prefs.h : include/bgui_prefs.h
-	$(CP) $^ $@
+	@$(CP) $^ $@
 
 bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \
 		o/plmain$(o) \
@@ -319,152 +319,152 @@ o/plaslclasses$(o) : $(asl_o)
 	@$(LD) -r $(asl_o) -o $@
 
 o/libtag.o: libtag.c
-	$(CC) $(INCLUDES) -c $^ -o $@
+	@$(CC) $(INCLUDES) -c $^ -o $@
 
 o/endtag.o: endtag.c
-	$(CC) $(INCLUDES) -c $^ -o $@
+	@$(CC) $(INCLUDES) -c $^ -o $@
 
 o/lib$(o): lib.c
-	$(CC) $(CFLAGS) $(DEFINES) -c lib.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c lib.c -o $@ 2>&1|tee $@.err
 
 o/libfunc$(o): libfunc.c
-	$(CC) $(CFLAGS) $(DEFINES) -c libfunc.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c libfunc.c -o $@ 2>&1|tee $@.err
 
 o/task$(o): task.c
-	$(CC) $(CFLAGS) $(DEFINES) -c task.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c task.c -o $@ 2>&1|tee $@.err
 
 o/request$(o): request.c
-	$(CC) $(CFLAGS) $(DEFINES) -c request.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c request.c -o $@ 2>&1|tee $@.err
 
 o/misc$(o): misc.c
-	$(CC) $(CFLAGS) $(DEFINES) -c misc.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c misc.c -o $@ 2>&1|tee $@.err
 
 o/bgui_locale$(o): bgui_locale.c
-	$(CC) $(CFLAGS) $(DEFINES) -c bgui_locale.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c bgui_locale.c -o $@ 2>&1|tee $@.err
 
 o/miscc$(o): miscc.c
-	$(CC) $(CFLAGS) $(DEFINES) -c miscc.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c miscc.c -o $@ 2>&1|tee $@.err
 
 o/stkext$(o): stkext.c
-	$(CC) $(CFLAGS) $(DEFINES) -c miscc.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c miscc.c -o $@ 2>&1|tee $@.err
 
 
 o/classes$(o): classes.c
-	$(CC) $(CFLAGS) $(DEFINES) -c classes.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c classes.c -o $@ 2>&1|tee $@.err
 
 o/dgm$(o): dgm.c
-	$(CC) $(CFLAGS) $(DEFINES) -c dgm.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c dgm.c -o $@ 2>&1|tee $@.err
 
 o/rootclass$(o): rootclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c rootclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c rootclass.c -o $@ 2>&1|tee $@.err
 
 o/arexxclass$(o): arexxclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c arexxclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c arexxclass.c -o $@ 2>&1|tee $@.err
 
 
 o/gfx$(o): gfx.c
-	$(CC) $(CFLAGS) $(DEFINES) -c gfx.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c gfx.c -o $@ 2>&1|tee $@.err
 
 o/blitter$(o): blitter.c
-	$(CC) $(CFLAGS) $(DEFINES) -c blitter.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c blitter.c -o $@ 2>&1|tee $@.err
 
 o/textclass$(o): textclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c textclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c textclass.c -o $@ 2>&1|tee $@.err
 
 o/strformat$(o): strformat.c
-	$(CC) $(CFLAGS) $(DEFINES) -c strformat.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c strformat.c -o $@ 2>&1|tee $@.err
 
 
 o/windowclass$(o): windowclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c windowclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c windowclass.c -o $@ 2>&1|tee $@.err
 
 o/groupclass$(o): groupclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c groupclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c groupclass.c -o $@ 2>&1|tee $@.err
 
 o/spacingclass$(o): spacingclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c spacingclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c spacingclass.c -o $@ 2>&1|tee $@.err
 
 o/pageclass$(o): pageclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c pageclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c pageclass.c -o $@ 2>&1|tee $@.err
 
 o/viewclass$(o): viewclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c viewclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c viewclass.c -o $@ 2>&1|tee $@.err
 
 o/externalclass$(o): externalclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c externalclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c externalclass.c -o $@ 2>&1|tee $@.err
 
 
 o/frameclass$(o): frameclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c frameclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c frameclass.c -o $@ 2>&1|tee $@.err
 
 o/labelclass$(o): labelclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c labelclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c labelclass.c -o $@ 2>&1|tee $@.err
 
 o/separatorclass$(o): separatorclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c separatorclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c separatorclass.c -o $@ 2>&1|tee $@.err
 
 o/vectorclass$(o): vectorclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c vectorclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c vectorclass.c -o $@ 2>&1|tee $@.err
 
 o/systemiclass$(o): systemiclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c systemiclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c systemiclass.c -o $@ 2>&1|tee $@.err
 
 
 o/baseclass$(o): baseclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c baseclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c baseclass.c -o $@ 2>&1|tee $@.err
 
 o/areaclass$(o): areaclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c areaclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c areaclass.c -o $@ 2>&1|tee $@.err
 
 o/buttonclass$(o): buttonclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c buttonclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c buttonclass.c -o $@ 2>&1|tee $@.err
 
 o/checkboxclass$(o): checkboxclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c checkboxclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c checkboxclass.c -o $@ 2>&1|tee $@.err
 
 o/commodityclass$(o): commodityclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c commodityclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c commodityclass.c -o $@ 2>&1|tee $@.err
 
 o/cycleclass$(o): cycleclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c cycleclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c cycleclass.c -o $@ 2>&1|tee $@.err
 
 o/indicatorclass$(o): indicatorclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c indicatorclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c indicatorclass.c -o $@ 2>&1|tee $@.err
 
 o/infoclass$(o): infoclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c infoclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c infoclass.c -o $@ 2>&1|tee $@.err
 
 o/listclass$(o): listclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c listclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c listclass.c -o $@ 2>&1|tee $@.err
 
 o/mxclass$(o): mxclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c mxclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c mxclass.c -o $@ 2>&1|tee $@.err
 
 o/progressclass$(o): progressclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c progressclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c progressclass.c -o $@ 2>&1|tee $@.err
 
 o/propclass$(o): propclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c propclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c propclass.c -o $@ 2>&1|tee $@.err
 
 o/sliderclass$(o): sliderclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c sliderclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c sliderclass.c -o $@ 2>&1|tee $@.err
 
 o/stringclass$(o): stringclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c stringclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c stringclass.c -o $@ 2>&1|tee $@.err
 
 o/radiobuttonclass$(o): radiobuttonclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c radiobuttonclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c radiobuttonclass.c -o $@ 2>&1|tee $@.err
 
 
 o/aslreqclass$(o): aslreqclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c aslreqclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c aslreqclass.c -o $@ 2>&1|tee $@.err
 
 o/filereqclass$(o): filereqclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c filereqclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c filereqclass.c -o $@ 2>&1|tee $@.err
 
 o/fontreqclass$(o): fontreqclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c fontreqclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c fontreqclass.c -o $@ 2>&1|tee $@.err
 
 o/screenreqclass$(o): screenreqclass.c
-	$(CC) $(CFLAGS) $(DEFINES) -c screenreqclass.c -o $@ 2>&1|tee $@.err
+	@$(CC) $(CFLAGS) $(DEFINES) -c screenreqclass.c -o $@ 2>&1|tee $@.err
 
