@@ -12,13 +12,16 @@
 #include <exec/libraries.h>
 #include <dos/dosextens.h>
 #include <proto/exec.h>
+#include <proto/intuition.h>
 #include <libraries/commodities.h>
 #include <libraries/locale.h>
+#include <libraries/mui.h>
 #include <devices/inputevent.h>
-/* #include <libraries/mui.h> */
 #include <libraries/asl.h>
-/* #include <clib/muimaster_protos.h> */
-#include <mui/HotkeyString_mcc.h>
+
+#if !defined(__AROS__)
+#include <MUI/HotkeyString_mcc.h>
+#endif
 
 #include <proto/locale.h>
 #include <proto/console.h>
@@ -27,13 +30,14 @@
 
 #include <proto/muimaster.h>
 
-
 extern struct Library *myLibPtr;
 extern struct ExecBase *SysBase;
 extern struct DosLibrary *DOSBase;
 extern struct Library *UtilityBase;
 extern struct Library *GfxBase;
+#if !defined(__AROS__)
 extern struct Library *IntuitionBase;
+#endif
 extern struct Library *LayersBase;
 extern struct Library *MUIMasterBase;
 extern struct MUI_CustomClass *ThisClass;
@@ -42,7 +46,6 @@ extern struct LocaleBase *LocaleBase;
 extern struct Catalog *catalog;
 
 extern struct Device *ConsoleDevice;
-
 
 #include "private.h"
 #include "rev.h"
@@ -237,7 +240,7 @@ static struct KeyBinding empty_key = { 0, (UWORD)-1, 0 };
 
 static char *MainTextArray[] =
 {
-#ifdef MORPHOS
+#if defined(MORPHOS)
 	"Der Vogelfänger bin ich ja,",
 	"Stets lustig heissa hoppsassa!",
 	"Ich Vogelfänger bin bekannt",
@@ -470,7 +473,8 @@ enum StringsID
 };
 
 
-//#ifdef MORPHOS
+#if !defined(__AROS__)
+//#if defined(MORPHOS)
 #undef MUI_NewObject
 #undef MUI_MakeObject
 
@@ -516,7 +520,7 @@ Object *MUI_MakeObject(long type, ...)
 }
 //#endif
 
-
+#endif /* !defined(__AROS__) */
 
 /*
 static STRPTR STRING(enum StringsID id,STRPTR defstr)
@@ -530,7 +534,7 @@ static STRPTR STRING(enum StringsID id,STRPTR defstr)
 #define STRING(a,b) b
 
 
-#ifndef __SASC
+#if !defined(__SASC) && !defined(__AROS__)
 /*char *stpcpy(char *to,const char *from)*/
 static char *stpcpy(char *to,char *from)
 {
@@ -700,14 +704,21 @@ kprintf("%lx|pos=%ld  key=%lx  kt=%lx (!= %lx)\n",list,pos,key,k1,k2);
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static LONG StrObjFunc_gate(void)
 {
   Object *pop = REG_A2;
   Object *str = REG_A1;
-#else
+#elseif !defined(__AROS__)
 static LONG ASM SAVEDS StrObjFunc( REG(a2) Object *pop GNUCREG(a2), REG(a1) Object *str GNUCREG(a1) )
 {
+#else
+AROS_UFH3(LONG, StrObjFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, pop, A2),
+	AROS_UFHA(Object *, str, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
   char *x;
@@ -719,17 +730,28 @@ static LONG ASM SAVEDS StrObjFunc( REG(a2) Object *pop GNUCREG(a2), REG(a1) Obje
   else
     set(pop,MUIA_List_Active,MUIV_List_Active_Off);
   return(TRUE);
+  
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static VOID ObjStrFunc_gate(void)
 {
   Object *pop = REG_A2;
   Object *str = REG_A1;
-#else
+#elseif !defined(__AROS__)
 static VOID ASM SAVEDS ObjStrFunc( REG(a2) Object *pop GNUCREG(a2), REG(a1) Object *str GNUCREG(a1) )
 {
+#else
+AROS_UFH3(void, ObjStrFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, pop, A2),
+	AROS_UFHA(Object *, str, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
   LONG i = -1;
@@ -745,31 +767,53 @@ static VOID ASM SAVEDS ObjStrFunc( REG(a2) Object *pop GNUCREG(a2), REG(a1) Obje
     set(str,MUIA_UserData,i);
     set(str,MUIA_Text_Contents,"");
   }
+
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static VOID WindowFunc_gate(void)
 {
   Object *pop = REG_A2;
   Object *win = REG_A1;
-#else
+#elseif !defined(__AROS__)
 static VOID ASM SAVEDS WindowFunc( REG(a2) Object *pop GNUCREG(a2), REG(a1) Object *win GNUCREG(a1) )
 {
+#else
+AROS_UFH3(void, WindowFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, pop, A2),
+	AROS_UFHA(Object *, win, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
   set(win,MUIA_Window_DefaultObject,pop);
+
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static VOID TxtFctFunc_gate(void)
 {
   Object *list = REG_A2;
   long *val = REG_A1;
-#else
+#elseif !defined(__AROS__)
 static VOID ASM SAVEDS TxtFctFunc( REG(a2) Object *list GNUCREG(a2), REG(a1) long *val GNUCREG(a1) )
 {
+#else
+AROS_UFH3(void, TxtFctFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, list, A2),
+	AROS_UFHA(long *, val, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
   Object *txtfct = (Object *) val[0];
@@ -784,17 +828,28 @@ static VOID ASM SAVEDS TxtFctFunc( REG(a2) Object *list GNUCREG(a2), REG(a1) lon
     get(list,MUIA_NList_Active,&i);
     set(list,MUIA_NList_Active,i);
   }
+  
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static VOID AckFunc_gate(void)
 {
   Object *list = REG_A2;
   long *val = REG_A1;
-#else
+#elseif !defined(__AROS__)
 static VOID ASM SAVEDS AckFunc( REG(a2) Object *list GNUCREG(a2), REG(a1) long *val GNUCREG(a1) )
 {
+#else
+AROS_UFH3(void, AckFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, list, A2),
+	AROS_UFHA(long *, val, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
   Object *stringkey = (Object *) val[0];
@@ -811,17 +866,28 @@ static VOID ASM SAVEDS AckFunc( REG(a2) Object *list GNUCREG(a2), REG(a1) long *
     key->kb_Code = ix.ix_Code;
     DoMethod(list,MUIM_NList_Redraw,MUIV_NList_Redraw_Active);
   }
+  
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static VOID ActiveFunc_gate(void)
 {
   Object *list = REG_A2;
   long *val = REG_A1;
-#else
+#elseif !defined(__AROS__)
 static VOID ASM SAVEDS ActiveFunc( REG(a2) Object *list GNUCREG(a2), REG(a1) long *val GNUCREG(a1) )
 {
+#else
+AROS_UFH3(void, ActiveFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, list, A2),
+	AROS_UFHA(long *, val, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
   struct NListviews_MCP_Data *data = (struct NListviews_MCP_Data *) (val[0]);
@@ -836,7 +902,11 @@ static VOID ASM SAVEDS ActiveFunc( REG(a2) Object *list GNUCREG(a2), REG(a1) lon
       while ((keytags[i] > 0) && (keytags[i] != key->kb_KeyTag))
         i++;
       if (keytags[i] == key->kb_KeyTag)
-      { nnset(data->mcp_stringkey,MUIA_HotkeyString_Snoop, FALSE);
+      {
+
+#if !defined(__AROS__)
+	      nnset(data->mcp_stringkey,MUIA_HotkeyString_Snoop, FALSE);
+#endif
         nnset(data->mcp_stringkey,MUIA_Disabled, FALSE);
         nnset(data->mcp_snoopkey,MUIA_Disabled, FALSE);
         nnset(data->mcp_txtfct,MUIA_UserData,i);
@@ -861,44 +931,75 @@ static VOID ASM SAVEDS ActiveFunc( REG(a2) Object *list GNUCREG(a2), REG(a1) lon
     nnset(data->mcp_stringkey,MUIA_Disabled, TRUE);
     nnset(data->mcp_snoopkey,MUIA_Disabled, TRUE);
   }
+  
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static VOID DefaultFunc_gate(void)
 {
   Object *list = REG_A2;
-#else
+#elseif !defined(__AROS__)
 static VOID ASM SAVEDS DefaultFunc( REG(a2) Object *list GNUCREG(a2) )
 {
+#else
+AROS_UFH3(void, DefaultFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, list, A2),
+	AROS_UFHA(void *, unused, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
-  if (list)
-    NL_LoadKeys(list,default_keys);
+	if (list) NL_LoadKeys(list,default_keys);
+	  
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static VOID UpdateFunc_gate(void)
 {
   Object *list = REG_A2;
-#else
+#elseif !defined(__AROS__)
 static VOID ASM SAVEDS UpdateFunc( REG(a2) Object *list GNUCREG(a2) )
 {
+#else
+AROS_UFH3(void, UpdateFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, list, A2),
+	AROS_UFHA(void *, unused, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
-  if (list)
-    NL_UpdateKeys(list,default_keys);
+	if (list) NL_UpdateKeys(list,default_keys);
+	  
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static VOID InsertFunc_gate(void)
 {
   Object *list = REG_A2;
-#else
+#elseif !defined(__AROS__)
 static VOID ASM SAVEDS InsertFunc( REG(a2) Object *list GNUCREG(a2) )
 {
+#else
+AROS_UFH3(void, InsertFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, list, A2),
+	AROS_UFHA(void *, unused, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
   if (list)
@@ -915,17 +1016,28 @@ static VOID ASM SAVEDS InsertFunc( REG(a2) Object *list GNUCREG(a2) )
     set(list,MUIA_NList_Active,pos);
     set(list,MUIA_NList_Quiet,FALSE);
   }
+  
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static VOID DisplayFunc_gate(void)
 {
   Object *obj = REG_A2;
   struct NList_DisplayMessage *ndm = REG_A1;
-#else
+#elseif !defined(__AROS__)
 static VOID ASM SAVEDS DisplayFunc( REG(a2) Object *obj GNUCREG(a2), REG(a1) struct NList_DisplayMessage *ndm GNUCREG(a1) )
 {
+#else
+AROS_UFH3(void, DisplayFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, obj, A2),
+	AROS_UFHA(struct NList_DisplayMessage *, ndm, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
   struct KeyBinding *key = (struct KeyBinding *) ndm->entry;
@@ -953,16 +1065,27 @@ static VOID ASM SAVEDS DisplayFunc( REG(a2) Object *obj GNUCREG(a2), REG(a1) str
     ndm->strings[1]  = "";
     ndm->strings[2]  = "\033cAction";
   }
+  
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static APTR ConstructFunc_gate(void)
 {
   Object *obj = REG_A2;
   struct NList_ConstructMessage *ncm = REG_A1;
-#else
+#elseif !defined(__AROS__)
 static APTR ASM SAVEDS ConstructFunc( REG(a2) Object *obj GNUCREG(a2), REG(a1) struct NList_ConstructMessage *ncm GNUCREG(a1) )
 {
+#else
+AROS_UFH3(APTR, ConstructFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, obj, A2),
+	AROS_UFHA(struct NList_ConstructMessage *, ncm, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
   struct KeyBinding *key = (struct KeyBinding *) ncm->entry;
@@ -972,26 +1095,41 @@ static APTR ASM SAVEDS ConstructFunc( REG(a2) Object *obj GNUCREG(a2), REG(a1) s
     *key2 = *key;
 /*kprintf("%lx|Construct=%lx -> %lx\n",obj,key,key2);*/
   return ((APTR) key2);
+  
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 static VOID DestructFunc_gate(void)
 {
   Object *obj = REG_A2;
   struct NList_DestructMessage *ndm = REG_A1;
-#else
+#elseif !defined(__AROS__)
 static VOID ASM SAVEDS DestructFunc( REG(a2) Object *obj GNUCREG(a2), REG(a1) struct NList_DestructMessage *ndm GNUCREG(a1) )
 {
+#else
+AROS_UFH3(void, DestructFunc,
+    	AROS_UFHA(struct Hook *, hook, A0),
+	AROS_UFHA(Object *, obj, A2),
+	AROS_UFHA(struct NList_DestructMessage *, ndm, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
   struct KeyBinding *key = (struct KeyBinding *) ndm->entry;
 
 /*kprintf("%lx|Destruct=%lx\n",obj,key);*/
   FreeMem((void *) key,sizeof(struct KeyBinding));
+	  
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif
 }
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 MADTRAP(StrObjFunc);
 MADTRAP(ObjStrFunc);
 MADTRAP(WindowFunc);
@@ -1004,6 +1142,19 @@ MADTRAP(ActiveFunc);
 MADTRAP(DisplayFunc);
 MADTRAP(ConstructFunc);
 MADTRAP(DestructFunc);
+static const struct Hook StrObjHook =    { { NULL,NULL },(VOID *)&StrObjFunc,NULL,NULL };
+static const struct Hook ObjStrHook =    { { NULL,NULL },(VOID *)&ObjStrFunc,NULL,NULL };
+static const struct Hook WindowHook =    { { NULL,NULL },(VOID *)&WindowFunc,NULL,NULL };
+static const struct Hook InsertHook =    { { NULL,NULL },(VOID *)&InsertFunc,NULL,NULL };
+static const struct Hook DefaultHook =   { { NULL,NULL },(VOID *)&DefaultFunc,NULL,NULL };
+static const struct Hook UpdateHook =    { { NULL,NULL },(VOID *)&UpdateFunc,NULL,NULL };
+static const struct Hook TxtFctHook =    { { NULL,NULL },(VOID *)&TxtFctFunc,NULL,NULL };
+static const struct Hook AckHook =       { { NULL,NULL },(VOID *)&AckFunc,NULL,NULL };
+static const struct Hook ActiveHook =    { { NULL,NULL },(VOID *)&ActiveFunc,NULL,NULL };
+static const struct Hook DisplayHook =   { { NULL,NULL },(VOID *)&DisplayFunc, NULL,NULL };
+static const struct Hook ConstructHook = { { NULL,NULL },(VOID *)&ConstructFunc, NULL,NULL };
+static const struct Hook DestructHook =  { { NULL,NULL },(VOID *)&DestructFunc, NULL,NULL };
+#elseif defined(__AROS__)
 static const struct Hook StrObjHook =    { { NULL,NULL },(VOID *)&StrObjFunc,NULL,NULL };
 static const struct Hook ObjStrHook =    { { NULL,NULL },(VOID *)&ObjStrFunc,NULL,NULL };
 static const struct Hook WindowHook =    { { NULL,NULL },(VOID *)&WindowFunc,NULL,NULL };
@@ -1063,11 +1214,19 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
 
   data->nlkeys = NULL;
 
+#if defined (__AROS__)
+  data->mcp_stringkey =   StringObject,
+                            StringFrame, MUIA_CycleChain, 1,
+                            MUIA_Disabled,TRUE,
+                          End;
+
+#else
   data->mcp_stringkey =   MUI_NewObject( MUIC_HotkeyString,
                             StringFrame, MUIA_CycleChain, 1,
                             MUIA_HotkeyString_Snoop, FALSE,
                             MUIA_Disabled,TRUE,
                           TAG_DONE );
+#endif
 
   if (!data->mcp_stringkey)
   { data->mcp_stringkey = MUI_NewObject(MUIC_String,
@@ -1725,8 +1884,10 @@ static ULONG mNL_MCP_New(struct IClass *cl,Object *obj,struct opSet *msg)
   DoMethod(data->mcp_snoopkey, MUIM_Notify, MUIA_Selected, TRUE,
            MUIV_Notify_Window, 3, MUIM_Set, MUIA_Window_ActiveObject, data->mcp_stringkey);
 
-  DoMethod(data->mcp_snoopkey, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+#if !defined(__AROS__)
+	DoMethod(data->mcp_snoopkey, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
            data->mcp_stringkey, 3, MUIM_Set, MUIA_HotkeyString_Snoop, MUIV_TriggerValue);
+#endif
 
   DoMethod(data->mcp_stringkey, MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
            data->mcp_snoopkey, 3, MUIM_Set, MUIA_Selected, FALSE);
@@ -2137,15 +2298,22 @@ static ULONG mNL_MCP_Get(struct IClass *cl,Object *obj,Msg msg)
 }
 
 
-#ifdef MORPHOS
+#if defined(MORPHOS)
 ULONG _DispatcherP_gate(void)
 {
   struct IClass *cl = REG_A0;
   Msg msg = REG_A1;
   Object *obj = REG_A2;
-#else
+#elseif !defined(__AROS__)
 ULONG ASM SAVEDS _DispatcherP( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Object *obj GNUCREG(a2), REG(a1) Msg msg GNUCREG(a1) )
 {
+#else
+AROS_UFH3(ULONG, _DispatcherP,
+    	AROS_UFHA(struct IClass *, cl, A0),
+	AROS_UFHA(Object *, obj, A2),
+	AROS_UFHA(Msg, msg, A1))
+{
+		AROS_USERFUNC_INIT
 #endif
 
   switch (msg->MethodID)
@@ -2156,5 +2324,8 @@ ULONG ASM SAVEDS _DispatcherP( REG(a0) struct IClass *cl GNUCREG(a0), REG(a2) Ob
     case OM_GET                  : return (     mNL_MCP_Get(cl,obj,(APTR)msg));
   }
   return(DoSuperMethodA(cl,obj,msg));
-}
 
+#if defined(__AROS__)
+	AROS_USERFUNC_EXIT
+#endif  
+}

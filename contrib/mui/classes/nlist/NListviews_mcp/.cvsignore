@@ -3,3 +3,4 @@
 *.mcc
 *.mcc.elf
 SCOPTIONS
+mmakefile
